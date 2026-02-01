@@ -3,7 +3,6 @@ import unittest
 from random import randint
 
 def limpiar_terminal():
-    # 'nt' es para Windows, 'posix' para Mac y Linux
     if os.name == 'nt':
         os.system('cls')
     else:
@@ -12,54 +11,54 @@ def limpiar_terminal():
 # Llama a la función justo antes de tus pruebas
 limpiar_terminal()
 
-
-
 def calculate_engine_health(temp, pressure):
-    # La temperatura de operación segura es entre 150 y 250 grados
-    # La presión segura es entre 30 y 50 psi
-    
-    if 150 <= temp and temp <= 250:
-        
-        if 30 <= pressure and pressure <= 50:
+    # Lógica de estados del motor
+    if 150 <= temp <= 250:
+        if 30 <= pressure <= 50:
             status = "Optimal Temperature and Optimal pressure"
-            print('Temperature:',temp,'Pressure:',pressure)
         else:
             status = "Optimal Temperature and High Pressure Alert"
-            print('Temperature:',temp,'Pressure:',pressure)
     else:
-        if 30 <= pressure and pressure <= 50:
+        if 30 <= pressure <= 50:
             status = "Critical Temperature and Optimal pressure"
-            print('Temperature:',temp,'Pressure:',pressure)
         else:
             status = "Critical Temperature and High Pressure Alert"
-            print('Temperature:',temp,'Pressure:',pressure)
+    
+    # Cálculo de salud
     try:
         health_score = (temp / pressure) * 100
-
     except ZeroDivisionError:
-        return ("Error pression is:"), 0.0
+        # Nota: unittest fallará si esperas un número y recibes esta tupla
+        return "Error pression is:", 0.0
     
-
     return health_score
 
+# --- AQUÍ EMPIEZA LO QUE TE FALTABA PARA UNITTEST ---
 
-def test_calculate_engine_health():
-    print("Pruebas")
-    assert calculate_engine_health(150, 30) == 500
+class TestEngineHealth(unittest.TestCase):
+    
+    def test_optimal_conditions(self):
+        """Prueba con los valores exactos del límite inferior óptimo"""
+        result = calculate_engine_health(150, 30)
+        self.assertEqual(result, 500.0)
+
+    def test_high_values(self):
+        """Prueba con los valores exactos del límite superior óptimo"""
+        result = calculate_engine_health(250, 50)
+        self.assertEqual(result, 500.0)
+
+    def test_zero_pressure(self):
+        """Prueba el manejo de división por cero"""
+        result = calculate_engine_health(250, 0)
+        # Verificamos que devuelva la tupla de error que definiste
+        self.assertEqual(result, ("Error pression is:", 0.0))
+
+    def test_random_values(self):
+        """Prueba con valores aleatorios dentro del rango"""
+        temp = randint(150, 250)
+        press = randint(30, 50)
+        result = calculate_engine_health(temp, press)
+        self.assertIsInstance(result, float)
 
 if __name__ == "__main__":
-    test_calculate_engine_health()
-
-
-# Ejemplo de uso que falla:
-# print(calculate_engine_health(150, 30))
-#print(calculate_engine_health(149, 29))
-#print(calculate_engine_health(151, 31))
-
-#print(calculate_engine_health(250, 50))
-#print(calculate_engine_health(249, 49))
-#print(calculate_engine_health(251, 51))
-
-#print(calculate_engine_health(251, 0))
-
-#print(calculate_engine_health(randint(150, 250), randint(30, 50)))
+    unittest.main()
