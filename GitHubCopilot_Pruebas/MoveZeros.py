@@ -1,3 +1,7 @@
+# Input given
+test_list = [0, 1, 0, 3, 12]
+
+
 def move_zeroes(nums):
     # Pointer for the next position of a non-zero element
     # Puntero para la siguiente posición de un elemento que no sea cero
@@ -15,8 +19,7 @@ def move_zeroes(nums):
             # Incrementamos el puntero
             last_non_zero_index += 1
 
-# Input given
-test_list = [0, 1, 0, 3, 12]
+
 
 # Running the function
 move_zeroes(test_list)
