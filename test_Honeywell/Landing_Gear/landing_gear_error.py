@@ -1,26 +1,35 @@
-#Safety Requirements (ASIL-D):
+from typing import Tuple  # Lo correcto es 'typing' no 'types'
+import unittest 
 
-# V-MAX-EXTEND: Gear can only be deployed if Airspeed < 220 knots.
-
-# A-MAX-EXTEND: Gear should only be deployed if Altitude < 15,000 ft.
-
-# WARNING: Trigger 'OVERSPEED_GEAR' if Airspeed > 250 knots while Gear is DOWN.
-
-# CALC: Compute 'Drag Factor' = (Airspeed * 1.5) / Altitude.
-
-
-
-def landing_gear_logic(airspeed, altitude, is_gear_down):
-    # Bug 1: Dangerous logical operator
-    if airspeed < 220 or altitude < 15000:
-        action = "DEPLOY_ALLOWED"
-    else:
-        action = "RETAIN_STATE"
-
-    # Bug 2: Missing overspeed check for gear structural integrity
-    if airspeed > 250:
-        status = "SPEED_ALERT"
+def landing_gear_logic(Airspeed_KTS: float, Altitude_FT: float, gear_down: bool ) -> Tuple[str, float]:
+    OVER_AIRSPEED_KTS = 250
+    MAX_AIRSPEED_KTS = 220
+    MAX_ALTITUDE_FT = 15000
     
-    # Bug 3: Immediate crash at touchdown (Altitude = 0)
-    drag_factor = (airspeed * 1.5) / altitude
-    return action, drag_factor
+    resultado = "GEAR_UP" # Valor por defecto
+
+    # Cambiamos 'while' por 'if' para que el código avance
+    if gear_down == True: 
+        if Airspeed_KTS > OVER_AIRSPEED_KTS:
+            resultado = "OVERSPEED"
+        elif Airspeed_KTS < MAX_AIRSPEED_KTS and Altitude_FT < MAX_ALTITUDE_FT:
+            resultado = "DEPLOY_OK"
+        else:
+            resultado = "REJECTED"
+            
+    try:    
+        drag = (Airspeed_KTS * 1.5) / Altitude_FT
+        return resultado, drag
+    except ZeroDivisionError:
+        return resultado, 0.0
+    
+class TestLanding_gear_logic (unittest.TestCase):
+    def test_Overspeed_(self):
+        # Ejecuta la lógica y verifica si el resultado es el esperado
+        resultado, _ = landing_gear_logic(251, 20003, True)
+        self.assertEqual(resultado, "OVERSPEED")
+        pass
+
+# Esta es la forma correcta de iniciar el ejecutor de pruebas
+if __name__ == "__main__":
+    unittest.main()

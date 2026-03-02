@@ -10,7 +10,7 @@ print(directorio)
 
 for i in range(0,len(palabras),1):
 
-    if i+1 < len(palabras):
+    if i+1 == len(palabras):
         p1 = palabras[i]
         p2 = palabras[i+1]
         
