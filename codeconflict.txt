@@ -1,4 +1,0 @@
-Primera linea en VSCODE
-
-cambios desde rama principal 1
-cambios desde rama local
