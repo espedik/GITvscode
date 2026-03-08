@@ -15,7 +15,7 @@ equipo_test.append("Osciloscopio")
 equipo_test.append("Fuente")
 print(equipo_test)
 
-equipo_test.insert(1, "Cautin")
+equipo_test.insert(0, "Cautin")
 print(equipo_test)
 
 herramienta_fuera = equipo_test.pop()

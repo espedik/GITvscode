@@ -10,7 +10,7 @@ Objetivo: Manipular el orden de los errores encontrados en un test.
 
 # A. Crea una lista de IDs de error desordenados
 errores = ["ERR-05", "ERR-01", "ERR-08", "ERR-03", "ERR-02"]
-
+string = "83034959"
 # B. Ordena la lista alfabéticamente de forma permanente usando .sort()
 # Por defecto, .sort() ordena de menor a mayor (A-Z o 0-9).
 errores.sort()

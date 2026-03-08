@@ -13,7 +13,7 @@ Objetivo: Extraer subconjuntos de datos de una lista de telemetría.
 
 voltajes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 
-primeros_tres = voltajes[:3]
+primeros_tres = voltajes[0:3]
 print(f"Primeros 3 voltajes: {primeros_tres}") # Salida: [1, 2, 3]
 
 ultimos_tres = voltajes[-3:]
