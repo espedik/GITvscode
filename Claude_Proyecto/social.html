@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mi Red Social</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --g:#00e87a;--g-d:#00b860;--g-l:rgba(0,232,122,.1);
+  --o:#ff6b35;--o-l:rgba(255,107,53,.1);
+  --b:#3b82f6;--b-l:rgba(59,130,246,.1);
+  --p:#b06eff;--p-l:rgba(176,110,255,.1);
+  --w:#ffd93d;--w-l:rgba(255,217,61,.1);
+  --r:#ff3b6b;--r-l:rgba(255,59,107,.1);
+  --bg:#060614;--surface:rgba(255,255,255,.04);--border:rgba(255,255,255,.08);
+  --text:#e8eaf6;--text2:#8892b0;--text3:#4a5568;
+  --sw:245px;--r14:14px;--rs:9px;--sh:0 4px 24px rgba(0,0,0,.5);
+}
+body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);display:flex;min-height:100vh;font-size:14px;
+  background-image:radial-gradient(ellipse 80% 60% at 20% 0%,rgba(0,232,122,.05) 0%,transparent 60%),radial-gradient(ellipse 60% 50% at 85% 100%,rgba(255,107,53,.05) 0%,transparent 60%)}
+::-webkit-scrollbar{width:4px;height:4px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:rgba(255,255,255,.12);border-radius:2px}
+.sidebar{width:var(--sw);background:rgba(6,6,20,.85);backdrop-filter:blur(20px);border-right:1px solid rgba(0,232,122,.1);display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:100;transition:transform .25s}
+.sb-logo{padding:20px;border-bottom:1px solid rgba(255,255,255,.06)}
+.sb-logo h1{font-size:16px;font-weight:800;background:linear-gradient(90deg,#00e87a,#3b82f6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.sb-logo p{font-size:10px;color:var(--text3);margin-top:3px;letter-spacing:.08em;text-transform:uppercase}
+.sb-nav{padding:10px 8px;flex:1;overflow-y:auto}
+.nav-label{font-size:9px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.1em;padding:12px 12px 4px}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:var(--rs);cursor:pointer;color:var(--text2);font-weight:500;font-size:13px;transition:all .2s;margin-bottom:2px;user-select:none}
+.nav-item:hover{background:rgba(255,255,255,.05);color:var(--text)}
+.nav-item.active{background:rgba(0,232,122,.1);color:var(--g);font-weight:600;border-left:2px solid var(--g)}
+.nav-item .ico{font-size:15px;width:20px;text-align:center;flex-shrink:0}
+.main{margin-left:var(--sw);flex:1;display:flex;flex-direction:column;min-height:100vh}
+.topbar{background:rgba(6,6,20,.8);backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,.06);padding:0 24px;height:58px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
+.topbar-title{font-size:15px;font-weight:700}
+.content{padding:22px;flex:1}
+.section{display:none}.section.active{display:block}
+.card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:var(--r14);padding:18px;box-shadow:var(--sh),inset 0 1px 0 rgba(255,255,255,.05);transition:border-color .2s;backdrop-filter:blur(10px)}
+.card:hover{border-color:rgba(255,255,255,.12)}
+.card-title{font-size:11px;font-weight:600;color:var(--text2);margin-bottom:8px;display:flex;align-items:center;gap:5px;text-transform:uppercase;letter-spacing:.06em}
+.card-val{font-size:26px;font-weight:800;color:var(--text);letter-spacing:-.5px}
+.card-sub{font-size:11px;color:var(--text3);margin-top:3px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.g2{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.btn{display:inline-flex;align-items:center;gap:5px;padding:8px 14px;border-radius:var(--rs);border:none;cursor:pointer;font-size:13px;font-weight:600;transition:all .2s;white-space:nowrap;font-family:inherit}
+.btn-g{background:linear-gradient(135deg,#00b860,#00e87a);color:#000;box-shadow:0 0 16px rgba(0,232,122,.3)}
+.btn-g:hover{box-shadow:0 0 28px rgba(0,232,122,.55);transform:translateY(-1px)}
+.btn-o{background:rgba(255,255,255,.05);color:var(--text2);border:1px solid rgba(255,255,255,.1)}
+.btn-o:hover{background:rgba(255,255,255,.09);color:var(--text)}
+.btn-r{background:linear-gradient(135deg,#cc1144,#ff3b6b);color:#fff}
+.btn-sm{padding:5px 9px;font-size:11px}.btn-ico{padding:5px 8px}
+.pbar{height:6px;background:rgba(255,255,255,.08);border-radius:20px;overflow:hidden;margin-top:7px}
+.pfill{height:100%;border-radius:20px;transition:width .6s cubic-bezier(.4,0,.2,1)}
+.mo{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(4px);z-index:200;align-items:center;justify-content:center;padding:16px}
+.mo.open{display:flex}
+.modal{background:rgba(10,10,30,.95);backdrop-filter:blur(30px);border:1px solid rgba(0,232,122,.15);border-radius:var(--r14);box-shadow:0 0 20px rgba(0,232,122,.1),var(--sh);width:100%;max-width:480px;max-height:92vh;overflow-y:auto;padding:22px}
+.modal-h{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+.modal-title{font-size:17px;font-weight:700}
+.modal-x{background:none;border:none;font-size:18px;cursor:pointer;color:var(--text2);padding:3px}
+.modal-x:hover{color:var(--r)}
+.fg{margin-bottom:14px}
+.fr{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+label{display:block;font-size:10px;font-weight:700;color:var(--text2);margin-bottom:5px;text-transform:uppercase;letter-spacing:.07em}
+input,select,textarea{width:100%;padding:9px 12px;border:1px solid rgba(255,255,255,.1);border-radius:var(--rs);font-size:13px;color:var(--text);background:rgba(255,255,255,.05);outline:none;transition:all .2s;font-family:inherit}
+input:focus,select:focus,textarea:focus{border-color:var(--g);box-shadow:0 0 0 3px rgba(0,232,122,.12)}
+select option{background:#0d0d2a;color:var(--text)}
+.sh{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+.sh h2{font-size:19px;font-weight:800;background:linear-gradient(90deg,var(--text),var(--text2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.badge{display:inline-block;padding:3px 9px;border-radius:20px;font-size:10px;font-weight:700}
+.b-g{background:rgba(0,232,122,.15);color:var(--g);border:1px solid rgba(0,232,122,.25)}
+.b-o{background:rgba(255,107,53,.15);color:var(--o);border:1px solid rgba(255,107,53,.25)}
+.b-r{background:rgba(255,59,107,.15);color:var(--r);border:1px solid rgba(255,59,107,.25)}
+.b-b{background:rgba(59,130,246,.15);color:var(--b);border:1px solid rgba(59,130,246,.25)}
+.b-p{background:rgba(176,110,255,.15);color:var(--p);border:1px solid rgba(176,110,255,.25)}
+.b-n{background:rgba(255,255,255,.07);color:var(--text2)}
+.tw{overflow-x:auto;margin-top:10px}
+table{width:100%;border-collapse:collapse}
+th{text-align:left;padding:9px 12px;font-size:10px;font-weight:700;color:var(--g);border-bottom:1px solid rgba(0,232,122,.15);white-space:nowrap;text-transform:uppercase;letter-spacing:.08em}
+td{padding:11px 12px;border-bottom:1px solid rgba(255,255,255,.05);font-size:13px}
+tr:last-child td{border-bottom:none}
+tbody tr:hover td{background:rgba(0,232,122,.02)}
+.conf{position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(4px);z-index:300;display:none;align-items:center;justify-content:center}
+.conf.open{display:flex}
+.conf-box{background:rgba(10,10,30,.98);border:1px solid rgba(255,59,107,.25);border-radius:var(--r14);padding:22px;max-width:340px;width:90%}
+.conf-box h3{font-size:15px;font-weight:700;margin-bottom:7px}
+.conf-box p{color:var(--text2);font-size:13px;margin-bottom:18px}
+.toast{position:fixed;bottom:24px;right:24px;background:rgba(10,10,30,.95);color:var(--text);border:1px solid rgba(0,232,122,.2);padding:10px 18px;border-radius:var(--rs);font-size:13px;font-weight:600;box-shadow:var(--sh);z-index:500;opacity:0;transform:translateY(8px);transition:all .3s;pointer-events:none}
+.toast.show{opacity:1;transform:translateY(0)}
+.mt16{margin-top:16px}.mt20{margin-top:20px}
+.flex{display:flex}.aic{align-items:center}.jb{justify-content:space-between}
+.fw7{font-weight:700}.ts{font-size:11px}.tm{color:var(--text3)}.gap6{gap:6px}.gap8{gap:8px}
+.chart-c{position:relative;height:220px}
+.empty{text-align:center;padding:40px 24px;color:var(--text3)}
+.empty .ico{font-size:40px;margin-bottom:10px;opacity:.4}
+.star-row{display:flex;gap:5px;margin-top:5px}
+.star-btn{background:none;border:none;font-size:20px;cursor:pointer;color:var(--text3);transition:color .15s;line-height:1}
+.star-btn.on{color:#ffd93d}
+.contact-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.contact-card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:var(--r14);padding:16px;cursor:pointer;transition:all .2s;position:relative}
+.contact-card:hover{border-color:rgba(0,232,122,.25);transform:translateY(-2px);box-shadow:0 8px 32px rgba(0,0,0,.4)}
+.contact-avatar{font-size:36px;text-align:center;margin-bottom:10px}
+.contact-name{font-size:14px;font-weight:700;text-align:center;margin-bottom:6px}
+.contact-stars{text-align:center;font-size:13px;color:#ffd93d;margin:5px 0}
+.contact-meta{font-size:10px;color:var(--text3);text-align:center;margin-top:4px}
+.seg-row{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.05)}
+.seg-row:last-child{border-bottom:none}
+.detail-modal{max-width:600px}
+.health-score{font-size:48px;font-weight:900;text-align:center;padding:16px}
+.menu-btn{display:none;background:none;border:none;color:var(--text);font-size:20px;cursor:pointer;padding:4px 8px}
+@media(max-width:900px){.g4{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:repeat(2,1fr)}.contact-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:640px){.sidebar{transform:translateX(-100%)}.sidebar.open{transform:translateX(0)}.main{margin-left:0}.g4,.g3,.g2{grid-template-columns:1fr}.fr{grid-template-columns:1fr}.contact-grid{grid-template-columns:1fr}.menu-btn{display:block}}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<nav class="sidebar" id="sidebar">
+  <div class="sb-logo">
+    <h1>👥 Mi Red Social</h1>
+    <p>Relaciones &amp; Conexiones</p>
+  </div>
+  <div class="sb-nav">
+    <div class="nav-label">Principal</div>
+    <div class="nav-item active" onclick="nav('dashboard')"><span class="ico">🏠</span>Dashboard</div>
+    <div class="nav-item" onclick="nav('contactos')"><span class="ico">👤</span>Contactos</div>
+    <div class="nav-item" onclick="nav('interacciones')"><span class="ico">💬</span>Interacciones</div>
+    <div class="nav-item" onclick="nav('seguimientos')"><span class="ico">🔔</span>Seguimientos</div>
+    <div class="nav-item" onclick="nav('estadisticas')"><span class="ico">📊</span>Estadísticas</div>
+    <div class="nav-label">Datos</div>
+    <div class="nav-item" onclick="exportData()"><span class="ico">💾</span>Exportar datos</div>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <div class="flex aic gap8">
+      <button class="menu-btn" onclick="toggleMenu()">☰</button>
+      <span class="topbar-title" id="topbar-title">Dashboard</span>
+    </div>
+    <div class="flex gap6">
+      <button class="btn btn-g btn-sm" onclick="openContactoModal()">+ Contacto</button>
+      <button class="btn btn-o btn-sm" onclick="openInteraccionModal()">+ Interacción</button>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- DASHBOARD -->
+    <div class="section active" id="sec-dashboard">
+      <div class="sh"><h2>Dashboard</h2></div>
+      <div class="g4" id="kpi-dash"></div>
+      <div class="g2 mt20" id="dash-panels"></div>
+      <div class="card mt20">
+        <div class="card-title">📈 Interacciones por semana (últimas 8 semanas)</div>
+        <div class="chart-c"><canvas id="ch-weekly"></canvas></div>
+      </div>
+    </div>
+
+    <!-- CONTACTOS -->
+    <div class="section" id="sec-contactos">
+      <div class="sh">
+        <h2>Contactos</h2>
+        <div class="flex gap6">
+          <select id="sort-contactos" onchange="renderContactos()" style="width:auto;padding:6px 10px;font-size:12px">
+            <option value="importancia">Por importancia</option>
+            <option value="nombre">Por nombre</option>
+            <option value="ultimo_contacto">Último contacto</option>
+          </select>
+          <button class="btn btn-g btn-sm" onclick="openContactoModal()">+ Agregar contacto</button>
+        </div>
+      </div>
+      <div class="contact-grid" id="contactos-grid"></div>
+    </div>
+
+    <!-- INTERACCIONES -->
+    <div class="section" id="sec-interacciones">
+      <div class="sh">
+        <h2>Interacciones</h2>
+        <button class="btn btn-g btn-sm" onclick="openInteraccionModal()">+ Nueva interacción</button>
+      </div>
+      <div class="card">
+        <div class="flex gap8 aic" style="flex-wrap:wrap;margin-bottom:12px">
+          <select id="fil-contacto" onchange="renderInteracciones()" style="width:auto;padding:6px 10px;font-size:12px">
+            <option value="">Todos los contactos</option>
+          </select>
+          <select id="fil-tipo" onchange="renderInteracciones()" style="width:auto;padding:6px 10px;font-size:12px">
+            <option value="">Todos los tipos</option>
+            <option value="llamada">Llamada</option>
+            <option value="mensaje">Mensaje</option>
+            <option value="reunión">Reunión</option>
+            <option value="comida">Comida</option>
+            <option value="videollamada">Videollamada</option>
+            <option value="evento">Evento</option>
+            <option value="otro">Otro</option>
+          </select>
+          <input type="date" id="fil-desde" onchange="renderInteracciones()" style="width:auto;padding:6px 10px;font-size:12px">
+          <input type="date" id="fil-hasta" onchange="renderInteracciones()" style="width:auto;padding:6px 10px;font-size:12px">
+        </div>
+        <div class="tw"><table><thead><tr>
+          <th>Fecha</th><th>Contacto</th><th>Tipo</th><th>Calidad</th><th>Duración</th><th>Notas</th><th>Acciones</th>
+        </tr></thead><tbody id="int-tbody"></tbody></table></div>
+      </div>
+    </div>
+
+    <!-- SEGUIMIENTOS -->
+    <div class="section" id="sec-seguimientos">
+      <div class="sh"><h2>Seguimientos Pendientes</h2></div>
+      <div class="card">
+        <div class="card-title">🎯 Urgencia de contacto — ordenado por prioridad</div>
+        <div id="seg-list"></div>
+      </div>
+    </div>
+
+    <!-- ESTADÍSTICAS -->
+    <div class="section" id="sec-estadisticas">
+      <div class="sh"><h2>Estadísticas</h2></div>
+      <div class="g2">
+        <div class="card">
+          <div class="card-title">📊 Interacciones por tipo de relación</div>
+          <div class="chart-c"><canvas id="ch-relacion"></canvas></div>
+        </div>
+        <div class="card">
+          <div class="card-title">⭐ Tendencia de calidad</div>
+          <div class="chart-c"><canvas id="ch-calidad"></canvas></div>
+        </div>
+      </div>
+      <div class="g2 mt16">
+        <div class="card">
+          <div class="card-title">📅 Meses más activos</div>
+          <div class="chart-c"><canvas id="ch-meses"></canvas></div>
+        </div>
+        <div class="card" style="display:flex;flex-direction:column;align-items:center;justify-content:center">
+          <div class="card-title" style="text-align:center">💚 Salud de tu red</div>
+          <div class="health-score" id="health-score-val" style="color:var(--g)">--</div>
+          <div style="font-size:13px;color:var(--text2);text-align:center" id="health-score-label"></div>
+          <div class="pbar mt16" style="width:80%"><div class="pfill" id="health-bar" style="background:var(--g);width:0%"></div></div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+</div><!-- /main -->
+
+<!-- MODAL CONTACTO -->
+<div class="mo" id="mo-contacto">
+  <div class="modal">
+    <div class="modal-h">
+      <span class="modal-title" id="mo-c-title">Agregar Contacto</span>
+      <button class="modal-x" onclick="closeMo('mo-contacto')">✕</button>
+    </div>
+    <input type="hidden" id="c-id">
+    <div class="fr">
+      <div class="fg">
+        <label>Nombre *</label>
+        <input type="text" id="c-nombre" placeholder="Nombre completo">
+      </div>
+      <div class="fg">
+        <label>Emoji / Avatar</label>
+        <input type="text" id="c-emoji" placeholder="😊" maxlength="4">
+      </div>
+    </div>
+    <div class="fr">
+      <div class="fg">
+        <label>Relación *</label>
+        <select id="c-relacion">
+          <option value="">Seleccionar...</option>
+          <option value="familia">Familia</option>
+          <option value="pareja">Pareja</option>
+          <option value="amigo_cercano">Amigo cercano</option>
+          <option value="amigo">Amigo</option>
+          <option value="trabajo">Trabajo</option>
+          <option value="mentor">Mentor</option>
+          <option value="conocido">Conocido</option>
+          <option value="otro">Otro</option>
+        </select>
+      </div>
+      <div class="fg">
+        <label>Cumpleaños</label>
+        <input type="date" id="c-cumple">
+      </div>
+    </div>
+    <div class="fg">
+      <label>Importancia</label>
+      <div class="star-row" id="c-imp-stars">
+        <button type="button" class="star-btn" data-val="1" onclick="setImp(1)">★</button>
+        <button type="button" class="star-btn" data-val="2" onclick="setImp(2)">★</button>
+        <button type="button" class="star-btn" data-val="3" onclick="setImp(3)">★</button>
+        <button type="button" class="star-btn" data-val="4" onclick="setImp(4)">★</button>
+        <button type="button" class="star-btn" data-val="5" onclick="setImp(5)">★</button>
+      </div>
+    </div>
+    <div class="fg">
+      <label>Notas</label>
+      <textarea id="c-notas" rows="3" placeholder="Notas sobre este contacto..."></textarea>
+    </div>
+    <div class="flex gap8 jb">
+      <button class="btn btn-o" onclick="closeMo('mo-contacto')">Cancelar</button>
+      <button class="btn btn-g" onclick="saveContacto()">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL INTERACCIÓN -->
+<div class="mo" id="mo-interaccion">
+  <div class="modal">
+    <div class="modal-h">
+      <span class="modal-title" id="mo-i-title">Nueva Interacción</span>
+      <button class="modal-x" onclick="closeMo('mo-interaccion')">✕</button>
+    </div>
+    <input type="hidden" id="i-id">
+    <div class="fg">
+      <label>Contacto *</label>
+      <select id="i-contacto"></select>
+    </div>
+    <div class="fr">
+      <div class="fg">
+        <label>Fecha *</label>
+        <input type="date" id="i-fecha">
+      </div>
+      <div class="fg">
+        <label>Tipo *</label>
+        <select id="i-tipo">
+          <option value="llamada">📞 Llamada</option>
+          <option value="mensaje">💬 Mensaje</option>
+          <option value="reunión">🤝 Reunión</option>
+          <option value="comida">🍽️ Comida</option>
+          <option value="videollamada">📹 Videollamada</option>
+          <option value="evento">🎉 Evento</option>
+          <option value="otro">📌 Otro</option>
+        </select>
+      </div>
+    </div>
+    <div class="fr">
+      <div class="fg">
+        <label>Calidad (1-5)</label>
+        <div class="star-row" id="i-cal-stars">
+          <button type="button" class="star-btn" data-val="1" onclick="setCal(1)">★</button>
+          <button type="button" class="star-btn" data-val="2" onclick="setCal(2)">★</button>
+          <button type="button" class="star-btn" data-val="3" onclick="setCal(3)">★</button>
+          <button type="button" class="star-btn" data-val="4" onclick="setCal(4)">★</button>
+          <button type="button" class="star-btn" data-val="5" onclick="setCal(5)">★</button>
+        </div>
+      </div>
+      <div class="fg">
+        <label>Duración (min)</label>
+        <input type="number" id="i-duracion" min="0" placeholder="Opcional">
+      </div>
+    </div>
+    <div class="fg">
+      <label>Notas</label>
+      <textarea id="i-notas" rows="3" placeholder="¿Qué platicaron? ¿Cómo fue?"></textarea>
+    </div>
+    <div class="flex gap8 jb">
+      <button class="btn btn-o" onclick="closeMo('mo-interaccion')">Cancelar</button>
+      <button class="btn btn-g" onclick="saveInteraccion()">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL DETALLE CONTACTO -->
+<div class="mo" id="mo-detalle">
+  <div class="modal detail-modal" style="max-width:600px">
+    <div class="modal-h">
+      <span class="modal-title" id="det-title">Detalle del Contacto</span>
+      <button class="modal-x" onclick="closeMo('mo-detalle')">✕</button>
+    </div>
+    <div id="det-body"></div>
+  </div>
+</div>
+
+<!-- CONFIRM -->
+<div class="conf" id="confirm-dlg">
+  <div class="conf-box">
+    <h3 id="conf-title">¿Confirmar?</h3>
+    <p id="conf-msg"></p>
+    <div class="flex gap8 jb">
+      <button class="btn btn-o" onclick="closeConf()">Cancelar</button>
+      <button class="btn btn-r" id="conf-ok">Eliminar</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+const today = () => new Date().toISOString().slice(0,10);
+const uid = () => Date.now().toString(36)+Math.random().toString(36).slice(2);
+const fmt = n => new Intl.NumberFormat('es-MX').format(Math.round(n||0));
+const fmtD = d => { if(!d)return''; const[y,m,day]=d.split('-'); const mn=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic']; return `${parseInt(day)} ${mn[parseInt(m)-1]} ${y}`; };
+const killChart = c => { if(c) c.destroy(); return null; };
+
+const STORAGE_KEY = 'social_v1';
+let S = { contactos: [], interacciones: [] };
+let cImp = 3, iCal = 3;
+let charts = {};
+
+function load() {
+  try { const d = localStorage.getItem(STORAGE_KEY); if(d) S = JSON.parse(d); } catch(e){}
+}
+function save() { localStorage.setItem(STORAGE_KEY, JSON.stringify(S)); }
+
+// Relation labels
+const REL_LABEL = { familia:'Familia', pareja:'Pareja', amigo_cercano:'Amigo cercano', amigo:'Amigo', trabajo:'Trabajo', mentor:'Mentor', conocido:'Conocido', otro:'Otro' };
+const REL_FREQ = { familia:7, pareja:1, amigo_cercano:14, amigo:30, trabajo:14, mentor:30, conocido:90, otro:60 };
+const TIPO_EMOJI = { llamada:'📞', mensaje:'💬', 'reunión':'🤝', comida:'🍽️', videollamada:'📹', evento:'🎉', otro:'📌' };
+
+function daysSince(dateStr) {
+  if(!dateStr) return 999;
+  const diff = new Date() - new Date(dateStr);
+  return Math.floor(diff / 86400000);
+}
+
+function lastInteraction(cid) {
+  const ints = S.interacciones.filter(i => i.contacto_id === cid).sort((a,b)=>b.fecha.localeCompare(a.fecha));
+  return ints[0] || null;
+}
+
+function nav(sec) {
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById('sec-'+sec).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n=>{ if(n.textContent.trim().toLowerCase().includes(sec.slice(0,5).toLowerCase())) n.classList.add('active'); });
+  const titles = {dashboard:'Dashboard', contactos:'Contactos', interacciones:'Interacciones', seguimientos:'Seguimientos', estadisticas:'Estadísticas'};
+  document.getElementById('topbar-title').textContent = titles[sec] || sec;
+  if(sec==='dashboard') renderDashboard();
+  if(sec==='contactos') renderContactos();
+  if(sec==='interacciones') renderInteracciones();
+  if(sec==='seguimientos') renderSeguimientos();
+  if(sec==='estadisticas') renderStats();
+  document.getElementById('sidebar').classList.remove('open');
+}
+
+function toggleMenu() { document.getElementById('sidebar').classList.toggle('open'); }
+
+// ---- DASHBOARD ----
+function renderDashboard() {
+  const activos = S.contactos.filter(c=>c.activo!==false).length;
+  const ahora = new Date();
+  const lun = new Date(ahora); lun.setDate(ahora.getDate()-ahora.getDay()+1);
+  const lunesStr = lun.toISOString().slice(0,10);
+  const intSemana = S.interacciones.filter(i=>i.fecha>=lunesStr).length;
+
+  // Most frequent this month
+  const mesStart = today().slice(0,7)+'-01';
+  const freq = {};
+  S.interacciones.filter(i=>i.fecha>=mesStart).forEach(i=>{ freq[i.contacto_id]=(freq[i.contacto_id]||0)+1; });
+  const topCid = Object.keys(freq).sort((a,b)=>freq[b]-freq[a])[0];
+  const topC = S.contactos.find(c=>c.id===topCid);
+  const topName = topC ? topC.nombre : '—';
+
+  const sinContacto30 = S.contactos.filter(c=>c.activo!==false).filter(c=>{
+    const li = lastInteraction(c.id);
+    return daysSince(li?.fecha) > 30;
+  }).length;
+
+  document.getElementById('kpi-dash').innerHTML = `
+    <div class="card"><div class="card-title">👤 Contactos activos</div><div class="card-val">${activos}</div><div class="card-sub">en tu red</div></div>
+    <div class="card"><div class="card-title">💬 Esta semana</div><div class="card-val">${intSemana}</div><div class="card-sub">interacciones</div></div>
+    <div class="card"><div class="card-title">🏆 Más frecuente (mes)</div><div class="card-val" style="font-size:18px">${topName}</div><div class="card-sub">${topCid?freq[topCid]+' interacciones':''}</div></div>
+    <div class="card"><div class="card-title">⚠️ Sin contacto 30d</div><div class="card-val" style="color:var(--r)">${sinContacto30}</div><div class="card-sub">contactos olvidados</div></div>
+  `;
+
+  // Pending + birthdays
+  const pending = S.contactos.filter(c=>c.activo!==false).map(c=>{
+    const li = lastInteraction(c.id);
+    return { ...c, dias: daysSince(li?.fecha) };
+  }).sort((a,b)=>b.dias-a.dias).slice(0,8);
+
+  const in30 = new Date(); in30.setDate(in30.getDate()+30);
+  const birthdays = S.contactos.filter(c=>c.activo!==false && c.cumpleanos).filter(c=>{
+    const [,m,d] = c.cumpleanos.split('-');
+    const anio = new Date().getFullYear();
+    const bday = new Date(`${anio}-${m}-${d}`);
+    if(bday < new Date()) bday.setFullYear(anio+1);
+    return bday <= in30;
+  }).sort((a,b)=>{
+    const anio = new Date().getFullYear();
+    const da = new Date(a.cumpleanos.replace(/^\d{4}/,anio));
+    const db = new Date(b.cumpleanos.replace(/^\d{4}/,anio));
+    if(da < new Date()) da.setFullYear(anio+1);
+    if(db < new Date()) db.setFullYear(anio+1);
+    return da-db;
+  });
+
+  document.getElementById('dash-panels').innerHTML = `
+    <div class="card">
+      <div class="card-title">🔔 Seguimientos pendientes</div>
+      ${pending.length ? pending.map(c=>`
+        <div class="seg-row">
+          <div><span style="font-size:20px">${c.emoji||'👤'}</span> <span style="font-weight:600">${c.nombre}</span> <span style="font-size:11px;color:var(--text3)">${REL_LABEL[c.relacion]||c.relacion}</span></div>
+          <span class="badge ${c.dias<7?'b-g':c.dias<30?'b-o':'b-r'}">${c.dias===999?'Nunca':c.dias+'d'}</span>
+        </div>`).join('') : '<div class="empty"><div class="ico">✅</div>¡Todo al día!</div>'}
+    </div>
+    <div class="card">
+      <div class="card-title">🎂 Cumpleaños próximos (30 días)</div>
+      ${birthdays.length ? birthdays.map(c=>{
+        const anio = new Date().getFullYear();
+        const [,m,d] = c.cumpleanos.split('-');
+        const bday = new Date(`${anio}-${m}-${d}`);
+        if(bday < new Date()) bday.setFullYear(anio+1);
+        const dias = Math.ceil((bday-new Date())/86400000);
+        return `<div class="seg-row">
+          <div><span style="font-size:20px">${c.emoji||'👤'}</span> <span style="font-weight:600">${c.nombre}</span></div>
+          <span class="badge b-p">${dias===0?'¡Hoy!':dias+'d'}</span>
+        </div>`;
+      }).join('') : '<div class="empty"><div class="ico">🎂</div>Sin cumpleaños próximos</div>'}
+    </div>
+  `;
+
+  // Weekly chart - last 8 weeks
+  const weeks = [];
+  const wData = [];
+  for(let i=7;i>=0;i--) {
+    const d = new Date(); d.setDate(d.getDate()-i*7);
+    const wStart = new Date(d); wStart.setDate(d.getDate()-d.getDay()+1);
+    const wEnd = new Date(wStart); wEnd.setDate(wStart.getDate()+6);
+    const wS = wStart.toISOString().slice(0,10);
+    const wE = wEnd.toISOString().slice(0,10);
+    const mn=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+    weeks.push(`${wStart.getDate()} ${mn[wStart.getMonth()]}`);
+    wData.push(S.interacciones.filter(x=>x.fecha>=wS&&x.fecha<=wE).length);
+  }
+
+  charts.weekly = killChart(charts.weekly);
+  charts.weekly = new Chart(document.getElementById('ch-weekly'), {
+    type:'bar',
+    data:{ labels:weeks, datasets:[{ label:'Interacciones', data:wData, backgroundColor:'rgba(0,232,122,.4)', borderColor:'#00e87a', borderWidth:1, borderRadius:5 }] },
+    options:{ responsive:true, maintainAspectRatio:false, plugins:{ legend:{display:false} }, scales:{
+      x:{grid:{color:'rgba(255,255,255,.05)'},ticks:{color:'#8892b0',font:{size:10}}},
+      y:{grid:{color:'rgba(255,255,255,.05)'},ticks:{color:'#8892b0',font:{size:10},stepSize:1}}
+    }}
+  });
+}
+
+// ---- CONTACTOS ----
+function renderContactos() {
+  const sort = document.getElementById('sort-contactos').value;
+  let list = S.contactos.filter(c=>c.activo!==false);
+  if(sort==='importancia') list.sort((a,b)=>(b.importancia||0)-(a.importancia||0));
+  else if(sort==='nombre') list.sort((a,b)=>a.nombre.localeCompare(b.nombre));
+  else if(sort==='ultimo_contacto') list.sort((a,b)=>{
+    const da = lastInteraction(a.id)?.fecha||'0000-00-00';
+    const db = lastInteraction(b.id)?.fecha||'0000-00-00';
+    return db.localeCompare(da);
+  });
+
+  const grid = document.getElementById('contactos-grid');
+  if(!list.length) { grid.innerHTML='<div class="empty" style="grid-column:1/-1"><div class="ico">👤</div>No hay contactos aún. ¡Agrega tu primer contacto!</div>'; return; }
+  grid.innerHTML = list.map(c=>{
+    const li = lastInteraction(c.id);
+    const dias = daysSince(li?.fecha);
+    const stars = '★'.repeat(c.importancia||0)+'☆'.repeat(5-(c.importancia||0));
+    return `<div class="contact-card" onclick="openDetalle('${c.id}')">
+      <div style="position:absolute;top:10px;right:10px">
+        <span class="badge ${dias<7?'b-g':dias<30?'b-o':'b-r'}" style="font-size:9px">${dias===999?'Nunca':dias+'d'}</span>
+      </div>
+      <div class="contact-avatar">${c.emoji||'👤'}</div>
+      <div class="contact-name">${c.nombre}</div>
+      <div style="text-align:center"><span class="badge b-n" style="font-size:9px">${REL_LABEL[c.relacion]||c.relacion||'—'}</span></div>
+      <div class="contact-stars" title="Importancia">${stars}</div>
+      <div class="contact-meta">${li?'Último: '+fmtD(li.fecha):'Sin interacciones'}</div>
+    </div>`;
+  }).join('');
+}
+
+// ---- DETALLE CONTACTO ----
+function openDetalle(cid) {
+  const c = S.contactos.find(x=>x.id===cid);
+  if(!c) return;
+  const ints = S.interacciones.filter(i=>i.contacto_id===cid).sort((a,b)=>b.fecha.localeCompare(a.fecha));
+  const avgQ = ints.length ? (ints.reduce((s,i)=>s+(i.calidad||0),0)/ints.length).toFixed(1) : '—';
+  const stars = '★'.repeat(c.importancia||0)+'☆'.repeat(5-(c.importancia||0));
+  document.getElementById('det-title').textContent = `${c.emoji||'👤'} ${c.nombre}`;
+  document.getElementById('det-body').innerHTML = `
+    <div class="g2" style="margin-bottom:16px">
+      <div class="card"><div class="card-title">Relación</div><div style="font-weight:600">${REL_LABEL[c.relacion]||'—'}</div></div>
+      <div class="card"><div class="card-title">Importancia</div><div style="color:#ffd93d;font-size:18px">${stars}</div></div>
+      <div class="card"><div class="card-title">Total interacciones</div><div class="card-val">${ints.length}</div></div>
+      <div class="card"><div class="card-title">Calidad promedio</div><div class="card-val">${avgQ}</div></div>
+    </div>
+    ${c.cumpleanos?`<div style="margin-bottom:10px;font-size:13px;color:var(--text2)">🎂 Cumpleaños: ${fmtD(c.cumpleanos)}</div>`:''}
+    ${c.notas?`<div style="margin-bottom:14px;font-size:13px;color:var(--text2);padding:10px;background:rgba(255,255,255,.04);border-radius:8px">${c.notas}</div>`:''}
+    <div class="flex gap6" style="margin-bottom:14px">
+      <button class="btn btn-g btn-sm" onclick="quickInteraccion('${cid}')">+ Registrar interacción</button>
+      <button class="btn btn-o btn-sm" onclick="editContacto('${cid}')">✏️ Editar</button>
+      <button class="btn btn-r btn-sm" onclick="confirmDelete('contacto','${cid}')">🗑️ Eliminar</button>
+    </div>
+    <div style="font-size:11px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px">Historial de interacciones</div>
+    ${ints.length ? `<div class="tw"><table><thead><tr><th>Fecha</th><th>Tipo</th><th>Calidad</th><th>Duración</th><th>Notas</th></tr></thead><tbody>
+      ${ints.map(i=>`<tr>
+        <td>${fmtD(i.fecha)}</td>
+        <td>${TIPO_EMOJI[i.tipo]||''} ${i.tipo}</td>
+        <td>${'★'.repeat(i.calidad||0)}</td>
+        <td>${i.duracion_min?i.duracion_min+'min':'—'}</td>
+        <td style="color:var(--text2);max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${i.notas||'—'}</td>
+      </tr>`).join('')}
+    </tbody></table></div>` : '<div class="empty"><div class="ico">💬</div>Sin interacciones aún</div>'}
+  `;
+  document.getElementById('mo-detalle').classList.add('open');
+}
+
+function quickInteraccion(cid) {
+  closeMo('mo-detalle');
+  openInteraccionModal(null, cid);
+}
+
+// ---- INTERACCIONES ----
+function renderInteracciones() {
+  const selC = document.getElementById('fil-contacto').value;
+  const selT = document.getElementById('fil-tipo').value;
+  const desde = document.getElementById('fil-desde').value;
+  const hasta = document.getElementById('fil-hasta').value;
+
+  // Populate contacto filter
+  const fc = document.getElementById('fil-contacto');
+  const prev = fc.value;
+  fc.innerHTML = '<option value="">Todos los contactos</option>' +
+    S.contactos.filter(c=>c.activo!==false).sort((a,b)=>a.nombre.localeCompare(b.nombre))
+      .map(c=>`<option value="${c.id}" ${c.id===prev?'selected':''}>${c.nombre}</option>`).join('');
+  fc.value = selC;
+
+  let list = [...S.interacciones];
+  if(selC) list = list.filter(i=>i.contacto_id===selC);
+  if(selT) list = list.filter(i=>i.tipo===selT);
+  if(desde) list = list.filter(i=>i.fecha>=desde);
+  if(hasta) list = list.filter(i=>i.fecha<=hasta);
+  list.sort((a,b)=>b.fecha.localeCompare(a.fecha));
+
+  const tbody = document.getElementById('int-tbody');
+  if(!list.length) { tbody.innerHTML='<tr><td colspan="7"><div class="empty"><div class="ico">💬</div>Sin interacciones</div></td></tr>'; return; }
+  tbody.innerHTML = list.map(i=>{
+    const c = S.contactos.find(x=>x.id===i.contacto_id);
+    return `<tr>
+      <td>${fmtD(i.fecha)}</td>
+      <td>${c?`${c.emoji||'👤'} ${c.nombre}`:'—'}</td>
+      <td><span class="badge b-b">${TIPO_EMOJI[i.tipo]||''} ${i.tipo}</span></td>
+      <td style="color:#ffd93d">${'★'.repeat(i.calidad||0)}</td>
+      <td>${i.duracion_min?i.duracion_min+'min':'—'}</td>
+      <td style="color:var(--text2);max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${i.notas||'—'}</td>
+      <td><div class="flex gap6">
+        <button class="btn btn-o btn-sm btn-ico" onclick="editInteraccion('${i.id}')">✏️</button>
+        <button class="btn btn-r btn-sm btn-ico" onclick="confirmDelete('interaccion','${i.id}')">🗑️</button>
+      </div></td>
+    </tr>`;
+  }).join('');
+}
+
+// ---- SEGUIMIENTOS ----
+function renderSeguimientos() {
+  const list = S.contactos.filter(c=>c.activo!==false).map(c=>{
+    const li = lastInteraction(c.id);
+    const dias = daysSince(li?.fecha);
+    const freq = REL_FREQ[c.relacion] || 60;
+    const overdue = dias - freq;
+    const urgency = (c.importancia||1) * (overdue > 0 ? overdue : 0) + (c.importancia||1);
+    return { ...c, dias, freq, overdue, urgency };
+  }).sort((a,b)=>b.urgency-a.urgency);
+
+  const cont = document.getElementById('seg-list');
+  if(!list.length) { cont.innerHTML='<div class="empty"><div class="ico">👤</div>No hay contactos</div>'; return; }
+  cont.innerHTML = `<div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr;gap:8px;padding:8px 0;font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.08em">
+    <div>Contacto</div><div>Relación</div><div>Frec. ideal</div><div>Sin contacto</div><div>Acción</div>
+  </div>` +
+  list.map(c=>{
+    const status = c.dias < c.freq ? 'b-g' : c.dias < c.freq*2 ? 'b-o' : 'b-r';
+    const label = c.dias===999?'Nunca':c.dias+'d';
+    return `<div class="seg-row" style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr;gap:8px;align-items:center">
+      <div class="flex aic gap8"><span style="font-size:22px">${c.emoji||'👤'}</span><span style="font-weight:600">${c.nombre}</span></div>
+      <div><span class="badge b-n" style="font-size:9px">${REL_LABEL[c.relacion]||c.relacion}</span></div>
+      <div style="font-size:12px;color:var(--text2)">c/${c.freq}d</div>
+      <div><span class="badge ${status}">${label}</span></div>
+      <div><button class="btn btn-g btn-sm" onclick="registrarHoy('${c.id}')">Contactar</button></div>
+    </div>`;
+  }).join('');
+}
+
+function registrarHoy(cid) {
+  closeMo('mo-detalle');
+  openInteraccionModal(null, cid);
+}
+
+// ---- STATS ----
+function renderStats() {
+  // By relation type
+  const byRel = {};
+  S.interacciones.forEach(i=>{
+    const c = S.contactos.find(x=>x.id===i.contacto_id);
+    const rel = c?.relacion || 'otro';
+    byRel[rel] = (byRel[rel]||0)+1;
+  });
+  const relLabels = Object.keys(byRel).map(k=>REL_LABEL[k]||k);
+  const relData = Object.values(byRel);
+  const colors = ['#00e87a','#3b82f6','#ff6b35','#b06eff','#ffd93d','#ff3b6b','#06b6d4','#a3e635'];
+
+  charts.relacion = killChart(charts.relacion);
+  if(relLabels.length) charts.relacion = new Chart(document.getElementById('ch-relacion'), {
+    type:'doughnut',
+    data:{ labels:relLabels, datasets:[{ data:relData, backgroundColor:colors.slice(0,relLabels.length), borderWidth:0 }] },
+    options:{ responsive:true, maintainAspectRatio:false, plugins:{ legend:{ position:'right', labels:{ color:'#8892b0', font:{size:11} } } } }
+  });
+
+  // Quality trend - last 12 weeks
+  const weeks = []; const qData = [];
+  for(let i=11;i>=0;i--) {
+    const d = new Date(); d.setDate(d.getDate()-i*7);
+    const wStart = new Date(d); wStart.setDate(d.getDate()-d.getDay()+1);
+    const wEnd = new Date(wStart); wEnd.setDate(wStart.getDate()+6);
+    const mn=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+    weeks.push(`${wStart.getDate()}/${mn[wStart.getMonth()]}`);
+    const ints = S.interacciones.filter(x=>x.fecha>=wStart.toISOString().slice(0,10)&&x.fecha<=wEnd.toISOString().slice(0,10));
+    qData.push(ints.length ? (ints.reduce((s,x)=>s+(x.calidad||0),0)/ints.length).toFixed(1) : null);
+  }
+
+  charts.calidad = killChart(charts.calidad);
+  charts.calidad = new Chart(document.getElementById('ch-calidad'), {
+    type:'line',
+    data:{ labels:weeks, datasets:[{ label:'Calidad promedio', data:qData, borderColor:'#ffd93d', backgroundColor:'rgba(255,217,61,.1)', tension:.4, fill:true, pointRadius:3, spanGaps:true }] },
+    options:{ responsive:true, maintainAspectRatio:false, plugins:{ legend:{display:false} }, scales:{
+      x:{grid:{color:'rgba(255,255,255,.05)'},ticks:{color:'#8892b0',font:{size:10}}},
+      y:{grid:{color:'rgba(255,255,255,.05)'},ticks:{color:'#8892b0',font:{size:10}},min:0,max:5}
+    }}
+  });
+
+  // Monthly activity
+  const meses = []; const mData = [];
+  for(let i=5;i>=0;i--) {
+    const d = new Date(); d.setMonth(d.getMonth()-i);
+    const m = d.toISOString().slice(0,7);
+    const mn=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+    meses.push(mn[d.getMonth()]);
+    mData.push(S.interacciones.filter(x=>x.fecha.startsWith(m)).length);
+  }
+  charts.meses = killChart(charts.meses);
+  charts.meses = new Chart(document.getElementById('ch-meses'), {
+    type:'bar',
+    data:{ labels:meses, datasets:[{ label:'Interacciones', data:mData, backgroundColor:'rgba(59,130,246,.4)', borderColor:'#3b82f6', borderWidth:1, borderRadius:5 }] },
+    options:{ responsive:true, maintainAspectRatio:false, plugins:{ legend:{display:false} }, scales:{
+      x:{grid:{color:'rgba(255,255,255,.05)'},ticks:{color:'#8892b0',font:{size:10}}},
+      y:{grid:{color:'rgba(255,255,255,.05)'},ticks:{color:'#8892b0',font:{size:10},stepSize:1}}
+    }}
+  });
+
+  // Network health score
+  const activos = S.contactos.filter(c=>c.activo!==false);
+  if(!activos.length) { document.getElementById('health-score-val').textContent='0'; document.getElementById('health-score-label').textContent='Sin contactos'; return; }
+  let totalScore = 0;
+  activos.forEach(c=>{
+    const li = lastInteraction(c.id);
+    const dias = daysSince(li?.fecha);
+    const freq = REL_FREQ[c.relacion]||60;
+    const ratio = Math.max(0, 1 - (Math.max(0, dias-freq) / (freq*3)));
+    totalScore += ratio * (c.importancia||1);
+  });
+  const maxScore = activos.reduce((s,c)=>s+(c.importancia||1),0);
+  const health = Math.round((totalScore/maxScore)*100);
+  document.getElementById('health-score-val').textContent = health;
+  document.getElementById('health-bar').style.width = health+'%';
+  const label = health>=80?'Excelente — tu red está muy saludable':health>=60?'Buena — mantén el ritmo':health>=40?'Regular — algunos contactos necesitan atención':'Crítica — muchos contactos descuidados';
+  document.getElementById('health-score-label').textContent = label;
+  document.getElementById('health-score-val').style.color = health>=80?'var(--g)':health>=60?'var(--w)':health>=40?'var(--o)':'var(--r)';
+}
+
+// ---- MODAL CONTACTO ----
+let _cImp = 3;
+function setImp(v) {
+  _cImp = v;
+  document.querySelectorAll('#c-imp-stars .star-btn').forEach(b=>b.classList.toggle('on', parseInt(b.dataset.val)<=v));
+}
+function openContactoModal(id) {
+  document.getElementById('mo-c-title').textContent = id ? 'Editar Contacto' : 'Agregar Contacto';
+  document.getElementById('c-id').value = id||'';
+  const c = id ? S.contactos.find(x=>x.id===id) : null;
+  document.getElementById('c-nombre').value = c?.nombre||'';
+  document.getElementById('c-emoji').value = c?.emoji||'';
+  document.getElementById('c-relacion').value = c?.relacion||'';
+  document.getElementById('c-cumple').value = c?.cumpleanos||'';
+  document.getElementById('c-notas').value = c?.notas||'';
+  setImp(c?.importancia||3);
+  document.getElementById('mo-contacto').classList.add('open');
+  setTimeout(()=>document.getElementById('c-nombre').focus(),100);
+}
+function editContacto(id) { closeMo('mo-detalle'); openContactoModal(id); }
+function saveContacto() {
+  const nombre = document.getElementById('c-nombre').value.trim();
+  if(!nombre) { showToast('El nombre es requerido','error'); return; }
+  const id = document.getElementById('c-id').value;
+  const obj = {
+    id: id||uid(), nombre,
+    emoji: document.getElementById('c-emoji').value.trim()||'👤',
+    relacion: document.getElementById('c-relacion').value,
+    importancia: _cImp,
+    cumpleanos: document.getElementById('c-cumple').value||'',
+    notas: document.getElementById('c-notas').value.trim(),
+    activo: true
+  };
+  if(id) { const idx=S.contactos.findIndex(x=>x.id===id); if(idx>=0) S.contactos[idx]=obj; }
+  else S.contactos.push(obj);
+  save();
+  closeMo('mo-contacto');
+  showToast(id?'Contacto actualizado':'Contacto agregado');
+  renderContactos();
+}
+
+// ---- MODAL INTERACCIÓN ----
+let _iCal = 3;
+function setCal(v) {
+  _iCal = v;
+  document.querySelectorAll('#i-cal-stars .star-btn').forEach(b=>b.classList.toggle('on', parseInt(b.dataset.val)<=v));
+}
+function openInteraccionModal(id, prefCid) {
+  document.getElementById('mo-i-title').textContent = id ? 'Editar Interacción' : 'Nueva Interacción';
+  document.getElementById('i-id').value = id||'';
+  // populate contacto select
+  const sel = document.getElementById('i-contacto');
+  sel.innerHTML = S.contactos.filter(c=>c.activo!==false).sort((a,b)=>a.nombre.localeCompare(b.nombre))
+    .map(c=>`<option value="${c.id}">${c.emoji||'👤'} ${c.nombre}</option>`).join('');
+  const i = id ? S.interacciones.find(x=>x.id===id) : null;
+  if(prefCid) sel.value = prefCid;
+  else if(i) sel.value = i.contacto_id;
+  document.getElementById('i-fecha').value = i?.fecha||today();
+  document.getElementById('i-tipo').value = i?.tipo||'llamada';
+  document.getElementById('i-duracion').value = i?.duracion_min||'';
+  document.getElementById('i-notas').value = i?.notas||'';
+  setCal(i?.calidad||3);
+  document.getElementById('mo-interaccion').classList.add('open');
+}
+function saveInteraccion() {
+  const cid = document.getElementById('i-contacto').value;
+  const fecha = document.getElementById('i-fecha').value;
+  if(!cid||!fecha) { showToast('Completa los campos requeridos','error'); return; }
+  const id = document.getElementById('i-id').value;
+  const obj = {
+    id:id||uid(), contacto_id:cid, fecha,
+    tipo:document.getElementById('i-tipo').value,
+    calidad:_iCal,
+    duracion_min:parseInt(document.getElementById('i-duracion').value)||0,
+    notas:document.getElementById('i-notas').value.trim()
+  };
+  if(id){ const idx=S.interacciones.findIndex(x=>x.id===id); if(idx>=0) S.interacciones[idx]=obj; }
+  else S.interacciones.push(obj);
+  save();
+  closeMo('mo-interaccion');
+  showToast(id?'Interacción actualizada':'Interacción registrada');
+  renderInteracciones();
+}
+function editInteraccion(id) { openInteraccionModal(id); }
+
+// ---- DELETE ----
+let _pendingDelete = null;
+function confirmDelete(type, id) {
+  _pendingDelete = {type, id};
+  const names = { contacto:'contacto', interaccion:'interacción' };
+  document.getElementById('conf-title').textContent = `Eliminar ${names[type]}`;
+  document.getElementById('conf-msg').textContent = '¿Estás seguro? Esta acción no se puede deshacer.';
+  document.getElementById('confirm-dlg').classList.add('open');
+}
+function closeConf() { document.getElementById('confirm-dlg').classList.remove('open'); _pendingDelete=null; }
+document.getElementById('conf-ok').onclick = ()=>{
+  if(!_pendingDelete) return;
+  const {type, id} = _pendingDelete;
+  if(type==='contacto') {
+    S.contactos = S.contactos.filter(x=>x.id!==id);
+    S.interacciones = S.interacciones.filter(x=>x.contacto_id!==id);
+    save(); showToast('Contacto eliminado'); renderContactos();
+  } else if(type==='interaccion') {
+    S.interacciones = S.interacciones.filter(x=>x.id!==id);
+    save(); showToast('Interacción eliminada'); renderInteracciones();
+  }
+  closeConf(); closeMo('mo-detalle');
+};
+
+function closeMo(id) { document.getElementById(id).classList.remove('open'); }
+function showToast(msg, type) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.borderColor = type==='error'?'rgba(255,59,107,.4)':'rgba(0,232,122,.2)';
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 2800);
+}
+
+function exportData() {
+  const blob = new Blob([JSON.stringify(S,null,2)], {type:'application/json'});
+  const a = document.createElement('a'); a.href=URL.createObjectURL(blob);
+  a.download=`red_social_${today()}.json`; a.click();
+  showToast('Datos exportados');
+}
+
+// Close modals on backdrop click
+document.querySelectorAll('.mo').forEach(mo=>mo.addEventListener('click',e=>{ if(e.target===mo) mo.classList.remove('open'); }));
+
+// Init
+load();
+renderDashboard();
+// populate interaccion filter on load
+const filC = document.getElementById('fil-contacto');
+filC.innerHTML = '<option value="">Todos los contactos</option>' +
+  S.contactos.filter(c=>c.activo!==false).sort((a,b)=>a.nombre.localeCompare(b.nombre))
+    .map(c=>`<option value="${c.id}">${c.nombre}</option>`).join('');
+</script>
+</body>
+</html>

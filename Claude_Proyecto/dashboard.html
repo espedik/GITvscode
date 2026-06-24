@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard Maestro — Mi Vida</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --g:#00e87a;--o:#ff6b35;--b:#3b82f6;--p:#b06eff;--w:#ffd93d;--r:#ff3b6b;
+  --bg:#060614;--text:#e8eaf6;--text2:#8892b0;--text3:#4a5568;
+  --sw:255px;--r14:14px;--rs:9px;--sh:0 4px 24px rgba(0,0,0,.5);
+}
+body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);display:flex;min-height:100vh;font-size:14px;
+  background-image:radial-gradient(ellipse 80% 60% at 20% 0%,rgba(0,232,122,.06) 0%,transparent 60%),radial-gradient(ellipse 60% 50% at 85% 100%,rgba(176,110,255,.07) 0%,transparent 60%)}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:rgba(255,255,255,.12);border-radius:2px}
+.sidebar{width:var(--sw);background:rgba(6,6,20,.9);backdrop-filter:blur(20px);border-right:1px solid rgba(0,232,122,.12);display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:100;transition:transform .25s}
+.sb-logo{padding:20px;border-bottom:1px solid rgba(255,255,255,.06)}
+.sb-logo h1{font-size:17px;font-weight:900;background:linear-gradient(90deg,#00e87a,#b06eff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.sb-logo p{font-size:10px;color:var(--text3);margin-top:3px;letter-spacing:.08em;text-transform:uppercase}
+.sb-nav{padding:10px 8px;flex:1;overflow-y:auto}
+.nav-label{font-size:9px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.1em;padding:12px 12px 4px}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:var(--rs);cursor:pointer;color:var(--text2);font-weight:500;font-size:13px;transition:all .2s;margin-bottom:2px;user-select:none}
+.nav-item:hover{background:rgba(255,255,255,.05);color:var(--text)}
+.nav-item.active{background:rgba(0,232,122,.1);color:var(--g);font-weight:600;border-left:2px solid var(--g)}
+.nav-item .ico{font-size:15px;width:20px;text-align:center;flex-shrink:0}
+.app-link{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:var(--rs);color:var(--text2);font-size:12px;transition:all .2s;text-decoration:none;margin-bottom:1px}
+.app-link:hover{background:rgba(255,255,255,.05);color:var(--text)}
+.main{margin-left:var(--sw);flex:1;display:flex;flex-direction:column;min-height:100vh}
+.topbar{background:rgba(6,6,20,.8);backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,.06);padding:0 24px;height:58px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
+.topbar-title{font-size:15px;font-weight:700}
+.content{padding:22px;flex:1}
+.section{display:none}.section.active{display:block}
+.card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:var(--r14);padding:18px;box-shadow:var(--sh),inset 0 1px 0 rgba(255,255,255,.05);transition:border-color .2s;backdrop-filter:blur(10px)}
+.card:hover{border-color:rgba(255,255,255,.12)}
+.card-title{font-size:11px;font-weight:600;color:var(--text2);margin-bottom:8px;display:flex;align-items:center;gap:5px;text-transform:uppercase;letter-spacing:.06em}
+.card-val{font-size:26px;font-weight:800;letter-spacing:-.5px}
+.card-sub{font-size:11px;color:var(--text3);margin-top:3px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.g2{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.btn{display:inline-flex;align-items:center;gap:5px;padding:8px 14px;border-radius:var(--rs);border:none;cursor:pointer;font-size:13px;font-weight:600;transition:all .2s;white-space:nowrap;font-family:inherit}
+.btn-g{background:linear-gradient(135deg,#00b860,#00e87a);color:#000}
+.btn-o{background:rgba(255,255,255,.05);color:var(--text2);border:1px solid rgba(255,255,255,.1)}
+.btn-sm{padding:5px 9px;font-size:11px}
+.pbar{height:6px;background:rgba(255,255,255,.08);border-radius:20px;overflow:hidden;margin-top:7px}
+.pfill{height:100%;border-radius:20px;transition:width .6s cubic-bezier(.4,0,.2,1)}
+.sh{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+.sh h2{font-size:19px;font-weight:800;background:linear-gradient(90deg,var(--text),var(--text2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.mt16{margin-top:16px}.mt20{margin-top:20px}
+.flex{display:flex}.aic{align-items:center}.jb{justify-content:space-between}.gap8{gap:8px}
+.ts{font-size:11px}.tm{color:var(--text3)}
+.chart-c{position:relative;height:260px}
+.score-big{font-size:72px;font-weight:900;letter-spacing:-3px;background:linear-gradient(135deg,#00e87a,#3b82f6,#b06eff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1}
+.alert-item{display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.05)}
+.alert-item:last-child{border-bottom:none}
+.alert-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:5px}
+.app-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.app-card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:var(--r14);padding:20px;text-decoration:none;color:var(--text);transition:all .25s;display:block}
+.app-card:hover{background:rgba(255,255,255,.06);border-color:rgba(0,232,122,.3);transform:translateY(-2px);box-shadow:0 8px 30px rgba(0,0,0,.4)}
+.toast{position:fixed;bottom:24px;right:24px;background:rgba(10,10,30,.95);color:var(--text);border:1px solid rgba(0,232,122,.2);padding:10px 18px;border-radius:var(--rs);font-size:13px;font-weight:600;box-shadow:var(--sh);z-index:500;opacity:0;transform:translateY(8px);transition:all .3s;pointer-events:none}
+.toast.show{opacity:1;transform:translateY(0)}
+@media(max-width:900px){.g4{grid-template-columns:repeat(2,1fr)}.app-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:640px){.sidebar{transform:translateX(-100%)}.sidebar.open{transform:translateX(0)}.main{margin-left:0}.g4,.g3,.g2,.app-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<aside class="sidebar" id="sidebar">
+  <div class="sb-logo">
+    <h1>🌟 Mi Vida</h1>
+    <p>Dashboard Maestro</p>
+  </div>
+  <nav class="sb-nav">
+    <div class="nav-label">Dashboard</div>
+    <div class="nav-item active" onclick="nav('resumen')"><span class="ico">🌟</span>Resumen General</div>
+    <div class="nav-item" onclick="nav('semana')"><span class="ico">📅</span>Esta Semana</div>
+    <div class="nav-item" onclick="nav('alertas')"><span class="ico">🔔</span>Alertas <span id="alert-badge" style="margin-left:auto;background:var(--r);color:#fff;font-size:9px;font-weight:700;padding:2px 6px;border-radius:10px;display:none">0</span></div>
+    <div class="nav-item" onclick="nav('vida')"><span class="ico">🎯</span>Vida Score</div>
+    <div class="nav-item" onclick="nav('apps')"><span class="ico">🚀</span>Todas mis apps</div>
+    <div class="nav-label">Acceso Rápido</div>
+    <a href="index.html" class="app-link">💰 Finanzas</a>
+    <a href="salud.html" class="app-link">🥦 Salud & Nutrición</a>
+    <a href="ejercicio.html" class="app-link">🏋️ Ejercicio</a>
+    <a href="sueno.html" class="app-link">😴 Sueño</a>
+    <a href="habitos.html" class="app-link">✅ Hábitos</a>
+    <a href="tiempo.html" class="app-link">⏱️ Productividad</a>
+    <a href="animo.html" class="app-link">🧠 Ánimo</a>
+    <a href="aprendizaje.html" class="app-link">📚 Aprendizaje</a>
+    <a href="proyectos.html" class="app-link">🎯 Proyectos</a>
+    <a href="social.html" class="app-link">👥 Social</a>
+    <a href="vehiculo.html" class="app-link">🚗 Vehículo</a>
+  </nav>
+</aside>
+
+<main class="main">
+  <div class="topbar">
+    <div class="flex aic gap8">
+      <button class="btn btn-o btn-sm" id="menuBtn" onclick="document.getElementById('sidebar').classList.toggle('open')" style="display:none;padding:5px 8px">☰</button>
+      <span class="topbar-title" id="topTitle">🌟 Resumen General</span>
+    </div>
+    <div class="flex aic gap8">
+      <span class="ts tm" id="dateLabel"></span>
+      <button class="btn btn-g btn-sm" onclick="reloadAll()">↻ Actualizar</button>
+    </div>
+  </div>
+  <div class="content">
+    <section id="s-resumen" class="section active"><div id="r-body"></div></section>
+    <section id="s-semana" class="section"><div id="sem-body"></div></section>
+    <section id="s-alertas" class="section"><div id="al-body"></div></section>
+    <section id="s-vida" class="section"><div id="vs-body"></div></section>
+    <section id="s-apps" class="section"><div id="apps-body"></div></section>
+  </div>
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const today=()=>new Date().toISOString().slice(0,10);
+const fmt=n=>new Intl.NumberFormat('es-MX').format(Math.round(n||0));
+const fmtD=d=>{if(!d)return'';const[y,m,day]=d.split('-');const mn=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];return`${parseInt(day)} ${mn[parseInt(m)-1]} ${y}`;};
+const killChart=c=>{if(c)c.destroy();return null;};
+let chRadar=null, curSec='resumen';
+
+function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500);}
+
+// ── DATA ────────────────────────────────────────────────────────────────────
+function tryParse(key,def){try{const r=localStorage.getItem(key);if(!r)return def;const p=JSON.parse(r);return typeof p==='object'&&p?{...def,...p}:def;}catch(e){return def;}}
+
+let D={};
+function loadAll(){
+  D={
+    fin:  tryParse('finanzasmx_v2',{transactions:[],debts:[],goals:[],investments:[]}),
+    sal:  tryParse('misalud_v1',{alimentos:[],ejercicios:[],medidas:[],agua:{},metas:{caloriasD:2000,proteina:150},perfil:{peso:0}}),
+    sue:  tryParse('sueno_v1',{registros:[],config:{objetivo_horas:8}}),
+    hab:  tryParse('habitos_v1',{habitos:[],registros:[]}),
+    tie:  tryParse('tiempo_v1',{bloques:[]}),
+    ani:  tryParse('animo_v1',{registros:[]}),
+    apr:  tryParse('aprendizaje_v1',{libros:[],sesiones:[],skills:[],metas:{libros_anuales:12,horas_semana:10}}),
+    pro:  tryParse('proyectos_v1',{proyectos:[],tareas:[],sesiones:[]}),
+    soc:  tryParse('social_v1',{contactos:[],interacciones:[]}),
+    veh:  tryParse('vehiculo_v1',{vehiculo:{},gasolina:[],mantenimientos:[],gastos:[]})
+  };
+}
+function reloadAll(){loadAll();RENDERS[curSec]?.();updateAlertBadge();toast('✅ Datos actualizados');}
+
+// ── HELPERS ─────────────────────────────────────────────────────────────────
+function getDias(n){return Array.from({length:n},(_,i)=>{const d=new Date();d.setDate(d.getDate()-i);return d.toISOString().slice(0,10);});}
+function addDays(d,n){const x=new Date(d);x.setDate(x.getDate()+n);return x.toISOString().slice(0,10);}
+
+// ── SCORE ENGINE ────────────────────────────────────────────────────────────
+function calcScores(dias7){
+  // SUEÑO
+  const sR=(D.sue.registros||[]).filter(r=>dias7.includes(r.fecha));
+  const sObj=D.sue.config?.objetivo_horas||8;
+  let sueScore=0;
+  if(sR.length){const h=sR.reduce((s,r)=>s+Math.min((r.horas||0)/sObj,1.1),0)/sR.length;const q=sR.reduce((s,r)=>s+(r.calidad||5)/10,0)/sR.length;sueScore=Math.round(Math.min(100,h*55+q*45));}
+
+  // HÁBITOS
+  const hAct=(D.hab.habitos||[]).filter(h=>h.activo&&h.frecuencia==='diario');
+  let habScore=0;
+  if(hAct.length){const rates=dias7.map(d=>{const done=(D.hab.registros||[]).filter(r=>r.fecha===d&&r.completado).length;return done/hAct.length;});habScore=Math.round((rates.reduce((s,v)=>s+v,0)/dias7.length)*100);}
+
+  // ÁNIMO
+  const aR=(D.ani.registros||[]).filter(r=>dias7.includes(r.fecha));
+  const aniScore=aR.length?Math.round((aR.reduce((s,r)=>s+(r.mood||5),0)/aR.length)*10):0;
+
+  // PRODUCTIVIDAD
+  const tB=(D.tie.bloques||[]).filter(b=>dias7.includes(b.fecha));
+  const tMin=tB.reduce((s,b)=>s+(b.duracion_min||0),0);
+  const prodScore=Math.round(Math.min(100,(tMin/840)*100));
+
+  // APRENDIZAJE
+  const aS=(D.apr.sesiones||[]).filter(s=>dias7.includes(s.fecha));
+  const aMin=aS.reduce((s,r)=>s+(r.duracion_min||0),0);
+  const aprScore=Math.round(Math.min(100,(aMin/((D.apr.metas?.horas_semana||10)*60))*100));
+
+  // SALUD (nutrición)
+  const sdias=dias7.map(d=>{const al=(D.sal.alimentos||[]).filter(a=>a.fecha===d);if(!al.length)return null;const cM=D.sal.metas?.caloriasD||2000,pM=D.sal.metas?.proteina||150;const cC=al.reduce((s,a)=>s+(a.cal||0),0),pC=al.reduce((s,a)=>s+(a.prot||0),0);return Math.min(1,cC/cM)*.5+Math.min(1,pC/pM)*.5;}).filter(v=>v!==null);
+  const salScore=sdias.length?Math.round((sdias.reduce((s,v)=>s+v,0)/sdias.length)*100):0;
+
+  // SOCIAL
+  const sI=(D.soc.interacciones||[]).filter(i=>dias7.includes(i.fecha));
+  const socScore=Math.round(Math.min(100,(sI.length/5)*100));
+
+  // FINANZAS
+  const m=today().slice(0,7);
+  const txM=(D.fin.transactions||[]).filter(t=>t.date?.startsWith(m));
+  const inc=txM.filter(t=>t.type==='income').reduce((s,t)=>s+(t.amount||0),0);
+  const exp=txM.filter(t=>t.type==='expense').reduce((s,t)=>s+(t.amount||0),0);
+  const finScore=inc>0?Math.round(Math.min(100,Math.max(20,50+(1-exp/inc)*50))):50;
+
+  return{sueno:sueScore,habitos:habScore,animo:aniScore,productividad:prodScore,aprendizaje:aprScore,salud:salScore,social:socScore,finanzas:finScore};
+}
+
+function vidaScore(sc){
+  const w={sueno:15,habitos:15,animo:15,productividad:15,aprendizaje:10,salud:15,social:10,finanzas:5};
+  return Math.round(Object.keys(w).reduce((t,k)=>t+(sc[k]||0)*(w[k]/100),0));
+}
+
+function sCol(s){return s>=80?'var(--g)':s>=60?'var(--w)':s>=40?'var(--o)':'var(--r)';}
+function sLab(s){return s>=80?'Excelente':s>=60?'Bueno':s>=40?'Regular':'Necesita atención';}
+
+const AREAS=[
+  {k:'sueno',ico:'😴',n:'Sueño',tip:'Duerme 8h con calidad ≥8 cada noche.',href:'sueno.html'},
+  {k:'salud',ico:'🥗',n:'Salud',tip:'Cumple calorías y proteínas diarias.',href:'salud.html'},
+  {k:'habitos',ico:'✅',n:'Hábitos',tip:'Completa el 100% de hábitos 7 días seguidos.',href:'habitos.html'},
+  {k:'productividad',ico:'⏱️',n:'Productividad',tip:'Registra ≥2h de focus diario.',href:'tiempo.html'},
+  {k:'animo',ico:'🧠',n:'Ánimo',tip:'Registra tu estado diariamente.',href:'animo.html'},
+  {k:'aprendizaje',ico:'📚',n:'Aprendizaje',tip:'Cumple tu meta semanal de estudio.',href:'aprendizaje.html'},
+  {k:'social',ico:'👥',n:'Social',tip:'Mantén ≥5 interacciones por semana.',href:'social.html'},
+  {k:'finanzas',ico:'💰',n:'Finanzas',tip:'Gastos < ingresos cada mes.',href:'index.html'}
+];
+
+// ── ALERTS ──────────────────────────────────────────────────────────────────
+function getAlerts(){
+  const t=today(),alerts=[];
+
+  // Tareas vencidas / próximas
+  (D.pro.tareas||[]).filter(t2=>t2.estado!=='completada'&&t2.fecha_limite).forEach(t2=>{
+    const diff=Math.floor((new Date(t2.fecha_limite)-new Date(t))/(864e5));
+    if(diff<0) alerts.push({tipo:'urgente',ico:'🔴',titulo:t2.titulo,desc:`Vencida hace ${Math.abs(diff)} día(s)`,href:'proyectos.html'});
+    else if(diff<=3) alerts.push({tipo:'proximo',ico:'🟡',titulo:t2.titulo,desc:`Vence en ${diff===0?'hoy':diff+' día(s)'}`,href:'proyectos.html'});
+  });
+
+  // Cumpleaños próximos 14 días
+  (D.soc.contactos||[]).filter(c=>c.cumpleanos).forEach(c=>{
+    const[,m2,d2]=c.cumpleanos.split('-');
+    const thisY=`${new Date().getFullYear()}-${m2}-${d2}`;
+    const diff=Math.floor((new Date(thisY)-new Date(t))/(864e5));
+    if(diff>=0&&diff<=14) alerts.push({tipo:'proximo',ico:'🎂',titulo:`Cumpleaños de ${c.nombre}`,desc:`${diff===0?'¡Es hoy!':('En '+diff+' día(s)')}`,href:'social.html'});
+  });
+
+  // Contactos descuidados (importancia ≥4, >30d)
+  (D.soc.contactos||[]).filter(c=>c.activo&&(c.importancia||0)>=4).forEach(c=>{
+    const ints=(D.soc.interacciones||[]).filter(i=>i.contacto_id===c.id).sort((a,b)=>b.fecha.localeCompare(a.fecha));
+    const ul=ints[0]?.fecha;
+    if(!ul||Math.floor((new Date(t)-new Date(ul))/(864e5))>30)
+      alerts.push({tipo:'info',ico:'👤',titulo:`Contactar a ${c.nombre}`,desc:'Más de 30 días sin interacción',href:'social.html'});
+  });
+
+  // Mantenimientos vencidos
+  const kmAct=(D.veh.gasolina||[]).sort((a,b)=>b.fecha.localeCompare(a.fecha))[0]?.km_odometro||D.veh.vehiculo?.km_inicial||0;
+  (D.veh.mantenimientos||[]).forEach(m=>{
+    if(m.proximo_km&&kmAct>m.proximo_km) alerts.push({tipo:'urgente',ico:'🔧',titulo:`Mantenimiento vencido: ${m.tipo||''}`,desc:`Km actual ${fmt(kmAct)} superó límite ${fmt(m.proximo_km)}`,href:'vehiculo.html'});
+    else if(m.proxima_fecha&&m.proxima_fecha<=addDays(t,14)) alerts.push({tipo:'proximo',ico:'🔧',titulo:`Mantenimiento próximo: ${m.tipo||''}`,desc:`Programado: ${fmtD(m.proxima_fecha)}`,href:'vehiculo.html'});
+  });
+
+  // Hábitos pendientes hoy
+  const hAct=(D.hab.habitos||[]).filter(h=>h.activo&&h.frecuencia==='diario');
+  const hDoneIds=(D.hab.registros||[]).filter(r=>r.fecha===t&&r.completado).map(r=>r.habito_id);
+  const hPend=hAct.filter(h=>!hDoneIds.includes(h.id));
+  if(hPend.length) alerts.push({tipo:'info',ico:'✅',titulo:`${hPend.length} hábito(s) pendiente(s) hoy`,desc:hPend.slice(0,3).map(h=>(h.emoji||'•')+' '+h.nombre).join(', '),href:'habitos.html'});
+
+  // Déficit de sueño
+  const sAn=(D.sue.registros||[]).sort((a,b)=>b.fecha.localeCompare(a.fecha))[0];
+  if(sAn&&sAn.horas<(D.sue.config?.objetivo_horas||8)-1.5)
+    alerts.push({tipo:'info',ico:'😴',titulo:`Solo ${sAn.horas}h de sueño la última noche`,desc:`Déficit de ${((D.sue.config?.objetivo_horas||8)-sAn.horas).toFixed(1)}h vs tu objetivo`,href:'sueno.html'});
+
+  return alerts.sort((a,b)=>({urgente:0,proximo:1,info:2}[a.tipo]-{urgente:0,proximo:1,info:2}[b.tipo]));
+}
+
+function updateAlertBadge(){
+  const a=getAlerts(), b=document.getElementById('alert-badge');
+  const u=a.filter(x=>x.tipo==='urgente').length;
+  b.style.display=u>0?'':'none'; b.textContent=u;
+}
+
+// ── NAVIGATION ──────────────────────────────────────────────────────────────
+const SECS=['resumen','semana','alertas','vida','apps'];
+const STITLE={resumen:'🌟 Resumen General',semana:'📅 Esta Semana',alertas:'🔔 Alertas',vida:'🎯 Vida Score',apps:'🚀 Todas mis apps'};
+const RENDERS={resumen:renderResumen,semana:renderSemana,alertas:renderAlertas,vida:renderVida,apps:renderApps};
+
+function nav(s){
+  SECS.forEach(x=>document.getElementById('s-'+x).classList.toggle('active',x===s));
+  document.querySelectorAll('.nav-item').forEach(el=>el.classList.toggle('active',el.getAttribute('onclick')?.includes(`'${s}'`)));
+  document.getElementById('topTitle').textContent=STITLE[s];
+  curSec=s; RENDERS[s]?.();
+}
+
+// ── RESUMEN ─────────────────────────────────────────────────────────────────
+function renderResumen(){
+  const t=today(), d7=getDias(7);
+  const sc=calcScores(d7), vs=vidaScore(sc);
+  const alerts=getAlerts().slice(0,5);
+  const alHoy=(D.sal.alimentos||[]).filter(a=>a.fecha===t);
+  const calHoy=alHoy.reduce((s,a)=>s+(a.cal||0),0);
+  const sAn=(D.sue.registros||[]).sort((a,b)=>b.fecha.localeCompare(a.fecha))[0];
+  const mHoy=(D.ani.registros||[]).find(r=>r.fecha===t);
+  const fMin=(D.tie.bloques||[]).filter(b=>b.fecha===t).reduce((s,b)=>s+(b.duracion_min||0),0);
+  const hAct=(D.hab.habitos||[]).filter(h=>h.activo&&h.frecuencia==='diario');
+  const hDone=(D.hab.registros||[]).filter(r=>r.fecha===t&&r.completado).length;
+  const tarHoy=(D.pro.tareas||[]).filter(t2=>t2.fecha_limite===t&&t2.estado!=='completada').length;
+  const intW=(D.soc.interacciones||[]).filter(i=>d7.includes(i.fecha)).length;
+
+  document.getElementById('r-body').innerHTML=`
+    <div class="card" style="margin-bottom:18px;background:linear-gradient(135deg,rgba(0,232,122,.06),rgba(176,110,255,.06));border-color:rgba(0,232,122,.2);padding:24px">
+      <div style="display:flex;align-items:center;gap:36px;flex-wrap:wrap">
+        <div>
+          <div style="font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px">Vida Score — últimos 7 días</div>
+          <div class="score-big">${vs}</div>
+          <div style="font-size:14px;font-weight:700;color:${sCol(vs)};margin-top:8px">${sLab(vs)}</div>
+        </div>
+        <div style="flex:1;min-width:240px">
+          ${AREAS.map(a=>`<div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+            <span style="width:22px;font-size:14px">${a.ico}</span>
+            <span style="font-size:11px;color:var(--text2);width:90px">${a.n}</span>
+            <div style="flex:1;height:5px;background:rgba(255,255,255,.08);border-radius:10px;overflow:hidden"><div style="height:100%;width:${sc[a.k]}%;background:${sCol(sc[a.k])};border-radius:10px"></div></div>
+            <span style="font-size:12px;font-weight:800;color:${sCol(sc[a.k])};width:28px;text-align:right">${sc[a.k]}</span>
+          </div>`).join('')}
+        </div>
+      </div>
+    </div>
+
+    <div class="sh"><h2>📊 Hoy en números</h2></div>
+    <div class="g4" style="margin-bottom:14px">
+      <div class="card" style="border-left:4px solid var(--b)">
+        <div class="card-title" style="color:var(--b)">😴 Sueño anoche</div>
+        <div class="card-val" style="color:var(--b)">${sAn?.horas!=null?sAn.horas+'h':'—'}</div>
+        <div class="card-sub">Calidad: ${sAn?.calidad||'—'}/10</div>
+      </div>
+      <div class="card" style="border-left:4px solid var(--o)">
+        <div class="card-title" style="color:var(--o)">🔥 Calorías hoy</div>
+        <div class="card-val" style="color:var(--o)">${fmt(calHoy)}</div>
+        <div class="card-sub">Meta: ${fmt(D.sal.metas?.caloriasD||2000)} kcal</div>
+      </div>
+      <div class="card" style="border-left:4px solid var(--g)">
+        <div class="card-title" style="color:var(--g)">✅ Hábitos hoy</div>
+        <div class="card-val" style="color:var(--g)">${hDone}/${hAct.length}</div>
+        <div class="card-sub">${hAct.length?Math.round(hDone/hAct.length*100)+'% completado':'Sin hábitos'}</div>
+      </div>
+      <div class="card" style="border-left:4px solid var(--p)">
+        <div class="card-title" style="color:var(--p)">🧠 Ánimo hoy</div>
+        <div class="card-val" style="color:var(--p)">${mHoy?mHoy.mood+'/10':'—'}</div>
+        <div class="card-sub">${mHoy?'Energía '+mHoy.energia+' · Estrés '+mHoy.estres:'Sin registro'}</div>
+      </div>
+    </div>
+    <div class="g4" style="margin-bottom:18px">
+      <div class="card" style="border-left:4px solid var(--w)">
+        <div class="card-title" style="color:var(--w)">⏱️ Focus hoy</div>
+        <div class="card-val" style="color:var(--w)">${fMin>=60?Math.floor(fMin/60)+'h '+(fMin%60)+'m':fMin+'m'}</div>
+        <div class="card-sub">bloques registrados</div>
+      </div>
+      <div class="card" style="border-left:4px solid #06b6d4">
+        <div class="card-title" style="color:#06b6d4">📚 Libros activos</div>
+        <div class="card-val" style="color:#06b6d4">${(D.apr.libros||[]).filter(b=>b.estado==='leyendo').length}</div>
+        <div class="card-sub">${(D.apr.skills||[]).length} skills registrados</div>
+      </div>
+      <div class="card" style="border-left:4px solid ${tarHoy>0?'var(--r)':'var(--g)'}">
+        <div class="card-title" style="color:${tarHoy>0?'var(--r)':'var(--g)'}">🎯 Tareas hoy</div>
+        <div class="card-val" style="color:${tarHoy>0?'var(--r)':'var(--g)'}">${tarHoy}</div>
+        <div class="card-sub">${tarHoy?'vencen hoy':'Al día 🎉'}</div>
+      </div>
+      <div class="card" style="border-left:4px solid var(--g)">
+        <div class="card-title" style="color:var(--g)">👥 Social esta semana</div>
+        <div class="card-val" style="color:var(--g)">${intW}</div>
+        <div class="card-sub">${(D.soc.contactos||[]).filter(c=>c.activo).length} contactos activos</div>
+      </div>
+    </div>
+
+    ${alerts.length?`
+    <div class="sh"><h2>🔔 Alertas prioritarias</h2><button class="btn btn-o btn-sm" onclick="nav('alertas')">Ver todas →</button></div>
+    <div class="card">
+      ${alerts.map(a=>`<div class="alert-item">
+        <div class="alert-dot" style="background:${{urgente:'var(--r)',proximo:'var(--w)',info:'var(--b)'}[a.tipo]}"></div>
+        <div style="flex:1"><div style="font-size:13px;font-weight:600">${a.ico} ${a.titulo}</div><div class="ts tm" style="margin-top:2px">${a.desc}</div></div>
+        <a href="${a.href}" style="font-size:11px;color:var(--g);text-decoration:none;white-space:nowrap;font-weight:600">Ir →</a>
+      </div>`).join('')}
+    </div>`:''}
+  `;
+}
+
+// ── SEMANA ───────────────────────────────────────────────────────────────────
+function renderSemana(){
+  const d7=getDias(7), d14=getDias(14).slice(7);
+  const sc=calcScores(d7), scA=calcScores(d14);
+  const vs=vidaScore(sc), vsA=vidaScore(scA);
+  const mejor=AREAS.reduce((m,a)=>sc[a.k]>sc[m.k]?a:m,AREAS[0]);
+  const peor=AREAS.reduce((m,a)=>sc[a.k]<sc[m.k]?a:m,AREAS[0]);
+
+  document.getElementById('sem-body').innerHTML=`
+    <div class="sh"><h2>📅 Resumen semanal</h2></div>
+    <div class="g4" style="margin-bottom:18px">
+      <div class="card" style="border-left:4px solid ${sCol(vs)}">
+        <div class="card-title">🌟 Vida Score</div>
+        <div class="card-val" style="color:${sCol(vs)}">${vs}</div>
+        <div class="card-sub" style="color:${vs>=vsA?'var(--g)':'var(--r)'}">${vs>=vsA?'↑ +'+(vs-vsA):' ↓ '+(vsA-vs)} vs semana anterior</div>
+      </div>
+      <div class="card">
+        <div class="card-title">🏆 Mejor área</div>
+        <div class="card-val" style="font-size:16px;color:var(--g)">${mejor.ico} ${mejor.n}</div>
+        <div class="card-sub">Score: ${sc[mejor.k]}/100</div>
+      </div>
+      <div class="card">
+        <div class="card-title">⚠️ Área a reforzar</div>
+        <div class="card-val" style="font-size:16px;color:var(--r)">${peor.ico} ${peor.n}</div>
+        <div class="card-sub">Score: ${sc[peor.k]}/100</div>
+      </div>
+      <div class="card">
+        <div class="card-title">📈 Tendencia</div>
+        <div class="card-val" style="font-size:20px;color:${vs>=vsA?'var(--g)':'var(--r)'}">${vs>=vsA?'↑ Mejorando':'↓ Bajando'}</div>
+        <div class="card-sub">Esta semana vs anterior</div>
+      </div>
+    </div>
+    <div class="g2">
+      <div class="card">
+        <div class="card-title" style="margin-bottom:14px">🕸️ Balance de vida</div>
+        <div class="chart-c"><canvas id="ch-radar"></canvas></div>
+      </div>
+      <div class="card">
+        <div class="card-title" style="margin-bottom:14px">📊 Scores por área</div>
+        ${AREAS.map(a=>`<div style="margin-bottom:11px">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+            <span style="font-size:12px">${a.ico} ${a.n}</span>
+            <div style="display:flex;align-items:center;gap:8px">
+              ${scA[a.k]>0?`<span class="ts tm">ant: ${scA[a.k]}</span>`:''}
+              <span style="font-size:13px;font-weight:800;color:${sCol(sc[a.k])}">${sc[a.k]}</span>
+              <span style="font-size:11px;color:${sc[a.k]>=scA[a.k]?'var(--g)':'var(--r)'}">${sc[a.k]>=scA[a.k]?'↑':'↓'}</span>
+            </div>
+          </div>
+          <div class="pbar"><div class="pfill" style="width:${sc[a.k]}%;background:${sCol(sc[a.k])}"></div></div>
+        </div>`).join('')}
+      </div>
+    </div>`;
+
+  chRadar=killChart(chRadar);
+  const ctx=document.getElementById('ch-radar');
+  if(ctx) chRadar=new Chart(ctx,{type:'radar',
+    data:{labels:AREAS.map(a=>a.n),datasets:[
+      {label:'Esta semana',data:AREAS.map(a=>sc[a.k]),backgroundColor:'rgba(0,232,122,.15)',borderColor:'var(--g)',borderWidth:2,pointBackgroundColor:'var(--g)',pointRadius:4},
+      {label:'Semana ant.',data:AREAS.map(a=>scA[a.k]),backgroundColor:'rgba(176,110,255,.1)',borderColor:'var(--p)',borderWidth:1.5,pointBackgroundColor:'var(--p)',pointRadius:3,borderDash:[4,4]}
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,
+      scales:{r:{min:0,max:100,grid:{color:'rgba(255,255,255,.08)'},angleLines:{color:'rgba(255,255,255,.08)'},ticks:{color:'#4a5568',backdropColor:'transparent',font:{size:10}},pointLabels:{color:'var(--text2)',font:{size:11,weight:'600'}}}},
+      plugins:{legend:{labels:{color:'var(--text2)',font:{size:11},padding:14}},tooltip:{backgroundColor:'rgba(10,10,30,.95)',titleColor:'var(--text)',bodyColor:'var(--text2)'}}}});
+}
+
+// ── ALERTAS ──────────────────────────────────────────────────────────────────
+function renderAlertas(){
+  const all=getAlerts();
+  const grupos=[{tipo:'urgente',label:'🔴 Urgente',col:'var(--r)'},{tipo:'proximo',label:'🟡 Próximamente',col:'var(--w)'},{tipo:'info',label:'ℹ️ Informativo',col:'var(--b)'}];
+  document.getElementById('al-body').innerHTML=`
+    <div class="sh"><h2>🔔 Centro de Alertas</h2><span class="ts tm">${all.length} alerta(s)</span></div>
+    ${all.length===0?`<div class="card" style="text-align:center;padding:48px"><div style="font-size:48px;margin-bottom:12px">🎉</div><div style="font-size:16px;font-weight:700">¡Todo en orden!</div><div class="ts tm" style="margin-top:6px">No hay alertas pendientes.</div></div>`:''}
+    ${grupos.map(g=>{
+      const items=all.filter(a=>a.tipo===g.tipo);
+      if(!items.length) return '';
+      return `<div style="margin-bottom:20px">
+        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:${g.col};margin-bottom:10px">${g.label} (${items.length})</div>
+        <div class="card">${items.map(a=>`<div class="alert-item">
+          <div class="alert-dot" style="background:${g.col}"></div>
+          <div style="flex:1"><div style="font-size:13px;font-weight:600">${a.ico} ${a.titulo}</div><div class="ts tm" style="margin-top:2px">${a.desc}</div></div>
+          <a href="${a.href}" class="btn btn-o btn-sm" style="text-decoration:none">Abrir →</a>
+        </div>`).join('')}</div>
+      </div>`;
+    }).join('')}`;
+}
+
+// ── VIDA SCORE ───────────────────────────────────────────────────────────────
+function renderVida(){
+  const sc=calcScores(getDias(7)), vs=vidaScore(sc);
+  const pesos={sueno:15,habitos:15,animo:15,productividad:15,aprendizaje:10,salud:15,social:10,finanzas:5};
+  document.getElementById('vs-body').innerHTML=`
+    <div class="sh"><h2>🎯 Vida Score — Desglose</h2></div>
+    <div class="card" style="text-align:center;padding:32px;margin-bottom:18px;background:linear-gradient(135deg,rgba(0,232,122,.06),rgba(176,110,255,.06));border-color:rgba(0,232,122,.2)">
+      <div class="ts tm" style="text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px">Promedio ponderado — últimos 7 días</div>
+      <div class="score-big">${vs}</div>
+      <div style="font-size:15px;font-weight:700;color:${sCol(vs)};margin-top:10px">${sLab(vs)}</div>
+      <div class="ts tm" style="margin-top:6px">8 áreas · ponderación diferenciada</div>
+    </div>
+    <div class="g2">
+      ${AREAS.map(a=>`<div class="card" style="border-left:4px solid ${sCol(sc[a.k])}">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px">
+          <div>
+            <div style="font-size:15px;font-weight:800">${a.ico} ${a.n}</div>
+            <div class="ts tm" style="margin-top:2px">Peso: ${pesos[a.k]}% del score</div>
+          </div>
+          <div style="text-align:right">
+            <div style="font-size:30px;font-weight:900;color:${sCol(sc[a.k])}">${sc[a.k]}</div>
+            <div style="font-size:10px;color:${sCol(sc[a.k])}">${sLab(sc[a.k])}</div>
+          </div>
+        </div>
+        <div class="pbar" style="height:8px"><div class="pfill" style="width:${sc[a.k]}%;background:${sCol(sc[a.k])}"></div></div>
+        <div class="ts tm" style="margin-top:10px">💡 ${a.tip}</div>
+        <div style="margin-top:10px"><a href="${a.href}" style="font-size:11px;color:var(--g);text-decoration:none;font-weight:600">Ir a ${a.n} →</a></div>
+      </div>`).join('')}
+    </div>`;
+}
+
+// ── APPS ────────────────────────────────────────────────────────────────────
+function renderApps(){
+  const t=today(), d7=getDias(7);
+  const apps=[
+    {ico:'💰',n:'Finanzas',sub:'Ingresos, gastos & metas',href:'index.html',
+     stat:(()=>{const m=t.slice(0,7);const exp=(D.fin.transactions||[]).filter(x=>x.date?.startsWith(m)&&x.type==='expense').reduce((s,x)=>s+(x.amount||0),0);return exp>0?'$'+fmt(exp)+' gastados este mes':'Sin movimientos';})()},
+    {ico:'🥦',n:'Salud & Nutrición',sub:'Calorías y macros',href:'salud.html',
+     stat:(()=>{const c=(D.sal.alimentos||[]).filter(a=>a.fecha===t).reduce((s,a)=>s+(a.cal||0),0);return c?fmt(c)+' kcal hoy':'Sin registro hoy';})()},
+    {ico:'🏋️',n:'Ejercicio',sub:'Entrenamientos',href:'ejercicio.html',
+     stat:(()=>{const e=(D.sal.ejercicios||[]).filter(e=>e.fecha===t);return e.length?e.length+' sesión(es) hoy':'Sin ejercicio hoy';})()},
+    {ico:'😴',n:'Sueño',sub:'Descanso & recuperación',href:'sueno.html',
+     stat:(()=>{const r=(D.sue.registros||[]).sort((a,b)=>b.fecha.localeCompare(a.fecha))[0];return r?r.horas+'h · cal '+r.calidad+'/10':'Sin registros';})()},
+    {ico:'✅',n:'Hábitos',sub:'Disciplina & consistencia',href:'habitos.html',
+     stat:(()=>{const h=(D.hab.habitos||[]).filter(h=>h.activo&&h.frecuencia==='diario');const d=(D.hab.registros||[]).filter(r=>r.fecha===t&&r.completado).length;return h.length?d+'/'+h.length+' hoy':'Sin hábitos';})()},
+    {ico:'⏱️',n:'Productividad',sub:'Tiempo & Pomodoro',href:'tiempo.html',
+     stat:(()=>{const m=(D.tie.bloques||[]).filter(b=>b.fecha===t).reduce((s,b)=>s+(b.duracion_min||0),0);return m?(m>=60?Math.floor(m/60)+'h '+(m%60)+'m':m+'m')+' focus':'Sin bloques hoy';})()},
+    {ico:'🧠',n:'Ánimo',sub:'Bienestar mental',href:'animo.html',
+     stat:(()=>{const r=(D.ani.registros||[]).find(r=>r.fecha===t);return r?'Mood '+r.mood+'/10 · E:'+r.energia+' S:'+r.estres:'Sin registro hoy';})()},
+    {ico:'📚',n:'Aprendizaje',sub:'Libros & skills',href:'aprendizaje.html',
+     stat:(()=>{const l=(D.apr.libros||[]).filter(b=>b.estado==='leyendo').length;return l+' libro(s) activo(s) · '+(D.apr.skills||[]).length+' skills';})()},
+    {ico:'🎯',n:'Proyectos',sub:'Metas & iniciativas',href:'proyectos.html',
+     stat:(()=>{const a=(D.pro.proyectos||[]).filter(p=>p.estado==='activo').length;const p=(D.pro.tareas||[]).filter(t=>t.estado==='pendiente').length;return a+' activo(s) · '+p+' tarea(s) pendiente(s)';})()},
+    {ico:'👥',n:'Red Social',sub:'Relaciones & contactos',href:'social.html',
+     stat:(()=>{const c=(D.soc.contactos||[]).filter(c=>c.activo).length;const i=(D.soc.interacciones||[]).filter(i=>d7.includes(i.fecha)).length;return c+' contactos · '+i+' int. esta semana';})()},
+    {ico:'🚗',n:'Vehículo',sub:'Auto & movilidad',href:'vehiculo.html',
+     stat:(()=>{const g=(D.veh.gasolina||[]);const m=(D.veh.mantenimientos||[]);return g.length+' carga(s) · '+m.length+' mantenimiento(s)';})()}
+  ];
+  document.getElementById('apps-body').innerHTML=`
+    <div class="sh"><h2>🚀 Todas mis apps</h2><span class="ts tm">${apps.length} aplicaciones</span></div>
+    <div class="app-grid">
+      ${apps.map(a=>`<a href="${a.href}" class="app-card">
+        <div style="font-size:30px;margin-bottom:10px">${a.ico}</div>
+        <div style="font-size:13px;font-weight:700;margin-bottom:3px">${a.n}</div>
+        <div class="ts tm" style="margin-bottom:8px">${a.sub}</div>
+        <div style="font-size:11px;color:var(--g);font-weight:600">${a.stat}</div>
+      </a>`).join('')}
+    </div>`;
+}
+
+// ── INIT ─────────────────────────────────────────────────────────────────────
+function init(){
+  loadAll();
+  document.getElementById('dateLabel').textContent=new Date().toLocaleDateString('es-MX',{weekday:'long',day:'numeric',month:'long'});
+  const check=()=>{const mb=document.getElementById('menuBtn');mb.style.display=window.innerWidth<640?'':'none';if(window.innerWidth>=640)document.getElementById('sidebar').classList.remove('open');};
+  window.addEventListener('resize',check);check();
+  updateAlertBadge();
+  nav('resumen');
+}
+init();
+</script>
+</body>
+</html>

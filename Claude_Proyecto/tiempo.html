@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mi Tiempo — Productividad & Focus</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --g:#00e87a;--g-d:#00b860;--g-l:rgba(0,232,122,.1);
+  --o:#ff6b35;--o-l:rgba(255,107,53,.1);
+  --b:#3b82f6;--b-l:rgba(59,130,246,.1);
+  --p:#b06eff;--p-l:rgba(176,110,255,.1);
+  --w:#ffd93d;--w-l:rgba(255,217,61,.1);
+  --r:#ff3b6b;--r-l:rgba(255,59,107,.1);
+  --bg:#060614;--surface:rgba(255,255,255,.04);--border:rgba(255,255,255,.08);
+  --text:#e8eaf6;--text2:#8892b0;--text3:#4a5568;
+  --sw:245px;--r14:14px;--rs:9px;--sh:0 4px 24px rgba(0,0,0,.5);
+}
+body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);display:flex;min-height:100vh;font-size:14px;
+  background-image:radial-gradient(ellipse 80% 60% at 20% 0%,rgba(0,232,122,.05) 0%,transparent 60%),radial-gradient(ellipse 60% 50% at 85% 100%,rgba(255,107,53,.05) 0%,transparent 60%)}
+::-webkit-scrollbar{width:4px;height:4px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:rgba(255,255,255,.12);border-radius:2px}
+.sidebar{width:var(--sw);background:rgba(6,6,20,.85);backdrop-filter:blur(20px);border-right:1px solid rgba(0,232,122,.1);display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:100;transition:transform .25s}
+.sb-logo{padding:20px;border-bottom:1px solid rgba(255,255,255,.06)}
+.sb-logo h1{font-size:16px;font-weight:800;background:linear-gradient(90deg,#00e87a,#3b82f6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.sb-logo p{font-size:10px;color:var(--text3);margin-top:3px;letter-spacing:.08em;text-transform:uppercase}
+.sb-nav{padding:10px 8px;flex:1;overflow-y:auto}
+.nav-label{font-size:9px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.1em;padding:12px 12px 4px}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:var(--rs);cursor:pointer;color:var(--text2);font-weight:500;font-size:13px;transition:all .2s;margin-bottom:2px;user-select:none}
+.nav-item:hover{background:rgba(255,255,255,.05);color:var(--text)}
+.nav-item.active{background:rgba(0,232,122,.1);color:var(--g);font-weight:600;border-left:2px solid var(--g)}
+.nav-item .ico{font-size:15px;width:20px;text-align:center;flex-shrink:0}
+.main{margin-left:var(--sw);flex:1;display:flex;flex-direction:column;min-height:100vh}
+.topbar{background:rgba(6,6,20,.8);backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,.06);padding:0 24px;height:58px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
+.topbar-title{font-size:15px;font-weight:700}
+.content{padding:22px;flex:1}
+.section{display:none}.section.active{display:block}
+.card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:var(--r14);padding:18px;box-shadow:var(--sh),inset 0 1px 0 rgba(255,255,255,.05);transition:border-color .2s;backdrop-filter:blur(10px)}
+.card:hover{border-color:rgba(255,255,255,.12)}
+.card-title{font-size:11px;font-weight:600;color:var(--text2);margin-bottom:8px;display:flex;align-items:center;gap:5px;text-transform:uppercase;letter-spacing:.06em}
+.card-val{font-size:26px;font-weight:800;color:var(--text);letter-spacing:-.5px}
+.card-sub{font-size:11px;color:var(--text3);margin-top:3px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.g2{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.btn{display:inline-flex;align-items:center;gap:5px;padding:8px 14px;border-radius:var(--rs);border:none;cursor:pointer;font-size:13px;font-weight:600;transition:all .2s;white-space:nowrap;font-family:inherit}
+.btn-g{background:linear-gradient(135deg,#00b860,#00e87a);color:#000;box-shadow:0 0 16px rgba(0,232,122,.3)}
+.btn-g:hover{box-shadow:0 0 28px rgba(0,232,122,.55);transform:translateY(-1px)}
+.btn-o{background:rgba(255,255,255,.05);color:var(--text2);border:1px solid rgba(255,255,255,.1)}
+.btn-o:hover{background:rgba(255,255,255,.09);color:var(--text)}
+.btn-r{background:linear-gradient(135deg,#cc1144,#ff3b6b);color:#fff}
+.btn-sm{padding:5px 9px;font-size:11px}.btn-ico{padding:5px 8px}
+.pbar{height:6px;background:rgba(255,255,255,.08);border-radius:20px;overflow:hidden;margin-top:7px}
+.pfill{height:100%;border-radius:20px;transition:width .6s cubic-bezier(.4,0,.2,1)}
+.mo{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(4px);z-index:200;align-items:center;justify-content:center;padding:16px}
+.mo.open{display:flex}
+.modal{background:rgba(10,10,30,.95);backdrop-filter:blur(30px);border:1px solid rgba(0,232,122,.15);border-radius:var(--r14);box-shadow:0 0 20px rgba(0,232,122,.1),var(--sh);width:100%;max-width:480px;max-height:92vh;overflow-y:auto;padding:22px}
+.modal-h{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+.modal-title{font-size:17px;font-weight:700}
+.modal-x{background:none;border:none;font-size:18px;cursor:pointer;color:var(--text2);padding:3px}
+.modal-x:hover{color:var(--r)}
+.fg{margin-bottom:14px}
+.fr{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+label{display:block;font-size:10px;font-weight:700;color:var(--text2);margin-bottom:5px;text-transform:uppercase;letter-spacing:.07em}
+input,select,textarea{width:100%;padding:9px 12px;border:1px solid rgba(255,255,255,.1);border-radius:var(--rs);font-size:13px;color:var(--text);background:rgba(255,255,255,.05);outline:none;transition:all .2s;font-family:inherit}
+input:focus,select:focus,textarea:focus{border-color:var(--g);box-shadow:0 0 0 3px rgba(0,232,122,.12)}
+select option{background:#0d0d2a;color:var(--text)}
+.sh{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+.sh h2{font-size:19px;font-weight:800;background:linear-gradient(90deg,var(--text),var(--text2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.badge{display:inline-block;padding:3px 9px;border-radius:20px;font-size:10px;font-weight:700}
+.b-g{background:rgba(0,232,122,.15);color:var(--g);border:1px solid rgba(0,232,122,.25)}
+.b-o{background:rgba(255,107,53,.15);color:var(--o);border:1px solid rgba(255,107,53,.25)}
+.b-r{background:rgba(255,59,107,.15);color:var(--r);border:1px solid rgba(255,59,107,.25)}
+.b-n{background:rgba(255,255,255,.07);color:var(--text2)}
+.tw{overflow-x:auto;margin-top:10px}
+table{width:100%;border-collapse:collapse}
+th{text-align:left;padding:9px 12px;font-size:10px;font-weight:700;color:var(--g);border-bottom:1px solid rgba(0,232,122,.15);white-space:nowrap;text-transform:uppercase;letter-spacing:.08em}
+td{padding:11px 12px;border-bottom:1px solid rgba(255,255,255,.05);font-size:13px}
+tr:last-child td{border-bottom:none}
+tbody tr:hover td{background:rgba(0,232,122,.02)}
+.conf{position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(4px);z-index:300;display:none;align-items:center;justify-content:center}
+.conf.open{display:flex}
+.conf-box{background:rgba(10,10,30,.98);border:1px solid rgba(255,59,107,.25);border-radius:var(--r14);padding:22px;max-width:340px;width:90%}
+.conf-box h3{font-size:15px;font-weight:700;margin-bottom:7px}
+.conf-box p{color:var(--text2);font-size:13px;margin-bottom:18px}
+.toast{position:fixed;bottom:24px;right:24px;background:rgba(10,10,30,.95);color:var(--text);border:1px solid rgba(0,232,122,.2);padding:10px 18px;border-radius:var(--rs);font-size:13px;font-weight:600;box-shadow:var(--sh);z-index:500;opacity:0;transform:translateY(8px);transition:all .3s;pointer-events:none}
+.toast.show{opacity:1;transform:translateY(0)}
+.mt16{margin-top:16px}.mt20{margin-top:20px}
+.flex{display:flex}.aic{align-items:center}.jb{justify-content:space-between}
+.fw7{font-weight:700}.ts{font-size:11px}.tm{color:var(--text3)}.gap6{gap:6px}.gap8{gap:8px}
+.chart-c{position:relative;height:220px}
+.empty{text-align:center;padding:40px 24px;color:var(--text3)}
+.empty .ico{font-size:40px;margin-bottom:10px;opacity:.4}
+@media(max-width:900px){.g4{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:640px){.sidebar{transform:translateX(-100%)}.sidebar.open{transform:translateX(0)}.main{margin-left:0}.g4,.g3,.g2{grid-template-columns:1fr}.fr{grid-template-columns:1fr}}
+
+/* Timer specific */
+.timer-display{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 20px}
+.timer-clock{font-size:72px;font-weight:900;letter-spacing:-2px;font-variant-numeric:tabular-nums;color:var(--text);text-shadow:0 0 40px rgba(0,232,122,.3);transition:color .3s}
+.timer-mode{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.15em;margin-bottom:16px;transition:color .3s}
+.timer-btns{display:flex;gap:10px;margin-top:24px;flex-wrap:wrap;justify-content:center}
+.timer-modes{display:flex;gap:8px;margin-bottom:8px;flex-wrap:wrap;justify-content:center}
+.mode-btn{padding:7px 16px;border-radius:20px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.05);color:var(--text2);cursor:pointer;font-size:12px;font-weight:600;transition:all .2s;font-family:inherit}
+.mode-btn.active{border-color:var(--g);color:var(--g);background:rgba(0,232,122,.1)}
+.mode-btn:hover{background:rgba(255,255,255,.08)}
+.timer-ring{width:200px;height:200px;position:relative;margin:0 auto}
+.timer-ring svg{transform:rotate(-90deg);width:200px;height:200px}
+.timer-ring-bg{fill:none;stroke:rgba(255,255,255,.07);stroke-width:8}
+.timer-ring-fill{fill:none;stroke-width:8;stroke-linecap:round;transition:stroke-dashoffset .5s,stroke .3s}
+.timer-inner{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.pomodoro-dots{display:flex;gap:6px;margin-top:12px}
+.pom-dot{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.12);transition:all .3s}
+.pom-dot.done{background:var(--g)}
+.pom-dot.current{background:var(--g);box-shadow:0 0 8px var(--g)}
+.flash-overlay{position:fixed;inset:0;background:rgba(0,232,122,.15);pointer-events:none;opacity:0;z-index:999;transition:opacity .2s}
+.flash-overlay.flash{opacity:1}
+.cat-dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px}
+.week-day-card{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);border-radius:var(--rs);padding:14px;margin-bottom:10px}
+.week-day-title{font-size:12px;font-weight:700;color:var(--text2);margin-bottom:8px}
+.week-entry{display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:12px}
+.week-entry:last-child{border-bottom:none}
+.burger{display:none;background:none;border:none;color:var(--text);font-size:20px;cursor:pointer;padding:4px}
+@media(max-width:640px){.burger{display:block}}
+</style>
+</head>
+<body>
+
+<!-- Flash overlay for timer end -->
+<div class="flash-overlay" id="flashOverlay"></div>
+
+<!-- Sidebar -->
+<aside class="sidebar" id="sidebar">
+  <div class="sb-logo">
+    <h1>⏱️ Mi Tiempo</h1>
+    <p>Productividad &amp; Focus</p>
+  </div>
+  <nav class="sb-nav">
+    <div class="nav-label">Principal</div>
+    <div class="nav-item active" onclick="nav('dashboard')"><span class="ico">📊</span>Dashboard</div>
+    <div class="nav-item" onclick="nav('timer')"><span class="ico">⏲️</span>Temporizador</div>
+    <div class="nav-label">Registro</div>
+    <div class="nav-item" onclick="nav('registro')"><span class="ico">📝</span>Registros</div>
+    <div class="nav-item" onclick="nav('semana')"><span class="ico">📅</span>Semana</div>
+    <div class="nav-label">Sistema</div>
+    <div class="nav-item" onclick="nav('configuracion')"><span class="ico">⚙️</span>Configuración</div>
+  </nav>
+</aside>
+
+<!-- Main -->
+<div class="main">
+  <div class="topbar">
+    <div style="display:flex;align-items:center;gap:12px">
+      <button class="burger" onclick="toggleSidebar()">☰</button>
+      <span class="topbar-title" id="topbarTitle">Dashboard</span>
+    </div>
+    <div style="display:flex;gap:8px">
+      <button class="btn btn-o btn-sm" onclick="exportData()">⬇ Exportar</button>
+      <button class="btn btn-g btn-sm" onclick="openModal()">+ Registrar</button>
+    </div>
+  </div>
+  <div class="content">
+
+    <!-- DASHBOARD -->
+    <div class="section active" id="sec-dashboard">
+      <div class="sh"><h2>Dashboard</h2><span class="badge b-n" id="dash-date"></span></div>
+      <div class="g4" id="kpi-grid">
+        <div class="card">
+          <div class="card-title">⏱ Horas Focus Hoy</div>
+          <div class="card-val" id="kpi-horas">0h 0m</div>
+          <div class="card-sub" id="kpi-horas-sub">Sin sesiones registradas</div>
+        </div>
+        <div class="card">
+          <div class="card-title">🍅 Pomodoros Hoy</div>
+          <div class="card-val" id="kpi-pomodoros">0</div>
+          <div class="card-sub" id="kpi-pom-sub">sesiones completadas</div>
+        </div>
+        <div class="card">
+          <div class="card-title">🏆 Categoría Dominante</div>
+          <div class="card-val" id="kpi-cat" style="font-size:18px">—</div>
+          <div class="card-sub" id="kpi-cat-sub">hoy</div>
+        </div>
+        <div class="card">
+          <div class="card-title">💯 Productividad</div>
+          <div class="card-val" id="kpi-prod">0%</div>
+          <div class="pbar"><div class="pfill" id="kpi-prod-bar" style="width:0%;background:var(--g)"></div></div>
+          <div class="card-sub">focus vs tiempo total</div>
+        </div>
+      </div>
+      <div class="g2 mt20">
+        <div class="card">
+          <div class="card-title">🥧 Distribución de Hoy por Categoría</div>
+          <div class="chart-c"><canvas id="chartPie"></canvas></div>
+        </div>
+        <div class="card">
+          <div class="card-title">📊 Horas por Categoría Esta Semana</div>
+          <div class="chart-c"><canvas id="chartCatWeek"></canvas></div>
+        </div>
+      </div>
+      <div class="card mt20">
+        <div class="card-title">🕒 Últimas 10 Entradas</div>
+        <div class="tw"><table>
+          <thead><tr><th>Fecha</th><th>Inicio</th><th>Fin</th><th>Duración</th><th>Categoría</th><th>Descripción</th><th>Proyecto</th><th>Tipo</th></tr></thead>
+          <tbody id="dash-table"></tbody>
+        </table></div>
+      </div>
+    </div>
+
+    <!-- TIMER -->
+    <div class="section" id="sec-timer">
+      <div class="sh"><h2>Temporizador Pomodoro</h2><button class="btn btn-o btn-sm" onclick="resetTimer()">↺ Reiniciar</button></div>
+      <div class="g2">
+        <div class="card">
+          <div class="timer-display">
+            <div class="timer-modes">
+              <button class="mode-btn active" id="btn-trabajo" onclick="setMode('trabajo')">🍅 Trabajo</button>
+              <button class="mode-btn" id="btn-descanso" onclick="setMode('descanso')">☕ Descanso Corto</button>
+              <button class="mode-btn" id="btn-largo" onclick="setMode('largo')">🌙 Descanso Largo</button>
+            </div>
+            <div class="timer-ring">
+              <svg viewBox="0 0 200 200">
+                <circle class="timer-ring-bg" cx="100" cy="100" r="88"/>
+                <circle class="timer-ring-fill" id="ringFill" cx="100" cy="100" r="88" stroke="var(--g)" stroke-dasharray="553" stroke-dashoffset="0"/>
+              </svg>
+              <div class="timer-inner">
+                <div class="timer-mode" id="timerModeLabel" style="color:var(--g)">TRABAJO</div>
+                <div class="timer-clock" id="timerDisplay">25:00</div>
+              </div>
+            </div>
+            <div class="pomodoro-dots" id="pomDots"></div>
+            <div class="timer-btns">
+              <button class="btn btn-g" id="btnStartPause" onclick="toggleTimer()">▶ Iniciar</button>
+              <button class="btn btn-o" onclick="resetTimer()">↺ Reiniciar</button>
+            </div>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:14px">
+          <div class="card">
+            <div class="card-title">📈 Estadísticas de Hoy</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:8px">
+              <div style="text-align:center">
+                <div style="font-size:32px;font-weight:900;color:var(--g)" id="timer-pom-count">0</div>
+                <div style="font-size:11px;color:var(--text3)">Pomodoros hoy</div>
+              </div>
+              <div style="text-align:center">
+                <div style="font-size:32px;font-weight:900;color:var(--b)" id="timer-focus-min">0</div>
+                <div style="font-size:11px;color:var(--text3)">Minutos enfocado</div>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title">🍅 Configuración Actual</div>
+            <div style="margin-top:8px;display:flex;flex-direction:column;gap:7px">
+              <div class="flex jb"><span style="color:var(--text2);font-size:13px">Trabajo</span><span style="font-weight:700;color:var(--g)" id="cfg-trabajo">25 min</span></div>
+              <div class="flex jb"><span style="color:var(--text2);font-size:13px">Descanso corto</span><span style="font-weight:700;color:var(--b)" id="cfg-descanso">5 min</span></div>
+              <div class="flex jb"><span style="color:var(--text2);font-size:13px">Descanso largo</span><span style="font-weight:700;color:var(--p)" id="cfg-largo">15 min</span></div>
+              <div class="flex jb"><span style="color:var(--text2);font-size:13px">Pomodoros antes de largo</span><span style="font-weight:700;color:var(--w)" id="cfg-antes">4</span></div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title">📋 Registrar en Categoría</div>
+            <div class="fg" style="margin-top:8px">
+              <label>Categoría de la sesión</label>
+              <select id="timerCat">
+                <option value="trabajo">Trabajo</option>
+                <option value="estudio">Estudio</option>
+                <option value="ejercicio">Ejercicio</option>
+                <option value="ocio">Ocio</option>
+                <option value="hogar">Hogar</option>
+                <option value="social">Social</option>
+                <option value="personal">Personal</option>
+              </select>
+            </div>
+            <div class="fg">
+              <label>Proyecto (opcional)</label>
+              <input type="text" id="timerProyecto" placeholder="Nombre del proyecto...">
+            </div>
+            <div class="fg">
+              <label>Descripción (opcional)</label>
+              <input type="text" id="timerDesc" placeholder="¿En qué trabajaste?">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- REGISTRO -->
+    <div class="section" id="sec-registro">
+      <div class="sh">
+        <h2>Registros</h2>
+        <button class="btn btn-g" onclick="openModal()">+ Registrar Bloque</button>
+      </div>
+      <div class="card" style="margin-bottom:14px">
+        <div class="flex aic gap8">
+          <div class="fg" style="margin:0;flex:1">
+            <label>Filtrar por fecha</label>
+            <input type="date" id="regFechaFiltro" onchange="renderRegistro()">
+          </div>
+          <div style="padding-top:18px">
+            <button class="btn btn-o btn-sm" onclick="document.getElementById('regFechaFiltro').value=today();renderRegistro()">Hoy</button>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title" id="reg-subtitle">Bloques del día</div>
+        <div class="tw"><table>
+          <thead><tr><th>Inicio</th><th>Fin</th><th>Duración</th><th>Categoría</th><th>Descripción</th><th>Proyecto</th><th>Tipo</th><th>Acciones</th></tr></thead>
+          <tbody id="reg-table"></tbody>
+        </table></div>
+        <div class="empty" id="reg-empty" style="display:none"><div class="ico">📭</div><div>Sin bloques registrados para esta fecha</div></div>
+      </div>
+    </div>
+
+    <!-- SEMANA -->
+    <div class="section" id="sec-semana">
+      <div class="sh"><h2>Vista Semanal</h2><span class="badge b-n" id="semana-range"></span></div>
+      <div class="g2 mt16">
+        <div class="card">
+          <div class="card-title">📊 Horas Diarias — Últimas 2 Semanas</div>
+          <div class="chart-c"><canvas id="chartDiario"></canvas></div>
+        </div>
+        <div class="card">
+          <div class="card-title">🗂 Horas por Categoría por Día</div>
+          <div class="chart-c"><canvas id="chartStack"></canvas></div>
+        </div>
+      </div>
+      <div class="g2 mt16">
+        <div class="card">
+          <div class="card-title">📋 Resumen Semanal por Categoría</div>
+          <div class="tw"><table>
+            <thead><tr><th>Categoría</th><th>Tiempo</th><th>Sesiones</th><th>%</th></tr></thead>
+            <tbody id="semana-cat-table"></tbody>
+          </table></div>
+        </div>
+        <div class="card">
+          <div class="card-title">📅 Bloques por Día</div>
+          <div id="semana-days"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONFIGURACION -->
+    <div class="section" id="sec-configuracion">
+      <div class="sh"><h2>Configuración</h2></div>
+      <div style="max-width:480px">
+        <div class="card">
+          <div class="card-title">🍅 Temporizador Pomodoro</div>
+          <div class="mt16">
+            <div class="fg">
+              <label>Tiempo de Trabajo (minutos)</label>
+              <input type="number" id="cfg-input-trabajo" min="1" max="120" value="25">
+            </div>
+            <div class="fg">
+              <label>Descanso Corto (minutos)</label>
+              <input type="number" id="cfg-input-descanso" min="1" max="60" value="5">
+            </div>
+            <div class="fg">
+              <label>Descanso Largo (minutos)</label>
+              <input type="number" id="cfg-input-largo" min="1" max="60" value="15">
+            </div>
+            <div class="fg">
+              <label>Pomodoros Antes de Descanso Largo</label>
+              <input type="number" id="cfg-input-antes" min="1" max="10" value="4">
+            </div>
+            <button class="btn btn-g" onclick="saveConfig()">💾 Guardar Configuración</button>
+          </div>
+        </div>
+        <div class="card mt16">
+          <div class="card-title">🗑 Datos</div>
+          <div class="mt16" style="display:flex;gap:8px;flex-wrap:wrap">
+            <button class="btn btn-o" onclick="exportData()">⬇ Exportar JSON</button>
+            <button class="btn btn-r btn-sm" onclick="confirmClear()">🗑 Borrar Todo</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Modal: Registrar Bloque -->
+<div class="mo" id="mo-bloque">
+  <div class="modal">
+    <div class="modal-h">
+      <div class="modal-title" id="modal-bloque-title">Registrar Bloque de Tiempo</div>
+      <button class="modal-x" onclick="closeModal()">✕</button>
+    </div>
+    <div class="fg">
+      <label>Fecha</label>
+      <input type="date" id="m-fecha">
+    </div>
+    <div class="fr">
+      <div class="fg">
+        <label>Hora Inicio</label>
+        <input type="time" id="m-inicio" oninput="calcDuracion()">
+      </div>
+      <div class="fg">
+        <label>Hora Fin</label>
+        <input type="time" id="m-fin" oninput="calcDuracion()">
+      </div>
+    </div>
+    <div class="fg">
+      <label>Duración calculada</label>
+      <div style="padding:9px 12px;background:rgba(0,232,122,.05);border:1px solid rgba(0,232,122,.15);border-radius:var(--rs);font-size:13px;font-weight:700;color:var(--g)" id="m-duracion">—</div>
+    </div>
+    <div class="fg">
+      <label>Categoría</label>
+      <select id="m-cat">
+        <option value="trabajo">🟢 Trabajo</option>
+        <option value="estudio">🔵 Estudio</option>
+        <option value="ejercicio">🟠 Ejercicio</option>
+        <option value="ocio">🟣 Ocio</option>
+        <option value="hogar">🟡 Hogar</option>
+        <option value="social">🩵 Social</option>
+        <option value="personal">🩷 Personal</option>
+      </select>
+    </div>
+    <div class="fg">
+      <label>Descripción</label>
+      <textarea id="m-desc" rows="2" placeholder="¿Qué hiciste?"></textarea>
+    </div>
+    <div class="fg">
+      <label>Proyecto (opcional)</label>
+      <input type="text" id="m-proyecto" placeholder="Nombre del proyecto">
+    </div>
+    <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:4px">
+      <button class="btn btn-o" onclick="closeModal()">Cancelar</button>
+      <button class="btn btn-g" onclick="saveBloque()">💾 Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Confirm dialog -->
+<div class="conf" id="conf-dialog">
+  <div class="conf-box">
+    <h3 id="conf-title">¿Confirmar acción?</h3>
+    <p id="conf-msg">Esta acción no se puede deshacer.</p>
+    <div style="display:flex;gap:8px;justify-content:flex-end">
+      <button class="btn btn-o btn-sm" onclick="closeConf()">Cancelar</button>
+      <button class="btn btn-r btn-sm" id="conf-ok">Confirmar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ─── Utilities ────────────────────────────────────────────────────────────────
+const today = () => new Date().toISOString().slice(0,10);
+const uid = () => Date.now().toString(36)+Math.random().toString(36).slice(2);
+const fmt = n => new Intl.NumberFormat('es-MX').format(Math.round(n||0));
+const fmtD = d => { if(!d)return''; const[y,m,day]=d.split('-'); const mn=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic']; return `${parseInt(day)} ${mn[parseInt(m)-1]} ${y}`; };
+const killChart = c => { if(c) c.destroy(); return null; };
+
+// ─── Category config ──────────────────────────────────────────────────────────
+const CAT_COLORS = {
+  trabajo:'#00e87a', estudio:'#3b82f6', ejercicio:'#ff6b35',
+  ocio:'#b06eff', hogar:'#ffd93d', social:'#06b6d4', personal:'#ec4899'
+};
+const CAT_LABELS = {
+  trabajo:'Trabajo', estudio:'Estudio', ejercicio:'Ejercicio',
+  ocio:'Ocio', hogar:'Hogar', social:'Social', personal:'Personal'
+};
+
+// ─── State ────────────────────────────────────────────────────────────────────
+let S = { bloques:[], config:{pomodoro_trabajo:25, pomodoro_descanso:5, pomodoro_largo:15, pomodoros_antes_largo:4} };
+const SKEY = 'tiempo_v1';
+const load = () => { try{ const d=localStorage.getItem(SKEY); if(d) S=JSON.parse(d); }catch(e){} };
+const save = () => localStorage.setItem(SKEY, JSON.stringify(S));
+load();
+
+// ─── Timer state (module-level) ───────────────────────────────────────────────
+let timerInterval = null;
+let timerRunning = false;
+let timerMode = 'trabajo'; // trabajo | descanso | largo
+let timerSecsLeft = S.config.pomodoro_trabajo * 60;
+let timerTotalSecs = S.config.pomodoro_trabajo * 60;
+let timerSessionCount = 0; // pomodoros completed this session
+
+// ─── Chart refs ───────────────────────────────────────────────────────────────
+let chartPie=null, chartCatWeek=null, chartDiario=null, chartStack=null;
+
+// ─── Navigation ───────────────────────────────────────────────────────────────
+const STITLE = {dashboard:'Dashboard', timer:'Temporizador', registro:'Registros', semana:'Vista Semanal', configuracion:'Configuración'};
+const RENDERS = {dashboard:renderDashboard, timer:renderTimer, registro:renderRegistro, semana:renderSemana, configuracion:renderConfiguracion};
+
+function nav(id) {
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById('sec-'+id).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n=>{if(n.textContent.trim().toLowerCase().includes(STITLE[id].toLowerCase().substring(0,5))||n.getAttribute('onclick')===`nav('${id}')`)n.classList.add('active');});
+  document.getElementById('topbarTitle').textContent = STITLE[id];
+  if(RENDERS[id]) RENDERS[id]();
+  document.getElementById('sidebar').classList.remove('open');
+}
+
+function toggleSidebar(){ document.getElementById('sidebar').classList.toggle('open'); }
+
+// ─── Toast ────────────────────────────────────────────────────────────────────
+let toastTimer=null;
+function showToast(msg, dur=3000){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>t.classList.remove('show'), dur);
+}
+
+// ─── Confirm dialog ───────────────────────────────────────────────────────────
+let confCb=null;
+function showConf(title, msg, cb){ document.getElementById('conf-title').textContent=title; document.getElementById('conf-msg').textContent=msg; confCb=cb; document.getElementById('conf-dialog').classList.add('open'); }
+function closeConf(){ document.getElementById('conf-dialog').classList.remove('open'); confCb=null; }
+document.getElementById('conf-ok').onclick = ()=>{ if(confCb)confCb(); closeConf(); };
+
+// ─── Modal ────────────────────────────────────────────────────────────────────
+let editingId = null;
+function openModal(bloque=null){
+  editingId = bloque ? bloque.id : null;
+  document.getElementById('modal-bloque-title').textContent = bloque ? 'Editar Bloque' : 'Registrar Bloque de Tiempo';
+  document.getElementById('m-fecha').value = bloque ? bloque.fecha : today();
+  document.getElementById('m-inicio').value = bloque ? bloque.hora_inicio : '';
+  document.getElementById('m-fin').value = bloque ? bloque.hora_fin : '';
+  document.getElementById('m-cat').value = bloque ? bloque.categoria : 'trabajo';
+  document.getElementById('m-desc').value = bloque ? bloque.descripcion : '';
+  document.getElementById('m-proyecto').value = bloque ? bloque.proyecto : '';
+  document.getElementById('m-duracion').textContent = bloque ? fmtMins(bloque.duracion_min) : '—';
+  document.getElementById('mo-bloque').classList.add('open');
+}
+function closeModal(){ document.getElementById('mo-bloque').classList.remove('open'); editingId=null; }
+
+function calcDuracion(){
+  const a=document.getElementById('m-inicio').value, b=document.getElementById('m-fin').value;
+  if(!a||!b){ document.getElementById('m-duracion').textContent='—'; return 0; }
+  const [ah,am]=a.split(':').map(Number), [bh,bm]=b.split(':').map(Number);
+  let diff = (bh*60+bm)-(ah*60+am);
+  if(diff<0) diff+=1440;
+  document.getElementById('m-duracion').textContent = diff>0 ? fmtMins(diff) : '—';
+  return diff;
+}
+
+function fmtMins(m){ if(!m||m<=0)return'0 min'; const h=Math.floor(m/60), min=m%60; return h>0 ? `${h}h ${min}m` : `${min} min`; }
+
+function saveBloque(){
+  const fecha=document.getElementById('m-fecha').value;
+  const inicio=document.getElementById('m-inicio').value;
+  const fin=document.getElementById('m-fin').value;
+  const cat=document.getElementById('m-cat').value;
+  const desc=document.getElementById('m-desc').value.trim();
+  const proyecto=document.getElementById('m-proyecto').value.trim();
+  if(!fecha||!inicio||!fin){ showToast('⚠️ Completa fecha, hora inicio y hora fin'); return; }
+  const dur=calcDuracion();
+  if(dur<=0){ showToast('⚠️ La hora de fin debe ser después del inicio'); return; }
+  if(editingId){
+    const idx=S.bloques.findIndex(b=>b.id===editingId);
+    if(idx>=0) S.bloques[idx]={...S.bloques[idx],fecha,hora_inicio:inicio,hora_fin:fin,duracion_min:dur,categoria:cat,descripcion:desc,proyecto,tipo:'bloque'};
+    showToast('✅ Bloque actualizado');
+  } else {
+    S.bloques.push({id:uid(),fecha,hora_inicio:inicio,hora_fin:fin,duracion_min:dur,categoria:cat,descripcion:desc,proyecto,tipo:'bloque'});
+    showToast('✅ Bloque registrado');
+  }
+  save(); closeModal();
+  const activeSection=document.querySelector('.section.active');
+  if(activeSection){ const id=activeSection.id.replace('sec-',''); if(RENDERS[id]) RENDERS[id](); }
+}
+
+function deleteBloque(id){
+  showConf('Eliminar bloque','¿Seguro que deseas eliminar este bloque de tiempo?', ()=>{
+    S.bloques=S.bloques.filter(b=>b.id!==id); save();
+    showToast('🗑 Bloque eliminado');
+    const activeSection=document.querySelector('.section.active');
+    if(activeSection){ const sid=activeSection.id.replace('sec-',''); if(RENDERS[sid]) RENDERS[sid](); }
+  });
+}
+
+function confirmClear(){
+  showConf('Borrar todos los datos','Esta acción eliminará TODOS los bloques y no se puede deshacer.', ()=>{
+    S.bloques=[]; save(); showToast('🗑 Datos eliminados'); renderDashboard();
+  });
+}
+
+// ─── Export ───────────────────────────────────────────────────────────────────
+function exportData(){
+  const blob=new Blob([JSON.stringify(S,null,2)],{type:'application/json'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=`tiempo_${today()}.json`; a.click();
+  showToast('⬇ Exportación descargada');
+}
+
+// ─── Dashboard ────────────────────────────────────────────────────────────────
+function renderDashboard(){
+  const t = today();
+  document.getElementById('dash-date').textContent = fmtD(t);
+
+  // KPIs for today
+  const hoy = S.bloques.filter(b=>b.fecha===t);
+  const totalMin = hoy.reduce((a,b)=>a+b.duracion_min,0);
+  const poms = hoy.filter(b=>b.tipo==='pomodoro').length;
+
+  document.getElementById('kpi-horas').textContent = fmtMins(totalMin);
+  document.getElementById('kpi-horas-sub').textContent = `${hoy.length} bloque(s) registrado(s)`;
+  document.getElementById('kpi-pomodoros').textContent = poms;
+  document.getElementById('kpi-pom-sub').textContent = poms===1?'sesión completada':'sesiones completadas';
+
+  // Dominant category
+  const catMin = {};
+  hoy.forEach(b=>{ catMin[b.categoria]=(catMin[b.categoria]||0)+b.duracion_min; });
+  const cats = Object.entries(catMin).sort((a,b)=>b[1]-a[1]);
+  if(cats.length>0){
+    const [topCat, topMin]=cats[0];
+    document.getElementById('kpi-cat').textContent = CAT_LABELS[topCat]||topCat;
+    document.getElementById('kpi-cat-sub').style.color = CAT_COLORS[topCat]||'var(--text3)';
+    document.getElementById('kpi-cat-sub').textContent = fmtMins(topMin);
+  } else {
+    document.getElementById('kpi-cat').textContent = '—';
+    document.getElementById('kpi-cat-sub').textContent = 'hoy';
+    document.getElementById('kpi-cat-sub').style.color = 'var(--text3)';
+  }
+
+  // Productivity: pomodoro focus mins / total mins * 100
+  const focusMin = hoy.filter(b=>b.tipo==='pomodoro'||b.categoria==='trabajo'||b.categoria==='estudio').reduce((a,b)=>a+b.duracion_min,0);
+  const prodPct = totalMin>0 ? Math.round((focusMin/totalMin)*100) : 0;
+  document.getElementById('kpi-prod').textContent = prodPct+'%';
+  document.getElementById('kpi-prod-bar').style.width = prodPct+'%';
+
+  // Pie chart: today by category
+  chartPie = killChart(chartPie);
+  const pieCtx = document.getElementById('chartPie').getContext('2d');
+  if(cats.length>0){
+    chartPie = new Chart(pieCtx,{type:'doughnut',data:{
+      labels:cats.map(([c])=>CAT_LABELS[c]||c),
+      datasets:[{data:cats.map(([,m])=>+(m/60).toFixed(2)),backgroundColor:cats.map(([c])=>CAT_COLORS[c]||'#888'),borderWidth:0}]
+    },options:{plugins:{legend:{labels:{color:'#8892b0',font:{size:11}}}},cutout:'65%',responsive:true,maintainAspectRatio:false}});
+  } else {
+    chartPie = new Chart(pieCtx,{type:'doughnut',data:{labels:['Sin datos'],datasets:[{data:[1],backgroundColor:['rgba(255,255,255,.08)'],borderWidth:0}]},options:{plugins:{legend:{labels:{color:'#4a5568'}}},cutout:'65%',responsive:true,maintainAspectRatio:false}});
+  }
+
+  // Bar chart: hours by category this week
+  chartCatWeek = killChart(chartCatWeek);
+  const weekStart = getWeekStart(t);
+  const weekDates = Array.from({length:7},(_,i)=>addDays(weekStart,i));
+  const weekBloques = S.bloques.filter(b=>b.fecha>=weekStart&&b.fecha<=weekDates[6]);
+  const cats7 = {};
+  weekBloques.forEach(b=>{ cats7[b.categoria]=(cats7[b.categoria]||0)+b.duracion_min; });
+  const allCats = Object.keys(CAT_COLORS);
+  const barCtx = document.getElementById('chartCatWeek').getContext('2d');
+  chartCatWeek = new Chart(barCtx,{type:'bar',data:{
+    labels:allCats.map(c=>CAT_LABELS[c]),
+    datasets:[{data:allCats.map(c=>+((cats7[c]||0)/60).toFixed(2)),backgroundColor:allCats.map(c=>CAT_COLORS[c]),borderRadius:6,borderWidth:0}]
+  },options:{plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#8892b0',font:{size:10}},grid:{color:'rgba(255,255,255,.04)'}},y:{ticks:{color:'#8892b0',font:{size:10}},grid:{color:'rgba(255,255,255,.06)'},title:{display:true,text:'Horas',color:'#4a5568',font:{size:10}}}},responsive:true,maintainAspectRatio:false}});
+
+  // Table: last 10
+  const last10 = [...S.bloques].sort((a,b)=>b.fecha.localeCompare(a.fecha)||b.hora_inicio.localeCompare(a.hora_inicio)).slice(0,10);
+  const tbody = document.getElementById('dash-table');
+  if(last10.length===0){ tbody.innerHTML=`<tr><td colspan="8" class="empty"><div class="ico">📭</div>Sin registros</td></tr>`; return; }
+  tbody.innerHTML = last10.map(b=>`
+    <tr>
+      <td>${fmtD(b.fecha)}</td>
+      <td>${b.hora_inicio}</td>
+      <td>${b.hora_fin}</td>
+      <td><b>${fmtMins(b.duracion_min)}</b></td>
+      <td><span class="cat-dot" style="background:${CAT_COLORS[b.categoria]||'#888'}"></span>${CAT_LABELS[b.categoria]||b.categoria}</td>
+      <td style="max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${b.descripcion||'—'}</td>
+      <td>${b.proyecto||'—'}</td>
+      <td><span class="badge ${b.tipo==='pomodoro'?'b-o':'b-n'}">${b.tipo==='pomodoro'?'🍅 Pomodoro':'⏱ Bloque'}</span></td>
+    </tr>`).join('');
+}
+
+// ─── Timer ────────────────────────────────────────────────────────────────────
+function renderTimer(){
+  updateTimerDisplay();
+  updateTimerModeButtons();
+  updatePomDots();
+  updateTimerStats();
+  // Update config labels
+  document.getElementById('cfg-trabajo').textContent = S.config.pomodoro_trabajo+' min';
+  document.getElementById('cfg-descanso').textContent = S.config.pomodoro_descanso+' min';
+  document.getElementById('cfg-largo').textContent = S.config.pomodoro_largo+' min';
+  document.getElementById('cfg-antes').textContent = S.config.pomodoros_antes_largo;
+}
+
+function setMode(mode){
+  if(timerRunning) return; // Don't change mode while running
+  timerMode = mode;
+  const mins = mode==='trabajo' ? S.config.pomodoro_trabajo : mode==='descanso' ? S.config.pomodoro_descanso : S.config.pomodoro_largo;
+  timerSecsLeft = mins*60;
+  timerTotalSecs = mins*60;
+  updateTimerDisplay();
+  updateTimerModeButtons();
+}
+
+function updateTimerModeButtons(){
+  ['trabajo','descanso','largo'].forEach(m=>{
+    document.getElementById('btn-'+m).classList.toggle('active', timerMode===m);
+  });
+  const colors = {trabajo:'var(--g)', descanso:'var(--b)', largo:'var(--p)'};
+  const labels = {trabajo:'TRABAJO', descanso:'DESCANSO CORTO', largo:'DESCANSO LARGO'};
+  document.getElementById('timerModeLabel').style.color = colors[timerMode];
+  document.getElementById('timerModeLabel').textContent = labels[timerMode];
+  document.getElementById('ringFill').style.stroke = colors[timerMode];
+}
+
+function updateTimerDisplay(){
+  const m = Math.floor(timerSecsLeft/60);
+  const s = timerSecsLeft%60;
+  document.getElementById('timerDisplay').textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+  // Ring animation
+  const circumference = 2*Math.PI*88; // 553
+  const progress = timerTotalSecs>0 ? timerSecsLeft/timerTotalSecs : 0;
+  document.getElementById('ringFill').style.strokeDashoffset = circumference*(1-progress);
+  document.getElementById('btnStartPause').textContent = timerRunning ? '⏸ Pausar' : '▶ Iniciar';
+}
+
+function updatePomDots(){
+  const n = S.config.pomodoros_antes_largo;
+  const container = document.getElementById('pomDots');
+  container.innerHTML = Array.from({length:n},(_,i)=>{
+    let cls='pom-dot';
+    if(i<timerSessionCount%n) cls+=' done';
+    else if(i===timerSessionCount%n&&timerMode==='trabajo') cls+=' current';
+    return `<div class="${cls}"></div>`;
+  }).join('');
+}
+
+function updateTimerStats(){
+  const t=today();
+  const hoyPoms = S.bloques.filter(b=>b.fecha===t&&b.tipo==='pomodoro').length;
+  const hoyFocusMin = S.bloques.filter(b=>b.fecha===t&&b.tipo==='pomodoro').reduce((a,b)=>a+b.duracion_min,0);
+  const timerEl = document.getElementById('timer-pom-count');
+  const focusEl = document.getElementById('timer-focus-min');
+  if(timerEl) timerEl.textContent = hoyPoms;
+  if(focusEl) focusEl.textContent = hoyFocusMin;
+}
+
+function toggleTimer(){
+  if(timerRunning){
+    clearInterval(timerInterval);
+    timerInterval=null;
+    timerRunning=false;
+  } else {
+    timerRunning=true;
+    timerInterval=setInterval(()=>{
+      timerSecsLeft--;
+      if(timerSecsLeft<=0){
+        clearInterval(timerInterval);
+        timerInterval=null;
+        timerRunning=false;
+        timerSecsLeft=0;
+        onTimerEnd();
+      }
+      updateTimerDisplay();
+    },1000);
+  }
+  updateTimerDisplay();
+}
+
+function resetTimer(){
+  clearInterval(timerInterval);
+  timerInterval=null;
+  timerRunning=false;
+  const mins = timerMode==='trabajo' ? S.config.pomodoro_trabajo : timerMode==='descanso' ? S.config.pomodoro_descanso : S.config.pomodoro_largo;
+  timerSecsLeft = mins*60;
+  timerTotalSecs = mins*60;
+  updateTimerDisplay();
+  updateTimerModeButtons();
+}
+
+function onTimerEnd(){
+  // Flash animation
+  const overlay=document.getElementById('flashOverlay');
+  overlay.classList.add('flash');
+  setTimeout(()=>overlay.classList.remove('flash'),600);
+
+  if(timerMode==='trabajo'){
+    // Log this pomodoro
+    const now = new Date();
+    const endTime = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+    const startMins = (now.getHours()*60+now.getMinutes()) - S.config.pomodoro_trabajo;
+    const sh = Math.floor(((startMins%1440)+1440)%1440/60);
+    const sm = ((startMins%1440)+1440)%1440%60;
+    const startTime = `${String(sh).padStart(2,'0')}:${String(sm).padStart(2,'0')}`;
+    const cat = document.getElementById('timerCat') ? document.getElementById('timerCat').value : 'trabajo';
+    const desc = document.getElementById('timerDesc') ? document.getElementById('timerDesc').value.trim() : '';
+    const proyecto = document.getElementById('timerProyecto') ? document.getElementById('timerProyecto').value.trim() : '';
+    S.bloques.push({id:uid(),fecha:today(),hora_inicio:startTime,hora_fin:endTime,duracion_min:S.config.pomodoro_trabajo,categoria:cat,descripcion:desc||'Sesión Pomodoro',proyecto,tipo:'pomodoro'});
+    save();
+    timerSessionCount++;
+    showToast(`🍅 ¡Pomodoro completado! (${timerSessionCount} hoy)`);
+    // Auto-switch to break
+    if(timerSessionCount%S.config.pomodoros_antes_largo===0){
+      setTimeout(()=>{ setMode('largo'); showToast('🌙 ¡Hora de un descanso largo!'); }, 500);
+    } else {
+      setTimeout(()=>{ setMode('descanso'); showToast('☕ ¡Tómate un descanso corto!'); }, 500);
+    }
+    updateTimerStats();
+    updatePomDots();
+  } else {
+    showToast('⏰ ¡Descanso terminado! Vuelve al trabajo');
+    setTimeout(()=>setMode('trabajo'), 500);
+  }
+}
+
+// ─── Registro ─────────────────────────────────────────────────────────────────
+function renderRegistro(){
+  const filtro = document.getElementById('regFechaFiltro').value || today();
+  if(!document.getElementById('regFechaFiltro').value) document.getElementById('regFechaFiltro').value = today();
+  const dia = S.bloques.filter(b=>b.fecha===filtro).sort((a,b)=>a.hora_inicio.localeCompare(b.hora_inicio));
+  document.getElementById('reg-subtitle').textContent = `Bloques del ${fmtD(filtro)} — ${dia.length} registro(s)`;
+  const tbody = document.getElementById('reg-table');
+  const empty = document.getElementById('reg-empty');
+  if(dia.length===0){ tbody.innerHTML=''; empty.style.display='block'; return; }
+  empty.style.display='none';
+  tbody.innerHTML = dia.map(b=>`
+    <tr>
+      <td>${b.hora_inicio}</td>
+      <td>${b.hora_fin}</td>
+      <td><b>${fmtMins(b.duracion_min)}</b></td>
+      <td><span class="cat-dot" style="background:${CAT_COLORS[b.categoria]||'#888'}"></span>${CAT_LABELS[b.categoria]||b.categoria}</td>
+      <td style="max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${b.descripcion||'—'}</td>
+      <td>${b.proyecto||'—'}</td>
+      <td><span class="badge ${b.tipo==='pomodoro'?'b-o':'b-n'}">${b.tipo==='pomodoro'?'🍅 Pom':'⏱ Bloque'}</span></td>
+      <td>
+        <div style="display:flex;gap:4px">
+          <button class="btn btn-o btn-sm" onclick='openModal(${JSON.stringify(b)})'>✏️</button>
+          <button class="btn btn-r btn-sm" onclick="deleteBloque('${b.id}')">🗑</button>
+        </div>
+      </td>
+    </tr>`).join('');
+}
+
+// ─── Semana ───────────────────────────────────────────────────────────────────
+function getWeekStart(dateStr){
+  const d=new Date(dateStr+'T00:00:00');
+  const day=d.getDay(); // 0=Sun
+  const diff=d.getDate()-day+(day===0?-6:1); // Monday
+  const mon=new Date(d.setDate(diff));
+  return mon.toISOString().slice(0,10);
+}
+function addDays(dateStr, n){ const d=new Date(dateStr+'T00:00:00'); d.setDate(d.getDate()+n); return d.toISOString().slice(0,10); }
+const DAY_LABELS=['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'];
+
+function renderSemana(){
+  const t=today();
+  const weekStart=getWeekStart(t);
+  const weekDates=Array.from({length:7},(_,i)=>addDays(weekStart,i));
+  const twoWeeksAgo=addDays(weekStart,-7);
+  const twoWeekDates=Array.from({length:14},(_,i)=>addDays(twoWeeksAgo,i));
+
+  document.getElementById('semana-range').textContent = `${fmtD(weekStart)} — ${fmtD(weekDates[6])}`;
+
+  // Daily totals for last 2 weeks
+  const dailyHours = twoWeekDates.map(d=>{ return S.bloques.filter(b=>b.fecha===d).reduce((a,b)=>a+b.duracion_min,0)/60; });
+  const dayLabels14 = twoWeekDates.map(d=>{ const[,m,day]=d.split('-'); return `${parseInt(day)}/${parseInt(m)}`; });
+
+  chartDiario = killChart(chartDiario);
+  const diarCtx=document.getElementById('chartDiario').getContext('2d');
+  chartDiario=new Chart(diarCtx,{type:'bar',data:{
+    labels:dayLabels14,
+    datasets:[{label:'Horas',data:dailyHours.map(h=>+h.toFixed(2)),backgroundColor:twoWeekDates.map(d=>d>=weekStart?'rgba(0,232,122,.7)':'rgba(59,130,246,.4)'),borderRadius:5,borderWidth:0}]
+  },options:{plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#8892b0',font:{size:9}},grid:{color:'rgba(255,255,255,.04)'}},y:{ticks:{color:'#8892b0',font:{size:10}},grid:{color:'rgba(255,255,255,.06)'}}},responsive:true,maintainAspectRatio:false}});
+
+  // Stacked bar by category per day this week
+  const allCats=Object.keys(CAT_COLORS);
+  chartStack=killChart(chartStack);
+  const stackCtx=document.getElementById('chartStack').getContext('2d');
+  chartStack=new Chart(stackCtx,{type:'bar',data:{
+    labels:weekDates.map((_,i)=>DAY_LABELS[i]),
+    datasets:allCats.map(cat=>({
+      label:CAT_LABELS[cat],
+      data:weekDates.map(d=>+(S.bloques.filter(b=>b.fecha===d&&b.categoria===cat).reduce((a,b)=>a+b.duracion_min,0)/60).toFixed(2)),
+      backgroundColor:CAT_COLORS[cat],borderWidth:0,borderRadius:3
+    }))
+  },options:{plugins:{legend:{labels:{color:'#8892b0',font:{size:9}}}},scales:{x:{stacked:true,ticks:{color:'#8892b0',font:{size:10}},grid:{color:'rgba(255,255,255,.04)'}},y:{stacked:true,ticks:{color:'#8892b0',font:{size:10}},grid:{color:'rgba(255,255,255,.06)'}}},responsive:true,maintainAspectRatio:false}});
+
+  // Summary table by category this week
+  const weekBloques=S.bloques.filter(b=>b.fecha>=weekStart&&b.fecha<=weekDates[6]);
+  const totalWeek=weekBloques.reduce((a,b)=>a+b.duracion_min,0);
+  const catSummary={};
+  weekBloques.forEach(b=>{ catSummary[b.categoria]=(catSummary[b.categoria]||{min:0,count:0}); catSummary[b.categoria].min+=b.duracion_min; catSummary[b.categoria].count++; });
+  const catRows=Object.entries(catSummary).sort((a,b)=>b[1].min-a[1].min);
+  document.getElementById('semana-cat-table').innerHTML = catRows.length===0
+    ? `<tr><td colspan="4" class="empty">Sin datos esta semana</td></tr>`
+    : catRows.map(([cat,v])=>`<tr>
+        <td><span class="cat-dot" style="background:${CAT_COLORS[cat]||'#888'}"></span>${CAT_LABELS[cat]||cat}</td>
+        <td><b>${fmtMins(v.min)}</b></td>
+        <td>${v.count}</td>
+        <td>${totalWeek>0?Math.round(v.min/totalWeek*100)+'%':'—'}</td>
+      </tr>`).join('');
+
+  // Days detail
+  const daysEl=document.getElementById('semana-days');
+  daysEl.innerHTML=weekDates.map((d,i)=>{
+    const blocks=S.bloques.filter(b=>b.fecha===d).sort((a,b)=>a.hora_inicio.localeCompare(b.hora_inicio));
+    const total=blocks.reduce((a,b)=>a+b.duracion_min,0);
+    return `<div class="week-day-card">
+      <div class="week-day-title flex jb"><span>${DAY_LABELS[i]} ${fmtD(d)}</span><span style="color:var(--g)">${fmtMins(total)}</span></div>
+      ${blocks.length===0?`<div style="font-size:11px;color:var(--text3)">Sin bloques</div>`:blocks.map(b=>`
+        <div class="week-entry">
+          <span class="cat-dot" style="background:${CAT_COLORS[b.categoria]||'#888'}"></span>
+          <span style="color:var(--text2)">${b.hora_inicio}</span>
+          <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${b.descripcion||CAT_LABELS[b.categoria]}</span>
+          <span style="color:var(--g);font-weight:700">${fmtMins(b.duracion_min)}</span>
+        </div>`).join('')}
+    </div>`;
+  }).join('');
+}
+
+// ─── Configuración ────────────────────────────────────────────────────────────
+function renderConfiguracion(){
+  document.getElementById('cfg-input-trabajo').value = S.config.pomodoro_trabajo;
+  document.getElementById('cfg-input-descanso').value = S.config.pomodoro_descanso;
+  document.getElementById('cfg-input-largo').value = S.config.pomodoro_largo;
+  document.getElementById('cfg-input-antes').value = S.config.pomodoros_antes_largo;
+}
+
+function saveConfig(){
+  S.config.pomodoro_trabajo = parseInt(document.getElementById('cfg-input-trabajo').value)||25;
+  S.config.pomodoro_descanso = parseInt(document.getElementById('cfg-input-descanso').value)||5;
+  S.config.pomodoro_largo = parseInt(document.getElementById('cfg-input-largo').value)||15;
+  S.config.pomodoros_antes_largo = parseInt(document.getElementById('cfg-input-antes').value)||4;
+  // Reset timer with new config if not running
+  if(!timerRunning){
+    timerSecsLeft = S.config.pomodoro_trabajo*60;
+    timerTotalSecs = S.config.pomodoro_trabajo*60;
+    timerMode='trabajo';
+  }
+  save();
+  showToast('✅ Configuración guardada');
+}
+
+// ─── Close modal on backdrop click ───────────────────────────────────────────
+document.getElementById('mo-bloque').addEventListener('click',e=>{ if(e.target===e.currentTarget) closeModal(); });
+
+// ─── Init ─────────────────────────────────────────────────────────────────────
+timerSecsLeft = S.config.pomodoro_trabajo*60;
+timerTotalSecs = S.config.pomodoro_trabajo*60;
+renderDashboard();
+</script>
+</body>
+</html>
