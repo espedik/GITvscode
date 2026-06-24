@@ -182,6 +182,8 @@ tbody tr:hover td{background:rgba(0,232,122,.02)}
     <div class="nav-label">Seguimiento</div>
     <div class="nav-item" onclick="nav('medidas')"><span class="ico">⚖️</span>Peso & Medidas</div>
     <div class="nav-item" onclick="nav('progreso')"><span class="ico">📈</span>Progreso</div>
+    <div class="nav-label">Nutrición</div>
+    <div class="nav-item" onclick="nav('rutina')"><span class="ico">🥩</span>Rutina Muscular</div>
     <div class="nav-label">Configuración</div>
     <div class="nav-item" onclick="nav('metas')"><span class="ico">🎯</span>Perfil & Metas</div>
   </nav>
@@ -284,6 +286,9 @@ tbody tr:hover td{background:rgba(0,232,122,.02)}
       <div class="sh"><h2>📈 Progreso</h2></div>
       <div id="prog-body"></div>
     </section>
+
+    <!-- RUTINA MUSCULAR -->
+    <section id="s-rutina" class="section"></section>
 
     <!-- METAS -->
     <section id="s-metas" class="section">
@@ -437,9 +442,9 @@ document.querySelectorAll('.mo').forEach(m=>m.addEventListener('click',e=>{ if(e
 document.getElementById('conf').addEventListener('click',e=>{ if(e.target===document.getElementById('conf')) closeConf(); });
 
 // ─── NAVIGATION ──────────────────────────────────────────────────────────────
-const SECS=['dashboard','plan','alimentos','ejercicio','medidas','progreso','metas'];
-const STITLE={dashboard:'📊 Dashboard',plan:'🍽️ Plan Semanal',alimentos:'🥗 Registro Diario',ejercicio:'💪 Ejercicio',medidas:'⚖️ Peso & Medidas',progreso:'📈 Progreso',metas:'🎯 Perfil & Metas'};
-const RENDERS={dashboard:renderDashboard,plan:renderPlan,alimentos:renderAlimentos,ejercicio:renderEjercicio,medidas:renderMedidas,progreso:renderProgreso,metas:renderMetas};
+const SECS=['dashboard','plan','alimentos','ejercicio','medidas','progreso','rutina','metas'];
+const STITLE={dashboard:'📊 Dashboard',plan:'🍽️ Plan Semanal',alimentos:'🥗 Registro Diario',ejercicio:'💪 Ejercicio',medidas:'⚖️ Peso & Medidas',progreso:'📈 Progreso',rutina:'🥩 Rutina Muscular',metas:'🎯 Perfil & Metas'};
+const RENDERS={dashboard:renderDashboard,plan:renderPlan,alimentos:renderAlimentos,ejercicio:renderEjercicio,medidas:renderMedidas,progreso:renderProgreso,rutina:renderRutina,metas:renderMetas};
 
 function nav(s) {
   SECS.forEach(x=>document.getElementById('s-'+x).classList.toggle('active',x===s));
@@ -1079,9 +1084,124 @@ function exportData() {
   toast('⬇️ Datos exportados');
 }
 
+// ─── RUTINA MUSCULAR ─────────────────────────────────────────────────────────
+const PLAN_ITEMS=[
+  [
+    {nombre:'4 huevos revueltos con espinacas y aceite',cal:345,prot:26,carbs:4,gra:24},
+    {nombre:'Avena (70g) cocida con 250ml leche entera',cal:410,prot:19,carbs:59,gra:13},
+    {nombre:'2 plátanos medianos (120g c/u)',cal:200,prot:2,carbs:50,gra:0}
+  ],
+  [
+    {nombre:'200g pechuga de pollo a la plancha',cal:220,prot:46,carbs:0,gra:4},
+    {nombre:'1.5 tazas arroz blanco cocido',cal:300,prot:6,carbs:66,gra:0},
+    {nombre:'1 taza frijoles negros cocidos',cal:230,prot:15,carbs:42,gra:1},
+    {nombre:'2 tortillas de maíz',cal:130,prot:3,carbs:27,gra:2},
+    {nombre:'½ aguacate + ensalada verde',cal:160,prot:2,carbs:9,gra:14}
+  ],
+  [
+    {nombre:'2 latas atún en agua (170g drenado)',cal:180,prot:40,carbs:0,gra:2},
+    {nombre:'1.5 tazas arroz blanco cocido',cal:300,prot:6,carbs:66,gra:0},
+    {nombre:'Ensalada (lechuga, jitomate, pepino)',cal:50,prot:2,carbs:10,gra:0},
+    {nombre:'500ml leche entera',cal:310,prot:16,carbs:24,gra:17}
+  ]
+];
+
+function registrarRutinaMeal(idx) {
+  const KEYS=['desayuno','almuerzo','cena'];
+  const NAMES=['Desayuno','Comida','Cena'];
+  PLAN_ITEMS[idx].forEach(item=>{
+    S.alimentos.push({id:uid(),nombre:item.nombre,comida:KEYS[idx],
+      cantidad:'',unidad:'g',cal:item.cal,prot:item.prot,carbs:item.carbs,gra:item.gra,
+      fecha:today(),notas:'Rutina muscular'});
+  });
+  save();
+  toast('✅ '+NAMES[idx]+' registrado en el diario ('+PLAN_ITEMS[idx].length+' alimentos)');
+  if(document.getElementById('s-dashboard').classList.contains('active')) renderDashboard();
+}
+
+function renderRutina() {
+  const sec=document.getElementById('s-rutina'); if(!sec) return;
+  const tCal=2835,tProt=183,tCarb=357,tGra=77;
+  const meals=[
+    {idx:0,ico:'🌅',name:'Desayuno',time:'7:00 – 8:00 am',cal:955,prot:47,carbs:113,gra:37,col:'#ffd93d'},
+    {idx:1,ico:'☀️',name:'Comida',time:'1:00 – 2:00 pm',cal:1040,prot:72,carbs:144,gra:21,col:'#ff6b35'},
+    {idx:2,ico:'🌙',name:'Cena',time:'7:00 – 8:00 pm',cal:840,prot:64,carbs:100,gra:19,col:'#3b82f6'}
+  ];
+  const alts=[
+    {ico:'🥩',cat:'Proteínas económicas',items:['Huevo (la fuente más barata)','Atún en lata','Pollo pierna/muslo','Carne molida 90/10','Leche entera','Frijoles + arroz combinados']},
+    {ico:'🌾',cat:'Carbohidratos complejos',items:['Arroz blanco/integral','Avena en hojuelas','Tortillas de maíz','Plátano','Papa cocida','Pan integral']},
+    {ico:'🥑',cat:'Grasas saludables',items:['Aguacate','Mantequilla de cacahuate','Aceite de oliva','Yema de huevo','Semillas de girasol','Coco rallado sin azúcar']},
+    {ico:'🥦',cat:'Verduras recomendadas',items:['Espinacas','Brócoli','Zanahoria','Jitomate','Pepino','Chayote cocido']}
+  ];
+  const tips=[
+    {ico:'⏰',t:'Timing de proteína',d:'Consume mínimo 40g de proteína en cada comida para maximizar la síntesis muscular postentrenamiento.'},
+    {ico:'💧',t:'Hidratación',d:'Toma 3–3.5 L de agua al día. El músculo es 75% agua; con solo 2% de deshidratación el rendimiento cae notablemente.'},
+    {ico:'😴',t:'Descanso obligatorio',d:'Duerme 7–9 horas. El 70% de la hormona de crecimiento se libera durante el sueño profundo — ahí crece el músculo.'},
+    {ico:'📅',t:'Consistencia',d:'Los primeros cambios visibles llegan entre las semanas 6–12. Ningún suplemento reemplaza una dieta sostenida.'},
+    {ico:'📈',t:'Superávit controlado',d:'Consumes ~315 kcal sobre tu mantenimiento estimado (≈2,520 kcal/día). Ideal para ganar músculo sin acumular exceso de grasa.'},
+    {ico:'🏋️',t:'Entrenamiento',d:'3–4 días/semana con movimientos compuestos: sentadilla, peso muerto, press banca, dominadas y remo con barra.'}
+  ];
+  sec.innerHTML=`
+    <div class="sh"><h2>💪 Rutina Alimentaria — Masa Muscular</h2></div>
+    <div class="card" style="margin-bottom:16px;border-color:rgba(0,232,122,.25);background:linear-gradient(135deg,rgba(0,232,122,.05),rgba(59,130,246,.05))">
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;text-align:center">
+        <div><div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px">Peso actual</div><div style="font-size:22px;font-weight:800;color:var(--g)">75 kg</div></div>
+        <div><div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px">Estatura</div><div style="font-size:22px;font-weight:800;color:var(--b)">1.78 m</div></div>
+        <div><div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px">Edad</div><div style="font-size:22px;font-weight:800;color:var(--p)">31 años</div></div>
+        <div><div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px">Objetivo</div><div style="font-size:16px;font-weight:800;color:var(--o)">Ganar masa muscular</div></div>
+      </div>
+    </div>
+    <div class="g4" style="margin-bottom:16px">
+      ${[
+        {l:'Calorías / día',v:fmt(tCal)+' kcal',sub:'Superávit +315 kcal',c:'var(--o)'},
+        {l:'Proteína',v:tProt+'g',sub:'2.4 g por kg de peso',c:'var(--p)'},
+        {l:'Carbohidratos',v:tCarb+'g',sub:'Energía y recuperación',c:'var(--b)'},
+        {l:'Grasas',v:tGra+'g',sub:'Hormonas anabólicas',c:'var(--w)'}
+      ].map(k=>`<div class="card" style="border-left:4px solid ${k.c};text-align:center"><div class="card-title" style="color:${k.c};justify-content:center">${k.l}</div><div class="card-val" style="color:${k.c}">${k.v}</div><div class="card-sub">${k.sub}</div></div>`).join('')}
+    </div>
+    <div style="display:flex;flex-direction:column;gap:14px;margin-bottom:22px">
+      ${meals.map(m=>`
+      <div class="card" style="border-left:4px solid ${m.col}">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px;margin-bottom:14px">
+          <div>
+            <div style="font-size:17px;font-weight:800;color:${m.col}">${m.ico} ${m.name}</div>
+            <div style="font-size:11px;color:var(--text3);margin-top:2px">⏰ ${m.time}</div>
+          </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <div style="text-align:center;background:rgba(255,107,53,.1);border-radius:8px;padding:5px 10px"><div style="font-size:9px;color:var(--text3)">Calorías</div><div style="font-size:14px;font-weight:800;color:var(--o)">${m.cal}</div></div>
+            <div style="text-align:center;background:rgba(176,110,255,.1);border-radius:8px;padding:5px 10px"><div style="font-size:9px;color:var(--text3)">Proteína</div><div style="font-size:14px;font-weight:800;color:var(--p)">${m.prot}g</div></div>
+            <div style="text-align:center;background:rgba(59,130,246,.1);border-radius:8px;padding:5px 10px"><div style="font-size:9px;color:var(--text3)">Carbs</div><div style="font-size:14px;font-weight:800;color:var(--b)">${m.carbs}g</div></div>
+            <div style="text-align:center;background:rgba(255,217,61,.1);border-radius:8px;padding:5px 10px"><div style="font-size:9px;color:var(--text3)">Grasa</div><div style="font-size:14px;font-weight:800;color:var(--w)">${m.gra}g</div></div>
+          </div>
+        </div>
+        <div class="tw"><table>
+          <thead><tr><th>Alimento</th><th>Cal</th><th>Prot.</th><th>Carbs</th><th>Grasa</th></tr></thead>
+          <tbody>${PLAN_ITEMS[m.idx].map(it=>'<tr><td style="font-weight:600">'+it.nombre+'</td><td style="color:var(--o)">'+it.cal+'</td><td style="color:var(--p)">'+it.prot+'g</td><td style="color:var(--b)">'+it.carbs+'g</td><td style="color:var(--w)">'+it.gra+'g</td></tr>').join('')}</tbody>
+        </table></div>
+        <div style="margin-top:12px;display:flex;justify-content:flex-end">
+          <button class="btn btn-g btn-sm" onclick="registrarRutinaMeal(${m.idx})">➕ Registrar esta comida hoy</button>
+        </div>
+      </div>`).join('')}
+    </div>
+    <div class="sh"><h2>🛒 Alimentos recomendados (bajo presupuesto)</h2></div>
+    <div class="g4" style="margin-bottom:22px">
+      ${alts.map(a=>'<div class="card"><div class="card-title">'+a.ico+' '+a.cat+'</div><ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:5px">'+a.items.map(i=>'<li style="font-size:12px;color:var(--text);display:flex;align-items:center;gap:6px"><span style="color:var(--g);font-size:9px">▶</span>'+i+'</li>').join('')+'</ul></div>').join('')}
+    </div>
+    <div class="sh"><h2>💡 Claves para ganar masa muscular</h2></div>
+    <div class="g3">
+      ${tips.map(t=>'<div class="card" style="border-left:3px solid var(--g)"><div style="font-size:22px;margin-bottom:8px">'+t.ico+'</div><div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:5px">'+t.t+'</div><div style="font-size:12px;color:var(--text2);line-height:1.6">'+t.d+'</div></div>').join('')}
+    </div>
+  `;
+}
+
 // ─── INIT ────────────────────────────────────────────────────────────────────
 function init() {
   load();
+  if(!S.perfil.peso&&!S.perfil.altura){
+    S.perfil={nombre:'',peso:75,altura:178,edad:31,sexo:'M',actividad:'moderado'};
+    S.metas={...S.metas,caloriasD:2835,proteina:183,carbs:357,grasa:77,agua:10};
+    save();
+  }
   document.getElementById('dateLabel').textContent=new Date().toLocaleDateString('es-MX',{weekday:'long',day:'numeric',month:'long'});
   document.getElementById('f-fecha-al').value=today();
 
