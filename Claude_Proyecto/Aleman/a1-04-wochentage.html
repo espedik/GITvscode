@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="es">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>A1 · 04 — Wochentage & Monate | Deutsch</title><link rel="stylesheet" href="styles.css">
+<style>
+.day-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-bottom:16px}
+.day-card{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:10px 6px;text-align:center}
+.day-card.today{background:rgba(204,0,0,.07);border-color:rgba(204,0,0,.25)}
+.day-num{font-size:11px;font-weight:700;color:var(--text3)}
+.day-de{font-size:12px;font-weight:800;color:var(--black);margin-top:3px}
+.day-es{font-size:10px;color:var(--text2);margin-top:2px}
+.month-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px}
+.month-card{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:12px;text-align:center}
+.month-card.season-spring{border-color:rgba(34,197,94,.3);background:rgba(34,197,94,.05)}
+.month-card.season-summer{border-color:rgba(234,179,8,.3);background:rgba(234,179,8,.05)}
+.month-card.season-autumn{border-color:rgba(249,115,22,.3);background:rgba(249,115,22,.05)}
+.month-card.season-winter{border-color:rgba(59,130,246,.3);background:rgba(59,130,246,.05)}
+.month-num{font-size:10px;font-weight:700;color:var(--text3)}
+.month-de{font-size:13px;font-weight:800;color:var(--black)}
+.month-es{font-size:10px;color:var(--text2);margin-top:2px}
+@media(max-width:600px){.day-grid{grid-template-columns:repeat(4,1fr)}.month-grid{grid-template-columns:repeat(2,1fr)}}
+</style></head>
+<body>
+<nav class="nav"><a href="index.html" class="nav-logo">🇩🇪 Deutsch</a><div class="nav-links"><a href="index.html" class="nav-link">← Índice A1</a></div></nav>
+
+<div class="topic-hero"><div class="container">
+  <div class="topic-hero-tag">A1 · Tema 04</div>
+  <h1>Wochentage & Monate — <em>Días y Meses</em></h1>
+  <p class="topic-hero-desc">Aprenderás los días de la semana, los meses del año, las estaciones y cómo expresar fechas, horarios y rutinas temporales en alemán.</p>
+  <div class="topic-hero-meta"><span class="meta-pill">📅 Días</span><span class="meta-pill">📆 Meses</span><span class="meta-pill">🌸 Estaciones</span><span class="meta-pill">🕐 Preposiciones de tiempo</span></div>
+</div></div>
+
+<div class="topic-content"><div class="container">
+
+<!-- DÍAS DE LA SEMANA -->
+<div class="content-full">
+  <div class="card card-gold">
+    <h3><span>📅</span> 1. Días de la semana — die Wochentage</h3>
+    <p style="color:var(--text2);font-size:13px;margin-bottom:14px">En alemán la semana empieza el <strong>lunes (Montag)</strong>. Todos los días son masculinos: <em>der Montag</em>. La mayoría terminan en <strong>-tag</strong> (día).</p>
+    <div class="day-grid">
+      <div class="day-card"><div class="day-num">Mo</div><div class="day-de">Montag</div><div class="day-es">lunes</div></div>
+      <div class="day-card"><div class="day-num">Di</div><div class="day-de">Dienstag</div><div class="day-es">martes</div></div>
+      <div class="day-card"><div class="day-num">Mi</div><div class="day-de">Mittwoch</div><div class="day-es">miércoles</div></div>
+      <div class="day-card"><div class="day-num">Do</div><div class="day-de">Donnerstag</div><div class="day-es">jueves</div></div>
+      <div class="day-card"><div class="day-num">Fr</div><div class="day-de">Freitag</div><div class="day-es">viernes</div></div>
+      <div class="day-card today"><div class="day-num">Sa</div><div class="day-de">Samstag</div><div class="day-es">sábado</div></div>
+      <div class="day-card today"><div class="day-num">So</div><div class="day-de">Sonntag</div><div class="day-es">domingo</div></div>
+    </div>
+    <table class="vocab-table">
+      <thead><tr><th>Día</th><th>Abreviatura</th><th>Frase tipo</th><th>Español</th></tr></thead>
+      <tbody>
+        <tr><td class="vocab-de">am Montag</td><td>Mo</td><td class="vocab-ex">Am Montag habe ich Deutschkurs.</td><td class="vocab-es">El lunes tengo clase de alemán.</td></tr>
+        <tr><td class="vocab-de">am Dienstag</td><td>Di</td><td class="vocab-ex">Am Dienstag arbeite ich.</td><td class="vocab-es">El martes trabajo.</td></tr>
+        <tr><td class="vocab-de">am Mittwoch</td><td>Mi</td><td class="vocab-ex">Am Mittwoch gehe ich zum Arzt.</td><td class="vocab-es">El miércoles voy al médico.</td></tr>
+        <tr><td class="vocab-de">am Wochenende</td><td>Sa+So</td><td class="vocab-ex">Am Wochenende schlafe ich lang.</td><td class="vocab-es">El fin de semana duermo hasta tarde.</td></tr>
+      </tbody>
+    </table>
+    <div class="tip-box"><strong>💡 am + día:</strong> Para decir "el lunes" siempre se usa <em>am</em> + día. Ej: <em>am Freitag</em> = el viernes / los viernes.</div>
+  </div>
+</div>
+
+<!-- MESES -->
+<div class="content-full">
+  <div class="card">
+    <h3><span>📆</span> 2. Los meses del año — die Monate</h3>
+    <p style="color:var(--text2);font-size:13px;margin-bottom:14px">Todos los meses son masculinos: <em>der Januar</em>. Para decir "en enero" usa <strong>im</strong> + mes.</p>
+    <div class="month-grid">
+      <div class="month-card season-winter"><div class="month-num">01 ❄️</div><div class="month-de">Januar</div><div class="month-es">enero</div></div>
+      <div class="month-card season-winter"><div class="month-num">02 ❄️</div><div class="month-de">Februar</div><div class="month-es">febrero</div></div>
+      <div class="month-card season-spring"><div class="month-num">03 🌸</div><div class="month-de">März</div><div class="month-es">marzo</div></div>
+      <div class="month-card season-spring"><div class="month-num">04 🌸</div><div class="month-de">April</div><div class="month-es">abril</div></div>
+      <div class="month-card season-spring"><div class="month-num">05 🌸</div><div class="month-de">Mai</div><div class="month-es">mayo</div></div>
+      <div class="month-card season-summer"><div class="month-num">06 ☀️</div><div class="month-de">Juni</div><div class="month-es">junio</div></div>
+      <div class="month-card season-summer"><div class="month-num">07 ☀️</div><div class="month-de">Juli</div><div class="month-es">julio</div></div>
+      <div class="month-card season-summer"><div class="month-num">08 ☀️</div><div class="month-de">August</div><div class="month-es">agosto</div></div>
+      <div class="month-card season-autumn"><div class="month-num">09 🍂</div><div class="month-de">September</div><div class="month-es">septiembre</div></div>
+      <div class="month-card season-autumn"><div class="month-num">10 🍂</div><div class="month-de">Oktober</div><div class="month-es">octubre</div></div>
+      <div class="month-card season-autumn"><div class="month-num">11 🍂</div><div class="month-de">November</div><div class="month-es">noviembre</div></div>
+      <div class="month-card season-winter"><div class="month-num">12 ❄️</div><div class="month-de">Dezember</div><div class="month-es">diciembre</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ESTACIONES -->
+<div class="content-full">
+  <div class="card">
+    <h3><span>🌸</span> 3. Las estaciones — die Jahreszeiten</h3>
+    <table class="vocab-table">
+      <thead><tr><th>Estación</th><th>Alemán</th><th>Meses</th><th>Ejemplo</th></tr></thead>
+      <tbody>
+        <tr><td>🌸</td><td class="vocab-de">der Frühling</td><td class="vocab-es">marzo–mayo</td><td class="vocab-ex">Im Frühling blühen die Blumen.</td></tr>
+        <tr><td>☀️</td><td class="vocab-de">der Sommer</td><td class="vocab-es">junio–agosto</td><td class="vocab-ex">Im Sommer ist es heiß in Deutschland.</td></tr>
+        <tr><td>🍂</td><td class="vocab-de">der Herbst</td><td class="vocab-es">sept.–noviembre</td><td class="vocab-ex">Im Herbst fallen die Blätter.</td></tr>
+        <tr><td>❄️</td><td class="vocab-de">der Winter</td><td class="vocab-es">dic.–febrero</td><td class="vocab-ex">Im Winter schneit es oft.</td></tr>
+      </tbody>
+    </table>
+    <div class="tip-box"><strong>💡 im + estación/mes:</strong> Para estaciones y meses siempre se usa <em>im</em>. Ej: <em>im Sommer</em> = en verano, <em>im März</em> = en marzo.</div>
+  </div>
+</div>
+
+<!-- PREPOSICIONES DE TIEMPO -->
+<div class="content-full">
+  <div class="card card-red">
+    <h3><span>⏰</span> 4. Preposiciones de tiempo — esenciales</h3>
+    <table class="vocab-table">
+      <thead><tr><th>Prep.</th><th>Uso</th><th>Ejemplo</th><th>Español</th></tr></thead>
+      <tbody>
+        <tr><td class="vocab-de" style="font-size:16px;font-weight:800">am</td><td class="vocab-es">Días + momentos del día</td><td class="vocab-ex">am Montag / am Morgen / am Wochenende</td><td class="vocab-es">el lunes / por la mañana / el fin de semana</td></tr>
+        <tr><td class="vocab-de" style="font-size:16px;font-weight:800">im</td><td class="vocab-es">Meses + estaciones + años</td><td class="vocab-ex">im Januar / im Sommer / im Jahr 2024</td><td class="vocab-es">en enero / en verano / en el año 2024</td></tr>
+        <tr><td class="vocab-de" style="font-size:16px;font-weight:800">um</td><td class="vocab-es">Horas exactas</td><td class="vocab-ex">um 8 Uhr / um halb neun</td><td class="vocab-es">a las 8 / a las 8:30</td></tr>
+        <tr><td class="vocab-de" style="font-size:16px;font-weight:800">von ... bis</td><td class="vocab-es">Desde ... hasta</td><td class="vocab-ex">von Montag bis Freitag / von 9 bis 17 Uhr</td><td class="vocab-es">de lunes a viernes / de 9 a 17h</td></tr>
+        <tr><td class="vocab-de" style="font-size:16px;font-weight:800">seit</td><td class="vocab-es">Desde hace (con presente)</td><td class="vocab-ex">seit drei Jahren / seit einem Monat</td><td class="vocab-es">desde hace 3 años / desde hace un mes</td></tr>
+        <tr><td class="vocab-de" style="font-size:16px;font-weight:800">in</td><td class="vocab-es">Dentro de (futuro)</td><td class="vocab-ex">in drei Tagen / in einer Woche</td><td class="vocab-es">en 3 días / en una semana</td></tr>
+        <tr><td class="vocab-de" style="font-size:16px;font-weight:800">vor</td><td class="vocab-es">Hace (pasado)</td><td class="vocab-ex">vor einer Stunde / vor zwei Tagen</td><td class="vocab-es">hace una hora / hace dos días</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- EXPRESIONES DE TIEMPO -->
+<div class="content-full">
+  <div class="card">
+    <h3><span>💬</span> 5. Expresiones de tiempo frecuentes</h3>
+    <table class="vocab-table">
+      <thead><tr><th>Alemán</th><th>Español</th><th>Ejemplo</th></tr></thead>
+      <tbody>
+        <tr><td class="vocab-de">heute</td><td class="vocab-es">hoy</td><td class="vocab-ex">Heute lerne ich Deutsch.</td></tr>
+        <tr><td class="vocab-de">gestern</td><td class="vocab-es">ayer</td><td class="vocab-ex">Gestern war ich krank.</td></tr>
+        <tr><td class="vocab-de">morgen</td><td class="vocab-es">mañana</td><td class="vocab-ex">Morgen fahre ich nach Berlin.</td></tr>
+        <tr><td class="vocab-de">vorgestern</td><td class="vocab-es">anteayer</td><td class="vocab-ex">Vorgestern hatte ich ein Meeting.</td></tr>
+        <tr><td class="vocab-de">übermorgen</td><td class="vocab-es">pasado mañana</td><td class="vocab-ex">Übermorgen kommt er zurück.</td></tr>
+        <tr><td class="vocab-de">jetzt / gerade</td><td class="vocab-es">ahora / en este momento</td><td class="vocab-ex">Ich lerne jetzt.</td></tr>
+        <tr><td class="vocab-de">bald</td><td class="vocab-es">pronto</td><td class="vocab-ex">Bis bald!</td></tr>
+        <tr><td class="vocab-de">immer / oft / manchmal / selten / nie</td><td class="vocab-es">siempre / a menudo / a veces / raramente / nunca</td><td class="vocab-ex">Ich gehe oft ins Kino.</td></tr>
+        <tr><td class="vocab-de">täglich / wöchentlich / monatlich</td><td class="vocab-es">diario / semanal / mensual</td><td class="vocab-ex">Ich lerne täglich eine Stunde Deutsch.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- CÓMO ESCRIBIR FECHAS -->
+<div class="content-full">
+  <div class="card card-gold">
+    <h3><span>🗓️</span> 6. Cómo escribir y decir fechas</h3>
+    <div class="rule-box">
+      Estructura: <strong>am + ordinal + Monat</strong><br><br>
+      am <strong>ersten</strong> Januar → el 1 de enero<br>
+      am <strong>fünfzehnten</strong> März → el 15 de marzo<br>
+      am <strong>dritten</strong> Oktober → el 3 de octubre<br><br>
+      Por escrito: 01.01.2025 (día.mes.año)
+    </div>
+    <table class="vocab-table">
+      <thead><tr><th>Pregunta</th><th>Respuesta</th><th>Español</th></tr></thead>
+      <tbody>
+        <tr><td class="vocab-de">Welches Datum haben wir heute?</td><td class="vocab-ex">Heute ist der dreiundzwanzigste Juni.</td><td class="vocab-es">¿Qué fecha es hoy? — Hoy es el 23 de junio.</td></tr>
+        <tr><td class="vocab-de">Wann hast du Geburtstag?</td><td class="vocab-ex">Am fünfzehnten August.</td><td class="vocab-es">¿Cuándo es tu cumpleaños? — El 15 de agosto.</td></tr>
+        <tr><td class="vocab-de">In welchem Jahr bist du geboren?</td><td class="vocab-ex">Ich bin neunzehnneunundneunzig geboren.</td><td class="vocab-es">¿En qué año naciste? — Nací en 1999.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- EJERCICIOS -->
+<div class="content-full">
+  <div class="card card-red">
+    <h3><span>✏️</span> 7. Ejercicios</h3>
+    <div class="exercise"><div class="exercise-num">Ejercicio 1 — ¿Qué preposición?</div><div class="exercise-q">___ Montag / ___ März / ___ 8 Uhr / ___ Sommer / ___ zwei Jahren</div><div class="exercise-hint">am / im / um / im / seit</div></div>
+    <div class="exercise"><div class="exercise-num">Ejercicio 2 — Escribe tu rutina semanal</div><div class="placeholder" style="margin-top:8px">Am Montag... Am Dienstag... Am Wochenende... Immer / Oft / Manchmal...</div></div>
+    <div class="exercise"><div class="exercise-num">Ejercicio 3 — Fechas importantes</div><div class="exercise-q">¿Cómo dices en alemán: "El día de la unidad alemana es el 3 de octubre"?</div><div class="exercise-hint">Der Tag der Deutschen Einheit ist am dritten Oktober.</div></div>
+    <div class="exercise"><div class="exercise-num">Ejercicio 4 — Tu cumpleaños</div><div class="exercise-q">Schreib: Cuándo es tu cumpleaños, en qué mes, y qué estación es.</div><div class="placeholder" style="margin-top:8px">Ich habe am ... Geburtstag. Das ist im ... (Monat), im ... (Jahreszeit).</div></div>
+  </div>
+</div>
+
+</div></div>
+<div class="page-nav">
+  <a href="a1-03-farben.html" class="page-nav-btn"><span style="font-size:24px">🎨</span><div><div class="page-nav-dir">← Anterior</div><div class="page-nav-title">Farben & Formen</div></div></a>
+  <a href="a1-05-familie.html" class="page-nav-btn next"><div><div class="page-nav-dir">Siguiente →</div><div class="page-nav-title">Familie</div></div><span style="font-size:24px">👨‍👩‍👧</span></a>
+</div>
+<footer class="footer"><p>A1 · 04 — Wochentage & Monate</p><div class="footer-flag"><span style="background:#1a1a1a;width:20px;height:5px"></span><span style="background:var(--red);width:20px;height:5px"></span><span style="background:#FFCE00;width:20px;height:5px"></span></div></footer>
+</body></html>
