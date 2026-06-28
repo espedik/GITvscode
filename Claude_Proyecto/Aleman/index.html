@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Deutsch Lernen — A1 & A2</title>
+<link rel="stylesheet" href="styles.css">
+<style>
+/* Animación bandera */
+@keyframes flagSlide{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+.flag-stripe{animation:flagSlide .6s ease forwards}
+.flag-black{animation-delay:.0s}
+.flag-red{animation-delay:.15s}
+.flag-gold{animation-delay:.3s}
+.flag-stripe{transform-origin:left}
+
+/* Motivational banner */
+.motivation{background:linear-gradient(135deg,rgba(221,0,0,.08),rgba(255,206,0,.08));border:1px solid rgba(255,206,0,.15);border-radius:var(--r);padding:24px 32px;text-align:center;margin:40px 0}
+.motivation-quote{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--text);margin-bottom:6px}
+.motivation-attr{font-size:13px;color:var(--text3)}
+
+/* Progress overview */
+.progress-overview{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:24px;margin-bottom:48px}
+.progress-overview h3{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text2);margin-bottom:20px}
+.progress-levels{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:480px){.progress-levels{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="index.html" class="nav-logo">🇩🇪 Deutsch</a>
+  <div class="nav-links">
+    <a href="#a1" class="nav-link active">A1 Básico</a>
+    <a href="#a2" class="nav-link">A2 Elemental</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-flag">
+    <div class="flag-stripe flag-black" style="width:80px;height:12px;border-radius:3px 0 0 3px;border:1px solid rgba(255,255,255,.1)"></div>
+    <div class="flag-stripe flag-red" style="width:80px;height:12px;border-radius:0"></div>
+    <div class="flag-stripe flag-gold" style="width:80px;height:12px;border-radius:0 3px 3px 0"></div>
+  </div>
+  <div class="hero-tag">Tu camino al alemán</div>
+  <h1>Aprende <span>Deutsch</span><br>desde cero</h1>
+  <p>Domina el alemán nivel A1 y A2. Gramática, vocabulario y ejercicios organizados para que avances rápido y con confianza.</p>
+  <div class="hero-stats">
+    <div class="hero-stat"><div class="hero-stat-n">2</div><div class="hero-stat-l">Niveles</div></div>
+    <div class="hero-stat"><div class="hero-stat-n">30+</div><div class="hero-stat-l">Temas</div></div>
+    <div class="hero-stat"><div class="hero-stat-n">A2</div><div class="hero-stat-l">Meta actual</div></div>
+    <div class="hero-stat"><div class="hero-stat-n">🎓</div><div class="hero-stat-l">Alemania</div></div>
+  </div>
+</section>
+
+<div class="container">
+
+  <!-- Frase motivacional -->
+  <div class="motivation">
+    <div class="motivation-quote">"Eine Sprache zu lernen ist ein Fenster zur Welt zu öffnen."</div>
+    <div class="motivation-attr">Aprender un idioma es abrir una ventana al mundo.</div>
+  </div>
+
+  <!-- Progreso general -->
+  <div class="progress-overview">
+    <h3>📊 Tu progreso</h3>
+    <div class="progress-levels">
+      <div>
+        <div class="prog-wrap">
+          <div class="prog-label"><span>A1 — Básico</span><span style="color:var(--gold)">0%</span></div>
+          <div class="prog-bar"><div class="prog-fill" style="width:0%"></div></div>
+        </div>
+      </div>
+      <div>
+        <div class="prog-wrap">
+          <div class="prog-label"><span>A2 — Elemental</span><span style="color:var(--red)">0%</span></div>
+          <div class="prog-bar"><div class="prog-fill" style="width:0%"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════ NIVEL A1 ══════════ -->
+  <div id="a1">
+    <div class="sh">
+      <span class="sh-badge a1">Nivel A1</span>
+      <h2>Básico — Punto de partida</h2>
+      <div class="sh-line"></div>
+    </div>
+
+    <div class="topic-grid">
+
+      <div class="topic-card a1" style="cursor:default">
+        <div class="topic-num">A1 · 01</div>
+        <div class="topic-icon">👋</div>
+        <div class="topic-title">Begrüßungen<br><span style="font-size:12px;color:var(--text2);font-weight:400">Saludos y despedidas</span></div>
+        <div class="topic-tags"><span class="topic-tag">Hallo</span><span class="topic-tag">Tschüss</span><span class="topic-tag">Guten Morgen</span></div>
+        <div class="topic-arrow">→</div>
+      </div>
+
+      <div class="topic-card a1" style="cursor:default">
+        <div class="topic-num">A1 · 02</div>
+        <div class="topic-icon">🔢</div>
+        <div class="topic-title">Zahlen 1–100<br><span style="font-size:12px;color:var(--text2);font-weight:400">Números del 1 al 100</span></div>
+        <div class="topic-tags"><span class="topic-tag">eins</span><span class="topic-tag">zehn</span><span class="topic-tag">hundert</span></div>
+        <div class="topic-arrow">→</div>
+      </div>
+
+      <div class="topic-card a1" style="cursor:default">
+        <div class="topic-num">A1 · 03</div>
+        <div class="topic-icon">🎨</div>
+        <div class="topic-title">Farben & Formen<br><span style="font-size:12px;color:var(--text2);font-weight:400">Colores y formas</span></div>
+        <div class="topic-tags"><span class="topic-tag">rot</span><span class="topic-tag">blau</span><span class="topic-tag">groß</span></div>
+        <div class="topic-arrow">→</div>
+      </div>
+
+      <div class="topic-card a1" style="cursor:default">
+        <div class="topic-num">A1 · 04</div>
+        <div class="topic-icon">📅</div>
+        <div class="topic-title">Wochentage & Monate<br><span style="font-size:12px;color:var(--text2);font-weight:400">Días de la semana y meses</span></div>
+        <div class="topic-tags"><span class="topic-tag">Montag</span><span class="topic-tag">Januar</span><span class="topic-tag">heute</span></div>
+        <div class="topic-arrow">→</div>
+      </div>
+
+      <div class="topic-card a1" style="cursor:default">
+        <div class="topic-num">A1 · 05</div>
+        <div class="topic-icon">👨‍👩‍👧</div>
+        <div class="topic-title">Familie<br><span style="font-size:12px;color:var(--text2);font-weight:400">La familia</span></div>
+        <div class="topic-tags"><span class="topic-tag">Mutter</span><span class="topic-tag">Vater</span><span class="topic-tag">Bruder</span></div>
+        <div class="topic-arrow">→</div>
+      </div>
+
+      <div class="topic-card a1" style="cursor:default">
+        <div class="topic-num">A1 · 06</div>
+        <div class="topic-icon">🔤</div>
+        <div class="topic-title">Artikel: der, die, das<br><span style="font-size:12px;color:var(--text2);font-weight:400">Los artículos alemanes</span></div>
+        <div class="topic-tags"><span class="topic-tag">der Mann</span><span class="topic-tag">die Frau</span><span class="topic-tag">das Kind</span></div>
+        <div class="topic-arrow">→</div>
+      </div>
+
+      <div class="topic-card a1" style="cursor:default">
+        <div class="topic-num">A1 · 07</div>
+        <div class="topic-icon">👤</div>
+        <div class="topic-title">Personalpronomen<br><span style="font-size:12px;color:var(--text2);font-weight:400">Pronombres personales</span></div>
+        <div class="topic-tags"><span class="topic-tag">ich</span><span class="topic-tag">du</span><span class="topic-tag">er/sie/es</span></div>
+        <div class="topic-arrow">→</div>
+      </div>
+
+      <div class="topic-card a1" style="cursor:default">
+        <div class="topic-num">A1 · 08</div>
+        <div class="topic-icon">⚙️</div>
+        <div class="topic-title">Verben: sein & haben<br><span style="font-size:12px;color:var(--text2);font-weight:400">Los verbos ser/estar y tener</span></div>
+        <div class="topic-tags"><span class="topic-tag">ich bin</span><span class="topic-tag">du hast</span><span class="topic-tag">er ist</span></div>
+        <div class="topic-arrow">→</div>
+      </div>
+
+      <div class="topic-card a1" style="cursor:default">
+        <div class="topic-num">A1 · 09</div>
+        <div class="topic-icon">🕐</div>
+        <div class="topic-title">Uhrzeit<br><span style="font-size:12px;color:var(--text2);font-weight:400">Decir la hora</span></div>
+        <div class="topic-tags"><span class="topic-tag">Wie spät ist es?</span><span class="topic-tag">halb</span><span class="topic-tag">Uhr</span></div>
+        <div class="topic-arrow">→</div>
+      </div>
+
+      <div class="topic-card a1" style="cursor:default">
+        <div class="topic-num">A1 · 10</div>
+        <div class="topic-icon">🌍</div>
+        <div class="topic-title">Länder & Nationalitäten<br><span style="font-size:12px;color:var(--text2);font-weight:400">Países y nacionalidades</span></div>
+        <div class="topic-tags"><span class="topic-tag">Deutschland</span><span class="topic-tag">Mexiko</span><span class="topic-tag">ich komme aus</span></div>
+        <div class="topic-arrow">→</div>
+      </div>
+
+      <div class="topic-card a1" style="cursor:default">
+        <div class="topic-num">A1 · 11</div>
+        <div class="topic-icon">💼</div>
+        <div class="topic-title">Berufe<br><span style="font-size:12px;color:var(--text2);font-weight:400">Profesiones</span></div>
+        <div class="topic-tags"><span class="topic-tag">Arzt</span><span class="topic-tag">Lehrer</span><span class="topic-tag">Ingenieur</span></div>
+        <div class="topic-arrow">→</div>
+      </div>
+
+      <div class="topic-card a1" style="cursor:default">
+        <div class="topic-num">A1 · 12</div>
+        <div class="topic-icon">🍎</div>
+        <div class="topic-title">Essen & Trinken<br><span style="font-size:12px;color:var(--text2);font-weight:400">Comida y bebida básica</span></div>
+        <div class="topic-tags"><span class="topic-tag">Brot</span><span class="topic-tag">Wasser</span><span class="topic-tag">Bier</span></div>
+        <div class="topic-arrow">→</div>
+      </div>
+
+      <div class="topic-card a1" style="cursor:default">
+        <div class="topic-num">A1 · 13</div>
+        <div class="topic-icon">🏠</div>
+        <div class="topic-title">Wohnen — Grundlagen<br><span style="font-size:12px;color:var(--text2);font-weight:400">Vivienda básica</span></div>
+        <div class="topic-tags"><span class="topic-tag">Haus</span><span class="topic-tag">Zimmer</span><span class="topic-tag">Küche</span></div>
+        <div class="topic-arrow">→</div>
+      </div>
+
+      <div class="topic-card a1" style="cursor:default">
+        <div class="topic-num">A1 · 14</div>
+        <div class="topic-icon">🚇</div>
+        <div class="topic-title">Verkehr & Richtungen<br><span style="font-size:12px;color:var(--text2);font-weight:400">Transporte y direcciones</span></div>
+        <div class="topic-tags"><span class="topic-tag">links</span><span class="topic-tag">rechts</span><span class="topic-tag">U-Bahn</span></div>
+        <div class="topic-arrow">→</div>
+      </div>
+
+      <div class="topic-card a1" style="cursor:default">
+        <div class="topic-num">A1 · 15</div>
+        <div class="topic-icon">🎮</div>
+        <div class="topic-title">Hobbys & Freizeit<br><span style="font-size:12px;color:var(--text2);font-weight:400">Pasatiempos básicos</span></div>
+        <div class="topic-tags"><span class="topic-tag">lesen</span><span class="topic-tag">spielen</span><span class="topic-tag">Sport</span></div>
+        <div class="topic-arrow">→</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══════════ NIVEL A2 ══════════ -->
+  <div id="a2">
+    <div class="sh">
+      <span class="sh-badge a2">Nivel A2</span>
+      <h2>Elemental — Tu meta actual</h2>
+      <div class="sh-line"></div>
+    </div>
+
+    <!-- Gramática A2 -->
+    <p class="section-label">📐 Gramática</p>
+    <div class="topic-grid">
+
+      <a href="a2-01-modalverben.html" class="topic-card a2">
+        <div class="topic-num">A2 · 01</div>
+        <div class="topic-icon">⚙️</div>
+        <div class="topic-title">Modalverben<br><span style="font-size:12px;color:var(--text2);font-weight:400">Verbos modales</span></div>
+        <div class="topic-tags"><span class="topic-tag">können</span><span class="topic-tag">müssen</span><span class="topic-tag">wollen</span></div>
+        <div class="topic-arrow">→</div>
+      </a>
+
+      <a href="a2-02-perfekt-haben.html" class="topic-card a2">
+        <div class="topic-num">A2 · 02</div>
+        <div class="topic-icon">✅</div>
+        <div class="topic-title">Perfekt mit haben<br><span style="font-size:12px;color:var(--text2);font-weight:400">Pasado con haben</span></div>
+        <div class="topic-tags"><span class="topic-tag">ich habe gemacht</span><span class="topic-tag">Partizip II</span></div>
+        <div class="topic-arrow">→</div>
+      </a>
+
+      <a href="a2-03-perfekt-sein.html" class="topic-card a2">
+        <div class="topic-num">A2 · 03</div>
+        <div class="topic-icon">🚶</div>
+        <div class="topic-title">Perfekt mit sein<br><span style="font-size:12px;color:var(--text2);font-weight:400">Pasado con sein</span></div>
+        <div class="topic-tags"><span class="topic-tag">ich bin gegangen</span><span class="topic-tag">Bewegung</span></div>
+        <div class="topic-arrow">→</div>
+      </a>
+
+      <a href="a2-04-prateritum.html" class="topic-card a2">
+        <div class="topic-num">A2 · 04</div>
+        <div class="topic-icon">📜</div>
+        <div class="topic-title">Präteritum<br><span style="font-size:12px;color:var(--text2);font-weight:400">Pasado simple (escrito)</span></div>
+        <div class="topic-tags"><span class="topic-tag">war</span><span class="topic-tag">hatte</span><span class="topic-tag">konnte</span></div>
+        <div class="topic-arrow">→</div>
+      </a>
+
+      <a href="a2-05-verbos-separables.html" class="topic-card a2">
+        <div class="topic-num">A2 · 05</div>
+        <div class="topic-icon">✂️</div>
+        <div class="topic-title">Trennbare Verben<br><span style="font-size:12px;color:var(--text2);font-weight:400">Verbos separables</span></div>
+        <div class="topic-tags"><span class="topic-tag">aufstehen</span><span class="topic-tag">anrufen</span><span class="topic-tag">mitkommen</span></div>
+        <div class="topic-arrow">→</div>
+      </a>
+
+      <a href="a2-06-verbos-reflexivos.html" class="topic-card a2">
+        <div class="topic-num">A2 · 06</div>
+        <div class="topic-icon">🔄</div>
+        <div class="topic-title">Reflexive Verben<br><span style="font-size:12px;color:var(--text2);font-weight:400">Verbos reflexivos</span></div>
+        <div class="topic-tags"><span class="topic-tag">sich freuen</span><span class="topic-tag">sich waschen</span></div>
+        <div class="topic-arrow">→</div>
+      </a>
+
+      <a href="a2-07-kasus.html" class="topic-card a2">
+        <div class="topic-num">A2 · 07</div>
+        <div class="topic-icon">📊</div>
+        <div class="topic-title">Kasus: Nom., Akk., Dat.<br><span style="font-size:12px;color:var(--text2);font-weight:400">Casos gramaticales</span></div>
+        <div class="topic-tags"><span class="topic-tag">der/den/dem</span><span class="topic-tag">Subjekt</span><span class="topic-tag">Objekt</span></div>
+        <div class="topic-arrow">→</div>
+      </a>
+
+      <a href="a2-08-komparativ.html" class="topic-card a2">
+        <div class="topic-num">A2 · 08</div>
+        <div class="topic-icon">📈</div>
+        <div class="topic-title">Komparativ & Superlativ<br><span style="font-size:12px;color:var(--text2);font-weight:400">Comparativo y superlativo</span></div>
+        <div class="topic-tags"><span class="topic-tag">größer</span><span class="topic-tag">am größten</span><span class="topic-tag">als</span></div>
+        <div class="topic-arrow">→</div>
+      </a>
+
+      <a href="a2-09-konjunktionen.html" class="topic-card a2">
+        <div class="topic-num">A2 · 09</div>
+        <div class="topic-icon">🔗</div>
+        <div class="topic-title">Konjunktionen<br><span style="font-size:12px;color:var(--text2);font-weight:400">Conjunciones y conectores</span></div>
+        <div class="topic-tags"><span class="topic-tag">weil</span><span class="topic-tag">dass</span><span class="topic-tag">wenn</span><span class="topic-tag">obwohl</span></div>
+        <div class="topic-arrow">→</div>
+      </a>
+
+      <a href="a2-10-preposiciones.html" class="topic-card a2">
+        <div class="topic-num">A2 · 10</div>
+        <div class="topic-icon">📍</div>
+        <div class="topic-title">Präpositionen<br><span style="font-size:12px;color:var(--text2);font-weight:400">Preposiciones + casos</span></div>
+        <div class="topic-tags"><span class="topic-tag">in/an/auf</span><span class="topic-tag">Wechselpräp.</span></div>
+        <div class="topic-arrow">→</div>
+      </a>
+
+      <a href="a2-11-adjetivos.html" class="topic-card a2">
+        <div class="topic-num">A2 · 11</div>
+        <div class="topic-icon">🎨</div>
+        <div class="topic-title">Adjektivdeklination<br><span style="font-size:12px;color:var(--text2);font-weight:400">Declinación de adjetivos</span></div>
+        <div class="topic-tags"><span class="topic-tag">ein großer Mann</span><span class="topic-tag">Endungen</span></div>
+        <div class="topic-arrow">→</div>
+      </a>
+
+      <a href="a2-12-infinitiv.html" class="topic-card a2">
+        <div class="topic-num">A2 · 12</div>
+        <div class="topic-icon">∞</div>
+        <div class="topic-title">Infinitiv mit zu<br><span style="font-size:12px;color:var(--text2);font-weight:400">Infinitivo con zu</span></div>
+        <div class="topic-tags"><span class="topic-tag">Es ist schön, zu...</span><span class="topic-tag">versuchen zu</span></div>
+        <div class="topic-arrow">→</div>
+      </a>
+
+    </div>
+
+    <!-- Vocabulario A2 -->
+    <p class="section-label mt32">📚 Vocabulario temático</p>
+    <div class="topic-grid">
+
+      <a href="a2-13-wohnen.html" class="topic-card a2">
+        <div class="topic-num">A2 · 13</div>
+        <div class="topic-icon">🏠</div>
+        <div class="topic-title">Wohnen & Haushalt<br><span style="font-size:12px;color:var(--text2);font-weight:400">Vivienda y hogar</span></div>
+        <div class="topic-tags"><span class="topic-tag">Miete</span><span class="topic-tag">Kühlschrank</span><span class="topic-tag">Nachbar</span></div>
+        <div class="topic-arrow">→</div>
+      </a>
+
+      <a href="a2-14-arbeit.html" class="topic-card a2">
+        <div class="topic-num">A2 · 14</div>
+        <div class="topic-icon">💼</div>
+        <div class="topic-title">Arbeit & Beruf<br><span style="font-size:12px;color:var(--text2);font-weight:400">Trabajo y carrera</span></div>
+        <div class="topic-tags"><span class="topic-tag">Gehalt</span><span class="topic-tag">Kollege</span><span class="topic-tag">Bewerbung</span></div>
+        <div class="topic-arrow">→</div>
+      </a>
+
+      <a href="a2-15-gesundheit.html" class="topic-card a2">
+        <div class="topic-num">A2 · 15</div>
+        <div class="topic-icon">🏥</div>
+        <div class="topic-title">Gesundheit & Körper<br><span style="font-size:12px;color:var(--text2);font-weight:400">Salud y cuerpo humano</span></div>
+        <div class="topic-tags"><span class="topic-tag">Schmerzen</span><span class="topic-tag">Arzt</span><span class="topic-tag">Apotheke</span></div>
+        <div class="topic-arrow">→</div>
+      </a>
+
+      <a href="a2-16-reisen.html" class="topic-card a2">
+        <div class="topic-num">A2 · 16</div>
+        <div class="topic-icon">✈️</div>
+        <div class="topic-title">Reisen & Tourismus<br><span style="font-size:12px;color:var(--text2);font-weight:400">Viajes y turismo</span></div>
+        <div class="topic-tags"><span class="topic-tag">Flug</span><span class="topic-tag">Hotel</span><span class="topic-tag">Ausflug</span></div>
+        <div class="topic-arrow">→</div>
+      </a>
+
+      <a href="a2-17-freizeit.html" class="topic-card a2">
+        <div class="topic-num">A2 · 17</div>
+        <div class="topic-icon">🎯</div>
+        <div class="topic-title">Freizeit & Hobbys<br><span style="font-size:12px;color:var(--text2);font-weight:400">Tiempo libre y aficiones</span></div>
+        <div class="topic-tags"><span class="topic-tag">Kino</span><span class="topic-tag">Sport</span><span class="topic-tag">Musik</span></div>
+        <div class="topic-arrow">→</div>
+      </a>
+
+      <a href="a2-18-essen.html" class="topic-card a2">
+        <div class="topic-num">A2 · 18</div>
+        <div class="topic-icon">🍽️</div>
+        <div class="topic-title">Essen, Trinken & Kochen<br><span style="font-size:12px;color:var(--text2);font-weight:400">Gastronomía y cocina</span></div>
+        <div class="topic-tags"><span class="topic-tag">Rezept</span><span class="topic-tag">Restaurant</span><span class="topic-tag">bestellen</span></div>
+        <div class="topic-arrow">→</div>
+      </a>
+
+      <a href="a2-19-einkaufen.html" class="topic-card a2">
+        <div class="topic-num">A2 · 19</div>
+        <div class="topic-icon">🛒</div>
+        <div class="topic-title">Einkaufen & Preise<br><span style="font-size:12px;color:var(--text2);font-weight:400">Compras y precios</span></div>
+        <div class="topic-tags"><span class="topic-tag">Supermarkt</span><span class="topic-tag">Rabatt</span><span class="topic-tag">bezahlen</span></div>
+        <div class="topic-arrow">→</div>
+      </a>
+
+      <a href="a2-20-medien.html" class="topic-card a2">
+        <div class="topic-num">A2 · 20</div>
+        <div class="topic-icon">📱</div>
+        <div class="topic-title">Medien & Technologie<br><span style="font-size:12px;color:var(--text2);font-weight:400">Medios y tecnología</span></div>
+        <div class="topic-tags"><span class="topic-tag">Internet</span><span class="topic-tag">Handy</span><span class="topic-tag">Nachrichten</span></div>
+        <div class="topic-arrow">→</div>
+      </a>
+
+    </div>
+  </div>
+
+</div><!-- /container -->
+
+<footer class="footer">
+  <p>🇩🇪 Deutsch A1 & A2 — Tu camino a Alemania</p>
+  <div class="footer-flag">
+    <span style="background:#000;width:20px;height:5px"></span>
+    <span style="background:var(--red);width:20px;height:5px"></span>
+    <span style="background:var(--gold);width:20px;height:5px"></span>
+  </div>
+</footer>
+
+</body>
+</html>
