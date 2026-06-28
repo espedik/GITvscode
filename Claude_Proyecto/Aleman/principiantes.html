@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Para principiantes | Deutsch</title>
+<link rel="stylesheet" href="styles.css">
+<style>
+.alpha-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:8px;margin-top:12px}
+.alpha-card{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:12px 8px;text-align:center}
+.alpha-letter{font-size:26px;font-weight:900;color:var(--black);line-height:1}
+.alpha-sound{font-size:11px;color:var(--red);font-weight:700;margin-top:4px}
+.alpha-ex{font-size:10px;color:var(--text3);margin-top:2px}
+
+.special-card{background:rgba(204,0,0,.05);border:1.5px solid rgba(204,0,0,.2);border-radius:10px;padding:14px;text-align:center}
+.special-letter{font-size:30px;font-weight:900;color:var(--red)}
+.special-name{font-size:11px;font-weight:700;color:var(--red);margin-top:4px}
+.special-tip{font-size:11px;color:var(--text2);margin-top:4px}
+
+.tip-box{background:rgba(212,160,0,.07);border-left:4px solid var(--gold-dark);border-radius:0 10px 10px 0;padding:14px 18px;margin-bottom:10px}
+.tip-box strong{color:var(--gold-dark)}
+
+.pronoun-table th{background:rgba(204,0,0,.06)}
+.conj-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+@media(max-width:600px){.conj-grid{grid-template-columns:1fr}}
+
+.sentence-diagram{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:18px;margin-bottom:10px}
+.sd-word{display:inline-block;padding:6px 14px;border-radius:6px;font-weight:700;font-size:14px;margin:4px}
+.sd-pos1{background:rgba(59,130,246,.12);color:#2563eb;border:1px solid rgba(59,130,246,.25)}
+.sd-pos2{background:rgba(204,0,0,.1);color:var(--red);border:1px solid rgba(204,0,0,.25)}
+.sd-pos3{background:rgba(16,185,129,.1);color:#059669;border:1px solid rgba(16,185,129,.25)}
+.sd-end{background:rgba(139,92,246,.1);color:#7c3aed;border:1px solid rgba(139,92,246,.25)}
+.sd-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;display:block;text-align:center;margin-top:2px}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="index.html" class="nav-logo">🇩🇪 Deutsch</a>
+  <div class="nav-links">
+    <a href="index.html" class="nav-link">Inicio</a>
+    <a href="principiantes.html" class="nav-link active">Principiantes</a>
+    <a href="gramatica.html" class="nav-link">Gramática</a>
+    <a href="vocabulario.html" class="nav-link">Vocabulario</a>
+  </div>
+</nav>
+
+<div class="topic-hero">
+  <div class="container">
+    <div class="topic-hero-tag">Nivel 0 → A1 · Punto de partida</div>
+    <h1>Para <em>Principiantes</em></h1>
+    <p class="topic-hero-desc">Todo lo que necesitas saber antes de empezar: el alfabeto, la pronunciación, los primeros verbos y cómo construir tus primeras oraciones en alemán.</p>
+    <div class="topic-hero-meta">
+      <span class="meta-pill">🔤 Alfabeto</span>
+      <span class="meta-pill">🔊 Pronunciación</span>
+      <span class="meta-pill">📐 Estructura básica</span>
+      <span class="meta-pill">🟢 Sin requisitos previos</span>
+    </div>
+  </div>
+</div>
+
+<div class="topic-content">
+<div class="container">
+
+<!-- ══ 1. ALFABETO ══════════════════════════════════════════════════════ -->
+<div class="content-full">
+  <div class="card">
+    <h3><span>🔤</span> El alfabeto alemán</h3>
+    <p style="color:var(--text2);font-size:13px;margin-bottom:16px">El alemán usa el mismo alfabeto latino (26 letras) más 4 caracteres especiales. La mayoría suenan igual que en español, con algunas excepciones clave.</p>
+    <div class="alpha-grid">
+      <div class="alpha-card"><div class="alpha-letter">A a</div><div class="alpha-sound">como "a"</div><div class="alpha-ex">Apfel</div></div>
+      <div class="alpha-card"><div class="alpha-letter">B b</div><div class="alpha-sound">como "b"</div><div class="alpha-ex">Brot</div></div>
+      <div class="alpha-card"><div class="alpha-letter">C c</div><div class="alpha-sound">"ts" o "k"</div><div class="alpha-ex">Café</div></div>
+      <div class="alpha-card"><div class="alpha-letter">D d</div><div class="alpha-sound">como "d"</div><div class="alpha-ex">Deutsch</div></div>
+      <div class="alpha-card"><div class="alpha-letter">E e</div><div class="alpha-sound">como "e"</div><div class="alpha-ex">Essen</div></div>
+      <div class="alpha-card"><div class="alpha-letter">F f</div><div class="alpha-sound">como "f"</div><div class="alpha-ex">Frau</div></div>
+      <div class="alpha-card"><div class="alpha-letter">G g</div><div class="alpha-sound">como "g"</div><div class="alpha-ex">gut</div></div>
+      <div class="alpha-card"><div class="alpha-letter">H h</div><div class="alpha-sound">como "j" suave</div><div class="alpha-ex">Haus</div></div>
+      <div class="alpha-card"><div class="alpha-letter">I i</div><div class="alpha-sound">como "i"</div><div class="alpha-ex">ich</div></div>
+      <div class="alpha-card"><div class="alpha-letter">J j</div><div class="alpha-sound">como "y"</div><div class="alpha-ex">Jahr</div></div>
+      <div class="alpha-card"><div class="alpha-letter">K k</div><div class="alpha-sound">como "k"</div><div class="alpha-ex">Kind</div></div>
+      <div class="alpha-card"><div class="alpha-letter">L l</div><div class="alpha-sound">como "l"</div><div class="alpha-ex">lernen</div></div>
+      <div class="alpha-card"><div class="alpha-letter">M m</div><div class="alpha-sound">como "m"</div><div class="alpha-ex">Mann</div></div>
+      <div class="alpha-card"><div class="alpha-letter">N n</div><div class="alpha-sound">como "n"</div><div class="alpha-ex">Name</div></div>
+      <div class="alpha-card"><div class="alpha-letter">O o</div><div class="alpha-sound">como "o"</div><div class="alpha-ex">Ort</div></div>
+      <div class="alpha-card"><div class="alpha-letter">P p</div><div class="alpha-sound">como "p"</div><div class="alpha-ex">Park</div></div>
+      <div class="alpha-card"><div class="alpha-letter">Q q</div><div class="alpha-sound">como "ku"</div><div class="alpha-ex">Quiz</div></div>
+      <div class="alpha-card"><div class="alpha-letter">R r</div><div class="alpha-sound">gutural</div><div class="alpha-ex">rot</div></div>
+      <div class="alpha-card"><div class="alpha-letter">S s</div><div class="alpha-sound">"s" o "z"</div><div class="alpha-ex">See</div></div>
+      <div class="alpha-card"><div class="alpha-letter">T t</div><div class="alpha-sound">como "t"</div><div class="alpha-ex">Tag</div></div>
+      <div class="alpha-card"><div class="alpha-letter">U u</div><div class="alpha-sound">como "u"</div><div class="alpha-ex">und</div></div>
+      <div class="alpha-card"><div class="alpha-letter">V v</div><div class="alpha-sound">como "f"</div><div class="alpha-ex">Vater</div></div>
+      <div class="alpha-card"><div class="alpha-letter">W w</div><div class="alpha-sound">como "v"</div><div class="alpha-ex">Wasser</div></div>
+      <div class="alpha-card"><div class="alpha-letter">X x</div><div class="alpha-sound">como "ks"</div><div class="alpha-ex">Text</div></div>
+      <div class="alpha-card"><div class="alpha-letter">Y y</div><div class="alpha-sound">como "i" o "ü"</div><div class="alpha-ex">Yoga</div></div>
+      <div class="alpha-card"><div class="alpha-letter">Z z</div><div class="alpha-sound">como "ts"</div><div class="alpha-ex">Zeit</div></div>
+    </div>
+
+    <div style="margin-top:20px;margin-bottom:10px;font-size:12px;font-weight:700;color:var(--red);text-transform:uppercase;letter-spacing:.07em">⭐ Caracteres especiales — solo en alemán</div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px">
+      <div class="special-card"><div class="special-letter">Ä ä</div><div class="special-name">A-Umlaut</div><div class="special-tip">Como "e" abierta<br>Ej: Mädchen, schön</div></div>
+      <div class="special-card"><div class="special-letter">Ö ö</div><div class="special-name">O-Umlaut</div><div class="special-tip">Como "eu" en francés<br>Ej: hören, schön</div></div>
+      <div class="special-card"><div class="special-letter">Ü ü</div><div class="special-name">U-Umlaut</div><div class="special-tip">Como "u" con labios en "i"<br>Ej: über, grün</div></div>
+      <div class="special-card"><div class="special-letter">ß</div><div class="special-name">Eszett / scharfes S</div><div class="special-tip">Suena como "ss"<br>Ej: Straße, heiß</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ 2. PRONUNCIACIÓN ═════════════════════════════════════════════════ -->
+<div class="content-full">
+  <div class="card">
+    <h3><span>🔊</span> Pronunciación — Reglas clave</h3>
+    <table class="vocab-table">
+      <thead><tr><th>Combinación</th><th>Suena como</th><th>Ejemplo</th><th>Pronunciación</th></tr></thead>
+      <tbody>
+        <tr><td class="vocab-de">ei</td><td class="vocab-es">"ai" (como en "aire")</td><td class="vocab-de">mein, nein, zwei</td><td class="vocab-ex">"main", "nain", "tsvai"</td></tr>
+        <tr><td class="vocab-de">ie</td><td class="vocab-es">"i" larga</td><td class="vocab-de">die, lieben, vier</td><td class="vocab-ex">"di", "liben", "fir"</td></tr>
+        <tr><td class="vocab-de">eu / äu</td><td class="vocab-es">"oi" (como en "hoy")</td><td class="vocab-de">neu, heute, Häuser</td><td class="vocab-ex">"noi", "hoite"</td></tr>
+        <tr><td class="vocab-de">ch</td><td class="vocab-es">gutural suave (después de a/o/u) o "sh" suave (después de e/i)</td><td class="vocab-de">auch, ich, mich</td><td class="vocab-ex">"jauj" / "ij"</td></tr>
+        <tr><td class="vocab-de">sch</td><td class="vocab-es">"sh" como en inglés "she"</td><td class="vocab-de">Schule, schön</td><td class="vocab-ex">"shule", "shøn"</td></tr>
+        <tr><td class="vocab-de">sp / st</td><td class="vocab-es">"shp" / "sht" (al inicio de palabra)</td><td class="vocab-de">sprechen, Stein</td><td class="vocab-ex">"shprekhen", "shtain"</td></tr>
+        <tr><td class="vocab-de">w</td><td class="vocab-es">"v" como en "vela"</td><td class="vocab-de">Wasser, wohnen</td><td class="vocab-ex">"Vaser", "vonen"</td></tr>
+        <tr><td class="vocab-de">v</td><td class="vocab-es">"f" como en "foca"</td><td class="vocab-de">Vater, Vogel</td><td class="vocab-ex">"Fater", "Fogel"</td></tr>
+        <tr><td class="vocab-de">j</td><td class="vocab-es">"y" como en "yate"</td><td class="vocab-de">ja, Jahr, jetzt</td><td class="vocab-ex">"ya", "yar", "yetst"</td></tr>
+        <tr><td class="vocab-de">z</td><td class="vocab-es">"ts" como en "pizza"</td><td class="vocab-de">Zeit, zehn</td><td class="vocab-ex">"Tsait", "tsen"</td></tr>
+        <tr><td class="vocab-de">-ig (final)</td><td class="vocab-es">"ij" o "ish"</td><td class="vocab-de">richtig, wenig</td><td class="vocab-ex">"rijtij", "venij"</td></tr>
+        <tr><td class="vocab-de">-er (final)</td><td class="vocab-es">"a" muy suave</td><td class="vocab-de">Wasser, Vater</td><td class="vocab-ex">"Vasa", "Fata"</td></tr>
+      </tbody>
+    </table>
+
+    <div class="tip-box" style="margin-top:16px">
+      <strong>💡 El acento en alemán:</strong> generalmente cae en la primera sílaba de la raíz de la palabra.
+      Ej: <em>ARbeiten</em>, <em>LEsen</em>, <em>DEutsch</em>. Las palabras de origen extranjero son excepción.
+    </div>
+  </div>
+</div>
+
+<!-- ══ 3. ARTÍCULOS ═════════════════════════════════════════════════════ -->
+<div class="content-full">
+  <div class="card card-gold">
+    <h3><span>📌</span> Los artículos — der, die, das</h3>
+    <p style="color:var(--text2);font-size:13px;margin-bottom:16px">En alemán, <strong>todos los sustantivos tienen género</strong>: masculino, femenino o neutro. No hay reglas perfectas para saberlo — hay que aprenderlos de memoria con el artículo.</p>
+    <table class="vocab-table">
+      <thead><tr><th>Género</th><th>Artículo definido</th><th>Artículo indefinido</th><th>Ejemplo</th><th>Truco / pista</th></tr></thead>
+      <tbody>
+        <tr>
+          <td style="font-weight:700;color:#2563eb">Masculino</td>
+          <td><strong style="color:#2563eb">der</strong></td>
+          <td>ein</td>
+          <td class="vocab-ex">der Mann, der Tisch, der Tag</td>
+          <td class="vocab-es">Muchos días, meses, estaciones y puntos cardinales</td>
+        </tr>
+        <tr>
+          <td style="font-weight:700;color:#db2777">Femenino</td>
+          <td><strong style="color:#db2777">die</strong></td>
+          <td>eine</td>
+          <td class="vocab-ex">die Frau, die Schule, die Zeit</td>
+          <td class="vocab-es">Palabras terminadas en -ung, -heit, -keit, -schaft, -tion, -tät</td>
+        </tr>
+        <tr>
+          <td style="font-weight:700;color:#059669">Neutro</td>
+          <td><strong style="color:#059669">das</strong></td>
+          <td>ein</td>
+          <td class="vocab-ex">das Kind, das Haus, das Buch</td>
+          <td class="vocab-es">Diminutivos en -chen/-lein, infinitivos usados como sustantivos</td>
+        </tr>
+        <tr>
+          <td style="font-weight:700;color:#f97316">Plural</td>
+          <td><strong style="color:#f97316">die</strong></td>
+          <td>— (sin artículo o "einige")</td>
+          <td class="vocab-ex">die Männer, die Frauen, die Kinder</td>
+          <td class="vocab-es">El plural siempre usa "die", sin importar el género original</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="tip-box" style="margin-top:16px">
+      <strong>💡 Consejo de oro:</strong> Aprende siempre el artículo con la palabra. No memorices "Haus", memoriza "<strong>das</strong> Haus". Ponles colores: azul=der, rosa=die, verde=das.
+    </div>
+  </div>
+</div>
+
+<!-- ══ 4. PRONOMBRES PERSONALES ═════════════════════════════════════════ -->
+<div class="content-full">
+  <div class="card">
+    <h3><span>👤</span> Pronombres personales</h3>
+    <table class="vocab-table pronoun-table">
+      <thead><tr><th>Pronombre</th><th>Español</th><th>Uso</th><th>Ejemplo con sein</th></tr></thead>
+      <tbody>
+        <tr><td class="vocab-de" style="font-size:18px;font-weight:900">ich</td><td class="vocab-es">yo</td><td class="vocab-es">1ª persona singular</td><td class="vocab-ex">Ich bin Student.</td></tr>
+        <tr><td class="vocab-de" style="font-size:18px;font-weight:900">du</td><td class="vocab-es">tú (informal)</td><td class="vocab-es">2ª persona singular — con amigos, familia</td><td class="vocab-ex">Du bist nett.</td></tr>
+        <tr><td class="vocab-de" style="font-size:18px;font-weight:900">er</td><td class="vocab-es">él</td><td class="vocab-es">3ª persona masc.</td><td class="vocab-ex">Er ist Arzt.</td></tr>
+        <tr><td class="vocab-de" style="font-size:18px;font-weight:900">sie</td><td class="vocab-es">ella</td><td class="vocab-es">3ª persona fem.</td><td class="vocab-ex">Sie ist Lehrerin.</td></tr>
+        <tr><td class="vocab-de" style="font-size:18px;font-weight:900">es</td><td class="vocab-es">ello / él/ella (para cosas)</td><td class="vocab-es">3ª persona neutro</td><td class="vocab-ex">Es ist kalt.</td></tr>
+        <tr><td class="vocab-de" style="font-size:18px;font-weight:900">wir</td><td class="vocab-es">nosotros</td><td class="vocab-es">1ª persona plural</td><td class="vocab-ex">Wir sind Freunde.</td></tr>
+        <tr><td class="vocab-de" style="font-size:18px;font-weight:900">ihr</td><td class="vocab-es">ustedes / vosotros (informal)</td><td class="vocab-es">2ª persona plural</td><td class="vocab-ex">Ihr seid lustig.</td></tr>
+        <tr><td class="vocab-de" style="font-size:18px;font-weight:900">sie / Sie</td><td class="vocab-es">ellos / ellas / usted (formal)</td><td class="vocab-es">3ª plural o tratamiento formal</td><td class="vocab-ex">Sie sind willkommen, Herr Müller.</td></tr>
+      </tbody>
+    </table>
+    <div class="tip-box" style="margin-top:16px">
+      <strong>⚠️ Confusión común:</strong> <em>sie</em> (minúscula) = ella o ellos/ellas. <em>Sie</em> (mayúscula) = usted/ustedes (formal). Se distinguen por el contexto y la conjugación.
+    </div>
+  </div>
+</div>
+
+<!-- ══ 5. SEIN Y HABEN ══════════════════════════════════════════════════ -->
+<div class="content-full">
+  <div class="card">
+    <h3><span>⚙️</span> Los verbos más importantes: sein (ser/estar) y haben (tener)</h3>
+    <div class="conj-grid">
+      <div>
+        <div style="font-size:12px;font-weight:700;color:var(--red);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px">sein — ser / estar</div>
+        <table class="vocab-table">
+          <thead><tr><th>Pronombre</th><th>Forma</th><th>Ejemplo</th></tr></thead>
+          <tbody>
+            <tr><td>ich</td><td class="vocab-de" style="font-size:16px;font-weight:800">bin</td><td class="vocab-ex">Ich bin Mexikaner.</td></tr>
+            <tr><td>du</td><td class="vocab-de" style="font-size:16px;font-weight:800">bist</td><td class="vocab-ex">Du bist müde.</td></tr>
+            <tr><td>er/sie/es</td><td class="vocab-de" style="font-size:16px;font-weight:800">ist</td><td class="vocab-ex">Er ist groß.</td></tr>
+            <tr><td>wir</td><td class="vocab-de" style="font-size:16px;font-weight:800">sind</td><td class="vocab-ex">Wir sind hier.</td></tr>
+            <tr><td>ihr</td><td class="vocab-de" style="font-size:16px;font-weight:800">seid</td><td class="vocab-ex">Ihr seid spät.</td></tr>
+            <tr><td>sie/Sie</td><td class="vocab-de" style="font-size:16px;font-weight:800">sind</td><td class="vocab-ex">Sie sind nett.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div>
+        <div style="font-size:12px;font-weight:700;color:var(--red);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px">haben — tener</div>
+        <table class="vocab-table">
+          <thead><tr><th>Pronombre</th><th>Forma</th><th>Ejemplo</th></tr></thead>
+          <tbody>
+            <tr><td>ich</td><td class="vocab-de" style="font-size:16px;font-weight:800">habe</td><td class="vocab-ex">Ich habe Hunger.</td></tr>
+            <tr><td>du</td><td class="vocab-de" style="font-size:16px;font-weight:800">hast</td><td class="vocab-ex">Du hast ein Auto.</td></tr>
+            <tr><td>er/sie/es</td><td class="vocab-de" style="font-size:16px;font-weight:800">hat</td><td class="vocab-ex">Er hat Zeit.</td></tr>
+            <tr><td>wir</td><td class="vocab-de" style="font-size:16px;font-weight:800">haben</td><td class="vocab-ex">Wir haben Geld.</td></tr>
+            <tr><td>ihr</td><td class="vocab-de" style="font-size:16px;font-weight:800">habt</td><td class="vocab-ex">Ihr habt Glück!</td></tr>
+            <tr><td>sie/Sie</td><td class="vocab-de" style="font-size:16px;font-weight:800">haben</td><td class="vocab-ex">Sie haben Recht.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ 6. VERBOS REGULARES ══════════════════════════════════════════════ -->
+<div class="content-full">
+  <div class="card">
+    <h3><span>📐</span> Conjugar verbos regulares en presente</h3>
+    <p style="color:var(--text2);font-size:13px;margin-bottom:14px">La mayoría de los verbos en alemán son regulares. Se conjuga así: quita el <strong>-en</strong> del infinitivo y agrega la terminación correcta.</p>
+    <div class="rule-box">Infinitivo: <strong>lern</strong>en → raíz: <strong>lern</strong></div>
+    <table class="vocab-table">
+      <thead><tr><th>Pronombre</th><th>Terminación</th><th>lernen</th><th>wohnen</th><th>arbeiten</th></tr></thead>
+      <tbody>
+        <tr><td>ich</td><td class="vocab-de">-e</td><td class="vocab-de">lern<strong>e</strong></td><td class="vocab-de">wohn<strong>e</strong></td><td class="vocab-de">arbeit<strong>e</strong></td></tr>
+        <tr><td>du</td><td class="vocab-de">-st</td><td class="vocab-de">lern<strong>st</strong></td><td class="vocab-de">wohn<strong>st</strong></td><td class="vocab-de">arbeit<strong>est</strong></td></tr>
+        <tr><td>er/sie/es</td><td class="vocab-de">-t</td><td class="vocab-de">lern<strong>t</strong></td><td class="vocab-de">wohn<strong>t</strong></td><td class="vocab-de">arbeit<strong>et</strong></td></tr>
+        <tr><td>wir</td><td class="vocab-de">-en</td><td class="vocab-de">lern<strong>en</strong></td><td class="vocab-de">wohn<strong>en</strong></td><td class="vocab-de">arbeit<strong>en</strong></td></tr>
+        <tr><td>ihr</td><td class="vocab-de">-t</td><td class="vocab-de">lern<strong>t</strong></td><td class="vocab-de">wohn<strong>t</strong></td><td class="vocab-de">arbeit<strong>et</strong></td></tr>
+        <tr><td>sie/Sie</td><td class="vocab-de">-en</td><td class="vocab-de">lern<strong>en</strong></td><td class="vocab-de">wohn<strong>en</strong></td><td class="vocab-de">arbeit<strong>en</strong></td></tr>
+      </tbody>
+    </table>
+    <div class="tip-box" style="margin-top:14px">
+      <strong>⚠️ Excepción:</strong> Si la raíz termina en -t, -d, -n, se agrega una <strong>-e-</strong> extra antes de -st y -t para facilitar la pronunciación. Ej: arbeit → du arbeite<strong>st</strong>.
+    </div>
+  </div>
+</div>
+
+<!-- ══ 7. ORDEN DE PALABRAS ═════════════════════════════════════════════ -->
+<div class="content-full">
+  <div class="card card-red">
+    <h3><span>📏</span> Orden de las palabras en alemán</h3>
+    <p style="color:var(--text2);font-size:13px;margin-bottom:16px">La regla más importante del alemán: el <strong>verbo conjugado siempre ocupa la posición 2</strong>. No importa qué pongamos primero — el verbo siempre es el elemento número 2.</p>
+
+    <div style="margin-bottom:8px;font-size:12px;font-weight:700;color:var(--red);text-transform:uppercase;letter-spacing:.07em">Oración normal</div>
+    <div class="sentence-diagram">
+      <div style="display:flex;align-items:flex-end;gap:4px;flex-wrap:wrap">
+        <div style="text-align:center"><div class="sd-word sd-pos1">Ich</div><div class="sd-label" style="color:#2563eb">Pos. 1 (Sujeto)</div></div>
+        <div style="text-align:center"><div class="sd-word sd-pos2">lerne</div><div class="sd-label" style="color:var(--red)">Pos. 2 ⚡ VERBO</div></div>
+        <div style="text-align:center"><div class="sd-word sd-pos3">jeden Tag</div><div class="sd-label" style="color:#059669">Tiempo</div></div>
+        <div style="text-align:center"><div class="sd-word sd-pos3">Deutsch</div><div class="sd-label" style="color:#059669">Objeto</div></div>
+      </div>
+      <div style="margin-top:10px;font-size:13px;color:var(--text2);font-style:italic">Yo aprendo alemán todos los días.</div>
+    </div>
+
+    <div style="margin-bottom:8px;font-size:12px;font-weight:700;color:var(--red);text-transform:uppercase;letter-spacing:.07em">Cuando algo va primero (inversión)</div>
+    <div class="sentence-diagram">
+      <div style="display:flex;align-items:flex-end;gap:4px;flex-wrap:wrap">
+        <div style="text-align:center"><div class="sd-word sd-pos3">Jeden Tag</div><div class="sd-label" style="color:#059669">Pos. 1 (Tiempo)</div></div>
+        <div style="text-align:center"><div class="sd-word sd-pos2">lerne</div><div class="sd-label" style="color:var(--red)">Pos. 2 ⚡ VERBO</div></div>
+        <div style="text-align:center"><div class="sd-word sd-pos1">ich</div><div class="sd-label" style="color:#2563eb">Sujeto (va después)</div></div>
+        <div style="text-align:center"><div class="sd-word sd-pos3">Deutsch</div><div class="sd-label" style="color:#059669">Objeto</div></div>
+      </div>
+      <div style="margin-top:10px;font-size:13px;color:var(--text2);font-style:italic">Todos los días aprendo alemán. (mismo significado, diferente énfasis)</div>
+    </div>
+
+    <div style="margin-bottom:8px;font-size:12px;font-weight:700;color:var(--red);text-transform:uppercase;letter-spacing:.07em">Con modal: infinitivo al final</div>
+    <div class="sentence-diagram">
+      <div style="display:flex;align-items:flex-end;gap:4px;flex-wrap:wrap">
+        <div style="text-align:center"><div class="sd-word sd-pos1">Ich</div><div class="sd-label" style="color:#2563eb">Pos. 1</div></div>
+        <div style="text-align:center"><div class="sd-word sd-pos2">möchte</div><div class="sd-label" style="color:var(--red)">Pos. 2 ⚡ MODAL</div></div>
+        <div style="text-align:center"><div class="sd-word sd-pos3">nach Deutschland</div><div class="sd-label" style="color:#059669">Medio</div></div>
+        <div style="text-align:center"><div class="sd-word sd-end">fahren</div><div class="sd-label" style="color:#7c3aed">Final (infinitivo)</div></div>
+      </div>
+      <div style="margin-top:10px;font-size:13px;color:var(--text2);font-style:italic">Quisiera ir a Alemania.</div>
+    </div>
+
+    <table class="vocab-table" style="margin-top:16px">
+      <thead><tr><th>Tipo de oración</th><th>Estructura</th><th>Ejemplo</th></tr></thead>
+      <tbody>
+        <tr><td class="vocab-de">Afirmativa normal</td><td class="vocab-es">Sujeto + VERBO + resto</td><td class="vocab-ex">Ich lerne Deutsch.</td></tr>
+        <tr><td class="vocab-de">Con énfasis inicial</td><td class="vocab-es">Otro elemento + VERBO + sujeto + resto</td><td class="vocab-ex">Heute lerne ich Deutsch.</td></tr>
+        <tr><td class="vocab-de">Pregunta (Sí/No)</td><td class="vocab-es">VERBO + sujeto + resto?</td><td class="vocab-ex">Lernst du Deutsch?</td></tr>
+        <tr><td class="vocab-de">Pregunta (con pronombre)</td><td class="vocab-es">Wer/Was/Wann + VERBO + sujeto + resto?</td><td class="vocab-ex">Wo wohnst du?</td></tr>
+        <tr><td class="vocab-de">Negación</td><td class="vocab-es">... + nicht (al final o antes del elemento negado)</td><td class="vocab-ex">Ich lerne nicht. / Ich bin nicht müde.</td></tr>
+        <tr><td class="vocab-de">Con modal</td><td class="vocab-es">Sujeto + MODAL + resto + infinitivo (final)</td><td class="vocab-ex">Ich kann gut Deutsch sprechen.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ══ 8. PREGUNTAS BÁSICAS ═════════════════════════════════════════════ -->
+<div class="content-full">
+  <div class="card">
+    <h3><span>❓</span> Palabras de pregunta — W-Fragen</h3>
+    <table class="vocab-table">
+      <thead><tr><th>Pregunta</th><th>Español</th><th>Ejemplo</th><th>Respuesta típica</th></tr></thead>
+      <tbody>
+        <tr><td class="vocab-de">Wer?</td><td class="vocab-es">¿Quién?</td><td class="vocab-ex">Wer ist das?</td><td class="vocab-es">Das ist mein Bruder.</td></tr>
+        <tr><td class="vocab-de">Was?</td><td class="vocab-es">¿Qué?</td><td class="vocab-ex">Was machst du?</td><td class="vocab-es">Ich lerne Deutsch.</td></tr>
+        <tr><td class="vocab-de">Wo?</td><td class="vocab-es">¿Dónde?</td><td class="vocab-ex">Wo wohnst du?</td><td class="vocab-es">In Berlin.</td></tr>
+        <tr><td class="vocab-de">Wann?</td><td class="vocab-es">¿Cuándo?</td><td class="vocab-ex">Wann kommst du?</td><td class="vocab-es">Um 8 Uhr.</td></tr>
+        <tr><td class="vocab-de">Wie?</td><td class="vocab-es">¿Cómo?</td><td class="vocab-ex">Wie heißt du?</td><td class="vocab-es">Ich heiße Ana.</td></tr>
+        <tr><td class="vocab-de">Wie viel(e)?</td><td class="vocab-es">¿Cuánto(s)?</td><td class="vocab-ex">Wie viel kostet das?</td><td class="vocab-es">5 Euro.</td></tr>
+        <tr><td class="vocab-de">Warum?</td><td class="vocab-es">¿Por qué?</td><td class="vocab-ex">Warum lernst du Deutsch?</td><td class="vocab-es">Weil ich nach Deutschland möchte.</td></tr>
+        <tr><td class="vocab-de">Woher?</td><td class="vocab-es">¿De dónde?</td><td class="vocab-ex">Woher kommst du?</td><td class="vocab-es">Aus Mexiko.</td></tr>
+        <tr><td class="vocab-de">Wohin?</td><td class="vocab-es">¿A dónde?</td><td class="vocab-ex">Wohin fährst du?</td><td class="vocab-es">Nach Deutschland.</td></tr>
+        <tr><td class="vocab-de">Welche(r/s)?</td><td class="vocab-es">¿Cuál(es)?</td><td class="vocab-ex">Welchen Kurs machst du?</td><td class="vocab-es">Den A2-Kurs.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ══ 9. NEGACIÓN ══════════════════════════════════════════════════════ -->
+<div class="content-full">
+  <div class="card">
+    <h3><span>🚫</span> Cómo decir NO en alemán</h3>
+    <table class="vocab-table">
+      <thead><tr><th>Partícula</th><th>Cuándo usarla</th><th>Ejemplo afirmativo</th><th>Ejemplo negativo</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="vocab-de" style="font-size:18px;font-weight:800">nicht</td>
+          <td class="vocab-es">Para negar verbos, adjetivos y adverbios</td>
+          <td class="vocab-ex">Ich komme.</td>
+          <td class="vocab-ex">Ich komme <strong>nicht</strong>.</td>
+        </tr>
+        <tr>
+          <td class="vocab-de" style="font-size:18px;font-weight:800">kein / keine</td>
+          <td class="vocab-es">Para negar sustantivos con artículo indefinido o sin artículo</td>
+          <td class="vocab-ex">Ich habe ein Auto.</td>
+          <td class="vocab-ex">Ich habe <strong>kein</strong> Auto.</td>
+        </tr>
+        <tr>
+          <td class="vocab-de" style="font-size:18px;font-weight:800">kein / keine</td>
+          <td class="vocab-es">Con sustantivos en plural sin artículo</td>
+          <td class="vocab-ex">Ich habe Geschwister.</td>
+          <td class="vocab-ex">Ich habe <strong>keine</strong> Geschwister.</td>
+        </tr>
+      </tbody>
+    </table>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:14px">
+      <div style="background:rgba(0,0,0,.04);border-radius:8px;padding:12px;text-align:center">
+        <div style="font-size:13px;font-weight:700;color:var(--text3);margin-bottom:6px">Masculino</div>
+        <div style="font-size:20px;font-weight:900;color:var(--red)">kein</div>
+        <div style="font-size:11px;color:var(--text3);margin-top:4px">kein Mann</div>
+      </div>
+      <div style="background:rgba(0,0,0,.04);border-radius:8px;padding:12px;text-align:center">
+        <div style="font-size:13px;font-weight:700;color:var(--text3);margin-bottom:6px">Femenino</div>
+        <div style="font-size:20px;font-weight:900;color:var(--red)">keine</div>
+        <div style="font-size:11px;color:var(--text3);margin-top:4px">keine Frau</div>
+      </div>
+      <div style="background:rgba(0,0,0,.04);border-radius:8px;padding:12px;text-align:center">
+        <div style="font-size:13px;font-weight:700;color:var(--text3);margin-bottom:6px">Neutro / Plural</div>
+        <div style="font-size:20px;font-weight:900;color:var(--red)">kein / keine</div>
+        <div style="font-size:11px;color:var(--text3);margin-top:4px">kein Kind / keine Kinder</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SIGUIENTE PASO ════════════════════════════════════════════════════ -->
+<div class="content-full">
+  <div class="card" style="background:linear-gradient(135deg,rgba(204,0,0,.05),rgba(212,160,0,.06));border:1.5px solid rgba(212,160,0,.2);text-align:center;padding:36px">
+    <div style="font-size:36px;margin-bottom:14px">🎓</div>
+    <div style="font-family:'Playfair Display',serif;font-size:22px;font-weight:900;color:var(--black);margin-bottom:8px">¿Ya dominas lo básico?</div>
+    <p style="color:var(--text2);font-size:14px;max-width:480px;margin:0 auto 22px">El siguiente paso es entender los casos gramaticales (Nominativ, Akkusativ, Dativ). Son la clave para hablar alemán correctamente.</p>
+    <a href="gramatica.html" style="display:inline-block;padding:12px 26px;background:var(--red);color:#fff;border-radius:9px;text-decoration:none;font-weight:800;font-size:14px;box-shadow:0 4px 16px rgba(204,0,0,.3)">
+      → Ver tabla completa de Casos gramaticales
+    </a>
+  </div>
+</div>
+
+</div><!-- /container -->
+</div><!-- /topic-content -->
+
+<div class="page-nav">
+  <div></div>
+  <a href="gramatica.html" class="page-nav-btn next">
+    <div><div class="page-nav-dir">Siguiente →</div><div class="page-nav-title">Gramática — Casos y Tablas</div></div>
+    <span style="font-size:24px">📐</span>
+  </a>
+</div>
+
+<footer class="footer">
+  <p>Principiantes — A1 · Punto de partida</p>
+  <div class="footer-flag"><span style="background:#1a1a1a;width:20px;height:5px"></span><span style="background:var(--red);width:20px;height:5px"></span><span style="background:#FFCE00;width:20px;height:5px"></span></div>
+</footer>
+</body>
+</html>

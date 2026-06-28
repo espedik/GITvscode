@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gramática — Referencia completa | Deutsch</title>
+<link rel="stylesheet" href="styles.css">
+<style>
+/* ── GRAMMAR PAGE EXTRAS ── */
+.gram-hero{padding:40px 32px 32px;border-bottom:1px solid var(--border);background:linear-gradient(180deg,rgba(204,0,0,.04) 0%,transparent 100%)}
+.gram-hero h1{font-family:'Playfair Display',serif;font-size:clamp(28px,5vw,52px);font-weight:900;color:var(--black);margin-bottom:8px}
+.gram-hero h1 em{font-style:normal;color:var(--red)}
+
+/* Sticky side nav */
+.gram-layout{display:grid;grid-template-columns:220px 1fr;gap:28px;padding:28px 32px 80px;max-width:1200px;margin:0 auto}
+.gram-nav{position:sticky;top:80px;height:fit-content}
+.gram-nav-list{display:flex;flex-direction:column;gap:2px}
+.gram-nav-item{display:block;padding:8px 14px;border-radius:8px;text-decoration:none;font-size:13px;font-weight:600;color:var(--text2);transition:all .2s;border-left:3px solid transparent}
+.gram-nav-item:hover{background:rgba(204,0,0,.06);color:var(--red)}
+.gram-nav-item.active{background:rgba(204,0,0,.08);color:var(--red);border-left-color:var(--red)}
+.gram-nav-label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:var(--text3);padding:12px 14px 4px}
+
+/* Section anchors */
+.gram-section{margin-bottom:48px;scroll-margin-top:80px}
+.gram-section-title{font-family:'Playfair Display',serif;font-size:24px;font-weight:900;color:var(--black);margin-bottom:6px;padding-bottom:10px;border-bottom:2px solid rgba(204,0,0,.15)}
+.gram-section-sub{color:var(--text2);font-size:14px;margin-bottom:20px}
+
+/* Case tables */
+.case-table{width:100%;border-collapse:collapse;font-size:14px}
+.case-table th{padding:10px 14px;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.07em;border-bottom:2px solid rgba(204,0,0,.15)}
+.case-table td{padding:11px 14px;border-bottom:1px solid var(--border);vertical-align:middle}
+.case-table tr:last-child td{border-bottom:none}
+.case-table tbody tr:hover td{background:rgba(204,0,0,.03)}
+.case-row-nom td:first-child{background:rgba(59,130,246,.06)}
+.case-row-akk td:first-child{background:rgba(204,0,0,.06)}
+.case-row-dat td:first-child{background:rgba(16,185,129,.06)}
+.case-row-gen td:first-child{background:rgba(139,92,246,.06)}
+
+/* Color coding */
+.nom{color:#2563eb;font-weight:800}
+.akk{color:#cc0000;font-weight:800}
+.dat{color:#059669;font-weight:800}
+.gen{color:#7c3aed;font-weight:800}
+.changed{background:rgba(255,165,0,.15);border-radius:4px;padding:0 4px;font-weight:800}
+
+/* Legend pills */
+.legend{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.leg-pill{display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700}
+.leg-nom{background:rgba(37,99,235,.1);color:#2563eb;border:1px solid rgba(37,99,235,.2)}
+.leg-akk{background:rgba(204,0,0,.1);color:#cc0000;border:1px solid rgba(204,0,0,.2)}
+.leg-dat{background:rgba(5,150,105,.1);color:#059669;border:1px solid rgba(5,150,105,.2)}
+.leg-gen{background:rgba(124,58,237,.1);color:#7c3aed;border:1px solid rgba(124,58,237,.2)}
+
+/* Big alert box */
+.big-rule{background:rgba(212,160,0,.08);border:2px solid rgba(212,160,0,.35);border-radius:12px;padding:20px 24px;margin-bottom:16px}
+.big-rule-title{font-size:13px;font-weight:800;color:var(--gold-dark);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px}
+.big-rule p{font-size:14px;color:var(--text);line-height:1.7}
+
+/* Prep boxes */
+.prep-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:16px}
+.prep-box{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px;box-shadow:var(--shadow)}
+.prep-box-title{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.07em;margin-bottom:10px}
+.prep-tag{display:inline-block;padding:4px 10px;border-radius:6px;font-size:13px;font-weight:700;margin:3px;font-family:monospace}
+.prep-akk .prep-tag{background:rgba(204,0,0,.1);color:#cc0000}
+.prep-dat .prep-tag{background:rgba(5,150,105,.1);color:#059669}
+.prep-wech .prep-tag{background:rgba(212,160,0,.1);color:var(--gold-dark)}
+
+/* Verb conjugation */
+.verbtabs{display:flex;gap:5px;margin-bottom:12px;flex-wrap:wrap}
+.verbtab{padding:6px 14px;border-radius:20px;border:1.5px solid var(--border);background:var(--surface);font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;color:var(--text2);transition:all .2s}
+.verbtab.active{background:var(--red);border-color:var(--red);color:#fff}
+
+/* Comparison table */
+.comp-row-pos td{background:rgba(59,130,246,.04)}
+.comp-row-komp td{background:rgba(204,0,0,.04)}
+.comp-row-sup td{background:rgba(5,150,105,.04)}
+
+@media(max-width:900px){
+  .gram-layout{grid-template-columns:1fr}
+  .gram-nav{display:none}
+  .prep-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="index.html" class="nav-logo">🇩🇪 Deutsch</a>
+  <div class="nav-links">
+    <a href="index.html" class="nav-link">Inicio</a>
+    <a href="principiantes.html" class="nav-link">Principiantes</a>
+    <a href="gramatica.html" class="nav-link active">Gramática</a>
+    <a href="vocabulario.html" class="nav-link">Vocabulario</a>
+  </div>
+</nav>
+
+<div class="gram-hero">
+  <div style="max-width:1200px;margin:0 auto;padding:0">
+    <div style="font-size:12px;font-weight:700;color:var(--red);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px">Referencia completa</div>
+    <h1>Gramática <em>alemana</em> — Todas las tablas</h1>
+    <p style="color:var(--text2);font-size:15px;max-width:580px">Nominativ, Akkusativ, Dativ, Genitiv — todos los casos con tablas ultra claras. Tu referencia permanente para hablar alemán correctamente.</p>
+    <div class="legend" style="margin-top:16px">
+      <span class="leg-pill leg-nom">🔵 Nominativ — sujeto</span>
+      <span class="leg-pill leg-akk">🔴 Akkusativ — objeto directo</span>
+      <span class="leg-pill leg-dat">🟢 Dativ — objeto indirecto</span>
+      <span class="leg-pill leg-gen">🟣 Genitiv — posesión</span>
+    </div>
+  </div>
+</div>
+
+<div class="gram-layout">
+
+<!-- ══ NAVEGACIÓN LATERAL ════════════════════════════════════════════════ -->
+<aside class="gram-nav">
+  <div class="gram-nav-label">Casos</div>
+  <a href="#casos-intro" class="gram-nav-item">¿Qué son los casos?</a>
+  <a href="#nominativ" class="gram-nav-item">Nominativ</a>
+  <a href="#akkusativ" class="gram-nav-item">Akkusativ</a>
+  <a href="#dativ" class="gram-nav-item">Dativ</a>
+  <a href="#genitiv" class="gram-nav-item">Genitiv</a>
+  <a href="#tabla-maestra" class="gram-nav-item">⭐ Tabla maestra</a>
+  <div class="gram-nav-label">Artículos</div>
+  <a href="#art-definido" class="gram-nav-item">Artículo definido</a>
+  <a href="#art-indefinido" class="gram-nav-item">Artículo indefinido</a>
+  <a href="#pronombres" class="gram-nav-item">Pronombres</a>
+  <div class="gram-nav-label">Preposiciones</div>
+  <a href="#prep-akk" class="gram-nav-item">Solo Akkusativ</a>
+  <a href="#prep-dat" class="gram-nav-item">Solo Dativ</a>
+  <a href="#wechsel" class="gram-nav-item">Wechselpräp.</a>
+  <div class="gram-nav-label">Verbos</div>
+  <a href="#verbos-regulares" class="gram-nav-item">Verbos regulares</a>
+  <a href="#verbos-irregulares" class="gram-nav-item">Verbos irregulares</a>
+  <a href="#verbos-modales" class="gram-nav-item">Verbos modales</a>
+  <a href="#perfekt" class="gram-nav-item">Perfekt</a>
+  <div class="gram-nav-label">Otros</div>
+  <a href="#komparativ" class="gram-nav-item">Comparativo</a>
+  <a href="#orden" class="gram-nav-item">Orden de palabras</a>
+</aside>
+
+<!-- ══ CONTENIDO PRINCIPAL ═══════════════════════════════════════════════ -->
+<main>
+
+<!-- ─── ¿QUÉ SON LOS CASOS? ─────────────────────────────────────────────────── -->
+<section class="gram-section" id="casos-intro">
+  <div class="gram-section-title">¿Qué son los casos gramaticales?</div>
+  <div class="gram-section-sub">Los casos indican la función de cada sustantivo en la oración. Cambian los artículos y pronombres — no la palabra en sí (salvo pocas excepciones).</div>
+
+  <div class="big-rule">
+    <div class="big-rule-title">💡 La gran diferencia con el español</div>
+    <p>En español el orden de las palabras indica quién hace qué: <em>"El perro muerde al hombre"</em> ≠ <em>"El hombre muerde al perro"</em>. En alemán, los <strong>artículos cambian</strong> para indicar esa función, así que el orden es más flexible: <em>"Den Mann beißt der Hund"</em> sigue significando que el perro muerde al hombre (den = acusativo → recibe la acción).</p>
+  </div>
+
+  <div class="card">
+    <h3><span>🗺️</span> Los 4 casos en una frase</h3>
+    <div class="example" style="font-size:15px;line-height:2">
+      <div class="example-de">
+        <span class="nom">[Der Vater]</span> gibt
+        <span class="dat">[dem Kind]</span>
+        <span class="akk">[das Buch]</span>
+        <span class="gen">[des Lehrers]</span>.
+      </div>
+      <div class="example-es">El padre le da el libro del profesor al niño.</div>
+    </div>
+    <table class="case-table" style="margin-top:14px">
+      <thead><tr><th style="color:#2563eb">Caso</th><th>Función</th><th>Pregunta para encontrarlo</th><th>En el ejemplo</th></tr></thead>
+      <tbody>
+        <tr class="case-row-nom"><td><span class="nom">Nominativ</span></td><td>El sujeto — quien realiza la acción</td><td>¿Quién? (Wer?)</td><td class="nom">Der Vater</td></tr>
+        <tr class="case-row-akk"><td><span class="akk">Akkusativ</span></td><td>Objeto directo — sobre quién recae la acción</td><td>¿A quién / qué? (Wen? / Was?)</td><td class="akk">das Buch</td></tr>
+        <tr class="case-row-dat"><td><span class="dat">Dativ</span></td><td>Objeto indirecto — para/a quién va dirigida la acción</td><td>¿A quién / para quién? (Wem?)</td><td class="dat">dem Kind</td></tr>
+        <tr class="case-row-gen"><td><span class="gen">Genitiv</span></td><td>Posesión — de quién es algo</td><td>¿De quién? (Wessen?)</td><td class="gen">des Lehrers</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ─── TABLA MAESTRA ────────────────────────────────────────────────────────── -->
+<section class="gram-section" id="tabla-maestra">
+  <div class="gram-section-title">⭐ Tabla maestra — Artículo definido por caso</div>
+  <div class="gram-section-sub">Esta es LA tabla más importante de todo el alemán. Memorízala. Los cambios marcados en naranja son los que difieren del Nominativ.</div>
+
+  <div class="card">
+    <div class="legend">
+      <span class="leg-pill leg-nom">Nominativ</span>
+      <span class="leg-pill leg-akk">Akkusativ</span>
+      <span class="leg-pill leg-dat">Dativ</span>
+      <span class="leg-pill leg-gen">Genitiv</span>
+    </div>
+    <table class="case-table">
+      <thead>
+        <tr style="background:rgba(0,0,0,.04)">
+          <th style="text-align:left">Caso</th>
+          <th style="color:#2563eb;text-align:center">MASKULIN<br><span style="font-weight:400;font-size:10px">der Mann</span></th>
+          <th style="color:#db2777;text-align:center">FEMININ<br><span style="font-weight:400;font-size:10px">die Frau</span></th>
+          <th style="color:#059669;text-align:center">NEUTRUM<br><span style="font-weight:400;font-size:10px">das Kind</span></th>
+          <th style="color:#f97316;text-align:center">PLURAL<br><span style="font-weight:400;font-size:10px">die Männer</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="case-row-nom">
+          <td><span class="nom">Nominativ</span><br><span style="font-size:10px;color:var(--text3)">¿Quién?</span></td>
+          <td style="text-align:center;font-size:22px;font-weight:900;color:#2563eb">der</td>
+          <td style="text-align:center;font-size:22px;font-weight:900;color:#db2777">die</td>
+          <td style="text-align:center;font-size:22px;font-weight:900;color:#059669">das</td>
+          <td style="text-align:center;font-size:22px;font-weight:900;color:#f97316">die</td>
+        </tr>
+        <tr class="case-row-akk">
+          <td><span class="akk">Akkusativ</span><br><span style="font-size:10px;color:var(--text3)">¿A quién / qué?</span></td>
+          <td style="text-align:center;font-size:22px;font-weight:900;color:#cc0000"><span class="changed">den</span></td>
+          <td style="text-align:center;font-size:22px;font-weight:900;color:#db2777">die</td>
+          <td style="text-align:center;font-size:22px;font-weight:900;color:#059669">das</td>
+          <td style="text-align:center;font-size:22px;font-weight:900;color:#f97316">die</td>
+        </tr>
+        <tr class="case-row-dat">
+          <td><span class="dat">Dativ</span><br><span style="font-size:10px;color:var(--text3)">¿Para quién?</span></td>
+          <td style="text-align:center;font-size:22px;font-weight:900;color:#059669"><span class="changed">dem</span></td>
+          <td style="text-align:center;font-size:22px;font-weight:900;color:#059669"><span class="changed">der</span></td>
+          <td style="text-align:center;font-size:22px;font-weight:900;color:#059669"><span class="changed">dem</span></td>
+          <td style="text-align:center;font-size:22px;font-weight:900;color:#059669"><span class="changed">den</span></td>
+        </tr>
+        <tr class="case-row-gen">
+          <td><span class="gen">Genitiv</span><br><span style="font-size:10px;color:var(--text3)">¿De quién?</span></td>
+          <td style="text-align:center;font-size:22px;font-weight:900;color:#7c3aed"><span class="changed">des</span></td>
+          <td style="text-align:center;font-size:22px;font-weight:900;color:#7c3aed"><span class="changed">der</span></td>
+          <td style="text-align:center;font-size:22px;font-weight:900;color:#7c3aed"><span class="changed">des</span></td>
+          <td style="text-align:center;font-size:22px;font-weight:900;color:#7c3aed"><span class="changed">der</span></td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="tip-box" style="margin-top:14px">
+      <strong>🧠 Truco para memorizar:</strong> Solo el <strong>masculino cambia en Akkusativ</strong> (der → <span class="akk">den</span>). En Dativ, todo cambia a <span class="dat">dem/der/dem/den</span>. En Genitiv a <span class="gen">des/der/des/der</span>.
+    </div>
+  </div>
+</section>
+
+<!-- ─── ARTÍCULO INDEFINIDO ──────────────────────────────────────────────────── -->
+<section class="gram-section" id="art-indefinido">
+  <div class="gram-section-title">Artículo indefinido — ein / eine</div>
+  <div class="gram-section-sub">El artículo indefinido (un, una) también cambia según el caso. Nota que masculino y neutro son idénticos en Nominativ y Akkusativ.</div>
+  <div class="card">
+    <table class="case-table">
+      <thead>
+        <tr style="background:rgba(0,0,0,.04)">
+          <th style="text-align:left">Caso</th>
+          <th style="color:#2563eb;text-align:center">MASKULIN</th>
+          <th style="color:#db2777;text-align:center">FEMININ</th>
+          <th style="color:#059669;text-align:center">NEUTRUM</th>
+          <th style="color:#f97316;text-align:center">PLURAL (kein)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="case-row-nom"><td><span class="nom">Nominativ</span></td><td style="text-align:center;font-size:18px;font-weight:800">ein</td><td style="text-align:center;font-size:18px;font-weight:800">eine</td><td style="text-align:center;font-size:18px;font-weight:800">ein</td><td style="text-align:center;font-size:18px;font-weight:800;color:var(--text3)">— / keine</td></tr>
+        <tr class="case-row-akk"><td><span class="akk">Akkusativ</span></td><td style="text-align:center;font-size:18px;font-weight:800"><span class="changed">einen</span></td><td style="text-align:center;font-size:18px;font-weight:800">eine</td><td style="text-align:center;font-size:18px;font-weight:800">ein</td><td style="text-align:center;font-size:18px;font-weight:800;color:var(--text3)">— / keine</td></tr>
+        <tr class="case-row-dat"><td><span class="dat">Dativ</span></td><td style="text-align:center;font-size:18px;font-weight:800"><span class="changed">einem</span></td><td style="text-align:center;font-size:18px;font-weight:800"><span class="changed">einer</span></td><td style="text-align:center;font-size:18px;font-weight:800"><span class="changed">einem</span></td><td style="text-align:center;font-size:18px;font-weight:800;color:var(--text3)">— / keinen</td></tr>
+        <tr class="case-row-gen"><td><span class="gen">Genitiv</span></td><td style="text-align:center;font-size:18px;font-weight:800"><span class="changed">eines</span></td><td style="text-align:center;font-size:18px;font-weight:800"><span class="changed">einer</span></td><td style="text-align:center;font-size:18px;font-weight:800"><span class="changed">eines</span></td><td style="text-align:center;font-size:18px;font-weight:800;color:var(--text3)">— / keiner</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ─── PRONOMBRES PERSONALES POR CASO ──────────────────────────────────────── -->
+<section class="gram-section" id="pronombres">
+  <div class="gram-section-title">Pronombres personales por caso</div>
+  <div class="gram-section-sub">Los pronombres también cambian de forma según el caso. Aquí están todos organizados.</div>
+  <div class="card">
+    <table class="case-table">
+      <thead>
+        <tr style="background:rgba(0,0,0,.04)">
+          <th style="text-align:left">Pronombre</th>
+          <th style="color:#2563eb;text-align:center">Nominativ<br><span style="font-weight:400;font-size:10px">sujeto</span></th>
+          <th style="color:#cc0000;text-align:center">Akkusativ<br><span style="font-weight:400;font-size:10px">obj. directo</span></th>
+          <th style="color:#059669;text-align:center">Dativ<br><span style="font-weight:400;font-size:10px">obj. indirecto</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>yo / me</td><td style="text-align:center" class="nom">ich</td><td style="text-align:center" class="akk">mich</td><td style="text-align:center" class="dat">mir</td></tr>
+        <tr><td>tú / te</td><td style="text-align:center" class="nom">du</td><td style="text-align:center" class="akk">dich</td><td style="text-align:center" class="dat">dir</td></tr>
+        <tr><td>él / lo / le</td><td style="text-align:center" class="nom">er</td><td style="text-align:center" class="akk">ihn</td><td style="text-align:center" class="dat">ihm</td></tr>
+        <tr><td>ella / la / le</td><td style="text-align:center" class="nom">sie</td><td style="text-align:center" class="akk">sie</td><td style="text-align:center" class="dat">ihr</td></tr>
+        <tr><td>ello / lo / le</td><td style="text-align:center" class="nom">es</td><td style="text-align:center" class="akk">es</td><td style="text-align:center" class="dat">ihm</td></tr>
+        <tr><td>nosotros</td><td style="text-align:center" class="nom">wir</td><td style="text-align:center" class="akk">uns</td><td style="text-align:center" class="dat">uns</td></tr>
+        <tr><td>ustedes (informal)</td><td style="text-align:center" class="nom">ihr</td><td style="text-align:center" class="akk">euch</td><td style="text-align:center" class="dat">euch</td></tr>
+        <tr><td>ellos/ellas / Usted</td><td style="text-align:center" class="nom">sie/Sie</td><td style="text-align:center" class="akk">sie/Sie</td><td style="text-align:center" class="dat">ihnen/Ihnen</td></tr>
+      </tbody>
+    </table>
+    <div class="example" style="margin-top:16px">
+      <div class="example-de"><span class="nom">Ich</span> sehe <span class="akk">ihn</span>. Er gibt <span class="dat">mir</span> das Buch.</div>
+      <div class="example-es">Yo lo veo. Él me da el libro.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── NOMINATIV ────────────────────────────────────────────────────────────── -->
+<section class="gram-section" id="nominativ">
+  <div class="gram-section-title">🔵 Nominativ — El sujeto</div>
+  <div class="gram-section-sub">El Nominativ es el caso del sujeto: quien realiza la acción. Es el caso "base" de todos los sustantivos.</div>
+  <div class="card">
+    <div class="big-rule"><div class="big-rule-title">¿Cuándo usar Nominativ?</div><p>Cuando el sustantivo <strong>realiza la acción</strong> del verbo o cuando es el complemento de <em>sein, werden, bleiben</em>.</p></div>
+    <table class="case-table">
+      <thead><tr><th>Situación</th><th>Ejemplo</th><th>Explicación</th></tr></thead>
+      <tbody>
+        <tr><td class="nom">Sujeto de la oración</td><td class="vocab-ex"><span class="nom">Der Mann</span> schläft.</td><td class="vocab-es">El hombre duerme. (él hace la acción)</td></tr>
+        <tr><td class="nom">Con sein (ser/estar)</td><td class="vocab-ex">Das ist <span class="nom">ein gutes Buch</span>.</td><td class="vocab-es">Eso es un buen libro. (ambos lados = Nom.)</td></tr>
+        <tr><td class="nom">Con werden (volverse)</td><td class="vocab-ex">Sie wird <span class="nom">Ärztin</span>.</td><td class="vocab-es">Ella se convierte en médica.</td></tr>
+        <tr><td class="nom">Con bleiben (quedarse)</td><td class="vocab-ex">Er bleibt <span class="nom">mein Freund</span>.</td><td class="vocab-es">Él sigue siendo mi amigo.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ─── AKKUSATIV ────────────────────────────────────────────────────────────── -->
+<section class="gram-section" id="akkusativ">
+  <div class="gram-section-title">🔴 Akkusativ — El objeto directo</div>
+  <div class="gram-section-sub">El Akkusativ marca el objeto directo: la persona o cosa sobre la que recae la acción directamente.</div>
+  <div class="card">
+    <div class="big-rule"><div class="big-rule-title">¿Cuándo usar Akkusativ?</div><p>Cuando el sustantivo <strong>recibe la acción directamente</strong>. Pregunta: <em>¿Qué es lo que...? / ¿A quién...?</em> Solo el masculino cambia: <strong>der → <span class="akk">den</span></strong>.</p></div>
+    <table class="case-table">
+      <thead><tr><th>Situación</th><th>Ejemplo</th><th>Explicación</th></tr></thead>
+      <tbody>
+        <tr><td class="akk">Objeto directo de la acción</td><td class="vocab-ex">Ich sehe <span class="akk">den Mann</span>.</td><td class="vocab-es">Veo al hombre. (él recibe la acción de "ver")</td></tr>
+        <tr><td class="akk">Con verbos transitivos</td><td class="vocab-ex">Er kauft <span class="akk">das Auto</span>.</td><td class="vocab-es">Él compra el auto.</td></tr>
+        <tr><td class="akk">Después de preposiciones Akk.</td><td class="vocab-ex">Das ist für <span class="akk">dich</span>.</td><td class="vocab-es">Esto es para ti.</td></tr>
+        <tr><td class="akk">Expresiones de tiempo</td><td class="vocab-ex">Ich bleibe <span class="akk">einen Monat</span>.</td><td class="vocab-es">Me quedo un mes.</td></tr>
+      </tbody>
+    </table>
+    <div style="margin-top:16px">
+      <div style="font-size:12px;font-weight:700;color:var(--red);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px">Verbos que siempre rigen Akkusativ</div>
+      <div style="display:flex;flex-wrap:wrap;gap:6px">
+        <span style="padding:4px 10px;background:rgba(204,0,0,.08);color:var(--red);border-radius:6px;font-size:13px;font-weight:600">sehen</span>
+        <span style="padding:4px 10px;background:rgba(204,0,0,.08);color:var(--red);border-radius:6px;font-size:13px;font-weight:600">hören</span>
+        <span style="padding:4px 10px;background:rgba(204,0,0,.08);color:var(--red);border-radius:6px;font-size:13px;font-weight:600">kaufen</span>
+        <span style="padding:4px 10px;background:rgba(204,0,0,.08);color:var(--red);border-radius:6px;font-size:13px;font-weight:600">essen</span>
+        <span style="padding:4px 10px;background:rgba(204,0,0,.08);color:var(--red);border-radius:6px;font-size:13px;font-weight:600">trinken</span>
+        <span style="padding:4px 10px;background:rgba(204,0,0,.08);color:var(--red);border-radius:6px;font-size:13px;font-weight:600">lesen</span>
+        <span style="padding:4px 10px;background:rgba(204,0,0,.08);color:var(--red);border-radius:6px;font-size:13px;font-weight:600">schreiben</span>
+        <span style="padding:4px 10px;background:rgba(204,0,0,.08);color:var(--red);border-radius:6px;font-size:13px;font-weight:600">lieben</span>
+        <span style="padding:4px 10px;background:rgba(204,0,0,.08);color:var(--red);border-radius:6px;font-size:13px;font-weight:600">brauchen</span>
+        <span style="padding:4px 10px;background:rgba(204,0,0,.08);color:var(--red);border-radius:6px;font-size:13px;font-weight:600">kennen</span>
+        <span style="padding:4px 10px;background:rgba(204,0,0,.08);color:var(--red);border-radius:6px;font-size:13px;font-weight:600">haben</span>
+        <span style="padding:4px 10px;background:rgba(204,0,0,.08);color:var(--red);border-radius:6px;font-size:13px;font-weight:600">finden</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── DATIV ─────────────────────────────────────────────────────────────────── -->
+<section class="gram-section" id="dativ">
+  <div class="gram-section-title">🟢 Dativ — El objeto indirecto</div>
+  <div class="gram-section-sub">El Dativ indica a quién va dirigida la acción o en beneficio de quién se hace algo. Es el caso más "cambiante" de los tres principales.</div>
+  <div class="card">
+    <div class="big-rule"><div class="big-rule-title">¿Cuándo usar Dativ?</div><p>Cuando el sustantivo es el <strong>receptor indirecto</strong> de la acción. Pregunta: <em>¿A quién? / ¿Para quién?</em> (Wem?). Todos los géneros cambian: <strong>dem/der/dem/den</strong>.</p></div>
+    <table class="case-table">
+      <thead><tr><th>Situación</th><th>Ejemplo</th><th>Explicación</th></tr></thead>
+      <tbody>
+        <tr><td class="dat">Objeto indirecto</td><td class="vocab-ex">Er gibt <span class="dat">dem Kind</span> ein Buch.</td><td class="vocab-es">Le da un libro al niño. (el niño recibe)</td></tr>
+        <tr><td class="dat">Después de prep. Dativ</td><td class="vocab-ex">Ich fahre mit <span class="dat">dem Bus</span>.</td><td class="vocab-es">Voy en autobús.</td></tr>
+        <tr><td class="dat">Con verbos Dativ</td><td class="vocab-ex">Ich helfe <span class="dat">dir</span>.</td><td class="vocab-es">Te ayudo.</td></tr>
+        <tr><td class="dat">Plural: añade -n</td><td class="vocab-ex">Ich danke <span class="dat">den Freunden</span>.</td><td class="vocab-es">Agradezco a los amigos. (+n en plural)</td></tr>
+      </tbody>
+    </table>
+    <div style="margin-top:16px">
+      <div style="font-size:12px;font-weight:700;color:#059669;text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px">Verbos que SIEMPRE rigen Dativ (sin Akkusativ)</div>
+      <table class="case-table">
+        <thead><tr><th>Verbo</th><th>Español</th><th>Ejemplo</th></tr></thead>
+        <tbody>
+          <tr><td class="dat">helfen</td><td class="vocab-es">ayudar</td><td class="vocab-ex">Ich helfe <span class="dat">dir</span>.</td></tr>
+          <tr><td class="dat">danken</td><td class="vocab-es">agradecer</td><td class="vocab-ex">Ich danke <span class="dat">Ihnen</span>.</td></tr>
+          <tr><td class="dat">gehören</td><td class="vocab-es">pertenecer</td><td class="vocab-ex">Das Buch gehört <span class="dat">mir</span>.</td></tr>
+          <tr><td class="dat">gefallen</td><td class="vocab-es">gustar</td><td class="vocab-ex">Das gefällt <span class="dat">mir</span> sehr.</td></tr>
+          <tr><td class="dat">glauben</td><td class="vocab-es">creer (a alguien)</td><td class="vocab-ex">Ich glaube <span class="dat">dir</span>.</td></tr>
+          <tr><td class="dat">folgen</td><td class="vocab-es">seguir</td><td class="vocab-ex">Folg <span class="dat">mir</span>!</td></tr>
+          <tr><td class="dat">antworten</td><td class="vocab-es">responder (a alguien)</td><td class="vocab-ex">Antworte <span class="dat">dem Lehrer</span>!</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ─── GENITIV ───────────────────────────────────────────────────────────────── -->
+<section class="gram-section" id="genitiv">
+  <div class="gram-section-title">🟣 Genitiv — Posesión</div>
+  <div class="gram-section-sub">El Genitiv indica pertenencia (de quién es algo). Equivale al "de" en español. En lenguaje hablado a veces se reemplaza por "von + Dativ".</div>
+  <div class="card">
+    <div class="big-rule"><div class="big-rule-title">¿Cuándo usar Genitiv?</div><p>Para indicar <strong>posesión o pertenencia</strong>. Los sustantivos masculinos y neutros añaden <strong>-s</strong> o <strong>-es</strong>.</p></div>
+    <table class="case-table">
+      <thead><tr><th>Situación</th><th>Ejemplo</th><th>Alternativa informal</th></tr></thead>
+      <tbody>
+        <tr><td class="gen">Posesión (masc./neut.)</td><td class="vocab-ex">das Auto <span class="gen">des Mannes</span></td><td class="vocab-ex">das Auto von dem Mann</td></tr>
+        <tr><td class="gen">Posesión (fem./plural)</td><td class="vocab-ex">die Tasche <span class="gen">der Frau</span></td><td class="vocab-ex">die Tasche von der Frau</td></tr>
+        <tr><td class="gen">Nombres propios: +s</td><td class="vocab-ex"><span class="gen">Annas</span> Buch</td><td class="vocab-ex">das Buch von Anna</td></tr>
+        <tr><td class="gen">Con preposiciones Genitiv</td><td class="vocab-ex">wegen <span class="gen">des Regens</span></td><td class="vocab-ex">wegen dem Regen (informal)</td></tr>
+      </tbody>
+    </table>
+    <div style="margin-top:14px">
+      <div style="font-size:12px;font-weight:700;color:#7c3aed;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">Preposiciones que rigen Genitiv</div>
+      <div style="display:flex;flex-wrap:wrap;gap:6px">
+        <span style="padding:4px 10px;background:rgba(124,58,237,.08);color:#7c3aed;border-radius:6px;font-size:13px;font-weight:600">wegen (por causa de)</span>
+        <span style="padding:4px 10px;background:rgba(124,58,237,.08);color:#7c3aed;border-radius:6px;font-size:13px;font-weight:600">trotz (a pesar de)</span>
+        <span style="padding:4px 10px;background:rgba(124,58,237,.08);color:#7c3aed;border-radius:6px;font-size:13px;font-weight:600">während (durante)</span>
+        <span style="padding:4px 10px;background:rgba(124,58,237,.08);color:#7c3aed;border-radius:6px;font-size:13px;font-weight:600">statt / anstatt (en lugar de)</span>
+        <span style="padding:4px 10px;background:rgba(124,58,237,.08);color:#7c3aed;border-radius:6px;font-size:13px;font-weight:600">außerhalb (fuera de)</span>
+        <span style="padding:4px 10px;background:rgba(124,58,237,.08);color:#7c3aed;border-radius:6px;font-size:13px;font-weight:600">innerhalb (dentro de)</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── PREPOSICIONES ─────────────────────────────────────────────────────────── -->
+<section class="gram-section" id="prep-akk">
+  <div class="gram-section-title">Preposiciones y sus casos</div>
+  <div class="gram-section-sub">Cada preposición en alemán rige un caso fijo, o dos según el contexto (Wechselpräpositionen).</div>
+
+  <div class="prep-grid">
+    <div class="prep-box prep-akk">
+      <div class="prep-box-title" style="color:#cc0000">🔴 Solo Akkusativ</div>
+      <div><span class="prep-tag">durch</span><span style="font-size:11px;color:var(--text2)">a través de</span></div>
+      <div><span class="prep-tag">für</span><span style="font-size:11px;color:var(--text2)">para</span></div>
+      <div><span class="prep-tag">gegen</span><span style="font-size:11px;color:var(--text2)">contra</span></div>
+      <div><span class="prep-tag">ohne</span><span style="font-size:11px;color:var(--text2)">sin</span></div>
+      <div><span class="prep-tag">um</span><span style="font-size:11px;color:var(--text2)">alrededor / a las</span></div>
+      <div><span class="prep-tag">bis</span><span style="font-size:11px;color:var(--text2)">hasta</span></div>
+      <div><span class="prep-tag">entlang</span><span style="font-size:11px;color:var(--text2)">a lo largo de</span></div>
+      <div style="margin-top:10px;font-size:12px;color:var(--text2);font-style:italic">Ejemplo: Das ist <span class="akk">für dich</span>. / Ich gehe <span class="akk">durch den Park</span>.</div>
+    </div>
+    <div class="prep-box prep-dat">
+      <div class="prep-box-title" style="color:#059669">🟢 Solo Dativ</div>
+      <div><span class="prep-tag">aus</span><span style="font-size:11px;color:var(--text2)">de (origen)</span></div>
+      <div><span class="prep-tag">bei</span><span style="font-size:11px;color:var(--text2)">en casa de</span></div>
+      <div><span class="prep-tag">mit</span><span style="font-size:11px;color:var(--text2)">con</span></div>
+      <div><span class="prep-tag">nach</span><span style="font-size:11px;color:var(--text2)">después / hacia</span></div>
+      <div><span class="prep-tag">seit</span><span style="font-size:11px;color:var(--text2)">desde (tiempo)</span></div>
+      <div><span class="prep-tag">von</span><span style="font-size:11px;color:var(--text2)">de / por</span></div>
+      <div><span class="prep-tag">zu</span><span style="font-size:11px;color:var(--text2)">a / hacia</span></div>
+      <div><span class="prep-tag">gegenüber</span><span style="font-size:11px;color:var(--text2)">frente a</span></div>
+      <div style="margin-top:10px;font-size:12px;color:var(--text2);font-style:italic">Ejemplo: Ich fahre <span class="dat">mit dem Bus</span>. / Seit <span class="dat">einem Jahr</span> lerne ich.</div>
+    </div>
+    <div class="prep-box prep-wech" id="wechsel">
+      <div class="prep-box-title" style="color:var(--gold-dark)">🟡 Wechselpräpositionen</div>
+      <div><span class="prep-tag">an</span> <span class="prep-tag">auf</span> <span class="prep-tag">in</span></div>
+      <div><span class="prep-tag">hinter</span> <span class="prep-tag">neben</span> <span class="prep-tag">über</span></div>
+      <div><span class="prep-tag">unter</span> <span class="prep-tag">vor</span> <span class="prep-tag">zwischen</span></div>
+      <div style="margin-top:12px;background:rgba(0,0,0,.04);border-radius:8px;padding:10px">
+        <div style="font-size:11px;font-weight:700;margin-bottom:6px">Regla:</div>
+        <div style="font-size:12px;color:var(--text2)">
+          <strong style="color:#059669">Dativ</strong> → ¿Dónde está? (estado)<br>
+          <em>Das Buch liegt <span class="dat">auf dem</span> Tisch.</em><br><br>
+          <strong style="color:#cc0000">Akkusativ</strong> → ¿Adónde va? (movimiento)<br>
+          <em>Ich lege das Buch <span class="akk">auf den</span> Tisch.</em>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:4px">
+    <h3><span>📊</span> Wechselpräpositionen — tabla completa</h3>
+    <table class="case-table">
+      <thead><tr><th>Prep.</th><th>Español</th><th>Con Dativ (¿dónde?)</th><th>Con Akkusativ (¿adónde?)</th></tr></thead>
+      <tbody>
+        <tr><td class="vocab-de">an</td><td class="vocab-es">en / al lado de / en la pared</td><td class="vocab-ex">Das Bild hängt <span class="dat">an der</span> Wand.</td><td class="vocab-ex">Er hängt das Bild <span class="akk">an die</span> Wand.</td></tr>
+        <tr><td class="vocab-de">auf</td><td class="vocab-es">sobre / encima</td><td class="vocab-ex">Die Katze sitzt <span class="dat">auf dem</span> Stuhl.</td><td class="vocab-ex">Die Katze springt <span class="akk">auf den</span> Stuhl.</td></tr>
+        <tr><td class="vocab-de">in</td><td class="vocab-es">en / dentro</td><td class="vocab-ex">Er ist <span class="dat">in der</span> Schule.</td><td class="vocab-ex">Er geht <span class="akk">in die</span> Schule.</td></tr>
+        <tr><td class="vocab-de">hinter</td><td class="vocab-es">detrás</td><td class="vocab-ex">Der Hund ist <span class="dat">hinter dem</span> Haus.</td><td class="vocab-ex">Der Hund läuft <span class="akk">hinter das</span> Haus.</td></tr>
+        <tr><td class="vocab-de">neben</td><td class="vocab-es">al lado</td><td class="vocab-ex">Er sitzt <span class="dat">neben mir</span>.</td><td class="vocab-ex">Er setzt sich <span class="akk">neben mich</span>.</td></tr>
+        <tr><td class="vocab-de">über</td><td class="vocab-es">sobre / por encima</td><td class="vocab-ex">Die Lampe hängt <span class="dat">über dem</span> Tisch.</td><td class="vocab-ex">Die Katze springt <span class="akk">über den</span> Tisch.</td></tr>
+        <tr><td class="vocab-de">unter</td><td class="vocab-es">debajo</td><td class="vocab-ex">Die Katze ist <span class="dat">unter dem</span> Bett.</td><td class="vocab-ex">Die Katze kriecht <span class="akk">unter das</span> Bett.</td></tr>
+        <tr><td class="vocab-de">vor</td><td class="vocab-es">delante / antes</td><td class="vocab-ex">Er steht <span class="dat">vor dem</span> Haus.</td><td class="vocab-ex">Er stellt das Auto <span class="akk">vor das</span> Haus.</td></tr>
+        <tr><td class="vocab-de">zwischen</td><td class="vocab-es">entre</td><td class="vocab-ex">Er sitzt <span class="dat">zwischen den</span> Stühlen.</td><td class="vocab-ex">Er stellt sich <span class="akk">zwischen die</span> Stühle.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ─── VERBOS REGULARES ──────────────────────────────────────────────────────── -->
+<section class="gram-section" id="verbos-regulares">
+  <div class="gram-section-title">Verbos regulares — Presente</div>
+  <div class="gram-section-sub">La conjugación base: quita -en del infinitivo y agrega la terminación según el pronombre.</div>
+  <div class="card">
+    <table class="case-table">
+      <thead><tr><th>Pronombre</th><th>Terminación</th><th>lernen</th><th>machen</th><th>wohnen</th><th>arbeiten*</th></tr></thead>
+      <tbody>
+        <tr><td>ich</td><td class="nom">-e</td><td>lerne</td><td>mache</td><td>wohne</td><td>arbeite</td></tr>
+        <tr><td>du</td><td class="nom">-st</td><td>lernst</td><td>machst</td><td>wohnst</td><td>arbeit<strong>est</strong></td></tr>
+        <tr><td>er/sie/es</td><td class="nom">-t</td><td>lernt</td><td>macht</td><td>wohnt</td><td>arbeit<strong>et</strong></td></tr>
+        <tr><td>wir</td><td class="nom">-en</td><td>lernen</td><td>machen</td><td>wohnen</td><td>arbeiten</td></tr>
+        <tr><td>ihr</td><td class="nom">-t</td><td>lernt</td><td>macht</td><td>wohnt</td><td>arbeit<strong>et</strong></td></tr>
+        <tr><td>sie/Sie</td><td class="nom">-en</td><td>lernen</td><td>machen</td><td>wohnen</td><td>arbeiten</td></tr>
+      </tbody>
+    </table>
+    <div class="tip-box" style="margin-top:12px"><strong>* Raíz terminada en -t/-d:</strong> se inserta una -e- extra para facilitar pronunciación (arbeit → arbeite-st, arbeit-et).</div>
+  </div>
+</section>
+
+<!-- ─── VERBOS IRREGULARES ───────────────────────────────────────────────────── -->
+<section class="gram-section" id="verbos-irregulares">
+  <div class="gram-section-title">Verbos irregulares más importantes</div>
+  <div class="gram-section-sub">Estos verbos cambian la vocal de la raíz en 2ª y 3ª persona singular. Son muy frecuentes — hay que memorizarlos.</div>
+  <div class="card">
+    <table class="case-table">
+      <thead><tr><th>Infinitivo</th><th>Español</th><th>ich</th><th>du</th><th>er/sie/es</th><th>wir</th><th>ihr</th><th>sie/Sie</th></tr></thead>
+      <tbody>
+        <tr><td class="vocab-de">sein</td><td class="vocab-es">ser / estar</td><td>bin</td><td>bist</td><td>ist</td><td>sind</td><td>seid</td><td>sind</td></tr>
+        <tr><td class="vocab-de">haben</td><td class="vocab-es">tener</td><td>habe</td><td>hast</td><td>hat</td><td>haben</td><td>habt</td><td>haben</td></tr>
+        <tr><td class="vocab-de">werden</td><td class="vocab-es">volverse / ser (pasiva)</td><td>werde</td><td>wirst</td><td>wird</td><td>werden</td><td>werdet</td><td>werden</td></tr>
+        <tr><td class="vocab-de">fahren</td><td class="vocab-es">conducir / ir (vehículo)</td><td>fahre</td><td><span class="changed">fährst</span></td><td><span class="changed">fährt</span></td><td>fahren</td><td>fahrt</td><td>fahren</td></tr>
+        <tr><td class="vocab-de">schlafen</td><td class="vocab-es">dormir</td><td>schlafe</td><td><span class="changed">schläfst</span></td><td><span class="changed">schläft</span></td><td>schlafen</td><td>schlaft</td><td>schlafen</td></tr>
+        <tr><td class="vocab-de">lesen</td><td class="vocab-es">leer</td><td>lese</td><td><span class="changed">liest</span></td><td><span class="changed">liest</span></td><td>lesen</td><td>lest</td><td>lesen</td></tr>
+        <tr><td class="vocab-de">sprechen</td><td class="vocab-es">hablar</td><td>spreche</td><td><span class="changed">sprichst</span></td><td><span class="changed">spricht</span></td><td>sprechen</td><td>sprecht</td><td>sprechen</td></tr>
+        <tr><td class="vocab-de">essen</td><td class="vocab-es">comer</td><td>esse</td><td><span class="changed">isst</span></td><td><span class="changed">isst</span></td><td>essen</td><td>esst</td><td>essen</td></tr>
+        <tr><td class="vocab-de">nehmen</td><td class="vocab-es">tomar / coger</td><td>nehme</td><td><span class="changed">nimmst</span></td><td><span class="changed">nimmt</span></td><td>nehmen</td><td>nehmt</td><td>nehmen</td></tr>
+        <tr><td class="vocab-de">geben</td><td class="vocab-es">dar</td><td>gebe</td><td><span class="changed">gibst</span></td><td><span class="changed">gibt</span></td><td>geben</td><td>gebt</td><td>geben</td></tr>
+        <tr><td class="vocab-de">sehen</td><td class="vocab-es">ver</td><td>sehe</td><td><span class="changed">siehst</span></td><td><span class="changed">sieht</span></td><td>sehen</td><td>seht</td><td>sehen</td></tr>
+        <tr><td class="vocab-de">wissen</td><td class="vocab-es">saber</td><td>weiß</td><td>weißt</td><td>weiß</td><td>wissen</td><td>wisst</td><td>wissen</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ─── VERBOS MODALES ────────────────────────────────────────────────────────── -->
+<section class="gram-section" id="verbos-modales">
+  <div class="gram-section-title">Verbos modales — conjugación completa</div>
+  <div class="gram-section-sub">Los verbos modales modifican el significado del verbo principal. La 1ª y 3ª persona singular son idénticas (sin terminación).</div>
+  <div class="card">
+    <table class="case-table">
+      <thead><tr><th>Infinitivo</th><th>Significado</th><th>ich</th><th>du</th><th>er/sie/es</th><th>wir</th><th>ihr</th><th>sie/Sie</th></tr></thead>
+      <tbody>
+        <tr><td class="vocab-de">können</td><td class="vocab-es">poder</td><td class="nom">kann</td><td>kannst</td><td class="nom">kann</td><td>können</td><td>könnt</td><td>können</td></tr>
+        <tr><td class="vocab-de">müssen</td><td class="vocab-es">tener que</td><td class="akk">muss</td><td>musst</td><td class="akk">muss</td><td>müssen</td><td>müsst</td><td>müssen</td></tr>
+        <tr><td class="vocab-de">wollen</td><td class="vocab-es">querer</td><td>will</td><td>willst</td><td>will</td><td>wollen</td><td>wollt</td><td>wollen</td></tr>
+        <tr><td class="vocab-de">sollen</td><td class="vocab-es">deber (por otro)</td><td>soll</td><td>sollst</td><td>soll</td><td>sollen</td><td>sollt</td><td>sollen</td></tr>
+        <tr><td class="vocab-de">dürfen</td><td class="vocab-es">tener permiso</td><td class="dat">darf</td><td>darfst</td><td class="dat">darf</td><td>dürfen</td><td>dürft</td><td>dürfen</td></tr>
+        <tr><td class="vocab-de">mögen / möchten</td><td class="vocab-es">gustar / quisiera</td><td>mag / möchte</td><td>magst / möchtest</td><td>mag / möchte</td><td>mögen / möchten</td><td>mögt / möchtet</td><td>mögen / möchten</td></tr>
+      </tbody>
+    </table>
+    <div class="example" style="margin-top:14px">
+      <div class="example-de">Ich <strong class="akk">muss</strong> morgen früh <strong>aufstehen</strong>.</div>
+      <div class="example-es">Tengo que levantarme temprano mañana. → Modal en pos. 2, infinitivo al final.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── PERFEKT ───────────────────────────────────────────────────────────────── -->
+<section class="gram-section" id="perfekt">
+  <div class="gram-section-title">Perfekt — Pasado compuesto</div>
+  <div class="gram-section-sub">El tiempo pasado más usado en alemán hablado. Se forma con haben o sein + Partizip II.</div>
+  <div class="card">
+    <div class="big-rule"><div class="big-rule-title">Estructura</div><p><strong>haben / sein</strong> (conjugado, pos. 2) + ... + <strong>Partizip II</strong> (al final)</p></div>
+    <table class="case-table">
+      <thead><tr><th>Tipo de verbo</th><th>Auxiliar</th><th>Partizip II</th><th>Formación</th><th>Ejemplo</th></tr></thead>
+      <tbody>
+        <tr><td>Regulares</td><td class="nom">haben</td><td>ge + raíz + <strong>t</strong></td><td>machen → ge<strong>macht</strong></td><td class="vocab-ex">Ich habe viel ge<strong>macht</strong>.</td></tr>
+        <tr><td>Irregulares</td><td class="nom">haben</td><td>ge + raíz* + <strong>en</strong></td><td>schreiben → ge<strong>schrieben</strong></td><td class="vocab-ex">Er hat einen Brief ge<strong>schrieben</strong>.</td></tr>
+        <tr><td>Movimiento / cambio</td><td class="akk">sein</td><td>ge + raíz + en/t</td><td>gehen → ge<strong>gangen</strong></td><td class="vocab-ex">Ich bin nach Hause ge<strong>gangen</strong>.</td></tr>
+        <tr><td>Verbos con prefijo -be/-er/-ver</td><td class="nom">haben</td><td>Sin ge- (prefijo ya incluido)</td><td>besuchen → <strong>besucht</strong></td><td class="vocab-ex">Sie hat Berlin be<strong>sucht</strong>.</td></tr>
+        <tr><td>Verbos separables</td><td class="nom">haben</td><td>Prefijo + ge + raíz</td><td>aufmachen → <strong>aufgemacht</strong></td><td class="vocab-ex">Er hat das Fenster auf<strong>gemacht</strong>.</td></tr>
+      </tbody>
+    </table>
+    <div style="margin-top:16px">
+      <div style="font-size:12px;font-weight:700;color:var(--red);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px">Participios irregulares esenciales</div>
+      <table class="case-table">
+        <thead><tr><th>Infinitivo</th><th>Partizip II</th><th>Aux.</th><th>Inf.</th><th>Partizip II</th><th>Aux.</th></tr></thead>
+        <tbody>
+          <tr><td class="vocab-de">sein</td><td class="vocab-de">gewesen</td><td class="akk">sein</td><td class="vocab-de">sprechen</td><td class="vocab-de">gesprochen</td><td class="nom">haben</td></tr>
+          <tr><td class="vocab-de">haben</td><td class="vocab-de">gehabt</td><td class="nom">haben</td><td class="vocab-de">kommen</td><td class="vocab-de">gekommen</td><td class="akk">sein</td></tr>
+          <tr><td class="vocab-de">gehen</td><td class="vocab-de">gegangen</td><td class="akk">sein</td><td class="vocab-de">essen</td><td class="vocab-de">gegessen</td><td class="nom">haben</td></tr>
+          <tr><td class="vocab-de">fahren</td><td class="vocab-de">gefahren</td><td class="akk">sein</td><td class="vocab-de">lesen</td><td class="vocab-de">gelesen</td><td class="nom">haben</td></tr>
+          <tr><td class="vocab-de">fliegen</td><td class="vocab-de">geflogen</td><td class="akk">sein</td><td class="vocab-de">schreiben</td><td class="vocab-de">geschrieben</td><td class="nom">haben</td></tr>
+          <tr><td class="vocab-de">trinken</td><td class="vocab-de">getrunken</td><td class="nom">haben</td><td class="vocab-de">sehen</td><td class="vocab-de">gesehen</td><td class="nom">haben</td></tr>
+          <tr><td class="vocab-de">bleiben</td><td class="vocab-de">geblieben</td><td class="akk">sein</td><td class="vocab-de">nehmen</td><td class="vocab-de">genommen</td><td class="nom">haben</td></tr>
+          <tr><td class="vocab-de">schlafen</td><td class="vocab-de">geschlafen</td><td class="nom">haben</td><td class="vocab-de">geben</td><td class="vocab-de">gegeben</td><td class="nom">haben</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ─── KOMPARATIV ───────────────────────────────────────────────────────────── -->
+<section class="gram-section" id="komparativ">
+  <div class="gram-section-title">Komparativ y Superlativ</div>
+  <div class="gram-section-sub">Para comparar cosas, personas o situaciones en alemán.</div>
+  <div class="card">
+    <table class="case-table">
+      <thead><tr><th>Grado</th><th>Formación</th><th>groß</th><th>schnell</th><th>gut (irr.)</th><th>viel (irr.)</th><th>gern (irr.)</th></tr></thead>
+      <tbody>
+        <tr class="comp-row-pos"><td class="nom">Positivo (base)</td><td class="vocab-es">—</td><td>groß</td><td>schnell</td><td>gut</td><td>viel</td><td>gern</td></tr>
+        <tr class="comp-row-komp"><td class="akk">Komparativ</td><td class="vocab-es">raíz + <strong>er</strong></td><td>größ<strong>er</strong></td><td>schnell<strong>er</strong></td><td><span class="changed">besser</span></td><td><span class="changed">mehr</span></td><td><span class="changed">lieber</span></td></tr>
+        <tr class="comp-row-sup"><td class="dat">Superlativ</td><td class="vocab-es">am + raíz + <strong>sten</strong></td><td>am größ<strong>ten</strong></td><td>am schnell<strong>sten</strong></td><td>am <span class="changed">besten</span></td><td>am <span class="changed">meisten</span></td><td>am <span class="changed">liebsten</span></td></tr>
+      </tbody>
+    </table>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px">
+      <div class="example"><div class="example-de">Berlin ist <strong>größer als</strong> München.</div><div class="example-es">Berlín es más grande que Múnich.</div></div>
+      <div class="example"><div class="example-de">Deutschland ist <strong>so groß wie</strong> Mexiko. ✗<br>Mexiko ist <strong>größer als</strong> Deutschland. ✓</div><div class="example-es">México es más grande que Alemania.</div></div>
+      <div class="example"><div class="example-de">Berlin ist <strong>die größte</strong> Stadt Deutschlands.</div><div class="example-es">Berlín es la ciudad más grande de Alemania.</div></div>
+      <div class="example"><div class="example-de">Ich mag Schokolade <strong>am liebsten</strong>.</div><div class="example-es">Lo que más me gusta es el chocolate.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── ORDEN DE PALABRAS ─────────────────────────────────────────────────────── -->
+<section class="gram-section" id="orden">
+  <div class="gram-section-title">Orden de palabras — Satzstellung</div>
+  <div class="gram-section-sub">La regla de oro: el verbo conjugado SIEMPRE ocupa la posición 2.</div>
+  <div class="card">
+    <table class="case-table">
+      <thead><tr><th>Tipo</th><th>Estructura</th><th>Ejemplo</th><th>Español</th></tr></thead>
+      <tbody>
+        <tr><td class="nom">Afirmativa</td><td class="vocab-es">Sujeto — <strong>Verbo</strong> — Resto</td><td class="vocab-ex">Ich lerne Deutsch.</td><td class="vocab-es">Aprendo alemán.</td></tr>
+        <tr><td class="nom">Con inversión</td><td class="vocab-es">Elemento — <strong>Verbo</strong> — Sujeto — Resto</td><td class="vocab-ex">Heute lerne ich Deutsch.</td><td class="vocab-es">Hoy aprendo alemán.</td></tr>
+        <tr><td class="akk">Pregunta sí/no</td><td class="vocab-es"><strong>Verbo</strong> — Sujeto — Resto?</td><td class="vocab-ex">Lernst du Deutsch?</td><td class="vocab-es">¿Aprendes alemán?</td></tr>
+        <tr><td class="akk">Pregunta W-</td><td class="vocab-es">W-Wort — <strong>Verbo</strong> — Sujeto — Resto?</td><td class="vocab-ex">Wo wohnst du?</td><td class="vocab-es">¿Dónde vives?</td></tr>
+        <tr><td class="dat">Con modal</td><td class="vocab-es">Sujeto — <strong>Modal</strong> — Resto — Infinitivo</td><td class="vocab-ex">Ich kann gut Deutsch sprechen.</td><td class="vocab-es">Puedo hablar alemán bien.</td></tr>
+        <tr><td class="dat">Perfekt</td><td class="vocab-es">Sujeto — <strong>haben/sein</strong> — Resto — Partizip II</td><td class="vocab-ex">Ich habe Deutsch gelernt.</td><td class="vocab-es">He aprendido / aprendí alemán.</td></tr>
+        <tr><td class="gen">Subordinada (weil...)</td><td class="vocab-es">..., weil Sujeto Resto <strong>Verbo</strong></td><td class="vocab-ex">...weil ich Deutsch lernen will.</td><td class="vocab-es">...porque quiero aprender alemán.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+</main>
+</div><!-- /gram-layout -->
+
+<footer class="footer" style="margin-top:0">
+  <p>Gramática Alemana — Referencia completa A1/A2</p>
+  <div class="footer-flag"><span style="background:#1a1a1a;width:20px;height:5px"></span><span style="background:var(--red);width:20px;height:5px"></span><span style="background:#FFCE00;width:20px;height:5px"></span></div>
+</footer>
+
+<script>
+// Highlight active nav item on scroll
+const sections = document.querySelectorAll('.gram-section[id]');
+const navItems = document.querySelectorAll('.gram-nav-item');
+window.addEventListener('scroll', ()=>{
+  let cur='';
+  sections.forEach(s=>{if(s.getBoundingClientRect().top<=120)cur=s.id});
+  navItems.forEach(n=>{
+    n.classList.toggle('active', n.getAttribute('href')==='#'+cur);
+  });
+});
+</script>
+</body>
+</html>
