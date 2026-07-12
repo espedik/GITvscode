@@ -12,11 +12,11 @@ function buildPages() {
     const richContent = WAYVE_RICH[id] || CODING_RICH[id] || PYTHON_RICH[id] || PYTHON_RICH2[id] || PYTHON_RICH3[id]
       || AUTO_RICH[id] || PROTO_RICH[id] || DIAG_RICH[id] || TOOLS_RICH[id]
       || STANDARDS_RICH[id] || TESTING_RICH[id] || GIT_RICH[id] || DEVOPS_RICH[id]
-      || METOD_RICH[id] || ISTQB_RICH[id] || INTERVIEW_RICH[id]
+      || METOD_RICH[id] || ISTQB_RICH[id] || INTERVIEW_RICH[id] || SYSDESIGN_RICH[id] || API_RICH[id] || AI_RICH[id]
       ? (WAYVE_RICH[id] || CODING_RICH[id] || PYTHON_RICH[id] || PYTHON_RICH2[id] || PYTHON_RICH3[id]
          || AUTO_RICH[id] || PROTO_RICH[id] || DIAG_RICH[id] || TOOLS_RICH[id]
          || STANDARDS_RICH[id] || TESTING_RICH[id] || GIT_RICH[id] || DEVOPS_RICH[id]
-         || METOD_RICH[id] || ISTQB_RICH[id] || INTERVIEW_RICH[id])
+         || METOD_RICH[id] || ISTQB_RICH[id] || INTERVIEW_RICH[id] || SYSDESIGN_RICH[id] || API_RICH[id] || AI_RICH[id])
       : `<div class="notes-card">
           <div class="notes-card-label">Mis notas</div>
           <p class="notes-placeholder">Agrega aquí tus apuntes sobre "${d.title}"...<br><br>

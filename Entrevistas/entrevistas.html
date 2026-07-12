@@ -150,6 +150,71 @@
     </div>
   </div>
 
+  <!-- ═══ CODING CHALLENGES ═══ -->
+  <div class="sidebar-section-label">Coding Challenges</div>
+
+  <div class="module" data-mod="coding">
+    <div class="module-header" onclick="toggleMod(this)">
+      <span class="m-icon">💻</span><span class="m-label">Coding Challenges</span>
+      <span class="m-count" id="cnt-coding">0/6</span><span class="m-arrow">▶</span>
+    </div>
+    <div class="module-body">
+      <div class="sub-group-label">📐 Paso 1 — El approach</div>
+      <div class="s-link" onclick="go('wayve-algo-approach')"><span class="dot"></span>Cómo resolver cualquier problema</div>
+
+      <div class="sub-group-label">📚 Paso 2 — Patrones base (9 algoritmos)</div>
+      <div class="s-link" onclick="go('wayve-algoritmos')"><span class="dot"></span>SW · 2P · HashMap · BS · BFS · DFS · Heap · Stack · Regex</div>
+
+      <div class="sub-group-label">🔥 Paso 2b — Patrones avanzados</div>
+      <div class="s-link" onclick="go('wayve-algo-advanced')"><span class="dot"></span>Intervals · DP / Kadane · Topological Sort</div>
+
+      <div class="sub-group-label">💪 Paso 3 — Practica (con soluciones)</div>
+      <div class="s-link" onclick="go('wayve-python-challenge')"><span class="dot"></span>Challenges 1 — Sensor streams</div>
+      <div class="s-link" onclick="go('wayve-challenges-2')"><span class="dot"></span>Challenges 2 — Merge · Top-K · Buffer</div>
+      <div class="s-link" onclick="go('wayve-challenges-3')"><span class="dot"></span>Challenges 3 — DP · Topological · Grid</div>
+    </div>
+  </div>
+
+  <!-- ═══ ENTREVISTAS ═══ -->
+  <div class="sidebar-section-label">Preparación Entrevista</div>
+
+  <!-- ═══ 13. ENTREVISTA ═══ -->
+  <div class="module" data-mod="interview">
+    <div class="module-header" onclick="toggleMod(this)">
+      <span class="m-icon">🎯</span><span class="m-label">Entrevista — Estrategia</span>
+      <span class="m-count" id="cnt-interview">0/9</span><span class="m-arrow">▶</span>
+    </div>
+    <div class="module-body">
+      <div class="s-link" onclick="go('ent-estructura-datos')"><span class="dot"></span>Estructuras de datos (Python)</div>
+      <div class="s-link" onclick="go('ent-algoritmos')"><span class="dot"></span>Algoritmos frecuentes</div>
+      <div class="s-link" onclick="go('ent-complejidad')"><span class="dot"></span>Complejidad O(n) — Big O</div>
+      <div class="s-link" onclick="go('ent-preguntas-py')"><span class="dot"></span>Preguntas frecuentes Python</div>
+      <div class="s-link" onclick="go('ent-preguntas-auto')"><span class="dot"></span>Preguntas frecuentes Automotriz</div>
+      <div class="s-link" onclick="go('ent-behavioral')"><span class="dot"></span>Preguntas Behavioral (STAR)</div>
+      <div class="s-link" onclick="go('ent-preguntas-entrevistador')"><span class="dot"></span>Preguntas al Entrevistador</div>
+      <div class="s-link" onclick="go('ent-patron-apuntadores')"><span class="dot"></span>Patron de Apuntadores (Two Pointers)</div>
+      <div class="s-link" onclick="go('ent-libros')"><span class="dot"></span>Libros & Recursos recomendados</div>
+    </div>
+  </div>
+
+  <!-- ═══ DISEÑO DE SISTEMAS ═══ -->
+  <div class="module" data-mod="sysdesign">
+    <div class="module-header" onclick="toggleMod(this)">
+      <span class="m-icon">🏗️</span><span class="m-label">Diseño de Sistemas</span>
+      <span class="m-count" id="cnt-sysdesign">0/8</span><span class="m-arrow">▶</span>
+    </div>
+    <div class="module-body">
+      <div class="s-link" onclick="go('sysd-framework')"><span class="dot"></span>Framework — Cómo resolver cualquier problema</div>
+      <div class="s-link" onclick="go('sysd-escalabilidad')"><span class="dot"></span>Escalabilidad y Rendimiento</div>
+      <div class="s-link" onclick="go('sysd-datos')"><span class="dot"></span>Datos y Almacenamiento</div>
+      <div class="s-link" onclick="go('sysd-comunicacion')"><span class="dot"></span>Comunicación entre Servicios</div>
+      <div class="s-link" onclick="go('sysd-confiabilidad')"><span class="dot"></span>Confiabilidad y Tolerancia a Fallos</div>
+      <div class="s-link" onclick="go('sysd-ejemplo')"><span class="dot"></span>Ejemplo resuelto — Telemetría de flota</div>
+      <div class="s-link" onclick="go('sysd-errores')"><span class="dot"></span>⚠️ Errores Comunes y Complicaciones</div>
+      <div class="s-link" onclick="go('sysd-practicas')"><span class="dot"></span>✅ Mejores Prácticas</div>
+    </div>
+  </div>
+
   <!-- ═══ PYTHON ═══ -->
   <div class="sidebar-section-label">Python</div>
 
@@ -234,6 +299,43 @@
   <div class="module module-link">
     <div class="module-header" onclick="go('py-cheatsheet')">
       <span class="m-icon">📄</span><span class="m-label">Cheat Sheet — Todos los métodos</span>
+    </div>
+  </div>
+
+  <!-- ═══ APIs ═══ -->
+  <div class="sidebar-section-label">APIs</div>
+
+  <div class="module" data-mod="api">
+    <div class="module-header" onclick="toggleMod(this)">
+      <span class="m-icon">🌐</span><span class="m-label">APIs — Fundamentos y Práctica</span>
+      <span class="m-count" id="cnt-api">0/8</span><span class="m-arrow">▶</span>
+    </div>
+    <div class="module-body">
+      <div class="s-link" onclick="go('api-fundamentos')"><span class="dot"></span>¿Qué es una API? — Fundamentos</div>
+      <div class="s-link" onclick="go('api-http')"><span class="dot"></span>HTTP y REST — El lenguaje de las APIs</div>
+      <div class="s-link" onclick="go('api-consumir')"><span class="dot"></span>Cómo consumir una API</div>
+      <div class="s-link" onclick="go('api-construir')"><span class="dot"></span>Cómo construir tu propia API</div>
+      <div class="s-link" onclick="go('api-auth')"><span class="dot"></span>Autenticación y Seguridad</div>
+      <div class="s-link" onclick="go('api-diseno')"><span class="dot"></span>Diseño de buenas APIs</div>
+      <div class="s-link" onclick="go('api-errores')"><span class="dot"></span>⚠️ Errores Comunes</div>
+      <div class="s-link" onclick="go('api-practicas')"><span class="dot"></span>✅ Mejores Prácticas</div>
+    </div>
+  </div>
+
+  <!-- ═══ AI CON API ═══ -->
+  <div class="sidebar-section-label">AI con API</div>
+
+  <div class="module" data-mod="aiapi">
+    <div class="module-header" onclick="toggleMod(this)">
+      <span class="m-icon">🤖</span><span class="m-label">IA — Trabajar con APIs de IA</span>
+      <span class="m-count" id="cnt-aiapi">0/5</span><span class="m-arrow">▶</span>
+    </div>
+    <div class="module-body">
+      <div class="s-link" onclick="go('ai-fundamentos')"><span class="dot"></span>¿Qué es una API de IA? — Cómo funcionan los LLMs</div>
+      <div class="s-link" onclick="go('ai-llamar')"><span class="dot"></span>Cómo llamar a una API de IA</div>
+      <div class="s-link" onclick="go('ai-prompting')"><span class="dot"></span>Prompt Engineering</div>
+      <div class="s-link" onclick="go('ai-avanzado')"><span class="dot"></span>Function Calling, Streaming y Structured Outputs</div>
+      <div class="s-link" onclick="go('ai-practicas')"><span class="dot"></span>✅ Costos, Seguridad y Mejores Prácticas</div>
     </div>
   </div>
 
@@ -352,51 +454,6 @@
     </div>
   </div>
 
-  <!-- ═══ ENTREVISTAS ═══ -->
-  <div class="sidebar-section-label">Preparación Entrevista</div>
-
-  <!-- ═══ 13. ENTREVISTA ═══ -->
-  <div class="module" data-mod="interview">
-    <div class="module-header" onclick="toggleMod(this)">
-      <span class="m-icon">🎯</span><span class="m-label">Entrevista — Estrategia</span>
-      <span class="m-count" id="cnt-interview">0/9</span><span class="m-arrow">▶</span>
-    </div>
-    <div class="module-body">
-      <div class="s-link" onclick="go('ent-estructura-datos')"><span class="dot"></span>Estructuras de datos (Python)</div>
-      <div class="s-link" onclick="go('ent-algoritmos')"><span class="dot"></span>Algoritmos frecuentes</div>
-      <div class="s-link" onclick="go('ent-complejidad')"><span class="dot"></span>Complejidad O(n) — Big O</div>
-      <div class="s-link" onclick="go('ent-preguntas-py')"><span class="dot"></span>Preguntas frecuentes Python</div>
-      <div class="s-link" onclick="go('ent-preguntas-auto')"><span class="dot"></span>Preguntas frecuentes Automotriz</div>
-      <div class="s-link" onclick="go('ent-behavioral')"><span class="dot"></span>Preguntas Behavioral (STAR)</div>
-      <div class="s-link" onclick="go('ent-preguntas-entrevistador')"><span class="dot"></span>Preguntas al Entrevistador</div>
-      <div class="s-link" onclick="go('ent-patron-apuntadores')"><span class="dot"></span>Patron de Apuntadores (Two Pointers)</div>
-      <div class="s-link" onclick="go('ent-libros')"><span class="dot"></span>Libros & Recursos recomendados</div>
-    </div>
-  </div>
-
-  <!-- ═══ 14. CODING CHALLENGES ═══ -->
-  <div class="module" data-mod="coding">
-    <div class="module-header" onclick="toggleMod(this)">
-      <span class="m-icon">💻</span><span class="m-label">Coding Challenges</span>
-      <span class="m-count" id="cnt-coding">0/6</span><span class="m-arrow">▶</span>
-    </div>
-    <div class="module-body">
-      <div class="sub-group-label">📐 Paso 1 — El approach</div>
-      <div class="s-link" onclick="go('wayve-algo-approach')"><span class="dot"></span>Cómo resolver cualquier problema</div>
-
-      <div class="sub-group-label">📚 Paso 2 — Patrones base (9 algoritmos)</div>
-      <div class="s-link" onclick="go('wayve-algoritmos')"><span class="dot"></span>SW · 2P · HashMap · BS · BFS · DFS · Heap · Stack · Regex</div>
-
-      <div class="sub-group-label">🔥 Paso 2b — Patrones avanzados</div>
-      <div class="s-link" onclick="go('wayve-algo-advanced')"><span class="dot"></span>Intervals · DP / Kadane · Topological Sort</div>
-
-      <div class="sub-group-label">💪 Paso 3 — Practica (con soluciones)</div>
-      <div class="s-link" onclick="go('wayve-python-challenge')"><span class="dot"></span>Challenges 1 — Sensor streams</div>
-      <div class="s-link" onclick="go('wayve-challenges-2')"><span class="dot"></span>Challenges 2 — Merge · Top-K · Buffer</div>
-      <div class="s-link" onclick="go('wayve-challenges-3')"><span class="dot"></span>Challenges 3 — DP · Topological · Grid</div>
-    </div>
-  </div>
-
   <!-- ══════════════════════════════════════════ -->
   <!-- ═══ WAYVE INTERVIEW — SECCIÓN ESPECIAL ═══ -->
   <!-- ══════════════════════════════════════════ -->
@@ -490,6 +547,9 @@
 <script src="js/data-metod.js"></script>
 <script src="js/data-istqb.js"></script>
 <script src="js/data-interview.js"></script>
+<script src="js/data-sysdesign.js"></script>
+<script src="js/data-api.js"></script>
+<script src="js/data-ai.js"></script>
 <script src="js/ui.js"></script>
 </body>
 </html>

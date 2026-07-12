@@ -22,6 +22,9 @@ App estática de una sola página (sin build, sin servidor — se abre con doble
   - `data-metod.js` → `METOD_RICH`
   - `data-istqb.js` → `ISTQB_RICH`
   - `data-interview.js` → `INTERVIEW_RICH`
+  - `data-sysdesign.js` → `SYSDESIGN_RICH` (Diseño de Sistemas — sección propia debajo de "Entrevista — Estrategia")
+  - `data-api.js` → `API_RICH` (sección "APIs", debajo de Python)
+  - `data-ai.js` → `AI_RICH` (sección "AI con API", debajo de "APIs")
 - `js/ui.js` — `buildPages()`, `go(id)`, `toggleMod`, `toggleDone`, `resetProgress`, `refreshSidebar`, `refreshProgress`, `autoOpenWayve` + código de init al final del archivo. **Cargar último** (depende de todo lo anterior).
 - `estructura.md` — outline temático de referencia (documentación, no está conectado al código).
 
@@ -30,6 +33,8 @@ App estática de una sola página (sin build, sin servidor — se abre con doble
 - Todos los `const NOMBRE_RICH = {...}` son objetos planos en scope global (scripts clásicos, no ES modules), por eso el orden de `<script src>` en `entrevistas.html` importa.
 - Cada entrada de contenido dentro de un `*_RICH` tiene su key alineada con un id del objeto `T` en `core.js`.
 - Los archivos `data-*.js` cierran con el comentario `};  // fin NOMBRE_RICH` — útil como ancla de búsqueda al editar.
+
+- El usuario quitó las secciones de Quiz (`quiz-section`/`quiz-card`) de toda la app — no las reagregues en contenido nuevo salvo que lo pida explícitamente.
 
 ## Al hacer cambios
 

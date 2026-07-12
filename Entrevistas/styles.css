@@ -460,6 +460,28 @@
     font-size:.65rem; font-weight:700; padding:2px 7px; border-radius:4px;
     background:var(--accent-light); color:var(--accent); white-space:nowrap; flex-shrink:0;
   }
+  .quiz-q .q-tag.lvl-basico     { background:#DCFCE7; color:#16A34A; }
+  .quiz-q .q-tag.lvl-intermedio { background:#FEF3C7; color:#D97706; }
+  .quiz-q .q-tag.lvl-complejo   { background:#FEE2E2; color:#DC2626; }
+
+  /* Ejercicios: salida esperada destacada antes del procedimiento */
+  .exercise-output {
+    display:flex; align-items:baseline; gap:8px; margin-bottom:14px;
+    padding:10px 14px; background:var(--white); border:1px solid var(--border);
+    border-left:4px solid var(--accent); border-radius:0 8px 8px 0;
+  }
+  .exercise-output .exercise-output-label {
+    font-size:.68rem; font-weight:800; text-transform:uppercase; letter-spacing:.06em;
+    color:var(--text-muted); flex-shrink:0;
+  }
+  .exercise-output code {
+    font-family:'Consolas','Fira Code',monospace; font-size:.82rem;
+    background:var(--tag-bg); color:var(--text); padding:2px 6px; border-radius:4px;
+  }
+  .exercise-steps-label {
+    font-size:.7rem; font-weight:800; text-transform:uppercase; letter-spacing:.08em;
+    color:var(--text-muted); margin:14px 0 8px;
+  }
   .quiz-q .q-arr { margin-left:auto; font-size:.6rem; color:var(--text-muted); transition:transform .2s; flex-shrink:0; }
   .quiz-q.open .q-arr { transform:rotate(90deg); }
   .quiz-a {
@@ -636,6 +658,7 @@
     background:#002B36; border-radius:10px; padding:16px 20px;
     font-family:'Consolas',monospace; font-size:.75rem; color:#93A1A1;
     line-height:1.8; overflow-x:auto; margin:12px 0;
+    white-space:pre;
   }
   .p-green { color:#859900; }
   .p-blue  { color:#268BD2; }
@@ -712,3 +735,6 @@
   [data-theme="dark"] .cs-table td:nth-child(4) { color: #F87171; }
   [data-theme="dark"] .err-bad .err-label { color: #F87171; }
   [data-theme="dark"] .err-good .err-label { color: #86EFAC; }
+  [data-theme="dark"] .quiz-q .q-tag.lvl-basico     { background: rgba(22,163,74,.18); color: #86EFAC; }
+  [data-theme="dark"] .quiz-q .q-tag.lvl-intermedio { background: rgba(217,119,6,.18); color: #FCD34D; }
+  [data-theme="dark"] .quiz-q .q-tag.lvl-complejo   { background: rgba(220,38,38,.18); color: #FCA5A5; }

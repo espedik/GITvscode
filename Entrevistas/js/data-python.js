@@ -12,7 +12,7 @@ const PYTHON_RICH = {
     <button class="tab-btn" onclick="switchTab(this,'pf-4','pyfor')">Trucos avanzados</button>
     <button class="tab-btn" onclick="switchTab(this,'pf-5','pyfor')">⚠️ Errores comunes</button>
     <button class="tab-btn" onclick="switchTab(this,'pf-6','pyfor')">✅ Mejores Prácticas</button>
-    <button class="tab-btn" onclick="switchTab(this,'pf-7','pyfor')">Gotchas + Quiz</button>
+    <button class="tab-btn" onclick="switchTab(this,'pf-7','pyfor')">Gotchas</button>
   </div>
   <div id="pf-1" class="tab-panel active">
 <div class="concept-intro">El <strong>for</strong> recorre un iterable (lista, tupla, dict, string, range, generador...) elemento por elemento; internamente llama a <code>iter()</code> y luego a <code>next()</code> hasta agotarlo. Úsalo cuando el número de iteraciones está determinado por el tamaño de una colección — recorrer una lista, un diccionario, o un rango fijo. En entrevistas de software automotriz es común pedir procesar logs, telemetría o streams de CAN con él.</div>
@@ -270,12 +270,6 @@ retries = <span class="c-nb">0</span>
       <div class="plan-block"><div class="plan-time">Trampa 3</div><div class="plan-content"><h4>for-else es contraintuitivo</h4><p>El <code>else</code> de un for/while NO es "si el loop no corrió". Es "si el loop terminó sin break". Pregunta frecuente de entrevista.</p></div></div>
       <div class="plan-block"><div class="plan-time">Trampa 4</div><div class="plan-content"><h4>La variable del loop sobrevive fuera del for</h4><p>A diferencia de otros lenguajes, el nombre usado en <code>for i in ...</code> no queda "encapsulado": después del loop, <code>i</code> sigue existiendo con su último valor (o incluso si la colección estaba vacía, con el valor que tenía antes, si es que existía).</p></div></div>
     </div>
-    <div class="quiz-section"><div class="quiz-title">Quiz</div>
-      <div class="quiz-card"><div class="quiz-q" onclick="toggleQuiz(this)"><span class="q-tag">Gotcha</span>¿Cuál es la salida de: <code>for i in range(3): pass</code>, ¿cuánto vale i después?<span class="q-arr">▶</span></div><div class="quiz-a"><b>i = 2.</b> La variable del loop persiste después del loop en Python. No se destruye como en otros lenguajes. Esto puede causar bugs si reutilizas el nombre.</div></div>
-      <div class="quiz-card"><div class="quiz-q" onclick="toggleQuiz(this)"><span class="q-tag">Diferencia</span>¿Diferencia entre break y continue?<span class="q-arr">▶</span></div><div class="quiz-a"><b>break</b>: termina el loop completamente. <b>continue</b>: salta a la siguiente iteración. Con break el else del loop NO se ejecuta. Con continue sí puede ejecutarse el else.</div></div>
-      <div class="quiz-card"><div class="quiz-q" onclick="toggleQuiz(this)"><span class="q-tag">Trampa</span>¿Qué imprime este código?<br><code>fns = [lambda: i for i in range(3)]<br>print([f() for f in fns])</code><span class="q-arr">▶</span></div><div class="quiz-a"><b>[2, 2, 2]</b>, no [0, 1, 2]. Las lambdas capturan la variable <code>i</code> por referencia (late binding), y para cuando se ejecutan, el loop ya terminó con i=2. Solución: <code>lambda i=i: i</code> para congelar el valor en el momento de la definición.</div></div>
-      <div class="quiz-card"><div class="quiz-q" onclick="toggleQuiz(this)"><span class="q-tag">Diseño</span>¿Cuándo usarías while en vez de for si ambos podrían "funcionar"?<span class="q-arr">▶</span></div><div class="quiz-a">Cuando el número de iteraciones no se conoce de antemano y depende de una condición externa que cambia en tiempo de ejecución — por ejemplo, esperar que un ECU reporte "ready", leer un socket hasta que llegue EOF, o reintentar una conexión hasta un timeout. Si la cantidad de iteraciones es fija o depende del tamaño de una colección, usa for.</div></div>
-    </div>
   </div>
 </div>`,
 
@@ -286,7 +280,7 @@ retries = <span class="c-nb">0</span>
     <button class="tab-btn" onclick="switchTab(this,'pyl-2','pylst')">Slicing avanzado</button>
     <button class="tab-btn" onclick="switchTab(this,'pyl-3','pylst')">⚠️ Errores comunes</button>
     <button class="tab-btn" onclick="switchTab(this,'pyl-4','pylst')">✅ Mejores Prácticas</button>
-    <button class="tab-btn" onclick="switchTab(this,'pyl-5','pylst')">Quiz</button>
+    <button class="tab-btn" onclick="switchTab(this,'pyl-6','pylst')">🧩 Ejercicios</button>
   </div>
   <div id="pyl-1" class="tab-panel active">
 ${renderMethodTable('LST')}
@@ -415,12 +409,219 @@ ids_validos = <span class="c-bi">set</span>([<span class="c-nb">1001</span>, <sp
   <p>En vez de <code>remove()</code>/<code>del</code> dentro de un <code>for</code>, usa una list comprehension que filtre lo que quieres conservar. Es más seguro, más corto y evita el bug de "saltar elementos".</p>
 </div>
   </div>
-  <div id="pyl-5" class="tab-panel">
-<div class="quiz-section"><div class="quiz-title">Quiz</div>
-  <div class="quiz-card"><div class="quiz-q" onclick="toggleQuiz(this)"><span class="q-tag">Complejidad</span>¿Por qué pop(0) es O(n) pero pop() es O(1)?<span class="q-arr">▶</span></div><div class="quiz-a">Las listas en Python son arrays dinámicos. Al hacer pop(0), todos los n-1 elementos restantes deben moverse una posición hacia la izquierda → O(n). Al hacer pop() (del final), ningún elemento se mueve → O(1). Si necesitas pops frecuentes del frente, usa <code>collections.deque</code>.</div></div>
-  <div class="quiz-card"><div class="quiz-q" onclick="toggleQuiz(this)"><span class="q-tag">Trampa</span>¿Qué imprime <code>lst[100:200]</code> si lst tiene solo 5 elementos?<span class="q-arr">▶</span></div><div class="quiz-a"><b>[] (lista vacía), no un error.</b> El slicing "clampa" los índices al rango válido en vez de lanzar excepción, a diferencia de <code>lst[100]</code> que sí lanza IndexError. Es una fuente común de bugs silenciosos: código que "funciona" pero retorna vacío sin avisar.</div></div>
-  <div class="quiz-card"><div class="quiz-q" onclick="toggleQuiz(this)"><span class="q-tag">Diferencia</span>¿sort() y sorted() son intercambiables?<span class="q-arr">▶</span></div><div class="quiz-a"><b>No.</b> <code>lst.sort()</code> ordena in-place y retorna <code>None</code> (por eso <code>lst = lst.sort()</code> es un bug clásico: deja lst en None). <code>sorted(lst)</code> retorna una lista nueva ordenada y no toca la original; funciona sobre cualquier iterable, no solo listas.</div></div>
-  <div class="quiz-card"><div class="quiz-q" onclick="toggleQuiz(this)"><span class="q-tag">Trampa</span>¿Qué produce <code>[[0]*3]*3</code> y por qué es peligroso?<span class="q-arr">▶</span></div><div class="quiz-a">Produce una lista de 3 referencias a la <b>misma</b> sublista interna. Modificar <code>matrix[0][0]</code> modifica las 3 "filas" a la vez, porque <code>*</code> repite referencias, no clona objetos. La forma correcta es <code>[[0]*3 for _ in range(3)]</code>, que crea 3 listas independientes en cada iteración de la comprehension.</div></div>
+  <div id="pyl-6" class="tab-panel">
+<div class="concept-intro">Esta sección es para <strong>practicar activamente</strong>, no solo leer. Cada ejercicio plantea un problema real: intenta resolverlo por tu cuenta (en tu editor, en un intérprete, o incluso en papel) <strong>antes</strong> de hacer click. Al revelar la respuesta verás primero la <b>salida esperada</b>, para que puedas comprobar si tu propio intento fue correcto, y después el <b>procedimiento paso a paso</b> con la solución completa explicada.</div>
+
+<div class="exercise-steps-label">🟢 Básico</div>
+
+<div class="quiz-card">
+  <div class="quiz-q" onclick="toggleQuiz(this)">
+    <span class="q-tag lvl-basico">BÁSICO</span>
+    <span>Escribe una función que reciba una lista de números y retorne solo los pares, sin usar un ciclo <code>for</code> explícito (usa comprehension).</span>
+    <span class="q-arr">▶</span>
+  </div>
+  <div class="quiz-a">
+    <div class="exercise-output"><span class="exercise-output-label">Salida esperada</span><code>pares([1, 2, 3, 4, 5, 6]) &rarr; [2, 4, 6]</code></div>
+    <div class="exercise-steps-label">Procedimiento paso a paso</div>
+    <div class="plan-card">
+      <div class="plan-block"><div class="plan-time">Paso 1</div><div class="plan-content"><p>"Sin loop explícito" apunta a usar una <b>list comprehension</b>: sigue iterando internamente, pero no escribes un bloque <code>for</code> tradicional con <code>append()</code>.</p></div></div>
+      <div class="plan-block"><div class="plan-time">Paso 2</div><div class="plan-content"><p>Dentro de la comprehension, filtra con la condición <code>x % 2 == 0</code> para quedarte solo con los pares.</p></div></div>
+      <div class="plan-block"><div class="plan-time">Paso 3</div><div class="plan-content"><p>La comprehension retorna directamente la lista nueva; no hace falta variable acumuladora ni <code>append()</code>.</p></div></div>
+    </div>
+    <div class="code-block"><div class="code-lang">Solución completa</div><pre>
+<span class="c-kw">def</span> <span class="c-fn">pares</span>(lista):
+    <span class="c-kw">return</span> [x <span class="c-kw">for</span> x <span class="c-kw">in</span> lista <span class="c-kw">if</span> x % <span class="c-nb">2</span> == <span class="c-nb">0</span>]
+
+<span class="c-bi">print</span>(pares([<span class="c-nb">1</span>, <span class="c-nb">2</span>, <span class="c-nb">3</span>, <span class="c-nb">4</span>, <span class="c-nb">5</span>, <span class="c-nb">6</span>]))  <span class="c-cm"># [2, 4, 6]</span></pre></div>
+  </div>
+</div>
+
+<div class="quiz-card">
+  <div class="quiz-q" onclick="toggleQuiz(this)">
+    <span class="q-tag lvl-basico">BÁSICO</span>
+    <span>Escribe una función que reciba una lista de lecturas de temperatura (floats) de un sensor y retorne el promedio redondeado a 2 decimales. Si la lista está vacía, debe retornar <code>None</code> en vez de lanzar una excepción.</span>
+    <span class="q-arr">▶</span>
+  </div>
+  <div class="quiz-a">
+    <div class="exercise-output"><span class="exercise-output-label">Salida esperada</span><code>promedio_temp([36.5, 37.125, 36.8, 37.0]) &rarr; 36.86</code></div>
+    <div class="exercise-steps-label">Procedimiento paso a paso</div>
+    <div class="plan-card">
+      <div class="plan-block"><div class="plan-time">Paso 1</div><div class="plan-content"><p>Maneja primero el caso borde: si <code>lecturas</code> está vacía, retorna <code>None</code> de inmediato — así evitas un <code>ZeroDivisionError</code> al dividir entre <code>len(lecturas)</code>.</p></div></div>
+      <div class="plan-block"><div class="plan-time">Paso 2</div><div class="plan-content"><p>Calcula la suma con <code>sum(lecturas)</code> y divide entre <code>len(lecturas)</code> para obtener el promedio.</p></div></div>
+      <div class="plan-block"><div class="plan-time">Paso 3</div><div class="plan-content"><p>Redondea el resultado a 2 decimales con <code>round(valor, 2)</code> antes de retornarlo.</p></div></div>
+    </div>
+    <div class="code-block"><div class="code-lang">Solución completa</div><pre>
+<span class="c-kw">def</span> <span class="c-fn">promedio_temp</span>(lecturas):
+    <span class="c-kw">if</span> <span class="c-kw">not</span> lecturas:
+        <span class="c-kw">return</span> <span class="c-kw">None</span>
+    <span class="c-kw">return</span> <span class="c-bi">round</span>(<span class="c-bi">sum</span>(lecturas) / <span class="c-bi">len</span>(lecturas), <span class="c-nb">2</span>)
+
+<span class="c-bi">print</span>(promedio_temp([<span class="c-nb">36.5</span>, <span class="c-nb">37.125</span>, <span class="c-nb">36.8</span>, <span class="c-nb">37.0</span>]))  <span class="c-cm"># 36.86</span></pre></div>
+  </div>
+</div>
+
+<div class="quiz-card">
+  <div class="quiz-q" onclick="toggleQuiz(this)">
+    <span class="q-tag lvl-basico">BÁSICO</span>
+    <span>Escribe una función que reciba una lista de códigos DTC (con posibles duplicados, en el orden en que se detectaron) y retorne una lista sin duplicados, preservando el orden de primera aparición.</span>
+    <span class="q-arr">▶</span>
+  </div>
+  <div class="quiz-a">
+    <div class="exercise-output"><span class="exercise-output-label">Salida esperada</span><code>dedup(['P0300','P0171','P0300','P0420','P0171']) &rarr; ['P0300', 'P0171', 'P0420']</code></div>
+    <div class="exercise-steps-label">Procedimiento paso a paso</div>
+    <div class="plan-card">
+      <div class="plan-block"><div class="plan-time">Paso 1</div><div class="plan-content"><p>Un <code>set()</code> elimina duplicados, pero no preserva el orden original — necesitas otra estructura que sí lo haga.</p></div></div>
+      <div class="plan-block"><div class="plan-time">Paso 2</div><div class="plan-content"><p><code>dict.fromkeys(lista)</code> preserva el orden de inserción (garantizado desde Python 3.7) y descarta duplicados automáticamente, porque las keys de un dict son únicas.</p></div></div>
+      <div class="plan-block"><div class="plan-time">Paso 3</div><div class="plan-content"><p>Convierte el resultado de vuelta a lista con <code>list(...)</code> para retornar el tipo esperado.</p></div></div>
+    </div>
+    <div class="code-block"><div class="code-lang">Solución completa</div><pre>
+<span class="c-kw">def</span> <span class="c-fn">dedup</span>(codigos):
+    <span class="c-kw">return</span> <span class="c-bi">list</span>(<span class="c-bi">dict</span>.fromkeys(codigos))
+
+<span class="c-bi">print</span>(dedup([<span class="c-st">'P0300'</span>, <span class="c-st">'P0171'</span>, <span class="c-st">'P0300'</span>, <span class="c-st">'P0420'</span>, <span class="c-st">'P0171'</span>]))
+<span class="c-cm"># ['P0300', 'P0171', 'P0420']</span></pre></div>
+  </div>
+</div>
+
+<div class="exercise-steps-label">🟡 Intermedio</div>
+
+<div class="quiz-card">
+  <div class="quiz-q" onclick="toggleQuiz(this)">
+    <span class="q-tag lvl-intermedio">INTERMEDIO</span>
+    <span>Escribe una función que reciba una lista de lecturas numéricas y un tamaño de ventana <code>n</code>, y retorne una lista con el promedio móvil (la media de cada ventana de <code>n</code> elementos consecutivos).</span>
+    <span class="q-arr">▶</span>
+  </div>
+  <div class="quiz-a">
+    <div class="exercise-output"><span class="exercise-output-label">Salida esperada</span><code>media_movil([10, 20, 30, 40, 50], 3) &rarr; [20.0, 30.0, 40.0]</code></div>
+    <div class="exercise-steps-label">Procedimiento paso a paso</div>
+    <div class="plan-card">
+      <div class="plan-block"><div class="plan-time">Paso 1</div><div class="plan-content"><p>El resultado tendrá <code>len(lecturas) - n + 1</code> elementos: una ventana por cada posición de inicio válida dentro de la lista.</p></div></div>
+      <div class="plan-block"><div class="plan-time">Paso 2</div><div class="plan-content"><p>Para cada índice <code>i</code> válido, toma el slice <code>lecturas[i:i+n]</code> (exactamente <code>n</code> elementos) y calcula su promedio con <code>sum(...)/n</code>.</p></div></div>
+      <div class="plan-block"><div class="plan-time">Paso 3</div><div class="plan-content"><p>Recorre todos los índices de inicio con <code>range(len(lecturas) - n + 1)</code> dentro de una list comprehension, redondeando cada promedio a 2 decimales.</p></div></div>
+    </div>
+    <div class="code-block"><div class="code-lang">Solución completa</div><pre>
+<span class="c-kw">def</span> <span class="c-fn">media_movil</span>(lecturas, n):
+    <span class="c-kw">return</span> [<span class="c-bi">round</span>(<span class="c-bi">sum</span>(lecturas[i:i+n]) / n, <span class="c-nb">2</span>)
+            <span class="c-kw">for</span> i <span class="c-kw">in</span> <span class="c-bi">range</span>(<span class="c-bi">len</span>(lecturas) - n + <span class="c-nb">1</span>)]
+
+<span class="c-bi">print</span>(media_movil([<span class="c-nb">10</span>, <span class="c-nb">20</span>, <span class="c-nb">30</span>, <span class="c-nb">40</span>, <span class="c-nb">50</span>], <span class="c-nb">3</span>))
+<span class="c-cm"># [20.0, 30.0, 40.0]</span></pre></div>
+  </div>
+</div>
+
+<div class="quiz-card">
+  <div class="quiz-q" onclick="toggleQuiz(this)">
+    <span class="q-tag lvl-intermedio">INTERMEDIO</span>
+    <span>Tienes una lista de resultados de test, cada uno un dict con <code>'bench'</code>, <code>'severity'</code> (int, mayor = más grave) y <code>'timestamp'</code>. Escribe una función que los ordene por <code>severity</code> descendente y, en caso de empate, por <code>timestamp</code> ascendente (el más antiguo primero).</span>
+    <span class="q-arr">▶</span>
+  </div>
+  <div class="quiz-a">
+    <div class="exercise-output"><span class="exercise-output-label">Salida esperada</span><code>[r['bench'] for r in ordenados] &rarr; ['c2', 'b1', 'a3', 'd4']</code></div>
+    <div class="exercise-steps-label">Procedimiento paso a paso</div>
+    <div class="plan-card">
+      <div class="plan-block"><div class="plan-time">Paso 1</div><div class="plan-content"><p><code>sort()</code>/<code>sorted()</code> aceptan una <b>tupla</b> como <code>key</code> para ordenar por varios campos a la vez: primero compara el primer elemento de la tupla, y solo si hay empate pasa al segundo.</p></div></div>
+      <div class="plan-block"><div class="plan-time">Paso 2</div><div class="plan-content"><p>Para lograr "severity descendente" y "timestamp ascendente" en un solo <code>sort</code> (que por defecto siempre ordena ascendente), niega el campo numérico que quieres invertir: <code>key=lambda r: (-r['severity'], r['timestamp'])</code>.</p></div></div>
+      <div class="plan-block"><div class="plan-time">Paso 3</div><div class="plan-content"><p>Usa <code>sorted(resultados, key=...)</code> para no mutar la lista original, y verifica extrayendo el campo <code>'bench'</code> de cada dict en el orden resultante.</p></div></div>
+    </div>
+    <div class="code-block"><div class="code-lang">Solución completa</div><pre>
+<span class="c-kw">def</span> <span class="c-fn">ordenar_resultados</span>(resultados):
+    <span class="c-kw">return</span> <span class="c-bi">sorted</span>(resultados, key=<span class="c-kw">lambda</span> r: (-r[<span class="c-st">'severity'</span>], r[<span class="c-st">'timestamp'</span>]))
+
+resultados = [
+    {<span class="c-st">'bench'</span>: <span class="c-st">'a3'</span>, <span class="c-st">'severity'</span>: <span class="c-nb">2</span>, <span class="c-st">'timestamp'</span>: <span class="c-nb">300</span>},
+    {<span class="c-st">'bench'</span>: <span class="c-st">'b1'</span>, <span class="c-st">'severity'</span>: <span class="c-nb">3</span>, <span class="c-st">'timestamp'</span>: <span class="c-nb">100</span>},
+    {<span class="c-st">'bench'</span>: <span class="c-st">'c2'</span>, <span class="c-st">'severity'</span>: <span class="c-nb">3</span>, <span class="c-st">'timestamp'</span>: <span class="c-nb">50</span>},
+    {<span class="c-st">'bench'</span>: <span class="c-st">'d4'</span>, <span class="c-st">'severity'</span>: <span class="c-nb">1</span>, <span class="c-st">'timestamp'</span>: <span class="c-nb">10</span>},
+]
+ordenados = ordenar_resultados(resultados)
+<span class="c-bi">print</span>([r[<span class="c-st">'bench'</span>] <span class="c-kw">for</span> r <span class="c-kw">in</span> ordenados])
+<span class="c-cm"># ['c2', 'b1', 'a3', 'd4']</span></pre></div>
+  </div>
+</div>
+
+<div class="quiz-card">
+  <div class="quiz-q" onclick="toggleQuiz(this)">
+    <span class="q-tag lvl-intermedio">INTERMEDIO</span>
+    <span>Escribe una función que reciba una lista de listas (por ejemplo, frames CAN capturados por cada bench en una corrida) y la aplane un nivel, retornando una sola lista con todos los elementos, sin usar <code>itertools</code>.</span>
+    <span class="q-arr">▶</span>
+  </div>
+  <div class="quiz-a">
+    <div class="exercise-output"><span class="exercise-output-label">Salida esperada</span><code>aplanar([[1, 2], [3], [4, 5, 6]]) &rarr; [1, 2, 3, 4, 5, 6]</code></div>
+    <div class="exercise-steps-label">Procedimiento paso a paso</div>
+    <div class="plan-card">
+      <div class="plan-block"><div class="plan-time">Paso 1</div><div class="plan-content"><p>Una comprehension anidada puede recorrer primero la lista externa (cada sublista) y luego cada elemento dentro de esa sublista, en el mismo orden en que escribirías los <code>for</code> anidados como loops normales.</p></div></div>
+      <div class="plan-block"><div class="plan-time">Paso 2</div><div class="plan-content"><p>La sintaxis queda <code>[elem for sublista in listas for elem in sublista]</code> — el primer <code>for</code> es el más "externo", igual que si estuviera arriba en loops anidados.</p></div></div>
+      <div class="plan-block"><div class="plan-time">Paso 3</div><div class="plan-content"><p>El resultado es una sola lista plana con todos los elementos, respetando el orden de las sublistas originales.</p></div></div>
+    </div>
+    <div class="code-block"><div class="code-lang">Solución completa</div><pre>
+<span class="c-kw">def</span> <span class="c-fn">aplanar</span>(listas):
+    <span class="c-kw">return</span> [elem <span class="c-kw">for</span> sublista <span class="c-kw">in</span> listas <span class="c-kw">for</span> elem <span class="c-kw">in</span> sublista]
+
+<span class="c-bi">print</span>(aplanar([[<span class="c-nb">1</span>, <span class="c-nb">2</span>], [<span class="c-nb">3</span>], [<span class="c-nb">4</span>, <span class="c-nb">5</span>, <span class="c-nb">6</span>]]))
+<span class="c-cm"># [1, 2, 3, 4, 5, 6]</span></pre></div>
+  </div>
+</div>
+
+<div class="exercise-steps-label">🔴 Complejo</div>
+
+<div class="quiz-card">
+  <div class="quiz-q" onclick="toggleQuiz(this)">
+    <span class="q-tag lvl-complejo">COMPLEJO</span>
+    <span>Escribe una función que reciba una lista y un tamaño <code>n</code>, y la divida en sublistas ("chunks") de tamaño <code>n</code>. El último chunk puede tener menos de <code>n</code> elementos si la lista no es múltiplo exacto. Útil para enviar frames CAN en lotes de tamaño fijo.</span>
+    <span class="q-arr">▶</span>
+  </div>
+  <div class="quiz-a">
+    <div class="exercise-output"><span class="exercise-output-label">Salida esperada</span><code>chunk([1, 2, 3, 4, 5, 6, 7], 3) &rarr; [[1, 2, 3], [4, 5, 6], [7]]</code></div>
+    <div class="exercise-steps-label">Procedimiento paso a paso</div>
+    <div class="plan-card">
+      <div class="plan-block"><div class="plan-time">Paso 1</div><div class="plan-content"><p>Necesitas recorrer la lista en saltos de tamaño <code>n</code>: <code>range(0, len(lista), n)</code> genera exactamente esos puntos de inicio (0, n, 2n, ...).</p></div></div>
+      <div class="plan-block"><div class="plan-time">Paso 2</div><div class="plan-content"><p>Para cada punto de inicio <code>i</code>, toma el slice <code>lista[i:i+n]</code>. El slicing nunca lanza error aunque <code>i+n</code> se pase del final de la lista: simplemente retorna lo que queda disponible.</p></div></div>
+      <div class="plan-block"><div class="plan-time">Paso 3</div><div class="plan-content"><p>Acumula cada slice como un elemento de la lista resultado usando una comprehension: <code>[lista[i:i+n] for i in range(0, len(lista), n)]</code>.</p></div></div>
+      <div class="plan-block"><div class="plan-time">Paso 4</div><div class="plan-content"><p>Verifica el caso borde: si <code>len(lista)</code> no es múltiplo exacto de <code>n</code>, el último chunk queda naturalmente más corto, sin necesitar código adicional para ese caso.</p></div></div>
+    </div>
+    <div class="code-block"><div class="code-lang">Solución completa</div><pre>
+<span class="c-kw">def</span> <span class="c-fn">chunk</span>(lista, n):
+    <span class="c-kw">return</span> [lista[i:i+n] <span class="c-kw">for</span> i <span class="c-kw">in</span> <span class="c-bi">range</span>(<span class="c-nb">0</span>, <span class="c-bi">len</span>(lista), n)]
+
+<span class="c-bi">print</span>(chunk([<span class="c-nb">1</span>, <span class="c-nb">2</span>, <span class="c-nb">3</span>, <span class="c-nb">4</span>, <span class="c-nb">5</span>, <span class="c-nb">6</span>, <span class="c-nb">7</span>], <span class="c-nb">3</span>))
+<span class="c-cm"># [[1, 2, 3], [4, 5, 6], [7]]</span></pre></div>
+  </div>
+</div>
+
+<div class="quiz-card">
+  <div class="quiz-q" onclick="toggleQuiz(this)">
+    <span class="q-tag lvl-complejo">COMPLEJO</span>
+    <span>Tienes dos listas de timestamps YA ordenadas ascendentemente (por ejemplo, capturadas por dos benches distintos). Escribe una función que las combine en una sola lista ordenada, en O(n+m), SIN usar <code>sorted()</code>, <code>sort()</code> ni el operador <code>+</code> para unirlas de golpe.</span>
+    <span class="q-arr">▶</span>
+  </div>
+  <div class="quiz-a">
+    <div class="exercise-output"><span class="exercise-output-label">Salida esperada</span><code>merge_ordenadas([1, 4, 7, 10], [2, 3, 8]) &rarr; [1, 2, 3, 4, 7, 8, 10]</code></div>
+    <div class="exercise-steps-label">Procedimiento paso a paso</div>
+    <div class="plan-card">
+      <div class="plan-block"><div class="plan-time">Paso 1</div><div class="plan-content"><p>Usa dos punteros, <code>i</code> y <code>j</code>, que arrancan en 0 sobre cada lista de entrada — esta es la técnica clásica de dos punteros sobre secuencias ya ordenadas.</p></div></div>
+      <div class="plan-block"><div class="plan-time">Paso 2</div><div class="plan-content"><p>En cada paso, compara <code>a[i]</code> con <code>b[j]</code> y agrega a la lista resultado el menor de los dos, avanzando <b>solo</b> el puntero de la lista de la que tomaste el elemento.</p></div></div>
+      <div class="plan-block"><div class="plan-time">Paso 3</div><div class="plan-content"><p>Repite ese paso mientras ambos punteros sigan dentro de rango — es exactamente la fase de "merge" que usa mergesort internamente.</p></div></div>
+      <div class="plan-block"><div class="plan-time">Paso 4</div><div class="plan-content"><p>Cuando una de las dos listas se agota, la otra ya está garantizada ordenada: agrega el resto directamente con <code>extend()</code> (no viola la restricción, ya que no es una concatenación de dos listas completas sin procesar).</p></div></div>
+      <div class="plan-block"><div class="plan-time">Paso 5</div><div class="plan-content"><p>El costo total es O(n+m): cada elemento de ambas listas se visita y se copia exactamente una vez, sin comparar contra todos los demás como haría un sort genérico (que sería O((n+m) log(n+m))).</p></div></div>
+    </div>
+    <div class="code-block"><div class="code-lang">Solución completa</div><pre>
+<span class="c-kw">def</span> <span class="c-fn">merge_ordenadas</span>(a, b):
+    resultado = []
+    i = j = <span class="c-nb">0</span>
+    <span class="c-kw">while</span> i &lt; <span class="c-bi">len</span>(a) <span class="c-kw">and</span> j &lt; <span class="c-bi">len</span>(b):
+        <span class="c-kw">if</span> a[i] &lt;= b[j]:
+            resultado.append(a[i])
+            i += <span class="c-nb">1</span>
+        <span class="c-kw">else</span>:
+            resultado.append(b[j])
+            j += <span class="c-nb">1</span>
+    resultado.extend(a[i:])   <span class="c-cm"># agrega lo que quedó de "a" (si algo quedó)</span>
+    resultado.extend(b[j:])   <span class="c-cm"># agrega lo que quedó de "b" (si algo quedó)</span>
+    <span class="c-kw">return</span> resultado
+
+<span class="c-bi">print</span>(merge_ordenadas([<span class="c-nb">1</span>, <span class="c-nb">4</span>, <span class="c-nb">7</span>, <span class="c-nb">10</span>], [<span class="c-nb">2</span>, <span class="c-nb">3</span>, <span class="c-nb">8</span>]))
+<span class="c-cm"># [1, 2, 3, 4, 7, 8, 10]</span></pre></div>
+  </div>
 </div>
   </div>
 </div>`,
@@ -432,7 +633,8 @@ ids_validos = <span class="c-bi">set</span>([<span class="c-nb">1001</span>, <sp
     <button class="tab-btn" onclick="switchTab(this,'ptp-1','pytup')">Conceptos y creación</button>
     <button class="tab-btn" onclick="switchTab(this,'ptp-2','pytup')">Unpacking & namedtuple</button>
     <button class="tab-btn" onclick="switchTab(this,'ptp-3','pytup')">⚠️ Errores comunes</button>
-    <button class="tab-btn" onclick="switchTab(this,'ptp-4','pytup')">✅ Mejores Prácticas + Quiz</button>
+    <button class="tab-btn" onclick="switchTab(this,'ptp-4','pytup')">✅ Mejores Prácticas</button>
+    <button class="tab-btn" onclick="switchTab(this,'ptp-5','pytup')">🧩 Ejercicios</button>
   </div>
   <div id="ptp-0" class="tab-panel active">
 ${renderMethodTable('TUP')}
@@ -574,10 +776,247 @@ reading = Reading(<span class="c-nb">1720000000.0</span>, <span class="c-nb">36.
   <div class="practice-title">No uses tuplas cuando en realidad necesitas mutabilidad</div>
   <p>Si vas a acumular elementos incrementalmente (agregar uno por uno en un loop), usa una lista y conviértela a tupla al final si hace falta inmutabilidad — evita el patrón O(n²) de <code>tupla += (x,)</code> dentro de un loop.</p>
 </div>
-<div class="quiz-section"><div class="quiz-title">Quiz</div>
-  <div class="quiz-card"><div class="quiz-q" onclick="toggleQuiz(this)"><span class="q-tag">Trampa</span>¿Una tupla es siempre inmutable?<span class="q-arr">▶</span></div><div class="quiz-a"><b>La tupla en sí es inmutable, pero puede contener objetos mutables.</b><br><code>t = ([1,2], [3,4])<br>t[0].append(99)  # t = ([1,2,99], [3,4]) — ¡modificó!</code><br><br>La tupla no cambió (t[0] sigue siendo la misma lista), pero el contenido de esa lista sí. Por eso las tuplas con mutables NO son hashables y no pueden ser keys de dict.</div></div>
-  <div class="quiz-card"><div class="quiz-q" onclick="toggleQuiz(this)"><span class="q-tag">Sintaxis</span>¿Por qué (1) no es una tupla pero (1,) sí?<span class="q-arr">▶</span></div><div class="quiz-a">Porque lo que crea una tupla es la <b>coma</b>, no los paréntesis. <code>(1)</code> es solo el entero 1 entre paréntesis de agrupación (igual que en aritmética). <code>(1,)</code> tiene la coma que le indica al parser "esto es una secuencia de un elemento". De hecho, incluso sin paréntesis, <code>1,</code> ya es una tupla.</div></div>
-  <div class="quiz-card"><div class="quiz-q" onclick="toggleQuiz(this)"><span class="q-tag">Diseño</span>¿Cuándo elegirías namedtuple sobre una clase normal?<span class="q-arr">▶</span></div><div class="quiz-a">Cuando el objeto es esencialmente un conjunto de datos inmutables sin comportamiento propio (sin métodos que muten estado) — por ejemplo, un registro de lectura de sensor o una fila parseada de un CSV. namedtuple da inmutabilidad, hashabilidad, comparación por valor y menor uso de memoria "gratis", sin escribir <code>__init__</code>/<code>__eq__</code>/<code>__hash__</code> a mano. Si necesitas métodos con lógica compleja o mutabilidad, usa una clase normal o dataclass.</div></div>
+  </div>
+  <div id="ptp-5" class="tab-panel">
+<div class="concept-intro">Practica activa: resuelve cada ejercicio por tu cuenta (en tu editor o en papel) <strong>antes</strong> de hacer click. Al revelar verás primero la <b>salida esperada</b>, para que puedas comparar tu propio resultado, y después el <b>procedimiento completo paso a paso</b> con la solución comentada. Progresión: 🟢 Básico → 🟡 Intermedio → 🔴 Complejo.</div>
+
+<div class="exercise-steps-label">🟢 Básico</div>
+
+<div class="quiz-card">
+  <div class="quiz-q" onclick="toggleQuiz(this)">
+    <span class="q-tag lvl-basico">BÁSICO</span>
+    <span>Escribe una función <code>pares(t)</code> que reciba una tupla de enteros y retorne una tupla nueva con solo los valores pares, sin modificar la tupla original.</span>
+    <span class="q-arr">▶</span>
+  </div>
+  <div class="quiz-a">
+    <div class="exercise-output"><span class="exercise-output-label">Salida esperada</span><code>pares((1, 2, 3, 4, 5, 6)) → (2, 4, 6)</code></div>
+    <div class="exercise-steps-label">Procedimiento paso a paso</div>
+    <div class="plan-card">
+      <div class="plan-block"><div class="plan-time">Paso 1</div><div class="plan-content"><p>Recorre la tupla de entrada con una comprehension, filtrando con el operador módulo (<code>x % 2 == 0</code>) para quedarte solo con los pares.</p></div></div>
+      <div class="plan-block"><div class="plan-time">Paso 2</div><div class="plan-content"><p>Envuelve la comprehension con <code>tuple(...)</code>: la sintaxis <code>(x for x in t)</code> por sí sola es un generador, no una tupla, así que hay que empaquetarlo explícitamente.</p></div></div>
+    </div>
+    <div class="code-block"><div class="code-lang">Solución completa</div><pre>
+<span class="c-kw">def</span> <span class="c-fn">pares</span>(t):
+    <span class="c-kw">return</span> <span class="c-bi">tuple</span>(x <span class="c-kw">for</span> x <span class="c-kw">in</span> t <span class="c-kw">if</span> x % <span class="c-nb">2</span> == <span class="c-nb">0</span>)
+
+<span class="c-bi">print</span>(pares((<span class="c-nb">1</span>, <span class="c-nb">2</span>, <span class="c-nb">3</span>, <span class="c-nb">4</span>, <span class="c-nb">5</span>, <span class="c-nb">6</span>)))  <span class="c-cm"># (2, 4, 6)</span></pre></div>
+  </div>
+</div>
+
+<div class="quiz-card">
+  <div class="quiz-q" onclick="toggleQuiz(this)">
+    <span class="q-tag lvl-basico">BÁSICO</span>
+    <span>Escribe una función <code>diferencias(a, b)</code> que reciba dos tuplas numéricas de igual longitud — lecturas de dos sensores tomadas en los mismos instantes — y retorne una tupla con la diferencia absoluta entre cada par de valores.</span>
+    <span class="q-arr">▶</span>
+  </div>
+  <div class="quiz-a">
+    <div class="exercise-output"><span class="exercise-output-label">Salida esperada</span><code>diferencias((10, 20, 30), (12, 18, 33)) → (2, 2, 3)</code></div>
+    <div class="exercise-steps-label">Procedimiento paso a paso</div>
+    <div class="plan-card">
+      <div class="plan-block"><div class="plan-time">Paso 1</div><div class="plan-content"><p>Usa <code>zip(a, b)</code> para recorrer ambas tuplas en paralelo, generando pares <code>(x, y)</code> posición por posición.</p></div></div>
+      <div class="plan-block"><div class="plan-time">Paso 2</div><div class="plan-content"><p>Calcula <code>abs(x - y)</code> para cada par dentro de una comprehension y envuelve el resultado en <code>tuple(...)</code>.</p></div></div>
+    </div>
+    <div class="code-block"><div class="code-lang">Solución completa</div><pre>
+<span class="c-kw">def</span> <span class="c-fn">diferencias</span>(a, b):
+    <span class="c-kw">return</span> <span class="c-bi">tuple</span>(<span class="c-bi">abs</span>(x - y) <span class="c-kw">for</span> x, y <span class="c-kw">in</span> <span class="c-bi">zip</span>(a, b))
+
+<span class="c-bi">print</span>(diferencias((<span class="c-nb">10</span>, <span class="c-nb">20</span>, <span class="c-nb">30</span>), (<span class="c-nb">12</span>, <span class="c-nb">18</span>, <span class="c-nb">33</span>)))  <span class="c-cm"># (2, 2, 3)</span></pre></div>
+  </div>
+</div>
+
+<div class="quiz-card">
+  <div class="quiz-q" onclick="toggleQuiz(this)">
+    <span class="q-tag lvl-basico">BÁSICO</span>
+    <span>Escribe una función <code>formatear_lectura(r)</code> que reciba una tupla <code>(nombre, valor, unidad)</code> y retorne un string con el formato <code>'nombre: valor unidad'</code>, usando unpacking para nombrar cada campo dentro de la función.</span>
+    <span class="q-arr">▶</span>
+  </div>
+  <div class="quiz-a">
+    <div class="exercise-output"><span class="exercise-output-label">Salida esperada</span><code>formatear_lectura(('temp_motor', 92.5, 'C')) → 'temp_motor: 92.5 C'</code></div>
+    <div class="exercise-steps-label">Procedimiento paso a paso</div>
+    <div class="plan-card">
+      <div class="plan-block"><div class="plan-time">Paso 1</div><div class="plan-content"><p>Desempaqueta la tupla recibida en tres variables descriptivas: <code>nombre, valor, unidad = r</code>. Esto es más legible que acceder por índice (<code>r[0]</code>, <code>r[1]</code>, <code>r[2]</code>).</p></div></div>
+      <div class="plan-block"><div class="plan-time">Paso 2</div><div class="plan-content"><p>Construye el string de salida con un f-string que interpole las tres variables ya desempaquetadas.</p></div></div>
+    </div>
+    <div class="code-block"><div class="code-lang">Solución completa</div><pre>
+<span class="c-kw">def</span> <span class="c-fn">formatear_lectura</span>(r):
+    nombre, valor, unidad = r
+    <span class="c-kw">return</span> <span class="c-st">f"{nombre}: {valor} {unidad}"</span>
+
+<span class="c-bi">print</span>(formatear_lectura((<span class="c-st">'temp_motor'</span>, <span class="c-nb">92.5</span>, <span class="c-st">'C'</span>)))  <span class="c-cm"># temp_motor: 92.5 C</span></pre></div>
+  </div>
+</div>
+
+<div class="exercise-steps-label">🟡 Intermedio</div>
+
+<div class="quiz-card">
+  <div class="quiz-q" onclick="toggleQuiz(this)">
+    <span class="q-tag lvl-intermedio">INTERMEDIO</span>
+    <span>Escribe una función <code>extremos(tel)</code> que reciba una tupla de telemetría con forma <code>(timestamp, *lecturas)</code> — un timestamp seguido de un número variable de lecturas — y, usando unpacking extendido con <code>*</code>, retorne una tupla <code>(timestamp, primera_lectura, ultima_lectura)</code>.</span>
+    <span class="q-arr">▶</span>
+  </div>
+  <div class="quiz-a">
+    <div class="exercise-output"><span class="exercise-output-label">Salida esperada</span><code>extremos((1700000000, 12, 45, 30, 8, 91)) → (1700000000, 12, 91)</code></div>
+    <div class="exercise-steps-label">Procedimiento paso a paso</div>
+    <div class="plan-card">
+      <div class="plan-block"><div class="plan-time">Paso 1</div><div class="plan-content"><p>Usa unpacking extendido para separar el primer elemento del resto: <code>ts, *lecturas = tel</code>.</p></div></div>
+      <div class="plan-block"><div class="plan-time">Paso 2</div><div class="plan-content"><p>Recuerda que <code>*lecturas</code> siempre produce una <b>lista</b>, aunque <code>tel</code> sea una tupla — así que <code>lecturas[0]</code> y <code>lecturas[-1]</code> acceden a la primera y última lectura normalmente.</p></div></div>
+      <div class="plan-block"><div class="plan-time">Paso 3</div><div class="plan-content"><p>Empaqueta el resultado final como una tupla nueva de tres elementos.</p></div></div>
+    </div>
+    <div class="code-block"><div class="code-lang">Solución completa</div><pre>
+<span class="c-kw">def</span> <span class="c-fn">extremos</span>(tel):
+    ts, *lecturas = tel
+    <span class="c-kw">return</span> (ts, lecturas[<span class="c-nb">0</span>], lecturas[-<span class="c-nb">1</span>])
+
+<span class="c-bi">print</span>(extremos((<span class="c-nb">1700000000</span>, <span class="c-nb">12</span>, <span class="c-nb">45</span>, <span class="c-nb">30</span>, <span class="c-nb">8</span>, <span class="c-nb">91</span>)))  <span class="c-cm"># (1700000000, 12, 91)</span></pre></div>
+  </div>
+</div>
+
+<div class="quiz-card">
+  <div class="quiz-q" onclick="toggleQuiz(this)">
+    <span class="q-tag lvl-intermedio">INTERMEDIO</span>
+    <span>Define un namedtuple <code>TestResult</code> con campos <code>bench</code>, <code>test</code>, <code>status</code> y <code>duration</code>. Luego escribe <code>tests_fallidos_por_duracion(resultados)</code>, que reciba una lista de <code>TestResult</code> y retorne una tupla con los nombres de los tests con <code>status == 'FAILED'</code>, ordenados de mayor a menor duración.</span>
+    <span class="q-arr">▶</span>
+  </div>
+  <div class="quiz-a">
+    <div class="exercise-output"><span class="exercise-output-label">Salida esperada</span><code>('test_eth', 'test_lidar')</code></div>
+    <div class="exercise-steps-label">Procedimiento paso a paso</div>
+    <div class="plan-card">
+      <div class="plan-block"><div class="plan-time">Paso 1</div><div class="plan-content"><p>Define el namedtuple con <code>collections.namedtuple('TestResult', ['bench', 'test', 'status', 'duration'])</code>.</p></div></div>
+      <div class="plan-block"><div class="plan-time">Paso 2</div><div class="plan-content"><p>Filtra la lista con una comprehension quedándote solo con los elementos donde <code>r.status == 'FAILED'</code> — el acceso por atributo evita adivinar índices.</p></div></div>
+      <div class="plan-block"><div class="plan-time">Paso 3</div><div class="plan-content"><p>Ordena los filtrados con <code>sorted(..., key=lambda r: r.duration, reverse=True)</code> para que el más lento quede primero.</p></div></div>
+      <div class="plan-block"><div class="plan-time">Paso 4</div><div class="plan-content"><p>Extrae solo el campo <code>test</code> de cada resultado ordenado y empaqueta todo en una tupla final.</p></div></div>
+    </div>
+    <div class="code-block"><div class="code-lang">Solución completa</div><pre>
+<span class="c-kw">from</span> collections <span class="c-kw">import</span> namedtuple
+
+TestResult = namedtuple(<span class="c-st">'TestResult'</span>, [<span class="c-st">'bench'</span>, <span class="c-st">'test'</span>, <span class="c-st">'status'</span>, <span class="c-st">'duration'</span>])
+
+<span class="c-kw">def</span> <span class="c-fn">tests_fallidos_por_duracion</span>(resultados):
+    fallidos = [r <span class="c-kw">for</span> r <span class="c-kw">in</span> resultados <span class="c-kw">if</span> r.status == <span class="c-st">'FAILED'</span>]
+    ordenados = <span class="c-bi">sorted</span>(fallidos, key=<span class="c-kw">lambda</span> r: r.duration, reverse=<span class="c-kw">True</span>)
+    <span class="c-kw">return</span> <span class="c-bi">tuple</span>(r.test <span class="c-kw">for</span> r <span class="c-kw">in</span> ordenados)
+
+resultados = [
+    TestResult(<span class="c-st">'a3'</span>, <span class="c-st">'test_lidar'</span>, <span class="c-st">'FAILED'</span>, <span class="c-nb">12.4</span>),
+    TestResult(<span class="c-st">'a3'</span>, <span class="c-st">'test_can'</span>, <span class="c-st">'PASSED'</span>, <span class="c-nb">3.1</span>),
+    TestResult(<span class="c-st">'b1'</span>, <span class="c-st">'test_eth'</span>, <span class="c-st">'FAILED'</span>, <span class="c-nb">20.7</span>),
+]
+<span class="c-bi">print</span>(tests_fallidos_por_duracion(resultados))  <span class="c-cm"># ('test_eth', 'test_lidar')</span></pre></div>
+  </div>
+</div>
+
+<div class="quiz-card">
+  <div class="quiz-q" onclick="toggleQuiz(this)">
+    <span class="q-tag lvl-intermedio">INTERMEDIO</span>
+    <span>Escribe dos funciones sobre una tupla de tuplas <code>(clave, valor)</code>: <code>a_dict(pares)</code>, que la convierta en un diccionario normal (si una clave se repite, gana el último valor), y <code>agrupar(pares)</code>, que en cambio acumule en una lista todos los valores de cada clave repetida.</span>
+    <span class="q-arr">▶</span>
+  </div>
+  <div class="quiz-a">
+    <div class="exercise-output"><span class="exercise-output-label">Salida esperada</span><code>a_dict(...) → {'bench_a3': 'FAILED', 'bench_b1': 'FAILED'}  |  agrupar(...) → {'bench_a3': ['PASSED', 'FAILED'], 'bench_b1': ['FAILED']}</code></div>
+    <div class="exercise-steps-label">Procedimiento paso a paso</div>
+    <div class="plan-card">
+      <div class="plan-block"><div class="plan-time">Paso 1</div><div class="plan-content"><p><code>a_dict</code> es simplemente <code>dict(pares)</code>: el constructor <code>dict()</code> acepta cualquier iterable de pares <code>(clave, valor)</code>, y si una clave se repite, la última ocurrencia sobrescribe a las anteriores.</p></div></div>
+      <div class="plan-block"><div class="plan-time">Paso 2</div><div class="plan-content"><p>Para <code>agrupar</code>, <code>dict()</code> directo no sirve porque perdería valores. Usa <code>defaultdict(list)</code> y recorre <code>pares</code> con <code>for clave, valor in pares</code>, acumulando con <code>append</code>.</p></div></div>
+      <div class="plan-block"><div class="plan-time">Paso 3</div><div class="plan-content"><p>Convierte el <code>defaultdict</code> a un <code>dict</code> normal al final con <code>dict(resultado)</code> — opcional, pero evita sorpresas si alguien luego consulta una clave inexistente.</p></div></div>
+    </div>
+    <div class="code-block"><div class="code-lang">Solución completa</div><pre>
+<span class="c-kw">from</span> collections <span class="c-kw">import</span> defaultdict
+
+<span class="c-kw">def</span> <span class="c-fn">a_dict</span>(pares):
+    <span class="c-kw">return</span> <span class="c-bi">dict</span>(pares)
+
+<span class="c-kw">def</span> <span class="c-fn">agrupar</span>(pares):
+    resultado = defaultdict(<span class="c-bi">list</span>)
+    <span class="c-kw">for</span> clave, valor <span class="c-kw">in</span> pares:
+        resultado[clave].append(valor)
+    <span class="c-kw">return</span> <span class="c-bi">dict</span>(resultado)
+
+pares = ((<span class="c-st">'bench_a3'</span>, <span class="c-st">'PASSED'</span>), (<span class="c-st">'bench_b1'</span>, <span class="c-st">'FAILED'</span>), (<span class="c-st">'bench_a3'</span>, <span class="c-st">'FAILED'</span>))
+<span class="c-bi">print</span>(a_dict(pares))    <span class="c-cm"># {'bench_a3': 'FAILED', 'bench_b1': 'FAILED'}</span>
+<span class="c-bi">print</span>(agrupar(pares))   <span class="c-cm"># {'bench_a3': ['PASSED', 'FAILED'], 'bench_b1': ['FAILED']}</span></pre></div>
+  </div>
+</div>
+
+<div class="exercise-steps-label">🔴 Complejo</div>
+
+<div class="quiz-card">
+  <div class="quiz-q" onclick="toggleQuiz(this)">
+    <span class="q-tag lvl-complejo">COMPLEJO</span>
+    <span>Escribe una función <code>resumen_por_sensor(lecturas)</code> que reciba una tupla de tuplas <code>(sensor_id, timestamp, valor)</code>, posiblemente desordenadas y con varios sensores mezclados, y retorne un diccionario donde cada key es un <code>sensor_id</code> y el valor es un namedtuple <code>Resumen(minimo, maximo, promedio, n)</code> calculado solo con los valores de ese sensor. La tupla <code>lecturas</code> original no debe modificarse.</span>
+    <span class="q-arr">▶</span>
+  </div>
+  <div class="quiz-a">
+    <div class="exercise-output"><span class="exercise-output-label">Salida esperada</span><code>{'imu1': Resumen(minimo=10.0, maximo=14.0, promedio=12.0, n=3), 'can1': Resumen(minimo=2.0, maximo=4.0, promedio=3.0, n=2)}</code></div>
+    <div class="exercise-steps-label">Procedimiento paso a paso</div>
+    <div class="plan-card">
+      <div class="plan-block"><div class="plan-time">Paso 1</div><div class="plan-content"><p>Agrupa los valores por <code>sensor_id</code> con <code>defaultdict(list)</code>, recorriendo <code>lecturas</code> con unpacking directo en el <code>for</code>: <code>for sensor_id, ts, valor in lecturas</code>. Como solo lees la tupla original (nunca le asignas nada), no la modificas.</p></div></div>
+      <div class="plan-block"><div class="plan-time">Paso 2</div><div class="plan-content"><p>Define el namedtuple <code>Resumen</code> con los cuatro campos que pide el enunciado: <code>minimo</code>, <code>maximo</code>, <code>promedio</code>, <code>n</code>.</p></div></div>
+      <div class="plan-block"><div class="plan-time">Paso 3</div><div class="plan-content"><p>Para cada sensor, calcula <code>min()</code>, <code>max()</code> y <code>sum()/len()</code> sobre su lista de valores agrupados.</p></div></div>
+      <div class="plan-block"><div class="plan-time">Paso 4</div><div class="plan-content"><p>Construye el diccionario final con una dict comprehension que recorre <code>por_sensor.items()</code> y arma un <code>Resumen(...)</code> por cada sensor.</p></div></div>
+    </div>
+    <div class="code-block"><div class="code-lang">Solución completa</div><pre>
+<span class="c-kw">from</span> collections <span class="c-kw">import</span> namedtuple, defaultdict
+
+Resumen = namedtuple(<span class="c-st">'Resumen'</span>, [<span class="c-st">'minimo'</span>, <span class="c-st">'maximo'</span>, <span class="c-st">'promedio'</span>, <span class="c-st">'n'</span>])
+
+<span class="c-kw">def</span> <span class="c-fn">resumen_por_sensor</span>(lecturas):
+    por_sensor = defaultdict(<span class="c-bi">list</span>)
+    <span class="c-kw">for</span> sensor_id, ts, valor <span class="c-kw">in</span> lecturas:
+        por_sensor[sensor_id].append(valor)
+
+    <span class="c-kw">return</span> {
+        sensor_id: Resumen(
+            minimo=<span class="c-bi">min</span>(valores),
+            maximo=<span class="c-bi">max</span>(valores),
+            promedio=<span class="c-bi">sum</span>(valores) / <span class="c-bi">len</span>(valores),
+            n=<span class="c-bi">len</span>(valores),
+        )
+        <span class="c-kw">for</span> sensor_id, valores <span class="c-kw">in</span> por_sensor.items()
+    }
+
+lecturas = (
+    (<span class="c-st">'imu1'</span>, <span class="c-nb">100</span>, <span class="c-nb">10.0</span>), (<span class="c-st">'can1'</span>, <span class="c-nb">101</span>, <span class="c-nb">2.0</span>),
+    (<span class="c-st">'imu1'</span>, <span class="c-nb">102</span>, <span class="c-nb">14.0</span>), (<span class="c-st">'can1'</span>, <span class="c-nb">103</span>, <span class="c-nb">4.0</span>),
+    (<span class="c-st">'imu1'</span>, <span class="c-nb">104</span>, <span class="c-nb">12.0</span>),
+)
+<span class="c-bi">print</span>(resumen_por_sensor(lecturas))
+<span class="c-cm"># {'imu1': Resumen(minimo=10.0, maximo=14.0, promedio=12.0, n=3),</span>
+<span class="c-cm"># 'can1': Resumen(minimo=2.0, maximo=4.0, promedio=3.0, n=2)}</span></pre></div>
+  </div>
+</div>
+
+<div class="quiz-card">
+  <div class="quiz-q" onclick="toggleQuiz(this)">
+    <span class="q-tag lvl-complejo">COMPLEJO</span>
+    <span>Escribe una función <code>comparar_runs(run_a, run_b)</code> que reciba dos tuplas de tuplas <code>(test_name, status)</code> representando dos corridas de test (pueden tener tests distintos y en distinto orden) y retorne una tupla de tres sets: <code>(ambas_pasaron, ambas_fallaron, cambiaron)</code>, donde <code>cambiaron</code> son los tests presentes en ambas corridas cuyo status difiere entre una y otra.</span>
+    <span class="q-arr">▶</span>
+  </div>
+  <div class="quiz-a">
+    <div class="exercise-output"><span class="exercise-output-label">Salida esperada</span><code>({'test_can', 'test_eth'}, set(), {'test_lidar'})</code></div>
+    <div class="exercise-steps-label">Procedimiento paso a paso</div>
+    <div class="plan-card">
+      <div class="plan-block"><div class="plan-time">Paso 1</div><div class="plan-content"><p>Convierte cada corrida en un diccionario <code>{test_name: status}</code> con <code>dict(run_a)</code> y <code>dict(run_b)</code>, aprovechando que las tuplas ya vienen como pares clave-valor — esto da lookup O(1) por nombre de test.</p></div></div>
+      <div class="plan-block"><div class="plan-time">Paso 2</div><div class="plan-content"><p>Obtén los tests presentes en ambas corridas con la intersección de las keys de los dos dicts: <code>comunes = a.keys() &amp; b.keys()</code>.</p></div></div>
+      <div class="plan-block"><div class="plan-time">Paso 3</div><div class="plan-content"><p>Sobre <code>comunes</code>, construye <code>ambas_pasaron</code> y <code>ambas_fallaron</code> con set comprehensions que filtran por status igual en los dos dicts (<code>a[t] == b[t] == 'PASSED'</code> o <code>'FAILED'</code>).</p></div></div>
+      <div class="plan-block"><div class="plan-time">Paso 4</div><div class="plan-content"><p>Construye <code>cambiaron</code> filtrando los tests comunes donde <code>a[t] != b[t]</code>, y retorna las tres sets empaquetadas en una tupla.</p></div></div>
+    </div>
+    <div class="code-block"><div class="code-lang">Solución completa</div><pre>
+<span class="c-kw">def</span> <span class="c-fn">comparar_runs</span>(run_a, run_b):
+    a = <span class="c-bi">dict</span>(run_a)
+    b = <span class="c-bi">dict</span>(run_b)
+    comunes = a.keys() &amp; b.keys()
+
+    ambas_pasaron = {t <span class="c-kw">for</span> t <span class="c-kw">in</span> comunes <span class="c-kw">if</span> a[t] == b[t] == <span class="c-st">'PASSED'</span>}
+    ambas_fallaron = {t <span class="c-kw">for</span> t <span class="c-kw">in</span> comunes <span class="c-kw">if</span> a[t] == b[t] == <span class="c-st">'FAILED'</span>}
+    cambiaron = {t <span class="c-kw">for</span> t <span class="c-kw">in</span> comunes <span class="c-kw">if</span> a[t] != b[t]}
+
+    <span class="c-kw">return</span> (ambas_pasaron, ambas_fallaron, cambiaron)
+
+run_a = ((<span class="c-st">'test_can'</span>, <span class="c-st">'PASSED'</span>), (<span class="c-st">'test_lidar'</span>, <span class="c-st">'FAILED'</span>), (<span class="c-st">'test_eth'</span>, <span class="c-st">'PASSED'</span>), (<span class="c-st">'test_imu'</span>, <span class="c-st">'FAILED'</span>))
+run_b = ((<span class="c-st">'test_can'</span>, <span class="c-st">'PASSED'</span>), (<span class="c-st">'test_lidar'</span>, <span class="c-st">'PASSED'</span>), (<span class="c-st">'test_eth'</span>, <span class="c-st">'PASSED'</span>), (<span class="c-st">'test_gps'</span>, <span class="c-st">'FAILED'</span>))
+<span class="c-bi">print</span>(comparar_runs(run_a, run_b))
+<span class="c-cm"># ({'test_can', 'test_eth'}, set(), {'test_lidar'})</span></pre></div>
+  </div>
 </div>
   </div>
 </div>`,
@@ -590,6 +1029,7 @@ reading = Reading(<span class="c-nb">1720000000.0</span>, <span class="c-nb">36.
     <button class="tab-btn" onclick="switchTab(this,'pd-3','pydicts')">Patrones avanzados</button>
     <button class="tab-btn" onclick="switchTab(this,'pd-4','pydicts')">⚠️ Errores comunes</button>
     <button class="tab-btn" onclick="switchTab(this,'pd-5','pydicts')">✅ Mejores Prácticas</button>
+    <button class="tab-btn" onclick="switchTab(this,'pd-6','pydicts')">🧩 Ejercicios</button>
   </div>
   <div id="pd-1" class="tab-panel active">
 ${renderMethodTable('DCT')}
@@ -774,9 +1214,202 @@ copia[<span class="c-st">'tags'</span>].append(<span class="c-st">'debug'</span>
   <div class="practice-title">Copia explícita: .copy() para planos, copy.deepcopy() para anidados</div>
   <p>Antes de pasar un dict a una función que podría mutarlo, decide conscientemente si compartir referencia es correcto. Si no, copia — y si el dict tiene listas/dicts anidados, usa <code>deepcopy</code>, no <code>.copy()</code>.</p>
 </div>
-<div class="quiz-section"><div class="quiz-title">Quiz</div>
-  <div class="quiz-card"><div class="quiz-q" onclick="toggleQuiz(this)"><span class="q-tag">Trampa</span>¿Qué imprime este código?<br><code>def f(x, cache={}): cache[x]=cache.get(x,0)+1; return cache</code><br><code>f(1); print(f(2))</code><span class="q-arr">▶</span></div><div class="quiz-a"><b>{1: 1, 2: 1}</b> — no solo {2: 1}. El dict default se crea UNA vez al definir la función y persiste entre llamadas, acumulando entradas de llamadas anteriores. Es el bug de "mutable default argument" — evítalo siempre con <code>cache=None</code> + <code>if cache is None: cache = {}</code>.</div></div>
-  <div class="quiz-card"><div class="quiz-q" onclick="toggleQuiz(this)"><span class="q-tag">Conceptual</span>¿Cuál es la complejidad de <code>key in dict</code> comparada con <code>key in list</code>?<span class="q-arr">▶</span></div><div class="quiz-a"><b>O(1) promedio en dict, vs O(n) en list.</b> El dict usa una tabla hash internamente: calcula el hash de la key y salta directo al bucket. La lista tiene que recorrer elemento por elemento hasta encontrar (o no) una coincidencia.</div></div>
+  </div>
+  <div id="pd-6" class="tab-panel">
+<div class="concept-intro">Esta sección es para practicar, no para leer. Antes de hacer click en cada ejercicio, intenta resolverlo por tu cuenta (en papel, en un intérprete, o mentalmente). Al revelar la respuesta verás primero la <b>salida esperada</b> — úsala para verificar tu propio resultado — y después el <b>procedimiento completo paso a paso</b> con la solución comentada. Progresión: 3 ejercicios básicos, 3 intermedios y 2 complejos.</div>
+
+<div class="exercise-steps-label">🟢 Básico</div>
+
+<div class="quiz-card">
+  <div class="quiz-q" onclick="toggleQuiz(this)">
+    <span class="q-tag lvl-basico">BÁSICO</span>
+    <span>Escribe una función <code>contar_codigos(codigos)</code> que reciba una lista de códigos de error (strings, con posibles repetidos) y devuelva un diccionario con la cantidad de veces que aparece cada código.</span>
+    <span class="q-arr">▶</span>
+  </div>
+  <div class="quiz-a">
+    <div class="exercise-output"><span class="exercise-output-label">Salida esperada</span><code>contar_codigos(['P0300','P0171','P0300','P0420','P0171','P0300']) → {'P0300': 3, 'P0171': 2, 'P0420': 1}</code></div>
+    <div class="exercise-steps-label">Procedimiento paso a paso</div>
+    <div class="plan-card">
+      <div class="plan-block"><div class="plan-time">Paso 1</div><div class="plan-content"><p>Crea un diccionario vacío que acumulará el conteo de cada código.</p></div></div>
+      <div class="plan-block"><div class="plan-time">Paso 2</div><div class="plan-content"><p>Recorre la lista con un <code>for</code> y usa <code>dict.get(code, 0) + 1</code> para incrementar el contador sin necesidad de comprobar antes si la key existe (evita <code>KeyError</code>).</p></div></div>
+      <div class="plan-block"><div class="plan-time">Paso 3</div><div class="plan-content"><p>Devuelve el diccionario una vez terminado el recorrido.</p></div></div>
+    </div>
+    <div class="code-block"><div class="code-lang">Solución completa</div><pre>
+<span class="c-kw">def</span> <span class="c-fn">contar_codigos</span>(codigos):
+    conteo = {}
+    <span class="c-kw">for</span> c <span class="c-kw">in</span> codigos:
+        conteo[c] = conteo.get(c, <span class="c-nb">0</span>) + <span class="c-nb">1</span>
+    <span class="c-kw">return</span> conteo</pre></div>
+  </div>
+</div>
+
+<div class="quiz-card">
+  <div class="quiz-q" onclick="toggleQuiz(this)">
+    <span class="q-tag lvl-basico">BÁSICO</span>
+    <span>Tienes un diccionario que mapea número de pin GPIO → nombre del sensor conectado (los valores son únicos). Escribe una función <code>invertir(pines)</code> que devuelva el diccionario invertido: nombre del sensor → número de pin.</span>
+    <span class="q-arr">▶</span>
+  </div>
+  <div class="quiz-a">
+    <div class="exercise-output"><span class="exercise-output-label">Salida esperada</span><code>invertir({12: 'lidar_front', 13: 'imu_main', 27: 'cam_left'}) → {'lidar_front': 12, 'imu_main': 13, 'cam_left': 27}</code></div>
+    <div class="exercise-steps-label">Procedimiento paso a paso</div>
+    <div class="plan-card">
+      <div class="plan-block"><div class="plan-time">Paso 1</div><div class="plan-content"><p>Recorre el diccionario original con <code>.items()</code> para obtener pares key-value.</p></div></div>
+      <div class="plan-block"><div class="plan-time">Paso 2</div><div class="plan-content"><p>Construye un dict comprehension intercambiando key y value: <code>{v: k for k, v in d.items()}</code>. Solo funciona sin pérdida de información si los valores originales son únicos (si se repiten, keys posteriores sobreescriben a las anteriores).</p></div></div>
+    </div>
+    <div class="code-block"><div class="code-lang">Solución completa</div><pre>
+<span class="c-kw">def</span> <span class="c-fn">invertir</span>(pines):
+    <span class="c-kw">return</span> {v: k <span class="c-kw">for</span> k, v <span class="c-kw">in</span> pines.items()}</pre></div>
+  </div>
+</div>
+
+<div class="quiz-card">
+  <div class="quiz-q" onclick="toggleQuiz(this)">
+    <span class="q-tag lvl-basico">BÁSICO</span>
+    <span>Escribe una función <code>combinar_config(defaults, overrides)</code> que reciba dos diccionarios de configuración y devuelva uno nuevo donde los valores de <code>overrides</code> tengan prioridad. Ninguno de los dos diccionarios originales debe modificarse.</span>
+    <span class="q-arr">▶</span>
+  </div>
+  <div class="quiz-a">
+    <div class="exercise-output"><span class="exercise-output-label">Salida esperada</span><code>combinar_config({'timeout':30,'retries':3,'log_level':'INFO'}, {'timeout':5,'log_level':'DEBUG'}) → {'timeout': 5, 'retries': 3, 'log_level': 'DEBUG'}</code></div>
+    <div class="exercise-steps-label">Procedimiento paso a paso</div>
+    <div class="plan-card">
+      <div class="plan-block"><div class="plan-time">Paso 1</div><div class="plan-content"><p>Usa el operador <code>|</code> (Python 3.9+) para mezclar los dos diccionarios: crea uno nuevo sin mutar ninguno de los originales.</p></div></div>
+      <div class="plan-block"><div class="plan-time">Paso 2</div><div class="plan-content"><p>Coloca <code>overrides</code> a la derecha del <code>|</code> — en un merge con <code>|</code>, el dict de la derecha gana en caso de key repetida.</p></div></div>
+    </div>
+    <div class="code-block"><div class="code-lang">Solución completa</div><pre>
+<span class="c-kw">def</span> <span class="c-fn">combinar_config</span>(defaults, overrides):
+    <span class="c-kw">return</span> defaults | overrides</pre></div>
+  </div>
+</div>
+
+<div class="exercise-steps-label">🟡 Intermedio</div>
+
+<div class="quiz-card">
+  <div class="quiz-q" onclick="toggleQuiz(this)">
+    <span class="q-tag lvl-intermedio">INTERMEDIO</span>
+    <span>Escribe una función <code>agrupar_por_bench(resultados)</code> que reciba una lista de resultados de pruebas (diccionarios con las keys <code>'bench'</code> y <code>'status'</code>) y devuelva un diccionario que agrupe los status por bench.</span>
+    <span class="q-arr">▶</span>
+  </div>
+  <div class="quiz-a">
+    <div class="exercise-output"><span class="exercise-output-label">Salida esperada</span><code>[{'bench':'a3','status':'PASSED'},{'bench':'a3','status':'FAILED'},{'bench':'b1','status':'PASSED'}] → {'a3': ['PASSED', 'FAILED'], 'b1': ['PASSED']}</code></div>
+    <div class="exercise-steps-label">Procedimiento paso a paso</div>
+    <div class="plan-card">
+      <div class="plan-block"><div class="plan-time">Paso 1</div><div class="plan-content"><p>Importa <code>defaultdict(list)</code> de <code>collections</code> para no tener que inicializar manualmente cada key nueva con una lista vacía.</p></div></div>
+      <div class="plan-block"><div class="plan-time">Paso 2</div><div class="plan-content"><p>Recorre la lista de resultados y en cada iteración agrega el status a <code>por_bench[r['bench']]</code> con <code>.append()</code>.</p></div></div>
+      <div class="plan-block"><div class="plan-time">Paso 3</div><div class="plan-content"><p>Convierte el resultado a <code>dict</code> normal antes de devolverlo, para que quien lo consuma no dependa del comportamiento "crea key al acceder" de <code>defaultdict</code>.</p></div></div>
+    </div>
+    <div class="code-block"><div class="code-lang">Solución completa</div><pre>
+<span class="c-kw">from</span> collections <span class="c-kw">import</span> defaultdict
+
+<span class="c-kw">def</span> <span class="c-fn">agrupar_por_bench</span>(resultados):
+    por_bench = defaultdict(<span class="c-bi">list</span>)
+    <span class="c-kw">for</span> r <span class="c-kw">in</span> resultados:
+        por_bench[r[<span class="c-st">'bench'</span>]].append(r[<span class="c-st">'status'</span>])
+    <span class="c-kw">return</span> <span class="c-bi">dict</span>(por_bench)</pre></div>
+  </div>
+</div>
+
+<div class="quiz-card">
+  <div class="quiz-q" onclick="toggleQuiz(this)">
+    <span class="q-tag lvl-intermedio">INTERMEDIO</span>
+    <span>Tienes una lista larga de niveles de log capturados durante una corrida nocturna (strings como <code>'INFO'</code>, <code>'ERROR'</code>, <code>'WARN'</code>...). Escribe una función <code>top_niveles(logs, n=3)</code> que devuelva los <code>n</code> niveles más frecuentes junto con su conteo, ordenados de mayor a menor frecuencia.</span>
+    <span class="q-arr">▶</span>
+  </div>
+  <div class="quiz-a">
+    <div class="exercise-output"><span class="exercise-output-label">Salida esperada</span><code>top_niveles(['ERROR','INFO','ERROR','WARN','ERROR','INFO','DEBUG','WARN','ERROR']) → [('ERROR', 4), ('INFO', 2), ('WARN', 2)]</code></div>
+    <div class="exercise-steps-label">Procedimiento paso a paso</div>
+    <div class="plan-card">
+      <div class="plan-block"><div class="plan-time">Paso 1</div><div class="plan-content"><p>Importa <code>Counter</code> de <code>collections</code> — es un dict especializado exactamente para este tipo de conteo.</p></div></div>
+      <div class="plan-block"><div class="plan-time">Paso 2</div><div class="plan-content"><p>Construye el Counter pasándole la lista completa: <code>Counter(logs)</code> cuenta automáticamente cada elemento, sin loop manual.</p></div></div>
+      <div class="plan-block"><div class="plan-time">Paso 3</div><div class="plan-content"><p>Usa <code>.most_common(n)</code> para obtener directamente los <code>n</code> elementos más frecuentes, ya ordenados de mayor a menor.</p></div></div>
+    </div>
+    <div class="code-block"><div class="code-lang">Solución completa</div><pre>
+<span class="c-kw">from</span> collections <span class="c-kw">import</span> Counter
+
+<span class="c-kw">def</span> <span class="c-fn">top_niveles</span>(logs, n=<span class="c-nb">3</span>):
+    conteo = Counter(logs)
+    <span class="c-kw">return</span> conteo.most_common(n)</pre></div>
+  </div>
+</div>
+
+<div class="quiz-card">
+  <div class="quiz-q" onclick="toggleQuiz(this)">
+    <span class="q-tag lvl-intermedio">INTERMEDIO</span>
+    <span>Escribe una función <code>a_volts_validos(lecturas)</code> que reciba un diccionario de lecturas de sensores (id → valor en milivolts) y devuelva un nuevo diccionario solo con las lecturas válidas (valor mayor a 0), convertidas a volts (dividido entre 1000) y redondeadas a 2 decimales.</span>
+    <span class="q-arr">▶</span>
+  </div>
+  <div class="quiz-a">
+    <div class="exercise-output"><span class="exercise-output-label">Salida esperada</span><code>a_volts_validos({'s1': 3300, 's2': -1, 's3': 5000, 's4': 0}) → {'s1': 3.3, 's3': 5.0}</code></div>
+    <div class="exercise-steps-label">Procedimiento paso a paso</div>
+    <div class="plan-card">
+      <div class="plan-block"><div class="plan-time">Paso 1</div><div class="plan-content"><p>Usa un dict comprehension recorriendo <code>.items()</code> con una condición <code>if v &gt; 0</code> para filtrar las lecturas inválidas o apagadas.</p></div></div>
+      <div class="plan-block"><div class="plan-time">Paso 2</div><div class="plan-content"><p>En la misma comprehension, transforma el valor con <code>round(v / 1000, 2)</code>: filtrar y transformar se hacen en un solo paso, sin loop intermedio.</p></div></div>
+    </div>
+    <div class="code-block"><div class="code-lang">Solución completa</div><pre>
+<span class="c-kw">def</span> <span class="c-fn">a_volts_validos</span>(lecturas):
+    <span class="c-kw">return</span> {k: <span class="c-bi">round</span>(v / <span class="c-nb">1000</span>, <span class="c-nb">2</span>) <span class="c-kw">for</span> k, v <span class="c-kw">in</span> lecturas.items() <span class="c-kw">if</span> v &gt; <span class="c-nb">0</span>}</pre></div>
+  </div>
+</div>
+
+<div class="exercise-steps-label">🔴 Complejo</div>
+
+<div class="quiz-card">
+  <div class="quiz-q" onclick="toggleQuiz(this)">
+    <span class="q-tag lvl-complejo">COMPLEJO</span>
+    <span>Tienes una lista de eventos de telemetría, cada uno un diccionario con <code>'vehiculo'</code>, <code>'dia'</code> y <code>'latencia_ms'</code>. Escribe <code>agrupar_telemetria(eventos)</code> que devuelva un dict anidado <code>vehiculo → dia → lista de latencias</code>, y <code>promedios_por_vehiculo(agrupado)</code> que a partir de esa estructura calcule el promedio de latencia por vehículo y día (redondeado a 2 decimales).</span>
+    <span class="q-arr">▶</span>
+  </div>
+  <div class="quiz-a">
+    <div class="exercise-output"><span class="exercise-output-label">Salida esperada</span><code>agrupado = {'v1': {'lun': [120, 100], 'mar': [90]}, 'v2': {'lun': [200]}}  →  promedios = {'v1': {'lun': 110.0, 'mar': 90.0}, 'v2': {'lun': 200.0}}</code></div>
+    <div class="exercise-steps-label">Procedimiento paso a paso</div>
+    <div class="plan-card">
+      <div class="plan-block"><div class="plan-time">Paso 1</div><div class="plan-content"><p>Usa <code>defaultdict(lambda: defaultdict(list))</code> para el agrupamiento: el primer nivel (vehículo) crea automáticamente un <code>defaultdict(list)</code> para el segundo nivel (día), sin inicializar nada a mano.</p></div></div>
+      <div class="plan-block"><div class="plan-time">Paso 2</div><div class="plan-content"><p>Recorre los eventos y agrega cada latencia con <code>agrupado[e['vehiculo']][e['dia']].append(e['latencia_ms'])</code>.</p></div></div>
+      <div class="plan-block"><div class="plan-time">Paso 3</div><div class="plan-content"><p>Convierte la estructura a dicts normales antes de devolverla (comprehension anidada: <code>{v: dict(dias) for v, dias in agrupado.items()}</code>), para no exponer un <code>defaultdict</code> hacia afuera.</p></div></div>
+      <div class="plan-block"><div class="plan-time">Paso 4</div><div class="plan-content"><p>Para los promedios, recorre el dict anidado con una comprehension de dos niveles y calcula <code>sum(latencias) / len(latencias)</code> por cada combinación vehículo/día.</p></div></div>
+    </div>
+    <div class="code-block"><div class="code-lang">Solución completa</div><pre>
+<span class="c-kw">from</span> collections <span class="c-kw">import</span> defaultdict
+
+<span class="c-kw">def</span> <span class="c-fn">agrupar_telemetria</span>(eventos):
+    agrupado = defaultdict(<span class="c-kw">lambda</span>: defaultdict(<span class="c-bi">list</span>))
+    <span class="c-kw">for</span> e <span class="c-kw">in</span> eventos:
+        agrupado[e[<span class="c-st">'vehiculo'</span>]][e[<span class="c-st">'dia'</span>]].append(e[<span class="c-st">'latencia_ms'</span>])
+    <span class="c-kw">return</span> {v: <span class="c-bi">dict</span>(dias) <span class="c-kw">for</span> v, dias <span class="c-kw">in</span> agrupado.items()}
+
+<span class="c-kw">def</span> <span class="c-fn">promedios_por_vehiculo</span>(agrupado):
+    <span class="c-kw">return</span> {
+        v: {dia: <span class="c-bi">round</span>(<span class="c-bi">sum</span>(latencias) / <span class="c-bi">len</span>(latencias), <span class="c-nb">2</span>) <span class="c-kw">for</span> dia, latencias <span class="c-kw">in</span> dias.items()}
+        <span class="c-kw">for</span> v, dias <span class="c-kw">in</span> agrupado.items()
+    }</pre></div>
+  </div>
+</div>
+
+<div class="quiz-card">
+  <div class="quiz-q" onclick="toggleQuiz(this)">
+    <span class="q-tag lvl-complejo">COMPLEJO</span>
+    <span>Escribe una función <code>merge_profundo(base, override)</code> que combine dos diccionarios de configuración anidados de forma recursiva: si una key existe en ambos y ambos valores son diccionarios, se combinan recursivamente; en cualquier otro caso, el valor de <code>override</code> gana. Ninguno de los dos diccionarios originales debe modificarse.</span>
+    <span class="q-arr">▶</span>
+  </div>
+  <div class="quiz-a">
+    <div class="exercise-output"><span class="exercise-output-label">Salida esperada</span><code>base={'log_level':'INFO','timeouts':{'connect':5,'read':30},'sensors':{'lidar':{'enabled':True,'rate_hz':10}}}, override={'timeouts':{'read':60},'sensors':{'lidar':{'rate_hz':20},'imu':{'enabled':True}}}  →  {'log_level': 'INFO', 'timeouts': {'connect': 5, 'read': 60}, 'sensors': {'lidar': {'enabled': True, 'rate_hz': 20}, 'imu': {'enabled': True}}}</code></div>
+    <div class="exercise-steps-label">Procedimiento paso a paso</div>
+    <div class="plan-card">
+      <div class="plan-block"><div class="plan-time">Paso 1</div><div class="plan-content"><p>Copia <code>base</code> con <code>dict(base)</code> para no mutar el diccionario original — basta con una copia superficial porque solo reasignamos keys del nivel actual, nunca mutamos los sub-dicts existentes in-place.</p></div></div>
+      <div class="plan-block"><div class="plan-time">Paso 2</div><div class="plan-content"><p>Recorre las keys de <code>override</code> una por una.</p></div></div>
+      <div class="plan-block"><div class="plan-time">Paso 3</div><div class="plan-content"><p>Si la key ya existe en el resultado <b>y</b> tanto el valor actual como el de <code>override</code> son diccionarios (verifica con <code>isinstance(x, dict)</code> en ambos), llama a <code>merge_profundo</code> recursivamente sobre ese par para combinarlos en profundidad en vez de sobreescribir todo el sub-dict.</p></div></div>
+      <div class="plan-block"><div class="plan-time">Paso 4</div><div class="plan-content"><p>En cualquier otro caso (key nueva, o el valor no es un dict en alguno de los dos lados), sobreescribe directamente: <code>resultado[key] = val</code>.</p></div></div>
+      <div class="plan-block"><div class="plan-time">Paso 5</div><div class="plan-content"><p>Devuelve <code>resultado</code> al terminar de recorrer todas las keys de <code>override</code>. La recursión termina porque cada llamada opera sobre un nivel de anidamiento menos.</p></div></div>
+    </div>
+    <div class="code-block"><div class="code-lang">Solución completa</div><pre>
+<span class="c-kw">def</span> <span class="c-fn">merge_profundo</span>(base, override):
+    resultado = <span class="c-bi">dict</span>(base)
+    <span class="c-kw">for</span> key, val <span class="c-kw">in</span> override.items():
+        <span class="c-kw">if</span> key <span class="c-kw">in</span> resultado <span class="c-kw">and</span> <span class="c-bi">isinstance</span>(resultado[key], <span class="c-bi">dict</span>) <span class="c-kw">and</span> <span class="c-bi">isinstance</span>(val, <span class="c-bi">dict</span>):
+            resultado[key] = <span class="c-fn">merge_profundo</span>(resultado[key], val)
+        <span class="c-kw">else</span>:
+            resultado[key] = val
+    <span class="c-kw">return</span> resultado</pre></div>
+  </div>
 </div>
   </div>
 </div>`,
@@ -788,7 +1421,7 @@ copia[<span class="c-st">'tags'</span>].append(<span class="c-st">'debug'</span>
     <button class="tab-btn" onclick="switchTab(this,'pst-1','pyset')">Conceptos y operaciones</button>
     <button class="tab-btn" onclick="switchTab(this,'pst-2','pyset')">Comprehensions & frozenset</button>
     <button class="tab-btn" onclick="switchTab(this,'pst-3','pyset')">⚠️ Errores comunes</button>
-    <button class="tab-btn" onclick="switchTab(this,'pst-4','pyset')">✅ Mejores Prácticas + Quiz</button>
+    <button class="tab-btn" onclick="switchTab(this,'pst-4','pyset')">✅ Mejores Prácticas</button>
   </div>
   <div id="pst-0" class="tab-panel active">
 ${renderMethodTable('SET')}
@@ -916,11 +1549,6 @@ ids_activos = {sid <span class="c-kw">for</span> sid <span class="c-kw">in</span
   <div class="practice-title">Prefiere discard() sobre remove() cuando "puede que no exista" es un caso normal</div>
   <p><code>s.discard(x)</code> no lanza excepción si <code>x</code> no está — ideal para limpiezas idempotentes. Reserva <code>remove()</code> para cuando la ausencia del elemento indica un bug que quieres que falle ruidosamente.</p>
 </div>
-<div class="quiz-section"><div class="quiz-title">Quiz</div>
-  <div class="quiz-card"><div class="quiz-q" onclick="toggleQuiz(this)"><span class="q-tag">Velocidad</span>Tienes 1 millón de IDs. ¿Qué usas para buscar si un ID está en la colección?<span class="q-arr">▶</span></div><div class="quiz-a"><b>set</b>. La búsqueda en un set es O(1) en promedio (tabla hash interna). En una lista es O(n). Con 1M elementos, la diferencia es 1M operaciones vs 1. Si los IDs no cambian, también puedes usar <code>frozenset</code> que es ligeramente más eficiente en memoria.</div></div>
-  <div class="quiz-card"><div class="quiz-q" onclick="toggleQuiz(this)"><span class="q-tag">Trampa</span>¿Qué diferencia hay entre <code>a - b</code> y <code>a ^ b</code>?<span class="q-arr">▶</span></div><div class="quiz-a"><b>a - b</b> son los elementos de a que NO están en b (no conmutativo). <b>a ^ b</b> (diferencia simétrica) son los elementos que están en uno u otro pero NO en ambos — equivale a <code>(a - b) | (b - a)</code>, y sí es conmutativo.</div></div>
-  <div class="quiz-card"><div class="quiz-q" onclick="toggleQuiz(this)"><span class="q-tag">Conceptual</span>¿Por qué frozenset puede ser key de un dict pero un set normal no?<span class="q-arr">▶</span></div><div class="quiz-a"><b>Porque las keys de dict deben ser hasheables, y solo los objetos inmutables lo son.</b> Un set normal es mutable (add/remove cambian su contenido), así que Python le niega <code>__hash__</code>. frozenset es exactamente lo mismo pero inmutable, así que sí implementa <code>__hash__</code> y puede usarse como key o como elemento de otro set.</div></div>
-</div>
   </div>
 </div>`,
 
@@ -933,6 +1561,7 @@ ids_activos = {sid <span class="c-kw">for</span> sid <span class="c-kw">in</span
     <button class="tab-btn" onclick="switchTab(this,'ps-3','pystr')">Parsing & encoding</button>
     <button class="tab-btn" onclick="switchTab(this,'ps-4','pystr')">⚠️ Errores comunes</button>
     <button class="tab-btn" onclick="switchTab(this,'ps-5','pystr')">✅ Mejores Prácticas</button>
+    <button class="tab-btn" onclick="switchTab(this,'ps-6','pystr')">🧩 Ejercicios</button>
   </div>
   <div id="ps-0" class="tab-panel active">
 ${renderMethodTable('STR')}
@@ -1135,6 +1764,252 @@ anio, mes, dia = fecha[<span class="c-nb">0</span>:<span class="c-nb">4</span>],
 <div class="practice-card">
   <div class="practice-title">Usa métodos is*() solo como pre-chequeo rápido, no como validación completa</div>
   <p><code>"123".isdigit()</code> es útil para un filtro rápido, pero no cubre negativos, decimales, ni notación científica. Para validar que un string realmente representa el número que esperas, intenta convertirlo con <code>try: float(s) except ValueError:</code> — es más robusto que encadenar varios <code>is*()</code>.</p>
+</div>
+  </div>
+  <div id="ps-6" class="tab-panel">
+<div class="concept-intro">Esta sección es para <strong>practicar activamente</strong>, no solo leer. Cada ejercicio plantea un problema real — intenta resolverlo tú mismo (en tu cabeza o en un intérprete) antes de hacer click. El panel revelado muestra primero la <strong>salida esperada</strong>, para que puedas verificar tu propio resultado sin ver la solución todavía, y después el <strong>procedimiento completo paso a paso</strong> con el código final. Progresión: 🟢 Básico → 🟡 Intermedio → 🔴 Complejo.</div>
+
+<div class="exercise-steps-label">🟢 Básico</div>
+
+<div class="quiz-card">
+  <div class="quiz-q" onclick="toggleQuiz(this)">
+    <span class="q-tag lvl-basico">BÁSICO</span>
+    <span>Escribe una función <code>normalizar_id(s)</code> que tome un ID de bench con espacios extra y mayúsculas mezcladas (ej. <code>"  Bench A3  "</code>) y devuelva una versión limpia: sin espacios al inicio/fin, todo en mayúsculas, y con los espacios internos reemplazados por guiones.</span>
+    <span class="q-arr">▶</span>
+  </div>
+  <div class="quiz-a">
+    <div class="exercise-output"><span class="exercise-output-label">Salida esperada</span><code>normalizar_id("  Bench A3  ") == "BENCH-A3"</code></div>
+    <div class="exercise-steps-label">Procedimiento paso a paso</div>
+    <div class="plan-card">
+      <div class="plan-block"><div class="plan-time">Paso 1</div><div class="plan-content"><p>Elimina los espacios sobrantes al inicio y al final con <code>strip()</code> — así <code>"  Bench A3  "</code> se convierte en <code>"Bench A3"</code>.</p></div></div>
+      <div class="plan-block"><div class="plan-time">Paso 2</div><div class="plan-content"><p>Convierte todo a mayúsculas con <code>upper()</code>, obteniendo <code>"BENCH A3"</code>.</p></div></div>
+      <div class="plan-block"><div class="plan-time">Paso 3</div><div class="plan-content"><p>Reemplaza los espacios internos por guiones con <code>replace(" ", "-")</code> para llegar al resultado final. Como los strings son inmutables, cada método retorna un string nuevo — se pueden encadenar en una sola línea.</p></div></div>
+    </div>
+    <div class="code-block"><div class="code-lang">Solución completa</div><pre>
+<span class="c-kw">def</span> <span class="c-fn">normalizar_id</span>(s):
+    <span class="c-kw">return</span> s.strip().upper().replace(<span class="c-st">" "</span>, <span class="c-st">"-"</span>)
+
+<span class="c-bi">print</span>(normalizar_id(<span class="c-st">"  Bench A3  "</span>))  <span class="c-cm"># "BENCH-A3"</span></pre></div>
+  </div>
+</div>
+
+<div class="quiz-card">
+  <div class="quiz-q" onclick="toggleQuiz(this)">
+    <span class="q-tag lvl-basico">BÁSICO</span>
+    <span>Escribe una función <code>es_palindromo(s)</code> que determine si un string es un palíndromo (se lee igual al derecho y al revés), ignorando mayúsculas/minúsculas y espacios. Por ejemplo <code>"Anita lava la tina"</code> debe ser palíndromo.</span>
+    <span class="q-arr">▶</span>
+  </div>
+  <div class="quiz-a">
+    <div class="exercise-output"><span class="exercise-output-label">Salida esperada</span><code>es_palindromo("Anita lava la tina") == True</code></div>
+    <div class="exercise-steps-label">Procedimiento paso a paso</div>
+    <div class="plan-card">
+      <div class="plan-block"><div class="plan-time">Paso 1</div><div class="plan-content"><p>Normaliza el string: pásalo a minúsculas con <code>lower()</code> y elimina los espacios con <code>replace(" ", "")</code>, para que la comparación no dependa de formato.</p></div></div>
+      <div class="plan-block"><div class="plan-time">Paso 2</div><div class="plan-content"><p>Invierte el string normalizado usando slicing con paso -1: <code>s[::-1]</code>.</p></div></div>
+      <div class="plan-block"><div class="plan-time">Paso 3</div><div class="plan-content"><p>Compara el string normalizado contra su versión invertida con <code>==</code>. Si son iguales, es palíndromo.</p></div></div>
+    </div>
+    <div class="code-block"><div class="code-lang">Solución completa</div><pre>
+<span class="c-kw">def</span> <span class="c-fn">es_palindromo</span>(s):
+    limpio = s.lower().replace(<span class="c-st">" "</span>, <span class="c-st">""</span>)
+    <span class="c-kw">return</span> limpio == limpio[::-<span class="c-nb">1</span>]
+
+<span class="c-bi">print</span>(es_palindromo(<span class="c-st">"Anita lava la tina"</span>))  <span class="c-cm"># True</span>
+<span class="c-bi">print</span>(es_palindromo(<span class="c-st">"bench_a3"</span>))          <span class="c-cm"># False</span></pre></div>
+  </div>
+</div>
+
+<div class="quiz-card">
+  <div class="quiz-q" onclick="toggleQuiz(this)">
+    <span class="q-tag lvl-basico">BÁSICO</span>
+    <span>Escribe una función <code>contar_vocales(s)</code> que reciba un string y devuelva cuántas vocales (a, e, i, o, u, sin importar mayúsculas) contiene.</span>
+    <span class="q-arr">▶</span>
+  </div>
+  <div class="quiz-a">
+    <div class="exercise-output"><span class="exercise-output-label">Salida esperada</span><code>contar_vocales("Sensor LIDAR activo") == 7</code></div>
+    <div class="exercise-steps-label">Procedimiento paso a paso</div>
+    <div class="plan-card">
+      <div class="plan-block"><div class="plan-time">Paso 1</div><div class="plan-content"><p>Convierte el string a minúsculas con <code>lower()</code> para no tener que comparar contra vocales mayúsculas y minúsculas por separado.</p></div></div>
+      <div class="plan-block"><div class="plan-time">Paso 2</div><div class="plan-content"><p>Recorre cada carácter del string y cuenta cuántos están presentes en el string <code>"aeiou"</code>, usando el operador <code>in</code> como filtro.</p></div></div>
+    </div>
+    <div class="code-block"><div class="code-lang">Solución completa</div><pre>
+<span class="c-kw">def</span> <span class="c-fn">contar_vocales</span>(s):
+    vocales = <span class="c-st">"aeiou"</span>
+    <span class="c-kw">return</span> <span class="c-bi">sum</span>(<span class="c-nb">1</span> <span class="c-kw">for</span> ch <span class="c-kw">in</span> s.lower() <span class="c-kw">if</span> ch <span class="c-kw">in</span> vocales)
+
+<span class="c-bi">print</span>(contar_vocales(<span class="c-st">"Sensor LIDAR activo"</span>))  <span class="c-cm"># 7</span></pre></div>
+  </div>
+</div>
+
+<div class="exercise-steps-label">🟡 Intermedio</div>
+
+<div class="quiz-card">
+  <div class="quiz-q" onclick="toggleQuiz(this)">
+    <span class="q-tag lvl-intermedio">INTERMEDIO</span>
+    <span>Escribe una función <code>parsear_linea_can(linea)</code> que reciba una línea de log CAN con formato <code>"ID=0x1A3 DLC=8 DATA=DE AD BE EF 00 11 22 33"</code> y devuelva un diccionario con las claves <code>"id"</code> (string hex), <code>"dlc"</code> (int) y <code>"data"</code> (lista de strings hex de 2 caracteres).</span>
+    <span class="q-arr">▶</span>
+  </div>
+  <div class="quiz-a">
+    <div class="exercise-output"><span class="exercise-output-label">Salida esperada</span><code>{'id': '0x1A3', 'dlc': 8, 'data': ['DE', 'AD', 'BE', 'EF', '00', '11', '22', '33']}</code></div>
+    <div class="exercise-steps-label">Procedimiento paso a paso</div>
+    <div class="plan-card">
+      <div class="plan-block"><div class="plan-time">Paso 1</div><div class="plan-content"><p>Divide la línea completa por espacios con <code>split()</code> — obtienes 3 campos principales: <code>"ID=0x1A3"</code>, <code>"DLC=8"</code> y el resto que empieza con <code>"DATA="</code> seguido de los bytes. Como los bytes de data también están separados por espacios, mejor usa <code>split(maxsplit=2)</code> para separar los primeros dos campos y dejar el resto de <code>DATA=...</code> intacto en un solo string.</p></div></div>
+      <div class="plan-block"><div class="plan-time">Paso 2</div><div class="plan-content"><p>Para cada campo <code>"ID=0x1A3"</code> y <code>"DLC=8"</code>, usa <code>partition("=")</code> o <code>split("=", 1)</code> para separar la clave del valor, quedándote solo con la parte después del <code>"="</code>.</p></div></div>
+      <div class="plan-block"><div class="plan-time">Paso 3</div><div class="plan-content"><p>Convierte el DLC a entero con <code>int()</code>. El ID se deja como string hex tal cual.</p></div></div>
+      <div class="plan-block"><div class="plan-time">Paso 4</div><div class="plan-content"><p>Para el campo de data, quita el prefijo <code>"DATA="</code> con <code>replace("DATA=", "")</code> (o slicing) y luego usa <code>split()</code> sobre lo que queda para obtener la lista de bytes individuales.</p></div></div>
+    </div>
+    <div class="code-block"><div class="code-lang">Solución completa</div><pre>
+<span class="c-kw">def</span> <span class="c-fn">parsear_linea_can</span>(linea):
+    campo_id, campo_dlc, campo_data = linea.split(maxsplit=<span class="c-nb">2</span>)
+
+    _, id_val = campo_id.split(<span class="c-st">"="</span>, <span class="c-nb">1</span>)
+    _, dlc_val = campo_dlc.split(<span class="c-st">"="</span>, <span class="c-nb">1</span>)
+    data_val = campo_data.replace(<span class="c-st">"DATA="</span>, <span class="c-st">""</span>)
+
+    <span class="c-kw">return</span> {
+        <span class="c-st">"id"</span>: id_val,
+        <span class="c-st">"dlc"</span>: <span class="c-bi">int</span>(dlc_val),
+        <span class="c-st">"data"</span>: data_val.split(),
+    }
+
+linea = <span class="c-st">"ID=0x1A3 DLC=8 DATA=DE AD BE EF 00 11 22 33"</span>
+<span class="c-bi">print</span>(parsear_linea_can(linea))
+<span class="c-cm"># {'id': '0x1A3', 'dlc': 8, 'data': ['DE','AD','BE','EF','00','11','22','33']}</span></pre></div>
+  </div>
+</div>
+
+<div class="quiz-card">
+  <div class="quiz-q" onclick="toggleQuiz(this)">
+    <span class="q-tag lvl-intermedio">INTERMEDIO</span>
+    <span>Escribe una función <code>formatear_reporte(bench, test, resultado, duracion)</code> que genere una línea de reporte alineada en columnas usando f-strings, con el nombre del bench a la izquierda en un ancho de 10, el test a la izquierda en un ancho de 15, el resultado centrado en un ancho de 8, y la duración con 2 decimales seguida de "s".</span>
+    <span class="q-arr">▶</span>
+  </div>
+  <div class="quiz-a">
+    <div class="exercise-output"><span class="exercise-output-label">Salida esperada</span><code>formatear_reporte("A3","lidar","PASS",1.2345) == "A3         lidar           PASS   1.23s"</code></div>
+    <div class="exercise-steps-label">Procedimiento paso a paso</div>
+    <div class="plan-card">
+      <div class="plan-block"><div class="plan-time">Paso 1</div><div class="plan-content"><p>Recuerda la sintaxis de formato de f-strings: <code>{valor:ancho}</code> alinea a la izquierda por default para strings, <code>{valor:^ancho}</code> centra, y <code>{valor:.2f}</code> formatea un float con 2 decimales.</p></div></div>
+      <div class="plan-block"><div class="plan-time">Paso 2</div><div class="plan-content"><p>Construye la f-string combinando cada especificador de formato para el campo correspondiente: <code>{bench:10}</code>, <code>{test:15}</code>, <code>{resultado:^8}</code> y <code>{duracion:.2f}s</code>.</p></div></div>
+      <div class="plan-block"><div class="plan-time">Paso 3</div><div class="plan-content"><p>Concatena todo dentro de una sola f-string y retorna el resultado.</p></div></div>
+    </div>
+    <div class="code-block"><div class="code-lang">Solución completa</div><pre>
+<span class="c-kw">def</span> <span class="c-fn">formatear_reporte</span>(bench, test, resultado, duracion):
+    <span class="c-kw">return</span> <span class="c-st">f"{bench:10}{test:15}{resultado:^8}{duracion:.2f}s"</span>
+
+<span class="c-bi">print</span>(formatear_reporte(<span class="c-st">"A3"</span>, <span class="c-st">"lidar"</span>, <span class="c-st">"PASS"</span>, <span class="c-nb">1.2345</span>))
+<span class="c-cm"># "A3         lidar           PASS   1.23s"</span></pre></div>
+  </div>
+</div>
+
+<div class="quiz-card">
+  <div class="quiz-q" onclick="toggleQuiz(this)">
+    <span class="q-tag lvl-intermedio">INTERMEDIO</span>
+    <span>Escribe una función <code>es_id_valido(s)</code> que valide si un string tiene el formato de ID de bench esperado: exactamente 6 caracteres, los primeros 5 son letras mayúsculas y el último es un dígito (ej. <code>"BENCH3"</code> es válido, <code>"bench3"</code> y <code>"BENCH33"</code> no lo son).</span>
+    <span class="q-arr">▶</span>
+  </div>
+  <div class="quiz-a">
+    <div class="exercise-output"><span class="exercise-output-label">Salida esperada</span><code>es_id_valido("BENCH3") == True; es_id_valido("bench3") == False; es_id_valido("BENCH33") == False</code></div>
+    <div class="exercise-steps-label">Procedimiento paso a paso</div>
+    <div class="plan-card">
+      <div class="plan-block"><div class="plan-time">Paso 1</div><div class="plan-content"><p>Valida primero el largo total con <code>len(s) == 6</code> — si no cumple, ya se puede retornar <code>False</code> sin seguir evaluando (evita indexar fuera de rango).</p></div></div>
+      <div class="plan-block"><div class="plan-time">Paso 2</div><div class="plan-content"><p>Separa el string en la parte de letras (<code>s[:5]</code>) y el último carácter (<code>s[5]</code>) usando slicing.</p></div></div>
+      <div class="plan-block"><div class="plan-time">Paso 3</div><div class="plan-content"><p>Verifica que la parte de letras cumpla <code>isalpha()</code> y <code>isupper()</code> a la vez, y que el último carácter cumpla <code>isdigit()</code>.</p></div></div>
+      <div class="plan-block"><div class="plan-time">Paso 4</div><div class="plan-content"><p>Combina todas las condiciones con <code>and</code> y retorna el resultado booleano final.</p></div></div>
+    </div>
+    <div class="code-block"><div class="code-lang">Solución completa</div><pre>
+<span class="c-kw">def</span> <span class="c-fn">es_id_valido</span>(s):
+    <span class="c-kw">if</span> <span class="c-bi">len</span>(s) != <span class="c-nb">6</span>:
+        <span class="c-kw">return</span> <span class="c-kw">False</span>
+    letras, digito = s[:<span class="c-nb">5</span>], s[<span class="c-nb">5</span>]
+    <span class="c-kw">return</span> letras.isalpha() <span class="c-kw">and</span> letras.isupper() <span class="c-kw">and</span> digito.isdigit()
+
+<span class="c-bi">print</span>(es_id_valido(<span class="c-st">"BENCH3"</span>))   <span class="c-cm"># True</span>
+<span class="c-bi">print</span>(es_id_valido(<span class="c-st">"bench3"</span>))   <span class="c-cm"># False — minúsculas</span>
+<span class="c-bi">print</span>(es_id_valido(<span class="c-st">"BENCH33"</span>))  <span class="c-cm"># False — largo incorrecto</span></pre></div>
+  </div>
+</div>
+
+<div class="exercise-steps-label">🔴 Complejo</div>
+
+<div class="quiz-card">
+  <div class="quiz-q" onclick="toggleQuiz(this)">
+    <span class="q-tag lvl-complejo">COMPLEJO</span>
+    <span>Escribe una función <code>parsear_csv_simple(linea)</code> que parsee una línea con formato CSV donde los campos pueden estar entre comillas dobles y contener comas dentro (ej. <code>'bench_a3,"lidar, radar",PASSED,1.23'</code> debe dar 4 campos, el segundo con la coma interna preservada). No uses el módulo <code>csv</code> — hazlo con métodos de string.</span>
+    <span class="q-arr">▶</span>
+  </div>
+  <div class="quiz-a">
+    <div class="exercise-output"><span class="exercise-output-label">Salida esperada</span><code>parsear_csv_simple('bench_a3,"lidar, radar",PASSED,1.23') == ['bench_a3', 'lidar, radar', 'PASSED', '1.23']</code></div>
+    <div class="exercise-steps-label">Procedimiento paso a paso</div>
+    <div class="plan-card">
+      <div class="plan-block"><div class="plan-time">Paso 1</div><div class="plan-content"><p>Un <code>split(",")</code> simple rompería el campo entrecomillado en dos, porque no sabe que esa coma está "protegida". Hay que recorrer carácter por carácter llevando un estado de "¿estoy dentro de comillas?".</p></div></div>
+      <div class="plan-block"><div class="plan-time">Paso 2</div><div class="plan-content"><p>Inicializa una lista de campos, un buffer de texto acumulado (string vacío) y un flag booleano <code>dentro_comillas = False</code>.</p></div></div>
+      <div class="plan-block"><div class="plan-time">Paso 3</div><div class="plan-content"><p>Recorre cada carácter de la línea: si es una comilla doble, invierte el flag <code>dentro_comillas</code> (y no la agregues al buffer); si es una coma y NO estás dentro de comillas, cierra el campo actual (agrégalo a la lista y reinicia el buffer); en cualquier otro caso, agrega el carácter al buffer.</p></div></div>
+      <div class="plan-block"><div class="plan-time">Paso 4</div><div class="plan-content"><p>Al terminar el loop, agrega el último buffer pendiente a la lista de campos (no hay coma final que lo dispare) y retorna la lista completa.</p></div></div>
+    </div>
+    <div class="code-block"><div class="code-lang">Solución completa</div><pre>
+<span class="c-kw">def</span> <span class="c-fn">parsear_csv_simple</span>(linea):
+    campos = []
+    buffer = <span class="c-st">""</span>
+    dentro_comillas = <span class="c-kw">False</span>
+
+    <span class="c-kw">for</span> ch <span class="c-kw">in</span> linea:
+        <span class="c-kw">if</span> ch == <span class="c-st">'"'</span>:
+            dentro_comillas = <span class="c-kw">not</span> dentro_comillas
+        <span class="c-kw">elif</span> ch == <span class="c-st">","</span> <span class="c-kw">and</span> <span class="c-kw">not</span> dentro_comillas:
+            campos.append(buffer)
+            buffer = <span class="c-st">""</span>
+        <span class="c-kw">else</span>:
+            buffer += ch
+
+    campos.append(buffer)   <span class="c-cm"># último campo, sin coma que lo cierre</span>
+    <span class="c-kw">return</span> campos
+
+linea = <span class="c-st">'bench_a3,"lidar, radar",PASSED,1.23'</span>
+<span class="c-bi">print</span>(parsear_csv_simple(linea))
+<span class="c-cm"># ['bench_a3', 'lidar, radar', 'PASSED', '1.23']</span></pre></div>
+  </div>
+</div>
+
+<div class="quiz-card">
+  <div class="quiz-q" onclick="toggleQuiz(this)">
+    <span class="q-tag lvl-complejo">COMPLEJO</span>
+    <span>Escribe una función <code>resumir_log(texto)</code> que reciba un log multilínea donde cada línea tiene formato <code>"NIVEL: mensaje"</code> (ej. <code>"INFO: ..."</code>, <code>"ERROR: ..."</code>) y devuelva un diccionario con el conteo de líneas por nivel, además de una clave <code>"total"</code> con el número total de líneas no vacías. Ignora líneas vacías o que no tengan el separador <code>": "</code>.</span>
+    <span class="q-arr">▶</span>
+  </div>
+  <div class="quiz-a">
+    <div class="exercise-output"><span class="exercise-output-label">Salida esperada</span><code>{'INFO': 2, 'ERROR': 1, 'WARNING': 1, 'total': 4}</code></div>
+    <div class="exercise-steps-label">Procedimiento paso a paso</div>
+    <div class="plan-card">
+      <div class="plan-block"><div class="plan-time">Paso 1</div><div class="plan-content"><p>Divide el texto completo en líneas con <code>splitlines()</code> (más robusto que <code>split("\n")</code> porque maneja distintos finales de línea).</p></div></div>
+      <div class="plan-block"><div class="plan-time">Paso 2</div><div class="plan-content"><p>Inicializa un diccionario vacío para los conteos y un contador <code>total = 0</code>.</p></div></div>
+      <div class="plan-block"><div class="plan-time">Paso 3</div><div class="plan-content"><p>Para cada línea, primero descarta las vacías con <code>if not linea.strip(): continue</code>. Luego verifica que contenga el separador <code>": "</code> con el operador <code>in</code> — si no lo tiene, la línea no tiene formato válido y se salta también.</p></div></div>
+      <div class="plan-block"><div class="plan-time">Paso 4</div><div class="plan-content"><p>Usa <code>partition(": ")</code> para separar el nivel del resto del mensaje sin riesgo de romper el mensaje si este contiene más ":" internos (a diferencia de <code>split(": ")</code> que podría generar más de 2 partes).</p></div></div>
+      <div class="plan-block"><div class="plan-time">Paso 5</div><div class="plan-content"><p>Incrementa el contador del nivel correspondiente usando <code>dict.get(nivel, 0) + 1</code> (evita el <code>KeyError</code> de acceder a una clave que aún no existe), suma 1 al total, y al final agrega <code>"total"</code> al diccionario de resultado.</p></div></div>
+    </div>
+    <div class="code-block"><div class="code-lang">Solución completa</div><pre>
+<span class="c-kw">def</span> <span class="c-fn">resumir_log</span>(texto):
+    conteos = {}
+    total = <span class="c-nb">0</span>
+
+    <span class="c-kw">for</span> linea <span class="c-kw">in</span> texto.splitlines():
+        <span class="c-kw">if</span> <span class="c-kw">not</span> linea.strip():
+            <span class="c-kw">continue</span>
+        <span class="c-kw">if</span> <span class="c-st">": "</span> <span class="c-kw">not in</span> linea:
+            <span class="c-kw">continue</span>
+
+        nivel, _, _mensaje = linea.partition(<span class="c-st">": "</span>)
+        conteos[nivel] = conteos.get(nivel, <span class="c-nb">0</span>) + <span class="c-nb">1</span>
+        total += <span class="c-nb">1</span>
+
+    conteos[<span class="c-st">"total"</span>] = total
+    <span class="c-kw">return</span> conteos
+
+log = <span class="c-st">"""INFO: bench iniciado
+ERROR: sensor lidar no responde
+WARNING: reintentando conexión
+INFO: bench listo"""</span>
+
+<span class="c-bi">print</span>(resumir_log(log))
+<span class="c-cm"># {'INFO': 2, 'ERROR': 1, 'WARNING': 1, 'total': 4}</span></pre></div>
+  </div>
 </div>
   </div>
 </div>`,
@@ -1401,11 +2276,6 @@ result = compute_checksum(payload)  # None !</pre></div>
   <div class="practice-title">Evita funciones con más de ~4 parámetros posicionales — agrupa en un dataclass</div>
   <p>Si una función necesita muchos datos relacionados, considera <code>def run(config: BenchConfig)</code> en vez de 8 parámetros sueltos. Es más fácil de testear y de extender sin romper llamadas existentes.</p>
 </div>
-<div class="quiz-section"><div class="quiz-title">Quiz</div>
-  <div class="quiz-card"><div class="quiz-q" onclick="toggleQuiz(this)"><span class="q-tag">Trampa</span>¿Qué imprime este código?<br><code>def f(x, lst=[]): lst.append(x); return lst</code><br><code>print(f(1)); print(f(2))</code><span class="q-arr">▶</span></div><div class="quiz-a"><b>[1] luego [1, 2]</b> — no [1] y [2] como muchos esperan. La lista default se crea una sola vez cuando se define <code>f</code>, y todas las llamadas sin argumento <code>lst</code> comparten esa misma lista en memoria.</div></div>
-  <div class="quiz-card"><div class="quiz-q" onclick="toggleQuiz(this)"><span class="q-tag">Conceptual</span>¿Cuál es la diferencia real entre *args y **kwargs a nivel de tipo de dato?<span class="q-arr">▶</span></div><div class="quiz-a"><code>*args</code> empaqueta los argumentos posicionales extra en una <b>tupla</b>. <code>**kwargs</code> empaqueta los argumentos con nombre extra en un <b>diccionario</b>. Por eso puedes iterar <code>*args</code> con índices y <code>**kwargs</code> con <code>.items()</code>.</div></div>
-  <div class="quiz-card"><div class="quiz-q" onclick="toggleQuiz(this)"><span class="q-tag">Trampa</span>¿Por qué <code>[lambda: i for i in range(3)]</code> hace que las 3 lambdas retornen 2?<span class="q-arr">▶</span></div><div class="quiz-a">Porque el closure captura la <b>variable</b> <code>i</code>, no su valor en cada iteración. Cuando finalmente se llaman las lambdas (después de terminar el loop), todas leen el último valor que tomó <code>i</code>, que es 2. Se arregla capturando el valor como default: <code>lambda x=i: x</code>.</div></div>
-</div>
   </div>
 </div>`,
 
@@ -1620,12 +2490,6 @@ def connect(): ...</pre></div>
   <div class="practice-title">Para decoradores complejos con estado, considera una clase</div>
   <p>Si el decorador necesita mantener contadores, cachés propios o configuración compleja, una clase con <code>__call__</code> suele ser más clara que múltiples niveles de closures anidados.</p>
 </div>
-<div class="quiz-section"><div class="quiz-title">Quiz</div>
-  <div class="quiz-card"><div class="quiz-q" onclick="toggleQuiz(this)"><span class="q-tag">¿Por qué?</span>¿Por qué se usa @functools.wraps en decoradores?<span class="q-arr">▶</span></div><div class="quiz-a">Sin @wraps, la función decorada pierde su identidad: <code>validate_mcap.__name__</code> sería "wrapper" en vez de "validate_mcap". Esto rompe logging, debugging, y herramientas como Sphinx. @wraps copia __name__, __doc__, __module__ y otros atributos de la función original al wrapper.</div></div>
-  <div class="quiz-card"><div class="quiz-q" onclick="toggleQuiz(this)"><span class="q-tag">Trampa</span>¿En qué momento se ejecuta el código que está DENTRO de la función decoradora pero FUERA del wrapper interno?<span class="q-arr">▶</span></div><div class="quiz-a">Se ejecuta UNA vez, en el momento de <b>decorar</b> (cuando Python lee la línea <code>@decorador</code> / importa el módulo) — no cada vez que se llama a la función decorada. Solo el código dentro de <code>wrapper</code> corre en cada llamada.</div></div>
-  <div class="quiz-card"><div class="quiz-q" onclick="toggleQuiz(this)"><span class="q-tag">Conceptual</span>Con <code>@timer</code> encima de <code>@retry(times=3)</code> sobre <code>connect_to_bench</code>, ¿qué mide timer si retry reintenta 2 veces antes de tener éxito?<span class="q-arr">▶</span></div><div class="quiz-a">Mide el tiempo TOTAL, incluyendo los reintentos fallidos — porque <code>timer</code> envuelve a <code>retry</code> por fuera (se ejecuta primero al llamar, y no termina hasta que <code>retry.wrapper</code> retorna, lo cual incluye todos los intentos internos).</div></div>
-  <div class="quiz-card"><div class="quiz-q" onclick="toggleQuiz(this)"><span class="q-tag">Trampa</span>¿Cuántos niveles de función anidada necesita un decorador que acepta argumentos propios, como @retry(times=3)?<span class="q-arr">▶</span></div><div class="quiz-a"><b>3 niveles.</b> Nivel 1 (<code>retry(times=3)</code>) recibe los argumentos del decorador y retorna el decorador real. Nivel 2 (<code>decorator(func)</code>) recibe la función a decorar y retorna el wrapper. Nivel 3 (<code>wrapper(*args, **kwargs)</code>) ejecuta la lógica en cada llamada.</div></div>
-</div>
   </div>
 </div>`,
 
@@ -1829,12 +2693,6 @@ batches(read_log_lines("f.log"), 10)  # funciona con CUALQUIER iterable</pre></d
   <div class="practice-title">Mide la memoria real antes de optimizar prematuramente</div>
   <p>Si el dataset cabe cómodo en RAM (ej. &lt;10k elementos), una list comprehension suele ser más simple y hasta más rápida que un generador equivalente. Usa generadores cuando el tamaño de los datos es el problema real, no por costumbre.</p>
 </div>
-<div class="quiz-section"><div class="quiz-title">Quiz</div>
-  <div class="quiz-card"><div class="quiz-q" onclick="toggleQuiz(this)"><span class="q-tag">Diferencia</span>¿Cuándo usar generador vs list comprehension?<span class="q-arr">▶</span></div><div class="quiz-a"><b>Generador (o gen expr):</b> cuando el resultado es grande, solo lo vas a iterar una vez, o es potencialmente infinito. Usa O(1) de memoria.<br><b>List comp:</b> cuando necesitas acceso por índice, reutilizar la colección varias veces, o saber el len() sin consumirla.<div class="a-tip">Regla práctica: si lo pasas a sum(), any(), all(), max(), o un for loop de una vez → generador. Si necesitas lst[i] o len(lst) → lista.</div></div></div>
-  <div class="quiz-card"><div class="quiz-q" onclick="toggleQuiz(this)"><span class="q-tag">Trampa</span>¿Qué pasa si iteras dos veces sobre el mismo objeto generador?<span class="q-arr">▶</span></div><div class="quiz-a">La segunda iteración no produce nada — el generador ya está agotado y simplemente lanza <code>StopIteration</code> de inmediato (un <code>for</code> sobre él terminaría en 0 iteraciones). A diferencia de una lista, un generador es de un solo uso; hay que crear una nueva instancia llamando de nuevo a la función generadora.</div></div>
-  <div class="quiz-card"><div class="quiz-q" onclick="toggleQuiz(this)"><span class="q-tag">Conceptual</span>¿Por qué el código antes del primer yield NO se ejecuta al llamar a la función generadora?<span class="q-arr">▶</span></div><div class="quiz-a">Porque una función con <code>yield</code> en cualquier parte de su cuerpo no ejecuta nada al ser llamada — solo construye y retorna un objeto generador. La ejecución del cuerpo (incluyendo validaciones al inicio) empieza recién con el primer <code>next()</code> (o el primer paso de un <code>for</code>).</div></div>
-  <div class="quiz-card"><div class="quiz-q" onclick="toggleQuiz(this)"><span class="q-tag">Medido</span>Procesando un log de 5 millones de líneas, ¿por qué una generator expression usa memoria casi constante mientras una list comprehension puede usar más de 1 GB?<span class="q-arr">▶</span></div><div class="quiz-a">La list comprehension construye la lista COMPLETA en memoria antes de que el código pueda usar el primer elemento — todas las líneas procesadas coexisten en RAM. La generator expression procesa y entrega una línea a la vez; solo el elemento actual (y el estado interno del generador) ocupa memoria, sin importar si el archivo tiene mil o 5 millones de líneas.</div></div>
-</div>
   </div>
 </div>`,
 
@@ -1844,7 +2702,7 @@ batches(read_log_lines("f.log"), 10)  # funciona con CUALQUIER iterable</pre></d
     <button class="tab-btn active" onclick="switchTab(this,'ptr-1','pytry')">try/except/else/finally</button>
     <button class="tab-btn" onclick="switchTab(this,'ptr-2','pytry')">Excepciones custom &amp; jerarquía</button>
     <button class="tab-btn" onclick="switchTab(this,'ptr-3','pytry')">⚠️ Errores comunes</button>
-    <button class="tab-btn" onclick="switchTab(this,'ptr-4','pytry')">✅ Mejores Prácticas + Quiz</button>
+    <button class="tab-btn" onclick="switchTab(this,'ptr-4','pytry')">✅ Mejores Prácticas</button>
   </div>
 
   <div id="ptr-1" class="tab-panel active">
@@ -2033,14 +2891,6 @@ use(result)  <span class="c-cm"># NameError si compute() falló: result nunca se
   <div class="practice-title">Loguea con contexto, no solo el mensaje de la excepción</div>
   <p>Usa <code>log.exception(...)</code> dentro de un except (incluye el traceback automáticamente) en vez de <code>print(e)</code>, y agrega datos relevantes como el <code>bench_id</code> o el request que estabas procesando cuando ocurrió el fallo.</p>
 </div>
-
-<div class="quiz-section"><div class="quiz-title">Quiz</div>
-  <div class="quiz-card"><div class="quiz-q" onclick="toggleQuiz(this)"><span class="q-tag">Trampa</span>¿Cuándo se ejecuta el bloque else de un try?<span class="q-arr">▶</span></div><div class="quiz-a"><b>Solo cuando NO hay excepción.</b> El propósito del else es separar el código que puede fallar (en try) del código que solo corre si todo fue bien (en else). Evita tener demasiado código en el try y capturar excepciones no intencionadas.</div></div>
-  <div class="quiz-card"><div class="quiz-q" onclick="toggleQuiz(this)"><span class="q-tag">Nunca</span>¿Por qué es malo hacer "except Exception: pass"?<span class="q-arr">▶</span></div><div class="quiz-a">Silencia TODOS los errores incluyendo bugs reales. Si tu código falla silenciosamente, es casi imposible debuggear. Siempre: 1) captura excepciones específicas, 2) al menos haz logging del error, 3) o re-raise si no puedes manejarlo.</div></div>
-  <div class="quiz-card"><div class="quiz-q" onclick="toggleQuiz(this)"><span class="q-tag">Trampa</span>¿Cuál es la diferencia entre "raise" y "raise e" dentro de un except?<span class="q-arr">▶</span></div><div class="quiz-a"><b>"raise" (sin argumento) re-lanza la excepción actual preservando el traceback completo original.</b> "raise e" también relanza la misma excepción, pero desde Python 3 reescribe el punto de origen del traceback en esa línea, dificultando ver dónde ocurrió realmente el fallo. En general, prefiere "raise" a secas para re-lanzar.</div></div>
-  <div class="quiz-card"><div class="quiz-q" onclick="toggleQuiz(this)"><span class="q-tag">Conceptual</span>¿Para qué sirve "raise NuevoError(...) from e"?<span class="q-arr">▶</span></div><div class="quiz-a">Encadena excepciones: conviertes un error de bajo nivel (por ejemplo OSError de una librería de red) en uno de tu dominio (ConnectionError/BenchError) sin perder la causa original. El traceback muestra ambas excepciones y su relación, lo cual es clave para debug en sistemas con capas (HIL, drivers, APIs).</div></div>
-  <div class="quiz-card"><div class="quiz-q" onclick="toggleQuiz(this)"><span class="q-tag">Diseño</span>¿Por qué crear excepciones custom en vez de usar solo ValueError/RuntimeError genéricos?<span class="q-arr">▶</span></div><div class="quiz-a">Dan significado semántico al error (BenchTimeoutError vs "algo salió mal"), permiten capturar por jerarquía (una clase base agrupa varias específicas), y pueden llevar datos extra como atributos (bench_id, timeout_s) útiles para logging estructurado y decisiones de reintento.</div></div>
-</div>
   </div>
 </div>`,
 
@@ -2050,7 +2900,7 @@ use(result)  <span class="c-cm"># NameError si compute() falló: result nunca se
     <button class="tab-btn active" onclick="switchTab(this,'pac-1','pyarc')">open() y context manager</button>
     <button class="tab-btn" onclick="switchTab(this,'pac-2','pyarc')">JSON, CSV y pathlib</button>
     <button class="tab-btn" onclick="switchTab(this,'pac-3','pyarc')">⚠️ Errores comunes</button>
-    <button class="tab-btn" onclick="switchTab(this,'pac-4','pyarc')">✅ Mejores Prácticas + Quiz</button>
+    <button class="tab-btn" onclick="switchTab(this,'pac-4','pyarc')">✅ Mejores Prácticas</button>
   </div>
 
   <div id="pac-1" class="tab-panel active">
@@ -2220,13 +3070,6 @@ config = json.loads(path.read_text(encoding=<span class="c-st">"utf-8"</span>))<
   <div class="practice-title">Usa csv.DictReader/DictWriter en vez de índices numéricos</div>
   <p>Acceder a columnas por nombre (<code>row["status"]</code>) en vez de por posición (<code>row[1]</code>) hace el código robusto ante cambios en el orden de columnas del CSV.</p>
 </div>
-
-<div class="quiz-section"><div class="quiz-title">Quiz</div>
-  <div class="quiz-card"><div class="quiz-q" onclick="toggleQuiz(this)"><span class="q-tag">Trampa</span>¿Qué pasa si abres un archivo existente con modo "w" y no escribes nada?<span class="q-arr">▶</span></div><div class="quiz-a"><b>El archivo queda vacío igual.</b> El modo "w" trunca el archivo apenas se abre (no cuando escribes). Si solo querías leerlo o agregar contenido, usar "w" por error borra todo el contenido previo de forma irreversible.</div></div>
-  <div class="quiz-card"><div class="quiz-q" onclick="toggleQuiz(this)"><span class="q-tag">Conceptual</span>¿Por qué "with open(...) as f" es mejor que open()/close() manual?<span class="q-arr">▶</span></div><div class="quiz-a">Porque garantiza que f.close() se ejecute incluso si el código dentro del bloque lanza una excepción (usa __exit__ internamente, equivalente a un finally). Con close() manual al final del bloque, una excepción antes de esa línea deja el archivo abierto.</div></div>
-  <div class="quiz-card"><div class="quiz-q" onclick="toggleQuiz(this)"><span class="q-tag">Práctico</span>¿Cuándo conviene iterar "for line in f" en vez de "f.readlines()"?<span class="q-arr">▶</span></div><div class="quiz-a">Cuando el archivo es grande. "for line in f" lee línea por línea con memoria constante (streaming), mientras que readlines() carga TODAS las líneas en una lista en memoria de golpe. Para logs de varios GB, esto puede ser la diferencia entre funcionar y agotar la RAM.</div></div>
-  <div class="quiz-card"><div class="quiz-q" onclick="toggleQuiz(this)"><span class="q-tag">Trampa</span>¿Por qué se recomienda newline="" al escribir CSV en Windows?<span class="q-arr">▶</span></div><div class="quiz-a">Sin newline="", el módulo csv y la capa de texto de Windows (que traduce \n a \r\n) interactúan mal, generando una línea en blanco extra entre cada fila del CSV. Pasar newline="" a open() delega el manejo de saltos de línea completamente al módulo csv.</div></div>
-</div>
   </div>
 </div>`,
 
@@ -2236,7 +3079,7 @@ config = json.loads(path.read_text(encoding=<span class="c-st">"utf-8"</span>))<
     <button class="tab-btn active" onclick="switchTab(this,'pcp-1','pycpy')">Referencias vs copias</button>
     <button class="tab-btn" onclick="switchTab(this,'pcp-2','pycpy')">Shallow vs Deep copy</button>
     <button class="tab-btn" onclick="switchTab(this,'pcp-3','pycpy')">⚠️ Errores comunes</button>
-    <button class="tab-btn" onclick="switchTab(this,'pcp-4','pycpy')">✅ Mejores Prácticas + Quiz</button>
+    <button class="tab-btn" onclick="switchTab(this,'pcp-4','pycpy')">✅ Mejores Prácticas</button>
   </div>
 
   <div id="pcp-1" class="tab-panel active">
@@ -2415,14 +3258,6 @@ ordenados = normalizar(datos_originales)
   <div class="practice-title">Documenta si una función muta sus argumentos o no</div>
   <p>Si una función recibe una lista/dict y la modifica in-place, deja constancia en el docstring o el nombre (por ejemplo <code>sort_in_place()</code> vs <code>sorted_copy()</code>) para que quien la use no se sorprenda con efectos secundarios.</p>
 </div>
-
-<div class="quiz-section"><div class="quiz-title">Quiz</div>
-  <div class="quiz-card"><div class="quiz-q" onclick="toggleQuiz(this)"><span class="q-tag">Trampa</span>Si b = a y a es una lista, ¿qué pasa si modifico b?<span class="q-arr">▶</span></div><div class="quiz-a"><b>También se modifica lo que ves a través de a.</b> b y a apuntan al mismo objeto en memoria (aliasing), no son copias independientes. Para tener una copia real necesitas copy.copy() (shallow) o copy.deepcopy() (deep), según si hay anidamiento mutable.</div></div>
-  <div class="quiz-card"><div class="quiz-q" onclick="toggleQuiz(this)"><span class="q-tag">Conceptual</span>¿Cuál es la diferencia entre shallow copy y deep copy?<span class="q-arr">▶</span></div><div class="quiz-a">Shallow copy crea un nuevo contenedor exterior, pero los elementos DENTRO siguen siendo los mismos objetos compartidos con el original (si son mutables, los cambios se propagan). Deep copy copia recursivamente TODO, incluyendo los objetos anidados, logrando independencia total entre original y copia.</div></div>
-  <div class="quiz-card"><div class="quiz-q" onclick="toggleQuiz(this)"><span class="q-tag">Clásico</span>¿Por qué es peligroso usar def f(x=[]): como firma de función?<span class="q-arr">▶</span></div><div class="quiz-a">Porque el valor por defecto [] se crea UNA sola vez, al definirse la función, y se reutiliza (comparte) entre TODAS las llamadas que no pasan x explícitamente. Si la función muta esa lista (append, etc.), el estado persiste y se acumula entre llamadas independientes, causando bugs muy difíciles de rastrear.</div></div>
-  <div class="quiz-card"><div class="quiz-q" onclick="toggleQuiz(this)"><span class="q-tag">Trampa</span>¿Por qué [[0]*3]*3 no crea una matriz 3x3 independiente?<span class="q-arr">▶</span></div><div class="quiz-a">Porque el operador * sobre una lista repite REFERENCIAS al mismo objeto, no crea copias. [[0]*3] crea una sublista, y *3 la repite tres veces como el MISMO objeto, así que las tres "filas" son en realidad una sola lista compartida. La forma correcta es una comprehension: [[0]*3 for _ in range(3)], que crea una sublista nueva en cada iteración.</div></div>
-  <div class="quiz-card"><div class="quiz-q" onclick="toggleQuiz(this)"><span class="q-tag">Conceptual</span>¿Por qué los tipos inmutables (str, int, tuple) no tienen el problema de aliasing mutante?<span class="q-arr">▶</span></div><div class="quiz-a">Porque no se pueden modificar in-place: cualquier operación que "parece" modificarlos (como .upper() en un string o + en una tupla) en realidad crea y devuelve un objeto NUEVO. Por eso, aunque dos nombres apunten al mismo string inmutable, nunca vas a ver cambios "fantasma" propagarse entre ellos.</div></div>
-</div>
   </div>
 </div>`,
 
@@ -2432,7 +3267,7 @@ ordenados = normalizar(datos_originales)
     <button class="tab-btn active" onclick="switchTab(this,'ptd-1','ptyp')">Tipos básicos y Optional/Union</button>
     <button class="tab-btn" onclick="switchTab(this,'ptd-2','ptyp')">TypedDict, Protocol y Generics</button>
     <button class="tab-btn" onclick="switchTab(this,'ptd-3','ptyp')">⚠️ Errores comunes</button>
-    <button class="tab-btn" onclick="switchTab(this,'ptd-4','ptyp')">✅ Mejores Prácticas + Quiz</button>
+    <button class="tab-btn" onclick="switchTab(this,'ptd-4','ptyp')">✅ Mejores Prácticas</button>
   </div>
 
   <div id="ptd-1" class="tab-panel active">
@@ -2618,13 +3453,6 @@ set_timeout(<span class="c-st">"30"</span>)   <span class="c-cm"># ¡NO lanza Ty
 <div class="practice-card">
   <div class="practice-title">Si necesitas validación real en runtime, usa pydantic (no solo type hints)</div>
   <p>Para validar datos externos (config JSON, payloads de API, mensajes de un bus) donde SÍ necesitas que un tipo incorrecto lance una excepción en ejecución, type hints puros no alcanzan — usa pydantic o valida manualmente con isinstance().</p>
-</div>
-
-<div class="quiz-section"><div class="quiz-title">Quiz</div>
-  <div class="quiz-card"><div class="quiz-q" onclick="toggleQuiz(this)"><span class="q-tag">Trampa</span>¿Los type hints impiden que llames una función con el tipo incorrecto?<span class="q-arr">▶</span></div><div class="quiz-a"><b>No.</b> Python es de tipado dinámico y no valida los type hints en runtime por defecto. Puedes llamar def f(x: int) con f("hola") y el programa se ejecuta sin error hasta que algo dentro de f falle por usar x como si fuera int. Los hints solo son verificados por herramientas externas como mypy/pyright, o si tú mismo agregas isinstance().</div></div>
-  <div class="quiz-card"><div class="quiz-q" onclick="toggleQuiz(this)"><span class="q-tag">Conceptual</span>¿Qué diferencia hay entre Optional[str] y str en una anotación?<span class="q-arr">▶</span></div><div class="quiz-a">str dice "siempre va a ser un string". Optional[str] (equivalente a str | None) dice "puede ser un string o puede ser None". Usar Optional obliga a quien consume el valor a considerar el caso None explícitamente si usa un checker de tipos, evitando AttributeError por asumir que nunca es None.</div></div>
-  <div class="quiz-card"><div class="quiz-q" onclick="toggleQuiz(this)"><span class="q-tag">Práctico</span>¿Qué ventaja tiene Protocol sobre heredar de una clase base abstracta (ABC)?<span class="q-arr">▶</span></div><div class="quiz-a">Protocol usa "structural typing" (duck typing tipado): cualquier clase que tenga los métodos/atributos requeridos es válida automáticamente, sin necesidad de heredar explícitamente del Protocol. Esto es útil cuando quieres tipar una interfaz que deben cumplir clases de terceros o librerías externas que no puedes modificar para que hereden de tu ABC.</div></div>
-  <div class="quiz-card"><div class="quiz-q" onclick="toggleQuiz(this)"><span class="q-tag">Herramientas</span>¿Qué hace mypy y por qué se usa en CI?<span class="q-arr">▶</span></div><div class="quiz-a">mypy es un verificador estático de tipos: lee las anotaciones de tu código y detecta inconsistencias (pasar un str donde se espera int, retornar None donde se declaró -> str, etc.) sin ejecutar el programa. Ponerlo en el pipeline de CI asegura que ningún PR con errores de tipo se mergee, funcionando como una capa extra de testing muy rápida de correr.</div></div>
 </div>
   </div>
 </div>`,
