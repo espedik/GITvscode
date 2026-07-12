@@ -9,11 +9,11 @@ function buildPages() {
     page.id = 'page-' + id;
     const tagsHtml = d.tags.map(t => `<span class="t-tag">${t}</span>`).join('');
 
-    const richContent = WAYVE_RICH[id] || PYTHON_RICH[id] || PYTHON_RICH2[id] || PYTHON_RICH3[id]
+    const richContent = WAYVE_RICH[id] || CODING_RICH[id] || PYTHON_RICH[id] || PYTHON_RICH2[id] || PYTHON_RICH3[id]
       || AUTO_RICH[id] || PROTO_RICH[id] || DIAG_RICH[id] || TOOLS_RICH[id]
       || STANDARDS_RICH[id] || TESTING_RICH[id] || GIT_RICH[id] || DEVOPS_RICH[id]
       || METOD_RICH[id] || ISTQB_RICH[id] || INTERVIEW_RICH[id]
-      ? (WAYVE_RICH[id] || PYTHON_RICH[id] || PYTHON_RICH2[id] || PYTHON_RICH3[id]
+      ? (WAYVE_RICH[id] || CODING_RICH[id] || PYTHON_RICH[id] || PYTHON_RICH2[id] || PYTHON_RICH3[id]
          || AUTO_RICH[id] || PROTO_RICH[id] || DIAG_RICH[id] || TOOLS_RICH[id]
          || STANDARDS_RICH[id] || TESTING_RICH[id] || GIT_RICH[id] || DEVOPS_RICH[id]
          || METOD_RICH[id] || ISTQB_RICH[id] || INTERVIEW_RICH[id])
@@ -51,8 +51,8 @@ function go(id) {
   if (currentPage) document.getElementById('page-' + currentPage)?.classList.remove('visible');
   document.getElementById('page-' + id)?.classList.add('visible');
   currentPage = id;
-  document.querySelectorAll('.s-link').forEach(l => l.classList.remove('active'));
-  document.querySelectorAll('.s-link').forEach(l => {
+  document.querySelectorAll('.s-link, .module-link .module-header').forEach(l => l.classList.remove('active'));
+  document.querySelectorAll('.s-link, .module-link .module-header').forEach(l => {
     if ((l.getAttribute('onclick')||'').includes(`'${id}'`)) l.classList.add('active');
   });
   document.getElementById('content').scrollTo({ top: 0, behavior: 'smooth' });
@@ -159,12 +159,63 @@ function autoOpenWayve() {
 }
 
 // ══════════════════════════════════════════════════════════════════
+//  MEJORA VISUAL — columnas "Ejemplo" / "Ejemplo → Resultado" en kv-table
+// ══════════════════════════════════════════════════════════════════
+function enhanceExampleColumns() {
+  const esc = s => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  document.querySelectorAll('.kv-table').forEach(table => {
+    let idx = -1;
+    table.querySelectorAll('th').forEach((th, i) => {
+      if (idx === -1 && th.textContent.trim().startsWith('Ejemplo')) idx = i;
+    });
+    if (idx === -1) return;
+    table.querySelectorAll('tr').forEach(row => {
+      if (row.querySelector('th')) return;
+      const cell = row.children[idx];
+      if (!cell || cell.querySelector('code')) return;
+      const raw = cell.textContent.trim();
+      if (!raw) return;
+      // Solo tratar " | " como separador de varios ejemplos si hay más de una
+      // flecha " → " en total — si no, " | " es sintaxis real de Python (ej. unión de sets)
+      const arrowCount = (raw.match(/ → /g) || []).length;
+      const groups = arrowCount > 1 ? raw.split(' | ') : [raw];
+      const items = groups.map(g => g.trim()).filter(Boolean).map(g => {
+        const arrowIdx = g.indexOf(' → ');
+        if (arrowIdx === -1) return `<div class="ex-item"><code>${esc(g)}</code></div>`;
+        const expr = g.slice(0, arrowIdx);
+        const result = g.slice(arrowIdx + 3);
+        return `<div class="ex-item"><code>${esc(expr)}</code><span class="ex-arrow">→</span><code class="ex-out">${esc(result)}</code></div>`;
+      }).join('');
+      cell.innerHTML = `<div class="ex-cell">${items}</div>`;
+    });
+  });
+}
+
+// ══════════════════════════════════════════════════════════════════
+//  TEMA CLARO / OSCURO
+// ══════════════════════════════════════════════════════════════════
+function updateThemeIcon(theme) {
+  const btn = document.getElementById('theme-toggle');
+  if (btn) btn.textContent = theme === 'dark' ? '☀️' : '🌙';
+}
+
+function toggleTheme() {
+  const html = document.documentElement;
+  const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+  html.setAttribute('data-theme', next);
+  localStorage.setItem('theme', next);
+  updateThemeIcon(next);
+}
+
+// ══════════════════════════════════════════════════════════════════
 //  INIT
 // ══════════════════════════════════════════════════════════════════
 document.getElementById('ws-topics').textContent = TOTAL;
 buildPages();
+enhanceExampleColumns();
 refreshSidebar();
 refreshProgress();
+updateThemeIcon(document.documentElement.getAttribute('data-theme'));
 // Auto-navigate to study plan on first load (reset key so it opens again)
 if (!localStorage.getItem('wayve-visited-v2')) {
   localStorage.setItem('wayve-visited-v2', '1');

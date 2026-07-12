@@ -57,7 +57,6 @@ const T = {
 
   // PYTHON FUNDAMENTOS
   'py-for':           { title: 'For / While / If-Else', icon: '🔁', mod: 'pyfund', tags: ['range', 'enumerate', 'zip', 'break'], hint: 'range(), enumerate(), zip(). break/continue/else en loops. Diferencia for-else.' },
-  'py-comprehensions': { title: 'List & Dict Comprehensions', icon: '⚡', mod: 'pyfund', tags: ['[x for x in]', 'Nested', 'Conditional'], hint: '[x**2 for x in range(10) if x%2==0]. Dict: {k:v for k,v in d.items()}. Cuando usarlas vs loop normal.' },
   'py-listas':        { title: 'Listas', icon: '📋', mod: 'pyfund', tags: ['append', 'extend', 'pop', 'sort', 'slice'], hint: 'Métodos: append, extend, insert, remove, pop, sort, reverse. Slicing [inicio:fin:paso]. Lista de listas.' },
   'py-tuplas':        { title: 'Tuplas', icon: '📦', mod: 'pyfund', tags: ['Inmutable', 'Namedtuple', 'Unpacking'], hint: 'Inmutables. Unpacking: a,b,c = (1,2,3). Named tuple. Uso como clave de diccionario. Ventaja vs lista.' },
   'py-dicts':         { title: 'Diccionarios', icon: '📖', mod: 'pyfund', tags: ['get', 'items', 'defaultdict', 'Counter'], hint: 'dict.get(k, default). items(), keys(), values(). defaultdict, OrderedDict, Counter de collections.' },
@@ -70,7 +69,7 @@ const T = {
   'py-archivos':      { title: 'Archivos de Texto', icon: '📄', mod: 'pyfund', tags: ['open', 'with', 'read', 'write', 'json', 'csv'], hint: 'open() modos: r, w, a, rb. with context manager. json.load/dump. csv.reader/writer. pathlib.Path.' },
   'py-copy':          { title: 'Copy — Shallow vs Deep', icon: '📋', mod: 'pyfund', tags: ['copy.copy', 'copy.deepcopy', 'Referencia'], hint: 'Shallow copy: copia la estructura pero comparte referencias internas. Deep copy: copia todo. copy.deepcopy().' },
   'py-tipado':        { title: 'Type Hints', icon: '🏷️', mod: 'pyfund', tags: ['typing', 'Optional', 'List', 'Dict', 'mypy'], hint: 'PEP 484. def f(x: int) -> str:. Optional[int], List[str], Dict[str,int], Union. Validación con mypy.' },
-  'py-cheatsheet':    { title: 'Cheat Sheet — Todos los métodos', icon: '📄', mod: 'pyfund', tags: ['Strings', 'Listas', 'Dicts', 'Sets', 'Built-ins', 'Operadores', 'itertools', 'Collections'], hint: 'Referencia rápida de todos los métodos, operaciones y funciones built-in.' },
+  'py-cheatsheet':    { title: 'Cheat Sheet — Todos los métodos', icon: '📄', mod: 'pycheat', tags: ['Strings', 'Listas', 'Dicts', 'Sets', 'Built-ins', 'Operadores', 'itertools', 'Collections'], hint: 'Referencia rápida de todos los métodos, operaciones y funciones built-in.' },
 
   // POO
   'poo-clase':        { title: 'Clases y Objetos', icon: '🏛️', mod: 'poo', tags: ['__init__', 'self', 'Instancia', 'Atributos'], hint: '__init__, __str__, __repr__. Atributos de clase vs instancia. Métodos de clase (@classmethod) y estáticos (@staticmethod).' },
@@ -241,7 +240,7 @@ const T = {
   },
   'wayve-algoritmos': {
     title: 'Algoritmos clave para Wayve',
-    icon: '🔢', mod: 'wayve',
+    icon: '🔢', mod: 'coding',
     tags: ['Sorting', 'Search', 'Graph', 'Sliding Window', 'Hash Map'],
     hint: 'Consejo dado: "algoritmos". Para este rol: procesar streams de datos (sliding window), buscar patrones en logs (string matching), analizar grafos de dependencias (BFS/DFS).'
   },
@@ -259,13 +258,13 @@ const T = {
   },
   'wayve-algo-approach': {
     title: 'Cómo resolver cualquier coding challenge',
-    icon: '📐', mod: 'wayve',
+    icon: '📐', mod: 'coding',
     tags: ['Approach', 'Big O', 'Python tools', 'Pattern recognition', 'Edge cases'],
     hint: 'El framework de 6 pasos para cualquier ejercicio, cómo identificar el patrón correcto, Big O de memoria, Python tools esenciales y edge cases que siempre debes mencionar.'
   },
   'wayve-algo-advanced': {
     title: 'Patrones avanzados — Intervals, DP, Topological Sort',
-    icon: '🔥', mod: 'wayve',
+    icon: '🔥', mod: 'coding',
     tags: ['Merge Intervals', 'Kadane', 'Dynamic Programming', 'Topological Sort', 'Sweep Line'],
     hint: 'Los 3 patrones que no están en el set base pero que puede que pregunten en nivel senior: merge/insert intervals, Kadane maximum subarray, y topological sort para dependencias.'
   },
@@ -303,19 +302,19 @@ const T = {
   },
   'wayve-python-challenge': {
     title: 'Coding Challenge — Lo que preguntarán',
-    icon: '💻', mod: 'wayve',
+    icon: '💻', mod: 'coding',
     tags: ['Sliding Window', 'Log parsing', 'Anomaly detection', 'MCAP validation'],
     hint: 'Los challenges típicos para este rol: procesar streams de eventos con timestamps, detectar gaps en sensor data, parsear logs de CI, encontrar top-N errores.'
   },
   'wayve-challenges-2': {
     title: 'Coding Challenges — Parte 2 (6 ejercicios)',
-    icon: '🔥', mod: 'wayve',
+    icon: '🔥', mod: 'coding',
     tags: ['Intervals', 'HashMap', 'Priority Queue', 'Circular Buffer', 'Bisect', 'Merge'],
     hint: 'Merge intervals de sesiones, deduplicar eventos, top-K con heap, circular buffer para streams, binary search en timestamps, sync multi-sensor.'
   },
   'wayve-challenges-3': {
     title: 'Coding Challenges — Parte 3 (DP + Grafos)',
-    icon: '🧩', mod: 'wayve',
+    icon: '🧩', mod: 'coding',
     tags: ['DP', 'Graph', 'Topological sort', 'Longest valid sequence', 'CI dependency'],
     hint: 'DP para longest healthy recording, topological sort para orden de tests en CI, DFS para detectar ciclos en dependencias, matrix traversal.'
   },
@@ -376,4 +375,151 @@ function switchTab(btn, panelId, groupClass) {
   container.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
   btn.classList.add('active');
   document.getElementById(panelId)?.classList.add('active');
+}
+
+
+// ══════════════════════════════════════════════════════════════════
+//  TABLAS DE MÉTODOS COMPARTIDAS (fuente única: usadas en Cheat Sheet
+//  y en las pestañas "Métodos esenciales" de Fundamentos)
+// ══════════════════════════════════════════════════════════════════
+const METHOD_TABLES = {
+  STR: { header: ["Método","¿Qué hace?","Ejemplo → Resultado","Nota","🚫 No usar cuando"], rows: [
+    ["upper()","Todo mayúsculas","\"hello\".upper() → \"HELLO\"","No modifica la original","bytes, int, float"],
+    ["lower()","Todo minúsculas","\"HELLO\".lower() → \"hello\"","","bytes, int, float"],
+    ["title()","Primera letra de cada palabra en mayúscula","\"hola mundo\".title() → \"Hola Mundo\"","","Apostrofes: \"don't\" → \"Don'T\" (usar regex)"],
+    ["capitalize()","Solo primera letra del string","\"hola MUNDO\".capitalize() → \"Hola mundo\"","Baja el resto","bytes; no maneja palabras individuales"],
+    ["swapcase()","Invierte mayúsculas/minúsculas","\"hOLa\".swapcase() → \"HolA\"","","bytes"],
+    ["casefold()","Minúsculas agresivo (para comparación)","\"Straße\".casefold() → \"strasse\"","Mejor que lower() para unicode","bytes; si solo necesitas lower()"],
+    ["strip(chars)","Elimina chars al inicio y al final","\"  hi  \".strip() → \"hi\" | \"xxhixx\".strip(\"x\") → \"hi\"","Default: whitespace","Modificar contenido interior del string"],
+    ["lstrip(chars)","Solo al inicio (left)","\"  hi  \".lstrip() → \"hi  \"","","Eliminar del final → usar rstrip()"],
+    ["rstrip(chars)","Solo al final (right)","\"log.txt\".rstrip(\".txt\") → \"log\"","chars es un SET de chars, no secuencia","Eliminar del inicio → usar lstrip(); \"rstrip('.txt')\" elimina cualquier combinación de '.','t','x'"],
+    ["split(sep, maxsplit)","Divide en lista por sep","\"a,b,c\".split(\",\") → [\"a\",\"b\",\"c\"] | \"a  b\".split() → [\"a\",\"b\"]","Sin arg: divide por whitespace y elimina vacíos","sep=\"\" → ValueError; patrones regex → usar re.split()"],
+    ["rsplit(sep, maxsplit)","Divide desde la derecha","\"a/b/c\".rsplit(\"/\",1) → [\"a/b\",\"c\"]","","sep=\"\" → ValueError"],
+    ["splitlines()","Divide por saltos de línea","\"a\\nb\\nc\".splitlines() → [\"a\",\"b\",\"c\"]","Reconoce \\r\\n, \\r, \\n, \\v, \\f","Separadores personalizados → usar split()"],
+    ["join(iterable)","Une lista en string con separador","\",\".join([\"a\",\"b\",\"c\"]) → \"a,b,c\" | \" \".join([\"hola\",\"mundo\"]) → \"hola mundo\"","El string ES el separador","Iterable con no-strings → TypeError; bytes → usar b\"\".join()"],
+    ["replace(old, new, count)","Reemplaza ocurrencias","\"aaa\".replace(\"a\",\"b\",2) → \"bba\" | \"hi hi\".replace(\"hi\",\"hey\") → \"hey hey\"","count=máx reemplazos","Patrones complejos/regex → usar re.sub()"],
+    ["find(sub, start, end)","Índice primera ocurrencia (-1 si no)","\"hello world\".find(\"world\") → 6 | \"hello\".find(\"x\") → -1","No lanza error","Necesitas TODAS las posiciones → usar re.finditer()"],
+    ["rfind(sub)","Índice ÚLTIMA ocurrencia","\"abab\".rfind(\"ab\") → 2 | \"a.b.c\".rfind(\".\") → 3","","Cuando la primera ocurrencia basta → usar find()"],
+    ["index(sub)","Como find pero lanza ValueError","\"hello\".index(\"ll\") → 2 | \"hello\".index(\"x\") → ValueError","","Sub puede NO existir → usar find() que retorna -1"],
+    ["rindex(sub)","Última ocurrencia, lanza ValueError","\"abab\".rindex(\"ab\") → 2","","Sub puede NO existir → usar rfind()"],
+    ["count(sub, start, end)","Cuenta ocurrencias sin solaparse","\"aaa\".count(\"aa\") → 1 | \"banana\".count(\"an\") → 2","NO solapa: \"aaa\".count(\"aa\")=1, no 2","Patrones solapados → usar re.findall() con lookahead"],
+    ["startswith(prefix, start, end)","¿Empieza con prefix?","\"ERROR: x\".startswith(\"ERROR\") → True | \"log\".startswith((\"ERR\",\"WARN\",\"INFO\")) → False","Acepta tupla de prefijos","bytes sin decodificar → usar b\"\".startswith(b\"...\")"],
+    ["endswith(suffix)","¿Termina con suffix?","\"file.log\".endswith((\".log\",\".txt\")) → True","Acepta tupla","bytes sin decodificar → usar b\"\".endswith(b\"...\")"],
+    ["center(width, fillchar)","Centra en campo de width","\"hi\".center(10,\"*\") → \"****hi****\"","","width &lt; len(s) → sin efecto, retorna original (no error)"],
+    ["ljust(width, fillchar)","Alinea izquierda","\"hi\".ljust(6,\".\") → \"hi....\"","","width &lt; len(s) → sin efecto (no error)"],
+    ["rjust(width, fillchar)","Alinea derecha","\"42\".rjust(6,\"0\") → \"000042\"","","width &lt; len(s) → sin efecto; para números → usar zfill() o f\"{x:06d}\""],
+    ["zfill(width)","Rellena con ceros a la izquierda","\"42\".zfill(5) → \"00042\" | \"-7\".zfill(4) → \"-007\"","Respeta signo: \"-42\".zfill(5) → \"-0042\"","float/int directo → usar f\"{x:05d}\" en su lugar"],
+    ["partition(sep)","Divide en 3: (antes, sep, después)","\"user:pass\".partition(\":\") → (\"user\",\":\",  \"pass\")","Solo primera ocurrencia","sep no en string → (original, '', ''); múltiples ocurrencias → usar split()"],
+    ["rpartition(sep)","Última ocurrencia","\"a/b/c\".rpartition(\"/\") → (\"a/b\",\"/\",\"c\")","","sep no en string → ('', '', original)"],
+    ["encode(encoding)","String → bytes","\"hola\".encode(\"utf-8\") → b\"hola\" | \"€\".encode(\"latin-1\") → UnicodeEncodeError","","Char fuera del encoding → UnicodeEncodeError; encoding incorrecto → LookupError"],
+    ["format(**kwargs)","Formateo con {}","\"{name} tiene {age} años\".format(name=\"Ana\",age=25) → \"Ana tiene 25 años\"","Alternativa a f-strings","Clave/índice no existe → KeyError/IndexError"],
+    ["isalpha()","¿Solo letras?","\"abc\".isalpha() → True | \"abc1\".isalpha() → False","False si hay espacio o número","String vacío → False; dígitos/espacios → False"],
+    ["isdigit()","¿Solo dígitos?","\"123\".isdigit() → True | \"1.5\".isdigit() → False","\"1.2\" → False","Decimales/floats; string vacío → False; usar isnumeric() para fracciones unicode"],
+    ["isnumeric()","¿Carácter numérico? (más amplio)","\"½\".isnumeric() → True | \"123\".isnumeric() → True","Incluye fracciones unicode","String vacío → False; \"3.14\" → False (tiene punto)"],
+    ["isalnum()","¿Solo letras y dígitos?","\"abc123\".isalnum() → True | \"abc 1\".isalnum() → False","","String vacío → False; espacios/guiones → False"],
+    ["isspace()","¿Solo whitespace?","\"  \\t\\n\".isspace() → True | \" a \".isspace() → False","","String vacío → False"],
+    ["isupper() / islower()","¿Todo mayúsculas/minúsculas?","\"ABC\".isupper() → True | \"ABC1\".isupper() → True (números no cuentan)","","String sin letras → False; \"A1\".isupper()→True aunque tiene número"],
+    ["istitle()","¿Title case?","\"Hello World\".istitle() → True | \"Hello world\".istitle() → False","","\"Hello world\" → False; \"It's Ok\" → False (s' después de apostrofe se cuenta)"],
+    ["expandtabs(tabsize)","Reemplaza \\t por espacios","\"a\\tb\".expandtabs(4) → \"a   b\"","Default tabsize=8","Sin \\t en el string (no error, sin efecto útil)"],
+    ["maketrans() + translate()","Sustituye caracteres por tabla","tbl=str.maketrans(\"aeiou\",\"AEIOU\"); \"hola\".translate(tbl) → \"hOlA\"","Muy eficiente para múltiples reemplazos","Patrones de más de 1 char → usar replace() o re.sub()"],
+  ] },
+  LST: { header: ["Método / Op","¿Qué hace?","Ejemplo → Resultado","Complejidad","🚫 No usar cuando"], rows: [
+    ["append(x)","Agrega x al final","[1,2].append(3) → [1,2,3]","O(1) amortizado","Tuples, strings, frozenset (inmutables); sets → usar .add()"],
+    ["extend(iterable)","Agrega todos los elementos","[1].extend([2,3]) → [1,2,3] | lst.extend(\"ab\") → [...,\"a\",\"b\"]","O(k)","Tuples/strings (inmutables); agregar UN solo elemento → usar append()"],
+    ["insert(i, x)","Inserta x en posición i","[1,3].insert(1,2) → [1,2,3] | lst.insert(0,\"x\") → al principio","O(n)","Tuples; insertar al final → append() es O(1) y más rápido"],
+    ["remove(x)","Elimina primera ocurrencia de x","[1,2,2].remove(2) → [1,2]","O(n)","x no existe → ValueError; tuples; hacer \"if x in lst\" antes si dudas"],
+    ["pop(i=-1)","Elimina y retorna elemento en i","[1,2,3].pop() → 3, lst=[1,2] | [1,2,3].pop(0) → 1","O(1) final, O(n) otro índice","Lista vacía → IndexError; índice fuera de rango → IndexError"],
+    ["del lst[i]","Elimina elemento en i (no retorna)","del lst[0] | del lst[-1]","O(n)","i fuera de rango → IndexError; cuando necesitas el valor → usar pop()"],
+    ["del lst[i:j]","Elimina rango","del lst[1:3] | del lst[:]  → vacía la lista","O(n)","Tuples; cuando necesitas los elementos eliminados"],
+    ["clear()","Vacía la lista","[1,2,3].clear() → []","O(n)","Tuples/strings (inmutables); si necesitas guardar copia primero"],
+    ["index(x, start, end)","Índice de primera ocurrencia de x","[10,20,30].index(20) → 1 | [1,2,1].index(1,1) → 2","O(n)","x no existe → ValueError; hacer \"if x in lst\" antes o usar try/except"],
+    ["count(x)","Número de ocurrencias de x","[1,2,2,3].count(2) → 2","O(n)","Contar muchos elementos distintos → usar Counter(); O(n) cada llamada"],
+    ["sort(key, reverse)","Ordena in-place (modifica la lista)","[3,1,2].sort() | words.sort(key=str.lower) | nums.sort(reverse=True)","O(n log n)","Tuples/strings (inmutables); mezcla de tipos no comparables → TypeError"],
+    ["sorted(lst, key, reverse)","Nueva lista ordenada (no modifica)","sorted([3,1,2]) → [1,2,3] | sorted(lst, key=lambda x: x[1])","O(n log n)","Mezcla de tipos no comparables → TypeError; modifica el original → usar .sort()"],
+    ["reverse()","Invierte in-place","[1,2,3].reverse() → [3,2,1]","O(n)","Tuples/strings; si necesitas el original intacto → usar [::-1] o reversed()"],
+    ["reversed(lst)","Iterator invertido (no modifica)","list(reversed([1,2,3])) → [3,2,1]","O(1) crear, O(n) consumir","Objetos sin __len__ ni __reversed__ → TypeError"],
+    ["copy()","Shallow copy","b = a.copy() | b = list(a)","O(n)","Listas ANIDADAS → elementos internos SE COMPARTEN; usar copy.deepcopy()"],
+    ["lst[:]","Shallow copy con slice","b = a[:]","O(n)","Igual que copy(): shallow; listas anidadas comparten referencias internas"],
+    ["lst + lst2","Concatena (nueva lista)","[1,2]+[3,4] → [1,2,3,4]","O(n+m)","Concatenar MUCHAS listas en loop → O(n²); usar extend() o itertools.chain()"],
+    ["lst * n","Repite n veces","[0]*3 → [0,0,0] | [\"a\"]*2 → [\"a\",\"a\"]","O(n*k)","n negativo → lista vacía (no error); objetos MUTABLES → todas las copias comparten la misma referencia"],
+    ["x in lst","¿Está x en la lista?","2 in [1,2,3] → True | \"z\" in [\"a\",\"b\"] → False","O(n)","Búsquedas frecuentes en lista grande → convertir a set para O(1)"],
+    ["len(lst)","Número de elementos","len([1,2,3]) → 3","O(1)","[Siempre seguro]"],
+    ["min(lst) / max(lst)","Mínimo / máximo","min([3,1,2]) → 1 | max(lst, key=len) → el más largo","O(n)","Lista vacía → ValueError; tipos no comparables → TypeError"],
+    ["sum(lst)","Suma de elementos","sum([1,2,3]) → 6 | sum([1,2,3], 10) → 16","O(n)","Lista de strings → TypeError; usar \"\".join() para strings"],
+    ["any(lst) / all(lst)","¿Alguno/todos truthy?","any([0,1,0]) → True | all([1,2,3]) → True | any([]) → False | all([]) → True","O(n), cortocircuito","[Siempre seguro; ojo: all([]) → True (vacío es True por convención)]"],
+    ["enumerate(lst, start)","Pares (índice, valor)","for i,v in enumerate([\"a\",\"b\"],1): → (1,\"a\"),(2,\"b\")","O(1) crear","[Siempre seguro para cualquier iterable]"],
+    ["zip(lst, lst2)","Pares de dos listas","list(zip([1,2],[\"a\",\"b\"])) → [(1,\"a\"),(2,\"b\")]","Se detiene en la más corta","Listas de DIFERENTE longitud → datos perdidos; usar itertools.zip_longest()"],
+    ["lst[i] = x","Asigna valor en posición i","lst[0] = 99 | lst[-1] = 0","O(1)","Tuples/strings (inmutables); i fuera de rango → IndexError"],
+    ["lst[i:j] = iterable","Reemplaza slice","lst[1:3] = [10,20,30] | lst[1:1] = [99] → inserta en posición 1","O(n)","Tuples; puede CAMBIAR la longitud de la lista (cuidado al iterar)"],
+  ] },
+  TUP: { header: ["Operación","¿Qué hace?","Ejemplo → Resultado","Nota"], rows: [
+    ["t[i]","Acceso por índice","(10,20,30)[1] → 20","O(1)"],
+    ["t[i:j]","Slice (devuelve nueva tupla)","(1,2,3,4)[1:3] → (2,3)","O(k)"],
+    ["t[-1]","Último elemento","(1,2,3)[-1] → 3",""],
+    ["count(x)","Ocurrencias de x","(1,2,2,3).count(2) → 2","O(n)"],
+    ["index(x, start, end)","Índice primera ocurrencia","(10,20,30).index(20) → 1","O(n), ValueError si no existe"],
+    ["a, b, c = t","Unpacking","a,b,c = (1,2,3)","Cantidad debe coincidir"],
+    ["a, *rest = t","Unpacking con *","a,*rest = (1,2,3,4) → a=1,rest=[2,3,4]",""],
+    ["t1 + t2","Concatena (nueva tupla)","(1,2)+(3,4) → (1,2,3,4)","O(n+m)"],
+    ["t * n","Repite","(1,2)*3 → (1,2,1,2,1,2)","O(n*k)"],
+    ["x in t","Membership","2 in (1,2,3) → True","O(n)"],
+    ["len(t)","Longitud","len((1,2,3)) → 3","O(1)"],
+    ["hash(t)","Hash (si todos los elem son hashables)","hash((1,2,3)) → int","Por eso pueden ser keys de dict"],
+    ["min(t) / max(t)","Mínimo / máximo","min((3,1,2)) → 1","O(n)"],
+    ["sorted(t)","Lista ordenada","sorted((3,1,2)) → [1,2,3]","Retorna lista, no tupla"],
+    ["tuple(lst)","Convierte lista a tupla","tuple([1,2,3]) → (1,2,3)","O(n)"],
+    ["from collections import namedtuple","Tupla con nombres","Point = namedtuple('Point',['x','y']); p = Point(1,2); p.x","Legibilidad"],
+  ] },
+  DCT: { header: ["Método / Op","¿Qué hace?","Ejemplo → Resultado","Nota"], rows: [
+    ["d[key]","Obtener valor por clave","d[\"a\"] → 1","KeyError si no existe"],
+    ["d.get(key, default)","Obtener con default seguro","d.get(\"z\", 0) → 0","No lanza KeyError"],
+    ["d[key] = value","Insertar / actualizar","d[\"c\"] = 3","O(1) amortizado"],
+    ["d.setdefault(key, default)","Inserta default si key no existe; retorna valor","d.setdefault(\"x\", []).append(1)","Útil para inicializar"],
+    ["d.update(d2)","Merge in-place (d2 gana en conflicto)","d.update({\"a\":99})","También acepta kwargs"],
+    ["d | d2","Merge (Python 3.9+, nueva dict)","{\"a\":1} | {\"b\":2} → {\"a\":1,\"b\":2}","d2 gana en conflicto"],
+    ["d |= d2","Merge in-place","d |= {\"new\": 99}",""],
+    ["d.pop(key, default)","Elimina y retorna valor","d.pop(\"a\") → 1","KeyError sin default si no existe"],
+    ["d.popitem()","Elimina y retorna último (key,val)","d.popitem() → (\"c\", 3)","LIFO desde Python 3.7"],
+    ["del d[key]","Elimina clave","del d[\"a\"]","KeyError si no existe"],
+    ["d.clear()","Vacía el diccionario","d.clear() → {}",""],
+    ["d.keys()","Vista de claves","d.keys() → dict_keys(['a','b'])","Vista dinámica, no copia"],
+    ["d.values()","Vista de valores","d.values() → dict_values([1,2])","Vista dinámica"],
+    ["d.items()","Vista de pares (key,val)","for k,v in d.items():","Usar siempre en for"],
+    ["d.copy()","Shallow copy","d2 = d.copy()","O(n)"],
+    ["key in d","¿Existe la clave?","\"a\" in d → True","O(1) — busca en keys"],
+    ["key not in d","¿No existe?","\"z\" not in d → True",""],
+    ["len(d)","Número de pares","len({\"a\":1,\"b\":2}) → 2","O(1)"],
+    ["dict.fromkeys(keys, val)","Nuevo dict con claves dadas y val como default","dict.fromkeys([\"a\",\"b\"], 0) → {\"a\":0,\"b\":0}","Cuidado: mismo objeto para todos"],
+  ] },
+  SET: { header: ["Método / Op","¿Qué hace?","Ejemplo","Alias"], rows: [
+    ["add(x)","Agrega x","s.add(5)",""],
+    ["update(iterable)","Agrega múltiples","s.update([4,5,6])","s |= {4,5}"],
+    ["remove(x)","Elimina x — KeyError si no existe","s.remove(3)",""],
+    ["discard(x)","Elimina x — sin error si no existe","s.discard(99)","Más seguro que remove"],
+    ["pop()","Elimina y retorna un elemento arbitrario","s.pop()",""],
+    ["clear()","Vacía el set","s.clear()",""],
+    ["s | s2","Unión: todos los elementos de ambos","{1,2} | {2,3} → {1,2,3}","s.union(s2)"],
+    ["s & s2","Intersección: solo los comunes","{1,2} & {2,3} → {2}","s.intersection(s2)"],
+    ["s - s2","Diferencia: en s pero no en s2","{1,2,3} - {2,3} → {1}","s.difference(s2)"],
+    ["s ^ s2","Diferencia simétrica: en uno pero no en ambos","{1,2} ^ {2,3} → {1,3}","s.symmetric_difference(s2)"],
+    ["s <= s2","¿s es subconjunto de s2?","{1,2} <= {1,2,3} → True","s.issubset(s2)"],
+    ["s >= s2","¿s es superconjunto?","{1,2,3} >= {1,2} → True","s.issuperset(s2)"],
+    ["s < s2","Subconjunto propio (s != s2)","{1} < {1,2} → True",""],
+    ["s.isdisjoint(s2)","¿No tienen elementos comunes?","{1,2}.isdisjoint({3,4}) → True",""],
+    ["s |= s2","Unión in-place","s |= {5,6}","s.update(s2)"],
+    ["s &= s2","Intersección in-place","s &= {1,2}","s.intersection_update(s2)"],
+    ["s -= s2","Diferencia in-place","s -= {3}","s.difference_update(s2)"],
+    ["x in s","Membership O(1)","5 in {1,2,3,5} → True","Mucho más rápido que lista"],
+    ["len(s)","Número de elementos","len({1,2,3}) → 3","O(1)"],
+    ["frozenset(s)","Versión inmutable y hashable","frozenset({1,2})","Puede ser key de dict"],
+  ] },
+};
+
+function renderMethodTable(key) {
+  const t = METHOD_TABLES[key];
+  if (!t) return '';
+  let html = '<table class="kv-table">\n<tr>' + t.header.map(h => '<th>' + h + '</th>').join('') + '</tr>\n';
+  for (const row of t.rows) html += '<tr>' + row.map(c => '<td>' + c + '</td>').join('') + '</tr>\n';
+  html += '</table>';
+  return html;
 }

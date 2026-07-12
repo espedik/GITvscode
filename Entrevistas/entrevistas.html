@@ -6,6 +6,13 @@
 <title>Entrevistas — Automotive Software Engineering</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🚗%3C/text%3E%3C/svg%3E">
 <link rel="stylesheet" href="styles.css">
+<script>
+(function() {
+  var saved = localStorage.getItem('theme');
+  var theme = saved || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+  document.documentElement.setAttribute('data-theme', theme);
+})();
+</script>
 </head>
 <body>
 
@@ -15,13 +22,13 @@
     <h1>Interview Prep <small>Automotive SW Engineering</small></h1>
   </div>
   <input type="text" id="search" placeholder="Buscar tema..." autocomplete="off">
-  <button class="btn-cheatsheet" onclick="go('py-cheatsheet')">📄 Cheat Sheet</button>
   <div class="header-right">
     <div class="progress-global">
       <span id="progress-text">0 / 0</span>
       <div class="progress-bar-wrap"><div class="progress-bar-fill" id="progress-fill" style="width:0%"></div></div>
       <span id="progress-pct">0%</span>
     </div>
+    <button class="btn-theme" id="theme-toggle" onclick="toggleTheme()" title="Cambiar tema" aria-label="Cambiar tema claro/oscuro">🌙</button>
     <button class="btn-reset" onclick="resetProgress()">↺ Reset</button>
   </div>
 </header>
@@ -150,19 +157,18 @@
   <div class="module" data-mod="pyfund">
     <div class="module-header" onclick="toggleMod(this)">
       <span class="m-icon">🐍</span><span class="m-label">Python — Fundamentos</span>
-      <span class="m-count" id="cnt-pyfund">0/15</span><span class="m-arrow">▶</span>
+      <span class="m-count" id="cnt-pyfund">0/13</span><span class="m-arrow">▶</span>
     </div>
     <div class="module-body">
       <div class="sub-group-label">Estructuras de Control</div>
       <div class="s-link" onclick="go('py-for')"><span class="dot"></span>For / While / If-Else</div>
-      <div class="s-link" onclick="go('py-comprehensions')"><span class="dot"></span>List & Dict Comprehensions</div>
-      <div class="sub-group-label">Estructuras de Datos</div>
+      <div class="sub-group-label">Tipos de Datos y Colecciones</div>
       <div class="s-link" onclick="go('py-listas')"><span class="dot"></span>Listas</div>
       <div class="s-link" onclick="go('py-tuplas')"><span class="dot"></span>Tuplas</div>
       <div class="s-link" onclick="go('py-dicts')"><span class="dot"></span>Diccionarios</div>
+      <div class="s-link" onclick="go('py-strings')"><span class="dot"></span>Strings</div>
       <div class="s-link" onclick="go('py-sets')"><span class="dot"></span>Sets</div>
       <div class="sub-group-label">Tipos y Operaciones</div>
-      <div class="s-link" onclick="go('py-strings')"><span class="dot"></span>Strings</div>
       <div class="s-link" onclick="go('py-funciones')"><span class="dot"></span>Funciones & Lambdas</div>
       <div class="s-link" onclick="go('py-decoradores')"><span class="dot"></span>Decoradores</div>
       <div class="s-link" onclick="go('py-generadores')"><span class="dot"></span>Generadores & Iteradores</div>
@@ -171,8 +177,6 @@
       <div class="s-link" onclick="go('py-archivos')"><span class="dot"></span>Archivos de Texto</div>
       <div class="s-link" onclick="go('py-copy')"><span class="dot"></span>Copy — Shallow vs Deep</div>
       <div class="s-link" onclick="go('py-tipado')"><span class="dot"></span>Type Hints</div>
-      <div class="sub-group-label">📄 Referencia rápida</div>
-      <div class="s-link" onclick="go('py-cheatsheet')"><span class="dot"></span>Cheat Sheet — Todos los métodos</div>
     </div>
   </div>
 
@@ -223,6 +227,13 @@
       <div class="s-link" onclick="go('ut-faker')"><span class="dot"></span>Faker — Datos aleatorios</div>
       <div class="s-link" onclick="go('gh-actions-py')"><span class="dot"></span>GitHub Actions + pytest</div>
       <div class="s-link" onclick="go('ia-test')"><span class="dot"></span>IA Test — Generación con IA</div>
+    </div>
+  </div>
+
+  <!-- ═══ PYTHON CHEAT SHEET (link directo, sin subitems) ═══ -->
+  <div class="module module-link">
+    <div class="module-header" onclick="go('py-cheatsheet')">
+      <span class="m-icon">📄</span><span class="m-label">Cheat Sheet — Todos los métodos</span>
     </div>
   </div>
 
@@ -363,6 +374,29 @@
     </div>
   </div>
 
+  <!-- ═══ 14. CODING CHALLENGES ═══ -->
+  <div class="module" data-mod="coding">
+    <div class="module-header" onclick="toggleMod(this)">
+      <span class="m-icon">💻</span><span class="m-label">Coding Challenges</span>
+      <span class="m-count" id="cnt-coding">0/6</span><span class="m-arrow">▶</span>
+    </div>
+    <div class="module-body">
+      <div class="sub-group-label">📐 Paso 1 — El approach</div>
+      <div class="s-link" onclick="go('wayve-algo-approach')"><span class="dot"></span>Cómo resolver cualquier problema</div>
+
+      <div class="sub-group-label">📚 Paso 2 — Patrones base (9 algoritmos)</div>
+      <div class="s-link" onclick="go('wayve-algoritmos')"><span class="dot"></span>SW · 2P · HashMap · BS · BFS · DFS · Heap · Stack · Regex</div>
+
+      <div class="sub-group-label">🔥 Paso 2b — Patrones avanzados</div>
+      <div class="s-link" onclick="go('wayve-algo-advanced')"><span class="dot"></span>Intervals · DP / Kadane · Topological Sort</div>
+
+      <div class="sub-group-label">💪 Paso 3 — Practica (con soluciones)</div>
+      <div class="s-link" onclick="go('wayve-python-challenge')"><span class="dot"></span>Challenges 1 — Sensor streams</div>
+      <div class="s-link" onclick="go('wayve-challenges-2')"><span class="dot"></span>Challenges 2 — Merge · Top-K · Buffer</div>
+      <div class="s-link" onclick="go('wayve-challenges-3')"><span class="dot"></span>Challenges 3 — DP · Topological · Grid</div>
+    </div>
+  </div>
+
   <!-- ══════════════════════════════════════════ -->
   <!-- ═══ WAYVE INTERVIEW — SECCIÓN ESPECIAL ═══ -->
   <!-- ══════════════════════════════════════════ -->
@@ -371,7 +405,7 @@
   <div class="module wayve-mod" data-mod="wayve">
     <div class="module-header open" onclick="toggleMod(this)">
       <span class="m-icon">🚀</span><span class="m-label">Wayve Interview Prep</span>
-      <span class="m-count" id="cnt-wayve">0/30</span><span class="m-arrow">▶</span>
+      <span class="m-count" id="cnt-wayve">0/23</span><span class="m-arrow">▶</span>
     </div>
     <div class="module-body open">
 
@@ -402,23 +436,6 @@
       <div class="s-link" onclick="go('wayve-triage')"><span class="dot"></span>Triage — HW vs SW vs Tooling</div>
       <div class="s-link" onclick="go('wayve-ci')"><span class="dot"></span>CI/CD — debugging & pipeline</div>
       <div class="s-link" onclick="go('wayve-pytest')"><span class="dot"></span>pytest para plataforma AV</div>
-
-      <!-- ── SECCIÓN 5: CODING ───────────────── -->
-      <div class="wayve-section-header">💻 Coding Challenges</div>
-
-      <div class="sub-group-label">📐 Paso 1 — El approach</div>
-      <div class="s-link" onclick="go('wayve-algo-approach')"><span class="dot"></span>Cómo resolver cualquier problema</div>
-
-      <div class="sub-group-label">📚 Paso 2 — Patrones base (9 algoritmos)</div>
-      <div class="s-link" onclick="go('wayve-algoritmos')"><span class="dot"></span>SW · 2P · HashMap · BS · BFS · DFS · Heap · Stack · Regex</div>
-
-      <div class="sub-group-label">🔥 Paso 2b — Patrones avanzados</div>
-      <div class="s-link" onclick="go('wayve-algo-advanced')"><span class="dot"></span>Intervals · DP / Kadane · Topological Sort</div>
-
-      <div class="sub-group-label">💪 Paso 3 — Practica (con soluciones)</div>
-      <div class="s-link" onclick="go('wayve-python-challenge')"><span class="dot"></span>Challenges 1 — Sensor streams</div>
-      <div class="s-link" onclick="go('wayve-challenges-2')"><span class="dot"></span>Challenges 2 — Merge · Top-K · Buffer</div>
-      <div class="s-link" onclick="go('wayve-challenges-3')"><span class="dot"></span>Challenges 3 — DP · Topological · Grid</div>
 
       <!-- ── SECCIÓN 6: SYSTEM DESIGN ──────── -->
       <div class="wayve-section-header">🏗️ System Design</div>
@@ -460,6 +477,7 @@
 
 <script src="js/core.js"></script>
 <script src="js/data-wayve.js"></script>
+<script src="js/data-coding.js"></script>
 <script src="js/data-python.js"></script>
 <script src="js/data-auto.js"></script>
 <script src="js/data-proto.js"></script>

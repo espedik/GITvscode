@@ -9,6 +9,7 @@ App estática de una sola página (sin build, sin servidor — se abre con doble
 - `js/core.js` — objeto `T` (metadata de cada tema: title, icon, mod, tags, hint) + `TOTAL` + helpers `toggleQuiz`/`switchTab`. **Cargar primero.**
 - `js/data-*.js` — contenido enriquecido por módulo, cada uno un objeto `*_RICH` con HTML embebido como template strings. Deben cargar antes de `js/ui.js`:
   - `data-wayve.js` → `WAYVE_RICH` (plan de estudio específico Wayve)
+  - `data-coding.js` → `CODING_RICH` (Coding Challenges — vive como sección propia en "Preparación Entrevista", ya no depende de Wayve aunque el contenido se escribió originalmente para esa prep)
   - `data-python.js` → `PYTHON_RICH`, `PYTHON_RICH2`, `PYTHON_RICH3`
   - `data-auto.js` → `AUTO_RICH` (arquitectura automotriz)
   - `data-proto.js` → `PROTO_RICH` (CAN/LIN/ETH/etc.)

@@ -6,12 +6,16 @@ const PYTHON_RICH = {
 'py-for': `
 <div class="tab-group-pyfor">
   <div class="tab-bar">
-    <button class="tab-btn active" onclick="switchTab(this,'pf-1','pyfor')">for / while</button>
-    <button class="tab-btn" onclick="switchTab(this,'pf-2','pyfor')">if / elif / else</button>
-    <button class="tab-btn" onclick="switchTab(this,'pf-3','pyfor')">Trucos avanzados</button>
-    <button class="tab-btn" onclick="switchTab(this,'pf-4','pyfor')">Gotchas</button>
+    <button class="tab-btn active" onclick="switchTab(this,'pf-1','pyfor')">for</button>
+    <button class="tab-btn" onclick="switchTab(this,'pf-2','pyfor')">while</button>
+    <button class="tab-btn" onclick="switchTab(this,'pf-3','pyfor')">if / elif / else</button>
+    <button class="tab-btn" onclick="switchTab(this,'pf-4','pyfor')">Trucos avanzados</button>
+    <button class="tab-btn" onclick="switchTab(this,'pf-5','pyfor')">⚠️ Errores comunes</button>
+    <button class="tab-btn" onclick="switchTab(this,'pf-6','pyfor')">✅ Mejores Prácticas</button>
+    <button class="tab-btn" onclick="switchTab(this,'pf-7','pyfor')">Gotchas + Quiz</button>
   </div>
   <div id="pf-1" class="tab-panel active">
+<div class="concept-intro">El <strong>for</strong> recorre un iterable (lista, tupla, dict, string, range, generador...) elemento por elemento; internamente llama a <code>iter()</code> y luego a <code>next()</code> hasta agotarlo. Úsalo cuando el número de iteraciones está determinado por el tamaño de una colección — recorrer una lista, un diccionario, o un rango fijo. En entrevistas de software automotriz es común pedir procesar logs, telemetría o streams de CAN con él.</div>
 <div class="code-block"><div class="code-lang">Python — for: todas las variantes</div><pre>
 <span class="c-cm"># 1. Iterar sobre lista</span>
 <span class="c-kw">for</span> item <span class="c-kw">in</span> [<span class="c-nb">1</span>, <span class="c-nb">2</span>, <span class="c-nb">3</span>]:
@@ -45,6 +49,30 @@ const PYTHON_RICH = {
 <span class="c-cm"># 7. reversed() e iter() sobre cualquier iterable</span>
 <span class="c-kw">for</span> i <span class="c-kw">in</span> <span class="c-bi">reversed</span>(<span class="c-bi">range</span>(<span class="c-nb">5</span>)):   <span class="c-cm"># 4,3,2,1,0</span>
     <span class="c-bi">print</span>(i)</pre></div>
+<div class="code-block"><div class="code-lang">Python — Iterar diccionarios (claves, valores, ambos)</div><pre>
+telemetry = {<span class="c-st">'rpm'</span>: <span class="c-nb">3200</span>, <span class="c-st">'speed'</span>: <span class="c-nb">87</span>, <span class="c-st">'temp'</span>: <span class="c-nb">92</span>}
+
+<span class="c-cm"># Iterar solo claves (comportamiento por defecto de "for k in dict")</span>
+<span class="c-kw">for</span> key <span class="c-kw">in</span> telemetry:
+    <span class="c-bi">print</span>(key)
+
+<span class="c-cm"># Iterar solo valores</span>
+<span class="c-kw">for</span> value <span class="c-kw">in</span> telemetry.values():
+    <span class="c-bi">print</span>(value)
+
+<span class="c-cm"># Iterar clave + valor (la forma más usada en la práctica)</span>
+<span class="c-kw">for</span> key, value <span class="c-kw">in</span> telemetry.items():
+    <span class="c-bi">print</span>(<span class="c-st">f"{key}: {value}"</span>)
+
+<span class="c-cm"># TRAMPA: agregar/eliminar claves mientras iteras lanza RuntimeError</span>
+<span class="c-cm"># for k in telemetry: del telemetry[k]   # RuntimeError: dictionary changed size during iteration</span>
+<span class="c-cm"># Solución: iterar sobre una copia de las claves</span>
+<span class="c-kw">for</span> k <span class="c-kw">in</span> <span class="c-bi">list</span>(telemetry.keys()):
+    <span class="c-kw">if</span> telemetry[k] &lt; <span class="c-nb">0</span>:
+        <span class="c-kw">del</span> telemetry[k]</pre></div>
+  </div>
+  <div id="pf-2" class="tab-panel">
+<div class="concept-intro">El <strong>while</strong> repite mientras una condición sea verdadera — úsalo cuando no sabes de antemano cuántas iteraciones harán falta (por ejemplo, esperar una respuesta de un ECU o hacer polling de un sensor), a diferencia del <code>for</code> que recorre una cantidad de elementos ya conocida.</div>
 <div class="code-block"><div class="code-lang">Python — while y control de flujo</div><pre>
 <span class="c-cm"># while básico</span>
 i = <span class="c-nb">0</span>
@@ -64,9 +92,18 @@ i = <span class="c-nb">0</span>
 
 <span class="c-cm"># Walrus operator := (Python 3.8+) — asigna y evalúa en una línea</span>
 <span class="c-kw">while</span> chunk := f.read(<span class="c-nb">8192</span>):   <span class="c-cm"># lee hasta EOF</span>
-    process(chunk)</pre></div>
+    process(chunk)
+
+<span class="c-cm"># while con timeout — patrón típico de polling de un ECU/HIL rig</span>
+<span class="c-kw">import</span> time
+deadline = time.time() + <span class="c-nb">5.0</span>
+<span class="c-kw">while</span> <span class="c-kw">not</span> ecu.is_ready():
+    <span class="c-kw">if</span> time.time() &gt; deadline:
+        <span class="c-kw">raise</span> TimeoutError(<span class="c-st">"ECU no respondió a tiempo"</span>)
+    time.sleep(<span class="c-nb">0.1</span>)</pre></div>
   </div>
-  <div id="pf-2" class="tab-panel">
+  <div id="pf-3" class="tab-panel">
+<div class="concept-intro">Las estructuras condicionales deciden qué rama de código se ejecuta. Python no tiene <code>switch</code> tradicional (hasta 3.10, donde llega <code>match/case</code>); antes de eso, la alternativa Pythónica para "muchos casos" es un diccionario de funciones (dispatch table).</div>
 <div class="code-block"><div class="code-lang">Python — if / elif / else completo</div><pre>
 <span class="c-cm"># Básico</span>
 <span class="c-kw">if</span> x &gt; <span class="c-nb">0</span>:
@@ -97,9 +134,15 @@ handlers = {
     <span class="c-st">"FW_BUG"</span>:   handle_fw,
 }
 handler = handlers.get(error_type, handle_unknown)
-handler()</pre></div>
+handler()
+
+<span class="c-cm"># Truthiness — qué se evalúa como False en un if</span>
+<span class="c-cm"># False, None, 0, 0.0, "", [], {}, set(), range(0)  → todos "falsy"</span>
+<span class="c-kw">if</span> <span class="c-kw">not</span> errores:       <span class="c-cm"># mejor que "len(errores) == 0"</span>
+    <span class="c-bi">print</span>(<span class="c-st">"sin errores"</span>)</pre></div>
   </div>
-  <div id="pf-3" class="tab-panel">
+  <div id="pf-4" class="tab-panel">
+<div class="concept-intro">El módulo <code>itertools</code> ofrece iteradores "perezosos" (lazy) muy usados para procesar grandes volúmenes de datos — logs de CI, streams de bus CAN, resultados de baterías de test — sin cargar todo en memoria.</div>
 <div class="code-block"><div class="code-lang">Python — Técnicas avanzadas de iteración</div><pre>
 <span class="c-kw">import</span> itertools
 
@@ -122,119 +165,134 @@ events_sorted = <span class="c-bi">sorted</span>(events, key=<span class="c-kw">
 
 <span class="c-cm"># pairwise (Python 3.10+) — pares consecutivos</span>
 <span class="c-kw">for</span> t1, t2 <span class="c-kw">in</span> itertools.pairwise(timestamps):
-    gap = t2 - t1</pre></div>
+    gap = t2 - t1
+
+<span class="c-cm"># count / cycle — iteradores infinitos, siempre combinados con islice o break</span>
+<span class="c-kw">for</span> seq_id <span class="c-kw">in</span> itertools.count(start=<span class="c-nb">1</span>):    <span class="c-cm"># 1, 2, 3, 4, ... infinito</span>
+    <span class="c-kw">if</span> seq_id &gt; <span class="c-nb">3</span>: <span class="c-kw">break</span>
+    <span class="c-bi">print</span>(seq_id)
+
+<span class="c-kw">for</span> bank <span class="c-kw">in</span> itertools.islice(itertools.cycle([<span class="c-st">'A'</span>,<span class="c-st">'B'</span>,<span class="c-st">'C'</span>]), <span class="c-nb">7</span>):
+    <span class="c-bi">print</span>(bank)   <span class="c-cm"># A B C A B C A — repite el ciclo</span></pre></div>
   </div>
-  <div id="pf-4" class="tab-panel">
+  <div id="pf-5" class="tab-panel">
+<div class="error-compare">
+  <div class="err-bad"><div class="err-label">❌ Incorrecto</div><pre>
+<span class="c-kw">for</span> v <span class="c-kw">in</span> <span class="c-bi">range</span>(<span class="c-nb">0</span>, <span class="c-nb">1</span>, <span class="c-nb">0.1</span>):   <span class="c-cm"># TypeError</span>
+    <span class="c-bi">print</span>(v)</pre></div>
+  <div class="err-good"><div class="err-label">✅ Correcto</div><pre>
+<span class="c-kw">import</span> numpy <span class="c-kw">as</span> np
+<span class="c-kw">for</span> v <span class="c-kw">in</span> np.arange(<span class="c-nb">0</span>, <span class="c-nb">1</span>, <span class="c-nb">0.1</span>):
+    <span class="c-bi">print</span>(v)
+<span class="c-cm"># o sin numpy:</span>
+<span class="c-kw">for</span> i <span class="c-kw">in</span> <span class="c-bi">range</span>(<span class="c-nb">10</span>):
+    v = i * <span class="c-nb">0.1</span></pre></div>
+</div>
+<div class="error-note"><b>Por qué pasa:</b> <code>range()</code> solo acepta enteros — internamente representa el rango sin materializar la secuencia, y eso requiere pasos enteros. En entrevistas es un clásico: si necesitas pasos fraccionarios (por ejemplo, barrer un umbral de voltaje 0.0 a 1.0 en pasos de 0.1), usa <code>numpy.arange</code>/<code>numpy.linspace</code> o multiplica un índice entero.</div>
+
+<div class="error-compare">
+  <div class="err-bad"><div class="err-label">❌ Incorrecto</div><pre>
+codigos = [<span class="c-nb">1</span>, <span class="c-nb">2</span>, <span class="c-nb">3</span>, <span class="c-nb">4</span>, <span class="c-nb">5</span>]
+<span class="c-kw">for</span> c <span class="c-kw">in</span> codigos:
+    <span class="c-kw">if</span> c % <span class="c-nb">2</span> == <span class="c-nb">0</span>:
+        codigos.remove(c)   <span class="c-cm"># salta el 4</span></pre></div>
+  <div class="err-good"><div class="err-label">✅ Correcto</div><pre>
+<span class="c-cm"># Itera sobre una copia, o mejor, construye una lista nueva</span>
+codigos = [c <span class="c-kw">for</span> c <span class="c-kw">in</span> codigos <span class="c-kw">if</span> c % <span class="c-nb">2</span> != <span class="c-nb">0</span>]</pre></div>
+</div>
+<div class="error-note"><b>Por qué pasa:</b> las listas usan un índice interno que avanza en cada iteración. Al hacer <code>remove()</code>, el resto de elementos se recorre a la izquierda pero el índice ya avanzó, así que un elemento se "salta". El mismo problema ocurre con <code>dict</code>/<code>set</code>, donde directamente lanza <code>RuntimeError: dictionary changed size during iteration</code>. Regla general: nunca mutes la colección que estás recorriendo; construye una nueva o itera sobre <code>lista[:]</code>.</div>
+
+<div class="error-compare">
+  <div class="err-bad"><div class="err-label">❌ Incorrecto</div><pre>
+callbacks = []
+<span class="c-kw">for</span> i <span class="c-kw">in</span> <span class="c-bi">range</span>(<span class="c-nb">3</span>):
+    callbacks.append(<span class="c-kw">lambda</span>: i)
+<span class="c-bi">print</span>([cb() <span class="c-kw">for</span> cb <span class="c-kw">in</span> callbacks])  <span class="c-cm"># [2, 2, 2] no [0, 1, 2]</span></pre></div>
+  <div class="err-good"><div class="err-label">✅ Correcto</div><pre>
+callbacks = []
+<span class="c-kw">for</span> i <span class="c-kw">in</span> <span class="c-bi">range</span>(<span class="c-nb">3</span>):
+    callbacks.append(<span class="c-kw">lambda</span> i=i: i)   <span class="c-cm"># default arg "congela" el valor</span>
+<span class="c-bi">print</span>([cb() <span class="c-kw">for</span> cb <span class="c-kw">in</span> callbacks])  <span class="c-cm"># [0, 1, 2]</span></pre></div>
+</div>
+<div class="error-note"><b>Por qué pasa:</b> las funciones/lambdas creadas dentro de un loop capturan la <b>variable</b>, no el valor que tenía en ese instante (late binding). Cuando finalmente se ejecutan, todas leen el valor final de <code>i</code>. Este bug aparece típicamente al registrar callbacks de eventos de un bus CAN dentro de un loop de configuración. Solución: usa un argumento por defecto (<code>lambda i=i: ...</code>) o una fábrica de funciones/<code>functools.partial</code>.</div>
+
+<div class="error-compare">
+  <div class="err-bad"><div class="err-label">❌ Incorrecto</div><pre>
+<span class="c-cm"># Loop infinito: la condición nunca cambia dentro del loop</span>
+retries = <span class="c-nb">0</span>
+<span class="c-kw">while</span> retries &lt; <span class="c-nb">3</span>:
+    ok = try_connect_to_ecu()
+    <span class="c-kw">if</span> ok:
+        <span class="c-kw">break</span>
+    <span class="c-cm"># ¡falta incrementar retries!</span></pre></div>
+  <div class="err-good"><div class="err-label">✅ Correcto</div><pre>
+retries = <span class="c-nb">0</span>
+<span class="c-kw">while</span> retries &lt; <span class="c-nb">3</span>:
+    ok = try_connect_to_ecu()
+    <span class="c-kw">if</span> ok:
+        <span class="c-kw">break</span>
+    retries += <span class="c-nb">1</span>
+<span class="c-kw">else</span>:
+    <span class="c-kw">raise</span> ConnectionError(<span class="c-st">"No se pudo conectar tras 3 intentos"</span>)</pre></div>
+</div>
+<div class="error-note"><b>Por qué pasa:</b> un <code>while</code> depende 100% de que algo dentro del cuerpo cambie la condición. Olvidar el incremento/actualización es la causa número uno de scripts que "cuelgan" un banco de pruebas HIL. Buena práctica: siempre ten un límite de intentos o timeout explícito (ver ejemplo de <code>deadline</code> en la pestaña for/while), y usa <code>while...else</code> para manejar el caso de agotar los reintentos.</div>
+  </div>
+  <div id="pf-6" class="tab-panel">
+<div class="practice-card">
+  <div class="practice-title">Usa enumerate() en vez de manejar un índice manual</div>
+  <p>En vez de <code>i = 0; for x in lst: ...; i += 1</code>, usa <code>for i, x in enumerate(lst):</code>. Es más corto, menos propenso a errores off-by-one, y soporta <code>start=</code> para arrancar en 1 en vez de 0.</p>
+</div>
+<div class="practice-card">
+  <div class="practice-title">Usa zip() en vez de indexar dos listas con range(len(...))</div>
+  <p>Mal: <code>for i in range(len(a)): f(a[i], b[i])</code>. Bien: <code>for x, y in zip(a, b):</code>. Es más legible y evita bugs si las listas tienen longitudes distintas (zip corta en la más corta; usa <code>zip_longest</code> si necesitas lo contrario).</p>
+</div>
+<div class="practice-card">
+  <div class="practice-title">for cuando sabes cuántas iteraciones, while cuando dependes de una condición dinámica</div>
+  <p>Si vas a recorrer una colección conocida, usa <code>for</code>. Reserva <code>while</code> para esperar eventos externos (polling de un sensor, esperar respuesta de un ECU, leer un stream hasta EOF) — y siempre agrega un timeout o límite de reintentos para evitar loops infinitos en producción.</p>
+</div>
+<div class="practice-card">
+  <div class="practice-title">Evita anidar más de 2-3 niveles de for; extrae a función o usa itertools.product</div>
+  <p>Un triple <code>for</code> anidado suele ser señal de que conviene una función auxiliar, una comprehension, o <code>itertools.product</code> para combinaciones. Reduce la complejidad ciclomática y facilita el testing unitario de cada parte.</p>
+</div>
+<div class="practice-card">
+  <div class="practice-title">Usa "continue" con guard clauses para reducir anidamiento</div>
+  <p>En vez de anidar todo el cuerpo del loop dentro de un <code>if</code>, invierte la condición y usa <code>continue</code> para saltar temprano: <code>if not valido(x): continue</code>. El código queda más plano y fácil de leer, sobre todo al filtrar líneas de log inválidas.</p>
+</div>
+<div class="practice-card">
+  <div class="practice-title">Prefiere .items() a re-indexar el diccionario dentro del loop</div>
+  <p>Mal: <code>for k in d: v = d[k]</code> (una búsqueda extra por iteración). Bien: <code>for k, v in d.items():</code>. Además de más limpio, evita una consulta redundante al diccionario en cada vuelta.</p>
+</div>
+  </div>
+  <div id="pf-7" class="tab-panel">
     <div class="plan-card"><div class="plan-card-title">⚠️ Gotchas comunes — errores típicos en entrevista</div>
       <div class="plan-block"><div class="plan-time">Trampa 1</div><div class="plan-content"><h4>Modificar una lista mientras la iteras</h4><p>Nunca hagas <code>for x in lista: lista.remove(x)</code>. Salta elementos porque el índice avanza pero la lista se encoge. Solución: itera sobre una copia: <code>for x in lista[:]:</code> o usa list comprehension.</p></div></div>
       <div class="plan-block"><div class="plan-time">Trampa 2</div><div class="plan-content"><h4>range vs list — range es lazy</h4><p><code>range(1000000)</code> no crea un millón de números en memoria. Es un objeto que genera los valores al iterar. Nunca hagas <code>list(range(1000000))</code> si solo vas a iterar.</p></div></div>
       <div class="plan-block"><div class="plan-time">Trampa 3</div><div class="plan-content"><h4>for-else es contraintuitivo</h4><p>El <code>else</code> de un for/while NO es "si el loop no corrió". Es "si el loop terminó sin break". Pregunta frecuente de entrevista.</p></div></div>
+      <div class="plan-block"><div class="plan-time">Trampa 4</div><div class="plan-content"><h4>La variable del loop sobrevive fuera del for</h4><p>A diferencia de otros lenguajes, el nombre usado en <code>for i in ...</code> no queda "encapsulado": después del loop, <code>i</code> sigue existiendo con su último valor (o incluso si la colección estaba vacía, con el valor que tenía antes, si es que existía).</p></div></div>
     </div>
     <div class="quiz-section"><div class="quiz-title">Quiz</div>
       <div class="quiz-card"><div class="quiz-q" onclick="toggleQuiz(this)"><span class="q-tag">Gotcha</span>¿Cuál es la salida de: <code>for i in range(3): pass</code>, ¿cuánto vale i después?<span class="q-arr">▶</span></div><div class="quiz-a"><b>i = 2.</b> La variable del loop persiste después del loop en Python. No se destruye como en otros lenguajes. Esto puede causar bugs si reutilizas el nombre.</div></div>
       <div class="quiz-card"><div class="quiz-q" onclick="toggleQuiz(this)"><span class="q-tag">Diferencia</span>¿Diferencia entre break y continue?<span class="q-arr">▶</span></div><div class="quiz-a"><b>break</b>: termina el loop completamente. <b>continue</b>: salta a la siguiente iteración. Con break el else del loop NO se ejecuta. Con continue sí puede ejecutarse el else.</div></div>
-    </div>
-  </div>
-</div>`,
-
-'py-comprehensions': `
-<div class="tab-group-pycomp">
-  <div class="tab-bar">
-    <button class="tab-btn active" onclick="switchTab(this,'pc-1','pycomp')">List Comp</button>
-    <button class="tab-btn" onclick="switchTab(this,'pc-2','pycomp')">Dict / Set Comp</button>
-    <button class="tab-btn" onclick="switchTab(this,'pc-3','pycomp')">Generator Expr</button>
-    <button class="tab-btn" onclick="switchTab(this,'pc-4','pycomp')">Cuándo NO usarlas</button>
-  </div>
-  <div id="pc-1" class="tab-panel active">
-<div class="code-block"><div class="code-lang">Python — List Comprehension: todas las formas</div><pre>
-<span class="c-cm"># Sintaxis: [expresión for item in iterable if condición]</span>
-
-<span class="c-cm"># 1. Simple</span>
-cuadrados = [x**<span class="c-nb">2</span> <span class="c-kw">for</span> x <span class="c-kw">in</span> <span class="c-bi">range</span>(<span class="c-nb">10</span>)]
-
-<span class="c-cm"># 2. Con filtro</span>
-pares = [x <span class="c-kw">for</span> x <span class="c-kw">in</span> <span class="c-bi">range</span>(<span class="c-nb">20</span>) <span class="c-kw">if</span> x % <span class="c-nb">2</span> == <span class="c-nb">0</span>]
-
-<span class="c-cm"># 3. Transformación de strings (muy útil para logs)</span>
-clean_lines = [line.strip().lower() <span class="c-kw">for</span> line <span class="c-kw">in</span> raw_log <span class="c-kw">if</span> line.strip()]
-
-<span class="c-cm"># 4. Anidado — CUIDADO: el orden es el mismo que en for anidado</span>
-<span class="c-cm"># [expr for x in outer for y in inner]  ←→</span>
-<span class="c-cm"># for x in outer: for y in inner: expr</span>
-coords = [(x, y) <span class="c-kw">for</span> x <span class="c-kw">in</span> <span class="c-bi">range</span>(<span class="c-nb">3</span>) <span class="c-kw">for</span> y <span class="c-kw">in</span> <span class="c-bi">range</span>(<span class="c-nb">3</span>)]
-
-<span class="c-cm"># 5. Aplanar lista de listas (flatten)</span>
-flat = [item <span class="c-kw">for</span> sublist <span class="c-kw">in</span> matrix <span class="c-kw">for</span> item <span class="c-kw">in</span> sublist]
-
-<span class="c-cm"># 6. Con función (ternario en la expresión)</span>
-labels = [<span class="c-st">"PASS"</span> <span class="c-kw">if</span> r == <span class="c-nb">0</span> <span class="c-kw">else</span> <span class="c-st">"FAIL"</span> <span class="c-kw">for</span> r <span class="c-kw">in</span> results]
-
-<span class="c-cm"># 7. Walrus para evitar doble cómputo</span>
-processed = [y <span class="c-kw">for</span> x <span class="c-kw">in</span> data <span class="c-kw">if</span> (y := expensive(x)) <span class="c-kw">is not None</span>]</pre></div>
-  </div>
-  <div id="pc-2" class="tab-panel">
-<div class="code-block"><div class="code-lang">Python — Dict y Set comprehensions</div><pre>
-<span class="c-cm"># Dict comprehension: {key: value for ...}</span>
-error_freq = {err: count <span class="c-kw">for</span> err, count <span class="c-kw">in</span> error_list <span class="c-kw">if</span> count &gt; <span class="c-nb">5</span>}
-
-<span class="c-cm"># Invertir un dict (key↔value)</span>
-inv = {v: k <span class="c-kw">for</span> k, v <span class="c-kw">in</span> original.items()}
-
-<span class="c-cm"># Agrupar por primera letra</span>
-grouped = {k: [w <span class="c-kw">for</span> w <span class="c-kw">in</span> words <span class="c-kw">if</span> w[<span class="c-nb">0</span>] == k]
-           <span class="c-kw">for</span> k <span class="c-kw">in</span> <span class="c-bi">set</span>(w[<span class="c-nb">0</span>] <span class="c-kw">for</span> w <span class="c-kw">in</span> words)}
-
-<span class="c-cm"># Merge de dicts (Python 3.9+)</span>
-merged = dict_a | dict_b   <span class="c-cm"># b gana en conflicto</span>
-
-<span class="c-cm"># Set comprehension: {expr for ...}</span>
-unique_benches = {event[<span class="c-st">'bench'</span>] <span class="c-kw">for</span> event <span class="c-kw">in</span> events}
-
-<span class="c-cm"># Diferencia entre set comp y frozenset</span>
-immutable = <span class="c-bi">frozenset</span>({x**<span class="c-nb">2</span> <span class="c-kw">for</span> x <span class="c-kw">in</span> <span class="c-bi">range</span>(<span class="c-nb">5</span>)})  <span class="c-cm"># hashable, usable como key</span></pre></div>
-  </div>
-  <div id="pc-3" class="tab-panel">
-<div class="code-block"><div class="code-lang">Python — Generator expressions (perezosas, ahorran memoria)</div><pre>
-<span class="c-cm"># () en vez de [] → no crea la lista en memoria</span>
-gen = (x**<span class="c-nb">2</span> <span class="c-kw">for</span> x <span class="c-kw">in</span> <span class="c-bi">range</span>(<span class="c-nb">1_000_000</span>))  <span class="c-cm"># ocupa ~112 bytes, no 8 MB</span>
-
-<span class="c-cm"># Perfecto para pasar a funciones que aceptan iterables</span>
-total  = <span class="c-bi">sum</span>(x**<span class="c-nb">2</span> <span class="c-kw">for</span> x <span class="c-kw">in</span> <span class="c-bi">range</span>(<span class="c-nb">1000</span>))
-any_gt = <span class="c-bi">any</span>(x &gt; <span class="c-nb">100</span> <span class="c-kw">for</span> x <span class="c-kw">in</span> data)   <span class="c-cm"># cortocircuito: para al primer True</span>
-all_ok = <span class="c-bi">all</span>(x &gt; <span class="c-nb">0</span> <span class="c-kw">for</span> x <span class="c-kw">in</span> data)   <span class="c-cm"># cortocircuito: para al primer False</span>
-
-<span class="c-cm"># Procesamiento de archivo línea a línea sin cargar todo en RAM</span>
-error_lines = <span class="c-bi">sum</span>(<span class="c-nb">1</span> <span class="c-kw">for</span> line <span class="c-kw">in</span> <span class="c-bi">open</span>(<span class="c-st">'big.log'</span>) <span class="c-kw">if</span> <span class="c-st">'ERROR'</span> <span class="c-kw">in</span> line)
-
-<span class="c-cm"># DIFERENCIA CLAVE: list comp crea todo de golpe, gen expr es lazy</span>
-lista = [f(x) <span class="c-kw">for</span> x <span class="c-kw">in</span> data]   <span class="c-cm"># O(n) memoria ahora</span>
-gen   = (f(x) <span class="c-kw">for</span> x <span class="c-kw">in</span> data)   <span class="c-cm"># O(1) memoria, computa al pedir</span></pre></div>
-  </div>
-  <div id="pc-4" class="tab-panel">
-    <div class="plan-card"><div class="plan-card-title">Cuándo NO usar comprehensions</div>
-      <div class="plan-block"><div class="plan-time">Demasiado compleja</div><div class="plan-content"><h4>Si necesitas más de 2 condiciones o 2 for, usa un loop normal</h4><p>La legibilidad importa más que la brevedad. Una comprehension de 3 líneas anidada es más difícil de debuggear que 5 líneas de loop claro.</p></div></div>
-      <div class="plan-block"><div class="plan-time">Side effects</div><div class="plan-content"><h4>Nunca uses comprehension solo por sus side effects</h4><p>Mal: <code>[print(x) for x in lista]</code>. Bien: <code>for x in lista: print(x)</code>. Las comprehensions son para crear colecciones, no para ejecutar acciones.</p></div></div>
-      <div class="plan-block"><div class="plan-time">Listas grandes en memoria</div><div class="plan-content"><h4>Si solo vas a iterar una vez, usa generator expression</h4><p><code>sum(x**2 for x in range(1M))</code> vs <code>sum([x**2 for x in range(1M)])</code>. El primero usa O(1) memoria, el segundo O(n).</p></div></div>
+      <div class="quiz-card"><div class="quiz-q" onclick="toggleQuiz(this)"><span class="q-tag">Trampa</span>¿Qué imprime este código?<br><code>fns = [lambda: i for i in range(3)]<br>print([f() for f in fns])</code><span class="q-arr">▶</span></div><div class="quiz-a"><b>[2, 2, 2]</b>, no [0, 1, 2]. Las lambdas capturan la variable <code>i</code> por referencia (late binding), y para cuando se ejecutan, el loop ya terminó con i=2. Solución: <code>lambda i=i: i</code> para congelar el valor en el momento de la definición.</div></div>
+      <div class="quiz-card"><div class="quiz-q" onclick="toggleQuiz(this)"><span class="q-tag">Diseño</span>¿Cuándo usarías while en vez de for si ambos podrían "funcionar"?<span class="q-arr">▶</span></div><div class="quiz-a">Cuando el número de iteraciones no se conoce de antemano y depende de una condición externa que cambia en tiempo de ejecución — por ejemplo, esperar que un ECU reporte "ready", leer un socket hasta que llegue EOF, o reintentar una conexión hasta un timeout. Si la cantidad de iteraciones es fija o depende del tamaño de una colección, usa for.</div></div>
     </div>
   </div>
 </div>`,
 
 'py-listas': `
-<div class="plan-card"><div class="plan-card-title">📋 Listas — referencia completa de métodos</div>
-<table class="kv-table">
-<tr><th>Método</th><th>Qué hace</th><th>Complejidad</th><th>Ejemplo</th></tr>
-<tr><td>append(x)</td><td>Agrega al final</td><td><span class="badge badge-grn">O(1)</span></td><td>lst.append(5)</td></tr>
-<tr><td>extend(iterable)</td><td>Agrega todos los elementos</td><td><span class="badge badge-ylw">O(k)</span></td><td>lst.extend([1,2,3])</td></tr>
-<tr><td>insert(i, x)</td><td>Inserta en posición i</td><td><span class="badge badge-red">O(n)</span></td><td>lst.insert(0, 'x')</td></tr>
-<tr><td>remove(x)</td><td>Elimina primera ocurrencia de x</td><td><span class="badge badge-red">O(n)</span></td><td>lst.remove('a')</td></tr>
-<tr><td>pop(i=-1)</td><td>Elimina y retorna elemento</td><td>O(1) final, O(n) medio</td><td>lst.pop() / lst.pop(0)</td></tr>
-<tr><td>index(x)</td><td>Índice de primera ocurrencia</td><td><span class="badge badge-red">O(n)</span></td><td>lst.index('a')</td></tr>
-<tr><td>count(x)</td><td>Cuenta ocurrencias de x</td><td><span class="badge badge-red">O(n)</span></td><td>lst.count(3)</td></tr>
-<tr><td>sort(key, reverse)</td><td>Ordena in-place</td><td><span class="badge badge-ylw">O(n log n)</span></td><td>lst.sort(key=len)</td></tr>
-<tr><td>reverse()</td><td>Invierte in-place</td><td><span class="badge badge-ylw">O(n)</span></td><td>lst.reverse()</td></tr>
-<tr><td>copy()</td><td>Shallow copy</td><td><span class="badge badge-ylw">O(n)</span></td><td>copia = lst.copy()</td></tr>
-<tr><td>clear()</td><td>Vacía la lista</td><td><span class="badge badge-grn">O(1)</span></td><td>lst.clear()</td></tr>
-</table></div>
+<div class="tab-group-pylst">
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="switchTab(this,'pyl-1','pylst')">Métodos esenciales</button>
+    <button class="tab-btn" onclick="switchTab(this,'pyl-2','pylst')">Slicing avanzado</button>
+    <button class="tab-btn" onclick="switchTab(this,'pyl-3','pylst')">⚠️ Errores comunes</button>
+    <button class="tab-btn" onclick="switchTab(this,'pyl-4','pylst')">✅ Mejores Prácticas</button>
+    <button class="tab-btn" onclick="switchTab(this,'pyl-5','pylst')">Quiz</button>
+  </div>
+  <div id="pyl-1" class="tab-panel active">
+${renderMethodTable('LST')}
+  </div>
+  <div id="pyl-2" class="tab-panel">
+<div class="concept-intro">El <strong>slicing</strong> (<code>lst[start:stop:step]</code>) extrae sublistas sin lanzar <code>IndexError</code> aunque los índices se salgan de rango — a diferencia de indexar un solo elemento (<code>lst[i]</code>), que sí lanza error si i no existe. Dominar slicing es clave para procesar ventanas de datos (por ejemplo, los últimos N frames de CAN) sin loops manuales.</div>
 <div class="code-block"><div class="code-lang">Python — Slicing y operaciones avanzadas</div><pre>
 lst = [<span class="c-nb">0</span>,<span class="c-nb">1</span>,<span class="c-nb">2</span>,<span class="c-nb">3</span>,<span class="c-nb">4</span>,<span class="c-nb">5</span>]
 
@@ -245,11 +303,18 @@ lst[::-<span class="c-nb">1</span>]  <span class="c-cm"># [5, 4, 3, 2, 1, 0] —
 lst[-<span class="c-nb">3</span>:]   <span class="c-cm"># [3, 4, 5] — últimos 3</span>
 lst[:<span class="c-nb">3</span>]    <span class="c-cm"># [0, 1, 2] — primeros 3</span>
 
+<span class="c-cm"># Índices fuera de rango NO lanzan error en slicing (a diferencia de lst[i])</span>
+lst[<span class="c-nb">100</span>:<span class="c-nb">200</span>]  <span class="c-cm"># [] — lista vacía, sin excepción</span>
+<span class="c-cm"># lst[100]              # IndexError: list index out of range</span>
+
 <span class="c-cm"># Copiar con slice (shallow)</span>
 copia = lst[:]   <span class="c-cm"># equivale a lst.copy()</span>
 
 <span class="c-cm"># Reemplazar rango con slice assignment</span>
 lst[<span class="c-nb">1</span>:<span class="c-nb">3</span>] = [<span class="c-nb">10</span>, <span class="c-nb">20</span>, <span class="c-nb">30</span>]   <span class="c-cm"># puede cambiar el tamaño</span>
+
+<span class="c-cm"># Eliminar un rango con slice assignment vacío</span>
+lst[<span class="c-nb">1</span>:<span class="c-nb">3</span>] = []   <span class="c-cm"># equivale a "del lst[1:3]"</span>
 
 <span class="c-cm"># sorted() vs sort() — sorted crea nueva lista, sort modifica in-place</span>
 nueva = <span class="c-bi">sorted</span>(lst, key=<span class="c-kw">lambda</span> x: -x)  <span class="c-cm"># descendente, lst no cambia</span>
@@ -261,26 +326,166 @@ a, *middle, z = [<span class="c-nb">1</span>,<span class="c-nb">2</span>,<span c
 <span class="c-cm"># Multiplicación (ojo con objetos mutables)</span>
 zeros = [<span class="c-nb">0</span>] * <span class="c-nb">10</span>           <span class="c-cm"># [0,0,...,0]  ✓ para inmutables</span>
 <span class="c-cm"># TRAMPA: [[0]*3]*3 crea 3 referencias a la MISMA lista interna</span>
-matrix = [[<span class="c-nb">0</span>]*<span class="c-nb">3</span> <span class="c-kw">for</span> _ <span class="c-kw">in</span> <span class="c-bi">range</span>(<span class="c-nb">3</span>)]  <span class="c-cm"># correcto: 3 listas independientes</span></pre></div>
+matrix = [[<span class="c-nb">0</span>]*<span class="c-nb">3</span> <span class="c-kw">for</span> _ <span class="c-kw">in</span> <span class="c-bi">range</span>(<span class="c-nb">3</span>)]  <span class="c-cm"># correcto: 3 listas independientes</span>
+
+<span class="c-cm"># Ventana deslizante — últimos N elementos de un buffer de telemetría</span>
+ultimos_10 = buffer[-<span class="c-nb">10</span>:]  <span class="c-cm"># si buffer tiene menos de 10, retorna todo</span></pre></div>
+  </div>
+  <div id="pyl-3" class="tab-panel">
+<div class="error-compare">
+  <div class="err-bad"><div class="err-label">❌ Incorrecto</div><pre>
+original = [<span class="c-nb">1</span>, <span class="c-nb">2</span>, <span class="c-nb">3</span>]
+copia = original          <span class="c-cm"># NO copia, es el mismo objeto</span>
+copia.append(<span class="c-nb">4</span>)
+<span class="c-bi">print</span>(original)      <span class="c-cm"># [1, 2, 3, 4] — ¡se modificó!</span></pre></div>
+  <div class="err-good"><div class="err-label">✅ Correcto</div><pre>
+original = [<span class="c-nb">1</span>, <span class="c-nb">2</span>, <span class="c-nb">3</span>]
+copia = original.copy()   <span class="c-cm"># o original[:] o list(original)</span>
+copia.append(<span class="c-nb">4</span>)
+<span class="c-bi">print</span>(original)      <span class="c-cm"># [1, 2, 3] — intacta</span></pre></div>
+</div>
+<div class="error-note"><b>Por qué pasa:</b> en Python, las variables son referencias a objetos, no los objetos en sí. <code>copia = original</code> solo crea un segundo nombre apuntando a la misma lista en memoria (puedes confirmarlo con <code>copia is original → True</code>). Para copias reales usa <code>.copy()</code>, <code>[:]</code> o <code>list(x)</code> — y recuerda que son <b>shallow copies</b>: si la lista contiene sublistas, esas sí se comparten (usa <code>copy.deepcopy()</code> si necesitas independencia total).</div>
+
+<div class="error-compare">
+  <div class="err-bad"><div class="err-label">❌ Incorrecto</div><pre>
+fila = [<span class="c-nb">0</span>] * <span class="c-nb">3</span>
+matrix = [fila] * <span class="c-nb">3</span>     <span class="c-cm"># 3 referencias a la MISMA lista</span>
+matrix[<span class="c-nb">0</span>][<span class="c-nb">0</span>] = <span class="c-nb">1</span>
+<span class="c-bi">print</span>(matrix)         <span class="c-cm"># [[1,0,0],[1,0,0],[1,0,0]] ¡las 3 filas cambiaron!</span></pre></div>
+  <div class="err-good"><div class="err-label">✅ Correcto</div><pre>
+matrix = [[<span class="c-nb">0</span>]*<span class="c-nb">3</span> <span class="c-kw">for</span> _ <span class="c-kw">in</span> <span class="c-bi">range</span>(<span class="c-nb">3</span>)]  <span class="c-cm"># 3 listas independientes</span>
+matrix[<span class="c-nb">0</span>][<span class="c-nb">0</span>] = <span class="c-nb">1</span>
+<span class="c-bi">print</span>(matrix)         <span class="c-cm"># [[1,0,0],[0,0,0],[0,0,0]] correcto</span></pre></div>
+</div>
+<div class="error-note"><b>Por qué pasa:</b> el operador <code>*</code> sobre una lista no clona los elementos, solo repite las <b>referencias</b>. Con enteros (inmutables) esto es inofensivo porque no se puede mutar un int in-place. Pero con listas anidadas, las "3 filas" son en realidad la misma lista vista 3 veces. Clásico gotcha al inicializar matrices/buffers 2D para simulación o grillas de test.</div>
+
+<div class="error-compare">
+  <div class="err-bad"><div class="err-label">❌ Incorrecto</div><pre>
+<span class="c-cm"># Concatenar en loop con "+" — crea una lista NUEVA en cada vuelta</span>
+resultado = []
+<span class="c-kw">for</span> chunk <span class="c-kw">in</span> chunks:
+    resultado = resultado + chunk   <span class="c-cm"># O(n) cada vez → O(n²) total</span></pre></div>
+  <div class="err-good"><div class="err-label">✅ Correcto</div><pre>
+resultado = []
+<span class="c-kw">for</span> chunk <span class="c-kw">in</span> chunks:
+    resultado.extend(chunk)   <span class="c-cm"># amortizado O(1) por elemento</span>
+<span class="c-cm"># o, si ya tienes todos los chunks:</span>
+resultado = [x <span class="c-kw">for</span> chunk <span class="c-kw">in</span> chunks <span class="c-kw">for</span> x <span class="c-kw">in</span> chunk]</pre></div>
+</div>
+<div class="error-note"><b>Por qué pasa:</b> <code>resultado + chunk</code> crea una lista completamente nueva copiando todos los elementos existentes más los nuevos — O(n) por operación. Repetido n veces en un loop, el costo total es O(n²). <code>extend()</code> (o <code>append()</code> en loop, o comprehension) reutiliza la capacidad reservada de la lista y es O(1) amortizado por elemento.</div>
+
+<div class="error-compare">
+  <div class="err-bad"><div class="err-label">❌ Incorrecto</div><pre>
+<span class="c-cm"># Buscar pertenencia con "in" en una lista grande, dentro de un loop</span>
+ids_validos = [<span class="c-nb">1001</span>, <span class="c-nb">1002</span>, <span class="c-nb">... 50000 ids ...</span>]
+<span class="c-kw">for</span> frame <span class="c-kw">in</span> can_frames:      <span class="c-cm"># miles de frames</span>
+    <span class="c-kw">if</span> frame.id <span class="c-kw">in</span> ids_validos:  <span class="c-cm"># O(n) cada chequeo → O(n*m) total</span>
+        process(frame)</pre></div>
+  <div class="err-good"><div class="err-label">✅ Correcto</div><pre>
+ids_validos = <span class="c-bi">set</span>([<span class="c-nb">1001</span>, <span class="c-nb">1002</span>, <span class="c-nb">... 50000 ids ...</span>])  <span class="c-cm"># O(1) por chequeo</span>
+<span class="c-kw">for</span> frame <span class="c-kw">in</span> can_frames:
+    <span class="c-kw">if</span> frame.id <span class="c-kw">in</span> ids_validos:
+        process(frame)</pre></div>
+</div>
+<div class="error-note"><b>Por qué pasa:</b> <code>in</code> sobre una lista hace búsqueda lineal — recorre elemento por elemento. Si esa comprobación está dentro de un loop que se repite m veces, sobre una lista de n elementos, el costo total es O(n*m). Un <code>set</code> (hash table) resuelve <code>in</code> en O(1) promedio. Regla práctica: si vas a chequear pertenencia repetidamente, convierte la colección a <code>set</code> primero.</div>
+  </div>
+  <div id="pyl-4" class="tab-panel">
+<div class="practice-card">
+  <div class="practice-title">Copia explícitamente cuando no quieras compartir referencia</div>
+  <p>Usa <code>.copy()</code>, <code>list(x)</code> o <code>x[:]</code> para shallow copy, y <code>copy.deepcopy(x)</code> cuando la lista contiene objetos mutables anidados que también deben ser independientes.</p>
+</div>
+<div class="practice-card">
+  <div class="practice-title">Usa collections.deque para pops/inserts frecuentes al inicio</div>
+  <p>Las listas son O(n) para <code>pop(0)</code> o <code>insert(0, x)</code> porque deben desplazar todos los elementos. Si necesitas una cola FIFO (por ejemplo, un buffer circular de los últimos N mensajes CAN), <code>collections.deque</code> ofrece O(1) en ambos extremos.</p>
+</div>
+<div class="practice-card">
+  <div class="practice-title">Convierte a set cuando la pertenencia (in) se chequea repetidamente</div>
+  <p>Si vas a preguntar <code>x in coleccion</code> muchas veces, y el orden/los duplicados no importan, un <code>set</code> baja la complejidad de O(n) a O(1) promedio por consulta.</p>
+</div>
+<div class="practice-card">
+  <div class="practice-title">Prefiere comprehension o extend() sobre concatenar con + en loop</div>
+  <p>Evita el patrón <code>resultado = resultado + x</code> dentro de un for; usa <code>resultado.extend(x)</code>, <code>resultado.append(x)</code>, o construye todo de una vez con una comprehension.</p>
+</div>
+<div class="practice-card">
+  <div class="practice-title">Usa sort(key=...) con una función nombrada cuando la lógica no sea trivial</div>
+  <p><code>lst.sort(key=lambda r: (r.severity, -r.timestamp))</code> está bien si es simple; si la clave de orden tiene lógica de negocio, extráela a una función con nombre (<code>key=severity_then_recency</code>) para que sea testeable y reutilizable.</p>
+</div>
+<div class="practice-card">
+  <div class="practice-title">No mutes una lista que estás iterando; construye una nueva</div>
+  <p>En vez de <code>remove()</code>/<code>del</code> dentro de un <code>for</code>, usa una list comprehension que filtre lo que quieres conservar. Es más seguro, más corto y evita el bug de "saltar elementos".</p>
+</div>
+  </div>
+  <div id="pyl-5" class="tab-panel">
 <div class="quiz-section"><div class="quiz-title">Quiz</div>
   <div class="quiz-card"><div class="quiz-q" onclick="toggleQuiz(this)"><span class="q-tag">Complejidad</span>¿Por qué pop(0) es O(n) pero pop() es O(1)?<span class="q-arr">▶</span></div><div class="quiz-a">Las listas en Python son arrays dinámicos. Al hacer pop(0), todos los n-1 elementos restantes deben moverse una posición hacia la izquierda → O(n). Al hacer pop() (del final), ningún elemento se mueve → O(1). Si necesitas pops frecuentes del frente, usa <code>collections.deque</code>.</div></div>
+  <div class="quiz-card"><div class="quiz-q" onclick="toggleQuiz(this)"><span class="q-tag">Trampa</span>¿Qué imprime <code>lst[100:200]</code> si lst tiene solo 5 elementos?<span class="q-arr">▶</span></div><div class="quiz-a"><b>[] (lista vacía), no un error.</b> El slicing "clampa" los índices al rango válido en vez de lanzar excepción, a diferencia de <code>lst[100]</code> que sí lanza IndexError. Es una fuente común de bugs silenciosos: código que "funciona" pero retorna vacío sin avisar.</div></div>
+  <div class="quiz-card"><div class="quiz-q" onclick="toggleQuiz(this)"><span class="q-tag">Diferencia</span>¿sort() y sorted() son intercambiables?<span class="q-arr">▶</span></div><div class="quiz-a"><b>No.</b> <code>lst.sort()</code> ordena in-place y retorna <code>None</code> (por eso <code>lst = lst.sort()</code> es un bug clásico: deja lst en None). <code>sorted(lst)</code> retorna una lista nueva ordenada y no toca la original; funciona sobre cualquier iterable, no solo listas.</div></div>
+  <div class="quiz-card"><div class="quiz-q" onclick="toggleQuiz(this)"><span class="q-tag">Trampa</span>¿Qué produce <code>[[0]*3]*3</code> y por qué es peligroso?<span class="q-arr">▶</span></div><div class="quiz-a">Produce una lista de 3 referencias a la <b>misma</b> sublista interna. Modificar <code>matrix[0][0]</code> modifica las 3 "filas" a la vez, porque <code>*</code> repite referencias, no clona objetos. La forma correcta es <code>[[0]*3 for _ in range(3)]</code>, que crea 3 listas independientes en cada iteración de la comprehension.</div></div>
+</div>
+  </div>
 </div>`,
 
 'py-tuplas': `
-<div class="code-block"><div class="code-lang">Python — Tuplas: todo lo que necesitas saber</div><pre>
+<div class="tab-group-pytup">
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="switchTab(this,'ptp-0','pytup')">Métodos esenciales</button>
+    <button class="tab-btn" onclick="switchTab(this,'ptp-1','pytup')">Conceptos y creación</button>
+    <button class="tab-btn" onclick="switchTab(this,'ptp-2','pytup')">Unpacking & namedtuple</button>
+    <button class="tab-btn" onclick="switchTab(this,'ptp-3','pytup')">⚠️ Errores comunes</button>
+    <button class="tab-btn" onclick="switchTab(this,'ptp-4','pytup')">✅ Mejores Prácticas + Quiz</button>
+  </div>
+  <div id="ptp-0" class="tab-panel active">
+${renderMethodTable('TUP')}
+  </div>
+  <div id="ptp-1" class="tab-panel">
+<div class="concept-intro">Las <strong>tuplas</strong> son secuencias ordenadas e <strong>inmutables</strong>: una vez creadas, no puedes agregar, quitar ni reemplazar elementos. Se usan para datos que no deberían cambiar (coordenadas, filas de CSV, un par clave-test), para retornar múltiples valores de una función, y como <code>keys</code> de diccionarios o elementos de <code>set</code> (porque son hashables, a diferencia de las listas).</div>
+<div class="code-block"><div class="code-lang">Python — Crear tuplas</div><pre>
 <span class="c-cm"># Crear tuplas</span>
 t = (<span class="c-nb">1</span>, <span class="c-nb">2</span>, <span class="c-nb">3</span>)
 t = <span class="c-nb">1</span>, <span class="c-nb">2</span>, <span class="c-nb">3</span>       <span class="c-cm"># los paréntesis son opcionales</span>
 t = (<span class="c-nb">1</span>,)             <span class="c-cm"># TRAMPA: tupla de un elemento necesita la coma</span>
+t = <span class="c-bi">tuple</span>()             <span class="c-cm"># tupla vacía</span>
+t = ()                    <span class="c-cm"># también tupla vacía</span>
 t = <span class="c-bi">tuple</span>([<span class="c-nb">1</span>,<span class="c-nb">2</span>,<span class="c-nb">3</span>]) <span class="c-cm"># desde lista</span>
+t = <span class="c-bi">tuple</span>(<span class="c-st">'abc'</span>)        <span class="c-cm"># ('a', 'b', 'c') — desde cualquier iterable</span>
 
+<span class="c-cm"># Ventaja sobre lista: más rápidas, usan menos memoria, comunican inmutabilidad</span>
+<span class="c-kw">import</span> sys
+<span class="c-bi">print</span>(sys.getsizeof((<span class="c-nb">1</span>,<span class="c-nb">2</span>,<span class="c-nb">3</span>)))  <span class="c-cm"># 64 bytes</span>
+<span class="c-bi">print</span>(sys.getsizeof([<span class="c-nb">1</span>,<span class="c-nb">2</span>,<span class="c-nb">3</span>]))  <span class="c-cm"># 88 bytes</span>
+
+<span class="c-cm"># Métodos — solo count() e index() (no hay ninguno que mute)</span>
+(<span class="c-nb">1</span>,<span class="c-nb">2</span>,<span class="c-nb">2</span>,<span class="c-nb">3</span>).count(<span class="c-nb">2</span>)   <span class="c-cm"># 2</span>
+(<span class="c-nb">1</span>,<span class="c-nb">2</span>,<span class="c-nb">3</span>).index(<span class="c-nb">2</span>)     <span class="c-cm"># 1</span>
+
+<span class="c-cm"># Concatenar y repetir crean tuplas NUEVAS (la original no cambia)</span>
+a = (<span class="c-nb">1</span>, <span class="c-nb">2</span>) + (<span class="c-nb">3</span>, <span class="c-nb">4</span>)   <span class="c-cm"># (1, 2, 3, 4)</span>
+b = (<span class="c-nb">0</span>,) * <span class="c-nb">3</span>            <span class="c-cm"># (0, 0, 0)</span>
+
+<span class="c-cm"># Tuplas como keys de dict (porque son hashables)</span>
+cache = {}
+cache[(<span class="c-st">'bench_a3'</span>, <span class="c-st">'test_lidar'</span>)] = <span class="c-st">'PASSED'</span></pre></div>
+  </div>
+  <div id="ptp-2" class="tab-panel">
+<div class="concept-intro">El <strong>unpacking</strong> (desempaquetado) asigna los elementos de una tupla (o cualquier iterable) a varias variables en una sola línea. Un <strong>namedtuple</strong> es una tupla con nombres para cada posición: mantiene el rendimiento y la inmutabilidad de una tupla, pero se accede por atributo (<code>r.value</code>) en vez de índice (<code>r[1]</code>), mucho más legible en code review.</div>
+<div class="code-block"><div class="code-lang">Python — Unpacking y namedtuple</div><pre>
 <span class="c-cm"># Unpacking — muy Pythónico</span>
 x, y, z = (<span class="c-nb">1</span>, <span class="c-nb">2</span>, <span class="c-nb">3</span>)
-a, *rest = (<span class="c-nb">1</span>, <span class="c-nb">2</span>, <span class="c-nb">3</span>, <span class="c-nb">4</span>)   <span class="c-cm"># a=1, rest=[2,3,4]</span>
+a, *rest = (<span class="c-nb">1</span>, <span class="c-nb">2</span>, <span class="c-nb">3</span>, <span class="c-nb">4</span>)   <span class="c-cm"># a=1, rest=[2,3,4]  ← rest es LISTA, no tupla</span>
+first, *_, last = (<span class="c-nb">1</span>, <span class="c-nb">2</span>, <span class="c-nb">3</span>, <span class="c-nb">4</span>)  <span class="c-cm"># first=1, last=4</span>
 _, second, *_ = (<span class="c-nb">1</span>, <span class="c-nb">2</span>, <span class="c-nb">3</span>, <span class="c-nb">4</span>)  <span class="c-cm"># solo me importa el segundo</span>
 
 <span class="c-cm"># Swap sin variable temporal</span>
 a, b = b, a   <span class="c-cm"># Python crea tupla (b, a) y desempaca</span>
+
+<span class="c-cm"># Retornar múltiples valores de una función — en realidad retorna UNA tupla</span>
+<span class="c-kw">def</span> <span class="c-fn">min_max</span>(valores):
+    <span class="c-kw">return</span> <span class="c-bi">min</span>(valores), <span class="c-bi">max</span>(valores)   <span class="c-cm"># empaqueta (min, max)</span>
+lo, hi = min_max([<span class="c-nb">4</span>, <span class="c-nb">1</span>, <span class="c-nb">9</span>, <span class="c-nb">2</span>])   <span class="c-cm"># desempaqueta al recibir</span>
+
+<span class="c-cm"># Unpacking en for — muy usado con enumerate/zip/items</span>
+<span class="c-kw">for</span> idx, (bench, resultado) <span class="c-kw">in</span> <span class="c-bi">enumerate</span>(pares):
+    <span class="c-bi">print</span>(idx, bench, resultado)
 
 <span class="c-cm"># Named tuple — tupla con campos nombrados (mejor que índices)</span>
 <span class="c-kw">from</span> collections <span class="c-kw">import</span> namedtuple
@@ -288,21 +493,93 @@ SensorReading = namedtuple(<span class="c-st">'SensorReading'</span>, [<span cla
 r = SensorReading(<span class="c-nb">1720000000.0</span>, <span class="c-nb">36.5</span>, <span class="c-st">'celsius'</span>)
 <span class="c-bi">print</span>(r.value)     <span class="c-cm"># 36.5  ← más claro que r[1]</span>
 <span class="c-bi">print</span>(r._asdict()) <span class="c-cm"># {'timestamp': ..., 'value': 36.5, 'unit': 'celsius'}</span>
+r2 = r._replace(value=<span class="c-nb">37.0</span>)  <span class="c-cm"># namedtuple sigue siendo inmutable: _replace retorna una copia</span>
 
-<span class="c-cm"># Tuplas como keys de dict (porque son hashables)</span>
-cache = {}
-cache[(<span class="c-st">'bench_a3'</span>, <span class="c-st">'test_lidar'</span>)] = <span class="c-st">'PASSED'</span>
+<span class="c-cm"># Alternativa moderna: dataclass congelada (Python 3.7+), similar pero con type hints</span>
+<span class="c-kw">from</span> dataclasses <span class="c-kw">import</span> dataclass
+<span class="c-dc">@dataclass</span>(frozen=<span class="c-kw">True</span>)
+<span class="c-kw">class</span> <span class="c-fn">Reading</span>:
+    timestamp: <span class="c-bi">float</span>
+    value: <span class="c-bi">float</span>
+    unit: <span class="c-bi">str</span></pre></div>
+  </div>
+  <div id="ptp-3" class="tab-panel">
+<div class="error-compare">
+  <div class="err-bad"><div class="err-label">❌ Incorrecto</div><pre>
+t = (<span class="c-nb">1</span>)
+<span class="c-bi">print</span>(<span class="c-bi">type</span>(t))   <span class="c-cm"># &lt;class 'int'&gt; — ¡no es tupla!</span></pre></div>
+  <div class="err-good"><div class="err-label">✅ Correcto</div><pre>
+t = (<span class="c-nb">1</span>,)   <span class="c-cm"># la coma es lo que crea la tupla, no los paréntesis</span>
+<span class="c-bi">print</span>(<span class="c-bi">type</span>(t))   <span class="c-cm"># &lt;class 'tuple'&gt;</span></pre></div>
+</div>
+<div class="error-note"><b>Por qué pasa:</b> en Python, los paréntesis alrededor de un solo valor son solo agrupación aritmética, igual que en matemáticas — no crean una tupla. Lo que define una tupla es la <b>coma</b>. Por eso <code>tuple('abc')</code> da <code>('a', 'b', 'c')</code> (itera el string) y no <code>('abc',)</code>: la única forma de obtener esta última es escribir explícitamente la coma.</div>
 
-<span class="c-cm"># Ventaja sobre lista: más rápidas, usan menos memoria, semántica de inmutabilidad</span>
-<span class="c-kw">import</span> sys
-<span class="c-bi">print</span>(sys.getsizeof((<span class="c-nb">1</span>,<span class="c-nb">2</span>,<span class="c-nb">3</span>)))  <span class="c-cm"># 64 bytes</span>
-<span class="c-bi">print</span>(sys.getsizeof([<span class="c-nb">1</span>,<span class="c-nb">2</span>,<span class="c-nb">3</span>]))  <span class="c-cm"># 88 bytes</span>
+<div class="error-compare">
+  <div class="err-bad"><div class="err-label">❌ Incorrecto</div><pre>
+config = ([<span class="c-nb">1</span>,<span class="c-nb">2</span>], [<span class="c-nb">3</span>,<span class="c-nb">4</span>])
+cache[config] = <span class="c-st">'PASSED'</span>   <span class="c-cm"># TypeError: unhashable type: 'list'</span></pre></div>
+  <div class="err-good"><div class="err-label">✅ Correcto</div><pre>
+config = ((<span class="c-nb">1</span>,<span class="c-nb">2</span>), (<span class="c-nb">3</span>,<span class="c-nb">4</span>))   <span class="c-cm"># sub-tuplas, no sub-listas</span>
+cache[config] = <span class="c-st">'PASSED'</span>   <span class="c-cm"># funciona, todo es hashable</span></pre></div>
+</div>
+<div class="error-note"><b>Por qué pasa:</b> una tupla es hashable <b>solo si todos sus elementos son hashables</b>. La tupla en sí es inmutable, pero si contiene una lista, esa lista sí es mutable y Python no puede calcular un hash estable para ella. Esto rompe el uso de la tupla como key de dict o elemento de set. Verifica con <code>hash(x)</code>: si lanza TypeError, no puedes usar esa estructura como key.</div>
 
-<span class="c-cm"># Métodos — solo count() e index() (sin mutación)</span>
-(<span class="c-nb">1</span>,<span class="c-nb">2</span>,<span class="c-nb">2</span>,<span class="c-nb">3</span>).count(<span class="c-nb">2</span>)   <span class="c-cm"># 2</span>
-(<span class="c-nb">1</span>,<span class="c-nb">2</span>,<span class="c-nb">3</span>).index(<span class="c-nb">2</span>)     <span class="c-cm"># 1</span></pre></div>
+<div class="error-compare">
+  <div class="err-bad"><div class="err-label">❌ Incorrecto</div><pre>
+resultado = ()
+<span class="c-kw">for</span> chunk <span class="c-kw">in</span> chunks:
+    resultado += (chunk,)   <span class="c-cm"># crea una tupla NUEVA cada vuelta → O(n²)</span></pre></div>
+  <div class="err-good"><div class="err-label">✅ Correcto</div><pre>
+<span class="c-cm"># Acumula en lista (mutable) y convierte a tupla al final</span>
+resultado = []
+<span class="c-kw">for</span> chunk <span class="c-kw">in</span> chunks:
+    resultado.append(chunk)
+resultado = <span class="c-bi">tuple</span>(resultado)</pre></div>
+</div>
+<div class="error-note"><b>Por qué pasa:</b> igual que con listas, <code>+=</code> sobre una tupla no modifica in-place (no puede, son inmutables): crea una tupla completamente nueva copiando todos los elementos anteriores más el nuevo. Repetido en un loop, el costo es O(n²). Si necesitas construir una colección incrementalmente, usa una lista mutable y conviértela a tupla solo al final si la inmutabilidad importa para el resultado.</div>
+
+<div class="error-compare">
+  <div class="err-bad"><div class="err-label">❌ Incorrecto</div><pre>
+<span class="c-cm"># Acceder por índice numérico en una tupla de muchos campos</span>
+reading = (<span class="c-nb">1720000000.0</span>, <span class="c-nb">36.5</span>, <span class="c-st">'celsius'</span>, <span class="c-st">'sensor_04'</span>, <span class="c-kw">True</span>)
+<span class="c-kw">if</span> reading[<span class="c-nb">4</span>]:   <span class="c-cm"># ¿qué es el índice 4? hay que ir a leer la definición</span>
+    process(reading[<span class="c-nb">1</span>])</pre></div>
+  <div class="err-good"><div class="err-label">✅ Correcto</div><pre>
+<span class="c-kw">from</span> collections <span class="c-kw">import</span> namedtuple
+Reading = namedtuple(<span class="c-st">'Reading'</span>, <span class="c-st">'timestamp value unit sensor_id is_valid'</span>)
+reading = Reading(<span class="c-nb">1720000000.0</span>, <span class="c-nb">36.5</span>, <span class="c-st">'celsius'</span>, <span class="c-st">'sensor_04'</span>, <span class="c-kw">True</span>)
+<span class="c-kw">if</span> reading.is_valid:   <span class="c-cm"># autoexplicativo</span>
+    process(reading.value)</pre></div>
+</div>
+<div class="error-note"><b>Por qué pasa:</b> las tuplas posicionales con muchos campos son ilegibles y frágiles: si alguien reordena los campos al construirlas en otro punto del código, no hay ningún error en tiempo de ejecución, solo un bug silencioso. <code>namedtuple</code> (o <code>dataclass</code>) resuelve esto dando nombre a cada posición sin perder el rendimiento ni la inmutabilidad de una tupla.</div>
+  </div>
+  <div id="ptp-4" class="tab-panel">
+<div class="practice-card">
+  <div class="practice-title">Usa namedtuple o dataclass(frozen=True) para datos con significado</div>
+  <p>En vez de tuplas posicionales genéricas para representar una lectura de sensor, un resultado de test o una fila de CSV, dale nombre a cada campo. El código se vuelve autoexplicativo y evita bugs de "¿cuál índice era el timestamp?".</p>
+</div>
+<div class="practice-card">
+  <div class="practice-title">Usa tuplas para comunicar "esto no debería cambiar"</div>
+  <p>Elegir <code>tuple</code> en vez de <code>list</code> es también documentación: le dice al siguiente desarrollador (o a ti en 6 meses) que esos valores son fijos — por ejemplo, las coordenadas de un sensor montado en el vehículo, o los encabezados de un CSV.</p>
+</div>
+<div class="practice-card">
+  <div class="practice-title">Aprovecha que son hashables para keys compuestas de dict/set</div>
+  <p><code>cache[(bench_id, test_name)] = resultado</code> es más limpio que anidar diccionarios (<code>cache[bench_id][test_name]</code>). Solo asegúrate de que todos los elementos de la tupla sean a su vez hashables (nada de listas o dicts adentro).</p>
+</div>
+<div class="practice-card">
+  <div class="practice-title">Retorna tuplas desde funciones y desempaqueta de inmediato en el caller</div>
+  <p><code>def stats(x): return min(x), max(x), sum(x)/len(x)</code> seguido de <code>lo, hi, avg = stats(datos)</code> es un patrón muy Pythónico para retornar varios valores relacionados sin crear una clase completa.</p>
+</div>
+<div class="practice-card">
+  <div class="practice-title">No uses tuplas cuando en realidad necesitas mutabilidad</div>
+  <p>Si vas a acumular elementos incrementalmente (agregar uno por uno en un loop), usa una lista y conviértela a tupla al final si hace falta inmutabilidad — evita el patrón O(n²) de <code>tupla += (x,)</code> dentro de un loop.</p>
+</div>
 <div class="quiz-section"><div class="quiz-title">Quiz</div>
   <div class="quiz-card"><div class="quiz-q" onclick="toggleQuiz(this)"><span class="q-tag">Trampa</span>¿Una tupla es siempre inmutable?<span class="q-arr">▶</span></div><div class="quiz-a"><b>La tupla en sí es inmutable, pero puede contener objetos mutables.</b><br><code>t = ([1,2], [3,4])<br>t[0].append(99)  # t = ([1,2,99], [3,4]) — ¡modificó!</code><br><br>La tupla no cambió (t[0] sigue siendo la misma lista), pero el contenido de esa lista sí. Por eso las tuplas con mutables NO son hashables y no pueden ser keys de dict.</div></div>
+  <div class="quiz-card"><div class="quiz-q" onclick="toggleQuiz(this)"><span class="q-tag">Sintaxis</span>¿Por qué (1) no es una tupla pero (1,) sí?<span class="q-arr">▶</span></div><div class="quiz-a">Porque lo que crea una tupla es la <b>coma</b>, no los paréntesis. <code>(1)</code> es solo el entero 1 entre paréntesis de agrupación (igual que en aritmética). <code>(1,)</code> tiene la coma que le indica al parser "esto es una secuencia de un elemento". De hecho, incluso sin paréntesis, <code>1,</code> ya es una tupla.</div></div>
+  <div class="quiz-card"><div class="quiz-q" onclick="toggleQuiz(this)"><span class="q-tag">Diseño</span>¿Cuándo elegirías namedtuple sobre una clase normal?<span class="q-arr">▶</span></div><div class="quiz-a">Cuando el objeto es esencialmente un conjunto de datos inmutables sin comportamiento propio (sin métodos que muten estado) — por ejemplo, un registro de lectura de sensor o una fila parseada de un CSV. namedtuple da inmutabilidad, hashabilidad, comparación por valor y menor uso de memoria "gratis", sin escribir <code>__init__</code>/<code>__eq__</code>/<code>__hash__</code> a mano. Si necesitas métodos con lógica compleja o mutabilidad, usa una clase normal o dataclass.</div></div>
+</div>
+  </div>
 </div>`,
 
 'py-dicts': `
@@ -311,42 +588,14 @@ cache[(<span class="c-st">'bench_a3'</span>, <span class="c-st">'test_lidar'</sp
     <button class="tab-btn active" onclick="switchTab(this,'pd-1','pydicts')">Métodos esenciales</button>
     <button class="tab-btn" onclick="switchTab(this,'pd-2','pydicts')">defaultdict / Counter</button>
     <button class="tab-btn" onclick="switchTab(this,'pd-3','pydicts')">Patrones avanzados</button>
+    <button class="tab-btn" onclick="switchTab(this,'pd-4','pydicts')">⚠️ Errores comunes</button>
+    <button class="tab-btn" onclick="switchTab(this,'pd-5','pydicts')">✅ Mejores Prácticas</button>
   </div>
   <div id="pd-1" class="tab-panel active">
-<table class="kv-table"><tr><th>Método</th><th>Qué hace</th><th>Nota</th></tr>
-<tr><td>d[key]</td><td>Acceso — lanza KeyError si no existe</td><td>Usa get() para acceso seguro</td></tr>
-<tr><td>d.get(k, default)</td><td>Acceso seguro con default</td><td>default=None si se omite</td></tr>
-<tr><td>d.setdefault(k, v)</td><td>Inserta v si k no existe, retorna valor</td><td>Útil para inicializar</td></tr>
-<tr><td>d.keys()</td><td>Vista de claves</td><td>Es una vista, no copia</td></tr>
-<tr><td>d.values()</td><td>Vista de valores</td><td>Es una vista, no copia</td></tr>
-<tr><td>d.items()</td><td>Vista de pares (k, v)</td><td>Usar en for k, v in d.items()</td></tr>
-<tr><td>d.pop(k, default)</td><td>Elimina y retorna</td><td>Sin default → KeyError si no existe</td></tr>
-<tr><td>d.update(otro)</td><td>Merge in-place (otro gana)</td><td>También acepta kwargs</td></tr>
-<tr><td>k in d</td><td>Membership test</td><td>O(1) — busca en keys</td></tr>
-<tr><td>d | d2</td><td>Merge (Python 3.9+)</td><td>Crea nuevo dict, d2 gana</td></tr>
-</table>
-<div class="code-block"><div class="code-lang">Python — Iteración y manipulación de dicts</div><pre>
-d = {<span class="c-st">'a'</span>: <span class="c-nb">1</span>, <span class="c-st">'b'</span>: <span class="c-nb">2</span>, <span class="c-st">'c'</span>: <span class="c-nb">3</span>}
-
-<span class="c-cm"># Iterar — siempre usa .items() para key+value</span>
-<span class="c-kw">for</span> key, val <span class="c-kw">in</span> d.items():
-    <span class="c-bi">print</span>(key, val)
-
-<span class="c-cm"># Ordenar por valor</span>
-<span class="c-bi">sorted</span>(d.items(), key=<span class="c-kw">lambda</span> kv: kv[<span class="c-nb">1</span>], reverse=<span class="c-kw">True</span>)
-
-<span class="c-cm"># get() con default — evita KeyError</span>
-count = d.get(<span class="c-st">'missing_key'</span>, <span class="c-nb">0</span>)   <span class="c-cm"># 0 en vez de KeyError</span>
-
-<span class="c-cm"># setdefault — inicializa solo si no existe</span>
-d.setdefault(<span class="c-st">'new_key'</span>, []).append(<span class="c-nb">42</span>)
-
-<span class="c-cm"># Dict comprehension — filtrar o transformar</span>
-activos = {k: v <span class="c-kw">for</span> k, v <span class="c-kw">in</span> benches.items() <span class="c-kw">if</span> v[<span class="c-st">'status'</span>] == <span class="c-st">'online'</span>}
-<span class="c-cm"># Intercambiar key/value</span>
-inv = {v: k <span class="c-kw">for</span> k, v <span class="c-kw">in</span> d.items()}</pre></div>
+${renderMethodTable('DCT')}
   </div>
   <div id="pd-2" class="tab-panel">
+<div class="concept-intro">Las variantes de <code>collections</code> resuelven problemas específicos: <strong>defaultdict</strong> elimina el "if key not in dict" antes de escribir, <strong>Counter</strong> es un dict especializado para conteos y frecuencias, y <strong>OrderedDict</strong> sigue teniendo utilidad cuando el <em>orden en sí</em> es parte de la lógica (no solo un efecto colateral), por ejemplo para implementar una caché LRU manual.</div>
 <div class="code-block"><div class="code-lang">Python — defaultdict y Counter</div><pre>
 <span class="c-kw">from</span> collections <span class="c-kw">import</span> defaultdict, Counter, OrderedDict
 
@@ -367,12 +616,49 @@ c.most_common(<span class="c-nb">2</span>)   <span class="c-cm"># [('ERROR', 3),
 <span class="c-cm"># Operaciones aritméticas de Counter</span>
 c1 = Counter(<span class="c-st">'abcabc'</span>)
 c2 = Counter(<span class="c-st">'abc'</span>)
-c1 - c2   <span class="c-cm"># Counter({'a':1,'b':1,'c':1})  — resta</span>
+c1 - c2   <span class="c-cm"># Counter({'a':1,'b':1,'c':1})  — resta (nunca negativos)</span>
 c1 + c2   <span class="c-cm"># suma</span>
 c1 &amp; c2   <span class="c-cm"># intersección (mínimo)</span>
-c1 | c2   <span class="c-cm"># unión (máximo)</span></pre></div>
+c1 | c2   <span class="c-cm"># unión (máximo)</span>
+
+<span class="c-cm"># OrderedDict — útil cuando el orden importa para la LÓGICA, no solo la salida</span>
+lru = OrderedDict()
+<span class="c-kw">def</span> <span class="c-fn">access</span>(key, value):
+    <span class="c-kw">if</span> key <span class="c-kw">in</span> lru:
+        lru.move_to_end(key)        <span class="c-cm"># marca como "recién usado"</span>
+    lru[key] = value
+    <span class="c-kw">if</span> <span class="c-bi">len</span>(lru) &gt; <span class="c-nb">100</span>:
+        lru.popitem(last=<span class="c-kw">False</span>)  <span class="c-cm"># descarta el menos usado (el más antiguo)</span></pre></div>
   </div>
   <div id="pd-3" class="tab-panel">
+<div class="concept-intro">Patrones que aparecen constantemente en herramientas de bench/CI: despachar acciones sin cadenas de <code>if/elif</code>, memoizar resultados caros, y componer configuración desde múltiples fuentes (defaults, overrides de CLI, variables de entorno) sin copiar datos.</div>
+<div class="code-block"><div class="code-lang">Python — Iteración y comprehensions con dicts</div><pre>
+d = {<span class="c-st">'a'</span>: <span class="c-nb">1</span>, <span class="c-st">'b'</span>: <span class="c-nb">2</span>, <span class="c-st">'c'</span>: <span class="c-nb">3</span>}
+
+<span class="c-cm"># Iterar — siempre usa .items() para key+value</span>
+<span class="c-kw">for</span> key, val <span class="c-kw">in</span> d.items():
+    <span class="c-bi">print</span>(key, val)
+
+<span class="c-cm"># Ordenar por valor</span>
+<span class="c-bi">sorted</span>(d.items(), key=<span class="c-kw">lambda</span> kv: kv[<span class="c-nb">1</span>], reverse=<span class="c-kw">True</span>)
+
+<span class="c-cm"># get() con default — evita KeyError</span>
+count = d.get(<span class="c-st">'missing_key'</span>, <span class="c-nb">0</span>)   <span class="c-cm"># 0 en vez de KeyError</span>
+
+<span class="c-cm"># setdefault — inicializa solo si no existe</span>
+d.setdefault(<span class="c-st">'new_key'</span>, []).append(<span class="c-nb">42</span>)
+
+<span class="c-cm"># Dict comprehension — filtrar o transformar</span>
+activos = {k: v <span class="c-kw">for</span> k, v <span class="c-kw">in</span> benches.items() <span class="c-kw">if</span> v[<span class="c-st">'status'</span>] == <span class="c-st">'online'</span>}
+<span class="c-cm"># Intercambiar key/value</span>
+inv = {v: k <span class="c-kw">for</span> k, v <span class="c-kw">in</span> d.items()}
+
+<span class="c-cm"># Dict comprehension con if/else en el valor (no es filtro, es transformación)</span>
+etiqueta = {k: (<span class="c-st">'OK'</span> <span class="c-kw">if</span> v == <span class="c-nb">0</span> <span class="c-kw">else</span> <span class="c-st">'FAIL'</span>) <span class="c-kw">for</span> k, v <span class="c-kw">in</span> error_counts.items()}
+
+<span class="c-cm"># Dict anidado — acceso encadenado seguro con get()</span>
+config = {<span class="c-st">'bench_a3'</span>: {<span class="c-st">'timeout'</span>: <span class="c-nb">30</span>}}
+timeout = config.get(<span class="c-st">'bench_a3'</span>, {}).get(<span class="c-st">'timeout'</span>, <span class="c-nb">15</span>)  <span class="c-cm"># 30, o 15 si falta cualquier nivel</span></pre></div>
 <div class="code-block"><div class="code-lang">Python — Patrones avanzados con dicts</div><pre>
 <span class="c-cm"># Dict como switch/case (antes de Python 3.10)</span>
 actions = {
@@ -389,67 +675,295 @@ _cache = {}
         _cache[key] = run_analysis(key)
     <span class="c-kw">return</span> _cache[key]
 
-<span class="c-cm"># ChainMap — busca en múltiples dicts en orden</span>
+<span class="c-cm"># ChainMap — busca en múltiples dicts en orden, sin copiar ni mergear</span>
 <span class="c-kw">from</span> collections <span class="c-kw">import</span> ChainMap
 defaults = {<span class="c-st">'timeout'</span>: <span class="c-nb">30</span>, <span class="c-st">'retries'</span>: <span class="c-nb">3</span>}
 overrides = {<span class="c-st">'timeout'</span>: <span class="c-nb">60</span>}
 config = ChainMap(overrides, defaults)
 config[<span class="c-st">'timeout'</span>]   <span class="c-cm"># 60 (del override)</span>
-config[<span class="c-st">'retries'</span>]   <span class="c-cm"># 3 (del default)</span></pre></div>
+config[<span class="c-st">'retries'</span>]   <span class="c-cm"># 3 (del default)</span>
+
+<span class="c-cm"># Agrupar registros por campo — patrón "groupby" con defaultdict(list)</span>
+resultados = [
+    {<span class="c-st">'bench'</span>: <span class="c-st">'a3'</span>, <span class="c-st">'status'</span>: <span class="c-st">'PASSED'</span>},
+    {<span class="c-st">'bench'</span>: <span class="c-st">'a3'</span>, <span class="c-st">'status'</span>: <span class="c-st">'FAILED'</span>},
+    {<span class="c-st">'bench'</span>: <span class="c-st">'b1'</span>, <span class="c-st">'status'</span>: <span class="c-st">'PASSED'</span>},
+]
+por_bench = defaultdict(<span class="c-bi">list</span>)
+<span class="c-kw">for</span> r <span class="c-kw">in</span> resultados:
+    por_bench[r[<span class="c-st">'bench'</span>]].append(r[<span class="c-st">'status'</span>])
+<span class="c-cm"># {'a3': ['PASSED','FAILED'], 'b1': ['PASSED']}</span>
+
+<span class="c-cm"># Merge de configuración con | (crea dict nuevo, no muta ninguno de los dos)</span>
+base_cfg = {<span class="c-st">'log_level'</span>: <span class="c-st">'INFO'</span>, <span class="c-st">'timeout'</span>: <span class="c-nb">30</span>}
+cli_cfg  = {<span class="c-st">'timeout'</span>: <span class="c-nb">5</span>}
+final_cfg = base_cfg | cli_cfg   <span class="c-cm"># {'log_level':'INFO', 'timeout':5}</span></pre></div>
+  </div>
+  <div id="pd-4" class="tab-panel">
+<div class="concept-intro">Estos son los errores con dicts que más aparecen tanto en entrevistas como en scripts reales de bench/CI. La mayoría comparte una causa raíz: tratar el dict como si tuviera garantías que no tiene (todas las keys existen, el orden de iteración es libre de cambiar, copiar es siempre "independizar").</div>
+<div class="error-compare">
+  <div class="err-bad"><div class="err-label">❌ Incorrecto</div><pre>timeout = config[<span class="c-st">'timeout'</span>]
+<span class="c-cm"># KeyError: 'timeout' si la key no vino en el JSON de config</span></pre></div>
+  <div class="err-good"><div class="err-label">✅ Correcto</div><pre>timeout = config.get(<span class="c-st">'timeout'</span>, <span class="c-nb">30</span>)
+<span class="c-cm"># o si de verdad DEBE existir, falla explícito y claro:</span>
+<span class="c-kw">if</span> <span class="c-st">'timeout'</span> <span class="c-kw">not in</span> config:
+    <span class="c-kw">raise</span> <span class="c-bi">ValueError</span>(<span class="c-st">"config.json debe incluir 'timeout'"</span>)</pre></div>
+</div>
+<div class="error-note"><b>Por qué pasa:</b> el indexado directo <code>d[key]</code> asume que la key siempre está presente. En configs que vienen de JSON externo, argumentos CLI opcionales, o respuestas HTTP, eso casi nunca es cierto. Usa <code>.get()</code> cuando el valor faltante es un caso normal, y una validación explícita con mensaje claro cuando faltar es un bug de configuración que quieres detectar temprano (no un KeyError críptico tres funciones más abajo).</div>
+
+<div class="error-compare">
+  <div class="err-bad"><div class="err-label">❌ Incorrecto</div><pre><span class="c-kw">for</span> key <span class="c-kw">in</span> resultados:
+    <span class="c-kw">if</span> resultados[key] == <span class="c-st">'STALE'</span>:
+        <span class="c-kw">del</span> resultados[key]
+<span class="c-cm"># RuntimeError: dictionary changed size during iteration</span></pre></div>
+  <div class="err-good"><div class="err-label">✅ Correcto</div><pre><span class="c-kw">for</span> key <span class="c-kw">in</span> <span class="c-bi">list</span>(resultados.keys()):   <span class="c-cm"># copia las keys primero</span>
+    <span class="c-kw">if</span> resultados[key] == <span class="c-st">'STALE'</span>:
+        <span class="c-kw">del</span> resultados[key]
+
+<span class="c-cm"># Alternativa más Pythónica: reconstruir el dict</span>
+resultados = {k: v <span class="c-kw">for</span> k, v <span class="c-kw">in</span> resultados.items() <span class="c-kw">if</span> v != <span class="c-st">'STALE'</span>}</pre></div>
+</div>
+<div class="error-note"><b>Por qué pasa:</b> Python detecta que el tamaño del dict cambió mientras un iterador seguía activo sobre él (agregar o quitar keys, no solo cambiar valores) y lanza <code>RuntimeError</code> para evitar comportamiento indefinido. La solución es iterar sobre una copia (<code>list(d.keys())</code>) o, mejor, construir un dict nuevo con comprehension en vez de mutar el original in-place.</div>
+
+<div class="error-compare">
+  <div class="err-bad"><div class="err-label">❌ Incorrecto</div><pre><span class="c-kw">def</span> <span class="c-fn">registrar_resultado</span>(bench, status, historial={}):  <span class="c-cm"># default mutable!</span>
+    historial[bench] = status
+    <span class="c-kw">return</span> historial
+<span class="c-cm"># cada llamada SIN historial explícito comparte el MISMO dict</span></pre></div>
+  <div class="err-good"><div class="err-label">✅ Correcto</div><pre><span class="c-kw">def</span> <span class="c-fn">registrar_resultado</span>(bench, status, historial=<span class="c-kw">None</span>):
+    <span class="c-kw">if</span> historial <span class="c-kw">is None</span>:
+        historial = {}   <span class="c-cm"># dict nuevo en cada llamada</span>
+    historial[bench] = status
+    <span class="c-kw">return</span> historial</pre></div>
+</div>
+<div class="error-note"><b>Por qué pasa:</b> los valores default de parámetros se evalúan <b>una sola vez</b>, cuando se define la función — no en cada llamada. Un <code>{}</code> como default crea un único objeto dict que todas las llamadas sin ese argumento comparten y mutan acumulativamente. Es uno de los gotchas clásicos de Python y aparece seguido en entrevistas. Regla: nunca uses listas, dicts ni sets como default de parámetro; usa <code>None</code> y crea el objeto dentro de la función.</div>
+
+<div class="error-compare">
+  <div class="err-bad"><div class="err-label">❌ Incorrecto</div><pre>original = {<span class="c-st">'bench'</span>: <span class="c-st">'a3'</span>, <span class="c-st">'tags'</span>: [<span class="c-st">'hil'</span>, <span class="c-st">'nightly'</span>]}
+copia = original.copy()          <span class="c-cm"># copia SUPERFICIAL (shallow)</span>
+copia[<span class="c-st">'tags'</span>].append(<span class="c-st">'debug'</span>)
+<span class="c-cm"># original['tags'] también cambió — sorpresa</span></pre></div>
+  <div class="err-good"><div class="err-label">✅ Correcto</div><pre><span class="c-kw">import</span> copy
+copia = copy.deepcopy(original)  <span class="c-cm"># copia profunda: independiza también los anidados</span>
+copia[<span class="c-st">'tags'</span>].append(<span class="c-st">'debug'</span>)  <span class="c-cm"># original NO cambia</span></pre></div>
+</div>
+<div class="error-note"><b>Por qué pasa:</b> <code>dict.copy()</code> y <code>dict(original)</code> crean un nuevo dict, pero los valores que son objetos mutables (listas, otros dicts) siguen siendo <b>el mismo objeto</b> referenciado desde ambos dicts. Solo <code>copy.deepcopy()</code> clona recursivamente. Para dicts planos (valores inmutables como int/str) <code>.copy()</code> es suficiente y más rápido; para configs anidadas, usa deepcopy si vas a mutar la copia.</div>
+  </div>
+  <div id="pd-5" class="tab-panel">
+<div class="practice-card">
+  <div class="practice-title">Usa .get() (o setdefault) en vez de indexado directo cuando la key puede faltar</div>
+  <p>Reserva <code>d[key]</code> para cuando la ausencia de la key es un bug real que quieres que explote. Si es un caso normal (config opcional, parámetro CLI no pasado), usa <code>d.get(k, default)</code> — es más corto que try/except y comunica intención.</p>
+</div>
+<div class="practice-card">
+  <div class="practice-title">Construye dicts con comprehensions en vez de loops con d[k]=v</div>
+  <p><code>{k: transform(v) for k, v in items}</code> es más corto, evita bugs de inicialización, y dice explícitamente "esto construye un dict nuevo" en vez de mutar uno existente.</p>
+</div>
+<div class="practice-card">
+  <div class="practice-title">Prefiere defaultdict/Counter a manejar KeyError manualmente para agrupar o contar</div>
+  <p>Si tu código tiene un <code>if key not in d: d[key] = ...</code> antes de acumular, casi siempre es una señal de que quieres <code>defaultdict(list)</code>, <code>defaultdict(int)</code> o <code>Counter</code>. Menos líneas, menos lugares donde olvidar el caso inicial.</p>
+</div>
+<div class="practice-card">
+  <div class="practice-title">Usa | y |= (Python 3.9+) para mergear configs de forma explícita</div>
+  <p><code>final = defaults | overrides</code> deja claro, en una línea, quién gana en caso de conflicto (el de la derecha) y no muta ninguno de los dos dicts originales — más seguro que <code>update()</code> cuando ambos dicts se siguen usando después.</p>
+</div>
+<div class="practice-card">
+  <div class="practice-title">No abuses del dict genérico para estructuras con forma fija — considera dataclass o TypedDict</div>
+  <p>Si siempre esperas las mismas keys (<code>{'bench_id':..., 'status':..., 'duration':...}</code>), un <code>dict</code> no valida nada: un typo en la key falla en silencio o con KeyError lejos de la causa. Un <code>@dataclass</code> o <code>TypedDict</code> da autocompletado, chequeo estático y documenta la forma esperada.</p>
+</div>
+<div class="practice-card">
+  <div class="practice-title">Copia explícita: .copy() para planos, copy.deepcopy() para anidados</div>
+  <p>Antes de pasar un dict a una función que podría mutarlo, decide conscientemente si compartir referencia es correcto. Si no, copia — y si el dict tiene listas/dicts anidados, usa <code>deepcopy</code>, no <code>.copy()</code>.</p>
+</div>
+<div class="quiz-section"><div class="quiz-title">Quiz</div>
+  <div class="quiz-card"><div class="quiz-q" onclick="toggleQuiz(this)"><span class="q-tag">Trampa</span>¿Qué imprime este código?<br><code>def f(x, cache={}): cache[x]=cache.get(x,0)+1; return cache</code><br><code>f(1); print(f(2))</code><span class="q-arr">▶</span></div><div class="quiz-a"><b>{1: 1, 2: 1}</b> — no solo {2: 1}. El dict default se crea UNA vez al definir la función y persiste entre llamadas, acumulando entradas de llamadas anteriores. Es el bug de "mutable default argument" — evítalo siempre con <code>cache=None</code> + <code>if cache is None: cache = {}</code>.</div></div>
+  <div class="quiz-card"><div class="quiz-q" onclick="toggleQuiz(this)"><span class="q-tag">Conceptual</span>¿Cuál es la complejidad de <code>key in dict</code> comparada con <code>key in list</code>?<span class="q-arr">▶</span></div><div class="quiz-a"><b>O(1) promedio en dict, vs O(n) en list.</b> El dict usa una tabla hash internamente: calcula el hash de la key y salta directo al bucket. La lista tiene que recorrer elemento por elemento hasta encontrar (o no) una coincidencia.</div></div>
+</div>
   </div>
 </div>`,
 
 'py-sets': `
-<div class="code-block"><div class="code-lang">Python — Sets: operaciones y usos</div><pre>
-<span class="c-cm"># Crear sets</span>
+<div class="tab-group-pyset">
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="switchTab(this,'pst-0','pyset')">Métodos esenciales</button>
+    <button class="tab-btn" onclick="switchTab(this,'pst-1','pyset')">Conceptos y operaciones</button>
+    <button class="tab-btn" onclick="switchTab(this,'pst-2','pyset')">Comprehensions & frozenset</button>
+    <button class="tab-btn" onclick="switchTab(this,'pst-3','pyset')">⚠️ Errores comunes</button>
+    <button class="tab-btn" onclick="switchTab(this,'pst-4','pyset')">✅ Mejores Prácticas + Quiz</button>
+  </div>
+  <div id="pst-0" class="tab-panel active">
+${renderMethodTable('SET')}
+  </div>
+  <div id="pst-1" class="tab-panel">
+<div class="concept-intro">Un <strong>set</strong> es una colección <em>desordenada</em> de elementos <strong>únicos y hasheables</strong> (no admite duplicados, no admite listas/dicts como elementos). Internamente usa la misma tabla hash que un dict — por eso membership test (<code>x in s</code>) y agregar/quitar son O(1) promedio, mucho más rápido que buscar en una lista cuando la colección crece. Úsalo cuando lo que te importa es "¿está o no está" y "qué tienen en común/de diferente dos colecciones", no el orden ni las repeticiones.</div>
+<div class="code-block"><div class="code-lang">Python — Crear sets</div><pre>
 s = {<span class="c-nb">1</span>, <span class="c-nb">2</span>, <span class="c-nb">3</span>}
 s = <span class="c-bi">set</span>([<span class="c-nb">1</span>, <span class="c-nb">2</span>, <span class="c-nb">2</span>, <span class="c-nb">3</span>])    <span class="c-cm"># deduplicación automática → {1, 2, 3}</span>
-s = <span class="c-bi">set</span>()               <span class="c-cm"># TRAMPA: {} crea dict vacío, no set</span>
-
-<span class="c-cm"># Operaciones matemáticas — O(min(len(s),len(t)))</span>
-a = {<span class="c-nb">1</span>, <span class="c-nb">2</span>, <span class="c-nb">3</span>, <span class="c-nb">4</span>}
-b = {<span class="c-nb">3</span>, <span class="c-nb">4</span>, <span class="c-nb">5</span>, <span class="c-nb">6</span>}
-
-a | b     <span class="c-cm"># {1,2,3,4,5,6}   unión      — a.union(b)</span>
-a &amp; b     <span class="c-cm"># {3, 4}          intersección — a.intersection(b)</span>
-a - b     <span class="c-cm"># {1, 2}          diferencia   — a.difference(b)</span>
-a ^ b     <span class="c-cm"># {1,2,5,6}       diferencia simétrica — a.symmetric_difference(b)</span>
-a &lt;= b    <span class="c-cm"># False           a es subconjunto de b?</span>
-a &gt;= b    <span class="c-cm"># False           a es superconjunto de b?</span>
-
-<span class="c-cm"># Membership test — O(1) vs O(n) en lista</span>
-<span class="c-nb">5</span> <span class="c-kw">in</span> a            <span class="c-cm"># False — O(1)</span>
-<span class="c-nb">5</span> <span class="c-kw">in</span> [<span class="c-nb">1</span>,<span class="c-nb">2</span>,<span class="c-nb">3</span>,<span class="c-nb">4</span>]   <span class="c-cm"># False — O(n)</span>
-
-<span class="c-cm"># Métodos de mutación</span>
-s.add(<span class="c-nb">5</span>)           <span class="c-cm"># agrega elemento</span>
-s.discard(<span class="c-nb">5</span>)       <span class="c-cm"># elimina sin error si no existe (diferente a remove)</span>
-s.remove(<span class="c-nb">5</span>)        <span class="c-cm"># elimina, KeyError si no existe</span>
-s.update({<span class="c-nb">6</span>,<span class="c-nb">7</span>})    <span class="c-cm"># agrega múltiples</span>
-s.clear()           <span class="c-cm"># vacía el set</span>
-
-<span class="c-cm"># frozenset — hashable, usable como key de dict</span>
-fs = <span class="c-bi">frozenset</span>({<span class="c-nb">1</span>, <span class="c-nb">2</span>, <span class="c-nb">3</span>})
-config_cache = {<span class="c-bi">frozenset</span>({<span class="c-st">'debug'</span>,<span class="c-st">'hil'</span>}): <span class="c-st">'config_A'</span>}
-
-<span class="c-cm"># Caso práctico: deduplicar tests fallidos de múltiples benches</span>
+s = <span class="c-bi">set</span>()               <span class="c-cm"># TRAMPA: {} crea dict vacío, no set — ver tab de Errores</span>
+s = {x <span class="c-kw">for</span> x <span class="c-kw">in</span> <span class="c-bi">range</span>(<span class="c-nb">5</span>)}   <span class="c-cm"># set comprehension → {0,1,2,3,4}</span></pre></div>
+<div class="code-block"><div class="code-lang">Python — Caso práctico: comparar resultados entre benches</div><pre>
+<span class="c-cm"># Deduplicar y comparar tests fallidos de múltiples benches</span>
 bench_a_fails = {<span class="c-st">'test_lidar'</span>, <span class="c-st">'test_can'</span>, <span class="c-st">'test_imu'</span>}
 bench_b_fails = {<span class="c-st">'test_can'</span>, <span class="c-st">'test_eth'</span>}
+
 all_unique_fails = bench_a_fails | bench_b_fails  <span class="c-cm"># {'test_lidar','test_can','test_imu','test_eth'}</span>
-only_in_a       = bench_a_fails - bench_b_fails   <span class="c-cm"># {'test_lidar','test_imu'}</span>
-both_fail       = bench_a_fails &amp; bench_b_fails   <span class="c-cm"># {'test_can'}</span></pre></div>
+only_in_a       = bench_a_fails - bench_b_fails   <span class="c-cm"># {'test_lidar','test_imu'} — regresión propia de A</span>
+both_fail       = bench_a_fails &amp; bench_b_fails   <span class="c-cm"># {'test_can'} — problema compartido, probable bug en HW/HIL común</span>
+solo_en_uno     = bench_a_fails ^ bench_b_fails   <span class="c-cm"># {'test_lidar','test_imu','test_eth'} — inconsistencias entre benches</span>
+
+<span class="c-cm"># Membership: verificar si un test específico está en el set de fallos — O(1)</span>
+<span class="c-kw">if</span> <span class="c-st">'test_can'</span> <span class="c-kw">in</span> bench_a_fails:
+    <span class="c-bi">print</span>(<span class="c-st">"CAN sigue fallando en bench A"</span>)</pre></div>
+  </div>
+  <div id="pst-2" class="tab-panel">
+<div class="concept-intro">Las <strong>set comprehensions</strong> construyen sets con la misma sintaxis que las list comprehensions pero con <code>{}</code>. <strong>frozenset</strong> es la versión inmutable (y por tanto hasheable) de set — no tiene <code>add</code>/<code>remove</code>, pero justamente por ser inmutable puede usarse como key de dict o como elemento de otro set, algo que un set normal no puede hacer.</div>
+<div class="code-block"><div class="code-lang">Python — Set comprehensions</div><pre>
+<span class="c-cm"># Básica: transformar y deduplicar en un paso</span>
+codigos = [<span class="c-st">'DTC001'</span>, <span class="c-st">'dtc001'</span>, <span class="c-st">'DTC002'</span>]
+unicos = {c.upper() <span class="c-kw">for</span> c <span class="c-kw">in</span> codigos}   <span class="c-cm"># {'DTC001', 'DTC002'} — normaliza y deduplica</span>
+
+<span class="c-cm"># Con filtro — solo IDs de sensores que fallaron</span>
+lecturas = [{<span class="c-st">'id'</span>: <span class="c-st">'imu1'</span>, <span class="c-st">'ok'</span>: <span class="c-kw">False</span>}, {<span class="c-st">'id'</span>: <span class="c-st">'imu2'</span>, <span class="c-st">'ok'</span>: <span class="c-kw">True</span>}]
+sensores_fallidos = {r[<span class="c-st">'id'</span>] <span class="c-kw">for</span> r <span class="c-kw">in</span> lecturas <span class="c-kw">if</span> <span class="c-kw">not</span> r[<span class="c-st">'ok'</span>]}   <span class="c-cm"># {'imu1'}</span>
+
+<span class="c-cm"># Sacar valores únicos de una columna de datos crudos</span>
+timestamps_raw = [(<span class="c-nb">1000</span>, <span class="c-st">'A'</span>), (<span class="c-nb">1000</span>, <span class="c-st">'B'</span>), (<span class="c-nb">2000</span>, <span class="c-st">'A'</span>)]
+ticks_unicos = {t <span class="c-kw">for</span> t, _ <span class="c-kw">in</span> timestamps_raw}   <span class="c-cm"># {1000, 2000}</span></pre></div>
+<div class="code-block"><div class="code-lang">Python — frozenset: inmutable y hasheable</div><pre>
+<span class="c-cm"># frozenset básico — misma API de solo-lectura que set (union, &, etc. funcionan)</span>
+fs = <span class="c-bi">frozenset</span>({<span class="c-nb">1</span>, <span class="c-nb">2</span>, <span class="c-nb">3</span>})
+fs.add(<span class="c-nb">4</span>)   <span class="c-cm"># AttributeError: 'frozenset' object has no attribute 'add'</span>
+
+<span class="c-cm"># Caso de uso 1: key de dict compuesta por un conjunto de flags</span>
+config_cache = {
+    <span class="c-bi">frozenset</span>({<span class="c-st">'debug'</span>, <span class="c-st">'hil'</span>}): <span class="c-st">'config_A'</span>,
+    <span class="c-bi">frozenset</span>({<span class="c-st">'release'</span>}):     <span class="c-st">'config_B'</span>,
+}
+flags_activos = <span class="c-bi">frozenset</span>({<span class="c-st">'hil'</span>, <span class="c-st">'debug'</span>})   <span class="c-cm"># orden no importa: {'hil','debug'} == {'debug','hil'}</span>
+config_cache[flags_activos]   <span class="c-cm"># 'config_A'</span>
+
+<span class="c-cm"># Caso de uso 2: memoización cuando el "argumento" es un conjunto de IDs</span>
+_cache = {}
+<span class="c-kw">def</span> <span class="c-fn">correlacionar_sensores</span>(ids_sensores):
+    key = <span class="c-bi">frozenset</span>(ids_sensores)   <span class="c-cm"># set normal no serviría como key: unhashable</span>
+    <span class="c-kw">if</span> key <span class="c-kw">not in</span> _cache:
+        _cache[key] = calcular_correlacion(ids_sensores)
+    <span class="c-kw">return</span> _cache[key]
+
+<span class="c-cm"># Caso de uso 3: set de sets — solo funciona con frozenset dentro</span>
+grupos_de_prueba = {<span class="c-bi">frozenset</span>({<span class="c-st">'can'</span>,<span class="c-st">'lin'</span>}), <span class="c-bi">frozenset</span>({<span class="c-st">'eth'</span>})}</pre></div>
+  </div>
+  <div id="pst-3" class="tab-panel">
+<div class="concept-intro">Los errores con sets casi siempre vienen de dos fuentes: confundir la sintaxis <code>{}</code> con la de dict, o asumir que un set se comporta como una lista (orden, mutabilidad durante iteración, elementos permitidos).</div>
+<div class="error-compare">
+  <div class="err-bad"><div class="err-label">❌ Incorrecto</div><pre>fallos = {}                 <span class="c-cm"># esto es un DICT vacío, no un set</span>
+fallos.add(<span class="c-st">'test_can'</span>)     <span class="c-cm"># AttributeError: 'dict' object has no attribute 'add'</span></pre></div>
+  <div class="err-good"><div class="err-label">✅ Correcto</div><pre>fallos = <span class="c-bi">set</span>()             <span class="c-cm"># set vacío explícito</span>
+fallos.add(<span class="c-st">'test_can'</span>)</pre></div>
+</div>
+<div class="error-note"><b>Por qué pasa:</b> <code>{}</code> es syntax de dict por razones históricas (dict existe desde antes que set tuviera literal propio). Un set vacío SIEMPRE se crea con <code>set()</code>. Solo con al menos un elemento la sintaxis <code>{1, 2}</code> es inequívocamente un set.</div>
+
+<div class="error-compare">
+  <div class="err-bad"><div class="err-label">❌ Incorrecto</div><pre>historial = {[<span class="c-nb">1</span>, <span class="c-nb">2</span>], [<span class="c-nb">3</span>, <span class="c-nb">4</span>]}
+<span class="c-cm"># TypeError: unhashable type: 'list'</span></pre></div>
+  <div class="err-good"><div class="err-label">✅ Correcto</div><pre>historial = {(<span class="c-nb">1</span>, <span class="c-nb">2</span>), (<span class="c-nb">3</span>, <span class="c-nb">4</span>)}   <span class="c-cm"># tuplas son hasheables</span></pre></div>
+</div>
+<div class="error-note"><b>Por qué pasa:</b> un set necesita calcular el <code>hash()</code> de cada elemento para ubicarlo en su tabla interna. Las listas (y los dicts, y los sets normales) son mutables y por eso Python las hace explícitamente <em>no hasheables</em> — si su contenido cambiara, el hash quedaría inválido y rompería la estructura interna. Usa tuplas (o frozenset, si el elemento en sí es una colección) cuando necesites meter "algo parecido a una lista" dentro de un set.</div>
+
+<div class="error-compare">
+  <div class="err-bad"><div class="err-label">❌ Incorrecto</div><pre>ids_activos = {<span class="c-st">'s1'</span>, <span class="c-st">'s2'</span>, <span class="c-st">'s3'</span>}
+<span class="c-kw">for</span> sid <span class="c-kw">in</span> ids_activos:
+    <span class="c-kw">if</span> is_stale(sid):
+        ids_activos.remove(sid)
+<span class="c-cm"># RuntimeError: Set changed size during iteration</span></pre></div>
+  <div class="err-good"><div class="err-label">✅ Correcto</div><pre>ids_activos = {<span class="c-st">'s1'</span>, <span class="c-st">'s2'</span>, <span class="c-st">'s3'</span>}
+<span class="c-kw">for</span> sid <span class="c-kw">in</span> <span class="c-bi">list</span>(ids_activos):   <span class="c-cm"># itera sobre una copia</span>
+    <span class="c-kw">if</span> is_stale(sid):
+        ids_activos.remove(sid)
+
+<span class="c-cm"># o, más Pythónico: reconstruir el set</span>
+ids_activos = {sid <span class="c-kw">for</span> sid <span class="c-kw">in</span> ids_activos <span class="c-kw">if</span> <span class="c-kw">not</span> is_stale(sid)}</pre></div>
+</div>
+<div class="error-note"><b>Por qué pasa:</b> igual que con dict, mutar un set (add/remove/discard) mientras un iterador está activo sobre él invalida la estructura interna a mitad de recorrido. Python lo detecta y lanza <code>RuntimeError</code> en vez de dejarte con un bug silencioso de elementos saltados.</div>
+
+<div class="error-compare">
+  <div class="err-bad"><div class="err-label">❌ Incorrecto</div><pre>orden_ejecucion = {<span class="c-st">'init'</span>, <span class="c-st">'configure'</span>, <span class="c-st">'run'</span>, <span class="c-st">'teardown'</span>}
+<span class="c-kw">for</span> paso <span class="c-kw">in</span> orden_ejecucion:
+    ejecutar(paso)   <span class="c-cm"># el orden real de iteración NO es el de escritura</span></pre></div>
+  <div class="err-good"><div class="err-label">✅ Correcto</div><pre>orden_ejecucion = [<span class="c-st">'init'</span>, <span class="c-st">'configure'</span>, <span class="c-st">'run'</span>, <span class="c-st">'teardown'</span>]   <span class="c-cm"># lista, no set</span>
+<span class="c-kw">for</span> paso <span class="c-kw">in</span> orden_ejecucion:
+    ejecutar(paso)</pre></div>
+</div>
+<div class="error-note"><b>Por qué pasa:</b> a diferencia de dict (que desde 3.7 SÍ garantiza orden de inserción), un set no da ninguna garantía de orden — su disposición depende del hash de cada elemento y puede variar. Si el orden importa (secuencia de pasos, prioridad, orden de despliegue), usa list o tuple, nunca set.</div>
+  </div>
+  <div id="pst-4" class="tab-panel">
+<div class="practice-card">
+  <div class="practice-title">Usa set para membership tests sobre colecciones grandes</div>
+  <p>Si tu código hace <code>x in coleccion</code> repetidamente dentro de un loop y <code>coleccion</code> es una lista de miles de elementos, conviértela a set una sola vez antes del loop. Pasas de O(n) a O(1) por búsqueda.</p>
+</div>
+<div class="practice-card">
+  <div class="practice-title">Usa operadores de conjuntos (|, &, -, ^) en vez de loops manuales para comparar colecciones</div>
+  <p><code>solo_en_a = a - b</code> es más corto, más rápido (implementado en C) y más difícil de equivocar que escribir un doble loop con <code>if x not in b</code>.</p>
+</div>
+<div class="practice-card">
+  <div class="practice-title">Usa frozenset cuando necesites un conjunto como key de dict o elemento de otro set</div>
+  <p>Si te encuentras con <code>TypeError: unhashable type: 'set'</code>, la solución casi siempre es envolverlo en <code>frozenset(...)</code> en el punto donde lo usas como key, no cambiar toda tu estructura de datos.</p>
+</div>
+<div class="practice-card">
+  <div class="practice-title">No dependas del orden de iteración de un set</div>
+  <p>Si necesitas orden (de inserción, alfabético, de prioridad), usa list/tuple o <code>sorted(mi_set)</code> explícitamente al consumirlo. Nunca asumas que el orden de un set es estable entre ejecuciones.</p>
+</div>
+<div class="practice-card">
+  <div class="practice-title">Prefiere discard() sobre remove() cuando "puede que no exista" es un caso normal</div>
+  <p><code>s.discard(x)</code> no lanza excepción si <code>x</code> no está — ideal para limpiezas idempotentes. Reserva <code>remove()</code> para cuando la ausencia del elemento indica un bug que quieres que falle ruidosamente.</p>
+</div>
 <div class="quiz-section"><div class="quiz-title">Quiz</div>
-  <div class="quiz-card"><div class="quiz-q" onclick="toggleQuiz(this)"><span class="q-tag">Velocidad</span>Tienes 1 millón de IDs. ¿Qué usas para buscar si un ID está en la colección?<span class="q-arr">▶</span></div><div class="quiz-a"><b>set</b>. La búsqueda en un set es O(1) en promedio (tabla hash interna). En una lista es O(n). Con 1M elementos, la diferencia es 1M operaciones vs 1. Si los IDs no cambian, también puedes usar <code>frozenset</code> que es ligeramente más eficiente.</div></div>
+  <div class="quiz-card"><div class="quiz-q" onclick="toggleQuiz(this)"><span class="q-tag">Velocidad</span>Tienes 1 millón de IDs. ¿Qué usas para buscar si un ID está en la colección?<span class="q-arr">▶</span></div><div class="quiz-a"><b>set</b>. La búsqueda en un set es O(1) en promedio (tabla hash interna). En una lista es O(n). Con 1M elementos, la diferencia es 1M operaciones vs 1. Si los IDs no cambian, también puedes usar <code>frozenset</code> que es ligeramente más eficiente en memoria.</div></div>
+  <div class="quiz-card"><div class="quiz-q" onclick="toggleQuiz(this)"><span class="q-tag">Trampa</span>¿Qué diferencia hay entre <code>a - b</code> y <code>a ^ b</code>?<span class="q-arr">▶</span></div><div class="quiz-a"><b>a - b</b> son los elementos de a que NO están en b (no conmutativo). <b>a ^ b</b> (diferencia simétrica) son los elementos que están en uno u otro pero NO en ambos — equivale a <code>(a - b) | (b - a)</code>, y sí es conmutativo.</div></div>
+  <div class="quiz-card"><div class="quiz-q" onclick="toggleQuiz(this)"><span class="q-tag">Conceptual</span>¿Por qué frozenset puede ser key de un dict pero un set normal no?<span class="q-arr">▶</span></div><div class="quiz-a"><b>Porque las keys de dict deben ser hasheables, y solo los objetos inmutables lo son.</b> Un set normal es mutable (add/remove cambian su contenido), así que Python le niega <code>__hash__</code>. frozenset es exactamente lo mismo pero inmutable, así que sí implementa <code>__hash__</code> y puede usarse como key o como elemento de otro set.</div></div>
+</div>
+  </div>
 </div>`,
 
 'py-strings': `
 <div class="tab-group-pystr">
   <div class="tab-bar">
-    <button class="tab-btn active" onclick="switchTab(this,'ps-1','pystr')">Métodos</button>
+    <button class="tab-btn active" onclick="switchTab(this,'ps-0','pystr')">Métodos esenciales</button>
+    <button class="tab-btn" onclick="switchTab(this,'ps-1','pystr')">Inmutabilidad & slicing</button>
     <button class="tab-btn" onclick="switchTab(this,'ps-2','pystr')">f-strings</button>
-    <button class="tab-btn" onclick="switchTab(this,'ps-3','pystr')">Parsing</button>
+    <button class="tab-btn" onclick="switchTab(this,'ps-3','pystr')">Parsing & encoding</button>
+    <button class="tab-btn" onclick="switchTab(this,'ps-4','pystr')">⚠️ Errores comunes</button>
+    <button class="tab-btn" onclick="switchTab(this,'ps-5','pystr')">✅ Mejores Prácticas</button>
   </div>
-  <div id="ps-1" class="tab-panel active">
+  <div id="ps-0" class="tab-panel active">
+${renderMethodTable('STR')}
+  </div>
+  <div id="ps-1" class="tab-panel">
+<div class="concept-intro">Los <strong>strings en Python son inmutables</strong>: ningún método de <code>str</code> modifica el string original, todos retornan uno <strong>nuevo</strong>. <code>"hola".upper()</code> no cambia la variable original, la reemplaza si reasignas. Esto tiene consecuencias directas en performance (concatenar en loop es caro) y en identidad (comparar strings con <code>is</code> es una trampa). El <strong>slicing</strong> (<code>s[inicio:fin:paso]</code>) es la herramienta principal para extraer sub-strings sin escribir loops manuales.</div>
+<div class="code-block"><div class="code-lang">Python — Inmutabilidad en acción</div><pre>
+s = <span class="c-st">"bench_a3"</span>
+upper = s.upper()      <span class="c-cm"># crea un string NUEVO</span>
+<span class="c-bi">print</span>(s)             <span class="c-cm"># "bench_a3" — sin cambios, s nunca se muta</span>
+<span class="c-bi">print</span>(upper)         <span class="c-cm"># "BENCH_A3"</span>
+
+<span class="c-cm"># Encadenar métodos es seguro porque cada uno retorna un string nuevo</span>
+limpio = <span class="c-st">"  Bench_A3  "</span>.strip().lower().replace(<span class="c-st">"_"</span>, <span class="c-st">"-"</span>)   <span class="c-cm"># "bench-a3"</span></pre></div>
+<div class="code-block"><div class="code-lang">Python — Slicing: s[inicio:fin:paso]</div><pre>
+s = <span class="c-st">"telemetry_2024_07_11"</span>
+<span class="c-cm">#    índices:  0123456789...</span>
+
+s[<span class="c-nb">0</span>:<span class="c-nb">9</span>]        <span class="c-cm"># "telemetry"      — fin es EXCLUSIVO (no incluye índice 9)</span>
+s[:<span class="c-nb">9</span>]         <span class="c-cm"># "telemetry"      — omitir inicio = desde el principio</span>
+s[<span class="c-nb">10</span>:]        <span class="c-cm"># "2024_07_11"     — omitir fin = hasta el final</span>
+s[-<span class="c-nb">2</span>:]        <span class="c-cm"># "11"             — índices negativos cuentan desde el final</span>
+s[-<span class="c-nb">10</span>:-<span class="c-nb">6</span>]     <span class="c-cm"># "2024"           — rango con negativos</span>
+s[::-<span class="c-nb">1</span>]       <span class="c-cm"># string invertido — paso -1</span>
+s[::<span class="c-nb">2</span>]        <span class="c-cm"># toma un carácter de cada dos</span>
+s[<span class="c-nb">100</span>:<span class="c-nb">200</span>]     <span class="c-cm"># ""  — fuera de rango NO lanza IndexError, retorna vacío/truncado</span>
+
+<span class="c-cm"># Caso práctico: extraer fecha de un nombre de archivo con formato fijo</span>
+filename = <span class="c-st">"log_20240711_143201.txt"</span>
+fecha = filename[<span class="c-nb">4</span>:<span class="c-nb">12</span>]      <span class="c-cm"># "20240711"</span>
+hora  = filename[<span class="c-nb">13</span>:<span class="c-nb">19</span>]     <span class="c-cm"># "143201"</span></pre></div>
 <table class="kv-table"><tr><th>Método</th><th>Qué hace</th><th>Ejemplo</th></tr>
 <tr><td>upper() / lower()</td><td>Cambiar case</td><td>"Hello".lower() → "hello"</td></tr>
 <tr><td>strip() / lstrip() / rstrip()</td><td>Eliminar espacios (u otros chars)</td><td>"  hi  ".strip() → "hi"</td></tr>
@@ -460,19 +974,22 @@ both_fail       = bench_a_fails &amp; bench_b_fails   <span class="c-cm"># {'tes
 <tr><td>startswith() / endswith()</td><td>Verificar prefijo/sufijo</td><td>"ERROR: ...".startswith("ERROR")</td></tr>
 <tr><td>count(sub)</td><td>Cuenta ocurrencias</td><td>"aaa".count("a") → 3</td></tr>
 <tr><td>zfill(width)</td><td>Rellena con ceros</td><td>"42".zfill(5) → "00042"</td></tr>
-<tr><td>partition(sep)</td><td>Divide en 3: antes, sep, después</td><td>"a:b".partition(":") → ("a",":",b")</td></tr>
+<tr><td>partition(sep)</td><td>Divide en 3: antes, sep, después</td><td>"a:b".partition(":") → ("a",":","b")</td></tr>
 </table>
+<div class="alert-card">Esta lista es solo lo esencial de Fundamentos. Para el catálogo completo de métodos de string, revisa el Cheat Sheet de Strings dedicado en la app.</div>
   </div>
   <div id="ps-2" class="tab-panel">
+<div class="concept-intro">Los <strong>f-strings</strong> (<code>f"..."</code>, desde Python 3.6) interpolan expresiones directamente dentro del literal — son más legibles y más rápidos en runtime que <code>%</code> o <code>.format()</code> porque se resuelven en tiempo de compilación, no con parsing dinámico del string de formato.</div>
 <div class="code-block"><div class="code-lang">Python — f-strings: todas las formas</div><pre>
 name = <span class="c-st">"Wayve"</span>; val = <span class="c-nb">3.14159</span>; items = [<span class="c-nb">1</span>,<span class="c-nb">2</span>,<span class="c-nb">3</span>]
 
 <span class="c-cm"># Básico</span>
 <span class="c-bi">print</span>(<span class="c-st">f"Empresa: {name}"</span>)
 
-<span class="c-cm"># Expresiones dentro</span>
+<span class="c-cm"># Expresiones dentro — cualquier expresión Python válida, incluso llamadas a función</span>
 <span class="c-bi">print</span>(<span class="c-st">f"Doble: {val * 2}"</span>)
 <span class="c-bi">print</span>(<span class="c-st">f"Upper: {name.upper()}"</span>)
+<span class="c-bi">print</span>(<span class="c-st">f"Items: {len(items)} elementos"</span>)
 
 <span class="c-cm"># Formato de números</span>
 <span class="c-bi">print</span>(<span class="c-st">f"{val:.2f}"</span>)         <span class="c-cm"># "3.14"       — 2 decimales</span>
@@ -481,16 +998,18 @@ name = <span class="c-st">"Wayve"</span>; val = <span class="c-nb">3.14159</span
 <span class="c-bi">print</span>(<span class="c-st">f"{255:#x}"</span>)         <span class="c-cm"># "0xff"       — hex con prefijo</span>
 <span class="c-bi">print</span>(<span class="c-st">f"{0.756:.1%}"</span>)      <span class="c-cm"># "75.6%"      — porcentaje</span>
 
-<span class="c-cm"># Alineación</span>
-<span class="c-bi">print</span>(<span class="c-st">f"{'left':<span class="c-nb">10</span>}"</span>)      <span class="c-cm"># "left      "  — alinea izquierda</span>
-<span class="c-bi">print</span>(<span class="c-st">f"{'right':&gt;<span class="c-nb">10</span>}"</span>)     <span class="c-cm"># "     right"  — alinea derecha</span>
-<span class="c-bi">print</span>(<span class="c-st">f"{'center':^<span class="c-nb">10</span>}"</span>)   <span class="c-cm"># "  center  "  — centrado</span>
+<span class="c-cm"># Alineación — útil para tablas de log en consola</span>
+<span class="c-bi">print</span>(<span class="c-st">f"{'left':10}"</span>)      <span class="c-cm"># "left      "  — alinea izquierda (default para strings)</span>
+<span class="c-bi">print</span>(<span class="c-st">f"{'right':&gt;10}"</span>)     <span class="c-cm"># "     right"  — alinea derecha</span>
+<span class="c-bi">print</span>(<span class="c-st">f"{'center':^10}"</span>)   <span class="c-cm"># "  center  "  — centrado</span>
+<span class="c-bi">print</span>(<span class="c-st">f"{42:0&gt;5}"</span>)         <span class="c-cm"># "00042"       — relleno con 0 a la derecha del especificador</span>
 
-<span class="c-cm"># Debug (Python 3.8+) — muestra nombre y valor</span>
+<span class="c-cm"># Debug (Python 3.8+) — muestra nombre y valor, ideal para prints temporales</span>
 x = <span class="c-nb">42</span>
 <span class="c-bi">print</span>(<span class="c-st">f"{x=}"</span>)             <span class="c-cm"># "x=42"</span>
+<span class="c-bi">print</span>(<span class="c-st">f"{val * 2=:.1f}"</span>)   <span class="c-cm"># "val * 2=6.3" — combina debug con formato</span>
 
-<span class="c-cm"># Multiline</span>
+<span class="c-cm"># Multiline — paréntesis + strings adyacentes se concatenan automáticamente</span>
 msg = (
     <span class="c-st">f"Bench: {bench_id}\n"</span>
     <span class="c-st">f"Test:  {test_name}\n"</span>
@@ -498,6 +1017,7 @@ msg = (
 )</pre></div>
   </div>
   <div id="ps-3" class="tab-panel">
+<div class="concept-intro">Parsear texto (logs, tramas, respuestas de un DUT) es el uso más frecuente de strings en herramientas de bench. Cuando los datos vienen de un socket, puerto serial o bus CAN, además hay que lidiar con la diferencia entre <strong>bytes</strong> (datos crudos) y <strong>str</strong> (texto decodificado) — ahí es donde entra el <strong>encoding</strong>.</div>
 <div class="code-block"><div class="code-lang">Python — Parsing de strings (logs, datos)</div><pre>
 <span class="c-cm"># split con límite — útil para parsear headers</span>
 <span class="c-st">"key: value: extra"</span>.split(<span class="c-st">":"</span>, maxsplit=<span class="c-nb">1</span>)   <span class="c-cm"># ['key', ' value: extra']</span>
@@ -517,11 +1037,105 @@ s.isalpha()         <span class="c-cm"># False — ¿solo letras?</span>
 <span class="c-cm"># Join — siempre más eficiente que concatenación en loop</span>
 parts = [<span class="c-st">"bench"</span>, <span class="c-st">"a3"</span>, <span class="c-st">"test"</span>, <span class="c-st">"lidar"</span>]
 <span class="c-st">"-"</span>.join(parts)          <span class="c-cm"># "bench-a3-test-lidar"</span>
-<span class="c-st">"\n"</span>.join(log_lines)     <span class="c-cm"># une líneas de log</span>
+<span class="c-st">"\n"</span>.join(log_lines)     <span class="c-cm"># une líneas de log
 
-<span class="c-cm"># TRAMPA: nunca construyas strings con + en un loop</span>
+# TRAMPA: nunca construyas strings con + en un loop</span>
 <span class="c-cm"># Mal (O(n²)):  result = ""; for s in lista: result += s</span>
 <span class="c-cm"># Bien (O(n)):  result = "".join(lista)</span></pre></div>
+<div class="code-block"><div class="code-lang">Python — Encoding: bytes vs str</div><pre>
+<span class="c-cm"># bytes: datos crudos (lo que llega de un socket, puerto serial, o payload CAN)</span>
+raw = <span class="c-kw">b</span><span class="c-st">'\x02BENCH_A3\x03'</span>    <span class="c-cm"># literal de bytes — prefijo b</span>
+<span class="c-bi">type</span>(raw)               <span class="c-cm"># <class 'bytes'></span>
+
+<span class="c-cm"># decode: bytes → str (interpretando el encoding)</span>
+payload = raw.decode(<span class="c-st">'utf-8'</span>)         <span class="c-cm"># texto legible</span>
+payload = raw.decode(<span class="c-st">'ascii'</span>, errors=<span class="c-st">'replace'</span>)  <span class="c-cm"># reemplaza bytes inválidos con "?" en vez de crashear</span>
+
+<span class="c-cm"># encode: str → bytes (para enviar por red/serial)</span>
+comando = <span class="c-st">"START_TEST"</span>.encode(<span class="c-st">'utf-8'</span>)   <span class="c-cm"># b'START_TEST'</span>
+serial_port.write(comando)
+
+<span class="c-cm"># Caso práctico: leer una trama de un socket TCP del bench</span>
+chunk = sock.recv(<span class="c-nb">1024</span>)                     <span class="c-cm"># siempre retorna bytes, nunca str</span>
+<span class="c-kw">try</span>:
+    texto = chunk.decode(<span class="c-st">'utf-8'</span>)
+<span class="c-kw">except</span> UnicodeDecodeError:
+    logger.warning(<span class="c-st">f"Trama no-UTF8 recibida: {chunk!r}"</span>)</pre></div>
+  </div>
+  <div id="ps-4" class="tab-panel">
+<div class="concept-intro">Casi todos los errores de strings vienen de olvidar la inmutabilidad, mezclar bytes con str, o confiar en comparaciones/identidad que no funcionan como parecen a primera vista.</div>
+<div class="error-compare">
+  <div class="err-bad"><div class="err-label">❌ Incorrecto</div><pre>s = <span class="c-st">"bench_a3"</span>
+s[<span class="c-nb">0</span>] = <span class="c-st">"B"</span>
+<span class="c-cm"># TypeError: 'str' object does not support item assignment</span></pre></div>
+  <div class="err-good"><div class="err-label">✅ Correcto</div><pre>s = <span class="c-st">"bench_a3"</span>
+s = <span class="c-st">"B"</span> + s[<span class="c-nb">1</span>:]              <span class="c-cm"># reconstruir con slicing → "Bench_a3"</span>
+<span class="c-cm"># o, si son varios cambios: pasar por lista y volver a unir</span>
+chars = <span class="c-bi">list</span>(s)
+chars[<span class="c-nb">0</span>] = <span class="c-st">"B"</span>
+s = <span class="c-st">""</span>.join(chars)</pre></div>
+</div>
+<div class="error-note"><b>Por qué pasa:</b> los strings son inmutables — no existe ningún método ni sintaxis que cambie los caracteres "en el lugar". Cualquier "modificación" en realidad crea un string nuevo. Si necesitas construir/editar texto carácter a carácter, trabaja con una lista de caracteres y usa <code>"".join()</code> al final.</div>
+
+<div class="error-compare">
+  <div class="err-bad"><div class="err-label">❌ Incorrecto</div><pre><span class="c-kw">if</span> status <span class="c-kw">is</span> <span class="c-st">"PASSED"</span>:
+    marcar_ok()
+<span class="c-cm"># funciona "por suerte" con literales cortos (interning), pero es frágil</span>
+<span class="c-cm"># y falla con strings construidos dinámicamente</span></pre></div>
+  <div class="err-good"><div class="err-label">✅ Correcto</div><pre><span class="c-kw">if</span> status == <span class="c-st">"PASSED"</span>:
+    marcar_ok()</pre></div>
+</div>
+<div class="error-note"><b>Por qué pasa:</b> <code>is</code> compara <b>identidad de objeto</b> (mismo lugar en memoria), no igualdad de contenido. CPython a veces reutiliza el mismo objeto para strings literales cortos (interning), lo que hace que <code>is</code> "funcione" por casualidad en pruebas rápidas — pero un string leído de un archivo, construido con <code>+</code>, o resultado de <code>.decode()</code> es un objeto distinto aunque tenga el mismo contenido, y <code>is</code> fallará. Usa siempre <code>==</code> para comparar contenido de strings.</div>
+
+<div class="error-compare">
+  <div class="err-bad"><div class="err-label">❌ Incorrecto</div><pre>comando = <span class="c-st">"START"</span>
+sock.send(comando)
+<span class="c-cm"># TypeError: a bytes-like object is required, not 'str'</span></pre></div>
+  <div class="err-good"><div class="err-label">✅ Correcto</div><pre>comando = <span class="c-st">"START"</span>
+sock.send(comando.encode(<span class="c-st">'utf-8'</span>))   <span class="c-cm"># str → bytes explícito</span>
+
+<span class="c-cm"># y al leer, decodifica de vuelta a str antes de usar métodos de string</span>
+respuesta = sock.recv(<span class="c-nb">1024</span>).decode(<span class="c-st">'utf-8'</span>)</pre></div>
+</div>
+<div class="error-note"><b>Por qué pasa:</b> las APIs de red/serial en Python trabajan con <code>bytes</code>, no con <code>str</code> — son tipos distintos y Python 3 no los mezcla implícitamente (a diferencia de Python 2). Cada vez que cruzas la frontera "voy a enviar/recibir datos crudos", decide explícitamente el encoding con <code>.encode()</code>/<code>.decode()</code>; no confíes en una conversión automática que no existe.</div>
+
+<div class="error-compare">
+  <div class="err-bad"><div class="err-label">❌ Incorrecto</div><pre>fecha = <span class="c-st">"20240711"</span>
+anio = fecha[<span class="c-nb">0</span>:<span class="c-nb">4</span>]
+mes  = fecha[<span class="c-nb">4</span>:<span class="c-nb">8</span>]      <span class="c-cm"># si "fecha" viene truncada a 6 chars,</span>
+dia  = fecha[<span class="c-nb">8</span>:<span class="c-nb">10</span>]     <span class="c-cm"># esto NO lanza error — retorna "" silenciosamente</span></pre></div>
+  <div class="err-good"><div class="err-label">✅ Correcto</div><pre>fecha = <span class="c-st">"20240711"</span>
+<span class="c-kw">if</span> <span class="c-bi">len</span>(fecha) != <span class="c-nb">8</span>:
+    <span class="c-kw">raise</span> <span class="c-bi">ValueError</span>(<span class="c-st">f"Fecha con formato inesperado: {fecha!r}"</span>)
+anio, mes, dia = fecha[<span class="c-nb">0</span>:<span class="c-nb">4</span>], fecha[<span class="c-nb">4</span>:<span class="c-nb">6</span>], fecha[<span class="c-nb">6</span>:<span class="c-nb">8</span>]</pre></div>
+</div>
+<div class="error-note"><b>Por qué pasa:</b> a diferencia del indexado simple (<code>s[100]</code> sí lanza IndexError), el slicing fuera de rango <b>nunca lanza excepción</b> — simplemente trunca o retorna un string vacío. Es cómodo para evitar checks manuales, pero peligroso cuando asumes un largo fijo: un dato corrupto o truncado pasa desapercibido en vez de fallar ruidosamente. Valida el largo explícitamente cuando el formato es crítico.</div>
+  </div>
+  <div id="ps-5" class="tab-panel">
+<div class="practice-card">
+  <div class="practice-title">Usa f-strings por default, no % ni .format()</div>
+  <p>Son más legibles (la variable está justo donde se usa, no en una lista separada de argumentos) y más rápidas en runtime. Reserva <code>.format()</code> solo para casos donde el template se construye dinámicamente en runtime (no es un literal fijo en el código).</p>
+</div>
+<div class="practice-card">
+  <div class="practice-title">Construye strings largos con "".join(lista), nunca con += en un loop</div>
+  <p>Como los strings son inmutables, cada <code>+=</code> crea un string nuevo copiando todo el contenido anterior — O(n²) total para n concatenaciones. <code>"".join()</code> reserva la memoria una vez y es O(n).</p>
+</div>
+<div class="practice-card">
+  <div class="practice-title">Usa casefold() en vez de lower() para comparaciones case-insensitive robustas</div>
+  <p><code>lower()</code> es suficiente para ASCII, pero <code>casefold()</code> maneja correctamente casos Unicode más agresivos (por ejemplo la ß alemana). Para comparar IDs o nombres de test sin importar mayúsculas/minúsculas de forma segura, prefiere <code>casefold()</code>.</p>
+</div>
+<div class="practice-card">
+  <div class="practice-title">Sé explícito con el encoding — nunca confíes en el default de la plataforma</div>
+  <p><code>open(path)</code> sin especificar encoding usa el default del sistema operativo, que difiere entre Windows y Linux. Usa siempre <code>open(path, encoding='utf-8')</code> y <code>.encode('utf-8')</code>/<code>.decode('utf-8')</code> explícitos para que tu script se comporte igual en cualquier máquina (CI, laptop del compañero, bench en el lab).</p>
+</div>
+<div class="practice-card">
+  <div class="practice-title">Valida el formato antes de confiar en slicing de posiciones fijas</div>
+  <p>Si parseas datos con formato posicional fijo (IDs de trama, nombres de archivo con estructura fija), valida <code>len()</code> o usa una expresión regular con grupos nombrados en vez de índices mágicos — falla rápido y con un mensaje claro en vez de silenciosamente producir strings vacíos o truncados.</p>
+</div>
+<div class="practice-card">
+  <div class="practice-title">Usa métodos is*() solo como pre-chequeo rápido, no como validación completa</div>
+  <p><code>"123".isdigit()</code> es útil para un filtro rápido, pero no cubre negativos, decimales, ni notación científica. Para validar que un string realmente representa el número que esperas, intenta convertirlo con <code>try: float(s) except ValueError:</code> — es más robusto que encadenar varios <code>is*()</code>.</p>
+</div>
   </div>
 </div>`,
 
@@ -533,16 +1147,28 @@ parts = [<span class="c-st">"bench"</span>, <span class="c-st">"a3"</span>, <spa
 const PYTHON_RICH2 = {
 
 'py-funciones': `
+<div class="concept-intro">Una <strong>función</strong> es un bloque de código reutilizable que recibe entradas (parámetros), ejecuta lógica y opcionalmente retorna un valor. En Python las funciones son <strong>ciudadanos de primera clase</strong>: se pueden asignar a variables, pasar como argumentos y retornar desde otras funciones — esto habilita closures, decoradores y programación funcional.</div>
 <div class="tab-group-pyfn">
   <div class="tab-bar">
     <button class="tab-btn active" onclick="switchTab(this,'fn-1','pyfn')">Definición</button>
     <button class="tab-btn" onclick="switchTab(this,'fn-2','pyfn')">*args / **kwargs</button>
     <button class="tab-btn" onclick="switchTab(this,'fn-3','pyfn')">Lambda / HOF</button>
     <button class="tab-btn" onclick="switchTab(this,'fn-4','pyfn')">Closures</button>
+    <button class="tab-btn" onclick="switchTab(this,'fn-5','pyfn')">⚠️ Errores comunes</button>
+    <button class="tab-btn" onclick="switchTab(this,'fn-6','pyfn')">✅ Mejores Prácticas</button>
   </div>
   <div id="fn-1" class="tab-panel active">
+<div class="concept-intro">Python soporta varios tipos de parámetros: posicionales, con default, <code>keyword-only</code> (después de <code>*</code>) y <code>positional-only</code> (antes de <code>/</code>). Elegir el tipo correcto documenta la intención de la API y previene llamadas ambiguas.</div>
+<table class="kv-table">
+  <tr><th>Sintaxis</th><th>¿Qué hace?</th><th>Ejemplo → Resultado</th><th>Nota</th></tr>
+  <tr><td>def f(x)</td><td>Parámetro posicional normal</td><td>f(1) → x=1</td><td>Se puede pasar por posición o por nombre</td></tr>
+  <tr><td>def f(x=5)</td><td>Parámetro con valor default</td><td>f() → x=5</td><td>El default se evalúa UNA sola vez al definir la función</td></tr>
+  <tr><td>def f(*, x)</td><td>Keyword-only: todo después de * se exige por nombre</td><td>f(x=1) → válido, f(1) → TypeError</td><td>Fuerza claridad en llamadas con muchos parámetros</td></tr>
+  <tr><td>def f(x, /)</td><td>Positional-only: todo antes de / no admite nombre</td><td>f(1) → válido, f(x=1) → TypeError</td><td>Útil para congelar el nombre del parámetro en APIs públicas</td></tr>
+  <tr><td>-> str</td><td>Type hint de retorno (no se valida en runtime)</td><td>solo documentación / linters</td><td>mypy y pyright sí lo verifican estáticamente</td></tr>
+</table>
 <div class="code-block"><div class="code-lang">Python — Definición de funciones</div><pre>
-<span class="c-cm"># Básica</span>
+<span class="c-cm"># Básica, con type hints</span>
 <span class="c-kw">def</span> <span class="c-fn">greet</span>(name: str) -&gt; str:
     <span class="c-kw">return</span> <span class="c-st">f"Hello, {name}"</span>
 
@@ -567,9 +1193,21 @@ const PYTHON_RICH2 = {
 
 <span class="c-cm"># Positional-only arguments (antes de /)</span>
 <span class="c-kw">def</span> <span class="c-fn">power</span>(base, exp, /):    <span class="c-cm"># base y exp solo por posición</span>
-    <span class="c-kw">return</span> base ** exp</pre></div>
+    <span class="c-kw">return</span> base ** exp
+
+<span class="c-cm"># Documentar con docstring — accesible vía help() y func.__doc__</span>
+<span class="c-kw">def</span> <span class="c-fn">parse_dtc</span>(code: str) -&gt; <span class="c-bi">dict</span>:
+    <span class="c-cm">"""Parsea un Diagnostic Trouble Code (ej. 'P0301') en sus partes.
+
+    Args:
+        code: código DTC de 5 caracteres.
+    Returns:
+        dict con 'system', 'type', 'number'.
+    """</span>
+    <span class="c-kw">return</span> {<span class="c-st">"system"</span>: code[<span class="c-nb">0</span>], <span class="c-st">"number"</span>: code[<span class="c-nb">1</span>:]}</pre></div>
   </div>
   <div id="fn-2" class="tab-panel">
+<div class="concept-intro"><code>*args</code> agrupa argumentos posicionales extra en una <strong>tupla</strong>; <code>**kwargs</code> agrupa argumentos con nombre extra en un <strong>diccionario</strong>. Son esenciales para escribir wrappers/decoradores genéricos que no conocen de antemano la firma de la función que envuelven.</div>
 <div class="code-block"><div class="code-lang">Python — *args y **kwargs</div><pre>
 <span class="c-cm"># *args — captura positional args extras como tuple</span>
 <span class="c-kw">def</span> <span class="c-fn">log</span>(level, *messages):
@@ -585,26 +1223,36 @@ log(<span class="c-st">"ERROR"</span>, <span class="c-st">"sensor fail"</span>, 
 create_report(<span class="c-st">"Daily"</span>, bench=<span class="c-st">"A3"</span>, date=<span class="c-st">"2024-07-08"</span>)
 <span class="c-cm"># metadata = {'bench': 'A3', 'date': '2024-07-08'}</span>
 
-<span class="c-cm"># Combinación completa</span>
+<span class="c-cm"># Combinación completa — el ORDEN importa siempre:</span>
+<span class="c-cm"># pos, *args, kw_only, **kwargs</span>
 <span class="c-kw">def</span> <span class="c-fn">full_func</span>(pos1, pos2, *args, kw_only, **kwargs):
     <span class="c-bi">print</span>(pos1, pos2, args, kw_only, kwargs)
 
-<span class="c-cm"># Desempaquetar al llamar</span>
+<span class="c-cm"># Desempaquetar al llamar (el * y ** también sirven "hacia afuera")</span>
 params = [<span class="c-st">"bench_a3"</span>, <span class="c-st">"test_lidar"</span>]
 config = {<span class="c-st">"timeout"</span>: <span class="c-nb">30</span>, <span class="c-st">"retries"</span>: <span class="c-nb">3</span>}
-run_test(*params, **config)   <span class="c-cm"># desempaca lista y dict</span></pre></div>
+run_test(*params, **config)   <span class="c-cm"># desempaca lista y dict</span>
+
+<span class="c-cm"># Caso real: wrapper genérico que reenvía TODO a otra función</span>
+<span class="c-kw">def</span> <span class="c-fn">safe_call</span>(func, *args, **kwargs):
+    <span class="c-kw">try</span>:
+        <span class="c-kw">return</span> func(*args, **kwargs)
+    <span class="c-kw">except</span> <span class="c-bi">Exception</span> <span class="c-kw">as</span> e:
+        <span class="c-bi">print</span>(<span class="c-st">f"Fallo {func.__name__}: {e}"</span>)
+        <span class="c-kw">return</span> <span class="c-kw">None</span></pre></div>
   </div>
   <div id="fn-3" class="tab-panel">
+<div class="concept-intro">Las <strong>funciones de orden superior</strong> (HOF) reciben o retornan otras funciones. <code>lambda</code> crea funciones anónimas de una sola expresión, útiles como argumento rápido de <code>sort</code>, <code>map</code> o <code>filter</code> — pero para lógica reutilizable o con nombre, usa <code>def</code>.</div>
 <div class="code-block"><div class="code-lang">Python — Lambda, map, filter, reduce</div><pre>
-<span class="c-cm"># Lambda — función anónima de una expresión</span>
+<span class="c-cm"># Lambda — función anónima de una expresión (sin return explícito)</span>
 double = <span class="c-kw">lambda</span> x: x * <span class="c-nb">2</span>
-sorter = <span class="c-kw">lambda</span> item: (item[<span class="c-st">'bench'</span>], item[<span class="c-st">'test'</span>])  <span class="c-cm"># sort key</span>
+sorter = <span class="c-kw">lambda</span> item: (item[<span class="c-st">'bench'</span>], item[<span class="c-st">'test'</span>])  <span class="c-cm"># sort key compuesta</span>
 
 <span class="c-cm"># Cuándo usar lambda vs def</span>
-<span class="c-cm"># Lambda: una vez, como argumento — def: reutilizable o compleja</span>
+<span class="c-cm"># Lambda: una vez, como argumento — def: reutilizable, con nombre o compleja</span>
 events.sort(key=<span class="c-kw">lambda</span> e: e.timestamp)              <span class="c-cm"># lambda OK aquí</span>
 
-<span class="c-cm"># map() — aplica función a cada elemento (lazy)</span>
+<span class="c-cm"># map() — aplica función a cada elemento (lazy, retorna iterador)</span>
 <span class="c-bi">list</span>(<span class="c-bi">map</span>(<span class="c-kw">lambda</span> x: x**<span class="c-nb">2</span>, [<span class="c-nb">1</span>,<span class="c-nb">2</span>,<span class="c-nb">3</span>]))    <span class="c-cm"># [1, 4, 9]</span>
 <span class="c-cm"># Equivalente más Pythónico:</span>
 [x**<span class="c-nb">2</span> <span class="c-kw">for</span> x <span class="c-kw">in</span> [<span class="c-nb">1</span>,<span class="c-nb">2</span>,<span class="c-nb">3</span>]]               <span class="c-cm"># prefiere esto sobre map+lambda</span>
@@ -617,12 +1265,19 @@ events.sort(key=<span class="c-kw">lambda</span> e: e.timestamp)              <s
 total = reduce(<span class="c-kw">lambda</span> acc, x: acc + x, [<span class="c-nb">1</span>,<span class="c-nb">2</span>,<span class="c-nb">3</span>,<span class="c-nb">4</span>])  <span class="c-cm"># 10</span>
 <span class="c-cm"># Pero sum() es más claro para este caso</span>
 
-<span class="c-cm"># partial — congela algunos argumentos</span>
+<span class="c-cm"># partial — congela algunos argumentos, crea una nueva función</span>
 <span class="c-kw">from</span> functools <span class="c-kw">import</span> partial
 log_error = partial(<span class="c-bi">print</span>, <span class="c-st">"ERROR:"</span>)   <span class="c-cm"># print con primer arg fijo</span>
-log_error(<span class="c-st">"sensor fail"</span>)               <span class="c-cm"># "ERROR: sensor fail"</span></pre></div>
+log_error(<span class="c-st">"sensor fail"</span>)               <span class="c-cm"># "ERROR: sensor fail"</span>
+
+<span class="c-cm"># Funciones como argumento (HOF real) — inyección de comportamiento</span>
+<span class="c-kw">def</span> <span class="c-fn">process_frames</span>(frames, transform):
+    <span class="c-kw">return</span> [transform(f) <span class="c-kw">for</span> f <span class="c-kw">in</span> frames]
+
+process_frames(can_frames, <span class="c-kw">lambda</span> f: f.decode_signal(<span class="c-st">"RPM"</span>))</pre></div>
   </div>
   <div id="fn-4" class="tab-panel">
+<div class="concept-intro">Un <strong>closure</strong> es una función interna que "recuerda" las variables del scope de la función que la creó, incluso después de que esa función externa ya retornó. Es la base de fábricas de funciones, validadores parametrizados y (como veremos en el tema siguiente) los decoradores.</div>
 <div class="code-block"><div class="code-lang">Python — Closures: funciones que recuerdan su contexto</div><pre>
 <span class="c-cm"># Un closure es una función interna que accede a variables</span>
 <span class="c-cm"># del scope de la función externa, incluso después de que ésta retorna.</span>
@@ -654,15 +1309,146 @@ validate_voltage(<span class="c-nb">6</span>)  <span class="c-cm"># False</span>
 
 <span class="c-cm"># TRAMPA: closure en loop captura la REFERENCIA, no el valor</span>
 fns = [<span class="c-kw">lambda</span>: i <span class="c-kw">for</span> i <span class="c-kw">in</span> <span class="c-bi">range</span>(<span class="c-nb">3</span>)]  <span class="c-cm"># TODAS retornan 2 (el último i)</span>
-fns = [<span class="c-kw">lambda</span> x=i: x <span class="c-kw">for</span> i <span class="c-kw">in</span> <span class="c-bi">range</span>(<span class="c-nb">3</span>)]  <span class="c-cm"># correcto: captura por valor</span></pre></div>
+fns = [<span class="c-kw">lambda</span> x=i: x <span class="c-kw">for</span> i <span class="c-kw">in</span> <span class="c-bi">range</span>(<span class="c-nb">3</span>)]  <span class="c-cm"># correcto: captura por valor</span>
+
+<span class="c-cm"># Inspeccionar qué variables capturó un closure</span>
+[cell.cell_contents <span class="c-kw">for</span> cell <span class="c-kw">in</span> counter.__closure__]  <span class="c-cm"># [10] (o el valor actual de count)</span></pre></div>
+  </div>
+  <div id="fn-5" class="tab-panel">
+<div class="concept-intro">Estos son los errores de funciones que más aparecen en code review y en entrevistas técnicas — todos comparten la causa raíz de no entender <strong>cuándo</strong> se evalúa cada parte del código (al definir vs al llamar).</div>
+<div class="error-compare">
+  <div class="err-bad"><div class="err-label">❌ Incorrecto</div><pre>def add_reading(value, history=[]):
+    history.append(value)
+    return history
+
+<span class="c-cm"># cada llamada "contamina" la misma lista</span>
+add_reading(23.1)   # [23.1]
+add_reading(24.0)   # [23.1, 24.0]  ← inesperado!</pre></div>
+  <div class="err-good"><div class="err-label">✅ Correcto</div><pre>def add_reading(value, history=None):
+    if history is None:
+        history = []
+    history.append(value)
+    return history</pre></div>
+</div>
+<div class="error-note"><b>Por qué pasa:</b> los valores default se evalúan UNA sola vez, cuando Python ejecuta la sentencia <code>def</code> — no en cada llamada. Si el default es mutable (lista, dict, set), ese mismo objeto se reutiliza y acumula estado entre llamadas. Detectarlo: si un bug "aparece solo después de la segunda llamada", sospecha de un default mutable.</div>
+
+<div class="error-compare">
+  <div class="err-bad"><div class="err-label">❌ Incorrecto</div><pre>def process(bench, timeout, retries, verbose,
+            dry_run, save_log, notify):
+    ...
+
+# ¿cuál argumento es cuál? imposible de leer
+process("A3", 30, 3, True, False, True, False)</pre></div>
+  <div class="err-good"><div class="err-label">✅ Correcto</div><pre>def process(bench, *, timeout=30, retries=3,
+            verbose=False, dry_run=False,
+            save_log=True, notify=False):
+    ...
+
+process("A3", timeout=60, notify=True)</pre></div>
+</div>
+<div class="error-note"><b>Por qué pasa:</b> con muchos parámetros booleanos posicionales, una llamada como <code>process("A3", 30, 3, True, False, True, False)</code> es imposible de auditar sin abrir la definición. Usar keyword-only (<code>*</code>) fuerza a que cada llamada sea autoexplicativa y evita el bug clásico de invertir dos argumentos del mismo tipo por accidente.</div>
+
+<div class="error-compare">
+  <div class="err-bad"><div class="err-label">❌ Incorrecto</div><pre>fns = []
+for sensor_id in ["temp", "rpm", "voltage"]:
+    fns.append(lambda: read_sensor(sensor_id))
+
+# las 3 funciones leen "voltage" (el último valor de sensor_id)
+[f() for f in fns]</pre></div>
+  <div class="err-good"><div class="err-label">✅ Correcto</div><pre>fns = []
+for sensor_id in ["temp", "rpm", "voltage"]:
+    fns.append(lambda sid=sensor_id: read_sensor(sid))
+
+# cada lambda ahora captura su propio valor por default</pre></div>
+</div>
+<div class="error-note"><b>Por qué pasa:</b> el closure captura la <em>variable</em> <code>sensor_id</code>, no una copia de su valor en ese momento del loop. Cuando las funciones finalmente se ejecutan, todas ven el último valor que tomó la variable. Forzar la captura con un parámetro default (<code>sid=sensor_id</code>) evalúa el valor en el momento de crear la lambda, no al ejecutarla.</div>
+
+<div class="error-compare">
+  <div class="err-bad"><div class="err-label">❌ Incorrecto</div><pre>def compute_checksum(data: bytes) -> int:
+    total = sum(data)
+    # olvidó el return
+    total % 256
+
+result = compute_checksum(payload)  # None !</pre></div>
+  <div class="err-good"><div class="err-label">✅ Correcto</div><pre>def compute_checksum(data: bytes) -> int:
+    total = sum(data)
+    return total % 256</pre></div>
+</div>
+<div class="error-note"><b>Por qué pasa:</b> si una función no tiene <code>return</code> explícito (o termina un flujo sin pasar por uno), retorna <code>None</code> silenciosamente — Python no avisa. El bug se manifiesta lejos del origen, cuando se intenta operar sobre <code>None</code>. El type hint <code>-> int</code> ayuda a que un type checker (mypy) lo detecte antes de runtime.</div>
+</div>
+  <div id="fn-6" class="tab-panel">
+<div class="practice-card">
+  <div class="practice-title">Usa <code>None</code> como default y crea el mutable dentro del cuerpo</div>
+  <p>Nunca uses listas, dicts o sets como valor default. El patrón <code>if x is None: x = []</code> es el estándar de facto en Python y evita el bug de estado compartido entre llamadas.</p>
+</div>
+<div class="practice-card">
+  <div class="practice-title">Fuerza keyword-only en funciones con más de 2-3 parámetros del mismo tipo</div>
+  <p>Si tu función tiene varios <code>bool</code> o <code>int</code> seguidos, agrega <code>*</code> antes de ellos. <code>run(bench, *, timeout=30, retries=3)</code> es imposible de llamar mal por orden.</p>
+</div>
+<div class="practice-card">
+  <div class="practice-title">Agrega type hints incluso sin usar un type checker en CI</div>
+  <p><code>def parse(code: str) -> dict:</code> documenta la intención, habilita autocompletado en el IDE y facilita que herramientas como mypy/pyright detecten errores antes de que lleguen al bench.</p>
+</div>
+<div class="practice-card">
+  <div class="practice-title">Prefiere comprehensions sobre map()/filter() con lambda</div>
+  <p><code>[x**2 for x in data if x > 0]</code> es más legible que <code>list(map(lambda x: x**2, filter(lambda x: x>0, data)))</code>. Reserva lambda para argumentos cortos de una sola expresión (ej. <code>key=</code> en sort).</p>
+</div>
+<div class="practice-card">
+  <div class="practice-title">Escribe docstrings en funciones públicas o con lógica no trivial</div>
+  <p>Un docstring con formato Google/NumPy (Args, Returns, Raises) es accesible vía <code>help(func)</code> y lo consumen herramientas de documentación automática (Sphinx) y linters.</p>
+</div>
+<div class="practice-card">
+  <div class="practice-title">Evita funciones con más de ~4 parámetros posicionales — agrupa en un dataclass</div>
+  <p>Si una función necesita muchos datos relacionados, considera <code>def run(config: BenchConfig)</code> en vez de 8 parámetros sueltos. Es más fácil de testear y de extender sin romper llamadas existentes.</p>
+</div>
+<div class="quiz-section"><div class="quiz-title">Quiz</div>
+  <div class="quiz-card"><div class="quiz-q" onclick="toggleQuiz(this)"><span class="q-tag">Trampa</span>¿Qué imprime este código?<br><code>def f(x, lst=[]): lst.append(x); return lst</code><br><code>print(f(1)); print(f(2))</code><span class="q-arr">▶</span></div><div class="quiz-a"><b>[1] luego [1, 2]</b> — no [1] y [2] como muchos esperan. La lista default se crea una sola vez cuando se define <code>f</code>, y todas las llamadas sin argumento <code>lst</code> comparten esa misma lista en memoria.</div></div>
+  <div class="quiz-card"><div class="quiz-q" onclick="toggleQuiz(this)"><span class="q-tag">Conceptual</span>¿Cuál es la diferencia real entre *args y **kwargs a nivel de tipo de dato?<span class="q-arr">▶</span></div><div class="quiz-a"><code>*args</code> empaqueta los argumentos posicionales extra en una <b>tupla</b>. <code>**kwargs</code> empaqueta los argumentos con nombre extra en un <b>diccionario</b>. Por eso puedes iterar <code>*args</code> con índices y <code>**kwargs</code> con <code>.items()</code>.</div></div>
+  <div class="quiz-card"><div class="quiz-q" onclick="toggleQuiz(this)"><span class="q-tag">Trampa</span>¿Por qué <code>[lambda: i for i in range(3)]</code> hace que las 3 lambdas retornen 2?<span class="q-arr">▶</span></div><div class="quiz-a">Porque el closure captura la <b>variable</b> <code>i</code>, no su valor en cada iteración. Cuando finalmente se llaman las lambdas (después de terminar el loop), todas leen el último valor que tomó <code>i</code>, que es 2. Se arregla capturando el valor como default: <code>lambda x=i: x</code>.</div></div>
+</div>
   </div>
 </div>`,
 
 'py-decoradores': `
+<div class="concept-intro">Un <strong>decorador</strong> es una función que recibe otra función y retorna una función nueva que la envuelve, agregando comportamiento (logging, timing, retry, caché, validación) sin tocar el código original. La sintaxis <code>@decorador</code> es azúcar sintáctica: <code>func = decorador(func)</code> se ejecuta automáticamente justo debajo de la definición.</div>
+<div class="tab-group-pydec">
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="switchTab(this,'pdc-1','pydec')">Concepto y decorador básico</button>
+    <button class="tab-btn" onclick="switchTab(this,'pdc-2','pydec')">@wraps & args</button>
+    <button class="tab-btn" onclick="switchTab(this,'pdc-3','pydec')">⚠️ Errores comunes</button>
+    <button class="tab-btn" onclick="switchTab(this,'pdc-4','pydec')">✅ Mejores Prácticas</button>
+  </div>
+  <div id="pdc-1" class="tab-panel active">
 <div class="plan-card"><div class="plan-card-title">🎨 Decoradores — funciones que modifican funciones</div>
 <div class="plan-block"><div class="plan-time">¿Qué es?</div><div class="plan-content"><h4>Una función que toma una función y retorna una función mejorada</h4><p>El decorador es azúcar sintáctica para <code>func = decorador(func)</code>. La línea <code>@decorador</code> sobre una función aplica ese patrón automáticamente. Esto permite agregar comportamiento (logging, timing, retry, auth) sin modificar el código original.</p></div></div>
+<div class="plan-block"><div class="plan-time">Paso a paso: qué ejecuta Python realmente</div><div class="plan-content"><h4>El orden de ejecución es la clave para entender decoradores</h4><p>Cuando Python lee este código:</p></div></div>
 </div>
-<div class="code-block"><div class="code-lang">Python — Decorador básico con @wraps</div><pre>
+<div class="code-block"><div class="code-lang">Python — Orden real de ejecución de un decorador</div><pre>
+<span class="c-kw">def</span> <span class="c-fn">timer</span>(func):              <span class="c-cm"># PASO 1: se define timer (no se ejecuta aún)</span>
+    <span class="c-bi">print</span>(<span class="c-st">f"timer() decorando a {func.__name__}"</span>)
+    <span class="c-kw">def</span> <span class="c-fn">wrapper</span>(*args, **kwargs):  <span class="c-cm"># PASO 3: se define wrapper (tampoco se ejecuta)</span>
+        <span class="c-bi">print</span>(<span class="c-st">"antes de llamar a func"</span>)
+        result = func(*args, **kwargs)      <span class="c-cm"># PASO 5: esto corre cuando LLAMAS validate_mcap()</span>
+        <span class="c-bi">print</span>(<span class="c-st">"después de llamar a func"</span>)
+        <span class="c-kw">return</span> result
+    <span class="c-kw">return</span> wrapper                    <span class="c-cm"># PASO 4: timer() retorna wrapper (una función, no un valor)</span>
+
+<span class="c-dc">@timer</span>                            <span class="c-cm"># PASO 2: al leer esta línea, Python ejecuta:</span>
+<span class="c-kw">def</span> <span class="c-fn">validate_mcap</span>(path):           <span class="c-cm"># validate_mcap = timer(validate_mcap)</span>
+    <span class="c-bi">print</span>(<span class="c-st">f"validando {path}"</span>)          <span class="c-cm"># esto imprime "timer() decorando..." AL IMPORTAR EL MÓDULO</span>
+
+<span class="c-cm"># En este punto, validate_mcap YA NO es la función original:</span>
+<span class="c-cm"># es "wrapper", que internamente guarda una referencia (closure)</span>
+<span class="c-cm"># a la función original bajo el nombre "func".</span>
+
+validate_mcap(<span class="c-st">"log_001.mcap"</span>)  <span class="c-cm"># solo AHORA corren los prints 5 (dentro de wrapper)</span>
+<span class="c-cm"># Salida completa:</span>
+<span class="c-cm"># timer() decorando a validate_mcap      ← al definir (import time)</span>
+<span class="c-cm"># antes de llamar a func                  ← al llamar (call time)</span>
+<span class="c-cm"># validando log_001.mcap</span>
+<span class="c-cm"># después de llamar a func</span></pre></div>
+<div class="alert-card">La confusión #1 en entrevistas: <b>"decorar" y "llamar" son dos momentos distintos.</b> Decorar (aplicar <code>@decorador</code>) ocurre UNA vez, cuando Python importa/lee el módulo. Llamar a la función decorada ocurre cada vez que el código la invoca — y ahí es cuando corre el código de <code>wrapper</code>, incluyendo la llamada a la función original.</div>
+<div class="code-block"><div class="code-lang">Python — Decorador básico con @wraps (versión limpia)</div><pre>
 <span class="c-kw">import</span> functools, time
 
 <span class="c-kw">def</span> <span class="c-fn">timer</span>(func):
@@ -678,8 +1464,14 @@ fns = [<span class="c-kw">lambda</span> x=i: x <span class="c-kw">for</span> i <
 <span class="c-dc">@timer</span>
 <span class="c-kw">def</span> <span class="c-fn">validate_mcap</span>(path):
     <span class="c-kw">pass</span>   <span class="c-cm"># ahora mide su tiempo automáticamente</span></pre></div>
+  </div>
+  <div id="pdc-2" class="tab-panel">
+<div class="concept-intro">Un decorador que necesita <strong>argumentos propios</strong> (ej. <code>@retry(times=3)</code>) requiere un nivel extra de anidación: una función que retorna un decorador, que retorna un wrapper. También se pueden apilar (<em>stacking</em>) varios decoradores sobre una misma función — se aplican de abajo hacia arriba pero se ejecutan de afuera hacia adentro.</div>
 <div class="code-block"><div class="code-lang">Python — Decorador con argumentos + stacking</div><pre>
-<span class="c-cm"># Decorador con argumentos — necesita 3 niveles de anidación</span>
+<span class="c-cm"># Decorador con argumentos — necesita 3 niveles de anidación:</span>
+<span class="c-cm"># retry(times=3)      → retorna decorator</span>
+<span class="c-cm"># decorator(func)      → retorna wrapper</span>
+<span class="c-cm"># wrapper(*args, **kw) → ejecuta la lógica real</span>
 <span class="c-kw">def</span> <span class="c-fn">retry</span>(times=<span class="c-nb">3</span>, exceptions=(<span class="c-bi">Exception</span>,)):
     <span class="c-kw">def</span> <span class="c-fn">decorator</span>(func):
         <span class="c-dc">@functools.wraps</span>(func)
@@ -692,25 +1484,172 @@ fns = [<span class="c-kw">lambda</span> x=i: x <span class="c-kw">for</span> i <
         <span class="c-kw">return</span> wrapper
     <span class="c-kw">return</span> decorator
 
-<span class="c-cm"># Stacking — se aplican de abajo hacia arriba</span>
+<span class="c-cm"># Stacking — se APLICAN de abajo hacia arriba, se EJECUTAN de afuera hacia adentro</span>
 <span class="c-dc">@timer</span>
 <span class="c-dc">@retry</span>(times=<span class="c-nb">3</span>, exceptions=(ConnectionError,))
 <span class="c-kw">def</span> <span class="c-fn">connect_to_bench</span>(bench_id): <span class="c-kw">pass</span>
-<span class="c-cm"># equivale a: timer(retry(times=3)(connect_to_bench))</span>
+<span class="c-cm"># equivale a: connect_to_bench = timer(retry(times=3)(connect_to_bench))</span>
+<span class="c-cm"># al LLAMAR: timer.wrapper() arranca el cronómetro → llama a retry.wrapper()</span>
+<span class="c-cm"># → que reintenta internamente → cuando retry termina, timer detiene el cronómetro</span>
 
 <span class="c-cm"># Decoradores útiles de la stdlib</span>
 <span class="c-kw">from</span> functools <span class="c-kw">import</span> lru_cache, cached_property, singledispatch
 
-<span class="c-dc">@lru_cache</span>(maxsize=<span class="c-nb">128</span>)     <span class="c-cm"># memoiza los últimos 128 resultados</span>
-<span class="c-kw">def</span> <span class="c-fn">parse_config</span>(path: str): <span class="c-kw">pass</span></pre></div>
+<span class="c-dc">@lru_cache</span>(maxsize=<span class="c-nb">128</span>)     <span class="c-cm"># memoiza los últimos 128 resultados (misma firma → mismo resultado cacheado)</span>
+<span class="c-kw">def</span> <span class="c-fn">parse_config</span>(path: str): <span class="c-kw">pass</span>
+
+<span class="c-cm"># Decorador que preserva argumentos de la función decorada usando *args/**kwargs</span>
+<span class="c-cm"># — SIN esto, el decorador solo serviría para funciones sin argumentos</span>
+<span class="c-kw">def</span> <span class="c-fn">log_call</span>(func):
+    <span class="c-dc">@functools.wraps</span>(func)
+    <span class="c-kw">def</span> <span class="c-fn">wrapper</span>(*args, **kwargs):
+        <span class="c-bi">print</span>(<span class="c-st">f"Llamando {func.__name__}(args={args}, kwargs={kwargs})"</span>)
+        <span class="c-kw">return</span> func(*args, **kwargs)
+    <span class="c-kw">return</span> wrapper
+
+<span class="c-cm"># Decorador basado en clase (alternativa a función anidada)</span>
+<span class="c-kw">class</span> <span class="c-fn">CountCalls</span>:
+    <span class="c-kw">def</span> <span class="c-fn">__init__</span>(self, func):
+        functools.update_wrapper(self, func)
+        self.func = func
+        self.calls = <span class="c-nb">0</span>
+    <span class="c-kw">def</span> <span class="c-fn">__call__</span>(self, *args, **kwargs):
+        self.calls += <span class="c-nb">1</span>
+        <span class="c-kw">return</span> self.func(*args, **kwargs)
+
+<span class="c-dc">@CountCalls</span>
+<span class="c-kw">def</span> <span class="c-fn">read_frame</span>(): <span class="c-kw">pass</span>
+read_frame(); read_frame()
+read_frame.calls   <span class="c-cm"># 2</span></pre></div>
+  </div>
+  <div id="pdc-3" class="tab-panel">
+<div class="concept-intro">Estos errores aparecen constantemente en code review — casi todos vienen de olvidar que el <code>wrapper</code> debe reenviar argumentos, preservar metadata, y ejecutar la lógica en el momento correcto (definición vs llamada).</div>
+<div class="error-compare">
+  <div class="err-bad"><div class="err-label">❌ Incorrecto</div><pre>def cache(func):
+    result = func()   # se ejecuta UNA vez al decorar,
+    return lambda: result   # no en cada llamada!
+
+@cache
+def read_config():
+    return load_from_disk()  # solo corre 1 vez, siempre</pre></div>
+  <div class="err-good"><div class="err-label">✅ Correcto</div><pre>def cache(func):
+    def wrapper(*args, **kwargs):
+        return func(*args, **kwargs)  # corre en cada llamada
+    return wrapper</pre></div>
+</div>
+<div class="error-note"><b>Por qué pasa:</b> el cuerpo de <code>cache</code> (fuera del wrapper interno) se ejecuta al momento de DECORAR, no de llamar. Si pones lógica de negocio ahí en vez de dentro de <code>wrapper</code>, esa lógica corre una sola vez cuando Python importa el módulo, no cada vez que se invoca la función decorada.</div>
+
+<div class="error-compare">
+  <div class="err-bad"><div class="err-label">❌ Incorrecto</div><pre>def timer(func):
+    def wrapper():        # sin *args, **kwargs
+        return func()
+    return wrapper
+
+@timer
+def connect(bench_id, timeout=30):
+    ...
+
+connect("A3", timeout=60)  # TypeError: wrapper() takes 0 args</pre></div>
+  <div class="err-good"><div class="err-label">✅ Correcto</div><pre>def timer(func):
+    def wrapper(*args, **kwargs):
+        return func(*args, **kwargs)
+    return wrapper</pre></div>
+</div>
+<div class="error-note"><b>Por qué pasa:</b> el wrapper reemplaza por completo a la función original — si no acepta <code>*args, **kwargs</code> y los reenvía, el decorador solo funciona con funciones sin argumentos. Este es el error más común al escribir el primer decorador genérico.</div>
+
+<div class="error-compare">
+  <div class="err-bad"><div class="err-label">❌ Incorrecto</div><pre>def timer(func):
+    def wrapper(*args, **kwargs):
+        return func(*args, **kwargs)
+    return wrapper   # sin @functools.wraps
+
+@timer
+def validate_mcap(path):
+    """Valida un archivo .mcap."""
+    ...
+
+validate_mcap.__name__  # "wrapper" — perdió su identidad!
+validate_mcap.__doc__   # None — perdió el docstring!</pre></div>
+  <div class="err-good"><div class="err-label">✅ Correcto</div><pre>def timer(func):
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs):
+        return func(*args, **kwargs)
+    return wrapper</pre></div>
+</div>
+<div class="error-note"><b>Por qué pasa:</b> sin <code>@functools.wraps(func)</code>, <code>wrapper</code> reemplaza los metadatos (<code>__name__</code>, <code>__doc__</code>, <code>__module__</code>) de la función original con los suyos propios. Esto rompe logging, debugging con pdb, herramientas de documentación (Sphinx) y tests que verifican <code>__name__</code>.</div>
+
+<div class="error-compare">
+  <div class="err-bad"><div class="err-label">❌ Incorrecto</div><pre>def retry(func, times=3):   # falta el nivel extra de anidación
+    def wrapper(*args, **kwargs):
+        ...
+    return wrapper
+
+@retry(times=3)   # TypeError: retry() falta 1 argumento posicional (func)
+def connect(): ...</pre></div>
+  <div class="err-good"><div class="err-label">✅ Correcto</div><pre>def retry(times=3):        # nivel 1: recibe args del decorador
+    def decorator(func):    # nivel 2: recibe la función
+        def wrapper(*a, **k):  # nivel 3: recibe args de la llamada
+            ...
+        return wrapper
+    return decorator</pre></div>
+</div>
+<div class="error-note"><b>Por qué pasa:</b> <code>@retry(times=3)</code> primero EVALÚA <code>retry(times=3)</code> — eso debe retornar algo invocable con la función como único argumento (el decorador real). Si <code>retry</code> mezcla los dos niveles, Python intenta pasarle <code>func</code> y <code>times</code> juntos y falla. Regla mental: "decorador con paréntesis" siempre necesita 3 niveles de funciones anidadas.</div>
+</div>
+  <div id="pdc-4" class="tab-panel">
+<div class="practice-card">
+  <div class="practice-title">Usa @functools.wraps SIEMPRE, sin excepción</div>
+  <p>Sin <code>@wraps</code>, la función decorada pierde su identidad: <code>validate_mcap.__name__</code> sería <code>"wrapper"</code> en vez de <code>"validate_mcap"</code>. Esto rompe logging, debugging y herramientas como Sphinx. <code>@wraps</code> copia <code>__name__</code>, <code>__doc__</code>, <code>__module__</code> y otros atributos al wrapper.</p>
+</div>
+<div class="practice-card">
+  <div class="practice-title">El wrapper interno siempre debe firmar (*args, **kwargs)</div>
+  <p>Salvo que el decorador esté diseñado para una firma específica, reenviar todos los argumentos con <code>func(*args, **kwargs)</code> es lo que hace al decorador reutilizable con cualquier función.</p>
+</div>
+<div class="practice-card">
+  <div class="practice-title">Prefiere decoradores de la stdlib antes de escribir los tuyos</div>
+  <p><code>@functools.lru_cache</code> para memoización, <code>@functools.cached_property</code> para propiedades costosas calculadas una vez, <code>@functools.singledispatch</code> para overloading por tipo. Son probados, rápidos y ya conocidos por otros devs.</p>
+</div>
+<div class="practice-card">
+  <div class="practice-title">Documenta el orden cuando apilas decoradores</div>
+  <p>El orden de <code>@a</code> / <code>@b</code> sobre una función cambia el comportamiento (ej. <code>@timer</code> por fuera de <code>@retry</code> mide el tiempo total incluyendo reintentos; al revés, solo mediría el último intento). Agrega un comentario si el orden es importante para la lógica.</p>
+</div>
+<div class="practice-card">
+  <div class="practice-title">Evita efectos secundarios costosos fuera del wrapper</div>
+  <p>Todo lo que esté en el cuerpo de la función decoradora (fuera de <code>wrapper</code>) corre una sola vez, al importar el módulo. No hagas ahí llamadas de red, lecturas de archivo grandes, ni nada que dependa de argumentos de la llamada.</p>
+</div>
+<div class="practice-card">
+  <div class="practice-title">Para decoradores complejos con estado, considera una clase</div>
+  <p>Si el decorador necesita mantener contadores, cachés propios o configuración compleja, una clase con <code>__call__</code> suele ser más clara que múltiples niveles de closures anidados.</p>
+</div>
 <div class="quiz-section"><div class="quiz-title">Quiz</div>
   <div class="quiz-card"><div class="quiz-q" onclick="toggleQuiz(this)"><span class="q-tag">¿Por qué?</span>¿Por qué se usa @functools.wraps en decoradores?<span class="q-arr">▶</span></div><div class="quiz-a">Sin @wraps, la función decorada pierde su identidad: <code>validate_mcap.__name__</code> sería "wrapper" en vez de "validate_mcap". Esto rompe logging, debugging, y herramientas como Sphinx. @wraps copia __name__, __doc__, __module__ y otros atributos de la función original al wrapper.</div></div>
+  <div class="quiz-card"><div class="quiz-q" onclick="toggleQuiz(this)"><span class="q-tag">Trampa</span>¿En qué momento se ejecuta el código que está DENTRO de la función decoradora pero FUERA del wrapper interno?<span class="q-arr">▶</span></div><div class="quiz-a">Se ejecuta UNA vez, en el momento de <b>decorar</b> (cuando Python lee la línea <code>@decorador</code> / importa el módulo) — no cada vez que se llama a la función decorada. Solo el código dentro de <code>wrapper</code> corre en cada llamada.</div></div>
+  <div class="quiz-card"><div class="quiz-q" onclick="toggleQuiz(this)"><span class="q-tag">Conceptual</span>Con <code>@timer</code> encima de <code>@retry(times=3)</code> sobre <code>connect_to_bench</code>, ¿qué mide timer si retry reintenta 2 veces antes de tener éxito?<span class="q-arr">▶</span></div><div class="quiz-a">Mide el tiempo TOTAL, incluyendo los reintentos fallidos — porque <code>timer</code> envuelve a <code>retry</code> por fuera (se ejecuta primero al llamar, y no termina hasta que <code>retry.wrapper</code> retorna, lo cual incluye todos los intentos internos).</div></div>
+  <div class="quiz-card"><div class="quiz-q" onclick="toggleQuiz(this)"><span class="q-tag">Trampa</span>¿Cuántos niveles de función anidada necesita un decorador que acepta argumentos propios, como @retry(times=3)?<span class="q-arr">▶</span></div><div class="quiz-a"><b>3 niveles.</b> Nivel 1 (<code>retry(times=3)</code>) recibe los argumentos del decorador y retorna el decorador real. Nivel 2 (<code>decorator(func)</code>) recibe la función a decorar y retorna el wrapper. Nivel 3 (<code>wrapper(*args, **kwargs)</code>) ejecuta la lógica en cada llamada.</div></div>
+</div>
+  </div>
 </div>`,
 
 'py-generadores': `
+<div class="concept-intro">Un <strong>generador</strong> es una función que usa <code>yield</code> en vez de (o además de) <code>return</code>. En lugar de calcular todo el resultado de una vez y devolverlo en memoria, produce valores <strong>uno a la vez, bajo demanda</strong> (lazy evaluation). Esto es clave cuando el dataset es grande, potencialmente infinito, o solo se va a recorrer una vez — como logs de telemetría de millones de líneas o streams de sensores en tiempo real.</div>
+<div class="tab-group-pygen">
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="switchTab(this,'pgn-1','pygen')">yield vs return</button>
+    <button class="tab-btn" onclick="switchTab(this,'pgn-2','pygen')">Gen expressions & itertools</button>
+    <button class="tab-btn" onclick="switchTab(this,'pgn-3','pygen')">⚠️ Errores comunes</button>
+    <button class="tab-btn" onclick="switchTab(this,'pgn-4','pygen')">✅ Mejores Prácticas</button>
+  </div>
+  <div id="pgn-1" class="tab-panel active">
+<table class="kv-table">
+  <tr><th>Concepto</th><th>¿Qué hace?</th><th>Ejemplo → Resultado</th><th>Nota</th></tr>
+  <tr><td>return</td><td>Termina la función y entrega UN valor final; el estado se pierde</td><td>return [1,2,3] → toda la lista en RAM ya</td><td>La función completa corre antes de retornar</td></tr>
+  <tr><td>yield</td><td>Pausa la función y entrega un valor; el estado se conserva</td><td>next(gen) → siguiente valor</td><td>La ejecución se reanuda justo después del yield en la próxima llamada</td></tr>
+  <tr><td>next(gen)</td><td>Avanza el generador hasta el próximo yield</td><td>next(gen) → valor o StopIteration</td><td>StopIteration marca el fin — los for loops lo manejan solos</td></tr>
+  <tr><td>yield from</td><td>Delega la iteración completa a otro iterable/generador</td><td>yield from sub_gen() → reenvía cada valor de sub_gen</td><td>Evita loops manuales de "for x in sub_gen: yield x"</td></tr>
+  <tr><td>send(valor)</td><td>Envía un valor AL generador, que lo recibe como resultado de yield</td><td>gen.send(5) → reanuda y x = 5 dentro</td><td>Permite comunicación bidireccional (poco usado, pero preguntado en entrevistas)</td></tr>
+</table>
 <div class="code-block"><div class="code-lang">Python — Generadores: yield vs return</div><pre>
 <span class="c-cm"># Una función con yield es un generador</span>
-<span class="c-cm"># Al llamarla, retorna un objeto generador (no ejecuta nada aún)</span>
+<span class="c-cm"># Al llamarla, retorna un objeto generador (no ejecuta nada aún — lazy)</span>
 <span class="c-cm"># Cada next() la ejecuta hasta el próximo yield</span>
 
 <span class="c-kw">def</span> <span class="c-fn">read_log_lines</span>(path, batch_size=<span class="c-nb">100</span>):
@@ -720,234 +1659,975 @@ fns = [<span class="c-kw">lambda</span> x=i: x <span class="c-kw">for</span> i <
         <span class="c-kw">for</span> line <span class="c-kw">in</span> f:
             batch.append(line.rstrip())
             <span class="c-kw">if</span> <span class="c-bi">len</span>(batch) == batch_size:
-                <span class="c-kw">yield</span> batch      <span class="c-cm"># pausa aquí, retorna batch</span>
+                <span class="c-kw">yield</span> batch      <span class="c-cm"># pausa aquí, retorna batch, GUARDA el estado local</span>
                 batch = []        <span class="c-cm"># continúa desde aquí en el próximo next()</span>
         <span class="c-kw">if</span> batch:
             <span class="c-kw">yield</span> batch         <span class="c-cm"># último batch incompleto</span>
 
-<span class="c-cm"># Uso — procesa 10M líneas con O(100) memoria</span>
+<span class="c-cm"># Uso — procesa 10M líneas con O(batch_size) memoria, no O(n)</span>
 <span class="c-kw">for</span> batch <span class="c-kw">in</span> read_log_lines(<span class="c-st">"huge.log"</span>):
     process_batch(batch)
 
-<span class="c-cm"># next() y StopIteration</span>
+<span class="c-cm"># next() y StopIteration — lo que el "for" hace por debajo</span>
 gen = read_log_lines(<span class="c-st">"file.log"</span>)
-first = <span class="c-bi">next</span>(gen)           <span class="c-cm"># primer batch</span>
-second = <span class="c-bi">next</span>(gen)          <span class="c-cm"># segundo batch</span>
-<span class="c-cm"># cuando se agota, lanza StopIteration</span>
+first = <span class="c-bi">next</span>(gen)           <span class="c-cm"># primer batch — la función corre hasta el 1er yield</span>
+second = <span class="c-bi">next</span>(gen)          <span class="c-cm"># reanuda DESPUÉS del yield anterior, corre hasta el 2do</span>
+<span class="c-cm"># cuando se agota, lanza StopIteration (el for loop la atrapa automáticamente)</span>
 
-<span class="c-cm"># yield from — delega a otro iterable</span>
+<span class="c-cm"># yield from — delega a otro iterable/generador</span>
 <span class="c-kw">def</span> <span class="c-fn">all_errors_from_all_benches</span>(bench_logs):
     <span class="c-kw">for</span> log_path <span class="c-kw">in</span> bench_logs:
         <span class="c-kw">yield from</span> read_log_lines(log_path)   <span class="c-cm"># delega al sub-generador</span>
 
-<span class="c-cm"># Generadores infinitos — útiles para streams</span>
+<span class="c-cm"># Generadores infinitos — útiles para streams en tiempo real (nunca haría esto con una lista)</span>
 <span class="c-kw">def</span> <span class="c-fn">timestamp_stream</span>(interval=<span class="c-nb">0.1</span>):
     <span class="c-kw">while</span> <span class="c-kw">True</span>:
         <span class="c-kw">yield</span> time.time()
-        time.sleep(interval)
+        time.sleep(interval)</pre></div>
+<div class="alert-card"><b>Medido en la práctica:</b> procesar un log de telemetría de <b>5 millones de líneas</b> con <code>[parse(l) for l in open(path)]</code> (list comprehension) puede consumir <b>&gt;1.5 GB de RAM</b> si cada línea parseada pesa ~300 bytes. La versión generador <code>(parse(l) for l in open(path))</code> mantiene el uso de memoria prácticamente constante (unos pocos KB) porque solo una línea existe en memoria a la vez — el archivo se lee línea por línea gracias a que los file objects de Python ya son iteradores lazy.</div>
+  </div>
+  <div id="pgn-2" class="tab-panel">
+<div class="concept-intro">Una <strong>generator expression</strong> es la versión lazy de una list comprehension: mismo syntax, pero con paréntesis <code>()</code> en vez de corchetes <code>[]</code>. El módulo <code>itertools</code> de la stdlib provee generadores optimizados en C para las operaciones lazy más comunes (encadenar, agrupar, tomar de a N, combinar).</div>
+<div class="code-block"><div class="code-lang">Python — Generator expressions e itertools</div><pre>
+<span class="c-cm"># Generator expression vs list comprehension — mismo syntax, distinta memoria</span>
+big_list = [process(x) <span class="c-kw">for</span> x <span class="c-kw">in</span> data]   <span class="c-cm"># O(n) RAM — calcula TODO ahora mismo</span>
+big_gen  = (process(x) <span class="c-kw">for</span> x <span class="c-kw">in</span> data)   <span class="c-cm"># O(1) RAM — lazy, calcula bajo demanda</span>
 
-<span class="c-cm"># Generator expression vs list comprehension</span>
-big_list = [process(x) <span class="c-kw">for</span> x <span class="c-kw">in</span> data]   <span class="c-cm"># O(n) RAM ahora</span>
-big_gen  = (process(x) <span class="c-kw">for</span> x <span class="c-kw">in</span> data)   <span class="c-cm"># O(1) RAM — lazy</span></pre></div>
+<span class="c-cm"># Se pueden pasar directo a funciones que consumen iterables — sin paréntesis extra</span>
+<span class="c-bi">sum</span>(x**<span class="c-nb">2</span> <span class="c-kw">for</span> x <span class="c-kw">in</span> readings)        <span class="c-cm"># nunca crea una lista intermedia</span>
+<span class="c-bi">any</span>(v &gt; threshold <span class="c-kw">for</span> v <span class="c-kw">in</span> readings)  <span class="c-cm"># corta apenas encuentra True (short-circuit)</span>
+
+<span class="c-kw">import</span> itertools
+
+<span class="c-cm"># itertools.chain — encadena varios iterables sin copiarlos</span>
+<span class="c-kw">for</span> line <span class="c-kw">in</span> itertools.chain(log_bench_a, log_bench_b, log_bench_c):
+    process(line)
+
+<span class="c-cm"># itertools.islice — "slice" lazy, evita materializar todo para tomar los primeros N</span>
+first_1000 = <span class="c-bi">list</span>(itertools.islice(read_log_lines(<span class="c-st">"huge.log"</span>), <span class="c-nb">1000</span>))
+
+<span class="c-cm"># itertools.groupby — agrupa elementos CONSECUTIVOS iguales (requiere datos ordenados)</span>
+readings.sort(key=<span class="c-kw">lambda</span> r: r.sensor_id)
+<span class="c-kw">for</span> sensor_id, group <span class="c-kw">in</span> itertools.groupby(readings, key=<span class="c-kw">lambda</span> r: r.sensor_id):
+    <span class="c-bi">print</span>(sensor_id, <span class="c-bi">list</span>(group))
+
+<span class="c-cm"># itertools.count / cycle / repeat — generadores infinitos listos para usar</span>
+counter = itertools.count(start=<span class="c-nb">1</span>, step=<span class="c-nb">1</span>)   <span class="c-cm"># 1, 2, 3, 4, ... infinito</span>
+frame_ids = itertools.cycle([<span class="c-st">'A'</span>, <span class="c-st">'B'</span>, <span class="c-st">'C'</span>])  <span class="c-cm"># A,B,C,A,B,C,... infinito</span>
+
+<span class="c-cm"># Generador con estado explícito usando una clase (alternativa a función con yield)</span>
+<span class="c-kw">class</span> <span class="c-fn">SlidingWindow</span>:
+    <span class="c-kw">def</span> <span class="c-fn">__init__</span>(self, iterable, size):
+        self.it, self.size = <span class="c-bi">iter</span>(iterable), size
+    <span class="c-kw">def</span> <span class="c-fn">__iter__</span>(self):
+        <span class="c-kw">return</span> self
+    <span class="c-kw">def</span> <span class="c-fn">__next__</span>(self):
+        window = [<span class="c-bi">next</span>(self.it) <span class="c-kw">for</span> _ <span class="c-kw">in</span> <span class="c-bi">range</span>(self.size)]
+        <span class="c-kw">return</span> window   <span class="c-cm"># StopIteration se propaga solo desde next(self.it)</span>
+
+<span class="c-cm"># send() — comunicación bidireccional con el generador (poco común pero preguntado)</span>
+<span class="c-kw">def</span> <span class="c-fn">running_average</span>():
+    total, count = <span class="c-nb">0</span>, <span class="c-nb">0</span>
+    avg = <span class="c-kw">None</span>
+    <span class="c-kw">while</span> <span class="c-kw">True</span>:
+        value = <span class="c-kw">yield</span> avg          <span class="c-cm"># recibe el valor enviado con send()</span>
+        total, count = total + value, count + <span class="c-nb">1</span>
+        avg = total / count
+
+gen = running_average()
+<span class="c-bi">next</span>(gen)              <span class="c-cm"># "arranca" el generador hasta el primer yield</span>
+gen.send(<span class="c-nb">10</span>)          <span class="c-cm"># avg = 10.0</span>
+gen.send(<span class="c-nb">20</span>)          <span class="c-cm"># avg = 15.0</span></pre></div>
+  </div>
+  <div id="pgn-3" class="tab-panel">
+<div class="concept-intro">La mayoría de los errores con generadores vienen de olvidar una propiedad central: <strong>un generador se consume una sola vez</strong>. Una vez que se agota (o se recorre parcialmente), no vuelve al principio.</div>
+<div class="error-compare">
+  <div class="err-bad"><div class="err-label">❌ Incorrecto</div><pre>errors = (line for line in read_log_lines("f.log") if "ERROR" in line)
+
+total = sum(1 for _ in errors)   # consume el generador entero
+first_error = next(errors)       # StopIteration! ya no quedan valores</pre></div>
+  <div class="err-good"><div class="err-label">✅ Correcto</div><pre>errors = list(line for line in read_log_lines("f.log") if "ERROR" in line)
+
+total = len(errors)
+first_error = errors[0] if errors else None
+# o: recrear el generador si el dataset es demasiado grande para list()</pre></div>
+</div>
+<div class="error-note"><b>Por qué pasa:</b> un generador no tiene "memoria" de lo ya iterado ni forma de retroceder — es un iterador de un solo uso. Si necesitas recorrer los datos más de una vez, materialízalos en una lista (si caben en RAM) o construye una nueva llamada al generador por cada recorrido.</div>
+
+<div class="error-compare">
+  <div class="err-bad"><div class="err-label">❌ Incorrecto</div><pre>def get_readings(sensor_id):
+    if sensor_id not in VALID_SENSORS:
+        raise ValueError("sensor inválido")   # NUNCA se ejecuta aquí
+    for r in fetch_readings(sensor_id):
+        yield r
+
+gen = get_readings("bad_id")   # no lanza el ValueError todavía!
+next(gen)                       # AHORA sí lanza, en un punto lejano del código</pre></div>
+  <div class="err-good"><div class="err-label">✅ Correcto</div><pre>def get_readings(sensor_id):
+    if sensor_id not in VALID_SENSORS:
+        raise ValueError("sensor inválido")  # separar validación de la función generadora
+    return _get_readings_gen(sensor_id)
+
+def _get_readings_gen(sensor_id):
+    for r in fetch_readings(sensor_id):
+        yield r</pre></div>
+</div>
+<div class="error-note"><b>Por qué pasa:</b> si una función contiene <code>yield</code> en cualquier parte de su cuerpo, TODA la función se convierte en generadora — incluido el código antes del primer <code>yield</code>. Ese código no corre al llamar a la función, sino al primer <code>next()</code>. Esto sorprende cuando se espera validación "inmediata" de argumentos.</div>
+
+<div class="error-compare">
+  <div class="err-bad"><div class="err-label">❌ Incorrecto</div><pre>def batches(data, size):
+    for i in range(0, len(data), size):
+        yield data[i:i+size]
+
+# 'data' debe soportar len() e indexado por slice — no sirve
+# para un generador de entrada (ej. otro generador, un socket, un file)
+batches(read_log_lines("f.log"), 10)  # TypeError: generator has no len()</pre></div>
+  <div class="err-good"><div class="err-label">✅ Correcto</div><pre>def batches(iterable, size):
+    it = iter(iterable)
+    while chunk := list(itertools.islice(it, size)):
+        yield chunk
+
+batches(read_log_lines("f.log"), 10)  # funciona con CUALQUIER iterable</pre></div>
+</div>
+<div class="error-note"><b>Por qué pasa:</b> asumir que la entrada tiene <code>len()</code> o soporta slicing rompe la composición de generadores — uno de los mayores beneficios de yield es poder encadenarlos. Usar <code>iter()</code> + <code>itertools.islice</code> hace que la función funcione con listas, generadores, archivos o cualquier iterable.</div>
+
+<div class="error-compare">
+  <div class="err-bad"><div class="err-label">❌ Incorrecto</div><pre>def process_all(paths):
+    results = []
+    for p in paths:
+        results.append(list(read_log_lines(p)))  # list() fuerza carga completa
+    return results
+# perdiste TODA la ventaja de memoria del generador original</pre></div>
+  <div class="err-good"><div class="err-label">✅ Correcto</div><pre>def process_all(paths):
+    for p in paths:
+        yield from read_log_lines(p)  # se mantiene lazy de punta a punta</pre></div>
+</div>
+<div class="error-note"><b>Por qué pasa:</b> envolver un generador en <code>list()</code> "a mitad de camino" en una cadena de procesamiento anula el beneficio de memoria constante — vuelves a cargar todo en RAM. Para mantener el pipeline lazy de principio a fin, encadena generadores entre sí (con <code>yield from</code> o generator expressions) y materializa solo al final, si realmente hace falta.</div>
+</div>
+  <div id="pgn-4" class="tab-panel">
+<div class="practice-card">
+  <div class="practice-title">Usa un generador cuando el dataset es grande, se recorre una sola vez, o es potencialmente infinito</div>
+  <p>Streams de sensores, logs de varios GB, resultados de queries paginadas: todos son candidatos naturales. La regla práctica: si el resultado se pasa a <code>sum()</code>, <code>any()</code>, <code>all()</code>, <code>max()</code> o a un solo <code>for</code>, usa generador.</p>
+</div>
+<div class="practice-card">
+  <div class="practice-title">Usa una lista cuando necesitas indexar, medir longitud, o recorrer varias veces</div>
+  <p>Si el código hace <code>datos[i]</code>, <code>len(datos)</code>, o itera la misma colección dos veces, un generador no sirve (se agota) — usa <code>list()</code> o una estructura reutilizable.</p>
+</div>
+<div class="practice-card">
+  <div class="practice-title">Prefiere itertools sobre reimplementar lógica de iteración a mano</div>
+  <p><code>itertools.islice</code>, <code>chain</code>, <code>groupby</code>, <code>takewhile</code> están optimizados en C y ya manejan casos límite. Reimplementar "tomar los primeros N de un generador" a mano es más lento y más propenso a bugs.</p>
+</div>
+<div class="practice-card">
+  <div class="practice-title">Separa validación de argumentos en una función wrapper no-generadora</div>
+  <p>Si necesitas que los errores de validación salten inmediatamente al llamar (no al primer <code>next()</code>), usa una función normal que valide y luego retorne/delegue a un generador interno con <code>yield from</code>.</p>
+</div>
+<div class="practice-card">
+  <div class="practice-title">Cierra recursos explícitamente o usa "with" dentro del generador</div>
+  <p>Un <code>with open(path) as f:</code> dentro de la función generadora se cierra correctamente incluso si el generador se abandona a mitad de camino (garbage collected), gracias a que Python llama a <code>close()</code> en el generador.</p>
+</div>
+<div class="practice-card">
+  <div class="practice-title">Mide la memoria real antes de optimizar prematuramente</div>
+  <p>Si el dataset cabe cómodo en RAM (ej. &lt;10k elementos), una list comprehension suele ser más simple y hasta más rápida que un generador equivalente. Usa generadores cuando el tamaño de los datos es el problema real, no por costumbre.</p>
+</div>
 <div class="quiz-section"><div class="quiz-title">Quiz</div>
   <div class="quiz-card"><div class="quiz-q" onclick="toggleQuiz(this)"><span class="q-tag">Diferencia</span>¿Cuándo usar generador vs list comprehension?<span class="q-arr">▶</span></div><div class="quiz-a"><b>Generador (o gen expr):</b> cuando el resultado es grande, solo lo vas a iterar una vez, o es potencialmente infinito. Usa O(1) de memoria.<br><b>List comp:</b> cuando necesitas acceso por índice, reutilizar la colección varias veces, o saber el len() sin consumirla.<div class="a-tip">Regla práctica: si lo pasas a sum(), any(), all(), max(), o un for loop de una vez → generador. Si necesitas lst[i] o len(lst) → lista.</div></div></div>
+  <div class="quiz-card"><div class="quiz-q" onclick="toggleQuiz(this)"><span class="q-tag">Trampa</span>¿Qué pasa si iteras dos veces sobre el mismo objeto generador?<span class="q-arr">▶</span></div><div class="quiz-a">La segunda iteración no produce nada — el generador ya está agotado y simplemente lanza <code>StopIteration</code> de inmediato (un <code>for</code> sobre él terminaría en 0 iteraciones). A diferencia de una lista, un generador es de un solo uso; hay que crear una nueva instancia llamando de nuevo a la función generadora.</div></div>
+  <div class="quiz-card"><div class="quiz-q" onclick="toggleQuiz(this)"><span class="q-tag">Conceptual</span>¿Por qué el código antes del primer yield NO se ejecuta al llamar a la función generadora?<span class="q-arr">▶</span></div><div class="quiz-a">Porque una función con <code>yield</code> en cualquier parte de su cuerpo no ejecuta nada al ser llamada — solo construye y retorna un objeto generador. La ejecución del cuerpo (incluyendo validaciones al inicio) empieza recién con el primer <code>next()</code> (o el primer paso de un <code>for</code>).</div></div>
+  <div class="quiz-card"><div class="quiz-q" onclick="toggleQuiz(this)"><span class="q-tag">Medido</span>Procesando un log de 5 millones de líneas, ¿por qué una generator expression usa memoria casi constante mientras una list comprehension puede usar más de 1 GB?<span class="q-arr">▶</span></div><div class="quiz-a">La list comprehension construye la lista COMPLETA en memoria antes de que el código pueda usar el primer elemento — todas las líneas procesadas coexisten en RAM. La generator expression procesa y entrega una línea a la vez; solo el elemento actual (y el estado interno del generador) ocupa memoria, sin importar si el archivo tiene mil o 5 millones de líneas.</div></div>
+</div>
+  </div>
 </div>`,
 
 'py-tryexcept': `
-<div class="code-block"><div class="code-lang">Python — try/except/else/finally completo</div><pre>
-<span class="c-cm"># Estructura completa</span>
+<div class="tab-group-pytry">
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="switchTab(this,'ptr-1','pytry')">try/except/else/finally</button>
+    <button class="tab-btn" onclick="switchTab(this,'ptr-2','pytry')">Excepciones custom &amp; jerarquía</button>
+    <button class="tab-btn" onclick="switchTab(this,'ptr-3','pytry')">⚠️ Errores comunes</button>
+    <button class="tab-btn" onclick="switchTab(this,'ptr-4','pytry')">✅ Mejores Prácticas + Quiz</button>
+  </div>
+
+  <div id="ptr-1" class="tab-panel active">
+<div class="concept-intro">El bloque <strong>try/except</strong> permite ejecutar código que puede fallar y decidir qué hacer si falla, en vez de dejar que el programa se caiga. <code>try</code> envuelve el código riesgoso, <code>except</code> captura el/los tipo(s) de excepción que sabes manejar, <code>else</code> corre solo si NO hubo excepción, y <code>finally</code> corre SIEMPRE (haya o no excepción) — típico para liberar recursos como conexiones a un banco de pruebas o cerrar un archivo.</div>
+<div class="code-block"><div class="code-lang">Python — estructura completa try/except/else/finally</div><pre>
 <span class="c-kw">try</span>:
     result = risky_operation()   <span class="c-cm"># puede lanzar excepción</span>
 <span class="c-kw">except</span> FileNotFoundError <span class="c-kw">as</span> e:
     <span class="c-bi">print</span>(<span class="c-st">f"Archivo no encontrado: {e}"</span>)
-<span class="c-kw">except</span> (ValueError, TypeError) <span class="c-kw">as</span> e:  <span class="c-cm"># múltiples tipos</span>
+<span class="c-kw">except</span> (ValueError, TypeError) <span class="c-kw">as</span> e:  <span class="c-cm"># múltiples tipos en una tupla</span>
     <span class="c-bi">print</span>(<span class="c-st">f"Error de tipo: {e}"</span>)
-<span class="c-kw">except</span> <span class="c-bi">Exception</span> <span class="c-kw">as</span> e:
+<span class="c-kw">except</span> <span class="c-bi">Exception</span> <span class="c-kw">as</span> e:        <span class="c-cm"># catch-all, siempre AL FINAL</span>
     <span class="c-bi">print</span>(<span class="c-st">f"Error inesperado: {e}"</span>)
-    <span class="c-kw">raise</span>                        <span class="c-cm"># re-raise: deja que suba</span>
+    <span class="c-kw">raise</span>                        <span class="c-cm"># re-raise: deja que suba después de loguear</span>
 <span class="c-kw">else</span>:
-    use(result)   <span class="c-cm"># solo corre si NO hubo excepción</span>
+    use(result)   <span class="c-cm"># solo corre si el try NO lanzó excepción</span>
 <span class="c-kw">finally</span>:
-    cleanup()     <span class="c-cm"># SIEMPRE corre, con o sin excepción</span>
+    cleanup()     <span class="c-cm"># SIEMPRE corre — con, sin, o incluso con return en medio</span>
 
-<span class="c-cm"># raise vs raise e (diferencia importante)</span>
-<span class="c-kw">try</span>: risky()
+<span class="c-cm"># El orden de los except IMPORTA: el primero que matchee gana.</span>
+<span class="c-cm"># Si pones "except Exception" primero, los siguientes nunca se alcanzan.</span>
+<span class="c-kw">try</span>:
+    <span class="c-nb">1</span> / <span class="c-nb">0</span>
+<span class="c-kw">except</span> <span class="c-bi">Exception</span>:
+    <span class="c-bi">print</span>(<span class="c-st">"genérico"</span>)      <span class="c-cm"># esto se ejecuta</span>
+<span class="c-kw">except</span> ZeroDivisionError:
+    <span class="c-bi">print</span>(<span class="c-st">"específico"</span>)    <span class="c-cm"># ¡nunca se llega aquí! código muerto</span>
+
+<span class="c-cm"># El "with" es la forma correcta de garantizar cleanup — mejor que</span>
+<span class="c-cm"># try/finally manual porque usa __enter__/__exit__ del objeto</span>
+<span class="c-kw">with</span> <span class="c-bi">open</span>(<span class="c-st">"bench_a3.log"</span>) <span class="c-kw">as</span> f:   <span class="c-cm"># cierra el archivo aunque falle f.read()</span>
+    data = f.read()
+
+<span class="c-cm"># Equivalente manual (NO lo hagas así, "with" ya lo resuelve):</span>
+f = <span class="c-bi">open</span>(<span class="c-st">"bench_a3.log"</span>)
+<span class="c-kw">try</span>:
+    data = f.read()
+<span class="c-kw">finally</span>:
+    f.close()</pre></div>
+<table class="kv-table">
+<tr><th>Excepción</th><th>¿Cuándo ocurre?</th><th>Ejemplo → Resultado</th><th>Nota</th></tr>
+<tr><td>KeyError</td><td>Falta una key en un dict</td><td>config["timeout"] → KeyError</td><td>Usa .get("timeout", 30) para evitarlo</td></tr>
+<tr><td>IndexError</td><td>Índice fuera de rango en lista/tupla</td><td>logs[100] → IndexError</td><td>Verifica len() antes o usa slicing</td></tr>
+<tr><td>ValueError</td><td>Tipo correcto, valor inválido</td><td>int("abc") → ValueError</td><td>Común al parsear input externo</td></tr>
+<tr><td>TypeError</td><td>Operación sobre tipo incompatible</td><td>"3" + 3 → TypeError</td><td>Suele indicar un bug de tipos</td></tr>
+<tr><td>AttributeError</td><td>Atributo/método no existe en el objeto</td><td>None.upper() → AttributeError</td><td>Muy común cuando algo devuelve None sin querer</td></tr>
+<tr><td>FileNotFoundError</td><td>open() sobre archivo inexistente</td><td>open("x.log") → FileNotFoundError</td><td>Subclase de OSError</td></tr>
+<tr><td>ZeroDivisionError</td><td>División o módulo entre cero</td><td>10 / 0 → ZeroDivisionError</td><td>Valida el divisor antes en cálculos de telemetría</td></tr>
+</table>
+  </div>
+
+  <div id="ptr-2" class="tab-panel">
+<div class="concept-intro">Crear tus propias excepciones (heredando de <code>Exception</code> o de una más específica) le da significado a los errores de tu dominio — en vez de propagar un <code>ValueError</code> genérico, defines <code>BenchNotAvailableError</code> y quien lo capture sabe exactamente qué pasó. Entender la <strong>jerarquía de excepciones</strong> de Python te dice qué capturar y en qué orden.</div>
+<div class="code-block"><div class="code-lang">Python — raise, raise ... from, y excepciones propias</div><pre>
+<span class="c-cm"># ── raise vs raise e (diferencia CRÍTICA en entrevistas) ─────────</span>
+<span class="c-kw">try</span>:
+    risky()
 <span class="c-kw">except</span> <span class="c-bi">ValueError</span> <span class="c-kw">as</span> e:
-    <span class="c-kw">raise</span>              <span class="c-cm"># preserva el traceback original</span>
-    <span class="c-cm"># raise e          ← pierde el contexto del traceback</span>
+    <span class="c-kw">raise</span>              <span class="c-cm"># re-lanza la MISMA excepción, preserva traceback completo</span>
+    <span class="c-cm"># raise e         ← relanza pero RESETEA el traceback (pierdes dónde ocurrió originalmente)</span>
 
-<span class="c-cm"># Exception chaining</span>
-<span class="c-kw">try</span>: connect()
+<span class="c-cm"># ── raise ... from e — exception chaining explícito ───────────────</span>
+<span class="c-cm"># Útil cuando conviertes un error de bajo nivel en uno de tu dominio,</span>
+<span class="c-cm"># pero quieres conservar la causa original para debug</span>
+<span class="c-kw">try</span>:
+    connect_to_bench()
 <span class="c-kw">except</span> OSError <span class="c-kw">as</span> e:
-    <span class="c-kw">raise</span> ConnectionError(<span class="c-st">"Bench offline"</span>) <span class="c-kw">from</span> e  <span class="c-cm"># encadena</span>
+    <span class="c-kw">raise</span> ConnectionError(<span class="c-st">"Bench A3 offline"</span>) <span class="c-kw">from</span> e
+    <span class="c-cm"># El traceback mostrará: "ConnectionError: Bench A3 offline"</span>
+    <span class="c-cm"># y debajo: "The above exception was the direct cause of..."</span>
 
-<span class="c-cm"># Excepciones customizadas</span>
-<span class="c-kw">class</span> <span class="c-fn">BenchNotAvailableError</span>(RuntimeError):
+<span class="c-cm"># raise ... from None — oculta la causa (rara vez lo quieres)</span>
+<span class="c-kw">try</span>:
+    parse(raw)
+<span class="c-kw">except</span> ValueError:
+    <span class="c-kw">raise</span> ConfigError(<span class="c-st">"config inválida"</span>) <span class="c-kw">from</span> <span class="c-kw">None</span>
+
+<span class="c-cm"># ── Excepciones customizadas — jerarquía propia del proyecto ──────</span>
+<span class="c-kw">class</span> <span class="c-fn">BenchError</span>(<span class="c-bi">Exception</span>):
+    <span class="c-st">"""Base para todos los errores del framework de HIL."""</span>
+    <span class="c-kw">pass</span>
+
+<span class="c-kw">class</span> <span class="c-fn">BenchNotAvailableError</span>(BenchError):
     <span class="c-kw">def</span> <span class="c-fn">__init__</span>(self, bench_id: str):
         self.bench_id = bench_id
         <span class="c-bi">super</span>().__init__(<span class="c-st">f"Bench {bench_id} not available"</span>)
 
-<span class="c-kw">raise</span> BenchNotAvailableError(<span class="c-st">"A3"</span>)
+<span class="c-kw">class</span> <span class="c-fn">BenchTimeoutError</span>(BenchError):
+    <span class="c-kw">def</span> <span class="c-fn">__init__</span>(self, bench_id: str, timeout_s: <span class="c-bi">float</span>):
+        self.bench_id, self.timeout_s = bench_id, timeout_s
+        <span class="c-bi">super</span>().__init__(<span class="c-st">f"Bench {bench_id} timed out after {timeout_s}s"</span>)
 
-<span class="c-cm"># Context manager con with (usa __enter__/__exit__)</span>
-<span class="c-kw">with</span> <span class="c-bi">open</span>(<span class="c-st">"file.txt"</span>) <span class="c-kw">as</span> f:    <span class="c-cm"># cierra el archivo automáticamente</span>
-    data = f.read()
+<span class="c-cm"># Al capturar la clase base, capturas TODAS las hijas también</span>
+<span class="c-kw">try</span>:
+    connect(bench_id=<span class="c-st">"A3"</span>)
+<span class="c-kw">except</span> BenchError <span class="c-kw">as</span> e:   <span class="c-cm"># atrapa BenchNotAvailableError y BenchTimeoutError</span>
+    log.error(<span class="c-st">f"Fallo de banco: {e}"</span>)
 
-<span class="c-cm"># Jerarquía de excepciones</span>
+<span class="c-cm"># ── Jerarquía builtin de Python (de arriba hacia abajo) ────────────</span>
 <span class="c-cm"># BaseException</span>
-<span class="c-cm">#   ├── SystemExit, KeyboardInterrupt, GeneratorExit</span>
-<span class="c-cm">#   └── Exception</span>
-<span class="c-cm">#         ├── ArithmeticError (ZeroDivisionError, OverflowError)</span>
-<span class="c-cm">#         ├── LookupError (IndexError, KeyError)</span>
-<span class="c-cm">#         ├── OSError (FileNotFoundError, PermissionError, ...)</span>
-<span class="c-cm">#         ├── TypeError, ValueError, AttributeError, ...</span></pre></div>
+<span class="c-cm">#   ├── SystemExit, KeyboardInterrupt, GeneratorExit   ← NO heredes de Exception para capturarlos</span>
+<span class="c-cm">#   └── Exception                                       ← captura "casi todo lo normal"</span>
+<span class="c-cm">#         ├── ArithmeticError → ZeroDivisionError, OverflowError</span>
+<span class="c-cm">#         ├── LookupError    → IndexError, KeyError</span>
+<span class="c-cm">#         ├── OSError        → FileNotFoundError, PermissionError, TimeoutError</span>
+<span class="c-cm">#         ├── TypeError, ValueError, AttributeError, RuntimeError, ...</span>
+<span class="c-cm"># "except:" (sin tipo) captura hasta BaseException — incluye Ctrl+C. Evítalo.</span></pre></div>
+  </div>
+
+  <div id="ptr-3" class="tab-panel">
+<div class="concept-intro">Estos son los errores de manejo de excepciones que más se ven en code review y en entrevistas técnicas — desde silenciar errores hasta capturar el tipo equivocado.</div>
+
+<div class="error-compare">
+  <div class="err-bad"><div class="err-label">❌ Incorrecto</div><pre>try:
+    read_sensor()
+<span class="c-kw">except</span>:                <span class="c-cm"># bare except</span>
+    pass                 <span class="c-cm"># silencia TODO, incluso Ctrl+C</span></pre></div>
+  <div class="err-good"><div class="err-label">✅ Correcto</div><pre>try:
+    read_sensor()
+<span class="c-kw">except</span> SensorTimeoutError <span class="c-kw">as</span> e:
+    log.warning(<span class="c-st">f"sensor timeout: {e}"</span>)</pre></div>
+</div>
+<div class="error-note"><b>Por qué pasa:</b> un <code>except:</code> sin tipo captura desde <code>BaseException</code>, incluyendo <code>KeyboardInterrupt</code> y <code>SystemExit</code> — tu script deja de poder cancelarse con Ctrl+C. Además <code>pass</code> esconde bugs reales: el test "pasa" aunque el sensor nunca respondió. Detéctalo buscando <code>except:</code> y <code>except Exception: pass</code> en linters (pylint E722, bare-except).</div>
+
+<div class="error-compare">
+  <div class="err-bad"><div class="err-label">❌ Incorrecto</div><pre><span class="c-kw">try</span>: connect()
+<span class="c-kw">except</span> OSError <span class="c-kw">as</span> e:
+    <span class="c-kw">raise</span> ConnectionError(<span class="c-st">"offline"</span>)
+    <span class="c-cm"># se pierde la causa original (e)</span></pre></div>
+  <div class="err-good"><div class="err-label">✅ Correcto</div><pre><span class="c-kw">try</span>: connect()
+<span class="c-kw">except</span> OSError <span class="c-kw">as</span> e:
+    <span class="c-kw">raise</span> ConnectionError(<span class="c-st">"offline"</span>) <span class="c-kw">from</span> e</pre></div>
+</div>
+<div class="error-note"><b>Por qué pasa:</b> al lanzar una excepción nueva dentro de un except sin <code>from e</code>, Python igual muestra "During handling... another exception occurred" pero no deja explícito que una causó la otra, y algunas herramientas de logging/Sentry agrupan peor los errores. <code>raise NuevaExcepcion(...) from e</code> deja la cadena de causalidad clara en el traceback.</div>
+
+<div class="error-compare">
+  <div class="err-bad"><div class="err-label">❌ Incorrecto</div><pre><span class="c-kw">try</span>:
+    v = <span class="c-bi">int</span>(config[<span class="c-st">"count"</span>])
+    process(v)
+<span class="c-kw">except</span> <span class="c-bi">Exception</span>:
+    <span class="c-bi">print</span>(<span class="c-st">"algo falló"</span>)  <span class="c-cm"># ¿KeyError? ¿ValueError? ¿bug en process()?</span></pre></div>
+  <div class="err-good"><div class="err-label">✅ Correcto</div><pre><span class="c-kw">try</span>:
+    v = <span class="c-bi">int</span>(config[<span class="c-st">"count"</span>])
+<span class="c-kw">except</span> KeyError:
+    v = <span class="c-nb">0</span>
+<span class="c-kw">except</span> ValueError:
+    <span class="c-kw">raise</span> ConfigError(<span class="c-st">"count debe ser numérico"</span>)
+process(v)  <span class="c-cm"># fuera del try: si falla aquí, el traceback es claro</span></pre></div>
+</div>
+<div class="error-note"><b>Por qué pasa:</b> meter demasiado código dentro de un solo try con un except genérico mezcla errores de distinto origen y oculta cuál línea falló realmente. Regla práctica: el try debe cubrir solo la(s) línea(s) que puede fallar, y cada except debe ser lo más específico posible.</div>
+
+<div class="error-compare">
+  <div class="err-bad"><div class="err-label">❌ Incorrecto</div><pre><span class="c-kw">try</span>:
+    result = compute()
+<span class="c-kw">except</span> <span class="c-bi">Exception</span> <span class="c-kw">as</span> e:
+    <span class="c-bi">print</span>(<span class="c-st">"error"</span>)
+use(result)  <span class="c-cm"># NameError si compute() falló: result nunca se creó</span></pre></div>
+  <div class="err-good"><div class="err-label">✅ Correcto</div><pre><span class="c-kw">try</span>:
+    result = compute()
+<span class="c-kw">except</span> <span class="c-bi">Exception</span> <span class="c-kw">as</span> e:
+    log.error(e)
+<span class="c-kw">else</span>:
+    use(result)  <span class="c-cm"># solo corre si compute() tuvo éxito</span></pre></div>
+</div>
+<div class="error-note"><b>Por qué pasa:</b> usar una variable definida dentro del try fuera de él (sin else) asume que siempre se llegó a esa línea. Si hubo excepción, la variable no existe y obtienes un <code>NameError</code> encima del error original, confundiendo el debug. El bloque <code>else</code> existe exactamente para este caso.</div>
+  </div>
+
+  <div id="ptr-4" class="tab-panel">
+<div class="practice-card">
+  <div class="practice-title">Captura excepciones específicas, nunca un except desnudo</div>
+  <p>Usa <code>except ValueError:</code> en vez de <code>except:</code> o <code>except Exception:</code> cuando sabes qué puede fallar. Reserva <code>except Exception</code> solo en el borde de la aplicación (por ejemplo el loop principal de un runner de tests) para loguear y continuar sin tumbar el proceso.</p>
+</div>
+<div class="practice-card">
+  <div class="practice-title">Usa "with" para cualquier recurso que deba liberarse</div>
+  <p>Archivos, conexiones de red, locks, sesiones de base de datos: si el objeto soporta context manager (<code>__enter__</code>/<code>__exit__</code>), usa <code>with</code> en vez de try/finally manual — es más corto y más difícil de olvidar.</p>
+</div>
+<div class="practice-card">
+  <div class="practice-title">Preserva la causa original con "raise" o "raise ... from e"</div>
+  <p>Nunca hagas <code>raise e</code> dentro de un except si tu intención es re-lanzar tal cual — usa <code>raise</code> solo. Si envuelves el error en uno nuevo, siempre agrega <code>from e</code> para no perder el traceback original en producción.</p>
+</div>
+<div class="practice-card">
+  <div class="practice-title">Define una jerarquía de excepciones propia por módulo/proyecto</div>
+  <p>Una excepción base (<code>BenchError</code>) y subclases específicas permiten capturar a distintos niveles de granularidad: todo el módulo con la base, o un caso puntual con la subclase, sin duplicar lógica de manejo.</p>
+</div>
+<div class="practice-card">
+  <div class="practice-title">Loguea con contexto, no solo el mensaje de la excepción</div>
+  <p>Usa <code>log.exception(...)</code> dentro de un except (incluye el traceback automáticamente) en vez de <code>print(e)</code>, y agrega datos relevantes como el <code>bench_id</code> o el request que estabas procesando cuando ocurrió el fallo.</p>
+</div>
+
 <div class="quiz-section"><div class="quiz-title">Quiz</div>
-  <div class="quiz-card"><div class="quiz-q" onclick="toggleQuiz(this)"><span class="q-tag">Trampa</span>¿Cuándo se ejecuta el bloque else de un try?<span class="q-arr">▶</span></div><div class="quiz-a"><b>Solo cuando NO hay excepción.</b> El propósito del else es separar el código que puede fallar (en try) del código que solo corre si todo fue bien (en else). Evita tener demasiado código en el try y catching excepciones no intencionadas.</div></div>
-  <div class="quiz-card"><div class="quiz-q" onclick="toggleQuiz(this)"><span class="q-tag">Nunca</span>¿Por qué es malo hacer: except Exception: pass?<span class="q-arr">▶</span></div><div class="quiz-a">Silencia TODOS los errores incluyendo bugs reales. Si tu código falla silenciosamente, es casi imposible debuggear. Siempre: 1) captura excepciones específicas, 2) al menos haz logging del error, 3) o re-raise si no puedes manejarlo.</div></div>
+  <div class="quiz-card"><div class="quiz-q" onclick="toggleQuiz(this)"><span class="q-tag">Trampa</span>¿Cuándo se ejecuta el bloque else de un try?<span class="q-arr">▶</span></div><div class="quiz-a"><b>Solo cuando NO hay excepción.</b> El propósito del else es separar el código que puede fallar (en try) del código que solo corre si todo fue bien (en else). Evita tener demasiado código en el try y capturar excepciones no intencionadas.</div></div>
+  <div class="quiz-card"><div class="quiz-q" onclick="toggleQuiz(this)"><span class="q-tag">Nunca</span>¿Por qué es malo hacer "except Exception: pass"?<span class="q-arr">▶</span></div><div class="quiz-a">Silencia TODOS los errores incluyendo bugs reales. Si tu código falla silenciosamente, es casi imposible debuggear. Siempre: 1) captura excepciones específicas, 2) al menos haz logging del error, 3) o re-raise si no puedes manejarlo.</div></div>
+  <div class="quiz-card"><div class="quiz-q" onclick="toggleQuiz(this)"><span class="q-tag">Trampa</span>¿Cuál es la diferencia entre "raise" y "raise e" dentro de un except?<span class="q-arr">▶</span></div><div class="quiz-a"><b>"raise" (sin argumento) re-lanza la excepción actual preservando el traceback completo original.</b> "raise e" también relanza la misma excepción, pero desde Python 3 reescribe el punto de origen del traceback en esa línea, dificultando ver dónde ocurrió realmente el fallo. En general, prefiere "raise" a secas para re-lanzar.</div></div>
+  <div class="quiz-card"><div class="quiz-q" onclick="toggleQuiz(this)"><span class="q-tag">Conceptual</span>¿Para qué sirve "raise NuevoError(...) from e"?<span class="q-arr">▶</span></div><div class="quiz-a">Encadena excepciones: conviertes un error de bajo nivel (por ejemplo OSError de una librería de red) en uno de tu dominio (ConnectionError/BenchError) sin perder la causa original. El traceback muestra ambas excepciones y su relación, lo cual es clave para debug en sistemas con capas (HIL, drivers, APIs).</div></div>
+  <div class="quiz-card"><div class="quiz-q" onclick="toggleQuiz(this)"><span class="q-tag">Diseño</span>¿Por qué crear excepciones custom en vez de usar solo ValueError/RuntimeError genéricos?<span class="q-arr">▶</span></div><div class="quiz-a">Dan significado semántico al error (BenchTimeoutError vs "algo salió mal"), permiten capturar por jerarquía (una clase base agrupa varias específicas), y pueden llevar datos extra como atributos (bench_id, timeout_s) útiles para logging estructurado y decisiones de reintento.</div></div>
+</div>
+  </div>
 </div>`,
 
 'py-archivos': `
-<div class="code-block"><div class="code-lang">Python — Manejo de archivos completo</div><pre>
-<span class="c-kw">from</span> pathlib <span class="c-kw">import</span> Path
-<span class="c-kw">import</span> json, csv
+<div class="tab-group-pyarc">
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="switchTab(this,'pac-1','pyarc')">open() y context manager</button>
+    <button class="tab-btn" onclick="switchTab(this,'pac-2','pyarc')">JSON, CSV y pathlib</button>
+    <button class="tab-btn" onclick="switchTab(this,'pac-3','pyarc')">⚠️ Errores comunes</button>
+    <button class="tab-btn" onclick="switchTab(this,'pac-4','pyarc')">✅ Mejores Prácticas + Quiz</button>
+  </div>
 
-<span class="c-cm"># ── open() modos ─────────────────────────────────────────────────</span>
-<span class="c-cm"># 'r'  = leer texto (default)    'rb' = leer binario</span>
-<span class="c-cm"># 'w'  = escribir (sobreescribe) 'wb' = escribir binario</span>
+  <div id="pac-1" class="tab-panel active">
+<div class="concept-intro"><code>open()</code> abre un archivo y devuelve un objeto file-like sobre el que puedes leer o escribir. El modo (segundo argumento) define si es lectura, escritura, append, texto o binario. Usar <code>open()</code> dentro de un <strong>context manager</strong> (<code>with</code>) garantiza que el archivo se cierre automáticamente aunque ocurra una excepción — evita fugas de file descriptors, algo crítico en procesos de larga duración como un runner de tests HIL que abre miles de logs.</div>
+<div class="code-block"><div class="code-lang">Python — open() modos y patrones de lectura/escritura</div><pre>
+<span class="c-cm"># ── Modos de open() ───────────────────────────────────────────────</span>
+<span class="c-cm"># 'r'  = leer texto (default)     'rb' = leer binario</span>
+<span class="c-cm"># 'w'  = escribir (SOBREESCRIBE)  'wb' = escribir binario</span>
 <span class="c-cm"># 'a'  = append (agrega al final) 'ab' = append binario</span>
-<span class="c-cm"># 'x'  = crear exclusivo (error si existe)</span>
-<span class="c-cm"># 'r+' = leer y escribir</span>
+<span class="c-cm"># 'x'  = crear exclusivo (FileExistsError si ya existe)</span>
+<span class="c-cm"># 'r+' = leer y escribir, sin truncar</span>
 
-<span class="c-cm"># Leer todo el archivo</span>
+<span class="c-cm"># Leer todo el archivo de una vez</span>
 <span class="c-kw">with</span> <span class="c-bi">open</span>(<span class="c-st">"log.txt"</span>, encoding=<span class="c-st">"utf-8"</span>) <span class="c-kw">as</span> f:
-    content = f.read()         <span class="c-cm"># todo como string</span>
-    <span class="c-cm"># líneas = f.readlines()   # lista de strings con \n</span>
+    content = f.read()          <span class="c-cm"># todo como un solo string</span>
+    <span class="c-cm"># líneas = f.readlines()    # lista de strings, cada uno con \n</span>
 
-<span class="c-cm"># Leer línea por línea (eficiente para archivos grandes)</span>
+<span class="c-cm"># Leer línea por línea — eficiente en memoria (O(1), no carga todo)</span>
 <span class="c-kw">with</span> <span class="c-bi">open</span>(<span class="c-st">"big.log"</span>) <span class="c-kw">as</span> f:
-    <span class="c-kw">for</span> line <span class="c-kw">in</span> f:             <span class="c-cm"># f es un iterador — O(1) memoria</span>
-        process(line.rstrip())  <span class="c-cm"># rstrip() elimina el \n final</span>
+    <span class="c-kw">for</span> line <span class="c-kw">in</span> f:              <span class="c-cm"># f es un iterador línea por línea</span>
+        process(line.rstrip(<span class="c-st">"\n"</span>))  <span class="c-cm"># rstrip quita el salto de línea final</span>
 
-<span class="c-cm"># Escribir</span>
+<span class="c-cm"># Escribir (w SOBREESCRIBE todo el contenido previo)</span>
 <span class="c-kw">with</span> <span class="c-bi">open</span>(<span class="c-st">"output.txt"</span>, <span class="c-st">"w"</span>) <span class="c-kw">as</span> f:
     f.write(<span class="c-st">"línea 1\n"</span>)
-    f.writelines([<span class="c-st">"a\n"</span>, <span class="c-st">"b\n"</span>])
+    f.writelines([<span class="c-st">"a\n"</span>, <span class="c-st">"b\n"</span>])  <span class="c-cm"># NO agrega \n automáticamente entre elementos</span>
+
+<span class="c-cm"># Append — agrega al final sin borrar lo existente</span>
+<span class="c-kw">with</span> <span class="c-bi">open</span>(<span class="c-st">"telemetry.log"</span>, <span class="c-st">"a"</span>) <span class="c-kw">as</span> f:
+    f.write(<span class="c-st">f"{timestamp} speed={speed_kmh}\n"</span>)
+
+<span class="c-cm"># ── Cómo funciona el context manager por dentro ────────────────────</span>
+<span class="c-cm"># with EXPR as VAR:            equivale aproximadamente a:</span>
+<span class="c-cm">#     VAR = EXPR.__enter__()</span>
+<span class="c-cm">#     try:</span>
+<span class="c-cm">#         BLOQUE</span>
+<span class="c-cm">#     finally:</span>
+<span class="c-cm">#         EXPR.__exit__(...)     # cierra el archivo SIEMPRE, incluso si el bloque lanza</span>
+
+<span class="c-cm"># Múltiples archivos en un mismo with (Python 3.10+ con paréntesis)</span>
+<span class="c-kw">with</span> (
+    <span class="c-bi">open</span>(<span class="c-st">"input.csv"</span>) <span class="c-kw">as</span> src,
+    <span class="c-bi">open</span>(<span class="c-st">"output.csv"</span>, <span class="c-st">"w"</span>) <span class="c-kw">as</span> dst,
+):
+    dst.write(src.read().upper())</pre></div>
+  </div>
+
+  <div id="pac-2" class="tab-panel">
+<div class="concept-intro">Para datos estructurados usa el módulo estándar correspondiente en vez de parsear texto a mano: <code>json</code> para configuración/telemetría en formato JSON, <code>csv</code> para tablas de resultados de test, y <code>pathlib.Path</code> (moderno, orientado a objetos) en vez de <code>os.path</code> para manipular rutas de forma legible y portable entre sistemas operativos.</div>
+<div class="code-block"><div class="code-lang">Python — JSON, CSV y pathlib.Path</div><pre>
+<span class="c-kw">import</span> json, csv
+<span class="c-kw">from</span> pathlib <span class="c-kw">import</span> Path
 
 <span class="c-cm"># ── JSON ─────────────────────────────────────────────────────────</span>
-config = {<span class="c-st">"bench"</span>: <span class="c-st">"A3"</span>, <span class="c-st">"timeout"</span>: <span class="c-nb">30</span>}
+config = {<span class="c-st">"bench"</span>: <span class="c-st">"A3"</span>, <span class="c-st">"timeout"</span>: <span class="c-nb">30</span>, <span class="c-st">"retries"</span>: <span class="c-nb">3</span>}
 <span class="c-kw">with</span> <span class="c-bi">open</span>(<span class="c-st">"config.json"</span>, <span class="c-st">"w"</span>) <span class="c-kw">as</span> f:
-    json.dump(config, f, indent=<span class="c-nb">2</span>)
+    json.dump(config, f, indent=<span class="c-nb">2</span>)     <span class="c-cm"># escribe a archivo</span>
+
 <span class="c-kw">with</span> <span class="c-bi">open</span>(<span class="c-st">"config.json"</span>) <span class="c-kw">as</span> f:
-    loaded = json.load(f)
+    loaded = json.load(f)                <span class="c-cm"># lee de archivo → dict</span>
+
+<span class="c-cm"># json.dumps/loads (con "s") trabajan sobre strings, no archivos</span>
+texto = json.dumps(config)               <span class="c-cm"># dict → str</span>
+de_vuelta = json.loads(texto)            <span class="c-cm"># str → dict</span>
 
 <span class="c-cm"># ── CSV ──────────────────────────────────────────────────────────</span>
+<span class="c-cm"># newline="" es OBLIGATORIO en Windows para evitar líneas en blanco extra</span>
 <span class="c-kw">with</span> <span class="c-bi">open</span>(<span class="c-st">"results.csv"</span>, <span class="c-st">"w"</span>, newline=<span class="c-st">""</span>) <span class="c-kw">as</span> f:
-    writer = csv.DictWriter(f, fieldnames=[<span class="c-st">"test"</span>,<span class="c-st">"status"</span>,<span class="c-st">"duration"</span>])
+    writer = csv.DictWriter(f, fieldnames=[<span class="c-st">"test"</span>, <span class="c-st">"status"</span>, <span class="c-st">"duration"</span>])
     writer.writeheader()
-    writer.writerow({<span class="c-st">"test"</span>:<span class="c-st">"lidar"</span>,<span class="c-st">"status"</span>:<span class="c-st">"PASS"</span>,<span class="c-st">"duration"</span>:<span class="c-nb">1.23</span>})
+    writer.writerow({<span class="c-st">"test"</span>: <span class="c-st">"lidar"</span>, <span class="c-st">"status"</span>: <span class="c-st">"PASS"</span>, <span class="c-st">"duration"</span>: <span class="c-nb">1.23</span>})
 
-<span class="c-cm"># ── pathlib.Path (moderno, recomendado) ──────────────────────────</span>
+<span class="c-kw">with</span> <span class="c-bi">open</span>(<span class="c-st">"results.csv"</span>) <span class="c-kw">as</span> f:
+    reader = csv.DictReader(f)
+    <span class="c-kw">for</span> row <span class="c-kw">in</span> reader:               <span class="c-cm"># cada row es un dict</span>
+        <span class="c-kw">if</span> row[<span class="c-st">"status"</span>] == <span class="c-st">"FAIL"</span>:
+            <span class="c-bi">print</span>(row[<span class="c-st">"test"</span>])
+
+<span class="c-cm"># ── pathlib.Path — moderno, recomendado sobre os.path ─────────────</span>
 p = Path(<span class="c-st">"data/logs"</span>)
-p.mkdir(parents=<span class="c-kw">True</span>, exist_ok=<span class="c-kw">True</span>)    <span class="c-cm"># mkdir -p</span>
-p.exists()                                 <span class="c-cm"># True/False</span>
-p.is_file() / p.is_dir()
-<span class="c-bi">list</span>(p.glob(<span class="c-st">"*.mcap"</span>))                    <span class="c-cm"># todos los .mcap</span>
-<span class="c-bi">list</span>(p.rglob(<span class="c-st">"*.log"</span>))                    <span class="c-cm"># recursivo</span>
-(p / <span class="c-st">"bench_a3.log"</span>).read_text()          <span class="c-cm"># leer directo</span>
-(p / <span class="c-st">"out.txt"</span>).write_text(<span class="c-st">"content"</span>)    <span class="c-cm"># escribir directo</span>
-p.stat().st_size                           <span class="c-cm"># tamaño en bytes</span></pre></div>`,
+p.mkdir(parents=<span class="c-kw">True</span>, exist_ok=<span class="c-kw">True</span>)     <span class="c-cm"># equivalente a mkdir -p</span>
+p.exists()                                  <span class="c-cm"># True/False</span>
+p.is_file() / p.is_dir()                    <span class="c-cm"># comprobar tipo</span>
+<span class="c-bi">list</span>(p.glob(<span class="c-st">"*.mcap"</span>))                     <span class="c-cm"># archivos .mcap en ese directorio</span>
+<span class="c-bi">list</span>(p.rglob(<span class="c-st">"*.log"</span>))                     <span class="c-cm"># glob recursivo (subdirectorios también)</span>
+
+<span class="c-cm"># El operador / concatena rutas — funciona en Windows y Linux/Mac</span>
+log_file = p / <span class="c-st">"bench_a3.log"</span>
+log_file.read_text()                        <span class="c-cm"># leer directo, sin with (Path lo maneja)</span>
+(p / <span class="c-st">"out.txt"</span>).write_text(<span class="c-st">"content"</span>)     <span class="c-cm"># escribir directo</span>
+
+log_file.stat().st_size                     <span class="c-cm"># tamaño en bytes</span>
+log_file.suffix                             <span class="c-cm"># '.log'</span>
+log_file.stem                               <span class="c-cm"># 'bench_a3' (sin extensión)</span>
+log_file.parent                             <span class="c-cm"># Path('data/logs')</span>
+Path.cwd()                                  <span class="c-cm"># directorio de trabajo actual</span></pre></div>
+<table class="kv-table">
+<tr><th>Tarea</th><th>os.path (clásico)</th><th>pathlib (recomendado)</th><th>Nota</th></tr>
+<tr><td>Unir rutas</td><td>os.path.join(a, b)</td><td>Path(a) / b</td><td>pathlib es legible y encadenable</td></tr>
+<tr><td>Existe archivo</td><td>os.path.exists(p)</td><td>Path(p).exists()</td><td>Igual de rápido</td></tr>
+<tr><td>Listar por patrón</td><td>glob.glob("*.log")</td><td>Path(".").glob("*.log")</td><td>pathlib devuelve objetos Path, no strings</td></tr>
+<tr><td>Crear directorios</td><td>os.makedirs(p, exist_ok=True)</td><td>Path(p).mkdir(parents=True, exist_ok=True)</td><td>Mismo comportamiento</td></tr>
+</table>
+  </div>
+
+  <div id="pac-3" class="tab-panel">
+<div class="concept-intro">Errores típicos al trabajar con archivos: recursos no cerrados, encoding mal manejado, sobrescritura accidental y suposiciones incorrectas sobre si un archivo existe.</div>
+
+<div class="error-compare">
+  <div class="err-bad"><div class="err-label">❌ Incorrecto</div><pre>f = <span class="c-bi">open</span>(<span class="c-st">"log.txt"</span>)
+data = f.read()
+process(data)   <span class="c-cm"># si process() lanza, f nunca se cierra</span>
+f.close()</pre></div>
+  <div class="err-good"><div class="err-label">✅ Correcto</div><pre><span class="c-kw">with</span> <span class="c-bi">open</span>(<span class="c-st">"log.txt"</span>) <span class="c-kw">as</span> f:
+    data = f.read()
+process(data)   <span class="c-cm"># f ya se cerró aquí, pase lo que pase arriba</span></pre></div>
+</div>
+<div class="error-note"><b>Por qué pasa:</b> si una excepción ocurre entre <code>open()</code> y <code>close()</code>, la línea <code>f.close()</code> nunca se ejecuta y el file descriptor queda abierto. En procesos de larga duración (un runner que procesa miles de logs) esto agota los descriptores disponibles del sistema operativo y falla con "Too many open files". <code>with</code> resuelve esto usando try/finally internamente.</div>
+
+<div class="error-compare">
+  <div class="err-bad"><div class="err-label">❌ Incorrecto</div><pre><span class="c-kw">with</span> <span class="c-bi">open</span>(<span class="c-st">"resultados.csv"</span>, <span class="c-st">"w"</span>) <span class="c-kw">as</span> f:
+    f.write(nueva_fila)
+    <span class="c-cm"># "w" trunca el archivo: se perdió todo lo anterior</span></pre></div>
+  <div class="err-good"><div class="err-label">✅ Correcto</div><pre><span class="c-kw">with</span> <span class="c-bi">open</span>(<span class="c-st">"resultados.csv"</span>, <span class="c-st">"a"</span>) <span class="c-kw">as</span> f:
+    f.write(nueva_fila)   <span class="c-cm"># "a" agrega al final, no borra</span></pre></div>
+</div>
+<div class="error-note"><b>Por qué pasa:</b> confundir "w" con "a" es uno de los bugs más comunes y más costosos: "w" trunca el archivo apenas se abre, incluso si nunca llamas a write(). Si el objetivo es acumular resultados de test a lo largo de varias corridas, "a" es el modo correcto. Verifica siempre el modo antes de escribir a un archivo que ya tiene datos importantes.</div>
+
+<div class="error-compare">
+  <div class="err-bad"><div class="err-label">❌ Incorrecto</div><pre><span class="c-kw">with</span> <span class="c-bi">open</span>(<span class="c-st">"reporte.txt"</span>) <span class="c-kw">as</span> f:
+    texto = f.read()   <span class="c-cm"># asume que existe encoding='utf-8'</span>
+    <span class="c-cm"># en Windows el default puede ser cp1252 → UnicodeDecodeError con acentos</span></pre></div>
+  <div class="err-good"><div class="err-label">✅ Correcto</div><pre><span class="c-kw">with</span> <span class="c-bi">open</span>(<span class="c-st">"reporte.txt"</span>, encoding=<span class="c-st">"utf-8"</span>) <span class="c-kw">as</span> f:
+    texto = f.read()   <span class="c-cm"># explícito, portable entre SO</span></pre></div>
+</div>
+<div class="error-note"><b>Por qué pasa:</b> <code>open()</code> sin <code>encoding</code> usa la codificación por defecto del sistema operativo (locale.getpreferredencoding()), que en Windows suele ser cp1252 y en Linux utf-8. Un log generado en Linux con acentos o símbolos especiales puede fallar al leerse en Windows sin encoding explícito. Regla: siempre pasa <code>encoding="utf-8"</code> quando trabajas con texto.</div>
+
+<div class="error-compare">
+  <div class="err-bad"><div class="err-label">❌ Incorrecto</div><pre>data = <span class="c-bi">open</span>(<span class="c-st">"config.json"</span>).read()
+config = json.loads(data)   <span class="c-cm"># si el archivo no existe: crashea sin contexto claro</span></pre></div>
+  <div class="err-good"><div class="err-label">✅ Correcto</div><pre>path = Path(<span class="c-st">"config.json"</span>)
+<span class="c-kw">if</span> <span class="c-kw">not</span> path.exists():
+    <span class="c-kw">raise</span> ConfigError(<span class="c-st">f"No existe {path}"</span>)
+config = json.loads(path.read_text(encoding=<span class="c-st">"utf-8"</span>))</pre></div>
+</div>
+<div class="error-note"><b>Por qué pasa:</b> asumir que un archivo de configuración siempre existe lleva a un <code>FileNotFoundError</code> genérico y confuso en producción. Validar explícitamente (o capturar la excepción con un mensaje claro) ayuda a diagnosticar rápido, especialmente en pipelines de CI donde el working directory puede no ser el esperado.</div>
+  </div>
+
+  <div id="pac-4" class="tab-panel">
+<div class="practice-card">
+  <div class="practice-title">Usa siempre "with" para abrir archivos</div>
+  <p>Nunca llames <code>open()</code> sin un context manager salvo casos muy puntuales (y aun así, envuelto en try/finally). Esto garantiza el cierre del recurso incluso ante excepciones.</p>
+</div>
+<div class="practice-card">
+  <div class="practice-title">Sé explícito con encoding="utf-8"</div>
+  <p>No confíes en el encoding por defecto del sistema operativo. Pasa <code>encoding="utf-8"</code> en cada <code>open()</code> de texto para que el comportamiento sea idéntico en Windows, Linux y macOS.</p>
+</div>
+<div class="practice-card">
+  <div class="practice-title">Prefiere pathlib.Path sobre os.path para código nuevo</div>
+  <p><code>Path</code> es orientado a objetos, encadenable con <code>/</code>, y expone métodos como <code>.read_text()</code>, <code>.glob()</code>, <code>.stat()</code> que reemplazan varias llamadas de <code>os</code>/<code>os.path</code> con una API más legible.</p>
+</div>
+<div class="practice-card">
+  <div class="practice-title">Para archivos grandes, itera línea a línea en vez de .read()</div>
+  <p><code>for line in f:</code> procesa el archivo con memoria constante O(1). Cargar un log de varios GB completo con <code>f.read()</code> puede agotar la memoria del proceso de CI.</p>
+</div>
+<div class="practice-card">
+  <div class="practice-title">Usa csv.DictReader/DictWriter en vez de índices numéricos</div>
+  <p>Acceder a columnas por nombre (<code>row["status"]</code>) en vez de por posición (<code>row[1]</code>) hace el código robusto ante cambios en el orden de columnas del CSV.</p>
+</div>
+
+<div class="quiz-section"><div class="quiz-title">Quiz</div>
+  <div class="quiz-card"><div class="quiz-q" onclick="toggleQuiz(this)"><span class="q-tag">Trampa</span>¿Qué pasa si abres un archivo existente con modo "w" y no escribes nada?<span class="q-arr">▶</span></div><div class="quiz-a"><b>El archivo queda vacío igual.</b> El modo "w" trunca el archivo apenas se abre (no cuando escribes). Si solo querías leerlo o agregar contenido, usar "w" por error borra todo el contenido previo de forma irreversible.</div></div>
+  <div class="quiz-card"><div class="quiz-q" onclick="toggleQuiz(this)"><span class="q-tag">Conceptual</span>¿Por qué "with open(...) as f" es mejor que open()/close() manual?<span class="q-arr">▶</span></div><div class="quiz-a">Porque garantiza que f.close() se ejecute incluso si el código dentro del bloque lanza una excepción (usa __exit__ internamente, equivalente a un finally). Con close() manual al final del bloque, una excepción antes de esa línea deja el archivo abierto.</div></div>
+  <div class="quiz-card"><div class="quiz-q" onclick="toggleQuiz(this)"><span class="q-tag">Práctico</span>¿Cuándo conviene iterar "for line in f" en vez de "f.readlines()"?<span class="q-arr">▶</span></div><div class="quiz-a">Cuando el archivo es grande. "for line in f" lee línea por línea con memoria constante (streaming), mientras que readlines() carga TODAS las líneas en una lista en memoria de golpe. Para logs de varios GB, esto puede ser la diferencia entre funcionar y agotar la RAM.</div></div>
+  <div class="quiz-card"><div class="quiz-q" onclick="toggleQuiz(this)"><span class="q-tag">Trampa</span>¿Por qué se recomienda newline="" al escribir CSV en Windows?<span class="q-arr">▶</span></div><div class="quiz-a">Sin newline="", el módulo csv y la capa de texto de Windows (que traduce \n a \r\n) interactúan mal, generando una línea en blanco extra entre cada fila del CSV. Pasar newline="" a open() delega el manejo de saltos de línea completamente al módulo csv.</div></div>
+</div>
+  </div>
+</div>`,
 
 'py-copy': `
-<div class="plan-card"><div class="plan-card-title">📋 Copy — Shallow vs Deep</div>
-<div class="plan-block"><div class="plan-time">El problema</div><div class="plan-content"><h4>En Python, asignar = no crea una copia — crea otra referencia al mismo objeto</h4><p>Si <code>b = a</code> y a es una lista, b y a apuntan a la MISMA lista. Modificar b modifica a. Esto sorprende a mucha gente y es una fuente común de bugs.</p></div></div>
-</div>
-<div class="code-block"><div class="code-lang">Python — Assignment vs Shallow vs Deep copy</div><pre>
-<span class="c-kw">import</span> copy
+<div class="tab-group-pycpy">
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="switchTab(this,'pcp-1','pycpy')">Referencias vs copias</button>
+    <button class="tab-btn" onclick="switchTab(this,'pcp-2','pycpy')">Shallow vs Deep copy</button>
+    <button class="tab-btn" onclick="switchTab(this,'pcp-3','pycpy')">⚠️ Errores comunes</button>
+    <button class="tab-btn" onclick="switchTab(this,'pcp-4','pycpy')">✅ Mejores Prácticas + Quiz</button>
+  </div>
 
+  <div id="pcp-1" class="tab-panel active">
+<div class="concept-intro">En Python, una variable no "contiene" un objeto — es una <strong>etiqueta que apunta</strong> a un objeto en memoria. Cuando haces <code>b = a</code>, no copias el objeto: haces que <code>b</code> apunte al MISMO objeto que <code>a</code>. Si ese objeto es mutable (lista, dict, set, instancia de clase), modificarlo a través de <code>b</code> también "modifica" lo que ves a través de <code>a</code> — porque es literalmente el mismo objeto. Esto se llama <strong>aliasing</strong> y es una de las causas de bugs más comunes en Python.</div>
+<div class="code-block"><div class="code-lang">Python — asignación es aliasing, no copia</div><pre>
 original = [[<span class="c-nb">1</span>, <span class="c-nb">2</span>], [<span class="c-nb">3</span>, <span class="c-nb">4</span>]]
 
-<span class="c-cm"># ── ASIGNACIÓN — misma referencia ────────────────────────────────</span>
+<span class="c-cm"># ── ASIGNACIÓN — misma referencia, dos nombres, un objeto ─────────</span>
+<span class="c-cm">#   original ──┐</span>
+<span class="c-cm">#              ├──▶ [[1,2],[3,4]]   (un único objeto en memoria)</span>
+<span class="c-cm">#   referencia ┘</span>
 referencia = original
 referencia[<span class="c-nb">0</span>].append(<span class="c-nb">99</span>)
-<span class="c-bi">print</span>(original)  <span class="c-cm"># [[1, 2, 99], [3, 4]]  ← original cambió</span>
+<span class="c-bi">print</span>(original)     <span class="c-cm"># [[1, 2, 99], [3, 4]]  ← "original" también cambió</span>
+<span class="c-bi">print</span>(referencia <span class="c-kw">is</span> original)   <span class="c-cm"># True: literalmente el mismo objeto (misma id())</span>
+<span class="c-bi">print</span>(<span class="c-bi">id</span>(referencia) == <span class="c-bi">id</span>(original))  <span class="c-cm"># True</span>
 
-<span class="c-cm"># ── SHALLOW COPY — nueva estructura, mismos objetos internos ─────</span>
+<span class="c-cm"># ── Lo mismo pasa al pasar objetos mutables a funciones ────────────</span>
+<span class="c-kw">def</span> <span class="c-fn">agregar_tag</span>(lista: <span class="c-bi">list</span>, tag: str) -&gt; <span class="c-kw">None</span>:
+    lista.append(tag)     <span class="c-cm"># modifica el objeto original, no una copia</span>
+
+tags = [<span class="c-st">"lidar"</span>, <span class="c-st">"radar"</span>]
+agregar_tag(tags, <span class="c-st">"camera"</span>)
+<span class="c-bi">print</span>(tags)          <span class="c-cm"># ['lidar', 'radar', 'camera']  ← la función SÍ mutó el original</span>
+
+<span class="c-cm"># ── Tipos INMUTABLES: no hay riesgo de aliasing mutante ────────────</span>
+<span class="c-cm"># int, float, str, tuple (si su contenido también es inmutable),</span>
+<span class="c-cm"># frozenset, bool son inmutables: no se pueden modificar "in place"</span>
+a = <span class="c-st">"hello"</span>
+b = a               <span class="c-cm"># b y a apuntan al mismo string, pero no importa: es inmutable</span>
+b = b.upper()        <span class="c-cm"># .upper() crea un string NUEVO, no modifica "hello"</span>
+<span class="c-bi">print</span>(a, b)        <span class="c-cm"># hello HELLO  ← a no cambió, b apunta a un objeto distinto ahora</span>
+
+<span class="c-cm"># ── Comparar "==" (igual valor) vs "is" (misma identidad/objeto) ──</span>
+x = [<span class="c-nb">1</span>, <span class="c-nb">2</span>, <span class="c-nb">3</span>]
+y = [<span class="c-nb">1</span>, <span class="c-nb">2</span>, <span class="c-nb">3</span>]
+<span class="c-bi">print</span>(x == y)      <span class="c-cm"># True  — mismo contenido</span>
+<span class="c-bi">print</span>(x <span class="c-kw">is</span> y)      <span class="c-cm"># False — son dos objetos distintos en memoria</span></pre></div>
+<table class="kv-table">
+<tr><th>Operación</th><th>¿Copia el objeto?</th><th>¿Comparten sub-objetos internos?</th><th>Nota</th></tr>
+<tr><td>b = a</td><td>No — mismo objeto</td><td>Sí, son el mismo</td><td>Aliasing puro, ambos nombres ven los mismos cambios</td></tr>
+<tr><td>b = a.copy() / a[:]</td><td>Sí — nuevo objeto contenedor</td><td>Sí — los elementos internos siguen siendo compartidos</td><td>Shallow copy</td></tr>
+<tr><td>b = copy.deepcopy(a)</td><td>Sí — nuevo objeto contenedor</td><td>No — copia también los elementos internos recursivamente</td><td>Deep copy, independencia total</td></tr>
+</table>
+  </div>
+
+  <div id="pcp-2" class="tab-panel">
+<div class="concept-intro">Cuando necesitas una copia real (no un alias), Python ofrece dos niveles: <strong>shallow copy</strong> (copia superficial: crea un contenedor nuevo pero los elementos DENTRO siguen siendo los mismos objetos compartidos) y <strong>deep copy</strong> (copia profunda: copia recursivamente TODO, incluyendo los objetos anidados, logrando independencia total). Cuál necesitas depende de si tu estructura tiene objetos mutables anidados (listas dentro de listas, dicts dentro de dicts, etc.).</div>
+<div class="code-block"><div class="code-lang">Python — copy.copy() vs copy.deepcopy()</div><pre>
+<span class="c-kw">import</span> copy
+
+<span class="c-cm"># ── SHALLOW COPY — nuevo contenedor, mismos objetos internos ──────</span>
+<span class="c-cm">#   original ──▶ [ref_A, ref_B]        shallow ──▶ [ref_A, ref_B]</span>
+<span class="c-cm">#                  │      │                          │      │</span>
+<span class="c-cm">#                  ▼      ▼                          ▼      ▼</span>
+<span class="c-cm">#               [1,2]   [3,4]   ← MISMAS sublistas compartidas por ambos</span>
 original = [[<span class="c-nb">1</span>, <span class="c-nb">2</span>], [<span class="c-nb">3</span>, <span class="c-nb">4</span>]]
-shallow = copy.copy(original)    <span class="c-cm"># o original[:] o original.copy()</span>
+shallow = copy.copy(original)      <span class="c-cm"># o: original[:]  o: original.copy()  o: list(original)</span>
 
 shallow.append([<span class="c-nb">5</span>, <span class="c-nb">6</span>])
-<span class="c-bi">print</span>(original)  <span class="c-cm"># [[1,2],[3,4]]  ← no cambió (nueva estructura)</span>
+<span class="c-bi">print</span>(original)   <span class="c-cm"># [[1,2],[3,4]]        ← NO cambió: el contenedor exterior es independiente</span>
 
 shallow[<span class="c-nb">0</span>].append(<span class="c-nb">99</span>)
-<span class="c-bi">print</span>(original)  <span class="c-cm"># [[1,2,99],[3,4]] ← SÍ cambió (misma sublista interna)</span>
+<span class="c-bi">print</span>(original)   <span class="c-cm"># [[1,2,99],[3,4]]     ← SÍ cambió: la sublista interna es la MISMA</span>
+<span class="c-bi">print</span>(shallow[<span class="c-nb">0</span>] <span class="c-kw">is</span> original[<span class="c-nb">0</span>])   <span class="c-cm"># True — mismo objeto interno</span>
+<span class="c-bi">print</span>(shallow <span class="c-kw">is</span> original)          <span class="c-cm"># False — contenedores distintos</span>
 
-<span class="c-cm"># ── DEEP COPY — copia todo, independiente total ───────────────────</span>
+<span class="c-cm"># dict.copy() y set.copy() también son shallow</span>
+config = {<span class="c-st">"limits"</span>: [<span class="c-nb">10</span>, <span class="c-nb">20</span>]}
+config_copy = config.copy()
+config_copy[<span class="c-st">"limits"</span>].append(<span class="c-nb">30</span>)
+<span class="c-bi">print</span>(config[<span class="c-st">"limits"</span>])   <span class="c-cm"># [10, 20, 30]  ← también cambió: la lista interna se comparte</span>
+
+<span class="c-cm"># ── DEEP COPY — copia recursiva, independencia total ───────────────</span>
 original = [[<span class="c-nb">1</span>, <span class="c-nb">2</span>], [<span class="c-nb">3</span>, <span class="c-nb">4</span>]]
 deep = copy.deepcopy(original)
 
 deep[<span class="c-nb">0</span>].append(<span class="c-nb">99</span>)
-<span class="c-bi">print</span>(original)  <span class="c-cm"># [[1,2],[3,4]] ← NO cambió</span>
+<span class="c-bi">print</span>(original)   <span class="c-cm"># [[1,2],[3,4]]   ← NO cambió, deep copió también las sublistas</span>
+<span class="c-bi">print</span>(deep[<span class="c-nb">0</span>] <span class="c-kw">is</span> original[<span class="c-nb">0</span>])   <span class="c-cm"># False — objetos completamente distintos</span>
 
-<span class="c-cm"># Cuándo usar cuál</span>
-<span class="c-cm"># = (asignación): siempre, solo no copia</span>
-<span class="c-cm"># Shallow: cuando la estructura exterior cambia pero los elementos no</span>
-<span class="c-cm"># Deep: cuando necesitas independencia total (objetos anidados mutables)</span>
+<span class="c-cm"># deepcopy también funciona con objetos custom (instancias de clase)</span>
+<span class="c-kw">class</span> <span class="c-fn">BenchConfig</span>:
+    <span class="c-kw">def</span> <span class="c-fn">__init__</span>(self, sensors: <span class="c-bi">list</span>):
+        self.sensors = sensors
 
-<span class="c-cm"># Tipos inmutables: NO necesitan copy (int, float, str, tuple, frozenset)</span>
-a = <span class="c-st">"hello"</span>
-b = a           <span class="c-cm"># b y a son la misma string, pero no importa — es inmutable</span></pre></div>`,
+cfg1 = BenchConfig([<span class="c-st">"lidar"</span>, <span class="c-st">"radar"</span>])
+cfg2 = copy.deepcopy(cfg1)
+cfg2.sensors.append(<span class="c-st">"camera"</span>)
+<span class="c-bi">print</span>(cfg1.sensors)   <span class="c-cm"># ['lidar', 'radar']  ← independiente de cfg2</span>
+
+<span class="c-cm"># ── Cuándo usar cuál ────────────────────────────────────────────────</span>
+<span class="c-cm"># = (asignación):  cuando SÍ quieres que ambos nombres compartan el objeto</span>
+<span class="c-cm"># Shallow copy:     estructura plana, o solo el nivel exterior cambia</span>
+<span class="c-cm"># Deep copy:        estructuras anidadas donde necesitas independencia total</span>
+<span class="c-cm"># Tipos inmutables: nunca necesitan copy — int, float, str, tuple, frozenset</span></pre></div>
+  </div>
+
+  <div id="pcp-3" class="tab-panel">
+<div class="concept-intro">Aliasing accidental es una de las fuentes de bugs más silenciosas en Python: el código "funciona" en pruebas simples pero corrompe datos compartidos en producción, sobre todo con valores por defecto mutables y estructuras anidadas.</div>
+
+<div class="error-compare">
+  <div class="err-bad"><div class="err-label">❌ Incorrecto</div><pre><span class="c-kw">def</span> <span class="c-fn">agregar_lectura</span>(valor, buffer=[]):  <span class="c-cm"># default mutable</span>
+    buffer.append(valor)
+    <span class="c-kw">return</span> buffer
+
+agregar_lectura(<span class="c-nb">1</span>)   <span class="c-cm"># [1]</span>
+agregar_lectura(<span class="c-nb">2</span>)   <span class="c-cm"># [1, 2]  ← ¡el buffer persiste entre llamadas!</span></pre></div>
+  <div class="err-good"><div class="err-label">✅ Correcto</div><pre><span class="c-kw">def</span> <span class="c-fn">agregar_lectura</span>(valor, buffer=<span class="c-kw">None</span>):
+    <span class="c-kw">if</span> buffer <span class="c-kw">is</span> <span class="c-kw">None</span>:
+        buffer = []           <span class="c-cm"># lista NUEVA cada llamada</span>
+    buffer.append(valor)
+    <span class="c-kw">return</span> buffer</pre></div>
+</div>
+<div class="error-note"><b>Por qué pasa:</b> los valores por defecto de una función se evalúan UNA sola vez, cuando se define la función — no en cada llamada. Si el default es una lista/dict mutable, todas las llamadas que no pasan ese argumento comparten el mismo objeto, y las mutaciones se acumulan entre llamadas. Regla: nunca uses <code>[]</code>, <code>{}</code> o instancias mutables como default; usa <code>None</code> y créalo dentro de la función.</div>
+
+<div class="error-compare">
+  <div class="err-bad"><div class="err-label">❌ Incorrecto</div><pre>config_base = {<span class="c-st">"timeout"</span>: <span class="c-nb">30</span>, <span class="c-st">"sensors"</span>: [<span class="c-st">"lidar"</span>]}
+config_bench_a = config_base.copy()      <span class="c-cm"># shallow copy</span>
+config_bench_a[<span class="c-st">"sensors"</span>].append(<span class="c-st">"radar"</span>)
+<span class="c-bi">print</span>(config_base[<span class="c-st">"sensors"</span>])  <span class="c-cm"># ['lidar', 'radar']  ← ¡se filtró al base!</span></pre></div>
+  <div class="err-good"><div class="err-label">✅ Correcto</div><pre><span class="c-kw">import</span> copy
+config_base = {<span class="c-st">"timeout"</span>: <span class="c-nb">30</span>, <span class="c-st">"sensors"</span>: [<span class="c-st">"lidar"</span>]}
+config_bench_a = copy.deepcopy(config_base)
+config_bench_a[<span class="c-st">"sensors"</span>].append(<span class="c-st">"radar"</span>)
+<span class="c-bi">print</span>(config_base[<span class="c-st">"sensors"</span>])  <span class="c-cm"># ['lidar']  ← independiente</span></pre></div>
+</div>
+<div class="error-note"><b>Por qué pasa:</b> <code>dict.copy()</code>/<code>list.copy()</code>/<code>[:]</code> son shallow: copian solo el nivel exterior. Cuando el diccionario/lista tiene valores mutables anidados (otra lista, otro dict), esos anidados siguen siendo el MISMO objeto en la copia. Para independencia total con estructuras anidadas, usa <code>copy.deepcopy()</code>.</div>
+
+<div class="error-compare">
+  <div class="err-bad"><div class="err-label">❌ Incorrecto</div><pre>matrix = [[<span class="c-nb">0</span>] * <span class="c-nb">3</span>] * <span class="c-nb">3</span>    <span class="c-cm"># ¡las 3 filas son la MISMA lista!</span>
+matrix[<span class="c-nb">0</span>][<span class="c-nb">0</span>] = <span class="c-nb">1</span>
+<span class="c-bi">print</span>(matrix)   <span class="c-cm"># [[1,0,0],[1,0,0],[1,0,0]]  ← cambió en las 3 filas</span></pre></div>
+  <div class="err-good"><div class="err-label">✅ Correcto</div><pre>matrix = [[<span class="c-nb">0</span>] * <span class="c-nb">3</span> <span class="c-kw">for</span> _ <span class="c-kw">in</span> <span class="c-bi">range</span>(<span class="c-nb">3</span>)]   <span class="c-cm"># 3 listas independientes</span>
+matrix[<span class="c-nb">0</span>][<span class="c-nb">0</span>] = <span class="c-nb">1</span>
+<span class="c-bi">print</span>(matrix)   <span class="c-cm"># [[1,0,0],[0,0,0],[0,0,0]]  ← solo cambió la fila 0</span></pre></div>
+</div>
+<div class="error-note"><b>Por qué pasa:</b> <code>[[0]*3] * 3</code> multiplica una REFERENCIA a la misma sublista tres veces, no crea tres sublistas distintas. Es el mismo problema de aliasing que <code>b = a</code>, camuflado dentro de una expresión que parece inocente. Este bug clásico aparece al inicializar matrices o grids (por ejemplo un mapa de ocupación en un stack de percepción).</div>
+
+<div class="error-compare">
+  <div class="err-bad"><div class="err-label">❌ Incorrecto</div><pre><span class="c-kw">def</span> <span class="c-fn">normalizar</span>(lecturas: <span class="c-bi">list</span>) -&gt; <span class="c-bi">list</span>:
+    lecturas.sort()          <span class="c-cm"># muta la lista original del caller</span>
+    <span class="c-kw">return</span> lecturas
+
+datos_originales = [<span class="c-nb">3</span>, <span class="c-nb">1</span>, <span class="c-nb">2</span>]
+ordenados = normalizar(datos_originales)
+<span class="c-bi">print</span>(datos_originales)  <span class="c-cm"># [1, 2, 3]  ← se mutó sin que el caller lo esperara</span></pre></div>
+  <div class="err-good"><div class="err-label">✅ Correcto</div><pre><span class="c-kw">def</span> <span class="c-fn">normalizar</span>(lecturas: <span class="c-bi">list</span>) -&gt; <span class="c-bi">list</span>:
+    <span class="c-kw">return</span> <span class="c-bi">sorted</span>(lecturas)   <span class="c-cm"># crea una lista nueva, no muta</span>
+
+datos_originales = [<span class="c-nb">3</span>, <span class="c-nb">1</span>, <span class="c-nb">2</span>]
+ordenados = normalizar(datos_originales)
+<span class="c-bi">print</span>(datos_originales)  <span class="c-cm"># [3, 1, 2]  ← intacto</span></pre></div>
+</div>
+<div class="error-note"><b>Por qué pasa:</b> como las listas se pasan por referencia (aliasing), una función que recibe una lista y la muta "in place" (<code>.sort()</code>, <code>.append()</code>, <code>.pop()</code>) afecta al objeto original del llamador, aunque la función tenga un <code>return</code>. Si la función no debe tener efectos secundarios, usa versiones que devuelven copias nuevas (<code>sorted()</code> en vez de <code>.sort()</code>) o copia explícitamente al inicio.</div>
+  </div>
+
+  <div id="pcp-4" class="tab-panel">
+<div class="practice-card">
+  <div class="practice-title">Nunca uses listas/dicts mutables como valor por defecto de un parámetro</div>
+  <p>Usa <code>def f(x=None):</code> y crea el objeto dentro de la función si <code>x is None</code>. Este es uno de los "gotchas" más preguntados en entrevistas de Python.</p>
+</div>
+<div class="practice-card">
+  <div class="practice-title">Usa deepcopy solo cuando realmente hay anidamiento mutable</div>
+  <p><code>copy.deepcopy()</code> es más lento que shallow copy porque recorre recursivamente toda la estructura. Si tu estructura es plana (lista de números, por ejemplo), una shallow copy (<code>list(x)</code> o <code>x[:]</code>) es suficiente y más rápida.</p>
+</div>
+<div class="practice-card">
+  <div class="practice-title">Prefiere funciones que devuelven copias en vez de mutar in-place</div>
+  <p>Cuando el efecto secundario no es explícitamente deseado, usa <code>sorted(x)</code> en vez de <code>x.sort()</code>, o construye una lista/dict nueva en vez de modificar el parámetro recibido. Hace el código más predecible y fácil de testear.</p>
+</div>
+<div class="practice-card">
+  <div class="practice-title">Usa "is" para verificar identidad, "==" para verificar igualdad de valor</div>
+  <p><code>a is b</code> pregunta "¿son el mismo objeto en memoria?" mientras <code>a == b</code> pregunta "¿tienen el mismo contenido?". Usa <code>is</code> principalmente para comparar contra <code>None</code>, <code>True</code>/<code>False</code> o singletons — no para comparar valores de datos.</p>
+</div>
+<div class="practice-card">
+  <div class="practice-title">Documenta si una función muta sus argumentos o no</div>
+  <p>Si una función recibe una lista/dict y la modifica in-place, deja constancia en el docstring o el nombre (por ejemplo <code>sort_in_place()</code> vs <code>sorted_copy()</code>) para que quien la use no se sorprenda con efectos secundarios.</p>
+</div>
+
+<div class="quiz-section"><div class="quiz-title">Quiz</div>
+  <div class="quiz-card"><div class="quiz-q" onclick="toggleQuiz(this)"><span class="q-tag">Trampa</span>Si b = a y a es una lista, ¿qué pasa si modifico b?<span class="q-arr">▶</span></div><div class="quiz-a"><b>También se modifica lo que ves a través de a.</b> b y a apuntan al mismo objeto en memoria (aliasing), no son copias independientes. Para tener una copia real necesitas copy.copy() (shallow) o copy.deepcopy() (deep), según si hay anidamiento mutable.</div></div>
+  <div class="quiz-card"><div class="quiz-q" onclick="toggleQuiz(this)"><span class="q-tag">Conceptual</span>¿Cuál es la diferencia entre shallow copy y deep copy?<span class="q-arr">▶</span></div><div class="quiz-a">Shallow copy crea un nuevo contenedor exterior, pero los elementos DENTRO siguen siendo los mismos objetos compartidos con el original (si son mutables, los cambios se propagan). Deep copy copia recursivamente TODO, incluyendo los objetos anidados, logrando independencia total entre original y copia.</div></div>
+  <div class="quiz-card"><div class="quiz-q" onclick="toggleQuiz(this)"><span class="q-tag">Clásico</span>¿Por qué es peligroso usar def f(x=[]): como firma de función?<span class="q-arr">▶</span></div><div class="quiz-a">Porque el valor por defecto [] se crea UNA sola vez, al definirse la función, y se reutiliza (comparte) entre TODAS las llamadas que no pasan x explícitamente. Si la función muta esa lista (append, etc.), el estado persiste y se acumula entre llamadas independientes, causando bugs muy difíciles de rastrear.</div></div>
+  <div class="quiz-card"><div class="quiz-q" onclick="toggleQuiz(this)"><span class="q-tag">Trampa</span>¿Por qué [[0]*3]*3 no crea una matriz 3x3 independiente?<span class="q-arr">▶</span></div><div class="quiz-a">Porque el operador * sobre una lista repite REFERENCIAS al mismo objeto, no crea copias. [[0]*3] crea una sublista, y *3 la repite tres veces como el MISMO objeto, así que las tres "filas" son en realidad una sola lista compartida. La forma correcta es una comprehension: [[0]*3 for _ in range(3)], que crea una sublista nueva en cada iteración.</div></div>
+  <div class="quiz-card"><div class="quiz-q" onclick="toggleQuiz(this)"><span class="q-tag">Conceptual</span>¿Por qué los tipos inmutables (str, int, tuple) no tienen el problema de aliasing mutante?<span class="q-arr">▶</span></div><div class="quiz-a">Porque no se pueden modificar in-place: cualquier operación que "parece" modificarlos (como .upper() en un string o + en una tupla) en realidad crea y devuelve un objeto NUEVO. Por eso, aunque dos nombres apunten al mismo string inmutable, nunca vas a ver cambios "fantasma" propagarse entre ellos.</div></div>
+</div>
+  </div>
+</div>`,
 
 'py-tipado': `
-<div class="code-block"><div class="code-lang">Python — Type Hints completo (PEP 484/604)</div><pre>
+<div class="tab-group-ptyp">
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="switchTab(this,'ptd-1','ptyp')">Tipos básicos y Optional/Union</button>
+    <button class="tab-btn" onclick="switchTab(this,'ptd-2','ptyp')">TypedDict, Protocol y Generics</button>
+    <button class="tab-btn" onclick="switchTab(this,'ptd-3','ptyp')">⚠️ Errores comunes</button>
+    <button class="tab-btn" onclick="switchTab(this,'ptd-4','ptyp')">✅ Mejores Prácticas + Quiz</button>
+  </div>
+
+  <div id="ptd-1" class="tab-panel active">
+<div class="concept-intro">Los <strong>type hints</strong> (PEP 484) son anotaciones opcionales que documentan qué tipo de dato espera una variable, parámetro o retorno de función. Python sigue siendo un lenguaje de tipado dinámico: <strong>los hints NO se verifican en runtime</strong> por defecto — son solo documentación ejecutable que herramientas externas (mypy, pyright, tu IDE) usan para detectar errores ANTES de ejecutar el código. En equipos de software automotriz con bases de código grandes, son casi obligatorios para mantener la calidad y facilitar el code review.</div>
+<div class="code-block"><div class="code-lang">Python — Tipos básicos, Optional y Union</div><pre>
 <span class="c-kw">from</span> typing <span class="c-kw">import</span> Optional, Union, List, Dict, Tuple, Set, Callable, Any
+
+<span class="c-cm"># ── Tipos básicos en parámetros y retorno ──────────────────────────</span>
+<span class="c-kw">def</span> <span class="c-fn">process</span>(name: str, count: <span class="c-bi">int</span>, value: <span class="c-bi">float</span>, flag: <span class="c-bi">bool</span>) -&gt; <span class="c-kw">None</span>:
+    <span class="c-kw">pass</span>
+
+<span class="c-cm"># ── Optional[X] significa "X o None" ────────────────────────────────</span>
+<span class="c-kw">def</span> <span class="c-fn">find_bench</span>(bench_id: str) -&gt; Optional[str]:   <span class="c-cm"># equivale a Union[str, None]</span>
+    <span class="c-kw">return</span> <span class="c-kw">None</span> <span class="c-kw">if</span> bench_id == <span class="c-st">"X"</span> <span class="c-kw">else</span> bench_id
+
+<span class="c-cm"># Python 3.10+: sintaxis moderna con | en vez de Optional/Union</span>
+<span class="c-kw">def</span> <span class="c-fn">find_bench2</span>(bench_id: str) -&gt; str | <span class="c-kw">None</span>:      <span class="c-cm"># igual a Optional[str]</span>
+    <span class="c-kw">pass</span>
+
+<span class="c-kw">def</span> <span class="c-fn">parse_value</span>(raw: str) -&gt; <span class="c-bi">int</span> | <span class="c-bi">float</span> | <span class="c-kw">None</span>:   <span class="c-cm"># puede ser cualquiera de los 3</span>
+    <span class="c-kw">pass</span>
+
+<span class="c-cm"># ── Colecciones tipadas (Python 3.9+: builtins en minúscula) ───────</span>
+<span class="c-kw">def</span> <span class="c-fn">analyze</span>(
+    timestamps: <span class="c-bi">list</span>[<span class="c-bi">float</span>],           <span class="c-cm"># lista de floats</span>
+    config:     <span class="c-bi">dict</span>[str, <span class="c-bi">int</span>],
+    coords:     <span class="c-bi">tuple</span>[<span class="c-bi">float</span>, <span class="c-bi">float</span>],    <span class="c-cm"># tupla de longitud FIJA (2 floats)</span>
+    tags:       <span class="c-bi">set</span>[str],
+) -&gt; <span class="c-bi">list</span>[str]:
+    <span class="c-kw">pass</span>
+
+<span class="c-cm"># Antes de 3.9 había que usar typing.List, typing.Dict, etc (aún funcionan)</span>
+legacy_signature: List[<span class="c-bi">int</span>] = [<span class="c-nb">1</span>, <span class="c-nb">2</span>, <span class="c-nb">3</span>]
+
+<span class="c-cm"># tuple de longitud variable con mismo tipo: usa ...</span>
+scores: <span class="c-bi">tuple</span>[<span class="c-bi">int</span>, ...] = (<span class="c-nb">90</span>, <span class="c-nb">85</span>, <span class="c-nb">77</span>, <span class="c-nb">99</span>)
+
+<span class="c-cm"># ── Callable — tipar funciones como valores ─────────────────────────</span>
+Handler = Callable[[str, <span class="c-bi">int</span>], <span class="c-kw">None</span>]   <span class="c-cm"># función que recibe (str, int) y retorna None</span>
+
+<span class="c-kw">def</span> <span class="c-fn">register</span>(event: str, handler: Handler) -&gt; <span class="c-kw">None</span>:
+    <span class="c-kw">pass</span>
+
+<span class="c-cm"># ── Any — "apágame el chequeo de tipos aquí" (úsalo con moderación) ─</span>
+<span class="c-kw">def</span> <span class="c-fn">deserialize</span>(raw: str) -&gt; Any:   <span class="c-cm"># el tipo real depende del contenido</span>
+    <span class="c-kw">return</span> json.loads(raw)</pre></div>
+<table class="kv-table">
+<tr><th>Anotación</th><th>Significado</th><th>Ejemplo → Uso típico</th><th>Nota</th></tr>
+<tr><td>Optional[str]</td><td>str o None</td><td>find_bench() → Optional[str]</td><td>Igual a str | None (3.10+)</td></tr>
+<tr><td>Union[int, str]</td><td>int o str</td><td>parse() → Union[int, str]</td><td>Igual a int | str (3.10+)</td></tr>
+<tr><td>list[int]</td><td>Lista de enteros</td><td>ids: list[int]</td><td>Antes: List[int] (typing)</td></tr>
+<tr><td>dict[str, int]</td><td>Dict con keys str, values int</td><td>counts: dict[str, int]</td><td>Antes: Dict[str, int]</td></tr>
+<tr><td>tuple[float, float]</td><td>Tupla de longitud fija</td><td>coords: tuple[float, float]</td><td>tuple[int, ...] = longitud variable</td></tr>
+<tr><td>Any</td><td>Cualquier tipo, sin chequeo</td><td>data: Any</td><td>Úsalo lo menos posible</td></tr>
+</table>
+  </div>
+
+  <div id="ptd-2" class="tab-panel">
+<div class="concept-intro">Más allá de los tipos básicos, <code>typing</code> ofrece herramientas para modelar estructuras más ricas: <strong>TypedDict</strong> tipa las keys de un diccionario (útil para configuración JSON), <strong>Protocol</strong> permite "duck typing" tipado — cualquier clase que tenga los métodos correctos es válida sin necesidad de heredar — y <strong>TypeVar/Generic</strong> permiten escribir funciones y clases genéricas que preservan el tipo de su entrada.</div>
+<div class="code-block"><div class="code-lang">Python — TypedDict, Protocol, Generic y TypeVar</div><pre>
 <span class="c-kw">from</span> typing <span class="c-kw">import</span> TypeVar, Generic, TypedDict, Protocol
 <span class="c-kw">from</span> collections.abc <span class="c-kw">import</span> Sequence, Mapping, Iterator, Generator
 
-<span class="c-cm"># ── Tipos básicos ─────────────────────────────────────────────────</span>
-<span class="c-kw">def</span> <span class="c-fn">process</span>(name: str, count: <span class="c-bi">int</span>, value: <span class="c-bi">float</span>, flag: <span class="c-bi">bool</span>) -&gt; <span class="c-kw">None</span>: <span class="c-kw">pass</span>
-
-<span class="c-cm"># ── Optional (puede ser None) ─────────────────────────────────────</span>
-<span class="c-kw">def</span> <span class="c-fn">find_bench</span>(bench_id: str) -&gt; Optional[str]:  <span class="c-cm"># str | None</span>
-    <span class="c-kw">return</span> <span class="c-kw">None</span> <span class="c-kw">if</span> bench_id == <span class="c-st">"X"</span> <span class="c-kw">else</span> bench_id
-
-<span class="c-cm"># Python 3.10+: puedes usar | directamente</span>
-<span class="c-kw">def</span> <span class="c-fn">find_bench2</span>(bench_id: str) -&gt; str | <span class="c-kw">None</span>: <span class="c-kw">pass</span>
-
-<span class="c-cm"># ── Colecciones ───────────────────────────────────────────────────</span>
-<span class="c-kw">def</span> <span class="c-fn">analyze</span>(
-    timestamps: <span class="c-bi">list</span>[<span class="c-bi">float</span>],          <span class="c-cm"># Python 3.9+: builtin lowercase</span>
-    config:     <span class="c-bi">dict</span>[str, <span class="c-bi">int</span>],
-    coords:     <span class="c-bi">tuple</span>[<span class="c-bi">float</span>, <span class="c-bi">float</span>],   <span class="c-cm"># longitud fija</span>
-    tags:       <span class="c-bi">set</span>[str],
-) -&gt; <span class="c-bi">list</span>[str]: <span class="c-kw">pass</span>
-
-<span class="c-cm"># ── Callable ──────────────────────────────────────────────────────</span>
-Handler = Callable[[str, <span class="c-bi">int</span>], <span class="c-kw">None</span>]   <span class="c-cm"># función(str, int) → None</span>
-
-<span class="c-kw">def</span> <span class="c-fn">register</span>(event: str, handler: Handler) -&gt; <span class="c-kw">None</span>: <span class="c-kw">pass</span>
-
-<span class="c-cm"># ── TypedDict — dict con tipos por campo ──────────────────────────</span>
+<span class="c-cm"># ── TypedDict — dict con tipos definidos por campo ──────────────────</span>
 <span class="c-kw">class</span> <span class="c-fn">BenchConfig</span>(TypedDict):
     bench_id: str
     timeout: <span class="c-bi">int</span>
     retries: <span class="c-bi">int</span>
     debug: <span class="c-bi">bool</span>
 
-<span class="c-cm"># ── Protocol — duck typing tipado ─────────────────────────────────</span>
+<span class="c-cm"># mypy/pyright validan que el dict tenga EXACTAMENTE esas keys y tipos</span>
+cfg: BenchConfig = {<span class="c-st">"bench_id"</span>: <span class="c-st">"A3"</span>, <span class="c-st">"timeout"</span>: <span class="c-nb">30</span>, <span class="c-st">"retries"</span>: <span class="c-nb">3</span>, <span class="c-st">"debug"</span>: <span class="c-kw">False</span>}
+
+<span class="c-cm"># total=False — todas las keys son opcionales</span>
+<span class="c-kw">class</span> <span class="c-fn">PartialConfig</span>(TypedDict, total=<span class="c-kw">False</span>):
+    timeout: <span class="c-bi">int</span>
+    retries: <span class="c-bi">int</span>
+
+<span class="c-cm"># ── Protocol — "duck typing" tipado (structural typing) ─────────────</span>
 <span class="c-kw">class</span> <span class="c-fn">Connectable</span>(Protocol):
     <span class="c-kw">def</span> <span class="c-fn">connect</span>(self) -&gt; <span class="c-kw">None</span>: ...
     <span class="c-kw">def</span> <span class="c-fn">disconnect</span>(self) -&gt; <span class="c-kw">None</span>: ...
     <span class="c-kw">def</span> <span class="c-fn">is_alive</span>(self) -&gt; <span class="c-bi">bool</span>: ...
 
-<span class="c-kw">def</span> <span class="c-fn">use_device</span>(device: Connectable) -&gt; <span class="c-kw">None</span>: <span class="c-kw">pass</span>
-<span class="c-cm"># Cualquier clase con connect/disconnect/is_alive es válida — sin heredar</span>
+<span class="c-kw">def</span> <span class="c-fn">use_device</span>(device: Connectable) -&gt; <span class="c-kw">None</span>:
+    device.connect()
 
-<span class="c-cm"># ── TypeVar — genéricos ───────────────────────────────────────────</span>
+<span class="c-cm"># Cualquier clase con connect/disconnect/is_alive es válida — SIN heredar de Connectable</span>
+<span class="c-kw">class</span> <span class="c-fn">CanBusDevice</span>:
+    <span class="c-kw">def</span> <span class="c-fn">connect</span>(self) -&gt; <span class="c-kw">None</span>: ...
+    <span class="c-kw">def</span> <span class="c-fn">disconnect</span>(self) -&gt; <span class="c-kw">None</span>: ...
+    <span class="c-kw">def</span> <span class="c-fn">is_alive</span>(self) -&gt; <span class="c-bi">bool</span>: <span class="c-kw">return</span> <span class="c-kw">True</span>
+
+use_device(CanBusDevice())   <span class="c-cm"># válido para mypy: cumple el "shape" del Protocol</span>
+
+<span class="c-cm"># ── TypeVar y funciones genéricas ────────────────────────────────────</span>
 T = TypeVar(<span class="c-st">'T'</span>)
 
-<span class="c-kw">def</span> <span class="c-fn">first</span>(items: <span class="c-bi">list</span>[T]) -&gt; T:           <span class="c-cm"># retorna el mismo tipo</span>
-    <span class="c-kw">return</span> items[<span class="c-nb">0</span>]</pre></div>
-<div class="alert-card">💡 Los type hints son opcionales en Python (no se verifican en runtime por defecto). Usa <strong>mypy</strong> para verificación estática: <code>mypy script.py</code>. En Wayve/empresas tech, mypy o pyright son estándar en CI.</div>`,
+<span class="c-kw">def</span> <span class="c-fn">first</span>(items: <span class="c-bi">list</span>[T]) -&gt; T:              <span class="c-cm"># retorna EL MISMO tipo que recibió la lista</span>
+    <span class="c-kw">return</span> items[<span class="c-nb">0</span>]
+
+<span class="c-bi">int</span>_result = first([<span class="c-nb">1</span>, <span class="c-nb">2</span>, <span class="c-nb">3</span>])       <span class="c-cm"># mypy infiere: int</span>
+str_result = first([<span class="c-st">"a"</span>, <span class="c-st">"b"</span>])       <span class="c-cm"># mypy infiere: str</span>
+
+<span class="c-cm"># ── Generic — clases genéricas parametrizadas por tipo ───────────────</span>
+<span class="c-kw">class</span> <span class="c-fn">Buffer</span>(Generic[T]):
+    <span class="c-kw">def</span> <span class="c-fn">__init__</span>(self) -&gt; <span class="c-kw">None</span>:
+        self._items: <span class="c-bi">list</span>[T] = []
+
+    <span class="c-kw">def</span> <span class="c-fn">push</span>(self, item: T) -&gt; <span class="c-kw">None</span>:
+        self._items.append(item)
+
+    <span class="c-kw">def</span> <span class="c-fn">pop</span>(self) -&gt; T:
+        <span class="c-kw">return</span> self._items.pop()
+
+sensor_buffer: Buffer[<span class="c-bi">float</span>] = Buffer()   <span class="c-cm"># Buffer especializado para floats</span>
+sensor_buffer.push(<span class="c-nb">3.14</span>)
+<span class="c-cm"># sensor_buffer.push("no numérico")  ← mypy lo marcaría como error</span>
+
+<span class="c-cm"># ── Generator/Iterator tipados ────────────────────────────────────────</span>
+<span class="c-kw">def</span> <span class="c-fn">read_frames</span>(path: str) -&gt; Generator[<span class="c-bi">dict</span>, <span class="c-kw">None</span>, <span class="c-kw">None</span>]:
+    <span class="c-kw">with</span> <span class="c-bi">open</span>(path) <span class="c-kw">as</span> f:
+        <span class="c-kw">for</span> line <span class="c-kw">in</span> f:
+            <span class="c-kw">yield</span> json.loads(line)</pre></div>
+  </div>
+
+  <div id="ptd-3" class="tab-panel">
+<div class="concept-intro">El error de fondo más común con type hints es olvidar que <strong>Python no los hace cumplir en runtime</strong> — son solo para herramientas de análisis estático. Otros errores frecuentes: usar el tipo equivocado de contenedor, y anotaciones que no reflejan la realidad del código.</div>
+
+<div class="error-compare">
+  <div class="err-bad"><div class="err-label">❌ Incorrecto</div><pre><span class="c-kw">def</span> <span class="c-fn">set_timeout</span>(seconds: <span class="c-bi">int</span>) -&gt; <span class="c-kw">None</span>:
+    ...
+
+set_timeout(<span class="c-st">"30"</span>)   <span class="c-cm"># ¡NO lanza TypeError! Python lo ejecuta igual</span>
+<span class="c-cm"># el type hint es solo documentación, no un guardia en runtime</span></pre></div>
+  <div class="err-good"><div class="err-label">✅ Correcto</div><pre><span class="c-kw">def</span> <span class="c-fn">set_timeout</span>(seconds: <span class="c-bi">int</span>) -&gt; <span class="c-kw">None</span>:
+    <span class="c-kw">if</span> <span class="c-kw">not</span> <span class="c-bi">isinstance</span>(seconds, <span class="c-bi">int</span>):
+        <span class="c-kw">raise</span> <span class="c-bi">TypeError</span>(<span class="c-st">f"seconds debe ser int, llegó {type(seconds)}"</span>)
+    ...
+<span class="c-cm"># y en CI: correr "mypy ." para atrapar el llamado incorrecto ANTES de ejecutar</span></pre></div>
+</div>
+<div class="error-note"><b>Por qué pasa:</b> Python es de tipado dinámico y los type hints no se validan al ejecutar el programa — solo son leídos por herramientas externas como mypy o pyright durante análisis estático, o por tu IDE para autocompletar. Si necesitas garantía real en runtime (por ejemplo validando input externo de un archivo de configuración), tienes que hacer la validación explícita con <code>isinstance()</code> o usar una librería como pydantic.</div>
+
+<div class="error-compare">
+  <div class="err-bad"><div class="err-label">❌ Incorrecto</div><pre><span class="c-kw">def</span> <span class="c-fn">get_status</span>(bench_id: str) -&gt; str:
+    <span class="c-kw">if</span> bench_id <span class="c-kw">not</span> <span class="c-kw">in</span> benches:
+        <span class="c-kw">return</span> <span class="c-kw">None</span>   <span class="c-cm"># viola su propio type hint: -> str, no -> Optional[str]</span>
+    <span class="c-kw">return</span> benches[bench_id].status</pre></div>
+  <div class="err-good"><div class="err-label">✅ Correcto</div><pre><span class="c-kw">def</span> <span class="c-fn">get_status</span>(bench_id: str) -&gt; Optional[str]:
+    <span class="c-kw">if</span> bench_id <span class="c-kw">not</span> <span class="c-kw">in</span> benches:
+        <span class="c-kw">return</span> <span class="c-kw">None</span>
+    <span class="c-kw">return</span> benches[bench_id].status</pre></div>
+</div>
+<div class="error-note"><b>Por qué pasa:</b> declarar <code>-&gt; str</code> pero retornar <code>None</code> en algún camino es una anotación mentirosa: mypy lo detectaría como error si lo corrieras, pero si nadie ejecuta el linter de tipos, el código pasa code review "silenciosamente" y quien llama a la función asume que siempre recibe un str, causando un <code>AttributeError</code> más adelante al hacer <code>.upper()</code> sobre None.</div>
+
+<div class="error-compare">
+  <div class="err-bad"><div class="err-label">❌ Incorrecto</div><pre><span class="c-kw">def</span> <span class="c-fn">process_batch</span>(items) -&gt; <span class="c-bi">list</span>:   <span class="c-cm"># sin anotar el contenido</span>
+    <span class="c-kw">return</span> [transform(i) <span class="c-kw">for</span> i <span class="c-kw">in</span> items]
+<span class="c-cm"># ¿items es list[str]? ¿list[dict]? nadie lo sabe sin leer el cuerpo</span></pre></div>
+  <div class="err-good"><div class="err-label">✅ Correcto</div><pre><span class="c-kw">def</span> <span class="c-fn">process_batch</span>(items: <span class="c-bi">list</span>[SensorReading]) -&gt; <span class="c-bi">list</span>[Result]:
+    <span class="c-kw">return</span> [transform(i) <span class="c-kw">for</span> i <span class="c-kw">in</span> items]</pre></div>
+</div>
+<div class="error-note"><b>Por qué pasa:</b> anotar solo el contenedor exterior (<code>list</code>) sin el tipo de sus elementos (<code>list[SensorReading]</code>) pierde la mitad del valor del type hint: tu IDE no puede autocompletar los atributos de cada elemento, y mypy no puede detectar si pasas una lista del tipo equivocado. Siempre especifica el tipo de los elementos en colecciones.</div>
+  </div>
+
+  <div id="ptd-4" class="tab-panel">
+<div class="practice-card">
+  <div class="practice-title">Corre mypy o pyright en CI, no solo en tu editor</div>
+  <p>Los type hints solo aportan valor real si algo los verifica. Agrega <code>mypy .</code> o <code>pyright</code> como paso de CI/CD (igual que pytest) para que un PR con tipos incorrectos falle el pipeline, no solo se vea "raro" en el IDE de quien lo escribió.</p>
+</div>
+<div class="practice-card">
+  <div class="practice-title">Usa Optional[X] (o X | None) en vez de omitir el caso None</div>
+  <p>Si una función puede devolver None en algún camino, refleja eso en la anotación del retorno. Esto obliga a quien la llama a manejar explícitamente el caso None (mypy se queja si no lo haces).</p>
+</div>
+<div class="practice-card">
+  <div class="practice-title">Prefiere Protocol sobre herencia cuando solo necesitas "el shape" de una clase</div>
+  <p>Protocol permite tipar interfaces sin forzar herencia — cualquier objeto con los métodos correctos es válido (duck typing tipado). Es más flexible que ABC para casos donde no controlas todas las implementaciones (por ejemplo, drivers de terceros).</p>
+</div>
+<div class="practice-card">
+  <div class="practice-title">No abuses de Any — perdiste el chequeo de tipos donde lo uses</div>
+  <p><code>Any</code> es compatible con cualquier tipo y desactiva la verificación de mypy en ese punto. Úsalo solo en fronteras genuinamente dinámicas (deserializar JSON de estructura desconocida), no como atajo para "no pensar en el tipo".</p>
+</div>
+<div class="practice-card">
+  <div class="practice-title">Si necesitas validación real en runtime, usa pydantic (no solo type hints)</div>
+  <p>Para validar datos externos (config JSON, payloads de API, mensajes de un bus) donde SÍ necesitas que un tipo incorrecto lance una excepción en ejecución, type hints puros no alcanzan — usa pydantic o valida manualmente con isinstance().</p>
+</div>
+
+<div class="quiz-section"><div class="quiz-title">Quiz</div>
+  <div class="quiz-card"><div class="quiz-q" onclick="toggleQuiz(this)"><span class="q-tag">Trampa</span>¿Los type hints impiden que llames una función con el tipo incorrecto?<span class="q-arr">▶</span></div><div class="quiz-a"><b>No.</b> Python es de tipado dinámico y no valida los type hints en runtime por defecto. Puedes llamar def f(x: int) con f("hola") y el programa se ejecuta sin error hasta que algo dentro de f falle por usar x como si fuera int. Los hints solo son verificados por herramientas externas como mypy/pyright, o si tú mismo agregas isinstance().</div></div>
+  <div class="quiz-card"><div class="quiz-q" onclick="toggleQuiz(this)"><span class="q-tag">Conceptual</span>¿Qué diferencia hay entre Optional[str] y str en una anotación?<span class="q-arr">▶</span></div><div class="quiz-a">str dice "siempre va a ser un string". Optional[str] (equivalente a str | None) dice "puede ser un string o puede ser None". Usar Optional obliga a quien consume el valor a considerar el caso None explícitamente si usa un checker de tipos, evitando AttributeError por asumir que nunca es None.</div></div>
+  <div class="quiz-card"><div class="quiz-q" onclick="toggleQuiz(this)"><span class="q-tag">Práctico</span>¿Qué ventaja tiene Protocol sobre heredar de una clase base abstracta (ABC)?<span class="q-arr">▶</span></div><div class="quiz-a">Protocol usa "structural typing" (duck typing tipado): cualquier clase que tenga los métodos/atributos requeridos es válida automáticamente, sin necesidad de heredar explícitamente del Protocol. Esto es útil cuando quieres tipar una interfaz que deben cumplir clases de terceros o librerías externas que no puedes modificar para que hereden de tu ABC.</div></div>
+  <div class="quiz-card"><div class="quiz-q" onclick="toggleQuiz(this)"><span class="q-tag">Herramientas</span>¿Qué hace mypy y por qué se usa en CI?<span class="q-arr">▶</span></div><div class="quiz-a">mypy es un verificador estático de tipos: lee las anotaciones de tu código y detecta inconsistencias (pasar un str donde se espera int, retornar None donde se declaró -> str, etc.) sin ejecutar el programa. Ponerlo en el pipeline de CI asegura que ningún PR con errores de tipo se mergee, funcionando como una capa extra de testing muy rápida de correr.</div></div>
+</div>
+  </div>
+</div>`,
 
 // ══ POO ══
 
@@ -1405,47 +3085,7 @@ const PYTHON_RICH3 = {
     <div class="alert-card" style="margin:8px 0">🔒 <strong>Strings son INMUTABLES</strong> — ningún método las modifica, todos retornan una nueva string. <code>s[0] = 'x'</code> → <b>TypeError</b>.</div>
     <div class="cs-section-title">Creación</div>
     <div class="mini-code">s = "hola"  |  s = 'hola'  |  s = """multi\nlínea"""  |  s = f"hola {var}"  |  s = str(42)  |  s = chr(65) → "A"  |  ord("A") → 65</div>
-    <table class="kv-table">
-      <tr><th>Método</th><th>¿Qué hace?</th><th>Ejemplo → Resultado</th><th>Nota</th><th>🚫 No usar cuando</th></tr>
-      <tr><td>upper()</td><td>Todo mayúsculas</td><td>"hello".upper() → "HELLO"</td><td>No modifica la original</td><td>bytes, int, float</td></tr>
-      <tr><td>lower()</td><td>Todo minúsculas</td><td>"HELLO".lower() → "hello"</td><td></td><td>bytes, int, float</td></tr>
-      <tr><td>title()</td><td>Primera letra de cada palabra en mayúscula</td><td>"hola mundo".title() → "Hola Mundo"</td><td></td><td>Apostrofes: "don't" → "Don'T" (usar regex)</td></tr>
-      <tr><td>capitalize()</td><td>Solo primera letra del string</td><td>"hola MUNDO".capitalize() → "Hola mundo"</td><td>Baja el resto</td><td>bytes; no maneja palabras individuales</td></tr>
-      <tr><td>swapcase()</td><td>Invierte mayúsculas/minúsculas</td><td>"hOLa".swapcase() → "HolA"</td><td></td><td>bytes</td></tr>
-      <tr><td>casefold()</td><td>Minúsculas agresivo (para comparación)</td><td>"Straße".casefold() → "strasse"</td><td>Mejor que lower() para unicode</td><td>bytes; si solo necesitas lower()</td></tr>
-      <tr><td>strip(chars)</td><td>Elimina chars al inicio y al final</td><td>"  hi  ".strip() → "hi" | "xxhixx".strip("x") → "hi"</td><td>Default: whitespace</td><td>Modificar contenido interior del string</td></tr>
-      <tr><td>lstrip(chars)</td><td>Solo al inicio (left)</td><td>"  hi  ".lstrip() → "hi  "</td><td></td><td>Eliminar del final → usar rstrip()</td></tr>
-      <tr><td>rstrip(chars)</td><td>Solo al final (right)</td><td>"log.txt".rstrip(".txt") → "log"</td><td>chars es un SET de chars, no secuencia</td><td>Eliminar del inicio → usar lstrip(); "rstrip('.txt')" elimina cualquier combinación de '.','t','x'</td></tr>
-      <tr><td>split(sep, maxsplit)</td><td>Divide en lista por sep</td><td>"a,b,c".split(",") → ["a","b","c"] | "a  b".split() → ["a","b"]</td><td>Sin arg: divide por whitespace y elimina vacíos</td><td>sep="" → ValueError; patrones regex → usar re.split()</td></tr>
-      <tr><td>rsplit(sep, maxsplit)</td><td>Divide desde la derecha</td><td>"a/b/c".rsplit("/",1) → ["a/b","c"]</td><td></td><td>sep="" → ValueError</td></tr>
-      <tr><td>splitlines()</td><td>Divide por saltos de línea</td><td>"a\nb\nc".splitlines() → ["a","b","c"]</td><td>Reconoce \r\n, \r, \n, \v, \f</td><td>Separadores personalizados → usar split()</td></tr>
-      <tr><td>join(iterable)</td><td>Une lista en string con separador</td><td>",".join(["a","b","c"]) → "a,b,c" | " ".join(["hola","mundo"]) → "hola mundo"</td><td>El string ES el separador</td><td>Iterable con no-strings → TypeError; bytes → usar b"".join()</td></tr>
-      <tr><td>replace(old, new, count)</td><td>Reemplaza ocurrencias</td><td>"aaa".replace("a","b",2) → "bba" | "hi hi".replace("hi","hey") → "hey hey"</td><td>count=máx reemplazos</td><td>Patrones complejos/regex → usar re.sub()</td></tr>
-      <tr><td>find(sub, start, end)</td><td>Índice primera ocurrencia (-1 si no)</td><td>"hello world".find("world") → 6 | "hello".find("x") → -1</td><td>No lanza error</td><td>Necesitas TODAS las posiciones → usar re.finditer()</td></tr>
-      <tr><td>rfind(sub)</td><td>Índice ÚLTIMA ocurrencia</td><td>"abab".rfind("ab") → 2 | "a.b.c".rfind(".") → 3</td><td></td><td>Cuando la primera ocurrencia basta → usar find()</td></tr>
-      <tr><td>index(sub)</td><td>Como find pero lanza ValueError</td><td>"hello".index("ll") → 2 | "hello".index("x") → ValueError</td><td></td><td>Sub puede NO existir → usar find() que retorna -1</td></tr>
-      <tr><td>rindex(sub)</td><td>Última ocurrencia, lanza ValueError</td><td>"abab".rindex("ab") → 2</td><td></td><td>Sub puede NO existir → usar rfind()</td></tr>
-      <tr><td>count(sub, start, end)</td><td>Cuenta ocurrencias sin solaparse</td><td>"aaa".count("aa") → 1 | "banana".count("an") → 2</td><td>NO solapa: "aaa".count("aa")=1, no 2</td><td>Patrones solapados → usar re.findall() con lookahead</td></tr>
-      <tr><td>startswith(prefix, start, end)</td><td>¿Empieza con prefix?</td><td>"ERROR: x".startswith("ERROR") → True | "log".startswith(("ERR","WARN","INFO")) → False</td><td>Acepta tupla de prefijos</td><td>bytes sin decodificar → usar b"".startswith(b"...")</td></tr>
-      <tr><td>endswith(suffix)</td><td>¿Termina con suffix?</td><td>"file.log".endswith((".log",".txt")) → True</td><td>Acepta tupla</td><td>bytes sin decodificar → usar b"".endswith(b"...")</td></tr>
-      <tr><td>center(width, fillchar)</td><td>Centra en campo de width</td><td>"hi".center(10,"*") → "****hi****"</td><td></td><td>width &lt; len(s) → sin efecto, retorna original (no error)</td></tr>
-      <tr><td>ljust(width, fillchar)</td><td>Alinea izquierda</td><td>"hi".ljust(6,".") → "hi...."</td><td></td><td>width &lt; len(s) → sin efecto (no error)</td></tr>
-      <tr><td>rjust(width, fillchar)</td><td>Alinea derecha</td><td>"42".rjust(6,"0") → "000042"</td><td></td><td>width &lt; len(s) → sin efecto; para números → usar zfill() o f"{x:06d}"</td></tr>
-      <tr><td>zfill(width)</td><td>Rellena con ceros a la izquierda</td><td>"42".zfill(5) → "00042" | "-7".zfill(4) → "-007"</td><td>Respeta signo: "-42".zfill(5) → "-0042"</td><td>float/int directo → usar f"{x:05d}" en su lugar</td></tr>
-      <tr><td>partition(sep)</td><td>Divide en 3: (antes, sep, después)</td><td>"user:pass".partition(":") → ("user",":",  "pass")</td><td>Solo primera ocurrencia</td><td>sep no en string → (original, '', ''); múltiples ocurrencias → usar split()</td></tr>
-      <tr><td>rpartition(sep)</td><td>Última ocurrencia</td><td>"a/b/c".rpartition("/") → ("a/b","/","c")</td><td></td><td>sep no en string → ('', '', original)</td></tr>
-      <tr><td>encode(encoding)</td><td>String → bytes</td><td>"hola".encode("utf-8") → b"hola" | "€".encode("latin-1") → UnicodeEncodeError</td><td></td><td>Char fuera del encoding → UnicodeEncodeError; encoding incorrecto → LookupError</td></tr>
-      <tr><td>format(**kwargs)</td><td>Formateo con {}</td><td>"{name} tiene {age} años".format(name="Ana",age=25) → "Ana tiene 25 años"</td><td>Alternativa a f-strings</td><td>Clave/índice no existe → KeyError/IndexError</td></tr>
-      <tr><td>isalpha()</td><td>¿Solo letras?</td><td>"abc".isalpha() → True | "abc1".isalpha() → False</td><td>False si hay espacio o número</td><td>String vacío → False; dígitos/espacios → False</td></tr>
-      <tr><td>isdigit()</td><td>¿Solo dígitos?</td><td>"123".isdigit() → True | "1.5".isdigit() → False</td><td>"1.2" → False</td><td>Decimales/floats; string vacío → False; usar isnumeric() para fracciones unicode</td></tr>
-      <tr><td>isnumeric()</td><td>¿Carácter numérico? (más amplio)</td><td>"½".isnumeric() → True | "123".isnumeric() → True</td><td>Incluye fracciones unicode</td><td>String vacío → False; "3.14" → False (tiene punto)</td></tr>
-      <tr><td>isalnum()</td><td>¿Solo letras y dígitos?</td><td>"abc123".isalnum() → True | "abc 1".isalnum() → False</td><td></td><td>String vacío → False; espacios/guiones → False</td></tr>
-      <tr><td>isspace()</td><td>¿Solo whitespace?</td><td>"  \t\n".isspace() → True | " a ".isspace() → False</td><td></td><td>String vacío → False</td></tr>
-      <tr><td>isupper() / islower()</td><td>¿Todo mayúsculas/minúsculas?</td><td>"ABC".isupper() → True | "ABC1".isupper() → True (números no cuentan)</td><td></td><td>String sin letras → False; "A1".isupper()→True aunque tiene número</td></tr>
-      <tr><td>istitle()</td><td>¿Title case?</td><td>"Hello World".istitle() → True | "Hello world".istitle() → False</td><td></td><td>"Hello world" → False; "It's Ok" → False (s' después de apostrofe se cuenta)</td></tr>
-      <tr><td>expandtabs(tabsize)</td><td>Reemplaza \t por espacios</td><td>"a\tb".expandtabs(4) → "a   b"</td><td>Default tabsize=8</td><td>Sin \t en el string (no error, sin efecto útil)</td></tr>
-      <tr><td>maketrans() + translate()</td><td>Sustituye caracteres por tabla</td><td>tbl=str.maketrans("aeiou","AEIOU"); "hola".translate(tbl) → "hOlA"</td><td>Muy eficiente para múltiples reemplazos</td><td>Patrones de más de 1 char → usar replace() o re.sub()</td></tr>
-    </table>
+    ${renderMethodTable('STR')}
     <div class="plan-card"><div class="plan-card-title">f-strings — Formato rápido</div>
     <table class="kv-table">
       <tr><th>Especificador</th><th>¿Qué hace?</th><th>Ejemplo → Resultado</th></tr>
@@ -1478,36 +3118,7 @@ const PYTHON_RICH3 = {
         <code>lst[0]</code> primer · <code>lst[-1]</code> último · <code>lst[1:4]</code> índices 1,2,3 · <code>lst[::2]</code> cada 2 · <code>lst[::-1]</code> invertido · <code>lst[-3:]</code> últimos 3 · <code>a,*b,c = lst</code> unpack
       </div></div>
     </div>
-    <table class="kv-table">
-      <tr><th>Método / Op</th><th>¿Qué hace?</th><th>Ejemplo → Resultado</th><th>Complejidad</th><th>🚫 No usar cuando</th></tr>
-      <tr><td>append(x)</td><td>Agrega x al final</td><td>[1,2].append(3) → [1,2,3]</td><td>O(1) amortizado</td><td>Tuples, strings, frozenset (inmutables); sets → usar .add()</td></tr>
-      <tr><td>extend(iterable)</td><td>Agrega todos los elementos</td><td>[1].extend([2,3]) → [1,2,3] | lst.extend("ab") → [...,"a","b"]</td><td>O(k)</td><td>Tuples/strings (inmutables); agregar UN solo elemento → usar append()</td></tr>
-      <tr><td>insert(i, x)</td><td>Inserta x en posición i</td><td>[1,3].insert(1,2) → [1,2,3] | lst.insert(0,"x") → al principio</td><td>O(n)</td><td>Tuples; insertar al final → append() es O(1) y más rápido</td></tr>
-      <tr><td>remove(x)</td><td>Elimina primera ocurrencia de x</td><td>[1,2,2].remove(2) → [1,2]</td><td>O(n)</td><td>x no existe → ValueError; tuples; hacer "if x in lst" antes si dudas</td></tr>
-      <tr><td>pop(i=-1)</td><td>Elimina y retorna elemento en i</td><td>[1,2,3].pop() → 3, lst=[1,2] | [1,2,3].pop(0) → 1</td><td>O(1) final, O(n) otro índice</td><td>Lista vacía → IndexError; índice fuera de rango → IndexError</td></tr>
-      <tr><td>del lst[i]</td><td>Elimina elemento en i (no retorna)</td><td>del lst[0] | del lst[-1]</td><td>O(n)</td><td>i fuera de rango → IndexError; cuando necesitas el valor → usar pop()</td></tr>
-      <tr><td>del lst[i:j]</td><td>Elimina rango</td><td>del lst[1:3] | del lst[:]  → vacía la lista</td><td>O(n)</td><td>Tuples; cuando necesitas los elementos eliminados</td></tr>
-      <tr><td>clear()</td><td>Vacía la lista</td><td>[1,2,3].clear() → []</td><td>O(n)</td><td>Tuples/strings (inmutables); si necesitas guardar copia primero</td></tr>
-      <tr><td>index(x, start, end)</td><td>Índice de primera ocurrencia de x</td><td>[10,20,30].index(20) → 1 | [1,2,1].index(1,1) → 2</td><td>O(n)</td><td>x no existe → ValueError; hacer "if x in lst" antes o usar try/except</td></tr>
-      <tr><td>count(x)</td><td>Número de ocurrencias de x</td><td>[1,2,2,3].count(2) → 2</td><td>O(n)</td><td>Contar muchos elementos distintos → usar Counter(); O(n) cada llamada</td></tr>
-      <tr><td>sort(key, reverse)</td><td>Ordena in-place (modifica la lista)</td><td>[3,1,2].sort() | words.sort(key=str.lower) | nums.sort(reverse=True)</td><td>O(n log n)</td><td>Tuples/strings (inmutables); mezcla de tipos no comparables → TypeError</td></tr>
-      <tr><td>sorted(lst, key, reverse)</td><td>Nueva lista ordenada (no modifica)</td><td>sorted([3,1,2]) → [1,2,3] | sorted(lst, key=lambda x: x[1])</td><td>O(n log n)</td><td>Mezcla de tipos no comparables → TypeError; modifica el original → usar .sort()</td></tr>
-      <tr><td>reverse()</td><td>Invierte in-place</td><td>[1,2,3].reverse() → [3,2,1]</td><td>O(n)</td><td>Tuples/strings; si necesitas el original intacto → usar [::-1] o reversed()</td></tr>
-      <tr><td>reversed(lst)</td><td>Iterator invertido (no modifica)</td><td>list(reversed([1,2,3])) → [3,2,1]</td><td>O(1) crear, O(n) consumir</td><td>Objetos sin __len__ ni __reversed__ → TypeError</td></tr>
-      <tr><td>copy()</td><td>Shallow copy</td><td>b = a.copy() | b = list(a)</td><td>O(n)</td><td>Listas ANIDADAS → elementos internos SE COMPARTEN; usar copy.deepcopy()</td></tr>
-      <tr><td>lst[:]</td><td>Shallow copy con slice</td><td>b = a[:]</td><td>O(n)</td><td>Igual que copy(): shallow; listas anidadas comparten referencias internas</td></tr>
-      <tr><td>lst + lst2</td><td>Concatena (nueva lista)</td><td>[1,2]+[3,4] → [1,2,3,4]</td><td>O(n+m)</td><td>Concatenar MUCHAS listas en loop → O(n²); usar extend() o itertools.chain()</td></tr>
-      <tr><td>lst * n</td><td>Repite n veces</td><td>[0]*3 → [0,0,0] | ["a"]*2 → ["a","a"]</td><td>O(n*k)</td><td>n negativo → lista vacía (no error); objetos MUTABLES → todas las copias comparten la misma referencia</td></tr>
-      <tr><td>x in lst</td><td>¿Está x en la lista?</td><td>2 in [1,2,3] → True | "z" in ["a","b"] → False</td><td>O(n)</td><td>Búsquedas frecuentes en lista grande → convertir a set para O(1)</td></tr>
-      <tr><td>len(lst)</td><td>Número de elementos</td><td>len([1,2,3]) → 3</td><td>O(1)</td><td>[Siempre seguro]</td></tr>
-      <tr><td>min(lst) / max(lst)</td><td>Mínimo / máximo</td><td>min([3,1,2]) → 1 | max(lst, key=len) → el más largo</td><td>O(n)</td><td>Lista vacía → ValueError; tipos no comparables → TypeError</td></tr>
-      <tr><td>sum(lst)</td><td>Suma de elementos</td><td>sum([1,2,3]) → 6 | sum([1,2,3], 10) → 16</td><td>O(n)</td><td>Lista de strings → TypeError; usar "".join() para strings</td></tr>
-      <tr><td>any(lst) / all(lst)</td><td>¿Alguno/todos truthy?</td><td>any([0,1,0]) → True | all([1,2,3]) → True | any([]) → False | all([]) → True</td><td>O(n), cortocircuito</td><td>[Siempre seguro; ojo: all([]) → True (vacío es True por convención)]</td></tr>
-      <tr><td>enumerate(lst, start)</td><td>Pares (índice, valor)</td><td>for i,v in enumerate(["a","b"],1): → (1,"a"),(2,"b")</td><td>O(1) crear</td><td>[Siempre seguro para cualquier iterable]</td></tr>
-      <tr><td>zip(lst, lst2)</td><td>Pares de dos listas</td><td>list(zip([1,2],["a","b"])) → [(1,"a"),(2,"b")]</td><td>Se detiene en la más corta</td><td>Listas de DIFERENTE longitud → datos perdidos; usar itertools.zip_longest()</td></tr>
-      <tr><td>lst[i] = x</td><td>Asigna valor en posición i</td><td>lst[0] = 99 | lst[-1] = 0</td><td>O(1)</td><td>Tuples/strings (inmutables); i fuera de rango → IndexError</td></tr>
-      <tr><td>lst[i:j] = iterable</td><td>Reemplaza slice</td><td>lst[1:3] = [10,20,30] | lst[1:1] = [99] → inserta en posición 1</td><td>O(n)</td><td>Tuples; puede CAMBIAR la longitud de la lista (cuidado al iterar)</td></tr>
-    </table>
+    ${renderMethodTable('LST')}
   </div>
 
   <!-- ══ TUPLAS ══ -->
@@ -1517,25 +3128,7 @@ const PYTHON_RICH3 = {
         <code>()</code> vacía · <code>(1,)</code> un elemento (la coma es obligatoria) · <code>(1,2,3)</code> · <code>1,2,3</code> paréntesis opcionales · <code>tuple([1,2,3])</code> · <code>tuple("abc") → ('a','b','c')</code>
       </div></div>
     </div>
-    <table class="kv-table">
-      <tr><th>Operación</th><th>¿Qué hace?</th><th>Ejemplo → Resultado</th><th>Nota</th></tr>
-      <tr><td>t[i]</td><td>Acceso por índice</td><td>(10,20,30)[1] → 20</td><td>O(1)</td></tr>
-      <tr><td>t[i:j]</td><td>Slice (devuelve nueva tupla)</td><td>(1,2,3,4)[1:3] → (2,3)</td><td>O(k)</td></tr>
-      <tr><td>t[-1]</td><td>Último elemento</td><td>(1,2,3)[-1] → 3</td><td></td></tr>
-      <tr><td>count(x)</td><td>Ocurrencias de x</td><td>(1,2,2,3).count(2) → 2</td><td>O(n)</td></tr>
-      <tr><td>index(x, start, end)</td><td>Índice primera ocurrencia</td><td>(10,20,30).index(20) → 1</td><td>O(n), ValueError si no existe</td></tr>
-      <tr><td>a, b, c = t</td><td>Unpacking</td><td>a,b,c = (1,2,3)</td><td>Cantidad debe coincidir</td></tr>
-      <tr><td>a, *rest = t</td><td>Unpacking con *</td><td>a,*rest = (1,2,3,4) → a=1,rest=[2,3,4]</td><td></td></tr>
-      <tr><td>t1 + t2</td><td>Concatena (nueva tupla)</td><td>(1,2)+(3,4) → (1,2,3,4)</td><td>O(n+m)</td></tr>
-      <tr><td>t * n</td><td>Repite</td><td>(1,2)*3 → (1,2,1,2,1,2)</td><td>O(n*k)</td></tr>
-      <tr><td>x in t</td><td>Membership</td><td>2 in (1,2,3) → True</td><td>O(n)</td></tr>
-      <tr><td>len(t)</td><td>Longitud</td><td>len((1,2,3)) → 3</td><td>O(1)</td></tr>
-      <tr><td>hash(t)</td><td>Hash (si todos los elem son hashables)</td><td>hash((1,2,3)) → int</td><td>Por eso pueden ser keys de dict</td></tr>
-      <tr><td>min(t) / max(t)</td><td>Mínimo / máximo</td><td>min((3,1,2)) → 1</td><td>O(n)</td></tr>
-      <tr><td>sorted(t)</td><td>Lista ordenada</td><td>sorted((3,1,2)) → [1,2,3]</td><td>Retorna lista, no tupla</td></tr>
-      <tr><td>tuple(lst)</td><td>Convierte lista a tupla</td><td>tuple([1,2,3]) → (1,2,3)</td><td>O(n)</td></tr>
-      <tr><td>from collections import namedtuple</td><td>Tupla con nombres</td><td>Point = namedtuple('Point',['x','y']); p = Point(1,2); p.x</td><td>Legibilidad</td></tr>
-    </table>
+    ${renderMethodTable('TUP')}
   </div>
 
   <!-- ══ DICCIONARIOS ══ -->
@@ -1545,28 +3138,7 @@ const PYTHON_RICH3 = {
         <code>{}</code> vacío · <code>{"a":1,"b":2}</code> · <code>dict(a=1,b=2)</code> · <code>dict([("a",1),("b",2)])</code> · <code>dict.fromkeys(["a","b"], 0)</code> → {'a':0,'b':0} · <code>{k:v for k,v in items}</code>
       </div></div>
     </div>
-    <table class="kv-table">
-      <tr><th>Método / Op</th><th>¿Qué hace?</th><th>Ejemplo → Resultado</th><th>Nota</th></tr>
-      <tr><td>d[key]</td><td>Obtener valor por clave</td><td>d["a"] → 1</td><td>KeyError si no existe</td></tr>
-      <tr><td>d.get(key, default)</td><td>Obtener con default seguro</td><td>d.get("z", 0) → 0</td><td>No lanza KeyError</td></tr>
-      <tr><td>d[key] = value</td><td>Insertar / actualizar</td><td>d["c"] = 3</td><td>O(1) amortizado</td></tr>
-      <tr><td>d.setdefault(key, default)</td><td>Inserta default si key no existe; retorna valor</td><td>d.setdefault("x", []).append(1)</td><td>Útil para inicializar</td></tr>
-      <tr><td>d.update(d2)</td><td>Merge in-place (d2 gana en conflicto)</td><td>d.update({"a":99})</td><td>También acepta kwargs</td></tr>
-      <tr><td>d | d2</td><td>Merge (Python 3.9+, nueva dict)</td><td>{"a":1} | {"b":2} → {"a":1,"b":2}</td><td>d2 gana en conflicto</td></tr>
-      <tr><td>d |= d2</td><td>Merge in-place</td><td>d |= {"new": 99}</td><td></td></tr>
-      <tr><td>d.pop(key, default)</td><td>Elimina y retorna valor</td><td>d.pop("a") → 1</td><td>KeyError sin default si no existe</td></tr>
-      <tr><td>d.popitem()</td><td>Elimina y retorna último (key,val)</td><td>d.popitem() → ("c", 3)</td><td>LIFO desde Python 3.7</td></tr>
-      <tr><td>del d[key]</td><td>Elimina clave</td><td>del d["a"]</td><td>KeyError si no existe</td></tr>
-      <tr><td>d.clear()</td><td>Vacía el diccionario</td><td>d.clear() → {}</td><td></td></tr>
-      <tr><td>d.keys()</td><td>Vista de claves</td><td>d.keys() → dict_keys(['a','b'])</td><td>Vista dinámica, no copia</td></tr>
-      <tr><td>d.values()</td><td>Vista de valores</td><td>d.values() → dict_values([1,2])</td><td>Vista dinámica</td></tr>
-      <tr><td>d.items()</td><td>Vista de pares (key,val)</td><td>for k,v in d.items():</td><td>Usar siempre en for</td></tr>
-      <tr><td>d.copy()</td><td>Shallow copy</td><td>d2 = d.copy()</td><td>O(n)</td></tr>
-      <tr><td>key in d</td><td>¿Existe la clave?</td><td>"a" in d → True</td><td>O(1) — busca en keys</td></tr>
-      <tr><td>key not in d</td><td>¿No existe?</td><td>"z" not in d → True</td><td></td></tr>
-      <tr><td>len(d)</td><td>Número de pares</td><td>len({"a":1,"b":2}) → 2</td><td>O(1)</td></tr>
-      <tr><td>dict.fromkeys(keys, val)</td><td>Nuevo dict con claves dadas y val como default</td><td>dict.fromkeys(["a","b"], 0) → {"a":0,"b":0}</td><td>Cuidado: mismo objeto para todos</td></tr>
-    </table>
+    ${renderMethodTable('DCT')}
   </div>
 
   <!-- ══ SETS ══ -->
@@ -1576,29 +3148,7 @@ const PYTHON_RICH3 = {
         <code>set()</code> vacío (NUNCA {}) · <code>{1,2,3}</code> · <code>set([1,2,2,3]) → {1,2,3}</code> · <code>{x for x in lst}</code> · <code>frozenset({1,2,3})</code> inmutable
       </div></div>
     </div>
-    <table class="kv-table">
-      <tr><th>Método / Op</th><th>¿Qué hace?</th><th>Ejemplo</th><th>Alias</th></tr>
-      <tr><td>add(x)</td><td>Agrega x</td><td>s.add(5)</td><td></td></tr>
-      <tr><td>update(iterable)</td><td>Agrega múltiples</td><td>s.update([4,5,6])</td><td>s |= {4,5}</td></tr>
-      <tr><td>remove(x)</td><td>Elimina x — KeyError si no existe</td><td>s.remove(3)</td><td></td></tr>
-      <tr><td>discard(x)</td><td>Elimina x — sin error si no existe</td><td>s.discard(99)</td><td>Más seguro que remove</td></tr>
-      <tr><td>pop()</td><td>Elimina y retorna un elemento arbitrario</td><td>s.pop()</td><td></td></tr>
-      <tr><td>clear()</td><td>Vacía el set</td><td>s.clear()</td><td></td></tr>
-      <tr><td>s | s2</td><td>Unión: todos los elementos de ambos</td><td>{1,2} | {2,3} → {1,2,3}</td><td>s.union(s2)</td></tr>
-      <tr><td>s & s2</td><td>Intersección: solo los comunes</td><td>{1,2} & {2,3} → {2}</td><td>s.intersection(s2)</td></tr>
-      <tr><td>s - s2</td><td>Diferencia: en s pero no en s2</td><td>{1,2,3} - {2,3} → {1}</td><td>s.difference(s2)</td></tr>
-      <tr><td>s ^ s2</td><td>Diferencia simétrica: en uno pero no en ambos</td><td>{1,2} ^ {2,3} → {1,3}</td><td>s.symmetric_difference(s2)</td></tr>
-      <tr><td>s <= s2</td><td>¿s es subconjunto de s2?</td><td>{1,2} <= {1,2,3} → True</td><td>s.issubset(s2)</td></tr>
-      <tr><td>s >= s2</td><td>¿s es superconjunto?</td><td>{1,2,3} >= {1,2} → True</td><td>s.issuperset(s2)</td></tr>
-      <tr><td>s < s2</td><td>Subconjunto propio (s != s2)</td><td>{1} < {1,2} → True</td><td></td></tr>
-      <tr><td>s.isdisjoint(s2)</td><td>¿No tienen elementos comunes?</td><td>{1,2}.isdisjoint({3,4}) → True</td><td></td></tr>
-      <tr><td>s |= s2</td><td>Unión in-place</td><td>s |= {5,6}</td><td>s.update(s2)</td></tr>
-      <tr><td>s &= s2</td><td>Intersección in-place</td><td>s &= {1,2}</td><td>s.intersection_update(s2)</td></tr>
-      <tr><td>s -= s2</td><td>Diferencia in-place</td><td>s -= {3}</td><td>s.difference_update(s2)</td></tr>
-      <tr><td>x in s</td><td>Membership O(1)</td><td>5 in {1,2,3,5} → True</td><td>Mucho más rápido que lista</td></tr>
-      <tr><td>len(s)</td><td>Número de elementos</td><td>len({1,2,3}) → 3</td><td>O(1)</td></tr>
-      <tr><td>frozenset(s)</td><td>Versión inmutable y hashable</td><td>frozenset({1,2})</td><td>Puede ser key de dict</td></tr>
-    </table>
+    ${renderMethodTable('SET')}
   </div>
 
   <!-- ══ NÚMEROS ══ -->
