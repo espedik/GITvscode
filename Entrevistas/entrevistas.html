@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Entrevistas — Automotive Software Engineering</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🚗%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <div class="logo-icon">🚗</div>
+    <h1>Interview Prep <small>Automotive SW Engineering</small></h1>
+  </div>
+  <input type="text" id="search" placeholder="Buscar tema..." autocomplete="off">
+  <button class="btn-cheatsheet" onclick="go('py-cheatsheet')">📄 Cheat Sheet</button>
+  <div class="header-right">
+    <div class="progress-global">
+      <span id="progress-text">0 / 0</span>
+      <div class="progress-bar-wrap"><div class="progress-bar-fill" id="progress-fill" style="width:0%"></div></div>
+      <span id="progress-pct">0%</span>
+    </div>
+    <button class="btn-reset" onclick="resetProgress()">↺ Reset</button>
+  </div>
+</header>
+
+<div class="app-layout">
+<nav id="sidebar">
+
+  <!-- ═══ 1. ARQUITECTURA AUTOMOTRIZ ═══ -->
+  <div class="sidebar-section-label">Dominio Automotriz</div>
+
+  <div class="module" data-mod="arch">
+    <div class="module-header" onclick="toggleMod(this)">
+      <span class="m-icon">🏗️</span><span class="m-label">Arquitectura Automotriz</span>
+      <span class="m-count" id="cnt-arch">0/9</span><span class="m-arrow">▶</span>
+    </div>
+    <div class="module-body">
+      <div class="s-link" onclick="go('arch-intro')"><span class="dot"></span>Introducción E/E Architecture</div>
+      <div class="s-link" onclick="go('arch-adas')"><span class="dot"></span>ADAS</div>
+      <div class="s-link" onclick="go('arch-bcm')"><span class="dot"></span>BCM — Body Control Module</div>
+      <div class="s-link" onclick="go('arch-gateway')"><span class="dot"></span>Gateway ECU</div>
+      <div class="s-link" onclick="go('arch-bms')"><span class="dot"></span>BMS — Battery Management System</div>
+      <div class="s-link" onclick="go('arch-infotainment')"><span class="dot"></span>Infotainment</div>
+      <div class="s-link" onclick="go('arch-sensors')"><span class="dot"></span>Sensores Automotrices</div>
+      <div class="s-link" onclick="go('arch-domain')"><span class="dot"></span>Domain vs Zonal Architecture</div>
+      <div class="s-link" onclick="go('arch-autosar')"><span class="dot"></span>AUTOSAR (Classic & Adaptive)</div>
+    </div>
+  </div>
+
+  <!-- ═══ 2. PROTOCOLOS ═══ -->
+  <div class="module" data-mod="proto">
+    <div class="module-header" onclick="toggleMod(this)">
+      <span class="m-icon">📡</span><span class="m-label">Protocolos de Comunicación</span>
+      <span class="m-count" id="cnt-proto">0/14</span><span class="m-arrow">▶</span>
+    </div>
+    <div class="module-body">
+      <div class="sub-group-label">CAN</div>
+      <div class="s-link" onclick="go('can-fundamentos')"><span class="dot"></span>Fundamentos CAN Bus</div>
+      <div class="s-link" onclick="go('can-trama')"><span class="dot"></span>Trama CAN</div>
+      <div class="s-link" onclick="go('can-fd')"><span class="dot"></span>CAN FD</div>
+      <div class="s-link" onclick="go('can-ejemplo')"><span class="dot"></span>Ejemplo práctico (ignición)</div>
+      <div class="sub-group-label">Otros Protocolos</div>
+      <div class="s-link" onclick="go('lin')"><span class="dot"></span>LIN Bus</div>
+      <div class="s-link" onclick="go('flexray')"><span class="dot"></span>FlexRay</div>
+      <div class="sub-group-label">Ethernet Automotriz</div>
+      <div class="s-link" onclick="go('eth-auto')"><span class="dot"></span>Automotive Ethernet</div>
+      <div class="s-link" onclick="go('someip')"><span class="dot"></span>SOME/IP</div>
+      <div class="s-link" onclick="go('doip')"><span class="dot"></span>DoIP</div>
+      <div class="sub-group-label">XCP</div>
+      <div class="s-link" onclick="go('xcp')"><span class="dot"></span>XCP — Calibración y Medición</div>
+      <div class="sub-group-label">Comparativa</div>
+      <div class="s-link" onclick="go('proto-comparativa')"><span class="dot"></span>CAN vs LIN vs ETH vs FlexRay</div>
+      <div class="s-link" onclick="go('proto-capas')"><span class="dot"></span>Capas OSI en Automotriz</div>
+      <div class="s-link" onclick="go('proto-topologias')"><span class="dot"></span>Topologías de red</div>
+      <div class="s-link" onclick="go('proto-bitrate')"><span class="dot"></span>Bit Rate y sincronización</div>
+    </div>
+  </div>
+
+  <!-- ═══ 3. DIAGNÓSTICO ═══ -->
+  <div class="module" data-mod="diag">
+    <div class="module-header" onclick="toggleMod(this)">
+      <span class="m-icon">🔧</span><span class="m-label">Diagnóstico Automotriz</span>
+      <span class="m-count" id="cnt-diag">0/8</span><span class="m-arrow">▶</span>
+    </div>
+    <div class="module-body">
+      <div class="sub-group-label">UDS — ISO 14229</div>
+      <div class="s-link" onclick="go('uds-intro')"><span class="dot"></span>UDS — Introducción</div>
+      <div class="s-link" onclick="go('uds-servicios')"><span class="dot"></span>Servicios UDS (Positivos)</div>
+      <div class="s-link" onclick="go('uds-nrc')"><span class="dot"></span>NRC — Negative Response Codes</div>
+      <div class="s-link" onclick="go('uds-sesiones')"><span class="dot"></span>Sesiones de diagnóstico</div>
+      <div class="sub-group-label">Otros</div>
+      <div class="s-link" onclick="go('obd2')"><span class="dot"></span>OBD-II</div>
+      <div class="s-link" onclick="go('dtc')"><span class="dot"></span>DTCs — Diagnostic Trouble Codes</div>
+      <div class="s-link" onclick="go('bootloader')"><span class="dot"></span>Bootloader & Flashing</div>
+      <div class="s-link" onclick="go('kwp2000')"><span class="dot"></span>KWP2000 vs UDS</div>
+    </div>
+  </div>
+
+  <!-- ═══ 4. HERRAMIENTAS ═══ -->
+  <div class="module" data-mod="tools">
+    <div class="module-header" onclick="toggleMod(this)">
+      <span class="m-icon">🛠️</span><span class="m-label">Herramientas</span>
+      <span class="m-count" id="cnt-tools">0/10</span><span class="m-arrow">▶</span>
+    </div>
+    <div class="module-body">
+      <div class="s-link" onclick="go('canoe')"><span class="dot"></span>CANoe</div>
+      <div class="s-link" onclick="go('canalyzer')"><span class="dot"></span>CANalyzer</div>
+      <div class="sub-group-label">CAPL</div>
+      <div class="s-link" onclick="go('capl-intro')"><span class="dot"></span>CAPL — Introducción</div>
+      <div class="s-link" onclick="go('capl-scripting')"><span class="dot"></span>CAPL — Scripts y Eventos</div>
+      <div class="sub-group-label">Simulink & HIL/SIL/MIL</div>
+      <div class="s-link" onclick="go('simulink')"><span class="dot"></span>Simulink / Model-Based Design</div>
+      <div class="s-link" onclick="go('dspace')"><span class="dot"></span>dSPACE — HIL Testing</div>
+      <div class="s-link" onclick="go('sil-mil')"><span class="dot"></span>HIL / SIL / MIL — Comparativa</div>
+      <div class="sub-group-label">Datos & Observabilidad</div>
+      <div class="s-link" onclick="go('mcap')"><span class="dot"></span>MCAP — Robot Data Format</div>
+      <div class="s-link" onclick="go('observability')"><span class="dot"></span>Observability — Logs/Metrics/Traces</div>
+      <div class="s-link" onclick="go('vector-tools')"><span class="dot"></span>Vector Tools (resumen)</div>
+    </div>
+  </div>
+
+  <!-- ═══ 5. ESTÁNDARES ═══ -->
+  <div class="module" data-mod="standards">
+    <div class="module-header" onclick="toggleMod(this)">
+      <span class="m-icon">🛡️</span><span class="m-label">Estándares & Seguridad</span>
+      <span class="m-count" id="cnt-standards">0/8</span><span class="m-arrow">▶</span>
+    </div>
+    <div class="module-body">
+      <div class="sub-group-label">Seguridad Funcional</div>
+      <div class="s-link" onclick="go('iso26262')"><span class="dot"></span>ISO 26262 — Overview</div>
+      <div class="s-link" onclick="go('asil')"><span class="dot"></span>ASIL — Niveles A, B, C, D</div>
+      <div class="s-link" onclick="go('hara')"><span class="dot"></span>HARA — Hazard Analysis</div>
+      <div class="sub-group-label">Proceso</div>
+      <div class="s-link" onclick="go('aspice')"><span class="dot"></span>ASPICE — V-Model</div>
+      <div class="s-link" onclick="go('misra')"><span class="dot"></span>MISRA C / C++</div>
+      <div class="sub-group-label">Cybersecurity</div>
+      <div class="s-link" onclick="go('iso21434')"><span class="dot"></span>ISO 21434 — Cybersecurity</div>
+      <div class="s-link" onclick="go('tara')"><span class="dot"></span>TARA — Threat Analysis</div>
+      <div class="s-link" onclick="go('security-concepts')"><span class="dot"></span>SecOC & Secure Boot</div>
+    </div>
+  </div>
+
+  <!-- ═══ PYTHON ═══ -->
+  <div class="sidebar-section-label">Python</div>
+
+  <!-- ═══ 6. PYTHON FUNDAMENTOS ═══ -->
+  <div class="module" data-mod="pyfund">
+    <div class="module-header" onclick="toggleMod(this)">
+      <span class="m-icon">🐍</span><span class="m-label">Python — Fundamentos</span>
+      <span class="m-count" id="cnt-pyfund">0/15</span><span class="m-arrow">▶</span>
+    </div>
+    <div class="module-body">
+      <div class="sub-group-label">Estructuras de Control</div>
+      <div class="s-link" onclick="go('py-for')"><span class="dot"></span>For / While / If-Else</div>
+      <div class="s-link" onclick="go('py-comprehensions')"><span class="dot"></span>List & Dict Comprehensions</div>
+      <div class="sub-group-label">Estructuras de Datos</div>
+      <div class="s-link" onclick="go('py-listas')"><span class="dot"></span>Listas</div>
+      <div class="s-link" onclick="go('py-tuplas')"><span class="dot"></span>Tuplas</div>
+      <div class="s-link" onclick="go('py-dicts')"><span class="dot"></span>Diccionarios</div>
+      <div class="s-link" onclick="go('py-sets')"><span class="dot"></span>Sets</div>
+      <div class="sub-group-label">Tipos y Operaciones</div>
+      <div class="s-link" onclick="go('py-strings')"><span class="dot"></span>Strings</div>
+      <div class="s-link" onclick="go('py-funciones')"><span class="dot"></span>Funciones & Lambdas</div>
+      <div class="s-link" onclick="go('py-decoradores')"><span class="dot"></span>Decoradores</div>
+      <div class="s-link" onclick="go('py-generadores')"><span class="dot"></span>Generadores & Iteradores</div>
+      <div class="sub-group-label">Manejo de Errores & Archivos</div>
+      <div class="s-link" onclick="go('py-tryexcept')"><span class="dot"></span>Try / Except / Finally</div>
+      <div class="s-link" onclick="go('py-archivos')"><span class="dot"></span>Archivos de Texto</div>
+      <div class="s-link" onclick="go('py-copy')"><span class="dot"></span>Copy — Shallow vs Deep</div>
+      <div class="s-link" onclick="go('py-tipado')"><span class="dot"></span>Type Hints</div>
+      <div class="sub-group-label">📄 Referencia rápida</div>
+      <div class="s-link" onclick="go('py-cheatsheet')"><span class="dot"></span>Cheat Sheet — Todos los métodos</div>
+    </div>
+  </div>
+
+  <!-- ═══ 7. POO ═══ -->
+  <div class="module" data-mod="poo">
+    <div class="module-header" onclick="toggleMod(this)">
+      <span class="m-icon">🏛️</span><span class="m-label">Python — POO</span>
+      <span class="m-count" id="cnt-poo">0/7</span><span class="m-arrow">▶</span>
+    </div>
+    <div class="module-body">
+      <div class="s-link" onclick="go('poo-clase')"><span class="dot"></span>Clases y Objetos</div>
+      <div class="s-link" onclick="go('poo-principios')"><span class="dot"></span>4 Principios POO</div>
+      <div class="s-link" onclick="go('poo-herencia')"><span class="dot"></span>Herencia & MRO</div>
+      <div class="s-link" onclick="go('poo-metodos')"><span class="dot"></span>Métodos especiales (__dunder__)</div>
+      <div class="s-link" onclick="go('poo-abstractas')"><span class="dot"></span>Clases Abstractas (ABC)</div>
+      <div class="s-link" onclick="go('poo-dataclass')"><span class="dot"></span>Dataclasses</div>
+      <div class="s-link" onclick="go('poo-patrones')"><span class="dot"></span>Design Patterns (Singleton, Factory, Observer)</div>
+    </div>
+  </div>
+
+  <!-- ═══ 8. PYTHON TESTING ═══ -->
+  <div class="module" data-mod="testing">
+    <div class="module-header" onclick="toggleMod(this)">
+      <span class="m-icon">🧪</span><span class="m-label">Python — Testing</span>
+      <span class="m-count" id="cnt-testing">0/20</span><span class="m-arrow">▶</span>
+    </div>
+    <div class="module-body">
+      <div class="sub-group-label">Unittest</div>
+      <div class="s-link" onclick="go('ut-intro')"><span class="dot"></span>Unittest — Introducción</div>
+      <div class="s-link" onclick="go('ut-estructura')"><span class="dot"></span>Estructura de un test</div>
+      <div class="s-link" onclick="go('ut-setup')"><span class="dot"></span>setUp / tearDown / setUpClass</div>
+      <div class="s-link" onclick="go('ut-asserts')"><span class="dot"></span>ASSERT Methods</div>
+      <div class="s-link" onclick="go('ut-mock')"><span class="dot"></span>Mock / Patch</div>
+      <div class="s-link" onclick="go('ut-decoradores')"><span class="dot"></span>Decoradores (@skip, @expectedFailure)</div>
+      <div class="s-link" onclick="go('ut-subtest')"><span class="dot"></span>SubTest</div>
+      <div class="s-link" onclick="go('ut-doctest')"><span class="dot"></span>DocTest</div>
+      <div class="sub-group-label">pytest</div>
+      <div class="s-link" onclick="go('pt-intro')"><span class="dot"></span>pytest — Introducción</div>
+      <div class="s-link" onclick="go('pt-fixtures')"><span class="dot"></span>Fixtures</div>
+      <div class="s-link" onclick="go('pt-parametrize')"><span class="dot"></span>@pytest.mark.parametrize</div>
+      <div class="s-link" onclick="go('pt-marks')"><span class="dot"></span>Marks y filtros</div>
+      <div class="s-link" onclick="go('pt-conftest')"><span class="dot"></span>conftest.py</div>
+      <div class="s-link" onclick="go('pt-assert')"><span class="dot"></span>Assert en pytest</div>
+      <div class="s-link" onclick="go('pt-reportes')"><span class="dot"></span>Reportes (HTML, JUnit, CSV)</div>
+      <div class="sub-group-label">Cobertura & CI</div>
+      <div class="s-link" onclick="go('coverage')"><span class="dot"></span>Coverage.py — HTML Report</div>
+      <div class="s-link" onclick="go('ut-api')"><span class="dot"></span>API Testing (requests + pytest)</div>
+      <div class="s-link" onclick="go('ut-faker')"><span class="dot"></span>Faker — Datos aleatorios</div>
+      <div class="s-link" onclick="go('gh-actions-py')"><span class="dot"></span>GitHub Actions + pytest</div>
+      <div class="s-link" onclick="go('ia-test')"><span class="dot"></span>IA Test — Generación con IA</div>
+    </div>
+  </div>
+
+  <!-- ═══ DEVOPS ═══ -->
+  <div class="sidebar-section-label">DevOps & Herramientas</div>
+
+  <!-- ═══ 9. GIT ═══ -->
+  <div class="module" data-mod="git">
+    <div class="module-header" onclick="toggleMod(this)">
+      <span class="m-icon">🌿</span><span class="m-label">Git & Control de Versiones</span>
+      <span class="m-count" id="cnt-git">0/16</span><span class="m-arrow">▶</span>
+    </div>
+    <div class="module-body">
+      <div class="sub-group-label">Fundamentos</div>
+      <div class="s-link" onclick="go('git-config')"><span class="dot"></span>Configurar Git</div>
+      <div class="s-link" onclick="go('git-comandos')"><span class="dot"></span>Comandos más usados</div>
+      <div class="s-link" onclick="go('git-branching')"><span class="dot"></span>Branching — Crear / Merge</div>
+      <div class="s-link" onclick="go('git-conflictos')"><span class="dot"></span>Conflictos de merge</div>
+      <div class="s-link" onclick="go('git-reset-revert')"><span class="dot"></span>Reset vs Revert vs Checkout</div>
+      <div class="s-link" onclick="go('git-stash')"><span class="dot"></span>Stash</div>
+      <div class="s-link" onclick="go('git-rebase')"><span class="dot"></span>Rebase vs Merge</div>
+      <div class="s-link" onclick="go('git-tag')"><span class="dot"></span>Tags y versioning</div>
+      <div class="s-link" onclick="go('git-logs')"><span class="dot"></span>Logs y blame</div>
+      <div class="sub-group-label">GitHub</div>
+      <div class="s-link" onclick="go('gh-intro')"><span class="dot"></span>GitHub — Overview</div>
+      <div class="s-link" onclick="go('gh-ssh')"><span class="dot"></span>SSH Key & Clonar</div>
+      <div class="s-link" onclick="go('gh-pr')"><span class="dot"></span>Pull Requests</div>
+      <div class="s-link" onclick="go('gh-issues')"><span class="dot"></span>Issues & Projects</div>
+      <div class="s-link" onclick="go('gh-actions')"><span class="dot"></span>GitHub Actions (CI/CD)</div>
+      <div class="s-link" onclick="go('gh-markdown')"><span class="dot"></span>Markdown & Gist</div>
+      <div class="s-link" onclick="go('git-bitbucket')"><span class="dot"></span>Bitbucket</div>
+    </div>
+  </div>
+
+  <!-- ═══ 10. DEVOPS ═══ -->
+  <div class="module" data-mod="devops">
+    <div class="module-header" onclick="toggleMod(this)">
+      <span class="m-icon">⚙️</span><span class="m-label">CI/CD & DevOps</span>
+      <span class="m-count" id="cnt-devops">0/9</span><span class="m-arrow">▶</span>
+    </div>
+    <div class="module-body">
+      <div class="s-link" onclick="go('cicd-conceptos')"><span class="dot"></span>CI/CD — Conceptos</div>
+      <div class="s-link" onclick="go('jenkins')"><span class="dot"></span>Jenkins — Pipelines</div>
+      <div class="sub-group-label">Docker</div>
+      <div class="s-link" onclick="go('docker-intro')"><span class="dot"></span>Docker — Introducción</div>
+      <div class="s-link" onclick="go('docker-comandos')"><span class="dot"></span>Comandos Docker esenciales</div>
+      <div class="s-link" onclick="go('docker-compose')"><span class="dot"></span>Docker Compose</div>
+      <div class="s-link" onclick="go('docker-dockerfile')"><span class="dot"></span>Dockerfile</div>
+      <div class="s-link" onclick="go('linux-bash')"><span class="dot"></span>Linux / Bash comandos</div>
+      <div class="s-link" onclick="go('py-logging')"><span class="dot"></span>Python Logging</div>
+      <div class="s-link" onclick="go('triage-ci')"><span class="dot"></span>Triage de fallos en CI/CD</div>
+    </div>
+  </div>
+
+  <!-- ═══ LINUX ═══ -->
+  <div class="sidebar-section-label">Linux</div>
+
+  <div class="module" data-mod="linux">
+    <div class="module-header" onclick="toggleMod(this)">
+      <span class="m-icon">🐧</span><span class="m-label">Linux — Comandos</span>
+      <span class="m-count" id="cnt-linux">0/10</span><span class="m-arrow">▶</span>
+    </div>
+    <div class="module-body">
+      <div class="sub-group-label">Archivos y Navegación</div>
+      <div class="s-link" onclick="go('linux-nav')"><span class="dot"></span>Navegación del sistema</div>
+      <div class="s-link" onclick="go('linux-archivos')"><span class="dot"></span>Gestión de archivos</div>
+      <div class="s-link" onclick="go('linux-busqueda')"><span class="dot"></span>Búsqueda y filtrado</div>
+      <div class="sub-group-label">Procesos y Sistema</div>
+      <div class="s-link" onclick="go('linux-procesos')"><span class="dot"></span>Procesos y jobs</div>
+      <div class="s-link" onclick="go('linux-permisos')"><span class="dot"></span>Permisos y usuarios</div>
+      <div class="sub-group-label">Red y Conectividad</div>
+      <div class="s-link" onclick="go('linux-red')"><span class="dot"></span>Red, SSH y transferencia</div>
+      <div class="sub-group-label">Texto y Scripting</div>
+      <div class="s-link" onclick="go('linux-pipes')"><span class="dot"></span>Pipes, redirección y texto</div>
+      <div class="s-link" onclick="go('linux-bash-script')"><span class="dot"></span>Bash scripting</div>
+      <div class="sub-group-label">Sistema y Mantenimiento</div>
+      <div class="s-link" onclick="go('linux-monitoreo')"><span class="dot"></span>Monitoreo y logs</div>
+      <div class="s-link" onclick="go('linux-paquetes')"><span class="dot"></span>Gestión de paquetes</div>
+    </div>
+  </div>
+
+  <!-- ═══ PROCESO & METODOLOGÍAS ═══ -->
+  <div class="sidebar-section-label">Proceso & Metodologías</div>
+
+  <!-- ═══ 11. METODOLOGÍAS ═══ -->
+  <div class="module" data-mod="metod">
+    <div class="module-header" onclick="toggleMod(this)">
+      <span class="m-icon">🔄</span><span class="m-label">Metodologías de Desarrollo</span>
+      <span class="m-count" id="cnt-metod">0/7</span><span class="m-arrow">▶</span>
+    </div>
+    <div class="module-body">
+      <div class="s-link" onclick="go('scrum')"><span class="dot"></span>SCRUM</div>
+      <div class="s-link" onclick="go('agile')"><span class="dot"></span>Agile — Principios</div>
+      <div class="s-link" onclick="go('vmodel')"><span class="dot"></span>V-Model</div>
+      <div class="s-link" onclick="go('sw-testing-concepts')"><span class="dot"></span>SW Testing Concepts</div>
+      <div class="s-link" onclick="go('test-levels')"><span class="dot"></span>Niveles de prueba</div>
+      <div class="s-link" onclick="go('test-types')"><span class="dot"></span>Tipos de prueba</div>
+      <div class="s-link" onclick="go('tdd')"><span class="dot"></span>TDD — Test Driven Development</div>
+    </div>
+  </div>
+
+  <!-- ═══ 12. ISTQB ═══ -->
+  <div class="module" data-mod="istqb">
+    <div class="module-header" onclick="toggleMod(this)">
+      <span class="m-icon">📜</span><span class="m-label">ISTQB CTFL</span>
+      <span class="m-count" id="cnt-istqb">0/7</span><span class="m-arrow">▶</span>
+    </div>
+    <div class="module-body">
+      <div class="s-link" onclick="go('istqb-ch1')"><span class="dot"></span>Chapter 1 — Fundamentos del Testing</div>
+      <div class="s-link" onclick="go('istqb-ch2')"><span class="dot"></span>Chapter 2 — Testing en el SDLC</div>
+      <div class="s-link" onclick="go('istqb-ch3')"><span class="dot"></span>Chapter 3 — Pruebas estáticas</div>
+      <div class="s-link" onclick="go('istqb-ch4')"><span class="dot"></span>Chapter 4 — Técnicas de prueba</div>
+      <div class="s-link" onclick="go('istqb-ch4-collab')"><span class="dot"></span>Chapter 4 — Collaborative Testing</div>
+      <div class="s-link" onclick="go('istqb-ch5')"><span class="dot"></span>Chapter 5 — Gestión de pruebas</div>
+      <div class="s-link" onclick="go('istqb-ch6')"><span class="dot"></span>Chapter 6 — Herramientas de testing</div>
+    </div>
+  </div>
+
+  <!-- ═══ ENTREVISTAS ═══ -->
+  <div class="sidebar-section-label">Preparación Entrevista</div>
+
+  <!-- ═══ 13. ENTREVISTA ═══ -->
+  <div class="module" data-mod="interview">
+    <div class="module-header" onclick="toggleMod(this)">
+      <span class="m-icon">🎯</span><span class="m-label">Entrevista — Estrategia</span>
+      <span class="m-count" id="cnt-interview">0/9</span><span class="m-arrow">▶</span>
+    </div>
+    <div class="module-body">
+      <div class="s-link" onclick="go('ent-estructura-datos')"><span class="dot"></span>Estructuras de datos (Python)</div>
+      <div class="s-link" onclick="go('ent-algoritmos')"><span class="dot"></span>Algoritmos frecuentes</div>
+      <div class="s-link" onclick="go('ent-complejidad')"><span class="dot"></span>Complejidad O(n) — Big O</div>
+      <div class="s-link" onclick="go('ent-preguntas-py')"><span class="dot"></span>Preguntas frecuentes Python</div>
+      <div class="s-link" onclick="go('ent-preguntas-auto')"><span class="dot"></span>Preguntas frecuentes Automotriz</div>
+      <div class="s-link" onclick="go('ent-behavioral')"><span class="dot"></span>Preguntas Behavioral (STAR)</div>
+      <div class="s-link" onclick="go('ent-preguntas-entrevistador')"><span class="dot"></span>Preguntas al Entrevistador</div>
+      <div class="s-link" onclick="go('ent-patron-apuntadores')"><span class="dot"></span>Patron de Apuntadores (Two Pointers)</div>
+      <div class="s-link" onclick="go('ent-libros')"><span class="dot"></span>Libros & Recursos recomendados</div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════ -->
+  <!-- ═══ WAYVE INTERVIEW — SECCIÓN ESPECIAL ═══ -->
+  <!-- ══════════════════════════════════════════ -->
+  <div class="wayve-label">WAYVE <span class="wayve-badge">MARTES 14 JUL</span></div>
+
+  <div class="module wayve-mod" data-mod="wayve">
+    <div class="module-header open" onclick="toggleMod(this)">
+      <span class="m-icon">🚀</span><span class="m-label">Wayve Interview Prep</span>
+      <span class="m-count" id="cnt-wayve">0/30</span><span class="m-arrow">▶</span>
+    </div>
+    <div class="module-body open">
+
+      <!-- ── SECCIÓN 1: PLAN ─────────────────── -->
+      <div class="wayve-section-header">📅 Plan & Qué estudiar</div>
+      <div class="s-link" onclick="go('wayve-plan')"><span class="dot"></span>Plan de estudio — 7 días</div>
+      <div class="s-link" onclick="go('wayve-checklist')"><span class="dot"></span>Checklist — Qué dominar antes del 14 Jul</div>
+
+      <!-- ── SECCIÓN 2: EMPRESA ──────────────── -->
+      <div class="wayve-section-header">🏢 Empresa & Contexto</div>
+      <div class="s-link" onclick="go('wayve-empresa')"><span class="dot"></span>Historia de Wayve</div>
+      <div class="s-link" onclick="go('wayve-av20')"><span class="dot"></span>AV 1.0 vs AV 2.0 — Filosofía</div>
+      <div class="s-link" onclick="go('wayve-lingo')"><span class="dot"></span>LINGO — El modelo de IA</div>
+      <div class="s-link" onclick="go('wayve-jd')"><span class="dot"></span>Job Description — análisis completo</div>
+
+      <!-- ── SECCIÓN 3: PLATAFORMA AV ───────── -->
+      <div class="wayve-section-header">🔬 Plataforma AV — Técnico</div>
+      <div class="s-link" onclick="go('wayve-dev-vehicle')"><span class="dot"></span>Development Vehicle — sensores & compute</div>
+      <div class="s-link" onclick="go('wayve-data-pipeline')"><span class="dot"></span>Data Pipeline — Vehicle → Cloud</div>
+      <div class="s-link" onclick="go('wayve-hil-sil-mil')"><span class="dot"></span>HIL / SIL / MIL en contexto AV</div>
+      <div class="s-link" onclick="go('wayve-mcap')"><span class="dot"></span>MCAP — Formato de datos de sensores</div>
+      <div class="s-link" onclick="go('wayve-sensor')"><span class="dot"></span>Sensor data validation</div>
+      <div class="s-link" onclick="go('wayve-linux-debug')"><span class="dot"></span>Linux debugging en vehículos</div>
+      <div class="s-link" onclick="go('wayve-reliability')"><span class="dot"></span>Reliability Engineering AV</div>
+
+      <!-- ── SECCIÓN 4: TESTING & CI ────────── -->
+      <div class="wayve-section-header">⚙️ Testing & CI/CD</div>
+      <div class="s-link" onclick="go('wayve-triage')"><span class="dot"></span>Triage — HW vs SW vs Tooling</div>
+      <div class="s-link" onclick="go('wayve-ci')"><span class="dot"></span>CI/CD — debugging & pipeline</div>
+      <div class="s-link" onclick="go('wayve-pytest')"><span class="dot"></span>pytest para plataforma AV</div>
+
+      <!-- ── SECCIÓN 5: CODING ───────────────── -->
+      <div class="wayve-section-header">💻 Coding Challenges</div>
+
+      <div class="sub-group-label">📐 Paso 1 — El approach</div>
+      <div class="s-link" onclick="go('wayve-algo-approach')"><span class="dot"></span>Cómo resolver cualquier problema</div>
+
+      <div class="sub-group-label">📚 Paso 2 — Patrones base (9 algoritmos)</div>
+      <div class="s-link" onclick="go('wayve-algoritmos')"><span class="dot"></span>SW · 2P · HashMap · BS · BFS · DFS · Heap · Stack · Regex</div>
+
+      <div class="sub-group-label">🔥 Paso 2b — Patrones avanzados</div>
+      <div class="s-link" onclick="go('wayve-algo-advanced')"><span class="dot"></span>Intervals · DP / Kadane · Topological Sort</div>
+
+      <div class="sub-group-label">💪 Paso 3 — Practica (con soluciones)</div>
+      <div class="s-link" onclick="go('wayve-python-challenge')"><span class="dot"></span>Challenges 1 — Sensor streams</div>
+      <div class="s-link" onclick="go('wayve-challenges-2')"><span class="dot"></span>Challenges 2 — Merge · Top-K · Buffer</div>
+      <div class="s-link" onclick="go('wayve-challenges-3')"><span class="dot"></span>Challenges 3 — DP · Topological · Grid</div>
+
+      <!-- ── SECCIÓN 6: SYSTEM DESIGN ──────── -->
+      <div class="wayve-section-header">🏗️ System Design</div>
+      <div class="s-link" onclick="go('wayve-system-design')"><span class="dot"></span>Framework + AV pipeline design</div>
+      <div class="s-link" onclick="go('wayve-design-fleet')"><span class="dot"></span>Fleet monitoring — 20 vehículos</div>
+
+      <!-- ── SECCIÓN 7: PRÁCTICA ────────────── -->
+      <div class="wayve-section-header">🎯 Práctica de Entrevista</div>
+      <div class="s-link" onclick="go('wayve-preguntas')"><span class="dot"></span>Preguntas técnicas + respuestas</div>
+      <div class="s-link" onclick="go('wayve-star-stories')"><span class="dot"></span>STAR Stories — 5 historias listas</div>
+      <div class="s-link" onclick="go('wayve-english-mock')"><span class="dot"></span>Mock Interview completa en inglés</div>
+      <div class="s-link" onclick="go('wayve-vocab-english')"><span class="dot"></span>Vocabulario técnico en inglés</div>
+      <div class="s-link" onclick="go('wayve-entrevistador')"><span class="dot"></span>Preguntas al entrevistador</div>
+
+    </div>
+  </div>
+
+</nav>
+
+<!-- ═══ MAIN CONTENT ═══ -->
+<main id="content">
+
+  <div id="welcome">
+    <div class="welcome-icon">🚀</div>
+    <h2>Automotive SW Engineering — Interview Prep</h2>
+    <p>Selecciona un tema del panel izquierdo para empezar.<br>
+    Marca cada sección como estudiada y sigue tu progreso.</p>
+    <div class="welcome-stats">
+      <div class="w-stat"><div class="w-num" id="ws-modules">14</div><div class="w-label">Módulos</div></div>
+      <div class="w-stat"><div class="w-num" id="ws-topics">--</div><div class="w-label">Temas</div></div>
+      <div class="w-stat"><div class="w-num" id="ws-done">0</div><div class="w-label">Estudiados</div></div>
+    </div>
+  </div>
+
+  <!-- Las páginas de temas se generan con JS -->
+
+</main>
+</div>
+
+<script src="js/core.js"></script>
+<script src="js/data-wayve.js"></script>
+<script src="js/data-python.js"></script>
+<script src="js/data-auto.js"></script>
+<script src="js/data-proto.js"></script>
+<script src="js/data-diag.js"></script>
+<script src="js/data-tools.js"></script>
+<script src="js/data-standards.js"></script>
+<script src="js/data-testing.js"></script>
+<script src="js/data-git.js"></script>
+<script src="js/data-devops.js"></script>
+<script src="js/data-metod.js"></script>
+<script src="js/data-istqb.js"></script>
+<script src="js/data-interview.js"></script>
+<script src="js/ui.js"></script>
+</body>
+</html>
