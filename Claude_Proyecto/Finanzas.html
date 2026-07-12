@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mis Finanzas MX</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💰</text></svg>">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
@@ -14,26 +15,26 @@
   --danger:#ff3b6b;--danger-light:rgba(255,59,107,.1);
   --warning:#ffd93d;--warning-light:rgba(255,217,61,.1);
   --purple:#b06eff;--purple-light:rgba(176,110,255,.1);
-  --bg:#060614;--surface:rgba(255,255,255,.04);--border:rgba(255,255,255,.08);
-  --text:#e8eaf6;--text2:#8892b0;--text3:#4a5568;
+  --bg:#f5f7fa;--surface:rgba(0,0,0,.03);--border:rgba(0,0,0,.09);
+  --text:#1a1a2e;--text2:#4a5670;--text3:#8892a8;
   --sw:245px;--r:14px;--rs:9px;
-  --sh:0 4px 24px rgba(0,0,0,.5);--shm:0 8px 40px rgba(0,0,0,.6);--shl:0 20px 60px rgba(0,0,0,.7);
+  --sh:0 4px 24px rgba(0,0,0,.08);--shm:0 8px 40px rgba(0,0,0,.12);--shl:0 20px 60px rgba(0,0,0,.15);
   --glow-p:0 0 20px rgba(0,212,255,.25);--glow-s:0 0 20px rgba(0,232,122,.25);--glow-d:0 0 20px rgba(255,59,107,.25)
 }
 
 /* ── BASE ─────────────────────────────────────────────────────── */
 body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:var(--bg);color:var(--text);display:flex;min-height:100vh;font-size:14px;
-  background-image:radial-gradient(ellipse 80% 60% at 20% 0%,rgba(0,212,255,.06) 0%,transparent 60%),
-                   radial-gradient(ellipse 60% 50% at 85% 100%,rgba(176,110,255,.07) 0%,transparent 60%)}
+  background-image:radial-gradient(ellipse 80% 60% at 20% 0%,rgba(0,212,255,.04) 0%,transparent 60%),
+                   radial-gradient(ellipse 60% 50% at 85% 100%,rgba(176,110,255,.04) 0%,transparent 60%)}
 ::-webkit-scrollbar{width:4px;height:4px}
 ::-webkit-scrollbar-track{background:transparent}
-::-webkit-scrollbar-thumb{background:rgba(255,255,255,.12);border-radius:2px}
+::-webkit-scrollbar-thumb{background:rgba(0,0,0,.18);border-radius:2px}
 
 /* ── SIDEBAR ──────────────────────────────────────────────────── */
-.sidebar{width:var(--sw);background:rgba(6,6,20,.85);backdrop-filter:blur(20px);
-  border-right:1px solid rgba(0,212,255,.1);display:flex;flex-direction:column;
-  position:fixed;top:0;left:0;bottom:0;z-index:100;transition:transform .25s}
-.sb-logo{padding:20px;border-bottom:1px solid rgba(255,255,255,.06)}
+.sidebar{width:var(--sw);background:rgba(255,255,255,.97);backdrop-filter:blur(20px);
+  border-right:1px solid rgba(0,212,255,.15);display:flex;flex-direction:column;
+  position:fixed;top:0;left:0;bottom:0;z-index:100;transition:transform .25s;box-shadow:2px 0 12px rgba(0,0,0,.06)}
+.sb-logo{padding:20px;border-bottom:1px solid rgba(0,0,0,.07)}
 .sb-logo h1{font-size:16px;font-weight:800;background:linear-gradient(90deg,#00d4ff,#b06eff);
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:-.3px}
 .sb-logo p{font-size:10px;color:var(--text3);margin-top:3px;letter-spacing:.08em;text-transform:uppercase}
@@ -43,28 +44,28 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
 .nav-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:var(--rs);
   cursor:pointer;color:var(--text2);font-weight:500;font-size:13px;transition:all .2s;
   margin-bottom:2px;user-select:none;position:relative}
-.nav-item:hover{background:rgba(255,255,255,.05);color:var(--text)}
+.nav-item:hover{background:rgba(0,0,0,.05);color:var(--text)}
 .nav-item.active{background:rgba(0,212,255,.1);color:var(--primary);font-weight:600;
   border-left:2px solid var(--primary);box-shadow:inset 0 0 20px rgba(0,212,255,.05)}
 .nav-item .ico{font-size:15px;width:20px;text-align:center;flex-shrink:0}
-.sb-bottom{padding:12px;border-top:1px solid rgba(255,255,255,.06);display:flex;flex-direction:column;gap:6px}
+.sb-bottom{padding:12px;border-top:1px solid rgba(0,0,0,.07);display:flex;flex-direction:column;gap:6px}
 
 /* ── MAIN ─────────────────────────────────────────────────────── */
 .main{margin-left:var(--sw);flex:1;display:flex;flex-direction:column;min-height:100vh}
-.topbar{background:rgba(6,6,20,.8);backdrop-filter:blur(20px);
-  border-bottom:1px solid rgba(255,255,255,.06);padding:0 24px;height:58px;
-  display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
+.topbar{background:rgba(255,255,255,.97);backdrop-filter:blur(20px);
+  border-bottom:1px solid rgba(0,0,0,.08);padding:0 24px;height:58px;
+  display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50;box-shadow:0 1px 8px rgba(0,0,0,.06)}
 .topbar-title{font-size:15px;font-weight:700;color:var(--text)}
 .topbar-actions{display:flex;gap:8px;align-items:center}
 .content{padding:22px;flex:1}
 .section{display:none}.section.active{display:block}
 
 /* ── CARDS ────────────────────────────────────────────────────── */
-.card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);
+.card{background:#ffffff;border:1px solid rgba(0,0,0,.08);
   border-radius:var(--r);padding:18px;
-  box-shadow:var(--sh),inset 0 1px 0 rgba(255,255,255,.05);
-  transition:border-color .2s,box-shadow .2s;backdrop-filter:blur(10px)}
-.card:hover{border-color:rgba(255,255,255,.12)}
+  box-shadow:var(--sh);
+  transition:border-color .2s,box-shadow .2s}
+.card:hover{border-color:rgba(0,0,0,.15);box-shadow:var(--shm)}
 .card-title{font-size:11px;font-weight:600;color:var(--text2);margin-bottom:8px;
   display:flex;align-items:center;gap:5px;text-transform:uppercase;letter-spacing:.06em}
 .card-val{font-size:26px;font-weight:800;color:var(--text);letter-spacing:-.5px}
@@ -95,9 +96,9 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
 .btn-d{background:linear-gradient(135deg,#cc1144,#ff3b6b);color:#fff;
   box-shadow:0 0 16px rgba(255,59,107,.3)}
 .btn-d:hover{box-shadow:0 0 28px rgba(255,59,107,.5);transform:translateY(-1px)}
-.btn-o{background:rgba(255,255,255,.05);color:var(--text2);
-  border:1px solid rgba(255,255,255,.1)}
-.btn-o:hover{background:rgba(255,255,255,.09);color:var(--text);border-color:rgba(255,255,255,.2)}
+.btn-o{background:rgba(0,0,0,.04);color:var(--text2);
+  border:1px solid rgba(0,0,0,.12)}
+.btn-o:hover{background:rgba(0,0,0,.07);color:var(--text);border-color:rgba(0,0,0,.22)}
 .btn-sm{padding:5px 9px;font-size:11px}
 .btn-ico{padding:5px 8px}
 
@@ -112,16 +113,16 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
 table{width:100%;border-collapse:collapse}
 th{text-align:left;padding:9px 12px;font-size:10px;font-weight:700;color:var(--primary);
   border-bottom:1px solid rgba(0,212,255,.15);white-space:nowrap;text-transform:uppercase;letter-spacing:.08em}
-td{padding:11px 12px;border-bottom:1px solid rgba(255,255,255,.05);font-size:13px;color:var(--text)}
+td{padding:11px 12px;border-bottom:1px solid rgba(0,0,0,.06);font-size:13px;color:var(--text)}
 tr:last-child td{border-bottom:none}
-tbody tr:hover td{background:rgba(0,212,255,.03)}
+tbody tr:hover td{background:rgba(0,212,255,.05)}
 
 /* ── MODAL ────────────────────────────────────────────────────── */
 .mo{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(4px);
   z-index:200;align-items:center;justify-content:center;padding:16px}
 .mo.open{display:flex}
-.modal{background:rgba(10,10,30,.95);backdrop-filter:blur(30px);
-  border:1px solid rgba(0,212,255,.15);border-radius:var(--r);
+.modal{background:#ffffff;
+  border:1px solid rgba(0,212,255,.2);border-radius:var(--r);
   box-shadow:var(--glow-p),var(--shl);width:100%;max-width:500px;max-height:92vh;overflow-y:auto;padding:22px}
 .modal-h{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
 .modal-title{font-size:17px;font-weight:700;color:var(--text)}
@@ -133,18 +134,18 @@ tbody tr:hover td{background:rgba(0,212,255,.03)}
 .fr{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 label{display:block;font-size:10px;font-weight:700;color:var(--text2);margin-bottom:5px;
   text-transform:uppercase;letter-spacing:.07em}
-input,select,textarea{width:100%;padding:9px 12px;border:1px solid rgba(255,255,255,.1);
+input,select,textarea{width:100%;padding:9px 12px;border:1px solid rgba(0,0,0,.13);
   border-radius:var(--rs);font-size:13px;color:var(--text);
-  background:rgba(255,255,255,.05);outline:none;transition:all .2s;font-family:inherit}
+  background:#fff;outline:none;transition:all .2s;font-family:inherit}
 input:focus,select:focus,textarea:focus{
   border-color:var(--primary);box-shadow:0 0 0 3px rgba(0,212,255,.15),var(--glow-p);
-  background:rgba(0,212,255,.04)}
-select option{background:#0d0d2a;color:var(--text)}
+  background:rgba(0,212,255,.03)}
+select option{background:#ffffff;color:var(--text)}
 
 /* ── TYPE TOGGLE ──────────────────────────────────────────────── */
 .type-sel{display:flex;gap:6px;margin-bottom:14px}
-.type-btn{flex:1;padding:9px;border:1px solid rgba(255,255,255,.1);border-radius:var(--rs);
-  background:rgba(255,255,255,.04);cursor:pointer;font-size:13px;font-weight:600;
+.type-btn{flex:1;padding:9px;border:1px solid rgba(0,0,0,.12);border-radius:var(--rs);
+  background:rgba(0,0,0,.03);cursor:pointer;font-size:13px;font-weight:600;
   text-align:center;transition:all .2s;color:var(--text2)}
 .type-btn.income.sel{border-color:var(--success);background:rgba(0,232,122,.1);
   color:var(--success);box-shadow:var(--glow-s)}
@@ -152,7 +153,7 @@ select option{background:#0d0d2a;color:var(--text)}
   color:var(--danger);box-shadow:var(--glow-d)}
 
 /* ── PROGRESS ─────────────────────────────────────────────────── */
-.pbar{height:6px;background:rgba(255,255,255,.08);border-radius:20px;overflow:hidden;margin-top:7px}
+.pbar{height:6px;background:rgba(0,0,0,.08);border-radius:20px;overflow:hidden;margin-top:7px}
 .pfill{height:100%;border-radius:20px;transition:width .6s cubic-bezier(.4,0,.2,1)}
 
 /* ── FILTER BAR ───────────────────────────────────────────────── */
@@ -192,7 +193,7 @@ select option{background:#0d0d2a;color:var(--text)}
 .conf{position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(4px);
   z-index:300;display:none;align-items:center;justify-content:center}
 .conf.open{display:flex}
-.conf-box{background:rgba(10,10,30,.98);border:1px solid rgba(255,59,107,.25);
+.conf-box{background:#ffffff;border:1px solid rgba(255,59,107,.3);
   border-radius:var(--r);padding:22px;max-width:340px;width:90%;
   box-shadow:var(--glow-d),var(--shl)}
 .conf-box h3{font-size:15px;font-weight:700;margin-bottom:7px;color:var(--text)}
@@ -200,8 +201,8 @@ select option{background:#0d0d2a;color:var(--text)}
 
 /* ── TOAST ────────────────────────────────────────────────────── */
 .toast{position:fixed;bottom:24px;right:24px;
-  background:rgba(10,10,30,.95);color:var(--text);
-  border:1px solid rgba(0,212,255,.2);padding:10px 18px;border-radius:var(--rs);
+  background:#ffffff;color:var(--text);
+  border:1px solid rgba(0,212,255,.3);padding:10px 18px;border-radius:var(--rs);
   font-size:13px;font-weight:600;box-shadow:var(--glow-p),var(--shl);
   z-index:500;opacity:0;transform:translateY(8px);transition:all .3s;pointer-events:none}
 .toast.show{opacity:1;transform:translateY(0)}
@@ -243,7 +244,7 @@ select option{background:#0d0d2a;color:var(--text)}
     <div class="nav-item" onclick="nav('gbm')"><span class="ico">📈</span>Plan de Inversiones</div>
     <div class="nav-label">Análisis</div>
     <div class="nav-item" onclick="nav('indicators')"><span class="ico">📐</span>Indicadores</div>
-    <div style="border-top:1px solid rgba(255,255,255,.05);margin:10px 0 6px"></div>
+    <div style="border-top:1px solid rgba(0,0,0,.08);margin:10px 0 6px"></div>
     <div class="nav-item" onclick="nav('debts')" style="opacity:.35;font-size:12px"><span class="ico" style="font-size:12px">🏦</span>Deudas</div>
     <div class="nav-item" onclick="nav('patrimonio')" style="opacity:.35;font-size:12px"><span class="ico" style="font-size:12px">🏛️</span>Patrimonio</div>
     <div class="nav-item" onclick="nav('transactions')" style="opacity:.35;font-size:12px"><span class="ico" style="font-size:12px">💳</span>Transacciones</div>
@@ -285,9 +286,8 @@ select option{background:#0d0d2a;color:var(--text)}
       <div class="mt16" id="d-income"></div>
       <!-- Fila 2: Salud financiera -->
       <div class="g4 mt16" id="d-insights"></div>
-      <!-- Fila 3: Gráficas -->
-      <div class="g2 mt20">
-        <div class="card"><div class="card-title">🍩 Gastos por categoría (mes actual)</div><div class="chart-c"><canvas id="ch-cat"></canvas></div></div>
+      <!-- Fila 3: Gráfica de balance -->
+      <div class="mt20">
         <div class="card"><div class="card-title">📈 Balance últimos 6 meses</div><div class="chart-c"><canvas id="ch-bal"></canvas></div></div>
       </div>
       <!-- Fila 4: Paneles estratégicos -->
@@ -608,12 +608,13 @@ select option{background:#0d0d2a;color:var(--text)}
 <script>
 // ─── STATE ───────────────────────────────────────────────────────────────────
 const KEY = 'finanzasmx_v2';
-let S = { transactions:[], budgets:[], debts:[], goals:[], investments:[], activos:[], btcHistory:[], currentBtcPrice:0, usdMxn:19.5, btcLastFetch:'', weeklyLeftover:0, sivaleBalance:0, sivaleLastMonth:'', emergencyFund:0, didiMonthly:0, gbmMonth:'' };
+let S = { transactions:[], budgets:[], debts:[], goals:[], investments:[], activos:[], btcHistory:[], currentBtcPrice:0, usdMxn:19.5, btcLastFetch:'', weeklyLeftover:0, sivaleBalance:0, sivaleLastMonth:'', emergencyFund:0, didiMonthly:0, gbmMonth:'', indicatorHistory:[] };
 let editId = null, confCb = null, payDebtId = null, contribGoalId = null;
 let btcEditId = null, activoEditId = null;
 let curType = 'expense';
-let chCat=null, chBal=null, chBud=null, chInv=null, chGbmInv=null, chBtcPnl=null;
+let chBal=null, chBud=null, chInv=null, chGbmInv=null, chBtcPnl=null;
 let dashMonth = '';
+let indActiveMonth = 'live';
 
 const CATS = {
   expense:['Alimentación','Transporte','Hogar/Renta','Salud','Entretenimiento',
@@ -1123,8 +1124,7 @@ const WEEKLY_PICKS = {
 
 function renderGBM() {
   // ── Ingresos ─────────────────────────────────────────────────────────────────
-  const BASE_SALARY=43000, BASE_DIDI=S.didiMonthly>0?S.didiMonthly:11200;
-  // Ingreso quincenal (cada 15 días) depositado en BBVA débito — sin Si Vale (uso personal aparte)
+  const BASE_SALARY=41000;
   const QUINC = Math.round(BASE_SALARY / 2); // $21,500/quincena
 
   // ── Gastos fijos por fecha ──────────────────────────────────────────────────
@@ -1161,19 +1161,19 @@ function renderGBM() {
   });
   const p3E=past3.map(m=>S.transactions.filter(t=>ym(t.date)===m&&t.type==='expense').reduce((s,t)=>s+t.amount,0));
   const vE=p3E.filter(e=>e>0);
-  const avgExpTotal=vE.length>0?vE.reduce((s,e)=>s+e,0)/vE.length:(BASE_SALARY+BASE_DIDI)*0.75;
+  const _msiGBM=(S.debts||[]).filter(d=>d.rate===0&&d.balance>0&&d.type==='other'&&d.start)
+    .reduce((s,d)=>{const st=new Date(d.start),tm=d.total>0&&d.min>0?Math.round(d.total/d.min):0;
+      const ed=new Date(st);ed.setMonth(ed.getMonth()+tm);return new Date()<ed?s+(d.min||0):s;},0);
+  const _fixedFloorGBM=RENTA+AUTO+SERVICIOS+SUSCRIPCIONES+TC_MINS+CETES_DIA15+_msiGBM;
+  const avgExpTotal=vE.length>0?vE.reduce((s,e)=>s+e,0)/vE.length:_fixedFloorGBM+Math.round(BASE_SALARY*0.15);
   const totalFixed=RENTA+AUTO+SERVICIOS+SUSCRIPCIONES+TC_MINS+msiActive+CETES_DIA15;
   const varMonthly=Math.max(0,avgExpTotal-totalFixed);
   const varPerWeek=Math.round(varMonthly/4);
 
-  // ── Didi semanal ─────────────────────────────────────────────────────────────
-  const WPM = 52/12;
-  const weeklyDidi = Math.round(BASE_DIDI / WPM);
-
-  const w1GBM = Math.max(0, QUINC - RENTA - AUTO - varPerWeek) + weeklyDidi;
-  const w2GBM = weeklyDidi;
-  const w3GBM = Math.max(0, QUINC - CETES_DIA15 - SERVICIOS - SUSCRIPCIONES - TC_MINS - msiActive - varPerWeek) + weeklyDidi;
-  const w4GBM = weeklyDidi;
+  const w1GBM = Math.max(0, QUINC - RENTA - AUTO - varPerWeek);
+  const w2GBM = 0;
+  const w3GBM = Math.max(0, QUINC - CETES_DIA15 - SERVICIOS - SUSCRIPCIONES - TC_MINS - msiActive - varPerWeek);
+  const w4GBM = 0;
 
   const monthGBM   = w1GBM + w2GBM + w3GBM + w4GBM;
   const monthCETES = CETES_DIA15;
@@ -1214,6 +1214,56 @@ function renderGBM() {
   const avgDias  = invsSorted.length?Math.round(invsSorted.reduce((s,i)=>s+i.dias,0)/invsSorted.length):0;
   const proj12   = totVal + (monthGBM*12);
   const proj12r  = proj12 * 1.15;
+
+  // ── Grupos del portafolio ─────────────────────────────────────────────────────
+  const invsBolsa  = invsSorted.filter(i => i.type !== 'otro');
+  const invsRenta  = invsSorted.filter(i => i.type === 'otro');
+  const totBolsa   = invsBolsa.reduce((s,i)=>s+i.val,0);
+  const totRenta   = invsRenta.reduce((s,i)=>s+i.val,0);
+  const cardHTML = i => {
+    const typeColors={cetes:'#00e87a',acciones:'#00d4ff',crypto:'#f7931a',fondos:'#b06eff',inmuebles:'#f59e0b',deuda:'#64748b',otro:'#f59e0b'};
+    const tc=typeColors[i.type]||'#94a3b8';
+    return `<div class="card" style="padding:14px;border-left:3px solid ${tc}">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:10px">
+        <div style="display:flex;align-items:center;gap:8px">
+          <div style="font-size:10px;padding:2px 8px;border-radius:4px;background:${tc}18;color:${tc};font-weight:700;border:1px solid ${tc}30">${ITYPE[i.type]||i.type}</div>
+          <div>
+            <div style="font-size:14px;font-weight:700;color:var(--text)">${i.name}</div>
+            ${i.date?`<div class="ts tm">Desde ${fmtDate(i.date)} · ${i.dias} días</div>`:''}
+          </div>
+        </div>
+        <div style="display:flex;gap:5px;flex-shrink:0">
+          <span class="chip ${i.roi>=0?'ch-up':'ch-dn'}" style="font-size:10px">${i.roi>=0?'↑':'↓'} ${Math.abs(i.roi).toFixed(2)}%</span>
+          <button class="btn btn-o btn-sm btn-ico" onclick="openInvModal('${i.id}')">✏️</button>
+          <button class="btn btn-o btn-sm btn-ico" onclick="askDel('inversión',()=>delInv('${i.id}'))">🗑️</button>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;margin-bottom:8px">
+        <div style="background:rgba(0,0,0,.03);border-radius:7px;padding:8px 10px">
+          <div style="font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px">Capital</div>
+          <div style="font-size:13px;font-weight:700">${fmt(i.invested||0)}</div>
+        </div>
+        <div style="background:rgba(0,0,0,.03);border-radius:7px;padding:8px 10px">
+          <div style="font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px">Valor actual</div>
+          <div style="font-size:13px;font-weight:700;color:${tc}">${fmt(i.val)}</div>
+        </div>
+        <div style="background:${i.pnl>=0?'rgba(0,232,122,.06)':'rgba(255,59,107,.06)'};border-radius:7px;padding:8px 10px">
+          <div style="font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px">Ganancia/Pérdida</div>
+          <div style="font-size:13px;font-weight:700;color:${i.pnl>=0?'var(--success)':'var(--danger)'}">${i.pnl>=0?'+':''}${fmt(i.pnl)}</div>
+        </div>
+        <div style="background:rgba(0,0,0,.03);border-radius:7px;padding:8px 10px">
+          <div style="font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px">Rend. anual</div>
+          <div style="font-size:13px;font-weight:700;color:var(--warning)">${i.rate?`~${i.rate}%`:'—'}</div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <div style="flex:1">
+          <div class="pbar" style="height:4px"><div class="pfill" style="width:${i.alloc}%;background:${tc}"></div></div>
+        </div>
+        <span style="font-size:10px;color:var(--text3);white-space:nowrap">${i.alloc.toFixed(1)}% del portafolio</span>
+      </div>
+    </div>`;
+  };
 
   // ── Tabs de meses: actual + 4 siguientes ─────────────────────────────────────
   const gbmMonthTabs = Array.from({length:5},(_,i)=>{
@@ -1283,7 +1333,7 @@ function renderGBM() {
         <div style="width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#0099ff,#00d4ff);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">📈</div>
         <div>
           <div style="font-size:14px;font-weight:800;color:#00d4ff;letter-spacing:-.2px">¿Cuánto inviertes esta semana?</div>
-          <div style="font-size:11px;color:rgba(255,255,255,.4);margin-top:1px">Tu sobrante semanal va directo a acciones de USA en GBM+</div>
+          <div style="font-size:11px;color:rgba(255,255,255,.4);margin-top:1px">Tu sobrante del salario va directo a acciones de USA en GBM+</div>
         </div>
       </div>
 
@@ -1368,21 +1418,21 @@ function renderGBM() {
     <!-- CONTENIDO DE CADA TAB -->
     ${[
       {num:1, label:'Semana 1 — Días 1–7', icon:'💰', active:cw===1,
-        ins:[{l:'Quincena 1 (BBVA)',a:QUINC},{l:'Didi (inicio semana)',a:weeklyDidi}],
+        ins:[{l:'Quincena 1 (BBVA)',a:QUINC}],
         outs:[
           {l:'Renta departamento (día 1)',a:RENTA,g:'vivienda'},
           {l:'Reserva Dolphin Mini (día 14)',a:AUTO,g:'auto'},
           {l:'Gastos variables est.',a:varPerWeek,g:'var'},
         ],
-        gbm:w1GBM, nota:'La quincena llega a BBVA. Se paga renta y se reserva el Dolphin Mini para el día 14. El Didi va directo a bolsa.'},
+        gbm:w1GBM, nota:'La quincena llega a BBVA. Se paga renta y se reserva el Dolphin Mini para el día 14. El sobrante va a GBM+.'},
       {num:2, label:'Semana 2 — Días 8–14', icon:'🚗', active:cw===2,
-        ins:[{l:'Didi (inicio semana)',a:weeklyDidi}],
+        ins:[],
         outs:[
           {l:'Dolphin Mini BYD (día 14)',a:AUTO,g:'auto'},
         ],
-        gbm:w2GBM, nota:'El Dolphin Mini se paga del saldo BBVA reservado de la quincena 1. Tu Didi va íntegro a la bolsa.'},
+        gbm:w2GBM, nota:'El Dolphin Mini se paga del saldo BBVA reservado de la semana 1. Sin ingresos esta semana.'},
       {num:3, label:'Semana 3 — Días 15–21', icon:'💳', active:cw===3,
-        ins:[{l:'Quincena 2 (BBVA)',a:QUINC},{l:'Didi (inicio semana)',a:weeklyDidi}],
+        ins:[{l:'Quincena 2 (BBVA)',a:QUINC}],
         outs:[
           {l:'CETES ahorro recurrente (día 15)',a:CETES_DIA15,g:'ahorro'},
           {l:'Plan de datos celular',a:SVC_CELULAR,g:'svc'},
@@ -1398,11 +1448,11 @@ function renderGBM() {
           ...(msiActive>0?[{l:'Cuotas MSI activas',a:Math.round(msiActive),g:'tc'}]:[]),
           {l:'Gastos variables est.',a:varPerWeek,g:'var'},
         ],
-        gbm:w3GBM, nota:'Llega la segunda quincena. Se apartan CETES, se pagan todos los servicios y TCs. El sobrante + Didi van a la bolsa.'},
+        gbm:w3GBM, nota:'Llega la segunda quincena. Se apartan CETES, se pagan todos los servicios y TCs. El sobrante va a GBM+.'},
       {num:4, label:'Semana 4 — Días 22–28', icon:'📊', active:cw===4,
-        ins:[{l:'Didi (inicio semana)',a:weeklyDidi}],
+        ins:[],
         outs:[],
-        gbm:w4GBM, nota:'Semana libre. No hay pagos fijos. Todo el Didi va directo a la bolsa.'},
+        gbm:w4GBM, nota:'Semana libre. Sin pagos fijos ni ingresos programados.'},
     ].map(w=>{
       const investAmt = w.active && efectivoSemana>0 ? efectivoSemana : w.gbm;
       const totIn  = w.ins.reduce((s,i)=>s+i.a,0);
@@ -1604,52 +1654,47 @@ function renderGBM() {
     <!-- LAYOUT PRINCIPAL: posiciones (izq) + panel (der) -->
     <div style="display:grid;grid-template-columns:1fr 340px;gap:14px;margin-bottom:16px;align-items:start">
 
-      <!-- POSICIONES -->
-      <div style="display:flex;flex-direction:column;gap:8px">
-        ${invsSorted.map((i,idx)=>{
-          const typeColors={cetes:'#00e87a',acciones:'#00d4ff',crypto:'#f7931a',fondos:'#b06eff',inmuebles:'#f59e0b',deuda:'#64748b',otro:'#94a3b8'};
-          const tc=typeColors[i.type]||'#94a3b8';
-          return `<div class="card" style="padding:14px;border-left:3px solid ${tc}">
-            <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:10px">
-              <div style="display:flex;align-items:center;gap:8px">
-                <div style="font-size:10px;padding:2px 8px;border-radius:4px;background:${tc}18;color:${tc};font-weight:700;border:1px solid ${tc}30">${ITYPE[i.type]||i.type}</div>
-                <div>
-                  <div style="font-size:14px;font-weight:700;color:var(--text)">${i.name}</div>
-                  ${i.date?`<div class="ts tm">Desde ${fmtDate(i.date)} · ${i.dias} días</div>`:''}
-                </div>
-              </div>
-              <div style="display:flex;gap:5px;flex-shrink:0">
-                <span class="chip ${i.roi>=0?'ch-up':'ch-dn'}" style="font-size:10px">${i.roi>=0?'↑':'↓'} ${Math.abs(i.roi).toFixed(2)}%</span>
-                <button class="btn btn-o btn-sm btn-ico" onclick="openInvModal('${i.id}')">✏️</button>
-                <button class="btn btn-o btn-sm btn-ico" onclick="askDel('inversión',()=>delInv('${i.id}'))">🗑️</button>
-              </div>
+      <!-- POSICIONES: dos grupos -->
+      <div style="display:flex;flex-direction:column;gap:20px">
+
+        <!-- GRUPO 1: Acciones en la bolsa -->
+        ${invsBolsa.length>0?`
+        <div>
+          <div style="display:flex;align-items:center;gap:10px;padding:11px 16px;background:rgba(0,212,255,.07);border-radius:12px;border:1px solid rgba(0,212,255,.18);margin-bottom:10px">
+            <span style="font-size:20px">📈</span>
+            <div style="flex:1">
+              <div style="font-size:13px;font-weight:800;color:var(--primary);letter-spacing:-.2px">Acciones en la bolsa</div>
+              <div style="font-size:10px;color:var(--text3);margin-top:1px">CETES · GBM+ · Mercados USA</div>
             </div>
-            <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;margin-bottom:8px">
-              <div style="background:rgba(255,255,255,.04);border-radius:7px;padding:8px 10px">
-                <div style="font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px">Capital</div>
-                <div style="font-size:13px;font-weight:700">${fmt(i.invested||0)}</div>
-              </div>
-              <div style="background:rgba(255,255,255,.04);border-radius:7px;padding:8px 10px">
-                <div style="font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px">Valor actual</div>
-                <div style="font-size:13px;font-weight:700;color:${tc}">${fmt(i.val)}</div>
-              </div>
-              <div style="background:${i.pnl>=0?'rgba(0,232,122,.06)':'rgba(255,59,107,.06)'};border-radius:7px;padding:8px 10px">
-                <div style="font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px">Ganancia/Pérdida</div>
-                <div style="font-size:13px;font-weight:700;color:${i.pnl>=0?'var(--success)':'var(--danger)'}">${i.pnl>=0?'+':''}${fmt(i.pnl)}</div>
-              </div>
-              <div style="background:rgba(255,255,255,.04);border-radius:7px;padding:8px 10px">
-                <div style="font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px">Rend. anual</div>
-                <div style="font-size:13px;font-weight:700;color:var(--warning)">${i.rate?`~${i.rate}%`:'—'}</div>
-              </div>
+            <div style="text-align:right">
+              <div style="font-size:17px;font-weight:900;color:var(--primary)">${fmt(totBolsa)}</div>
+              <div style="font-size:9px;color:var(--text3)">${invsBolsa.length} posición(es)</div>
             </div>
-            <div style="display:flex;align-items:center;gap:8px">
-              <div style="flex:1">
-                <div class="pbar" style="height:4px"><div class="pfill" style="width:${i.alloc}%;background:${tc}"></div></div>
-              </div>
-              <span style="font-size:10px;color:var(--text3);white-space:nowrap">${i.alloc.toFixed(1)}% del portafolio</span>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            ${invsBolsa.map(cardHTML).join('')}
+          </div>
+        </div>`:''}
+
+        <!-- GRUPO 2: Depósito de renta -->
+        ${invsRenta.length>0?`
+        <div>
+          <div style="display:flex;align-items:center;gap:10px;padding:11px 16px;background:rgba(255,217,61,.07);border-radius:12px;border:1px solid rgba(255,217,61,.2);margin-bottom:10px">
+            <span style="font-size:20px">🏠</span>
+            <div style="flex:1">
+              <div style="font-size:13px;font-weight:800;color:var(--warning);letter-spacing:-.2px">Depósito de renta</div>
+              <div style="font-size:10px;color:var(--text3);margin-top:1px">Garantía del departamento · capital bloqueado</div>
             </div>
-          </div>`;
-        }).join('')}
+            <div style="text-align:right">
+              <div style="font-size:17px;font-weight:900;color:var(--warning)">${fmt(totRenta)}</div>
+              <div style="font-size:9px;color:var(--text3)">no disponible</div>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            ${invsRenta.map(cardHTML).join('')}
+          </div>
+        </div>`:''}
+
       </div>
 
       <!-- PANEL DERECHO -->
@@ -1875,425 +1920,608 @@ function maybeRefreshIndicators() {
   if(document.getElementById('s-indicators')?.classList.contains('active')) renderIndicators();
 }
 
-// ─── INDICATORS ───────────────────────────────────────────────────────────────
-function renderIndicators() {
-  const BASE_INC = 43000 + (S.didiMonthly>0?S.didiMonthly:11200); // Si Vale excluido
-  const liqActivos = (S.activos||[]).filter(a=>a.type==='liquido').reduce((s,a)=>s+a.value,0) + (S.emergencyFund||0);
-  const finActivos = S.investments.reduce((s,i)=>s+i.value,0);
-  const fisActivos = (S.activos||[]).filter(a=>a.type!=='liquido').reduce((s,a)=>s+a.value,0);
-  const _btcHeldInd = (S.btcHistory||[]).reduce((s,h)=>s+(h.btc||0),0);
-  const _btcMXNInd  = _btcHeldInd * (S.currentBtcPrice||0) * (S.usdMxn||19.5);
-  const totalActivos = finActivos+liqActivos+fisActivos+_btcMXNInd;
-  const totalPasivos = S.debts.reduce((s,d)=>s+d.balance,0);
-  const netWorth = totalActivos-totalPasivos;
-  const totalMinPay = S.debts.reduce((s,d)=>s+(d.min||0),0);
-  const totalInvested = S.investments.reduce((s,i)=>s+(i.invested||0),0);
+// ─── AUTO-BALANCE DE DEUDAS ───────────────────────────────────────────────────
+// Calcula el saldo actual esperado de una deuda según fecha de inicio y pagos realizados.
+// Solo aplica para MSI (0%) y crédito automotriz. Las TC se quedan manuales.
+function autoBalance(d, refDate) {
+  // Solo auto-calcular MSI a 0% (deterministas: total − meses × cuota)
+  // Créditos con interés y TCs se quedan manuales — dependen de pagos reales hechos
+  if(!d.start || !d.balance || !d.min || d.rate !== 0 || d.type !== 'other') return d.balance;
+  const start = new Date(d.start);
+  const months = Math.max(0, Math.round((refDate - start) / (30.44 * 24 * 3600 * 1000)));
+  if(months === 0) return d.balance;
+  const cal = Math.max(0, (d.total || d.balance) - months * d.min);
+  return Math.min(d.balance, cal);
+}
 
-  const now=new Date();
-  const past3=Array.from({length:3},(_,i)=>{
-    const d=new Date(now.getFullYear(),now.getMonth()-i-1,1);
+// ─── INDICATORS ───────────────────────────────────────────────────────────────
+// Genera el HTML completo de indicadores a partir de cualquier fuente (S o snapshot)
+function renderIndicatorsHTML(src) {
+  const BASE_INC = 41000;
+  const now2 = new Date();
+  // Para la vista live, auto-calcular saldos de MSI y auto según tiempo transcurrido.
+  // Para snapshots (tienen savedAt), usar datos tal como fueron guardados.
+  const isSnapshot = !!src.savedAt;
+  const srcDebts = isSnapshot ? (src.debts||[]) :
+    (src.debts||[]).map(d => ({...d, balance: autoBalance(d, now2)}));
+  const liqActivos = (src.activos||[]).filter(a=>a.type==='liquido').reduce((s,a)=>s+a.value,0) + (src.emergencyFund||0);
+  const finActivos = (src.investments||[]).reduce((s,i)=>s+i.value,0);
+  const fisActivos = (src.activos||[]).filter(a=>a.type!=='liquido').reduce((s,a)=>s+a.value,0);
+  const btcHeld2   = (src.btcHistory||[]).reduce((s,h)=>s+(h.btc||0),0);
+  const btcValue2  = btcHeld2*(src.currentBtcPrice||0)*(src.usdMxn||19.5);
+  const totalActivos = finActivos+liqActivos+fisActivos+btcValue2;
+  const totalPasivos = srcDebts.reduce((s,d)=>s+d.balance,0);
+  const netWorth2   = totalActivos-totalPasivos;
+  const totalMinPay2= srcDebts.filter(d=>d.balance>0).reduce((s,d)=>s+(d.min||0),0);
+  const totalInvested2=(src.investments||[]).reduce((s,i)=>s+(i.invested||0),0);
+  const past3_2=Array.from({length:3},(_,i)=>{
+    const d=new Date(now2.getFullYear(),now2.getMonth()-i-1,1);
     return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
   });
-  const past3Exps=past3.map(m=>S.transactions.filter(t=>ym(t.date)===m&&t.type==='expense').reduce((ss,t)=>ss+t.amount,0));
-  const validExps=past3Exps.filter(e=>e>0);
-  const avgExp=validExps.length>0?validExps.reduce((s,e)=>s+e,0)/validExps.length:BASE_INC*0.75;
-
-  // ── Métricas ──
-  const dti        = (totalMinPay/BASE_INC)*100;
-  const savRate    = Math.max(0,((BASE_INC-avgExp)/BASE_INC)*100);
-  const d2a        = totalActivos>0?(totalPasivos/totalActivos)*100:100;
-  const solvency   = totalPasivos>0?totalActivos/totalPasivos:99;
-  const d2i        = totalPasivos/(BASE_INC*12);
-  const emergM     = avgExp>0?liqActivos/avgExp:0;
-  const efGoal     = (S.goals.find(g=>g.id==='ef-001')?.target)||10000;
-  const efPct      = Math.min(1,(S.emergencyFund||0)/efGoal); // % de la meta de fondo
-  const liqRatio   = totalMinPay>0?liqActivos/totalMinPay:null;
-  const inv2inc    = finActivos/(BASE_INC*12);
-  const roi        = totalInvested>0?((finActivos-totalInvested)/totalInvested)*100:0;
-  const maestria     = S.goals.find(g=>g.id==='g001')||S.goals.find(g=>g.icon==='🎓');
-  const totalBtcHeld = (S.btcHistory||[]).reduce((s,h)=>s+(h.btc||0),0);
-  const btcValue     = totalBtcHeld * (S.currentBtcPrice||0) * (S.usdMxn||19.5);
-  const maestriaBase = (S.emergencyFund||0) + finActivos + btcValue;
-  const mPct         = Math.min(100,(maestriaBase/(maestria?.target||300000))*100);
-
-  // ── Score ──
-  const sc={
-    dti:      dti<20?100:dti<30?80:dti<40?55:dti<50?30:5,
-    savings:  savRate>20?100:savRate>15?80:savRate>10?60:savRate>5?35:10,
-    emerg:    Math.max(
-                emergM>6?100:emergM>3?80:emergM>1?50:emergM>0.25?15:0,
-                efPct>=1?70:efPct>=0.75?50:efPct>=0.5?35:efPct>=0.25?20:efPct>0?10:0
-              ),
-    d2a:      d2a<30?100:d2a<50?75:d2a<70?45:d2a<90?20:0,
-    solvency: solvency>3?100:solvency>2?80:solvency>1.5?60:solvency>1?35:0,
+  // Para snapshots usamos avgExp guardado; para live calculamos de transacciones reales
+  // Fallback: gastos fijos conocidos + MSI activos + variable estimado (15%)
+  const _msiEst2=srcDebts.filter(d=>d.rate===0&&d.balance>0&&d.type==='other'&&d.start)
+    .reduce((s,d)=>{const st=new Date(d.start),tm=d.total>0&&d.min>0?Math.round(d.total/d.min):0;
+      const ed=new Date(st);ed.setMonth(ed.getMonth()+tm);return new Date()<ed?s+(d.min||0):s;},0);
+  const _fixedFloor2=11000+6700+(600+200+179+135+150)+(1500+380+50)+(1500+810)+1500+_msiEst2;
+  const _fallback2=_fixedFloor2+Math.round(BASE_INC*0.15); // +15% variable (comida, transporte, etc.)
+  const avgExp2 = src.avgExp !== undefined ? src.avgExp :
+    (()=>{
+      const vE=past3_2.map(m=>S.transactions.filter(t=>ym(t.date)===m&&t.type==='expense').reduce((s,t)=>s+t.amount,0)).filter(e=>e>0);
+      return vE.length>0?vE.reduce((s,e)=>s+e,0)/vE.length:_fallback2;
+    })();
+  const _avgExpIsEst2 = src.avgExp===undefined &&
+    (()=>{const vE=past3_2.map(m=>S.transactions.filter(t=>ym(t.date)===m&&t.type==='expense').reduce((s,t)=>s+t.amount,0)).filter(e=>e>0);return !vE.length;})();
+  const dti2        = (totalMinPay2/BASE_INC)*100;
+  const savRate2    = Math.max(0,((BASE_INC-avgExp2)/BASE_INC)*100);
+  const d2a2        = totalActivos>0?(totalPasivos/totalActivos)*100:100;
+  const solvency2   = totalPasivos>0?totalActivos/totalPasivos:99;
+  const d2i2        = totalPasivos/(BASE_INC*12);
+  const emergM2     = avgExp2>0?liqActivos/avgExp2:0;
+  const efGoal2     = 10000;
+  const efPct2      = Math.min(1,(src.emergencyFund||0)/efGoal2);
+  const liqRatio2   = totalMinPay2>0?liqActivos/totalMinPay2:null;
+  const inv2inc2    = finActivos/(BASE_INC*12);
+  const roi2        = totalInvested2>0?((finActivos-totalInvested2)/totalInvested2)*100:0;
+  const maestria2   = (src.goals||[]).find(g=>g.id==='g001')||(src.goals||[]).find(g=>g.icon==='🎓');
+  const maeBase2    = (src.emergencyFund||0)+finActivos+btcValue2;
+  const mPct2       = Math.min(100,(maeBase2/(maestria2?.target||300000))*100);
+  const sc2={
+    dti:dti2<20?100:dti2<30?80:dti2<40?55:dti2<50?30:5,
+    savings:savRate2>20?100:savRate2>15?80:savRate2>10?60:savRate2>5?35:10,
+    emerg:Math.max(emergM2>6?100:emergM2>3?80:emergM2>1?50:emergM2>0.25?15:0,efPct2>=1?70:efPct2>=0.75?50:efPct2>=0.5?35:efPct2>=0.25?20:efPct2>0?10:0),
+    d2a:d2a2<30?100:d2a2<50?75:d2a2<70?45:d2a2<90?20:0,
+    solvency:solvency2>3?100:solvency2>2?80:solvency2>1.5?60:solvency2>1?35:0,
   };
-  const score=Math.round(sc.dti*.28+sc.savings*.24+sc.emerg*.20+sc.d2a*.16+sc.solvency*.12);
-  const grade=score>=85?{g:'A',l:'Excelente',c:'var(--success)'}:
-              score>=70?{g:'B',l:'Bueno',c:'#3b82f6'}:
-              score>=55?{g:'C',l:'Aceptable',c:'var(--warning)'}:
-              score>=40?{g:'D',l:'Atención',c:'#f97316'}:
-                        {g:'F',l:'Crítico',c:'var(--danger)'};
+  const score2=Math.round(sc2.dti*.28+sc2.savings*.24+sc2.emerg*.20+sc2.d2a*.16+sc2.solvency*.12);
+  const grade2=score2>=85?{g:'A',l:'Excelente',c:'var(--success)'}:
+               score2>=70?{g:'B',l:'Bueno',c:'#3b82f6'}:
+               score2>=55?{g:'C',l:'Aceptable',c:'var(--warning)'}:
+               score2>=40?{g:'D',l:'Atención',c:'#f97316'}:
+                          {g:'F',l:'Crítico',c:'var(--danger)'};
 
-  // ── Helpers ──
-  const chip=(l,c)=>`<span style="padding:3px 10px;border-radius:20px;font-size:10px;font-weight:700;background:${c}22;color:${c};border:1px solid ${c}55;white-space:nowrap">${l}</span>`;
-  const stHi=(v,rules)=>{for(const r of rules)if(v>=r.min)return chip(r.l,r.c);return chip(rules[rules.length-1].l,rules[rules.length-1].c);};
-  const stLo=(v,rules)=>{for(const r of rules)if(v<=r.max)return chip(r.l,r.c);return chip(rules[rules.length-1].l,rules[rules.length-1].c);};
-
-  const C=(icon,name,value,formula,desc,benchmark,statusChip)=>`
+  const chip2=(l,c)=>`<span style="padding:3px 10px;border-radius:20px;font-size:10px;font-weight:700;background:${c}22;color:${c};border:1px solid ${c}55;white-space:nowrap">${l}</span>`;
+  const stHi2=(v,rules)=>{for(const r of rules)if(v>=r.min)return chip2(r.l,r.c);return chip2(rules[rules.length-1].l,rules[rules.length-1].c);};
+  const stLo2=(v,rules)=>{for(const r of rules)if(v<=r.max)return chip2(r.l,r.c);return chip2(rules[rules.length-1].l,rules[rules.length-1].c);};
+  const sec2=(label,col)=>`<div style="font-size:10px;font-weight:700;color:${col};text-transform:uppercase;letter-spacing:.1em;padding:18px 0 8px;display:flex;align-items:center;gap:7px">${label}</div>`;
+  const C2=(icon,name,value,formula,desc,benchmark,statusChip)=>`
     <div class="card">
       <div class="flex jb" style="margin-bottom:8px;align-items:flex-start;gap:8px">
         <div style="font-size:11px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.06em;line-height:1.4">${icon} ${name}</div>
         ${statusChip}
       </div>
       <div style="font-size:28px;font-weight:800;letter-spacing:-.5px;margin-bottom:10px;color:var(--text)">${value}</div>
-      <div style="font-size:10px;color:var(--primary);font-weight:600;padding:5px 10px;background:rgba(0,212,255,.06);border-radius:6px;font-family:monospace;margin-bottom:8px">
-        📐 ${formula}
-      </div>
+      <div style="font-size:10px;color:var(--primary);font-weight:600;padding:5px 10px;background:rgba(0,212,255,.06);border-radius:6px;font-family:monospace;margin-bottom:8px">📐 ${formula}</div>
       <div style="font-size:11px;color:var(--text2);margin-bottom:8px;line-height:1.55">${desc}</div>
-      <div style="font-size:10px;color:var(--text3);border-top:1px solid rgba(255,255,255,.06);padding-top:7px;line-height:1.8">${benchmark}</div>
+      <div style="font-size:10px;color:var(--text3);border-top:1px solid rgba(0,0,0,.07);padding-top:7px;line-height:1.8">${benchmark}</div>
     </div>`;
 
-  const sec=(label,col)=>`<div style="font-size:10px;font-weight:700;color:${col};text-transform:uppercase;letter-spacing:.1em;padding:18px 0 8px;display:flex;align-items:center;gap:7px">${label}</div>`;
+  const scColor2=s=>s>=80?'var(--success)':s>=50?'#f97316':'var(--danger)';
+  const roiBar2=Math.min(100,Math.max(0,roi2>=0?Math.min(100,roi2*6):0));
+  const roiCol2=roi2>=10?'var(--success)':roi2>=0?'#f97316':'var(--danger)';
+  const invCol2=inv2inc2>=1?'var(--success)':inv2inc2>=0.5?'#f97316':'var(--danger)';
+  const liqCol2=(liqRatio2||0)>=2?'var(--success)':(liqRatio2||0)>=1?'#f97316':'var(--danger)';
+  // Etiqueta de urgencia dinámica según valor actual
+  const urg=col=>col==='var(--danger)'?'🔴 Urgente':col==='#f97316'?'🟠 Atención':'✅ Bien';
 
-  const scoreExpl={
-    'Carga de deuda (DTI)':   'Qué % de tu ingreso mensual se va en pagar deudas. La barra llena significa que debes poco relativo a lo que ganas.',
-    'Tasa de ahorro':          'Qué % de tu ingreso te sobra libre cada mes. La barra llena significa que ahorras mucho.',
-    'Fondo de emergencia':     'Cuántos meses de gastos tienes cubiertos sin necesitar ingresos. La barra llena = 6 meses o más.',
-    'Deuda vs activos':        'Qué tan "prestado" está tu patrimonio. La barra llena significa que tienes pocas deudas respecto a tus bienes.',
-    'Solvencia':               'Cuántas veces tus activos cubren tus deudas. La barra llena significa que podrías pagar todo lo que debes y sobrar.',
-  };
-  const scoreRows=Object.entries({
-    'Carga de deuda (DTI)':[sc.dti,'28%'],
-    'Tasa de ahorro':[sc.savings,'24%'],
-    'Fondo de emergencia':[sc.emerg,'20%'],
-    'Deuda vs activos':[sc.d2a,'16%'],
-    'Solvencia':[sc.solvency,'12%'],
-  }).map(([n,[s,w]])=>`
+  // Ordenadas por prioridad financiera real (de más urgente a largo plazo)
+  const scoreRows2=[
+    // 1. Seguridad inmediata — sin esto todo lo demás se derrumba ante un imprevisto
+    {n:'Fondo de emergencia',      bar:sc2.emerg,    label:`${sc2.emerg}/100`,    detail:'peso 20%', col:scColor2(sc2.emerg),
+     expl:`Tienes ${fmt(liqActivos)} líquidos = ${emergM2.toFixed(1)} mes${emergM2!==1?'es':''} cubiertos. Meta: 3–6 meses de gastos.`},
+    // 2. Liquidez — capacidad de responder a compromisos sin ingresos
+    {n:'💧 Ratio de liquidez',     bar:Math.min(100,(liqRatio2||0)/3*100), label:`${(liqRatio2||0).toFixed(1)}x`, detail:'info', col:liqCol2,
+     expl:`Dinero líquido (${fmt(liqActivos)}) ÷ pagos mínimos/mes (${fmt(totalMinPay2)}). Cuántos meses puedes cubrir compromisos sin ingresos.`},
+    // 3. Carga de deuda — mayor peso en el score, impacta cada mes directamente
+    {n:'Carga de deuda (DTI)',     bar:sc2.dti,      label:`${sc2.dti}/100`,      detail:'peso 28%', col:scColor2(sc2.dti),
+     expl:`Tus pagos mínimos son ${fmt(totalMinPay2)}/mes — ${dti2.toFixed(1)}% de tus ingresos. Ideal: menos del 20%.`},
+    // 4. Tasa de ahorro — sin ahorro no hay crecimiento ni avance hacia metas
+    {n:'Tasa de ahorro',           bar:sc2.savings,  label:`${sc2.savings}/100`,  detail:'peso 24%', col:scColor2(sc2.savings),
+     expl:`Gastos prom.${_avgExpIsEst2?' est.':''}: ${fmt(Math.round(avgExp2))}/mes → te queda libre el ${savRate2.toFixed(1)}%${_avgExpIsEst2?' (est. con gastos fijos + 15% variable)':''}. Meta: >20%.`},
+    // 5. Deuda vs activos — qué tan "prestado" estás estructuralmente
+    {n:'Deuda vs activos',         bar:sc2.d2a,      label:`${sc2.d2a}/100`,      detail:'peso 16%', col:scColor2(sc2.d2a),
+     expl:`Tu deuda (${fmt(totalPasivos)}) es el ${d2a2.toFixed(1)}% de tus activos (${fmt(totalActivos)}). Ideal: menos del 30%.`},
+    // 6. Solvencia — capacidad de liquidar todo en un escenario extremo
+    {n:'Solvencia',                bar:sc2.solvency, label:`${sc2.solvency}/100`, detail:'peso 12%', col:scColor2(sc2.solvency),
+     expl:`Tus activos cubren ${solvency2.toFixed(2)}x tu deuda. ${solvency2>=1?'Si vendieras todo quedarías en positivo':'Aún tendrías deuda si vendieras todo'}.`},
+    // 7–8. Largo plazo — crecen solos con el tiempo conforme reduces deudas y acumulas inversiones
+    {n:'📈 ROI del portafolio',    bar:roiBar2,      label:`${roi2>=0?'+':''}${roi2.toFixed(2)}%`, detail:'largo plazo', col:roiCol2,
+     expl:`Rendimiento sobre el capital invertido (${fmt(totalInvested2)} invertido → ${fmt(finActivos)} valor actual).`},
+    {n:'💼 Inv. vs ingreso anual', bar:Math.min(100,inv2inc2/25*100), label:`${inv2inc2.toFixed(2)}x`, detail:'largo plazo', col:invCol2,
+     expl:`Activos financieros (${fmt(finActivos)}) ÷ ingreso anual (${fmt(BASE_INC*12)}). Independencia financiera = 25x. Vas en ${(inv2inc2/25*100).toFixed(1)}%.`},
+  ].map(({n,bar,label,detail,col,expl})=>`
     <div style="margin-bottom:11px">
-      <div class="flex jb" style="margin-bottom:2px">
-        <span style="font-size:11px;font-weight:600;color:var(--text2)">${n}</span>
-        <span style="font-size:11px;font-weight:700;color:${s>=80?'var(--success)':s>=50?'var(--warning)':'var(--danger)'}">
-          ${s}/100 <span style="font-size:9px;color:var(--text3)">peso ${w}</span>
-        </span>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px;gap:6px">
+        <span style="font-size:11px;font-weight:600;color:var(--text);flex:1">${n}</span>
+        <span style="font-size:9px;font-weight:700;color:${col};white-space:nowrap">${urg(col)}</span>
+        <span style="font-size:11px;font-weight:700;color:${col};white-space:nowrap">${label} <span style="font-size:9px;color:var(--text3)">${detail}</span></span>
       </div>
-      <div class="pbar" style="height:5px;margin-bottom:3px"><div class="pfill" style="width:${s}%;background:${s>=80?'var(--success)':s>=50?'var(--warning)':'var(--danger)'}"></div></div>
-      <div style="font-size:9px;color:var(--text3);line-height:1.4">${scoreExpl[n]}</div>
+      <div class="pbar" style="height:5px;margin-bottom:4px"><div class="pfill" style="width:${bar}%;background:${col}"></div></div>
+      <div style="font-size:9px;color:var(--text3);line-height:1.5">${expl}</div>
     </div>`).join('');
 
-  document.getElementById('ind-body').innerHTML=`
-    <!-- ── CARD 1: SCORE ── -->
+  // Metas de ahorro
+  const goals2=(src.goals||[]).filter(g=>g.id!=='g002');
+  const logradas2=goals2.filter(g=>g.target>0&&(g.current||0)>=g.target).length;
+  const cetesV2 =(src.investments||[]).filter(i=>i.type==='cetes').reduce((s,i)=>s+i.value,0);
+  const accV2   =(src.investments||[]).filter(i=>i.type==='acciones').reduce((s,i)=>s+i.value,0);
+  const rentaV2 =(src.investments||[]).filter(i=>i.type==='otro').reduce((s,i)=>s+i.value,0);
+  const efV2    =src.emergencyFund||0;
+
+  // Deudas sin auto
+  const allActive2=srcDebts.filter(d=>d.balance>0);
+  const debts2=allActive2.filter(d=>d.type!=='car');
+  const totalDebt2=debts2.reduce((s,d)=>s+d.balance,0);
+  const totalOrig2=debts2.reduce((s,d)=>s+(d.total||d.balance),0);
+  const totalPaid2=totalOrig2-totalDebt2;
+  const totalPct2=totalOrig2>0?Math.min(100,totalPaid2/totalOrig2*100):0;
+
+  // Auto
+  const auto2=srcDebts.find(d=>d.type==='car'&&d.balance>0);
+
+  return `
     <div class="card card-hi" style="margin-bottom:14px">
       <div style="display:flex;align-items:center;gap:20px;flex-wrap:wrap">
         <div style="display:flex;align-items:center;gap:14px;flex-shrink:0">
-          <div style="width:64px;height:64px;border-radius:16px;background:${grade.c}22;border:2px solid ${grade.c}55;display:flex;align-items:center;justify-content:center;box-shadow:0 0 20px ${grade.c}33">
-            <span style="font-size:38px;font-weight:900;color:${grade.c};line-height:1">${grade.g}</span>
+          <div style="width:64px;height:64px;border-radius:16px;background:${grade2.c}22;border:2px solid ${grade2.c}55;display:flex;align-items:center;justify-content:center;box-shadow:0 0 20px ${grade2.c}33">
+            <span style="font-size:38px;font-weight:900;color:${grade2.c};line-height:1">${grade2.g}</span>
           </div>
           <div>
             <div style="font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:2px">⚡ Score Financiero</div>
-            <div style="font-size:26px;font-weight:800;color:${grade.c};line-height:1">${score}<span style="font-size:13px;opacity:.5">/100</span></div>
-            <div style="font-size:12px;font-weight:600;color:${grade.c};margin-top:1px">${grade.l}</div>
+            <div style="font-size:26px;font-weight:800;color:${grade2.c};line-height:1">${score2}<span style="font-size:13px;opacity:.5">/100</span></div>
+            <div style="font-size:12px;font-weight:600;color:${grade2.c};margin-top:1px">${grade2.l}</div>
           </div>
         </div>
-        <div style="flex:1;min-width:200px">${scoreRows}</div>
+        <div style="flex:1;min-width:200px">${scoreRows2}</div>
       </div>
     </div>
 
-    <!-- ── CARD 2: METAS ── -->
-    ${(()=>{
-      const goals = (S.goals||[]).filter(g=>g.id!=='g002');
-      if(!goals.length) return '';
-      const logradas = goals.filter(g=>g.target>0&&(g.current||0)>=g.target).length;
-      return `<div class="card" style="margin-bottom:14px;border-left:4px solid var(--primary);background:rgba(0,212,255,.03)">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
-          <div style="display:flex;align-items:center;gap:10px">
-            <div style="width:32px;height:32px;border-radius:8px;background:rgba(0,212,255,.12);display:flex;align-items:center;justify-content:center;font-size:16px">🎯</div>
-            <div>
-              <div style="font-size:13px;font-weight:800;color:var(--primary)">Metas de Ahorro</div>
-              <div style="font-size:10px;color:var(--text3);margin-top:1px">${logradas} de ${goals.length} logradas</div>
-            </div>
-          </div>
-          <button class="btn btn-p btn-sm" style="font-size:10px;padding:3px 10px" onclick="openGoalModal()">+ Nueva</button>
+    ${goals2.length?`<div class="card" style="margin-bottom:14px;border-left:4px solid var(--primary);background:rgba(0,212,255,.03)">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+        <div style="display:flex;align-items:center;gap:10px">
+          <div style="width:32px;height:32px;border-radius:8px;background:rgba(0,212,255,.12);display:flex;align-items:center;justify-content:center;font-size:16px">🎯</div>
+          <div><div style="font-size:13px;font-weight:800;color:var(--primary)">Metas de Ahorro</div>
+          <div style="font-size:10px;color:var(--text3);margin-top:1px">${logradas2} de ${goals2.length} logradas</div></div>
         </div>
-        <div style="display:flex;flex-direction:column;gap:9px">
-            ${(()=>{
-              const cetesV = S.investments.filter(i=>i.type==='cetes').reduce((s,i)=>s+i.value,0);
-              const invV   = S.investments.filter(i=>i.type!=='cetes').reduce((s,i)=>s+i.value,0);
-              const btcHld = (S.btcHistory||[]).reduce((s,h)=>s+(h.btc||0),0);
-              const btcV   = btcHld*(S.currentBtcPrice||0)*(S.usdMxn||19.5);
-              const efV    = S.emergencyFund||0;
-              return goals.map(g=>{
-                const isMae = g.id==='g001'||g.icon==='🎓';
-                const cur   = isMae?(efV+cetesV+invV+btcV):(g.current||0);
-                const pct   = g.target>0?Math.min(100,cur/g.target*100):0;
-                const col   = pct>=100?'var(--success)':pct>=75?'#3b82f6':pct>=50?'var(--warning)':'var(--danger)';
-                const falta = Math.max(0,(g.target||0)-cur);
-                const segs  = isMae?[
-                  {a:efV,  col:'#00e87a', l:'Fondo emerg.'},
-                  {a:cetesV,col:'#3b82f6',l:'CETES'},
-                  {a:invV, col:'#b06eff', l:'Acciones'},
-                  {a:btcV, col:'#f7931a', l:'BTC'},
-                ].filter(s=>s.a>0):null;
-                return `<div>
-                  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
-                    <span style="font-size:12px;font-weight:600;color:var(--text)">${g.icon||'🎯'} ${g.name}</span>
-                    <div style="display:flex;align-items:center;gap:12px;flex-shrink:0">
-                      <span style="font-size:10px;color:var(--text3)">${fmt(cur)}<span style="opacity:.6"> / ${fmt(g.target||0)}</span></span>
-                      <span style="font-size:11px;font-weight:700;color:${col};min-width:36px;text-align:right">${pct.toFixed(0)}%</span>
-                      <span style="font-size:10px;color:${pct>=100?'var(--success)':'var(--text3)'}">
-                        ${pct>=100?'✅ lograda':'−'+fmt(falta)}
-                      </span>
-                    </div>
-                  </div>
-                  ${segs?`
-                  <!-- Barra segmentada Maestría -->
-                  <div style="height:5px;border-radius:20px;overflow:hidden;background:rgba(255,255,255,.08);display:flex">
-                    ${segs.map(s=>{
-                      const sw=Math.min(100,s.a/(g.target||300000)*100);
-                      return sw>0?`<div style="width:${sw}%;background:${s.col};height:100%" title="${s.l}: ${fmt(s.a)}"></div>`:'';
-                    }).join('')}
-                  </div>
-                  <!-- Leyenda -->
-                  <div style="display:flex;gap:8px;margin-top:4px;flex-wrap:wrap">
-                    ${segs.map(s=>`<span style="font-size:9px;color:${s.col}">■ ${s.l} ${fmt(s.a)}</span>`).join('')}
-                  </div>`:`
-                  <div class="pbar" style="height:5px"><div class="pfill" style="width:${pct}%;background:${col}"></div></div>`}
-                </div>`;
-              }).join('');
-            })()}
-          </div>
-        </div>`;
-      })()}
-
-    <!-- ── CARD 3: DEUDAS (sin auto) ── -->
-    ${(()=>{
-      const allActive = (S.debts||[]).filter(d=>d.balance>0);
-      const debts = allActive.filter(d=>d.type!=='car');
-      if(!debts.length) return '';
-      const totalDebt = debts.reduce((s,d)=>s+d.balance,0);
-      const totalOrig = debts.reduce((s,d)=>s+(d.total||d.balance),0);
-      const totalPaid = totalOrig-totalDebt;
-      const totalPct  = totalOrig>0?Math.min(100,totalPaid/totalOrig*100):0;
-      return `<div class="card" style="margin-bottom:14px;border-left:4px solid var(--danger);background:rgba(255,59,107,.03)">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
-          <div style="display:flex;align-items:center;gap:10px">
-            <div style="width:32px;height:32px;border-radius:8px;background:rgba(255,59,107,.12);display:flex;align-items:center;justify-content:center;font-size:16px">💳</div>
-            <div>
-              <div style="font-size:13px;font-weight:800;color:var(--danger)">Tarjetas y créditos</div>
-              <div style="font-size:10px;color:var(--text3);margin-top:1px">${debts.length} obligaciones activas</div>
-            </div>
-          </div>
-          <div style="display:flex;gap:16px;font-size:11px;color:var(--text2);flex-wrap:wrap">
-            <span><span style="color:var(--danger);font-weight:700">${fmt(totalDebt)}</span> pendiente</span>
-            <span><span style="color:var(--success);font-weight:700">${fmt(totalPaid)}</span> pagado</span>
-            <span style="font-weight:700;color:var(--success)">${totalPct.toFixed(1)}%</span>
-          </div>
-        </div>
-        <div class="pbar" style="height:6px;margin-bottom:14px"><div class="pfill" style="width:${totalPct}%;background:linear-gradient(90deg,var(--success),#3b82f6)"></div></div>
-        <div style="display:flex;flex-direction:column;gap:9px">
-          ${debts.map(d=>{
-            const orig  = d.total||d.balance;
-            const pct   = orig>0?Math.min(100,(orig-d.balance)/orig*100):0;
-            const col   = pct>=75?'var(--success)':pct>=50?'#3b82f6':pct>=25?'var(--warning)':'var(--danger)';
-            const icon  = d.type==='credit_card'?'💳':d.type==='mortgage'?'🏠':d.type==='loan'?'💰':'📋';
-            const meses = d.min>0?Math.ceil(d.balance/d.min):null;
-            return `<div>
-              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
-                <span style="font-size:12px;font-weight:600;color:var(--text)">${icon} ${d.name}</span>
-                <div style="display:flex;align-items:center;gap:12px;flex-shrink:0">
-                  ${d.rate>0?`<span style="font-size:10px;color:var(--text3)">${d.rate}% anual</span>`:''}
-                  ${meses?`<span style="font-size:10px;color:var(--warning)">~${meses} meses</span>`:''}
-                  <span style="font-size:10px;color:var(--danger);font-weight:600">${fmt(d.balance)}</span>
-                  <span style="font-size:11px;font-weight:700;color:${col};min-width:38px;text-align:right">${pct.toFixed(0)}%</span>
-                </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:9px">
+        ${goals2.map(g=>{
+          const isMae=g.id==='g001'||g.icon==='🎓';
+          const cur=isMae?(efV2+cetesV2+accV2+rentaV2+btcValue2):(g.current||0);
+          const pct=g.target>0?Math.min(100,cur/g.target*100):0;
+          const col=pct>=100?'var(--success)':pct>=75?'#3b82f6':pct>=50?'var(--warning)':'var(--danger)';
+          const falta=Math.max(0,(g.target||0)-cur);
+          const segs=isMae?[
+            {a:efV2,col:'#00e87a',l:'Fondo emerg.'},{a:cetesV2,col:'#3b82f6',l:'CETES'},
+            {a:accV2,col:'#b06eff',l:'Acciones'},{a:rentaV2,col:'#f59e0b',l:'Dep. renta'},
+            {a:btcValue2,col:'#f7931a',l:'BTC'},
+          ].filter(s=>s.a>0):null;
+          return `<div>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+              <span style="font-size:12px;font-weight:600;color:var(--text)">${g.icon||'🎯'} ${g.name}</span>
+              <div style="display:flex;align-items:center;gap:12px;flex-shrink:0">
+                <span style="font-size:10px;color:var(--text3)">${fmt(cur)}<span style="opacity:.6"> / ${fmt(g.target||0)}</span></span>
+                <span style="font-size:11px;font-weight:700;color:${col};min-width:36px;text-align:right">${pct.toFixed(0)}%</span>
+                <span style="font-size:10px;color:${pct>=100?'var(--success)':'var(--text3)'}">${pct>=100?'✅ lograda':'−'+fmt(falta)}</span>
               </div>
-              <div class="pbar" style="height:5px"><div class="pfill" style="width:${pct}%;background:${col}"></div></div>
-            </div>`;
-          }).join('')}
-        </div>
-      </div>`;
-    })()}
-
-    <!-- ── CARD 4: CRÉDITO AUTOMOTRIZ ── -->
-    ${(()=>{
-      const auto = (S.debts||[]).find(d=>d.type==='car'&&d.balance>0);
-      if(!auto) return '';
-      const orig   = auto.total||auto.balance;
-      const paid   = orig - auto.balance;
-      const pct    = orig>0?Math.min(100,(paid/orig)*100):0;
-      const meses  = auto.min>0?Math.ceil(auto.balance/auto.min):null;
-      const intTotal = auto.balance * (auto.rate/100); // interés anual estimado
-      return `<div class="card" style="margin-bottom:14px;border-left:4px solid var(--warning);background:rgba(255,217,61,.02)">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-          <div style="display:flex;align-items:center;gap:10px">
-            <div style="width:32px;height:32px;border-radius:8px;background:rgba(255,217,61,.12);display:flex;align-items:center;justify-content:center;font-size:16px">🚗</div>
-            <div>
-              <div style="font-size:13px;font-weight:800;color:var(--warning)">Crédito Automotriz</div>
-              <div style="font-size:10px;color:var(--text3);margin-top:1px">${auto.name} · ${auto.rate}% anual</div>
             </div>
-          </div>
-          <span class="badge b-n" style="font-size:10px">Separado del resto</span>
-        </div>
+            ${segs?`<div style="height:5px;border-radius:20px;overflow:hidden;background:rgba(0,0,0,.1);display:flex">
+              ${segs.map(s=>{const sw=Math.min(100,s.a/(g.target||300000)*100);return sw>0?`<div style="width:${sw}%;background:${s.col};height:100%"></div>`:''}).join('')}
+            </div>
+            <div style="display:flex;gap:8px;margin-top:4px;flex-wrap:wrap">
+              ${segs.map(s=>`<span style="font-size:9px;color:${s.col}">■ ${s.l} ${fmt(s.a)}</span>`).join('')}
+            </div>`:`<div class="pbar" style="height:5px"><div class="pfill" style="width:${pct}%;background:${col}"></div></div>`}
+          </div>`;
+        }).join('')}
+      </div>
+    </div>`:''}
 
-        <!-- KPIs del auto -->
-        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px">
-          <div style="background:rgba(255,255,255,.04);border-radius:8px;padding:10px;text-align:center">
-            <div style="font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px">Deuda original</div>
-            <div style="font-size:14px;font-weight:800;color:var(--text)">${fmt(orig)}</div>
-          </div>
-          <div style="background:rgba(255,59,107,.07);border-radius:8px;padding:10px;text-align:center">
-            <div style="font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px">Saldo pendiente</div>
-            <div style="font-size:14px;font-weight:800;color:var(--danger)">${fmt(auto.balance)}</div>
-          </div>
-          <div style="background:rgba(0,232,122,.07);border-radius:8px;padding:10px;text-align:center">
-            <div style="font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px">Ya pagado</div>
-            <div style="font-size:14px;font-weight:800;color:var(--success)">${fmt(paid)}</div>
-          </div>
-          <div style="background:rgba(255,217,61,.07);border-radius:8px;padding:10px;text-align:center">
-            <div style="font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px">Mensualidad</div>
-            <div style="font-size:14px;font-weight:800;color:var(--warning)">${fmt(auto.min)}</div>
-          </div>
+    ${debts2.length?`<div class="card" style="margin-bottom:14px;border-left:4px solid var(--danger);background:rgba(255,59,107,.03)">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <div style="display:flex;align-items:center;gap:10px">
+          <div style="width:32px;height:32px;border-radius:8px;background:rgba(255,59,107,.12);display:flex;align-items:center;justify-content:center;font-size:16px">💳</div>
+          <div><div style="font-size:13px;font-weight:800;color:var(--danger)">Tarjetas y créditos</div>
+          <div style="font-size:10px;color:var(--text3);margin-top:1px">${debts2.length} obligaciones activas</div></div>
         </div>
-
-        <!-- Barra de progreso -->
-        <div style="margin-bottom:10px">
-          <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--text3);margin-bottom:5px">
-            <span>Progreso pagado</span>
-            <span style="font-weight:700;color:var(--warning)">${pct.toFixed(1)}%</span>
-          </div>
-          <div class="pbar" style="height:8px">
-            <div class="pfill" style="width:${pct}%;background:linear-gradient(90deg,var(--warning),var(--success))"></div>
-          </div>
+        <div style="display:flex;gap:16px;font-size:11px;color:var(--text2);flex-wrap:wrap">
+          <span><span style="color:var(--danger);font-weight:700">${fmt(totalDebt2)}</span> pendiente</span>
+          <span><span style="color:var(--success);font-weight:700">${fmt(totalPaid2)}</span> pagado</span>
+          <span style="font-weight:700;color:var(--success)">${totalPct2.toFixed(1)}%</span>
         </div>
+      </div>
+      <div class="pbar" style="height:6px;margin-bottom:14px"><div class="pfill" style="width:${totalPct2}%;background:linear-gradient(90deg,var(--success),#3b82f6)"></div></div>
+      <div style="display:flex;flex-direction:column;gap:9px">
+        ${debts2.map(d=>{
+          const orig=d.total||d.balance;
+          const pct=orig>0?Math.min(100,(orig-d.balance)/orig*100):0;
+          const col=pct>=75?'var(--success)':pct>=50?'#3b82f6':pct>=25?'var(--warning)':'var(--danger)';
+          const icon=d.type==='credit_card'?'💳':d.type==='mortgage'?'🏠':d.type==='loan'?'💰':'📋';
+          const meses=d.min>0?Math.ceil(d.balance/d.min):null;
+          return `<div>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+              <span style="font-size:12px;font-weight:600;color:var(--text)">${icon} ${d.name}</span>
+              <div style="display:flex;align-items:center;gap:10px">
+                ${d.rate>0?`<span style="font-size:10px;color:var(--text3)">${d.rate}% anual</span>`:''}
+                ${meses?`<span style="font-size:10px;color:${meses<=3?'var(--success)':meses<=12?'#3b82f6':'var(--text3)'}">~${meses} meses</span>`:''}
+                <span style="font-size:10px;color:var(--danger);font-weight:600">${fmt(d.balance)}</span>
+                <span style="font-size:11px;font-weight:700;color:${col};min-width:38px;text-align:right">${pct.toFixed(0)}%</span>
+              </div>
+            </div>
+            <div class="pbar" style="height:5px"><div class="pfill" style="width:${pct}%;background:${col}"></div></div>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>`:''}
 
-        <!-- Stats adicionales -->
-        <div style="display:flex;gap:16px;flex-wrap:wrap;font-size:11px;color:var(--text2);padding-top:10px;border-top:1px solid rgba(255,255,255,.06)">
+    ${auto2?`<div class="card" style="margin-bottom:14px;border-left:4px solid var(--warning);background:rgba(255,217,61,.02)">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+        <div style="display:flex;align-items:center;gap:10px">
+          <div style="width:32px;height:32px;border-radius:8px;background:rgba(255,217,61,.12);display:flex;align-items:center;justify-content:center;font-size:16px">🚗</div>
+          <div><div style="font-size:13px;font-weight:800;color:var(--warning)">Crédito Automotriz</div>
+          <div style="font-size:10px;color:var(--text3);margin-top:1px">${auto2.name} · ${auto2.rate}% anual</div></div>
+        </div>
+        <span class="badge b-n" style="font-size:10px">Separado del resto</span>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px">
+        <div style="background:rgba(0,0,0,.03);border-radius:8px;padding:10px;text-align:center"><div style="font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px">Deuda original</div><div style="font-size:14px;font-weight:800">${fmt(auto2.total||auto2.balance)}</div></div>
+        <div style="background:rgba(255,59,107,.07);border-radius:8px;padding:10px;text-align:center"><div style="font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px">Saldo pendiente</div><div style="font-size:14px;font-weight:800;color:var(--danger)">${fmt(auto2.balance)}</div></div>
+        <div style="background:rgba(0,232,122,.07);border-radius:8px;padding:10px;text-align:center"><div style="font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px">Ya pagado</div><div style="font-size:14px;font-weight:800;color:var(--success)">${fmt((auto2.total||auto2.balance)-auto2.balance)}</div></div>
+        <div style="background:rgba(255,217,61,.07);border-radius:8px;padding:10px;text-align:center"><div style="font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px">Mensualidad</div><div style="font-size:14px;font-weight:800;color:var(--warning)">${fmt(auto2.min)}</div></div>
+      </div>
+      ${(()=>{const orig=auto2.total||auto2.balance,paid=orig-auto2.balance,pct=orig>0?Math.min(100,paid/orig*100):0,meses=auto2.min>0?Math.ceil(auto2.balance/auto2.min):null;
+      return `<div style="margin-bottom:10px"><div style="display:flex;justify-content:space-between;font-size:10px;color:var(--text3);margin-bottom:5px"><span>Progreso pagado</span><span style="font-weight:700;color:var(--warning)">${pct.toFixed(1)}%</span></div>
+        <div class="pbar" style="height:8px"><div class="pfill" style="width:${pct}%;background:linear-gradient(90deg,var(--warning),var(--success))"></div></div></div>
+        <div style="display:flex;gap:16px;flex-wrap:wrap;font-size:11px;color:var(--text2);padding-top:10px;border-top:1px solid rgba(0,0,0,.07)">
           ${meses?`<span>⏱️ <strong style="color:var(--text)">${meses} meses</strong> restantes (~${Math.round(meses/12*10)/10} años)</span>`:''}
-          <span>💸 Interés anual est. <strong style="color:var(--danger)">${fmt(Math.round(auto.balance*(auto.rate/100)))}</strong></span>
-          ${auto.day?`<span>📅 Corte día <strong style="color:var(--text)">${auto.day}</strong></span>`:''}
-        </div>
-      </div>`;
-    })()}
+          <span>💸 Interés anual est. <strong style="color:var(--danger)">${fmt(Math.round(auto2.balance*(auto2.rate/100)))}</strong></span>
+          ${auto2.day?`<span>📅 Corte día <strong>${auto2.day}</strong></span>`:''}
+        </div>`;})()}
+    </div>`:''}
 
-    ${sec('💧 Liquidez y Emergencia','var(--primary)')}
+    ${sec2('💧 Liquidez y Emergencia','var(--primary)')}
     <div class="g2" style="margin-bottom:4px">
-      ${C('🆘','Fondo de Emergencia',`${fmt(S.emergencyFund||0)} — ${(efPct*100).toFixed(0)}% de meta`,
+      ${C2('🆘','Fondo de Emergencia',`${fmt(src.emergencyFund||0)} — ${(efPct2*100).toFixed(0)}% de meta`,
         '(Fondo emergencia + Líquidos) ÷ Gasto mensual promedio',
-        `Meta: ${fmt(efGoal)} · Ahorrado: ${fmt(S.emergencyFund||0)} · Cobertura: ${emergM.toFixed(2)} meses de gastos. Score combina el avance hacia tu meta ($${(efGoal/1000).toFixed(0)}K) y los meses de gastos cubiertos.`,
+        `Meta: ${fmt(efGoal2)} · Ahorrado: ${fmt(src.emergencyFund||0)} · Cobertura: ${emergM2.toFixed(2)} meses de gastos.`,
         '✅ Meta completa (≥100%) — Excelente &nbsp;·&nbsp; 🟡 Meta al 50–75% — Buen avance &nbsp;·&nbsp; ⚠️ Meta al 25–50% — En progreso &nbsp;·&nbsp; 🔴 &lt;25% — Inicio',
-        efPct>=1?chip('Meta alcanzada ✅','var(--success)'):efPct>=0.75?chip(`${(efPct*100).toFixed(0)}% de meta`,'#3b82f6'):efPct>=0.5?chip(`${(efPct*100).toFixed(0)}% de meta`,'var(--warning)'):chip(`${(efPct*100).toFixed(0)}% de meta`,'var(--danger)'))}
-      ${C('💧','Ratio de Liquidez',liqRatio!==null?`${liqRatio.toFixed(2)}x`:'N/A',
+        efPct2>=1?chip2('Meta alcanzada ✅','var(--success)'):efPct2>=0.75?chip2(`${(efPct2*100).toFixed(0)}% de meta`,'#3b82f6'):efPct2>=0.5?chip2(`${(efPct2*100).toFixed(0)}% de meta`,'var(--warning)'):chip2(`${(efPct2*100).toFixed(0)}% de meta`,'var(--danger)'))}
+      ${C2('💧','Ratio de Liquidez',liqRatio2!==null?`${liqRatio2.toFixed(2)}x`:'N/A',
         'Activos líquidos ÷ Pagos mínimos mensuales',
-        'Cuántas veces puedes cubrir todas tus obligaciones de deuda en un mes usando solo tu efectivo disponible. Mide tu capacidad de reacción ante imprevistos.',
+        'Cuántas veces puedes cubrir todas tus obligaciones de deuda usando solo tu efectivo disponible.',
         '✅ ≥3x — Excelente &nbsp;·&nbsp; 🟡 1–3x — Aceptable &nbsp;·&nbsp; 🔴 &lt;1x — Riesgo de liquidez',
-        liqRatio!==null?stHi(liqRatio,[{min:3,l:'Excelente',c:'var(--success)'},{min:1,l:'Aceptable',c:'var(--warning)'},{min:0,l:'Riesgo',c:'var(--danger)'}]):chip('Sin deudas','var(--success)'))}
+        liqRatio2!==null?stHi2(liqRatio2,[{min:3,l:'Excelente',c:'var(--success)'},{min:1,l:'Aceptable',c:'var(--warning)'},{min:0,l:'Riesgo',c:'var(--danger)'}]):chip2('Sin deudas','var(--success)'))}
     </div>
 
-    ${sec('🏦 Endeudamiento','var(--warning)')}
+    ${sec2('🏦 Endeudamiento','var(--warning)')}
     <div class="g2" style="margin-bottom:4px">
-      ${C('📊','Carga de Deuda — DTI',`${dti.toFixed(1)}%`,
+      ${C2('📊','Carga de Deuda — DTI',`${dti2.toFixed(1)}%`,
         'Σ Pagos mínimos mensuales ÷ Ingreso mensual × 100',
-        'Porcentaje del ingreso que va a pagar deudas cada mes. Es el indicador principal que usan bancos y asesores para evaluar salud financiera. Por encima del 40% es zona de riesgo.',
+        'Porcentaje del ingreso que va a pagar deudas cada mes.',
         '✅ &lt;20% — Excelente &nbsp;·&nbsp; 🟢 20–30% — Bueno &nbsp;·&nbsp; 🟡 30–40% — Moderado &nbsp;·&nbsp; 🔴 &gt;40% — Alto riesgo',
-        stLo(dti,[{max:20,l:'Excelente',c:'var(--success)'},{max:30,l:'Bueno',c:'#3b82f6'},{max:40,l:'Moderado',c:'var(--warning)'},{max:999,l:'Alto riesgo',c:'var(--danger)'}]))}
-      ${C('⚖️','Deuda vs Activos',`${d2a.toFixed(1)}%`,
+        stLo2(dti2,[{max:20,l:'Excelente',c:'var(--success)'},{max:30,l:'Bueno',c:'#3b82f6'},{max:40,l:'Moderado',c:'var(--warning)'},{max:999,l:'Alto riesgo',c:'var(--danger)'}]))}
+      ${C2('⚖️','Deuda vs Activos',`${d2a2.toFixed(1)}%`,
         'Deuda total ÷ Activos totales × 100',
-        'Qué porcentaje de tus activos está financiado con deuda. Indica qué tan "prestado" está tu patrimonio. Un banco sano opera con menos del 80%.',
+        'Qué porcentaje de tus activos está financiado con deuda.',
         '✅ &lt;30% — Excelente &nbsp;·&nbsp; 🟡 30–60% — Moderado &nbsp;·&nbsp; ⚠️ 60–80% — Alto &nbsp;·&nbsp; 🔴 &gt;80% — Crítico',
-        stLo(d2a,[{max:30,l:'Excelente',c:'var(--success)'},{max:60,l:'Moderado',c:'var(--warning)'},{max:80,l:'Alto',c:'#f97316'},{max:999,l:'Crítico',c:'var(--danger)'}]))}
-      ${C('🔢','Multiplicador de Deuda',`${d2i.toFixed(2)}x`,
+        stLo2(d2a2,[{max:30,l:'Excelente',c:'var(--success)'},{max:60,l:'Moderado',c:'var(--warning)'},{max:80,l:'Alto',c:'#f97316'},{max:999,l:'Crítico',c:'var(--danger)'}]))}
+      ${C2('🔢','Multiplicador de Deuda',`${d2i2.toFixed(2)}x`,
         'Deuda total ÷ Ingreso anual estimado',
-        'Cuántos años de ingreso completo necesitarías para pagar toda tu deuda de golpe. Refleja la magnitud de tu deuda relativa a tu capacidad de generación.',
+        'Cuántos años de ingreso necesitarías para pagar toda tu deuda de golpe.',
         '✅ &lt;1x — Excelente &nbsp;·&nbsp; 🟡 1–2x — Moderado &nbsp;·&nbsp; ⚠️ 2–4x — Alto &nbsp;·&nbsp; 🔴 &gt;4x — Muy alto',
-        stLo(d2i,[{max:1,l:'Excelente',c:'var(--success)'},{max:2,l:'Moderado',c:'var(--warning)'},{max:4,l:'Alto',c:'#f97316'},{max:999,l:'Muy alto',c:'var(--danger)'}]))}
-      ${C('🏛️','Ratio de Solvencia',`${solvency>50?'+50':solvency.toFixed(2)}x`,
+        stLo2(d2i2,[{max:1,l:'Excelente',c:'var(--success)'},{max:2,l:'Moderado',c:'var(--warning)'},{max:4,l:'Alto',c:'#f97316'},{max:999,l:'Muy alto',c:'var(--danger)'}]))}
+      ${C2('🏛️','Ratio de Solvencia',`${solvency2>50?'+50':solvency2.toFixed(2)}x`,
         'Activos totales ÷ Deuda total',
-        'Cuántas veces cubren tus activos toda tu deuda. Si es mayor a 1x eres técnicamente solvente — podrías liquidar todas tus deudas vendiendo tus activos.',
+        'Cuántas veces cubren tus activos toda tu deuda.',
         '✅ ≥3x — Excelente &nbsp;·&nbsp; 🟡 1.5–3x — Bueno &nbsp;·&nbsp; ⚠️ 1–1.5x — Ajustado &nbsp;·&nbsp; 🔴 &lt;1x — Insolvente',
-        stHi(solvency,[{min:3,l:'Excelente',c:'var(--success)'},{min:1.5,l:'Bueno',c:'#3b82f6'},{min:1,l:'Ajustado',c:'var(--warning)'},{min:0,l:'Insolvente',c:'var(--danger)'}]))}
+        stHi2(solvency2,[{min:3,l:'Excelente',c:'var(--success)'},{min:1.5,l:'Bueno',c:'#3b82f6'},{min:1,l:'Ajustado',c:'var(--warning)'},{min:0,l:'Insolvente',c:'var(--danger)'}]))}
     </div>
 
-    ${sec('📈 Ahorro e Inversión','var(--success)')}
+    ${sec2('📈 Ahorro e Inversión','var(--success)')}
     <div class="g2" style="margin-bottom:4px">
-      ${C('💹','Tasa de Ahorro',`${savRate.toFixed(1)}%`,
+      ${C2('💹','Tasa de Ahorro',`${savRate2.toFixed(1)}%`,
         '(Ingreso base − Gasto mensual promedio) ÷ Ingreso base × 100',
-        'Porcentaje del ingreso que queda disponible para ahorro e inversión. Es la palanca más poderosa de construcción de riqueza: pequeñas mejoras aquí tienen impacto enorme a largo plazo.',
+        'Porcentaje del ingreso disponible para ahorro e inversión.',
         '✅ ≥20% — Excelente &nbsp;·&nbsp; 🟡 10–20% — Bueno &nbsp;·&nbsp; ⚠️ 5–10% — Básico &nbsp;·&nbsp; 🔴 &lt;5% — Insuficiente',
-        stHi(savRate,[{min:20,l:'Excelente',c:'var(--success)'},{min:10,l:'Bueno',c:'#3b82f6'},{min:5,l:'Básico',c:'var(--warning)'},{min:0,l:'Insuficiente',c:'var(--danger)'}]))}
-      ${C('📐','ROI del Portafolio',`${roi>=0?'+':''}${roi.toFixed(2)}%`,
+        stHi2(savRate2,[{min:20,l:'Excelente',c:'var(--success)'},{min:10,l:'Bueno',c:'#3b82f6'},{min:5,l:'Básico',c:'var(--warning)'},{min:0,l:'Insuficiente',c:'var(--danger)'}]))}
+      ${C2('📐','ROI del Portafolio',`${roi2>=0?'+':''}${roi2.toFixed(2)}%`,
         '(Valor actual − Capital invertido) ÷ Capital invertido × 100',
-        'Rendimiento total sobre el capital que pusiste a trabajar en inversiones. Si es negativo, el valor actual de tus inversiones está por debajo de lo que invertiste originalmente.',
+        'Rendimiento total sobre el capital invertido en inversiones.',
         '✅ &gt;10% — Excelente &nbsp;·&nbsp; 🟡 0–10% — Positivo &nbsp;·&nbsp; 🔴 &lt;0% — En pérdida',
-        roi>=10?chip('Excelente','var(--success)'):roi>=0?chip('Positivo','#3b82f6'):chip('En pérdida','var(--danger)'))}
-      ${C('💼','Inversión vs Ingreso Anual',`${inv2inc.toFixed(2)}x`,
+        roi2>=10?chip2('Excelente','var(--success)'):roi2>=0?chip2('Positivo','#3b82f6'):chip2('En pérdida','var(--danger)'))}
+      ${C2('💼','Inversión vs Ingreso Anual',`${inv2inc2.toFixed(2)}x`,
         'Activos financieros ÷ Ingreso anual estimado',
-        'Cuántos años de ingreso tienes acumulados en inversiones. La meta de independencia financiera (regla del 4%) se alcanza a 25x — tus inversiones generarían suficiente para vivir sin trabajar.',
-        '🎯 ≥25x — Independencia financiera &nbsp;·&nbsp; ✅ ≥1x — Buen inicio &nbsp;·&nbsp; 🟡 0.5–1x — En camino &nbsp;·&nbsp; ⚠️ &lt;0.5x — Inicio',
-        stHi(inv2inc,[{min:25,l:'Independencia',c:'var(--success)'},{min:1,l:'Buen inicio',c:'#3b82f6'},{min:0.5,l:'En camino',c:'var(--warning)'},{min:0,l:'Inicio',c:'var(--text3)'}]))}
+        'Cuántos años de ingreso acumulados en inversiones. Independencia financiera = 25x.',
+        '🎯 ≥25x — Independencia &nbsp;·&nbsp; ✅ ≥1x — Buen inicio &nbsp;·&nbsp; 🟡 0.5–1x — En camino &nbsp;·&nbsp; ⚠️ &lt;0.5x — Inicio',
+        stHi2(inv2inc2,[{min:25,l:'Independencia',c:'var(--success)'},{min:1,l:'Buen inicio',c:'#3b82f6'},{min:0.5,l:'En camino',c:'var(--warning)'},{min:0,l:'Inicio',c:'var(--text3)'}]))}
     </div>
 
-    ${sec('🏛️ Patrimonio','var(--purple)')}
+    ${sec2('🏛️ Patrimonio','var(--purple)')}
     <div class="g2">
-      ${C('⚖️','Patrimonio Neto',`${netWorth<0?'−':''}${fmt(Math.abs(netWorth))}`,
-        'Activos totales (Financieros + Líquidos + Físicos) − Deudas totales',
-        'Tu valor financiero real: lo que quedaría si vendieras todo y liquidaras todas tus deudas hoy. El objetivo principal de las finanzas personales es hacer crecer este número consistentemente.',
-        `Activos: ${fmt(totalActivos)} &nbsp;·&nbsp; Deudas: ${fmt(totalPasivos)} &nbsp;·&nbsp; ${netWorth>=0?'✅ Solvente':'🔴 Patrimonio negativo'}`,
-        netWorth>=0?chip('Positivo','var(--success)'):chip('Negativo','var(--danger)'))}
-      ${(()=>{
-        const mTarget   = maestria?.target||300000;
-        const cetesVal  = S.investments.filter(i=>i.type==='cetes').reduce((s,i)=>s+i.value,0);
-        const invVal    = S.investments.filter(i=>i.type!=='cetes').reduce((s,i)=>s+i.value,0);
-        const efVal     = S.emergencyFund||0;
-        const components=[
-          {l:'🛡️ Fondo de emergencia', a:efVal,   col:'#00e87a'},
-          {l:'🏛️ CETES',               a:cetesVal, col:'#3b82f6'},
-          {l:'📈 Acciones / inversiones',a:invVal,  col:'#b06eff'},
-          {l:'₿ Bitcoin',              a:btcValue, col:'#f7931a'},
-        ].filter(c=>c.a>0);
-        const statusC=mPct>=100?'var(--success)':mPct>=50?'#3b82f6':mPct>=25?'var(--warning)':'var(--primary)';
-        return `<div class="card">
-          <div class="flex jb" style="margin-bottom:8px;align-items:flex-start;gap:8px">
-            <div style="font-size:11px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.06em">🎓 Progreso Meta Maestría</div>
-            ${stHi(mPct,[{min:100,l:'Lograda',c:'var(--success)'},{min:50,l:'Buen camino',c:'#3b82f6'},{min:25,l:'En desarrollo',c:'var(--warning)'},{min:0,l:'Inicio',c:'var(--primary)'}])}
-          </div>
-          <div style="font-size:28px;font-weight:800;letter-spacing:-.5px;margin-bottom:4px;color:${statusC}">${mPct.toFixed(1)}%</div>
-          <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:10px">${fmt(maestriaBase)} <span style="font-size:11px;color:var(--text3);font-weight:400">de ${fmt(mTarget)}</span></div>
-          <div style="font-size:10px;color:var(--primary);font-weight:600;padding:5px 10px;background:rgba(0,212,255,.06);border-radius:6px;font-family:monospace;margin-bottom:12px">
-            📐 (Fondo emergencia + CETES + Acciones + BTC) ÷ $${(mTarget/1000).toFixed(0)}K × 100
-          </div>
-          <!-- Barra total -->
-          <div class="pbar" style="height:8px;margin-bottom:14px">
-            <div class="pfill" style="width:${mPct}%;background:linear-gradient(90deg,#00e87a,#3b82f6,#b06eff)"></div>
-          </div>
-          <!-- Desglose por componente -->
-          <div style="display:flex;flex-direction:column;gap:8px">
-            ${components.map(c=>{
-              const pct=Math.min(100,(c.a/mTarget)*100);
-              return `<div>
-                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px">
-                  <span style="font-size:11px;color:var(--text2)">${c.l}</span>
-                  <div style="text-align:right">
-                    <span style="font-size:11px;font-weight:700;color:${c.col}">${fmt(c.a)}</span>
-                    <span style="font-size:10px;color:var(--text3);margin-left:4px">${pct.toFixed(1)}%</span>
-                  </div>
-                </div>
-                <div class="pbar" style="height:5px"><div class="pfill" style="width:${pct}%;background:${c.col}"></div></div>
-              </div>`;
-            }).join('')}
-          </div>
-          <div style="font-size:10px;color:var(--text3);border-top:1px solid rgba(255,255,255,.06);padding-top:8px;margin-top:12px;line-height:1.8">
-            ✅ 100% — Lograda &nbsp;·&nbsp; 🟡 50–100% — Buen camino &nbsp;·&nbsp; ⚠️ 25–50% — En desarrollo &nbsp;·&nbsp; 🔵 &lt;25% — Inicio
-            ${btcValue>0?`<br>₿ BTC calculado a precio USD × cantidad acumulada — actualiza el precio en Plan de Inversiones.`:''}
-          </div>
-        </div>`;
-      })()}
+      ${C2('⚖️','Patrimonio Neto',`${netWorth2<0?'−':''}${fmt(Math.abs(netWorth2))}`,
+        'Activos totales − Deudas totales',
+        'Tu valor financiero real: lo que quedaría si vendieras todo y liquidaras todas tus deudas hoy.',
+        `Activos: ${fmt(totalActivos)} &nbsp;·&nbsp; Deudas: ${fmt(totalPasivos)} &nbsp;·&nbsp; ${netWorth2>=0?'✅ Solvente':'🔴 Patrimonio negativo'}`,
+        netWorth2>=0?chip2('Positivo','var(--success)'):chip2('Negativo','var(--danger)'))}
+      <div class="card">
+        <div class="flex jb" style="margin-bottom:8px;align-items:flex-start;gap:8px">
+          <div style="font-size:11px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.06em">🎓 Progreso Meta Maestría</div>
+          ${stHi2(mPct2,[{min:100,l:'Lograda',c:'var(--success)'},{min:50,l:'Buen camino',c:'#3b82f6'},{min:25,l:'En desarrollo',c:'var(--warning)'},{min:0,l:'Inicio',c:'var(--primary)'}])}
+        </div>
+        <div style="font-size:28px;font-weight:800;letter-spacing:-.5px;margin-bottom:4px;color:${mPct2>=100?'var(--success)':mPct2>=50?'#3b82f6':mPct2>=25?'var(--warning)':'var(--primary)'}">${mPct2.toFixed(1)}%</div>
+        <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:10px">${fmt(Math.round(maeBase2))} <span style="font-size:11px;color:var(--text3);font-weight:400">de ${fmt(maestria2?.target||300000)}</span></div>
+        <div class="pbar" style="height:8px;margin-bottom:14px"><div class="pfill" style="width:${mPct2}%;background:linear-gradient(90deg,#00e87a,#3b82f6,#b06eff)"></div></div>
+        ${[
+          {l:'🛡️ Fondo de emergencia',a:efV2,col:'#00e87a'},
+          {l:'🏛️ CETES',a:cetesV2,col:'#3b82f6'},
+          {l:'📈 Acciones (bolsa)',a:accV2,col:'#b06eff'},
+          {l:'🏠 Dep. renta',a:rentaV2,col:'#f59e0b'},
+          {l:'₿ Bitcoin',a:btcValue2,col:'#f7931a'},
+        ].filter(c=>c.a>0).map(c=>{const p=Math.min(100,(c.a/(maestria2?.target||300000))*100);
+          return `<div style="margin-bottom:8px"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px">
+            <span style="font-size:11px;color:var(--text2)">${c.l}</span>
+            <div><span style="font-size:11px;font-weight:700;color:${c.col}">${fmt(c.a)}</span>
+            <span style="font-size:10px;color:var(--text3);margin-left:4px">${p.toFixed(1)}%</span></div>
+          </div><div class="pbar" style="height:5px"><div class="pfill" style="width:${p}%;background:${c.col}"></div></div></div>`;
+        }).join('')}
+      </div>
     </div>`;
 }
+
+function renderIndicators() {
+  // Auto-guardar snapshot del mes actual (sobrescribe el mes actual, no los pasados)
+  autoSaveCurrentMonthSnapshot();
+
+  // ── Tabs de meses ─────────────────────────────────────────────────────────
+  const _now2 = new Date();
+  const _curM = `${_now2.getFullYear()}-${String(_now2.getMonth()+1).padStart(2,'0')}`;
+  const _MN2 = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+  const _fmtM = m => { const[y,mn]=m.split('-'); return _MN2[parseInt(mn)-1]+' '+y; };
+  const _hist2 = (S.indicatorHistory||[]).slice().reverse(); // más reciente primero
+  const _activeM = indActiveMonth || 'live';
+
+  const _tabBar = `<div style="display:flex;gap:5px;margin-bottom:18px;padding:5px;background:rgba(0,0,0,.04);border-radius:12px;flex-wrap:wrap;overflow-x:auto">
+    <button onclick="switchIndMonth('live')"
+      style="padding:8px 16px;border-radius:8px;cursor:pointer;font-family:inherit;font-size:12px;white-space:nowrap;transition:all .2s;
+        border:${_activeM==='live'?'2px solid var(--primary)':'1px solid rgba(0,0,0,.1)'};
+        background:${_activeM==='live'?'rgba(0,212,255,.1)':'transparent'};
+        color:${_activeM==='live'?'var(--primary)':'var(--text2)'};
+        font-weight:${_activeM==='live'?800:500}">
+      📊 Mes actual
+    </button>
+    ${_hist2.filter(s=>s.month!==_curM).map(snap=>`
+    <button onclick="switchIndMonth('${snap.month}')"
+      style="padding:8px 16px;border-radius:8px;cursor:pointer;font-family:inherit;font-size:12px;white-space:nowrap;transition:all .2s;
+        border:${_activeM===snap.month?'2px solid var(--primary)':'1px solid rgba(0,0,0,.1)'};
+        background:${_activeM===snap.month?'rgba(0,212,255,.1)':'transparent'};
+        color:${_activeM===snap.month?'var(--primary)':'var(--text2)'};
+        font-weight:${_activeM===snap.month?800:500}">
+      🔒 ${_fmtM(snap.month)}
+    </button>`).join('')}
+  </div>`;
+
+  // Si el mes activo es un snapshot pasado, mostrar vista histórica y salir
+  if(_activeM !== 'live') {
+    const _snap = _hist2.find(s=>s.month===_activeM);
+    const _curSnap = _hist2.find(s=>s.month===_curM);
+    if(_snap) {
+      const MNs2=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+      const [_y,_mn]=_snap.month.split('-');
+      const _mesLabel=MNs2[parseInt(_mn)-1]+' '+_y;
+      const _frozenBanner=`<div style="display:flex;align-items:center;gap:10px;padding:10px 16px;background:rgba(0,212,255,.06);border:1px solid rgba(0,212,255,.15);border-radius:10px;margin-bottom:14px">
+        <span style="font-size:18px">🔒</span>
+        <div style="flex:1">
+          <div style="font-size:13px;font-weight:700;color:var(--primary)">Datos históricos — ${_mesLabel}</div>
+          <div style="font-size:10px;color:var(--text3)">Guardado el ${_snap.savedAt} · Solo lectura</div>
+        </div>
+        ${_curSnap?`<div style="text-align:right">
+          <div style="font-size:10px;color:var(--text3)">Score entonces vs hoy</div>
+          <div style="font-size:16px;font-weight:800;color:${_curSnap.score>=_snap.score?'var(--success)':'var(--danger)'}">${_snap.score} → ${_curSnap.score} <span style="font-size:11px">${_curSnap.score>=_snap.score?'↑':'↓'}${Math.abs(_curSnap.score-_snap.score)} pts</span></div>
+        </div>`:''}
+      </div>`;
+      // Si tiene datos completos, renderizar vista completa con datos históricos
+      if(_snap.debts) {
+        document.getElementById('ind-body').innerHTML = _tabBar + _frozenBanner + renderIndicatorsHTML(_snap);
+      } else {
+        document.getElementById('ind-body').innerHTML = _tabBar + renderSnapshotView(_snap, _curSnap);
+      }
+      return;
+    }
+  }
+
+  // Live view: usar renderIndicatorsHTML con el estado actual
+  document.getElementById('ind-body').innerHTML = _tabBar + renderIndicatorsHTML(S);
+}
+
+function switchIndMonth(m) {
+  indActiveMonth = m;
+  renderIndicators();
+}
+
+function autoSaveCurrentMonthSnapshot() {
+  if(!S.indicatorHistory) S.indicatorHistory=[];
+  const now=new Date();
+  const monthKey=`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
+  // Los meses pasados son inmutables — solo actualizar el mes actual
+  const existing = S.indicatorHistory.find(s=>s.month===monthKey);
+  // Si ya existe un snapshot de un mes ANTERIOR al actual, no tocarlo
+  // (Solo sobrescribir si es el mes actual)
+  const BASE_INC=41000;
+  const liqAct=(S.activos||[]).filter(a=>a.type==='liquido').reduce((s,a)=>s+a.value,0)+(S.emergencyFund||0);
+  const finAct=S.investments.reduce((s,i)=>s+i.value,0);
+  const fisAct=(S.activos||[]).filter(a=>a.type!=='liquido').reduce((s,a)=>s+a.value,0);
+  const btcH=(S.btcHistory||[]).reduce((s,h)=>s+(h.btc||0),0);
+  const btcV=btcH*(S.currentBtcPrice||0)*(S.usdMxn||19.5);
+  const totAct=finAct+liqAct+fisAct+btcV;
+  const totPas=S.debts.reduce((s,d)=>s+d.balance,0);
+  const netW=totAct-totPas;
+  const totMin=S.debts.reduce((s,d)=>s+(d.min||0),0);
+  const dti=(totMin/BASE_INC)*100;
+  const p3=Array.from({length:3},(_,i)=>{
+    const d=new Date(now.getFullYear(),now.getMonth()-i-1,1);
+    return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+  });
+  const vE=p3.map(m=>S.transactions.filter(t=>ym(t.date)===m&&t.type==='expense').reduce((s,t)=>s+t.amount,0)).filter(e=>e>0);
+  const _msiSnap=(S.debts||[]).filter(d=>d.rate===0&&d.balance>0&&d.type==='other'&&d.start)
+    .reduce((s,d)=>{const st=new Date(d.start),tm=d.total>0&&d.min>0?Math.round(d.total/d.min):0;
+      const ed=new Date(st);ed.setMonth(ed.getMonth()+tm);return now<ed?s+(d.min||0):s;},0);
+  const _fixedFloor=11000+6700+(600+200+179+135+150)+(1500+380+50)+(1500+810)+1500+_msiSnap;
+  const avgE=vE.length>0?vE.reduce((s,e)=>s+e,0)/vE.length:_fixedFloor+Math.round(BASE_INC*0.15);
+  const savRate=Math.max(0,((BASE_INC-avgE)/BASE_INC)*100);
+  const mae=S.goals.find(g=>g.id==='g001')||S.goals.find(g=>g.icon==='🎓');
+  const maeBase=(S.emergencyFund||0)+finAct+btcV;
+  const mPct=Math.min(100,(maeBase/(mae?.target||300000))*100);
+  const d2a=totAct>0?(totPas/totAct)*100:100;
+  const sol=totPas>0?totAct/totPas:99;
+  const efP=Math.min(1,(S.emergencyFund||0)/10000);
+  const emM=avgE>0?liqAct/avgE:0;
+  const sc={
+    dti:dti<20?100:dti<30?80:dti<40?55:dti<50?30:5,
+    savings:savRate>20?100:savRate>15?80:savRate>10?60:savRate>5?35:10,
+    emerg:Math.max(emM>6?100:emM>3?80:emM>1?50:emM>0.25?15:0,efP>=1?70:efP>=0.75?50:efP>=0.5?35:efP>=0.25?20:efP>0?10:0),
+    d2a:d2a<30?100:d2a<50?75:d2a<70?45:d2a<90?20:0,
+    solvency:sol>3?100:sol>2?80:sol>1.5?60:sol>1?35:0,
+  };
+  const score=Math.round(sc.dti*.28+sc.savings*.24+sc.emerg*.20+sc.d2a*.16+sc.solvency*.12);
+  const totInv=S.investments.reduce((s,i)=>s+(i.invested||0),0);
+  const roi2=totInv>0?((finAct-totInv)/totInv)*100:0;
+  const inv2inc2=finAct/(BASE_INC*12);
+  const d2i2=totPas/(BASE_INC*12);
+  const liqRatio2=totMin>0?liqAct/totMin:null;
+  // Sobrescribir solo el mes actual (pasados son inmutables)
+  S.indicatorHistory=S.indicatorHistory.filter(s=>s.month!==monthKey);
+  S.indicatorHistory.push({
+    month:monthKey, savedAt:now.toISOString().split('T')[0],
+    // Métricas calculadas
+    netWorth:netW, totalActivos:totAct, totalPasivos:totPas, finActivos:finAct,
+    liqActivos:liqAct, fisActivos:fisAct, btcValue:btcV,
+    score, sc, dti, savRate, mPct, d2a, solvency:sol, inv2inc:inv2inc2,
+    roi:roi2, emergM:emM, liqRatio:liqRatio2, d2i:d2i2,
+    totalInvested:totInv, totalMinPay:totMin, avgExp:avgE, BASE_INC,
+    // Estado completo (deep copy)
+    debts:       JSON.parse(JSON.stringify(S.debts||[])),
+    investments: JSON.parse(JSON.stringify(S.investments||[])),
+    goals:       JSON.parse(JSON.stringify(S.goals||[])),
+    activos:     JSON.parse(JSON.stringify(S.activos||[])),
+    btcHistory:  JSON.parse(JSON.stringify(S.btcHistory||[])),
+    emergencyFund:   S.emergencyFund||0,
+    currentBtcPrice: S.currentBtcPrice||0,
+    usdMxn:          S.usdMxn||19.5,
+    didiMonthly:     S.didiMonthly||0,
+  });
+  S.indicatorHistory.sort((a,b)=>a.month.localeCompare(b.month));
+  save();
+}
+
+function renderSnapshotView(snap, curSnap) {
+  const MNs=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+  const [y,mn]=snap.month.split('-');
+  const mesLabel=MNs[parseInt(mn)-1]+' '+y;
+  const grade=snap.score>=85?{g:'A',l:'Excelente',c:'var(--success)'}:
+              snap.score>=70?{g:'B',l:'Bueno',c:'#3b82f6'}:
+              snap.score>=55?{g:'C',l:'Aceptable',c:'var(--warning)'}:
+              snap.score>=40?{g:'D',l:'Atención',c:'#f97316'}:
+                             {g:'F',l:'Crítico',c:'var(--danger)'};
+  const delta=curSnap?{
+    score:curSnap.score-snap.score,
+    netWorth:curSnap.netWorth-snap.netWorth,
+    finActivos:curSnap.finActivos-snap.finActivos,
+    mPct:curSnap.mPct-snap.mPct,
+    dti:curSnap.dti-snap.dti,
+    totalPasivos:curSnap.totalPasivos-snap.totalPasivos,
+  }:null;
+  const scoreItems=snap.sc?[
+    {l:'Carga de deuda (DTI)',  s:snap.sc.dti,      w:28},
+    {l:'Tasa de ahorro',        s:snap.sc.savings,   w:24},
+    {l:'Fondo de emergencia',   s:snap.sc.emerg,     w:20},
+    {l:'Deuda vs activos',      s:snap.sc.d2a,       w:16},
+    {l:'Solvencia',             s:snap.sc.solvency,  w:12},
+  ]:[];
+  return `
+    <div style="background:linear-gradient(135deg,rgba(0,212,255,.07),rgba(176,110,255,.07));border:1.5px solid rgba(0,212,255,.2);border-radius:14px;padding:16px 20px;margin-bottom:16px;display:flex;align-items:center;gap:16px;flex-wrap:wrap">
+      <div style="font-size:42px;font-weight:900;color:${grade.c};min-width:56px;text-align:center;line-height:1">${grade.g}</div>
+      <div style="flex:1;min-width:180px">
+        <div style="font-size:15px;font-weight:800;color:var(--text)">🔒 ${mesLabel} — Datos cerrados</div>
+        <div style="font-size:24px;font-weight:900;color:${grade.c};margin-top:2px">${snap.score}<span style="font-size:12px;color:var(--text3)">/100</span> <span style="font-size:13px;font-weight:600">${grade.l}</span></div>
+        <div style="font-size:10px;color:var(--text3);margin-top:3px">Guardado el ${snap.savedAt}</div>
+      </div>
+      ${delta?`<div style="text-align:right;min-width:100px">
+        <div style="font-size:10px;color:var(--text3);margin-bottom:3px">vs mes actual</div>
+        <div style="font-size:20px;font-weight:900;color:${delta.score>=0?'var(--success)':'var(--danger)'}">${delta.score>=0?'+':''}${delta.score} pts</div>
+        <div style="font-size:10px;color:${delta.netWorth>=0?'var(--success)':'var(--danger)'};margin-top:2px">${delta.netWorth>=0?'↑ +':'↓ '}${fmt(Math.abs(delta.netWorth))} patrimonio</div>
+      </div>`:''}
+    </div>
+    <div class="g3" style="margin-bottom:16px">
+      <div class="card" style="padding:14px;border-left:3px solid ${snap.netWorth>=0?'var(--success)':'var(--danger)'}">
+        <div class="card-title" style="font-size:9px">⚖️ Patrimonio Neto</div>
+        <div style="font-size:19px;font-weight:800;color:${snap.netWorth>=0?'var(--success)':'var(--danger)'}">${fmt(snap.netWorth)}</div>
+        ${delta?`<div style="font-size:10px;color:${delta.netWorth>=0?'var(--success)':'var(--danger)'};margin-top:3px">${delta.netWorth>=0?'↑ ':'↓ '}${fmt(Math.abs(delta.netWorth))} hoy</div>`:''}
+      </div>
+      <div class="card" style="padding:14px;border-left:3px solid var(--primary)">
+        <div class="card-title" style="font-size:9px">💼 Inversiones</div>
+        <div style="font-size:19px;font-weight:800;color:var(--primary)">${fmt(snap.finActivos)}</div>
+        ${delta?`<div style="font-size:10px;color:${delta.finActivos>=0?'var(--success)':'var(--danger)'};margin-top:3px">${delta.finActivos>=0?'+':''}${fmt(delta.finActivos)} hoy</div>`:''}
+      </div>
+      <div class="card" style="padding:14px;border-left:3px solid ${snap.dti<30?'var(--success)':snap.dti<40?'var(--warning)':'var(--danger)'}">
+        <div class="card-title" style="font-size:9px">🏦 DTI</div>
+        <div style="font-size:19px;font-weight:800;color:${snap.dti<30?'var(--success)':snap.dti<40?'var(--warning)':'var(--danger)'}">${snap.dti.toFixed(1)}%</div>
+        ${delta?`<div style="font-size:10px;color:${delta.dti<=0?'var(--success)':'var(--danger)'};margin-top:3px">${delta.dti<=0?'↓ mejoró':'↑ empeoró'} ${Math.abs(delta.dti).toFixed(1)}%</div>`:''}
+      </div>
+      <div class="card" style="padding:14px;border-left:3px solid ${snap.savRate>15?'var(--success)':snap.savRate>8?'var(--warning)':'var(--danger)'}">
+        <div class="card-title" style="font-size:9px">💹 Tasa de Ahorro</div>
+        <div style="font-size:19px;font-weight:800;color:${snap.savRate>15?'var(--success)':snap.savRate>8?'var(--warning)':'var(--danger)'}">${snap.savRate.toFixed(1)}%</div>
+      </div>
+      <div class="card" style="padding:14px;border-left:3px solid var(--primary)">
+        <div class="card-title" style="font-size:9px">🎓 Maestría</div>
+        <div style="font-size:19px;font-weight:800;color:var(--primary)">${snap.mPct.toFixed(1)}%</div>
+        <div class="pbar" style="height:4px;margin-top:6px"><div class="pfill" style="width:${snap.mPct}%;background:var(--primary)"></div></div>
+        ${delta?`<div style="font-size:10px;color:${delta.mPct>=0?'var(--success)':'var(--danger)'};margin-top:4px">${delta.mPct>=0?'+':''}${delta.mPct.toFixed(1)}% hoy</div>`:''}
+      </div>
+      <div class="card" style="padding:14px;border-left:3px solid var(--danger)">
+        <div class="card-title" style="font-size:9px">💳 Deuda Total</div>
+        <div style="font-size:19px;font-weight:800;color:var(--danger)">${fmt(snap.totalPasivos)}</div>
+        ${delta&&delta.totalPasivos<0?`<div style="font-size:10px;color:var(--success);margin-top:3px">↓ bajó ${fmt(Math.abs(delta.totalPasivos))} hoy</div>`:''}
+      </div>
+    </div>
+    ${scoreItems.length?`<div class="card">
+      <div class="card-title" style="margin-bottom:12px">⚡ Desglose del Score — ${mesLabel}</div>
+      ${scoreItems.map(item=>{
+        const col=item.s>=80?'var(--success)':item.s>=55?'#3b82f6':item.s>=35?'var(--warning)':'var(--danger)';
+        return `<div style="margin-bottom:10px">
+          <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:4px">
+            <span style="color:var(--text2)">${item.l}</span>
+            <span style="font-weight:700;color:${col}">${item.s}/100 <span style="color:var(--text3);font-weight:400">peso ${item.w}%</span></span>
+          </div>
+          <div class="pbar" style="height:6px"><div class="pfill" style="width:${item.s}%;background:${col}"></div></div>
+        </div>`;
+      }).join('')}
+    </div>`:''}`
+;}
 
 // ─── PROJECTION & RECURRING ───────────────────────────────────────────────────
 function getMonthProjection(month) {
   const [yr, mn] = month.split('-').map(Number);
   const monthDate = new Date(yr, mn-1, 1);
-  const BASE_INC = 43000 + (S.didiMonthly>0?S.didiMonthly:11200); // Si Vale excluido
+  const BASE_INC = 41000;
 
   const fixed = [
     {desc:'Renta departamento',      amount:11000, cat:'Hogar/Renta'},
@@ -2355,7 +2583,7 @@ function loadRecurringForMonth(month) {
   const monthDate=new Date(yr,mn-1,1);
 
   const toAdd=[
-    {type:'income', desc:'Salario',              amount:43000,date:d1, cat:'Salario',              notes:'[recurrente]'},
+    {type:'income', desc:'Salario',              amount:41000,date:d1, cat:'Salario',              notes:'[recurrente]'},
     {type:'income', desc:'Tarjeta Si Vale',      amount:940,  date:d1, cat:'Salario',              notes:'[recurrente]'},
     {type:'expense',desc:'Renta departamento',   amount:11000,date:d1, cat:'Hogar/Renta',          notes:'[recurrente]'},
     {type:'expense',desc:'Agua y luz',           amount:135,  date:d1, cat:'Servicios',            notes:'[recurrente]'},
@@ -2461,16 +2689,12 @@ function renderDashboard() {
   const totDebt=S.debts.reduce((s,d)=>s+d.balance,0);
 
   // Ingresos base fijos (siempre presentes cada mes)
-  const BASE_SALARY = 43000;
-  const BASE_DIDI   = S.didiMonthly > 0 ? S.didiMonthly : 11200; // real si fue capturado, estimado si no
-  const DIDI_IS_EST = S.didiMonthly === 0;
-  const BASE_SIVALE = 940;   // solo para display — no suma al flujo, uso personal aparte
-  const BASE_INC    = BASE_SALARY + BASE_DIDI; // Si Vale excluido
+  const BASE_SALARY = 41000;
+  const BASE_INC    = BASE_SALARY;
 
-  // Extras variables ese mes (PTU, bonos, etc.)
+  // Extras variables ese mes (PTU, bonos, ingresos adicionales registrados incluyendo Didi)
   const extras = mtx.filter(t=>t.type==='income'
     &&!t.desc.toLowerCase().includes('salario')
-    &&!t.desc.toLowerCase().includes('didi')
     &&!t.desc.toLowerCase().includes('vale'));
   const extrasTotal = extras.reduce((s,t)=>s+t.amount,0);
 
@@ -2535,79 +2759,45 @@ function renderDashboard() {
 
   // ── Desglose de ingresos + sobrante ──
   document.getElementById('d-income').innerHTML=`
-    <div class="card" style="padding:18px 22px">
-      <div style="font-size:11px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.05em;margin-bottom:14px">
-        💰 Flujo de Ingresos vs. Gastos — ${m.slice(5)}/${m.slice(0,4)}
+    <div class="card" style="padding:16px 20px">
+      <div style="font-size:11px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.05em;margin-bottom:12px">
+        💰 Ingresos — ${m.slice(5)}/${m.slice(0,4)}
       </div>
-      <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:stretch;margin-bottom:16px">
-        <div style="background:var(--primary-light);border-radius:10px;padding:12px 18px;min-width:150px">
-          <div style="font-size:10px;font-weight:700;color:var(--primary);text-transform:uppercase;letter-spacing:.05em">💼 Salario fijo</div>
-          <div style="font-size:22px;font-weight:800;color:var(--primary);margin-top:4px">${fmt(BASE_SALARY)}</div>
-          <div style="font-size:11px;color:var(--primary);opacity:.7;margin-top:2px">mensual neto</div>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:stretch">
+        <!-- Salario -->
+        <div style="background:var(--primary-light);border-radius:10px;padding:12px 18px;min-width:160px">
+          <div style="font-size:10px;font-weight:700;color:var(--primary);text-transform:uppercase;letter-spacing:.05em">💼 Salario BBVA</div>
+          <div style="font-size:24px;font-weight:900;color:var(--primary);margin-top:4px">${fmt(BASE_SALARY)}</div>
+          <div style="font-size:10px;color:var(--primary);opacity:.7;margin-top:2px">mensual neto · dos quincenas</div>
         </div>
-        <div style="background:rgba(0,232,122,.07);border-radius:10px;padding:12px 18px;border:1px solid rgba(0,232,122,.2);min-width:170px;position:relative">
-          <div style="position:absolute;top:8px;right:8px;display:flex;gap:4px">
-            <span style="font-size:9px;font-weight:700;padding:2px 6px;background:rgba(255,217,61,.15);color:var(--warning);border-radius:4px;letter-spacing:.04em">VARIABLE</span>
-            <span style="font-size:9px;font-weight:700;padding:2px 6px;background:rgba(0,212,255,.12);color:var(--primary);border-radius:4px;letter-spacing:.04em">→ GBM+</span>
-          </div>
-          <div style="font-size:10px;font-weight:700;color:var(--success);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px">🚗 Didi</div>
-          <div style="font-size:22px;font-weight:800;color:var(--success)">${fmt(BASE_DIDI)}</div>
-          <div style="font-size:10px;color:var(--success);opacity:.7;margin-top:2px;margin-bottom:10px">
-            ${DIDI_IS_EST?'estimado · va a GBM+ semanal':'real este mes · va a GBM+ semanal'}
-          </div>
-          <input type="number" value="${S.didiMonthly||''}" min="0" step="0.01"
-            placeholder="${DIDI_IS_EST?'Ingresar monto real...':'Monto real del mes'}"
-            style="width:100%;padding:6px 9px;border:1px solid rgba(0,232,122,.3);border-radius:7px;font-size:12px;font-weight:700;color:var(--text);background:rgba(0,232,122,.06);outline:none;font-family:inherit"
-            onchange="setDidiMonthly(this.value)">
-          ${!DIDI_IS_EST?`<div style="margin-top:5px;font-size:10px;color:var(--success)">✅ Monto real capturado · <a href="#" onclick="setDidiMonthly(0);return false" style="color:var(--warning)">volver a estimado</a></div>`:`<div style="margin-top:5px;font-size:10px;color:rgba(255,255,255,.25)">Déjalo vacío para usar el estimado ($11,200)</div>`}
-        </div>
+        <!-- Si Vale -->
         <div style="background:rgba(176,110,255,.07);border:1px solid rgba(176,110,255,.2);border-radius:10px;padding:12px 18px;min-width:190px">
           <div style="font-size:10px;font-weight:700;color:var(--purple);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px">🎫 Si Vale — saldo acumulado</div>
-          <div style="font-size:26px;font-weight:900;color:var(--purple)">${fmt(S.sivaleBalance)}</div>
-          <div style="font-size:10px;color:var(--purple);opacity:.7;margin-top:2px;margin-bottom:10px">uso personal · +$940/mes</div>
-          <div style="display:flex;gap:5px;margin-bottom:7px">
+          <div style="font-size:24px;font-weight:900;color:var(--purple)">${fmt(S.sivaleBalance)}</div>
+          <div style="font-size:10px;color:var(--purple);opacity:.7;margin-top:2px;margin-bottom:8px">uso personal · +$940/mes</div>
+          <div style="display:flex;gap:5px;margin-bottom:6px">
             ${S.sivaleLastMonth!==nowYM()?`
             <button onclick="addSivaleMonth()" style="flex:1;padding:5px 0;background:rgba(176,110,255,.2);color:var(--purple);border:1px solid rgba(176,110,255,.35);border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit">
               + Agregar $940 de ${new Date().toLocaleString('es-MX',{month:'long'})}
             </button>`:`
             <div style="flex:1;display:flex;align-items:center;justify-content:space-between;background:rgba(176,110,255,.08);border:1px solid rgba(176,110,255,.2);border-radius:6px;padding:4px 8px">
               <span style="font-size:10px;color:var(--purple)">✓ ${new Date().toLocaleString('es-MX',{month:'long'})} aplicado</span>
-              <button onclick="undoSivaleMonth()" title="Deshacer — quitar los $940 agregados" style="padding:2px 7px;background:none;color:var(--warning);border:1px solid rgba(255,217,61,.3);border-radius:4px;font-size:10px;font-weight:700;cursor:pointer;font-family:inherit">↩ deshacer</button>
+              <button onclick="undoSivaleMonth()" style="padding:2px 7px;background:none;color:var(--warning);border:1px solid rgba(255,217,61,.3);border-radius:4px;font-size:10px;font-weight:700;cursor:pointer;font-family:inherit">↩</button>
             </div>`}
-            <button onclick="setSivaleBalance(0)" title="Resetear a $0 — fondos agotados" style="padding:5px 9px;background:rgba(255,59,107,.1);color:var(--danger);border:1px solid rgba(255,59,107,.25);border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit">↺ $0</button>
+            <button onclick="setSivaleBalance(0)" style="padding:5px 9px;background:rgba(255,59,107,.1);color:var(--danger);border:1px solid rgba(255,59,107,.25);border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit">↺ $0</button>
           </div>
           <input type="number" value="${S.sivaleBalance||''}" min="0" step="0.01"
-            placeholder="Ajustar saldo manualmente..."
+            placeholder="Ajustar saldo..."
             style="width:100%;padding:6px 9px;border:1px solid rgba(176,110,255,.3);border-radius:7px;font-size:12px;font-weight:700;color:var(--text);background:rgba(176,110,255,.06);outline:none;font-family:inherit"
             onchange="setSivaleBalance(this.value)">
         </div>
-        ${extras.map(t=>`
+        <!-- Extras del mes (bonos, honorarios, etc.) -->
+        ${extras.length?extras.map(t=>`
         <div style="background:var(--warning-light);border-radius:10px;padding:12px 18px;border:1px solid #fde68a;min-width:150px">
           <div style="font-size:10px;font-weight:700;color:#b45309;text-transform:uppercase;letter-spacing:.05em">⭐ ${t.desc}</div>
           <div style="font-size:22px;font-weight:800;color:#b45309;margin-top:4px">${fmt(t.amount)}</div>
           <div style="font-size:11px;color:#b45309;opacity:.7;margin-top:2px">${t.notes||'ingreso extra'}</div>
-        </div>`).join('')}
-        <div style="margin-left:auto;display:flex;flex-direction:column;justify-content:center;padding:0 8px;text-align:right">
-          <div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em">Total ingresos</div>
-          <div style="font-size:28px;font-weight:900;color:var(--success)">${fmt(inc)}</div>
-        </div>
-      </div>
-      <div style="border-top:2px dashed var(--border);margin-bottom:14px"></div>
-      <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap">
-        <div class="flex aic gap6">
-          <span style="font-size:13px;color:var(--text2)">Ingresos</span>
-          <span style="font-size:17px;font-weight:700;color:var(--success)">${fmt(inc)}</span>
-        </div>
-        <span style="font-size:22px;color:var(--text3);font-weight:300">−</span>
-        <div class="flex aic gap6">
-          <span style="font-size:13px;color:var(--text2)">Gastos registrados</span>
-          <span style="font-size:17px;font-weight:700;color:var(--danger)">${fmt(exp)}</span>
-        </div>
-        <span style="font-size:22px;color:var(--text3);font-weight:300">=</span>
-        <div style="background:${sobrante>=0?'var(--success-light)':'var(--danger-light)'};border:2px solid ${sobrante>=0?'var(--success)':'var(--danger)'};border-radius:12px;padding:12px 24px;display:flex;align-items:center;gap:12px;flex:1;justify-content:center">
-          <span style="font-size:14px;font-weight:700;color:${sobrante>=0?'var(--success)':'var(--danger)'}">${sobrante>=0?'💵 Te sobra al mes':'⚠️ Déficit del mes'}</span>
-          <span style="font-size:30px;font-weight:900;color:${sobrante>=0?'var(--success)':'var(--danger)'}">${fmt(sobrante)}</span>
-        </div>
+        </div>`).join(''):''}
       </div>
     </div>`;
 
@@ -2621,14 +2811,19 @@ function renderDashboard() {
 }
 
 function renderInsights(inc, exp) {
+  const now=new Date();
   const _btcIns=(S.btcHistory||[]).reduce((s,h)=>s+(h.btc||0),0)*(S.currentBtcPrice||0)*(S.usdMxn||19.5);
-  const totAssets=(S.investments||[]).reduce((s,i)=>s+i.value,0)+_btcIns;
-  const totDebt=S.debts.reduce((s,d)=>s+d.balance,0);
+  const finAct=(S.investments||[]).reduce((s,i)=>s+i.value,0);
+  const totAssets=finAct+_btcIns+
+    (S.activos||[]).reduce((s,a)=>s+a.value,0)+(S.emergencyFund||0);
+  // Auto-balance para deudas MSI (misma lógica que renderIndicatorsHTML)
+  const autoDebtsIns=(S.debts||[]).map(d=>({...d,balance:autoBalance(d,now)}));
+  const totDebt=autoDebtsIns.reduce((s,d)=>s+d.balance,0);
   const netWorth=totAssets-totDebt;
-  const freeMonth=inc-exp;
-  const totalMinPay=S.debts.reduce((s,d)=>s+(d.min||0),0);
-  const debtRatio=inc>0?(totalMinPay/inc)*100:0;
-  const savingsRate=inc>0?(freeMonth/inc)*100:0;
+  const maestria=(S.goals||[]).find(g=>g.id==='g001')||(S.goals||[]).find(g=>g.icon==='🎓');
+  const maeBase=(S.emergencyFund||0)+finAct+_btcIns;
+  const maePct=Math.min(100,(maeBase/(maestria?.target||300000))*100);
+  const maeCol=maePct>=75?'var(--success)':maePct>=30?'#f97316':'var(--danger)';
 
   document.getElementById('d-insights').innerHTML=`
     <div class="card" style="border-left:4px solid ${netWorth>=0?'var(--success)':'var(--danger)'}">
@@ -2636,20 +2831,20 @@ function renderInsights(inc, exp) {
       <div class="card-val" style="color:${netWorth>=0?'var(--success)':'var(--danger)'}">${fmt(netWorth)}</div>
       <div class="card-sub">${netWorth<0?`Deudas superan activos por ${fmt(Math.abs(netWorth))}`:'✅ Activos > Deudas'}</div>
     </div>
-    <div class="card" style="border-left:4px solid var(--success)">
-      <div class="card-title">💵 Dinero Libre / Mes</div>
-      <div class="card-val" style="color:${freeMonth>0?'var(--success)':'var(--danger)'}">${fmt(freeMonth)}</div>
-      <div class="card-sub">después de todos tus gastos del mes</div>
+    <div class="card" style="border-left:4px solid var(--primary)">
+      <div class="card-title">💼 Inversiones + BTC</div>
+      <div class="card-val" style="color:var(--primary)">${fmt(finAct+_btcIns)}</div>
+      <div class="card-sub">Portafolio financiero actual</div>
     </div>
-    <div class="card" style="border-left:4px solid ${debtRatio<30?'var(--success)':debtRatio<40?'var(--warning)':'var(--danger)'}">
-      <div class="card-title">🏦 Carga de Deuda</div>
-      <div class="card-val" style="color:${debtRatio<30?'var(--success)':debtRatio<40?'var(--warning)':'var(--danger)'}">${debtRatio.toFixed(1)}%</div>
-      <div class="card-sub">${debtRatio<30?'✅ Nivel saludable (< 30%)':debtRatio<40?'⚠️ Moderado':'🔴 Alto — revisar'}</div>
+    <div class="card" style="border-left:4px solid ${maeCol}">
+      <div class="card-title">🎓 Maestría — avance</div>
+      <div class="card-val" style="color:${maeCol}">${maePct.toFixed(1)}%</div>
+      <div class="card-sub">${fmt(Math.round(maeBase))} de ${fmt(maestria?.target||300000)}</div>
     </div>
-    <div class="card" style="border-left:4px solid ${savingsRate>=20?'var(--success)':savingsRate>=10?'var(--warning)':'var(--danger)'}">
-      <div class="card-title">💹 Tasa de Ahorro</div>
-      <div class="card-val" style="color:${savingsRate>=20?'var(--success)':savingsRate>=10?'var(--warning)':'var(--danger)'}">${Math.max(0,savingsRate).toFixed(1)}%</div>
-      <div class="card-sub">${savingsRate>=20?'✅ Excelente (> 20%)':savingsRate>=10?'👍 Aceptable (> 10%)':'⚠️ Busca aumentarlo'}</div>
+    <div class="card card-hi">
+      <div class="card-title">💰 Salario mensual</div>
+      <div class="card-val">${fmt(41000)}</div>
+      <div class="card-sub">dos quincenas BBVA · base fija</div>
     </div>`;
 }
 
@@ -2707,36 +2902,52 @@ function renderSpecials(freeMonth, refDate=new Date()) {
   const autoFreeExtra=addM(now,autoExtraMonths);
   const autoSavedMonths=Math.max(0,autoMonths-autoExtraMonths);
 
-  // ── Escenarios de ahorro ──
+  // ── Cálculo realista del sobrante mensual (igual que plan GBM) ──────────────
+  const _gbmQUINc=Math.round(41000/2);
+  const _gbmRENTA=11000,_gbmAUTO=6700;
+  const _gbmSVC=600+200+179+135+150,_gbmSUB=1500+380+50,_gbmTC=1500+810,_gbmCETES=1500;
+  const _gbmMSI=(S.debts||[]).filter(d=>d.rate===0&&d.balance>0&&d.type==='other'&&d.start)
+    .reduce((s,d)=>{
+      const st=new Date(d.start),tm=d.total>0&&d.min>0?Math.round(d.total/d.min):0;
+      const ed=new Date(st);ed.setMonth(ed.getMonth()+tm);
+      return now<ed?s+(d.min||0):s;
+    },0);
+  const _gbmP3=Array.from({length:3},(_,i)=>{
+    const d=new Date(now.getFullYear(),now.getMonth()-i-1,1);
+    return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+  });
+  const _gbmVE=_gbmP3.map(m=>S.transactions.filter(t=>ym(t.date)===m&&t.type==='expense').reduce((s,t)=>s+t.amount,0)).filter(e=>e>0);
+  const _gbmTF=_gbmRENTA+_gbmAUTO+_gbmSVC+_gbmSUB+_gbmTC+_gbmMSI+_gbmCETES;
+  const _gbmAvg=_gbmVE.length>0?_gbmVE.reduce((s,e)=>s+e,0)/_gbmVE.length:41000*0.75;
+  const _gbmVPW=Math.round(Math.max(0,_gbmAvg-_gbmTF)/4);
+  const monthGBMCalc=
+    Math.max(0,_gbmQUINc-_gbmRENTA-_gbmAUTO-_gbmVPW)+
+    Math.max(0,_gbmQUINc-_gbmCETES-_gbmSVC-_gbmSUB-_gbmTC-_gbmMSI-_gbmVPW);
+
+  // ── Escenarios realistas ──────────────────────────────────────────────────
   const mxDateL=d=>d.toLocaleDateString('es-MX',{month:'long',year:'numeric'});
 
-  // Escenario A: ahorra TODO lo libre
-  const scA_mo=freeMonth;
+  // A: Tu plan GBM mensual (lo que realmente puedes invertir)
+  const scA_mo=monthGBMCalc;
   const scA_months=scA_mo>0?Math.ceil(needed/scA_mo):999;
   const scA_date=addM(now,scA_months);
-  const scA_diff=monthsLeft-scA_months; // positivo = antes, negativo = después
+  const scA_diff=monthsLeft-scA_months;
 
-  // Escenario B: ahorra 70% de lo libre
-  const scB_mo=Math.floor(freeMonth*0.7);
+  // B: Plan GBM + CETES (todo el ahorro mensual combinado)
+  const scB_mo=monthGBMCalc+_gbmCETES;
   const scB_months=scB_mo>0?Math.ceil(needed/scB_mo):999;
   const scB_date=addM(now,scB_months);
   const scB_diff=monthsLeft-scB_months;
 
-  // Escenario C: ahorra el mínimo exacto (línea base)
+  // C: Mínimo necesario para llegar en diciembre 2027
   const scC_mo=monthlyNeeded;
   const scC_months=monthsLeft;
 
-  // Escenario D: ahorra 50% de lo libre
-  const scD_mo=Math.floor(freeMonth*0.5);
+  // D: Si reduces gastos variables 20%
+  const scD_mo=Math.round(monthGBMCalc*1.2);
   const scD_months=scD_mo>0?Math.ceil(needed/scD_mo):999;
   const scD_date=addM(now,scD_months);
   const scD_diff=monthsLeft-scD_months;
-
-  // Escenario E: ahorra 30% de lo libre
-  const scE_mo=Math.floor(freeMonth*0.3);
-  const scE_months=scE_mo>0?Math.ceil(needed/scE_mo):999;
-  const scE_date=addM(now,scE_months);
-  const scE_diff=monthsLeft-scE_months;
 
   const scRow=(icon,label,mo,months,date,diff)=>`
     <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;background:${diff>0?'var(--success-light)':diff===0?'var(--primary-light)':'var(--danger-light)'}">
@@ -2787,7 +2998,7 @@ function renderSpecials(freeMonth, refDate=new Date()) {
           <span class="ts tm">Meta: ${fmt(maestriaTarget)} · dic 2027</span>
         </div>
         <!-- Barra principal segmentada -->
-        <div style="height:12px;border-radius:20px;overflow:hidden;background:rgba(255,255,255,.08);display:flex;margin-bottom:10px">
+        <div style="height:12px;border-radius:20px;overflow:hidden;background:rgba(0,0,0,.09);display:flex;margin-bottom:10px">
           ${comps.map(c=>{
             const w=Math.min(99.9,(c.a/maestriaTarget)*100);
             return w>0?`<div style="width:${w}%;background:${c.col};height:100%"></div>`:'';
@@ -2819,10 +3030,10 @@ function renderSpecials(freeMonth, refDate=new Date()) {
           <div class="ts tm">para llegar en dic 2027</div>
         </div>
         <div style="background:var(--bg);border-radius:8px;padding:10px 14px;text-align:center">
-          <div class="ts tm">Tu dinero libre / mes</div>
-          <div style="font-size:19px;font-weight:800;color:var(--success);margin-top:2px">${fmt(freeMonth)}</div>
-          <div class="ts tm" style="color:${surplus>=0?'var(--success)':'var(--danger)'}">
-            ${surplus>=0?`te sobran ${fmt(surplus)}`:`te faltan ${fmt(Math.abs(surplus))}`}
+          <div class="ts tm">Tu sobrante real mensual</div>
+          <div style="font-size:19px;font-weight:800;color:var(--primary);margin-top:2px">${fmt(monthGBMCalc)}</div>
+          <div class="ts tm" style="color:${monthGBMCalc>=monthlyNeeded?'var(--success)':'var(--danger)'}">
+            ${monthGBMCalc>=monthlyNeeded?`✅ cubre el mínimo de ${fmt(monthlyNeeded)}`:`⚠️ faltan ${fmt(monthlyNeeded-monthGBMCalc)}/mes`}
           </div>
         </div>
       </div>
@@ -2832,11 +3043,10 @@ function renderSpecials(freeMonth, refDate=new Date()) {
         📊 Escenarios — ¿Cuándo llegas a $300,000?
       </div>
       <div style="display:flex;flex-direction:column;gap:6px">
-        ${scRow('🚀','Si ahorras TODO lo que te sobra',scA_mo,scA_months,scA_date,scA_diff)}
-        ${scRow('💪','Si ahorras el 70% de lo libre',scB_mo,scB_months,scB_date,scB_diff)}
-        ${scRow('🎯','Mínimo necesario (línea base)',scC_mo,scC_months,targetDate,0)}
-        ${scRow('😐','Si ahorras el 50% de lo libre',scD_mo,scD_months,scD_date,scD_diff)}
-        ${scRow('😟','Si ahorras solo el 30% de lo libre',scE_mo,scE_months,scE_date,scE_diff)}
+        ${scRow('📈','Tu plan GBM mensual (sobrante real calculado)',scA_mo,scA_months,scA_date,scA_diff)}
+        ${scRow('💰','Plan GBM + CETES combinados (ahorro total)',scB_mo,scB_months,scB_date,scB_diff)}
+        ${scRow('🎯','Mínimo necesario para llegar en dic 2027',scC_mo,scC_months,targetDate,0)}
+        ${scRow('💡','Si reduces gastos variables 20%',scD_mo,scD_months,scD_date,scD_diff)}
       </div>
     </div>
 
@@ -2864,7 +3074,7 @@ function renderSpecials(freeMonth, refDate=new Date()) {
               <span style="font-size:12px;font-weight:700;color:var(--success)">${d.name}</span>
               <span style="font-size:11px;font-weight:600;color:var(--success)">Termina: ${mxDate(dEnd)}</span>
             </div>
-            <div class="pbar" style="height:7px;margin-bottom:5px;background:rgba(255,255,255,.08)">
+            <div class="pbar" style="height:7px;margin-bottom:5px;background:rgba(0,0,0,.09)">
               <div class="pfill" style="width:${dPct}%;background:var(--success);box-shadow:0 0 8px var(--success)"></div>
             </div>
             <div class="flex jb">
@@ -2887,7 +3097,7 @@ function renderSpecials(freeMonth, refDate=new Date()) {
               <span style="font-size:12px;font-weight:700;color:var(--warning)">${d.name}</span>
               <span style="font-size:11px;font-weight:600;color:var(--warning)">~${mxDate(dEnd)}</span>
             </div>
-            <div class="pbar" style="height:7px;margin-bottom:5px;background:rgba(255,255,255,.08)">
+            <div class="pbar" style="height:7px;margin-bottom:5px;background:rgba(0,0,0,.09)">
               <div class="pfill" style="width:${dPct}%;background:var(--warning);box-shadow:0 0 8px var(--warning)"></div>
             </div>
             <div class="flex jb">
@@ -2905,7 +3115,7 @@ function renderSpecials(freeMonth, refDate=new Date()) {
             <span style="font-size:12px;font-weight:700;color:var(--danger)">${autoDebt.name}</span>
             <span style="font-size:11px;font-weight:600;color:var(--danger)">~${mxDate(autoFree)}</span>
           </div>
-          <div class="pbar" style="height:7px;margin-bottom:5px;background:rgba(255,255,255,.08)">
+          <div class="pbar" style="height:7px;margin-bottom:5px;background:rgba(0,0,0,.09)">
             <div class="pfill" style="width:${Math.min(100,((autoDebt.total-autoPb)/autoDebt.total)*100)}%;background:var(--danger);box-shadow:0 0 8px var(--danger)"></div>
           </div>
           <div class="flex jb">
@@ -2938,16 +3148,6 @@ function renderSpecials(freeMonth, refDate=new Date()) {
 }
 
 function renderDashCharts(mtx) {
-  // Category donut
-  const expMap={};
-  mtx.filter(t=>t.type==='expense').forEach(t=>expMap[t.cat]=(expMap[t.cat]||0)+t.amount);
-  const cats=Object.keys(expMap); const vals=Object.values(expMap);
-  const ctx1=document.getElementById('ch-cat');
-  chCat=killChart(chCat);
-  if(cats.length) chCat=new Chart(ctx1,{type:'doughnut',data:{labels:cats,datasets:[{data:vals,backgroundColor:cats.map(c=>CCOLORS[c]||'#94a3b8'),borderWidth:2,borderColor:'#fff'}]},
-    options:{responsive:true,maintainAspectRatio:false,cutout:'60%',
-    plugins:{legend:{position:'right',labels:{boxWidth:9,padding:10,font:{size:11}}},tooltip:{callbacks:{label:c=>` ${c.label}: ${fmt(c.parsed)}`}}}}});
-
   // Balance line
   const months=last6Months();
   const mLabels=months.map(x=>{const[y,mn]=x.split('-');const n=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];return `${n[parseInt(mn)-1]} ${y.slice(2)}`;});
@@ -3020,7 +3220,7 @@ function renderSubscriptions(refDate=new Date()) {
               <span style="font-size:16px">${r.icon}</span>
               <div>
                 <div style="font-size:13px;font-weight:600;color:var(--text)">${r.name}</div>
-                <span style="font-size:10px;padding:1px 6px;border-radius:4px;background:rgba(255,255,255,.08);color:var(--text2)">${r.tag}</span>
+                <span style="font-size:10px;padding:1px 6px;border-radius:4px;background:rgba(0,0,0,.09);color:var(--text2)">${r.tag}</span>
               </div>
             </div>
             <div style="font-size:15px;font-weight:800;color:${r.color}">${fmt(r.amount)}<span style="font-size:10px;font-weight:400;color:var(--text3)">/mes</span></div>
@@ -3050,7 +3250,7 @@ function renderSubscriptions(refDate=new Date()) {
                 <span style="font-size:12px;font-weight:600;color:var(--text)">${d.name}</span>
                 <span style="font-size:11px;font-weight:700;color:${urgency}">Termina: ${mxDate(dEnd)}</span>
               </div>
-              <div class="pbar" style="height:6px;margin-bottom:6px;background:rgba(255,255,255,.08)">
+              <div class="pbar" style="height:6px;margin-bottom:6px;background:rgba(0,0,0,.09)">
                 <div class="pfill" style="width:${pct}%;background:${urgency};box-shadow:0 0 8px ${urgency}"></div>
               </div>
               <div class="flex jb">
@@ -3141,7 +3341,7 @@ function seedData() {
   S = {
     transactions: [
       // ── JUNIO 2026 ──
-      {id:'s001',type:'income', desc:'Salario',                        amount:43000,  date:'2026-06-01',cat:'Salario',                notes:''},
+      {id:'s001',type:'income', desc:'Salario',                        amount:41000,  date:'2026-06-01',cat:'Salario',                notes:''},
       {id:'s001b',type:'income',desc:'Didi — conductor',              amount:11200,  date:'2026-06-28',cat:'Freelance/Honorarios',  notes:'~$400/día × 28 días'},
       {id:'s001c',type:'income',desc:'Tarjeta Si Vale',               amount:940,    date:'2026-06-01',cat:'Salario',                notes:'Vale de despensa'},
       {id:'s001d',type:'income',desc:'PTU — Bosch',                  amount:5000,   date:'2026-06-20',cat:'Bonos',                   notes:'Participación de utilidades 2026'},
@@ -3164,7 +3364,7 @@ function seedData() {
       {id:'s009',type:'expense',desc:'Pago mínimo TC BBVA',           amount:1500,   date:'2026-06-16',cat:'Deudas',                notes:''},
       {id:'s010',type:'expense',desc:'Pago mínimo TC Banamex',        amount:810,   date:'2026-06-16',cat:'Deudas',                notes:''},
       // ── MAYO 2026 ──
-      {id:'s011',type:'income', desc:'Salario',                        amount:43000,  date:'2026-05-01',cat:'Salario',                notes:''},
+      {id:'s011',type:'income', desc:'Salario',                        amount:41000,  date:'2026-05-01',cat:'Salario',                notes:''},
       {id:'s011b',type:'income',desc:'Didi — conductor',              amount:11200,  date:'2026-05-28',cat:'Freelance/Honorarios',  notes:'~$400/día × 28 días'},
       {id:'s011c',type:'income',desc:'Tarjeta Si Vale',               amount:940,    date:'2026-05-01',cat:'Salario',                notes:'Vale de despensa'},
       {id:'s012',type:'expense',desc:'Renta departamento',             amount:11000,  date:'2026-05-01',cat:'Hogar/Renta',            notes:''},
@@ -3187,7 +3387,7 @@ function seedData() {
       {id:'s019',type:'expense',desc:'Pago mínimo TC BBVA',           amount:1500,   date:'2026-05-16',cat:'Deudas',                notes:''},
       {id:'s020',type:'expense',desc:'Pago mínimo TC Banamex',        amount:810,   date:'2026-05-16',cat:'Deudas',                notes:''},
       // ── ABRIL 2026 ──
-      {id:'s021',type:'income', desc:'Salario',                        amount:43000,  date:'2026-04-01',cat:'Salario',                notes:''},
+      {id:'s021',type:'income', desc:'Salario',                        amount:41000,  date:'2026-04-01',cat:'Salario',                notes:''},
       {id:'s022',type:'income', desc:'Didi — conductor',               amount:11200,  date:'2026-04-28',cat:'Freelance/Honorarios',  notes:'~$400/día × 28 días'},
       {id:'s022b',type:'income',desc:'Tarjeta Si Vale',               amount:940,    date:'2026-04-01',cat:'Salario',                notes:'Vale de despensa'},
       {id:'s023',type:'expense',desc:'Renta departamento',             amount:11000,  date:'2026-04-01',cat:'Hogar/Renta',            notes:''},
@@ -3209,7 +3409,7 @@ function seedData() {
       {id:'s029',type:'expense',desc:'Pago mínimo TC BBVA',           amount:1500,   date:'2026-04-16',cat:'Deudas',                notes:''},
       {id:'s030',type:'expense',desc:'Pago mínimo TC Banamex',        amount:810,   date:'2026-04-16',cat:'Deudas',                notes:''},
       // ── MARZO 2026 ──
-      {id:'s031',type:'income', desc:'Salario',                        amount:43000,  date:'2026-03-01',cat:'Salario',                notes:''},
+      {id:'s031',type:'income', desc:'Salario',                        amount:41000,  date:'2026-03-01',cat:'Salario',                notes:''},
       {id:'s032',type:'income', desc:'Didi — conductor',               amount:11200,  date:'2026-03-28',cat:'Freelance/Honorarios',  notes:'~$400/día × 28 días'},
       {id:'s032b',type:'income',desc:'Tarjeta Si Vale',               amount:940,    date:'2026-03-01',cat:'Salario',                notes:'Vale de despensa'},
       {id:'s033',type:'expense',desc:'Renta departamento',             amount:11000,  date:'2026-03-01',cat:'Hogar/Renta',            notes:''},
@@ -3231,7 +3431,7 @@ function seedData() {
       {id:'s040',type:'expense',desc:'Pago mínimo TC BBVA',           amount:1500,   date:'2026-03-16',cat:'Deudas',                notes:''},
       {id:'s041',type:'expense',desc:'Pago mínimo TC Banamex',        amount:810,   date:'2026-03-16',cat:'Deudas',                notes:''},
       // ── FEBRERO 2026 ──
-      {id:'s042',type:'income', desc:'Salario',                        amount:43000,  date:'2026-02-01',cat:'Salario',                notes:''},
+      {id:'s042',type:'income', desc:'Salario',                        amount:41000,  date:'2026-02-01',cat:'Salario',                notes:''},
       {id:'s042b',type:'income',desc:'Didi — conductor',              amount:11200,  date:'2026-02-28',cat:'Freelance/Honorarios',  notes:'~$400/día × 28 días'},
       {id:'s042c',type:'income',desc:'Tarjeta Si Vale',               amount:940,    date:'2026-02-01',cat:'Salario',                notes:'Vale de despensa'},
       {id:'s043',type:'expense',desc:'Renta departamento',             amount:11000,  date:'2026-02-01',cat:'Hogar/Renta',            notes:''},
@@ -3251,7 +3451,7 @@ function seedData() {
       {id:'s049',type:'expense',desc:'Pago mínimo TC BBVA',           amount:1500,   date:'2026-02-16',cat:'Deudas',                notes:''},
       {id:'s050',type:'expense',desc:'Pago mínimo TC Banamex',        amount:810,   date:'2026-02-16',cat:'Deudas',                notes:''},
       // ── ENERO 2026 ──
-      {id:'s051',type:'income', desc:'Salario',                        amount:43000,  date:'2026-01-01',cat:'Salario',                notes:''},
+      {id:'s051',type:'income', desc:'Salario',                        amount:41000,  date:'2026-01-01',cat:'Salario',                notes:''},
       {id:'s052',type:'income', desc:'Didi — conductor',               amount:11200,  date:'2026-01-28',cat:'Freelance/Honorarios',  notes:'~$400/día × 28 días'},
       {id:'s052b',type:'income',desc:'Tarjeta Si Vale',               amount:940,    date:'2026-01-01',cat:'Salario',                notes:'Vale de despensa'},
       {id:'s053',type:'expense',desc:'Renta departamento',             amount:11000,  date:'2026-01-01',cat:'Hogar/Renta',            notes:''},
@@ -3288,7 +3488,7 @@ function seedData() {
     debts: [
       {id:'d001',name:'Tarjeta BBVA',                  type:'credit_card',total:32343.31,  balance:32343.31,  rate:10,    min:1500, day:11,start:'2024-01-22'},
       {id:'d002',name:'Tarjeta Banamex',               type:'credit_card',total:14349.72,  balance:14349.72,  rate:10,    min:810,  day:8, start:'2024-06-18', noInterest:12238},
-      {id:'d003',name:'Crédito Automotriz',            type:'car',        total:315800,    balance:296697.66, rate:12.99, min:6700, day:1, start:'2026-01-01', remainingMonths:67},
+      {id:'d003',name:'Crédito Automotriz',            type:'car',        total:315800,    balance:299000,    rate:12.99, min:6700, day:1, start:'2026-01-01', remainingMonths:61},
       {id:'d004',name:'Apple Watch MSI (TC Banamex)',  type:'other',      total:10248,     balance:2562,      rate:0,     min:854,  day:16,start:'2025-09-16'},
       {id:'d005',name:'Vuelo Viva Aerobus (TC BBVA)',  type:'other',      total:5280,      balance:1320,      rate:0,     min:440,  day:16,start:'2025-09-16'},
       {id:'d006',name:'Mercado Libre (MSI)',           type:'other',      total:3940,      balance:3940,      rate:0,     min:1314, day:0, start:'2026-06-20'},
@@ -3387,7 +3587,7 @@ function renderPatrimonio() {
               </div>
               <span style="font-size:14px;font-weight:800;color:${col}">${fmt(i.value)}</span>
             </div>
-            <div class="pbar" style="height:5px;background:rgba(255,255,255,.08)">
+            <div class="pbar" style="height:5px;background:rgba(0,0,0,.09)">
               <div class="pfill" style="width:${pct}%;background:${col};box-shadow:0 0 6px ${col}"></div>
             </div>
             <div class="ts tm" style="margin-top:4px">${pct.toFixed(1)}% del total de activos</div>
@@ -3425,7 +3625,7 @@ function renderPatrimonio() {
                 <button class="btn btn-o btn-sm btn-ico" onclick="askDel('activo',()=>delActivo('${a.id}'))">🗑️</button>
               </div>
             </div>
-            <div class="pbar" style="height:5px;background:rgba(255,255,255,.08)">
+            <div class="pbar" style="height:5px;background:rgba(0,0,0,.09)">
               <div class="pfill" style="width:${pct}%;background:${col};box-shadow:0 0 6px ${col}"></div>
             </div>
             <div class="ts tm" style="margin-top:4px">${pct.toFixed(1)}% del total de activos</div>
@@ -3463,7 +3663,7 @@ function renderPatrimonio() {
                 <button class="btn btn-o btn-sm btn-ico" onclick="askDel('activo',()=>delActivo('${a.id}'))">🗑️</button>
               </div>
             </div>
-            <div class="pbar" style="height:5px;background:rgba(255,255,255,.08)">
+            <div class="pbar" style="height:5px;background:rgba(0,0,0,.09)">
               <div class="pfill" style="width:${pct}%;background:${col};box-shadow:0 0 6px ${col}"></div>
             </div>
             <div class="ts tm" style="margin-top:4px">${pct.toFixed(1)}% del total de activos</div>
@@ -3956,6 +4156,8 @@ function init() {
     });
     save();
   }
+  // Auto-guardar snapshot del mes actual al abrir la app
+  autoSaveCurrentMonthSnapshot();
   dashMonth = nowYM();
   const now=new Date();
   document.getElementById('dateLabel').textContent=now.toLocaleDateString('es-MX',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
