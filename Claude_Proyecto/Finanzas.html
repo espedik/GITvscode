@@ -1141,6 +1141,8 @@ function renderGBM() {
 
   // ── Mes seleccionado (tabs) ───────────────────────────────────────────────────
   const realNow = new Date();
+  // Auto-avanzar al mes actual si el guardado ya pasó
+  if (S.gbmMonth && S.gbmMonth < nowYM()) { S.gbmMonth = ''; save(); }
   const selM = S.gbmMonth || nowYM();
   const [selY_,selMN_] = selM.split('-').map(Number);
   const nowD = new Date(selY_, selMN_-1, 1); // primer día del mes seleccionado
@@ -1170,7 +1172,7 @@ function renderGBM() {
   const varMonthly=Math.max(0,avgExpTotal-totalFixed);
   const varPerWeek=Math.round(varMonthly/4);
 
-  const w1GBM = Math.max(0, QUINC - RENTA - AUTO - varPerWeek);
+  const w1GBM = Math.max(0, QUINC - RENTA - varPerWeek);
   const w2GBM = 0;
   const w3GBM = Math.max(0, QUINC - CETES_DIA15 - SERVICIOS - SUSCRIPCIONES - TC_MINS - msiActive - varPerWeek);
   const w4GBM = 0;
@@ -1421,10 +1423,9 @@ function renderGBM() {
         ins:[{l:'Quincena 1 (BBVA)',a:QUINC}],
         outs:[
           {l:'Renta departamento (día 1)',a:RENTA,g:'vivienda'},
-          {l:'Reserva Dolphin Mini (día 14)',a:AUTO,g:'auto'},
           {l:'Gastos variables est.',a:varPerWeek,g:'var'},
         ],
-        gbm:w1GBM, nota:'La quincena llega a BBVA. Se paga renta y se reserva el Dolphin Mini para el día 14. El sobrante va a GBM+.'},
+        gbm:w1GBM, nota:'La quincena llega a BBVA. Se paga renta y el sobrante va a GBM+.'},
       {num:2, label:'Semana 2 — Días 8–14', icon:'🚗', active:cw===2,
         ins:[],
         outs:[
@@ -1985,7 +1986,7 @@ function renderIndicatorsHTML(src) {
   const roi2        = totalInvested2>0?((finActivos-totalInvested2)/totalInvested2)*100:0;
   const maestria2   = (src.goals||[]).find(g=>g.id==='g001')||(src.goals||[]).find(g=>g.icon==='🎓');
   const maeBase2    = (src.emergencyFund||0)+finActivos+btcValue2;
-  const mPct2       = Math.min(100,(maeBase2/(maestria2?.target||300000))*100);
+  const mPct2       = Math.min(100,(maeBase2/(maestria2?.target||500000))*100);
   const sc2={
     dti:dti2<20?100:dti2<30?80:dti2<40?55:dti2<50?30:5,
     savings:savRate2>20?100:savRate2>15?80:savRate2>10?60:savRate2>5?35:10,
@@ -2126,7 +2127,7 @@ function renderIndicatorsHTML(src) {
               </div>
             </div>
             ${segs?`<div style="height:5px;border-radius:20px;overflow:hidden;background:rgba(0,0,0,.1);display:flex">
-              ${segs.map(s=>{const sw=Math.min(100,s.a/(g.target||300000)*100);return sw>0?`<div style="width:${sw}%;background:${s.col};height:100%"></div>`:''}).join('')}
+              ${segs.map(s=>{const sw=Math.min(100,s.a/(g.target||500000)*100);return sw>0?`<div style="width:${sw}%;background:${s.col};height:100%"></div>`:''}).join('')}
             </div>
             <div style="display:flex;gap:8px;margin-top:4px;flex-wrap:wrap">
               ${segs.map(s=>`<span style="font-size:9px;color:${s.col}">■ ${s.l} ${fmt(s.a)}</span>`).join('')}
@@ -2268,7 +2269,7 @@ function renderIndicatorsHTML(src) {
           ${stHi2(mPct2,[{min:100,l:'Lograda',c:'var(--success)'},{min:50,l:'Buen camino',c:'#3b82f6'},{min:25,l:'En desarrollo',c:'var(--warning)'},{min:0,l:'Inicio',c:'var(--primary)'}])}
         </div>
         <div style="font-size:28px;font-weight:800;letter-spacing:-.5px;margin-bottom:4px;color:${mPct2>=100?'var(--success)':mPct2>=50?'#3b82f6':mPct2>=25?'var(--warning)':'var(--primary)'}">${mPct2.toFixed(1)}%</div>
-        <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:10px">${fmt(Math.round(maeBase2))} <span style="font-size:11px;color:var(--text3);font-weight:400">de ${fmt(maestria2?.target||300000)}</span></div>
+        <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:10px">${fmt(Math.round(maeBase2))} <span style="font-size:11px;color:var(--text3);font-weight:400">de ${fmt(maestria2?.target||500000)}</span></div>
         <div class="pbar" style="height:8px;margin-bottom:14px"><div class="pfill" style="width:${mPct2}%;background:linear-gradient(90deg,#00e87a,#3b82f6,#b06eff)"></div></div>
         ${[
           {l:'🛡️ Fondo de emergencia',a:efV2,col:'#00e87a'},
@@ -2276,7 +2277,7 @@ function renderIndicatorsHTML(src) {
           {l:'📈 Acciones (bolsa)',a:accV2,col:'#b06eff'},
           {l:'🏠 Dep. renta',a:rentaV2,col:'#f59e0b'},
           {l:'₿ Bitcoin',a:btcValue2,col:'#f7931a'},
-        ].filter(c=>c.a>0).map(c=>{const p=Math.min(100,(c.a/(maestria2?.target||300000))*100);
+        ].filter(c=>c.a>0).map(c=>{const p=Math.min(100,(c.a/(maestria2?.target||500000))*100);
           return `<div style="margin-bottom:8px"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px">
             <span style="font-size:11px;color:var(--text2)">${c.l}</span>
             <div><span style="font-size:11px;font-weight:700;color:${c.col}">${fmt(c.a)}</span>
@@ -2389,7 +2390,7 @@ function autoSaveCurrentMonthSnapshot() {
   const savRate=Math.max(0,((BASE_INC-avgE)/BASE_INC)*100);
   const mae=S.goals.find(g=>g.id==='g001')||S.goals.find(g=>g.icon==='🎓');
   const maeBase=(S.emergencyFund||0)+finAct+btcV;
-  const mPct=Math.min(100,(maeBase/(mae?.target||300000))*100);
+  const mPct=Math.min(100,(maeBase/(mae?.target||500000))*100);
   const d2a=totAct>0?(totPas/totAct)*100:100;
   const sol=totPas>0?totAct/totPas:99;
   const efP=Math.min(1,(S.emergencyFund||0)/10000);
@@ -2822,7 +2823,7 @@ function renderInsights(inc, exp) {
   const netWorth=totAssets-totDebt;
   const maestria=(S.goals||[]).find(g=>g.id==='g001')||(S.goals||[]).find(g=>g.icon==='🎓');
   const maeBase=(S.emergencyFund||0)+finAct+_btcIns;
-  const maePct=Math.min(100,(maeBase/(maestria?.target||300000))*100);
+  const maePct=Math.min(100,(maeBase/(maestria?.target||500000))*100);
   const maeCol=maePct>=75?'var(--success)':maePct>=30?'#f97316':'var(--danger)';
 
   document.getElementById('d-insights').innerHTML=`
@@ -2839,7 +2840,7 @@ function renderInsights(inc, exp) {
     <div class="card" style="border-left:4px solid ${maeCol}">
       <div class="card-title">🎓 Maestría — avance</div>
       <div class="card-val" style="color:${maeCol}">${maePct.toFixed(1)}%</div>
-      <div class="card-sub">${fmt(Math.round(maeBase))} de ${fmt(maestria?.target||300000)}</div>
+      <div class="card-sub">${fmt(Math.round(maeBase))} de ${fmt(maestria?.target||500000)}</div>
     </div>
     <div class="card card-hi">
       <div class="card-title">💰 Salario mensual</div>
@@ -2851,7 +2852,7 @@ function renderInsights(inc, exp) {
 function renderSpecials(freeMonth, refDate=new Date()) {
   // ── Análisis Maestría ──
   const maestria=(S.goals||[]).find(g=>g.id==='g001')||(S.goals||[]).find(g=>g.icon==='🎓'||g.name.toLowerCase().includes('maestr')||g.name.toLowerCase().includes('alemania'));
-  const targetDate=maestria?.date?new Date(maestria.date):new Date(2027,11,1);
+  const targetDate=maestria?.date?new Date(maestria.date):new Date(2027,9,1);
   const now=refDate;
   const monthsLeft=Math.max(1,Math.round((targetDate-now)/2592000000));
   const realToday=new Date();
@@ -2859,7 +2860,7 @@ function renderSpecials(freeMonth, refDate=new Date()) {
   const btcHeld = (S.btcHistory||[]).reduce((s,h)=>s+(h.btc||0),0);
   const btcVal  = btcHeld * (S.currentBtcPrice||0) * (S.usdMxn||19.5);
   const totalActivos = S.investments.reduce((s,i)=>s+i.value,0) + (S.emergencyFund||0) + btcVal;
-  const maestriaTarget=maestria?.target||300000;
+  const maestriaTarget=maestria?.target||500000;
   // Proyectar activos acumulados al llegar al mes seleccionado
   const totalMonthsToGoal=Math.max(1,Math.round((targetDate-realToday)/2592000000));
   const baseNeeded=Math.max(0,maestriaTarget-totalActivos);
@@ -2927,19 +2928,22 @@ function renderSpecials(freeMonth, refDate=new Date()) {
   // ── Escenarios realistas ──────────────────────────────────────────────────
   const mxDateL=d=>d.toLocaleDateString('es-MX',{month:'long',year:'numeric'});
 
+  // helper: meses entre dos fechas directamente (sin pasar por refDate)
+  const diffMonths=(a,b)=>Math.round((b-a)/2592000000);
+
   // A: Tu plan GBM mensual (lo que realmente puedes invertir)
   const scA_mo=monthGBMCalc;
   const scA_months=scA_mo>0?Math.ceil(needed/scA_mo):999;
   const scA_date=addM(now,scA_months);
-  const scA_diff=monthsLeft-scA_months;
+  const scA_diff=diffMonths(scA_date,targetDate);
 
   // B: Plan GBM + CETES (todo el ahorro mensual combinado)
   const scB_mo=monthGBMCalc+_gbmCETES;
   const scB_months=scB_mo>0?Math.ceil(needed/scB_mo):999;
   const scB_date=addM(now,scB_months);
-  const scB_diff=monthsLeft-scB_months;
+  const scB_diff=diffMonths(scB_date,targetDate);
 
-  // C: Mínimo necesario para llegar en diciembre 2027
+  // C: Mínimo necesario para llegar en oct 2027
   const scC_mo=monthlyNeeded;
   const scC_months=monthsLeft;
 
@@ -2947,7 +2951,32 @@ function renderSpecials(freeMonth, refDate=new Date()) {
   const scD_mo=Math.round(monthGBMCalc*1.2);
   const scD_months=scD_mo>0?Math.ceil(needed/scD_mo):999;
   const scD_date=addM(now,scD_months);
-  const scD_diff=monthsLeft-scD_months;
+  const scD_diff=diffMonths(scD_date,targetDate);
+
+  // E: Escenario optimista — Didi $10k/mes ahora + sin renta desde feb 2027 ($11k más)
+  const scE_didi=10000;
+  const scE_sinRentaDate=new Date(2027,1,1);
+  const scE_p1Months=Math.max(0,Math.round((scE_sinRentaDate-now)/2592000000));
+  const scE_mo1=monthGBMCalc+scE_didi;          // ahora → ene 2027
+  const scE_mo2=monthGBMCalc+scE_didi+11000;    // feb 2027 en adelante
+  const scE_savedP1=Math.min(needed,scE_p1Months*scE_mo1);
+  const scE_remainP2=Math.max(0,needed-scE_savedP1);
+  const scE_p2Months=scE_remainP2>0?(scE_mo2>0?Math.ceil(scE_remainP2/scE_mo2):999):0;
+  const scE_months=scE_p1Months+scE_p2Months;
+  const scE_date=addM(now,scE_months);
+  const scE_diff=diffMonths(scE_date,targetDate);
+  // ¿Cuánto tendrías en la fecha límite (oct 2027)?
+  const scE_p2ToDeadline=Math.max(0,Math.round((targetDate-scE_sinRentaDate)/2592000000));
+  const scE_atDeadlineFlat=totalActivos+scE_savedP1+scE_p2ToDeadline*scE_mo2;
+  const scE_atDeadline=Math.min(maestriaTarget,scE_atDeadlineFlat);
+  const scE_shortfall=Math.max(0,maestriaTarget-scE_atDeadline);
+  // Con rendimiento GBM (~10% anual = 0.833% mensual, interés compuesto)
+  const gbmR=0.10/12;
+  const fvCalc=(pv,pmt,r,n)=>pv*Math.pow(1+r,n)+(r>0?pmt*(Math.pow(1+r,n)-1)/r:pmt*n);
+  const scE_fv1=fvCalc(totalActivos,scE_mo1,gbmR,scE_p1Months);
+  const scE_fvDeadline=fvCalc(scE_fv1,scE_mo2,gbmR,scE_p2ToDeadline);
+  const scE_rendimiento=Math.round(scE_fvDeadline-scE_atDeadlineFlat);
+  const scE_shortfallR=Math.max(0,maestriaTarget-scE_fvDeadline);
 
   const scRow=(icon,label,mo,months,date,diff)=>`
     <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;background:${diff>0?'var(--success-light)':diff===0?'var(--primary-light)':'var(--danger-light)'}">
@@ -2995,7 +3024,7 @@ function renderSpecials(freeMonth, refDate=new Date()) {
             <span class="ts fw6" style="color:var(--success)">${fmt(maeSum)} en activos</span>
             <span class="ts tm"> · faltan ${fmt(Math.max(0,maestriaTarget-maeSum))}</span>
           </div>
-          <span class="ts tm">Meta: ${fmt(maestriaTarget)} · dic 2027</span>
+          <span class="ts tm">Meta: ${fmt(maestriaTarget)} · oct 2027</span>
         </div>
         <!-- Barra principal segmentada -->
         <div style="height:12px;border-radius:20px;overflow:hidden;background:rgba(0,0,0,.09);display:flex;margin-bottom:10px">
@@ -3027,7 +3056,7 @@ function renderSpecials(freeMonth, refDate=new Date()) {
           <div style="font-size:19px;font-weight:800;color:${monthlyNeeded>0?'var(--primary)':'var(--success)'};margin-top:2px">
             ${monthlyNeeded>0?fmt(monthlyNeeded):'¡Ya cubierto!'}
           </div>
-          <div class="ts tm">para llegar en dic 2027</div>
+          <div class="ts tm">para llegar en oct 2027</div>
         </div>
         <div style="background:var(--bg);border-radius:8px;padding:10px 14px;text-align:center">
           <div class="ts tm">Tu sobrante real mensual</div>
@@ -3040,13 +3069,108 @@ function renderSpecials(freeMonth, refDate=new Date()) {
 
       <!-- Tabla de escenarios -->
       <div style="font-size:11px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.04em;margin-bottom:8px">
-        📊 Escenarios — ¿Cuándo llegas a $300,000?
+        📊 Escenarios — ¿Cuándo llegas a $500,000?
       </div>
       <div style="display:flex;flex-direction:column;gap:6px">
         ${scRow('📈','Tu plan GBM mensual (sobrante real calculado)',scA_mo,scA_months,scA_date,scA_diff)}
         ${scRow('💰','Plan GBM + CETES combinados (ahorro total)',scB_mo,scB_months,scB_date,scB_diff)}
-        ${scRow('🎯','Mínimo necesario para llegar en dic 2027',scC_mo,scC_months,targetDate,0)}
+        ${scRow('🎯','Mínimo necesario para llegar en oct 2027',scC_mo,scC_months,targetDate,0)}
         ${scRow('💡','Si reduces gastos variables 20%',scD_mo,scD_months,scD_date,scD_diff)}
+        <!-- Escenario E expandido -->
+        <div style="border-radius:8px;border:1px solid rgba(0,212,255,.3);background:linear-gradient(135deg,rgba(0,212,255,.06),rgba(176,110,255,.06));overflow:hidden">
+          <!-- Header -->
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 12px 6px">
+            <div style="display:flex;align-items:center;gap:8px">
+              <span style="font-size:18px">🚀</span>
+              <div>
+                <div style="font-size:12px;font-weight:700;color:var(--text)">Escenario optimista — Didi + Sin renta</div>
+                <div style="font-size:10px;color:var(--text3);margin-top:1px;font-style:italic">⚠️ Supuestos: ingresos Didi constantes + mudanza en feb 2027</div>
+              </div>
+            </div>
+            <div style="text-align:right;white-space:nowrap">
+              <div style="font-size:13px;font-weight:800;color:${scE_diff>0?'var(--success)':scE_diff===0?'var(--primary)':'var(--danger)'}">${mxDateL(scE_date)}</div>
+              <div style="font-size:11px;font-weight:600;color:${scE_diff>0?'var(--success)':scE_diff===0?'var(--primary)':'var(--danger)'}">
+                ${scE_diff>0?`✅ ${scE_diff} mes${scE_diff!==1?'es':''} antes`:scE_diff===0?'⏱️ En tiempo exacto':`⚠️ ${Math.abs(scE_diff)} mes${Math.abs(scE_diff)!==1?'es':''} de retraso`}
+              </div>
+            </div>
+          </div>
+          <!-- Fases -->
+          <div style="display:flex;flex-direction:column;gap:4px;padding:0 12px 10px">
+            <div style="display:flex;align-items:center;justify-content:space-between;background:rgba(0,0,0,.04);border-radius:6px;padding:7px 10px">
+              <div>
+                <div style="font-size:10px;font-weight:700;color:var(--primary);text-transform:uppercase;letter-spacing:.05em">Fase 1 — Ahora → ene 2027</div>
+                <div style="font-size:11px;color:var(--text2);margin-top:2px">
+                  Salario GBM <span style="color:var(--text3)">${fmt(monthGBMCalc)}</span>
+                  + Didi <span style="color:var(--success);font-weight:700">${fmt(scE_didi)}</span>
+                </div>
+              </div>
+              <div style="font-size:16px;font-weight:800;color:var(--primary)">${fmt(scE_mo1)}<span style="font-size:10px;font-weight:600;color:var(--text3)">/mes</span></div>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;background:rgba(0,232,122,.07);border-radius:6px;padding:7px 10px;border:1px solid rgba(0,232,122,.18)">
+              <div>
+                <div style="font-size:10px;font-weight:700;color:var(--success);text-transform:uppercase;letter-spacing:.05em">Fase 2 — Feb 2027 en adelante</div>
+                <div style="font-size:11px;color:var(--text2);margin-top:2px">
+                  Salario GBM <span style="color:var(--text3)">${fmt(monthGBMCalc)}</span>
+                  + Didi <span style="color:var(--success);font-weight:700">${fmt(scE_didi)}</span>
+                  + Sin renta <span style="color:var(--success);font-weight:700">+${fmt(11000)}</span>
+                </div>
+              </div>
+              <div style="font-size:16px;font-weight:800;color:var(--success)">${fmt(scE_mo2)}<span style="font-size:10px;font-weight:600;color:var(--text3)">/mes</span></div>
+            </div>
+            <!-- Proyección al deadline oct 2027 -->
+            <div style="margin-top:6px;border-radius:6px;padding:9px 12px;background:${scE_shortfall>0?'rgba(249,115,22,.08)':'rgba(0,232,122,.08)'};border:1px solid ${scE_shortfall>0?'rgba(249,115,22,.3)':'rgba(0,232,122,.3)'}">
+              <div style="font-size:10px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px">📅 ¿Cuánto tendrías en oct 2027?</div>
+              <div style="display:flex;flex-direction:column;gap:3px;font-size:11px;color:var(--text2)">
+                <div style="display:flex;justify-content:space-between">
+                  <span>Activos hoy</span>
+                  <span style="font-weight:600;color:var(--text)">${fmt(totalActivos)}</span>
+                </div>
+                <div style="display:flex;justify-content:space-between">
+                  <span>Fase 1 completa (${scE_p1Months} meses × ${fmt(scE_mo1)})</span>
+                  <span style="font-weight:600;color:var(--primary)">+${fmt(scE_savedP1)}</span>
+                </div>
+                <div style="display:flex;justify-content:space-between">
+                  <span>Fase 2 parcial (${scE_p2ToDeadline} meses × ${fmt(scE_mo2)})</span>
+                  <span style="font-weight:600;color:var(--success)">+${fmt(scE_p2ToDeadline*scE_mo2)}</span>
+                </div>
+                <div style="height:1px;background:rgba(255,255,255,.1);margin:4px 0"></div>
+                <div style="display:flex;justify-content:space-between;align-items:center">
+                  <span style="font-weight:700;color:var(--text)">Total en oct 2027</span>
+                  <span style="font-size:14px;font-weight:800;color:${scE_shortfall>0?'#f97316':'var(--success)'}">
+                    ${fmt(Math.round(scE_atDeadline))}
+                  </span>
+                </div>
+                ${scE_shortfall>0?`
+                <div style="display:flex;justify-content:space-between;margin-top:2px">
+                  <span style="color:#f97316">Aún faltarían</span>
+                  <span style="font-weight:700;color:#f97316">−${fmt(Math.round(scE_shortfall))}</span>
+                </div>`:`
+                <div style="font-size:11px;color:var(--success);font-weight:600;margin-top:2px;text-align:center">✅ Meta cubierta antes de oct 2027</div>`}
+                <!-- Rendimiento GBM -->
+                <div style="margin-top:8px;padding-top:8px;border-top:1px dashed rgba(176,110,255,.35)">
+                  <div style="font-size:10px;font-weight:700;color:#b06eff;text-transform:uppercase;letter-spacing:.05em;margin-bottom:5px">📈 + Rendimiento GBM estimado (~10% anual)</div>
+                  <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text2)">
+                    <span>Interés compuesto acumulado</span>
+                    <span style="font-weight:700;color:#b06eff">+${fmt(scE_rendimiento)}</span>
+                  </div>
+                  <div style="display:flex;justify-content:space-between;align-items:center;margin-top:4px">
+                    <span style="font-size:11px;font-weight:700;color:var(--text)">Total con rendimiento en oct 2027</span>
+                    <span style="font-size:14px;font-weight:800;color:${scE_shortfallR>0?'#f97316':'var(--success)'}">
+                      ${fmt(Math.round(scE_fvDeadline))}
+                    </span>
+                  </div>
+                  ${scE_shortfallR>0?`
+                  <div style="display:flex;justify-content:space-between;margin-top:2px;font-size:11px">
+                    <span style="color:#f97316">Aún faltarían con rendimiento</span>
+                    <span style="font-weight:700;color:#f97316">−${fmt(Math.round(scE_shortfallR))}</span>
+                  </div>`:`
+                  <div style="font-size:11px;color:var(--success);font-weight:600;margin-top:2px;text-align:center">✅ Meta cubierta con rendimientos</div>`}
+                  <div style="font-size:10px;color:var(--text3);margin-top:4px;font-style:italic">* Estimado. GBM+ (acciones USA) históricamente rinde 8–12% anual. No garantizado.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -3496,7 +3620,7 @@ function seedData() {
       {id:'d008',name:'iPhone 15 MSI',               type:'other',      total:13337.46,  balance:11361.54,  rate:0,     min:493.98,day:0, start:'2026-03-20'}
     ],
     goals: [
-      {id:'g001',name:'Maestría en Alemania', target:300000, current:53740, date:'2027-12-01',icon:'🎓'},
+      {id:'g001',name:'Maestría en Alemania', target:500000, current:53740, date:'2027-10-01',icon:'🎓'},
     ],
     investments: [
       {id:'i002',name:'CETES',              type:'cetes',    invested:3000,  value:3000,  date:'2026-04-20',rate:11},
@@ -4148,6 +4272,9 @@ function delBtc(id) {
 function init() {
   seedData();
   load();
+  // Migración: actualizar meta maestría de 300k → 500k
+  const _maeGoal=S.goals.find(g=>g.id==='g001');
+  if(_maeGoal&&_maeGoal.target===300000){_maeGoal.target=500000;save();}
   // Asegurar que el fondo de emergencia exista en metas
   if(!S.goals.find(g=>g.id==='ef-001')) {
     S.goals.unshift({

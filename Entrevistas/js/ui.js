@@ -208,6 +208,21 @@ function toggleTheme() {
 }
 
 // ══════════════════════════════════════════════════════════════════
+//  BARRA LATERAL — MOSTRAR / OCULTAR
+// ══════════════════════════════════════════════════════════════════
+function toggleSidebar() {
+  const html = document.documentElement;
+  const collapsed = html.getAttribute('data-sidebar-collapsed') === 'true';
+  if (collapsed) {
+    html.removeAttribute('data-sidebar-collapsed');
+    localStorage.setItem('sidebar-collapsed', 'false');
+  } else {
+    html.setAttribute('data-sidebar-collapsed', 'true');
+    localStorage.setItem('sidebar-collapsed', 'true');
+  }
+}
+
+// ══════════════════════════════════════════════════════════════════
 //  INIT
 // ══════════════════════════════════════════════════════════════════
 document.getElementById('ws-topics').textContent = TOTAL;

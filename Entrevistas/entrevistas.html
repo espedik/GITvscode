@@ -11,12 +11,16 @@
   var saved = localStorage.getItem('theme');
   var theme = saved || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
   document.documentElement.setAttribute('data-theme', theme);
+  if (localStorage.getItem('sidebar-collapsed') === 'true') {
+    document.documentElement.setAttribute('data-sidebar-collapsed', 'true');
+  }
 })();
 </script>
 </head>
 <body>
 
 <header>
+  <button class="btn-sidebar-toggle" id="sidebar-toggle" onclick="toggleSidebar()" title="Ocultar/mostrar barra lateral" aria-label="Ocultar/mostrar barra lateral">☰</button>
   <div class="logo">
     <div class="logo-icon">🚗</div>
     <h1>Interview Prep <small>Automotive SW Engineering</small></h1>

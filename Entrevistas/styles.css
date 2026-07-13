@@ -94,6 +94,15 @@
   }
   .btn-theme:hover { border-color: var(--accent); background: var(--accent-light); }
 
+  .btn-sidebar-toggle {
+    width: 30px; height: 30px; border-radius: 6px; border: 1px solid var(--border);
+    background: var(--white); font-size: .9rem; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all .15s; flex-shrink: 0; color: var(--text-muted);
+  }
+  .btn-sidebar-toggle:hover { border-color: var(--accent); background: var(--accent-light); color: var(--accent); }
+  html[data-sidebar-collapsed="true"] .btn-sidebar-toggle { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
+
   .btn-cheatsheet {
     padding: 6px 14px; border-radius: 6px; border: none;
     background: var(--accent); font-size: .78rem; color: white; font-weight: 600;
@@ -112,9 +121,19 @@
     overflow-y: auto;
     flex-shrink: 0;
     padding-bottom: 40px;
+    transition: width .2s ease, opacity .15s ease, padding .2s ease, border-color .2s ease;
   }
   #sidebar::-webkit-scrollbar { width: 3px; }
   #sidebar::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 4px; }
+
+  html[data-sidebar-collapsed="true"] #sidebar {
+    width: 0;
+    min-width: 0;
+    opacity: 0;
+    padding: 0;
+    border-right-color: transparent;
+    overflow: hidden;
+  }
 
   .sidebar-section-label {
     padding: 20px 16px 6px;
@@ -549,8 +568,9 @@
 
   /* Columna "Ejemplo → Resultado" */
   .kv-table td code {
-    font-family:'Consolas','Fira Code',monospace; font-size:.74rem;
-    background:#F1F5F9; color:#0F172A; padding:2px 6px; border-radius:4px;
+    display:inline-block; font-family:'Consolas','Fira Code',monospace; font-size:.74rem;
+    line-height:1.65; background:#F1F5F9; color:#0F172A; padding:6px 10px; border-radius:6px;
+    margin:3px 0; white-space:pre-wrap;
   }
   .ex-cell { display:flex; flex-direction:column; gap:6px; }
   .ex-item { display:flex; align-items:center; gap:6px; flex-wrap:wrap; line-height:1.4; }
