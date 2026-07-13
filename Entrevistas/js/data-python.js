@@ -13,6 +13,7 @@ const PYTHON_RICH = {
     <button class="tab-btn" onclick="switchTab(this,'pf-5','pyfor')">⚠️ Errores comunes</button>
     <button class="tab-btn" onclick="switchTab(this,'pf-6','pyfor')">✅ Mejores Prácticas</button>
     <button class="tab-btn" onclick="switchTab(this,'pf-7','pyfor')">Gotchas</button>
+    <button class="tab-btn" onclick="switchTab(this,'pf-8','pyfor')">📁 Ejercicios_For_Loop (carpeta)</button>
   </div>
   <div id="pf-1" class="tab-panel active">
 <div class="concept-intro">El <strong>for</strong> recorre un iterable (lista, tupla, dict, string, range, generador...) elemento por elemento; internamente llama a <code>iter()</code> y luego a <code>next()</code> hasta agotarlo. Úsalo cuando el número de iteraciones está determinado por el tamaño de una colección — recorrer una lista, un diccionario, o un rango fijo. En entrevistas de software automotriz es común pedir procesar logs, telemetría o streams de CAN con él.</div>
@@ -271,6 +272,450 @@ retries = <span class="c-nb">0</span>
       <div class="plan-block"><div class="plan-time">Trampa 4</div><div class="plan-content"><h4>La variable del loop sobrevive fuera del for</h4><p>A diferencia de otros lenguajes, el nombre usado en <code>for i in ...</code> no queda "encapsulado": después del loop, <code>i</code> sigue existiendo con su último valor (o incluso si la colección estaba vacía, con el valor que tenía antes, si es que existía).</p></div></div>
     </div>
   </div>
+  <div id="pf-8" class="tab-panel">
+<div class="concept-intro">Los <b>10 ejercicios completos</b> de la carpeta <code>Ejercicios_Python/Ejercicios_For_Loop</code> del repositorio, con su enunciado y solución tal como están guardados — para tenerlos siempre a mano sin salir de la app.</div>
+<div class="tab-group-pfex">
+  <div class="tab-bar" style="flex-wrap:wrap">
+    <button class="tab-btn active" onclick="switchTab(this,'pfex-1','pfex')">1. Básico</button>
+    <button class="tab-btn" onclick="switchTab(this,'pfex-2','pfex')">2. Enumerate</button>
+    <button class="tab-btn" onclick="switchTab(this,'pfex-3','pfex')">3. Zip</button>
+    <button class="tab-btn" onclick="switchTab(this,'pfex-4','pfex')">4. Anidado</button>
+    <button class="tab-btn" onclick="switchTab(this,'pfex-5','pfex')">5. Break/Continue</button>
+    <button class="tab-btn" onclick="switchTab(this,'pfex-6','pfex')">6. For-Else</button>
+    <button class="tab-btn" onclick="switchTab(this,'pfex-7','pfex')">7. Comprehension</button>
+    <button class="tab-btn" onclick="switchTab(this,'pfex-8','pfex')">8. Acumuladores</button>
+    <button class="tab-btn" onclick="switchTab(this,'pfex-9','pfex')">9. Diccionario</button>
+    <button class="tab-btn" onclick="switchTab(this,'pfex-10','pfex')">10. While vs For</button>
+  </div>
+
+  <div id="pfex-1" class="tab-panel active">
+<div class="code-block"><div class="code-lang">1_Basico_For.py</div><pre>
+<span class="c-st">"""
+1. EL RECORRIDO BÁSICO
+Objetivo: Aprender las dos formas fundamentales de recorrer datos con 'for'.
+
+- Crea una lista 'lecturas' con al menos 5 valores numéricos.
+- Recorre la lista directamente con 'for valor in lecturas' e imprime cada uno.
+- Recorre la misma lista usando 'for i in range(len(lecturas))' para acceder
+  por índice, e imprime "posición -> valor".
+- Recorre la lista con la forma EXPLÍCITA 'range(0, len(lecturas), 1)',
+  indicando inicio, fin y paso aunque sean los valores por defecto.
+- Usa range(inicio, fin, paso) con paso distinto de 1 para imprimir solo
+  los índices pares.
+"""</span>
+
+<span class="c-cm"># A. Lista de lecturas de un sensor</span>
+lecturas = [<span class="c-nb">12.5</span>, <span class="c-nb">13.1</span>, <span class="c-nb">11.8</span>, <span class="c-nb">14.4</span>, <span class="c-nb">10.9</span>]
+
+<span class="c-cm"># B. Recorrido directo: 'valor' toma cada elemento de la lista en orden</span>
+<span class="c-bi">print</span>(<span class="c-st">"--- Recorrido directo ---"</span>)
+<span class="c-kw">for</span> valor <span class="c-kw">in</span> lecturas:
+    <span class="c-bi">print</span>(valor)
+
+<span class="c-cm"># C. Recorrido por índice: útil cuando necesitas la POSICIÓN, no solo el dato
+# range(len(lecturas)) es la forma corta; internamente equivale a
+# range(0, len(lecturas), 1), es decir: empezar en 0, terminar antes de
+# len(lecturas), avanzando de a 1 en 1.</span>
+<span class="c-bi">print</span>(<span class="c-st">"--- Recorrido por índice ---"</span>)
+<span class="c-kw">for</span> i <span class="c-kw">in</span> <span class="c-bi">range</span>(<span class="c-bi">len</span>(lecturas)):
+    <span class="c-bi">print</span>(f<span class="c-st">"posición {i} -&gt; {lecturas[i]}"</span>)
+
+<span class="c-cm"># D. La misma idea pero con los 3 parámetros ESCRITOS explícitamente:
+# range(inicio, fin, paso) -> range(0, len(lecturas), 1)
+# Es exactamente el mismo recorrido que en C, solo que sin depender de
+# los valores por defecto de range(). Útil cuando el paso puede cambiar.</span>
+<span class="c-bi">print</span>(<span class="c-st">"--- Recorrido por índice (forma explícita) ---"</span>)
+<span class="c-kw">for</span> i <span class="c-kw">in</span> <span class="c-bi">range</span>(<span class="c-nb">0</span>, <span class="c-bi">len</span>(lecturas), <span class="c-nb">1</span>):
+    <span class="c-bi">print</span>(f<span class="c-st">"posición {i} -&gt; {lecturas[i]}"</span>)
+
+<span class="c-cm"># E. range(inicio, fin, paso): controla exactamente qué índices visitar
+# Aquí recorremos solo las posiciones pares (0, 2, 4...)</span>
+<span class="c-bi">print</span>(<span class="c-st">"--- Solo posiciones pares ---"</span>)
+<span class="c-kw">for</span> i <span class="c-kw">in</span> <span class="c-bi">range</span>(<span class="c-nb">0</span>, <span class="c-bi">len</span>(lecturas), <span class="c-nb">2</span>):
+    <span class="c-bi">print</span>(f<span class="c-st">"posición {i} -&gt; {lecturas[i]}"</span>)</pre></div>
+  </div>
+
+  <div id="pfex-2" class="tab-panel">
+<div class="code-block"><div class="code-lang">2_Enumerate_For.py</div><pre>
+<span class="c-st">"""
+2. ÍNDICE Y VALOR CON enumerate()
+Objetivo: Obtener posición y valor al mismo tiempo, sin usar range(len(...)).
+
+- Crea una lista 'componentes' con al menos 5 nombres de piezas.
+- Recorre la lista con enumerate() e imprime "índice: nombre".
+- Usa el parámetro 'start' de enumerate() para que la numeración empiece en 1.
+- Usa enumerate() para encontrar en qué posición está un componente específico
+  sin usar el método .index().
+"""</span>
+
+<span class="c-cm"># A. Lista de componentes a inspeccionar</span>
+componentes = [<span class="c-st">"CPU"</span>, <span class="c-st">"RAM"</span>, <span class="c-st">"Disco"</span>, <span class="c-st">"Ventilador"</span>, <span class="c-st">"Fuente"</span>]
+
+<span class="c-cm"># B. enumerate() devuelve pares (índice, valor) en cada vuelta</span>
+<span class="c-bi">print</span>(<span class="c-st">"--- Inventario (índice desde 0) ---"</span>)
+<span class="c-kw">for</span> indice, nombre <span class="c-kw">in</span> <span class="c-bi">enumerate</span>(componentes):
+    <span class="c-bi">print</span>(f<span class="c-st">"{indice}: {nombre}"</span>)
+
+<span class="c-cm"># C. start=1 desplaza la numeración para reportes "amigables" al usuario</span>
+<span class="c-bi">print</span>(<span class="c-st">"--- Inventario (numeración desde 1) ---"</span>)
+<span class="c-kw">for</span> numero, nombre <span class="c-kw">in</span> <span class="c-bi">enumerate</span>(componentes, start=<span class="c-nb">1</span>):
+    <span class="c-bi">print</span>(f<span class="c-st">"Ítem #{numero}: {nombre}"</span>)
+
+<span class="c-cm"># D. Buscar la posición de un componente sin usar .index()</span>
+objetivo = <span class="c-st">"Ventilador"</span>
+<span class="c-kw">for</span> indice, nombre <span class="c-kw">in</span> <span class="c-bi">enumerate</span>(componentes):
+    <span class="c-kw">if</span> nombre == objetivo:
+        <span class="c-bi">print</span>(f<span class="c-st">"'{objetivo}' encontrado en la posición {indice}"</span>)
+        <span class="c-kw">break</span></pre></div>
+  </div>
+
+  <div id="pfex-3" class="tab-panel">
+<div class="code-block"><div class="code-lang">3_Zip_For.py</div><pre>
+<span class="c-st">"""
+3. RECORRIDO PARALELO CON zip()
+Objetivo: Iterar dos o más listas relacionadas al mismo tiempo.
+
+- Crea dos listas paralelas: 'sensores' (nombres) y 'temperaturas' (valores).
+- Usa zip() para recorrer ambas listas a la vez e imprimir "sensor: temperatura".
+- Agrega una tercera lista 'unidades' y recorre las tres listas juntas con zip().
+- Usa zip() junto con dict() para construir un diccionario a partir de las
+  dos primeras listas en una sola línea.
+"""</span>
+
+<span class="c-cm"># A. Listas paralelas: la posición 'i' de cada lista describe al mismo sensor</span>
+sensores = [<span class="c-st">"SNS-01"</span>, <span class="c-st">"SNS-02"</span>, <span class="c-st">"SNS-03"</span>]
+temperaturas = [<span class="c-nb">25.4</span>, <span class="c-nb">30.1</span>, <span class="c-nb">18.7</span>]
+unidades = [<span class="c-st">"C"</span>, <span class="c-st">"C"</span>, <span class="c-st">"C"</span>]
+
+<span class="c-cm"># B. zip() empareja los elementos de ambas listas posición a posición</span>
+<span class="c-bi">print</span>(<span class="c-st">"--- Lecturas por sensor ---"</span>)
+<span class="c-kw">for</span> nombre, temperatura <span class="c-kw">in</span> <span class="c-bi">zip</span>(sensores, temperaturas):
+    <span class="c-bi">print</span>(f<span class="c-st">"{nombre}: {temperatura}"</span>)
+
+<span class="c-cm"># C. zip() acepta más de dos listas a la vez</span>
+<span class="c-bi">print</span>(<span class="c-st">"--- Lecturas con unidad ---"</span>)
+<span class="c-kw">for</span> nombre, temperatura, unidad <span class="c-kw">in</span> <span class="c-bi">zip</span>(sensores, temperaturas, unidades):
+    <span class="c-bi">print</span>(f<span class="c-st">"{nombre}: {temperatura}{unidad}"</span>)
+
+<span class="c-cm"># D. zip() + dict(): construir un diccionario clave-valor en una sola línea</span>
+mapa_temperaturas = <span class="c-bi">dict</span>(<span class="c-bi">zip</span>(sensores, temperaturas))
+<span class="c-bi">print</span>(f<span class="c-st">"Diccionario generado: {mapa_temperaturas}"</span>)
+
+<span class="c-cm"># NOTA: si las listas tienen distinta longitud, zip() se detiene en la más corta.</span></pre></div>
+  </div>
+
+  <div id="pfex-4" class="tab-panel">
+<div class="code-block"><div class="code-lang">4_Anidado_For.py</div><pre>
+<span class="c-st">"""
+4. BUCLES ANIDADOS (FOR DENTRO DE FOR)
+Objetivo: Recorrer estructuras de dos dimensiones, como una matriz de datos.
+
+- Crea una matriz 'lecturas' (lista de listas) con 3 filas y 3 columnas.
+- Usa un 'for' externo para recorrer cada fila y un 'for' interno para
+  recorrer cada valor dentro de esa fila.
+- Suma todos los valores de la matriz usando los dos bucles anidados.
+- Encuentra la posición (fila, columna) del valor más alto de la matriz.
+"""</span>
+
+<span class="c-cm"># A. Matriz de temperaturas: 3 salas, 3 lecturas por sala</span>
+lecturas = [
+    [<span class="c-nb">21.5</span>, <span class="c-nb">22.0</span>, <span class="c-nb">20.8</span>],
+    [<span class="c-nb">30.1</span>, <span class="c-nb">29.5</span>, <span class="c-nb">31.2</span>],
+    [<span class="c-nb">18.0</span>, <span class="c-nb">17.5</span>, <span class="c-nb">19.1</span>],
+]
+
+<span class="c-cm"># B. Bucle externo recorre cada fila (cada sala); el interno recorre cada
+# valor dentro de esa fila. Por cada vuelta del externo, el interno da
+# la vuelta completa.</span>
+<span class="c-bi">print</span>(<span class="c-st">"--- Recorrido completo de la matriz ---"</span>)
+<span class="c-kw">for</span> fila_index, fila <span class="c-kw">in</span> <span class="c-bi">enumerate</span>(lecturas):
+    <span class="c-kw">for</span> columna_index, valor <span class="c-kw">in</span> <span class="c-bi">enumerate</span>(fila):
+        <span class="c-bi">print</span>(f<span class="c-st">"Sala {fila_index}, lectura {columna_index}: {valor}"</span>)
+
+<span class="c-cm"># C. Suma total acumulando en cada vuelta del bucle interno</span>
+suma_total = <span class="c-nb">0</span>
+<span class="c-kw">for</span> fila <span class="c-kw">in</span> lecturas:
+    <span class="c-kw">for</span> valor <span class="c-kw">in</span> fila:
+        suma_total += valor
+<span class="c-bi">print</span>(f<span class="c-st">"Suma total de todas las lecturas: {suma_total:.1f}"</span>)
+
+<span class="c-cm"># D. Localizar el valor máximo junto con su posición exacta (fila, columna)</span>
+maximo = lecturas[<span class="c-nb">0</span>][<span class="c-nb">0</span>]
+posicion_maxima = (<span class="c-nb">0</span>, <span class="c-nb">0</span>)
+<span class="c-kw">for</span> fila_index, fila <span class="c-kw">in</span> <span class="c-bi">enumerate</span>(lecturas):
+    <span class="c-kw">for</span> columna_index, valor <span class="c-kw">in</span> <span class="c-bi">enumerate</span>(fila):
+        <span class="c-kw">if</span> valor &gt; maximo:
+            maximo = valor
+            posicion_maxima = (fila_index, columna_index)
+
+<span class="c-bi">print</span>(f<span class="c-st">"Valor máximo: {maximo} en la posición {posicion_maxima}"</span>)</pre></div>
+  </div>
+
+  <div id="pfex-5" class="tab-panel">
+<div class="code-block"><div class="code-lang">5_BreakContinue_For.py</div><pre>
+<span class="c-st">"""
+5. CONTROL DE FLUJO: break Y continue
+Objetivo: Alterar el recorrido normal de un bucle según una condición.
+
+- Crea una lista 'trama' con varios códigos de estado, incluyendo un "ABORT".
+- Recorre la lista y usa 'break' para detener el bucle apenas encuentres "ABORT".
+- Crea una lista 'lecturas' con valores válidos y algunos None.
+- Recorre 'lecturas' y usa 'continue' para saltarte los valores None sin
+  detener el bucle, sumando solo los válidos.
+"""</span>
+
+<span class="c-cm"># A. 'break' corta el bucle POR COMPLETO en cuanto se cumple la condición</span>
+trama = [<span class="c-st">"OK"</span>, <span class="c-st">"OK"</span>, <span class="c-st">"WARNING"</span>, <span class="c-st">"ABORT"</span>, <span class="c-st">"OK"</span>, <span class="c-st">"OK"</span>]
+
+<span class="c-bi">print</span>(<span class="c-st">"--- Procesando trama hasta encontrar ABORT ---"</span>)
+<span class="c-kw">for</span> codigo <span class="c-kw">in</span> trama:
+    <span class="c-kw">if</span> codigo == <span class="c-st">"ABORT"</span>:
+        <span class="c-bi">print</span>(<span class="c-st">"Señal de ABORT detectada. Deteniendo procesamiento."</span>)
+        <span class="c-kw">break</span>
+    <span class="c-bi">print</span>(f<span class="c-st">"Procesando código: {codigo}"</span>)
+
+<span class="c-cm"># B. 'continue' salta SOLO la iteración actual y sigue con la siguiente</span>
+lecturas = [<span class="c-nb">12.5</span>, <span class="c-kw">None</span>, <span class="c-nb">14.2</span>, <span class="c-kw">None</span>, <span class="c-nb">9.8</span>, <span class="c-nb">11.1</span>]
+
+suma = <span class="c-nb">0</span>
+validos = <span class="c-nb">0</span>
+<span class="c-bi">print</span>(<span class="c-st">"--- Sumando solo lecturas válidas (ignorando None) ---"</span>)
+<span class="c-kw">for</span> lectura <span class="c-kw">in</span> lecturas:
+    <span class="c-kw">if</span> lectura <span class="c-kw">is None</span>:
+        <span class="c-kw">continue</span>
+    suma += lectura
+    validos += <span class="c-nb">1</span>
+
+<span class="c-bi">print</span>(f<span class="c-st">"Total de lecturas válidas: {validos}"</span>)
+<span class="c-bi">print</span>(f<span class="c-st">"Suma de lecturas válidas: {suma:.1f}"</span>)</pre></div>
+  </div>
+
+  <div id="pfex-6" class="tab-panel">
+<div class="code-block"><div class="code-lang">6_ForElse_For.py</div><pre>
+<span class="c-st">"""
+6. LA CLÁUSULA for...else
+Objetivo: Ejecutar código solo si el bucle terminó SIN usar 'break'.
+
+- Crea una lista 'componentes' y busca uno que probablemente no exista.
+- Usa un 'for' con 'break' para buscarlo; agrega un bloque 'else' que se
+  ejecute únicamente si el bucle no encontró nada (no hubo break).
+- Repite el ejercicio buscando un componente que SÍ existe, para comparar
+  el comportamiento.
+"""</span>
+
+<span class="c-cm"># A. 'else' en un for se ejecuta SOLO si el bucle terminó normalmente,
+# es decir, si NUNCA se ejecutó un 'break' dentro de él.</span>
+componentes = [<span class="c-st">"CPU"</span>, <span class="c-st">"RAM"</span>, <span class="c-st">"Disco"</span>, <span class="c-st">"Ventilador"</span>]
+
+objetivo = <span class="c-st">"GPU"</span>
+<span class="c-bi">print</span>(f<span class="c-st">"--- Buscando '{objetivo}' ---"</span>)
+<span class="c-kw">for</span> componente <span class="c-kw">in</span> componentes:
+    <span class="c-kw">if</span> componente == objetivo:
+        <span class="c-bi">print</span>(f<span class="c-st">"'{objetivo}' encontrado en el inventario."</span>)
+        <span class="c-kw">break</span>
+<span class="c-kw">else</span>:
+    <span class="c-cm"># B. Como el bucle nunca hizo 'break', esto SÍ se ejecuta</span>
+    <span class="c-bi">print</span>(f<span class="c-st">"'{objetivo}' NO está en el inventario. Se debe registrar como nuevo."</span>)
+
+<span class="c-cm"># C. Ahora buscamos un componente que sí existe, para comparar</span>
+objetivo = <span class="c-st">"RAM"</span>
+<span class="c-bi">print</span>(f<span class="c-st">"--- Buscando '{objetivo}' ---"</span>)
+<span class="c-kw">for</span> componente <span class="c-kw">in</span> componentes:
+    <span class="c-kw">if</span> componente == objetivo:
+        <span class="c-bi">print</span>(f<span class="c-st">"'{objetivo}' encontrado en el inventario."</span>)
+        <span class="c-kw">break</span>
+<span class="c-kw">else</span>:
+    <span class="c-cm"># D. Aquí NO se ejecuta, porque el bucle sí hizo 'break'</span>
+    <span class="c-bi">print</span>(f<span class="c-st">"'{objetivo}' NO está en el inventario."</span>)</pre></div>
+  </div>
+
+  <div id="pfex-7" class="tab-panel">
+<div class="code-block"><div class="code-lang">7_Comprehension_For.py</div><pre>
+<span class="c-st">"""
+7. COMPREHENSIONS AVANZADAS (LIST, SET Y DICT)
+Objetivo: Reemplazar bucles 'for' de varias líneas por una sola expresión.
+
+- Convierte un bucle for tradicional que filtra y transforma una lista en
+  una list comprehension equivalente.
+- Crea una list comprehension con condición if/else dentro de la expresión.
+- Crea una comprehension anidada para "aplanar" una matriz (lista de listas).
+- Crea un set comprehension para obtener valores únicos.
+"""</span>
+
+lecturas = [<span class="c-nb">12.5</span>, -<span class="c-nb">3.2</span>, <span class="c-nb">14.8</span>, <span class="c-nb">0.0</span>, -<span class="c-nb">1.5</span>, <span class="c-nb">13.2</span>, -<span class="c-nb">0.1</span>, <span class="c-nb">15.6</span>]
+
+<span class="c-cm"># A. Bucle for tradicional: filtrar valores positivos y duplicarlos</span>
+resultado_bucle = []
+<span class="c-kw">for</span> valor <span class="c-kw">in</span> lecturas:
+    <span class="c-kw">if</span> valor &gt; <span class="c-nb">0</span>:
+        resultado_bucle.append(valor * <span class="c-nb">2</span>)
+
+<span class="c-cm"># B. La misma lógica en una sola línea con list comprehension
+# Sintaxis: [expresion for elemento in iterable if condicion]</span>
+resultado_comprehension = [valor * <span class="c-nb">2</span> <span class="c-kw">for</span> valor <span class="c-kw">in</span> lecturas <span class="c-kw">if</span> valor &gt; <span class="c-nb">0</span>]
+
+<span class="c-bi">print</span>(f<span class="c-st">"Con bucle for: {resultado_bucle}"</span>)
+<span class="c-bi">print</span>(f<span class="c-st">"Con comprehension: {resultado_comprehension}"</span>)
+<span class="c-bi">print</span>(f<span class="c-st">"¿Son iguales?: {resultado_bucle == resultado_comprehension}"</span>)
+
+<span class="c-cm"># C. Comprehension con if/else DENTRO de la expresión (no como filtro)
+# Aquí clasificamos cada valor sin descartar ninguno</span>
+etiquetas = [<span class="c-st">"POSITIVO"</span> <span class="c-kw">if</span> valor &gt;= <span class="c-nb">0</span> <span class="c-kw">else</span> <span class="c-st">"NEGATIVO"</span> <span class="c-kw">for</span> valor <span class="c-kw">in</span> lecturas]
+<span class="c-bi">print</span>(f<span class="c-st">"Clasificación: {etiquetas}"</span>)
+
+<span class="c-cm"># D. Comprehension anidada para aplanar una matriz en una sola lista</span>
+matriz = [[<span class="c-nb">1</span>, <span class="c-nb">2</span>, <span class="c-nb">3</span>], [<span class="c-nb">4</span>, <span class="c-nb">5</span>, <span class="c-nb">6</span>], [<span class="c-nb">7</span>, <span class="c-nb">8</span>, <span class="c-nb">9</span>]]
+matriz_aplanada = [valor <span class="c-kw">for</span> fila <span class="c-kw">in</span> matriz <span class="c-kw">for</span> valor <span class="c-kw">in</span> fila]
+<span class="c-bi">print</span>(f<span class="c-st">"Matriz aplanada: {matriz_aplanada}"</span>)
+
+<span class="c-cm"># E. Set comprehension: igual que list comprehension pero con {} y sin duplicados</span>
+codigos = [<span class="c-st">"OK"</span>, <span class="c-st">"FAIL"</span>, <span class="c-st">"OK"</span>, <span class="c-st">"WARNING"</span>, <span class="c-st">"FAIL"</span>, <span class="c-st">"OK"</span>]
+codigos_unicos = {codigo <span class="c-kw">for</span> codigo <span class="c-kw">in</span> codigos}
+<span class="c-bi">print</span>(f<span class="c-st">"Códigos únicos encontrados: {codigos_unicos}"</span>)</pre></div>
+  </div>
+
+  <div id="pfex-8" class="tab-panel">
+<div class="code-block"><div class="code-lang">8_Acumuladores_For.py</div><pre>
+<span class="c-st">"""
+8. PATRÓN DE ACUMULADORES Y CONTADORES
+Objetivo: Usar variables externas al bucle para acumular resultados.
+
+- Crea una lista 'lecturas' con al menos 8 valores numéricos.
+- Usa un acumulador para calcular la suma total dentro de un 'for'.
+- Usa un contador para saber cuántos valores superan un umbral determinado.
+- Calcula el promedio, el máximo y el mínimo manualmente con un solo bucle
+  (sin usar sum(), max() ni min()).
+"""</span>
+
+lecturas = [<span class="c-nb">12.5</span>, <span class="c-nb">18.2</span>, <span class="c-nb">9.7</span>, <span class="c-nb">21.4</span>, <span class="c-nb">15.0</span>, <span class="c-nb">7.3</span>, <span class="c-nb">19.9</span>, <span class="c-nb">11.1</span>]
+umbral = <span class="c-nb">15.0</span>
+
+<span class="c-cm"># A. Acumulador de suma: se inicializa en 0 ANTES del bucle</span>
+suma_total = <span class="c-nb">0</span>
+
+<span class="c-cm"># B. Contador de valores que superan el umbral: también se inicializa antes</span>
+total_sobre_umbral = <span class="c-nb">0</span>
+
+<span class="c-cm"># C. Variables para llevar el máximo y el mínimo "vistos hasta ahora"</span>
+maximo = lecturas[<span class="c-nb">0</span>]
+minimo = lecturas[<span class="c-nb">0</span>]
+
+<span class="c-kw">for</span> valor <span class="c-kw">in</span> lecturas:
+    <span class="c-cm"># D. En cada vuelta, el acumulador SUMA el valor actual al total previo</span>
+    suma_total += valor
+
+    <span class="c-kw">if</span> valor &gt; umbral:
+        total_sobre_umbral += <span class="c-nb">1</span>
+
+    <span class="c-kw">if</span> valor &gt; maximo:
+        maximo = valor
+    <span class="c-kw">if</span> valor &lt; minimo:
+        minimo = valor
+
+promedio = suma_total / <span class="c-bi">len</span>(lecturas)
+
+<span class="c-bi">print</span>(f<span class="c-st">"Suma total: {suma_total:.1f}"</span>)
+<span class="c-bi">print</span>(f<span class="c-st">"Promedio: {promedio:.2f}"</span>)
+<span class="c-bi">print</span>(f<span class="c-st">"Máximo: {maximo}"</span>)
+<span class="c-bi">print</span>(f<span class="c-st">"Mínimo: {minimo}"</span>)
+<span class="c-bi">print</span>(f<span class="c-st">"Lecturas por encima de {umbral}: {total_sobre_umbral}"</span>)</pre></div>
+  </div>
+
+  <div id="pfex-9" class="tab-panel">
+<div class="code-block"><div class="code-lang">9_Diccionario_For.py</div><pre>
+<span class="c-st">"""
+9. RECORRIENDO DICCIONARIOS CON FOR
+Objetivo: Dominar las tres formas de iterar un diccionario con 'for'.
+
+- Crea un diccionario 'inventario' con al menos 4 componentes y su cantidad.
+- Recorre solo las claves con 'for clave in inventario'.
+- Recorre solo los valores con 'for valor in inventario.values()'.
+- Recorre pares clave-valor con 'for clave, valor in inventario.items()'.
+- Modifica los valores de un diccionario MIENTRAS lo recorres con .items()
+  (sumando una unidad a cada cantidad).
+"""</span>
+
+inventario = {
+    <span class="c-st">"CPU"</span>: <span class="c-nb">12</span>,
+    <span class="c-st">"RAM"</span>: <span class="c-nb">34</span>,
+    <span class="c-st">"Disco"</span>: <span class="c-nb">8</span>,
+    <span class="c-st">"Ventilador"</span>: <span class="c-nb">20</span>,
+}
+
+<span class="c-cm"># A. Recorrer un diccionario directamente itera solo sobre sus CLAVES</span>
+<span class="c-bi">print</span>(<span class="c-st">"--- Solo claves ---"</span>)
+<span class="c-kw">for</span> clave <span class="c-kw">in</span> inventario:
+    <span class="c-bi">print</span>(clave)
+
+<span class="c-cm"># B. .values() itera solo sobre los valores, sin las claves</span>
+<span class="c-bi">print</span>(<span class="c-st">"--- Solo valores ---"</span>)
+<span class="c-kw">for</span> valor <span class="c-kw">in</span> inventario.values():
+    <span class="c-bi">print</span>(valor)
+
+<span class="c-cm"># C. .items() es la forma más común: entrega clave y valor juntos</span>
+<span class="c-bi">print</span>(<span class="c-st">"--- Clave y valor ---"</span>)
+<span class="c-kw">for</span> clave, valor <span class="c-kw">in</span> inventario.items():
+    <span class="c-bi">print</span>(f<span class="c-st">"{clave}: {valor} unidades"</span>)
+
+<span class="c-cm"># D. Para MODIFICAR valores mientras iteras, usa la clave para reescribir
+# el diccionario original (nunca agregues/elimines claves durante el for).</span>
+<span class="c-kw">for</span> clave, cantidad <span class="c-kw">in</span> inventario.items():
+    inventario[clave] = cantidad + <span class="c-nb">1</span>
+
+<span class="c-bi">print</span>(f<span class="c-st">"Inventario actualizado (+1 unidad cada uno): {inventario}"</span>)</pre></div>
+  </div>
+
+  <div id="pfex-10" class="tab-panel">
+<div class="code-block"><div class="code-lang">10_WhileVsFor_For.py</div><pre>
+<span class="c-st">"""
+10. FOR vs WHILE: ¿CUÁNDO USAR CADA UNO?
+Objetivo: Entender la diferencia práctica y reproducir un 'for' con 'while'.
+
+- Usa un 'for' para recorrer una lista de intentos de conexión (caso ideal
+  para 'for': se conoce de antemano cuántos elementos hay).
+- Usa un 'while' para reintentar una conexión hasta que sea exitosa o se
+  alcance un máximo de intentos (caso ideal para 'while': no se sabe de
+  antemano cuántas vueltas tomará).
+- Reproduce manualmente el comportamiento de range(0, 5) usando un 'while'
+  con contador, para entender qué hace 'for' internamente.
+"""</span>
+
+<span class="c-cm"># A. 'for' es ideal cuando ya sabes CUÁNTOS elementos vas a recorrer</span>
+intentos = [<span class="c-st">"FAIL"</span>, <span class="c-st">"FAIL"</span>, <span class="c-st">"OK"</span>, <span class="c-st">"OK"</span>, <span class="c-st">"FAIL"</span>]
+<span class="c-bi">print</span>(<span class="c-st">"--- Revisión de todos los intentos (for) ---"</span>)
+<span class="c-kw">for</span> intento <span class="c-kw">in</span> intentos:
+    <span class="c-bi">print</span>(f<span class="c-st">"Resultado: {intento}"</span>)
+
+<span class="c-cm"># B. 'while' es ideal cuando NO sabes cuántas vueltas tomará, solo la
+# CONDICIÓN de parada (aquí: hasta conectar o agotar los intentos)</span>
+<span class="c-kw">import</span> random
+
+random.seed(<span class="c-nb">7</span>)
+max_intentos = <span class="c-nb">5</span>
+intento_actual = <span class="c-nb">0</span>
+conectado = <span class="c-kw">False</span>
+
+<span class="c-bi">print</span>(<span class="c-st">"--- Reintentando conexión (while) ---"</span>)
+<span class="c-kw">while</span> intento_actual &lt; max_intentos <span class="c-kw">and not</span> conectado:
+    intento_actual += <span class="c-nb">1</span>
+    conectado = random.choice([<span class="c-kw">True</span>, <span class="c-kw">False</span>])
+    <span class="c-bi">print</span>(f<span class="c-st">"Intento {intento_actual}: {'Conectado' if conectado else 'Fallido'}"</span>)
+
+<span class="c-kw">if</span> conectado:
+    <span class="c-bi">print</span>(f<span class="c-st">"Conexión exitosa en el intento {intento_actual}."</span>)
+<span class="c-kw">else</span>:
+    <span class="c-bi">print</span>(<span class="c-st">"Se agotaron los intentos sin conectar."</span>)
+
+<span class="c-cm"># C. Reproducir range(0, 5) manualmente con while, para ver qué hace 'for'</span>
+<span class="c-bi">print</span>(<span class="c-st">"--- range(0, 5) simulado con while ---"</span>)
+i = <span class="c-nb">0</span>
+<span class="c-kw">while</span> i &lt; <span class="c-nb">5</span>:
+    <span class="c-bi">print</span>(i)
+    i += <span class="c-nb">1</span></pre></div>
+  </div>
+
+</div>
+  </div>
 </div>`,
 
 'py-listas': `
@@ -280,7 +725,8 @@ retries = <span class="c-nb">0</span>
     <button class="tab-btn" onclick="switchTab(this,'pyl-2','pylst')">Slicing avanzado</button>
     <button class="tab-btn" onclick="switchTab(this,'pyl-3','pylst')">⚠️ Errores comunes</button>
     <button class="tab-btn" onclick="switchTab(this,'pyl-4','pylst')">✅ Mejores Prácticas</button>
-    <button class="tab-btn" onclick="switchTab(this,'pyl-6','pylst')">🧩 Ejercicios</button>
+    <button class="tab-btn" onclick="switchTab(this,'pyl-6','pylst')">🧩 Ejercicios (quiz)</button>
+    <button class="tab-btn" onclick="switchTab(this,'pyl-7','pylst')">📁 Ejercicios_Listas (carpeta)</button>
   </div>
   <div id="pyl-1" class="tab-panel active">
 ${renderMethodTable('LST')}
@@ -622,6 +1068,669 @@ ordenados = ordenar_resultados(resultados)
 <span class="c-bi">print</span>(merge_ordenadas([<span class="c-nb">1</span>, <span class="c-nb">4</span>, <span class="c-nb">7</span>, <span class="c-nb">10</span>], [<span class="c-nb">2</span>, <span class="c-nb">3</span>, <span class="c-nb">8</span>]))
 <span class="c-cm"># [1, 2, 3, 4, 7, 8, 10]</span></pre></div>
   </div>
+</div>
+  </div>
+  <div id="pyl-7" class="tab-panel">
+<div class="concept-intro">Los <b>18 ejercicios completos</b> de la carpeta <code>Ejercicios_Python/Ejercicios_Listas</code> del repositorio, con su enunciado y solución tal como están guardados — para tenerlos siempre a mano sin salir de la app.</div>
+<div class="tab-group-plex">
+  <div class="tab-bar" style="flex-wrap:wrap">
+    <button class="tab-btn active" onclick="switchTab(this,'plex-1','plex')">1. Creación</button>
+    <button class="tab-btn" onclick="switchTab(this,'plex-2','plex')">2. Modificación</button>
+    <button class="tab-btn" onclick="switchTab(this,'plex-3','plex')">3. Slicing</button>
+    <button class="tab-btn" onclick="switchTab(this,'plex-4','plex')">4. Funciones</button>
+    <button class="tab-btn" onclick="switchTab(this,'plex-5','plex')">5. Ordenamiento</button>
+    <button class="tab-btn" onclick="switchTab(this,'plex-6','plex')">6. Bucles</button>
+    <button class="tab-btn" onclick="switchTab(this,'plex-7','plex')">7. Unión</button>
+    <button class="tab-btn" onclick="switchTab(this,'plex-8','plex')">8. Localizador de Fallos</button>
+    <button class="tab-btn" onclick="switchTab(this,'plex-9','plex')">9. Matriz</button>
+    <button class="tab-btn" onclick="switchTab(this,'plex-10','plex')">10. Copy</button>
+    <button class="tab-btn" onclick="switchTab(this,'plex-11','plex')">11. Comprehension</button>
+    <button class="tab-btn" onclick="switchTab(this,'plex-12','plex')">12. Reversión</button>
+    <button class="tab-btn" onclick="switchTab(this,'plex-13','plex')">13. Sincronización</button>
+    <button class="tab-btn" onclick="switchTab(this,'plex-14','plex')">14. Extraer (CAN unpacking)</button>
+    <button class="tab-btn" onclick="switchTab(this,'plex-15','plex')">15. DeepCopy</button>
+    <button class="tab-btn" onclick="switchTab(this,'plex-16','plex')">16. Limpiar Duplicados</button>
+    <button class="tab-btn" onclick="switchTab(this,'plex-17','plex')">17. Formateo Reporte</button>
+    <button class="tab-btn" onclick="switchTab(this,'plex-18','plex')">18. BigO</button>
+  </div>
+
+  <div id="plex-1" class="tab-panel active">
+<div class="code-block"><div class="code-lang">1_Creacion_Listas.py</div><pre>
+<span class="c-st">"""
+1. EL CATÁLOGO DE SENSORES
+Objetivo: Aprender a crear listas y acceder a elementos específicos.
+
+- Crea una lista llamada 'sensores' con 5 nombres (ej. "Temp", "Presion", "Humedad", "Luz", "Oxigeno").
+- Imprime el primer elemento y el último usando índices positivos y negativos.
+- Accede al elemento central de la lista (índice 2) e imprímelo.
+"""</span>
+
+sensores = [<span class="c-st">"Temp"</span>, <span class="c-st">"Presion"</span>, <span class="c-st">"Humedad"</span>, <span class="c-st">"Luz"</span>,<span class="c-st">"Oxigeno"</span>]
+
+<span class="c-bi">print</span>(sensores[<span class="c-nb">0</span>])
+<span class="c-bi">print</span>(sensores[-<span class="c-nb">1</span>])
+<span class="c-bi">print</span>(sensores[<span class="c-nb">2</span>])</pre></div>
+  </div>
+
+  <div id="plex-2" class="tab-panel">
+<div class="code-block"><div class="code-lang">2_Modificacion_Listas.py</div><pre>
+<span class="c-st">"""
+2. GESTIÓN DE INVENTARIO DE HARDWARE
+Objetivo: Practicar la inserción y eliminación dinámica de datos.
+
+- Crea una lista vacía llamada 'equipo_test'.
+- Agrega 3 herramientas usando el método .append().
+- Inserta un nuevo elemento en la segunda posición (índice 1) usando .insert().
+- Elimina el último elemento con .pop() y uno específico por nombre con .remove().
+"""</span>
+
+equipo_test = []
+
+equipo_test.append(<span class="c-st">"Multimetro"</span>)
+equipo_test.append(<span class="c-st">"Osciloscopio"</span>)
+equipo_test.append(<span class="c-st">"Fuente"</span>)
+<span class="c-bi">print</span>(equipo_test)
+
+equipo_test.insert(<span class="c-nb">0</span>, <span class="c-st">"Cautin"</span>)
+<span class="c-bi">print</span>(equipo_test)
+
+herramienta_fuera = equipo_test.pop()
+<span class="c-bi">print</span>(f<span class="c-st">"# Nota: Se eliminó '{herramienta_fuera}' porque era el último en la lista."</span>)
+<span class="c-bi">print</span>(equipo_test)</pre></div>
+  </div>
+
+  <div id="plex-3" class="tab-panel">
+<div class="code-block"><div class="code-lang">3_Slicing_Listas.py</div><pre>
+<span class="c-st">"""
+
+3. EL CORTADOR DE SEÑALES
+Objetivo: Extraer subconjuntos de datos de una lista de telemetría.
+
+- Crea una lista de lecturas de voltaje del 1 al 10.
+- Extrae e imprime los primeros 3 valores.
+- Extrae e imprime los últimos 3 valores.
+- Crea una sub-lista que contenga solo los valores de los índices 2 al 6.
+- Imprime la lista saltando de 2 en 2 (paso del slicing).
+
+"""</span>
+
+voltajes = [<span class="c-nb">1</span>, <span class="c-nb">2</span>, <span class="c-nb">3</span>, <span class="c-nb">4</span>, <span class="c-nb">5</span>, <span class="c-nb">6</span>, <span class="c-nb">7</span>, <span class="c-nb">8</span>, <span class="c-nb">9</span>, <span class="c-nb">10</span>]
+
+primeros_tres = voltajes[<span class="c-nb">0</span>:<span class="c-nb">3</span>]
+<span class="c-bi">print</span>(f<span class="c-st">"Primeros 3 voltajes: {primeros_tres}"</span>) <span class="c-cm"># Salida: [1, 2, 3]</span>
+
+ultimos_tres = voltajes[-<span class="c-nb">3</span>:]
+<span class="c-bi">print</span>(f<span class="c-st">"Últimos 3 voltajes: {ultimos_tres}"</span>)   <span class="c-cm"># Salida: [8, 9, 10]</span>
+
+rango_medio = voltajes[<span class="c-nb">2</span>:<span class="c-nb">7</span>]
+<span class="c-bi">print</span>(f<span class="c-st">"Rango del índice 2 al 6: {rango_medio}"</span>) <span class="c-cm"># Salida: [3, 4, 5, 6, 7]</span>
+
+posiciones_pares = voltajes[::<span class="c-nb">2</span>]
+<span class="c-bi">print</span>(f<span class="c-st">"Lecturas con paso de 2: {posiciones_pares}"</span>) <span class="c-cm"># Salida: [1, 3, 5, 7, 9]</span></pre></div>
+  </div>
+
+  <div id="plex-4" class="tab-panel">
+<div class="code-block"><div class="code-lang">4_Funciones_Listas.py</div><pre>
+<span class="c-st">"""
+4. ANÁLISIS DE TELEMETRÍA
+Objetivo: Usar matemáticas básicas sobre listas de datos.
+
+- Crea una lista con 10 temperaturas desordenadas (ej. [22.5, 18.0, 30.2, ...]).
+- Encuentra e imprime el valor máximo (max) y el mínimo (min).
+- Calcula la suma total de las lecturas y el promedio:
+  Promedio = \\frac{\\sum \\text{Valores}}{\\text{Total de elementos}}
+- Verifica si el valor 25.0 existe en la lista usando el operador 'in'.
+"""</span>
+
+<span class="c-cm"># A. Crea una lista con 10 temperaturas desordenadas</span>
+temperaturas = [<span class="c-nb">22.5</span>, <span class="c-nb">18.0</span>, <span class="c-nb">30.2</span>, <span class="c-nb">25.0</span>, <span class="c-nb">27.4</span>, <span class="c-nb">19.8</span>, <span class="c-nb">21.0</span>, <span class="c-nb">28.5</span>, <span class="c-nb">24.1</span>, <span class="c-nb">26.3</span>]
+
+<span class="c-cm"># B. Encuentra e imprime el valor máximo y el mínimo</span>
+t_max = <span class="c-bi">max</span>(temperaturas)
+t_min = <span class="c-bi">min</span>(temperaturas)
+<span class="c-bi">print</span>(f<span class="c-st">"Temperatura Máxima: {t_max}°C"</span>) <span class="c-cm"># Salida: 30.2</span>
+<span class="c-bi">print</span>(f<span class="c-st">"Temperatura Mínima: {t_min}°C"</span>) <span class="c-cm"># Salida: 18.0</span>
+
+<span class="c-cm"># C. Calcula la suma total y el promedio
+# La fórmula matemática aplicada es:
+# $$Promedio = \\frac{\\sum \\text{Temperaturas}}{\\text{Total de elementos}}$$</span>
+suma_total = <span class="c-bi">sum</span>(temperaturas)
+conteo = <span class="c-bi">len</span>(temperaturas)
+promedio = suma_total / conteo
+
+<span class="c-bi">print</span>(f<span class="c-st">"Suma total de lecturas: {suma_total}"</span>)
+<span class="c-bi">print</span>(f<span class="c-st">"Promedio del sensor: {promedio:.2f}°C"</span>)
+
+<span class="c-cm"># D. Verifica si el valor 25.0 existe en la lista usando 'in'
+# El operador 'in' es fundamental para los "Asserts" en testing.</span>
+<span class="c-kw">if</span> <span class="c-nb">25.0</span> <span class="c-kw">in</span> temperaturas:
+    <span class="c-bi">print</span>(<span class="c-st">"✅ El valor 25.0 fue detectado en la telemetría."</span>)
+<span class="c-kw">else</span>:
+    <span class="c-bi">print</span>(<span class="c-st">"❌ El valor 25.0 no se encuentra en los registros."</span>)</pre></div>
+  </div>
+
+  <div id="plex-5" class="tab-panel">
+<div class="code-block"><div class="code-lang">5_Ordenamiento_Listas.py</div><pre>
+<span class="c-st">"""
+5. REORDENAMIENTO DE LOGS
+Objetivo: Manipular el orden de los errores encontrados en un test.
+
+- Crea una lista de IDs de error desordenados (ej. ["ERR-05", "ERR-01", "ERR-03"]).
+- Ordena la lista alfabéticamente de forma permanente usando .sort().
+- Invierte el orden de la lista usando .reverse().
+- Compara el resultado usando la función sorted() en lugar de .sort().
+"""</span>
+
+<span class="c-cm"># A. Crea una lista de IDs de error desordenados</span>
+errores = [<span class="c-st">"ERR-05"</span>, <span class="c-st">"ERR-01"</span>, <span class="c-st">"ERR-08"</span>, <span class="c-st">"ERR-03"</span>, <span class="c-st">"ERR-02"</span>]
+string = <span class="c-st">"83034959"</span>
+<span class="c-cm"># B. Ordena la lista alfabéticamente de forma permanente usando .sort()
+# Por defecto, .sort() ordena de menor a mayor (A-Z o 0-9).</span>
+errores.sort()
+<span class="c-bi">print</span>(f<span class="c-st">"Errores ordenados (Permanente): {errores}"</span>)
+<span class="c-cm"># Salida: ['ERR-01', 'ERR-02', 'ERR-03', 'ERR-05', 'ERR-08']</span>
+
+
+<span class="c-cm"># C. Invierte el orden de la lista usando .reverse()
+# Ahora el error más alto quedará al principio.</span>
+errores.reverse()
+<span class="c-bi">print</span>(f<span class="c-st">"Errores en orden descendente: {errores}"</span>)
+<span class="c-cm"># Salida: ['ERR-08', 'ERR-05', 'ERR-03', 'ERR-02', 'ERR-01']</span>
+
+
+<span class="c-cm"># D. Ejemplo con sorted() para no perder el orden original
+# Supongamos que tenemos una lista nueva de prioridad</span>
+prioridad = [<span class="c-st">"Alta"</span>, <span class="c-st">"Baja"</span>, <span class="c-st">"Media"</span>]
+
+<span class="c-cm"># sorted() nos devuelve una lista nueva que guardamos en otra variable</span>
+prioridad_ordenada = <span class="c-bi">sorted</span>(prioridad)
+
+<span class="c-bi">print</span>(f<span class="c-st">"Original: {prioridad}"</span>)          <span class="c-cm"># Sigue siendo ["Alta", "Baja", "Media"]</span>
+<span class="c-bi">print</span>(f<span class="c-st">"Ordenada: {prioridad_ordenada}"</span>) <span class="c-cm"># Es ["Alta", "Baja", "Media"] -&gt; ["Alta", "Baja", "Media"] (alfabético)</span></pre></div>
+  </div>
+
+  <div id="plex-6" class="tab-panel">
+<div class="code-block"><div class="code-lang">6_Bucles_Listas.py</div><pre>
+<span class="c-st">"""
+6. EL FILTRO DE ALERTAS CRÍTICAS
+Objetivo: Automatizar el filtrado de datos negativos o erróneos.
+
+- Crea una lista llamada 'lecturas' con valores positivos y negativos.
+- Crea una lista vacía llamada 'alertas'.
+- Recorre 'lecturas' con un bucle 'for'; si el valor es menor a 0, agrégalo a 'alertas'.
+- Al final, imprime el conteo total de alertas encontradas.
+"""</span>
+
+<span class="c-cm"># A. Lista de telemetría con valores mixtos (Voltajes o Temperaturas)</span>
+lecturas = [<span class="c-nb">12.5</span>, -<span class="c-nb">3.2</span>, <span class="c-nb">14.8</span>, <span class="c-nb">0.0</span>, -<span class="c-nb">1.5</span>, <span class="c-nb">13.2</span>, -<span class="c-nb">0.1</span>, <span class="c-nb">15.6</span>]
+
+<span class="c-cm"># B. Lista vacía para recolectar solo los errores (valores negativos)</span>
+alertas = []
+
+<span class="c-cm"># C. Recorremos la lista 'lecturas'
+# 'dato' es una variable temporal que toma el valor de cada elemento en cada vuelta.</span>
+<span class="c-kw">for</span> dato <span class="c-kw">in</span> lecturas:
+    <span class="c-cm"># D. Lógica de filtrado: Si el valor es menor a 0, es una anomalía</span>
+    <span class="c-kw">if</span> dato &lt; <span class="c-nb">0</span>:
+        alertas.append(dato)
+        <span class="c-bi">print</span>(f<span class="c-st">"⚠️ Alerta detectada: Valor anómalo de {dato}"</span>)
+
+
+<span class="c-cm"># E. Resultado final usando len() para el conteo</span>
+total_alertas = <span class="c-bi">len</span>(alertas)
+
+<span class="c-bi">print</span>(<span class="c-st">"--- Resumen del Análisis ---"</span>)
+<span class="c-bi">print</span>(f<span class="c-st">"Total de lecturas procesadas: {len(lecturas)}"</span>)
+<span class="c-bi">print</span>(f<span class="c-st">"Total de fallos encontrados: {total_alertas}"</span>)
+<span class="c-bi">print</span>(f<span class="c-st">"Lista de fallos: {alertas}"</span>)</pre></div>
+  </div>
+
+  <div id="plex-7" class="tab-panel">
+<div class="code-block"><div class="code-lang">7_Union_Listas.py</div><pre>
+<span class="c-st">"""
+7. FUSIÓN DE REPORTES
+Objetivo: Aprender a combinar datos de diferentes fuentes.
+
+- Crea dos listas: 'lote_A' (con 3 voltajes) y 'lote_B' (con otros 3).
+- Crea una tercera lista 'reporte_total' usando el operador '+'.
+- Usa el método .extend() para agregar una lista de 'errores' a 'reporte_total'.
+- Imprime la longitud final del reporte.
+"""</span>
+
+<span class="c-cm"># A. Crea dos listas: 'lote_A' y 'lote_B' con 3 voltajes cada una</span>
+lote_A = [<span class="c-nb">5.0</span>, <span class="c-nb">5.1</span>, <span class="c-nb">4.9</span>]
+lote_B = [<span class="c-nb">12.0</span>, <span class="c-nb">12.1</span>, <span class="c-nb">11.8</span>]
+
+<span class="c-cm"># B. Crea 'reporte_total' usando el operador '+'
+# NOTA: El operador '+' genera una NUEVA lista en la memoria.
+# Las listas originales 'lote_A' y 'lote_B' permanecen intactas.</span>
+reporte_total = lote_A + lote_B
+
+<span class="c-bi">print</span>(f<span class="c-st">"# Reporte inicial (Suma de lotes): {reporte_total}"</span>)
+
+<span class="c-cm"># C. Usa .extend() para agregar una lista de 'errores'
+# NOTA: .extend() no crea una lista nueva, sino que "estira" la lista
+# 'reporte_total' agregando los nuevos elementos al final.
+# Es más eficiente en términos de memoria para listas muy grandes.</span>
+errores = [-<span class="c-nb">1.0</span>, -<span class="c-nb">99.9</span>, -<span class="c-nb">0.5</span>]
+reporte_total.extend(errores)
+
+<span class="c-cm"># D. Imprime la longitud final del reporte
+# Usamos len() para confirmar cuántos datos procesamos en total.</span>
+<span class="c-bi">print</span>(f<span class="c-st">"# Reporte final con errores: {reporte_total}"</span>)
+<span class="c-bi">print</span>(f<span class="c-st">"# Cantidad total de datos analizados: {len(reporte_total)}"</span>)</pre></div>
+  </div>
+
+  <div id="plex-8" class="tab-panel">
+<div class="code-block"><div class="code-lang">8_LocalizadorFallos_Listas.py</div><pre>
+<span class="c-st">"""
+
+8. LOCALIZADOR DE FALLOS
+Objetivo: Encontrar la ubicación y recurrencia de errores.
+
+- Crea una lista 'logs' con varios estados: ["OK", "FAIL", "OK", "OK", "FAIL"].
+- Usa .count() para saber cuántos "FAIL" hubo en total.
+- Usa .index() para encontrar en qué posición ocurrió el PRIMER "FAIL".
+- Imprime ambos resultados con mensajes claros.
+
+"""</span>
+
+<span class="c-cm"># A. Crea una lista 'logs' con varios estados de ejecución</span>
+logs = [<span class="c-st">"OK"</span>, <span class="c-st">"FAIL"</span>, <span class="c-st">"OK"</span>, <span class="c-st">"OK"</span>, <span class="c-st">"FAIL"</span>]
+
+<span class="c-cm"># B. Usa .count() para saber cuántos "FAIL" hubo en total
+# Esto es vital para calcular el "Pass Rate" de tus pruebas en Google/Intelliswift.</span>
+total_fallos = logs.count(<span class="c-st">"FAIL"</span>)
+
+<span class="c-cm"># C. Usa .index() para encontrar la posición del PRIMER "FAIL"
+# Recuerda: .index() solo devuelve el primero que encuentra de izquierda a derecha.</span>
+indice_primer_fallo = logs.index(<span class="c-st">"FAIL"</span>)
+
+<span class="c-cm"># D. Imprime ambos resultados con mensajes profesionales</span>
+<span class="c-bi">print</span>(f<span class="c-st">"--- REPORTE DE EJECUCIÓN ---"</span>)
+<span class="c-bi">print</span>(f<span class="c-st">"Total de estados analizados: {len(logs)}"</span>)
+<span class="c-bi">print</span>(f<span class="c-st">"Número de fallos detectados: {total_fallos}"</span>)
+<span class="c-bi">print</span>(f<span class="c-st">"El primer fallo ocurrió en el paso número: {indice_primer_fallo}"</span>)
+
+<span class="c-cm"># E. TIP PRO: Si quieres la posición humana (empezando en 1), suma 1 al índice</span>
+<span class="c-bi">print</span>(f<span class="c-st">"Ubicación humana del primer error: {indice_primer_fallo + 1}"</span>)</pre></div>
+  </div>
+
+  <div id="plex-9" class="tab-panel">
+<div class="code-block"><div class="code-lang">9_Matriz_Listas.py</div><pre>
+<span class="c-st">"""
+9. MATRIZ DE SENSORES
+Objetivo: Acceder a datos en estructuras de dos dimensiones.
+
+- Crea una lista 'matriz' que represente 2 grupos de sensores:
+  Grupo 1: [20, 21, 22] | Grupo 2: [30, 31, 32]
+- Accede e imprime el segundo valor del primer grupo.
+- Accede e imprime el tercer valor del segundo grupo.
+"""</span>
+
+<span class="c-cm"># A. Crea una lista 'matriz' que represente 2 grupos de sensores
+# Grupo 1 (Índice 0): [20, 21, 22] | Grupo 2 (Índice 1): [30, 31, 32]</span>
+matriz = [
+    [<span class="c-nb">20</span>, <span class="c-nb">21</span>, <span class="c-nb">22</span>],  <span class="c-cm"># Fila 0</span>
+    [<span class="c-nb">30</span>, <span class="c-nb">31</span>, <span class="c-nb">32</span>]   <span class="c-cm"># Fila 1</span>
+]
+
+<span class="c-cm"># B. Accede e imprime el segundo valor del primer grupo
+# Fila 0, Columna 1 (Recuerda que empezamos en 0)</span>
+valor_g1 = matriz[<span class="c-nb">0</span>][<span class="c-nb">1</span>]
+<span class="c-bi">print</span>(f<span class="c-st">"Sensor 2 del Grupo 1: {valor_g1}"</span>)  <span class="c-cm"># Salida: 21</span>
+
+<span class="c-cm"># C. Accede e imprime el tercer valor del segundo grupo
+# Fila 1, Columna 2</span>
+valor_g2 = matriz[<span class="c-nb">1</span>][<span class="c-nb">2</span>]
+<span class="c-bi">print</span>(f<span class="c-st">"Sensor 3 del Grupo 2: {valor_g2}"</span>)  <span class="c-cm"># Salida: 32</span>
+
+<span class="c-cm"># D. TIP TÉCNICO: Puedes ver la matriz completa de forma visual</span>
+<span class="c-bi">print</span>(<span class="c-st">"\\nVisualización de la red de sensores:"</span>)
+<span class="c-kw">for</span> fila <span class="c-kw">in</span> matriz:
+    <span class="c-bi">print</span>(f<span class="c-st">"  Grupo de Sensores: {fila}"</span>)</pre></div>
+  </div>
+
+  <div id="plex-10" class="tab-panel">
+<div class="code-block"><div class="code-lang">10_Copy_Listas.py</div><pre>
+<span class="c-st">"""
+10. LIMPIEZA DE BUFFER
+Objetivo: Aprender a resetear datos sin perder la referencia.
+
+- Crea una lista 'buffer_datos' con 5 números aleatorios.
+- Crea una copia de seguridad llamada 'backup' usando .copy().
+- Vacía la lista original 'buffer_datos' usando .clear().
+- Imprime ambas listas para demostrar que el backup sobrevivió.
+"""</span>
+
+<span class="c-cm"># A. Crea una lista 'buffer_datos' con 5 números (simulando lecturas)</span>
+buffer_datos = [<span class="c-nb">10.2</span>, <span class="c-nb">15.5</span>, <span class="c-nb">12.1</span>, <span class="c-nb">18.9</span>, <span class="c-nb">14.3</span>]
+
+<span class="c-cm"># B. Crea una copia de seguridad llamada 'backup' usando .copy()
+# Como AI Software Test Engineer, esto te permite guardar evidencias antes
+# de que el sistema limpie los logs para la siguiente prueba.</span>
+backup = buffer_datos.copy()
+
+<span class="c-cm"># C. Vacía la lista original 'buffer_datos' usando .clear()
+# Esto simula un "Reset" de hardware o de memoria tras procesar los datos.</span>
+buffer_datos.clear()
+
+<span class="c-cm"># D. Imprime ambas listas para demostrar que el backup sobrevivió</span>
+<span class="c-bi">print</span>(<span class="c-st">"--- GESTIÓN DE MEMORIA ---"</span>)
+<span class="c-bi">print</span>(f<span class="c-st">"Estado del Buffer (Original): {buffer_datos}"</span>) <span class="c-cm"># Salida: []</span>
+<span class="c-bi">print</span>(f<span class="c-st">"Estado del Backup (Copia):     {backup}"</span>)       <span class="c-cm"># Salida: [10.2, 15.5, 12.1, 18.9, 14.3]</span>
+
+<span class="c-cm"># E. PRUEBA DE IDENTIDAD:
+# Verificamos si son objetos diferentes en la memoria RAM.</span>
+<span class="c-kw">if</span> buffer_datos <span class="c-kw">is not</span> backup:
+    <span class="c-bi">print</span>(<span class="c-st">"✅ Confirmado: Son objetos independientes en memoria."</span>)</pre></div>
+  </div>
+
+  <div id="plex-11" class="tab-panel">
+<div class="code-block"><div class="code-lang">11_ComprehensionList_Listas.py</div><pre>
+<span class="c-st">"""
+11. FILTRO VELOZ (LIST COMPREHENSION)
+Objetivo: Reducir 4 líneas de código (bucle for) a solo 1.
+
+- Tienes una lista: valores = [10, 50, 120, 80, 200, 30].
+- Crea una nueva lista 'criticos' que solo contenga los valores mayores a 100.
+- Hazlo en UNA SOLA LÍNEA de código usando List Comprehension.
+- Imprime la lista 'criticos'.
+"""</span>
+
+<span class="c-cm"># A. Lista de valores de sensores</span>
+valores = [<span class="c-nb">10</span>, <span class="c-nb">50</span>, <span class="c-nb">120</span>, <span class="c-nb">80</span>, <span class="c-nb">200</span>, <span class="c-nb">30</span>]
+
+<span class="c-cm"># B. Crea 'criticos' con valores &gt; 100 en UNA SOLA LÍNEA
+# Esto sustituye a un bucle 'for' de 4 líneas.</span>
+criticos = [v <span class="c-kw">for</span> v <span class="c-kw">in</span> valores <span class="c-kw">if</span> v &gt; <span class="c-nb">100</span>]
+
+<span class="c-cm"># C. Imprime la lista resultante</span>
+<span class="c-bi">print</span>(<span class="c-st">"--- ANÁLISIS DE UMBRAL CRÍTICO ---"</span>)
+<span class="c-bi">print</span>(f<span class="c-st">"Valores originales: {valores}"</span>)
+<span class="c-bi">print</span>(f<span class="c-st">"Lecturas críticas (&gt;100): {criticos}"</span>) <span class="c-cm"># Salida: [120, 200]</span></pre></div>
+  </div>
+
+  <div id="plex-12" class="tab-panel">
+<div class="code-block"><div class="code-lang">12_Reversion_Listas.py</div><pre>
+<span class="c-st">"""
+12. INVERSIÓN DE DATOS ESTRICTA
+Objetivo: Manipular el flujo cronológico de la información.
+
+- Crea una lista 'pasos' del 1 al 5.
+- Invierte la lista usando el truco de slicing [::-1] y guárdala en 'pasos_inv'.
+- Toma la lista original 'pasos' y usa .sort(reverse=True).
+- Explica en un comentario cuál es la diferencia entre ambos resultados.
+"""</span>
+
+<span class="c-cm"># A. Crea una lista 'pasos' del 1 al 5</span>
+pasos = [<span class="c-nb">1</span>, <span class="c-nb">2</span>, <span class="c-nb">3</span>, <span class="c-nb">4</span>, <span class="c-nb">5</span>]
+
+<span class="c-cm"># B. Invierte usando slicing [::-1] y guarda en 'pasos_inv'
+# Esto crea una COPIA nueva en la memoria. La original 'pasos' sigue igual.</span>
+pasos_inv = pasos[::-<span class="c-nb">1</span>]
+
+<span class="c-cm">#  memory operation]</span>
+
+<span class="c-cm"># C. Usa .sort(reverse=True) en la lista original
+# Esto NO crea una copia; modifica 'pasos' de forma PERMANENTE en la memoria.</span>
+pasos.sort(reverse=<span class="c-kw">True</span>)
+
+<span class="c-cm"># D. Resultados y Diferencias</span>
+<span class="c-bi">print</span>(<span class="c-st">"--- RESULTADOS DE INVERSIÓN ---"</span>)
+<span class="c-bi">print</span>(f<span class="c-st">"Original modificada (.sort): {pasos}"</span>)     <span class="c-cm"># Salida: [5, 4, 3, 2, 1]</span>
+<span class="c-bi">print</span>(f<span class="c-st">"Copia creada ([::-1]):      {pasos_inv}"</span>) <span class="c-cm"># Salida: [5, 4, 3, 2, 1]</span>
+
+<span class="c-cm"># E. EXPLICACIÓN TÉCNICA (Comentario crítico para entrevista):</span>
+<span class="c-st">"""
+DIFERENCIA CLAVE:
+Si la lista fuera [1, 5, 2]:
+- [::-1] devolvería [2, 5, 1] (Simplemente el orden inverso de aparición).
+- .sort(reverse=True) devolvería [5, 2, 1] (Orden numérico de mayor a menor).
+
+En Testing, usamos [::-1] para ver los logs más recientes primero sin
+alterar la lógica de los datos.
+"""</span></pre></div>
+  </div>
+
+  <div id="plex-13" class="tab-panel">
+<div class="code-block"><div class="code-lang">13_Sincronizacion_Listas.py</div><pre>
+<span class="c-st">"""
+13. SINCRONIZACIÓN DE SENSORES
+Objetivo: Operar con múltiples listas al mismo tiempo de forma eficiente.
+
+- Tienes dos listas: 'nombres_sensores' y 'lecturas_actuales'.
+- Usa 'enumerate()' para imprimir cada sensor con su número de orden (empezando en 1).
+- Usa 'zip()' para crear un reporte que diga: "El [nombre] reportó [valor] unidades".
+"""</span>
+
+nombres_sensores = [<span class="c-st">"Temp_Motor"</span>, <span class="c-st">"Presion_Aceite"</span>, <span class="c-st">"Nivel_Bateria"</span>]
+lecturas_actuales = [<span class="c-nb">85.5</span>, <span class="c-nb">40.2</span>, <span class="c-nb">12.6</span>]
+
+<span class="c-cm"># --- PARTE A: Uso de enumerate() ---
+# Objetivo: Obtener el índice y el valor al mismo tiempo.
+# Usamos 'start=1' para que el conteo sea humano (1, 2, 3...) y no de sistema (0, 1, 2...).</span>
+
+<span class="c-bi">print</span>(<span class="c-st">"--- REPORTE DE ESTADO DE SENSORES ---"</span>)
+<span class="c-kw">for</span> i, nombre <span class="c-kw">in</span> <span class="c-bi">enumerate</span>(nombres_sensores, start=<span class="c-nb">1</span>):
+    <span class="c-bi">print</span>(f<span class="c-st">"Sensor #{i}: {nombre} detectado."</span>)
+
+<span class="c-cm"># --- PARTE B: Uso de zip() ---
+# Objetivo: Recorrer dos listas en paralelo como si fueran una sola tabla.</span>
+
+<span class="c-bi">print</span>(<span class="c-st">"\\n--- TELEMETRÍA EN TIEMPO REAL ---"</span>)
+<span class="c-kw">for</span> nombre, valor <span class="c-kw">in</span> <span class="c-bi">zip</span>(nombres_sensores, lecturas_actuales):
+    <span class="c-bi">print</span>(f<span class="c-st">"El {nombre} tiene una lectura de {valor} unidades."</span>)</pre></div>
+  </div>
+
+  <div id="plex-14" class="tab-panel">
+<div class="code-block"><div class="code-lang">14_Extraer_Listas.py</div><pre>
+<span class="c-st">"""
+14. DESEMPAQUETADO DE MENSAJES CAN (CAN BUS UNPACKING)
+Objetivo: Aislar el Header, el Body y el Checksum de una ráfaga de datos.
+
+- Tienes una lista: datos_can = [0x1F, 0x01, 0xFF, 0x00, 0xAB, 0x22, 0x05]
+- Usa el asterisco (*) para guardar el primer elemento en 'header',
+  el último en 'checksum' y todos los del medio en una lista llamada 'payload'.
+- Imprime las tres variables por separado.
+"""</span>
+
+<span class="c-cm"># ==============================================================================
+# 📔 NOTAS TÉCNICAS: EXTENDED ITERABLE UNPACKING
+# ==============================================================================
+# El desempaquetado con '*' permite capturar múltiples elementos de una lista
+# sin saber cuántos hay exactamente en medio.
+#
+# Regla: Solo puedes usar UN asterisco por cada operación de desempaquetado.
+# ==============================================================================</span>
+
+<span class="c-cm"># A. Datos de ejemplo (Mensaje CAN con Header, Payload y Checksum)
+# 0x1F es el Header, 0x05 es el Checksum, lo demás es la carga de datos (Payload).</span>
+datos_can = [<span class="c-nb">0x1F</span>, <span class="c-nb">0x01</span>, <span class="c-nb">0xFF</span>, <span class="c-nb">0x00</span>, <span class="c-nb">0xAB</span>, <span class="c-nb">0x22</span>, <span class="c-nb">0x05</span>]
+
+<span class="c-cm"># B. Uso del desempaquetado extendido
+# header toma el primer valor.
+# checksum toma el último valor.
+# *payload toma TODO lo que quedó en medio como una lista nueva.</span>
+header, *payload, checksum = datos_can
+
+<span class="c-cm"># C. Resultados</span>
+<span class="c-bi">print</span>(<span class="c-st">"--- DESEMPAQUETADO DE PROTOCOLO ---"</span>)
+<span class="c-bi">print</span>(f<span class="c-st">"ID/Header (Hex): {hex(header)}"</span>)   <span class="c-cm"># 0x1f</span>
+<span class="c-bi">print</span>(f<span class="c-st">"Checksum  (Hex): {hex(checksum)}"</span>) <span class="c-cm"># 0x05</span>
+<span class="c-bi">print</span>(f<span class="c-st">"Payload de datos: {payload}"</span>)      <span class="c-cm"># [1, 255, 0, 171, 34] (en decimal)</span></pre></div>
+  </div>
+
+  <div id="plex-15" class="tab-panel">
+<div class="code-block"><div class="code-lang">15_DeepCopy_Listas.py</div><pre>
+<span class="c-st">"""
+15. CLONACIÓN SEGURA DE MATRICES
+Objetivo: Aprender la diferencia entre copia superficial y profunda.
+
+- Importa el módulo 'copy'.
+- Crea una matriz: configuracion = [[1, 0], [0, 1]] (una matriz identidad).
+- Crea 'config_test' usando copy.deepcopy(configuracion).
+- Cambia un valor dentro de 'config_test' y demuestra con un print que
+  la matriz 'configuracion' original NO cambió.
+"""</span>
+<span class="c-cm"># ==============================================================================
+# 📔 NOTAS TÉCNICAS: SHALLOW COPY (SUPERFICIAL) VS DEEP COPY (PROFUNDA)
+# ==============================================================================
+# 1. .copy(): Es una copia superficial. Copia la lista exterior, pero los
+#    objetos internos (las sub-listas) siguen siendo los mismos en la memoria.
+# 2. copy.deepcopy(): Crea una réplica total. Clona la lista exterior y todas
+#    las sub-listas de forma independiente.
+# ==============================================================================</span>
+
+<span class="c-kw">import</span> copy
+
+<span class="c-cm"># A. Crea una matriz: configuracion (Matriz Identidad 2x2)</span>
+configuracion = [[<span class="c-nb">1</span>, <span class="c-nb">0</span>], [<span class="c-nb">0</span>, <span class="c-nb">1</span>]]
+
+<span class="c-cm"># B. Crear 'config_test' usando deepcopy()
+# Esto garantiza que si modificamos config_test, la original no sufra cambios.</span>
+config_test = copy.deepcopy(configuracion)
+
+<span class="c-cm"># C. Modificamos un valor dentro de 'config_test' (Fila 0, Columna 1)
+# Vamos a cambiar el 0 por un 5.</span>
+config_test[<span class="c-nb">0</span>][<span class="c-nb">1</span>] = <span class="c-nb">5</span>
+
+<span class="c-cm"># D. Demostración con prints</span>
+<span class="c-bi">print</span>(<span class="c-st">"--- PRUEBA DE CLONACIÓN SEGURA ---"</span>)
+<span class="c-bi">print</span>(f<span class="c-st">"Original (configuracion): {configuracion}"</span>) <span class="c-cm"># Salida: [[1, 0], [0, 1]]</span>
+<span class="c-bi">print</span>(f<span class="c-st">"Copia de Test (config_test): {config_test}"</span>)  <span class="c-cm"># Salida: [[1, 5], [0, 1]]</span></pre></div>
+  </div>
+
+  <div id="plex-16" class="tab-panel">
+<div class="code-block"><div class="code-lang">16_LimpiarDuplicados_Listas.py</div><pre>
+<span class="c-st">"""
+16. AUDITORÍA DE ERRORES ÚNICOS
+Objetivo: Filtrar IDs de error repetidos en una prueba masiva.
+
+- Tienes: logs = ["E-01", "E-05", "E-01", "E-03", "E-05", "E-01", "E-02"].
+- Convierte la lista en un 'set' para eliminar duplicados y luego
+  regrésala a formato lista.
+- Ordena el resultado e imprímelo.
+"""</span>
+
+<span class="c-cm"># ==============================================================================
+# 📔 NOTAS TÉCNICAS: ELIMINACIÓN DE DUPLICADOS CON 'SET'
+# ==============================================================================
+# Un 'Set' (conjunto) es una estructura de datos que, por definición, NO permite
+# elementos duplicados.
+#
+# El flujo estándar en Python para limpiar una lista es:
+# 1. lista -&gt; set (Se borran los duplicados automáticamente).
+# 2. set -&gt; lista (Recuperas las propiedades de la lista, como el ordenamiento).
+#
+# Nota de rendimiento: Buscar en un set tiene una complejidad de $O(1)$,
+# lo que lo hace instantáneo sin importar el tamaño.
+# ==============================================================================</span>
+
+<span class="c-cm"># A. Lista de logs con IDs de error repetidos</span>
+logs = [<span class="c-st">"E-01"</span>, <span class="c-st">"E-05"</span>, <span class="c-st">"E-01"</span>, <span class="c-st">"E-03"</span>, <span class="c-st">"E-05"</span>, <span class="c-st">"E-01"</span>, <span class="c-st">"E-02"</span>]
+
+<span class="c-cm"># B. Convertir la lista en un 'set' y luego de vuelta a 'lista'
+# Esto se puede hacer en una sola línea.</span>
+errores_unicos = <span class="c-bi">list</span>(<span class="c-bi">set</span>(logs))
+
+<span class="c-cm"># C. Ordenar el resultado
+# Como los sets no tienen orden, al volver a lista los datos quedan desordenados.
+# Usamos .sort() para que el reporte sea legible (E-01, E-02...).</span>
+errores_unicos.sort()
+
+<span class="c-cm"># D. Resultados</span>
+<span class="c-bi">print</span>(<span class="c-st">"--- AUDITORÍA DE LOGS ---"</span>)
+<span class="c-bi">print</span>(f<span class="c-st">"Total de eventos registrados: {len(logs)}"</span>)
+<span class="c-bi">print</span>(f<span class="c-st">"IDs de error detectados (Únicos): {errores_unicos}"</span>)
+<span class="c-bi">print</span>(f<span class="c-st">"Cantidad de tipos de error: {len(errores_unicos)}"</span>)</pre></div>
+  </div>
+
+  <div id="plex-17" class="tab-panel">
+<div class="code-block"><div class="code-lang">17_FormateoReporte_Listas.py</div><pre>
+<span class="c-st">"""
+17. FORMATEO DE REPORTE FINAL
+Objetivo: Generar una línea de log profesional a partir de una lista.
+
+- Tienes: pasos = ["Conectado", "Autenticado", "Lectura_OK", "Desconectado"].
+- Usa el método .join() para crear un solo string donde cada paso
+  esté separado por una flecha " -&gt; ".
+- Imprime el resultado.
+"""</span>
+
+<span class="c-cm"># ==============================================================================
+# 📔 NOTAS TÉCNICAS: EL MÉTODO .join()
+# ==============================================================================
+# A diferencia de los métodos anteriores, .join() es un método de STRING,
+# no de lista. Toma todos los elementos de una lista y los pega usando el
+# string que tú definas como "pegamento".
+#
+# REGLA DE ORO: Todos los elementos dentro de la lista DEBEN ser strings.
+# Si hay números, primero hay que convertirlos.
+# ==============================================================================</span>
+
+<span class="c-cm"># A. Lista de pasos ejecutados en una prueba de software</span>
+pasos = [<span class="c-st">"Conectado"</span>, <span class="c-st">"Autenticado"</span>, <span class="c-st">"Lectura_OK"</span>, <span class="c-st">"Desconectado"</span>]
+
+<span class="c-cm"># B. Usa .join() para crear una cadena separada por flechas " -&gt; "
+# El string inicial " -&gt; " es el separador que se pondrá ENTRE los elementos.</span>
+reporte_flujo = <span class="c-st">" -&gt; "</span>.join(pasos)
+
+<span class="c-cm"># C. Ejemplo adicional: Formato CSV (valores separados por comas)
+# Muy útil para exportar datos a Excel después de un test.</span>
+reporte_csv = <span class="c-st">","</span>.join(pasos)
+
+<span class="c-cm"># D. Resultados</span>
+<span class="c-bi">print</span>(<span class="c-st">"--- GENERACIÓN DE LOG PROFESIONAL ---"</span>)
+<span class="c-bi">print</span>(f<span class="c-st">"Flujo de ejecución: {reporte_flujo}"</span>)
+<span class="c-bi">print</span>(f<span class="c-st">"Formato de exportación: {reporte_csv}"</span>)</pre></div>
+  </div>
+
+  <div id="plex-18" class="tab-panel">
+<div class="code-block"><div class="code-lang">18_BigO_Listas.py</div><pre>
+<span class="c-st">"""
+18. ANÁLISIS DE EFICIENCIA (TEÓRICO)
+Objetivo: Evaluar el rendimiento de tus scripts para Honeywell/Google.
+
+- Tienes una lista de 1,000,000 de registros.
+- En un comentario, responde cuál de estas operaciones es más rápida y por qué:
+  A) Acceder al elemento en la posición 500,000 (lista[500000]).
+  B) Buscar si el valor 'ERROR_CRITICO' existe en la lista (if 'ERROR_CRITICO' in lista).
+
+Pista: Investiga la complejidad $O(1)$ vs $O(n)$.
+"""</span>
+
+<span class="c-cm"># ==============================================================================
+# 📔 NOTAS TÉCNICAS: COMPLEJIDAD TEMPORAL (BIG O)
+# ==============================================================================
+# La eficiencia se mide en cómo crece el tiempo de ejecución según el tamaño (n)
+# de los datos.
+#
+# 1. O(1) - Constante: Es instantáneo. No importa si tienes 10 o 10 millones
+#    de datos, el tiempo es el mismo.
+# 2. O(n) - Lineal: El tiempo crece proporcionalmente a los datos. Si tienes
+#    el doble de datos, tarda el doble de tiempo.
+# ==============================================================================</span>
+
+<span class="c-st">"""
+RESPUESTA AL DESAFÍO:
+---------------------
+Escenario: Lista de 1,000,000 de registros.
+
+A) Acceder a lista[500000]: Es una operación O(1).
+   Python sabe exactamente en qué dirección de memoria está ese índice.
+   Es INSTANTÁNEO.
+
+B) 'ERROR_CRITICO' in lista: Es una operación O(n).
+   Python tiene que empezar desde el índice 0 y preguntar "es este?" uno por uno
+   hasta llegar al final. En el peor caso, revisará el millón de registros.
+
+CONCLUSIÓN:
+La opción A es muchísimo más rápida que la opción B para grandes volúmenes
+de datos.
+"""</span></pre></div>
+  </div>
+
 </div>
   </div>
 </div>`,
@@ -1029,7 +2138,8 @@ run_b = ((<span class="c-st">'test_can'</span>, <span class="c-st">'PASSED'</spa
     <button class="tab-btn" onclick="switchTab(this,'pd-3','pydicts')">Patrones avanzados</button>
     <button class="tab-btn" onclick="switchTab(this,'pd-4','pydicts')">⚠️ Errores comunes</button>
     <button class="tab-btn" onclick="switchTab(this,'pd-5','pydicts')">✅ Mejores Prácticas</button>
-    <button class="tab-btn" onclick="switchTab(this,'pd-6','pydicts')">🧩 Ejercicios</button>
+    <button class="tab-btn" onclick="switchTab(this,'pd-6','pydicts')">🧩 Ejercicios (quiz)</button>
+    <button class="tab-btn" onclick="switchTab(this,'pd-7','pydicts')">📁 Ejercicios_Diccionarios (carpeta)</button>
   </div>
   <div id="pd-1" class="tab-panel active">
 ${renderMethodTable('DCT')}
@@ -1412,6 +2522,695 @@ copia[<span class="c-st">'tags'</span>].append(<span class="c-st">'debug'</span>
   </div>
 </div>
   </div>
+  <div id="pd-7" class="tab-panel">
+<div class="concept-intro">Los <b>18 ejercicios completos</b> de la carpeta <code>Ejercicios_Python/Ejercicios_Diccionarios</code> del repositorio, con su enunciado y solución tal como están guardados — para tenerlos siempre a mano sin salir de la app.</div>
+<div class="tab-group-pdex">
+  <div class="tab-bar" style="flex-wrap:wrap">
+    <button class="tab-btn active" onclick="switchTab(this,'pdex-1','pdex')">1. Creación</button>
+    <button class="tab-btn" onclick="switchTab(this,'pdex-2','pdex')">2. Modificación</button>
+    <button class="tab-btn" onclick="switchTab(this,'pdex-3','pdex')">3. Vistas</button>
+    <button class="tab-btn" onclick="switchTab(this,'pdex-4','pdex')">4. Funciones</button>
+    <button class="tab-btn" onclick="switchTab(this,'pdex-5','pdex')">5. Ordenamiento</button>
+    <button class="tab-btn" onclick="switchTab(this,'pdex-6','pdex')">6. Bucles</button>
+    <button class="tab-btn" onclick="switchTab(this,'pdex-7','pdex')">7. Unión</button>
+    <button class="tab-btn" onclick="switchTab(this,'pdex-8','pdex')">8. Localizador de Fallos</button>
+    <button class="tab-btn" onclick="switchTab(this,'pdex-9','pdex')">9. Anidados</button>
+    <button class="tab-btn" onclick="switchTab(this,'pdex-10','pdex')">10. Copy</button>
+    <button class="tab-btn" onclick="switchTab(this,'pdex-11','pdex')">11. Comprehension</button>
+    <button class="tab-btn" onclick="switchTab(this,'pdex-12','pdex')">12. Inversión</button>
+    <button class="tab-btn" onclick="switchTab(this,'pdex-13','pdex')">13. Sincronización</button>
+    <button class="tab-btn" onclick="switchTab(this,'pdex-14','pdex')">14. Extraer (kwargs)</button>
+    <button class="tab-btn" onclick="switchTab(this,'pdex-15','pdex')">15. DeepCopy</button>
+    <button class="tab-btn" onclick="switchTab(this,'pdex-16','pdex')">16. Limpiar Duplicados</button>
+    <button class="tab-btn" onclick="switchTab(this,'pdex-17','pdex')">17. Formateo Reporte</button>
+    <button class="tab-btn" onclick="switchTab(this,'pdex-18','pdex')">18. BigO</button>
+  </div>
+
+  <div id="pdex-1" class="tab-panel active">
+<div class="code-block"><div class="code-lang">1_Creacion_Diccionarios.py</div><pre>
+<span class="c-st">"""
+1. LA FICHA TÉCNICA DEL DISPOSITIVO
+Objetivo: Aprender a crear diccionarios y acceder a sus valores por clave.
+
+- Crea un diccionario llamado 'dispositivo' con las claves "nombre", "modelo",
+  "voltaje" y "estado" (ej. "OK").
+- Imprime el valor de "nombre" usando corchetes [].
+- Imprime el valor de "voltaje" usando el método .get().
+- Intenta acceder a una clave que no existe (ej. "fabricante") usando .get()
+  con un valor por defecto "Desconocido", para evitar un error.
+"""</span>
+
+dispositivo = {
+    <span class="c-st">"nombre"</span>: <span class="c-st">"Sensor_Termico_01"</span>,
+    <span class="c-st">"modelo"</span>: <span class="c-st">"ST-2200"</span>,
+    <span class="c-st">"voltaje"</span>: <span class="c-nb">5.0</span>,
+    <span class="c-st">"estado"</span>: <span class="c-st">"OK"</span>
+}
+
+<span class="c-bi">print</span>(dispositivo[<span class="c-st">"nombre"</span>])
+<span class="c-bi">print</span>(dispositivo.get(<span class="c-st">"voltaje"</span>))
+<span class="c-bi">print</span>(dispositivo.get(<span class="c-st">"fabricante"</span>, <span class="c-st">"Desconocido"</span>))</pre></div>
+  </div>
+
+  <div id="pdex-2" class="tab-panel">
+<div class="code-block"><div class="code-lang">2_Modificacion_Diccionarios.py</div><pre>
+<span class="c-st">"""
+2. GESTIÓN DE CONFIGURACIÓN DE PRUEBA
+Objetivo: Practicar la inserción, actualización y eliminación dinámica de claves.
+
+- Crea un diccionario vacío llamado 'config_test'.
+- Agrega 3 claves con sus valores usando asignación directa (ej. config_test["puerto"] = "COM3").
+- Actualiza el valor de una clave existente.
+- Elimina una clave con .pop() y otra con del.
+"""</span>
+
+config_test = {}
+
+config_test[<span class="c-st">"puerto"</span>] = <span class="c-st">"COM3"</span>
+config_test[<span class="c-st">"baudrate"</span>] = <span class="c-nb">9600</span>
+config_test[<span class="c-st">"timeout"</span>] = <span class="c-nb">5</span>
+<span class="c-bi">print</span>(config_test)
+
+config_test[<span class="c-st">"baudrate"</span>] = <span class="c-nb">115200</span>
+<span class="c-bi">print</span>(config_test)
+
+valor_eliminado = config_test.pop(<span class="c-st">"timeout"</span>)
+<span class="c-bi">print</span>(f<span class="c-st">"# Nota: Se eliminó 'timeout' con valor '{valor_eliminado}' usando .pop()."</span>)
+<span class="c-bi">print</span>(config_test)
+
+<span class="c-kw">del</span> config_test[<span class="c-st">"puerto"</span>]
+<span class="c-bi">print</span>(f<span class="c-st">"# Nota: Se eliminó 'puerto' usando 'del'."</span>)
+<span class="c-bi">print</span>(config_test)</pre></div>
+  </div>
+
+  <div id="pdex-3" class="tab-panel">
+<div class="code-block"><div class="code-lang">3_Vistas_Diccionarios.py</div><pre>
+<span class="c-st">"""
+3. EL EXTRACTOR DE VISTAS
+Objetivo: Extraer subconjuntos de datos de un diccionario de configuración.
+
+- Crea un diccionario 'sensor' con al menos 4 pares clave-valor.
+- Extrae e imprime todas las claves usando .keys().
+- Extrae e imprime todos los valores usando .values().
+- Extrae e imprime todos los pares clave-valor usando .items().
+- Convierte el resultado de .keys() en una lista real con list().
+"""</span>
+
+<span class="c-cm"># A. Diccionario de configuración de un sensor</span>
+sensor = {
+    <span class="c-st">"id"</span>: <span class="c-st">"SNS-014"</span>,
+    <span class="c-st">"tipo"</span>: <span class="c-st">"Presion"</span>,
+    <span class="c-st">"unidad"</span>: <span class="c-st">"bar"</span>,
+    <span class="c-st">"activo"</span>: <span class="c-kw">True</span>
+}
+
+<span class="c-cm"># B. Extrae todas las claves con .keys()</span>
+claves = sensor.keys()
+<span class="c-bi">print</span>(f<span class="c-st">"Claves: {claves}"</span>)  <span class="c-cm"># Salida: dict_keys(['id', 'tipo', 'unidad', 'activo'])</span>
+
+<span class="c-cm"># C. Extrae todos los valores con .values()</span>
+valores = sensor.values()
+<span class="c-bi">print</span>(f<span class="c-st">"Valores: {valores}"</span>)  <span class="c-cm"># Salida: dict_values(['SNS-014', 'Presion', 'bar', True])</span>
+
+<span class="c-cm"># D. Extrae todos los pares con .items()</span>
+pares = sensor.items()
+<span class="c-bi">print</span>(f<span class="c-st">"Pares clave-valor: {pares}"</span>)
+
+<span class="c-cm"># E. Convierte .keys() en una lista real con list()
+# NOTA: .keys() devuelve una "vista", no una lista. Si necesitas indexar
+# o manipularla como lista (ej. lista_claves[0]), debes convertirla.</span>
+lista_claves = <span class="c-bi">list</span>(claves)
+<span class="c-bi">print</span>(f<span class="c-st">"Claves como lista: {lista_claves}"</span>)  <span class="c-cm"># Salida: ['id', 'tipo', 'unidad', 'activo']</span></pre></div>
+  </div>
+
+  <div id="pdex-4" class="tab-panel">
+<div class="code-block"><div class="code-lang">4_Funciones_Diccionarios.py</div><pre>
+<span class="c-st">"""
+4. ANÁLISIS DE LECTURAS POR SENSOR
+Objetivo: Usar matemáticas básicas sobre los valores de un diccionario.
+
+- Crea un diccionario 'lecturas' donde cada clave es el nombre de un sensor
+  y el valor es su última lectura numérica.
+- Calcula la suma total y el promedio de las lecturas usando .values().
+- Encuentra cuál es el sensor con el valor MÁS ALTO usando max() con key=.
+- Verifica si la clave "Temp_Motor" existe en el diccionario usando 'in'.
+"""</span>
+
+<span class="c-cm"># A. Diccionario de lecturas por sensor</span>
+lecturas = {
+    <span class="c-st">"Temp_Motor"</span>: <span class="c-nb">85.5</span>,
+    <span class="c-st">"Presion_Aceite"</span>: <span class="c-nb">40.2</span>,
+    <span class="c-st">"Nivel_Bateria"</span>: <span class="c-nb">12.6</span>,
+    <span class="c-st">"Temp_Ambiente"</span>: <span class="c-nb">22.3</span>
+}
+
+<span class="c-cm"># B. Suma total y promedio usando .values()</span>
+suma_total = <span class="c-bi">sum</span>(lecturas.values())
+promedio = suma_total / <span class="c-bi">len</span>(lecturas)
+<span class="c-bi">print</span>(f<span class="c-st">"Suma total de lecturas: {suma_total}"</span>)
+<span class="c-bi">print</span>(f<span class="c-st">"Promedio general: {promedio:.2f}"</span>)
+
+<span class="c-cm"># C. Sensor con el valor más alto usando max() con key=
+# 'key=lecturas.get' le dice a max() que compare por el VALOR de cada clave,
+# no por el nombre de la clave en sí (que compararía alfabéticamente).</span>
+sensor_max = <span class="c-bi">max</span>(lecturas, key=lecturas.get)
+<span class="c-bi">print</span>(f<span class="c-st">"Sensor con la lectura más alta: {sensor_max} ({lecturas[sensor_max]})"</span>)
+
+<span class="c-cm"># D. Verifica si la clave "Temp_Motor" existe usando 'in'
+# En diccionarios, 'in' revisa las CLAVES, no los valores. Es una operación O(1).</span>
+<span class="c-kw">if</span> <span class="c-st">"Temp_Motor"</span> <span class="c-kw">in</span> lecturas:
+    <span class="c-bi">print</span>(<span class="c-st">"✅ El sensor 'Temp_Motor' está registrado."</span>)
+<span class="c-kw">else</span>:
+    <span class="c-bi">print</span>(<span class="c-st">"❌ El sensor 'Temp_Motor' no se encuentra registrado."</span>)</pre></div>
+  </div>
+
+  <div id="pdex-5" class="tab-panel">
+<div class="code-block"><div class="code-lang">5_Ordenamiento_Diccionarios.py</div><pre>
+<span class="c-st">"""
+5. RANKING DE ERRORES POR FRECUENCIA
+Objetivo: Ordenar un diccionario según sus claves o sus valores.
+
+- Crea un diccionario 'conteo_errores' donde cada clave es un ID de error
+  y el valor es cuántas veces ocurrió.
+- Ordena las claves alfabéticamente usando sorted() sobre el diccionario.
+- Ordena los pares (clave, valor) de mayor a menor frecuencia usando
+  sorted() con .items() y una función lambda como key.
+"""</span>
+
+<span class="c-cm"># A. Diccionario con la frecuencia de cada error detectado</span>
+conteo_errores = {<span class="c-st">"ERR-05"</span>: <span class="c-nb">3</span>, <span class="c-st">"ERR-01"</span>: <span class="c-nb">7</span>, <span class="c-st">"ERR-08"</span>: <span class="c-nb">1</span>, <span class="c-st">"ERR-03"</span>: <span class="c-nb">5</span>}
+
+<span class="c-cm"># B. Ordena las claves alfabéticamente
+# sorted() sobre un diccionario itera y ordena SUS CLAVES por defecto.</span>
+claves_ordenadas = <span class="c-bi">sorted</span>(conteo_errores)
+<span class="c-bi">print</span>(f<span class="c-st">"IDs de error ordenados: {claves_ordenadas}"</span>)
+<span class="c-cm"># Salida: ['ERR-01', 'ERR-03', 'ERR-05', 'ERR-08']</span>
+
+<span class="c-cm"># C. Ordena los pares (clave, valor) de mayor a menor frecuencia
+# .items() nos da tuplas (clave, valor). Usamos una lambda para decirle a
+# sorted() que compare por el segundo elemento de la tupla (el valor, x[1]).</span>
+ranking = <span class="c-bi">sorted</span>(conteo_errores.items(), key=<span class="c-kw">lambda</span> x: x[<span class="c-nb">1</span>], reverse=<span class="c-kw">True</span>)
+<span class="c-bi">print</span>(f<span class="c-st">"Ranking de errores más frecuentes: {ranking}"</span>)
+<span class="c-cm"># Salida: [('ERR-01', 7), ('ERR-03', 5), ('ERR-05', 3), ('ERR-08', 1)]</span>
+
+<span class="c-cm"># D. Reporte legible del ranking</span>
+<span class="c-bi">print</span>(<span class="c-st">"\\n--- TOP ERRORES DEL SISTEMA ---"</span>)
+<span class="c-kw">for</span> id_error, veces <span class="c-kw">in</span> ranking:
+    <span class="c-bi">print</span>(f<span class="c-st">"{id_error}: {veces} ocurrencias"</span>)</pre></div>
+  </div>
+
+  <div id="pdex-6" class="tab-panel">
+<div class="code-block"><div class="code-lang">6_Bucles_Diccionarios.py</div><pre>
+<span class="c-st">"""
+6. EL FILTRO DE SENSORES CRÍTICOS
+Objetivo: Automatizar el filtrado de datos dentro de un diccionario.
+
+- Crea un diccionario 'lecturas' con nombres de sensores y sus valores.
+- Crea un diccionario vacío llamado 'criticos'.
+- Recorre 'lecturas' con un bucle 'for' usando .items(); si el valor supera
+  un umbral (ej. 50), agrégalo a 'criticos'.
+- Al final, imprime el conteo total de sensores críticos encontrados.
+"""</span>
+
+<span class="c-cm"># A. Diccionario de lecturas mixtas</span>
+lecturas = {
+    <span class="c-st">"Temp_Motor"</span>: <span class="c-nb">85.5</span>,
+    <span class="c-st">"Presion_Aceite"</span>: <span class="c-nb">40.2</span>,
+    <span class="c-st">"Nivel_Bateria"</span>: <span class="c-nb">12.6</span>,
+    <span class="c-st">"Temp_Escape"</span>: <span class="c-nb">95.0</span>,
+    <span class="c-st">"Voltaje_Sistema"</span>: <span class="c-nb">60.1</span>
+}
+
+<span class="c-cm"># B. Diccionario vacío para recolectar solo los valores críticos</span>
+criticos = {}
+
+<span class="c-cm"># C. Recorremos 'lecturas' con .items() para obtener clave y valor a la vez</span>
+<span class="c-kw">for</span> nombre, valor <span class="c-kw">in</span> lecturas.items():
+    <span class="c-cm"># D. Lógica de filtrado: Si el valor supera el umbral, es crítico</span>
+    <span class="c-kw">if</span> valor &gt; <span class="c-nb">50</span>:
+        criticos[nombre] = valor
+        <span class="c-bi">print</span>(f<span class="c-st">"⚠️ Sensor crítico detectado: {nombre} = {valor}"</span>)
+
+<span class="c-cm"># E. Resultado final usando len() para el conteo</span>
+total_criticos = <span class="c-bi">len</span>(criticos)
+
+<span class="c-bi">print</span>(<span class="c-st">"--- Resumen del Análisis ---"</span>)
+<span class="c-bi">print</span>(f<span class="c-st">"Total de sensores procesados: {len(lecturas)}"</span>)
+<span class="c-bi">print</span>(f<span class="c-st">"Total de sensores críticos: {total_criticos}"</span>)
+<span class="c-bi">print</span>(f<span class="c-st">"Detalle de críticos: {criticos}"</span>)</pre></div>
+  </div>
+
+  <div id="pdex-7" class="tab-panel">
+<div class="code-block"><div class="code-lang">7_Union_Diccionarios.py</div><pre>
+<span class="c-st">"""
+7. FUSIÓN DE CONFIGURACIONES
+Objetivo: Aprender a combinar diccionarios de diferentes fuentes.
+
+- Crea dos diccionarios: 'config_default' y 'config_usuario', donde
+  'config_usuario' sobreescribe alguna clave de 'config_default'.
+- Crea un tercer diccionario 'config_final' usando el operador '|'.
+- Usa el método .update() para agregar un diccionario de 'config_extra'
+  a 'config_final'.
+- Imprime el diccionario final combinado.
+"""</span>
+
+<span class="c-cm"># A. Configuración por defecto y la personalizada por el usuario</span>
+config_default = {<span class="c-st">"puerto"</span>: <span class="c-st">"COM1"</span>, <span class="c-st">"baudrate"</span>: <span class="c-nb">9600</span>, <span class="c-st">"timeout"</span>: <span class="c-nb">5</span>}
+config_usuario = {<span class="c-st">"baudrate"</span>: <span class="c-nb">115200</span>, <span class="c-st">"modo"</span>: <span class="c-st">"debug"</span>}
+
+<span class="c-cm"># B. Crea 'config_final' usando el operador '|' (Python 3.9+)
+# NOTA: En caso de claves repetidas, el diccionario de la DERECHA gana.
+# Este operador crea un diccionario NUEVO; los originales no se modifican.</span>
+config_final = config_default | config_usuario
+<span class="c-bi">print</span>(f<span class="c-st">"# Configuración fusionada: {config_final}"</span>)
+<span class="c-cm"># Salida: {'puerto': 'COM1', 'baudrate': 115200, 'timeout': 5, 'modo': 'debug'}</span>
+
+<span class="c-cm"># C. Usa .update() para agregar 'config_extra' a 'config_final'
+# NOTA: .update() modifica 'config_final' de forma PERMANENTE (in-place),
+# a diferencia de '|' que crea una copia nueva.</span>
+config_extra = {<span class="c-st">"reintentos"</span>: <span class="c-nb">3</span>}
+config_final.update(config_extra)
+
+<span class="c-cm"># D. Imprime el diccionario final combinado</span>
+<span class="c-bi">print</span>(f<span class="c-st">"# Configuración final con extras: {config_final}"</span>)
+<span class="c-bi">print</span>(f<span class="c-st">"# Cantidad total de parámetros: {len(config_final)}"</span>)</pre></div>
+  </div>
+
+  <div id="pdex-8" class="tab-panel">
+<div class="code-block"><div class="code-lang">8_LocalizadorFallos_Diccionarios.py</div><pre>
+<span class="c-st">"""
+8. LOCALIZADOR DE ESTADO POR CLAVE
+Objetivo: Consultar de forma segura el estado de componentes en un diccionario.
+
+- Crea un diccionario 'estados' con varios componentes y su estado: "OK" o "FAIL".
+- Cuenta cuántos componentes están en estado "FAIL" recorriendo .values().
+- Usa .get() para consultar el estado de un componente que podría no existir,
+  con un valor por defecto de "NO_REGISTRADO".
+- Imprime ambos resultados con mensajes claros.
+"""</span>
+
+<span class="c-cm"># A. Diccionario con el estado de cada componente</span>
+estados = {
+    <span class="c-st">"CPU"</span>: <span class="c-st">"OK"</span>,
+    <span class="c-st">"RAM"</span>: <span class="c-st">"FAIL"</span>,
+    <span class="c-st">"Disco"</span>: <span class="c-st">"OK"</span>,
+    <span class="c-st">"Ventilador"</span>: <span class="c-st">"FAIL"</span>
+}
+
+<span class="c-cm"># B. Cuenta cuántos componentes están en "FAIL"
+# A diferencia de una lista, un diccionario no tiene .count(), así que
+# recorremos los valores y contamos manualmente.</span>
+total_fallos = <span class="c-nb">0</span>
+<span class="c-kw">for</span> estado <span class="c-kw">in</span> estados.values():
+    <span class="c-kw">if</span> estado == <span class="c-st">"FAIL"</span>:
+        total_fallos += <span class="c-nb">1</span>
+
+<span class="c-cm"># C. Usa .get() para consultar un componente que podría no existir
+# Esto evita un KeyError si "GPU" nunca fue registrada en el diccionario.</span>
+estado_gpu = estados.get(<span class="c-st">"GPU"</span>, <span class="c-st">"NO_REGISTRADO"</span>)
+
+<span class="c-cm"># D. Imprime ambos resultados con mensajes profesionales</span>
+<span class="c-bi">print</span>(<span class="c-st">"--- REPORTE DE ESTADO DE COMPONENTES ---"</span>)
+<span class="c-bi">print</span>(f<span class="c-st">"Total de componentes analizados: {len(estados)}"</span>)
+<span class="c-bi">print</span>(f<span class="c-st">"Número de fallos detectados: {total_fallos}"</span>)
+<span class="c-bi">print</span>(f<span class="c-st">"Estado del componente 'GPU': {estado_gpu}"</span>)</pre></div>
+  </div>
+
+  <div id="pdex-9" class="tab-panel">
+<div class="code-block"><div class="code-lang">9_Anidados_Diccionarios.py</div><pre>
+<span class="c-st">"""
+9. FICHERO DE SENSORES ANIDADOS
+Objetivo: Acceder a datos en diccionarios dentro de diccionarios.
+
+- Crea un diccionario 'red_sensores' donde cada clave es el ID de un sensor
+  y el valor es OTRO diccionario con sus propiedades ("tipo", "valor").
+- Accede e imprime el "valor" del sensor "S1".
+- Accede e imprime el "tipo" del sensor "S2".
+- Recorre todos los sensores e imprime un resumen de cada uno.
+"""</span>
+
+<span class="c-cm"># A. Diccionario anidado: cada sensor tiene su propio sub-diccionario de datos</span>
+red_sensores = {
+    <span class="c-st">"S1"</span>: {<span class="c-st">"tipo"</span>: <span class="c-st">"Temperatura"</span>, <span class="c-st">"valor"</span>: <span class="c-nb">21.5</span>},
+    <span class="c-st">"S2"</span>: {<span class="c-st">"tipo"</span>: <span class="c-st">"Presion"</span>, <span class="c-st">"valor"</span>: <span class="c-nb">101.3</span>},
+}
+
+<span class="c-cm"># B. Accede al "valor" del sensor "S1"
+# Primero entramos a la clave "S1", y de ahí extraemos su clave "valor".</span>
+valor_s1 = red_sensores[<span class="c-st">"S1"</span>][<span class="c-st">"valor"</span>]
+<span class="c-bi">print</span>(f<span class="c-st">"Valor del sensor S1: {valor_s1}"</span>)  <span class="c-cm"># Salida: 21.5</span>
+
+<span class="c-cm"># C. Accede al "tipo" del sensor "S2"</span>
+tipo_s2 = red_sensores[<span class="c-st">"S2"</span>][<span class="c-st">"tipo"</span>]
+<span class="c-bi">print</span>(f<span class="c-st">"Tipo del sensor S2: {tipo_s2}"</span>)  <span class="c-cm"># Salida: Presion</span>
+
+<span class="c-cm"># D. TIP TÉCNICO: Puedes recorrer la estructura completa de forma visual</span>
+<span class="c-bi">print</span>(<span class="c-st">"\\nResumen de la red de sensores:"</span>)
+<span class="c-kw">for</span> id_sensor, propiedades <span class="c-kw">in</span> red_sensores.items():
+    <span class="c-bi">print</span>(f<span class="c-st">"  {id_sensor} -&gt; Tipo: {propiedades['tipo']}, Valor: {propiedades['valor']}"</span>)</pre></div>
+  </div>
+
+  <div id="pdex-10" class="tab-panel">
+<div class="code-block"><div class="code-lang">10_Copy_Diccionarios.py</div><pre>
+<span class="c-st">"""
+10. RESPALDO DE CONFIGURACIÓN
+Objetivo: Aprender a resetear datos sin perder la referencia original.
+
+- Crea un diccionario 'estado_actual' con 3 pares clave-valor.
+- Crea una copia de seguridad llamada 'backup' usando .copy().
+- Vacía el diccionario original 'estado_actual' usando .clear().
+- Imprime ambos diccionarios para demostrar que el backup sobrevivió.
+"""</span>
+
+<span class="c-cm"># A. Diccionario con el estado actual del sistema</span>
+estado_actual = {<span class="c-st">"cpu"</span>: <span class="c-st">"OK"</span>, <span class="c-st">"ram"</span>: <span class="c-st">"OK"</span>, <span class="c-st">"disco"</span>: <span class="c-st">"WARNING"</span>}
+
+<span class="c-cm"># B. Crea una copia de seguridad llamada 'backup' usando .copy()
+# Como AI Software Test Engineer, esto permite guardar evidencias antes
+# de que el sistema reinicie el estado para la siguiente prueba.</span>
+backup = estado_actual.copy()
+
+<span class="c-cm"># C. Vacía el diccionario original usando .clear()
+# Esto simula un "Reset" de configuración tras procesar los datos.</span>
+estado_actual.clear()
+
+<span class="c-cm"># D. Imprime ambos diccionarios para demostrar que el backup sobrevivió</span>
+<span class="c-bi">print</span>(<span class="c-st">"--- GESTIÓN DE MEMORIA ---"</span>)
+<span class="c-bi">print</span>(f<span class="c-st">"Estado Actual (Original): {estado_actual}"</span>)  <span class="c-cm"># Salida: {}</span>
+<span class="c-bi">print</span>(f<span class="c-st">"Estado del Backup (Copia): {backup}"</span>)         <span class="c-cm"># Salida: {'cpu': 'OK', 'ram': 'OK', 'disco': 'WARNING'}</span>
+
+<span class="c-cm"># E. PRUEBA DE IDENTIDAD:
+# Verificamos si son objetos diferentes en la memoria RAM.</span>
+<span class="c-kw">if</span> estado_actual <span class="c-kw">is not</span> backup:
+    <span class="c-bi">print</span>(<span class="c-st">"✅ Confirmado: Son objetos independientes en memoria."</span>)</pre></div>
+  </div>
+
+  <div id="pdex-11" class="tab-panel">
+<div class="code-block"><div class="code-lang">11_ComprehensionDict_Diccionarios.py</div><pre>
+<span class="c-st">"""
+11. FILTRO VELOZ (DICT COMPREHENSION)
+Objetivo: Reducir un bucle for de varias líneas a solo 1 con Dict Comprehension.
+
+- Tienes un diccionario: valores = {"S1": 10, "S2": 120, "S3": 80, "S4": 200}.
+- Crea un nuevo diccionario 'criticos' que solo contenga los pares
+  cuyo valor sea mayor a 100.
+- Hazlo en UNA SOLA LÍNEA de código usando Dict Comprehension.
+- Imprime el diccionario 'criticos'.
+"""</span>
+
+<span class="c-cm"># A. Diccionario de valores de sensores</span>
+valores = {<span class="c-st">"S1"</span>: <span class="c-nb">10</span>, <span class="c-st">"S2"</span>: <span class="c-nb">120</span>, <span class="c-st">"S3"</span>: <span class="c-nb">80</span>, <span class="c-st">"S4"</span>: <span class="c-nb">200</span>}
+
+<span class="c-cm"># B. Crea 'criticos' con valores &gt; 100 en UNA SOLA LÍNEA
+# Esto sustituye a un bucle 'for' de varias líneas.</span>
+criticos = {clave: valor <span class="c-kw">for</span> clave, valor <span class="c-kw">in</span> valores.items() <span class="c-kw">if</span> valor &gt; <span class="c-nb">100</span>}
+
+<span class="c-cm"># C. Imprime el diccionario resultante</span>
+<span class="c-bi">print</span>(<span class="c-st">"--- ANÁLISIS DE UMBRAL CRÍTICO ---"</span>)
+<span class="c-bi">print</span>(f<span class="c-st">"Valores originales: {valores}"</span>)
+<span class="c-bi">print</span>(f<span class="c-st">"Lecturas críticas (&gt;100): {criticos}"</span>)  <span class="c-cm"># Salida: {'S2': 120, 'S4': 200}</span></pre></div>
+  </div>
+
+  <div id="pdex-12" class="tab-panel">
+<div class="code-block"><div class="code-lang">12_Inversion_Diccionarios.py</div><pre>
+<span class="c-st">"""
+12. INVERSIÓN CLAVE-VALOR
+Objetivo: Transformar un diccionario intercambiando claves por valores.
+
+- Crea un diccionario 'codigos' donde la clave es un ID y el valor es
+  una descripción (ej. {"E01": "Fallo_Sensor", "E02": "Fallo_Comunicacion"}).
+- Crea un diccionario 'codigos_inv' donde los valores originales pasen
+  a ser las claves, y las claves originales pasen a ser los valores.
+- Hazlo usando Dict Comprehension.
+- Explica en un comentario qué pasaría si hubiera valores duplicados.
+"""</span>
+
+<span class="c-cm"># A. Diccionario original de códigos de error</span>
+codigos = {<span class="c-st">"E01"</span>: <span class="c-st">"Fallo_Sensor"</span>, <span class="c-st">"E02"</span>: <span class="c-st">"Fallo_Comunicacion"</span>, <span class="c-st">"E03"</span>: <span class="c-st">"Fallo_Alimentacion"</span>}
+
+<span class="c-cm"># B. Invierte el diccionario usando Dict Comprehension
+# Recorremos los pares (clave, valor) y los reescribimos como (valor, clave).</span>
+codigos_inv = {valor: clave <span class="c-kw">for</span> clave, valor <span class="c-kw">in</span> codigos.items()}
+
+<span class="c-cm"># C. Resultados</span>
+<span class="c-bi">print</span>(<span class="c-st">"--- INVERSIÓN DE DICCIONARIO ---"</span>)
+<span class="c-bi">print</span>(f<span class="c-st">"Original: {codigos}"</span>)
+<span class="c-bi">print</span>(f<span class="c-st">"Invertido: {codigos_inv}"</span>)
+<span class="c-cm"># Salida: {'Fallo_Sensor': 'E01', 'Fallo_Comunicacion': 'E02', 'Fallo_Alimentacion': 'E03'}</span>
+
+<span class="c-cm"># D. EXPLICACIÓN TÉCNICA (Comentario crítico para entrevista):</span>
+<span class="c-st">"""
+RIESGO DE VALORES DUPLICADOS:
+Las claves de un diccionario deben ser ÚNICAS. Si dos claves originales
+tuvieran el mismo valor (ej. "E01": "Fallo" y "E04": "Fallo"), al invertir
+la última en procesarse SOBRESCRIBIRÍA a la anterior, y perderías uno
+de los códigos de error en la inversión.
+"""</span></pre></div>
+  </div>
+
+  <div id="pdex-13" class="tab-panel">
+<div class="code-block"><div class="code-lang">13_Sincronizacion_Diccionarios.py</div><pre>
+<span class="c-st">"""
+13. CONSTRUCCIÓN DE REPORTE DESDE DOS LISTAS
+Objetivo: Combinar dos listas paralelas en un solo diccionario de forma eficiente.
+
+- Tienes dos listas: 'nombres_sensores' y 'lecturas_actuales'.
+- Usa 'zip()' junto con dict() para construir un diccionario 'reporte'
+  que una cada nombre con su lectura correspondiente.
+- Recorre el diccionario resultante con .items() e imprime un mensaje
+  por cada sensor.
+"""</span>
+
+nombres_sensores = [<span class="c-st">"Temp_Motor"</span>, <span class="c-st">"Presion_Aceite"</span>, <span class="c-st">"Nivel_Bateria"</span>]
+lecturas_actuales = [<span class="c-nb">85.5</span>, <span class="c-nb">40.2</span>, <span class="c-nb">12.6</span>]
+
+<span class="c-cm"># --- PARTE A: Uso de zip() + dict() ---
+# Objetivo: Emparejar cada nombre con su lectura en un solo diccionario.
+# zip() une las dos listas posición a posición; dict() convierte esos pares en claves y valores.</span>
+reporte = <span class="c-bi">dict</span>(<span class="c-bi">zip</span>(nombres_sensores, lecturas_actuales))
+<span class="c-bi">print</span>(f<span class="c-st">"Diccionario construido: {reporte}"</span>)
+<span class="c-cm"># Salida: {'Temp_Motor': 85.5, 'Presion_Aceite': 40.2, 'Nivel_Bateria': 12.6}</span>
+
+<span class="c-cm"># --- PARTE B: Recorrido con .items() ---</span>
+<span class="c-bi">print</span>(<span class="c-st">"\\n--- TELEMETRÍA EN TIEMPO REAL ---"</span>)
+<span class="c-kw">for</span> nombre, valor <span class="c-kw">in</span> reporte.items():
+    <span class="c-bi">print</span>(f<span class="c-st">"El {nombre} tiene una lectura de {valor} unidades."</span>)</pre></div>
+  </div>
+
+  <div id="pdex-14" class="tab-panel">
+<div class="code-block"><div class="code-lang">14_Extraer_Diccionarios.py</div><pre>
+<span class="c-st">"""
+14. DESEMPAQUETADO DE PARÁMETROS (KWARGS UNPACKING)
+Objetivo: Pasar un diccionario completo como argumentos de una función.
+
+- Crea una función 'conectar_dispositivo' que reciba los parámetros
+  'puerto', 'baudrate' y 'timeout'.
+- Crea un diccionario 'parametros' con esas tres claves.
+- Llama a la función pasando el diccionario desempaquetado con doble
+  asterisco (**parametros).
+- Imprime el resultado dentro de la función.
+"""</span>
+
+<span class="c-cm"># ==============================================================================
+# 📔 NOTAS TÉCNICAS: DICTIONARY UNPACKING CON **
+# ==============================================================================
+# El doble asterisco (**) permite "desempaquetar" un diccionario para que
+# cada par clave-valor se convierta en un argumento con nombre (keyword
+# argument) al llamar a una función.
+#
+# Regla: Las claves del diccionario deben coincidir EXACTAMENTE con los
+# nombres de los parámetros de la función.
+# ==============================================================================</span>
+
+
+<span class="c-kw">def</span> <span class="c-fn">conectar_dispositivo</span>(puerto, baudrate, timeout):
+    <span class="c-bi">print</span>(f<span class="c-st">"Conectando por {puerto} a {baudrate} baudios (timeout={timeout}s)..."</span>)
+
+
+<span class="c-cm"># A. Diccionario con los parámetros de conexión</span>
+parametros = {<span class="c-st">"puerto"</span>: <span class="c-st">"COM3"</span>, <span class="c-st">"baudrate"</span>: <span class="c-nb">9600</span>, <span class="c-st">"timeout"</span>: <span class="c-nb">5</span>}
+
+<span class="c-cm"># B. Llama a la función desempaquetando el diccionario con **</span>
+conectar_dispositivo(**parametros)
+
+<span class="c-cm"># C. Comparación: sin desempaquetar tendrías que escribir esto manualmente</span>
+conectar_dispositivo(puerto=parametros[<span class="c-st">"puerto"</span>], baudrate=parametros[<span class="c-st">"baudrate"</span>], timeout=parametros[<span class="c-st">"timeout"</span>])</pre></div>
+  </div>
+
+  <div id="pdex-15" class="tab-panel">
+<div class="code-block"><div class="code-lang">15_DeepCopy_Diccionarios.py</div><pre>
+<span class="c-st">"""
+15. CLONACIÓN SEGURA DE CONFIGURACIONES ANIDADAS
+Objetivo: Aprender la diferencia entre copia superficial y profunda en diccionarios.
+
+- Importa el módulo 'copy'.
+- Crea un diccionario anidado: configuracion = {"red": {"ip": "192.168.1.1", "puerto": 80}}.
+- Crea 'config_test' usando copy.deepcopy(configuracion).
+- Cambia un valor dentro de 'config_test' y demuestra con un print que
+  el diccionario 'configuracion' original NO cambió.
+"""</span>
+<span class="c-cm"># ==============================================================================
+# 📔 NOTAS TÉCNICAS: SHALLOW COPY (SUPERFICIAL) VS DEEP COPY (PROFUNDA)
+# ==============================================================================
+# 1. .copy(): Es una copia superficial. Copia el diccionario exterior, pero
+#    los objetos internos (los sub-diccionarios) siguen siendo los mismos
+#    en la memoria.
+# 2. copy.deepcopy(): Crea una réplica total. Clona el diccionario exterior
+#    y todos los sub-diccionarios de forma independiente.
+# ==============================================================================</span>
+
+<span class="c-kw">import</span> copy
+
+<span class="c-cm"># A. Crea un diccionario anidado: configuracion</span>
+configuracion = {<span class="c-st">"red"</span>: {<span class="c-st">"ip"</span>: <span class="c-st">"192.168.1.1"</span>, <span class="c-st">"puerto"</span>: <span class="c-nb">80</span>}}
+
+<span class="c-cm"># B. Crear 'config_test' usando deepcopy()
+# Esto garantiza que si modificamos config_test, la original no sufra cambios.</span>
+config_test = copy.deepcopy(configuracion)
+
+<span class="c-cm"># C. Modificamos un valor dentro de 'config_test' (clave anidada "puerto")</span>
+config_test[<span class="c-st">"red"</span>][<span class="c-st">"puerto"</span>] = <span class="c-nb">8080</span>
+
+<span class="c-cm"># D. Demostración con prints</span>
+<span class="c-bi">print</span>(<span class="c-st">"--- PRUEBA DE CLONACIÓN SEGURA ---"</span>)
+<span class="c-bi">print</span>(f<span class="c-st">"Original (configuracion): {configuracion}"</span>)  <span class="c-cm"># Salida: {'red': {'ip': '192.168.1.1', 'puerto': 80}}</span>
+<span class="c-bi">print</span>(f<span class="c-st">"Copia de Test (config_test): {config_test}"</span>)  <span class="c-cm"># Salida: {'red': {'ip': '192.168.1.1', 'puerto': 8080}}</span></pre></div>
+  </div>
+
+  <div id="pdex-16" class="tab-panel">
+<div class="code-block"><div class="code-lang">16_LimpiarDuplicados_Diccionarios.py</div><pre>
+<span class="c-st">"""
+16. AUDITORÍA DE VALORES ÚNICOS
+Objetivo: Detectar qué componentes comparten el mismo estado en una prueba masiva.
+
+- Tienes: estados = {"CPU": "OK", "RAM": "FAIL", "Disco": "OK", "Ventilador": "FAIL", "GPU": "OK"}.
+- Usa set() sobre .values() para obtener los estados únicos posibles.
+- Usa .setdefault() para agrupar, en un nuevo diccionario, la lista de
+  componentes que comparten cada estado.
+- Imprime el resultado agrupado.
+"""</span>
+<span class="c-cm"># ==============================================================================
+# 📔 NOTAS TÉCNICAS: SET() PARA VALORES ÚNICOS Y .setdefault()
+# ==============================================================================
+# Un 'Set' no permite duplicados, así que convertir los .values() de un
+# diccionario en un set nos dice cuántas categorías distintas existen.
+#
+# .setdefault(clave, valor_por_defecto) es ideal para agrupar datos: si la
+# clave ya existe devuelve su valor actual, y si no existe la crea con el
+# valor por defecto (evitando un KeyError).
+# ==============================================================================</span>
+
+<span class="c-cm"># A. Diccionario con el estado de cada componente</span>
+estados = {<span class="c-st">"CPU"</span>: <span class="c-st">"OK"</span>, <span class="c-st">"RAM"</span>: <span class="c-st">"FAIL"</span>, <span class="c-st">"Disco"</span>: <span class="c-st">"OK"</span>, <span class="c-st">"Ventilador"</span>: <span class="c-st">"FAIL"</span>, <span class="c-st">"GPU"</span>: <span class="c-st">"OK"</span>}
+
+<span class="c-cm"># B. Obtiene los estados únicos posibles usando set()</span>
+estados_unicos = <span class="c-bi">set</span>(estados.values())
+<span class="c-bi">print</span>(f<span class="c-st">"Estados posibles detectados: {estados_unicos}"</span>)  <span class="c-cm"># Salida: {'OK', 'FAIL'}</span>
+
+<span class="c-cm"># C. Agrupa los componentes por estado usando .setdefault()</span>
+agrupado = {}
+<span class="c-kw">for</span> componente, estado <span class="c-kw">in</span> estados.items():
+    <span class="c-cm"># Si 'estado' aún no es una clave en 'agrupado', la crea con lista vacía [].
+    # Si ya existe, simplemente devuelve la lista que ya tenía.</span>
+    agrupado.setdefault(estado, []).append(componente)
+
+<span class="c-cm"># D. Resultados</span>
+<span class="c-bi">print</span>(<span class="c-st">"--- AUDITORÍA AGRUPADA POR ESTADO ---"</span>)
+<span class="c-bi">print</span>(f<span class="c-st">"Componentes agrupados: {agrupado}"</span>)
+<span class="c-cm"># Salida: {'OK': ['CPU', 'Disco', 'GPU'], 'FAIL': ['RAM', 'Ventilador']}</span></pre></div>
+  </div>
+
+  <div id="pdex-17" class="tab-panel">
+<div class="code-block"><div class="code-lang">17_FormateoReporte_Diccionarios.py</div><pre>
+<span class="c-st">"""
+17. FORMATEO DE REPORTE FINAL
+Objetivo: Generar un reporte de texto profesional a partir de un diccionario.
+
+- Tienes: resultados = {"Conectado": True, "Autenticado": True, "Lectura_OK": False}.
+- Usa .items() junto con una f-string dentro de un bucle 'for' para generar
+  una línea de reporte por cada paso.
+- Usa .join() sobre una lista generada con comprehension para crear un
+  único string con todos los pasos separados por " | ".
+- Imprime ambos resultados.
+"""</span>
+
+<span class="c-cm"># ==============================================================================
+# 📔 NOTAS TÉCNICAS: DE DICCIONARIO A REPORTE DE TEXTO
+# ==============================================================================
+# .join() sigue siendo un método de STRING, no de diccionario. Para usarlo
+# con un diccionario primero debemos transformar sus pares clave-valor en
+# una lista de strings, normalmente con una comprehension.
+# ==============================================================================</span>
+
+<span class="c-cm"># A. Diccionario con el resultado de cada paso de una prueba</span>
+resultados = {<span class="c-st">"Conectado"</span>: <span class="c-kw">True</span>, <span class="c-st">"Autenticado"</span>: <span class="c-kw">True</span>, <span class="c-st">"Lectura_OK"</span>: <span class="c-kw">False</span>}
+
+<span class="c-cm"># B. Genera una línea de reporte por cada paso usando .items()</span>
+<span class="c-bi">print</span>(<span class="c-st">"--- REPORTE PASO A PASO ---"</span>)
+<span class="c-kw">for</span> paso, exito <span class="c-kw">in</span> resultados.items():
+    estado = <span class="c-st">"✅ OK"</span> <span class="c-kw">if</span> exito <span class="c-kw">else</span> <span class="c-st">"❌ FALLO"</span>
+    <span class="c-bi">print</span>(f<span class="c-st">"{paso}: {estado}"</span>)
+
+<span class="c-cm"># C. Convierte los pares en una lista de strings con comprehension
+# y únelos con .join() usando " | " como separador.</span>
+lineas = [f<span class="c-st">"{paso}={exito}"</span> <span class="c-kw">for</span> paso, exito <span class="c-kw">in</span> resultados.items()]
+reporte_flujo = <span class="c-st">" | "</span>.join(lineas)
+
+<span class="c-cm"># D. Resultado final</span>
+<span class="c-bi">print</span>(<span class="c-st">"\\n--- REPORTE COMPACTO ---"</span>)
+<span class="c-bi">print</span>(reporte_flujo)  <span class="c-cm"># Salida: Conectado=True | Autenticado=True | Lectura_OK=False</span></pre></div>
+  </div>
+
+  <div id="pdex-18" class="tab-panel">
+<div class="code-block"><div class="code-lang">18_BigO_Diccionarios.py</div><pre>
+<span class="c-st">"""
+18. ANÁLISIS DE EFICIENCIA (TEÓRICO)
+Objetivo: Evaluar el rendimiento de un diccionario frente a una lista para Honeywell/Google.
+
+- Tienes un diccionario de 1,000,000 de registros (clave -&gt; valor) y una
+  lista equivalente de 1,000,000 de tuplas (clave, valor).
+- En un comentario, responde cuál de estas operaciones es más rápida y por qué:
+  A) Buscar si la clave 'ID_004500' existe en el diccionario (if 'ID_004500' in diccionario).
+  B) Buscar si la clave 'ID_004500' existe en la lista de tuplas (recorriendo una por una).
+
+Pista: Investiga cómo funciona una tabla hash frente a una búsqueda lineal.
+"""</span>
+
+<span class="c-cm"># ==============================================================================
+# 📔 NOTAS TÉCNICAS: TABLA HASH (DICT) VS BÚSQUEDA LINEAL (LISTA)
+# ==============================================================================
+# Un diccionario en Python está implementado internamente como una TABLA HASH.
+# Cada clave se convierte en una posición de memoria calculada matemáticamente
+# (hash), por lo que Python "salta" directo a esa posición sin recorrer nada.
+#
+# Una lista, en cambio, no tiene esa estructura: para saber si un elemento
+# existe, Python debe revisarlo uno por uno desde el principio.
+# ==============================================================================</span>
+
+<span class="c-st">"""
+RESPUESTA AL DESAFÍO:
+---------------------
+Escenario: 1,000,000 de registros.
+
+A) 'ID_004500' in diccionario: Es una operación O(1) - Constante.
+   Python calcula el hash de la clave y va directo a su posición en memoria.
+   No importa si hay 10 o 10 millones de registros, el tiempo es el mismo.
+
+B) 'ID_004500' in lista_de_tuplas: Es una operación O(n) - Lineal.
+   Python tiene que recorrer tupla por tupla, comparando la clave de cada
+   una, hasta encontrarla o llegar al final. En el peor caso, revisará
+   el millón de registros.
+
+CONCLUSIÓN:
+La opción A (diccionario) es muchísimo más rápida que la opción B (lista)
+para búsquedas por clave en grandes volúmenes de datos. Por eso, cuando el
+acceso frecuente es "buscar algo por su identificador", un diccionario es
+casi siempre la estructura correcta.
+"""</span></pre></div>
+  </div>
+
+</div>
+  </div>
 </div>`,
 
 'py-sets': `
@@ -1561,7 +3360,8 @@ ids_activos = {sid <span class="c-kw">for</span> sid <span class="c-kw">in</span
     <button class="tab-btn" onclick="switchTab(this,'ps-3','pystr')">Parsing & encoding</button>
     <button class="tab-btn" onclick="switchTab(this,'ps-4','pystr')">⚠️ Errores comunes</button>
     <button class="tab-btn" onclick="switchTab(this,'ps-5','pystr')">✅ Mejores Prácticas</button>
-    <button class="tab-btn" onclick="switchTab(this,'ps-6','pystr')">🧩 Ejercicios</button>
+    <button class="tab-btn" onclick="switchTab(this,'ps-6','pystr')">🧩 Ejercicios (quiz)</button>
+    <button class="tab-btn" onclick="switchTab(this,'ps-7','pystr')">📁 Ejercicios_Strings (carpeta)</button>
   </div>
   <div id="ps-0" class="tab-panel active">
 ${renderMethodTable('STR')}
@@ -2010,6 +3810,583 @@ INFO: bench listo"""</span>
 <span class="c-bi">print</span>(resumir_log(log))
 <span class="c-cm"># {'INFO': 2, 'ERROR': 1, 'WARNING': 1, 'total': 4}</span></pre></div>
   </div>
+</div>
+  </div>
+  <div id="ps-7" class="tab-panel">
+<div class="concept-intro">Los <b>18 ejercicios completos</b> de la carpeta <code>Ejercicios_Python/Ejercicios_Strings</code> del repositorio, con su enunciado y solución tal como están guardados — para tenerlos siempre a mano sin salir de la app.</div>
+<div class="tab-group-psex">
+  <div class="tab-bar" style="flex-wrap:wrap">
+    <button class="tab-btn active" onclick="switchTab(this,'psex-1','psex')">1. Slicing</button>
+    <button class="tab-btn" onclick="switchTab(this,'psex-2','psex')">2. Limpieza</button>
+    <button class="tab-btn" onclick="switchTab(this,'psex-3','psex')">3. Print (f-strings)</button>
+    <button class="tab-btn" onclick="switchTab(this,'psex-4','psex')">4. Split</button>
+    <button class="tab-btn" onclick="switchTab(this,'psex-5','psex')">5. Booleans</button>
+    <button class="tab-btn" onclick="switchTab(this,'psex-6','psex')">6. Salto de Línea</button>
+    <button class="tab-btn" onclick="switchTab(this,'psex-7','psex')">7. For</button>
+    <button class="tab-btn" onclick="switchTab(this,'psex-8','psex')">8. Replace</button>
+    <button class="tab-btn" onclick="switchTab(this,'psex-9','psex')">9. Find</button>
+    <button class="tab-btn" onclick="switchTab(this,'psex-10','psex')">10. Ordenamiento</button>
+    <button class="tab-btn" onclick="switchTab(this,'psex-11','psex')">11. Reconstructor (join)</button>
+    <button class="tab-btn" onclick="switchTab(this,'psex-12','psex')">12. zFill</button>
+    <button class="tab-btn" onclick="switchTab(this,'psex-13','psex')">13. Mayus/Minus</button>
+    <button class="tab-btn" onclick="switchTab(this,'psex-14','psex')">14. Contar/Validar</button>
+    <button class="tab-btn" onclick="switchTab(this,'psex-15','psex')">15. Join</button>
+    <button class="tab-btn" onclick="switchTab(this,'psex-16','psex')">16. Formateo Avanzado</button>
+    <button class="tab-btn" onclick="switchTab(this,'psex-17','psex')">17. Comprehension</button>
+    <button class="tab-btn" onclick="switchTab(this,'psex-18','psex')">18. BigO</button>
+  </div>
+
+  <div id="psex-1" class="tab-panel active">
+<div class="code-block"><div class="code-lang">1_Slicing_Strings.py</div><pre>
+<span class="c-cm"># ==============================================================================
+# 📔 NOTAS TÉCNICAS: ÍNDICES Y REBANADAS (SLICING)
+# ==============================================================================
+# Un string es una secuencia de caracteres.
+# Sintaxis: cadena[inicio:fin:paso]
+# - El índice 'fin' no se incluye en el resultado.
+# - El índice '-1' siempre es el último carácter.
+# ==============================================================================</span>
+
+<span class="c-cm"># 🛠️ EJERCICIO 1: ANATOMÍA DE UN VIN (SOLUCIÓN)</span>
+vin = <span class="c-st">"1HGCM82635A001234"</span>
+
+<span class="c-cm"># A. Primer carácter (País de origen)</span>
+pais = vin[<span class="c-nb">0</span>]
+
+<span class="c-cm"># B. Últimos 6 caracteres (Número de serie)</span>
+serie = vin[-<span class="c-nb">6</span>:]
+
+<span class="c-cm"># C. Model Code (Índices del 3 al 8)</span>
+modelo = vin[<span class="c-nb">3</span>:<span class="c-nb">8</span>]
+
+<span class="c-cm"># D. VIN invertido (Truco del espejo)</span>
+vin_espejo = vin[::-<span class="c-nb">1</span>]
+
+<span class="c-bi">print</span>(f<span class="c-st">"País: {pais} | Serie: {serie} | Modelo: {modelo}"</span>)
+<span class="c-bi">print</span>(f<span class="c-st">"VIN Invertido: {vin_espejo}"</span>)
+
+<span class="c-cm"># ==============================================================================
+# 📔 NOTAS TÉCNICAS: EL TERCER PARÁMETRO DEL SLICE [inicio:fin:paso]
+# ==============================================================================
+# El 'paso' determina cuántos caracteres saltar.
+# paso 2: toma uno sí, uno no.
+# paso -1: invierte la cadena.
+# ==============================================================================</span>
+
+<span class="c-cm"># 🛠️ EJERCICIO 8: FILTRADO DE SEÑALES (SOLUCIÓN)
+# Supongamos que recibes lecturas intercaladas: "A1B2C3D4" (Letra=Sensor, Número=Valor)</span>
+trama = <span class="c-st">"A1B2C3D4"</span>
+
+<span class="c-cm"># 1. Extraer solo los nombres de los sensores (letras en índices pares)</span>
+sensores = trama[<span class="c-nb">0</span>::<span class="c-nb">2</span>] <span class="c-cm"># Empieza en 0, hasta el final, de 2 en 2</span>
+
+<span class="c-cm"># 2. Extraer solo los valores (números en índices impares)</span>
+valores = trama[<span class="c-nb">1</span>::<span class="c-nb">2</span>] <span class="c-cm"># Empieza en 1, hasta el final, de 2 en 2</span>
+
+<span class="c-bi">print</span>(f<span class="c-st">"Sensores detectados: {sensores}"</span>) <span class="c-cm"># ABCD</span>
+<span class="c-bi">print</span>(f<span class="c-st">"Valores reportados: {valores}"</span>)   <span class="c-cm"># 1234</span></pre></div>
+  </div>
+
+  <div id="psex-2" class="tab-panel">
+<div class="code-block"><div class="code-lang">2_Limpieza_Strings.py</div><pre>
+<span class="c-cm"># ==============================================================================
+# 📔 NOTAS TÉCNICAS: MÉTODOS DE TRANSFORMACIÓN
+# ==============================================================================
+# .strip(): Elimina espacios (o caracteres) al inicio y al final.
+# .replace(viejo, nuevo): Cambia una parte del texto por otra.
+# .upper() / .lower(): Cambia el "case" del texto.
+# ==============================================================================</span>
+
+<span class="c-cm"># 🛠️ EJERCICIO 2: LIMPIEZA DE LOGS (SOLUCIÓN)</span>
+entrada = <span class="c-st">"   ERROR: sensor fuera de rango   "</span>
+
+<span class="c-cm"># 1. Quitar espacios y pasar a mayúsculas</span>
+limpio = entrada.strip().upper()
+
+<span class="c-cm"># 2. Reemplazar etiqueta para escalarlo</span>
+final = limpio.replace(<span class="c-st">"ERROR"</span>, <span class="c-st">"CRÍTICO"</span>)
+
+<span class="c-bi">print</span>(f<span class="c-st">"Mensaje procesado: '{final}'"</span>)
+<span class="c-cm"># Resultado esperado: "CRÍTICO: SENSOR FUERA DE RANGO"</span>
+
+<span class="c-cm">#</span></pre></div>
+  </div>
+
+  <div id="psex-3" class="tab-panel">
+<div class="code-block"><div class="code-lang">3_Print_Strings.py</div><pre>
+<span class="c-cm"># ==============================================================================
+# 📔 NOTAS TÉCNICAS: FORMATO CON F-STRINGS
+# ==============================================================================
+# Es la forma más rápida y moderna de concatenar en Python.
+# Permite formatear números: {variable:.2f} (para 2 decimales).
+# Permite alinear texto: {variable:&gt;15} (15 espacios a la derecha).
+# ==============================================================================</span>
+
+<span class="c-cm"># 🛠️ EJERCICIO 3: GENERADOR DE REPORTES (SOLUCIÓN)</span>
+sensor = <span class="c-st">"Termocupla"</span>
+valor = <span class="c-nb">23.5678</span>
+estado = <span class="c-st">"Activo"</span>
+
+<span class="c-cm"># Creamos el reporte con formato profesional
+# :.2f redondea el voltaje o temperatura para el log
+# :&gt;15 empuja el nombre del sensor para que los reportes salgan alineados</span>
+reporte = f<span class="c-st">"DISPOSITIVO: {sensor:&gt;15} | LECTURA: {valor:.2f}°C | STATUS: {estado}"</span>
+
+<span class="c-bi">print</span>(reporte)</pre></div>
+  </div>
+
+  <div id="psex-4" class="tab-panel">
+<div class="code-block"><div class="code-lang">4_Split_Strings.py</div><pre>
+<span class="c-cm"># ==============================================================================
+# 📔 NOTAS TÉCNICAS: SEGMENTACIÓN
+# ==============================================================================
+# .split(separador): Rompe el string y lo convierte en una LISTA.
+# Es el puente entre los dos temas que estás aprendiendo.
+# ==============================================================================</span>
+
+<span class="c-cm"># 🛠️ EJERCICIO 4: ANALIZADOR DE COMANDOS (SOLUCIÓN)</span>
+comando = <span class="c-st">"SET_TEMP:25:UNIT:CELSIUS:MODE:AUTO"</span>
+
+<span class="c-cm"># 1. Convertir a lista usando el separador ':'</span>
+partes = comando.split(<span class="c-st">":"</span>)
+
+<span class="c-cm"># 2. Contar ocurrencias y buscar posición</span>
+conteo_mode = comando.count(<span class="c-st">"MODE"</span>)
+posicion_unit = comando.find(<span class="c-st">"UNIT"</span>)
+
+<span class="c-bi">print</span>(f<span class="c-st">"Lista de parámetros: {partes}"</span>)
+<span class="c-bi">print</span>(f<span class="c-st">"La palabra 'MODE' aparece {conteo_mode} vez/veces."</span>)
+<span class="c-bi">print</span>(f<span class="c-st">"La sección 'UNIT' empieza en el índice: {posicion_unit}"</span>)
+
+
+<span class="c-cm"># 🛠️ EJERCICIO 9: REORDENAMIENTO DE SECUENCIA (SOLUCIÓN)</span>
+secuencia = <span class="c-st">"STOP,START,WAIT,CALIBRATE"</span>
+lista_pasos = secuencia.split(<span class="c-st">","</span>)
+secuencia_invertida = []
+
+<span class="c-cm"># Usamos el rango para recorrer la lista de atrás hacia adelante
+# Pero para seguir tu regla: range(0, len(lista), 1)</span>
+<span class="c-kw">for</span> i <span class="c-kw">in</span> <span class="c-bi">range</span>(<span class="c-nb">0</span>, <span class="c-bi">len</span>(lista_pasos), <span class="c-nb">1</span>):
+    <span class="c-cm"># Insertamos cada elemento al inicio para invertir la lista</span>
+    elemento = lista_pasos[i]
+    secuencia_invertida.insert(<span class="c-nb">0</span>, elemento)
+
+secuencia_final = <span class="c-st">" -&gt; "</span>.join(secuencia_invertida)
+
+<span class="c-bi">print</span>(f<span class="c-st">"Secuencia Final: {secuencia_final}"</span>)
+
+<span class="c-cm">#</span></pre></div>
+  </div>
+
+  <div id="psex-5" class="tab-panel">
+<div class="code-block"><div class="code-lang">5_Booleans_Strings.py</div><pre>
+<span class="c-cm"># ==============================================================================
+# 📔 NOTAS TÉCNICAS: MÉTODOS DE VALIDACIÓN (.is...)
+# ==============================================================================
+# Devuelven True o False. Ideales para poner dentro de un 'if'.
+# .isdigit(): ¿Son solo números?
+# .isalnum(): ¿Son letras y números (sin signos)?
+# .startswith() / .endswith(): ¿Empieza o termina con X?
+# ==============================================================================</span>
+
+<span class="c-cm"># 🛠️ EJERCICIO 5: VALIDADOR DE TELEMETRÍA (SOLUCIÓN)</span>
+id_sensor = <span class="c-st">"S001"</span>
+lectura = <span class="c-st">"25"</span>
+
+<span class="c-cm"># Validaciones críticas para un Test Engineer</span>
+es_numero = lectura.isdigit()
+es_id_valido = id_sensor.startswith(<span class="c-st">"S"</span>) <span class="c-kw">and</span> id_sensor[<span class="c-nb">1</span>:].isdigit()
+
+<span class="c-bi">print</span>(f<span class="c-st">"¿La lectura es procesable como número?: {es_numero}"</span>)
+<span class="c-bi">print</span>(f<span class="c-st">"¿El ID sigue el formato de protocolo (S + número)?: {es_id_valido}"</span>)</pre></div>
+  </div>
+
+  <div id="psex-6" class="tab-panel">
+<div class="code-block"><div class="code-lang">6_SaltoDeLinea_Stings.py</div><pre>
+<span class="c-cm"># ==============================================================================
+# 📔 NOTAS TÉCNICAS: CARACTERES DE ESCAPE
+# ==============================================================================
+# \\n : Salto de línea (Enter).
+# \\t : Tabulación (Tab).
+# \\" : Incluir comillas dobles dentro de un string de comillas dobles.
+# ==============================================================================</span>
+
+<span class="c-cm"># 🛠️ EJERCICIO 6: EL TRADUCTOR DE BYTES (SOLUCIÓN)
+# Construimos un reporte multilínea en una sola variable</span>
+reporte_hw = <span class="c-st">"Reporte de Hardware:\\n\\tCPU: \"Intel Core\"\\n\\tRAM: '16GB'"</span>
+
+<span class="c-bi">print</span>(reporte_hw)
+
+<span class="c-cm"># TIP: También puedes usar comillas triples para textos largos</span>
+reporte_pro = <span class="c-st">"""
+Detalle del Sistema:
+-------------------
+Estado: OK
+Versión: 1.0.2
+"""</span>
+<span class="c-bi">print</span>(reporte_pro)</pre></div>
+  </div>
+
+  <div id="psex-7" class="tab-panel">
+<div class="code-block"><div class="code-lang">7_For_String.py</div><pre>
+<span class="c-cm"># ==============================================================================
+# 📔 NOTAS TÉCNICAS: ITERACIÓN POR ÍNDICE
+# ==============================================================================
+# Al usar range(0, len(cadena), 1), la variable 'i' representa el número
+# de la posición (0, 1, 2...). Para obtener la letra, usamos cadena[i].
+# ==============================================================================</span>
+
+<span class="c-cm"># 🛠️ EJERCICIO 7: CONTADOR DE ALERTAS (SOLUCIÓN)</span>
+trama_datos = <span class="c-st">"OK-OK-ERROR-OK-FAIL-OK-ERROR"</span>
+
+conteo_e = <span class="c-nb">0</span>
+<span class="c-cm"># Recorremos el string usando su longitud total</span>
+<span class="c-kw">for</span> i <span class="c-kw">in</span> <span class="c-bi">range</span>(<span class="c-nb">0</span>, <span class="c-bi">len</span>(trama_datos), <span class="c-nb">1</span>):
+    <span class="c-cm"># Accedemos al carácter en la posición actual</span>
+    <span class="c-kw">if</span> trama_datos[i] == <span class="c-st">"E"</span>:
+        conteo_e += <span class="c-nb">1</span>
+
+<span class="c-bi">print</span>(f<span class="c-st">"Análisis de trama: Se detectaron {conteo_e} inicios de error ('E')."</span>)
+
+<span class="c-cm">#</span></pre></div>
+  </div>
+
+  <div id="psex-8" class="tab-panel">
+<div class="code-block"><div class="code-lang">8_Replace_String.py</div><pre>
+<span class="c-cm"># ==============================================================================
+# 📔 NOTAS TÉCNICAS: CONSTRUCCIÓN POR POSICIÓN
+# ==============================================================================
+# Como los strings son inmutables, para "cambiar" algo con un bucle,
+# empezamos con un string vacío y le vamos sumando caracteres.
+# ==============================================================================</span>
+
+<span class="c-cm"># 🛠️ EJERCICIO 8: ANONIMIZACIÓN DE DATOS (SOLUCIÓN)</span>
+ip_cruda = <span class="c-st">"192.168.1.1"</span>
+ip_segura = <span class="c-st">""</span>
+
+<span class="c-kw">for</span> i <span class="c-kw">in</span> <span class="c-bi">range</span>(<span class="c-nb">0</span>, <span class="c-bi">len</span>(ip_cruda), <span class="c-nb">1</span>):
+    <span class="c-cm"># Si el carácter es un punto, lo cambiamos por una 'X'</span>
+    <span class="c-kw">if</span> ip_cruda[i] == <span class="c-st">"."</span>:
+        ip_segura += <span class="c-st">"X"</span>
+    <span class="c-kw">else</span>:
+        <span class="c-cm"># Si no es punto, dejamos el número original</span>
+        ip_segura += ip_cruda[i]
+
+<span class="c-bi">print</span>(f<span class="c-st">"IP Original: {ip_cruda}"</span>)
+<span class="c-bi">print</span>(f<span class="c-st">"IP Protegida: {ip_segura}"</span>)
+
+<span class="c-cm"># ==============================================================================
+# 📔 NOTAS TÉCNICAS: .replace(viejo, nuevo)
+# ==============================================================================
+# El método busca TODAS las apariciones de la subcadena y las cambia.
+# Es ideal para cambiar formatos de archivos o etiquetas de sensores.
+# ==============================================================================</span>
+
+<span class="c-cm"># 🛠️ EJERCICIO 20: LIMPIEZA DE SEPARADORES (SOLUCIÓN)</span>
+trama = <span class="c-st">"ID:001;TEMP:25;STATUS:OK"</span>
+
+<span class="c-cm"># Cambiamos los puntos y coma por barras inclinadas</span>
+trama_nueva = trama.replace(<span class="c-st">";"</span>, <span class="c-st">" / "</span>)
+
+<span class="c-cm"># Usamos tu bucle para imprimir cada carácter del resultado final</span>
+<span class="c-bi">print</span>(<span class="c-st">"--- Trama Procesada ---"</span>)
+<span class="c-kw">for</span> i <span class="c-kw">in</span> <span class="c-bi">range</span>(<span class="c-nb">0</span>, <span class="c-bi">len</span>(trama_nueva), <span class="c-nb">1</span>):
+    <span class="c-bi">print</span>(f<span class="c-st">"Índice {i}: {trama_nueva[i]}"</span>)
+
+<span class="c-bi">print</span>(f<span class="c-st">"\\nResultado final: {trama_nueva}"</span>)
+
+<span class="c-cm">#</span></pre></div>
+  </div>
+
+  <div id="psex-9" class="tab-panel">
+<div class="code-block"><div class="code-lang">9_Find_Strings.py</div><pre>
+<span class="c-cm"># 🛠️ 14_Busqueda_Segura.py</span>
+log = <span class="c-st">"TEMP:25.5;STATUS:OK"</span>
+
+<span class="c-cm"># Buscamos 'ERROR' de forma segura</span>
+posicion = log.find(<span class="c-st">"ERROR"</span>)
+
+<span class="c-kw">if</span> posicion == -<span class="c-nb">1</span>:
+    <span class="c-bi">print</span>(<span class="c-st">"✅ El log está limpio de errores."</span>)
+<span class="c-kw">else</span>:
+    <span class="c-cm"># Usamos el bucle para analizar la zona del error</span>
+    <span class="c-kw">for</span> i <span class="c-kw">in</span> <span class="c-bi">range</span>(posicion, <span class="c-bi">len</span>(log), <span class="c-nb">1</span>):
+        <span class="c-bi">print</span>(f<span class="c-st">"Analizando falla en índice {i}: {log[i]}"</span>)</pre></div>
+  </div>
+
+  <div id="psex-10" class="tab-panel">
+<div class="code-block"><div class="code-lang">10_Ordenamiento_Strings.py</div><pre>
+<span class="c-cm"># 🛠️ EJERCICIO 11: ORDENAMIENTO DE ETIQUETAS (SOLUCIÓN)</span>
+tag_id = <span class="c-st">"B5A1C3"</span>
+<span class="c-cm"># Primero ordenamos (devuelve una lista)</span>
+caracteres_ordenados = <span class="c-bi">sorted</span>(tag_id)
+tag_final = <span class="c-st">""</span>
+
+<span class="c-cm"># Usamos el rango para reconstruir el string a partir de la lista ordenada</span>
+<span class="c-kw">for</span> i <span class="c-kw">in</span> <span class="c-bi">range</span>(<span class="c-nb">0</span>, <span class="c-bi">len</span>(caracteres_ordenados), <span class="c-nb">1</span>):
+    tag_final += caracteres_ordenados[i]
+
+<span class="c-bi">print</span>(f<span class="c-st">"Tag ID normalizado: {tag_final}"</span>)</pre></div>
+  </div>
+
+  <div id="psex-11" class="tab-panel">
+<div class="code-block"><div class="code-lang">11_Reconstructor_Strings.py</div><pre>
+<span class="c-cm"># 🛠️ 11_Join_Strings.py
+# Objetivo: Unir una lista de estados en una sola cadena para un log.</span>
+pasos = [<span class="c-st">"CONECTADO"</span>, <span class="c-st">"TEST_OK"</span>, <span class="c-st">"DESCONECTADO"</span>]
+reporte_final = <span class="c-st">""</span>
+
+<span class="c-cm"># Usamos el método nativo .join()</span>
+reporte_final = <span class="c-st">" -&gt; "</span>.join(pasos)
+
+<span class="c-cm"># Usamos tu bucle para validar la longitud del reporte generado</span>
+<span class="c-kw">for</span> i <span class="c-kw">in</span> <span class="c-bi">range</span>(<span class="c-nb">0</span>, <span class="c-bi">len</span>(reporte_final), <span class="c-nb">1</span>):
+    <span class="c-kw">if</span> reporte_final[i] == <span class="c-st">"&gt;"</span>:
+        <span class="c-bi">print</span>(f<span class="c-st">"Flecha de seguimiento detectada en índice {i}"</span>)
+
+<span class="c-bi">print</span>(f<span class="c-st">"Log generado: {reporte_final}"</span>)</pre></div>
+  </div>
+
+  <div id="psex-12" class="tab-panel">
+<div class="code-block"><div class="code-lang">12_zFill_Strings.py</div><pre>
+<span class="c-cm"># 🛠️ 12_Padding_Zfill.py</span>
+id_corto = <span class="c-st">"A15"</span>
+
+<span class="c-cm"># Rellenamos con ceros a la izquierda hasta tener 8 caracteres</span>
+id_completo = id_corto.zfill(<span class="c-nb">8</span>)
+
+<span class="c-bi">print</span>(f<span class="c-st">"ID Original: {id_corto}"</span>)
+<span class="c-bi">print</span>(f<span class="c-st">"ID para Protocolo: {id_completo}"</span>)
+
+<span class="c-cm"># Image of [Python string zfill and padding for hardware IDs]</span></pre></div>
+  </div>
+
+  <div id="psex-13" class="tab-panel">
+<div class="code-block"><div class="code-lang">13_MayusMinus_Strings.py</div><pre>
+<span class="c-cm"># ==============================================================================
+# 📔 NOTAS TÉCNICAS: MAYÚSCULAS Y MINÚSCULAS
+# ==============================================================================
+# .upper()     : Convierte TODO el string a mayúsculas.
+# .lower()     : Convierte TODO el string a minúsculas.
+# .capitalize(): Pone en mayúscula solo la primera letra, el resto en minúscula.
+# .title()     : Pone en mayúscula la primera letra de CADA palabra.
+# .swapcase()  : Invierte mayúsculas por minúsculas y viceversa.
+# Estos métodos NO modifican el string original (son inmutables), devuelven
+# uno nuevo. Muy usados para normalizar datos antes de comparar (ej. logins).
+# ==============================================================================</span>
+
+<span class="c-cm"># 🛠️ EJERCICIO 13: NORMALIZADOR DE IDs DE SENSOR (SOLUCIÓN)</span>
+id_crudo = <span class="c-st">"sns-014_temperatura"</span>
+nombre_operario = <span class="c-st">"juan carlos perez"</span>
+
+<span class="c-cm"># A. Normalizamos el ID a mayúsculas para comparaciones estrictas en el sistema</span>
+id_normalizado = id_crudo.upper()
+
+<span class="c-cm"># B. Convertimos el nombre a formato "Título" para mostrarlo en un reporte</span>
+nombre_formateado = nombre_operario.title()
+
+<span class="c-cm"># C. Comparación segura ignorando el caso original con .lower()</span>
+entrada_usuario = <span class="c-st">"SNS-014_TEMPERATURA"</span>
+coincide = entrada_usuario.lower() == id_crudo.lower()
+
+<span class="c-bi">print</span>(f<span class="c-st">"ID original: {id_crudo}"</span>)
+<span class="c-bi">print</span>(f<span class="c-st">"ID normalizado: {id_normalizado}"</span>)
+<span class="c-bi">print</span>(f<span class="c-st">"Nombre del operario: {nombre_formateado}"</span>)
+<span class="c-bi">print</span>(f<span class="c-st">"¿La entrada coincide con el ID (sin importar mayúsculas)?: {coincide}"</span>)</pre></div>
+  </div>
+
+  <div id="psex-14" class="tab-panel">
+<div class="code-block"><div class="code-lang">14_ContarValidar_Strings.py</div><pre>
+<span class="c-cm"># ==============================================================================
+# 📔 NOTAS TÉCNICAS: CONTEO Y VALIDACIÓN DE FORMATO
+# ==============================================================================
+# .count(sub)     : Cuenta cuántas veces aparece una subcadena.
+# .startswith(sub): ¿El string empieza con X? Devuelve True/False.
+# .endswith(sub)  : ¿El string termina con X? Devuelve True/False.
+# Muy usados para validar protocolos, extensiones de archivo o cabeceras
+# de una trama antes de procesarla.
+# ==============================================================================</span>
+
+<span class="c-cm"># 🛠️ EJERCICIO 14: VALIDADOR DE ARCHIVOS DE LOG (SOLUCIÓN)</span>
+archivo = <span class="c-st">"reporte_turno_noche_2026.log"</span>
+trama = <span class="c-st">"STX;DATA;DATA;DATA;ETX"</span>
+
+<span class="c-cm"># A. Verificamos que el archivo tenga la extensión correcta</span>
+es_log_valido = archivo.endswith(<span class="c-st">".log"</span>)
+
+<span class="c-cm"># B. Verificamos que la trama empiece con el byte de inicio esperado (STX)</span>
+inicio_valido = trama.startswith(<span class="c-st">"STX"</span>)
+
+<span class="c-cm"># C. Contamos cuántos bloques de datos trae la trama</span>
+bloques_data = trama.count(<span class="c-st">"DATA"</span>)
+
+<span class="c-bi">print</span>(f<span class="c-st">"Archivo: {archivo}"</span>)
+<span class="c-bi">print</span>(f<span class="c-st">"¿Es un archivo .log válido?: {es_log_valido}"</span>)
+<span class="c-bi">print</span>(f<span class="c-st">"¿La trama empieza con STX?: {inicio_valido}"</span>)
+<span class="c-bi">print</span>(f<span class="c-st">"Cantidad de bloques 'DATA' encontrados: {bloques_data}"</span>)</pre></div>
+  </div>
+
+  <div id="psex-15" class="tab-panel">
+<div class="code-block"><div class="code-lang">15_Join_Strings.py</div><pre>
+<span class="c-cm"># ==============================================================================
+# 📔 NOTAS TÉCNICAS: ENSAMBLADO CON .join()
+# ==============================================================================
+# "separador".join(lista): Toma una LISTA de strings y los une en un solo
+# string, colocando el separador entre cada elemento. Es lo opuesto a .split().
+# Es mucho más eficiente que concatenar con '+' dentro de un bucle.
+# ==============================================================================</span>
+
+<span class="c-cm"># 🛠️ EJERCICIO 15: ENSAMBLADOR DE TRAMAS (SOLUCIÓN)</span>
+fragmentos = [<span class="c-st">"STX"</span>, <span class="c-st">"ID:014"</span>, <span class="c-st">"TEMP:25.6"</span>, <span class="c-st">"STATUS:OK"</span>, <span class="c-st">"ETX"</span>]
+
+<span class="c-cm"># A. Unimos los fragmentos con ';' para reconstruir la trama completa</span>
+trama_completa = <span class="c-st">";"</span>.join(fragmentos)
+
+<span class="c-cm"># B. También podemos unir sin separador (cadena vacía) para pegar caracteres</span>
+codigo_barras = [<span class="c-st">"4"</span>, <span class="c-st">"5"</span>, <span class="c-st">"0"</span>, <span class="c-st">"1"</span>, <span class="c-st">"2"</span>]
+numero_serie = <span class="c-st">""</span>.join(codigo_barras)
+
+<span class="c-bi">print</span>(f<span class="c-st">"Fragmentos originales: {fragmentos}"</span>)
+<span class="c-bi">print</span>(f<span class="c-st">"Trama ensamblada: {trama_completa}"</span>)
+<span class="c-bi">print</span>(f<span class="c-st">"Número de serie ensamblado: {numero_serie}"</span>)
+
+<span class="c-cm"># C. Round-trip: separamos y volvemos a unir para confirmar que es reversible</span>
+fragmentos_recuperados = trama_completa.split(<span class="c-st">";"</span>)
+<span class="c-bi">print</span>(f<span class="c-st">"¿El round-trip conserva los datos?: {fragmentos_recuperados == fragmentos}"</span>)</pre></div>
+  </div>
+
+  <div id="psex-16" class="tab-panel">
+<div class="code-block"><div class="code-lang">16_FormateoAvanzado_Strings.py</div><pre>
+<span class="c-cm"># ==============================================================================
+# 📔 NOTAS TÉCNICAS: FORMATEO AVANZADO CON F-STRINGS
+# ==============================================================================
+# f"{valor:&lt;10}"  : Alinea a la izquierda dejando 10 espacios de ancho.
+# f"{valor:&gt;10}"  : Alinea a la derecha dejando 10 espacios de ancho.
+# f"{valor:^10}"  : Centra el valor en 10 espacios de ancho.
+# f"{numero:.2f}" : Redondea un decimal a 2 cifras después del punto.
+# f"{numero:05d}" : Rellena un entero con ceros a la izquierda hasta 5 dígitos.
+# IMPORTANTE: si concatenas varios campos con ancho, deja siempre un separador
+# (espacio, "|", etc.) entre ellos, o el resultado se leerá como un solo número.
+# ==============================================================================</span>
+
+<span class="c-cm"># 🛠️ EJERCICIO 16: REPORTE TABULADO DE SENSORES (SOLUCIÓN)</span>
+sensores = [
+    (<span class="c-st">"SNS-01"</span>, <span class="c-nb">25.678</span>, <span class="c-nb">3</span>),
+    (<span class="c-st">"SNS-14"</span>, <span class="c-nb">101.2</span>, <span class="c-nb">27</span>),
+    (<span class="c-st">"SNS-99"</span>, <span class="c-nb">9.5</span>, <span class="c-nb">145</span>),
+]
+
+<span class="c-bi">print</span>(f<span class="c-st">"{'ID':&lt;8} | {'Temp(C)':&gt;10} | {'Ciclos':&gt;8}"</span>)
+<span class="c-kw">for</span> id_sensor, temperatura, ciclos <span class="c-kw">in</span> sensores:
+    <span class="c-cm"># A. ID alineado a la izquierda, temperatura y ciclos a la derecha
+    # B. La temperatura se redondea a 2 decimales con .2f
+    # C. Un separador " | " evita que los campos se lean como un solo número</span>
+    <span class="c-bi">print</span>(f<span class="c-st">"{id_sensor:&lt;8} | {temperatura:&gt;10.2f} | {ciclos:&gt;8d}"</span>)
+
+<span class="c-cm"># D. El zero-padding (05d) se usa para IDs numéricos, no para tablas con columnas</span>
+numero_lote = <span class="c-nb">7</span>
+<span class="c-bi">print</span>(f<span class="c-st">"\\nCódigo de lote generado: LOTE-{numero_lote:05d}"</span>)</pre></div>
+  </div>
+
+  <div id="psex-17" class="tab-panel">
+<div class="code-block"><div class="code-lang">17_Comprehension_Strings.py</div><pre>
+<span class="c-cm"># ==============================================================================
+# 📔 NOTAS TÉCNICAS: LIST COMPREHENSION SOBRE STRINGS
+# ==============================================================================
+# Un string es iterable, así que se puede recorrer con comprehension igual
+# que una lista: [operacion(c) for c in cadena if condicion].
+# Es la forma más rápida de filtrar o transformar caracteres uno por uno.
+# ==============================================================================</span>
+
+<span class="c-cm"># 🛠️ EJERCICIO 17: FILTRO DE CARACTERES DE UNA TRAMA (SOLUCIÓN)</span>
+trama_cruda = <span class="c-st">"S1N2S-0v1a4_T3E5M0P"</span>
+
+<span class="c-cm"># A. Extraemos solo los dígitos de la trama usando comprehension + .isdigit()</span>
+digitos = [caracter <span class="c-kw">for</span> caracter <span class="c-kw">in</span> trama_cruda <span class="c-kw">if</span> caracter.isdigit()]
+<span class="c-bi">print</span>(f<span class="c-st">"Dígitos encontrados: {digitos}"</span>)
+
+<span class="c-cm"># B. Extraemos solo las letras y las unimos de nuevo en un string con join()</span>
+letras = <span class="c-st">""</span>.join([caracter <span class="c-kw">for</span> caracter <span class="c-kw">in</span> trama_cruda <span class="c-kw">if</span> caracter.isalpha()])
+<span class="c-bi">print</span>(f<span class="c-st">"Solo letras: {letras}"</span>)
+
+<span class="c-cm"># C. Transformamos cada carácter a mayúscula solo si es una letra (comprehension + if/else)</span>
+transformado = <span class="c-st">""</span>.join(
+    [c.upper() <span class="c-kw">if</span> c.isalpha() <span class="c-kw">else</span> c <span class="c-kw">for</span> c <span class="c-kw">in</span> trama_cruda]
+)
+<span class="c-bi">print</span>(f<span class="c-st">"Trama con letras en mayúscula: {transformado}"</span>)
+
+<span class="c-cm"># D. Contamos cuántas vocales tiene un texto usando comprehension + len()</span>
+texto = <span class="c-st">"sensor de temperatura activo"</span>
+vocales = [c <span class="c-kw">for</span> c <span class="c-kw">in</span> texto <span class="c-kw">if</span> c <span class="c-kw">in</span> <span class="c-st">"aeiou"</span>]
+<span class="c-bi">print</span>(f<span class="c-st">"Total de vocales en '{texto}': {len(vocales)}"</span>)</pre></div>
+  </div>
+
+  <div id="psex-18" class="tab-panel">
+<div class="code-block"><div class="code-lang">18_BigO_Strings.py</div><pre>
+<span class="c-st">"""
+18. ANÁLISIS DE EFICIENCIA (TEÓRICO)
+Objetivo: Evaluar el costo de construir strings grandes, para Honeywell/Google.
+
+- Tienes que construir un reporte de texto a partir de 1,000,000 de líneas.
+- En un comentario, responde cuál de estas dos formas es más eficiente y por qué:
+  A) reporte = ""; for linea in datos: reporte += linea  (concatenar con +=)
+  B) reporte = "".join(datos)  (usar .join() sobre una lista)
+
+Pista: Investiga por qué los strings son inmutables en Python.
+"""</span>
+
+<span class="c-cm"># ==============================================================================
+# 📔 NOTAS TÉCNICAS: INMUTABILIDAD Y CONCATENACIÓN
+# ==============================================================================
+# Un string en Python es INMUTABLE: no se puede modificar en memoria una vez
+# creado. Cada vez que haces reporte += linea, Python en realidad crea un
+# string COMPLETAMENTE NUEVO copiando todo el contenido anterior más el
+# fragmento agregado, y descarta el string viejo.
+# ==============================================================================</span>
+
+<span class="c-st">"""
+RESPUESTA AL DESAFÍO:
+---------------------
+Escenario: 1,000,000 de líneas de texto.
+
+A) reporte += linea dentro de un bucle: Es O(n²) en el peor caso.
+   En cada vuelta se copia TODO el contenido acumulado hasta ese momento.
+   Con 1 línea copia 1, con 2 líneas copia 2, ... con 1,000,000 copia
+   1,000,000. La suma de todas esas copias crece cuadráticamente.
+
+B) "".join(datos): Es O(n) - Lineal.
+   .join() primero calcula el tamaño total necesario y reserva la memoria
+   UNA sola vez, luego copia cada fragmento exactamente una vez. No hay
+   copias repetidas del contenido acumulado.
+
+CONCLUSIÓN:
+Para construir strings grandes a partir de muchas partes, siempre es
+preferible juntar los fragmentos en una lista y usar "".join(lista) al
+final, en lugar de concatenar con += dentro de un bucle.
+"""</span>
+
+<span class="c-cm"># 🛠️ DEMOSTRACIÓN PRÁCTICA CON MEDICIÓN DE TIEMPO</span>
+<span class="c-kw">import</span> time
+
+datos = [f<span class="c-st">"linea_{i};"</span> <span class="c-kw">for</span> i <span class="c-kw">in</span> <span class="c-bi">range</span>(<span class="c-nb">100_000</span>)]
+
+<span class="c-cm"># A. Método lento: concatenación con += dentro de un bucle</span>
+inicio = time.perf_counter()
+reporte_lento = <span class="c-st">""</span>
+<span class="c-kw">for</span> linea <span class="c-kw">in</span> datos:
+    reporte_lento += linea
+tiempo_lento = time.perf_counter() - inicio
+
+<span class="c-cm"># B. Método rápido: join() sobre la lista completa</span>
+inicio = time.perf_counter()
+reporte_rapido = <span class="c-st">""</span>.join(datos)
+tiempo_rapido = time.perf_counter() - inicio
+
+<span class="c-bi">print</span>(f<span class="c-st">"Tiempo con += en bucle: {tiempo_lento:.5f} segundos"</span>)
+<span class="c-bi">print</span>(f<span class="c-st">"Tiempo con ''.join(): {tiempo_rapido:.5f} segundos"</span>)
+<span class="c-bi">print</span>(f<span class="c-st">"¿Ambos resultados son iguales?: {reporte_lento == reporte_rapido}"</span>)</pre></div>
+  </div>
+
 </div>
   </div>
 </div>`,
