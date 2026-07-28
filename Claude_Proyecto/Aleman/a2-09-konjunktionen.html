@@ -1,5 +1,14 @@
 <!DOCTYPE html>
-<html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>A2 · 09 — Konjunktionen | Deutsch</title><link rel="stylesheet" href="styles.css"></head>
+<html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>A2 · 09 — Konjunktionen | Deutsch</title><link rel="stylesheet" href="styles.css">
+<style>
+.dialog-box{background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:18px 20px;margin-bottom:12px}
+.dialog-line{display:flex;gap:10px;margin-bottom:10px;align-items:flex-start}
+.dialog-line:last-child{margin-bottom:0}
+.dialog-speaker{font-size:11px;font-weight:800;color:var(--red);text-transform:uppercase;letter-spacing:.06em;white-space:nowrap;min-width:30px;margin-top:2px}
+.dialog-de{font-size:14px;font-weight:600;color:var(--black)}
+.dialog-es{font-size:12px;color:var(--text2);margin-top:1px}
+</style>
+</head>
 <body>
 <nav class="nav"><a href="index.html" class="nav-logo">🇩🇪 Deutsch</a><a href="index.html" class="nav-back">← Índice</a></nav>
 <div class="topic-hero"><div class="container">
@@ -9,6 +18,13 @@
   <div class="topic-hero-meta"><span class="meta-pill">🔗 Conectores</span><span class="meta-pill">📝 Verbo al final</span><span class="meta-pill">⏱️ ~50 min</span></div>
 </div></div>
 <div class="topic-content"><div class="container">
+
+  <div class="content-full">
+    <div class="card">
+      <h3><span>🎴</span> Repasa con tarjetas</h3>
+      <div id="fc-a2-09" class="flashcards"></div>
+    </div>
+  </div>
 
   <div class="content-full">
     <div class="card card-gold">
@@ -32,8 +48,48 @@
           <tr><td class="vocab-de">oder</td><td class="vocab-es">o</td><td style="color:var(--success);font-weight:700">No</td><td class="vocab-ex">Tee oder Kaffee?</td></tr>
           <tr><td class="vocab-de">denn</td><td class="vocab-es">pues / ya que</td><td style="color:var(--success);font-weight:700">No</td><td class="vocab-ex">Ich bleibe, denn es regnet.</td></tr>
           <tr><td class="vocab-de">deshalb</td><td class="vocab-es">por eso</td><td style="color:var(--success);font-weight:700">No (adv.)</td><td class="vocab-ex">Es regnet, deshalb bleibe ich.</td></tr>
+          <tr><td class="vocab-de">während</td><td class="vocab-es">mientras</td><td style="color:var(--red);font-weight:700">Sí</td><td class="vocab-ex">Während ich koche, hört meine Frau Musik.</td></tr>
+          <tr><td class="vocab-de">bevor</td><td class="vocab-es">antes de que</td><td style="color:var(--red);font-weight:700">Sí</td><td class="vocab-ex">Bevor ich schlafen gehe, lese ich noch.</td></tr>
+          <tr><td class="vocab-de">nachdem</td><td class="vocab-es">después de que</td><td style="color:var(--red);font-weight:700">Sí</td><td class="vocab-ex">Nachdem ich gegessen habe, gehe ich spazieren.</td></tr>
+          <tr><td class="vocab-de">damit</td><td class="vocab-es">para que</td><td style="color:var(--red);font-weight:700">Sí</td><td class="vocab-ex">Ich spare Geld, damit ich reisen kann.</td></tr>
+          <tr><td class="vocab-de">als</td><td class="vocab-es">cuando (pasado, un evento)</td><td style="color:var(--red);font-weight:700">Sí</td><td class="vocab-ex">Als ich klein war, wohnte ich in Berlin.</td></tr>
+          <tr><td class="vocab-de">sodass</td><td class="vocab-es">de modo que</td><td style="color:var(--red);font-weight:700">Sí</td><td class="vocab-ex">Er spricht laut, sodass alle ihn hören.</td></tr>
         </tbody>
       </table>
+    </div>
+  </div>
+
+  <div class="content-full">
+    <div class="card card-gold">
+      <h3><span>🗨️</span> Frases comunes usando conjunciones</h3>
+      <div class="phrase-grid">
+        <div class="phrase-item"><span class="phrase-situation">Explicando por qué llegas tarde</span><span class="phrase-de">Entschuldigung, ich komme zu spät, weil der Bus Verspätung hatte.</span><span class="phrase-es">Disculpa, llego tarde porque el autobús se retrasó.</span></div>
+        <div class="phrase-item"><span class="phrase-situation">En una entrevista de trabajo</span><span class="phrase-de">Ich denke, dass ich gut zu diesem Team passe.</span><span class="phrase-es">Creo que encajo bien en este equipo.</span></div>
+        <div class="phrase-item"><span class="phrase-situation">Haciendo planes con un amigo</span><span class="phrase-de">Wenn du Lust hast, können wir heute Abend ausgehen.</span><span class="phrase-es">Si tienes ganas, podemos salir esta noche.</span></div>
+        <div class="phrase-item"><span class="phrase-situation">Disculpándote por un error</span><span class="phrase-de">Ich weiß, dass ich einen Fehler gemacht habe.</span><span class="phrase-es">Sé que cometí un error.</span></div>
+        <div class="phrase-item"><span class="phrase-situation">Hablando de tus estudios de alemán</span><span class="phrase-de">Ich lerne jeden Tag, obwohl ich wenig Zeit habe.</span><span class="phrase-es">Estudio todos los días, aunque tengo poco tiempo.</span></div>
+        <div class="phrase-item"><span class="phrase-situation">Explicando una decisión laboral</span><span class="phrase-de">Ich nehme den Job, weil das Gehalt gut ist.</span><span class="phrase-es">Tomo el trabajo porque el sueldo es bueno.</span></div>
+        <div class="phrase-item"><span class="phrase-situation">En el consultorio médico</span><span class="phrase-de">Ich komme, weil ich seit drei Tagen Kopfschmerzen habe.</span><span class="phrase-es">Vengo porque tengo dolor de cabeza desde hace tres días.</span></div>
+        <div class="phrase-item"><span class="phrase-situation">Antes de firmar un contrato</span><span class="phrase-de">Bevor ich unterschreibe, möchte ich die Wohnung noch einmal sehen.</span><span class="phrase-es">Antes de firmar, quisiera ver el apartamento una vez más.</span></div>
+        <div class="phrase-item"><span class="phrase-situation">Describiendo tu rutina matutina</span><span class="phrase-de">Nachdem ich aufgestanden bin, trinke ich einen Kaffee.</span><span class="phrase-es">Después de levantarme, tomo un café.</span></div>
+        <div class="phrase-item"><span class="phrase-situation">Escribiendo un correo formal</span><span class="phrase-de">Ich schreibe Ihnen, weil ich Interesse an der Stelle habe.</span><span class="phrase-es">Le escribo porque tengo interés en el puesto.</span></div>
+        <div class="phrase-item"><span class="phrase-situation">Aclarando un malentendido</span><span class="phrase-de">Ich glaube, dass du mich falsch verstanden hast.</span><span class="phrase-es">Creo que me entendiste mal.</span></div>
+        <div class="phrase-item"><span class="phrase-situation">Hablando de una meta personal</span><span class="phrase-de">Ich spare Geld, damit ich nach Deutschland reisen kann.</span><span class="phrase-es">Ahorro dinero para poder viajar a Alemania.</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="content-full">
+    <div class="card">
+      <h3><span>💬</span> Diálogo de práctica — Haciendo planes</h3>
+      <div class="dialog-box">
+        <div class="dialog-line"><div class="dialog-speaker">A:</div><div><div class="dialog-de">Kommst du heute Abend mit ins Kino?</div><div class="dialog-es">¿Vienes hoy en la noche al cine?</div></div></div>
+        <div class="dialog-line"><div class="dialog-speaker">B:</div><div><div class="dialog-de">Ich weiß nicht, ob ich Zeit habe, weil ich noch arbeiten muss.</div><div class="dialog-es">No sé si tendré tiempo, porque todavía tengo que trabajar.</div></div></div>
+        <div class="dialog-line"><div class="dialog-speaker">A:</div><div><div class="dialog-de">Wenn du früher fertig bist, ruf mich einfach an.</div><div class="dialog-es">Si terminas antes, solo llámame.</div></div></div>
+        <div class="dialog-line"><div class="dialog-speaker">B:</div><div><div class="dialog-de">Okay, aber ich glaube, dass ich erst um neun fertig bin.</div><div class="dialog-es">Bien, pero creo que no termino hasta las nueve.</div></div></div>
+        <div class="dialog-line"><div class="dialog-speaker">A:</div><div><div class="dialog-de">Kein Problem, obwohl der Film um acht beginnt, gibt es auch eine spätere Vorstellung.</div><div class="dialog-es">No hay problema, aunque la película empieza a las ocho, hay otra función más tarde.</div></div></div>
+        <div class="dialog-line"><div class="dialog-speaker">B:</div><div><div class="dialog-de">Perfekt, dann komme ich, sobald ich fertig bin!</div><div class="dialog-es">Perfecto, entonces voy en cuanto termine.</div></div></div>
+      </div>
     </div>
   </div>
 
@@ -57,6 +113,7 @@
       <div class="exercise"><div class="exercise-num">Ejercicio 2 — dass</div><div class="exercise-q">Ich weiß, dass du in Mexiko _______. (wohnen)</div><div class="exercise-hint">Pista: wohnst</div></div>
       <div class="exercise"><div class="exercise-num">Ejercicio 3 — Une las oraciones con obwohl</div><div class="exercise-q">"Es regnet. / Wir gehen spazieren."</div><div class="placeholder" style="margin-top:8px">Escribe la oración combinada aquí</div></div>
       <div class="exercise"><div class="exercise-num">Ejercicio 4 — ¿Por qué aprendes alemán?</div><div class="placeholder" style="margin-top:8px">Escribe 3 razones usando: weil / denn / deshalb</div></div>
+      <div class="exercise"><div class="exercise-num">Ejercicio 5 — Une con bevor / nachdem</div><div class="exercise-q">"Ich stehe auf. Ich trinke Kaffee." (nachdem)</div><div class="exercise-hint">Respuesta posible: Nachdem ich aufgestanden bin, trinke ich Kaffee.</div></div>
     </div>
   </div>
 
@@ -68,4 +125,23 @@
   <a href="a2-10-preposiciones.html" class="page-nav-btn next"><div><div class="page-nav-dir">Siguiente →</div><div class="page-nav-title">Präpositionen</div></div><span style="font-size:24px">📍</span></a>
 </div>
 <footer class="footer"><p>A2 · 09 — Konjunktionen</p><div class="footer-flag"><span style="background:#000;width:20px;height:5px"></span><span style="background:var(--red);width:20px;height:5px"></span><span style="background:var(--gold);width:20px;height:5px"></span></div></footer>
+<script src="flashcards.js"></script>
+<script>
+initFlashcards('fc-a2-09', [
+  {art:'-', de:'Ich bleibe zu Hause, weil es regnet.', es:'Me quedo en casa porque llueve.'},
+  {art:'-', de:'Ich weiß, dass du fleißig lernst.', es:'Sé que estudias con dedicación.'},
+  {art:'-', de:'Wenn ich Zeit habe, rufe ich dich an.', es:'Cuando tenga tiempo, te llamo.'},
+  {art:'-', de:'Er geht joggen, obwohl es kalt ist.', es:'Sale a correr aunque hace frío.'},
+  {art:'-', de:'Ich trinke Tee und du trinkst Kaffee.', es:'Yo tomo té y tú tomas café.'},
+  {art:'-', de:'Ich bin müde, aber ich arbeite weiter.', es:'Estoy cansado, pero sigo trabajando.'},
+  {art:'-', de:'Möchtest du Tee oder Kaffee?', es:'¿Quieres té o café?'},
+  {art:'-', de:'Ich bleibe, denn es regnet stark.', es:'Me quedo, pues llueve fuerte.'},
+  {art:'-', de:'Es regnet, deshalb bleibe ich zu Hause.', es:'Llueve, por eso me quedo en casa.'},
+  {art:'-', de:'Bevor ich schlafen gehe, putze ich mir die Zähne.', es:'Antes de dormir, me cepillo los dientes.'},
+  {art:'-', de:'Nachdem ich gegessen habe, gehe ich spazieren.', es:'Después de comer, salgo a caminar.'},
+  {art:'-', de:'Ich lerne Deutsch, damit ich in Deutschland arbeiten kann.', es:'Aprendo alemán para poder trabajar en Alemania.'},
+  {art:'-', de:'Während ich koche, hört meine Frau Musik.', es:'Mientras cocino, mi esposa escucha música.'},
+  {art:'-', de:'Als ich klein war, wohnte ich in Berlin.', es:'Cuando era pequeño, vivía en Berlín.'}
+]);
+</script>
 </body></html>

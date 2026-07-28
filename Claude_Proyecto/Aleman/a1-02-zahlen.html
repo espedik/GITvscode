@@ -13,6 +13,12 @@
 .formula-box{background:rgba(212,160,0,.07);border:1.5px solid rgba(212,160,0,.3);border-radius:10px;padding:16px 20px;margin-bottom:12px}
 .formula-box .formula{font-family:monospace;font-size:15px;font-weight:700;color:var(--black);margin-bottom:6px}
 .formula-box .explain{font-size:13px;color:var(--text2)}
+.dialog-box{background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:18px 20px;margin-bottom:12px}
+.dialog-line{display:flex;gap:10px;margin-bottom:10px;align-items:flex-start}
+.dialog-line:last-child{margin-bottom:0}
+.dialog-speaker{font-size:11px;font-weight:800;color:var(--red);text-transform:uppercase;letter-spacing:.06em;white-space:nowrap;min-width:30px;margin-top:2px}
+.dialog-de{font-size:14px;font-weight:600;color:var(--black)}
+.dialog-es{font-size:12px;color:var(--text2);margin-top:1px}
 </style>
 </head>
 <body>
@@ -26,6 +32,14 @@
 </div></div>
 
 <div class="topic-content"><div class="container">
+
+<!-- 0. FLASHCARDS -->
+<div class="content-full">
+  <div class="card">
+    <h3><span>🎴</span> Repasa con tarjetas</h3>
+    <div id="fc-a1-02" class="flashcards"></div>
+  </div>
+</div>
 
 <!-- 1 AL 20 -->
 <div class="content-full">
@@ -158,6 +172,41 @@
   </div>
 </div>
 
+<!-- FRASES COMUNES -->
+<div class="content-full">
+  <div class="card card-gold">
+    <h3><span>🗨️</span> Frases comunes en este tema</h3>
+    <div class="phrase-grid">
+      <div class="phrase-item"><span class="phrase-situation">Preguntando el precio</span><span class="phrase-de">Wie viel kostet das?</span><span class="phrase-es">¿Cuánto cuesta eso?</span></div>
+      <div class="phrase-item"><span class="phrase-situation">En la caja de una tienda</span><span class="phrase-de">Das macht zwanzig Euro fünfzig.</span><span class="phrase-es">Son veinte euros con cincuenta.</span></div>
+      <div class="phrase-item"><span class="phrase-situation">Dando tu número de teléfono</span><span class="phrase-de">Meine Nummer ist null-eins-fünf...</span><span class="phrase-es">Mi número es cero-uno-cinco...</span></div>
+      <div class="phrase-item"><span class="phrase-situation">Preguntando la edad</span><span class="phrase-de">Wie alt bist du?</span><span class="phrase-es">¿Cuántos años tienes?</span></div>
+      <div class="phrase-item"><span class="phrase-situation">Respondiendo la edad</span><span class="phrase-de">Ich bin dreißig Jahre alt.</span><span class="phrase-es">Tengo treinta años.</span></div>
+      <div class="phrase-item"><span class="phrase-situation">Dando una dirección</span><span class="phrase-de">Ich wohne in der Bahnhofstraße zwölf.</span><span class="phrase-es">Vivo en la calle Bahnhofstraße número doce.</span></div>
+      <div class="phrase-item"><span class="phrase-situation">En el ascensor</span><span class="phrase-de">Ich muss in den dritten Stock.</span><span class="phrase-es">Tengo que ir al tercer piso.</span></div>
+      <div class="phrase-item"><span class="phrase-situation">Reservando una mesa</span><span class="phrase-de">Ein Tisch für vier Personen, bitte.</span><span class="phrase-es">Una mesa para cuatro personas, por favor.</span></div>
+      <div class="phrase-item"><span class="phrase-situation">Preguntando la fecha</span><span class="phrase-de">Der Wievielte ist heute?</span><span class="phrase-es">¿Qué fecha es hoy?</span></div>
+      <div class="phrase-item"><span class="phrase-situation">Respondiendo la fecha</span><span class="phrase-de">Heute ist der erste Mai.</span><span class="phrase-es">Hoy es primero de mayo.</span></div>
+      <div class="phrase-item"><span class="phrase-situation">Comprando boletos</span><span class="phrase-de">Zwei Karten, bitte.</span><span class="phrase-es">Dos boletos, por favor.</span></div>
+      <div class="phrase-item"><span class="phrase-situation">En el banco</span><span class="phrase-de">Ich möchte hundert Euro abheben.</span><span class="phrase-es">Quiero retirar cien euros.</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- DIÁLOGO -->
+<div class="content-full">
+  <div class="card">
+    <h3><span>💬</span> Diálogo de práctica — En la tienda</h3>
+    <div class="dialog-box">
+      <div class="dialog-line"><div class="dialog-speaker">A:</div><div><div class="dialog-de">Guten Tag! Was kostet der Kaffee?</div><div class="dialog-es">¡Buenos días! ¿Cuánto cuesta el café?</div></div></div>
+      <div class="dialog-line"><div class="dialog-speaker">B:</div><div><div class="dialog-de">Der Kaffee kostet drei Euro fünfzig.</div><div class="dialog-es">El café cuesta tres euros con cincuenta.</div></div></div>
+      <div class="dialog-line"><div class="dialog-speaker">A:</div><div><div class="dialog-de">Und das Wasser?</div><div class="dialog-es">¿Y el agua?</div></div></div>
+      <div class="dialog-line"><div class="dialog-speaker">B:</div><div><div class="dialog-de">Das macht zwei Euro. Zusammen fünf Euro fünfzig.</div><div class="dialog-es">Eso es dos euros. En total cinco euros con cincuenta.</div></div></div>
+      <div class="dialog-line"><div class="dialog-speaker">A:</div><div><div class="dialog-de">Hier, bitte. Danke schön!</div><div class="dialog-es">Aquí tiene. ¡Muchas gracias!</div></div></div>
+    </div>
+  </div>
+</div>
+
 <!-- EJERCICIOS -->
 <div class="content-full">
   <div class="card card-red">
@@ -175,4 +224,25 @@
   <a href="a1-03-farben.html" class="page-nav-btn next"><div><div class="page-nav-dir">Siguiente →</div><div class="page-nav-title">Farben & Formen</div></div><span style="font-size:24px">🎨</span></a>
 </div>
 <footer class="footer"><p>A1 · 02 — Zahlen</p><div class="footer-flag"><span style="background:#1a1a1a;width:20px;height:5px"></span><span style="background:var(--red);width:20px;height:5px"></span><span style="background:#FFCE00;width:20px;height:5px"></span></div></footer>
+<script src="flashcards.js"></script>
+<script>
+initFlashcards('fc-a1-02', [
+  {art:'-', de:'null', es:'cero'},
+  {art:'-', de:'zwölf', es:'doce'},
+  {art:'-', de:'zwanzig', es:'veinte'},
+  {art:'-', de:'dreißig', es:'treinta'},
+  {art:'-', de:'einundzwanzig', es:'veintiuno'},
+  {art:'-', de:'hundert', es:'cien'},
+  {art:'-', de:'tausend', es:'mil'},
+  {art:'-', de:'Wie viel kostet das?', es:'¿Cuánto cuesta eso?'},
+  {art:'-', de:'Das kostet... Euro.', es:'Eso cuesta ... euros.'},
+  {art:'-', de:'Wie ist deine Telefonnummer?', es:'¿Cuál es tu número de teléfono?'},
+  {art:'-', de:'Wie alt bist du?', es:'¿Cuántos años tienes?'},
+  {art:'-', de:'Ich bin ... Jahre alt.', es:'Tengo ... años.'},
+  {art:'-', de:'der erste', es:'el primero'},
+  {art:'-', de:'der zweite', es:'el segundo'},
+  {art:'-', de:'der dritte', es:'el tercero'},
+  {art:'-', de:'Der Wievielte ist heute?', es:'¿Qué fecha es hoy?'}
+]);
+</script>
 </body></html>

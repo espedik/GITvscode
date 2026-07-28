@@ -12,6 +12,12 @@
 .fam-es{font-size:12px;color:var(--text2)}
 .poss-table th{background:rgba(212,160,0,.08)}
 @media(max-width:640px){.family-tree{grid-template-columns:1fr}}
+.dialog-box{background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:18px 20px;margin-bottom:12px}
+.dialog-line{display:flex;gap:10px;margin-bottom:10px;align-items:flex-start}
+.dialog-line:last-child{margin-bottom:0}
+.dialog-speaker{font-size:11px;font-weight:800;color:var(--red);text-transform:uppercase;letter-spacing:.06em;white-space:nowrap;min-width:30px;margin-top:2px}
+.dialog-de{font-size:14px;font-weight:600;color:var(--black)}
+.dialog-es{font-size:12px;color:var(--text2);margin-top:1px}
 </style></head>
 <body>
 <nav class="nav"><a href="index.html" class="nav-logo">🇩🇪 Deutsch</a><div class="nav-links"><a href="index.html" class="nav-link">← Índice A1</a></div></nav>
@@ -24,6 +30,14 @@
 </div></div>
 
 <div class="topic-content"><div class="container">
+
+<!-- 0. FLASHCARDS -->
+<div class="content-full">
+  <div class="card">
+    <h3><span>🎴</span> Repasa con tarjetas</h3>
+    <div id="fc-a1-05" class="flashcards"></div>
+  </div>
+</div>
 
 <!-- MIEMBROS DE LA FAMILIA -->
 <div class="content-full">
@@ -100,35 +114,34 @@
 
 <!-- CÓMO HABLAR DE TU FAMILIA -->
 <div class="content-full">
-  <div class="card">
-    <h3><span>💬</span> 3. Frases para hablar de tu familia</h3>
-    <table class="vocab-table">
-      <thead><tr><th>Frase alemana</th><th>Español</th></tr></thead>
-      <tbody>
-        <tr><td class="vocab-de">Meine Familie ist groß / klein.</td><td class="vocab-es">Mi familia es grande / pequeña.</td></tr>
-        <tr><td class="vocab-de">Ich habe zwei Geschwister: einen Bruder und eine Schwester.</td><td class="vocab-es">Tengo dos hermanos: un hermano y una hermana.</td></tr>
-        <tr><td class="vocab-de">Ich bin Einzelkind.</td><td class="vocab-es">Soy hijo único / hija única.</td></tr>
-        <tr><td class="vocab-de">Mein Vater ist 55 Jahre alt und arbeitet als Ingenieur.</td><td class="vocab-es">Mi padre tiene 55 años y trabaja como ingeniero.</td></tr>
-        <tr><td class="vocab-de">Meine Mutter kommt aus Mexiko.</td><td class="vocab-es">Mi madre es de México.</td></tr>
-        <tr><td class="vocab-de">Mein Bruder ist älter als ich. Er ist 3 Jahre älter.</td><td class="vocab-es">Mi hermano es mayor que yo. Es 3 años mayor.</td></tr>
-        <tr><td class="vocab-de">Meine Schwester ist verheiratet und hat zwei Kinder.</td><td class="vocab-es">Mi hermana está casada y tiene dos hijos.</td></tr>
-        <tr><td class="vocab-de">Wie viele Geschwister hast du?</td><td class="vocab-es">¿Cuántos hermanos tienes?</td></tr>
-        <tr><td class="vocab-de">Bist du verheiratet / ledig / geschieden?</td><td class="vocab-es">¿Estás casado/a / soltero/a / divorciado/a?</td></tr>
-        <tr><td class="vocab-de">Hast du Kinder?</td><td class="vocab-es">¿Tienes hijos?</td></tr>
-      </tbody>
-    </table>
+  <div class="card card-gold">
+    <h3><span>🗨️</span> 3. Frases comunes en este tema</h3>
+    <div class="phrase-grid">
+      <div class="phrase-item"><span class="phrase-situation">Describiendo el tamaño de tu familia</span><span class="phrase-de">Meine Familie ist groß / klein.</span><span class="phrase-es">Mi familia es grande / pequeña.</span></div>
+      <div class="phrase-item"><span class="phrase-situation">Contando cuántos hermanos tienes</span><span class="phrase-de">Ich habe zwei Geschwister: einen Bruder und eine Schwester.</span><span class="phrase-es">Tengo dos hermanos: un hermano y una hermana.</span></div>
+      <div class="phrase-item"><span class="phrase-situation">Diciendo que eres hijo único</span><span class="phrase-de">Ich bin Einzelkind.</span><span class="phrase-es">Soy hijo único / hija única.</span></div>
+      <div class="phrase-item"><span class="phrase-situation">Presentando a tu padre</span><span class="phrase-de">Mein Vater ist 55 Jahre alt und arbeitet als Ingenieur.</span><span class="phrase-es">Mi padre tiene 55 años y trabaja como ingeniero.</span></div>
+      <div class="phrase-item"><span class="phrase-situation">Diciendo de dónde es tu madre</span><span class="phrase-de">Meine Mutter kommt aus Mexiko.</span><span class="phrase-es">Mi madre es de México.</span></div>
+      <div class="phrase-item"><span class="phrase-situation">Comparando edades entre hermanos</span><span class="phrase-de">Mein Bruder ist drei Jahre älter als ich.</span><span class="phrase-es">Mi hermano es tres años mayor que yo.</span></div>
+      <div class="phrase-item"><span class="phrase-situation">Hablando del estado civil de un familiar</span><span class="phrase-de">Meine Schwester ist verheiratet und hat zwei Kinder.</span><span class="phrase-es">Mi hermana está casada y tiene dos hijos.</span></div>
+      <div class="phrase-item"><span class="phrase-situation">Preguntando cuántos hermanos tiene alguien</span><span class="phrase-de">Wie viele Geschwister hast du?</span><span class="phrase-es">¿Cuántos hermanos tienes?</span></div>
+      <div class="phrase-item"><span class="phrase-situation">Preguntando el estado civil</span><span class="phrase-de">Bist du verheiratet, ledig oder geschieden?</span><span class="phrase-es">¿Estás casado/a, soltero/a o divorciado/a?</span></div>
+      <div class="phrase-item"><span class="phrase-situation">Preguntando si tiene hijos</span><span class="phrase-de">Hast du Kinder?</span><span class="phrase-es">¿Tienes hijos?</span></div>
+      <div class="phrase-item"><span class="phrase-situation">Presentando a un familiar en persona</span><span class="phrase-de">Das ist meine Schwester Anna.</span><span class="phrase-es">Esta es mi hermana Anna.</span></div>
+      <div class="phrase-item"><span class="phrase-situation">Explicando quién es alguien en la familia</span><span class="phrase-de">Das ist der Vater meiner Mutter — mein Opa.</span><span class="phrase-es">Este es el padre de mi madre — mi abuelo.</span></div>
+    </div>
   </div>
 </div>
 
 <!-- DIÁLOGO -->
 <div class="content-full">
-  <div class="card card-gold">
+  <div class="card">
     <h3><span>💬</span> 4. Diálogo — Meine Familie</h3>
-    <div style="background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:18px">
-      <div style="display:flex;gap:10px;margin-bottom:10px"><div style="font-size:11px;font-weight:800;color:var(--red);white-space:nowrap;min-width:30px;margin-top:2px">A:</div><div><div style="font-size:14px;font-weight:600">Hast du Geschwister?</div><div style="font-size:12px;color:var(--text2)">¿Tienes hermanos?</div></div></div>
-      <div style="display:flex;gap:10px;margin-bottom:10px"><div style="font-size:11px;font-weight:800;color:var(--red);white-space:nowrap;min-width:30px;margin-top:2px">B:</div><div><div style="font-size:14px;font-weight:600">Ja, ich habe einen Bruder. Er heißt Carlos und ist 25 Jahre alt. Er wohnt in Guadalajara. Und du?</div><div style="font-size:12px;color:var(--text2)">Sí, tengo un hermano. Se llama Carlos y tiene 25 años. Vive en Guadalajara. ¿Y tú?</div></div></div>
-      <div style="display:flex;gap:10px;margin-bottom:10px"><div style="font-size:11px;font-weight:800;color:var(--red);white-space:nowrap;min-width:30px;margin-top:2px">A:</div><div><div style="font-size:14px;font-weight:600">Ich bin Einzelkind. Aber meine Familie ist groß — ich habe viele Cousins! Ist dein Bruder verheiratet?</div><div style="font-size:12px;color:var(--text2)">Soy hijo único. Pero mi familia es grande — ¡tengo muchos primos! ¿Tu hermano está casado?</div></div></div>
-      <div style="display:flex;gap:10px"><div style="font-size:11px;font-weight:800;color:var(--red);white-space:nowrap;min-width:30px;margin-top:2px">B:</div><div><div style="font-size:14px;font-weight:600">Nein, er ist noch ledig. Aber er hat eine Freundin. Ihre Eltern kommen aus Deutschland — interessant, oder?</div><div style="font-size:12px;color:var(--text2)">No, todavía está soltero. Pero tiene novia. Los padres de ella son de Alemania — interesante, ¿verdad?</div></div></div>
+    <div class="dialog-box">
+      <div class="dialog-line"><div class="dialog-speaker">A:</div><div><div class="dialog-de">Hast du Geschwister?</div><div class="dialog-es">¿Tienes hermanos?</div></div></div>
+      <div class="dialog-line"><div class="dialog-speaker">B:</div><div><div class="dialog-de">Ja, ich habe einen Bruder. Er heißt Carlos und ist 25 Jahre alt. Er wohnt in Guadalajara. Und du?</div><div class="dialog-es">Sí, tengo un hermano. Se llama Carlos y tiene 25 años. Vive en Guadalajara. ¿Y tú?</div></div></div>
+      <div class="dialog-line"><div class="dialog-speaker">A:</div><div><div class="dialog-de">Ich bin Einzelkind. Aber meine Familie ist groß — ich habe viele Cousins! Ist dein Bruder verheiratet?</div><div class="dialog-es">Soy hijo único. Pero mi familia es grande — ¡tengo muchos primos! ¿Tu hermano está casado?</div></div></div>
+      <div class="dialog-line"><div class="dialog-speaker">B:</div><div><div class="dialog-de">Nein, er ist noch ledig. Aber er hat eine Freundin. Ihre Eltern kommen aus Deutschland — interessant, oder?</div><div class="dialog-es">No, todavía está soltero. Pero tiene novia. Los padres de ella son de Alemania — interesante, ¿verdad?</div></div></div>
     </div>
   </div>
 </div>
@@ -150,4 +163,25 @@
   <a href="a1-06-artikel.html" class="page-nav-btn next"><div><div class="page-nav-dir">Siguiente →</div><div class="page-nav-title">Artikel: der, die, das</div></div><span style="font-size:24px">🔤</span></a>
 </div>
 <footer class="footer"><p>A1 · 05 — Familie</p><div class="footer-flag"><span style="background:#1a1a1a;width:20px;height:5px"></span><span style="background:var(--red);width:20px;height:5px"></span><span style="background:#FFCE00;width:20px;height:5px"></span></div></footer>
+<script src="flashcards.js"></script>
+<script>
+initFlashcards('fc-a1-05', [
+  {art:'der', de:'Vater', es:'el padre', ex:'Mein Vater ist Ingenieur.'},
+  {art:'die', de:'Mutter', es:'la madre', ex:'Meine Mutter kommt aus Mexiko.'},
+  {art:'der', de:'Bruder', es:'el hermano'},
+  {art:'die', de:'Schwester', es:'la hermana'},
+  {art:'das', de:'Kind', es:'el niño / la niña'},
+  {art:'der', de:'Sohn', es:'el hijo'},
+  {art:'die', de:'Tochter', es:'la hija'},
+  {art:'pl.', de:'Großeltern', es:'los abuelos'},
+  {art:'der', de:'Onkel', es:'el tío'},
+  {art:'die', de:'Tante', es:'la tía'},
+  {art:'der', de:'Cousin / die Cousine', es:'el primo / la prima'},
+  {art:'pl.', de:'Geschwister', es:'los hermanos (en conjunto)'},
+  {art:'-', de:'verheiratet', es:'casado/a'},
+  {art:'-', de:'ledig', es:'soltero/a'},
+  {art:'-', de:'mein / meine', es:'mi (masc./neutro) / mi (fem./plural)'},
+  {art:'-', de:'Wie viele Geschwister hast du?', es:'¿Cuántos hermanos tienes?'}
+]);
+</script>
 </body></html>

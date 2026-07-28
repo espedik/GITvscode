@@ -16,6 +16,12 @@
 .gc-rule{font-size:11px;color:var(--text2);line-height:1.6;margin-bottom:6px}
 .gc-ex{font-size:12px;font-weight:600;margin-top:2px}
 @media(max-width:600px){.gender-grid{grid-template-columns:1fr}}
+.dialog-box{background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:18px 20px;margin-bottom:12px}
+.dialog-line{display:flex;gap:10px;margin-bottom:10px;align-items:flex-start}
+.dialog-line:last-child{margin-bottom:0}
+.dialog-speaker{font-size:11px;font-weight:800;color:var(--red);text-transform:uppercase;letter-spacing:.06em;white-space:nowrap;min-width:30px;margin-top:2px}
+.dialog-de{font-size:14px;font-weight:600;color:var(--black)}
+.dialog-es{font-size:12px;color:var(--text2);margin-top:1px}
 </style></head>
 <body>
 <nav class="nav"><a href="index.html" class="nav-logo">🇩🇪 Deutsch</a><div class="nav-links"><a href="index.html" class="nav-link">← Índice A1</a></div></nav>
@@ -28,6 +34,14 @@
 </div></div>
 
 <div class="topic-content"><div class="container">
+
+<!-- 0. FLASHCARDS -->
+<div class="content-full">
+  <div class="card">
+    <h3><span>🎴</span> Repasa con tarjetas</h3>
+    <div id="fc-a1-06" class="flashcards"></div>
+  </div>
+</div>
 
 <!-- LOS 3 ARTÍCULOS -->
 <div class="content-full">
@@ -155,6 +169,41 @@
   </div>
 </div>
 
+<!-- FRASES COMUNES -->
+<div class="content-full">
+  <div class="card card-gold">
+    <h3><span>🗨️</span> Frases comunes en este tema</h3>
+    <div class="phrase-grid">
+      <div class="phrase-item"><span class="phrase-situation">Preguntando qué es algo</span><span class="phrase-de">Was ist das?</span><span class="phrase-es">¿Qué es eso?</span></div>
+      <div class="phrase-item"><span class="phrase-situation">Identificando un objeto</span><span class="phrase-de">Das ist ein Tisch.</span><span class="phrase-es">Eso es una mesa.</span></div>
+      <div class="phrase-item"><span class="phrase-situation">Corrigiendo a alguien</span><span class="phrase-de">Nein, das ist kein Hund, das ist eine Katze.</span><span class="phrase-es">No, eso no es un perro, es una gata.</span></div>
+      <div class="phrase-item"><span class="phrase-situation">Preguntando si algo existe cerca</span><span class="phrase-de">Gibt es hier einen Supermarkt?</span><span class="phrase-es">¿Hay un supermercado por aquí?</span></div>
+      <div class="phrase-item"><span class="phrase-situation">Negando que tienes algo</span><span class="phrase-de">Ich habe kein Auto.</span><span class="phrase-es">No tengo auto.</span></div>
+      <div class="phrase-item"><span class="phrase-situation">Pidiendo prestado un objeto</span><span class="phrase-de">Hast du einen Stift?</span><span class="phrase-es">¿Tienes un bolígrafo?</span></div>
+      <div class="phrase-item"><span class="phrase-situation">Describiendo lo que ves</span><span class="phrase-de">Ich sehe eine Frau und einen Mann.</span><span class="phrase-es">Veo a una mujer y a un hombre.</span></div>
+      <div class="phrase-item"><span class="phrase-situation">Pidiendo algo en un café</span><span class="phrase-de">Ich hätte gern ein Wasser, bitte.</span><span class="phrase-es">Quisiera un agua, por favor.</span></div>
+      <div class="phrase-item"><span class="phrase-situation">Preguntando el significado de una palabra</span><span class="phrase-de">Was bedeutet das Wort?</span><span class="phrase-es">¿Qué significa esa palabra?</span></div>
+      <div class="phrase-item"><span class="phrase-situation">Aclarando el género de una palabra</span><span class="phrase-de">Heißt es der oder die Zeitung?</span><span class="phrase-es">¿Se dice "der" o "die" Zeitung?</span></div>
+      <div class="phrase-item"><span class="phrase-situation">Señalando algo a lo lejos</span><span class="phrase-de">Siehst du das Auto dort?</span><span class="phrase-es">¿Ves ese auto ahí?</span></div>
+      <div class="phrase-item"><span class="phrase-situation">Explicando qué necesitas</span><span class="phrase-de">Ich brauche ein neues Buch.</span><span class="phrase-es">Necesito un libro nuevo.</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- DIÁLOGO -->
+<div class="content-full">
+  <div class="card">
+    <h3><span>💬</span> Diálogo de práctica — ¿Qué es eso?</h3>
+    <div class="dialog-box">
+      <div class="dialog-line"><div class="dialog-speaker">A:</div><div><div class="dialog-de">Was ist das?</div><div class="dialog-es">¿Qué es eso?</div></div></div>
+      <div class="dialog-line"><div class="dialog-speaker">B:</div><div><div class="dialog-de">Das ist ein Wörterbuch. Ich brauche es für den Deutschkurs.</div><div class="dialog-es">Eso es un diccionario. Lo necesito para el curso de alemán.</div></div></div>
+      <div class="dialog-line"><div class="dialog-speaker">A:</div><div><div class="dialog-de">Und das da drüben? Ist das eine Zeitung?</div><div class="dialog-es">¿Y eso de allá? ¿Es un periódico?</div></div></div>
+      <div class="dialog-line"><div class="dialog-speaker">B:</div><div><div class="dialog-de">Nein, das ist keine Zeitung — das ist ein Buch.</div><div class="dialog-es">No, eso no es un periódico — es un libro.</div></div></div>
+      <div class="dialog-line"><div class="dialog-speaker">A:</div><div><div class="dialog-de">Ach so, jetzt verstehe ich! Danke.</div><div class="dialog-es">Ah, ¡ahora entiendo! Gracias.</div></div></div>
+    </div>
+  </div>
+</div>
+
 <!-- EJERCICIOS -->
 <div class="content-full">
   <div class="card card-red">
@@ -172,4 +221,25 @@
   <a href="a1-07-pronomen.html" class="page-nav-btn next"><div><div class="page-nav-dir">Siguiente →</div><div class="page-nav-title">Personalpronomen</div></div><span style="font-size:24px">👤</span></a>
 </div>
 <footer class="footer"><p>A1 · 06 — Artikel: der, die, das</p><div class="footer-flag"><span style="background:#1a1a1a;width:20px;height:5px"></span><span style="background:var(--red);width:20px;height:5px"></span><span style="background:#FFCE00;width:20px;height:5px"></span></div></footer>
+<script src="flashcards.js"></script>
+<script>
+initFlashcards('fc-a1-06', [
+  {art:'der', de:'Mann', es:'el hombre'},
+  {art:'die', de:'Frau', es:'la mujer'},
+  {art:'das', de:'Kind', es:'el niño / la niña'},
+  {art:'der', de:'Tisch', es:'la mesa'},
+  {art:'die', de:'Schule', es:'la escuela'},
+  {art:'das', de:'Buch', es:'el libro'},
+  {art:'-', de:'ein / eine', es:'un / una (indefinido)'},
+  {art:'-', de:'kein / keine', es:'ningún / ninguna'},
+  {art:'-', de:'Ist das ein Hund?', es:'¿Es eso un perro?'},
+  {art:'das', de:'Mädchen', es:'la niña (siempre neutro)'},
+  {art:'die', de:'Zeitung', es:'el periódico'},
+  {art:'der', de:'Lehrer / die Lehrerin', es:'el profesor / la profesora'},
+  {art:'das', de:'Auto', es:'el auto'},
+  {art:'die', de:'Arbeit', es:'el trabajo'},
+  {art:'der', de:'Freund / die Freundin', es:'el amigo / la amiga'},
+  {art:'das', de:'Wasser', es:'el agua'}
+]);
+</script>
 </body></html>

@@ -1,5 +1,14 @@
 <!DOCTYPE html>
-<html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>A2 · 12 — Infinitiv mit zu | Deutsch</title><link rel="stylesheet" href="styles.css"></head>
+<html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>A2 · 12 — Infinitiv mit zu | Deutsch</title><link rel="stylesheet" href="styles.css">
+<style>
+.dialog-box{background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:18px 20px;margin-bottom:12px}
+.dialog-line{display:flex;gap:10px;margin-bottom:10px;align-items:flex-start}
+.dialog-line:last-child{margin-bottom:0}
+.dialog-speaker{font-size:11px;font-weight:800;color:var(--red);text-transform:uppercase;letter-spacing:.06em;white-space:nowrap;min-width:30px;margin-top:2px}
+.dialog-de{font-size:14px;font-weight:600;color:var(--black)}
+.dialog-es{font-size:12px;color:var(--text2);margin-top:1px}
+</style>
+</head>
 <body>
 <nav class="nav"><a href="index.html" class="nav-logo">🇩🇪 Deutsch</a><a href="index.html" class="nav-back">← Índice</a></nav>
 <div class="topic-hero"><div class="container">
@@ -9,6 +18,13 @@
   <div class="topic-hero-meta"><span class="meta-pill">∞ Infinitivo</span><span class="meta-pill">🎯 Propósito</span><span class="meta-pill">⏱️ ~35 min</span></div>
 </div></div>
 <div class="topic-content"><div class="container">
+
+  <div class="content-full">
+    <div class="card">
+      <h3><span>🎴</span> Repasa con tarjetas</h3>
+      <div id="fc-a2-12" class="flashcards"></div>
+    </div>
+  </div>
 
   <div class="content-full">
     <div class="card card-gold">
@@ -31,8 +47,46 @@
           <tr><td class="vocab-de">Es macht Spaß zu</td><td class="vocab-es">Es divertido</td><td class="vocab-ex">Es macht Spaß, Deutsch zu lernen.</td></tr>
           <tr><td class="vocab-de">Es ist wichtig zu</td><td class="vocab-es">Es importante</td><td class="vocab-ex">Es ist wichtig, zu üben.</td></tr>
           <tr><td class="vocab-de">Es ist schön zu</td><td class="vocab-es">Es bonito</td><td class="vocab-ex">Es ist schön, hier zu wohnen.</td></tr>
+          <tr><td class="vocab-de">sich freuen, zu</td><td class="vocab-es">alegrarse de</td><td class="vocab-ex">Ich freue mich, dich zu sehen.</td></tr>
+          <tr><td class="vocab-de">Lust haben zu</td><td class="vocab-es">tener ganas de</td><td class="vocab-ex">Ich habe Lust, spazieren zu gehen.</td></tr>
+          <tr><td class="vocab-de">planen zu</td><td class="vocab-es">planear</td><td class="vocab-ex">Wir planen, nächstes Jahr zu heiraten.</td></tr>
+          <tr><td class="vocab-de">Zeit haben zu</td><td class="vocab-es">tener tiempo para</td><td class="vocab-ex">Ich habe keine Zeit, das zu machen.</td></tr>
         </tbody>
       </table>
+    </div>
+  </div>
+
+  <div class="content-full">
+    <div class="card card-gold">
+      <h3><span>🗨️</span> Frases comunes con Infinitiv mit zu</h3>
+      <div class="phrase-grid">
+        <div class="phrase-item"><span class="phrase-situation">Haciendo un compromiso</span><span class="phrase-de">Ich verspreche, pünktlich zu sein.</span><span class="phrase-es">Prometo ser puntual.</span></div>
+        <div class="phrase-item"><span class="phrase-situation">Rechazando algo educadamente</span><span class="phrase-de">Es tut mir leid, aber ich habe keine Zeit, das zu machen.</span><span class="phrase-es">Lo siento, pero no tengo tiempo para hacer eso.</span></div>
+        <div class="phrase-item"><span class="phrase-situation">Expresando una meta</span><span class="phrase-de">Ich habe vor, nächstes Jahr umzuziehen.</span><span class="phrase-es">Tengo planeado mudarme el próximo año.</span></div>
+        <div class="phrase-item"><span class="phrase-situation">En una entrevista de trabajo</span><span class="phrase-de">Ich freue mich, hier zu arbeiten.</span><span class="phrase-es">Me alegra trabajar aquí.</span></div>
+        <div class="phrase-item"><span class="phrase-situation">Dando una recomendación</span><span class="phrase-de">Es ist wichtig, viel Wasser zu trinken.</span><span class="phrase-es">Es importante beber mucha agua.</span></div>
+        <div class="phrase-item"><span class="phrase-situation">Hablando de un hábito que quieres cambiar</span><span class="phrase-de">Ich versuche, weniger Zucker zu essen.</span><span class="phrase-es">Intento comer menos azúcar.</span></div>
+        <div class="phrase-item"><span class="phrase-situation">Proponiendo un plan</span><span class="phrase-de">Hast du Lust, heute Abend auszugehen?</span><span class="phrase-es">¿Tienes ganas de salir esta noche?</span></div>
+        <div class="phrase-item"><span class="phrase-situation">Disculpándote por olvidar algo</span><span class="phrase-de">Ich habe vergessen, dich anzurufen.</span><span class="phrase-es">Se me olvidó llamarte.</span></div>
+        <div class="phrase-item"><span class="phrase-situation">Motivándote a estudiar</span><span class="phrase-de">Es macht Spaß, eine neue Sprache zu lernen.</span><span class="phrase-es">Es divertido aprender un idioma nuevo.</span></div>
+        <div class="phrase-item"><span class="phrase-situation">Hablando de dejar un hábito</span><span class="phrase-de">Ich habe aufgehört, spät aufzustehen.</span><span class="phrase-es">Dejé de levantarme tarde.</span></div>
+        <div class="phrase-item"><span class="phrase-situation">En el consultorio médico</span><span class="phrase-de">Der Arzt hat empfohlen, mehr zu schlafen.</span><span class="phrase-es">El médico recomendó dormir más.</span></div>
+        <div class="phrase-item"><span class="phrase-situation">Dando ánimo a alguien</span><span class="phrase-de">Es ist nicht leicht, eine neue Sprache zu sprechen, aber du schaffst es!</span><span class="phrase-es">No es fácil hablar un idioma nuevo, ¡pero lo lograrás!</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="content-full">
+    <div class="card">
+      <h3><span>💬</span> Diálogo de práctica — Haciendo planes</h3>
+      <div class="dialog-box">
+        <div class="dialog-line"><div class="dialog-speaker">A:</div><div><div class="dialog-de">Hast du Lust, heute Abend ins Kino zu gehen?</div><div class="dialog-es">¿Tienes ganas de ir al cine esta noche?</div></div></div>
+        <div class="dialog-line"><div class="dialog-speaker">B:</div><div><div class="dialog-de">Ich würde gern, aber ich habe vergessen, meine Hausaufgaben zu machen.</div><div class="dialog-es">Me encantaría, pero se me olvidó hacer mi tarea.</div></div></div>
+        <div class="dialog-line"><div class="dialog-speaker">A:</div><div><div class="dialog-de">Kein Problem, wir können versuchen, morgen zu gehen.</div><div class="dialog-es">No hay problema, podemos intentar ir mañana.</div></div></div>
+        <div class="dialog-line"><div class="dialog-speaker">B:</div><div><div class="dialog-de">Ja! Ich habe vor, heute früh fertig zu sein.</div><div class="dialog-es">¡Sí! Tengo planeado terminar temprano hoy.</div></div></div>
+        <div class="dialog-line"><div class="dialog-speaker">A:</div><div><div class="dialog-de">Super, dann rufe ich dich morgen an.</div><div class="dialog-es">Genial, entonces te llamo mañana.</div></div></div>
+        <div class="dialog-line"><div class="dialog-speaker">B:</div><div><div class="dialog-de">Perfekt, ich freue mich darauf!</div><div class="dialog-es">¡Perfecto, tengo muchas ganas!</div></div></div>
+      </div>
     </div>
   </div>
 
@@ -55,6 +109,8 @@
       <div class="exercise"><div class="exercise-num">Ejercicio 1</div><div class="exercise-q">Es ist wichtig, viel _______ (trinken)</div><div class="exercise-hint">Pista: zu trinken</div></div>
       <div class="exercise"><div class="exercise-num">Ejercicio 2 — Verbo separable</div><div class="exercise-q">Ich versuche, früh _____________. (aufstehen)</div><div class="exercise-hint">Pista: aufzustehen</div></div>
       <div class="exercise"><div class="exercise-num">Ejercicio 3 — Tus metas en alemán</div><div class="placeholder" style="margin-top:8px">Escribe 3 metas usando: Ich vorhabe / versuche / plane...</div></div>
+      <div class="exercise"><div class="exercise-num">Ejercicio 4 — Traduce</div><div class="exercise-q">"Es importante dormir 8 horas."</div><div class="exercise-hint">Es ist wichtig, 8 Stunden zu schlafen.</div></div>
+      <div class="exercise"><div class="exercise-num">Ejercicio 5 — Verbo separable</div><div class="exercise-q">Ich habe vergessen, das Licht ________. (ausschalten)</div><div class="exercise-hint">Pista: auszuschalten</div></div>
     </div>
   </div>
 
@@ -66,4 +122,23 @@
   <a href="a2-13-wohnen.html" class="page-nav-btn next"><div><div class="page-nav-dir">Siguiente →</div><div class="page-nav-title">Wohnen & Haushalt</div></div><span style="font-size:24px">🏠</span></a>
 </div>
 <footer class="footer"><p>A2 · 12 — Infinitiv mit zu</p><div class="footer-flag"><span style="background:#000;width:20px;height:5px"></span><span style="background:var(--red);width:20px;height:5px"></span><span style="background:var(--gold);width:20px;height:5px"></span></div></footer>
+<script src="flashcards.js"></script>
+<script>
+initFlashcards('fc-a2-12', [
+  {art:'-', de:'Ich versuche, Deutsch zu lernen.', es:'Intento aprender alemán.'},
+  {art:'-', de:'Es ist schön, in Deutschland zu leben.', es:'Es bonito vivir en Alemania.'},
+  {art:'-', de:'Ich versuche, früh aufzustehen.', es:'Intento levantarme temprano. (verbo separable)'},
+  {art:'-', de:'Er hat vergessen, anzurufen.', es:'Se le olvidó llamar.'},
+  {art:'-', de:'Sie fängt an zu arbeiten.', es:'Ella empieza a trabajar.'},
+  {art:'-', de:'Hör auf zu rauchen!', es:'¡Deja de fumar!'},
+  {art:'-', de:'Ich habe vor, nach Berlin zu fahren.', es:'Tengo planeado ir a Berlín.'},
+  {art:'-', de:'Es macht Spaß, Deutsch zu lernen.', es:'Es divertido aprender alemán.'},
+  {art:'-', de:'Es ist wichtig zu üben.', es:'Es importante practicar.'},
+  {art:'-', de:'Ich freue mich, dich zu sehen.', es:'Me alegra verte.'},
+  {art:'-', de:'Ich habe Lust, spazieren zu gehen.', es:'Tengo ganas de salir a caminar.'},
+  {art:'-', de:'Wir planen, nächstes Jahr zu heiraten.', es:'Planeamos casarnos el próximo año.'},
+  {art:'-', de:'Ich habe keine Zeit, das zu machen.', es:'No tengo tiempo para hacer eso.'},
+  {art:'-', de:'Ich will Deutsch lernen.', es:'Quiero aprender alemán. (modal, sin zu)'}
+]);
+</script>
 </body></html>

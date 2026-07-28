@@ -1,5 +1,14 @@
 <!DOCTYPE html>
-<html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>A2 · 05 — Trennbare Verben | Deutsch</title><link rel="stylesheet" href="styles.css"></head>
+<html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>A2 · 05 — Trennbare Verben | Deutsch</title><link rel="stylesheet" href="styles.css">
+<style>
+.dialog-box{background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:18px 20px;margin-bottom:12px}
+.dialog-line{display:flex;gap:10px;margin-bottom:10px;align-items:flex-start}
+.dialog-line:last-child{margin-bottom:0}
+.dialog-speaker{font-size:11px;font-weight:800;color:var(--red);text-transform:uppercase;letter-spacing:.06em;white-space:nowrap;min-width:30px;margin-top:2px}
+.dialog-de{font-size:14px;font-weight:600;color:var(--black)}
+.dialog-es{font-size:12px;color:var(--text2);margin-top:1px}
+</style>
+</head>
 <body>
 <nav class="nav"><a href="index.html" class="nav-logo">🇩🇪 Deutsch</a><a href="index.html" class="nav-back">← Índice</a></nav>
 <div class="topic-hero"><div class="container">
@@ -9,6 +18,13 @@
   <div class="topic-hero-meta"><span class="meta-pill">✂️ Prefijos</span><span class="meta-pill">🎯 ~50 verbos clave</span><span class="meta-pill">⏱️ ~45 min</span></div>
 </div></div>
 <div class="topic-content"><div class="container">
+
+  <div class="content-full">
+    <div class="card">
+      <h3><span>🎴</span> Repasa con tarjetas</h3>
+      <div id="fc-a2-05" class="flashcards"></div>
+    </div>
+  </div>
 
   <div class="content-full">
     <div class="card card-gold">
@@ -33,8 +49,47 @@
           <tr><td class="vocab-de">zumachen</td><td>zu-</td><td class="vocab-es">cerrar</td><td class="vocab-ex">Mach das Fenster zu.</td></tr>
           <tr><td class="vocab-de">fernsehen</td><td>fern-</td><td class="vocab-es">ver televisión</td><td class="vocab-ex">Ich sehe abends fern.</td></tr>
           <tr><td class="vocab-de">zurückkommen</td><td>zurück-</td><td class="vocab-es">regresar</td><td class="vocab-ex">Wann kommst du zurück?</td></tr>
+          <tr><td class="vocab-de">aufräumen</td><td>auf-</td><td class="vocab-es">ordenar / limpiar</td><td class="vocab-ex">Ich räume mein Zimmer auf.</td></tr>
+          <tr><td class="vocab-de">einsteigen</td><td>ein-</td><td class="vocab-es">subir (a un vehículo)</td><td class="vocab-ex">Wir steigen in den Bus ein.</td></tr>
+          <tr><td class="vocab-de">aussteigen</td><td>aus-</td><td class="vocab-es">bajar (de un vehículo)</td><td class="vocab-ex">Steig hier aus!</td></tr>
+          <tr><td class="vocab-de">anziehen</td><td>an-</td><td class="vocab-es">ponerse (ropa)</td><td class="vocab-ex">Sie zieht die Jacke an.</td></tr>
+          <tr><td class="vocab-de">vorbereiten</td><td>vor-</td><td class="vocab-es">preparar</td><td class="vocab-ex">Ich bereite das Essen vor.</td></tr>
+          <tr><td class="vocab-de">abholen</td><td>ab-</td><td class="vocab-es">recoger (a alguien)</td><td class="vocab-ex">Er holt mich vom Flughafen ab.</td></tr>
         </tbody>
       </table>
+    </div>
+  </div>
+
+  <!-- FRASES COMUNES -->
+  <div class="content-full">
+    <div class="card card-gold">
+      <h3><span>🗨️</span> Frases comunes usando verbos separables</h3>
+      <div class="phrase-grid">
+        <div class="phrase-item"><span class="phrase-situation">Rutina matutina</span><span class="phrase-de">Ich stehe immer um 7 Uhr auf.</span><span class="phrase-es">Siempre me levanto a las 7.</span></div>
+        <div class="phrase-item"><span class="phrase-situation">Invitar a alguien</span><span class="phrase-de">Kommst du heute Abend mit?</span><span class="phrase-es">¿Vienes con nosotros esta noche?</span></div>
+        <div class="phrase-item"><span class="phrase-situation">Pedir que llamen</span><span class="phrase-de">Ruf mich bitte später an!</span><span class="phrase-es">¡Llámame más tarde, por favor!</span></div>
+        <div class="phrase-item"><span class="phrase-situation">En el transporte público</span><span class="phrase-de">An welcher Haltestelle steigen wir aus?</span><span class="phrase-es">¿En qué parada nos bajamos?</span></div>
+        <div class="phrase-item"><span class="phrase-situation">Pedir que abran/cierren</span><span class="phrase-de">Kannst du das Fenster zumachen?</span><span class="phrase-es">¿Puedes cerrar la ventana?</span></div>
+        <div class="phrase-item"><span class="phrase-situation">Ir de compras</span><span class="phrase-de">Ich kaufe am Samstag ein.</span><span class="phrase-es">Hago las compras el sábado.</span></div>
+        <div class="phrase-item"><span class="phrase-situation">Ir por alguien</span><span class="phrase-de">Ich hole dich vom Bahnhof ab.</span><span class="phrase-es">Paso a recogerte a la estación.</span></div>
+        <div class="phrase-item"><span class="phrase-situation">Pedir puntualidad</span><span class="phrase-de">Der Zug fährt pünktlich ab.</span><span class="phrase-es">El tren sale puntual.</span></div>
+        <div class="phrase-item"><span class="phrase-situation">Preparar algo</span><span class="phrase-de">Wir bereiten das Abendessen vor.</span><span class="phrase-es">Estamos preparando la cena.</span></div>
+        <div class="phrase-item"><span class="phrase-situation">Hablar de regresar</span><span class="phrase-de">Ich komme spät zurück.</span><span class="phrase-es">Regreso tarde.</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DIÁLOGO -->
+  <div class="content-full">
+    <div class="card">
+      <h3><span>💬</span> Diálogo de práctica — Planeando el día</h3>
+      <div class="dialog-box">
+        <div class="dialog-line"><div class="dialog-speaker">A:</div><div><div class="dialog-de">Wann stehst du morgen auf?</div><div class="dialog-es">¿A qué hora te levantas mañana?</div></div></div>
+        <div class="dialog-line"><div class="dialog-speaker">B:</div><div><div class="dialog-de">Ich stehe um 6 auf, weil ich einkaufen muss. Kommst du mit?</div><div class="dialog-es">Me levanto a las 6 porque tengo que ir de compras. ¿Vienes conmigo?</div></div></div>
+        <div class="dialog-line"><div class="dialog-speaker">A:</div><div><div class="dialog-de">Ja, gerne! Ruf mich einfach an, wenn du bereit bist.</div><div class="dialog-es">¡Sí, con gusto! Solo llámame cuando estés listo.</div></div></div>
+        <div class="dialog-line"><div class="dialog-speaker">B:</div><div><div class="dialog-de">Danach hole ich dich ab und wir fahren zusammen los.</div><div class="dialog-es">Después paso por ti y salimos juntos.</div></div></div>
+        <div class="dialog-line"><div class="dialog-speaker">A:</div><div><div class="dialog-de">Perfekt! Ich mache jetzt das Licht aus und schlafe.</div><div class="dialog-es">¡Perfecto! Ahora apago la luz y duermo.</div></div></div>
+      </div>
     </div>
   </div>
 
@@ -58,6 +113,8 @@
       <div class="exercise"><div class="exercise-num">Ejercicio 2 — Forma el imperativo</div><div class="exercise-q">"¡Llámame!" → _______!</div><div class="exercise-hint">Pista: Ruf mich an!</div></div>
       <div class="exercise"><div class="exercise-num">Ejercicio 3 — Perfekt de aufstehen</div><div class="exercise-q">Heute bin ich sehr früh ______________________.</div><div class="exercise-hint">Pista: aufgestanden</div></div>
       <div class="exercise"><div class="exercise-num">Ejercicio 4 — Tu rutina diaria</div><div class="placeholder" style="margin-top:8px">Describe tu día usando: aufstehen, einkaufen, fernsehen, anrufen...</div></div>
+      <div class="exercise"><div class="exercise-num">Ejercicio 5 — Coloca el prefijo al final</div><div class="exercise-q">Wir ___steigen___ an der nächsten Haltestelle ___. (aussteigen)</div><div class="exercise-hint">Pista: steigen / aus</div></div>
+      <div class="exercise"><div class="exercise-num">Ejercicio 6 — Traduce al alemán</div><div class="exercise-q">"Paso a recogerte a las 8."</div><div class="exercise-hint">Pista: Ich hole dich um 8 Uhr ab.</div></div>
     </div>
   </div>
 
@@ -69,4 +126,25 @@
   <a href="a2-06-verbos-reflexivos.html" class="page-nav-btn next"><div><div class="page-nav-dir">Siguiente →</div><div class="page-nav-title">Reflexive Verben</div></div><span style="font-size:24px">🔄</span></a>
 </div>
 <footer class="footer"><p>A2 · 05 — Trennbare Verben</p><div class="footer-flag"><span style="background:#000;width:20px;height:5px"></span><span style="background:var(--red);width:20px;height:5px"></span><span style="background:var(--gold);width:20px;height:5px"></span></div></footer>
+
+<script src="flashcards.js"></script>
+<script>
+initFlashcards('fc-a2-05', [
+  {art:'-', de:'Ich stehe jeden Tag um 7 auf.', es:'Me levanto todos los días a las 7.', ex:'aufstehen'},
+  {art:'-', de:'Ruf mich bitte an!', es:'¡Llámame, por favor!', ex:'anrufen — imperativo'},
+  {art:'-', de:'Wir kaufen samstags ein.', es:'Hacemos las compras los sábados.', ex:'einkaufen'},
+  {art:'-', de:'Kommst du mit?', es:'¿Vienes con nosotros?', ex:'mitkommen — pregunta'},
+  {art:'-', de:'Der Zug fährt pünktlich ab.', es:'El tren sale puntual.', ex:'abfahren'},
+  {art:'-', de:'Wann kommst du an?', es:'¿Cuándo llegas?', ex:'ankommen — pregunta'},
+  {art:'-', de:'Mach bitte die Tür auf!', es:'¡Abre la puerta, por favor!', ex:'aufmachen — imperativo'},
+  {art:'-', de:'Mach das Fenster zu.', es:'Cierra la ventana.', ex:'zumachen — imperativo'},
+  {art:'-', de:'Ich sehe abends fern.', es:'Veo televisión por las noches.', ex:'fernsehen'},
+  {art:'-', de:'Wann kommst du zurück?', es:'¿Cuándo regresas?', ex:'zurückkommen'},
+  {art:'-', de:'Ich räume mein Zimmer auf.', es:'Ordeno mi cuarto.', ex:'aufräumen'},
+  {art:'-', de:'Steig hier aus!', es:'¡Bájate aquí!', ex:'aussteigen — imperativo'},
+  {art:'-', de:'Sie ist früh aufgestanden.', es:'Ella se levantó temprano.', ex:'aufstehen — Perfekt'},
+  {art:'-', de:'Ich hole dich vom Bahnhof ab.', es:'Paso a recogerte a la estación.', ex:'abholen'}
+]);
+</script>
+
 </body></html>

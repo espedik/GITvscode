@@ -5,6 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>A2 · 01 — Modalverben | Deutsch</title>
 <link rel="stylesheet" href="styles.css">
+<style>
+.dialog-box{background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:18px 20px;margin-bottom:12px}
+.dialog-line{display:flex;gap:10px;margin-bottom:10px;align-items:flex-start}
+.dialog-line:last-child{margin-bottom:0}
+.dialog-speaker{font-size:11px;font-weight:800;color:var(--red);text-transform:uppercase;letter-spacing:.06em;white-space:nowrap;min-width:30px;margin-top:2px}
+.dialog-de{font-size:14px;font-weight:600;color:var(--black)}
+.dialog-es{font-size:12px;color:var(--text2);margin-top:1px}
+</style>
 </head>
 <body>
 
@@ -29,6 +37,14 @@
 
 <div class="topic-content">
   <div class="container">
+
+    <!-- 0. FLASHCARDS -->
+    <div class="content-full">
+      <div class="card">
+        <h3><span>🎴</span> Repasa con tarjetas</h3>
+        <div id="fc-a2-01" class="flashcards"></div>
+      </div>
+    </div>
 
     <!-- INTRODUCCIÓN -->
     <div class="content-full">
@@ -87,6 +103,53 @@
         <div class="example"><div class="example-de">Du darfst nicht rauchen.</div><div class="example-es">No tienes permiso de fumar.</div></div>
         <div class="example"><div class="example-de">Kinder dürfen hier spielen.</div><div class="example-es">Los niños pueden jugar aquí.</div></div>
       </div>
+      <div class="card">
+        <h3><span>💬</span> Ejemplos con sollen</h3>
+        <div class="example"><div class="example-de">Ich soll den Arzt anrufen.</div><div class="example-es">Debo llamar al médico (alguien me lo pidió).</div></div>
+        <div class="example"><div class="example-de">Was soll ich tun?</div><div class="example-es">¿Qué debo hacer?</div></div>
+        <div class="example"><div class="example-de">Du sollst pünktlich sein.</div><div class="example-es">Se supone que debes ser puntual.</div></div>
+      </div>
+      <div class="card">
+        <h3><span>💬</span> Ejemplos con mögen / möchten</h3>
+        <div class="example"><div class="example-de">Ich möchte einen Kaffee, bitte.</div><div class="example-es">Quisiera un café, por favor.</div></div>
+        <div class="example"><div class="example-de">Magst du klassische Musik?</div><div class="example-es">¿Te gusta la música clásica?</div></div>
+        <div class="example"><div class="example-de">Wir möchten nach Hause gehen.</div><div class="example-es">Quisiéramos irnos a casa.</div></div>
+      </div>
+    </div>
+
+    <!-- FRASES COMUNES -->
+    <div class="content-full">
+      <div class="card card-gold">
+        <h3><span>🗨️</span> Frases comunes usando verbos modales</h3>
+        <div class="phrase-grid">
+          <div class="phrase-item"><span class="phrase-situation">Pedir permiso</span><span class="phrase-de">Darf ich das Fenster öffnen?</span><span class="phrase-es">¿Puedo abrir la ventana?</span></div>
+          <div class="phrase-item"><span class="phrase-situation">Pedir ayuda</span><span class="phrase-de">Können Sie mir bitte helfen?</span><span class="phrase-es">¿Podría ayudarme, por favor?</span></div>
+          <div class="phrase-item"><span class="phrase-situation">Obligación</span><span class="phrase-de">Ich muss zum Arzt gehen.</span><span class="phrase-es">Tengo que ir al médico.</span></div>
+          <div class="phrase-item"><span class="phrase-situation">Deseo cortés</span><span class="phrase-de">Ich möchte einen Tisch reservieren.</span><span class="phrase-es">Quisiera reservar una mesa.</span></div>
+          <div class="phrase-item"><span class="phrase-situation">Prohibición</span><span class="phrase-de">Hier darf man nicht parken.</span><span class="phrase-es">Aquí no se puede estacionar.</span></div>
+          <div class="phrase-item"><span class="phrase-situation">Recomendación (indirecta)</span><span class="phrase-de">Du solltest mehr Wasser trinken.</span><span class="phrase-es">Deberías beber más agua.</span></div>
+          <div class="phrase-item"><span class="phrase-situation">Habilidad</span><span class="phrase-de">Kannst du schwimmen?</span><span class="phrase-es">¿Sabes nadar?</span></div>
+          <div class="phrase-item"><span class="phrase-situation">Invitación</span><span class="phrase-de">Willst du mitkommen?</span><span class="phrase-es">¿Quieres venir con nosotros?</span></div>
+          <div class="phrase-item"><span class="phrase-situation">Encargo de un tercero</span><span class="phrase-de">Ich soll dich von Anna grüßen.</span><span class="phrase-es">Debo saludarte de parte de Anna.</span></div>
+          <div class="phrase-item"><span class="phrase-situation">En un restaurante</span><span class="phrase-de">Was möchten Sie bestellen?</span><span class="phrase-es">¿Qué desea ordenar?</span></div>
+          <div class="phrase-item"><span class="phrase-situation">Excusarse</span><span class="phrase-de">Ich kann heute leider nicht kommen.</span><span class="phrase-es">Lamentablemente no puedo venir hoy.</span></div>
+          <div class="phrase-item"><span class="phrase-situation">Reglas del trabajo</span><span class="phrase-de">Man muss die Regeln befolgen.</span><span class="phrase-es">Hay que seguir las reglas.</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DIÁLOGO -->
+    <div class="content-full">
+      <div class="card">
+        <h3><span>💬</span> Diálogo de práctica — En la oficina</h3>
+        <div class="dialog-box">
+          <div class="dialog-line"><div class="dialog-speaker">A:</div><div><div class="dialog-de">Entschuldigung, darf ich Sie etwas fragen?</div><div class="dialog-es">Disculpe, ¿puedo preguntarle algo?</div></div></div>
+          <div class="dialog-line"><div class="dialog-speaker">B:</div><div><div class="dialog-de">Natürlich, was möchten Sie wissen?</div><div class="dialog-es">Claro, ¿qué le gustaría saber?</div></div></div>
+          <div class="dialog-line"><div class="dialog-speaker">A:</div><div><div class="dialog-de">Ich muss den Bericht bis morgen fertig machen. Können Sie mir helfen?</div><div class="dialog-es">Tengo que terminar el informe para mañana. ¿Puede ayudarme?</div></div></div>
+          <div class="dialog-line"><div class="dialog-speaker">B:</div><div><div class="dialog-de">Klar! Du sollst aber auch eine Pause machen. Wollen wir zuerst einen Kaffee trinken?</div><div class="dialog-es">¡Claro! Pero también deberías tomar un descanso. ¿Queremos tomar un café primero?</div></div></div>
+          <div class="dialog-line"><div class="dialog-speaker">A:</div><div><div class="dialog-de">Gute Idee, das dürfen wir uns gönnen.</div><div class="dialog-es">Buena idea, nos podemos dar ese gusto.</div></div></div>
+        </div>
+      </div>
     </div>
 
     <!-- EJERCICIOS -->
@@ -112,6 +175,16 @@
           <div class="exercise-num">Ejercicio 4 — Traduce al alemán</div>
           <div class="exercise-q">"¿Quieres ir al cine conmigo?"</div>
           <div class="exercise-hint">Pista: wollen + Kino + mit mir</div>
+        </div>
+        <div class="exercise">
+          <div class="exercise-num">Ejercicio 5 — Completa con el modal correcto</div>
+          <div class="exercise-q">Man <span class="exercise-blank"></span> hier nicht rauchen. (prohibido)</div>
+          <div class="exercise-hint">Pista: dürfen (negado) — prohibición</div>
+        </div>
+        <div class="exercise">
+          <div class="exercise-num">Ejercicio 6 — Traduce al alemán</div>
+          <div class="exercise-q">"Quisiera una taza de té, por favor."</div>
+          <div class="exercise-hint">Pista: Ich möchte eine Tasse Tee, bitte.</div>
         </div>
       </div>
     </div>
@@ -139,6 +212,26 @@
   <p>A2 · 01 — Modalverben</p>
   <div class="footer-flag"><span style="background:#000;width:20px;height:5px"></span><span style="background:var(--red);width:20px;height:5px"></span><span style="background:var(--gold);width:20px;height:5px"></span></div>
 </footer>
+
+<script src="flashcards.js"></script>
+<script>
+initFlashcards('fc-a2-01', [
+  {art:'-', de:'Ich kann Deutsch sprechen.', es:'Puedo hablar alemán.', ex:'können — habilidad'},
+  {art:'-', de:'Kannst du mir helfen?', es:'¿Puedes ayudarme?', ex:'können — pedir ayuda'},
+  {art:'-', de:'Ich muss morgen früh aufstehen.', es:'Debo levantarme temprano mañana.', ex:'müssen — obligación'},
+  {art:'-', de:'Wir müssen jetzt gehen.', es:'Tenemos que irnos ahora.', ex:'müssen — necesidad'},
+  {art:'-', de:'Ich will nach Deutschland fliegen.', es:'Quiero volar a Alemania.', ex:'wollen — voluntad'},
+  {art:'-', de:'Was willst du essen?', es:'¿Qué quieres comer?', ex:'wollen — pregunta'},
+  {art:'-', de:'Darf ich hier sitzen?', es:'¿Puedo sentarme aquí?', ex:'dürfen — pedir permiso'},
+  {art:'-', de:'Hier darf man nicht rauchen.', es:'Aquí no se puede fumar.', ex:'dürfen — prohibición'},
+  {art:'-', de:'Du sollst pünktlich sein.', es:'Se supone que debes ser puntual.', ex:'sollen — obligación externa'},
+  {art:'-', de:'Was soll ich tun?', es:'¿Qué debo hacer?', ex:'sollen — pedir consejo'},
+  {art:'-', de:'Ich möchte einen Kaffee, bitte.', es:'Quisiera un café, por favor.', ex:'möchten — deseo cortés'},
+  {art:'-', de:'Magst du klassische Musik?', es:'¿Te gusta la música clásica?', ex:'mögen — gustos'},
+  {art:'-', de:'Sie will Ärztin werden.', es:'Ella quiere ser médica.', ex:'wollen — planes futuros'},
+  {art:'-', de:'Kannst du bitte langsamer sprechen?', es:'¿Puedes hablar más despacio, por favor?', ex:'können — petición cortés'}
+]);
+</script>
 
 </body>
 </html>

@@ -14,6 +14,12 @@
 .shape-icon{font-size:32px;margin-bottom:8px}
 .shape-de{font-size:13px;font-weight:700;color:var(--black)}
 .shape-es{font-size:11px;color:var(--text2);margin-top:2px}
+.dialog-box{background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:18px 20px;margin-bottom:12px}
+.dialog-line{display:flex;gap:10px;margin-bottom:10px;align-items:flex-start}
+.dialog-line:last-child{margin-bottom:0}
+.dialog-speaker{font-size:11px;font-weight:800;color:var(--red);text-transform:uppercase;letter-spacing:.06em;white-space:nowrap;min-width:30px;margin-top:2px}
+.dialog-de{font-size:14px;font-weight:600;color:var(--black)}
+.dialog-es{font-size:12px;color:var(--text2);margin-top:1px}
 </style></head>
 <body>
 <nav class="nav"><a href="index.html" class="nav-logo">🇩🇪 Deutsch</a><div class="nav-links"><a href="index.html" class="nav-link">← Índice A1</a></div></nav>
@@ -26,6 +32,14 @@
 </div></div>
 
 <div class="topic-content"><div class="container">
+
+<!-- 0. FLASHCARDS -->
+<div class="content-full">
+  <div class="card">
+    <h3><span>🎴</span> Repasa con tarjetas</h3>
+    <div id="fc-a1-03" class="flashcards"></div>
+  </div>
+</div>
 
 <!-- COLORES -->
 <div class="content-full">
@@ -111,6 +125,41 @@
   </div>
 </div>
 
+<!-- FRASES COMUNES -->
+<div class="content-full">
+  <div class="card card-gold">
+    <h3><span>🗨️</span> Frases comunes en este tema</h3>
+    <div class="phrase-grid">
+      <div class="phrase-item"><span class="phrase-situation">Preguntando el color de algo</span><span class="phrase-de">Welche Farbe hat dein Auto?</span><span class="phrase-es">¿De qué color es tu auto?</span></div>
+      <div class="phrase-item"><span class="phrase-situation">Describiendo tu color favorito</span><span class="phrase-de">Meine Lieblingsfarbe ist Blau.</span><span class="phrase-es">Mi color favorito es el azul.</span></div>
+      <div class="phrase-item"><span class="phrase-situation">En una tienda de ropa</span><span class="phrase-de">Haben Sie das in Rot?</span><span class="phrase-es">¿Lo tiene en rojo?</span></div>
+      <div class="phrase-item"><span class="phrase-situation">Describiendo un objeto</span><span class="phrase-de">Ich suche eine schwarze Tasche.</span><span class="phrase-es">Busco un bolso negro.</span></div>
+      <div class="phrase-item"><span class="phrase-situation">Hablando del clima</span><span class="phrase-de">Der Himmel ist heute grau.</span><span class="phrase-es">El cielo está gris hoy.</span></div>
+      <div class="phrase-item"><span class="phrase-situation">Comparando objetos</span><span class="phrase-de">Das rote Auto ist größer als das blaue.</span><span class="phrase-es">El auto rojo es más grande que el azul.</span></div>
+      <div class="phrase-item"><span class="phrase-situation">En clase de arte</span><span class="phrase-de">Mal das Dreieck gelb.</span><span class="phrase-es">Pinta el triángulo de amarillo.</span></div>
+      <div class="phrase-item"><span class="phrase-situation">Describiendo a alguien</span><span class="phrase-de">Sie hat grüne Augen und braune Haare.</span><span class="phrase-es">Ella tiene ojos verdes y cabello castaño.</span></div>
+      <div class="phrase-item"><span class="phrase-situation">Eligiendo un color en una tienda</span><span class="phrase-de">Ich möchte das in Weiß, bitte.</span><span class="phrase-es">Lo quiero en blanco, por favor.</span></div>
+      <div class="phrase-item"><span class="phrase-situation">Hablando de una bandera</span><span class="phrase-de">Die deutsche Flagge ist schwarz, rot und gold.</span><span class="phrase-es">La bandera alemana es negra, roja y dorada.</span></div>
+      <div class="phrase-item"><span class="phrase-situation">Preguntando por la forma</span><span class="phrase-de">Welche Form hat der Tisch?</span><span class="phrase-es">¿Qué forma tiene la mesa?</span></div>
+      <div class="phrase-item"><span class="phrase-situation">Describiendo una prenda</span><span class="phrase-de">Das Kleid ist lila und sehr schön.</span><span class="phrase-es">El vestido es morado y muy bonito.</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- DIÁLOGO -->
+<div class="content-full">
+  <div class="card">
+    <h3><span>💬</span> Diálogo de práctica — Comprando ropa</h3>
+    <div class="dialog-box">
+      <div class="dialog-line"><div class="dialog-speaker">A:</div><div><div class="dialog-de">Entschuldigung, haben Sie dieses Hemd in Blau?</div><div class="dialog-es">Disculpe, ¿tiene esta camisa en azul?</div></div></div>
+      <div class="dialog-line"><div class="dialog-speaker">B:</div><div><div class="dialog-de">Ja, wir haben es in Blau und in Schwarz.</div><div class="dialog-es">Sí, la tenemos en azul y en negro.</div></div></div>
+      <div class="dialog-line"><div class="dialog-speaker">A:</div><div><div class="dialog-de">Super! Und wie viel kostet es?</div><div class="dialog-es">¡Genial! ¿Y cuánto cuesta?</div></div></div>
+      <div class="dialog-line"><div class="dialog-speaker">B:</div><div><div class="dialog-de">Es kostet fünfundzwanzig Euro.</div><div class="dialog-es">Cuesta veinticinco euros.</div></div></div>
+      <div class="dialog-line"><div class="dialog-speaker">A:</div><div><div class="dialog-de">Gut, ich nehme das blaue Hemd.</div><div class="dialog-es">Bien, me llevo la camisa azul.</div></div></div>
+    </div>
+  </div>
+</div>
+
 <!-- EJERCICIOS -->
 <div class="content-full">
   <div class="card card-red">
@@ -127,4 +176,25 @@
   <a href="a1-04-wochentage.html" class="page-nav-btn next"><div><div class="page-nav-dir">Siguiente →</div><div class="page-nav-title">Wochentage & Monate</div></div><span style="font-size:24px">📅</span></a>
 </div>
 <footer class="footer"><p>A1 · 03 — Farben & Formen</p><div class="footer-flag"><span style="background:#1a1a1a;width:20px;height:5px"></span><span style="background:var(--red);width:20px;height:5px"></span><span style="background:#FFCE00;width:20px;height:5px"></span></div></footer>
+<script src="flashcards.js"></script>
+<script>
+initFlashcards('fc-a1-03', [
+  {art:'-', de:'rot', es:'rojo'},
+  {art:'-', de:'blau', es:'azul'},
+  {art:'-', de:'grün', es:'verde'},
+  {art:'-', de:'gelb', es:'amarillo'},
+  {art:'-', de:'schwarz', es:'negro'},
+  {art:'-', de:'weiß', es:'blanco'},
+  {art:'-', de:'orange', es:'naranja'},
+  {art:'-', de:'braun', es:'marrón / café'},
+  {art:'-', de:'rosa', es:'rosa'},
+  {art:'der', de:'Kreis', es:'el círculo'},
+  {art:'das', de:'Quadrat', es:'el cuadrado'},
+  {art:'der', de:'Stern', es:'la estrella'},
+  {art:'-', de:'groß', es:'grande'},
+  {art:'-', de:'klein', es:'pequeño'},
+  {art:'-', de:'Welche Farbe hat...?', es:'¿De qué color es...?'},
+  {art:'-', de:'Meine Lieblingsfarbe ist...', es:'Mi color favorito es...'}
+]);
+</script>
 </body></html>

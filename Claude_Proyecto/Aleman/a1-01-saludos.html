@@ -38,6 +38,14 @@
 
 <div class="topic-content"><div class="container">
 
+<!-- 0. FLASHCARDS -->
+<div class="content-full">
+  <div class="card">
+    <h3><span>🎴</span> Repasa con tarjetas</h3>
+    <div id="fc-a1-01" class="flashcards"></div>
+  </div>
+</div>
+
 <!-- 1. SALUDOS POR HORA -->
 <div class="content-full">
   <div class="card card-gold">
@@ -153,6 +161,27 @@
   </div>
 </div>
 
+<!-- 5b. FRASES COMUNES -->
+<div class="content-full">
+  <div class="card card-gold">
+    <h3><span>🗨️</span> Frases comunes en este tema</h3>
+    <div class="phrase-grid">
+      <div class="phrase-item"><span class="phrase-situation">Al llegar a la oficina</span><span class="phrase-de">Guten Morgen, wie geht es Ihnen?</span><span class="phrase-es">Buenos días, ¿cómo está usted?</span></div>
+      <div class="phrase-item"><span class="phrase-situation">Conociendo a alguien nuevo</span><span class="phrase-de">Freut mich, Sie kennenzulernen!</span><span class="phrase-es">¡Mucho gusto en conocerlo!</span></div>
+      <div class="phrase-item"><span class="phrase-situation">Entrando a una tienda</span><span class="phrase-de">Guten Tag! Ich schaue nur.</span><span class="phrase-es">¡Buenos días! Solo estoy mirando.</span></div>
+      <div class="phrase-item"><span class="phrase-situation">Despidiéndote de un amigo</span><span class="phrase-de">Tschüss, bis morgen!</span><span class="phrase-es">¡Chau, hasta mañana!</span></div>
+      <div class="phrase-item"><span class="phrase-situation">Al colgar el teléfono</span><span class="phrase-de">Auf Wiederhören!</span><span class="phrase-es">¡Hasta luego! (formal, por teléfono)</span></div>
+      <div class="phrase-item"><span class="phrase-situation">Al chocar con alguien</span><span class="phrase-de">Oh, Entschuldigung!</span><span class="phrase-es">¡Oh, disculpe!</span></div>
+      <div class="phrase-item"><span class="phrase-situation">Agradeciendo un favor</span><span class="phrase-de">Vielen Dank für Ihre Hilfe!</span><span class="phrase-es">¡Muchas gracias por su ayuda!</span></div>
+      <div class="phrase-item"><span class="phrase-situation">Respondiendo a un agradecimiento</span><span class="phrase-de">Gern geschehen!</span><span class="phrase-es">¡No hay de qué!</span></div>
+      <div class="phrase-item"><span class="phrase-situation">Viernes, al despedirte</span><span class="phrase-de">Schönes Wochenende!</span><span class="phrase-es">¡Buen fin de semana!</span></div>
+      <div class="phrase-item"><span class="phrase-situation">Pidiendo que hablen despacio</span><span class="phrase-de">Können Sie bitte langsamer sprechen?</span><span class="phrase-es">¿Puede hablar más despacio, por favor?</span></div>
+      <div class="phrase-item"><span class="phrase-situation">Presentándote en una fiesta</span><span class="phrase-de">Hallo, ich bin Laura. Und du?</span><span class="phrase-es">Hola, soy Laura. ¿Y tú?</span></div>
+      <div class="phrase-item"><span class="phrase-situation">Saludando a un grupo</span><span class="phrase-de">Hallo zusammen!</span><span class="phrase-es">¡Hola a todos!</span></div>
+    </div>
+  </div>
+</div>
+
 <!-- 6. DIÁLOGOS -->
 <div class="content-full">
   <div class="card card-gold">
@@ -221,4 +250,25 @@
   <a href="a1-02-zahlen.html" class="page-nav-btn next"><div><div class="page-nav-dir">Siguiente →</div><div class="page-nav-title">Zahlen 1–100</div></div><span style="font-size:24px">🔢</span></a>
 </div>
 <footer class="footer"><p>A1 · 01 — Begrüßungen</p><div class="footer-flag"><span style="background:#1a1a1a;width:20px;height:5px"></span><span style="background:var(--red);width:20px;height:5px"></span><span style="background:#FFCE00;width:20px;height:5px"></span></div></footer>
+<script src="flashcards.js"></script>
+<script>
+initFlashcards('fc-a1-01', [
+  {art:'-', de:'Guten Morgen!', es:'¡Buenos días!', ex:'Guten Morgen! Wie geht es Ihnen?'},
+  {art:'-', de:'Guten Tag!', es:'¡Buenas tardes! / ¡Buenos días!'},
+  {art:'-', de:'Guten Abend!', es:'¡Buenas noches! (al llegar)'},
+  {art:'-', de:'Gute Nacht!', es:'¡Buenas noches! (al dormir)'},
+  {art:'-', de:'Hallo!', es:'¡Hola!'},
+  {art:'-', de:'Tschüss!', es:'¡Adiós! (informal)'},
+  {art:'-', de:'Auf Wiedersehen!', es:'¡Hasta luego! (formal)'},
+  {art:'-', de:'Bis bald!', es:'¡Hasta pronto!'},
+  {art:'-', de:'Wie geht es dir?', es:'¿Cómo estás? (informal)'},
+  {art:'-', de:'Sehr gut, danke!', es:'¡Muy bien, gracias!'},
+  {art:'-', de:'Ich heiße...', es:'Me llamo...', ex:'Ich heiße Ana.'},
+  {art:'-', de:'Woher kommst du?', es:'¿De dónde eres?'},
+  {art:'-', de:'Ich komme aus...', es:'Vengo de...', ex:'Ich komme aus Mexiko.'},
+  {art:'-', de:'Entschuldigung', es:'Disculpe / Perdón'},
+  {art:'-', de:'Danke schön!', es:'¡Muchas gracias!'},
+  {art:'-', de:'Bitte', es:'Por favor / De nada'}
+]);
+</script>
 </body></html>

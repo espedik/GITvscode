@@ -17,6 +17,14 @@
 .stat-item{display:flex;align-items:center;gap:7px;font-size:13px;color:var(--text2)}
 .stat-item strong{font-size:18px;font-weight:800;color:var(--red)}
 
+/* ── TABS (Diccionario / Frases / Tarjetas) ── */
+.voc-tabs{display:flex;gap:6px;padding:14px 32px 0;background:var(--surface);flex-wrap:wrap}
+.voc-tab{padding:9px 18px;border-radius:10px 10px 0 0;border:1.5px solid var(--border);border-bottom:none;background:var(--surface2);font-size:13px;font-weight:700;color:var(--text2);cursor:pointer;font-family:inherit;transition:all .2s}
+.voc-tab:hover{color:var(--red)}
+.voc-tab.active{background:var(--surface);color:var(--red);border-color:var(--border);position:relative;top:1px}
+.voc-panel{display:none}
+.voc-panel.active{display:block}
+
 /* ── CONTROLS ── */
 .controls{padding:18px 32px;background:var(--surface2);border-bottom:1px solid var(--border);display:flex;flex-direction:column;gap:12px;position:sticky;top:60px;z-index:90}
 .search-wrap{position:relative}
@@ -42,7 +50,7 @@
 /* ── TABLE ── */
 .voc-table-wrap{padding:0 32px 60px}
 .voc-table{width:100%;border-collapse:collapse;margin-top:20px}
-.voc-table thead th{text-align:left;padding:10px 14px;font-size:11px;font-weight:700;color:var(--red);border-bottom:2px solid rgba(204,0,0,.15);text-transform:uppercase;letter-spacing:.07em;background:var(--surface);position:sticky;top:180px}
+.voc-table thead th{text-align:left;padding:10px 14px;font-size:11px;font-weight:700;color:var(--red);border-bottom:2px solid rgba(204,0,0,.15);text-transform:uppercase;letter-spacing:.07em;background:var(--surface);position:sticky;top:230px}
 .voc-table tbody tr{border-bottom:1px solid var(--border);transition:background .15s}
 .voc-table tbody tr:hover{background:rgba(204,0,0,.03)}
 .voc-table tbody tr:last-child{border-bottom:none}
@@ -66,6 +74,18 @@
 .voc-empty{text-align:center;padding:60px 20px;color:var(--text3)}
 .voc-empty .ico{font-size:40px;margin-bottom:12px;opacity:.4}
 
+/* ── FRASES POR SITUACIÓN ── */
+.situ-wrap{padding:28px 32px 60px}
+.situ-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:22px 24px;margin-bottom:20px;box-shadow:var(--shadow)}
+.situ-card h3{font-size:15px;font-weight:800;color:var(--black);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.situ-card h3 span{font-size:20px}
+
+/* ── FLASHCARDS TAB ── */
+.fc-tabwrap{padding:32px 32px 70px;text-align:center}
+.fc-tabwrap .flashcards{max-width:420px}
+.fc-tabwrap .fc-card{height:210px}
+.fc-tab-note{font-size:12.5px;color:var(--text3);margin-top:18px;max-width:420px;margin-left:auto;margin-right:auto}
+
 /* ── CAT COLORS ── */
 .c-saludos{background:rgba(99,102,241,.1);color:#4f46e5}
 .c-numeros{background:rgba(59,130,246,.1);color:#2563eb}
@@ -82,12 +102,20 @@
 .c-verbos{background:rgba(204,0,0,.1);color:#cc0000}
 .c-adjetivos{background:rgba(168,85,247,.1);color:#9333ea}
 .c-viaje{background:rgba(6,182,212,.1);color:#0891b2}
+.c-emociones{background:rgba(244,63,94,.1);color:#e11d48}
+.c-tecnologia{background:rgba(14,165,233,.1);color:#0284c7}
+.c-animales{background:rgba(101,163,13,.1);color:#4d7c0f}
+.c-compras{background:rgba(217,70,239,.1);color:#a21caf}
+.c-escuela{background:rgba(79,70,229,.1);color:#4338ca}
+.c-adverbios{background:rgba(120,113,108,.1);color:#57534e}
 
 @media(max-width:640px){
   .voc-hero{padding:24px 16px 20px}
   .stats-bar{padding:12px 16px;gap:14px}
+  .voc-tabs{padding:14px 16px 0}
   .controls{padding:14px 16px;top:60px}
   .voc-table-wrap{padding:0 0 40px}
+  .situ-wrap{padding:20px 16px 40px}
   .col-ex{display:none}
   .voc-table thead th:last-child{display:none}
   .col-cat{display:none}
@@ -100,7 +128,9 @@
   <a href="index.html" class="nav-logo">🇩🇪 Deutsch</a>
   <div class="nav-links">
     <a href="index.html" class="nav-link">A1 & A2</a>
-    <a href="vocabulario.html" class="nav-link active">Vocabulario</a>
+    <a href="principiantes.html" class="nav-link">🟢 Principiantes</a>
+    <a href="gramatica.html" class="nav-link">📐 Gramática</a>
+    <a href="vocabulario.html" class="nav-link active">📖 Vocabulario</a>
   </div>
 </nav>
 
@@ -109,51 +139,189 @@
   <div class="container">
     <div style="font-size:12px;font-weight:700;color:var(--red);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px">Diccionario básico</div>
     <h1>Vocabulario <em>Alemán</em> — Español</h1>
-    <p>Palabras esenciales organizadas por categoría. Activa el modo estudio para ocultar la traducción y ponerte a prueba.</p>
+    <p>Más de 480 palabras esenciales organizadas por categoría, frases listas para usar en situaciones reales, y un modo de tarjetas (slides) para repasar jugando. Activa el modo estudio para ocultar la traducción y ponerte a prueba.</p>
   </div>
 </div>
 
 <!-- STATS -->
 <div class="stats-bar">
   <div class="stat-item"><strong id="total-count">0</strong> palabras en total</div>
-  <div class="stat-item"><strong id="cat-count">15</strong> categorías</div>
+  <div class="stat-item"><strong id="cat-count">21</strong> categorías</div>
   <div class="stat-item"><strong id="visible-count">0</strong> mostrando</div>
+  <div class="stat-item"><strong id="situ-count">0</strong> frases por situación</div>
 </div>
 
-<!-- CONTROLS -->
-<div class="controls">
-  <div class="search-wrap">
-    <span class="search-icon">🔍</span>
-    <input type="text" id="search" placeholder="Buscar en alemán o español..." oninput="filterVoc()" autocomplete="off">
-    <button class="search-clear" id="clear-btn" onclick="clearSearch()">✕</button>
+<!-- TABS -->
+<div class="voc-tabs">
+  <button class="voc-tab active" data-tab="dict" onclick="setTab('dict')">📖 Diccionario</button>
+  <button class="voc-tab" data-tab="situ" onclick="setTab('situ')">🗨️ Frases por situación</button>
+  <button class="voc-tab" data-tab="cards" onclick="setTab('cards')">🎴 Tarjetas (slides)</button>
+</div>
+
+<!-- ═══════════ PANEL: DICCIONARIO ═══════════ -->
+<div class="voc-panel active" id="panel-dict">
+  <!-- CONTROLS -->
+  <div class="controls">
+    <div class="search-wrap">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="search" placeholder="Buscar en alemán o español..." oninput="filterVoc()" autocomplete="off">
+      <button class="search-clear" id="clear-btn" onclick="clearSearch()">✕</button>
+    </div>
+    <div class="filter-row">
+      <span class="filter-label">Categoría:</span>
+      <div class="cats" id="cat-filters"></div>
+    </div>
+    <div class="mode-row">
+      <button class="mode-btn" id="mode-btn" onclick="toggleMode()">👁️ Modo estudio — ocultar traducción</button>
+      <span class="results-count" id="results-label"></span>
+    </div>
   </div>
-  <div class="filter-row">
-    <span class="filter-label">Categoría:</span>
-    <div class="cats" id="cat-filters"></div>
-  </div>
-  <div class="mode-row">
-    <button class="mode-btn" id="mode-btn" onclick="toggleMode()">👁️ Modo estudio — ocultar traducción</button>
-    <span class="results-count" id="results-label"></span>
+
+  <!-- TABLE -->
+  <div class="voc-table-wrap container">
+    <table class="voc-table" id="voc-table">
+      <thead>
+        <tr>
+          <th style="width:100px">Categoría</th>
+          <th style="width:44px">Art.</th>
+          <th>Alemán</th>
+          <th>Español</th>
+          <th>Ejemplo</th>
+        </tr>
+      </thead>
+      <tbody id="voc-body"></tbody>
+    </table>
+    <div class="voc-empty" id="voc-empty" style="display:none">
+      <div class="ico">🔎</div>
+      <p>Sin resultados para tu búsqueda.</p>
+    </div>
   </div>
 </div>
 
-<!-- TABLE -->
-<div class="voc-table-wrap container">
-  <table class="voc-table" id="voc-table">
-    <thead>
-      <tr>
-        <th style="width:100px">Categoría</th>
-        <th style="width:44px">Art.</th>
-        <th>Alemán</th>
-        <th>Español</th>
-        <th>Ejemplo</th>
-      </tr>
-    </thead>
-    <tbody id="voc-body"></tbody>
-  </table>
-  <div class="voc-empty" id="voc-empty" style="display:none">
-    <div class="ico">🔎</div>
-    <p>Sin resultados para tu búsqueda.</p>
+<!-- ═══════════ PANEL: FRASES POR SITUACIÓN ═══════════ -->
+<div class="voc-panel" id="panel-situ">
+  <div class="situ-wrap container">
+
+    <div class="situ-card">
+      <h3><span>🍽️</span> En el restaurante</h3>
+      <div class="phrase-grid">
+        <div class="phrase-item"><span class="phrase-situation">Pedir mesa</span><span class="phrase-de">Haben Sie einen Tisch für zwei Personen?</span><span class="phrase-es">¿Tiene una mesa para dos personas?</span></div>
+        <div class="phrase-item"><span class="phrase-situation">Pedir la carta</span><span class="phrase-de">Die Speisekarte, bitte.</span><span class="phrase-es">La carta, por favor.</span></div>
+        <div class="phrase-item"><span class="phrase-situation">Ordenar</span><span class="phrase-de">Ich möchte das Schnitzel, bitte.</span><span class="phrase-es">Quisiera el schnitzel, por favor.</span></div>
+        <div class="phrase-item"><span class="phrase-situation">Preguntar recomendación</span><span class="phrase-de">Was empfehlen Sie?</span><span class="phrase-es">¿Qué me recomienda?</span></div>
+        <div class="phrase-item"><span class="phrase-situation">Alergias</span><span class="phrase-de">Ich bin allergisch gegen Nüsse.</span><span class="phrase-es">Soy alérgico a los frutos secos.</span></div>
+        <div class="phrase-item"><span class="phrase-situation">Pedir la cuenta</span><span class="phrase-de">Die Rechnung, bitte! / Zahlen, bitte!</span><span class="phrase-es">¡La cuenta, por favor!</span></div>
+        <div class="phrase-item"><span class="phrase-situation">Pagar junto/separado</span><span class="phrase-de">Zusammen oder getrennt?</span><span class="phrase-es">¿Junto o por separado?</span></div>
+        <div class="phrase-item"><span class="phrase-situation">Despedida cortés</span><span class="phrase-de">Das Essen war lecker, danke!</span><span class="phrase-es">La comida estuvo deliciosa, ¡gracias!</span></div>
+      </div>
+    </div>
+
+    <div class="situ-card">
+      <h3><span>🛒</span> De compras</h3>
+      <div class="phrase-grid">
+        <div class="phrase-item"><span class="phrase-situation">Preguntar precio</span><span class="phrase-de">Wie viel kostet das?</span><span class="phrase-es">¿Cuánto cuesta esto?</span></div>
+        <div class="phrase-item"><span class="phrase-situation">Buscar algo</span><span class="phrase-de">Ich suche eine Hose in Größe M.</span><span class="phrase-es">Busco un pantalón en talla M.</span></div>
+        <div class="phrase-item"><span class="phrase-situation">Probarse ropa</span><span class="phrase-de">Kann ich das anprobieren?</span><span class="phrase-es">¿Puedo probármelo?</span></div>
+        <div class="phrase-item"><span class="phrase-situation">Método de pago</span><span class="phrase-de">Kann ich mit Karte bezahlen?</span><span class="phrase-es">¿Puedo pagar con tarjeta?</span></div>
+        <div class="phrase-item"><span class="phrase-situation">Pedir descuento</span><span class="phrase-de">Gibt es einen Rabatt?</span><span class="phrase-es">¿Hay algún descuento?</span></div>
+        <div class="phrase-item"><span class="phrase-situation">Devolver un producto</span><span class="phrase-de">Ich möchte das umtauschen.</span><span class="phrase-es">Quisiera cambiar esto.</span></div>
+        <div class="phrase-item"><span class="phrase-situation">Solo mirando</span><span class="phrase-de">Ich schaue nur, danke.</span><span class="phrase-es">Solo estoy mirando, gracias.</span></div>
+        <div class="phrase-item"><span class="phrase-situation">Pedir la bolsa</span><span class="phrase-de">Brauchen Sie eine Tüte?</span><span class="phrase-es">¿Necesita una bolsa?</span></div>
+      </div>
+    </div>
+
+    <div class="situ-card">
+      <h3><span>🧭</span> Pidiendo direcciones</h3>
+      <div class="phrase-grid">
+        <div class="phrase-item"><span class="phrase-situation">Preguntar dónde queda</span><span class="phrase-de">Entschuldigung, wo ist der Bahnhof?</span><span class="phrase-es">Disculpe, ¿dónde está la estación?</span></div>
+        <div class="phrase-item"><span class="phrase-situation">Pedir ayuda</span><span class="phrase-de">Können Sie mir helfen?</span><span class="phrase-es">¿Puede ayudarme?</span></div>
+        <div class="phrase-item"><span class="phrase-situation">Indicar dirección</span><span class="phrase-de">Gehen Sie geradeaus, dann links.</span><span class="phrase-es">Siga derecho y luego a la izquierda.</span></div>
+        <div class="phrase-item"><span class="phrase-situation">Preguntar distancia</span><span class="phrase-de">Wie weit ist das von hier?</span><span class="phrase-es">¿Qué tan lejos está de aquí?</span></div>
+        <div class="phrase-item"><span class="phrase-situation">Confirmar a pie</span><span class="phrase-de">Kann ich zu Fuß dahin gehen?</span><span class="phrase-es">¿Puedo ir caminando hasta ahí?</span></div>
+        <div class="phrase-item"><span class="phrase-situation">En el transporte</span><span class="phrase-de">Welcher Bus fährt zum Zentrum?</span><span class="phrase-es">¿Qué autobús va al centro?</span></div>
+        <div class="phrase-item"><span class="phrase-situation">Comprar boleto</span><span class="phrase-de">Ein Ticket nach München, bitte.</span><span class="phrase-es">Un boleto a Múnich, por favor.</span></div>
+        <div class="phrase-item"><span class="phrase-situation">Agradecer</span><span class="phrase-de">Vielen Dank für Ihre Hilfe!</span><span class="phrase-es">¡Muchas gracias por su ayuda!</span></div>
+      </div>
+    </div>
+
+    <div class="situ-card">
+      <h3><span>🏥</span> En el médico / farmacia</h3>
+      <div class="phrase-grid">
+        <div class="phrase-item"><span class="phrase-situation">Explicar el síntoma</span><span class="phrase-de">Ich habe Kopfschmerzen.</span><span class="phrase-es">Tengo dolor de cabeza.</span></div>
+        <div class="phrase-item"><span class="phrase-situation">Decir que está enfermo</span><span class="phrase-de">Mir ist schlecht / Mir ist übel.</span><span class="phrase-es">Me siento mal / Tengo náuseas.</span></div>
+        <div class="phrase-item"><span class="phrase-situation">Pedir cita</span><span class="phrase-de">Ich brauche einen Termin beim Arzt.</span><span class="phrase-es">Necesito una cita con el médico.</span></div>
+        <div class="phrase-item"><span class="phrase-situation">Alergias/medicación</span><span class="phrase-de">Ich nehme keine Medikamente.</span><span class="phrase-es">No tomo ningún medicamento.</span></div>
+        <div class="phrase-item"><span class="phrase-situation">En la farmacia</span><span class="phrase-de">Haben Sie etwas gegen Kopfschmerzen?</span><span class="phrase-es">¿Tiene algo para el dolor de cabeza?</span></div>
+        <div class="phrase-item"><span class="phrase-situation">Emergencia</span><span class="phrase-de">Rufen Sie einen Krankenwagen!</span><span class="phrase-es">¡Llame a una ambulancia!</span></div>
+        <div class="phrase-item"><span class="phrase-situation">Seguro médico</span><span class="phrase-de">Ich habe eine Versicherung.</span><span class="phrase-es">Tengo un seguro médico.</span></div>
+        <div class="phrase-item"><span class="phrase-situation">Despedida del médico</span><span class="phrase-de">Gute Besserung!</span><span class="phrase-es">¡Que te mejores!</span></div>
+      </div>
+    </div>
+
+    <div class="situ-card">
+      <h3><span>💼</span> En el trabajo / oficina</h3>
+      <div class="phrase-grid">
+        <div class="phrase-item"><span class="phrase-situation">Proponer reunión</span><span class="phrase-de">Können wir uns morgen treffen?</span><span class="phrase-es">¿Podemos reunirnos mañana?</span></div>
+        <div class="phrase-item"><span class="phrase-situation">Pedir permiso</span><span class="phrase-de">Darf ich früher gehen?</span><span class="phrase-es">¿Puedo irme más temprano?</span></div>
+        <div class="phrase-item"><span class="phrase-situation">Pedir ayuda con una tarea</span><span class="phrase-de">Können Sie mir das erklären?</span><span class="phrase-es">¿Puede explicarme esto?</span></div>
+        <div class="phrase-item"><span class="phrase-situation">Presentarse a colegas</span><span class="phrase-de">Ich bin neu im Team.</span><span class="phrase-es">Soy nuevo en el equipo.</span></div>
+        <div class="phrase-item"><span class="phrase-situation">Fin de la jornada</span><span class="phrase-de">Ich mache jetzt Feierabend.</span><span class="phrase-es">Ya termino mi jornada laboral.</span></div>
+        <div class="phrase-item"><span class="phrase-situation">Reportar un problema</span><span class="phrase-de">Es gibt ein Problem mit dem Drucker.</span><span class="phrase-es">Hay un problema con la impresora.</span></div>
+        <div class="phrase-item"><span class="phrase-situation">Pedir vacaciones</span><span class="phrase-de">Ich möchte Urlaub beantragen.</span><span class="phrase-es">Quisiera solicitar vacaciones.</span></div>
+        <div class="phrase-item"><span class="phrase-situation">Correo formal</span><span class="phrase-de">Mit freundlichen Grüßen</span><span class="phrase-es">Saludos cordiales (cierre de e-mail formal)</span></div>
+      </div>
+    </div>
+
+    <div class="situ-card">
+      <h3><span>🎉</span> Socializando / conociendo gente</h3>
+      <div class="phrase-grid">
+        <div class="phrase-item"><span class="phrase-situation">Invitar</span><span class="phrase-de">Hast du Lust, ins Kino zu gehen?</span><span class="phrase-es">¿Tienes ganas de ir al cine?</span></div>
+        <div class="phrase-item"><span class="phrase-situation">Aceptar</span><span class="phrase-de">Ja, gerne! Wann treffen wir uns?</span><span class="phrase-es">¡Sí, con gusto! ¿Cuándo nos vemos?</span></div>
+        <div class="phrase-item"><span class="phrase-situation">Rechazar cortésmente</span><span class="phrase-de">Tut mir leid, ich habe keine Zeit.</span><span class="phrase-es">Lo siento, no tengo tiempo.</span></div>
+        <div class="phrase-item"><span class="phrase-situation">Preguntar intereses</span><span class="phrase-de">Was machst du gern in deiner Freizeit?</span><span class="phrase-es">¿Qué te gusta hacer en tu tiempo libre?</span></div>
+        <div class="phrase-item"><span class="phrase-situation">Cumplido</span><span class="phrase-de">Das steht dir gut!</span><span class="phrase-es">¡Eso te queda muy bien!</span></div>
+        <div class="phrase-item"><span class="phrase-situation">Brindar</span><span class="phrase-de">Zum Wohl! / Prost!</span><span class="phrase-es">¡Salud!</span></div>
+        <div class="phrase-item"><span class="phrase-situation">Felicitar</span><span class="phrase-de">Herzlichen Glückwunsch!</span><span class="phrase-es">¡Felicidades!</span></div>
+        <div class="phrase-item"><span class="phrase-situation">Despedida festiva</span><span class="phrase-de">Es war ein toller Abend!</span><span class="phrase-es">¡Fue una noche genial!</span></div>
+      </div>
+    </div>
+
+    <div class="situ-card">
+      <h3><span>🌦️</span> Hablar del clima</h3>
+      <div class="phrase-grid">
+        <div class="phrase-item"><span class="phrase-situation">Preguntar el clima</span><span class="phrase-de">Wie ist das Wetter heute?</span><span class="phrase-es">¿Cómo está el clima hoy?</span></div>
+        <div class="phrase-item"><span class="phrase-situation">Está soleado</span><span class="phrase-de">Die Sonne scheint.</span><span class="phrase-es">Está soleado.</span></div>
+        <div class="phrase-item"><span class="phrase-situation">Está lloviendo</span><span class="phrase-de">Es regnet in Strömen.</span><span class="phrase-es">Está lloviendo a cántaros.</span></div>
+        <div class="phrase-item"><span class="phrase-situation">Hace frío</span><span class="phrase-de">Mir ist kalt.</span><span class="phrase-es">Tengo frío.</span></div>
+        <div class="phrase-item"><span class="phrase-situation">Recomendar abrigo</span><span class="phrase-de">Nimm einen Regenschirm mit!</span><span class="phrase-es">¡Lleva un paraguas!</span></div>
+        <div class="phrase-item"><span class="phrase-situation">Pronóstico</span><span class="phrase-de">Morgen soll es schneien.</span><span class="phrase-es">Mañana se supone que va a nevar.</span></div>
+      </div>
+    </div>
+
+    <div class="situ-card">
+      <h3><span>🚨</span> Emergencias y ayuda urgente</h3>
+      <div class="phrase-grid">
+        <div class="phrase-item"><span class="phrase-situation">Pedir ayuda</span><span class="phrase-de">Hilfe!</span><span class="phrase-es">¡Ayuda!</span></div>
+        <div class="phrase-item"><span class="phrase-situation">Llamar a la policía</span><span class="phrase-de">Rufen Sie die Polizei!</span><span class="phrase-es">¡Llame a la policía!</span></div>
+        <div class="phrase-item"><span class="phrase-situation">Reportar robo</span><span class="phrase-de">Ich wurde bestohlen.</span><span class="phrase-es">Me robaron.</span></div>
+        <div class="phrase-item"><span class="phrase-situation">Estar perdido</span><span class="phrase-de">Ich habe mich verlaufen.</span><span class="phrase-es">Me perdí.</span></div>
+        <div class="phrase-item"><span class="phrase-situation">Perdí mi pasaporte</span><span class="phrase-de">Ich habe meinen Pass verloren.</span><span class="phrase-es">Perdí mi pasaporte.</span></div>
+        <div class="phrase-item"><span class="phrase-situation">Número de emergencia</span><span class="phrase-de">Die Notrufnummer ist 112.</span><span class="phrase-es">El número de emergencia es el 112.</span></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════ PANEL: TARJETAS (SLIDES) ═══════════ -->
+<div class="voc-panel" id="panel-cards">
+  <div class="fc-tabwrap container">
+    <div class="filter-row" style="justify-content:center;margin-bottom:18px">
+      <span class="filter-label">Categoría:</span>
+      <div class="cats" id="cat-filters-fc"></div>
+    </div>
+    <div id="fc-voc" class="flashcards"></div>
+    <p class="fc-tab-note">Haz clic o pulsa Enter/Espacio en la tarjeta para revelar la traducción. Usa "Mezclar" para practicar en orden aleatorio.</p>
   </div>
 </div>
 
@@ -166,6 +334,7 @@
   </div>
 </footer>
 
+<script src="flashcards.js"></script>
 <script>
 // ── DATOS ──────────────────────────────────────────────────────────────────
 // art: der/die/das/pl/- (sin artículo, para verbos y adjetivos)
@@ -188,6 +357,14 @@ const VOC = [
   {art:'-',  de:'Wie geht es Ihnen?', es:'¿Cómo está usted?',      ex:'Wie geht es Ihnen? — Gut, danke!',      cat:'saludos'},
   {art:'-',  de:'Ich verstehe nicht', es:'No entiendo',             ex:'Entschuldigung, ich verstehe nicht. Können Sie das wiederholen?', cat:'saludos'},
   {art:'-',  de:'Sprechen Sie Englisch?', es:'¿Habla inglés?',     ex:'Sprechen Sie Englisch? Mein Deutsch ist noch nicht gut.', cat:'saludos'},
+  {art:'-',  de:'Wie war dein Tag?',  es:'¿Cómo estuvo tu día?',   ex:'Hallo! Wie war dein Tag?',               cat:'saludos'},
+  {art:'-',  de:'Viel Glück!',        es:'¡Buena suerte!',         ex:'Viel Glück bei der Prüfung!',            cat:'saludos'},
+  {art:'-',  de:'Alles Gute!',        es:'¡Todo lo mejor! / ¡Que te vaya bien!', ex:'Alles Gute zum Geburtstag!', cat:'saludos'},
+  {art:'-',  de:'Herzlichen Glückwunsch!', es:'¡Felicidades!',     ex:'Herzlichen Glückwunsch zur neuen Arbeit!', cat:'saludos'},
+  {art:'-',  de:'Prost! / Zum Wohl!', es:'¡Salud!',                ex:'Prost! Auf unsere Freundschaft!',        cat:'saludos'},
+  {art:'-',  de:'Guten Appetit!',     es:'¡Buen provecho!',        ex:'Guten Appetit! Lass es dir schmecken.',  cat:'saludos'},
+  {art:'-',  de:'Willkommen!',        es:'¡Bienvenido/a!',          ex:'Willkommen in Deutschland!',             cat:'saludos'},
+  {art:'-',  de:'Schön, dich/Sie kennenzulernen', es:'Un placer conocerte/conocerle', ex:'Schön, Sie kennenzulernen, Herr Klein.', cat:'saludos'},
 
   // NÚMEROS
   {art:'-',  de:'null',               es:'cero (0)',               ex:'Meine Nummer ist null-vier-...',        cat:'numeros'},
@@ -201,10 +378,24 @@ const VOC = [
   {art:'-',  de:'acht',               es:'ocho (8)',               ex:'Ich stehe um acht Uhr auf.',            cat:'numeros'},
   {art:'-',  de:'neun',               es:'nueve (9)',              ex:'Er ist neun Jahre alt.',                cat:'numeros'},
   {art:'-',  de:'zehn',               es:'diez (10)',              ex:'Ich lerne seit zehn Monaten Deutsch.',  cat:'numeros'},
+  {art:'-',  de:'elf',                es:'once (11)',              ex:'Der Zug kommt um elf Uhr.',             cat:'numeros'},
+  {art:'-',  de:'zwölf',              es:'doce (12)',               ex:'Wir haben zwölf Monate im Jahr.',       cat:'numeros'},
+  {art:'-',  de:'fünfzehn',           es:'quince (15)',            ex:'In fünfzehn Minuten bin ich da.',        cat:'numeros'},
   {art:'-',  de:'zwanzig',            es:'veinte (20)',            ex:'Das kostet zwanzig Euro.',              cat:'numeros'},
+  {art:'-',  de:'dreißig',            es:'treinta (30)',           ex:'Ich bin dreißig Jahre alt.',             cat:'numeros'},
+  {art:'-',  de:'vierzig',            es:'cuarenta (40)',          ex:'Die Reise dauert vierzig Minuten.',      cat:'numeros'},
+  {art:'-',  de:'fünfzig',            es:'cincuenta (50)',         ex:'Fünfzig Prozent ist die Hälfte.',        cat:'numeros'},
+  {art:'-',  de:'sechzig',            es:'sesenta (60)',           ex:'Eine Stunde hat sechzig Minuten.',       cat:'numeros'},
+  {art:'-',  de:'siebzig',            es:'setenta (70)',           ex:'Mein Opa ist siebzig Jahre alt.',        cat:'numeros'},
+  {art:'-',  de:'achtzig',            es:'ochenta (80)',           ex:'Das Auto fährt achtzig km/h.',           cat:'numeros'},
+  {art:'-',  de:'neunzig',            es:'noventa (90)',           ex:'Neunzig Prozent der Schüler haben bestanden.', cat:'numeros'},
   {art:'-',  de:'hundert',            es:'cien (100)',             ex:'Das Buch hat hundert Seiten.',          cat:'numeros'},
   {art:'-',  de:'tausend',            es:'mil (1000)',             ex:'Die Miete ist tausend Euro.',           cat:'numeros'},
+  {art:'die', de:'Million',           es:'millón',                 ex:'Berlin hat über drei Millionen Einwohner.', cat:'numeros'},
   {art:'-',  de:'erste / zweite',     es:'primero / segundo',      ex:'Ich wohne im ersten Stock.',            cat:'numeros'},
+  {art:'-',  de:'halb',               es:'medio / mitad',          ex:'Es ist halb zehn.',                     cat:'numeros'},
+  {art:'das', de:'Prozent',           es:'el porcentaje',          ex:'Fünfzig Prozent sind genug.',           cat:'numeros'},
+  {art:'das', de:'Paar',              es:'el par',                 ex:'Ich brauche ein Paar neue Schuhe.',     cat:'numeros'},
 
   // COLORES
   {art:'-',  de:'rot',                es:'rojo',                   ex:'Das Auto ist rot.',                     cat:'colores'},
@@ -218,6 +409,11 @@ const VOC = [
   {art:'-',  de:'braun',              es:'marrón / café',          ex:'Der Tisch ist braun.',                  cat:'colores'},
   {art:'-',  de:'lila / violett',     es:'morado / violeta',       ex:'Sie trägt ein lila Kleid.',             cat:'colores'},
   {art:'-',  de:'rosa / pink',        es:'rosa',                   ex:'Die Blumen sind rosa.',                 cat:'colores'},
+  {art:'-',  de:'türkis',             es:'turquesa',               ex:'Das Meer ist türkis.',                  cat:'colores'},
+  {art:'-',  de:'silber',             es:'plateado',               ex:'Ihr Auto ist silber.',                  cat:'colores'},
+  {art:'-',  de:'gold / golden',      es:'dorado',                 ex:'Der Ring ist golden.',                  cat:'colores'},
+  {art:'-',  de:'bunt',               es:'colorido / multicolor',  ex:'Das Bild ist sehr bunt.',                cat:'colores'},
+  {art:'-',  de:'hell / dunkel',      es:'claro / oscuro',         ex:'Ich mag helle Farben, nicht dunkle.',   cat:'colores'},
 
   // TIEMPO (DÍAS, MESES, ESTACIONES)
   {art:'der', de:'Montag',            es:'lunes',                  ex:'Am Montag habe ich Deutschkurs.',       cat:'tiempo'},
@@ -244,6 +440,13 @@ const VOC = [
   {art:'der', de:'Herbst',            es:'otoño',                  ex:'Im Herbst fallen die Blätter.',         cat:'tiempo'},
   {art:'der', de:'Winter',            es:'invierno',               ex:'Im Winter schneit es in Deutschland.',  cat:'tiempo'},
   {art:'-',   de:'heute / gestern / morgen', es:'hoy / ayer / mañana', ex:'Heute lerne ich, gestern habe ich gearbeitet.', cat:'tiempo'},
+  {art:'die', de:'Woche',             es:'la semana',              ex:'Diese Woche habe ich viel zu tun.',     cat:'tiempo'},
+  {art:'der', de:'Monat',             es:'el mes',                 ex:'Nächsten Monat fahre ich nach Berlin.', cat:'tiempo'},
+  {art:'das', de:'Jahr',              es:'el año',                 ex:'Dieses Jahr lerne ich viel Deutsch.',   cat:'tiempo'},
+  {art:'das', de:'Wochenende',        es:'el fin de semana',       ex:'Was machst du am Wochenende?',          cat:'tiempo'},
+  {art:'der', de:'Feiertag',          es:'el día festivo',         ex:'Morgen ist ein Feiertag.',              cat:'tiempo'},
+  {art:'der', de:'Termin',            es:'la cita / el turno',     ex:'Ich habe einen Termin um 15 Uhr.',      cat:'tiempo'},
+  {art:'der', de:'Kalender',          es:'el calendario',          ex:'Ich schreibe alles in meinen Kalender.', cat:'tiempo'},
 
   // FAMILIA
   {art:'die', de:'Mutter',            es:'la madre',               ex:'Meine Mutter kommt aus Mexiko.',        cat:'familia'},
@@ -260,6 +463,15 @@ const VOC = [
   {art:'der', de:'Mann / Ehemann',    es:'el esposo/marido',       ex:'Mein Mann arbeitet in der Stadt.',      cat:'familia'},
   {art:'die', de:'Frau / Ehefrau',    es:'la esposa/mujer',        ex:'Seine Frau ist Ärztin.',               cat:'familia'},
   {art:'der', de:'Freund / die Freundin', es:'el amigo / la novia', ex:'Mein Freund kommt heute.',           cat:'familia'},
+  {art:'pl.', de:'Eltern',            es:'los padres',             ex:'Meine Eltern wohnen in Puebla.',        cat:'familia'},
+  {art:'pl.', de:'Geschwister',       es:'los hermanos (en general)', ex:'Ich habe zwei Geschwister.',        cat:'familia'},
+  {art:'der', de:'Cousin / die Cousine', es:'el primo / la prima', ex:'Meine Cousine besucht mich im Sommer.', cat:'familia'},
+  {art:'der', de:'Neffe / die Nichte', es:'el sobrino / la sobrina', ex:'Mein Neffe ist erst zwei Jahre alt.', cat:'familia'},
+  {art:'die', de:'Schwiegermutter / der Schwiegervater', es:'la suegra / el suegro', ex:'Meine Schwiegermutter kocht sehr gut.', cat:'familia'},
+  {art:'das', de:'Baby',              es:'el bebé',                ex:'Das Baby schläft gerade.',              cat:'familia'},
+  {art:'das', de:'Enkelkind',         es:'el nieto / la nieta',    ex:'Sie hat vier Enkelkinder.',             cat:'familia'},
+  {art:'der/die', de:'Partner / Partnerin', es:'la pareja (novio/a, cónyuge)', ex:'Das ist mein Partner.',   cat:'familia'},
+  {art:'-',  de:'verheiratet / ledig',es:'casado / soltero',       ex:'Ich bin nicht verheiratet, ich bin ledig.', cat:'familia'},
 
   // CUERPO HUMANO
   {art:'der', de:'Kopf',              es:'la cabeza',              ex:'Ich habe Kopfschmerzen.',               cat:'cuerpo'},
@@ -278,6 +490,13 @@ const VOC = [
   {art:'das', de:'Bein',              es:'la pierna',              ex:'Er hat sich das Bein verletzt.',        cat:'cuerpo'},
   {art:'der', de:'Fuß (pl. Füße)',   es:'el pie',                 ex:'Meine Füße sind müde.',                 cat:'cuerpo'},
   {art:'das', de:'Herz',              es:'el corazón',             ex:'Sein Herz schlägt schnell.',            cat:'cuerpo'},
+  {art:'das', de:'Haar (pl. Haare)', es:'el pelo / cabello',      ex:'Sie hat lange Haare.',                  cat:'cuerpo'},
+  {art:'das', de:'Gesicht',           es:'la cara / el rostro',    ex:'Er hat ein freundliches Gesicht.',      cat:'cuerpo'},
+  {art:'die', de:'Zunge',             es:'la lengua',              ex:'Zeig mir deine Zunge.',                 cat:'cuerpo'},
+  {art:'die', de:'Haut',              es:'la piel',                ex:'Ihre Haut ist sehr empfindlich.',       cat:'cuerpo'},
+  {art:'das', de:'Knie',              es:'la rodilla',             ex:'Mein Knie tut weh.',                    cat:'cuerpo'},
+  {art:'der', de:'Ellbogen',          es:'el codo',                ex:'Ich habe mir den Ellbogen gestoßen.',   cat:'cuerpo'},
+  {art:'die', de:'Hüfte',             es:'la cadera',              ex:'Sie hat Schmerzen in der Hüfte.',       cat:'cuerpo'},
 
   // ROPA
   {art:'das', de:'Hemd',              es:'la camisa',              ex:'Er trägt ein weißes Hemd.',             cat:'ropa'},
@@ -293,6 +512,15 @@ const VOC = [
   {art:'der', de:'Schal',             es:'la bufanda',             ex:'Mein Schal ist aus Wolle.',             cat:'ropa'},
   {art:'die', de:'Handschuhe (pl.)', es:'los guantes',            ex:'Im Winter brauche ich Handschuhe.',     cat:'ropa'},
   {art:'die', de:'Größe',             es:'la talla',               ex:'Welche Größe haben Sie? — Größe M.',    cat:'ropa'},
+  {art:'der', de:'Anzug',             es:'el traje',               ex:'Er trägt einen Anzug zur Arbeit.',      cat:'ropa'},
+  {art:'die', de:'Krawatte',          es:'la corbata',             ex:'Diese Krawatte passt gut zum Hemd.',    cat:'ropa'},
+  {art:'die', de:'Unterwäsche',       es:'la ropa interior',       ex:'Ich muss Unterwäsche kaufen.',          cat:'ropa'},
+  {art:'pl.', de:'Sandalen',          es:'las sandalias',          ex:'Im Sommer trage ich Sandalen.',         cat:'ropa'},
+  {art:'pl.', de:'Stiefel',           es:'las botas',              ex:'Im Winter brauche ich warme Stiefel.',  cat:'ropa'},
+  {art:'der', de:'Badeanzug',         es:'el traje de baño',       ex:'Ich habe meinen Badeanzug vergessen.',  cat:'ropa'},
+  {art:'die', de:'Brille',            es:'los anteojos / las gafas', ex:'Ohne Brille sehe ich nichts.',       cat:'ropa'},
+  {art:'die', de:'Uhr',               es:'el reloj',               ex:'Seine Uhr war ein Geschenk.',           cat:'ropa'},
+  {art:'die', de:'Tasche / Handtasche', es:'el bolso',             ex:'Meine Handtasche ist sehr praktisch.',  cat:'ropa'},
 
   // COMIDA Y BEBIDAS
   {art:'das', de:'Brot',              es:'el pan',                 ex:'Zum Frühstück esse ich Brot.',          cat:'comida'},
@@ -315,6 +543,18 @@ const VOC = [
   {art:'der', de:'Saft',              es:'el jugo',                ex:'Ich möchte einen Orangensaft.',         cat:'comida'},
   {art:'die', de:'Milch',             es:'la leche',               ex:'Kinder trinken viel Milch.',            cat:'comida'},
   {art:'die', de:'Schokolade',        es:'el chocolate',           ex:'Deutsche Schokolade ist weltbekannt.',  cat:'comida'},
+  {art:'das', de:'Frühstück',         es:'el desayuno',            ex:'Was gibt es zum Frühstück?',            cat:'comida'},
+  {art:'das', de:'Mittagessen',       es:'el almuerzo',            ex:'Das Mittagessen ist um 13 Uhr.',        cat:'comida'},
+  {art:'das', de:'Abendessen',        es:'la cena',                ex:'Wir kochen zusammen das Abendessen.',   cat:'comida'},
+  {art:'der', de:'Nachtisch / das Dessert', es:'el postre',        ex:'Zum Nachtisch gibt es Eis.',            cat:'comida'},
+  {art:'der', de:'Kuchen',            es:'el pastel',              ex:'Meine Oma backt einen Kuchen.',         cat:'comida'},
+  {art:'der', de:'Zucker',            es:'el azúcar',              ex:'Ich nehme keinen Zucker im Kaffee.',    cat:'comida'},
+  {art:'das', de:'Salz',              es:'la sal',                 ex:'Die Suppe braucht mehr Salz.',          cat:'comida'},
+  {art:'der', de:'Pfeffer',           es:'la pimienta',            ex:'Etwas Pfeffer, bitte.',                 cat:'comida'},
+  {art:'das', de:'Öl',                es:'el aceite',              ex:'Olivenöl ist sehr gesund.',             cat:'comida'},
+  {art:'der', de:'Honig',             es:'la miel',                ex:'Tee mit Honig schmeckt gut.',           cat:'comida'},
+  {art:'-',  de:'süß / sauer / salzig / scharf', es:'dulce / ácido / salado / picante', ex:'Das Essen ist zu scharf für mich.', cat:'comida'},
+  {art:'der/die', de:'Vegetarier / Veganer', es:'vegetariano / vegano', ex:'Ich bin seit einem Jahr Veganer.', cat:'comida'},
 
   // CASA Y HOGAR
   {art:'die', de:'Wohnung',           es:'el apartamento',         ex:'Ich suche eine Wohnung in München.',    cat:'casa'},
@@ -332,6 +572,19 @@ const VOC = [
   {art:'der', de:'Kühlschrank',       es:'el refrigerador',        ex:'Der Kühlschrank ist leer.',             cat:'casa'},
   {art:'die', de:'Waschmaschine',     es:'la lavadora',            ex:'Ich muss die Wäsche waschen.',          cat:'casa'},
   {art:'die', de:'Miete',             es:'el alquiler',            ex:'Die Miete ist 900 Euro pro Monat.',     cat:'casa'},
+  {art:'der', de:'Garten',            es:'el jardín',              ex:'Die Kinder spielen im Garten.',         cat:'casa'},
+  {art:'der', de:'Balkon',            es:'el balcón',              ex:'Wir frühstücken auf dem Balkon.',       cat:'casa'},
+  {art:'der', de:'Keller',            es:'el sótano',              ex:'Das Fahrrad steht im Keller.',          cat:'casa'},
+  {art:'das', de:'Dach',              es:'el techo (tejado)',      ex:'Das Dach ist rot.',                     cat:'casa'},
+  {art:'die', de:'Wand',              es:'la pared',               ex:'An der Wand hängt ein Bild.',           cat:'casa'},
+  {art:'der', de:'Boden',             es:'el suelo / piso',        ex:'Der Boden ist aus Holz.',                cat:'casa'},
+  {art:'die', de:'Lampe',             es:'la lámpara',              ex:'Mach bitte die Lampe an.',              cat:'casa'},
+  {art:'das', de:'Sofa',              es:'el sofá',                 ex:'Ich sitze gern auf dem Sofa.',          cat:'casa'},
+  {art:'das', de:'Regal',             es:'la estantería / repisa',  ex:'Die Bücher stehen im Regal.',           cat:'casa'},
+  {art:'der', de:'Teppich',           es:'la alfombra',            ex:'Der Teppich im Wohnzimmer ist neu.',    cat:'casa'},
+  {art:'der/die', de:'Nachbar / Nachbarin', es:'el vecino / la vecina', ex:'Mein Nachbar ist sehr freundlich.', cat:'casa'},
+  {art:'der', de:'Vermieter',         es:'el arrendador',          ex:'Der Vermieter hat die Miete erhöht.',   cat:'casa'},
+  {art:'der', de:'Mieter',            es:'el inquilino',           ex:'Die Mieter zahlen jeden Monat.',        cat:'casa'},
 
   // CIUDAD Y TRANSPORTE
   {art:'die', de:'Stadt',             es:'la ciudad',              ex:'Berlin ist eine tolle Stadt.',           cat:'ciudad'},
@@ -348,19 +601,31 @@ const VOC = [
   {art:'der', de:'Supermarkt',        es:'el supermercado',        ex:'Ich gehe zum Supermarkt einkaufen.',    cat:'ciudad'},
   {art:'die', de:'Schule',            es:'la escuela',             ex:'Die Kinder gehen um 8 Uhr zur Schule.', cat:'ciudad'},
   {art:'die', de:'Universität',       es:'la universidad',         ex:'Ich studiere an der Universität Berlin.', cat:'ciudad'},
-  {art:'das', de:'Krankenhaus',       es:'el hospital',            ex:'Der Arzt arbeitet im Krankenhaus.',     cat:'ciudad'},
   {art:'die', de:'Post',              es:'el correo / la oficina postal', ex:'Ich schicke ein Paket bei der Post.', cat:'ciudad'},
   {art:'die', de:'Bank',              es:'el banco',               ex:'Ich muss Geld zur Bank bringen.',       cat:'ciudad'},
-  {art:'links / rechts',  art:'-', de:'links / rechts',     es:'izquierda / derecha',    ex:'Biegen Sie links ab!', cat:'ciudad'},
+  {art:'-',  de:'links / rechts',     es:'izquierda / derecha',    ex:'Biegen Sie links ab!',                  cat:'ciudad'},
   {art:'-',  de:'geradeaus',          es:'recto / de frente',      ex:'Gehen Sie geradeaus, dann links.',      cat:'ciudad'},
+  {art:'die', de:'Ampel',             es:'el semáforo',            ex:'An der Ampel links abbiegen.',           cat:'ciudad'},
+  {art:'die', de:'Kreuzung',          es:'el cruce',               ex:'An der Kreuzung ist die Bank.',          cat:'ciudad'},
+  {art:'die', de:'Brücke',            es:'el puente',              ex:'Die Brücke führt über die Spree.',      cat:'ciudad'},
+  {art:'der', de:'Platz',             es:'la plaza',               ex:'Der Alexanderplatz ist bekannt.',       cat:'ciudad'},
+  {art:'das', de:'Rathaus',           es:'el ayuntamiento',        ex:'Das Rathaus ist im Stadtzentrum.',      cat:'ciudad'},
+  {art:'die', de:'Kirche',            es:'la iglesia',             ex:'Die Kirche ist sehr alt.',              cat:'ciudad'},
+  {art:'der', de:'Park',              es:'el parque',              ex:'Wir machen einen Spaziergang im Park.', cat:'ciudad'},
+  {art:'der', de:'Parkplatz',         es:'el estacionamiento',     ex:'Der Parkplatz ist voll.',                cat:'ciudad'},
+  {art:'das', de:'Taxi',              es:'el taxi',                ex:'Ich nehme ein Taxi zum Flughafen.',     cat:'ciudad'},
+  {art:'das', de:'Fahrrad',           es:'la bicicleta',           ex:'Ich fahre mit dem Fahrrad zur Arbeit.', cat:'ciudad'},
+  {art:'der/die', de:'Fußgänger / Fußgängerin', es:'el/la peatón', ex:'Fußgänger haben hier Vorrang.',        cat:'ciudad'},
+  {art:'der', de:'Verkehr',           es:'el tráfico',             ex:'Der Verkehr ist heute sehr stark.',     cat:'ciudad'},
+  {art:'der', de:'Stau',              es:'el atasco / embotellamiento', ex:'Wir stehen im Stau.',             cat:'ciudad'},
 
   // TRABAJO Y ESTUDIOS
   {art:'die', de:'Arbeit',            es:'el trabajo',             ex:'Ich muss zur Arbeit.',                  cat:'trabajo'},
   {art:'das', de:'Büro',              es:'la oficina',             ex:'Ich arbeite im Büro.',                  cat:'trabajo'},
   {art:'der', de:'Beruf',             es:'la profesión / el oficio', ex:'Was ist Ihr Beruf?',                 cat:'trabajo'},
   {art:'das', de:'Gehalt',            es:'el salario',             ex:'Mein Gehalt ist gut.',                  cat:'trabajo'},
-  {art:'der', de:'Chef / die Chefin', es:'el/la jefe/a',           ex:'Mein Chef ist nett.',                   cat:'trabajo'},
-  {art:'der', de:'Kollege / die Kollegin', es:'el/la colega',     ex:'Meine Kollegen sind hilfsbereit.',      cat:'trabajo'},
+  {art:'der/die', de:'Chef / Chefin', es:'el/la jefe/a',           ex:'Mein Chef ist nett.',                   cat:'trabajo'},
+  {art:'der/die', de:'Kollege / Kollegin', es:'el/la colega',      ex:'Meine Kollegen sind hilfsbereit.',      cat:'trabajo'},
   {art:'die', de:'Besprechung',       es:'la reunión',             ex:'Um 10 Uhr haben wir eine Besprechung.', cat:'trabajo'},
   {art:'der', de:'Urlaub',            es:'las vacaciones',         ex:'Im August mache ich Urlaub.',           cat:'trabajo'},
   {art:'die', de:'Bewerbung',         es:'la solicitud de empleo', ex:'Ich schicke meine Bewerbung ab.',       cat:'trabajo'},
@@ -369,6 +634,14 @@ const VOC = [
   {art:'das', de:'Studium',           es:'los estudios universitarios', ex:'Mein Studium dauert 3 Jahre.',    cat:'trabajo'},
   {art:'der', de:'Kurs',              es:'el curso',               ex:'Ich besuche einen Deutschkurs.',        cat:'trabajo'},
   {art:'das', de:'Praktikum',         es:'la práctica profesional / pasantía', ex:'Ich mache ein Praktikum bei Bosch.', cat:'trabajo'},
+  {art:'der', de:'Vertrag',           es:'el contrato',            ex:'Ich habe den Vertrag unterschrieben.',  cat:'trabajo'},
+  {art:'die', de:'Kündigung',         es:'el despido / la renuncia', ex:'Er hat die Kündigung bekommen.',      cat:'trabajo'},
+  {art:'die', de:'Teamarbeit',        es:'el trabajo en equipo',   ex:'Teamarbeit ist hier sehr wichtig.',     cat:'trabajo'},
+  {art:'der', de:'Feierabend',        es:'el fin de la jornada laboral', ex:'Endlich Feierabend!',            cat:'trabajo'},
+  {art:'das', de:'Homeoffice',        es:'el trabajo desde casa',  ex:'Ich mache heute Homeoffice.',           cat:'trabajo'},
+  {art:'-',  de:'Vollzeit / Teilzeit',es:'tiempo completo / parcial', ex:'Ich arbeite Teilzeit.',              cat:'trabajo'},
+  {art:'die', de:'Rente',             es:'la pensión / jubilación', ex:'Meine Oma bekommt eine gute Rente.',   cat:'trabajo'},
+  {art:'-',  de:'arbeitslos',         es:'desempleado',            ex:'Er ist seit einem Monat arbeitslos.',   cat:'trabajo'},
 
   // NATURALEZA Y TIEMPO (CLIMA)
   {art:'die', de:'Sonne',             es:'el sol',                 ex:'Die Sonne scheint heute.',              cat:'naturaleza'},
@@ -384,6 +657,16 @@ const VOC = [
   {art:'das', de:'Meer',              es:'el mar',                 ex:'Im Sommer fahren wir ans Meer.',        cat:'naturaleza'},
   {art:'der', de:'Berg',              es:'la montaña',             ex:'Die Alpen sind sehr schöne Berge.',     cat:'naturaleza'},
   {art:'die', de:'Temperatur',        es:'la temperatura',         ex:'Die Temperatur beträgt 20 Grad.',       cat:'naturaleza'},
+  {art:'der', de:'Baum',              es:'el árbol',               ex:'Vor dem Haus steht ein großer Baum.',   cat:'naturaleza'},
+  {art:'die', de:'Blume',             es:'la flor',                ex:'Sie schenkt mir immer Blumen.',         cat:'naturaleza'},
+  {art:'das', de:'Tier',              es:'el animal',              ex:'Welches Tier magst du am liebsten?',    cat:'naturaleza'},
+  {art:'der', de:'Himmel',            es:'el cielo',               ex:'Der Himmel ist heute klar.',            cat:'naturaleza'},
+  {art:'der', de:'Stern',             es:'la estrella',            ex:'Man kann die Sterne gut sehen.',        cat:'naturaleza'},
+  {art:'der', de:'Mond',              es:'la luna',                ex:'Der Mond ist heute voll.',              cat:'naturaleza'},
+  {art:'die', de:'Insel',             es:'la isla',                ex:'Wir verbringen den Urlaub auf einer Insel.', cat:'naturaleza'},
+  {art:'der', de:'See',               es:'el lago',                ex:'Wir schwimmen im See.',                 cat:'naturaleza'},
+  {art:'die', de:'Wüste',             es:'el desierto',            ex:'Die Wüste ist sehr trocken.',           cat:'naturaleza'},
+  {art:'die', de:'Umwelt',            es:'el medio ambiente',      ex:'Wir müssen die Umwelt schützen.',       cat:'naturaleza'},
 
   // VERBOS ESENCIALES
   {art:'-',  de:'sein',               es:'ser / estar',            ex:'Ich bin Mexikaner. Er ist müde.',       cat:'verbos'},
@@ -411,6 +694,26 @@ const VOC = [
   {art:'-',  de:'brauchen',           es:'necesitar',              ex:'Ich brauche Hilfe.',                    cat:'verbos'},
   {art:'-',  de:'fragen',             es:'preguntar',              ex:'Ich möchte Sie etwas fragen.',          cat:'verbos'},
   {art:'-',  de:'antworten',          es:'responder / contestar',  ex:'Kannst du mir antworten?',             cat:'verbos'},
+  {art:'-',  de:'geben',              es:'dar',                    ex:'Kannst du mir das Salz geben?',         cat:'verbos'},
+  {art:'-',  de:'nehmen',             es:'tomar / coger',          ex:'Ich nehme den Bus um 8 Uhr.',           cat:'verbos'},
+  {art:'-',  de:'finden',             es:'encontrar / opinar',     ex:'Ich finde diesen Film gut.',            cat:'verbos'},
+  {art:'-',  de:'suchen',             es:'buscar',                 ex:'Ich suche meine Schlüssel.',            cat:'verbos'},
+  {art:'-',  de:'spielen',            es:'jugar',                  ex:'Die Kinder spielen im Park.',           cat:'verbos'},
+  {art:'-',  de:'zeigen',             es:'mostrar',                ex:'Kannst du mir den Weg zeigen?',         cat:'verbos'},
+  {art:'-',  de:'bringen',            es:'traer / llevar',         ex:'Kannst du mir das Buch bringen?',       cat:'verbos'},
+  {art:'-',  de:'bleiben',            es:'quedarse',               ex:'Ich bleibe heute zu Hause.',            cat:'verbos'},
+  {art:'-',  de:'anfangen / beginnen',es:'empezar',                ex:'Der Kurs beginnt um 9 Uhr.',            cat:'verbos'},
+  {art:'-',  de:'denken',             es:'pensar',                 ex:'Ich denke oft an dich.',                cat:'verbos'},
+  {art:'-',  de:'glauben',            es:'creer',                  ex:'Ich glaube, das ist richtig.',          cat:'verbos'},
+  {art:'-',  de:'mögen',              es:'gustar / apreciar',      ex:'Ich mag diese Stadt.',                  cat:'verbos'},
+  {art:'-',  de:'lieben',             es:'amar',                   ex:'Ich liebe meine Familie.',              cat:'verbos'},
+  {art:'-',  de:'warten',             es:'esperar',                ex:'Ich warte auf den Bus.',                cat:'verbos'},
+  {art:'-',  de:'öffnen',             es:'abrir',                  ex:'Kannst du das Fenster öffnen?',         cat:'verbos'},
+  {art:'-',  de:'schließen',          es:'cerrar',                 ex:'Bitte schließen Sie die Tür.',          cat:'verbos'},
+  {art:'-',  de:'bezahlen',           es:'pagar',                  ex:'Ich möchte bitte bezahlen.',            cat:'verbos'},
+  {art:'-',  de:'bestellen',          es:'pedir / ordenar',        ex:'Ich bestelle einen Kaffee.',            cat:'verbos'},
+  {art:'-',  de:'treffen',            es:'encontrarse / reunirse', ex:'Wir treffen uns um 6 Uhr.',             cat:'verbos'},
+  {art:'-',  de:'besuchen',           es:'visitar',                ex:'Ich besuche meine Eltern am Sonntag.',  cat:'verbos'},
 
   // ADJETIVOS COMUNES
   {art:'-',  de:'groß / klein',       es:'grande / pequeño',       ex:'Berlin ist groß. Mein Zimmer ist klein.', cat:'adjetivos'},
@@ -428,6 +731,14 @@ const VOC = [
   {art:'-',  de:'wichtig',            es:'importante',             ex:'Das ist sehr wichtig!',                 cat:'adjetivos'},
   {art:'-',  de:'interessant',        es:'interesante',            ex:'Deutschland ist ein interessantes Land.', cat:'adjetivos'},
   {art:'-',  de:'nett / freundlich',  es:'simpático / amable',     ex:'Die Deutschen sind nett.',              cat:'adjetivos'},
+  {art:'-',  de:'einfach / kompliziert', es:'sencillo / complicado', ex:'Diese Übung ist ganz einfach.',      cat:'adjetivos'},
+  {art:'-',  de:'laut / leise',       es:'ruidoso / silencioso',   ex:'Die Musik ist zu laut.',                cat:'adjetivos'},
+  {art:'-',  de:'stark / schwach',    es:'fuerte / débil',         ex:'Der Kaffee ist sehr stark.',            cat:'adjetivos'},
+  {art:'-',  de:'früh / spät',        es:'temprano / tarde',       ex:'Es ist schon spät!',                    cat:'adjetivos'},
+  {art:'-',  de:'nah / weit',         es:'cerca / lejos',          ex:'Die Schule ist ganz nah.',              cat:'adjetivos'},
+  {art:'-',  de:'richtig / falsch',   es:'correcto / incorrecto',  ex:'Deine Antwort ist richtig.',            cat:'adjetivos'},
+  {art:'-',  de:'frei / besetzt',     es:'libre / ocupado',        ex:'Ist dieser Platz frei?',                cat:'adjetivos'},
+  {art:'-',  de:'sauber / schmutzig', es:'limpio / sucio',         ex:'Die Küche ist sauber.',                 cat:'adjetivos'},
 
   // VIAJES
   {art:'der', de:'Flughafen',         es:'el aeropuerto',          ex:'Das Flugzeug landet am Flughafen.',     cat:'viaje'},
@@ -441,6 +752,114 @@ const VOC = [
   {art:'die', de:'Sehenswürdigkeit',  es:'el lugar turístico / atracción', ex:'Das Brandenburger Tor ist eine bekannte Sehenswürdigkeit.', cat:'viaje'},
   {art:'die', de:'Reise',             es:'el viaje',               ex:'Die Reise nach Deutschland war schön.', cat:'viaje'},
   {art:'-',  de:'reisen',             es:'viajar',                 ex:'Ich reise gern nach Europa.',           cat:'viaje'},
+  {art:'das', de:'Gepäck',            es:'el equipaje',            ex:'Mein Gepäck ist noch nicht angekommen.', cat:'viaje'},
+  {art:'der', de:'Ausweis',           es:'la identificación',      ex:'Zeigen Sie bitte Ihren Ausweis.',       cat:'viaje'},
+  {art:'die', de:'Grenze',            es:'la frontera',            ex:'Wir überqueren die Grenze nach Österreich.', cat:'viaje'},
+  {art:'der/die', de:'Abflug / Ankunft', es:'la salida / la llegada (vuelo)', ex:'Der Abflug ist um 14 Uhr.',  cat:'viaje'},
+  {art:'die', de:'Verspätung',        es:'el retraso',             ex:'Der Zug hat 20 Minuten Verspätung.',    cat:'viaje'},
+  {art:'der', de:'Zoll',              es:'la aduana',              ex:'Wir müssen durch den Zoll.',             cat:'viaje'},
+  {art:'die', de:'Landkarte / Karte', es:'el mapa',                ex:'Hast du eine Karte von der Stadt?',     cat:'viaje'},
+  {art:'das', de:'Souvenir / Andenken', es:'el recuerdo (regalo)', ex:'Ich kaufe ein Souvenir für meine Mutter.', cat:'viaje'},
+  {art:'die', de:'Jugendherberge',    es:'el albergue juvenil',    ex:'Wir übernachten in einer Jugendherberge.', cat:'viaje'},
+
+  // EMOCIONES Y SENTIMIENTOS
+  {art:'-',  de:'froh / fröhlich',    es:'contento / alegre',      ex:'Ich bin froh, dich zu sehen.',          cat:'emociones'},
+  {art:'-',  de:'wütend',             es:'enojado / furioso',      ex:'Er ist wütend auf seinen Bruder.',      cat:'emociones'},
+  {art:'-',  de:'ängstlich',          es:'temeroso / asustado',    ex:'Sie ist ängstlich vor Hunden.',         cat:'emociones'},
+  {art:'-',  de:'überrascht',         es:'sorprendido',            ex:'Ich war sehr überrascht von dem Geschenk.', cat:'emociones'},
+  {art:'-',  de:'gelangweilt',        es:'aburrido (sentirse)',    ex:'Die Kinder sind gelangweilt.',          cat:'emociones'},
+  {art:'-',  de:'nervös',             es:'nervioso',               ex:'Ich bin nervös vor der Prüfung.',       cat:'emociones'},
+  {art:'-',  de:'verliebt',           es:'enamorado',              ex:'Sie sind sehr verliebt.',                cat:'emociones'},
+  {art:'-',  de:'stolz',              es:'orgulloso',              ex:'Ich bin stolz auf dich.',                cat:'emociones'},
+  {art:'-',  de:'eifersüchtig',       es:'celoso',                 ex:'Er ist ein bisschen eifersüchtig.',     cat:'emociones'},
+  {art:'-',  de:'entspannt',          es:'relajado',               ex:'Am Wochenende bin ich entspannt.',      cat:'emociones'},
+  {art:'-',  de:'gestresst',          es:'estresado',              ex:'Ich bin heute sehr gestresst.',          cat:'emociones'},
+  {art:'-',  de:'enttäuscht',         es:'decepcionado',           ex:'Ich bin enttäuscht von dem Ergebnis.',  cat:'emociones'},
+  {art:'-',  de:'dankbar',            es:'agradecido',             ex:'Ich bin dir sehr dankbar.',              cat:'emociones'},
+  {art:'-',  de:'neugierig',          es:'curioso',                ex:'Die Kinder sind sehr neugierig.',       cat:'emociones'},
+  {art:'-',  de:'zufrieden',          es:'satisfecho / contento',  ex:'Ich bin zufrieden mit meiner Arbeit.',  cat:'emociones'},
+  {art:'-',  de:'einsam',             es:'solitario',              ex:'Manchmal fühle ich mich einsam.',       cat:'emociones'},
+
+  // TECNOLOGÍA
+  {art:'das', de:'Handy / Smartphone',es:'el celular',              ex:'Mein Handy hat keinen Akku mehr.',      cat:'tecnologia'},
+  {art:'der', de:'Computer / Rechner',es:'la computadora',         ex:'Ich arbeite am Computer.',              cat:'tecnologia'},
+  {art:'das', de:'Internet',          es:'internet',                ex:'Ohne Internet kann ich nicht arbeiten.', cat:'tecnologia'},
+  {art:'die', de:'E-Mail',            es:'el correo electrónico',  ex:'Ich schreibe eine E-Mail.',             cat:'tecnologia'},
+  {art:'das', de:'Passwort',          es:'la contraseña',          ex:'Ich habe mein Passwort vergessen.',     cat:'tecnologia'},
+  {art:'die', de:'App',               es:'la aplicación',          ex:'Ich habe eine neue App heruntergeladen.', cat:'tecnologia'},
+  {art:'-',  de:'herunterladen',      es:'descargar',               ex:'Kannst du mir die App herunterladen?',  cat:'tecnologia'},
+  {art:'der', de:'Akku',              es:'la batería',              ex:'Der Akku ist fast leer.',               cat:'tecnologia'},
+  {art:'-',  de:'aufladen',           es:'cargar (batería)',       ex:'Ich muss mein Handy aufladen.',         cat:'tecnologia'},
+  {art:'das', de:'WLAN',              es:'el wifi',                 ex:'Gibt es hier kostenloses WLAN?',        cat:'tecnologia'},
+  {art:'der', de:'Bildschirm',        es:'la pantalla',             ex:'Der Bildschirm ist kaputt.',             cat:'tecnologia'},
+  {art:'die', de:'Taste',             es:'la tecla / el botón',    ex:'Drück diese Taste.',                     cat:'tecnologia'},
+  {art:'-',  de:'klicken',            es:'hacer clic',              ex:'Klicken Sie hier, um fortzufahren.',    cat:'tecnologia'},
+  {art:'-',  de:'speichern',          es:'guardar (archivo)',      ex:'Hast du das Dokument gespeichert?',     cat:'tecnologia'},
+  {art:'-',  de:'löschen',            es:'borrar / eliminar',      ex:'Ich habe die Nachricht gelöscht.',      cat:'tecnologia'},
+  {art:'die', de:'Nachricht',         es:'el mensaje',              ex:'Ich habe dir eine Nachricht geschickt.', cat:'tecnologia'},
+
+  // ANIMALES
+  {art:'der', de:'Hund',              es:'el perro',                ex:'Mein Hund heißt Bello.',                cat:'animales'},
+  {art:'die', de:'Katze',             es:'el gato / la gata',       ex:'Die Katze schläft den ganzen Tag.',     cat:'animales'},
+  {art:'der', de:'Vogel',             es:'el pájaro',                ex:'Der Vogel singt schön.',                 cat:'animales'},
+  {art:'das', de:'Pferd',             es:'el caballo',               ex:'Sie reitet gern auf dem Pferd.',        cat:'animales'},
+  {art:'die', de:'Kuh',               es:'la vaca',                  ex:'Die Kuh gibt Milch.',                    cat:'animales'},
+  {art:'das', de:'Schwein',           es:'el cerdo',                 ex:'Das Schwein lebt auf dem Bauernhof.',   cat:'animales'},
+  {art:'das', de:'Huhn',              es:'la gallina / el pollo',   ex:'Das Huhn legt Eier.',                   cat:'animales'},
+  {art:'die', de:'Maus',              es:'el ratón',                 ex:'Die Katze jagt die Maus.',              cat:'animales'},
+  {art:'der', de:'Löwe',              es:'el león',                  ex:'Der Löwe ist der König der Tiere.',     cat:'animales'},
+  {art:'der', de:'Elefant',           es:'el elefante',               ex:'Der Elefant ist sehr groß.',            cat:'animales'},
+  {art:'der', de:'Affe',              es:'el mono',                  ex:'Der Affe klettert auf den Baum.',       cat:'animales'},
+  {art:'der', de:'Bär',               es:'el oso',                   ex:'Im Zoo gibt es einen Bären.',           cat:'animales'},
+  {art:'der', de:'Schmetterling',     es:'la mariposa',               ex:'Ein bunter Schmetterling fliegt vorbei.', cat:'animales'},
+  {art:'der', de:'Fisch',             es:'el pez',                   ex:'Im Aquarium schwimmen viele Fische.',   cat:'animales'},
+
+  // COMPRAS
+  {art:'das', de:'Geschäft / der Laden', es:'la tienda',            ex:'Das Geschäft öffnet um 9 Uhr.',         cat:'compras'},
+  {art:'die', de:'Kasse',             es:'la caja registradora',   ex:'Bitte zahlen Sie an der Kasse.',        cat:'compras'},
+  {art:'der', de:'Rabatt',            es:'el descuento',           ex:'Es gibt 20% Rabatt.',                    cat:'compras'},
+  {art:'das', de:'Angebot',           es:'la oferta',               ex:'Das ist ein gutes Angebot.',            cat:'compras'},
+  {art:'die', de:'Quittung',          es:'el recibo',               ex:'Kann ich eine Quittung bekommen?',      cat:'compras'},
+  {art:'das', de:'Bargeld',           es:'el efectivo',             ex:'Ich zahle lieber mit Bargeld.',         cat:'compras'},
+  {art:'die', de:'Kreditkarte',       es:'la tarjeta de crédito',   ex:'Akzeptieren Sie Kreditkarten?',         cat:'compras'},
+  {art:'-',  de:'umtauschen',         es:'cambiar / devolver (producto)', ex:'Ich möchte diesen Pullover umtauschen.', cat:'compras'},
+  {art:'-',  de:'anprobieren',        es:'probarse (ropa)',        ex:'Darf ich das anprobieren?',              cat:'compras'},
+  {art:'-',  de:'günstig',            es:'barato / conveniente',   ex:'Dieses Geschäft ist sehr günstig.',      cat:'compras'},
+  {art:'die', de:'Marke',             es:'la marca',                 ex:'Welche Marke bevorzugst du?',           cat:'compras'},
+  {art:'der/die', de:'Verkäufer / Verkäuferin', es:'el/la vendedor/a', ex:'Der Verkäufer war sehr freundlich.', cat:'compras'},
+  {art:'der', de:'Kundendienst',      es:'el servicio al cliente', ex:'Ruf den Kundendienst an.',               cat:'compras'},
+  {art:'der', de:'Einkaufswagen',     es:'el carrito de compras',  ex:'Der Einkaufswagen ist voll.',            cat:'compras'},
+  {art:'die', de:'Einkaufsliste',     es:'la lista de compras',    ex:'Ich habe eine Einkaufsliste geschrieben.', cat:'compras'},
+
+  // ESCUELA Y APRENDIZAJE
+  {art:'der/die', de:'Schüler / Schülerin', es:'el/la alumno/a',   ex:'Die Schülerin lernt sehr fleißig.',     cat:'escuela'},
+  {art:'das', de:'Klassenzimmer',     es:'el salón de clase',      ex:'Das Klassenzimmer ist hell.',            cat:'escuela'},
+  {art:'die', de:'Hausaufgabe',       es:'la tarea',                ex:'Ich mache meine Hausaufgaben.',         cat:'escuela'},
+  {art:'die', de:'Note',              es:'la calificación',        ex:'Ich habe eine gute Note bekommen.',     cat:'escuela'},
+  {art:'das', de:'Buch',              es:'el libro',                ex:'Dieses Buch ist sehr interessant.',     cat:'escuela'},
+  {art:'das', de:'Heft',              es:'el cuaderno',             ex:'Schreib das in dein Heft.',              cat:'escuela'},
+  {art:'der', de:'Stift',             es:'el bolígrafo / lápiz',    ex:'Hast du einen Stift für mich?',         cat:'escuela'},
+  {art:'das', de:'Wörterbuch',        es:'el diccionario',         ex:'Ich benutze ein Wörterbuch.',            cat:'escuela'},
+  {art:'-',  de:'üben',               es:'practicar',               ex:'Ich muss mehr Grammatik üben.',         cat:'escuela'},
+  {art:'-',  de:'wiederholen',        es:'repasar / repetir',      ex:'Können Sie das bitte wiederholen?',      cat:'escuela'},
+  {art:'der', de:'Fehler',            es:'el error',                ex:'Aus Fehlern lernt man.',                 cat:'escuela'},
+  {art:'der', de:'Fortschritt',       es:'el progreso',             ex:'Du machst gute Fortschritte!',           cat:'escuela'},
+
+  // ADVERBIOS DE FRECUENCIA Y TIEMPO
+  {art:'-',  de:'immer',              es:'siempre',                 ex:'Ich trinke immer Kaffee am Morgen.',    cat:'adverbios'},
+  {art:'-',  de:'oft',                es:'a menudo',                ex:'Ich gehe oft ins Kino.',                cat:'adverbios'},
+  {art:'-',  de:'manchmal',           es:'a veces',                 ex:'Manchmal koche ich zu Hause.',          cat:'adverbios'},
+  {art:'-',  de:'selten',             es:'raramente',               ex:'Ich fahre selten mit dem Auto.',        cat:'adverbios'},
+  {art:'-',  de:'nie',                es:'nunca',                   ex:'Ich trinke nie Alkohol.',                cat:'adverbios'},
+  {art:'-',  de:'jetzt',              es:'ahora',                   ex:'Ich muss jetzt gehen.',                  cat:'adverbios'},
+  {art:'-',  de:'gleich',             es:'en seguida / ahora mismo',ex:'Ich komme gleich!',                      cat:'adverbios'},
+  {art:'-',  de:'bald',               es:'pronto',                  ex:'Bis bald!',                              cat:'adverbios'},
+  {art:'-',  de:'schon',              es:'ya',                      ex:'Ich habe das schon gemacht.',            cat:'adverbios'},
+  {art:'-',  de:'noch',               es:'todavía / aún',           ex:'Ich bin noch hier.',                     cat:'adverbios'},
+  {art:'-',  de:'noch nicht',         es:'todavía no',              ex:'Ich habe noch nicht gegessen.',         cat:'adverbios'},
+  {art:'-',  de:'später',             es:'más tarde',                ex:'Wir sprechen später darüber.',          cat:'adverbios'},
+  {art:'-',  de:'zuerst',             es:'primero',                 ex:'Zuerst frühstücke ich, dann arbeite ich.', cat:'adverbios'},
+  {art:'-',  de:'zuletzt / schließlich', es:'por último / finalmente', ex:'Zuletzt räumen wir die Küche auf.', cat:'adverbios'},
 ];
 
 // ── CATEGORÍAS ────────────────────────────────────────────────────────────
@@ -460,20 +879,36 @@ const CATS = {
   verbos:    {label:'Verbos',     icon:'⚙️'},
   adjetivos: {label:'Adjetivos',  icon:'🎯'},
   viaje:     {label:'Viajes',     icon:'✈️'},
+  emociones: {label:'Emociones',  icon:'😊'},
+  tecnologia:{label:'Tecnología', icon:'📱'},
+  animales:  {label:'Animales',   icon:'🐾'},
+  compras:   {label:'Compras',    icon:'🛒'},
+  escuela:   {label:'Escuela',    icon:'🎓'},
+  adverbios: {label:'Adverbios',  icon:'⏱️'},
 };
 
 const ART_CLASS = {der:'art-der',die:'art-die',das:'art-das','pl.':'art-pl','-':'art-none'};
 
 let activeCat = 'all';
 let studyMode = false;
+let activeCatFc = 'all';
+
+// ── TABS ─────────────────────────────────────────────────────────────────
+function setTab(tab) {
+  document.querySelectorAll('.voc-tab').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
+  document.querySelectorAll('.voc-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('panel-' + tab).classList.add('active');
+  if (tab === 'cards') renderFlashcards();
+}
 
 // ── INIT ─────────────────────────────────────────────────────────────────
 function init() {
   // Stats
   document.getElementById('total-count').textContent = VOC.length;
   document.getElementById('cat-count').textContent = Object.keys(CATS).length;
+  document.getElementById('situ-count').textContent = document.querySelectorAll('#panel-situ .phrase-item').length;
 
-  // Category buttons
+  // Category buttons (dictionary tab)
   const cf = document.getElementById('cat-filters');
   cf.innerHTML = `<button class="cat-btn all active" onclick="setCat('all')">Todas (${VOC.length})</button>`;
   Object.entries(CATS).forEach(([k,v]) => {
@@ -481,19 +916,43 @@ function init() {
     cf.innerHTML += `<button class="cat-btn" onclick="setCat('${k}')">${v.icon} ${v.label} (${count})</button>`;
   });
 
+  // Category buttons (flashcards tab)
+  const cffc = document.getElementById('cat-filters-fc');
+  cffc.innerHTML = `<button class="cat-btn all active" onclick="setCatFc('all')">Todas</button>`;
+  Object.entries(CATS).forEach(([k,v]) => {
+    cffc.innerHTML += `<button class="cat-btn" onclick="setCatFc('${k}')">${v.icon} ${v.label}</button>`;
+  });
+
   render();
 }
 
 function setCat(cat) {
   activeCat = cat;
-  document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
-  const btns = document.querySelectorAll('.cat-btn');
+  document.querySelectorAll('#cat-filters .cat-btn').forEach(b => b.classList.remove('active'));
+  const btns = document.querySelectorAll('#cat-filters .cat-btn');
   if(cat === 'all') btns[0].classList.add('active');
   else {
     const idx = Object.keys(CATS).indexOf(cat);
     if(btns[idx+1]) btns[idx+1].classList.add('active');
   }
   render();
+}
+
+function setCatFc(cat) {
+  activeCatFc = cat;
+  document.querySelectorAll('#cat-filters-fc .cat-btn').forEach(b => b.classList.remove('active'));
+  const btns = document.querySelectorAll('#cat-filters-fc .cat-btn');
+  if(cat === 'all') btns[0].classList.add('active');
+  else {
+    const idx = Object.keys(CATS).indexOf(cat);
+    if(btns[idx+1]) btns[idx+1].classList.add('active');
+  }
+  renderFlashcards();
+}
+
+function renderFlashcards() {
+  const data = activeCatFc === 'all' ? VOC : VOC.filter(w => w.cat === activeCatFc);
+  initFlashcards('fc-voc', data);
 }
 
 function filterVoc() {
@@ -544,7 +1003,6 @@ function render() {
   }
   empty.style.display = 'none';
 
-  // Agrupar por categoría si no hay búsqueda y cat = all
   const rows = data.map(w => {
     const cat = CATS[w.cat] || {label:w.cat, icon:'•'};
     const artKey = (w.art||'-').split('/')[0].trim().toLowerCase();

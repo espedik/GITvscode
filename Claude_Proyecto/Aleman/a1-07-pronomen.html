@@ -12,6 +12,12 @@
 .p-ihr{background:rgba(6,182,212,.1);color:#0891b2;border:2px solid rgba(6,182,212,.25)}
 .p-sie-pl{background:rgba(100,116,139,.1);color:#475569;border:2px solid rgba(100,116,139,.25)}
 .p-Sie{background:rgba(0,0,0,.06);color:var(--black);border:2px solid rgba(0,0,0,.15)}
+.dialog-box{background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:18px 20px;margin-bottom:12px}
+.dialog-line{display:flex;gap:10px;margin-bottom:10px;align-items:flex-start}
+.dialog-line:last-child{margin-bottom:0}
+.dialog-speaker{font-size:11px;font-weight:800;color:var(--red);text-transform:uppercase;letter-spacing:.06em;white-space:nowrap;min-width:30px;margin-top:2px}
+.dialog-de{font-size:14px;font-weight:600;color:var(--black)}
+.dialog-es{font-size:12px;color:var(--text2);margin-top:1px}
 </style></head>
 <body>
 <nav class="nav"><a href="index.html" class="nav-logo">🇩🇪 Deutsch</a><div class="nav-links"><a href="index.html" class="nav-link">← Índice A1</a></div></nav>
@@ -24,6 +30,14 @@
 </div></div>
 
 <div class="topic-content"><div class="container">
+
+<!-- 0. FLASHCARDS -->
+<div class="content-full">
+  <div class="card">
+    <h3><span>🎴</span> Repasa con tarjetas</h3>
+    <div id="fc-a1-07" class="flashcards"></div>
+  </div>
+</div>
 
 <!-- LOS 8 PRONOMBRES -->
 <div class="content-full">
@@ -116,6 +130,41 @@
   </div>
 </div>
 
+<!-- FRASES COMUNES -->
+<div class="content-full">
+  <div class="card card-gold">
+    <h3><span>🗨️</span> Frases comunes en este tema</h3>
+    <div class="phrase-grid">
+      <div class="phrase-item"><span class="phrase-situation">Preguntando el nombre (formal)</span><span class="phrase-de">Wie heißen Sie?</span><span class="phrase-es">¿Cómo se llama usted?</span></div>
+      <div class="phrase-item"><span class="phrase-situation">Preguntando el nombre (informal)</span><span class="phrase-de">Wie heißt du?</span><span class="phrase-es">¿Cómo te llamas?</span></div>
+      <div class="phrase-item"><span class="phrase-situation">Proponiendo tutear a alguien</span><span class="phrase-de">Wir können du sagen.</span><span class="phrase-es">Podemos tutearnos.</span></div>
+      <div class="phrase-item"><span class="phrase-situation">Confirmando la identidad (formal)</span><span class="phrase-de">Sind Sie Herr Schmidt?</span><span class="phrase-es">¿Es usted el señor Schmidt?</span></div>
+      <div class="phrase-item"><span class="phrase-situation">Preguntando si es nuevo (informal)</span><span class="phrase-de">Bist du neu hier?</span><span class="phrase-es">¿Eres nuevo aquí?</span></div>
+      <div class="phrase-item"><span class="phrase-situation">Hablando de un objeto</span><span class="phrase-de">Der Tisch ist alt. Er ist aus Holz.</span><span class="phrase-es">La mesa es vieja. Es de madera.</span></div>
+      <div class="phrase-item"><span class="phrase-situation">Hablando del clima</span><span class="phrase-de">Es regnet heute.</span><span class="phrase-es">Hoy llueve.</span></div>
+      <div class="phrase-item"><span class="phrase-situation">Haciendo planes con amigos</span><span class="phrase-de">Wir gehen heute ins Kino.</span><span class="phrase-es">Hoy vamos al cine.</span></div>
+      <div class="phrase-item"><span class="phrase-situation">Invitando a un grupo (informal)</span><span class="phrase-de">Kommt ihr mit?</span><span class="phrase-es">¿Vienen ustedes / venís vosotros?</span></div>
+      <div class="phrase-item"><span class="phrase-situation">Hablando de terceros</span><span class="phrase-de">Sie sind Studenten.</span><span class="phrase-es">Ellos son estudiantes.</span></div>
+      <div class="phrase-item"><span class="phrase-situation">Preguntando formalmente el origen</span><span class="phrase-de">Entschuldigung, sind Sie von hier?</span><span class="phrase-es">Disculpe, ¿es usted de aquí?</span></div>
+      <div class="phrase-item"><span class="phrase-situation">Aclarando de quién hablas</span><span class="phrase-de">Er heißt Max, und sie heißt Lisa.</span><span class="phrase-es">Él se llama Max, y ella se llama Lisa.</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- DIÁLOGO -->
+<div class="content-full">
+  <div class="card">
+    <h3><span>💬</span> Diálogo de práctica — De Sie a du</h3>
+    <div class="dialog-box">
+      <div class="dialog-line"><div class="dialog-speaker">A:</div><div><div class="dialog-de">Guten Tag, sind Sie Frau Klein?</div><div class="dialog-es">Buenos días, ¿es usted la señora Klein?</div></div></div>
+      <div class="dialog-line"><div class="dialog-speaker">B:</div><div><div class="dialog-de">Ja, das bin ich. Und Sie sind...?</div><div class="dialog-es">Sí, soy yo. ¿Y usted es...?</div></div></div>
+      <div class="dialog-line"><div class="dialog-speaker">A:</div><div><div class="dialog-de">Ich bin Tom, dein neuer Kollege. Wir können sicher du sagen, oder?</div><div class="dialog-es">Soy Tom, tu nuevo colega. Podemos tutearnos, ¿verdad?</div></div></div>
+      <div class="dialog-line"><div class="dialog-speaker">B:</div><div><div class="dialog-de">Klar, gerne! Also, wie geht's dir, Tom?</div><div class="dialog-es">¡Claro, con gusto! Entonces, ¿cómo estás, Tom?</div></div></div>
+      <div class="dialog-line"><div class="dialog-speaker">A:</div><div><div class="dialog-de">Sehr gut, danke!</div><div class="dialog-es">¡Muy bien, gracias!</div></div></div>
+    </div>
+  </div>
+</div>
+
 <!-- EJERCICIOS -->
 <div class="content-full">
   <div class="card card-red">
@@ -132,4 +181,25 @@
   <a href="a1-08-sein-haben.html" class="page-nav-btn next"><div><div class="page-nav-dir">Siguiente →</div><div class="page-nav-title">sein & haben</div></div><span style="font-size:24px">⚙️</span></a>
 </div>
 <footer class="footer"><p>A1 · 07 — Personalpronomen</p><div class="footer-flag"><span style="background:#1a1a1a;width:20px;height:5px"></span><span style="background:var(--red);width:20px;height:5px"></span><span style="background:#FFCE00;width:20px;height:5px"></span></div></footer>
+<script src="flashcards.js"></script>
+<script>
+initFlashcards('fc-a1-07', [
+  {art:'-', de:'ich', es:'yo'},
+  {art:'-', de:'du', es:'tú'},
+  {art:'-', de:'er', es:'él'},
+  {art:'-', de:'sie', es:'ella'},
+  {art:'-', de:'es', es:'ello / eso'},
+  {art:'-', de:'wir', es:'nosotros/as'},
+  {art:'-', de:'ihr', es:'vosotros / ustedes (informal)'},
+  {art:'-', de:'Sie', es:'usted / ustedes (formal)'},
+  {art:'-', de:'Ich bin...', es:'Yo soy...'},
+  {art:'-', de:'Du bist...', es:'Tú eres...'},
+  {art:'-', de:'Er/Sie/Es ist...', es:'Él/Ella/Eso es...'},
+  {art:'-', de:'Wir sind...', es:'Nosotros somos...'},
+  {art:'-', de:'Wie heißt du?', es:'¿Cómo te llamas? (informal)'},
+  {art:'-', de:'Wie heißen Sie?', es:'¿Cómo se llama usted? (formal)'},
+  {art:'-', de:'Bist du neu hier?', es:'¿Eres nuevo aquí?'},
+  {art:'-', de:'Sind Sie Herr Müller?', es:'¿Es usted el señor Müller?'}
+]);
+</script>
 </body></html>

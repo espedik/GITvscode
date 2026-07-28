@@ -163,6 +163,43 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var
 .progress-levels{display:grid;grid-template-columns:1fr 1fr;gap:16px}
 @media(max-width:480px){.progress-levels{grid-template-columns:1fr}}
 
+/* ── DIÁLOGOS DE PRÁCTICA ── */
+.dialog-box{background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:18px 20px;margin-bottom:12px}
+.dialog-line{display:flex;gap:10px;margin-bottom:10px;align-items:flex-start}
+.dialog-line:last-child{margin-bottom:0}
+.dialog-speaker{font-size:11px;font-weight:800;color:var(--red);text-transform:uppercase;letter-spacing:.06em;white-space:nowrap;min-width:30px;margin-top:2px}
+.dialog-de{font-size:14px;font-weight:600;color:var(--black)}
+.dialog-es{font-size:12px;color:var(--text2);margin-top:1px}
+
+/* ── FLASHCARDS (slides interactivos) ── */
+.flashcards{max-width:380px;margin:8px auto 4px;text-align:center}
+.fc-progress{font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px}
+.fc-card{position:relative;height:180px;border-radius:var(--r);cursor:pointer;perspective:1000px;outline:none}
+.fc-face{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;border-radius:var(--r);backface-visibility:hidden;transition:transform .5s cubic-bezier(.4,.2,.2,1);padding:18px;box-shadow:var(--shadow-md)}
+.fc-front{background:linear-gradient(135deg,var(--surface),var(--surface2));border:1.5px solid var(--border)}
+.fc-back{background:linear-gradient(135deg,var(--red),var(--gold-dark));color:#fff;transform:rotateY(180deg)}
+.fc-card.flipped .fc-front{transform:rotateY(180deg)}
+.fc-card.flipped .fc-back{transform:rotateY(360deg)}
+.fc-card:focus-visible .fc-face{box-shadow:0 0 0 3px rgba(204,0,0,.35),var(--shadow-md)}
+.fc-art{font-size:12px;font-weight:800;color:var(--red);text-transform:uppercase;letter-spacing:.05em}
+.fc-de{font-size:23px;font-weight:900;color:var(--black);line-height:1.25;padding:0 8px}
+.fc-hint{font-size:11px;color:var(--text3);margin-top:2px}
+.fc-es{font-size:19px;font-weight:800;line-height:1.25;padding:0 8px}
+.fc-ex{font-size:12.5px;font-style:italic;opacity:.92;padding:0 10px}
+.fc-controls{display:flex;gap:8px;justify-content:center;margin-top:14px;flex-wrap:wrap}
+.fc-btn{padding:8px 14px;border-radius:8px;border:1.5px solid var(--border);background:var(--surface);font-size:12px;font-weight:700;color:var(--text2);cursor:pointer;font-family:inherit;transition:all .2s;box-shadow:var(--shadow)}
+.fc-btn:hover{border-color:rgba(204,0,0,.3);color:var(--red)}
+.fc-shuffle{background:#1a1a1a;color:#fff;border-color:#1a1a1a}
+.fc-shuffle:hover{color:#fff;opacity:.85}
+
+/* ── FRASES COMUNES (situaciones) ── */
+.phrase-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:720px){.phrase-grid{grid-template-columns:1fr}}
+.phrase-item{background:var(--surface2);border:1px solid var(--border);border-radius:var(--rs);padding:12px 14px;display:flex;flex-direction:column;gap:2px}
+.phrase-situation{font-size:10px;font-weight:800;color:var(--gold-dark);text-transform:uppercase;letter-spacing:.07em}
+.phrase-de{font-size:14.5px;font-weight:700;color:var(--black)}
+.phrase-es{font-size:12.5px;color:var(--text2)}
+
 /* ── UTILS ── */
 .mt32{margin-top:32px}
 .mb0{margin-bottom:0}

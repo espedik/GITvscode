@@ -1,5 +1,14 @@
 <!DOCTYPE html>
-<html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>A2 · 10 — Präpositionen | Deutsch</title><link rel="stylesheet" href="styles.css"></head>
+<html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>A2 · 10 — Präpositionen | Deutsch</title><link rel="stylesheet" href="styles.css">
+<style>
+.dialog-box{background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:18px 20px;margin-bottom:12px}
+.dialog-line{display:flex;gap:10px;margin-bottom:10px;align-items:flex-start}
+.dialog-line:last-child{margin-bottom:0}
+.dialog-speaker{font-size:11px;font-weight:800;color:var(--red);text-transform:uppercase;letter-spacing:.06em;white-space:nowrap;min-width:30px;margin-top:2px}
+.dialog-de{font-size:14px;font-weight:600;color:var(--black)}
+.dialog-es{font-size:12px;color:var(--text2);margin-top:1px}
+</style>
+</head>
 <body>
 <nav class="nav"><a href="index.html" class="nav-logo">🇩🇪 Deutsch</a><a href="index.html" class="nav-back">← Índice</a></nav>
 <div class="topic-hero"><div class="container">
@@ -9,6 +18,13 @@
   <div class="topic-hero-meta"><span class="meta-pill">📍 Posición</span><span class="meta-pill">🔀 Wechselpräp.</span><span class="meta-pill">⏱️ ~60 min</span></div>
 </div></div>
 <div class="topic-content"><div class="container">
+
+  <div class="content-full">
+    <div class="card">
+      <h3><span>🎴</span> Repasa con tarjetas</h3>
+      <div id="fc-a2-10" class="flashcards"></div>
+    </div>
+  </div>
 
   <div class="content-grid">
     <div class="card card-gold">
@@ -58,8 +74,45 @@
           <tr><td class="vocab-ex">Die Katze sitzt <strong>auf dem</strong> Stuhl.</td><td class="vocab-ex">Die Katze springt <strong>auf den</strong> Stuhl.</td></tr>
           <tr><td class="vocab-ex">Er ist <strong>in der</strong> Schule.</td><td class="vocab-ex">Er geht <strong>in die</strong> Schule.</td></tr>
           <tr><td class="vocab-ex">Das Bild hängt <strong>an der</strong> Wand.</td><td class="vocab-ex">Er hängt das Bild <strong>an die</strong> Wand.</td></tr>
+          <tr><td class="vocab-ex">Die Lampe hängt <strong>über dem</strong> Tisch.</td><td class="vocab-ex">Er hängt die Lampe <strong>über den</strong> Tisch.</td></tr>
+          <tr><td class="vocab-ex">Die Katze schläft <strong>unter dem</strong> Bett.</td><td class="vocab-ex">Die Katze läuft <strong>unter das</strong> Bett.</td></tr>
+          <tr><td class="vocab-ex">Das Auto steht <strong>vor dem</strong> Haus.</td><td class="vocab-ex">Er parkt das Auto <strong>vor das</strong> Haus.</td></tr>
         </tbody>
       </table>
+    </div>
+  </div>
+
+  <div class="content-full">
+    <div class="card card-gold">
+      <h3><span>🗨️</span> Frases comunes usando preposiciones</h3>
+      <div class="phrase-grid">
+        <div class="phrase-item"><span class="phrase-situation">Preguntando cómo llegar</span><span class="phrase-de">Wie komme ich zum Bahnhof?</span><span class="phrase-es">¿Cómo llego a la estación?</span></div>
+        <div class="phrase-item"><span class="phrase-situation">Dando indicaciones</span><span class="phrase-de">Gehen Sie geradeaus, das Geschäft ist neben der Bank.</span><span class="phrase-es">Siga derecho, la tienda está al lado del banco.</span></div>
+        <div class="phrase-item"><span class="phrase-situation">Explicando dónde vives</span><span class="phrase-de">Ich wohne seit zwei Jahren in Berlin.</span><span class="phrase-es">Vivo en Berlín desde hace dos años.</span></div>
+        <div class="phrase-item"><span class="phrase-situation">Hablando de transporte</span><span class="phrase-de">Ich fahre jeden Tag mit dem Bus zur Arbeit.</span><span class="phrase-es">Voy al trabajo en autobús todos los días.</span></div>
+        <div class="phrase-item"><span class="phrase-situation">Quedando con alguien</span><span class="phrase-de">Wir treffen uns um 18 Uhr vor dem Kino.</span><span class="phrase-es">Nos encontramos a las 18h frente al cine.</span></div>
+        <div class="phrase-item"><span class="phrase-situation">Ofreciendo algo</span><span class="phrase-de">Ist der Kaffee für mich?</span><span class="phrase-es">¿El café es para mí?</span></div>
+        <div class="phrase-item"><span class="phrase-situation">Hablando de tu origen</span><span class="phrase-de">Ich komme aus Kolumbien und wohne jetzt in München.</span><span class="phrase-es">Soy de Colombia y ahora vivo en Múnich.</span></div>
+        <div class="phrase-item"><span class="phrase-situation">En el trabajo</span><span class="phrase-de">Das Meeting findet im Konferenzraum statt.</span><span class="phrase-es">La reunión es en la sala de conferencias.</span></div>
+        <div class="phrase-item"><span class="phrase-situation">Explicando que olvidaste algo</span><span class="phrase-de">Ich kann ohne meinen Regenschirm nicht rausgehen.</span><span class="phrase-es">No puedo salir sin mi paraguas.</span></div>
+        <div class="phrase-item"><span class="phrase-situation">Describiendo tu apartamento</span><span class="phrase-de">Die Wohnung ist gegenüber der Post.</span><span class="phrase-es">El apartamento está frente al correo.</span></div>
+        <div class="phrase-item"><span class="phrase-situation">Contando tu rutina</span><span class="phrase-de">Nach der Arbeit gehe ich zum Sport.</span><span class="phrase-es">Después del trabajo voy al gimnasio.</span></div>
+        <div class="phrase-item"><span class="phrase-situation">Buscando un objeto</span><span class="phrase-de">Meine Schlüssel liegen neben dem Telefon.</span><span class="phrase-es">Mis llaves están al lado del teléfono.</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="content-full">
+    <div class="card">
+      <h3><span>💬</span> Diálogo de práctica — Pidiendo indicaciones</h3>
+      <div class="dialog-box">
+        <div class="dialog-line"><div class="dialog-speaker">A:</div><div><div class="dialog-de">Entschuldigung, wie komme ich zum Bahnhof?</div><div class="dialog-es">Disculpe, ¿cómo llego a la estación?</div></div></div>
+        <div class="dialog-line"><div class="dialog-speaker">B:</div><div><div class="dialog-de">Gehen Sie geradeaus und dann die zweite Straße links. Der Bahnhof ist neben der Post.</div><div class="dialog-es">Siga derecho y luego la segunda calle a la izquierda. La estación está al lado del correo.</div></div></div>
+        <div class="dialog-line"><div class="dialog-speaker">A:</div><div><div class="dialog-de">Ist das weit von hier?</div><div class="dialog-es">¿Está lejos de aquí?</div></div></div>
+        <div class="dialog-line"><div class="dialog-speaker">B:</div><div><div class="dialog-de">Nein, nur fünf Minuten zu Fuß. Er liegt zwischen der Bank und dem Supermarkt.</div><div class="dialog-es">No, solo cinco minutos a pie. Está entre el banco y el supermercado.</div></div></div>
+        <div class="dialog-line"><div class="dialog-speaker">A:</div><div><div class="dialog-de">Vielen Dank für Ihre Hilfe!</div><div class="dialog-es">¡Muchas gracias por su ayuda!</div></div></div>
+        <div class="dialog-line"><div class="dialog-speaker">B:</div><div><div class="dialog-de">Gern geschehen! Einen schönen Tag noch!</div><div class="dialog-es">¡De nada! ¡Que tenga un buen día!</div></div></div>
+      </div>
     </div>
   </div>
 
@@ -81,4 +134,23 @@
   <a href="a2-11-adjetivos.html" class="page-nav-btn next"><div><div class="page-nav-dir">Siguiente →</div><div class="page-nav-title">Adjektivdeklination</div></div><span style="font-size:24px">🎨</span></a>
 </div>
 <footer class="footer"><p>A2 · 10 — Präpositionen</p><div class="footer-flag"><span style="background:#000;width:20px;height:5px"></span><span style="background:var(--red);width:20px;height:5px"></span><span style="background:var(--gold);width:20px;height:5px"></span></div></footer>
+<script src="flashcards.js"></script>
+<script>
+initFlashcards('fc-a2-10', [
+  {art:'-', de:'Das Buch liegt auf dem Tisch.', es:'El libro está sobre la mesa. (Dativ, ubicación)'},
+  {art:'-', de:'Ich lege das Buch auf den Tisch.', es:'Pongo el libro sobre la mesa. (Akkusativ, movimiento)'},
+  {art:'-', de:'Er ist in der Schule.', es:'Él está en la escuela.'},
+  {art:'-', de:'Er geht in die Schule.', es:'Él va a la escuela.'},
+  {art:'-', de:'Das Bild hängt an der Wand.', es:'El cuadro está colgado en la pared.'},
+  {art:'-', de:'Er hängt das Bild an die Wand.', es:'Él cuelga el cuadro en la pared.'},
+  {art:'-', de:'Das Geschenk ist für dich.', es:'El regalo es para ti.'},
+  {art:'-', de:'Wir gehen ohne ihn.', es:'Vamos sin él.'},
+  {art:'-', de:'Ich fahre mit dem Zug.', es:'Voy en tren.'},
+  {art:'-', de:'Seit einem Jahr lerne ich Deutsch.', es:'Llevo un año aprendiendo alemán.'},
+  {art:'-', de:'Ich komme aus Mexiko.', es:'Vengo de México.'},
+  {art:'-', de:'Wir treffen uns bei mir.', es:'Nos encontramos en mi casa.'},
+  {art:'-', de:'Die Lampe hängt über dem Tisch.', es:'La lámpara cuelga sobre la mesa.'},
+  {art:'-', de:'Die Katze schläft unter dem Bett.', es:'El gato duerme debajo de la cama.'}
+]);
+</script>
 </body></html>

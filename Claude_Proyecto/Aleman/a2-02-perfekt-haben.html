@@ -5,6 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>A2 · 02 — Perfekt mit haben | Deutsch</title>
 <link rel="stylesheet" href="styles.css">
+<style>
+.dialog-box{background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:18px 20px;margin-bottom:12px}
+.dialog-line{display:flex;gap:10px;margin-bottom:10px;align-items:flex-start}
+.dialog-line:last-child{margin-bottom:0}
+.dialog-speaker{font-size:11px;font-weight:800;color:var(--red);text-transform:uppercase;letter-spacing:.06em;white-space:nowrap;min-width:30px;margin-top:2px}
+.dialog-de{font-size:14px;font-weight:600;color:var(--black)}
+.dialog-es{font-size:12px;color:var(--text2);margin-top:1px}
+</style>
 </head>
 <body>
 <nav class="nav">
@@ -28,6 +36,14 @@
 
 <div class="topic-content">
   <div class="container">
+
+    <!-- FLASHCARDS -->
+    <div class="content-full">
+      <div class="card">
+        <h3><span>🎴</span> Repasa con tarjetas</h3>
+        <div id="fc-a2-02" class="flashcards"></div>
+      </div>
+    </div>
 
     <div class="content-full">
       <div class="card card-gold">
@@ -76,8 +92,47 @@
             <tr><td class="vocab-de">sprechen</td><td class="vocab-de">gesprochen</td><td class="vocab-es">hablar</td><td class="vocab-ex">Er hat Deutsch gesprochen.</td></tr>
             <tr><td class="vocab-de">kaufen</td><td class="vocab-de">gekauft</td><td class="vocab-es">comprar</td><td class="vocab-ex">Ich habe Brot gekauft.</td></tr>
             <tr><td class="vocab-de">machen</td><td class="vocab-de">gemacht</td><td class="vocab-es">hacer</td><td class="vocab-ex">Was hast du gemacht?</td></tr>
+            <tr><td class="vocab-de">kennen</td><td class="vocab-de">gekannt</td><td class="vocab-es">conocer</td><td class="vocab-ex">Ich habe ihn schon gekannt.</td></tr>
+            <tr><td class="vocab-de">denken</td><td class="vocab-de">gedacht</td><td class="vocab-es">pensar</td><td class="vocab-ex">Ich habe an dich gedacht.</td></tr>
+            <tr><td class="vocab-de">bringen</td><td class="vocab-de">gebracht</td><td class="vocab-es">traer</td><td class="vocab-ex">Er hat Blumen gebracht.</td></tr>
+            <tr><td class="vocab-de">verstehen</td><td class="vocab-de">verstanden</td><td class="vocab-es">entender</td><td class="vocab-ex">Hast du das verstanden?</td></tr>
+            <tr><td class="vocab-de">finden</td><td class="vocab-de">gefunden</td><td class="vocab-es">encontrar</td><td class="vocab-ex">Wir haben die Schlüssel gefunden.</td></tr>
+            <tr><td class="vocab-de">helfen</td><td class="vocab-de">geholfen</td><td class="vocab-es">ayudar</td><td class="vocab-ex">Sie hat mir geholfen.</td></tr>
           </tbody>
         </table>
+      </div>
+    </div>
+
+    <!-- FRASES COMUNES -->
+    <div class="content-full">
+      <div class="card card-gold">
+        <h3><span>🗨️</span> Frases comunes usando el Perfekt con haben</h3>
+        <div class="phrase-grid">
+          <div class="phrase-item"><span class="phrase-situation">Contar el fin de semana</span><span class="phrase-de">Was hast du am Wochenende gemacht?</span><span class="phrase-es">¿Qué hiciste el fin de semana?</span></div>
+          <div class="phrase-item"><span class="phrase-situation">Responder</span><span class="phrase-de">Ich habe viel gearbeitet.</span><span class="phrase-es">Trabajé mucho.</span></div>
+          <div class="phrase-item"><span class="phrase-situation">En un restaurante</span><span class="phrase-de">Hast du schon bestellt?</span><span class="phrase-es">¿Ya pediste (la comida)?</span></div>
+          <div class="phrase-item"><span class="phrase-situation">Disculparse por tardanza</span><span class="phrase-de">Entschuldigung, ich habe den Bus verpasst.</span><span class="phrase-es">Perdón, perdí el autobús.</span></div>
+          <div class="phrase-item"><span class="phrase-situation">Preguntar si ya hizo algo</span><span class="phrase-de">Hast du die Hausaufgaben schon gemacht?</span><span class="phrase-es">¿Ya hiciste la tarea?</span></div>
+          <div class="phrase-item"><span class="phrase-situation">Compartir noticias</span><span class="phrase-de">Ich habe eine gute Nachricht bekommen.</span><span class="phrase-es">Recibí una buena noticia.</span></div>
+          <div class="phrase-item"><span class="phrase-situation">Explicar un malentendido</span><span class="phrase-de">Ich habe dich nicht verstanden.</span><span class="phrase-es">No te entendí.</span></div>
+          <div class="phrase-item"><span class="phrase-situation">Hablar de una compra</span><span class="phrase-de">Ich habe mir neue Schuhe gekauft.</span><span class="phrase-es">Me compré zapatos nuevos.</span></div>
+          <div class="phrase-item"><span class="phrase-situation">Agradecer ayuda</span><span class="phrase-de">Danke, dass du mir geholfen hast.</span><span class="phrase-es">Gracias por haberme ayudado.</span></div>
+          <div class="phrase-item"><span class="phrase-situation">Recomendar algo visto</span><span class="phrase-de">Wir haben einen tollen Film gesehen.</span><span class="phrase-es">Vimos una película excelente.</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DIÁLOGO -->
+    <div class="content-full">
+      <div class="card">
+        <h3><span>💬</span> Diálogo de práctica — El lunes en la oficina</h3>
+        <div class="dialog-box">
+          <div class="dialog-line"><div class="dialog-speaker">A:</div><div><div class="dialog-de">Hallo! Was hast du am Wochenende gemacht?</div><div class="dialog-es">¡Hola! ¿Qué hiciste el fin de semana?</div></div></div>
+          <div class="dialog-line"><div class="dialog-speaker">B:</div><div><div class="dialog-de">Ich habe ein Buch gelesen und meine Wohnung geputzt. Und du?</div><div class="dialog-es">Leí un libro y limpié mi apartamento. ¿Y tú?</div></div></div>
+          <div class="dialog-line"><div class="dialog-speaker">A:</div><div><div class="dialog-de">Ich habe meine Familie besucht. Wir haben viel gegessen und gelacht.</div><div class="dialog-es">Visité a mi familia. Comimos y nos reímos mucho.</div></div></div>
+          <div class="dialog-line"><div class="dialog-speaker">B:</div><div><div class="dialog-de">Das klingt schön! Hast du auch etwas Interessantes gelernt?</div><div class="dialog-es">¡Qué bonito! ¿Aprendiste algo interesante también?</div></div></div>
+          <div class="dialog-line"><div class="dialog-speaker">A:</div><div><div class="dialog-de">Ja, meine Mutter hat mir ein neues Rezept gezeigt.</div><div class="dialog-es">Sí, mi mamá me enseñó una receta nueva.</div></div></div>
+        </div>
       </div>
     </div>
 
@@ -128,5 +183,26 @@
   <p>A2 · 02 — Perfekt mit haben</p>
   <div class="footer-flag"><span style="background:#000;width:20px;height:5px"></span><span style="background:var(--red);width:20px;height:5px"></span><span style="background:var(--gold);width:20px;height:5px"></span></div>
 </footer>
+
+<script src="flashcards.js"></script>
+<script>
+initFlashcards('fc-a2-02', [
+  {art:'-', de:'Ich habe gestern viel gelernt.', es:'Ayer aprendí mucho.', ex:'lernen — regular'},
+  {art:'-', de:'Was hast du gemacht?', es:'¿Qué hiciste?', ex:'machen — pregunta'},
+  {art:'-', de:'Ich habe Pizza gegessen.', es:'Comí pizza.', ex:'essen — irregular'},
+  {art:'-', de:'Er hat Wasser getrunken.', es:'Él bebió agua.', ex:'trinken — irregular'},
+  {art:'-', de:'Sie hat einen Brief geschrieben.', es:'Ella escribió una carta.', ex:'schreiben — irregular'},
+  {art:'-', de:'Wir haben einen Film gesehen.', es:'Vimos una película.', ex:'sehen — irregular'},
+  {art:'-', de:'Du hast das Buch gelesen.', es:'Leíste el libro.', ex:'lesen — irregular'},
+  {art:'-', de:'Ich habe Brot gekauft.', es:'Compré pan.', ex:'kaufen — regular'},
+  {art:'-', de:'Hast du die Hausaufgaben gemacht?', es:'¿Hiciste la tarea?', ex:'machen — pregunta'},
+  {art:'-', de:'Ich habe mir neue Schuhe gekauft.', es:'Me compré zapatos nuevos.', ex:'kaufen — reflexivo con dativo'},
+  {art:'-', de:'Wir haben die Schlüssel gefunden.', es:'Encontramos las llaves.', ex:'finden — irregular'},
+  {art:'-', de:'Sie hat mir sehr geholfen.', es:'Ella me ayudó mucho.', ex:'helfen — irregular'},
+  {art:'-', de:'Ich habe an dich gedacht.', es:'Pensé en ti.', ex:'denken — irregular'},
+  {art:'-', de:'Er hat Blumen mitgebracht.', es:'Él trajo flores.', ex:'mitbringen — irregular'}
+]);
+</script>
+
 </body>
 </html>

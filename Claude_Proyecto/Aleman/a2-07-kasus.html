@@ -1,5 +1,14 @@
 <!DOCTYPE html>
-<html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>A2 · 07 — Kasus | Deutsch</title><link rel="stylesheet" href="styles.css"></head>
+<html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>A2 · 07 — Kasus | Deutsch</title><link rel="stylesheet" href="styles.css">
+<style>
+.dialog-box{background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:18px 20px;margin-bottom:12px}
+.dialog-line{display:flex;gap:10px;margin-bottom:10px;align-items:flex-start}
+.dialog-line:last-child{margin-bottom:0}
+.dialog-speaker{font-size:11px;font-weight:800;color:var(--red);text-transform:uppercase;letter-spacing:.06em;white-space:nowrap;min-width:30px;margin-top:2px}
+.dialog-de{font-size:14px;font-weight:600;color:var(--black)}
+.dialog-es{font-size:12px;color:var(--text2);margin-top:1px}
+</style>
+</head>
 <body>
 <nav class="nav"><a href="index.html" class="nav-logo">🇩🇪 Deutsch</a><a href="index.html" class="nav-back">← Índice</a></nav>
 <div class="topic-hero"><div class="container">
@@ -9,6 +18,13 @@
   <div class="topic-hero-meta"><span class="meta-pill">📊 Casos</span><span class="meta-pill">🎯 Artículos</span><span class="meta-pill">⏱️ ~90 min</span><span class="meta-pill">🔥 Esencial</span></div>
 </div></div>
 <div class="topic-content"><div class="container">
+
+  <div class="content-full">
+    <div class="card">
+      <h3><span>🎴</span> Repasa con tarjetas</h3>
+      <div id="fc-a2-07" class="flashcards"></div>
+    </div>
+  </div>
 
   <div class="content-full">
     <div class="card card-gold">
@@ -62,6 +78,58 @@
     </div>
   </div>
 
+  <div class="content-full">
+    <div class="card">
+      <h3><span>📚</span> Verbos que siempre rigen Dativ</h3>
+      <p style="color:var(--text2);font-size:13px;margin-bottom:16px">Algunos verbos en alemán siempre piden Dativ para su objeto, aunque en español los traduzcamos con objeto directo.</p>
+      <table class="vocab-table">
+        <thead><tr><th>Verbo</th><th>Español</th><th>Ejemplo</th></tr></thead>
+        <tbody>
+          <tr><td class="vocab-de">helfen</td><td class="vocab-es">ayudar</td><td class="vocab-ex">Ich helfe dir gern.</td></tr>
+          <tr><td class="vocab-de">danken</td><td class="vocab-es">agradecer</td><td class="vocab-ex">Ich danke Ihnen.</td></tr>
+          <tr><td class="vocab-de">gefallen</td><td class="vocab-es">gustar</td><td class="vocab-ex">Das Kleid gefällt mir.</td></tr>
+          <tr><td class="vocab-de">gehören</td><td class="vocab-es">pertenecer</td><td class="vocab-ex">Das Buch gehört ihm.</td></tr>
+          <tr><td class="vocab-de">antworten</td><td class="vocab-es">responder</td><td class="vocab-ex">Sie antwortet dem Lehrer.</td></tr>
+          <tr><td class="vocab-de">gratulieren</td><td class="vocab-es">felicitar</td><td class="vocab-ex">Wir gratulieren dir!</td></tr>
+          <tr><td class="vocab-de">glauben</td><td class="vocab-es">creer (a alguien)</td><td class="vocab-ex">Ich glaube dir nicht.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- FRASES COMUNES -->
+  <div class="content-full">
+    <div class="card card-gold">
+      <h3><span>🗨️</span> Frases comunes usando los casos</h3>
+      <div class="phrase-grid">
+        <div class="phrase-item"><span class="phrase-situation">Pedir un objeto</span><span class="phrase-de">Ich hätte gern den Kaffee, bitte.</span><span class="phrase-es">Quisiera el café, por favor. (Akk.)</span></div>
+        <div class="phrase-item"><span class="phrase-situation">Ofrecer ayuda</span><span class="phrase-de">Kann ich Ihnen helfen?</span><span class="phrase-es">¿Puedo ayudarle? (Dat.)</span></div>
+        <div class="phrase-item"><span class="phrase-situation">Dar las gracias</span><span class="phrase-de">Ich danke dir für das Geschenk.</span><span class="phrase-es">Te agradezco el regalo. (Dat.)</span></div>
+        <div class="phrase-item"><span class="phrase-situation">Preguntar por dirección</span><span class="phrase-de">Wie komme ich zum Bahnhof?</span><span class="phrase-es">¿Cómo llego a la estación? (Dat.)</span></div>
+        <div class="phrase-item"><span class="phrase-situation">Expresar gustos</span><span class="phrase-de">Das gefällt mir sehr gut.</span><span class="phrase-es">Eso me gusta mucho. (Dat.)</span></div>
+        <div class="phrase-item"><span class="phrase-situation">Comprar algo</span><span class="phrase-de">Ich kaufe einen Rucksack.</span><span class="phrase-es">Compro una mochila. (Akk.)</span></div>
+        <div class="phrase-item"><span class="phrase-situation">Preguntar propiedad</span><span class="phrase-de">Gehört das Handy dir?</span><span class="phrase-es">¿Ese celular es tuyo? (Dat.)</span></div>
+        <div class="phrase-item"><span class="phrase-situation">Felicitar a alguien</span><span class="phrase-de">Ich gratuliere dir zum Geburtstag!</span><span class="phrase-es">¡Te felicito por tu cumpleaños! (Dat.)</span></div>
+        <div class="phrase-item"><span class="phrase-situation">Describir a alguien</span><span class="phrase-de">Ich sehe den Mann dort drüben.</span><span class="phrase-es">Veo al hombre allá. (Akk.)</span></div>
+        <div class="phrase-item"><span class="phrase-situation">En un correo formal</span><span class="phrase-de">Ich schreibe Ihnen wegen meiner Bestellung.</span><span class="phrase-es">Le escribo por mi pedido. (Dat.)</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DIÁLOGO -->
+  <div class="content-full">
+    <div class="card">
+      <h3><span>💬</span> Diálogo de práctica — En una tienda de regalos</h3>
+      <div class="dialog-box">
+        <div class="dialog-line"><div class="dialog-speaker">A:</div><div><div class="dialog-de">Guten Tag! Kann ich Ihnen helfen?</div><div class="dialog-es">¡Buenos días! ¿Puedo ayudarle?</div></div></div>
+        <div class="dialog-line"><div class="dialog-speaker">B:</div><div><div class="dialog-de">Ja, ich suche ein Geschenk für meinen Bruder.</div><div class="dialog-es">Sí, busco un regalo para mi hermano.</div></div></div>
+        <div class="dialog-line"><div class="dialog-speaker">A:</div><div><div class="dialog-de">Vielleicht gefällt ihm diese Uhr?</div><div class="dialog-es">¿Quizás le guste este reloj?</div></div></div>
+        <div class="dialog-line"><div class="dialog-speaker">B:</div><div><div class="dialog-de">Ja, die gefällt mir auch! Ich nehme die Uhr.</div><div class="dialog-es">¡Sí, a mí también me gusta! Me llevo el reloj.</div></div></div>
+        <div class="dialog-line"><div class="dialog-speaker">A:</div><div><div class="dialog-de">Perfekt. Danke Ihnen für Ihren Einkauf!</div><div class="dialog-es">Perfecto. ¡Gracias por su compra!</div></div></div>
+      </div>
+    </div>
+  </div>
+
   <div class="content-full mt32">
     <div class="card card-red">
       <h3><span>✏️</span> Ejercicios</h3>
@@ -69,6 +137,8 @@
       <div class="exercise"><div class="exercise-num">Ejercicio 2</div><div class="exercise-q">Er gibt ___ Frau die Schlüssel. (Dativ, femenino)</div><div class="exercise-hint">Pista: der</div></div>
       <div class="exercise"><div class="exercise-num">Ejercicio 3</div><div class="exercise-q">Ich fahre mit ___ Bus. (Dativ, masculino)</div><div class="exercise-hint">Pista: dem</div></div>
       <div class="exercise"><div class="exercise-num">Ejercicio 4 — Identifica el caso</div><div class="exercise-q">"Der Lehrer erklärt dem Schüler die Grammatik."<br>¿Cuál es el Nom., Akk., y Dat.?</div><div class="placeholder" style="margin-top:8px">Escribe tu respuesta aquí</div></div>
+      <div class="exercise"><div class="exercise-num">Ejercicio 5 — Verbo con Dativ</div><div class="exercise-q">Das Kleid gefällt ___ sehr gut. (a mí)</div><div class="exercise-hint">Pista: mir</div></div>
+      <div class="exercise"><div class="exercise-num">Ejercicio 6 — Traduce al alemán</div><div class="exercise-q">"Te agradezco tu ayuda."</div><div class="exercise-hint">Pista: Ich danke dir für deine Hilfe.</div></div>
     </div>
   </div>
 
@@ -80,4 +150,25 @@
   <a href="a2-08-komparativ.html" class="page-nav-btn next"><div><div class="page-nav-dir">Siguiente →</div><div class="page-nav-title">Komparativ & Superlativ</div></div><span style="font-size:24px">📈</span></a>
 </div>
 <footer class="footer"><p>A2 · 07 — Kasus</p><div class="footer-flag"><span style="background:#000;width:20px;height:5px"></span><span style="background:var(--red);width:20px;height:5px"></span><span style="background:var(--gold);width:20px;height:5px"></span></div></footer>
+
+<script src="flashcards.js"></script>
+<script>
+initFlashcards('fc-a2-07', [
+  {art:'-', de:'Der Mann schläft.', es:'El hombre duerme.', ex:'Nominativ — sujeto'},
+  {art:'-', de:'Ich sehe den Mann.', es:'Veo al hombre.', ex:'Akkusativ — objeto directo'},
+  {art:'-', de:'Ich kaufe die Zeitung.', es:'Compro el periódico.', ex:'Akkusativ'},
+  {art:'-', de:'Ich helfe dem Mann.', es:'Le ayudo al hombre.', ex:'Dativ — objeto indirecto'},
+  {art:'-', de:'Er gibt der Frau ein Buch.', es:'Él le da un libro a la mujer.', ex:'Dativ + Akkusativ'},
+  {art:'-', de:'Ich fahre mit dem Bus.', es:'Voy en autobús.', ex:'Dativ tras preposición mit'},
+  {art:'-', de:'Das ist ein Geschenk für dich.', es:'Este es un regalo para ti.', ex:'Akkusativ tras für'},
+  {art:'-', de:'Das Kleid gefällt mir.', es:'El vestido me gusta.', ex:'gefallen + Dativ'},
+  {art:'-', de:'Ich danke Ihnen sehr.', es:'Le agradezco mucho.', ex:'danken + Dativ'},
+  {art:'-', de:'Das Buch gehört ihm.', es:'El libro le pertenece.', ex:'gehören + Dativ'},
+  {art:'-', de:'Wie komme ich zum Bahnhof?', es:'¿Cómo llego a la estación?', ex:'Dativ tras zu'},
+  {art:'-', de:'Ich gratuliere dir zum Geburtstag!', es:'¡Te felicito por tu cumpleaños!', ex:'gratulieren + Dativ'},
+  {art:'-', de:'Der Lehrer erklärt dem Schüler die Grammatik.', es:'El profesor le explica la gramática al alumno.', ex:'Nom. + Dat. + Akk.'},
+  {art:'-', de:'Kannst du mir bitte helfen?', es:'¿Puedes ayudarme, por favor?', ex:'helfen + Dativ'}
+]);
+</script>
+
 </body></html>

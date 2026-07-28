@@ -18,6 +18,12 @@
 .month-de{font-size:13px;font-weight:800;color:var(--black)}
 .month-es{font-size:10px;color:var(--text2);margin-top:2px}
 @media(max-width:600px){.day-grid{grid-template-columns:repeat(4,1fr)}.month-grid{grid-template-columns:repeat(2,1fr)}}
+.dialog-box{background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:18px 20px;margin-bottom:12px}
+.dialog-line{display:flex;gap:10px;margin-bottom:10px;align-items:flex-start}
+.dialog-line:last-child{margin-bottom:0}
+.dialog-speaker{font-size:11px;font-weight:800;color:var(--red);text-transform:uppercase;letter-spacing:.06em;white-space:nowrap;min-width:30px;margin-top:2px}
+.dialog-de{font-size:14px;font-weight:600;color:var(--black)}
+.dialog-es{font-size:12px;color:var(--text2);margin-top:1px}
 </style></head>
 <body>
 <nav class="nav"><a href="index.html" class="nav-logo">🇩🇪 Deutsch</a><div class="nav-links"><a href="index.html" class="nav-link">← Índice A1</a></div></nav>
@@ -30,6 +36,14 @@
 </div></div>
 
 <div class="topic-content"><div class="container">
+
+<!-- 0. FLASHCARDS -->
+<div class="content-full">
+  <div class="card">
+    <h3><span>🎴</span> Repasa con tarjetas</h3>
+    <div id="fc-a1-04" class="flashcards"></div>
+  </div>
+</div>
 
 <!-- DÍAS DE LA SEMANA -->
 <div class="content-full">
@@ -159,6 +173,40 @@
   </div>
 </div>
 
+<!-- FRASES COMUNES -->
+<div class="content-full">
+  <div class="card card-gold">
+    <h3><span>🗨️</span> Frases comunes en este tema</h3>
+    <div class="phrase-grid">
+      <div class="phrase-item"><span class="phrase-situation">Planeando una cita</span><span class="phrase-de">Hast du am Montag Zeit?</span><span class="phrase-es">¿Tienes tiempo el lunes?</span></div>
+      <div class="phrase-item"><span class="phrase-situation">Aceptando un plan</span><span class="phrase-de">Ja, am Freitag passt mir gut.</span><span class="phrase-es">Sí, el viernes me viene bien.</span></div>
+      <div class="phrase-item"><span class="phrase-situation">Rechazando por fecha</span><span class="phrase-de">Tut mir leid, am Mittwoch kann ich nicht.</span><span class="phrase-es">Lo siento, el miércoles no puedo.</span></div>
+      <div class="phrase-item"><span class="phrase-situation">Preguntando el cumpleaños</span><span class="phrase-de">Wann hast du Geburtstag?</span><span class="phrase-es">¿Cuándo es tu cumpleaños?</span></div>
+      <div class="phrase-item"><span class="phrase-situation">Hablando del clima según la estación</span><span class="phrase-de">Im Winter schneit es viel.</span><span class="phrase-es">En invierno nieva mucho.</span></div>
+      <div class="phrase-item"><span class="phrase-situation">Describiendo tu rutina semanal</span><span class="phrase-de">Am Wochenende schlafe ich lang.</span><span class="phrase-es">El fin de semana duermo hasta tarde.</span></div>
+      <div class="phrase-item"><span class="phrase-situation">Diciendo hace cuánto haces algo</span><span class="phrase-de">Ich lerne seit drei Monaten Deutsch.</span><span class="phrase-es">Aprendo alemán desde hace tres meses.</span></div>
+      <div class="phrase-item"><span class="phrase-situation">Hablando de vacaciones</span><span class="phrase-de">Wir fahren im Sommer nach Spanien.</span><span class="phrase-es">Vamos a España en verano.</span></div>
+      <div class="phrase-item"><span class="phrase-situation">Confirmando una reunión</span><span class="phrase-de">Das Meeting ist am Donnerstag um 10 Uhr.</span><span class="phrase-es">La reunión es el jueves a las 10.</span></div>
+      <div class="phrase-item"><span class="phrase-situation">Preguntando disponibilidad</span><span class="phrase-de">Hast du diese Woche Zeit?</span><span class="phrase-es">¿Tienes tiempo esta semana?</span></div>
+      <div class="phrase-item"><span class="phrase-situation">Anunciando algo futuro</span><span class="phrase-de">In zwei Wochen habe ich Urlaub.</span><span class="phrase-es">En dos semanas tengo vacaciones.</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- DIÁLOGO -->
+<div class="content-full">
+  <div class="card">
+    <h3><span>💬</span> Diálogo de práctica — Planeando una reunión</h3>
+    <div class="dialog-box">
+      <div class="dialog-line"><div class="dialog-speaker">A:</div><div><div class="dialog-de">Hast du am Freitag Zeit für ein Treffen?</div><div class="dialog-es">¿Tienes tiempo el viernes para una reunión?</div></div></div>
+      <div class="dialog-line"><div class="dialog-speaker">B:</div><div><div class="dialog-de">Am Freitag kann ich leider nicht. Wie wäre es am Montag?</div><div class="dialog-es">El viernes lamentablemente no puedo. ¿Qué tal el lunes?</div></div></div>
+      <div class="dialog-line"><div class="dialog-speaker">A:</div><div><div class="dialog-de">Montag passt gut. Um wie viel Uhr?</div><div class="dialog-es">El lunes me viene bien. ¿A qué hora?</div></div></div>
+      <div class="dialog-line"><div class="dialog-speaker">B:</div><div><div class="dialog-de">Um zehn Uhr, wenn das okay ist.</div><div class="dialog-es">A las diez, si te parece bien.</div></div></div>
+      <div class="dialog-line"><div class="dialog-speaker">A:</div><div><div class="dialog-de">Perfekt, bis Montag!</div><div class="dialog-es">¡Perfecto, hasta el lunes!</div></div></div>
+    </div>
+  </div>
+</div>
+
 <!-- EJERCICIOS -->
 <div class="content-full">
   <div class="card card-red">
@@ -176,4 +224,25 @@
   <a href="a1-05-familie.html" class="page-nav-btn next"><div><div class="page-nav-dir">Siguiente →</div><div class="page-nav-title">Familie</div></div><span style="font-size:24px">👨‍👩‍👧</span></a>
 </div>
 <footer class="footer"><p>A1 · 04 — Wochentage & Monate</p><div class="footer-flag"><span style="background:#1a1a1a;width:20px;height:5px"></span><span style="background:var(--red);width:20px;height:5px"></span><span style="background:#FFCE00;width:20px;height:5px"></span></div></footer>
+<script src="flashcards.js"></script>
+<script>
+initFlashcards('fc-a1-04', [
+  {art:'der', de:'Montag', es:'lunes'},
+  {art:'der', de:'Freitag', es:'viernes'},
+  {art:'das', de:'Wochenende', es:'el fin de semana'},
+  {art:'der', de:'Januar', es:'enero'},
+  {art:'der', de:'Sommer', es:'verano'},
+  {art:'der', de:'Winter', es:'invierno'},
+  {art:'-', de:'heute', es:'hoy'},
+  {art:'-', de:'morgen', es:'mañana'},
+  {art:'-', de:'gestern', es:'ayer'},
+  {art:'-', de:'am Montag', es:'el lunes'},
+  {art:'-', de:'im Sommer', es:'en verano'},
+  {art:'-', de:'Welches Datum haben wir heute?', es:'¿Qué fecha es hoy?'},
+  {art:'-', de:'Wann hast du Geburtstag?', es:'¿Cuándo es tu cumpleaños?'},
+  {art:'-', de:'seit', es:'desde hace'},
+  {art:'-', de:'von ... bis ...', es:'de ... a ...'},
+  {art:'-', de:'immer / oft / manchmal / nie', es:'siempre / a menudo / a veces / nunca'}
+]);
+</script>
 </body></html>
