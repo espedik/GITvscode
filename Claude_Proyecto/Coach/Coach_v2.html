@@ -612,6 +612,34 @@
     .day-tab.active { background: var(--accent-soft); color: var(--accent); border-color: var(--accent); }
     .day-tab.is-today:not(.active)::after { content: '•'; margin-left: 4px; color: var(--green); }
 
+    /* ─── RUTINA — resumen del día + timeline vertical enriquecido ──────── */
+    .rt-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+    .rt-dot.pulse { animation: rtPulse 1.8s ease-in-out infinite; }
+    @keyframes rtPulse { 0%,100% { box-shadow: 0 0 0 0 currentColor; opacity: 1; } 50% { box-shadow: 0 0 0 4px transparent; opacity: .55; } }
+    .rt-summary { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
+    .rt-chip { display: inline-flex; align-items: center; gap: 6px; padding: 5px 11px; border-radius: 20px; font-size: 11px; font-weight: 700; background: var(--surface-2); border: 1px solid var(--border); color: var(--muted); }
+    .rt-chip .rt-dot { width: 7px; height: 7px; }
+    .rt-item { display: flex; gap: 12px; margin-bottom: 9px; }
+    .rt-item:last-child { margin-bottom: 0; }
+    .rt-time-col { display: flex; flex-direction: column; align-items: center; width: 40px; flex-shrink: 0; }
+    .rt-time { font-family: var(--mono); font-size: 9.5px; color: var(--muted-2); margin-bottom: 5px; white-space: nowrap; }
+    .rt-dot-wrap { position: relative; flex: 1; display: flex; justify-content: center; }
+    .rt-dot-wrap::after { content: ''; position: absolute; top: 13px; bottom: -9px; width: 2px; background: var(--border); }
+    .rt-dot-wrap.rt-no-line::after { display: none; }
+    .rt-dot-wrap .rt-dot { margin-top: 2px; box-shadow: 0 0 0 3px var(--surface); position: relative; z-index: 1; }
+    .rt-dot-fijo { width: 14px; height: 14px; border-radius: 4px; }
+    .rt-card { flex: 1; min-width: 0; background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 9px 13px; transition: opacity .15s, border-color .15s; }
+    .rt-card .check-item { padding: 0; }
+    .rt-item.rt-done .rt-card { opacity: .5; }
+    .rt-item.rt-now .rt-card { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent-soft); }
+    .rt-card-head { display: flex; align-items: center; gap: 8px; margin-bottom: 5px; }
+    .rt-cat-tag { font-size: 9px; font-weight: 800; text-transform: uppercase; letter-spacing: .05em; padding: 2px 8px; border-radius: 8px; background: var(--surface); border: 1px solid var(--border); }
+    .rt-dur { font-size: 10px; color: var(--muted-2); margin-left: auto; white-space: nowrap; }
+    .rt-card.rt-fijo { display: flex; align-items: center; gap: 12px; background: var(--accent-soft); border: 1px solid rgba(212,160,0,.3); }
+    .rt-fijo-ico { font-size: 22px; flex-shrink: 0; }
+    .rt-fijo-title { font-weight: 800; font-size: 13px; }
+    .rt-fijo-dur { font-size: 10.5px; color: var(--muted); margin-top: 2px; }
+
     /* ─── HÁBITOS ─────────────────────────────────────── */
     .habito-header { display: grid; grid-template-columns: 1fr repeat(7,32px); gap: 6px; font-size: 10.5px; color: var(--muted); text-align: center; margin-bottom: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .3px; }
     .habito-row { display: grid; grid-template-columns: 1fr repeat(7,32px); gap: 6px; align-items: center; padding: 7px 0; border-bottom: 1px solid var(--border); }
@@ -2234,8 +2262,8 @@
 
       <div class="context-banner">
         <p><strong>Tu contexto ahora mismo:</strong> estás en <strong>Fase 0</strong> del <a href="#perfil" class="inline-link">Plan Maestro</a> (18 jul – 30 sep 2026) — régimen fiscal activo, contacto con los 5 ex-colegas de Bosch/Continental/Ford, y la plantilla Finanzas.html lista para publicarse en comunidades de GBM son las 3 cosas que definen si esta fase se cumple o no.
-          Tu jornada en ALTEN (<strong>7:00–17:00</strong>) ya está bloqueada abajo como referencia fija — esta rutina organiza el resto del día (ejercicio, skincare, finanzas, ventas y tu Plan Maestro) alrededor de ese bloque, no al revés. <strong>El ejercicio y el bloque de habilidad cambian cada día de la semana</strong> (tomados de tus 5 prioridades en <a href="#aprendizaje" class="inline-link">Aprendizaje</a>), y el fin de semana tiene su propio horario, sin ALTEN. Usa las pestañas de abajo para ver cualquier día — solo el día de hoy guarda tu avance.
-          <em style="color:var(--muted-2)">Traslados estimados en 15–20 min; ajusta las horas si tu commute real es distinto.</em>
+          Horario real confirmado: te levantas <strong>7:00</strong>, te bañas de inmediato, sales <strong>7:40</strong>, manejas hasta <strong>8:00</strong> y trabajas en ALTEN hasta las <strong>17:00</strong> — con solo 40 min entre despertar y salir, esa ventana es únicamente higiene/skincare, así que el ejercicio y el bloque de habilidad se movieron a después del trabajo, donde sí hay tiempo. Duermes alrededor de <strong>medianoche</strong> (~7h de sueño). <strong>Skincare y el tratamiento anticaída (minoxidil) están en la rutina al despertar y antes de dormir, todos los días</strong> — el lavado de cabello (Lun/Jue/Sáb) se hace en la ducha de la mañana. El ejercicio y el bloque de habilidad cambian cada día de la semana (tomados de tus 5 prioridades en <a href="#aprendizaje" class="inline-link">Aprendizaje</a>), y el fin de semana tiene su propio horario, sin ALTEN. Usa las pestañas de abajo para ver cualquier día — solo el día de hoy guarda tu avance.
+          <em style="color:var(--muted-2)">El traslado de regreso (17:00) se asume igual de ~20 min que el de la mañana — ajusta las horas de la noche si tu commute real es distinto.</em>
         </p>
       </div>
 
@@ -2244,15 +2272,24 @@
         <div class="grid-3">
           <div>
             <div class="fs-13 text-muted">🟢 Ahora mismo</div>
-            <div id="rutina-now-txt" class="fw-700" style="font-size:14px;margin-top:5px;line-height:1.4;">—</div>
+            <div style="display:flex;align-items:center;gap:9px;margin-top:7px;">
+              <span class="rt-dot pulse" id="rutina-now-dot" style="width:11px;height:11px;flex-shrink:0;"></span>
+              <div id="rutina-now-txt" class="fw-700" style="font-size:14px;line-height:1.4;">—</div>
+            </div>
           </div>
           <div>
             <div class="fs-13 text-muted">🔜 Siguiente</div>
-            <div id="rutina-next-txt" class="fw-700" style="font-size:14px;margin-top:5px;line-height:1.4;">—</div>
+            <div style="display:flex;align-items:center;gap:9px;margin-top:7px;">
+              <span class="rt-dot" id="rutina-next-dot" style="width:11px;height:11px;flex-shrink:0;opacity:.55;"></span>
+              <div id="rutina-next-txt" class="fw-700" style="font-size:14px;line-height:1.4;">—</div>
+            </div>
           </div>
           <div>
             <div class="fs-13 text-muted">✅ Progreso de hoy</div>
-            <div id="rutina-progress-txt" class="num fw-700" style="font-size:19px;margin-top:3px;">0/0</div>
+            <div style="display:flex;align-items:baseline;gap:6px;margin-top:3px;">
+              <div id="rutina-progress-txt" class="num fw-700" style="font-size:19px;">0/0</div>
+              <div id="rutina-progress-pct" class="fs-13 text-muted">(0%)</div>
+            </div>
             <div class="progress-bar mt-16" style="height:6px;"><div class="progress-fill" id="rutina-progress-bar" style="width:0%;"></div></div>
           </div>
         </div>
@@ -2264,7 +2301,8 @@
           <h3 class="fw-700" style="margin:0;">🗓️ Tu día, bloque por bloque</h3>
           <button class="btn btn-o btn-sm" onclick="resetChecklist()">↺ Resetear hoy</button>
         </div>
-        <div id="rutina-day-tabs" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px;"></div>
+        <div id="rutina-day-tabs" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;"></div>
+        <div id="rutina-day-summary" class="rt-summary"></div>
         <p class="fs-13 text-muted mb-12" id="rutina-dia-sub">—</p>
         <div id="rutina-timeline"></div>
       </div>
@@ -3049,79 +3087,104 @@
   // Los bloques con fijo:true (ALTEN) se muestran en la línea de tiempo y cuentan
   // para "ahora/siguiente", pero no llevan checkbox ni cuentan en el progreso.
   const RUTINA_TASKS = [
-    // ── Común entre semana (Lun–Vie) ────────────────────────────────────
-    {id:'wd01', dias:[1,2,3,4,5], hora:'05:00', cat:'salud',    txt:'Despertar sin snooze — celular fuera del cuarto'},
-    {id:'wd02', dias:[1,2,3,4,5], hora:'05:05', cat:'salud',    txt:'Agua 500ml'},
-    {id:'wd03', dias:[1,2,3,4,5], hora:'05:40', cat:'salud',    txt:'Ducha fría 90 seg'},
-    {id:'wd04', dias:[1,2,3,4,5], hora:'05:43', cat:'salud',    txt:'🧴 Skincare AM: limpiador + hidratante + protector solar'},
-    {id:'wd05', dias:[1,2,3,4,5], hora:'05:48', cat:'descanso', txt:'2 min de journaling: qué haría hoy la versión de mí que ya llegó'},
-    {id:'wd06', dias:[1,2,3,4,5], hora:'05:50', cat:'admin',    txt:'💰 Revisar GBM: portafolio + VOO + USD/MXN'},
-    {id:'wd07', dias:[1,2,3,4,5], hora:'05:58', cat:'salud',    txt:'Desayuno alto en proteína'},
-    {id:'wd08', dias:[1,2,3,4,5], hora:'06:43', cat:'descanso', txt:'Traslado a ALTEN'},
-    {id:'wd09', dias:[1,2,3,4,5], hora:'07:00', cat:'trabajo',  txt:'🏢 ALTEN — jornada laboral (HIL/SIL Ford)', fijo:true},
-    {id:'wd10', dias:[1,2,3,4,5], hora:'17:00', cat:'descanso', txt:'Traslado de vuelta a casa'},
-    {id:'wd11', dias:[1,2,3,4,5], hora:'17:20', cat:'profundo', txt:'🎯 Prioridad activa de Fase 0: régimen fiscal, outreach o plantilla GBM — 1 avance real'},
-    {id:'wd12', dias:[1,2,3,4,5], hora:'18:40', cat:'admin',    txt:'🤝 Ventas: 5 mensajes personalizados a prospectos'},
-    {id:'wd13', dias:[1,2,3,4,5], hora:'18:50', cat:'descanso', txt:'Didi solo si Opciones 1-2 aún no generan ingreso'},
-    {id:'wd14', dias:[1,2,3,4,5], hora:'19:30', cat:'salud',    txt:'Cenar ligero, sin carbohidratos refinados'},
-    {id:'wd15', dias:[1,2,3,4,5], hora:'19:50', cat:'descanso', txt:'30 min lectura física (no celular)'},
-    {id:'wd16', dias:[1,2,3,4,5], hora:'20:20', cat:'descanso', txt:'Journaling: 3 logros + 1 lección + 1 gasto evitable'},
-    {id:'wd17', dias:[1,2,3,4,5], hora:'20:35', cat:'salud',    txt:'🧴 Skincare PM: limpiador + tratamiento + hidratante'},
-    {id:'wd18', dias:[1,2,3,4,5], hora:'20:45', cat:'profundo', txt:'Plan de mañana: 1 MIT (Most Important Task) + 4 tareas'},
-    {id:'wd19', dias:[1,2,3,4,5], hora:'21:00', cat:'descanso', txt:'Meditación / respiración box 4-4-4-4 (10 min)'},
-    {id:'wd20', dias:[1,2,3,4,5], hora:'21:15', cat:'salud',    txt:'Apagar pantallas. Dormir 7h mínimo — es recuperación activa'},
+    // ── Común entre semana (Lun–Vie) — horario real confirmado 2026-07-29 ──
+    {id:'wd01', dias:[1,2,3,4,5], hora:'07:00', cat:'salud',    txt:'Despertar sin snooze — celular fuera del cuarto'},
+    {id:'wd02', dias:[1,2,3,4,5], hora:'07:03', cat:'salud',    txt:'Bañarte — los días de lavado (Lun/Jue/Sáb) lava también el cabello, ver Cuidado del Cabello'},
+    {id:'wd03', dias:[1,2,3,4,5], hora:'07:20', cat:'salud',    txt:'🧴 Skincare AM: limpiador + niacinamida + hidratante + protector solar'},
+    {id:'wd04', dias:[1,2,3,4,5], hora:'07:28', cat:'salud',    txt:'🍂 Minoxidil en cuero cabelludo seco — dosis de la mañana'},
+    {id:'wd05', dias:[1,2,3,4,5], hora:'07:33', cat:'descanso', txt:'Vestirte y alistarte'},
+    {id:'wd06', dias:[1,2,3,4,5], hora:'07:40', cat:'descanso', txt:'Salir de casa — traslado a ALTEN (~20 min manejando)'},
+    {id:'wd07', dias:[1,2,3,4,5], hora:'08:00', cat:'trabajo',  txt:'🏢 ALTEN — jornada laboral (HIL/SIL Ford)', fijo:true},
+    {id:'wd08', dias:[1,2,3,4,5], hora:'17:00', cat:'descanso', txt:'Traslado de vuelta a casa (~20 min)'},
+    {id:'wd09', dias:[1,2,3,4,5], hora:'17:55', cat:'salud',    txt:'Ducha rápida post-ejercicio'},
+    {id:'wd10', dias:[1,2,3,4,5], hora:'18:35', cat:'admin',    txt:'💰 Revisar GBM: portafolio + VOO + USD/MXN'},
+    {id:'wd11', dias:[1,2,3,4,5], hora:'18:45', cat:'profundo', txt:'🎯 Prioridad activa de Fase 0: régimen fiscal, outreach o plantilla GBM — 1 avance real'},
+    {id:'wd12', dias:[1,2,3,4,5], hora:'20:15', cat:'admin',    txt:'🤝 Ventas: 5 mensajes personalizados a prospectos'},
+    {id:'wd13', dias:[1,2,3,4,5], hora:'20:25', cat:'descanso', txt:'Didi solo si Opciones 1-2 aún no generan ingreso'},
+    {id:'wd14', dias:[1,2,3,4,5], hora:'20:30', cat:'salud',    txt:'Cenar ligero, sin carbohidratos refinados'},
+    {id:'wd15', dias:[1,2,3,4,5], hora:'21:00', cat:'descanso', txt:'30 min lectura física (no celular)'},
+    {id:'wd16', dias:[1,2,3,4,5], hora:'21:30', cat:'descanso', txt:'Journaling: 3 logros + 1 lección + 1 gasto evitable'},
+    {id:'wd17', dias:[1,2,3,4,5], hora:'21:45', cat:'salud',    txt:'🧴 Skincare PM: limpiador + tratamiento + hidratante'},
+    {id:'wd18', dias:[1,2,3,4,5], hora:'21:55', cat:'salud',    txt:'🍂 Minoxidil en cuero cabelludo seco — dosis de la noche'},
+    {id:'wd19', dias:[1,2,3,4,5], hora:'22:00', cat:'profundo', txt:'Plan de mañana: 1 MIT (Most Important Task) + 4 tareas'},
+    {id:'wd20', dias:[1,2,3,4,5], hora:'22:15', cat:'descanso', txt:'Meditación / respiración box 4-4-4-4 (10 min)'},
+    {id:'wd21', dias:[1,2,3,4,5], hora:'23:55', cat:'salud',    txt:'Apagar pantallas. Dormir — buscas ~7h (medianoche a 7:00am)'},
 
-    // ── Ejercicio y bloque de habilidad — cambian cada día (05:10 y 06:13) ──
-    {id:'e1', dias:[1], hora:'05:10', cat:'salud',    txt:'Ejercicio: Pesas — Empuje (pecho / hombro / tríceps)'},
-    {id:'k1', dias:[1], hora:'06:13', cat:'creativo', txt:'📣 Marketing: publica 1 post de valor en LinkedIn'},
-    {id:'e2', dias:[2], hora:'05:10', cat:'salud',    txt:'Ejercicio: Cardio 25 min (correr/bici) + core 5 min'},
-    {id:'k2', dias:[2], hora:'06:13', cat:'aprender', txt:'📊 Datos: 30 min de SQL (SQLZoo/Kaggle)'},
-    {id:'e3', dias:[3], hora:'05:10', cat:'salud',    txt:'Ejercicio: Pesas — Jalón (espalda / bíceps)'},
-    {id:'k3', dias:[3], hora:'06:13', cat:'creativo', txt:'📣 Marketing: publica 1 post de valor en LinkedIn'},
-    {id:'e4', dias:[4], hora:'05:10', cat:'salud',    txt:'Ejercicio: Cardio / HIIT 25 min'},
-    {id:'k4', dias:[4], hora:'06:13', cat:'aprender', txt:'📊 Datos: 30 min de SQL'},
-    {id:'e5', dias:[5], hora:'05:10', cat:'salud',    txt:'Ejercicio: Pesas — Piernas / glúteo'},
-    {id:'k5', dias:[5], hora:'06:13', cat:'creativo', txt:'✍️ Copy: mejora o escribe 1 mensaje de venta / la landing de la plantilla GBM'},
+    // ── Ejercicio y bloque de habilidad — cambian cada día, después del trabajo ──
+    {id:'e1', dias:[1], hora:'17:20', cat:'salud',    txt:'Ejercicio: Pesas — Empuje (pecho / hombro / tríceps)'},
+    {id:'k1', dias:[1], hora:'18:05', cat:'creativo', txt:'📣 Marketing: publica 1 post de valor en LinkedIn'},
+    {id:'e2', dias:[2], hora:'17:20', cat:'salud',    txt:'Ejercicio: Cardio 25 min (correr/bici) + core 5 min'},
+    {id:'k2', dias:[2], hora:'18:05', cat:'aprender', txt:'📊 Datos: 30 min de SQL (SQLZoo/Kaggle)'},
+    {id:'e3', dias:[3], hora:'17:20', cat:'salud',    txt:'Ejercicio: Pesas — Jalón (espalda / bíceps)'},
+    {id:'k3', dias:[3], hora:'18:05', cat:'creativo', txt:'📣 Marketing: publica 1 post de valor en LinkedIn'},
+    {id:'e4', dias:[4], hora:'17:20', cat:'salud',    txt:'Ejercicio: Cardio / HIIT 25 min'},
+    {id:'k4', dias:[4], hora:'18:05', cat:'aprender', txt:'📊 Datos: 30 min de SQL'},
+    {id:'e5', dias:[5], hora:'17:20', cat:'salud',    txt:'Ejercicio: Pesas — Piernas / glúteo'},
+    {id:'k5', dias:[5], hora:'18:05', cat:'creativo', txt:'✍️ Copy: mejora o escribe 1 mensaje de venta / la landing de la plantilla GBM'},
 
     // ── Sábado ───────────────────────────────────────────────────────────
-    {id:'sa01', dias:[6], hora:'07:00', cat:'salud',    txt:'Despertar (sin alarma agresiva)'},
-    {id:'sa02', dias:[6], hora:'07:05', cat:'salud',    txt:'🧴 Skincare AM'},
-    {id:'sa03', dias:[6], hora:'07:10', cat:'salud',    txt:'Desayuno tranquilo'},
-    {id:'sa04', dias:[6], hora:'07:30', cat:'salud',    txt:'Ejercicio 1h — entreno largo / lo que falte en la semana'},
-    {id:'sa05', dias:[6], hora:'08:30', cat:'salud',    txt:'Ducha'},
-    {id:'sa06', dias:[6], hora:'08:45', cat:'profundo', txt:'🎯 Bloque profundo 4h: prioridad activa del Plan Maestro'},
-    {id:'sa07', dias:[6], hora:'12:45', cat:'salud',    txt:'Almuerzo'},
-    {id:'sa08', dias:[6], hora:'13:15', cat:'aprender', txt:'🤖 IA aplicada — 30 min construyendo (n8n, Cursor, mini-proyecto propio)'},
-    {id:'sa09', dias:[6], hora:'13:45', cat:'admin',    txt:'🤝 Ventas: 5 mensajes personalizados'},
-    {id:'sa10', dias:[6], hora:'16:00', cat:'admin',    txt:'💰 Revisión semanal: finanzas, metas, hábitos cumplidos'},
-    {id:'sa11', dias:[6], hora:'20:00', cat:'salud',    txt:'Cena'},
-    {id:'sa12', dias:[6], hora:'20:30', cat:'descanso', txt:'Tiempo libre / familia / lectura'},
-    {id:'sa13', dias:[6], hora:'21:00', cat:'salud',    txt:'🧴 Skincare PM'},
-    {id:'sa14', dias:[6], hora:'21:30', cat:'descanso', txt:'Meditación'},
-    {id:'sa15', dias:[6], hora:'21:45', cat:'salud',    txt:'Apagar pantallas. Dormir'},
+    {id:'sa01',  dias:[6], hora:'07:00', cat:'salud',    txt:'Despertar (sin alarma agresiva)'},
+    {id:'sa02',  dias:[6], hora:'07:05', cat:'salud',    txt:'🧴 Skincare AM'},
+    {id:'sa02b', dias:[6], hora:'07:12', cat:'salud',    txt:'🍂 Minoxidil — dosis de la mañana'},
+    {id:'sa03',  dias:[6], hora:'07:18', cat:'salud',    txt:'Desayuno tranquilo'},
+    {id:'sa04',  dias:[6], hora:'07:35', cat:'salud',    txt:'Ejercicio 1h — entreno largo / lo que falte en la semana'},
+    {id:'sa05',  dias:[6], hora:'08:35', cat:'salud',    txt:'Ducha'},
+    {id:'sa06',  dias:[6], hora:'08:50', cat:'profundo', txt:'🎯 Bloque profundo 4h: prioridad activa del Plan Maestro'},
+    {id:'sa07',  dias:[6], hora:'12:50', cat:'salud',    txt:'Almuerzo'},
+    {id:'sa08',  dias:[6], hora:'13:20', cat:'aprender', txt:'🤖 IA aplicada — 30 min construyendo (n8n, Cursor, mini-proyecto propio)'},
+    {id:'sa09',  dias:[6], hora:'13:50', cat:'admin',    txt:'🤝 Ventas: 5 mensajes personalizados'},
+    {id:'sa10',  dias:[6], hora:'16:00', cat:'admin',    txt:'💰 Revisión semanal: finanzas, metas, hábitos cumplidos'},
+    {id:'sa11',  dias:[6], hora:'20:00', cat:'salud',    txt:'Cena'},
+    {id:'sa12',  dias:[6], hora:'20:30', cat:'descanso', txt:'Tiempo libre / familia / lectura'},
+    {id:'sa13',  dias:[6], hora:'21:00', cat:'salud',    txt:'🧴 Skincare PM'},
+    {id:'sa13b', dias:[6], hora:'21:08', cat:'salud',    txt:'🍂 Minoxidil — dosis de la noche'},
+    {id:'sa14',  dias:[6], hora:'21:30', cat:'descanso', txt:'Meditación'},
+    {id:'sa15',  dias:[6], hora:'21:45', cat:'salud',    txt:'Apagar pantallas. Dormir'},
 
     // ── Compartido Sábado y Domingo ─────────────────────────────────────
     {id:'fl1', dias:[6,0], hora:'17:00', cat:'descanso', txt:'Bloque largo de freelance/plantilla si ya hay cliente o ventas activas'},
 
     // ── Domingo ──────────────────────────────────────────────────────────
-    {id:'do01', dias:[0], hora:'07:30', cat:'salud',    txt:'Despertar'},
-    {id:'do02', dias:[0], hora:'07:35', cat:'salud',    txt:'🧴 Skincare AM'},
-    {id:'do03', dias:[0], hora:'07:40', cat:'salud',    txt:'Desayuno tranquilo'},
-    {id:'do04', dias:[0], hora:'08:00', cat:'salud',    txt:'Ejercicio: descanso activo — caminata o movilidad 30 min'},
-    {id:'do05', dias:[0], hora:'09:00', cat:'descanso', txt:'Tiempo libre / familia'},
-    {id:'do06', dias:[0], hora:'20:00', cat:'admin',    txt:'💰 Finanzas: revisión de presupuesto + planificar semana + revisar inversiones'},
-    {id:'do07', dias:[0], hora:'20:30', cat:'profundo', txt:'🎯 Revisar Plan Maestro: ¿la fase actual sigue en verde? Ajustar si hace falta'},
-    {id:'do08', dias:[0], hora:'21:00', cat:'salud',    txt:'Cena ligera'},
-    {id:'do09', dias:[0], hora:'21:20', cat:'descanso', txt:'Journaling: cierre de semana'},
-    {id:'do10', dias:[0], hora:'21:40', cat:'salud',    txt:'🧴 Skincare PM'},
-    {id:'do11', dias:[0], hora:'22:00', cat:'descanso', txt:'Meditación'},
-    {id:'do12', dias:[0], hora:'22:15', cat:'salud',    txt:'Apagar pantallas. Dormir'},
+    {id:'do01',  dias:[0], hora:'07:30', cat:'salud',    txt:'Despertar'},
+    {id:'do02',  dias:[0], hora:'07:35', cat:'salud',    txt:'🧴 Skincare AM'},
+    {id:'do02b', dias:[0], hora:'07:42', cat:'salud',    txt:'🍂 Minoxidil — dosis de la mañana'},
+    {id:'do03',  dias:[0], hora:'07:48', cat:'salud',    txt:'Desayuno tranquilo'},
+    {id:'do04',  dias:[0], hora:'08:05', cat:'salud',    txt:'Ejercicio: descanso activo — caminata o movilidad 30 min'},
+    {id:'do05',  dias:[0], hora:'09:00', cat:'descanso', txt:'Tiempo libre / familia'},
+    {id:'do06',  dias:[0], hora:'20:00', cat:'admin',    txt:'💰 Finanzas: revisión de presupuesto + planificar semana + revisar inversiones'},
+    {id:'do07',  dias:[0], hora:'20:30', cat:'profundo', txt:'🎯 Revisar Plan Maestro: ¿la fase actual sigue en verde? Ajustar si hace falta'},
+    {id:'do08',  dias:[0], hora:'21:00', cat:'salud',    txt:'Cena ligera'},
+    {id:'do09',  dias:[0], hora:'21:20', cat:'descanso', txt:'Journaling: cierre de semana'},
+    {id:'do10',  dias:[0], hora:'21:40', cat:'salud',    txt:'🧴 Skincare PM'},
+    {id:'do10b', dias:[0], hora:'21:48', cat:'salud',    txt:'🍂 Minoxidil — dosis de la noche'},
+    {id:'do11',  dias:[0], hora:'22:00', cat:'descanso', txt:'Meditación'},
+    {id:'do12',  dias:[0], hora:'22:15', cat:'salud',    txt:'Apagar pantallas. Dormir'},
   ];
   const RUTINA_KEY = 'coach_rutina_v1';
   const DIA_TABS = [1,2,3,4,5,6,0];
   const DIA_TABS_LBL = {1:'Lun',2:'Mar',3:'Mié',4:'Jue',5:'Vie',6:'Sáb',0:'Dom'};
   const DIA_LABEL = {0:'Domingo',1:'Lunes',2:'Martes',3:'Miércoles',4:'Jueves',5:'Viernes',6:'Sábado'};
   let rutinaDiaSel = new Date().getDay();
+
+  // Categoría → ícono/etiqueta/color (mismos colores que ya usaban los bordes .bloque-*)
+  const CAT_META = {
+    salud:    {ico:'💪', label:'Salud',    color:'var(--red)'},
+    descanso: {ico:'🌙', label:'Descanso', color:'var(--muted-2)'},
+    admin:    {ico:'💼', label:'Admin',    color:'#4a9fd8'},
+    aprender: {ico:'📚', label:'Aprender', color:'var(--green)'},
+    profundo: {ico:'🎯', label:'Profundo', color:'var(--accent)'},
+    creativo: {ico:'✍️', label:'Creativo', color:'var(--purple)'},
+    trabajo:  {ico:'🏢', label:'Trabajo',  color:'#3ea8a8'},
+  };
+  // Duración entre dos horas 'HH:MM' (envuelve a la medianoche si es necesario)
+  function rtDur(fromHora, toHora) {
+    const [fh, fm] = fromHora.split(':').map(Number);
+    const [th, tm] = toHora.split(':').map(Number);
+    let diff = (th*60+tm) - (fh*60+fm);
+    if (diff <= 0) diff += 24*60;
+    const h = Math.floor(diff/60), m = diff%60;
+    return h > 0 ? (h+'h'+(m ? ' '+m+'m' : '')) : m+'m';
+  }
 
   function rutinaHoyStr() { return new Date().toISOString().slice(0,10); }
   function rutinaLoad() { try { const r = localStorage.getItem(RUTINA_KEY); return r ? JSON.parse(r) : {completado:{}}; } catch(e) { return {completado:{}}; } }
@@ -3138,6 +3201,10 @@
 
     const nowTxt = document.getElementById('rutina-now-txt');
     const nextTxt = document.getElementById('rutina-next-txt');
+    const nowDot = document.getElementById('rutina-now-dot');
+    const nextDot = document.getElementById('rutina-next-dot');
+    if (nowDot) nowDot.style.background = actual ? (CAT_META[actual.cat]||{}).color || 'var(--muted-2)' : 'var(--muted-2)';
+    if (nextDot) nextDot.style.background = siguiente ? (CAT_META[siguiente.cat]||{}).color || 'var(--muted-2)' : 'var(--muted-2)';
     if (nowTxt) nowTxt.textContent = actual ? (actual.hora+' — '+actual.txt) : (tareasHoy.length ? 'Aún no empieza tu rutina de hoy' : 'Sin bloques configurados para hoy');
     if (nextTxt) {
       if (siguiente) {
@@ -3156,9 +3223,12 @@
     const contables = tareasHoy.filter(t => !t.fijo); // el bloque de ALTEN no lleva checkbox, no cuenta en el progreso
     const doneCount = contables.filter(t => doneHoy.includes(t.id)).length;
     const progTxt = document.getElementById('rutina-progress-txt');
+    const progPct = document.getElementById('rutina-progress-pct');
     const progBar = document.getElementById('rutina-progress-bar');
+    const pct = contables.length ? Math.round(doneCount/contables.length*100) : 0;
     if (progTxt) progTxt.textContent = doneCount+'/'+contables.length;
-    if (progBar) progBar.style.width = (contables.length ? (doneCount/contables.length*100) : 0)+'%';
+    if (progPct) progPct.textContent = '('+pct+'%)';
+    if (progBar) progBar.style.width = pct+'%';
   }
 
   function buildDayTabs() {
@@ -3184,14 +3254,51 @@
 
     const tareas = rutinaTareasDia(rutinaDiaSel);
     const doneHoy = esHoy ? (rutinaLoad().completado[rutinaHoyStr()] || []) : [];
+
+    // Resumen del día por categoría
+    const resumen = document.getElementById('rutina-day-summary');
+    if (resumen) {
+      const counts = {};
+      tareas.forEach(t => { counts[t.cat] = (counts[t.cat]||0) + 1; });
+      resumen.innerHTML = Object.keys(counts).map(cat => {
+        const m = CAT_META[cat] || {ico:'•', label:cat, color:'var(--muted)'};
+        return `<span class="rt-chip"><span class="rt-dot" style="background:${m.color}"></span>${m.ico} ${counts[cat]} ${m.label}</span>`;
+      }).join('');
+    }
+
+    // Tarea "actual" — solo relevante si se está viendo el día de hoy, para resaltar su tarjeta
+    let actualId = null;
+    if (esHoy) {
+      const hhmm = String(new Date().getHours()).padStart(2,'0')+':'+String(new Date().getMinutes()).padStart(2,'0');
+      let actual = null;
+      tareas.forEach(t => { if (t.hora <= hhmm) actual = t; });
+      actualId = actual ? actual.id : null;
+    }
+
     const tl = document.getElementById('rutina-timeline');
     if (!tl) return;
-    tl.innerHTML = tareas.map(t => {
+    tl.innerHTML = tareas.map((t, i) => {
+      const m = CAT_META[t.cat] || {ico:'•', label:t.cat, color:'var(--muted)'};
+      const nextHora = (i+1 < tareas.length) ? tareas[i+1].hora : tareas[0].hora;
+      const dur = rtDur(t.hora, nextHora);
+      const isNow = t.id === actualId;
+      const isLast = i === tareas.length - 1;
+      const dotWrapCls = 'rt-dot-wrap' + (isLast ? ' rt-no-line' : '');
+
       if (t.fijo) {
-        return `<div class="timeblock-row"><div class="timeblock-hora">${t.hora}</div><div class="timeblock-bloque bloque-${t.cat}" style="font-weight:700;">${t.txt}</div></div>`;
+        return `<div class="rt-item${isNow?' rt-now':''}">
+          <div class="rt-time-col"><div class="rt-time">${t.hora}</div><div class="${dotWrapCls}"><span class="rt-dot rt-dot-fijo" style="background:${m.color}"></span></div></div>
+          <div class="rt-card rt-fijo"><span class="rt-fijo-ico">${m.ico}</span><div><div class="rt-fijo-title">${t.txt}</div><div class="rt-fijo-dur">${dur}</div></div></div>
+        </div>`;
       }
       const checked = doneHoy.includes(t.id);
-      return `<div class="timeblock-row"><div class="timeblock-hora">${t.hora}</div><div class="timeblock-bloque bloque-${t.cat}"><div class="check-item"><input type="checkbox" id="${t.id}" ${checked?'checked':''} ${esHoy?'':'disabled'}><label for="${t.id}"${checked?' style="text-decoration:line-through"':''}>${t.txt}</label></div></div></div>`;
+      return `<div class="rt-item${checked?' rt-done':''}${isNow?' rt-now':''}">
+        <div class="rt-time-col"><div class="rt-time">${t.hora}</div><div class="${dotWrapCls}"><span class="rt-dot" style="background:${m.color}"></span></div></div>
+        <div class="rt-card">
+          <div class="rt-card-head"><span class="rt-cat-tag" style="color:${m.color}">${m.ico} ${m.label}</span><span class="rt-dur">${dur}</span></div>
+          <div class="check-item"><input type="checkbox" id="${t.id}" ${checked?'checked':''} ${esHoy?'':'disabled'}><label for="${t.id}"${checked?' style="text-decoration:line-through"':''}>${t.txt}</label></div>
+        </div>
+      </div>`;
     }).join('');
 
     if (esHoy) {
@@ -3203,8 +3310,7 @@
           cb.checked ? arr.add(cb.id) : arr.delete(cb.id);
           d.completado[hoyStr] = [...arr];
           rutinaSave(d);
-          const lbl = cb.nextElementSibling;
-          if (lbl) lbl.style.textDecoration = cb.checked ? 'line-through' : '';
+          renderRutinaTimeline();
           renderRutinaLive();
         });
       });

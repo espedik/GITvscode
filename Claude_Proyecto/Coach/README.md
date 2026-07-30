@@ -51,28 +51,44 @@ Array `SK` con 12 skills, cada una `{id, name, full, icon, val, w (peso), cat, d
 
 Reescrita por completo el 2026-07-29 para dejar de ser un checklist visual sin memoria y convertirse en un **tracker real, distinto cada día de la semana**, que cubre ejercicio, skincare, el trabajo en ALTEN, ventas/outreach, el Plan Maestro y finanzas — no solo "tiempo libre".
 
-### `RUTINA_TASKS` — fuente única de verdad (58 tareas)
+### `RUTINA_TASKS` — fuente única de verdad (63 tareas)
 
 Array top-level `{id, dias:[0-6], hora:'HH:MM', cat, txt, fijo?:true}` (dias: 0=domingo…6=sábado). Se filtra y ordena por hora para obtener el horario de cualquier día (`rutinaTareasDia(dow)` / `rutinaTareasHoy()`).
 
-- **Común Lun-Vie** (`wd01`-`wd20`, `dias:[1,2,3,4,5]`): despertar 05:00 → agua → ducha → **skincare AM** (`wd04`) → journaling → revisar GBM → desayuno → traslado → **`wd09` = 🏢 ALTEN, jornada laboral 7:00–17:00, `fijo:true`** → traslado de vuelta → prioridad de Fase 0 → ventas (5 mensajes) → cena → lectura → journaling → **skincare PM** (`wd17`) → plan de mañana → meditación → dormir.
-- **Ejercicio y bloque de habilidad — cambian cada día** (`e1`-`e5` a las 05:10, `k1`-`k5` a las 06:13, un id por día 1-5): Lun=Pesas Empuje+Marketing, Mar=Cardio+Datos/SQL, Mié=Pesas Jalón+Marketing, Jue=Cardio-HIIT+Datos, Vie=Pesas Piernas+Copy.
-- **Sábado** (`sa01`-`sa15`, `dias:[6]`): despertar 07:00, skincare AM, entreno largo, **bloque profundo de 4h** para la prioridad del Plan Maestro, almuerzo, IA aplicada, ventas, revisión semanal de finanzas, cena, skincare PM, dormir.
-- **Domingo** (`do01`-`do12`, `dias:[0]`): despertar 07:30, skincare AM, descanso activo, finanzas (revisión de presupuesto + planificar semana), **checkpoint explícito del Plan Maestro**, cena, journaling, skincare PM, dormir.
+**Horario real confirmado el 2026-07-29** (reemplazó una versión anterior con supuestos incorrectos de despertar a las 5:00 y trabajo 7:00–17:00): se levanta **7:00**, se baña de inmediato (~7:03), sale de casa **7:40**, maneja **~20 min** y trabaja en ALTEN **8:00–17:00**, duerme alrededor de **medianoche** (~7h de sueño). Con solo 40 min entre despertar y salir, la mañana **solo alcanza para higiene/skincare** — el ejercicio, el bloque de habilidad, la revisión de GBM y la prioridad de Fase 0 se movieron a después del trabajo, donde sí hay ~6h40m libres antes de dormir.
+
+- **Común Lun-Vie** (`wd01`-`wd21`, `dias:[1,2,3,4,5]`): despertar 07:00 → bañarse (`wd02`, incluye lavar el cabello los días de lavado) → **skincare AM** (`wd03`) → **🍂 minoxidil AM** (`wd04`) → vestirse → salir 7:40 → traslado (~20 min) → **`wd07` = 🏢 ALTEN, jornada laboral 8:00–17:00, `fijo:true`** → traslado de vuelta (~20 min) → ejercicio del día → ducha rápida → bloque de habilidad del día → revisar GBM → prioridad de Fase 0 (90 min) → ventas (5 mensajes) → cena → lectura → journaling → **skincare PM** (`wd17`) → **🍂 minoxidil PM** (`wd18`) → plan de mañana → meditación → dormir 23:55.
+- **Ejercicio y bloque de habilidad — cambian cada día, después del trabajo** (`e1`-`e5` a las 17:20, `k1`-`k5` a las 18:05, un id por día 1-5): Lun=Pesas Empuje+Marketing, Mar=Cardio+Datos/SQL, Mié=Pesas Jalón+Marketing, Jue=Cardio-HIIT+Datos, Vie=Pesas Piernas+Copy.
+- **Sábado** (`sa01`-`sa15` + `sa02b`/`sa13b` minoxidil, `dias:[6]`): despertar 07:00, skincare AM + minoxidil, entreno largo, **bloque profundo de 4h** para la prioridad del Plan Maestro, almuerzo, IA aplicada, ventas, revisión semanal de finanzas, cena, skincare PM + minoxidil, dormir.
+- **Domingo** (`do01`-`do12` + `do02b`/`do10b` minoxidil, `dias:[0]`): despertar 07:30, skincare AM + minoxidil, descanso activo, finanzas (revisión de presupuesto + planificar semana), **checkpoint explícito del Plan Maestro**, cena, journaling, skincare PM + minoxidil, dormir.
 - **Compartida Sáb/Dom** (`fl1`, `dias:[6,0]`, 17:00): bloque largo de freelance/plantilla si hay cliente o ventas activas.
 
-Tareas con `fijo:true` (solo `wd09`, el bloque de ALTEN) se muestran en la línea de tiempo y cuentan para "ahora/siguiente", pero **no llevan checkbox y no cuentan en el % de progreso**.
+Los pasos de **🍂 minoxidil** (AM y PM, todos los días de la semana sin excepción) y el aviso de lavado de cabello dentro de `wd02` se agregaron el 2026-07-29 a pedido explícito de Adán ("el skincare y cuidado del cabello añádelo a la rutina de coach cuando me despierto y me duermo") — el tratamiento anticaída real (`CuidadoPersonal/cuidadopersonal.html` → Cabello → Guía) recomienda 2 aplicaciones diarias, por eso hay una tarea por cada momento del día, todos los días, no solo entre semana.
 
-**Supuesto a revisar**: el horario asume **15–20 min de traslado** a/desde ALTEN (bloques `wd08`/`wd10`). Si el commute real es distinto, ajustar las horas de `wd01`-`wd09` y `wd10`-`wd20` a mano.
+Tareas con `fijo:true` (solo `wd07`, el bloque de ALTEN) se muestran en la línea de tiempo y cuentan para "ahora/siguiente", pero **no llevan checkbox y no cuentan en el % de progreso**.
+
+**Supuesto a revisar**: el traslado de la mañana (7:40→8:00, ~20 min) está confirmado por Adán; el de la tarde (`wd08`, 17:00→17:20) se **asume simétrico** (~20 min) porque no se confirmó explícitamente — ajustar si el commute real de regreso es distinto. También se asumió que no hay tiempo para desayuno formal en la ventana de 40 min de la mañana (no se agregó como tarea trackeada) — si Adán sí desayuna, hay que decidir dónde entra (¿en el camino? ¿al llegar a ALTEN?) y agregarlo.
+
+### Diseño visual del timeline (rediseñado 2026-07-29, mismo día)
+
+`#rutina-timeline` dejó de ser una lista plana de filas (`.timeblock-row`) y ahora es una **línea de tiempo vertical** por bloque `.rt-item` (uno por tarea del día seleccionado):
+
+- **`CAT_META`** — mapa `cat → {ico, label, color}` con un ícono, etiqueta y color por categoría (💪 Salud=rojo, 🌙 Descanso=gris, 💼 Admin=azul, 📚 Aprender=verde, 🎯 Profundo=dorado/accent, ✍️ Creativo=morado, 🏢 Trabajo=teal — mismos colores que ya usaban los bordes `.bloque-*`, así que **no** hay que tocar `CAT_META` si solo cambia texto/horario, únicamente si se agrega una categoría nueva).
+- **`rtDur(fromHora, toHora)`** — calcula la duración entre el inicio de una tarea y el de la siguiente (envolviendo a medianoche para la última tarea del día contra la primera), se muestra como "`Xh Ym`" en cada tarjeta.
+- Cada tarjeta (`.rt-card`) tiene: un punto de color en la línea (`.rt-dot`, cuadrado y más grande para el bloque `fijo` de ALTEN — `.rt-dot-fijo`), una etiqueta de categoría con ícono (`.rt-cat-tag`), la duración hasta el siguiente bloque, y el checkbox/texto de la tarea. El bloque de ALTEN se renderiza distinto (`.rt-card.rt-fijo`, con fondo dorado suave e ícono grande 🏢), sin checkbox.
+- La tarjeta de la tarea **"actual"** (calculada igual que en el widget de arriba, solo cuando se está viendo el día de hoy) recibe la clase `.rt-now` (borde dorado). Las tareas ya marcadas reciben `.rt-done` (opacidad reducida).
+- **Resumen del día** (`#rutina-day-summary`, `.rt-chip` por categoría) — cuenta cuántos bloques de cada categoría tiene el día seleccionado, arriba del selector de pestañas.
+- El widget "Ahora/Siguiente/Progreso" (`#rutina-live`) ahora tiene un punto de color junto al texto (coloreado según la categoría de la tarea actual/siguiente, con una animación de pulso en el de "ahora"), y el progreso muestra también el porcentaje junto al conteo `X/Y`.
+- Al marcar/desmarcar un checkbox, `renderRutinaTimeline()` se vuelve a ejecutar por completo (en vez de solo tachar el texto) para que las clases `.rt-now`/`.rt-done` y el resumen del día siempre reflejen el estado real — con ~20 tareas por día el costo de re-renderizar todo es insignificante.
 
 ### Funciones
 
 - `rutinaHoyStr()` — fecha de hoy en UTC (`toISOString().slice(0,10)`).
 - `rutinaLoad()`/`rutinaSave(d)` — leer/escribir `coach_rutina_v1`.
 - `rutinaTareasDia(dow)`/`rutinaTareasHoy()` — tareas de un día de la semana, ordenadas por hora.
-- `renderRutinaLive()` — actualiza el widget "🟢 Ahora mismo / 🔜 Siguiente / ✅ Progreso" (ids `rutina-now-txt`, `rutina-next-txt`, `rutina-progress-txt`, `rutina-progress-bar`) comparando la hora real contra `rutinaTareasHoy()`. Se llama cada 30s (`setInterval`) y tras cada cambio de checkbox.
+- `renderRutinaLive()` — actualiza el widget "🟢 Ahora mismo / 🔜 Siguiente / ✅ Progreso" (ids `rutina-now-txt`, `rutina-next-txt`, `rutina-progress-txt`, `rutina-progress-pct`, `rutina-progress-bar`, y los puntos de color `rutina-now-dot`/`rutina-next-dot` vía `CAT_META`) comparando la hora real contra `rutinaTareasHoy()`. Se llama cada 30s (`setInterval`) y tras cada cambio de checkbox.
 - `buildDayTabs()`/`verDia(dow)` — construyen y manejan las 7 pestañas de día (`#rutina-day-tabs`, clase `.day-tab`); `rutinaDiaSel` guarda el día actualmente visible (por defecto, hoy).
-- `renderRutinaTimeline()` — pinta `#rutina-timeline` con las tareas del día seleccionado. **Solo si `rutinaDiaSel` es hoy** los checkboxes son interactivos y persisten; si se está viendo otro día, se muestran deshabilitados como referencia (no hay historial por fecha pasada específica, solo el día de hoy guarda).
+- `renderRutinaTimeline()` — pinta `#rutina-timeline` (línea de tiempo vertical, ver sección de diseño visual arriba) y `#rutina-day-summary` con las tareas del día seleccionado. **Solo si `rutinaDiaSel` es hoy** los checkboxes son interactivos y persisten; si se está viendo otro día, se muestran deshabilitados como referencia (no hay historial por fecha pasada específica, solo el día de hoy guarda).
 - `rutinaInit()` — se ejecuta en `DOMContentLoaded`: selecciona el día de hoy, construye tabs y timeline, y renderiza el widget vivo.
 - `resetChecklist()` — borra `completado[hoyStr]` (ya no es solo visual) y vuelve a pintar si se está viendo el día de hoy.
 
@@ -104,7 +120,7 @@ Checklist personal (`.check-item`, **no persiste** — mismo comportamiento visu
 ## Referencias cruzadas
 
 - La barra de navegación (ambos modos) tiene un enlace **🚀 Dashboard** al final, alineado a la derecha (`margin-left:auto`), que apunta a `../Dashboard/dashboard.html`.
-- El **Dashboard** (`../Dashboard/dashboard.html`) lee `coach_rutina_v1` directamente (`D.rut`) y **duplica** `RUTINA_TASKS` (58 tareas, deben quedar byte-idénticas — verificado con `JSON.stringify` en cada cambio), las 4 fechas de `PHASES`, y el array `SK` de 12 skills. **Si editas el horario de `#rutina`, los valores base del radar, o las fechas del Plan Maestro aquí, hay que replicar el cambio en `Dashboard/dashboard.html`** — no hay sincronización automática entre archivos. Ver tabla de "Datos duplicados" en [`../README.md`](../README.md).
+- El **Dashboard** (`../Dashboard/dashboard.html`) lee `coach_rutina_v1` directamente (`D.rut`) y **duplica** `RUTINA_TASKS` (63 tareas, deben quedar byte-idénticas — verificado con `JSON.stringify` en cada cambio), las 4 fechas de `PHASES`, y el array `SK` de 12 skills. **Si editas el horario de `#rutina`, los valores base del radar, o las fechas del Plan Maestro aquí, hay que replicar el cambio en `Dashboard/dashboard.html`** — no hay sincronización automática entre archivos. Ver tabla de "Datos duplicados" en [`../README.md`](../README.md).
 - Mapa completo del proyecto: [`../README.md`](../README.md).
 
 ## Cómo usarlo

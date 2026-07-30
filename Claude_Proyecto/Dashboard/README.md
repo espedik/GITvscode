@@ -21,7 +21,7 @@ Esto significa que el dashboard **solo muestra datos reales si se abrió desde e
 
 ## Navegación (motor de slides, rotación automática cada 3 min)
 
-- **🕐 Mi Día** (slide 0, pantalla principal) — vive/actualiza cada segundo: bloque "Ahora mismo" y "Siguiente" calculados en tiempo real contra el horario de `Coach_v2.html → #rutina` (arreglo `RUTINA_TASKS`, 58 tareas, duplicado idéntico en ambos archivos — si se edita el horario en uno, hay que replicarlo en el otro), progreso de hoy (X/Y bloques completados, excluyendo el bloque fijo de ALTEN que no lleva checkbox) y una **línea de tiempo relativa a la hora actual**: no muestra el día completo desde las 5am, sino solo los **3 bloques anteriores al actual + el actual + todos los de después** (`renderDia()`, variable `visibles` = `tareasHoy.slice(idxAnchor-3)`). Enlaza a Coach → Rutina para editar el horario.
+- **🕐 Mi Día** (slide 0, pantalla principal) — vive/actualiza cada segundo: bloque "Ahora mismo" y "Siguiente" calculados en tiempo real contra el horario de `Coach_v2.html → #rutina` (arreglo `RUTINA_TASKS`, 63 tareas, duplicado idéntico en ambos archivos — si se edita el horario en uno, hay que replicarlo en el otro), progreso de hoy (X/Y bloques completados, excluyendo el bloque fijo de ALTEN que no lleva checkbox) y una **línea de tiempo relativa a la hora actual**: no muestra el día completo desde que despierta, sino solo los **3 bloques anteriores al actual + el actual + todos los de después** (`renderDia()`, variable `visibles` = `tareasHoy.slice(idxAnchor-3)`). Enlaza a Coach → Rutina para editar el horario.
 - **🌟 Hero** (slide 1) — "Vida Score" del momento y barras de progreso por área.
 - **🪙 Coach · Plan Maestro** (slide 2) — fase activa, días restantes a la meta, prioridades de la fase.
 - **💰 Finanzas** (slide 3) — patrimonio, fondo de emergencia, deuda, flujo del mes.
@@ -44,7 +44,7 @@ El Dashboard no puede leer el JS de `Coach_v2.html` (son documentos HTML distint
 
 | Estructura | Origen (Coach_v2.html) | Copia (dashboard.html) | Verificación rápida |
 |---|---|---|---|
-| Horario completo de la rutina (58 tareas) | `const RUTINA_TASKS` en `#rutina` | `const RUTINA_TASKS` (idéntica) | Ambas deben ser byte-idénticas tras `JSON.stringify` — ver comando de verificación abajo |
+| Horario completo de la rutina (63 tareas) | `const RUTINA_TASKS` en `#rutina` | `const RUTINA_TASKS` (idéntica) | Ambas deben ser byte-idénticas tras `JSON.stringify` — ver comando de verificación abajo |
 | Fechas de las 4 fases del Plan Maestro | IIFE "Plan Maestro" (`const fases`) | `const PHASES` | Mismas 4 fechas: 18 jul 2026 / 1 oct 2026 / 1 abr 2027 / 1 ene 2029 / 1 ene 2030 |
 | Radar de 12 habilidades (valores base + pesos) | `const SK` (IIFE "Radar FIFA") | `const SK` | Mismos 12 `id`/`val`/`w` |
 
