@@ -151,7 +151,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
         <div class="pbar"><div class="pfill" id="diaProgresoBar" style="width:0%;background:linear-gradient(90deg,var(--g),var(--cy))"></div></div>
       </div>
 
-      <div class="tile reveal d5" id="diaTimeline" style="max-height:34vh;overflow-y:auto"></div>
+      <div class="tile reveal d5" id="diaTimeline" style="max-height:40vh;overflow-y:auto"></div>
 
       <div class="reveal d6" style="margin-top:14px">
         <a href="../Coach/Coach_v2.html#rutina" style="color:var(--cy);font-size:12px;font-weight:600;text-decoration:none">Ver/editar rutina completa en Coach →</a>
@@ -457,20 +457,6 @@ function vidaScore(sc){const w={salud:76,finanzas:24};return Math.round(Object.k
 function sCol(s){return s>=80?'var(--g)':s>=60?'var(--w)':s>=40?'var(--o)':'var(--r)';}
 function sLab(s){return s>=80?'Excelente':s>=60?'Bueno':s>=40?'Regular':'Necesita atención';}
 
-// ── ALERTAS (mismo motor que el dashboard anterior) ─────────────────────────
-function addDays(d,n){const x=new Date(d);x.setDate(x.getDate()+n);return x.toISOString().slice(0,10);}
-function getAlerts(){
-  const t=today(),alerts=[];
-  (D.pro.tareas||[]).filter(t2=>t2.estado!=='completada'&&t2.fecha_limite).forEach(t2=>{
-    const diff=Math.floor((new Date(t2.fecha_limite)-new Date(t))/(864e5));
-    if(diff<0) alerts.push({tipo:'urgente',ico:'🔴',titulo:t2.titulo,desc:`Vencida hace ${Math.abs(diff)} día(s)`,href:'../Proyectos/proyectos.html'});
-    else if(diff<=3) alerts.push({tipo:'proximo',ico:'🟡',titulo:t2.titulo,desc:`Vence en ${diff===0?'hoy':diff+' día(s)'}`,href:'../Proyectos/proyectos.html'});
-  });
-  // Coach — régimen fiscal / prioridades de Fase 0 siempre visibles como recordatorio
-  alerts.push({tipo:'info',ico:'🪙',titulo:'Revisa tus prioridades activas en Coach',desc:'Régimen fiscal, outreach y plantilla GBM — Plan Maestro, Fase 0',href:'../Coach/Coach_v2.html'});
-  return alerts.sort((a,b)=>({urgente:0,proximo:1,info:2}[a.tipo]-{urgente:0,proximo:1,info:2}[b.tipo]));
-}
-
 // ── COACH — Plan Maestro (fechas ancla, igual que Coach_v2.html) ────────────
 const PHASES=[
   {start:new Date(2026,6,18), end:new Date(2026,8,30),  tag:'Fase 0', title:'Cerrar la fuga y arrancar ingreso, no solo pensar',
@@ -684,62 +670,90 @@ function renderSkills(){
       plugins:{legend:{display:false}}}});
 }
 
-function renderAlertas(){
-  const all=getAlerts();
-  const urgentes=all.filter(a=>a.tipo==='urgente').length;
-  document.getElementById('alTitle').textContent=urgentes?`🔴 ${urgentes} urgente(s) — revisa esto primero`:'🔔 Tus pendientes de hoy';
-  const top=all.slice(0,6);
-  document.getElementById('alBody').innerHTML=top.length?top.map(a=>`
-    <div class="al-row">
-      <div class="al-dot" style="background:${({urgente:'#ff5c5c',proximo:'#ffd93d',info:'#3b82f6'})[a.tipo]};color:${({urgente:'#ff5c5c',proximo:'#ffd93d',info:'#3b82f6'})[a.tipo]}"></div>
-      <div style="flex:1"><div class="al-t">${a.ico} ${a.titulo}</div><div class="al-d">${a.desc}</div></div>
-    </div>`).join(''):'<div class="al-row"><div style="flex:1;text-align:center;padding:20px"><div style="font-size:40px;margin-bottom:10px">🎉</div><div class="al-t">Todo en orden</div></div></div>';
-}
-
-function renderHoy(){
+// ── BARRA SUPERIOR — acceso directo a los demás proyectos (persistente, no rota) ─
+function renderQuickApps(){
   const t=today();
-  const alHoy=(D.sal.alimentos||[]).filter(a=>a.fecha===t);
-  const calHoy=alHoy.reduce((s,a)=>s+(a.cal||0),0);
-  const tarHoy=(D.pro.tareas||[]).filter(t2=>t2.fecha_limite===t&&t2.estado!=='completada').length;
-  document.getElementById('hoyTitle').textContent='📊 '+new Date().toLocaleDateString('es-MX',{weekday:'long',day:'numeric',month:'long'});
-  const tiles=[
-    {ico:'🔥',c:'var(--o)',lbl:'Calorías hoy',val:fmt(calHoy),sub:'Meta: '+fmt(D.sal.metas?.caloriasD||2000)+' kcal'},
-    {ico:'🎯',c:tarHoy>0?'var(--r)':'var(--g)',lbl:'Tareas hoy',val:tarHoy,sub:tarHoy?'vencen hoy':'Al día 🎉'},
-  ];
-  document.getElementById('hoyBody').innerHTML=tiles.map(x=>`
-    <div class="tile" style="border-left:4px solid ${x.c}">
-      <div class="lbl" style="color:${x.c}">${x.ico} ${x.lbl}</div>
-      <div class="big-num" style="font-size:clamp(28px,3vw,42px);color:${x.c}">${x.val}</div>
-      <div class="sub">${x.sub}</div>
-    </div>`).join('');
-}
-
-function renderApps(){
-  const t=today(), d7=getDias(7);
   const apps=[
-    {ico:'🪙',n:'Coach',sub:'Plan Maestro & negocio',href:'../Coach/Coach_v2.html',stat:activePhase().tag+' activa'},
-    {ico:'💰',n:'Finanzas',sub:'Ingresos, gastos & metas',href:'../Finanzas/Finanzas.html',
-     stat:(()=>{const m=t.slice(0,7);const exp=(D.fin.transactions||[]).filter(x=>x.date?.startsWith(m)&&x.type==='expense').reduce((s,x)=>s+(x.amount||0),0);return exp>0?money(exp)+' gastados este mes':'Sin movimientos';})()},
-    {ico:'🧴',n:'Skincare',sub:'Mi piel & guía personalizada',href:'../CuidadoPersonal/cuidadopersonal.html?tab=skincare',
-     stat:(()=>{const pf=D.sk.perfil;const tipos={grasa:'Piel grasa',seca:'Piel seca',mixta:'Piel mixta',normal:'Piel normal'};return pf?.tipo?tipos[pf.tipo]||'Perfil guardado':'Sin perfil configurado';})()},
-    {ico:'💇',n:'Cuidado del Cabello',sub:'Mi cabello & guía personalizada',href:'../CuidadoPersonal/cuidadopersonal.html?tab=cabello',
-     stat:(()=>{const pf=D.ca.perfil;const tipos={lacio:'Cabello lacio',ondulado:'Cabello ondulado',rizado:'Cabello rizado',afro:'Cabello afro'};return pf?.tipo?tipos[pf.tipo]||'Perfil guardado':'Sin perfil configurado';})()},
-    {ico:'🥦',n:'Cuidado de la Salud',sub:'Calorías y macros',href:'../CuidadoPersonal/cuidadopersonal.html?tab=salud',
-     stat:(()=>{const c=(D.sal.alimentos||[]).filter(a=>a.fecha===t).reduce((s,a)=>s+(a.cal||0),0);return c?fmt(c)+' kcal hoy':'Sin registro hoy';})()},
-    {ico:'🏋️',n:'Ejercicio',sub:'Rutina de entrenamiento',href:'../CuidadoPersonal/cuidadopersonal.html?tab=ejercicio',
-     stat:(()=>{const e=(D.sal.ejercicios||[]).filter(e=>e.fecha===t);return e.length?e.length+' sesión(es) hoy':'Sin ejercicio hoy';})()},
-    {ico:'🎯',n:'Proyectos',sub:'Metas & iniciativas',href:'../Proyectos/proyectos.html',
-     stat:(()=>{const a=(D.pro.proyectos||[]).filter(p=>p.estado==='activo').length;const p=(D.pro.tareas||[]).filter(t=>t.estado==='pendiente').length;return a+' activo(s) · '+p+' tarea(s)';})()}
+    {ico:'🪙',n:'Coach',href:'../Coach/Coach_v2.html',stat:activePhase().tag},
+    {ico:'💰',n:'Finanzas',href:'../Finanzas/Finanzas.html',stat:hasFinData()?money(patrimonioNeto()):''},
+    {ico:'🧴',n:'Skincare',href:'../CuidadoPersonal/cuidadopersonal.html?tab=skincare',stat:''},
+    {ico:'💇',n:'Cabello',href:'../CuidadoPersonal/cuidadopersonal.html?tab=cabello',stat:''},
+    {ico:'🥦',n:'Salud',href:'../CuidadoPersonal/cuidadopersonal.html?tab=salud',
+     stat:(()=>{const c=(D.sal.alimentos||[]).filter(a=>a.fecha===t).reduce((s,a)=>s+(a.cal||0),0);return c?fmt(c)+' kcal':'';})()},
+    {ico:'🏋️',n:'Ejercicio',href:'../CuidadoPersonal/cuidadopersonal.html?tab=ejercicio',stat:''},
+    {ico:'🎯',n:'Proyectos',href:'../Proyectos/proyectos.html',
+     stat:(()=>{const p=(D.pro.tareas||[]).filter(x=>x.estado==='pendiente').length;return p?p+' pend.':'';})()}
   ];
-  document.getElementById('appsBody').innerHTML=apps.map(a=>`<a href="${a.href}" class="app-card">
-    <div class="app-ico">${a.ico}</div>
-    <div class="app-name">${a.n}</div>
-    <div class="sub" style="margin-top:0">${a.sub}</div>
-    <div class="app-stat">${a.stat}</div>
+  document.getElementById('qaBar').innerHTML=apps.map(a=>`<a href="${a.href}" class="qa-pill" title="${a.n}">
+    <span class="qa-ico">${a.ico}</span>
+    <span class="qa-txt"><span class="qa-name">${a.n}</span>${a.stat?`<span class="qa-stat">${a.stat}</span>`:''}</span>
   </a>`).join('');
 }
 
-const RENDERS=[renderDia,renderHero,renderCoach,renderFinanzas,renderSkills,renderAlertas,renderHoy,renderApps];
+// ── MIS METAS — progreso real (Finanzas) + bucket list (Coach → Metas) ──────
+function metaDebtInfo(matcher){
+  const d=(D.fin.debts||[]).find(matcher);
+  return d?{balance:d.balance||0,total:d.total||d.balance||0,found:true}:{balance:0,total:0,found:false};
+}
+function renderMetasSlide(){
+  const bana=metaDebtInfo(d=>/banamex/i.test(d.name||''));
+  const bbva=metaDebtInfo(d=>/bbva/i.test(d.name||'')&&(!d.type||d.type==='credit_card'));
+  const carro=metaDebtInfo(d=>d.type==='car');
+  const goalMae=(D.fin.goals||[]).find(g=>g.id==='g001'||/maestr/i.test(g.name||''));
+
+  const deudaCaraBal=bana.balance+bbva.balance, deudaCaraTot=bana.total+bbva.total;
+  const deudaCaraTieneDatos=bana.found||bbva.found;
+  const deudaCaraPct=deudaCaraTot>0?Math.max(0,Math.min(100,(1-deudaCaraBal/deudaCaraTot)*100)):0;
+
+  const ef=D.fin.emergencyFund||0;
+  const pat=patrimonioNeto();
+  const START=-308830, GOAL=1000000;
+  const patPct=hasFinData()?Math.min(100,Math.max(0,(pat-START)/(GOAL-START)*100)):0;
+
+  const tiles=[
+    {ico:'🆘',lbl:'Fondo de emergencia',val:money(ef),pct:Math.min(100,ef/10000*100),sub:'Meta: $10,000',c:'var(--w)'},
+    {ico:'💳',lbl:'Deuda cara (Banamex+BBVA)',val:deudaCaraTieneDatos?money(deudaCaraBal):'Sin datos',pct:deudaCaraTieneDatos?deudaCaraPct:0,sub:deudaCaraTieneDatos?(deudaCaraBal<=0?'Liquidada 🎉':'restante'):'Regístralas en Finanzas',c:'var(--r)'},
+    {ico:'🎓',lbl:'Fondo Maestría',val:goalMae?money(goalMae.current||0):'Sin datos',pct:goalMae&&goalMae.target?Math.min(100,(goalMae.current||0)/goalMae.target*100):0,sub:goalMae?`Meta: ${money(goalMae.target)}`:'Meta en Finanzas → Metas',c:'var(--cy)'},
+    {ico:'💰',lbl:'Patrimonio hacia $1M',val:hasFinData()?money(pat):'Sin datos',pct:patPct,sub:'Meta: $1,000,000 · 01 ene 2030',c:'var(--g)'}
+  ];
+  document.getElementById('metasProgreso').innerHTML=tiles.map(x=>`
+    <div class="tile">
+      <div class="lbl" style="color:${x.c}">${x.ico} ${x.lbl}</div>
+      <div class="big-num" style="font-size:clamp(20px,2.2vw,30px);color:${x.c}">${x.val}</div>
+      <div class="pbar"><div class="pfill" style="width:${x.pct}%;background:${x.c}"></div></div>
+      <div class="sub">${x.sub}</div>
+    </div>`).join('');
+
+  const cortoMediano=[
+    {ico:'🏆',t:'Torneo de ajedrez'},
+    {ico:'🏋️',t:'Primer Hyrox'},
+    {ico:'💻',t:'Trabajar remoto'},
+    {ico:'🚙',t:'Cupra Formentor'},
+    {ico:'🚗',t:'Liquidar el BYD'+(carro.found?' · '+money(carro.balance)+' restantes':'')}
+  ];
+  const largoExtras=[
+    {ico:'🏢',t:'Empresa ya creada'},
+    {ico:'🏙️',t:'Depa en la zona que quieras'},
+    {ico:'🥊',t:'Pelear en Tailandia'},
+    {ico:'🌃',t:'Rascacielos en Hong Kong'},
+    {ico:'🚀',t:'Lanzamiento de SpaceX'},
+    {ico:'🎓',t:'Maestría en Alemania'},
+    {ico:'🏋️',t:'Hyrox internacional'}
+  ];
+  const listHtml=arr=>arr.map(i=>`<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.06);font-size:clamp(13px,1.1vw,15px)"><span style="font-size:18px">${i.ico}</span>${i.t}</div>`).join('');
+  document.getElementById('metasListas').innerHTML=`
+    <div class="tile">
+      <div class="lbl" style="margin-bottom:8px">🚩 Corto & mediano plazo</div>
+      ${listHtml(cortoMediano)}
+    </div>
+    <div class="tile">
+      <div class="lbl" style="margin-bottom:8px">🏔️ Largo plazo & bucket list</div>
+      ${listHtml(largoExtras)}
+      <div class="sub" style="margin-top:10px"><a href="../Coach/Coach_v2.html#perfil" style="color:var(--cy);text-decoration:none">Ver detalle completo en Coach → Metas →</a></div>
+    </div>`;
+}
+
+const RENDERS=[renderDia,renderHero,renderCoach,renderFinanzas,renderSkills,renderMetasSlide];
 
 // ══════════════════════════════════════════════════════════════════════════
 // SLIDE ENGINE — avance automático cada 3 min + transición + controles
@@ -757,6 +771,7 @@ function paintDots(){document.querySelectorAll('.dot-btn').forEach((d,i)=>d.clas
 function showSlide(i){
   loadAll();
   RENDERS[i]();
+  renderQuickApps();
   document.querySelectorAll('.slide').forEach(s=>s.classList.toggle('active',parseInt(s.dataset.i)===i));
   cur=i; paintDots();
 }
@@ -775,7 +790,7 @@ document.addEventListener('keydown',e=>{
   if(e.key==='ArrowLeft') prevSlide();
   if(e.key===' '){e.preventDefault();togglePlay();}
 });
-window.addEventListener('storage',()=>{loadAll();RENDERS[cur]();});
+window.addEventListener('storage',()=>{loadAll();RENDERS[cur]();renderQuickApps();});
 
 // ── Reloj vivo ───────────────────────────────────────────────────────────
 let lastSync=Date.now();
