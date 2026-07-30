@@ -4,6 +4,7 @@ Este documento es el **índice central** de todo lo que vive en `Claude_Proyecto
 
 **Regla del proyecto (pedida por Adán, 2026-07-29): toda la aplicación (todas las apps de vida/negocio, no las de estudio) debe estar bien referenciada y trazable.**
 - **Cada archivo `.html` tiene su propio `.md`** con la misma información que un futuro Claude necesitaría para modificarlo sin releer todo el código: estructura, modelo de datos (`localStorage`), funciones clave, y referencias cruzadas a otros archivos.
+- **Convención de nombres (pedida por Adán, 2026-07-30):** el `.md` de cada `.html` se llama `readme_{nombrehtml}.md` (ej. `Coach_v2.html` → `readme_coach_v2.md`) para diferenciarlos rápido de un vistazo en el árbol de carpetas. Este `README.md` de la raíz es la única excepción — es el mapa maestro, no el doc de un `.html` específico.
 - **Siempre que se modifique un `.html`, se actualiza su `.md` en el mismo cambio** (no después, no "cuando haya tiempo").
 - Este `README.md` es el mapa de las **ramificaciones** entre archivos — para el detalle interno de cada app, ir a su `.md` propio (enlazado abajo).
 
@@ -17,13 +18,13 @@ Un conjunto de aplicaciones web de una sola página (HTML + CSS + JS, **sin back
 
 | Carpeta | HTML | Doc (`.md`) | Qué es | Clave(s) `localStorage` |
 |---|---|---|---|---|
-| `Dashboard/` | `dashboard.html` | [`Dashboard/README.md`](Dashboard/README.md) | Panel central: agrega datos de todas las apps, slide "Mi Día" en vivo | *(no escribe, solo lee las de las demás)* |
-| `Coach/` | `Coach_v2.html` | [`Coach/README.md`](Coach/README.md) | Coach de vida/negocio: Plan Maestro, rutina diaria completa, radar de habilidades, legal | `coach-theme`, `radarp_*` (12), `coach_rutina_v1` |
-| `CuidadoPersonal/` | `cuidadopersonal.html` | [`CuidadoPersonal/cuidadopersonal.md`](CuidadoPersonal/cuidadopersonal.md) | Shell con 4 subtabs: Skincare y Cabello nativas | `skincare_v1`, `cabello_v1` |
-| `CuidadoPersonal/` | `salud.html` | [`CuidadoPersonal/salud.md`](CuidadoPersonal/salud.md) | Nutrición, ejercicio ligero, peso/medidas — incrustada por iframe en el shell | `misalud_v1` |
-| `CuidadoPersonal/` | `ejercicio.html` | [`CuidadoPersonal/ejercicio.md`](CuidadoPersonal/ejercicio.md) | Rutina de gimnasio completa — incrustada por iframe en el shell | `mirutina_v1` |
-| `Finanzas/` | `Finanzas.html` | [`Finanzas/finanzas.md`](Finanzas/finanzas.md) | Finanzas personales reales, plan GBM, BTC, deudas | `finanzasmx_v2` |
-| `Proyectos/` | `proyectos.html` | [`Proyectos/README.md`](Proyectos/README.md) | Proyectos personales, tareas, tiempo invertido | `proyectos_v1` |
+| `Dashboard/` | `dashboard.html` | [`Dashboard/readme_dashboard.md`](Dashboard/readme_dashboard.md) | Panel central: agrega datos de todas las apps, slide "Mi Día" en vivo | *(no escribe, solo lee las de las demás)* |
+| `Coach/` | `Coach_v2.html` | [`Coach/readme_coach_v2.md`](Coach/readme_coach_v2.md) | Coach de vida/negocio: Plan Maestro, rutina diaria completa, radar de habilidades, legal | `coach-theme`, `radarp_*` (12), `coach_rutina_v1` |
+| `CuidadoPersonal/` | `cuidadopersonal.html` | [`CuidadoPersonal/readme_cuidadopersonal.md`](CuidadoPersonal/readme_cuidadopersonal.md) | Shell con 4 subtabs: Skincare y Cabello nativas | `skincare_v1`, `cabello_v1` |
+| `CuidadoPersonal/` | `salud.html` | [`CuidadoPersonal/readme_salud.md`](CuidadoPersonal/readme_salud.md) | Nutrición, ejercicio ligero, peso/medidas — incrustada por iframe en el shell | `misalud_v1` |
+| `CuidadoPersonal/` | `ejercicio.html` | [`CuidadoPersonal/readme_ejercicio.md`](CuidadoPersonal/readme_ejercicio.md) | Rutina de gimnasio completa — incrustada por iframe en el shell | `mirutina_v1` |
+| `Finanzas/` | `Finanzas.html` | [`Finanzas/readme_finanzas.md`](Finanzas/readme_finanzas.md) | Finanzas personales reales, plan GBM, BTC, deudas | `finanzasmx_v2` |
+| `Proyectos/` | `proyectos.html` | [`Proyectos/readme_proyectos.md`](Proyectos/readme_proyectos.md) | Proyectos personales, tareas, tiempo invertido | `proyectos_v1` |
 
 **Fuera de este ecosistema** (no se documentan archivo por archivo aquí, no comparten datos con las apps de arriba):
 - `Aleman/` — 35+ páginas estáticas de estudio de alemán (A1/A2), sin `localStorage`, sin interconexión con el resto.
@@ -37,7 +38,7 @@ Un conjunto de aplicaciones web de una sola página (HTML + CSS + JS, **sin back
 |---|---|---|
 | `finanzasmx_v2` | `Finanzas/Finanzas.html` | `Dashboard/dashboard.html` |
 | `misalud_v1` | `CuidadoPersonal/salud.html` | `Dashboard/dashboard.html` |
-| `mirutina_v1` | `CuidadoPersonal/ejercicio.html` | *(nadie todavía — ver `ejercicio.md`)* |
+| `mirutina_v1` | `CuidadoPersonal/ejercicio.html` | *(nadie todavía — ver `readme_ejercicio.md`)* |
 | `skincare_v1` | `CuidadoPersonal/cuidadopersonal.html` | `Dashboard/dashboard.html` |
 | `cabello_v1` | `CuidadoPersonal/cuidadopersonal.html` | `Dashboard/dashboard.html` |
 | `proyectos_v1` | `Proyectos/proyectos.html` | `Dashboard/dashboard.html` |
@@ -50,8 +51,8 @@ Un conjunto de aplicaciones web de una sola página (HTML + CSS + JS, **sin back
 ## Ramificaciones — cómo se conectan los archivos entre sí
 
 1. **`Dashboard/dashboard.html` agrega todo.** Lee las 8 claves marcadas arriba directamente vía `localStorage.getItem`, sin backend ni API. Cualquier cambio en la *forma* de los datos de una app (agregar/quitar un campo, renombrar un array) puede romper silenciosamente algún cálculo del Dashboard — revisar su `.md` antes de cambiar la forma de `S`/`D` en cualquier app.
-2. **`CuidadoPersonal/cuidadopersonal.html` incrusta dos apps enteras por `<iframe>`** (`salud.html`, `ejercicio.html`) en vez de fusionar su código, porque ambas comparten nombres de función/variable globales entre sí y con el shell — concatenarlas rompería todo. El shell y las apps incrustadas comparten `localStorage` por el mismo motivo de origen `file://` compartido (ver arriba). Detalle en [`cuidadopersonal.md`](CuidadoPersonal/cuidadopersonal.md).
-3. **`Coach/Coach_v2.html` y `Dashboard/dashboard.html` duplican 3 estructuras de datos a mano** porque no hay build step que permita compartir un módulo JS entre dos documentos HTML distintos: el horario completo de la rutina (`RUTINA_TASKS`, 58 tareas), las 4 fechas del Plan Maestro (`PHASES`/`fases`), y los 12 valores base del radar de habilidades (`SK`). **Estas son las estructuras más sensibles a romperse por edición asimétrica** — el detalle y el comando de verificación exacto viven en [`Dashboard/README.md`](Dashboard/README.md) → "Datos duplicados".
+2. **`CuidadoPersonal/cuidadopersonal.html` incrusta dos apps enteras por `<iframe>`** (`salud.html`, `ejercicio.html`) en vez de fusionar su código, porque ambas comparten nombres de función/variable globales entre sí y con el shell — concatenarlas rompería todo. El shell y las apps incrustadas comparten `localStorage` por el mismo motivo de origen `file://` compartido (ver arriba). Detalle en [`readme_cuidadopersonal.md`](CuidadoPersonal/readme_cuidadopersonal.md).
+3. **`Coach/Coach_v2.html` y `Dashboard/dashboard.html` duplican 3 estructuras de datos a mano** porque no hay build step que permita compartir un módulo JS entre dos documentos HTML distintos: el horario completo de la rutina (`RUTINA_TASKS`, 58 tareas), las 4 fechas del Plan Maestro (`PHASES`/`fases`), y los 12 valores base del radar de habilidades (`SK`). **Estas son las estructuras más sensibles a romperse por edición asimétrica** — el detalle y el comando de verificación exacto viven en [`Dashboard/readme_dashboard.md`](Dashboard/readme_dashboard.md) → "Datos duplicados".
 4. **Las apps de "Todas mis apps" del Dashboard enlazan de vuelta al Dashboard.** `Coach_v2.html`, `Finanzas.html`, `proyectos.html` y `cuidadopersonal.html` tienen un botón/link **🚀 Dashboard** que regresa a `../Dashboard/dashboard.html`. Si se agrega una app nueva al Dashboard, agregarle también este enlace de vuelta.
 5. **Convención de fecha universal**: toda la aplicación usa `const today = () => new Date().toISOString().slice(0,10)` (UTC) como clave de fecha `'YYYY-MM-DD'` — **no** fecha local. Si algún archivo nuevo usa `getFullYear()/getMonth()/getDate()` en su lugar, sus fechas se van a desalinear con las demás apps cerca de medianoche en horario de CDMX (UTC-6). Ya pasó una vez (rutina de Coach, corregido el 2026-07-29) — verificar siempre contra este patrón.
 

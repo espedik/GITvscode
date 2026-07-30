@@ -20,8 +20,20 @@ html,body{height:100%}
 body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hidden;position:relative}
 ::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:rgba(255,255,255,.14);border-radius:3px}
 
+/* ─── BARRA SUPERIOR — acceso directo a los demás proyectos ─ */
+.qa-bar{position:fixed;top:0;left:0;right:0;z-index:60;display:flex;align-items:center;justify-content:center;
+  gap:8px;flex-wrap:wrap;padding:10px 16px;background:rgba(6,6,14,.65);backdrop-filter:blur(18px);
+  border-bottom:1px solid rgba(255,255,255,.07)}
+.qa-pill{display:flex;align-items:center;gap:8px;padding:6px 13px;border-radius:30px;background:rgba(255,255,255,.045);
+  border:1px solid rgba(255,255,255,.08);text-decoration:none;color:var(--text);transition:all .2s}
+.qa-pill:hover{background:rgba(255,255,255,.1);border-color:rgba(0,232,122,.4);transform:translateY(-1px)}
+.qa-ico{font-size:16px}
+.qa-txt{display:flex;flex-direction:column;line-height:1.15}
+.qa-name{font-size:11px;font-weight:800}
+.qa-stat{font-size:9.5px;color:var(--g);font-weight:600}
+
 /* ─── SLIDES ENGINE ─────────────────────────────────────── */
-.slides{position:fixed;inset:0;overflow:hidden}
+.slides{position:fixed;top:58px;left:0;right:0;bottom:0;overflow:hidden}
 .slide{
   position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
   padding:5vh 6vw;opacity:0;transform:scale(1.045);filter:blur(10px);
@@ -41,9 +53,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 .theme-coach  {--ac1:#e0b020;--ac2:#ff8a3d}
 .theme-fin    {--ac1:#00e87a;--ac2:#00c2d1}
 .theme-skills {--ac1:#b06eff;--ac2:#ff6bd6}
-.theme-alert  {--ac1:#ff5c5c;--ac2:#ffb020}
-.theme-hoy    {--ac1:#3b82f6;--ac2:#00e0ff}
-.theme-apps   {--ac1:#00e87a;--ac2:#b06eff}
+.theme-metas  {--ac1:#ffd93d;--ac2:#00e0c0}
 
 .eyebrow{font-size:clamp(11px,1.1vw,14px);font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--text2);display:flex;align-items:center;gap:10px;margin-bottom:10px}
 .eyebrow .dot{width:8px;height:8px;border-radius:50%;background:var(--ac1);box-shadow:0 0 12px var(--ac1);animation:pulse 2s ease-in-out infinite}
@@ -80,19 +90,21 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 .hud-btn:hover{background:rgba(255,255,255,.12)}
 .hud-sync{font-size:10px;color:var(--text3)}
 
-/* ─── APP GRID (última pantalla) ────────────────────────── */
-.app-card{background:var(--card);border:1px solid var(--card-br);border-radius:20px;padding:18px;text-decoration:none;color:var(--text);display:block;transition:all .25s}
-.app-card:hover{background:rgba(255,255,255,.08);border-color:rgba(0,232,122,.35);transform:translateY(-3px)}
-.app-ico{font-size:26px;margin-bottom:8px}
-.app-name{font-size:13px;font-weight:800;margin-bottom:3px}
-.app-stat{font-size:11px;color:var(--g);font-weight:600;margin-top:6px}
-
-/* ─── ALERTAS ────────────────────────────────────────────── */
-.al-row{display:flex;align-items:flex-start;gap:14px;padding:14px 0;border-bottom:1px solid rgba(255,255,255,.06)}
-.al-row:last-child{border-bottom:none}
-.al-dot{width:10px;height:10px;border-radius:50%;margin-top:6px;flex-shrink:0;box-shadow:0 0 10px currentColor}
-.al-t{font-size:clamp(14px,1.3vw,17px);font-weight:700}
-.al-d{font-size:clamp(11px,1vw,13px);color:var(--text2);margin-top:2px}
+/* ─── TIMELINE DE ACTIVIDADES (Mi Día) — detalle por bloque ─ */
+.rt2-card{display:flex;align-items:flex-start;gap:12px;padding:12px 4px;border-bottom:1px solid rgba(255,255,255,.06);transition:background .2s}
+.rt2-card:last-child{border-bottom:none}
+.rt2-dot{width:11px;height:11px;border-radius:50%;margin-top:6px;flex-shrink:0;transition:all .3s}
+.rt2-body{flex:1;min-width:0}
+.rt2-top{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:4px}
+.rt2-cat{font-size:10px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;padding:2px 10px;border-radius:20px;border:1px solid}
+.rt2-time{font-family:var(--mono);font-size:12px;color:var(--text3);font-weight:600}
+.rt2-txt{font-size:clamp(13px,1.15vw,15px);color:var(--text);line-height:1.4}
+.rt2-check{font-size:16px;margin-top:5px;flex-shrink:0}
+.rt2-now{background:rgba(255,255,255,.04);border-radius:12px;padding:12px 10px;margin:0 -10px}
+.rt2-now .rt2-txt{font-weight:800;color:#fff}
+.rt2-done .rt2-txt{opacity:.5;text-decoration:line-through}
+.rt2-fijo{opacity:.85}
+.rt2-cat-chip{display:inline-flex;align-items:center;gap:5px;border-radius:20px;padding:5px 12px;font-size:11px;font-weight:700;border:1px solid}
 
 /* ─── AREA BARS (hero) ──────────────────────────────────── */
 .ar-row{display:flex;align-items:center;gap:12px;margin-bottom:11px}
@@ -109,6 +121,8 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 </style>
 </head>
 <body>
+
+<div class="qa-bar" id="qaBar"></div>
 
 <div class="slides" id="slides">
 
@@ -263,30 +277,13 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
     </div>
   </section>
 
-  <!-- 4 · ALERTAS -->
-  <section class="slide theme-alert" data-i="5">
+  <!-- 5 · MIS METAS -->
+  <section class="slide theme-metas" data-i="5">
     <div class="slide-inner">
-      <div class="eyebrow reveal d1"><span class="dot"></span> Centro de alertas</div>
-      <div class="slide-title reveal d2" id="alTitle">🔔 Pendientes</div>
-      <div class="tile reveal d3" id="alBody" style="max-height:62vh;overflow:hidden"></div>
-    </div>
-  </section>
-
-  <!-- 5 · HOY EN NÚMEROS -->
-  <section class="slide theme-hoy" data-i="6">
-    <div class="slide-inner">
-      <div class="eyebrow reveal d1"><span class="dot"></span> Hoy en números</div>
-      <div class="slide-title reveal d2" id="hoyTitle">📊 —</div>
-      <div class="grid g3 reveal d3" id="hoyBody"></div>
-    </div>
-  </section>
-
-  <!-- 6 · APPS -->
-  <section class="slide theme-apps" data-i="7">
-    <div class="slide-inner">
-      <div class="eyebrow reveal d1"><span class="dot"></span> Todos mis proyectos</div>
-      <div class="slide-title reveal d2">🚀 Ir directo a…</div>
-      <div class="grid g4 reveal d3" id="appsBody"></div>
+      <div class="eyebrow reveal d1"><span class="dot"></span> Mis Metas</div>
+      <div class="slide-title reveal d2">🎯 Corto, mediano y largo plazo</div>
+      <div class="grid g4 reveal d3" id="metasProgreso" style="margin-bottom:18px"></div>
+      <div class="grid g2 reveal d4" id="metasListas"></div>
     </div>
   </section>
 
@@ -412,6 +409,23 @@ const RUTINA_TASKS=[
   {id:'do11',  dias:[0], hora:'22:00', cat:'descanso', txt:'Meditación'},
   {id:'do12',  dias:[0], hora:'22:15', cat:'salud',    txt:'Apagar pantallas. Dormir'},
 ];
+// Categorías visuales — mismo mapa de colores/íconos que Coach_v2.html → #rutina (CAT_META)
+const CAT_META={
+  salud:    {ico:'💪',label:'Salud',    c:'#ff5c5c'},
+  descanso: {ico:'🌙',label:'Descanso', c:'#9a9db3'},
+  admin:    {ico:'💼',label:'Admin',    c:'#3b82f6'},
+  aprender: {ico:'📚',label:'Aprender', c:'#00e87a'},
+  profundo: {ico:'🎯',label:'Profundo', c:'#ffd93d'},
+  creativo: {ico:'✍️',label:'Creativo', c:'#b06eff'},
+  trabajo:  {ico:'🏢',label:'Trabajo',  c:'#00e0c0'}
+};
+function rtDur(fromHora,toHora){
+  const[fh,fm]=fromHora.split(':').map(Number);
+  const[th,tm]=toHora.split(':').map(Number);
+  let mins=(th*60+tm)-(fh*60+fm);
+  if(mins<=0) mins+=24*60;
+  return mins>=60?(Math.floor(mins/60)+'h'+(mins%60?' '+(mins%60)+'m':'')):mins+'m';
+}
 function rutinaTareasHoy(){const dow=new Date().getDay();return RUTINA_TASKS.filter(t=>t.dias.includes(dow)).sort((a,b)=>a.hora.localeCompare(b.hora));}
 function rutinaAhoraSiguiente(){
   const now=new Date();
@@ -539,23 +553,36 @@ function renderDia(){
   // No mostrar el día completo desde el inicio: 3 bloques antes de "ahora" + el actual + todos los de después
   const idxAnchor = actual ? tareasHoy.findIndex(t=>t.id===actual.id) : (siguiente ? tareasHoy.findIndex(t=>t.id===siguiente.id) : -1);
   const visibles = idxAnchor<=0 ? tareasHoy : tareasHoy.slice(Math.max(0,idxAnchor-3));
-  document.getElementById('diaTimeline').innerHTML=visibles.length?visibles.map(t=>{
+
+  // Resumen del día por categoría — de un vistazo, cuántos bloques de cada tipo hay hoy
+  const resumenCats={};
+  tareasHoy.forEach(t=>{ const k=t.fijo?'trabajo':t.cat; resumenCats[k]=(resumenCats[k]||0)+1; });
+  const resumenHtml=Object.entries(resumenCats).map(([cat,n])=>{
+    const meta=CAT_META[cat]||{ico:'•',label:cat,c:'#565a72'};
+    return `<span class="rt2-cat-chip" style="background:${meta.c}22;color:${meta.c};border-color:${meta.c}55">${meta.ico} ${meta.label} · ${n}</span>`;
+  }).join('');
+
+  const itemsHtml=visibles.length?visibles.map((t,idx)=>{
     const isNow=actual&&t.id===actual.id;
-    if(t.fijo){
-      const col=isNow?'#00e0c0':'#565a72';
-      return `<div class="al-row">
-        <div class="al-dot" style="background:${col};color:${col}"></div>
-        <div style="flex:1"><div class="al-t" style="font-size:14px;font-weight:800">${t.hora} — ${t.txt}</div></div>
-      </div>`;
-    }
-    const done=doneHoy.includes(t.id);
-    const col=done?'#00e87a':isNow?'#00e0c0':'#565a72';
-    return `<div class="al-row">
-      <div class="al-dot" style="background:${col};color:${col}"></div>
-      <div style="flex:1"><div class="al-t" style="font-size:14px">${t.hora} — ${t.txt}</div></div>
-      ${done?'<span style="color:var(--g);font-size:13px">✅</span>':''}
+    const meta=CAT_META[t.cat]||{ico:'•',label:t.cat,c:'#565a72'};
+    const nextT=visibles[idx+1];
+    const dur=nextT?rtDur(t.hora,nextT.hora):'';
+    const done=!t.fijo&&doneHoy.includes(t.id);
+    const dotColor=t.fijo?(isNow?meta.c:'#3a3d52'):(done?'#00e87a':isNow?meta.c:'#3a3d52');
+    return `<div class="rt2-card ${isNow?'rt2-now':''} ${done?'rt2-done':''} ${t.fijo?'rt2-fijo':''}">
+      <div class="rt2-dot" style="background:${dotColor};box-shadow:${(isNow||done)?'0 0 10px '+dotColor:'none'}"></div>
+      <div class="rt2-body">
+        <div class="rt2-top">
+          <span class="rt2-cat" style="background:${meta.c}22;color:${meta.c};border-color:${meta.c}55">${meta.ico} ${meta.label}</span>
+          <span class="rt2-time">${t.hora}${dur?' · '+dur:''}</span>
+        </div>
+        <div class="rt2-txt">${t.txt}</div>
+      </div>
+      ${done?'<span class="rt2-check">✅</span>':''}
     </div>`;
   }).join(''):'<div style="text-align:center;padding:20px;color:var(--text3)">Sin bloques de rutina configurados para hoy. Configúralos en Coach → Rutina.</div>';
+
+  document.getElementById('diaTimeline').innerHTML=(resumenHtml?`<div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px">${resumenHtml}</div>`:'')+itemsHtml;
 }
 
 function renderHero(){

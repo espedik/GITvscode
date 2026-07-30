@@ -26,7 +26,7 @@ Esto significa que el dashboard **solo muestra datos reales si se abrió desde e
 - **🪙 Coach · Plan Maestro** (slide 2) — fase activa, días restantes a la meta, prioridades de la fase.
 - **💰 Finanzas** (slide 3) — patrimonio, fondo de emergencia, deuda, flujo del mes.
 - **🧠 Habilidades** (slide 4) — radar de skills (mismo set que Coach) y las 3 más débiles.
-- **🔔 Alertas** (slide 5) — tareas vencidas/próximas. (El pendiente de skincare AM/PM se retiró el 2026-07-29 — ese tracking vive ahora solo en `Coach/Coach_v2.html → #rutina`, ver `../CuidadoPersonal/cuidadopersonal.md`.)
+- **🔔 Alertas** (slide 5) — tareas vencidas/próximas. (El pendiente de skincare AM/PM se retiró el 2026-07-29 — ese tracking vive ahora solo en `Coach/Coach_v2.html → #rutina`, ver `../CuidadoPersonal/readme_cuidadopersonal.md`.)
 - **📊 Hoy en números** (slide 6) — calorías, tareas del día. (El tile de "Cabello" con días desde el último lavado se retiró el 2026-07-29 cuando Cabello dejó de trackear lavados y pasó a ser perfil + guía, igual que Skincare.)
 - **🚀 Todas mis apps** (slide 7) — grid con acceso rápido a cada aplicación y una estadística resumen de cada una.
 
@@ -57,7 +57,7 @@ console.log(JSON.stringify(ex('Coach/Coach_v2.html'))===JSON.stringify(ex('Dashb
 "
 ```
 
-Detalle completo de cada estructura en [`../Coach/README.md`](../Coach/README.md).
+Detalle completo de cada estructura en [`../Coach/readme_coach_v2.md`](../Coach/readme_coach_v2.md).
 
 ## Cómo usarlo
 

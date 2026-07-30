@@ -2,7 +2,7 @@
 
 Página "hub" de una sola pieza (HTML+CSS+JS, sin backend, sin dependencias externas — ni Chart.js) creada el 2026-07-29 que agrupa 4 subtabs principales en una sola navegación: **🧴 Skincare**, **💇 Cuidado del Cabello** (nativas, construidas en este mismo archivo), **🥗 Cuidado de la Salud** y **🏋️ Ejercicio** (apps completas preexistentes, incrustadas vía `<iframe>`). Sustituyó a las antiguas apps independientes `Salud/salud.html`, `Ejercicio/ejercicio.html` y a la app de `Animo/animo.html` (retirada, no fusionada).
 
-Ver también: [`salud.md`](salud.md) y [`ejercicio.md`](ejercicio.md) — documentación de las dos apps incrustadas. Este archivo (`cuidadopersonal.md`) solo documenta el shell y los dos módulos nativos.
+Ver también: [`readme_salud.md`](readme_salud.md) y [`readme_ejercicio.md`](readme_ejercicio.md) — documentación de las dos apps incrustadas. Este archivo (`readme_cuidadopersonal.md`) solo documenta el shell y los dos módulos nativos.
 
 ## Por qué Salud y Ejercicio están incrustados con `<iframe>` en vez de fusionados línea por línea
 

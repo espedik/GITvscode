@@ -730,7 +730,7 @@
       section { display: none !important; }
       #perfil { display: block !important; margin-bottom: 0; }
       #perfil > h2.section-title { display: none !important; }
-      #perfil-diagnostico, #perfil-negocios { display: none !important; }
+      #perfil-diagnostico, #perfil-metas { display: none !important; }
       #perfil-cv { display: block !important; }
 
       /* Contenido plano, una sola columna — así un ATS lee el texto en el
@@ -824,7 +824,7 @@
 
     <div class="subtab-nav">
       <button class="subtab-btn active" onclick="showSubtab('perfil','diagnostico',this)">Diagnóstico & Plan</button>
-      <button class="subtab-btn" onclick="showSubtab('perfil','negocios',this)">Posibles Negocios</button>
+      <button class="subtab-btn" onclick="showSubtab('perfil','metas',this)">🎯 Metas</button>
       <button class="subtab-btn" onclick="showSubtab('perfil','cv',this)">CV Completo</button>
     </div>
 
@@ -1831,229 +1831,63 @@
     </div>
     <!-- fin perfil-diagnostico -->
 
-    <div id="perfil-negocios" class="subtab-panel">
+    <div id="perfil-metas" class="subtab-panel">
       <div class="card mb-16" style="margin-bottom:16px;">
-        <h3 class="fw-700 mb-12">Posibles Negocios — evaluados contra tu perfil real, no contra una idea bonita</h3>
+        <h3 class="fw-700 mb-12">🎯 Metas — corto, mediano y largo plazo</h3>
         <p class="fs-13" style="line-height:1.7;color:var(--muted);">
-          "Automotriz vs. aeroespacial" era demasiado vago para ser un plan. Aquí están las opciones concretas,
-          cada una evaluada contra lo que de verdad eres capaz de hacer hoy: malo vendiendo en frío, bueno dirigiendo
-          IA con un ejemplo, liderazgo probado, tiempo limitado (trabajas tiempo completo en ALTEN), y un patrón de
-          abandono si no ves resultado rápido. Por eso el orden importa tanto como las opciones mismas.
-        </p>
-        <p class="fs-13 mt-8" style="line-height:1.7;color:var(--muted);">
-          Las Opciones 7 y 8 se agregaron después: al profundizar en tu historia real (mantenimiento industrial
-          farmacéutico antes de Ford, y tu red activa en Alemania) aparecieron dos ángulos que las primeras 6
-          opciones no cubrían.
+          No son deseos sueltos: la mayoría ya tiene fecha y número dentro de tu Plan Maestro y tu calendario de deuda
+          real (pestaña Diagnóstico & Plan) — aquí están todas juntas en un solo lugar, sin separar lo financiero de
+          lo físico o lo personal, porque para ti todo compite por el mismo tiempo y el mismo dinero.
         </p>
       </div>
 
-      <div class="negocio-grid">
+      <div class="perfil-grid">
 
-      <!-- OPCIÓN 1 -->
-      <div class="negocio-card pick" id="negocio1">
-        <div class="negocio-rank">⭐ Empieza aquí — la más rápida a primer ingreso</div>
-        <h3>1. Vender tu plantilla de Finanzas.html en comunidades de GBM</h3>
-        <div class="grid-3" style="margin-bottom:10px;">
-          <div class="stat-badge"><span style="color:#c2410c">Bajo-Medio</span><span>Requiere ventas</span></div>
-          <div class="stat-badge"><span class="text-green">1-3 semanas</span><span>A primer ingreso</span></div>
-          <div class="stat-badge"><span class="text-green">Alto</span><span>Techo de escala</span></div>
-        </div>
-        <p><strong>Qué es:</strong> idea tuya, y buena. El producto <strong>ya existe</strong> — es tu propio Finanzas.html. Lo conviertes en plantilla genérica (sin tus datos personales), le pones un precio ($99-299 MXN es rango típico de un producto digital de este tipo) y lo vendes en comunidades de GBM/inversión de Telegram, Discord o Facebook, donde la audiencia ya está pre-calificada: gente que activamente quiere controlar su dinero e invertir.</p>
-        <h5>Por qué encaja</h5>
-        <p>Costo de construcción: casi cero, ya está hecho. No es venta en frío — es distribución dentro de una comunidad que ya existe y ya quiere esto, apoyado en tu fuerza real de generar ideas y expectativa (con IA) para escribir el post de venta. Es la única opción con techo de escala alto y costo marginal casi cero: cada venta extra no te cuesta tiempo adicional.</p>
-        <h5>Primer paso esta semana — MUY IMPORTANTE</h5>
-        <p><strong style="color:var(--red);">Antes de compartir el archivo con nadie:</strong> tu Finanzas.html real tiene tu sueldo, tus deudas exactas y tus montos de inversión escritos directamente en el código. Crea una copia limpia con datos de ejemplo (o un formulario de bienvenida vacío) antes de vender absolutamente nada — esto no es opcional, es proteger tu propia información financiera.</p>
-        <h5>Riesgo principal</h5>
-        <p>Vender un producto digital de forma recurrente formalmente requiere factura (mismo trámite fiscal que necesitas para el freelance — ver Fase 0 del plan). Para las primeras ventas de validación puedes usar un link de pago simple, pero si esto escala, regularízalo pronto.</p>
-      </div>
-
-      <!-- OPCIÓN 2 -->
-      <div class="negocio-card pick" id="negocio2">
-        <div class="negocio-rank">⭐ Empieza aquí — mejor techo de ingreso por hora</div>
-        <h3>2. Freelance de automatización de pruebas automotrices (noches/fines de semana)</h3>
-        <div class="grid-3" style="margin-bottom:10px;">
-          <div class="stat-badge"><span class="text-green">Bajo</span><span>Requiere ventas</span></div>
-          <div class="stat-badge"><span class="text-green">4-8 semanas</span><span>A primer ingreso</span></div>
-          <div class="stat-badge"><span style="color:#c2410c">Medio</span><span>Techo de escala</span></div>
-        </div>
-        <p><strong>Qué es:</strong> ofrecer contratos cortos de automatización HIL/SIL, scripting Python/CAPL e integración CI/CD Jenkins a Tier 1/2 automotrices (Bosch, Continental, Magna, Aptiv, Valeo, Denso) o startups de EV/ADAS que necesitan capacidad extra pero no pueden contratar un senior de planta.</p>
-        <h5>Por qué encaja</h5>
-        <p>Es exactamente lo que ya sabes hacer con 6 años de experiencia real en Ford/Continental/Bosch — no hay curva de aprendizaje. No requiere vender en frío: se consigue por referidos directos de tus ex-colegas (tienes 4 empresas de trayectoria llenas de gente que ya confía en tu trabajo), no por marketing.</p>
-        <h5>Primer paso esta semana</h5>
-        <p>Mensaje directo a 5 ex-compañeros de Bosch/Continental/Ford preguntando si su equipo necesita apoyo freelance de automatización. Nada de página web ni oferta pulida — solo la pregunta directa.</p>
-        <h5>Riesgo principal</h5>
-        <p>Revisa tu contrato con ALTEN antes de facturarle a otra automotriz — puede haber cláusula de exclusividad o conflicto de interés que tengas que resolver primero (competencia directa con Ford vía ALTEN es zona de riesgo real).</p>
-      </div>
-
-      <!-- OPCIÓN 3 -->
-      <div class="negocio-card" id="negocio3">
-        <div class="negocio-rank">En paralelo, desde la semana 1</div>
-        <h3>3. Mentoría paga para ingenieros junior en testing automotriz</h3>
-        <div class="grid-3" style="margin-bottom:10px;">
-          <div class="stat-badge"><span class="text-green">Bajo-Medio</span><span>Requiere ventas</span></div>
-          <div class="stat-badge"><span class="text-green">2-4 semanas</span><span>A primer ingreso</span></div>
-          <div class="stat-badge"><span class="text-red">Bajo</span><span>Techo de escala</span></div>
-        </div>
-        <p><strong>Qué es:</strong> sesiones 1:1 o en grupo pequeño enseñando CAPL, Python, HIL y vTestStudio a ingenieros junior que quieren entrar a Bosch/Continental/Ford/Magna. Tu inglés B2 te permite venderlo también a quien busque entrar a la industria en EUA/Europa.</p>
-        <h5>Por qué encaja</h5>
-        <p>Usa tu liderazgo ya probado en Bosch y no requiere construir nada — solo tu conocimiento y tu tiempo. Es la opción de menor riesgo total de todo este plan.</p>
-        <h5>Primer paso esta semana</h5>
-        <p>1 post en LinkedIn ofreciendo 3 sesiones gratis a cambio de testimonio. De ahí sale tu primer caso de estudio para empezar a cobrar.</p>
-        <h5>Riesgo principal</h5>
-        <p>Ninguno relevante — es la apuesta más segura, pero por sí sola no cierra la brecha de $31,540/mes. Es complemento, no la apuesta principal.</p>
-      </div>
-
-      <!-- OPCIÓN 4 -->
-      <div class="negocio-card" id="negocio4">
-        <div class="negocio-rank">Apuesta de mediano plazo, en paralelo</div>
-        <h3>4. Versión productizada de tu herramienta "CodeReview" (IA + revisión de código embebido)</h3>
-        <div class="grid-3" style="margin-bottom:10px;">
-          <div class="stat-badge"><span style="color:#c2410c">Medio</span><span>Requiere ventas</span></div>
-          <div class="stat-badge"><span class="text-red">3-6 meses</span><span>A primer ingreso</span></div>
-          <div class="stat-badge"><span class="text-green">Alto</span><span>Techo de escala</span></div>
-        </div>
-        <p><strong>Qué es:</strong> adaptar la herramienta de revisión de código con IA que ya construiste en ALTEN (con Claude Code/Copilot) a una versión que puedas ofrecer a 2-3 equipos pequeños de software embebido que no pueden pagar herramientas enterprise tipo SonarQube.</p>
-        <h5>Por qué encaja</h5>
-        <p>Es la prueba más fuerte que tienes de que sabes "dirigir IA para construir producto" — ya la construiste una vez con ejemplo real. Combina tu ventaja única: automotriz + IA en producción, algo que casi nadie más tiene junto.</p>
-        <h5>Primer paso esta semana</h5>
-        <p>Nada todavía — este es el proyecto de la Fase 2, no de la Fase 0. Anótalo, no lo empieces aún; dispersarte entre 3 cosas a la vez es tu patrón de abandono en acción.</p>
-        <h5>Riesgo principal</h5>
-        <p>Revisa si ALTEN/Ford tienen propiedad intelectual sobre la herramienta original — si es así, tendrías que reconstruir una versión genérica desde cero fuera de horario laboral, con tus propios ejemplos.</p>
-      </div>
-
-      <!-- OPCIÓN 5 -->
-      <div class="negocio-card" id="negocio5">
-        <div class="negocio-rank">Exploración de bajo compromiso — no es plan B todavía</div>
-        <h3>5. Aeroespacial con tu papá</h3>
-        <div class="grid-3" style="margin-bottom:10px;">
-          <div class="stat-badge"><span class="text-muted">Desconocido</span><span>Requiere ventas</span></div>
-          <div class="stat-badge"><span class="text-red">Incierto</span><span>A primer ingreso</span></div>
-          <div class="stat-badge"><span class="text-muted">Desconocido</span><span>Techo de escala</span></div>
-        </div>
-        <p><strong>Qué es honestamente hoy:</strong> no es un negocio, es una conversación pendiente. Tu papá tiene contactos pero no usa tecnología, y tú todavía no sabes qué proceso específico les duele lo suficiente como para pagar por resolverlo. Antes de construir cualquier cosa aquí hace falta encontrar UN dolor concreto y validable.</p>
-        <h5>Por qué no es la prioridad #1</h5>
-        <p>Cero validación, cero claridad del problema, y depende de terceros (clientes de tu papá) que ni siquiera saben que esto existe. Construir un "piloto" antes de tener esa claridad es exactamente el tipo de apuesta que no es realista todavía — tenías razón en señalarlo.</p>
-        <h5>Primer paso esta semana</h5>
-        <p>Una llamada de 30 min con tu papá, sin compromiso de construir nada — solo para escuchar qué hace manualmente y qué le cuesta tiempo o dinero. Tratar esto como investigación, no como apuesta.</p>
-        <h5>Preguntas para llevar a esa llamada</h5>
-        <ul style="padding-left:18px;font-size:12.5px;line-height:1.8;">
-          <li>¿Qué haces manualmente cada semana que más tiempo te quita?</li>
-          <li>¿Hay algo que llevas en papel o Excel que se te complica o se te pierde?</li>
-          <li>¿Cómo consigues clientes hoy y cómo les das seguimiento?</li>
-          <li>¿Algún cliente te ha pedido algo que no supiste resolver por falta de tecnología?</li>
-          <li>De tus clientes, ¿cuántos usan computadora o celular para su negocio, y cuántos todo en persona/papel?</li>
-        </ul>
-      </div>
-
-      <!-- OPCIÓN 6 -->
-      <div class="negocio-card" id="negocio6">
-        <div class="negocio-rank">No es un negocio nuevo — es una corrección</div>
-        <h3>6. Dejar de manejar DiDi y redirigir esas horas a las Opciones 1-2</h3>
-        <p><strong>El problema real:</strong> un ingeniero senior de automatización freelance cobra aproximadamente $300-600 MXN/hora en México (o $25-45 USD/hora remoto ≈ $490-880 MXN/hora usando tu inglés B2), mientras que DiDi deja netos aproximados de $80-120 MXN/hora después de gasolina y desgaste del auto. Estás cambiando tu hora más valiosa por tu hora menos valiosa — y además desgastando el mismo BYD que te está costando $109,700 en puro interés, para generar el ingreso más bajo posible con tu tiempo.</p>
-        <h5>Acción concreta</h5>
-        <p>En cuanto las Opciones 1 o 2 tengan tu primer peso cobrado, esas horas de DiDi se mueven ahí. No antes — no dejes DiDi sin tener ya el reemplazo generando, porque eso rompería tu único colchón de efectivo actual.</p>
-      </div>
-
-      <!-- OPCIÓN 7 -->
-      <div class="negocio-card" id="negocio7">
-        <div class="negocio-rank">Apuesta de nicho — validar antes de construir</div>
-        <h3>7. Automatización/mantenimiento predictivo para manufactura regulada (farmacéutica, alimentos)</h3>
-        <div class="grid-3" style="margin-bottom:10px;">
-          <div class="stat-badge"><span style="color:#c2410c">Medio</span><span>Requiere ventas</span></div>
-          <div class="stat-badge"><span class="text-red">Incierto</span><span>A primer ingreso</span></div>
-          <div class="stat-badge"><span class="text-green">Alto</span><span>Techo de escala</span></div>
-        </div>
-        <p><strong>Qué es:</strong> ofrecer automatización, instrumentación o mantenimiento predictivo a plantas de manufactura regulada que hoy operan con equipo viejo y sin monitoreo digital — el mismo tipo de máquinas que tú reparabas (tableteadoras, hornos de secado, llenadoras, encapsuladoras) antes de Ford.</p>
-        <h5>Por qué encaja</h5>
-        <p>Combinación que casi nadie tiene: experiencia real de planta reparando este equipo + tu formación de Mecatrónica en automatización industrial, PLCs, neumática/hidráulica y control + tu capacidad de dirigir IA para construir herramientas de monitoreo. No es teoría — ya trabajaste con estas máquinas.</p>
-        <h5>Primer paso esta semana</h5>
-        <p>Nada todavía — a diferencia de las Opciones 1-2, aquí no tienes ni un contacto cálido confirmado hoy. Es Fase 2-3, no Fase 0. Cuando llegue el momento: contacta a algún excompañero o supervisor de aquel primer trabajo para preguntar qué problemas de automatización siguen sin resolver ahí.</p>
-        <h5>Riesgo principal</h5>
-        <p>Misma trampa que la Opción 5 (aeroespacial): no construyas nada hasta validar un dolor real y un cliente dispuesto a pagar. Sin eso, es una idea bonita, no un negocio.</p>
-      </div>
-
-      <!-- OPCIÓN 8 -->
-      <div class="negocio-card" id="negocio8">
-        <div class="negocio-rank">Apuesta de mediano plazo — apalanca tu red en Alemania</div>
-        <h3>8. Freelance/consultoría con tu red activa de Bosch en Stuttgart</h3>
-        <div class="grid-3" style="margin-bottom:10px;">
-          <div class="stat-badge"><span class="text-green">Bajo</span><span>Requiere ventas</span></div>
-          <div class="stat-badge"><span style="color:#c2410c">Medio</span><span>A primer ingreso</span></div>
-          <div class="stat-badge"><span class="text-green">Alto</span><span>Techo de escala</span></div>
-        </div>
-        <p><strong>Qué es:</strong> ofrecer automatización/testing a proyectos conectados con los líderes de Bosch que sigues tratando en Stuttgart, ya sea por referido directo o preparando el terreno para clientes europeos cuando retomes la Maestría en Alemania.</p>
-        <h5>Por qué encaja</h5>
-        <p>A diferencia de la Opción 2 (referidos automotrices en México), aquí ya tienes relaciones de mayor nivel — líderes, no solo excolegas —, y las tarifas europeas ($25-45 USD/hora, tu inglés B2 ya lo habilita) son 2-3× las de la Opción 2. Además llega justo a tiempo con tu Maestría pausada: llegarías a Alemania con red ya construida, no desde cero.</p>
-        <h5>Primer paso esta semana</h5>
-        <p>Nada todavía — vive en Fase 1-2, después de que las Opciones 1-2 den tracción. Cuando llegue el momento: un mensaje directo, sin pedir nada todavía, a 1-2 de esos líderes preguntando cómo les va y si su equipo alguna vez necesita apoyo remoto.</p>
-        <h5>Riesgo principal</h5>
-        <p>Es una relación profesional, no una amistad cercana — trátala con el mismo cuidado que a un cliente potencial, no como favor. Revisa cláusulas de exclusividad con ALTEN/Ford antes de facturarle a cualquier entidad relacionada con Bosch, igual que en la Opción 2.</p>
-      </div>
-
-      </div><!-- /negocio-grid -->
-
-      <!-- PLANTILLAS -->
-      <div class="card mb-16" style="margin-bottom:16px;">
-        <h3 class="fw-700 mb-12">Plantillas de mensajes — listas para copiar</h3>
-        <p class="fs-13 text-muted mb-12">Tu bloqueo no es no saber qué decir — es no tener nada escrito para empezar. Copia esto, ajusta el nombre, y mándalo. Editar algo que ya existe es mucho más fácil que crear desde cero.</p>
-
-        <h5>Opción 2 — mensaje directo a ex-colegas</h5>
-        <p class="fs-13" style="line-height:1.6;background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 14px;font-style:italic;">
-          "Hola [nombre], ¿cómo va todo en [empresa]? Te escribo porque ando abriendo un poco de tiempo para proyectos freelance de automatización de pruebas (Python, CAPL, HIL/CI-CD) — nada que compita con Ford/ALTEN, más bien para otros equipos o proveedores. ¿Tu equipo anda necesitando apoyo extra en algo así, o conoces a alguien que sí? Sin compromiso, solo preguntando."
-        </p>
-
-        <h5 class="mt-8">Opción 1 — post para comunidades de GBM</h5>
-        <p class="fs-13" style="line-height:1.6;background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 14px;font-style:italic;">
-          "Hice una plantilla de Excel/HTML para trackear mi patrimonio neto, deudas, inversiones y presupuesto en un solo lugar — la empecé a usar hace [tiempo] porque ninguna app gratuita me dejaba ver todo junto. Quedó bien completa así que decidí ponerla disponible por $[precio] — [1-2 líneas de qué incluye]. Si a alguien le sirve algo así, con gusto se las paso."
-        </p>
-
-        <h5 class="mt-8">Opción 3 — post de mentoría (LinkedIn)</h5>
-        <p class="fs-13" style="line-height:1.6;background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 14px;font-style:italic;">
-          "Llevo 6 años en testing automotriz (Ford, Continental, Bosch) trabajando con CAPL, Python, HIL y CI/CD. Voy a dar 3 sesiones gratis de 30 min a quien esté buscando entrar a la industria o mejorar en automatización — a cambio solo pido honestidad si te sirvió (y si quieres, un testimonio). Comenta o mándame DM."
-        </p>
-      </div>
-
-      <!-- CUÁNTO COBRAR -->
-      <div class="card mb-16" style="margin-bottom:16px;">
-        <h3 class="fw-700 mb-12">¿Cuánto cobrar? — tu debilidad #1 no puede ser una adivinanza</h3>
-        <p class="fs-13 text-muted mb-12">Como Ventas es tu skill más baja (15/100), no improvises un precio en la llamada — decide el número ANTES y ya no lo negocias en caliente.</p>
-        <div class="impuesto-row"><span class="imp-nombre">Opción 2 — Freelance automatización (por hora, cliente nuevo)</span><span class="imp-fecha">$350-450 MXN/h</span></div>
-        <div class="impuesto-row"><span class="imp-nombre">Opción 2 — Proyecto pequeño cerrado (framework/script a la medida)</span><span class="imp-fecha">$8,000-15,000 MXN</span></div>
-        <div class="impuesto-row"><span class="imp-nombre">Opción 1 — Plantilla GBM (precio de lanzamiento, para validar volumen)</span><span class="imp-fecha">$99-149 MXN</span></div>
-        <div class="impuesto-row"><span class="imp-nombre">Opción 3 — Mentoría, primeras 5 sesiones pagadas (tras las 3 gratis)</span><span class="imp-fecha">$300-400 MXN/h</span></div>
-        <hr class="divider">
-        <p class="fs-13 fw-700 mb-12">Para protegerte, sin importar la opción:</p>
-        <div class="check-item"><input type="checkbox" id="pr1"><label for="pr1">Pide 30-50% por adelantado antes de empezar cualquier proyecto pagado</label></div>
-        <div class="check-item"><input type="checkbox" id="pr2"><label for="pr2">Deja el alcance por escrito, aunque sea en un mensaje de WhatsApp resumido</label></div>
-        <div class="check-item"><input type="checkbox" id="pr3"><label for="pr3">No entregues el trabajo final (código, plantilla) sin el pago completo</label></div>
-        <div class="check-item"><input type="checkbox" id="pr4"><label for="pr4">Si alguien regatea mucho el precio inicial, es señal de que no es tu cliente ideal — no bajes por debajo de tu mínimo</label></div>
-      </div>
-
-      <!-- SEGUIMIENTO REAL -->
-      <div class="card">
-        <h3 class="fw-700 mb-12">Seguimiento de outreach — Opciones 1 y 2</h3>
-        <p class="fs-13 text-muted mb-12">Esto es lo que faltaba: un lugar para registrar de verdad a quién le escribiste, no solo la intención. Llénalo tú mismo — no se guarda automáticamente, es tu bitácora manual.</p>
-
-        <p class="fs-13 fw-700 mb-12">Opción 2 — Freelance: 5 ex-colegas contactados</p>
-        <div class="grid-2 mb-16" style="margin-bottom:16px;">
-          <div class="check-item"><input type="checkbox" id="oc1"><label for="oc1">1.</label><input type="text" placeholder="Nombre · empresa · fecha · respuesta" style="flex:1;"></div>
-          <div class="check-item"><input type="checkbox" id="oc2"><label for="oc2">2.</label><input type="text" placeholder="Nombre · empresa · fecha · respuesta" style="flex:1;"></div>
-          <div class="check-item"><input type="checkbox" id="oc3"><label for="oc3">3.</label><input type="text" placeholder="Nombre · empresa · fecha · respuesta" style="flex:1;"></div>
-          <div class="check-item"><input type="checkbox" id="oc4"><label for="oc4">4.</label><input type="text" placeholder="Nombre · empresa · fecha · respuesta" style="flex:1;"></div>
-          <div class="check-item"><input type="checkbox" id="oc5"><label for="oc5">5.</label><input type="text" placeholder="Nombre · empresa · fecha · respuesta" style="flex:1;"></div>
+        <div class="card">
+          <h4 class="fw-700 mb-12">🚩 Corto plazo</h4>
+          <p class="fs-13 text-muted mb-12">Antes de la revisión de la Maestría (18 jul 2027) — coincide casi exacto con dejar la deuda cara en $0.</p>
+          <div class="check-item"><input type="checkbox" id="mtc1"><label for="mtc1">Ir a un torneo de ajedrez</label></div>
+          <div class="check-item"><input type="checkbox" id="mtc2"><label for="mtc2">Correr tu primer Hyrox</label></div>
+          <div class="check-item"><input type="checkbox" id="mtc3"><label for="mtc3">Liquidar la deuda de Banamex y cancelar la tarjeta <span class="text-muted">(meta: ene 2027, ya en tu Plan Maestro)</span></label></div>
+          <div class="check-item"><input type="checkbox" id="mtc4"><label for="mtc4">Liquidar la TC de BBVA <span class="text-muted">(meta: jul 2027, ya en tu Plan Maestro)</span></label></div>
+          <div class="check-item"><input type="checkbox" id="mtc5"><label for="mtc5">Fondo de emergencia completo a $10,000 <span class="text-muted">(meta: sep 2026, Fase 0)</span></label></div>
         </div>
 
-        <p class="fs-13 fw-700 mb-12">Opción 1 — Plantilla GBM: comunidades donde publicaste</p>
-        <div class="grid-2">
-          <div class="check-item"><input type="checkbox" id="og1"><label for="og1">1.</label><input type="text" placeholder="Comunidad · fecha · ventas" style="flex:1;"></div>
-          <div class="check-item"><input type="checkbox" id="og2"><label for="og2">2.</label><input type="text" placeholder="Comunidad · fecha · ventas" style="flex:1;"></div>
-          <div class="check-item"><input type="checkbox" id="og3"><label for="og3">3.</label><input type="text" placeholder="Comunidad · fecha · ventas" style="flex:1;"></div>
+        <div class="card">
+          <h4 class="fw-700 mb-12">🧭 Mediano plazo</h4>
+          <p class="fs-13 text-muted mb-12">2027-2029, una vez que la deuda cara esté en $0 y el negocio tenga tracción real.</p>
+          <div class="check-item"><input type="checkbox" id="mtm1"><label for="mtm1">Liquidar el crédito del BYD Dolphin Mini <span class="text-muted">(pagando solo el mínimo cuesta $109,700 en puro interés; hoy el excedente libre va primero a Banamex/BBVA y al fondo de $500,000 — decide cuánto extra meterle aquí en cuanto la deuda cara esté en $0)</span></label></div>
+          <div class="check-item"><input type="checkbox" id="mtm2"><label for="mtm2">$500,000 ahorrados <span class="text-muted">(ya es tu meta oficial de la Maestría, reagendada a oct 2028 — hoy vas $53,740 quietos e invertidos)</span></label></div>
+          <div class="check-item"><input type="checkbox" id="mtm3"><label for="mtm3">Poder trabajar remoto <span class="text-muted">(se habilita con tracción real del negocio — ver <a href="#" class="inline-link" onclick="irANegocios('negocio8');return false;">Opción 8</a>, consultoría con tu red de Bosch en Stuttgart)</span></label></div>
+          <div class="check-item"><input type="checkbox" id="mtm4"><label for="mtm4">Comprarte una Cupra Formentor para viajar por el mundo</label></div>
         </div>
-        <p class="fs-13 text-muted mt-8">Checkpoint de Fase 0-1 en tu Plan Maestro: si a las 8 semanas esto sigue vacío, es la señal de cambiar de canal, no de esperar más.</p>
+
       </div>
 
+      <div class="perfil-grid mt-16">
+
+        <div class="card">
+          <h4 class="fw-700 mb-12">🏔️ Largo plazo</h4>
+          <p class="fs-13 text-muted mb-12">Hacia 2030 — la meta central de todo este plan.</p>
+          <div class="check-item"><input type="checkbox" id="mtl1"><label for="mtl1">Ser millonario ($1,000,000 de patrimonio líquido) con la empresa ya creada <span class="text-muted">(meta central del Plan Maestro, 01/01/2030 — ver <a href="#" class="inline-link" onclick="cambiarModo('empresa');return false;">Coach Empresa</a>)</span></label></div>
+          <div class="check-item"><input type="checkbox" id="mtl2"><label for="mtl2">Comprar un departamento en la zona que quieras</label></div>
+        </div>
+
+        <div class="card">
+          <h4 class="fw-700 mb-12">✨ Extras — bucket list</h4>
+          <p class="fs-13 text-muted mb-12">Sin fecha fija todavía; se agendan en cuanto el flujo lo permita.</p>
+          <div class="check-item"><input type="checkbox" id="mte1"><label for="mte1">Pelear en Tailandia (Muay Thai)</label></div>
+          <div class="check-item"><input type="checkbox" id="mte2"><label for="mte2">Hospedarte en un rascacielos en Hong Kong</label></div>
+          <div class="check-item"><input type="checkbox" id="mte3"><label for="mte3">Ver un lanzamiento de SpaceX</label></div>
+          <div class="check-item"><input type="checkbox" id="mte4"><label for="mte4">Retomar la Maestría en Alemania <span class="text-muted">(fecha de revisión ya fijada: 18 jul 2027)</span></label></div>
+          <div class="check-item"><input type="checkbox" id="mte5"><label for="mte5">Correr un Hyrox internacional, fuera de México</label></div>
+        </div>
+
+      </div>
+
+      <p class="fs-13 text-muted mt-16">Checkboxes de esta pestaña: son visuales, igual que en Hábitos y Legal & Personal — no se guardan al recargar la página.</p>
     </div>
-    <!-- fin perfil-negocios -->
+    <!-- fin perfil-metas -->
 
     <div id="perfil-cv" class="subtab-panel">
       <div class="btn-row no-print" style="margin-bottom:14px;">
@@ -2692,12 +2526,239 @@
 
 <nav>
   <span class="logo">🏢 Coach Empresa</span>
-  <a href="#crear-empresa" class="active">Crear tu Empresa</a>
+  <a href="#posibles-negocios" class="active">Posibles Negocios</a>
+  <a href="#crear-empresa">Crear tu Empresa</a>
   <a href="#legal">Legal & Fiscal</a>
   <a href="../Dashboard/dashboard.html" style="margin-left:auto">🚀 Dashboard</a>
 </nav>
 
 <main>
+
+  <section id="posibles-negocios">
+    <h2 class="section-title">💡 Posibles Negocios</h2>
+
+    <div class="card mb-16" style="margin-bottom:16px;">
+      <h3 class="fw-700 mb-12">Posibles Negocios — evaluados contra tu perfil real, no contra una idea bonita</h3>
+      <p class="fs-13" style="line-height:1.7;color:var(--muted);">
+        "Automotriz vs. aeroespacial" era demasiado vago para ser un plan. Aquí están las opciones concretas,
+        cada una evaluada contra lo que de verdad eres capaz de hacer hoy: malo vendiendo en frío, bueno dirigiendo
+        IA con un ejemplo, liderazgo probado, tiempo limitado (trabajas tiempo completo en ALTEN), y un patrón de
+        abandono si no ves resultado rápido. Por eso el orden importa tanto como las opciones mismas.
+      </p>
+      <p class="fs-13 mt-8" style="line-height:1.7;color:var(--muted);">
+        Las Opciones 7 y 8 se agregaron después: al profundizar en tu historia real (mantenimiento industrial
+        farmacéutico antes de Ford, y tu red activa en Alemania) aparecieron dos ángulos que las primeras 6
+        opciones no cubrían.
+      </p>
+    </div>
+
+    <div class="negocio-grid">
+
+    <!-- OPCIÓN 1 -->
+    <div class="negocio-card pick" id="negocio1">
+      <div class="negocio-rank">⭐ Empieza aquí — la más rápida a primer ingreso</div>
+      <h3>1. Vender tu plantilla de Finanzas.html en comunidades de GBM</h3>
+      <div class="grid-3" style="margin-bottom:10px;">
+        <div class="stat-badge"><span style="color:#c2410c">Bajo-Medio</span><span>Requiere ventas</span></div>
+        <div class="stat-badge"><span class="text-green">1-3 semanas</span><span>A primer ingreso</span></div>
+        <div class="stat-badge"><span class="text-green">Alto</span><span>Techo de escala</span></div>
+      </div>
+      <p><strong>Qué es:</strong> idea tuya, y buena. El producto <strong>ya existe</strong> — es tu propio Finanzas.html. Lo conviertes en plantilla genérica (sin tus datos personales), le pones un precio ($99-299 MXN es rango típico de un producto digital de este tipo) y lo vendes en comunidades de GBM/inversión de Telegram, Discord o Facebook, donde la audiencia ya está pre-calificada: gente que activamente quiere controlar su dinero e invertir.</p>
+      <h5>Por qué encaja</h5>
+      <p>Costo de construcción: casi cero, ya está hecho. No es venta en frío — es distribución dentro de una comunidad que ya existe y ya quiere esto, apoyado en tu fuerza real de generar ideas y expectativa (con IA) para escribir el post de venta. Es la única opción con techo de escala alto y costo marginal casi cero: cada venta extra no te cuesta tiempo adicional.</p>
+      <h5>Primer paso esta semana — MUY IMPORTANTE</h5>
+      <p><strong style="color:var(--red);">Antes de compartir el archivo con nadie:</strong> tu Finanzas.html real tiene tu sueldo, tus deudas exactas y tus montos de inversión escritos directamente en el código. Crea una copia limpia con datos de ejemplo (o un formulario de bienvenida vacío) antes de vender absolutamente nada — esto no es opcional, es proteger tu propia información financiera.</p>
+      <h5>Riesgo principal</h5>
+      <p>Vender un producto digital de forma recurrente formalmente requiere factura (mismo trámite fiscal que necesitas para el freelance — ver Fase 0 del plan). Para las primeras ventas de validación puedes usar un link de pago simple, pero si esto escala, regularízalo pronto.</p>
+    </div>
+
+    <!-- OPCIÓN 2 -->
+    <div class="negocio-card pick" id="negocio2">
+      <div class="negocio-rank">⭐ Empieza aquí — mejor techo de ingreso por hora</div>
+      <h3>2. Freelance de automatización de pruebas automotrices (noches/fines de semana)</h3>
+      <div class="grid-3" style="margin-bottom:10px;">
+        <div class="stat-badge"><span class="text-green">Bajo</span><span>Requiere ventas</span></div>
+        <div class="stat-badge"><span class="text-green">4-8 semanas</span><span>A primer ingreso</span></div>
+        <div class="stat-badge"><span style="color:#c2410c">Medio</span><span>Techo de escala</span></div>
+      </div>
+      <p><strong>Qué es:</strong> ofrecer contratos cortos de automatización HIL/SIL, scripting Python/CAPL e integración CI/CD Jenkins a Tier 1/2 automotrices (Bosch, Continental, Magna, Aptiv, Valeo, Denso) o startups de EV/ADAS que necesitan capacidad extra pero no pueden contratar un senior de planta.</p>
+      <h5>Por qué encaja</h5>
+      <p>Es exactamente lo que ya sabes hacer con 6 años de experiencia real en Ford/Continental/Bosch — no hay curva de aprendizaje. No requiere vender en frío: se consigue por referidos directos de tus ex-colegas (tienes 4 empresas de trayectoria llenas de gente que ya confía en tu trabajo), no por marketing.</p>
+      <h5>Primer paso esta semana</h5>
+      <p>Mensaje directo a 5 ex-compañeros de Bosch/Continental/Ford preguntando si su equipo necesita apoyo freelance de automatización. Nada de página web ni oferta pulida — solo la pregunta directa.</p>
+      <h5>Riesgo principal</h5>
+      <p>Revisa tu contrato con ALTEN antes de facturarle a otra automotriz — puede haber cláusula de exclusividad o conflicto de interés que tengas que resolver primero (competencia directa con Ford vía ALTEN es zona de riesgo real).</p>
+    </div>
+
+    <!-- OPCIÓN 3 -->
+    <div class="negocio-card" id="negocio3">
+      <div class="negocio-rank">En paralelo, desde la semana 1</div>
+      <h3>3. Mentoría paga para ingenieros junior en testing automotriz</h3>
+      <div class="grid-3" style="margin-bottom:10px;">
+        <div class="stat-badge"><span class="text-green">Bajo-Medio</span><span>Requiere ventas</span></div>
+        <div class="stat-badge"><span class="text-green">2-4 semanas</span><span>A primer ingreso</span></div>
+        <div class="stat-badge"><span class="text-red">Bajo</span><span>Techo de escala</span></div>
+      </div>
+      <p><strong>Qué es:</strong> sesiones 1:1 o en grupo pequeño enseñando CAPL, Python, HIL y vTestStudio a ingenieros junior que quieren entrar a Bosch/Continental/Ford/Magna. Tu inglés B2 te permite venderlo también a quien busque entrar a la industria en EUA/Europa.</p>
+      <h5>Por qué encaja</h5>
+      <p>Usa tu liderazgo ya probado en Bosch y no requiere construir nada — solo tu conocimiento y tu tiempo. Es la opción de menor riesgo total de todo este plan.</p>
+      <h5>Primer paso esta semana</h5>
+      <p>1 post en LinkedIn ofreciendo 3 sesiones gratis a cambio de testimonio. De ahí sale tu primer caso de estudio para empezar a cobrar.</p>
+      <h5>Riesgo principal</h5>
+      <p>Ninguno relevante — es la apuesta más segura, pero por sí sola no cierra la brecha de $31,540/mes. Es complemento, no la apuesta principal.</p>
+    </div>
+
+    <!-- OPCIÓN 4 -->
+    <div class="negocio-card" id="negocio4">
+      <div class="negocio-rank">Apuesta de mediano plazo, en paralelo</div>
+      <h3>4. Versión productizada de tu herramienta "CodeReview" (IA + revisión de código embebido)</h3>
+      <div class="grid-3" style="margin-bottom:10px;">
+        <div class="stat-badge"><span style="color:#c2410c">Medio</span><span>Requiere ventas</span></div>
+        <div class="stat-badge"><span class="text-red">3-6 meses</span><span>A primer ingreso</span></div>
+        <div class="stat-badge"><span class="text-green">Alto</span><span>Techo de escala</span></div>
+      </div>
+      <p><strong>Qué es:</strong> adaptar la herramienta de revisión de código con IA que ya construiste en ALTEN (con Claude Code/Copilot) a una versión que puedas ofrecer a 2-3 equipos pequeños de software embebido que no pueden pagar herramientas enterprise tipo SonarQube.</p>
+      <h5>Por qué encaja</h5>
+      <p>Es la prueba más fuerte que tienes de que sabes "dirigir IA para construir producto" — ya la construiste una vez con ejemplo real. Combina tu ventaja única: automotriz + IA en producción, algo que casi nadie más tiene junto.</p>
+      <h5>Primer paso esta semana</h5>
+      <p>Nada todavía — este es el proyecto de la Fase 2, no de la Fase 0. Anótalo, no lo empieces aún; dispersarte entre 3 cosas a la vez es tu patrón de abandono en acción.</p>
+      <h5>Riesgo principal</h5>
+      <p>Revisa si ALTEN/Ford tienen propiedad intelectual sobre la herramienta original — si es así, tendrías que reconstruir una versión genérica desde cero fuera de horario laboral, con tus propios ejemplos.</p>
+    </div>
+
+    <!-- OPCIÓN 5 -->
+    <div class="negocio-card" id="negocio5">
+      <div class="negocio-rank">Exploración de bajo compromiso — no es plan B todavía</div>
+      <h3>5. Aeroespacial con tu papá</h3>
+      <div class="grid-3" style="margin-bottom:10px;">
+        <div class="stat-badge"><span class="text-muted">Desconocido</span><span>Requiere ventas</span></div>
+        <div class="stat-badge"><span class="text-red">Incierto</span><span>A primer ingreso</span></div>
+        <div class="stat-badge"><span class="text-muted">Desconocido</span><span>Techo de escala</span></div>
+      </div>
+      <p><strong>Qué es honestamente hoy:</strong> no es un negocio, es una conversación pendiente. Tu papá tiene contactos pero no usa tecnología, y tú todavía no sabes qué proceso específico les duele lo suficiente como para pagar por resolverlo. Antes de construir cualquier cosa aquí hace falta encontrar UN dolor concreto y validable.</p>
+      <h5>Por qué no es la prioridad #1</h5>
+      <p>Cero validación, cero claridad del problema, y depende de terceros (clientes de tu papá) que ni siquiera saben que esto existe. Construir un "piloto" antes de tener esa claridad es exactamente el tipo de apuesta que no es realista todavía — tenías razón en señalarlo.</p>
+      <h5>Primer paso esta semana</h5>
+      <p>Una llamada de 30 min con tu papá, sin compromiso de construir nada — solo para escuchar qué hace manualmente y qué le cuesta tiempo o dinero. Tratar esto como investigación, no como apuesta.</p>
+      <h5>Preguntas para llevar a esa llamada</h5>
+      <ul style="padding-left:18px;font-size:12.5px;line-height:1.8;">
+        <li>¿Qué haces manualmente cada semana que más tiempo te quita?</li>
+        <li>¿Hay algo que llevas en papel o Excel que se te complica o se te pierde?</li>
+        <li>¿Cómo consigues clientes hoy y cómo les das seguimiento?</li>
+        <li>¿Algún cliente te ha pedido algo que no supiste resolver por falta de tecnología?</li>
+        <li>De tus clientes, ¿cuántos usan computadora o celular para su negocio, y cuántos todo en persona/papel?</li>
+      </ul>
+    </div>
+
+    <!-- OPCIÓN 6 -->
+    <div class="negocio-card" id="negocio6">
+      <div class="negocio-rank">No es un negocio nuevo — es una corrección</div>
+      <h3>6. Dejar de manejar DiDi y redirigir esas horas a las Opciones 1-2</h3>
+      <p><strong>El problema real:</strong> un ingeniero senior de automatización freelance cobra aproximadamente $300-600 MXN/hora en México (o $25-45 USD/hora remoto ≈ $490-880 MXN/hora usando tu inglés B2), mientras que DiDi deja netos aproximados de $80-120 MXN/hora después de gasolina y desgaste del auto. Estás cambiando tu hora más valiosa por tu hora menos valiosa — y además desgastando el mismo BYD que te está costando $109,700 en puro interés, para generar el ingreso más bajo posible con tu tiempo.</p>
+      <h5>Acción concreta</h5>
+      <p>En cuanto las Opciones 1 o 2 tengan tu primer peso cobrado, esas horas de DiDi se mueven ahí. No antes — no dejes DiDi sin tener ya el reemplazo generando, porque eso rompería tu único colchón de efectivo actual.</p>
+    </div>
+
+    <!-- OPCIÓN 7 -->
+    <div class="negocio-card" id="negocio7">
+      <div class="negocio-rank">Apuesta de nicho — validar antes de construir</div>
+      <h3>7. Automatización/mantenimiento predictivo para manufactura regulada (farmacéutica, alimentos)</h3>
+      <div class="grid-3" style="margin-bottom:10px;">
+        <div class="stat-badge"><span style="color:#c2410c">Medio</span><span>Requiere ventas</span></div>
+        <div class="stat-badge"><span class="text-red">Incierto</span><span>A primer ingreso</span></div>
+        <div class="stat-badge"><span class="text-green">Alto</span><span>Techo de escala</span></div>
+      </div>
+      <p><strong>Qué es:</strong> ofrecer automatización, instrumentación o mantenimiento predictivo a plantas de manufactura regulada que hoy operan con equipo viejo y sin monitoreo digital — el mismo tipo de máquinas que tú reparabas (tableteadoras, hornos de secado, llenadoras, encapsuladoras) antes de Ford.</p>
+      <h5>Por qué encaja</h5>
+      <p>Combinación que casi nadie tiene: experiencia real de planta reparando este equipo + tu formación de Mecatrónica en automatización industrial, PLCs, neumática/hidráulica y control + tu capacidad de dirigir IA para construir herramientas de monitoreo. No es teoría — ya trabajaste con estas máquinas.</p>
+      <h5>Primer paso esta semana</h5>
+      <p>Nada todavía — a diferencia de las Opciones 1-2, aquí no tienes ni un contacto cálido confirmado hoy. Es Fase 2-3, no Fase 0. Cuando llegue el momento: contacta a algún excompañero o supervisor de aquel primer trabajo para preguntar qué problemas de automatización siguen sin resolver ahí.</p>
+      <h5>Riesgo principal</h5>
+      <p>Misma trampa que la Opción 5 (aeroespacial): no construyas nada hasta validar un dolor real y un cliente dispuesto a pagar. Sin eso, es una idea bonita, no un negocio.</p>
+    </div>
+
+    <!-- OPCIÓN 8 -->
+    <div class="negocio-card" id="negocio8">
+      <div class="negocio-rank">Apuesta de mediano plazo — apalanca tu red en Alemania</div>
+      <h3>8. Freelance/consultoría con tu red activa de Bosch en Stuttgart</h3>
+      <div class="grid-3" style="margin-bottom:10px;">
+        <div class="stat-badge"><span class="text-green">Bajo</span><span>Requiere ventas</span></div>
+        <div class="stat-badge"><span style="color:#c2410c">Medio</span><span>A primer ingreso</span></div>
+        <div class="stat-badge"><span class="text-green">Alto</span><span>Techo de escala</span></div>
+      </div>
+      <p><strong>Qué es:</strong> ofrecer automatización/testing a proyectos conectados con los líderes de Bosch que sigues tratando en Stuttgart, ya sea por referido directo o preparando el terreno para clientes europeos cuando retomes la Maestría en Alemania.</p>
+      <h5>Por qué encaja</h5>
+      <p>A diferencia de la Opción 2 (referidos automotrices en México), aquí ya tienes relaciones de mayor nivel — líderes, no solo excolegas —, y las tarifas europeas ($25-45 USD/hora, tu inglés B2 ya lo habilita) son 2-3× las de la Opción 2. Además llega justo a tiempo con tu Maestría pausada: llegarías a Alemania con red ya construida, no desde cero.</p>
+      <h5>Primer paso esta semana</h5>
+      <p>Nada todavía — vive en Fase 1-2, después de que las Opciones 1-2 den tracción. Cuando llegue el momento: un mensaje directo, sin pedir nada todavía, a 1-2 de esos líderes preguntando cómo les va y si su equipo alguna vez necesita apoyo remoto.</p>
+      <h5>Riesgo principal</h5>
+      <p>Es una relación profesional, no una amistad cercana — trátala con el mismo cuidado que a un cliente potencial, no como favor. Revisa cláusulas de exclusividad con ALTEN/Ford antes de facturarle a cualquier entidad relacionada con Bosch, igual que en la Opción 2.</p>
+    </div>
+
+    </div><!-- /negocio-grid -->
+
+    <!-- PLANTILLAS -->
+    <div class="card mb-16" style="margin-bottom:16px;">
+      <h3 class="fw-700 mb-12">Plantillas de mensajes — listas para copiar</h3>
+      <p class="fs-13 text-muted mb-12">Tu bloqueo no es no saber qué decir — es no tener nada escrito para empezar. Copia esto, ajusta el nombre, y mándalo. Editar algo que ya existe es mucho más fácil que crear desde cero.</p>
+
+      <h5>Opción 2 — mensaje directo a ex-colegas</h5>
+      <p class="fs-13" style="line-height:1.6;background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 14px;font-style:italic;">
+        "Hola [nombre], ¿cómo va todo en [empresa]? Te escribo porque ando abriendo un poco de tiempo para proyectos freelance de automatización de pruebas (Python, CAPL, HIL/CI-CD) — nada que compita con Ford/ALTEN, más bien para otros equipos o proveedores. ¿Tu equipo anda necesitando apoyo extra en algo así, o conoces a alguien que sí? Sin compromiso, solo preguntando."
+      </p>
+
+      <h5 class="mt-8">Opción 1 — post para comunidades de GBM</h5>
+      <p class="fs-13" style="line-height:1.6;background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 14px;font-style:italic;">
+        "Hice una plantilla de Excel/HTML para trackear mi patrimonio neto, deudas, inversiones y presupuesto en un solo lugar — la empecé a usar hace [tiempo] porque ninguna app gratuita me dejaba ver todo junto. Quedó bien completa así que decidí ponerla disponible por $[precio] — [1-2 líneas de qué incluye]. Si a alguien le sirve algo así, con gusto se las paso."
+      </p>
+
+      <h5 class="mt-8">Opción 3 — post de mentoría (LinkedIn)</h5>
+      <p class="fs-13" style="line-height:1.6;background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 14px;font-style:italic;">
+        "Llevo 6 años en testing automotriz (Ford, Continental, Bosch) trabajando con CAPL, Python, HIL y CI/CD. Voy a dar 3 sesiones gratis de 30 min a quien esté buscando entrar a la industria o mejorar en automatización — a cambio solo pido honestidad si te sirvió (y si quieres, un testimonio). Comenta o mándame DM."
+      </p>
+    </div>
+
+    <!-- CUÁNTO COBRAR -->
+    <div class="card mb-16" style="margin-bottom:16px;">
+      <h3 class="fw-700 mb-12">¿Cuánto cobrar? — tu debilidad #1 no puede ser una adivinanza</h3>
+      <p class="fs-13 text-muted mb-12">Como Ventas es tu skill más baja (15/100), no improvises un precio en la llamada — decide el número ANTES y ya no lo negocias en caliente.</p>
+      <div class="impuesto-row"><span class="imp-nombre">Opción 2 — Freelance automatización (por hora, cliente nuevo)</span><span class="imp-fecha">$350-450 MXN/h</span></div>
+      <div class="impuesto-row"><span class="imp-nombre">Opción 2 — Proyecto pequeño cerrado (framework/script a la medida)</span><span class="imp-fecha">$8,000-15,000 MXN</span></div>
+      <div class="impuesto-row"><span class="imp-nombre">Opción 1 — Plantilla GBM (precio de lanzamiento, para validar volumen)</span><span class="imp-fecha">$99-149 MXN</span></div>
+      <div class="impuesto-row"><span class="imp-nombre">Opción 3 — Mentoría, primeras 5 sesiones pagadas (tras las 3 gratis)</span><span class="imp-fecha">$300-400 MXN/h</span></div>
+      <hr class="divider">
+      <p class="fs-13 fw-700 mb-12">Para protegerte, sin importar la opción:</p>
+      <div class="check-item"><input type="checkbox" id="pr1"><label for="pr1">Pide 30-50% por adelantado antes de empezar cualquier proyecto pagado</label></div>
+      <div class="check-item"><input type="checkbox" id="pr2"><label for="pr2">Deja el alcance por escrito, aunque sea en un mensaje de WhatsApp resumido</label></div>
+      <div class="check-item"><input type="checkbox" id="pr3"><label for="pr3">No entregues el trabajo final (código, plantilla) sin el pago completo</label></div>
+      <div class="check-item"><input type="checkbox" id="pr4"><label for="pr4">Si alguien regatea mucho el precio inicial, es señal de que no es tu cliente ideal — no bajes por debajo de tu mínimo</label></div>
+    </div>
+
+    <!-- SEGUIMIENTO REAL -->
+    <div class="card">
+      <h3 class="fw-700 mb-12">Seguimiento de outreach — Opciones 1 y 2</h3>
+      <p class="fs-13 text-muted mb-12">Esto es lo que faltaba: un lugar para registrar de verdad a quién le escribiste, no solo la intención. Llénalo tú mismo — no se guarda automáticamente, es tu bitácora manual.</p>
+
+      <p class="fs-13 fw-700 mb-12">Opción 2 — Freelance: 5 ex-colegas contactados</p>
+      <div class="grid-2 mb-16" style="margin-bottom:16px;">
+        <div class="check-item"><input type="checkbox" id="oc1"><label for="oc1">1.</label><input type="text" placeholder="Nombre · empresa · fecha · respuesta" style="flex:1;"></div>
+        <div class="check-item"><input type="checkbox" id="oc2"><label for="oc2">2.</label><input type="text" placeholder="Nombre · empresa · fecha · respuesta" style="flex:1;"></div>
+        <div class="check-item"><input type="checkbox" id="oc3"><label for="oc3">3.</label><input type="text" placeholder="Nombre · empresa · fecha · respuesta" style="flex:1;"></div>
+        <div class="check-item"><input type="checkbox" id="oc4"><label for="oc4">4.</label><input type="text" placeholder="Nombre · empresa · fecha · respuesta" style="flex:1;"></div>
+        <div class="check-item"><input type="checkbox" id="oc5"><label for="oc5">5.</label><input type="text" placeholder="Nombre · empresa · fecha · respuesta" style="flex:1;"></div>
+      </div>
+
+      <p class="fs-13 fw-700 mb-12">Opción 1 — Plantilla GBM: comunidades donde publicaste</p>
+      <div class="grid-2">
+        <div class="check-item"><input type="checkbox" id="og1"><label for="og1">1.</label><input type="text" placeholder="Comunidad · fecha · ventas" style="flex:1;"></div>
+        <div class="check-item"><input type="checkbox" id="og2"><label for="og2">2.</label><input type="text" placeholder="Comunidad · fecha · ventas" style="flex:1;"></div>
+        <div class="check-item"><input type="checkbox" id="og3"><label for="og3">3.</label><input type="text" placeholder="Comunidad · fecha · ventas" style="flex:1;"></div>
+      </div>
+      <p class="fs-13 text-muted mt-8">Checkpoint de Fase 0-1 en tu Plan Maestro: si a las 8 semanas esto sigue vacío, es la señal de cambiar de canal, no de esperar más.</p>
+    </div>
+
+  </section>
+  <!-- fin posibles-negocios -->
 
   <section id="crear-empresa">
     <h2 class="section-title">🏢 Crear tu Empresa — Guía completa en México</h2>
@@ -3009,10 +3070,9 @@
     if (btn) btn.classList.toggle('abierto', abierto);
   }
 
-  // Salta a una tarjeta de 💡 Posibles Negocios desde cualquier mención en el Plan Maestro
+  // Salta a una tarjeta de 💡 Posibles Negocios (Coach Empresa) desde cualquier mención en el Plan Maestro
   function irANegocios(id) {
-    const btns = document.querySelectorAll('#perfil .subtab-btn');
-    showSubtab('perfil', 'negocios', btns[1]);
+    cambiarModo('empresa');
     setTimeout(() => {
       const el = document.getElementById(id);
       if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });

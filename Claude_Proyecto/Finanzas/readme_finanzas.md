@@ -61,7 +61,7 @@ Variables globales adicionales: `editId`, `confCb`, `payDebtId`, `contribGoalId`
 - **Target**: $500,000 MXN para **01 oct 2027** (verificado 2026-07-29 contra el seed en código — el dato anterior de este documento, $300,000/dic 2027, estaba desactualizado)
 - **ID de meta**: `g001` (o `icon === '🎓'`)
 - **Componentes que cuentan**: Fondo de emergencia + CETES + Acciones/inversiones + BTC en MXN
-- Nota de contexto (ver `../Coach/README.md` → Plan Maestro): en julio 2026 se decidió pausar nuevas aportaciones a esta meta por 1 año; confirmar contra el `date` real en `S.goals` antes de asumir que sigue vigente tal cual, ya que este tipo de decisión vive en Coach, no en el código de Finanzas.
+- Nota de contexto (ver `../Coach/readme_coach_v2.md` → Plan Maestro): en julio 2026 se decidió pausar nuevas aportaciones a esta meta por 1 año; confirmar contra el `date` real en `S.goals` antes de asumir que sigue vigente tal cual, ya que este tipo de decisión vive en Coach, no en el código de Finanzas.
 
 ### WEEKLY_PICKS (actualizar cada lunes pidiendo a Claude)
 ```js

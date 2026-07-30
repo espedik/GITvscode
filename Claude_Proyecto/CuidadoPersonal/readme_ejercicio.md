@@ -44,9 +44,9 @@ El horario semanal (`S.rutina`) viene precargado con una rutina de ejemplo de 5-
 
 ## Referencias cruzadas
 
-- Incrustada vía `<iframe>` en [`cuidadopersonal.md`](cuidadopersonal.md) (subtab "Ejercicio"). Comparte `localStorage` con el shell por origen `file://` compartido (ver `cuidadopersonal.md`).
+- Incrustada vía `<iframe>` en [`readme_cuidadopersonal.md`](readme_cuidadopersonal.md) (subtab "Ejercicio"). Comparte `localStorage` con el shell por origen `file://` compartido (ver `readme_cuidadopersonal.md`).
 - El **Dashboard** (`../Dashboard/dashboard.html`) **no** lee `mirutina_v1` todavía — no hay ninguna tarjeta ni score derivado de esta app en el Dashboard más allá del enlace de acceso directo en "Todas mis apps" (que en realidad muestra estadísticas de `misalud_v1.ejercicios`, no de esta app). Si se quiere integrar racha/sesiones de esta app al Dashboard, es trabajo pendiente — habría que replicar la lógica de `S.rutina`/`S.sesiones` en `Dashboard/dashboard.html` siguiendo el mismo patrón que ya existe para `RUTINA_TASKS`/`SK`/`PHASES` (ver [`../README.md`](../README.md) sección "Datos duplicados").
-- Distinto de `CuidadoPersonal/salud.md` → sección "💪 Ejercicio" interna de Salud, que es un registro **ligero** de cardio/fuerza que sí alimenta el cálculo de calorías netas del día — no confundir ambos trackers de ejercicio.
+- Distinto de `CuidadoPersonal/readme_salud.md` → sección "💪 Ejercicio" interna de Salud, que es un registro **ligero** de cardio/fuerza que sí alimenta el cálculo de calorías netas del día — no confundir ambos trackers de ejercicio.
 - Mapa completo del proyecto: [`../README.md`](../README.md).
 
 ## Cómo usarlo

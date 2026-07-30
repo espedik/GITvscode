@@ -9,7 +9,7 @@ Tema claro/oscuro con toggle (🌙/☀️ arriba a la derecha), persistido en `l
 Un único botón (`cambiarModo('personal'|'empresa')`) alterna entre dos `<div class="vista-panel">` independientes, cada uno con su propio `<nav>` de navegación por ancla (`#seccion`) y scroll-spy propio (`refrescarScrollSpy()`, recalculado en cada cambio de modo):
 
 - **🪙 Coach — Personal** (modo por defecto): `#perfil` · `#rutina` · `#habitos` · `#aprendizaje` · `#legal-personal`
-- **🏢 Coach — Empresa**: `#crear-empresa` · `#legal`
+- **🏢 Coach — Empresa**: `#posibles-negocios` · `#crear-empresa` · `#legal`
 
 ## Modelo de datos — 3 claves de `localStorage`
 
@@ -24,10 +24,12 @@ Un único botón (`cambiarModo('personal'|'empresa')`) alterna entre dos `<div c
 La portada única del modo Personal (fusiona lo que en versiones viejas eran Dashboard + Perfil por separado). Hero con KPIs reales (patrimonio líquido, deuda total, fondo de emergencia, `id="kpiDiasMeta"` = días restantes al 01 ene 2030, calculado en vivo). 3 subtabs (`showSubtab('perfil', tab, btn)`):
 
 - **Diagnóstico & Plan** — historia real (mantenimiento industrial farmacéutico → Ford → Continental → Bosch → Stuttgart → Google/Intelliswift → ALTEN), diagnóstico financiero riguroso, fortalezas/debilidades, moat competitivo, riesgo principal, y el **Plan Maestro en 4 fases** con navegación por pasos (`#fase0`..`#fase3`, botones `.plan-step` con `id="step0"`..`id="step3"`).
-- **💡 Posibles Negocios** — 8 opciones rankeadas contra el perfil real, cada una con `id="negocio1"`..`id="negocio8"` (saltables desde cualquier parte de la app con `irANegocios('negocioN')`, que hace scroll suave y activa el subtab si hace falta).
+- **🎯 Metas** (`#perfil-metas`, reemplazó a "Posibles Negocios" el 2026-07-30 — ver nota abajo) — checklist de metas de vida en 4 tarjetas dentro de `.perfil-grid` × 2: 🚩 Corto plazo (torneo de ajedrez, Hyrox, liquidar Banamex y cancelar la tarjeta, liquidar TC BBVA, fondo de emergencia a $10,000), 🧭 Mediano plazo (liquidar el crédito del BYD Dolphin Mini, $500,000 ahorrados, trabajar remoto, Cupra Formentor), 🏔️ Largo plazo (ser millonario con la empresa ya creada, departamento en la zona que quiera) y ✨ Extras/bucket list (pelear en Tailandia, rascacielos en Hong Kong, lanzamiento de SpaceX, retomar la Maestría en Alemania, Hyrox internacional). Cada meta con fecha/monto conocido cita el dato exacto ya existente en Diagnóstico & Plan (calendario de deuda, meta de $500,000 de la Maestría, meta de $1,000,000 del Plan Maestro) en vez de inventar uno nuevo. Checkboxes `.check-item` **no persisten** — mismo patrón visual-only que `#habitos`/`#legal-personal`.
 - **CV Completo** — CV imprimible; `downloadCV()` cambia `document.title`, llama a `window.print()` y restaura el título al terminar (o al evento `afterprint`).
 
-### Plan Maestro — fechas (IIFE en el `<script>`, ~línea 2984)
+**2026-07-30 — "Posibles Negocios" se movió a Coach Empresa** (a petición explícita de Adán): las 8 tarjetas de negocio (`id="negocio1"`..`id="negocio8"`, `.negocio-grid`) y sus 3 tarjetas de apoyo (Plantillas de mensajes, Cuánto cobrar, Seguimiento de outreach) viven ahora completas en `#posibles-negocios` dentro del modo Empresa (ver sección "Modo Empresa" abajo) — contenido byte-idéntico, solo cambió el contenedor (de `.subtab-panel` dentro de `#perfil` a `<section>` de nivel superior). El slot que dejó libre en el subtab-nav de `#perfil` ahora lo ocupa 🎯 Metas.
+
+### Plan Maestro — fechas (IIFE en el `<script>`, ~línea 3084)
 
 ```js
 inicio = new Date(2026, 6, 18)   // 18 jul 2026
@@ -41,7 +43,7 @@ fases = [
 ```
 Calcula fase activa, marca `.is-done/.is-active/.is-pending` en cada bloque de fase y en los `.plan-step`, y escribe `kpiDiasMeta`. **Estas mismas 4 fechas están duplicadas en `Dashboard/dashboard.html` (constante `PHASES`)** — si cambian aquí, hay que replicarlas allá (ver `../README.md`).
 
-### Radar FIFA de habilidades (IIFE en el `<script>`, ~línea 3237)
+### Radar FIFA de habilidades (IIFE en el `<script>`, ~línea 3403)
 
 Array `SK` con 12 skills, cada una `{id, name, full, icon, val, w (peso), cat, desc}`. Al cargar, sobreescribe `val` con lo que haya en `localStorage['radarp_'+id]` si existe. `calcOVR()` calcula el overall ponderado por `w`. `draw()` dibuja el radar en `<canvas>` a mano (sin librería), sensible al tema claro/oscuro. `buildSliders()` genera un slider 0-100 por skill; `updateRadarSkill(id,val)` (expuesta en `window`) actualiza `SK`, persiste en `radarp_{id}` y redibuja. `showSkillTab(id)`/`goToSkillDetail(id)` abren el detalle expandible de una skill (roadmap 0→100, contenido estático por skill).
 
@@ -110,12 +112,13 @@ Checklist personal (`.check-item`, **no persiste** — mismo comportamiento visu
 
 ## Modo Empresa
 
+- **`#posibles-negocios`** (nuevo el 2026-07-30, movido desde `#perfil` en modo Personal — ver arriba) — 8 opciones de negocio rankeadas contra el perfil real de Adán, cada una con `id="negocio1"`..`id="negocio8"` dentro de `.negocio-grid` (saltables desde cualquier parte de la app con `irANegocios('negocioN')`, que ahora cambia a modo Empresa con `cambiarModo('empresa')` y hace scroll suave hasta la tarjeta — ya no activa un subtab, porque la sección es de nivel superior, siempre renderizada). Incluye además 3 tarjetas de apoyo: Plantillas de mensajes (listas para copiar), ¿Cuánto cobrar? (tarifas de referencia + checklist `pr1`-`pr4` de protección al cobrar) y Seguimiento de outreach (bitácora manual `oc1`-`oc5`/`og1`-`og3`, no persiste).
 - **`#crear-empresa`** — guía estática completa para constituir una empresa en México (Persona Física vs. Persona Moral, SAS vs. SA de CV, rutas de constitución, costos/tiempos estimados, obligaciones recurrentes, errores comunes). Contenido de referencia, sin interactividad.
 - **`#legal`** — checklist legal del negocio (**no persiste**) + calendario fiscal del negocio + "Qué puedo deducir si tuviera empresa" (Operación, Nómina, Equipo/tecnología, Marketing, Viáticos, Financieros, Protección del negocio, Costo de ventas, Estímulos fiscales adicionales).
 
 ## Funciones utilitarias / globales
 
-`cambiarModo(modo)` — alterna modo Personal/Empresa, hace scroll a 0 y recalcula el scroll-spy. `toggleTheme()` — alterna `data-theme` y persiste en `coach-theme`. `showSubtab(section, tab, btn)` — subtabs internas de una sección (usado en `#perfil`). `toggleCard(id, btn)` — colapsa/expande bloques con chevron. `irANegocios(id)` — salta a una opción de negocio con scroll suave. `refrescarScrollSpy()` — recalcula qué `<section>`/`<a>` están dentro del panel de modo visible, para resaltar el link de nav activo al hacer scroll.
+`cambiarModo(modo)` — alterna modo Personal/Empresa, hace scroll a 0 y recalcula el scroll-spy. `toggleTheme()` — alterna `data-theme` y persiste en `coach-theme`. `showSubtab(section, tab, btn)` — subtabs internas de una sección (usado en `#perfil` y en `#crear-empresa`). `toggleCard(id, btn)` — colapsa/expande bloques con chevron. `irANegocios(id)` — cambia a Coach Empresa (`cambiarModo('empresa')`) y hace scroll suave hasta la tarjeta de negocio indicada; usada desde enlaces `.inline-link` en Diagnóstico & Plan y en 🎯 Metas (modo Personal) para saltar a `#posibles-negocios` (modo Empresa). `refrescarScrollSpy()` — recalcula qué `<section>`/`<a>` están dentro del panel de modo visible, para resaltar el link de nav activo al hacer scroll (genérico: cualquier `<section id>` nuevo dentro de un `.vista-panel` se detecta solo, no hace falta tocar esta función al agregar secciones).
 
 ## Referencias cruzadas
 

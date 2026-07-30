@@ -186,6 +186,7 @@ tbody tr:hover td{background:rgba(0,232,122,.02)}
     <div class="nav-item" onclick="nav('rutina')"><span class="ico">🥩</span>Rutina Muscular</div>
     <div class="nav-label">Salud</div>
     <div class="nav-item" onclick="nav('digestiva')"><span class="ico">🫁</span>Salud Digestiva</div>
+    <div class="nav-item" onclick="nav('examenes')"><span class="ico">🩺</span>Exámenes Médicos</div>
     <div class="nav-label">Configuración</div>
     <div class="nav-item" onclick="nav('metas')"><span class="ico">🎯</span>Perfil & Metas</div>
   </nav>
@@ -295,6 +296,9 @@ tbody tr:hover td{background:rgba(0,232,122,.02)}
     <!-- SALUD DIGESTIVA -->
     <section id="s-digestiva" class="section"></section>
 
+    <!-- EXÁMENES MÉDICOS -->
+    <section id="s-examenes" class="section"></section>
+
     <!-- METAS -->
     <section id="s-metas" class="section">
       <div class="sh"><h2>🎯 Perfil & Metas</h2></div>
@@ -393,6 +397,56 @@ tbody tr:hover td{background:rgba(0,232,122,.02)}
   </div>
 </div>
 
+<!-- MODAL EXAMEN MÉDICO -->
+<div class="mo" id="mo-exam">
+  <div class="modal">
+    <div class="modal-h"><div class="modal-title" id="mo-exam-title">Registrar Examen</div><button class="modal-x" onclick="closeMo('mo-exam')">✕</button></div>
+    <div class="fg"><label>Categoría</label>
+      <select id="exam-cat" onchange="onExamCatChange()"></select>
+    </div>
+    <div class="fg" id="exam-nombre-wrap"><label>Examen / marcador</label>
+      <select id="exam-nombre-sel" onchange="onExamNombreChange()"></select>
+      <input id="exam-nombre-otro" placeholder="Ej. Ferritina, PSA, Cortisol..." style="display:none;margin-top:8px">
+    </div>
+    <div class="fr">
+      <div class="fg"><label>Valor *</label><input type="number" id="exam-valor" placeholder="0" step="0.01"></div>
+      <div class="fg"><label>Unidad</label><input id="exam-unidad" placeholder="mg/dL"></div>
+    </div>
+    <div id="exam-rango-info" class="ts tm" style="margin:-6px 0 14px"></div>
+    <div class="fg"><label>Fecha</label><input type="date" id="exam-fecha"></div>
+    <div class="fg"><label>Notas</label><input id="exam-notas" placeholder="Laboratorio, en ayuno, observaciones..."></div>
+    <div class="flex" style="justify-content:flex-end;gap:8px">
+      <button class="btn btn-o" onclick="closeMo('mo-exam')">Cancelar</button>
+      <button class="btn btn-g" onclick="saveExamen()">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL CHEQUEO / CONSULTA -->
+<div class="mo" id="mo-cheq">
+  <div class="modal">
+    <div class="modal-h"><div class="modal-title" id="mo-cheq-title">Registrar Chequeo</div><button class="modal-x" onclick="closeMo('mo-cheq')">✕</button></div>
+    <div class="fg"><label>Tipo</label>
+      <select id="cheq-tipo">
+        <option value="general">🩺 Chequeo general</option>
+        <option value="dental">🦷 Dental</option>
+        <option value="oftalmologico">👁️ Oftalmológico / vista</option>
+        <option value="dermatologico">🧴 Dermatológico</option>
+        <option value="cardiologico">❤️ Cardiológico</option>
+        <option value="otro">📋 Otro</option>
+      </select>
+    </div>
+    <div class="fg"><label>Fecha</label><input type="date" id="cheq-fecha"></div>
+    <div class="fg"><label>Resultado / diagnóstico</label><input id="cheq-resultado" placeholder="Ej. Todo normal, colesterol algo alto, caries en muela..."></div>
+    <div class="fg"><label>Próxima cita (opcional)</label><input type="date" id="cheq-proxima"></div>
+    <div class="fg"><label>Notas</label><input id="cheq-notas" placeholder="Médico, clínica, indicaciones..."></div>
+    <div class="flex" style="justify-content:flex-end;gap:8px">
+      <button class="btn btn-o" onclick="closeMo('mo-cheq')">Cancelar</button>
+      <button class="btn btn-g" onclick="saveChequeo()">Guardar</button>
+    </div>
+  </div>
+</div>
+
 <!-- CONFIRM -->
 <div class="conf" id="conf">
   <div class="conf-box">
@@ -416,13 +470,66 @@ let S = {
   ejercicios: [],
   medidas: [],
   agua: {},
-  plan: {}
+  plan: {},
+  examenes: [],
+  chequeos: [],
+  perfilMedico: { tipoSangre:'', alergias:'', medicamentos:'', condiciones:'', cirugias:'', antecedentesFamiliares:'', contactoEmergencia:'' }
 };
 let editId=null, confCb=null;
-let chEj=null, chPeso=null, chCal=null, chMac=null;
+let chEj=null, chPeso=null, chCal=null, chMac=null, chExam=null;
 
 const COMIDAS = {desayuno:'🌅 Desayuno',almuerzo:'☀️ Almuerzo',cena:'🌙 Cena',snack:'🍎 Snack'};
 const TIPO_EJ = {cardio:'🏃 Cardio',fuerza:'🏋️ Fuerza',flexibilidad:'🧘 Flexibilidad',hiit:'⚡ HIIT',deporte:'⚽ Deporte',otro:'📋 Otro'};
+
+// ─── EXÁMENES MÉDICOS — catálogo de referencia ───────────────────────────────
+// Rangos generales para adulto — orientativos, no diagnósticos. Cada registro guarda
+// su propio refMin/refMax al momento de capturarlo, así que cambiar este catálogo
+// después no altera el historial ya guardado.
+const CAT_OTRO = '__otro__';
+const EXAM_CATALOG = {
+  'Signos vitales': [
+    {id:'pas',    nombre:'Presión arterial sistólica', unidad:'mmHg',    min:90,  max:120},
+    {id:'pad',    nombre:'Presión arterial diastólica',unidad:'mmHg',    min:60,  max:80},
+    {id:'fc',     nombre:'Frecuencia cardiaca en reposo',unidad:'lpm',   min:60,  max:100},
+    {id:'sato2',  nombre:'Saturación de oxígeno',       unidad:'%',      min:95,  max:100}
+  ],
+  'Biometría hemática': [
+    {id:'hb',     nombre:'Hemoglobina',    unidad:'g/dL',    min:13.5, max:17.5},
+    {id:'hct',    nombre:'Hematocrito',    unidad:'%',       min:41,   max:50},
+    {id:'leuco',  nombre:'Leucocitos',     unidad:'x10³/µL', min:4.5,  max:11},
+    {id:'plaq',   nombre:'Plaquetas',      unidad:'x10³/µL', min:150,  max:450}
+  ],
+  'Glucosa y metabolismo': [
+    {id:'gluc',   nombre:'Glucosa en ayuno',              unidad:'mg/dL', min:70, max:99},
+    {id:'hba1c',  nombre:'Hemoglobina glucosilada (HbA1c)',unidad:'%',    min:4,  max:5.6}
+  ],
+  'Perfil lipídico': [
+    {id:'coltot', nombre:'Colesterol total', unidad:'mg/dL', min:0,  max:200},
+    {id:'ldl',    nombre:'Colesterol LDL',   unidad:'mg/dL', min:0,  max:100},
+    {id:'hdl',    nombre:'Colesterol HDL',   unidad:'mg/dL', min:40, max:200},
+    {id:'trig',   nombre:'Triglicéridos',    unidad:'mg/dL', min:0,  max:150}
+  ],
+  'Función renal': [
+    {id:'creat',  nombre:'Creatinina',      unidad:'mg/dL', min:0.7, max:1.3},
+    {id:'urea',   nombre:'Urea (BUN)',      unidad:'mg/dL', min:7,   max:20},
+    {id:'acurico',nombre:'Ácido úrico',     unidad:'mg/dL', min:3.4, max:7}
+  ],
+  'Función hepática': [
+    {id:'alt',    nombre:'ALT (TGP)',            unidad:'U/L',   min:7,   max:56},
+    {id:'ast',    nombre:'AST (TGO)',            unidad:'U/L',   min:10,  max:40},
+    {id:'bili',   nombre:'Bilirrubina total',    unidad:'mg/dL', min:0.1, max:1.2}
+  ],
+  'Tiroides': [
+    {id:'tsh',    nombre:'TSH',      unidad:'µUI/mL', min:0.4, max:4},
+    {id:'t4l',    nombre:'T4 libre', unidad:'ng/dL',  min:0.8, max:1.8}
+  ],
+  'Hormonal y vitaminas': [
+    {id:'testo',  nombre:'Testosterona total',   unidad:'ng/dL', min:264, max:916},
+    {id:'vitd',   nombre:'Vitamina D (25-OH)',   unidad:'ng/mL', min:30,  max:100},
+    {id:'vitb12', nombre:'Vitamina B12',         unidad:'pg/mL', min:200, max:900}
+  ]
+};
+const CHEQ_TIPOS = {general:'🩺 Chequeo general',dental:'🦷 Dental',oftalmologico:'👁️ Oftalmológico',dermatologico:'🧴 Dermatológico',cardiologico:'❤️ Cardiológico',otro:'📋 Otro'};
 
 const today = () => new Date().toISOString().slice(0,10);
 const uid = () => Date.now().toString(36)+Math.random().toString(36).slice(2);
@@ -447,9 +554,9 @@ document.querySelectorAll('.mo').forEach(m=>m.addEventListener('click',e=>{ if(e
 document.getElementById('conf').addEventListener('click',e=>{ if(e.target===document.getElementById('conf')) closeConf(); });
 
 // ─── NAVIGATION ──────────────────────────────────────────────────────────────
-const SECS=['dashboard','plan','alimentos','ejercicio','medidas','progreso','rutina','digestiva','metas'];
-const STITLE={dashboard:'📊 Dashboard',plan:'🍽️ Plan Semanal',alimentos:'🥗 Registro Diario',ejercicio:'💪 Ejercicio',medidas:'⚖️ Peso & Medidas',progreso:'📈 Progreso',rutina:'🥩 Rutina Muscular',digestiva:'🫁 Salud Digestiva',metas:'🎯 Perfil & Metas'};
-const RENDERS={dashboard:renderDashboard,plan:renderPlan,alimentos:renderAlimentos,ejercicio:renderEjercicio,medidas:renderMedidas,progreso:renderProgreso,rutina:renderRutina,digestiva:renderDigestiva,metas:renderMetas};
+const SECS=['dashboard','plan','alimentos','ejercicio','medidas','progreso','rutina','digestiva','examenes','metas'];
+const STITLE={dashboard:'📊 Dashboard',plan:'🍽️ Plan Semanal',alimentos:'🥗 Registro Diario',ejercicio:'💪 Ejercicio',medidas:'⚖️ Peso & Medidas',progreso:'📈 Progreso',rutina:'🥩 Rutina Muscular',digestiva:'🫁 Salud Digestiva',examenes:'🩺 Exámenes Médicos',metas:'🎯 Perfil & Metas'};
+const RENDERS={dashboard:renderDashboard,plan:renderPlan,alimentos:renderAlimentos,ejercicio:renderEjercicio,medidas:renderMedidas,progreso:renderProgreso,rutina:renderRutina,digestiva:renderDigestiva,examenes:renderExamenes,metas:renderMetas};
 
 function nav(s) {
   SECS.forEach(x=>document.getElementById('s-'+x).classList.toggle('active',x===s));
@@ -1428,6 +1535,300 @@ function renderDigestiva() {
     </div>
   `;
 }
+
+// ─── EXÁMENES MÉDICOS ────────────────────────────────────────────────────────
+function examStatusInfo(e) {
+  if(e.refMin==null) return {l:'Sin rango',bg:'rgba(255,255,255,.07)',col:'var(--text2)',bd:'rgba(255,255,255,.14)'};
+  if(e.valor<e.refMin) return {l:'Bajo',bg:'rgba(59,130,246,.15)',col:'var(--b)',bd:'rgba(59,130,246,.3)'};
+  if(e.valor>e.refMax) return {l:'Alto',bg:'rgba(255,59,107,.15)',col:'var(--r)',bd:'rgba(255,59,107,.3)'};
+  return {l:'Normal',bg:'rgba(0,232,122,.15)',col:'var(--g)',bd:'rgba(0,232,122,.3)'};
+}
+
+function renderExamenes() {
+  const sec=document.getElementById('s-examenes'); if(!sec) return;
+
+  const list=[...S.examenes].sort((a,b)=>b.fecha.localeCompare(a.fecha));
+  const cheq=[...S.chequeos].sort((a,b)=>b.fecha.localeCompare(a.fecha));
+
+  // último valor de cada marcador (por examenId de catálogo, o por nombre si es personalizado)
+  const latestByMarker={};
+  [...S.examenes].sort((a,b)=>a.fecha.localeCompare(b.fecha)).forEach(e=>{ latestByMarker[e.examenId||e.nombre]=e; });
+  const markers=Object.values(latestByMarker).sort((a,b)=>a.categoria.localeCompare(b.categoria)||a.nombre.localeCompare(b.nombre));
+  const fueraDeRango=markers.filter(m=>{const st=examStatusInfo(m);return st.l==='Alto'||st.l==='Bajo';}).length;
+
+  const proximas=cheq.filter(c=>c.proxima&&c.proxima>=today()).sort((a,b)=>a.proxima.localeCompare(b.proxima));
+  const pm=S.perfilMedico;
+
+  sec.innerHTML=`
+    <div class="sh"><h2>🩺 Exámenes Médicos</h2>
+      <div class="flex gap8">
+        <button class="btn btn-o" onclick="openCheqModal()">+ Chequeo</button>
+        <button class="btn btn-g" onclick="openExamModal()">+ Examen</button>
+      </div>
+    </div>
+
+    <div class="g4" style="margin-bottom:18px">
+      <div class="card" style="border-left:4px solid var(--g)">
+        <div class="card-title" style="color:var(--g)">🧪 Exámenes registrados</div>
+        <div class="card-val">${list.length}</div>
+        <div class="card-sub">${list.length?'Último: '+fmtD(list[0].fecha):'Sin registros'}</div>
+      </div>
+      <div class="card" style="border-left:4px solid ${fueraDeRango?'var(--r)':'var(--g)'}">
+        <div class="card-title" style="color:${fueraDeRango?'var(--r)':'var(--g)'}">${fueraDeRango?'⚠️':'✅'} Fuera de rango</div>
+        <div class="card-val" style="color:${fueraDeRango?'var(--r)':'var(--g)'}">${fueraDeRango}</div>
+        <div class="card-sub">de ${markers.length} marcador(es) con valor actual</div>
+      </div>
+      <div class="card" style="border-left:4px solid var(--b)">
+        <div class="card-title" style="color:var(--b)">🩺 Chequeos registrados</div>
+        <div class="card-val">${cheq.length}</div>
+        <div class="card-sub">${cheq.length?'Último: '+fmtD(cheq[0].fecha):'Sin registros'}</div>
+      </div>
+      <div class="card" style="border-left:4px solid var(--o)">
+        <div class="card-title" style="color:var(--o)">📅 Próxima cita</div>
+        <div class="card-val" style="font-size:18px">${proximas.length?fmtD(proximas[0].proxima):'—'}</div>
+        <div class="card-sub">${proximas.length?(CHEQ_TIPOS[proximas[0].tipo]||proximas[0].tipo):'Sin citas agendadas'}</div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom:18px">
+      <div class="card-title" style="margin-bottom:14px">📋 Cómo estás — último valor de cada marcador</div>
+      ${markers.length?`<div class="tw"><table>
+        <thead><tr><th>Categoría</th><th>Marcador</th><th>Valor</th><th>Rango de referencia</th><th>Estado</th><th>Fecha</th></tr></thead>
+        <tbody>${markers.map(m=>{const st=examStatusInfo(m);return `<tr>
+          <td class="ts tm">${m.categoria}</td>
+          <td style="font-weight:600">${m.nombre}</td>
+          <td style="font-weight:700">${m.valor} <span class="ts tm">${m.unidad||''}</span></td>
+          <td class="ts tm">${m.refMin!=null?`${m.refMin}–${m.refMax} ${m.unidad||''}`:'—'}</td>
+          <td><span class="badge" style="background:${st.bg};color:${st.col};border:1px solid ${st.bd}">${st.l}</span></td>
+          <td class="ts tm" style="white-space:nowrap">${fmtD(m.fecha)}</td>
+        </tr>`;}).join('')}</tbody>
+      </table></div>`:`<div class="empty"><div class="ico">🩺</div><p>Registra tu primer examen para ver aquí un resumen de cómo estás.</p></div>`}
+    </div>
+
+    ${markers.length?`<div class="card" style="margin-bottom:18px">
+      <div class="flex jb aic" style="margin-bottom:14px;flex-wrap:wrap;gap:10px">
+        <div class="card-title" style="margin:0">📈 Evolución de un marcador</div>
+        <select id="exam-chart-sel" style="width:auto;min-width:220px" onchange="renderExamChart(this.value)">
+          ${markers.map(m=>`<option value="${m.examenId||m.nombre}">${m.nombre}</option>`).join('')}
+        </select>
+      </div>
+      <div class="chart-c"><canvas id="ch-exam"></canvas></div>
+    </div>`:''}
+
+    <div class="card" style="margin-bottom:18px">
+      <div class="card-title" style="margin-bottom:14px">🗂️ Historial de exámenes</div>
+      <div class="tw"><table>
+        <thead><tr><th>Fecha</th><th>Categoría</th><th>Examen</th><th>Valor</th><th>Rango</th><th>Estado</th><th></th></tr></thead>
+        <tbody id="exam-body"></tbody>
+      </table></div>
+      <div id="exam-empty" class="empty" style="display:none"><div class="ico">🧪</div><p>Sin exámenes registrados.</p></div>
+    </div>
+
+    <div class="card" style="margin-bottom:18px">
+      <div class="card-title" style="margin-bottom:14px">🩺 Chequeos y consultas</div>
+      <div class="tw"><table>
+        <thead><tr><th>Fecha</th><th>Tipo</th><th>Resultado</th><th>Próxima cita</th><th></th></tr></thead>
+        <tbody id="cheq-body"></tbody>
+      </table></div>
+      <div id="cheq-empty" class="empty" style="display:none"><div class="ico">🩺</div><p>Sin chequeos registrados.</p></div>
+    </div>
+
+    <div class="card" style="margin-bottom:18px">
+      <div class="card-title" style="margin-bottom:14px">🧬 Mi perfil médico</div>
+      <div class="g2">
+        <div class="fg"><label>Tipo de sangre</label><input value="${pm.tipoSangre||''}" placeholder="O+" onchange="updatePerfilMedico('tipoSangre',this.value)"></div>
+        <div class="fg"><label>Contacto de emergencia</label><input value="${pm.contactoEmergencia||''}" placeholder="Nombre y teléfono" onchange="updatePerfilMedico('contactoEmergencia',this.value)"></div>
+      </div>
+      <div class="fg"><label>Alergias</label><input value="${pm.alergias||''}" placeholder="Ninguna conocida" onchange="updatePerfilMedico('alergias',this.value)"></div>
+      <div class="fg"><label>Medicamentos actuales</label><input value="${pm.medicamentos||''}" placeholder="Ninguno" onchange="updatePerfilMedico('medicamentos',this.value)"></div>
+      <div class="fg"><label>Condiciones / diagnósticos</label><input value="${pm.condiciones||''}" placeholder="Ninguna conocida" onchange="updatePerfilMedico('condiciones',this.value)"></div>
+      <div class="fg"><label>Cirugías previas</label><input value="${pm.cirugias||''}" placeholder="Ninguna" onchange="updatePerfilMedico('cirugias',this.value)"></div>
+      <div class="fg" style="margin-bottom:0"><label>Antecedentes familiares relevantes</label><input value="${pm.antecedentesFamiliares||''}" placeholder="Diabetes, hipertensión, etc." onchange="updatePerfilMedico('antecedentesFamiliares',this.value)"></div>
+    </div>
+
+    <div class="card" style="border:1px solid rgba(255,217,61,.3);background:rgba(255,217,61,.05)">
+      <div style="font-size:12px;color:var(--text2);line-height:1.6">⚠️ <strong style="color:var(--text)">Esto es tu bitácora personal, no un diagnóstico.</strong> Los rangos de referencia son generales; los rangos exactos varían por laboratorio — usa siempre los que indique tu estudio si son distintos, y consulta a tu médico para interpretar cualquier resultado fuera de rango.</div>
+    </div>
+  `;
+
+  renderExamBody(list);
+  renderCheqBody(cheq);
+  if(markers.length) renderExamChart(markers[0].examenId||markers[0].nombre);
+}
+
+function renderExamBody(list) {
+  const tbody=document.getElementById('exam-body');
+  const empty=document.getElementById('exam-empty');
+  if(!tbody) return;
+  if(!list.length){tbody.innerHTML='';empty.style.display='';return;}
+  empty.style.display='none';
+  tbody.innerHTML=list.map(e=>{
+    const st=examStatusInfo(e);
+    return `<tr>
+      <td style="white-space:nowrap">${fmtD(e.fecha)}</td>
+      <td class="ts tm">${e.categoria}</td>
+      <td style="font-weight:600">${e.nombre}${e.notas?`<div class="ts tm">${e.notas}</div>`:''}</td>
+      <td style="font-weight:700">${e.valor} <span class="ts tm">${e.unidad||''}</span></td>
+      <td class="ts tm">${e.refMin!=null?`${e.refMin}–${e.refMax} ${e.unidad||''}`:'—'}</td>
+      <td><span class="badge" style="background:${st.bg};color:${st.col};border:1px solid ${st.bd}">${st.l}</span></td>
+      <td>
+        <button class="btn btn-o btn-sm btn-ico" onclick="openExamModal('${e.id}')">✏️</button>
+        <button class="btn btn-o btn-sm btn-ico" onclick="askDel(()=>delExamen('${e.id}'))">🗑️</button>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+function renderCheqBody(list) {
+  const tbody=document.getElementById('cheq-body');
+  const empty=document.getElementById('cheq-empty');
+  if(!tbody) return;
+  if(!list.length){tbody.innerHTML='';empty.style.display='';return;}
+  empty.style.display='none';
+  tbody.innerHTML=list.map(c=>{
+    const proximaVigente=c.proxima&&c.proxima>=today();
+    return `<tr>
+      <td style="white-space:nowrap">${fmtD(c.fecha)}</td>
+      <td><span class="badge b-n">${CHEQ_TIPOS[c.tipo]||c.tipo}</span></td>
+      <td>${c.resultado||'—'}${c.notas?`<div class="ts tm">${c.notas}</div>`:''}</td>
+      <td style="white-space:nowrap;${proximaVigente?'color:var(--o);font-weight:700':'color:var(--text3)'}">${c.proxima?fmtD(c.proxima):'—'}</td>
+      <td>
+        <button class="btn btn-o btn-sm btn-ico" onclick="openCheqModal('${c.id}')">✏️</button>
+        <button class="btn btn-o btn-sm btn-ico" onclick="askDel(()=>delChequeo('${c.id}'))">🗑️</button>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+function renderExamChart(key) {
+  const sel=document.getElementById('exam-chart-sel');
+  if(sel) sel.value=key;
+  const hist=[...S.examenes].filter(e=>(e.examenId||e.nombre)===key).sort((a,b)=>a.fecha.localeCompare(b.fecha));
+  chExam=killChart(chExam);
+  const ctx=document.getElementById('ch-exam');
+  if(!ctx||!hist.length) return;
+  const refMin=hist[hist.length-1].refMin, refMax=hist[hist.length-1].refMax;
+  const datasets=[{label:hist[0].nombre,data:hist.map(h=>h.valor),borderColor:'var(--g)',backgroundColor:'rgba(0,232,122,.1)',fill:true,tension:.3,pointRadius:5,pointBackgroundColor:'var(--g)',pointBorderColor:'#060614',pointBorderWidth:2,borderWidth:2.5}];
+  if(refMin!=null){
+    datasets.push({label:'Mín. referencia',data:hist.map(()=>refMin),borderColor:'rgba(255,255,255,.25)',borderDash:[4,4],borderWidth:1.5,pointRadius:0,fill:false});
+    datasets.push({label:'Máx. referencia',data:hist.map(()=>refMax),borderColor:'rgba(255,255,255,.25)',borderDash:[4,4],borderWidth:1.5,pointRadius:0,fill:false});
+  }
+  chExam=new Chart(ctx,{type:'line',data:{labels:hist.map(h=>fmtD(h.fecha)),datasets},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},
+      tooltip:{callbacks:{label:ctx=>` ${ctx.parsed.y} ${hist[0].unidad||''}`}}},
+      scales:{y:{grid:{color:'rgba(255,255,255,.06)'},ticks:{color:'#4a5568'}},x:{grid:{display:false},ticks:{color:'#4a5568'}}}}});
+}
+
+function populateExamCatOptions() {
+  const sel=document.getElementById('exam-cat');
+  sel.innerHTML=Object.keys(EXAM_CATALOG).map(c=>`<option value="${c}">${c}</option>`).join('')
+    +`<option value="${CAT_OTRO}">✍️ Otro (personalizado)</option>`;
+}
+
+function onExamCatChange() {
+  const cat=document.getElementById('exam-cat').value;
+  const selEl=document.getElementById('exam-nombre-sel');
+  const otroEl=document.getElementById('exam-nombre-otro');
+  if(cat===CAT_OTRO){
+    selEl.style.display='none';
+    otroEl.style.display='';
+    document.getElementById('exam-unidad').value='';
+    document.getElementById('exam-rango-info').textContent='Los exámenes personalizados no tienen rango de referencia automático.';
+  } else {
+    selEl.style.display='';
+    otroEl.style.display='none';
+    selEl.innerHTML=EXAM_CATALOG[cat].map(it=>`<option value="${it.id}">${it.nombre}</option>`).join('');
+    onExamNombreChange();
+  }
+}
+
+function onExamNombreChange() {
+  const cat=document.getElementById('exam-cat').value;
+  if(cat===CAT_OTRO) return;
+  const id=document.getElementById('exam-nombre-sel').value;
+  const item=EXAM_CATALOG[cat].find(x=>x.id===id);
+  if(!item) return;
+  document.getElementById('exam-unidad').value=item.unidad;
+  document.getElementById('exam-rango-info').textContent=`Rango de referencia general: ${item.min}–${item.max} ${item.unidad} (orientativo — usa el de tu estudio si es distinto)`;
+}
+
+function openExamModal(id=null) {
+  editId=id;
+  const e=id?S.examenes.find(x=>x.id===id):null;
+  document.getElementById('mo-exam-title').textContent=id?'Editar examen':'Registrar Examen';
+  populateExamCatOptions();
+  if(e){
+    document.getElementById('exam-cat').value=e.examenId?e.categoria:CAT_OTRO;
+    onExamCatChange();
+    if(e.examenId) document.getElementById('exam-nombre-sel').value=e.examenId;
+    else document.getElementById('exam-nombre-otro').value=e.nombre;
+    onExamNombreChange();
+    document.getElementById('exam-unidad').value=e.unidad||'';
+    document.getElementById('exam-valor').value=e.valor;
+  } else {
+    document.getElementById('exam-cat').value=Object.keys(EXAM_CATALOG)[0];
+    onExamCatChange();
+    document.getElementById('exam-valor').value='';
+  }
+  document.getElementById('exam-fecha').value=e?.fecha||today();
+  document.getElementById('exam-notas').value=e?.notas||'';
+  document.getElementById('mo-exam').classList.add('open');
+  setTimeout(()=>document.getElementById('exam-valor').focus(),100);
+}
+
+function saveExamen() {
+  const cat=document.getElementById('exam-cat').value;
+  const valor=parseFloat(document.getElementById('exam-valor').value);
+  if(isNaN(valor)) return alert('Ingresa el valor del examen.');
+  let data;
+  if(cat===CAT_OTRO){
+    const nombre=document.getElementById('exam-nombre-otro').value.trim();
+    if(!nombre) return alert('Ingresa el nombre del examen.');
+    data={categoria:'Personalizado',examenId:'',nombre,unidad:document.getElementById('exam-unidad').value.trim(),valor,refMin:null,refMax:null};
+  } else {
+    const id=document.getElementById('exam-nombre-sel').value;
+    const item=EXAM_CATALOG[cat].find(x=>x.id===id);
+    if(!item) return alert('Selecciona un examen.');
+    data={categoria:cat,examenId:item.id,nombre:item.nombre,unidad:document.getElementById('exam-unidad').value.trim()||item.unidad,valor,refMin:item.min,refMax:item.max};
+  }
+  data.fecha=document.getElementById('exam-fecha').value||today();
+  data.notas=document.getElementById('exam-notas').value.trim();
+  if(editId){const i=S.examenes.findIndex(x=>x.id===editId);if(i>=0)S.examenes[i]={...S.examenes[i],...data};}
+  else S.examenes.push({id:uid(),...data});
+  save(); closeMo('mo-exam'); renderExamenes(); toast('✅ Examen guardado');
+}
+
+function delExamen(id) { S.examenes=S.examenes.filter(e=>e.id!==id); save(); renderExamenes(); toast('🗑️ Eliminado'); }
+
+function openCheqModal(id=null) {
+  editId=id;
+  const c=id?S.chequeos.find(x=>x.id===id):null;
+  document.getElementById('mo-cheq-title').textContent=id?'Editar chequeo':'Registrar Chequeo';
+  document.getElementById('cheq-tipo').value=c?.tipo||'general';
+  document.getElementById('cheq-fecha').value=c?.fecha||today();
+  document.getElementById('cheq-resultado').value=c?.resultado||'';
+  document.getElementById('cheq-proxima').value=c?.proxima||'';
+  document.getElementById('cheq-notas').value=c?.notas||'';
+  document.getElementById('mo-cheq').classList.add('open');
+  setTimeout(()=>document.getElementById('cheq-resultado').focus(),100);
+}
+
+function saveChequeo() {
+  const data={
+    tipo:document.getElementById('cheq-tipo').value,
+    fecha:document.getElementById('cheq-fecha').value||today(),
+    resultado:document.getElementById('cheq-resultado').value.trim(),
+    proxima:document.getElementById('cheq-proxima').value,
+    notas:document.getElementById('cheq-notas').value.trim()
+  };
+  if(editId){const i=S.chequeos.findIndex(x=>x.id===editId);if(i>=0)S.chequeos[i]={...S.chequeos[i],...data};}
+  else S.chequeos.push({id:uid(),...data});
+  save(); closeMo('mo-cheq'); renderExamenes(); toast('✅ Chequeo guardado');
+}
+
+function delChequeo(id) { S.chequeos=S.chequeos.filter(c=>c.id!==id); save(); renderExamenes(); toast('🗑️ Eliminado'); }
+
+function updatePerfilMedico(key,val) { S.perfilMedico[key]=val; save(); }
 
 // ─── INIT ────────────────────────────────────────────────────────────────────
 function init() {
