@@ -116,6 +116,19 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 
 .chart-wrap{position:relative;height:clamp(240px,34vh,420px)}
 
+/* ─── HABILIDADES — subtabs de prioridades + recursos ───── */
+.skill-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.skill-tab{display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:20px;border:1px solid rgba(255,255,255,.1);
+  background:rgba(255,255,255,.04);color:var(--text2);font-size:11px;font-weight:700;cursor:pointer;transition:all .2s;font-family:inherit}
+.skill-tab:hover{background:rgba(255,255,255,.09)}
+.skill-tab.on{background:rgba(176,110,255,.18);border-color:rgba(176,110,255,.45);color:#fff}
+.skill-tab .n{font-family:var(--mono);opacity:.85}
+.sk-block{font-size:12px;color:var(--text2);line-height:1.6;margin-bottom:10px}
+.sk-block strong{color:var(--text)}
+.sk-res{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.09);
+  border-radius:8px;padding:6px 10px;font-size:11px;margin:0 6px 6px 0}
+.sk-res-tag{font-size:9px;font-weight:800;text-transform:uppercase;color:var(--p);letter-spacing:.05em}
+
 @media(max-width:900px){.g4{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:repeat(2,1fr)}.g6{grid-template-columns:repeat(3,1fr)}}
 @media(max-width:600px){.g2,.g4,.g3,.g6{grid-template-columns:1fr}.ar-name{width:80px}}
 </style>
@@ -260,17 +273,18 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
       <div class="eyebrow reveal d1"><span class="dot"></span> Coach · Radar de habilidades</div>
       <div class="slide-title reveal d2">🧠 En qué invertir tu tiempo</div>
 
-      <div class="grid g2 reveal d3" style="align-items:center">
+      <div class="grid g2 reveal d3" style="align-items:start">
         <div class="tile chart-wrap"><canvas id="chSkills"></canvas></div>
         <div>
-          <div class="tile tile-glow" style="text-align:center;margin-bottom:16px">
+          <div class="tile tile-glow" style="text-align:center;margin-bottom:16px;padding:14px">
             <div class="lbl">OVR general</div>
-            <div class="big-num" style="font-size:clamp(48px,6vw,84px)" id="skillOvr">—</div>
-            <div id="skillOvrLabel" style="font-weight:800">—</div>
+            <div class="big-num" style="font-size:clamp(38px,4.5vw,60px)" id="skillOvr">—</div>
+            <div id="skillOvrLabel" style="font-weight:800;font-size:13px">—</div>
           </div>
-          <div class="tile">
-            <div class="lbl" style="margin-bottom:10px">⚠️ Tus 3 más débiles ahora</div>
-            <div id="skillWeak"></div>
+          <div class="tile" style="max-height:44vh;overflow-y:auto">
+            <div class="lbl" style="margin-bottom:10px">⚠️ Tus 5 prioridades reales — cómo subirlas</div>
+            <div class="skill-tabs" id="skillTabs"></div>
+            <div id="skillDetail"></div>
           </div>
         </div>
       </div>
@@ -647,18 +661,54 @@ function skLevel(v){
   if(v>=40)return{l:'BÁSICO',c:'#f87171'};
   return{l:'PRINCIPIANTE',c:'#ef4444'};
 }
+// Plan de ataque de las 5 prioridades reales — mismo contenido que Coach_v2.html → #aprendizaje
+// (primer paso de la semana, hábito recomendado y recursos exactos). Copiado a mano, igual que
+// RUTINA_TASKS/PHASES/SK — si se edita #aprendizaje en Coach, replicar aquí.
+const APRENDIZAJE={
+  datos:{primer:'Módulos de Python y Pandas en Kaggle Learn (2-3h, gratis) + arma un dashboard simple de tus gastos en Google Looker Studio.',
+    habito:'10 min/día de SQL en SQLZoo o LeetCode SQL, 30 días seguidos.',
+    recursos:[{t:'Curso',n:'Kaggle Learn'},{t:'Curso',n:'Google Data Analytics Certificate'},{t:'Libro',n:'Storytelling with Data — Cole Nussbaumer Knaflic'},{t:'Tool',n:'Google Looker Studio'}]},
+  ventas:{primer:'Lee el cap. 1 de "Influence" (reciprocidad) y envía 1 mensaje personalizado a un prospecto real de tu red Ford/Continental/Bosch.',
+    habito:'5 mensajes personalizados/día a prospectos + follow-up en días 1-3-7-14-30.',
+    recursos:[{t:'Libro',n:'Influence — Robert Cialdini'},{t:'Libro',n:'$100M Offers — Alex Hormozi'},{t:'Libro',n:'Never Split the Difference — Chris Voss'},{t:'YouTube',n:'Alex Hormozi'}]},
+  marketing:{primer:'Termina el módulo de fundamentos de Google Digital Garage y publica tu primer post de valor en LinkedIn sobre la plantilla Finanzas.html.',
+    habito:'3 publicaciones/semana en LinkedIn — lunes, miércoles y viernes.',
+    recursos:[{t:'Curso',n:'Google Digital Garage'},{t:'Curso',n:'HubSpot Academy'},{t:'Curso',n:'Meta Blueprint'},{t:'Libro',n:'$100M Leads — Alex Hormozi'}]},
+  finanzas:{primer:'Instala YNAB o Finerio y conecta tus cuentas para categorizar los gastos de este mes.',
+    habito:'Revisión de 10 min cada domingo — clasifica gastos vs. presupuesto.',
+    recursos:[{t:'Libro',n:'I Will Teach You to Be Rich — Ramit Sethi'},{t:'App',n:'YNAB'},{t:'Libro',n:'The Millionaire Next Door — Thomas Stanley'},{t:'Libro',n:'Psicología del Dinero — Morgan Housel'}]},
+  ia:{primer:'Construye una automatización simple en n8n.io conectando un formulario a Google Sheets — menos de 1h.',
+    habito:'1 bloque de 30 min/semana construyendo (no solo leyendo) un mini-proyecto de IA.',
+    recursos:[{t:'Curso',n:'DeepLearning.AI — Prompt Engineering for Developers'},{t:'Curso',n:'Fast.ai'},{t:'Tool',n:'n8n.io'},{t:'Tool',n:'Cursor IDE'}]}
+};
+let skillSel=null;
+function selectSkill(id){
+  skillSel=id;
+  document.querySelectorAll('.skill-tab').forEach(b=>b.classList.toggle('on',b.dataset.id===id));
+  renderSkillDetail();
+}
+function renderSkillDetail(){
+  const s=SK.find(x=>x.id===skillSel), a=APRENDIZAJE[skillSel];
+  const box=document.getElementById('skillDetail');
+  if(!s||!a){box.innerHTML='';return;}
+  box.innerHTML=`
+    <div class="sk-block"><strong>🎯 Primer paso esta semana:</strong> ${a.primer}</div>
+    <div class="sk-block"><strong>🔁 Hábito recomendado:</strong> ${a.habito}</div>
+    <div>${a.recursos.map(r=>`<span class="sk-res"><span class="sk-res-tag">${r.t}</span> ${r.n}</span>`).join('')}</div>
+    <div class="sub" style="margin-top:10px"><a href="../Coach/Coach_v2.html#aprendizaje" style="color:var(--cy);text-decoration:none">Ver plan completo en Coach → Aprendizaje →</a></div>`;
+}
 let chSkills=null;
 function renderSkills(){
   const ovr=calcOVR(), lv=skLevel(ovr);
   document.getElementById('skillOvr').textContent=ovr;
   document.getElementById('skillOvrLabel').textContent=lv.l;
   document.getElementById('skillOvrLabel').style.color=lv.c;
-  const weakest=[...SK].sort((a,b)=>a.val-b.val).slice(0,3);
-  document.getElementById('skillWeak').innerHTML=weakest.map(s=>{const l=skLevel(s.val);return `
-    <div style="display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.06)">
-      <span style="font-size:13px">${s.icon} ${s.name}</span>
-      <span style="font-family:var(--mono);font-weight:800;color:${l.c}">${s.val}</span>
-    </div>`;}).join('')+'<div class="sub" style="margin-top:10px">Roadmap y "primer paso" de cada una en Coach → Aprendizaje.</div>';
+
+  const priority=Object.keys(APRENDIZAJE).map(id=>SK.find(s=>s.id===id)).filter(Boolean).sort((a,b)=>a.val-b.val);
+  if(!skillSel||!priority.find(s=>s.id===skillSel)) skillSel=priority[0]?.id;
+  document.getElementById('skillTabs').innerHTML=priority.map(s=>
+    `<button class="skill-tab ${s.id===skillSel?'on':''}" data-id="${s.id}" onclick="selectSkill('${s.id}')">${s.icon} ${s.name} <span class="n">${s.val}</span></button>`).join('');
+  renderSkillDetail();
 
   if(chSkills)chSkills.destroy();
   const ctx=document.getElementById('chSkills');
