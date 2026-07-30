@@ -116,18 +116,17 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 
 .chart-wrap{position:relative;height:clamp(240px,34vh,420px)}
 
-/* ─── HABILIDADES — subtabs de prioridades + recursos ───── */
-.skill-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
-.skill-tab{display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:20px;border:1px solid rgba(255,255,255,.1);
-  background:rgba(255,255,255,.04);color:var(--text2);font-size:11px;font-weight:700;cursor:pointer;transition:all .2s;font-family:inherit}
-.skill-tab:hover{background:rgba(255,255,255,.09)}
-.skill-tab.on{background:rgba(176,110,255,.18);border-color:rgba(176,110,255,.45);color:#fff}
-.skill-tab .n{font-family:var(--mono);opacity:.85}
-.sk-block{font-size:12px;color:var(--text2);line-height:1.6;margin-bottom:10px}
-.sk-block strong{color:var(--text)}
-.sk-res{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.09);
-  border-radius:8px;padding:6px 10px;font-size:11px;margin:0 6px 6px 0}
-.sk-res-tag{font-size:9px;font-weight:800;text-transform:uppercase;color:var(--p);letter-spacing:.05em}
+/* ─── HABILIDADES — 5 prioridades siempre visibles, sin clics (slide pasivo) ─ */
+.skill-row{display:flex;gap:10px;padding:8px 4px;border-bottom:1px solid rgba(255,255,255,.06)}
+.skill-row:last-child{border-bottom:none}
+.sr-badge{width:30px;height:30px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.sr-body{flex:1;min-width:0}
+.sr-head{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.sr-name{font-size:12.5px;font-weight:800;color:var(--text)}
+.sr-val{font-family:var(--mono);font-size:12px;font-weight:700}
+.sr-primer{font-size:11.5px;color:var(--text2);line-height:1.45;margin-top:2px}
+.sr-res{font-size:10.5px;color:var(--text3);margin-top:3px}
+.sr-res b{color:var(--p);font-weight:700}
 
 @media(max-width:900px){.g4{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:repeat(2,1fr)}.g6{grid-template-columns:repeat(3,1fr)}}
 @media(max-width:600px){.g2,.g4,.g3,.g6{grid-template-columns:1fr}.ar-name{width:80px}}
@@ -273,19 +272,15 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
       <div class="eyebrow reveal d1"><span class="dot"></span> Coach · Radar de habilidades</div>
       <div class="slide-title reveal d2">🧠 En qué invertir tu tiempo</div>
 
-      <div class="grid g2 reveal d3" style="align-items:start">
+      <div class="grid g2 reveal d3" style="align-items:center">
         <div class="tile chart-wrap"><canvas id="chSkills"></canvas></div>
         <div>
-          <div class="tile tile-glow" style="text-align:center;margin-bottom:16px;padding:14px">
+          <div class="tile tile-glow" style="text-align:center;margin-bottom:14px;padding:12px">
             <div class="lbl">OVR general</div>
-            <div class="big-num" style="font-size:clamp(38px,4.5vw,60px)" id="skillOvr">—</div>
-            <div id="skillOvrLabel" style="font-weight:800;font-size:13px">—</div>
+            <div class="big-num" style="font-size:clamp(34px,4vw,52px)" id="skillOvr">—</div>
+            <div id="skillOvrLabel" style="font-weight:800;font-size:12px">—</div>
           </div>
-          <div class="tile" style="max-height:44vh;overflow-y:auto">
-            <div class="lbl" style="margin-bottom:10px">⚠️ Tus 5 prioridades reales — cómo subirlas</div>
-            <div class="skill-tabs" id="skillTabs"></div>
-            <div id="skillDetail"></div>
-          </div>
+          <div id="skillPriority"></div>
         </div>
       </div>
     </div>
@@ -681,22 +676,6 @@ const APRENDIZAJE={
     habito:'1 bloque de 30 min/semana construyendo (no solo leyendo) un mini-proyecto de IA.',
     recursos:[{t:'Curso',n:'DeepLearning.AI — Prompt Engineering for Developers'},{t:'Curso',n:'Fast.ai'},{t:'Tool',n:'n8n.io'},{t:'Tool',n:'Cursor IDE'}]}
 };
-let skillSel=null;
-function selectSkill(id){
-  skillSel=id;
-  document.querySelectorAll('.skill-tab').forEach(b=>b.classList.toggle('on',b.dataset.id===id));
-  renderSkillDetail();
-}
-function renderSkillDetail(){
-  const s=SK.find(x=>x.id===skillSel), a=APRENDIZAJE[skillSel];
-  const box=document.getElementById('skillDetail');
-  if(!s||!a){box.innerHTML='';return;}
-  box.innerHTML=`
-    <div class="sk-block"><strong>🎯 Primer paso esta semana:</strong> ${a.primer}</div>
-    <div class="sk-block"><strong>🔁 Hábito recomendado:</strong> ${a.habito}</div>
-    <div>${a.recursos.map(r=>`<span class="sk-res"><span class="sk-res-tag">${r.t}</span> ${r.n}</span>`).join('')}</div>
-    <div class="sub" style="margin-top:10px"><a href="../Coach/Coach_v2.html#aprendizaje" style="color:var(--cy);text-decoration:none">Ver plan completo en Coach → Aprendizaje →</a></div>`;
-}
 let chSkills=null;
 function renderSkills(){
   const ovr=calcOVR(), lv=skLevel(ovr);
@@ -704,11 +683,24 @@ function renderSkills(){
   document.getElementById('skillOvrLabel').textContent=lv.l;
   document.getElementById('skillOvrLabel').style.color=lv.c;
 
+  // Las 5 prioridades reales, siempre visibles (nada de clics — este slide es pasivo,
+  // rota solo y se ve de reojo mientras se trabaja, así que todo debe verse de un vistazo).
   const priority=Object.keys(APRENDIZAJE).map(id=>SK.find(s=>s.id===id)).filter(Boolean).sort((a,b)=>a.val-b.val);
-  if(!skillSel||!priority.find(s=>s.id===skillSel)) skillSel=priority[0]?.id;
-  document.getElementById('skillTabs').innerHTML=priority.map(s=>
-    `<button class="skill-tab ${s.id===skillSel?'on':''}" data-id="${s.id}" onclick="selectSkill('${s.id}')">${s.icon} ${s.name} <span class="n">${s.val}</span></button>`).join('');
-  renderSkillDetail();
+  document.getElementById('skillPriority').innerHTML=`
+    <div class="tile">
+      ${priority.map(s=>{
+        const l=skLevel(s.val), a=APRENDIZAJE[s.id];
+        return `<div class="skill-row">
+          <div class="sr-badge" style="background:${l.c}22">${s.icon}</div>
+          <div class="sr-body">
+            <div class="sr-head"><span class="sr-name">${s.name}</span><span class="sr-val" style="color:${l.c}">${s.val}</span></div>
+            <div class="sr-primer">🎯 ${a.primer}</div>
+            <div class="sr-res">📚 <b>${a.recursos[0].n}</b> · ${a.recursos.slice(1,3).map(r=>r.n).join(' · ')}</div>
+          </div>
+        </div>`;
+      }).join('')}
+      <div class="sub" style="margin-top:10px;text-align:center"><a href="../Coach/Coach_v2.html#aprendizaje" style="color:var(--cy);text-decoration:none">Ver plan completo (hábitos + todos los recursos) en Coach → Aprendizaje →</a></div>
+    </div>`;
 
   if(chSkills)chSkills.destroy();
   const ctx=document.getElementById('chSkills');
