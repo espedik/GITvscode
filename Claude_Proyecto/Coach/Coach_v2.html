@@ -593,7 +593,6 @@
     .meta-paso-num { width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 800; color: #fff; flex-shrink: 0; }
 
     /* ─── RUTINA ──────────────────────────────────────── */
-    .rutina-bloque h3 { font-size: 14.5px; font-weight: 800; margin-bottom: 11px; }
     .hora-tag { font-family: var(--mono); font-size: 10.5px; color: var(--muted); margin-left: auto; flex-shrink: 0; }
     .check-item .hora-tag { padding-left: 8px; }
 
@@ -606,7 +605,12 @@
     .bloque-admin     { border-left-color: #4a9fd8; }
     .bloque-descanso  { border-left-color: var(--muted-2); }
     .bloque-salud     { border-left-color: var(--red); }
+    .bloque-trabajo   { border-left-color: #3ea8a8; }
     .timeblock-bloque .check-item { padding: 0; }
+    .day-tab { background: var(--surface-2); border: 1px solid var(--border); border-radius: 20px; padding: 7px 14px; font-family: inherit; font-size: 12.5px; font-weight: 700; color: var(--muted); cursor: pointer; transition: all .15s; }
+    .day-tab:hover { color: var(--text); }
+    .day-tab.active { background: var(--accent-soft); color: var(--accent); border-color: var(--accent); }
+    .day-tab.is-today:not(.active)::after { content: '•'; margin-left: 4px; color: var(--green); }
 
     /* ─── HÁBITOS ─────────────────────────────────────── */
     .habito-header { display: grid; grid-template-columns: 1fr repeat(7,32px); gap: 6px; font-size: 10.5px; color: var(--muted); text-align: center; margin-bottom: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .3px; }
@@ -779,6 +783,7 @@
   <a href="#habitos">Hábitos</a>
   <a href="#aprendizaje">Aprendizaje</a>
   <a href="#legal-personal">Legal & Personal</a>
+  <a href="../Dashboard/dashboard.html" style="margin-left:auto">🚀 Dashboard</a>
 </nav>
 
 <main>
@@ -2229,218 +2234,39 @@
 
       <div class="context-banner">
         <p><strong>Tu contexto ahora mismo:</strong> estás en <strong>Fase 0</strong> del <a href="#perfil" class="inline-link">Plan Maestro</a> (18 jul – 30 sep 2026) — régimen fiscal activo, contacto con los 5 ex-colegas de Bosch/Continental/Ford, y la plantilla Finanzas.html lista para publicarse en comunidades de GBM son las 3 cosas que definen si esta fase se cumple o no.
-          Tus 8:00–17:00 en ALTEN son fijos y no aparecen aquí — ya sabes hacer ese trabajo, no necesitas que un coach te lo recuerde. Esta rutina organiza únicamente las <strong>~1.5h libres entre semana</strong> y el fin de semana alrededor de ese plan, no al revés. Cada bloque de habilidad está tomado directo de tus 5 prioridades en <a href="#aprendizaje" class="inline-link">Aprendizaje</a>.
+          Tu jornada en ALTEN (<strong>7:00–17:00</strong>) ya está bloqueada abajo como referencia fija — esta rutina organiza el resto del día (ejercicio, skincare, finanzas, ventas y tu Plan Maestro) alrededor de ese bloque, no al revés. <strong>El ejercicio y el bloque de habilidad cambian cada día de la semana</strong> (tomados de tus 5 prioridades en <a href="#aprendizaje" class="inline-link">Aprendizaje</a>), y el fin de semana tiene su propio horario, sin ALTEN. Usa las pestañas de abajo para ver cualquier día — solo el día de hoy guarda tu avance.
+          <em style="color:var(--muted-2)">Traslados estimados en 15–20 min; ajusta las horas si tu commute real es distinto.</em>
         </p>
       </div>
 
-      <div class="grid-3">
-
-        <!-- Mañana -->
-        <div class="card">
-          <div class="rutina-bloque">
-            <h3>🌅 Mañana — antes de entrar a ALTEN</h3>
-
-            <div class="timeblock-row">
-              <div class="timeblock-hora">5:00</div>
-              <div class="timeblock-bloque bloque-salud">
-                <div class="check-item"><input type="checkbox" id="r1"><label for="r1">Levantarte sin snooze — celular fuera del cuarto</label></div>
-              </div>
-            </div>
-            <div class="timeblock-row">
-              <div class="timeblock-hora">5:05</div>
-              <div class="timeblock-bloque bloque-salud">
-                <div class="check-item"><input type="checkbox" id="r2"><label for="r2">Agua 500ml (suplementos solo cuando el fondo de emergencia llegue a $10,000 — ver ↓)</label></div>
-              </div>
-            </div>
-            <div class="timeblock-row">
-              <div class="timeblock-hora">5:10–5:45</div>
-              <div class="timeblock-bloque bloque-salud">
-                <div class="check-item"><input type="checkbox" id="r3"><label for="r3">Ejercicio: pesas Lun/Mié/Vie · cardio Mar/Jue</label></div>
-              </div>
-            </div>
-            <div class="timeblock-row">
-              <div class="timeblock-hora">5:50</div>
-              <div class="timeblock-bloque bloque-salud">
-                <div class="check-item"><input type="checkbox" id="r4"><label for="r4">Ducha fría 90 seg — activa cortisol y claridad</label></div>
-              </div>
-            </div>
-            <div class="timeblock-row">
-              <div class="timeblock-hora">6:00</div>
-              <div class="timeblock-bloque bloque-descanso">
-                <div class="check-item"><input type="checkbox" id="r5"><label for="r5">2 min de journaling: qué haría hoy la versión de mí que ya llegó</label></div>
-              </div>
-            </div>
-            <div class="timeblock-row">
-              <div class="timeblock-hora">6:08</div>
-              <div class="timeblock-bloque bloque-admin">
-                <div class="check-item"><input type="checkbox" id="r6"><label for="r6">Revisar GBM: portafolio + VOO + USD/MXN (10 min)</label></div>
-              </div>
-            </div>
-            <div class="timeblock-row">
-              <div class="timeblock-hora">6:18</div>
-              <div class="timeblock-bloque bloque-salud">
-                <div class="check-item"><input type="checkbox" id="r7"><label for="r7">Desayuno alto en proteína: huevos + avena + fruta</label></div>
-              </div>
-            </div>
-            <div class="timeblock-row">
-              <div class="timeblock-hora">6:40</div>
-              <div class="timeblock-bloque bloque-aprender">
-                <div class="check-item"><input type="checkbox" id="r8"><label for="r8">Bloque de habilidad débil (30 min) — rotativo, ver tabla semanal ↓</label></div>
-              </div>
-            </div>
-            <div class="timeblock-row">
-              <div class="timeblock-hora">7:10</div>
-              <div class="timeblock-bloque bloque-descanso">
-                <div class="check-item"><input type="checkbox" id="r8b"><label for="r8b">Commute a ALTEN: podcast de finanzas o tecnología</label></div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Después del trabajo -->
-        <div class="card">
-          <div class="rutina-bloque">
-            <h3>🌆 Después de ALTEN — Bloque de negocio, 90 min sagrados</h3>
-
-            <div class="timeblock-row">
-              <div class="timeblock-hora">17:00</div>
-              <div class="timeblock-bloque bloque-descanso">
-                <div class="check-item"><input type="checkbox" id="r13"><label for="r13">Commute de vuelta: audiobook (negocios, finanzas o biografías)</label></div>
-              </div>
-            </div>
-            <div class="timeblock-row">
-              <div class="timeblock-hora">18:00</div>
-              <div class="timeblock-bloque bloque-profundo">
-                <div class="check-item"><input type="checkbox" id="r14"><label for="r14">Prioridad activa de Fase 0: régimen fiscal, outreach a ex-colegas, o plantilla GBM — 1 avance real, no "investigar más"</label></div>
-              </div>
-            </div>
-            <div class="timeblock-row">
-              <div class="timeblock-hora">19:20</div>
-              <div class="timeblock-bloque bloque-admin">
-                <div class="check-item"><input type="checkbox" id="r15"><label for="r15">Ventas: 5 mensajes personalizados a prospectos (hábito diario de Aprendizaje)</label></div>
-              </div>
-            </div>
-            <div class="timeblock-row">
-              <div class="timeblock-hora">19:30</div>
-              <div class="timeblock-bloque bloque-descanso">
-                <div class="check-item"><input type="checkbox" id="r15b"><label for="r15b">Didi solo si Opciones 1-2 aún no generan ingreso (ver Mi Perfil Real)</label></div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Noche -->
-        <div class="card">
-          <div class="rutina-bloque">
-            <h3>🌙 Cierre — recargar para mañana</h3>
-
-            <div class="timeblock-row">
-              <div class="timeblock-hora">20:00</div>
-              <div class="timeblock-bloque bloque-salud">
-                <div class="check-item"><input type="checkbox" id="r16"><label for="r16">Cenar ligero y sin carbohidratos refinados</label></div>
-              </div>
-            </div>
-            <div class="timeblock-row">
-              <div class="timeblock-hora">20:20</div>
-              <div class="timeblock-bloque bloque-descanso">
-                <div class="check-item"><input type="checkbox" id="r17"><label for="r17">30 min lectura física (no celular)</label></div>
-              </div>
-            </div>
-            <div class="timeblock-row">
-              <div class="timeblock-hora">20:50</div>
-              <div class="timeblock-bloque bloque-descanso">
-                <div class="check-item"><input type="checkbox" id="r18"><label for="r18">Journaling: 3 logros + 1 lección + 1 gasto evitable</label></div>
-              </div>
-            </div>
-            <div class="timeblock-row">
-              <div class="timeblock-hora">21:05</div>
-              <div class="timeblock-bloque bloque-profundo">
-                <div class="check-item"><input type="checkbox" id="r19"><label for="r19">Plan de mañana: 1 MIT (Most Important Task) + 4 tareas</label></div>
-              </div>
-            </div>
-            <div class="timeblock-row">
-              <div class="timeblock-hora">21:15</div>
-              <div class="timeblock-bloque bloque-descanso">
-                <div class="check-item"><input type="checkbox" id="r20"><label for="r20">Meditación / respiración box 4-4-4-4 (10 min)</label></div>
-              </div>
-            </div>
-            <div class="timeblock-row">
-              <div class="timeblock-hora">21:30</div>
-              <div class="timeblock-bloque bloque-salud">
-                <div class="check-item"><input type="checkbox" id="r21"><label for="r21">Apagar pantallas. Dormir 7h mínimo — es recuperación activa</label></div>
-              </div>
-            </div>
-          </div>
-
-          <div class="btn-row" style="margin-top:14px;">
-            <button class="btn btn-gold" onclick="resetChecklist()">Resetear checklist</button>
-          </div>
-        </div>
-
-      </div>
-
-      <!-- Rotación semanal de habilidades débiles -->
-      <div class="card mt-16" style="margin-top:16px;">
-        <h3 class="fw-700 mb-4">📅 Rotación semanal — tu debilidad de la semana, todos los días</h3>
-        <p class="fs-13 text-muted mb-12">Tomado directo de las 5 prioridades de <a href="#aprendizaje" class="inline-link">Aprendizaje</a>. Cada día tiene un foco fijo para el bloque de las 6:40 — nunca tienes que decidir qué tocar, solo ejecutar.</p>
-        <div class="grid-3" style="gap:10px;">
-          <div class="timeblock-bloque bloque-creativo"><strong>Lunes</strong><br><span class="fs-13">📣 Marketing — publica 1 post de valor en LinkedIn</span></div>
-          <div class="timeblock-bloque bloque-aprender"><strong>Martes</strong><br><span class="fs-13">📊 Datos — 10 min de SQL (SQLZoo/Kaggle)</span></div>
-          <div class="timeblock-bloque bloque-creativo"><strong>Miércoles</strong><br><span class="fs-13">📣 Marketing — publica 1 post de valor en LinkedIn</span></div>
-          <div class="timeblock-bloque bloque-aprender"><strong>Jueves</strong><br><span class="fs-13">📊 Datos — 10 min de SQL</span></div>
-          <div class="timeblock-bloque bloque-creativo"><strong>Viernes</strong><br><span class="fs-13">📣 Marketing — publica 1 post de valor en LinkedIn</span></div>
-          <div class="timeblock-bloque bloque-admin"><strong>Sábado</strong><br><span class="fs-13">🤖 IA — 30 min construyendo un mini-proyecto propio (n8n, Cursor)</span></div>
-          <div class="timeblock-bloque bloque-profundo"><strong>Domingo</strong><br><span class="fs-13">💰 Finanzas — 10 min de revisión de presupuesto (YNAB/Finerio)</span></div>
-        </div>
-        <p class="fs-13 text-muted mt-16"><strong style="color:var(--accent);">🤝 Ventas no rota — es todos los días</strong> a las 19:20: 5 mensajes personalizados a prospectos, sin excepción. Es tu segunda skill más débil y la que más rápido destraba ingreso real.</p>
-      </div>
-
-      <!-- Fin de semana -->
-      <div class="card mt-16" style="margin-top:16px;">
-        <h3 class="fw-700 mb-4">🚀 Fin de semana — acelerador</h3>
-        <p class="fs-13 text-muted mb-12">Sábado es tu día de mayor ROI personal. Domingo cierra la semana con números reales, no con vibra.</p>
-        <div class="grid-2">
+      <!-- Ahora / Siguiente — vivo, según la hora real -->
+      <div class="card mb-16" id="rutina-live" style="border-color:var(--accent);">
+        <div class="grid-3">
           <div>
-            <div class="timeblock-row">
-              <div class="timeblock-hora">Sáb 6:30</div>
-              <div class="timeblock-bloque bloque-salud">
-                <div class="check-item"><input type="checkbox" id="rw1"><label for="rw1">Ejercicio 1h (más largo que entre semana)</label></div>
-              </div>
-            </div>
-            <div class="timeblock-row">
-              <div class="timeblock-hora">Sáb 8:00</div>
-              <div class="timeblock-bloque bloque-profundo">
-                <div class="check-item"><input type="checkbox" id="rw2"><label for="rw2">Bloque profundo 4h: la prioridad activa de la fase actual del Plan Maestro</label></div>
-              </div>
-            </div>
-            <div class="timeblock-row">
-              <div class="timeblock-hora">Sáb 12:30</div>
-              <div class="timeblock-bloque bloque-aprender">
-                <div class="check-item"><input type="checkbox" id="rw2b"><label for="rw2b">IA aplicada — 30 min construyendo (hábito semanal de Aprendizaje)</label></div>
-              </div>
-            </div>
+            <div class="fs-13 text-muted">🟢 Ahora mismo</div>
+            <div id="rutina-now-txt" class="fw-700" style="font-size:14px;margin-top:5px;line-height:1.4;">—</div>
           </div>
           <div>
-            <div class="timeblock-row">
-              <div class="timeblock-hora">Sáb 16:00</div>
-              <div class="timeblock-bloque bloque-admin">
-                <div class="check-item"><input type="checkbox" id="rw3"><label for="rw3">Revisión semanal: finanzas, metas, hábitos cumplidos</label></div>
-              </div>
-            </div>
-            <div class="timeblock-row">
-              <div class="timeblock-hora">Sáb–Dom</div>
-              <div class="timeblock-bloque bloque-descanso">
-                <div class="check-item"><input type="checkbox" id="rw4"><label for="rw4">Bloque largo de freelance/plantilla si ya hay cliente o ventas activas</label></div>
-              </div>
-            </div>
-            <div class="timeblock-row">
-              <div class="timeblock-hora">Dom 20:00</div>
-              <div class="timeblock-bloque bloque-profundo">
-                <div class="check-item"><input type="checkbox" id="rw5"><label for="rw5">Finanzas: revisión de presupuesto (10 min) + planificar semana + revisar inversiones</label></div>
-              </div>
-            </div>
+            <div class="fs-13 text-muted">🔜 Siguiente</div>
+            <div id="rutina-next-txt" class="fw-700" style="font-size:14px;margin-top:5px;line-height:1.4;">—</div>
+          </div>
+          <div>
+            <div class="fs-13 text-muted">✅ Progreso de hoy</div>
+            <div id="rutina-progress-txt" class="num fw-700" style="font-size:19px;margin-top:3px;">0/0</div>
+            <div class="progress-bar mt-16" style="height:6px;"><div class="progress-fill" id="rutina-progress-bar" style="width:0%;"></div></div>
           </div>
         </div>
+      </div>
+
+      <!-- Selector de día — cada día tiene un plan distinto, no es el mismo horario repetido -->
+      <div class="card mt-16" style="margin-top:16px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:14px;">
+          <h3 class="fw-700" style="margin:0;">🗓️ Tu día, bloque por bloque</h3>
+          <button class="btn btn-o btn-sm" onclick="resetChecklist()">↺ Resetear hoy</button>
+        </div>
+        <div id="rutina-day-tabs" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px;"></div>
+        <p class="fs-13 text-muted mb-12" id="rutina-dia-sub">—</p>
+        <div id="rutina-timeline"></div>
       </div>
 
       <!-- Suplementación -->
@@ -2830,6 +2656,7 @@
   <span class="logo">🏢 Coach Empresa</span>
   <a href="#crear-empresa" class="active">Crear tu Empresa</a>
   <a href="#legal">Legal & Fiscal</a>
+  <a href="../Dashboard/dashboard.html" style="margin-left:auto">🚀 Dashboard</a>
 </nav>
 
 <main>
@@ -3217,13 +3044,189 @@
     setTimeout(restaurar, 3000);
   }
 
-  // Resetear checklist rutina
+  // ─── RUTINA DIARIA — horario real (fuente única para el widget "Ahora/Siguiente",
+  // el progreso persistido y lo que lee el Dashboard). dias: 0=dom … 6=sáb.
+  // Los bloques con fijo:true (ALTEN) se muestran en la línea de tiempo y cuentan
+  // para "ahora/siguiente", pero no llevan checkbox ni cuentan en el progreso.
+  const RUTINA_TASKS = [
+    // ── Común entre semana (Lun–Vie) ────────────────────────────────────
+    {id:'wd01', dias:[1,2,3,4,5], hora:'05:00', cat:'salud',    txt:'Despertar sin snooze — celular fuera del cuarto'},
+    {id:'wd02', dias:[1,2,3,4,5], hora:'05:05', cat:'salud',    txt:'Agua 500ml'},
+    {id:'wd03', dias:[1,2,3,4,5], hora:'05:40', cat:'salud',    txt:'Ducha fría 90 seg'},
+    {id:'wd04', dias:[1,2,3,4,5], hora:'05:43', cat:'salud',    txt:'🧴 Skincare AM: limpiador + hidratante + protector solar'},
+    {id:'wd05', dias:[1,2,3,4,5], hora:'05:48', cat:'descanso', txt:'2 min de journaling: qué haría hoy la versión de mí que ya llegó'},
+    {id:'wd06', dias:[1,2,3,4,5], hora:'05:50', cat:'admin',    txt:'💰 Revisar GBM: portafolio + VOO + USD/MXN'},
+    {id:'wd07', dias:[1,2,3,4,5], hora:'05:58', cat:'salud',    txt:'Desayuno alto en proteína'},
+    {id:'wd08', dias:[1,2,3,4,5], hora:'06:43', cat:'descanso', txt:'Traslado a ALTEN'},
+    {id:'wd09', dias:[1,2,3,4,5], hora:'07:00', cat:'trabajo',  txt:'🏢 ALTEN — jornada laboral (HIL/SIL Ford)', fijo:true},
+    {id:'wd10', dias:[1,2,3,4,5], hora:'17:00', cat:'descanso', txt:'Traslado de vuelta a casa'},
+    {id:'wd11', dias:[1,2,3,4,5], hora:'17:20', cat:'profundo', txt:'🎯 Prioridad activa de Fase 0: régimen fiscal, outreach o plantilla GBM — 1 avance real'},
+    {id:'wd12', dias:[1,2,3,4,5], hora:'18:40', cat:'admin',    txt:'🤝 Ventas: 5 mensajes personalizados a prospectos'},
+    {id:'wd13', dias:[1,2,3,4,5], hora:'18:50', cat:'descanso', txt:'Didi solo si Opciones 1-2 aún no generan ingreso'},
+    {id:'wd14', dias:[1,2,3,4,5], hora:'19:30', cat:'salud',    txt:'Cenar ligero, sin carbohidratos refinados'},
+    {id:'wd15', dias:[1,2,3,4,5], hora:'19:50', cat:'descanso', txt:'30 min lectura física (no celular)'},
+    {id:'wd16', dias:[1,2,3,4,5], hora:'20:20', cat:'descanso', txt:'Journaling: 3 logros + 1 lección + 1 gasto evitable'},
+    {id:'wd17', dias:[1,2,3,4,5], hora:'20:35', cat:'salud',    txt:'🧴 Skincare PM: limpiador + tratamiento + hidratante'},
+    {id:'wd18', dias:[1,2,3,4,5], hora:'20:45', cat:'profundo', txt:'Plan de mañana: 1 MIT (Most Important Task) + 4 tareas'},
+    {id:'wd19', dias:[1,2,3,4,5], hora:'21:00', cat:'descanso', txt:'Meditación / respiración box 4-4-4-4 (10 min)'},
+    {id:'wd20', dias:[1,2,3,4,5], hora:'21:15', cat:'salud',    txt:'Apagar pantallas. Dormir 7h mínimo — es recuperación activa'},
+
+    // ── Ejercicio y bloque de habilidad — cambian cada día (05:10 y 06:13) ──
+    {id:'e1', dias:[1], hora:'05:10', cat:'salud',    txt:'Ejercicio: Pesas — Empuje (pecho / hombro / tríceps)'},
+    {id:'k1', dias:[1], hora:'06:13', cat:'creativo', txt:'📣 Marketing: publica 1 post de valor en LinkedIn'},
+    {id:'e2', dias:[2], hora:'05:10', cat:'salud',    txt:'Ejercicio: Cardio 25 min (correr/bici) + core 5 min'},
+    {id:'k2', dias:[2], hora:'06:13', cat:'aprender', txt:'📊 Datos: 30 min de SQL (SQLZoo/Kaggle)'},
+    {id:'e3', dias:[3], hora:'05:10', cat:'salud',    txt:'Ejercicio: Pesas — Jalón (espalda / bíceps)'},
+    {id:'k3', dias:[3], hora:'06:13', cat:'creativo', txt:'📣 Marketing: publica 1 post de valor en LinkedIn'},
+    {id:'e4', dias:[4], hora:'05:10', cat:'salud',    txt:'Ejercicio: Cardio / HIIT 25 min'},
+    {id:'k4', dias:[4], hora:'06:13', cat:'aprender', txt:'📊 Datos: 30 min de SQL'},
+    {id:'e5', dias:[5], hora:'05:10', cat:'salud',    txt:'Ejercicio: Pesas — Piernas / glúteo'},
+    {id:'k5', dias:[5], hora:'06:13', cat:'creativo', txt:'✍️ Copy: mejora o escribe 1 mensaje de venta / la landing de la plantilla GBM'},
+
+    // ── Sábado ───────────────────────────────────────────────────────────
+    {id:'sa01', dias:[6], hora:'07:00', cat:'salud',    txt:'Despertar (sin alarma agresiva)'},
+    {id:'sa02', dias:[6], hora:'07:05', cat:'salud',    txt:'🧴 Skincare AM'},
+    {id:'sa03', dias:[6], hora:'07:10', cat:'salud',    txt:'Desayuno tranquilo'},
+    {id:'sa04', dias:[6], hora:'07:30', cat:'salud',    txt:'Ejercicio 1h — entreno largo / lo que falte en la semana'},
+    {id:'sa05', dias:[6], hora:'08:30', cat:'salud',    txt:'Ducha'},
+    {id:'sa06', dias:[6], hora:'08:45', cat:'profundo', txt:'🎯 Bloque profundo 4h: prioridad activa del Plan Maestro'},
+    {id:'sa07', dias:[6], hora:'12:45', cat:'salud',    txt:'Almuerzo'},
+    {id:'sa08', dias:[6], hora:'13:15', cat:'aprender', txt:'🤖 IA aplicada — 30 min construyendo (n8n, Cursor, mini-proyecto propio)'},
+    {id:'sa09', dias:[6], hora:'13:45', cat:'admin',    txt:'🤝 Ventas: 5 mensajes personalizados'},
+    {id:'sa10', dias:[6], hora:'16:00', cat:'admin',    txt:'💰 Revisión semanal: finanzas, metas, hábitos cumplidos'},
+    {id:'sa11', dias:[6], hora:'20:00', cat:'salud',    txt:'Cena'},
+    {id:'sa12', dias:[6], hora:'20:30', cat:'descanso', txt:'Tiempo libre / familia / lectura'},
+    {id:'sa13', dias:[6], hora:'21:00', cat:'salud',    txt:'🧴 Skincare PM'},
+    {id:'sa14', dias:[6], hora:'21:30', cat:'descanso', txt:'Meditación'},
+    {id:'sa15', dias:[6], hora:'21:45', cat:'salud',    txt:'Apagar pantallas. Dormir'},
+
+    // ── Compartido Sábado y Domingo ─────────────────────────────────────
+    {id:'fl1', dias:[6,0], hora:'17:00', cat:'descanso', txt:'Bloque largo de freelance/plantilla si ya hay cliente o ventas activas'},
+
+    // ── Domingo ──────────────────────────────────────────────────────────
+    {id:'do01', dias:[0], hora:'07:30', cat:'salud',    txt:'Despertar'},
+    {id:'do02', dias:[0], hora:'07:35', cat:'salud',    txt:'🧴 Skincare AM'},
+    {id:'do03', dias:[0], hora:'07:40', cat:'salud',    txt:'Desayuno tranquilo'},
+    {id:'do04', dias:[0], hora:'08:00', cat:'salud',    txt:'Ejercicio: descanso activo — caminata o movilidad 30 min'},
+    {id:'do05', dias:[0], hora:'09:00', cat:'descanso', txt:'Tiempo libre / familia'},
+    {id:'do06', dias:[0], hora:'20:00', cat:'admin',    txt:'💰 Finanzas: revisión de presupuesto + planificar semana + revisar inversiones'},
+    {id:'do07', dias:[0], hora:'20:30', cat:'profundo', txt:'🎯 Revisar Plan Maestro: ¿la fase actual sigue en verde? Ajustar si hace falta'},
+    {id:'do08', dias:[0], hora:'21:00', cat:'salud',    txt:'Cena ligera'},
+    {id:'do09', dias:[0], hora:'21:20', cat:'descanso', txt:'Journaling: cierre de semana'},
+    {id:'do10', dias:[0], hora:'21:40', cat:'salud',    txt:'🧴 Skincare PM'},
+    {id:'do11', dias:[0], hora:'22:00', cat:'descanso', txt:'Meditación'},
+    {id:'do12', dias:[0], hora:'22:15', cat:'salud',    txt:'Apagar pantallas. Dormir'},
+  ];
+  const RUTINA_KEY = 'coach_rutina_v1';
+  const DIA_TABS = [1,2,3,4,5,6,0];
+  const DIA_TABS_LBL = {1:'Lun',2:'Mar',3:'Mié',4:'Jue',5:'Vie',6:'Sáb',0:'Dom'};
+  const DIA_LABEL = {0:'Domingo',1:'Lunes',2:'Martes',3:'Miércoles',4:'Jueves',5:'Viernes',6:'Sábado'};
+  let rutinaDiaSel = new Date().getDay();
+
+  function rutinaHoyStr() { return new Date().toISOString().slice(0,10); }
+  function rutinaLoad() { try { const r = localStorage.getItem(RUTINA_KEY); return r ? JSON.parse(r) : {completado:{}}; } catch(e) { return {completado:{}}; } }
+  function rutinaSave(d) { localStorage.setItem(RUTINA_KEY, JSON.stringify(d)); }
+  function rutinaTareasDia(dow) { return RUTINA_TASKS.filter(t => t.dias.includes(dow)).sort((a,b) => a.hora.localeCompare(b.hora)); }
+  function rutinaTareasHoy() { return rutinaTareasDia(new Date().getDay()); }
+
+  function renderRutinaLive() {
+    const now = new Date();
+    const hhmm = String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0');
+    const tareasHoy = rutinaTareasHoy();
+    let actual = null, siguiente = null;
+    tareasHoy.forEach(t => { if (t.hora <= hhmm) actual = t; else if (!siguiente) siguiente = t; });
+
+    const nowTxt = document.getElementById('rutina-now-txt');
+    const nextTxt = document.getElementById('rutina-next-txt');
+    if (nowTxt) nowTxt.textContent = actual ? (actual.hora+' — '+actual.txt) : (tareasHoy.length ? 'Aún no empieza tu rutina de hoy' : 'Sin bloques configurados para hoy');
+    if (nextTxt) {
+      if (siguiente) {
+        const [sh, sm] = siguiente.hora.split(':').map(Number);
+        const dest = new Date(); dest.setHours(sh, sm, 0, 0);
+        const diffMin = Math.max(0, Math.round((dest - now) / 60000));
+        const faltan = diffMin >= 60 ? Math.floor(diffMin/60)+'h '+(diffMin%60)+'m' : diffMin+'m';
+        nextTxt.textContent = siguiente.hora+' — '+siguiente.txt+' (en '+faltan+')';
+      } else {
+        nextTxt.textContent = tareasHoy.length ? 'Ya terminaste tu rutina de hoy 🎉' : '—';
+      }
+    }
+
+    const data = rutinaLoad();
+    const doneHoy = data.completado[rutinaHoyStr()] || [];
+    const contables = tareasHoy.filter(t => !t.fijo); // el bloque de ALTEN no lleva checkbox, no cuenta en el progreso
+    const doneCount = contables.filter(t => doneHoy.includes(t.id)).length;
+    const progTxt = document.getElementById('rutina-progress-txt');
+    const progBar = document.getElementById('rutina-progress-bar');
+    if (progTxt) progTxt.textContent = doneCount+'/'+contables.length;
+    if (progBar) progBar.style.width = (contables.length ? (doneCount/contables.length*100) : 0)+'%';
+  }
+
+  function buildDayTabs() {
+    const hoy = new Date().getDay();
+    const el = document.getElementById('rutina-day-tabs');
+    if (!el) return;
+    el.innerHTML = DIA_TABS.map(d =>
+      `<button type="button" class="day-tab${d===rutinaDiaSel?' active':''}${d===hoy?' is-today':''}" onclick="verDia(${d})">${DIA_TABS_LBL[d]}</button>`
+    ).join('');
+  }
+
+  function verDia(dow) {
+    rutinaDiaSel = dow;
+    buildDayTabs();
+    renderRutinaTimeline();
+  }
+
+  function renderRutinaTimeline() {
+    const hoy = new Date().getDay();
+    const esHoy = rutinaDiaSel === hoy;
+    const sub = document.getElementById('rutina-dia-sub');
+    if (sub) sub.textContent = DIA_LABEL[rutinaDiaSel] + (esHoy ? ' · hoy — aquí se guarda tu avance' : ' · vista de referencia, no guarda avance');
+
+    const tareas = rutinaTareasDia(rutinaDiaSel);
+    const doneHoy = esHoy ? (rutinaLoad().completado[rutinaHoyStr()] || []) : [];
+    const tl = document.getElementById('rutina-timeline');
+    if (!tl) return;
+    tl.innerHTML = tareas.map(t => {
+      if (t.fijo) {
+        return `<div class="timeblock-row"><div class="timeblock-hora">${t.hora}</div><div class="timeblock-bloque bloque-${t.cat}" style="font-weight:700;">${t.txt}</div></div>`;
+      }
+      const checked = doneHoy.includes(t.id);
+      return `<div class="timeblock-row"><div class="timeblock-hora">${t.hora}</div><div class="timeblock-bloque bloque-${t.cat}"><div class="check-item"><input type="checkbox" id="${t.id}" ${checked?'checked':''} ${esHoy?'':'disabled'}><label for="${t.id}"${checked?' style="text-decoration:line-through"':''}>${t.txt}</label></div></div></div>`;
+    }).join('');
+
+    if (esHoy) {
+      tl.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+        cb.addEventListener('change', () => {
+          const d = rutinaLoad();
+          const hoyStr = rutinaHoyStr();
+          const arr = new Set(d.completado[hoyStr] || []);
+          cb.checked ? arr.add(cb.id) : arr.delete(cb.id);
+          d.completado[hoyStr] = [...arr];
+          rutinaSave(d);
+          const lbl = cb.nextElementSibling;
+          if (lbl) lbl.style.textDecoration = cb.checked ? 'line-through' : '';
+          renderRutinaLive();
+        });
+      });
+    }
+  }
+
+  function rutinaInit() {
+    rutinaDiaSel = new Date().getDay();
+    buildDayTabs();
+    renderRutinaTimeline();
+    renderRutinaLive();
+  }
+  document.addEventListener('DOMContentLoaded', rutinaInit);
+  setInterval(renderRutinaLive, 30000);
+
+  // Resetear checklist de HOY (borra también lo guardado, no solo lo visual)
   function resetChecklist() {
-    document.querySelectorAll('#rutina input[type="checkbox"]').forEach(cb => {
-      cb.checked = false;
-      const lbl = cb.nextElementSibling;
-      if (lbl) lbl.style.textDecoration = '';
-    });
+    const d = rutinaLoad();
+    delete d.completado[rutinaHoyStr()];
+    rutinaSave(d);
+    if (rutinaDiaSel === new Date().getDay()) renderRutinaTimeline();
+    renderRutinaLive();
   }
 
   // Toggle hábitos

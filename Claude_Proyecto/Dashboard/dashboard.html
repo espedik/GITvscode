@@ -3,541 +3,783 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dashboard Maestro — Mi Vida</title>
+<title>JARVIS — Dashboard</title>
+<meta name="description" content="Salvapantallas de mando: rotación automática de pantallas con lo más importante y pendiente de Coach, Finanzas y el resto de mis proyectos.">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='46' fill='%2305050a' stroke='%2300e0c0' stroke-width='4'/%3E%3Ccircle cx='50' cy='50' r='14' fill='%2300e0c0'/%3E%3Ccircle cx='50' cy='50' r='30' fill='none' stroke='%2300e0c0' stroke-width='2' opacity='.5'/%3E%3C/svg%3E">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;700&display=swap');
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --g:#00e87a;--o:#ff6b35;--b:#3b82f6;--p:#b06eff;--w:#ffd93d;--r:#ff3b6b;
-  --bg:#060614;--text:#e8eaf6;--text2:#8892b0;--text3:#4a5568;
-  --sw:255px;--r14:14px;--rs:9px;--sh:0 4px 24px rgba(0,0,0,.5);
+  --bg:#05050a; --text:#f4f4f8; --text2:#9a9db3; --text3:#565a72;
+  --card:rgba(255,255,255,.045); --card-br:rgba(255,255,255,.09);
+  --g:#00e87a; --o:#ff8a3d; --b:#3b82f6; --p:#b06eff; --w:#ffd93d; --r:#ff5c5c; --cy:#00e0c0;
+  --font:'Inter',-apple-system,sans-serif; --mono:'Space Grotesk',monospace;
 }
-body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);display:flex;min-height:100vh;font-size:14px;
-  background-image:radial-gradient(ellipse 80% 60% at 20% 0%,rgba(0,232,122,.06) 0%,transparent 60%),radial-gradient(ellipse 60% 50% at 85% 100%,rgba(176,110,255,.07) 0%,transparent 60%)}
-::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:rgba(255,255,255,.12);border-radius:2px}
-.sidebar{width:var(--sw);background:rgba(6,6,20,.9);backdrop-filter:blur(20px);border-right:1px solid rgba(0,232,122,.12);display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:100;transition:transform .25s}
-.sb-logo{padding:20px;border-bottom:1px solid rgba(255,255,255,.06)}
-.sb-logo h1{font-size:17px;font-weight:900;background:linear-gradient(90deg,#00e87a,#b06eff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.sb-logo p{font-size:10px;color:var(--text3);margin-top:3px;letter-spacing:.08em;text-transform:uppercase}
-.sb-nav{padding:10px 8px;flex:1;overflow-y:auto}
-.nav-label{font-size:9px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.1em;padding:12px 12px 4px}
-.nav-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:var(--rs);cursor:pointer;color:var(--text2);font-weight:500;font-size:13px;transition:all .2s;margin-bottom:2px;user-select:none}
-.nav-item:hover{background:rgba(255,255,255,.05);color:var(--text)}
-.nav-item.active{background:rgba(0,232,122,.1);color:var(--g);font-weight:600;border-left:2px solid var(--g)}
-.nav-item .ico{font-size:15px;width:20px;text-align:center;flex-shrink:0}
-.app-link{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:var(--rs);color:var(--text2);font-size:12px;transition:all .2s;text-decoration:none;margin-bottom:1px}
-.app-link:hover{background:rgba(255,255,255,.05);color:var(--text)}
-.main{margin-left:var(--sw);flex:1;display:flex;flex-direction:column;min-height:100vh}
-.topbar{background:rgba(6,6,20,.8);backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,.06);padding:0 24px;height:58px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
-.topbar-title{font-size:15px;font-weight:700}
-.content{padding:22px;flex:1}
-.section{display:none}.section.active{display:block}
-.card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:var(--r14);padding:18px;box-shadow:var(--sh),inset 0 1px 0 rgba(255,255,255,.05);transition:border-color .2s;backdrop-filter:blur(10px)}
-.card:hover{border-color:rgba(255,255,255,.12)}
-.card-title{font-size:11px;font-weight:600;color:var(--text2);margin-bottom:8px;display:flex;align-items:center;gap:5px;text-transform:uppercase;letter-spacing:.06em}
-.card-val{font-size:26px;font-weight:800;letter-spacing:-.5px}
-.card-sub{font-size:11px;color:var(--text3);margin-top:3px}
-.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
-.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
-.g2{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
-.btn{display:inline-flex;align-items:center;gap:5px;padding:8px 14px;border-radius:var(--rs);border:none;cursor:pointer;font-size:13px;font-weight:600;transition:all .2s;white-space:nowrap;font-family:inherit}
-.btn-g{background:linear-gradient(135deg,#00b860,#00e87a);color:#000}
-.btn-o{background:rgba(255,255,255,.05);color:var(--text2);border:1px solid rgba(255,255,255,.1)}
-.btn-sm{padding:5px 9px;font-size:11px}
-.pbar{height:6px;background:rgba(255,255,255,.08);border-radius:20px;overflow:hidden;margin-top:7px}
-.pfill{height:100%;border-radius:20px;transition:width .6s cubic-bezier(.4,0,.2,1)}
-.sh{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
-.sh h2{font-size:19px;font-weight:800;background:linear-gradient(90deg,var(--text),var(--text2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.mt16{margin-top:16px}.mt20{margin-top:20px}
-.flex{display:flex}.aic{align-items:center}.jb{justify-content:space-between}.gap8{gap:8px}
-.ts{font-size:11px}.tm{color:var(--text3)}
-.chart-c{position:relative;height:260px}
-.score-big{font-size:72px;font-weight:900;letter-spacing:-3px;background:linear-gradient(135deg,#00e87a,#3b82f6,#b06eff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1}
-.alert-item{display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.05)}
-.alert-item:last-child{border-bottom:none}
-.alert-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:5px}
-.app-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
-.app-card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:var(--r14);padding:20px;text-decoration:none;color:var(--text);transition:all .25s;display:block}
-.app-card:hover{background:rgba(255,255,255,.06);border-color:rgba(0,232,122,.3);transform:translateY(-2px);box-shadow:0 8px 30px rgba(0,0,0,.4)}
-.toast{position:fixed;bottom:24px;right:24px;background:rgba(10,10,30,.95);color:var(--text);border:1px solid rgba(0,232,122,.2);padding:10px 18px;border-radius:var(--rs);font-size:13px;font-weight:600;box-shadow:var(--sh);z-index:500;opacity:0;transform:translateY(8px);transition:all .3s;pointer-events:none}
-.toast.show{opacity:1;transform:translateY(0)}
-@media(max-width:900px){.g4{grid-template-columns:repeat(2,1fr)}.app-grid{grid-template-columns:repeat(3,1fr)}}
-@media(max-width:640px){.sidebar{transform:translateX(-100%)}.sidebar.open{transform:translateX(0)}.main{margin-left:0}.g4,.g3,.g2,.app-grid{grid-template-columns:1fr}}
+html,body{height:100%}
+body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hidden;position:relative}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:rgba(255,255,255,.14);border-radius:3px}
+
+/* ─── SLIDES ENGINE ─────────────────────────────────────── */
+.slides{position:fixed;inset:0;overflow:hidden}
+.slide{
+  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  padding:5vh 6vw;opacity:0;transform:scale(1.045);filter:blur(10px);
+  transition:opacity 1.3s cubic-bezier(.22,.61,.36,1), transform 1.8s cubic-bezier(.22,.61,.36,1), filter 1.3s ease;
+  pointer-events:none; overflow:hidden;
+}
+.slide.active{opacity:1;transform:scale(1);filter:blur(0);pointer-events:auto;z-index:2}
+.slide::before,.slide::after{content:'';position:absolute;border-radius:50%;filter:blur(100px);opacity:.32;pointer-events:none;z-index:0}
+.slide::before{width:58vmax;height:58vmax;top:-22%;left:-14%;background:var(--ac1);animation:driftA 24s ease-in-out infinite alternate}
+.slide::after{width:50vmax;height:50vmax;bottom:-24%;right:-12%;background:var(--ac2);animation:driftB 28s ease-in-out infinite alternate}
+@keyframes driftA{0%{transform:translate(0,0) scale(1)}100%{transform:translate(6vw,5vh) scale(1.18)}}
+@keyframes driftB{0%{transform:translate(0,0) scale(1)}100%{transform:translate(-6vw,-5vh) scale(1.12)}}
+.slide-inner{position:relative;z-index:1;width:100%;max-width:1400px;height:100%;display:flex;flex-direction:column;justify-content:center}
+
+.theme-dia    {--ac1:#00e0ff;--ac2:#00e87a}
+.theme-hero   {--ac1:#3ddc97;--ac2:#7c6cff}
+.theme-coach  {--ac1:#e0b020;--ac2:#ff8a3d}
+.theme-fin    {--ac1:#00e87a;--ac2:#00c2d1}
+.theme-skills {--ac1:#b06eff;--ac2:#ff6bd6}
+.theme-alert  {--ac1:#ff5c5c;--ac2:#ffb020}
+.theme-hoy    {--ac1:#3b82f6;--ac2:#00e0ff}
+.theme-apps   {--ac1:#00e87a;--ac2:#b06eff}
+
+.eyebrow{font-size:clamp(11px,1.1vw,14px);font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--text2);display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.eyebrow .dot{width:8px;height:8px;border-radius:50%;background:var(--ac1);box-shadow:0 0 12px var(--ac1);animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+.slide-title{font-size:clamp(26px,3.4vw,46px);font-weight:900;letter-spacing:-.02em;margin-bottom:clamp(20px,3vh,40px);
+  background:linear-gradient(90deg,var(--text),var(--text2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+
+.reveal{animation:fadeUp .8s cubic-bezier(.22,.61,.36,1) both}
+.slide:not(.active) .reveal{animation:none;opacity:0}
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+.d1{animation-delay:.05s}.d2{animation-delay:.15s}.d3{animation-delay:.25s}.d4{animation-delay:.35s}.d5{animation-delay:.45s}.d6{animation-delay:.55s}
+
+.tile{background:var(--card);border:1px solid var(--card-br);border-radius:22px;padding:clamp(16px,2vw,26px);backdrop-filter:blur(16px);box-shadow:0 10px 40px rgba(0,0,0,.35)}
+.tile-glow{box-shadow:0 10px 40px rgba(0,0,0,.35),0 0 0 1px rgba(255,255,255,.02),inset 0 1px 0 rgba(255,255,255,.06)}
+.grid{display:grid;gap:clamp(12px,1.4vw,20px)}
+.g2{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:repeat(3,1fr)}.g4{grid-template-columns:repeat(4,1fr)}.g6{grid-template-columns:repeat(6,1fr)}
+.big-num{font-family:var(--mono);font-weight:700;letter-spacing:-.02em;line-height:1}
+.pbar{height:11px;background:rgba(255,255,255,.08);border-radius:20px;overflow:hidden;margin-top:9px;position:relative}
+.pfill{height:100%;border-radius:20px;transition:width 1.2s cubic-bezier(.22,.61,.36,1);position:relative}
+.pfill::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.35),transparent);animation:shine 2.4s linear infinite}
+@keyframes shine{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+.lbl{font-size:clamp(10px,.9vw,12px);color:var(--text2);text-transform:uppercase;letter-spacing:.08em;font-weight:700}
+.sub{font-size:clamp(11px,1vw,13px);color:var(--text3);margin-top:4px}
+
+/* ─── HUD ────────────────────────────────────────────────── */
+.hud{position:fixed;left:0;right:0;bottom:0;display:flex;flex-direction:column;align-items:center;gap:10px;padding:0 0 22px;z-index:50;opacity:.55;transition:opacity .3s}
+.hud:hover{opacity:1}
+.hud-clock{font-family:var(--mono);font-size:13px;color:var(--text2);letter-spacing:.04em}
+.hud-row{display:flex;align-items:center;gap:14px;background:rgba(10,10,20,.55);border:1px solid rgba(255,255,255,.08);backdrop-filter:blur(14px);border-radius:40px;padding:8px 14px}
+.dots{display:flex;gap:7px}
+.dot-btn{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.22);border:none;cursor:pointer;transition:all .25s;padding:0}
+.dot-btn.on{width:22px;background:linear-gradient(90deg,var(--g),var(--p));box-shadow:0 0 10px rgba(0,232,122,.5)}
+.hud-btn{width:30px;height:30px;border-radius:50%;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.04);color:var(--text);cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.hud-btn:hover{background:rgba(255,255,255,.12)}
+.hud-sync{font-size:10px;color:var(--text3)}
+
+/* ─── APP GRID (última pantalla) ────────────────────────── */
+.app-card{background:var(--card);border:1px solid var(--card-br);border-radius:20px;padding:18px;text-decoration:none;color:var(--text);display:block;transition:all .25s}
+.app-card:hover{background:rgba(255,255,255,.08);border-color:rgba(0,232,122,.35);transform:translateY(-3px)}
+.app-ico{font-size:26px;margin-bottom:8px}
+.app-name{font-size:13px;font-weight:800;margin-bottom:3px}
+.app-stat{font-size:11px;color:var(--g);font-weight:600;margin-top:6px}
+
+/* ─── ALERTAS ────────────────────────────────────────────── */
+.al-row{display:flex;align-items:flex-start;gap:14px;padding:14px 0;border-bottom:1px solid rgba(255,255,255,.06)}
+.al-row:last-child{border-bottom:none}
+.al-dot{width:10px;height:10px;border-radius:50%;margin-top:6px;flex-shrink:0;box-shadow:0 0 10px currentColor}
+.al-t{font-size:clamp(14px,1.3vw,17px);font-weight:700}
+.al-d{font-size:clamp(11px,1vw,13px);color:var(--text2);margin-top:2px}
+
+/* ─── AREA BARS (hero) ──────────────────────────────────── */
+.ar-row{display:flex;align-items:center;gap:12px;margin-bottom:11px}
+.ar-ico{width:26px;font-size:16px;text-align:center}
+.ar-name{width:110px;font-size:12px;color:var(--text2)}
+.ar-track{flex:1;height:7px;background:rgba(255,255,255,.08);border-radius:10px;overflow:hidden}
+.ar-fill{height:100%;border-radius:10px}
+.ar-val{width:32px;text-align:right;font-family:var(--mono);font-weight:700;font-size:13px}
+
+.chart-wrap{position:relative;height:clamp(240px,34vh,420px)}
+
+@media(max-width:900px){.g4{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:repeat(2,1fr)}.g6{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:600px){.g2,.g4,.g3,.g6{grid-template-columns:1fr}.ar-name{width:80px}}
 </style>
 </head>
 <body>
 
-<aside class="sidebar" id="sidebar">
-  <div class="sb-logo">
-    <h1>🌟 Mi Vida</h1>
-    <p>Dashboard Maestro</p>
-  </div>
-  <nav class="sb-nav">
-    <div class="nav-label">Dashboard</div>
-    <div class="nav-item active" onclick="nav('resumen')"><span class="ico">🌟</span>Resumen General</div>
-    <div class="nav-item" onclick="nav('semana')"><span class="ico">📅</span>Esta Semana</div>
-    <div class="nav-item" onclick="nav('alertas')"><span class="ico">🔔</span>Alertas <span id="alert-badge" style="margin-left:auto;background:var(--r);color:#fff;font-size:9px;font-weight:700;padding:2px 6px;border-radius:10px;display:none">0</span></div>
-    <div class="nav-item" onclick="nav('vida')"><span class="ico">🎯</span>Vida Score</div>
-    <div class="nav-item" onclick="nav('apps')"><span class="ico">🚀</span>Todas mis apps</div>
-    <div class="nav-label">Acceso Rápido</div>
-    <a href="../Finanzas/Finanzas.html" class="app-link">💰 Finanzas</a>
-    <a href="../Salud/salud.html" class="app-link">🥦 Salud & Nutrición</a>
-    <a href="../Ejercicio/ejercicio.html" class="app-link">🏋️ Ejercicio</a>
-    <a href="../Sueno/sueno.html" class="app-link">😴 Sueño</a>
-    <a href="../Habitos/habitos.html" class="app-link">✅ Hábitos</a>
-    <a href="../Tiempo/tiempo.html" class="app-link">⏱️ Productividad</a>
-    <a href="../Animo/animo.html" class="app-link">🧠 Ánimo</a>
-    <a href="../Aprendizaje/aprendizaje.html" class="app-link">📚 Aprendizaje</a>
-    <a href="../Proyectos/proyectos.html" class="app-link">🎯 Proyectos</a>
-    <a href="../Social/social.html" class="app-link">👥 Social</a>
-    <a href="../Vehiculo/vehiculo.html" class="app-link">🚗 Vehículo</a>
-  </nav>
-</aside>
+<div class="slides" id="slides">
 
-<main class="main">
-  <div class="topbar">
-    <div class="flex aic gap8">
-      <button class="btn btn-o btn-sm" id="menuBtn" onclick="document.getElementById('sidebar').classList.toggle('open')" style="display:none;padding:5px 8px">☰</button>
-      <span class="topbar-title" id="topTitle">🌟 Resumen General</span>
-    </div>
-    <div class="flex aic gap8">
-      <span class="ts tm" id="dateLabel"></span>
-      <button class="btn btn-g btn-sm" onclick="reloadAll()">↻ Actualizar</button>
-    </div>
-  </div>
-  <div class="content">
-    <section id="s-resumen" class="section active"><div id="r-body"></div></section>
-    <section id="s-semana" class="section"><div id="sem-body"></div></section>
-    <section id="s-alertas" class="section"><div id="al-body"></div></section>
-    <section id="s-vida" class="section"><div id="vs-body"></div></section>
-    <section id="s-apps" class="section"><div id="apps-body"></div></section>
-  </div>
-</main>
+  <!-- 0 · MI DÍA -->
+  <section class="slide theme-dia" data-i="0">
+    <div class="slide-inner">
+      <div class="eyebrow reveal d1"><span class="dot"></span> Mi Día · <span id="diaClock">00:00</span></div>
+      <div class="slide-title reveal d2" id="diaFecha">—</div>
 
-<div class="toast" id="toast"></div>
+      <div class="grid g2 reveal d3" style="margin-bottom:18px;align-items:stretch">
+        <div class="tile tile-glow">
+          <div class="lbl">🟢 Ahora mismo</div>
+          <div style="font-weight:800;font-size:clamp(16px,1.8vw,22px);margin-top:8px;line-height:1.4" id="diaAhora">—</div>
+        </div>
+        <div class="tile tile-glow">
+          <div class="lbl">🔜 Siguiente</div>
+          <div style="font-weight:800;font-size:clamp(16px,1.8vw,22px);margin-top:8px;line-height:1.4" id="diaSiguiente">—</div>
+        </div>
+      </div>
+
+      <div class="tile reveal d4" style="margin-bottom:18px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <div class="lbl">✅ Progreso de hoy</div>
+          <div class="sub" id="diaProgresoTxt" style="margin-top:0">0/0</div>
+        </div>
+        <div class="pbar"><div class="pfill" id="diaProgresoBar" style="width:0%;background:linear-gradient(90deg,var(--g),var(--cy))"></div></div>
+      </div>
+
+      <div class="tile reveal d5" id="diaTimeline" style="max-height:34vh;overflow-y:auto"></div>
+
+      <div class="reveal d6" style="margin-top:14px">
+        <a href="../Coach/Coach_v2.html#rutina" style="color:var(--cy);font-size:12px;font-weight:600;text-decoration:none">Ver/editar rutina completa en Coach →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 1 · HERO -->
+  <section class="slide theme-hero" data-i="1">
+    <div class="slide-inner">
+      <div class="eyebrow reveal d1"><span class="dot"></span> JARVIS · Panel de mando</div>
+      <div class="reveal d2" style="font-family:var(--mono);font-size:clamp(52px,9vw,120px);font-weight:700;letter-spacing:-.02em;line-height:1" id="heroClock">00:00:00</div>
+      <div class="reveal d3" style="font-size:clamp(15px,1.6vw,20px);color:var(--text2);margin-top:6px;margin-bottom:clamp(24px,4vh,44px);text-transform:capitalize" id="heroDate">—</div>
+
+      <div class="grid g2 reveal d4" style="align-items:stretch">
+        <div class="tile tile-glow" style="display:flex;flex-direction:column;justify-content:center;text-align:center">
+          <div class="lbl">Vida Score · 7 días</div>
+          <div class="big-num" style="font-size:clamp(64px,9vw,120px);background:linear-gradient(135deg,#00e87a,#3b82f6,#b06eff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text" id="heroVida">—</div>
+          <div id="heroVidaLabel" style="font-weight:800;font-size:clamp(13px,1.2vw,16px)">—</div>
+          <div class="sub" id="heroCountdown">—</div>
+        </div>
+        <div class="tile tile-glow" id="heroAreas"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 1 · COACH: PLAN MAESTRO -->
+  <section class="slide theme-coach" data-i="2">
+    <div class="slide-inner">
+      <div class="eyebrow reveal d1"><span class="dot"></span> Coach · Plan Maestro</div>
+      <div class="slide-title reveal d2" id="coachPhaseTitle">Fase —</div>
+
+      <div class="grid g3 reveal d3" style="margin-bottom:18px">
+        <div class="tile">
+          <div class="lbl">Días restantes a la meta</div>
+          <div class="big-num" style="font-size:clamp(34px,4vw,56px);color:var(--w)" id="coachDiasMeta">—</div>
+          <div class="sub">Hasta el 01 ene 2030 · $1,000,000 líquido</div>
+        </div>
+        <div class="tile">
+          <div class="lbl">Avance del plan</div>
+          <div class="big-num" style="font-size:clamp(34px,4vw,56px);color:var(--g)" id="coachPct">—</div>
+          <div class="pbar"><div class="pfill" id="coachPctBar" style="width:0%;background:linear-gradient(90deg,var(--g),var(--cy))"></div></div>
+        </div>
+        <div class="tile">
+          <div class="lbl">Fase actual vence</div>
+          <div class="big-num" style="font-size:clamp(20px,2.6vw,32px)" id="coachFaseFin">—</div>
+          <div class="sub" id="coachFaseDias">—</div>
+        </div>
+      </div>
+
+      <div class="tile reveal d4" style="margin-bottom:18px">
+        <div class="lbl" style="margin-bottom:10px">🎯 Meta de esta fase</div>
+        <div style="font-size:clamp(14px,1.3vw,17px);color:var(--text);line-height:1.5" id="coachFaseMeta">—</div>
+      </div>
+
+      <div class="grid g3 reveal d5" id="coachPriorities"></div>
+    </div>
+  </section>
+
+  <!-- 2 · FINANZAS -->
+  <section class="slide theme-fin" data-i="3">
+    <div class="slide-inner">
+      <div class="eyebrow reveal d1"><span class="dot"></span> Finanzas · Coach + Finanzas.html</div>
+      <div class="slide-title reveal d2">💰 Patrimonio y flujo</div>
+
+      <div class="grid g3 reveal d3" style="margin-bottom:18px">
+        <div class="tile tile-glow" style="grid-column:span 1">
+          <div class="lbl">Patrimonio neto estimado</div>
+          <div class="big-num" style="font-size:clamp(30px,3.6vw,50px)" id="finPatrimonio">—</div>
+          <div class="pbar"><div class="pfill" id="finPatBar" style="width:0%;background:linear-gradient(90deg,var(--g),var(--cy))"></div></div>
+          <div class="sub">Meta: $1,000,000 · 01 ene 2030</div>
+        </div>
+        <div class="tile">
+          <div class="lbl">🆘 Fondo de emergencia</div>
+          <div class="big-num" style="font-size:clamp(30px,3.6vw,50px)" id="finFondo">—</div>
+          <div class="pbar"><div class="pfill" id="finFondoBar" style="width:0%;background:linear-gradient(90deg,var(--w),var(--o))"></div></div>
+          <div class="sub">Meta: $10,000</div>
+        </div>
+        <div class="tile">
+          <div class="lbl">🏦 Deuda total pendiente</div>
+          <div class="big-num" style="font-size:clamp(30px,3.6vw,50px);color:var(--r)" id="finDeuda">—</div>
+          <div class="sub" id="finDeudaSub">—</div>
+        </div>
+      </div>
+
+      <div class="grid g2 reveal d4">
+        <div class="tile">
+          <div class="lbl" style="margin-bottom:10px">📆 Este mes</div>
+          <div class="grid g2">
+            <div><div class="sub" style="margin-top:0">Ingresos</div><div class="big-num" style="font-size:22px;color:var(--g)" id="finIngresos">—</div></div>
+            <div><div class="sub" style="margin-top:0">Gastos</div><div class="big-num" style="font-size:22px;color:var(--r)" id="finGastos">—</div></div>
+          </div>
+          <div class="sub" style="margin-top:12px" id="finAhorro">—</div>
+        </div>
+        <div class="tile">
+          <div class="lbl" style="margin-bottom:10px">🏦 Mayores deudas</div>
+          <div id="finTopDeudas"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3 · COACH: HABILIDADES -->
+  <section class="slide theme-skills" data-i="4">
+    <div class="slide-inner">
+      <div class="eyebrow reveal d1"><span class="dot"></span> Coach · Radar de habilidades</div>
+      <div class="slide-title reveal d2">🧠 En qué invertir tu tiempo</div>
+
+      <div class="grid g2 reveal d3" style="align-items:center">
+        <div class="tile chart-wrap"><canvas id="chSkills"></canvas></div>
+        <div>
+          <div class="tile tile-glow" style="text-align:center;margin-bottom:16px">
+            <div class="lbl">OVR general</div>
+            <div class="big-num" style="font-size:clamp(48px,6vw,84px)" id="skillOvr">—</div>
+            <div id="skillOvrLabel" style="font-weight:800">—</div>
+          </div>
+          <div class="tile">
+            <div class="lbl" style="margin-bottom:10px">⚠️ Tus 3 más débiles ahora</div>
+            <div id="skillWeak"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4 · ALERTAS -->
+  <section class="slide theme-alert" data-i="5">
+    <div class="slide-inner">
+      <div class="eyebrow reveal d1"><span class="dot"></span> Centro de alertas</div>
+      <div class="slide-title reveal d2" id="alTitle">🔔 Pendientes</div>
+      <div class="tile reveal d3" id="alBody" style="max-height:62vh;overflow:hidden"></div>
+    </div>
+  </section>
+
+  <!-- 5 · HOY EN NÚMEROS -->
+  <section class="slide theme-hoy" data-i="6">
+    <div class="slide-inner">
+      <div class="eyebrow reveal d1"><span class="dot"></span> Hoy en números</div>
+      <div class="slide-title reveal d2" id="hoyTitle">📊 —</div>
+      <div class="grid g3 reveal d3" id="hoyBody"></div>
+    </div>
+  </section>
+
+  <!-- 6 · APPS -->
+  <section class="slide theme-apps" data-i="7">
+    <div class="slide-inner">
+      <div class="eyebrow reveal d1"><span class="dot"></span> Todos mis proyectos</div>
+      <div class="slide-title reveal d2">🚀 Ir directo a…</div>
+      <div class="grid g4 reveal d3" id="appsBody"></div>
+    </div>
+  </section>
+
+</div>
+
+<div class="hud">
+  <div class="hud-clock"><span id="hudClock">—</span> <span class="hud-sync" id="hudSync"></span></div>
+  <div class="hud-row">
+    <button class="hud-btn" onclick="prevSlide()" title="Anterior">‹</button>
+    <div class="dots" id="dots"></div>
+    <button class="hud-btn" onclick="nextSlide()" title="Siguiente">›</button>
+    <button class="hud-btn" id="playBtn" onclick="togglePlay()" title="Pausar/Reanudar">⏸</button>
+  </div>
+</div>
 
 <script>
+// ══════════════════════════════════════════════════════════════════════════
+// DATA ENGINE — lee en vivo el localStorage de cada proyecto hermano
+// ══════════════════════════════════════════════════════════════════════════
 const today=()=>new Date().toISOString().slice(0,10);
 const fmt=n=>new Intl.NumberFormat('es-MX').format(Math.round(n||0));
-const fmtD=d=>{if(!d)return'';const[y,m,day]=d.split('-');const mn=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];return`${parseInt(day)} ${mn[parseInt(m)-1]} ${y}`;};
-const killChart=c=>{if(c)c.destroy();return null;};
-let chRadar=null, curSec='resumen';
-
-function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500);}
-
-// ── DATA ────────────────────────────────────────────────────────────────────
+const money=n=>(n<0?'-$':'$')+fmt(Math.abs(n));
+const fmtD=d=>{if(!d)return'';const[y,m,day]=d.split('-');const mn=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];return `${parseInt(day)} ${mn[parseInt(m)-1]} ${y}`;};
 function tryParse(key,def){try{const r=localStorage.getItem(key);if(!r)return def;const p=JSON.parse(r);return typeof p==='object'&&p?{...def,...p}:def;}catch(e){return def;}}
+
+// Habilidades — mismo set y pesos que el radar de Coach (Coach_v2.html)
+const SK=[
+  {id:'ventas',    name:'Ventas',     icon:'🤝', val:15, w:1.5},
+  {id:'copy',      name:'Copy',       icon:'✍️', val:55, w:1.2},
+  {id:'marketing', name:'Marketing',  icon:'📣', val:20, w:1.2},
+  {id:'network',   name:'Networking', icon:'🔗', val:55, w:1.0},
+  {id:'liderazgo', name:'Liderazgo',  icon:'👑', val:80, w:1.0},
+  {id:'codigo',    name:'Código',     icon:'💻', val:60, w:1.2},
+  {id:'ia',        name:'IA',         icon:'🤖', val:30, w:1.2},
+  {id:'datos',     name:'Datos',      icon:'📊', val:15, w:1.0},
+  {id:'inversion', name:'Inversión',  icon:'📈', val:25, w:1.2},
+  {id:'finanzas',  name:'Finanzas',   icon:'💰', val:20, w:1.1},
+  {id:'ingles',    name:'Inglés',     icon:'🌐', val:80, w:1.1},
+  {id:'mente',     name:'Mentalidad', icon:'🚀', val:85, w:1.0},
+];
 
 let D={};
 function loadAll(){
   D={
-    fin:  tryParse('finanzasmx_v2',{transactions:[],debts:[],goals:[],investments:[]}),
-    sal:  tryParse('misalud_v1',{alimentos:[],ejercicios:[],medidas:[],agua:{},metas:{caloriasD:2000,proteina:150},perfil:{peso:0}}),
-    sue:  tryParse('sueno_v1',{registros:[],config:{objetivo_horas:8}}),
-    hab:  tryParse('habitos_v1',{habitos:[],registros:[]}),
-    tie:  tryParse('tiempo_v1',{bloques:[]}),
-    ani:  tryParse('animo_v1',{registros:[]}),
-    apr:  tryParse('aprendizaje_v1',{libros:[],sesiones:[],skills:[],metas:{libros_anuales:12,horas_semana:10}}),
-    pro:  tryParse('proyectos_v1',{proyectos:[],tareas:[],sesiones:[]}),
-    soc:  tryParse('social_v1',{contactos:[],interacciones:[]}),
-    veh:  tryParse('vehiculo_v1',{vehiculo:{},gasolina:[],mantenimientos:[],gastos:[]})
+    fin: tryParse('finanzasmx_v2',{transactions:[],debts:[],goals:[],investments:[],emergencyFund:0}),
+    sal: tryParse('misalud_v1',{alimentos:[],ejercicios:[],medidas:[],agua:{},metas:{caloriasD:2000,proteina:150},perfil:{peso:0}}),
+    sk: tryParse('skincare_v1',{perfil:{tipo:'grasa',preocupaciones:[],rasurado:'no_aplica',presupuesto:'medio',notas:''}}),
+    ca: tryParse('cabello_v1',{perfil:{tipo:'lacio',grosor:'fino',cuero:'graso',preocupaciones:[],caidaPatron:'no_seguro',presupuesto:'medio',notas:''}}),
+    pro: tryParse('proyectos_v1',{proyectos:[],tareas:[],sesiones:[]}),
+    rut: tryParse('coach_rutina_v1',{completado:{}})
   };
+  SK.forEach(s=>{const v=localStorage.getItem('radarp_'+s.id);if(v!==null)s.val=Math.min(100,Math.max(0,parseInt(v)));});
 }
-function reloadAll(){loadAll();RENDERS[curSec]?.();updateAlertBadge();toast('✅ Datos actualizados');}
 
-// ── HELPERS ─────────────────────────────────────────────────────────────────
+// ── RUTINA DIARIA — mismo horario que Coach_v2.html → #rutina (fuente única) ─
+const RUTINA_TASKS=[
+  // Común entre semana (Lun–Vie)
+  {id:'wd01', dias:[1,2,3,4,5], hora:'05:00', cat:'salud',    txt:'Despertar sin snooze — celular fuera del cuarto'},
+  {id:'wd02', dias:[1,2,3,4,5], hora:'05:05', cat:'salud',    txt:'Agua 500ml'},
+  {id:'wd03', dias:[1,2,3,4,5], hora:'05:40', cat:'salud',    txt:'Ducha fría 90 seg'},
+  {id:'wd04', dias:[1,2,3,4,5], hora:'05:43', cat:'salud',    txt:'🧴 Skincare AM: limpiador + hidratante + protector solar'},
+  {id:'wd05', dias:[1,2,3,4,5], hora:'05:48', cat:'descanso', txt:'2 min de journaling: qué haría hoy la versión de mí que ya llegó'},
+  {id:'wd06', dias:[1,2,3,4,5], hora:'05:50', cat:'admin',    txt:'💰 Revisar GBM: portafolio + VOO + USD/MXN'},
+  {id:'wd07', dias:[1,2,3,4,5], hora:'05:58', cat:'salud',    txt:'Desayuno alto en proteína'},
+  {id:'wd08', dias:[1,2,3,4,5], hora:'06:43', cat:'descanso', txt:'Traslado a ALTEN'},
+  {id:'wd09', dias:[1,2,3,4,5], hora:'07:00', cat:'trabajo',  txt:'🏢 ALTEN — jornada laboral (HIL/SIL Ford)', fijo:true},
+  {id:'wd10', dias:[1,2,3,4,5], hora:'17:00', cat:'descanso', txt:'Traslado de vuelta a casa'},
+  {id:'wd11', dias:[1,2,3,4,5], hora:'17:20', cat:'profundo', txt:'🎯 Prioridad activa de Fase 0: régimen fiscal, outreach o plantilla GBM — 1 avance real'},
+  {id:'wd12', dias:[1,2,3,4,5], hora:'18:40', cat:'admin',    txt:'🤝 Ventas: 5 mensajes personalizados a prospectos'},
+  {id:'wd13', dias:[1,2,3,4,5], hora:'18:50', cat:'descanso', txt:'Didi solo si Opciones 1-2 aún no generan ingreso'},
+  {id:'wd14', dias:[1,2,3,4,5], hora:'19:30', cat:'salud',    txt:'Cenar ligero, sin carbohidratos refinados'},
+  {id:'wd15', dias:[1,2,3,4,5], hora:'19:50', cat:'descanso', txt:'30 min lectura física (no celular)'},
+  {id:'wd16', dias:[1,2,3,4,5], hora:'20:20', cat:'descanso', txt:'Journaling: 3 logros + 1 lección + 1 gasto evitable'},
+  {id:'wd17', dias:[1,2,3,4,5], hora:'20:35', cat:'salud',    txt:'🧴 Skincare PM: limpiador + tratamiento + hidratante'},
+  {id:'wd18', dias:[1,2,3,4,5], hora:'20:45', cat:'profundo', txt:'Plan de mañana: 1 MIT (Most Important Task) + 4 tareas'},
+  {id:'wd19', dias:[1,2,3,4,5], hora:'21:00', cat:'descanso', txt:'Meditación / respiración box 4-4-4-4 (10 min)'},
+  {id:'wd20', dias:[1,2,3,4,5], hora:'21:15', cat:'salud',    txt:'Apagar pantallas. Dormir 7h mínimo — es recuperación activa'},
+  // Ejercicio y bloque de habilidad — cambian cada día
+  {id:'e1', dias:[1], hora:'05:10', cat:'salud',    txt:'Ejercicio: Pesas — Empuje (pecho / hombro / tríceps)'},
+  {id:'k1', dias:[1], hora:'06:13', cat:'creativo', txt:'📣 Marketing: publica 1 post de valor en LinkedIn'},
+  {id:'e2', dias:[2], hora:'05:10', cat:'salud',    txt:'Ejercicio: Cardio 25 min (correr/bici) + core 5 min'},
+  {id:'k2', dias:[2], hora:'06:13', cat:'aprender', txt:'📊 Datos: 30 min de SQL (SQLZoo/Kaggle)'},
+  {id:'e3', dias:[3], hora:'05:10', cat:'salud',    txt:'Ejercicio: Pesas — Jalón (espalda / bíceps)'},
+  {id:'k3', dias:[3], hora:'06:13', cat:'creativo', txt:'📣 Marketing: publica 1 post de valor en LinkedIn'},
+  {id:'e4', dias:[4], hora:'05:10', cat:'salud',    txt:'Ejercicio: Cardio / HIIT 25 min'},
+  {id:'k4', dias:[4], hora:'06:13', cat:'aprender', txt:'📊 Datos: 30 min de SQL'},
+  {id:'e5', dias:[5], hora:'05:10', cat:'salud',    txt:'Ejercicio: Pesas — Piernas / glúteo'},
+  {id:'k5', dias:[5], hora:'06:13', cat:'creativo', txt:'✍️ Copy: mejora o escribe 1 mensaje de venta / la landing de la plantilla GBM'},
+  // Sábado
+  {id:'sa01', dias:[6], hora:'07:00', cat:'salud',    txt:'Despertar (sin alarma agresiva)'},
+  {id:'sa02', dias:[6], hora:'07:05', cat:'salud',    txt:'🧴 Skincare AM'},
+  {id:'sa03', dias:[6], hora:'07:10', cat:'salud',    txt:'Desayuno tranquilo'},
+  {id:'sa04', dias:[6], hora:'07:30', cat:'salud',    txt:'Ejercicio 1h — entreno largo / lo que falte en la semana'},
+  {id:'sa05', dias:[6], hora:'08:30', cat:'salud',    txt:'Ducha'},
+  {id:'sa06', dias:[6], hora:'08:45', cat:'profundo', txt:'🎯 Bloque profundo 4h: prioridad activa del Plan Maestro'},
+  {id:'sa07', dias:[6], hora:'12:45', cat:'salud',    txt:'Almuerzo'},
+  {id:'sa08', dias:[6], hora:'13:15', cat:'aprender', txt:'🤖 IA aplicada — 30 min construyendo (n8n, Cursor, mini-proyecto propio)'},
+  {id:'sa09', dias:[6], hora:'13:45', cat:'admin',    txt:'🤝 Ventas: 5 mensajes personalizados'},
+  {id:'sa10', dias:[6], hora:'16:00', cat:'admin',    txt:'💰 Revisión semanal: finanzas, metas, hábitos cumplidos'},
+  {id:'sa11', dias:[6], hora:'20:00', cat:'salud',    txt:'Cena'},
+  {id:'sa12', dias:[6], hora:'20:30', cat:'descanso', txt:'Tiempo libre / familia / lectura'},
+  {id:'sa13', dias:[6], hora:'21:00', cat:'salud',    txt:'🧴 Skincare PM'},
+  {id:'sa14', dias:[6], hora:'21:30', cat:'descanso', txt:'Meditación'},
+  {id:'sa15', dias:[6], hora:'21:45', cat:'salud',    txt:'Apagar pantallas. Dormir'},
+  // Compartido Sábado y Domingo
+  {id:'fl1', dias:[6,0], hora:'17:00', cat:'descanso', txt:'Bloque largo de freelance/plantilla si ya hay cliente o ventas activas'},
+  // Domingo
+  {id:'do01', dias:[0], hora:'07:30', cat:'salud',    txt:'Despertar'},
+  {id:'do02', dias:[0], hora:'07:35', cat:'salud',    txt:'🧴 Skincare AM'},
+  {id:'do03', dias:[0], hora:'07:40', cat:'salud',    txt:'Desayuno tranquilo'},
+  {id:'do04', dias:[0], hora:'08:00', cat:'salud',    txt:'Ejercicio: descanso activo — caminata o movilidad 30 min'},
+  {id:'do05', dias:[0], hora:'09:00', cat:'descanso', txt:'Tiempo libre / familia'},
+  {id:'do06', dias:[0], hora:'20:00', cat:'admin',    txt:'💰 Finanzas: revisión de presupuesto + planificar semana + revisar inversiones'},
+  {id:'do07', dias:[0], hora:'20:30', cat:'profundo', txt:'🎯 Revisar Plan Maestro: ¿la fase actual sigue en verde? Ajustar si hace falta'},
+  {id:'do08', dias:[0], hora:'21:00', cat:'salud',    txt:'Cena ligera'},
+  {id:'do09', dias:[0], hora:'21:20', cat:'descanso', txt:'Journaling: cierre de semana'},
+  {id:'do10', dias:[0], hora:'21:40', cat:'salud',    txt:'🧴 Skincare PM'},
+  {id:'do11', dias:[0], hora:'22:00', cat:'descanso', txt:'Meditación'},
+  {id:'do12', dias:[0], hora:'22:15', cat:'salud',    txt:'Apagar pantallas. Dormir'},
+];
+function rutinaTareasHoy(){const dow=new Date().getDay();return RUTINA_TASKS.filter(t=>t.dias.includes(dow)).sort((a,b)=>a.hora.localeCompare(b.hora));}
+function rutinaAhoraSiguiente(){
+  const now=new Date();
+  const hhmm=String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0');
+  const tareasHoy=rutinaTareasHoy();
+  let actual=null, siguiente=null;
+  tareasHoy.forEach(t=>{ if(t.hora<=hhmm) actual=t; else if(!siguiente) siguiente=t; });
+  return {tareasHoy, actual, siguiente};
+}
+
 function getDias(n){return Array.from({length:n},(_,i)=>{const d=new Date();d.setDate(d.getDate()-i);return d.toISOString().slice(0,10);});}
-function addDays(d,n){const x=new Date(d);x.setDate(x.getDate()+n);return x.toISOString().slice(0,10);}
 
-// ── SCORE ENGINE ────────────────────────────────────────────────────────────
+// ── SCORES (mismo motor que el dashboard anterior) ──────────────────────────
+const AREAS=[
+  {k:'salud',ico:'🥗',n:'Salud',href:'../CuidadoPersonal/cuidadopersonal.html?tab=salud'},
+  {k:'finanzas',ico:'💰',n:'Finanzas',href:'../Finanzas/Finanzas.html'}
+];
 function calcScores(dias7){
-  // SUEÑO
-  const sR=(D.sue.registros||[]).filter(r=>dias7.includes(r.fecha));
-  const sObj=D.sue.config?.objetivo_horas||8;
-  let sueScore=0;
-  if(sR.length){const h=sR.reduce((s,r)=>s+Math.min((r.horas||0)/sObj,1.1),0)/sR.length;const q=sR.reduce((s,r)=>s+(r.calidad||5)/10,0)/sR.length;sueScore=Math.round(Math.min(100,h*55+q*45));}
-
-  // HÁBITOS
-  const hAct=(D.hab.habitos||[]).filter(h=>h.activo&&h.frecuencia==='diario');
-  let habScore=0;
-  if(hAct.length){const rates=dias7.map(d=>{const done=(D.hab.registros||[]).filter(r=>r.fecha===d&&r.completado).length;return done/hAct.length;});habScore=Math.round((rates.reduce((s,v)=>s+v,0)/dias7.length)*100);}
-
-  // ÁNIMO
-  const aR=(D.ani.registros||[]).filter(r=>dias7.includes(r.fecha));
-  const aniScore=aR.length?Math.round((aR.reduce((s,r)=>s+(r.mood||5),0)/aR.length)*10):0;
-
-  // PRODUCTIVIDAD
-  const tB=(D.tie.bloques||[]).filter(b=>dias7.includes(b.fecha));
-  const tMin=tB.reduce((s,b)=>s+(b.duracion_min||0),0);
-  const prodScore=Math.round(Math.min(100,(tMin/840)*100));
-
-  // APRENDIZAJE
-  const aS=(D.apr.sesiones||[]).filter(s=>dias7.includes(s.fecha));
-  const aMin=aS.reduce((s,r)=>s+(r.duracion_min||0),0);
-  const aprScore=Math.round(Math.min(100,(aMin/((D.apr.metas?.horas_semana||10)*60))*100));
-
-  // SALUD (nutrición)
   const sdias=dias7.map(d=>{const al=(D.sal.alimentos||[]).filter(a=>a.fecha===d);if(!al.length)return null;const cM=D.sal.metas?.caloriasD||2000,pM=D.sal.metas?.proteina||150;const cC=al.reduce((s,a)=>s+(a.cal||0),0),pC=al.reduce((s,a)=>s+(a.prot||0),0);return Math.min(1,cC/cM)*.5+Math.min(1,pC/pM)*.5;}).filter(v=>v!==null);
   const salScore=sdias.length?Math.round((sdias.reduce((s,v)=>s+v,0)/sdias.length)*100):0;
-
-  // SOCIAL
-  const sI=(D.soc.interacciones||[]).filter(i=>dias7.includes(i.fecha));
-  const socScore=Math.round(Math.min(100,(sI.length/5)*100));
-
-  // FINANZAS
   const m=today().slice(0,7);
   const txM=(D.fin.transactions||[]).filter(t=>t.date?.startsWith(m));
   const inc=txM.filter(t=>t.type==='income').reduce((s,t)=>s+(t.amount||0),0);
   const exp=txM.filter(t=>t.type==='expense').reduce((s,t)=>s+(t.amount||0),0);
   const finScore=inc>0?Math.round(Math.min(100,Math.max(20,50+(1-exp/inc)*50))):50;
-
-  return{sueno:sueScore,habitos:habScore,animo:aniScore,productividad:prodScore,aprendizaje:aprScore,salud:salScore,social:socScore,finanzas:finScore};
+  return{salud:salScore,finanzas:finScore};
 }
-
-function vidaScore(sc){
-  const w={sueno:15,habitos:15,animo:15,productividad:15,aprendizaje:10,salud:15,social:10,finanzas:5};
-  return Math.round(Object.keys(w).reduce((t,k)=>t+(sc[k]||0)*(w[k]/100),0));
-}
-
+function vidaScore(sc){const w={salud:76,finanzas:24};return Math.round(Object.keys(w).reduce((t,k)=>t+(sc[k]||0)*(w[k]/100),0));}
 function sCol(s){return s>=80?'var(--g)':s>=60?'var(--w)':s>=40?'var(--o)':'var(--r)';}
 function sLab(s){return s>=80?'Excelente':s>=60?'Bueno':s>=40?'Regular':'Necesita atención';}
 
-const AREAS=[
-  {k:'sueno',ico:'😴',n:'Sueño',tip:'Duerme 8h con calidad ≥8 cada noche.',href:'../Sueno/sueno.html'},
-  {k:'salud',ico:'🥗',n:'Salud',tip:'Cumple calorías y proteínas diarias.',href:'../Salud/salud.html'},
-  {k:'habitos',ico:'✅',n:'Hábitos',tip:'Completa el 100% de hábitos 7 días seguidos.',href:'../Habitos/habitos.html'},
-  {k:'productividad',ico:'⏱️',n:'Productividad',tip:'Registra ≥2h de focus diario.',href:'../Tiempo/tiempo.html'},
-  {k:'animo',ico:'🧠',n:'Ánimo',tip:'Registra tu estado diariamente.',href:'../Animo/animo.html'},
-  {k:'aprendizaje',ico:'📚',n:'Aprendizaje',tip:'Cumple tu meta semanal de estudio.',href:'../Aprendizaje/aprendizaje.html'},
-  {k:'social',ico:'👥',n:'Social',tip:'Mantén ≥5 interacciones por semana.',href:'../Social/social.html'},
-  {k:'finanzas',ico:'💰',n:'Finanzas',tip:'Gastos < ingresos cada mes.',href:'../Finanzas/Finanzas.html'}
-];
-
-// ── ALERTS ──────────────────────────────────────────────────────────────────
+// ── ALERTAS (mismo motor que el dashboard anterior) ─────────────────────────
+function addDays(d,n){const x=new Date(d);x.setDate(x.getDate()+n);return x.toISOString().slice(0,10);}
 function getAlerts(){
   const t=today(),alerts=[];
-
-  // Tareas vencidas / próximas
   (D.pro.tareas||[]).filter(t2=>t2.estado!=='completada'&&t2.fecha_limite).forEach(t2=>{
     const diff=Math.floor((new Date(t2.fecha_limite)-new Date(t))/(864e5));
     if(diff<0) alerts.push({tipo:'urgente',ico:'🔴',titulo:t2.titulo,desc:`Vencida hace ${Math.abs(diff)} día(s)`,href:'../Proyectos/proyectos.html'});
     else if(diff<=3) alerts.push({tipo:'proximo',ico:'🟡',titulo:t2.titulo,desc:`Vence en ${diff===0?'hoy':diff+' día(s)'}`,href:'../Proyectos/proyectos.html'});
   });
-
-  // Cumpleaños próximos 14 días
-  (D.soc.contactos||[]).filter(c=>c.cumpleanos).forEach(c=>{
-    const[,m2,d2]=c.cumpleanos.split('-');
-    const thisY=`${new Date().getFullYear()}-${m2}-${d2}`;
-    const diff=Math.floor((new Date(thisY)-new Date(t))/(864e5));
-    if(diff>=0&&diff<=14) alerts.push({tipo:'proximo',ico:'🎂',titulo:`Cumpleaños de ${c.nombre}`,desc:`${diff===0?'¡Es hoy!':('En '+diff+' día(s)')}`,href:'../Social/social.html'});
-  });
-
-  // Contactos descuidados (importancia ≥4, >30d)
-  (D.soc.contactos||[]).filter(c=>c.activo&&(c.importancia||0)>=4).forEach(c=>{
-    const ints=(D.soc.interacciones||[]).filter(i=>i.contacto_id===c.id).sort((a,b)=>b.fecha.localeCompare(a.fecha));
-    const ul=ints[0]?.fecha;
-    if(!ul||Math.floor((new Date(t)-new Date(ul))/(864e5))>30)
-      alerts.push({tipo:'info',ico:'👤',titulo:`Contactar a ${c.nombre}`,desc:'Más de 30 días sin interacción',href:'../Social/social.html'});
-  });
-
-  // Mantenimientos vencidos
-  const kmAct=(D.veh.gasolina||[]).sort((a,b)=>b.fecha.localeCompare(a.fecha))[0]?.km_odometro||D.veh.vehiculo?.km_inicial||0;
-  (D.veh.mantenimientos||[]).forEach(m=>{
-    if(m.proximo_km&&kmAct>m.proximo_km) alerts.push({tipo:'urgente',ico:'🔧',titulo:`Mantenimiento vencido: ${m.tipo||''}`,desc:`Km actual ${fmt(kmAct)} superó límite ${fmt(m.proximo_km)}`,href:'../Vehiculo/vehiculo.html'});
-    else if(m.proxima_fecha&&m.proxima_fecha<=addDays(t,14)) alerts.push({tipo:'proximo',ico:'🔧',titulo:`Mantenimiento próximo: ${m.tipo||''}`,desc:`Programado: ${fmtD(m.proxima_fecha)}`,href:'../Vehiculo/vehiculo.html'});
-  });
-
-  // Hábitos pendientes hoy
-  const hAct=(D.hab.habitos||[]).filter(h=>h.activo&&h.frecuencia==='diario');
-  const hDoneIds=(D.hab.registros||[]).filter(r=>r.fecha===t&&r.completado).map(r=>r.habito_id);
-  const hPend=hAct.filter(h=>!hDoneIds.includes(h.id));
-  if(hPend.length) alerts.push({tipo:'info',ico:'✅',titulo:`${hPend.length} hábito(s) pendiente(s) hoy`,desc:hPend.slice(0,3).map(h=>(h.emoji||'•')+' '+h.nombre).join(', '),href:'../Habitos/habitos.html'});
-
-  // Déficit de sueño
-  const sAn=(D.sue.registros||[]).sort((a,b)=>b.fecha.localeCompare(a.fecha))[0];
-  if(sAn&&sAn.horas<(D.sue.config?.objetivo_horas||8)-1.5)
-    alerts.push({tipo:'info',ico:'😴',titulo:`Solo ${sAn.horas}h de sueño la última noche`,desc:`Déficit de ${((D.sue.config?.objetivo_horas||8)-sAn.horas).toFixed(1)}h vs tu objetivo`,href:'../Sueno/sueno.html'});
-
+  // Coach — régimen fiscal / prioridades de Fase 0 siempre visibles como recordatorio
+  alerts.push({tipo:'info',ico:'🪙',titulo:'Revisa tus prioridades activas en Coach',desc:'Régimen fiscal, outreach y plantilla GBM — Plan Maestro, Fase 0',href:'../Coach/Coach_v2.html'});
   return alerts.sort((a,b)=>({urgente:0,proximo:1,info:2}[a.tipo]-{urgente:0,proximo:1,info:2}[b.tipo]));
 }
 
-function updateAlertBadge(){
-  const a=getAlerts(), b=document.getElementById('alert-badge');
-  const u=a.filter(x=>x.tipo==='urgente').length;
-  b.style.display=u>0?'':'none'; b.textContent=u;
+// ── COACH — Plan Maestro (fechas ancla, igual que Coach_v2.html) ────────────
+const PHASES=[
+  {start:new Date(2026,6,18), end:new Date(2026,8,30),  tag:'Fase 0', title:'Cerrar la fuga y arrancar ingreso, no solo pensar',
+   meta:'Fondo de emergencia a $10,000 + $14,000–15,000 de activos vendidos aplicados a Banamex.',
+   priorities:[
+     {ico:'🧾',t:'Régimen fiscal activo',d:'Trámite en el SAT — sin esto no puedes facturar freelance ni la plantilla'},
+     {ico:'🤝',t:'5 ex-colegas contactados',d:'Bosch / Continental / Ford — freelance de automatización'},
+     {ico:'💻',t:'Plantilla GBM publicada',d:'2-3 comunidades — Opción 1 de negocio'},
+   ]},
+  {start:new Date(2026,9,1),  end:new Date(2027,2,31),  tag:'Fase 1', title:'Los $3,868/mes liberados entran en acción + primer ingreso real',
+   meta:'Primer contrato freelance o 20+ ventas de la plantilla cobradas; Banamex liquidada.',
+   priorities:[
+     {ico:'💼',t:'Primer contrato freelance',d:'Opción 2 — o 20+ ventas de la plantilla GBM'},
+     {ico:'📣',t:'1 post mensual de seguimiento',d:'Plantilla GBM — Opción 1'},
+     {ico:'🎓',t:'Sube Copy y Finanzas',d:'Foco de habilidad de esta fase en el Radar'},
+   ]},
+  {start:new Date(2027,3,1),  end:new Date(2028,11,31), tag:'Fase 2', title:'Doblar apuesta en lo que mostró tracción',
+   meta:'BBVA liquidada, deuda cara en $0, ingreso extra estable de al menos $10,000–15,000/mes.',
+   priorities:[
+     {ico:'🎯',t:'Concéntrate en 1 opción',d:'La que ya mostró ingreso recurrente real'},
+     {ico:'🚀',t:'Arranca Opción 4',d:'CodeReview productizado — con capital ya disponible'},
+     {ico:'📈',t:'Sube Ventas y Marketing',d:'Lo mínimo para vender sin depender solo de referidos'},
+   ]},
+  {start:new Date(2029,0,1),  end:new Date(2030,0,1),   tag:'Fase 3', title:'Escalar, cerrar la brecha de $31,540/mes y reevaluar',
+   meta:'Cerrar la distancia final a $1,000,000 líquido con el negocio como fuente principal de excedente.',
+   priorities:[
+     {ico:'🏁',t:'El negocio cubre la brecha',d:'Ingreso extra cercano a cero = problema de opción, no de timing'},
+     {ico:'💰',t:'Todo excedente a inversión',d:'CETES, fondos indexados, ampliar BTC/acciones'},
+     {ico:'🎓',t:'Decisión de Maestría',d:'Retomar en oct 2028 con datos reales, o posponer conscientemente'},
+   ]},
+];
+function activePhase(){
+  const t=new Date(); t.setHours(0,0,0,0);
+  return PHASES.find(p=>t>=p.start&&t<=p.end) || PHASES[PHASES.length-1];
+}
+function coachCountdown(){
+  const inicio=new Date(2026,6,18), meta=new Date(2030,0,1);
+  const hoy=new Date(); hoy.setHours(0,0,0,0);
+  const msDia=86400000;
+  const diasTotales=Math.round((meta-inicio)/msDia);
+  const diasTranscurridos=Math.min(diasTotales,Math.max(0,Math.round((hoy-inicio)/msDia)));
+  const diasRestantes=Math.max(0,Math.round((meta-hoy)/msDia));
+  const pct=Math.min(100,Math.max(0,Math.round(diasTranscurridos/diasTotales*100)));
+  return{diasRestantes,pct};
 }
 
-// ── NAVIGATION ──────────────────────────────────────────────────────────────
-const SECS=['resumen','semana','alertas','vida','apps'];
-const STITLE={resumen:'🌟 Resumen General',semana:'📅 Esta Semana',alertas:'🔔 Alertas',vida:'🎯 Vida Score',apps:'🚀 Todas mis apps'};
-const RENDERS={resumen:renderResumen,semana:renderSemana,alertas:renderAlertas,vida:renderVida,apps:renderApps};
-
-function nav(s){
-  SECS.forEach(x=>document.getElementById('s-'+x).classList.toggle('active',x===s));
-  document.querySelectorAll('.nav-item').forEach(el=>el.classList.toggle('active',el.getAttribute('onclick')?.includes(`'${s}'`)));
-  document.getElementById('topTitle').textContent=STITLE[s];
-  curSec=s; RENDERS[s]?.();
+// ── FINANZAS derivadas ───────────────────────────────────────────────────
+function patrimonioNeto(){
+  const inv=(D.fin.investments||[]).reduce((s,i)=>s+(i.value||0),0);
+  const ef=D.fin.emergencyFund||0;
+  const deuda=(D.fin.debts||[]).reduce((s,d)=>s+(d.balance||0),0);
+  return inv+ef-deuda;
 }
+function hasFinData(){return (D.fin.transactions||[]).length+(D.fin.debts||[]).length+(D.fin.investments||[]).length>0 || (D.fin.emergencyFund||0)>0;}
 
-// ── RESUMEN ─────────────────────────────────────────────────────────────────
-function renderResumen(){
-  const t=today(), d7=getDias(7);
-  const sc=calcScores(d7), vs=vidaScore(sc);
-  const alerts=getAlerts().slice(0,5);
-  const alHoy=(D.sal.alimentos||[]).filter(a=>a.fecha===t);
-  const calHoy=alHoy.reduce((s,a)=>s+(a.cal||0),0);
-  const sAn=(D.sue.registros||[]).sort((a,b)=>b.fecha.localeCompare(a.fecha))[0];
-  const mHoy=(D.ani.registros||[]).find(r=>r.fecha===t);
-  const fMin=(D.tie.bloques||[]).filter(b=>b.fecha===t).reduce((s,b)=>s+(b.duracion_min||0),0);
-  const hAct=(D.hab.habitos||[]).filter(h=>h.activo&&h.frecuencia==='diario');
-  const hDone=(D.hab.registros||[]).filter(r=>r.fecha===t&&r.completado).length;
-  const tarHoy=(D.pro.tareas||[]).filter(t2=>t2.fecha_limite===t&&t2.estado!=='completada').length;
-  const intW=(D.soc.interacciones||[]).filter(i=>d7.includes(i.fecha)).length;
+// ══════════════════════════════════════════════════════════════════════════
+// RENDER — una función por pantalla
+// ══════════════════════════════════════════════════════════════════════════
+function renderDia(){
+  const {tareasHoy,actual,siguiente}=rutinaAhoraSiguiente();
+  const doneHoy=(D.rut.completado||{})[today()]||[];
 
-  document.getElementById('r-body').innerHTML=`
-    <div class="card" style="margin-bottom:18px;background:linear-gradient(135deg,rgba(0,232,122,.06),rgba(176,110,255,.06));border-color:rgba(0,232,122,.2);padding:24px">
-      <div style="display:flex;align-items:center;gap:36px;flex-wrap:wrap">
-        <div>
-          <div style="font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px">Vida Score — últimos 7 días</div>
-          <div class="score-big">${vs}</div>
-          <div style="font-size:14px;font-weight:700;color:${sCol(vs)};margin-top:8px">${sLab(vs)}</div>
-        </div>
-        <div style="flex:1;min-width:240px">
-          ${AREAS.map(a=>`<div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
-            <span style="width:22px;font-size:14px">${a.ico}</span>
-            <span style="font-size:11px;color:var(--text2);width:90px">${a.n}</span>
-            <div style="flex:1;height:5px;background:rgba(255,255,255,.08);border-radius:10px;overflow:hidden"><div style="height:100%;width:${sc[a.k]}%;background:${sCol(sc[a.k])};border-radius:10px"></div></div>
-            <span style="font-size:12px;font-weight:800;color:${sCol(sc[a.k])};width:28px;text-align:right">${sc[a.k]}</span>
-          </div>`).join('')}
-        </div>
-      </div>
-    </div>
+  document.getElementById('diaFecha').textContent=new Date().toLocaleDateString('es-MX',{weekday:'long',day:'numeric',month:'long'});
+  document.getElementById('diaAhora').textContent=actual?(actual.hora+' — '+actual.txt):(tareasHoy.length?'Aún no empieza tu rutina de hoy':'Sin bloques configurados para hoy');
+  if(siguiente){
+    const[sh,sm]=siguiente.hora.split(':').map(Number);
+    const dest=new Date();dest.setHours(sh,sm,0,0);
+    const diffMin=Math.max(0,Math.round((dest-new Date())/60000));
+    const faltan=diffMin>=60?Math.floor(diffMin/60)+'h '+(diffMin%60)+'m':diffMin+'m';
+    document.getElementById('diaSiguiente').textContent=siguiente.hora+' — '+siguiente.txt+' (en '+faltan+')';
+  } else {
+    document.getElementById('diaSiguiente').textContent=tareasHoy.length?'Ya terminaste tu rutina de hoy 🎉':'—';
+  }
 
-    <div class="sh"><h2>📊 Hoy en números</h2></div>
-    <div class="g4" style="margin-bottom:14px">
-      <div class="card" style="border-left:4px solid var(--b)">
-        <div class="card-title" style="color:var(--b)">😴 Sueño anoche</div>
-        <div class="card-val" style="color:var(--b)">${sAn?.horas!=null?sAn.horas+'h':'—'}</div>
-        <div class="card-sub">Calidad: ${sAn?.calidad||'—'}/10</div>
-      </div>
-      <div class="card" style="border-left:4px solid var(--o)">
-        <div class="card-title" style="color:var(--o)">🔥 Calorías hoy</div>
-        <div class="card-val" style="color:var(--o)">${fmt(calHoy)}</div>
-        <div class="card-sub">Meta: ${fmt(D.sal.metas?.caloriasD||2000)} kcal</div>
-      </div>
-      <div class="card" style="border-left:4px solid var(--g)">
-        <div class="card-title" style="color:var(--g)">✅ Hábitos hoy</div>
-        <div class="card-val" style="color:var(--g)">${hDone}/${hAct.length}</div>
-        <div class="card-sub">${hAct.length?Math.round(hDone/hAct.length*100)+'% completado':'Sin hábitos'}</div>
-      </div>
-      <div class="card" style="border-left:4px solid var(--p)">
-        <div class="card-title" style="color:var(--p)">🧠 Ánimo hoy</div>
-        <div class="card-val" style="color:var(--p)">${mHoy?mHoy.mood+'/10':'—'}</div>
-        <div class="card-sub">${mHoy?'Energía '+mHoy.energia+' · Estrés '+mHoy.estres:'Sin registro'}</div>
-      </div>
-    </div>
-    <div class="g4" style="margin-bottom:18px">
-      <div class="card" style="border-left:4px solid var(--w)">
-        <div class="card-title" style="color:var(--w)">⏱️ Focus hoy</div>
-        <div class="card-val" style="color:var(--w)">${fMin>=60?Math.floor(fMin/60)+'h '+(fMin%60)+'m':fMin+'m'}</div>
-        <div class="card-sub">bloques registrados</div>
-      </div>
-      <div class="card" style="border-left:4px solid #06b6d4">
-        <div class="card-title" style="color:#06b6d4">📚 Libros activos</div>
-        <div class="card-val" style="color:#06b6d4">${(D.apr.libros||[]).filter(b=>b.estado==='leyendo').length}</div>
-        <div class="card-sub">${(D.apr.skills||[]).length} skills registrados</div>
-      </div>
-      <div class="card" style="border-left:4px solid ${tarHoy>0?'var(--r)':'var(--g)'}">
-        <div class="card-title" style="color:${tarHoy>0?'var(--r)':'var(--g)'}">🎯 Tareas hoy</div>
-        <div class="card-val" style="color:${tarHoy>0?'var(--r)':'var(--g)'}">${tarHoy}</div>
-        <div class="card-sub">${tarHoy?'vencen hoy':'Al día 🎉'}</div>
-      </div>
-      <div class="card" style="border-left:4px solid var(--g)">
-        <div class="card-title" style="color:var(--g)">👥 Social esta semana</div>
-        <div class="card-val" style="color:var(--g)">${intW}</div>
-        <div class="card-sub">${(D.soc.contactos||[]).filter(c=>c.activo).length} contactos activos</div>
-      </div>
-    </div>
+  const contables=tareasHoy.filter(t=>!t.fijo); // el bloque de ALTEN no lleva checkbox, no cuenta en el progreso
+  const doneCount=contables.filter(t=>doneHoy.includes(t.id)).length;
+  document.getElementById('diaProgresoTxt').textContent=doneCount+'/'+contables.length;
+  document.getElementById('diaProgresoBar').style.width=(contables.length?doneCount/contables.length*100:0)+'%';
 
-    ${alerts.length?`
-    <div class="sh"><h2>🔔 Alertas prioritarias</h2><button class="btn btn-o btn-sm" onclick="nav('alertas')">Ver todas →</button></div>
-    <div class="card">
-      ${alerts.map(a=>`<div class="alert-item">
-        <div class="alert-dot" style="background:${{urgente:'var(--r)',proximo:'var(--w)',info:'var(--b)'}[a.tipo]}"></div>
-        <div style="flex:1"><div style="font-size:13px;font-weight:600">${a.ico} ${a.titulo}</div><div class="ts tm" style="margin-top:2px">${a.desc}</div></div>
-        <a href="${a.href}" style="font-size:11px;color:var(--g);text-decoration:none;white-space:nowrap;font-weight:600">Ir →</a>
-      </div>`).join('')}
-    </div>`:''}
-  `;
-}
-
-// ── SEMANA ───────────────────────────────────────────────────────────────────
-function renderSemana(){
-  const d7=getDias(7), d14=getDias(14).slice(7);
-  const sc=calcScores(d7), scA=calcScores(d14);
-  const vs=vidaScore(sc), vsA=vidaScore(scA);
-  const mejor=AREAS.reduce((m,a)=>sc[a.k]>sc[m.k]?a:m,AREAS[0]);
-  const peor=AREAS.reduce((m,a)=>sc[a.k]<sc[m.k]?a:m,AREAS[0]);
-
-  document.getElementById('sem-body').innerHTML=`
-    <div class="sh"><h2>📅 Resumen semanal</h2></div>
-    <div class="g4" style="margin-bottom:18px">
-      <div class="card" style="border-left:4px solid ${sCol(vs)}">
-        <div class="card-title">🌟 Vida Score</div>
-        <div class="card-val" style="color:${sCol(vs)}">${vs}</div>
-        <div class="card-sub" style="color:${vs>=vsA?'var(--g)':'var(--r)'}">${vs>=vsA?'↑ +'+(vs-vsA):' ↓ '+(vsA-vs)} vs semana anterior</div>
-      </div>
-      <div class="card">
-        <div class="card-title">🏆 Mejor área</div>
-        <div class="card-val" style="font-size:16px;color:var(--g)">${mejor.ico} ${mejor.n}</div>
-        <div class="card-sub">Score: ${sc[mejor.k]}/100</div>
-      </div>
-      <div class="card">
-        <div class="card-title">⚠️ Área a reforzar</div>
-        <div class="card-val" style="font-size:16px;color:var(--r)">${peor.ico} ${peor.n}</div>
-        <div class="card-sub">Score: ${sc[peor.k]}/100</div>
-      </div>
-      <div class="card">
-        <div class="card-title">📈 Tendencia</div>
-        <div class="card-val" style="font-size:20px;color:${vs>=vsA?'var(--g)':'var(--r)'}">${vs>=vsA?'↑ Mejorando':'↓ Bajando'}</div>
-        <div class="card-sub">Esta semana vs anterior</div>
-      </div>
-    </div>
-    <div class="g2">
-      <div class="card">
-        <div class="card-title" style="margin-bottom:14px">🕸️ Balance de vida</div>
-        <div class="chart-c"><canvas id="ch-radar"></canvas></div>
-      </div>
-      <div class="card">
-        <div class="card-title" style="margin-bottom:14px">📊 Scores por área</div>
-        ${AREAS.map(a=>`<div style="margin-bottom:11px">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
-            <span style="font-size:12px">${a.ico} ${a.n}</span>
-            <div style="display:flex;align-items:center;gap:8px">
-              ${scA[a.k]>0?`<span class="ts tm">ant: ${scA[a.k]}</span>`:''}
-              <span style="font-size:13px;font-weight:800;color:${sCol(sc[a.k])}">${sc[a.k]}</span>
-              <span style="font-size:11px;color:${sc[a.k]>=scA[a.k]?'var(--g)':'var(--r)'}">${sc[a.k]>=scA[a.k]?'↑':'↓'}</span>
-            </div>
-          </div>
-          <div class="pbar"><div class="pfill" style="width:${sc[a.k]}%;background:${sCol(sc[a.k])}"></div></div>
-        </div>`).join('')}
-      </div>
+  // No mostrar el día completo desde el inicio: 3 bloques antes de "ahora" + el actual + todos los de después
+  const idxAnchor = actual ? tareasHoy.findIndex(t=>t.id===actual.id) : (siguiente ? tareasHoy.findIndex(t=>t.id===siguiente.id) : -1);
+  const visibles = idxAnchor<=0 ? tareasHoy : tareasHoy.slice(Math.max(0,idxAnchor-3));
+  document.getElementById('diaTimeline').innerHTML=visibles.length?visibles.map(t=>{
+    const isNow=actual&&t.id===actual.id;
+    if(t.fijo){
+      const col=isNow?'#00e0c0':'#565a72';
+      return `<div class="al-row">
+        <div class="al-dot" style="background:${col};color:${col}"></div>
+        <div style="flex:1"><div class="al-t" style="font-size:14px;font-weight:800">${t.hora} — ${t.txt}</div></div>
+      </div>`;
+    }
+    const done=doneHoy.includes(t.id);
+    const col=done?'#00e87a':isNow?'#00e0c0':'#565a72';
+    return `<div class="al-row">
+      <div class="al-dot" style="background:${col};color:${col}"></div>
+      <div style="flex:1"><div class="al-t" style="font-size:14px">${t.hora} — ${t.txt}</div></div>
+      ${done?'<span style="color:var(--g);font-size:13px">✅</span>':''}
     </div>`;
-
-  chRadar=killChart(chRadar);
-  const ctx=document.getElementById('ch-radar');
-  if(ctx) chRadar=new Chart(ctx,{type:'radar',
-    data:{labels:AREAS.map(a=>a.n),datasets:[
-      {label:'Esta semana',data:AREAS.map(a=>sc[a.k]),backgroundColor:'rgba(0,232,122,.15)',borderColor:'var(--g)',borderWidth:2,pointBackgroundColor:'var(--g)',pointRadius:4},
-      {label:'Semana ant.',data:AREAS.map(a=>scA[a.k]),backgroundColor:'rgba(176,110,255,.1)',borderColor:'var(--p)',borderWidth:1.5,pointBackgroundColor:'var(--p)',pointRadius:3,borderDash:[4,4]}
-    ]},
-    options:{responsive:true,maintainAspectRatio:false,
-      scales:{r:{min:0,max:100,grid:{color:'rgba(255,255,255,.08)'},angleLines:{color:'rgba(255,255,255,.08)'},ticks:{color:'#4a5568',backdropColor:'transparent',font:{size:10}},pointLabels:{color:'var(--text2)',font:{size:11,weight:'600'}}}},
-      plugins:{legend:{labels:{color:'var(--text2)',font:{size:11},padding:14}},tooltip:{backgroundColor:'rgba(10,10,30,.95)',titleColor:'var(--text)',bodyColor:'var(--text2)'}}}});
+  }).join(''):'<div style="text-align:center;padding:20px;color:var(--text3)">Sin bloques de rutina configurados para hoy. Configúralos en Coach → Rutina.</div>';
 }
 
-// ── ALERTAS ──────────────────────────────────────────────────────────────────
+function renderHero(){
+  const sc=calcScores(getDias(7)), vs=vidaScore(sc);
+  document.getElementById('heroVida').textContent=vs;
+  document.getElementById('heroVidaLabel').textContent=sLab(vs);
+  document.getElementById('heroVidaLabel').style.color=sCol(vs);
+  const cd=coachCountdown();
+  document.getElementById('heroCountdown').textContent=`Faltan ${fmt(cd.diasRestantes)} días para tu meta de $1,000,000 (01 ene 2030)`;
+  document.getElementById('heroAreas').innerHTML=AREAS.map(a=>`
+    <div class="ar-row">
+      <span class="ar-ico">${a.ico}</span>
+      <span class="ar-name">${a.n}</span>
+      <div class="ar-track"><div class="ar-fill" style="width:${sc[a.k]}%;background:${sCol(sc[a.k])}"></div></div>
+      <span class="ar-val" style="color:${sCol(sc[a.k])}">${sc[a.k]}</span>
+    </div>`).join('');
+}
+
+function renderCoach(){
+  const ph=activePhase(), cd=coachCountdown();
+  document.getElementById('coachPhaseTitle').textContent=`${ph.tag} — ${ph.title}`;
+  document.getElementById('coachDiasMeta').textContent=fmt(cd.diasRestantes);
+  document.getElementById('coachPct').textContent=cd.pct+'%';
+  document.getElementById('coachPctBar').style.width=cd.pct+'%';
+  document.getElementById('coachFaseFin').textContent=ph.end.toLocaleDateString('es-MX',{day:'numeric',month:'short',year:'numeric'});
+  const diasFase=Math.max(0,Math.round((ph.end-new Date())/86400000));
+  document.getElementById('coachFaseDias').textContent=`${fmt(diasFase)} día(s) restantes de esta fase`;
+  document.getElementById('coachFaseMeta').textContent=ph.meta;
+  document.getElementById('coachPriorities').innerHTML=ph.priorities.map(p=>`
+    <div class="tile">
+      <div style="font-size:26px;margin-bottom:8px">${p.ico}</div>
+      <div style="font-weight:800;font-size:clamp(13px,1.2vw,15px);margin-bottom:4px">${p.t}</div>
+      <div class="sub">${p.d}</div>
+    </div>`).join('');
+}
+
+function renderFinanzas(){
+  const pat=patrimonioNeto();
+  const START=-308830, GOAL=1000000;
+  const pct=Math.min(100,Math.max(0,(pat-START)/(GOAL-START)*100));
+  document.getElementById('finPatrimonio').textContent=hasFinData()?money(pat):'—';
+  document.getElementById('finPatrimonio').style.color=pat>=0?'var(--g)':'var(--r)';
+  document.getElementById('finPatBar').style.width=pct+'%';
+
+  const ef=D.fin.emergencyFund||0;
+  document.getElementById('finFondo').textContent=money(ef);
+  document.getElementById('finFondoBar').style.width=Math.min(100,ef/10000*100)+'%';
+
+  const debts=(D.fin.debts||[]).filter(d=>d.balance>0);
+  const deuda=debts.reduce((s,d)=>s+d.balance,0);
+  document.getElementById('finDeuda').textContent=money(deuda);
+  document.getElementById('finDeudaSub').textContent=debts.length?`${debts.length} deuda(s) activa(s)`:'Sin deudas registradas';
+
+  const m=today().slice(0,7);
+  const txM=(D.fin.transactions||[]).filter(t=>t.date?.startsWith(m));
+  const inc=txM.filter(t=>t.type==='income').reduce((s,t)=>s+(t.amount||0),0);
+  const exp=txM.filter(t=>t.type==='expense').reduce((s,t)=>s+(t.amount||0),0);
+  document.getElementById('finIngresos').textContent=money(inc);
+  document.getElementById('finGastos').textContent=money(exp);
+  document.getElementById('finAhorro').textContent=inc>0?`${money(inc-exp)} de flujo libre este mes (${Math.round((1-exp/inc)*100)}% ahorrado)`:'Sin ingresos registrados este mes';
+
+  const top=[...debts].sort((a,b)=>b.balance-a.balance).slice(0,4);
+  document.getElementById('finTopDeudas').innerHTML=top.length?top.map(d=>`
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.06)">
+      <span style="font-size:13px">${d.name||'Deuda'}</span>
+      <span style="font-family:var(--mono);font-weight:700;color:var(--r)">${money(d.balance)}</span>
+    </div>`).join(''):'<div class="sub">Sin deudas registradas en Finanzas.html todavía.</div>';
+}
+
+function calcOVR(){let t=0,w=0;SK.forEach(s=>{t+=s.val*s.w;w+=100*s.w;});return Math.round(t/w*100);}
+function skLevel(v){
+  if(v>=90)return{l:'ÉLITE',c:'#22c55e'};
+  if(v>=80)return{l:'AVANZADO',c:'#84cc16'};
+  if(v>=70)return{l:'BUENO',c:'#f0b429'};
+  if(v>=55)return{l:'MEDIO',c:'#fb923c'};
+  if(v>=40)return{l:'BÁSICO',c:'#f87171'};
+  return{l:'PRINCIPIANTE',c:'#ef4444'};
+}
+let chSkills=null;
+function renderSkills(){
+  const ovr=calcOVR(), lv=skLevel(ovr);
+  document.getElementById('skillOvr').textContent=ovr;
+  document.getElementById('skillOvrLabel').textContent=lv.l;
+  document.getElementById('skillOvrLabel').style.color=lv.c;
+  const weakest=[...SK].sort((a,b)=>a.val-b.val).slice(0,3);
+  document.getElementById('skillWeak').innerHTML=weakest.map(s=>{const l=skLevel(s.val);return `
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.06)">
+      <span style="font-size:13px">${s.icon} ${s.name}</span>
+      <span style="font-family:var(--mono);font-weight:800;color:${l.c}">${s.val}</span>
+    </div>`;}).join('')+'<div class="sub" style="margin-top:10px">Roadmap y "primer paso" de cada una en Coach → Aprendizaje.</div>';
+
+  if(chSkills)chSkills.destroy();
+  const ctx=document.getElementById('chSkills');
+  if(ctx) chSkills=new Chart(ctx,{type:'radar',
+    data:{labels:SK.map(s=>s.icon+' '+s.name),datasets:[{label:'Nivel actual',data:SK.map(s=>s.val),
+      backgroundColor:'rgba(176,110,255,.16)',borderColor:'#b06eff',borderWidth:2,pointBackgroundColor:'#b06eff',pointRadius:3}]},
+    options:{responsive:true,maintainAspectRatio:false,
+      scales:{r:{min:0,max:100,grid:{color:'rgba(255,255,255,.08)'},angleLines:{color:'rgba(255,255,255,.08)'},ticks:{display:false,backdropColor:'transparent'},pointLabels:{color:'#c8cadf',font:{size:10,weight:'600'}}}},
+      plugins:{legend:{display:false}}}});
+}
+
 function renderAlertas(){
   const all=getAlerts();
-  const grupos=[{tipo:'urgente',label:'🔴 Urgente',col:'var(--r)'},{tipo:'proximo',label:'🟡 Próximamente',col:'var(--w)'},{tipo:'info',label:'ℹ️ Informativo',col:'var(--b)'}];
-  document.getElementById('al-body').innerHTML=`
-    <div class="sh"><h2>🔔 Centro de Alertas</h2><span class="ts tm">${all.length} alerta(s)</span></div>
-    ${all.length===0?`<div class="card" style="text-align:center;padding:48px"><div style="font-size:48px;margin-bottom:12px">🎉</div><div style="font-size:16px;font-weight:700">¡Todo en orden!</div><div class="ts tm" style="margin-top:6px">No hay alertas pendientes.</div></div>`:''}
-    ${grupos.map(g=>{
-      const items=all.filter(a=>a.tipo===g.tipo);
-      if(!items.length) return '';
-      return `<div style="margin-bottom:20px">
-        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:${g.col};margin-bottom:10px">${g.label} (${items.length})</div>
-        <div class="card">${items.map(a=>`<div class="alert-item">
-          <div class="alert-dot" style="background:${g.col}"></div>
-          <div style="flex:1"><div style="font-size:13px;font-weight:600">${a.ico} ${a.titulo}</div><div class="ts tm" style="margin-top:2px">${a.desc}</div></div>
-          <a href="${a.href}" class="btn btn-o btn-sm" style="text-decoration:none">Abrir →</a>
-        </div>`).join('')}</div>
-      </div>`;
-    }).join('')}`;
+  const urgentes=all.filter(a=>a.tipo==='urgente').length;
+  document.getElementById('alTitle').textContent=urgentes?`🔴 ${urgentes} urgente(s) — revisa esto primero`:'🔔 Tus pendientes de hoy';
+  const top=all.slice(0,6);
+  document.getElementById('alBody').innerHTML=top.length?top.map(a=>`
+    <div class="al-row">
+      <div class="al-dot" style="background:${({urgente:'#ff5c5c',proximo:'#ffd93d',info:'#3b82f6'})[a.tipo]};color:${({urgente:'#ff5c5c',proximo:'#ffd93d',info:'#3b82f6'})[a.tipo]}"></div>
+      <div style="flex:1"><div class="al-t">${a.ico} ${a.titulo}</div><div class="al-d">${a.desc}</div></div>
+    </div>`).join(''):'<div class="al-row"><div style="flex:1;text-align:center;padding:20px"><div style="font-size:40px;margin-bottom:10px">🎉</div><div class="al-t">Todo en orden</div></div></div>';
 }
 
-// ── VIDA SCORE ───────────────────────────────────────────────────────────────
-function renderVida(){
-  const sc=calcScores(getDias(7)), vs=vidaScore(sc);
-  const pesos={sueno:15,habitos:15,animo:15,productividad:15,aprendizaje:10,salud:15,social:10,finanzas:5};
-  document.getElementById('vs-body').innerHTML=`
-    <div class="sh"><h2>🎯 Vida Score — Desglose</h2></div>
-    <div class="card" style="text-align:center;padding:32px;margin-bottom:18px;background:linear-gradient(135deg,rgba(0,232,122,.06),rgba(176,110,255,.06));border-color:rgba(0,232,122,.2)">
-      <div class="ts tm" style="text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px">Promedio ponderado — últimos 7 días</div>
-      <div class="score-big">${vs}</div>
-      <div style="font-size:15px;font-weight:700;color:${sCol(vs)};margin-top:10px">${sLab(vs)}</div>
-      <div class="ts tm" style="margin-top:6px">8 áreas · ponderación diferenciada</div>
-    </div>
-    <div class="g2">
-      ${AREAS.map(a=>`<div class="card" style="border-left:4px solid ${sCol(sc[a.k])}">
-        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px">
-          <div>
-            <div style="font-size:15px;font-weight:800">${a.ico} ${a.n}</div>
-            <div class="ts tm" style="margin-top:2px">Peso: ${pesos[a.k]}% del score</div>
-          </div>
-          <div style="text-align:right">
-            <div style="font-size:30px;font-weight:900;color:${sCol(sc[a.k])}">${sc[a.k]}</div>
-            <div style="font-size:10px;color:${sCol(sc[a.k])}">${sLab(sc[a.k])}</div>
-          </div>
-        </div>
-        <div class="pbar" style="height:8px"><div class="pfill" style="width:${sc[a.k]}%;background:${sCol(sc[a.k])}"></div></div>
-        <div class="ts tm" style="margin-top:10px">💡 ${a.tip}</div>
-        <div style="margin-top:10px"><a href="${a.href}" style="font-size:11px;color:var(--g);text-decoration:none;font-weight:600">Ir a ${a.n} →</a></div>
-      </div>`).join('')}
-    </div>`;
+function renderHoy(){
+  const t=today();
+  const alHoy=(D.sal.alimentos||[]).filter(a=>a.fecha===t);
+  const calHoy=alHoy.reduce((s,a)=>s+(a.cal||0),0);
+  const tarHoy=(D.pro.tareas||[]).filter(t2=>t2.fecha_limite===t&&t2.estado!=='completada').length;
+  document.getElementById('hoyTitle').textContent='📊 '+new Date().toLocaleDateString('es-MX',{weekday:'long',day:'numeric',month:'long'});
+  const tiles=[
+    {ico:'🔥',c:'var(--o)',lbl:'Calorías hoy',val:fmt(calHoy),sub:'Meta: '+fmt(D.sal.metas?.caloriasD||2000)+' kcal'},
+    {ico:'🎯',c:tarHoy>0?'var(--r)':'var(--g)',lbl:'Tareas hoy',val:tarHoy,sub:tarHoy?'vencen hoy':'Al día 🎉'},
+  ];
+  document.getElementById('hoyBody').innerHTML=tiles.map(x=>`
+    <div class="tile" style="border-left:4px solid ${x.c}">
+      <div class="lbl" style="color:${x.c}">${x.ico} ${x.lbl}</div>
+      <div class="big-num" style="font-size:clamp(28px,3vw,42px);color:${x.c}">${x.val}</div>
+      <div class="sub">${x.sub}</div>
+    </div>`).join('');
 }
 
-// ── APPS ────────────────────────────────────────────────────────────────────
 function renderApps(){
   const t=today(), d7=getDias(7);
   const apps=[
+    {ico:'🪙',n:'Coach',sub:'Plan Maestro & negocio',href:'../Coach/Coach_v2.html',stat:activePhase().tag+' activa'},
     {ico:'💰',n:'Finanzas',sub:'Ingresos, gastos & metas',href:'../Finanzas/Finanzas.html',
-     stat:(()=>{const m=t.slice(0,7);const exp=(D.fin.transactions||[]).filter(x=>x.date?.startsWith(m)&&x.type==='expense').reduce((s,x)=>s+(x.amount||0),0);return exp>0?'$'+fmt(exp)+' gastados este mes':'Sin movimientos';})()},
-    {ico:'🥦',n:'Salud & Nutrición',sub:'Calorías y macros',href:'../Salud/salud.html',
+     stat:(()=>{const m=t.slice(0,7);const exp=(D.fin.transactions||[]).filter(x=>x.date?.startsWith(m)&&x.type==='expense').reduce((s,x)=>s+(x.amount||0),0);return exp>0?money(exp)+' gastados este mes':'Sin movimientos';})()},
+    {ico:'🧴',n:'Skincare',sub:'Mi piel & guía personalizada',href:'../CuidadoPersonal/cuidadopersonal.html?tab=skincare',
+     stat:(()=>{const pf=D.sk.perfil;const tipos={grasa:'Piel grasa',seca:'Piel seca',mixta:'Piel mixta',normal:'Piel normal'};return pf?.tipo?tipos[pf.tipo]||'Perfil guardado':'Sin perfil configurado';})()},
+    {ico:'💇',n:'Cuidado del Cabello',sub:'Mi cabello & guía personalizada',href:'../CuidadoPersonal/cuidadopersonal.html?tab=cabello',
+     stat:(()=>{const pf=D.ca.perfil;const tipos={lacio:'Cabello lacio',ondulado:'Cabello ondulado',rizado:'Cabello rizado',afro:'Cabello afro'};return pf?.tipo?tipos[pf.tipo]||'Perfil guardado':'Sin perfil configurado';})()},
+    {ico:'🥦',n:'Cuidado de la Salud',sub:'Calorías y macros',href:'../CuidadoPersonal/cuidadopersonal.html?tab=salud',
      stat:(()=>{const c=(D.sal.alimentos||[]).filter(a=>a.fecha===t).reduce((s,a)=>s+(a.cal||0),0);return c?fmt(c)+' kcal hoy':'Sin registro hoy';})()},
-    {ico:'🏋️',n:'Ejercicio',sub:'Entrenamientos',href:'../Ejercicio/ejercicio.html',
+    {ico:'🏋️',n:'Ejercicio',sub:'Rutina de entrenamiento',href:'../CuidadoPersonal/cuidadopersonal.html?tab=ejercicio',
      stat:(()=>{const e=(D.sal.ejercicios||[]).filter(e=>e.fecha===t);return e.length?e.length+' sesión(es) hoy':'Sin ejercicio hoy';})()},
-    {ico:'😴',n:'Sueño',sub:'Descanso & recuperación',href:'../Sueno/sueno.html',
-     stat:(()=>{const r=(D.sue.registros||[]).sort((a,b)=>b.fecha.localeCompare(a.fecha))[0];return r?r.horas+'h · cal '+r.calidad+'/10':'Sin registros';})()},
-    {ico:'✅',n:'Hábitos',sub:'Disciplina & consistencia',href:'../Habitos/habitos.html',
-     stat:(()=>{const h=(D.hab.habitos||[]).filter(h=>h.activo&&h.frecuencia==='diario');const d=(D.hab.registros||[]).filter(r=>r.fecha===t&&r.completado).length;return h.length?d+'/'+h.length+' hoy':'Sin hábitos';})()},
-    {ico:'⏱️',n:'Productividad',sub:'Tiempo & Pomodoro',href:'../Tiempo/tiempo.html',
-     stat:(()=>{const m=(D.tie.bloques||[]).filter(b=>b.fecha===t).reduce((s,b)=>s+(b.duracion_min||0),0);return m?(m>=60?Math.floor(m/60)+'h '+(m%60)+'m':m+'m')+' focus':'Sin bloques hoy';})()},
-    {ico:'🧠',n:'Ánimo',sub:'Bienestar mental',href:'../Animo/animo.html',
-     stat:(()=>{const r=(D.ani.registros||[]).find(r=>r.fecha===t);return r?'Mood '+r.mood+'/10 · E:'+r.energia+' S:'+r.estres:'Sin registro hoy';})()},
-    {ico:'📚',n:'Aprendizaje',sub:'Libros & skills',href:'../Aprendizaje/aprendizaje.html',
-     stat:(()=>{const l=(D.apr.libros||[]).filter(b=>b.estado==='leyendo').length;return l+' libro(s) activo(s) · '+(D.apr.skills||[]).length+' skills';})()},
     {ico:'🎯',n:'Proyectos',sub:'Metas & iniciativas',href:'../Proyectos/proyectos.html',
-     stat:(()=>{const a=(D.pro.proyectos||[]).filter(p=>p.estado==='activo').length;const p=(D.pro.tareas||[]).filter(t=>t.estado==='pendiente').length;return a+' activo(s) · '+p+' tarea(s) pendiente(s)';})()},
-    {ico:'👥',n:'Red Social',sub:'Relaciones & contactos',href:'../Social/social.html',
-     stat:(()=>{const c=(D.soc.contactos||[]).filter(c=>c.activo).length;const i=(D.soc.interacciones||[]).filter(i=>d7.includes(i.fecha)).length;return c+' contactos · '+i+' int. esta semana';})()},
-    {ico:'🚗',n:'Vehículo',sub:'Auto & movilidad',href:'../Vehiculo/vehiculo.html',
-     stat:(()=>{const g=(D.veh.gasolina||[]);const m=(D.veh.mantenimientos||[]);return g.length+' carga(s) · '+m.length+' mantenimiento(s)';})()}
+     stat:(()=>{const a=(D.pro.proyectos||[]).filter(p=>p.estado==='activo').length;const p=(D.pro.tareas||[]).filter(t=>t.estado==='pendiente').length;return a+' activo(s) · '+p+' tarea(s)';})()}
   ];
-  document.getElementById('apps-body').innerHTML=`
-    <div class="sh"><h2>🚀 Todas mis apps</h2><span class="ts tm">${apps.length} aplicaciones</span></div>
-    <div class="app-grid">
-      ${apps.map(a=>`<a href="${a.href}" class="app-card">
-        <div style="font-size:30px;margin-bottom:10px">${a.ico}</div>
-        <div style="font-size:13px;font-weight:700;margin-bottom:3px">${a.n}</div>
-        <div class="ts tm" style="margin-bottom:8px">${a.sub}</div>
-        <div style="font-size:11px;color:var(--g);font-weight:600">${a.stat}</div>
-      </a>`).join('')}
-    </div>`;
+  document.getElementById('appsBody').innerHTML=apps.map(a=>`<a href="${a.href}" class="app-card">
+    <div class="app-ico">${a.ico}</div>
+    <div class="app-name">${a.n}</div>
+    <div class="sub" style="margin-top:0">${a.sub}</div>
+    <div class="app-stat">${a.stat}</div>
+  </a>`).join('');
 }
 
-// ── INIT ─────────────────────────────────────────────────────────────────────
-function init(){
-  loadAll();
-  document.getElementById('dateLabel').textContent=new Date().toLocaleDateString('es-MX',{weekday:'long',day:'numeric',month:'long'});
-  const check=()=>{const mb=document.getElementById('menuBtn');mb.style.display=window.innerWidth<640?'':'none';if(window.innerWidth>=640)document.getElementById('sidebar').classList.remove('open');};
-  window.addEventListener('resize',check);check();
-  updateAlertBadge();
-  nav('resumen');
+const RENDERS=[renderDia,renderHero,renderCoach,renderFinanzas,renderSkills,renderAlertas,renderHoy,renderApps];
+
+// ══════════════════════════════════════════════════════════════════════════
+// SLIDE ENGINE — avance automático cada 3 min + transición + controles
+// ══════════════════════════════════════════════════════════════════════════
+const N=RENDERS.length;
+let cur=0, playing=true, timer=null;
+const AUTO_MS=180000; // 3 minutos
+
+function buildDots(){
+  document.getElementById('dots').innerHTML=Array.from({length:N},(_,i)=>
+    `<button class="dot-btn" onclick="goTo(${i})" aria-label="Pantalla ${i+1}"></button>`).join('');
 }
-init();
+function paintDots(){document.querySelectorAll('.dot-btn').forEach((d,i)=>d.classList.toggle('on',i===cur));}
+
+function showSlide(i){
+  loadAll();
+  RENDERS[i]();
+  document.querySelectorAll('.slide').forEach(s=>s.classList.toggle('active',parseInt(s.dataset.i)===i));
+  cur=i; paintDots();
+}
+function nextSlide(){showSlide((cur+1)%N); restartTimer();}
+function prevSlide(){showSlide((cur-1+N)%N); restartTimer();}
+function goTo(i){showSlide(i); restartTimer();}
+function restartTimer(){clearInterval(timer); if(playing) timer=setInterval(nextSlide,AUTO_MS);}
+function togglePlay(){
+  playing=!playing;
+  document.getElementById('playBtn').textContent=playing?'⏸':'▶';
+  restartTimer();
+}
+
+document.addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight') nextSlide();
+  if(e.key==='ArrowLeft') prevSlide();
+  if(e.key===' '){e.preventDefault();togglePlay();}
+});
+window.addEventListener('storage',()=>{loadAll();RENDERS[cur]();});
+
+// ── Reloj vivo ───────────────────────────────────────────────────────────
+let lastSync=Date.now();
+function tickClock(){
+  const n=new Date();
+  const hh=String(n.getHours()).padStart(2,'0'), mm=String(n.getMinutes()).padStart(2,'0'), ss=String(n.getSeconds()).padStart(2,'0');
+  const hc=document.getElementById('heroClock'); if(hc) hc.textContent=`${hh}:${mm}:${ss}`;
+  const hud=document.getElementById('hudClock'); if(hud) hud.textContent=`${hh}:${mm}`;
+  const hd=document.getElementById('heroDate'); if(hd) hd.textContent=n.toLocaleDateString('es-MX',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  const sy=document.getElementById('hudSync'); if(sy){const s=Math.round((Date.now()-lastSync)/1000);sy.textContent='· sync hace '+(s<60?s+'s':Math.round(s/60)+'m');}
+  const dc=document.getElementById('diaClock'); if(dc) dc.textContent=`${hh}:${mm}`;
+  const da=document.getElementById('diaAhora'), ds=document.getElementById('diaSiguiente');
+  if(da||ds){
+    const {tareasHoy,actual,siguiente}=rutinaAhoraSiguiente();
+    if(da) da.textContent=actual?(actual.hora+' — '+actual.txt):(tareasHoy.length?'Aún no empieza tu rutina de hoy':'Sin bloques configurados para hoy');
+    if(ds){
+      if(siguiente){
+        const[sh,sm]=siguiente.hora.split(':').map(Number);
+        const dest=new Date();dest.setHours(sh,sm,0,0);
+        const diffMin=Math.max(0,Math.round((dest-n)/60000));
+        const faltan=diffMin>=60?Math.floor(diffMin/60)+'h '+(diffMin%60)+'m':diffMin+'m';
+        ds.textContent=siguiente.hora+' — '+siguiente.txt+' (en '+faltan+')';
+      } else {
+        ds.textContent=tareasHoy.length?'Ya terminaste tu rutina de hoy 🎉':'—';
+      }
+    }
+  }
+}
+setInterval(tickClock,1000);
+
+// ── Init ─────────────────────────────────────────────────────────────────
+buildDots();
+loadAll();
+tickClock();
+showSlide(0);
+restartTimer();
 </script>
 </body>
 </html>

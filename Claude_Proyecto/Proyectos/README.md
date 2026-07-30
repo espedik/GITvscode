@@ -22,3 +22,9 @@ Barra lateral con 5 secciones controladas por `nav()`:
 ## Cómo usarlo
 
 Se abre directamente `proyectos.html` en cualquier navegador, sin instalación ni servidor. No hay sincronización entre dispositivos salvo mediante exportación manual del JSON.
+
+## Referencias cruzadas
+
+- La barra lateral tiene un enlace **🚀 Volver al Dashboard** (`../Dashboard/dashboard.html`).
+- El **Dashboard** (`../Dashboard/dashboard.html`) lee `proyectos_v1` directamente: usa `tareas` (para las alertas de tareas vencidas/próximas y el conteo de "Tareas hoy") y `proyectos` (conteo de activos en la tarjeta de acceso rápido). Si cambias la forma de `S.tareas`/`S.proyectos` aquí, revisa `getAlerts()` y `renderApps()` en `Dashboard/dashboard.html`.
+- Mapa completo del proyecto: [`../README.md`](../README.md).

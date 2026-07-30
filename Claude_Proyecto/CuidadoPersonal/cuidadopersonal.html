@@ -1,0 +1,1011 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cuidado Personal</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --g:#00e87a;--g-l:rgba(0,232,122,.1);
+  --o:#ff6b35;--o-l:rgba(255,107,53,.1);
+  --b:#3b82f6;--b-l:rgba(59,130,246,.1);
+  --pu:#b06eff;--pu-l:rgba(176,110,255,.1);
+  --w:#ffd93d;--w-l:rgba(255,217,61,.1);
+  --r:#ff3b6b;--r-l:rgba(255,59,107,.1);
+  --pk:#ff6bd6;--pk-l:rgba(255,107,214,.1);
+  --am:#e0a020;--am-l:rgba(224,160,32,.1);
+  --bg:#060614;--surface:rgba(255,255,255,.04);--border:rgba(255,255,255,.08);
+  --text:#e8eaf6;--text2:#8892b0;--text3:#4a5568;
+  --r14:14px;--rs:9px;--sh:0 4px 24px rgba(0,0,0,.5);
+}
+html,body{height:100%}
+body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);font-size:14px;
+  display:flex;flex-direction:column;overflow:hidden;
+  background-image:radial-gradient(ellipse 80% 60% at 20% 0%,rgba(255,107,214,.05) 0%,transparent 60%),
+                   radial-gradient(ellipse 60% 50% at 85% 100%,rgba(0,232,122,.05) 0%,transparent 60%)}
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:rgba(255,255,255,.12);border-radius:2px}
+
+/* TOPNAV */
+.topnav{flex:none;display:flex;align-items:center;justify-content:space-between;gap:16px;
+  padding:12px 20px;background:rgba(6,6,20,.85);backdrop-filter:blur(20px);
+  border-bottom:1px solid rgba(255,255,255,.08);position:relative;z-index:100;flex-wrap:wrap}
+.brand{font-size:16px;font-weight:800;background:linear-gradient(90deg,#ff6bd6,#b06eff);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;white-space:nowrap}
+.tabs{display:flex;gap:6px;flex-wrap:wrap}
+.tab-btn{display:flex;align-items:center;gap:7px;padding:9px 16px;border-radius:20px;border:1px solid transparent;
+  background:transparent;color:var(--text2);font-weight:600;font-size:13px;cursor:pointer;transition:all .2s;font-family:inherit}
+.tab-btn:hover{background:rgba(255,255,255,.06);color:var(--text)}
+.tab-btn[data-tab="skincare"].active{background:var(--pk-l);color:var(--pk);border-color:rgba(255,107,214,.4)}
+.tab-btn[data-tab="cabello"].active{background:var(--am-l);color:var(--am);border-color:rgba(224,160,32,.4)}
+.tab-btn[data-tab="salud"].active{background:var(--g-l);color:var(--g);border-color:rgba(0,232,122,.4)}
+.tab-btn[data-tab="ejercicio"].active{background:var(--o-l);color:var(--o);border-color:rgba(255,107,53,.4)}
+
+/* VIEWS */
+.view{flex:1;min-height:0;display:none}
+.view.active{display:block}
+.view-native.active{overflow-y:auto;padding:22px}
+.view-frame{overflow:hidden}
+.view-frame.active{display:flex;flex-direction:column}
+.view-frame iframe{flex:1;width:100%;border:0;display:block;background:#060614}
+
+/* SUBNAV */
+.subnav{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
+.subnav-btn{padding:7px 14px;border-radius:var(--rs);border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.03);
+  color:var(--text2);font-weight:600;font-size:12px;cursor:pointer;transition:all .2s;font-family:inherit}
+.subnav-btn:hover{background:rgba(255,255,255,.07);color:var(--text)}
+.subnav-btn.active{background:var(--acc-l);color:var(--acc);border-color:var(--acc)}
+
+/* CARDS */
+.card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:var(--r14);padding:18px;
+  box-shadow:var(--sh),inset 0 1px 0 rgba(255,255,255,.05);transition:border-color .2s;backdrop-filter:blur(10px)}
+.card:hover{border-color:rgba(255,255,255,.12)}
+.card-title{font-size:11px;font-weight:600;color:var(--text2);margin-bottom:8px;display:flex;align-items:center;gap:5px;text-transform:uppercase;letter-spacing:.06em}
+.card-val{font-size:26px;font-weight:800;color:var(--text);letter-spacing:-.5px}
+.card-sub{font-size:11px;color:var(--text3);margin-top:3px}
+
+/* GRIDS */
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.g2{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:5px;padding:8px 14px;border-radius:var(--rs);
+  border:none;cursor:pointer;font-size:13px;font-weight:600;transition:all .2s;white-space:nowrap;font-family:inherit}
+.btn-g{background:linear-gradient(135deg,#cc4fb0,#ff6bd6);color:#000;box-shadow:0 0 16px rgba(255,107,214,.3)}
+.btn-g:hover{box-shadow:0 0 28px rgba(255,107,214,.55);transform:translateY(-1px)}
+.btn-o{background:rgba(255,255,255,.05);color:var(--text2);border:1px solid rgba(255,255,255,.1)}
+.btn-o:hover{background:rgba(255,255,255,.09);color:var(--text)}
+.btn-r{background:linear-gradient(135deg,#cc1144,#ff3b6b);color:#fff}
+.btn-sm{padding:5px 9px;font-size:11px}
+.btn-ico{padding:5px 8px}
+
+/* PROGRESS BAR */
+.pbar{height:6px;background:rgba(255,255,255,.08);border-radius:20px;overflow:hidden;margin-top:7px}
+.pfill{height:100%;border-radius:20px;transition:width .6s cubic-bezier(.4,0,.2,1)}
+
+/* MODAL */
+.mo{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(4px);
+  z-index:200;align-items:center;justify-content:center;padding:16px}
+.mo.open{display:flex}
+.modal{background:rgba(10,10,30,.95);backdrop-filter:blur(30px);border:1px solid rgba(255,107,214,.15);
+  border-radius:var(--r14);box-shadow:0 0 20px rgba(255,107,214,.1),var(--sh);width:100%;max-width:480px;max-height:92vh;overflow-y:auto;padding:22px}
+.modal-h{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+.modal-title{font-size:17px;font-weight:700}
+.modal-x{background:none;border:none;font-size:18px;cursor:pointer;color:var(--text2);padding:3px}
+.modal-x:hover{color:var(--r)}
+
+/* FORMS */
+.fg{margin-bottom:14px}
+.fr{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+label{display:block;font-size:10px;font-weight:700;color:var(--text2);margin-bottom:5px;text-transform:uppercase;letter-spacing:.07em}
+input,select,textarea{width:100%;padding:9px 12px;border:1px solid rgba(255,255,255,.1);border-radius:var(--rs);
+  font-size:13px;color:var(--text);background:rgba(255,255,255,.05);outline:none;transition:all .2s;font-family:inherit}
+input:focus,select:focus,textarea:focus{border-color:var(--pk);box-shadow:0 0 0 3px rgba(255,107,214,.12)}
+input[type=checkbox]{width:auto}
+select option{background:#0d0d2a;color:var(--text)}
+
+/* SECTION HEADER */
+.section{display:none}.section.active{display:block}
+.sh{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;flex-wrap:wrap;gap:10px}
+.sh h2{font-size:19px;font-weight:800;background:linear-gradient(90deg,var(--text),var(--text2));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+
+/* BADGE */
+.badge{display:inline-block;padding:3px 9px;border-radius:20px;font-size:10px;font-weight:700}
+.b-g{background:rgba(0,232,122,.15);color:var(--g);border:1px solid rgba(0,232,122,.25)}
+.b-n{background:rgba(255,255,255,.07);color:var(--text2)}
+
+/* TABLE */
+.tw{overflow-x:auto;margin-top:10px}
+table{width:100%;border-collapse:collapse}
+th{text-align:left;padding:9px 12px;font-size:10px;font-weight:700;color:var(--pk);
+  border-bottom:1px solid rgba(255,107,214,.15);white-space:nowrap;text-transform:uppercase;letter-spacing:.08em}
+td{padding:11px 12px;border-bottom:1px solid rgba(255,255,255,.05);font-size:13px}
+tr:last-child td{border-bottom:none}
+tbody tr:hover td{background:rgba(255,255,255,.02)}
+
+/* CONFIRM */
+.conf{position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(4px);
+  z-index:300;display:none;align-items:center;justify-content:center}
+.conf.open{display:flex}
+.conf-box{background:rgba(10,10,30,.98);border:1px solid rgba(255,59,107,.25);border-radius:var(--r14);padding:22px;max-width:340px;width:90%}
+.conf-box h3{font-size:15px;font-weight:700;margin-bottom:7px}
+.conf-box p{color:var(--text2);font-size:13px;margin-bottom:18px}
+
+/* TOAST */
+.toast{position:fixed;bottom:24px;right:24px;background:rgba(10,10,30,.95);color:var(--text);
+  border:1px solid rgba(255,107,214,.2);padding:10px 18px;border-radius:var(--rs);
+  font-size:13px;font-weight:600;box-shadow:var(--sh);z-index:500;opacity:0;transform:translateY(8px);transition:all .3s;pointer-events:none}
+.toast.show{opacity:1;transform:translateY(0)}
+
+/* UTILS */
+.flex{display:flex}.aic{align-items:center}.jb{justify-content:space-between}
+.fw7{font-weight:700}.ts{font-size:11px}.tm{color:var(--text3)}
+.gap6{gap:6px}.gap8{gap:8px}
+.empty{text-align:center;padding:40px 24px;color:var(--text3)}
+.empty .ico{font-size:40px;margin-bottom:10px;opacity:.4}
+
+/* ══════════════════════════════════════════════════════════════════════
+   SKINCARE — tema pastel propio, aislado bajo #view-skincare para no
+   afectar Cabello/Salud/Ejercicio (que comparten .card, .btn, etc.)
+   ══════════════════════════════════════════════════════════════════════ */
+#view-skincare{
+  --sk-bg1:#fff0f6;--sk-bg2:#f4eeff;--sk-bg3:#eafaf3;
+  --sk-card:#ffffff;--sk-card-br:#f1e3ea;
+  --sk-text:#4a3b4f;--sk-text2:#8d7c92;--sk-text3:#b7a9bb;
+  --sk-pink:#ff9fc9;--sk-pink-d:#c23f77;--sk-pink-l:#fff0f6;
+  --sk-teal:#5fc4bb;--sk-teal-d:#1b6e66;--sk-teal-l:#e0f6f3;
+  --sk-mint:#8fdcb2;--sk-mint-d:#2f8a5c;--sk-mint-l:#e8faf0;
+  --sk-peach:#ffc389;--sk-peach-d:#b8611a;--sk-peach-l:#fff3e6;
+  --sk-blue:#9dcdfb;--sk-blue-d:#25659e;--sk-blue-l:#eaf5ff;
+  --sk-coral:#ffaaa0;--sk-coral-d:#b8382c;--sk-coral-l:#fff1ef;
+  background:radial-gradient(ellipse 70% 50% at 15% 0%,var(--sk-bg1) 0%,transparent 60%),
+             radial-gradient(ellipse 60% 50% at 100% 20%,var(--sk-bg2) 0%,transparent 55%),
+             radial-gradient(ellipse 70% 60% at 50% 100%,var(--sk-bg3) 0%,transparent 60%),
+             #fffdfb;
+  color:var(--sk-text);
+}
+#view-skincare .card{background:var(--sk-card);border:1px solid var(--sk-card-br);box-shadow:0 6px 24px rgba(190,150,170,.14);color:var(--sk-text)}
+#view-skincare .card-title{color:var(--sk-text2)}
+#view-skincare .card-sub,#view-skincare .ts{color:var(--sk-text2)}
+#view-skincare .tm{color:var(--sk-text3)}
+#view-skincare label{color:var(--sk-text2)}
+#view-skincare input,#view-skincare select,#view-skincare textarea{background:#fbf7f9;border:1px solid var(--sk-card-br);color:var(--sk-text)}
+#view-skincare input:focus,#view-skincare select:focus,#view-skincare textarea:focus{border-color:var(--sk-pink);box-shadow:0 0 0 3px rgba(255,159,201,.18)}
+#view-skincare select option{background:#fff;color:var(--sk-text)}
+#view-skincare .btn-g{background:linear-gradient(135deg,var(--sk-pink),#ff7fb8);color:#5c1638;box-shadow:0 4px 16px rgba(255,159,201,.45)}
+#view-skincare .btn-g:hover{box-shadow:0 6px 22px rgba(255,159,201,.6)}
+#view-skincare .btn-o{background:#fbf7f9;color:var(--sk-text2);border:1px solid var(--sk-card-br)}
+#view-skincare .btn-o:hover{background:#f5edf1;color:var(--sk-text)}
+
+.sk-hero{padding:20px 22px;border-radius:20px;background:linear-gradient(135deg,var(--sk-pink-l),var(--sk-teal-l));border:1px solid #ffe0ee;margin-bottom:18px}
+.sk-hero-top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}
+.sk-eyebrow{font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--sk-pink-d)}
+.sk-title{font-size:24px;font-weight:800;margin:4px 0 8px;color:var(--sk-text)}
+.sk-desc{font-size:13px;color:var(--sk-text2);max-width:640px;line-height:1.6;margin:0}
+.sk-btn-edit{flex-shrink:0;background:#fff;border:1px solid #ffcfe4;color:var(--sk-pink-d);font-weight:700;font-size:12.5px;padding:9px 16px;border-radius:20px;cursor:pointer;font-family:inherit;transition:all .2s}
+.sk-btn-edit:hover{background:var(--sk-pink-l);transform:translateY(-1px)}
+.sk-chips-resumen{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.sk-pill{display:inline-flex;align-items:center;gap:5px;padding:6px 13px;border-radius:20px;font-size:12px;font-weight:700}
+.sk-pill.p-pink{background:#ffe0ee;color:var(--sk-pink-d)}
+.sk-pill.p-teal{background:#d7f0ec;color:var(--sk-teal-d)}
+.sk-pill.p-mint{background:#d7f5e4;color:var(--sk-mint-d)}
+.sk-pill.p-peach{background:#ffe8d1;color:var(--sk-peach-d)}
+.sk-pill.p-blue{background:#dbedff;color:var(--sk-blue-d)}
+.sk-pill.p-coral{background:#ffdfda;color:var(--sk-coral-d)}
+.sk-pill.small{padding:3px 9px;font-size:10.5px;font-weight:700}
+
+.sk-section-h{display:flex;align-items:center;gap:9px;margin:26px 0 14px}
+.sk-section-h .ico{font-size:19px}
+.sk-section-h h3{font-size:15.5px;font-weight:800;color:var(--sk-text);margin:0}
+.sk-section-h .line{flex:1;height:1px;background:linear-gradient(90deg,var(--sk-card-br),transparent)}
+
+.sk-step{background:var(--sk-card);border:1px solid var(--sk-card-br);border-radius:16px;padding:16px;margin-bottom:12px;box-shadow:0 4px 16px rgba(190,150,170,.1);display:flex;gap:14px}
+.sk-step-num{flex-shrink:0;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;color:#fff}
+.sk-step-body{flex:1;min-width:0}
+.sk-step-name{font-weight:800;font-size:14.5px;color:var(--sk-text);margin-bottom:6px}
+.sk-step-block{margin-top:8px}
+.sk-step-label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--sk-text3);margin-bottom:3px}
+.sk-step-text{font-size:12.5px;color:var(--sk-text2);line-height:1.55}
+.sk-step-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+
+.sk-week{display:flex;gap:8px;flex-wrap:wrap}
+.sk-day{flex:1;min-width:74px;border-radius:14px;padding:12px 8px;text-align:center;border:1px solid var(--sk-card-br)}
+.sk-day-lbl{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px}
+.sk-day-act{font-size:11px;font-weight:700;line-height:1.3}
+
+.sk-timeline{position:relative;padding-left:26px}
+.sk-tl-item{position:relative;padding-bottom:20px}
+.sk-tl-item:last-child{padding-bottom:0}
+.sk-tl-item::before{content:'';position:absolute;left:-26px;top:3px;width:11px;height:11px;border-radius:50%;background:var(--sk-teal);box-shadow:0 0 0 4px var(--sk-teal-l)}
+.sk-tl-item::after{content:'';position:absolute;left:-21px;top:16px;bottom:0;width:2px;background:var(--sk-card-br)}
+.sk-tl-item:last-child::after{display:none}
+.sk-tl-when{font-size:11px;font-weight:800;color:var(--sk-teal-d);text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px}
+.sk-tl-txt{font-size:13px;color:var(--sk-text);line-height:1.5}
+
+.sk-shop{display:flex;align-items:center;gap:12px;padding:11px 4px;border-bottom:1px solid var(--sk-card-br)}
+.sk-shop:last-child{border-bottom:none}
+.sk-shop-ico{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.sk-shop-name{font-weight:700;font-size:13px;color:var(--sk-text)}
+.sk-shop-cat{font-size:11px;color:var(--sk-text3)}
+
+.sk-tip{display:flex;gap:11px;align-items:flex-start;padding:11px 0;border-bottom:1px solid var(--sk-card-br)}
+.sk-tip:last-child{border-bottom:none}
+.sk-tip .ico{font-size:16px;flex-shrink:0;margin-top:1px}
+.sk-tip-txt{font-size:13px;color:var(--sk-text2);line-height:1.55}
+
+.sk-warn{background:var(--sk-coral-l);border:1px solid #ffd4cd;border-radius:14px;padding:14px 16px}
+.sk-warn-title{font-weight:800;font-size:13px;color:var(--sk-coral-d);margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.sk-warn ul{margin:0;padding-left:18px}
+.sk-warn li{font-size:12.5px;color:#8a4a41;line-height:1.7}
+
+.sk-disclaimer{margin-top:22px;padding:13px 16px;border-radius:14px;background:#faf7fb;border:1px dashed var(--sk-card-br);font-size:11.5px;color:var(--sk-text3);line-height:1.6}
+
+/* ══════════════════════════════════════════════════════════════════════
+   CABELLO — mismo patrón pastel que Skincare, paleta propia (ámbar/azul/
+   verde/terracota — sin morado), aislado bajo #view-cabello.
+   ══════════════════════════════════════════════════════════════════════ */
+#view-cabello{
+  --ca-bg1:#fff6e6;--ca-bg2:#eaf5ff;--ca-bg3:#edf9ee;
+  --ca-card:#ffffff;--ca-card-br:#f0e6d6;
+  --ca-text:#4a3f30;--ca-text2:#8d8172;--ca-text3:#b7ab9c;
+  --ca-amber:#f0b84e;--ca-amber-d:#8a5a12;--ca-amber-l:#fdf1dc;
+  --ca-blue:#8fc4f5;--ca-blue-d:#255c8a;--ca-blue-l:#e8f3fe;
+  --ca-green:#9cd6ab;--ca-green-d:#2f7a45;--ca-green-l:#e9f8ec;
+  --ca-terra:#e3a179;--ca-terra-d:#a05a2e;--ca-terra-l:#fbeee2;
+  --ca-coral:#ffaaa0;--ca-coral-d:#b8382c;--ca-coral-l:#fff1ef;
+  background:radial-gradient(ellipse 70% 50% at 10% 0%,var(--ca-bg1) 0%,transparent 60%),
+             radial-gradient(ellipse 60% 50% at 100% 15%,var(--ca-bg2) 0%,transparent 55%),
+             radial-gradient(ellipse 70% 60% at 50% 100%,var(--ca-bg3) 0%,transparent 60%),
+             #fffdfa;
+  color:var(--ca-text);
+}
+#view-cabello .card{background:var(--ca-card);border:1px solid var(--ca-card-br);box-shadow:0 6px 24px rgba(190,160,120,.14);color:var(--ca-text)}
+#view-cabello .card-title{color:var(--ca-text2)}
+#view-cabello .card-sub,#view-cabello .ts{color:var(--ca-text2)}
+#view-cabello .tm{color:var(--ca-text3)}
+#view-cabello label{color:var(--ca-text2)}
+#view-cabello input,#view-cabello select,#view-cabello textarea{background:#fbf9f5;border:1px solid var(--ca-card-br);color:var(--ca-text)}
+#view-cabello input:focus,#view-cabello select:focus,#view-cabello textarea:focus{border-color:var(--ca-amber);box-shadow:0 0 0 3px rgba(240,184,78,.2)}
+#view-cabello select option{background:#fff;color:var(--ca-text)}
+#view-cabello .btn-g{background:linear-gradient(135deg,var(--ca-amber),#e0a020);color:#4a2f05;box-shadow:0 4px 16px rgba(240,184,78,.45)}
+#view-cabello .btn-g:hover{box-shadow:0 6px 22px rgba(240,184,78,.6)}
+#view-cabello .btn-o{background:#fbf9f5;color:var(--ca-text2);border:1px solid var(--ca-card-br)}
+#view-cabello .btn-o:hover{background:#f5efe4;color:var(--ca-text)}
+
+.ca-hero{padding:20px 22px;border-radius:20px;background:linear-gradient(135deg,var(--ca-amber-l),var(--ca-blue-l));border:1px solid #ffe6bc;margin-bottom:18px}
+.ca-hero-top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}
+.ca-eyebrow{font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--ca-amber-d)}
+.ca-title{font-size:24px;font-weight:800;margin:4px 0 8px;color:var(--ca-text)}
+.ca-desc{font-size:13px;color:var(--ca-text2);max-width:640px;line-height:1.6;margin:0}
+.ca-btn-edit{flex-shrink:0;background:#fff;border:1px solid #f5dba4;color:var(--ca-amber-d);font-weight:700;font-size:12.5px;padding:9px 16px;border-radius:20px;cursor:pointer;font-family:inherit;transition:all .2s}
+.ca-btn-edit:hover{background:var(--ca-amber-l);transform:translateY(-1px)}
+.ca-chips-resumen{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.ca-pill{display:inline-flex;align-items:center;gap:5px;padding:6px 13px;border-radius:20px;font-size:12px;font-weight:700}
+.ca-pill.p-amber{background:var(--ca-amber-l);color:var(--ca-amber-d)}
+.ca-pill.p-blue{background:var(--ca-blue-l);color:var(--ca-blue-d)}
+.ca-pill.p-green{background:var(--ca-green-l);color:var(--ca-green-d)}
+.ca-pill.p-terra{background:var(--ca-terra-l);color:var(--ca-terra-d)}
+.ca-pill.small{padding:3px 9px;font-size:10.5px;font-weight:700}
+
+.ca-section-h{display:flex;align-items:center;gap:9px;margin:26px 0 14px}
+.ca-section-h .ico{font-size:19px}
+.ca-section-h h3{font-size:15.5px;font-weight:800;color:var(--ca-text);margin:0}
+.ca-section-h .line{flex:1;height:1px;background:linear-gradient(90deg,var(--ca-card-br),transparent)}
+
+.ca-step{background:var(--ca-card);border:1px solid var(--ca-card-br);border-radius:16px;padding:16px;margin-bottom:12px;box-shadow:0 4px 16px rgba(190,160,120,.1);display:flex;gap:14px}
+.ca-step-num{flex-shrink:0;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;color:#fff}
+.ca-step-body{flex:1;min-width:0}
+.ca-step-name{font-weight:800;font-size:14.5px;color:var(--ca-text);margin-bottom:6px}
+.ca-step-block{margin-top:8px}
+.ca-step-label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--ca-text3);margin-bottom:3px}
+.ca-step-text{font-size:12.5px;color:var(--ca-text2);line-height:1.55}
+.ca-step-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+
+.ca-week{display:flex;gap:8px;flex-wrap:wrap}
+.ca-day{flex:1;min-width:74px;border-radius:14px;padding:12px 8px;text-align:center;border:1px solid var(--ca-card-br)}
+.ca-day-lbl{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px}
+.ca-day-act{font-size:11px;font-weight:700;line-height:1.3}
+
+.ca-timeline{position:relative;padding-left:26px}
+.ca-tl-item{position:relative;padding-bottom:20px}
+.ca-tl-item:last-child{padding-bottom:0}
+.ca-tl-item::before{content:'';position:absolute;left:-26px;top:3px;width:11px;height:11px;border-radius:50%;background:var(--ca-amber);box-shadow:0 0 0 4px var(--ca-amber-l)}
+.ca-tl-item::after{content:'';position:absolute;left:-21px;top:16px;bottom:0;width:2px;background:var(--ca-card-br)}
+.ca-tl-item:last-child::after{display:none}
+.ca-tl-when{font-size:11px;font-weight:800;color:var(--ca-amber-d);text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px}
+.ca-tl-txt{font-size:13px;color:var(--ca-text);line-height:1.5}
+
+.ca-shop{display:flex;align-items:center;gap:12px;padding:11px 4px;border-bottom:1px solid var(--ca-card-br)}
+.ca-shop:last-child{border-bottom:none}
+.ca-shop-ico{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.ca-shop-name{font-weight:700;font-size:13px;color:var(--ca-text)}
+.ca-shop-cat{font-size:11px;color:var(--ca-text3)}
+
+.ca-tip{display:flex;gap:11px;align-items:flex-start;padding:11px 0;border-bottom:1px solid var(--ca-card-br)}
+.ca-tip:last-child{border-bottom:none}
+.ca-tip .ico{font-size:16px;flex-shrink:0;margin-top:1px}
+.ca-tip-txt{font-size:13px;color:var(--ca-text2);line-height:1.55}
+
+.ca-warn{background:var(--ca-coral-l);border:1px solid #ffd4cd;border-radius:14px;padding:14px 16px}
+.ca-warn-title{font-weight:800;font-size:13px;color:var(--ca-coral-d);margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.ca-warn ul{margin:0;padding-left:18px}
+.ca-warn li{font-size:12.5px;color:#8a4a41;line-height:1.7}
+
+.ca-note{background:var(--ca-blue-l);border:1px solid #d3e9fb;border-radius:14px;padding:14px 16px;margin-bottom:18px}
+.ca-note-title{font-weight:800;font-size:13px;color:var(--ca-blue-d);margin-bottom:6px;display:flex;align-items:center;gap:6px}
+.ca-note-text{font-size:12.5px;color:#3d5a72;line-height:1.65}
+
+.ca-disclaimer{margin-top:22px;padding:13px 16px;border-radius:14px;background:#faf8f4;border:1px dashed var(--ca-card-br);font-size:11.5px;color:var(--ca-text3);line-height:1.6}
+
+@media(max-width:900px){.g4{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:640px){.g4,.g3,.g2{grid-template-columns:1fr}.fr{grid-template-columns:1fr}.brand{width:100%}
+  .sk-step,.ca-step{flex-direction:column}.sk-hero-top,.ca-hero-top{flex-direction:column}}
+</style>
+</head>
+<body>
+
+<header class="topnav">
+  <div class="brand">💆 Cuidado Personal</div>
+  <nav class="tabs" id="mainTabs">
+    <button class="tab-btn active" data-tab="skincare" onclick="mainTab('skincare')">🧴 Skincare</button>
+    <button class="tab-btn" data-tab="cabello" onclick="mainTab('cabello')">💇 Cuidado del Cabello</button>
+    <button class="tab-btn" data-tab="salud" onclick="mainTab('salud')">🥗 Cuidado de la Salud</button>
+    <button class="tab-btn" data-tab="ejercicio" onclick="mainTab('ejercicio')">🏋️ Ejercicio</button>
+    <a href="../Dashboard/dashboard.html" class="tab-btn" style="text-decoration:none;margin-left:8px;border-left:1px solid rgba(255,255,255,.12);padding-left:16px">🚀 Dashboard</a>
+  </nav>
+</header>
+
+<!-- ══════════════ SKINCARE ══════════════ -->
+<main class="view view-native active" id="view-skincare">
+  <div class="sk-hero">
+    <div class="sk-hero-top">
+      <div>
+        <div class="sk-eyebrow">🧴 Cuidado de la piel</div>
+        <h2 class="sk-title">Mi Piel &amp; Guía</h2>
+        <p class="sk-desc">Tu plan de skincare hecho a tu medida: qué producto usar en cada paso, cómo aplicarlo y para qué sirve — con productos reales que puedes comprar en México. Cuando tu piel cambie, actualiza tu perfil y la guía se ajusta sola.</p>
+      </div>
+      <button class="sk-btn-edit" id="sk-btn-edit" onclick="skToggleForm()">✏️ Editar mi perfil</button>
+    </div>
+    <div class="sk-chips-resumen" id="sk-resumen-chips"></div>
+  </div>
+
+  <div class="card" id="sk-form-card" style="margin-bottom:18px;display:none">
+    <div class="card-title">📋 Tu perfil de piel</div>
+    <div class="ts" style="display:block;margin-bottom:14px">Esto alimenta toda la guía de abajo.</div>
+    <div class="g2">
+      <div class="fg"><label>Tipo de piel</label>
+        <select id="sk-pf-tipo">
+          <option value="grasa">Grasa</option>
+          <option value="seca">Seca</option>
+          <option value="mixta">Mixta</option>
+          <option value="normal">Normal / no estoy seguro</option>
+        </select>
+      </div>
+      <div class="fg"><label>¿Te rasuras?</label>
+        <select id="sk-pf-rasurado">
+          <option value="rastrillo">Sí, con rastrillo/navaja</option>
+          <option value="electrica">Sí, con rasuradora eléctrica</option>
+          <option value="barba">Tengo barba y la mantengo</option>
+          <option value="no_aplica">No me rasuro / no aplica</option>
+        </select>
+      </div>
+    </div>
+    <div class="fg"><label>Preocupaciones principales</label>
+      <div class="flex gap8" style="flex-wrap:wrap">
+        <label class="flex aic gap6" style="text-transform:none;font-size:13px;color:var(--sk-text)"><input type="checkbox" id="sk-pf-acne" value="acne"> Acné, brotes, poros o puntos negros</label>
+        <label class="flex aic gap6" style="text-transform:none;font-size:13px;color:var(--sk-text)"><input type="checkbox" id="sk-pf-manchas" value="manchas"> Manchas oscuras / post-acné</label>
+        <label class="flex aic gap6" style="text-transform:none;font-size:13px;color:var(--sk-text)"><input type="checkbox" id="sk-pf-arrugas" value="arrugas"> Líneas finas / prevención</label>
+        <label class="flex aic gap6" style="text-transform:none;font-size:13px;color:var(--sk-text)"><input type="checkbox" id="sk-pf-sensibilidad" value="sensibilidad"> Resequedad / rojeces / sensibilidad</label>
+      </div>
+    </div>
+    <div class="fg"><label>Presupuesto preferido</label>
+      <select id="sk-pf-presupuesto">
+        <option value="economico">Económico (farmacia/súper)</option>
+        <option value="medio">Rango medio (CeraVe, La Roche-Posay, Isdin)</option>
+        <option value="alto">Sin restricción, prioriza calidad</option>
+      </select>
+    </div>
+    <div class="fg"><label>Notas (reacciones, productos que ya probaste, lo que sea útil recordar)</label><textarea id="sk-pf-notas" rows="2" placeholder="Ej. me irrita el ácido glicólico, uso protector solar de tal marca y me gusta..."></textarea></div>
+    <button class="btn btn-g" onclick="skSavePerfil()">Guardar perfil y actualizar guía</button>
+  </div>
+  <div id="sk-guia-body"></div>
+</main>
+
+<!-- ══════════════ CABELLO ══════════════ -->
+<main class="view view-native" id="view-cabello">
+  <div class="ca-hero">
+    <div class="ca-hero-top">
+      <div>
+        <div class="ca-eyebrow">💇 Cuidado del cabello</div>
+        <h2 class="ca-title">Mi Cabello &amp; Guía</h2>
+        <p class="ca-desc">Tu plan real para frenar la caída, recuperar hidratación y cuidar tu cabello — qué producto usar, cómo aplicarlo y por qué, con marcas que puedes comprar en México. Actualiza tu perfil cuando algo cambie y la guía se ajusta sola.</p>
+      </div>
+      <button class="ca-btn-edit" id="ca-btn-edit" onclick="caToggleForm()">✏️ Editar mi perfil</button>
+    </div>
+    <div class="ca-chips-resumen" id="ca-resumen-chips"></div>
+  </div>
+
+  <div class="card" id="ca-form-card" style="margin-bottom:18px;display:none">
+    <div class="card-title">📋 Tu perfil de cabello</div>
+    <div class="ts" style="display:block;margin-bottom:14px">Esto alimenta toda la guía de abajo.</div>
+    <div class="g2">
+      <div class="fg"><label>Tipo de cabello</label>
+        <select id="ca-pf-tipo">
+          <option value="lacio">Lacio</option>
+          <option value="ondulado">Ondulado</option>
+          <option value="rizado">Rizado</option>
+          <option value="afro">Afro / muy rizado</option>
+        </select>
+      </div>
+      <div class="fg"><label>Grosor</label>
+        <select id="ca-pf-grosor">
+          <option value="fino">Fino</option>
+          <option value="medio">Medio</option>
+          <option value="grueso">Grueso</option>
+        </select>
+      </div>
+    </div>
+    <div class="g2">
+      <div class="fg"><label>Cuero cabelludo</label>
+        <select id="ca-pf-cuero">
+          <option value="graso">Graso</option>
+          <option value="seco">Seco / con caspa</option>
+          <option value="normal">Normal</option>
+        </select>
+      </div>
+      <div class="fg"><label>Si marcaste caída como preocupación, ¿cuál describe mejor tu caso?</label>
+        <select id="ca-pf-caidapatron">
+          <option value="reciente">Notoria y reciente (semanas/meses)</option>
+          <option value="genetica">Gradual de años, con antecedentes familiares</option>
+          <option value="leve">Leve, quiero prevenir</option>
+          <option value="no_seguro">No estoy seguro</option>
+        </select>
+      </div>
+    </div>
+    <div class="fg"><label>Preocupaciones principales</label>
+      <div class="flex gap8" style="flex-wrap:wrap">
+        <label class="flex aic gap6" style="text-transform:none;font-size:13px;color:var(--ca-text)"><input type="checkbox" id="ca-pf-caida" value="caida"> Caída de cabello</label>
+        <label class="flex aic gap6" style="text-transform:none;font-size:13px;color:var(--ca-text)"><input type="checkbox" id="ca-pf-resequedad" value="resequedad"> Resequedad / falta de hidratación</label>
+        <label class="flex aic gap6" style="text-transform:none;font-size:13px;color:var(--ca-text)"><input type="checkbox" id="ca-pf-caspa" value="caspa"> Caspa</label>
+        <label class="flex aic gap6" style="text-transform:none;font-size:13px;color:var(--ca-text)"><input type="checkbox" id="ca-pf-frizz" value="frizz"> Frizz / encrespado</label>
+      </div>
+    </div>
+    <div class="fg"><label>Presupuesto preferido</label>
+      <select id="ca-pf-presupuesto">
+        <option value="economico">Económico (supermercado/farmacia)</option>
+        <option value="medio">Rango medio (L'Oréal Elvive, Pantene Pro-V, Vichy Dercos)</option>
+        <option value="alto">Sin restricción, prioriza calidad</option>
+      </select>
+    </div>
+    <div class="fg"><label>Notas (productos que ya probaste, reacciones, lo que sea útil recordar)</label><textarea id="ca-pf-notas" rows="2" placeholder="Ej. ya uso minoxidil desde hace 2 meses, se me irrita con..."></textarea></div>
+    <button class="btn btn-g" onclick="caSavePerfil()">Guardar perfil y actualizar guía</button>
+  </div>
+  <div id="ca-guia-body"></div>
+</main>
+
+<!-- ══════════════ SALUD (app completa embebida) ══════════════ -->
+<main class="view view-frame" id="view-salud">
+  <iframe id="frame-salud" title="Cuidado de la Salud"></iframe>
+</main>
+
+<!-- ══════════════ EJERCICIO (app completa embebida) ══════════════ -->
+<main class="view view-frame" id="view-ejercicio">
+  <iframe id="frame-ejercicio" title="Ejercicio"></iframe>
+</main>
+
+
+<!-- CONFIRM -->
+<div class="conf" id="conf">
+  <div class="conf-box">
+    <h3 id="conf-title">¿Eliminar registro?</h3>
+    <p id="conf-msg">Esta acción no se puede deshacer.</p>
+    <div class="flex" style="justify-content:flex-end;gap:8px">
+      <button class="btn btn-o" onclick="closeConf()">Cancelar</button>
+      <button class="btn btn-r" onclick="doConf()">Eliminar</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ══════════════════════════════════════════════════════════════════════════
+// UTILIDADES COMPARTIDAS
+// ══════════════════════════════════════════════════════════════════════════
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2);
+const today=()=>new Date().toISOString().slice(0,10);
+const fmtD=d=>{if(!d)return'';const[y,m,day]=d.split('-');const mn=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];return `${parseInt(day)} ${mn[parseInt(m)-1]} ${y}`;};
+function addDays(d,n){const x=new Date(d);x.setDate(x.getDate()+n);return x.toISOString().slice(0,10);}
+function daysAgo(n){return Array.from({length:n},(_,i)=>addDays(today(),-i));}
+
+let toastTimer=null;
+function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('show'),2200);}
+function openM(id){document.getElementById(id).classList.add('open');}
+function closeM(id){document.getElementById(id).classList.remove('open');}
+let confCb=null;
+function askDel(msg,cb){document.getElementById('conf-msg').textContent=msg;confCb=cb;openM('conf');}
+function closeConf(){closeM('conf');confCb=null;}
+function doConf(){if(confCb)confCb();closeConf();}
+
+// ══════════════════════════════════════════════════════════════════════════
+// NAVEGACIÓN PRINCIPAL — 4 subtabs
+// ══════════════════════════════════════════════════════════════════════════
+function mainTab(tab){
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));
+  document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id==='view-'+tab));
+  if(tab==='salud'){const f=document.getElementById('frame-salud');if(!f.getAttribute('src'))f.src='salud.html';}
+  if(tab==='ejercicio'){const f=document.getElementById('frame-ejercicio');if(!f.getAttribute('src'))f.src='ejercicio.html';}
+}
+
+// ══════════════════════════════════════════════════════════════════════════
+// SKINCARE
+// ══════════════════════════════════════════════════════════════════════════
+const SK_KEY='skincare_v1';
+function skDefault(){return{perfil:{tipo:'grasa',preocupaciones:['acne','manchas','arrugas'],rasurado:'barba',presupuesto:'medio',notas:''}};}
+function skLoad(){try{const r=localStorage.getItem(SK_KEY);if(!r)return skDefault();const p=JSON.parse(r);const d=skDefault();return{...d,...p,perfil:{...d.perfil,...(p.perfil||{})}};}catch(e){return skDefault();}}
+let SK=skLoad();
+function skSave(){localStorage.setItem(SK_KEY,JSON.stringify(SK));}
+
+// ─── BASE DE PRODUCTOS REALES (disponibles en México: farmacias, Walmart, Amazon.mx, Sephora) ───
+const SKIN_DB={
+  limpiador:[
+    {n:'La Roche-Posay Effaclar Gel Purificante',tipos:['grasa','mixta'],presu:['medio','alto'],ayuda:['acne'],uso:'Masajea sobre piel húmeda 30-60 seg, enjuaga con agua tibia (no caliente). 2 veces al día, mañana y noche.'},
+    {n:'CeraVe Limpiador Espumoso (Foaming Facial Cleanser)',tipos:['grasa','mixta','normal'],presu:['medio','alto'],ayuda:[],uso:'Igual que el anterior — con ceramidas, no deja la piel jalada aunque hagas espuma.'},
+    {n:'Cetaphil Gel Limpiador Piel Grasa/Mixta',tipos:['grasa','mixta'],presu:['economico','medio'],ayuda:['acne'],uso:'Opción de entrada más barata con el mismo objetivo: limpiar sin resecar de más.'},
+    {n:'CeraVe Limpiador Hidratante (Hydrating Facial Cleanser)',tipos:['seca','sensible','normal'],presu:['medio','alto'],ayuda:['sensibilidad'],uso:'En crema, no hace espuma — para piel seca/sensible que se irrita con limpiadores fuertes.'},
+  ],
+  exfoliante:[
+    {n:'The Ordinary Ácido Salicílico 2% Solución',tipos:['grasa','mixta'],presu:['economico','medio','alto'],ayuda:['acne'],uso:'Aplica una capa fina sobre piel limpia y seca, 2-3 noches por semana (NO diario, NO la misma noche que el retinoide). Deja actuar, no enjuagues.'},
+    {n:'Neutrogena Rapid Clear (ácido salicílico)',tipos:['grasa','mixta'],presu:['economico','medio'],ayuda:['acne'],uso:'Alternativa de farmacia con el mismo ingrediente activo, mismo uso 2-3x/semana.'},
+    {n:'The Ordinary Ácido Láctico 5%',tipos:['seca','sensible','normal'],presu:['economico','medio'],ayuda:['manchas'],uso:'Exfoliante más suave (AHA), 2 noches por semana, mejor tolerado en piel seca/sensible.'},
+  ],
+  serumAM:[
+    {n:'The Ordinary Niacinamida 10% + Zinc 1%',tipos:['grasa','mixta','normal'],presu:['economico','medio','alto'],ayuda:['acne','manchas'],uso:'2-3 gotas por la mañana después de limpiar, antes del hidratante. Controla grasa, afina poros y ayuda a desvanecer marcas — compatible con todo lo demás.'},
+    {n:'La Roche-Posay Pure Vitamin C10',tipos:['grasa','mixta','normal','seca'],presu:['medio','alto'],ayuda:['manchas','arrugas'],uso:'Por la mañana antes del protector solar — potencia la protección contra el sol y ayuda a iluminar manchas.'},
+  ],
+  hidratanteAM:[
+    {n:'CeraVe Loción Facial Hidratante AM SPF30',tipos:['grasa','mixta','normal'],presu:['medio','alto'],ayuda:['manchas','arrugas'],uso:'2 en 1: hidrata ligero y ya trae protector solar — simplifica la rutina de la mañana a un solo paso final.'},
+    {n:'Neutrogena Hydro Boost Water Gel',tipos:['grasa','mixta'],presu:['economico','medio'],ayuda:[],uso:'Gel oil-free con ácido hialurónico. Si usas este, necesitas un protector solar aparte (ver abajo).'},
+  ],
+  spf:[
+    {n:'Isdin Fusion Water Oil-Free SPF50',tipos:['grasa','mixta'],presu:['medio','alto'],ayuda:['manchas','arrugas'],uso:'2 dedos completos para cara+cuello, todos los días sin excepción (nublado incluido). Es el paso más importante de toda la rutina.'},
+    {n:'La Roche-Posay Anthelios Oil Free SPF50',tipos:['grasa','mixta'],presu:['medio','alto'],ayuda:['manchas','arrugas'],uso:'Equivalente al de Isdin, mismo uso — cualquiera de las dos es excelente.'},
+    {n:'Neutrogena Ultra Sheer SPF50',tipos:['grasa','mixta','normal'],presu:['economico','medio'],ayuda:['manchas','arrugas'],uso:'Opción de farmacia más económica, misma cantidad y frecuencia de uso.'},
+  ],
+  tratamientoPM:[
+    {n:'Differin Adapaleno 0.1% Gel',tipos:['grasa','mixta','normal'],presu:['economico','medio','alto'],ayuda:['acne','arrugas','manchas'],uso:'Del tamaño de un chícharo para toda la cara, sobre piel seca (espera 20-30 min después de lavarte). Empieza 2 noches/semana y sube gradual a diario según tolerancia. Es el activo de venta libre con más evidencia: trata acné, previene arrugas y ayuda con manchas — los 3 a la vez.'},
+    {n:'The Ordinary Retinol 0.2% en Escualano',tipos:['grasa','mixta','normal','seca'],presu:['economico','medio'],ayuda:['arrugas','manchas'],uso:'Punto de entrada más suave si el Adapaleno irrita mucho al inicio. Mismo esquema: 2 noches/semana subiendo gradual.'},
+  ],
+  hidratantePM:[
+    {n:'CeraVe Loción Facial Hidratante PM',tipos:['grasa','mixta','normal'],presu:['medio','alto'],ayuda:[],uso:'Último paso de la noche — ayuda a amortiguar la irritación del retinoide/BHA. Con niacinamida y ceramidas.'},
+    {n:'Cetaphil Crema Hidratante',tipos:['seca','sensible','normal'],presu:['economico','medio'],ayuda:['sensibilidad'],uso:'Más rica, para piel seca/sensible que necesita más hidratación nocturna.'},
+  ],
+  semanal:[
+    {n:'Aztec Secret Indian Healing Clay',tipos:['grasa','mixta'],presu:['economico','medio'],ayuda:['acne'],uso:'Mezcla con agua o vinagre de manzana hasta pasta, aplica 10-15 min, enjuaga. Solo 1 vez por semana — controla grasa y afina poros, pero reseca si abusas.'},
+    {n:'The Ordinary Salicylic Acid 2% Masque',tipos:['grasa','mixta'],presu:['economico','medio','alto'],ayuda:['acne'],uso:'Mascarilla lista para usar con BHA + arcilla, 10 min, 1 vez por semana.'},
+  ],
+};
+function skPick(cat,perfil,n){
+  n=n||1;
+  let pool=SKIN_DB[cat].filter(p=>p.tipos.includes(perfil.tipo));
+  const porPresu=pool.filter(p=>p.presu.includes(perfil.presupuesto));
+  if(porPresu.length)pool=porPresu;
+  if(!pool.length)pool=SKIN_DB[cat];
+  pool=[...pool].sort((a,b)=>(b.ayuda.filter(x=>perfil.preocupaciones.includes(x)).length)-(a.ayuda.filter(x=>perfil.preocupaciones.includes(x)).length));
+  return pool.slice(0,n);
+}
+function skLeerPerfilForm(){
+  return{
+    tipo:document.getElementById('sk-pf-tipo').value,
+    rasurado:document.getElementById('sk-pf-rasurado').value,
+    presupuesto:document.getElementById('sk-pf-presupuesto').value,
+    preocupaciones:['acne','manchas','arrugas','sensibilidad'].filter(k=>document.getElementById('sk-pf-'+k).checked),
+    notas:document.getElementById('sk-pf-notas').value.trim(),
+  };
+}
+function skPintarPerfilForm(){
+  const p=SK.perfil;
+  document.getElementById('sk-pf-tipo').value=p.tipo;
+  document.getElementById('sk-pf-rasurado').value=p.rasurado;
+  document.getElementById('sk-pf-presupuesto').value=p.presupuesto;
+  ['acne','manchas','arrugas','sensibilidad'].forEach(k=>{document.getElementById('sk-pf-'+k).checked=p.preocupaciones.includes(k);});
+  document.getElementById('sk-pf-notas').value=p.notas||'';
+}
+function skSavePerfil(){
+  SK.perfil=skLeerPerfilForm();
+  skSave();
+  skResumenChips();
+  skRenderGuiaContent();
+  toast('Perfil guardado — guía actualizada');
+}
+function skToggleForm(){
+  const card=document.getElementById('sk-form-card');
+  const btn=document.getElementById('sk-btn-edit');
+  const open=card.style.display!=='none';
+  card.style.display=open?'none':'block';
+  btn.textContent=open?'✏️ Editar mi perfil':'✕ Cerrar';
+}
+
+const SK_CONCERN_META={
+  acne:{label:'Acné / poros',emoji:'✨',cls:'p-peach'},
+  manchas:{label:'Manchas',emoji:'🌸',cls:'p-pink'},
+  arrugas:{label:'Arrugas',emoji:'⏳',cls:'p-teal'},
+  sensibilidad:{label:'Sensibilidad',emoji:'🌿',cls:'p-mint'},
+};
+const SK_TIPO_LABEL={grasa:'Piel grasa',seca:'Piel seca',mixta:'Piel mixta',normal:'Piel normal'};
+const SK_RASURADO_LABEL={rastrillo:'Rasurado con rastrillo',electrica:'Rasuradora eléctrica',barba:'Con barba',no_aplica:'No se rasura'};
+const SK_PRESU_LABEL={economico:'Presupuesto económico',medio:'Presupuesto medio',alto:'Sin límite de presupuesto'};
+
+function skResumenChips(){
+  const p=SK.perfil;
+  const chips=[`<span class="sk-pill p-teal">💧 ${SK_TIPO_LABEL[p.tipo]||p.tipo}</span>`];
+  (p.preocupaciones||[]).forEach(k=>{const m=SK_CONCERN_META[k];if(m)chips.push(`<span class="sk-pill ${m.cls}">${m.emoji} ${m.label}</span>`);});
+  if(p.rasurado&&p.rasurado!=='no_aplica')chips.push(`<span class="sk-pill p-blue">🪒 ${SK_RASURADO_LABEL[p.rasurado]}</span>`);
+  chips.push(`<span class="sk-pill p-mint">💰 ${SK_PRESU_LABEL[p.presupuesto]||p.presupuesto}</span>`);
+  document.getElementById('sk-resumen-chips').innerHTML=chips.join('');
+}
+
+function skStepHtml(num,color,prod,nota){
+  if(!prod)return'';
+  const tags=(prod.ayuda||[]).map(k=>{const m=SK_CONCERN_META[k];return m?`<span class="sk-pill small ${m.cls}">${m.emoji} ${m.label}</span>`:'';}).join('');
+  return `<div class="sk-step">
+    <div class="sk-step-num" style="background:${color}">${num}</div>
+    <div class="sk-step-body">
+      <div class="sk-step-name">${prod.n}</div>
+      <div class="sk-step-block"><div class="sk-step-label">Cómo aplicarlo</div><div class="sk-step-text">${prod.uso}</div></div>
+      ${nota?`<div class="sk-step-block"><div class="sk-step-label">Nota</div><div class="sk-step-text" style="color:var(--sk-teal-d);font-weight:700">${nota}</div></div>`:''}
+      ${tags?`<div class="sk-step-tags">${tags}</div>`:''}
+    </div>
+  </div>`;
+}
+function skDayPill(lbl,tipo){
+  const map={
+    retinoide:{bg:'var(--sk-teal-l)',br:'#bfe8e2',txt:'var(--sk-teal-d)',ico:'🌙',n:'Retinoide'},
+    bha:{bg:'var(--sk-peach-l)',br:'#ffe0b8',txt:'var(--sk-peach-d)',ico:'✨',n:'BHA'},
+    descanso:{bg:'var(--sk-mint-l)',br:'#c8ecd8',txt:'var(--sk-mint-d)',ico:'🌿',n:'Descanso'},
+  };
+  const m=map[tipo];
+  return `<div class="sk-day" style="background:${m.bg};border-color:${m.br}"><div class="sk-day-lbl" style="color:${m.txt}">${lbl}</div><div class="sk-day-act" style="color:${m.txt}">${m.ico} ${m.n}</div></div>`;
+}
+function skTimeline(tieneAcne,tieneManchas,tieneArrugas){
+  const items=[
+    {when:'Semana 1-2',txt:(tieneAcne||tieneArrugas)?'Adaptación: es normal algo de tirantez o incluso un grano nuevo si recién empiezas el retinoide/BHA (la llamada "purga"). No lo abandones por esto.':'Tu piel se acostumbra a la rutina nueva — no debería pasar nada dramático si introduces los productos de a uno.'},
+    {when:'Semana 3-4',txt:'La grasa del día debería sentirse un poco más controlada, y la rutina AM/PM ya debería sentirse automática.'},
+  ];
+  if(tieneAcne)items.push({when:'Semana 6-8',txt:'Primeros resultados reales contra el acné activo: menos brotes nuevos, poros más despejados.'});
+  if(tieneManchas)items.push({when:'Semana 8-12',txt:'Las manchas oscuras empiezan a desvanecer — siempre que el protector solar no haya fallado ni un día.'});
+  if(tieneArrugas)items.push({when:'Semana 12+',txt:'Con el retinoide constante, la textura y las líneas finas se notan más lisas. Aquí es donde mucha gente se rinde sin necesidad — sigue.'});
+  return items.map(it=>`<div class="sk-tl-item"><div class="sk-tl-when">${it.when}</div><div class="sk-tl-txt">${it.txt}</div></div>`).join('');
+}
+function skListaHtml(usados){
+  const vistos=new Set();
+  const items=usados.filter(u=>{if(!u||vistos.has(u.p.n))return false;vistos.add(u.p.n);return true;});
+  return items.map(u=>`<div class="sk-shop"><div class="sk-shop-ico" style="background:var(--sk-pink-l)">🧴</div><div><div class="sk-shop-name">${u.p.n}</div><div class="sk-shop-cat">${u.catLabel}</div></div></div>`).join('')
+    ||'<div class="ts">Sin productos que mostrar todavía.</div>';
+}
+function skWarnHtml(tieneManchas){
+  const items=[
+    'Retinoide + ácido salicílico (BHA) la misma noche — irritan juntos, van en noches distintas (ver rotación semanal).',
+    'Dos exfoliantes distintos el mismo día (uno físico + uno químico) — sobre-exfoliación, piel en carne viva.',
+    'Retinoide/BHA + rasurado el mismo día si notas ardor — sepáralos hasta que tu piel se adapte.',
+  ];
+  if(tieneManchas)items.push('Ningún tratamiento de manchas sirve sin protector solar constante — sin SPF diario, es esfuerzo desperdiciado.');
+  return items.map(t=>`<li>${t}</li>`).join('');
+}
+
+function skRenderGuiaContent(){
+  const perfil=SK.perfil;
+  const c=perfil.preocupaciones||[];
+  const tieneAcne=c.includes('acne'), tieneManchas=c.includes('manchas'), tieneArrugas=c.includes('arrugas');
+  const usados=[];
+  function pick1(cat,catLabel){const arr=skPick(cat,perfil,1);if(arr.length){usados.push({p:arr[0],catLabel});return arr[0];}return null;}
+
+  const am=[
+    skStepHtml(1,'var(--sk-peach)',pick1('limpiador','Limpiador'),null),
+    skStepHtml(2,'var(--sk-peach)',pick1('serumAM','Sérum'),null),
+    skStepHtml(3,'var(--sk-peach)',pick1('hidratanteAM','Hidratante'),null),
+    skStepHtml(4,'var(--sk-peach)',pick1('spf','Protector solar'),'Este paso nunca se salta, ni en días nublados.'),
+  ].join('');
+
+  const pmActivo=(tieneAcne&&!tieneArrugas&&!tieneManchas)?'exfoliante':'tratamientoPM';
+  const pmActivoLbl=pmActivo==='exfoliante'?'Exfoliante (BHA)':'Tratamiento (retinoide)';
+  const pm=[
+    skStepHtml(1,'var(--sk-teal)',pick1('limpiador','Limpiador'),null),
+    skStepHtml(2,'var(--sk-teal)',pick1(pmActivo,pmActivoLbl),'Alterna con el otro activo de tu rotación semanal — nunca los uses la misma noche.'),
+    skStepHtml(3,'var(--sk-teal)',pick1('hidratantePM','Hidratante'),null),
+  ].join('');
+
+  if(tieneAcne&&(tieneArrugas||tieneManchas)){pick1('tratamientoPM','Tratamiento (retinoide)');pick1('exfoliante','Exfoliante (BHA)');}
+
+  const dias=['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'];
+  let semanaHtml='';
+  if(tieneAcne&&(tieneArrugas||tieneManchas))semanaHtml=dias.map((d,i)=>skDayPill(d,[0,2,4].includes(i)?'retinoide':i===6?'descanso':'bha')).join('');
+  else if(tieneAcne)semanaHtml=dias.map((d,i)=>skDayPill(d,[1,3,5].includes(i)?'bha':'descanso')).join('');
+  else if(tieneArrugas||tieneManchas)semanaHtml=dias.map((d,i)=>skDayPill(d,[0,2,4].includes(i)?'retinoide':'descanso')).join('');
+
+  const semanalCat=perfil.tipo==='seca'?'hidratantePM':'semanal';
+  const semanalProd=pick1(semanalCat,'Mascarilla semanal');
+
+  const consejos=[
+    {ico:'🧪',t:'Introduce productos nuevos de uno en uno, esperando 1-2 semanas entre cada uno — así identificas qué te cae mal si algo pasa.'},
+    {ico:'🩹',t:'Haz una prueba en el antebrazo 24h antes de usar cualquier producto nuevo por primera vez en la cara.'},
+    {ico:'🚿',t:'No laves la cara más de 2 veces al día: lavar de más hace que la piel produzca más grasa por rebote.'},
+    tieneAcne?{ico:'⏳',t:'Es normal que el retinoide/BHA empeoren el acné las primeras 2-4 semanas ("purga") antes de mejorar — no lo confundas con una alergia y no lo abandones antes de las 6 semanas.'}:null,
+    {ico:'🙅',t:'No revientes ni exprimas granos — es la causa #1 de que un brote se convierta en mancha o cicatriz permanente.'},
+    {ico:'🛏️',t:'Cambia la funda de tu almohada 1-2 veces por semana.'},
+    perfil.rasurado==='barba'?{ico:'🧔',t:'Limpia bien la base/nacimiento de la barba — ahí se acumula grasa y células muertas que tapan los poros del cuello y las mejillas. Si usas aceite de barba, que sea ligero y no comedogénico.'}:null,
+    (perfil.rasurado==='rastrillo'||perfil.rasurado==='electrica')?{ico:'🪒',t:'Rasúrate siempre sobre piel limpia e hidratada (nunca en seco), con rastrillo afilado.'}:null,
+  ].filter(Boolean);
+
+  document.getElementById('sk-guia-body').innerHTML=`
+    <div class="sk-section-h"><span class="ico">🌅</span><h3>Rutina de mañana</h3><span class="line"></span></div>
+    ${am}
+
+    <div class="sk-section-h"><span class="ico">🌙</span><h3>Rutina de noche</h3><span class="line"></span></div>
+    ${pm}
+
+    ${semanaHtml?`<div class="sk-section-h"><span class="ico">🗓️</span><h3>Rotación semanal de activos</h3><span class="line"></span></div>
+    <div class="card" style="margin-bottom:8px"><div class="ts" style="display:block;margin-bottom:12px">No mezcles retinoide y BHA la misma noche — repártelos en la semana así:</div><div class="sk-week">${semanaHtml}</div></div>`:''}
+
+    <div class="sk-section-h"><span class="ico">⏳</span><h3>Qué esperar y cuándo</h3><span class="line"></span></div>
+    <div class="card"><div class="sk-timeline">${skTimeline(tieneAcne,tieneManchas,tieneArrugas)}</div></div>
+
+    ${semanalProd?`<div class="sk-section-h"><span class="ico">🧖</span><h3>Mascarilla semanal</h3><span class="line"></span></div>${skStepHtml('★','var(--sk-mint)',semanalProd,'Solo 1 vez por semana — no reemplaza los pasos diarios.')}`:''}
+
+    <div class="sk-section-h"><span class="ico">⚠️</span><h3>Qué no mezclar</h3><span class="line"></span></div>
+    <div class="sk-warn"><div class="sk-warn-title">⚠️ Evita combinar esto</div><ul>${skWarnHtml(tieneManchas)}</ul></div>
+
+    <div class="sk-section-h"><span class="ico">🛒</span><h3>Tu lista de compras</h3><span class="line"></span></div>
+    <div class="card">${skListaHtml(usados)}</div>
+
+    <div class="sk-section-h"><span class="ico">💡</span><h3>Consejos</h3><span class="line"></span></div>
+    <div class="card">${consejos.map(cn=>`<div class="sk-tip"><span class="ico">${cn.ico}</span><div class="sk-tip-txt">${cn.t}</div></div>`).join('')}</div>
+
+    <div class="sk-disclaimer">Esto es orientación general con productos reales de venta libre en México, no sustituye a un dermatólogo — si el acné es severo, quístico, o algo te irrita fuerte y no mejora, ve con uno.</div>`;
+}
+function skRenderGuia(){
+  skPintarPerfilForm();
+  skResumenChips();
+  skRenderGuiaContent();
+}
+
+// ══════════════════════════════════════════════════════════════════════════
+// CUIDADO DEL CABELLO
+// ══════════════════════════════════════════════════════════════════════════
+const CA_KEY='cabello_v1';
+function caDefault(){return{perfil:{tipo:'lacio',grosor:'fino',cuero:'graso',preocupaciones:['caida','resequedad'],caidaPatron:'reciente',presupuesto:'medio',notas:''}};}
+function caLoad(){try{const r=localStorage.getItem(CA_KEY);if(!r)return caDefault();const p=JSON.parse(r);const d=caDefault();return{...d,...p,perfil:{...d.perfil,...(p.perfil||{})}};}catch(e){return caDefault();}}
+let CA=caLoad();
+function caSave(){localStorage.setItem(CA_KEY,JSON.stringify(CA));}
+
+// ─── BASE DE PRODUCTOS REALES para cabello (disponibles en México) ───
+const HAIR_DB={
+  champu:[
+    {n:'Vichy Dercos Energising Shampoo (con Aminexil)',grosor:['fino','medio','grueso'],presu:['medio','alto'],ayuda:['caida'],uso:'Masajea el cuero cabelludo (no las puntas) 2-3 min, deja actuar 2-3 min más, enjuaga bien. 2-3 veces por semana.'},
+    {n:'Alpecin Caffeine Shampoo C1',grosor:['fino','medio','grueso'],presu:['economico','medio'],ayuda:['caida'],uso:'Mismo uso — la cafeína se queda activa en el cuero cabelludo unas horas, no lo enjuagues de inmediato tras aplicar.'},
+    {n:'Pantene Pro-V Anti-Caída',grosor:['fino','medio'],presu:['economico'],ayuda:['caida'],uso:'Opción de entrada más económica, mismo objetivo de fortalecer desde la raíz.'},
+    {n:'Head & Shoulders Anticaspa Classic Clean',grosor:['fino','medio','grueso'],presu:['economico','medio'],ayuda:['caspa'],uso:'Masajea el cuero cabelludo 2-3 min, deja actuar antes de enjuagar. Úsalo los días de lavado si la caspa es tu preocupación principal.'},
+  ],
+  acondicionador:[
+    {n:'TRESemmé Keratin Smooth Conditioner',grosor:['fino','medio'],presu:['economico','medio'],ayuda:['resequedad'],uso:'Aplica solo de medios a puntas, nunca en la raíz/cuero cabelludo — en cabello fino y graso, poner acondicionador en la raíz lo aplana y engrasa más rápido.'},
+    {n:'Pantene Pro-V Acondicionador Cabello Fino',grosor:['fino'],presu:['economico','medio'],ayuda:['resequedad'],uso:'Fórmula ligera pensada para no pesar cabello fino — mismo uso, solo puntas.'},
+    {n:'Kérastase Nutritive Acondicionador',grosor:['medio','grueso'],presu:['alto'],ayuda:['resequedad'],uso:'Opción premium si buscas más hidratación y el presupuesto no es problema.'},
+  ],
+  mascarilla:[
+    {n:"L'Oréal Elvive Total Repair 5 Mascarilla",grosor:['fino','medio','grueso'],presu:['economico','medio'],ayuda:['resequedad'],uso:'1 vez por semana, en puntas y medios (evita la raíz), deja actuar 5-10 min, enjuaga bien.'},
+    {n:'Moroccanoil Hydrating Mask',grosor:['medio','grueso'],presu:['alto'],ayuda:['resequedad'],uso:'Mismo uso, versión premium con aceite de argán — más rica, úsala con moderación en cabello fino.'},
+  ],
+  tratamientoCaida:[
+    {n:'Minoxidil 5% Solución/Espuma (Kirkland Signature o genérico)',grosor:['fino','medio','grueso'],presu:['economico','medio','alto'],ayuda:['caida'],uso:'1ml (la tapa dosificadora) en cuero cabelludo seco, 2 veces al día (mañana y noche), constante — no lo apliques en cabello mojado ni justo después de lavar.'},
+  ],
+  aceitePuntas:[
+    {n:'Moroccanoil Treatment Light',grosor:['fino'],presu:['medio','alto'],ayuda:['resequedad'],uso:'2-3 gotas en las palmas, aplica solo en puntas con el cabello húmedo o seco. La versión "Light" es clave para cabello fino — la original regular puede pesarlo/engrasarlo.'},
+    {n:"L'Oréal Elvive Aceite Extraordinario",grosor:['fino','medio','grueso'],presu:['economico','medio'],ayuda:['resequedad'],uso:'Alternativa más económica, mismo uso — 1-2 gotas es suficiente en cabello fino.'},
+  ],
+};
+function haPick(cat,perfil,n){
+  n=n||1;
+  let pool=HAIR_DB[cat].filter(p=>p.grosor.includes(perfil.grosor));
+  const porPresu=pool.filter(p=>p.presu.includes(perfil.presupuesto));
+  if(porPresu.length)pool=porPresu;
+  if(!pool.length)pool=HAIR_DB[cat];
+  pool=[...pool].sort((a,b)=>(b.ayuda.filter(x=>(perfil.preocupaciones||[]).includes(x)).length)-(a.ayuda.filter(x=>(perfil.preocupaciones||[]).includes(x)).length));
+  return pool.slice(0,n);
+}
+
+const HAIR_CONCERN_META={
+  caida:{label:'Caída de cabello',emoji:'🍂',cls:'p-amber'},
+  resequedad:{label:'Resequedad',emoji:'💧',cls:'p-blue'},
+  caspa:{label:'Caspa',emoji:'❄️',cls:'p-green'},
+  frizz:{label:'Frizz / encrespado',emoji:'🌪️',cls:'p-terra'},
+};
+const HAIR_TIPO_LABEL={lacio:'Cabello lacio',ondulado:'Cabello ondulado',rizado:'Cabello rizado',afro:'Cabello afro'};
+const HAIR_GROSOR_LABEL={fino:'Cabello fino',medio:'Cabello medio',grueso:'Cabello grueso'};
+const HAIR_CUERO_LABEL={graso:'Cuero graso',seco:'Cuero seco',normal:'Cuero normal'};
+const HAIR_PRESU_LABEL={economico:'Presupuesto económico',medio:'Presupuesto medio',alto:'Sin límite de presupuesto'};
+
+function caResumenChips(){
+  const p=CA.perfil;
+  const chips=[
+    `<span class="ca-pill p-blue">💧 ${HAIR_TIPO_LABEL[p.tipo]||p.tipo}</span>`,
+    `<span class="ca-pill p-terra">🧵 ${HAIR_GROSOR_LABEL[p.grosor]||p.grosor}</span>`,
+    `<span class="ca-pill p-amber">🌀 ${HAIR_CUERO_LABEL[p.cuero]||p.cuero}</span>`,
+  ];
+  (p.preocupaciones||[]).forEach(k=>{const m=HAIR_CONCERN_META[k];if(m)chips.push(`<span class="ca-pill ${m.cls}">${m.emoji} ${m.label}</span>`);});
+  chips.push(`<span class="ca-pill p-green">💰 ${HAIR_PRESU_LABEL[p.presupuesto]||p.presupuesto}</span>`);
+  document.getElementById('ca-resumen-chips').innerHTML=chips.join('');
+}
+function caToggleForm(){
+  const card=document.getElementById('ca-form-card');
+  const btn=document.getElementById('ca-btn-edit');
+  const open=card.style.display!=='none';
+  card.style.display=open?'none':'block';
+  btn.textContent=open?'✏️ Editar mi perfil':'✕ Cerrar';
+}
+function caLeerPerfilForm(){
+  return{
+    tipo:document.getElementById('ca-pf-tipo').value,
+    grosor:document.getElementById('ca-pf-grosor').value,
+    cuero:document.getElementById('ca-pf-cuero').value,
+    caidaPatron:document.getElementById('ca-pf-caidapatron').value,
+    presupuesto:document.getElementById('ca-pf-presupuesto').value,
+    preocupaciones:['caida','resequedad','caspa','frizz'].filter(k=>document.getElementById('ca-pf-'+k).checked),
+    notas:document.getElementById('ca-pf-notas').value.trim(),
+  };
+}
+function caPintarPerfilForm(){
+  const p=CA.perfil;
+  document.getElementById('ca-pf-tipo').value=p.tipo;
+  document.getElementById('ca-pf-grosor').value=p.grosor;
+  document.getElementById('ca-pf-cuero').value=p.cuero;
+  document.getElementById('ca-pf-caidapatron').value=p.caidaPatron;
+  document.getElementById('ca-pf-presupuesto').value=p.presupuesto;
+  ['caida','resequedad','caspa','frizz'].forEach(k=>{document.getElementById('ca-pf-'+k).checked=(p.preocupaciones||[]).includes(k);});
+  document.getElementById('ca-pf-notas').value=p.notas||'';
+}
+function caSavePerfil(){
+  CA.perfil=caLeerPerfilForm();
+  caSave();
+  caResumenChips();
+  caRenderGuiaContent();
+  toast('Perfil guardado — guía actualizada');
+}
+
+function caStepHtml(num,color,prod,nota){
+  if(!prod)return'';
+  const tags=(prod.ayuda||[]).map(k=>{const m=HAIR_CONCERN_META[k];return m?`<span class="ca-pill small ${m.cls}">${m.emoji} ${m.label}</span>`:'';}).join('');
+  return `<div class="ca-step">
+    <div class="ca-step-num" style="background:${color}">${num}</div>
+    <div class="ca-step-body">
+      <div class="ca-step-name">${prod.n}</div>
+      <div class="ca-step-block"><div class="ca-step-label">Cómo aplicarlo</div><div class="ca-step-text">${prod.uso}</div></div>
+      ${nota?`<div class="ca-step-block"><div class="ca-step-label">Nota</div><div class="ca-step-text" style="color:var(--ca-amber-d);font-weight:700">${nota}</div></div>`:''}
+      ${tags?`<div class="ca-step-tags">${tags}</div>`:''}
+    </div>
+  </div>`;
+}
+function caDayPill(lbl,tipo){
+  const map={
+    lavado:{bg:'var(--ca-blue-l)',br:'#d3e9fb',txt:'var(--ca-blue-d)',ico:'🚿',n:'Lavado'},
+    mascarilla:{bg:'var(--ca-green-l)',br:'#cdeed4',txt:'var(--ca-green-d)',ico:'🧖',n:'+ Mascarilla'},
+    descanso:{bg:'var(--ca-terra-l)',br:'#f3d9c4',txt:'var(--ca-terra-d)',ico:'🌙',n:'Descanso'},
+  };
+  const m=map[tipo];
+  return `<div class="ca-day" style="background:${m.bg};border-color:${m.br}"><div class="ca-day-lbl" style="color:${m.txt}">${lbl}</div><div class="ca-day-act" style="color:${m.txt}">${m.ico} ${m.n}</div></div>`;
+}
+function caWashDays(cuero,tieneResequedad){
+  if(cuero==='seco')return[1,4]; // Mar, Vie — 2x/semana
+  if(cuero==='graso'&&!tieneResequedad)return[0,2,4,6]; // Lun,Mié,Vie,Dom — 4x/semana
+  return[0,3,5]; // Lun,Jue,Sáb — 3x/semana (graso+resequedad, o normal)
+}
+function caTimeline(tieneCaida){
+  const items=[
+    {when:'Semana 1-2',txt:tieneCaida?'Empiezas el tratamiento anticaída — es normal notar algo más de caída de lo usual estas primeras semanas (fase de ajuste), no significa que esté empeorando.':'Tu cuero cabelludo y puntas se van adaptando a la rutina nueva.'},
+    {when:'Semana 3-4',txt:'El cuero cabelludo debería sentirse menos graso entre lavados, y las puntas menos resecas si sigues la mascarilla semanal.'},
+  ];
+  if(tieneCaida)items.push({when:'Semana 8-12',txt:'La caída excesiva debería empezar a estabilizarse — es apenas el punto donde el tratamiento anticaída empieza a mostrar efecto real.'});
+  if(tieneCaida)items.push({when:'Mes 4-6',txt:'Si el tratamiento funciona para tu caso, aquí es donde se nota más densidad/grosor. Si a los 6 meses no ves ningún cambio, es momento de ver a un especialista.'});
+  return items.map(it=>`<div class="ca-tl-item"><div class="ca-tl-when">${it.when}</div><div class="ca-tl-txt">${it.txt}</div></div>`).join('');
+}
+function caListaHtml(usados){
+  const vistos=new Set();
+  const items=usados.filter(u=>{if(!u||vistos.has(u.p.n))return false;vistos.add(u.p.n);return true;});
+  return items.map(u=>`<div class="ca-shop"><div class="ca-shop-ico" style="background:var(--ca-amber-l)">💇</div><div><div class="ca-shop-name">${u.p.n}</div><div class="ca-shop-cat">${u.catLabel}</div></div></div>`).join('')
+    ||'<div class="ts">Sin productos que mostrar todavía.</div>';
+}
+function caWarnHtml(tieneCaida){
+  const items=[
+    'Agua muy caliente al lavar — reseca más las puntas y no ayuda con la grasa del cuero cabelludo.',
+    'Acondicionador o mascarilla directo en la raíz si tu cuero es graso — lo apelmaza y engrasa más rápido.',
+    'Cepillar agresivo con el cabello mojado — es cuando más se rompe.',
+    'Cambiar de productos cada semana probando cosas distintas — dale a cada producto al menos 3-4 semanas antes de decidir si funciona.',
+  ];
+  if(tieneCaida)items.push('Abandonar el tratamiento anticaída antes de 3 meses por "no ver resultados" — es el error #1, ese es justo el tiempo mínimo que tarda en notarse.');
+  return items.map(t=>`<li>${t}</li>`).join('');
+}
+
+function caRenderGuiaContent(){
+  const perfil=CA.perfil;
+  const c=perfil.preocupaciones||[];
+  const tieneCaida=c.includes('caida'), tieneResequedad=c.includes('resequedad');
+  const usados=[];
+  function pick1(cat,catLabel){const arr=haPick(cat,perfil,1);if(arr.length){usados.push({p:arr[0],catLabel});return arr[0];}return null;}
+
+  const lavado=[
+    caStepHtml(1,'var(--ca-blue)',pick1('champu',tieneCaida?'Champú anticaída':'Champú'),'Aplica solo en el cuero cabelludo, masajea, no lo pongas en las puntas.'),
+    caStepHtml(2,'var(--ca-blue)',pick1('acondicionador','Acondicionador'),'Solo de medios a puntas — nunca en la raíz.'),
+  ].join('');
+
+  const tratCaida=tieneCaida?caStepHtml('💊','var(--ca-amber)',pick1('tratamientoCaida','Tratamiento anticaída'),'Todos los días, se lave o no el cabello ese día — la constancia es lo que hace efecto.'):'';
+  const puntas=tieneResequedad?caStepHtml('✨','var(--ca-green)',pick1('aceitePuntas','Aceite/sérum de puntas'),'Muy poca cantidad en cabello fino — 1-2 gotas es suficiente.'):'';
+
+  const dias=['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'];
+  const washIdx=caWashDays(perfil.cuero,tieneResequedad);
+  const maskDay=washIdx[washIdx.length-1];
+  const semanaHtml=dias.map((d,i)=>{
+    if(i===maskDay)return caDayPill(d,'mascarilla');
+    if(washIdx.includes(i))return caDayPill(d,'lavado');
+    return caDayPill(d,'descanso');
+  }).join('');
+
+  const mascProd=pick1('mascarilla','Mascarilla hidratante (día de mascarilla)');
+  const notaMedica=(tieneCaida&&perfil.caidaPatron==='reciente')?`<div class="ca-note"><div class="ca-note-title">🩺 Antes que nada</div><div class="ca-note-text">Dijiste que la caída es notoria y reciente — vale la pena una visita a un dermatólogo o tricólogo para descartar causas puntuales (estrés, alguna deficiencia nutricional, tiroides, un "telógeno efluvio"). El tratamiento de abajo ayuda en general, pero no reemplaza saber la causa real.</div></div>`:'';
+
+  const consejos=[
+    {ico:'🌡️',t:'Lava con agua tibia, nunca caliente — el agua caliente reseca más las puntas y no ayuda con la grasa del cuero cabelludo.'},
+    {ico:'🪮',t:'En mojado, usa un peine de dientes anchos para desenredar — el cabello mojado se rompe mucho más fácil que seco.'},
+    {ico:'🔥',t:'Si usas secadora o plancha, aplica antes un protector de calor — el calor directo reseca y debilita el cabello con el tiempo.'},
+    tieneCaida?{ico:'⏳',t:'El tratamiento anticaída necesita mínimo 3-4 meses de uso constante para notar diferencia real — no lo dejes antes de tiempo por impaciencia.'}:null,
+    tieneCaida?{ico:'⚠️',t:'Si dejas de usar el tratamiento anticaída, el beneficio ganado se revierte con el tiempo — es mantenimiento, no una cura de una sola vez.'}:null,
+    {ico:'🧴',t:'No pongas acondicionador ni mascarilla en la raíz si tu cuero cabelludo es graso — solo aceleras que se vea grasoso otra vez.'},
+    {ico:'🛏️',t:'Una funda de almohada de seda o satín reduce la fricción que rompe/reseca el cabello mientras duermes.'},
+  ].filter(Boolean);
+
+  document.getElementById('ca-guia-body').innerHTML=`
+    ${notaMedica}
+    <div class="ca-section-h"><span class="ico">🚿</span><h3>Rutina de lavado</h3><span class="line"></span></div>
+    ${lavado}
+    ${tratCaida?`<div class="ca-section-h"><span class="ico">💊</span><h3>Tratamiento anticaída diario</h3><span class="line"></span></div>${tratCaida}`:''}
+    ${puntas?`<div class="ca-section-h"><span class="ico">✨</span><h3>Después de lavar</h3><span class="line"></span></div>${puntas}`:''}
+
+    <div class="ca-section-h"><span class="ico">🗓️</span><h3>Calendario semanal</h3><span class="line"></span></div>
+    <div class="card" style="margin-bottom:8px"><div class="ts" style="display:block;margin-bottom:12px">${perfil.cuero==='graso'?'Cuero graso: no te excedas lavando todos los días, reparte los lavados así:':'Reparte tus lavados así:'}</div><div class="ca-week">${semanaHtml}</div>${tieneCaida?`<div class="ts" style="margin-top:10px;display:block">💊 El tratamiento anticaída va aparte — todos los días, sin importar si es día de lavado.</div>`:''}</div>
+
+    <div class="ca-section-h"><span class="ico">⏳</span><h3>Qué esperar y cuándo</h3><span class="line"></span></div>
+    <div class="card"><div class="ca-timeline">${caTimeline(tieneCaida)}</div></div>
+
+    ${mascProd?`<div class="ca-section-h"><span class="ico">🧖</span><h3>Mascarilla hidratante</h3><span class="line"></span></div>${caStepHtml('★','var(--ca-green)',mascProd,'El día de mascarilla, sustituye al acondicionador normal.')}`:''}
+
+    <div class="ca-section-h"><span class="ico">⚠️</span><h3>Qué evitar</h3><span class="line"></span></div>
+    <div class="ca-warn"><div class="ca-warn-title">⚠️ Errores comunes que empeoran esto</div><ul>${caWarnHtml(tieneCaida)}</ul></div>
+
+    <div class="ca-section-h"><span class="ico">🛒</span><h3>Tu lista de compras</h3><span class="line"></span></div>
+    <div class="card">${caListaHtml(usados)}</div>
+
+    <div class="ca-section-h"><span class="ico">💡</span><h3>Consejos</h3><span class="line"></span></div>
+    <div class="card">${consejos.map(cn=>`<div class="ca-tip"><span class="ico">${cn.ico}</span><div class="ca-tip-txt">${cn.t}</div></div>`).join('')}</div>
+
+    <div class="ca-disclaimer">Esto es orientación general con productos reales de venta libre en México, no sustituye a un dermatólogo o tricólogo — si la caída es abrupta, en mechones, o viene con otros síntomas, busca atención profesional.</div>`;
+}
+function caRenderGuia(){
+  caPintarPerfilForm();
+  caResumenChips();
+  caRenderGuiaContent();
+}
+
+// ══════════════════════════════════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════════════════════════════════
+skRenderGuia();
+caRenderGuia();
+
+const initialTab=new URLSearchParams(location.search).get('tab');
+if(['skincare','cabello','salud','ejercicio'].includes(initialTab)) mainTab(initialTab);
+</script>
+</body>
+</html>

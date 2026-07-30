@@ -58,9 +58,10 @@ Variables globales adicionales: `editId`, `confCb`, `payDebtId`, `contribGoalId`
 | Si Vale (display)    | $940      | Día 1 (no suma al flujo) |
 
 ### Meta Maestría
-- **Target**: $300,000 MXN para **dic 2027**
+- **Target**: $500,000 MXN para **01 oct 2027** (verificado 2026-07-29 contra el seed en código — el dato anterior de este documento, $300,000/dic 2027, estaba desactualizado)
 - **ID de meta**: `g001` (o `icon === '🎓'`)
 - **Componentes que cuentan**: Fondo de emergencia + CETES + Acciones/inversiones + BTC en MXN
+- Nota de contexto (ver `../Coach/README.md` → Plan Maestro): en julio 2026 se decidió pausar nuevas aportaciones a esta meta por 1 año; confirmar contra el `date` real en `S.goals` antes de asumir que sigue vigente tal cual, ya que este tipo de decisión vive en Coach, no en el código de Finanzas.
 
 ### WEEKLY_PICKS (actualizar cada lunes pidiendo a Claude)
 ```js
@@ -597,3 +598,12 @@ Semana 4 (días 22-28):
 ```
 
 Si `S.weeklyLeftover > 0`, ese monto manual reemplaza el estimado automático en la semana actual.
+
+---
+
+## Referencias cruzadas
+
+- El **Dashboard** (`../Dashboard/dashboard.html`) lee `finanzasmx_v2` directamente (`D.fin`): usa `investments`, `emergencyFund`, `debts` (patrimonio neto, fondo de emergencia, deuda total del slide "💰 Finanzas") y `transactions` del mes actual (ingresos/gastos, score de finanzas del Vida Score). Si cambias la forma de `S.investments`/`S.debts`/`S.transactions`/`S.emergencyFund` aquí, revisa `patrimonioNeto()`, `hasFinData()`, `calcScores()` y `renderFinanzas()` en `Dashboard/dashboard.html`.
+- No tiene enlace "Volver al Dashboard" en el sidebar todavía a la fecha de esta nota (2026-07-29) — pendiente de agregar si se retoma este archivo.
+- Mapa completo del proyecto: [`../README.md`](../README.md).
+- **Este documento no se ha vuelto a auditar por completo desde su creación** — se corrigió un dato desactualizado (meta Maestría) el 2026-07-29 al escribir el README maestro del proyecto, pero el resto del contenido no se verificó línea por línea contra el código actual. Verificar contra `Finanzas.html` antes de asumir como hecho cualquier cifra específica de este documento.
