@@ -462,6 +462,21 @@ function rutinaAhoraSiguiente(){
 function semanaActual(){const hoy=new Date();const dow=hoy.getDay();return Array.from({length:7},(_,i)=>{const d=new Date(hoy);d.setDate(d.getDate()-dow+i);return d.toISOString().slice(0,10);});}
 const DIAS_CORTOS=['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
 
+// Copia liviana (solo nombre + tipo) del programa semanal por defecto de ejercicio.html → S.rutina.
+// El Hero la usa como respaldo cuando D.gym.rutina viene vacío — así "qué toca hoy" se ve completo
+// desde la primera vez que se abre el Dashboard, sin depender de haber abierto ejercicio.html antes.
+// Si Adán personaliza su rutina ahí, esa versión real siempre tiene prioridad (ver renderHero()).
+// Si se edita S.rutina en ejercicio.html, replicar nombre/tipo aquí — mismo patrón que RUTINA_TASKS/SK/PHASES.
+const GYM_RUTINA_DEFAULT={
+  1:{nombre:'Brazos A — Bíceps + Tríceps',tipo:'brazos'},
+  2:{nombre:'Piernas A — Cuádriceps',tipo:'piernas'},
+  3:{nombre:'Espalda + Hombros + Cardio',tipo:'halar'},
+  4:{nombre:'Brazos B — Bíceps + Tríceps',tipo:'brazos'},
+  5:{nombre:'Piernas B — Glúteo + Femoral',tipo:'piernas'},
+  6:{nombre:'Pecho + Cardio + Core',tipo:'empuje'},
+  0:{nombre:'Descanso activo',tipo:'descanso'}
+};
+
 // ── COACH — Plan Maestro (fechas ancla, igual que Coach_v2.html) ────────────
 const PHASES=[
   {start:new Date(2026,6,18), end:new Date(2026,8,30),  tag:'Fase 0', title:'Cerrar la fuga y arrancar ingreso, no solo pensar',
@@ -588,16 +603,19 @@ function renderHero(){
   const semana=semanaActual();
   const hoyStr=today();
   const dowHoy=new Date().getDay();
+  // D.gym.rutina real (si Adán ya personalizó algo en ejercicio.html) tiene prioridad;
+  // si viene vacío (nunca se abrió esa app en este navegador), se usa el programa por defecto.
+  const gymRutina=(D.gym.rutina&&Object.keys(D.gym.rutina).length)?D.gym.rutina:GYM_RUTINA_DEFAULT;
 
   // ── Tira de 7 días: qué rutina de gym tocaba/se hizo + calorías registradas cada día ──
   document.getElementById('heroWeekStrip').innerHTML=semana.map((d,dow)=>{
     const esHoy=d===hoyStr, esFuturo=d>hoyStr;
     const sesion=(D.gym.sesiones||[]).find(s=>s.fecha===d);
-    const rutinaDia=D.gym.rutina?.[dow];
+    const rutinaDia=gymRutina[dow];
     let gymIco='—', gymLbl='';
     if(sesion){ gymIco='✅'; gymLbl=sesion.nombre||'Entrenado'; }
     else if(rutinaDia?.tipo==='descanso'){ gymIco='😴'; gymLbl='Descanso'; }
-    else if(rutinaDia?.ejercicios?.length){ gymIco=(esFuturo||esHoy)?'⏳':'❌'; gymLbl=rutinaDia.nombre||''; }
+    else if(rutinaDia?.nombre){ gymIco=(esFuturo||esHoy)?'⏳':'❌'; gymLbl=rutinaDia.nombre; }
     const calDia=(D.sal.alimentos||[]).filter(a=>a.fecha===d).reduce((s,a)=>s+(a.cal||0),0);
     return `<div class="ws-day ${esHoy?'today':''}">
       <div class="ws-dname">${DIAS_CORTOS[dow]}${esHoy?' •':''}</div>
@@ -611,12 +629,12 @@ function renderHero(){
   // ── Panel 1: Gym — sesiones reales de la semana (nombre + fecha) y qué toca hoy ──
   const sesionesSemana=(D.gym.sesiones||[]).filter(s=>semana.includes(s.fecha)).sort((a,b)=>a.fecha.localeCompare(b.fecha));
   const metaGym=D.gym.metas?.frecuencia||6;
-  const rutinaHoy=D.gym.rutina?.[dowHoy];
+  const rutinaHoy=gymRutina[dowHoy];
   const yaEntrenoHoy=(D.gym.sesiones||[]).some(s=>s.fecha===hoyStr);
   document.getElementById('heroGymPanel').innerHTML=`
     <div class="hp-title">🏋️ Gym esta semana <span style="color:var(--g);font-family:var(--mono)">${sesionesSemana.length}/${metaGym}</span></div>
     ${sesionesSemana.length?sesionesSemana.map(s=>`<div class="hp-row"><span style="color:var(--text3)">${fmtD(s.fecha)}</span><span style="font-weight:700;color:var(--text);text-align:right">${s.nombre}</span></div>`).join(''):'<div class="hp-empty">Sin sesiones esta semana todavía</div>'}
-    ${rutinaHoy&&rutinaHoy.tipo!=='descanso'&&rutinaHoy.ejercicios?.length?`<div class="hp-row" style="margin-top:2px"><span style="color:var(--text3)">${yaEntrenoHoy?'Hoy hiciste':'Hoy toca'}</span><span style="font-weight:800;color:${yaEntrenoHoy?'var(--g)':'var(--ac1)'};text-align:right">${rutinaHoy.nombre}</span></div>`:''}
+    ${rutinaHoy&&rutinaHoy.tipo!=='descanso'&&rutinaHoy.nombre?`<div class="hp-row" style="margin-top:2px"><span style="color:var(--text3)">${yaEntrenoHoy?'Hoy hiciste':'Hoy toca'}</span><span style="font-weight:800;color:${yaEntrenoHoy?'var(--g)':'var(--ac1)'};text-align:right">${rutinaHoy.nombre}</span></div>`:''}
   `;
 
   // ── Panel 2: Nutrición de hoy — calorías y macros reales vs. meta (no solo "días registrados") ──
@@ -626,12 +644,11 @@ function renderHero(){
   const m=D.sal.metas||{};
   document.getElementById('heroNutriPanel').innerHTML=`
     <div class="hp-title">🥗 Nutrición de hoy</div>
-    ${alHoy.length?`
-      <div class="hp-big" style="color:var(--o)">${fmt(calHoy)}<span style="font-size:13px;color:var(--text3);font-family:var(--font)"> / ${fmt(m.caloriasD||2000)} kcal</span></div>
-      ${heroBarRow('Proteína',protHoy,m.proteina||150,'#b06eff')}
-      ${heroBarRow('Carbs',carbsHoy,m.carbs||200,'#3b82f6')}
-      ${heroBarRow('Grasa',graHoy,m.grasa||65,'#ffd93d')}
-    `:'<div class="hp-empty">Sin comidas registradas hoy todavía</div>'}
+    <div class="hp-big" style="color:var(--o)">${fmt(calHoy)}<span style="font-size:13px;color:var(--text3);font-family:var(--font)"> / ${fmt(m.caloriasD||2000)} kcal</span></div>
+    ${heroBarRow('Proteína',protHoy,m.proteina||150,'#b06eff')}
+    ${heroBarRow('Carbs',carbsHoy,m.carbs||200,'#3b82f6')}
+    ${heroBarRow('Grasa',graHoy,m.grasa||65,'#ffd93d')}
+    ${!alHoy.length?'<div style="font-size:10.5px;color:var(--text3);margin-top:6px;text-align:center">Todavía no registras comida hoy — esto son tus metas</div>':''}
   `;
 
   // ── Panel 3: Tareas pendientes reales de Proyectos (título + fecha límite, no solo un %) ──
