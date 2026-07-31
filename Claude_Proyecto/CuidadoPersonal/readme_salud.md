@@ -10,11 +10,14 @@ La aplicación más completa del proyecto en cuanto a secciones: seguimiento de 
 - **🍽️ Plan Semanal** — vista de un plan de comidas planeado.
 - **🥗 Registro Diario** — bitácora de alimentos consumidos (comida del día: desayuno/almuerzo/cena/snack, nombre, cantidad, calorías y macros), filtrable por fecha y tipo de comida, con resumen de totales.
 - **💪 Ejercicio** (dentro de Salud, distinto del subtab "Ejercicio" del shell) — registro ligero de entrenamientos (tipo: cardio/fuerza/flexibilidad/HIIT/deporte/otro, nombre, duración, calorías quemadas estimadas), con gráfica de calorías quemadas de las últimas 2 semanas. **No** es la app completa de rutina de gimnasio — esa es `ejercicio.html` (ver [`readme_ejercicio.md`](readme_ejercicio.md)); esta sección solo sirve para que el gasto calórico entre en el cálculo de calorías netas del día.
-- **⚖️ Peso & Medidas** — registro de peso corporal y medidas (cintura, cadera, pecho, brazo, muslo) con cálculo automático de IMC, y gráfica de evolución del peso.
+- **⚖️ Peso & Medidas** — registro de peso corporal, % de grasa corporal y medidas (cintura, cadera, pecho, brazo, muslo) con cálculo automático de IMC y de masa magra estimada, gráfica de evolución del peso y una segunda gráfica de composición corporal (cintura/brazo/muslo/% grasa). Ampliada el 2026-07-30 — ver detalle abajo.
 - **📈 Progreso** — vista consolidada de la evolución hacia las metas.
 - **🥩 Rutina Muscular** — contenido de referencia (no editable desde la UI): un plan alimentario detallado para ganar masa muscular con datos personales precargados (peso, estatura, edad, objetivo), calorías/macros objetivo, desglose de desayuno/comida/cena con tablas de alimentos y valores nutricionales, alternativas económicas de proteína/carbohidratos/grasas/verduras, y tips de entrenamiento y descanso. Cada comida del plan se puede registrar directamente en el Registro Diario con un botón.
 - **🫁 Salud Digestiva** — contenido de referencia sobre reflujo/agruras: síntomas, alimentos a evitar y recomendados (con la razón fisiológica de cada uno), remedios caseros paso a paso, un plan diario hora por hora, hábitos recomendados, y señales de alerta que ameritan ver a un médico.
-- **🩺 Exámenes Médicos** (nuevo, 2026-07-30 — ver detalle abajo) — registro de exámenes de laboratorio y signos vitales con rangos de referencia, chequeos/consultas por especialidad, y un perfil médico general. Responde a "necesito saber todo de mí y cómo estoy" en un solo lugar.
+- **🩺 Exámenes Médicos** — registro de exámenes de laboratorio y signos vitales con rangos de referencia, chequeos/consultas por especialidad, y un perfil médico general. Responde a "necesito saber todo de mí y cómo estoy" en un solo lugar.
+- **🧍 Postura** (nuevo, 2026-07-30 — ver detalle abajo) — ejercicios correctivos, registro de dolor/molestias, contador de pausas activas y tips de ergonomía de escritorio.
+- **🧠 Salud Mental** (nuevo, 2026-07-30 — ver detalle abajo) — registro diario de ánimo/estrés con gráfica de tendencia, guía de técnicas para manejar el estrés, y señales de alerta para buscar ayuda profesional.
+- **💊 Suplementos** (nuevo, 2026-07-30 — ver detalle abajo) — catálogo de referencia de suplementos relevantes a la meta de masa muscular, lista personal con check-off diario de "tomado hoy".
 - **🎯 Perfil & Metas** — configuración del perfil (peso, altura, edad, sexo, nivel de actividad) y metas nutricionales (calorías diarias, proteína, carbohidratos, grasa, vasos de agua, peso objetivo y fecha).
 
 ### `#s-examenes` — 🩺 Exámenes Médicos (detalle)
@@ -30,6 +33,32 @@ Pedido explícito de Adán ("necesito saber todo de mí y como estoy, lo más co
 
 Termina con un disclaimer fijo: es una bitácora personal, no un diagnóstico, y los rangos son generales.
 
+### `#s-postura` — 🧍 Postura (detalle)
+
+Agregada el 2026-07-30 a petición explícita de Adán, que reportó el subtab de Salud "vacío" y pidió agregar contenido — tras intake uno-por-uno se identificó postura como uno de los temas faltantes (relevante porque pasa muchas horas sentado en su trabajo de ingeniería). Sigue el mismo patrón que `renderRutina()`/`renderDigestiva()`: `<section id="s-postura">` vacía en el HTML, pintada entera por `renderPostura()`. Tres piezas, más contenido de referencia:
+
+1. **Ejercicios correctivos** (`POSTURA_EJERCICIOS`, contenido fijo) — 8 estiramientos/ejercicios reales orientados a quien trabaja sentado (couch stretch, cat-cow, estiramiento de pectoral en marco de puerta, wall angels, face pulls, extensión torácica, chin tuck, glute bridge), cada uno con zona afectada, pasos numerados y un tip explicando el porqué.
+2. **Registro de dolor/molestias** (`S.postura.dolores`) — CRUD igual que Alimentos/Ejercicio/Medidas: zona (`ZONAS_DOLOR`), intensidad 1-5, fecha, notas. El KPI "🔥 Dolor promedio" toma el promedio de los últimos 10 registros; "📍 Zona más frecuente" cuenta ocurrencias por zona sobre todo el historial.
+3. **Control de pausas activas** (`S.postura.pausas`, un contador por fecha) — botones `+1 pausa`/`−` (`addPausa()`/`quitarPausa()`), meta fija `META_PAUSAS=6` por día, con barra de progreso. Se reinicia solo cada día porque la clave es la fecha de hoy (`pausasHoy()`), igual patrón que `agua` en Dashboard/Alimentos.
+4. **Ergonomía de escritorio** (`POSTURA_ERGONOMIA`, contenido fijo) — 6 tips (altura de monitor, apoyo lumbar, pies, codos, regla 30-30, "text neck" del celular).
+
+### `#s-mental` — 🧠 Salud Mental (detalle)
+
+Agregada el 2026-07-30 junto con Postura, por la misma petición. `renderMental()` pinta `<section id="s-mental">`:
+
+1. **Registro diario de ánimo/estrés** (`S.mental.registros`) — modal (`mo-animo`) con ánimo 1-5 (`ANIMO_LABELS`), estrés 1-5 (`ESTRES_LABELS`), causa y notas. `openAnimoModal()` sin `id` busca primero si ya existe un registro con `fecha===today()` y lo edita en vez de duplicarlo — como máximo un registro por día. Gráfica de tendencia (`ch-mental`, Chart.js) de los últimos 20 registros, dos líneas (ánimo/estrés).
+2. **Técnicas para manejar el estrés** (`MENTAL_TECNICAS`, contenido fijo) — 8 técnicas con pasos numerados (respiración 4-7-8, box breathing, grounding 5-4-3-2-1, journaling de descarga, caminata sin celular, desconexión digital nocturna, gratitud antes de dormir, ejercicio como regulador — esta última conecta explícitamente con la Rutina Muscular que Adán ya sigue).
+3. **Alerta de ayuda profesional** (`MENTAL_ALERTAS`, contenido fijo) — tarjeta roja con 5 señales que ameritan ver a un psicólogo, mismo estilo visual que la alerta médica de Salud Digestiva/Exámenes.
+
+### `#s-suplementos` — 💊 Suplementos (detalle)
+
+Agregada el 2026-07-30 junto con Postura y Salud Mental. `renderSuplementos()` pinta `<section id="s-suplementos">`:
+
+1. **Catálogo de referencia** (`SUPP_CATALOG`, contenido fijo) — 6 suplementos elegidos específicamente por su meta de masa muscular ya definida en Rutina Muscular (proteína whey, creatina monohidratada, vitamina D3, omega 3, multivitamínico, magnesio), cada uno con dosis, momento del día y una nota de precaución. Botón "➕ Agregar a mi lista" (`addFromCatalog(i)`) copia esos valores a `S.suplementos.lista` con un clic.
+2. **Mi lista** (`S.suplementos.lista`) — CRUD manual también disponible (`openSuppModal()`/`saveSupp()`/`delSupp()`) para suplementos fuera del catálogo. Cada fila tiene un checkbox de **"tomado hoy"** (`S.suplementos.tomado['YYYY-MM-DD'][id]`, `toggleTomado()`) — se reinicia solo cada día por la misma razón que las pausas activas de Postura.
+
+Los tres cierran con la misma convención visual que Salud Digestiva/Exámenes: `.g3` de tarjetas para contenido de referencia, tabla + modal para lo que sí es un registro del usuario, y un disclaimer de que no sustituye atención profesional donde aplica.
+
 ## Modelo de datos — `localStorage['misalud_v1']`
 
 ```js
@@ -38,7 +67,7 @@ Termina con un disclaimer fijo: es una bitácora personal, no un diagnóstico, y
                  nombre, cantidad, unidad, cal, prot, carbs, gra, notas }],
   ejercicios: [{ id, fecha, tipo:'cardio|fuerza|flexibilidad|hiit|deporte|otro',
                  nombre, duracion_min, cal }],
-  medidas:    [{ id, fecha, peso, cintura, cadera, pecho, brazo, muslo, notas }],
+  medidas:    [{ id, fecha, peso, cintura, cadera, pecho, brazo, muslo, grasa:pct, notas }],
   agua:       { 'YYYY-MM-DD': vasosContados },
   metas:      { caloriasD:2000, proteina:150, carbs:.., grasa:.., vasos:.., pesoObjetivo:.., fechaObjetivo:.. },
   perfil:     { peso, altura, edad, sexo, nivelActividad },
@@ -46,24 +75,36 @@ Termina con un disclaimer fijo: es una bitácora personal, no un diagnóstico, y
                  nombre, unidad, valor, refMin:num|null, refMax:num|null, notas }],
   chequeos:   [{ id, fecha, tipo:'general|dental|oftalmologico|dermatologico|cardiologico|otro',
                  resultado, proxima:'YYYY-MM-DD'|'', notas }],
-  perfilMedico: { tipoSangre, alergias, medicamentos, condiciones, cirugias, antecedentesFamiliares, contactoEmergencia }
+  perfilMedico: { tipoSangre, alergias, medicamentos, condiciones, cirugias, antecedentesFamiliares, contactoEmergencia },
+  postura: {
+    dolores: [{ id, fecha, zona:'cuello|hombros|espalda_alta|espalda_baja|cadera|rodillas|otro', intensidad:1-5, notas }],
+    pausas:  { 'YYYY-MM-DD': contadorDePausas }
+  },
+  mental: {
+    registros: [{ id, fecha, animo:1-5, estres:1-5, causa, notas }]   // máx. 1 por fecha, ver openAnimoModal()
+  },
+  suplementos: {
+    lista:   [{ id, nombre, dosis, momento:'am|pre|post|pm|cualquiera', notas }],
+    tomado:  { 'YYYY-MM-DD': { idDeSuplemento: true } }
+  }
 }
 ```
 
 ## Funcionalidad clave
 
-- **CRUD** de alimentos, ejercicios, medidas, exámenes médicos y chequeos, todos con modales y confirmación antes de eliminar (`askDel()`/`doConf()`/`closeConf()`, compartido).
-- **Cálculo de IMC**: `calcIMC()` y `imcLabel()` calculan el índice de masa corporal a partir de peso/altura y lo clasifican.
+- **CRUD** de alimentos, ejercicios, medidas, exámenes médicos, chequeos, dolor/molestias de postura, registros de ánimo/estrés y suplementos — todos con modales y confirmación antes de eliminar (`askDel()`/`doConf()`/`closeConf()`, compartido).
+- **Cálculo de IMC y composición corporal**: `calcIMC()`/`imcLabel()` calculan y clasifican el IMC; `renderMedidas()` también estima la masa magra (`peso*(1-grasa/100)`) cuando hay dato de % de grasa corporal.
 - **Contador de agua**: `toggleVaso()`/`resetAgua()` llevan el conteo de vasos de agua del día.
+- **Contadores diarios reseteables por fecha**: mismo patrón usado tres veces en el archivo — `agua` (por vaso), `postura.pausas` (por pausa activa) y `suplementos.tomado` (por suplemento) — todos son objetos `{ 'YYYY-MM-DD': ... }`, se "reinician" solos cada día porque la clave es la fecha de hoy, no requieren limpieza manual.
 - **Catálogo de exámenes** (`EXAM_CATALOG`, `CHEQ_TIPOS`, `CAT_OTRO`): ~24 marcadores de laboratorio con rango de referencia general por adulto, más la opción de examen personalizado. `examStatusInfo(e)` clasifica cualquier registro en Normal/Alto/Bajo/Sin rango.
-- **Contenido nutricional personalizado**: las secciones "Rutina Muscular" y "Salud Digestiva" contienen información específica (peso 75kg, estatura 1.78m, edad 31 años, objetivo ganar masa muscular) — es contenido de referencia escrito directamente en el código, no datos que se editen desde la interfaz.
+- **Contenido nutricional/físico personalizado**: "Rutina Muscular", "Salud Digestiva", "Postura" (ejercicios/ergonomía) y "Salud Mental" (técnicas) contienen información específica y curada (peso 75kg, estatura 1.78m, edad 31 años, objetivo ganar masa muscular, reflujo digestivo, trabajo sentado) — es contenido de referencia escrito directamente en el código, no datos que se editen desde la interfaz.
 - **`today()`** usa `new Date().toISOString().slice(0,10)` (UTC) — misma convención que el resto del proyecto, importante si algún día se cruza esta clave con otro archivo.
-- **Exportar datos**: botón en la barra lateral descarga un JSON de respaldo.
+- **Exportar datos**: botón en la barra lateral descarga un JSON de respaldo (incluye todas las claves de `S`, incluidas las nuevas — `exportData()` serializa el objeto completo, no requiere mantenimiento al agregar secciones).
 
 ## Referencias cruzadas
 
 - Incrustada vía `<iframe>` en [`readme_cuidadopersonal.md`](readme_cuidadopersonal.md) (subtab "Cuidado de la Salud"). El shell no puede tocar el DOM/JS de este archivo (iframe cross-document), pero **sí comparte `localStorage`** porque ambos se sirven desde `file://` (ver la nota de origen compartido en `readme_cuidadopersonal.md`).
-- El **Dashboard** (`../Dashboard/dashboard.html`) lee `misalud_v1` directamente (`D.sal`): usa `alimentos` (calorías de hoy, score de nutrición de 7 días) y `ejercicios` (conteo de "sesión(es) hoy" en la tarjeta de acceso rápido de Ejercicio). Si cambias la forma de `S.alimentos`/`S.ejercicios`/`S.metas` aquí, revisa `calcScores()` y `renderApps()` en `Dashboard/dashboard.html`. **`S.examenes`/`S.chequeos`/`S.perfilMedico` no los lee el Dashboard todavía** — si en el futuro se quiere una alerta de "próximo chequeo" o similar ahí, hay que agregarla a mano en `loadAll()`/`renderApps()`.
+- El **Dashboard** (`../Dashboard/dashboard.html`) lee `misalud_v1` directamente (`D.sal`): `renderHero()` usa `alimentos` (calorías de hoy en el panel de nutrición) y `medidas`/`agua`/`metas`; `renderQuickApps()` usa `alimentos` para el dato de calorías de hoy en la píldora de acceso rápido. Si cambias la forma de `S.alimentos`/`S.medidas`/`S.metas` aquí, revisa esas dos funciones en `Dashboard/dashboard.html`. **`S.examenes`/`S.chequeos`/`S.perfilMedico`/`S.postura`/`S.mental`/`S.suplementos` no los lee el Dashboard todavía** — si en el futuro se quiere una alerta ahí, hay que agregarla a mano en `loadAll()` y en la función de slide correspondiente.
 - Mapa completo del proyecto: [`../README.md`](../README.md).
 
 ## Cómo usarlo

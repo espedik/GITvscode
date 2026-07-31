@@ -187,6 +187,10 @@ tbody tr:hover td{background:rgba(0,232,122,.02)}
     <div class="nav-label">Salud</div>
     <div class="nav-item" onclick="nav('digestiva')"><span class="ico">🫁</span>Salud Digestiva</div>
     <div class="nav-item" onclick="nav('examenes')"><span class="ico">🩺</span>Exámenes Médicos</div>
+    <div class="nav-label">Bienestar</div>
+    <div class="nav-item" onclick="nav('postura')"><span class="ico">🧍</span>Postura</div>
+    <div class="nav-item" onclick="nav('mental')"><span class="ico">🧠</span>Salud Mental</div>
+    <div class="nav-item" onclick="nav('suplementos')"><span class="ico">💊</span>Suplementos</div>
     <div class="nav-label">Configuración</div>
     <div class="nav-item" onclick="nav('metas')"><span class="ico">🎯</span>Perfil & Metas</div>
   </nav>
@@ -273,14 +277,15 @@ tbody tr:hover td{background:rgba(0,232,122,.02)}
     <section id="s-medidas" class="section">
       <div class="sh"><h2>⚖️ Peso & Medidas</h2><button class="btn btn-g" onclick="openMedidaModal()">+ Registrar</button></div>
       <div class="g4" id="med-kpis" style="margin-bottom:18px"></div>
-      <div class="g2">
+      <div class="g2" style="margin-bottom:14px">
         <div class="card"><div class="card-title">📉 Evolución del peso</div><div class="chart-c"><canvas id="ch-peso"></canvas></div></div>
-        <div class="card"><div class="tw"><table>
-          <thead><tr><th>Fecha</th><th>Peso</th><th>Cintura</th><th>Cadera</th><th>IMC</th><th></th></tr></thead>
-          <tbody id="med-body"></tbody>
-        </table></div>
-        <div id="med-empty" class="empty" style="display:none"><div class="ico">⚖️</div><p>Sin medidas registradas.</p></div>
-        </div>
+        <div class="card"><div class="card-title">📏 Composición corporal (cintura, brazo, muslo, % grasa)</div><div class="chart-c"><canvas id="ch-comp"></canvas></div></div>
+      </div>
+      <div class="card"><div class="tw"><table>
+        <thead><tr><th>Fecha</th><th>Peso</th><th>% Grasa</th><th>Cintura</th><th>Brazo</th><th>Muslo</th><th>IMC</th><th></th></tr></thead>
+        <tbody id="med-body"></tbody>
+      </table></div>
+      <div id="med-empty" class="empty" style="display:none"><div class="ico">⚖️</div><p>Sin medidas registradas.</p></div>
       </div>
     </section>
 
@@ -298,6 +303,15 @@ tbody tr:hover td{background:rgba(0,232,122,.02)}
 
     <!-- EXÁMENES MÉDICOS -->
     <section id="s-examenes" class="section"></section>
+
+    <!-- POSTURA -->
+    <section id="s-postura" class="section"></section>
+
+    <!-- SALUD MENTAL -->
+    <section id="s-mental" class="section"></section>
+
+    <!-- SUPLEMENTOS -->
+    <section id="s-suplementos" class="section"></section>
 
     <!-- METAS -->
     <section id="s-metas" class="section">
@@ -389,6 +403,7 @@ tbody tr:hover td{background:rgba(0,232,122,.02)}
       <div class="fg"><label>📏 Brazo (cm)</label><input type="number" id="med-brazo" placeholder="32" min="0" step="0.1"></div>
       <div class="fg"><label>📏 Muslo (cm)</label><input type="number" id="med-muslo" placeholder="55" min="0" step="0.1"></div>
     </div>
+    <div class="fg"><label>📊 % Grasa corporal (opcional)</label><input type="number" id="med-grasa" placeholder="Ej. 18.5 — báscula de bioimpedancia o caliper" min="0" max="70" step="0.1"></div>
     <div class="fg"><label>Notas</label><input id="med-notas" placeholder="Condiciones, hora del día..."></div>
     <div class="flex" style="justify-content:flex-end;gap:8px">
       <button class="btn btn-o" onclick="closeMo('mo-med')">Cancelar</button>
@@ -447,6 +462,96 @@ tbody tr:hover td{background:rgba(0,232,122,.02)}
   </div>
 </div>
 
+<!-- MODAL DOLOR / MOLESTIA (POSTURA) -->
+<div class="mo" id="mo-dolor">
+  <div class="modal">
+    <div class="modal-h"><div class="modal-title" id="mo-dolor-title">Registrar dolor o molestia</div><button class="modal-x" onclick="closeMo('mo-dolor')">✕</button></div>
+    <div class="fg"><label>Zona</label>
+      <select id="dolor-zona">
+        <option value="cuello">🦴 Cuello</option>
+        <option value="hombros">🤷 Hombros</option>
+        <option value="espalda_alta">🔺 Espalda alta</option>
+        <option value="espalda_baja">⬇️ Espalda baja / lumbar</option>
+        <option value="cadera">🦵 Cadera</option>
+        <option value="rodillas">🦵 Rodillas</option>
+        <option value="otro">📍 Otro</option>
+      </select>
+    </div>
+    <div class="fg"><label>Intensidad (1 = leve, 5 = muy fuerte)</label>
+      <select id="dolor-intensidad">
+        <option value="1">1 — Leve</option>
+        <option value="2">2 — Molesta</option>
+        <option value="3">3 — Moderada</option>
+        <option value="4">4 — Fuerte</option>
+        <option value="5">5 — Muy fuerte</option>
+      </select>
+    </div>
+    <div class="fg"><label>Fecha</label><input type="date" id="dolor-fecha"></div>
+    <div class="fg"><label>Notas</label><input id="dolor-notas" placeholder="¿Qué lo provocó? ¿Cuánto duró?"></div>
+    <div class="flex" style="justify-content:flex-end;gap:8px">
+      <button class="btn btn-o" onclick="closeMo('mo-dolor')">Cancelar</button>
+      <button class="btn btn-g" onclick="saveDolor()">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL ÁNIMO / ESTRÉS (SALUD MENTAL) -->
+<div class="mo" id="mo-animo">
+  <div class="modal">
+    <div class="modal-h"><div class="modal-title" id="mo-animo-title">Registrar cómo te sientes</div><button class="modal-x" onclick="closeMo('mo-animo')">✕</button></div>
+    <div class="fg"><label>Fecha</label><input type="date" id="animo-fecha"></div>
+    <div class="fr">
+      <div class="fg"><label>Ánimo</label>
+        <select id="animo-animo">
+          <option value="1">😞 1 — Muy mal</option>
+          <option value="2">😕 2 — Mal</option>
+          <option value="3" selected>😐 3 — Regular</option>
+          <option value="4">🙂 4 — Bien</option>
+          <option value="5">😄 5 — Muy bien</option>
+        </select>
+      </div>
+      <div class="fg"><label>Estrés</label>
+        <select id="animo-estres">
+          <option value="1">😌 1 — Muy tranquilo</option>
+          <option value="2">🙂 2 — Tranquilo</option>
+          <option value="3" selected>😐 3 — Normal</option>
+          <option value="4">😣 4 — Estresado</option>
+          <option value="5">🤯 5 — Muy estresado</option>
+        </select>
+      </div>
+    </div>
+    <div class="fg"><label>¿Qué lo causó? (opcional)</label><input id="animo-causa" placeholder="Ej. junta de trabajo, buen entreno, poco sueño..."></div>
+    <div class="fg"><label>Notas</label><input id="animo-notas" placeholder="Lo que sea útil recordar"></div>
+    <div class="flex" style="justify-content:flex-end;gap:8px">
+      <button class="btn btn-o" onclick="closeMo('mo-animo')">Cancelar</button>
+      <button class="btn btn-g" onclick="saveAnimo()">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL SUPLEMENTO -->
+<div class="mo" id="mo-supp">
+  <div class="modal">
+    <div class="modal-h"><div class="modal-title" id="mo-supp-title">Agregar suplemento</div><button class="modal-x" onclick="closeMo('mo-supp')">✕</button></div>
+    <div class="fg"><label>Nombre *</label><input id="supp-nombre" placeholder="Ej. Creatina monohidratada"></div>
+    <div class="fg"><label>Dosis</label><input id="supp-dosis" placeholder="Ej. 5g al día"></div>
+    <div class="fg"><label>Momento</label>
+      <select id="supp-momento">
+        <option value="am">🌅 Mañana</option>
+        <option value="pre">🏋️ Pre-entreno</option>
+        <option value="post">💪 Post-entreno</option>
+        <option value="pm">🌙 Noche</option>
+        <option value="cualquiera">🕐 Cualquier hora</option>
+      </select>
+    </div>
+    <div class="fg"><label>Notas</label><input id="supp-notas" placeholder="Marca, para qué lo tomas, precauciones..."></div>
+    <div class="flex" style="justify-content:flex-end;gap:8px">
+      <button class="btn btn-o" onclick="closeMo('mo-supp')">Cancelar</button>
+      <button class="btn btn-g" onclick="saveSupp()">Guardar</button>
+    </div>
+  </div>
+</div>
+
 <!-- CONFIRM -->
 <div class="conf" id="conf">
   <div class="conf-box">
@@ -473,10 +578,13 @@ let S = {
   plan: {},
   examenes: [],
   chequeos: [],
-  perfilMedico: { tipoSangre:'', alergias:'', medicamentos:'', condiciones:'', cirugias:'', antecedentesFamiliares:'', contactoEmergencia:'' }
+  perfilMedico: { tipoSangre:'', alergias:'', medicamentos:'', condiciones:'', cirugias:'', antecedentesFamiliares:'', contactoEmergencia:'' },
+  postura: { dolores: [], pausas: {} },
+  mental: { registros: [] },
+  suplementos: { lista: [], tomado: {} }
 };
 let editId=null, confCb=null;
-let chEj=null, chPeso=null, chCal=null, chMac=null, chExam=null;
+let chEj=null, chPeso=null, chCal=null, chMac=null, chExam=null, chComp=null, chMental=null;
 
 const COMIDAS = {desayuno:'🌅 Desayuno',almuerzo:'☀️ Almuerzo',cena:'🌙 Cena',snack:'🍎 Snack'};
 const TIPO_EJ = {cardio:'🏃 Cardio',fuerza:'🏋️ Fuerza',flexibilidad:'🧘 Flexibilidad',hiit:'⚡ HIIT',deporte:'⚽ Deporte',otro:'📋 Otro'};
@@ -554,9 +662,9 @@ document.querySelectorAll('.mo').forEach(m=>m.addEventListener('click',e=>{ if(e
 document.getElementById('conf').addEventListener('click',e=>{ if(e.target===document.getElementById('conf')) closeConf(); });
 
 // ─── NAVIGATION ──────────────────────────────────────────────────────────────
-const SECS=['dashboard','plan','alimentos','ejercicio','medidas','progreso','rutina','digestiva','examenes','metas'];
-const STITLE={dashboard:'📊 Dashboard',plan:'🍽️ Plan Semanal',alimentos:'🥗 Registro Diario',ejercicio:'💪 Ejercicio',medidas:'⚖️ Peso & Medidas',progreso:'📈 Progreso',rutina:'🥩 Rutina Muscular',digestiva:'🫁 Salud Digestiva',examenes:'🩺 Exámenes Médicos',metas:'🎯 Perfil & Metas'};
-const RENDERS={dashboard:renderDashboard,plan:renderPlan,alimentos:renderAlimentos,ejercicio:renderEjercicio,medidas:renderMedidas,progreso:renderProgreso,rutina:renderRutina,digestiva:renderDigestiva,examenes:renderExamenes,metas:renderMetas};
+const SECS=['dashboard','plan','alimentos','ejercicio','medidas','progreso','rutina','digestiva','examenes','postura','mental','suplementos','metas'];
+const STITLE={dashboard:'📊 Dashboard',plan:'🍽️ Plan Semanal',alimentos:'🥗 Registro Diario',ejercicio:'💪 Ejercicio',medidas:'⚖️ Peso & Medidas',progreso:'📈 Progreso',rutina:'🥩 Rutina Muscular',digestiva:'🫁 Salud Digestiva',examenes:'🩺 Exámenes Médicos',postura:'🧍 Postura',mental:'🧠 Salud Mental',suplementos:'💊 Suplementos',metas:'🎯 Perfil & Metas'};
+const RENDERS={dashboard:renderDashboard,plan:renderPlan,alimentos:renderAlimentos,ejercicio:renderEjercicio,medidas:renderMedidas,progreso:renderProgreso,rutina:renderRutina,digestiva:renderDigestiva,examenes:renderExamenes,postura:renderPostura,mental:renderMental,suplementos:renderSuplementos,metas:renderMetas};
 
 function nav(s) {
   SECS.forEach(x=>document.getElementById('s-'+x).classList.toggle('active',x===s));
@@ -902,6 +1010,8 @@ function renderMedidas() {
   const imc=ultima&&altura?calcIMC(ultima.peso,altura):0;
   const imcI=imcLabel(imc);
   const diff=ultima&&anterior?(ultima.peso-anterior.peso):null;
+  const grasaDiff=ultima&&anterior&&ultima.grasa&&anterior.grasa?(ultima.grasa-anterior.grasa):null;
+  const masaMagra=ultima&&ultima.peso&&ultima.grasa?(ultima.peso*(1-ultima.grasa/100)).toFixed(1):null;
 
   document.getElementById('med-kpis').innerHTML=`
     <div class="card card-hi" style="background:rgba(0,232,122,.05);border-color:rgba(0,232,122,.25)">
@@ -913,6 +1023,11 @@ function renderMedidas() {
       <div class="card-title">📐 IMC</div>
       <div class="card-val" style="color:${imcI.c}">${imc||'—'}</div>
       <div class="card-sub">${imc?imcI.l:'Configura tu altura en Metas'}</div>
+    </div>
+    <div class="card" style="border-left:4px solid var(--p)">
+      <div class="card-title" style="color:var(--p)">📊 % Grasa corporal</div>
+      <div class="card-val" style="color:var(--p)">${ultima&&ultima.grasa?ultima.grasa+'%':'—'}</div>
+      <div class="card-sub">${grasaDiff!==null?`${grasaDiff>0?'↑ +':'↓ '}${Math.abs(grasaDiff).toFixed(1)}% vs anterior`:(masaMagra?`Masa magra est.: ${masaMagra} kg`:'Sin dato aún')}</div>
     </div>
     <div class="card">
       <div class="card-title">🎯 Objetivo de peso</div>
@@ -927,7 +1042,7 @@ function renderMedidas() {
 
   const empty=document.getElementById('med-empty');
   const tbody=document.getElementById('med-body');
-  if(!list.length){tbody.innerHTML='';empty.style.display='';chPeso=killChart(chPeso);return;}
+  if(!list.length){tbody.innerHTML='';empty.style.display='';chPeso=killChart(chPeso);chComp=killChart(chComp);return;}
   empty.style.display='none';
   tbody.innerHTML=list.slice(0,20).map(m=>{
     const i=calcIMC(m.peso,altura);
@@ -935,8 +1050,10 @@ function renderMedidas() {
     return `<tr>
       <td style="white-space:nowrap">${fmtD(m.fecha)}</td>
       <td style="font-weight:700;color:var(--g)">${m.peso} kg</td>
+      <td>${m.grasa?m.grasa+'%':'—'}</td>
       <td>${m.cintura?m.cintura+' cm':'—'}</td>
-      <td>${m.cadera?m.cadera+' cm':'—'}</td>
+      <td>${m.brazo?m.brazo+' cm':'—'}</td>
+      <td>${m.muslo?m.muslo+' cm':'—'}</td>
       <td>${i?`<span style="color:${ii.c};font-weight:700">${i}</span> <span class="ts tm">${ii.l}</span>`:'—'}</td>
       <td>
         <button class="btn btn-o btn-sm btn-ico" onclick="openMedidaModal('${m.id}')">✏️</button>
@@ -950,12 +1067,25 @@ function renderMedidas() {
   const labels=sorted.map(m=>fmtD(m.fecha));
   const data=sorted.map(m=>m.peso);
   chPeso=killChart(chPeso);
-  const ctx=document.getElementById('ch-peso'); if(!ctx) return;
-  chPeso=new Chart(ctx,{type:'line',data:{labels,datasets:[
+  const ctx=document.getElementById('ch-peso');
+  if(ctx) chPeso=new Chart(ctx,{type:'line',data:{labels,datasets:[
     {label:'Peso (kg)',data,borderColor:'var(--g)',backgroundColor:'rgba(0,232,122,.1)',fill:true,tension:.4,pointRadius:5,pointBackgroundColor:'var(--g)',pointBorderColor:'#060614',pointBorderWidth:2,borderWidth:2.5}
   ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},
     tooltip:{callbacks:{label:ctx=>` ${ctx.parsed.y} kg`}}},
     scales:{y:{grid:{color:'rgba(255,255,255,.06)'},ticks:{color:'#4a5568',callback:v=>v+' kg'}},x:{grid:{display:false},ticks:{color:'#4a5568'}}}}});
+
+  // Gráfica de composición corporal (cintura, brazo, muslo, % grasa)
+  chComp=killChart(chComp);
+  const ctxC=document.getElementById('ch-comp');
+  if(ctxC) chComp=new Chart(ctxC,{type:'line',data:{labels,datasets:[
+    {label:'Cintura (cm)',data:sorted.map(m=>m.cintura||null),borderColor:'var(--o)',backgroundColor:'transparent',tension:.4,pointRadius:4,borderWidth:2,spanGaps:true},
+    {label:'Brazo (cm)',data:sorted.map(m=>m.brazo||null),borderColor:'var(--b)',backgroundColor:'transparent',tension:.4,pointRadius:4,borderWidth:2,spanGaps:true},
+    {label:'Muslo (cm)',data:sorted.map(m=>m.muslo||null),borderColor:'var(--w)',backgroundColor:'transparent',tension:.4,pointRadius:4,borderWidth:2,spanGaps:true},
+    {label:'% Grasa',data:sorted.map(m=>m.grasa||null),borderColor:'var(--p)',backgroundColor:'transparent',tension:.4,pointRadius:4,borderWidth:2,spanGaps:true,yAxisID:'y1'}
+  ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:true,position:'bottom',labels:{color:'#8892b0',boxWidth:10,font:{size:10}}}},
+    scales:{y:{grid:{color:'rgba(255,255,255,.06)'},ticks:{color:'#4a5568',callback:v=>v+' cm'}},
+      y1:{position:'right',grid:{display:false},ticks:{color:'#4a5568',callback:v=>v+'%'}},
+      x:{grid:{display:false},ticks:{color:'#4a5568'}}}}});
 }
 
 function openMedidaModal(id=null) {
@@ -969,6 +1099,7 @@ function openMedidaModal(id=null) {
   document.getElementById('med-pecho').value=m?.pecho||'';
   document.getElementById('med-brazo').value=m?.brazo||'';
   document.getElementById('med-muslo').value=m?.muslo||'';
+  document.getElementById('med-grasa').value=m?.grasa||'';
   document.getElementById('med-notas').value=m?.notas||'';
   document.getElementById('mo-med').classList.add('open');
   setTimeout(()=>document.getElementById('med-peso').focus(),100);
@@ -983,6 +1114,7 @@ function saveMedida() {
     pecho:parseFloat(document.getElementById('med-pecho').value)||0,
     brazo:parseFloat(document.getElementById('med-brazo').value)||0,
     muslo:parseFloat(document.getElementById('med-muslo').value)||0,
+    grasa:parseFloat(document.getElementById('med-grasa').value)||0,
     notas:document.getElementById('med-notas').value.trim()};
   if(editId){const i=S.medidas.findIndex(x=>x.id===editId);if(i>=0)S.medidas[i]={...S.medidas[i],...data};}
   else S.medidas.push({id:uid(),...data});
@@ -1829,6 +1961,413 @@ function saveChequeo() {
 function delChequeo(id) { S.chequeos=S.chequeos.filter(c=>c.id!==id); save(); renderExamenes(); toast('🗑️ Eliminado'); }
 
 function updatePerfilMedico(key,val) { S.perfilMedico[key]=val; save(); }
+
+// ─── POSTURA ─────────────────────────────────────────────────────────────────
+const ZONAS_DOLOR = {cuello:'🦴 Cuello',hombros:'🤷 Hombros',espalda_alta:'🔺 Espalda alta',espalda_baja:'⬇️ Espalda baja / lumbar',cadera:'🦵 Cadera',rodillas:'🦵 Rodillas',otro:'📍 Otro'};
+const META_PAUSAS = 6;
+
+const POSTURA_EJERCICIOS = [
+  {ico:'🧎',titulo:'Estiramiento de flexores de cadera (couch stretch)',zona:'Cadera / lumbar',pasos:['Arrodíllate frente a un sillón o silla, apoya el empeine del pie trasero sobre el asiento.','Coloca el pie delantero plano en el piso, rodilla a 90°.','Empuja la cadera hacia adelante manteniendo el torso recto, sin arquear la espalda baja.','Sostén 30-45 seg por lado, 2-3 veces.'],tip:'Clave para quien pasa muchas horas sentado — los flexores de cadera se acortan y jalan la pelvis, generando dolor lumbar.'},
+  {ico:'🐈',titulo:'Cat-Cow (gato-vaca)',zona:'Columna completa',pasos:['En cuatro puntos, manos bajo hombros, rodillas bajo cadera.','Inhala arqueando la espalda hacia abajo, pecho y mirada al frente (vaca).','Exhala redondeando la espalda hacia arriba, barbilla al pecho (gato).','Repite 10-12 veces, movimiento lento y controlado.'],tip:'Moviliza toda la columna y libera tensión acumulada de estar sentado — ideal como calentamiento antes de estirar.'},
+  {ico:'🚪',titulo:'Estiramiento de pectoral en marco de puerta',zona:'Pecho / hombros',pasos:['Coloca el antebrazo en el marco de una puerta, codo a la altura del hombro (90°).','Da un paso adelante girando el torso hacia el lado contrario, sin torcer la espalda baja.','Sostén 30 seg por lado, 2-3 veces.'],tip:'Contrarresta el hombro "hacia adentro" típico de trabajar en computadora — abre el pecho y mejora la postura frontal.'},
+  {ico:'🧍',titulo:'Wall Angels (ángeles de pared)',zona:'Espalda alta / hombros',pasos:['Pega espalda, glúteos y cabeza a la pared, pies un poco separados de ella.','Sube los brazos en forma de "W" pegando codos y muñecas a la pared.','Desliza los brazos hacia arriba como un ángel de nieve, sin despegar la espalda baja.','Repite 10-12 veces, lento.'],tip:'El ejercicio correctivo más efectivo para la postura encorvada de oficina — fortalece los músculos que jalan los hombros hacia atrás.'},
+  {ico:'🎗️',titulo:'Face pulls con banda elástica',zona:'Espalda alta / rotadores',pasos:['Ancla una banda a la altura de la cara.','Jala hacia tu cara separando las manos, codos altos, apretando omóplatos.','Controla el regreso. 3 series de 15 repeticiones.'],tip:'El mejor ejercicio de gimnasio para revertir hombros redondeados — fortalece deltoides posterior y romboides.'},
+  {ico:'🦴',titulo:'Extensión torácica en silla',zona:'Espalda media',pasos:['Siéntate, coloca las manos detrás de la cabeza.','Arquea la espalda media sobre el respaldo de la silla, mirando hacia arriba.','Sostén 2-3 seg y regresa. 10-12 repeticiones.'],tip:'Contrarresta directamente la joroba que se forma al pasar horas encorvado frente a la pantalla.'},
+  {ico:'🙆',titulo:'Retracción de barbilla (chin tuck)',zona:'Cuello',pasos:['Sentado o de pie, mirada al frente.','Empuja la barbilla hacia atrás (como hacer doble papada), sin inclinar la cabeza.','Sostén 5 seg. Repite 10 veces.'],tip:'Corrige la postura de "cabeza adelantada" por ver la pantalla muy de cerca — reduce tensión de cuello y dolores de cabeza tensionales.'},
+  {ico:'🍑',titulo:'Puente de glúteo (glute bridge)',zona:'Glúteos / lumbar',pasos:['Acostado boca arriba, rodillas flexionadas, pies apoyados.','Aprieta glúteos y eleva la cadera hasta alinear rodilla-cadera-hombro.','Sostén 2 seg arriba. 3 series de 15 repeticiones.'],tip:'Glúteos débiles por estar sentado todo el día sobrecargan la zona lumbar — este ejercicio los reactiva directamente.'}
+];
+
+const POSTURA_ERGONOMIA = [
+  {ico:'🖥️',t:'Monitor a la altura de los ojos',d:'El borde superior de la pantalla debe quedar a la altura de tus ojos, a un brazo de distancia — evita inclinar el cuello hacia abajo.'},
+  {ico:'🪑',t:'Espalda baja apoyada',d:'La silla debe soportar la curva lumbar; si no, usa un cojín lumbar o una toalla enrollada.'},
+  {ico:'🦵',t:'Pies planos en el piso',d:'Rodillas a 90°, pies completamente apoyados — usa un reposapiés si la silla queda alta.'},
+  {ico:'💺',t:'Codos a 90° en el teclado',d:'Antebrazos paralelos al piso al escribir, hombros relajados y no encogidos hacia las orejas.'},
+  {ico:'⏱️',t:'Regla 30-30',d:'Cada 30 minutos sentado, levántate al menos 30 segundos — camina, estira, cambia de postura.'},
+  {ico:'📱',t:'Evita el "text neck"',d:'Al usar el celular, súbelo a la altura de los ojos en vez de bajar la cabeza — cada 15° de inclinación multiplica la carga sobre el cuello.'}
+];
+
+function pausasHoy() { return S.postura.pausas[today()]||0; }
+function addPausa() { const t=today(); S.postura.pausas[t]=(S.postura.pausas[t]||0)+1; save(); renderPostura(); toast('🧍 Pausa activa registrada'); }
+function quitarPausa() { const t=today(); S.postura.pausas[t]=Math.max(0,(S.postura.pausas[t]||0)-1); save(); renderPostura(); }
+
+function renderPostura() {
+  const sec=document.getElementById('s-postura'); if(!sec) return;
+  const dolores=[...S.postura.dolores].sort((a,b)=>b.fecha.localeCompare(a.fecha));
+  const recientes=dolores.slice(0,10);
+  const promInt=recientes.length?(recientes.reduce((s,d)=>s+d.intensidad,0)/recientes.length).toFixed(1):null;
+  const conteoZona={};
+  dolores.forEach(d=>{conteoZona[d.zona]=(conteoZona[d.zona]||0)+1;});
+  const zonaTop=Object.keys(conteoZona).sort((a,b)=>conteoZona[b]-conteoZona[a])[0];
+  const pHoy=pausasHoy();
+  const pPct=Math.min(100,(pHoy/META_PAUSAS)*100);
+
+  sec.innerHTML=`
+    <div class="sh"><h2>🧍 Postura</h2><button class="btn btn-g" onclick="openDolorModal()">+ Registrar dolor/molestia</button></div>
+
+    <div class="g4" style="margin-bottom:18px">
+      <div class="card" style="border-left:4px solid ${pHoy>=META_PAUSAS?'var(--g)':'var(--o)'}">
+        <div class="card-title" style="color:${pHoy>=META_PAUSAS?'var(--g)':'var(--o)'}">🧍 Pausas activas hoy</div>
+        <div class="card-val" style="color:${pHoy>=META_PAUSAS?'var(--g)':'var(--o)'}">${pHoy} / ${META_PAUSAS}</div>
+        <div class="pbar"><div class="pfill" style="width:${pPct}%;background:${pHoy>=META_PAUSAS?'var(--g)':'var(--o)'}"></div></div>
+      </div>
+      <div class="card" style="border-left:4px solid var(--r)">
+        <div class="card-title" style="color:var(--r)">🔥 Dolor promedio</div>
+        <div class="card-val" style="color:var(--r)">${promInt||'—'}</div>
+        <div class="card-sub">${promInt?'de últimos '+recientes.length+' registro(s), escala 1-5':'Sin registros aún'}</div>
+      </div>
+      <div class="card">
+        <div class="card-title">📍 Zona más frecuente</div>
+        <div class="card-val" style="font-size:16px">${zonaTop?ZONAS_DOLOR[zonaTop]:'—'}</div>
+        <div class="card-sub">${zonaTop?conteoZona[zonaTop]+' registro(s)':'Sin datos'}</div>
+      </div>
+      <div class="card">
+        <div class="card-title">📅 Registros totales</div>
+        <div class="card-val">${dolores.length}</div>
+        <div class="card-sub">${dolores.length?'Último: '+fmtD(dolores[0].fecha):'Sin registros'}</div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom:20px;border-color:rgba(255,107,53,.25);background:linear-gradient(135deg,rgba(255,107,53,.05),rgba(0,232,122,.04))">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px">
+        <div>
+          <div class="card-title" style="color:var(--o)">⏱️ Control de pausas activas</div>
+          <div style="font-size:12px;color:var(--text2);max-width:480px">Levántate, camina o estira cada 30-45 min de trabajo sentado. Meta: ${META_PAUSAS} pausas en tu jornada.</div>
+        </div>
+        <div class="flex gap8 aic">
+          <button class="btn btn-o btn-ico" onclick="quitarPausa()">−</button>
+          <div style="font-size:26px;font-weight:800;color:var(--o);min-width:36px;text-align:center">${pHoy}</div>
+          <button class="btn btn-g" onclick="addPausa()">+1 pausa</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="sh"><h2>🤸 Ejercicios correctivos</h2></div>
+    <div class="g3" style="margin-bottom:22px">
+      ${POSTURA_EJERCICIOS.map(e=>`
+      <div class="card" style="border-top:3px solid var(--b)">
+        <div style="font-size:24px;margin-bottom:8px">${e.ico}</div>
+        <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:2px">${e.titulo}</div>
+        <div class="ts" style="color:var(--b);margin-bottom:10px">${e.zona}</div>
+        <ol style="padding-left:16px;margin:0;display:flex;flex-direction:column;gap:5px">
+          ${e.pasos.map(p=>`<li style="font-size:12px;color:var(--text2);line-height:1.5">${p}</li>`).join('')}
+        </ol>
+        <div style="margin-top:10px;padding:8px 10px;background:rgba(59,130,246,.08);border-radius:7px;border-left:2px solid var(--b)">
+          <div style="font-size:11px;color:var(--b);line-height:1.5">💡 ${e.tip}</div>
+        </div>
+      </div>`).join('')}
+    </div>
+
+    <div class="sh"><h2>🖥️ Ergonomía de escritorio</h2></div>
+    <div class="g3" style="margin-bottom:22px">
+      ${POSTURA_ERGONOMIA.map(t=>`<div class="card" style="border-left:3px solid var(--g)"><div style="font-size:22px;margin-bottom:8px">${t.ico}</div><div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:5px">${t.t}</div><div style="font-size:12px;color:var(--text2);line-height:1.6">${t.d}</div></div>`).join('')}
+    </div>
+
+    <div class="card">
+      <div class="card-title" style="margin-bottom:14px">📋 Historial de dolor / molestias</div>
+      ${dolores.length?`<div class="tw"><table>
+        <thead><tr><th>Fecha</th><th>Zona</th><th>Intensidad</th><th>Notas</th><th></th></tr></thead>
+        <tbody>${dolores.map(d=>`<tr>
+          <td style="white-space:nowrap">${fmtD(d.fecha)}</td>
+          <td>${ZONAS_DOLOR[d.zona]||d.zona}</td>
+          <td><span class="badge ${d.intensidad>=4?'b-r':d.intensidad>=3?'b-o':'b-n'}">${d.intensidad}/5</span></td>
+          <td class="ts tm">${d.notas||'—'}</td>
+          <td>
+            <button class="btn btn-o btn-sm btn-ico" onclick="openDolorModal('${d.id}')">✏️</button>
+            <button class="btn btn-o btn-sm btn-ico" onclick="askDel(()=>delDolor('${d.id}'))">🗑️</button>
+          </td>
+        </tr>`).join('')}</tbody>
+      </table></div>`:`<div class="empty"><div class="ico">🧍</div><p>Sin registros de dolor. Ojalá se quede así.</p></div>`}
+    </div>
+  `;
+}
+
+function openDolorModal(id=null) {
+  editId=id;
+  const d=id?S.postura.dolores.find(x=>x.id===id):null;
+  document.getElementById('mo-dolor-title').textContent=id?'Editar registro':'Registrar dolor o molestia';
+  document.getElementById('dolor-zona').value=d?.zona||'espalda_baja';
+  document.getElementById('dolor-intensidad').value=d?.intensidad||'2';
+  document.getElementById('dolor-fecha').value=d?.fecha||today();
+  document.getElementById('dolor-notas').value=d?.notas||'';
+  document.getElementById('mo-dolor').classList.add('open');
+}
+
+function saveDolor() {
+  const data={
+    zona:document.getElementById('dolor-zona').value,
+    intensidad:parseInt(document.getElementById('dolor-intensidad').value),
+    fecha:document.getElementById('dolor-fecha').value||today(),
+    notas:document.getElementById('dolor-notas').value.trim()
+  };
+  if(editId){const i=S.postura.dolores.findIndex(x=>x.id===editId);if(i>=0)S.postura.dolores[i]={...S.postura.dolores[i],...data};}
+  else S.postura.dolores.push({id:uid(),...data});
+  save(); closeMo('mo-dolor'); renderPostura(); toast('✅ Registro guardado');
+}
+
+function delDolor(id) { S.postura.dolores=S.postura.dolores.filter(d=>d.id!==id); save(); renderPostura(); toast('🗑️ Eliminado'); }
+
+// ─── SALUD MENTAL ────────────────────────────────────────────────────────────
+const ANIMO_LABELS = {1:'😞 Muy mal',2:'😕 Mal',3:'😐 Regular',4:'🙂 Bien',5:'😄 Muy bien'};
+const ESTRES_LABELS = {1:'😌 Muy tranquilo',2:'🙂 Tranquilo',3:'😐 Normal',4:'😣 Estresado',5:'🤯 Muy estresado'};
+
+const MENTAL_TECNICAS = [
+  {ico:'🫁',titulo:'Respiración 4-7-8',pasos:['Exhala completamente por la boca.','Inhala por la nariz contando 4 segundos.','Sostén la respiración contando 7 segundos.','Exhala por la boca contando 8 segundos.','Repite el ciclo 4 veces.'],tip:'Activa el sistema nervioso parasimpático en minutos — útil antes de dormir o en un pico de estrés agudo.'},
+  {ico:'🟦',titulo:'Respiración en caja (box breathing)',pasos:['Inhala contando 4 segundos.','Sostén 4 segundos.','Exhala 4 segundos.','Sostén con pulmones vacíos 4 segundos.','Repite 4-6 ciclos.'],tip:'La usan pilotos y equipos de operaciones especiales para bajar el estrés bajo presión — funciona en cualquier lugar, sin que nadie note que la estás haciendo.'},
+  {ico:'✋',titulo:'Grounding 5-4-3-2-1',pasos:['Nombra 5 cosas que puedas ver.','4 cosas que puedas tocar.','3 cosas que puedas oír.','2 cosas que puedas oler.','1 cosa que puedas saborear.'],tip:'Saca a tu cerebro del bucle de pensamientos ansiosos anclándolo al presente a través de los sentidos.'},
+  {ico:'📝',titulo:'Journaling de descarga (brain dump)',pasos:['Toma papel o el celular, pon un temporizador de 5-10 min.','Escribe todo lo que traes en la cabeza sin filtrar ni corregir.','No lo releas de inmediato — el objetivo es sacarlo, no analizarlo.','Al final, marca con ⭐ lo que sí requiere una acción real mañana.'],tip:'Vaciar la mente en papel reduce la carga de estar "cargando" pendientes mentalmente todo el día.'},
+  {ico:'🚶',titulo:'Caminata sin celular',pasos:['10-15 minutos, sin audífonos ni celular.','Enfócate en el entorno: lo que ves, el clima, tus pasos.','Ideal a medio día o justo después del trabajo, como transición.'],tip:'El movimiento ligero baja el cortisol y la "caminata de transición" ayuda a cerrar mentalmente la jornada laboral.'},
+  {ico:'📵',titulo:'Desconexión digital nocturna',pasos:['Define una hora de corte (ej. 9:30 pm) para dejar el celular.','Pon el teléfono a cargar fuera del cuarto o en modo avión.','Sustituye ese tiempo por lectura, estiramiento o platicar.'],tip:'La luz azul y el scroll nocturno elevan el cortisol justo cuando el cuerpo debería estar bajándolo para dormir.'},
+  {ico:'🙏',titulo:'3 gratitudes antes de dormir',pasos:['Cada noche, antes de dormir, piensa o escribe 3 cosas concretas del día que salieron bien.','Sé específico: no "mi familia" sino "la llamada con mi hermano a las 8pm".'],tip:'Entrena al cerebro a buscar activamente lo positivo — con la práctica reduce la rumiación nocturna.'},
+  {ico:'💪',titulo:'Ejercicio como regulador de estrés',pasos:['Cualquier entrenamiento de tu rutina de gym cuenta — no necesita ser "cardio para estrés".','30-45 min, 3-4 veces por semana, ya es terapéutico a nivel hormonal.'],tip:'El ejercicio de fuerza reduce el cortisol basal y sube endorfinas — el mismo entrenamiento que ya haces para ganar masa también te está ayudando aquí.'}
+];
+
+const MENTAL_ALERTAS = [
+  'Ánimo bajo (1-2) sostenido por más de 2 semanas seguidas',
+  'Pérdida de interés en cosas que normalmente disfrutas',
+  'Cambios fuertes en sueño o apetito que no se explican por otra causa',
+  'Pensamientos de que no vale la pena seguir, o de hacerte daño',
+  'El estrés interfiere con el trabajo, el entrenamiento o tus relaciones de forma constante'
+];
+
+function renderMental() {
+  const sec=document.getElementById('s-mental'); if(!sec) return;
+  const regs=[...S.mental.registros].sort((a,b)=>b.fecha.localeCompare(a.fecha));
+  const recientes=regs.slice(0,7);
+  const promAnimo=recientes.length?(recientes.reduce((s,r)=>s+r.animo,0)/recientes.length).toFixed(1):null;
+  const promEstres=recientes.length?(recientes.reduce((s,r)=>s+r.estres,0)/recientes.length).toFixed(1):null;
+  const hoyReg=regs.find(r=>r.fecha===today());
+
+  sec.innerHTML=`
+    <div class="sh"><h2>🧠 Salud Mental</h2><button class="btn btn-g" onclick="openAnimoModal()">${hoyReg?'✏️ Editar registro de hoy':'+ Registrar cómo te sientes'}</button></div>
+
+    <div class="g4" style="margin-bottom:18px">
+      <div class="card" style="border-left:4px solid var(--g)">
+        <div class="card-title" style="color:var(--g)">🙂 Ánimo promedio</div>
+        <div class="card-val" style="color:var(--g)">${promAnimo||'—'}</div>
+        <div class="card-sub">${promAnimo?'de últimos '+recientes.length+' registro(s)':'Sin registros aún'}</div>
+      </div>
+      <div class="card" style="border-left:4px solid var(--o)">
+        <div class="card-title" style="color:var(--o)">😣 Estrés promedio</div>
+        <div class="card-val" style="color:var(--o)">${promEstres||'—'}</div>
+        <div class="card-sub">${promEstres?'de últimos '+recientes.length+' registro(s)':'Sin registros aún'}</div>
+      </div>
+      <div class="card">
+        <div class="card-title">📅 Hoy</div>
+        <div class="card-val" style="font-size:16px">${hoyReg?ANIMO_LABELS[hoyReg.animo]:'Sin registrar'}</div>
+        <div class="card-sub">${hoyReg?'Estrés: '+ESTRES_LABELS[hoyReg.estres]:'Registra cómo te sientes hoy'}</div>
+      </div>
+      <div class="card">
+        <div class="card-title">📊 Registros totales</div>
+        <div class="card-val">${regs.length}</div>
+        <div class="card-sub">${regs.length?'Último: '+fmtD(regs[0].fecha):'Sin registros'}</div>
+      </div>
+    </div>
+
+    ${regs.length?`<div class="card" style="margin-bottom:20px"><div class="card-title" style="margin-bottom:10px">📈 Tendencia de ánimo y estrés</div><div class="chart-c"><canvas id="ch-mental"></canvas></div></div>`:''}
+
+    <div class="sh"><h2>🧘 Técnicas para manejar el estrés</h2></div>
+    <div class="g3" style="margin-bottom:22px">
+      ${MENTAL_TECNICAS.map(t=>`
+      <div class="card" style="border-top:3px solid var(--p)">
+        <div style="font-size:24px;margin-bottom:8px">${t.ico}</div>
+        <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:10px">${t.titulo}</div>
+        <ol style="padding-left:16px;margin:0;display:flex;flex-direction:column;gap:5px">
+          ${t.pasos.map(p=>`<li style="font-size:12px;color:var(--text2);line-height:1.5">${p}</li>`).join('')}
+        </ol>
+        <div style="margin-top:10px;padding:8px 10px;background:rgba(176,110,255,.08);border-radius:7px;border-left:2px solid var(--p)">
+          <div style="font-size:11px;color:var(--p);line-height:1.5">💡 ${t.tip}</div>
+        </div>
+      </div>`).join('')}
+    </div>
+
+    <div class="card" style="margin-bottom:18px">
+      <div class="card-title" style="margin-bottom:14px">📋 Historial</div>
+      ${regs.length?`<div class="tw"><table>
+        <thead><tr><th>Fecha</th><th>Ánimo</th><th>Estrés</th><th>Causa</th><th></th></tr></thead>
+        <tbody>${regs.map(r=>`<tr>
+          <td style="white-space:nowrap">${fmtD(r.fecha)}</td>
+          <td>${ANIMO_LABELS[r.animo]}</td>
+          <td>${ESTRES_LABELS[r.estres]}</td>
+          <td class="ts tm">${r.causa||'—'}</td>
+          <td>
+            <button class="btn btn-o btn-sm btn-ico" onclick="openAnimoModal('${r.id}')">✏️</button>
+            <button class="btn btn-o btn-sm btn-ico" onclick="askDel(()=>delAnimo('${r.id}'))">🗑️</button>
+          </td>
+        </tr>`).join('')}</tbody>
+      </table></div>`:`<div class="empty"><div class="ico">🧠</div><p>Sin registros. Registra cómo te sientes hoy.</p></div>`}
+    </div>
+
+    <div class="card" style="border:1px solid rgba(255,59,107,.3);background:rgba(255,59,107,.05)">
+      <div style="display:flex;gap:12px;align-items:flex-start">
+        <span style="font-size:28px">⚠️</span>
+        <div>
+          <div style="font-size:14px;font-weight:700;color:var(--r);margin-bottom:8px">Cuándo buscar ayuda profesional</div>
+          <div style="font-size:12px;color:var(--text2);margin-bottom:10px">Estas técnicas ayudan con el estrés del día a día, pero no sustituyen atención profesional. Busca ayuda de un psicólogo si notas:</div>
+          <div style="display:flex;flex-direction:column;gap:6px">
+            ${MENTAL_ALERTAS.map(a=>`<div style="display:flex;gap:8px;align-items:center"><span style="color:var(--r);font-size:10px;flex-shrink:0">▶</span><span style="font-size:12px;color:var(--text)">${a}</span></div>`).join('')}
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+
+  if(regs.length){
+    const sorted=[...regs].sort((a,b)=>a.fecha.localeCompare(b.fecha)).slice(-20);
+    chMental=killChart(chMental);
+    const ctx=document.getElementById('ch-mental');
+    if(ctx) chMental=new Chart(ctx,{type:'line',data:{labels:sorted.map(r=>fmtD(r.fecha)),datasets:[
+      {label:'Ánimo',data:sorted.map(r=>r.animo),borderColor:'var(--g)',backgroundColor:'rgba(0,232,122,.08)',fill:true,tension:.4,pointRadius:4,borderWidth:2.5},
+      {label:'Estrés',data:sorted.map(r=>r.estres),borderColor:'var(--o)',backgroundColor:'transparent',tension:.4,pointRadius:4,borderWidth:2.5}
+    ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:true,position:'bottom',labels:{color:'#8892b0',boxWidth:10,font:{size:10}}}},
+      scales:{y:{min:1,max:5,grid:{color:'rgba(255,255,255,.06)'},ticks:{color:'#4a5568',stepSize:1}},x:{grid:{display:false},ticks:{color:'#4a5568'}}}}});
+  }
+}
+
+function openAnimoModal(id=null) {
+  editId=id;
+  const r=id?S.mental.registros.find(x=>x.id===id):(S.mental.registros.find(x=>x.fecha===today())||null);
+  if(r&&!id) editId=r.id;
+  document.getElementById('mo-animo-title').textContent=(id||r)?'Editar registro':'Registrar cómo te sientes';
+  document.getElementById('animo-fecha').value=r?.fecha||today();
+  document.getElementById('animo-animo').value=r?.animo||'3';
+  document.getElementById('animo-estres').value=r?.estres||'3';
+  document.getElementById('animo-causa').value=r?.causa||'';
+  document.getElementById('animo-notas').value=r?.notas||'';
+  document.getElementById('mo-animo').classList.add('open');
+}
+
+function saveAnimo() {
+  const data={
+    fecha:document.getElementById('animo-fecha').value||today(),
+    animo:parseInt(document.getElementById('animo-animo').value),
+    estres:parseInt(document.getElementById('animo-estres').value),
+    causa:document.getElementById('animo-causa').value.trim(),
+    notas:document.getElementById('animo-notas').value.trim()
+  };
+  if(editId){const i=S.mental.registros.findIndex(x=>x.id===editId);if(i>=0)S.mental.registros[i]={...S.mental.registros[i],...data};}
+  else S.mental.registros.push({id:uid(),...data});
+  save(); closeMo('mo-animo'); renderMental(); toast('✅ Registro guardado');
+}
+
+function delAnimo(id) { S.mental.registros=S.mental.registros.filter(r=>r.id!==id); save(); renderMental(); toast('🗑️ Eliminado'); }
+
+// ─── SUPLEMENTOS ─────────────────────────────────────────────────────────────
+const MOMENTO_LABELS = {am:'🌅 Mañana',pre:'🏋️ Pre-entreno',post:'💪 Post-entreno',pm:'🌙 Noche',cualquiera:'🕐 Cualquier hora'};
+
+const SUPP_CATALOG = [
+  {ico:'🥤',nombre:'Proteína Whey (suero de leche)',dosis:'25-30g (1 scoop) post-entreno o para completar tu meta diaria',momento:'post',para:'Completar la meta de proteína de tu Rutina Muscular (183g/día) cuando la comida no alcanza.',nota:'No reemplaza comida real — es un complemento para los días en que no llegas a tu meta solo con alimentos.'},
+  {ico:'⚡',nombre:'Creatina monohidratada',dosis:'5g al día, todos los días (no solo días de entreno)',momento:'cualquiera',para:'El suplemento con más evidencia científica para fuerza y ganancia de masa muscular.',nota:'No necesita fase de carga. Tómala siempre a la misma hora para no olvidarla — el efecto es acumulativo, no inmediato.'},
+  {ico:'☀️',nombre:'Vitamina D3',dosis:'2000-4000 UI al día, con una comida que tenga algo de grasa',momento:'am',para:'Soporte hormonal (incluida testosterona) y salud ósea — muy común tener deficiencia si te da poco sol.',nota:'Idealmente confirma tu nivel con el examen de Vitamina D en Exámenes Médicos antes de dosis altas y sostenidas.'},
+  {ico:'🐟',nombre:'Omega 3 (aceite de pescado)',dosis:'1-2g de EPA+DHA al día, con alimento',momento:'cualquiera',para:'Antiinflamatorio, apoya recuperación muscular y salud cardiovascular.',nota:'Si tienes reflujo, tómalo con una comida grande para evitar el "repique" de sabor a pescado.'},
+  {ico:'💊',nombre:'Multivitamínico',dosis:'1 tableta al día con desayuno',momento:'am',para:'Cubre huecos de micronutrientes en días donde la dieta no es perfecta.',nota:'No sustituye comer variado — es un seguro, no la base de la nutrición.'},
+  {ico:'🧂',nombre:'Magnesio (glicinato o citrato)',dosis:'200-400mg, 30-60 min antes de dormir',momento:'pm',para:'Mejora la calidad del sueño y reduce calambres — complementa lo de Postura y Salud Mental.',nota:'El glicinato de magnesio es el mejor tolerado digestivamente; evita el óxido de magnesio si tienes el estómago sensible.'}
+];
+
+function tomadoHoy(id) { return !!(S.suplementos.tomado[today()]||{})[id]; }
+function toggleTomado(id) {
+  const t=today();
+  if(!S.suplementos.tomado[t]) S.suplementos.tomado[t]={};
+  S.suplementos.tomado[t][id]=!S.suplementos.tomado[t][id];
+  save(); renderSuplementos();
+}
+
+function renderSuplementos() {
+  const sec=document.getElementById('s-suplementos'); if(!sec) return;
+  const lista=S.suplementos.lista;
+  const tomadosHoy=lista.filter(s=>tomadoHoy(s.id)).length;
+
+  sec.innerHTML=`
+    <div class="sh"><h2>💊 Suplementos</h2><button class="btn btn-g" onclick="openSuppModal()">+ Agregar suplemento</button></div>
+
+    <div class="g3" style="margin-bottom:18px">
+      <div class="card" style="border-left:4px solid var(--g)">
+        <div class="card-title" style="color:var(--g)">✅ Tomados hoy</div>
+        <div class="card-val" style="color:var(--g)">${tomadosHoy} / ${lista.length}</div>
+        <div class="card-sub">${lista.length?'Marca cada uno al tomarlo':'Aún no agregas ninguno'}</div>
+      </div>
+      <div class="card">
+        <div class="card-title">📋 En mi lista</div>
+        <div class="card-val">${lista.length}</div>
+        <div class="card-sub">suplemento(s) activos</div>
+      </div>
+      <div class="card">
+        <div class="card-title">📚 Catálogo de referencia</div>
+        <div class="card-val">${SUPP_CATALOG.length}</div>
+        <div class="card-sub">relacionados a tu meta de masa muscular</div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom:20px">
+      <div class="card-title" style="margin-bottom:14px">📋 Mi lista</div>
+      ${lista.length?`<div class="tw"><table>
+        <thead><tr><th>Hoy</th><th>Nombre</th><th>Dosis</th><th>Momento</th><th></th></tr></thead>
+        <tbody>${lista.map(s=>`<tr>
+          <td><input type="checkbox" ${tomadoHoy(s.id)?'checked':''} onchange="toggleTomado('${s.id}')" style="width:18px;height:18px;cursor:pointer"></td>
+          <td style="font-weight:600">${s.nombre}${s.notas?`<div class="ts tm">${s.notas}</div>`:''}</td>
+          <td class="ts tm">${s.dosis||'—'}</td>
+          <td>${MOMENTO_LABELS[s.momento]||s.momento}</td>
+          <td>
+            <button class="btn btn-o btn-sm btn-ico" onclick="openSuppModal('${s.id}')">✏️</button>
+            <button class="btn btn-o btn-sm btn-ico" onclick="askDel(()=>delSupp('${s.id}'))">🗑️</button>
+          </td>
+        </tr>`).join('')}</tbody>
+      </table></div>`:`<div class="empty"><div class="ico">💊</div><p>Agrega un suplemento manualmente o desde el catálogo de abajo.</p></div>`}
+    </div>
+
+    <div class="sh"><h2>📚 Catálogo — relevantes para tu meta de masa muscular</h2></div>
+    <div class="g3">
+      ${SUPP_CATALOG.map((s,i)=>`
+      <div class="card" style="border-top:3px solid var(--b)">
+        <div style="font-size:24px;margin-bottom:8px">${s.ico}</div>
+        <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:6px">${s.nombre}</div>
+        <div style="font-size:11px;color:var(--b);margin-bottom:8px">${s.dosis}</div>
+        <div style="font-size:12px;color:var(--text2);line-height:1.5;margin-bottom:8px">${s.para}</div>
+        <div style="padding:8px 10px;background:rgba(59,130,246,.08);border-radius:7px;border-left:2px solid var(--b);margin-bottom:10px">
+          <div style="font-size:11px;color:var(--b);line-height:1.5">⚠️ ${s.nota}</div>
+        </div>
+        <button class="btn btn-o btn-sm" style="width:100%" onclick="addFromCatalog(${i})">➕ Agregar a mi lista</button>
+      </div>`).join('')}
+    </div>
+
+    <div class="card" style="margin-top:18px;border:1px solid rgba(255,217,61,.3);background:rgba(255,217,61,.05)">
+      <div style="font-size:12px;color:var(--text2);line-height:1.6">⚠️ <strong style="color:var(--text)">Esto es contenido de referencia, no una prescripción.</strong> Consulta a tu médico antes de empezar cualquier suplemento nuevo, especialmente si ya tomas medicamentos.</div>
+    </div>
+  `;
+}
+
+function addFromCatalog(i) {
+  const s=SUPP_CATALOG[i];
+  S.suplementos.lista.push({id:uid(),nombre:s.nombre,dosis:s.dosis,momento:s.momento,notas:''});
+  save(); renderSuplementos(); toast('✅ '+s.nombre+' agregado a tu lista');
+}
+
+function openSuppModal(id=null) {
+  editId=id;
+  const s=id?S.suplementos.lista.find(x=>x.id===id):null;
+  document.getElementById('mo-supp-title').textContent=id?'Editar suplemento':'Agregar suplemento';
+  document.getElementById('supp-nombre').value=s?.nombre||'';
+  document.getElementById('supp-dosis').value=s?.dosis||'';
+  document.getElementById('supp-momento').value=s?.momento||'am';
+  document.getElementById('supp-notas').value=s?.notas||'';
+  document.getElementById('mo-supp').classList.add('open');
+  setTimeout(()=>document.getElementById('supp-nombre').focus(),100);
+}
+
+function saveSupp() {
+  const nombre=document.getElementById('supp-nombre').value.trim();
+  if(!nombre) return alert('Ingresa el nombre del suplemento.');
+  const data={
+    nombre,
+    dosis:document.getElementById('supp-dosis').value.trim(),
+    momento:document.getElementById('supp-momento').value,
+    notas:document.getElementById('supp-notas').value.trim()
+  };
+  if(editId){const i=S.suplementos.lista.findIndex(x=>x.id===editId);if(i>=0)S.suplementos.lista[i]={...S.suplementos.lista[i],...data};}
+  else S.suplementos.lista.push({id:uid(),...data});
+  save(); closeMo('mo-supp'); renderSuplementos(); toast('✅ Suplemento guardado');
+}
+
+function delSupp(id) { S.suplementos.lista=S.suplementos.lista.filter(s=>s.id!==id); save(); renderSuplementos(); toast('🗑️ Eliminado'); }
 
 // ─── INIT ────────────────────────────────────────────────────────────────────
 function init() {
