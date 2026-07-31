@@ -124,6 +124,21 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 .hp-row:last-child{border-bottom:none}
 .hp-empty{font-size:12px;color:var(--text3);text-align:center;padding:12px 0}
 
+/* ─── COACH · PLAN MAESTRO — ruta de deuda cara + to-do de fase (2026-07-30) ─ */
+.debt-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.debt-step{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:16px 14px;text-align:center;position:relative}
+.debt-step.activo{border-color:var(--ac1);box-shadow:0 0 14px rgba(255,255,255,.08)}
+.debt-step.done{border-color:rgba(0,232,122,.35);background:rgba(0,232,122,.04)}
+.ds-num{position:absolute;top:10px;left:10px;width:20px;height:20px;border-radius:50%;background:rgba(255,255,255,.08);font-size:10.5px;font-weight:800;display:flex;align-items:center;justify-content:center;color:var(--text2)}
+.debt-step.done .ds-num{background:rgba(0,232,122,.2);color:var(--g)}
+.ds-ico{font-size:26px;margin-bottom:4px}
+.ds-lbl{font-size:12px;font-weight:800;color:var(--text)}
+.ds-txt{font-size:11.5px;color:var(--text2);margin:4px 0 9px;font-family:var(--mono)}
+.todo-row{display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.06)}
+.todo-row:last-child{border-bottom:none}
+.todo-num{width:24px;height:24px;border-radius:50%;background:rgba(255,255,255,.08);color:var(--text2);font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+@media(max-width:640px){.debt-steps{grid-template-columns:1fr}}
+
 /* ─── HABILIDADES — tarjetas grandes, una por prioridad (slide pasivo, sin clics) ─ */
 .skill-priority-title{font-size:clamp(15px,1.6vw,19px);font-weight:900;color:var(--text);margin-bottom:12px;display:flex;align-items:center;gap:8px}
 .skill-card{display:flex;flex-direction:column;gap:8px;min-height:100%}
@@ -206,31 +221,31 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
     <div class="slide-inner">
       <div class="eyebrow reveal d1"><span class="dot"></span> Coach · Plan Maestro</div>
       <div class="slide-title reveal d2" id="coachPhaseTitle">Fase —</div>
+      <div class="reveal d2" style="font-size:clamp(12.5px,1.1vw,14.5px);color:var(--text2);line-height:1.65;margin-bottom:18px;max-width:820px" id="coachFaseExplica">—</div>
 
-      <div class="grid g3 reveal d3" style="margin-bottom:18px">
+      <div class="tile reveal d3" style="margin-bottom:18px">
+        <div class="lbl" style="margin-bottom:12px">💰 Tu ruta hacia deuda cara en $0 — en este orden, sin excepción</div>
+        <div class="debt-steps" id="coachDebtSteps"></div>
+      </div>
+
+      <div class="grid g2 reveal d4" style="margin-bottom:18px">
         <div class="tile">
-          <div class="lbl">Días restantes a la meta</div>
-          <div class="big-num" style="font-size:clamp(34px,4vw,56px);color:var(--w)" id="coachDiasMeta">—</div>
-          <div class="sub">Hasta el 01 ene 2030 · $1,000,000 líquido</div>
+          <div class="lbl">Avance real de la ruta</div>
+          <div class="big-num" style="font-size:clamp(30px,3.6vw,46px);color:var(--g)" id="coachRutaPct">—</div>
+          <div class="pbar"><div class="pfill" id="coachRutaPctBar" style="width:0%;background:linear-gradient(90deg,var(--g),var(--cy))"></div></div>
+          <div class="sub">Con $ reales de Finanzas — no tiempo transcurrido</div>
         </div>
         <div class="tile">
-          <div class="lbl">Avance del plan</div>
-          <div class="big-num" style="font-size:clamp(34px,4vw,56px);color:var(--g)" id="coachPct">—</div>
-          <div class="pbar"><div class="pfill" id="coachPctBar" style="width:0%;background:linear-gradient(90deg,var(--g),var(--cy))"></div></div>
-        </div>
-        <div class="tile">
-          <div class="lbl">Fase actual vence</div>
-          <div class="big-num" style="font-size:clamp(20px,2.6vw,32px)" id="coachFaseFin">—</div>
+          <div class="lbl">Esta fase vence</div>
+          <div class="big-num" style="font-size:clamp(22px,2.8vw,34px)" id="coachFaseFin">—</div>
           <div class="sub" id="coachFaseDias">—</div>
         </div>
       </div>
 
-      <div class="tile reveal d4" style="margin-bottom:18px">
-        <div class="lbl" style="margin-bottom:10px">🎯 Meta de esta fase</div>
-        <div style="font-size:clamp(14px,1.3vw,17px);color:var(--text);line-height:1.5" id="coachFaseMeta">—</div>
+      <div class="tile reveal d5">
+        <div class="lbl" style="margin-bottom:10px">📋 Qué hacer en esta fase</div>
+        <div id="coachPriorities"></div>
       </div>
-
-      <div class="grid g3 reveal d5" id="coachPriorities"></div>
     </div>
   </section>
 
@@ -481,6 +496,7 @@ const GYM_RUTINA_DEFAULT={
 const PHASES=[
   {start:new Date(2026,6,18), end:new Date(2026,8,30),  tag:'Fase 0', title:'Cerrar la fuga y arrancar ingreso, no solo pensar',
    meta:'Fondo de emergencia a $10,000 + $14,000–15,000 de activos vendidos aplicados a Banamex.',
+   explica:'Fase 0 es el arranque del plan (18 jul – 30 sep 2026, ~10 semanas). Todavía no se trata de ganar mucho — se trata de cerrar la fuga de dinero y sentar las bases, en este orden exacto: 1) fondo de emergencia, 2) Banamex, 3) BBVA. En paralelo arrancas el negocio: régimen fiscal, contactar ex-colegas y publicar tu primera plantilla.',
    priorities:[
      {ico:'🧾',t:'Régimen fiscal activo',d:'Trámite en el SAT — sin esto no puedes facturar freelance ni la plantilla'},
      {ico:'🤝',t:'5 ex-colegas contactados',d:'Bosch / Continental / Ford — freelance de automatización'},
@@ -488,6 +504,7 @@ const PHASES=[
    ]},
   {start:new Date(2026,9,1),  end:new Date(2027,2,31),  tag:'Fase 1', title:'Los $3,868/mes liberados entran en acción + primer ingreso real',
    meta:'Primer contrato freelance o 20+ ventas de la plantilla cobradas; Banamex liquidada.',
+   explica:'Fase 1 (oct 2026 – mar 2027) arranca cuando los $3,868/mes que hoy se van en MSI de gadgets quedan libres. Ese dinero sigue la misma fila que en Fase 0: termina de dejar Banamex en $0, y lo que sobre empieza a atacar BBVA. En paralelo, buscas tu primer ingreso real fuera de ALTEN.',
    priorities:[
      {ico:'💼',t:'Primer contrato freelance',d:'Opción 2 — o 20+ ventas de la plantilla GBM'},
      {ico:'📣',t:'1 post mensual de seguimiento',d:'Plantilla GBM — Opción 1'},
@@ -495,6 +512,7 @@ const PHASES=[
    ]},
   {start:new Date(2027,3,1),  end:new Date(2028,11,31), tag:'Fase 2', title:'Doblar apuesta en lo que mostró tracción',
    meta:'BBVA liquidada, deuda cara en $0, ingreso extra estable de al menos $10,000–15,000/mes.',
+   explica:'Fase 2 (abr 2027 – dic 2028) es la fase más larga. Con Banamex ya resuelto, todo el excedente ataca BBVA hasta dejar la deuda cara en $0 — mientras doblas la apuesta en la opción de negocio que ya mostró tracción real, en vez de dispersarte entre varias.',
    priorities:[
      {ico:'🎯',t:'Concéntrate en 1 opción',d:'La que ya mostró ingreso recurrente real'},
      {ico:'🚀',t:'Arranca Opción 4',d:'CodeReview productizado — con capital ya disponible'},
@@ -502,6 +520,7 @@ const PHASES=[
    ]},
   {start:new Date(2029,0,1),  end:new Date(2030,0,1),   tag:'Fase 3', title:'Escalar, cerrar la brecha de $31,540/mes y reevaluar',
    meta:'Cerrar la distancia final a $1,000,000 líquido con el negocio como fuente principal de excedente.',
+   explica:'Fase 3 (ene 2029 – ene 2030) es el cierre. Con la deuda cara ya en $0 desde la fase anterior, todo el excedente nuevo va directo a cerrar la brecha final hacia $1,000,000 de patrimonio líquido — la meta central de todo el Plan Maestro.',
    priorities:[
      {ico:'🏁',t:'El negocio cubre la brecha',d:'Ingreso extra cercano a cero = problema de opción, no de timing'},
      {ico:'💰',t:'Todo excedente a inversión',d:'CETES, fondos indexados, ampliar BTC/acciones'},
@@ -511,16 +530,6 @@ const PHASES=[
 function activePhase(){
   const t=new Date(); t.setHours(0,0,0,0);
   return PHASES.find(p=>t>=p.start&&t<=p.end) || PHASES[PHASES.length-1];
-}
-function coachCountdown(){
-  const inicio=new Date(2026,6,18), meta=new Date(2030,0,1);
-  const hoy=new Date(); hoy.setHours(0,0,0,0);
-  const msDia=86400000;
-  const diasTotales=Math.round((meta-inicio)/msDia);
-  const diasTranscurridos=Math.min(diasTotales,Math.max(0,Math.round((hoy-inicio)/msDia)));
-  const diasRestantes=Math.max(0,Math.round((meta-hoy)/msDia));
-  const pct=Math.min(100,Math.max(0,Math.round(diasTranscurridos/diasTotales*100)));
-  return{diasRestantes,pct};
 }
 
 // ── FINANZAS derivadas ───────────────────────────────────────────────────
@@ -685,20 +694,54 @@ function renderHero(){
 }
 
 function renderCoach(){
-  const ph=activePhase(), cd=coachCountdown();
+  const ph=activePhase();
   document.getElementById('coachPhaseTitle').textContent=`${ph.tag} — ${ph.title}`;
-  document.getElementById('coachDiasMeta').textContent=fmt(cd.diasRestantes);
-  document.getElementById('coachPct').textContent=cd.pct+'%';
-  document.getElementById('coachPctBar').style.width=cd.pct+'%';
+  document.getElementById('coachFaseExplica').innerHTML=`${ph.explica||ph.meta}`;
+
+  // ── Ruta real hacia deuda cara en $0: fondo de emergencia → Banamex → BBVA,
+  //    en ese orden, con $ reales de Finanzas (mismo matching que usa Mis Metas) ──
+  const ef=D.fin.emergencyFund||0, efMeta=10000;
+  const bana=metaDebtInfo(d=>/banamex/i.test(d.name||''));
+  const bbva=metaDebtInfo(d=>/bbva/i.test(d.name||'')&&(!d.type||d.type==='credit_card'));
+  const efPct=Math.min(100,ef/efMeta*100), efDone=ef>=efMeta;
+  const banaPct=bana.found&&bana.total>0?Math.max(0,Math.min(100,(1-bana.balance/bana.total)*100)):0;
+  const banaDone=bana.found&&bana.balance<=0;
+  const bbvaPct=bbva.found&&bbva.total>0?Math.max(0,Math.min(100,(1-bbva.balance/bbva.total)*100)):0;
+  const bbvaDone=bbva.found&&bbva.balance<=0;
+
+  const steps=[
+    {n:1,ico:'🆘',lbl:'Fondo de emergencia',done:efDone,activo:!efDone,pct:efPct,
+     txt:`${money(ef)} / ${money(efMeta)}`},
+    {n:2,ico:'💳',lbl:'Banamex',done:banaDone,activo:efDone&&!banaDone,pct:banaPct,
+     txt:!bana.found?'Sin datos en Finanzas':banaDone?'Liquidada 🎉':money(bana.balance)+' restante'},
+    {n:3,ico:'💳',lbl:'BBVA TC',done:bbvaDone,activo:banaDone&&!bbvaDone,pct:bbvaPct,
+     txt:!bbva.found?'Sin datos en Finanzas':bbvaDone?'Liquidada 🎉':money(bbva.balance)+' restante'},
+  ];
+  document.getElementById('coachDebtSteps').innerHTML=steps.map(s=>`
+    <div class="debt-step ${s.done?'done':''} ${s.activo?'activo':''}">
+      <div class="ds-num">${s.done?'✅':s.n}</div>
+      <div class="ds-ico">${s.ico}</div>
+      <div class="ds-lbl">${s.lbl}</div>
+      <div class="ds-txt">${s.txt}</div>
+      <div class="pbar" style="height:6px;margin-top:0"><div class="pfill" style="width:${s.pct}%;background:${s.done?'var(--g)':s.activo?'var(--w)':'var(--text3)'}"></div></div>
+    </div>`).join('');
+
+  // Avance real = promedio de los 3 pasos con datos reales (no días transcurridos)
+  const rutaPct=Math.round((efPct+banaPct+bbvaPct)/3);
+  document.getElementById('coachRutaPct').textContent=rutaPct+'%';
+  document.getElementById('coachRutaPctBar').style.width=rutaPct+'%';
+
   document.getElementById('coachFaseFin').textContent=ph.end.toLocaleDateString('es-MX',{day:'numeric',month:'short',year:'numeric'});
   const diasFase=Math.max(0,Math.round((ph.end-new Date())/86400000));
   document.getElementById('coachFaseDias').textContent=`${fmt(diasFase)} día(s) restantes de esta fase`;
-  document.getElementById('coachFaseMeta').textContent=ph.meta;
-  document.getElementById('coachPriorities').innerHTML=ph.priorities.map(p=>`
-    <div class="tile">
-      <div style="font-size:26px;margin-bottom:8px">${p.ico}</div>
-      <div style="font-weight:800;font-size:clamp(13px,1.2vw,15px);margin-bottom:4px">${p.t}</div>
-      <div class="sub">${p.d}</div>
+
+  document.getElementById('coachPriorities').innerHTML=ph.priorities.map((p,i)=>`
+    <div class="todo-row">
+      <div class="todo-num">${i+1}</div>
+      <div style="flex:1">
+        <div style="font-weight:800;font-size:13px">${p.ico} ${p.t}</div>
+        <div class="sub" style="margin-top:2px">${p.d}</div>
+      </div>
     </div>`).join('');
 }
 
