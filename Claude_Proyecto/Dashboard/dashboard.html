@@ -117,12 +117,36 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 .ws-ddate{font-size:9px;color:var(--text3);margin-bottom:7px}
 .ws-gym-ico{font-size:17px;line-height:1}
 .ws-gym-lbl{font-size:8px;color:var(--text3);margin-top:3px;line-height:1.25;min-height:20px;overflow:hidden}
-.ws-cal{font-size:9px;color:var(--text2);margin-top:5px;font-family:var(--mono);padding-top:5px;border-top:1px solid rgba(255,255,255,.06)}
+.ws-gym-lbl.pend{color:var(--text3);opacity:.7}
 .hp-title{font-size:11.5px;font-weight:800;color:var(--text2);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;gap:6px}
 .hp-big{font-family:var(--mono);font-weight:700;font-size:clamp(26px,3vw,38px);line-height:1;margin-bottom:8px}
 .hp-row{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.06);font-size:12px}
 .hp-row:last-child{border-bottom:none}
 .hp-empty{font-size:12px;color:var(--text3);text-align:center;padding:12px 0}
+.hp-link{font-size:10.5px;font-weight:700;color:var(--cy);text-decoration:none;white-space:nowrap}
+
+/* Frase motivacional (Hero) */
+.hero-frase{display:flex;align-items:center;gap:12px;padding:12px 18px;border-radius:16px;background:rgba(255,255,255,.035);
+  border:1px solid rgba(255,255,255,.08);margin-bottom:14px}
+.hero-frase .q{font-size:20px;flex-shrink:0;opacity:.7}
+.hero-frase .txt{font-size:clamp(12.5px,1.15vw,15px);font-style:italic;color:var(--text);line-height:1.4}
+.hero-frase .txt b{font-style:normal;color:var(--ac1)}
+
+/* Panel de gym con ejercicios detallados (Hero) */
+.hp-ex-scroll{max-height:180px;overflow-y:auto;margin-top:4px}
+.hp-ex-row{padding:7px 0;border-bottom:1px solid rgba(255,255,255,.06)}
+.hp-ex-row:last-child{border-bottom:none}
+.hp-ex-top{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.hp-ex-name{font-size:12.5px;font-weight:700;color:var(--text)}
+.hp-ex-sr{font-size:11px;color:var(--text2);font-family:var(--mono);white-space:nowrap}
+.hp-ex-cue{font-size:10.5px;color:var(--text3);line-height:1.4;margin-top:2px}
+
+/* Panel de sugerencias de comida (Hero) */
+.hp-meal{padding:9px 0;border-bottom:1px solid rgba(255,255,255,.06)}
+.hp-meal:last-child{border-bottom:none}
+.hp-meal-lbl{font-size:9.5px;font-weight:800;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px}
+.hp-meal-name{font-size:13px;font-weight:700;color:var(--text);line-height:1.35}
+.hp-meal-macro{font-size:10.5px;color:var(--text2);font-family:var(--mono);margin-top:3px}
 
 /* ─── COACH · PLAN MAESTRO — ruta de deuda cara + to-do de fase (2026-07-30) ─ */
 .debt-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
@@ -172,9 +196,11 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
         </div>
       </div>
 
+      <div class="hero-frase reveal d2" id="heroFrase"></div>
+
       <div class="week-strip reveal d2" id="heroWeekStrip"></div>
 
-      <div class="grid g3 reveal d3" style="margin-top:14px" id="heroQuickStats"></div>
+      <div class="grid g2 reveal d3" style="margin-top:14px" id="heroQuickStats"></div>
 
       <div class="grid g2 reveal d4" style="margin-top:14px;align-items:stretch">
         <div class="tile" id="heroGymPanel"></div>
@@ -483,14 +509,114 @@ const DIAS_CORTOS=['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
 // Si Adán personaliza su rutina ahí, esa versión real siempre tiene prioridad (ver renderHero()).
 // Si se edita S.rutina en ejercicio.html, replicar nombre/tipo aquí — mismo patrón que RUTINA_TASKS/SK/PHASES.
 const GYM_RUTINA_DEFAULT={
-  1:{nombre:'Brazos A — Bíceps + Tríceps',tipo:'brazos'},
-  2:{nombre:'Piernas A — Cuádriceps',tipo:'piernas'},
-  3:{nombre:'Espalda + Hombros + Cardio',tipo:'halar'},
-  4:{nombre:'Brazos B — Bíceps + Tríceps',tipo:'brazos'},
-  5:{nombre:'Piernas B — Glúteo + Femoral',tipo:'piernas'},
-  6:{nombre:'Pecho + Cardio + Core',tipo:'empuje'},
-  0:{nombre:'Descanso activo',tipo:'descanso'}
+  1:{nombre:'Brazos A — Bíceps + Tríceps',tipo:'brazos',
+     ejercicios:[{id:'e021',series:4,reps:9,descanso:90},{id:'e027',series:4,reps:10,descanso:90},{id:'e023',series:3,reps:12,descanso:60},{id:'e028',series:3,reps:12,descanso:60},{id:'e045',series:3,reps:45,unidad:'seg',descanso:45}]},
+  2:{nombre:'Piernas A — Cuádriceps',tipo:'piernas',
+     ejercicios:[{id:'e032',series:4,reps:8,descanso:120},{id:'e033',series:4,reps:12,descanso:90},{id:'e034',series:3,reps:15,descanso:60},{id:'e036',series:3,reps:12,descanso:60},{id:'e039',series:4,reps:20,descanso:45}]},
+  3:{nombre:'Espalda + Hombros + Cardio',tipo:'halar',
+     ejercicios:[{id:'e008',series:4,reps:8,descanso:120},{id:'e009',series:4,reps:10,descanso:90},{id:'e015',series:3,reps:10,descanso:90},{id:'e017',series:3,reps:15,descanso:45},{id:'e056',series:5,reps:30,unidad:'seg',descanso:30}]},
+  4:{nombre:'Brazos B — Bíceps + Tríceps',tipo:'brazos',
+     ejercicios:[{id:'e022',series:4,reps:12,descanso:60},{id:'e031',series:4,reps:12,descanso:60},{id:'e026',series:3,reps:10,descanso:60},{id:'e029',series:3,reps:15,descanso:60},{id:'e047',series:3,reps:15,descanso:45}]},
+  5:{nombre:'Piernas B — Glúteo + Femoral',tipo:'piernas',
+     ejercicios:[{id:'e038',series:4,reps:8,descanso:120},{id:'e041',series:4,reps:12,descanso:90},{id:'e035',series:3,reps:12,descanso:60},{id:'e037',series:3,reps:10,descanso:60},{id:'e044',series:3,reps:15,descanso:45}]},
+  6:{nombre:'Pecho + Cardio + Core',tipo:'empuje',
+     ejercicios:[{id:'e001',series:4,reps:8,descanso:120},{id:'e002',series:3,reps:10,descanso:90},{id:'e004',series:3,reps:12,descanso:60},{id:'e054',series:1,reps:25,unidad:'min',descanso:0},{id:'e048',series:3,reps:10,descanso:60}]},
+  0:{nombre:'Descanso activo',tipo:'descanso',ejercicios:[{id:'e051',series:1,reps:30,unidad:'min',descanso:0}]}
 };
+
+// Nombre + técnica de cada ejercicio que aparece en GYM_RUTINA_DEFAULT — subconjunto
+// duplicado de EJ_DB (ejercicio.html), solo con lo necesario para mostrar el detalle
+// aquí sin cargar la biblioteca completa de ~56 ejercicios.
+const EJ_LOOKUP={
+  e001:{nombre:'Press de Banca',cue:'Escápulas retraídas y pegadas al banco, baja la barra controlada hasta rozar el pecho y empuja en línea recta hacia arriba.'},
+  e002:{nombre:'Press Inclinado con Barra',cue:'Banco a 30-45°. La barra baja a la parte alta del pecho — más ángulo, más pecho superior.'},
+  e004:{nombre:'Aperturas con Mancuerna',cue:'Codos ligeramente flexionados y fijos — es un abrazo amplio, no un press. Siente el estiramiento en el pecho.'},
+  e008:{nombre:'Dominadas',cue:'Agarre un poco más ancho que los hombros, sube hasta que la barbilla pase la barra, baja controlado hasta extender el brazo.'},
+  e009:{nombre:'Remo con Barra',cue:'Torso inclinado ~45°, espalda recta, jala la barra hacia el abdomen apretando los omóplatos al final.'},
+  e015:{nombre:'Press Militar con Barra',cue:'Core apretado, empuja la barra en línea recta sobre la cabeza sin arquear la espalda baja.'},
+  e017:{nombre:'Elevaciones Laterales',cue:'Codos ligeramente flexionados, sube hasta la altura del hombro, lidera con el codo. Peso ligero, técnica estricta.'},
+  e021:{nombre:'Curl con Barra',cue:'Codos pegados al torso todo el movimiento — si se mueven hacia adelante, estás usando impulso, no bíceps.'},
+  e022:{nombre:'Curl con Mancuerna',cue:'Gira la muñeca conforme subes para contraer más el bíceps arriba. Baja siempre controlado, 2-3 segundos.'},
+  e023:{nombre:'Curl Martillo',cue:'Agarre neutro (palmas viéndose todo el tiempo) — construye antebrazo y da grosor extra al brazo.'},
+  e026:{nombre:'Curl Scott (Predicador)',cue:'El banco fija el codo y elimina el impulso — aísla 100% el bíceps.'},
+  e027:{nombre:'Press Francés',cue:'Codos apuntando al techo y fijos, baja hacia la frente doblando solo el codo — el que más masa agrega al tríceps.'},
+  e028:{nombre:'Extensión en Polea (Pushdown)',cue:'Codos pegados al costado sin moverse, extiende hasta bloquear el codo y aprieta el tríceps 1 seg abajo.'},
+  e029:{nombre:'Fondos en Banco',cue:'Manos en el borde del banco, baja hasta 90° de codo sin encoger los hombros hacia las orejas.'},
+  e031:{nombre:'Extensión sobre Cabeza',cue:'Codos apuntando al frente/arriba y fijos junto a la cabeza, baja la mancuerna detrás de la nuca.'},
+  e032:{nombre:'Sentadilla con Barra',cue:'Pecho arriba, rodillas siguiendo la línea de los pies, baja hasta que el muslo pase de paralelo y empuja con los talones.'},
+  e033:{nombre:'Prensa de Piernas',cue:'Pies a la anchura de hombros, baja hasta 90° de rodilla sin despegar la zona lumbar del respaldo.'},
+  e034:{nombre:'Extensión de Cuádriceps',cue:'Extiende por completo y aprieta el cuádriceps 1 seg arriba, baja controlado.'},
+  e035:{nombre:'Curl de Femoral Tumbado',cue:'Cadera pegada al banco todo el movimiento, flexiona la rodilla llevando el talón al glúteo sin impulso.'},
+  e036:{nombre:'Zancadas',cue:'Paso largo hacia adelante, baja hasta que ambas rodillas formen 90° sin golpear el piso. Torso recto.'},
+  e037:{nombre:'Sentadilla Búlgara',cue:'Pie trasero elevado en un banco, baja recto hacia abajo — empieza con poco peso.'},
+  e038:{nombre:'Peso Muerto Rumano',cue:'Rodillas casi rectas, empuja la cadera hacia atrás con la barra pegada a las piernas — sientes el femoral, no la espalda baja.'},
+  e039:{nombre:'Elevación de Pantorrilla',cue:'Sube hasta la punta de los pies y aprieta arriba 1 seg, baja dejando caer el talón para el estiramiento completo.'},
+  e041:{nombre:'Hip Thrust',cue:'Espalda alta apoyada en el banco, barra sobre la cadera, empuja hasta alinear torso y muslos, aprieta el glúteo arriba.'},
+  e044:{nombre:'Abducción de Cadera',cue:'Empuja las piernas hacia afuera contra la resistencia, controla la vuelta — trabaja el glúteo medio.'},
+  e045:{nombre:'Plancha',cue:'Cuerpo en línea recta de cabeza a talones, glúteo y abdomen apretados, no dejes caer la cadera.'},
+  e047:{nombre:'Elevación de Piernas',cue:'Espalda baja pegada al piso, sube las piernas rectas hasta 90° sin impulso, baja controlado.'},
+  e048:{nombre:'Rueda Abdominal',cue:'De rodillas, rueda hacia adelante con el abdomen apretado — solo hasta donde puedas regresar sin arquear la espalda.'},
+  e051:{nombre:'Caminata en Cinta',cue:'Ritmo cómodo y sostenido — recuperación activa, no exigencia.'},
+  e054:{nombre:'Elíptica',cue:'Ritmo constante, postura erguida sin colgarte de los brazos — bajo impacto, ideal para cardio largo.'},
+  e056:{nombre:'Battle Ropes',cue:'Rodillas ligeramente flexionadas, core apretado, ondas fuertes y rápidas — intervalos de 20-30s.'}
+};
+
+// ── NUTRICIÓN — muestra de recetas de Comida (nombre + macros), no el consumo real del
+//    día: Adán registra en Salud/Comida a lo mucho semanalmente, no diario, así que mostrar
+//    "calorías de hoy" casi siempre estaría en 0 y se ve mal. Duplicado ligero de
+//    CuidadoPersonal/comida.html → RECETAS (solo nombre/tiempo/macros, sin ingredientes/pasos).
+const RECETAS_MINI={
+  desayuno:[
+    {nombre:'Avena con plátano, canela y miel',tiempo:'10 min',cal:480,prot:15},
+    {nombre:'Huevos revueltos con espinaca y pan integral',tiempo:'10 min',cal:430,prot:26},
+    {nombre:'Claras de huevo con avena y manzana',tiempo:'12 min',cal:370,prot:28},
+    {nombre:'Yogurt griego con avena, miel y pera',tiempo:'5 min',cal:420,prot:24},
+    {nombre:'Licuado de plátano, avena y crema de cacahuate',tiempo:'5 min',cal:480,prot:18},
+    {nombre:'Hot cakes de avena y plátano (sin harina)',tiempo:'15 min',cal:430,prot:22},
+    {nombre:'Omelette de claras con queso panela y pan tostado',tiempo:'12 min',cal:420,prot:38},
+    {nombre:'Pan tostado con aguacate y huevo cocido',tiempo:'12 min',cal:450,prot:22},
+    {nombre:'Avena overnight con manzana y canela (para llevar)',tiempo:'5 min + reposo',cal:380,prot:10},
+    {nombre:'Quesadillas de claras con queso panela y nopales',tiempo:'12 min',cal:380,prot:30}
+  ],
+  cena:[
+    {nombre:'Pechuga de pollo a la plancha con arroz y verduras',tiempo:'20 min',cal:520,prot:50},
+    {nombre:'Pescado blanco al vapor con papa y ejotes',tiempo:'20 min',cal:330,prot:33},
+    {nombre:'Sopa de pollo con chayote, zanahoria y calabaza',tiempo:'25 min',cal:300,prot:40},
+    {nombre:'Atún con arroz y ensalada de pepino',tiempo:'10 min',cal:400,prot:34},
+    {nombre:'Pavo molido con puré de papa y brócoli',tiempo:'25 min',cal:450,prot:38},
+    {nombre:'Tacos de pollo deshebrado con nopales',tiempo:'20 min',cal:420,prot:42},
+    {nombre:'Omelette de claras con verduras (cena ligera)',tiempo:'10 min',cal:200,prot:24},
+    {nombre:'Caldo de pollo con verduras y arroz',tiempo:'25 min',cal:380,prot:42},
+    {nombre:'Filete de pescado al horno con camote',tiempo:'30 min',cal:350,prot:32},
+    {nombre:'Ensalada tibia de pollo, quinoa y verduras',tiempo:'20 min',cal:480,prot:48}
+  ]
+};
+
+// ── Frases motivacionales — rotan una por día (no por render, para que no cambien a
+//    media pantalla), elegidas relacionadas al plan real de Adán (gym, negocio, deudas).
+const FRASES_MOTIVACION=[
+  'La disciplina de hoy en el gym es el mismo músculo que necesitas para el negocio.',
+  'No necesitas verte al espejo todos los días — necesitas seguir apareciendo.',
+  'Cada peso a Banamex y BBVA es un peso que ya no te cobra intereses.',
+  'El cuerpo cambia en semanas, no en un entrenamiento. Sigue apareciendo.',
+  'Un ex-colega contactado hoy vale más que diez "algún día lo hago".',
+  'La consistencia aburrida gana — la motivación es solo lo que te hace empezar.',
+  'Cada pausa activa que tomas hoy es una espalda que no te va a doler a los 40.',
+  'No compites contra nadie del gym — compites contra el Adán que no fue.',
+  'El fondo de emergencia no es para gastarlo — es para dormir tranquilo.',
+  'Publica la plantilla imperfecta hoy. La perfecta nunca sale.',
+  'Cada comida que sí armas de la lista es una decisión que ya no tienes que pensar dos veces.',
+  'El Hyrox no se corre en la carrera, se corre en cada sesión de piernas que no te saltaste.',
+  '$1,000,000 para 2030 no es un salto — son miles de decisiones pequeñas y aburridas.',
+  'Ir sin ganas y hacerlo de todos modos es la definición real de disciplina.',
+  'Menos deuda cara este mes que el mes pasado ya es ganar.',
+  'El jaque mate del ajedrez y el plan de negocio se ganan igual: pensando 3 jugadas adelante.',
+  'Tu yo de dentro de 4 años ya te está agradeciendo lo que hagas hoy.',
+  'No se trata de tener tiempo — se trata de que esto sí importe lo suficiente.',
+  'Cada kilo de más que baja de la panza es un kilo que ya no cargas en cada sentadilla.',
+  'La cuenta de banco y el cuerpo se construyen con el mismo principio: superávit sostenido.'
+];
+function diaDelAnio(){const n=new Date();const ini=new Date(n.getFullYear(),0,0);return Math.floor((n-ini)/86400000);}
 
 // ── COACH — Plan Maestro (fechas ancla, igual que Coach_v2.html) ────────────
 const PHASES=[
@@ -600,52 +726,44 @@ function renderDia(){
   document.getElementById('diaTimeline').innerHTML=(resumenHtml?`<div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px">${resumenHtml}</div>`:'')+itemsHtml;
 }
 
-function heroBarRow(label,val,meta,col){
-  const pct=meta>0?Math.min(100,val/meta*100):0;
-  return `<div style="margin-bottom:9px">
-    <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:3px"><span style="color:${col};font-weight:700">${label}</span><span style="color:var(--text2)">${fmt(val)}${meta?' / '+fmt(meta):''}</span></div>
-    <div class="pbar" style="height:6px;margin-top:0"><div class="pfill" style="width:${pct}%;background:${col}"></div></div>
-  </div>`;
-}
-
 function renderHero(){
   const semana=semanaActual();
   const hoyStr=today();
   const dowHoy=new Date().getDay();
+  const diaIdx=diaDelAnio();
   // D.gym.rutina real (si Adán ya personalizó algo en ejercicio.html) tiene prioridad;
   // si viene vacío (nunca se abrió esa app en este navegador), se usa el programa por defecto.
   const gymRutina=(D.gym.rutina&&Object.keys(D.gym.rutina).length)?D.gym.rutina:GYM_RUTINA_DEFAULT;
 
-  // ── Tira de 7 días: qué rutina de gym tocaba/se hizo + calorías registradas cada día ──
+  // ── Frase motivacional — una por día, no por render (mismo índice todo el día) ──
+  const frase=FRASES_MOTIVACION[diaIdx%FRASES_MOTIVACION.length];
+  document.getElementById('heroFrase').innerHTML=`<span class="q">"</span><span class="txt">${frase}</span>`;
+
+  // ── Tira de 7 días: qué rutina de gym tocaba/se hizo. Sin "calorías de hoy" (asume
+  //    registro diario que Adán no hace) y sin ❌ en días pasados sin sesión logueada:
+  //    no registrar no es lo mismo que no haber ido, así que no se marca como fallo. ──
   document.getElementById('heroWeekStrip').innerHTML=semana.map((d,dow)=>{
-    const esHoy=d===hoyStr, esFuturo=d>hoyStr;
+    const esHoy=d===hoyStr, esFuturo=d>hoyStr, esPasado=d<hoyStr;
     const sesion=(D.gym.sesiones||[]).find(s=>s.fecha===d);
     const rutinaDia=gymRutina[dow];
-    let gymIco='—', gymLbl='';
+    let gymIco='—', gymLbl='', lblCls='';
     if(sesion){ gymIco='✅'; gymLbl=sesion.nombre||'Entrenado'; }
     else if(rutinaDia?.tipo==='descanso'){ gymIco='😴'; gymLbl='Descanso'; }
-    else if(rutinaDia?.nombre){ gymIco=(esFuturo||esHoy)?'⏳':'❌'; gymLbl=rutinaDia.nombre; }
-    const calDia=(D.sal.alimentos||[]).filter(a=>a.fecha===d).reduce((s,a)=>s+(a.cal||0),0);
+    else if(rutinaDia?.nombre){
+      gymIco=(esFuturo||esHoy)?'⏳':'🏋️';
+      gymLbl=rutinaDia.nombre;
+      if(esPasado) lblCls='pend'; // pasado y sin sesión logueada: neutro, no se asume que falló
+    }
     return `<div class="ws-day ${esHoy?'today':''}">
       <div class="ws-dname">${DIAS_CORTOS[dow]}${esHoy?' •':''}</div>
       <div class="ws-ddate">${parseInt(d.split('-')[2])}/${parseInt(d.split('-')[1])}</div>
       <div class="ws-gym-ico">${gymIco}</div>
-      <div class="ws-gym-lbl">${gymLbl}</div>
-      <div class="ws-cal">${calDia?fmt(calDia)+' kcal':'—'}</div>
+      <div class="ws-gym-lbl ${lblCls}">${gymLbl}</div>
     </div>`;
   }).join('');
 
-  // ── Fila de estadísticas rápidas: racha de gym, peso más reciente, agua de hoy —
-  //    todo dato real ya cargado, sin campos inventados ──
-  let racha=0;
-  for(let i=0;i<60;i++){
-    const d=new Date(); d.setDate(d.getDate()-i);
-    const ds=d.toISOString().slice(0,10);
-    const rutDia=gymRutina[d.getDay()];
-    if(rutDia?.tipo==='descanso') continue;
-    if((D.gym.sesiones||[]).some(s=>s.fecha===ds)) racha++;
-    else if(i>0) break;
-  }
+  // ── Fila de estadísticas rápidas: solo datos que no dependen de registrar todos los
+  //    días — peso más reciente (se pesa cuando se pesa) y agua de hoy ──
   const medidas=[...(D.sal.medidas||[])].sort((a,b)=>b.fecha.localeCompare(a.fecha));
   const pesoActual=medidas[0], pesoAnterior=medidas[1];
   const pesoDiff=pesoActual&&pesoAnterior?+(pesoActual.peso-pesoAnterior.peso).toFixed(1):null;
@@ -656,7 +774,6 @@ function renderHero(){
   const vasosHoy=D.sal.agua?.[hoyStr]||0, vasosMeta=D.sal.metas?.vasos||8;
 
   const qs=[
-    {ico:'🔥',lbl:'Racha de gym',val:racha+(racha===1?' día':' días'),col:racha>=3?'var(--o)':'var(--text2)'},
     {ico:'⚖️',lbl:'Peso actual',val:pesoActual?pesoActual.peso+' kg':'—',sub:pesoSub,subCol:pesoSubCol,col:'var(--cy)'},
     {ico:'💧',lbl:'Agua hoy',val:vasosHoy+'/'+vasosMeta,col:'#06b6d4'}
   ];
@@ -667,29 +784,53 @@ function renderHero(){
       ${q.sub?`<div class="sub" style="margin-top:2px;color:${q.subCol}">${q.sub}</div>`:''}
     </div>`).join('');
 
-  // ── Panel 1: Gym — sesiones reales de la semana (nombre + fecha) y qué toca hoy ──
-  const sesionesSemana=(D.gym.sesiones||[]).filter(s=>semana.includes(s.fecha)).sort((a,b)=>a.fecha.localeCompare(b.fecha));
-  const metaGym=D.gym.metas?.frecuencia||6;
+  // ── Panel 1: Gym — qué toca hoy, con cada ejercicio explicado (series×reps + técnica) ──
   const rutinaHoy=gymRutina[dowHoy];
   const yaEntrenoHoy=(D.gym.sesiones||[]).some(s=>s.fecha===hoyStr);
+  const esDescansoHoy=rutinaHoy?.tipo==='descanso';
+  let gymBody;
+  if(esDescansoHoy){
+    gymBody=`<div class="hp-empty">😴 Hoy toca descanso — caminata ligera opcional, sin gimnasio.</div>`;
+  } else if(rutinaHoy?.ejercicios?.length){
+    gymBody=`<div class="hp-ex-scroll">${rutinaHoy.ejercicios.map(ej=>{
+      const info=EJ_LOOKUP[ej.id];
+      const nombre=info?.nombre||'Ejercicio';
+      const sr=ej.series+'×'+ej.reps+(ej.unidad?' '+ej.unidad:'');
+      return `<div class="hp-ex-row">
+        <div class="hp-ex-top"><span class="hp-ex-name">${nombre}</span><span class="hp-ex-sr">${sr}</span></div>
+        ${info?.cue?`<div class="hp-ex-cue">${info.cue}</div>`:''}
+      </div>`;
+    }).join('')}</div>`;
+  } else {
+    gymBody='<div class="hp-empty">Sin rutina configurada para hoy.</div>';
+  }
   document.getElementById('heroGymPanel').innerHTML=`
-    <div class="hp-title">🏋️ Gym esta semana <span style="color:var(--g);font-family:var(--mono)">${sesionesSemana.length}/${metaGym}</span></div>
-    ${sesionesSemana.length?sesionesSemana.map(s=>`<div class="hp-row"><span style="color:var(--text3)">${fmtD(s.fecha)}</span><span style="font-weight:700;color:var(--text);text-align:right">${s.nombre}</span></div>`).join(''):'<div class="hp-empty">Sin sesiones esta semana todavía</div>'}
-    ${rutinaHoy&&rutinaHoy.tipo!=='descanso'&&rutinaHoy.nombre?`<div class="hp-row" style="margin-top:2px"><span style="color:var(--text3)">${yaEntrenoHoy?'Hoy hiciste':'Hoy toca'}</span><span style="font-weight:800;color:${yaEntrenoHoy?'var(--g)':'var(--ac1)'};text-align:right">${rutinaHoy.nombre}</span></div>`:''}
+    <div class="hp-title">
+      <span>${yaEntrenoHoy?'✅ Hoy hiciste':'🏋️ Hoy toca'}: ${rutinaHoy?.nombre||'—'}</span>
+      <a href="../CuidadoPersonal/ejercicio.html" class="hp-link">Ver en Ejercicio →</a>
+    </div>
+    ${gymBody}
   `;
 
-  // ── Panel 2: Nutrición de hoy — calorías y macros reales vs. meta (no solo "días registrados") ──
-  const alHoy=(D.sal.alimentos||[]).filter(a=>a.fecha===hoyStr);
-  const calHoy=alHoy.reduce((s,a)=>s+(a.cal||0),0), protHoy=alHoy.reduce((s,a)=>s+(a.prot||0),0);
-  const carbsHoy=alHoy.reduce((s,a)=>s+(a.carbs||0),0), graHoy=alHoy.reduce((s,a)=>s+(a.gra||0),0);
-  const m=D.sal.metas||{};
+  // ── Panel 2: Ideas de comida — 1 desayuno + 1 cena del recetario (rota por día, no
+  //    "lo que comiste hoy" porque Adán no registra diario) ──
+  const desayuno=RECETAS_MINI.desayuno[diaIdx%RECETAS_MINI.desayuno.length];
+  const cena=RECETAS_MINI.cena[diaIdx%RECETAS_MINI.cena.length];
   document.getElementById('heroNutriPanel').innerHTML=`
-    <div class="hp-title">🥗 Nutrición de hoy</div>
-    <div class="hp-big" style="color:var(--o)">${fmt(calHoy)}<span style="font-size:13px;color:var(--text3);font-family:var(--font)"> / ${fmt(m.caloriasD||2000)} kcal</span></div>
-    ${heroBarRow('Proteína',protHoy,m.proteina||150,'#b06eff')}
-    ${heroBarRow('Carbs',carbsHoy,m.carbs||200,'#3b82f6')}
-    ${heroBarRow('Grasa',graHoy,m.grasa||65,'#ffd93d')}
-    ${!alHoy.length?'<div style="font-size:10.5px;color:var(--text3);margin-top:6px;text-align:center">Todavía no registras comida hoy — esto son tus metas</div>':''}
+    <div class="hp-title">
+      <span>🍽️ Ideas para hoy</span>
+      <a href="../CuidadoPersonal/comida.html" class="hp-link">Ver recetario →</a>
+    </div>
+    <div class="hp-meal">
+      <div class="hp-meal-lbl">🌅 Desayuno · ${desayuno.tiempo}</div>
+      <div class="hp-meal-name">${desayuno.nombre}</div>
+      <div class="hp-meal-macro">${desayuno.cal} kcal · ${desayuno.prot}g proteína</div>
+    </div>
+    <div class="hp-meal">
+      <div class="hp-meal-lbl">🌙 Cena · ${cena.tiempo}</div>
+      <div class="hp-meal-name">${cena.nombre}</div>
+      <div class="hp-meal-macro">${cena.cal} kcal · ${cena.prot}g proteína</div>
+    </div>
   `;
 }
 
