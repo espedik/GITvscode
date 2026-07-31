@@ -146,8 +146,31 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 
 <div class="slides" id="slides">
 
-  <!-- 0 · MI DÍA -->
-  <section class="slide theme-dia" data-i="0">
+  <!-- 0 · HERO — pantalla principal (2026-07-30, a petición de Adán: "esa que hiciste ponla como principal") -->
+  <section class="slide theme-hero" data-i="0">
+    <div class="slide-inner">
+      <div class="flex-hero-top reveal d1">
+        <div class="eyebrow" style="margin-bottom:0"><span class="dot"></span> JARVIS · Tu semana completa</div>
+        <div style="text-align:right">
+          <div style="font-family:var(--mono);font-size:clamp(20px,2.2vw,28px);font-weight:700" id="heroClock">00:00:00</div>
+          <div style="font-size:11px;color:var(--text2);text-transform:capitalize" id="heroDate">—</div>
+        </div>
+      </div>
+
+      <div class="week-strip reveal d2" id="heroWeekStrip"></div>
+
+      <div class="grid g4 reveal d3" style="margin-top:14px" id="heroQuickStats"></div>
+
+      <div class="grid g3 reveal d4" style="margin-top:14px;align-items:stretch">
+        <div class="tile" id="heroGymPanel"></div>
+        <div class="tile" id="heroNutriPanel"></div>
+        <div class="tile" id="heroTareasPanel"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 1 · MI DÍA -->
+  <section class="slide theme-dia" data-i="1">
     <div class="slide-inner">
       <div class="eyebrow reveal d1"><span class="dot"></span> Mi Día · <span id="diaClock">00:00</span></div>
       <div class="slide-title reveal d2" id="diaFecha">—</div>
@@ -175,29 +198,6 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 
       <div class="reveal d6" style="margin-top:14px">
         <a href="../Coach/Coach_v2.html#rutina" style="color:var(--cy);font-size:12px;font-weight:600;text-decoration:none">Ver/editar rutina completa en Coach →</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- 1 · HERO -->
-  <section class="slide theme-hero" data-i="1">
-    <div class="slide-inner">
-      <div class="flex-hero-top reveal d1">
-        <div class="eyebrow" style="margin-bottom:0"><span class="dot"></span> JARVIS · Tu semana completa</div>
-        <div style="text-align:right">
-          <div style="font-family:var(--mono);font-size:clamp(20px,2.2vw,28px);font-weight:700" id="heroClock">00:00:00</div>
-          <div style="font-size:11px;color:var(--text2);text-transform:capitalize" id="heroDate">—</div>
-        </div>
-      </div>
-
-      <div class="week-strip reveal d2" id="heroWeekStrip"></div>
-
-      <div class="grid g4 reveal d3" style="margin-top:14px" id="heroQuickStats"></div>
-
-      <div class="grid g3 reveal d4" style="margin-top:14px;align-items:stretch">
-        <div class="tile" id="heroGymPanel"></div>
-        <div class="tile" id="heroNutriPanel"></div>
-        <div class="tile" id="heroTareasPanel"></div>
       </div>
     </div>
   </section>
@@ -904,7 +904,7 @@ function renderMetasSlide(){
     </div>`;
 }
 
-const RENDERS=[renderDia,renderHero,renderCoach,renderFinanzas,renderSkills,renderMetasSlide];
+const RENDERS=[renderHero,renderDia,renderCoach,renderFinanzas,renderSkills,renderMetasSlide];
 
 // ══════════════════════════════════════════════════════════════════════════
 // SLIDE ENGINE — avance automático cada 3 min + transición + controles
