@@ -128,4 +128,4 @@ Checklist personal (`.check-item`, **no persiste** — mismo comportamiento visu
 
 ## Cómo usarlo
 
-Se abre `Coach_v2.html` directamente en cualquier navegador, sin instalación ni servidor. No hay exportación de datos (a diferencia de Finanzas/Salud/Ejercicio/Proyectos) — lo único persistido son el tema, los valores del radar y el progreso de la rutina diaria.
+Se abre `Coach_v2.html` directamente en cualquier navegador, sin instalación ni servidor. No hay exportación de datos (a diferencia de Finanzas/Salud/Ejercicio) — lo único persistido son el tema, los valores del radar y el progreso de la rutina diaria.

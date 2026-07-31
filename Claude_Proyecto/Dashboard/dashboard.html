@@ -159,12 +159,11 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 
       <div class="week-strip reveal d2" id="heroWeekStrip"></div>
 
-      <div class="grid g4 reveal d3" style="margin-top:14px" id="heroQuickStats"></div>
+      <div class="grid g3 reveal d3" style="margin-top:14px" id="heroQuickStats"></div>
 
-      <div class="grid g3 reveal d4" style="margin-top:14px;align-items:stretch">
+      <div class="grid g2 reveal d4" style="margin-top:14px;align-items:stretch">
         <div class="tile" id="heroGymPanel"></div>
         <div class="tile" id="heroNutriPanel"></div>
-        <div class="tile" id="heroTareasPanel"></div>
       </div>
     </div>
   </section>
@@ -355,7 +354,6 @@ function loadAll(){
     sal: tryParse('misalud_v1',{alimentos:[],ejercicios:[],medidas:[],agua:{},metas:{caloriasD:2000,proteina:150},perfil:{peso:0}}),
     sk: tryParse('skincare_v1',{perfil:{tipo:'grasa',preocupaciones:[],rasurado:'no_aplica',presupuesto:'medio',notas:''}}),
     ca: tryParse('cabello_v1',{perfil:{tipo:'lacio',grosor:'fino',cuero:'graso',preocupaciones:[],caidaPatron:'no_seguro',presupuesto:'medio',notas:''}}),
-    pro: tryParse('proyectos_v1',{proyectos:[],tareas:[],sesiones:[]}),
     rut: tryParse('coach_rutina_v1',{completado:{}}),
     gym: tryParse('mirutina_v1',{rutina:{},sesiones:[],metas:{frecuencia:6}})
   };
@@ -628,8 +626,8 @@ function renderHero(){
     </div>`;
   }).join('');
 
-  // ── Fila de estadísticas rápidas: racha de gym, peso más reciente, agua de hoy, horas
-  //    trabajadas en Proyectos esta semana — todo dato real ya cargado, sin campos inventados ──
+  // ── Fila de estadísticas rápidas: racha de gym, peso más reciente, agua de hoy —
+  //    todo dato real ya cargado, sin campos inventados ──
   let racha=0;
   for(let i=0;i<60;i++){
     const d=new Date(); d.setDate(d.getDate()-i);
@@ -647,13 +645,11 @@ function renderHero(){
   else if(pesoDiff===null) pesoSub='Primer registro';
   else { pesoSub=(pesoDiff>0?'↑ +':pesoDiff<0?'↓ ':'= ')+Math.abs(pesoDiff)+' kg vs. anterior'; pesoSubCol=pesoDiff<0?'var(--g)':pesoDiff>0?'var(--r)':'var(--text3)'; }
   const vasosHoy=D.sal.agua?.[hoyStr]||0, vasosMeta=D.sal.metas?.vasos||8;
-  const horasProy=(D.pro.sesiones||[]).filter(s=>semana.includes(s.fecha)).reduce((s,x)=>s+(+x.duracion_min||0),0)/60;
 
   const qs=[
     {ico:'🔥',lbl:'Racha de gym',val:racha+(racha===1?' día':' días'),col:racha>=3?'var(--o)':'var(--text2)'},
     {ico:'⚖️',lbl:'Peso actual',val:pesoActual?pesoActual.peso+' kg':'—',sub:pesoSub,subCol:pesoSubCol,col:'var(--cy)'},
-    {ico:'💧',lbl:'Agua hoy',val:vasosHoy+'/'+vasosMeta,col:'#06b6d4'},
-    {ico:'⏱️',lbl:'Proyectos (semana)',val:horasProy.toFixed(1)+'h',col:'var(--p)'}
+    {ico:'💧',lbl:'Agua hoy',val:vasosHoy+'/'+vasosMeta,col:'#06b6d4'}
   ];
   document.getElementById('heroQuickStats').innerHTML=qs.map(q=>`
     <div class="tile" style="text-align:center;padding:12px 10px">
@@ -685,18 +681,6 @@ function renderHero(){
     ${heroBarRow('Carbs',carbsHoy,m.carbs||200,'#3b82f6')}
     ${heroBarRow('Grasa',graHoy,m.grasa||65,'#ffd93d')}
     ${!alHoy.length?'<div style="font-size:10.5px;color:var(--text3);margin-top:6px;text-align:center">Todavía no registras comida hoy — esto son tus metas</div>':''}
-  `;
-
-  // ── Panel 3: Tareas pendientes reales de Proyectos (título + fecha límite, no solo un %) ──
-  const pendientes=(D.pro.tareas||[]).filter(t=>t.estado!=='completada');
-  const top=[...pendientes].sort((a,b)=>(a.fecha_limite||'9999-99-99').localeCompare(b.fecha_limite||'9999-99-99')).slice(0,5);
-  document.getElementById('heroTareasPanel').innerHTML=`
-    <div class="hp-title">✅ Tareas pendientes <span style="color:var(--text2);font-family:var(--mono)">${pendientes.length}</span></div>
-    ${top.length?top.map(t=>{
-      const venc=t.fecha_limite&&t.fecha_limite<hoyStr, esHoyT=t.fecha_limite===hoyStr;
-      const col=venc?'var(--r)':esHoyT?'var(--w)':'var(--text3)';
-      return `<div class="hp-row"><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:68%">${t.titulo||'Tarea'}</span><span style="color:${col};font-size:11px;font-weight:700;flex-shrink:0">${t.fecha_limite?fmtD(t.fecha_limite):'sin fecha'}</span></div>`;
-    }).join(''):'<div class="hp-empty">Sin tareas pendientes 🎉</div>'}
   `;
 }
 
@@ -831,9 +815,7 @@ function renderQuickApps(){
     {ico:'💇',n:'Cabello',href:'../CuidadoPersonal/cuidadopersonal.html?tab=cabello',stat:''},
     {ico:'🥦',n:'Salud',href:'../CuidadoPersonal/cuidadopersonal.html?tab=salud',
      stat:(()=>{const c=(D.sal.alimentos||[]).filter(a=>a.fecha===t).reduce((s,a)=>s+(a.cal||0),0);return c?fmt(c)+' kcal':'';})()},
-    {ico:'🏋️',n:'Ejercicio',href:'../CuidadoPersonal/cuidadopersonal.html?tab=ejercicio',stat:''},
-    {ico:'🎯',n:'Proyectos',href:'../Proyectos/proyectos.html',
-     stat:(()=>{const p=(D.pro.tareas||[]).filter(x=>x.estado==='pendiente').length;return p?p+' pend.':'';})()}
+    {ico:'🏋️',n:'Ejercicio',href:'../CuidadoPersonal/cuidadopersonal.html?tab=ejercicio',stat:''}
   ];
   document.getElementById('qaBar').innerHTML=apps.map(a=>`<a href="${a.href}" class="qa-pill" title="${a.n}">
     <span class="qa-ico">${a.ico}</span>
