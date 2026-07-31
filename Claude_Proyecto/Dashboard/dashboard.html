@@ -116,17 +116,16 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 
 .chart-wrap{position:relative;height:clamp(240px,34vh,420px)}
 
-/* ─── HABILIDADES — 5 prioridades siempre visibles, sin clics (slide pasivo) ─ */
-.skill-row{display:flex;gap:10px;padding:8px 4px;border-bottom:1px solid rgba(255,255,255,.06)}
+/* ─── HABILIDADES — top prioridades siempre visibles, sin clics (slide pasivo) ─ */
+.skill-row{display:flex;align-items:center;gap:9px;padding:7px 2px;border-bottom:1px solid rgba(255,255,255,.06)}
 .skill-row:last-child{border-bottom:none}
-.sr-badge{width:30px;height:30px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
-.sr-body{flex:1;min-width:0}
-.sr-head{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
-.sr-name{font-size:12.5px;font-weight:800;color:var(--text)}
-.sr-val{font-family:var(--mono);font-size:12px;font-weight:700}
-.sr-primer{font-size:11.5px;color:var(--text2);line-height:1.45;margin-top:2px}
-.sr-res{font-size:10.5px;color:var(--text3);margin-top:3px}
-.sr-res b{color:var(--p);font-weight:700}
+.sr-badge{width:26px;height:26px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
+.sr-body{flex:1;min-width:0;display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.sr-head{display:flex;align-items:baseline;gap:6px;flex-shrink:0}
+.sr-name{font-size:12px;font-weight:800;color:var(--text);white-space:nowrap}
+.sr-val{font-family:var(--mono);font-size:11px;font-weight:700}
+.sr-primer{font-size:11px;color:var(--text2);line-height:1.3;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;min-width:0}
+@media(max-width:900px){.sr-body{flex-wrap:wrap}.sr-primer{white-space:normal}}
 
 @media(max-width:900px){.g4{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:repeat(2,1fr)}.g6{grid-template-columns:repeat(3,1fr)}}
 @media(max-width:600px){.g2,.g4,.g3,.g6{grid-template-columns:1fr}.ar-name{width:80px}}
@@ -660,22 +659,28 @@ function skLevel(v){
 // (primer paso de la semana, hábito recomendado y recursos exactos). Copiado a mano, igual que
 // RUTINA_TASKS/PHASES/SK — si se edita #aprendizaje en Coach, replicar aquí.
 const APRENDIZAJE={
-  datos:{primer:'Módulos de Python y Pandas en Kaggle Learn (2-3h, gratis) + arma un dashboard simple de tus gastos en Google Looker Studio.',
+  datos:{corto:'Kaggle Learn (Python/Pandas) + dashboard de gastos en Looker Studio',
+    primer:'Módulos de Python y Pandas en Kaggle Learn (2-3h, gratis) + arma un dashboard simple de tus gastos en Google Looker Studio.',
     habito:'10 min/día de SQL en SQLZoo o LeetCode SQL, 30 días seguidos.',
     recursos:[{t:'Curso',n:'Kaggle Learn'},{t:'Curso',n:'Google Data Analytics Certificate'},{t:'Libro',n:'Storytelling with Data — Cole Nussbaumer Knaflic'},{t:'Tool',n:'Google Looker Studio'}]},
-  ventas:{primer:'Lee el cap. 1 de "Influence" (reciprocidad) y envía 1 mensaje personalizado a un prospecto real de tu red Ford/Continental/Bosch.',
+  ventas:{corto:'Lee "Influence" + 1 mensaje personalizado/día a un prospecto real',
+    primer:'Lee el cap. 1 de "Influence" (reciprocidad) y envía 1 mensaje personalizado a un prospecto real de tu red Ford/Continental/Bosch.',
     habito:'5 mensajes personalizados/día a prospectos + follow-up en días 1-3-7-14-30.',
     recursos:[{t:'Libro',n:'Influence — Robert Cialdini'},{t:'Libro',n:'$100M Offers — Alex Hormozi'},{t:'Libro',n:'Never Split the Difference — Chris Voss'},{t:'YouTube',n:'Alex Hormozi'}]},
-  marketing:{primer:'Termina el módulo de fundamentos de Google Digital Garage y publica tu primer post de valor en LinkedIn sobre la plantilla Finanzas.html.',
+  marketing:{corto:'Google Digital Garage + 1er post en LinkedIn de tu plantilla',
+    primer:'Termina el módulo de fundamentos de Google Digital Garage y publica tu primer post de valor en LinkedIn sobre la plantilla Finanzas.html.',
     habito:'3 publicaciones/semana en LinkedIn — lunes, miércoles y viernes.',
     recursos:[{t:'Curso',n:'Google Digital Garage'},{t:'Curso',n:'HubSpot Academy'},{t:'Curso',n:'Meta Blueprint'},{t:'Libro',n:'$100M Leads — Alex Hormozi'}]},
-  finanzas:{primer:'Instala YNAB o Finerio y conecta tus cuentas para categorizar los gastos de este mes.',
+  finanzas:{corto:'Instala YNAB y categoriza los gastos de este mes',
+    primer:'Instala YNAB o Finerio y conecta tus cuentas para categorizar los gastos de este mes.',
     habito:'Revisión de 10 min cada domingo — clasifica gastos vs. presupuesto.',
     recursos:[{t:'Libro',n:'I Will Teach You to Be Rich — Ramit Sethi'},{t:'App',n:'YNAB'},{t:'Libro',n:'The Millionaire Next Door — Thomas Stanley'},{t:'Libro',n:'Psicología del Dinero — Morgan Housel'}]},
-  ia:{primer:'Construye una automatización simple en n8n.io conectando un formulario a Google Sheets — menos de 1h.',
+  ia:{corto:'Automatización simple en n8n.io: formulario → Google Sheets',
+    primer:'Construye una automatización simple en n8n.io conectando un formulario a Google Sheets — menos de 1h.',
     habito:'1 bloque de 30 min/semana construyendo (no solo leyendo) un mini-proyecto de IA.',
     recursos:[{t:'Curso',n:'DeepLearning.AI — Prompt Engineering for Developers'},{t:'Curso',n:'Fast.ai'},{t:'Tool',n:'n8n.io'},{t:'Tool',n:'Cursor IDE'}]}
 };
+const PRIORIDAD_N = 4; // cuántas prioridades mostrar en el Dashboard (las N más bajas) — el resto sigue completo en Coach → Aprendizaje
 let chSkills=null;
 function renderSkills(){
   const ovr=calcOVR(), lv=skLevel(ovr);
@@ -683,23 +688,22 @@ function renderSkills(){
   document.getElementById('skillOvrLabel').textContent=lv.l;
   document.getElementById('skillOvrLabel').style.color=lv.c;
 
-  // Las 5 prioridades reales, siempre visibles (nada de clics — este slide es pasivo,
-  // rota solo y se ve de reojo mientras se trabaja, así que todo debe verse de un vistazo).
-  const priority=Object.keys(APRENDIZAJE).map(id=>SK.find(s=>s.id===id)).filter(Boolean).sort((a,b)=>a.val-b.val);
+  // Top N prioridades reales, siempre visibles y compactas (nada de clics — este slide es
+  // pasivo, rota solo y se ve de reojo mientras se trabaja, todo debe caber de un vistazo).
+  const priority=Object.keys(APRENDIZAJE).map(id=>SK.find(s=>s.id===id)).filter(Boolean).sort((a,b)=>a.val-b.val).slice(0,PRIORIDAD_N);
   document.getElementById('skillPriority').innerHTML=`
-    <div class="tile">
+    <div class="tile" style="padding:12px 16px">
       ${priority.map(s=>{
         const l=skLevel(s.val), a=APRENDIZAJE[s.id];
         return `<div class="skill-row">
           <div class="sr-badge" style="background:${l.c}22">${s.icon}</div>
           <div class="sr-body">
             <div class="sr-head"><span class="sr-name">${s.name}</span><span class="sr-val" style="color:${l.c}">${s.val}</span></div>
-            <div class="sr-primer">🎯 ${a.primer}</div>
-            <div class="sr-res">📚 <b>${a.recursos[0].n}</b> · ${a.recursos.slice(1,3).map(r=>r.n).join(' · ')}</div>
+            <div class="sr-primer">🎯 ${a.corto}</div>
           </div>
         </div>`;
       }).join('')}
-      <div class="sub" style="margin-top:10px;text-align:center"><a href="../Coach/Coach_v2.html#aprendizaje" style="color:var(--cy);text-decoration:none">Ver plan completo (hábitos + todos los recursos) en Coach → Aprendizaje →</a></div>
+      <div class="sub" style="margin-top:6px;text-align:center"><a href="../Coach/Coach_v2.html#aprendizaje" style="color:var(--cy);text-decoration:none">Plan completo (5 skills, hábitos y recursos) en Coach →</a></div>
     </div>`;
 
   if(chSkills)chSkills.destroy();
