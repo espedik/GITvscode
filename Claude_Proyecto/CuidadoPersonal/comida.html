@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mi Comida — Desayunos, Cenas & Súper</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --g:#00e87a;--g-l:rgba(0,232,122,.1);
+  --o:#ff8a3d;--o-l:rgba(255,138,61,.1);
+  --w:#ffd93d;--w-l:rgba(255,217,61,.1);
+  --b:#3b82f6;--b-l:rgba(59,130,246,.1);
+  --p:#b06eff;--p-l:rgba(176,110,255,.1);
+  --r:#ff3b6b;--r-l:rgba(255,59,107,.1);
+  --bg:#060614;--text:#e8eaf6;--text2:#8892b0;--text3:#4a5568;
+  --sw:245px;--r14:14px;--rs:9px;--sh:0 4px 24px rgba(0,0,0,.5);
+}
+body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);display:flex;min-height:100vh;font-size:14px;
+  background-image:radial-gradient(ellipse 80% 60% at 20% 0%,rgba(255,217,61,.05) 0%,transparent 60%),
+                   radial-gradient(ellipse 60% 50% at 85% 100%,rgba(0,232,122,.05) 0%,transparent 60%)}
+::-webkit-scrollbar{width:4px;height:4px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:rgba(255,255,255,.12);border-radius:2px}
+
+.sidebar{width:var(--sw);background:rgba(6,6,20,.85);backdrop-filter:blur(20px);border-right:1px solid rgba(255,217,61,.1);
+  display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:100;transition:transform .25s}
+.sb-logo{padding:20px;border-bottom:1px solid rgba(255,255,255,.06)}
+.sb-logo h1{font-size:16px;font-weight:800;background:linear-gradient(90deg,#ffd93d,#ff8a3d);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.sb-logo p{font-size:10px;color:var(--text3);margin-top:3px;letter-spacing:.08em;text-transform:uppercase}
+.sb-nav{padding:10px 8px;flex:1;overflow-y:auto}
+.nav-label{font-size:9px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.1em;padding:12px 12px 4px}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:var(--rs);cursor:pointer;color:var(--text2);font-weight:500;font-size:13px;transition:all .2s;margin-bottom:2px;user-select:none}
+.nav-item:hover{background:rgba(255,255,255,.05);color:var(--text)}
+.nav-item.active{background:rgba(255,217,61,.12);color:var(--w);font-weight:600;border-left:2px solid var(--w)}
+.nav-item .ico{font-size:15px;width:20px;text-align:center;flex-shrink:0}
+.nav-item .count{margin-left:auto;font-size:10px;color:var(--text3);font-family:monospace}
+
+.main{margin-left:var(--sw);flex:1;display:flex;flex-direction:column;min-height:100vh}
+.topbar{background:rgba(6,6,20,.8);backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,.06);
+  padding:0 24px;height:58px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
+.topbar-title{font-size:15px;font-weight:700}
+.content{padding:22px;flex:1;max-width:1200px}
+.section{display:none}.section.active{display:block}
+
+.card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:var(--r14);padding:18px;box-shadow:var(--sh),inset 0 1px 0 rgba(255,255,255,.05);backdrop-filter:blur(10px)}
+.card-title{font-size:11px;font-weight:600;color:var(--text2);margin-bottom:8px;text-transform:uppercase;letter-spacing:.06em}
+
+.btn{display:inline-flex;align-items:center;gap:5px;padding:8px 14px;border-radius:var(--rs);border:none;cursor:pointer;font-size:13px;font-weight:600;transition:all .2s;white-space:nowrap;font-family:inherit}
+.btn-w{background:linear-gradient(135deg,#e0b020,#ffd93d);color:#241c00;box-shadow:0 0 16px rgba(255,217,61,.3)}
+.btn-w:hover{box-shadow:0 0 26px rgba(255,217,61,.5);transform:translateY(-1px)}
+.btn-o{background:rgba(255,255,255,.05);color:var(--text2);border:1px solid rgba(255,255,255,.1)}
+.btn-o:hover{background:rgba(255,255,255,.09);color:var(--text)}
+.btn-sm{padding:5px 10px;font-size:11.5px}
+
+/* Banner de contexto (arriba de todo) */
+.ctx-banner{display:flex;gap:12px;align-items:flex-start;background:rgba(255,217,61,.06);border:1px solid rgba(255,217,61,.2);
+  border-radius:var(--r14);padding:14px 16px;margin-bottom:20px;font-size:12px;color:var(--text2);line-height:1.7}
+.ctx-banner b{color:var(--text)}
+.ctx-banner .ico{font-size:22px;flex-shrink:0}
+
+/* Grid de recetas */
+.recetas-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+.receta-card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:var(--r14);padding:16px;display:flex;flex-direction:column;gap:10px}
+.receta-card h3{font-size:15px;font-weight:800;line-height:1.3}
+.receta-meta{display:flex;gap:10px;flex-wrap:wrap;font-size:11px;color:var(--text3)}
+.receta-meta span{display:flex;align-items:center;gap:4px}
+.macro-row{display:flex;gap:6px;flex-wrap:wrap}
+.macro-chip{font-size:10.5px;font-weight:700;padding:3px 9px;border-radius:20px;background:rgba(255,255,255,.06);color:var(--text2)}
+.macro-chip.cal{background:var(--o-l);color:var(--o)}
+.macro-chip.prot{background:var(--p-l);color:var(--p)}
+.macro-chip.carb{background:var(--b-l);color:var(--b)}
+.macro-chip.gra{background:var(--w-l);color:var(--w)}
+.receta-sub{font-size:12px;font-weight:700;color:var(--text2);margin-top:4px;text-transform:uppercase;letter-spacing:.05em;font-size:10px}
+.ing-list{list-style:none;display:flex;flex-direction:column;gap:3px}
+.ing-list li{font-size:12.5px;color:var(--text);display:flex;justify-content:space-between;gap:8px;padding:2px 0;border-bottom:1px dashed rgba(255,255,255,.05)}
+.ing-list li:last-child{border-bottom:none}
+.ing-list li span:last-child{color:var(--text3);white-space:nowrap}
+.pasos-list{list-style:decimal;padding-left:18px;display:flex;flex-direction:column;gap:5px}
+.pasos-list li{font-size:12.5px;color:var(--text2);line-height:1.5}
+.tip-box{display:flex;gap:8px;background:rgba(0,232,122,.06);border:1px solid rgba(0,232,122,.18);border-radius:9px;padding:9px 11px;font-size:11.5px;color:var(--text2);line-height:1.5}
+.tip-box .ico{flex-shrink:0}
+.receta-actions{margin-top:auto;padding-top:8px;display:flex;justify-content:flex-end}
+
+/* Lista del súper */
+.shop-cat{margin-bottom:22px}
+.shop-cat-title{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:800;color:var(--w);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid rgba(255,217,61,.15)}
+.shop-cat-title .n{margin-left:auto;font-size:10px;color:var(--text3);font-family:monospace;text-transform:none;letter-spacing:0}
+.shop-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:6px}
+.shop-item{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:8px;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.05);cursor:pointer;transition:all .15s;user-select:none}
+.shop-item:hover{background:rgba(255,255,255,.05)}
+.shop-item.checked{opacity:.45}
+.shop-item.checked .shop-name{text-decoration:line-through}
+.shop-check{width:17px;height:17px;border-radius:5px;border:1.5px solid rgba(255,255,255,.25);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:11px}
+.shop-item.checked .shop-check{background:var(--g);border-color:var(--g);color:#001a0d}
+.shop-name{font-size:12.5px;flex:1}
+.shop-progress{display:flex;align-items:center;gap:10px;margin-bottom:18px}
+.shop-progress .pbar{flex:1;height:8px;background:rgba(255,255,255,.08);border-radius:20px;overflow:hidden}
+.shop-progress .pfill{height:100%;border-radius:20px;background:linear-gradient(90deg,var(--w),var(--g));transition:width .4s}
+.shop-progress .ptxt{font-size:12px;color:var(--text2);font-weight:700;white-space:nowrap}
+
+.toast{position:fixed;bottom:24px;right:24px;background:rgba(10,10,30,.95);color:var(--text);border:1px solid rgba(255,217,61,.25);
+  padding:10px 18px;border-radius:var(--rs);font-size:13px;font-weight:600;box-shadow:var(--sh);z-index:500;opacity:0;transform:translateY(8px);transition:all .3s;pointer-events:none}
+.toast.show{opacity:1;transform:translateY(0)}
+
+@media(max-width:640px){.sidebar{transform:translateX(-100%)}.sidebar.open{transform:translateX(0)}.main{margin-left:0}.recetas-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<aside class="sidebar" id="sidebar">
+  <div class="sb-logo">
+    <h1>🍳 Mi Comida</h1>
+    <p>Desayunos, Cenas & Súper</p>
+  </div>
+  <nav class="sb-nav">
+    <div class="nav-label">Recetas</div>
+    <div class="nav-item active" onclick="nav('desayunos')"><span class="ico">🌅</span>Desayunos<span class="count" id="cnt-desayunos"></span></div>
+    <div class="nav-item" onclick="nav('cenas')"><span class="ico">🌙</span>Cenas<span class="count" id="cnt-cenas"></span></div>
+    <div class="nav-label">Compras</div>
+    <div class="nav-item" onclick="nav('super')"><span class="ico">🛒</span>Lista del Súper<span class="count" id="cnt-super"></span></div>
+  </nav>
+  <div style="padding:12px;border-top:1px solid rgba(255,255,255,.06);display:flex;flex-direction:column;gap:6px">
+    <button class="btn btn-o" style="width:100%;font-size:12px" onclick="resetShop()">↺ Reiniciar lista del súper</button>
+  </div>
+</aside>
+
+<main class="main">
+  <div class="topbar">
+    <div style="display:flex;align-items:center;gap:8px">
+      <button class="btn btn-o" id="menuBtn" onclick="document.getElementById('sidebar').classList.toggle('open')" style="display:none;padding:5px 8px">☰</button>
+      <span class="topbar-title" id="topTitle">🌅 Desayunos</span>
+    </div>
+    <span style="font-size:11px;color:var(--text3)">Solo desayuno y cena — la comida de mediodía no vive aquí</span>
+  </div>
+
+  <div class="content">
+
+    <div class="ctx-banner">
+      <span class="ico">🩺</span>
+      <div>
+        <b>Elegidas a tu medida, no genéricas:</b> todas evitan tus disparadores de reflujo/agruras (café, picante, cítricos en exceso, chocolate, frituras, cebolla/ajo crudos) y favorecen lo que sí toleras bien (avena, plátano, pollo, pescado, papa, verduras cocidas). Apuntan a tu meta de <b>~2,835 kcal</b> y <b>~183 g de proteína al día</b> entre desayuno y cena (el resto lo cubre tu comida de mediodía, aparte). Todas son <b>sencillas</b> — nada de técnicas complicadas ni ingredientes raros.
+      </div>
+    </div>
+
+    <!-- DESAYUNOS -->
+    <section id="s-desayunos" class="section active">
+      <div class="recetas-grid" id="grid-desayunos"></div>
+    </section>
+
+    <!-- CENAS -->
+    <section id="s-cenas" class="section">
+      <div class="recetas-grid" id="grid-cenas"></div>
+    </section>
+
+    <!-- SÚPER -->
+    <section id="s-super" class="section">
+      <div class="card" style="margin-bottom:18px">
+        <div class="card-title" style="margin-bottom:10px">📋 Cómo usar esta lista</div>
+        <p style="font-size:12.5px;color:var(--text2);line-height:1.6">
+          Es la lista <b style="color:var(--text)">completa y consolidada</b> de todo lo que necesitas comprar para poder cocinar las 20 recetas de arriba (10 desayunos + 10 cenas), sin repetir ingredientes. Márcalos conforme los vayas metiendo al carrito — se guarda automáticamente. No son cantidades exactas por semana (cada receta ya trae su cantidad) — es tu lista maestra de despensa.
+        </p>
+      </div>
+      <div class="shop-progress">
+        <div class="pbar"><div class="pfill" id="shop-pfill" style="width:0%"></div></div>
+        <span class="ptxt" id="shop-ptxt">0/0</span>
+      </div>
+      <div id="shop-body"></div>
+    </section>
+
+  </div>
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ─── Categorías de ingredientes — para armar la lista del súper consolidada ──
+const CATEGORIA_ING = {
+  'Huevo':'🥚 Proteínas','Clara de huevo':'🥚 Proteínas','Pechuga de pollo':'🥚 Proteínas','Pavo molido':'🥚 Proteínas',
+  'Filete de tilapia':'🥚 Proteínas','Atún en agua':'🥚 Proteínas','Queso panela':'🥚 Proteínas','Yogurt griego natural':'🥚 Proteínas',
+  'Leche entera':'🥛 Lácteos','Leche de avena':'🥛 Lácteos',
+  'Avena en hojuelas':'🌾 Granos y carbohidratos','Arroz blanco cocido':'🌾 Granos y carbohidratos','Pan integral':'🌾 Granos y carbohidratos',
+  'Tortilla de maíz':'🌾 Granos y carbohidratos','Quinoa cocida':'🌾 Granos y carbohidratos','Papa':'🌾 Granos y carbohidratos','Camote':'🌾 Granos y carbohidratos',
+  'Plátano':'🍎 Frutas','Manzana':'🍎 Frutas','Pera':'🍎 Frutas','Aguacate':'🍎 Frutas',
+  'Espinaca':'🥦 Verduras','Brócoli':'🥦 Verduras','Zanahoria':'🥦 Verduras','Ejotes':'🥦 Verduras','Chayote':'🥦 Verduras',
+  'Calabaza':'🥦 Verduras','Pepino':'🥦 Verduras','Nopales cocidos':'🥦 Verduras','Cebolla':'🥦 Verduras',
+  'Canela en polvo':'🧂 Condimentos y otros','Miel de abeja':'🧂 Condimentos y otros','Crema de cacahuate':'🧂 Condimentos y otros',
+  'Aceite de oliva':'🧂 Condimentos y otros','Sal':'🧂 Condimentos y otros','Caldo de pollo bajo en sodio':'🧂 Condimentos y otros','Hierbas de olor':'🧂 Condimentos y otros'
+};
+const ORDEN_CAT = ['🥚 Proteínas','🥛 Lácteos','🌾 Granos y carbohidratos','🍎 Frutas','🥦 Verduras','🧂 Condimentos y otros'];
+
+// ─── Recetario — 10 desayunos + 10 cenas, sencillos, reales, con macros aproximados ──
+const RECETAS = {
+  desayuno: [
+    {id:'d1', nombre:'Avena con plátano, canela y miel', tiempo:'10 min',
+     ingredientes:[{n:'Avena en hojuelas',c:'40 g'},{n:'Leche entera',c:'250 ml'},{n:'Plátano',c:'1 pza'},{n:'Canela en polvo',c:'al gusto'},{n:'Miel de abeja',c:'1 cda'}],
+     pasos:['Cuece la avena con la leche a fuego bajo 5 min, moviendo para que no se pegue.','Sirve, agrega el plátano rebanado, la canela y la miel encima.'],
+     macros:{cal:480,prot:15,carbs:85,gra:12},
+     tip:'La avena y el plátano son de los alimentos más seguros para reflujo — evita café en esta comida.'},
+    {id:'d2', nombre:'Huevos revueltos con espinaca y pan integral', tiempo:'10 min',
+     ingredientes:[{n:'Huevo',c:'3 pza'},{n:'Espinaca',c:'1 taza'},{n:'Aceite de oliva',c:'1 cdta'},{n:'Pan integral',c:'2 rebanadas'},{n:'Sal',c:'poca'}],
+     pasos:['Sofríe la espinaca en el aceite 1 minuto.','Agrega los huevos batidos y revuelve a fuego bajo hasta que cuajen.','Sirve con el pan tostado.'],
+     macros:{cal:430,prot:26,carbs:30,gra:22},
+     tip:'Sal con moderación — el exceso de sal no ayuda al reflujo.'},
+    {id:'d3', nombre:'Claras de huevo con avena y manzana', tiempo:'12 min',
+     ingredientes:[{n:'Clara de huevo',c:'6 pza'},{n:'Avena en hojuelas',c:'40 g'},{n:'Manzana',c:'1 pza'},{n:'Canela en polvo',c:'al gusto'}],
+     pasos:['Cuece la avena con agua hasta que espese.','Cocina las claras a la plancha con un poco de aceite en aerosol.','Sirve junto con la manzana en rebanadas y canela sobre la avena.'],
+     macros:{cal:370,prot:28,carbs:55,gra:4},
+     tip:'Manzana sin cáscara si notas que te repite — la pectina protege el esófago.'},
+    {id:'d4', nombre:'Yogurt griego con avena, miel y pera', tiempo:'5 min',
+     ingredientes:[{n:'Yogurt griego natural',c:'200 g'},{n:'Avena en hojuelas',c:'30 g'},{n:'Miel de abeja',c:'1 cda'},{n:'Pera',c:'1 pza'}],
+     pasos:['Mezcla el yogurt con la avena y deja reposar 5 min para que la avena se suavice.','Agrega la miel y la pera picada encima.'],
+     macros:{cal:420,prot:24,carbs:60,gra:8},
+     tip:'Si el yogurt te repite, sustitúyelo por leche de avena (ver receta de Avena Overnight).'},
+    {id:'d5', nombre:'Licuado de plátano, avena y crema de cacahuate', tiempo:'5 min',
+     ingredientes:[{n:'Plátano',c:'1 pza'},{n:'Avena en hojuelas',c:'30 g'},{n:'Crema de cacahuate',c:'1 cda'},{n:'Leche entera',c:'300 ml'}],
+     pasos:['Licúa todos los ingredientes 1 minuto.','Sirve frío. Ideal si andas corto de tiempo en la mañana.'],
+     macros:{cal:480,prot:18,carbs:62,gra:18},
+     tip:'Para llevar en tu traslado a ALTEN si no te da tiempo de sentarte a desayunar.'},
+    {id:'d6', nombre:'Hot cakes de avena y plátano (sin harina)', tiempo:'15 min',
+     ingredientes:[{n:'Avena en hojuelas',c:'50 g (molida)'},{n:'Plátano',c:'1 pza'},{n:'Huevo',c:'2 pza'},{n:'Canela en polvo',c:'al gusto'},{n:'Miel de abeja',c:'1 cda, para servir'}],
+     pasos:['Muele la avena en la licuadora hasta volverla harina fina.','Licúa o machaca el plátano con la avena molida y los huevos hasta integrar.','Cocina en sartén antiadherente a fuego bajo, 2 min por lado.','Sirve con miel y canela.'],
+     macros:{cal:430,prot:22,carbs:55,gra:12},
+     tip:'Sin harina refinada — más suave para la digestión que unos hot cakes normales.'},
+    {id:'d7', nombre:'Omelette de claras con queso panela y pan tostado', tiempo:'12 min',
+     ingredientes:[{n:'Clara de huevo',c:'6 pza'},{n:'Queso panela',c:'40 g'},{n:'Pan integral',c:'2 rebanadas'},{n:'Espinaca',c:'1 taza'},{n:'Aceite de oliva',c:'1 cdta'}],
+     pasos:['Sofríe la espinaca en el aceite.','Vierte las claras batidas, agrega el queso en cubos y cocina a fuego bajo doblando el omelette a la mitad.','Sirve con el pan tostado.'],
+     macros:{cal:420,prot:38,carbs:32,gra:14},
+     tip:'El desayuno más alto en proteína de la lista — bueno para los días de Brazos o Piernas.'},
+    {id:'d8', nombre:'Pan tostado con aguacate y huevo cocido', tiempo:'12 min',
+     ingredientes:[{n:'Pan integral',c:'2 rebanadas'},{n:'Aguacate',c:'1/2 pza'},{n:'Huevo',c:'2 pza'},{n:'Sal',c:'poca'}],
+     pasos:['Cuece los huevos 8 min, pélalos y rebánalos.','Machaca el aguacate sobre el pan tostado.','Corona con el huevo rebanado.'],
+     macros:{cal:450,prot:22,carbs:35,gra:25},
+     tip:'Evita el limón si sientes ardor ese día — el aguacate solo ya tiene buen sabor.'},
+    {id:'d9', nombre:'Avena overnight con manzana y canela (para llevar)', tiempo:'5 min + reposo nocturno',
+     ingredientes:[{n:'Avena en hojuelas',c:'40 g'},{n:'Leche de avena',c:'200 ml'},{n:'Manzana',c:'1 pza, rallada'},{n:'Canela en polvo',c:'al gusto'},{n:'Miel de abeja',c:'1 cdta'}],
+     pasos:['Mezcla todo en un frasco la noche anterior.','Refrigera toda la noche.','Por la mañana ya está lista, fría o tibia — solo sírvela.'],
+     macros:{cal:380,prot:10,carbs:68,gra:7},
+     tip:'La mejor opción para tus mañanas de solo ~40 min entre despertar y salir — se prepara la noche anterior.'},
+    {id:'d10', nombre:'Quesadillas de claras con queso panela y nopales', tiempo:'12 min',
+     ingredientes:[{n:'Tortilla de maíz',c:'2 pza'},{n:'Clara de huevo',c:'4 pza'},{n:'Queso panela',c:'40 g'},{n:'Nopales cocidos',c:'1/2 taza'}],
+     pasos:['Cocina las claras revueltas en un sartén.','Rellena las tortillas con las claras, el queso y los nopales.','Dobla y calienta en comal hasta que el queso gratine.'],
+     macros:{cal:380,prot:30,carbs:30,gra:14},
+     tip:'Los nopales cocidos son alcalinos — buenos para el estómago, a diferencia de los crudos en salsa.'},
+  ],
+  cena: [
+    {id:'c1', nombre:'Pechuga de pollo a la plancha con arroz y verduras', tiempo:'20 min',
+     ingredientes:[{n:'Pechuga de pollo',c:'150 g'},{n:'Arroz blanco cocido',c:'1 taza'},{n:'Brócoli',c:'1 taza'},{n:'Zanahoria',c:'1 pza'},{n:'Aceite de oliva',c:'1 cdta'}],
+     pasos:['Sazona el pollo con poca sal y cocínalo a la plancha 5-6 min por lado.','Cuece al vapor el brócoli y la zanahoria 8 min.','Sirve todo junto con el arroz.'],
+     macros:{cal:520,prot:50,carbs:55,gra:8},
+     tip:'Cena base de la semana — fácil de repetir y de escalar en porción si entrenaste ese día.'},
+    {id:'c2', nombre:'Pescado blanco al vapor con papa y ejotes', tiempo:'20 min',
+     ingredientes:[{n:'Filete de tilapia',c:'150 g'},{n:'Papa',c:'1 pza mediana'},{n:'Ejotes',c:'1 taza'},{n:'Sal',c:'poca'}],
+     pasos:['Cuece la papa entera o en cubos 15 min.','Cuece al vapor el pescado y los ejotes 10 min.','Sirve todo junto.'],
+     macros:{cal:330,prot:33,carbs:38,gra:3},
+     tip:'La cena más ligera y de digestión más rápida — ideal para los días que cenas más tarde.'},
+    {id:'c3', nombre:'Sopa de pollo con chayote, zanahoria y calabaza', tiempo:'25 min',
+     ingredientes:[{n:'Pechuga de pollo',c:'150 g'},{n:'Chayote',c:'1 taza'},{n:'Zanahoria',c:'1 pza'},{n:'Calabaza',c:'1 taza'},{n:'Caldo de pollo bajo en sodio',c:'500 ml'}],
+     pasos:['Cuece el pollo en el caldo 15 min y deshébralo.','Agrega las verduras picadas y cuece 10 min más.'],
+     macros:{cal:300,prot:40,carbs:20,gra:4},
+     tip:'Perfecta para las noches frías o cuando sientes el estómago sensible.'},
+    {id:'c4', nombre:'Atún con arroz y ensalada de pepino', tiempo:'10 min',
+     ingredientes:[{n:'Atún en agua',c:'1 lata'},{n:'Arroz blanco cocido',c:'1 taza'},{n:'Pepino',c:'1 taza'},{n:'Aceite de oliva',c:'1 cdta'}],
+     pasos:['Escurre el atún y mézclalo con el arroz.','Sirve con el pepino en rebanadas y un toque de aceite de oliva.'],
+     macros:{cal:400,prot:34,carbs:48,gra:6},
+     tip:'La cena más rápida de armar — para los días de bloque profundo o poco tiempo.'},
+    {id:'c5', nombre:'Pavo molido con puré de papa y brócoli', tiempo:'25 min',
+     ingredientes:[{n:'Pavo molido',c:'150 g'},{n:'Papa',c:'2 pza'},{n:'Leche entera',c:'50 ml'},{n:'Brócoli',c:'1 taza'}],
+     pasos:['Cocina el pavo molido en sartén con poca sal.','Cuece y machaca la papa con la leche para el puré.','Cuece el brócoli al vapor. Sirve todo junto.'],
+     macros:{cal:450,prot:38,carbs:45,gra:10},
+     tip:'Buena opción para los días de Piernas — carbohidrato extra del puré.'},
+    {id:'c6', nombre:'Tacos de pollo deshebrado con nopales', tiempo:'20 min',
+     ingredientes:[{n:'Pechuga de pollo',c:'150 g'},{n:'Tortilla de maíz',c:'4 pza'},{n:'Nopales cocidos',c:'1 taza'},{n:'Cebolla',c:'poca, cocida'}],
+     pasos:['Cuece el pollo y deshébralo.','Calienta las tortillas en comal.','Arma los tacos con el pollo y los nopales.'],
+     macros:{cal:420,prot:42,carbs:40,gra:8},
+     tip:'Cebolla siempre cocida, nunca cruda — y sin salsa picante en la noche.'},
+    {id:'c7', nombre:'Omelette de claras con verduras (cena ligera)', tiempo:'10 min',
+     ingredientes:[{n:'Clara de huevo',c:'6 pza'},{n:'Calabaza',c:'1/2 taza'},{n:'Zanahoria',c:'1/2 pza, rallada'},{n:'Aceite de oliva',c:'1 cdta'}],
+     pasos:['Sofríe las verduras 3 minutos.','Agrega las claras y cocina a fuego bajo hasta que cuajen.'],
+     macros:{cal:200,prot:24,carbs:10,gra:6},
+     tip:'La cena más ligera de todas — para cuando cenas tarde o sientes pesadez.'},
+    {id:'c8', nombre:'Caldo de pollo con verduras y arroz', tiempo:'25 min',
+     ingredientes:[{n:'Pechuga de pollo',c:'150 g'},{n:'Caldo de pollo bajo en sodio',c:'500 ml'},{n:'Zanahoria',c:'1 pza'},{n:'Calabaza',c:'1 taza'},{n:'Arroz blanco cocido',c:'1/2 taza'}],
+     pasos:['Cuece todo junto a fuego medio 20 min, hasta que el pollo esté suave.'],
+     macros:{cal:380,prot:42,carbs:35,gra:4},
+     tip:'Se hace en una sola olla — bueno para los días de bloque profundo de 4h del sábado.'},
+    {id:'c9', nombre:'Filete de pescado al horno con camote', tiempo:'30 min',
+     ingredientes:[{n:'Filete de tilapia',c:'150 g'},{n:'Camote',c:'1 pza mediana'},{n:'Aceite de oliva',c:'1 cdta'},{n:'Hierbas de olor',c:'al gusto'}],
+     pasos:['Hornea el camote en rebanadas 25 min a 200°C.','Hornea el pescado con aceite y hierbas de olor 15 min.'],
+     macros:{cal:350,prot:32,carbs:32,gra:6},
+     tip:'El camote es más alcalino que la papa — buena opción en días de más ardor.'},
+    {id:'c10', nombre:'Ensalada tibia de pollo, quinoa y verduras', tiempo:'20 min',
+     ingredientes:[{n:'Pechuga de pollo',c:'150 g'},{n:'Quinoa cocida',c:'1 taza'},{n:'Brócoli',c:'1/2 taza'},{n:'Zanahoria',c:'1/2 pza'},{n:'Aceite de oliva',c:'1 cdta'}],
+     pasos:['Cocina el pollo a la plancha y córtalo en cubos.','Cuece al vapor el brócoli y la zanahoria.','Mezcla todo con la quinoa cocida y el aceite de oliva.'],
+     macros:{cal:480,prot:48,carbs:45,gra:10},
+     tip:'La cena con más proteína de la lista — para los días de Brazos A/B.'},
+  ]
+};
+
+// ─── Estado — lista del súper (localStorage) ───────────────────────────────
+const KEY='comida_v1';
+let S={comprado:{}};
+const save=()=>localStorage.setItem(KEY,JSON.stringify(S));
+const load=()=>{try{const d=localStorage.getItem(KEY);if(d)S={...S,...JSON.parse(d)};}catch(e){}};
+
+function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500);}
+
+// ─── Navegación ─────────────────────────────────────────────────────────────
+const SECS=['desayunos','cenas','super'];
+const STITLE={desayunos:'🌅 Desayunos',cenas:'🌙 Cenas',super:'🛒 Lista del Súper'};
+function nav(s){
+  SECS.forEach(x=>document.getElementById('s-'+x).classList.toggle('active',x===s));
+  document.querySelectorAll('.nav-item').forEach(el=>el.classList.toggle('active',el.getAttribute('onclick')?.includes(`'${s}'`)));
+  document.getElementById('topTitle').textContent=STITLE[s];
+}
+
+// ─── Render de recetas ──────────────────────────────────────────────────────
+function recetaCard(r,tipo){
+  return `<div class="receta-card">
+    <h3>${r.nombre}</h3>
+    <div class="receta-meta"><span>⏱️ ${r.tiempo}</span><span>🍽️ 1 porción</span></div>
+    <div class="macro-row">
+      <span class="macro-chip cal">🔥 ${r.macros.cal} kcal</span>
+      <span class="macro-chip prot">💜 ${r.macros.prot}g prot</span>
+      <span class="macro-chip carb">💙 ${r.macros.carbs}g carbs</span>
+      <span class="macro-chip gra">💛 ${r.macros.gra}g grasa</span>
+    </div>
+    <div class="receta-sub">Ingredientes</div>
+    <ul class="ing-list">${r.ingredientes.map(i=>`<li><span>${i.n}</span><span>${i.c}</span></li>`).join('')}</ul>
+    <div class="receta-sub">Preparación</div>
+    <ol class="pasos-list">${r.pasos.map(p=>`<li>${p}</li>`).join('')}</ol>
+    <div class="tip-box"><span class="ico">💡</span><span>${r.tip}</span></div>
+    <div class="receta-actions">
+      <button class="btn btn-w btn-sm" onclick="registrarReceta('${r.id}','${tipo}')">➕ Registrar en mi diario de hoy</button>
+    </div>
+  </div>`;
+}
+function renderRecetas(){
+  document.getElementById('grid-desayunos').innerHTML=RECETAS.desayuno.map(r=>recetaCard(r,'desayuno')).join('');
+  document.getElementById('grid-cenas').innerHTML=RECETAS.cena.map(r=>recetaCard(r,'cena')).join('');
+  document.getElementById('cnt-desayunos').textContent=RECETAS.desayuno.length;
+  document.getElementById('cnt-cenas').textContent=RECETAS.cena.length;
+}
+
+// ─── Registrar una receta directo en el diario de Cuidado de la Salud
+//     (misalud_v1.alimentos) — mismo origen file://, mismo formato que usa
+//     salud.html. Es un registro de referencia: si comiste algo distinto a
+//     la receta exacta, edítalo o bórralo desde Cuidado de la Salud. ──────────
+function registrarReceta(id,tipo){
+  const r=RECETAS[tipo].find(x=>x.id===id); if(!r) return;
+  const hoy=new Date().toISOString().slice(0,10);
+  let sal={alimentos:[]};
+  try{const d=localStorage.getItem('misalud_v1');if(d)sal={alimentos:[],...JSON.parse(d)};}catch(e){}
+  if(!sal.alimentos) sal.alimentos=[];
+  const comidaKey=tipo==='desayuno'?'desayuno':'cena';
+  sal.alimentos.push({
+    id:Date.now().toString(36)+Math.random().toString(36).slice(2),
+    fecha:hoy, comida:comidaKey, nombre:r.nombre, cantidad:'', unidad:'',
+    cal:r.macros.cal, prot:r.macros.prot, carbs:r.macros.carbs, gra:r.macros.gra,
+    notas:'Registrado desde Mi Comida'
+  });
+  localStorage.setItem('misalud_v1',JSON.stringify(sal));
+  toast('✅ Agregado a tu Registro Diario de hoy');
+}
+
+// ─── Lista del súper — consolidada, deduplicada, con checklist persistente ──
+function listaSuperUnica(){
+  const set=new Set();
+  [...RECETAS.desayuno,...RECETAS.cena].forEach(r=>r.ingredientes.forEach(i=>set.add(i.n)));
+  return [...set];
+}
+function renderSuper(){
+  const items=listaSuperUnica();
+  const porCat={};
+  items.forEach(n=>{const cat=CATEGORIA_ING[n]||'🧂 Condimentos y otros';(porCat[cat]=porCat[cat]||[]).push(n);});
+  document.getElementById('shop-body').innerHTML=ORDEN_CAT.filter(c=>porCat[c]).map(cat=>{
+    const lista=porCat[cat].sort((a,b)=>a.localeCompare(b,'es'));
+    return `<div class="shop-cat">
+      <div class="shop-cat-title">${cat}<span class="n">${lista.filter(n=>S.comprado[n]).length}/${lista.length}</span></div>
+      <div class="shop-grid">${lista.map(n=>`
+        <div class="shop-item ${S.comprado[n]?'checked':''}" onclick="toggleShop('${n.replace(/'/g,"\\'")}')">
+          <span class="shop-check">${S.comprado[n]?'✓':''}</span>
+          <span class="shop-name">${n}</span>
+        </div>`).join('')}</div>
+    </div>`;
+  }).join('');
+  const total=items.length, hechos=items.filter(n=>S.comprado[n]).length;
+  document.getElementById('shop-pfill').style.width=(total?hechos/total*100:0)+'%';
+  document.getElementById('shop-ptxt').textContent=hechos+'/'+total;
+  document.getElementById('cnt-super').textContent=hechos+'/'+total;
+}
+function toggleShop(n){ S.comprado[n]=!S.comprado[n]; save(); renderSuper(); }
+function resetShop(){ S.comprado={}; save(); renderSuper(); toast('↺ Lista reiniciada'); }
+
+// ─── Init ────────────────────────────────────────────────────────────────────
+function init(){
+  load();
+  renderRecetas();
+  renderSuper();
+  const check=()=>{const mb=document.getElementById('menuBtn');mb.style.display=window.innerWidth<640?'':'none';if(window.innerWidth>=640)document.getElementById('sidebar').classList.remove('open');};
+  window.addEventListener('resize',check); check();
+}
+init();
+</script>
+</body>
+</html>

@@ -43,6 +43,7 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var
 .tab-btn[data-tab="cabello"].active{background:var(--am-l);color:var(--am);border-color:rgba(224,160,32,.4)}
 .tab-btn[data-tab="salud"].active{background:var(--g-l);color:var(--g);border-color:rgba(0,232,122,.4)}
 .tab-btn[data-tab="ejercicio"].active{background:var(--o-l);color:var(--o);border-color:rgba(255,107,53,.4)}
+.tab-btn[data-tab="comida"].active{background:var(--w-l);color:var(--w);border-color:rgba(255,217,61,.4)}
 
 /* VIEWS */
 .view{flex:1;min-height:0;display:none}
@@ -356,6 +357,7 @@ tbody tr:hover td{background:rgba(255,255,255,.02)}
     <button class="tab-btn" data-tab="cabello" onclick="mainTab('cabello')">💇 Cuidado del Cabello</button>
     <button class="tab-btn" data-tab="salud" onclick="mainTab('salud')">🥗 Cuidado de la Salud</button>
     <button class="tab-btn" data-tab="ejercicio" onclick="mainTab('ejercicio')">🏋️ Ejercicio</button>
+    <button class="tab-btn" data-tab="comida" onclick="mainTab('comida')">🍳 Comida</button>
     <a href="../Dashboard/dashboard.html" class="tab-btn" style="text-decoration:none;margin-left:8px;border-left:1px solid rgba(255,255,255,.12);padding-left:16px">🚀 Dashboard</a>
   </nav>
 </header>
@@ -498,6 +500,11 @@ tbody tr:hover td{background:rgba(255,255,255,.02)}
   <iframe id="frame-ejercicio" title="Ejercicio"></iframe>
 </main>
 
+<!-- ══════════════ COMIDA (app completa embebida) ══════════════ -->
+<main class="view view-frame" id="view-comida">
+  <iframe id="frame-comida" title="Comida"></iframe>
+</main>
+
 
 <!-- CONFIRM -->
 <div class="conf" id="conf">
@@ -540,6 +547,7 @@ function mainTab(tab){
   document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id==='view-'+tab));
   if(tab==='salud'){const f=document.getElementById('frame-salud');if(!f.getAttribute('src'))f.src='salud.html';}
   if(tab==='ejercicio'){const f=document.getElementById('frame-ejercicio');if(!f.getAttribute('src'))f.src='ejercicio.html';}
+  if(tab==='comida'){const f=document.getElementById('frame-comida');if(!f.getAttribute('src'))f.src='comida.html';}
 }
 
 // ══════════════════════════════════════════════════════════════════════════
@@ -1005,7 +1013,7 @@ skRenderGuia();
 caRenderGuia();
 
 const initialTab=new URLSearchParams(location.search).get('tab');
-if(['skincare','cabello','salud','ejercicio'].includes(initialTab)) mainTab(initialTab);
+if(['skincare','cabello','salud','ejercicio','comida'].includes(initialTab)) mainTab(initialTab);
 </script>
 </body>
 </html>

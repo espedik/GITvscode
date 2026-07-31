@@ -1,20 +1,20 @@
 # cuidadopersonal.html — Cuidado Personal (shell)
 
-Página "hub" de una sola pieza (HTML+CSS+JS, sin backend, sin dependencias externas — ni Chart.js) creada el 2026-07-29 que agrupa 4 subtabs principales en una sola navegación: **🧴 Skincare**, **💇 Cuidado del Cabello** (nativas, construidas en este mismo archivo), **🥗 Cuidado de la Salud** y **🏋️ Ejercicio** (apps completas preexistentes, incrustadas vía `<iframe>`). Sustituyó a las antiguas apps independientes `Salud/salud.html`, `Ejercicio/ejercicio.html` y a la app de `Animo/animo.html` (retirada, no fusionada).
+Página "hub" de una sola pieza (HTML+CSS+JS, sin backend, sin dependencias externas — ni Chart.js) creada el 2026-07-29 que agrupa 5 subtabs principales en una sola navegación: **🧴 Skincare**, **💇 Cuidado del Cabello** (nativas, construidas en este mismo archivo), **🥗 Cuidado de la Salud**, **🏋️ Ejercicio** y **🍳 Comida** (**nuevo 2026-07-30**) (apps completas preexistentes, incrustadas vía `<iframe>`). Sustituyó a las antiguas apps independientes `Salud/salud.html`, `Ejercicio/ejercicio.html` y a la app de `Animo/animo.html` (retirada, no fusionada).
 
-Ver también: [`readme_salud.md`](readme_salud.md) y [`readme_ejercicio.md`](readme_ejercicio.md) — documentación de las dos apps incrustadas. Este archivo (`readme_cuidadopersonal.md`) solo documenta el shell y los dos módulos nativos.
+Ver también: [`readme_salud.md`](readme_salud.md), [`readme_ejercicio.md`](readme_ejercicio.md) y [`readme_comida.md`](readme_comida.md) — documentación de las tres apps incrustadas. Este archivo (`readme_cuidadopersonal.md`) solo documenta el shell y los dos módulos nativos.
 
-## Por qué Salud y Ejercicio están incrustados con `<iframe>` en vez de fusionados línea por línea
+## Por qué Salud, Ejercicio y Comida están incrustados con `<iframe>` en vez de fusionados línea por línea
 
-Ambas apps son grandes por sí solas y comparten nombres de variables y funciones globales (`KEY`, `RENDERS`, `SECS`, `STITLE`, `load`, `save`, `today`, `fmtD`, `uid`, `check`, `killChart`, etc.). Concatenarlas en un mismo `<script>` provocaría errores de "Identifier ya declarado" y rompería ambas apps. Incrustarlas cada una en su propio `<iframe>` dentro del subtab correspondiente conserva el 100% de su funcionalidad original sin ese riesgo.
+Las tres apps son grandes por sí solas y comparten (o podrían llegar a compartir) nombres de variables y funciones globales (`KEY`, `RENDERS`, `SECS`, `STITLE`, `load`, `save`, `today`, `fmtD`, `uid`, `check`, `killChart`, etc.). Concatenarlas en un mismo `<script>` provocaría errores de "Identifier ya declarado" y rompería las apps. Incrustarlas cada una en su propio `<iframe>` dentro del subtab correspondiente conserva el 100% de su funcionalidad original sin ese riesgo.
 
-**Origen compartido de `localStorage`**: como los tres archivos (`cuidadopersonal.html`, `salud.html`, `ejercicio.html`) se abren vía `file://`, comparten el mismo origen/almacenamiento que el resto del proyecto (así lo hace también `Dashboard/dashboard.html` al leer las claves de todas las apps hermanas desde una carpeta distinta). Por eso los datos guardados en `misalud_v1` y `mirutina_v1` siguen disponibles igual que antes de mover los archivos a esta carpeta, y por eso Skincare/Cabello pueden compartir sesión de `localStorage` con el resto del proyecto sin ninguna configuración especial.
+**Origen compartido de `localStorage`**: como los cuatro archivos (`cuidadopersonal.html`, `salud.html`, `ejercicio.html`, `comida.html`) se abren vía `file://`, comparten el mismo origen/almacenamiento que el resto del proyecto (así lo hace también `Dashboard/dashboard.html` al leer las claves de todas las apps hermanas desde una carpeta distinta). Por eso los datos guardados en `misalud_v1`, `mirutina_v1` y `comida_v1` siguen disponibles igual que antes de mover los archivos a esta carpeta, y por eso Skincare/Cabello pueden compartir sesión de `localStorage` con el resto del proyecto sin ninguna configuración especial. **`comida.html` además usa este origen compartido para *escribir* directamente en `misalud_v1`** (no solo en su propia clave) — ver [`readme_comida.md`](readme_comida.md) → "Referencias cruzadas".
 
 ## Navegación del shell
 
-`mainTab(tab)` alterna la clase `.active` entre los 4 botones `.tab-btn` (`data-tab="skincare|cabello|salud|ejercicio"`) y los 4 contenedores `.view` (`#view-skincare|#view-cabello|#view-salud|#view-ejercicio`). Los dos tabs de iframe (`salud`, `ejercicio`) cargan su `src` de forma perezosa la primera vez que se activan (`if(!f.getAttribute('src')) f.src='salud.html'`), y ya no se recarga después — cambiar de tab y volver conserva el estado interno de esa app.
+`mainTab(tab)` alterna la clase `.active` entre los 5 botones `.tab-btn` (`data-tab="skincare|cabello|salud|ejercicio|comida"`) y los 5 contenedores `.view` (`#view-skincare|#view-cabello|#view-salud|#view-ejercicio|#view-comida`). Los tres tabs de iframe (`salud`, `ejercicio`, `comida`) cargan su `src` de forma perezosa la primera vez que se activan (`if(!f.getAttribute('src')) f.src='salud.html'`), y ya no se recarga después — cambiar de tab y volver conserva el estado interno de esa app.
 
-**Deep-link**: acepta `?tab=` en la URL (`skincare|cabello|salud|ejercicio`) para abrir directo ese subtab — así es como el Dashboard enlaza a cada área específica (`cuidadopersonal.html?tab=ejercicio`, etc.).
+**Deep-link**: acepta `?tab=` en la URL (`skincare|cabello|salud|ejercicio|comida`) para abrir directo ese subtab — así es como el Dashboard enlaza a cada área específica (`cuidadopersonal.html?tab=ejercicio`, etc.).
 
 ## Módulo nativo: 🧴 Skincare — `localStorage['skincare_v1']`
 
@@ -86,8 +86,8 @@ Reconstruido a fondo el 2026-07-29, y **simplificado a una sola pantalla ese mis
 
 ## Referencias cruzadas
 
-- El **Dashboard** (`../Dashboard/dashboard.html`) lee `skincare_v1` (`D.sk`) y `cabello_v1` (`D.ca`) directamente: usa `sk.perfil.tipo` y `ca.perfil.tipo` únicamente para el subtítulo de las tarjetas de acceso rápido de Skincare y Cabello en `renderApps()` (ninguno de los dos tiene ya tile en "Hoy en números" ni alerta — todo lo relacionado a "hice mi rutina hoy" se retiró el 2026-07-29, tanto el checklist interno de Skincare como el CRUD de Lavados de Cabello). Si cambias la forma de `perfil` en cualquiera de los dos aquí, revisa `renderApps()` en `Dashboard/dashboard.html`.
-- Las tarjetas de acceso rápido del Dashboard enlazan aquí con `?tab=skincare`, `?tab=cabello`, `?tab=salud`, `?tab=ejercicio`.
+- El **Dashboard** (`../Dashboard/dashboard.html`) ya no tiene una pantalla dedicada de "Todas mis apps" (se retiró el 2026-07-30) — el acceso directo ahora vive en su barra superior fija (`renderQuickApps()`), que **no** muestra estadística para Skincare/Cabello/Ejercicio/Comida (solo íconos), y sí para Salud (kcal de hoy). Si cambias la forma de `perfil` en Skincare/Cabello, revisa `renderQuickApps()` en `Dashboard/dashboard.html` de todos modos, por si en el futuro se le agrega estadística.
+- Las píldoras de la barra superior del Dashboard enlazan aquí con `?tab=skincare`, `?tab=cabello`, `?tab=salud`, `?tab=ejercicio` (`?tab=comida` todavía no tiene píldora propia en el Dashboard — ver [`readme_comida.md`](readme_comida.md)).
 - Mapa completo del proyecto: [`../README.md`](../README.md).
 
 ## Cómo usarlo
