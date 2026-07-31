@@ -115,19 +115,18 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 .ar-val{width:32px;text-align:right;font-family:var(--mono);font-weight:700;font-size:13px}
 
 .chart-wrap{position:relative;height:clamp(240px,34vh,420px)}
-.chart-wrap-sm{position:relative;height:clamp(150px,18vh,220px);padding:10px}
 
-/* ─── HABILIDADES — top prioridades, letra compacta, sin clics (slide pasivo) ─ */
-.skill-priority-title{font-size:clamp(14px,1.5vw,18px);font-weight:900;color:var(--text);margin-bottom:8px;display:flex;align-items:center;gap:7px}
-.skill-row{display:flex;align-items:center;gap:8px;padding:5px 2px;border-bottom:1px solid rgba(255,255,255,.06)}
-.skill-row:last-child{border-bottom:none}
-.sr-badge{width:22px;height:22px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0}
-.sr-body{flex:1;min-width:0;display:flex;align-items:baseline;gap:7px;flex-wrap:nowrap}
-.sr-head{display:flex;align-items:baseline;gap:5px;flex-shrink:0}
-.sr-name{font-size:10.5px;font-weight:800;color:var(--text);white-space:nowrap}
-.sr-val{font-family:var(--mono);font-size:9.5px;font-weight:700}
-.sr-primer{font-size:9.5px;color:var(--text2);line-height:1.3;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;min-width:0}
-@media(max-width:900px){.sr-body{flex-wrap:wrap}.sr-primer{white-space:normal}}
+/* ─── HABILIDADES — tarjetas grandes, una por prioridad (slide pasivo, sin clics) ─ */
+.skill-priority-title{font-size:clamp(15px,1.6vw,19px);font-weight:900;color:var(--text);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.skill-card{display:flex;flex-direction:column;gap:8px;min-height:100%}
+.skill-card-head{display:flex;align-items:center;gap:10px}
+.sc-badge{width:38px;height:38px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0}
+.sc-name{font-size:clamp(14px,1.3vw,16px);font-weight:800;color:var(--text)}
+.sc-val{font-family:var(--mono);font-size:13px;font-weight:800;margin-left:auto}
+.sc-primer{font-size:clamp(11.5px,1vw,13px);color:var(--text2);line-height:1.55}
+.sc-primer b{color:var(--text);font-weight:700}
+.sc-res{font-size:11px;color:var(--text3);margin-top:auto;padding-top:8px;border-top:1px solid rgba(255,255,255,.06)}
+.sc-res b{color:var(--p);font-weight:700}
 
 @media(max-width:900px){.g4{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:repeat(2,1fr)}.g6{grid-template-columns:repeat(3,1fr)}}
 @media(max-width:600px){.g2,.g4,.g3,.g6{grid-template-columns:1fr}.ar-name{width:80px}}
@@ -273,17 +272,19 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
       <div class="eyebrow reveal d1"><span class="dot"></span> Coach · Radar de habilidades</div>
       <div class="slide-title reveal d2">🧠 En qué invertir tu tiempo</div>
 
-      <div class="grid reveal d3" style="align-items:start;grid-template-columns:0.8fr 1.35fr;gap:clamp(12px,1.4vw,20px)">
-        <div>
-          <div class="tile chart-wrap-sm"><canvas id="chSkills"></canvas></div>
-          <div class="tile tile-glow" style="text-align:center;margin-top:12px;padding:10px">
-            <div class="lbl" style="font-size:9px">OVR general</div>
-            <div class="big-num" style="font-size:clamp(24px,2.8vw,36px)" id="skillOvr">—</div>
-            <div id="skillOvrLabel" style="font-weight:800;font-size:10px">—</div>
-          </div>
+      <div class="grid reveal d3" style="grid-template-columns:1fr 1fr;align-items:center;margin-bottom:clamp(16px,2.2vh,26px)">
+        <div class="tile chart-wrap"><canvas id="chSkills"></canvas></div>
+        <div class="tile tile-glow" style="text-align:center">
+          <div class="lbl">OVR general</div>
+          <div class="big-num" style="font-size:clamp(56px,7vw,96px)" id="skillOvr">—</div>
+          <div id="skillOvrLabel" style="font-weight:800;font-size:15px">—</div>
         </div>
-        <div id="skillPriority"></div>
       </div>
+
+      <div class="skill-priority-title reveal d4">⚠️ Habilidades a mejorar — primer paso de esta semana
+        <a href="../Coach/Coach_v2.html#aprendizaje" style="margin-left:auto;font-size:12px;font-weight:600;color:var(--cy);text-decoration:none">Ver las 5 + hábitos y recursos en Coach →</a>
+      </div>
+      <div class="grid g4 reveal d5" id="skillPriority"></div>
     </div>
   </section>
 
@@ -690,24 +691,23 @@ function renderSkills(){
   document.getElementById('skillOvrLabel').textContent=lv.l;
   document.getElementById('skillOvrLabel').style.color=lv.c;
 
-  // Top N prioridades reales, siempre visibles y compactas (nada de clics — este slide es
-  // pasivo, rota solo y se ve de reojo mientras se trabaja, todo debe caber de un vistazo).
+  // Top N prioridades reales, siempre visibles (nada de clics — este slide es pasivo, rota
+  // solo y se ve de reojo mientras se trabaja), cada una en una tarjeta grande y detallada.
   const priority=Object.keys(APRENDIZAJE).map(id=>SK.find(s=>s.id===id)).filter(Boolean).sort((a,b)=>a.val-b.val).slice(0,PRIORIDAD_N);
-  document.getElementById('skillPriority').innerHTML=`
-    <div class="tile tile-glow" style="padding:16px 18px">
-      <div class="skill-priority-title">⚠️ Habilidades a mejorar</div>
-      ${priority.map(s=>{
-        const l=skLevel(s.val), a=APRENDIZAJE[s.id];
-        return `<div class="skill-row">
-          <div class="sr-badge" style="background:${l.c}22">${s.icon}</div>
-          <div class="sr-body">
-            <div class="sr-head"><span class="sr-name">${s.name}</span><span class="sr-val" style="color:${l.c}">${s.val}</span></div>
-            <div class="sr-primer">🎯 ${a.corto}</div>
-          </div>
-        </div>`;
-      }).join('')}
-      <div class="sub" style="margin-top:6px;text-align:center"><a href="../Coach/Coach_v2.html#aprendizaje" style="color:var(--cy);text-decoration:none">Plan completo (5 skills, hábitos y recursos) en Coach →</a></div>
+  document.getElementById('skillPriority').innerHTML=priority.map(s=>{
+    const l=skLevel(s.val), a=APRENDIZAJE[s.id];
+    return `<div class="tile">
+      <div class="skill-card">
+        <div class="skill-card-head">
+          <div class="sc-badge" style="background:${l.c}22">${s.icon}</div>
+          <div class="sc-name">${s.name}</div>
+          <div class="sc-val" style="color:${l.c}">${s.val}</div>
+        </div>
+        <div class="sc-primer">🎯 <b>Esta semana:</b> ${a.primer}</div>
+        <div class="sc-res">📚 <b>${a.recursos[0].n}</b> · ${a.recursos[1].n}</div>
+      </div>
     </div>`;
+  }).join('');
 
   if(chSkills)chSkills.destroy();
   const ctx=document.getElementById('chSkills');
