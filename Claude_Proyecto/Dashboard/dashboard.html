@@ -106,14 +106,6 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 .rt2-fijo{opacity:.85}
 .rt2-cat-chip{display:inline-flex;align-items:center;gap:5px;border-radius:20px;padding:5px 12px;font-size:11px;font-weight:700;border:1px solid}
 
-/* ─── AREA BARS (hero) ──────────────────────────────────── */
-.ar-row{display:flex;align-items:center;gap:12px;margin-bottom:11px}
-.ar-ico{width:26px;font-size:16px;text-align:center}
-.ar-name{width:110px;font-size:12px;color:var(--text2)}
-.ar-track{flex:1;height:7px;background:rgba(255,255,255,.08);border-radius:10px;overflow:hidden}
-.ar-fill{height:100%;border-radius:10px}
-.ar-val{width:32px;text-align:right;font-family:var(--mono);font-weight:700;font-size:13px}
-
 .chart-wrap{position:relative;height:clamp(240px,34vh,420px)}
 
 /* ─── HABILIDADES — tarjetas grandes, una por prioridad (slide pasivo, sin clics) ─ */
@@ -129,7 +121,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 .sc-res b{color:var(--p);font-weight:700}
 
 @media(max-width:900px){.g4{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:repeat(2,1fr)}.g6{grid-template-columns:repeat(3,1fr)}}
-@media(max-width:600px){.g2,.g4,.g3,.g6{grid-template-columns:1fr}.ar-name{width:80px}}
+@media(max-width:600px){.g2,.g4,.g3,.g6{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -175,17 +167,26 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
   <section class="slide theme-hero" data-i="1">
     <div class="slide-inner">
       <div class="eyebrow reveal d1"><span class="dot"></span> JARVIS · Panel de mando</div>
-      <div class="reveal d2" style="font-family:var(--mono);font-size:clamp(52px,9vw,120px);font-weight:700;letter-spacing:-.02em;line-height:1" id="heroClock">00:00:00</div>
-      <div class="reveal d3" style="font-size:clamp(15px,1.6vw,20px);color:var(--text2);margin-top:6px;margin-bottom:clamp(24px,4vh,44px);text-transform:capitalize" id="heroDate">—</div>
+      <div class="reveal d2" style="font-family:var(--mono);font-size:clamp(34px,4.2vw,58px);font-weight:700;letter-spacing:-.02em;line-height:1" id="heroClock">00:00:00</div>
+      <div class="reveal d3" style="font-size:clamp(12.5px,1.2vw,15px);color:var(--text2);margin-top:4px;margin-bottom:clamp(22px,3.5vh,38px);text-transform:capitalize" id="heroDate">—</div>
 
-      <div class="grid g2 reveal d4" style="align-items:stretch">
-        <div class="tile tile-glow" style="display:flex;flex-direction:column;justify-content:center;text-align:center">
-          <div class="lbl">Vida Score · 7 días</div>
-          <div class="big-num" style="font-size:clamp(64px,9vw,120px);background:linear-gradient(135deg,#00e87a,#3b82f6,#b06eff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text" id="heroVida">—</div>
-          <div id="heroVidaLabel" style="font-weight:800;font-size:clamp(13px,1.2vw,16px)">—</div>
-          <div class="sub" id="heroCountdown">—</div>
+      <div class="eyebrow reveal d3" style="margin-bottom:14px"><span class="dot"></span> 📊 Tu semana en números</div>
+      <div class="grid g3 reveal d4" style="align-items:stretch">
+        <div class="tile tile-glow" style="text-align:center">
+          <div class="lbl">🏋️ Gym esta semana</div>
+          <div class="big-num" style="font-size:clamp(42px,5.4vw,68px)" id="heroGym">—</div>
+          <div class="sub" id="heroGymSub">—</div>
         </div>
-        <div class="tile tile-glow" id="heroAreas"></div>
+        <div class="tile tile-glow" style="text-align:center">
+          <div class="lbl">🥗 Nutrición registrada</div>
+          <div class="big-num" style="font-size:clamp(42px,5.4vw,68px)" id="heroNutricion">—</div>
+          <div class="sub" id="heroNutricionSub">—</div>
+        </div>
+        <div class="tile tile-glow" style="text-align:center">
+          <div class="lbl">✅ Tareas completadas</div>
+          <div class="big-num" style="font-size:clamp(42px,5.4vw,68px)" id="heroTareas">—</div>
+          <div class="sub" id="heroTareasSub">—</div>
+        </div>
       </div>
     </div>
   </section>
@@ -344,7 +345,8 @@ function loadAll(){
     sk: tryParse('skincare_v1',{perfil:{tipo:'grasa',preocupaciones:[],rasurado:'no_aplica',presupuesto:'medio',notas:''}}),
     ca: tryParse('cabello_v1',{perfil:{tipo:'lacio',grosor:'fino',cuero:'graso',preocupaciones:[],caidaPatron:'no_seguro',presupuesto:'medio',notas:''}}),
     pro: tryParse('proyectos_v1',{proyectos:[],tareas:[],sesiones:[]}),
-    rut: tryParse('coach_rutina_v1',{completado:{}})
+    rut: tryParse('coach_rutina_v1',{completado:{}}),
+    gym: tryParse('mirutina_v1',{rutina:{},sesiones:[],metas:{frecuencia:6}})
   };
   SK.forEach(s=>{const v=localStorage.getItem('radarp_'+s.id);if(v!==null)s.val=Math.min(100,Math.max(0,parseInt(v)));});
 }
@@ -447,26 +449,8 @@ function rutinaAhoraSiguiente(){
   return {tareasHoy, actual, siguiente};
 }
 
-function getDias(n){return Array.from({length:n},(_,i)=>{const d=new Date();d.setDate(d.getDate()-i);return d.toISOString().slice(0,10);});}
-
-// ── SCORES (mismo motor que el dashboard anterior) ──────────────────────────
-const AREAS=[
-  {k:'salud',ico:'🥗',n:'Salud',href:'../CuidadoPersonal/cuidadopersonal.html?tab=salud'},
-  {k:'finanzas',ico:'💰',n:'Finanzas',href:'../Finanzas/Finanzas.html'}
-];
-function calcScores(dias7){
-  const sdias=dias7.map(d=>{const al=(D.sal.alimentos||[]).filter(a=>a.fecha===d);if(!al.length)return null;const cM=D.sal.metas?.caloriasD||2000,pM=D.sal.metas?.proteina||150;const cC=al.reduce((s,a)=>s+(a.cal||0),0),pC=al.reduce((s,a)=>s+(a.prot||0),0);return Math.min(1,cC/cM)*.5+Math.min(1,pC/pM)*.5;}).filter(v=>v!==null);
-  const salScore=sdias.length?Math.round((sdias.reduce((s,v)=>s+v,0)/sdias.length)*100):0;
-  const m=today().slice(0,7);
-  const txM=(D.fin.transactions||[]).filter(t=>t.date?.startsWith(m));
-  const inc=txM.filter(t=>t.type==='income').reduce((s,t)=>s+(t.amount||0),0);
-  const exp=txM.filter(t=>t.type==='expense').reduce((s,t)=>s+(t.amount||0),0);
-  const finScore=inc>0?Math.round(Math.min(100,Math.max(20,50+(1-exp/inc)*50))):50;
-  return{salud:salScore,finanzas:finScore};
-}
-function vidaScore(sc){const w={salud:76,finanzas:24};return Math.round(Object.keys(w).reduce((t,k)=>t+(sc[k]||0)*(w[k]/100),0));}
-function sCol(s){return s>=80?'var(--g)':s>=60?'var(--w)':s>=40?'var(--o)':'var(--r)';}
-function sLab(s){return s>=80?'Excelente':s>=60?'Bueno':s>=40?'Regular':'Necesita atención';}
+// Semana calendario (Domingo→Sábado), misma convención que ejercicio.html → renderDashboard()
+function semanaActual(){const hoy=new Date();const dow=hoy.getDay();return Array.from({length:7},(_,i)=>{const d=new Date(hoy);d.setDate(d.getDate()-dow+i);return d.toISOString().slice(0,10);});}
 
 // ── COACH — Plan Maestro (fechas ancla, igual que Coach_v2.html) ────────────
 const PHASES=[
@@ -583,19 +567,32 @@ function renderDia(){
 }
 
 function renderHero(){
-  const sc=calcScores(getDias(7)), vs=vidaScore(sc);
-  document.getElementById('heroVida').textContent=vs;
-  document.getElementById('heroVidaLabel').textContent=sLab(vs);
-  document.getElementById('heroVidaLabel').style.color=sCol(vs);
-  const cd=coachCountdown();
-  document.getElementById('heroCountdown').textContent=`Faltan ${fmt(cd.diasRestantes)} días para tu meta de $1,000,000 (01 ene 2030)`;
-  document.getElementById('heroAreas').innerHTML=AREAS.map(a=>`
-    <div class="ar-row">
-      <span class="ar-ico">${a.ico}</span>
-      <span class="ar-name">${a.n}</span>
-      <div class="ar-track"><div class="ar-fill" style="width:${sc[a.k]}%;background:${sCol(sc[a.k])}"></div></div>
-      <span class="ar-val" style="color:${sCol(sc[a.k])}">${sc[a.k]}</span>
-    </div>`).join('');
+  const semana=semanaActual();
+
+  // 🏋️ Gym esta semana — sesiones reales de ejercicio.html (mirutina_v1) vs. la meta de frecuencia
+  const gymSes=(D.gym.sesiones||[]).filter(s=>semana.includes(s.fecha)).length;
+  const gymMeta=D.gym.metas?.frecuencia||6;
+  const gymCol=gymSes>=gymMeta?'var(--g)':gymSes>=Math.ceil(gymMeta/2)?'var(--w)':'var(--r)';
+  const elGym=document.getElementById('heroGym');
+  elGym.textContent=gymSes+'/'+gymMeta; elGym.style.color=gymCol;
+  document.getElementById('heroGymSub').textContent=gymSes>=gymMeta?'Meta de la semana cumplida 💪':'sesiones — meta '+gymMeta+'/semana';
+
+  // 🥗 Nutrición — días distintos con al menos 1 alimento registrado esta semana
+  const diasNutri=new Set((D.sal.alimentos||[]).filter(a=>semana.includes(a.fecha)).map(a=>a.fecha)).size;
+  const nutriCol=diasNutri>=6?'var(--g)':diasNutri>=3?'var(--w)':'var(--r)';
+  const elNut=document.getElementById('heroNutricion');
+  elNut.textContent=diasNutri+'/7'; elNut.style.color=nutriCol;
+  document.getElementById('heroNutricionSub').textContent='días con comida registrada';
+
+  // ✅ Tareas — tasa de completación real de Proyectos (no hay fecha de completado, así que
+  // es la tasa general, no "de esta semana" — sería un dato inventado si se filtrara por fecha)
+  const totalTareas=(D.pro.tareas||[]).length;
+  const compTareas=(D.pro.tareas||[]).filter(t=>t.estado==='completada').length;
+  const pctTareas=totalTareas?Math.round(compTareas/totalTareas*100):0;
+  const tarCol=pctTareas>=70?'var(--g)':pctTareas>=40?'var(--w)':'var(--r)';
+  const elTar=document.getElementById('heroTareas');
+  elTar.textContent=totalTareas?pctTareas+'%':'—'; elTar.style.color=tarCol;
+  document.getElementById('heroTareasSub').textContent=totalTareas?`${compTareas} de ${totalTareas} tareas completadas`:'Sin tareas en Proyectos todavía';
 }
 
 function renderCoach(){

@@ -38,7 +38,7 @@ Un conjunto de aplicaciones web de una sola página (HTML + CSS + JS, **sin back
 |---|---|---|
 | `finanzasmx_v2` | `Finanzas/Finanzas.html` | `Dashboard/dashboard.html` |
 | `misalud_v1` | `CuidadoPersonal/salud.html` | `Dashboard/dashboard.html` |
-| `mirutina_v1` | `CuidadoPersonal/ejercicio.html` | *(nadie todavía — ver `readme_ejercicio.md`)* |
+| `mirutina_v1` | `CuidadoPersonal/ejercicio.html` | `Dashboard/dashboard.html` (`D.gym`, solo `sesiones`/`metas.frecuencia`, desde 2026-07-30) |
 | `skincare_v1` | `CuidadoPersonal/cuidadopersonal.html` | `Dashboard/dashboard.html` |
 | `cabello_v1` | `CuidadoPersonal/cuidadopersonal.html` | `Dashboard/dashboard.html` |
 | `proyectos_v1` | `Proyectos/proyectos.html` | `Dashboard/dashboard.html` |
