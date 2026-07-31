@@ -192,7 +192,9 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 
       <div class="week-strip reveal d2" id="heroWeekStrip"></div>
 
-      <div class="grid g3 reveal d3" style="margin-top:14px;align-items:stretch">
+      <div class="grid g4 reveal d3" style="margin-top:14px" id="heroQuickStats"></div>
+
+      <div class="grid g3 reveal d4" style="margin-top:14px;align-items:stretch">
         <div class="tile" id="heroGymPanel"></div>
         <div class="tile" id="heroNutriPanel"></div>
         <div class="tile" id="heroTareasPanel"></div>
@@ -625,6 +627,40 @@ function renderHero(){
       <div class="ws-cal">${calDia?fmt(calDia)+' kcal':'—'}</div>
     </div>`;
   }).join('');
+
+  // ── Fila de estadísticas rápidas: racha de gym, peso más reciente, agua de hoy, horas
+  //    trabajadas en Proyectos esta semana — todo dato real ya cargado, sin campos inventados ──
+  let racha=0;
+  for(let i=0;i<60;i++){
+    const d=new Date(); d.setDate(d.getDate()-i);
+    const ds=d.toISOString().slice(0,10);
+    const rutDia=gymRutina[d.getDay()];
+    if(rutDia?.tipo==='descanso') continue;
+    if((D.gym.sesiones||[]).some(s=>s.fecha===ds)) racha++;
+    else if(i>0) break;
+  }
+  const medidas=[...(D.sal.medidas||[])].sort((a,b)=>b.fecha.localeCompare(a.fecha));
+  const pesoActual=medidas[0], pesoAnterior=medidas[1];
+  const pesoDiff=pesoActual&&pesoAnterior?+(pesoActual.peso-pesoAnterior.peso).toFixed(1):null;
+  let pesoSub, pesoSubCol='var(--text3)';
+  if(!pesoActual) pesoSub='Sin registros en Salud';
+  else if(pesoDiff===null) pesoSub='Primer registro';
+  else { pesoSub=(pesoDiff>0?'↑ +':pesoDiff<0?'↓ ':'= ')+Math.abs(pesoDiff)+' kg vs. anterior'; pesoSubCol=pesoDiff<0?'var(--g)':pesoDiff>0?'var(--r)':'var(--text3)'; }
+  const vasosHoy=D.sal.agua?.[hoyStr]||0, vasosMeta=D.sal.metas?.vasos||8;
+  const horasProy=(D.pro.sesiones||[]).filter(s=>semana.includes(s.fecha)).reduce((s,x)=>s+(+x.duracion_min||0),0)/60;
+
+  const qs=[
+    {ico:'🔥',lbl:'Racha de gym',val:racha+(racha===1?' día':' días'),col:racha>=3?'var(--o)':'var(--text2)'},
+    {ico:'⚖️',lbl:'Peso actual',val:pesoActual?pesoActual.peso+' kg':'—',sub:pesoSub,subCol:pesoSubCol,col:'var(--cy)'},
+    {ico:'💧',lbl:'Agua hoy',val:vasosHoy+'/'+vasosMeta,col:'#06b6d4'},
+    {ico:'⏱️',lbl:'Proyectos (semana)',val:horasProy.toFixed(1)+'h',col:'var(--p)'}
+  ];
+  document.getElementById('heroQuickStats').innerHTML=qs.map(q=>`
+    <div class="tile" style="text-align:center;padding:12px 10px">
+      <div class="lbl" style="justify-content:center;display:flex;gap:4px;white-space:nowrap">${q.ico} ${q.lbl}</div>
+      <div class="big-num" style="font-size:clamp(20px,2.4vw,28px);color:${q.col};margin-top:5px">${q.val}</div>
+      ${q.sub?`<div class="sub" style="margin-top:2px;color:${q.subCol}">${q.sub}</div>`:''}
+    </div>`).join('');
 
   // ── Panel 1: Gym — sesiones reales de la semana (nombre + fecha) y qué toca hoy ──
   const sesionesSemana=(D.gym.sesiones||[]).filter(s=>semana.includes(s.fecha)).sort((a,b)=>a.fecha.localeCompare(b.fecha));
