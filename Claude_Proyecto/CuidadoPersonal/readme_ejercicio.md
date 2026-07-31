@@ -49,7 +49,7 @@ Cada día trae un campo `foco` (texto, se muestra en el banner del detalle) expl
 ```
 `unidad` y `descanso` son nuevos (2026-07-30) — solo se usan para mostrar el dato correcto en el detalle (p.ej. Plancha son 45 **segundos**, no 45 reps; Elíptica son 25 **minutos**). El modal "Configurar día" (`saveRutina()`) todavía solo edita `series`/`reps` por ejercicio — si se edita un día desde ahí, se pierde el `foco`/`unidad`/`descanso` curados (limitación conocida, no bloqueante).
 
-El horario semanal (`S.rutina`) viene precargado con el programa de 6 días de arriba al primer uso.
+El horario semanal (`S.rutina`) viene precargado con el programa de 6 días de arriba al primer uso. **`init()` llama a `save()` justo después de `load()` (fix 2026-07-30)** — antes el programa por defecto solo vivía en memoria hasta que el usuario guardaba algo a mano (configurar un día, terminar un entrenamiento o exportar), así que el Dashboard veía `mirutina_v1` vacío (`rutina:{}`) si Adán nunca había interactuado con la app, aunque el programa completo ya estuviera cargado en pantalla. Mismo patrón que ya usaba `salud.html` (guarda perfil/metas por defecto si no hay datos).
 
 ## Funcionalidad clave
 

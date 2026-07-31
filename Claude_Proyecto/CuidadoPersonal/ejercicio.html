@@ -1220,6 +1220,9 @@ function exportData(){ const b=new Blob([JSON.stringify(S,null,2)],{type:'applic
 // ─── INIT ────────────────────────────────────────────────────────────────────
 function init() {
   load();
+  save(); // persiste la rutina semanal por defecto en localStorage desde la primera apertura,
+          // igual que salud.html — si no, el Dashboard no puede leer "qué toca hoy" hasta que
+          // el usuario guarde algo a mano (configurar día, registrar entrenamiento o exportar).
   document.getElementById('dateLabel').textContent=new Date().toLocaleDateString('es-MX',{weekday:'long',day:'numeric',month:'long'});
   const check=()=>{ const mb=document.getElementById('menuBtn'); mb.style.display=window.innerWidth<640?'':'none'; if(window.innerWidth>=640)document.getElementById('sidebar').classList.remove('open'); };
   window.addEventListener('resize',check); check();
