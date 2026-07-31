@@ -108,6 +108,22 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 
 .chart-wrap{position:relative;height:clamp(240px,34vh,420px)}
 
+/* ─── HERO — semana completa (tira de 7 días + 3 paneles detallados) ────── */
+.flex-hero-top{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:16px}
+.week-strip{display:grid;grid-template-columns:repeat(7,1fr);gap:8px}
+.ws-day{background:var(--card);border:1px solid var(--card-br);border-radius:14px;padding:10px 6px;text-align:center;backdrop-filter:blur(10px)}
+.ws-day.today{border-color:var(--ac1);box-shadow:0 0 14px rgba(255,255,255,.08)}
+.ws-dname{font-size:10px;font-weight:800;color:var(--text2);text-transform:uppercase;letter-spacing:.04em}
+.ws-ddate{font-size:9px;color:var(--text3);margin-bottom:7px}
+.ws-gym-ico{font-size:17px;line-height:1}
+.ws-gym-lbl{font-size:8px;color:var(--text3);margin-top:3px;line-height:1.25;min-height:20px;overflow:hidden}
+.ws-cal{font-size:9px;color:var(--text2);margin-top:5px;font-family:var(--mono);padding-top:5px;border-top:1px solid rgba(255,255,255,.06)}
+.hp-title{font-size:11.5px;font-weight:800;color:var(--text2);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;gap:6px}
+.hp-big{font-family:var(--mono);font-weight:700;font-size:clamp(26px,3vw,38px);line-height:1;margin-bottom:8px}
+.hp-row{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.06);font-size:12px}
+.hp-row:last-child{border-bottom:none}
+.hp-empty{font-size:12px;color:var(--text3);text-align:center;padding:12px 0}
+
 /* ─── HABILIDADES — tarjetas grandes, una por prioridad (slide pasivo, sin clics) ─ */
 .skill-priority-title{font-size:clamp(15px,1.6vw,19px);font-weight:900;color:var(--text);margin-bottom:12px;display:flex;align-items:center;gap:8px}
 .skill-card{display:flex;flex-direction:column;gap:8px;min-height:100%}
@@ -166,27 +182,20 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
   <!-- 1 · HERO -->
   <section class="slide theme-hero" data-i="1">
     <div class="slide-inner">
-      <div class="eyebrow reveal d1"><span class="dot"></span> JARVIS · Panel de mando</div>
-      <div class="reveal d2" style="font-family:var(--mono);font-size:clamp(34px,4.2vw,58px);font-weight:700;letter-spacing:-.02em;line-height:1" id="heroClock">00:00:00</div>
-      <div class="reveal d3" style="font-size:clamp(12.5px,1.2vw,15px);color:var(--text2);margin-top:4px;margin-bottom:clamp(22px,3.5vh,38px);text-transform:capitalize" id="heroDate">—</div>
+      <div class="flex-hero-top reveal d1">
+        <div class="eyebrow" style="margin-bottom:0"><span class="dot"></span> JARVIS · Tu semana completa</div>
+        <div style="text-align:right">
+          <div style="font-family:var(--mono);font-size:clamp(20px,2.2vw,28px);font-weight:700" id="heroClock">00:00:00</div>
+          <div style="font-size:11px;color:var(--text2);text-transform:capitalize" id="heroDate">—</div>
+        </div>
+      </div>
 
-      <div class="eyebrow reveal d3" style="margin-bottom:14px"><span class="dot"></span> 📊 Tu semana en números</div>
-      <div class="grid g3 reveal d4" style="align-items:stretch">
-        <div class="tile tile-glow" style="text-align:center">
-          <div class="lbl">🏋️ Gym esta semana</div>
-          <div class="big-num" style="font-size:clamp(42px,5.4vw,68px)" id="heroGym">—</div>
-          <div class="sub" id="heroGymSub">—</div>
-        </div>
-        <div class="tile tile-glow" style="text-align:center">
-          <div class="lbl">🥗 Nutrición registrada</div>
-          <div class="big-num" style="font-size:clamp(42px,5.4vw,68px)" id="heroNutricion">—</div>
-          <div class="sub" id="heroNutricionSub">—</div>
-        </div>
-        <div class="tile tile-glow" style="text-align:center">
-          <div class="lbl">✅ Tareas completadas</div>
-          <div class="big-num" style="font-size:clamp(42px,5.4vw,68px)" id="heroTareas">—</div>
-          <div class="sub" id="heroTareasSub">—</div>
-        </div>
+      <div class="week-strip reveal d2" id="heroWeekStrip"></div>
+
+      <div class="grid g3 reveal d3" style="margin-top:14px;align-items:stretch">
+        <div class="tile" id="heroGymPanel"></div>
+        <div class="tile" id="heroNutriPanel"></div>
+        <div class="tile" id="heroTareasPanel"></div>
       </div>
     </div>
   </section>
@@ -451,6 +460,7 @@ function rutinaAhoraSiguiente(){
 
 // Semana calendario (Domingo→Sábado), misma convención que ejercicio.html → renderDashboard()
 function semanaActual(){const hoy=new Date();const dow=hoy.getDay();return Array.from({length:7},(_,i)=>{const d=new Date(hoy);d.setDate(d.getDate()-dow+i);return d.toISOString().slice(0,10);});}
+const DIAS_CORTOS=['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
 
 // ── COACH — Plan Maestro (fechas ancla, igual que Coach_v2.html) ────────────
 const PHASES=[
@@ -566,33 +576,75 @@ function renderDia(){
   document.getElementById('diaTimeline').innerHTML=(resumenHtml?`<div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px">${resumenHtml}</div>`:'')+itemsHtml;
 }
 
+function heroBarRow(label,val,meta,col){
+  const pct=meta>0?Math.min(100,val/meta*100):0;
+  return `<div style="margin-bottom:9px">
+    <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:3px"><span style="color:${col};font-weight:700">${label}</span><span style="color:var(--text2)">${fmt(val)}${meta?' / '+fmt(meta):''}</span></div>
+    <div class="pbar" style="height:6px;margin-top:0"><div class="pfill" style="width:${pct}%;background:${col}"></div></div>
+  </div>`;
+}
+
 function renderHero(){
   const semana=semanaActual();
+  const hoyStr=today();
+  const dowHoy=new Date().getDay();
 
-  // 🏋️ Gym esta semana — sesiones reales de ejercicio.html (mirutina_v1) vs. la meta de frecuencia
-  const gymSes=(D.gym.sesiones||[]).filter(s=>semana.includes(s.fecha)).length;
-  const gymMeta=D.gym.metas?.frecuencia||6;
-  const gymCol=gymSes>=gymMeta?'var(--g)':gymSes>=Math.ceil(gymMeta/2)?'var(--w)':'var(--r)';
-  const elGym=document.getElementById('heroGym');
-  elGym.textContent=gymSes+'/'+gymMeta; elGym.style.color=gymCol;
-  document.getElementById('heroGymSub').textContent=gymSes>=gymMeta?'Meta de la semana cumplida 💪':'sesiones — meta '+gymMeta+'/semana';
+  // ── Tira de 7 días: qué rutina de gym tocaba/se hizo + calorías registradas cada día ──
+  document.getElementById('heroWeekStrip').innerHTML=semana.map((d,dow)=>{
+    const esHoy=d===hoyStr, esFuturo=d>hoyStr;
+    const sesion=(D.gym.sesiones||[]).find(s=>s.fecha===d);
+    const rutinaDia=D.gym.rutina?.[dow];
+    let gymIco='—', gymLbl='';
+    if(sesion){ gymIco='✅'; gymLbl=sesion.nombre||'Entrenado'; }
+    else if(rutinaDia?.tipo==='descanso'){ gymIco='😴'; gymLbl='Descanso'; }
+    else if(rutinaDia?.ejercicios?.length){ gymIco=(esFuturo||esHoy)?'⏳':'❌'; gymLbl=rutinaDia.nombre||''; }
+    const calDia=(D.sal.alimentos||[]).filter(a=>a.fecha===d).reduce((s,a)=>s+(a.cal||0),0);
+    return `<div class="ws-day ${esHoy?'today':''}">
+      <div class="ws-dname">${DIAS_CORTOS[dow]}${esHoy?' •':''}</div>
+      <div class="ws-ddate">${parseInt(d.split('-')[2])}/${parseInt(d.split('-')[1])}</div>
+      <div class="ws-gym-ico">${gymIco}</div>
+      <div class="ws-gym-lbl">${gymLbl}</div>
+      <div class="ws-cal">${calDia?fmt(calDia)+' kcal':'—'}</div>
+    </div>`;
+  }).join('');
 
-  // 🥗 Nutrición — días distintos con al menos 1 alimento registrado esta semana
-  const diasNutri=new Set((D.sal.alimentos||[]).filter(a=>semana.includes(a.fecha)).map(a=>a.fecha)).size;
-  const nutriCol=diasNutri>=6?'var(--g)':diasNutri>=3?'var(--w)':'var(--r)';
-  const elNut=document.getElementById('heroNutricion');
-  elNut.textContent=diasNutri+'/7'; elNut.style.color=nutriCol;
-  document.getElementById('heroNutricionSub').textContent='días con comida registrada';
+  // ── Panel 1: Gym — sesiones reales de la semana (nombre + fecha) y qué toca hoy ──
+  const sesionesSemana=(D.gym.sesiones||[]).filter(s=>semana.includes(s.fecha)).sort((a,b)=>a.fecha.localeCompare(b.fecha));
+  const metaGym=D.gym.metas?.frecuencia||6;
+  const rutinaHoy=D.gym.rutina?.[dowHoy];
+  const yaEntrenoHoy=(D.gym.sesiones||[]).some(s=>s.fecha===hoyStr);
+  document.getElementById('heroGymPanel').innerHTML=`
+    <div class="hp-title">🏋️ Gym esta semana <span style="color:var(--g);font-family:var(--mono)">${sesionesSemana.length}/${metaGym}</span></div>
+    ${sesionesSemana.length?sesionesSemana.map(s=>`<div class="hp-row"><span style="color:var(--text3)">${fmtD(s.fecha)}</span><span style="font-weight:700;color:var(--text);text-align:right">${s.nombre}</span></div>`).join(''):'<div class="hp-empty">Sin sesiones esta semana todavía</div>'}
+    ${rutinaHoy&&rutinaHoy.tipo!=='descanso'&&rutinaHoy.ejercicios?.length?`<div class="hp-row" style="margin-top:2px"><span style="color:var(--text3)">${yaEntrenoHoy?'Hoy hiciste':'Hoy toca'}</span><span style="font-weight:800;color:${yaEntrenoHoy?'var(--g)':'var(--ac1)'};text-align:right">${rutinaHoy.nombre}</span></div>`:''}
+  `;
 
-  // ✅ Tareas — tasa de completación real de Proyectos (no hay fecha de completado, así que
-  // es la tasa general, no "de esta semana" — sería un dato inventado si se filtrara por fecha)
-  const totalTareas=(D.pro.tareas||[]).length;
-  const compTareas=(D.pro.tareas||[]).filter(t=>t.estado==='completada').length;
-  const pctTareas=totalTareas?Math.round(compTareas/totalTareas*100):0;
-  const tarCol=pctTareas>=70?'var(--g)':pctTareas>=40?'var(--w)':'var(--r)';
-  const elTar=document.getElementById('heroTareas');
-  elTar.textContent=totalTareas?pctTareas+'%':'—'; elTar.style.color=tarCol;
-  document.getElementById('heroTareasSub').textContent=totalTareas?`${compTareas} de ${totalTareas} tareas completadas`:'Sin tareas en Proyectos todavía';
+  // ── Panel 2: Nutrición de hoy — calorías y macros reales vs. meta (no solo "días registrados") ──
+  const alHoy=(D.sal.alimentos||[]).filter(a=>a.fecha===hoyStr);
+  const calHoy=alHoy.reduce((s,a)=>s+(a.cal||0),0), protHoy=alHoy.reduce((s,a)=>s+(a.prot||0),0);
+  const carbsHoy=alHoy.reduce((s,a)=>s+(a.carbs||0),0), graHoy=alHoy.reduce((s,a)=>s+(a.gra||0),0);
+  const m=D.sal.metas||{};
+  document.getElementById('heroNutriPanel').innerHTML=`
+    <div class="hp-title">🥗 Nutrición de hoy</div>
+    ${alHoy.length?`
+      <div class="hp-big" style="color:var(--o)">${fmt(calHoy)}<span style="font-size:13px;color:var(--text3);font-family:var(--font)"> / ${fmt(m.caloriasD||2000)} kcal</span></div>
+      ${heroBarRow('Proteína',protHoy,m.proteina||150,'#b06eff')}
+      ${heroBarRow('Carbs',carbsHoy,m.carbs||200,'#3b82f6')}
+      ${heroBarRow('Grasa',graHoy,m.grasa||65,'#ffd93d')}
+    `:'<div class="hp-empty">Sin comidas registradas hoy todavía</div>'}
+  `;
+
+  // ── Panel 3: Tareas pendientes reales de Proyectos (título + fecha límite, no solo un %) ──
+  const pendientes=(D.pro.tareas||[]).filter(t=>t.estado!=='completada');
+  const top=[...pendientes].sort((a,b)=>(a.fecha_limite||'9999-99-99').localeCompare(b.fecha_limite||'9999-99-99')).slice(0,5);
+  document.getElementById('heroTareasPanel').innerHTML=`
+    <div class="hp-title">✅ Tareas pendientes <span style="color:var(--text2);font-family:var(--mono)">${pendientes.length}</span></div>
+    ${top.length?top.map(t=>{
+      const venc=t.fecha_limite&&t.fecha_limite<hoyStr, esHoyT=t.fecha_limite===hoyStr;
+      const col=venc?'var(--r)':esHoyT?'var(--w)':'var(--text3)';
+      return `<div class="hp-row"><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:68%">${t.titulo||'Tarea'}</span><span style="color:${col};font-size:11px;font-weight:700;flex-shrink:0">${t.fecha_limite?fmtD(t.fecha_limite):'sin fecha'}</span></div>`;
+    }).join(''):'<div class="hp-empty">Sin tareas pendientes 🎉</div>'}
+  `;
 }
 
 function renderCoach(){
