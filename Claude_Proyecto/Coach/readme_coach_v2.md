@@ -8,7 +8,7 @@ Tema claro/oscuro con toggle (🌙/☀️ arriba a la derecha), persistido en `l
 
 Un único botón (`cambiarModo('personal'|'empresa')`) alterna entre dos `<div class="vista-panel">` independientes, cada uno con su propio `<nav>` de navegación por ancla (`#seccion`) y scroll-spy propio (`refrescarScrollSpy()`, recalculado en cada cambio de modo):
 
-- **🪙 Coach — Personal** (modo por defecto): `#perfil` · `#rutina` · `#habitos` · `#aprendizaje` · `#networking` · `#legal-personal`
+- **🪙 Coach — Personal** (modo por defecto): `#perfil` · `#rutina` · `#habitos` · `#aprendizaje` · `#perfil-rico` · `#networking` · `#marca-personal` · `#legal-personal`
 - **🏢 Coach — Empresa**: `#posibles-negocios` · `#mas-ideas` · `#crear-empresa` · `#legal`
 
 ## Modelo de datos — 3 claves de `localStorage`
@@ -119,6 +119,17 @@ Grid semanal (L M X J V S D) por hábito con botones `.habito-day` que solo alte
 
 5 tarjetas de contenido estático (sin interactividad ni persistencia): 📊 Datos/Análisis, 🤝 Ventas/Negociación, 📣 Marketing Digital, 💰 Finanzas personales, 🤖 IA aplicada a proyectos propios — cada una con primer paso de la semana, el hábito que lo sostiene, y una lista de recursos. Son las mismas 5 prioridades que alimentan el bloque de habilidad diario de `#rutina` (`k1`-`k5`). (La app separada `Aprendizaje/aprendizaje.html`, que era un tracker de libros/sesiones/skills con su propio `localStorage['aprendizaje_v1']`, se eliminó del proyecto el 2026-07-29; el Dashboard ya no tiene score de aprendizaje.)
 
+## `#perfil-rico` — Perfil del Rico (nuevo 2026-07-31)
+
+Pedido explícito de Adán: "pon una sección del ejemplo de las finanzas de alguien rico, cómo se comporta, qué amistades tiene, cómo llegó a ser rico". **Es un compuesto explícitamente declarado como tal en el propio texto de la sección** — basado en la investigación real de Thomas Stanley & William Danko (*The Millionaire Next Door*, ya citado en los recursos de `#aprendizaje` → Finanzas) más patrones públicos bien documentados de frugalidad de inversionistas conocidos (Warren Buffett) — no una persona inventada ni un caso real específico de nadie identificable. Contenido, en tarjetas `.card`:
+
+1. **Cómo se comporta en el día a día** — frugalidad calculada (no tacañería), rutina protegida, lectura diaria no negociable, consistencia "aburrida" sostenida.
+2. **Cómo gasta y cómo invierte** — paga primero a sus inversiones, cero deuda de consumo, activos que producen vs. pasivos que aparentan (distinción de *Padre Rico, Padre Pobre*), horizonte de años no de meses.
+3. **Qué amistades y red tiene** — círculo chico de alta confianza, mastermind/mentores, selectivo con su tiempo, da valor antes de pedir (cruza directo con `#networking` de abajo).
+4. **Cómo llegó a ser rico** — casi nunca solo con salario (siempre negocio propio/equity/inversión sostenida), toma 7-20 años, reinvierte las primeras utilidades, un riesgo calculado específico (no genérico).
+5. **`.riesgo-box` "Lo que NO hace"** — no compra estatus a crédito, no se compara en redes contra apariencia, no espera "sentirse listo" para actuar, no trata el dinero como identidad.
+6. **Comparación honesta contra la situación real de Adán** — qué de este perfil ya tiene (rutina, horizonte largo, ya identificó que necesita ser dueño de algo) y qué le falta (patrón de gasto en MSI de gadgets, red de pares dueños de negocio en vez de solo colegas empleados) + recursos (suma *Padre Rico Padre Pobre* y *The Millionaire Fastlane* a los ya existentes de Finanzas).
+
 ## `#networking` — Networking (nuevo 2026-07-31)
 
 Sección de referencia (sin interactividad persistente, salvo 4 checkboxes visual-only `nw1`-`nw4` del hábito semanal, mismo patrón que `#habitos`) pedida explícitamente por Adán: "haz una sección de networking, detallada, cómo generar conversación, cómo ganar amigos, cómo persuadir, cómo conocer gente de alto valor, qué lugares/situaciones". Tarjetas `.card`, en orden:
@@ -131,6 +142,15 @@ Sección de referencia (sin interactividad persistente, salvo 4 checkboxes visua
 6. **Tu hábito semanal de networking** — 4 checkboxes de cadencia (`nw1`-`nw4`, no persisten) + recursos (Cómo Ganar Amigos e Influir sobre las Personas, Never Split the Difference, Give and Take, The Like Switch, canal Charisma on Command).
 
 Todo el contenido está anclado a contexto real de Adán (red de Bosch/Stuttgart, meta de alemán, bucket list de ajedrez, plantilla GBM) en vez de ser genérico — mismo estándar que el resto de Coach.
+
+## `#marca-personal` — Redes Sociales y Marca Personal (nuevo 2026-07-31)
+
+Pedido explícito: "pon una sección de mejorar redes sociales y marca personal, dame todos los posibles escenarios y sugerencias para mejorar". Diagnóstico honesto de arranque: Marketing Digital es de las skills más bajas del radar (<a href="#perfil">20/100</a>) y hoy no hay presencia digital construida. Estructura:
+
+1. **Por qué no es opcional** — conecta directo con las Opciones 1 (plantilla GBM), 2 (freelance) y 3 (mentoría) de `#posibles-negocios`: nadie compra/contrata a quien no puede encontrar.
+2. **Todos los escenarios posibles** (el cuerpo principal, 7 plataformas evaluadas con 3 `.stat-badge` cada una — encaje con su red actual, esfuerzo de producción, y qué tan directo pega a su meta): LinkedIn (empezar aquí), YouTube (mayor techo a largo plazo), X/Twitter (comunidad de builders), Newsletter propio (el único activo que no depende de algoritmo), Podcast como invitado (audiencia prestada), GitHub/portafolio técnico (prueba de trabajo para freelance), e Instagram/TikTok (el que menos encaja, explicado por qué).
+3. **Sugerencias concretas para mejorar** — 6 `.recurso-item`: pilares de contenido fijos, consistencia sobre viralidad, documentar en vez de crear de la nada, repurposing entre canales, métricas que sí importan (no vanity metrics), y una nota explícita de **cuidado con confidencialidad** (nunca compartir código/datos de Ford/ALTEN/Bosch, revisar cláusulas de exclusividad).
+4. **Plan de arranque de 4 semanas** — 5 checkboxes visual-only (`mp1`-`mp5`, no persisten) con acciones concretas por semana, enlazado al bloque de Marketing ya existente en `#rutina`.
 
 ## `#legal-personal` — Legal & Personal
 

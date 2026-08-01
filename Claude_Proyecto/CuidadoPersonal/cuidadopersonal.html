@@ -16,6 +16,7 @@
   --r:#ff3b6b;--r-l:rgba(255,59,107,.1);
   --pk:#ff6bd6;--pk-l:rgba(255,107,214,.1);
   --am:#e0a020;--am-l:rgba(224,160,32,.1);
+  --mt:#4fd6ad;--mt-l:rgba(79,214,173,.1);
   --bg:#060614;--surface:#161619;--surface-2:#18181c;--surface-3:#1b1b20;--border:rgba(var(--ov),.08);--ov:255,255,255;
   --text:#e8eaf6;--text2:#8892b0;--text3:#4a5568;
   --r14:14px;--rs:9px;--sh:0 4px 24px rgba(0,0,0,.5);
@@ -29,6 +30,7 @@
   --r:#c81e4d;--r-l:rgba(200,30,77,.12);
   --pk:#c0268f;--pk-l:rgba(192,38,143,.12);
   --am:#92660a;--am-l:rgba(146,102,10,.12);
+  --mt:#1a8a63;--mt-l:rgba(26,138,99,.12);
   --bg:#f4f4f7;--surface:#ffffff;--surface-2:#ffffff;--surface-3:#ffffff;--border:rgba(var(--ov),.1);--ov:0,0,0;
   --text:#16161a;--text2:#5c5f70;--text3:#82859a;
   --sh:0 2px 14px rgba(0,0,0,.08);
@@ -54,6 +56,7 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var
 .tab-btn[data-tab="salud"].active{background:var(--g-l);color:var(--g);border-color:rgba(0,232,122,.4)}
 .tab-btn[data-tab="ejercicio"].active{background:var(--o-l);color:var(--o);border-color:rgba(255,107,53,.4)}
 .tab-btn[data-tab="comida"].active{background:var(--w-l);color:var(--w);border-color:rgba(255,217,61,.4)}
+.tab-btn[data-tab="dentista"].active{background:var(--mt-l);color:var(--mt);border-color:rgba(79,214,173,.4)}
 
 /* VIEWS */
 .view{flex:1;min-height:0;display:none}
@@ -355,9 +358,91 @@ tbody tr:hover td{background:rgba(var(--ov),.02)}
 
 .ca-disclaimer{margin-top:22px;padding:13px 16px;border-radius:14px;background:#faf8f4;border:1px dashed var(--ca-card-br);font-size:11.5px;color:var(--ca-text3);line-height:1.6}
 
+/* ══════════════════════════════════════════════════════════════════════
+   DENTISTA — mismo patrón pastel que Skincare/Cabello, paleta propia
+   (menta/azul/coral — sin morado), aislado bajo #view-dentista.
+   ══════════════════════════════════════════════════════════════════════ */
+#view-dentista{
+  --de-bg1:#e6fff6;--de-bg2:#eaf5ff;--de-bg3:#fff6f0;
+  --de-card:#ffffff;--de-card-br:#dceee8;
+  --de-text:#2f4a44;--de-text2:#72918a;--de-text3:#a9c1bb;
+  --de-mint:#4fd6ad;--de-mint-d:#1a8a63;--de-mint-l:#e0faf1;
+  --de-blue:#9dcdfb;--de-blue-d:#25659e;--de-blue-l:#eaf5ff;
+  --de-coral:#ffaaa0;--de-coral-d:#b8382c;--de-coral-l:#fff1ef;
+  --de-amber:#f0b84e;--de-amber-d:#8a5a12;--de-amber-l:#fdf1dc;
+  background:radial-gradient(ellipse 70% 50% at 15% 0%,var(--de-bg1) 0%,transparent 60%),
+             radial-gradient(ellipse 60% 50% at 100% 20%,var(--de-bg2) 0%,transparent 55%),
+             radial-gradient(ellipse 70% 60% at 50% 100%,var(--de-bg3) 0%,transparent 60%),
+             #fffdfc;
+  color:var(--de-text);
+}
+#view-dentista .card{background:var(--de-card);border:1px solid var(--de-card-br);box-shadow:0 6px 24px rgba(150,190,180,.14);color:var(--de-text)}
+#view-dentista .card-title{color:var(--de-text2)}
+#view-dentista .card-sub,#view-dentista .ts{color:var(--de-text2)}
+#view-dentista .tm{color:var(--de-text3)}
+#view-dentista label{color:var(--de-text2)}
+#view-dentista input,#view-dentista select,#view-dentista textarea{background:#f7fdfb;border:1px solid var(--de-card-br);color:var(--de-text)}
+#view-dentista input:focus,#view-dentista select:focus,#view-dentista textarea:focus{border-color:var(--de-mint);box-shadow:0 0 0 3px rgba(79,214,173,.18)}
+#view-dentista select option{background:#fff;color:var(--de-text)}
+#view-dentista .btn-g{background:linear-gradient(135deg,var(--de-mint),#2fc090);color:#04281c;box-shadow:0 4px 16px rgba(79,214,173,.4)}
+#view-dentista .btn-g:hover{box-shadow:0 6px 22px rgba(79,214,173,.55)}
+#view-dentista .btn-o{background:#f7fdfb;color:var(--de-text2);border:1px solid var(--de-card-br)}
+#view-dentista .btn-o:hover{background:#eff8f5;color:var(--de-text)}
+
+.de-hero{padding:20px 22px;border-radius:20px;background:linear-gradient(135deg,var(--de-mint-l),var(--de-blue-l));border:1px solid #d3f5e9;margin-bottom:18px}
+.de-hero-top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}
+.de-eyebrow{font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--de-mint-d)}
+.de-title{font-size:24px;font-weight:800;margin:4px 0 8px;color:var(--de-text)}
+.de-desc{font-size:13px;color:var(--de-text2);max-width:640px;line-height:1.6;margin:0}
+.de-btn-edit{flex-shrink:0;background:#fff;border:1px solid #bdeeda;color:var(--de-mint-d);font-weight:700;font-size:12.5px;padding:9px 16px;border-radius:20px;cursor:pointer;font-family:inherit;transition:all .2s}
+.de-btn-edit:hover{background:var(--de-mint-l);transform:translateY(-1px)}
+.de-chips-resumen{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.de-pill{display:inline-flex;align-items:center;gap:5px;padding:6px 13px;border-radius:20px;font-size:12px;font-weight:700}
+.de-pill.p-mint{background:var(--de-mint-l);color:var(--de-mint-d)}
+.de-pill.p-blue{background:var(--de-blue-l);color:var(--de-blue-d)}
+.de-pill.p-coral{background:var(--de-coral-l);color:var(--de-coral-d)}
+.de-pill.p-amber{background:var(--de-amber-l);color:var(--de-amber-d)}
+.de-pill.small{padding:3px 9px;font-size:10.5px;font-weight:700}
+
+.de-section-h{display:flex;align-items:center;gap:9px;margin:26px 0 14px}
+.de-section-h .ico{font-size:19px}
+.de-section-h h3{font-size:15.5px;font-weight:800;color:var(--de-text);margin:0}
+.de-section-h .line{flex:1;height:1px;background:linear-gradient(90deg,var(--de-card-br),transparent)}
+
+.de-step{background:var(--de-card);border:1px solid var(--de-card-br);border-radius:16px;padding:16px;margin-bottom:12px;box-shadow:0 4px 16px rgba(150,190,180,.1);display:flex;gap:14px}
+.de-step-num{flex-shrink:0;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;color:#fff}
+.de-step-body{flex:1;min-width:0}
+.de-step-name{font-weight:800;font-size:14.5px;color:var(--de-text);margin-bottom:6px}
+.de-step-block{margin-top:8px}
+.de-step-label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--de-text3);margin-bottom:3px}
+.de-step-text{font-size:12.5px;color:var(--de-text2);line-height:1.55}
+
+.de-cita-box{display:flex;align-items:center;gap:16px;flex-wrap:wrap;background:var(--de-card);border:1px solid var(--de-card-br);border-radius:16px;padding:18px}
+.de-cita-box.atrasada{border-color:#ffd4cd;background:var(--de-coral-l)}
+.de-cita-num{font-size:30px;font-weight:900;color:var(--de-mint-d)}
+.de-cita-box.atrasada .de-cita-num{color:var(--de-coral-d)}
+
+.de-warn{background:var(--de-coral-l);border:1px solid #ffd4cd;border-radius:14px;padding:14px 16px}
+.de-warn-title{font-weight:800;font-size:13px;color:var(--de-coral-d);margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.de-warn ul{margin:0;padding-left:18px}
+.de-warn li{font-size:12.5px;color:#8a4a41;line-height:1.7}
+
+.de-tip{display:flex;gap:11px;align-items:flex-start;padding:11px 0;border-bottom:1px solid var(--de-card-br)}
+.de-tip:last-child{border-bottom:none}
+.de-tip .ico{font-size:16px;flex-shrink:0;margin-top:1px}
+.de-tip-txt{font-size:13px;color:var(--de-text2);line-height:1.55}
+
+.de-shop{display:flex;align-items:center;gap:12px;padding:11px 4px;border-bottom:1px solid var(--de-card-br)}
+.de-shop:last-child{border-bottom:none}
+.de-shop-ico{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;background:var(--de-mint-l)}
+.de-shop-name{font-weight:700;font-size:13px;color:var(--de-text)}
+.de-shop-cat{font-size:11px;color:var(--de-text3)}
+
+.de-disclaimer{margin-top:22px;padding:13px 16px;border-radius:14px;background:#f7fdfb;border:1px dashed var(--de-card-br);font-size:11.5px;color:var(--de-text3);line-height:1.6}
+
 @media(max-width:900px){.g4{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:640px){.g4,.g3,.g2{grid-template-columns:1fr}.fr{grid-template-columns:1fr}.brand{width:100%}
-  .sk-step,.ca-step{flex-direction:column}.sk-hero-top,.ca-hero-top{flex-direction:column}}
+  .sk-step,.ca-step,.de-step{flex-direction:column}.sk-hero-top,.ca-hero-top,.de-hero-top{flex-direction:column}}
 
 /* ══════════════════════════════════════════════════════════════════════
    MODO OSCURO — Skincare y Cabello son pastel-claro únicamente por diseño;
@@ -419,6 +504,31 @@ tbody tr:hover td{background:rgba(var(--ov),.02)}
 :root[data-theme="dark"] .ca-note{border-color:#1f3550}
 :root[data-theme="dark"] .ca-note-text{color:#a8c8de}
 :root[data-theme="dark"] .ca-disclaimer{background:#221d1a}
+
+/* Dentista oscuro — misma idea que Skincare/Cabello arriba: redefine las variables --de-x, invertidas a oscuro */
+:root[data-theme="dark"] #view-dentista{
+  --de-bg1:#122b22;--de-bg2:#16233d;--de-bg3:#2b2016;
+  --de-card:#1a2420;--de-card-br:#2f3d38;
+  --de-text:#e6f5f0;--de-text2:#a8c4bc;--de-text3:#6e8880;
+  --de-mint:#4fd6ad;--de-mint-d:#4fd6ad;--de-mint-l:#163d2e;
+  --de-blue:#9dcdfb;--de-blue-d:#a8d4ff;--de-blue-l:#16283d;
+  --de-coral:#ffaaa0;--de-coral-d:#ff9d90;--de-coral-l:#3d201c;
+  --de-amber:#f0b84e;--de-amber-d:#f0b84e;--de-amber-l:#3d2f16;
+  background:radial-gradient(ellipse 70% 50% at 15% 0%,var(--de-bg1) 0%,transparent 60%),
+             radial-gradient(ellipse 60% 50% at 100% 20%,var(--de-bg2) 0%,transparent 55%),
+             radial-gradient(ellipse 70% 60% at 50% 100%,var(--de-bg3) 0%,transparent 60%),
+             #131916;
+}
+:root[data-theme="dark"] #view-dentista input,:root[data-theme="dark"] #view-dentista select,:root[data-theme="dark"] #view-dentista textarea{background:#1f2b26}
+:root[data-theme="dark"] #view-dentista select option{background:#1a2420}
+:root[data-theme="dark"] .de-hero{border-color:#1f4535}
+:root[data-theme="dark"] .de-btn-edit{background:#1f2b26;border-color:#2f5040}
+:root[data-theme="dark"] .de-cita-box{background:#1a2420}
+:root[data-theme="dark"] .de-cita-box.atrasada{background:#3d201c;border-color:#5c3730}
+:root[data-theme="dark"] .de-warn{border-color:#5c3730}
+:root[data-theme="dark"] .de-warn li{color:#e0a89e}
+:root[data-theme="dark"] .de-shop-ico{background:#163d2e}
+:root[data-theme="dark"] .de-disclaimer{background:#1a2420}
 </style>
 <script>
 (function () {
@@ -438,6 +548,7 @@ tbody tr:hover td{background:rgba(var(--ov),.02)}
     <button class="tab-btn" data-tab="salud" onclick="mainTab('salud')">🥗 Cuidado de la Salud</button>
     <button class="tab-btn" data-tab="ejercicio" onclick="mainTab('ejercicio')">🏋️ Ejercicio</button>
     <button class="tab-btn" data-tab="comida" onclick="mainTab('comida')">🍳 Comida</button>
+    <button class="tab-btn" data-tab="dentista" onclick="mainTab('dentista')">🦷 Dentista</button>
     <a href="../Dashboard/dashboard.html" class="tab-btn" style="text-decoration:none;margin-left:8px;border-left:1px solid rgba(var(--ov),.12);padding-left:16px">🚀 Dashboard</a>
   </nav>
   <button class="theme-toggle-btn" id="theme-toggle-btn" onclick="toggleTheme()" title="Cambiar tema claro/oscuro" aria-label="Cambiar tema claro/oscuro">🌙</button>
@@ -586,6 +697,58 @@ tbody tr:hover td{background:rgba(var(--ov),.02)}
   <iframe id="frame-comida" title="Comida"></iframe>
 </main>
 
+<!-- ══════════════ DENTISTA ══════════════ -->
+<main class="view view-native" id="view-dentista">
+  <div class="de-hero">
+    <div class="de-hero-top">
+      <div>
+        <div class="de-eyebrow">🦷 Salud dental</div>
+        <h2 class="de-title">Mi Dentista &amp; Guía</h2>
+        <p class="de-desc">Rutina de cuidado dental diaria, cuándo toca tu próximo chequeo, y señales de alerta para no esperar hasta que duela. Actualiza tu perfil cuando cambie algo (aparato, sensibilidad, última cita) y la guía se ajusta sola.</p>
+      </div>
+      <button class="de-btn-edit" id="de-btn-edit" onclick="deToggleForm()">✏️ Editar mi perfil</button>
+    </div>
+    <div class="de-chips-resumen" id="de-resumen-chips"></div>
+  </div>
+
+  <div class="card" id="de-form-card" style="margin-bottom:18px;display:none">
+    <div class="card-title">📋 Tu perfil dental</div>
+    <div class="ts" style="display:block;margin-bottom:14px">Esto alimenta toda la guía de abajo.</div>
+    <div class="g2">
+      <div class="fg"><label>¿Usas aparato o dispositivo?</label>
+        <select id="de-pf-aparato">
+          <option value="no">No uso nada</option>
+          <option value="brackets">Brackets / ortodoncia fija</option>
+          <option value="alineadores">Alineadores transparentes (Invisalign y similares)</option>
+          <option value="retenedor">Retenedor</option>
+          <option value="placa_nocturna">Guarda/placa nocturna (bruxismo)</option>
+        </select>
+      </div>
+      <div class="fg"><label>Frecuencia de chequeo deseada</label>
+        <select id="de-pf-frecuencia">
+          <option value="6">Cada 6 meses (lo estándar)</option>
+          <option value="4">Cada 4 meses (encías sensibles/tratamiento activo)</option>
+          <option value="12">Cada 12 meses</option>
+        </select>
+      </div>
+    </div>
+    <div class="fg"><label>Última vez que fuiste al dentista</label>
+      <input type="date" id="de-pf-ultimo">
+    </div>
+    <div class="fg"><label>Preocupaciones principales</label>
+      <div class="flex gap8" style="flex-wrap:wrap">
+        <label class="flex aic gap6" style="text-transform:none;font-size:13px;color:var(--de-text)"><input type="checkbox" id="de-pf-sensibilidad" value="sensibilidad"> Sensibilidad al frío/calor/dulce</label>
+        <label class="flex aic gap6" style="text-transform:none;font-size:13px;color:var(--de-text)"><input type="checkbox" id="de-pf-sangrado" value="sangrado"> Sangrado o inflamación de encías</label>
+        <label class="flex aic gap6" style="text-transform:none;font-size:13px;color:var(--de-text)"><input type="checkbox" id="de-pf-bruxismo" value="bruxismo"> Rechino los dientes (bruxismo)</label>
+        <label class="flex aic gap6" style="text-transform:none;font-size:13px;color:var(--de-text)"><input type="checkbox" id="de-pf-mal_aliento" value="mal_aliento"> Mal aliento persistente</label>
+      </div>
+    </div>
+    <div class="fg"><label>Notas (tratamientos en curso, alergias a anestesia, lo que sea útil recordar)</label><textarea id="de-pf-notas" rows="2" placeholder="Ej. me sacaron las muelas del juicio en 2024, uso pasta para sensibilidad..."></textarea></div>
+    <button class="btn btn-g" onclick="deSavePerfil()">Guardar perfil y actualizar guía</button>
+  </div>
+
+  <div id="de-guia-body"></div>
+</main>
 
 <!-- CONFIRM -->
 <div class="conf" id="conf">
@@ -1105,13 +1268,181 @@ function caRenderGuia(){
 }
 
 // ══════════════════════════════════════════════════════════════════════════
+// DENTISTA
+// ══════════════════════════════════════════════════════════════════════════
+const DE_KEY='dentista_v1';
+function deDefault(){return{perfil:{aparato:'no',frecuencia:6,ultimoChequeo:'',preocupaciones:[],notas:''}};}
+function deLoad(){try{const r=localStorage.getItem(DE_KEY);if(!r)return deDefault();const p=JSON.parse(r);const d=deDefault();return{...d,...p,perfil:{...d.perfil,...(p.perfil||{})}};}catch(e){return deDefault();}}
+let DE=deLoad();
+function deSave(){localStorage.setItem(DE_KEY,JSON.stringify(DE));}
+
+const DE_APARATO_LABEL={no:'Sin aparato',brackets:'Brackets / ortodoncia fija',alineadores:'Alineadores transparentes',retenedor:'Retenedor',placa_nocturna:'Guarda nocturna (bruxismo)'};
+const DE_CONCERN_META={
+  sensibilidad:{label:'Sensibilidad',emoji:'❄️',cls:'p-blue'},
+  sangrado:{label:'Sangrado de encías',emoji:'🩸',cls:'p-coral'},
+  bruxismo:{label:'Bruxismo',emoji:'😬',cls:'p-amber'},
+  mal_aliento:{label:'Mal aliento',emoji:'💨',cls:'p-mint'},
+};
+
+// Próxima cita: última fecha + frecuencia en meses. Sin fecha registrada = "sin datos", no se inventa.
+function deProximaCita(){
+  const p=DE.perfil;
+  if(!p.ultimoChequeo)return{tieneDatos:false};
+  const prox=new Date(p.ultimoChequeo);
+  prox.setMonth(prox.getMonth()+(parseInt(p.frecuencia)||6));
+  const hoy=new Date(today());
+  const diasRest=Math.round((prox-hoy)/86400000);
+  return{tieneDatos:true,fecha:prox.toISOString().slice(0,10),diasRest,atrasada:diasRest<0};
+}
+function deRegistrarCita(){
+  DE.perfil.ultimoChequeo=today();
+  deSave();
+  deRenderGuiaContent();
+  toast('✅ Cita registrada — próxima calculada automáticamente');
+}
+function deResumenChips(){
+  const p=DE.perfil;
+  const chips=[`<span class="de-pill p-mint">🦷 ${DE_APARATO_LABEL[p.aparato]||p.aparato}</span>`];
+  (p.preocupaciones||[]).forEach(k=>{const m=DE_CONCERN_META[k];if(m)chips.push(`<span class="de-pill ${m.cls}">${m.emoji} ${m.label}</span>`);});
+  const cita=deProximaCita();
+  if(cita.tieneDatos)chips.push(`<span class="de-pill ${cita.atrasada?'p-coral':'p-mint'}">📅 Próxima cita: ${fmtD(cita.fecha)}${cita.atrasada?' (atrasada)':''}</span>`);
+  else chips.push(`<span class="de-pill p-amber">📅 Registra tu última cita abajo</span>`);
+  document.getElementById('de-resumen-chips').innerHTML=chips.join('');
+}
+function deToggleForm(){
+  const card=document.getElementById('de-form-card');
+  const btn=document.getElementById('de-btn-edit');
+  const open=card.style.display!=='none';
+  card.style.display=open?'none':'block';
+  btn.textContent=open?'✏️ Editar mi perfil':'✕ Cerrar';
+}
+function deLeerPerfilForm(){
+  return{
+    aparato:document.getElementById('de-pf-aparato').value,
+    frecuencia:parseInt(document.getElementById('de-pf-frecuencia').value)||6,
+    ultimoChequeo:document.getElementById('de-pf-ultimo').value,
+    preocupaciones:['sensibilidad','sangrado','bruxismo','mal_aliento'].filter(k=>document.getElementById('de-pf-'+k).checked),
+    notas:document.getElementById('de-pf-notas').value.trim(),
+  };
+}
+function dePintarPerfilForm(){
+  const p=DE.perfil;
+  document.getElementById('de-pf-aparato').value=p.aparato;
+  document.getElementById('de-pf-frecuencia').value=String(p.frecuencia||6);
+  document.getElementById('de-pf-ultimo').value=p.ultimoChequeo||'';
+  ['sensibilidad','sangrado','bruxismo','mal_aliento'].forEach(k=>{document.getElementById('de-pf-'+k).checked=(p.preocupaciones||[]).includes(k);});
+  document.getElementById('de-pf-notas').value=p.notas||'';
+}
+function deSavePerfil(){
+  DE.perfil=deLeerPerfilForm();
+  deSave();
+  deResumenChips();
+  deRenderGuiaContent();
+  toast('Perfil guardado — guía actualizada');
+}
+function deStepHtml(num,color,nombre,texto,nota){
+  return `<div class="de-step">
+    <div class="de-step-num" style="background:${color}">${num}</div>
+    <div class="de-step-body">
+      <div class="de-step-name">${nombre}</div>
+      <div class="de-step-block"><div class="de-step-label">Cómo hacerlo</div><div class="de-step-text">${texto}</div></div>
+      ${nota?`<div class="de-step-block"><div class="de-step-label">Nota</div><div class="de-step-text" style="color:var(--de-amber-d);font-weight:700">${nota}</div></div>`:''}
+    </div>
+  </div>`;
+}
+function deRenderGuiaContent(){
+  const p=DE.perfil;
+  const tieneSensibilidad=(p.preocupaciones||[]).includes('sensibilidad');
+  const tieneSangrado=(p.preocupaciones||[]).includes('sangrado');
+  const tieneBruxismo=(p.preocupaciones||[]).includes('bruxismo')||p.aparato==='placa_nocturna';
+  const tieneMalAliento=(p.preocupaciones||[]).includes('mal_aliento');
+  const cita=deProximaCita();
+
+  let html='';
+
+  // Caja de próxima cita
+  html+=`<div class="de-cita-box ${cita.tieneDatos&&cita.atrasada?'atrasada':''}" style="margin-bottom:18px">
+    <div>
+      <div class="de-step-label">${cita.tieneDatos?(cita.atrasada?'⚠️ Chequeo atrasado':'📅 Próximo chequeo'):'📅 Sin fecha registrada'}</div>
+      <div class="de-cita-num">${cita.tieneDatos?(cita.atrasada?`${Math.abs(cita.diasRest)} días atrasado`:`En ${cita.diasRest} día${cita.diasRest===1?'':'s'}`):'—'}</div>
+      <div class="ts tm">${cita.tieneDatos?`Calculado: última visita ${fmtD(p.ultimoChequeo)} + ${p.frecuencia} meses = ${fmtD(cita.fecha)}`:'Registra cuándo fue tu última visita en "Editar mi perfil" para que se calcule sola.'}</div>
+    </div>
+    <button class="btn btn-g" style="margin-left:auto" onclick="deRegistrarCita()">✅ Fui al dentista hoy</button>
+  </div>`;
+
+  // Rutina diaria
+  html+=`<div class="de-section-h"><span class="ico">🪥</span><h3>Rutina diaria</h3><span class="line"></span></div>`;
+  html+=deStepHtml(1,'var(--de-mint)','Cepillado — mañana y noche','2 minutos completos, cerdas suaves a 45° contra la encía, movimientos circulares cortos (no de lado a lado) — cronometra las primeras veces, 2 minutos se siente más largo de lo que parece. Cambia el cepillo (o cabezal eléctrico) cada 3 meses o antes si las cerdas se abren.');
+  html+=deStepHtml(2,'var(--de-blue)','Hilo o seda dental — 1 vez al día, antes de dormir','Forma de "C" alrededor de cada diente, deslizando hacia abajo y arriba sin forzar hacia la encía. El cepillo por sí solo no limpia entre dientes — ahí es donde empiezan la mayoría de las caries.'+((p.aparato==='brackets')?'':''),
+    p.aparato==='brackets'?'Con brackets usa un enhebrador de hilo o un cepillo interdental — el hilo normal no pasa entre el alambre.':'');
+  html+=deStepHtml(3,'var(--de-coral)','Enjuague bucal',tieneSensibilidad?'Usa un enjuague sin alcohol formulado para sensibilidad (ej. con fluoruro de estaño) — el alcohol reseca e irrita más si ya tienes sensibilidad.':tieneSangrado?'Usa un enjuague antibacterial/antiplaca (clorhexidina solo por periodos cortos que indique tu dentista, o uno de venta libre para uso diario) mientras controlas el sangrado.':'Uno con flúor después del cepillado nocturno es suficiente para la mayoría — no reemplaza cepillo ni hilo, es el último paso.');
+
+  // Cuidado especial condicional
+  const especiales=[];
+  if(p.aparato==='brackets')especiales.push(deStepHtml('🔧','var(--de-amber)','Cuidado con brackets','Cepillo interdental (tipo "espiral") entre cada bracket después de comer, cera ortodóntica en cualquier bracket que roce la mejilla, y evita alimentos muy pegajosos (caramelos, chicle) o muy duros (hielo, palomitas con cáscara) que puedan despegar un bracket.'));
+  if(p.aparato==='alineadores')especiales.push(deStepHtml('🔧','var(--de-amber)','Cuidado con alineadores','Quítatelos siempre para comer o beber cualquier cosa que no sea agua natural — comer con ellos puestos los mancha y los deforma. Cepilla los dientes antes de volver a ponértelos, y limpia los alineadores con su limpiador específico (no pasta dental, raya el plástico).'));
+  if(tieneSensibilidad)especiales.push(deStepHtml('❄️','var(--de-blue)','Manejo de sensibilidad','Usa pasta específica para sensibilidad (con nitrato de potasio o fluoruro de estaño) al menos 2 semanas seguidas para notar efecto real — no es instantánea. Evita cambios bruscos de temperatura en la boca (bebidas heladas seguidas de calientes) y un cepillado demasiado agresivo, que desgasta el esmalte y expone más la dentina.'));
+  if(tieneSangrado)especiales.push(deStepHtml('🩸','var(--de-coral)','Manejo de sangrado de encías','Cepilla más suave, no más fuerte — el sangrado casi siempre es señal de placa acumulada en la línea de encía, no de que "falta tallar más duro". Si el sangrado persiste más de 1-2 semanas de rutina consistente, es momento de que lo revise un profesional (puede ser gingivitis, tratable si se atiende a tiempo).'));
+  if(tieneBruxismo)especiales.push(deStepHtml('😬','var(--de-amber)','Manejo de bruxismo','Usa tu guarda/placa nocturna todas las noches, sin excepción — es lo único que realmente protege el esmalte del desgaste por rechinar. Evita masticar hielo, uñas o bolígrafos durante el día, y si notas mucha tensión en la mandíbula al despertar, vale la pena revisar estrés/postura para dormir también.'));
+  if(tieneMalAliento)especiales.push(deStepHtml('💨','var(--de-mint)','Manejo de mal aliento persistente','Limpia también la lengua (con el reverso del cepillo o un limpiador de lengua) — ahí vive gran parte de las bacterias que causan mal aliento, no solo en los dientes. Mantente hidratado (la boca seca empeora el olor) y si es persistente pese a la rutina completa, puede venir de las encías o del estómago — coméntalo en tu próximo chequeo.'));
+  if(especiales.length){
+    html+=`<div class="de-section-h"><span class="ico">⚡</span><h3>Cuidado especial para tu caso</h3><span class="line"></span></div>`;
+    html+=especiales.join('');
+  }
+
+  // Señales de alerta
+  html+=`<div class="de-section-h"><span class="ico">⚠️</span><h3>Señales de alerta — no esperes a tu cita programada</h3><span class="line"></span></div>`;
+  html+=`<div class="de-warn"><div class="de-warn-title">🚨 Ve al dentista antes si notas:</div><ul>
+    <li>Dolor de diente persistente por más de 1-2 días, sobre todo si empeora con calor/frío o al morder.</li>
+    <li>Sangrado abundante de encías (no solo un poco al cepillar) o inflamación visible.</li>
+    <li>Un diente que se siente flojo o cambió de posición sin razón aparente.</li>
+    <li>Hinchazón en la cara o cuello, con o sin fiebre — puede ser un absceso, no esperar.</li>
+    <li>Sensibilidad extrema y repentina que antes no tenías.</li>
+    <li>Un bracket o alambre roto que lastima la mejilla o encía.</li>
+  </ul></div>`;
+
+  // Lista de compras
+  html+=`<div class="de-section-h"><span class="ico">🛒</span><h3>Tu lista de compras</h3><span class="line"></span></div>`;
+  const compras=[
+    {ico:'🪥',n:'Cepillo de cerdas suaves (o eléctrico)',cat:'Básico — cambiar cada 3 meses'},
+    {ico:'🧵',n:tieneBruxismo||p.aparato==='brackets'?'Cepillo interdental + hilo dental':'Hilo o seda dental',cat:'Básico — uso diario'},
+    {ico:'💧',n:tieneSensibilidad?'Enjuague sin alcohol para sensibilidad':tieneSangrado?'Enjuague antibacterial':'Enjuague con flúor',cat:'Según tu perfil'},
+    {ico:'🧴',n:tieneSensibilidad?'Pasta dental para sensibilidad':'Pasta dental con flúor',cat:'Según tu perfil'},
+  ];
+  if(p.aparato==='brackets')compras.push({ico:'🕯️',n:'Cera ortodóntica',cat:'Para brackets'});
+  if(p.aparato==='alineadores')compras.push({ico:'🧼',n:'Limpiador de alineadores',cat:'Para alineadores'});
+  if(tieneBruxismo)compras.push({ico:'😬',n:'Guarda/placa nocturna (a la medida con tu dentista)',cat:'Para bruxismo'});
+  html+=compras.map(c=>`<div class="de-shop"><div class="de-shop-ico">${c.ico}</div><div><div class="de-shop-name">${c.n}</div><div class="de-shop-cat">${c.cat}</div></div></div>`).join('');
+
+  // Consejos
+  html+=`<div class="de-section-h"><span class="ico">💡</span><h3>Consejos generales</h3><span class="line"></span></div>`;
+  const tips=[
+    {ico:'⏰',t:'Espera 30 min para cepillar después de comer algo ácido (cítricos, refresco) — el ácido ablanda el esmalte y cepillar de inmediato lo desgasta más.'},
+    {ico:'🍬',t:'No es solo "cuánta azúcar" sino "cuánto tiempo" está en contacto con los dientes — picar dulce todo el día es peor que comerlo de una vez.'},
+    {ico:'💧',t:'Mantente hidratado — la saliva neutraliza ácidos y limpia restos de comida de forma natural; la boca seca es un factor de riesgo real de caries.'},
+    {ico:'🚭',t:'Fumar o vapear no solo mancha — retrasa la cicatrización de encías y esconde señales tempranas de problemas (como el sangrado, que puede no notarse igual).'},
+  ];
+  html+=`<div class="card">${tips.map(t=>`<div class="de-tip"><span class="ico">${t.ico}</span><div class="de-tip-txt">${t.t}</div></div>`).join('')}</div>`;
+
+  html+=`<div class="de-disclaimer">Esto es orientación general, no sustituye una revisión profesional — si tienes dolor, sangrado abundante o cualquier señal de alerta de arriba, agenda una cita en vez de esperar a que la guía "se sienta suficiente".</div>`;
+
+  document.getElementById('de-guia-body').innerHTML=html;
+}
+function deRenderGuia(){
+  dePintarPerfilForm();
+  deResumenChips();
+  deRenderGuiaContent();
+}
+
+// ══════════════════════════════════════════════════════════════════════════
 // INIT
 // ══════════════════════════════════════════════════════════════════════════
 skRenderGuia();
 caRenderGuia();
+deRenderGuia();
 
 const initialTab=new URLSearchParams(location.search).get('tab');
-if(['skincare','cabello','salud','ejercicio','comida'].includes(initialTab)) mainTab(initialTab);
+if(['skincare','cabello','salud','ejercicio','comida','dentista'].includes(initialTab)) mainTab(initialTab);
 const themeBtn=document.getElementById('theme-toggle-btn');
 if(themeBtn) themeBtn.textContent=document.documentElement.getAttribute('data-theme')==='dark'?'☀️':'🌙';
 </script>

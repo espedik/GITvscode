@@ -1,8 +1,8 @@
 # cuidadopersonal.html — Cuidado Personal (shell)
 
-Página "hub" de una sola pieza (HTML+CSS+JS, sin backend, sin dependencias externas — ni Chart.js) creada el 2026-07-29 que agrupa 5 subtabs principales en una sola navegación: **🧴 Skincare**, **💇 Cuidado del Cabello** (nativas, construidas en este mismo archivo), **🥗 Cuidado de la Salud**, **🏋️ Ejercicio** y **🍳 Comida** (**nuevo 2026-07-30**) (apps completas preexistentes, incrustadas vía `<iframe>`). Sustituyó a las antiguas apps independientes `Salud/salud.html`, `Ejercicio/ejercicio.html` y a la app de `Animo/animo.html` (retirada, no fusionada).
+Página "hub" de una sola pieza (HTML+CSS+JS, sin backend, sin dependencias externas — ni Chart.js) creada el 2026-07-29 que agrupa 6 subtabs principales en una sola navegación: **🧴 Skincare**, **💇 Cuidado del Cabello**, **🦷 Dentista** (**nuevo 2026-07-31**) (las tres nativas, construidas en este mismo archivo), **🥗 Cuidado de la Salud**, **🏋️ Ejercicio** y **🍳 Comida** (apps completas preexistentes, incrustadas vía `<iframe>`). Sustituyó a las antiguas apps independientes `Salud/salud.html`, `Ejercicio/ejercicio.html` y a la app de `Animo/animo.html` (retirada, no fusionada).
 
-Ver también: [`readme_salud.md`](readme_salud.md), [`readme_ejercicio.md`](readme_ejercicio.md) y [`readme_comida.md`](readme_comida.md) — documentación de las tres apps incrustadas. Este archivo (`readme_cuidadopersonal.md`) solo documenta el shell y los dos módulos nativos.
+Ver también: [`readme_salud.md`](readme_salud.md), [`readme_ejercicio.md`](readme_ejercicio.md) y [`readme_comida.md`](readme_comida.md) — documentación de las tres apps incrustadas. Este archivo (`readme_cuidadopersonal.md`) solo documenta el shell y los tres módulos nativos (Skincare, Cabello, Dentista).
 
 ## Por qué Salud, Ejercicio y Comida están incrustados con `<iframe>` en vez de fusionados línea por línea
 
@@ -12,9 +12,9 @@ Las tres apps son grandes por sí solas y comparten (o podrían llegar a compart
 
 ## Navegación del shell
 
-`mainTab(tab)` alterna la clase `.active` entre los 5 botones `.tab-btn` (`data-tab="skincare|cabello|salud|ejercicio|comida"`) y los 5 contenedores `.view` (`#view-skincare|#view-cabello|#view-salud|#view-ejercicio|#view-comida`). Los tres tabs de iframe (`salud`, `ejercicio`, `comida`) cargan su `src` de forma perezosa la primera vez que se activan (`if(!f.getAttribute('src')) f.src='salud.html'`), y ya no se recarga después — cambiar de tab y volver conserva el estado interno de esa app.
+`mainTab(tab)` alterna la clase `.active` entre los 6 botones `.tab-btn` (`data-tab="skincare|cabello|dentista|salud|ejercicio|comida"`) y los 6 contenedores `.view` (`#view-skincare|#view-cabello|#view-dentista|#view-salud|#view-ejercicio|#view-comida`). Los tres tabs de iframe (`salud`, `ejercicio`, `comida`) cargan su `src` de forma perezosa la primera vez que se activan (`if(!f.getAttribute('src')) f.src='salud.html'`), y ya no se recarga después — cambiar de tab y volver conserva el estado interno de esa app. Dentista, como Skincare/Cabello, es nativo — no usa iframe ni carga perezosa.
 
-**Deep-link**: acepta `?tab=` en la URL (`skincare|cabello|salud|ejercicio|comida`) para abrir directo ese subtab — así es como el Dashboard enlaza a cada área específica (`cuidadopersonal.html?tab=ejercicio`, etc.).
+**Deep-link**: acepta `?tab=` en la URL (`skincare|cabello|dentista|salud|ejercicio|comida`) para abrir directo ese subtab — así es como el Dashboard enlaza a cada área específica (`cuidadopersonal.html?tab=ejercicio`, etc.).
 
 ## Módulo nativo: 🧴 Skincare — `localStorage['skincare_v1']`
 
@@ -80,6 +80,36 @@ Reconstruido a fondo el 2026-07-29, y **simplificado a una sola pantalla ese mis
 
 `HAIR_DB`: objeto con 5 categorías (`champu`, `acondicionador`, `mascarilla`, `tratamientoCaida`, `aceitePuntas`), productos reales (Vichy Dercos, Alpecin, Pantene Pro-V, Head & Shoulders, TRESemmé, L'Oréal Elvive, Kérastase, Moroccanoil, **Minoxidil 5% — Kirkland Signature o genérico**) etiquetados por `grosor`, `presu` y `ayuda`. `haPick(cat, perfil, n)` es el equivalente de `skPick()` para cabello — mismo algoritmo de filtro+orden, filtrando por `grosor` en vez de `tipo` de piel.
 
+## Módulo nativo: 🦷 Dentista — `localStorage['dentista_v1']` (nuevo 2026-07-31)
+
+Pedido explícito: "en cuidado personal agrega la sección de dentista". Mismo patrón de **perfil + guía en una sola vista** que Skincare/Cabello, con tema pastel propio aislado bajo `#view-dentista` (menta/azul/coral — **sin morado**, mismo criterio de paleta que las otras dos) y soporte de modo oscuro (`:root[data-theme="dark"] #view-dentista{...}`, ver `../README.md`). A diferencia de Skincare/Cabello, no tiene una base de datos de productos con algoritmo de ranking (`skPick`/`haPick`) — el cuidado dental depende mucho menos de qué marca específica y mucho más de la rutina y el calendario, así que la guía es más simple y sí incluye algo que Skincare/Cabello no tienen: **una caja de próxima cita calculada**.
+
+```js
+{
+  perfil: {
+    aparato: 'no'|'brackets'|'alineadores'|'retenedor'|'placa_nocturna',
+    frecuencia: 6,                 // meses entre chequeos, elegible: 4|6|12
+    ultimoChequeo: 'YYYY-MM-DD',   // vacío = sin datos, no se inventa una fecha
+    preocupaciones: ['sensibilidad'|'sangrado'|'bruxismo'|'mal_aliento', ...],
+    notas: ''
+  }
+}
+```
+
+**Valores por defecto** (`deDefault()`): sin aparato, frecuencia 6 meses, sin última fecha registrada, sin preocupaciones — a diferencia de Skincare/Cabello, aquí no se precargó un perfil "real" de Adán porque no se tenía ese dato; el perfil arranca vacío hasta que él lo llene.
+
+**Próxima cita** (`deProximaCita()`): si `ultimoChequeo` existe, calcula `próxima = último + frecuencia meses` y los días restantes (negativo = atrasada); si no hay fecha registrada, retorna `{tieneDatos:false}` y la guía lo deja explícito en vez de inventar una fecha. El botón **"✅ Fui al dentista hoy"** (`deRegistrarCita()`) escribe `ultimoChequeo = today()` y recalcula todo — es la única acción de un clic en las tres apps nativas (Skincare/Cabello no tienen equivalente porque no trackean citas, solo rutina).
+
+**Contenido de la vista** (`#view-dentista`, `deRenderGuiaContent()`), en orden:
+1. **Hero** (`.de-hero`) con chips-resumen (`deResumenChips()`) — aparato, cada preocupación marcada, y el estado de la próxima cita (verde/menta si en regla, coral si atrasada).
+2. **Formulario de perfil** (`#de-form-card`, oculto hasta pulsar "Editar") — aparato, frecuencia deseada, fecha de última visita, preocupaciones (checkboxes), notas.
+3. **`.de-cita-box`** — la cifra grande de días restantes o atrasados, con el cálculo explicado en texto pequeño, y el botón de registrar cita. Cambia a estilo de alerta (`.atrasada`, fondo coral) si ya pasó la fecha.
+4. **🪥 Rutina diaria** — 3 `.de-step` fijos: cepillado (técnica + frecuencia de cambio de cepillo), hilo dental (técnica en C, nota condicional de enhebrador si hay brackets), enjuague (tipo condicional según sensibilidad/sangrado).
+5. **⚡ Cuidado especial para tu caso** (`especiales`, solo aparece si aplica algo) — tarjetas condicionales por aparato (brackets: cepillo interdental + cera; alineadores: quitarlos para comer) y por preocupación (sensibilidad, sangrado — con nota de derivar a profesional si persiste, bruxismo, mal aliento).
+6. **⚠️ Señales de alerta** (`.de-warn`, siempre visible) — lista fija de cuándo ir antes de la cita programada (dolor persistente, sangrado abundante, diente flojo, hinchazón facial, sensibilidad repentina, bracket roto).
+7. **🛒 Lista de compras** — se arma dinámicamente según perfil (pasta/enjuague según sensibilidad o sangrado, cera si hay brackets, limpiador si hay alineadores, guarda si hay bruxismo).
+8. **💡 Consejos generales** y disclaimer final de que no sustituye revisión profesional.
+
 ## Utilidades compartidas (top-level del `<script>`)
 
 `uid()`, `today()` (UTC, `toISOString().slice(0,10)` — misma convención que el resto del proyecto), `fmtD(d)`, `addDays(d,n)`, `daysAgo(n)`, `toast(msg)`, `openM(id)`/`closeM(id)` (modales genéricos por id), `askDel(msg,cb)`/`closeConf()`/`doConf()` (diálogo de confirmación genérico compartido por Skincare y Cabello).
@@ -100,8 +130,8 @@ Botón `.theme-toggle-btn` en el `.topnav`. Tres capas de tema en un solo archiv
 
 ## Referencias cruzadas
 
-- El **Dashboard** (`../Dashboard/dashboard.html`) ya no tiene una pantalla dedicada de "Todas mis apps" (se retiró el 2026-07-30) — el acceso directo ahora vive en su barra superior fija (`renderQuickApps()`), que **no** muestra estadística para Skincare/Cabello/Ejercicio/Comida (solo íconos), y sí para Salud (kcal de hoy). Si cambias la forma de `perfil` en Skincare/Cabello, revisa `renderQuickApps()` en `Dashboard/dashboard.html` de todos modos, por si en el futuro se le agrega estadística.
-- Las píldoras de la barra superior del Dashboard enlazan aquí con `?tab=skincare`, `?tab=cabello`, `?tab=salud`, `?tab=ejercicio` (`?tab=comida` todavía no tiene píldora propia en el Dashboard — ver [`readme_comida.md`](readme_comida.md)).
+- El **Dashboard** (`../Dashboard/dashboard.html`) ya no tiene una pantalla dedicada de "Todas mis apps" (se retiró el 2026-07-30) — el acceso directo ahora vive en su barra superior fija (`renderQuickApps()`), que **no** muestra estadística para Skincare/Ejercicio/Comida/Dentista (solo íconos), y sí para Salud (kcal de hoy). **Desde el 2026-07-31 el Dashboard ya no muestra píldora de Cabello** (pedido explícito de Adán) y sí agregó las de Comida y Dentista, que antes faltaban. Si cambias la forma de `perfil` en Skincare/Cabello/Dentista, revisa `renderQuickApps()` en `Dashboard/dashboard.html` de todos modos, por si en el futuro se le agrega estadística.
+- Las píldoras de la barra superior del Dashboard enlazan aquí con `?tab=skincare`, `?tab=salud`, `?tab=ejercicio`, `?tab=comida`, `?tab=dentista` (`?tab=cabello` sigue funcionando si se visita a mano — el deep-link no se quitó del shell, solo su píldora en el Dashboard).
 - Mapa completo del proyecto: [`../README.md`](../README.md).
 
 ## Cómo usarlo

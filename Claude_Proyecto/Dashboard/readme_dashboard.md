@@ -21,7 +21,9 @@ Esto significa que el dashboard **solo muestra datos reales si se abrió desde e
 
 ## Barra superior — acceso directo a los demás proyectos (fija, no rota)
 
-**Nuevo el 2026-07-30**, a petición explícita de Adán ("arriba pon una sección para que vaya directo a mis otros proyectos"): `.qa-bar` (`#qaBar`, `renderQuickApps()`) es una franja fija en `top:0` — **no** forma parte del carrusel de slides, está siempre visible sin importar qué slide esté activo. Muestra una píldora compacta (ícono + nombre + estadística corta opcional) por cada app hermana: Coach, Finanzas, Skincare, Cabello, Salud, Ejercicio. Se repinta en cada `showSlide(i)` y en el listener de `storage`, igual que el slide activo. `.slides` se corrió a `top:58px` para dejarle espacio. (**2026-07-30**: se quitó la píldora de Proyectos junto con toda la app — ver nota más abajo.)
+**Nuevo el 2026-07-30**, a petición explícita de Adán ("arriba pon una sección para que vaya directo a mis otros proyectos"): `.qa-bar` (`#qaBar`, `renderQuickApps()`) es una franja fija en `top:0` — **no** forma parte del carrusel de slides, está siempre visible sin importar qué slide esté activo. Se repinta en cada `showSlide(i)` y en el listener de `storage`, igual que el slide activo. `.slides` se corrió a `top:58px` para dejarle espacio. (**2026-07-30**: se quitó la píldora de Proyectos junto con toda la app — ver nota más abajo.)
+
+**Píldoras actualizadas el 2026-07-31** (pedido explícito: "no muestres el subtab de cabello, pero sí muestra los demás que falten"): se quitó **Cabello** (Adán no la quiere aquí) y se agregaron **Comida** (`?tab=comida`) y **Dentista** (`?tab=dentista`, ver [`../CuidadoPersonal/readme_cuidadopersonal.md`](../CuidadoPersonal/readme_cuidadopersonal.md) → módulo nuevo), que antes no tenían píldora. Lista actual: Coach, Finanzas, Skincare, Salud, Ejercicio, Comida, Dentista (7, antes 6).
 
 ## Navegación (motor de slides, rotación automática cada 3 min)
 
@@ -103,6 +105,15 @@ Botón `.theme-toggle-btn` (🌙/☀️) agregado al `.hud-row` junto a los cont
 - Las manchas de fondo (`.slide::before/::after`) bajan su opacidad a `.12` en tema claro (`:root[data-theme="light"] .slide::before,::after`) — a `.2` (la del tema oscuro) se verían demasiado saturadas sobre fondo claro.
 - El radar de habilidades (`chSkills`, único uso de Chart.js en este archivo) tenía sus colores hardcoded (`'#b06eff'`, `'rgba(176,110,255,.16)'`, grid `rgba(255,255,255,.08)`, labels `'#c8cadf'`) — Chart.js pinta directo a `<canvas>` y no resuelve `var()`, así que se cambiaron a `cssVar('--p')`/`cssVar('--p-l')`/etc. `toggleTheme()` vuelve a llamar `showSlide(cur)` para redibujar el slide activo (y su chart, si es el de Habilidades) con los colores correctos de inmediato.
 - `CAT_META` (colores por categoría de la rutina) se dejó con hex literal a propósito — sus valores se concatenan con sufijos de alpha (`${meta.c}22`, `${meta.c}55`) para armar `rgba` de 8 dígitos en los chips de categoría; convertirlos a `var(--x)` rompería esa concatenación. Quedan igual en ambos temas (colores saturados, funcionan razonablemente en los dos).
+
+## Modo privado (2026-07-31)
+
+Pedido explícito: "crea el modo privado, oculta mi info financiera con un botón al principio del dashboard". Botón `.priv-btn` (👁️ Ocultar finanzas / 🙈 Modo privado) como **primer elemento de `.qa-bar`**, posicionado absoluto a la izquierda (`left:16px`) dentro de la barra fija superior — literalmente lo primero que se ve. Persiste en `localStorage['dash-privado']` (clave propia, **no** compartida con el resto del ecosistema — es un ajuste solo de este archivo).
+
+- `let privado` (booleano global) + `togglePrivado()`: guarda el estado, actualiza el texto del botón, y llama a `showSlide(cur)` para redibujar el slide activo de inmediato.
+- **`money(n)` enmascara la cifra en el origen** cuando `privado` es `true` (retorna `'$••,•••'` en vez de calcular el monto real) — cubre automáticamente cualquier lugar que ya use `money()` sin tener que tocarlo uno por uno (píldora de Finanzas en `.qa-bar`, `#coachDebtSteps`, `#metasProgreso`, la línea del BYD en el bucket list).
+- **Además se aplica una clase `.fin-hidden` (`filter:blur(7px)`)** a los contenedores completos de las cifras financieras — `.ds-txt`/`.pbar` de cada paso de `#coachDebtSteps`, `#coachRutaPct`/su barra, y `.big-num`/`.pbar`/`.sub` de los 4 tiles de `#metasProgreso` — para que también se difumine visualmente la barra de progreso (que por sí sola revela el % de avance hacia una cifra ya conocida, p.ej. "Meta: $10,000") y no solo el texto. Los `.lbl`/íconos de cada tile se dejan visibles a propósito (para saber *qué* es cada tarjeta, no *cuánto*).
+- No se tocó nada de la app **Finanzas** (`../Finanzas/Finanzas.html`) — el modo privado es exclusivo de este dashboard ambiental, no de la app financiera completa.
 
 ## Cómo usarlo
 

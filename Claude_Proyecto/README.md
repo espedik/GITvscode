@@ -20,7 +20,7 @@ Un conjunto de aplicaciones web de una sola página (HTML + CSS + JS, **sin back
 |---|---|---|---|---|
 | `Dashboard/` | `dashboard.html` | [`Dashboard/readme_dashboard.md`](Dashboard/readme_dashboard.md) | Panel central: agrega datos de todas las apps, slide "Mi Día" en vivo | *(no escribe, solo lee las de las demás)* |
 | `Coach/` | `Coach_v2.html` | [`Coach/readme_coach_v2.md`](Coach/readme_coach_v2.md) | Coach de vida/negocio: Plan Maestro, rutina diaria completa, radar de habilidades, legal | `coach-theme`, `radarp_*` (12), `coach_rutina_v1` |
-| `CuidadoPersonal/` | `cuidadopersonal.html` | [`CuidadoPersonal/readme_cuidadopersonal.md`](CuidadoPersonal/readme_cuidadopersonal.md) | Shell con 5 subtabs: Skincare y Cabello nativas | `skincare_v1`, `cabello_v1` |
+| `CuidadoPersonal/` | `cuidadopersonal.html` | [`CuidadoPersonal/readme_cuidadopersonal.md`](CuidadoPersonal/readme_cuidadopersonal.md) | Shell con 6 subtabs: Skincare, Cabello y Dentista nativas | `skincare_v1`, `cabello_v1`, `dentista_v1` |
 | `CuidadoPersonal/` | `salud.html` | [`CuidadoPersonal/readme_salud.md`](CuidadoPersonal/readme_salud.md) | Nutrición, ejercicio ligero, peso/medidas/composición corporal, exámenes médicos, postura y salud mental — incrustada por iframe en el shell | `misalud_v1` |
 | `CuidadoPersonal/` | `ejercicio.html` | [`CuidadoPersonal/readme_ejercicio.md`](CuidadoPersonal/readme_ejercicio.md) | Rutina de gimnasio completa — incrustada por iframe en el shell | `mirutina_v1` |
 | `CuidadoPersonal/` | `comida.html` | [`CuidadoPersonal/readme_comida.md`](CuidadoPersonal/readme_comida.md) | Recetario (10 desayunos + 10 cenas) + lista del súper — incrustada por iframe en el shell | `comida_v1` (y **escribe** en `misalud_v1`, ver nota) |
@@ -42,8 +42,10 @@ Un conjunto de aplicaciones web de una sola página (HTML + CSS + JS, **sin back
 | `comida_v1` | `CuidadoPersonal/comida.html` | *(nadie más — solo qué ingredientes de la lista del súper están marcados)* |
 | `skincare_v1` | `CuidadoPersonal/cuidadopersonal.html` | `Dashboard/dashboard.html` |
 | `cabello_v1` | `CuidadoPersonal/cuidadopersonal.html` | `Dashboard/dashboard.html` |
+| `dentista_v1` | `CuidadoPersonal/cuidadopersonal.html` | *(nadie más — perfil dental y fecha de última cita, el Dashboard no la lee todavía)* |
 | `coach_rutina_v1` | `Coach/Coach_v2.html` | `Dashboard/dashboard.html` |
 | `coach-theme` | Las 7 apps del ecosistema principal (cada una escribe al hacer toggle) | Las mismas 7 la leen al cargar — clave compartida de tema visual claro/oscuro (ver "Convenciones de diseño compartidas") |
+| `dash-privado` | `Dashboard/dashboard.html` | *(nadie más — clave propia del Dashboard, no compartida; oculta cifras financieras en su propia pantalla, no afecta a `Finanzas/Finanzas.html`)* |
 | `radarp_{id}` × 12 | `Coach/Coach_v2.html` | *(nadie más — el radar del Dashboard usa sus propios valores base duplicados, no lee estas claves)* |
 
 `Dashboard/dashboard.html` es el único archivo que lee prácticamente todo; ningún otro archivo lee datos de otro (excepto el caso especial de abajo). Si agregas una app nueva o una clave nueva, decide explícitamente si el Dashboard debe leerla (`loadAll()`) y actualiza esta tabla.

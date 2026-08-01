@@ -39,6 +39,10 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 .qa-txt{display:flex;flex-direction:column;line-height:1.15}
 .qa-name{font-size:11px;font-weight:800}
 .qa-stat{font-size:9.5px;color:var(--g);font-weight:600}
+.priv-btn{position:absolute;left:16px;top:50%;transform:translateY(-50%);display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:30px;background:rgba(var(--ov),.045);border:1px solid rgba(var(--ov),.08);color:var(--text2);font-size:11px;font-weight:700;font-family:inherit;cursor:pointer;transition:all .2s}
+.priv-btn:hover{background:rgba(var(--ov),.1);color:var(--text)}
+.priv-btn.on{background:rgba(255,92,92,.12);border-color:rgba(255,92,92,.35);color:var(--r)}
+.fin-hidden{filter:blur(7px);user-select:none}
 
 /* ─── SLIDES ENGINE ─────────────────────────────────────── */
 .slides{position:fixed;top:58px;left:0;right:0;bottom:0;overflow:hidden}
@@ -351,7 +355,15 @@ function toggleTheme(){
   showSlide(cur);
 }
 const fmt=n=>new Intl.NumberFormat('es-MX').format(Math.round(n||0));
-const money=n=>(n<0?'-$':'$')+fmt(Math.abs(n));
+let privado=localStorage.getItem('dash-privado')==='1';
+const money=n=>privado?'$••,•••':(n<0?'-$':'$')+fmt(Math.abs(n));
+function togglePrivado(){
+  privado=!privado;
+  localStorage.setItem('dash-privado',privado?'1':'0');
+  const btn=document.getElementById('priv-btn');
+  if(btn){ btn.classList.toggle('on',privado); btn.innerHTML=privado?'🙈 Modo privado':'👁️ Ocultar finanzas'; }
+  showSlide(cur);
+}
 const fmtD=d=>{if(!d)return'';const[y,m,day]=d.split('-');const mn=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];return `${parseInt(day)} ${mn[parseInt(m)-1]} ${y}`;};
 function tryParse(key,def){try{const r=localStorage.getItem(key);if(!r)return def;const p=JSON.parse(r);return typeof p==='object'&&p?{...def,...p}:def;}catch(e){return def;}}
 
@@ -866,14 +878,17 @@ function renderCoach(){
       <div class="ds-num">${s.done?'✅':s.n}</div>
       <div class="ds-ico">${s.ico}</div>
       <div class="ds-lbl">${s.lbl}</div>
-      <div class="ds-txt">${s.txt}</div>
-      <div class="pbar" style="height:6px;margin-top:0"><div class="pfill" style="width:${s.pct}%;background:${s.done?'var(--g)':s.activo?'var(--w)':'var(--text3)'}"></div></div>
+      <div class="ds-txt${privado?' fin-hidden':''}">${s.txt}</div>
+      <div class="pbar${privado?' fin-hidden':''}" style="height:6px;margin-top:0"><div class="pfill" style="width:${s.pct}%;background:${s.done?'var(--g)':s.activo?'var(--w)':'var(--text3)'}"></div></div>
     </div>`).join('');
 
   // Avance real = promedio de los 3 pasos con datos reales (no días transcurridos)
   const rutaPct=Math.round((efPct+banaPct+bbvaPct)/3);
-  document.getElementById('coachRutaPct').textContent=rutaPct+'%';
+  const coachRutaPctEl=document.getElementById('coachRutaPct');
+  coachRutaPctEl.textContent=rutaPct+'%';
+  coachRutaPctEl.classList.toggle('fin-hidden',privado);
   document.getElementById('coachRutaPctBar').style.width=rutaPct+'%';
+  document.getElementById('coachRutaPctBar').closest('.pbar').classList.toggle('fin-hidden',privado);
 
   document.getElementById('coachFaseFin').textContent=ph.end.toLocaleDateString('es-MX',{day:'numeric',month:'short',year:'numeric'});
   const diasFase=Math.max(0,Math.round((ph.end-new Date())/86400000));
@@ -964,16 +979,19 @@ function renderQuickApps(){
   const t=today();
   const apps=[
     {ico:'🪙',n:'Coach',href:'../Coach/Coach_v2.html',stat:activePhase().tag},
-    {ico:'💰',n:'Finanzas',href:'../Finanzas/Finanzas.html',stat:hasFinData()?money(patrimonioNeto()):''},
+    {ico:'💰',n:'Finanzas',href:'../Finanzas/Finanzas.html',stat:hasFinData()?money(patrimonioNeto()):'',fin:true},
     {ico:'🧴',n:'Skincare',href:'../CuidadoPersonal/cuidadopersonal.html?tab=skincare',stat:''},
-    {ico:'💇',n:'Cabello',href:'../CuidadoPersonal/cuidadopersonal.html?tab=cabello',stat:''},
     {ico:'🥦',n:'Salud',href:'../CuidadoPersonal/cuidadopersonal.html?tab=salud',
      stat:(()=>{const c=(D.sal.alimentos||[]).filter(a=>a.fecha===t).reduce((s,a)=>s+(a.cal||0),0);return c?fmt(c)+' kcal':'';})()},
-    {ico:'🏋️',n:'Ejercicio',href:'../CuidadoPersonal/cuidadopersonal.html?tab=ejercicio',stat:''}
+    {ico:'🏋️',n:'Ejercicio',href:'../CuidadoPersonal/cuidadopersonal.html?tab=ejercicio',stat:''},
+    {ico:'🍳',n:'Comida',href:'../CuidadoPersonal/cuidadopersonal.html?tab=comida',stat:''},
+    {ico:'🦷',n:'Dentista',href:'../CuidadoPersonal/cuidadopersonal.html?tab=dentista',stat:''}
   ];
-  document.getElementById('qaBar').innerHTML=apps.map(a=>`<a href="${a.href}" class="qa-pill" title="${a.n}">
+  document.getElementById('qaBar').innerHTML=
+    `<button class="priv-btn${privado?' on':''}" id="priv-btn" onclick="togglePrivado()">${privado?'🙈 Modo privado':'👁️ Ocultar finanzas'}</button>`+
+    apps.map(a=>`<a href="${a.href}" class="qa-pill" title="${a.n}">
     <span class="qa-ico">${a.ico}</span>
-    <span class="qa-txt"><span class="qa-name">${a.n}</span>${a.stat?`<span class="qa-stat">${a.stat}</span>`:''}</span>
+    <span class="qa-txt"><span class="qa-name">${a.n}</span>${a.stat?`<span class="qa-stat${a.fin&&privado?' fin-hidden':''}">${a.stat}</span>`:''}</span>
   </a>`).join('');
 }
 
@@ -1006,9 +1024,9 @@ function renderMetasSlide(){
   document.getElementById('metasProgreso').innerHTML=tiles.map(x=>`
     <div class="tile">
       <div class="lbl" style="color:${x.c}">${x.ico} ${x.lbl}</div>
-      <div class="big-num" style="font-size:clamp(20px,2.2vw,30px);color:${x.c}">${x.val}</div>
-      <div class="pbar"><div class="pfill" style="width:${x.pct}%;background:${x.c}"></div></div>
-      <div class="sub">${x.sub}</div>
+      <div class="big-num${privado?' fin-hidden':''}" style="font-size:clamp(20px,2.2vw,30px);color:${x.c}">${x.val}</div>
+      <div class="pbar${privado?' fin-hidden':''}"><div class="pfill" style="width:${x.pct}%;background:${x.c}"></div></div>
+      <div class="sub${privado?' fin-hidden':''}">${x.sub}</div>
     </div>`).join('');
 
   const cortoMediano=[
