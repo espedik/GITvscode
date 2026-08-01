@@ -1330,14 +1330,15 @@ const PLAN_ITEMS=[
   [
     {nombre:'4 huevos revueltos con espinacas y aceite',cal:345,prot:26,carbs:4,gra:24},
     {nombre:'Avena (70g) cocida con 250ml leche entera',cal:410,prot:19,carbs:59,gra:13},
-    {nombre:'2 plátanos medianos (120g c/u)',cal:200,prot:2,carbs:50,gra:0}
+    {nombre:'3 plátanos medianos (120g c/u)',cal:300,prot:3,carbs:75,gra:0}
   ],
   [
     {nombre:'200g pechuga de pollo a la plancha',cal:220,prot:46,carbs:0,gra:4},
-    {nombre:'1.5 tazas arroz blanco cocido',cal:300,prot:6,carbs:66,gra:0},
+    {nombre:'2 tazas arroz blanco cocido',cal:400,prot:8,carbs:88,gra:0},
     {nombre:'1 taza frijoles negros cocidos',cal:230,prot:15,carbs:42,gra:1},
     {nombre:'2 tortillas de maíz',cal:130,prot:3,carbs:27,gra:2},
-    {nombre:'½ aguacate + ensalada verde',cal:160,prot:2,carbs:9,gra:14}
+    {nombre:'½ aguacate + ensalada verde',cal:160,prot:2,carbs:9,gra:14},
+    {nombre:'Aceite de oliva (2 cdtas) en la ensalada',cal:80,prot:0,carbs:0,gra:9}
   ],
   [
     {nombre:'2 latas atún en agua (170g drenado)',cal:180,prot:40,carbs:0,gra:2},
@@ -1362,10 +1363,10 @@ function registrarRutinaMeal(idx) {
 
 function renderRutina() {
   const sec=document.getElementById('s-rutina'); if(!sec) return;
-  const tCal=2835,tProt=183,tCarb=357,tGra=77;
+  const tCal=3115,tProt=186,tCarb=404,tGra=86;
   const meals=[
-    {idx:0,ico:'🌅',name:'Desayuno',time:'7:00 – 8:00 am',cal:955,prot:47,carbs:113,gra:37,col:'#ffd93d'},
-    {idx:1,ico:'☀️',name:'Comida',time:'1:00 – 2:00 pm',cal:1040,prot:72,carbs:144,gra:21,col:'#ff6b35'},
+    {idx:0,ico:'🌅',name:'Desayuno',time:'7:00 – 8:00 am',cal:1055,prot:48,carbs:138,gra:37,col:'#ffd93d'},
+    {idx:1,ico:'☀️',name:'Comida',time:'1:00 – 2:00 pm',cal:1220,prot:74,carbs:166,gra:30,col:'#ff6b35'},
     {idx:2,ico:'🌙',name:'Cena',time:'7:00 – 8:00 pm',cal:840,prot:64,carbs:100,gra:19,col:'#3b82f6'}
   ];
   const alts=[
@@ -1379,14 +1380,14 @@ function renderRutina() {
     {ico:'💧',t:'Hidratación',d:'Toma 3–3.5 L de agua al día. El músculo es 75% agua; con solo 2% de deshidratación el rendimiento cae notablemente.'},
     {ico:'😴',t:'Descanso obligatorio',d:'Duerme 7–9 horas. El 70% de la hormona de crecimiento se libera durante el sueño profundo — ahí crece el músculo.'},
     {ico:'📅',t:'Consistencia',d:'Los primeros cambios visibles llegan entre las semanas 6–12. Ningún suplemento reemplaza una dieta sostenida.'},
-    {ico:'📈',t:'Superávit controlado',d:'Consumes ~315 kcal sobre tu mantenimiento estimado (≈2,520 kcal/día). Ideal para ganar músculo sin acumular exceso de grasa.'},
+    {ico:'📈',t:'Superávit controlado',d:'Consumes ~325 kcal sobre tu mantenimiento estimado (≈2,790 kcal/día). Ideal para ganar músculo sin acumular exceso de grasa.'},
     {ico:'🏋️',t:'Entrenamiento',d:'3–4 días/semana con movimientos compuestos: sentadilla, peso muerto, press banca, dominadas y remo con barra.'}
   ];
   sec.innerHTML=`
     <div class="sh"><h2>💪 Rutina Alimentaria — Masa Muscular</h2></div>
     <div class="card" style="margin-bottom:16px;border-color:rgba(0,232,122,.25);background:rgba(0,232,122,.05)">
       <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;text-align:center">
-        <div><div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px">Peso actual</div><div style="font-size:22px;font-weight:800;color:var(--g)">75 kg</div></div>
+        <div><div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px">Peso actual</div><div style="font-size:22px;font-weight:800;color:var(--g)">77 kg</div></div>
         <div><div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px">Estatura</div><div style="font-size:22px;font-weight:800;color:var(--b)">1.78 m</div></div>
         <div><div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px">Edad</div><div style="font-size:22px;font-weight:800;color:var(--p)">31 años</div></div>
         <div><div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px">Objetivo</div><div style="font-size:16px;font-weight:800;color:var(--o)">Ganar masa muscular</div></div>
@@ -1394,7 +1395,7 @@ function renderRutina() {
     </div>
     <div class="g4" style="margin-bottom:16px">
       ${[
-        {l:'Calorías / día',v:fmt(tCal)+' kcal',sub:'Superávit +315 kcal',c:'var(--o)'},
+        {l:'Calorías / día',v:fmt(tCal)+' kcal',sub:'Superávit +325 kcal',c:'var(--o)'},
         {l:'Proteína',v:tProt+'g',sub:'2.4 g por kg de peso',c:'var(--p)'},
         {l:'Carbohidratos',v:tCarb+'g',sub:'Energía y recuperación',c:'var(--b)'},
         {l:'Grasas',v:tGra+'g',sub:'Hormonas anabólicas',c:'var(--w)'}
@@ -2252,7 +2253,7 @@ function delAnimo(id) { S.mental.registros=S.mental.registros.filter(r=>r.id!==i
 const MOMENTO_LABELS = {am:'🌅 Mañana',pre:'🏋️ Pre-entreno',post:'💪 Post-entreno',pm:'🌙 Noche',cualquiera:'🕐 Cualquier hora'};
 
 const SUPP_CATALOG = [
-  {ico:'🥤',nombre:'Proteína Whey (suero de leche)',dosis:'25-30g (1 scoop) post-entreno o para completar tu meta diaria',momento:'post',para:'Completar la meta de proteína de tu Rutina Muscular (183g/día) cuando la comida no alcanza.',nota:'No reemplaza comida real — es un complemento para los días en que no llegas a tu meta solo con alimentos.'},
+  {ico:'🥤',nombre:'Proteína Whey (suero de leche)',dosis:'25-30g (1 scoop) post-entreno o para completar tu meta diaria',momento:'post',para:'Completar la meta de proteína de tu Rutina Muscular (186g/día) cuando la comida no alcanza.',nota:'No reemplaza comida real — es un complemento para los días en que no llegas a tu meta solo con alimentos.'},
   {ico:'⚡',nombre:'Creatina monohidratada',dosis:'5g al día, todos los días (no solo días de entreno)',momento:'cualquiera',para:'El suplemento con más evidencia científica para fuerza y ganancia de masa muscular.',nota:'No necesita fase de carga. Tómala siempre a la misma hora para no olvidarla — el efecto es acumulativo, no inmediato.'},
   {ico:'☀️',nombre:'Vitamina D3',dosis:'2000-4000 UI al día, con una comida que tenga algo de grasa',momento:'am',para:'Soporte hormonal (incluida testosterona) y salud ósea — muy común tener deficiencia si te da poco sol.',nota:'Idealmente confirma tu nivel con el examen de Vitamina D en Exámenes Médicos antes de dosis altas y sostenidas.'},
   {ico:'🐟',nombre:'Omega 3 (aceite de pescado)',dosis:'1-2g de EPA+DHA al día, con alimento',momento:'cualquiera',para:'Antiinflamatorio, apoya recuperación muscular y salud cardiovascular.',nota:'Si tienes reflujo, tómalo con una comida grande para evitar el "repique" de sabor a pescado.'},
@@ -2370,8 +2371,8 @@ function delSupp(id) { S.suplementos.lista=S.suplementos.lista.filter(s=>s.id!==
 function init() {
   load();
   if(!S.perfil.peso&&!S.perfil.altura){
-    S.perfil={nombre:'',peso:75,altura:178,edad:31,sexo:'M',actividad:'moderado'};
-    S.metas={...S.metas,caloriasD:2835,proteina:183,carbs:357,grasa:77,agua:10};
+    S.perfil={nombre:'',peso:77,altura:178,edad:31,sexo:'M',actividad:'moderado'};
+    S.metas={...S.metas,caloriasD:3115,proteina:186,carbs:404,grasa:86,agua:10};
     save();
   }
   document.getElementById('dateLabel').textContent=new Date().toLocaleDateString('es-MX',{weekday:'long',day:'numeric',month:'long'});
