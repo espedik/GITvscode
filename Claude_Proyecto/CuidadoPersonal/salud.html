@@ -20,20 +20,17 @@
   --sw:245px;--r14:14px;--rs:9px;
   --sh:0 4px 24px rgba(0,0,0,.5);
 }
-body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);display:flex;min-height:100vh;font-size:14px;
-  background-image:radial-gradient(ellipse 80% 60% at 20% 0%,rgba(0,232,122,.05) 0%,transparent 60%),
-                   radial-gradient(ellipse 60% 50% at 85% 100%,rgba(255,107,53,.05) 0%,transparent 60%)}
+body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);display:flex;min-height:100vh;font-size:14px}
 ::-webkit-scrollbar{width:4px;height:4px}
 ::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:rgba(255,255,255,.12);border-radius:2px}
 
 /* SIDEBAR */
-.sidebar{width:var(--sw);background:rgba(6,6,20,.85);backdrop-filter:blur(20px);
-  border-right:1px solid rgba(0,232,122,.1);display:flex;flex-direction:column;
+.sidebar{width:var(--sw);background:#161619;
+  border-right:1px solid rgba(255,255,255,.08);display:flex;flex-direction:column;
   position:fixed;top:0;left:0;bottom:0;z-index:100;transition:transform .25s}
 .sb-logo{padding:20px;border-bottom:1px solid rgba(255,255,255,.06)}
-.sb-logo h1{font-size:16px;font-weight:800;background:linear-gradient(90deg,#00e87a,#3b82f6);
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.sb-logo h1{font-size:16px;font-weight:800;color:var(--text);letter-spacing:-.2px}
 .sb-logo p{font-size:10px;color:var(--text3);margin-top:3px;letter-spacing:.08em;text-transform:uppercase}
 .sb-nav{padding:10px 8px;flex:1;overflow-y:auto}
 .nav-label{font-size:9px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.1em;padding:12px 12px 4px}
@@ -45,16 +42,16 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var
 
 /* MAIN */
 .main{margin-left:var(--sw);flex:1;display:flex;flex-direction:column;min-height:100vh}
-.topbar{background:rgba(6,6,20,.8);backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,.06);
+.topbar{background:#161619;border-bottom:1px solid rgba(255,255,255,.06);
   padding:0 24px;height:58px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
 .topbar-title{font-size:15px;font-weight:700}
 .content{padding:22px;flex:1}
 .section{display:none}.section.active{display:block}
 
 /* CARDS */
-.card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:var(--r14);padding:18px;
-  box-shadow:var(--sh),inset 0 1px 0 rgba(255,255,255,.05);transition:border-color .2s;backdrop-filter:blur(10px)}
-.card:hover{border-color:rgba(255,255,255,.12)}
+.card{background:#18181c;border:1px solid rgba(255,255,255,.07);border-radius:var(--r14);padding:18px;
+  box-shadow:var(--sh);transition:border-color .2s,transform .2s,box-shadow .2s}
+.card:hover{border-color:rgba(255,255,255,.14);transform:translateY(-1px);box-shadow:0 6px 28px rgba(0,0,0,.5)}
 .card-title{font-size:11px;font-weight:600;color:var(--text2);margin-bottom:8px;display:flex;align-items:center;gap:5px;text-transform:uppercase;letter-spacing:.06em}
 .card-val{font-size:26px;font-weight:800;color:var(--text);letter-spacing:-.5px}
 .card-sub{font-size:11px;color:var(--text3);margin-top:3px}
@@ -67,11 +64,12 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var
 /* BUTTONS */
 .btn{display:inline-flex;align-items:center;gap:5px;padding:8px 14px;border-radius:var(--rs);
   border:none;cursor:pointer;font-size:13px;font-weight:600;transition:all .2s;white-space:nowrap;font-family:inherit}
-.btn-g{background:linear-gradient(135deg,#00b860,#00e87a);color:#000;box-shadow:0 0 16px rgba(0,232,122,.3)}
-.btn-g:hover{box-shadow:0 0 28px rgba(0,232,122,.55);transform:translateY(-1px)}
+.btn-g{background:var(--g);color:#06170f}
+.btn-g:hover{filter:brightness(1.08);transform:translateY(-1px);box-shadow:var(--sh)}
 .btn-o{background:rgba(255,255,255,.05);color:var(--text2);border:1px solid rgba(255,255,255,.1)}
 .btn-o:hover{background:rgba(255,255,255,.09);color:var(--text)}
-.btn-r{background:linear-gradient(135deg,#cc1144,#ff3b6b);color:#fff}
+.btn-r{background:var(--r);color:#fff}
+.btn-r:hover{filter:brightness(1.1);transform:translateY(-1px)}
 .btn-sm{padding:5px 9px;font-size:11px}
 .btn-ico{padding:5px 8px}
 
@@ -80,11 +78,11 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var
 .pfill{height:100%;border-radius:20px;transition:width .6s cubic-bezier(.4,0,.2,1)}
 
 /* MODAL */
-.mo{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(4px);
+.mo{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);
   z-index:200;align-items:center;justify-content:center;padding:16px}
 .mo.open{display:flex}
-.modal{background:rgba(10,10,30,.95);backdrop-filter:blur(30px);border:1px solid rgba(0,232,122,.15);
-  border-radius:var(--r14);box-shadow:0 0 20px rgba(0,232,122,.1),var(--sh);width:100%;max-width:480px;max-height:92vh;overflow-y:auto;padding:22px}
+.modal{background:#1b1b20;border:1px solid rgba(255,255,255,.09);
+  border-radius:var(--r14);box-shadow:var(--sh);width:100%;max-width:480px;max-height:92vh;overflow-y:auto;padding:22px}
 .modal-h{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
 .modal-title{font-size:17px;font-weight:700}
 .modal-x{background:none;border:none;font-size:18px;cursor:pointer;color:var(--text2);padding:3px}
@@ -101,8 +99,7 @@ select option{background:#0d0d2a;color:var(--text)}
 
 /* SECTION HEADER */
 .sh{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
-.sh h2{font-size:19px;font-weight:800;background:linear-gradient(90deg,var(--text),var(--text2));
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.sh h2{font-size:19px;font-weight:800;color:var(--text)}
 
 /* BADGE */
 .badge{display:inline-block;padding:3px 9px;border-radius:20px;font-size:10px;font-weight:700}
@@ -121,16 +118,16 @@ tr:last-child td{border-bottom:none}
 tbody tr:hover td{background:rgba(0,232,122,.02)}
 
 /* CONFIRM */
-.conf{position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(4px);
+.conf{position:fixed;inset:0;background:rgba(0,0,0,.75);
   z-index:300;display:none;align-items:center;justify-content:center}
 .conf.open{display:flex}
-.conf-box{background:rgba(10,10,30,.98);border:1px solid rgba(255,59,107,.25);border-radius:var(--r14);padding:22px;max-width:340px;width:90%}
+.conf-box{background:#1b1b20;border:1px solid rgba(255,255,255,.1);border-radius:var(--r14);padding:22px;max-width:340px;width:90%}
 .conf-box h3{font-size:15px;font-weight:700;margin-bottom:7px}
 .conf-box p{color:var(--text2);font-size:13px;margin-bottom:18px}
 
 /* TOAST */
-.toast{position:fixed;bottom:24px;right:24px;background:rgba(10,10,30,.95);color:var(--text);
-  border:1px solid rgba(0,232,122,.2);padding:10px 18px;border-radius:var(--rs);
+.toast{position:fixed;bottom:24px;right:24px;background:#1b1b20;color:var(--text);
+  border:1px solid rgba(255,255,255,.1);padding:10px 18px;border-radius:var(--rs);
   font-size:13px;font-weight:600;box-shadow:var(--sh);z-index:500;opacity:0;transform:translateY(8px);transition:all .3s;pointer-events:none}
 .toast.show{opacity:1;transform:translateY(0)}
 
@@ -1387,7 +1384,7 @@ function renderRutina() {
   ];
   sec.innerHTML=`
     <div class="sh"><h2>💪 Rutina Alimentaria — Masa Muscular</h2></div>
-    <div class="card" style="margin-bottom:16px;border-color:rgba(0,232,122,.25);background:linear-gradient(135deg,rgba(0,232,122,.05),rgba(59,130,246,.05))">
+    <div class="card" style="margin-bottom:16px;border-color:rgba(0,232,122,.25);background:rgba(0,232,122,.05)">
       <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;text-align:center">
         <div><div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px">Peso actual</div><div style="font-size:22px;font-weight:800;color:var(--g)">75 kg</div></div>
         <div><div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px">Estatura</div><div style="font-size:22px;font-weight:800;color:var(--b)">1.78 m</div></div>
@@ -2027,7 +2024,7 @@ function renderPostura() {
       </div>
     </div>
 
-    <div class="card" style="margin-bottom:20px;border-color:rgba(255,107,53,.25);background:linear-gradient(135deg,rgba(255,107,53,.05),rgba(0,232,122,.04))">
+    <div class="card" style="margin-bottom:20px;border-color:rgba(255,107,53,.25);background:rgba(255,107,53,.05)">
       <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px">
         <div>
           <div class="card-title" style="color:var(--o)">⏱️ Control de pausas activas</div>

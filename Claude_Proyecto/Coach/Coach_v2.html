@@ -639,6 +639,11 @@
     .rt-fijo-ico { font-size: 22px; flex-shrink: 0; }
     .rt-fijo-title { font-weight: 800; font-size: 13px; }
     .rt-fijo-dur { font-size: 10.5px; color: var(--muted); margin-top: 2px; }
+    .rt-group-title { font-size: 12px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+    .rt-sub-list { display: flex; flex-direction: column; gap: 6px; padding-left: 2px; border-left: 2px solid var(--border); margin-left: 2px; }
+    .rt-sub-list .check-item { padding-left: 10px; }
+    .rt-link { color: var(--accent); text-decoration: none; font-weight: 700; white-space: nowrap; }
+    .rt-link:hover { text-decoration: underline; }
 
     /* ─── HÁBITOS ─────────────────────────────────────── */
     .habito-header { display: grid; grid-template-columns: 1fr repeat(7,32px); gap: 6px; font-size: 10.5px; color: var(--muted); text-align: center; margin-bottom: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .3px; }
@@ -3150,8 +3155,10 @@
     // ── Común entre semana (Lun–Vie) — horario real confirmado 2026-07-29 ──
     {id:'wd01', dias:[1,2,3,4,5], hora:'07:00', cat:'salud',    txt:'Despertar sin snooze — celular fuera del cuarto'},
     {id:'wd02', dias:[1,2,3,4,5], hora:'07:03', cat:'salud',    txt:'Bañarte — los días de lavado (Lun/Jue/Sáb) lava también el cabello, ver Cuidado del Cabello'},
-    {id:'wd03', dias:[1,2,3,4,5], hora:'07:20', cat:'salud',    txt:'🧴 Skincare AM: limpiador + niacinamida + hidratante + protector solar'},
-    {id:'wd04', dias:[1,2,3,4,5], hora:'07:28', cat:'salud',    txt:'🍂 Minoxidil en cuero cabelludo seco — dosis de la mañana'},
+    {id:'wd0304', dias:[1,2,3,4,5], hora:'07:20', cat:'salud', txt:'🧴 Skincare + 🍂 Minoxidil — AM', subtareas:[
+      {id:'wd03', txt:'Skincare: limpiador + niacinamida + hidratante + protector solar'},
+      {id:'wd04', txt:'Minoxidil en cuero cabelludo seco — dosis de la mañana'},
+    ]},
     {id:'wd05', dias:[1,2,3,4,5], hora:'07:33', cat:'descanso', txt:'Vestirte y alistarte'},
     {id:'wd06', dias:[1,2,3,4,5], hora:'07:40', cat:'descanso', txt:'Salir de casa — traslado a ALTEN (~20 min manejando)'},
     {id:'wd07', dias:[1,2,3,4,5], hora:'08:00', cat:'trabajo',  txt:'🏢 ALTEN — jornada laboral (HIL/SIL Ford)', fijo:true},
@@ -3161,11 +3168,16 @@
     {id:'wd11', dias:[1,2,3,4,5], hora:'18:45', cat:'profundo', txt:'🎯 Prioridad activa de Fase 0: régimen fiscal, outreach o plantilla GBM — 1 avance real'},
     {id:'wd12', dias:[1,2,3,4,5], hora:'20:15', cat:'admin',    txt:'🤝 Ventas: 5 mensajes personalizados a prospectos'},
     {id:'wd13', dias:[1,2,3,4,5], hora:'20:25', cat:'descanso', txt:'Didi solo si Opciones 1-2 aún no generan ingreso'},
-    {id:'wd14', dias:[1,2,3,4,5], hora:'20:30', cat:'salud',    txt:'Cenar ligero, sin carbohidratos refinados'},
+    {id:'wd14', dias:[1,2,3,4,5], hora:'20:30', cat:'salud', txt:'🍽️ Cena + preparar desayuno de mañana', subtareas:[
+      {id:'wd14a', txt:'Cenar ligero, sin carbohidratos refinados', link:{href:'../CuidadoPersonal/comida.html?s=cenas', label:'🍳 Ver cenas'}},
+      {id:'wd14b', txt:'Dejar listo el desayuno de mañana para llevar a ALTEN (se come allá, no hay tiempo en la mañana)', link:{href:'../CuidadoPersonal/comida.html?s=desayunos', label:'🍳 Ver desayunos'}},
+    ]},
     {id:'wd15', dias:[1,2,3,4,5], hora:'21:00', cat:'descanso', txt:'30 min lectura física (no celular)'},
     {id:'wd16', dias:[1,2,3,4,5], hora:'21:30', cat:'descanso', txt:'Journaling: 3 logros + 1 lección + 1 gasto evitable'},
-    {id:'wd17', dias:[1,2,3,4,5], hora:'21:45', cat:'salud',    txt:'🧴 Skincare PM: limpiador + tratamiento + hidratante'},
-    {id:'wd18', dias:[1,2,3,4,5], hora:'21:55', cat:'salud',    txt:'🍂 Minoxidil en cuero cabelludo seco — dosis de la noche'},
+    {id:'wd1718', dias:[1,2,3,4,5], hora:'21:45', cat:'salud', txt:'🧴 Skincare + 🍂 Minoxidil — PM', subtareas:[
+      {id:'wd17', txt:'Skincare: limpiador + tratamiento + hidratante'},
+      {id:'wd18', txt:'Minoxidil en cuero cabelludo seco — dosis de la noche'},
+    ]},
     {id:'wd19', dias:[1,2,3,4,5], hora:'22:00', cat:'profundo', txt:'Plan de mañana: 1 MIT (Most Important Task) + 4 tareas'},
     {id:'wd20', dias:[1,2,3,4,5], hora:'22:15', cat:'descanso', txt:'Meditación / respiración box 4-4-4-4 (10 min)'},
     {id:'wd21', dias:[1,2,3,4,5], hora:'23:55', cat:'salud',    txt:'Apagar pantallas. Dormir — buscas ~7h (medianoche a 7:00am)'},
@@ -3184,9 +3196,11 @@
 
     // ── Sábado ───────────────────────────────────────────────────────────
     {id:'sa01',  dias:[6], hora:'07:00', cat:'salud',    txt:'Despertar (sin alarma agresiva)'},
-    {id:'sa02',  dias:[6], hora:'07:05', cat:'salud',    txt:'🧴 Skincare AM'},
-    {id:'sa02b', dias:[6], hora:'07:12', cat:'salud',    txt:'🍂 Minoxidil — dosis de la mañana'},
-    {id:'sa03',  dias:[6], hora:'07:18', cat:'salud',    txt:'Desayuno tranquilo'},
+    {id:'sa0203', dias:[6], hora:'07:05', cat:'salud', txt:'🧴 Skincare + 🍂 Minoxidil — AM', subtareas:[
+      {id:'sa02', txt:'Skincare AM'},
+      {id:'sa02b', txt:'Minoxidil — dosis de la mañana'},
+    ]},
+    {id:'sa03',  dias:[6], hora:'07:18', cat:'salud', txt:'🍳 Preparar y desayunar tranquilo', link:{href:'../CuidadoPersonal/comida.html?s=desayunos', label:'Ver desayunos'}},
     {id:'sa04',  dias:[6], hora:'07:35', cat:'salud',    txt:'Ejercicio 1h — entreno largo / lo que falte en la semana'},
     {id:'sa05',  dias:[6], hora:'08:35', cat:'salud',    txt:'Ducha'},
     {id:'sa06',  dias:[6], hora:'08:50', cat:'profundo', txt:'🎯 Bloque profundo 4h: prioridad activa del Plan Maestro'},
@@ -3194,10 +3208,12 @@
     {id:'sa08',  dias:[6], hora:'13:20', cat:'aprender', txt:'🤖 IA aplicada — 30 min construyendo (n8n, Cursor, mini-proyecto propio)'},
     {id:'sa09',  dias:[6], hora:'13:50', cat:'admin',    txt:'🤝 Ventas: 5 mensajes personalizados'},
     {id:'sa10',  dias:[6], hora:'16:00', cat:'admin',    txt:'💰 Revisión semanal: finanzas, metas, hábitos cumplidos'},
-    {id:'sa11',  dias:[6], hora:'20:00', cat:'salud',    txt:'Cena'},
+    {id:'sa11',  dias:[6], hora:'20:00', cat:'salud', txt:'🍽️ Cena', link:{href:'../CuidadoPersonal/comida.html?s=cenas', label:'Ver cenas'}},
     {id:'sa12',  dias:[6], hora:'20:30', cat:'descanso', txt:'Tiempo libre / familia / lectura'},
-    {id:'sa13',  dias:[6], hora:'21:00', cat:'salud',    txt:'🧴 Skincare PM'},
-    {id:'sa13b', dias:[6], hora:'21:08', cat:'salud',    txt:'🍂 Minoxidil — dosis de la noche'},
+    {id:'sa1113', dias:[6], hora:'21:00', cat:'salud', txt:'🧴 Skincare + 🍂 Minoxidil — PM', subtareas:[
+      {id:'sa13', txt:'Skincare PM'},
+      {id:'sa13b', txt:'Minoxidil — dosis de la noche'},
+    ]},
     {id:'sa14',  dias:[6], hora:'21:30', cat:'descanso', txt:'Meditación'},
     {id:'sa15',  dias:[6], hora:'21:45', cat:'salud',    txt:'Apagar pantallas. Dormir'},
 
@@ -3206,17 +3222,21 @@
 
     // ── Domingo ──────────────────────────────────────────────────────────
     {id:'do01',  dias:[0], hora:'07:30', cat:'salud',    txt:'Despertar'},
-    {id:'do02',  dias:[0], hora:'07:35', cat:'salud',    txt:'🧴 Skincare AM'},
-    {id:'do02b', dias:[0], hora:'07:42', cat:'salud',    txt:'🍂 Minoxidil — dosis de la mañana'},
-    {id:'do03',  dias:[0], hora:'07:48', cat:'salud',    txt:'Desayuno tranquilo'},
+    {id:'do0203', dias:[0], hora:'07:35', cat:'salud', txt:'🧴 Skincare + 🍂 Minoxidil — AM', subtareas:[
+      {id:'do02', txt:'Skincare AM'},
+      {id:'do02b', txt:'Minoxidil — dosis de la mañana'},
+    ]},
+    {id:'do03',  dias:[0], hora:'07:48', cat:'salud', txt:'🍳 Preparar y desayunar tranquilo', link:{href:'../CuidadoPersonal/comida.html?s=desayunos', label:'Ver desayunos'}},
     {id:'do04',  dias:[0], hora:'08:05', cat:'salud',    txt:'Ejercicio: descanso activo — caminata o movilidad 30 min'},
     {id:'do05',  dias:[0], hora:'09:00', cat:'descanso', txt:'Tiempo libre / familia'},
     {id:'do06',  dias:[0], hora:'20:00', cat:'admin',    txt:'💰 Finanzas: revisión de presupuesto + planificar semana + revisar inversiones'},
     {id:'do07',  dias:[0], hora:'20:30', cat:'profundo', txt:'🎯 Revisar Plan Maestro: ¿la fase actual sigue en verde? Ajustar si hace falta'},
-    {id:'do08',  dias:[0], hora:'21:00', cat:'salud',    txt:'Cena ligera'},
+    {id:'do08',  dias:[0], hora:'21:00', cat:'salud', txt:'🍽️ Cena ligera', link:{href:'../CuidadoPersonal/comida.html?s=cenas', label:'Ver cenas'}},
     {id:'do09',  dias:[0], hora:'21:20', cat:'descanso', txt:'Journaling: cierre de semana'},
-    {id:'do10',  dias:[0], hora:'21:40', cat:'salud',    txt:'🧴 Skincare PM'},
-    {id:'do10b', dias:[0], hora:'21:48', cat:'salud',    txt:'🍂 Minoxidil — dosis de la noche'},
+    {id:'do1013', dias:[0], hora:'21:40', cat:'salud', txt:'🧴 Skincare + 🍂 Minoxidil — PM', subtareas:[
+      {id:'do10', txt:'Skincare PM'},
+      {id:'do10b', txt:'Minoxidil — dosis de la noche'},
+    ]},
     {id:'do11',  dias:[0], hora:'22:00', cat:'descanso', txt:'Meditación'},
     {id:'do12',  dias:[0], hora:'22:15', cat:'salud',    txt:'Apagar pantallas. Dormir'},
   ];
@@ -3251,6 +3271,9 @@
   function rutinaSave(d) { localStorage.setItem(RUTINA_KEY, JSON.stringify(d)); }
   function rutinaTareasDia(dow) { return RUTINA_TASKS.filter(t => t.dias.includes(dow)).sort((a,b) => a.hora.localeCompare(b.hora)); }
   function rutinaTareasHoy() { return rutinaTareasDia(new Date().getDay()); }
+  // Una tarea agrupada (.subtareas) cuenta cada subtarea por separado para el progreso; una tarea simple cuenta como 1
+  function leafItems(t) { return (t.subtareas && t.subtareas.length) ? t.subtareas : [{id:t.id, txt:t.txt, link:t.link}]; }
+  function taskLabelHtml(txt, link) { return txt + (link ? ' · <a href="'+link.href+'" target="_blank" class="rt-link" onclick="event.stopPropagation()">'+link.label+' →</a>' : ''); }
 
   function renderRutinaLive() {
     const now = new Date();
@@ -3280,8 +3303,8 @@
 
     const data = rutinaLoad();
     const doneHoy = data.completado[rutinaHoyStr()] || [];
-    const contables = tareasHoy.filter(t => !t.fijo); // el bloque de ALTEN no lleva checkbox, no cuenta en el progreso
-    const doneCount = contables.filter(t => doneHoy.includes(t.id)).length;
+    const contables = tareasHoy.filter(t => !t.fijo).flatMap(leafItems); // el bloque de ALTEN no lleva checkbox; las agrupadas cuentan por subtarea
+    const doneCount = contables.filter(it => doneHoy.includes(it.id)).length;
     const progTxt = document.getElementById('rutina-progress-txt');
     const progPct = document.getElementById('rutina-progress-pct');
     const progBar = document.getElementById('rutina-progress-bar');
@@ -3351,12 +3374,20 @@
           <div class="rt-card rt-fijo"><span class="rt-fijo-ico">${m.ico}</span><div><div class="rt-fijo-title">${t.txt}</div><div class="rt-fijo-dur">${dur}</div></div></div>
         </div>`;
       }
-      const checked = doneHoy.includes(t.id);
+      const leaves = leafItems(t);
+      const checked = leaves.every(it => doneHoy.includes(it.id));
+      const bodyHtml = t.subtareas ? `
+          <div class="rt-group-title">${t.txt}</div>
+          <div class="rt-sub-list">${leaves.map(it => {
+            const subChecked = doneHoy.includes(it.id);
+            return `<div class="check-item"><input type="checkbox" id="${it.id}" ${subChecked?'checked':''} ${esHoy?'':'disabled'}><label for="${it.id}"${subChecked?' style="text-decoration:line-through"':''}>${taskLabelHtml(it.txt, it.link)}</label></div>`;
+          }).join('')}</div>`
+        : `<div class="check-item"><input type="checkbox" id="${t.id}" ${checked?'checked':''} ${esHoy?'':'disabled'}><label for="${t.id}"${checked?' style="text-decoration:line-through"':''}>${taskLabelHtml(t.txt, t.link)}</label></div>`;
       return `<div class="rt-item${checked?' rt-done':''}${isNow?' rt-now':''}">
         <div class="rt-time-col"><div class="rt-time">${t.hora}</div><div class="${dotWrapCls}"><span class="rt-dot" style="background:${m.color}"></span></div></div>
         <div class="rt-card">
           <div class="rt-card-head"><span class="rt-cat-tag" style="color:${m.color}">${m.ico} ${m.label}</span><span class="rt-dur">${dur}</span></div>
-          <div class="check-item"><input type="checkbox" id="${t.id}" ${checked?'checked':''} ${esHoy?'':'disabled'}><label for="${t.id}"${checked?' style="text-decoration:line-through"':''}>${t.txt}</label></div>
+          ${bodyHtml}
         </div>
       </div>`;
     }).join('');

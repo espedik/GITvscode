@@ -101,6 +101,10 @@ Los tres cierran con la misma convención visual que Salud Digestiva/Exámenes: 
 - **`today()`** usa `new Date().toISOString().slice(0,10)` (UTC) — misma convención que el resto del proyecto, importante si algún día se cruza esta clave con otro archivo.
 - **Exportar datos**: botón en la barra lateral descarga un JSON de respaldo (incluye todas las claves de `S`, incluidas las nuevas — `exportData()` serializa el objeto completo, no requiere mantenimiento al agregar secciones).
 
+## Rediseño de interfaz (2026-07-31)
+
+Mismo tratamiento visual que `ejercicio.html` (ver el detalle completo en [`readme_ejercicio.md`](readme_ejercicio.md) → "Rediseño de interfaz") — se quitaron manchas radiales de fondo, `backdrop-filter: blur`, texto con gradiente (`.sb-logo h1`, `.sh h2`) y glow de neón en botones, sin tocar HTML/JS ni los valores de las variables de color (`--g`, `--o`, `--b`, `--p`, `--w`, `--r`), que el JS sigue usando inline en decenas de lugares. Los dos banners de contenido con degradado de dos colores ("Rutina Muscular" y "Salud Digestiva") se aplanaron a un solo tono. Verificado con jsdom navegando las 13 secciones sin errores de consola.
+
 ## Referencias cruzadas
 
 - Incrustada vía `<iframe>` en [`readme_cuidadopersonal.md`](readme_cuidadopersonal.md) (subtab "Cuidado de la Salud"). El shell no puede tocar el DOM/JS de este archivo (iframe cross-document), pero **sí comparte `localStorage`** porque ambos se sirven desde `file://` (ver la nota de origen compartido en `readme_cuidadopersonal.md`).

@@ -84,6 +84,10 @@ Reconstruido a fondo el 2026-07-29, y **simplificado a una sola pantalla ese mis
 
 `uid()`, `today()` (UTC, `toISOString().slice(0,10)` — misma convención que el resto del proyecto), `fmtD(d)`, `addDays(d,n)`, `daysAgo(n)`, `toast(msg)`, `openM(id)`/`closeM(id)` (modales genéricos por id), `askDel(msg,cb)`/`closeConf()`/`doConf()` (diálogo de confirmación genérico compartido por Skincare y Cabello).
 
+## Rediseño de interfaz del shell (2026-07-31)
+
+Mismo tratamiento visual que `ejercicio.html`/`salud.html`/`comida.html` (ver [`readme_ejercicio.md`](readme_ejercicio.md) → "Rediseño de interfaz"), aplicado **solo a las partes oscuras y compartidas del shell** — `.topnav`, `.brand`, `.tab-btn`, `.card`/`.btn`/`.modal`/`.conf`/`.toast` genéricos: se quitaron manchas radiales de fondo, `backdrop-filter: blur`, el texto del logo con gradiente (`.brand`) y el glow de neón de `.btn-g`/`.modal`. **No se tocó nada dentro de `#view-skincare` ni `#view-cabello`** (sus temas pastel `--sk-*`/`--ca-*`, con degradados en `.sk-hero`/`.ca-hero` y línea de sección) — esos dos ya tuvieron su propio rediseño dedicado el 2026-07-29 y a Adán le gustó el resultado, así que se dejaron exactamente igual. Verificado con jsdom cambiando entre los 5 tabs sin errores de consola.
+
 ## Referencias cruzadas
 
 - El **Dashboard** (`../Dashboard/dashboard.html`) ya no tiene una pantalla dedicada de "Todas mis apps" (se retiró el 2026-07-30) — el acceso directo ahora vive en su barra superior fija (`renderQuickApps()`), que **no** muestra estadística para Skincare/Cabello/Ejercicio/Comida (solo íconos), y sí para Salud (kcal de hoy). Si cambias la forma de `perfil` en Skincare/Cabello, revisa `renderQuickApps()` en `Dashboard/dashboard.html` de todos modos, por si en el futuro se le agrega estadística.

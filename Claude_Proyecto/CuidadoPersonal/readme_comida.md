@@ -39,6 +39,14 @@ Las 20 recetas y sus ingredientes/pasos/macros **no** se guardan en `localStorag
 - **Checklist de compras persistente**: `toggleShop(nombre)` marca/desmarca un ingrediente en `S.comprado` y guarda; `resetShop()` limpia toda la lista (botón en la barra lateral, para reiniciar cada semana).
 - **`registrarReceta(id, tipo)`** — botón "➕ Registrar en mi diario de hoy" en cada tarjeta de receta. Escribe **directamente en `localStorage['misalud_v1']`** (la clave de `salud.html`) un nuevo alimento con la fecha de hoy, `comida:'desayuno'|'cena'` y los macros de la receta — mismo formato exacto que usa `salud.html` internamente. Es un registro de referencia (asume que comiste la receta tal cual); si comiste algo distinto, se edita o se borra desde `salud.html` → Registro Diario como cualquier otro alimento.
 
+## Deep-link `?s=` (2026-07-31)
+
+`init()` ahora lee `?s=desayunos|cenas|super` de la URL y llama a `nav(s)` si es un valor válido de `SECS` — mismo patrón que el `?tab=` de `cuidadopersonal.html`. Se agregó para que `Coach/Coach_v2.html → #rutina` y `Dashboard/dashboard.html` puedan enlazar directo a la pestaña de Desayunos o Cenas desde una tarea de la rutina (p.ej. "🍽️ Cena" enlaza a `comida.html?s=cenas`) — ver [`../Coach/readme_coach_v2.md`](../Coach/readme_coach_v2.md) → "Tareas agrupadas".
+
+## Rediseño de interfaz (2026-07-31)
+
+Mismo tratamiento visual que `ejercicio.html`/`salud.html` (ver [`readme_ejercicio.md`](readme_ejercicio.md) → "Rediseño de interfaz"): se quitaron la mancha radial de fondo, el `backdrop-filter: blur` de sidebar/topbar/card y el texto con gradiente del logo, y `.btn-w` pasó de degradado+glow a color sólido. Se dejó igual el degradado de `.shop-progress .pfill` (barra de progreso de la lista del súper) — ahí un degradado de dirección es un patrón funcional común en barras de progreso, no la decoración genérica que se pidió quitar.
+
 ## Referencias cruzadas
 
 - Incrustada vía `<iframe>` en [`readme_cuidadopersonal.md`](readme_cuidadopersonal.md) (subtab "Comida"). Comparte `localStorage` con el shell y con `salud.html` por el mismo origen `file://` compartido (ver `readme_cuidadopersonal.md`).

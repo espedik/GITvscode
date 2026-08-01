@@ -61,6 +61,21 @@ El horario semanal (`S.rutina`) viene precargado con el programa de 6 días de a
 - **`today()`** usa `new Date().toISOString().slice(0,10)` (UTC) — misma convención que el resto del proyecto.
 - **Exportar datos**: botón en la barra lateral descarga un JSON de respaldo (`rutina_YYYY-MM-DD.json`).
 
+## Rediseño de interfaz (2026-07-31)
+
+Adán pidió explícitamente "el contenido me gusta pero la interfaz no" — rediseño puramente visual, **sin tocar HTML ni JS**, solo los valores del `<style>`. El mismo tratamiento se aplicó a `salud.html`, `comida.html` y el shell `cuidadopersonal.html` (ver sus `.md` respectivos), alineando el look de las 4 apps al lenguaje visual "premium minimalista" que ya se validó en `Coach/Coach_v2.html` (rediseño del 2026-07-18: sin gradientes decorativos, sin glow de neón, tarjetas planas).
+
+Se quitó, en todo el `<style>`:
+- `background-image` con manchas radiales de color detrás del `body`.
+- `backdrop-filter: blur(...)` en sidebar/topbar/card/modal/confirm (dejaban de tener sentido al volver los fondos opacos).
+- Texto con gradiente (`background: linear-gradient(...); -webkit-background-clip: text`) en `.sb-logo h1` y `.sh h2` — ahora color plano.
+- `box-shadow: 0 0 Npx rgba(...)` (glow de neón) en `.btn-p`/`.btn-g`, `.day-card.today`, `.day-tab.active`, `.modal` — los botones ahora son de color sólido con un `hover` que solo sube 1px y usa la sombra estándar `var(--sh)`.
+- El degradado de dos colores en `.meta-banner` se aplanó a un solo tono.
+
+**Se conservaron sin tocar**: todas las variables de color (`--p`, `--g`, `--b`, `--pu`, `--w`, `--r`) y sus valores — el JS genera decenas de estilos inline con `var(--p)` etc. y con `rgba(255,107,53,...)` literal (color del muscle map, chips, badges), así que cambiar los valores de esas variables sin auditar cada uso hubiera desincronizado el color de las tarjetas generadas por JS del resto de la interfaz. El anillo de foco de inputs (`box-shadow: 0 0 0 3px ...`) y el degradado sutil de `.pr-badge` se dejaron igual — son patrones funcionales/de acento, no la decoración genérica que se pidió quitar.
+
+Verificado con un smoke test en jsdom (`nav()` a las 6 secciones) sin errores de consola tras el cambio.
+
 ## Referencias cruzadas
 
 - Incrustada vía `<iframe>` en [`readme_cuidadopersonal.md`](readme_cuidadopersonal.md) (subtab "Ejercicio"). Comparte `localStorage` con el shell por origen `file://` compartido (ver `readme_cuidadopersonal.md`).

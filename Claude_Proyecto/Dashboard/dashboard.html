@@ -12,7 +12,7 @@
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
   --bg:#05050a; --text:#f4f4f8; --text2:#9a9db3; --text3:#565a72;
-  --card:rgba(255,255,255,.045); --card-br:rgba(255,255,255,.09);
+  --card:rgba(255,255,255,.06); --card-br:rgba(255,255,255,.13);
   --g:#00e87a; --o:#ff8a3d; --b:#3b82f6; --p:#b06eff; --w:#ffd93d; --r:#ff5c5c; --cy:#00e0c0;
   --font:'Inter',-apple-system,sans-serif; --mono:'Space Grotesk',monospace;
 }
@@ -41,7 +41,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
   pointer-events:none; overflow:hidden;
 }
 .slide.active{opacity:1;transform:scale(1);filter:blur(0);pointer-events:auto;z-index:2}
-.slide::before,.slide::after{content:'';position:absolute;border-radius:50%;filter:blur(100px);opacity:.32;pointer-events:none;z-index:0}
+.slide::before,.slide::after{content:'';position:absolute;border-radius:50%;filter:blur(100px);opacity:.2;pointer-events:none;z-index:0}
 .slide::before{width:58vmax;height:58vmax;top:-22%;left:-14%;background:var(--ac1);animation:driftA 24s ease-in-out infinite alternate}
 .slide::after{width:50vmax;height:50vmax;bottom:-24%;right:-12%;background:var(--ac2);animation:driftB 28s ease-in-out infinite alternate}
 @keyframes driftA{0%{transform:translate(0,0) scale(1)}100%{transform:translate(6vw,5vh) scale(1.18)}}
@@ -51,7 +51,6 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 .theme-dia    {--ac1:#00e0ff;--ac2:#00e87a}
 .theme-hero   {--ac1:#3ddc97;--ac2:#7c6cff}
 .theme-coach  {--ac1:#e0b020;--ac2:#ff8a3d}
-.theme-fin    {--ac1:#00e87a;--ac2:#00c2d1}
 .theme-skills {--ac1:#b06eff;--ac2:#ff6bd6}
 .theme-metas  {--ac1:#ffd93d;--ac2:#00e0c0}
 
@@ -73,8 +72,6 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 .big-num{font-family:var(--mono);font-weight:700;letter-spacing:-.02em;line-height:1}
 .pbar{height:11px;background:rgba(255,255,255,.08);border-radius:20px;overflow:hidden;margin-top:9px;position:relative}
 .pfill{height:100%;border-radius:20px;transition:width 1.2s cubic-bezier(.22,.61,.36,1);position:relative}
-.pfill::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.35),transparent);animation:shine 2.4s linear infinite}
-@keyframes shine{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
 .lbl{font-size:clamp(10px,.9vw,12px);color:var(--text2);text-transform:uppercase;letter-spacing:.08em;font-weight:700}
 .sub{font-size:clamp(11px,1vw,13px);color:var(--text3);margin-top:4px}
 
@@ -105,6 +102,9 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 .rt2-done .rt2-txt{opacity:.5;text-decoration:line-through}
 .rt2-fijo{opacity:.85}
 .rt2-cat-chip{display:inline-flex;align-items:center;gap:5px;border-radius:20px;padding:5px 12px;font-size:11px;font-weight:700;border:1px solid}
+.rt2-sub{margin-top:5px;display:flex;flex-direction:column;gap:3px;padding-left:10px;border-left:2px solid rgba(255,255,255,.08)}
+.rt2-sub-item{font-size:12px;color:var(--text3)}
+.rt2-sub-done{opacity:.5;text-decoration:line-through}
 
 .chart-wrap{position:relative;height:clamp(240px,34vh,420px)}
 
@@ -275,51 +275,8 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
     </div>
   </section>
 
-  <!-- 2 · FINANZAS -->
-  <section class="slide theme-fin" data-i="3">
-    <div class="slide-inner">
-      <div class="eyebrow reveal d1"><span class="dot"></span> Finanzas · Coach + Finanzas.html</div>
-      <div class="slide-title reveal d2">💰 Patrimonio y flujo</div>
-
-      <div class="grid g3 reveal d3" style="margin-bottom:18px">
-        <div class="tile tile-glow" style="grid-column:span 1">
-          <div class="lbl">Patrimonio neto estimado</div>
-          <div class="big-num" style="font-size:clamp(30px,3.6vw,50px)" id="finPatrimonio">—</div>
-          <div class="pbar"><div class="pfill" id="finPatBar" style="width:0%;background:linear-gradient(90deg,var(--g),var(--cy))"></div></div>
-          <div class="sub">Meta: $1,000,000 · 01 ene 2030</div>
-        </div>
-        <div class="tile">
-          <div class="lbl">🆘 Fondo de emergencia</div>
-          <div class="big-num" style="font-size:clamp(30px,3.6vw,50px)" id="finFondo">—</div>
-          <div class="pbar"><div class="pfill" id="finFondoBar" style="width:0%;background:linear-gradient(90deg,var(--w),var(--o))"></div></div>
-          <div class="sub">Meta: $10,000</div>
-        </div>
-        <div class="tile">
-          <div class="lbl">🏦 Deuda total pendiente</div>
-          <div class="big-num" style="font-size:clamp(30px,3.6vw,50px);color:var(--r)" id="finDeuda">—</div>
-          <div class="sub" id="finDeudaSub">—</div>
-        </div>
-      </div>
-
-      <div class="grid g2 reveal d4">
-        <div class="tile">
-          <div class="lbl" style="margin-bottom:10px">📆 Este mes</div>
-          <div class="grid g2">
-            <div><div class="sub" style="margin-top:0">Ingresos</div><div class="big-num" style="font-size:22px;color:var(--g)" id="finIngresos">—</div></div>
-            <div><div class="sub" style="margin-top:0">Gastos</div><div class="big-num" style="font-size:22px;color:var(--r)" id="finGastos">—</div></div>
-          </div>
-          <div class="sub" style="margin-top:12px" id="finAhorro">—</div>
-        </div>
-        <div class="tile">
-          <div class="lbl" style="margin-bottom:10px">🏦 Mayores deudas</div>
-          <div id="finTopDeudas"></div>
-        </div>
-      </div>
-    </div>
-  </section>
-
   <!-- 3 · COACH: HABILIDADES -->
-  <section class="slide theme-skills" data-i="4">
+  <section class="slide theme-skills" data-i="3">
     <div class="slide-inner">
       <div class="eyebrow reveal d1"><span class="dot"></span> Coach · Radar de habilidades</div>
       <div class="slide-title reveal d2">🧠 En qué invertir tu tiempo</div>
@@ -340,8 +297,8 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
     </div>
   </section>
 
-  <!-- 5 · MIS METAS -->
-  <section class="slide theme-metas" data-i="5">
+  <!-- 4 · MIS METAS -->
+  <section class="slide theme-metas" data-i="4">
     <div class="slide-inner">
       <div class="eyebrow reveal d1"><span class="dot"></span> Mis Metas</div>
       <div class="slide-title reveal d2">🎯 Corto, mediano y largo plazo</div>
@@ -406,8 +363,10 @@ const RUTINA_TASKS=[
   // Común entre semana (Lun–Vie) — horario real confirmado 2026-07-29
   {id:'wd01', dias:[1,2,3,4,5], hora:'07:00', cat:'salud',    txt:'Despertar sin snooze — celular fuera del cuarto'},
   {id:'wd02', dias:[1,2,3,4,5], hora:'07:03', cat:'salud',    txt:'Bañarte — los días de lavado (Lun/Jue/Sáb) lava también el cabello, ver Cuidado del Cabello'},
-  {id:'wd03', dias:[1,2,3,4,5], hora:'07:20', cat:'salud',    txt:'🧴 Skincare AM: limpiador + niacinamida + hidratante + protector solar'},
-  {id:'wd04', dias:[1,2,3,4,5], hora:'07:28', cat:'salud',    txt:'🍂 Minoxidil en cuero cabelludo seco — dosis de la mañana'},
+  {id:'wd0304', dias:[1,2,3,4,5], hora:'07:20', cat:'salud', txt:'🧴 Skincare + 🍂 Minoxidil — AM', subtareas:[
+    {id:'wd03', txt:'Skincare: limpiador + niacinamida + hidratante + protector solar'},
+    {id:'wd04', txt:'Minoxidil en cuero cabelludo seco — dosis de la mañana'},
+  ]},
   {id:'wd05', dias:[1,2,3,4,5], hora:'07:33', cat:'descanso', txt:'Vestirte y alistarte'},
   {id:'wd06', dias:[1,2,3,4,5], hora:'07:40', cat:'descanso', txt:'Salir de casa — traslado a ALTEN (~20 min manejando)'},
   {id:'wd07', dias:[1,2,3,4,5], hora:'08:00', cat:'trabajo',  txt:'🏢 ALTEN — jornada laboral (HIL/SIL Ford)', fijo:true},
@@ -417,11 +376,16 @@ const RUTINA_TASKS=[
   {id:'wd11', dias:[1,2,3,4,5], hora:'18:45', cat:'profundo', txt:'🎯 Prioridad activa de Fase 0: régimen fiscal, outreach o plantilla GBM — 1 avance real'},
   {id:'wd12', dias:[1,2,3,4,5], hora:'20:15', cat:'admin',    txt:'🤝 Ventas: 5 mensajes personalizados a prospectos'},
   {id:'wd13', dias:[1,2,3,4,5], hora:'20:25', cat:'descanso', txt:'Didi solo si Opciones 1-2 aún no generan ingreso'},
-  {id:'wd14', dias:[1,2,3,4,5], hora:'20:30', cat:'salud',    txt:'Cenar ligero, sin carbohidratos refinados'},
+  {id:'wd14', dias:[1,2,3,4,5], hora:'20:30', cat:'salud', txt:'🍽️ Cena + preparar desayuno de mañana', subtareas:[
+    {id:'wd14a', txt:'Cenar ligero, sin carbohidratos refinados', link:{href:'../CuidadoPersonal/comida.html?s=cenas', label:'🍳 Ver cenas'}},
+    {id:'wd14b', txt:'Dejar listo el desayuno de mañana para llevar a ALTEN (se come allá, no hay tiempo en la mañana)', link:{href:'../CuidadoPersonal/comida.html?s=desayunos', label:'🍳 Ver desayunos'}},
+  ]},
   {id:'wd15', dias:[1,2,3,4,5], hora:'21:00', cat:'descanso', txt:'30 min lectura física (no celular)'},
   {id:'wd16', dias:[1,2,3,4,5], hora:'21:30', cat:'descanso', txt:'Journaling: 3 logros + 1 lección + 1 gasto evitable'},
-  {id:'wd17', dias:[1,2,3,4,5], hora:'21:45', cat:'salud',    txt:'🧴 Skincare PM: limpiador + tratamiento + hidratante'},
-  {id:'wd18', dias:[1,2,3,4,5], hora:'21:55', cat:'salud',    txt:'🍂 Minoxidil en cuero cabelludo seco — dosis de la noche'},
+  {id:'wd1718', dias:[1,2,3,4,5], hora:'21:45', cat:'salud', txt:'🧴 Skincare + 🍂 Minoxidil — PM', subtareas:[
+    {id:'wd17', txt:'Skincare: limpiador + tratamiento + hidratante'},
+    {id:'wd18', txt:'Minoxidil en cuero cabelludo seco — dosis de la noche'},
+  ]},
   {id:'wd19', dias:[1,2,3,4,5], hora:'22:00', cat:'profundo', txt:'Plan de mañana: 1 MIT (Most Important Task) + 4 tareas'},
   {id:'wd20', dias:[1,2,3,4,5], hora:'22:15', cat:'descanso', txt:'Meditación / respiración box 4-4-4-4 (10 min)'},
   {id:'wd21', dias:[1,2,3,4,5], hora:'23:55', cat:'salud',    txt:'Apagar pantallas. Dormir — buscas ~7h (medianoche a 7:00am)'},
@@ -438,9 +402,11 @@ const RUTINA_TASKS=[
   {id:'k5', dias:[5], hora:'18:05', cat:'creativo', txt:'✍️ Copy: mejora o escribe 1 mensaje de venta / la landing de la plantilla GBM'},
   // Sábado
   {id:'sa01',  dias:[6], hora:'07:00', cat:'salud',    txt:'Despertar (sin alarma agresiva)'},
-  {id:'sa02',  dias:[6], hora:'07:05', cat:'salud',    txt:'🧴 Skincare AM'},
-  {id:'sa02b', dias:[6], hora:'07:12', cat:'salud',    txt:'🍂 Minoxidil — dosis de la mañana'},
-  {id:'sa03',  dias:[6], hora:'07:18', cat:'salud',    txt:'Desayuno tranquilo'},
+  {id:'sa0203', dias:[6], hora:'07:05', cat:'salud', txt:'🧴 Skincare + 🍂 Minoxidil — AM', subtareas:[
+    {id:'sa02', txt:'Skincare AM'},
+    {id:'sa02b', txt:'Minoxidil — dosis de la mañana'},
+  ]},
+  {id:'sa03',  dias:[6], hora:'07:18', cat:'salud', txt:'🍳 Preparar y desayunar tranquilo', link:{href:'../CuidadoPersonal/comida.html?s=desayunos', label:'Ver desayunos'}},
   {id:'sa04',  dias:[6], hora:'07:35', cat:'salud',    txt:'Ejercicio 1h — entreno largo / lo que falte en la semana'},
   {id:'sa05',  dias:[6], hora:'08:35', cat:'salud',    txt:'Ducha'},
   {id:'sa06',  dias:[6], hora:'08:50', cat:'profundo', txt:'🎯 Bloque profundo 4h: prioridad activa del Plan Maestro'},
@@ -448,27 +414,33 @@ const RUTINA_TASKS=[
   {id:'sa08',  dias:[6], hora:'13:20', cat:'aprender', txt:'🤖 IA aplicada — 30 min construyendo (n8n, Cursor, mini-proyecto propio)'},
   {id:'sa09',  dias:[6], hora:'13:50', cat:'admin',    txt:'🤝 Ventas: 5 mensajes personalizados'},
   {id:'sa10',  dias:[6], hora:'16:00', cat:'admin',    txt:'💰 Revisión semanal: finanzas, metas, hábitos cumplidos'},
-  {id:'sa11',  dias:[6], hora:'20:00', cat:'salud',    txt:'Cena'},
+  {id:'sa11',  dias:[6], hora:'20:00', cat:'salud', txt:'🍽️ Cena', link:{href:'../CuidadoPersonal/comida.html?s=cenas', label:'Ver cenas'}},
   {id:'sa12',  dias:[6], hora:'20:30', cat:'descanso', txt:'Tiempo libre / familia / lectura'},
-  {id:'sa13',  dias:[6], hora:'21:00', cat:'salud',    txt:'🧴 Skincare PM'},
-  {id:'sa13b', dias:[6], hora:'21:08', cat:'salud',    txt:'🍂 Minoxidil — dosis de la noche'},
+  {id:'sa1113', dias:[6], hora:'21:00', cat:'salud', txt:'🧴 Skincare + 🍂 Minoxidil — PM', subtareas:[
+    {id:'sa13', txt:'Skincare PM'},
+    {id:'sa13b', txt:'Minoxidil — dosis de la noche'},
+  ]},
   {id:'sa14',  dias:[6], hora:'21:30', cat:'descanso', txt:'Meditación'},
   {id:'sa15',  dias:[6], hora:'21:45', cat:'salud',    txt:'Apagar pantallas. Dormir'},
   // Compartido Sábado y Domingo
   {id:'fl1', dias:[6,0], hora:'17:00', cat:'descanso', txt:'Bloque largo de freelance/plantilla si ya hay cliente o ventas activas'},
   // Domingo
   {id:'do01',  dias:[0], hora:'07:30', cat:'salud',    txt:'Despertar'},
-  {id:'do02',  dias:[0], hora:'07:35', cat:'salud',    txt:'🧴 Skincare AM'},
-  {id:'do02b', dias:[0], hora:'07:42', cat:'salud',    txt:'🍂 Minoxidil — dosis de la mañana'},
-  {id:'do03',  dias:[0], hora:'07:48', cat:'salud',    txt:'Desayuno tranquilo'},
+  {id:'do0203', dias:[0], hora:'07:35', cat:'salud', txt:'🧴 Skincare + 🍂 Minoxidil — AM', subtareas:[
+    {id:'do02', txt:'Skincare AM'},
+    {id:'do02b', txt:'Minoxidil — dosis de la mañana'},
+  ]},
+  {id:'do03',  dias:[0], hora:'07:48', cat:'salud', txt:'🍳 Preparar y desayunar tranquilo', link:{href:'../CuidadoPersonal/comida.html?s=desayunos', label:'Ver desayunos'}},
   {id:'do04',  dias:[0], hora:'08:05', cat:'salud',    txt:'Ejercicio: descanso activo — caminata o movilidad 30 min'},
   {id:'do05',  dias:[0], hora:'09:00', cat:'descanso', txt:'Tiempo libre / familia'},
   {id:'do06',  dias:[0], hora:'20:00', cat:'admin',    txt:'💰 Finanzas: revisión de presupuesto + planificar semana + revisar inversiones'},
   {id:'do07',  dias:[0], hora:'20:30', cat:'profundo', txt:'🎯 Revisar Plan Maestro: ¿la fase actual sigue en verde? Ajustar si hace falta'},
-  {id:'do08',  dias:[0], hora:'21:00', cat:'salud',    txt:'Cena ligera'},
+  {id:'do08',  dias:[0], hora:'21:00', cat:'salud', txt:'🍽️ Cena ligera', link:{href:'../CuidadoPersonal/comida.html?s=cenas', label:'Ver cenas'}},
   {id:'do09',  dias:[0], hora:'21:20', cat:'descanso', txt:'Journaling: cierre de semana'},
-  {id:'do10',  dias:[0], hora:'21:40', cat:'salud',    txt:'🧴 Skincare PM'},
-  {id:'do10b', dias:[0], hora:'21:48', cat:'salud',    txt:'🍂 Minoxidil — dosis de la noche'},
+  {id:'do1013', dias:[0], hora:'21:40', cat:'salud', txt:'🧴 Skincare + 🍂 Minoxidil — PM', subtareas:[
+    {id:'do10', txt:'Skincare PM'},
+    {id:'do10b', txt:'Minoxidil — dosis de la noche'},
+  ]},
   {id:'do11',  dias:[0], hora:'22:00', cat:'descanso', txt:'Meditación'},
   {id:'do12',  dias:[0], hora:'22:15', cat:'salud',    txt:'Apagar pantallas. Dormir'},
 ];
@@ -490,6 +462,8 @@ function rtDur(fromHora,toHora){
   return mins>=60?(Math.floor(mins/60)+'h'+(mins%60?' '+(mins%60)+'m':'')):mins+'m';
 }
 function rutinaTareasHoy(){const dow=new Date().getDay();return RUTINA_TASKS.filter(t=>t.dias.includes(dow)).sort((a,b)=>a.hora.localeCompare(b.hora));}
+// Igual que Coach_v2.html: una tarea agrupada (.subtareas) cuenta cada subtarea por separado
+function leafItems(t){ return (t.subtareas&&t.subtareas.length) ? t.subtareas : [{id:t.id, txt:t.txt, link:t.link}]; }
 function rutinaAhoraSiguiente(){
   const now=new Date();
   const hhmm=String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0');
@@ -686,8 +660,8 @@ function renderDia(){
     document.getElementById('diaSiguiente').textContent=tareasHoy.length?'Ya terminaste tu rutina de hoy 🎉':'—';
   }
 
-  const contables=tareasHoy.filter(t=>!t.fijo); // el bloque de ALTEN no lleva checkbox, no cuenta en el progreso
-  const doneCount=contables.filter(t=>doneHoy.includes(t.id)).length;
+  const contables=tareasHoy.filter(t=>!t.fijo).flatMap(leafItems); // el bloque de ALTEN no lleva checkbox; las agrupadas cuentan por subtarea
+  const doneCount=contables.filter(it=>doneHoy.includes(it.id)).length;
   document.getElementById('diaProgresoTxt').textContent=doneCount+'/'+contables.length;
   document.getElementById('diaProgresoBar').style.width=(contables.length?doneCount/contables.length*100:0)+'%';
 
@@ -708,8 +682,10 @@ function renderDia(){
     const meta=CAT_META[t.cat]||{ico:'•',label:t.cat,c:'#565a72'};
     const nextT=visibles[idx+1];
     const dur=nextT?rtDur(t.hora,nextT.hora):'';
-    const done=!t.fijo&&doneHoy.includes(t.id);
+    const leaves=leafItems(t);
+    const done=!t.fijo&&leaves.every(it=>doneHoy.includes(it.id));
     const dotColor=t.fijo?(isNow?meta.c:'#3a3d52'):(done?'#00e87a':isNow?meta.c:'#3a3d52');
+    const subHtml=(!t.fijo&&t.subtareas)?`<div class="rt2-sub">${leaves.map(it=>`<div class="rt2-sub-item${doneHoy.includes(it.id)?' rt2-sub-done':''}">${doneHoy.includes(it.id)?'✅':'▫️'} ${it.txt}</div>`).join('')}</div>`:'';
     return `<div class="rt2-card ${isNow?'rt2-now':''} ${done?'rt2-done':''} ${t.fijo?'rt2-fijo':''}">
       <div class="rt2-dot" style="background:${dotColor};box-shadow:${(isNow||done)?'0 0 10px '+dotColor:'none'}"></div>
       <div class="rt2-body">
@@ -718,6 +694,7 @@ function renderDia(){
           <span class="rt2-time">${t.hora}${dur?' · '+dur:''}</span>
         </div>
         <div class="rt2-txt">${t.txt}</div>
+        ${subHtml}
       </div>
       ${done?'<span class="rt2-check">✅</span>':''}
     </div>`;
@@ -886,39 +863,6 @@ function renderCoach(){
     </div>`).join('');
 }
 
-function renderFinanzas(){
-  const pat=patrimonioNeto();
-  const START=-308830, GOAL=1000000;
-  const pct=Math.min(100,Math.max(0,(pat-START)/(GOAL-START)*100));
-  document.getElementById('finPatrimonio').textContent=hasFinData()?money(pat):'—';
-  document.getElementById('finPatrimonio').style.color=pat>=0?'var(--g)':'var(--r)';
-  document.getElementById('finPatBar').style.width=pct+'%';
-
-  const ef=D.fin.emergencyFund||0;
-  document.getElementById('finFondo').textContent=money(ef);
-  document.getElementById('finFondoBar').style.width=Math.min(100,ef/10000*100)+'%';
-
-  const debts=(D.fin.debts||[]).filter(d=>d.balance>0);
-  const deuda=debts.reduce((s,d)=>s+d.balance,0);
-  document.getElementById('finDeuda').textContent=money(deuda);
-  document.getElementById('finDeudaSub').textContent=debts.length?`${debts.length} deuda(s) activa(s)`:'Sin deudas registradas';
-
-  const m=today().slice(0,7);
-  const txM=(D.fin.transactions||[]).filter(t=>t.date?.startsWith(m));
-  const inc=txM.filter(t=>t.type==='income').reduce((s,t)=>s+(t.amount||0),0);
-  const exp=txM.filter(t=>t.type==='expense').reduce((s,t)=>s+(t.amount||0),0);
-  document.getElementById('finIngresos').textContent=money(inc);
-  document.getElementById('finGastos').textContent=money(exp);
-  document.getElementById('finAhorro').textContent=inc>0?`${money(inc-exp)} de flujo libre este mes (${Math.round((1-exp/inc)*100)}% ahorrado)`:'Sin ingresos registrados este mes';
-
-  const top=[...debts].sort((a,b)=>b.balance-a.balance).slice(0,4);
-  document.getElementById('finTopDeudas').innerHTML=top.length?top.map(d=>`
-    <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.06)">
-      <span style="font-size:13px">${d.name||'Deuda'}</span>
-      <span style="font-family:var(--mono);font-weight:700;color:var(--r)">${money(d.balance)}</span>
-    </div>`).join(''):'<div class="sub">Sin deudas registradas en Finanzas.html todavía.</div>';
-}
-
 function calcOVR(){let t=0,w=0;SK.forEach(s=>{t+=s.val*s.w;w+=100*s.w;});return Math.round(t/w*100);}
 function skLevel(v){
   if(v>=90)return{l:'ÉLITE',c:'#22c55e'};
@@ -1070,7 +1014,7 @@ function renderMetasSlide(){
     </div>`;
 }
 
-const RENDERS=[renderHero,renderDia,renderCoach,renderFinanzas,renderSkills,renderMetasSlide];
+const RENDERS=[renderHero,renderDia,renderCoach,renderSkills,renderMetasSlide];
 
 // ══════════════════════════════════════════════════════════════════════════
 // SLIDE ENGINE — avance automático cada 3 min + transición + controles
