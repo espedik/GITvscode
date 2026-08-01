@@ -2402,11 +2402,21 @@ function delSupp(id) { S.suplementos.lista=S.suplementos.lista.filter(s=>s.id!==
 // ─── INIT ────────────────────────────────────────────────────────────────────
 function init() {
   load();
+  let _needSave=false;
   if(!S.perfil.peso&&!S.perfil.altura){
     S.perfil={nombre:'',peso:77,altura:178,edad:31,sexo:'M',actividad:'moderado'};
     S.metas={...S.metas,caloriasD:3115,proteina:186,carbs:404,grasa:86,agua:10};
-    save();
+    _needSave=true;
   }
+  // Dashboard → Hero lee D.sal.medidas (historial de pesajes), no D.sal.perfil.peso (que es solo
+  // para el cálculo de calorías) — si nunca se registró un pesaje real, "Peso actual" se ve vacío
+  // aunque el perfil ya tenga peso. Se sembra un primer registro con el peso real conocido para
+  // que el Dashboard muestre algo desde ya; a partir de ahí, registrar pesajes reales lo reemplaza.
+  if(!S.medidas.length){
+    S.medidas.push({id:uid(),peso:S.perfil.peso||77,fecha:today(),cintura:0,cadera:0,pecho:0,brazo:0,muslo:0,grasa:0,notas:'Peso inicial (seed)'});
+    _needSave=true;
+  }
+  if(_needSave) save();
   document.getElementById('dateLabel').textContent=new Date().toLocaleDateString('es-MX',{weekday:'long',day:'numeric',month:'long'});
   document.getElementById('f-fecha-al').value=today();
   const themeBtn=document.getElementById('theme-toggle-btn');
