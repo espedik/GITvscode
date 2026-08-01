@@ -15,11 +15,16 @@
   --danger:#ff3b6b;--danger-light:rgba(255,59,107,.1);
   --warning:#ffd93d;--warning-light:rgba(255,217,61,.1);
   --purple:#b06eff;--purple-light:rgba(176,110,255,.1);
-  --bg:#f5f7fa;--surface:rgba(0,0,0,.03);--border:rgba(0,0,0,.09);
-  --text:#1a1a2e;--text2:#4a5670;--text3:#8892a8;
+  --bg:#f5f7fa;--surface:rgba(var(--ov),.03);--surface-solid:#ffffff;--border:rgba(var(--ov),.09);
+  --text:#1a1a2e;--text2:#4a5670;--text3:#8892a8;--ov:0,0,0;
   --sw:245px;--r:14px;--rs:9px;
   --sh:0 4px 24px rgba(0,0,0,.08);--shm:0 8px 40px rgba(0,0,0,.12);--shl:0 20px 60px rgba(0,0,0,.15);
   --glow-p:0 0 20px rgba(0,212,255,.25);--glow-s:0 0 20px rgba(0,232,122,.25);--glow-d:0 0 20px rgba(255,59,107,.25)
+}
+:root[data-theme="dark"]{
+  --bg:#08080f;--surface:rgba(var(--ov),.04);--surface-solid:#17171f;--border:rgba(var(--ov),.1);
+  --text:#f0f0f5;--text2:#a8acc4;--text3:#6a6e88;--ov:255,255,255;
+  --sh:0 4px 24px rgba(0,0,0,.4);--shm:0 8px 40px rgba(0,0,0,.5);--shl:0 20px 60px rgba(0,0,0,.6);
 }
 
 /* ── BASE ─────────────────────────────────────────────────────── */
@@ -28,13 +33,13 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
                    radial-gradient(ellipse 60% 50% at 85% 100%,rgba(176,110,255,.04) 0%,transparent 60%)}
 ::-webkit-scrollbar{width:4px;height:4px}
 ::-webkit-scrollbar-track{background:transparent}
-::-webkit-scrollbar-thumb{background:rgba(0,0,0,.18);border-radius:2px}
+::-webkit-scrollbar-thumb{background:rgba(var(--ov),.18);border-radius:2px}
 
 /* ── SIDEBAR ──────────────────────────────────────────────────── */
 .sidebar{width:var(--sw);background:rgba(255,255,255,.97);backdrop-filter:blur(20px);
   border-right:1px solid rgba(0,212,255,.15);display:flex;flex-direction:column;
   position:fixed;top:0;left:0;bottom:0;z-index:100;transition:transform .25s;box-shadow:2px 0 12px rgba(0,0,0,.06)}
-.sb-logo{padding:20px;border-bottom:1px solid rgba(0,0,0,.07)}
+.sb-logo{padding:20px;border-bottom:1px solid rgba(var(--ov),.07)}
 .sb-logo h1{font-size:16px;font-weight:800;background:linear-gradient(90deg,#00d4ff,#b06eff);
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:-.3px}
 .sb-logo p{font-size:10px;color:var(--text3);margin-top:3px;letter-spacing:.08em;text-transform:uppercase}
@@ -44,16 +49,16 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
 .nav-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:var(--rs);
   cursor:pointer;color:var(--text2);font-weight:500;font-size:13px;transition:all .2s;
   margin-bottom:2px;user-select:none;position:relative}
-.nav-item:hover{background:rgba(0,0,0,.05);color:var(--text)}
+.nav-item:hover{background:rgba(var(--ov),.05);color:var(--text)}
 .nav-item.active{background:rgba(0,212,255,.1);color:var(--primary);font-weight:600;
   border-left:2px solid var(--primary);box-shadow:inset 0 0 20px rgba(0,212,255,.05)}
 .nav-item .ico{font-size:15px;width:20px;text-align:center;flex-shrink:0}
-.sb-bottom{padding:12px;border-top:1px solid rgba(0,0,0,.07);display:flex;flex-direction:column;gap:6px}
+.sb-bottom{padding:12px;border-top:1px solid rgba(var(--ov),.07);display:flex;flex-direction:column;gap:6px}
 
 /* ── MAIN ─────────────────────────────────────────────────────── */
 .main{margin-left:var(--sw);flex:1;display:flex;flex-direction:column;min-height:100vh}
 .topbar{background:rgba(255,255,255,.97);backdrop-filter:blur(20px);
-  border-bottom:1px solid rgba(0,0,0,.08);padding:0 24px;height:58px;
+  border-bottom:1px solid rgba(var(--ov),.08);padding:0 24px;height:58px;
   display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50;box-shadow:0 1px 8px rgba(0,0,0,.06)}
 .topbar-title{font-size:15px;font-weight:700;color:var(--text)}
 .topbar-actions{display:flex;gap:8px;align-items:center}
@@ -61,11 +66,11 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
 .section{display:none}.section.active{display:block}
 
 /* ── CARDS ────────────────────────────────────────────────────── */
-.card{background:#ffffff;border:1px solid rgba(0,0,0,.08);
+.card{background:var(--surface-solid);border:1px solid rgba(var(--ov),.08);
   border-radius:var(--r);padding:18px;
   box-shadow:var(--sh);
   transition:border-color .2s,box-shadow .2s}
-.card:hover{border-color:rgba(0,0,0,.15);box-shadow:var(--shm)}
+.card:hover{border-color:rgba(var(--ov),.15);box-shadow:var(--shm)}
 .card-title{font-size:11px;font-weight:600;color:var(--text2);margin-bottom:8px;
   display:flex;align-items:center;gap:5px;text-transform:uppercase;letter-spacing:.06em}
 .card-val{font-size:26px;font-weight:800;color:var(--text);letter-spacing:-.5px}
@@ -96,11 +101,13 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
 .btn-d{background:linear-gradient(135deg,#cc1144,#ff3b6b);color:#fff;
   box-shadow:0 0 16px rgba(255,59,107,.3)}
 .btn-d:hover{box-shadow:0 0 28px rgba(255,59,107,.5);transform:translateY(-1px)}
-.btn-o{background:rgba(0,0,0,.04);color:var(--text2);
-  border:1px solid rgba(0,0,0,.12)}
-.btn-o:hover{background:rgba(0,0,0,.07);color:var(--text);border-color:rgba(0,0,0,.22)}
+.btn-o{background:rgba(var(--ov),.04);color:var(--text2);
+  border:1px solid rgba(var(--ov),.12)}
+.btn-o:hover{background:rgba(var(--ov),.07);color:var(--text);border-color:rgba(var(--ov),.22)}
 .btn-sm{padding:5px 9px;font-size:11px}
 .btn-ico{padding:5px 8px}
+.theme-toggle-btn{background:rgba(var(--ov),.04);border:1px solid rgba(var(--ov),.12);color:var(--text);width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0}
+.theme-toggle-btn:hover{background:rgba(var(--ov),.09)}
 
 /* ── BADGE ────────────────────────────────────────────────────── */
 .badge{display:inline-block;padding:3px 9px;border-radius:20px;font-size:10px;font-weight:700;letter-spacing:.04em}
@@ -113,7 +120,7 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
 table{width:100%;border-collapse:collapse}
 th{text-align:left;padding:9px 12px;font-size:10px;font-weight:700;color:var(--primary);
   border-bottom:1px solid rgba(0,212,255,.15);white-space:nowrap;text-transform:uppercase;letter-spacing:.08em}
-td{padding:11px 12px;border-bottom:1px solid rgba(0,0,0,.06);font-size:13px;color:var(--text)}
+td{padding:11px 12px;border-bottom:1px solid rgba(var(--ov),.06);font-size:13px;color:var(--text)}
 tr:last-child td{border-bottom:none}
 tbody tr:hover td{background:rgba(0,212,255,.05)}
 
@@ -121,7 +128,7 @@ tbody tr:hover td{background:rgba(0,212,255,.05)}
 .mo{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(4px);
   z-index:200;align-items:center;justify-content:center;padding:16px}
 .mo.open{display:flex}
-.modal{background:#ffffff;
+.modal{background:var(--surface-solid);
   border:1px solid rgba(0,212,255,.2);border-radius:var(--r);
   box-shadow:var(--glow-p),var(--shl);width:100%;max-width:500px;max-height:92vh;overflow-y:auto;padding:22px}
 .modal-h{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
@@ -134,18 +141,18 @@ tbody tr:hover td{background:rgba(0,212,255,.05)}
 .fr{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 label{display:block;font-size:10px;font-weight:700;color:var(--text2);margin-bottom:5px;
   text-transform:uppercase;letter-spacing:.07em}
-input,select,textarea{width:100%;padding:9px 12px;border:1px solid rgba(0,0,0,.13);
+input,select,textarea{width:100%;padding:9px 12px;border:1px solid rgba(var(--ov),.13);
   border-radius:var(--rs);font-size:13px;color:var(--text);
-  background:#fff;outline:none;transition:all .2s;font-family:inherit}
+  background:rgba(var(--ov),.04);outline:none;transition:all .2s;font-family:inherit}
 input:focus,select:focus,textarea:focus{
   border-color:var(--primary);box-shadow:0 0 0 3px rgba(0,212,255,.15),var(--glow-p);
   background:rgba(0,212,255,.03)}
-select option{background:#ffffff;color:var(--text)}
+select option{background:var(--surface-solid);color:var(--text)}
 
 /* ── TYPE TOGGLE ──────────────────────────────────────────────── */
 .type-sel{display:flex;gap:6px;margin-bottom:14px}
-.type-btn{flex:1;padding:9px;border:1px solid rgba(0,0,0,.12);border-radius:var(--rs);
-  background:rgba(0,0,0,.03);cursor:pointer;font-size:13px;font-weight:600;
+.type-btn{flex:1;padding:9px;border:1px solid rgba(var(--ov),.12);border-radius:var(--rs);
+  background:rgba(var(--ov),.03);cursor:pointer;font-size:13px;font-weight:600;
   text-align:center;transition:all .2s;color:var(--text2)}
 .type-btn.income.sel{border-color:var(--success);background:rgba(0,232,122,.1);
   color:var(--success);box-shadow:var(--glow-s)}
@@ -153,7 +160,7 @@ select option{background:#ffffff;color:var(--text)}
   color:var(--danger);box-shadow:var(--glow-d)}
 
 /* ── PROGRESS ─────────────────────────────────────────────────── */
-.pbar{height:6px;background:rgba(0,0,0,.08);border-radius:20px;overflow:hidden;margin-top:7px}
+.pbar{height:6px;background:rgba(var(--ov),.08);border-radius:20px;overflow:hidden;margin-top:7px}
 .pfill{height:100%;border-radius:20px;transition:width .6s cubic-bezier(.4,0,.2,1)}
 
 /* ── FILTER BAR ───────────────────────────────────────────────── */
@@ -193,7 +200,7 @@ select option{background:#ffffff;color:var(--text)}
 .conf{position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(4px);
   z-index:300;display:none;align-items:center;justify-content:center}
 .conf.open{display:flex}
-.conf-box{background:#ffffff;border:1px solid rgba(255,59,107,.3);
+.conf-box{background:var(--surface-solid);border:1px solid rgba(255,59,107,.3);
   border-radius:var(--r);padding:22px;max-width:340px;width:90%;
   box-shadow:var(--glow-d),var(--shl)}
 .conf-box h3{font-size:15px;font-weight:700;margin-bottom:7px;color:var(--text)}
@@ -201,7 +208,7 @@ select option{background:#ffffff;color:var(--text)}
 
 /* ── TOAST ────────────────────────────────────────────────────── */
 .toast{position:fixed;bottom:24px;right:24px;
-  background:#ffffff;color:var(--text);
+  background:var(--surface-solid);color:var(--text);
   border:1px solid rgba(0,212,255,.3);padding:10px 18px;border-radius:var(--rs);
   font-size:13px;font-weight:600;box-shadow:var(--glow-p),var(--shl);
   z-index:500;opacity:0;transform:translateY(8px);transition:all .3s;pointer-events:none}
@@ -229,6 +236,13 @@ select option{background:#ffffff;color:var(--text)}
 @keyframes pulse-cyan{0%,100%{box-shadow:0 0 8px rgba(0,212,255,.3)}50%{box-shadow:0 0 20px rgba(0,212,255,.6)}}
 .card-hi{animation:pulse-cyan 4s ease-in-out infinite}
 </style>
+<script>
+(function () {
+  var saved = localStorage.getItem('coach-theme');
+  var theme = saved || ((window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light');
+  document.documentElement.setAttribute('data-theme', theme);
+})();
+</script>
 </head>
 <body>
 
@@ -246,7 +260,7 @@ select option{background:#ffffff;color:var(--text)}
     <div class="nav-item" onclick="nav('gbm')"><span class="ico">📈</span>Plan de Inversiones</div>
     <div class="nav-label">Análisis</div>
     <div class="nav-item" onclick="nav('indicators')"><span class="ico">📐</span>Indicadores</div>
-    <div style="border-top:1px solid rgba(0,0,0,.08);margin:10px 0 6px"></div>
+    <div style="border-top:1px solid rgba(var(--ov),.08);margin:10px 0 6px"></div>
     <div class="nav-item" onclick="nav('debts')" style="opacity:.35;font-size:12px"><span class="ico" style="font-size:12px">🏦</span>Deudas</div>
     <div class="nav-item" onclick="nav('patrimonio')" style="opacity:.35;font-size:12px"><span class="ico" style="font-size:12px">🏛️</span>Patrimonio</div>
     <div class="nav-item" onclick="nav('transactions')" style="opacity:.35;font-size:12px"><span class="ico" style="font-size:12px">💳</span>Transacciones</div>
@@ -272,6 +286,7 @@ select option{background:#ffffff;color:var(--text)}
     <div class="topbar-actions">
       <span class="ts tm" id="dateLabel"></span>
       <button class="btn btn-p" onclick="openTxModal()">+ Nueva transacción</button>
+      <button class="theme-toggle-btn" id="theme-toggle-btn" onclick="toggleTheme()" title="Cambiar tema claro/oscuro" aria-label="Cambiar tema claro/oscuro">🌙</button>
     </div>
   </div>
 
@@ -648,6 +663,7 @@ const ym = d => d ? d.slice(0,7) : '';
 const nowYM = () => new Date().toISOString().slice(0,7);
 const save = () => localStorage.setItem(KEY, JSON.stringify(S));
 const load = () => { try { const d=localStorage.getItem(KEY); if(d) S={...S,...JSON.parse(d)}; } catch(e){} };
+const cssVar = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
 
 function fmtDate(d) {
   if(!d) return '';
@@ -671,6 +687,17 @@ function toast(msg) {
 }
 
 function killChart(c) { if(c) c.destroy(); return null; }
+
+function toggleTheme(){
+  const html=document.documentElement;
+  const next=html.getAttribute('data-theme')==='dark'?'light':'dark';
+  html.setAttribute('data-theme',next);
+  localStorage.setItem('coach-theme',next);
+  const btn=document.getElementById('theme-toggle-btn');
+  if(btn) btn.textContent=next==='dark'?'☀️':'🌙';
+  const activa=SECS.find(s=>document.getElementById('s-'+s)?.classList.contains('active'));
+  if(activa) RENDERS[activa]?.();
+}
 
 // ─── NAVIGATION ──────────────────────────────────────────────────────────────
 const SECS=['dashboard','transactions','budgets','debts','goals','patrimonio','indicators','gbm'];
@@ -847,8 +874,8 @@ function renderBudgetChart() {
       {label:'Gastado',data:S.budgets.map(b=>spentCat(b.cat,m)),backgroundColor:'#ef444488',borderRadius:5},
       {label:'Límite',data:S.budgets.map(b=>b.limit),backgroundColor:'#3b82f622',borderColor:'#3b82f6',borderWidth:1.5,borderRadius:5}
     ]
-  },options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{boxWidth:10}}},
-    scales:{y:{ticks:{callback:v=>'$'+v.toLocaleString('es-MX')},grid:{color:'rgba(255,255,255,.08)'}},x:{grid:{display:false}}}}});
+  },options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{boxWidth:10,color:cssVar('--text2')}}},
+    scales:{y:{ticks:{color:cssVar('--text3'),callback:v=>'$'+v.toLocaleString('es-MX')},grid:{color:'rgba('+cssVar('--ov')+',.08)'}},x:{ticks:{color:cssVar('--text3')},grid:{display:false}}}}});
 }
 
 function openBudgetModal(id=null) {
@@ -1243,11 +1270,11 @@ function renderGBM() {
         </div>
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;margin-bottom:8px">
-        <div style="background:rgba(0,0,0,.03);border-radius:7px;padding:8px 10px">
+        <div style="background:rgba(var(--ov),.03);border-radius:7px;padding:8px 10px">
           <div style="font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px">Capital</div>
           <div style="font-size:13px;font-weight:700">${fmt(i.invested||0)}</div>
         </div>
-        <div style="background:rgba(0,0,0,.03);border-radius:7px;padding:8px 10px">
+        <div style="background:rgba(var(--ov),.03);border-radius:7px;padding:8px 10px">
           <div style="font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px">Valor actual</div>
           <div style="font-size:13px;font-weight:700;color:${tc}">${fmt(i.val)}</div>
         </div>
@@ -1255,7 +1282,7 @@ function renderGBM() {
           <div style="font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px">Ganancia/Pérdida</div>
           <div style="font-size:13px;font-weight:700;color:${i.pnl>=0?'var(--success)':'var(--danger)'}">${i.pnl>=0?'+':''}${fmt(i.pnl)}</div>
         </div>
-        <div style="background:rgba(0,0,0,.03);border-radius:7px;padding:8px 10px">
+        <div style="background:rgba(var(--ov),.03);border-radius:7px;padding:8px 10px">
           <div style="font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px">Rend. anual</div>
           <div style="font-size:13px;font-weight:700;color:var(--warning)">${i.rate?`~${i.rate}%`:'—'}</div>
         </div>
@@ -1831,10 +1858,10 @@ function renderGBM() {
       type:'doughnut',
       data:{
         labels: invs.map(i=>i.name),
-        datasets:[{data:invs.map(i=>i.value||i.invested||0), backgroundColor:PALETTE.slice(0,invs.length), borderWidth:2, borderColor:'rgba(255,255,255,.08)'}]
+        datasets:[{data:invs.map(i=>i.value||i.invested||0), backgroundColor:PALETTE.slice(0,invs.length), borderWidth:2, borderColor:cssVar('--surface-solid')}]
       },
       options:{responsive:true, maintainAspectRatio:false, cutout:'62%',
-        plugins:{legend:{position:'bottom',labels:{boxWidth:10,padding:12,color:'#8892b0'}},
+        plugins:{legend:{position:'bottom',labels:{boxWidth:10,padding:12,color:cssVar('--text2')}},
         tooltip:{callbacks:{label:ctx=>` ${fmt(ctx.parsed)}`}}}}
     });
   }
@@ -1860,7 +1887,7 @@ function switchGBMTab(n) {
       } else {
         tab.style.background='transparent';
         tab.style.color='var(--text3)';
-        tab.style.border='1px solid rgba(255,255,255,.07)';
+        tab.style.border='1px solid rgba(var(--ov),.07)';
         tab.style.fontWeight='500';
         tab.style.boxShadow='none';
         tab.style.opacity='0.6';
@@ -2016,7 +2043,7 @@ function renderIndicatorsHTML(src) {
       <div style="font-size:28px;font-weight:800;letter-spacing:-.5px;margin-bottom:10px;color:var(--text)">${value}</div>
       <div style="font-size:10px;color:var(--primary);font-weight:600;padding:5px 10px;background:rgba(0,212,255,.06);border-radius:6px;font-family:monospace;margin-bottom:8px">📐 ${formula}</div>
       <div style="font-size:11px;color:var(--text2);margin-bottom:8px;line-height:1.55">${desc}</div>
-      <div style="font-size:10px;color:var(--text3);border-top:1px solid rgba(0,0,0,.07);padding-top:7px;line-height:1.8">${benchmark}</div>
+      <div style="font-size:10px;color:var(--text3);border-top:1px solid rgba(var(--ov),.07);padding-top:7px;line-height:1.8">${benchmark}</div>
     </div>`;
 
   const scColor2=s=>s>=80?'var(--success)':s>=50?'#f97316':'var(--danger)';
@@ -2128,7 +2155,7 @@ function renderIndicatorsHTML(src) {
                 <span style="font-size:10px;color:${pct>=100?'var(--success)':'var(--text3)'}">${pct>=100?'✅ lograda':'−'+fmt(falta)}</span>
               </div>
             </div>
-            ${segs?`<div style="height:5px;border-radius:20px;overflow:hidden;background:rgba(0,0,0,.1);display:flex">
+            ${segs?`<div style="height:5px;border-radius:20px;overflow:hidden;background:rgba(var(--ov),.1);display:flex">
               ${segs.map(s=>{const sw=Math.min(100,s.a/(g.target||500000)*100);return sw>0?`<div style="width:${sw}%;background:${s.col};height:100%"></div>`:''}).join('')}
             </div>
             <div style="display:flex;gap:8px;margin-top:4px;flex-wrap:wrap">
@@ -2186,7 +2213,7 @@ function renderIndicatorsHTML(src) {
         <span class="badge b-n" style="font-size:10px">Separado del resto</span>
       </div>
       <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px">
-        <div style="background:rgba(0,0,0,.03);border-radius:8px;padding:10px;text-align:center"><div style="font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px">Deuda original</div><div style="font-size:14px;font-weight:800">${fmt(auto2.total||auto2.balance)}</div></div>
+        <div style="background:rgba(var(--ov),.03);border-radius:8px;padding:10px;text-align:center"><div style="font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px">Deuda original</div><div style="font-size:14px;font-weight:800">${fmt(auto2.total||auto2.balance)}</div></div>
         <div style="background:rgba(255,59,107,.07);border-radius:8px;padding:10px;text-align:center"><div style="font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px">Saldo pendiente</div><div style="font-size:14px;font-weight:800;color:var(--danger)">${fmt(auto2.balance)}</div></div>
         <div style="background:rgba(0,232,122,.07);border-radius:8px;padding:10px;text-align:center"><div style="font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px">Ya pagado</div><div style="font-size:14px;font-weight:800;color:var(--success)">${fmt((auto2.total||auto2.balance)-auto2.balance)}</div></div>
         <div style="background:rgba(255,217,61,.07);border-radius:8px;padding:10px;text-align:center"><div style="font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px">Mensualidad</div><div style="font-size:14px;font-weight:800;color:var(--warning)">${fmt(auto2.min)}</div></div>
@@ -2194,7 +2221,7 @@ function renderIndicatorsHTML(src) {
       ${(()=>{const orig=auto2.total||auto2.balance,paid=orig-auto2.balance,pct=orig>0?Math.min(100,paid/orig*100):0,meses=auto2.min>0?Math.ceil(auto2.balance/auto2.min):null;
       return `<div style="margin-bottom:10px"><div style="display:flex;justify-content:space-between;font-size:10px;color:var(--text3);margin-bottom:5px"><span>Progreso pagado</span><span style="font-weight:700;color:var(--warning)">${pct.toFixed(1)}%</span></div>
         <div class="pbar" style="height:8px"><div class="pfill" style="width:${pct}%;background:linear-gradient(90deg,var(--warning),var(--success))"></div></div></div>
-        <div style="display:flex;gap:16px;flex-wrap:wrap;font-size:11px;color:var(--text2);padding-top:10px;border-top:1px solid rgba(0,0,0,.07)">
+        <div style="display:flex;gap:16px;flex-wrap:wrap;font-size:11px;color:var(--text2);padding-top:10px;border-top:1px solid rgba(var(--ov),.07)">
           ${meses?`<span>⏱️ <strong style="color:var(--text)">${meses} meses</strong> restantes (~${Math.round(meses/12*10)/10} años)</span>`:''}
           <span>💸 Interés anual est. <strong style="color:var(--danger)">${fmt(Math.round(auto2.balance*(auto2.rate/100)))}</strong></span>
           ${auto2.day?`<span>📅 Corte día <strong>${auto2.day}</strong></span>`:''}
@@ -2302,10 +2329,10 @@ function renderIndicators() {
   const _hist2 = (S.indicatorHistory||[]).slice().reverse(); // más reciente primero
   const _activeM = indActiveMonth || 'live';
 
-  const _tabBar = `<div style="display:flex;gap:5px;margin-bottom:18px;padding:5px;background:rgba(0,0,0,.04);border-radius:12px;flex-wrap:wrap;overflow-x:auto">
+  const _tabBar = `<div style="display:flex;gap:5px;margin-bottom:18px;padding:5px;background:rgba(var(--ov),.04);border-radius:12px;flex-wrap:wrap;overflow-x:auto">
     <button onclick="switchIndMonth('live')"
       style="padding:8px 16px;border-radius:8px;cursor:pointer;font-family:inherit;font-size:12px;white-space:nowrap;transition:all .2s;
-        border:${_activeM==='live'?'2px solid var(--primary)':'1px solid rgba(0,0,0,.1)'};
+        border:${_activeM==='live'?'2px solid var(--primary)':'1px solid rgba(var(--ov),.1)'};
         background:${_activeM==='live'?'rgba(0,212,255,.1)':'transparent'};
         color:${_activeM==='live'?'var(--primary)':'var(--text2)'};
         font-weight:${_activeM==='live'?800:500}">
@@ -2314,7 +2341,7 @@ function renderIndicators() {
     ${_hist2.filter(s=>s.month!==_curM).map(snap=>`
     <button onclick="switchIndMonth('${snap.month}')"
       style="padding:8px 16px;border-radius:8px;cursor:pointer;font-family:inherit;font-size:12px;white-space:nowrap;transition:all .2s;
-        border:${_activeM===snap.month?'2px solid var(--primary)':'1px solid rgba(0,0,0,.1)'};
+        border:${_activeM===snap.month?'2px solid var(--primary)':'1px solid rgba(var(--ov),.1)'};
         background:${_activeM===snap.month?'rgba(0,212,255,.1)':'transparent'};
         color:${_activeM===snap.month?'var(--primary)':'var(--text2)'};
         font-weight:${_activeM===snap.month?800:500}">
@@ -2631,14 +2658,14 @@ function renderDashboard() {
   for(let i=curMIdx; i<=11; i++) tabs.push(`${curYear}-${String(i+1).padStart(2,'0')}`);
 
   document.getElementById('d-month-tabs').innerHTML=`
-    <div style="display:flex;gap:4px;flex-wrap:wrap;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:5px">
+    <div style="display:flex;gap:4px;flex-wrap:wrap;background:rgba(var(--ov),.03);border:1px solid rgba(var(--ov),.08);border-radius:12px;padding:5px">
       ${tabs.map(mo=>{
         const mn=parseInt(mo.split('-')[1])-1;
         const active=mo===m;
         const fut=mo>nowYM();
         return `<button onclick="setDashMonth('${mo}')" style="padding:7px 18px;border-radius:8px;border:none;cursor:pointer;font-size:12px;font-weight:${active?700:500};font-family:inherit;letter-spacing:.01em;transition:all .2s;
           background:${active?'linear-gradient(135deg,#0099ff,#00d4ff)':'transparent'};
-          color:${active?'#000':fut?'rgba(255,255,255,.35)':'var(--text2)'};
+          color:${active?'#000':fut?'var(--text3)':'var(--text2)'};
           ${active?'box-shadow:0 0 14px rgba(0,212,255,.4);':''}">${MN[mn]}</button>`;
       }).join('')}
     </div>
@@ -2718,7 +2745,7 @@ function renderDashboard() {
                   :                '⚠️ Sin fondos — meta: ' + fmt(EF_TARGET);
 
   document.getElementById('d-emergency').innerHTML=`
-    <div style="padding:10px 14px;border-radius:10px;border:1px solid ${efColor};background:${efPct>=100?'rgba(0,232,122,.04)':'rgba(255,255,255,.02)'};display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+    <div style="padding:10px 14px;border-radius:10px;border:1px solid ${efColor};background:${efPct>=100?'rgba(0,232,122,.04)':'rgba(var(--ov),.02)'};display:flex;align-items:center;gap:14px;flex-wrap:wrap">
       <span style="font-size:16px;flex-shrink:0">🛡️</span>
       <div style="flex:1;min-width:140px">
         <div style="display:flex;align-items:baseline;gap:6px;margin-bottom:4px">
@@ -3029,7 +3056,7 @@ function renderSpecials(freeMonth, refDate=new Date()) {
           <span class="ts tm">Meta: ${fmt(maestriaTarget)} · oct 2027</span>
         </div>
         <!-- Barra principal segmentada -->
-        <div style="height:12px;border-radius:20px;overflow:hidden;background:rgba(0,0,0,.09);display:flex;margin-bottom:10px">
+        <div style="height:12px;border-radius:20px;overflow:hidden;background:rgba(var(--ov),.09);display:flex;margin-bottom:10px">
           ${comps.map(c=>{
             const w=Math.min(99.9,(c.a/maestriaTarget)*100);
             return w>0?`<div style="width:${w}%;background:${c.col};height:100%"></div>`:'';
@@ -3098,7 +3125,7 @@ function renderSpecials(freeMonth, refDate=new Date()) {
           </div>
           <!-- Fases -->
           <div style="display:flex;flex-direction:column;gap:4px;padding:0 12px 10px">
-            <div style="display:flex;align-items:center;justify-content:space-between;background:rgba(0,0,0,.04);border-radius:6px;padding:7px 10px">
+            <div style="display:flex;align-items:center;justify-content:space-between;background:rgba(var(--ov),.04);border-radius:6px;padding:7px 10px">
               <div>
                 <div style="font-size:10px;font-weight:700;color:var(--primary);text-transform:uppercase;letter-spacing:.05em">Fase 1 — Ahora → ene 2027</div>
                 <div style="font-size:11px;color:var(--text2);margin-top:2px">
@@ -3200,7 +3227,7 @@ function renderSpecials(freeMonth, refDate=new Date()) {
               <span style="font-size:12px;font-weight:700;color:var(--success)">${d.name}</span>
               <span style="font-size:11px;font-weight:600;color:var(--success)">Termina: ${mxDate(dEnd)}</span>
             </div>
-            <div class="pbar" style="height:7px;margin-bottom:5px;background:rgba(0,0,0,.09)">
+            <div class="pbar" style="height:7px;margin-bottom:5px;background:rgba(var(--ov),.09)">
               <div class="pfill" style="width:${dPct}%;background:var(--success);box-shadow:0 0 8px var(--success)"></div>
             </div>
             <div class="flex jb">
@@ -3223,7 +3250,7 @@ function renderSpecials(freeMonth, refDate=new Date()) {
               <span style="font-size:12px;font-weight:700;color:var(--warning)">${d.name}</span>
               <span style="font-size:11px;font-weight:600;color:var(--warning)">~${mxDate(dEnd)}</span>
             </div>
-            <div class="pbar" style="height:7px;margin-bottom:5px;background:rgba(0,0,0,.09)">
+            <div class="pbar" style="height:7px;margin-bottom:5px;background:rgba(var(--ov),.09)">
               <div class="pfill" style="width:${dPct}%;background:var(--warning);box-shadow:0 0 8px var(--warning)"></div>
             </div>
             <div class="flex jb">
@@ -3241,7 +3268,7 @@ function renderSpecials(freeMonth, refDate=new Date()) {
             <span style="font-size:12px;font-weight:700;color:var(--danger)">${autoDebt.name}</span>
             <span style="font-size:11px;font-weight:600;color:var(--danger)">~${mxDate(autoFree)}</span>
           </div>
-          <div class="pbar" style="height:7px;margin-bottom:5px;background:rgba(0,0,0,.09)">
+          <div class="pbar" style="height:7px;margin-bottom:5px;background:rgba(var(--ov),.09)">
             <div class="pfill" style="width:${Math.min(100,((autoDebt.total-autoPb)/autoDebt.total)*100)}%;background:var(--danger);box-shadow:0 0 8px var(--danger)"></div>
           </div>
           <div class="flex jb">
@@ -3286,9 +3313,9 @@ function renderDashCharts(mtx) {
     {label:'Balance',data:mBal,borderColor:'#3b82f6',backgroundColor:'#3b82f618',fill:true,tension:.4,borderWidth:2,pointBackgroundColor:'#3b82f6',pointRadius:4},
     {label:'Ingresos',data:mInc,borderColor:'#10b981',borderDash:[4,4],tension:.4,borderWidth:1.5,pointRadius:3},
     {label:'Gastos',data:mExp,borderColor:'#ef4444',borderDash:[4,4],tension:.4,borderWidth:1.5,pointRadius:3}
-  ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{boxWidth:9,padding:12}},
+  ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{boxWidth:9,padding:12,color:cssVar('--text2')}},
     tooltip:{callbacks:{label:c=>` ${c.dataset.label}: ${fmt(c.parsed.y)}`}}},
-    scales:{y:{ticks:{callback:v=>'$'+(v/1000).toFixed(0)+'k'},grid:{color:'rgba(255,255,255,.08)'}},x:{grid:{display:false}}}}});
+    scales:{y:{ticks:{color:cssVar('--text3'),callback:v=>'$'+(v/1000).toFixed(0)+'k'},grid:{color:'rgba('+cssVar('--ov')+',.08)'}},x:{ticks:{color:cssVar('--text3')},grid:{display:false}}}}});
 }
 
 function renderSubscriptions(refDate=new Date()) {
@@ -3346,7 +3373,7 @@ function renderSubscriptions(refDate=new Date()) {
               <span style="font-size:16px">${r.icon}</span>
               <div>
                 <div style="font-size:13px;font-weight:600;color:var(--text)">${r.name}</div>
-                <span style="font-size:10px;padding:1px 6px;border-radius:4px;background:rgba(0,0,0,.09);color:var(--text2)">${r.tag}</span>
+                <span style="font-size:10px;padding:1px 6px;border-radius:4px;background:rgba(var(--ov),.09);color:var(--text2)">${r.tag}</span>
               </div>
             </div>
             <div style="font-size:15px;font-weight:800;color:${r.color}">${fmt(r.amount)}<span style="font-size:10px;font-weight:400;color:var(--text3)">/mes</span></div>
@@ -3376,7 +3403,7 @@ function renderSubscriptions(refDate=new Date()) {
                 <span style="font-size:12px;font-weight:600;color:var(--text)">${d.name}</span>
                 <span style="font-size:11px;font-weight:700;color:${urgency}">Termina: ${mxDate(dEnd)}</span>
               </div>
-              <div class="pbar" style="height:6px;margin-bottom:6px;background:rgba(0,0,0,.09)">
+              <div class="pbar" style="height:6px;margin-bottom:6px;background:rgba(var(--ov),.09)">
                 <div class="pfill" style="width:${pct}%;background:${urgency};box-shadow:0 0 8px ${urgency}"></div>
               </div>
               <div class="flex jb">
@@ -3713,7 +3740,7 @@ function renderPatrimonio() {
               </div>
               <span style="font-size:14px;font-weight:800;color:${col}">${fmt(i.value)}</span>
             </div>
-            <div class="pbar" style="height:5px;background:rgba(0,0,0,.09)">
+            <div class="pbar" style="height:5px;background:rgba(var(--ov),.09)">
               <div class="pfill" style="width:${pct}%;background:${col};box-shadow:0 0 6px ${col}"></div>
             </div>
             <div class="ts tm" style="margin-top:4px">${pct.toFixed(1)}% del total de activos</div>
@@ -3751,7 +3778,7 @@ function renderPatrimonio() {
                 <button class="btn btn-o btn-sm btn-ico" onclick="askDel('activo',()=>delActivo('${a.id}'))">🗑️</button>
               </div>
             </div>
-            <div class="pbar" style="height:5px;background:rgba(0,0,0,.09)">
+            <div class="pbar" style="height:5px;background:rgba(var(--ov),.09)">
               <div class="pfill" style="width:${pct}%;background:${col};box-shadow:0 0 6px ${col}"></div>
             </div>
             <div class="ts tm" style="margin-top:4px">${pct.toFixed(1)}% del total de activos</div>
@@ -3789,7 +3816,7 @@ function renderPatrimonio() {
                 <button class="btn btn-o btn-sm btn-ico" onclick="askDel('activo',()=>delActivo('${a.id}'))">🗑️</button>
               </div>
             </div>
-            <div class="pbar" style="height:5px;background:rgba(0,0,0,.09)">
+            <div class="pbar" style="height:5px;background:rgba(var(--ov),.09)">
               <div class="pfill" style="width:${pct}%;background:${col};box-shadow:0 0 6px ${col}"></div>
             </div>
             <div class="ts tm" style="margin-top:4px">${pct.toFixed(1)}% del total de activos</div>
@@ -3832,8 +3859,8 @@ function renderPatrimonio() {
   const values=[..._patInvVals,  ...(_btcMXNPat>0?[_btcMXNPat]:[]), ...(S.activos||[]).map(a=>a.value)];
   const colors=[..._patInvColors,...(_btcMXNPat>0?['#f7931a']:[]),   ...(S.activos||[]).map(a=>ACTIVO_COLORS[a.type]||'#64748b')];
   const ctx=document.getElementById('ch-pat');
-  if(ctx&&labels.length) chPat=new Chart(ctx,{type:'doughnut',data:{labels,datasets:[{data:values,backgroundColor:colors,borderWidth:2,borderColor:'rgba(0,0,0,.3)'}]},
-    options:{responsive:true,maintainAspectRatio:false,cutout:'60%',plugins:{legend:{position:'bottom',labels:{boxWidth:10,padding:10,color:'#8892b0',font:{size:11}}},
+  if(ctx&&labels.length) chPat=new Chart(ctx,{type:'doughnut',data:{labels,datasets:[{data:values,backgroundColor:colors,borderWidth:2,borderColor:cssVar('--surface-solid')}]},
+    options:{responsive:true,maintainAspectRatio:false,cutout:'60%',plugins:{legend:{position:'bottom',labels:{boxWidth:10,padding:10,color:cssVar('--text2'),font:{size:11}}},
     tooltip:{callbacks:{label:c=>` ${c.label}: ${fmt(c.parsed)} (${(c.parsed/totalActivos*100).toFixed(1)}%)`}}}}});
 }
 
@@ -4133,11 +4160,11 @@ function renderBtcHistory() {
           {
             label: 'Invertido acumulado',
             data: dataInv,
-            borderColor: 'rgba(255,255,255,.3)',
+            borderColor: 'rgba('+cssVar('--ov')+',.3)',
             borderWidth: 1.5,
             borderDash: [5,4],
             pointRadius: 4,
-            pointBackgroundColor: 'rgba(255,255,255,.5)',
+            pointBackgroundColor: 'rgba('+cssVar('--ov')+',.5)',
             fill: false,
             tension: 0.3
           },
@@ -4148,7 +4175,7 @@ function renderBtcHistory() {
             borderWidth: 2.5,
             pointRadius: 5,
             pointBackgroundColor: lineColor,
-            pointBorderColor: '#060614',
+            pointBorderColor: cssVar('--surface-solid'),
             pointBorderWidth: 2,
             fill: {target: 0, above: fillColor, below: 'rgba(255,59,107,.12)'},
             tension: 0.3
@@ -4167,10 +4194,10 @@ function renderBtcHistory() {
           }
         },
         scales: {
-          x: { grid: { display: false }, ticks: { color: '#4a5568', font: { size: 10 } } },
+          x: { grid: { display: false }, ticks: { color: cssVar('--text3'), font: { size: 10 } } },
           y: {
-            grid: { color: 'rgba(255,255,255,.06)' },
-            ticks: { color: '#4a5568', font: { size: 10 }, callback: v => '$'+(v/1000).toFixed(0)+'k' }
+            grid: { color: 'rgba('+cssVar('--ov')+',.06)' },
+            ticks: { color: cssVar('--text3'), font: { size: 10 }, callback: v => '$'+(v/1000).toFixed(0)+'k' }
           }
         }
       }
@@ -4184,8 +4211,8 @@ function switchBtcTab(key) {
   if(pane) pane.style.display='block';
   document.querySelectorAll('[id^="btc-tab-"]').forEach(btn=>{
     btn.style.background='transparent';
-    btn.style.color='rgba(255,255,255,.45)';
-    btn.style.borderColor='rgba(255,255,255,.08)';
+    btn.style.color='var(--text3)';
+    btn.style.borderColor='rgba(var(--ov),.08)';
   });
   const tab=document.getElementById('btc-tab-'+key);
   if(tab){ tab.style.background='rgba(247,147,26,.12)'; tab.style.color='#f7931a'; tab.style.borderColor='rgba(247,147,26,.4)'; }
@@ -4291,6 +4318,8 @@ function init() {
   const now=new Date();
   document.getElementById('dateLabel').textContent=now.toLocaleDateString('es-MX',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
   document.getElementById('f-month').value=nowYM();
+  const themeBtn=document.getElementById('theme-toggle-btn');
+  if(themeBtn) themeBtn.textContent=document.documentElement.getAttribute('data-theme')==='dark'?'☀️':'🌙';
 
   const check=()=>{
     const mb=document.getElementById('menuBtn');

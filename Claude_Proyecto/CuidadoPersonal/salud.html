@@ -15,43 +15,54 @@
   --p:#b06eff;--p-l:rgba(176,110,255,.1);
   --w:#ffd93d;--w-l:rgba(255,217,61,.1);
   --r:#ff3b6b;--r-l:rgba(255,59,107,.1);
-  --bg:#060614;--surface:rgba(255,255,255,.04);--border:rgba(255,255,255,.08);
+  --bg:#060614;--surface:#161619;--surface-2:#18181c;--surface-3:#1b1b20;--border:rgba(var(--ov),.08);--ov:255,255,255;
   --text:#e8eaf6;--text2:#8892b0;--text3:#4a5568;
   --sw:245px;--r14:14px;--rs:9px;
   --sh:0 4px 24px rgba(0,0,0,.5);
 }
+:root[data-theme="light"]{
+  --g:#00a758;--g-d:#008a48;--g-l:rgba(0,167,88,.12);
+  --o:#b8492a;--o-l:rgba(184,73,42,.12);
+  --b:#2563eb;--b-l:rgba(37,99,235,.12);
+  --p:#7f4fb8;--p-l:rgba(127,79,184,.12);
+  --w:#a8790a;--w-l:rgba(168,121,10,.12);
+  --r:#c81e4d;--r-l:rgba(200,30,77,.12);
+  --bg:#f4f4f7;--surface:#ffffff;--surface-2:#ffffff;--surface-3:#ffffff;--border:rgba(var(--ov),.1);--ov:0,0,0;
+  --text:#16161a;--text2:#5c5f70;--text3:#82859a;
+  --sh:0 2px 14px rgba(0,0,0,.08);
+}
 body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);display:flex;min-height:100vh;font-size:14px}
 ::-webkit-scrollbar{width:4px;height:4px}
 ::-webkit-scrollbar-track{background:transparent}
-::-webkit-scrollbar-thumb{background:rgba(255,255,255,.12);border-radius:2px}
+::-webkit-scrollbar-thumb{background:rgba(var(--ov),.12);border-radius:2px}
 
 /* SIDEBAR */
-.sidebar{width:var(--sw);background:#161619;
-  border-right:1px solid rgba(255,255,255,.08);display:flex;flex-direction:column;
+.sidebar{width:var(--sw);background:var(--surface);
+  border-right:1px solid rgba(var(--ov),.08);display:flex;flex-direction:column;
   position:fixed;top:0;left:0;bottom:0;z-index:100;transition:transform .25s}
-.sb-logo{padding:20px;border-bottom:1px solid rgba(255,255,255,.06)}
+.sb-logo{padding:20px;border-bottom:1px solid rgba(var(--ov),.06)}
 .sb-logo h1{font-size:16px;font-weight:800;color:var(--text);letter-spacing:-.2px}
 .sb-logo p{font-size:10px;color:var(--text3);margin-top:3px;letter-spacing:.08em;text-transform:uppercase}
 .sb-nav{padding:10px 8px;flex:1;overflow-y:auto}
 .nav-label{font-size:9px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.1em;padding:12px 12px 4px}
 .nav-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:var(--rs);
   cursor:pointer;color:var(--text2);font-weight:500;font-size:13px;transition:all .2s;margin-bottom:2px;user-select:none}
-.nav-item:hover{background:rgba(255,255,255,.05);color:var(--text)}
+.nav-item:hover{background:rgba(var(--ov),.05);color:var(--text)}
 .nav-item.active{background:rgba(0,232,122,.1);color:var(--g);font-weight:600;border-left:2px solid var(--g)}
 .nav-item .ico{font-size:15px;width:20px;text-align:center;flex-shrink:0}
 
 /* MAIN */
 .main{margin-left:var(--sw);flex:1;display:flex;flex-direction:column;min-height:100vh}
-.topbar{background:#161619;border-bottom:1px solid rgba(255,255,255,.06);
+.topbar{background:var(--surface);border-bottom:1px solid rgba(var(--ov),.06);
   padding:0 24px;height:58px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
 .topbar-title{font-size:15px;font-weight:700}
 .content{padding:22px;flex:1}
 .section{display:none}.section.active{display:block}
 
 /* CARDS */
-.card{background:#18181c;border:1px solid rgba(255,255,255,.07);border-radius:var(--r14);padding:18px;
+.card{background:var(--surface-2);border:1px solid rgba(var(--ov),.07);border-radius:var(--r14);padding:18px;
   box-shadow:var(--sh);transition:border-color .2s,transform .2s,box-shadow .2s}
-.card:hover{border-color:rgba(255,255,255,.14);transform:translateY(-1px);box-shadow:0 6px 28px rgba(0,0,0,.5)}
+.card:hover{border-color:rgba(var(--ov),.14);transform:translateY(-1px);box-shadow:0 6px 28px rgba(0,0,0,.5)}
 .card-title{font-size:11px;font-weight:600;color:var(--text2);margin-bottom:8px;display:flex;align-items:center;gap:5px;text-transform:uppercase;letter-spacing:.06em}
 .card-val{font-size:26px;font-weight:800;color:var(--text);letter-spacing:-.5px}
 .card-sub{font-size:11px;color:var(--text3);margin-top:3px}
@@ -66,22 +77,24 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var
   border:none;cursor:pointer;font-size:13px;font-weight:600;transition:all .2s;white-space:nowrap;font-family:inherit}
 .btn-g{background:var(--g);color:#06170f}
 .btn-g:hover{filter:brightness(1.08);transform:translateY(-1px);box-shadow:var(--sh)}
-.btn-o{background:rgba(255,255,255,.05);color:var(--text2);border:1px solid rgba(255,255,255,.1)}
-.btn-o:hover{background:rgba(255,255,255,.09);color:var(--text)}
+.btn-o{background:rgba(var(--ov),.05);color:var(--text2);border:1px solid rgba(var(--ov),.1)}
+.btn-o:hover{background:rgba(var(--ov),.09);color:var(--text)}
 .btn-r{background:var(--r);color:#fff}
 .btn-r:hover{filter:brightness(1.1);transform:translateY(-1px)}
 .btn-sm{padding:5px 9px;font-size:11px}
 .btn-ico{padding:5px 8px}
+.theme-toggle-btn{background:rgba(var(--ov),.06);border:1px solid rgba(var(--ov),.12);color:var(--text);width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0}
+.theme-toggle-btn:hover{background:rgba(var(--ov),.12)}
 
 /* PROGRESS BAR */
-.pbar{height:6px;background:rgba(255,255,255,.08);border-radius:20px;overflow:hidden;margin-top:7px}
+.pbar{height:6px;background:rgba(var(--ov),.08);border-radius:20px;overflow:hidden;margin-top:7px}
 .pfill{height:100%;border-radius:20px;transition:width .6s cubic-bezier(.4,0,.2,1)}
 
 /* MODAL */
 .mo{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);
   z-index:200;align-items:center;justify-content:center;padding:16px}
 .mo.open{display:flex}
-.modal{background:#1b1b20;border:1px solid rgba(255,255,255,.09);
+.modal{background:var(--surface-3);border:1px solid rgba(var(--ov),.09);
   border-radius:var(--r14);box-shadow:var(--sh);width:100%;max-width:480px;max-height:92vh;overflow-y:auto;padding:22px}
 .modal-h{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
 .modal-title{font-size:17px;font-weight:700}
@@ -92,8 +105,8 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var
 .fg{margin-bottom:14px}
 .fr{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 label{display:block;font-size:10px;font-weight:700;color:var(--text2);margin-bottom:5px;text-transform:uppercase;letter-spacing:.07em}
-input,select,textarea{width:100%;padding:9px 12px;border:1px solid rgba(255,255,255,.1);border-radius:var(--rs);
-  font-size:13px;color:var(--text);background:rgba(255,255,255,.05);outline:none;transition:all .2s;font-family:inherit}
+input,select,textarea{width:100%;padding:9px 12px;border:1px solid rgba(var(--ov),.1);border-radius:var(--rs);
+  font-size:13px;color:var(--text);background:rgba(var(--ov),.05);outline:none;transition:all .2s;font-family:inherit}
 input:focus,select:focus,textarea:focus{border-color:var(--g);box-shadow:0 0 0 3px rgba(0,232,122,.12)}
 select option{background:#0d0d2a;color:var(--text)}
 
@@ -106,14 +119,14 @@ select option{background:#0d0d2a;color:var(--text)}
 .b-g{background:rgba(0,232,122,.15);color:var(--g);border:1px solid rgba(0,232,122,.25)}
 .b-o{background:rgba(255,107,53,.15);color:var(--o);border:1px solid rgba(255,107,53,.25)}
 .b-r{background:rgba(255,59,107,.15);color:var(--r);border:1px solid rgba(255,59,107,.25)}
-.b-n{background:rgba(255,255,255,.07);color:var(--text2)}
+.b-n{background:rgba(var(--ov),.07);color:var(--text2)}
 
 /* TABLE */
 .tw{overflow-x:auto;margin-top:10px}
 table{width:100%;border-collapse:collapse}
 th{text-align:left;padding:9px 12px;font-size:10px;font-weight:700;color:var(--g);
   border-bottom:1px solid rgba(0,232,122,.15);white-space:nowrap;text-transform:uppercase;letter-spacing:.08em}
-td{padding:11px 12px;border-bottom:1px solid rgba(255,255,255,.05);font-size:13px}
+td{padding:11px 12px;border-bottom:1px solid rgba(var(--ov),.05);font-size:13px}
 tr:last-child td{border-bottom:none}
 tbody tr:hover td{background:rgba(0,232,122,.02)}
 
@@ -121,13 +134,13 @@ tbody tr:hover td{background:rgba(0,232,122,.02)}
 .conf{position:fixed;inset:0;background:rgba(0,0,0,.75);
   z-index:300;display:none;align-items:center;justify-content:center}
 .conf.open{display:flex}
-.conf-box{background:#1b1b20;border:1px solid rgba(255,255,255,.1);border-radius:var(--r14);padding:22px;max-width:340px;width:90%}
+.conf-box{background:var(--surface-3);border:1px solid rgba(var(--ov),.1);border-radius:var(--r14);padding:22px;max-width:340px;width:90%}
 .conf-box h3{font-size:15px;font-weight:700;margin-bottom:7px}
 .conf-box p{color:var(--text2);font-size:13px;margin-bottom:18px}
 
 /* TOAST */
-.toast{position:fixed;bottom:24px;right:24px;background:#1b1b20;color:var(--text);
-  border:1px solid rgba(255,255,255,.1);padding:10px 18px;border-radius:var(--rs);
+.toast{position:fixed;bottom:24px;right:24px;background:var(--surface-3);color:var(--text);
+  border:1px solid rgba(var(--ov),.1);padding:10px 18px;border-radius:var(--rs);
   font-size:13px;font-weight:600;box-shadow:var(--sh);z-index:500;opacity:0;transform:translateY(8px);transition:all .3s;pointer-events:none}
 .toast.show{opacity:1;transform:translateY(0)}
 
@@ -150,15 +163,22 @@ tbody tr:hover td{background:rgba(0,232,122,.02)}
 .glass:hover{border-color:rgba(6,182,212,.8);transform:scale(1.1)}
 
 /* MEAL SLOT */
-.meal-slot{background:rgba(255,255,255,.03);border:1px dashed rgba(255,255,255,.1);border-radius:10px;padding:10px 12px;min-height:60px;cursor:pointer;transition:all .2s}
+.meal-slot{background:rgba(var(--ov),.03);border:1px dashed rgba(var(--ov),.1);border-radius:10px;padding:10px 12px;min-height:60px;cursor:pointer;transition:all .2s}
 .meal-slot:hover{border-color:rgba(0,232,122,.35);background:rgba(0,232,122,.04)}
-.meal-item{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.05);font-size:12px}
+.meal-item{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid rgba(var(--ov),.05);font-size:12px}
 .meal-item:last-child{border-bottom:none}
 
 @media(max-width:900px){.g4{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:640px){.sidebar{transform:translateX(-100%)}.sidebar.open{transform:translateX(0)}
   .main{margin-left:0}.g4,.g3,.g2{grid-template-columns:1fr}.fr{grid-template-columns:1fr}}
 </style>
+<script>
+(function () {
+  var saved = localStorage.getItem('coach-theme');
+  var theme = saved || ((window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) ? 'light' : 'dark');
+  document.documentElement.setAttribute('data-theme', theme);
+})();
+</script>
 </head>
 <body>
 
@@ -191,7 +211,7 @@ tbody tr:hover td{background:rgba(0,232,122,.02)}
     <div class="nav-label">Configuración</div>
     <div class="nav-item" onclick="nav('metas')"><span class="ico">🎯</span>Perfil & Metas</div>
   </nav>
-  <div style="padding:12px;border-top:1px solid rgba(255,255,255,.06);display:flex;flex-direction:column;gap:6px">
+  <div style="padding:12px;border-top:1px solid rgba(var(--ov),.06);display:flex;flex-direction:column;gap:6px">
     <button class="btn btn-o" style="width:100%;font-size:12px" onclick="exportData()">⬇️ Exportar datos</button>
   </div>
 </aside>
@@ -206,6 +226,7 @@ tbody tr:hover td{background:rgba(0,232,122,.02)}
     <div class="flex aic gap8">
       <span class="ts tm" id="dateLabel"></span>
       <button class="btn btn-g btn-sm" onclick="openAlimentoModal()">+ Registrar comida</button>
+      <button class="theme-toggle-btn" id="theme-toggle-btn" onclick="toggleTheme()" title="Cambiar tema claro/oscuro" aria-label="Cambiar tema claro/oscuro">🌙</button>
     </div>
   </div>
 
@@ -643,6 +664,17 @@ const fmtD = d => { if(!d)return''; const[y,m,day]=d.split('-'); const mn=['Ene'
 const save = () => localStorage.setItem(KEY, JSON.stringify(S));
 const load = () => { try { const d=localStorage.getItem(KEY); if(d) S={...S,...JSON.parse(d)}; } catch(e){} };
 const killChart = c => { if(c) c.destroy(); return null; };
+const cssVar = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+function toggleTheme(){
+  const html=document.documentElement;
+  const next=html.getAttribute('data-theme')==='dark'?'light':'dark';
+  html.setAttribute('data-theme',next);
+  localStorage.setItem('coach-theme',next);
+  const btn=document.getElementById('theme-toggle-btn');
+  if(btn) btn.textContent=next==='dark'?'☀️':'🌙';
+  const activa=SECS.find(s=>document.getElementById('s-'+s)?.classList.contains('active'));
+  if(activa) RENDERS[activa]?.();
+}
 
 function toast(msg) {
   const t=document.getElementById('toast');
@@ -742,7 +774,7 @@ function renderDashboard() {
       ${macroBar(sumProt(alHoy),S.metas.proteina||150,'var(--p)','💜 Proteína')}
       ${macroBar(sumCarbs(alHoy),S.metas.carbs||200,'var(--b)','💙 Carbohidratos')}
       ${macroBar(sumGra(alHoy),S.metas.grasa||65,'var(--w)','💛 Grasas')}
-      <div style="margin-top:12px;padding-top:12px;border-top:1px solid rgba(255,255,255,.06)">
+      <div style="margin-top:12px;padding-top:12px;border-top:1px solid rgba(var(--ov),.06)">
         <div class="flex jb">
           <span class="ts tm">Calorías de macros</span>
           <span class="ts" style="color:var(--text2)">${fmt(sumProt(alHoy)*4+sumCarbs(alHoy)*4+sumGra(alHoy)*9)} kcal</span>
@@ -786,7 +818,7 @@ function renderDashboard() {
           <span class="ts" style="color:var(--o)">${fmt(a.cal)} kcal</span>
         </div>`).join(''):`<div style="font-size:11px;color:var(--text3);padding:4px 0">Sin registros</div>`}
       </div>`).join('')}
-      <div style="border-top:1px solid rgba(255,255,255,.06);padding-top:10px;display:flex;justify-content:space-between">
+      <div style="border-top:1px solid rgba(var(--ov),.06);padding-top:10px;display:flex;justify-content:space-between">
         <span class="ts fw7">Total</span>
         <span class="ts fw7" style="color:var(--o)">${fmt(calCon)} kcal</span>
       </div>
@@ -800,7 +832,7 @@ function renderDashboard() {
         <button class="btn btn-g btn-sm" onclick="openEjercicioModal()">+ Agregar</button>
       </div>
       ${ejHoy.length?ejHoy.map(e=>`
-      <div style="display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.06)">
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid rgba(var(--ov),.06)">
         <div>
           <div style="font-size:13px;font-weight:600">${e.nombre}</div>
           <div class="ts tm">${TIPO_EJ[e.tipo]||e.tipo} · ${e.duracion} min</div>
@@ -960,9 +992,9 @@ function renderEjercicio() {
 function renderEjChart(labels,data) {
   chEj=killChart(chEj);
   const ctx=document.getElementById('ch-ej'); if(!ctx) return;
-  chEj=new Chart(ctx,{type:'bar',data:{labels,datasets:[{label:'Cal. quemadas',data,backgroundColor:'rgba(0,232,122,.5)',borderColor:'var(--g)',borderRadius:5,borderWidth:1.5}]},
+  chEj=new Chart(ctx,{type:'bar',data:{labels,datasets:[{label:'Cal. quemadas',data,backgroundColor:'rgba(0,232,122,.5)',borderColor:cssVar('--g'),borderRadius:5,borderWidth:1.5}]},
     options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
-      scales:{y:{grid:{color:'rgba(255,255,255,.06)'},ticks:{color:'#4a5568',callback:v=>v+' kcal'}},x:{grid:{display:false},ticks:{color:'#4a5568'}}}}});
+      scales:{y:{grid:{color:'rgba('+cssVar('--ov')+',.06)'},ticks:{color:cssVar('--text3'),callback:v=>v+' kcal'}},x:{grid:{display:false},ticks:{color:cssVar('--text3')}}}}});
 }
 
 function openEjercicioModal(id=null) {
@@ -1066,23 +1098,23 @@ function renderMedidas() {
   chPeso=killChart(chPeso);
   const ctx=document.getElementById('ch-peso');
   if(ctx) chPeso=new Chart(ctx,{type:'line',data:{labels,datasets:[
-    {label:'Peso (kg)',data,borderColor:'var(--g)',backgroundColor:'rgba(0,232,122,.1)',fill:true,tension:.4,pointRadius:5,pointBackgroundColor:'var(--g)',pointBorderColor:'#060614',pointBorderWidth:2,borderWidth:2.5}
+    {label:'Peso (kg)',data,borderColor:cssVar('--g'),backgroundColor:'rgba(0,232,122,.1)',fill:true,tension:.4,pointRadius:5,pointBackgroundColor:cssVar('--g'),pointBorderColor:cssVar('--surface-2'),pointBorderWidth:2,borderWidth:2.5}
   ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},
     tooltip:{callbacks:{label:ctx=>` ${ctx.parsed.y} kg`}}},
-    scales:{y:{grid:{color:'rgba(255,255,255,.06)'},ticks:{color:'#4a5568',callback:v=>v+' kg'}},x:{grid:{display:false},ticks:{color:'#4a5568'}}}}});
+    scales:{y:{grid:{color:'rgba('+cssVar('--ov')+',.06)'},ticks:{color:cssVar('--text3'),callback:v=>v+' kg'}},x:{grid:{display:false},ticks:{color:cssVar('--text3')}}}}});
 
   // Gráfica de composición corporal (cintura, brazo, muslo, % grasa)
   chComp=killChart(chComp);
   const ctxC=document.getElementById('ch-comp');
   if(ctxC) chComp=new Chart(ctxC,{type:'line',data:{labels,datasets:[
-    {label:'Cintura (cm)',data:sorted.map(m=>m.cintura||null),borderColor:'var(--o)',backgroundColor:'transparent',tension:.4,pointRadius:4,borderWidth:2,spanGaps:true},
-    {label:'Brazo (cm)',data:sorted.map(m=>m.brazo||null),borderColor:'var(--b)',backgroundColor:'transparent',tension:.4,pointRadius:4,borderWidth:2,spanGaps:true},
-    {label:'Muslo (cm)',data:sorted.map(m=>m.muslo||null),borderColor:'var(--w)',backgroundColor:'transparent',tension:.4,pointRadius:4,borderWidth:2,spanGaps:true},
-    {label:'% Grasa',data:sorted.map(m=>m.grasa||null),borderColor:'var(--p)',backgroundColor:'transparent',tension:.4,pointRadius:4,borderWidth:2,spanGaps:true,yAxisID:'y1'}
-  ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:true,position:'bottom',labels:{color:'#8892b0',boxWidth:10,font:{size:10}}}},
-    scales:{y:{grid:{color:'rgba(255,255,255,.06)'},ticks:{color:'#4a5568',callback:v=>v+' cm'}},
-      y1:{position:'right',grid:{display:false},ticks:{color:'#4a5568',callback:v=>v+'%'}},
-      x:{grid:{display:false},ticks:{color:'#4a5568'}}}}});
+    {label:'Cintura (cm)',data:sorted.map(m=>m.cintura||null),borderColor:cssVar('--o'),backgroundColor:'transparent',tension:.4,pointRadius:4,borderWidth:2,spanGaps:true},
+    {label:'Brazo (cm)',data:sorted.map(m=>m.brazo||null),borderColor:cssVar('--b'),backgroundColor:'transparent',tension:.4,pointRadius:4,borderWidth:2,spanGaps:true},
+    {label:'Muslo (cm)',data:sorted.map(m=>m.muslo||null),borderColor:cssVar('--w'),backgroundColor:'transparent',tension:.4,pointRadius:4,borderWidth:2,spanGaps:true},
+    {label:'% Grasa',data:sorted.map(m=>m.grasa||null),borderColor:cssVar('--p'),backgroundColor:'transparent',tension:.4,pointRadius:4,borderWidth:2,spanGaps:true,yAxisID:'y1'}
+  ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:true,position:'bottom',labels:{color:cssVar('--text2'),boxWidth:10,font:{size:10}}}},
+    scales:{y:{grid:{color:'rgba('+cssVar('--ov')+',.06)'},ticks:{color:cssVar('--text3'),callback:v=>v+' cm'}},
+      y1:{position:'right',grid:{display:false},ticks:{color:cssVar('--text3'),callback:v=>v+'%'}},
+      x:{grid:{display:false},ticks:{color:cssVar('--text3')}}}}});
 }
 
 function openMedidaModal(id=null) {
@@ -1150,7 +1182,7 @@ function renderPlan() {
               ${items.length?items.map(a=>`<div style="font-size:10px;color:var(--text);margin-bottom:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="${a.nombre}">${a.nombre}</div>`).join(''):`<div style="font-size:10px;color:var(--text3)">—</div>`}
             </div>`;
           }).join('')}
-          <div style="margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,.06)">
+          <div style="margin-top:8px;padding-top:8px;border-top:1px solid rgba(var(--ov),.06)">
             <div class="pbar" style="height:4px"><div class="pfill" style="width:${pct}%;background:${colPct}"></div></div>
             <div style="font-size:10px;color:${colPct};margin-top:3px;font-weight:700">${fmt(calDia)} kcal</div>
           </div>
@@ -1202,7 +1234,7 @@ function renderProgreso() {
                 {l:'💙 Carbs/día',v:fmt(avgCarbs)+'g',meta:(S.metas.carbs||200)+'g meta',c:'var(--b)'},
                 {l:'💛 Grasa/día',v:fmt(avgGra)+'g',meta:(S.metas.grasa||65)+'g meta',c:'var(--w)'},
                 {l:'⚡ Cal. quemadas/día',v:fmt(avgCalQ)+' kcal',meta:`${diasEj.length} días activos`,c:'var(--g)'},
-              ].map(r=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.05)">
+              ].map(r=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid rgba(var(--ov),.05)">
                 <span style="font-size:12px;color:var(--text2)">${r.l}</span>
                 <div style="text-align:right">
                   <div style="font-size:14px;font-weight:800;color:${r.c}">${r.v}</div>
@@ -1218,10 +1250,10 @@ function renderProgreso() {
   chCal=killChart(chCal);
   const ctx=document.getElementById('ch-cal14'); if(!ctx) return;
   chCal=new Chart(ctx,{type:'bar',data:{labels,datasets:[
-    {label:'Calorías',data:calPorDia,backgroundColor:calPorDia.map(v=>v>metaCal?'rgba(255,59,107,.5)':'rgba(255,107,53,.5)'),borderColor:calPorDia.map(v=>v>metaCal?'var(--r)':'var(--o)'),borderRadius:4,borderWidth:1.5},
+    {label:'Calorías',data:calPorDia,backgroundColor:calPorDia.map(v=>v>metaCal?'rgba(255,59,107,.5)':'rgba(255,107,53,.5)'),borderColor:calPorDia.map(v=>v>metaCal?cssVar('--r'):cssVar('--o')),borderRadius:4,borderWidth:1.5},
     {label:'Meta',data:Array(14).fill(metaCal),type:'line',borderColor:'rgba(0,232,122,.5)',borderDash:[5,4],borderWidth:1.5,pointRadius:0,fill:false}
   ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
-    scales:{y:{grid:{color:'rgba(255,255,255,.06)'},ticks:{color:'#4a5568',callback:v=>v+' kcal'}},x:{grid:{display:false},ticks:{color:'#4a5568'}}}}});
+    scales:{y:{grid:{color:'rgba('+cssVar('--ov')+',.06)'},ticks:{color:cssVar('--text3'),callback:v=>v+' kcal'}},x:{grid:{display:false},ticks:{color:cssVar('--text3')}}}}});
 }
 
 // ─── METAS & PERFIL ──────────────────────────────────────────────────────────
@@ -1634,7 +1666,7 @@ function renderDigestiva() {
             <div style="font-size:10px;font-weight:700;color:var(--g);margin-top:3px;line-height:1.3">${p.hora}</div>
           </div>
           <div style="flex:1;display:flex;flex-wrap:wrap;gap:7px;align-items:flex-start">
-            ${p.acciones.map(a=>`<span style="font-size:12px;color:var(--text2);background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:6px;padding:5px 9px;display:inline-block">${a}</span>`).join('')}
+            ${p.acciones.map(a=>`<span style="font-size:12px;color:var(--text2);background:rgba(var(--ov),.04);border:1px solid rgba(var(--ov),.08);border-radius:6px;padding:5px 9px;display:inline-block">${a}</span>`).join('')}
           </div>
         </div>`).join('')}
       </div>
@@ -1668,7 +1700,7 @@ function renderDigestiva() {
 
 // ─── EXÁMENES MÉDICOS ────────────────────────────────────────────────────────
 function examStatusInfo(e) {
-  if(e.refMin==null) return {l:'Sin rango',bg:'rgba(255,255,255,.07)',col:'var(--text2)',bd:'rgba(255,255,255,.14)'};
+  if(e.refMin==null) return {l:'Sin rango',bg:'rgba(var(--ov),.07)',col:'var(--text2)',bd:'rgba(var(--ov),.14)'};
   if(e.valor<e.refMin) return {l:'Bajo',bg:'rgba(59,130,246,.15)',col:'var(--b)',bd:'rgba(59,130,246,.3)'};
   if(e.valor>e.refMax) return {l:'Alto',bg:'rgba(255,59,107,.15)',col:'var(--r)',bd:'rgba(255,59,107,.3)'};
   return {l:'Normal',bg:'rgba(0,232,122,.15)',col:'var(--g)',bd:'rgba(0,232,122,.3)'};
@@ -1838,15 +1870,15 @@ function renderExamChart(key) {
   const ctx=document.getElementById('ch-exam');
   if(!ctx||!hist.length) return;
   const refMin=hist[hist.length-1].refMin, refMax=hist[hist.length-1].refMax;
-  const datasets=[{label:hist[0].nombre,data:hist.map(h=>h.valor),borderColor:'var(--g)',backgroundColor:'rgba(0,232,122,.1)',fill:true,tension:.3,pointRadius:5,pointBackgroundColor:'var(--g)',pointBorderColor:'#060614',pointBorderWidth:2,borderWidth:2.5}];
+  const datasets=[{label:hist[0].nombre,data:hist.map(h=>h.valor),borderColor:cssVar('--g'),backgroundColor:'rgba(0,232,122,.1)',fill:true,tension:.3,pointRadius:5,pointBackgroundColor:cssVar('--g'),pointBorderColor:cssVar('--surface-2'),pointBorderWidth:2,borderWidth:2.5}];
   if(refMin!=null){
-    datasets.push({label:'Mín. referencia',data:hist.map(()=>refMin),borderColor:'rgba(255,255,255,.25)',borderDash:[4,4],borderWidth:1.5,pointRadius:0,fill:false});
-    datasets.push({label:'Máx. referencia',data:hist.map(()=>refMax),borderColor:'rgba(255,255,255,.25)',borderDash:[4,4],borderWidth:1.5,pointRadius:0,fill:false});
+    datasets.push({label:'Mín. referencia',data:hist.map(()=>refMin),borderColor:'rgba('+cssVar('--ov')+',.25)',borderDash:[4,4],borderWidth:1.5,pointRadius:0,fill:false});
+    datasets.push({label:'Máx. referencia',data:hist.map(()=>refMax),borderColor:'rgba('+cssVar('--ov')+',.25)',borderDash:[4,4],borderWidth:1.5,pointRadius:0,fill:false});
   }
   chExam=new Chart(ctx,{type:'line',data:{labels:hist.map(h=>fmtD(h.fecha)),datasets},
     options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},
       tooltip:{callbacks:{label:ctx=>` ${ctx.parsed.y} ${hist[0].unidad||''}`}}},
-      scales:{y:{grid:{color:'rgba(255,255,255,.06)'},ticks:{color:'#4a5568'}},x:{grid:{display:false},ticks:{color:'#4a5568'}}}}});
+      scales:{y:{grid:{color:'rgba('+cssVar('--ov')+',.06)'},ticks:{color:cssVar('--text3')}},x:{grid:{display:false},ticks:{color:cssVar('--text3')}}}}});
 }
 
 function populateExamCatOptions() {
@@ -2214,10 +2246,10 @@ function renderMental() {
     chMental=killChart(chMental);
     const ctx=document.getElementById('ch-mental');
     if(ctx) chMental=new Chart(ctx,{type:'line',data:{labels:sorted.map(r=>fmtD(r.fecha)),datasets:[
-      {label:'Ánimo',data:sorted.map(r=>r.animo),borderColor:'var(--g)',backgroundColor:'rgba(0,232,122,.08)',fill:true,tension:.4,pointRadius:4,borderWidth:2.5},
-      {label:'Estrés',data:sorted.map(r=>r.estres),borderColor:'var(--o)',backgroundColor:'transparent',tension:.4,pointRadius:4,borderWidth:2.5}
-    ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:true,position:'bottom',labels:{color:'#8892b0',boxWidth:10,font:{size:10}}}},
-      scales:{y:{min:1,max:5,grid:{color:'rgba(255,255,255,.06)'},ticks:{color:'#4a5568',stepSize:1}},x:{grid:{display:false},ticks:{color:'#4a5568'}}}}});
+      {label:'Ánimo',data:sorted.map(r=>r.animo),borderColor:cssVar('--g'),backgroundColor:'rgba(0,232,122,.08)',fill:true,tension:.4,pointRadius:4,borderWidth:2.5},
+      {label:'Estrés',data:sorted.map(r=>r.estres),borderColor:cssVar('--o'),backgroundColor:'transparent',tension:.4,pointRadius:4,borderWidth:2.5}
+    ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:true,position:'bottom',labels:{color:cssVar('--text2'),boxWidth:10,font:{size:10}}}},
+      scales:{y:{min:1,max:5,grid:{color:'rgba('+cssVar('--ov')+',.06)'},ticks:{color:cssVar('--text3'),stepSize:1}},x:{grid:{display:false},ticks:{color:cssVar('--text3')}}}}});
   }
 }
 
@@ -2377,6 +2409,8 @@ function init() {
   }
   document.getElementById('dateLabel').textContent=new Date().toLocaleDateString('es-MX',{weekday:'long',day:'numeric',month:'long'});
   document.getElementById('f-fecha-al').value=today();
+  const themeBtn=document.getElementById('theme-toggle-btn');
+  if(themeBtn) themeBtn.textContent=document.documentElement.getAttribute('data-theme')==='dark'?'☀️':'🌙';
 
   const check=()=>{
     const mb=document.getElementById('menuBtn');

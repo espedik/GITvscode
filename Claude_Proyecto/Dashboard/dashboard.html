@@ -12,21 +12,29 @@
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
   --bg:#05050a; --text:#f4f4f8; --text2:#9a9db3; --text3:#565a72;
-  --card:rgba(255,255,255,.06); --card-br:rgba(255,255,255,.13);
-  --g:#00e87a; --o:#ff8a3d; --b:#3b82f6; --p:#b06eff; --w:#ffd93d; --r:#ff5c5c; --cy:#00e0c0;
+  --card:rgba(var(--ov),.06); --card-br:rgba(var(--ov),.13);
+  --g:#00e87a; --o:#ff8a3d; --b:#3b82f6; --p:#b06eff; --p-l:rgba(176,110,255,.16); --w:#ffd93d; --r:#ff5c5c; --cy:#00e0c0;
   --font:'Inter',-apple-system,sans-serif; --mono:'Space Grotesk',monospace;
+  --ov:255,255,255; --bar:rgba(6,6,14,.65); --bar2:rgba(10,10,20,.55);
 }
+:root[data-theme="light"]{
+  --bg:#f2f2f6; --text:#16161a; --text2:#5c5f70; --text3:#82859a;
+  --card:rgba(255,255,255,.85); --card-br:rgba(var(--ov),.12);
+  --g:#00a758; --o:#b8632c; --b:#2563eb; --p:#7f4fb8; --p-l:rgba(127,79,184,.14); --w:#a8790a; --r:#c81e3a; --cy:#047a6b;
+  --ov:0,0,0; --bar:rgba(255,255,255,.72); --bar2:rgba(255,255,255,.6);
+}
+:root[data-theme="light"] .slide::before,:root[data-theme="light"] .slide::after{opacity:.12}
 html,body{height:100%}
 body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hidden;position:relative}
-::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:rgba(255,255,255,.14);border-radius:3px}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:rgba(var(--ov),.14);border-radius:3px}
 
 /* ─── BARRA SUPERIOR — acceso directo a los demás proyectos ─ */
 .qa-bar{position:fixed;top:0;left:0;right:0;z-index:60;display:flex;align-items:center;justify-content:center;
-  gap:8px;flex-wrap:wrap;padding:10px 16px;background:rgba(6,6,14,.65);backdrop-filter:blur(18px);
-  border-bottom:1px solid rgba(255,255,255,.07)}
-.qa-pill{display:flex;align-items:center;gap:8px;padding:6px 13px;border-radius:30px;background:rgba(255,255,255,.045);
-  border:1px solid rgba(255,255,255,.08);text-decoration:none;color:var(--text);transition:all .2s}
-.qa-pill:hover{background:rgba(255,255,255,.1);border-color:rgba(0,232,122,.4);transform:translateY(-1px)}
+  gap:8px;flex-wrap:wrap;padding:10px 16px;background:var(--bar);backdrop-filter:blur(18px);
+  border-bottom:1px solid rgba(var(--ov),.07)}
+.qa-pill{display:flex;align-items:center;gap:8px;padding:6px 13px;border-radius:30px;background:rgba(var(--ov),.045);
+  border:1px solid rgba(var(--ov),.08);text-decoration:none;color:var(--text);transition:all .2s}
+.qa-pill:hover{background:rgba(var(--ov),.1);border-color:rgba(0,232,122,.4);transform:translateY(-1px)}
 .qa-ico{font-size:16px}
 .qa-txt{display:flex;flex-direction:column;line-height:1.15}
 .qa-name{font-size:11px;font-weight:800}
@@ -66,11 +74,11 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 .d1{animation-delay:.05s}.d2{animation-delay:.15s}.d3{animation-delay:.25s}.d4{animation-delay:.35s}.d5{animation-delay:.45s}.d6{animation-delay:.55s}
 
 .tile{background:var(--card);border:1px solid var(--card-br);border-radius:22px;padding:clamp(16px,2vw,26px);backdrop-filter:blur(16px);box-shadow:0 10px 40px rgba(0,0,0,.35)}
-.tile-glow{box-shadow:0 10px 40px rgba(0,0,0,.35),0 0 0 1px rgba(255,255,255,.02),inset 0 1px 0 rgba(255,255,255,.06)}
+.tile-glow{box-shadow:0 10px 40px rgba(0,0,0,.35),0 0 0 1px rgba(var(--ov),.02),inset 0 1px 0 rgba(var(--ov),.06)}
 .grid{display:grid;gap:clamp(12px,1.4vw,20px)}
 .g2{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:repeat(3,1fr)}.g4{grid-template-columns:repeat(4,1fr)}.g6{grid-template-columns:repeat(6,1fr)}
 .big-num{font-family:var(--mono);font-weight:700;letter-spacing:-.02em;line-height:1}
-.pbar{height:11px;background:rgba(255,255,255,.08);border-radius:20px;overflow:hidden;margin-top:9px;position:relative}
+.pbar{height:11px;background:rgba(var(--ov),.08);border-radius:20px;overflow:hidden;margin-top:9px;position:relative}
 .pfill{height:100%;border-radius:20px;transition:width 1.2s cubic-bezier(.22,.61,.36,1);position:relative}
 .lbl{font-size:clamp(10px,.9vw,12px);color:var(--text2);text-transform:uppercase;letter-spacing:.08em;font-weight:700}
 .sub{font-size:clamp(11px,1vw,13px);color:var(--text3);margin-top:4px}
@@ -79,16 +87,16 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 .hud{position:fixed;left:0;right:0;bottom:0;display:flex;flex-direction:column;align-items:center;gap:10px;padding:0 0 22px;z-index:50;opacity:.55;transition:opacity .3s}
 .hud:hover{opacity:1}
 .hud-clock{font-family:var(--mono);font-size:13px;color:var(--text2);letter-spacing:.04em}
-.hud-row{display:flex;align-items:center;gap:14px;background:rgba(10,10,20,.55);border:1px solid rgba(255,255,255,.08);backdrop-filter:blur(14px);border-radius:40px;padding:8px 14px}
+.hud-row{display:flex;align-items:center;gap:14px;background:var(--bar2);border:1px solid rgba(var(--ov),.08);backdrop-filter:blur(14px);border-radius:40px;padding:8px 14px}
 .dots{display:flex;gap:7px}
-.dot-btn{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.22);border:none;cursor:pointer;transition:all .25s;padding:0}
+.dot-btn{width:8px;height:8px;border-radius:50%;background:rgba(var(--ov),.22);border:none;cursor:pointer;transition:all .25s;padding:0}
 .dot-btn.on{width:22px;background:linear-gradient(90deg,var(--g),var(--p));box-shadow:0 0 10px rgba(0,232,122,.5)}
-.hud-btn{width:30px;height:30px;border-radius:50%;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.04);color:var(--text);cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;transition:all .2s}
-.hud-btn:hover{background:rgba(255,255,255,.12)}
+.hud-btn{width:30px;height:30px;border-radius:50%;border:1px solid rgba(var(--ov),.12);background:rgba(var(--ov),.04);color:var(--text);cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.hud-btn:hover{background:rgba(var(--ov),.12)}
 .hud-sync{font-size:10px;color:var(--text3)}
 
 /* ─── TIMELINE DE ACTIVIDADES (Mi Día) — detalle por bloque ─ */
-.rt2-card{display:flex;align-items:flex-start;gap:12px;padding:12px 4px;border-bottom:1px solid rgba(255,255,255,.06);transition:background .2s}
+.rt2-card{display:flex;align-items:flex-start;gap:12px;padding:12px 4px;border-bottom:1px solid rgba(var(--ov),.06);transition:background .2s}
 .rt2-card:last-child{border-bottom:none}
 .rt2-dot{width:11px;height:11px;border-radius:50%;margin-top:6px;flex-shrink:0;transition:all .3s}
 .rt2-body{flex:1;min-width:0}
@@ -97,12 +105,12 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 .rt2-time{font-family:var(--mono);font-size:12px;color:var(--text3);font-weight:600}
 .rt2-txt{font-size:clamp(13px,1.15vw,15px);color:var(--text);line-height:1.4}
 .rt2-check{font-size:16px;margin-top:5px;flex-shrink:0}
-.rt2-now{background:rgba(255,255,255,.04);border-radius:12px;padding:12px 10px;margin:0 -10px}
+.rt2-now{background:rgba(var(--ov),.04);border-radius:12px;padding:12px 10px;margin:0 -10px}
 .rt2-now .rt2-txt{font-weight:800;color:#fff}
 .rt2-done .rt2-txt{opacity:.5;text-decoration:line-through}
 .rt2-fijo{opacity:.85}
 .rt2-cat-chip{display:inline-flex;align-items:center;gap:5px;border-radius:20px;padding:5px 12px;font-size:11px;font-weight:700;border:1px solid}
-.rt2-sub{margin-top:5px;display:flex;flex-direction:column;gap:3px;padding-left:10px;border-left:2px solid rgba(255,255,255,.08)}
+.rt2-sub{margin-top:5px;display:flex;flex-direction:column;gap:3px;padding-left:10px;border-left:2px solid rgba(var(--ov),.08)}
 .rt2-sub-item{font-size:12px;color:var(--text3)}
 .rt2-sub-done{opacity:.5;text-decoration:line-through}
 
@@ -112,7 +120,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 .flex-hero-top{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:16px}
 .week-strip{display:grid;grid-template-columns:repeat(7,1fr);gap:8px}
 .ws-day{background:var(--card);border:1px solid var(--card-br);border-radius:14px;padding:10px 6px;text-align:center;backdrop-filter:blur(10px)}
-.ws-day.today{border-color:var(--ac1);box-shadow:0 0 14px rgba(255,255,255,.08)}
+.ws-day.today{border-color:var(--ac1);box-shadow:0 0 14px rgba(var(--ov),.08)}
 .ws-dname{font-size:10px;font-weight:800;color:var(--text2);text-transform:uppercase;letter-spacing:.04em}
 .ws-ddate{font-size:9px;color:var(--text3);margin-bottom:7px}
 .ws-gym-ico{font-size:17px;line-height:1}
@@ -120,21 +128,21 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 .ws-gym-lbl.pend{color:var(--text3);opacity:.7}
 .hp-title{font-size:11.5px;font-weight:800;color:var(--text2);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;gap:6px}
 .hp-big{font-family:var(--mono);font-weight:700;font-size:clamp(26px,3vw,38px);line-height:1;margin-bottom:8px}
-.hp-row{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.06);font-size:12px}
+.hp-row{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid rgba(var(--ov),.06);font-size:12px}
 .hp-row:last-child{border-bottom:none}
 .hp-empty{font-size:12px;color:var(--text3);text-align:center;padding:12px 0}
 .hp-link{font-size:10.5px;font-weight:700;color:var(--cy);text-decoration:none;white-space:nowrap}
 
 /* Frase motivacional (Hero) */
-.hero-frase{display:flex;align-items:center;gap:12px;padding:12px 18px;border-radius:16px;background:rgba(255,255,255,.035);
-  border:1px solid rgba(255,255,255,.08);margin-bottom:14px}
+.hero-frase{display:flex;align-items:center;gap:12px;padding:12px 18px;border-radius:16px;background:rgba(var(--ov),.035);
+  border:1px solid rgba(var(--ov),.08);margin-bottom:14px}
 .hero-frase .q{font-size:20px;flex-shrink:0;opacity:.7}
 .hero-frase .txt{font-size:clamp(12.5px,1.15vw,15px);font-style:italic;color:var(--text);line-height:1.4}
 .hero-frase .txt b{font-style:normal;color:var(--ac1)}
 
 /* Panel de gym con ejercicios detallados (Hero) */
 .hp-ex-scroll{max-height:180px;overflow-y:auto;margin-top:4px}
-.hp-ex-row{padding:7px 0;border-bottom:1px solid rgba(255,255,255,.06)}
+.hp-ex-row{padding:7px 0;border-bottom:1px solid rgba(var(--ov),.06)}
 .hp-ex-row:last-child{border-bottom:none}
 .hp-ex-top{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
 .hp-ex-name{font-size:12.5px;font-weight:700;color:var(--text)}
@@ -142,7 +150,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 .hp-ex-cue{font-size:10.5px;color:var(--text3);line-height:1.4;margin-top:2px}
 
 /* Panel de sugerencias de comida (Hero) */
-.hp-meal{padding:9px 0;border-bottom:1px solid rgba(255,255,255,.06)}
+.hp-meal{padding:9px 0;border-bottom:1px solid rgba(var(--ov),.06)}
 .hp-meal:last-child{border-bottom:none}
 .hp-meal-lbl{font-size:9.5px;font-weight:800;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px}
 .hp-meal-name{font-size:13px;font-weight:700;color:var(--text);line-height:1.35}
@@ -150,17 +158,17 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 
 /* ─── COACH · PLAN MAESTRO — ruta de deuda cara + to-do de fase (2026-07-30) ─ */
 .debt-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
-.debt-step{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:16px 14px;text-align:center;position:relative}
-.debt-step.activo{border-color:var(--ac1);box-shadow:0 0 14px rgba(255,255,255,.08)}
+.debt-step{background:rgba(var(--ov),.03);border:1px solid rgba(var(--ov),.08);border-radius:14px;padding:16px 14px;text-align:center;position:relative}
+.debt-step.activo{border-color:var(--ac1);box-shadow:0 0 14px rgba(var(--ov),.08)}
 .debt-step.done{border-color:rgba(0,232,122,.35);background:rgba(0,232,122,.04)}
-.ds-num{position:absolute;top:10px;left:10px;width:20px;height:20px;border-radius:50%;background:rgba(255,255,255,.08);font-size:10.5px;font-weight:800;display:flex;align-items:center;justify-content:center;color:var(--text2)}
+.ds-num{position:absolute;top:10px;left:10px;width:20px;height:20px;border-radius:50%;background:rgba(var(--ov),.08);font-size:10.5px;font-weight:800;display:flex;align-items:center;justify-content:center;color:var(--text2)}
 .debt-step.done .ds-num{background:rgba(0,232,122,.2);color:var(--g)}
 .ds-ico{font-size:26px;margin-bottom:4px}
 .ds-lbl{font-size:12px;font-weight:800;color:var(--text)}
 .ds-txt{font-size:11.5px;color:var(--text2);margin:4px 0 9px;font-family:var(--mono)}
-.todo-row{display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.06)}
+.todo-row{display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-bottom:1px solid rgba(var(--ov),.06)}
 .todo-row:last-child{border-bottom:none}
-.todo-num{width:24px;height:24px;border-radius:50%;background:rgba(255,255,255,.08);color:var(--text2);font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.todo-num{width:24px;height:24px;border-radius:50%;background:rgba(var(--ov),.08);color:var(--text2);font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
 @media(max-width:640px){.debt-steps{grid-template-columns:1fr}}
 
 /* ─── HABILIDADES — tarjetas grandes, una por prioridad (slide pasivo, sin clics) ─ */
@@ -172,12 +180,19 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 .sc-val{font-family:var(--mono);font-size:13px;font-weight:800;margin-left:auto}
 .sc-primer{font-size:clamp(11.5px,1vw,13px);color:var(--text2);line-height:1.55}
 .sc-primer b{color:var(--text);font-weight:700}
-.sc-res{font-size:11px;color:var(--text3);margin-top:auto;padding-top:8px;border-top:1px solid rgba(255,255,255,.06)}
+.sc-res{font-size:11px;color:var(--text3);margin-top:auto;padding-top:8px;border-top:1px solid rgba(var(--ov),.06)}
 .sc-res b{color:var(--p);font-weight:700}
 
 @media(max-width:900px){.g4{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:repeat(2,1fr)}.g3>*:last-child{grid-column:1/-1}.g6{grid-template-columns:repeat(3,1fr)}}
 @media(max-width:600px){.g2,.g4,.g3,.g6{grid-template-columns:1fr}}
 </style>
+<script>
+(function () {
+  var saved = localStorage.getItem('coach-theme');
+  var theme = saved || ((window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) ? 'light' : 'dark');
+  document.documentElement.setAttribute('data-theme', theme);
+})();
+</script>
 </head>
 <body>
 
@@ -316,6 +331,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
     <div class="dots" id="dots"></div>
     <button class="hud-btn" onclick="nextSlide()" title="Siguiente">›</button>
     <button class="hud-btn" id="playBtn" onclick="togglePlay()" title="Pausar/Reanudar">⏸</button>
+    <button class="hud-btn" id="theme-toggle-btn" onclick="toggleTheme()" title="Cambiar tema claro/oscuro" aria-label="Cambiar tema claro/oscuro">🌙</button>
   </div>
 </div>
 
@@ -324,6 +340,16 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 // DATA ENGINE — lee en vivo el localStorage de cada proyecto hermano
 // ══════════════════════════════════════════════════════════════════════════
 const today=()=>new Date().toISOString().slice(0,10);
+const cssVar=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+function toggleTheme(){
+  const html=document.documentElement;
+  const next=html.getAttribute('data-theme')==='dark'?'light':'dark';
+  html.setAttribute('data-theme',next);
+  localStorage.setItem('coach-theme',next);
+  const btn=document.getElementById('theme-toggle-btn');
+  if(btn) btn.textContent=next==='dark'?'☀️':'🌙';
+  showSlide(cur);
+}
 const fmt=n=>new Intl.NumberFormat('es-MX').format(Math.round(n||0));
 const money=n=>(n<0?'-$':'$')+fmt(Math.abs(n));
 const fmtD=d=>{if(!d)return'';const[y,m,day]=d.split('-');const mn=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];return `${parseInt(day)} ${mn[parseInt(m)-1]} ${y}`;};
@@ -927,9 +953,9 @@ function renderSkills(){
   const ctx=document.getElementById('chSkills');
   if(ctx) chSkills=new Chart(ctx,{type:'radar',
     data:{labels:SK.map(s=>s.icon+' '+s.name),datasets:[{label:'Nivel actual',data:SK.map(s=>s.val),
-      backgroundColor:'rgba(176,110,255,.16)',borderColor:'#b06eff',borderWidth:2,pointBackgroundColor:'#b06eff',pointRadius:3}]},
+      backgroundColor:cssVar('--p-l'),borderColor:cssVar('--p'),borderWidth:2,pointBackgroundColor:cssVar('--p'),pointRadius:3}]},
     options:{responsive:true,maintainAspectRatio:false,
-      scales:{r:{min:0,max:100,grid:{color:'rgba(255,255,255,.08)'},angleLines:{color:'rgba(255,255,255,.08)'},ticks:{display:false,backdropColor:'transparent'},pointLabels:{color:'#c8cadf',font:{size:10,weight:'600'}}}},
+      scales:{r:{min:0,max:100,grid:{color:'rgba('+cssVar('--ov')+',.08)'},angleLines:{color:'rgba('+cssVar('--ov')+',.08)'},ticks:{display:false,backdropColor:'transparent'},pointLabels:{color:cssVar('--text2'),font:{size:10,weight:'600'}}}},
       plugins:{legend:{display:false}}}});
 }
 
@@ -1001,7 +1027,7 @@ function renderMetasSlide(){
     {ico:'🎓',t:'Maestría en Alemania'},
     {ico:'🏋️',t:'Hyrox internacional'}
   ];
-  const listHtml=arr=>arr.map(i=>`<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.06);font-size:clamp(13px,1.1vw,15px)"><span style="font-size:18px">${i.ico}</span>${i.t}</div>`).join('');
+  const listHtml=arr=>arr.map(i=>`<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid rgba(var(--ov),.06);font-size:clamp(13px,1.1vw,15px)"><span style="font-size:18px">${i.ico}</span>${i.t}</div>`).join('');
   document.getElementById('metasListas').innerHTML=`
     <div class="tile">
       <div class="lbl" style="margin-bottom:8px">🚩 Corto & mediano plazo</div>
@@ -1088,6 +1114,8 @@ loadAll();
 tickClock();
 showSlide(0);
 restartTimer();
+const themeBtn=document.getElementById('theme-toggle-btn');
+if(themeBtn) themeBtn.textContent=document.documentElement.getAttribute('data-theme')==='dark'?'☀️':'🌙';
 </script>
 </body>
 </html>

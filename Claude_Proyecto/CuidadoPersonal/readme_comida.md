@@ -47,6 +47,10 @@ Las 20 recetas y sus ingredientes/pasos/macros **no** se guardan en `localStorag
 
 Mismo tratamiento visual que `ejercicio.html`/`salud.html` (ver [`readme_ejercicio.md`](readme_ejercicio.md) → "Rediseño de interfaz"): se quitaron la mancha radial de fondo, el `backdrop-filter: blur` de sidebar/topbar/card y el texto con gradiente del logo, y `.btn-w` pasó de degradado+glow a color sólido. Se dejó igual el degradado de `.shop-progress .pfill` (barra de progreso de la lista del súper) — ahí un degradado de dirección es un patrón funcional común en barras de progreso, no la decoración genérica que se pidió quitar.
 
+## Modo oscuro/claro (2026-07-31)
+
+Botón `.theme-toggle-btn` en el topbar (junto al aviso de "solo desayuno y cena"). Mismo mecanismo que `ejercicio.html`/`salud.html`: `--surface`/`--surface-2`/`--surface-3` reemplazan los hex sólidos del rediseño de arriba, y el resto de bordes/hovers usa el truco `--ov` (variable con el triplete RGB sin envolver, ver `../README.md`). Sin gráficas Chart.js en este archivo, así que no hizo falta ningún `cssVar()`.
+
 ## Referencias cruzadas
 
 - Incrustada vía `<iframe>` en [`readme_cuidadopersonal.md`](readme_cuidadopersonal.md) (subtab "Comida"). Comparte `localStorage` con el shell y con `salud.html` por el mismo origen `file://` compartido (ver `readme_cuidadopersonal.md`).

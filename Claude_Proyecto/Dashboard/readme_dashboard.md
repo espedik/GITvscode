@@ -94,6 +94,16 @@ Adán pidió mejorar la interfaz pero **conservar el concepto de "screensaver de
 - Opacidad de las manchas de fondo (`.slide::before/::after`) de `.32` a `.2` — menos ruido visual detrás del texto.
 - Se eliminó la animación `.pfill::after` (un brillo en bucle infinito recorriendo cada barra de progreso) y su `@keyframes shine` — con varias barras de progreso por slide más las manchas moviéndose y el punto del `.eyebrow` pulsando, era demasiado movimiento simultáneo compitiendo por la atención.
 
+## Modo oscuro/claro (2026-07-31)
+
+Botón `.theme-toggle-btn` (🌙/☀️) agregado al `.hud-row` junto a los controles de reproducción de slides. Persiste en `localStorage['coach-theme']` (clave **compartida con las otras 6 apps del ecosistema**, ver `../README.md` → "Convenciones de diseño compartidas" para el detalle técnico completo del truco `--ov` y por qué Chart.js necesita `cssVar()` en vez de `var()`). Dashboard ya era oscuro por defecto, así que `:root` sigue siendo el tema oscuro y se agregó `:root[data-theme="light"]` como override — igual que Ejercicio/Salud/Comida/CuidadoPersonal, al revés que Coach/Finanzas (que ya eran claros).
+
+- `--card`/`--card-br` dejaron de derivar de `--ov` en el override claro (necesitaban valores propios: `rgba(255,255,255,.85)` sólido en vez de `rgba(0,0,0,X)`, que se vería como una tarjeta oscura sobre fondo claro) — son la excepción a la regla general de `--ov`.
+- Nuevas variables `--bar`/`--bar2` para `.qa-bar` y `.hud-row` (antes `rgba(6,6,14,.65)`/`rgba(10,10,20,.55)` hardcoded, invisibles en tema claro).
+- Las manchas de fondo (`.slide::before/::after`) bajan su opacidad a `.12` en tema claro (`:root[data-theme="light"] .slide::before,::after`) — a `.2` (la del tema oscuro) se verían demasiado saturadas sobre fondo claro.
+- El radar de habilidades (`chSkills`, único uso de Chart.js en este archivo) tenía sus colores hardcoded (`'#b06eff'`, `'rgba(176,110,255,.16)'`, grid `rgba(255,255,255,.08)`, labels `'#c8cadf'`) — Chart.js pinta directo a `<canvas>` y no resuelve `var()`, así que se cambiaron a `cssVar('--p')`/`cssVar('--p-l')`/etc. `toggleTheme()` vuelve a llamar `showSlide(cur)` para redibujar el slide activo (y su chart, si es el de Habilidades) con los colores correctos de inmediato.
+- `CAT_META` (colores por categoría de la rutina) se dejó con hex literal a propósito — sus valores se concatenan con sufijos de alpha (`${meta.c}22`, `${meta.c}55`) para armar `rgba` de 8 dígitos en los chips de categoría; convertirlos a `var(--x)` rompería esa concatenación. Quedan igual en ambos temas (colores saturados, funcionan razonablemente en los dos).
+
 ## Cómo usarlo
 
 Se abre `dashboard.html` en el mismo navegador donde ya se usaron las demás apps, para que pueda leer sus datos guardados. No tiene botón de refresco manual: escucha el evento `storage` (`window.addEventListener('storage', ...)`) y vuelve a leer `localStorage` automáticamente si otra pestaña del mismo navegador cambia algún dato. Además, cada vez que rota de slide (`showSlide(i)`) llama a `loadAll()` de nuevo.

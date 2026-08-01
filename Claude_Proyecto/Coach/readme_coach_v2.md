@@ -8,8 +8,8 @@ Tema claro/oscuro con toggle (🌙/☀️ arriba a la derecha), persistido en `l
 
 Un único botón (`cambiarModo('personal'|'empresa')`) alterna entre dos `<div class="vista-panel">` independientes, cada uno con su propio `<nav>` de navegación por ancla (`#seccion`) y scroll-spy propio (`refrescarScrollSpy()`, recalculado en cada cambio de modo):
 
-- **🪙 Coach — Personal** (modo por defecto): `#perfil` · `#rutina` · `#habitos` · `#aprendizaje` · `#legal-personal`
-- **🏢 Coach — Empresa**: `#posibles-negocios` · `#crear-empresa` · `#legal`
+- **🪙 Coach — Personal** (modo por defecto): `#perfil` · `#rutina` · `#habitos` · `#aprendizaje` · `#networking` · `#legal-personal`
+- **🏢 Coach — Empresa**: `#posibles-negocios` · `#mas-ideas` · `#crear-empresa` · `#legal`
 
 ## Modelo de datos — 3 claves de `localStorage`
 
@@ -119,6 +119,19 @@ Grid semanal (L M X J V S D) por hábito con botones `.habito-day` que solo alte
 
 5 tarjetas de contenido estático (sin interactividad ni persistencia): 📊 Datos/Análisis, 🤝 Ventas/Negociación, 📣 Marketing Digital, 💰 Finanzas personales, 🤖 IA aplicada a proyectos propios — cada una con primer paso de la semana, el hábito que lo sostiene, y una lista de recursos. Son las mismas 5 prioridades que alimentan el bloque de habilidad diario de `#rutina` (`k1`-`k5`). (La app separada `Aprendizaje/aprendizaje.html`, que era un tracker de libros/sesiones/skills con su propio `localStorage['aprendizaje_v1']`, se eliminó del proyecto el 2026-07-29; el Dashboard ya no tiene score de aprendizaje.)
 
+## `#networking` — Networking (nuevo 2026-07-31)
+
+Sección de referencia (sin interactividad persistente, salvo 4 checkboxes visual-only `nw1`-`nw4` del hábito semanal, mismo patrón que `#habitos`) pedida explícitamente por Adán: "haz una sección de networking, detallada, cómo generar conversación, cómo ganar amigos, cómo persuadir, cómo conocer gente de alto valor, qué lugares/situaciones". Tarjetas `.card`, en orden:
+
+1. **Cómo generar conversación de la nada** — método FORD, preguntas abiertas, dar valor antes de pedir, tolerar silencios.
+2. **Cómo caer bien y construir amistad real** — recordar nombre+detalle, regla de Dale Carnegie (70/30), seguimiento 1-3-7-30 (mismo patrón que el outreach de negocio), presentar gente a gente.
+3. **Cómo persuadir sin ser manipulador** — los 6 principios de Cialdini (cruza con `#aprendizaje` → Ventas, que ya los tenía como recursos de lectura) aplicados a relaciones, no a cerrar tratos.
+4. **El mapa: dónde conocer gente de alto valor en CDMX** (la parte más pedida) — 6 subgrupos: Educación premium (Goethe-Institut presencial aprovechando su alemán A2, EGADE/IPADE), Deporte y bienestar (pádel, ajedrez — cruza con su bucket list de `#perfil` → Metas, golf), Comunidades de negocio (GBM, Endeavor México, South Summit, CAMEXA), Voluntariado, Digital/LinkedIn estratégico, y su red ya validada (Bosch Stuttgart).
+5. **Cómo dar el primer paso** — 3 plantillas de mensaje copiables (reactivar contacto, después de un evento, pedir café/llamada), mismo patrón visual que las plantillas de `#posibles-negocios`.
+6. **Tu hábito semanal de networking** — 4 checkboxes de cadencia (`nw1`-`nw4`, no persisten) + recursos (Cómo Ganar Amigos e Influir sobre las Personas, Never Split the Difference, Give and Take, The Like Switch, canal Charisma on Command).
+
+Todo el contenido está anclado a contexto real de Adán (red de Bosch/Stuttgart, meta de alemán, bucket list de ajedrez, plantilla GBM) en vez de ser genérico — mismo estándar que el resto de Coach.
+
 ## `#legal-personal` — Legal & Personal
 
 Checklist personal (`.check-item`, **no persiste** — mismo comportamiento visual-only que `#habitos`), calendario fiscal personal, y bloques colapsables `toggleCard(id, btn)` con "Qué puedo deducir" como asalariado (Salud, Educación, Vivienda, Ahorro para el retiro, Donativos, Trámite y estrategia).
@@ -126,6 +139,7 @@ Checklist personal (`.check-item`, **no persiste** — mismo comportamiento visu
 ## Modo Empresa
 
 - **`#posibles-negocios`** (nuevo el 2026-07-30, movido desde `#perfil` en modo Personal — ver arriba) — 8 opciones de negocio rankeadas contra el perfil real de Adán, cada una con `id="negocio1"`..`id="negocio8"` dentro de `.negocio-grid` (saltables desde cualquier parte de la app con `irANegocios('negocioN')`, que ahora cambia a modo Empresa con `cambiarModo('empresa')` y hace scroll suave hasta la tarjeta — ya no activa un subtab, porque la sección es de nivel superior, siempre renderizada). Incluye además 3 tarjetas de apoyo: Plantillas de mensajes (listas para copiar), ¿Cuánto cobrar? (tarifas de referencia + checklist `pr1`-`pr4` de protección al cobrar) y Seguimiento de outreach (bitácora manual `oc1`-`oc5`/`og1`-`og3`, no persiste).
+- **`#mas-ideas`** (nuevo 2026-07-31) — "💼 Más Ideas de Negocio — Convencionales y No Convencionales", banco de ideas más amplio que `#posibles-negocios` (no rankeado contra el perfil de Adán, es solo para explorar). Dos grids de tarjetas `.card` simples (icono+título+descripción corta, sin el detalle de `.negocio-card`): 9 **convencionales** (renta de sillas/mesas — el ejemplo que dio Adán —, inflables, lavado de autos, limpieza, mudanzas, jardinería, food truck, renta de mobiliario de oficina, franquicia de bajo costo) y 11 **no convencionales pero 100% legales** (retail arbitrage, importación de nicho vía Alibaba, monetizar cochera como estacionamiento, Airbnb, self-storage, vending machines, compra-venta de segunda mano, junk removal, foto/dron de eventos, renta de trajes de gala, automatización/datos como servicio). Incluye un `.riesgo-box` explícito al inicio aclarando que "no convencional" significa creativo/poco obvio, **no** ilegal — a petición de Adán se pidió cubrir también "prácticas ilícitas" como categoría, lo cual se rechazó explícitamente por tratarse de contenido que facilita actividad ilegal; la sección cubre solo alternativas creativas y legales.
 - **`#crear-empresa`** — guía estática completa para constituir una empresa en México (Persona Física vs. Persona Moral, SAS vs. SA de CV, rutas de constitución, costos/tiempos estimados, obligaciones recurrentes, errores comunes). Contenido de referencia, sin interactividad.
 - **`#legal`** — checklist legal del negocio (**no persiste**) + calendario fiscal del negocio + "Qué puedo deducir si tuviera empresa" (Operación, Nómina, Equipo/tecnología, Marketing, Viáticos, Financieros, Protección del negocio, Costo de ventas, Estímulos fiscales adicionales).
 
@@ -136,7 +150,7 @@ Checklist personal (`.check-item`, **no persiste** — mismo comportamiento visu
 ## Referencias cruzadas
 
 - La barra de navegación (ambos modos) tiene un enlace **🚀 Dashboard** al final, alineado a la derecha (`margin-left:auto`), que apunta a `../Dashboard/dashboard.html`.
-- El **Dashboard** (`../Dashboard/dashboard.html`) lee `coach_rutina_v1` directamente (`D.rut`) y **duplica** `RUTINA_TASKS` (63 tareas, deben quedar byte-idénticas — verificado con `JSON.stringify` en cada cambio), las 4 fechas de `PHASES`, y el array `SK` de 12 skills. **Si editas el horario de `#rutina`, los valores base del radar, o las fechas del Plan Maestro aquí, hay que replicar el cambio en `Dashboard/dashboard.html`** — no hay sincronización automática entre archivos. Ver tabla de "Datos duplicados" en [`../README.md`](../README.md).
+- El **Dashboard** (`../Dashboard/dashboard.html`) lee `coach_rutina_v1` directamente (`D.rut`) y **duplica** `RUTINA_TASKS` (57 tareas de nivel superior / 70 contando subtareas, deben quedar byte-idénticas — verificado con `JSON.stringify` en cada cambio), las 4 fechas de `PHASES`, y el array `SK` de 12 skills. **Si editas el horario de `#rutina`, los valores base del radar, o las fechas del Plan Maestro aquí, hay que replicar el cambio en `Dashboard/dashboard.html`** — no hay sincronización automática entre archivos. Ver tabla de "Datos duplicados" en [`../README.md`](../README.md).
 - Mapa completo del proyecto: [`../README.md`](../README.md).
 
 ## Cómo usarlo

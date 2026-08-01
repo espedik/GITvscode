@@ -63,7 +63,7 @@ El horario semanal (`S.rutina`) viene precargado con el programa de 6 días de a
 
 ## Rediseño de interfaz (2026-07-31)
 
-Adán pidió explícitamente "el contenido me gusta pero la interfaz no" — rediseño puramente visual, **sin tocar HTML ni JS**, solo los valores del `<style>`. El mismo tratamiento se aplicó a `salud.html`, `comida.html` y el shell `cuidadopersonal.html` (ver sus `.md` respectivos), alineando el look de las 4 apps al lenguaje visual "premium minimalista" que ya se validó en `Coach/Coach_v2.html` (rediseño del 2026-07-18: sin gradientes decorativos, sin glow de neón, tarjetas planas).
+Adán pidió explícitamente "el contenido me gusta pero la interfaz no" — rediseño puramente visual, **sin tocar HTML ni JS**, solo los valores del `<style>`. El mismo tratamiento (quitar gradiente/glow) se aplicó también a `salud.html`, `comida.html` y a las partes oscuras/genéricas del shell `cuidadopersonal.html` (ver sus `.md` respectivos — `readme_salud.md`, `readme_comida.md`, `readme_cuidadopersonal.md` → "Rediseño de interfaz del shell"), alineando el look de las 4 apps al lenguaje visual "premium minimalista" que ya se validó en `Coach/Coach_v2.html` (rediseño del 2026-07-18: sin gradientes decorativos, sin glow de neón, tarjetas planas). **Los temas pastel de Skincare/Cabello (`#view-skincare`/`#view-cabello`) no se tocaron** — tuvieron su propio rediseño dedicado el 2026-07-29, ya aprobado, y sus gradientes (`.sk-hero`/`.ca-hero`, botones) son parte intencional de ese tema, no la decoración genérica que se pidió quitar aquí.
 
 Se quitó, en todo el `<style>`:
 - `background-image` con manchas radiales de color detrás del `body`.
@@ -75,6 +75,10 @@ Se quitó, en todo el `<style>`:
 **Se conservaron sin tocar**: todas las variables de color (`--p`, `--g`, `--b`, `--pu`, `--w`, `--r`) y sus valores — el JS genera decenas de estilos inline con `var(--p)` etc. y con `rgba(255,107,53,...)` literal (color del muscle map, chips, badges), así que cambiar los valores de esas variables sin auditar cada uso hubiera desincronizado el color de las tarjetas generadas por JS del resto de la interfaz. El anillo de foco de inputs (`box-shadow: 0 0 0 3px ...`) y el degradado sutil de `.pr-badge` se dejaron igual — son patrones funcionales/de acento, no la decoración genérica que se pidió quitar.
 
 Verificado con un smoke test en jsdom (`nav()` a las 6 secciones) sin errores de consola tras el cambio.
+
+## Modo oscuro/claro (2026-07-31)
+
+Botón `.theme-toggle-btn` junto a "💪 Entrenar ahora" en el topbar. `--surface`/`--surface-2`/`--surface-3` (nuevas) reemplazan los hex sólidos que dejó el rediseño de interfaz de arriba (`#161619`/`#18181c`/`#1b1b20`) para que puedan invertirse por tema; el resto de bordes/hovers usa el truco `--ov` (ver `../README.md`). El gráfico de progreso de fuerza (`ch-prog`, único uso de Chart.js aquí) tenía `borderColor:'var(--p)'` y similares — **Chart.js no resuelve `var()`** porque pinta a `<canvas>`, así que se cambió a un helper `cssVar(n)` que lee `getComputedStyle` en el momento de crear la gráfica; `toggleTheme()` vuelve a llamar al render de la sección activa (`RENDERS[activa]()`) para que la gráfica visible se redibuje con los colores correctos al cambiar de tema. `TIPO_COL`/`MUSCULO_COL` (colores por tipo de rutina/músculo) se dejaron con hex literal a propósito, igual que `CAT_META` en Dashboard — son categorización visual, no chrome de la interfaz, y ya son colores saturados que funcionan razonablemente en ambos temas.
 
 ## Referencias cruzadas
 

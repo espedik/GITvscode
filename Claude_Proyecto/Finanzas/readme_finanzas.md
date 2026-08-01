@@ -601,6 +601,16 @@ Si `S.weeklyLeftover > 0`, ese monto manual reemplaza el estimado automático en
 
 ---
 
+## Modo oscuro/claro (2026-07-31)
+
+Botón `.theme-toggle-btn` en el topbar, junto a "+ Nueva transacción". A diferencia de las otras 6 apps del ecosistema, **Finanzas ya era clara por defecto** (como Coach) — mismo patrón que Coach: `:root` sigue siendo el tema claro y se agregó `:root[data-theme="dark"]` como override, en vez de al revés. Persiste en la misma clave compartida `localStorage['coach-theme']` (ver `../README.md` para el detalle técnico completo de la convención `--ov` compartida entre las 7 apps).
+
+Detalles específicos de este archivo (el más grande y con más gráficas del proyecto):
+- Los bordes/hovers/divisores que ya usaban `rgba(0,0,0,.NN)` (dirección opuesta a las apps oscuras, que usan `rgba(255,255,255,.NN)`) se migraron al mismo truco `--ov`, con **7 excepciones dejadas deliberadamente en negro fijo**: los 3 `box-shadow` base (`--sh`/`--shm`/`--shl`), las sombras hardcoded de sidebar y topbar, el overlay de dimming de `.mo`/`.conf` (fondo de modales), y la tarjeta decorativa oscura de inversión GBM (`rgba(0,12,35,.95)`, un panel intencionalmente oscuro dentro de la página clara, no relacionado con el tema) — todos siguen viendo bien en ambos temas sin invertirse.
+- Nueva variable `--surface-solid` (`#ffffff` claro / `#17171f` oscuro) para `.card`/`.modal`/`.conf-box`/`.toast`/`select option`, que antes tenían `#ffffff` hardcoded.
+- **5 gráficas Chart.js** (`chBud`, `chGbmInv`, `chBal`, `chPat`, `chBtcPnl`) tenían colores de grid/ticks/leyenda hardcoded, algunos ya inconsistentes con el tema claro real desde antes (p.ej. grid `rgba(255,255,255,.08)` casi invisible sobre fondo blanco, o la línea "Invertido acumulado" del gráfico de BTC en blanco sobre blanco — bugs preexistentes, no introducidos ahora) — se corrigieron con el mismo helper `cssVar(n)` de las demás apps, y `toggleTheme()` vuelve a llamar al render de la sección activa para redibujar la gráfica visible al cambiar de tema.
+- Un puñado de estilos inline con grises hardcoded (tabs de mes futuro, botones de tabs de BTC) también se migraron a `var(--text3)`/`rgba(var(--ov),X)` por el mismo motivo — algunos, como el texto de meses futuros en blanco sobre blanco, eran ilegibles en el tema claro ya antes de este cambio.
+
 ## Referencias cruzadas
 
 - El **Dashboard** (`../Dashboard/dashboard.html`) lee `finanzasmx_v2` directamente (`D.fin`): usa `investments`, `emergencyFund`, `debts` (patrimonio neto, fondo de emergencia, deuda total del slide "💰 Finanzas") y `transactions` del mes actual (ingresos/gastos, score de finanzas del Vida Score). Si cambias la forma de `S.investments`/`S.debts`/`S.transactions`/`S.emergencyFund` aquí, revisa `patrimonioNeto()`, `hasFinData()`, `calcScores()` y `renderFinanzas()` en `Dashboard/dashboard.html`.

@@ -15,40 +15,54 @@
   --p:#b06eff;--p-l:rgba(176,110,255,.1);
   --r:#ff3b6b;--r-l:rgba(255,59,107,.1);
   --bg:#060614;--text:#e8eaf6;--text2:#8892b0;--text3:#4a5568;
+  --surface:#161619;--surface-2:#18181c;--surface-3:#1b1b20;--ov:255,255,255;
   --sw:245px;--r14:14px;--rs:9px;--sh:0 4px 24px rgba(0,0,0,.5);
 }
+:root[data-theme="light"]{
+  --g:#00a758;--g-l:rgba(0,167,88,.12);
+  --o:#b8632c;--o-l:rgba(184,99,44,.12);
+  --w:#a8790a;--w-l:rgba(168,121,10,.12);
+  --b:#2563eb;--b-l:rgba(37,99,235,.12);
+  --p:#7f4fb8;--p-l:rgba(127,79,184,.12);
+  --r:#c81e4d;--r-l:rgba(200,30,77,.12);
+  --bg:#f4f4f7;--text:#16161a;--text2:#5c5f70;--text3:#82859a;
+  --surface:#ffffff;--surface-2:#ffffff;--surface-3:#ffffff;--ov:0,0,0;
+  --sh:0 2px 14px rgba(0,0,0,.08);
+}
 body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);display:flex;min-height:100vh;font-size:14px}
-::-webkit-scrollbar{width:4px;height:4px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:rgba(255,255,255,.12);border-radius:2px}
+::-webkit-scrollbar{width:4px;height:4px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:rgba(var(--ov),.12);border-radius:2px}
 
-.sidebar{width:var(--sw);background:#161619;border-right:1px solid rgba(255,255,255,.08);
+.sidebar{width:var(--sw);background:var(--surface);border-right:1px solid rgba(var(--ov),.08);
   display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:100;transition:transform .25s}
-.sb-logo{padding:20px;border-bottom:1px solid rgba(255,255,255,.06)}
+.sb-logo{padding:20px;border-bottom:1px solid rgba(var(--ov),.06)}
 .sb-logo h1{font-size:16px;font-weight:800;color:var(--text);letter-spacing:-.2px}
 .sb-logo p{font-size:10px;color:var(--text3);margin-top:3px;letter-spacing:.08em;text-transform:uppercase}
 .sb-nav{padding:10px 8px;flex:1;overflow-y:auto}
 .nav-label{font-size:9px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.1em;padding:12px 12px 4px}
 .nav-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:var(--rs);cursor:pointer;color:var(--text2);font-weight:500;font-size:13px;transition:all .2s;margin-bottom:2px;user-select:none}
-.nav-item:hover{background:rgba(255,255,255,.05);color:var(--text)}
+.nav-item:hover{background:rgba(var(--ov),.05);color:var(--text)}
 .nav-item.active{background:rgba(255,217,61,.12);color:var(--w);font-weight:600;border-left:2px solid var(--w)}
 .nav-item .ico{font-size:15px;width:20px;text-align:center;flex-shrink:0}
 .nav-item .count{margin-left:auto;font-size:10px;color:var(--text3);font-family:monospace}
 
 .main{margin-left:var(--sw);flex:1;display:flex;flex-direction:column;min-height:100vh}
-.topbar{background:#161619;border-bottom:1px solid rgba(255,255,255,.06);
+.topbar{background:var(--surface);border-bottom:1px solid rgba(var(--ov),.06);
   padding:0 24px;height:58px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
 .topbar-title{font-size:15px;font-weight:700}
 .content{padding:22px;flex:1;max-width:1200px}
 .section{display:none}.section.active{display:block}
 
-.card{background:#18181c;border:1px solid rgba(255,255,255,.07);border-radius:var(--r14);padding:18px;box-shadow:var(--sh)}
+.card{background:var(--surface-2);border:1px solid rgba(var(--ov),.07);border-radius:var(--r14);padding:18px;box-shadow:var(--sh)}
 .card-title{font-size:11px;font-weight:600;color:var(--text2);margin-bottom:8px;text-transform:uppercase;letter-spacing:.06em}
 
 .btn{display:inline-flex;align-items:center;gap:5px;padding:8px 14px;border-radius:var(--rs);border:none;cursor:pointer;font-size:13px;font-weight:600;transition:all .2s;white-space:nowrap;font-family:inherit}
 .btn-w{background:var(--w);color:#241c00}
 .btn-w:hover{filter:brightness(1.08);transform:translateY(-1px);box-shadow:var(--sh)}
-.btn-o{background:rgba(255,255,255,.05);color:var(--text2);border:1px solid rgba(255,255,255,.1)}
-.btn-o:hover{background:rgba(255,255,255,.09);color:var(--text)}
+.btn-o{background:rgba(var(--ov),.05);color:var(--text2);border:1px solid rgba(var(--ov),.1)}
+.btn-o:hover{background:rgba(var(--ov),.09);color:var(--text)}
 .btn-sm{padding:5px 10px;font-size:11.5px}
+.theme-toggle-btn{background:rgba(var(--ov),.06);border:1px solid rgba(var(--ov),.12);color:var(--text);width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0}
+.theme-toggle-btn:hover{background:rgba(var(--ov),.12)}
 
 /* Banner de contexto (arriba de todo) */
 .ctx-banner{display:flex;gap:12px;align-items:flex-start;background:rgba(255,217,61,.06);border:1px solid rgba(255,217,61,.2);
@@ -58,19 +72,19 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var
 
 /* Grid de recetas */
 .recetas-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
-.receta-card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:var(--r14);padding:16px;display:flex;flex-direction:column;gap:10px}
+.receta-card{background:rgba(var(--ov),.03);border:1px solid rgba(var(--ov),.07);border-radius:var(--r14);padding:16px;display:flex;flex-direction:column;gap:10px}
 .receta-card h3{font-size:15px;font-weight:800;line-height:1.3}
 .receta-meta{display:flex;gap:10px;flex-wrap:wrap;font-size:11px;color:var(--text3)}
 .receta-meta span{display:flex;align-items:center;gap:4px}
 .macro-row{display:flex;gap:6px;flex-wrap:wrap}
-.macro-chip{font-size:10.5px;font-weight:700;padding:3px 9px;border-radius:20px;background:rgba(255,255,255,.06);color:var(--text2)}
+.macro-chip{font-size:10.5px;font-weight:700;padding:3px 9px;border-radius:20px;background:rgba(var(--ov),.06);color:var(--text2)}
 .macro-chip.cal{background:var(--o-l);color:var(--o)}
 .macro-chip.prot{background:var(--p-l);color:var(--p)}
 .macro-chip.carb{background:var(--b-l);color:var(--b)}
 .macro-chip.gra{background:var(--w-l);color:var(--w)}
 .receta-sub{font-size:12px;font-weight:700;color:var(--text2);margin-top:4px;text-transform:uppercase;letter-spacing:.05em;font-size:10px}
 .ing-list{list-style:none;display:flex;flex-direction:column;gap:3px}
-.ing-list li{font-size:12.5px;color:var(--text);display:flex;justify-content:space-between;gap:8px;padding:2px 0;border-bottom:1px dashed rgba(255,255,255,.05)}
+.ing-list li{font-size:12.5px;color:var(--text);display:flex;justify-content:space-between;gap:8px;padding:2px 0;border-bottom:1px dashed rgba(var(--ov),.05)}
 .ing-list li:last-child{border-bottom:none}
 .ing-list li span:last-child{color:var(--text3);white-space:nowrap}
 .pasos-list{list-style:decimal;padding-left:18px;display:flex;flex-direction:column;gap:5px}
@@ -84,24 +98,31 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var
 .shop-cat-title{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:800;color:var(--w);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid rgba(255,217,61,.15)}
 .shop-cat-title .n{margin-left:auto;font-size:10px;color:var(--text3);font-family:monospace;text-transform:none;letter-spacing:0}
 .shop-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:6px}
-.shop-item{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:8px;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.05);cursor:pointer;transition:all .15s;user-select:none}
-.shop-item:hover{background:rgba(255,255,255,.05)}
+.shop-item{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:8px;background:rgba(var(--ov),.02);border:1px solid rgba(var(--ov),.05);cursor:pointer;transition:all .15s;user-select:none}
+.shop-item:hover{background:rgba(var(--ov),.05)}
 .shop-item.checked{opacity:.45}
 .shop-item.checked .shop-name{text-decoration:line-through}
-.shop-check{width:17px;height:17px;border-radius:5px;border:1.5px solid rgba(255,255,255,.25);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:11px}
+.shop-check{width:17px;height:17px;border-radius:5px;border:1.5px solid rgba(var(--ov),.25);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:11px}
 .shop-item.checked .shop-check{background:var(--g);border-color:var(--g);color:#001a0d}
 .shop-name{font-size:12.5px;flex:1}
 .shop-progress{display:flex;align-items:center;gap:10px;margin-bottom:18px}
-.shop-progress .pbar{flex:1;height:8px;background:rgba(255,255,255,.08);border-radius:20px;overflow:hidden}
+.shop-progress .pbar{flex:1;height:8px;background:rgba(var(--ov),.08);border-radius:20px;overflow:hidden}
 .shop-progress .pfill{height:100%;border-radius:20px;background:linear-gradient(90deg,var(--w),var(--g));transition:width .4s}
 .shop-progress .ptxt{font-size:12px;color:var(--text2);font-weight:700;white-space:nowrap}
 
-.toast{position:fixed;bottom:24px;right:24px;background:#1b1b20;color:var(--text);border:1px solid rgba(255,255,255,.1);
+.toast{position:fixed;bottom:24px;right:24px;background:var(--surface-3);color:var(--text);border:1px solid rgba(var(--ov),.1);
   padding:10px 18px;border-radius:var(--rs);font-size:13px;font-weight:600;box-shadow:var(--sh);z-index:500;opacity:0;transform:translateY(8px);transition:all .3s;pointer-events:none}
 .toast.show{opacity:1;transform:translateY(0)}
 
 @media(max-width:640px){.sidebar{transform:translateX(-100%)}.sidebar.open{transform:translateX(0)}.main{margin-left:0}.recetas-grid{grid-template-columns:1fr}}
 </style>
+<script>
+(function () {
+  var saved = localStorage.getItem('coach-theme');
+  var theme = saved || ((window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) ? 'light' : 'dark');
+  document.documentElement.setAttribute('data-theme', theme);
+})();
+</script>
 </head>
 <body>
 
@@ -117,7 +138,7 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var
     <div class="nav-label">Compras</div>
     <div class="nav-item" onclick="nav('super')"><span class="ico">🛒</span>Lista del Súper<span class="count" id="cnt-super"></span></div>
   </nav>
-  <div style="padding:12px;border-top:1px solid rgba(255,255,255,.06);display:flex;flex-direction:column;gap:6px">
+  <div style="padding:12px;border-top:1px solid rgba(var(--ov),.06);display:flex;flex-direction:column;gap:6px">
     <button class="btn btn-o" style="width:100%;font-size:12px" onclick="resetShop()">↺ Reiniciar lista del súper</button>
   </div>
 </aside>
@@ -128,7 +149,10 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var
       <button class="btn btn-o" id="menuBtn" onclick="document.getElementById('sidebar').classList.toggle('open')" style="display:none;padding:5px 8px">☰</button>
       <span class="topbar-title" id="topTitle">🌅 Desayunos</span>
     </div>
-    <span style="font-size:11px;color:var(--text3)">Solo desayuno y cena — la comida de mediodía no vive aquí</span>
+    <div style="display:flex;align-items:center;gap:12px">
+      <span style="font-size:11px;color:var(--text3)">Solo desayuno y cena — la comida de mediodía no vive aquí</span>
+      <button class="theme-toggle-btn" id="theme-toggle-btn" onclick="toggleTheme()" title="Cambiar tema claro/oscuro" aria-label="Cambiar tema claro/oscuro">🌙</button>
+    </div>
   </div>
 
   <div class="content">
@@ -302,6 +326,15 @@ const load=()=>{try{const d=localStorage.getItem(KEY);if(d)S={...S,...JSON.parse
 
 function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500);}
 
+function toggleTheme(){
+  const html=document.documentElement;
+  const next=html.getAttribute('data-theme')==='dark'?'light':'dark';
+  html.setAttribute('data-theme',next);
+  localStorage.setItem('coach-theme',next);
+  const btn=document.getElementById('theme-toggle-btn');
+  if(btn) btn.textContent=next==='dark'?'☀️':'🌙';
+}
+
 // ─── Navegación ─────────────────────────────────────────────────────────────
 const SECS=['desayunos','cenas','super'];
 const STITLE={desayunos:'🌅 Desayunos',cenas:'🌙 Cenas',super:'🛒 Lista del Súper'};
@@ -394,6 +427,8 @@ function init(){
   load();
   renderRecetas();
   renderSuper();
+  const themeBtn=document.getElementById('theme-toggle-btn');
+  if(themeBtn) themeBtn.textContent=document.documentElement.getAttribute('data-theme')==='dark'?'☀️':'🌙';
   const s=new URLSearchParams(location.search).get('s');
   if(SECS.includes(s)) nav(s);
   const check=()=>{const mb=document.getElementById('menuBtn');mb.style.display=window.innerWidth<640?'':'none';if(window.innerWidth>=640)document.getElementById('sidebar').classList.remove('open');};
