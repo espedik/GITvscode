@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mi Guía de Vestimenta</title>
+<meta name="description" content="Guía personal de guardarropa: básicos, chaquetas, zapatos y outfits por ocasión (trabajo, casual, ejercicio, bodas, fiestas).">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --p:#c17f4a;--p-d:#9c632f;--p-l:rgba(193,127,74,.12);
+  --g:#00a758;--g-l:rgba(0,167,88,.1);
+  --r:#ff3b6b;--r-l:rgba(255,59,107,.1);
+  --w:#ffd93d;
+  --bg:#0a0908;--text:#f0ece6;--text2:#a89e91;--text3:#6b6156;
+  --surface:#151311;--surface-2:#1a1815;--surface-3:#1e1c18;
+  --border:rgba(var(--ov),.08);--ov:255,255,255;
+  --sw:245px;--r14:14px;--rs:9px;--sh:0 4px 24px rgba(0,0,0,.45);
+}
+:root[data-theme="light"]{
+  --p:#a4632f;--p-d:#824c22;--p-l:rgba(164,99,47,.1);
+  --g:#00a758;--r:#c81e4d;--w:#a8790a;
+  --bg:#f6f3ee;--text:#211d18;--text2:#6b6255;--text3:#95897a;
+  --surface:#ffffff;--surface-2:#ffffff;--surface-3:#ffffff;--ov:0,0,0;
+  --sh:0 2px 14px rgba(0,0,0,.08);
+}
+body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);display:flex;min-height:100vh;font-size:14px}
+::-webkit-scrollbar{width:4px;height:4px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:rgba(var(--ov),.14);border-radius:2px}
+.sidebar{width:var(--sw);background:var(--surface);border-right:1px solid rgba(var(--ov),.08);display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:100;transition:transform .25s}
+.sb-logo{padding:20px;border-bottom:1px solid rgba(var(--ov),.06)}
+.sb-logo h1{font-size:16px;font-weight:800;letter-spacing:-.2px}
+.sb-logo p{font-size:10px;color:var(--text3);margin-top:3px;letter-spacing:.08em;text-transform:uppercase}
+.sb-nav{padding:10px 8px;flex:1;overflow-y:auto}
+.nav-label{font-size:9px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.1em;padding:12px 12px 4px}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:var(--rs);cursor:pointer;color:var(--text2);font-weight:500;font-size:13px;transition:all .2s;margin-bottom:2px;user-select:none}
+.nav-item:hover{background:rgba(var(--ov),.05);color:var(--text)}
+.nav-item.active{background:var(--p-l);color:var(--p);font-weight:600;border-left:2px solid var(--p)}
+.nav-item .ico{font-size:15px;width:20px;text-align:center;flex-shrink:0}
+.main{margin-left:var(--sw);flex:1;display:flex;flex-direction:column;min-height:100vh}
+.topbar{background:var(--surface);border-bottom:1px solid rgba(var(--ov),.06);padding:0 24px;height:58px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
+.topbar-title{font-size:15px;font-weight:700}
+.content{padding:24px;flex:1;max-width:1280px}
+.section{display:none}.section.active{display:block}
+.card{background:var(--surface-2);border:1px solid rgba(var(--ov),.07);border-radius:var(--r14);padding:18px;box-shadow:var(--sh)}
+.sh{margin-bottom:18px}
+.sh h2{font-size:20px;font-weight:800}
+.sh .sub{font-size:12.5px;color:var(--text2);margin-top:4px;line-height:1.6;max-width:760px}
+.intro-banner{border-color:rgba(193,127,74,.28);background:var(--p-l);margin-bottom:20px}
+.intro-banner .t{font-size:13px;font-weight:800;color:var(--p);margin-bottom:4px}
+.intro-banner .d{font-size:12.5px;color:var(--text2);line-height:1.65}
+.theme-toggle-btn{background:rgba(var(--ov),.06);border:1px solid rgba(var(--ov),.12);color:var(--text);width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.theme-toggle-btn:hover{background:rgba(var(--ov),.12)}
+.badge{display:inline-block;padding:3px 9px;border-radius:20px;font-size:10px;font-weight:700}
+.b-p{background:var(--p-l);color:var(--p);border:1px solid rgba(193,127,74,.3)}
+.b-g{background:var(--g-l);color:var(--g);border:1px solid rgba(0,167,88,.25)}
+.b-n{background:rgba(var(--ov),.07);color:var(--text2)}
+
+/* Fase / plan de compra */
+.fase-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:6px}
+.fase-card{border-radius:12px;border:1px solid rgba(var(--ov),.08);background:rgba(var(--ov),.025);padding:14px}
+.fase-card .fn{font-size:10px;font-weight:800;color:var(--p);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px}
+.fase-card ul{list-style:none;font-size:12px;color:var(--text2);line-height:1.9}
+.fase-card ul li::before{content:"— "}
+.fase-card .tot{margin-top:8px;font-size:12px;font-weight:800;color:var(--text)}
+
+/* Grid de items comprables */
+.item-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:18px}
+.item-card{border-radius:var(--r14);border:1px solid rgba(var(--ov),.07);background:var(--surface-2);overflow:hidden;box-shadow:var(--sh);transition:border-color .2s,transform .2s}
+.item-card:hover{border-color:rgba(193,127,74,.35);transform:translateY(-2px)}
+.item-img{width:100%;height:210px;overflow:hidden;background:rgba(var(--ov),.04)}
+.item-img img{width:100%;height:100%;object-fit:cover;display:block}
+.item-body{padding:15px}
+.item-body h3{font-size:14.5px;font-weight:800;margin-bottom:4px}
+.item-use{font-size:12px;color:var(--text2);line-height:1.5;margin-bottom:10px}
+.buy-list{display:flex;flex-direction:column;gap:5px;margin-bottom:9px}
+.buy-opt{display:flex;justify-content:space-between;gap:8px;font-size:11.5px;background:rgba(var(--ov),.04);padding:6px 9px;border-radius:6px}
+.buy-opt .store{color:var(--text2);font-weight:600}
+.buy-opt .price{color:var(--p);font-weight:800;white-space:nowrap}
+.item-tip{font-size:11px;color:var(--text3);font-style:italic;line-height:1.5}
+.item-check{display:flex;align-items:center;gap:7px;margin-top:11px;padding-top:10px;border-top:1px solid rgba(var(--ov),.06);cursor:pointer;user-select:none}
+.item-check input{width:15px;height:15px;accent-color:var(--g);cursor:pointer}
+.item-check span{font-size:11.5px;color:var(--text2);font-weight:600}
+.item-card.checked{border-color:rgba(0,167,88,.4)}
+.item-card.checked .item-img{opacity:.75}
+
+/* Combos por ocasión */
+.combo-card{border-radius:var(--r14);border:1px solid rgba(var(--ov),.07);background:var(--surface-2);overflow:hidden;box-shadow:var(--sh);margin-bottom:18px;display:flex}
+.combo-img{width:280px;flex-shrink:0;overflow:hidden;background:rgba(var(--ov),.04)}
+.combo-img img{width:100%;height:100%;object-fit:cover;display:block}
+.combo-body{padding:18px 20px;flex:1}
+.combo-body h3{font-size:15px;font-weight:800;margin-bottom:3px}
+.combo-body .occ-badge{font-size:10px}
+.combo-desc{font-size:12.5px;color:var(--text2);line-height:1.6;margin:8px 0 12px}
+.piece-list{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:10px}
+.piece{font-size:11.5px;background:rgba(var(--ov),.05);border:1px solid rgba(var(--ov),.08);padding:5px 10px;border-radius:20px;color:var(--text2)}
+.piece a{color:var(--p);text-decoration:none;font-weight:700}
+.combo-total{font-size:12px;font-weight:700;color:var(--text)}
+.combo-total b{color:var(--p)}
+@media(max-width:760px){.combo-card{flex-direction:column}.combo-img{width:100%;height:200px}}
+@media(max-width:900px){.fase-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:640px){.sidebar{transform:translateX(-100%)}.sidebar.open{transform:translateX(0)}.main{margin-left:0}.fase-grid{grid-template-columns:1fr}}
+</style>
+<script>
+(function () {
+  var saved = localStorage.getItem('coach-theme');
+  var theme = saved || ((window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) ? 'light' : 'dark');
+  document.documentElement.setAttribute('data-theme', theme);
+})();
+</script>
+</head>
+<body>
+
+<aside class="sidebar" id="sidebar">
+  <div class="sb-logo">
+    <h1>👔 Mi Vestimenta</h1>
+    <p>Guardarropa y guía de compras</p>
+  </div>
+  <nav class="sb-nav">
+    <div class="nav-label">Principal</div>
+    <div class="nav-item active" onclick="nav('inicio')"><span class="ico">🏠</span>Inicio</div>
+    <div class="nav-label">Qué comprar</div>
+    <div class="nav-item" onclick="nav('basicos')"><span class="ico">👕</span>Básicos</div>
+    <div class="nav-item" onclick="nav('chaquetas')"><span class="ico">🧥</span>Chaquetas</div>
+    <div class="nav-item" onclick="nav('zapatos')"><span class="ico">👞</span>Zapatos</div>
+    <div class="nav-label">Por ocasión</div>
+    <div class="nav-item" onclick="nav('trabajo')"><span class="ico">💼</span>Trabajo</div>
+    <div class="nav-item" onclick="nav('casual')"><span class="ico">🙂</span>Casual</div>
+    <div class="nav-item" onclick="nav('ejercicio')"><span class="ico">🏋️</span>Ejercicio</div>
+    <div class="nav-item" onclick="nav('bodas')"><span class="ico">💍</span>Bodas</div>
+    <div class="nav-item" onclick="nav('fiestas')"><span class="ico">🎉</span>Fiestas</div>
+  </nav>
+  <div style="padding:12px;border-top:1px solid rgba(var(--ov),.06);font-size:10px;color:var(--text3);line-height:1.6">
+    <span id="checkCounter">0/20</span> piezas marcadas
+  </div>
+</aside>
+
+<main class="main">
+  <div class="topbar">
+    <div style="display:flex;align-items:center;gap:8px">
+      <button class="theme-toggle-btn" id="menuBtn" onclick="document.getElementById('sidebar').classList.toggle('open')" style="display:none;border-radius:6px">☰</button>
+      <span class="topbar-title" id="topTitle">🏠 Inicio</span>
+    </div>
+    <button class="theme-toggle-btn" id="theme-toggle-btn" onclick="toggleTheme()" title="Cambiar tema claro/oscuro" aria-label="Cambiar tema claro/oscuro">🌙</button>
+  </div>
+
+  <div class="content" id="content-root">
+    <!-- El contenido de cada sección se inserta abajo -->
+  </div>
+</main>
+
+<script src="vestimenta_data.js"></script>
+<script src="vestimenta_app.js"></script>
+</body>
+</html>

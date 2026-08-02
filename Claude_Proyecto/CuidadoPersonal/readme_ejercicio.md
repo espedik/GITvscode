@@ -16,6 +16,18 @@ Trae precargados 56 ejercicios (`EJ_DB`) organizados por músculo (Pecho, Espald
 - **📚 Biblioteca** — catálogo completo de ejercicios agrupado por músculo, con filtros por texto, músculo y equipo; las tarjetas ahora muestran imagen y técnica cuando el ejercicio las tiene. Permite agregar ejercicios propios y eliminarlos.
 - **📈 Progreso** — selecciona un ejercicio con historial y muestra una gráfica (Chart.js) de la evolución del peso máximo levantado por sesión, además del récord personal (PR) y la progresión total en kg.
 - **📋 Historial** — lista de todas las sesiones completadas, con series hechas, volumen total (toneladas movidas) y detalle de los mejores pesos por ejercicio.
+- **🧭 Deportes para Explorar** (**nuevo el 2026-08-01**, contenido 100% estático, sin `localStorage` ni JS de render — no está en `RENDERS`, solo en `SECS`/`STITLE` para navegación) — pedido explícito de Adán: *"ponme una sección de todos los deportes asequibles que puedo hacer, estaría interesante explorar, pero detállalos y dame toda la info con fotos y por que me gustaría"*. 8 tarjetas `.sport-card` (grid `.sport-grid`, 2 columnas) + 1 tarjeta bonus a ancho completo, cada una con foto real (Wikimedia Commons, mismo criterio de licencia libre que `EJ_DB.img`), descripción, un bloque `.sport-why` con **razón personalizada** (no genérica) ligada a su perfil real, y `.sport-meta` con costo aproximado en CDMX, dónde practicarlo y equipo necesario:
+  1. 🏋️ **Hyrox** — conecta directo con su meta de bucket list ("Hyrox" e "Hyrox internacional", ver `Dashboard/readme_dashboard.md` → slide Mis Metas).
+  2. 🥊 **Boxeo** — cardio para la meta de "bajar panza".
+  3. 🧗 **Escalada deportiva (bouldering)** — paralelismo con su formación en mecatrónica (control/cinemática).
+  4. 🚴 **Ciclismo urbano/de ruta** — afinidad con su perfil de ingeniero automotriz.
+  5. 🏊 **Natación** — bajo impacto articular, complementa el volumen de sentadilla/peso muerto ya en `S.rutina`.
+  6. 🥾 **Senderismo** — económico, compatible con su prioridad actual de liquidar deuda (ver `[[project-millonario-finanzas]]` en memoria).
+  7. 🏓 **Pádel** — networking informal fuera del ámbito automotriz, relevante para sus opciones de negocio paralelo.
+  8. 🤸 **Calistenia en parques** — gratis, extensión directa de las dominadas/fondos que ya hace en su split de brazos/espalda.
+  9. ♟️🥊 **Bonus — Chessboxing** (`.sport-card.bonus`, ancho completo) — intersección literal de dos metas ya en su lista (torneo de ajedrez + boxeo).
+
+  Todas las referencias de ubicación (Santa María la Ribera, Parque España/México, Alberca Olímpica Francisco Márquez, Desierto de los Leones, Monkey Bloc, Reforma/Muévete en Bici) y de costo son aproximaciones razonables para CDMX, no verificadas contra una fuente en vivo — si cambian precios/ubicaciones reales, actualizar aquí a mano. Las 9 URLs de imagen se verificaron una por una con `curl` (HTTP 200) antes de insertarlas, mismo estándar que `EJ_DB.img`.
 
 ## Programa por defecto — a la medida de la meta de Adán (2026-07-30)
 

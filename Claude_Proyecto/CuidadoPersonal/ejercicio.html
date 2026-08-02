@@ -162,6 +162,24 @@ tbody tr:hover td{background:rgba(255,107,53,.03)}
 .exd-stat{background:rgba(var(--ov),.05);border:1px solid rgba(var(--ov),.08);border-radius:6px;padding:3px 9px;font-size:11px;font-weight:700;color:var(--text2)}
 .exd-cue{font-size:11.5px;color:var(--text3);line-height:1.5;margin-top:4px;font-style:italic}
 @media(max-width:640px){.exd-card{flex-direction:column}.exd-img{width:100%;height:160px}}
+/* Deportes para explorar */
+.sport-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+.sport-card{border-radius:var(--r14);border:1px solid rgba(var(--ov),.07);background:var(--surface-2);overflow:hidden;box-shadow:var(--sh);transition:border-color .2s,transform .2s}
+.sport-card:hover{border-color:rgba(255,107,53,.3);transform:translateY(-2px)}
+.sport-card.bonus{grid-column:1/-1;display:flex}
+.sport-card.bonus .sport-img{width:260px;height:auto;flex-shrink:0}
+.sport-card.bonus .sport-body{flex:1}
+.sport-img{width:100%;height:180px;overflow:hidden;background:rgba(var(--ov),.04)}
+.sport-img img{width:100%;height:100%;object-fit:cover;display:block}
+.sport-body{padding:16px}
+.sport-head{display:flex;align-items:center;gap:9px;margin-bottom:8px}
+.sport-head h3{font-size:15px;font-weight:800;color:var(--text)}
+.sport-ico{font-size:20px;flex-shrink:0}
+.sport-desc{font-size:12.5px;color:var(--text2);line-height:1.55;margin-bottom:10px}
+.sport-why{font-size:12px;color:var(--text2);line-height:1.6;background:rgba(255,107,53,.05);border-left:2px solid var(--p);padding:8px 10px;border-radius:6px;margin-bottom:10px}
+.sport-why strong{color:var(--p)}
+.sport-meta{display:flex;gap:6px;flex-wrap:wrap}
+@media(max-width:900px){.sport-grid{grid-template-columns:1fr}.sport-card.bonus{flex-direction:column}.sport-card.bonus .sport-img{width:100%;height:180px}}
 @media(max-width:900px){.g4{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:640px){.sidebar{transform:translateX(-100%)}.sidebar.open{transform:translateX(0)}.main{margin-left:0}.g4,.g3,.g2{grid-template-columns:1fr}.fr{grid-template-columns:1fr}}
 </style>
@@ -190,6 +208,8 @@ tbody tr:hover td{background:rgba(255,107,53,.03)}
     <div class="nav-label">Seguimiento</div>
     <div class="nav-item" onclick="nav('progreso')"><span class="ico">📈</span>Progreso</div>
     <div class="nav-item" onclick="nav('historial')"><span class="ico">📋</span>Historial</div>
+    <div class="nav-label">Explorar</div>
+    <div class="nav-item" onclick="nav('deportes')"><span class="ico">🧭</span>Deportes</div>
   </nav>
   <div style="padding:12px;border-top:1px solid rgba(var(--ov),.06)">
     <button class="btn btn-o" style="width:100%;font-size:12px" onclick="exportData()">⬇️ Exportar datos</button>
@@ -279,6 +299,140 @@ tbody tr:hover td{background:rgba(255,107,53,.03)}
     <section id="s-historial" class="section">
       <div class="sh"><h2>📋 Historial de Sesiones</h2></div>
       <div id="hist-body"></div>
+    </section>
+
+    <!-- DEPORTES PARA EXPLORAR -->
+    <section id="s-deportes" class="section">
+      <div class="sh"><h2>🧭 Deportes para Explorar</h2></div>
+      <div class="card meta-banner" style="margin-bottom:18px">
+        <div style="font-size:13px;font-weight:800;color:var(--p);margin-bottom:4px">Tu rutina de gym ya cubre fuerza y parte del cardio</div>
+        <div class="ts" style="color:var(--text2);line-height:1.6">Esta sección es para cuando quieras variar, ponerte un reto nuevo o simplemente probar algo distinto sin gastar de más — los 8 de abajo son accesibles en costo dentro de CDMX, la mayoría a poca distancia de <strong style="color:var(--text)">Santa María la Ribera</strong>, y cada uno trae por qué podría engancharte a ti en particular, no una lista genérica.</div>
+      </div>
+
+      <div class="sport-grid">
+
+        <div class="sport-card">
+          <div class="sport-img"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Stockholm_HYROX_lunges.jpg/960px-Stockholm_HYROX_lunges.jpg" alt="Carrera de Hyrox, atleta haciendo zancadas con peso"></div>
+          <div class="sport-body">
+            <div class="sport-head"><span class="sport-ico">🏋️</span><h3>Hyrox — Entrenamiento Funcional Híbrido</h3></div>
+            <p class="sport-desc">Carrera de resistencia funcional: 8 km de carrera divididos en 8 estaciones (sled push, remo, wall balls, farmer's carry, burpees...). Es la competencia de fitness que más ha crecido en el mundo en los últimos años, y ya tiene box de entrenamiento y carreras oficiales en CDMX.</p>
+            <div class="sport-why"><strong>Por qué te gustaría:</strong> ya está en tu bucket list de metas (Hyrox y hasta Hyrox internacional) y encaja perfecto con lo que ya entrenas — sigues haciendo fuerza y cardio, solo le sumas una fecha, un tiempo que batir y un podio. La mentalidad de medir/iterar/mejorar tiempos que usas en testing la vas a disfrutar igual aquí.</div>
+            <div class="sport-meta">
+              <span class="exd-stat">💰 $800-1,800/mes en box, o gratis con tu rutina actual</span>
+              <span class="exd-stat">📍 Boxes en Roma/Condesa/Polanco · carreras en el WTC CDMX</span>
+              <span class="exd-stat">🎒 Ropa técnica + tenis de cross-training</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="sport-card">
+          <div class="sport-img"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/Ramses_Thimoumi_standing_in_his_hometown_boxing_gym_during_his_training.jpg/960px-Ramses_Thimoumi_standing_in_his_hometown_boxing_gym_during_his_training.jpg" alt="Boxeador entrenando en un gimnasio de box"></div>
+          <div class="sport-body">
+            <div class="sport-head"><span class="sport-ico">🥊</span><h3>Boxeo</h3></div>
+            <p class="sport-desc">Sesiones de 45-60 min de técnica, velocidad y cardio con costal y manoplas — de los deportes que más calorías queman por hora que existen, sin necesitar compañero fijo de entrenamiento.</p>
+            <div class="sport-why"><strong>Por qué te gustaría:</strong> es el complemento directo a tu meta de "bajar panza" con el cardio más intenso posible, y tiene ese componente técnico y repetitivo que ya disfrutas en el gym — perfeccionar la forma antes que subir el peso. Santa María la Ribera/Guerrero es zona con tradición boxística real, no solo gimnasios boutique.</div>
+            <div class="sport-meta">
+              <span class="exd-stat">💰 $400-900/mes en gimnasios de barrio</span>
+              <span class="exd-stat">📍 Gimnasios de box en casi toda colonia de CDMX</span>
+              <span class="exd-stat">🎒 Vendas + guantes (~$500-800)</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="sport-card">
+          <div class="sport-img"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/Man_climbing_in_bouldering_gym.jpg/960px-Man_climbing_in_bouldering_gym.jpg" alt="Persona escalando en un rocódromo de boulder"></div>
+          <div class="sport-body">
+            <div class="sport-head"><span class="sport-ico">🧗</span><h3>Escalada Deportiva (Bouldering)</h3></div>
+            <p class="sport-desc">Escalar rutas cortas sin cuerda sobre colchonetas, resolviendo "problemas" de movimiento — mitad físico, mitad rompecabezas espacial de secuencia de movimientos.</p>
+            <div class="sport-why"><strong>Por qué te gustaría:</strong> de toda la lista es el que más se parece a tu forma de pensar como ingeniero — cada ruta es literalmente un problema técnico que se resuelve con lógica de secuencia y control corporal, con puentes directos a tu formación en mecatrónica (cinemática, control). Pocos deportes premian tanto la cabeza fría como este.</div>
+            <div class="sport-meta">
+              <span class="exd-stat">💰 $150-250/día · membresía $700-1,200/mes</span>
+              <span class="exd-stat">📍 Monkey Bloc (Roma/Nápoles) o Escaladero</span>
+              <span class="exd-stat">🎒 Zapatos de escalada y magnesio (rentables)</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="sport-card">
+          <div class="sport-img"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/Road_cycling_-_riding_a_bike_on_the_road.jpg/960px-Road_cycling_-_riding_a_bike_on_the_road.jpg" alt="Ciclista rodando en carretera"></div>
+          <div class="sport-body">
+            <div class="sport-head"><span class="sport-ico">🚴</span><h3>Ciclismo Urbano / de Ruta</h3></div>
+            <p class="sport-desc">Desde rodar por Reforma los domingos hasta salidas de ruta de 40-80 km los fines de semana con un grupo — cardio de bajo impacto, escalable de "domingo casual" a "hobby serio".</p>
+            <div class="sport-why"><strong>Por qué te gustaría:</strong> bajo impacto en las rodillas, buen contraste a las sentadillas pesadas que ya mueves entre semana, y como ingeniero automotriz/mecatrónico tienes afinidad natural con la mecánica de la bici (cambios, frenos, geometría) que a alguien sin ese fondo técnico no le engancha igual.</div>
+            <div class="sport-meta">
+              <span class="exd-stat">💰 Gratis (Muévete en Bici) · Ecobici $150-500/mes</span>
+              <span class="exd-stat">📍 Reforma domingos 8am-2pm · rutas a Desierto de los Leones</span>
+              <span class="exd-stat">🎒 Casco obligatorio (~$400-800)</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="sport-card">
+          <div class="sport-img"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c8/US_Navy_110520-N-CD297-071_Aviation_Ordnanceman_2nd_Class_Selemani_Johnson_swims_in_the_100-meter_Freestyle_event_as_a_member_of_Team_Navy-Coast_Gu.jpg/960px-US_Navy_110520-N-CD297-071_Aviation_Ordnanceman_2nd_Class_Selemani_Johnson_swims_in_the_100-meter_Freestyle_event_as_a_member_of_Team_Navy-Coast_Gu.jpg" alt="Nadador compitiendo en estilo libre"></div>
+          <div class="sport-body">
+            <div class="sport-head"><span class="sport-ico">🏊</span><h3>Natación</h3></div>
+            <p class="sport-desc">El cardio más completo que existe y el de menor impacto articular — trabaja todo el cuerpo sin castigar rodillas ni espalda baja.</p>
+            <div class="sport-why"><strong>Por qué te gustaría:</strong> con el volumen de sentadilla y peso muerto que ya mueves, la natación te da cardio real para bajar panza sin sumarle más desgaste a articulaciones que ya trabajan duro en el gym — es el complemento de tu rutina actual, no la competencia.</div>
+            <div class="sport-meta">
+              <span class="exd-stat">💰 $20-50/visita en alberca pública</span>
+              <span class="exd-stat">📍 Alberca Olímpica Francisco Márquez (Doctores)</span>
+              <span class="exd-stat">🎒 Traje de baño, gorro y goggles (~$300-500)</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="sport-card">
+          <div class="sport-img"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/Mountaineering_Man_Trail_Path_Mountains.jpg/960px-Mountaineering_Man_Trail_Path_Mountains.jpg" alt="Persona haciendo senderismo en un sendero de montaña"></div>
+          <div class="sport-body">
+            <div class="sport-head"><span class="sport-ico">🥾</span><h3>Senderismo (Hiking)</h3></div>
+            <p class="sport-desc">Caminatas de 3-6 horas por bosque y montaña a menos de una hora de la ciudad — cardio de baja intensidad prolongado, ideal para recuperación activa y desconectar.</p>
+            <div class="sport-why"><strong>Por qué te gustaría:</strong> es casi gratis, se hace en grupo (buen espacio social fuera del trabajo remoto en ALTEN) y es la forma más barata de salir de la rutina de CDMX sin gastar en viajes largos — encaja bien mientras priorizas liquidar deuda antes que gastar en hobbies caros.</div>
+            <div class="sport-meta">
+              <span class="exd-stat">💰 $0-150 (transporte) · grupos guiados $250-400/día</span>
+              <span class="exd-stat">📍 Desierto de los Leones, Ajusco, La Marquesa (40-60 min)</span>
+              <span class="exd-stat">🎒 Tenis de trail, mochila pequeña, agua</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="sport-card">
+          <div class="sport-img"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/22/Multiple_Paddle_tennis_players_engage_in_a_lively_match_on_blue_courts_surrounded_by_lush_greenery.jpg/960px-Multiple_Paddle_tennis_players_engage_in_a_lively_match_on_blue_courts_surrounded_by_lush_greenery.jpg" alt="Jugadores de pádel en una cancha"></div>
+          <div class="sport-body">
+            <div class="sport-head"><span class="sport-ico">🏓</span><h3>Pádel</h3></div>
+            <p class="sport-desc">Mezcla de tenis y squash en cancha cerrada con paredes de cristal — mucho más fácil de aprender que el tenis y extremadamente social, se juega siempre en parejas.</p>
+            <div class="sport-why"><strong>Por qué te gustaría:</strong> es de los deportes con más crecimiento en CDMX ahora mismo, y es networking informal fuera del ámbito 100% automotriz/técnico — el tipo de contacto casual que puede abrir puertas para las opciones de negocio que ya tienes mapeadas (freelance, mentoría).</div>
+            <div class="sport-meta">
+              <span class="exd-stat">💰 $150-300/persona/hora (se divide entre 4)</span>
+              <span class="exd-stat">📍 Clubes en Condesa, Nápoles, Del Valle, Interlomas</span>
+              <span class="exd-stat">🎒 Pala rentable + tenis de suela no marcante</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="sport-card">
+          <div class="sport-img"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/93/Calisthenics-Park_Dovestra%C3%9Fe_Berlin_3v4.jpg/960px-Calisthenics-Park_Dovestra%C3%9Fe_Berlin_3v4.jpg" alt="Parque de calistenia con barras al aire libre"></div>
+          <div class="sport-body">
+            <div class="sport-head"><span class="sport-ico">🤸</span><h3>Calistenia en Parques</h3></div>
+            <p class="sport-desc">Entrenamiento con el propio peso corporal en barras y estructuras al aire libre — dominadas, fondos, y progresiones avanzadas como el muscle-up.</p>
+            <div class="sport-why"><strong>Por qué te gustaría:</strong> es gratis y hay parques con barras a minutos caminando de Santa María la Ribera. Tus dominadas y fondos ya son parte de tu rutina de brazos/espalda, así que esto es una extensión directa sin costo de lo que ya entrenas, con margen para un reto técnico nuevo (el muscle-up) cuando la fuerza base ya esté puesta.</div>
+            <div class="sport-meta">
+              <span class="exd-stat">💰 $0</span>
+              <span class="exd-stat">📍 Parque España y Parque México (Condesa, 15-20 min)</span>
+              <span class="exd-stat">🎒 Ninguno — opcional guantes o magnesio</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="sport-card bonus">
+          <div class="sport-img"><img src="https://upload.wikimedia.org/wikipedia/commons/e/e7/Chess_boxing_match_in_Shiraz%2C_Iran_%2803%29.jpg" alt="Combate de ajedrez-boxeo (chessboxing)"></div>
+          <div class="sport-body">
+            <div class="sport-head"><span class="sport-ico">♟️🥊</span><h3>Bonus / curiosidad: Chessboxing</h3></div>
+            <p class="sport-desc">Alterna rounds de ajedrez (4 min) con rounds de boxeo (3 min) hasta jaque mate, nocaut o decisión — deporte híbrido real, con federación internacional y eventos ocasionales en Latinoamérica.</p>
+            <div class="sport-why"><strong>Por qué te gustaría:</strong> es literalmente la intersección de dos metas que ya tienes en tu lista — el torneo de ajedrez y el boxeo de arriba — en un solo deporte. No hace falta competir para probarlo: algunos clubes de ajedrez y de box en CDMX organizan noches amistosas de chessboxing como evento social. No hay liga formal todavía en la ciudad, así que es más "reto raro para tener en el radar" que práctica regular — se arma combinando tu club de ajedrez con tu gimnasio de box.</div>
+          </div>
+        </div>
+
+      </div>
     </section>
 
   </div>
@@ -602,8 +756,8 @@ function askDel(cb) { document.getElementById('conf').classList.add('open'); con
 document.addEventListener('keydown',e=>{ if(e.key==='Escape') document.querySelectorAll('.mo.open').forEach(m=>m.classList.remove('open')); });
 
 // ─── NAVIGATION ──────────────────────────────────────────────────────────────
-const SECS=['dashboard','hoy','rutina','biblioteca','progreso','historial'];
-const STITLE={dashboard:'📊 Dashboard',hoy:'💪 Entrenar Hoy',rutina:'🗓️ Mi Rutina Semanal',biblioteca:'📚 Biblioteca de Ejercicios',progreso:'📈 Progreso de Fuerza',historial:'📋 Historial'};
+const SECS=['dashboard','hoy','rutina','biblioteca','progreso','historial','deportes'];
+const STITLE={dashboard:'📊 Dashboard',hoy:'💪 Entrenar Hoy',rutina:'🗓️ Mi Rutina Semanal',biblioteca:'📚 Biblioteca de Ejercicios',progreso:'📈 Progreso de Fuerza',historial:'📋 Historial',deportes:'🧭 Deportes para Explorar'};
 const RENDERS={dashboard:renderDashboard,hoy:renderHoy,rutina:renderRutina,biblioteca:renderBiblioteca,progreso:renderProgreso,historial:renderHistorial};
 
 function nav(s) {

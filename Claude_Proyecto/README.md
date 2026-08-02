@@ -29,6 +29,7 @@ Un conjunto de aplicaciones web de una sola página (HTML + CSS + JS, **sin back
 **Fuera de este ecosistema** (no se documentan archivo por archivo aquí, no comparten datos con las apps de arriba):
 - `Aleman/` — 35+ páginas estáticas de estudio de alemán (A1/A2), sin `localStorage`, sin interconexión con el resto.
 - `Entrevistas/` — app de preparación de entrevistas técnicas automotrices, con su propio `CLAUDE.md`/`estructura.md` ya documentados dentro de esa carpeta; usa `localStorage['theme']` y `['sidebar-collapsed']`, ajenas a las claves de la tabla de arriba.
+- `Vestimenta/` — `vestimenta.html` (**nueva 2026-08-01**, ver [`Vestimenta/readme_vestimenta.md`](Vestimenta/readme_vestimenta.md)): guía de guardarropa y compras (básicos, chaquetas, zapatos, y combos por ocasión — trabajo, casual, ejercicio, bodas, fiestas), con 30 fotos descargadas y curadas en `Vestimenta/images/`. Usa `localStorage['vestimenta_v1']` (propia, checklist de compra) y comparte `coach-theme` solo para el tema visual claro/oscuro.
 
 **Carpetas eliminadas** (ver historial de git para detalle): `Salud/`, `Ejercicio/` (contenido movido a `CuidadoPersonal/`), `Animo/`, `Habitos/`, `Sueno/`, `Tiempo/`, `Vehiculo/`, `Social/`, `Aprendizaje/` (retiradas del proyecto el 2026-07-29 a petición de Adán). El score de aprendizaje/skills del Dashboard y el bloque de habilidad diario de Coach ya no dependen de esta app — siguen vivos como contenido de referencia dentro de `Coach/Coach_v2.html → #aprendizaje` únicamente. **`Proyectos/`** (proyectos personales, tareas, tiempo invertido — clave `proyectos_v1`) se eliminó por completo el 2026-07-30 a petición explícita de Adán ("elimina la carpeta de proyectos y todas las referencias que tengan que ver con esto"); el Dashboard dejó de leer esa clave y se quitaron el panel "Tareas pendientes" y la estadística "Proyectos (semana)" del slide Hero, además de su píldora en la barra superior — ver [`Dashboard/readme_dashboard.md`](Dashboard/readme_dashboard.md).
 
@@ -44,7 +45,8 @@ Un conjunto de aplicaciones web de una sola página (HTML + CSS + JS, **sin back
 | `cabello_v1` | `CuidadoPersonal/cuidadopersonal.html` | `Dashboard/dashboard.html` |
 | `dentista_v1` | `CuidadoPersonal/cuidadopersonal.html` | *(nadie más — perfil dental y fecha de última cita, el Dashboard no la lee todavía)* |
 | `coach_rutina_v1` | `Coach/Coach_v2.html` | `Dashboard/dashboard.html` |
-| `coach-theme` | Las 7 apps del ecosistema principal (cada una escribe al hacer toggle) | Las mismas 7 la leen al cargar — clave compartida de tema visual claro/oscuro (ver "Convenciones de diseño compartidas") |
+| `coach-theme` | Las 7 apps del ecosistema principal (cada una escribe al hacer toggle) | Las mismas 7 la leen al cargar — clave compartida de tema visual claro/oscuro (ver "Convenciones de diseño compartidas"). `Vestimenta/vestimenta.html` también la lee/escribe (fuera del ecosistema, solo por el tema visual) |
+| `vestimenta_v1` | `Vestimenta/vestimenta.html` | *(nadie más — checklist de compra propio, fuera del ecosistema)* |
 | `dash-privado` | `Dashboard/dashboard.html` | *(nadie más — clave propia del Dashboard, no compartida; oculta cifras financieras en su propia pantalla, no afecta a `Finanzas/Finanzas.html`)* |
 | `radarp_{id}` × 12 | `Coach/Coach_v2.html` | *(nadie más — el radar del Dashboard usa sus propios valores base duplicados, no lee estas claves)* |
 
