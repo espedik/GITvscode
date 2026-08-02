@@ -1,6 +1,6 @@
 # Finanzas.html — Contexto completo de funciones y estructura
 
-App de finanzas personales en un solo archivo HTML (3981 líneas). Usa Chart.js 4.4 para gráficas y localStorage (`finanzasmx_v2`) para persistencia. Todo en MXN.
+App de finanzas personales en un solo archivo HTML (4340 líneas). Usa Chart.js 4.4 para gráficas y localStorage (`finanzasmx_v2`) para persistencia. Todo en MXN.
 
 ---
 
@@ -40,8 +40,8 @@ Variables globales adicionales: `editId`, `confCb`, `payDebtId`, `contribGoalId`
 ### Gastos fijos hardcodeados (usados en `renderGBM` y `getMonthProjection`)
 | Concepto             | Monto MXN | Semana / Fecha |
 |----------------------|-----------|----------------|
-| Salario BBVA         | $43,000   | Quincenal      |
-| Didi (estimado)      | $11,200   | Semanal (~$2,800/sem) |
+| Salario BBVA         | $41,000   | Quincenal      |
+| Didi (estimado)      | $11,200   | Ya no forma parte del flujo GBM — ver nota abajo |
 | Renta departamento   | $11,000   | Día 1          |
 | Crédito Dolphin Mini | $6,700    | Día 14         |
 | Celular (datos)      | $600      | Día 15 (Sem 3) |
@@ -73,6 +73,7 @@ const WEEKLY_PICKS = {
   ]
 }
 ```
+⚠️ **Desactualizado a la fecha de esta revisión (2026-08-01)** — `semana`/`actualizadoEl` siguen en "23 Jun 2026", ~5-6 semanas atrás. El propio comentario del código pide refrescar esto cada lunes y no se ha hecho; los precios/consensus/upside de MSFT y NVDA que se muestran como "actuales" son de hace más de un mes. No se corrigió en esta revisión porque requiere datos de mercado en vivo (Claude no debe inventar precios de acciones) — pedir explícitamente "actualiza WEEKLY_PICKS con precios de hoy" la próxima vez que se use esta app.
 
 ### Fondo de emergencia
 - **Target fijo**: $10,000 MXN (constante `EF_TARGET` en `renderDashboard`)
@@ -245,17 +246,16 @@ Elimina inversión por `id`. Refresca GBM si está activo e indicadores.
 ## Módulo: Plan de Inversiones (GBM)
 
 ### `renderGBM()`
-Función central del módulo. Calcula:
-- `QUINC = $21,500` (mitad del salario mensual)
-- `weeklyDidi = $11,200 / (52/12) ≈ $2,585/semana`
+Función central del módulo. **Fórmulas verificadas contra el código el 2026-08-01** (versión anterior de este documento tenía Didi metido en las 4 semanas — ya no es así, ver nota "Didi ya no es parte de BASE_INC" más abajo). Calcula:
+- `BASE_SALARY = 41000`, `QUINC = Math.round(BASE_SALARY/2) = $20,500` (mitad del salario mensual)
 - `msiActive` = suma de cuotas de deudas a 0% aún vigentes
 - `avgExpTotal` = promedio de gastos reales de los últimos 3 meses reales (no el mes seleccionado)
 - `varPerWeek` = (gastos variables estimados) / 4
-- **Sobrante semanal por semana:**
-  - `w1GBM = QUINC - RENTA - AUTO - varPerWeek + weeklyDidi`
-  - `w2GBM = weeklyDidi`
-  - `w3GBM = QUINC - CETES - SERVICIOS - SUSCRIPCIONES - TC_MINS - msiActive - varPerWeek + weeklyDidi`
-  - `w4GBM = weeklyDidi`
+- **Sobrante semanal por semana** (`Math.max(0, ...)` en cada una — nunca negativo):
+  - `w1GBM = QUINC - RENTA - varPerWeek` (el auto **no** se resta aquí — se paga en la semana 2 del saldo ya reservado en BBVA)
+  - `w2GBM = 0` (sin ingreso ni GBM esta semana; el Dolphin Mini se paga del saldo reservado)
+  - `w3GBM = QUINC - CETES_DIA15 - SERVICIOS - SUSCRIPCIONES - TC_MINS - msiActive - varPerWeek`
+  - `w4GBM = 0` (semana libre, sin pagos ni ingresos programados)
 - Tabs de meses: mes actual + 4 meses siguientes (proyección)
 - `efectivoSemana`: usa `S.weeklyLeftover` si > 0, o el estimado automático de la semana actual
 - Distribuye `efectivoSemana` entre las acciones de `WEEKLY_PICKS` según su `pct`
@@ -296,11 +296,20 @@ Solo llama a `renderIndicators()` si la sección `s-indicators` tiene la clase `
 
 ## Módulo: Indicadores Financieros
 
+### Snapshots mensuales congelados (`S.indicatorHistory`) — documentado 2026-08-01, existía sin documentar
+
+Módulo completo (~450 líneas, función `renderIndicators()` en adelante) que **no estaba documentado aquí** pese a ser funcionalidad real y ya construida:
+- `autoSaveCurrentMonthSnapshot()` — cada vez que se abre `#s-indicators`, guarda/sobrescribe automáticamente un snapshot del **mes actual** en `S.indicatorHistory` (array de `{month:'YYYY-MM', score, savedAt, ...indicadores}`). Solo el mes en curso se sobrescribe; los meses ya cerrados quedan congelados.
+- Tabs de navegación: "📊 Mes actual" (en vivo, editable) + un botón 🔒 por cada mes histórico ya guardado.
+- `switchIndMonth(monthOrLive)` — cambia entre la vista en vivo y la vista congelada de un mes pasado.
+- Vista histórica: banner de solo lectura con fecha de guardado y comparación de score "entonces vs. hoy" (↑/↓ puntos) contra el mes actual.
+- Útil para responder "¿mi salud financiera mejoró este trimestre?" con datos reales en vez de memoria — vale la pena que Adán sepa que existe, ya que no hay ningún botón que lo anuncie explícitamente, simplemente aparecen tabs nuevas conforme pasan los meses.
+
 ### `renderIndicators()`
 Calcula y renderiza 9 indicadores financieros en la sección `ind-body`.
 
 **Inputs:**
-- `BASE_INC = 43000 + (didiMonthly > 0 ? didiMonthly : 11200)` — Si Vale excluido
+- `BASE_INC = 41000` (corregido 2026-08-01 — el código ya no suma Didi aquí, ver "Didi ya no es parte de BASE_INC" abajo). Si Vale excluido.
 - Activos: financieros (investments + BTC en MXN), líquidos (activos tipo 'liquido'), físicos (resto de activos)
 - Pasivos: suma de `balance` de todas las deudas
 
@@ -332,11 +341,11 @@ Calcula y renderiza 9 indicadores financieros en la sección `ind-body`.
 ## Módulo: Proyección y Recurrentes
 
 ### `getMonthProjection(month)`
-Para meses futuros. Construye lista de gastos fijos del mes (renta, CETES, gym, servicios, suscripciones, deudas con interés, deudas tipo 'car', y cuotas MSI vigentes). Calcula el promedio de gastos variables de las 3 categorías (`Alimentación`, `Restaurantes`, `Entretenimiento`) de los últimos 3 meses reales. Retorna `{inc, fixedExp, varExp, fixed, varItems, totalExp, balance}`.
+Para meses futuros. `BASE_INC = 41000` (sin sumar Didi). Construye lista de gastos fijos del mes (renta, CETES, gym, servicios, suscripciones, deudas con interés, deudas tipo 'car', y cuotas MSI vigentes). Calcula el promedio de gastos variables de las 3 categorías (`Alimentación`, `Restaurantes`, `Entretenimiento`) de los últimos 3 meses reales. Retorna `{inc, fixedExp, varExp, fixed, varItems, totalExp, balance}`.
 
 ### `loadRecurringForMonth(month)`
 Genera transacciones con `notes: '[recurrente]'` para el mes dado:
-- Ingresos: Salario $43,000 y Si Vale $940 (día 1)
+- Ingresos: Salario $41,000 y Si Vale $940 (día 1)
 - Gastos fijos: renta, agua, internet, celular, gas, limpieza, gym, Claude, iCloud
 - Deudas con interés y crédito automotriz (día 1)
 - Cuotas MSI vigentes (día 16)
@@ -355,11 +364,10 @@ Establece `dashMonth = ym` y llama a `renderDashboard()`.
 ### `renderDashboard()`
 Función principal del dashboard. Determina si el mes es futuro (`isFuture`) y obtiene proyección si aplica.
 
-**Ingresos base calculados:**
-- `BASE_SALARY = 43000`
-- `BASE_DIDI = S.didiMonthly > 0 ? S.didiMonthly : 11200`
-- `BASE_INC = BASE_SALARY + BASE_DIDI` (Si Vale excluido del flujo)
-- `extras` = transacciones de ingreso del mes que NO son salario, didi, ni vale (ej. PTU, bonos)
+**Ingresos base calculados** (corregido 2026-08-01 — ver "Didi ya no es parte de BASE_INC" abajo):
+- `BASE_SALARY = 41000`
+- `BASE_INC = BASE_SALARY` (Si Vale excluido del flujo; Didi ya **no** se suma aquí — se registra como transacción manual de ingreso si ocurre)
+- `extras` = transacciones de ingreso del mes que NO son salario ni vale (ej. PTU, bonos, Didi si se registró manualmente)
 
 **Renderiza:**
 - Tabs de meses (mes actual hasta diciembre del año en curso)
@@ -574,30 +582,36 @@ Se ejecuta al cargar la página:
 
 ## Flujo semanal de inversión (lógica GBM)
 
+**Corregido 2026-08-01** — la versión anterior de este diagrama incluía "Didi semanal" en las 4 semanas; el código real ya no reparte Didi por semana (Didi se registra como transacción manual si ocurre, y ya no alimenta el cálculo de `renderGBM()`):
+
 ```
 Semana 1 (días 1-7):
-  IN:  Quincena 1 ($21,500) + Didi semanal
-  OUT: Renta ($11,000) + Reserva auto ($6,700) + gastos variables
+  IN:  Quincena 1 ($20,500)
+  OUT: Renta ($11,000) + gastos variables
   → GBM: sobrante → MSFT 70% / NVDA 30%
 
 Semana 2 (días 8-14):
-  IN:  Didi semanal
-  OUT: Dolphin Mini ($6,700) del saldo reservado
-  → GBM: Didi íntegro → MSFT 70% / NVDA 30%
+  IN:  ninguno
+  OUT: Dolphin Mini ($6,700) del saldo reservado en BBVA la semana 1
+  → GBM: $0 (sin ingreso ni sobrante esta semana)
 
 Semana 3 (días 15-21):
-  IN:  Quincena 2 ($21,500) + Didi semanal
+  IN:  Quincena 2 ($20,500)
   OUT: CETES ($1,500) + Servicios ($1,264) + Suscripciones ($1,930)
        + TC mínimos ($2,310) + MSI activas + gastos variables
   → GBM: sobrante → MSFT 70% / NVDA 30%
 
 Semana 4 (días 22-28):
-  IN:  Didi semanal
+  IN:  ninguno
   OUT: ninguno
-  → GBM: Didi íntegro → MSFT 70% / NVDA 30%
+  → GBM: $0 (semana libre)
 ```
 
 Si `S.weeklyLeftover > 0`, ese monto manual reemplaza el estimado automático en la semana actual.
+
+### Didi ya no es parte de `BASE_INC` ni de `renderGBM()` (código muerto detectado 2026-08-01)
+
+`S.didiMonthly` y `setDidiMonthly(val)` (línea ~283) **siguen existiendo en el código pero ya no los invoca ningún botón del HTML** — verificado con búsqueda exhaustiva. En algún punto se simplificó el flujo de ingresos (`BASE_INC = BASE_SALARY` a secas, sin sumar Didi) y se dejó de repartir Didi entre semanas en `renderGBM()`, pero la función/campo no se borraron. Si Adán vuelve a manejar Didi como ingreso recurrente en vez de transacción manual caso por caso, hay 2 opciones: (a) borrar `S.didiMonthly`/`setDidiMonthly()` por completo si de verdad ya no se usa, o (b) reconectarlo a `BASE_INC` y a `renderGBM()` a propósito. Ahora mismo no rompe nada (simplemente nunca se ejecuta), pero es deuda de código que vale la pena resolver en un sentido o el otro.
 
 ---
 
@@ -614,6 +628,6 @@ Detalles específicos de este archivo (el más grande y con más gráficas del p
 ## Referencias cruzadas
 
 - El **Dashboard** (`../Dashboard/dashboard.html`) lee `finanzasmx_v2` directamente (`D.fin`): usa `investments`, `emergencyFund`, `debts` (patrimonio neto, fondo de emergencia, deuda total del slide "💰 Finanzas") y `transactions` del mes actual (ingresos/gastos, score de finanzas del Vida Score). Si cambias la forma de `S.investments`/`S.debts`/`S.transactions`/`S.emergencyFund` aquí, revisa `patrimonioNeto()`, `hasFinData()`, `calcScores()` y `renderFinanzas()` en `Dashboard/dashboard.html`.
-- No tiene enlace "Volver al Dashboard" en el sidebar todavía a la fecha de esta nota (2026-07-29) — pendiente de agregar si se retoma este archivo.
+- El enlace "🚀 Volver al Dashboard" **sí existe** en el sidebar (confirmado 2026-08-01) — la nota anterior que decía que faltaba estaba desactualizada.
 - Mapa completo del proyecto: [`../README.md`](../README.md).
-- **Este documento no se ha vuelto a auditar por completo desde su creación** — se corrigió un dato desactualizado (meta Maestría) el 2026-07-29 al escribir el README maestro del proyecto, pero el resto del contenido no se verificó línea por línea contra el código actual. Verificar contra `Finanzas.html` antes de asumir como hecho cualquier cifra específica de este documento.
+- **Auditoría completa realizada el 2026-08-01** (la primera desde la creación de este documento): se verificaron contra el código real todos los cálculos financieros, se corrigió el sueldo base documentado ($43,000 → $41,000, el código nunca tuvo $43,000 — era el `.md` el que estaba mal), se corrigió la fórmula semanal de GBM (ya no reparte Didi por semana), se documentó el módulo de snapshots mensuales que no tenía entrada propia, y se restauró en el código la gráfica `ch-cat` (dona de gastos por categoría del mes) que el propio `.md` ya describía como existente pero había sido removida del HTML/JS — ver `renderDashCharts(mtx)` arriba, ya vuelve a estar en el Dashboard junto a la gráfica de balance. No se encontró ningún botón muerto, cálculo con división por cero sin manejar, ni referencia a función/ID inexistente en todo el archivo (4340 líneas).

@@ -25,6 +25,8 @@ App estática de una sola página (sin build, sin servidor — se abre con doble
   - `data-sysdesign.js` → `SYSDESIGN_RICH` (Diseño de Sistemas — sección propia debajo de "Entrevista — Estrategia")
   - `data-api.js` → `API_RICH` (sección "APIs", debajo de Python)
   - `data-ai.js` → `AI_RICH` (sección "AI con API", debajo de "APIs")
+  - `data-istqb-genai.js` → `GENAI_RICH` (ISTQB CT-GenAI)
+  - `data-claudecode.js` → `CLAUDECODE_RICH` (Claude Code)
 - `js/ui.js` — `buildPages()`, `go(id)`, `toggleMod`, `toggleDone`, `resetProgress`, `refreshSidebar`, `refreshProgress`, `autoOpenWayve` + código de init al final del archivo. **Cargar último** (depende de todo lo anterior).
 - `estructura.md` — outline temático de referencia (documentación, no está conectado al código).
 
@@ -34,7 +36,7 @@ App estática de una sola página (sin build, sin servidor — se abre con doble
 - Cada entrada de contenido dentro de un `*_RICH` tiene su key alineada con un id del objeto `T` en `core.js`.
 - Los archivos `data-*.js` cierran con el comentario `};  // fin NOMBRE_RICH` — útil como ancla de búsqueda al editar.
 
-- El usuario quitó las secciones de Quiz (`quiz-section`/`quiz-card`) de toda la app — no las reagregues en contenido nuevo salvo que lo pida explícitamente.
+- **Corrección 2026-08-01**: esta nota decía "el usuario quitó las secciones de Quiz — no las reagregues", pero es falso a la fecha de esta revisión — `quiz-section`/`quiz-card` existen y se usan activamente (54 veces en 6 módulos: `data-istqb.js`, `data-istqb-genai.js`, `data-testing.js`, `data-coding.js`, `data-metod.js`, `data-wayve.js`), con soporte CSS y el helper `toggleQuiz()` de `core.js` funcionando. Es contenido legítimo (exámenes de práctica) — no lo borres asumiendo que está prohibido.
 
 ## Al hacer cambios
 

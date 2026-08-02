@@ -189,6 +189,55 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 
 @media(max-width:900px){.g4{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:repeat(2,1fr)}.g3>*:last-child{grid-column:1/-1}.g6{grid-template-columns:repeat(3,1fr)}}
 @media(max-width:600px){.g2,.g4,.g3,.g6{grid-template-columns:1fr}}
+
+/* ─── HUD: barra de progreso hacia el siguiente slide ────── */
+.hud-progress{width:180px;height:3px;background:rgba(var(--ov),.1);border-radius:3px;overflow:hidden;margin-top:2px}
+.hud-progress-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--g),var(--p));border-radius:3px}
+.hud-progress-fill.anim{transition:width linear}
+
+/* ─── Botones de acción rápida (escriben datos, dentro de tiles) ─ */
+.qa-inline-btn{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:50%;
+  border:1px solid rgba(var(--ov),.14);background:rgba(var(--ov),.06);color:var(--text);cursor:pointer;font-size:14px;
+  font-family:inherit;transition:all .2s;flex-shrink:0}
+.qa-inline-btn:hover{background:var(--g);color:#06170f;border-color:var(--g);transform:scale(1.08)}
+.qa-inline-btn:active{transform:scale(.94)}
+.mark-done-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:30px;border:1px solid rgba(0,232,122,.35);
+  background:rgba(0,232,122,.12);color:var(--g);font-size:12px;font-weight:800;font-family:inherit;cursor:pointer;
+  margin-top:10px;transition:all .2s;white-space:nowrap}
+.mark-done-btn:hover{background:rgba(0,232,122,.22);transform:translateY(-1px)}
+.mark-done-btn:disabled{opacity:.5;cursor:default;transform:none}
+
+/* ─── Overlays flotantes: menú, ajustes, ayuda (mismo look que .hud-row) ─ */
+.float-panel{position:fixed;left:50%;bottom:78px;transform:translateX(-50%) translateY(10px);width:min(420px,92vw);
+  max-height:60vh;overflow-y:auto;background:var(--bar2);border:1px solid rgba(var(--ov),.12);backdrop-filter:blur(20px);
+  border-radius:20px;padding:16px;z-index:70;opacity:0;pointer-events:none;transition:opacity .22s,transform .22s;
+  box-shadow:0 20px 60px rgba(0,0,0,.45)}
+.float-panel.open{opacity:1;pointer-events:auto;transform:translateX(-50%) translateY(0)}
+.float-panel h3{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:var(--text2);margin-bottom:12px;display:flex;justify-content:space-between;align-items:center}
+.float-panel h3 button{background:none;border:none;color:var(--text3);font-size:15px;cursor:pointer;padding:2px 6px}
+.float-panel h3 button:hover{color:var(--r)}
+.menu-item{display:flex;align-items:center;gap:12px;padding:10px 8px;border-radius:12px;cursor:pointer;transition:background .2s;border:1px solid transparent}
+.menu-item:hover{background:rgba(var(--ov),.06)}
+.menu-item.on{background:var(--p-l);border-color:rgba(176,110,255,.3)}
+.menu-ico{font-size:20px;width:30px;text-align:center;flex-shrink:0}
+.menu-txt{flex:1;min-width:0}
+.menu-name{font-size:13px;font-weight:800;color:var(--text)}
+.menu-stat{font-size:11px;color:var(--text3);margin-top:1px}
+.set-row{display:flex;justify-content:space-between;align-items:center;padding:10px 4px;border-bottom:1px solid rgba(var(--ov),.07);gap:10px}
+.set-row:last-child{border-bottom:none}
+.set-lbl{font-size:12.5px;font-weight:700;color:var(--text)}
+.set-sub{font-size:10.5px;color:var(--text3);margin-top:2px}
+.set-select{background:rgba(var(--ov),.06);border:1px solid rgba(var(--ov),.14);color:var(--text);border-radius:8px;padding:6px 10px;font-size:12px;font-family:inherit;cursor:pointer}
+.set-toggle{width:38px;height:22px;border-radius:20px;background:rgba(var(--ov),.14);border:none;cursor:pointer;position:relative;flex-shrink:0;transition:background .2s}
+.set-toggle.on{background:var(--g)}
+.set-toggle::after{content:'';position:absolute;top:2px;left:2px;width:18px;height:18px;border-radius:50%;background:#fff;transition:transform .2s}
+.set-toggle.on::after{transform:translateX(16px)}
+.help-row{display:flex;align-items:center;gap:12px;padding:8px 4px;font-size:12.5px;color:var(--text2)}
+.help-key{font-family:var(--mono);background:rgba(var(--ov),.08);border:1px solid rgba(var(--ov),.14);border-radius:6px;padding:3px 9px;font-size:11px;font-weight:700;color:var(--text);min-width:34px;text-align:center}
+.toast{position:fixed;bottom:100px;left:50%;transform:translateX(-50%) translateY(8px);background:var(--bar2);color:var(--text);
+  border:1px solid rgba(var(--ov),.12);padding:10px 20px;border-radius:30px;font-size:13px;font-weight:700;
+  box-shadow:0 10px 30px rgba(0,0,0,.4);z-index:90;opacity:0;transition:all .3s;pointer-events:none;backdrop-filter:blur(14px)}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 </style>
 <script>
 (function () {
@@ -238,6 +287,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
         <div class="tile tile-glow">
           <div class="lbl">🟢 Ahora mismo</div>
           <div style="font-weight:800;font-size:clamp(16px,1.8vw,22px);margin-top:8px;line-height:1.4" id="diaAhora">—</div>
+          <div id="diaAhoraBtn"></div>
         </div>
         <div class="tile tile-glow">
           <div class="lbl">🔜 Siguiente</div>
@@ -330,14 +380,58 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 
 <div class="hud">
   <div class="hud-clock"><span id="hudClock">—</span> <span class="hud-sync" id="hudSync"></span></div>
+  <div class="hud-progress"><div class="hud-progress-fill" id="hudProgressFill"></div></div>
   <div class="hud-row">
-    <button class="hud-btn" onclick="prevSlide()" title="Anterior">‹</button>
+    <button class="hud-btn" onclick="toggleMenu()" title="Menú (M)" id="menuBtn">☰</button>
+    <button class="hud-btn" onclick="prevSlide()" title="Anterior (←)">‹</button>
     <div class="dots" id="dots"></div>
-    <button class="hud-btn" onclick="nextSlide()" title="Siguiente">›</button>
-    <button class="hud-btn" id="playBtn" onclick="togglePlay()" title="Pausar/Reanudar">⏸</button>
+    <button class="hud-btn" onclick="nextSlide()" title="Siguiente (→)">›</button>
+    <button class="hud-btn" id="playBtn" onclick="togglePlay()" title="Pausar/Reanudar (Espacio)">⏸</button>
+    <button class="hud-btn" onclick="toggleFullscreen()" title="Pantalla completa (F)" id="fsBtn">⛶</button>
+    <button class="hud-btn" onclick="toggleSettings()" title="Ajustes">⚙️</button>
+    <button class="hud-btn" onclick="toggleHelp()" title="Atajos de teclado (?)">?</button>
     <button class="hud-btn" id="theme-toggle-btn" onclick="toggleTheme()" title="Cambiar tema claro/oscuro" aria-label="Cambiar tema claro/oscuro">🌙</button>
   </div>
 </div>
+
+<!-- ─── MENÚ DE NAVEGACIÓN ─── -->
+<div class="float-panel" id="navMenuPanel">
+  <h3>☰ Ir a… <button onclick="toggleMenu()" aria-label="Cerrar">✕</button></h3>
+  <div id="navMenuList"></div>
+</div>
+
+<!-- ─── AJUSTES ─── -->
+<div class="float-panel" id="settingsPanel">
+  <h3>⚙️ Ajustes <button onclick="toggleSettings()" aria-label="Cerrar">✕</button></h3>
+  <div class="set-row">
+    <div><div class="set-lbl">Velocidad de rotación</div><div class="set-sub">Cada cuánto avanza solo a la siguiente pantalla</div></div>
+    <select class="set-select" id="setSpeed" onchange="applySettingsFromUI()">
+      <option value="30000">30 seg</option>
+      <option value="60000">1 min</option>
+      <option value="180000">3 min</option>
+      <option value="300000">5 min</option>
+      <option value="0">Desactivada</option>
+    </select>
+  </div>
+  <div class="set-row">
+    <div><div class="set-lbl">Recordar última pantalla</div><div class="set-sub">Abrir donde te quedaste en vez de siempre en Hero</div></div>
+    <button class="set-toggle" id="setRemember" onclick="toggleRemember()"></button>
+  </div>
+</div>
+
+<!-- ─── AYUDA / ATAJOS ─── -->
+<div class="float-panel" id="helpPanel">
+  <h3>⌨️ Atajos de teclado <button onclick="toggleHelp()" aria-label="Cerrar">✕</button></h3>
+  <div class="help-row"><span class="help-key">←</span> Pantalla anterior</div>
+  <div class="help-row"><span class="help-key">→</span> Pantalla siguiente</div>
+  <div class="help-row"><span class="help-key">Espacio</span> Pausar / reanudar rotación</div>
+  <div class="help-row"><span class="help-key">M</span> Abrir/cerrar el menú</div>
+  <div class="help-row"><span class="help-key">F</span> Pantalla completa</div>
+  <div class="help-row"><span class="help-key">1-5</span> Ir directo a esa pantalla</div>
+  <div class="help-row"><span class="help-key">?</span> Esta ayuda</div>
+</div>
+
+<div class="toast" id="toast"></div>
 
 <script>
 // ══════════════════════════════════════════════════════════════════════════
@@ -366,6 +460,18 @@ function togglePrivado(){
 }
 const fmtD=d=>{if(!d)return'';const[y,m,day]=d.split('-');const mn=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];return `${parseInt(day)} ${mn[parseInt(m)-1]} ${y}`;};
 function tryParse(key,def){try{const r=localStorage.getItem(key);if(!r)return def;const p=JSON.parse(r);return typeof p==='object'&&p?{...def,...p}:def;}catch(e){return def;}}
+// Lectura/escritura cruda (sin merge con defaults) — para las acciones rápidas que SÍ
+// escriben en el localStorage de otra app (misalud_v1/coach_rutina_v1). Solo se toca el
+// campo necesario (agua del día / completado del día), todo lo demás del objeto se
+// preserva tal cual estaba, para no pisar datos que esas apps hayan guardado.
+function rawGet(key,def){try{const r=localStorage.getItem(key);return r?JSON.parse(r):def;}catch(e){return def;}}
+function rawSet(key,obj){localStorage.setItem(key,JSON.stringify(obj));}
+let toastTimer=null;
+function toast(msg){
+  const t=document.getElementById('toast'); if(!t)return;
+  t.textContent=msg; t.classList.add('show');
+  clearTimeout(toastTimer); toastTimer=setTimeout(()=>t.classList.remove('show'),2200);
+}
 
 // Habilidades — mismo set y pesos que el radar de Coach (Coach_v2.html)
 const SK=[
@@ -688,6 +794,7 @@ function renderDia(){
 
   document.getElementById('diaFecha').textContent=new Date().toLocaleDateString('es-MX',{weekday:'long',day:'numeric',month:'long'});
   document.getElementById('diaAhora').textContent=actual?(actual.hora+' — '+actual.txt):(tareasHoy.length?'Aún no empieza tu rutina de hoy':'Sin bloques configurados para hoy');
+  updateMarkDoneBtn(actual);
   if(siguiente){
     const[sh,sm]=siguiente.hora.split(':').map(Number);
     const dest=new Date();dest.setHours(sh,sm,0,0);
@@ -741,6 +848,44 @@ function renderDia(){
   document.getElementById('diaTimeline').innerHTML=(resumenHtml?`<div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px">${resumenHtml}</div>`:'')+itemsHtml;
 }
 
+// ── ACCIONES RÁPIDAS — únicos 2 puntos donde el Dashboard SÍ escribe en el
+//    localStorage de otra app (antes solo leía). Ambas leen el objeto crudo,
+//    tocan solo el campo necesario y lo regresan igual — ver rawGet/rawSet arriba.
+function updateMarkDoneBtn(actual){
+  const el=document.getElementById('diaAhoraBtn'); if(!el)return;
+  if(!actual||actual.fijo){ el.innerHTML=''; return; }
+  const doneHoy=(D.rut.completado||{})[today()]||[];
+  const leaves=leafItems(actual);
+  const allDone=leaves.every(it=>doneHoy.includes(it.id));
+  el.innerHTML=`<button class="mark-done-btn" onclick="quickMarkDone()">${allDone?'↩️ Desmarcar':'✅ Marcar hecho'}</button>`;
+}
+function quickMarkDone(){
+  const {actual}=rutinaAhoraSiguiente();
+  if(!actual||actual.fijo)return;
+  const raw=rawGet('coach_rutina_v1',{completado:{}});
+  raw.completado=raw.completado||{};
+  const t=today();
+  raw.completado[t]=raw.completado[t]||[];
+  const leaves=leafItems(actual);
+  const allDone=leaves.every(it=>raw.completado[t].includes(it.id));
+  if(allDone) raw.completado[t]=raw.completado[t].filter(id=>!leaves.some(it=>it.id===id));
+  else leaves.forEach(it=>{ if(!raw.completado[t].includes(it.id)) raw.completado[t].push(it.id); });
+  rawSet('coach_rutina_v1',raw);
+  loadAll();
+  renderDia();
+  toast(allDone?'↩️ Desmarcado':'✅ Marcado como hecho');
+}
+function quickAddAgua(){
+  const raw=rawGet('misalud_v1',{alimentos:[],ejercicios:[],medidas:[],agua:{},metas:{caloriasD:2000,proteina:150},perfil:{peso:0}});
+  raw.agua=raw.agua||{};
+  const t=today();
+  raw.agua[t]=(raw.agua[t]||0)+1;
+  rawSet('misalud_v1',raw);
+  loadAll();
+  renderHero();
+  toast('💧 +1 vaso de agua registrado');
+}
+
 function renderHero(){
   const semana=semanaActual();
   const hoyStr=today();
@@ -789,13 +934,17 @@ function renderHero(){
   const vasosHoy=D.sal.agua?.[hoyStr]||0, vasosMeta=D.sal.metas?.vasos||8;
 
   const qs=[
-    {ico:'⚖️',lbl:'Peso actual',val:pesoActual?pesoActual.peso+' kg':'—',sub:pesoSub,subCol:pesoSubCol,col:'var(--cy)'},
-    {ico:'💧',lbl:'Agua hoy',val:vasosHoy+'/'+vasosMeta,col:'#06b6d4'}
+    {ico:'⚖️',lbl:'Peso actual',val:pesoActual?pesoActual.peso+' kg':'—',sub:pesoSub,subCol:pesoSubCol,col:'var(--cy)',btn:''},
+    {ico:'💧',lbl:'Agua hoy',val:vasosHoy+'/'+vasosMeta,col:'#06b6d4',
+     btn:`<button class="qa-inline-btn" onclick="event.stopPropagation();quickAddAgua()" title="Registrar un vaso de agua">+</button>`}
   ];
   document.getElementById('heroQuickStats').innerHTML=qs.map(q=>`
     <div class="tile" style="text-align:center;padding:12px 10px">
       <div class="lbl" style="justify-content:center;display:flex;gap:4px;white-space:nowrap">${q.ico} ${q.lbl}</div>
-      <div class="big-num" style="font-size:clamp(20px,2.4vw,28px);color:${q.col};margin-top:5px">${q.val}</div>
+      <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-top:5px">
+        <div class="big-num" style="font-size:clamp(20px,2.4vw,28px);color:${q.col}">${q.val}</div>
+        ${q.btn}
+      </div>
       ${q.sub?`<div class="sub" style="margin-top:2px;color:${q.subCol}">${q.sub}</div>`:''}
     </div>`).join('');
 
@@ -1059,13 +1208,46 @@ function renderMetasSlide(){
 }
 
 const RENDERS=[renderHero,renderDia,renderCoach,renderSkills,renderMetasSlide];
+const SLIDE_MENU_META=[
+  {ico:'🌟',n:'Hero · JARVIS'},
+  {ico:'🕐',n:'Mi Día'},
+  {ico:'🪙',n:'Coach · Plan Maestro'},
+  {ico:'🧠',n:'Habilidades'},
+  {ico:'🎯',n:'Mis Metas'},
+];
 
 // ══════════════════════════════════════════════════════════════════════════
-// SLIDE ENGINE — avance automático cada 3 min + transición + controles
+// SLIDE ENGINE — avance automático (velocidad configurable) + transición + controles
 // ══════════════════════════════════════════════════════════════════════════
 const N=RENDERS.length;
 let cur=0, playing=true, timer=null;
-const AUTO_MS=180000; // 3 minutos
+let AUTO_MS=180000; // 3 minutos por defecto — puede cambiar desde Ajustes
+
+// ── Ajustes propios del Dashboard (clave 'dash-settings', NO compartida con el resto) ──
+function loadSettings(){
+  const s=rawGet('dash-settings',{autoMs:180000,remember:false,lastSlide:0});
+  AUTO_MS=s.autoMs;
+  return s;
+}
+function saveSettings(patch){
+  const s=rawGet('dash-settings',{autoMs:AUTO_MS,remember:false,lastSlide:0});
+  const merged={...s,...patch};
+  rawSet('dash-settings',merged);
+  return merged;
+}
+function applySettingsFromUI(){
+  AUTO_MS=parseInt(document.getElementById('setSpeed').value,10);
+  saveSettings({autoMs:AUTO_MS});
+  restartTimer();
+  toast('⚙️ Velocidad de rotación actualizada');
+}
+function toggleRemember(){
+  const s=rawGet('dash-settings',{autoMs:AUTO_MS,remember:false,lastSlide:cur});
+  const next=!s.remember;
+  saveSettings({remember:next,lastSlide:cur});
+  document.getElementById('setRemember').classList.toggle('on',next);
+  toast(next?'📍 Vas a abrir donde te quedaste':'🏠 Siempre vas a abrir en Hero');
+}
 
 function buildDots(){
   document.getElementById('dots').innerHTML=Array.from({length:N},(_,i)=>
@@ -1074,26 +1256,109 @@ function buildDots(){
 function paintDots(){document.querySelectorAll('.dot-btn').forEach((d,i)=>d.classList.toggle('on',i===cur));}
 
 function showSlide(i){
+  i=Math.min(Math.max(0,i),N-1);
   loadAll();
   RENDERS[i]();
   renderQuickApps();
   document.querySelectorAll('.slide').forEach(s=>s.classList.toggle('active',parseInt(s.dataset.i)===i));
   cur=i; paintDots();
+  const s=rawGet('dash-settings',null);
+  if(s&&s.remember) saveSettings({lastSlide:i});
+  if(document.getElementById('navMenuPanel').classList.contains('open')) renderNavMenu();
 }
 function nextSlide(){showSlide((cur+1)%N); restartTimer();}
 function prevSlide(){showSlide((cur-1+N)%N); restartTimer();}
 function goTo(i){showSlide(i); restartTimer();}
-function restartTimer(){clearInterval(timer); if(playing) timer=setInterval(nextSlide,AUTO_MS);}
+function startProgressBar(){
+  const fill=document.getElementById('hudProgressFill'); if(!fill)return;
+  fill.classList.remove('anim'); fill.style.transition='none'; fill.style.width='0%';
+  void fill.offsetWidth; // fuerza reflow para reiniciar la animación desde 0
+  if(playing&&AUTO_MS>0){
+    fill.style.transition=`width ${AUTO_MS}ms linear`;
+    requestAnimationFrame(()=>{ fill.style.width='100%'; });
+  }
+}
+function restartTimer(){
+  clearInterval(timer);
+  startProgressBar();
+  if(playing&&AUTO_MS>0) timer=setInterval(nextSlide,AUTO_MS);
+}
 function togglePlay(){
   playing=!playing;
-  document.getElementById('playBtn').textContent=playing?'⏸':'▶';
+  document.getElementById('playBtn').textContent=(playing&&AUTO_MS>0)?'⏸':'▶';
   restartTimer();
 }
 
+// ── Menú / Ajustes / Ayuda — paneles flotantes sobre el HUD ────────────────
+function closeAllPanels(){
+  ['navMenuPanel','settingsPanel','helpPanel'].forEach(id=>document.getElementById(id).classList.remove('open'));
+}
+function renderNavMenu(){
+  const {tareasHoy,actual}=rutinaAhoraSiguiente();
+  const doneHoy=(D.rut.completado||{})[today()]||[];
+  const contables=tareasHoy.filter(t=>!t.fijo).flatMap(leafItems);
+  const doneCount=contables.filter(it=>doneHoy.includes(it.id)).length;
+  const ph=activePhase();
+  const stats=[
+    'Tu semana completa',
+    contables.length?`${doneCount}/${contables.length} hecho hoy${actual&&!actual.fijo?' · '+actual.txt:''}`:'Sin bloques hoy',
+    ph.tag+' — '+ph.title,
+    'OVR '+calcOVR(),
+    'Corto, mediano y largo plazo',
+  ];
+  document.getElementById('navMenuList').innerHTML=SLIDE_MENU_META.map((it,i)=>`
+    <div class="menu-item ${i===cur?'on':''}" onclick="goTo(${i});toggleMenu()">
+      <div class="menu-ico">${it.ico}</div>
+      <div class="menu-txt"><div class="menu-name">${it.n}</div><div class="menu-stat">${stats[i]}</div></div>
+    </div>`).join('');
+}
+function toggleMenu(){
+  const p=document.getElementById('navMenuPanel');
+  const willOpen=!p.classList.contains('open');
+  closeAllPanels();
+  if(willOpen){ renderNavMenu(); p.classList.add('open'); }
+}
+function toggleSettings(){
+  const p=document.getElementById('settingsPanel');
+  const willOpen=!p.classList.contains('open');
+  closeAllPanels();
+  if(willOpen){
+    const s=rawGet('dash-settings',{autoMs:AUTO_MS,remember:false});
+    document.getElementById('setSpeed').value=String(AUTO_MS);
+    document.getElementById('setRemember').classList.toggle('on',!!s.remember);
+    p.classList.add('open');
+  }
+}
+function toggleHelp(){
+  const p=document.getElementById('helpPanel');
+  const willOpen=!p.classList.contains('open');
+  closeAllPanels();
+  if(willOpen) p.classList.add('open');
+}
+document.addEventListener('click',e=>{
+  if(!e.target.closest('.float-panel')&&!e.target.closest('.hud-row')) closeAllPanels();
+});
+
+// ── Pantalla completa ───────────────────────────────────────────────────────
+function toggleFullscreen(){
+  if(!document.fullscreenElement) document.documentElement.requestFullscreen?.().catch(()=>{});
+  else document.exitFullscreen?.();
+}
+document.addEventListener('fullscreenchange',()=>{
+  const btn=document.getElementById('fsBtn');
+  if(btn) btn.title=document.fullscreenElement?'Salir de pantalla completa (F)':'Pantalla completa (F)';
+});
+
 document.addEventListener('keydown',e=>{
+  if(e.target.tagName==='SELECT'||e.target.tagName==='INPUT') return;
   if(e.key==='ArrowRight') nextSlide();
   if(e.key==='ArrowLeft') prevSlide();
   if(e.key===' '){e.preventDefault();togglePlay();}
+  if(e.key==='m'||e.key==='M') toggleMenu();
+  if(e.key==='f'||e.key==='F') toggleFullscreen();
+  if(e.key==='?') toggleHelp();
+  if(e.key==='Escape') closeAllPanels();
+  if(/^[1-5]$/.test(e.key)) goTo(parseInt(e.key,10)-1);
 });
 window.addEventListener('storage',()=>{loadAll();RENDERS[cur]();renderQuickApps();});
 
@@ -1111,6 +1376,7 @@ function tickClock(){
   if(da||ds){
     const {tareasHoy,actual,siguiente}=rutinaAhoraSiguiente();
     if(da) da.textContent=actual?(actual.hora+' — '+actual.txt):(tareasHoy.length?'Aún no empieza tu rutina de hoy':'Sin bloques configurados para hoy');
+    updateMarkDoneBtn(actual);
     if(ds){
       if(siguiente){
         const[sh,sm]=siguiente.hora.split(':').map(Number);
@@ -1128,9 +1394,10 @@ setInterval(tickClock,1000);
 
 // ── Init ─────────────────────────────────────────────────────────────────
 buildDots();
+const _settings=loadSettings();
 loadAll();
 tickClock();
-showSlide(0);
+showSlide(_settings.remember&&_settings.lastSlide!=null?_settings.lastSlide:0);
 restartTimer();
 const themeBtn=document.getElementById('theme-toggle-btn');
 if(themeBtn) themeBtn.textContent=document.documentElement.getAttribute('data-theme')==='dark'?'☀️':'🌙';

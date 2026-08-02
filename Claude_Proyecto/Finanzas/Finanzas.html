@@ -303,9 +303,10 @@ select option{background:var(--surface-solid);color:var(--text)}
       <div class="mt16" id="d-income"></div>
       <!-- Fila 2: Salud financiera -->
       <div class="g4 mt16" id="d-insights"></div>
-      <!-- Fila 3: Gráfica de balance -->
-      <div class="mt20">
+      <!-- Fila 3: Gráfica de balance + gastos por categoría del mes -->
+      <div class="g2 mt20">
         <div class="card"><div class="card-title">📈 Balance últimos 6 meses</div><div class="chart-c"><canvas id="ch-bal"></canvas></div></div>
+        <div class="card"><div class="card-title">🥧 Gastos por categoría — este mes</div><div class="chart-c"><canvas id="ch-cat"></canvas></div><div id="ch-cat-empty" class="alert a-ok" style="display:none;margin-top:10px">Sin gastos registrados este mes todavía.</div></div>
       </div>
       <!-- Fila 4: Paneles estratégicos -->
       <div class="g2 mt20" id="d-specials"></div>
@@ -629,7 +630,7 @@ let S = { transactions:[], budgets:[], debts:[], goals:[], investments:[], activ
 let editId = null, confCb = null, payDebtId = null, contribGoalId = null;
 let btcEditId = null, activoEditId = null;
 let curType = 'expense';
-let chBal=null, chBud=null, chInv=null, chGbmInv=null, chBtcPnl=null;
+let chBal=null, chBud=null, chInv=null, chGbmInv=null, chBtcPnl=null, chCat=null;
 let dashMonth = '';
 let indActiveMonth = 'live';
 
@@ -3316,6 +3317,29 @@ function renderDashCharts(mtx) {
   ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{boxWidth:9,padding:12,color:cssVar('--text2')}},
     tooltip:{callbacks:{label:c=>` ${c.dataset.label}: ${fmt(c.parsed.y)}`}}},
     scales:{y:{ticks:{color:cssVar('--text3'),callback:v=>'$'+(v/1000).toFixed(0)+'k'},grid:{color:'rgba('+cssVar('--ov')+',.08)'}},x:{ticks:{color:cssVar('--text3')},grid:{display:false}}}}});
+
+  // Gastos por categoría del mes seleccionado (dona) — usa las mismas CATS/CCOLORS del selector de transacciones
+  const catTotals={};
+  mtx.filter(t=>t.type==='expense').forEach(t=>{ catTotals[t.cat]=(catTotals[t.cat]||0)+t.amount; });
+  const catEntries=Object.entries(catTotals).sort((a,b)=>b[1]-a[1]);
+  const ctxCat=document.getElementById('ch-cat'), catEmptyEl=document.getElementById('ch-cat-empty');
+  chCat=killChart(chCat);
+  if(ctxCat){
+    if(catEntries.length){
+      ctxCat.style.display='';
+      if(catEmptyEl) catEmptyEl.style.display='none';
+      const catTotal=catEntries.reduce((s,e)=>s+e[1],0);
+      chCat=new Chart(ctxCat,{type:'doughnut',data:{
+        labels:catEntries.map(e=>e[0]),
+        datasets:[{data:catEntries.map(e=>e[1]),backgroundColor:catEntries.map(e=>CCOLORS[e[0]]||'#94a3b8'),borderColor:cssVar('--surface'),borderWidth:2}]
+      },options:{responsive:true,maintainAspectRatio:false,cutout:'62%',
+        plugins:{legend:{position:'right',labels:{boxWidth:9,padding:8,color:cssVar('--text2'),font:{size:10}}},
+          tooltip:{callbacks:{label:c=>` ${c.label}: ${fmt(c.parsed)} (${(c.parsed/catTotal*100).toFixed(0)}%)`}}}}});
+    } else {
+      ctxCat.style.display='none';
+      if(catEmptyEl) catEmptyEl.style.display='';
+    }
+  }
 }
 
 function renderSubscriptions(refDate=new Date()) {

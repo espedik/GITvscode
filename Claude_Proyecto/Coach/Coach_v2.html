@@ -802,6 +802,7 @@
   <button class="modo-btn active" id="modo-btn-personal" onclick="cambiarModo('personal')">🪙 Coach — Personal</button>
   <button class="modo-btn" id="modo-btn-empresa" onclick="cambiarModo('empresa')">🏢 Coach — Empresa</button>
   <button class="theme-toggle-btn" id="theme-toggle-btn" onclick="toggleTheme()" title="Cambiar tema claro/oscuro" aria-label="Cambiar tema claro/oscuro">🌙</button>
+  <button class="theme-toggle-btn" onclick="exportCoachData()" title="Exportar respaldo (rutina, radar de habilidades, checklists)" aria-label="Exportar respaldo">⬇️</button>
 </div>
 
 <div id="vista-personal" class="vista-panel active">
@@ -3379,6 +3380,23 @@
     refrescarScrollSpy();
   }
 
+  // Exportar respaldo — Coach era la única app "grande" del ecosistema sin esto
+  // (Finanzas/Salud/Ejercicio ya lo tienen). Junta las 3 claves reales de este archivo:
+  // la rutina diaria (coach_rutina_v1), el radar de habilidades (radarp_* × 12) y los
+  // checklists estáticos con persistencia nueva del 2026-08-01 (coach_checks_v1).
+  const RADAR_IDS = ['ventas','copy','marketing','network','liderazgo','codigo','ia','datos','inversion','finanzas','ingles','mente'];
+  function exportCoachData() {
+    const data = {
+      coach_rutina_v1: JSON.parse(localStorage.getItem('coach_rutina_v1') || 'null'),
+      coach_checks_v1: JSON.parse(localStorage.getItem('coach_checks_v1') || 'null'),
+      radar: RADAR_IDS.reduce((o, id) => { o[id] = localStorage.getItem('radarp_' + id); return o; }, {}),
+    };
+    const b = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const a = Object.assign(document.createElement('a'), { href: URL.createObjectURL(b), download: `coach_${new Date().toISOString().slice(0,10)}.json` });
+    a.click();
+    URL.revokeObjectURL(a.href);
+  }
+
   // Tema claro / oscuro
   function toggleTheme() {
     const html = document.documentElement;
@@ -3978,11 +3996,30 @@
     document.addEventListener('DOMContentLoaded',function(){buildSliders();draw();});
   })();
 
-  // Checkboxes con tachado
+  // Checkboxes con tachado + persistencia real (2026-08-01).
+  // Antes esto solo tachaba visualmente y se perdía al recargar — para TODOS los checklists
+  // estáticos del archivo (Próximos 14 días, Metas, Hábitos, Networking, Marca Personal,
+  // Legal, Posibles Negocios, etc.). El propio checklist "Próximos 14 días" (pf1-pf10) le pide
+  // a Adán "revisar esto cada semana", lo cual no tenía sentido si nunca recordaba qué ya
+  // estaba marcado. Los checkboxes de #rutina-timeline quedan excluidos a propósito: esos ya
+  // persisten de verdad, con fecha, en coach_rutina_v1 (ver rutinaSave() arriba) — duplicar
+  // su persistencia aquí los desincronizaría.
+  const CHECKS_KEY = 'coach_checks_v1';
+  function checksLoad(){ try{ const r=localStorage.getItem(CHECKS_KEY); return r?JSON.parse(r):{}; }catch(e){ return {}; } }
+  function checksSave(o){ localStorage.setItem(CHECKS_KEY, JSON.stringify(o)); }
+  const checksState = checksLoad();
   document.querySelectorAll('.check-item input[type="checkbox"]').forEach(cb => {
+    if (cb.closest('#rutina-timeline')) return; // esos ya persisten aparte, con fecha
+    if (!cb.id) return;
+    if (checksState[cb.id]) {
+      cb.checked = true;
+      if (cb.nextElementSibling) cb.nextElementSibling.style.textDecoration = 'line-through';
+    }
     cb.addEventListener('change', e => {
       const label = e.target.nextElementSibling;
       if (label) label.style.textDecoration = e.target.checked ? 'line-through' : '';
+      if (e.target.checked) checksState[cb.id] = true; else delete checksState[cb.id];
+      checksSave(checksState);
     });
   });
 </script>
