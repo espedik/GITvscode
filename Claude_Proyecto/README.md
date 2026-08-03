@@ -37,7 +37,7 @@ Un conjunto de aplicaciones web de una sola página (HTML + CSS + JS, **sin back
 
 | Clave | Dueña (quien escribe) | Quién más la lee |
 |---|---|---|
-| `finanzasmx_v2` | `Finanzas/Finanzas.html` | `Dashboard/dashboard.html` |
+| `finanzasmx_v2` | `Finanzas/Finanzas.html` | `Dashboard/dashboard.html` (deudas/inversiones/patrimonio, en vivo) **y**, desde el 2026-08-02, `Coach/Coach_v2.html` (`#perfil` → tarjeta "📈 Progreso real vs. el inicio de Fase 0", primera vez que este archivo lee datos de otra app) |
 | `misalud_v1` | `CuidadoPersonal/salud.html` (medidas/agua/metas/perfil/exámenes/postura/mental/suplementos) **y** `CuidadoPersonal/comida.html` (**solo** `alimentos[]`, desde 2026-08-02 — CRUD completo del Registro Diario, antes solo escribía un registro puntual vía `registrarReceta()`, ver `CuidadoPersonal/readme_comida.md`) | los dos se leen entre sí (`Dashboard/dashboard.html` dejó de escribir aquí el 2026-08-02, se quitó el botón rápido "+💧" del Hero — ver `Dashboard/readme_dashboard.md`) |
 | `mirutina_v1` | `CuidadoPersonal/ejercicio.html` | `Dashboard/dashboard.html` (`D.gym`, solo `sesiones`/`metas.frecuencia`, desde 2026-07-30) |
 | `comida_v1` | `CuidadoPersonal/comida.html` | *(nadie más — lista del súper marcada y, desde 2026-08-02, el Plan Semanal — `planSemana`, solo ids de receta por día)* |

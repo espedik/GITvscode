@@ -842,10 +842,11 @@
         </div>
         <p class="p-today">Hoy · <span id="fecha-hoy"></span></p>
       </div>
+      <p class="fs-13 text-muted" style="margin-top:10px;">📸 Punto de partida de Fase 0 — congelado al 18 jul 2026, no cambia aunque tus finanzas mejoren. Para ver el avance real de hoy comparado contra esto, ve la tarjeta "📈 Progreso real" más abajo.</p>
       <div class="hero-kpis">
-        <div class="stat-badge"><span class="num neg">-$308,830</span><span>Patrimonio líquido</span></div>
-        <div class="stat-badge"><span class="num neg">$366,137</span><span>Deuda total</span></div>
-        <div class="stat-badge"><span class="num">$0 / $10,000</span><span>Fondo de emergencia</span></div>
+        <div class="stat-badge"><span class="num neg">-$308,830</span><span>Patrimonio líquido al iniciar</span></div>
+        <div class="stat-badge"><span class="num neg">$366,137</span><span>Deuda total al iniciar</span></div>
+        <div class="stat-badge"><span class="num">$0 / $10,000</span><span>Fondo emergencia al iniciar</span></div>
         <div class="stat-badge"><span class="num" id="kpiDiasMeta">1,263</span><span>Días hasta 01 ene 2030</span></div>
       </div>
       <p class="p-quote">"Mi mayor miedo no es fracasar. Es no explotar mi potencial y quedarme estancado y pobre." Este perfil existe para que eso nunca pase.</p>
@@ -1699,6 +1700,13 @@
         Las Opciones 1 y 2 de 💡 Posibles Negocios (plantilla GBM y freelance) no requieren capital, solo tu tiempo y lo que ya sabes hacer. El capital real solo se vuelve relevante en la Opción 4 (CodeReview productizado, Fase 2). Por eso el excedente que liberes en Fase 0-1 va primero a un <strong class="text-gold">fondo de emergencia de $10,000</strong> (la meta que tu propio Finanzas.html ya trae integrada, hoy en $0) y después a deuda cara — no a un "fondo semilla" que todavía no tiene para qué usarse.
       </div>
       <div class="concepto-item" style="border:none;"><strong>Régimen fiscal — ya resuelto</strong>Para facturar honorarios freelance (Opción 2) o vender un producto digital de forma recurrente (Opción 1) necesitas régimen fiscal activo. Ya diste de alta el trámite en el SAT, así que este punto queda cerrado — no vuelve a aparecer como pendiente en Fase 0.</div>
+    </div>
+
+    <!-- PROGRESO REAL vs. PUNTO DE PARTIDA -->
+    <div class="card mb-16 span-2" style="margin-bottom:16px;">
+      <h3 class="fw-700 mb-12">📈 Progreso real vs. el inicio de Fase 0</h3>
+      <p class="fs-13 text-muted mb-12" id="progresoRealSub">Leído en vivo de <a href="../Finanzas/Finanzas.html" class="inline-link">Finanzas.html</a> cada vez que abres esta pestaña — comparado contra los números de arriba, congelados al 18 jul 2026. Si vas más rápido de lo que marca la "Trayectoria estimada" de abajo, es la señal para avisar y ajustar la estrategia de las siguientes fases; si vas más lento, es la señal para revisar qué opción de negocio no está jalando.</p>
+      <div class="grid-3" id="progresoRealGrid"></div>
     </div>
 
     <!-- TRAYECTORIA TRIMESTRAL -->
@@ -3348,6 +3356,48 @@
     const pctLabel = document.getElementById('planPctLabel');
     if (pctLabel) pctLabel.textContent = pct + '% del tiempo total transcurrido';
   })();
+
+  // ─── PROGRESO REAL vs. punto de partida de Fase 0 (2026-08-02) ───────────
+  // Coach_v2.html no leía datos de Finanzas.html hasta ahora — Adán pidió explícitamente
+  // "necesito tener esas stats" para poder comparar el avance real contra el día que arrancó
+  // el plan (los 4 números congelados en .hero-kpis arriba) y decidir si conviene ajustar la
+  // estrategia de las siguientes fases. Los valores "al iniciar" están hardcodeados a propósito
+  // — son historia, no deben recalcularse — solo el lado "hoy" se lee en vivo de localStorage.
+  function renderProgresoReal() {
+    const grid = document.getElementById('progresoRealGrid');
+    const sub  = document.getElementById('progresoRealSub');
+    if (!grid) return;
+    let fin = null;
+    try { const r = localStorage.getItem('finanzasmx_v2'); fin = r ? JSON.parse(r) : null; } catch (e) {}
+    if (!fin || !fin.debts) {
+      grid.innerHTML = '<p class="fs-13 text-muted">Todavía no hay datos de Finanzas.html en este navegador — ábrelo al menos una vez para que aparezca aquí tu avance real.</p>';
+      return;
+    }
+    const bana = fin.debts.find(d => d.id === 'd002');
+    const bbva = fin.debts.find(d => d.id === 'd001');
+    const deudaCaraInicial = 46693; // Banamex $14,349.72 + BBVA $32,343.31 al arrancar Fase 0 (18 jul 2026)
+    const deudaCaraHoy     = (bana ? bana.balance : 0) + (bbva ? bbva.balance : 0);
+    const deudaTotalHoy    = fin.debts.reduce((s, d) => s + (d.balance || 0), 0);
+    const invValue         = (fin.investments || []).reduce((s, i) => s + (i.value || 0), 0);
+    const patrimonioHoy    = invValue + (fin.emergencyFund || 0) - deudaTotalHoy;
+    const fmtN = n => (n < 0 ? '-$' : '$') + Math.round(Math.abs(n)).toLocaleString('es-MX');
+    const items = [
+      { lbl: 'Deuda cara hoy (Banamex+BBVA)', hoy: deudaCaraHoy,  inicial: deudaCaraInicial, bajarEsMejor: true },
+      { lbl: 'Deuda total hoy',               hoy: deudaTotalHoy, inicial: 366137,           bajarEsMejor: true },
+      { lbl: 'Patrimonio líquido hoy',        hoy: patrimonioHoy, inicial: -308830,          bajarEsMejor: false },
+    ];
+    grid.innerHTML = items.map(it => {
+      const delta  = it.hoy - it.inicial;
+      const mejora = it.bajarEsMejor ? delta < 0 : delta > 0;
+      const sinCambio = Math.round(delta) === 0;
+      const deltaTxt = sinCambio ? 'sin cambio vs. el inicio' : (delta > 0 ? '+' : '-') + fmtN(Math.abs(delta)) + ' vs. el inicio';
+      return `<div class="stat-badge" style="min-width:auto;${mejora ? 'border-color:rgba(0,168,88,.4)' : ''}">
+        <span class="num${mejora ? ' text-green' : sinCambio ? '' : ' neg'}">${fmtN(it.hoy)}</span>
+        <span>${it.lbl} · ${deltaTxt}</span>
+      </div>`;
+    }).join('');
+  }
+  renderProgresoReal();
 
   // Descargar CV en PDF — usa la impresión nativa del navegador ("Guardar como PDF")
   // en vez de una librería externa, para que el archivo siga funcionando 100% offline.
