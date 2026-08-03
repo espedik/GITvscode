@@ -17,6 +17,7 @@
   --pk:#ff6bd6;--pk-l:rgba(255,107,214,.1);
   --am:#e0a020;--am-l:rgba(224,160,32,.1);
   --mt:#4fd6ad;--mt-l:rgba(79,214,173,.1);
+  --ve:#c17f4a;--ve-l:rgba(193,127,74,.12);
   --bg:#060614;--surface:#161619;--surface-2:#18181c;--surface-3:#1b1b20;--border:rgba(var(--ov),.08);--ov:255,255,255;
   --text:#e8eaf6;--text2:#8892b0;--text3:#4a5568;
   --r14:14px;--rs:9px;--sh:0 4px 24px rgba(0,0,0,.5);
@@ -31,6 +32,7 @@
   --pk:#c0268f;--pk-l:rgba(192,38,143,.12);
   --am:#92660a;--am-l:rgba(146,102,10,.12);
   --mt:#1a8a63;--mt-l:rgba(26,138,99,.12);
+  --ve:#8a5a2e;--ve-l:rgba(138,90,46,.12);
   --bg:#f4f4f7;--surface:#ffffff;--surface-2:#ffffff;--surface-3:#ffffff;--border:rgba(var(--ov),.1);--ov:0,0,0;
   --text:#16161a;--text2:#5c5f70;--text3:#82859a;
   --sh:0 2px 14px rgba(0,0,0,.08);
@@ -57,6 +59,7 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var
 .tab-btn[data-tab="ejercicio"].active{background:var(--o-l);color:var(--o);border-color:rgba(255,107,53,.4)}
 .tab-btn[data-tab="comida"].active{background:var(--w-l);color:var(--w);border-color:rgba(255,217,61,.4)}
 .tab-btn[data-tab="dentista"].active{background:var(--mt-l);color:var(--mt);border-color:rgba(79,214,173,.4)}
+.tab-btn[data-tab="vestimenta"].active{background:var(--ve-l);color:var(--ve);border-color:rgba(193,127,74,.4)}
 
 /* VIEWS */
 .view{flex:1;min-height:0;display:none}
@@ -559,6 +562,7 @@ tbody tr:hover td{background:rgba(var(--ov),.02)}
     <button class="tab-btn" data-tab="ejercicio" onclick="mainTab('ejercicio')">🏋️ Ejercicio</button>
     <button class="tab-btn" data-tab="comida" onclick="mainTab('comida')">🍳 Comida</button>
     <button class="tab-btn" data-tab="dentista" onclick="mainTab('dentista')">🦷 Dentista</button>
+    <button class="tab-btn" data-tab="vestimenta" onclick="mainTab('vestimenta')">👔 Vestimenta</button>
     <a href="../Dashboard/dashboard.html" class="tab-btn" style="text-decoration:none;margin-left:8px;border-left:1px solid rgba(var(--ov),.12);padding-left:16px">🚀 Dashboard</a>
   </nav>
   <button class="theme-toggle-btn" id="theme-toggle-btn" onclick="toggleTheme()" title="Cambiar tema claro/oscuro" aria-label="Cambiar tema claro/oscuro">🌙</button>
@@ -707,6 +711,11 @@ tbody tr:hover td{background:rgba(var(--ov),.02)}
   <iframe id="frame-comida" title="Comida"></iframe>
 </main>
 
+<!-- ══════════════ VESTIMENTA (app completa embebida, vive fuera de CuidadoPersonal/) ══════════════ -->
+<main class="view view-frame" id="view-vestimenta">
+  <iframe id="frame-vestimenta" title="Vestimenta"></iframe>
+</main>
+
 <!-- ══════════════ DENTISTA ══════════════ -->
 <main class="view view-native" id="view-dentista">
   <div class="de-hero">
@@ -800,8 +809,8 @@ function toggleTheme(){
   localStorage.setItem('coach-theme',next);
   const btn=document.getElementById('theme-toggle-btn');
   if(btn) btn.textContent=next==='dark'?'☀️':'🌙';
-  // Empuja el tema a los iframes ya cargados (Salud/Ejercicio/Comida) para que no queden desincronizados
-  ['frame-salud','frame-ejercicio','frame-comida'].forEach(id=>{
+  // Empuja el tema a los iframes ya cargados (Salud/Ejercicio/Comida/Vestimenta) para que no queden desincronizados
+  ['frame-salud','frame-ejercicio','frame-comida','frame-vestimenta'].forEach(id=>{
     try{
       const f=document.getElementById(id);
       const doc=f&&f.getAttribute('src')&&f.contentDocument;
@@ -811,7 +820,7 @@ function toggleTheme(){
 }
 
 // ══════════════════════════════════════════════════════════════════════════
-// NAVEGACIÓN PRINCIPAL — 4 subtabs
+// NAVEGACIÓN PRINCIPAL — 7 subtabs
 // ══════════════════════════════════════════════════════════════════════════
 function mainTab(tab){
   document.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));
@@ -819,6 +828,7 @@ function mainTab(tab){
   if(tab==='salud'){const f=document.getElementById('frame-salud');if(!f.getAttribute('src'))f.src='salud.html';}
   if(tab==='ejercicio'){const f=document.getElementById('frame-ejercicio');if(!f.getAttribute('src'))f.src='ejercicio.html';}
   if(tab==='comida'){const f=document.getElementById('frame-comida');if(!f.getAttribute('src'))f.src='comida.html';}
+  if(tab==='vestimenta'){const f=document.getElementById('frame-vestimenta');if(!f.getAttribute('src'))f.src='../Vestimenta/vestimenta.html';}
 }
 
 // ══════════════════════════════════════════════════════════════════════════
@@ -1452,7 +1462,7 @@ caRenderGuia();
 deRenderGuia();
 
 const initialTab=new URLSearchParams(location.search).get('tab');
-if(['skincare','cabello','salud','ejercicio','comida','dentista'].includes(initialTab)) mainTab(initialTab);
+if(['skincare','cabello','salud','ejercicio','comida','dentista','vestimenta'].includes(initialTab)) mainTab(initialTab);
 const themeBtn=document.getElementById('theme-toggle-btn');
 if(themeBtn) themeBtn.textContent=document.documentElement.getAttribute('data-theme')==='dark'?'☀️':'🌙';
 </script>
