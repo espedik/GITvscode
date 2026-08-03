@@ -4327,10 +4327,19 @@ function init() {
   // Migración: actualizar meta maestría de 300k → 500k
   const _maeGoal=S.goals.find(g=>g.id==='g001');
   if(_maeGoal&&_maeGoal.target===300000){_maeGoal.target=500000;save();}
-  // Migración 2026-08-02: Banamex bajó a $9,000 real, y se vendieron todas las acciones de GBM
-  const _banamex=S.debts.find(d=>d.id==='d002');
-  if(_banamex&&_banamex.balance===14349.72){_banamex.balance=9000;save();}
+  // Migración 2026-08-02: se vendieron todas las acciones de GBM
   if(S.investments.find(i=>i.id==='i003')){S.investments=S.investments.filter(i=>i.id!=='i003');save();}
+  // Migración 2026-08-02b: Banamex a $9,000 real. Se usa una bandera propia en vez de comparar
+  // balance===14349.72 — el balance guardado en el navegador de Adán ya no coincidía con ese
+  // valor exacto (seguía mostrando ~$17,000, probablemente por interés acumulado desde la
+  // primera migración), así que la comparación por igualdad nunca disparaba el fix. Con la
+  // bandera se aplica una sola vez sin importar qué balance hubiera antes, y no vuelve a tocarlo
+  // después — así si Adán paga más y baja de $9,000 más adelante, esta migración no se lo revierte.
+  if(!localStorage.getItem(KEY+'_banamex9k')){
+    const _banamex=S.debts.find(d=>d.id==='d002');
+    if(_banamex){_banamex.balance=9000;save();}
+    localStorage.setItem(KEY+'_banamex9k','1');
+  }
   // Asegurar que el fondo de emergencia exista en metas
   if(!S.goals.find(g=>g.id==='ef-001')) {
     S.goals.unshift({

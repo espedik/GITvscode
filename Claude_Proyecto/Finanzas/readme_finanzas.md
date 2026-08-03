@@ -530,18 +530,24 @@ Se ejecuta al cargar la página:
 
 `seedData()` solo re-siembra si `SEED_VER` cambió, y cuando lo hace **borra por completo** `localStorage[KEY]` antes de reinyectar el seed (`localStorage.removeItem(KEY)`) — cualquier transacción, deuda o inversión que Adán haya agregado a mano desde el último seed **se pierde**. Bumpear `SEED_VER` es el mecanismo correcto para cambios estructurales del modelo de datos, pero es demasiado destructivo para una corrección puntual tipo "este saldo ya cambió en la vida real".
 
-Para esos casos, `init()` trae un patrón más seguro: un `if` puntual después de `load()` que busca el registro por `id`, verifica el valor viejo antes de tocarlo (evita reaplicar la migración si ya corrió), lo corrige, y llama a `save()` — sin tocar nada más del objeto `S`. Ya existía uno (`_maeGoal.target===300000` → `500000`, meta de la Maestría). **Ejemplo nuevo, 2026-08-02** (Adán reportó "Banamex ya solo le debo $9,000, pero vendí todas mis acciones de GBM"):
+Para esos casos, `init()` trae un patrón más seguro: un `if` puntual después de `load()` que busca el registro por `id`, verifica que no se haya aplicado ya, lo corrige, y llama a `save()` — sin tocar nada más del objeto `S`. Ya existía uno (`_maeGoal.target===300000` → `500000`, meta de la Maestría). **Ejemplo nuevo, 2026-08-02** (Adán reportó "Banamex ya solo le debo $9,000, pero vendí todas mis acciones de GBM"):
 
 ```js
-// Migración 2026-08-02: Banamex bajó a $9,000 real, y se vendieron todas las acciones de GBM
-const _banamex=S.debts.find(d=>d.id==='d002');
-if(_banamex&&_banamex.balance===14349.72){_banamex.balance=9000;save();}
+// Migración 2026-08-02: se vendieron todas las acciones de GBM
 if(S.investments.find(i=>i.id==='i003')){S.investments=S.investments.filter(i=>i.id!=='i003');save();}
+// Migración 2026-08-02b: Banamex a $9,000 real — bandera propia, no comparación de balance
+if(!localStorage.getItem(KEY+'_banamex9k')){
+  const _banamex=S.debts.find(d=>d.id==='d002');
+  if(_banamex){_banamex.balance=9000;save();}
+  localStorage.setItem(KEY+'_banamex9k','1');
+}
 ```
 
 `debts[].total` (14349.72) se dejó intacto a propósito — sigue siendo el monto original de la deuda, usado para calcular el % pagado (`1-balance/total`) en Dashboard y en el propio `renderDebts()`. Solo `balance` (lo que falta por pagar hoy) cambió. La inversión `i003` (NVIDIA — GBM+) se eliminó del array por completo, no se puso en `$0`, porque ya no existe esa posición. El seed base (más abajo, dentro de `seedData()`) también se actualizó con estos mismos valores, para que una instalación nueva desde cero ya nazca correcta — pero **sin** bumpear `SEED_VER`, así que no dispara un re-seed destructivo en el navegador donde Adán ya tiene datos reales.
 
-Verificado con Playwright: una carga limpia (`localStorage` vacío) usa el seed corregido directamente; un `localStorage` ya sembrado con los valores viejos (simulando el navegador real de Adán) se corrige solo en la siguiente carga vía la migración, y una transacción manual de prueba agregada aparte **sobrevive** el proceso — confirma que no hay pérdida de datos.
+**Por qué la migración de Banamex usa una bandera y no `balance===14349.72` (corregido el mismo día, segunda vuelta)**: la primera versión comparaba el balance contra el valor exacto del seed original. Adán reportó que el Dashboard seguía mostrando ~$17,000 — su balance real ya había cambiado (probablemente por interés acumulado, `rate:10`) y ya no coincidía con `14349.72`, así que la comparación estricta nunca disparaba el fix. La versión con bandera (`KEY+'_banamex9k'` en `localStorage`) corrige el balance a $9,000 **una sola vez, sin importar qué valor tuviera antes**, y no vuelve a tocarlo — así que si Adán paga más adelante y baja de $9,000 por su cuenta, esta migración no se lo revierte en la siguiente carga. Este es el patrón a preferir sobre comparar por igualdad exacta cuando se corrige un dato que pudo haber cambiado por el uso normal de la app entre que se escribió la migración y que el usuario la corrió.
+
+Verificado con Playwright: una carga limpia (`localStorage` vacío) usa el seed corregido directamente; un `localStorage` ya sembrado con un balance distinto (simulando el drift real que reportó Adán, ~$17,000) se corrige a $9,000 en la siguiente carga sin perder una transacción manual de prueba agregada aparte; y si después se simula que Adán paga y baja el balance a $5,000 por su cuenta, una recarga posterior **no lo revierte** — confirma que la migración es de un solo uso.
 
 ---
 
