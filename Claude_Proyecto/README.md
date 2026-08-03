@@ -39,7 +39,7 @@ Un conjunto de aplicaciones web de una sola página (HTML + CSS + JS, **sin back
 |---|---|---|
 | `finanzasmx_v2` | `Finanzas/Finanzas.html` | `Dashboard/dashboard.html` (deudas/inversiones/patrimonio, en vivo) **y**, desde el 2026-08-02, `Coach/Coach_v2.html` (`#perfil` → tarjeta "📈 Progreso real vs. el inicio de Fase 0", primera vez que este archivo lee datos de otra app) |
 | `misalud_v1` | `CuidadoPersonal/salud.html` (medidas/agua/metas/perfil/exámenes/postura/mental/suplementos) **y** `CuidadoPersonal/comida.html` (**solo** `alimentos[]`, desde 2026-08-02 — CRUD completo del Registro Diario, antes solo escribía un registro puntual vía `registrarReceta()`, ver `CuidadoPersonal/readme_comida.md`) | los dos se leen entre sí (`Dashboard/dashboard.html` dejó de escribir aquí el 2026-08-02, se quitó el botón rápido "+💧" del Hero — ver `Dashboard/readme_dashboard.md`) |
-| `mirutina_v1` | `CuidadoPersonal/ejercicio.html` | `Dashboard/dashboard.html` (`D.gym`, solo `sesiones`/`metas.frecuencia`, desde 2026-07-30) |
+| `mirutina_v1` | `CuidadoPersonal/ejercicio.html` (solo `rutina`/`ejerciciosCustom`/`fitsiCalendario` desde 2026-08-02 — `sesiones`/`metas` se quitaron del archivo, ver `readme_ejercicio.md` → "Reestructuración") | `Dashboard/dashboard.html` (`D.gym.rutina`, para "qué toca hoy") |
 | `comida_v1` | `CuidadoPersonal/comida.html` | *(nadie más — lista del súper marcada y, desde 2026-08-02, el Plan Semanal — `planSemana`, solo ids de receta por día)* |
 | `skincare_v1` | `CuidadoPersonal/cuidadopersonal.html` | `Dashboard/dashboard.html` |
 | `cabello_v1` | `CuidadoPersonal/cuidadopersonal.html` | `Dashboard/dashboard.html` |

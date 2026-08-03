@@ -110,20 +110,10 @@ tbody tr:hover td{background:rgba(255,107,53,.03)}
 .mt16{margin-top:16px}.mt20{margin-top:20px}
 .flex{display:flex}.aic{align-items:center}.jb{justify-content:space-between}
 .fw7{font-weight:700}.ts{font-size:11px}.tm{color:var(--text3)}.gap6{gap:6px}.gap8{gap:8px}
-.chart-c{position:relative;height:220px}
 .empty{text-align:center;padding:40px 24px;color:var(--text3)}
 .empty .ico{font-size:40px;margin-bottom:10px;opacity:.4}
 /* Músculo chips */
 .musculo-chip{display:inline-block;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:700;margin:2px}
-/* Set row */
-.set-row{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid rgba(var(--ov),.05)}
-.set-row:last-child{border-bottom:none}
-.set-num{width:28px;height:28px;border-radius:50%;background:rgba(255,107,53,.15);color:var(--p);font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.set-num.done{background:rgba(0,232,122,.2);color:var(--g)}
-.set-input{width:70px;padding:6px 8px;font-size:13px;font-weight:700;text-align:center}
-/* Timer */
-.timer-display{font-size:48px;font-weight:900;letter-spacing:-2px;color:var(--p);text-align:center;font-variant-numeric:tabular-nums}
-.timer-display.low{color:var(--g)}
 /* Muscle map */
 .muscle-map{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
 .muscle-cell{padding:10px 12px;border-radius:10px;border:1px solid rgba(var(--ov),.07);background:rgba(var(--ov),.03);display:flex;align-items:center;gap:8px;transition:all .2s}
@@ -137,8 +127,6 @@ tbody tr:hover td{background:rgba(255,107,53,.03)}
 .day-card{border-radius:12px;border:1px solid rgba(var(--ov),.08);background:rgba(var(--ov),.03);padding:14px;transition:all .2s}
 .day-card.today{border-color:var(--p);background:rgba(255,107,53,.06)}
 .day-card.rest-day{opacity:.6}
-/* PR badge */
-.pr-badge{background:linear-gradient(135deg,#e0b020,#d97757);color:#1a1200;padding:2px 7px;border-radius:4px;font-size:9px;font-weight:900;letter-spacing:.04em}
 /* Meta banner (Mi Rutina) */
 .meta-banner{border-color:rgba(255,107,53,.28);background:rgba(255,107,53,.05)}
 /* Day tabs (Mi Rutina) */
@@ -717,16 +705,13 @@ let rutinaDiaSel=new Date().getDay();
 
 const today = () => new Date().toISOString().slice(0,10);
 const uid = () => Date.now().toString(36)+Math.random().toString(36).slice(2);
-const fmtD = d => { if(!d)return''; const[y,m,day]=d.split('-'); const mn=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic']; return `${parseInt(day)} ${mn[parseInt(m)-1]} ${y}`; };
 const save = () => localStorage.setItem(KEY, JSON.stringify(S));
 const load = () => { try { const d=localStorage.getItem(KEY); if(d) S={...S,...JSON.parse(d)}; } catch(e){} };
-const killChart = c => { if(c) c.destroy(); return null; };
 const getAllEj = () => [...EJ_DB, ...(S.ejerciciosCustom||[])];
 const findEj = id => getAllEj().find(e=>e.id===id);
 
 function toast(msg) { const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2500); }
 
-const cssVar = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
 function toggleTheme(){
   const html=document.documentElement;
   const next=html.getAttribute('data-theme')==='dark'?'light':'dark';
@@ -843,193 +828,6 @@ function renderResumenSemana() {
     </div>`;
 }
 
-// ─── ENTRENAR HOY ────────────────────────────────────────────────────────────
-function renderHoy() {
-  const diaHoy = new Date().getDay();
-  const rutinaH = S.rutina[diaHoy];
-  const sesHoy = S.sesiones.filter(s=>s.fecha===today());
-  const el = document.getElementById('hoy-body');
-
-  if(!rutinaH || !rutinaH.ejercicios?.length || rutinaH.tipo==='descanso') {
-    el.innerHTML=`<div class="card empty"><div class="ico">${rutinaH?.tipo==='descanso'?'😴':'📋'}</div>
-      <p>${rutinaH?.tipo==='descanso'?'Hoy es día de descanso. ¡Descansa y recupera!':'Sin ejercicios para hoy. Configura tu rutina.'}</p>
-      ${rutinaH?.tipo!=='descanso'?`<button class="btn btn-p" style="margin-top:12px" onclick="nav('rutina')">Configurar rutina</button>`:''}
-    </div>`;
-    return;
-  }
-
-  if(!workoutActivo) {
-    // Vista previa antes de empezar
-    const lastSes = [...S.sesiones].filter(s=>{ const d=new Date(s.fecha).getDay(); return d===diaHoy; }).sort((a,b)=>b.fecha.localeCompare(a.fecha))[0];
-    el.innerHTML=`
-      <div class="card" style="margin-bottom:16px;border-color:rgba(255,107,53,.3);background:rgba(255,107,53,.05)">
-        <div style="font-size:22px;font-weight:900;color:var(--text);margin-bottom:4px">${rutinaH.nombre}</div>
-        <div class="ts tm">${DIAS_STR[diaHoy]} · ${rutinaH.ejercicios.length} ejercicios</div>
-        ${sesHoy.length?`<div class="badge b-g" style="margin-top:8px;display:inline-block">✅ Ya entrenaste hoy</div>`:''}
-      </div>
-      <div class="g2" style="margin-bottom:16px">
-        <div>
-          ${rutinaH.ejercicios.map((e,i)=>{ const ej=findEj(e.id); if(!ej)return'';
-            const lastSet = lastSes?.ejercicios?.find(x=>x.ejId===e.id)?.sets?.filter(s=>s.hecha);
-            const lastPR = lastSet?.length?`Última vez: ${lastSet[0].peso}kg × ${lastSet[0].reps}`:null;
-            const uni = UNI_LABEL[e.unidad]||'reps';
-            return `<div class="exd-card" style="margin-bottom:8px">
-              <div class="exd-img" style="width:64px;height:64px">${ej.img?`<img src="${ej.img}" alt="${ej.nombre}" loading="lazy">`:`<span class="ico" style="font-size:22px">🏋️</span>`}</div>
-              <div style="flex:1;min-width:0">
-                <div style="font-size:13px;font-weight:700">${i+1}. ${ej.nombre}</div>
-                <div class="ts tm">${ej.musculo} · ${e.series} series × ${e.reps} ${uni}${e.descanso?' · '+e.descanso+'s desc.':''}</div>
-                ${lastPR?`<div style="font-size:10px;color:var(--text3);margin-top:2px">${lastPR}</div>`:''}
-                ${ej.cue?`<div class="exd-cue" style="margin-top:3px">💡 ${ej.cue}</div>`:''}
-              </div>
-              <span style="font-size:10px;padding:2px 8px;border-radius:4px;background:${(MUSCULO_COL[ej.musculo]||'#64748b')}18;color:${MUSCULO_COL[ej.musculo]||'#64748b'};font-weight:700;height:fit-content">${ej.equipo}</span>
-            </div>`;
-          }).join('')}
-        </div>
-        <div>
-          ${lastSes?`<div class="card" style="margin-bottom:12px;padding:14px">
-            <div class="card-title" style="margin-bottom:8px">📋 Última vez (${fmtD(lastSes.fecha)})</div>
-            ${lastSes.ejercicios?.slice(0,4).map(e=>{ const ej=findEj(e.ejId);
-              const mejor = e.sets?.filter(s=>s.hecha).sort((a,b)=>b.peso-a.peso)[0];
-              return ej&&mejor?`<div class="flex jb" style="padding:4px 0;border-bottom:1px solid rgba(var(--ov),.05)">
-                <span class="ts" style="color:var(--text2)">${ej.nombre}</span>
-                <span class="ts fw7" style="color:var(--p)">${mejor.peso}kg × ${mejor.reps}</span>
-              </div>`:''}).join('')||''}
-          </div>`:''}
-          <button class="btn btn-p" style="width:100%;padding:14px;font-size:16px;font-weight:800" onclick="iniciarWorkout()">
-            🚀 Iniciar entrenamiento
-          </button>
-        </div>
-      </div>`;
-    return;
-  }
-
-  // MODO ACTIVO
-  const {rutinaEjs, setsLog, startTime} = workoutActivo;
-  const elapsed = Math.round((Date.now()-startTime)/60000);
-  el.innerHTML=`
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:8px">
-      <div>
-        <div style="font-size:18px;font-weight:800;color:var(--p)">${rutinaH.nombre}</div>
-        <div class="ts tm">⏱️ ${elapsed} min · ${rutinaEjs.length} ejercicios</div>
-      </div>
-      <div class="flex gap8">
-        <button class="btn btn-o btn-sm" onclick="openTimer()">⏱️ Descanso</button>
-        <button class="btn btn-g" onclick="terminarWorkout()">✅ Terminar</button>
-      </div>
-    </div>
-    <div style="display:flex;flex-direction:column;gap:12px">
-      ${rutinaEjs.map((e,ejIdx)=>{
-        const ej=findEj(e.id); if(!ej)return'';
-        const log=setsLog[ejIdx]||{sets:Array.from({length:e.series},()=>({peso:e.peso||0,reps:e.reps,hecha:false}))};
-        const hechos=log.sets.filter(s=>s.hecha).length;
-        return `<div class="card" style="padding:14px;${hechos===e.series?'border-color:rgba(0,232,122,.3);background:rgba(0,232,122,.03)':''}">
-          <div class="flex jb aic" style="margin-bottom:10px">
-            <div class="flex gap8 aic">
-              ${ej.img?`<div class="exd-img" style="width:44px;height:44px"><img src="${ej.img}" alt="${ej.nombre}" loading="lazy"></div>`:''}
-              <div>
-                <div style="font-size:14px;font-weight:700">${ejIdx+1}. ${ej.nombre}</div>
-                <div class="ts tm">${ej.musculo} · ${ej.equipo}${e.descanso?' · ⏱️ '+e.descanso+'s descanso':''}</div>
-              </div>
-            </div>
-            <span style="font-size:11px;font-weight:700;color:${hechos===e.series?'var(--g)':'var(--text3)'}">${hechos}/${e.series} series</span>
-          </div>
-          ${ej.cue?`<div class="exd-cue" style="margin-bottom:10px">💡 ${ej.cue}</div>`:''}
-          <div style="display:grid;grid-template-columns:28px 1fr 1fr 1fr auto;gap:6px;align-items:center;margin-bottom:6px">
-            <div></div>
-            <div class="ts tm" style="text-align:center">SERIE</div>
-            <div class="ts tm" style="text-align:center">PESO (kg)</div>
-            <div class="ts tm" style="text-align:center">REPS</div>
-            <div></div>
-          </div>
-          ${log.sets.map((set,si)=>`
-          <div style="display:grid;grid-template-columns:28px 1fr 1fr 1fr auto;gap:6px;align-items:center;margin-bottom:4px">
-            <div class="set-num ${set.hecha?'done':''}">${si+1}</div>
-            <div class="ts tm" style="text-align:center">${si+1}</div>
-            <input type="number" class="set-input" value="${set.peso||''}" placeholder="0" min="0" step="0.5"
-              onchange="updateSet(${ejIdx},${si},'peso',parseFloat(this.value)||0)">
-            <input type="number" class="set-input" value="${set.reps||''}" placeholder="${e.reps}" min="1"
-              onchange="updateSet(${ejIdx},${si},'reps',parseInt(this.value)||e.reps)">
-            <button onclick="toggleSet(${ejIdx},${si})"
-              style="padding:5px 8px;border-radius:6px;border:none;cursor:pointer;font-size:13px;font-weight:700;font-family:inherit;
-              background:${set.hecha?'rgba(0,232,122,.2)':'rgba(255,107,53,.2)'};color:${set.hecha?'var(--g)':'var(--p)'}">
-              ${set.hecha?'✅':'○'}
-            </button>
-          </div>`).join('')}
-        </div>`;
-      }).join('')}
-    </div>`;
-}
-
-function iniciarWorkout() {
-  const diaHoy = new Date().getDay();
-  const rutinaH = S.rutina[diaHoy];
-  workoutActivo = {
-    rutinaEjs: rutinaH.ejercicios,
-    setsLog: rutinaH.ejercicios.map(e=>({ ejId:e.id, sets: Array.from({length:e.series},()=>({peso:e.peso||0,reps:e.reps,hecha:false})) })),
-    startTime: Date.now(),
-    dia: diaHoy
-  };
-  renderHoy();
-}
-
-function updateSet(ejIdx, si, campo, val) {
-  if(!workoutActivo) return;
-  workoutActivo.setsLog[ejIdx].sets[si][campo] = val;
-}
-
-function toggleSet(ejIdx, si) {
-  if(!workoutActivo) return;
-  const set = workoutActivo.setsLog[ejIdx].sets[si];
-  set.hecha = !set.hecha;
-  renderHoy();
-}
-
-function terminarWorkout() {
-  if(!workoutActivo) return;
-  const diaHoy = new Date().getDay();
-  const rutinaH = S.rutina[diaHoy];
-  const sesion = {
-    id: uid(), fecha: today(), diaSemana: diaHoy,
-    nombre: rutinaH.nombre,
-    duracion: Math.round((Date.now()-workoutActivo.startTime)/60000),
-    ejercicios: workoutActivo.setsLog.map(e=>({
-      ejId: e.ejId,
-      nombre: findEj(e.ejId)?.nombre||'',
-      sets: e.sets
-    }))
-  };
-  S.sesiones.push(sesion);
-  save();
-  workoutActivo = null;
-  toast('✅ ¡Entrenamiento completado!');
-  renderHoy();
-}
-
-// ─── TIMER ───────────────────────────────────────────────────────────────────
-function openTimer() { setTimer(90); document.getElementById('mo-timer').classList.add('open'); }
-function stopTimer() { if(timerInterval){clearInterval(timerInterval);timerInterval=null;} timerRunning=false; }
-function setTimer(segs) {
-  stopTimer();
-  timerSegs=segs; timerRunning=true;
-  updateTimerDisplay();
-  timerInterval=setInterval(()=>{
-    if(!timerRunning)return;
-    timerSegs--;
-    updateTimerDisplay();
-    if(timerSegs<=0){ stopTimer(); document.getElementById('timer-val').textContent='¡Listo!'; }
-  },1000);
-  document.getElementById('timer-pause-btn').textContent='⏸ Pausar';
-}
-function pauseTimer() {
-  timerRunning=!timerRunning;
-  document.getElementById('timer-pause-btn').textContent=timerRunning?'⏸ Pausar':'▶️ Reanudar';
-}
-function updateTimerDisplay() {
-  const m=Math.floor(timerSegs/60), s=timerSegs%60;
-  const el=document.getElementById('timer-val');
-  if(el){ el.textContent=`${m}:${String(s).padStart(2,'0')}`; el.className='timer-display'+(timerSegs<=10?' low':''); }
-}
-
 // ─── MI RUTINA — subtabs por día + detalle completo con imagen por ejercicio ──
 const ORDEN_DIAS = [1,2,3,4,5,6,0];
 
@@ -1038,10 +836,9 @@ function renderRutina() {
     const rut = S.rutina[d]||{nombre:'Sin asignar',tipo:'',ejercicios:[]};
     const isHoy = d===new Date().getDay();
     const col = TIPO_COL[rut.tipo]||'rgba(var(--ov),.3)';
-    const hecha = S.sesiones.some(s=>s.diaSemana===d&&s.fecha===today());
     return `<button class="day-tab ${d===rutinaDiaSel?'active':''}" onclick="verRutinaDia(${d})">
       <span class="dt-d">${DIAS_SHORT[d]}${isHoy?' •':''}</span>
-      <span class="dt-t">${rut.tipo==='descanso'?'😴':hecha&&isHoy?'✅':''}</span>
+      <span class="dt-t">${rut.tipo==='descanso'?'😴':''}</span>
       <span class="dt-dot" style="background:${col}"></span>
     </button>`;
   }).join('');
@@ -1055,7 +852,6 @@ function renderRutinaDetalle() {
   const rut = S.rutina[d]||{nombre:'Sin asignar',tipo:'',ejercicios:[]};
   const isHoy = d===new Date().getDay();
   const col = TIPO_COL[rut.tipo]||'rgba(var(--ov),.3)';
-  const sesiones = S.sesiones.filter(s=>s.diaSemana===d).sort((a,b)=>b.fecha.localeCompare(a.fecha));
 
   // Resumen de músculos que cubre el día
   const musculosDia = {};
@@ -1077,7 +873,6 @@ function renderRutinaDetalle() {
           ${rut.foco?`<div class="ts tm" style="margin-top:4px;max-width:560px">${rut.foco}</div>`:''}
         </div>
         <div class="flex gap8">
-          ${isHoy?`<button class="btn btn-p btn-sm" onclick="nav('hoy')">💪 Entrenar</button>`:''}
           <button class="btn btn-o btn-sm" onclick="openRutinaModal(${d})">✏️ Editar</button>
         </div>
       </div>
@@ -1110,12 +905,6 @@ function renderRutinaDetalle() {
         </div>`;
       }).join('')}
     </div>`}
-
-    ${sesiones.length?`
-    <div class="card mt16" style="padding:14px">
-      <div class="card-title" style="margin-bottom:8px">📋 Historial de este día</div>
-      <div class="ts tm">${sesiones.length} sesión(es) — última: ${fmtD(sesiones[0].fecha)}</div>
-    </div>`:''}
   `;
 }
 
@@ -1248,120 +1037,27 @@ function saveEjCustom() {
 }
 function delEjCustom(id) { S.ejerciciosCustom=S.ejerciciosCustom.filter(e=>e.id!==id); save(); renderBiblioteca(); toast('🗑️ Eliminado'); }
 
-// ─── PROGRESO ────────────────────────────────────────────────────────────────
-function renderProgreso() {
-  // Obtener todos los ejercicios que tienen historial
-  const ejConHistorial={};
-  S.sesiones.forEach(ses=>ses.ejercicios?.forEach(e=>{
-    const mejor=e.sets?.filter(s=>s.hecha&&s.peso>0).sort((a,b)=>b.peso-a.peso)[0];
-    if(mejor){ if(!ejConHistorial[e.ejId]) ejConHistorial[e.ejId]=[]; ejConHistorial[e.ejId].push({fecha:ses.fecha,peso:mejor.peso,reps:mejor.reps}); }
-  }));
-  const ejIds=Object.keys(ejConHistorial);
+// ─── FITSI — tu gimnasio real en Buenavista (nuevo, 2026-08-02) ───────────────
+// Datos verificados en fitsi.com.mx/clubes/buenavista (2026-08-02) — Fitsi no publica un
+// calendario semanal con día/hora exacta por clase, solo la lista de clases que ofrece y las
+// instalaciones. Por eso "fitsiCalendario" es un campo de texto libre por día que Adán llena
+// él mismo con lo que vea en la app de Fitsi o en el pizarrón del club — no se inventa horario.
+const FITSI_CLASES = ['Fit Step','Zumba Fitness','Pilates','Cycling','Strong','Barre','Yoga','Aquafit','Body Pump','Salsa en Línea','Power Jump'];
+const FITSI_INSTALACIONES = ['Alberca Semiolímpica','Vapor','Vestidores de Lujo','Área de Cardiovascular','Área de Peso Integrado','Área de Peso Libre','Indoor Cycling','Salón Fuerza','Salón Mente','Cross Training'];
 
-  if(!ejIds.length){
-    document.getElementById('prog-body').innerHTML=`<div class="empty"><div class="ico">📈</div><p>Completa entrenamientos para ver tu progreso de fuerza aquí.</p></div>`;
-    chProgreso=killChart(chProgreso); return;
-  }
+function renderFitsi() {
+  document.getElementById('fitsi-clases-list').innerHTML = FITSI_CLASES.map(c=>
+    `<span class="badge b-p">${c}</span>`).join('');
+  document.getElementById('fitsi-instalaciones-list').innerHTML = FITSI_INSTALACIONES.map(i=>
+    `<span class="badge b-n">${i}</span>`).join('');
 
-  document.getElementById('prog-body').innerHTML=`
-    <div class="card" style="margin-bottom:16px">
-      <div class="fg" style="margin:0">
-        <label>Selecciona un ejercicio para ver su progresión</label>
-        <select id="prog-ej-sel" onchange="renderProgresoChart()" style="max-width:400px">
-          ${ejIds.map(id=>{ const ej=findEj(id); return ej?`<option value="${id}">${ej.nombre}</option>`:''; }).join('')}
-        </select>
-      </div>
-    </div>
-    <div class="g2">
-      <div class="card">
-        <div class="card-title" style="margin-bottom:12px">📈 Mejor peso por sesión</div>
-        <div class="chart-c"><canvas id="ch-prog"></canvas></div>
-      </div>
-      <div class="card">
-        <div class="card-title" style="margin-bottom:12px">🏆 Récords personales</div>
-        <div id="prog-records"></div>
-      </div>
-    </div>`;
-  renderProgresoChart();
+  document.getElementById('fitsi-calendario').innerHTML = ORDEN_DIAS.map(d=>`
+    <div class="flex gap8 aic" style="padding:6px 0;border-bottom:1px solid rgba(var(--ov),.05)">
+      <span style="width:70px;font-size:11px;font-weight:700;color:var(--text2);flex-shrink:0">${DIAS_STR[d]}</span>
+      <input type="text" value="${(S.fitsiCalendario?.[d]||'').replace(/"/g,'&quot;')}" placeholder="Ej. Cycling 7:00 am"
+        oninput="S.fitsiCalendario[${d}]=this.value;save()" style="flex:1">
+    </div>`).join('');
 }
-
-function renderProgresoChart() {
-  const selId=document.getElementById('prog-ej-sel')?.value; if(!selId)return;
-  const ej=findEj(selId);
-  const hist=[];
-  S.sesiones.forEach(ses=>ses.ejercicios?.forEach(e=>{
-    if(e.ejId!==selId)return;
-    const mejor=e.sets?.filter(s=>s.hecha&&s.peso>0).sort((a,b)=>b.peso-a.peso)[0];
-    if(mejor) hist.push({fecha:ses.fecha,peso:mejor.peso,reps:mejor.reps});
-  }));
-  hist.sort((a,b)=>a.fecha.localeCompare(b.fecha));
-
-  chProgreso=killChart(chProgreso);
-  const ctx=document.getElementById('ch-prog'); if(!ctx)return;
-  chProgreso=new Chart(ctx,{type:'line',data:{
-    labels:hist.map(h=>fmtD(h.fecha)),
-    datasets:[{label:'Peso máximo (kg)',data:hist.map(h=>h.peso),borderColor:cssVar('--p'),backgroundColor:cssVar('--p-l'),fill:true,tension:.3,pointRadius:5,pointBackgroundColor:cssVar('--p'),pointBorderColor:cssVar('--surface-2'),pointBorderWidth:2,borderWidth:2.5}]
-  },options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>` ${ctx.parsed.y} kg`}}},
-    scales:{y:{grid:{color:'rgba('+cssVar('--ov')+',.06)'},ticks:{color:cssVar('--text3'),callback:v=>v+' kg'}},x:{grid:{display:false},ticks:{color:cssVar('--text3')}}}}});
-
-  const pr=hist.reduce((best,h)=>h.peso>=(best?.peso||0)?h:best,null);
-  const progrTotal=hist.length>1?(hist[hist.length-1].peso-hist[0].peso):0;
-  document.getElementById('prog-records').innerHTML=`
-    <div style="display:flex;flex-direction:column;gap:10px">
-      <div style="background:rgba(255,217,61,.08);border:1px solid rgba(255,217,61,.25);border-radius:10px;padding:14px">
-        <div style="font-size:10px;font-weight:700;color:var(--w);text-transform:uppercase;margin-bottom:4px">🥇 Récord personal</div>
-        <div style="font-size:26px;font-weight:900;color:var(--w)">${pr?.peso||0} kg</div>
-        <div class="ts tm">${pr?'× '+pr.reps+' reps · '+fmtD(pr.fecha):''}</div>
-      </div>
-      <div style="background:rgba(255,107,53,.08);border-radius:10px;padding:14px">
-        <div style="font-size:10px;font-weight:700;color:var(--p);text-transform:uppercase;margin-bottom:4px">📊 Progresión total</div>
-        <div style="font-size:22px;font-weight:800;color:${progrTotal>=0?'var(--g)':'var(--r)'}">${progrTotal>=0?'+':''}${progrTotal.toFixed(1)} kg</div>
-        <div class="ts tm">en ${hist.length} sesiones</div>
-      </div>
-      ${ej?`<div style="background:rgba(var(--ov),.04);border-radius:10px;padding:14px">
-        <div style="font-size:10px;font-weight:700;color:var(--text2);text-transform:uppercase;margin-bottom:4px">💪 Músculo principal</div>
-        <div style="font-size:16px;font-weight:700;color:${MUSCULO_COL[ej.musculo]||'var(--text)'}">${ej.musculo}</div>
-        <div class="ts tm">${ej.equipo} · ${ej.tipo}</div>
-      </div>`:''}
-    </div>`;
-}
-
-// ─── HISTORIAL ───────────────────────────────────────────────────────────────
-function renderHistorial() {
-  const list=[...S.sesiones].sort((a,b)=>b.fecha.localeCompare(a.fecha));
-  const el=document.getElementById('hist-body');
-  if(!list.length){el.innerHTML='<div class="empty"><div class="ico">📋</div><p>Sin sesiones registradas aún. ¡Completa tu primer entrenamiento!</p></div>';return;}
-  el.innerHTML=list.map(ses=>{
-    const totalSets=ses.ejercicios?.reduce((s,e)=>s+(e.sets?.filter(x=>x.hecha).length||0),0)||0;
-    const totalVol=ses.ejercicios?.reduce((s,e)=>s+(e.sets?.filter(x=>x.hecha).reduce((ss,set)=>ss+(set.peso||0)*(set.reps||0),0)||0),0)||0;
-    return `<div class="card" style="margin-bottom:10px;padding:14px">
-      <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:8px">
-        <div>
-          <div style="font-size:15px;font-weight:700">${ses.nombre}</div>
-          <div class="ts tm">${fmtD(ses.fecha)} · ${ses.duracion||0} min · ${ses.ejercicios?.length||0} ejercicios</div>
-        </div>
-        <div class="flex gap8 aic">
-          <div style="text-align:center">
-            <div style="font-size:11px;color:var(--text3)">Sets hechos</div>
-            <div style="font-size:16px;font-weight:800;color:var(--p)">${totalSets}</div>
-          </div>
-          <div style="text-align:center">
-            <div style="font-size:11px;color:var(--text3)">Volumen</div>
-            <div style="font-size:16px;font-weight:800;color:var(--b)">${(totalVol/1000).toFixed(1)}t</div>
-          </div>
-          <button onclick="askDel(()=>delSesion('${ses.id}'))" class="btn btn-o btn-sm btn-ico">🗑️</button>
-        </div>
-      </div>
-      <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:10px">
-        ${ses.ejercicios?.map(e=>{ const ej=findEj(e.ejId);
-          const mejor=e.sets?.filter(s=>s.hecha&&s.peso>0).sort((a,b)=>b.peso-a.peso)[0];
-          return ej?`<span style="font-size:10px;padding:3px 8px;border-radius:5px;background:rgba(var(--ov),.05);color:var(--text2)">
-            ${ej.nombre}${mejor?` · <span style="color:var(--p);font-weight:700">${mejor.peso}kg×${mejor.reps}</span>`:''}</span>`:'' }).join('')||''}
-      </div>
-    </div>`;
-  }).join('');
-}
-function delSesion(id){S.sesiones=S.sesiones.filter(s=>s.id!==id);save();renderHistorial();if(document.getElementById('s-dashboard').classList.contains('active'))renderDashboard();toast('🗑️ Sesión eliminada');}
 
 // ─── EXPORT ──────────────────────────────────────────────────────────────────
 function exportData(){ const b=new Blob([JSON.stringify(S,null,2)],{type:'application/json'}); const a=Object.assign(document.createElement('a'),{href:URL.createObjectURL(b),download:`rutina_${today()}.json`}); a.click(); URL.revokeObjectURL(a.href); toast('⬇️ Datos exportados'); }
@@ -1377,7 +1073,7 @@ function init() {
   if(themeBtn) themeBtn.textContent=document.documentElement.getAttribute('data-theme')==='dark'?'☀️':'🌙';
   const check=()=>{ const mb=document.getElementById('menuBtn'); mb.style.display=window.innerWidth<640?'':'none'; if(window.innerWidth>=640)document.getElementById('sidebar').classList.remove('open'); };
   window.addEventListener('resize',check); check();
-  renderDashboard();
+  renderMiRutina();
 }
 init();
 </script>
