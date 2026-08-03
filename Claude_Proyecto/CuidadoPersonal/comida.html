@@ -45,7 +45,7 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var
 .nav-item .ico{font-size:15px;width:20px;text-align:center;flex-shrink:0}
 .nav-item .count{margin-left:auto;font-size:10px;color:var(--text3);font-family:monospace}
 
-.main{margin-left:var(--sw);flex:1;display:flex;flex-direction:column;min-height:100vh}
+.main{margin-left:var(--sw);flex:1;min-width:0;display:flex;flex-direction:column;min-height:100vh}
 .topbar{background:var(--surface);border-bottom:1px solid rgba(var(--ov),.06);
   padding:0 24px;height:58px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
 .topbar-title{font-size:15px;font-weight:700}
@@ -179,8 +179,14 @@ tbody tr:hover td{background:rgba(255,217,61,.02)}
 .pm-hero div div:first-child{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px}
 .pm-hero div div:last-child{font-size:20px;font-weight:800}
 
-@media(max-width:900px){.g4{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:repeat(2,1fr)}.psem-grid{grid-template-columns:repeat(4,1fr)}}
+@media(max-width:900px){.g4{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:repeat(2,1fr)}.psem-grid{grid-template-columns:repeat(4,1fr)}.pm-hero{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:640px){.sidebar{transform:translateX(-100%)}.sidebar.open{transform:translateX(0)}.main{margin-left:0}.recetas-grid{grid-template-columns:1fr}.g4,.g3,.g2{grid-template-columns:1fr}.fr{grid-template-columns:1fr}.psem-grid{grid-template-columns:repeat(2,1fr)}}
+
+/* Responsivo iPad/iPhone (2026-08-03): los hijos de grid tienen min-width:auto implícito
+   y no se encogen aunque la columna sea 1fr, lo que puede desbordar el viewport (mismo
+   patrón resuelto en salud.html). Forzamos min-width:0 en los hijos directos de cada grid. */
+.g4>*,.g3>*,.g2>*,.fr>*,.recetas-grid>*,.shop-grid>*,.psem-grid>*,.pm-hero>*{min-width:0}
+canvas{max-width:100%}
 </style>
 <script>
 (function () {

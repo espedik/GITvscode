@@ -100,6 +100,34 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var
 @media(max-width:760px){.combo-card{flex-direction:column}.combo-img{width:100%;height:200px}}
 @media(max-width:900px){.fase-grid{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:640px){.sidebar{transform:translateX(-100%)}.sidebar.open{transform:translateX(0)}.main{margin-left:0}.fase-grid{grid-template-columns:1fr}}
+
+/* ─── Responsivo — iPad / iPhone 15 Pro (2026-08-03) ───────────────────────
+   Los breakpoints 760/900/640 de arriba ya existían y funcionan (grid de
+   fases, combo-card apilado, sidebar off-canvas). Lo que faltaba:
+   1) el botón ☰ (#menuBtn) para abrir el sidebar en móvil tenía
+      style="display:none" puesto INLINE en el HTML — un media query normal
+      no le gana a un inline style, hace falta !important.
+   2) red de seguridad min-width:0 en los grids por si algún item-card con
+      texto largo fuerza overflow (los grid item tienen min-width:auto
+      implícito y no se encogen aunque la columna sea 1fr/minmax).
+   3) compactar padding/tipografía en iPad (800px) y aún más en iPhone (480px). */
+.fase-grid > *, .item-grid > * { min-width: 0 }
+@media(max-width:800px){
+  .content{padding:18px}
+  .sh h2{font-size:18px}
+  .combo-body{padding:16px 18px}
+}
+@media(max-width:640px){
+  #menuBtn{display:flex !important}
+}
+@media(max-width:480px){
+  .content{padding:14px}
+  .topbar{padding:0 14px}
+  .item-img{height:170px}
+  .item-body{padding:13px}
+  .sh h2{font-size:17px}
+  .fase-grid{gap:10px}
+}
 </style>
 <script>
 (function () {

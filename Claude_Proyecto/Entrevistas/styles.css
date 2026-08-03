@@ -770,3 +770,122 @@
   [data-theme="dark"] .quiz-q .q-tag.lvl-basico     { background: rgba(22,163,74,.18); color: #86EFAC; }
   [data-theme="dark"] .quiz-q .q-tag.lvl-intermedio { background: rgba(217,119,6,.18); color: #FCD34D; }
   [data-theme="dark"] .quiz-q .q-tag.lvl-complejo   { background: rgba(220,38,38,.18); color: #FCA5A5; }
+
+  /* ══════════════════════════════════════════════════════════════════
+     RESPONSIVO — iPad / iPhone 15 Pro (2026-08-03)
+     ══════════════════════════════════════════════════════════════════
+     Breakpoint principal en 900px, no 800px: el sidebar fijo de este
+     archivo mide 290px, así que en un iPad de 820px de ancho quedarían
+     solo 530px de contenido si el sidebar se mantuviera empujando el
+     layout — insuficiente para los grids de 2-3 columnas de abajo. Por
+     eso el sidebar pasa a overlay (y los grids se apilan) un poco antes
+     que el resto del ecosistema. 480px compacta más para iPhone. */
+  @media (max-width: 900px) {
+    /* Header: logo + buscador + progreso + botones no caben en una sola
+       fila a este ancho — se permite wrap y se recorta lo decorativo. */
+    header {
+      flex-wrap: wrap;
+      height: auto;
+      min-height: var(--header-h);
+      padding: 10px 14px;
+      gap: 8px 12px;
+    }
+    .logo h1 small { display: none; }
+    #search { flex: 1 1 160px; max-width: none; order: 3; }
+    .header-right { order: 4; margin-left: 0; }
+
+    /* Sidebar: de panel fijo en flujo (290px que empuja el contenido) a
+       drawer off-canvas. Reutiliza el atributo existente
+       data-sidebar-collapsed y el botón ☰ (#sidebar-toggle →
+       toggleSidebar() en ui.js, sin tocar JS), pero dentro de este media
+       query su significado se invierte a propósito: por defecto (sin el
+       atributo) el sidebar queda fuera de pantalla, y al "colapsar" en
+       realidad se desliza a la vista como overlay. Así el primer tap en
+       ☰ ABRE el menú en un teléfono en vez de ocultar algo que ya estaba
+       empujando el contenido (que en desktop nunca pasó de 290px fijos). */
+    #sidebar {
+      position: fixed;
+      top: var(--header-h);
+      left: 0;
+      bottom: 0;
+      z-index: 30;
+      width: min(290px, 82vw);
+      min-width: 0;
+      opacity: 1;
+      padding: 0 0 40px;
+      transform: translateX(-100%);
+      transition: transform .22s ease;
+      box-shadow: 4px 0 24px rgba(0,0,0,.18);
+    }
+    html[data-sidebar-collapsed="true"] #sidebar {
+      width: min(290px, 82vw);
+      min-width: 0;
+      opacity: 1;
+      padding: 0 0 40px;
+      border-right-color: var(--border);
+      overflow-y: auto;
+      transform: translateX(0);
+    }
+    #content { width: 100%; }
+
+    /* Grids de 2-3 columnas definidos en este archivo: se apilan para que
+       ningún hijo se comprima de más (trampa: los grid items tienen
+       min-width:auto implícito y no se encogen aunque la columna sea 1fr). */
+    .jd-grid, .two-col, .error-compare, .cs-grid { grid-template-columns: 1fr; }
+    .jd-grid > *, .two-col > *, .error-compare > *, .cs-grid > * { min-width: 0; }
+
+    /* Grids definidos en el <style> embebido de js/data-coding.js (página
+       "Cómo resolver cualquier problema — wayve-algo-approach"). Ese
+       <style> se inserta en el DOM (dentro de #content) en tiempo de
+       ejecución, después de este archivo — con la misma especificidad
+       ganaría por orden de aparición, así que aquí hace falta !important
+       para asegurar que gane esta regla externa sin tener que tocar el .js. */
+    .approach-summary { grid-template-columns: repeat(2,1fr) !important; }
+    .pattern-row { grid-template-columns: 1fr !important; }
+    .pattern-row.hdr { display: none !important; }
+    .py-tool-grid, .ec-grid { grid-template-columns: 1fr !important; }
+    .optim-head { grid-template-columns: 1fr !important; }
+    .approach-summary > *, .py-tool-grid > *, .ec-grid > * { min-width: 0 !important; }
+
+    /* Pestañas: con varios .tab-btn en una sola fila (usado en decenas de
+       páginas vía js/data-*.js) puede desbordar; permitir wrap es inocuo
+       cuando ya cabían. */
+    .tab-bar { flex-wrap: wrap; row-gap: 6px; }
+
+    /* Menos padding lateral para aprovechar el ancho disponible */
+    .topic-page { padding: 22px 20px; }
+    .topic-page.fullwidth { padding: 12px 14px; }
+
+    /* Tablas anchas (kv-table no tiene wrapper con overflow-x, a diferencia
+       de cs-table que ya usa .cs-table-wrap): scroll horizontal propio en
+       vez de forzar el ancho de toda la página. display:block en <table>
+       no cambia el display por defecto de thead/tbody/tr/td (siguen siendo
+       table-row-group/table-row/table-cell del UA stylesheet), así que la
+       tabla se sigue viendo como tabla, solo que ahora es un contenedor de
+       scroll independiente. */
+    .kv-table { display: block; overflow-x: auto; }
+
+    .welcome-stats { gap: 20px; }
+    .jd-grid, .two-col, .error-compare, .cs-grid { gap: 10px; }
+  }
+
+  @media (max-width: 480px) {
+    header { padding: 8px 10px; }
+    #search { flex-basis: 100%; order: 5; }
+    .header-right { flex-basis: 100%; justify-content: space-between; order: 6; margin-top: 4px; }
+    .progress-global { flex: 1; }
+    .progress-bar-wrap { flex: 1; width: auto; min-width: 40px; }
+    .btn-reset { padding: 5px 8px; font-size: .68rem; }
+    .logo h1 { font-size: .82rem; }
+
+    #sidebar { width: min(270px, 88vw); }
+    html[data-sidebar-collapsed="true"] #sidebar { width: min(270px, 88vw); }
+
+    .topic-page { padding: 16px 14px; }
+    .topic-top { flex-wrap: wrap; }
+    .btn-done { margin-left: auto; }
+
+    .welcome-stats { gap: 14px; flex-wrap: wrap; }
+    .approach-summary { grid-template-columns: repeat(2,1fr) !important; gap: 6px !important; }
+    .ec-grid { gap: 8px !important; }
+  }

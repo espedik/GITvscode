@@ -52,7 +52,7 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var
 .nav-item .ico{font-size:15px;width:20px;text-align:center;flex-shrink:0}
 
 /* MAIN */
-.main{margin-left:var(--sw);flex:1;display:flex;flex-direction:column;min-height:100vh}
+.main{margin-left:var(--sw);flex:1;min-width:0;display:flex;flex-direction:column;min-height:100vh}
 .topbar{background:var(--surface);border-bottom:1px solid rgba(var(--ov),.06);
   padding:0 24px;height:58px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
 .topbar-title{font-size:15px;font-weight:700}
@@ -171,6 +171,12 @@ tbody tr:hover td{background:rgba(0,232,122,.02)}
 @media(max-width:900px){.g4{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:640px){.sidebar{transform:translateX(-100%)}.sidebar.open{transform:translateX(0)}
   .main{margin-left:0}.g4,.g3,.g2{grid-template-columns:1fr}.fr{grid-template-columns:1fr}}
+
+/* Responsivo iPad/iPhone (2026-08-03): los hijos de grid tienen min-width:auto implícito
+   y no se encogen aunque la columna sea 1fr (p.ej. canvas de Chart.js con tamaño intrínseco
+   dentro de .g2), lo que desborda el viewport en iPad (820px). Forzamos min-width:0. */
+.g4>*,.g3>*,.g2>*,.fr>*{min-width:0}
+canvas{max-width:100%}
 </style>
 <script>
 (function () {

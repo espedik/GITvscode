@@ -56,7 +56,7 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
 .sb-bottom{padding:12px;border-top:1px solid rgba(var(--ov),.07);display:flex;flex-direction:column;gap:6px}
 
 /* ── MAIN ─────────────────────────────────────────────────────── */
-.main{margin-left:var(--sw);flex:1;display:flex;flex-direction:column;min-height:100vh}
+.main{margin-left:var(--sw);flex:1;min-width:0;display:flex;flex-direction:column;min-height:100vh}
 .topbar{background:rgba(255,255,255,.97);backdrop-filter:blur(20px);
   border-bottom:1px solid rgba(var(--ov),.08);padding:0 24px;height:58px;
   display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50;box-shadow:0 1px 8px rgba(0,0,0,.06)}
@@ -87,6 +87,19 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
 .g4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
 .g3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
 .g2{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+
+/* Grids equivalentes a los de arriba pero usados dentro de HTML generado por JS
+   (renderGBM, renderDebts/renderIndicatorsHTML, renderBtcHistory) — mismas columnas que
+   tenían como style="" inline, movidas a clase para poder tener breakpoints (ver RESPONSIVE). */
+.gbm-metrics-grid{display:grid;grid-template-columns:repeat(4,1fr)}
+.gbm-week-grid{display:grid;grid-template-columns:repeat(3,1fr)}
+.gbm-svc-grid{display:grid;grid-template-columns:repeat(3,1fr)}
+.gbm-port-kpis{display:grid;grid-template-columns:repeat(5,1fr)}
+.gbm-port-layout{display:grid;grid-template-columns:1fr 340px}
+.gbm-port-side{position:sticky;top:70px}
+.gbm-bw-grid{display:grid;grid-template-columns:repeat(2,1fr)}
+.ind-grid4{display:grid;grid-template-columns:repeat(4,1fr)}
+.btc-layout{display:grid;grid-template-columns:1.4fr 1fr}
 
 /* ── BUTTONS ──────────────────────────────────────────────────── */
 .btn{display:inline-flex;align-items:center;gap:5px;padding:8px 14px;border-radius:var(--rs);
@@ -228,13 +241,43 @@ select option{background:var(--surface-solid);color:var(--text)}
 .glow-red{text-shadow:0 0 12px rgba(255,59,107,.6)}
 
 /* ── RESPONSIVE ───────────────────────────────────────────────── */
-@media(max-width:900px){.g4{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:900px){
+  .g4{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:repeat(2,1fr)}
+  .topbar{padding:0 16px}
+  .topbar-actions{gap:6px}
+  /* Grids armados con style="" inline desde JS (renderGBM, renderDebts, renderBtcHistory) —
+     un media query normal no puede pisar un inline style, así que esas plantillas ahora
+     imprimen una clase (ver readme_finanzas.md) que sí podemos redefinir aquí. */
+  .gbm-metrics-grid{grid-template-columns:repeat(2,1fr)}
+  .gbm-port-kpis{grid-template-columns:repeat(2,1fr)}
+  .gbm-port-layout{grid-template-columns:1fr}
+  .gbm-port-side{position:static;top:auto}
+  .ind-grid4{grid-template-columns:repeat(2,1fr)}
+  .btc-layout{grid-template-columns:1fr}
+}
 @media(max-width:640px){.sidebar{transform:translateX(-100%)}.sidebar.open{transform:translateX(0)}
-  .main{margin-left:0}.g4,.g3,.g2{grid-template-columns:1fr}.fr{grid-template-columns:1fr}}
+  .main{margin-left:0}.g4,.g3,.g2{grid-template-columns:1fr}.fr{grid-template-columns:1fr}
+  /* Topbar: título + acciones ya no caben en una sola fila (botón "+ Nueva transacción"
+     + fecha + toggle de tema son texto sin wrap) — se deja envolver a una 2ª fila en vez
+     de forzar overflow horizontal de toda la página. */
+  .topbar{flex-wrap:wrap;height:auto;min-height:58px;row-gap:8px;padding:10px 16px}
+  .topbar-actions{flex-wrap:wrap;justify-content:flex-end}
+  .gbm-week-grid{grid-template-columns:1fr}
+  .gbm-svc-grid{grid-template-columns:1fr}
+}
 
 /* ── FUTURISTIC ACCENTS ───────────────────────────────────────── */
 @keyframes pulse-cyan{0%,100%{box-shadow:0 0 8px rgba(0,212,255,.3)}50%{box-shadow:0 0 20px rgba(0,212,255,.6)}}
 .card-hi{animation:pulse-cyan 4s ease-in-out infinite}
+
+/* ── FIX RESPONSIVO: hijos de grid no se encogen por debajo de su contenido ─────
+   Los grid items tienen min-width:auto implícito (usan el tamaño mínimo de su
+   contenido como piso) y por eso pueden desbordar el viewport aunque la columna
+   sea 1fr. Bloque al final de la hoja para ganar por orden de aparición sobre
+   cualquier regla previa con la misma especificidad. */
+.g2>*,.g3>*,.g4>*,.fr>*,
+.gbm-metrics-grid>*,.gbm-week-grid>*,.gbm-svc-grid>*,.gbm-port-kpis>*,
+.gbm-port-layout>*,.gbm-bw-grid>*,.ind-grid4>*,.btc-layout>*{min-width:0}
 </style>
 <script>
 (function () {
@@ -1270,7 +1313,7 @@ function renderGBM() {
           <button class="btn btn-o btn-sm btn-ico" onclick="askDel('inversión',()=>delInv('${i.id}'))">🗑️</button>
         </div>
       </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;margin-bottom:8px">
+      <div class="gbm-metrics-grid" style="gap:8px;margin-bottom:8px">
         <div style="background:rgba(var(--ov),.03);border-radius:7px;padding:8px 10px">
           <div style="font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px">Capital</div>
           <div style="font-size:13px;font-weight:700">${fmt(i.invested||0)}</div>
@@ -1505,7 +1548,7 @@ function renderGBM() {
           </div>
 
           <!-- 3 columnas: Entradas / Gastos / A invertir -->
-          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">
+          <div class="gbm-week-grid" style="gap:10px">
 
             <div style="background:rgba(0,232,122,.06);border-radius:10px;padding:12px">
               <div style="font-size:10px;font-weight:700;color:var(--success);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">↑ Entradas</div>
@@ -1561,7 +1604,7 @@ function renderGBM() {
             <div style="font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:8px">
               📋 Servicios fijos del mes (referencia — se pagan en Sem 3)
             </div>
-            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px">
+            <div class="gbm-svc-grid" style="gap:6px">
               <div style="background:rgba(255,255,255,.03);border-radius:8px;padding:8px 10px">
                 <div style="font-size:9px;font-weight:700;color:var(--text3);text-transform:uppercase;margin-bottom:5px">🔧 Servicios</div>
                 ${[
@@ -1654,7 +1697,7 @@ function renderGBM() {
     </div>`:`
 
     <!-- KPIs PORTAFOLIO -->
-    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:16px">
+    <div class="gbm-port-kpis" style="gap:10px;margin-bottom:16px">
       <div class="card card-hi" style="padding:14px">
         <div class="card-title" style="font-size:9px">💼 Valor total</div>
         <div style="font-size:20px;font-weight:900;letter-spacing:-.5px">${fmt(totVal)}</div>
@@ -1683,7 +1726,7 @@ function renderGBM() {
     </div>
 
     <!-- LAYOUT PRINCIPAL: posiciones (izq) + panel (der) -->
-    <div style="display:grid;grid-template-columns:1fr 340px;gap:14px;margin-bottom:16px;align-items:start">
+    <div class="gbm-port-layout" style="gap:14px;margin-bottom:16px;align-items:start">
 
       <!-- POSICIONES: dos grupos -->
       <div style="display:flex;flex-direction:column;gap:20px">
@@ -1729,7 +1772,7 @@ function renderGBM() {
       </div>
 
       <!-- PANEL DERECHO -->
-      <div style="display:flex;flex-direction:column;gap:10px;position:sticky;top:70px">
+      <div class="gbm-port-side" style="display:flex;flex-direction:column;gap:10px">
 
         <!-- Gráfica -->
         <div class="card" style="padding:14px">
@@ -1738,7 +1781,7 @@ function renderGBM() {
         </div>
 
         <!-- Mejor / Peor -->
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+        <div class="gbm-bw-grid" style="gap:8px">
           <div class="card" style="padding:12px;border-color:rgba(0,232,122,.2)">
             <div style="font-size:9px;font-weight:700;color:var(--success);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px">🏆 Mejor</div>
             ${bestPos?`<div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:2px">${bestPos.name}</div>
@@ -2213,7 +2256,7 @@ function renderIndicatorsHTML(src) {
         </div>
         <span class="badge b-n" style="font-size:10px">Separado del resto</span>
       </div>
-      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px">
+      <div class="ind-grid4" style="gap:8px;margin-bottom:14px">
         <div style="background:rgba(var(--ov),.03);border-radius:8px;padding:10px;text-align:center"><div style="font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px">Deuda original</div><div style="font-size:14px;font-weight:800">${fmt(auto2.total||auto2.balance)}</div></div>
         <div style="background:rgba(255,59,107,.07);border-radius:8px;padding:10px;text-align:center"><div style="font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px">Saldo pendiente</div><div style="font-size:14px;font-weight:800;color:var(--danger)">${fmt(auto2.balance)}</div></div>
         <div style="background:rgba(0,232,122,.07);border-radius:8px;padding:10px;text-align:center"><div style="font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px">Ya pagado</div><div style="font-size:14px;font-weight:800;color:var(--success)">${fmt((auto2.total||auto2.balance)-auto2.balance)}</div></div>
@@ -4048,7 +4091,7 @@ function renderBtcHistory() {
 
       <!-- PANE: Resumen total -->
       <div id="btc-pane-resumen">
-        <div style="display:grid;grid-template-columns:1.4fr 1fr;gap:14px;align-items:start">
+        <div class="btc-layout" style="gap:14px;align-items:start">
           <div style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:16px">
             <div style="font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px">Costo acumulado vs. Valor al precio actual</div>
             <div style="position:relative;height:170px"><canvas id="btc-ch-pnl"></canvas></div>

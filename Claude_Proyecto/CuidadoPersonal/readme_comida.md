@@ -74,6 +74,16 @@ Mismo tratamiento visual que `ejercicio.html`/`salud.html` (ver [`readme_ejercic
 
 Botón `.theme-toggle-btn` en el topbar (junto al aviso de "solo desayuno y cena"). Mismo mecanismo que `ejercicio.html`/`salud.html`: `--surface`/`--surface-2`/`--surface-3` reemplazan los hex sólidos del rediseño de arriba, y el resto de bordes/hovers usa el truco `--ov` (variable con el triplete RGB sin envolver, ver `../README.md`). Sin gráficas Chart.js en este archivo, así que no hizo falta ningún `cssVar()`.
 
+## Responsivo — iPad / iPhone 15 Pro (2026-08-03)
+
+Trabajo puramente de CSS (sin tocar JS, estructuras de datos ni claves de `localStorage`), verificado con Playwright (Chromium headless) en iPad `820×1180` y iPhone 15 Pro `393×852` (`isMobile`/`hasTouch`), abriendo el archivo directo por `file://` (no solo dentro del iframe de `cuidadopersonal.html`). Mismo criterio y misma causa raíz que en [`salud.html`](readme_salud.md) → "Responsivo — iPad / iPhone 15 Pro" (ambos archivos comparten el mismo layout de sidebar+tabs y el mismo autor, así que aplicaron las mismas trampas):
+
+1. **`.main{min-width:0}`** — `.main` es flex item de `body{display:flex}`; sin este fix, el `min-width:auto` (default) del navegador lo dejaba crecer hasta el ancho mínimo de su contenido (tablas con `white-space:nowrap`, p.ej. la columna de fecha en 📔 Registro Diario y en las tablas de alimentos del 🥩 Plan Masa Muscular), desbordando iPhone en vez de dejar que `.tw{overflow-x:auto}` scrolleara solo la tabla.
+2. **`.g4>*,.g3>*,.g2>*,.fr>*,.recetas-grid>*,.shop-grid>*,.psem-grid>*,.pm-hero>*{min-width:0}`** + `canvas{max-width:100%}` — red de seguridad para que ningún hijo de grid (tarjeta, canvas, etc.) fuerce el ancho de su columna por encima del espacio disponible, agregada como bloque nuevo antes de `</style>` junto al breakpoint de 640px existente.
+3. **`.pm-hero` no tenía ningún breakpoint** — la tarjeta de perfil del Plan Masa Muscular (4 columnas fijas: peso/estatura/edad/objetivo) se mostraba en 4 columnas apretadas incluso en iPhone (393px), sin llegar a desbordar pero sí muy comprimida (el valor "Ganar masa muscular" quedaba casi ilegible). Se agregó `.pm-hero{grid-template-columns:repeat(2,1fr)}` al `@media(max-width:900px)` ya existente (mismo breakpoint que usa `.g4`/`.g3`), quedando en 2×2 tanto en iPad como en iPhone — confirmado con Playwright que las 4 celdas quedan en dos filas de 151px cada una en 393px de ancho, sin overflow.
+
+Verificado sección por sección (`SECS` = desayunos, cenas, rutina, registro, planSemana, super) en ambos viewports: `document.documentElement.scrollWidth - clientWidth === 0` en los 12 casos, cero errores de consola. También se abrieron los 2 modales (`mo-al` alimento, `mo-pick` elegir receta) y el sidebar en modo overlay (iPhone) — mismo resultado limpio. Se re-corrió `test_comida.js` (el test funcional preexistente) sin regresiones: sigue registrando un alimento manual, una receta de Desayunos, una comida del Plan Masa Muscular, y una asignación en Plan Semanal, todo escribiendo correctamente en `misalud_v1`/`comida_v1`.
+
 ## Referencias cruzadas
 
 - Incrustada vía `<iframe>` en [`readme_cuidadopersonal.md`](readme_cuidadopersonal.md) (subtab "Comida"). Comparte `localStorage` con el shell y con `salud.html` por el mismo origen `file://` compartido (ver `readme_cuidadopersonal.md`).

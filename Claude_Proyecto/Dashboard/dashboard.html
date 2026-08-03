@@ -252,6 +252,43 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
   border:1px solid rgba(var(--ov),.12);padding:10px 20px;border-radius:30px;font-size:13px;font-weight:700;
   box-shadow:0 10px 30px rgba(0,0,0,.4);z-index:90;opacity:0;transition:all .3s;pointer-events:none;backdrop-filter:blur(14px)}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ─── RESPONSIVE — iPad / iPhone 15 Pro (2026-08-03) ───────
+   El diseño original asume un monitor sin scroll ("screensaver de comando").
+   Medido con Playwright: incluso en iPad (820×1180) el contenido real de
+   cada slide es ~270px más alto que el hueco disponible — con
+   `overflow:hidden` se recortaba silenciosamente. Por eso, en pantallas
+   ≤1024px (iPad e iPhone, ambas táctiles — a diferencia del monitor de
+   escritorio, aquí deslizar el dedo para ver el resto es un gesto normal)
+   el slide activo pasa a permitir scroll vertical interno en vez de
+   recortar. En ≤480px (iPhone) además se compactan la barra superior y el
+   HUD inferior, que en una pantalla tan angosta no caben en una sola fila.
+   `.slides{top}` ya no se fija aquí — lo calcula `syncSlidesTop()` en JS
+   según la altura real de `.qa-bar`, que ahora puede variar. */
+@media(max-width:1024px){
+  .slide{align-items:flex-start}
+  .slide.active{overflow-y:auto;-webkit-overflow-scrolling:touch}
+  .slide-inner{height:auto;min-height:100%;padding-bottom:calc(var(--hud-h,90px) + 24px)}
+  /* El botón "Ocultar finanzas" es absoluto (left:16px) para quedar pegado
+     al borde izquierdo en pantallas anchas — en ≤1024px el grupo de
+     píldoras centrado ya no deja ese hueco libre y se le monta encima
+     (visto en iPad, 820px). Se vuelve un elemento normal del flex, primero
+     por `order`, así sigue siendo lo primero que se ve sin pisar nada. */
+  .priv-btn{position:static;transform:none;order:-1;margin:0 0 2px}
+}
+@media(max-width:480px){
+  .qa-bar{gap:5px;padding:6px 8px}
+  .qa-pill{padding:4px 8px}
+  .qa-name{font-size:9.5px}
+  .qa-stat{display:none}
+  .slide{padding:3vh 3.5vw}
+  .week-strip{grid-template-columns:repeat(4,1fr);gap:6px}
+  .ws-gym-lbl{min-height:14px}
+  .hud-row{flex-wrap:wrap;justify-content:center;gap:8px;max-width:92vw;border-radius:20px}
+  .hud{padding-bottom:12px}
+  .lc-grid{grid-template-columns:1fr}
+  .float-panel{bottom:120px;max-height:64vh}
+}
 </style>
 <script>
 (function () {
@@ -1326,7 +1363,18 @@ function renderQuickApps(){
     <span class="qa-ico">${a.ico}</span>
     <span class="qa-txt"><span class="qa-name">${a.n}</span>${a.stat?`<span class="qa-stat${a.fin&&privado?' fin-hidden':''}">${a.stat}</span>`:''}</span>
   </a>`).join('');
+  syncSlidesTop();
 }
+
+// Alto real de .qa-bar (varía en pantallas angostas, donde las píldoras
+// pueden envolver a más de una fila) — el .slides fijo de arriba debe
+// empezar justo debajo, si no la barra tapa el inicio del slide activo.
+function syncSlidesTop(){
+  const bar=document.getElementById('qaBar'), slides=document.querySelector('.slides'), hud=document.querySelector('.hud');
+  if(bar&&slides) slides.style.top=bar.offsetHeight+'px';
+  if(hud) document.documentElement.style.setProperty('--hud-h',hud.offsetHeight+'px');
+}
+window.addEventListener('resize',syncSlidesTop);
 
 // ── MIS METAS — progreso real (Finanzas) + bucket list (Coach → Metas) ──────
 function metaDebtInfo(matcher){

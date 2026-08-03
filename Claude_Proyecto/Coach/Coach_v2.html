@@ -240,13 +240,14 @@
 
     .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
     .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .grid-2 > *, .grid-3 > * { min-width: 0; }
     @media (max-width: 700px) {
       .grid-2, .grid-3 { grid-template-columns: 1fr; }
     }
 
     /* ─── CUADRÍCULA DE TARJETAS DE PERFIL — como el topic-grid de la referencia ─── */
     .perfil-grid, .negocio-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; align-items: start; }
-    .perfil-grid > *, .negocio-grid > * { margin-bottom: 0 !important; }
+    .perfil-grid > *, .negocio-grid > * { margin-bottom: 0 !important; min-width: 0; }
     .perfil-grid > .span-2, .negocio-grid > .span-2 { grid-column: 1 / -1; }
     @media (max-width: 800px) {
       .perfil-grid, .negocio-grid { grid-template-columns: 1fr; }
@@ -418,6 +419,7 @@
     .p-sub { font-size: 13px; color: var(--muted); margin-top: 8px; line-height: 1.7; max-width: 640px; }
     .p-today { font-family: var(--mono); font-size: 12px; color: var(--muted); white-space: nowrap; padding-top: 4px; }
     .hero-kpis { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; margin-top: 24px; }
+    .hero-kpis > * { min-width: 0; }
     @media (max-width: 700px) { .hero-kpis { grid-template-columns: repeat(2,1fr); } }
     .hero-kpis .stat-badge { background: var(--bg); }
     .p-quote { font-size: 14px; font-family: var(--font-serif); font-style: italic; color: var(--text); margin-top: 22px; padding-top: 18px; border-top: 1px solid var(--border); line-height: 1.7; }
@@ -543,6 +545,17 @@
     .hz-stat { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 11px; text-align: center; }
     .hz-val { font-size: 17px; font-weight: 800; color: var(--accent); }
     .hz-lbl { font-size: 10px; color: var(--muted); margin-top: 3px; line-height: 1.4; }
+    .hz-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 8px; }
+    .hz-grid > * { min-width: 0; }
+    @media (max-width: 480px) { .hz-grid { grid-template-columns: repeat(2,1fr); } }
+
+    /* Tarjeta FIFA del radar (#aprendizaje) — ancho fijo de 320px pensado para
+       escritorio junto a los sliders; en pantallas angostas (iPad/iPhone) no
+       cabe: se apila arriba de los sliders y deja de ser sticky. */
+    @media (max-width: 800px) {
+      .skill-radar-grid { grid-template-columns: 1fr !important; }
+      .skill-radar-card { width: 100% !important; max-width: 360px; position: static !important; margin: 0 auto 20px; }
+    }
 
     .skill-tab-btn {
       background: var(--surface);
@@ -651,6 +664,7 @@
     /* ─── HÁBITOS ─────────────────────────────────────── */
 
     .salud-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; }
+    .salud-grid > * { min-width: 0; }
     @media (max-width: 700px) { .salud-grid { grid-template-columns: repeat(2,1fr); } }
     .salud-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; text-align: center; box-shadow: var(--shadow); transition: transform .2s; }
     .salud-card:hover { transform: translateY(-2px); }
@@ -685,6 +699,7 @@
     .porque-item h4 { font-size: 13.5px; margin-bottom: 3px; }
     .porque-item p  { font-size: 12px; color: var(--muted); }
     .vida-ideal-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; }
+    .vida-ideal-grid > * { min-width: 0; }
     @media (max-width: 700px) { .vida-ideal-grid { grid-template-columns: 1fr; } }
     .vida-card { background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 16px; text-align: center; transition: transform .2s; }
     .vida-card:hover { transform: translateY(-2px); }
@@ -780,6 +795,24 @@
         widows: 3;
       }
     }
+
+    /* ─── RESPONSIVE — iPad / iPhone 15 Pro (2026-08-03) ───────
+       CSS Grid le da a cada celda un `min-width:auto` implícito, que usa el
+       min-content del contenido como piso — un .stat-badge con texto largo
+       (p.ej. "Alemania — líderes de Bosch + expatriados en Stuttgart") o su
+       propio `min-width:110px` fuerza esa columna más ancha que su 1/3 o 1/4
+       real, y el grid entero se sale del viewport (visto en iPad, 820px).
+       Va al final de la hoja a propósito: sin esto, `.stat-badge{min-width:
+       110px}` (definida más abajo en el archivo, misma especificidad) le
+       ganaba a cualquier `.grid-N > *{min-width:0}` declarado más arriba.
+       Además, varios `.stat-badge` traen `style="min-width:auto"` inline
+       (generado por JS para los que tienen etiquetas largas) — un inline
+       style le gana a cualquier regla externa sin `!important`, así que
+       hace falta aquí también. */
+    .grid-2 > *, .grid-3 > *, .hero-kpis > *, .hz-grid > *,
+    .salud-grid > *, .vida-ideal-grid > *, .perfil-grid > *, .negocio-grid > * {
+      min-width: 0 !important;
+    }
   </style>
   <script>
     (function () {
@@ -810,7 +843,7 @@
   <span class="logo">🪙 Coach</span>
   <a href="#perfil" class="active">Mi Perfil Real</a>
   <a href="#perfil" onclick="goToPerfilTab('metas');return false;">🎯 Metas</a>
-  <a href="#perfil" onclick="goToPerfilTab('dan-prime');return false;">⚡ Dan Prime</a>
+  <a href="#perfil" onclick="goToPerfilTab('dan-prime');return false;">⚡ Adán Prime</a>
   <a href="#perfil" onclick="goToPerfilTab('cv');return false;">📄 CV</a>
   <a href="#rutina">Rutina</a>
   <a href="#aprendizaje">Aprendizaje</a>
@@ -832,7 +865,7 @@
     <div class="subtab-nav">
       <button class="subtab-btn active" onclick="showSubtab('perfil','diagnostico',this)">Diagnóstico & Plan</button>
       <button class="subtab-btn" onclick="showSubtab('perfil','metas',this)">🎯 Metas</button>
-      <button class="subtab-btn" onclick="showSubtab('perfil','dan-prime',this)">⚡ Dan Prime</button>
+      <button class="subtab-btn" onclick="showSubtab('perfil','dan-prime',this)">⚡ Adán Prime</button>
       <button class="subtab-btn" onclick="showSubtab('perfil','cv',this)">CV Completo</button>
     </div>
 
@@ -1053,10 +1086,10 @@
         Tus cambios se guardan automáticamente en el navegador.
       </p>
 
-      <div style="display:grid;grid-template-columns:auto 1fr;gap:28px;align-items:start;">
+      <div class="skill-radar-grid" style="display:grid;grid-template-columns:auto 1fr;gap:28px;align-items:start;">
 
         <!-- FIFA Card -->
-        <div style="background:var(--surface);border:1px solid var(--accent);border-radius:var(--radius);padding:22px;text-align:center;width:320px;position:sticky;top:80px;">
+        <div class="skill-radar-card" style="background:var(--surface);border:1px solid var(--accent);border-radius:var(--radius);padding:22px;text-align:center;width:320px;position:sticky;top:80px;">
           <p style="font-size:9px;letter-spacing:3px;color:var(--muted);margin-bottom:2px;text-transform:uppercase;">Constructor de Riqueza · 2026</p>
           <div id="ovrValue" class="num" style="font-size:72px;font-weight:800;color:var(--accent);line-height:1;">52</div>
           <div id="ovrLabel" style="font-size:11px;font-weight:800;letter-spacing:2px;color:#e08c14;margin-bottom:12px;">MEDIO</div>
@@ -1132,7 +1165,7 @@
         <div class="skill-hero">
           <h4>Ventas & Negociación — La habilidad #1 del millonario</h4>
           <p>Toda riqueza comienza con una venta. El ingeniero que no sabe vender = empleado. El que sabe = emprendedor. Alex Hormozi pasó de broke a $100M dominando UNA habilidad: crear y vender ofertas irresistibles.</p>
-          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;"><div class="hz-stat"><div class="hz-val" style="font-size:18px;">$0→∞</div><div class="hz-lbl">Techo de ingresos</div></div><div class="hz-stat"><div class="hz-val" style="font-size:18px;">80%</div><div class="hz-lbl">Ventas tras el 5° contacto</div></div><div class="hz-stat"><div class="hz-val" style="font-size:18px;">30/70</div><div class="hz-lbl">Habla/Escucha ideal</div></div><div class="hz-stat"><div class="hz-val" style="font-size:18px;">#1</div><div class="hz-lbl">Habilidad más pagada</div></div></div>
+          <div class="hz-grid"><div class="hz-stat"><div class="hz-val" style="font-size:18px;">$0→∞</div><div class="hz-lbl">Techo de ingresos</div></div><div class="hz-stat"><div class="hz-val" style="font-size:18px;">80%</div><div class="hz-lbl">Ventas tras el 5° contacto</div></div><div class="hz-stat"><div class="hz-val" style="font-size:18px;">30/70</div><div class="hz-lbl">Habla/Escucha ideal</div></div><div class="hz-stat"><div class="hz-val" style="font-size:18px;">#1</div><div class="hz-lbl">Habilidad más pagada</div></div></div>
         </div>
         <div class="grid-2" style="margin-bottom:14px;">
           <div class="card">
@@ -1196,7 +1229,7 @@
         <div class="skill-hero">
           <h4>Copywriting & Persuasión — Un vendedor que trabaja 24/7 sin sueldo</h4>
           <p>Un buen vendedor cierra 8 horas al día. Un buen copy cierra 24 horas al día, en todos los idiomas, sin vacaciones. Es la habilidad que escala ventas sin escalar personas.</p>
-          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;"><div class="hz-stat"><div class="hz-val" style="font-size:18px;">24/7</div><div class="hz-lbl">Trabaja sin descanso</div></div><div class="hz-stat"><div class="hz-val" style="font-size:18px;">3×</div><div class="hz-lbl">Más conversión con buen copy</div></div><div class="hz-stat"><div class="hz-val" style="font-size:18px;">8 seg</div><div class="hz-lbl">Para capturar atención</div></div><div class="hz-stat"><div class="hz-val" style="font-size:18px;">∞</div><div class="hz-lbl">Escala sin costo extra</div></div></div>
+          <div class="hz-grid"><div class="hz-stat"><div class="hz-val" style="font-size:18px;">24/7</div><div class="hz-lbl">Trabaja sin descanso</div></div><div class="hz-stat"><div class="hz-val" style="font-size:18px;">3×</div><div class="hz-lbl">Más conversión con buen copy</div></div><div class="hz-stat"><div class="hz-val" style="font-size:18px;">8 seg</div><div class="hz-lbl">Para capturar atención</div></div><div class="hz-stat"><div class="hz-val" style="font-size:18px;">∞</div><div class="hz-lbl">Escala sin costo extra</div></div></div>
         </div>
         <div class="grid-2" style="margin-bottom:14px;">
           <div class="card">
@@ -1248,7 +1281,7 @@
         <div class="skill-hero">
           <h4>Marketing Digital — Sin marketing el mejor producto muere en silencio</h4>
           <p>Marketing es el sistema que trae clientes a tu puerta de forma predecible. Con marketing mediocre y producto bueno, puedes ganar. Sin marketing y producto excelente, nadie lo sabrá.</p>
-          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;"><div class="hz-stat"><div class="hz-val" style="font-size:18px;">3×</div><div class="hz-lbl">Revenue con datos de marketing</div></div><div class="hz-stat"><div class="hz-val" style="font-size:18px;">62%</div><div class="hz-lbl">Leads más baratos con inbound</div></div><div class="hz-stat"><div class="hz-val" style="font-size:18px;">$0</div><div class="hz-lbl">Costo inicial — content marketing</div></div><div class="hz-stat"><div class="hz-val" style="font-size:18px;">∞</div><div class="hz-lbl">ROI del SEO a largo plazo</div></div></div>
+          <div class="hz-grid"><div class="hz-stat"><div class="hz-val" style="font-size:18px;">3×</div><div class="hz-lbl">Revenue con datos de marketing</div></div><div class="hz-stat"><div class="hz-val" style="font-size:18px;">62%</div><div class="hz-lbl">Leads más baratos con inbound</div></div><div class="hz-stat"><div class="hz-val" style="font-size:18px;">$0</div><div class="hz-lbl">Costo inicial — content marketing</div></div><div class="hz-stat"><div class="hz-val" style="font-size:18px;">∞</div><div class="hz-lbl">ROI del SEO a largo plazo</div></div></div>
         </div>
         <div class="grid-2" style="margin-bottom:14px;">
           <div class="card">
@@ -1296,7 +1329,7 @@
         <div class="skill-hero">
           <h4>Networking & Relaciones — Tu red ES tu patrimonio</h4>
           <p>El 85% de empleos premium se llenan por networking, no por aplicaciones. El 70% de oportunidades de negocio llegan a través de personas que ya te conocen. La oportunidad de tu vida llegará por alguien que conoces.</p>
-          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;"><div class="hz-stat"><div class="hz-val" style="font-size:18px;">85%</div><div class="hz-lbl">Empleos por networking</div></div><div class="hz-stat"><div class="hz-val" style="font-size:18px;">5×</div><div class="hz-lbl">ROI de dar antes de pedir</div></div><div class="hz-stat"><div class="hz-val" style="font-size:18px;">150</div><div class="hz-lbl">Número de Dunbar — red manejable</div></div><div class="hz-stat"><div class="hz-val" style="font-size:18px;">1/sem</div><div class="hz-lbl">Contacto nuevo mínimo</div></div></div>
+          <div class="hz-grid"><div class="hz-stat"><div class="hz-val" style="font-size:18px;">85%</div><div class="hz-lbl">Empleos por networking</div></div><div class="hz-stat"><div class="hz-val" style="font-size:18px;">5×</div><div class="hz-lbl">ROI de dar antes de pedir</div></div><div class="hz-stat"><div class="hz-val" style="font-size:18px;">150</div><div class="hz-lbl">Número de Dunbar — red manejable</div></div><div class="hz-stat"><div class="hz-val" style="font-size:18px;">1/sem</div><div class="hz-lbl">Contacto nuevo mínimo</div></div></div>
         </div>
         <div class="grid-2" style="margin-bottom:14px;">
           <div class="card">
@@ -1331,7 +1364,7 @@
         <div class="skill-hero">
           <h4>Liderazgo & Equipos — Tu techo de ingresos = tu capacidad de liderazgo</h4>
           <p>Un ingeniero promedio gana $30k/mes. Un CTO que lidera 50 ingenieros genera $500k+ de valor/mes. La diferencia no es técnica — es liderazgo. El dinero fluye hacia quien puede mover personas hacia metas.</p>
-          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;"><div class="hz-stat"><div class="hz-val" style="font-size:18px;">10×</div><div class="hz-lbl">Apalancamiento con equipo</div></div><div class="hz-stat"><div class="hz-val" style="font-size:18px;">70%</div><div class="hz-lbl">Retención con buen liderazgo</div></div><div class="hz-stat"><div class="hz-val" style="font-size:18px;">#1</div><div class="hz-lbl">Razón para dejar empleos: jefe</div></div><div class="hz-stat"><div class="hz-val" style="font-size:18px;">CTO</div><div class="hz-lbl">Tu próximo rol posible</div></div></div>
+          <div class="hz-grid"><div class="hz-stat"><div class="hz-val" style="font-size:18px;">10×</div><div class="hz-lbl">Apalancamiento con equipo</div></div><div class="hz-stat"><div class="hz-val" style="font-size:18px;">70%</div><div class="hz-lbl">Retención con buen liderazgo</div></div><div class="hz-stat"><div class="hz-val" style="font-size:18px;">#1</div><div class="hz-lbl">Razón para dejar empleos: jefe</div></div><div class="hz-stat"><div class="hz-val" style="font-size:18px;">CTO</div><div class="hz-lbl">Tu próximo rol posible</div></div></div>
         </div>
         <div class="grid-2" style="margin-bottom:14px;">
           <div class="card">
@@ -1364,7 +1397,7 @@
         <div class="skill-hero">
           <h4>Programación & Software — El mayor multiplicador de trabajo humano</h4>
           <p>Software que atiende a 1 millón de usuarios cuesta casi lo mismo que el que atiende a 1. Eso es apalancamiento infinito. Como ingeniero SW ya tienes la base — ahora es cuestión de dirigirla hacia productos que generen dinero.</p>
-          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;"><div class="hz-stat"><div class="hz-val" style="font-size:18px;">∞</div><div class="hz-lbl">Escala sin costo marginal</div></div><div class="hz-stat"><div class="hz-val" style="font-size:18px;">$70</div><div class="hz-lbl">USD/hr promedio freelance global</div></div><div class="hz-stat"><div class="hz-val" style="font-size:18px;">10×</div><div class="hz-lbl">Velocidad con las herramientas correctas</div></div><div class="hz-stat"><div class="hz-val" style="font-size:18px;">2030</div><div class="hz-lbl">La demanda seguirá creciendo</div></div></div>
+          <div class="hz-grid"><div class="hz-stat"><div class="hz-val" style="font-size:18px;">∞</div><div class="hz-lbl">Escala sin costo marginal</div></div><div class="hz-stat"><div class="hz-val" style="font-size:18px;">$70</div><div class="hz-lbl">USD/hr promedio freelance global</div></div><div class="hz-stat"><div class="hz-val" style="font-size:18px;">10×</div><div class="hz-lbl">Velocidad con las herramientas correctas</div></div><div class="hz-stat"><div class="hz-val" style="font-size:18px;">2030</div><div class="hz-lbl">La demanda seguirá creciendo</div></div></div>
         </div>
         <div class="grid-2" style="margin-bottom:14px;">
           <div class="card">
@@ -1398,7 +1431,7 @@
         <div class="skill-hero">
           <h4>IA & Automatización — La palanca del siglo XXI</h4>
           <p>La IA no va a quitarte el trabajo. Alguien que use IA mejor que tú sí podría. Quien domine prompting, agentes y automatización en 2025-2030 tiene una ventaja de 10 años sobre quien no. Como ingeniero SW ya tienes la base — ahora capitalízala.</p>
-          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;"><div class="hz-stat"><div class="hz-val" style="font-size:18px;">10×</div><div class="hz-lbl">Productividad con IA bien usada</div></div><div class="hz-stat"><div class="hz-val" style="font-size:18px;">$5k</div><div class="hz-lbl">USD precio mínimo por proyecto IA</div></div><div class="hz-stat"><div class="hz-val" style="font-size:18px;">2027</div><div class="hz-lbl">IA en 90% de empresas Fortune 500</div></div><div class="hz-stat"><div class="hz-val" style="font-size:18px;">Ahora</div><div class="hz-lbl">El mejor momento para aprender</div></div></div>
+          <div class="hz-grid"><div class="hz-stat"><div class="hz-val" style="font-size:18px;">10×</div><div class="hz-lbl">Productividad con IA bien usada</div></div><div class="hz-stat"><div class="hz-val" style="font-size:18px;">$5k</div><div class="hz-lbl">USD precio mínimo por proyecto IA</div></div><div class="hz-stat"><div class="hz-val" style="font-size:18px;">2027</div><div class="hz-lbl">IA en 90% de empresas Fortune 500</div></div><div class="hz-stat"><div class="hz-val" style="font-size:18px;">Ahora</div><div class="hz-lbl">El mejor momento para aprender</div></div></div>
         </div>
         <div class="grid-2" style="margin-bottom:14px;">
           <div class="card">
@@ -1445,7 +1478,7 @@
         <div class="skill-hero">
           <h4>Análisis de Datos — Quien tiene los datos, tiene el poder</h4>
           <p>Las empresas que toman decisiones basadas en datos crecen 2-3× más rápido. Un analista de datos senior en México gana 60-90% más que el promedio. Con tus habilidades de programación, subir a Data Engineer o Data Scientist es 2× más rápido para ti.</p>
-          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;"><div class="hz-stat"><div class="hz-val" style="font-size:18px;">3×</div><div class="hz-lbl">Crecimiento con decisiones data-driven</div></div><div class="hz-stat"><div class="hz-val" style="font-size:18px;">90%</div><div class="hz-lbl">Más que supuesto — datos reales</div></div><div class="hz-stat"><div class="hz-val" style="font-size:18px;">$45k</div><div class="hz-lbl">MXN/mes data engineer senior</div></div><div class="hz-stat"><div class="hz-val" style="font-size:18px;">+2 años</div><div class="hz-lbl">Ventaja en entrevistas técnicas</div></div></div>
+          <div class="hz-grid"><div class="hz-stat"><div class="hz-val" style="font-size:18px;">3×</div><div class="hz-lbl">Crecimiento con decisiones data-driven</div></div><div class="hz-stat"><div class="hz-val" style="font-size:18px;">90%</div><div class="hz-lbl">Más que supuesto — datos reales</div></div><div class="hz-stat"><div class="hz-val" style="font-size:18px;">$45k</div><div class="hz-lbl">MXN/mes data engineer senior</div></div><div class="hz-stat"><div class="hz-val" style="font-size:18px;">+2 años</div><div class="hz-lbl">Ventaja en entrevistas técnicas</div></div></div>
         </div>
         <div class="grid-2">
           <div class="card">
@@ -1476,7 +1509,7 @@
         <div class="skill-hero">
           <h4>Inversión en Mercados — El único camino a la libertad financiera real</h4>
           <p>$100,000 MXN invertido al 10% anual = $259,000 en 10 años sin hacer nada más. Sin invertir = trabajas de por vida. Con interés compuesto = el dinero trabaja para ti mientras duermes, manejas Didi o programas.</p>
-          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;"><div class="hz-stat"><div class="hz-val" style="font-size:18px;">10%</div><div class="hz-lbl">Rendimiento histórico S&P 500/año</div></div><div class="hz-stat"><div class="hz-val" style="font-size:18px;">7.2</div><div class="hz-lbl">Años para doblar (regla del 72)</div></div><div class="hz-stat"><div class="hz-val" style="font-size:18px;">$80k</div><div class="hz-lbl">Tu portafolio actual (Jul 2026)</div></div><div class="hz-stat"><div class="hz-val" style="font-size:18px;">2030</div><div class="hz-lbl">Meta: $1M en patrimonio</div></div></div>
+          <div class="hz-grid"><div class="hz-stat"><div class="hz-val" style="font-size:18px;">10%</div><div class="hz-lbl">Rendimiento histórico S&P 500/año</div></div><div class="hz-stat"><div class="hz-val" style="font-size:18px;">7.2</div><div class="hz-lbl">Años para doblar (regla del 72)</div></div><div class="hz-stat"><div class="hz-val" style="font-size:18px;">$80k</div><div class="hz-lbl">Tu portafolio actual (Jul 2026)</div></div><div class="hz-stat"><div class="hz-val" style="font-size:18px;">2030</div><div class="hz-lbl">Meta: $1M en patrimonio</div></div></div>
         </div>
         <div class="grid-2" style="margin-bottom:14px;">
           <div class="card">
@@ -1523,7 +1556,7 @@
         <div class="skill-hero">
           <h4>Finanzas Personales — Ganar mucho y manejar mal = siempre broke</h4>
           <p>El 70% de los lotería ganadores quiebran en 5 años. El 40% de ejecutivos con $200k/año no tienen fondo de emergencia. El problema nunca es cuánto ganas — es qué haces con lo que entra. Esta habilidad multiplica todos los demás ingresos.</p>
-          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;"><div class="hz-stat"><div class="hz-val" style="font-size:18px;">70%</div><div class="hz-lbl">De ricos de lotería quiebran</div></div><div class="hz-stat"><div class="hz-val" style="font-size:18px;">30%</div><div class="hz-lbl">Mínimo a invertir de cada peso</div></div><div class="hz-stat"><div class="hz-val" style="font-size:18px;">6</div><div class="hz-lbl">Meses de gasto en fondo de emergencia</div></div><div class="hz-stat"><div class="hz-val" style="font-size:18px;">$0</div><div class="hz-lbl">Deudas de consumo — meta</div></div></div>
+          <div class="hz-grid"><div class="hz-stat"><div class="hz-val" style="font-size:18px;">70%</div><div class="hz-lbl">De ricos de lotería quiebran</div></div><div class="hz-stat"><div class="hz-val" style="font-size:18px;">30%</div><div class="hz-lbl">Mínimo a invertir de cada peso</div></div><div class="hz-stat"><div class="hz-val" style="font-size:18px;">6</div><div class="hz-lbl">Meses de gasto en fondo de emergencia</div></div><div class="hz-stat"><div class="hz-val" style="font-size:18px;">$0</div><div class="hz-lbl">Deudas de consumo — meta</div></div></div>
         </div>
         <div class="grid-2">
           <div class="card">
@@ -1557,7 +1590,7 @@
         <div class="skill-hero">
           <h4>Inglés — El multiplicador de todas las demás habilidades</h4>
           <p>Un dev en México gana $18k-30k MXN/mes. El mismo dev, mismo nivel técnico, para empresa remota en USD: $5k-15k USD/mes. El inglés no es una habilidad más — es un multiplicador de todas las demás. Y tú ya tienes ventaja (nivel ~80).</p>
-          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;"><div class="hz-stat"><div class="hz-val" style="font-size:18px;">5×</div><div class="hz-lbl">Más oportunidades vs. español</div></div><div class="hz-stat"><div class="hz-val" style="font-size:18px;">$5k</div><div class="hz-lbl">USD/mes mínimo remoto para empresa tech</div></div><div class="hz-stat"><div class="hz-val" style="font-size:18px;">C1</div><div class="hz-lbl">Tu meta actual (de B2 a C1)</div></div><div class="hz-stat"><div class="hz-val" style="font-size:18px;">80</div><div class="hz-lbl">Tu nivel actual — muy cercano al goal</div></div></div>
+          <div class="hz-grid"><div class="hz-stat"><div class="hz-val" style="font-size:18px;">5×</div><div class="hz-lbl">Más oportunidades vs. español</div></div><div class="hz-stat"><div class="hz-val" style="font-size:18px;">$5k</div><div class="hz-lbl">USD/mes mínimo remoto para empresa tech</div></div><div class="hz-stat"><div class="hz-val" style="font-size:18px;">C1</div><div class="hz-lbl">Tu meta actual (de B2 a C1)</div></div><div class="hz-stat"><div class="hz-val" style="font-size:18px;">80</div><div class="hz-lbl">Tu nivel actual — muy cercano al goal</div></div></div>
         </div>
         <div class="grid-2" style="margin-bottom:14px;">
           <div class="card">
@@ -1591,7 +1624,7 @@
         <div class="skill-hero">
           <h4>Mentalidad & Ejecución — El sistema operativo de todo lo demás</h4>
           <p>La mentalidad es el OS sobre el que corren todas las demás habilidades. Sin mentalidad correcta, el mejor código no llega a clientes, la mejor inversión se vende en pánico y el mejor plan no se ejecuta. Es la base invisible de toda riqueza.</p>
-          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;"><div class="hz-stat"><div class="hz-val" style="font-size:18px;">OS</div><div class="hz-lbl">El sistema operativo de todo</div></div><div class="hz-stat"><div class="hz-val" style="font-size:18px;">21</div><div class="hz-lbl">Días para formar un nuevo hábito mental</div></div><div class="hz-stat"><div class="hz-val" style="font-size:18px;">1%</div><div class="hz-lbl">Mejora diaria = 37× en un año</div></div><div class="hz-stat"><div class="hz-val" style="font-size:18px;">∞</div><div class="hz-lbl">ROI de la mentalidad correcta</div></div></div>
+          <div class="hz-grid"><div class="hz-stat"><div class="hz-val" style="font-size:18px;">OS</div><div class="hz-lbl">El sistema operativo de todo</div></div><div class="hz-stat"><div class="hz-val" style="font-size:18px;">21</div><div class="hz-lbl">Días para formar un nuevo hábito mental</div></div><div class="hz-stat"><div class="hz-val" style="font-size:18px;">1%</div><div class="hz-lbl">Mejora diaria = 37× en un año</div></div><div class="hz-stat"><div class="hz-val" style="font-size:18px;">∞</div><div class="hz-lbl">ROI de la mentalidad correcta</div></div></div>
         </div>
         <div class="grid-2" style="margin-bottom:14px;">
           <div class="card">
@@ -1906,7 +1939,7 @@
 
     <div id="perfil-dan-prime" class="subtab-panel">
       <div class="card mb-16" style="margin-bottom:16px;">
-        <h3 class="fw-700 mb-12">⚡ Dan Prime — quién eres el 01 de enero de 2030</h3>
+        <h3 class="fw-700 mb-12">⚡ Adán Prime — quién eres el 01 de enero de 2030</h3>
         <p class="fs-13" style="line-height:1.7;color:var(--muted);">No es un personaje inventado ni una fantasía genérica de "mejor versión de ti" — es literalmente tú, en la fecha exacta de tu <a href="#perfil" class="inline-link">Plan Maestro</a>, si cada pieza que ya tienes documentada en esta app (metas, fases, radar de habilidades) sale como está planeado. Está construido 100% con tus propios números y metas reales, no con aspiraciones vagas. Úsalo como el norte concreto contra el que comparas cada Revisión Mensual — no para sentirte mal por lo que falta, sino para saber exactamente qué pieza mover después.</p>
       </div>
 
@@ -1926,7 +1959,7 @@
 
         <div class="card">
           <h4 class="fw-700 mb-12">🧠 Mentalidad — el cambio que más importa</h4>
-          <p class="fs-13" style="line-height:1.7;">Rompiste el patrón que tú mismo identificaste: "cuando no veo recompensa, abandono o cambio de rumbo". Dan Prime siguió apareciendo en los meses donde el negocio no se movía, cuando el gym no mostraba cambios, cuando el plan se sentía lento — la misma "consistencia aburrida" que ya le atribuyes al <a href="#perfil-rico" class="inline-link">Perfil del Rico</a>, ahora es tuya. El miedo que escribiste en tu propio perfil — <em>"no explotar mi potencial y quedarme estancado y pobre"</em> — ya no te describe.</p>
+          <p class="fs-13" style="line-height:1.7;">Rompiste el patrón que tú mismo identificaste: "cuando no veo recompensa, abandono o cambio de rumbo". Adán Prime siguió apareciendo en los meses donde el negocio no se movía, cuando el gym no mostraba cambios, cuando el plan se sentía lento — la misma "consistencia aburrida" que ya le atribuyes al <a href="#perfil-rico" class="inline-link">Perfil del Rico</a>, ahora es tuya. El miedo que escribiste en tu propio perfil — <em>"no explotar mi potencial y quedarme estancado y pobre"</em> — ya no te describe.</p>
         </div>
 
         <div class="card">
@@ -1948,13 +1981,13 @@
       </div>
 
       <div class="riesgo-box mb-16" style="margin-bottom:16px;margin-top:16px;">
-        <h3>⚠️ Lo que Dan Prime ya no hace</h3>
+        <h3>⚠️ Lo que Adán Prime ya no hace</h3>
         <p>No financia gadgets a MSI mientras hay deuda cara sin liquidar. No deja el fondo de emergencia en $0 esperando "el mes que sobre algo". No abandona una opción de negocio a las 3 semanas solo porque no vio resultado inmediato. No compara su avance contra el ritmo de nadie más — compara contra su propia Trayectoria estimada. No se salta el protector solar, ni el gym, ni la revisión semanal, aunque el día haya sido pesado.</p>
       </div>
 
       <div class="card">
         <h4 class="fw-700 mb-12">🪞 De aquí a ahí — la distancia real hoy</h4>
-        <p class="fs-13 mb-8" style="line-height:1.7;">La tarjeta <a href="#perfil" class="inline-link">"📈 Progreso real vs. el inicio de Fase 0"</a> de arriba ya mide esto en vivo, con tus números reales de Finanzas — no hace falta repetirlo aquí. Lo que sí vale la pena nombrar: la distancia entre hoy y Dan Prime no se cierra con una decisión grande, se cierra con la misma <a href="#rutina" class="inline-link">Rutina</a> diaria de siempre, sostenida sin el patrón de abandono — eso es literalmente todo el plan.</p>
+        <p class="fs-13 mb-8" style="line-height:1.7;">La tarjeta <a href="#perfil" class="inline-link">"📈 Progreso real vs. el inicio de Fase 0"</a> de arriba ya mide esto en vivo, con tus números reales de Finanzas — no hace falta repetirlo aquí. Lo que sí vale la pena nombrar: la distancia entre hoy y Adán Prime no se cierra con una decisión grande, se cierra con la misma <a href="#rutina" class="inline-link">Rutina</a> diaria de siempre, sostenida sin el patrón de abandono — eso es literalmente todo el plan.</p>
       </div>
     </div>
 
