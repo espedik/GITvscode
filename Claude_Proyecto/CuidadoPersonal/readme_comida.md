@@ -1,51 +1,74 @@
-# comida.html — Mi Comida: Desayunos, Cenas & Súper
+# comida.html — Mi Comida: Recetario, Registro Diario, Plan Semanal & Plan Masa Muscular
 
-Aplicación de una sola página (HTML+CSS+JS, sin backend) creada el 2026-07-30 a petición explícita de Adán ("agrega otro html con lo de comida... una interfaz de alimentos saludables que puedo cocinar sencillos, solo sería para desayuno y cena... y la lista completa de cosas que comprar en el súper"). Es contenido de referencia (recetario + lista de compras), **no** un tracker de comidas — para registrar lo que realmente comiste día a día existe `salud.html` (Registro Diario), con la que esta app se conecta directamente (ver "Integración" abajo).
+Aplicación de una sola página (HTML+CSS+JS, sin backend) creada el 2026-07-30 a petición explícita de Adán ("agrega otro html con lo de comida... una interfaz de alimentos saludables que puedo cocinar sencillos"). **Ampliada por completo el 2026-08-02**: ya no es solo un recetario de referencia — ahora es el **centro de nutrición completo** del ecosistema. Adán pidió explícitamente sacar de `salud.html` todo lo de alimentación ("quita alimentacion plan semanal, registro diario... rutina muscular... enriqueser la seccion de comida") y traerlo aquí, con una interfaz más visual. Ver [`readme_salud.md`](readme_salud.md) → "Reestructuración — nutrición se mudó a Comida" para el detalle de qué se quitó de allá.
 
 **Ubicación**: vive en `CuidadoPersonal/comida.html`. Se abre normalmente **incrustada** dentro de `CuidadoPersonal/cuidadopersonal.html` → pestaña **🍳 Comida**, vía `<iframe src="comida.html">`, igual que Salud y Ejercicio. También puede abrirse directo sin pasar por el shell.
 
-## Por qué solo desayuno y cena
+## Por qué solo desayuno y cena (recetario)
 
-Petición explícita de Adán — la comida de mediodía no vive aquí (la resuelve aparte, probablemente en ALTEN). El banner superior de la app dice esto mismo para que quede claro apenas se abre.
+Petición explícita de Adán — la comida de mediodía no vive aquí (la resuelve aparte, probablemente en ALTEN). El banner superior de la app dice esto mismo para que quede claro apenas se abre. Esto **no** aplica al Registro Diario (ahí sí se puede registrar cualquier comida, incluido almuerzo/snack) ni al Plan Masa Muscular (que sí incluye la comida de mediodía como parte del plan nutricional completo).
 
 ## Navegación (sidebar propio de este archivo)
 
 - **🌅 Desayunos** — 10 recetas.
 - **🌙 Cenas** — 10 recetas.
-- **🛒 Lista del Súper** — lista consolidada y deduplicada de los 37 ingredientes únicos que se necesitan para poder cocinar las 20 recetas, agrupada en 6 categorías, con checklist persistente.
+- **🥩 Plan Masa Muscular** (nuevo 2026-08-02, movido desde `salud.html` → "Rutina Muscular") — plan alimentario detallado para ganar masa muscular: tarjeta de perfil (peso/estatura/edad/objetivo), 4 KPIs de macros objetivo (calorías/proteína/carbs/grasa), desglose de desayuno/comida/cena con tabla de alimentos y valores nutricionales por comida, alimentos recomendados de bajo presupuesto por categoría, y 6 tips de entrenamiento/descanso/consistencia. Cada comida se puede registrar en el Registro Diario con un botón — igual que las recetas normales.
+- **📔 Registro Diario** (nuevo 2026-08-02, movido desde `salud.html` → "Registro Diario") — bitácora de alimentos consumidos (comida del día: desayuno/almuerzo/cena/snack, nombre, cantidad, calorías y macros), filtrable por fecha y tipo de comida. Header con resumen del día: calorías totales vs. meta + barras de progreso de proteína/carbohidratos/grasa vs. las metas configuradas en `salud.html` → Perfil & Metas. **Lee y escribe directamente `misalud_v1.alimentos`** (la clave de Salud, no `comida_v1`) — ver "Modelo de datos" abajo.
+- **📅 Plan Semanal** (nuevo 2026-08-02, **rediseñado, no portado**) — a diferencia del viejo Plan Semanal de `salud.html` (que era retrospectivo: mostraba lo que ya habías comido), este es **hacia adelante**: eliges qué receta piensas cocinar cada día de la semana (desayuno y cena, grid de 7 días tipo calendario). Cuando llega el día, abres la receta en Desayunos/Cenas y la registras con un clic — el plan es solo de planeación, no se autorregistra.
+- **🛒 Lista del Súper** — lista consolidada y deduplicada de los 37 ingredientes únicos que se necesitan para poder cocinar las 20 recetas, agrupada en 6 categorías, con checklist persistente. (El Plan Masa Muscular usa sus propios alimentos, no incluidos en esta lista — son ingredientes básicos genéricos, no una receta con cantidades exactas.)
 
 ## Por qué estas recetas y no otras — a la medida real de Adán, no genéricas
 
 Las 20 recetas (`const RECETAS`, dentro del `<script>`) no son un recetario genérico de internet — se eligieron cruzando dos fuentes de datos reales que ya existen en el proyecto:
 
-1. **Salud Digestiva** (`salud.html` → sección "🫁 Salud Digestiva"): Adán tiene reflujo/agruras documentado. Ninguna receta usa disparadores conocidos (café, picante, cítricos, chocolate, frituras, refresco, cebolla/ajo crudos, menta) y se favorecen los alimentos que esa misma sección marca como seguros (avena, plátano, manzana, pera, pollo, pescado blanco, papa, camote, verduras cocidas, nopales, jengibre/canela, miel). El banner superior de la app y el campo `tip` de cada receta lo explican.
-2. **Rutina Muscular** (`salud.html` → sección "🥩 Rutina Muscular"): la meta nutricional real de Adán (77 kg desde 2026-07-31 — antes 75 kg, ver [`readme_salud.md`](readme_salud.md) → "Actualización de peso y metas nutricionales" —, 1.78 m, 31 años, objetivo ganar masa muscular) es ~3,115 kcal y ~186 g de proteína al día. Los macros de cada receta (`r.macros`) apuntan a que desayuno + cena cubran una parte sustancial de esa meta, dejando el resto a la comida de mediodía (fuera del alcance de esta app). Las 20 recetas y sus macros individuales **no se recalcularon** — el ajuste de +280 kcal/día se absorbe en la Rutina Muscular (desayuno/comida) y en la comida de mediodía, no en este recetario.
+1. **Salud Digestiva** (`salud.html` → sección "🫁 Salud Digestiva"): Adán tiene reflujo/agruras documentado. Ninguna receta usa disparadores conocidos (café, picante, cítricos en exceso, chocolate, frituras, refresco, cebolla/ajo crudos, menta) y se favorecen los alimentos que esa misma sección marca como seguros (avena, plátano, manzana, pera, pollo, pescado blanco, papa, camote, verduras cocidas, nopales, jengibre/canela, miel). El banner superior de la app y el campo `tip` de cada receta lo explican.
+2. **Plan Masa Muscular** (ahora dentro de este mismo archivo, antes vivía en `salud.html` → "Rutina Muscular"): la meta nutricional real de Adán (77 kg desde 2026-07-31 — antes 75 kg, ver [`readme_salud.md`](readme_salud.md) → "Actualización de peso y metas nutricionales") es ~3,115 kcal y ~186 g de proteína al día. Los macros de cada receta (`r.macros`) apuntan a que desayuno + cena cubran una parte sustancial de esa meta, dejando el resto a la comida de mediodía (fuera del alcance del recetario, aunque sí cubierta en el Plan Masa Muscular). Las 20 recetas y sus macros individuales **no se recalcularon** — el ajuste de +280 kcal/día se absorbe en el Plan Masa Muscular (desayuno/comida) y en la comida de mediodía, no en este recetario.
 
 **Sencillez real**: nada de técnicas complicadas (solo plancha, vapor, horno, sartén, licuadora) ni ingredientes difíciles de conseguir — todo se compra en cualquier súper mexicano.
 
-## Modelo de datos — `localStorage['comida_v1']`
+## Modelo de datos
+
+### `localStorage['comida_v1']` — propio de este archivo
 
 ```js
 {
-  comprado: { 'Nombre del ingrediente': true }   // qué ya se marcó en la lista del súper
+  comprado:   { 'Nombre del ingrediente': true },              // lista del súper marcada
+  planSemana: { 'YYYY-MM-DD': { desayuno: recetaId, cena: recetaId } }  // nuevo 2026-08-02
 }
 ```
 
-Las 20 recetas y sus ingredientes/pasos/macros **no** se guardan en `localStorage` — son contenido de referencia hardcodeado en `const RECETAS`, igual que la Rutina Muscular o Salud Digestiva de `salud.html`. Lo único persistido es qué ingredientes de la lista del súper ya se marcaron como comprados.
+Las 20 recetas + Plan Masa Muscular (`RECETAS`, `PLAN_ITEMS`) **no** se guardan en `localStorage` — son contenido de referencia hardcodeado, igual que Salud Digestiva en `salud.html`. `planSemana` solo guarda **IDs de receta por día/slot**, no una copia de la receta — si el catálogo de recetas cambia, el plan sigue apuntando al mismo id.
+
+### `localStorage['misalud_v1']` — clave de `salud.html`, este archivo lee y escribe directo
+
+**Cambio de arquitectura del 2026-08-02**: antes esta app solo *escribía* un registro puntual vía `registrarReceta()`. Ahora el **Registro Diario completo vive aquí** — CRUD completo (crear/editar/eliminar) de `misalud_v1.alimentos`, usando los helpers `readSalud()`/`writeSalud()` (leen/escriben el objeto completo con un default seguro, igual patrón que `rawGet`/`rawSet` del Dashboard — ver `Dashboard/readme_dashboard.md`). También lee `misalud_v1.metas` (solo lectura) para las barras de progreso del resumen del día — esas metas se configuran en `salud.html` → Perfil & Metas, no aquí.
+
+```js
+// Forma de cada alimento — idéntica a la que usaba salud.html, sin cambios
+{ id, fecha:'YYYY-MM-DD', comida:'desayuno|almuerzo|cena|snack', nombre, cantidad, unidad, cal, prot, carbs, gra, notas }
+```
+
+Tres funciones escriben aquí: `registrarReceta(id,tipo)` (botón en cada tarjeta de receta), `registrarRutinaMeal(idx)` (botón en cada comida del Plan Masa Muscular), y `saveAlimento()`/`delAlimento()` (CRUD manual del Registro Diario).
 
 ## Funcionalidad clave
 
-- **`CATEGORIA_ING`**: mapa de cada uno de los 37 ingredientes únicos a una de 6 categorías (🥚 Proteínas, 🥛 Lácteos, 🌾 Granos y carbohidratos, 🍎 Frutas, 🥦 Verduras, 🧂 Condimentos y otros). `listaSuperUnica()` recorre las 20 recetas, deduplica por nombre de ingrediente (`Set`) y `renderSuper()` los agrupa por categoría usando este mapa — si se agrega una receta nueva con un ingrediente que no está en `CATEGORIA_ING`, cae por defecto en "Condimentos y otros" (no truena, pero conviene agregarlo al mapa).
+- **`CATEGORIA_ING`**: mapa de cada uno de los 37 ingredientes únicos a una de 6 categorías (🥚 Proteínas, 🥛 Lácteos, 🌾 Granos y carbohidratos, 🍎 Frutas, 🥦 Verduras, 🧂 Condimentos y otros). `listaSuperUnica()` recorre las 20 recetas, deduplica por nombre de ingrediente (`Set`) y `renderSuper()` los agrupa por categoría usando este mapa.
 - **Checklist de compras persistente**: `toggleShop(nombre)` marca/desmarca un ingrediente en `S.comprado` y guarda; `resetShop()` limpia toda la lista (botón en la barra lateral, para reiniciar cada semana).
-- **`registrarReceta(id, tipo)`** — botón "➕ Registrar en mi diario de hoy" en cada tarjeta de receta. Escribe **directamente en `localStorage['misalud_v1']`** (la clave de `salud.html`) un nuevo alimento con la fecha de hoy, `comida:'desayuno'|'cena'` y los macros de la receta — mismo formato exacto que usa `salud.html` internamente. Es un registro de referencia (asume que comiste la receta tal cual); si comiste algo distinto, se edita o se borra desde `salud.html` → Registro Diario como cualquier otro alimento.
+- **Tarjetas de receta con acento de color por tipo** (nuevo 2026-08-02): `.receta-card.t-desayuno` (borde izquierdo dorado) / `.t-cena` (borde izquierdo azul) — distinción visual rápida al hacer scroll, además del ícono de sección.
+- **`registrarReceta(id,tipo)`** — botón "➕ Registrar en mi diario de hoy" en cada tarjeta de receta y en cada comida del Plan Masa Muscular (`registrarRutinaMeal`). Escribe directo en `misalud_v1.alimentos` vía `readSalud()`/`writeSalud()`. Es un registro de referencia (asume que comiste la receta tal cual); si comiste algo distinto, se edita o se borra desde el propio Registro Diario de esta misma app.
+- **Registro Diario** (`renderRegistro()`): header de resumen (`reg-resumen`) con calorías del día vs. meta + 3 barras de macros; filtro por fecha (default hoy) y tipo de comida; tabla con editar/eliminar. `clearFiltrosAl()` resetea los filtros.
+- **Plan Semanal** (`renderPlanSemana()`, `diasSemana()`): grid de 7 tarjetas (domingo→sábado de la semana calendario actual, mismo patrón que `semanaActual()` de Ejercicio/Dashboard), cada una con 2 "slots" (desayuno/cena). Clic en un slot abre `openPickReceta(fecha,slot)` → modal con `<select>` de las 10 recetas de ese tipo → `savePickReceta()` guarda el id elegido (o lo borra si se deja "— Sin elegir —") en `S.planSemana` y vuelve a pintar el grid. El día de hoy se resalta con borde dorado.
+- **Modales/confirmación genéricos** (`mo-al` alimento, `mo-pick` elegir receta, `conf` confirmar eliminar): mismo patrón `closeMo()`/`askDel()`/`doConf()`/`closeConf()` que el resto del ecosistema — **se agregaron a este archivo el 2026-08-02**, antes no existían aquí (la app era solo lectura de recetas + checklist, no tenía ningún formulario).
 
 ## Deep-link `?s=` (2026-07-31)
 
-`init()` ahora lee `?s=desayunos|cenas|super` de la URL y llama a `nav(s)` si es un valor válido de `SECS` — mismo patrón que el `?tab=` de `cuidadopersonal.html`. Se agregó para que `Coach/Coach_v2.html → #rutina` y `Dashboard/dashboard.html` puedan enlazar directo a la pestaña de Desayunos o Cenas desde una tarea de la rutina (p.ej. "🍽️ Cena" enlaza a `comida.html?s=cenas`) — ver [`../Coach/readme_coach_v2.md`](../Coach/readme_coach_v2.md) → "Tareas agrupadas".
+`init()` lee `?s=desayunos|cenas|super` de la URL y llama a `nav(s)` si es un valor válido de `SECS` — mismo patrón que el `?tab=` de `cuidadopersonal.html`. Se agregó para que `Coach/Coach_v2.html → #rutina` y `Dashboard/dashboard.html` puedan enlazar directo a la pestaña de Desayunos o Cenas desde una tarea de la rutina (p.ej. "🍽️ Cena" enlaza a `comida.html?s=cenas`) — ver [`../Coach/readme_coach_v2.md`](../Coach/readme_coach_v2.md) → "Tareas agrupadas". `SECS` ahora incluye también `rutina`/`registro`/`planSemana`, así que `?s=registro` o `?s=planSemana` también funcionan si se quiere enlazar directo a esas secciones en el futuro.
 
-## Rediseño de interfaz (2026-07-31)
+## Rediseño de interfaz (2026-07-31, ampliado 2026-08-02)
 
-Mismo tratamiento visual que `ejercicio.html`/`salud.html` (ver [`readme_ejercicio.md`](readme_ejercicio.md) → "Rediseño de interfaz"): se quitaron la mancha radial de fondo, el `backdrop-filter: blur` de sidebar/topbar/card y el texto con gradiente del logo, y `.btn-w` pasó de degradado+glow a color sólido. Se dejó igual el degradado de `.shop-progress .pfill` (barra de progreso de la lista del súper) — ahí un degradado de dirección es un patrón funcional común en barras de progreso, no la decoración genérica que se pidió quitar.
+Mismo tratamiento visual que `ejercicio.html`/`salud.html` (ver [`readme_ejercicio.md`](readme_ejercicio.md) → "Rediseño de interfaz"): sin manchas radiales de fondo, sin `backdrop-filter: blur`, sin texto con gradiente, botones sólidos sin glow. Se dejó igual el degradado de `.shop-progress .pfill` (barra de progreso de la lista del súper) — patrón funcional, no decoración genérica.
+
+**2026-08-02**: esta app no tenía CSS de modal/formulario/tabla/confirmación/KPI (`g4`/`g3`/`g2`, `card-val`, `.mo`/`.modal`, `.fg`/`.fr`/`label`/`input,select`, `.tw`/`table`, `.conf`/`.conf-box`, `.pbar`/`.pfill` genérico, `.empty`) porque nunca los había necesitado — se agregaron todos, tomados literalmente del mismo sistema de diseño que `salud.html`/`ejercicio.html`, para que el Registro Diario y el Plan Semanal se vean consistentes con el resto del ecosistema. También se agregaron `.psem-*` (grid del Plan Semanal) y `.pm-hero` (tarjeta de perfil del Plan Masa Muscular), y el acento de color por tipo de receta (`.t-desayuno`/`.t-cena`).
 
 ## Modo oscuro/claro (2026-07-31)
 
@@ -54,10 +77,10 @@ Botón `.theme-toggle-btn` en el topbar (junto al aviso de "solo desayuno y cena
 ## Referencias cruzadas
 
 - Incrustada vía `<iframe>` en [`readme_cuidadopersonal.md`](readme_cuidadopersonal.md) (subtab "Comida"). Comparte `localStorage` con el shell y con `salud.html` por el mismo origen `file://` compartido (ver `readme_cuidadopersonal.md`).
-- **Escribe en `misalud_v1`** (la clave de `salud.html`) vía `registrarReceta()` — es la única app del proyecto que escribe en la clave de otra app en vez de solo la propia. Si se cambia la forma de `S.alimentos` en `salud.html` (campos `fecha`/`comida`/`nombre`/`cal`/`prot`/`carbs`/`gra`/`notas`), hay que revisar `registrarReceta()` aquí también.
-- El **Dashboard** (`../Dashboard/dashboard.html`) no lee `comida_v1` — no hay ninguna tarjeta ni estadística derivada de esta app ahí. Si algún día se registra una receta con `registrarReceta()`, sí impacta indirectamente lo que el Dashboard muestra de `misalud_v1` (calorías de hoy, macros del panel de Nutrición del Hero), porque ese dato vive en la clave de Salud, no en la de Comida.
+- **Escribe en `misalud_v1`** (la clave de `salud.html`) — desde el 2026-08-02 con mucha más superficie que antes (CRUD completo del Registro Diario, no solo `registrarReceta()`). Si se cambia la forma de `S.alimentos` en `salud.html` (campos `fecha`/`comida`/`nombre`/`cal`/`prot`/`carbs`/`gra`/`notas`), hay que revisar `readSalud()`/`writeSalud()` y las 3 funciones que escriben (`registrarReceta`, `registrarRutinaMeal`, `saveAlimento`) aquí también.
+- El **Dashboard** (`../Dashboard/dashboard.html`) sigue sin leer `comida_v1` directamente, pero indirectamente sí le importa lo que pasa aquí: cualquier alimento registrado desde esta app (receta, Plan Masa Muscular, o manual) aparece en `misalud_v1.alimentos`, que el Dashboard sí lee (calorías de hoy, panel de Nutrición del Hero) — ver [`readme_dashboard.md`](../Dashboard/readme_dashboard.md).
 - Mapa completo del proyecto: [`../README.md`](../README.md).
 
 ## Cómo usarlo
 
-Se abre `cuidadopersonal.html` (pestaña Comida) o directamente `comida.html` en cualquier navegador, sin instalación ni servidor. No hay sincronización entre dispositivos ni botón de exportar JSON (a diferencia de Finanzas/Salud/Ejercicio) — lo único persistido es la lista de compras marcada.
+Se abre `cuidadopersonal.html` (pestaña Comida) o directamente `comida.html` en cualquier navegador, sin instalación ni servidor. No hay sincronización entre dispositivos ni botón de exportar JSON propio — el Registro Diario se respalda junto con el resto de `misalud_v1` desde el botón "⬇️ Exportar datos" de `salud.html`.

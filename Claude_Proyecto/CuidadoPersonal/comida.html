@@ -72,7 +72,10 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var
 
 /* Grid de recetas */
 .recetas-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
-.receta-card{background:rgba(var(--ov),.03);border:1px solid rgba(var(--ov),.07);border-radius:var(--r14);padding:16px;display:flex;flex-direction:column;gap:10px}
+.receta-card{background:rgba(var(--ov),.03);border:1px solid rgba(var(--ov),.07);border-left:3px solid rgba(var(--ov),.07);border-radius:var(--r14);padding:16px;display:flex;flex-direction:column;gap:10px;transition:border-color .2s,transform .2s}
+.receta-card:hover{transform:translateY(-2px)}
+.receta-card.t-desayuno{border-left-color:var(--w)}
+.receta-card.t-cena{border-left-color:var(--b)}
 .receta-card h3{font-size:15px;font-weight:800;line-height:1.3}
 .receta-meta{display:flex;gap:10px;flex-wrap:wrap;font-size:11px;color:var(--text3)}
 .receta-meta span{display:flex;align-items:center;gap:4px}
@@ -114,7 +117,70 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var
   padding:10px 18px;border-radius:var(--rs);font-size:13px;font-weight:600;box-shadow:var(--sh);z-index:500;opacity:0;transform:translateY(8px);transition:all .3s;pointer-events:none}
 .toast.show{opacity:1;transform:translateY(0)}
 
-@media(max-width:640px){.sidebar{transform:translateX(-100%)}.sidebar.open{transform:translateX(0)}.main{margin-left:0}.recetas-grid{grid-template-columns:1fr}}
+/* ─── Grids genéricos, KPIs, formularios, modal, tabla, confirm — antes esta app
+      no tenía nada de esto (solo recetario+súper); se agregan para Registro Diario,
+      Plan Semanal y Plan Masa Muscular. Mismo lenguaje visual que salud.html/ejercicio.html ── */
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.g2{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.card-val{font-size:26px;font-weight:800;color:var(--text);letter-spacing:-.5px}
+.card-sub{font-size:11px;color:var(--text3);margin-top:3px}
+.badge{display:inline-block;padding:3px 9px;border-radius:20px;font-size:10px;font-weight:700}
+.b-n{background:rgba(var(--ov),.07);color:var(--text2)}
+.pbar{height:6px;background:rgba(var(--ov),.08);border-radius:20px;overflow:hidden;margin-top:7px}
+.pfill{height:100%;border-radius:20px;transition:width .6s cubic-bezier(.4,0,.2,1)}
+.mo{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:200;align-items:center;justify-content:center;padding:16px}
+.mo.open{display:flex}
+.modal{background:var(--surface-3);border:1px solid rgba(var(--ov),.09);border-radius:var(--r14);box-shadow:var(--sh);width:100%;max-width:480px;max-height:92vh;overflow-y:auto;padding:22px}
+.modal-h{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+.modal-title{font-size:17px;font-weight:700}
+.modal-x{background:none;border:none;font-size:18px;cursor:pointer;color:var(--text2);padding:3px}
+.modal-x:hover{color:var(--r)}
+.fg{margin-bottom:14px}
+.fr{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+label{display:block;font-size:10px;font-weight:700;color:var(--text2);margin-bottom:5px;text-transform:uppercase;letter-spacing:.07em}
+input,select,textarea{width:100%;padding:9px 12px;border:1px solid rgba(var(--ov),.1);border-radius:var(--rs);font-size:13px;color:var(--text);background:rgba(var(--ov),.05);outline:none;transition:all .2s;font-family:inherit}
+input:focus,select:focus{border-color:var(--w);box-shadow:0 0 0 3px rgba(255,217,61,.12)}
+select option{background:#0d0d2a;color:var(--text)}
+.sh{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+.sh h2{font-size:19px;font-weight:800;color:var(--text)}
+.tw{overflow-x:auto;margin-top:10px}
+table{width:100%;border-collapse:collapse}
+th{text-align:left;padding:9px 12px;font-size:10px;font-weight:700;color:var(--w);border-bottom:1px solid rgba(255,217,61,.15);white-space:nowrap;text-transform:uppercase;letter-spacing:.08em}
+td{padding:11px 12px;border-bottom:1px solid rgba(var(--ov),.05);font-size:13px}
+tr:last-child td{border-bottom:none}
+tbody tr:hover td{background:rgba(255,217,61,.02)}
+.conf{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:300;display:none;align-items:center;justify-content:center}
+.conf.open{display:flex}
+.conf-box{background:var(--surface-3);border:1px solid rgba(var(--ov),.1);border-radius:var(--r14);padding:22px;max-width:340px;width:90%}
+.conf-box h3{font-size:15px;font-weight:700;margin-bottom:7px}
+.conf-box p{color:var(--text2);font-size:13px;margin-bottom:18px}
+.empty{text-align:center;padding:40px 24px;color:var(--text3)}
+.empty .ico{font-size:40px;margin-bottom:10px;opacity:.4}
+.flex{display:flex}.aic{align-items:center}.jb{justify-content:space-between}
+.fw7{font-weight:700}.ts{font-size:11px}.tm{color:var(--text3)}.gap8{gap:8px}.mt16{margin-top:16px}
+
+/* ─── Plan Semanal — grid de 7 días ── */
+.psem-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:10px}
+.psem-day{background:rgba(var(--ov),.03);border:1px solid rgba(var(--ov),.07);border-radius:var(--r14);padding:12px;display:flex;flex-direction:column;gap:8px}
+.psem-day.today{border-color:var(--w);background:rgba(255,217,61,.05)}
+.psem-dname{font-size:11px;font-weight:800;color:var(--text2);text-transform:uppercase;letter-spacing:.06em}
+.psem-day.today .psem-dname{color:var(--w)}
+.psem-ddate{font-size:10px;color:var(--text3);margin-top:-4px}
+.psem-slot{background:rgba(var(--ov),.03);border:1px dashed rgba(var(--ov),.12);border-radius:9px;padding:8px 9px;cursor:pointer;transition:all .2s;min-height:52px}
+.psem-slot:hover{border-color:var(--w);background:rgba(255,217,61,.06)}
+.psem-slot.filled{border-style:solid;border-color:rgba(255,217,61,.3);background:rgba(255,217,61,.05)}
+.psem-slot-lbl{font-size:8.5px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px}
+.psem-slot-name{font-size:11px;color:var(--text);line-height:1.3}
+.psem-slot-empty{font-size:11px;color:var(--text3)}
+
+/* ─── Plan Masa Muscular — mismo lenguaje visual que las recetas ── */
+.pm-hero{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;text-align:center}
+.pm-hero div div:first-child{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px}
+.pm-hero div div:last-child{font-size:20px;font-weight:800}
+
+@media(max-width:900px){.g4{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:repeat(2,1fr)}.psem-grid{grid-template-columns:repeat(4,1fr)}}
+@media(max-width:640px){.sidebar{transform:translateX(-100%)}.sidebar.open{transform:translateX(0)}.main{margin-left:0}.recetas-grid{grid-template-columns:1fr}.g4,.g3,.g2{grid-template-columns:1fr}.fr{grid-template-columns:1fr}.psem-grid{grid-template-columns:repeat(2,1fr)}}
 </style>
 <script>
 (function () {
@@ -135,6 +201,10 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var
     <div class="nav-label">Recetas</div>
     <div class="nav-item active" onclick="nav('desayunos')"><span class="ico">🌅</span>Desayunos<span class="count" id="cnt-desayunos"></span></div>
     <div class="nav-item" onclick="nav('cenas')"><span class="ico">🌙</span>Cenas<span class="count" id="cnt-cenas"></span></div>
+    <div class="nav-item" onclick="nav('rutina')"><span class="ico">🥩</span>Plan Masa Muscular</div>
+    <div class="nav-label">Mi semana</div>
+    <div class="nav-item" onclick="nav('registro')"><span class="ico">📔</span>Registro Diario</div>
+    <div class="nav-item" onclick="nav('planSemana')"><span class="ico">📅</span>Plan Semanal</div>
     <div class="nav-label">Compras</div>
     <div class="nav-item" onclick="nav('super')"><span class="ico">🛒</span>Lista del Súper<span class="count" id="cnt-super"></span></div>
   </nav>
@@ -174,6 +244,46 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var
       <div class="recetas-grid" id="grid-cenas"></div>
     </section>
 
+    <!-- PLAN MASA MUSCULAR -->
+    <section id="s-rutina" class="section"></section>
+
+    <!-- REGISTRO DIARIO -->
+    <section id="s-registro" class="section">
+      <div id="reg-resumen"></div>
+      <div class="card mt16" style="margin-bottom:14px;padding:14px">
+        <div class="flex gap8" style="flex-wrap:wrap;align-items:center">
+          <input type="date" id="f-fecha-al" onchange="renderRegistro()" style="width:auto">
+          <select id="f-comida-al" onchange="renderRegistro()" style="width:auto;min-width:140px">
+            <option value="">Todas las comidas</option>
+            <option value="desayuno">🌅 Desayuno</option>
+            <option value="almuerzo">☀️ Almuerzo</option>
+            <option value="cena">🌙 Cena</option>
+            <option value="snack">🍎 Snack</option>
+          </select>
+          <button class="btn btn-o btn-sm" onclick="clearFiltrosAl()">✕ Limpiar</button>
+          <button class="btn btn-w btn-sm" style="margin-left:auto" onclick="openAlimentoModal()">+ Agregar alimento</button>
+        </div>
+      </div>
+      <div class="card"><div class="tw"><table>
+        <thead><tr><th>Comida</th><th>Alimento</th><th>Cantidad</th><th>Cal</th><th>Prot.</th><th>Carbs</th><th>Grasa</th><th></th></tr></thead>
+        <tbody id="al-body"></tbody>
+      </table></div>
+      <div id="al-empty" class="empty" style="display:none"><div class="ico">📔</div><p>Sin registros. Agrega tu primer alimento del día.</p></div>
+      </div>
+    </section>
+
+    <!-- PLAN SEMANAL -->
+    <section id="s-planSemana" class="section">
+      <div class="sh"><h2>📅 Plan Semanal</h2></div>
+      <div class="card" style="margin-bottom:16px;padding:14px">
+        <p style="font-size:12.5px;color:var(--text2);line-height:1.6">
+          Planea <b style="color:var(--text)">hacia adelante</b> qué vas a cocinar cada día — elige una receta por desayuno y cena.
+          Cuando llegue el día, ábrela desde <b style="color:var(--w)">Desayunos</b>/<b style="color:var(--w)">Cenas</b> y regístrala en tu diario con un clic.
+        </p>
+      </div>
+      <div id="plan-semana-body"></div>
+    </section>
+
     <!-- SÚPER -->
     <section id="s-super" class="section">
       <div class="card" style="margin-bottom:18px">
@@ -191,6 +301,66 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var
 
   </div>
 </main>
+
+<!-- MODAL ALIMENTO (registro diario — escribe directo en misalud_v1.alimentos) -->
+<div class="mo" id="mo-al">
+  <div class="modal">
+    <div class="modal-h"><div class="modal-title" id="mo-al-title">Registrar alimento</div><button class="modal-x" onclick="closeMo('mo-al')">✕</button></div>
+    <div class="fg"><label>Comida</label>
+      <select id="al-comida">
+        <option value="desayuno">🌅 Desayuno</option>
+        <option value="almuerzo">☀️ Almuerzo</option>
+        <option value="cena">🌙 Cena</option>
+        <option value="snack">🍎 Snack</option>
+      </select>
+    </div>
+    <div class="fg"><label>Alimento *</label><input id="al-nombre" placeholder="Ej. Avena con fruta, Pollo a la plancha..."></div>
+    <div class="fr">
+      <div class="fg"><label>Cantidad</label><input type="number" id="al-cantidad" placeholder="100" min="0"></div>
+      <div class="fg"><label>Unidad</label>
+        <select id="al-unidad"><option value="g">g</option><option value="ml">ml</option><option value="pza">pieza(s)</option><option value="taza">taza(s)</option><option value="cdta">cdta</option><option value="cda">cda</option></select>
+      </div>
+    </div>
+    <div class="fr">
+      <div class="fg"><label>🔥 Calorías *</label><input type="number" id="al-cal" placeholder="0" min="0"></div>
+      <div class="fg"><label>💜 Proteína (g)</label><input type="number" id="al-prot" placeholder="0" min="0" step="0.1"></div>
+    </div>
+    <div class="fr">
+      <div class="fg"><label>💙 Carbohidratos (g)</label><input type="number" id="al-carbs" placeholder="0" min="0" step="0.1"></div>
+      <div class="fg"><label>💛 Grasa (g)</label><input type="number" id="al-gra" placeholder="0" min="0" step="0.1"></div>
+    </div>
+    <div class="fg"><label>Fecha</label><input type="date" id="al-fecha"></div>
+    <div class="fg"><label>Notas</label><input id="al-notas" placeholder="Observaciones opcionales..."></div>
+    <div class="flex" style="justify-content:flex-end;gap:8px">
+      <button class="btn btn-o" onclick="closeMo('mo-al')">Cancelar</button>
+      <button class="btn btn-w" onclick="saveAlimento()">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL ELEGIR RECETA (Plan Semanal) -->
+<div class="mo" id="mo-pick">
+  <div class="modal" style="max-width:380px">
+    <div class="modal-h"><div class="modal-title" id="mo-pick-title">Elegir receta</div><button class="modal-x" onclick="closeMo('mo-pick')">✕</button></div>
+    <div class="fg"><label>Receta</label><select id="pick-receta"></select></div>
+    <div class="flex" style="justify-content:flex-end;gap:8px">
+      <button class="btn btn-o" onclick="closeMo('mo-pick')">Cancelar</button>
+      <button class="btn btn-w" onclick="savePickReceta()">Asignar</button>
+    </div>
+  </div>
+</div>
+
+<!-- CONFIRM -->
+<div class="conf" id="conf">
+  <div class="conf-box">
+    <h3 id="conf-title">¿Eliminar registro?</h3>
+    <p id="conf-msg">Esta acción no se puede deshacer.</p>
+    <div class="flex" style="justify-content:flex-end;gap:8px">
+      <button class="btn btn-o" onclick="closeConf()">Cancelar</button>
+      <button class="btn" style="background:var(--r);color:#fff" onclick="doConf()">Eliminar</button>
+    </div>
+  </div>
+</div>
 
 <div class="toast" id="toast"></div>
 
@@ -318,13 +488,39 @@ const RECETAS = {
   ]
 };
 
-// ─── Estado — lista del súper (localStorage) ───────────────────────────────
+// ─── Estado — lista del súper + plan semanal (localStorage) ────────────────
 const KEY='comida_v1';
-let S={comprado:{}};
+let S={comprado:{},planSemana:{}};
 const save=()=>localStorage.setItem(KEY,JSON.stringify(S));
 const load=()=>{try{const d=localStorage.getItem(KEY);if(d)S={...S,...JSON.parse(d)};}catch(e){}};
 
+const today=()=>new Date().toISOString().slice(0,10);
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2);
+const fmt=n=>new Intl.NumberFormat('es-MX').format(Math.round(n||0));
+const fmtD=d=>{if(!d)return'';const[y,m,day]=d.split('-');const mn=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];return `${parseInt(day)} ${mn[parseInt(m)-1]} ${y}`;};
+let editId=null, confCb=null;
+
 function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500);}
+function closeMo(id){document.getElementById(id).classList.remove('open');editId=null;}
+function closeConf(){document.getElementById('conf').classList.remove('open');confCb=null;}
+function doConf(){if(confCb)confCb();closeConf();}
+function askDel(cb){document.getElementById('conf').classList.add('open');confCb=cb;}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')document.querySelectorAll('.mo.open').forEach(m=>m.classList.remove('open'));});
+document.addEventListener('DOMContentLoaded',()=>{
+  document.querySelectorAll('.mo').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('open');}));
+  document.getElementById('conf')?.addEventListener('click',e=>{if(e.target===document.getElementById('conf'))closeConf();});
+});
+
+// ─── misalud_v1 crudo — Comida es dueña de comida_v1, pero el Registro Diario
+//     lee/escribe directo la clave de Salud (mismo formato exacto), igual patrón
+//     que ya usaba registrarReceta() más abajo, generalizado para CRUD completo. ──
+function readSalud(){
+  let sal={alimentos:[],metas:{caloriasD:2000,proteina:150,carbs:200,grasa:65}};
+  try{const d=localStorage.getItem('misalud_v1');if(d)sal={...sal,...JSON.parse(d)};}catch(e){}
+  if(!sal.alimentos) sal.alimentos=[];
+  return sal;
+}
+function writeSalud(sal){localStorage.setItem('misalud_v1',JSON.stringify(sal));}
 
 function toggleTheme(){
   const html=document.documentElement;
@@ -336,17 +532,19 @@ function toggleTheme(){
 }
 
 // ─── Navegación ─────────────────────────────────────────────────────────────
-const SECS=['desayunos','cenas','super'];
-const STITLE={desayunos:'🌅 Desayunos',cenas:'🌙 Cenas',super:'🛒 Lista del Súper'};
+const SECS=['desayunos','cenas','rutina','registro','planSemana','super'];
+const STITLE={desayunos:'🌅 Desayunos',cenas:'🌙 Cenas',rutina:'🥩 Plan Masa Muscular',registro:'📔 Registro Diario',planSemana:'📅 Plan Semanal',super:'🛒 Lista del Súper'};
+const RENDERS={registro:renderRegistro,planSemana:renderPlanSemana};
 function nav(s){
   SECS.forEach(x=>document.getElementById('s-'+x).classList.toggle('active',x===s));
   document.querySelectorAll('.nav-item').forEach(el=>el.classList.toggle('active',el.getAttribute('onclick')?.includes(`'${s}'`)));
   document.getElementById('topTitle').textContent=STITLE[s];
+  RENDERS[s]?.();
 }
 
 // ─── Render de recetas ──────────────────────────────────────────────────────
 function recetaCard(r,tipo){
-  return `<div class="receta-card">
+  return `<div class="receta-card t-${tipo}">
     <h3>${r.nombre}</h3>
     <div class="receta-meta"><span>⏱️ ${r.tiempo}</span><span>🍽️ 1 porción</span></div>
     <div class="macro-row">
@@ -372,25 +570,309 @@ function renderRecetas(){
   document.getElementById('cnt-cenas').textContent=RECETAS.cena.length;
 }
 
-// ─── Registrar una receta directo en el diario de Cuidado de la Salud
-//     (misalud_v1.alimentos) — mismo origen file://, mismo formato que usa
-//     salud.html. Es un registro de referencia: si comiste algo distinto a
-//     la receta exacta, edítalo o bórralo desde Cuidado de la Salud. ──────────
+// ─── Registrar una receta directo en el Registro Diario (misalud_v1.alimentos,
+//     mismo formato que usaba salud.html). Es un registro de referencia: si
+//     comiste algo distinto a la receta exacta, edítalo o bórralo ahí mismo. ──
 function registrarReceta(id,tipo){
   const r=RECETAS[tipo].find(x=>x.id===id); if(!r) return;
-  const hoy=new Date().toISOString().slice(0,10);
-  let sal={alimentos:[]};
-  try{const d=localStorage.getItem('misalud_v1');if(d)sal={alimentos:[],...JSON.parse(d)};}catch(e){}
-  if(!sal.alimentos) sal.alimentos=[];
-  const comidaKey=tipo==='desayuno'?'desayuno':'cena';
+  const sal=readSalud();
   sal.alimentos.push({
-    id:Date.now().toString(36)+Math.random().toString(36).slice(2),
-    fecha:hoy, comida:comidaKey, nombre:r.nombre, cantidad:'', unidad:'',
+    id:uid(), fecha:today(), comida:tipo==='desayuno'?'desayuno':'cena', nombre:r.nombre, cantidad:'', unidad:'',
     cal:r.macros.cal, prot:r.macros.prot, carbs:r.macros.carbs, gra:r.macros.gra,
     notas:'Registrado desde Mi Comida'
   });
-  localStorage.setItem('misalud_v1',JSON.stringify(sal));
+  writeSalud(sal);
   toast('✅ Agregado a tu Registro Diario de hoy');
+  if(document.getElementById('s-registro').classList.contains('active')) renderRegistro();
+}
+
+// ─── Plan Masa Muscular — movido desde salud.html (2026-08-02): es contenido de
+//     nutrición, no de ejercicio, así que su lugar real es aquí, junto al resto
+//     del recetario. Registrar una comida escribe directo en misalud_v1.alimentos,
+//     igual que las 20 recetas de arriba. ────────────────────────────────────────
+const PLAN_ITEMS=[
+  [
+    {nombre:'4 huevos revueltos con espinacas y aceite',cal:345,prot:26,carbs:4,gra:24},
+    {nombre:'Avena (70g) cocida con 250ml leche entera',cal:410,prot:19,carbs:59,gra:13},
+    {nombre:'3 plátanos medianos (120g c/u)',cal:300,prot:3,carbs:75,gra:0}
+  ],
+  [
+    {nombre:'200g pechuga de pollo a la plancha',cal:220,prot:46,carbs:0,gra:4},
+    {nombre:'2 tazas arroz blanco cocido',cal:400,prot:8,carbs:88,gra:0},
+    {nombre:'1 taza frijoles negros cocidos',cal:230,prot:15,carbs:42,gra:1},
+    {nombre:'2 tortillas de maíz',cal:130,prot:3,carbs:27,gra:2},
+    {nombre:'½ aguacate + ensalada verde',cal:160,prot:2,carbs:9,gra:14},
+    {nombre:'Aceite de oliva (2 cdtas) en la ensalada',cal:80,prot:0,carbs:0,gra:9}
+  ],
+  [
+    {nombre:'2 latas atún en agua (170g drenado)',cal:180,prot:40,carbs:0,gra:2},
+    {nombre:'1.5 tazas arroz blanco cocido',cal:300,prot:6,carbs:66,gra:0},
+    {nombre:'Ensalada (lechuga, jitomate, pepino)',cal:50,prot:2,carbs:10,gra:0},
+    {nombre:'500ml leche entera',cal:310,prot:16,carbs:24,gra:17}
+  ]
+];
+
+function registrarRutinaMeal(idx){
+  const KEYS=['desayuno','almuerzo','cena'];
+  const NAMES=['Desayuno','Comida','Cena'];
+  const sal=readSalud();
+  PLAN_ITEMS[idx].forEach(item=>{
+    sal.alimentos.push({id:uid(),nombre:item.nombre,comida:KEYS[idx],
+      cantidad:'',unidad:'g',cal:item.cal,prot:item.prot,carbs:item.carbs,gra:item.gra,
+      fecha:today(),notas:'Plan Masa Muscular'});
+  });
+  writeSalud(sal);
+  toast('✅ '+NAMES[idx]+' registrado en el diario ('+PLAN_ITEMS[idx].length+' alimentos)');
+  if(document.getElementById('s-registro').classList.contains('active')) renderRegistro();
+}
+
+function renderRutinaMuscular(){
+  const sec=document.getElementById('s-rutina'); if(!sec) return;
+  const tCal=3115,tProt=186,tCarb=404,tGra=86;
+  const meals=[
+    {idx:0,ico:'🌅',name:'Desayuno',time:'7:00 – 8:00 am',cal:1055,prot:48,carbs:138,gra:37,col:'#ffd93d'},
+    {idx:1,ico:'☀️',name:'Comida',time:'1:00 – 2:00 pm',cal:1220,prot:74,carbs:166,gra:30,col:'#ff8a3d'},
+    {idx:2,ico:'🌙',name:'Cena',time:'7:00 – 8:00 pm',cal:840,prot:64,carbs:100,gra:19,col:'#3b82f6'}
+  ];
+  const alts=[
+    {ico:'🥩',cat:'Proteínas económicas',items:['Huevo (la fuente más barata)','Atún en lata','Pollo pierna/muslo','Carne molida 90/10','Leche entera','Frijoles + arroz combinados']},
+    {ico:'🌾',cat:'Carbohidratos complejos',items:['Arroz blanco/integral','Avena en hojuelas','Tortillas de maíz','Plátano','Papa cocida','Pan integral']},
+    {ico:'🥑',cat:'Grasas saludables',items:['Aguacate','Mantequilla de cacahuate','Aceite de oliva','Yema de huevo','Semillas de girasol','Coco rallado sin azúcar']},
+    {ico:'🥦',cat:'Verduras recomendadas',items:['Espinacas','Brócoli','Zanahoria','Jitomate','Pepino','Chayote cocido']}
+  ];
+  const tips=[
+    {ico:'⏰',t:'Timing de proteína',d:'Consume mínimo 40g de proteína en cada comida para maximizar la síntesis muscular postentrenamiento.'},
+    {ico:'💧',t:'Hidratación',d:'Toma 3–3.5 L de agua al día. El músculo es 75% agua; con solo 2% de deshidratación el rendimiento cae notablemente.'},
+    {ico:'😴',t:'Descanso obligatorio',d:'Duerme 7–9 horas. El 70% de la hormona de crecimiento se libera durante el sueño profundo — ahí crece el músculo.'},
+    {ico:'📅',t:'Consistencia',d:'Los primeros cambios visibles llegan entre las semanas 6–12. Ningún suplemento reemplaza una dieta sostenida.'},
+    {ico:'📈',t:'Superávit controlado',d:'Consumes ~325 kcal sobre tu mantenimiento estimado (≈2,790 kcal/día). Ideal para ganar músculo sin acumular exceso de grasa.'},
+    {ico:'🏋️',t:'Entrenamiento',d:'3–4 días/semana con movimientos compuestos: sentadilla, peso muerto, press banca, dominadas y remo con barra.'}
+  ];
+  sec.innerHTML=`
+    <div class="sh"><h2>🥩 Plan Masa Muscular</h2></div>
+    <div class="card" style="margin-bottom:16px;border-color:rgba(255,138,61,.3);background:rgba(255,138,61,.05)">
+      <div class="pm-hero">
+        <div><div>Peso actual</div><div style="color:var(--g)">77 kg</div></div>
+        <div><div>Estatura</div><div style="color:var(--b)">1.78 m</div></div>
+        <div><div>Edad</div><div style="color:var(--p)">31 años</div></div>
+        <div><div>Objetivo</div><div style="font-size:15px;color:var(--o)">Ganar masa muscular</div></div>
+      </div>
+    </div>
+    <div class="g4" style="margin-bottom:16px">
+      ${[
+        {l:'Calorías / día',v:fmt(tCal)+' kcal',sub:'Superávit +325 kcal',c:'var(--o)'},
+        {l:'Proteína',v:tProt+'g',sub:'2.4 g por kg de peso',c:'var(--p)'},
+        {l:'Carbohidratos',v:tCarb+'g',sub:'Energía y recuperación',c:'var(--b)'},
+        {l:'Grasas',v:tGra+'g',sub:'Hormonas anabólicas',c:'var(--w)'}
+      ].map(k=>`<div class="card" style="border-left:4px solid ${k.c};text-align:center"><div class="card-title" style="color:${k.c};justify-content:center">${k.l}</div><div class="card-val" style="color:${k.c}">${k.v}</div><div class="card-sub">${k.sub}</div></div>`).join('')}
+    </div>
+    <div style="display:flex;flex-direction:column;gap:14px;margin-bottom:22px">
+      ${meals.map(m=>`
+      <div class="card" style="border-left:4px solid ${m.col}">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px;margin-bottom:14px">
+          <div>
+            <div style="font-size:17px;font-weight:800;color:${m.col}">${m.ico} ${m.name}</div>
+            <div style="font-size:11px;color:var(--text3);margin-top:2px">⏰ ${m.time}</div>
+          </div>
+          <div class="macro-row">
+            <span class="macro-chip cal">🔥 ${m.cal} kcal</span>
+            <span class="macro-chip prot">💜 ${m.prot}g</span>
+            <span class="macro-chip carb">💙 ${m.carbs}g</span>
+            <span class="macro-chip gra">💛 ${m.gra}g</span>
+          </div>
+        </div>
+        <div class="tw"><table>
+          <thead><tr><th>Alimento</th><th>Cal</th><th>Prot.</th><th>Carbs</th><th>Grasa</th></tr></thead>
+          <tbody>${PLAN_ITEMS[m.idx].map(it=>'<tr><td style="font-weight:600">'+it.nombre+'</td><td style="color:var(--o)">'+it.cal+'</td><td style="color:var(--p)">'+it.prot+'g</td><td style="color:var(--b)">'+it.carbs+'g</td><td style="color:var(--w)">'+it.gra+'g</td></tr>').join('')}</tbody>
+        </table></div>
+        <div style="margin-top:12px;display:flex;justify-content:flex-end">
+          <button class="btn btn-w btn-sm" onclick="registrarRutinaMeal(${m.idx})">➕ Registrar esta comida hoy</button>
+        </div>
+      </div>`).join('')}
+    </div>
+    <div class="sh"><h2>🛒 Alimentos recomendados (bajo presupuesto)</h2></div>
+    <div class="g4" style="margin-bottom:22px">
+      ${alts.map(a=>'<div class="card"><div class="card-title">'+a.ico+' '+a.cat+'</div><ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:5px">'+a.items.map(i=>'<li style="font-size:12px;color:var(--text);display:flex;align-items:center;gap:6px"><span style="color:var(--g);font-size:9px">▶</span>'+i+'</li>').join('')+'</ul></div>').join('')}
+    </div>
+    <div class="sh"><h2>💡 Claves para ganar masa muscular</h2></div>
+    <div class="g3">
+      ${tips.map(t=>'<div class="card" style="border-left:3px solid var(--g)"><div style="font-size:22px;margin-bottom:8px">'+t.ico+'</div><div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:5px">'+t.t+'</div><div style="font-size:12px;color:var(--text2);line-height:1.6">'+t.d+'</div></div>').join('')}
+    </div>
+  `;
+}
+
+// ─── Registro Diario — movido desde salud.html (2026-08-02). Lee/escribe directo
+//     misalud_v1.alimentos (readSalud/writeSalud arriba) — Comida es ahora dueña
+//     de la experiencia de registrar comida, aunque el dato siga viviendo en la
+//     clave de Salud (Dashboard.html y el resto del ecosistema ya la leen de ahí). ──
+const COMIDAS_LBL={desayuno:'🌅 Desayuno',almuerzo:'☀️ Almuerzo',cena:'🌙 Cena',snack:'🍎 Snack'};
+function sumCal(l){return l.reduce((s,a)=>s+(a.cal||0),0);}
+function sumProt(l){return l.reduce((s,a)=>s+(a.prot||0),0);}
+function sumCarbs(l){return l.reduce((s,a)=>s+(a.carbs||0),0);}
+function sumGra(l){return l.reduce((s,a)=>s+(a.gra||0),0);}
+
+function clearFiltrosAl(){
+  document.getElementById('f-fecha-al').value=today();
+  document.getElementById('f-comida-al').value='';
+  renderRegistro();
+}
+
+function renderRegistro(){
+  const sal=readSalud();
+  const fechaEl=document.getElementById('f-fecha-al');
+  if(fechaEl&&!fechaEl.value) fechaEl.value=today();
+  const fecha=fechaEl?.value||today();
+  const comidaF=document.getElementById('f-comida-al')?.value||'';
+
+  // Resumen del día seleccionado vs metas de Salud (misalud_v1.metas)
+  const delDia=sal.alimentos.filter(a=>a.fecha===fecha);
+  const m=sal.metas||{};
+  const cal=sumCal(delDia), calMeta=m.caloriasD||2000;
+  const prot=sumProt(delDia), protMeta=m.proteina||150;
+  const carbs=sumCarbs(delDia), carbMeta=m.carbs||200;
+  const gra=sumGra(delDia), graMeta=m.grasa||65;
+  const bar=(v,meta,col,lbl)=>{
+    const pct=meta>0?Math.min(100,(v/meta)*100):0;
+    return `<div style="margin-bottom:10px">
+      <div class="flex jb" style="margin-bottom:4px"><span style="font-size:11px;font-weight:600;color:${col}">${lbl}</span>
+        <span style="font-size:11px;color:var(--text2)">${fmt(v)} <span style="color:var(--text3)">/ ${fmt(meta)}</span></span></div>
+      <div class="pbar"><div class="pfill" style="width:${pct}%;background:${col}"></div></div>
+    </div>`;
+  };
+  document.getElementById('reg-resumen').innerHTML=`
+    <div class="g4">
+      <div class="card" style="border-left:4px solid var(--o)">
+        <div class="card-title" style="color:var(--o)">🔥 Calorías · ${fecha===today()?'hoy':fmtD(fecha)}</div>
+        <div class="card-val" style="color:var(--o)">${fmt(cal)}</div>
+        <div class="card-sub">meta: ${fmt(calMeta)} kcal</div>
+      </div>
+      <div class="card" style="grid-column:span 3">
+        ${bar(prot,protMeta,'var(--p)','💜 Proteína (g)')}
+        ${bar(carbs,carbMeta,'var(--b)','💙 Carbohidratos (g)')}
+        ${bar(gra,graMeta,'var(--w)','💛 Grasa (g)')}
+      </div>
+    </div>`;
+
+  // Tabla filtrada
+  let list=delDia;
+  if(comidaF) list=list.filter(a=>a.comida===comidaF);
+  list=[...list].sort((a,b)=>(a.comida||'').localeCompare(b.comida||''));
+  const tbody=document.getElementById('al-body');
+  const empty=document.getElementById('al-empty');
+  if(!list.length){ tbody.innerHTML=''; empty.style.display=''; return; }
+  empty.style.display='none';
+  tbody.innerHTML=list.map(a=>`<tr>
+    <td><span class="badge b-n">${COMIDAS_LBL[a.comida]||a.comida}</span></td>
+    <td style="font-weight:600">${a.nombre}${a.notas?`<div class="ts tm">${a.notas}</div>`:''}</td>
+    <td class="ts tm">${a.cantidad||''} ${a.unidad||''}</td>
+    <td style="font-weight:700;color:var(--o)">${fmt(a.cal)}</td>
+    <td style="color:var(--p)">${a.prot?fmt(a.prot)+'g':'—'}</td>
+    <td style="color:var(--b)">${a.carbs?fmt(a.carbs)+'g':'—'}</td>
+    <td style="color:var(--w)">${a.gra?fmt(a.gra)+'g':'—'}</td>
+    <td>
+      <button class="btn btn-o btn-sm" onclick="openAlimentoModal('${a.id}')">✏️</button>
+      <button class="btn btn-o btn-sm" onclick="askDel(()=>delAlimento('${a.id}'))">🗑️</button>
+    </td>
+  </tr>`).join('');
+}
+
+function openAlimentoModal(id=null){
+  editId=id;
+  const sal=readSalud();
+  const a=id?sal.alimentos.find(x=>x.id===id):null;
+  document.getElementById('mo-al-title').textContent=id?'Editar alimento':'Registrar alimento';
+  document.getElementById('al-comida').value=a?.comida||'desayuno';
+  document.getElementById('al-nombre').value=a?.nombre||'';
+  document.getElementById('al-cantidad').value=a?.cantidad||'';
+  document.getElementById('al-unidad').value=a?.unidad||'g';
+  document.getElementById('al-cal').value=a?.cal||'';
+  document.getElementById('al-prot').value=a?.prot||'';
+  document.getElementById('al-carbs').value=a?.carbs||'';
+  document.getElementById('al-gra').value=a?.gra||'';
+  document.getElementById('al-fecha').value=a?.fecha||document.getElementById('f-fecha-al')?.value||today();
+  document.getElementById('al-notas').value=a?.notas||'';
+  document.getElementById('mo-al').classList.add('open');
+  setTimeout(()=>document.getElementById('al-nombre').focus(),100);
+}
+
+function saveAlimento(){
+  const nombre=document.getElementById('al-nombre').value.trim();
+  const cal=parseFloat(document.getElementById('al-cal').value)||0;
+  if(!nombre||!cal) return alert('Ingresa el nombre y las calorías.');
+  const data={
+    nombre, comida:document.getElementById('al-comida').value,
+    cantidad:document.getElementById('al-cantidad').value,
+    unidad:document.getElementById('al-unidad').value,
+    cal, prot:parseFloat(document.getElementById('al-prot').value)||0,
+    carbs:parseFloat(document.getElementById('al-carbs').value)||0,
+    gra:parseFloat(document.getElementById('al-gra').value)||0,
+    fecha:document.getElementById('al-fecha').value||today(),
+    notas:document.getElementById('al-notas').value.trim()
+  };
+  const sal=readSalud();
+  if(editId){const i=sal.alimentos.findIndex(x=>x.id===editId);if(i>=0)sal.alimentos[i]={...sal.alimentos[i],...data};}
+  else sal.alimentos.push({id:uid(),...data});
+  writeSalud(sal);
+  closeMo('mo-al'); renderRegistro(); toast('✅ Alimento guardado');
+}
+
+function delAlimento(id){
+  const sal=readSalud();
+  sal.alimentos=sal.alimentos.filter(a=>a.id!==id);
+  writeSalud(sal);
+  renderRegistro(); toast('🗑️ Eliminado');
+}
+
+// ─── Plan Semanal — planificador HACIA ADELANTE (nuevo, 2026-08-02). Distinto del
+//     viejo "Plan Semanal" de salud.html (que era retrospectivo, mostraba lo ya
+//     comido): aquí eliges qué receta piensas cocinar cada día, antes de cocinarla.
+//     Se guarda en comida_v1.planSemana = {'YYYY-MM-DD': {desayuno:id, cena:id}}. ──
+let pickCtx=null; // {fecha, slot}
+function diasSemana(){
+  const hoy=new Date();
+  return Array.from({length:7},(_,i)=>{const d=new Date(hoy);d.setDate(d.getDate()-hoy.getDay()+i);return d.toISOString().slice(0,10);});
+}
+function renderPlanSemana(){
+  const MN=['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+  const hoyStr=today();
+  const dias=diasSemana();
+  document.getElementById('plan-semana-body').innerHTML=`<div class="psem-grid">
+    ${dias.map(d=>{
+      const esHoy=d===hoyStr;
+      const [,mo,day]=d.split('-');
+      const asign=S.planSemana[d]||{};
+      const slot=(tipo,ico)=>{
+        const rid=asign[tipo];
+        const r=rid?RECETAS[tipo].find(x=>x.id===rid):null;
+        return `<div class="psem-slot ${r?'filled':''}" onclick="openPickReceta('${d}','${tipo}')">
+          <div class="psem-slot-lbl">${ico} ${tipo==='desayuno'?'Desayuno':'Cena'}</div>
+          ${r?`<div class="psem-slot-name">${r.nombre}</div>`:'<div class="psem-slot-empty">+ elegir</div>'}
+        </div>`;
+      };
+      return `<div class="psem-day ${esHoy?'today':''}">
+        <div class="psem-dname">${MN[new Date(d).getDay()]}${esHoy?' •':''}</div>
+        <div class="psem-ddate">${parseInt(day)}/${parseInt(mo)}</div>
+        ${slot('desayuno','🌅')}
+        ${slot('cena','🌙')}
+      </div>`;
+    }).join('')}
+  </div>`;
+}
+function openPickReceta(fecha,slot){
+  pickCtx={fecha,slot};
+  const sel=document.getElementById('pick-receta');
+  const actual=(S.planSemana[fecha]||{})[slot]||'';
+  sel.innerHTML='<option value="">— Sin elegir —</option>'+RECETAS[slot].map(r=>`<option value="${r.id}" ${r.id===actual?'selected':''}>${r.nombre}</option>`).join('');
+  document.getElementById('mo-pick-title').textContent=(slot==='desayuno'?'🌅 Desayuno':'🌙 Cena')+' · '+fmtD(fecha);
+  document.getElementById('mo-pick').classList.add('open');
+}
+function savePickReceta(){
+  if(!pickCtx) return;
+  const val=document.getElementById('pick-receta').value;
+  S.planSemana[pickCtx.fecha]=S.planSemana[pickCtx.fecha]||{};
+  if(val) S.planSemana[pickCtx.fecha][pickCtx.slot]=val;
+  else delete S.planSemana[pickCtx.fecha][pickCtx.slot];
+  save(); closeMo('mo-pick'); renderPlanSemana();
 }
 
 // ─── Lista del súper — consolidada, deduplicada, con checklist persistente ──
@@ -425,7 +907,9 @@ function resetShop(){ S.comprado={}; save(); renderSuper(); toast('↺ Lista rei
 // ─── Init ────────────────────────────────────────────────────────────────────
 function init(){
   load();
+  document.getElementById('f-fecha-al').value=today();
   renderRecetas();
+  renderRutinaMuscular();
   renderSuper();
   const themeBtn=document.getElementById('theme-toggle-btn');
   if(themeBtn) themeBtn.textContent=document.documentElement.getAttribute('data-theme')==='dark'?'☀️':'🌙';

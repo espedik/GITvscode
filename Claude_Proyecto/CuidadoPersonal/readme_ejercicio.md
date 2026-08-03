@@ -96,7 +96,7 @@ Botón `.theme-toggle-btn` junto a "💪 Entrenar ahora" en el topbar. `--surfac
 
 - Incrustada vía `<iframe>` en [`readme_cuidadopersonal.md`](readme_cuidadopersonal.md) (subtab "Ejercicio"). Comparte `localStorage` con el shell por origen `file://` compartido (ver `readme_cuidadopersonal.md`).
 - El **Dashboard** (`../Dashboard/dashboard.html`) lee `mirutina_v1` desde el 2026-07-30 (`D.gym` en `loadAll()`): `sesiones`, `rutina` (qué toca cada día) y `metas.frecuencia`. Se usa en el slide Hero ("JARVIS · Tu semana completa") en la tira de 7 días (qué rutina se entrenó o toca cada día) y en el panel "🏋️ Gym esta semana" (lista de sesiones reales de la semana + qué toca hoy). **No** lee el detalle de series/pesos ni calcula progreso de fuerza — la píldora de acceso directo en la barra superior fija (`renderQuickApps()`) tampoco muestra estadística de esta app. Si se edita la forma de `S.rutina`/`S.sesiones` aquí (nombres de campos, estructura), revisar `renderHero()` en `Dashboard/dashboard.html`.
-- Distinto de `CuidadoPersonal/readme_salud.md` → sección "💪 Ejercicio" interna de Salud, que es un registro **ligero** de cardio/fuerza que sí alimenta el cálculo de calorías netas del día — no confundir ambos trackers de ejercicio.
+- **Nota histórica (corregida 2026-08-02)**: `salud.html` solía tener su propia sección "💪 Ejercicio" interna (registro ligero de cardio/fuerza para el cálculo de calorías netas del día) — se eliminó por completo el 2026-08-02 (petición explícita de Adán: era redundante con esta app) sin reemplazo, ver `readme_salud.md` → "Reestructuración — nutrición se mudó a Comida". Ya no hay dos trackers de ejercicio en el ecosistema, solo este.
 - Mapa completo del proyecto: [`../README.md`](../README.md).
 
 ## Cómo usarlo

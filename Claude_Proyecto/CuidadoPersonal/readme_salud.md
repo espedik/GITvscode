@@ -1,19 +1,14 @@
-# salud.html — Mi Salud: Nutrición & Bienestar
+# salud.html — Mi Salud: Cuerpo & Bienestar
 
-La aplicación más completa del proyecto en cuanto a secciones: seguimiento de alimentación, ejercicio ligero, peso/medidas corporales, un registro de historial médico (exámenes de laboratorio, chequeos y perfil médico), más dos módulos de contenido especializado (rutina alimentaria para masa muscular y guía de salud digestiva). Es de una sola página (HTML+CSS+JS, sin backend); los datos se guardan en `localStorage` (clave `misalud_v1`).
+**Reestructurada el 2026-08-02** (ver sección dedicada más abajo) — pedido explícito de Adán: *"quita alimentacion plan semanal, registro diario, actividad ejercicio, seguimiento progreso, lo de rutina muscular... enriqueser la seccion de comida"*. Ya **no** es la app de nutrición/nutrición — todo lo de alimentación (registro diario, plan semanal, plan de masa muscular) vive ahora en [`comida.html`](comida.html) / [`readme_comida.md`](readme_comida.md). Salud se quedó enfocada en **cuerpo y bienestar**: peso/medidas corporales, un registro de historial médico (exámenes de laboratorio, chequeos y perfil médico), postura, salud mental y suplementos, más una guía de referencia de salud digestiva. Es de una sola página (HTML+CSS+JS, sin backend); los datos se guardan en `localStorage` (clave `misalud_v1`, **compartida y escrita también por `comida.html`** desde la reestructuración — ver abajo).
 
 **Ubicación actual**: vive en `CuidadoPersonal/salud.html` (movida aquí el 2026-07-29 desde `Salud/salud.html`, sin cambios de código — solo de carpeta). Se abre normalmente **incrustada** dentro de `CuidadoPersonal/cuidadopersonal.html` → subtab **🥗 Cuidado de la Salud**, vía `<iframe src="salud.html">`. También puede abrirse directo (`CuidadoPersonal/salud.html`) sin pasar por el shell — funciona igual, es 100% autocontenida.
 
 ## Navegación (sidebar propio de este archivo)
 
-- **📊 Dashboard** — resumen del día: calorías y macros (proteína/carbohidratos/grasa) consumidos vs. meta, contador de vasos de agua, comidas registradas hoy y ejercicio de hoy.
-- **🍽️ Plan Semanal** — vista de un plan de comidas planeado.
-- **🥗 Registro Diario** — bitácora de alimentos consumidos (comida del día: desayuno/almuerzo/cena/snack, nombre, cantidad, calorías y macros), filtrable por fecha y tipo de comida, con resumen de totales.
-- **💪 Ejercicio** (dentro de Salud, distinto del subtab "Ejercicio" del shell) — registro ligero de entrenamientos (tipo: cardio/fuerza/flexibilidad/HIIT/deporte/otro, nombre, duración, calorías quemadas estimadas), con gráfica de calorías quemadas de las últimas 2 semanas. **No** es la app completa de rutina de gimnasio — esa es `ejercicio.html` (ver [`readme_ejercicio.md`](readme_ejercicio.md)); esta sección solo sirve para que el gasto calórico entre en el cálculo de calorías netas del día.
+- **📊 Dashboard** — **rediseñado el 2026-08-02** (ver abajo): ya no muestra calorías/macros/comidas de hoy (eso vive en Comida). Ahora resume lo que Salud sí administra: peso actual (con tendencia vs. el registro anterior), vasos de agua, pausas activas de hoy, suplementos tomados hoy, próxima cita médica, y un mini-resumen de bienestar (ánimo de hoy + dolor/molestia reciente). Incluye un banner fijo arriba con link directo a `comida.html` para lo de nutrición.
 - **⚖️ Peso & Medidas** — registro de peso corporal, % de grasa corporal y medidas (cintura, cadera, pecho, brazo, muslo) con cálculo automático de IMC y de masa magra estimada, gráfica de evolución del peso y una segunda gráfica de composición corporal (cintura/brazo/muslo/% grasa). Ampliada el 2026-07-30 — ver detalle abajo.
-- **📈 Progreso** — vista consolidada de la evolución hacia las metas.
-- **🥩 Rutina Muscular** — contenido de referencia (no editable desde la UI): un plan alimentario detallado para ganar masa muscular con datos personales precargados (peso, estatura, edad, objetivo), calorías/macros objetivo, desglose de desayuno/comida/cena con tablas de alimentos y valores nutricionales, alternativas económicas de proteína/carbohidratos/grasas/verduras, y tips de entrenamiento y descanso. Cada comida del plan se puede registrar directamente en el Registro Diario con un botón.
-- **🫁 Salud Digestiva** — contenido de referencia sobre reflujo/agruras: síntomas, alimentos a evitar y recomendados (con la razón fisiológica de cada uno), remedios caseros paso a paso, un plan diario hora por hora, hábitos recomendados, y señales de alerta que ameritan ver a un médico.
+- **🫁 Salud Digestiva** — contenido de referencia sobre reflujo/agruras: síntomas, alimentos a evitar y recomendados (con la razón fisiológica de cada uno), remedios caseros paso a paso, un plan diario hora por hora, hábitos recomendados, y señales de alerta que ameritan ver a un médico. Se quedó aquí (y no se movió a Comida) porque es guía médica de referencia, no un tracker de alimentos — aunque sí informa qué recetas se eligieron en `comida.html`.
 - **🩺 Exámenes Médicos** — registro de exámenes de laboratorio y signos vitales con rangos de referencia, chequeos/consultas por especialidad, y un perfil médico general. Responde a "necesito saber todo de mí y cómo estoy" en un solo lugar.
 - **🧍 Postura** (nuevo, 2026-07-30 — ver detalle abajo) — ejercicios correctivos, registro de dolor/molestias, contador de pausas activas y tips de ergonomía de escritorio.
 - **🧠 Salud Mental** (nuevo, 2026-07-30 — ver detalle abajo) — registro diario de ánimo/estrés con gráfica de tendencia, guía de técnicas para manejar el estrés, y señales de alerta para buscar ayuda profesional.
@@ -63,10 +58,6 @@ Los tres cierran con la misma convención visual que Salud Digestiva/Exámenes: 
 
 ```js
 {
-  alimentos:  [{ id, fecha:'YYYY-MM-DD', comida:'desayuno|almuerzo|cena|snack',
-                 nombre, cantidad, unidad, cal, prot, carbs, gra, notas }],
-  ejercicios: [{ id, fecha, tipo:'cardio|fuerza|flexibilidad|hiit|deporte|otro',
-                 nombre, duracion_min, cal }],
   medidas:    [{ id, fecha, peso, cintura, cadera, pecho, brazo, muslo, grasa:pct, notas }],
   agua:       { 'YYYY-MM-DD': vasosContados },
   metas:      { caloriasD:2000, proteina:150, carbs:.., grasa:.., vasos:.., pesoObjetivo:.., fechaObjetivo:.. },
@@ -86,13 +77,19 @@ Los tres cierran con la misma convención visual que Salud Digestiva/Exámenes: 
   suplementos: {
     lista:   [{ id, nombre, dosis, momento:'am|pre|post|pm|cualquiera', notas }],
     tomado:  { 'YYYY-MM-DD': { idDeSuplemento: true } }
-  }
+  },
+
+  // Campos que este archivo YA NO declara por defecto ni edita desde su UI, pero que
+  // pueden seguir presentes en la clave real si comida.html ya los escribió — load()
+  // los preserva igual vía spread, aunque salud.html no los toque. Ver "Reestructuración
+  // 2026-08-02" más abajo.
+  alimentos:  [{ id, fecha, comida:'desayuno|almuerzo|cena|snack', nombre, cantidad, unidad, cal, prot, carbs, gra, notas }]
 }
 ```
 
 ## Funcionalidad clave
 
-- **CRUD** de alimentos, ejercicios, medidas, exámenes médicos, chequeos, dolor/molestias de postura, registros de ánimo/estrés y suplementos — todos con modales y confirmación antes de eliminar (`askDel()`/`doConf()`/`closeConf()`, compartido).
+- **CRUD** de medidas, exámenes médicos, chequeos, dolor/molestias de postura, registros de ánimo/estrés y suplementos — todos con modales y confirmación antes de eliminar (`askDel()`/`doConf()`/`closeConf()`, compartido).
 - **Cálculo de IMC y composición corporal**: `calcIMC()`/`imcLabel()` calculan y clasifican el IMC; `renderMedidas()` también estima la masa magra (`peso*(1-grasa/100)`) cuando hay dato de % de grasa corporal.
 - **Contador de agua**: `toggleVaso()`/`resetAgua()` llevan el conteo de vasos de agua del día.
 - **Contadores diarios reseteables por fecha**: mismo patrón usado tres veces en el archivo — `agua` (por vaso), `postura.pausas` (por pausa activa) y `suplementos.tomado` (por suplemento) — todos son objetos `{ 'YYYY-MM-DD': ... }`, se "reinician" solos cada día porque la clave es la fecha de hoy, no requieren limpieza manual.
@@ -109,6 +106,28 @@ Adán reportó peso actual de 77 kg (antes 75 kg, el valor con el que se había 
 - La nota del suplemento de proteína whey en `SUPP_CATALOG` también se actualizó (183g→186g/día).
 - **Importante**: estos son solo los valores *por defecto* (contenido de referencia y el seed que se usa si `localStorage` está vacío). Si Adán ya tiene su propio peso/metas guardados en `misalud_v1` de una sesión anterior, este cambio **no los sobreescribe** — tiene que actualizar su peso a mano en `#s-metas` → "Mi Perfil" → "Peso actual (kg)" (o agregar un registro nuevo en "⚖️ Peso & Medidas") para que su app en el navegador reales refleje 77 kg.
 - `comida.html` también actualizó su banner de contexto con las mismas cifras (~3,115 kcal / ~186 g proteína) — ver [`readme_comida.md`](readme_comida.md).
+
+## Reestructuración — nutrición se mudó a Comida (2026-08-02)
+
+Pedido explícito de Adán: *"en cuidado de la salud, quita alimentacion plan semanal, registro diario, actividad ejercicio, seguimiento progreso, lo de rutina muscular... deberias poner o enriqueser la seccion de comida... quiero la interfaz mas visual y agrega cosas que falten"*. Se quitaron **5 secciones completas** de este archivo:
+
+| Sección quitada | Qué pasó con su contenido |
+|---|---|
+| 🍽️ Plan Semanal (`renderPlan()`) | Reemplazada por un **Plan Semanal nuevo y distinto** en `comida.html` — el viejo era retrospectivo (mostraba lo ya comido); el nuevo es hacia adelante (eliges qué vas a cocinar cada día). No se portó código, se rediseñó el concepto. |
+| 🥗 Registro Diario (`renderAlimentos()` + CRUD) | **Se movió tal cual** a `comida.html` → "📔 Registro Diario" — mismo CRUD, mismos campos, sigue escribiendo `misalud_v1.alimentos` (ver abajo). |
+| 💪 Ejercicio ligero (`renderEjercicio()`/`renderEjChart()` + CRUD) | **Eliminado sin reemplazo** — era redundante con `ejercicio.html` (Mi Rutina), que ya cubre cardio/fuerza de verdad. No se movió a ningún lado. |
+| 📈 Progreso (`renderProgreso()`, gráfica de calorías 14 días) | **Eliminado sin reemplazo** — dependía de `S.alimentos`/`S.ejercicios`, ya no administrados aquí. |
+| 🥩 Rutina Muscular (`renderRutina()` + `PLAN_ITEMS` + `registrarRutinaMeal()`) | **Se movió tal cual** a `comida.html` → "🥩 Plan Masa Muscular" — es contenido de nutrición (qué comer para ganar músculo), no de ejercicio, así que su lugar real siempre fue el recetario. |
+
+**Por qué Salud Digestiva y Suplementos se quedaron** (no los mencionó Adán explícitamente, y son distintos de lo que sí pidió quitar): Salud Digestiva es guía médica de referencia (síntomas/alertas), no un tracker de comida — aunque informa las recetas de Comida, no se solapa con ellas. Suplementos es una lista de pastillas/polvos con check-off diario — más cercano a un hábito de salud que a "comida".
+
+**Dashboard interno rediseñado** (`renderDashboard()`): antes mostraba calorías/macros/comidas/ejercicio de hoy (4 paneles de nutrición); ahora muestra 4 KPIs propios de Salud (peso actual con tendencia, agua hoy, pausas activas hoy, suplementos tomados hoy) + 2 paneles (próxima cita médica, bienestar del día: ánimo + dolor reciente) + un banner fijo arriba señalando que la nutrición vive en `comida.html`. Las funciones `getTodayAl()`/`getTodayEj()`/`sumCal()`/`sumProt()`/`sumCarbs()`/`sumGra()`/`macroBar()` se eliminaron por quedar sin uso.
+
+**`S.alimentos`/`S.ejercicios`/`S.plan` se quitaron del objeto `S` por defecto** de este archivo (ya no los declara ni los edita) — pero si `misalud_v1` real ya tenía `alimentos` (porque `comida.html` los escribió), `load()` los sigue trayendo a `S` vía spread y `save()` los sigue conservando intactos sin tocarlos. No hay pérdida de datos, solo Salud dejó de ser quien los administra.
+
+**Menú lateral simplificado**: de 13 secciones a 8 (`Dashboard, Peso & Medidas, Salud Digestiva, Exámenes Médicos, Postura, Salud Mental, Suplementos, Perfil & Metas`). El botón rápido del topbar cambió de "+ Registrar comida" a "+ Pesarme hoy" (`openMedidaModal()`).
+
+Probado con Playwright (Chromium headless): las 8 secciones cargan sin errores de consola, el nuevo Dashboard muestra datos reales, y no quedó ninguna referencia colgante a IDs/funciones eliminadas (verificado con grep sistemático antes de dar por terminado).
 
 ## Fix: Dashboard no mostraba el peso actual (2026-08-01)
 
@@ -129,7 +148,8 @@ Botón `.theme-toggle-btn` en el topbar. Mismo mecanismo que `ejercicio.html` (`
 ## Referencias cruzadas
 
 - Incrustada vía `<iframe>` en [`readme_cuidadopersonal.md`](readme_cuidadopersonal.md) (subtab "Cuidado de la Salud"). El shell no puede tocar el DOM/JS de este archivo (iframe cross-document), pero **sí comparte `localStorage`** porque ambos se sirven desde `file://` (ver la nota de origen compartido en `readme_cuidadopersonal.md`).
-- El **Dashboard** (`../Dashboard/dashboard.html`) lee `misalud_v1` directamente (`D.sal`): `renderHero()` usa `alimentos` (calorías de hoy en el panel de nutrición) y `medidas`/`agua`/`metas`; `renderQuickApps()` usa `alimentos` para el dato de calorías de hoy en la píldora de acceso rápido. Si cambias la forma de `S.alimentos`/`S.medidas`/`S.metas` aquí, revisa esas dos funciones en `Dashboard/dashboard.html`. **`S.examenes`/`S.chequeos`/`S.perfilMedico`/`S.postura`/`S.mental`/`S.suplementos` no los lee el Dashboard todavía** — si en el futuro se quiere una alerta ahí, hay que agregarla a mano en `loadAll()` y en la función de slide correspondiente.
+- El **Dashboard** (`../Dashboard/dashboard.html`) lee `misalud_v1` directamente (`D.sal`): `renderHero()` usa `alimentos` (calorías de hoy en el panel de nutrición) y `medidas`/`agua`/`metas`; `renderQuickApps()` usa `alimentos` para el dato de calorías de hoy en la píldora de acceso rápido. **Desde el 2026-08-02, `alimentos` ya no lo escribe este archivo — lo escribe `comida.html`** (mismo formato exacto, ver [`readme_comida.md`](readme_comida.md)); el Dashboard no tuvo que cambiar nada porque solo le importa la clave `misalud_v1`, no quién la escribe. Si cambias la forma de `S.alimentos`/`S.medidas`/`S.metas`, revisa `renderHero()`/`renderQuickApps()` en `Dashboard/dashboard.html` **y** `renderRegistro()`/`registrarReceta()`/`registrarRutinaMeal()` en `comida.html`. **`S.examenes`/`S.chequeos`/`S.perfilMedico`/`S.postura`/`S.mental`/`S.suplementos` no los lee el Dashboard todavía** — si en el futuro se quiere una alerta ahí, hay que agregarla a mano en `loadAll()` y en la función de slide correspondiente.
+- **`comida.html` escribe en la clave de este archivo** (`misalud_v1.alimentos`), no solo en la propia (`comida_v1`) — mismo patrón ya establecido desde el 2026-07-30, ahora con más superficie (antes solo `registrarReceta()`, ahora también el CRUD completo del Registro Diario y `registrarRutinaMeal()`). Ver [`readme_comida.md`](readme_comida.md) → "Registro Diario".
 - Mapa completo del proyecto: [`../README.md`](../README.md).
 
 ## Cómo usarlo

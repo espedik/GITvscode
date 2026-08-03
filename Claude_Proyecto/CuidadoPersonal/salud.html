@@ -191,16 +191,8 @@ tbody tr:hover td{background:rgba(0,232,122,.02)}
   <nav class="sb-nav">
     <div class="nav-label">Principal</div>
     <div class="nav-item active" onclick="nav('dashboard')"><span class="ico">📊</span>Dashboard</div>
-    <div class="nav-label">Alimentación</div>
-    <div class="nav-item" onclick="nav('plan')"><span class="ico">🍽️</span>Plan Semanal</div>
-    <div class="nav-item" onclick="nav('alimentos')"><span class="ico">🥗</span>Registro Diario</div>
-    <div class="nav-label">Actividad</div>
-    <div class="nav-item" onclick="nav('ejercicio')"><span class="ico">💪</span>Ejercicio</div>
     <div class="nav-label">Seguimiento</div>
     <div class="nav-item" onclick="nav('medidas')"><span class="ico">⚖️</span>Peso & Medidas</div>
-    <div class="nav-item" onclick="nav('progreso')"><span class="ico">📈</span>Progreso</div>
-    <div class="nav-label">Nutrición</div>
-    <div class="nav-item" onclick="nav('rutina')"><span class="ico">🥩</span>Rutina Muscular</div>
     <div class="nav-label">Salud</div>
     <div class="nav-item" onclick="nav('digestiva')"><span class="ico">🫁</span>Salud Digestiva</div>
     <div class="nav-item" onclick="nav('examenes')"><span class="ico">🩺</span>Exámenes Médicos</div>
@@ -225,7 +217,7 @@ tbody tr:hover td{background:rgba(0,232,122,.02)}
     </div>
     <div class="flex aic gap8">
       <span class="ts tm" id="dateLabel"></span>
-      <button class="btn btn-g btn-sm" onclick="openAlimentoModal()">+ Registrar comida</button>
+      <button class="btn btn-g btn-sm" onclick="openMedidaModal()">+ Pesarme hoy</button>
       <button class="theme-toggle-btn" id="theme-toggle-btn" onclick="toggleTheme()" title="Cambiar tema claro/oscuro" aria-label="Cambiar tema claro/oscuro">🌙</button>
     </div>
   </div>
@@ -234,60 +226,11 @@ tbody tr:hover td{background:rgba(0,232,122,.02)}
 
     <!-- DASHBOARD -->
     <section id="s-dashboard" class="section active">
-      <div id="d-resumen"></div>
+      <div id="d-nutri-banner"></div>
+      <div class="g4 mt16" id="d-kpis"></div>
       <div class="g2 mt16">
-        <div id="d-macros"></div>
-        <div id="d-agua"></div>
-      </div>
-      <div class="g2 mt16">
-        <div id="d-hoy"></div>
-        <div id="d-ejercicio-hoy"></div>
-      </div>
-    </section>
-
-    <!-- PLAN SEMANAL -->
-    <section id="s-plan" class="section">
-      <div class="sh"><h2>🍽️ Plan Semanal</h2></div>
-      <div id="plan-body"></div>
-    </section>
-
-    <!-- REGISTRO DIARIO -->
-    <section id="s-alimentos" class="section">
-      <div class="sh"><h2>🥗 Registro Diario</h2><button class="btn btn-g" onclick="openAlimentoModal()">+ Agregar</button></div>
-      <div class="card" style="margin-bottom:14px;padding:14px">
-        <div class="flex gap8" style="flex-wrap:wrap">
-          <input type="date" id="f-fecha-al" onchange="renderAlimentos()" style="width:auto">
-          <select id="f-comida-al" onchange="renderAlimentos()" style="width:auto;min-width:140px">
-            <option value="">Todas las comidas</option>
-            <option value="desayuno">🌅 Desayuno</option>
-            <option value="almuerzo">☀️ Almuerzo</option>
-            <option value="cena">🌙 Cena</option>
-            <option value="snack">🍎 Snack</option>
-          </select>
-          <button class="btn btn-o btn-sm" onclick="clearFiltrosAl()">✕ Limpiar</button>
-        </div>
-      </div>
-      <div id="al-resumen" class="flex gap8 mt16" style="flex-wrap:wrap;margin-bottom:14px"></div>
-      <div class="card"><div class="tw"><table>
-        <thead><tr><th>Hora/Comida</th><th>Alimento</th><th>Cantidad</th><th>Cal</th><th>Prot.</th><th>Carbs</th><th>Grasa</th><th></th></tr></thead>
-        <tbody id="al-body"></tbody>
-      </table></div>
-      <div id="al-empty" class="empty" style="display:none"><div class="ico">🥗</div><p>Sin registros. Agrega tu primera comida.</p></div>
-      </div>
-    </section>
-
-    <!-- EJERCICIO -->
-    <section id="s-ejercicio" class="section">
-      <div class="sh"><h2>💪 Ejercicio</h2><button class="btn btn-g" onclick="openEjercicioModal()">+ Registrar</button></div>
-      <div class="g3" id="ej-kpis" style="margin-bottom:18px"></div>
-      <div class="g2">
-        <div class="card"><div class="tw"><table>
-          <thead><tr><th>Fecha</th><th>Tipo</th><th>Ejercicio</th><th>Duración</th><th>Cal. quemadas</th><th></th></tr></thead>
-          <tbody id="ej-body"></tbody>
-        </table></div>
-        <div id="ej-empty" class="empty" style="display:none"><div class="ico">💪</div><p>Sin entrenamientos registrados.</p></div>
-        </div>
-        <div class="card"><div class="card-title">🔥 Calorías quemadas (últimas 2 semanas)</div><div class="chart-c"><canvas id="ch-ej"></canvas></div></div>
+        <div id="d-medico"></div>
+        <div id="d-bienestar"></div>
       </div>
     </section>
 
@@ -306,15 +249,6 @@ tbody tr:hover td{background:rgba(0,232,122,.02)}
       <div id="med-empty" class="empty" style="display:none"><div class="ico">⚖️</div><p>Sin medidas registradas.</p></div>
       </div>
     </section>
-
-    <!-- PROGRESO -->
-    <section id="s-progreso" class="section">
-      <div class="sh"><h2>📈 Progreso</h2></div>
-      <div id="prog-body"></div>
-    </section>
-
-    <!-- RUTINA MUSCULAR -->
-    <section id="s-rutina" class="section"></section>
 
     <!-- SALUD DIGESTIVA -->
     <section id="s-digestiva" class="section"></section>
@@ -339,70 +273,6 @@ tbody tr:hover td{background:rgba(0,232,122,.02)}
 
   </div>
 </main>
-
-<!-- MODAL ALIMENTO -->
-<div class="mo" id="mo-al">
-  <div class="modal">
-    <div class="modal-h"><div class="modal-title" id="mo-al-title">Registrar Comida</div><button class="modal-x" onclick="closeMo('mo-al')">✕</button></div>
-    <div class="fg"><label>Comida</label>
-      <select id="al-comida">
-        <option value="desayuno">🌅 Desayuno</option>
-        <option value="almuerzo">☀️ Almuerzo</option>
-        <option value="cena">🌙 Cena</option>
-        <option value="snack">🍎 Snack</option>
-      </select>
-    </div>
-    <div class="fg"><label>Alimento *</label><input id="al-nombre" placeholder="Ej. Avena con fruta, Pollo a la plancha..."></div>
-    <div class="fr">
-      <div class="fg"><label>Cantidad</label><input type="number" id="al-cantidad" placeholder="100" min="0"></div>
-      <div class="fg"><label>Unidad</label>
-        <select id="al-unidad"><option value="g">g</option><option value="ml">ml</option><option value="pza">pieza(s)</option><option value="taza">taza(s)</option><option value="cdta">cdta</option><option value="cda">cda</option></select>
-      </div>
-    </div>
-    <div class="fr">
-      <div class="fg"><label>🔥 Calorías *</label><input type="number" id="al-cal" placeholder="0" min="0"></div>
-      <div class="fg"><label>💜 Proteína (g)</label><input type="number" id="al-prot" placeholder="0" min="0" step="0.1"></div>
-    </div>
-    <div class="fr">
-      <div class="fg"><label>💙 Carbohidratos (g)</label><input type="number" id="al-carbs" placeholder="0" min="0" step="0.1"></div>
-      <div class="fg"><label>💛 Grasa (g)</label><input type="number" id="al-gra" placeholder="0" min="0" step="0.1"></div>
-    </div>
-    <div class="fg"><label>Fecha</label><input type="date" id="al-fecha"></div>
-    <div class="fg"><label>Notas</label><input id="al-notas" placeholder="Observaciones opcionales..."></div>
-    <div class="flex" style="justify-content:flex-end;gap:8px">
-      <button class="btn btn-o" onclick="closeMo('mo-al')">Cancelar</button>
-      <button class="btn btn-g" onclick="saveAlimento()">Guardar</button>
-    </div>
-  </div>
-</div>
-
-<!-- MODAL EJERCICIO -->
-<div class="mo" id="mo-ej">
-  <div class="modal">
-    <div class="modal-h"><div class="modal-title" id="mo-ej-title">Registrar Ejercicio</div><button class="modal-x" onclick="closeMo('mo-ej')">✕</button></div>
-    <div class="fg"><label>Tipo</label>
-      <select id="ej-tipo">
-        <option value="cardio">🏃 Cardio</option>
-        <option value="fuerza">🏋️ Fuerza / Pesas</option>
-        <option value="flexibilidad">🧘 Flexibilidad / Yoga</option>
-        <option value="hiit">⚡ HIIT</option>
-        <option value="deporte">⚽ Deporte</option>
-        <option value="otro">📋 Otro</option>
-      </select>
-    </div>
-    <div class="fg"><label>Nombre del ejercicio *</label><input id="ej-nombre" placeholder="Ej. Caminata, Press banca, Yoga matutino..."></div>
-    <div class="fr">
-      <div class="fg"><label>Duración (min) *</label><input type="number" id="ej-dur" placeholder="30" min="1"></div>
-      <div class="fg"><label>🔥 Cal. quemadas (est.)</label><input type="number" id="ej-cal" placeholder="200" min="0"></div>
-    </div>
-    <div class="fg"><label>Fecha</label><input type="date" id="ej-fecha"></div>
-    <div class="fg"><label>Notas</label><input id="ej-notas" placeholder="Series, reps, sensaciones..."></div>
-    <div class="flex" style="justify-content:flex-end;gap:8px">
-      <button class="btn btn-o" onclick="closeMo('mo-ej')">Cancelar</button>
-      <button class="btn btn-g" onclick="saveEjercicio()">Guardar</button>
-    </div>
-  </div>
-</div>
 
 <!-- MODAL MEDIDA -->
 <div class="mo" id="mo-med">
@@ -589,11 +459,8 @@ const KEY = 'misalud_v1';
 let S = {
   perfil: { nombre:'', peso:0, altura:0, edad:0, sexo:'M', actividad:'moderado' },
   metas: { caloriasD:2000, proteina:150, carbs:200, grasa:65, agua:8, pesoObj:0, fechaObj:'' },
-  alimentos: [],
-  ejercicios: [],
   medidas: [],
   agua: {},
-  plan: {},
   examenes: [],
   chequeos: [],
   perfilMedico: { tipoSangre:'', alergias:'', medicamentos:'', condiciones:'', cirugias:'', antecedentesFamiliares:'', contactoEmergencia:'' },
@@ -602,10 +469,7 @@ let S = {
   suplementos: { lista: [], tomado: {} }
 };
 let editId=null, confCb=null;
-let chEj=null, chPeso=null, chCal=null, chMac=null, chExam=null, chComp=null, chMental=null;
-
-const COMIDAS = {desayuno:'🌅 Desayuno',almuerzo:'☀️ Almuerzo',cena:'🌙 Cena',snack:'🍎 Snack'};
-const TIPO_EJ = {cardio:'🏃 Cardio',fuerza:'🏋️ Fuerza',flexibilidad:'🧘 Flexibilidad',hiit:'⚡ HIIT',deporte:'⚽ Deporte',otro:'📋 Otro'};
+let chPeso=null, chExam=null, chComp=null, chMental=null;
 
 // ─── EXÁMENES MÉDICOS — catálogo de referencia ───────────────────────────────
 // Rangos generales para adulto — orientativos, no diagnósticos. Cada registro guarda
@@ -691,9 +555,9 @@ document.querySelectorAll('.mo').forEach(m=>m.addEventListener('click',e=>{ if(e
 document.getElementById('conf').addEventListener('click',e=>{ if(e.target===document.getElementById('conf')) closeConf(); });
 
 // ─── NAVIGATION ──────────────────────────────────────────────────────────────
-const SECS=['dashboard','plan','alimentos','ejercicio','medidas','progreso','rutina','digestiva','examenes','postura','mental','suplementos','metas'];
-const STITLE={dashboard:'📊 Dashboard',plan:'🍽️ Plan Semanal',alimentos:'🥗 Registro Diario',ejercicio:'💪 Ejercicio',medidas:'⚖️ Peso & Medidas',progreso:'📈 Progreso',rutina:'🥩 Rutina Muscular',digestiva:'🫁 Salud Digestiva',examenes:'🩺 Exámenes Médicos',postura:'🧍 Postura',mental:'🧠 Salud Mental',suplementos:'💊 Suplementos',metas:'🎯 Perfil & Metas'};
-const RENDERS={dashboard:renderDashboard,plan:renderPlan,alimentos:renderAlimentos,ejercicio:renderEjercicio,medidas:renderMedidas,progreso:renderProgreso,rutina:renderRutina,digestiva:renderDigestiva,examenes:renderExamenes,postura:renderPostura,mental:renderMental,suplementos:renderSuplementos,metas:renderMetas};
+const SECS=['dashboard','medidas','digestiva','examenes','postura','mental','suplementos','metas'];
+const STITLE={dashboard:'📊 Dashboard',medidas:'⚖️ Peso & Medidas',digestiva:'🫁 Salud Digestiva',examenes:'🩺 Exámenes Médicos',postura:'🧍 Postura',mental:'🧠 Salud Mental',suplementos:'💊 Suplementos',metas:'🎯 Perfil & Metas'};
+const RENDERS={dashboard:renderDashboard,medidas:renderMedidas,digestiva:renderDigestiva,examenes:renderExamenes,postura:renderPostura,mental:renderMental,suplementos:renderSuplementos,metas:renderMetas};
 
 function nav(s) {
   SECS.forEach(x=>document.getElementById('s-'+x).classList.toggle('active',x===s));
@@ -703,23 +567,7 @@ function nav(s) {
 }
 
 // ─── HELPERS ─────────────────────────────────────────────────────────────────
-function getTodayAl() { return S.alimentos.filter(a=>a.fecha===today()); }
-function getTodayEj() { return S.ejercicios.filter(e=>e.fecha===today()); }
-function sumCal(list) { return list.reduce((s,a)=>s+(a.cal||0),0); }
-function sumProt(list) { return list.reduce((s,a)=>s+(a.prot||0),0); }
-function sumCarbs(list) { return list.reduce((s,a)=>s+(a.carbs||0),0); }
-function sumGra(list) { return list.reduce((s,a)=>s+(a.gra||0),0); }
 function getVasosHoy() { return S.agua[today()]||0; }
-function macroBar(val,meta,col,label) {
-  const pct=meta>0?Math.min(100,(val/meta)*100):0;
-  return `<div style="margin-bottom:10px">
-    <div class="flex jb" style="margin-bottom:4px">
-      <span style="font-size:11px;font-weight:600;color:${col}">${label}</span>
-      <span style="font-size:11px;color:var(--text2)">${fmt(val)}g <span style="color:var(--text3)">/ ${meta}g</span></span>
-    </div>
-    <div class="pbar"><div class="pfill" style="width:${pct}%;background:${col}"></div></div>
-  </div>`;
-}
 function calcIMC(peso,altura) { return altura>0?+(peso/((altura/100)**2)).toFixed(1):0; }
 function imcLabel(imc) {
   if(imc<18.5) return {l:'Bajo peso',c:'var(--b)'};
@@ -730,119 +578,82 @@ function imcLabel(imc) {
 
 // ─── DASHBOARD ───────────────────────────────────────────────────────────────
 function renderDashboard() {
-  const alHoy = getTodayAl();
-  const ejHoy = getTodayEj();
-  const calCon = sumCal(alHoy);
-  const calMeta = S.metas.caloriasD||2000;
-  const calQ = ejHoy.reduce((s,e)=>s+(e.cal||0),0);
-  const calNet = calCon - calQ;
-  const calPct = Math.min(100,(calCon/calMeta)*100);
   const vasosHoy = getVasosHoy();
   const vasosMeta = S.metas.agua||8;
+  const pHoy = pausasHoy();
+  const suppHoyMap = S.suplementos.tomado[today()]||{};
+  const suppTotal = S.suplementos.lista.length;
+  const suppHechos = Object.values(suppHoyMap).filter(Boolean).length;
+  const medidasOrd = [...S.medidas].sort((a,b)=>b.fecha.localeCompare(a.fecha));
+  const pesoActual = medidasOrd[0]||null, pesoAnterior = medidasOrd[1]||null;
+  const pesoDiff = pesoActual&&pesoAnterior?+(pesoActual.peso-pesoAnterior.peso).toFixed(1):null;
 
-  // Resumen de calorías
-  document.getElementById('d-resumen').innerHTML=`
-    <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px">
-      <div class="card" style="border-left:4px solid var(--o)">
-        <div class="card-title" style="color:var(--o)">🔥 Calorías consumidas</div>
-        <div class="card-val" style="color:var(--o)">${fmt(calCon)}</div>
-        <div class="card-sub">meta: ${fmt(calMeta)} kcal</div>
-        <div class="pbar" style="margin-top:10px"><div class="pfill" style="width:${calPct}%;background:var(--o)"></div></div>
-        <div style="font-size:10px;color:var(--text3);margin-top:4px">${calPct.toFixed(0)}% de la meta diaria</div>
+  // Banner — la nutrición (registro diario, plan semanal, plan de masa muscular) vive en Mi Comida
+  document.getElementById('d-nutri-banner').innerHTML=`
+    <div class="card" style="border-color:rgba(255,217,61,.25);background:rgba(255,217,61,.05);display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+      <span style="font-size:26px">🍳</span>
+      <div style="flex:1;min-width:240px">
+        <div style="font-size:13px;font-weight:800;color:var(--w)">Tu registro de comida, plan semanal y plan de masa muscular viven en Mi Comida</div>
+        <div class="ts tm" style="margin-top:2px">Aquí en Salud te quedas con lo que es de cuerpo y bienestar: peso, exámenes, postura, ánimo y suplementos.</div>
       </div>
-      <div class="card" style="border-left:4px solid var(--g)">
-        <div class="card-title" style="color:var(--g)">⚡ Quemadas (ejercicio)</div>
-        <div class="card-val" style="color:var(--g)">${fmt(calQ)}</div>
-        <div class="card-sub">${ejHoy.length} sesión(es) hoy</div>
-      </div>
-      <div class="card" style="border-left:4px solid ${calNet>calMeta?'var(--r)':'var(--b)'}">
-        <div class="card-title">⚖️ Calorías netas</div>
-        <div class="card-val" style="color:${calNet>calMeta?'var(--r)':'var(--b)'}">${fmt(calNet)}</div>
-        <div class="card-sub">${calNet<=calMeta?'✅ Dentro de meta':'⚠️ Sobre la meta'}</div>
-      </div>
-      <div class="card" style="border-left:4px solid var(--p)">
-        <div class="card-title" style="color:var(--p)">💜 Proteína hoy</div>
-        <div class="card-val" style="color:var(--p)">${fmt(sumProt(alHoy))}g</div>
-        <div class="card-sub">meta: ${S.metas.proteina||150}g</div>
-      </div>
+      <a href="comida.html" class="btn btn-o btn-sm" style="text-decoration:none">Ir a Mi Comida →</a>
     </div>`;
 
-  // Macros
-  document.getElementById('d-macros').innerHTML=`
-    <div class="card">
-      <div class="card-title" style="margin-bottom:14px">📊 Macros del día</div>
-      ${macroBar(sumProt(alHoy),S.metas.proteina||150,'var(--p)','💜 Proteína')}
-      ${macroBar(sumCarbs(alHoy),S.metas.carbs||200,'var(--b)','💙 Carbohidratos')}
-      ${macroBar(sumGra(alHoy),S.metas.grasa||65,'var(--w)','💛 Grasas')}
-      <div style="margin-top:12px;padding-top:12px;border-top:1px solid rgba(var(--ov),.06)">
-        <div class="flex jb">
-          <span class="ts tm">Calorías de macros</span>
-          <span class="ts" style="color:var(--text2)">${fmt(sumProt(alHoy)*4+sumCarbs(alHoy)*4+sumGra(alHoy)*9)} kcal</span>
-        </div>
-      </div>
-    </div>`;
-
-  // Agua
-  const vasosArr = Array.from({length:vasosMeta},(_,i)=>i<vasosHoy);
-  document.getElementById('d-agua').innerHTML=`
-    <div class="card">
-      <div class="flex jb aic" style="margin-bottom:14px">
-        <div class="card-title" style="margin:0">💧 Agua (${vasosHoy}/${vasosMeta} vasos)</div>
-        <button class="btn btn-o btn-sm" onclick="resetAgua()">↺ Reset</button>
-      </div>
-      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px">
-        ${vasosArr.map((f,i)=>`
-        <div class="glass ${f?'filled':''}" onclick="toggleVaso(${i})" title="${f?'Quitar vaso':'Marcar vaso'}">
-          <span style="font-size:16px;margin-bottom:4px">💧</span>
-        </div>`).join('')}
-      </div>
+  // KPIs — solo lo que Salud sigue administrando de verdad
+  document.getElementById('d-kpis').innerHTML=`
+    <div class="card" style="border-left:4px solid var(--g)">
+      <div class="card-title" style="color:var(--g)">⚖️ Peso actual</div>
+      <div class="card-val" style="color:var(--g)">${pesoActual?pesoActual.peso+' kg':'—'}</div>
+      <div class="card-sub">${pesoDiff!==null?`${pesoDiff>0?'↑ +':'↓ '}${Math.abs(pesoDiff)} kg vs anterior`:(pesoActual?'Sin registro anterior':'Sin registros aún')}</div>
+    </div>
+    <div class="card" style="border-left:4px solid #06b6d4">
+      <div class="card-title" style="color:#06b6d4">💧 Agua hoy</div>
+      <div class="card-val" style="color:#06b6d4">${vasosHoy}/${vasosMeta}</div>
       <div class="pbar"><div class="pfill" style="width:${Math.min(100,vasosHoy/vasosMeta*100)}%;background:#06b6d4"></div></div>
-      <div style="display:flex;justify-content:space-between;margin-top:6px">
-        <span class="ts tm">${vasosHoy} vasos · ${vasosHoy*250} ml</span>
-        <span class="ts tm">meta: ${vasosMeta*250} ml</span>
-      </div>
+    </div>
+    <div class="card" style="border-left:4px solid ${pHoy>=META_PAUSAS?'var(--g)':'var(--o)'}">
+      <div class="card-title" style="color:${pHoy>=META_PAUSAS?'var(--g)':'var(--o)'}">🧍 Pausas activas</div>
+      <div class="card-val" style="color:${pHoy>=META_PAUSAS?'var(--g)':'var(--o)'}">${pHoy}/${META_PAUSAS}</div>
+      <div class="card-sub">hoy · <a href="#" onclick="nav('postura');return false" style="color:inherit">ir a Postura</a></div>
+    </div>
+    <div class="card" style="border-left:4px solid var(--p)">
+      <div class="card-title" style="color:var(--p)">💊 Suplementos</div>
+      <div class="card-val" style="color:var(--p)">${suppTotal?`${suppHechos}/${suppTotal}`:'—'}</div>
+      <div class="card-sub">${suppTotal?'tomados hoy':'Sin lista configurada'}</div>
     </div>`;
 
-  // Comidas de hoy
-  const porComida = {desayuno:[],almuerzo:[],cena:[],snack:[]};
-  alHoy.forEach(a=>{ if(porComida[a.comida]) porComida[a.comida].push(a); });
-  document.getElementById('d-hoy').innerHTML=`
+  // Próxima cita médica (misma lógica que el resumen de Exámenes)
+  const proximas=S.chequeos.filter(c=>c.proxima&&c.proxima>=today()).sort((a,b)=>a.proxima.localeCompare(b.proxima));
+  document.getElementById('d-medico').innerHTML=`
     <div class="card">
-      <div class="card-title" style="margin-bottom:14px">🍽️ Comidas de hoy</div>
-      ${Object.entries(porComida).map(([k,items])=>`
-      <div style="margin-bottom:12px">
-        <div style="font-size:11px;font-weight:700;color:var(--g);margin-bottom:5px">${COMIDAS[k]}</div>
-        ${items.length?items.map(a=>`
-        <div class="meal-item">
-          <span style="color:var(--text)">${a.nombre}</span>
-          <span class="ts" style="color:var(--o)">${fmt(a.cal)} kcal</span>
-        </div>`).join(''):`<div style="font-size:11px;color:var(--text3);padding:4px 0">Sin registros</div>`}
-      </div>`).join('')}
-      <div style="border-top:1px solid rgba(var(--ov),.06);padding-top:10px;display:flex;justify-content:space-between">
-        <span class="ts fw7">Total</span>
-        <span class="ts fw7" style="color:var(--o)">${fmt(calCon)} kcal</span>
+      <div class="flex jb aic" style="margin-bottom:12px">
+        <div class="card-title" style="margin:0">🩺 Próxima cita médica</div>
+        <button class="btn btn-o btn-sm" onclick="nav('examenes')">Ver todo</button>
       </div>
+      ${proximas.length?`
+      <div class="card-val" style="font-size:20px">${fmtD(proximas[0].proxima)}</div>
+      <div class="card-sub">${CHEQ_TIPOS[proximas[0].tipo]||proximas[0].tipo}</div>`:`
+      <div class="empty" style="padding:16px"><div class="ico">🩺</div><p>Sin citas agendadas.</p></div>`}
     </div>`;
 
-  // Ejercicio de hoy
-  document.getElementById('d-ejercicio-hoy').innerHTML=`
+  // Bienestar: ánimo de hoy + dolor/molestia reciente
+  const hoyAnimo=(S.mental.registros||[]).find(r=>r.fecha===today());
+  const doloresRecientes=[...(S.postura.dolores||[])].sort((a,b)=>b.fecha.localeCompare(a.fecha)).slice(0,10);
+  const dolorProm=doloresRecientes.length?(doloresRecientes.reduce((s,d)=>s+d.intensidad,0)/doloresRecientes.length).toFixed(1):null;
+  document.getElementById('d-bienestar').innerHTML=`
     <div class="card">
-      <div class="flex jb aic" style="margin-bottom:14px">
-        <div class="card-title" style="margin:0">💪 Ejercicio de hoy</div>
-        <button class="btn btn-g btn-sm" onclick="openEjercicioModal()">+ Agregar</button>
+      <div class="flex jb aic" style="margin-bottom:12px">
+        <div class="card-title" style="margin:0">🧠 Bienestar</div>
+        <button class="btn btn-o btn-sm" onclick="nav('mental')">Ver todo</button>
       </div>
-      ${ejHoy.length?ejHoy.map(e=>`
-      <div style="display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid rgba(var(--ov),.06)">
-        <div>
-          <div style="font-size:13px;font-weight:600">${e.nombre}</div>
-          <div class="ts tm">${TIPO_EJ[e.tipo]||e.tipo} · ${e.duracion} min</div>
-        </div>
-        <span style="font-size:13px;font-weight:700;color:var(--g)">${e.cal?`-${fmt(e.cal)} kcal`:''}</span>
-      </div>`).join(''):`
-      <div class="empty" style="padding:20px">
-        <div class="ico">🏃</div>
-        <p>Sin ejercicio registrado hoy.</p>
-      </div>`}
+      <div class="flex jb" style="padding:8px 0;border-bottom:1px solid rgba(var(--ov),.06)">
+        <span class="ts tm">Ánimo de hoy</span>
+        <span class="ts fw7">${hoyAnimo?ANIMO_LABELS[hoyAnimo.animo]:'Sin registrar'}</span>
+      </div>
+      <div class="flex jb" style="padding:8px 0">
+        <span class="ts tm">Dolor/molestia (prom. reciente)</span>
+        <span class="ts fw7" style="${dolorProm&&dolorProm>=3?'color:var(--r)':''}">${dolorProm?dolorProm+'/5':'Sin registros'}</span>
+      </div>
     </div>`;
 }
 
@@ -853,182 +664,6 @@ function toggleVaso(i) {
   save(); renderDashboard();
 }
 function resetAgua() { S.agua[today()]=0; save(); renderDashboard(); }
-
-// ─── ALIMENTOS ───────────────────────────────────────────────────────────────
-function clearFiltrosAl() {
-  document.getElementById('f-fecha-al').value = today();
-  document.getElementById('f-comida-al').value = '';
-  renderAlimentos();
-}
-
-function renderAlimentos() {
-  const fecha = document.getElementById('f-fecha-al')?.value || today();
-  const comida = document.getElementById('f-comida-al')?.value || '';
-  let list = S.alimentos.filter(a=>a.fecha===fecha);
-  if(comida) list = list.filter(a=>a.comida===comida);
-  list.sort((a,b)=>a.comida.localeCompare(b.comida));
-
-  const tbody = document.getElementById('al-body');
-  const empty = document.getElementById('al-empty');
-  if(!list.length){tbody.innerHTML='';empty.style.display='';document.getElementById('al-resumen').innerHTML='';return;}
-  empty.style.display='none';
-
-  const totCal=sumCal(list), totProt=sumProt(list), totCarbs=sumCarbs(list), totGra=sumGra(list);
-  document.getElementById('al-resumen').innerHTML=`
-    <span class="badge b-o">🔥 ${fmt(totCal)} kcal</span>
-    <span class="badge" style="background:var(--p-l);color:var(--p);border:1px solid rgba(176,110,255,.25)">💜 ${fmt(totProt)}g prot</span>
-    <span class="badge b-n">💙 ${fmt(totCarbs)}g carbs</span>
-    <span class="badge" style="background:var(--w-l);color:var(--w);border:1px solid rgba(255,217,61,.25)">💛 ${fmt(totGra)}g grasa</span>`;
-
-  tbody.innerHTML=list.map(a=>`<tr>
-    <td><span class="badge b-n">${COMIDAS[a.comida]||a.comida}</span></td>
-    <td style="font-weight:600">${a.nombre}${a.notas?`<div class="ts tm">${a.notas}</div>`:''}</td>
-    <td class="ts tm">${a.cantidad||''} ${a.unidad||''}</td>
-    <td style="font-weight:700;color:var(--o)">${fmt(a.cal)}</td>
-    <td style="color:var(--p)">${a.prot?fmt(a.prot)+'g':'—'}</td>
-    <td style="color:var(--b)">${a.carbs?fmt(a.carbs)+'g':'—'}</td>
-    <td style="color:var(--w)">${a.gra?fmt(a.gra)+'g':'—'}</td>
-    <td>
-      <button class="btn btn-o btn-sm btn-ico" onclick="openAlimentoModal('${a.id}')">✏️</button>
-      <button class="btn btn-o btn-sm btn-ico" onclick="askDel(()=>delAlimento('${a.id}'))">🗑️</button>
-    </td>
-  </tr>`).join('');
-}
-
-function openAlimentoModal(id=null) {
-  editId=id;
-  const a=id?S.alimentos.find(x=>x.id===id):null;
-  document.getElementById('mo-al-title').textContent=id?'Editar comida':'Registrar Comida';
-  document.getElementById('al-comida').value=a?.comida||'desayuno';
-  document.getElementById('al-nombre').value=a?.nombre||'';
-  document.getElementById('al-cantidad').value=a?.cantidad||'';
-  document.getElementById('al-unidad').value=a?.unidad||'g';
-  document.getElementById('al-cal').value=a?.cal||'';
-  document.getElementById('al-prot').value=a?.prot||'';
-  document.getElementById('al-carbs').value=a?.carbs||'';
-  document.getElementById('al-gra').value=a?.gra||'';
-  document.getElementById('al-fecha').value=a?.fecha||today();
-  document.getElementById('al-notas').value=a?.notas||'';
-  document.getElementById('mo-al').classList.add('open');
-  setTimeout(()=>document.getElementById('al-nombre').focus(),100);
-}
-
-function saveAlimento() {
-  const nombre=document.getElementById('al-nombre').value.trim();
-  const cal=parseFloat(document.getElementById('al-cal').value)||0;
-  if(!nombre||!cal) return alert('Ingresa el nombre y las calorías.');
-  const data={
-    nombre, comida:document.getElementById('al-comida').value,
-    cantidad:document.getElementById('al-cantidad').value,
-    unidad:document.getElementById('al-unidad').value,
-    cal, prot:parseFloat(document.getElementById('al-prot').value)||0,
-    carbs:parseFloat(document.getElementById('al-carbs').value)||0,
-    gra:parseFloat(document.getElementById('al-gra').value)||0,
-    fecha:document.getElementById('al-fecha').value||today(),
-    notas:document.getElementById('al-notas').value.trim()
-  };
-  if(editId){const i=S.alimentos.findIndex(x=>x.id===editId);if(i>=0)S.alimentos[i]={...S.alimentos[i],...data};}
-  else S.alimentos.push({id:uid(),...data});
-  save(); closeMo('mo-al'); renderAlimentos(); toast('✅ Comida guardada');
-  if(document.getElementById('s-dashboard').classList.contains('active')) renderDashboard();
-}
-
-function delAlimento(id) {
-  S.alimentos=S.alimentos.filter(a=>a.id!==id);
-  save(); renderAlimentos(); toast('🗑️ Eliminado');
-  if(document.getElementById('s-dashboard').classList.contains('active')) renderDashboard();
-}
-
-// ─── EJERCICIO ───────────────────────────────────────────────────────────────
-function renderEjercicio() {
-  const list=[...S.ejercicios].sort((a,b)=>b.fecha.localeCompare(a.fecha));
-  const tbody=document.getElementById('ej-body');
-  const empty=document.getElementById('ej-empty');
-
-  const semana=Array.from({length:7},(_,i)=>{
-    const d=new Date(); d.setDate(d.getDate()-i);
-    return d.toISOString().slice(0,10);
-  });
-  const calSem=semana.reduce((s,d)=>s+S.ejercicios.filter(e=>e.fecha===d).reduce((ss,e)=>ss+(e.cal||0),0),0);
-  const durSem=semana.reduce((s,d)=>s+S.ejercicios.filter(e=>e.fecha===d).reduce((ss,e)=>ss+(e.duracion||0),0),0);
-  const sesionesSem=semana.reduce((s,d)=>s+S.ejercicios.filter(e=>e.fecha===d).length,0);
-
-  document.getElementById('ej-kpis').innerHTML=`
-    <div class="card" style="border-left:4px solid var(--g)">
-      <div class="card-title" style="color:var(--g)">🔥 Calorías quemadas (7d)</div>
-      <div class="card-val" style="color:var(--g)">${fmt(calSem)}</div>
-      <div class="card-sub">últimos 7 días</div>
-    </div>
-    <div class="card" style="border-left:4px solid var(--o)">
-      <div class="card-title" style="color:var(--o)">⏱️ Tiempo activo (7d)</div>
-      <div class="card-val" style="color:var(--o)">${durSem} min</div>
-      <div class="card-sub">${(durSem/60).toFixed(1)} horas</div>
-    </div>
-    <div class="card" style="border-left:4px solid var(--b)">
-      <div class="card-title" style="color:var(--b)">📅 Sesiones (7d)</div>
-      <div class="card-val" style="color:var(--b)">${sesionesSem}</div>
-      <div class="card-sub">entrenamientos</div>
-    </div>`;
-
-  if(!list.length){tbody.innerHTML='';empty.style.display='';renderEjChart([],[]);return;}
-  empty.style.display='none';
-  tbody.innerHTML=list.slice(0,30).map(e=>`<tr>
-    <td style="white-space:nowrap">${fmtD(e.fecha)}</td>
-    <td><span class="badge b-n">${TIPO_EJ[e.tipo]||e.tipo}</span></td>
-    <td style="font-weight:600">${e.nombre}${e.notas?`<div class="ts tm">${e.notas}</div>`:''}</td>
-    <td>${e.duracion} min</td>
-    <td style="font-weight:700;color:var(--g)">${e.cal?fmt(e.cal)+' kcal':'—'}</td>
-    <td>
-      <button class="btn btn-o btn-sm btn-ico" onclick="openEjercicioModal('${e.id}')">✏️</button>
-      <button class="btn btn-o btn-sm btn-ico" onclick="askDel(()=>delEjercicio('${e.id}'))">🗑️</button>
-    </td>
-  </tr>`).join('');
-
-  const labels=semana.reverse().map(d=>{const[,m,day]=d.split('-');return`${parseInt(day)}/${parseInt(m)}`;});
-  const data=semana.map(d=>S.ejercicios.filter(e=>e.fecha===d).reduce((s,e)=>s+(e.cal||0),0));
-  renderEjChart(labels,data);
-}
-
-function renderEjChart(labels,data) {
-  chEj=killChart(chEj);
-  const ctx=document.getElementById('ch-ej'); if(!ctx) return;
-  chEj=new Chart(ctx,{type:'bar',data:{labels,datasets:[{label:'Cal. quemadas',data,backgroundColor:'rgba(0,232,122,.5)',borderColor:cssVar('--g'),borderRadius:5,borderWidth:1.5}]},
-    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
-      scales:{y:{grid:{color:'rgba('+cssVar('--ov')+',.06)'},ticks:{color:cssVar('--text3'),callback:v=>v+' kcal'}},x:{grid:{display:false},ticks:{color:cssVar('--text3')}}}}});
-}
-
-function openEjercicioModal(id=null) {
-  editId=id;
-  const e=id?S.ejercicios.find(x=>x.id===id):null;
-  document.getElementById('mo-ej-title').textContent=id?'Editar ejercicio':'Registrar Ejercicio';
-  document.getElementById('ej-tipo').value=e?.tipo||'cardio';
-  document.getElementById('ej-nombre').value=e?.nombre||'';
-  document.getElementById('ej-dur').value=e?.duracion||'';
-  document.getElementById('ej-cal').value=e?.cal||'';
-  document.getElementById('ej-fecha').value=e?.fecha||today();
-  document.getElementById('ej-notas').value=e?.notas||'';
-  document.getElementById('mo-ej').classList.add('open');
-  setTimeout(()=>document.getElementById('ej-nombre').focus(),100);
-}
-
-function saveEjercicio() {
-  const nombre=document.getElementById('ej-nombre').value.trim();
-  const duracion=parseFloat(document.getElementById('ej-dur').value)||0;
-  if(!nombre||!duracion) return alert('Ingresa el nombre y la duración.');
-  const data={nombre,tipo:document.getElementById('ej-tipo').value,duracion,
-    cal:parseFloat(document.getElementById('ej-cal').value)||0,
-    fecha:document.getElementById('ej-fecha').value||today(),
-    notas:document.getElementById('ej-notas').value.trim()};
-  if(editId){const i=S.ejercicios.findIndex(x=>x.id===editId);if(i>=0)S.ejercicios[i]={...S.ejercicios[i],...data};}
-  else S.ejercicios.push({id:uid(),...data});
-  save(); closeMo('mo-ej'); renderEjercicio(); toast('✅ Ejercicio guardado');
-  if(document.getElementById('s-dashboard').classList.contains('active')) renderDashboard();
-}
-
-function delEjercicio(id) {
-  S.ejercicios=S.ejercicios.filter(e=>e.id!==id);
-  save(); renderEjercicio(); toast('🗑️ Eliminado');
-}
 
 // ─── MEDIDAS ─────────────────────────────────────────────────────────────────
 function renderMedidas() {
@@ -1152,110 +787,6 @@ function saveMedida() {
 
 function delMedida(id) { S.medidas=S.medidas.filter(m=>m.id!==id); save(); renderMedidas(); toast('🗑️ Eliminado'); }
 
-// ─── PLAN SEMANAL ─────────────────────────────────────────────────────────────
-function renderPlan() {
-  const MN=['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
-  const dias=Array.from({length:7},(_,i)=>{
-    const d=new Date(); d.setDate(d.getDate()-d.getDay()+i);
-    return d.toISOString().slice(0,10);
-  });
-  const todayStr=today();
-
-  document.getElementById('plan-body').innerHTML=`
-    <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:10px">
-      ${dias.map(d=>{
-        const esDia=d===todayStr;
-        const [,m,day]=d.split('-');
-        const diaN=new Date(d).getDay();
-        const alDia=S.alimentos.filter(a=>a.fecha===d);
-        const calDia=sumCal(alDia);
-        const metaCal=S.metas.caloriasD||2000;
-        const pct=Math.min(100,(calDia/metaCal)*100);
-        const colPct=pct>100?'var(--r)':pct>75?'var(--w)':'var(--g)';
-        return `<div class="card" style="padding:12px;${esDia?'border-color:var(--g);background:rgba(0,232,122,.04)':''}">
-          <div style="font-size:11px;font-weight:800;color:${esDia?'var(--g)':'var(--text2)'};text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px">${MN[diaN]}</div>
-          <div style="font-size:10px;color:var(--text3);margin-bottom:10px">${parseInt(day)}/${parseInt(m)}</div>
-          ${Object.keys(COMIDAS).map(c=>{
-            const items=alDia.filter(a=>a.comida===c);
-            return `<div style="margin-bottom:8px">
-              <div style="font-size:9px;font-weight:700;color:var(--text3);text-transform:uppercase;margin-bottom:3px">${COMIDAS[c].split(' ')[0]}</div>
-              ${items.length?items.map(a=>`<div style="font-size:10px;color:var(--text);margin-bottom:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="${a.nombre}">${a.nombre}</div>`).join(''):`<div style="font-size:10px;color:var(--text3)">—</div>`}
-            </div>`;
-          }).join('')}
-          <div style="margin-top:8px;padding-top:8px;border-top:1px solid rgba(var(--ov),.06)">
-            <div class="pbar" style="height:4px"><div class="pfill" style="width:${pct}%;background:${colPct}"></div></div>
-            <div style="font-size:10px;color:${colPct};margin-top:3px;font-weight:700">${fmt(calDia)} kcal</div>
-          </div>
-        </div>`;
-      }).join('')}
-    </div>
-    <div class="card mt16" style="padding:14px;border-color:rgba(0,232,122,.2);background:rgba(0,232,122,.02)">
-      <div style="font-size:11px;color:var(--text2);line-height:1.8">
-        💡 <strong style="color:var(--text)">Tip:</strong> Registra tus comidas en
-        <strong style="color:var(--g)">Registro Diario</strong> para que aparezcan automáticamente en el plan semanal.
-        El plan muestra lo que realmente comiste cada día.
-      </div>
-    </div>`;
-}
-
-// ─── PROGRESO ────────────────────────────────────────────────────────────────
-function renderProgreso() {
-  const dias14=Array.from({length:14},(_,i)=>{
-    const d=new Date(); d.setDate(d.getDate()-13+i);
-    return d.toISOString().slice(0,10);
-  });
-  const calPorDia=dias14.map(d=>sumCal(S.alimentos.filter(a=>a.fecha===d)));
-  const labels=dias14.map(d=>{ const[,m,day]=d.split('-'); return `${parseInt(day)}/${parseInt(m)}`; });
-  const metaCal=S.metas.caloriasD||2000;
-
-  document.getElementById('prog-body').innerHTML=`
-    <div class="g2" style="margin-bottom:16px">
-      <div class="card">
-        <div class="card-title" style="margin-bottom:12px">🔥 Calorías últimos 14 días</div>
-        <div class="chart-c" style="height:200px"><canvas id="ch-cal14"></canvas></div>
-      </div>
-      <div class="card">
-        <div class="card-title" style="margin-bottom:12px">📊 Promedios (14 días)</div>
-        ${(()=>{
-          const diasConDatos=dias14.filter(d=>S.alimentos.some(a=>a.fecha===d));
-          if(!diasConDatos.length) return '<div class="empty" style="padding:20px"><p>Sin datos suficientes.</p></div>';
-          const totAl=S.alimentos.filter(a=>dias14.includes(a.fecha));
-          const avgCal=diasConDatos.length>0?sumCal(totAl)/diasConDatos.length:0;
-          const avgProt=diasConDatos.length>0?sumProt(totAl)/diasConDatos.length:0;
-          const avgCarbs=diasConDatos.length>0?sumCarbs(totAl)/diasConDatos.length:0;
-          const avgGra=diasConDatos.length>0?sumGra(totAl)/diasConDatos.length:0;
-          const diasEj=dias14.filter(d=>S.ejercicios.some(e=>e.fecha===d));
-          const avgCalQ=S.ejercicios.filter(e=>dias14.includes(e.fecha)).reduce((s,e)=>s+(e.cal||0),0)/(diasConDatos.length||1);
-          return `
-            <div style="display:flex;flex-direction:column;gap:12px">
-              ${[
-                {l:'🔥 Calorías/día',v:fmt(avgCal)+' kcal',meta:metaCal+'kcal meta',c:'var(--o)'},
-                {l:'💜 Proteína/día',v:fmt(avgProt)+'g',meta:(S.metas.proteina||150)+'g meta',c:'var(--p)'},
-                {l:'💙 Carbs/día',v:fmt(avgCarbs)+'g',meta:(S.metas.carbs||200)+'g meta',c:'var(--b)'},
-                {l:'💛 Grasa/día',v:fmt(avgGra)+'g',meta:(S.metas.grasa||65)+'g meta',c:'var(--w)'},
-                {l:'⚡ Cal. quemadas/día',v:fmt(avgCalQ)+' kcal',meta:`${diasEj.length} días activos`,c:'var(--g)'},
-              ].map(r=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid rgba(var(--ov),.05)">
-                <span style="font-size:12px;color:var(--text2)">${r.l}</span>
-                <div style="text-align:right">
-                  <div style="font-size:14px;font-weight:800;color:${r.c}">${r.v}</div>
-                  <div style="font-size:10px;color:var(--text3)">${r.meta}</div>
-                </div>
-              </div>`).join('')}
-            </div>`;
-        })()}
-      </div>
-    </div>`;
-
-  // Render calorie chart
-  chCal=killChart(chCal);
-  const ctx=document.getElementById('ch-cal14'); if(!ctx) return;
-  chCal=new Chart(ctx,{type:'bar',data:{labels,datasets:[
-    {label:'Calorías',data:calPorDia,backgroundColor:calPorDia.map(v=>v>metaCal?'rgba(255,59,107,.5)':'rgba(255,107,53,.5)'),borderColor:calPorDia.map(v=>v>metaCal?cssVar('--r'):cssVar('--o')),borderRadius:4,borderWidth:1.5},
-    {label:'Meta',data:Array(14).fill(metaCal),type:'line',borderColor:'rgba(0,232,122,.5)',borderDash:[5,4],borderWidth:1.5,pointRadius:0,fill:false}
-  ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
-    scales:{y:{grid:{color:'rgba('+cssVar('--ov')+',.06)'},ticks:{color:cssVar('--text3'),callback:v=>v+' kcal'}},x:{grid:{display:false},ticks:{color:cssVar('--text3')}}}}});
-}
-
 // ─── METAS & PERFIL ──────────────────────────────────────────────────────────
 function renderMetas() {
   const p=S.perfil;
@@ -1355,117 +886,6 @@ function exportData() {
   const a=Object.assign(document.createElement('a'),{href:URL.createObjectURL(blob),download:`salud_${today()}.json`});
   a.click(); URL.revokeObjectURL(a.href);
   toast('⬇️ Datos exportados');
-}
-
-// ─── RUTINA MUSCULAR ─────────────────────────────────────────────────────────
-const PLAN_ITEMS=[
-  [
-    {nombre:'4 huevos revueltos con espinacas y aceite',cal:345,prot:26,carbs:4,gra:24},
-    {nombre:'Avena (70g) cocida con 250ml leche entera',cal:410,prot:19,carbs:59,gra:13},
-    {nombre:'3 plátanos medianos (120g c/u)',cal:300,prot:3,carbs:75,gra:0}
-  ],
-  [
-    {nombre:'200g pechuga de pollo a la plancha',cal:220,prot:46,carbs:0,gra:4},
-    {nombre:'2 tazas arroz blanco cocido',cal:400,prot:8,carbs:88,gra:0},
-    {nombre:'1 taza frijoles negros cocidos',cal:230,prot:15,carbs:42,gra:1},
-    {nombre:'2 tortillas de maíz',cal:130,prot:3,carbs:27,gra:2},
-    {nombre:'½ aguacate + ensalada verde',cal:160,prot:2,carbs:9,gra:14},
-    {nombre:'Aceite de oliva (2 cdtas) en la ensalada',cal:80,prot:0,carbs:0,gra:9}
-  ],
-  [
-    {nombre:'2 latas atún en agua (170g drenado)',cal:180,prot:40,carbs:0,gra:2},
-    {nombre:'1.5 tazas arroz blanco cocido',cal:300,prot:6,carbs:66,gra:0},
-    {nombre:'Ensalada (lechuga, jitomate, pepino)',cal:50,prot:2,carbs:10,gra:0},
-    {nombre:'500ml leche entera',cal:310,prot:16,carbs:24,gra:17}
-  ]
-];
-
-function registrarRutinaMeal(idx) {
-  const KEYS=['desayuno','almuerzo','cena'];
-  const NAMES=['Desayuno','Comida','Cena'];
-  PLAN_ITEMS[idx].forEach(item=>{
-    S.alimentos.push({id:uid(),nombre:item.nombre,comida:KEYS[idx],
-      cantidad:'',unidad:'g',cal:item.cal,prot:item.prot,carbs:item.carbs,gra:item.gra,
-      fecha:today(),notas:'Rutina muscular'});
-  });
-  save();
-  toast('✅ '+NAMES[idx]+' registrado en el diario ('+PLAN_ITEMS[idx].length+' alimentos)');
-  if(document.getElementById('s-dashboard').classList.contains('active')) renderDashboard();
-}
-
-function renderRutina() {
-  const sec=document.getElementById('s-rutina'); if(!sec) return;
-  const tCal=3115,tProt=186,tCarb=404,tGra=86;
-  const meals=[
-    {idx:0,ico:'🌅',name:'Desayuno',time:'7:00 – 8:00 am',cal:1055,prot:48,carbs:138,gra:37,col:'#ffd93d'},
-    {idx:1,ico:'☀️',name:'Comida',time:'1:00 – 2:00 pm',cal:1220,prot:74,carbs:166,gra:30,col:'#ff6b35'},
-    {idx:2,ico:'🌙',name:'Cena',time:'7:00 – 8:00 pm',cal:840,prot:64,carbs:100,gra:19,col:'#3b82f6'}
-  ];
-  const alts=[
-    {ico:'🥩',cat:'Proteínas económicas',items:['Huevo (la fuente más barata)','Atún en lata','Pollo pierna/muslo','Carne molida 90/10','Leche entera','Frijoles + arroz combinados']},
-    {ico:'🌾',cat:'Carbohidratos complejos',items:['Arroz blanco/integral','Avena en hojuelas','Tortillas de maíz','Plátano','Papa cocida','Pan integral']},
-    {ico:'🥑',cat:'Grasas saludables',items:['Aguacate','Mantequilla de cacahuate','Aceite de oliva','Yema de huevo','Semillas de girasol','Coco rallado sin azúcar']},
-    {ico:'🥦',cat:'Verduras recomendadas',items:['Espinacas','Brócoli','Zanahoria','Jitomate','Pepino','Chayote cocido']}
-  ];
-  const tips=[
-    {ico:'⏰',t:'Timing de proteína',d:'Consume mínimo 40g de proteína en cada comida para maximizar la síntesis muscular postentrenamiento.'},
-    {ico:'💧',t:'Hidratación',d:'Toma 3–3.5 L de agua al día. El músculo es 75% agua; con solo 2% de deshidratación el rendimiento cae notablemente.'},
-    {ico:'😴',t:'Descanso obligatorio',d:'Duerme 7–9 horas. El 70% de la hormona de crecimiento se libera durante el sueño profundo — ahí crece el músculo.'},
-    {ico:'📅',t:'Consistencia',d:'Los primeros cambios visibles llegan entre las semanas 6–12. Ningún suplemento reemplaza una dieta sostenida.'},
-    {ico:'📈',t:'Superávit controlado',d:'Consumes ~325 kcal sobre tu mantenimiento estimado (≈2,790 kcal/día). Ideal para ganar músculo sin acumular exceso de grasa.'},
-    {ico:'🏋️',t:'Entrenamiento',d:'3–4 días/semana con movimientos compuestos: sentadilla, peso muerto, press banca, dominadas y remo con barra.'}
-  ];
-  sec.innerHTML=`
-    <div class="sh"><h2>💪 Rutina Alimentaria — Masa Muscular</h2></div>
-    <div class="card" style="margin-bottom:16px;border-color:rgba(0,232,122,.25);background:rgba(0,232,122,.05)">
-      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;text-align:center">
-        <div><div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px">Peso actual</div><div style="font-size:22px;font-weight:800;color:var(--g)">77 kg</div></div>
-        <div><div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px">Estatura</div><div style="font-size:22px;font-weight:800;color:var(--b)">1.78 m</div></div>
-        <div><div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px">Edad</div><div style="font-size:22px;font-weight:800;color:var(--p)">31 años</div></div>
-        <div><div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px">Objetivo</div><div style="font-size:16px;font-weight:800;color:var(--o)">Ganar masa muscular</div></div>
-      </div>
-    </div>
-    <div class="g4" style="margin-bottom:16px">
-      ${[
-        {l:'Calorías / día',v:fmt(tCal)+' kcal',sub:'Superávit +325 kcal',c:'var(--o)'},
-        {l:'Proteína',v:tProt+'g',sub:'2.4 g por kg de peso',c:'var(--p)'},
-        {l:'Carbohidratos',v:tCarb+'g',sub:'Energía y recuperación',c:'var(--b)'},
-        {l:'Grasas',v:tGra+'g',sub:'Hormonas anabólicas',c:'var(--w)'}
-      ].map(k=>`<div class="card" style="border-left:4px solid ${k.c};text-align:center"><div class="card-title" style="color:${k.c};justify-content:center">${k.l}</div><div class="card-val" style="color:${k.c}">${k.v}</div><div class="card-sub">${k.sub}</div></div>`).join('')}
-    </div>
-    <div style="display:flex;flex-direction:column;gap:14px;margin-bottom:22px">
-      ${meals.map(m=>`
-      <div class="card" style="border-left:4px solid ${m.col}">
-        <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px;margin-bottom:14px">
-          <div>
-            <div style="font-size:17px;font-weight:800;color:${m.col}">${m.ico} ${m.name}</div>
-            <div style="font-size:11px;color:var(--text3);margin-top:2px">⏰ ${m.time}</div>
-          </div>
-          <div style="display:flex;gap:8px;flex-wrap:wrap">
-            <div style="text-align:center;background:rgba(255,107,53,.1);border-radius:8px;padding:5px 10px"><div style="font-size:9px;color:var(--text3)">Calorías</div><div style="font-size:14px;font-weight:800;color:var(--o)">${m.cal}</div></div>
-            <div style="text-align:center;background:rgba(176,110,255,.1);border-radius:8px;padding:5px 10px"><div style="font-size:9px;color:var(--text3)">Proteína</div><div style="font-size:14px;font-weight:800;color:var(--p)">${m.prot}g</div></div>
-            <div style="text-align:center;background:rgba(59,130,246,.1);border-radius:8px;padding:5px 10px"><div style="font-size:9px;color:var(--text3)">Carbs</div><div style="font-size:14px;font-weight:800;color:var(--b)">${m.carbs}g</div></div>
-            <div style="text-align:center;background:rgba(255,217,61,.1);border-radius:8px;padding:5px 10px"><div style="font-size:9px;color:var(--text3)">Grasa</div><div style="font-size:14px;font-weight:800;color:var(--w)">${m.gra}g</div></div>
-          </div>
-        </div>
-        <div class="tw"><table>
-          <thead><tr><th>Alimento</th><th>Cal</th><th>Prot.</th><th>Carbs</th><th>Grasa</th></tr></thead>
-          <tbody>${PLAN_ITEMS[m.idx].map(it=>'<tr><td style="font-weight:600">'+it.nombre+'</td><td style="color:var(--o)">'+it.cal+'</td><td style="color:var(--p)">'+it.prot+'g</td><td style="color:var(--b)">'+it.carbs+'g</td><td style="color:var(--w)">'+it.gra+'g</td></tr>').join('')}</tbody>
-        </table></div>
-        <div style="margin-top:12px;display:flex;justify-content:flex-end">
-          <button class="btn btn-g btn-sm" onclick="registrarRutinaMeal(${m.idx})">➕ Registrar esta comida hoy</button>
-        </div>
-      </div>`).join('')}
-    </div>
-    <div class="sh"><h2>🛒 Alimentos recomendados (bajo presupuesto)</h2></div>
-    <div class="g4" style="margin-bottom:22px">
-      ${alts.map(a=>'<div class="card"><div class="card-title">'+a.ico+' '+a.cat+'</div><ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:5px">'+a.items.map(i=>'<li style="font-size:12px;color:var(--text);display:flex;align-items:center;gap:6px"><span style="color:var(--g);font-size:9px">▶</span>'+i+'</li>').join('')+'</ul></div>').join('')}
-    </div>
-    <div class="sh"><h2>💡 Claves para ganar masa muscular</h2></div>
-    <div class="g3">
-      ${tips.map(t=>'<div class="card" style="border-left:3px solid var(--g)"><div style="font-size:22px;margin-bottom:8px">'+t.ico+'</div><div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:5px">'+t.t+'</div><div style="font-size:12px;color:var(--text2);line-height:1.6">'+t.d+'</div></div>').join('')}
-    </div>
-  `;
 }
 
 // ─── SALUD DIGESTIVA ─────────────────────────────────────────────────────────
@@ -2285,7 +1705,7 @@ function delAnimo(id) { S.mental.registros=S.mental.registros.filter(r=>r.id!==i
 const MOMENTO_LABELS = {am:'🌅 Mañana',pre:'🏋️ Pre-entreno',post:'💪 Post-entreno',pm:'🌙 Noche',cualquiera:'🕐 Cualquier hora'};
 
 const SUPP_CATALOG = [
-  {ico:'🥤',nombre:'Proteína Whey (suero de leche)',dosis:'25-30g (1 scoop) post-entreno o para completar tu meta diaria',momento:'post',para:'Completar la meta de proteína de tu Rutina Muscular (186g/día) cuando la comida no alcanza.',nota:'No reemplaza comida real — es un complemento para los días en que no llegas a tu meta solo con alimentos.'},
+  {ico:'🥤',nombre:'Proteína Whey (suero de leche)',dosis:'25-30g (1 scoop) post-entreno o para completar tu meta diaria',momento:'post',para:'Completar tu meta de proteína (186g/día, ver Plan Masa Muscular en Mi Comida) cuando la comida no alcanza.',nota:'No reemplaza comida real — es un complemento para los días en que no llegas a tu meta solo con alimentos.'},
   {ico:'⚡',nombre:'Creatina monohidratada',dosis:'5g al día, todos los días (no solo días de entreno)',momento:'cualquiera',para:'El suplemento con más evidencia científica para fuerza y ganancia de masa muscular.',nota:'No necesita fase de carga. Tómala siempre a la misma hora para no olvidarla — el efecto es acumulativo, no inmediato.'},
   {ico:'☀️',nombre:'Vitamina D3',dosis:'2000-4000 UI al día, con una comida que tenga algo de grasa',momento:'am',para:'Soporte hormonal (incluida testosterona) y salud ósea — muy común tener deficiencia si te da poco sol.',nota:'Idealmente confirma tu nivel con el examen de Vitamina D en Exámenes Médicos antes de dosis altas y sostenidas.'},
   {ico:'🐟',nombre:'Omega 3 (aceite de pescado)',dosis:'1-2g de EPA+DHA al día, con alimento',momento:'cualquiera',para:'Antiinflamatorio, apoya recuperación muscular y salud cardiovascular.',nota:'Si tienes reflujo, tómalo con una comida grande para evitar el "repique" de sabor a pescado.'},
@@ -2418,7 +1838,6 @@ function init() {
   }
   if(_needSave) save();
   document.getElementById('dateLabel').textContent=new Date().toLocaleDateString('es-MX',{weekday:'long',day:'numeric',month:'long'});
-  document.getElementById('f-fecha-al').value=today();
   const themeBtn=document.getElementById('theme-toggle-btn');
   if(themeBtn) themeBtn.textContent=document.documentElement.getAttribute('data-theme')==='dark'?'☀️':'🌙';
 
