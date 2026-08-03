@@ -453,6 +453,9 @@
     .fase-item h4 { font-size: 15px; font-weight: 800; margin: 5px 0 7px; }
     .fase-item ul { margin: 0; padding-left: 17px; }
     .fase-item li { font-size: 12.5px; color: var(--muted); line-height: 1.7; }
+    .fase-checklist .check-item { font-size: 12.5px; padding: 5px 0; gap: 9px; align-items: flex-start; }
+    .fase-checklist .check-item input[type="checkbox"] { margin-top: 2px; }
+    .fase-checklist .check-item label { line-height: 1.6; }
 
     /* ─── PLAN MAESTRO — estado dinámico, stepper y progreso ─── */
     .plan-status-bar { display: flex; align-items: center; gap: 20px; background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 14px 18px; margin-bottom: 18px; flex-wrap: wrap; }
@@ -1739,15 +1742,15 @@
         <span class="fase-tag">Fase 0 · 18 jul – 30 sep 2026 (~10 semanas)</span><span class="fase-status" id="faseStatus0">—</span>
         <h4>Cerrar la fuga y arrancar ingreso, no solo pensar</h4>
         <div class="fase-meta"><span>🎯</span><span>Fondo de emergencia a <strong>$10,000</strong> + <strong>$14,000-15,000</strong> de activos vendidos aplicados a Banamex.</span></div>
-        <ul>
-          <li><strong>Semana 1-2:</strong> corrige "Deudas" a $13,372 en Finanzas.html · cero MSI nuevo.</li>
-          <li><strong>Semana 1-2:</strong> revisar las fotos y el material del negocio de tu papá y ponerle atención real — primer paso concreto de la <a href="#" class="inline-link" onclick="irANegocios('negocio5');return false;">Opción 5</a>.</li>
-          <li><strong>Semana 2-3:</strong> versión limpia (sin tus datos) de la plantilla Finanzas.html + post de venta para comunidades de GBM (<a href="#" class="inline-link" onclick="irANegocios('negocio1');return false;">Opción 1</a>).</li>
-          <li><strong>Semana 3-4:</strong> publica la plantilla en 2-3 comunidades de GBM · sube a Marketplace tus activos ociosos (PS5, control, monitores, iPad).</li>
-          <li><strong>Semana 4-6:</strong> con las fotos ya revisadas, agenda la llamada exploratoria de 30 min con tu papá — solo escuchar, sin compromiso (<a href="#" class="inline-link" onclick="irANegocios('negocio5');return false;">Opción 5</a>).</li>
-          <li><strong>Jul 2026:</strong> pausa aportaciones a la Maestría 1 año (hasta 18 jul 2027) — los $53,740 quedan intactos, nueva meta oct 2028.</li>
-          <li><strong>Semana 6-10:</strong> cada peso de ventas/activos va, en orden: (1) fondo de emergencia a $10,000, (2) resto a Banamex.</li>
-        </ul>
+        <div class="fase-checklist">
+          <div class="check-item"><input type="checkbox" id="s0-1"><label for="s0-1"><strong>Semana 1-2:</strong> corrige "Deudas" a $13,372 en Finanzas.html · cero MSI nuevo.</label></div>
+          <div class="check-item"><input type="checkbox" id="s0-2"><label for="s0-2"><strong>Semana 1-2:</strong> revisar las fotos y el material del negocio de tu papá y ponerle atención real — primer paso concreto de la <a href="#" class="inline-link" onclick="irANegocios('negocio5');return false;">Opción 5</a>.</label></div>
+          <div class="check-item"><input type="checkbox" id="s0-3"><label for="s0-3"><strong>Semana 2-3:</strong> versión limpia (sin tus datos) de la plantilla Finanzas.html + post de venta para comunidades de GBM (<a href="#" class="inline-link" onclick="irANegocios('negocio1');return false;">Opción 1</a>).</label></div>
+          <div class="check-item"><input type="checkbox" id="s0-4"><label for="s0-4"><strong>Semana 3-4:</strong> publica la plantilla en 2-3 comunidades de GBM · sube a Marketplace tus activos ociosos (PS5, control, monitores, iPad).</label></div>
+          <div class="check-item"><input type="checkbox" id="s0-5"><label for="s0-5"><strong>Semana 4-6:</strong> con las fotos ya revisadas, agenda la llamada exploratoria de 30 min con tu papá — solo escuchar, sin compromiso (<a href="#" class="inline-link" onclick="irANegocios('negocio5');return false;">Opción 5</a>).</label></div>
+          <div class="check-item"><input type="checkbox" id="s0-6"><label for="s0-6"><strong>Jul 2026:</strong> pausa aportaciones a la Maestría 1 año (hasta 18 jul 2027) — los $53,740 quedan intactos, nueva meta oct 2028.</label></div>
+          <div class="check-item"><input type="checkbox" id="s0-7"><label for="s0-7"><strong>Semana 6-10:</strong> cada peso de ventas/activos va, en orden: (1) fondo de emergencia a $10,000, (2) resto a Banamex.</label></div>
+        </div>
         <div class="fase-checkpoint"><span class="fc-icon">🚩</span><div><strong>Checkpoint 30 sep 2026:</strong> sin haberle puesto atención real al negocio de tu papá, o plantilla sin publicar → no es falta de tiempo, es tu patrón de abandono otra vez.</div></div>
       </div>
 
@@ -1755,14 +1758,14 @@
         <span class="fase-tag">Fase 1 · Oct 2026 – Mar 2027 (6 meses)</span><span class="fase-status" id="faseStatus1">—</span>
         <h4>Los $3,868/mes liberados entran en acción + primer ingreso real</h4>
         <div class="fase-meta"><span>🎯</span><span>Primer contrato freelance o <strong>20+ ventas</strong> de la plantilla cobradas; <strong>Banamex liquidada</strong>.</span></div>
-        <ul>
-          <li>Oct 2026: los $3,868/mes liberados de MSI van, en orden fijo: fondo de emergencia a $10,000 → 100% Banamex → BBVA.</li>
-          <li>Prioridad: cerrar el primer contrato freelance (<a href="#" class="inline-link" onclick="irANegocios('negocio2');return false;">Opción 2</a>) + 1 post de seguimiento mensual de la plantilla GBM (<a href="#" class="inline-link" onclick="irANegocios('negocio1');return false;">Opción 1</a>).</li>
-          <li>En paralelo: primer post de mentoría pagada (<a href="#" class="inline-link" onclick="irANegocios('negocio3');return false;">Opción 3</a>) — bajo riesgo, casi sin preparación.</li>
-          <li>Primer peso cobrado en Opción 1-3 → esas horas de DiDi se mueven ahí (<a href="#" class="inline-link" onclick="irANegocios('negocio6');return false;">Opción 6</a>), no antes.</li>
-          <li>iPhone 15 MSI sigue corriendo ($494/mes) hasta jun 2028 — ya comprometido, no toca tu excedente nuevo.</li>
-          <li>Foco de habilidad (<a href="#radarFIFA" class="inline-link">Radar FIFA</a>): sube <strong>Copy</strong> (55→) escribiendo los posts, y <strong>Finanzas</strong> (20→) sosteniendo el presupuesto corregido. Solo estas dos.</li>
-        </ul>
+        <div class="fase-checklist">
+          <div class="check-item"><input type="checkbox" id="s1-1"><label for="s1-1">Oct 2026: los $3,868/mes liberados de MSI van, en orden fijo: fondo de emergencia a $10,000 → 100% Banamex → BBVA.</label></div>
+          <div class="check-item"><input type="checkbox" id="s1-2"><label for="s1-2">Prioridad: cerrar el primer contrato freelance (<a href="#" class="inline-link" onclick="irANegocios('negocio2');return false;">Opción 2</a>) + 1 post de seguimiento mensual de la plantilla GBM (<a href="#" class="inline-link" onclick="irANegocios('negocio1');return false;">Opción 1</a>).</label></div>
+          <div class="check-item"><input type="checkbox" id="s1-3"><label for="s1-3">En paralelo: primer post de mentoría pagada (<a href="#" class="inline-link" onclick="irANegocios('negocio3');return false;">Opción 3</a>) — bajo riesgo, casi sin preparación.</label></div>
+          <div class="check-item"><input type="checkbox" id="s1-4"><label for="s1-4">Primer peso cobrado en Opción 1-3 → esas horas de DiDi se mueven ahí (<a href="#" class="inline-link" onclick="irANegocios('negocio6');return false;">Opción 6</a>), no antes.</label></div>
+          <div class="check-item"><input type="checkbox" id="s1-5"><label for="s1-5">iPhone 15 MSI sigue corriendo ($494/mes) hasta jun 2028 — ya comprometido, no toca tu excedente nuevo.</label></div>
+          <div class="check-item"><input type="checkbox" id="s1-6"><label for="s1-6">Foco de habilidad (<a href="#radarFIFA" class="inline-link">Radar FIFA</a>): sube <strong>Copy</strong> (55→) escribiendo los posts, y <strong>Finanzas</strong> (20→) sosteniendo el presupuesto corregido. Solo estas dos.</label></div>
+        </div>
         <div class="fase-checkpoint"><span class="fc-icon">🚩</span><div><strong>Checkpoint 31 mar 2027:</strong> cero contratos, cero ventas y cero avance de mentoría tras 6 meses → problema de canal, no de esfuerzo. Cambia de distribución (ej. LinkedIn outreach a leads de Tier 2) antes de soltar la vía completa.</div></div>
       </div>
 
@@ -1770,13 +1773,13 @@
         <span class="fase-tag">Fase 2 · Abr 2027 – Dic 2028 (21 meses)</span><span class="fase-status" id="faseStatus2">—</span>
         <h4>Doblar apuesta en lo que mostró tracción</h4>
         <div class="fase-meta"><span>🎯</span><span>BBVA liquidada, deuda cara en <strong>$0</strong>, ingreso extra estable de al menos <strong>$10,000-15,000/mes</strong>.</span></div>
-        <ul>
-          <li>Elige la opción (1, 2 o 3) con ingreso recurrente real y concéntrate ahí — resiste saltar a "algo mejor".</li>
-          <li>Con tracción sostenida, arranca la <a href="#" class="inline-link" onclick="irANegocios('negocio4');return false;">Opción 4</a> (CodeReview productizado) — único punto del plan que requiere capital, ya disponible tras liquidar Banamex/BBVA.</li>
-          <li>Usa IA para construir tu propio sistema de ventas/argumentos — tu fuerza real, en vez de improvisar en vivo.</li>
-          <li>Jun 2028: se libera el iPhone MSI ($494/mes) — súmalo a inversión, no a gasto nuevo.</li>
-          <li>Foco de habilidad: sube <strong>Ventas</strong> (15→) y <strong>Marketing</strong> (20→) lo mínimo para vender la Opción 4 sin depender solo de referidos.</li>
-        </ul>
+        <div class="fase-checklist">
+          <div class="check-item"><input type="checkbox" id="s2-1"><label for="s2-1">Elige la opción (1, 2 o 3) con ingreso recurrente real y concéntrate ahí — resiste saltar a "algo mejor".</label></div>
+          <div class="check-item"><input type="checkbox" id="s2-2"><label for="s2-2">Con tracción sostenida, arranca la <a href="#" class="inline-link" onclick="irANegocios('negocio4');return false;">Opción 4</a> (CodeReview productizado) — único punto del plan que requiere capital, ya disponible tras liquidar Banamex/BBVA.</label></div>
+          <div class="check-item"><input type="checkbox" id="s2-3"><label for="s2-3">Usa IA para construir tu propio sistema de ventas/argumentos — tu fuerza real, en vez de improvisar en vivo.</label></div>
+          <div class="check-item"><input type="checkbox" id="s2-4"><label for="s2-4">Jun 2028: se libera el iPhone MSI ($494/mes) — súmalo a inversión, no a gasto nuevo.</label></div>
+          <div class="check-item"><input type="checkbox" id="s2-5"><label for="s2-5">Foco de habilidad: sube <strong>Ventas</strong> (15→) y <strong>Marketing</strong> (20→) lo mínimo para vender la Opción 4 sin depender solo de referidos.</label></div>
+        </div>
         <div class="fase-checkpoint"><span class="fc-icon">🚩</span><div><strong>Checkpoint dic 2028:</strong> compara patrimonio líquido real contra la trayectoria estimada (≈+$250,000). Muy por debajo → la Fase 3 arranca con plan de contingencia, no con el plan original intacto.</div></div>
       </div>
 
@@ -1784,12 +1787,12 @@
         <span class="fase-tag">Fase 3 · Ene 2029 – 01 Ene 2030 (12 meses)</span><span class="fase-status" id="faseStatus3">—</span>
         <h4>Escalar, cerrar la brecha de $31,540/mes y reevaluar</h4>
         <div class="fase-meta"><span>🎯</span><span>Cerrar la distancia final a <strong>$1,000,000</strong> líquido con el negocio como fuente principal de excedente.</span></div>
-        <ul>
-          <li>El negocio debe cubrir ya parte real de la brecha. Ingreso extra cercano a cero en 2029 = problema de opción elegida, no de timing — revisa <a href="#" class="inline-link" onclick="irANegocios('negocio1');return false;">Posibles Negocios</a>.</li>
-          <li>Todo ingreso adicional va primero a inversión (CETES, fondos indexados, ampliar BTC/acciones) — nunca a consumo nuevo.</li>
-          <li>La decisión de Maestría (18 jul 2027) ya está tomada: retomarla en oct 2028 con datos reales del negocio, o posponerla de nuevo, conscientemente.</li>
-          <li>Reevalúa la meta de $1,000,000 líquido con números reales del negocio y ajusta la fecha si hace falta — sin abandonarlo.</li>
-        </ul>
+        <div class="fase-checklist">
+          <div class="check-item"><input type="checkbox" id="s3-1"><label for="s3-1">El negocio debe cubrir ya parte real de la brecha. Ingreso extra cercano a cero en 2029 = problema de opción elegida, no de timing — revisa <a href="#" class="inline-link" onclick="irANegocios('negocio1');return false;">Posibles Negocios</a>.</label></div>
+          <div class="check-item"><input type="checkbox" id="s3-2"><label for="s3-2">Todo ingreso adicional va primero a inversión (CETES, fondos indexados, ampliar BTC/acciones) — nunca a consumo nuevo.</label></div>
+          <div class="check-item"><input type="checkbox" id="s3-3"><label for="s3-3">La decisión de Maestría (18 jul 2027) ya está tomada: retomarla en oct 2028 con datos reales del negocio, o posponerla de nuevo, conscientemente.</label></div>
+          <div class="check-item"><input type="checkbox" id="s3-4"><label for="s3-4">Reevalúa la meta de $1,000,000 líquido con números reales del negocio y ajusta la fecha si hace falta — sin abandonarlo.</label></div>
+        </div>
       </div>
     </div>
 
