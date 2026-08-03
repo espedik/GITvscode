@@ -517,13 +517,31 @@ Filtra `S.btcHistory` y llama a `renderBtcHistory()`.
 Se ejecuta al cargar la página:
 1. Llama a `seedData()` (solo si es primera vez o SEED_VER cambió)
 2. Llama a `load()` para cargar datos de localStorage
-3. Crea meta `ef-001` (fondo de emergencia) si no existe
-4. Establece `dashMonth = nowYM()`
-5. Escribe la fecha actual en el topbar
-6. Establece `f-month` al mes actual en el filtro de transacciones
-7. Configura listener de resize para mostrar/ocultar botón de menú móvil
-8. Llama a `renderDashboard()`
-9. Hace auto-fetch del precio BTC si tiene más de 15 minutos sin actualizarse (y hay historial BTC)
+3. **Migraciones puntuales** (ver abajo) — corrigen campos específicos sin tocar el resto de los datos de Adán
+4. Crea meta `ef-001` (fondo de emergencia) si no existe
+5. Establece `dashMonth = nowYM()`
+6. Escribe la fecha actual en el topbar
+7. Establece `f-month` al mes actual en el filtro de transacciones
+8. Configura listener de resize para mostrar/ocultar botón de menú móvil
+9. Llama a `renderDashboard()`
+10. Hace auto-fetch del precio BTC si tiene más de 15 minutos sin actualizarse (y hay historial BTC)
+
+### Migraciones puntuales — corregir un dato real sin bumpear `SEED_VER`
+
+`seedData()` solo re-siembra si `SEED_VER` cambió, y cuando lo hace **borra por completo** `localStorage[KEY]` antes de reinyectar el seed (`localStorage.removeItem(KEY)`) — cualquier transacción, deuda o inversión que Adán haya agregado a mano desde el último seed **se pierde**. Bumpear `SEED_VER` es el mecanismo correcto para cambios estructurales del modelo de datos, pero es demasiado destructivo para una corrección puntual tipo "este saldo ya cambió en la vida real".
+
+Para esos casos, `init()` trae un patrón más seguro: un `if` puntual después de `load()` que busca el registro por `id`, verifica el valor viejo antes de tocarlo (evita reaplicar la migración si ya corrió), lo corrige, y llama a `save()` — sin tocar nada más del objeto `S`. Ya existía uno (`_maeGoal.target===300000` → `500000`, meta de la Maestría). **Ejemplo nuevo, 2026-08-02** (Adán reportó "Banamex ya solo le debo $9,000, pero vendí todas mis acciones de GBM"):
+
+```js
+// Migración 2026-08-02: Banamex bajó a $9,000 real, y se vendieron todas las acciones de GBM
+const _banamex=S.debts.find(d=>d.id==='d002');
+if(_banamex&&_banamex.balance===14349.72){_banamex.balance=9000;save();}
+if(S.investments.find(i=>i.id==='i003')){S.investments=S.investments.filter(i=>i.id!=='i003');save();}
+```
+
+`debts[].total` (14349.72) se dejó intacto a propósito — sigue siendo el monto original de la deuda, usado para calcular el % pagado (`1-balance/total`) en Dashboard y en el propio `renderDebts()`. Solo `balance` (lo que falta por pagar hoy) cambió. La inversión `i003` (NVIDIA — GBM+) se eliminó del array por completo, no se puso en `$0`, porque ya no existe esa posición. El seed base (más abajo, dentro de `seedData()`) también se actualizó con estos mismos valores, para que una instalación nueva desde cero ya nazca correcta — pero **sin** bumpear `SEED_VER`, así que no dispara un re-seed destructivo en el navegador donde Adán ya tiene datos reales.
+
+Verificado con Playwright: una carga limpia (`localStorage` vacío) usa el seed corregido directamente; un `localStorage` ya sembrado con los valores viejos (simulando el navegador real de Adán) se corrige solo en la siguiente carga vía la migración, y una transacción manual de prueba agregada aparte **sobrevive** el proceso — confirma que no hay pérdida de datos.
 
 ---
 

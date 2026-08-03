@@ -515,32 +515,42 @@ const RUTINA_TASKS=[
   {id:'wd12b', dias:[1,2,3,4,5], hora:'13:00', cat:'salud',   txt:'🛒 Comprar comida — descanso de ALTEN'},
   {id:'wd08', dias:[1,2,3,4,5], hora:'17:00', cat:'admin',    txt:'🚗 Didi — 1 pasajero a Buenavista (~40 min)'},
   {id:'wd09', dias:[1,2,3,4,5], hora:'18:30', cat:'salud',    txt:'Ducha rápida post-ejercicio'},
-  {id:'wd11', dias:[1,2,3,4,5], hora:'18:40', cat:'profundo', txt:'🎯 Prioridad activa de Fase 0: negocio de tu papá o plantilla GBM — 1 avance real'},
   {id:'wd-didi2', dias:[1,2,3,4,5], hora:'19:20', cat:'admin', txt:'🚗 Didi — sesión de la noche (hasta ~21:00)'},
-  {id:'wd14', dias:[1,2,3,4,5], hora:'21:00', cat:'salud', txt:'🍽️ Cena + preparar la comida de mañana', subtareas:[
+  {id:'wd11', dias:[1,2,3,4,5], hora:'21:00', cat:'profundo', txt:'🎯 Prioridad activa de Fase 0: negocio de tu papá o plantilla GBM — 1 avance real'},
+  {id:'wd14', dias:[1,2,3,4,5], hora:'21:15', cat:'salud', txt:'🍽️ Cena + preparar la comida de mañana', subtareas:[
     {id:'wd14a', txt:'Cocina un solo platillo para cenar hoy y llevar de comida mañana a ALTEN — ahorra tiempo, sin carbohidratos refinados en la cena', link:{href:'../CuidadoPersonal/comida.html?s=cenas', label:'🍳 Ver cenas'}},
     {id:'wd14b', txt:'Deja todo empacado y listo junto a la puerta para salir rápido mañana', link:{href:'../CuidadoPersonal/comida.html?s=desayunos', label:'🍳 Ver desayunos'}},
   ]},
-  {id:'wd15', dias:[1,2,3,4,5], hora:'21:30', cat:'descanso', txt:'30 min lectura física (no celular)'},
-  {id:'wd16', dias:[1,2,3,4,5], hora:'22:00', cat:'descanso', txt:'📓 Diario del día (5 min) — libreta o notas del cel', subtareas:[
+  {id:'wd16', dias:[1,2,3,4,5], hora:'22:15', cat:'descanso', txt:'📓 Diario del día (5 min) — libreta o notas del cel', subtareas:[
     {id:'wd16a', txt:'Escribe 3 cosas que sí lograste hoy, aunque sean pequeñas'},
     {id:'wd16b', txt:'1 cosa que salió mal o que aprendiste — sin autocastigo, solo para no repetirla'},
     {id:'wd16c', txt:'1 gasto que pudiste evitar hoy (o "ninguno" si no hubo)'},
   ]},
-  {id:'wd1718', dias:[1,2,3,4,5], hora:'22:15', cat:'salud', txt:'🧴 Skincare + 🍂 Minoxidil — PM', subtareas:[
+  {id:'wd1718', dias:[1,2,3,4,5], hora:'22:30', cat:'salud', txt:'🧴 Skincare + 🍂 Minoxidil — PM', subtareas:[
     {id:'wd17a', txt:'Limpiador (doble limpieza si usaste protector solar) — remueve el bloqueador y el sudor del día'},
     {id:'wd17b', txt:'Tratamiento con ácido salicílico o retinol, alternando noches — controla brotes y mejora la textura'},
     {id:'wd17c', txt:'Hidratante nocturno — repara la piel mientras duermes'},
     {id:'wd18', txt:'Minoxidil 5% en cuero cabelludo seco — dosis de la noche'},
   ]},
-  {id:'wd19', dias:[1,2,3,4,5], hora:'22:30', cat:'profundo', txt:'🎯 Planear el día de mañana (5 min)', subtareas:[
+  {id:'wd19', dias:[1,2,3,4,5], hora:'22:45', cat:'profundo', txt:'🎯 Planear el día de mañana (5 min)', subtareas:[
     {id:'wd19a', txt:'Elige 1 sola tarea que, si mañana solo lograras esa, el día ya valió la pena — tu tarea más importante (MIT)'},
     {id:'wd19b', txt:'Anota 4 tareas más chicas para mañana, en el orden en que las harás'},
   ]},
-  {id:'wd20', dias:[1,2,3,4,5], hora:'22:45', cat:'descanso', txt:'Meditación / respiración box 4-4-4-4 (10 min)'},
+  {id:'wd20', dias:[1,2,3,4,5], hora:'23:00', cat:'descanso', txt:'🧘 Meditación — respiración box (10 min)', subtareas:[
+    {id:'wd20a', txt:'Inhala 4 segundos por la nariz'},
+    {id:'wd20b', txt:'Sostén el aire 4 segundos'},
+    {id:'wd20c', txt:'Exhala 4 segundos por la boca'},
+    {id:'wd20d', txt:'Sostén sin aire 4 segundos — repite el ciclo (~10 veces en 10 min)'},
+  ]},
   {id:'wd21', dias:[1,2,3,4,5], hora:'23:55', cat:'salud',    txt:'Apagar pantallas. Dormir — buscas ~7h (medianoche a 7:00am)'},
   // Bolsa GBM — solo lunes, porque solo inviertes al inicio de semana
   {id:'lu-gbm', dias:[1], hora:'09:00', cat:'admin', txt:'💰 Bolsa GBM: revisar portafolio + VOO + USD/MXN e invertir — solo lunes'},
+  // Lectura (21:45) — cambia cada día, libros ya recomendados en Aprendizaje/Perfil del Rico
+  {id:'l1', dias:[1], hora:'21:45', cat:'descanso', txt:'📖 Lectura (30 min): "$100M Offers" — Alex Hormozi'},
+  {id:'l2', dias:[2], hora:'21:45', cat:'descanso', txt:'📖 Lectura (30 min): "Storytelling with Data" — Cole Nussbaumer Knaflic'},
+  {id:'l3', dias:[3], hora:'21:45', cat:'descanso', txt:'📖 Lectura (30 min): "Psicología del Dinero" — Morgan Housel'},
+  {id:'l4', dias:[4], hora:'21:45', cat:'descanso', txt:'📖 Lectura (30 min): "The Millionaire Next Door" — Thomas Stanley'},
+  {id:'l5', dias:[5], hora:'21:45', cat:'descanso', txt:'📖 Lectura (30 min): "Never Split the Difference" — Chris Voss'},
   // Ejercicio (17:40, después de la Didi corta) y bloque de habilidad — cambian cada día
   {id:'e1', dias:[1], hora:'17:40', cat:'salud', txt:'🏋️ Ejercicio: Empuje (pecho / hombro / tríceps)', subtareas:[
     {id:'e1a', txt:'Press de banca — 4×8'},
@@ -594,7 +604,7 @@ const RUTINA_TASKS=[
     {id:'sa13', txt:'Skincare PM — limpiador + tratamiento (ácido salicílico/retinol) + hidratante nocturno'},
     {id:'sa13b', txt:'Minoxidil 5% en cuero cabelludo seco — dosis de la noche'},
   ]},
-  {id:'sa14',  dias:[6], hora:'21:30', cat:'descanso', txt:'Meditación'},
+  {id:'sa14',  dias:[6], hora:'21:30', cat:'descanso', txt:'🧘 Meditación — misma respiración box 4-4-4-4 que entre semana'},
   {id:'sa15',  dias:[6], hora:'21:45', cat:'salud',    txt:'Apagar pantallas. Dormir'},
   // Compartido Sábado y Domingo
   {id:'fl1', dias:[6,0], hora:'17:00', cat:'descanso', txt:'Bloque largo de freelance/plantilla si ya hay cliente o ventas activas'},
@@ -619,7 +629,7 @@ const RUTINA_TASKS=[
     {id:'do10', txt:'Skincare PM — limpiador + tratamiento (ácido salicílico/retinol) + hidratante nocturno'},
     {id:'do10b', txt:'Minoxidil 5% en cuero cabelludo seco — dosis de la noche'},
   ]},
-  {id:'do11',  dias:[0], hora:'22:00', cat:'descanso', txt:'Meditación'},
+  {id:'do11',  dias:[0], hora:'22:00', cat:'descanso', txt:'🧘 Meditación — misma respiración box 4-4-4-4 que entre semana'},
   {id:'do12',  dias:[0], hora:'22:15', cat:'salud',    txt:'Apagar pantallas. Dormir'},
 ];
 // Categorías visuales — mismo mapa de colores/íconos que Coach_v2.html → #rutina (CAT_META)

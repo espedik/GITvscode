@@ -3664,7 +3664,7 @@ function seedData() {
     ],
     debts: [
       {id:'d001',name:'Tarjeta BBVA',                  type:'credit_card',total:32343.31,  balance:32343.31,  rate:10,    min:1500, day:11,start:'2024-01-22'},
-      {id:'d002',name:'Tarjeta Banamex',               type:'credit_card',total:14349.72,  balance:14349.72,  rate:10,    min:810,  day:8, start:'2024-06-18', noInterest:12238},
+      {id:'d002',name:'Tarjeta Banamex',               type:'credit_card',total:14349.72,  balance:9000,      rate:10,    min:810,  day:8, start:'2024-06-18', noInterest:12238},
       {id:'d003',name:'Crédito Automotriz',            type:'car',        total:315800,    balance:299000,    rate:12.99, min:6700, day:1, start:'2026-01-01', remainingMonths:61},
       {id:'d004',name:'Apple Watch MSI (TC Banamex)',  type:'other',      total:10248,     balance:2562,      rate:0,     min:854,  day:16,start:'2025-09-16'},
       {id:'d005',name:'Vuelo Viva Aerobus (TC BBVA)',  type:'other',      total:5280,      balance:1320,      rate:0,     min:440,  day:16,start:'2025-09-16'},
@@ -3677,7 +3677,6 @@ function seedData() {
     ],
     investments: [
       {id:'i002',name:'CETES',              type:'cetes',    invested:3000,  value:3000,  date:'2026-04-20',rate:11},
-      {id:'i003',name:'NVIDIA — GBM+',      type:'acciones', invested:890,   value:890,   date:'2026-06-01',rate:0},
       {id:'i004',name:'Depósito de renta',  type:'otro',     invested:11250, value:11250, date:'2024-01-01',rate:0}
     ],
     activos: [
@@ -4328,6 +4327,10 @@ function init() {
   // Migración: actualizar meta maestría de 300k → 500k
   const _maeGoal=S.goals.find(g=>g.id==='g001');
   if(_maeGoal&&_maeGoal.target===300000){_maeGoal.target=500000;save();}
+  // Migración 2026-08-02: Banamex bajó a $9,000 real, y se vendieron todas las acciones de GBM
+  const _banamex=S.debts.find(d=>d.id==='d002');
+  if(_banamex&&_banamex.balance===14349.72){_banamex.balance=9000;save();}
+  if(S.investments.find(i=>i.id==='i003')){S.investments=S.investments.filter(i=>i.id!=='i003');save();}
   // Asegurar que el fondo de emergencia exista en metas
   if(!S.goals.find(g=>g.id==='ef-001')) {
     S.goals.unshift({
