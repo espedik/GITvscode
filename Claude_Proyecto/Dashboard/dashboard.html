@@ -167,17 +167,14 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 
 /* ─── COACH · PLAN MAESTRO — ruta de deuda cara + to-do de fase (2026-07-30) ─ */
 .debt-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
-.debt-step{background:rgba(var(--ov),.03);border:1px solid rgba(var(--ov),.08);border-radius:14px;padding:16px 14px;text-align:center;position:relative}
+.debt-step{background:rgba(var(--ov),.03);border:1px solid rgba(var(--ov),.08);border-radius:14px;padding:12px 10px;text-align:center;position:relative}
 .debt-step.activo{border-color:var(--ac1);box-shadow:0 0 14px rgba(var(--ov),.08)}
 .debt-step.done{border-color:rgba(0,232,122,.35);background:rgba(0,232,122,.04)}
-.ds-num{position:absolute;top:10px;left:10px;width:20px;height:20px;border-radius:50%;background:rgba(var(--ov),.08);font-size:10.5px;font-weight:800;display:flex;align-items:center;justify-content:center;color:var(--text2)}
+.ds-num{position:absolute;top:8px;left:8px;width:16px;height:16px;border-radius:50%;background:rgba(var(--ov),.08);font-size:9px;font-weight:800;display:flex;align-items:center;justify-content:center;color:var(--text2)}
 .debt-step.done .ds-num{background:rgba(0,232,122,.2);color:var(--g)}
-.ds-ico{font-size:26px;margin-bottom:4px}
+.ds-ico{font-size:13px;margin-bottom:2px}
 .ds-lbl{font-size:12px;font-weight:800;color:var(--text)}
-.ds-txt{font-size:11.5px;color:var(--text2);margin:4px 0 9px;font-family:var(--mono)}
-.todo-row{display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-bottom:1px solid rgba(var(--ov),.06)}
-.todo-row:last-child{border-bottom:none}
-.todo-num{width:24px;height:24px;border-radius:50%;background:rgba(var(--ov),.08);color:var(--text2);font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.ds-txt{font-size:11.5px;color:var(--text2);margin:3px 0 6px;font-family:var(--mono)}
 @media(max-width:640px){.debt-steps{grid-template-columns:1fr}}
 
 /* ─── HABILIDADES — tarjetas grandes, una por prioridad (slide pasivo, sin clics) ─ */
@@ -315,30 +312,24 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
   <section class="slide theme-coach" data-i="2">
     <div class="slide-inner">
       <div class="eyebrow reveal d1"><span class="dot"></span> Coach · Plan Maestro</div>
-      <div class="slide-title reveal d2" id="coachPhaseTitle">Fase —</div>
-      <div class="reveal d2" style="font-size:clamp(12.5px,1.1vw,14.5px);color:var(--text2);line-height:1.65;margin-bottom:18px;max-width:820px" id="coachFaseExplica">—</div>
+      <div class="reveal d2" style="display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:4px">
+        <div class="slide-title" id="coachPhaseTitle" style="margin-bottom:0">Fase —</div>
+        <div id="coachFaseFecha" style="font-size:clamp(11px,1vw,13px);color:var(--text2);white-space:nowrap">—</div>
+      </div>
+      <div class="reveal d2" style="font-size:clamp(12px,1.05vw,14px);color:var(--text2);line-height:1.45;margin-bottom:10px;max-width:820px" id="coachFaseExplica">—</div>
 
-      <div class="tile reveal d3" style="margin-bottom:18px">
-        <div class="lbl" style="margin-bottom:12px">💰 Tu ruta hacia deuda cara en $0 — en este orden, sin excepción</div>
+      <div class="tile reveal d3" style="margin-bottom:10px;padding:14px 18px">
+        <div class="lbl" style="margin-bottom:8px">💰 Tu ruta hacia deuda cara en $0 — en este orden, sin excepción</div>
         <div class="debt-steps" id="coachDebtSteps"></div>
-      </div>
-
-      <div class="grid g2 reveal d4" style="margin-bottom:18px">
-        <div class="tile">
-          <div class="lbl">Avance real de la ruta</div>
-          <div class="big-num" style="font-size:clamp(30px,3.6vw,46px);color:var(--g)" id="coachRutaPct">—</div>
-          <div class="pbar"><div class="pfill" id="coachRutaPctBar" style="width:0%;background:linear-gradient(90deg,var(--g),var(--cy))"></div></div>
-          <div class="sub">Con $ reales de Finanzas — no tiempo transcurrido</div>
-        </div>
-        <div class="tile">
-          <div class="lbl">Esta fase vence</div>
-          <div class="big-num" style="font-size:clamp(22px,2.8vw,34px)" id="coachFaseFin">—</div>
-          <div class="sub" id="coachFaseDias">—</div>
+        <div style="display:flex;align-items:center;gap:10px;margin-top:10px;padding-top:9px;border-top:1px solid rgba(var(--ov),.07)">
+          <span class="lbl" style="white-space:nowrap">Avance real</span>
+          <div class="pbar" style="flex:1;height:4px;margin-top:0"><div class="pfill" id="coachRutaPctBar" style="width:0%;background:linear-gradient(90deg,var(--g),var(--cy))"></div></div>
+          <span class="big-num" style="font-size:15px;color:var(--g)" id="coachRutaPct">—</span>
         </div>
       </div>
 
-      <div class="tile reveal d5">
-        <div class="lbl" style="margin-bottom:10px">📋 Qué hacer en esta fase</div>
+      <div class="tile reveal d5" style="padding:14px 18px">
+        <div class="lbl" style="margin-bottom:6px">📋 Qué hacer en esta fase — semana a semana</div>
         <div id="coachPriorities"></div>
       </div>
     </div>
@@ -831,34 +822,44 @@ const PHASES=[
   {start:new Date(2026,6,18), end:new Date(2026,8,30),  tag:'Fase 0', title:'Cerrar la fuga y arrancar ingreso, no solo pensar',
    meta:'Fondo de emergencia a $10,000 + $14,000–15,000 de activos vendidos aplicados a Banamex.',
    explica:'Fase 0 es el arranque del plan (18 jul – 30 sep 2026, ~10 semanas). Todavía no se trata de ganar mucho — se trata de cerrar la fuga de dinero y sentar las bases, en este orden exacto: 1) fondo de emergencia, 2) Banamex, 3) BBVA. En paralelo arrancas el negocio: dedicar atención real al negocio de tu papá y publicar tu primera plantilla en comunidades de GBM.',
-   priorities:[
-     {ico:'👨‍👦',t:'Atención al negocio de tu papá',d:'Revisar fotos y material — primer paso real de la Opción 5'},
-     {ico:'💻',t:'Plantilla GBM publicada',d:'2-3 comunidades — Opción 1 de negocio'},
-     {ico:'🆘',t:'Fondo de emergencia + Banamex',d:'Cada peso de ventas/activos, en ese orden'},
+   semanas:[
+     '<strong>Semana 1-2:</strong> corrige "Deudas" a $13,372 en Finanzas.html · cero MSI nuevo.',
+     '<strong>Semana 1-2:</strong> revisar las fotos y el material del negocio de tu papá y ponerle atención real — primer paso concreto de la Opción 5.',
+     '<strong>Semana 2-3:</strong> versión limpia (sin tus datos) de la plantilla Finanzas.html + post de venta para comunidades de GBM (Opción 1).',
+     '<strong>Semana 3-4:</strong> publica la plantilla en 2-3 comunidades de GBM · sube a Marketplace tus activos ociosos (PS5, control, monitores, iPad).',
+     '<strong>Semana 4-6:</strong> con las fotos ya revisadas, agenda la llamada exploratoria de 30 min con tu papá — solo escuchar, sin compromiso (Opción 5).',
+     '<strong>Jul 2026:</strong> pausa aportaciones a la Maestría 1 año (hasta 18 jul 2027) — los $53,740 quedan intactos, nueva meta oct 2028.',
+     '<strong>Semana 6-10:</strong> cada peso de ventas/activos va, en orden: (1) fondo de emergencia a $10,000, (2) resto a Banamex.',
    ]},
   {start:new Date(2026,9,1),  end:new Date(2027,2,31),  tag:'Fase 1', title:'Los $3,868/mes liberados entran en acción + primer ingreso real',
    meta:'Primer contrato freelance o 20+ ventas de la plantilla cobradas; Banamex liquidada.',
    explica:'Fase 1 (oct 2026 – mar 2027) arranca cuando los $3,868/mes que hoy se van en MSI de gadgets quedan libres. Ese dinero sigue la misma fila que en Fase 0: termina de dejar Banamex en $0, y lo que sobre empieza a atacar BBVA. En paralelo, buscas tu primer ingreso real fuera de ALTEN.',
-   priorities:[
-     {ico:'💼',t:'Primer contrato freelance',d:'Opción 2 — o 20+ ventas de la plantilla GBM'},
-     {ico:'📣',t:'1 post mensual de seguimiento',d:'Plantilla GBM — Opción 1'},
-     {ico:'🎓',t:'Sube Copy y Finanzas',d:'Foco de habilidad de esta fase en el Radar'},
+   semanas:[
+     'Oct 2026: los $3,868/mes liberados de MSI van, en orden fijo: fondo de emergencia a $10,000 → 100% Banamex → BBVA.',
+     'Prioridad: cerrar el primer contrato freelance (Opción 2) + 1 post de seguimiento mensual de la plantilla GBM (Opción 1).',
+     'En paralelo: primer post de mentoría pagada (Opción 3) — bajo riesgo, casi sin preparación.',
+     'Primer peso cobrado en Opción 1-3 → esas horas de Didi se mueven ahí (Opción 6), no antes.',
+     'iPhone 15 MSI sigue corriendo ($494/mes) hasta jun 2028 — ya comprometido, no toca tu excedente nuevo.',
+     'Foco de habilidad (Radar): sube <strong>Copy</strong> (55→) escribiendo los posts, y <strong>Finanzas</strong> (20→) sosteniendo el presupuesto corregido. Solo estas dos.',
    ]},
   {start:new Date(2027,3,1),  end:new Date(2028,11,31), tag:'Fase 2', title:'Doblar apuesta en lo que mostró tracción',
    meta:'BBVA liquidada, deuda cara en $0, ingreso extra estable de al menos $10,000–15,000/mes.',
    explica:'Fase 2 (abr 2027 – dic 2028) es la fase más larga. Con Banamex ya resuelto, todo el excedente ataca BBVA hasta dejar la deuda cara en $0 — mientras doblas la apuesta en la opción de negocio que ya mostró tracción real, en vez de dispersarte entre varias.',
-   priorities:[
-     {ico:'🎯',t:'Concéntrate en 1 opción',d:'La que ya mostró ingreso recurrente real'},
-     {ico:'🚀',t:'Arranca Opción 4',d:'CodeReview productizado — con capital ya disponible'},
-     {ico:'📈',t:'Sube Ventas y Marketing',d:'Lo mínimo para vender sin depender solo de referidos'},
+   semanas:[
+     'Elige la opción (1, 2 o 3) con ingreso recurrente real y concéntrate ahí — resiste saltar a "algo mejor".',
+     'Con tracción sostenida, arranca la Opción 4 (CodeReview productizado) — único punto del plan que requiere capital, ya disponible tras liquidar Banamex/BBVA.',
+     'Usa IA para construir tu propio sistema de ventas/argumentos — tu fuerza real, en vez de improvisar en vivo.',
+     'Jun 2028: se libera el iPhone MSI ($494/mes) — súmalo a inversión, no a gasto nuevo.',
+     'Foco de habilidad: sube <strong>Ventas</strong> (15→) y <strong>Marketing</strong> (20→) lo mínimo para vender la Opción 4 sin depender solo de referidos.',
    ]},
   {start:new Date(2029,0,1),  end:new Date(2030,0,1),   tag:'Fase 3', title:'Escalar, cerrar la brecha de $31,540/mes y reevaluar',
    meta:'Cerrar la distancia final a $1,000,000 líquido con el negocio como fuente principal de excedente.',
    explica:'Fase 3 (ene 2029 – ene 2030) es el cierre. Con la deuda cara ya en $0 desde la fase anterior, todo el excedente nuevo va directo a cerrar la brecha final hacia $1,000,000 de patrimonio líquido — la meta central de todo el Plan Maestro.',
-   priorities:[
-     {ico:'🏁',t:'El negocio cubre la brecha',d:'Ingreso extra cercano a cero = problema de opción, no de timing'},
-     {ico:'💰',t:'Todo excedente a inversión',d:'CETES, fondos indexados, ampliar BTC/acciones'},
-     {ico:'🎓',t:'Decisión de Maestría',d:'Retomar en oct 2028 con datos reales, o posponer conscientemente'},
+   semanas:[
+     'El negocio debe cubrir ya parte real de la brecha. Ingreso extra cercano a cero en 2029 = problema de opción elegida, no de timing — revisa Posibles Negocios.',
+     'Todo ingreso adicional va primero a inversión (CETES, fondos indexados, ampliar BTC/acciones) — nunca a consumo nuevo.',
+     'La decisión de Maestría (18 jul 2027) ya está tomada: retomarla en oct 2028 con datos reales del negocio, o posponerla de nuevo, conscientemente.',
+     'Reevalúa la meta de $1,000,000 líquido con números reales del negocio y ajusta la fecha si hace falta — sin abandonarlo.',
    ]},
 ];
 function activePhase(){
@@ -1081,7 +1082,7 @@ function renderCoach(){
       <div class="ds-ico">${s.ico}</div>
       <div class="ds-lbl">${s.lbl}</div>
       <div class="ds-txt${privado?' fin-hidden':''}">${s.txt}</div>
-      <div class="pbar${privado?' fin-hidden':''}" style="height:6px;margin-top:0"><div class="pfill" style="width:${s.pct}%;background:${s.done?'var(--g)':s.activo?'var(--w)':'var(--text3)'}"></div></div>
+      <div class="pbar${privado?' fin-hidden':''}" style="height:3px;margin-top:0"><div class="pfill" style="width:${s.pct}%;background:${s.done?'var(--g)':s.activo?'var(--w)':'var(--text3)'}"></div></div>
     </div>`).join('');
 
   // Avance real = promedio de los 3 pasos con datos reales (no días transcurridos)
@@ -1092,18 +1093,13 @@ function renderCoach(){
   document.getElementById('coachRutaPctBar').style.width=rutaPct+'%';
   document.getElementById('coachRutaPctBar').closest('.pbar').classList.toggle('fin-hidden',privado);
 
-  document.getElementById('coachFaseFin').textContent=ph.end.toLocaleDateString('es-MX',{day:'numeric',month:'short',year:'numeric'});
   const diasFase=Math.max(0,Math.round((ph.end-new Date())/86400000));
-  document.getElementById('coachFaseDias').textContent=`${fmt(diasFase)} día(s) restantes de esta fase`;
+  document.getElementById('coachFaseFecha').textContent=
+    `Vence ${ph.end.toLocaleDateString('es-MX',{day:'numeric',month:'short',year:'numeric'})} · ${fmt(diasFase)} día(s) restantes`;
 
-  document.getElementById('coachPriorities').innerHTML=ph.priorities.map((p,i)=>`
-    <div class="todo-row">
-      <div class="todo-num">${i+1}</div>
-      <div style="flex:1">
-        <div style="font-weight:800;font-size:13px">${p.ico} ${p.t}</div>
-        <div class="sub" style="margin-top:2px">${p.d}</div>
-      </div>
-    </div>`).join('');
+  document.getElementById('coachPriorities').innerHTML=
+    (ph.meta?`<div class="sub" style="margin-bottom:6px">🎯 ${ph.meta}</div>`:'')+
+    ph.semanas.map(s=>`<div style="font-size:11.5px;color:var(--text2);line-height:1.4;padding:3px 0;border-bottom:1px solid rgba(var(--ov),.06)">${s}</div>`).join('');
 }
 
 function calcOVR(){let t=0,w=0;SK.forEach(s=>{t+=s.val*s.w;w+=100*s.w;});return Math.round(t/w*100);}
