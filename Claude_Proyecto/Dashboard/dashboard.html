@@ -462,6 +462,22 @@ function tryParse(key,def){try{const r=localStorage.getItem(key);if(!r)return de
 // preserva tal cual estaba, para no pisar datos que esas apps hayan guardado.
 function rawGet(key,def){try{const r=localStorage.getItem(key);return r?JSON.parse(r):def;}catch(e){return def;}}
 function rawSet(key,obj){localStorage.setItem(key,JSON.stringify(obj));}
+// Corrección puntual 2026-08-02: Banamex a $9,000 real, replicada aquí (mismo fix y misma
+// bandera que Finanzas.html → init()) porque si Adán abre el Dashboard sin haber abierto antes
+// Finanzas.html en ESTE navegador, la migración de allá nunca llega a correr — mismo problema
+// ya visto con GYM_RUTINA_DEFAULT. Si finanzasmx_v2 todavía no existe en este navegador, no
+// pone la bandera todavía (para poder corregirlo en cuanto sí exista, sin importar quién abra
+// primero). Una vez corregido, no se vuelve a tocar — si Adán paga más y baja de $9,000 por su
+// cuenta, esto no se lo revierte en una carga futura.
+function fixBanamexIfNeeded(){
+  if(localStorage.getItem('finanzasmx_v2_banamex9k')) return;
+  const fin=rawGet('finanzasmx_v2', null);
+  if(!fin||!fin.debts) return;
+  const b=fin.debts.find(d=>d.id==='d002');
+  if(b) b.balance=9000;
+  rawSet('finanzasmx_v2', fin);
+  localStorage.setItem('finanzasmx_v2_banamex9k','1');
+}
 let toastTimer=null;
 function toast(msg){
   const t=document.getElementById('toast'); if(!t)return;
@@ -1471,6 +1487,7 @@ setInterval(tickClock,1000);
 // ── Init ─────────────────────────────────────────────────────────────────
 buildDots();
 const _settings=loadSettings();
+fixBanamexIfNeeded();
 loadAll();
 tickClock();
 showSlide(_settings.remember&&_settings.lastSlide!=null?_settings.lastSlide:1);
