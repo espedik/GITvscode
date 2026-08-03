@@ -46,12 +46,11 @@
   },
   {
     "file": "images/basicos/sudadera-hoodie.jpg",
-    "url": "https://live.staticflickr.com/5343/17797999629_12a1a844c5_b.jpg",
-    "title": "Person with Backpack and Grey Hoodie",
-    "lic": "CC0",
+    "url": "https://live.staticflickr.com/5610/15697367165_43009bd719_b.jpg",
+    "title": "Polo Sport RL Hoodie — reemplazo 2026-08-03, el original era una foto artística de un hitchhiker de espaldas, no se veía la prenda",
+    "lic": "CC (vía Openverse)",
     "src": "Flickr (via Openverse)",
-    "status": "OK",
-    "size": 102490
+    "status": "OK"
   },
   {
     "file": "images/basicos/polo-pique.jpg",
@@ -73,12 +72,11 @@
   },
   {
     "file": "images/chaquetas/chamarra-mezclilla.jpg",
-    "url": "https://live.staticflickr.com/4130/5051612535_400679b5bc_b.jpg",
-    "title": "Levi's denim jacket (reemplazo tras verificación visual — el original CC0 de rawpixel era una foto artística demasiado oscura para distinguir la chamarra)",
-    "lic": "CC BY 2.0",
-    "src": "Flickr (via Openverse)",
-    "status": "OK",
-    "size": 201658
+    "url": "https://upload.wikimedia.org/wikipedia/commons/5/5c/Man_in_denim_jacket_posing_%28Unsplash%29.jpg",
+    "title": "Man in denim jacket posing (Unsplash) — reemplazo 2026-08-03, el original mostraba a una mujer modelando la chamarra, no un hombre",
+    "lic": "Licencia Unsplash (vía Wikimedia Commons)",
+    "src": "Wikimedia Commons",
+    "status": "OK"
   },
   {
     "file": "images/chaquetas/chamarra-bomber.jpg",
@@ -91,21 +89,19 @@
   },
   {
     "file": "images/chaquetas/chamarra-cuero.jpg",
-    "url": "https://live.staticflickr.com/4063/4444711601_b8ee45f598_b.jpg",
-    "title": "Black leather jacket, close-up",
-    "lic": "CC BY-SA 2.0",
+    "url": "https://live.staticflickr.com/8046/8118777575_9edcf7abef_b.jpg",
+    "title": "\"Ahead of the pack.\" de Neil Moralee — reemplazo 2026-08-03, el original mostraba a una mujer modelando la chamarra sobre un vestido rojo, no un hombre",
+    "lic": "CC (vía Openverse) — foto con marca de agua del autor visible, confirmar tipo exacto de licencia en Flickr antes de cualquier uso comercial",
     "src": "Flickr (via Openverse)",
-    "status": "OK",
-    "size": 80042
+    "status": "OK"
   },
   {
     "file": "images/chaquetas/rompevientos.jpg",
-    "url": "https://live.staticflickr.com/117/307411946_d31a197433_b.jpg",
-    "title": "Winter cycling gear (rompevientos)",
-    "lic": "CC BY-SA 2.0",
+    "url": "https://live.staticflickr.com/5574/14878970922_f4dec3f6da_b.jpg",
+    "title": "Polo Sport Windbreaker / Vintage Jacket — reemplazo 2026-08-03, el original era un flat-lay confuso de un traje de lluvia completo (chamarra+pants+guantes+gorro), no solo la chamarra",
+    "lic": "CC (vía Openverse)",
     "src": "Flickr (via Openverse)",
-    "status": "OK",
-    "size": 194025
+    "status": "OK"
   },
   {
     "file": "images/chaquetas/chamarra-acolchada-puffer.jpg",
@@ -118,20 +114,19 @@
   },
   {
     "file": "images/chaquetas/blazer-casual.jpg",
-    "url": "https://upload.wikimedia.org/wikipedia/commons/8/8d/Blazer.JPG",
-    "title": "Blazer — imagen principal de Wikipedia",
+    "url": "https://upload.wikimedia.org/wikipedia/commons/0/04/Navy_blazer_jacket.jpg",
+    "title": "Navy blazer jacket — reemplazo 2026-08-03, el original era un acercamiento a manos/corbata de un traje demasiado formal para \"blazer casual\"",
     "lic": "Wikimedia Commons, licencia libre",
-    "src": "Wikipedia",
-    "status": "OK",
-    "size": 128015
+    "src": "Wikimedia Commons",
+    "status": "OK"
   },
   {
     "file": "images/zapatos/sneakers-blancos.jpg",
-    "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/Michael_Kors_Colby_Sneaker_43R5COFP2L_Kalbsleder_wei%C3%9F_%28optic_white%29_%281%29_%2816694076422%29.jpg/900px-Michael_Kors_Colby_Sneaker_43R5COFP2L_Kalbsleder_wei%C3%9F_%28optic_white%29_%281%29_%2816694076422%29.jpg",
-    "title": "Michael Kors Colby Sneaker, optic white",
-    "lic": "Wikimedia Commons, licencia libre",
-    "src": "Wikimedia Commons",
-    "status": "ERR",
+    "url": "https://live.staticflickr.com/111/316031995_1dd59a9cc3.jpg",
+    "title": "Product Placement — reemplazo 2026-08-03, el original eran sneakers Michael Kors de mujer",
+    "lic": "CC (vía Openverse)",
+    "src": "Flickr (via Openverse)",
+    "status": "OK",
     "error": "HTTP 400"
   },
   {
@@ -154,21 +149,19 @@
   },
   {
     "file": "images/zapatos/tenis-running.jpg",
-    "url": "https://live.staticflickr.com/3624/3392103094_f9f66c78aa_b.jpg",
-    "title": "Two Running Shoes",
-    "lic": "CC BY-NC 2.0",
+    "url": "https://live.staticflickr.com/3737/8937110922_41e94c37b6_b.jpg",
+    "title": "Brand new trainers (Saucony) — reemplazo 2026-08-03, el original eran tenis viejos y sucios sobre pasto",
+    "lic": "CC (vía Openverse)",
     "src": "Flickr (via Openverse)",
-    "status": "OK",
-    "size": 259953
+    "status": "OK"
   },
   {
     "file": "images/zapatos/tenis-entrenamiento-cruzado.jpg",
-    "url": "https://live.staticflickr.com/449/20016160340_f63d398cb9_b.jpg",
-    "title": "Reebok CrossFit Lifters",
-    "lic": "CC BY-NC 2.0",
-    "src": "Flickr (via Openverse)",
-    "status": "OK",
-    "size": 210219
+    "url": "https://upload.wikimedia.org/wikipedia/commons/c/c1/Reebok_Nano_2.0.jpg",
+    "title": "Reebok Nano 2.0 — reemplazo 2026-08-03, el original era una foto desordenada de una vitrina de zapatos en tienda",
+    "lic": "Wikimedia Commons, licencia libre",
+    "src": "Wikimedia Commons",
+    "status": "OK"
   },
   {
     "file": "images/zapatos/mocasines.jpg",
@@ -199,29 +192,27 @@
   },
   {
     "file": "images/casual/outfit-casual-diario.jpg",
-    "url": "https://live.staticflickr.com/3778/10230495133_c3a4c88abd_b.jpg",
-    "title": "Portrait of a Man (reemplazo tras verificación visual — el original mostraba a un señor mayor en foto noir con sombrero, tono equivocado para casual diario)",
-    "lic": "CC BY 2.0",
-    "src": "Flickr (via Openverse)",
-    "status": "OK",
-    "size": 78346
+    "url": "https://upload.wikimedia.org/wikipedia/commons/5/5c/Man_in_denim_jacket_posing_%28Unsplash%29.jpg",
+    "title": "Man in denim jacket posing (Unsplash) — reutilizada de chamarra-mezclilla.jpg (mismo criterio que trabajo/outfit-business-casual.jpg, ya reusada en 2 combos); reemplazo 2026-08-03, el original era un acercamiento de cara que no mostraba el outfit",
+    "lic": "Licencia Unsplash (vía Wikimedia Commons)",
+    "src": "Wikimedia Commons",
+    "status": "OK"
   },
   {
     "file": "images/casual/outfit-casual-fin-semana.jpg",
-    "url": "https://live.staticflickr.com/3759/9965421154_22c39cb907_b.jpg",
-    "title": "Portrait of a Man",
-    "lic": "CC BY 2.0",
+    "url": "https://live.staticflickr.com/3813/9029761646_3bea5e1009_b.jpg",
+    "title": "\"Callum\" — reemplazo 2026-08-03, el original era un acercamiento de cara que no mostraba el outfit",
+    "lic": "CC (vía Openverse)",
     "src": "Flickr (via Openverse)",
-    "status": "OK",
-    "size": 89589
+    "status": "OK"
   },
   {
     "file": "images/ejercicio/outfit-gym-entrenamiento.jpg",
-    "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/37/Working_out_in_a_local_gym.jpg/900px-Working_out_in_a_local_gym.jpg",
-    "title": "Working out in a local gym",
-    "lic": "Wikimedia Commons, licencia libre",
-    "src": "Wikimedia Commons",
-    "status": "ERR",
+    "url": "https://live.staticflickr.com/3493/3794139255_35be14e447_b.jpg",
+    "title": "Usain Bolt at Brunel University — reemplazo 2026-08-03, el original era un gimnasio casero improvisado con barra de dominadas artesanal",
+    "lic": "CC (vía Openverse)",
+    "src": "Flickr (via Openverse)",
+    "status": "OK",
     "error": "HTTP 400"
   },
   {
@@ -235,38 +226,74 @@
   },
   {
     "file": "images/bodas/traje-formal-boda.jpg",
-    "url": "https://live.staticflickr.com/2454/3571983944_8a4fb419fe_b.jpg",
-    "title": "Suit!",
-    "lic": "CC BY 2.0",
+    "url": "https://live.staticflickr.com/7375/15868686994_beae99d329_b.jpg",
+    "title": "Wedding Attire (exhibición de museo, esmoquin en maniquí) — reemplazo 2026-08-03, el original era un traje mal entallado fotografiado en la cochera de una casa",
+    "lic": "CC (vía Openverse)",
     "src": "Flickr (via Openverse)",
-    "status": "OK",
-    "size": 184246
+    "status": "OK"
   },
   {
     "file": "images/bodas/corbata-formal.jpg",
-    "url": "https://upload.wikimedia.org/wikipedia/commons/b/bc/Memphis_tie_1A.JPG",
-    "title": "Necktie — imagen principal de Wikipedia",
-    "lic": "Wikimedia Commons, licencia libre",
-    "src": "Wikipedia",
-    "status": "OK",
-    "size": 3012929
+    "url": "https://live.staticflickr.com/4001/4649724723_d615e26681.jpg",
+    "title": "\"A new guayabera shirt!\" — reemplazo 2026-08-03; el nombre de archivo viene de antes (\"corbata-formal\") pero el combo real que usa esta foto es \"Boda de día/jardín... con guayabera\" (ver readme_vestimenta.md), así que una guayabera es más fiel que una corbata — el original era una corbata estampada que chocaba con el saco",
+    "lic": "CC (vía Openverse)",
+    "src": "Flickr (via Openverse)",
+    "status": "OK"
   },
   {
     "file": "images/fiestas/outfit-noche-fiesta.jpg",
-    "url": "https://live.staticflickr.com/8051/8416571607_7c96c83d54_b.jpg",
-    "title": "Business man (look elegante de noche)",
-    "lic": "CC BY-ND 2.0",
+    "url": "https://live.staticflickr.com/4001/4349452522_170e9c8370_b.jpg",
+    "title": "\"A Certain Sense Of Style\" — reemplazo 2026-08-03, el original era un retrato corporativo con marca de agua del fotógrafo, sin relación con \"salir de noche\"",
+    "lic": "CC (vía Openverse)",
     "src": "Flickr (via Openverse)",
-    "status": "OK",
-    "size": 171948
+    "status": "OK"
   },
   {
     "file": "images/fiestas/camisa-estampada-casual.jpg",
-    "url": "https://live.staticflickr.com/3214/3111719233_4753ddee8a.jpg",
-    "title": "Hawaiian shirt man",
-    "lic": "CC BY-ND 2.0",
+    "url": "https://live.staticflickr.com/65535/52687726398_5ce5e9fc39_b.jpg",
+    "title": "\"Young Americans\" (foto de producción teatral) — reemplazo 2026-08-03, el original era una foto borrosa de una fiesta con varias personas, sin relación clara con la prenda",
+    "lic": "CC (vía Openverse)",
     "src": "Flickr (via Openverse)",
-    "status": "OK",
-    "size": 54530
+    "status": "OK"
+  },
+  {
+    "file": "images/accesorios/reloj.jpg",
+    "url": "https://live.staticflickr.com/3887/14786640030_d1af7155d0_b.jpg",
+    "title": "Casio Watch Product Shot 1 (nuevo 2026-08-03, categoría Accesorios)",
+    "lic": "CC (vía Openverse)",
+    "src": "Flickr (via Openverse)",
+    "status": "OK"
+  },
+  {
+    "file": "images/accesorios/lentes-sol.jpg",
+    "url": "https://live.staticflickr.com/5062/5610161240_9bffc7da15_b.jpg",
+    "title": "Ray Ban Aviator Sunglasses RB 3025 Black frame Brown Silver (nuevo 2026-08-03, categoría Accesorios)",
+    "lic": "CC (vía Openverse)",
+    "src": "Flickr (via Openverse)",
+    "status": "OK"
+  },
+  {
+    "file": "images/accesorios/mochila.jpg",
+    "url": "https://live.staticflickr.com/2877/9415914033_8da6174eb8.jpg",
+    "title": "Herschel Supply backpacks (nuevo 2026-08-03, categoría Accesorios)",
+    "lic": "CC (vía Openverse)",
+    "src": "Flickr (via Openverse)",
+    "status": "OK"
+  },
+  {
+    "file": "images/accesorios/corbata.jpg",
+    "url": "https://upload.wikimedia.org/wikipedia/commons/2/23/ANTORINI_7-fold_Silk_Tie.jpg",
+    "title": "ANTORINI 7-fold Silk Tie (nuevo 2026-08-03, categoría Accesorios)",
+    "lic": "Wikimedia Commons, licencia libre",
+    "src": "Wikimedia Commons",
+    "status": "OK"
+  },
+  {
+    "file": "images/accesorios/cartera.jpg",
+    "url": "https://live.staticflickr.com/7388/11177793886_266f988008_b.jpg",
+    "title": "Mitchell Leather Slim Wallet - Interior (nuevo 2026-08-03, categoría Accesorios)",
+    "lic": "CC (vía Openverse)",
+    "src": "Flickr (via Openverse)",
+    "status": "OK"
   }
 ]
