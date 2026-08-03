@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mi Rutina de Ejercicio</title>
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -200,14 +199,10 @@ tbody tr:hover td{background:rgba(255,107,53,.03)}
   </div>
   <nav class="sb-nav">
     <div class="nav-label">Principal</div>
-    <div class="nav-item active" onclick="nav('dashboard')"><span class="ico">📊</span>Dashboard</div>
-    <div class="nav-item" onclick="nav('hoy')"><span class="ico">💪</span>Entrenar Hoy</div>
-    <div class="nav-label">Planificación</div>
-    <div class="nav-item" onclick="nav('rutina')"><span class="ico">🗓️</span>Mi Rutina</div>
+    <div class="nav-item active" onclick="nav('rutina')"><span class="ico">🏋️</span>Mi Rutina</div>
     <div class="nav-item" onclick="nav('biblioteca')"><span class="ico">📚</span>Biblioteca</div>
-    <div class="nav-label">Seguimiento</div>
-    <div class="nav-item" onclick="nav('progreso')"><span class="ico">📈</span>Progreso</div>
-    <div class="nav-item" onclick="nav('historial')"><span class="ico">📋</span>Historial</div>
+    <div class="nav-label">Mi Gimnasio</div>
+    <div class="nav-item" onclick="nav('fitsi')"><span class="ico">🏢</span>Fitsi</div>
     <div class="nav-label">Explorar</div>
     <div class="nav-item" onclick="nav('deportes')"><span class="ico">🧭</span>Deportes</div>
   </nav>
@@ -220,45 +215,31 @@ tbody tr:hover td{background:rgba(255,107,53,.03)}
   <div class="topbar">
     <div class="flex aic gap8">
       <button class="btn btn-o btn-ico" id="menuBtn" onclick="document.getElementById('sidebar').classList.toggle('open')" style="display:none">☰</button>
-      <span class="topbar-title" id="topTitle">📊 Dashboard</span>
+      <span class="topbar-title" id="topTitle">🏋️ Mi Rutina</span>
     </div>
     <div class="flex aic gap8">
       <span class="ts tm" id="dateLabel"></span>
-      <button class="btn btn-p btn-sm" onclick="nav('hoy')">💪 Entrenar ahora</button>
       <button class="theme-toggle-btn" id="theme-toggle-btn" onclick="toggleTheme()" title="Cambiar tema claro/oscuro" aria-label="Cambiar tema claro/oscuro">🌙</button>
     </div>
   </div>
 
   <div class="content">
 
-    <!-- DASHBOARD -->
-    <section id="s-dashboard" class="section active">
-      <div class="card meta-banner" style="margin-bottom:16px;padding:12px 16px">
-        <span style="font-size:12px;font-weight:800;color:var(--p)">🎯 Meta activa:</span>
-        <span class="ts" style="color:var(--text2)">masa en brazos y piernas (2x/semana cada uno) + bajar panza con core y cardio + déficit calórico. Detalle completo en <a href="#" onclick="nav('rutina');return false" style="color:var(--p)">Mi Rutina</a>.</span>
+    <!-- MI RUTINA — fusión de Dashboard + Mi Rutina (2026-08-02) -->
+    <section id="s-rutina" class="section active">
+      <div class="card meta-banner" style="margin-bottom:16px">
+        <div style="font-size:13px;font-weight:800;color:var(--p);margin-bottom:4px">🎯 Tu meta: masa en brazos y piernas, bajar panza</div>
+        <div class="ts" style="color:var(--text2);line-height:1.6">Por eso brazos y piernas se entrenan <strong style="color:var(--text)">2 veces por semana</strong> cada uno (Lun/Jue y Mar/Vie) — el resto se mantiene 1x/semana para no perder desarrollo. Sobre la panza, honestidad primero: <strong style="color:var(--text)">no existe la reducción localizada de grasa</strong> — el core fuerte de esta rutina define músculo debajo, pero lo que realmente baja la grasa de la zona media es el déficit calórico sostenido (registra tus comidas en <a href="../CuidadoPersonal/cuidadopersonal.html?tab=salud" style="color:var(--p)">Cuidado de la Salud</a>) + el cardio de miércoles y sábado.</div>
       </div>
+
       <div class="g4" id="d-kpis" style="margin-bottom:16px"></div>
       <div class="g2" style="margin-bottom:16px">
         <div id="d-semana"></div>
         <div id="d-musculos"></div>
       </div>
-      <div id="d-hoy-preview"></div>
-    </section>
 
-    <!-- ENTRENAR HOY -->
-    <section id="s-hoy" class="section">
-      <div class="sh"><h2>💪 Entrenar Hoy</h2></div>
-      <div id="hoy-body"></div>
-    </section>
-
-    <!-- MI RUTINA -->
-    <section id="s-rutina" class="section">
-      <div class="sh"><h2>🗓️ Mi Rutina Semanal</h2>
+      <div class="sh" style="margin-top:6px"><h2 style="font-size:15px">🗓️ Detalle día por día</h2>
         <button class="btn btn-p btn-sm" onclick="openRutinaModal(rutinaDiaSel)">⚙️ Configurar este día</button>
-      </div>
-      <div class="card meta-banner" style="margin-bottom:16px">
-        <div style="font-size:13px;font-weight:800;color:var(--p);margin-bottom:4px">🎯 Tu meta: masa en brazos y piernas, bajar panza</div>
-        <div class="ts" style="color:var(--text2);line-height:1.6">Por eso brazos y piernas se entrenan <strong style="color:var(--text)">2 veces por semana</strong> cada uno (Lun/Jue y Mar/Vie) — el resto se mantiene 1x/semana para no perder desarrollo. Sobre la panza, honestidad primero: <strong style="color:var(--text)">no existe la reducción localizada de grasa</strong> — el core fuerte de esta rutina define músculo debajo, pero lo que realmente baja la grasa de la zona media es el déficit calórico sostenido (registra tus comidas en <a href="../CuidadoPersonal/cuidadopersonal.html?tab=salud" style="color:var(--p)">Cuidado de la Salud</a>) + el cardio de miércoles y sábado.</div>
       </div>
       <div class="day-tabs" id="rutina-day-tabs"></div>
       <div id="rutina-day-summary" style="margin-bottom:14px"></div>
@@ -289,16 +270,44 @@ tbody tr:hover td{background:rgba(255,107,53,.03)}
       <div id="bib-body"></div>
     </section>
 
-    <!-- PROGRESO -->
-    <section id="s-progreso" class="section">
-      <div class="sh"><h2>📈 Progreso de Fuerza</h2></div>
-      <div id="prog-body"></div>
-    </section>
+    <!-- FITSI — tu gimnasio real en Buenavista -->
+    <section id="s-fitsi" class="section">
+      <div class="sh"><h2>🏢 Fitsi Buenavista — tu gimnasio</h2></div>
 
-    <!-- HISTORIAL -->
-    <section id="s-historial" class="section">
-      <div class="sh"><h2>📋 Historial de Sesiones</h2></div>
-      <div id="hist-body"></div>
+      <div class="card meta-banner" style="margin-bottom:16px">
+        <div style="font-size:13px;font-weight:800;color:var(--p);margin-bottom:4px">📍 Eje 1 Nte. 259, Buenavista, Cuauhtémoc, CDMX · ☎️ 55 6535 8823</div>
+        <div class="ts" style="color:var(--text2);line-height:1.6">Lun-Vie 5:00 am – 12:00 am · Sáb-Dom 7:00 am – 8:00 pm · Días festivos 7:00 am – 3:00 pm. Datos verificados en <a href="https://fitsi.com.mx/clubes/buenavista" target="_blank" style="color:var(--p)">fitsi.com.mx/clubes/buenavista</a> — Fitsi no publica en su web el horario exacto (día/hora) de cada clase grupal, solo la lista de clases que ofrece. Usa la tabla de abajo para capturar tú mismo el horario real que veas en su app o en el pizarrón del club — queda guardado aquí para consultarlo después.</div>
+      </div>
+
+      <div class="g2" style="margin-bottom:16px">
+        <div class="card">
+          <div class="card-title" style="margin-bottom:10px">🧘 Clases grupales que ofrece (45-50 min c/u)</div>
+          <div id="fitsi-clases-list" class="flex gap6" style="flex-wrap:wrap"></div>
+        </div>
+        <div class="card">
+          <div class="card-title" style="margin-bottom:10px">🏊 Instalaciones</div>
+          <div id="fitsi-instalaciones-list" class="flex gap6" style="flex-wrap:wrap"></div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-bottom:16px">
+        <div class="card-title" style="margin-bottom:10px">💳 Membresías (referencia, confirmar precio vigente en el club)</div>
+        <div class="tw"><table>
+          <thead><tr><th>Plan</th><th>Desde</th></tr></thead>
+          <tbody>
+            <tr><td>Shape Up</td><td>$799/mes</td></tr>
+            <tr><td>Dorada</td><td>$1,099/mes</td></tr>
+            <tr><td>Dorada Plus</td><td>$1,399/mes</td></tr>
+            <tr><td>Third Age (adulto mayor)</td><td>Consultar</td></tr>
+          </tbody>
+        </table></div>
+      </div>
+
+      <div class="card">
+        <div class="sh" style="margin-bottom:6px"><h2 style="font-size:14px">📅 Tu calendario real de clases — captúralo tú</h2></div>
+        <div class="ts tm" style="margin-bottom:12px">Anota qué clase te interesa tomar cada día y a qué hora, según lo que veas en el club o en su app. Se guarda solo, en este mismo navegador.</div>
+        <div id="fitsi-calendario"></div>
+      </div>
     </section>
 
     <!-- DEPORTES PARA EXPLORAR -->
@@ -511,25 +520,6 @@ tbody tr:hover td{background:rgba(255,107,53,.03)}
   </div>
 </div>
 
-<!-- MODAL TIMER DESCANSO -->
-<div class="mo" id="mo-timer">
-  <div class="modal" style="max-width:320px;text-align:center">
-    <div class="modal-h" style="justify-content:center"><div class="modal-title">⏱️ Descanso</div></div>
-    <div class="timer-display" id="timer-val">1:30</div>
-    <div class="ts tm" style="margin:8px 0 20px">segundos de recuperación</div>
-    <div class="flex" style="justify-content:center;gap:8px;flex-wrap:wrap;margin-bottom:14px">
-      <button class="btn btn-o btn-sm" onclick="setTimer(60)">1 min</button>
-      <button class="btn btn-o btn-sm" onclick="setTimer(90)">1:30</button>
-      <button class="btn btn-o btn-sm" onclick="setTimer(120)">2 min</button>
-      <button class="btn btn-o btn-sm" onclick="setTimer(180)">3 min</button>
-    </div>
-    <div class="flex" style="justify-content:center;gap:8px">
-      <button class="btn btn-o" onclick="pauseTimer()" id="timer-pause-btn">⏸ Pausar</button>
-      <button class="btn btn-p" onclick="closeMo('mo-timer');stopTimer()">✕ Cerrar</button>
-    </div>
-  </div>
-</div>
-
 <!-- CONFIRM -->
 <div class="conf" id="conf">
   <div class="conf-box">
@@ -716,16 +706,14 @@ let S = {
        ejercicios:[{id:'e001',series:4,reps:8,peso:0,descanso:120},{id:'e002',series:3,reps:10,peso:0,descanso:90},{id:'e004',series:3,reps:12,peso:0,descanso:60},{id:'e054',series:1,reps:25,unidad:'min',peso:0,descanso:0},{id:'e048',series:3,reps:10,peso:0,descanso:60}]},
     0:{nombre:'Descanso activo',tipo:'descanso',foco:'Recuperación — caminata ligera opcional, sin gimnasio.',ejercicios:[{id:'e051',series:1,reps:30,unidad:'min',peso:0,descanso:0}]},
   },
-  sesiones: [],
   ejerciciosCustom: [],
-  metas: { frecuencia: 6 }
+  // Calendario real de Fitsi capturado a mano por Adán (Fitsi no publica horario de clases en
+  // su web) — un texto libre por día, ver sección Fitsi.
+  fitsiCalendario: {1:'',2:'',3:'',4:'',5:'',6:'',0:''}
 };
 let editId=null, confCb=null;
-let workoutActivo=null; // { rutinaEjs, setsLog:[{ejIdx, sets:[{peso,reps,hecha}]}], startTime, dia }
-let timerInterval=null, timerSegs=90, timerRunning=false;
 let rutinaDiaEditing=null, rutinaEjsSeleccionados=[];
 let rutinaDiaSel=new Date().getDay();
-let chProgreso=null;
 
 const today = () => new Date().toISOString().slice(0,10);
 const uid = () => Date.now().toString(36)+Math.random().toString(36).slice(2);
@@ -756,9 +744,9 @@ function askDel(cb) { document.getElementById('conf').classList.add('open'); con
 document.addEventListener('keydown',e=>{ if(e.key==='Escape') document.querySelectorAll('.mo.open').forEach(m=>m.classList.remove('open')); });
 
 // ─── NAVIGATION ──────────────────────────────────────────────────────────────
-const SECS=['dashboard','hoy','rutina','biblioteca','progreso','historial','deportes'];
-const STITLE={dashboard:'📊 Dashboard',hoy:'💪 Entrenar Hoy',rutina:'🗓️ Mi Rutina Semanal',biblioteca:'📚 Biblioteca de Ejercicios',progreso:'📈 Progreso de Fuerza',historial:'📋 Historial',deportes:'🧭 Deportes para Explorar'};
-const RENDERS={dashboard:renderDashboard,hoy:renderHoy,rutina:renderRutina,biblioteca:renderBiblioteca,progreso:renderProgreso,historial:renderHistorial};
+const SECS=['rutina','biblioteca','fitsi','deportes'];
+const STITLE={rutina:'🏋️ Mi Rutina',biblioteca:'📚 Biblioteca de Ejercicios',fitsi:'🏢 Fitsi Buenavista',deportes:'🧭 Deportes para Explorar'};
+const RENDERS={rutina:renderMiRutina,biblioteca:renderBiblioteca,fitsi:renderFitsi};
 
 function nav(s) {
   SECS.forEach(x=>document.getElementById('s-'+x).classList.toggle('active',x===s));
@@ -767,53 +755,47 @@ function nav(s) {
   RENDERS[s]?.();
 }
 
-// ─── DASHBOARD ───────────────────────────────────────────────────────────────
-function renderDashboard() {
+// ─── MI RUTINA — vista fusionada: resumen de la semana + detalle día por día ──
+// Fusión de lo que antes eran Dashboard + Mi Rutina (2026-08-02, pedido explícito de Adán:
+// "fusiona lo de dashboard y lo de mi rutina, esta nueva debe ser muy completa"). Los KPIs ya
+// no dependen de sesiones registradas (esa función se quitó junto con "Entrenar Hoy") — se
+// calculan directo del plan semanal, que siempre está disponible.
+function renderMiRutina() {
+  renderResumenSemana();
+  renderRutina();
+}
+
+function renderResumenSemana() {
   const hoy = new Date();
   const diaHoy = hoy.getDay();
   const semana = Array.from({length:7},(_,i)=>{ const d=new Date(hoy); d.setDate(d.getDate()-diaHoy+i); return d.toISOString().slice(0,10); });
-  const sesHoy = S.sesiones.filter(s=>s.fecha===today());
-  const sesSemana = S.sesiones.filter(s=>semana.includes(s.fecha));
-  const totalSesiones = S.sesiones.length;
+  const diasEntreno = ORDEN_DIAS.filter(d=>S.rutina[d] && S.rutina[d].tipo!=='descanso');
+  const diasDescanso = ORDEN_DIAS.filter(d=>!S.rutina[d] || S.rutina[d].tipo==='descanso');
+  const rutinaHoy = S.rutina[diaHoy];
 
-  // Racha
-  let racha=0;
-  for(let i=0;i<60;i++){
-    const d=new Date(); d.setDate(d.getDate()-i);
-    const ds=d.toISOString().slice(0,10);
-    const dW=d.getDay();
-    const rut=S.rutina[dW];
-    if(rut?.tipo==='descanso') continue;
-    if(S.sesiones.some(s=>s.fecha===ds)) racha++;
-    else if(i>0) break;
-  }
-
-  // Mejor racha histórica (simplificado)
   document.getElementById('d-kpis').innerHTML=`
     <div class="card" style="border-left:4px solid var(--p)">
-      <div class="card-title" style="color:var(--p)">🔥 Racha activa</div>
-      <div class="card-val" style="color:var(--p)">${racha} días</div>
-      <div class="card-sub">días consecutivos</div>
+      <div class="card-title" style="color:var(--p)">🏋️ Días de entreno</div>
+      <div class="card-val" style="color:var(--p)">${diasEntreno.length}<span style="font-size:14px;opacity:.5">/7</span></div>
+      <div class="card-sub">a la semana</div>
     </div>
     <div class="card" style="border-left:4px solid var(--g)">
-      <div class="card-title" style="color:var(--g)">📅 Esta semana</div>
-      <div class="card-val" style="color:var(--g)">${sesSemana.length}<span style="font-size:14px;opacity:.5"> / ${S.metas.frecuencia||5}</span></div>
-      <div class="card-sub">sesiones completadas</div>
-      <div class="pbar"><div class="pfill" style="width:${Math.min(100,sesSemana.length/(S.metas.frecuencia||5)*100)}%;background:var(--g)"></div></div>
+      <div class="card-title" style="color:var(--g)">😴 Descanso</div>
+      <div class="card-val" style="color:var(--g)">${diasDescanso.length}<span style="font-size:14px;opacity:.5">/7</span></div>
+      <div class="card-sub">días de recuperación</div>
     </div>
     <div class="card" style="border-left:4px solid var(--b)">
-      <div class="card-title" style="color:var(--b)">📋 Total sesiones</div>
-      <div class="card-val" style="color:var(--b)">${totalSesiones}</div>
-      <div class="card-sub">desde que empezaste</div>
+      <div class="card-title" style="color:var(--b)">💪 Grupos musculares</div>
+      <div class="card-val" style="color:var(--b)">${new Set(ORDEN_DIAS.flatMap(d=>(S.rutina[d]?.ejercicios||[]).map(e=>findEj(e.id)?.musculo).filter(Boolean))).size}</div>
+      <div class="card-sub">cubiertos en la semana</div>
     </div>
     <div class="card" style="border-left:4px solid var(--w)">
-      <div class="card-title" style="color:var(--w)">⏱️ Hoy</div>
-      <div class="card-val" style="color:${sesHoy.length?'var(--g)':'var(--w)'}">${sesHoy.length?'✅ Listo':'Pendiente'}</div>
-      <div class="card-sub">${S.rutina[diaHoy]?.nombre||'Sin rutina'}</div>
+      <div class="card-title" style="color:var(--w)">📅 Hoy toca</div>
+      <div class="card-val" style="color:var(--w);font-size:16px">${rutinaHoy?.nombre||'Sin asignar'}</div>
+      <div class="card-sub">${DIAS_STR[diaHoy]}</div>
     </div>`;
 
-  // Semana visual
-  const rutinaHoy = S.rutina[diaHoy];
+  // Semana visual — de un vistazo, qué toca cada día (sin depender de sesiones registradas)
   document.getElementById('d-semana').innerHTML=`
     <div class="card">
       <div class="card-title" style="margin-bottom:12px">🗓️ Esta semana</div>
@@ -822,11 +804,10 @@ function renderDashboard() {
           const dW=new Date(d).getDay();
           const rut=S.rutina[dW];
           const [,m,day]=d.split('-');
-          const hecha=S.sesiones.some(s=>s.fecha===d);
           const isHoy=d===today();
           const col=rut?.tipo?TIPO_COL[rut.tipo]:'rgba(var(--ov),.2)';
           const esDescanso=rut?.tipo==='descanso'||!rut;
-          return `<div style="display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:8px;background:${isHoy?'rgba(255,107,53,.08)':'rgba(var(--ov),.02)'};border:1px solid ${isHoy?'rgba(255,107,53,.3)':'rgba(var(--ov),.06)'}">
+          return `<div onclick="nav('rutina');verRutinaDia(${dW})" style="cursor:pointer;display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:8px;background:${isHoy?'rgba(255,107,53,.08)':'rgba(var(--ov),.02)'};border:1px solid ${isHoy?'rgba(255,107,53,.3)':'rgba(var(--ov),.06)'}">
             <div style="width:36px;text-align:center">
               <div style="font-size:10px;font-weight:700;color:${isHoy?'var(--p)':'var(--text3)'}">${DIAS_SHORT[dW]}</div>
               <div style="font-size:11px;color:var(--text2)">${parseInt(day)}/${parseInt(m)}</div>
@@ -834,21 +815,18 @@ function renderDashboard() {
             <div style="flex:1">
               <div style="font-size:12px;font-weight:${isHoy?700:500};color:${isHoy?'var(--text)':'var(--text2)'}">${rut?.nombre||'Sin asignar'}</div>
             </div>
-            ${esDescanso?'<span class="badge b-n" style="font-size:9px">😴</span>':
-              hecha?'<span class="badge b-g" style="font-size:9px">✅ Hecho</span>':
-              isHoy?`<button class="btn btn-p btn-sm" style="font-size:10px;padding:3px 8px" onclick="nav('hoy')">Iniciar</button>`:
-              `<div style="width:8px;height:8px;border-radius:50%;background:rgba(var(--ov),.15)"></div>`}
+            ${esDescanso?'<span class="badge b-n" style="font-size:9px">😴</span>':`<div style="width:8px;height:8px;border-radius:50%;background:${col}"></div>`}
           </div>`;
         }).join('')}
       </div>
     </div>`;
 
-  // Músculos trabajados esta semana
+  // Músculos que cubre la rutina completa de la semana (no depende de sesiones registradas)
   const musculosSem = {};
-  sesSemana.forEach(ses=>ses.ejercicios?.forEach(ej=>{ const e=findEj(ej.ejId); if(e) musculosSem[e.musculo]=(musculosSem[e.musculo]||0)+1; }));
+  ORDEN_DIAS.forEach(d=>(S.rutina[d]?.ejercicios||[]).forEach(e=>{ const ej=findEj(e.id); if(ej) musculosSem[ej.musculo]=(musculosSem[ej.musculo]||0)+1; }));
   document.getElementById('d-musculos').innerHTML=`
     <div class="card">
-      <div class="card-title" style="margin-bottom:12px">💪 Músculos trabajados esta semana</div>
+      <div class="card-title" style="margin-bottom:12px">💪 Músculos que cubre tu semana</div>
       <div class="muscle-map">
         ${MUSCULOS_ALL.map(m=>{
           const n=musculosSem[m]||0;
@@ -857,28 +835,11 @@ function renderDashboard() {
             <div style="width:10px;height:10px;border-radius:50%;background:${n>0?col:'rgba(var(--ov),.15)'}"></div>
             <div>
               <div style="font-size:11px;font-weight:${n>0?700:400};color:${n>0?col:'var(--text3)'}">${m}</div>
-              ${n>0?`<div style="font-size:9px;color:var(--text3)">${n} set${n!==1?'s':''}</div>`:''}
+              ${n>0?`<div style="font-size:9px;color:var(--text3)">${n} ejercicio${n!==1?'s':''}</div>`:''}
             </div>
           </div>`;
         }).join('')}
       </div>
-    </div>`;
-
-  // Preview del entrenamiento de hoy
-  const rutinaH = S.rutina[diaHoy];
-  document.getElementById('d-hoy-preview').innerHTML=`
-    <div class="card" style="border-color:rgba(255,107,53,.25);background:rgba(255,107,53,.04)">
-      <div class="flex jb aic" style="margin-bottom:12px">
-        <div>
-          <div class="card-title" style="color:var(--p);margin:0">💪 Entrenamiento de hoy — ${DIAS_STR[diaHoy]}</div>
-          <div style="font-size:16px;font-weight:800;color:var(--text);margin-top:4px">${rutinaH?.nombre||'Sin rutina asignada'}</div>
-        </div>
-        ${sesHoy.length?'<span class="badge b-g">✅ Completado</span>':`<button class="btn btn-p" onclick="nav('hoy')">💪 Iniciar entrenamiento</button>`}
-      </div>
-      ${rutinaH?.ejercicios?.length?`
-      <div style="display:flex;flex-wrap:wrap;gap:6px">
-        ${rutinaH.ejercicios.map(e=>{ const ej=findEj(e.id); return ej?`<span style="padding:4px 10px;border-radius:6px;font-size:11px;font-weight:600;background:rgba(255,107,53,.1);color:var(--p)">${ej.nombre} <span style="opacity:.6">${e.series}×${e.reps}</span></span>`:'' }).join('')}
-      </div>`:rutinaH?.tipo==='descanso'?`<div class="ts tm">😴 Día de descanso — recupera y crece</div>`:`<div class="ts tm">Sin ejercicios asignados. <a href="#" onclick="nav('rutina');return false" style="color:var(--p)">Configurar rutina →</a></div>`}
     </div>`;
 }
 
