@@ -65,6 +65,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 .theme-coach  {--ac1:#e0b020;--ac2:#ff8a3d}
 .theme-skills {--ac1:#b06eff;--ac2:#ff6bd6}
 .theme-metas  {--ac1:#ffd93d;--ac2:#00e0c0}
+.theme-lista  {--ac1:#3ddc97;--ac2:#00b8d9}
 
 .eyebrow{font-size:clamp(11px,1.1vw,14px);font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--text2);display:flex;align-items:center;gap:10px;margin-bottom:10px}
 .eyebrow .dot{width:8px;height:8px;border-radius:50%;background:var(--ac1);box-shadow:0 0 12px var(--ac1);animation:pulse 2s ease-in-out infinite}
@@ -110,7 +111,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 .rt2-body{flex:1;min-width:0}
 .rt2-top{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:4px}
 .rt2-cat{font-size:10px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;padding:2px 10px;border-radius:20px;border:1px solid}
-.rt2-time{font-family:var(--mono);font-size:12px;color:var(--text3);font-weight:600}
+.rt2-time{font-family:var(--mono);font-size:12px;color:var(--text2);font-weight:600}
 .rt2-txt{font-size:clamp(13px,1.15vw,15px);color:var(--text);line-height:1.4}
 .rt2-check{font-size:16px;margin-top:5px;flex-shrink:0}
 .rt2-now{background:rgba(var(--ov),.04);border-radius:12px;padding:12px 10px;margin:0 -10px}
@@ -180,6 +181,17 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 .sem-check input[type="checkbox"]{margin-top:3px;width:13px;height:13px;accent-color:var(--g);cursor:pointer;flex-shrink:0}
 .sem-check label{font-size:11.5px;color:var(--text2);line-height:1.4;cursor:pointer}
 .sem-check input:checked+label{color:var(--text3);text-decoration:line-through}
+
+/* Lista de Compras */
+.lc-tab{padding:7px 15px;border-radius:20px;border:1px solid rgba(var(--ov),.12);background:rgba(var(--ov),.05);color:var(--text2);font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;transition:all .2s;white-space:nowrap}
+.lc-tab:hover{background:rgba(var(--ov),.09)}
+.lc-tab.active{background:var(--ac1);color:#06170f;border-color:var(--ac1)}
+.lc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px 20px}
+.lc-item{display:flex;align-items:flex-start;gap:8px;padding:4px 0;border-bottom:1px solid rgba(var(--ov),.05)}
+.lc-item input[type="checkbox"]{margin-top:3px;width:13px;height:13px;accent-color:var(--g);cursor:pointer;flex-shrink:0}
+.lc-item label{font-size:12px;color:var(--text2);line-height:1.4;cursor:pointer}
+.lc-item input:checked+label{color:var(--text3);text-decoration:line-through}
+@media(max-width:900px){.lc-grid{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:640px){.debt-steps{grid-template-columns:1fr}}
 
 /* ─── HABILIDADES — tarjetas grandes, una por prioridad (slide pasivo, sin clics) ─ */
@@ -372,6 +384,18 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
     </div>
   </section>
 
+  <!-- 5 · LISTA DE COMPRAS -->
+  <section class="slide theme-lista" data-i="5">
+    <div class="slide-inner">
+      <div class="eyebrow reveal d1"><span class="dot"></span> Lista de Compras</div>
+      <div class="reveal d2" style="display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:10px;margin-bottom:12px">
+        <div class="slide-title" style="margin-bottom:0">🛒 Todo lo que hay que comprar</div>
+        <div id="listaCatTabs" style="display:flex;gap:6px;flex-wrap:wrap"></div>
+      </div>
+      <div class="tile reveal d3" id="listaCompraBody" style="max-height:70vh;overflow-y:auto"></div>
+    </div>
+  </section>
+
 </div>
 
 <div class="hud">
@@ -423,7 +447,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
   <div class="help-row"><span class="help-key">Espacio</span> Pausar / reanudar rotación</div>
   <div class="help-row"><span class="help-key">M</span> Abrir/cerrar el menú</div>
   <div class="help-row"><span class="help-key">F</span> Pantalla completa</div>
-  <div class="help-row"><span class="help-key">1-5</span> Ir directo a esa pantalla</div>
+  <div class="help-row"><span class="help-key">1-6</span> Ir directo a esa pantalla</div>
   <div class="help-row"><span class="help-key">?</span> Esta ayuda</div>
 </div>
 
@@ -769,6 +793,74 @@ const RECETAS_MINI={
     {nombre:'Ensalada tibia de pollo, quinoa y verduras',tiempo:'20 min',cal:480,prot:48}
   ]
 };
+
+// ── LISTA DE COMPRAS (nuevo 2026-08-03) — pedido explícito: "toda la lista separada" de
+//    comida, productos de limpieza de cara/skincare, suplementos y cuidado del cabello.
+//    Todo duplicado de datos 100% reales ya existentes en otras apps, mismo patrón que
+//    RECETAS_MINI/GYM_RUTINA_DEFAULT/APRENDIZAJE — si cambian las recetas o los catálogos de
+//    producto en el archivo de origen, replicar aquí a mano.
+//    - comida: ingredientes únicos de las 20 recetas de CuidadoPersonal/comida.html → RECETAS
+//      (desayuno+cena) + 3 extra de PLAN_ITEMS (frijoles negros, lechuga, jitomate) que no
+//      aparecían en ninguna receta pero sí en el Plan Masa Muscular.
+//    - skincare / cabello: opciones reales (marca+producto, disponibles en México) de
+//      CuidadoPersonal/cuidadopersonal.html → SKIN_DB/HAIR_DB, agrupadas por paso de la rutina
+//      (no es la selección personalizada de skPick()/haPick() — esto es el catálogo completo
+//      de cada paso para que Adán elija según lo que encuentre, "o" separa alternativas).
+//    - suplementos: los 6 de CuidadoPersonal/salud.html → SUPP_CATALOG, tal cual.
+const LISTA_COMPRAS={
+  comida:['Aceite de oliva','Aguacate','Arroz blanco cocido','Atún en agua','Avena en hojuelas','Brócoli','Calabaza','Caldo de pollo bajo en sodio','Camote','Canela en polvo','Cebolla','Chayote','Clara de huevo','Crema de cacahuate','Ejotes','Espinaca','Filete de tilapia','Frijoles negros','Hierbas de olor','Huevo','Jitomate','Lechuga','Leche de avena','Leche entera','Manzana','Miel de abeja','Nopales cocidos','Pan integral','Papa','Pavo molido','Pechuga de pollo','Pepino','Pera','Plátano','Queso panela','Quinoa cocida','Sal','Tortilla de maíz','Yogurt griego natural','Zanahoria'],
+  skincare:[
+    'Limpiador — La Roche-Posay Effaclar Gel Purificante o CeraVe Limpiador Espumoso o Cetaphil Gel Limpiador o CeraVe Limpiador Hidratante',
+    'Exfoliante (BHA/AHA) — The Ordinary Ácido Salicílico 2% o Neutrogena Rapid Clear o The Ordinary Ácido Láctico 5%',
+    'Sérum AM — The Ordinary Niacinamida 10% + Zinc 1% o La Roche-Posay Pure Vitamin C10',
+    'Hidratante AM — CeraVe Loción Hidratante AM SPF30 o Neutrogena Hydro Boost Water Gel',
+    'Protector solar — Isdin Fusion Water Oil-Free SPF50 o La Roche-Posay Anthelios Oil Free SPF50 o Neutrogena Ultra Sheer SPF50',
+    'Tratamiento PM (retinoide) — Differin Adapaleno 0.1% Gel o The Ordinary Retinol 0.2% en Escualano',
+    'Hidratante PM — CeraVe Loción Hidratante PM o Cetaphil Crema Hidratante',
+    'Mascarilla semanal — Aztec Secret Indian Healing Clay o The Ordinary Salicylic Acid 2% Masque',
+  ],
+  cabello:[
+    'Champú — Vichy Dercos Energising (Aminexil) o Alpecin Caffeine Shampoo C1 o Pantene Pro-V Anti-Caída o Head & Shoulders Anticaspa',
+    'Acondicionador — TRESemmé Keratin Smooth o Pantene Pro-V Cabello Fino o Kérastase Nutritive',
+    'Mascarilla — L\'Oréal Elvive Total Repair 5 o Moroccanoil Hydrating Mask',
+    'Minoxidil 5% Solución/Espuma (Kirkland Signature o genérico)',
+    'Aceite de puntas — Moroccanoil Treatment Light o L\'Oréal Elvive Aceite Extraordinario',
+  ],
+  suplementos:['Proteína Whey (suero de leche)','Creatina monohidratada','Vitamina D3','Omega 3 (aceite de pescado)','Multivitamínico','Magnesio (glicinato o citrato)'],
+};
+const LISTA_CAT_META={
+  comida:{ico:'🍽️',label:'Comida'},
+  skincare:{ico:'🧴',label:'Skincare'},
+  cabello:{ico:'💇',label:'Cabello'},
+  suplementos:{ico:'💊',label:'Suplementos'},
+};
+let listaCatSel='comida';
+function renderListaCompras(){
+  document.getElementById('listaCatTabs').innerHTML=Object.keys(LISTA_COMPRAS).map(cat=>{
+    const m=LISTA_CAT_META[cat];
+    return `<button class="lc-tab ${cat===listaCatSel?'active':''}" onclick="verListaCat('${cat}')">${m.ico} ${m.label}</button>`;
+  }).join('');
+  const checks=rawGet('dash-lista-compras',{});
+  const items=LISTA_COMPRAS[listaCatSel];
+  const esComida=listaCatSel==='comida';
+  document.getElementById('listaCompraBody').innerHTML=`
+    <div class="${esComida?'lc-grid':''}">
+      ${items.map((txt,i)=>{
+        const id='lc-'+listaCatSel+'-'+i;
+        return `<div class="lc-item">
+          <input type="checkbox" id="${id}" ${checks[id]?'checked':''} onchange="toggleListaItem('${id}')">
+          <label for="${id}">${txt}</label>
+        </div>`;
+      }).join('')}
+    </div>`;
+}
+function verListaCat(cat){ listaCatSel=cat; renderListaCompras(); }
+function toggleListaItem(id){
+  const checks=rawGet('dash-lista-compras',{});
+  const cb=document.getElementById(id);
+  if(cb&&cb.checked) checks[id]=true; else delete checks[id];
+  rawSet('dash-lista-compras',checks);
+}
 
 // ── Frases motivacionales — 70 en total (ampliado de 20 a 70 el 2026-08-02, a petición
 //    de Adán), rotan una por día (no por render, para que no cambien a media pantalla).
@@ -1299,13 +1391,14 @@ function renderMetasSlide(){
     </div>`;
 }
 
-const RENDERS=[renderHero,renderDia,renderCoach,renderSkills,renderMetasSlide];
+const RENDERS=[renderHero,renderDia,renderCoach,renderSkills,renderMetasSlide,renderListaCompras];
 const SLIDE_MENU_META=[
   {ico:'🌟',n:'Hero · JARVIS'},
   {ico:'🕐',n:'Mi Día'},
   {ico:'🪙',n:'Coach · Plan Maestro'},
   {ico:'🧠',n:'Habilidades'},
   {ico:'🎯',n:'Mis Metas'},
+  {ico:'🛒',n:'Lista de Compras'},
 ];
 
 // ══════════════════════════════════════════════════════════════════════════
@@ -1397,6 +1490,7 @@ function renderNavMenu(){
     ph.tag+' — '+ph.title,
     'OVR '+calcOVR(),
     'Corto, mediano y largo plazo',
+    'Comida, skincare, cabello y suplementos',
   ];
   document.getElementById('navMenuList').innerHTML=SLIDE_MENU_META.map((it,i)=>`
     <div class="menu-item ${i===cur?'on':''}" onclick="goTo(${i});toggleMenu()">
@@ -1450,7 +1544,7 @@ document.addEventListener('keydown',e=>{
   if(e.key==='f'||e.key==='F') toggleFullscreen();
   if(e.key==='?') toggleHelp();
   if(e.key==='Escape') closeAllPanels();
-  if(/^[1-5]$/.test(e.key)) goTo(parseInt(e.key,10)-1);
+  if(/^[1-6]$/.test(e.key)) goTo(parseInt(e.key,10)-1);
 });
 window.addEventListener('storage',()=>{loadAll();RENDERS[cur]();renderQuickApps();});
 
