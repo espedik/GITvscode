@@ -1,6 +1,6 @@
 # Coach_v2.html — Coach de vida de Adán
 
-Aplicación de una sola página (HTML+CSS+JS, sin backend, sin dependencias externas de gráficas — el radar de habilidades es un `<canvas>` dibujado a mano, no Chart.js). Es el núcleo del plan de vida/negocio de Adán: diagnóstico financiero real, Plan Maestro hacia $1,000,000 líquido, rutina diaria completa, hábitos, roadmap de aprendizaje, y una guía legal/fiscal tanto personal como para constituir una empresa. Único import externo: Google Fonts (Inter + Playfair Display).
+Aplicación de una sola página (HTML+CSS+JS, sin backend, sin dependencias externas de gráficas — el radar de habilidades es un `<canvas>` dibujado a mano, no Chart.js). Es el núcleo del plan de vida/negocio de Adán: diagnóstico financiero real, Plan Maestro hacia $1,000,000 líquido, rutina diaria completa, roadmap de aprendizaje, y una guía legal/fiscal tanto personal como para constituir una empresa. Único import externo: Google Fonts (Inter + Playfair Display).
 
 Tema claro/oscuro con toggle (🌙/☀️ arriba a la derecha), persistido en `localStorage['coach-theme']`. Soporta ambos temas completos (`:root` y `:root[data-theme="dark"]`).
 
@@ -8,7 +8,7 @@ Tema claro/oscuro con toggle (🌙/☀️ arriba a la derecha), persistido en `l
 
 Un único botón (`cambiarModo('personal'|'empresa')`) alterna entre dos `<div class="vista-panel">` independientes, cada uno con su propio `<nav>` de navegación por ancla (`#seccion`) y scroll-spy propio (`refrescarScrollSpy()`, recalculado en cada cambio de modo):
 
-- **🪙 Coach — Personal** (modo por defecto): `#perfil` · `#rutina` · `#habitos` · `#aprendizaje` · `#perfil-rico` · `#networking` · `#marca-personal` · `#legal-personal`
+- **🪙 Coach — Personal** (modo por defecto): `#perfil` · `#rutina` · `#aprendizaje` · `#perfil-rico` · `#networking` · `#marca-personal` · `#legal-personal`
 - **🏢 Coach — Empresa**: `#posibles-negocios` · `#mas-ideas` · `#crear-empresa` · `#legal`
 
 ## Modelo de datos — 4 claves de `localStorage`
@@ -24,7 +24,7 @@ Un único botón (`cambiarModo('personal'|'empresa')`) alterna entre dos `<div c
 
 Auditoría de la app encontró que **~90% de los checklists del archivo eran puramente visuales** (tachaban el texto al marcar, pero se reseteaban a cero en cada recarga) — incluyendo el checklist "Próximos 14 días" (`pf1`-`pf10`), cuyo propio último ítem (`pf10`) le pide a Adán "revisar este apartado completo una vez por semana", algo que no tenía sentido si nunca recordaba qué ya estaba marcado. Solo `#rutina` (vía `coach_rutina_v1`) y el radar de habilidades (vía `radarp_*`) persistían de verdad.
 
-**Fix genérico, al final del `<script>` principal**: todo checkbox `.check-item` que exista en el HTML al cargar la página (es decir, todos excepto los de `#rutina-timeline`, que se generan dinámicamente y ya tienen su propia persistencia con fecha) ahora se guarda/restaura automáticamente en `coach_checks_v1` (`{[id]: true}`), además de seguir tachando el texto visualmente. No hace falta tocar cada sección una por una — el mismo bucle cubre `#perfil` → 🎯 Metas, `#habitos`... **excepto la grilla de hábitos en sí**, que usa botones `.habito-day` (no checkboxes) y sigue sin persistir — Networking, Marca Personal, Legal & Personal, Legal de empresa, Posibles Negocios y cualquier checklist nuevo que se agregue después con la misma clase `.check-item` y un `id` único, sin tener que escribir código adicional.
+**Fix genérico, al final del `<script>` principal**: todo checkbox `.check-item` que exista en el HTML al cargar la página (es decir, todos excepto los de `#rutina-timeline`, que se generan dinámicamente y ya tienen su propia persistencia con fecha) ahora se guarda/restaura automáticamente en `coach_checks_v1` (`{[id]: true}`), además de seguir tachando el texto visualmente. No hace falta tocar cada sección una por una — el mismo bucle cubre `#perfil` → 🎯 Metas, Networking, Marca Personal, Legal & Personal, Legal de empresa, Posibles Negocios y cualquier checklist nuevo que se agregue después con la misma clase `.check-item` y un `id` único, sin tener que escribir código adicional.
 
 **Exportar respaldo** (botón `⬇️` junto al toggle de tema, `exportCoachData()`) — Coach era la única app "grande" del ecosistema sin esto (a diferencia de Finanzas/Salud/Ejercicio). Descarga un `coach_YYYY-MM-DD.json` con las 3 claves de datos reales: `coach_rutina_v1`, `coach_checks_v1` y los 12 `radarp_*` (agrupados bajo `radar`). No incluye `coach-theme` (preferencia visual, no dato de seguimiento).
 
@@ -52,6 +52,8 @@ fases = [
 ```
 Calcula fase activa, marca `.is-done/.is-active/.is-pending` en cada bloque de fase y en los `.plan-step`, y escribe `kpiDiasMeta`. **Estas mismas 4 fechas están duplicadas en `Dashboard/dashboard.html` (constante `PHASES`)** — si cambian aquí, hay que replicarlas allá (ver `../README.md`).
 
+**Fase 0 — prioridades actualizadas el 2026-08-02**: Adán pidió explícitamente quitar "régimen fiscal" de las tareas pendientes de Fase 0 ("eso ya quedó", el trámite ya está resuelto) y reemplazar "mensaje directo a 5 ex-colegas" por atención real al negocio de su papá ("ni siquiera va acorde a lo que tengo, quita eso, ponle que debo revisar fotos del negocio de mi papá y ponerle atención"). Se actualizaron los 3 lugares donde esto aparecía como tarea activa: la lista de la fase (`#fase0` → `<ul>`, semana 1-2), el checklist "Próximos 14 días" (`pf2` régimen fiscal se eliminó del todo; `pf5` ex-colegas ahora dice "revisar las fotos y el material del negocio de tu papá"), y el párrafo de contexto al inicio de `#rutina`. El checkpoint de Fase 0 y el `.concepto-item` de "Supuestos del plan" que mencionaba régimen fiscal como bloqueador también se actualizaron a tiempo pasado (ya resuelto). Régimen fiscal **sigue documentado como contexto histórico/legal** en `#legal-personal` y en los recursos de `#aprendizaje` — solo se quitó como tarea pendiente activa. Mismo cambio replicado en `Dashboard/dashboard.html` → `PHASES[0].priorities`.
+
 ### Radar FIFA de habilidades (IIFE en el `<script>`, ~línea 3403)
 
 Array `SK` con 12 skills, cada una `{id, name, full, icon, val, w (peso), cat, desc}`. Al cargar, sobreescribe `val` con lo que haya en `localStorage['radarp_'+id]` si existe. `calcOVR()` calcula el overall ponderado por `w`. `draw()` dibuja el radar en `<canvas>` a mano (sin librería), sensible al tema claro/oscuro. `buildSliders()` genera un slider 0-100 por skill; `updateRadarSkill(id,val)` (expuesta en `window`) actualiza `SK`, persiste en `radarp_{id}` y redibuja. `showSkillTab(id)`/`goToSkillDetail(id)` abren el detalle expandible de una skill (roadmap 0→100, contenido estático por skill).
@@ -64,23 +66,46 @@ Reescrita por completo el 2026-07-29 para dejar de ser un checklist visual sin m
 
 **2026-07-31 — tareas agrupadas con subtareas, para no verse "interminable"**: Adán pidió explícitamente juntar en una sola tarjeta las cosas que hace de corrido (skincare + minoxidil AM y PM, cena + preparar el desayuno del día siguiente), mostrado como subtareas dentro de una sola tarjeta en vez de filas sueltas — y enlazar la rutina con `CuidadoPersonal/comida.html` para saber qué comer. Ver detalle completo abajo en "Tareas agrupadas (`subtareas`)".
 
-### `RUTINA_TASKS` — fuente única de verdad (57 tareas de nivel superior, 70 tareas reales contando subtareas)
+### `RUTINA_TASKS` — fuente única de verdad (54 tareas de nivel superior, 85 tareas reales contando subtareas)
 
 Array top-level `{id, dias:[0-6], hora:'HH:MM', cat, txt, fijo?:true, subtareas?:[{id,txt,link?}], link?:{href,label}}` (dias: 0=domingo…6=sábado). Se filtra y ordena por hora para obtener el horario de cualquier día (`rutinaTareasDia(dow)` / `rutinaTareasHoy()`). `link` es opcional en una tarea simple o en cualquier subtarea — se renderiza como un enlace inline `→` que abre en pestaña nueva (`taskLabelHtml()`).
 
-**Horario real confirmado el 2026-07-29** (reemplazó una versión anterior con supuestos incorrectos de despertar a las 5:00 y trabajo 7:00–17:00): se levanta **7:00**, se baña de inmediato (~7:03), sale de casa **7:40**, maneja **~20 min** y trabaja en ALTEN **8:00–17:00**, duerme alrededor de **medianoche** (~7h de sueño). Con solo 40 min entre despertar y salir, la mañana **solo alcanza para higiene/skincare** — el ejercicio, el bloque de habilidad, la revisión de GBM y la prioridad de Fase 0 se movieron a después del trabajo, donde sí hay ~6h40m libres antes de dormir.
+**Reescrito por completo el 2026-08-02** (reemplazó la versión del 2026-07-29 que asumía que salía de ALTEN directo a casa) — Adán detalló su horario real de tarde/noche: sale de ALTEN, maneja Didi un rato corto, va al gym, y por la noche retoma Didi hasta cerca de las 9pm antes de cenar. Se levanta **7:00**, se baña de inmediato (~7:03), sale de casa **7:40**, maneja **~20 min**, trabaja en ALTEN **8:00–17:00** (con su descanso para comer a la **13:00**), y duerme alrededor de **medianoche** (~7h de sueño).
 
-- **Común Lun-Vie** (`wd01`-`wd21`, `dias:[1,2,3,4,5]`): despertar 07:00 → bañarse (`wd02`, incluye lavar el cabello los días de lavado) → **`wd0304` = 🧴 Skincare + 🍂 Minoxidil AM** (agrupada, subtareas `wd03`/`wd04`) → vestirse → salir 7:40 → traslado (~20 min) → **`wd07` = 🏢 ALTEN, jornada laboral 8:00–17:00, `fijo:true`** → traslado de vuelta (~20 min) → ejercicio del día → ducha rápida → bloque de habilidad del día → revisar GBM → prioridad de Fase 0 (90 min) → ventas (5 mensajes) → **`wd14` = 🍽️ Cena + preparar desayuno de mañana** (agrupada, subtareas `wd14a` cena / `wd14b` dejar listo el desayuno para llevar a ALTEN, cada una con `link` a `comida.html`) → lectura → journaling → **`wd1718` = 🧴 Skincare + 🍂 Minoxidil PM** (agrupada, subtareas `wd17`/`wd18`) → plan de mañana → meditación → dormir 23:55.
-- **Ejercicio y bloque de habilidad — cambian cada día, después del trabajo** (`e1`-`e5` a las 17:20, `k1`-`k5` a las 18:05, un id por día 1-5): Lun=Pesas Empuje+Marketing, Mar=Cardio+Datos/SQL, Mié=Pesas Jalón+Marketing, Jue=Cardio-HIIT+Datos, Vie=Pesas Piernas+Copy.
-- **Sábado** (`sa01`-`sa15`, `dias:[6]`): despertar 07:00, **`sa0203` = skincare + minoxidil AM** (agrupada), **`sa03` = 🍳 Preparar y desayunar tranquilo** (con `link` a `comida.html?s=desayunos` — aquí sí hay tiempo, se cocina y se come en el momento, sin dividir en subtareas), entreno largo, **bloque profundo de 4h** para la prioridad del Plan Maestro, almuerzo, IA aplicada, ventas, revisión semanal de finanzas, **`sa11` = 🍽️ Cena** (con `link` a cenas), **`sa1113` = skincare + minoxidil PM** (agrupada), dormir.
-- **Domingo** (`do01`-`do12`, `dias:[0]`): despertar 07:30, **`do0203` = skincare + minoxidil AM** (agrupada), **`do03` = 🍳 Preparar y desayunar tranquilo** (con `link`), descanso activo, finanzas (revisión de presupuesto + planificar semana), **checkpoint explícito del Plan Maestro**, **`do08` = 🍽️ Cena ligera** (con `link`), journaling, **`do1013` = skincare + minoxidil PM** (agrupada), dormir.
+- **Común Lun-Vie** (`dias:[1,2,3,4,5]`): despertar 07:00 → bañarse (`wd02`, incluye lavar el cabello los días de lavado) → **`wd0304` = 🧴 Skincare + 🍂 Minoxidil AM** (agrupada, 4 subtareas — ver "Skincare con productos y beneficio" abajo) → vestirse → salir 7:40 → traslado (~20 min) → **`wd07` = 🏢 ALTEN, jornada laboral 8:00–17:00, `fijo:true`** → **`wd12b` = 🛒 Comprar comida, 13:00** (en el descanso de ALTEN) → **`wd08` = 🚗 Didi, 1 pasajero a Buenavista (~40 min), 17:00** → **ejercicio del día, 17:40** (agrupada, sublista detallada de ejercicios — ver abajo) → ducha rápida (18:30) → prioridad activa de Fase 0 (18:40) → bloque de habilidad del día solo Mar/Jue/Vie (19:00) → **`wd-didi2` = 🚗 Didi, sesión de la noche hasta ~21:00, 19:20** → **`wd14` = 🍽️ Cena + preparar la comida de mañana, 21:00** (agrupada, mismo platillo para cenar hoy y llevar mañana a ALTEN — ver nota de eficiencia abajo) → lectura (21:30) → **`wd16` = 📓 Diario del día, 22:00** (agrupada, clarificada — ver abajo) → **`wd1718` = 🧴 Skincare + 🍂 Minoxidil PM, 22:15** (agrupada, 4 subtareas) → **`wd19` = 🎯 Planear el día de mañana, 22:30** (agrupada, clarificada — ver abajo) → meditación (22:45) → dormir 23:55.
+- **Bolsa GBM — solo lunes** (`lu-gbm`, `dias:[1]`, 09:00): "💰 Bolsa GBM: revisar portafolio + VOO + USD/MXN e invertir — solo lunes". Antes era un bloque diario a las 18:35 — Adán aclaró que solo invierte al inicio de semana, así que se quitó de los demás días entre semana.
+- **Ejercicio (17:40, después de la Didi corta) y bloque de habilidad** (`e1`-`e5`, `k2`/`k4`/`k5`, un id por día 1-5): Lun=Empuje (pecho/hombro/tríceps), Mar=Cardio+core+Datos/SQL, Mié=Jalón (espalda/bíceps), Jue=Cardio/HIIT+Datos/SQL, Vie=Piernas/glúteo+Copy. **Lun y Mié ya no tienen bloque de habilidad** — antes ahí iba "publica 1 post de LinkedIn" (`k1`/`k3`), que se quitó por completo (ver "Marketing pospuesto" abajo).
+- **Sábado** (`sa01`-`sa15`, `dias:[6]`): despertar 07:00, skincare+minoxidil AM, desayuno, entreno largo, bloque profundo de 4h para la prioridad del Plan Maestro, almuerzo, IA aplicada, revisión semanal de finanzas, cena, skincare+minoxidil PM, dormir. **Ya no tiene el bloque de "Ventas: 5 mensajes"** (`sa09`, eliminado — ver abajo).
+- **Domingo** (`do01`-`do12`, `dias:[0]`): despertar 07:30, skincare+minoxidil AM, desayuno, descanso activo, finanzas (revisión de presupuesto + planificar semana), checkpoint explícito del Plan Maestro, cena ligera, **`do09` = 📓 Diario de cierre de semana** (agrupada, clarificada), skincare+minoxidil PM, dormir.
 - **Compartida Sáb/Dom** (`fl1`, `dias:[6,0]`, 17:00): bloque largo de freelance/plantilla si hay cliente o ventas activas.
-
-Los pasos de **🍂 minoxidil** (AM y PM, todos los días de la semana sin excepción) y el aviso de lavado de cabello dentro de `wd02` se agregaron el 2026-07-29 a pedido explícito de Adán ("el skincare y cuidado del cabello añádelo a la rutina de coach cuando me despierto y me duermo") — el tratamiento anticaída real (`CuidadoPersonal/cuidadopersonal.html` → Cabello → Guía) recomienda 2 aplicaciones diarias, por eso hay una tarea por cada momento del día, todos los días, no solo entre semana. **El 2026-07-31 se fusionaron con su skincare correspondiente** (mismo horario AM/PM) en una sola tarjeta agrupada — ver "Tareas agrupadas" abajo.
 
 Tareas con `fijo:true` (solo `wd07`, el bloque de ALTEN) se muestran en la línea de tiempo y cuentan para "ahora/siguiente", pero **no llevan checkbox y no cuentan en el % de progreso**.
 
-**Desayuno entre semana — resuelto el 2026-07-31**: Adán confirmó que entre semana el desayuno **se prepara la noche anterior y se come ya en ALTEN**, no en la ventana de 40 min de la mañana (que sigue sin alcanzar para eso). Por eso la subtarea `wd14b` ("dejar listo el desayuno de mañana") vive en el bloque de la noche junto a la cena, no como tarea nueva en la mañana. El traslado de la tarde (`wd08`, 17:00→17:20) se sigue asumiendo simétrico al de la mañana (~20 min) — ajustar si el commute real de regreso es distinto.
+### Cambios del 2026-08-02, uno por uno
+
+Pedido explícito de Adán, con detalles concretos de su día real:
+
+- **🛒 Comprar comida (13:00)** — nueva, en su descanso de ALTEN.
+- **🚗 Didi a Buenavista (17:00, ~40 min) + gym a las 17:40** — "quisiera ir al gym como 5:40, debido a que 5 a 5:40 trabajaré de Didi llevando solo un pasajero a Buenavista". Reemplazó el traslado genérico de vuelta a casa.
+- **Ejercicio con sublista detallada** — "debes ser muy completo, una sublista de los ejercicios que debo hacer". Cada `e1`-`e5` ahora es una tarjeta agrupada con 3-5 subtareas nombrando el ejercicio exacto y series×reps (p. ej. Lun: Press de banca 4×8, Press inclinado con mancuerna 3×10, Press militar 3×10, Elevaciones laterales 3×12, Fondos en banco 3×12) — antes era una sola línea genérica tipo "Ejercicio: Pesas — Empuje". **No se tocó `ejercicio.html`** ni su propio programa semanal (`S.rutina`/`GYM_RUTINA_DEFAULT`) — esta sublista vive solo en la rutina diaria de Coach, es un desglose del mismo bloque, no un tracker de pesas/PRs nuevo.
+- **🚗 Didi de la noche (19:20, hasta ~21:00)** — "en las noches cuando termino de trabajar de Didi como 9pm". Reemplazó el bloque condicional "Didi solo si Opciones 1-2 aún no generan ingreso".
+- **🍽️ Cena + preparar la comida de mañana, ahora a las 21:00** — "debe ser lo mismo que haré [cenar y preparar] para ahorrar tiempo": la subtarea ya no dice "cenar" y "dejar listo el desayuno" como dos acciones separadas con platillos distintos, sino cocinar **un solo platillo** que sirve para cenar hoy y llevar de comida mañana a ALTEN.
+- **Bolsa GBM movida a solo lunes 9am** — antes diaria a las 18:35, ahora `lu-gbm` (solo `dias:[1]`) a las 09:00, "porque solo invierto al inicio de semana".
+- **Marketing/LinkedIn pospuesto** — se eliminaron `k1`/`k3` ("publica 1 post de valor en LinkedIn", Lun/Mié). Adán aclaró que eso lo hará como parte del proyecto de marketing del negocio de su papá, no como bloque genérico de su rutina personal.
+- **Ventas eliminado de la rutina** (`wd12` entre semana y `sa09` sábado, "🤝 Ventas: 5 mensajes personalizados") — "quita lo de ventas, aún ni tengo nada que vender". No se tocó la skill "Ventas" del Radar FIFA (`SK`, ver abajo) — sigue existiendo como competencia a largo plazo, es un concepto distinto al outreach diario que sí se quitó.
+- **🎯 Prioridad activa de Fase 0 actualizada** — el texto ya no menciona "régimen fiscal, outreach" (ambos resueltos/reemplazados, ver sección de Fase 0 más abajo), ahora dice "negocio de tu papá o plantilla GBM".
+- **📓 Diario del día y 🎯 Planear el día de mañana, clarificados** — Adán dijo explícitamente "lo de journaling ni siquiera lo entiendo, no sé qué se hace ahí, ni lo de plan 1 MIT". Ambos bloques pasaron de una sola línea vaga a tarjetas agrupadas con subtareas que explican paso a paso qué escribir: el diario pide 3 logros del día + 1 lección + 1 gasto evitable (igual que antes, pero ahora explícito subtarea por subtarea); planear mañana pide elegir 1 sola tarea más importante (explicando qué significa "MIT") + anotar 4 tareas más chicas en orden.
+
+### Skincare — con nombre de producto y para qué ayuda (2026-08-02)
+
+Adán pidió explícitamente no dejarlo genérico: "lo del skincare no estás siendo nada claro, debes poner los productos, el nombre y en qué me ayuda". `wd0304`/`wd1718` (AM/PM entre semana) ahora tienen 4 subtareas cada una en vez de 2:
+
+- **AM**: limpiador suave (ej. CeraVe Espuma o Cetaphil) — quita grasa/sudor de la noche; sérum de niacinamida 10% — controla grasa y afina poros; hidratante con SPF 50 (ej. La Roche-Posay Anthelios) — hidrata y protege del sol; minoxidil 5% en cuero cabelludo seco — estimula el folículo.
+- **PM**: limpiador (doble limpieza si usó protector solar) — remueve el bloqueador; tratamiento con ácido salicílico o retinol alternando noches — controla brotes y mejora textura; hidratante nocturno — repara mientras duerme; minoxidil 5% — dosis de la noche.
+
+Sábado y domingo (`sa0203`/`sa1113`/`do0203`/`do1013`) mantienen el resumen corto ("mismos productos que entre semana") para no repetir el texto completo 4 veces más en el archivo.
+
+**Desayuno entre semana**: sigue confirmado desde el 2026-07-31 que se prepara la noche anterior y se come ya en ALTEN, no en la ventana de 40 min de la mañana.
 
 ### Tareas agrupadas (`subtareas`) — 2026-07-31
 
@@ -119,10 +144,6 @@ Pedido explícito de Adán: "hay cosas que las quiero juntas... si no se verán 
 ### Categorías visuales (`cat` → clase CSS)
 
 `salud`→rojo, `descanso`→gris, `admin`→azul, `aprender`→verde, `profundo`→dorado/accent, `creativo`→morado, `trabajo`→teal (`#3ea8a8`, nueva, solo para el bloque de ALTEN).
-
-## `#habitos` — Hábitos & Energía
-
-Grid semanal (L M X J V S D) por hábito con botones `.habito-day` que solo alternan una clase CSS `done` al hacer clic (`document.querySelectorAll('.habito-day').forEach(btn=>btn.addEventListener('click',...))`). **No persiste en `localStorage`** — se resetea visualmente al recargar la página. Es contenido de referencia/UI, no un tracker real (a diferencia de `#rutina`). Incluye tarjetas estáticas "Pilares de energía" y "Distractores a eliminar".
 
 ## `#aprendizaje` — Aprendizaje: Ataca tus 5 debilidades
 
@@ -179,7 +200,8 @@ Checklist personal (`.check-item`, persistente desde el 2026-08-01), calendario 
 ## Referencias cruzadas
 
 - La barra de navegación (ambos modos) tiene un enlace **🚀 Dashboard** al final, alineado a la derecha (`margin-left:auto`), que apunta a `../Dashboard/dashboard.html`.
-- El **Dashboard** (`../Dashboard/dashboard.html`) lee `coach_rutina_v1` directamente (`D.rut`) y **duplica** `RUTINA_TASKS` (57 tareas de nivel superior / 70 contando subtareas, deben quedar byte-idénticas — verificado con `JSON.stringify` en cada cambio), las 4 fechas de `PHASES`, y el array `SK` de 12 skills. **Si editas el horario de `#rutina`, los valores base del radar, o las fechas del Plan Maestro aquí, hay que replicar el cambio en `Dashboard/dashboard.html`** — no hay sincronización automática entre archivos. Ver tabla de "Datos duplicados" en [`../README.md`](../README.md).
+- El **Dashboard** (`../Dashboard/dashboard.html`) lee `coach_rutina_v1` directamente (`D.rut`) y **duplica** `RUTINA_TASKS` (54 tareas de nivel superior / 85 contando subtareas, deben quedar byte-idénticas — verificado con `JSON.stringify` en cada cambio), las 4 fechas de `PHASES` (incluidas sus `priorities` de Fase 0, actualizadas el 2026-08-02), y el array `SK` de 12 skills. **Si editas el horario de `#rutina`, los valores base del radar, o las fechas/prioridades del Plan Maestro aquí, hay que replicar el cambio en `Dashboard/dashboard.html`** — no hay sincronización automática entre archivos. Ver tabla de "Datos duplicados" en [`../README.md`](../README.md).
+- **`#habitos` (Hábitos & Energía) se eliminó por completo el 2026-08-02** ("en coach quita lo de habitos y energia, elimina todo eso") — nav link, sección, CSS (`.habito-*`) y el listener de JS que alternaba la clase `done` en los botones del tracker (nunca persistía en `localStorage`, era decorativo). No queda ninguna referencia activa a `#habitos` en el archivo.
 - Mapa completo del proyecto: [`../README.md`](../README.md).
 
 ## Cómo usarlo
