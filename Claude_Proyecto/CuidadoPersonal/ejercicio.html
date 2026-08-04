@@ -114,11 +114,18 @@ tbody tr:hover td{background:rgba(255,107,53,.03)}
 .empty .ico{font-size:40px;margin-bottom:10px;opacity:.4}
 /* Músculo chips */
 .musculo-chip{display:inline-block;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:700;margin:2px}
-/* Muscle map */
-.muscle-map{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-.muscle-cell{padding:10px 12px;border-radius:10px;border:1px solid rgba(var(--ov),.07);background:rgba(var(--ov),.03);display:flex;align-items:center;gap:8px;transition:all .2s}
-.muscle-cell.worked{background:rgba(255,107,53,.1);border-color:rgba(255,107,53,.3)}
-.muscle-cell.rest{opacity:.5}
+/* Semana horizontal (Mi Rutina) */
+.week-strip{display:grid;grid-template-columns:repeat(7,1fr);gap:8px}
+.ws-day{border-radius:12px;border:1px solid rgba(var(--ov),.09);background:rgba(var(--ov),.03);padding:10px 6px;text-align:center;cursor:pointer;transition:all .2s}
+.ws-day:hover{background:rgba(var(--ov),.07)}
+.ws-day.today{border-color:var(--p);background:rgba(255,107,53,.1)}
+.ws-dname{font-size:10px;font-weight:800;color:var(--text2);text-transform:uppercase;letter-spacing:.04em}
+.ws-day.today .ws-dname{color:var(--p)}
+.ws-ddate{font-size:9px;color:var(--text3);margin-bottom:6px}
+.ws-dot{width:8px;height:8px;border-radius:50%;margin:0 auto 4px}
+.ws-ico{font-size:15px;line-height:1;margin-bottom:2px}
+.ws-lbl{font-size:9px;color:var(--text2);line-height:1.25;min-height:22px;overflow:hidden}
+@media(max-width:640px){.week-strip{grid-template-columns:repeat(4,1fr);gap:6px}}
 /* Exercise card in library */
 .ej-card{padding:12px 14px;border-radius:10px;border:1px solid rgba(var(--ov),.07);background:rgba(var(--ov),.03);transition:all .2s;cursor:pointer;margin-bottom:8px}
 .ej-card:hover{border-color:rgba(255,107,53,.35);background:rgba(255,107,53,.05)}
@@ -140,15 +147,18 @@ tbody tr:hover td{background:rgba(255,107,53,.03)}
 .day-tab .dt-t{font-size:9px;color:var(--text3);margin-top:1px}
 .day-tab .dt-dot{width:6px;height:6px;border-radius:50%;margin-top:3px}
 /* Exercise detail card (rutina del día) */
-.exd-card{display:flex;gap:14px;padding:14px;border-radius:12px;border:1px solid rgba(var(--ov),.07);background:rgba(var(--ov),.03);margin-bottom:10px}
-.exd-img{width:110px;height:110px;flex-shrink:0;border-radius:10px;overflow:hidden;background:rgba(var(--ov),.04);display:flex;align-items:center;justify-content:center}
-.exd-img img{width:100%;height:100%;object-fit:cover}
-.exd-img .ico{font-size:34px;opacity:.4}
-.exd-num{width:24px;height:24px;border-radius:50%;background:rgba(255,107,53,.15);color:var(--p);font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.exd-stats{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}
-.exd-stat{background:rgba(var(--ov),.05);border:1px solid rgba(var(--ov),.08);border-radius:6px;padding:3px 9px;font-size:11px;font-weight:700;color:var(--text2)}
-.exd-cue{font-size:11.5px;color:var(--text3);line-height:1.5;margin-top:4px;font-style:italic}
-@media(max-width:640px){.exd-card{flex-direction:column}.exd-img{width:100%;height:160px}}
+.exd-card{display:flex;border-radius:14px;border:1px solid rgba(var(--ov),.08);background:rgba(var(--ov),.03);margin-bottom:12px;overflow:hidden}
+.exd-img{width:130px;flex-shrink:0;background:rgba(var(--ov),.05)}
+.exd-img img{width:100%;height:100%;object-fit:cover;display:block}
+.exd-body{flex:1;min-width:0;padding:14px 16px}
+.exd-head{display:flex;align-items:center;gap:10px;margin-bottom:9px;flex-wrap:wrap}
+.exd-num{width:26px;height:26px;border-radius:50%;background:rgba(255,107,53,.15);color:var(--p);font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.exd-name{font-size:15px;font-weight:800}
+.exd-badges{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.exd-stats{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:9px}
+.exd-stat{background:rgba(var(--ov),.05);border:1px solid rgba(var(--ov),.08);border-radius:6px;padding:4px 10px;font-size:11.5px;font-weight:700;color:var(--text2)}
+.exd-cue{display:flex;gap:8px;align-items:flex-start;font-size:12px;color:var(--text2);line-height:1.5;background:rgba(var(--ov),.04);border-radius:8px;padding:9px 11px}
+@media(max-width:640px){.exd-card{flex-direction:column}.exd-img{width:100%;height:170px}}
 /* Deportes para explorar */
 .sport-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
 .sport-card{border-radius:var(--r14);border:1px solid rgba(var(--ov),.07);background:var(--surface-2);overflow:hidden;box-shadow:var(--sh);transition:border-color .2s,transform .2s}
@@ -221,10 +231,7 @@ tbody tr:hover td{background:rgba(255,107,53,.03)}
       </div>
 
       <div class="g4" id="d-kpis" style="margin-bottom:16px"></div>
-      <div class="g2" style="margin-bottom:16px">
-        <div id="d-semana"></div>
-        <div id="d-musculos"></div>
-      </div>
+      <div id="d-semana" style="margin-bottom:16px"></div>
 
       <div class="sh" style="margin-top:6px"><h2 style="font-size:15px">🗓️ Detalle día por día</h2>
         <button class="btn btn-p btn-sm" onclick="openRutinaModal(rutinaDiaSel)">⚙️ Configurar este día</button>
@@ -528,47 +535,58 @@ tbody tr:hover td{background:rgba(255,107,53,.03)}
 const EJ_DB = [
   // PECHO
   {id:'e001',nombre:'Press de Banca',musculo:'Pecho',secundarios:['Tríceps','Hombros'],equipo:'Barra',tipo:'Compuesto',
-    img:'https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/Bench_press_1.jpg/960px-Bench_press_1.jpg',
+    img:'https://upload.wikimedia.org/wikipedia/commons/a/a8/Bench-press-1.png',
     cue:'Escápulas retraídas y pegadas al banco, pies firmes en el piso, baja la barra controlada hasta rozar el pecho y empuja en línea recta hacia arriba.'},
   {id:'e002',nombre:'Press Inclinado con Barra',musculo:'Pecho',secundarios:['Tríceps'],equipo:'Barra',tipo:'Compuesto',
-    img:'https://upload.wikimedia.org/wikipedia/commons/9/97/Dumbbell-incline-bench-press-1.png',
+    img:'https://upload.wikimedia.org/wikipedia/commons/8/86/Incline-bench-press-1.png',
     cue:'Banco a 30-45°. Igual que el press plano pero la barra baja a la parte alta del pecho — más ángulo, más pecho superior.'},
   {id:'e003',nombre:'Press con Mancuernas',musculo:'Pecho',secundarios:['Tríceps'],equipo:'Mancuernas',tipo:'Compuesto',
+    img:'https://upload.wikimedia.org/wikipedia/commons/2/2e/Dumbbell-bench-press-1.png',
     cue:'Mayor rango de movimiento que la barra — deja que las mancuernas bajen un poco más allá de los hombros sin perder el control.'},
   {id:'e004',nombre:'Aperturas con Mancuerna',musculo:'Pecho',secundarios:[],equipo:'Mancuernas',tipo:'Aislamiento',
-    img:'https://upload.wikimedia.org/wikipedia/commons/7/7e/DumbbellFlye.JPG',
     cue:'Codos ligeramente flexionados y fijos durante todo el movimiento — es un abrazo amplio, no un press. Siente el estiramiento en el pecho, no en el hombro.'},
   {id:'e005',nombre:'Fondos (Dips)',musculo:'Pecho',secundarios:['Tríceps'],equipo:'Cuerpo',tipo:'Compuesto',
     img:'https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/Dipexercise.svg/960px-Dipexercise.svg.png',
     cue:'Inclina el torso hacia adelante para enfatizar pecho (más vertical = más tríceps). Baja hasta 90° de codo, sin hundir los hombros.'},
   {id:'e006',nombre:'Flexiones',musculo:'Pecho',secundarios:['Tríceps','Hombros'],equipo:'Cuerpo',tipo:'Compuesto',
+    img:'https://upload.wikimedia.org/wikipedia/commons/9/9e/Push-up-1.png',
     cue:'Cuerpo en línea recta de cabeza a talones, baja hasta que el pecho casi toque el piso, codos a 45° del torso (no pegados ni en cruz).'},
-  {id:'e007',nombre:'Aperturas en Polea',musculo:'Pecho',secundarios:[],equipo:'Máquina',tipo:'Aislamiento'},
+  {id:'e007',nombre:'Aperturas en Polea',musculo:'Pecho',secundarios:[],equipo:'Máquina',tipo:'Aislamiento',
+    img:'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1c/Cable_crossover_1.svg/960px-Cable_crossover_1.svg.png',
+    cue:'Sentado o de pie entre dos poleas, junta las manos al frente en un arco amplio como si abrazaras un árbol — mantén una ligera flexión de codo fija todo el movimiento.'},
   // ESPALDA
   {id:'e008',nombre:'Dominadas',musculo:'Espalda',secundarios:['Bíceps'],equipo:'Cuerpo',tipo:'Compuesto',
-    img:'https://upload.wikimedia.org/wikipedia/commons/thumb/6/67/Marine_Pull-ups.jpg/960px-Marine_Pull-ups.jpg',
     cue:'Agarre un poco más ancho que los hombros, sube hasta que la barbilla pase la barra, baja controlado hasta extender el brazo por completo. Usa banda de asistencia si no llegas al número de reps.'},
   {id:'e009',nombre:'Remo con Barra',musculo:'Espalda',secundarios:['Bíceps'],equipo:'Barra',tipo:'Compuesto',
     img:'https://upload.wikimedia.org/wikipedia/commons/a/af/Barbell-rear-delt-row-1.png',
     cue:'Torso inclinado ~45°, espalda recta (no redondeada), jala la barra hacia el abdomen apretando los omóplatos al final.'},
   {id:'e010',nombre:'Jalón al Pecho',musculo:'Espalda',secundarios:['Bíceps'],equipo:'Máquina',tipo:'Compuesto',
     cue:'Jala con los codos hacia abajo y atrás, no con los brazos — imagina que llevas los codos a los bolsillos traseros.'},
-  {id:'e011',nombre:'Remo con Mancuerna',musculo:'Espalda',secundarios:['Bíceps'],equipo:'Mancuernas',tipo:'Compuesto'},
+  {id:'e011',nombre:'Remo con Mancuerna',musculo:'Espalda',secundarios:['Bíceps'],equipo:'Mancuernas',tipo:'Compuesto',
+    cue:'Apoya una rodilla y una mano en el banco, jala la mancuerna hacia la cadera (no hacia el hombro) apretando el omóplato al final.'},
   {id:'e012',nombre:'Peso Muerto',musculo:'Espalda',secundarios:['Glúteos','Piernas'],equipo:'Barra',tipo:'Compuesto',
-    img:'https://upload.wikimedia.org/wikipedia/commons/thumb/6/63/Deadlift-phase_1.JPG/960px-Deadlift-phase_1.JPG',
     cue:'Barra pegada a las espinillas, espalda neutra (no redondeada), empuja el piso con los talones — la fuerza sale de cadera y piernas, no de la espalda baja.'},
-  {id:'e013',nombre:'Remo en Polea Baja',musculo:'Espalda',secundarios:['Bíceps'],equipo:'Máquina',tipo:'Compuesto'},
-  {id:'e014',nombre:'Pull-over con Mancuerna',musculo:'Espalda',secundarios:['Pecho'],equipo:'Mancuernas',tipo:'Aislamiento'},
+  {id:'e013',nombre:'Remo en Polea Baja',musculo:'Espalda',secundarios:['Bíceps'],equipo:'Máquina',tipo:'Compuesto',
+    img:'https://upload.wikimedia.org/wikipedia/commons/2/2d/Cable-seated-rows-1.png',
+    cue:'Espalda recta, jala el agarre hacia el abdomen sin usar impulso de balanceo — el movimiento sale de la espalda, no de los brazos.'},
+  {id:'e014',nombre:'Pull-over con Mancuerna',musculo:'Espalda',secundarios:['Pecho'],equipo:'Mancuernas',tipo:'Aislamiento',
+    img:'https://upload.wikimedia.org/wikipedia/commons/b/bf/Dumbbell-bent-arm-pullover-1.png',
+    cue:'Acostado perpendicular al banco (solo la espalda alta apoyada), baja la mancuerna en arco detrás de la cabeza sintiendo el estiramiento en el pecho y dorsal, sube al mismo arco.'},
   // HOMBROS
   {id:'e015',nombre:'Press Militar con Barra',musculo:'Hombros',secundarios:['Tríceps'],equipo:'Barra',tipo:'Compuesto',
     img:'https://upload.wikimedia.org/wikipedia/commons/6/62/Seated-military-shoulder-press-1.png',
     cue:'Core apretado, empuja la barra en línea recta sobre la cabeza sin arquear la espalda baja — la cabeza se mueve ligeramente atrás para dejar pasar la barra.'},
-  {id:'e016',nombre:'Press con Mancuernas (Hombros)',musculo:'Hombros',secundarios:['Tríceps'],equipo:'Mancuernas',tipo:'Compuesto'},
+  {id:'e016',nombre:'Press con Mancuernas (Hombros)',musculo:'Hombros',secundarios:['Tríceps'],equipo:'Mancuernas',tipo:'Compuesto',
+    img:'https://upload.wikimedia.org/wikipedia/commons/1/15/Dumbbell-shoulder-press-1.png',
+    cue:'Sentado o de pie, empuja las mancuernas hacia arriba sin que se junten arriba del todo — controla más el descenso que el empuje.'},
   {id:'e017',nombre:'Elevaciones Laterales',musculo:'Hombros',secundarios:[],equipo:'Mancuernas',tipo:'Aislamiento',
     img:'https://upload.wikimedia.org/wikipedia/commons/f/fd/Dumbbell-lateral-raises-1.png',
     cue:'Codos ligeramente flexionados, sube hasta la altura del hombro (no más), lidera con el codo, no con la muñeca. Peso ligero, técnica estricta.'},
-  {id:'e018',nombre:'Elevaciones Frontales',musculo:'Hombros',secundarios:[],equipo:'Mancuernas',tipo:'Aislamiento'},
-  {id:'e019',nombre:'Pájaros (Rear Delt)',musculo:'Hombros',secundarios:[],equipo:'Mancuernas',tipo:'Aislamiento'},
+  {id:'e018',nombre:'Elevaciones Frontales',musculo:'Hombros',secundarios:[],equipo:'Mancuernas',tipo:'Aislamiento',
+    img:'https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Front_dumbbell_raise_1.svg/960px-Front_dumbbell_raise_1.svg.png',
+    cue:'Sube las mancuernas al frente hasta la altura del hombro con los brazos casi rectos, sin usar impulso de cadera. Alterna o sube ambos brazos a la vez.'},
+  {id:'e019',nombre:'Pájaros (Rear Delt)',musculo:'Hombros',secundarios:[],equipo:'Mancuernas',tipo:'Aislamiento',
+    cue:'Inclinado hacia adelante, sube las mancuernas hacia los lados con los codos ligeramente flexionados — enfócate en apretar el omóplato, no en levantar peso.'},
   {id:'e020',nombre:'Face Pull',musculo:'Hombros',secundarios:['Espalda'],equipo:'Máquina',tipo:'Aislamiento',
     cue:'Jala la cuerda hacia la cara separando las manos al final, codos altos — clave para salud de hombro, no para ego-lifting con mucho peso.'},
   // BÍCEPS
@@ -579,16 +597,20 @@ const EJ_DB = [
     img:'https://upload.wikimedia.org/wikipedia/commons/6/66/Biceps-curl-2.png',
     cue:'Gira la muñeca (supina) conforme subes para contraer más el bíceps arriba. Baja siempre controlado, 2-3 segundos.'},
   {id:'e023',nombre:'Curl Martillo',musculo:'Bíceps',secundarios:['Antebrazo'],equipo:'Mancuernas',tipo:'Aislamiento',
-    img:'https://upload.wikimedia.org/wikipedia/commons/7/7f/Biceps-curl-1.png',
+    img:'https://upload.wikimedia.org/wikipedia/commons/thumb/0/06/Bicep_hammer_curl_with_dumbbell_1.svg/960px-Bicep_hammer_curl_with_dumbbell_1.svg.png',
     cue:'Agarre neutro (palmas viéndose todo el tiempo, como un martillo) — construye antebrazo y el músculo braquial, dando grosor extra al brazo.'},
-  {id:'e024',nombre:'Curl en Polea',musculo:'Bíceps',secundarios:[],equipo:'Máquina',tipo:'Aislamiento'},
-  {id:'e025',nombre:'Curl Concentrado',musculo:'Bíceps',secundarios:[],equipo:'Mancuernas',tipo:'Aislamiento'},
+  {id:'e024',nombre:'Curl en Polea',musculo:'Bíceps',secundarios:[],equipo:'Máquina',tipo:'Aislamiento',
+    img:'https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/Overhead_curl_with_cable_1.svg/960px-Overhead_curl_with_cable_1.svg.png',
+    cue:'De pie frente a la polea, codos fijos al costado, sube el agarre en arco hacia los hombros sin balancear el torso.'},
+  {id:'e025',nombre:'Curl Concentrado',musculo:'Bíceps',secundarios:[],equipo:'Mancuernas',tipo:'Aislamiento',
+    img:'https://upload.wikimedia.org/wikipedia/commons/6/6a/Concentration-curls-1.png',
+    cue:'Sentado, codo apoyado contra la cara interna del muslo, sube la mancuerna en arco completo sin despegar el codo de la pierna.'},
   {id:'e026',nombre:'Curl Scott (Predicador)',musculo:'Bíceps',secundarios:[],equipo:'Barra',tipo:'Aislamiento',
-    img:'https://upload.wikimedia.org/wikipedia/commons/6/66/Biceps-curl-2.png',
+    img:'https://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/Preacher_curl_with_barbell_1.svg/960px-Preacher_curl_with_barbell_1.svg.png',
     cue:'El banco fija el codo y elimina el impulso — aísla 100% el bíceps. No extiendas el codo por completo abajo si sientes tirón.'},
   // TRÍCEPS
   {id:'e027',nombre:'Press Francés',musculo:'Tríceps',secundarios:[],equipo:'Barra',tipo:'Aislamiento',
-    img:'https://upload.wikimedia.org/wikipedia/commons/5/51/DumbbellTricepsExtension.JPG',
+    img:'https://upload.wikimedia.org/wikipedia/commons/3/3f/Lying-triceps-extension-2.gif',
     cue:'Codos apuntando al techo y fijos, baja la barra/mancuerna hacia la frente doblando solo el codo — es el ejercicio que más masa agrega al tríceps.'},
   {id:'e028',nombre:'Extensión en Polea (Pushdown)',musculo:'Tríceps',secundarios:[],equipo:'Máquina',tipo:'Aislamiento',
     img:'https://upload.wikimedia.org/wikipedia/commons/thumb/1/13/Triceps_pushdown_with_cable_1.svg/960px-Triceps_pushdown_with_cable_1.svg.png',
@@ -596,28 +618,27 @@ const EJ_DB = [
   {id:'e029',nombre:'Fondos en Banco',musculo:'Tríceps',secundarios:[],equipo:'Cuerpo',tipo:'Aislamiento',
     img:'https://upload.wikimedia.org/wikipedia/commons/d/d0/Bench-dips-1.png',
     cue:'Manos en el borde del banco, baja hasta 90° de codo sin encoger los hombros hacia las orejas. Piernas estiradas = más difícil.'},
-  {id:'e030',nombre:'Patada de Tríceps',musculo:'Tríceps',secundarios:[],equipo:'Mancuernas',tipo:'Aislamiento'},
+  {id:'e030',nombre:'Patada de Tríceps',musculo:'Tríceps',secundarios:[],equipo:'Mancuernas',tipo:'Aislamiento',
+    img:'https://upload.wikimedia.org/wikipedia/commons/thumb/4/40/Triceps_kickback_with_dumbbell_1.svg/960px-Triceps_kickback_with_dumbbell_1.svg.png',
+    cue:'Torso inclinado hacia adelante, codo fijo pegado al costado, extiende el brazo hacia atrás y aprieta el tríceps arriba sin mover el hombro.'},
   {id:'e031',nombre:'Extensión sobre Cabeza',musculo:'Tríceps',secundarios:[],equipo:'Mancuernas',tipo:'Aislamiento',
-    img:'https://upload.wikimedia.org/wikipedia/commons/5/51/DumbbellTricepsExtension.JPG',
+    img:'https://upload.wikimedia.org/wikipedia/commons/c/ca/Seated-overhead-triceps-extension-1.gif',
     cue:'Codos apuntando al frente/arriba y fijos junto a la cabeza, baja la mancuerna detrás de la nuca y extiende sin abrir los codos hacia afuera.'},
   // PIERNAS
   {id:'e032',nombre:'Sentadilla con Barra',musculo:'Piernas',secundarios:['Glúteos'],equipo:'Barra',tipo:'Compuesto',
     img:'https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Squats.svg/960px-Squats.svg.png',
     cue:'Pecho arriba, rodillas siguiendo la línea de los pies, baja hasta que el muslo pase de paralelo al piso y empuja con los talones al subir.'},
   {id:'e033',nombre:'Prensa de Piernas',musculo:'Piernas',secundarios:['Glúteos'],equipo:'Máquina',tipo:'Compuesto',
-    img:'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bd/Gym_Leg_Press_Machine.jpg/960px-Gym_Leg_Press_Machine.jpg',
     cue:'Pies a la anchura de hombros en la plataforma, baja hasta 90° de rodilla sin despegar la zona lumbar del respaldo.'},
   {id:'e034',nombre:'Extensión de Cuádriceps',musculo:'Piernas',secundarios:[],equipo:'Máquina',tipo:'Aislamiento',
-    img:'https://upload.wikimedia.org/wikipedia/commons/3/36/LegExtensionMachineExercise.JPG',
+    img:'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Leg_extensions_1.svg/960px-Leg_extensions_1.svg.png',
     cue:'Extiende por completo y aprieta el cuádriceps 1 segundo arriba, baja controlado sin dejar caer el peso.'},
   {id:'e035',nombre:'Curl de Femoral Tumbado',musculo:'Piernas',secundarios:[],equipo:'Máquina',tipo:'Aislamiento',
-    img:'https://upload.wikimedia.org/wikipedia/commons/c/c6/LyingLegCurlMachineExercise.JPG',
+    img:'https://upload.wikimedia.org/wikipedia/commons/thumb/9/96/Lying_leg_curl_machine_1.svg/960px-Lying_leg_curl_machine_1.svg.png',
     cue:'Cadera pegada al banco durante todo el movimiento, flexiona la rodilla llevando el talón al glúteo sin impulso.'},
   {id:'e036',nombre:'Zancadas',musculo:'Piernas',secundarios:['Glúteos'],equipo:'Mancuernas',tipo:'Compuesto',
-    img:'https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/Airman_performing_lunge.jpg/960px-Airman_performing_lunge.jpg',
     cue:'Paso largo hacia adelante, baja hasta que ambas rodillas formen 90° sin que la rodilla de atrás toque el piso con fuerza. Torso recto.'},
   {id:'e037',nombre:'Sentadilla Búlgara',musculo:'Piernas',secundarios:['Glúteos'],equipo:'Mancuernas',tipo:'Compuesto',
-    img:'https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/Airman_performing_lunge.jpg/960px-Airman_performing_lunge.jpg',
     cue:'Pie trasero elevado en un banco, baja recto hacia abajo (no hacia adelante) — brutal para piernas y glúteo, empieza con poco peso.'},
   {id:'e038',nombre:'Peso Muerto Rumano',musculo:'Piernas',secundarios:['Glúteos'],equipo:'Barra',tipo:'Compuesto',
     img:'https://upload.wikimedia.org/wikipedia/commons/e/e8/Romanian-deadlift-1.png',
@@ -625,7 +646,9 @@ const EJ_DB = [
   {id:'e039',nombre:'Elevación de Pantorrilla',musculo:'Piernas',secundarios:[],equipo:'Máquina',tipo:'Aislamiento',
     img:'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Standing_calf_raises_using_machine_2.svg/960px-Standing_calf_raises_using_machine_2.svg.png',
     cue:'Sube hasta la punta de los pies y aprieta arriba 1 segundo, baja dejando que el talón caiga por debajo del escalón para el estiramiento completo.'},
-  {id:'e040',nombre:'Hack Squat',musculo:'Piernas',secundarios:[],equipo:'Máquina',tipo:'Compuesto'},
+  {id:'e040',nombre:'Hack Squat',musculo:'Piernas',secundarios:[],equipo:'Máquina',tipo:'Compuesto',
+    img:'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c0/Hack_squat_machine_1.svg/960px-Hack_squat_machine_1.svg.png',
+    cue:'Espalda y hombros apoyados en el respaldo inclinado, pies en la plataforma un poco adelantados, baja controlado y empuja sin bloquear las rodillas de golpe.'},
   // GLÚTEOS
   {id:'e041',nombre:'Hip Thrust',musculo:'Glúteos',secundarios:['Piernas'],equipo:'Barra',tipo:'Compuesto',
     img:'https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/Glute-bridge.png/960px-Glute-bridge.png',
@@ -633,34 +656,37 @@ const EJ_DB = [
   {id:'e042',nombre:'Glute Bridge',musculo:'Glúteos',secundarios:[],equipo:'Cuerpo',tipo:'Aislamiento',
     img:'https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/Glute-bridge.png/960px-Glute-bridge.png',
     cue:'Versión sin peso del Hip Thrust, en el piso — perfecta para activar el glúteo antes de sentadillas o pesomuerto.'},
-  {id:'e043',nombre:'Patada de Glúteo en Polea',musculo:'Glúteos',secundarios:[],equipo:'Máquina',tipo:'Aislamiento'},
+  {id:'e043',nombre:'Patada de Glúteo en Polea',musculo:'Glúteos',secundarios:[],equipo:'Máquina',tipo:'Aislamiento',
+    cue:'De pie frente a la polea con el tobillo en el agarre, patea la pierna hacia atrás apretando el glúteo sin arquear la espalda baja.'},
   {id:'e044',nombre:'Abducción de Cadera',musculo:'Glúteos',secundarios:[],equipo:'Máquina',tipo:'Aislamiento',
-    img:'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Hip_abductor_machine.jpg/960px-Hip_abductor_machine.jpg',
     cue:'Empuja las piernas hacia afuera contra la resistencia, controla la vuelta — trabaja el glúteo medio, clave para estabilidad de cadera.'},
   // CORE
   {id:'e045',nombre:'Plancha',musculo:'Core',secundarios:[],equipo:'Cuerpo',tipo:'Compuesto',
-    img:'https://upload.wikimedia.org/wikipedia/commons/thumb/7/79/A_U.S._Coast_Guard_recruit%2C_assigned_to_Company_Oscar_188%2C_performs_a_plank_during_incentive_training_at_Coast_Guard_Training_Center_Cape_May_in_Cape_May%2C_N.J.%2C_July_31%2C_2013_130731-G-WA946-943.jpg/960px-thumbnail.jpg',
     cue:'Cuerpo en línea recta de cabeza a talones, glúteo y abdomen apretados, no dejes caer la cadera. Respira, no aguantes el aire.'},
-  {id:'e046',nombre:'Crunch Abdominal',musculo:'Core',secundarios:[],equipo:'Cuerpo',tipo:'Aislamiento'},
+  {id:'e046',nombre:'Crunch Abdominal',musculo:'Core',secundarios:[],equipo:'Cuerpo',tipo:'Aislamiento',
+    img:'https://upload.wikimedia.org/wikipedia/commons/e/ef/Crunches-2.png',
+    cue:'Manos detrás de la cabeza sin jalar el cuello, sube solo los omóplatos del piso apretando el abdomen — rango corto pero controlado.'},
   {id:'e047',nombre:'Elevación de Piernas',musculo:'Core',secundarios:[],equipo:'Cuerpo',tipo:'Aislamiento',
     img:'https://upload.wikimedia.org/wikipedia/commons/7/7a/Leg-raises-2.png',
     cue:'Espalda baja pegada al piso (o banco), sube las piernas rectas hasta 90° sin usar impulso, baja controlado sin tocar el piso entre reps.'},
   {id:'e048',nombre:'Rueda Abdominal',musculo:'Core',secundarios:[],equipo:'Rueda',tipo:'Compuesto',
-    img:'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Woman_doing_exercises_with_an_ab_wheel_and_ankle_weights_on_a_yoga_mat_in_the_park._%2851540571665%29.jpg/960px-Woman_doing_exercises_with_an_ab_wheel_and_ankle_weights_on_a_yoga_mat_in_the_park._%2851540571665%29.jpg',
     cue:'De rodillas, rueda hacia adelante manteniendo el abdomen apretado y la espalda recta — solo hasta donde puedas regresar sin arquear la espalda baja.'},
-  {id:'e049',nombre:'Oblicuos con Cable',musculo:'Core',secundarios:[],equipo:'Máquina',tipo:'Aislamiento'},
+  {id:'e049',nombre:'Oblicuos con Cable',musculo:'Core',secundarios:[],equipo:'Máquina',tipo:'Aislamiento',
+    cue:'De pie con la polea al costado, gira el torso jalando el agarre en diagonal manteniendo la cadera fija — el giro sale del core, no de los brazos.'},
   {id:'e050',nombre:'Dead Bug',musculo:'Core',secundarios:[],equipo:'Cuerpo',tipo:'Compuesto',
     cue:'Espalda baja pegada al piso todo el ejercicio, extiende brazo y pierna opuestos lentamente sin arquear la zona lumbar.'},
   // CARDIO
-  {id:'e051',nombre:'Caminata en Cinta',musculo:'Cardio',secundarios:[],equipo:'Máquina',tipo:'Cardio'},
-  {id:'e052',nombre:'Correr',musculo:'Cardio',secundarios:[],equipo:'Cuerpo',tipo:'Cardio'},
-  {id:'e053',nombre:'Bicicleta Estática',musculo:'Cardio',secundarios:[],equipo:'Máquina',tipo:'Cardio'},
+  {id:'e051',nombre:'Caminata en Cinta',musculo:'Cardio',secundarios:[],equipo:'Máquina',tipo:'Cardio',
+    cue:'Postura erguida, brazos se mueven de forma natural, aumenta la inclinación antes que la velocidad para elevar la intensidad sin dañar rodillas.'},
+  {id:'e052',nombre:'Correr',musculo:'Cardio',secundarios:[],equipo:'Cuerpo',tipo:'Cardio',
+    cue:'Pisada de medio pie (no de talón), brazos relajados a 90°, respiración rítmica — empieza con trotes cortos antes de aumentar distancia.'},
+  {id:'e053',nombre:'Bicicleta Estática',musculo:'Cardio',secundarios:[],equipo:'Máquina',tipo:'Cardio',
+    cue:'Ajusta el asiento para que la rodilla quede con ligera flexión en el punto más bajo del pedaleo, mantén cadencia constante.'},
   {id:'e054',nombre:'Elíptica',musculo:'Cardio',secundarios:[],equipo:'Máquina',tipo:'Cardio',
-    img:'https://upload.wikimedia.org/wikipedia/commons/thumb/d/da/Elliptical_machine.jpg/960px-Elliptical_machine.jpg',
     cue:'Ritmo constante, postura erguida sin colgarte de los brazos — bajo impacto, ideal para cardio largo sin desgastar rodillas.'},
-  {id:'e055',nombre:'Saltar la Cuerda',musculo:'Cardio',secundarios:[],equipo:'Cuerda',tipo:'Cardio'},
+  {id:'e055',nombre:'Saltar la Cuerda',musculo:'Cardio',secundarios:[],equipo:'Cuerda',tipo:'Cardio',
+    cue:'Codos pegados al cuerpo, el giro de la cuerda sale de las muñecas, no de los hombros, salta lo mínimo necesario para despegar del piso.'},
   {id:'e056',nombre:'Battle Ropes',musculo:'Cardio',secundarios:['Hombros'],equipo:'Cuerda',tipo:'Cardio',
-    img:'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7c/170331-N-ZY039-015_%2833869515046%29.jpg/960px-170331-N-ZY039-015_%2833869515046%29.jpg',
     cue:'Rodillas ligeramente flexionadas, core apretado, ondas fuertes y rápidas — intervalos de 20-30s son los que más queman.'},
 ];
 
@@ -780,48 +806,23 @@ function renderResumenSemana() {
       <div class="card-sub">${DIAS_STR[diaHoy]}</div>
     </div>`;
 
-  // Semana visual — de un vistazo, qué toca cada día (sin depender de sesiones registradas)
+  // Semana visual, tira horizontal — de un vistazo, qué toca cada día (sin depender de sesiones registradas)
   document.getElementById('d-semana').innerHTML=`
     <div class="card">
       <div class="card-title" style="margin-bottom:12px">🗓️ Esta semana</div>
-      <div style="display:flex;flex-direction:column;gap:6px">
+      <div class="week-strip">
         ${semana.map(d=>{
           const dW=new Date(d).getDay();
           const rut=S.rutina[dW];
           const [,m,day]=d.split('-');
           const isHoy=d===today();
-          const col=rut?.tipo?TIPO_COL[rut.tipo]:'rgba(var(--ov),.2)';
+          const col=rut?.tipo?TIPO_COL[rut.tipo]:'rgba(var(--ov),.25)';
           const esDescanso=rut?.tipo==='descanso'||!rut;
-          return `<div onclick="nav('rutina');verRutinaDia(${dW})" style="cursor:pointer;display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:8px;background:${isHoy?'rgba(255,107,53,.08)':'rgba(var(--ov),.02)'};border:1px solid ${isHoy?'rgba(255,107,53,.3)':'rgba(var(--ov),.06)'}">
-            <div style="width:36px;text-align:center">
-              <div style="font-size:10px;font-weight:700;color:${isHoy?'var(--p)':'var(--text3)'}">${DIAS_SHORT[dW]}</div>
-              <div style="font-size:11px;color:var(--text2)">${parseInt(day)}/${parseInt(m)}</div>
-            </div>
-            <div style="flex:1">
-              <div style="font-size:12px;font-weight:${isHoy?700:500};color:${isHoy?'var(--text)':'var(--text2)'}">${rut?.nombre||'Sin asignar'}</div>
-            </div>
-            ${esDescanso?'<span class="badge b-n" style="font-size:9px">😴</span>':`<div style="width:8px;height:8px;border-radius:50%;background:${col}"></div>`}
-          </div>`;
-        }).join('')}
-      </div>
-    </div>`;
-
-  // Músculos que cubre la rutina completa de la semana (no depende de sesiones registradas)
-  const musculosSem = {};
-  ORDEN_DIAS.forEach(d=>(S.rutina[d]?.ejercicios||[]).forEach(e=>{ const ej=findEj(e.id); if(ej) musculosSem[ej.musculo]=(musculosSem[ej.musculo]||0)+1; }));
-  document.getElementById('d-musculos').innerHTML=`
-    <div class="card">
-      <div class="card-title" style="margin-bottom:12px">💪 Músculos que cubre tu semana</div>
-      <div class="muscle-map">
-        ${MUSCULOS_ALL.map(m=>{
-          const n=musculosSem[m]||0;
-          const col=MUSCULO_COL[m]||'#94a3b8';
-          return `<div class="muscle-cell ${n>0?'worked':'rest'}">
-            <div style="width:10px;height:10px;border-radius:50%;background:${n>0?col:'rgba(var(--ov),.15)'}"></div>
-            <div>
-              <div style="font-size:11px;font-weight:${n>0?700:400};color:${n>0?col:'var(--text3)'}">${m}</div>
-              ${n>0?`<div style="font-size:9px;color:var(--text3)">${n} ejercicio${n!==1?'s':''}</div>`:''}
-            </div>
+          return `<div class="ws-day ${isHoy?'today':''}" onclick="nav('rutina');verRutinaDia(${dW})">
+            <div class="ws-dname">${DIAS_SHORT[dW]}${isHoy?' •':''}</div>
+            <div class="ws-ddate">${parseInt(day)}/${parseInt(m)}</div>
+            ${esDescanso?'<div class="ws-ico">😴</div>':`<div class="ws-dot" style="background:${col}"></div>`}
+            <div class="ws-lbl">${rut?.nombre||'Sin asignar'}</div>
           </div>`;
         }).join('')}
       </div>
@@ -885,22 +886,22 @@ function renderRutinaDetalle() {
         const uni = UNI_LABEL[e.unidad]||'reps';
         const eqCol = MUSCULO_COL[ej.musculo]||'#64748b';
         return `<div class="exd-card">
-          <div class="exd-img">${ej.img?`<img src="${ej.img}" alt="${ej.nombre}" loading="lazy">`:`<span class="ico">🏋️</span>`}</div>
-          <div style="flex:1;min-width:0">
-            <div class="flex aic gap8" style="margin-bottom:2px">
+          ${ej.img?`<div class="exd-img"><img src="${ej.img}" alt="${ej.nombre}" loading="lazy"></div>`:''}
+          <div class="exd-body">
+            <div class="exd-head">
               <span class="exd-num">${i+1}</span>
-              <span style="font-size:14px;font-weight:800">${ej.nombre}</span>
+              <span class="exd-name">${ej.nombre}</span>
             </div>
-            <div class="flex gap6" style="flex-wrap:wrap;margin:4px 0 0 32px">
+            <div class="exd-badges">
               <span style="font-size:9px;padding:2px 7px;border-radius:4px;background:${eqCol}20;color:${eqCol};font-weight:700;border:1px solid ${eqCol}35">${ej.musculo}</span>
               <span class="badge b-n" style="font-size:9px">${ej.equipo}</span>
             </div>
-            <div class="exd-stats" style="margin-left:32px">
+            <div class="exd-stats">
               <span class="exd-stat" style="color:var(--p)">🔁 ${e.series} series</span>
               <span class="exd-stat" style="color:var(--g)">${e.reps} ${uni}</span>
               ${e.descanso?`<span class="exd-stat">⏱️ ${e.descanso}s descanso</span>`:''}
             </div>
-            ${ej.cue?`<div class="exd-cue" style="margin-left:32px">💡 ${ej.cue}</div>`:''}
+            ${ej.cue?`<div class="exd-cue"><span>💡</span><span>${ej.cue}</span></div>`:''}
           </div>
         </div>`;
       }).join('')}
