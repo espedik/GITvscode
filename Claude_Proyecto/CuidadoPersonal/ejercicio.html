@@ -147,9 +147,9 @@ tbody tr:hover td{background:rgba(255,107,53,.03)}
 .day-tab .dt-t{font-size:9px;color:var(--text3);margin-top:1px}
 .day-tab .dt-dot{width:6px;height:6px;border-radius:50%;margin-top:3px}
 /* Exercise detail card (rutina del día) */
-.exd-card{display:flex;border-radius:14px;border:1px solid rgba(var(--ov),.08);background:rgba(var(--ov),.03);margin-bottom:12px;overflow:hidden}
-.exd-img{width:130px;flex-shrink:0;background:rgba(var(--ov),.05)}
-.exd-img img{width:100%;height:100%;object-fit:cover;display:block}
+.exd-card{display:flex;align-items:flex-start;border-radius:14px;border:1px solid rgba(var(--ov),.08);background:rgba(var(--ov),.03);margin-bottom:12px;overflow:hidden}
+.exd-img{width:130px;height:130px;flex-shrink:0;background:rgba(var(--ov),.05);display:flex;align-items:center;justify-content:center;padding:10px}
+.exd-img img{width:100%;height:100%;object-fit:contain;display:block}
 .exd-body{flex:1;min-width:0;padding:14px 16px}
 .exd-head{display:flex;align-items:center;gap:10px;margin-bottom:9px;flex-wrap:wrap}
 .exd-num{width:26px;height:26px;border-radius:50%;background:rgba(255,107,53,.15);color:var(--p);font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0}
@@ -706,17 +706,17 @@ const KEY = 'mirutina_v1';
 // varias veces para apoyar la pérdida de grasa (sin prometer reducción localizada — ver banner).
 let S = {
   rutina: {
-    1:{nombre:'Brazos A — Bíceps + Tríceps',tipo:'brazos',foco:'Prioridad: masa en brazos. Series pesadas, pocas repeticiones.',
-       ejercicios:[{id:'e021',series:4,reps:9,peso:0,descanso:90},{id:'e027',series:4,reps:10,peso:0,descanso:90},{id:'e023',series:3,reps:12,peso:0,descanso:60},{id:'e028',series:3,reps:12,peso:0,descanso:60},{id:'e045',series:3,reps:45,unidad:'seg',peso:0,descanso:45}]},
+    1:{nombre:'Brazos A — Bíceps + Tríceps',tipo:'brazos',foco:'Prioridad: masa en brazos. Empiezas con Fondos (compuesto pesado, tríceps+pecho) antes que el aislamiento — el compuesto construye más masa total que solo curls, y hacerlo primero (con energía fresca) es cuando más rinde.',
+       ejercicios:[{id:'e005',series:4,reps:8,peso:0,descanso:90},{id:'e021',series:4,reps:9,peso:0,descanso:90},{id:'e027',series:4,reps:10,peso:0,descanso:90},{id:'e023',series:3,reps:12,peso:0,descanso:60},{id:'e028',series:3,reps:12,peso:0,descanso:60}]},
     2:{nombre:'Piernas A — Cuádriceps',tipo:'piernas',foco:'Prioridad: masa en piernas. Enfoque cuádriceps.',
        ejercicios:[{id:'e032',series:4,reps:8,peso:0,descanso:120},{id:'e033',series:4,reps:12,peso:0,descanso:90},{id:'e034',series:3,reps:15,peso:0,descanso:60},{id:'e036',series:3,reps:12,peso:0,descanso:60},{id:'e039',series:4,reps:20,peso:0,descanso:45}]},
-    3:{nombre:'Espalda + Hombros + Cardio',tipo:'halar',foco:'Mantenimiento de espalda/hombros + cardio HIIT para bajar grasa.',
+    3:{nombre:'Espalda + Hombros + Cardio',tipo:'halar',foco:'No es tu día de "brazos" pero sí les aporta: dominadas, remo y press militar son compuestos donde bíceps/tríceps trabajan como secundarios — frecuencia extra de brazos sin otro día dedicado. Los battle ropes (HIIT) son tu motor de cardio para bajar panza.',
        ejercicios:[{id:'e008',series:4,reps:8,peso:0,descanso:120},{id:'e009',series:4,reps:10,peso:0,descanso:90},{id:'e015',series:3,reps:10,peso:0,descanso:90},{id:'e017',series:3,reps:15,peso:0,descanso:45},{id:'e056',series:5,reps:30,unidad:'seg',peso:0,descanso:30}]},
-    4:{nombre:'Brazos B — Bíceps + Tríceps',tipo:'brazos',foco:'Prioridad: masa en brazos. Volumen, ejercicios distintos al lunes.',
+    4:{nombre:'Brazos B — Bíceps + Tríceps',tipo:'brazos',foco:'Prioridad: masa en brazos. Volumen, ejercicios distintos al lunes — Fondos en Banco de compuesto (más ligero que los Fondos del lunes) antes del aislamiento.',
        ejercicios:[{id:'e022',series:4,reps:12,peso:0,descanso:60},{id:'e031',series:4,reps:12,peso:0,descanso:60},{id:'e026',series:3,reps:10,peso:0,descanso:60},{id:'e029',series:3,reps:15,peso:0,descanso:60},{id:'e047',series:3,reps:15,peso:0,descanso:45}]},
     5:{nombre:'Piernas B — Glúteo + Femoral',tipo:'piernas',foco:'Prioridad: masa en piernas. Enfoque glúteo/femoral, complementa el martes.',
        ejercicios:[{id:'e038',series:4,reps:8,peso:0,descanso:120},{id:'e041',series:4,reps:12,peso:0,descanso:90},{id:'e035',series:3,reps:12,peso:0,descanso:60},{id:'e037',series:3,reps:10,peso:0,descanso:60},{id:'e044',series:3,reps:15,peso:0,descanso:45}]},
-    6:{nombre:'Pecho + Cardio + Core',tipo:'empuje',foco:'Mantenimiento de pecho + cardio largo y core para bajar grasa de la zona media.',
+    6:{nombre:'Pecho + Cardio + Core',tipo:'empuje',foco:'El press de banca/inclinado también trabaja tríceps como secundario, extra frecuencia de brazos. Pero el foco real de hoy es bajar panza: 25 min de elíptica (tu bloque de cardio más largo de la semana) + rueda abdominal — junto con el HIIT del miércoles, son tus 2 herramientas de ejercicio contra la grasa de la zona media.',
        ejercicios:[{id:'e001',series:4,reps:8,peso:0,descanso:120},{id:'e002',series:3,reps:10,peso:0,descanso:90},{id:'e004',series:3,reps:12,peso:0,descanso:60},{id:'e054',series:1,reps:25,unidad:'min',peso:0,descanso:0},{id:'e048',series:3,reps:10,peso:0,descanso:60}]},
     0:{nombre:'Descanso activo',tipo:'descanso',foco:'Recuperación — caminata ligera opcional, sin gimnasio.',ejercicios:[{id:'e051',series:1,reps:30,unidad:'min',peso:0,descanso:0}]},
   },
