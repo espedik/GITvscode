@@ -942,12 +942,31 @@ const LISTA_COMPRAS={
     'Aceite de puntas — Moroccanoil Treatment Light o L\'Oréal Elvive Aceite Extraordinario',
   ],
   suplementos:['Proteína Whey (suero de leche)','Creatina monohidratada','Vitamina D3','Omega 3 (aceite de pescado)','Multivitamínico','Magnesio (glicinato o citrato)'],
+  // 45 libros únicos recomendados dentro de Coach_v2.html → #aprendizaje (5 cards de skill: Ventas,
+  // Copywriting, Marketing, Networking, Liderazgo, más las secciones de Datos/Finanzas/Software del
+  // mismo bloque) y #perfil-rico, agrupados por el mismo tema bajo el que Coach los presenta —
+  // deduplicados donde el mismo libro aparece recomendado en más de una sección (ej. "Never Split
+  // the Difference" en Ventas y en Networking). 9ª estructura duplicada del tipo "Datos duplicados"
+  // del README: si Adán cambia/agrega una recomendación en Coach_v2.html → #aprendizaje o
+  // #perfil-rico, replicar aquí a mano.
+  libros:{
+    'Ventas':['Influence — Robert Cialdini','$100M Offers — Alex Hormozi','SPIN Selling — Neil Rackham','Never Split the Difference — Chris Voss','The Psychology of Selling — Brian Tracy'],
+    'Copywriting':['Breakthrough Advertising — Eugene Schwartz','Ca$hvertising — Drew Eric Whitman','The Adweek Copywriting Handbook — Joseph Sugarman','Building a StoryBrand — Donald Miller'],
+    'Marketing':['$100M Leads — Alex Hormozi','Hacking Growth — Sean Ellis','Traffic Secrets — Russell Brunson','Jab, Jab, Jab, Right Hook — Gary Vaynerchuk'],
+    'Networking':['Never Eat Alone — Keith Ferrazzi','Cómo Ganar Amigos e Influir sobre las Personas — Dale Carnegie','Give and Take — Adam Grant','The Art of Gathering — Priya Parker','The Like Switch — Jack Schafer'],
+    'Liderazgo':['Extreme Ownership — Jocko Willink','Good to Great — Jim Collins','The Hard Thing About Hard Things — Ben Horowitz','Leaders Eat Last — Simon Sinek','The Five Dysfunctions of a Team — Patrick Lencioni'],
+    'Programación':['Clean Code — Robert C. Martin','Designing Data-Intensive Applications — Martin Kleppmann','The Pragmatic Programmer — Hunt & Thomas','A Philosophy of Software Design — John Ousterhout'],
+    'Datos':['Storytelling with Data — Cole Nussbaumer Knaflic','Python for Data Analysis — Wes McKinney'],
+    'Finanzas e Inversión':['The Intelligent Investor — Benjamin Graham','The Little Book of Common Sense Investing — John Bogle','A Random Walk Down Wall Street — Burton Malkiel','One Up On Wall Street — Peter Lynch','Psicología del Dinero — Morgan Housel','I Will Teach You to Be Rich — Ramit Sethi','The Millionaire Next Door — Thomas Stanley','Tu Dinero o Tu Vida — Vicki Robin','Padre Rico, Padre Pobre — Robert Kiyosaki','The Millionaire Fastlane — MJ DeMarco'],
+    'Hábitos y Mentalidad':['Atomic Habits — James Clear','Mindset: The New Psychology of Success — Carol Dweck',"Can't Hurt Me — David Goggins",'The Obstacle is the Way — Ryan Holiday','Meditaciones — Marco Aurelio'],
+  },
 };
 const LISTA_CAT_META={
   comida:{ico:'🍽️',label:'Comida'},
   skincare:{ico:'🧴',label:'Skincare'},
   cabello:{ico:'💇',label:'Cabello'},
   suplementos:{ico:'💊',label:'Suplementos'},
+  libros:{ico:'📚',label:'Libros'},
 };
 let listaCatSel='comida';
 function lcSlug(txt){
@@ -1541,7 +1560,10 @@ function renderQuickApps(){
      stat:(()=>{const c=(D.sal.alimentos||[]).filter(a=>a.fecha===t).reduce((s,a)=>s+(a.cal||0),0);return c?fmt(c)+' kcal':'';})()},
     {ico:'🏋️',n:'Ejercicio',href:'../CuidadoPersonal/cuidadopersonal.html?tab=ejercicio',stat:''},
     {ico:'🍳',n:'Comida',href:'../CuidadoPersonal/cuidadopersonal.html?tab=comida',stat:''},
-    {ico:'🦷',n:'Dentista',href:'../CuidadoPersonal/cuidadopersonal.html?tab=dentista',stat:''}
+    {ico:'🦷',n:'Dentista',href:'../CuidadoPersonal/cuidadopersonal.html?tab=dentista',stat:''},
+    {ico:'👔',n:'Vestimenta',href:'../CuidadoPersonal/cuidadopersonal.html?tab=vestimenta',stat:''},
+    {ico:'🇩🇪',n:'Alemán',href:'../Aleman/index.html',stat:''},
+    {ico:'💻',n:'Entrevistas',href:'../Entrevistas/entrevistas.html',stat:''}
   ];
   document.getElementById('qaBar').innerHTML=
     `<button class="priv-btn${privado?' on':''}" id="priv-btn" onclick="togglePrivado()">${privado?'🙈 Modo privado':'👁️ Ocultar finanzas'}</button>`+

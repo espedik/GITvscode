@@ -228,6 +228,21 @@ Pedido explícito: "pon una sección de mejorar redes sociales y marca personal,
 
 Checklist personal (`.check-item`, persistente desde el 2026-08-01), calendario fiscal personal, y bloques colapsables `toggleCard(id, btn)` con "Qué puedo deducir" como asalariado (Salud, Educación, Vivienda, Ahorro para el retiro, Donativos, Trámite y estrategia).
 
+## `#habilidades-valor` — Habilidades de un Hombre de Valor (nuevo 2026-08-04)
+
+Pedido explícito de Adán: *"agrega en sección de coach como modales y habilidades que debo tener como hacer una fogata, proceso de vino, ya sabes cosas interesantes que un hombre de valor debe saber"*. Última sección del modo Personal (después de `#legal-personal`), sin conexión con negocio/finanzas — cultura general práctica, no una skill de negocio. 8 tarjetas `.card`:
+
+1. **🍽️ Modales y etiqueta esencial** — cubiertos de afuera hacia adentro, servilleta, apretón de manos firme, ponerse de pie al saludar, puntualidad; enlaza a [`../Vestimenta/vestimenta.html`](../Vestimenta/vestimenta.html) para qué ponerse según la ocasión.
+2. **🔥 Cómo hacer una fogata correctamente** — los 3 materiales en orden (yesca/leña delgada/leña gruesa) y 3 formas de armarla (tipi, cabaña, estrella) como `.recurso-item`, más un `.riesgo-box` de seguridad (nunca dejarla sola, cómo apagarla de verdad).
+3. **🍷 El proceso y la cultura del vino** — cómo se hace (fermentación, crianza en barrica vs. acero), los 3 pasos de cata (vista/nariz/boca), temperatura de servicio por tipo, cómo abrir con sacacorchos, maridaje simple.
+4. **🥃 Licores y coctelería básica** — diferencia real entre whisky/tequila/mezcal (grano vs. agave, destilación), 5 cocteles clásicos (Old Fashioned, Negroni, Margarita, Whisky Sour, Mojito) como `.recurso-item`.
+5. **🪢 4 nudos que de verdad sirven** — as de guía, ocho, nudo llano, ballestrinque, cada uno con cuándo usarlo.
+6. **🔧 Mecánica básica de auto** — cambiar una llanta ponchada paso a paso, pasar corriente (orden correcto de cables para evitar chispas), revisar aceite, qué hacer si se sobrecalienta.
+7. **🩹 Primeros auxilios que todo hombre debería saber** — Heimlich, RCP básico, cortada, quemadura, más un `.riesgo-box` de "cuándo esto no basta" (cuándo sí llamar al 911).
+8. **✅ Cuáles ya dominas** — checklist de 7 ítems (`hv1`-`hv7`, persistentes en `coach_checks_v1` vía el mismo mecanismo genérico de `.check-item` — ver "Persistencia de checklists" arriba, no requirió tocar ese código) para que Adán marque qué ya sabe hacer de verdad vs. qué le falta practicar.
+
+Link agregado al `<nav>` del modo Personal ("Habilidades de Valor", después de "Legal & Personal"). El scroll-spy genérico (`refrescarScrollSpy()`, ver "Funciones utilitarias" abajo) detectó la sección sola, sin tocar JS. Verificado con Playwright: navegación directa a `#habilidades-valor` renderiza las 8 tarjetas; marcar `hv2` persiste en `coach_checks_v1` y sobrevive un recargo real de página; cero errores de consola.
+
 ## Modo Empresa
 
 - **`#posibles-negocios`** (nuevo el 2026-07-30, movido desde `#perfil` en modo Personal — ver arriba) — 8 opciones de negocio rankeadas contra el perfil real de Adán, cada una con `id="negocio1"`..`id="negocio8"` dentro de `.negocio-grid` (saltables desde cualquier parte de la app con `irANegocios('negocioN')`, que ahora cambia a modo Empresa con `cambiarModo('empresa')` y hace scroll suave hasta la tarjeta — ya no activa un subtab, porque la sección es de nivel superior, siempre renderizada). Incluye además 3 tarjetas de apoyo: Plantillas de mensajes (listas para copiar), ¿Cuánto cobrar? (tarifas de referencia + checklist `pr1`-`pr4` de protección al cobrar) y Seguimiento de outreach (bitácora manual `oc1`-`oc5`/`og1`-`og3`, persistente).

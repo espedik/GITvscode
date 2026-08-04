@@ -136,19 +136,12 @@ tbody tr:hover td{background:rgba(255,107,53,.03)}
 .day-card.rest-day{opacity:.6}
 /* Meta banner (Mi Rutina) */
 .meta-banner{border-color:rgba(255,107,53,.28);background:rgba(255,107,53,.05)}
-/* Day tabs (Mi Rutina) */
-.day-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
-.day-tab{display:flex;flex-direction:column;align-items:center;gap:2px;padding:9px 14px;border-radius:12px;border:1px solid rgba(var(--ov),.09);
-  background:rgba(var(--ov),.03);cursor:pointer;transition:all .2s;font-family:inherit;min-width:64px}
-.day-tab:hover{background:rgba(var(--ov),.07)}
-.day-tab.active{border-color:var(--p);background:rgba(255,107,53,.12)}
-.day-tab .dt-d{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--text2)}
-.day-tab.active .dt-d{color:var(--p)}
-.day-tab .dt-t{font-size:9px;color:var(--text3);margin-top:1px}
-.day-tab .dt-dot{width:6px;height:6px;border-radius:50%;margin-top:3px}
 /* Exercise detail card (rutina del día) */
 .exd-card{display:flex;align-items:flex-start;border-radius:14px;border:1px solid rgba(var(--ov),.08);background:rgba(var(--ov),.03);margin-bottom:12px;overflow:hidden}
-.exd-img{width:130px;height:130px;flex-shrink:0;background:rgba(var(--ov),.05);display:flex;align-items:center;justify-content:center;padding:10px}
+/* Fondo blanco fijo (no rgba(var(--ov)), que en tema oscuro queda casi negro) — la mayoría de
+   estos diagramas de ejercicio (Wikimedia Commons, estilo atlas) son PNG con fondo transparente
+   y trazo oscuro, pensados para verse sobre blanco; con fondo oscuro detrás el trazo se pierde. */
+.exd-img{width:130px;height:130px;flex-shrink:0;background:#f2f2f2;display:flex;align-items:center;justify-content:center;padding:10px;border-radius:8px}
 .exd-img img{width:100%;height:100%;object-fit:contain;display:block}
 .exd-body{flex:1;min-width:0;padding:14px 16px}
 .exd-head{display:flex;align-items:center;gap:10px;margin-bottom:9px;flex-wrap:wrap}
@@ -233,12 +226,8 @@ tbody tr:hover td{background:rgba(255,107,53,.03)}
       <div class="g4" id="d-kpis" style="margin-bottom:16px"></div>
       <div id="d-semana" style="margin-bottom:16px"></div>
 
-      <div class="sh" style="margin-top:6px"><h2 style="font-size:15px">🗓️ Detalle día por día</h2>
-        <button class="btn btn-p btn-sm" onclick="openRutinaModal(rutinaDiaSel)">⚙️ Configurar este día</button>
-      </div>
-      <div class="day-tabs" id="rutina-day-tabs"></div>
-      <div id="rutina-day-summary" style="margin-bottom:14px"></div>
-      <div id="rutina-detalle"></div>
+      <div class="sh" style="margin-top:6px"><h2 style="font-size:15px">🏋️ Ejercicios de la semana</h2></div>
+      <div id="rutina-semana"></div>
     </section>
 
     <!-- BIBLIOTECA -->
@@ -727,7 +716,6 @@ let S = {
 };
 let editId=null, confCb=null;
 let rutinaDiaEditing=null, rutinaEjsSeleccionados=[];
-let rutinaDiaSel=new Date().getDay();
 
 const today = () => new Date().toISOString().slice(0,10);
 const uid = () => Date.now().toString(36)+Math.random().toString(36).slice(2);
@@ -773,7 +761,7 @@ function nav(s) {
 // calculan directo del plan semanal, que siempre está disponible.
 function renderMiRutina() {
   renderResumenSemana();
-  renderRutina();
+  renderRutinaSemana();
 }
 
 function renderResumenSemana() {
@@ -818,7 +806,7 @@ function renderResumenSemana() {
           const isHoy=d===today();
           const col=rut?.tipo?TIPO_COL[rut.tipo]:'rgba(var(--ov),.25)';
           const esDescanso=rut?.tipo==='descanso'||!rut;
-          return `<div class="ws-day ${isHoy?'today':''}" onclick="nav('rutina');verRutinaDia(${dW})">
+          return `<div class="ws-day ${isHoy?'today':''}" onclick="nav('rutina');scrollToRutinaDia(${dW})">
             <div class="ws-dname">${DIAS_SHORT[dW]}${isHoy?' •':''}</div>
             <div class="ws-ddate">${parseInt(day)}/${parseInt(m)}</div>
             ${esDescanso?'<div class="ws-ico">😴</div>':`<div class="ws-dot" style="background:${col}"></div>`}
@@ -829,84 +817,74 @@ function renderResumenSemana() {
     </div>`;
 }
 
-// ─── MI RUTINA — subtabs por día + detalle completo con imagen por ejercicio ──
+// ─── MI RUTINA — los 7 días completos, uno debajo del otro (sin selector de "un día a la
+//    vez"): cada día muestra su encabezado + resumen de músculos + todos sus ejercicios con
+//    imagen. La tira semanal (`.ws-day` de renderResumenSemana) hace scroll hasta el día
+//    correspondiente en vez de "seleccionarlo" — ya no hay un solo día activo a la vez.
 const ORDEN_DIAS = [1,2,3,4,5,6,0];
 
-function renderRutina() {
-  document.getElementById('rutina-day-tabs').innerHTML = ORDEN_DIAS.map(d=>{
+function scrollToRutinaDia(d) {
+  document.getElementById('rutina-dia-'+d)?.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function renderRutinaSemana() {
+  document.getElementById('rutina-semana').innerHTML = ORDEN_DIAS.map(d=>{
     const rut = S.rutina[d]||{nombre:'Sin asignar',tipo:'',ejercicios:[]};
     const isHoy = d===new Date().getDay();
     const col = TIPO_COL[rut.tipo]||'rgba(var(--ov),.3)';
-    return `<button class="day-tab ${d===rutinaDiaSel?'active':''}" onclick="verRutinaDia(${d})">
-      <span class="dt-d">${DIAS_SHORT[d]}${isHoy?' •':''}</span>
-      <span class="dt-t">${rut.tipo==='descanso'?'😴':''}</span>
-      <span class="dt-dot" style="background:${col}"></span>
-    </button>`;
-  }).join('');
-  renderRutinaDetalle();
-}
 
-function verRutinaDia(d) { rutinaDiaSel=d; renderRutina(); }
+    const musculosDia = {};
+    (rut.ejercicios||[]).forEach(e=>{ const ej=findEj(e.id); if(ej) musculosDia[ej.musculo]=(musculosDia[ej.musculo]||0)+1; });
 
-function renderRutinaDetalle() {
-  const d = rutinaDiaSel;
-  const rut = S.rutina[d]||{nombre:'Sin asignar',tipo:'',ejercicios:[]};
-  const isHoy = d===new Date().getDay();
-  const col = TIPO_COL[rut.tipo]||'rgba(var(--ov),.3)';
-
-  // Resumen de músculos que cubre el día
-  const musculosDia = {};
-  (rut.ejercicios||[]).forEach(e=>{ const ej=findEj(e.id); if(ej) musculosDia[ej.musculo]=(musculosDia[ej.musculo]||0)+1; });
-  document.getElementById('rutina-day-summary').innerHTML = Object.keys(musculosDia).length ? `
-    <div style="display:flex;gap:6px;flex-wrap:wrap">
-      ${Object.entries(musculosDia).map(([m,n])=>`<span style="font-size:10px;font-weight:700;padding:3px 10px;border-radius:20px;background:${(MUSCULO_COL[m]||'#64748b')}1e;color:${MUSCULO_COL[m]||'#64748b'};border:1px solid ${(MUSCULO_COL[m]||'#64748b')}40">${m} · ${n}</span>`).join('')}
-    </div>` : '';
-
-  document.getElementById('rutina-detalle').innerHTML = `
-    <div class="card" style="margin-bottom:16px;border-color:${col}50;background:${col}0c">
-      <div class="flex jb aic" style="flex-wrap:wrap;gap:10px">
-        <div>
-          <div class="flex aic gap8">
-            <span style="font-size:19px;font-weight:900">${DIAS_STR[d]}${isHoy?' — HOY':''}</span>
-            ${rut.tipo?`<span style="font-size:10px;padding:3px 9px;border-radius:20px;background:${col}22;color:${col};font-weight:800;border:1px solid ${col}45">${TIPO_LABEL[rut.tipo]||rut.tipo}</span>`:''}
+    return `<div id="rutina-dia-${d}" style="margin-bottom:24px;scroll-margin-top:80px">
+      <div class="card" style="margin-bottom:12px;border-color:${col}50;background:${col}0c">
+        <div class="flex jb aic" style="flex-wrap:wrap;gap:10px">
+          <div>
+            <div class="flex aic gap8">
+              <span style="font-size:19px;font-weight:900">${DIAS_STR[d]}${isHoy?' — HOY':''}</span>
+              ${rut.tipo?`<span style="font-size:10px;padding:3px 9px;border-radius:20px;background:${col}22;color:${col};font-weight:800;border:1px solid ${col}45">${TIPO_LABEL[rut.tipo]||rut.tipo}</span>`:''}
+            </div>
+            <div style="font-size:15px;font-weight:700;color:var(--text);margin-top:4px">${rut.nombre||'Sin asignar'}</div>
+            ${rut.foco?`<div class="ts tm" style="margin-top:4px;max-width:560px">${rut.foco}</div>`:''}
+            ${Object.keys(musculosDia).length?`<div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px">
+              ${Object.entries(musculosDia).map(([m,n])=>`<span style="font-size:10px;font-weight:700;padding:3px 10px;border-radius:20px;background:${(MUSCULO_COL[m]||'#64748b')}1e;color:${MUSCULO_COL[m]||'#64748b'};border:1px solid ${(MUSCULO_COL[m]||'#64748b')}40">${m} · ${n}</span>`).join('')}
+            </div>`:''}
           </div>
-          <div style="font-size:15px;font-weight:700;color:var(--text);margin-top:4px">${rut.nombre||'Sin asignar'}</div>
-          ${rut.foco?`<div class="ts tm" style="margin-top:4px;max-width:560px">${rut.foco}</div>`:''}
-        </div>
-        <div class="flex gap8">
-          <button class="btn btn-o btn-sm" onclick="openRutinaModal(${d})">✏️ Editar</button>
+          <div class="flex gap8">
+            <button class="btn btn-o btn-sm" onclick="openRutinaModal(${d})">✏️ Editar</button>
+          </div>
         </div>
       </div>
-    </div>
 
-    ${!rut.ejercicios?.length ? `<div class="card empty"><div class="ico">😴</div><p>Día de descanso o sin ejercicios asignados.</p></div>` : `
-    <div style="display:flex;flex-direction:column;gap:0">
-      ${rut.ejercicios.map((e,i)=>{
-        const ej=findEj(e.id); if(!ej) return '';
-        const uni = UNI_LABEL[e.unidad]||'reps';
-        const eqCol = MUSCULO_COL[ej.musculo]||'#64748b';
-        return `<div class="exd-card">
-          ${ej.img?`<div class="exd-img"><img src="${ej.img}" alt="${ej.nombre}" loading="lazy"></div>`:''}
-          <div class="exd-body">
-            <div class="exd-head">
-              <span class="exd-num">${i+1}</span>
-              <span class="exd-name">${ej.nombre}</span>
+      ${!rut.ejercicios?.length ? `<div class="card empty"><div class="ico">😴</div><p>Día de descanso o sin ejercicios asignados.</p></div>` : `
+      <div style="display:flex;flex-direction:column;gap:0">
+        ${rut.ejercicios.map((e,i)=>{
+          const ej=findEj(e.id); if(!ej) return '';
+          const uni = UNI_LABEL[e.unidad]||'reps';
+          const eqCol = MUSCULO_COL[ej.musculo]||'#64748b';
+          return `<div class="exd-card">
+            ${ej.img?`<div class="exd-img"><img src="${ej.img}" alt="${ej.nombre}" loading="lazy"></div>`:''}
+            <div class="exd-body">
+              <div class="exd-head">
+                <span class="exd-num">${i+1}</span>
+                <span class="exd-name">${ej.nombre}</span>
+              </div>
+              <div class="exd-badges">
+                <span style="font-size:9px;padding:2px 7px;border-radius:4px;background:${eqCol}20;color:${eqCol};font-weight:700;border:1px solid ${eqCol}35">${ej.musculo}</span>
+                <span class="badge b-n" style="font-size:9px">${ej.equipo}</span>
+              </div>
+              <div class="exd-stats">
+                <span class="exd-stat" style="color:var(--p)">🔁 ${e.series} series</span>
+                <span class="exd-stat" style="color:var(--g)">${e.reps} ${uni}</span>
+                ${e.descanso?`<span class="exd-stat">⏱️ ${e.descanso}s descanso</span>`:''}
+              </div>
+              ${ej.cue?`<div class="exd-cue"><span>💡</span><span>${ej.cue}</span></div>`:''}
             </div>
-            <div class="exd-badges">
-              <span style="font-size:9px;padding:2px 7px;border-radius:4px;background:${eqCol}20;color:${eqCol};font-weight:700;border:1px solid ${eqCol}35">${ej.musculo}</span>
-              <span class="badge b-n" style="font-size:9px">${ej.equipo}</span>
-            </div>
-            <div class="exd-stats">
-              <span class="exd-stat" style="color:var(--p)">🔁 ${e.series} series</span>
-              <span class="exd-stat" style="color:var(--g)">${e.reps} ${uni}</span>
-              ${e.descanso?`<span class="exd-stat">⏱️ ${e.descanso}s descanso</span>`:''}
-            </div>
-            ${ej.cue?`<div class="exd-cue"><span>💡</span><span>${ej.cue}</span></div>`:''}
-          </div>
-        </div>`;
-      }).join('')}
-    </div>`}
-  `;
+          </div>`;
+        }).join('')}
+      </div>`}
+    </div>`;
+  }).join('');
 }
 
 function openRutinaModal(dia=null) {
@@ -968,7 +946,7 @@ function saveRutina() {
     tipo:document.getElementById('rut-tipo').value,
     ejercicios:[...rutinaEjsSeleccionados]
   };
-  save(); closeMo('mo-rutina'); renderRutina(); toast('✅ Rutina guardada');
+  save(); closeMo('mo-rutina'); renderRutinaSemana(); toast('✅ Rutina guardada');
 }
 
 // ─── BIBLIOTECA ──────────────────────────────────────────────────────────────
