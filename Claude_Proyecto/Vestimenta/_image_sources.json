@@ -72,27 +72,26 @@
   },
   {
     "file": "images/chaquetas/chamarra-mezclilla.jpg",
-    "url": "https://upload.wikimedia.org/wikipedia/commons/5/5c/Man_in_denim_jacket_posing_%28Unsplash%29.jpg",
-    "title": "Man in denim jacket posing (Unsplash) — reemplazo 2026-08-03, el original mostraba a una mujer modelando la chamarra, no un hombre",
-    "lic": "Licencia Unsplash (vía Wikimedia Commons)",
-    "src": "Wikimedia Commons",
+    "url": "https://live.staticflickr.com/8541/8696591387_a083b43aa9_b.jpg",
+    "title": "\"Vintage Brittania Jacket Collage 01\" (recortada al panel frontal con Pillow) — 2do reemplazo 2026-08-03, para consistencia visual con el resto del catálogo (maniquí + fondo neutro de estudio, como el resto de Chaquetas) en vez de la foto de estilo de vida en la playa del primer reemplazo",
+    "lic": "CC (vía Openverse), recorte propio del panel frontal",
+    "src": "Flickr (via Openverse)",
     "status": "OK"
   },
   {
     "file": "images/chaquetas/chamarra-bomber.jpg",
-    "url": "https://upload.wikimedia.org/wikipedia/commons/d/df/MA-1_Jacket_in_petrol.jpg",
-    "title": "MA-1 bomber jacket — imagen principal de Wikipedia",
+    "url": "https://upload.wikimedia.org/wikipedia/commons/c/cb/Suede_Bomber_Jacket_%2851011161975%29.jpg",
+    "title": "Suede Bomber Jacket (AllSaints) — reemplazo 2026-08-03, la original nunca se había reemplazado desde el 2026-08-01 (fondo de alfombra roja, look anticuado)",
     "lic": "Wikimedia Commons, licencia libre",
-    "src": "Wikipedia",
-    "status": "OK",
-    "size": 53809
+    "src": "Wikimedia Commons",
+    "status": "OK"
   },
   {
     "file": "images/chaquetas/chamarra-cuero.jpg",
-    "url": "https://live.staticflickr.com/8046/8118777575_9edcf7abef_b.jpg",
-    "title": "\"Ahead of the pack.\" de Neil Moralee — reemplazo 2026-08-03, el original mostraba a una mujer modelando la chamarra sobre un vestido rojo, no un hombre",
-    "lic": "CC (vía Openverse) — foto con marca de agua del autor visible, confirmar tipo exacto de licencia en Flickr antes de cualquier uso comercial",
-    "src": "Flickr (via Openverse)",
+    "url": "https://upload.wikimedia.org/wikipedia/commons/9/9f/Leather_jacket_golden_era.jpg",
+    "title": "\"Leather jacket golden era\" — 2do reemplazo 2026-08-03, para consistencia visual (foto de producto aislada en fondo blanco) en vez de la foto de estilo de vida en motocicleta del primer reemplazo",
+    "lic": "Wikimedia Commons, licencia libre",
+    "src": "Wikimedia Commons",
     "status": "OK"
   },
   {
@@ -114,8 +113,8 @@
   },
   {
     "file": "images/chaquetas/blazer-casual.jpg",
-    "url": "https://upload.wikimedia.org/wikipedia/commons/0/04/Navy_blazer_jacket.jpg",
-    "title": "Navy blazer jacket — reemplazo 2026-08-03, el original era un acercamiento a manos/corbata de un traje demasiado formal para \"blazer casual\"",
+    "url": "https://upload.wikimedia.org/wikipedia/commons/8/8a/Polo_Ralph_Lauren_-_Sport_Coat.jpg",
+    "title": "Polo Ralph Lauren - Sport Coat — 2do reemplazo 2026-08-03, para consistencia visual (fondo blanco de estudio) en vez del flat-lay en piso de madera del primer reemplazo",
     "lic": "Wikimedia Commons, licencia libre",
     "src": "Wikimedia Commons",
     "status": "OK"
@@ -290,8 +289,8 @@
   },
   {
     "file": "images/accesorios/cartera.jpg",
-    "url": "https://live.staticflickr.com/7388/11177793886_266f988008_b.jpg",
-    "title": "Mitchell Leather Slim Wallet - Interior (nuevo 2026-08-03, categoría Accesorios)",
+    "url": "https://live.staticflickr.com/5295/5494808054_cbe8875fda_b.jpg",
+    "title": "\"Bellroy's Hide & Seek Wallet\" — reemplazo 2026-08-03, más consistente con el resto de Accesorios (producto solo, sin mano sosteniéndolo) que la foto original",
     "lic": "CC (vía Openverse)",
     "src": "Flickr (via Openverse)",
     "status": "OK"
