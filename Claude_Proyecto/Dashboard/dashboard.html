@@ -66,6 +66,8 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 .theme-skills {--ac1:#b06eff;--ac2:#ff6bd6}
 .theme-metas  {--ac1:#ffd93d;--ac2:#00e0c0}
 .theme-lista  {--ac1:#3ddc97;--ac2:#00b8d9}
+.theme-aleman {--ac1:#dd0000;--ac2:#ffce00}
+.theme-entrevista{--ac1:#4f8cff;--ac2:#22d3a8}
 
 .eyebrow{font-size:clamp(11px,1.1vw,14px);font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--text2);display:flex;align-items:center;gap:10px;margin-bottom:10px}
 .eyebrow .dot{width:8px;height:8px;border-radius:50%;background:var(--ac1);box-shadow:0 0 12px var(--ac1);animation:pulse 2s ease-in-out infinite}
@@ -195,6 +197,28 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 .lc-aisle:first-child{margin-top:0}
 .lc-aisle-title{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:var(--ac1);margin-bottom:6px;padding-bottom:5px;border-bottom:1px solid rgba(var(--ov),.1)}
 @media(max-width:900px){.lc-grid{grid-template-columns:repeat(2,1fr)}}
+
+/* ─── ALEMÁN DEL DÍA — tema de idioma que rota una vez al día (2026-08-04) ─ */
+.theme-aleman .slide-inner,.theme-entrevista .slide-inner{justify-content:flex-start}
+/* Clases genéricas ".td-*" (topic-of-the-day) — compartidas por los slides "Alemán del día"
+   y "Entrevista del día": mismo layout (encabezado + tags + iframe grande), solo cambia el
+   color de acento (--ac1/--ac2 del .theme-* del slide) y, en Alemán, el badge de nivel. */
+.td-top{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:14px}
+.td-right{display:flex;flex-direction:column;align-items:flex-end;gap:8px;flex-shrink:0}
+.al-level{display:inline-flex;align-items:center;gap:6px;padding:5px 13px;border-radius:20px;font-size:11px;font-weight:800;letter-spacing:.04em;white-space:nowrap}
+.al-level.a1{background:rgba(61,220,151,.14);color:#3ddc97;border:1px solid rgba(61,220,151,.32)}
+.al-level.a2{background:rgba(0,184,217,.14);color:#00b8d9;border:1px solid rgba(0,184,217,.32)}
+.td-badge{display:inline-flex;align-items:center;gap:6px;padding:5px 13px;border-radius:20px;font-size:11px;font-weight:800;letter-spacing:.04em;white-space:nowrap;background:rgba(var(--ov),.08);color:var(--ac1);border:1px solid rgba(var(--ov),.14)}
+.td-counter{font-size:11px;color:var(--text3);font-family:var(--mono);white-space:nowrap}
+.td-open{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:20px;background:var(--ac1);color:#06170f;text-decoration:none;font-weight:800;font-size:12px;white-space:nowrap;transition:transform .2s}
+.td-open:hover{transform:translateY(-1px)}
+.td-title{font-size:clamp(22px,2.6vw,34px);font-weight:900;color:var(--text);margin-top:12px}
+.td-sub{font-size:clamp(13px,1.15vw,16px);color:var(--text2);margin-top:4px}
+.td-tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.td-tag{padding:5px 12px;border-radius:20px;background:rgba(var(--ov),.06);border:1px solid rgba(var(--ov),.1);font-size:11.5px;font-family:var(--mono);color:var(--text2)}
+.td-frame-wrap{border-radius:18px;overflow:hidden;border:1px solid var(--card-br);background:#f5f4f0;box-shadow:0 10px 40px rgba(0,0,0,.35);margin-top:16px;flex:1;min-height:0}
+.td-frame-wrap iframe{width:100%;height:100%;border:0;display:block}
+@media(max-width:1024px){.td-frame-wrap{min-height:60vh}}
 @media(max-width:640px){.debt-steps{grid-template-columns:1fr}}
 
 /* ─── HABILIDADES — tarjetas grandes, una por prioridad (slide pasivo, sin clics) ─ */
@@ -436,6 +460,50 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
     </div>
   </section>
 
+  <!-- 6 · ALEMÁN DEL DÍA -->
+  <section class="slide theme-aleman" data-i="6">
+    <div class="slide-inner">
+      <div class="eyebrow reveal d1"><span class="dot"></span> Alemán del día</div>
+      <div class="td-top reveal d2">
+        <div>
+          <div class="td-title" id="alDe">Deutsch</div>
+          <div class="td-sub" id="alEs"></div>
+        </div>
+        <div class="td-right">
+          <span class="al-level" id="alLevel"></span>
+          <span class="td-counter" id="alCounter"></span>
+          <a class="td-open" id="alOpen" href="#" target="_blank" rel="noopener">↗ Abrir en pestaña nueva</a>
+        </div>
+      </div>
+      <div class="td-tags reveal d3" id="alTags"></div>
+      <div class="td-frame-wrap reveal d4" id="alFrameWrap">
+        <iframe id="alFrame" title="Lección de alemán del día"></iframe>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7 · ENTREVISTA TÉCNICA DEL DÍA -->
+  <section class="slide theme-entrevista" data-i="7">
+    <div class="slide-inner">
+      <div class="eyebrow reveal d1"><span class="dot"></span> Entrevista del día</div>
+      <div class="td-top reveal d2">
+        <div>
+          <div class="td-title" id="enTitle">Cargando…</div>
+          <div class="td-sub" id="enSub"></div>
+        </div>
+        <div class="td-right">
+          <span class="td-badge" id="enBadge"></span>
+          <span class="td-counter" id="enCounter"></span>
+          <a class="td-open" id="enOpen" href="../Entrevistas/entrevistas.html" target="_blank" rel="noopener">↗ Abrir en pestaña nueva</a>
+        </div>
+      </div>
+      <div class="td-tags reveal d3" id="enTags"></div>
+      <div class="td-frame-wrap reveal d4" id="enFrameWrap">
+        <iframe id="enFrame" title="Tema de entrevista técnica del día"></iframe>
+      </div>
+    </div>
+  </section>
+
 </div>
 
 <div class="hud">
@@ -487,7 +555,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
   <div class="help-row"><span class="help-key">Espacio</span> Pausar / reanudar rotación</div>
   <div class="help-row"><span class="help-key">M</span> Abrir/cerrar el menú</div>
   <div class="help-row"><span class="help-key">F</span> Pantalla completa</div>
-  <div class="help-row"><span class="help-key">1-6</span> Ir directo a esa pantalla</div>
+  <div class="help-row"><span class="help-key">1-8</span> Ir directo a esa pantalla</div>
   <div class="help-row"><span class="help-key">?</span> Esta ayuda</div>
 </div>
 
@@ -916,6 +984,105 @@ function toggleListaItem(id){
   const cb=document.getElementById(id);
   if(cb&&cb.checked) checks[id]=true; else delete checks[id];
   rawSet('dash-lista-compras',checks);
+}
+
+// ── Alemán del día (2026-08-04) — un tema distinto cada día, tomado de las 35 lecciones
+//    completas que ya existen en ../Aleman/ (15 A1 + 20 A2: 12 gramática + 8 vocabulario).
+//    Metadata (título/subtítulo/tags) copiada literalmente de Aleman/index.html — 8ª estructura
+//    duplicada del mismo tipo que las de la tabla "Datos duplicados" del README: si se agrega,
+//    quita o renombra un tema allá, hay que replicarlo aquí. El contenido real de la lección
+//    (vocabulario, gramática, diálogos, ejercicios, flashcards) NO se duplica — se embebe la
+//    página completa vía <iframe>, mismo patrón que CuidadoPersonal/cuidadopersonal.html usa
+//    para Salud/Ejercicio/Comida, así siempre se ve exactamente lo mismo que abriendo el archivo.
+const ALEMAN_TEMAS=[
+  {file:'a1-01-saludos.html',nivel:'A1',ico:'👋',de:'Begrüßungen',es:'Saludos y despedidas',tags:['Hallo','Tschüss','Guten Morgen']},
+  {file:'a1-02-zahlen.html',nivel:'A1',ico:'🔢',de:'Zahlen 1–100',es:'Números del 1 al 100',tags:['eins','zehn','hundert']},
+  {file:'a1-03-farben.html',nivel:'A1',ico:'🎨',de:'Farben & Formen',es:'Colores y formas',tags:['rot','blau','groß']},
+  {file:'a1-04-wochentage.html',nivel:'A1',ico:'📅',de:'Wochentage & Monate',es:'Días de la semana y meses',tags:['Montag','Januar','heute']},
+  {file:'a1-05-familie.html',nivel:'A1',ico:'👨‍👩‍👧',de:'Familie',es:'La familia',tags:['Mutter','Vater','Bruder']},
+  {file:'a1-06-artikel.html',nivel:'A1',ico:'🔤',de:'Artikel: der, die, das',es:'Los artículos alemanes',tags:['der Mann','die Frau','das Kind']},
+  {file:'a1-07-pronomen.html',nivel:'A1',ico:'👤',de:'Personalpronomen',es:'Pronombres personales',tags:['ich','du','er/sie/es']},
+  {file:'a1-08-sein-haben.html',nivel:'A1',ico:'⚙️',de:'Verben: sein & haben',es:'Los verbos ser/estar y tener',tags:['ich bin','du hast','er ist']},
+  {file:'a1-09-uhrzeit.html',nivel:'A1',ico:'🕐',de:'Uhrzeit',es:'Decir la hora',tags:['Wie spät ist es?','halb','Uhr']},
+  {file:'a1-10-laender.html',nivel:'A1',ico:'🌍',de:'Länder & Nationalitäten',es:'Países y nacionalidades',tags:['Deutschland','Mexiko','ich komme aus']},
+  {file:'a1-11-berufe.html',nivel:'A1',ico:'💼',de:'Berufe',es:'Profesiones',tags:['Arzt','Lehrer','Ingenieur']},
+  {file:'a1-12-essen.html',nivel:'A1',ico:'🍎',de:'Essen & Trinken',es:'Comida y bebida básica',tags:['Brot','Wasser','Bier']},
+  {file:'a1-13-wohnen.html',nivel:'A1',ico:'🏠',de:'Wohnen — Grundlagen',es:'Vivienda básica',tags:['Haus','Zimmer','Küche']},
+  {file:'a1-14-verkehr.html',nivel:'A1',ico:'🚇',de:'Verkehr & Richtungen',es:'Transporte y direcciones',tags:['links','rechts','U-Bahn']},
+  {file:'a1-15-hobbys.html',nivel:'A1',ico:'🎮',de:'Hobbys & Freizeit',es:'Pasatiempos básicos',tags:['lesen','spielen','Sport']},
+  {file:'a2-01-modalverben.html',nivel:'A2',ico:'⚙️',de:'Modalverben',es:'Verbos modales',tags:['können','müssen','wollen']},
+  {file:'a2-02-perfekt-haben.html',nivel:'A2',ico:'✅',de:'Perfekt mit haben',es:'Pasado con haben',tags:['ich habe gemacht','Partizip II']},
+  {file:'a2-03-perfekt-sein.html',nivel:'A2',ico:'🚶',de:'Perfekt mit sein',es:'Pasado con sein',tags:['ich bin gegangen','Bewegung']},
+  {file:'a2-04-prateritum.html',nivel:'A2',ico:'📜',de:'Präteritum',es:'Pasado simple (escrito)',tags:['war','hatte','konnte']},
+  {file:'a2-05-verbos-separables.html',nivel:'A2',ico:'✂️',de:'Trennbare Verben',es:'Verbos separables',tags:['aufstehen','anrufen','mitkommen']},
+  {file:'a2-06-verbos-reflexivos.html',nivel:'A2',ico:'🔄',de:'Reflexive Verben',es:'Verbos reflexivos',tags:['sich freuen','sich waschen']},
+  {file:'a2-07-kasus.html',nivel:'A2',ico:'📊',de:'Kasus: Nom., Akk., Dat.',es:'Casos gramaticales',tags:['der/den/dem','Subjekt','Objekt']},
+  {file:'a2-08-komparativ.html',nivel:'A2',ico:'📈',de:'Komparativ & Superlativ',es:'Comparativo y superlativo',tags:['größer','am größten','als']},
+  {file:'a2-09-konjunktionen.html',nivel:'A2',ico:'🔗',de:'Konjunktionen',es:'Conjunciones y conectores',tags:['weil','dass','wenn','obwohl']},
+  {file:'a2-10-preposiciones.html',nivel:'A2',ico:'📍',de:'Präpositionen',es:'Preposiciones + casos',tags:['in/an/auf','Wechselpräp.']},
+  {file:'a2-11-adjetivos.html',nivel:'A2',ico:'🎨',de:'Adjektivdeklination',es:'Declinación de adjetivos',tags:['ein großer Mann','Endungen']},
+  {file:'a2-12-infinitiv.html',nivel:'A2',ico:'∞',de:'Infinitiv mit zu',es:'Infinitivo con zu',tags:['Es ist schön, zu...','versuchen zu']},
+  {file:'a2-13-wohnen.html',nivel:'A2',ico:'🏠',de:'Wohnen & Haushalt',es:'Vivienda y hogar',tags:['Miete','Kühlschrank','Nachbar']},
+  {file:'a2-14-arbeit.html',nivel:'A2',ico:'💼',de:'Arbeit & Beruf',es:'Trabajo y carrera',tags:['Gehalt','Kollege','Bewerbung']},
+  {file:'a2-15-gesundheit.html',nivel:'A2',ico:'🏥',de:'Gesundheit & Körper',es:'Salud y cuerpo humano',tags:['Schmerzen','Arzt','Apotheke']},
+  {file:'a2-16-reisen.html',nivel:'A2',ico:'✈️',de:'Reisen & Tourismus',es:'Viajes y turismo',tags:['Flug','Hotel','Ausflug']},
+  {file:'a2-17-freizeit.html',nivel:'A2',ico:'🎯',de:'Freizeit & Hobbys',es:'Tiempo libre y aficiones',tags:['Kino','Sport','Musik']},
+  {file:'a2-18-essen.html',nivel:'A2',ico:'🍽️',de:'Essen, Trinken & Kochen',es:'Gastronomía y cocina',tags:['Rezept','Restaurant','bestellen']},
+  {file:'a2-19-einkaufen.html',nivel:'A2',ico:'🛒',de:'Einkaufen & Preise',es:'Compras y precios',tags:['Supermarkt','Rabatt','bezahlen']},
+  {file:'a2-20-medien.html',nivel:'A2',ico:'📱',de:'Medien & Technologie',es:'Medios y tecnología',tags:['Internet','Handy','Nachrichten']},
+];
+function alemanTemaHoy(){ return ALEMAN_TEMAS[diaDelAnio()%ALEMAN_TEMAS.length]; }
+function renderAleman(){
+  const t=alemanTemaHoy();
+  const idx=ALEMAN_TEMAS.indexOf(t)+1;
+  document.getElementById('alDe').textContent=`${t.ico} ${t.de}`;
+  document.getElementById('alEs').textContent=t.es;
+  const lvl=document.getElementById('alLevel');
+  lvl.textContent='Nivel '+t.nivel;
+  lvl.className='al-level '+t.nivel.toLowerCase();
+  document.getElementById('alCounter').textContent=`Tema ${idx} de ${ALEMAN_TEMAS.length} · cambia cada día`;
+  document.getElementById('alTags').innerHTML=t.tags.map(tag=>`<span class="td-tag">${tag}</span>`).join('');
+  const src='../Aleman/'+t.file;
+  document.getElementById('alOpen').href=src;
+  const frame=document.getElementById('alFrame');
+  if(!frame.src.endsWith(src)) frame.src=src; // evita recargar el iframe si el tema del día no cambió
+}
+
+// ── Entrevista técnica del día (2026-08-04) — un tema distinto cada día, de los 229 que ya
+//    existen en ../Entrevistas/entrevistas.html (automotive SW, protocolos, Python, Git,
+//    DevOps, ISTQB, IA, Claude Code, prep. Wayve, etc.). A diferencia de Alemán, aquí NO se
+//    duplica ninguna metadata: todos los temas viven en un único objeto `T` (ver
+//    Entrevistas/js/core.js) dentro del propio iframe, así que se lee en vivo vía
+//    `frame.contentWindow.T` una vez que el iframe carga, y se navega con la función `go(id)`
+//    que la app ya expone — nada que sincronizar a mano si se agregan/quitan temas allá.
+function renderEntrevista(){
+  const frame=document.getElementById('enFrame');
+  const src='../Entrevistas/entrevistas.html';
+  function paint(){
+    try{
+      const win=frame.contentWindow;
+      // `T` es un `const` de nivel superior en core.js: vive en el scope léxico del script,
+      // no como propiedad de `window` (a diferencia de `function go(){}`, que sí cuelga de
+      // window por ser function declaration) — hay que leerlo con eval indirecto sobre el
+      // propio contentWindow para que se resuelva en SU scope global, no en el del Dashboard.
+      const keys=win.eval('Object.keys(T)');
+      const idx=diaDelAnio()%keys.length;
+      const id=keys[idx];
+      const d=win.eval('T['+JSON.stringify(id)+']');
+      document.getElementById('enTitle').textContent=`${d.icon} ${d.title}`;
+      document.getElementById('enSub').textContent=d.hint||'';
+      document.getElementById('enBadge').textContent=d.mod.toUpperCase();
+      document.getElementById('enCounter').textContent=`Tema ${idx+1} de ${keys.length} · cambia cada día`;
+      document.getElementById('enTags').innerHTML=(d.tags||[]).map(tag=>`<span class="td-tag">${tag}</span>`).join('');
+      win.go(id);
+    }catch(e){ /* si el iframe aún no expone T/go, no rompe el slide — el iframe se ve igual */ }
+  }
+  if(!frame.dataset.loaded){
+    frame.addEventListener('load',()=>{ frame.dataset.loaded='1'; paint(); });
+    frame.src=src;
+  } else {
+    paint();
+  }
 }
 
 // ── Frases motivacionales — 70 en total (ampliado de 20 a 70 el 2026-08-02, a petición
@@ -1458,7 +1625,7 @@ function renderMetasSlide(){
     </div>`;
 }
 
-const RENDERS=[renderHero,renderDia,renderCoach,renderSkills,renderMetasSlide,renderListaCompras];
+const RENDERS=[renderHero,renderDia,renderCoach,renderSkills,renderMetasSlide,renderListaCompras,renderAleman,renderEntrevista];
 const SLIDE_MENU_META=[
   {ico:'🌟',n:'Hero · JARVIS'},
   {ico:'🕐',n:'Mi Día'},
@@ -1466,6 +1633,8 @@ const SLIDE_MENU_META=[
   {ico:'🧠',n:'Habilidades'},
   {ico:'🎯',n:'Mis Metas'},
   {ico:'🛒',n:'Lista de Compras'},
+  {ico:'🇩🇪',n:'Alemán del día'},
+  {ico:'💻',n:'Entrevista del día'},
 ];
 
 // ══════════════════════════════════════════════════════════════════════════
@@ -1558,6 +1727,8 @@ function renderNavMenu(){
     'OVR '+calcOVR(),
     'Corto, mediano y largo plazo',
     'Comida, skincare, cabello y suplementos',
+    (()=>{const t=alemanTemaHoy();return `${t.nivel} · ${t.de}`;})(),
+    (()=>{try{const win=document.getElementById('enFrame').contentWindow;const keys=win.eval('Object.keys(T)');return win.eval('T['+JSON.stringify(keys[diaDelAnio()%keys.length])+'].title');}catch(e){return '229 temas técnicos';}})(),
   ];
   document.getElementById('navMenuList').innerHTML=SLIDE_MENU_META.map((it,i)=>`
     <div class="menu-item ${i===cur?'on':''}" onclick="goTo(${i});toggleMenu()">
@@ -1611,7 +1782,7 @@ document.addEventListener('keydown',e=>{
   if(e.key==='f'||e.key==='F') toggleFullscreen();
   if(e.key==='?') toggleHelp();
   if(e.key==='Escape') closeAllPanels();
-  if(/^[1-6]$/.test(e.key)) goTo(parseInt(e.key,10)-1);
+  if(/^[1-8]$/.test(e.key)) goTo(parseInt(e.key,10)-1);
 });
 // Swipe táctil (iPad/iPhone) — un dedo, izq/der cambia de pantalla, igual que las flechas del teclado.
 // Solo se dispara si el gesto es más horizontal que vertical, para no pelearse con el scroll
