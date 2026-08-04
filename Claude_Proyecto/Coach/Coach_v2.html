@@ -3322,6 +3322,12 @@
     sections.forEach(s => {
       if (window.scrollY >= s.offsetTop - 100) current = s.id;
     });
+    // Si ya se llegó al fondo de la página, resalta la última sección aunque su
+    // contenido sea más corto que un viewport y scrollY nunca alcance su offsetTop-100
+    // (p. ej. "Legal & Personal"/"Legal & Fiscal", las últimas de cada modo).
+    if (sections.length && window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2) {
+      current = sections[sections.length - 1].id;
+    }
     navLinks.forEach(a => {
       a.classList.toggle('active', a.getAttribute('href') === '#' + current);
     });
