@@ -1613,6 +1613,30 @@ document.addEventListener('keydown',e=>{
   if(e.key==='Escape') closeAllPanels();
   if(/^[1-6]$/.test(e.key)) goTo(parseInt(e.key,10)-1);
 });
+// Swipe táctil (iPad/iPhone) — un dedo, izq/der cambia de pantalla, igual que las flechas del teclado.
+// Solo se dispara si el gesto es más horizontal que vertical, para no pelearse con el scroll
+// vertical normal del contenido de la pantalla (necesario en tablet/celular, ver @media arriba).
+(function(){
+  const slidesEl=document.getElementById('slides');
+  let touchStartX=0, touchStartY=0, touching=false;
+  slidesEl.addEventListener('touchstart',e=>{
+    if(e.touches.length!==1) return; // ignora pellizcar/zoom con 2 dedos
+    touching=true;
+    touchStartX=e.touches[0].clientX;
+    touchStartY=e.touches[0].clientY;
+  },{passive:true});
+  slidesEl.addEventListener('touchend',e=>{
+    if(!touching) return;
+    touching=false;
+    const dx=e.changedTouches[0].clientX-touchStartX;
+    const dy=e.changedTouches[0].clientY-touchStartY;
+    const UMBRAL=50;
+    if(Math.abs(dx)>UMBRAL && Math.abs(dx)>Math.abs(dy)){
+      if(dx<0) nextSlide(); else prevSlide();
+    }
+  },{passive:true});
+})();
+
 window.addEventListener('storage',()=>{loadAll();RENDERS[cur]();renderQuickApps();});
 
 // ── Reloj vivo ───────────────────────────────────────────────────────────
