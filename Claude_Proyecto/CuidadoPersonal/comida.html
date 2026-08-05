@@ -582,8 +582,14 @@ function renderRecetas(){
 function registrarReceta(id,tipo){
   const r=RECETAS[tipo].find(x=>x.id===id); if(!r) return;
   const sal=readSalud();
+  const comidaTag=tipo==='desayuno'?'desayuno':'cena';
+  // Evita duplicar calorías/macros por un doble clic accidental (fácil en iPad/iPhone) —
+  // si ya se registró exactamente esto hoy, confirma antes de agregarlo de nuevo en vez
+  // de simplemente sumarlo sin aviso.
+  const yaExiste=(sal.alimentos||[]).some(a=>a.fecha===today()&&a.comida===comidaTag&&a.nombre===r.nombre);
+  if(yaExiste&&!confirm(`Ya registraste "${r.nombre}" hoy. ¿Registrarlo de nuevo?`)) return;
   sal.alimentos.push({
-    id:uid(), fecha:today(), comida:tipo==='desayuno'?'desayuno':'cena', nombre:r.nombre, cantidad:'', unidad:'',
+    id:uid(), fecha:today(), comida:comidaTag, nombre:r.nombre, cantidad:'', unidad:'',
     cal:r.macros.cal, prot:r.macros.prot, carbs:r.macros.carbs, gra:r.macros.gra,
     notas:'Registrado desde Mi Comida'
   });
@@ -622,6 +628,10 @@ function registrarRutinaMeal(idx){
   const KEYS=['desayuno','almuerzo','cena'];
   const NAMES=['Desayuno','Comida','Cena'];
   const sal=readSalud();
+  // Mismo chequeo anti-doble-clic que registrarReceta() — si el plan de este bloque
+  // ya se registró hoy, confirma antes de duplicar los 3-6 alimentos de nuevo.
+  const yaExiste=(sal.alimentos||[]).some(a=>a.fecha===today()&&a.comida===KEYS[idx]&&a.notas==='Plan Masa Muscular');
+  if(yaExiste&&!confirm(`Ya registraste ${NAMES[idx]} del Plan Masa Muscular hoy. ¿Registrarlo de nuevo?`)) return;
   PLAN_ITEMS[idx].forEach(item=>{
     sal.alimentos.push({id:uid(),nombre:item.nombre,comida:KEYS[idx],
       cantidad:'',unidad:'g',cal:item.cal,prot:item.prot,carbs:item.carbs,gra:item.gra,

@@ -166,3 +166,7 @@ Verificado sección por sección (`SECS` = dashboard, medidas, digestiva, examen
 ## Cómo usarlo
 
 Se abre `CuidadoPersonal/cuidadopersonal.html` (subtab Cuidado de la Salud) o directamente `salud.html` en cualquier navegador, sin instalación ni servidor. No hay sincronización entre dispositivos salvo mediante exportación manual del JSON.
+
+## Fix: agregar un suplemento del catálogo dos veces lo duplicaba (2026-08-05)
+
+Encontrado en una auditoría general del ecosistema pedida por Adán ("mejora todos los html, ve funciones o cosas que les falten"). `addFromCatalog(i)` (botón "➕ Agregar a mi lista" de Suplementos) hacía `push()` directo sin comprobar si ese suplemento del `SUPP_CATALOG` ya estaba en `S.suplementos.lista` — un doble clic (o volver a pulsar el mismo suplemento) creaba una fila duplicada, cada una con su propio checkbox independiente de "tomado hoy". Fix: `if(S.suplementos.lista.some(x=>x.nombre===s.nombre)) return toast('Ya está en tu lista')` antes del `push()`. Verificado con Playwright: agregar el mismo suplemento del catálogo dos veces deja la lista en 1 solo ítem; cero errores de consola.

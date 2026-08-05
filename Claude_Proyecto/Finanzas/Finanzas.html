@@ -2926,6 +2926,13 @@ function renderSpecials(freeMonth, refDate=new Date()) {
   // ── Análisis Maestría ──
   const maestria=(S.goals||[]).find(g=>g.id==='g001')||(S.goals||[]).find(g=>g.icon==='🎓'||g.name.toLowerCase().includes('maestr')||g.name.toLowerCase().includes('alemania'));
   const targetDate=maestria?.date?new Date(maestria.date):new Date(2027,9,1);
+  // Coach_v2.html → #perfil documenta la decisión real (jul 2026): pausar aportaciones
+  // nuevas a esta meta por 1 año, sin tocar lo ya ahorrado. Mientras dure la pausa, no
+  // tiene sentido mostrar "faltan $X/mes" como si debiera seguir aportando activamente.
+  const maestriaPausada = !!(maestria?.pausadaHasta && new Date() < new Date(maestria.pausadaHasta));
+  // 'T12:00:00' evita que `new Date('YYYY-MM-DD')` (medianoche UTC) se muestre como el día
+  // anterior en zonas horarias negativas (México, UTC-6) al formatear con toLocaleDateString.
+  const targetLabel = new Date((maestria?.date||'2027-10-01')+'T12:00:00').toLocaleDateString('es-MX',{month:'short',year:'numeric'});
   const now=refDate;
   const monthsLeft=Math.max(1,Math.round((targetDate-now)/2592000000));
   const realToday=new Date();
@@ -3097,7 +3104,7 @@ function renderSpecials(freeMonth, refDate=new Date()) {
             <span class="ts fw6" style="color:var(--success)">${fmt(maeSum)} en activos</span>
             <span class="ts tm"> · faltan ${fmt(Math.max(0,maestriaTarget-maeSum))}</span>
           </div>
-          <span class="ts tm">Meta: ${fmt(maestriaTarget)} · oct 2027</span>
+          <span class="ts tm">Meta: ${fmt(maestriaTarget)} · ${targetLabel}</span>
         </div>
         <!-- Barra principal segmentada -->
         <div style="height:12px;border-radius:20px;overflow:hidden;background:rgba(var(--ov),.09);display:flex;margin-bottom:10px">
@@ -3123,13 +3130,18 @@ function renderSpecials(freeMonth, refDate=new Date()) {
       })()}
 
       <!-- Datos clave -->
+      ${maestriaPausada?`
+      <div style="background:var(--bg);border-radius:8px;padding:12px 14px;margin-bottom:14px;border-left:3px solid var(--text3)">
+        <div class="ts fw6" style="color:var(--text)">⏸️ Aportaciones pausadas hasta ${new Date(maestria.pausadaHasta+'T12:00:00').toLocaleDateString('es-MX',{day:'numeric',month:'short',year:'numeric'})}</div>
+        <div class="ts tm" style="margin-top:3px">Decisión tomada en Coach — los ${fmt(Math.round(totalActivos))} ya ahorrados quedan intactos, sin nuevas aportaciones mientras se prioriza deuda. Nueva meta: ${targetLabel}.</div>
+      </div>`:`
       <div class="g2" style="gap:8px;margin-bottom:14px">
         <div style="background:var(--bg);border-radius:8px;padding:10px 14px;text-align:center">
           <div class="ts tm">Falta por ahorrar / mes</div>
           <div style="font-size:19px;font-weight:800;color:${monthlyNeeded>0?'var(--primary)':'var(--success)'};margin-top:2px">
             ${monthlyNeeded>0?fmt(monthlyNeeded):'¡Ya cubierto!'}
           </div>
-          <div class="ts tm">para llegar en oct 2027</div>
+          <div class="ts tm">para llegar en ${targetLabel}</div>
         </div>
         <div style="background:var(--bg);border-radius:8px;padding:10px 14px;text-align:center">
           <div class="ts tm">Tu sobrante real mensual</div>
@@ -3138,7 +3150,7 @@ function renderSpecials(freeMonth, refDate=new Date()) {
             ${monthGBMCalc>=monthlyNeeded?`✅ cubre el mínimo de ${fmt(monthlyNeeded)}`:`⚠️ faltan ${fmt(monthlyNeeded-monthGBMCalc)}/mes`}
           </div>
         </div>
-      </div>
+      </div>`}
 
       <!-- Tabla de escenarios -->
       <div style="font-size:11px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.04em;margin-bottom:8px">
@@ -3147,7 +3159,7 @@ function renderSpecials(freeMonth, refDate=new Date()) {
       <div style="display:flex;flex-direction:column;gap:6px">
         ${scRow('📈','Tu plan GBM mensual (sobrante real calculado)',scA_mo,scA_months,scA_date,scA_diff)}
         ${scRow('💰','Plan GBM + CETES combinados (ahorro total)',scB_mo,scB_months,scB_date,scB_diff)}
-        ${scRow('🎯','Mínimo necesario para llegar en oct 2027',scC_mo,scC_months,targetDate,0)}
+        ${scRow('🎯',`Mínimo necesario para llegar en ${targetLabel}`,scC_mo,scC_months,targetDate,0)}
         ${scRow('💡','Si reduces gastos variables 20%',scD_mo,scD_months,scD_date,scD_diff)}
         <!-- Escenario E expandido -->
         <div style="border-radius:8px;border:1px solid rgba(0,212,255,.3);background:linear-gradient(135deg,rgba(0,212,255,.06),rgba(176,110,255,.06));overflow:hidden">
@@ -3192,7 +3204,7 @@ function renderSpecials(freeMonth, refDate=new Date()) {
             </div>
             <!-- Proyección al deadline oct 2027 -->
             <div style="margin-top:6px;border-radius:6px;padding:9px 12px;background:${scE_shortfall>0?'rgba(249,115,22,.08)':'rgba(0,232,122,.08)'};border:1px solid ${scE_shortfall>0?'rgba(249,115,22,.3)':'rgba(0,232,122,.3)'}">
-              <div style="font-size:10px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px">📅 ¿Cuánto tendrías en oct 2027?</div>
+              <div style="font-size:10px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px">📅 ¿Cuánto tendrías en ${targetLabel}?</div>
               <div style="display:flex;flex-direction:column;gap:3px;font-size:11px;color:var(--text2)">
                 <div style="display:flex;justify-content:space-between">
                   <span>Activos hoy</span>
@@ -3208,7 +3220,7 @@ function renderSpecials(freeMonth, refDate=new Date()) {
                 </div>
                 <div style="height:1px;background:rgba(255,255,255,.1);margin:4px 0"></div>
                 <div style="display:flex;justify-content:space-between;align-items:center">
-                  <span style="font-weight:700;color:var(--text)">Total en oct 2027</span>
+                  <span style="font-weight:700;color:var(--text)">Total en ${targetLabel}</span>
                   <span style="font-size:14px;font-weight:800;color:${scE_shortfall>0?'#f97316':'var(--success)'}">
                     ${fmt(Math.round(scE_atDeadline))}
                   </span>
@@ -3218,7 +3230,7 @@ function renderSpecials(freeMonth, refDate=new Date()) {
                   <span style="color:#f97316">Aún faltarían</span>
                   <span style="font-weight:700;color:#f97316">−${fmt(Math.round(scE_shortfall))}</span>
                 </div>`:`
-                <div style="font-size:11px;color:var(--success);font-weight:600;margin-top:2px;text-align:center">✅ Meta cubierta antes de oct 2027</div>`}
+                <div style="font-size:11px;color:var(--success);font-weight:600;margin-top:2px;text-align:center">✅ Meta cubierta antes de ${targetLabel}</div>`}
                 <!-- Rendimiento GBM -->
                 <div style="margin-top:8px;padding-top:8px;border-top:1px dashed rgba(176,110,255,.35)">
                   <div style="font-size:10px;font-weight:700;color:#b06eff;text-transform:uppercase;letter-spacing:.05em;margin-bottom:5px">📈 + Rendimiento GBM estimado (~10% anual)</div>
@@ -3227,7 +3239,7 @@ function renderSpecials(freeMonth, refDate=new Date()) {
                     <span style="font-weight:700;color:#b06eff">+${fmt(scE_rendimiento)}</span>
                   </div>
                   <div style="display:flex;justify-content:space-between;align-items:center;margin-top:4px">
-                    <span style="font-size:11px;font-weight:700;color:var(--text)">Total con rendimiento en oct 2027</span>
+                    <span style="font-size:11px;font-weight:700;color:var(--text)">Total con rendimiento en ${targetLabel}</span>
                     <span style="font-size:14px;font-weight:800;color:${scE_shortfallR>0?'#f97316':'var(--success)'}">
                       ${fmt(Math.round(scE_fvDeadline))}
                     </span>
@@ -3554,7 +3566,7 @@ function importData(input) {
 }
 
 // ─── SEED DATA ───────────────────────────────────────────────────────────────
-const SEED_VER = '22'; // incrementar cada vez que cambie el seed
+const SEED_VER = '23'; // incrementar cada vez que cambie el seed — v23: meta Maestría refleja la pausa de 1 año decidida en Coach (date 2028-10-01, pausadaHasta 2027-07-18)
 function seedData() {
   if (localStorage.getItem(KEY+'_v') === SEED_VER) return;
   localStorage.removeItem(KEY);
@@ -3716,7 +3728,7 @@ function seedData() {
       {id:'d008',name:'iPhone 15 MSI',               type:'other',      total:13337.46,  balance:11361.54,  rate:0,     min:493.98,day:0, start:'2026-03-20'}
     ],
     goals: [
-      {id:'g001',name:'Maestría en Alemania', target:500000, current:53740, date:'2027-10-01',icon:'🎓'},
+      {id:'g001',name:'Maestría en Alemania', target:500000, current:53740, date:'2028-10-01', pausadaHasta:'2027-07-18',icon:'🎓'},
     ],
     investments: [
       {id:'i002',name:'CETES',              type:'cetes',    invested:3000,  value:3000,  date:'2026-04-20',rate:11},

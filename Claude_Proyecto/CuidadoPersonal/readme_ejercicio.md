@@ -181,6 +181,10 @@ Dos pedidos explícitos en la misma sesión: *"en ejercicio en modo oscuro algun
 
 Verificado con Playwright: los 7 `#rutina-dia-N` presentes y visibles simultáneamente sin necesidad de interacción; `background-color` computado de `.exd-img` en tema oscuro forzado es `rgb(242,242,242)` (antes casi negro); guardar una edición desde el modal sigue refrescando la vista (`renderRutinaSemana()` en vez de `renderRutina()`); cero referencias huérfanas a `rutinaDiaSel`/`verRutinaDia`/`day-tab` (grep completo del archivo); cero errores de consola.
 
+## Fix: `saveRutina()` borraba `foco` al editar un día (2026-08-05)
+
+Encontrado en una auditoría general del ecosistema pedida por Adán ("mejora todos los html, ve funciones o cosas que les falten"), no reportado por él directamente. `saveRutina()` (el único punto de guardado del modal "✏️ Editar") reemplazaba el objeto completo `S.rutina[dia]` con solo `{nombre,tipo,ejercicios}` — el campo `foco` (el texto curado que explica qué ejercicios de ese día sirven a la meta de brazos/panza, reescrito a mano el 2026-08-03) se perdía silenciosamente en cada guardado, sin ningún aviso. Fix de una línea: `S.rutina[dia]={...S.rutina[dia], nombre, tipo, ejercicios}` — el spread del día existente preserva `foco` (y cualquier campo futuro que este modal no edite) automáticamente. Verificado con Playwright: editar y guardar el lunes conserva el mismo `foco` de antes; cero errores de consola.
+
 ## Referencias cruzadas
 
 - Incrustada vía `<iframe>` en [`readme_cuidadopersonal.md`](readme_cuidadopersonal.md) (subtab "Ejercicio"). Comparte `localStorage` con el shell por origen `file://` compartido (ver `readme_cuidadopersonal.md`).

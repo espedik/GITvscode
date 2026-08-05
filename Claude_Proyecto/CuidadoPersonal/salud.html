@@ -1793,6 +1793,7 @@ function renderSuplementos() {
 
 function addFromCatalog(i) {
   const s=SUPP_CATALOG[i];
+  if(S.suplementos.lista.some(x=>x.nombre===s.nombre)) { toast('Ya está en tu lista'); return; }
   S.suplementos.lista.push({id:uid(),nombre:s.nombre,dosis:s.dosis,momento:s.momento,notas:''});
   save(); renderSuplementos(); toast('✅ '+s.nombre+' agregado a tu lista');
 }

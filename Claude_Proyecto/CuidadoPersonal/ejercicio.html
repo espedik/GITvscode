@@ -941,7 +941,11 @@ function toggleRutEj(id) {
 }
 function saveRutina() {
   const dia=parseInt(document.getElementById('rut-dia').value);
+  // Spread del día existente primero — preserva `foco` (el texto curado que explica qué
+  // ejercicios de ese día sirven a la meta) y cualquier otro campo que no se edite desde
+  // este modal. Antes se reemplazaba el objeto completo y `foco` se perdía en cada guardado.
   S.rutina[dia]={
+    ...S.rutina[dia],
     nombre:document.getElementById('rut-nombre').value.trim()||DIAS_STR[dia],
     tipo:document.getElementById('rut-tipo').value,
     ejercicios:[...rutinaEjsSeleccionados]
