@@ -149,10 +149,24 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 .rt2-done .rt2-txt{opacity:.5;text-decoration:line-through}
 .rt2-fijo{opacity:.85}
 .rt2-cat-chip{display:inline-flex;align-items:center;gap:5px;border-radius:20px;padding:5px 12px;font-size:11px;font-weight:700;border:1px solid}
-.rt2-sub{margin-top:5px;display:flex;flex-direction:column;gap:3px;padding-left:10px;border-left:2px solid rgba(var(--ov),.08)}
-/* Explicación/subtareas — itálica y más chica, a propósito distinta del título de arriba */
-.rt2-sub-item{font-size:11.5px;color:var(--text2);font-style:italic;line-height:1.5}
-.rt2-sub-done{opacity:.5;text-decoration:line-through}
+/* Subtareas (2026-08-07, resaltadas a petición de Adán: "ni se ven", "de otro estilo, color") —
+   cada una es su propia tarjetita (fondo + borde), no solo texto suelto en itálica, para que se
+   note de un vistazo que hay una lista debajo del título. Dentro de cada una, si el texto trae
+   un " — " (producto/ítem seguido de la instrucción, patrón usado en todas las subtareas de
+   skincare/cabello/ejercicio: "Producto: Marca — qué hacer con él"), se pinta la primera parte
+   (el producto/ítem) en un color de acento y la segunda (la acción) en el color de texto
+   secundario — ambos colores ya están definidos para tema claro Y oscuro (`--cy`/`--text2` en
+   :root arriba), así se ve bien en los dos sin reglas extra por tema.  */
+.rt2-sub{margin-top:7px;display:flex;flex-direction:column;gap:6px}
+.rt2-sub-item{display:flex;align-items:flex-start;gap:7px;font-size:11.5px;line-height:1.5;
+  background:rgba(var(--ov),.045);border:1px solid rgba(var(--ov),.09);border-left:3px solid var(--cy);
+  border-radius:9px;padding:7px 10px}
+.rt2-sub-check{flex-shrink:0;margin-top:1px;font-size:11px}
+.rt2-sub-prod{font-weight:800;color:var(--cy)}
+.rt2-sub-dash{color:var(--text3)}
+.rt2-sub-action{color:var(--text2)}
+.rt2-sub-txt{font-weight:700;color:var(--text)}
+.rt2-sub-done{opacity:.55;text-decoration:line-through;border-left-color:var(--text3)}
 
 /* ─── Filas compactas ícono+texto (tile "Importante este mes", Mi Día) ─── */
 .ds-row{display:flex;align-items:baseline;gap:8px;font-size:12px;padding:3px 0}
@@ -212,6 +226,10 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 .hp-meal-lbl{font-size:9.5px;font-weight:800;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px}
 .hp-meal-name{font-size:13px;font-weight:700;color:var(--text);line-height:1.35}
 .hp-meal-macro{font-size:10.5px;color:var(--text2);font-family:var(--mono);margin-top:3px}
+/* "Ideas para hoy" (2026-08-07) — 3 opciones apiladas, no 1 sola, con scroll interno si no caben */
+.hp-meal-list{display:flex;flex-direction:column;gap:8px;max-height:clamp(220px,32vh,340px);overflow-y:auto;padding-right:2px}
+.hp-meal-card{background:rgba(var(--ov),.04);border:1px solid rgba(var(--ov),.08);border-radius:12px;padding:9px 12px}
+.hp-meal-card .hp-meal-name{margin-bottom:4px}
 
 /* ─── COACH · PLAN MAESTRO — ruta de deuda cara + to-do de fase (2026-07-30) ─ */
 .debt-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
@@ -274,6 +292,32 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 .td-frame-wrap iframe{width:100%;height:100%;border:0;display:block}
 @media(max-width:1024px){.td-frame-wrap{min-height:60vh}}
 @media(max-width:640px){.debt-steps{grid-template-columns:1fr}}
+
+/* ─── ALEMÁN DEL DÍA — iframe integrado, no encimado (2026-08-07) ─────────────────────────────
+   Pedido explícito: "no quiero que me pongas el otro html como encimado, se ve muuuy mal, debes
+   abarcar toda la página". Se probó reemplazar el iframe por contenido nativo leyendo su DOM,
+   pero Chrome bloquea el acceso entre documentos file:// distintos (ver comentario grande junto a
+   ALEMAN_TEMAS en el JS) — Adán, ante esa limitación real, pidió arreglar el iframe en vez de
+   quitarlo. Dos causas concretas de que "se viera mal", ambas corregidas aquí:
+   1) Encabezado duplicado: el Dashboard pintaba su propio título+subtítulo+tags grandes, y justo
+      debajo el iframe volvía a mostrar exactamente lo mismo (su propio hero con título, subtítulo
+      y tags) — literalmente la misma información dos veces, en dos estilos distintos, apilada.
+      Se quitó el bloque duplicado del lado del Dashboard (ya no hay #alEs ni #alTags) y se dejó
+      solo una línea compacta (icono + tema del día en el `eyebrow`) — el resto de la información
+      ya vive, una sola vez, dentro de la lección real.
+   2) El choque de color (blanco/crema de Aleman/styles.css contra el fondo oscuro del Dashboard)
+      no se puede evitar del todo sin poder inyectar CSS en un documento de otro origen — en vez de
+      pelear contra eso, se abraza: `.al-frame-wrap` agrega un resplandor ambiental en los mismos
+      colores de bandera alemana que ya usa este slide (--ac1 rojo / --ac2 dorado), para que la
+      transición se sienta intencional en vez de accidental, y crece a casi toda la altura y ancho
+      disponibles del slide — quitar el encabezado duplicado del punto 1 le regala ese espacio. */
+.al-top{align-items:center;margin-bottom:0}
+.al-top .eyebrow{font-size:clamp(12px,1.1vw,14px)}
+.al-top .eyebrow span:not(.dot){color:var(--text);font-weight:700}
+.al-frame-wrap{margin-top:14px;border-radius:20px;
+  box-shadow:0 30px 80px -12px rgba(0,0,0,.55),0 0 0 1px rgba(255,255,255,.05),
+    0 10px 46px -6px rgba(221,0,0,.16),0 10px 46px -6px rgba(255,206,0,.10)}
+@media(max-width:640px){.al-top{flex-direction:column;align-items:flex-start;gap:10px}}
 
 /* ─── HABILIDADES — tarjetas grandes, una por prioridad (slide pasivo, sin clics) ─ */
 .skill-priority-title{font-size:clamp(15px,1.6vw,19px);font-weight:900;color:var(--text);margin-bottom:12px;display:flex;align-items:center;gap:8px}
@@ -434,6 +478,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
         <div class="tile tile-glow">
           <div class="lbl">🟢 Ahora mismo</div>
           <div style="font-weight:800;font-size:clamp(16px,1.8vw,22px);margin-top:8px;line-height:1.4" id="diaAhora">—</div>
+          <div id="diaAhoraSub"></div>
           <div id="diaAhoraBtn"></div>
         </div>
         <div class="tile tile-glow">
@@ -550,20 +595,15 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
   <!-- 6 · ALEMÁN DEL DÍA -->
   <section class="slide theme-aleman" data-i="6">
     <div class="slide-inner">
-      <div class="eyebrow reveal d1"><span class="dot"></span> Alemán del día</div>
-      <div class="td-top reveal d2">
-        <div>
-          <div class="td-title" id="alDe">Deutsch</div>
-          <div class="td-sub" id="alEs"></div>
-        </div>
+      <div class="td-top al-top reveal d1">
+        <div class="eyebrow" style="margin-bottom:0"><span class="dot"></span> Alemán del día · <span id="alDe">Deutsch</span></div>
         <div class="td-right">
           <span class="al-level" id="alLevel"></span>
           <span class="td-counter" id="alCounter"></span>
           <a class="td-open" id="alOpen" href="#" target="_blank" rel="noopener">↗ Abrir en pestaña nueva</a>
         </div>
       </div>
-      <div class="td-tags reveal d3" id="alTags"></div>
-      <div class="td-frame-wrap reveal d4" id="alFrameWrap">
+      <div class="td-frame-wrap al-frame-wrap reveal d2" id="alFrameWrap">
         <iframe id="alFrame" title="Lección de alemán del día"></iframe>
       </div>
     </div>
@@ -930,6 +970,17 @@ function rtDur(fromHora,toHora){
 function rutinaTareasHoy(){const dow=new Date().getDay();return RUTINA_TASKS.filter(t=>t.dias.includes(dow)).sort((a,b)=>a.hora.localeCompare(b.hora));}
 // Igual que Coach_v2.html: una tarea agrupada (.subtareas) cuenta cada subtarea por separado
 function leafItems(t){ return (t.subtareas&&t.subtareas.length) ? t.subtareas : [{id:t.id, txt:t.txt, link:t.link}]; }
+// Pinta la lista de subtareas de un bloque, resaltando "producto — acción" cuando el texto trae
+// ese patrón (ver comentario de .rt2-sub-item en el CSS) — usado por renderDia() (tile "Ahora
+// mismo") y por la línea de tiempo, para que las dos se vean exactamente igual.
+function subtareasHtml(leaves,doneHoy){
+  return `<div class="rt2-sub">${leaves.map(it=>{
+    const done=doneHoy.includes(it.id);
+    const m=it.txt.match(/^(.+?)\s+—\s+(.+)$/s);
+    const body=m?`<span class="rt2-sub-prod">${m[1]}</span><span class="rt2-sub-dash"> — </span><span class="rt2-sub-action">${m[2]}</span>`:`<span class="rt2-sub-txt">${it.txt}</span>`;
+    return `<div class="rt2-sub-item${done?' rt2-sub-done':''}"><span class="rt2-sub-check">${done?'✅':'▫️'}</span><span>${body}</span></div>`;
+  }).join('')}</div>`;
+}
 function rutinaAhoraSiguiente(){
   const now=new Date();
   const hhmm=String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0');
@@ -1220,6 +1271,18 @@ function toggleListaItem(id){
 //    (vocabulario, gramática, diálogos, ejercicios, flashcards) NO se duplica — se embebe la
 //    página completa vía <iframe>, mismo patrón que CuidadoPersonal/cuidadopersonal.html usa
 //    para Salud/Ejercicio/Comida, así siempre se ve exactamente lo mismo que abriendo el archivo.
+//    Intento fallido documentado (2026-08-07): se probó leer el DOM de la lección desde un iframe
+//    oculto (`contentDocument`) para repintar el contenido con el look nativo del Dashboard, en
+//    vez de mostrar el iframe — pero Chrome bloquea el acceso entre dos documentos `file://`
+//    distintos (cada archivo local es un origen "opaco" propio), y `fetch()` a un archivo local
+//    tampoco funciona ("Failed to fetch") — confirmado con Playwright, cero acceso posible sin
+//    levantar un servidor local. El mismo problema silencioso ya existía en "Entrevista del día"
+//    (`win.eval(...)` sobre el iframe, ver más abajo) — ahí se degrada sin romper nada visible (el
+//    iframe muestra el índice de Entrevistas en vez del tema exacto del día), pero para Alemán
+//    habría dejado el slide vacío. Ante esto, Adán eligió explícitamente **arreglar el iframe en
+//    vez de quitarlo** (ver "Alemán del día — iframe integrado, no encimado" en
+//    readme_dashboard.md para el rediseño visual que sí se aplicó) en vez de transcribir las 35
+//    lecciones a mano.
 const ALEMAN_TEMAS=[
   {file:'a1-01-saludos.html',nivel:'A1',ico:'👋',de:'Begrüßungen',es:'Saludos y despedidas',tags:['Hallo','Tschüss','Guten Morgen']},
   {file:'a1-02-zahlen.html',nivel:'A1',ico:'🔢',de:'Zahlen 1–100',es:'Números del 1 al 100',tags:['eins','zehn','hundert']},
@@ -1261,13 +1324,11 @@ function alemanTemaHoy(){ return ALEMAN_TEMAS[diaDelAnio()%ALEMAN_TEMAS.length];
 function renderAleman(){
   const t=alemanTemaHoy();
   const idx=ALEMAN_TEMAS.indexOf(t)+1;
-  document.getElementById('alDe').textContent=`${t.ico} ${t.de}`;
-  document.getElementById('alEs').textContent=t.es;
+  document.getElementById('alDe').textContent=`${t.ico} ${t.de} — ${t.es}`;
   const lvl=document.getElementById('alLevel');
   lvl.textContent='Nivel '+t.nivel;
   lvl.className='al-level '+t.nivel.toLowerCase();
   document.getElementById('alCounter').textContent=`Tema ${idx} de ${ALEMAN_TEMAS.length} · cambia cada día`;
-  document.getElementById('alTags').innerHTML=t.tags.map(tag=>`<span class="td-tag">${tag}</span>`).join('');
   const src='../Aleman/'+t.file;
   document.getElementById('alOpen').href=src;
   const frame=document.getElementById('alFrame');
@@ -1484,6 +1545,11 @@ function renderDia(){
 
   document.getElementById('diaFecha').textContent=new Date().toLocaleDateString('es-MX',{weekday:'long',day:'numeric',month:'long'});
   document.getElementById('diaAhora').textContent=actual?(actual.hora+' — '+actual.txt):(tareasHoy.length?'Aún no empieza tu rutina de hoy':'Sin bloques configurados para hoy');
+  // El bloque "Ahora mismo" solo mostraba el título — si la tarea actual está agrupada (subtareas)
+  // no se veía ninguna, había que buscarla en la línea de tiempo de abajo. Pedido explícito de
+  // Adán ("en el ahora mismo ni se ven las subtask, debe mostrar todo"): mostrarlas aquí directo.
+  document.getElementById('diaAhoraSub').innerHTML=(actual&&!actual.fijo&&actual.subtareas)?
+    subtareasHtml(leafItems(actual),(D.rut.completado||{})[today()]||[]):'';
   updateMarkDoneBtn(actual);
   renderEventosMes();
 
@@ -1512,7 +1578,7 @@ function renderDia(){
     const leaves=leafItems(t);
     const done=!t.fijo&&leaves.every(it=>doneHoy.includes(it.id));
     const dotColor=t.fijo?(isNow?meta.c:'#3a3d52'):(done?'#00e87a':isNow?meta.c:'#3a3d52');
-    const subHtml=(!t.fijo&&t.subtareas)?`<div class="rt2-sub">${leaves.map(it=>`<div class="rt2-sub-item${doneHoy.includes(it.id)?' rt2-sub-done':''}">${doneHoy.includes(it.id)?'✅':'▫️'} ${it.txt}</div>`).join('')}</div>`:'';
+    const subHtml=(!t.fijo&&t.subtareas)?subtareasHtml(leaves,doneHoy):'';
     return `<div class="rt2-card ${isNow?'rt2-now':''} ${done?'rt2-done':''} ${t.fijo?'rt2-fijo':''}">
       <div class="rt2-dot" style="background:${dotColor};box-shadow:${(isNow||done)?'0 0 10px '+dotColor:'none'}"></div>
       <div class="rt2-body">
@@ -1650,17 +1716,21 @@ function renderHeroGymPanel(){
   `;
 }
 
-// ── Panel "🍽️ Ideas para hoy" — 1 desayuno + 1 cena del recetario (rota por día, no
-//    "lo que comiste hoy" porque Adán no registra diario), en subtabs (mismo patrón que
+// ── Panel "🍽️ Ideas para hoy" — 3 opciones rotativas de desayuno + 3 de cena del recetario
+//    (no "lo que comiste hoy" porque Adán no registra diario), en subtabs (mismo patrón que
 //    .mes-tab/.lc-tab) — solo nombre + ingredientes, sin macros ni pasos de preparación.
+//    2026-08-07: antes mostraba solo 1 opción fija por comida — "solo me muestras una opción...
+//    esto debe variar" — ahora muestra una ventana de 3 recetas que además se recorre un lugar
+//    cada día (`pickN`), así siempre hay variedad Y cambia de un día a otro, no las mismas 3 fijas.
 let nutriTabSel='desayuno';
+function pickN(arr,startIdx,n){ const out=[]; for(let i=0;i<n;i++) out.push(arr[(startIdx+i)%arr.length]); return out; }
 function renderHeroNutri(){
   const el=document.getElementById('heroNutriPanel');
   if(!el)return;
   const diaIdx=diaDelAnio();
-  const desayuno=RECETAS_MINI.desayuno[diaIdx%RECETAS_MINI.desayuno.length];
-  const cena=RECETAS_MINI.cena[diaIdx%RECETAS_MINI.cena.length];
-  const r=nutriTabSel==='cena'?cena:desayuno;
+  const desayunos=pickN(RECETAS_MINI.desayuno,diaIdx,3);
+  const cenas=pickN(RECETAS_MINI.cena,diaIdx,3);
+  const recetas=nutriTabSel==='cena'?cenas:desayunos;
   el.innerHTML=`
     <div class="hp-title">
       <span>🍽️ Ideas para hoy</span>
@@ -1670,8 +1740,12 @@ function renderHeroNutri(){
       <button class="mes-tab${nutriTabSel==='desayuno'?' active':''}" onclick="verNutriTab('desayuno')">🌅 Desayuno</button>
       <button class="mes-tab${nutriTabSel==='cena'?' active':''}" onclick="verNutriTab('cena')">🌙 Cena</button>
     </div>
-    <div class="hp-meal-name" style="margin-bottom:6px">${r.nombre}</div>
-    <div style="display:flex;flex-direction:column">${r.ing.map(i=>`<div class="ds-row"><span class="ds-txt" style="white-space:normal">${i}</span></div>`).join('')}</div>
+    <div class="hp-meal-list">${recetas.map(r=>`
+      <div class="hp-meal-card">
+        <div class="hp-meal-name">${r.nombre}</div>
+        <div style="display:flex;flex-direction:column">${r.ing.map(i=>`<div class="ds-row"><span class="ds-txt" style="white-space:normal">${i}</span></div>`).join('')}</div>
+      </div>`).join('')}
+    </div>
   `;
 }
 function verNutriTab(tab){ nutriTabSel=tab; renderHeroNutri(); }
