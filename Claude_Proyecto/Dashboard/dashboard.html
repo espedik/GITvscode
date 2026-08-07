@@ -7,6 +7,11 @@
 <meta name="description" content="Salvapantallas de mando: rotación automática de pantallas con lo más importante y pendiente de Coach, Finanzas y el resto de mis proyectos.">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='46' fill='%2305050a' stroke='%2300e0c0' stroke-width='4'/%3E%3Ccircle cx='50' cy='50' r='14' fill='%2300e0c0'/%3E%3Ccircle cx='50' cy='50' r='30' fill='none' stroke='%2300e0c0' stroke-width='2' opacity='.5'/%3E%3C/svg%3E">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<!-- Contenido real de las 35 lecciones de Aleman/ (ALEMAN_CONTENT), extraído automáticamente por
+     Aleman/_generar-datos-dashboard.js — ver "Alemán del día" en readme_dashboard.md. No es un
+     resumen ni texto reescrito a mano: es el vocabulario/diálogos/ejercicios reales de cada
+     lección, listo para pintarse con el estilo nativo del Dashboard. -->
+<script src="aleman-data.js"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;700&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&display=swap');
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -293,31 +298,80 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 @media(max-width:1024px){.td-frame-wrap{min-height:60vh}}
 @media(max-width:640px){.debt-steps{grid-template-columns:1fr}}
 
-/* ─── ALEMÁN DEL DÍA — iframe integrado, no encimado (2026-08-07) ─────────────────────────────
-   Pedido explícito: "no quiero que me pongas el otro html como encimado, se ve muuuy mal, debes
-   abarcar toda la página". Se probó reemplazar el iframe por contenido nativo leyendo su DOM,
-   pero Chrome bloquea el acceso entre documentos file:// distintos (ver comentario grande junto a
-   ALEMAN_TEMAS en el JS) — Adán, ante esa limitación real, pidió arreglar el iframe en vez de
-   quitarlo. Dos causas concretas de que "se viera mal", ambas corregidas aquí:
-   1) Encabezado duplicado: el Dashboard pintaba su propio título+subtítulo+tags grandes, y justo
-      debajo el iframe volvía a mostrar exactamente lo mismo (su propio hero con título, subtítulo
-      y tags) — literalmente la misma información dos veces, en dos estilos distintos, apilada.
-      Se quitó el bloque duplicado del lado del Dashboard (ya no hay #alEs ni #alTags) y se dejó
-      solo una línea compacta (icono + tema del día en el `eyebrow`) — el resto de la información
-      ya vive, una sola vez, dentro de la lección real.
-   2) El choque de color (blanco/crema de Aleman/styles.css contra el fondo oscuro del Dashboard)
-      no se puede evitar del todo sin poder inyectar CSS en un documento de otro origen — en vez de
-      pelear contra eso, se abraza: `.al-frame-wrap` agrega un resplandor ambiental en los mismos
-      colores de bandera alemana que ya usa este slide (--ac1 rojo / --ac2 dorado), para que la
-      transición se sienta intencional en vez de accidental, y crece a casi toda la altura y ancho
-      disponibles del slide — quitar el encabezado duplicado del punto 1 le regala ese espacio. */
-.al-top{align-items:center;margin-bottom:0}
-.al-top .eyebrow{font-size:clamp(12px,1.1vw,14px)}
-.al-top .eyebrow span:not(.dot){color:var(--text);font-weight:700}
-.al-frame-wrap{margin-top:14px;border-radius:20px;
-  box-shadow:0 30px 80px -12px rgba(0,0,0,.55),0 0 0 1px rgba(255,255,255,.05),
-    0 10px 46px -6px rgba(221,0,0,.16),0 10px 46px -6px rgba(255,206,0,.10)}
-@media(max-width:640px){.al-top{flex-direction:column;align-items:flex-start;gap:10px}}
+/* ─── ALEMÁN DEL DÍA — contenido real, nativo, sin iframe (2026-08-07, versión final) ─────────
+   Adán, tras ver la versión con iframe integrado: "la sección de alemán no me gustó, revisa bien
+   el proyecto Alemán, ya tienes diferentes html... con esa misma información puedes jalarla para
+   el dashboard y así ya no repliques contenido, utiliza ese y ya en el dashboard se vea muy bien".
+   El obstáculo real seguía siendo el mismo (Chrome bloquea leer el DOM de un iframe file:// desde
+   otro documento file://, ver intento anterior más abajo en el JS) — la solución no fue intentarlo
+   en el navegador de Adán, sino ANTES: `Aleman/_generar-datos-dashboard.js` abre cada una de las
+   35 lecciones como página propia con Playwright (sin iframe, sin restricción de origen) y extrae
+   su contenido real a `Dashboard/aleman-data.js`, que este archivo carga con un <script src=""> —
+   eso sí funciona sin servidor. El resultado: cero HTML/CSS de Aleman/ encimado, cero contenido
+   escrito a mano, solo los datos reales ya extraídos, pintados con el estilo propio del Dashboard.
+   Clases: cada sección de una lección es un `.tile.al-card` (vocabulario, diálogos, frases,
+   ejercicios, reglas, conjugaciones, y una rejilla genérica `.al-mini-grid` para los widgets
+   visuales únicos de cada lección A1 — números, colores, días, familia, artículos, pronombres). */
+.al-content{margin-top:16px;flex:1;min-height:0;overflow-y:auto;padding-right:6px;display:flex;flex-direction:column;gap:14px}
+.al-card-h{display:flex;align-items:center;gap:9px;font-family:var(--font-title);font-size:clamp(15px,1.4vw,19px);font-weight:600;color:var(--text);margin-bottom:12px}
+.al-card-h span:first-child{font-size:1.15em}
+.al-intro{font-size:12.5px;color:var(--text3);line-height:1.55;margin:-4px 0 14px}
+.al-vocab-wrap{overflow-x:auto;margin-bottom:12px}
+.al-vocab-wrap:last-child,.al-card>:last-child{margin-bottom:0}
+.al-vocab{width:100%;border-collapse:collapse;font-size:13px}
+.al-vocab th{text-align:left;padding:7px 10px;font-size:10px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--cy);border-bottom:1px solid rgba(var(--ov),.14);white-space:nowrap}
+.al-vocab td{padding:8px 10px;border-bottom:1px solid rgba(var(--ov),.06);vertical-align:top}
+.al-vocab tr:last-child td{border-bottom:none}
+.al-vocab tr:hover td{background:rgba(var(--ov),.03)}
+.al-vocab-de{font-weight:800;color:var(--text);white-space:nowrap}
+.al-vocab-es{color:var(--text2)}
+.al-rule{background:rgba(var(--ov),.04);border:1px dashed rgba(var(--ov),.16);border-radius:10px;padding:13px 16px;margin-bottom:12px;font-family:var(--mono);font-size:12.5px;line-height:1.75;color:var(--text2)}
+.al-rule strong{color:var(--cy)}
+.al-rule em{color:var(--text3);font-size:.92em}
+.al-examples{margin-bottom:12px}
+.al-example{border-left:3px solid var(--w);background:rgba(var(--ov),.03);border-radius:0 10px 10px 0;padding:9px 14px;margin-bottom:8px}
+.al-example:last-child{margin-bottom:0}
+.al-example-de{font-size:13.5px;font-weight:700;color:var(--text)}
+.al-example-es{font-size:11.5px;color:var(--text2);margin-top:2px}
+.al-tip{margin-bottom:12px;background:rgba(0,232,122,.08);border:1px solid rgba(0,232,122,.22);border-radius:10px;padding:10px 14px;font-size:12px;color:var(--text2);line-height:1.5}
+.al-phrase-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:9px;margin-bottom:12px}
+.al-phrase-item{background:rgba(var(--ov),.04);border:1px solid rgba(var(--ov),.08);border-radius:11px;padding:10px 13px;display:flex;flex-direction:column;gap:2px}
+.al-phrase-sit{font-size:9.5px;font-weight:800;color:var(--w);text-transform:uppercase;letter-spacing:.06em}
+.al-phrase-de{font-size:13.5px;font-weight:700;color:var(--text)}
+.al-phrase-es{font-size:11.5px;color:var(--text2)}
+.al-dialog-title{font-size:10px;font-weight:800;color:var(--ac1);text-transform:uppercase;letter-spacing:.06em;margin-bottom:7px}
+.al-dialog-box{background:rgba(var(--ov),.04);border:1px solid rgba(var(--ov),.08);border-radius:13px;padding:13px 15px;margin-bottom:12px}
+.al-dialog-line{display:flex;gap:10px;margin-bottom:9px;align-items:flex-start}
+.al-dialog-line:last-child{margin-bottom:0}
+.al-dialog-speaker{font-size:10.5px;font-weight:800;color:var(--cy);text-transform:uppercase;min-width:20px;margin-top:2px;flex-shrink:0}
+.al-dialog-de{font-size:13px;font-weight:600;color:var(--text)}
+.al-dialog-es{font-size:11px;color:var(--text3);margin-top:1px}
+.al-exercise{background:rgba(var(--ov),.04);border:1px solid rgba(var(--ov),.08);border-left:3px solid var(--o);border-radius:10px;padding:12px 14px;margin-bottom:10px}
+.al-exercise:last-child{margin-bottom:0}
+.al-exercise-num{font-size:10px;font-weight:800;color:var(--o);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
+.al-exercise-q{font-size:13px;color:var(--text);line-height:1.5}
+.al-exercise-hint{font-size:11px;color:var(--text3);font-style:italic;margin-top:6px}
+.al-placeholder{margin-top:8px;min-height:50px;border:1.5px dashed rgba(var(--ov),.14);border-radius:9px;display:flex;align-items:center;justify-content:center;color:var(--text3);font-size:11.5px;font-style:italic;text-align:center;padding:8px}
+/* Conjugación (.conj-big en el original) — tabla pronombre/forma/ejemplo */
+.al-conj{background:rgba(var(--ov),.04);border:1px solid rgba(var(--ov),.08);border-radius:12px;padding:14px 16px;margin-bottom:12px}
+.al-conj-h{font-size:10.5px;font-weight:800;color:var(--ac1);text-transform:uppercase;letter-spacing:.07em;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid rgba(var(--ov),.08)}
+.al-conj-row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:6px 0;border-bottom:1px solid rgba(var(--ov),.06)}
+.al-conj-row:last-child{border-bottom:none}
+.al-conj-pron{font-size:12.5px;color:var(--text2);min-width:70px}
+.al-conj-form{font-size:16px;font-weight:800;color:var(--cy)}
+.al-conj-ex{font-size:11px;color:var(--text3);font-style:italic;text-align:right}
+/* Contenido "extra" genérico (num-grid, color-grid, art-big, pron-big, family-tree, clock...) —
+   se desconoce el diseño original exacto de cada widget, así que se pinta con un formato propio
+   consistente: cada "item" es una mini tarjeta con su primera línea como titular y el resto como
+   detalle — sigue siendo el vocabulario/dato real, solo que con un layout genérico. */
+.al-mini-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px;margin-bottom:12px}
+.al-mini-card{background:rgba(var(--ov),.04);border:1px solid rgba(var(--ov),.08);border-radius:10px;padding:9px 10px;text-align:center}
+.al-mini-h{font-size:14px;font-weight:800;color:var(--cy)}
+.al-mini-l{font-size:10.5px;color:var(--text2);margin-top:2px;line-height:1.4}
+.al-extra-text{font-size:12.5px;color:var(--text2);line-height:1.6;background:rgba(var(--ov),.04);border:1px solid rgba(var(--ov),.08);border-radius:10px;padding:10px 14px;margin-bottom:12px}
+.al-extra-text div+div{margin-top:3px}
+.al-loading{color:var(--text3);font-size:13px;padding:20px 4px}
+@media(max-width:640px){.al-phrase-grid,.al-mini-grid{grid-template-columns:1fr 1fr}}
 
 /* ─── HABILIDADES — tarjetas grandes, una por prioridad (slide pasivo, sin clics) ─ */
 .skill-priority-title{font-size:clamp(15px,1.6vw,19px);font-weight:900;color:var(--text);margin-bottom:12px;display:flex;align-items:center;gap:8px}
@@ -595,17 +649,20 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
   <!-- 6 · ALEMÁN DEL DÍA -->
   <section class="slide theme-aleman" data-i="6">
     <div class="slide-inner">
-      <div class="td-top al-top reveal d1">
-        <div class="eyebrow" style="margin-bottom:0"><span class="dot"></span> Alemán del día · <span id="alDe">Deutsch</span></div>
+      <div class="eyebrow reveal d1"><span class="dot"></span> Alemán del día</div>
+      <div class="td-top reveal d2">
+        <div>
+          <div class="td-title" id="alDe">Deutsch</div>
+          <div class="td-sub" id="alEs"></div>
+        </div>
         <div class="td-right">
           <span class="al-level" id="alLevel"></span>
           <span class="td-counter" id="alCounter"></span>
-          <a class="td-open" id="alOpen" href="#" target="_blank" rel="noopener">↗ Abrir en pestaña nueva</a>
+          <a class="td-open" id="alOpen" href="#" target="_blank" rel="noopener">↗ Ver lección original</a>
         </div>
       </div>
-      <div class="td-frame-wrap al-frame-wrap reveal d2" id="alFrameWrap">
-        <iframe id="alFrame" title="Lección de alemán del día"></iframe>
-      </div>
+      <div class="td-tags reveal d3" id="alTags"></div>
+      <div class="al-content reveal d4" id="alContent"></div>
     </div>
   </section>
 
@@ -1263,26 +1320,32 @@ function toggleListaItem(id){
   rawSet('dash-lista-compras',checks);
 }
 
-// ── Alemán del día (2026-08-04) — un tema distinto cada día, tomado de las 35 lecciones
-//    completas que ya existen en ../Aleman/ (15 A1 + 20 A2: 12 gramática + 8 vocabulario).
-//    Metadata (título/subtítulo/tags) copiada literalmente de Aleman/index.html — 8ª estructura
-//    duplicada del mismo tipo que las de la tabla "Datos duplicados" del README: si se agrega,
-//    quita o renombra un tema allá, hay que replicarlo aquí. El contenido real de la lección
-//    (vocabulario, gramática, diálogos, ejercicios, flashcards) NO se duplica — se embebe la
-//    página completa vía <iframe>, mismo patrón que CuidadoPersonal/cuidadopersonal.html usa
-//    para Salud/Ejercicio/Comida, así siempre se ve exactamente lo mismo que abriendo el archivo.
-//    Intento fallido documentado (2026-08-07): se probó leer el DOM de la lección desde un iframe
-//    oculto (`contentDocument`) para repintar el contenido con el look nativo del Dashboard, en
-//    vez de mostrar el iframe — pero Chrome bloquea el acceso entre dos documentos `file://`
-//    distintos (cada archivo local es un origen "opaco" propio), y `fetch()` a un archivo local
-//    tampoco funciona ("Failed to fetch") — confirmado con Playwright, cero acceso posible sin
-//    levantar un servidor local. El mismo problema silencioso ya existía en "Entrevista del día"
-//    (`win.eval(...)` sobre el iframe, ver más abajo) — ahí se degrada sin romper nada visible (el
-//    iframe muestra el índice de Entrevistas en vez del tema exacto del día), pero para Alemán
-//    habría dejado el slide vacío. Ante esto, Adán eligió explícitamente **arreglar el iframe en
-//    vez de quitarlo** (ver "Alemán del día — iframe integrado, no encimado" en
-//    readme_dashboard.md para el rediseño visual que sí se aplicó) en vez de transcribir las 35
-//    lecciones a mano.
+// ── Alemán del día (2026-08-04, contenido nativo definitivo desde 2026-08-07) — un tema
+//    distinto cada día, tomado de las 35 lecciones completas que ya existen en ../Aleman/ (15 A1
+//    + 20 A2: 12 gramática + 8 vocabulario). Metadata (título/subtítulo/tags) copiada
+//    literalmente de Aleman/index.html — 8ª estructura duplicada del mismo tipo que las de la
+//    tabla "Datos duplicados" del README: si se agrega, quita o renombra un tema allá, hay que
+//    replicarlo aquí. El CONTENIDO real de cada lección (vocabulario, diálogos, frases,
+//    ejercicios, reglas, conjugaciones) ya no se duplica a mano ni se embebe por iframe — vive en
+//    `ALEMAN_CONTENT` (cargado desde `aleman-data.js`, ver <script src> en <head>), generado por
+//    `Aleman/_generar-datos-dashboard.js`.
+//
+//    Dos intentos previos, documentados aquí porque explican por qué se llegó a esta solución:
+//    1) Leer el DOM de la lección en vivo desde un iframe oculto (`contentDocument`), dentro del
+//       propio navegador de Adán — falló: Chrome bloquea el acceso entre dos documentos `file://`
+//       distintos, y `fetch()` a un archivo local también falla ("Failed to fetch"). Confirmado
+//       con Playwright. El mismo problema afecta silenciosamente a "Entrevista del día" (`win.eval`
+//       más abajo), que se degrada sin romper nada visible en vez de fallar por completo.
+//    2) Mostrar el iframe real, pero mejor integrado visualmente (sin encabezado duplicado, con
+//       un resplandor ambiental) — funcionaba, pero a Adán no le gustó el resultado: *"la sección
+//       de alemán no me gustó... con esa misma información puedes jalarla para el dashboard y así
+//       ya no repliques contenido, utiliza ese"*.
+//    Solución final: la extracción NO ocurre en el navegador de Adán (ahí es donde chocaba con la
+//    política de origen de Chrome) sino ANTES, de mi lado, con Playwright abriendo cada lección
+//    como página propia (sin iframe, incluir origen normal) y volcando su contenido real a un
+//    archivo de datos estático. Cero contenido inventado o retipeado a mano, cero iframe, cero
+//    duplicado visual — y funciona sin servidor porque `<script src="archivo.js">` sí carga bien
+//    vía file://, a diferencia de fetch()/XHR.
 const ALEMAN_TEMAS=[
   {file:'a1-01-saludos.html',nivel:'A1',ico:'👋',de:'Begrüßungen',es:'Saludos y despedidas',tags:['Hallo','Tschüss','Guten Morgen']},
   {file:'a1-02-zahlen.html',nivel:'A1',ico:'🔢',de:'Zahlen 1–100',es:'Números del 1 al 100',tags:['eins','zehn','hundert']},
@@ -1324,15 +1387,54 @@ function alemanTemaHoy(){ return ALEMAN_TEMAS[diaDelAnio()%ALEMAN_TEMAS.length];
 function renderAleman(){
   const t=alemanTemaHoy();
   const idx=ALEMAN_TEMAS.indexOf(t)+1;
-  document.getElementById('alDe').textContent=`${t.ico} ${t.de} — ${t.es}`;
+  document.getElementById('alDe').textContent=`${t.ico} ${t.de}`;
+  document.getElementById('alEs').textContent=t.es;
   const lvl=document.getElementById('alLevel');
   lvl.textContent='Nivel '+t.nivel;
   lvl.className='al-level '+t.nivel.toLowerCase();
   document.getElementById('alCounter').textContent=`Tema ${idx} de ${ALEMAN_TEMAS.length} · cambia cada día`;
-  const src='../Aleman/'+t.file;
-  document.getElementById('alOpen').href=src;
-  const frame=document.getElementById('alFrame');
-  if(!frame.src.endsWith(src)) frame.src=src; // evita recargar el iframe si el tema del día no cambió
+  document.getElementById('alTags').innerHTML=t.tags.map(tag=>`<span class="td-tag">${tag}</span>`).join('');
+  document.getElementById('alOpen').href='../Aleman/'+t.file;
+  const data=(typeof ALEMAN_CONTENT!=='undefined')?ALEMAN_CONTENT[t.file]:null;
+  renderAlemanContent(data,t);
+}
+// Pinta con las clases .al-* (CSS arriba) el contenido real ya extraído en ALEMAN_CONTENT —
+// mismo esquema que produce Aleman/_generar-datos-dashboard.js (hero.desc + cards[]).
+function renderAlemanContent(data,t){
+  const el=document.getElementById('alContent');
+  if(!data){ el.innerHTML=`<div class="al-loading">No se encontró el contenido de esta lección. <a href="../Aleman/${t.file}" target="_blank" style="color:var(--cy)">Abrirla directamente →</a></div>`; return; }
+  el.innerHTML=(data.hero.desc?`<div class="al-intro" style="margin-top:0">${data.hero.desc}</div>`:'')+
+    data.cards.map(c=>`
+    <div class="tile al-card">
+      <div class="al-card-h">${c.icon?`<span>${c.icon}</span>`:''}<span>${c.titulo}</span></div>
+      ${c.intro?`<div class="al-intro">${c.intro}</div>`:''}
+      ${c.vocabTables.map(vt=>`
+        <div class="al-vocab-wrap"><table class="al-vocab">
+          <thead><tr>${vt.headers.map(h=>`<th>${h}</th>`).join('')}</tr></thead>
+          <tbody>${vt.rows.map(r=>`<tr>${r.map((cell,i)=>`<td class="${i===0?'al-vocab-de':'al-vocab-es'}">${cell}</td>`).join('')}</tr>`).join('')}</tbody>
+        </table></div>`).join('')}
+      ${c.rule?`<div class="al-rule">${c.rule}</div>`:''}
+      ${c.examples.length?`<div class="al-examples">${c.examples.map(e=>`<div class="al-example"><div class="al-example-de">${e.de}</div><div class="al-example-es">${e.es}</div></div>`).join('')}</div>`:''}
+      ${c.tip?`<div class="al-tip">${c.tip}</div>`:''}
+      ${c.phrases.length?`<div class="al-phrase-grid">${c.phrases.map(p=>`<div class="al-phrase-item"><span class="al-phrase-sit">${p.sit}</span><span class="al-phrase-de">${p.de}</span><span class="al-phrase-es">${p.es}</span></div>`).join('')}</div>`:''}
+      ${c.dialogs.map(d=>`${d.titulo?`<div class="al-dialog-title">${d.titulo}</div>`:''}
+        <div class="al-dialog-box">${d.lineas.map(l=>`<div class="al-dialog-line"><span class="al-dialog-speaker">${l.speaker}</span><span><span class="al-dialog-de">${l.de}</span><span class="al-dialog-es">${l.es}</span></span></div>`).join('')}</div>`).join('')}
+      ${(c.conjugations||[]).map(cj=>`
+        <div class="al-conj">
+          <div class="al-conj-h">${cj.header}</div>
+          ${cj.rows.map(r=>`<div class="al-conj-row"><span class="al-conj-pron">${r.pron}</span><span class="al-conj-form">${r.form}</span><span class="al-conj-ex">${r.ex}</span></div>`).join('')}
+        </div>`).join('')}
+      ${(c.extra||[]).map(ex=>ex.type==='grid'?
+        `<div class="al-mini-grid">${ex.items.map(lines=>`<div class="al-mini-card"><div class="al-mini-h">${lines[0]||''}</div>${lines.slice(1).map(l=>`<div class="al-mini-l">${l}</div>`).join('')}</div>`).join('')}</div>`
+        : `<div class="al-extra-text">${ex.lines.map(l=>`<div>${l}</div>`).join('')}</div>`).join('')}
+      ${c.exercises.map(ex=>`
+        <div class="al-exercise">
+          <div class="al-exercise-num">${ex.num}</div>
+          <div class="al-exercise-q">${ex.q}</div>
+          ${ex.hint?`<div class="al-exercise-hint">💡 ${ex.hint}</div>`:''}
+          ${ex.placeholder?`<div class="al-placeholder">${ex.placeholder}</div>`:''}
+        </div>`).join('')}
+    </div>`).join('');
 }
 
 // ── Entrevista técnica del día (2026-08-04) — un tema distinto cada día, de los 229 que ya
