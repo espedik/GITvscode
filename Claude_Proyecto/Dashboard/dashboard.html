@@ -8,13 +8,13 @@
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='46' fill='%2305050a' stroke='%2300e0c0' stroke-width='4'/%3E%3Ccircle cx='50' cy='50' r='14' fill='%2300e0c0'/%3E%3Ccircle cx='50' cy='50' r='30' fill='none' stroke='%2300e0c0' stroke-width='2' opacity='.5'/%3E%3C/svg%3E">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;700&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&display=swap');
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
   --bg:#05050a; --text:#f4f4f8; --text2:#9a9db3; --text3:#565a72;
   --card:rgba(var(--ov),.06); --card-br:rgba(var(--ov),.13);
   --g:#00e87a; --o:#ff8a3d; --b:#3b82f6; --p:#b06eff; --p-l:rgba(176,110,255,.16); --w:#ffd93d; --r:#ff5c5c; --cy:#00e0c0;
-  --font:'Inter',-apple-system,sans-serif; --mono:'Space Grotesk',monospace;
+  --font:'Inter',-apple-system,sans-serif; --mono:'Space Grotesk',monospace; --font-title:'Fraunces',Georgia,serif;
   --ov:255,255,255; --bar:rgba(6,6,14,.65); --bar2:rgba(10,10,20,.55);
 }
 :root[data-theme="light"]{
@@ -72,8 +72,12 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 .eyebrow{font-size:clamp(11px,1.1vw,14px);font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--text2);display:flex;align-items:center;gap:10px;margin-bottom:10px}
 .eyebrow .dot{width:8px;height:8px;border-radius:50%;background:var(--ac1);box-shadow:0 0 12px var(--ac1);animation:pulse 2s ease-in-out infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
-.slide-title{font-size:clamp(26px,3.4vw,46px);font-weight:900;letter-spacing:-.02em;margin-bottom:clamp(20px,3vh,40px);
+.slide-title{font-family:var(--font-title);font-size:clamp(28px,3.6vw,48px);font-weight:600;letter-spacing:-.01em;margin-bottom:clamp(20px,3vh,40px);
   background:linear-gradient(90deg,var(--text),var(--text2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+/* El emoji del título hereda -webkit-text-fill-color:transparent del gradiente de arriba y se ve apagado/
+   casi invisible (los emojis no participan del gradiente, solo pierden su color nativo) — este span lo saca
+   del clip de texto para que se vea con sus colores reales. */
+.slide-title .ico{-webkit-text-fill-color:initial;color:initial}
 
 .reveal{animation:fadeUp .8s cubic-bezier(.22,.61,.36,1) both}
 .slide:not(.active) .reveal{animation:none;opacity:0}
@@ -84,27 +88,49 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 .tile-glow{box-shadow:0 10px 40px rgba(0,0,0,.35),0 0 0 1px rgba(var(--ov),.02),inset 0 1px 0 rgba(var(--ov),.06)}
 .grid{display:grid;gap:clamp(12px,1.4vw,20px)}
 .g2{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:repeat(3,1fr)}.g4{grid-template-columns:repeat(4,1fr)}.g6{grid-template-columns:repeat(6,1fr)}
+.g-metas{grid-template-columns:1.7fr 1fr}
+@media(max-width:900px){.g-metas{grid-template-columns:1fr}}
+
+/* ─── Tarjetas con foto — metas de corto/mediano/largo plazo (slide Mis Metas) ───
+   #metasListas crece para llenar todo el alto libre del slide (flex:1 dentro de
+   .slide-inner, que es flex-column) — las fotos usan toda la pantalla disponible
+   en vez de una altura fija. Cada .tile de adentro es flex-column para que su
+   grid de fotos también se estire, y las filas del grid usan 1fr (no una altura
+   fija por tarjeta) para repartirse ese alto por partes iguales. */
+#metasListas{flex:1;min-height:0}
+#metasListas>.tile{display:flex;flex-direction:column;min-height:0}
+.meta-img-grid{flex:1;min-height:0;display:grid;grid-template-columns:repeat(2,1fr);grid-template-rows:repeat(3,1fr);gap:10px;margin-top:2px}
+.meta-img-card{position:relative;border-radius:16px;overflow:hidden;background-size:cover;background-position:center;box-shadow:0 6px 18px rgba(0,0,0,.3);cursor:pointer;transition:transform .2s,box-shadow .2s}
+.meta-img-card:hover{transform:scale(1.02);box-shadow:0 10px 26px rgba(0,0,0,.4)}
+.meta-img-card::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.78) 0%,rgba(0,0,0,.2) 60%,transparent 85%)}
+.meta-img-card:last-child:nth-child(odd){grid-column:1/-1}
+.meta-img-txt{position:absolute;left:0;right:0;bottom:0;padding:6px 10px;z-index:1;display:flex;align-items:center;gap:6px;font-weight:800;font-size:clamp(10px,0.95vw,12px);color:#fff;text-shadow:0 1px 4px rgba(0,0,0,.6)}
+/* Variante chica — largo plazo, columna angosta con más ítems (6 → 3 filas) */
+.meta-img-grid-sm{gap:7px;grid-template-rows:repeat(3,1fr)}
+.meta-img-card-sm{border-radius:12px}
+.meta-img-txt-sm{padding:4px 7px;gap:4px;font-size:clamp(8px,0.75vw,10px)}
 .big-num{font-family:var(--mono);font-weight:700;letter-spacing:-.02em;line-height:1}
 .pbar{height:11px;background:rgba(var(--ov),.08);border-radius:20px;overflow:hidden;margin-top:9px;position:relative}
 .pfill{height:100%;border-radius:20px;transition:width 1.2s cubic-bezier(.22,.61,.36,1);position:relative}
 .lbl{font-size:clamp(10px,.9vw,12px);color:var(--text2);text-transform:uppercase;letter-spacing:.08em;font-weight:700}
 .sub{font-size:clamp(11px,1vw,13px);color:var(--text3);margin-top:4px}
 
-/* ─── HUD ────────────────────────────────────────────────── */
-/* pointer-events:none en el contenedor — su caja ocupa toda la franja inferior del viewport
-   aunque solo la fila de botones tenga contenido visible, y sin esto se comía los clics de
-   cualquier link/botón del slide que cayera detrás (ej. "Ver/editar rutina completa" en Mi
-   Día). Solo .hud-row (donde están los botones reales) vuelve a aceptar clics. */
-.hud{position:fixed;left:0;right:0;bottom:0;display:flex;flex-direction:column;align-items:center;gap:10px;padding:0 0 22px;z-index:50;opacity:.55;transition:opacity .3s;pointer-events:none}
-.hud:hover{opacity:1}
-.hud-clock{font-family:var(--mono);font-size:13px;color:var(--text2);letter-spacing:.04em}
-.hud-row{display:flex;align-items:center;gap:14px;background:var(--bar2);border:1px solid rgba(var(--ov),.08);backdrop-filter:blur(14px);border-radius:40px;padding:8px 14px;pointer-events:auto}
-.dots{display:flex;gap:7px}
+/* ─── HUD — 2 barras flotantes VERTICALES, una por borde (2026-08-07: antes era 1 sola
+   franja horizontal abajo, dividida en 2 mitades L/R; Adán pidió explícitamente que cada
+   mitad fuera su propia barra vertical pegada al borde izquierdo/derecho de la pantalla,
+   no una fila horizontal abajo) ────────────────────────────────────────────────────── */
+.hud-side{position:fixed;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;align-items:center;gap:10px;z-index:50;opacity:.55;transition:opacity .3s;background:var(--bar2);border:1px solid rgba(var(--ov),.08);backdrop-filter:blur(14px);border-radius:26px;padding:16px 10px}
+.hud-side:hover{opacity:1}
+.hud-side-left{left:16px}
+.hud-side-right{right:16px}
+.hud-clock{font-family:var(--mono);font-size:12px;color:var(--text2);letter-spacing:.02em;text-align:center;line-height:1.4}
+.dots{display:flex;flex-direction:column;gap:7px}
 .dot-btn{width:8px;height:8px;border-radius:50%;background:rgba(var(--ov),.22);border:none;cursor:pointer;transition:all .25s;padding:0}
-.dot-btn.on{width:22px;background:linear-gradient(90deg,var(--g),var(--p));box-shadow:0 0 10px rgba(0,232,122,.5)}
-.hud-btn{width:30px;height:30px;border-radius:50%;border:1px solid rgba(var(--ov),.12);background:rgba(var(--ov),.04);color:var(--text);cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.dot-btn.on{height:22px;width:8px;background:linear-gradient(180deg,var(--g),var(--p));box-shadow:0 0 10px rgba(0,232,122,.5)}
+.hud-btn{width:30px;height:30px;border-radius:50%;border:1px solid rgba(var(--ov),.12);background:rgba(var(--ov),.04);color:var(--text);cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0}
 .hud-btn:hover{background:rgba(var(--ov),.12)}
-.hud-sync{font-size:10px;color:var(--text3)}
+.hud-nav-btn.on{background:linear-gradient(180deg,var(--g),var(--p));border-color:transparent;box-shadow:0 0 10px rgba(0,232,122,.4)}
+.hud-sync{font-size:9px;color:var(--text3)}
 
 /* ─── TIMELINE DE ACTIVIDADES (Mi Día) — detalle por bloque ─ */
 .rt2-card{display:flex;align-items:flex-start;gap:12px;padding:12px 4px;border-bottom:1px solid rgba(var(--ov),.06);transition:background .2s}
@@ -112,31 +138,50 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 .rt2-dot{width:11px;height:11px;border-radius:50%;margin-top:6px;flex-shrink:0;transition:all .3s}
 .rt2-body{flex:1;min-width:0}
 .rt2-top{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:4px}
-.rt2-cat{font-size:10px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;padding:2px 10px;border-radius:20px;border:1px solid}
+.rt2-cat{font-size:7px;font-weight:800;letter-spacing:.03em;text-transform:uppercase;padding:1px 6px;border-radius:20px;border:1px solid}
 .rt2-time{font-family:var(--mono);font-size:12px;color:var(--text2);font-weight:600}
-.rt2-txt{font-size:clamp(13px,1.15vw,15px);color:var(--text);line-height:1.4}
+/* Título de cada bloque — siempre en negritas (antes solo el bloque activo), para que se lea
+   claramente como encabezado frente a las subtareas/explicación de abajo (.rt2-sub-item) */
+.rt2-txt{font-size:clamp(13px,1.15vw,15px);color:var(--text);font-weight:700;line-height:1.4}
 .rt2-check{font-size:16px;margin-top:5px;flex-shrink:0}
 .rt2-now{background:rgba(var(--ov),.04);border-radius:12px;padding:12px 10px;margin:0 -10px}
-.rt2-now .rt2-txt{font-weight:800;color:#fff}
+.rt2-now .rt2-txt{color:#fff}
 .rt2-done .rt2-txt{opacity:.5;text-decoration:line-through}
 .rt2-fijo{opacity:.85}
 .rt2-cat-chip{display:inline-flex;align-items:center;gap:5px;border-radius:20px;padding:5px 12px;font-size:11px;font-weight:700;border:1px solid}
 .rt2-sub{margin-top:5px;display:flex;flex-direction:column;gap:3px;padding-left:10px;border-left:2px solid rgba(var(--ov),.08)}
-.rt2-sub-item{font-size:12px;color:var(--text2)}
+/* Explicación/subtareas — itálica y más chica, a propósito distinta del título de arriba */
+.rt2-sub-item{font-size:11.5px;color:var(--text2);font-style:italic;line-height:1.5}
 .rt2-sub-done{opacity:.5;text-decoration:line-through}
 
+/* ─── Filas compactas ícono+texto (tile "Importante este mes", Mi Día) ─── */
+.ds-row{display:flex;align-items:baseline;gap:8px;font-size:12px;padding:3px 0}
+.ds-row+.ds-row{border-top:1px solid rgba(var(--ov),.06)}
+.ds-hora{font-family:var(--mono);color:var(--text2);flex-shrink:0}
+.ds-txt{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text2)}
+.ds-empty{color:var(--text3);font-size:14px}
+
 .chart-wrap{position:relative;height:clamp(240px,34vh,420px)}
+/* El tile ya no ocupa todo el ancho de la fila (dejaba mucho fondo vacío a los lados del
+   círculo del radar) — se angosta al tamaño real que necesita el gráfico + sus etiquetas, y
+   queda centrado; el resto del slide (título + tarjetas de abajo) sigue a ancho completo. */
+.chart-wrap-lg{display:flex;justify-content:center;align-items:center;height:clamp(320px,54vh,560px);max-width:680px;margin:0 auto}
 
 /* ─── HERO — semana completa (tira de 7 días + 3 paneles detallados) ────── */
 .flex-hero-top{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:16px}
 .week-strip{display:grid;grid-template-columns:repeat(7,1fr);gap:8px}
-.ws-day{background:var(--card);border:1px solid var(--card-br);border-radius:14px;padding:10px 6px;text-align:center;backdrop-filter:blur(10px)}
+.ws-day{background:var(--card);border:1px solid var(--card-br);border-radius:14px;padding:8px 6px 6px;text-align:center;backdrop-filter:blur(10px);display:flex;flex-direction:column;overflow:hidden;cursor:pointer;transition:border-color .2s}
 .ws-day.today{border-color:var(--ac1);box-shadow:0 0 14px rgba(var(--ov),.08)}
+.ws-day.sel{border-color:var(--g);box-shadow:0 0 14px rgba(0,232,122,.25)}
 .ws-dname{font-size:10px;font-weight:800;color:var(--text2);text-transform:uppercase;letter-spacing:.04em}
-.ws-ddate{font-size:9px;color:var(--text3);margin-bottom:7px}
-.ws-gym-ico{font-size:17px;line-height:1}
-.ws-gym-lbl{font-size:8px;color:var(--text3);margin-top:3px;line-height:1.25;min-height:20px;overflow:hidden}
-.ws-gym-lbl.pend{color:var(--text3);opacity:.7}
+.ws-ddate{font-size:9px;color:var(--text3);margin-bottom:6px}
+/* Foto real por tipo de ejercicio (brazos/piernas/empuje/cardio/descanso) en vez de un emoji
+   genérico — el emoji de estado (✅/⏳/😴/🏋️) se queda como badge chico encima de la foto. */
+.ws-gym-photo{position:relative;margin:0 -6px;flex:1;min-height:64px;background-size:cover;background-position:center;border-radius:0 0 12px 12px}
+.ws-gym-photo::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.78) 0%,rgba(0,0,0,.12) 55%,transparent 75%);border-radius:inherit}
+.ws-gym-badge{position:absolute;top:5px;right:5px;font-size:12px;z-index:1;line-height:1;filter:drop-shadow(0 1px 2px rgba(0,0,0,.7))}
+.ws-gym-lbl{position:absolute;left:5px;right:5px;bottom:5px;z-index:1;font-size:8px;color:#fff;line-height:1.25;text-align:left;text-shadow:0 1px 3px rgba(0,0,0,.8)}
+.ws-gym-lbl.pend{opacity:.8}
 .hp-title{font-size:11.5px;font-weight:800;color:var(--text2);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;gap:6px}
 .hp-big{font-family:var(--mono);font-weight:700;font-size:clamp(26px,3vw,38px);line-height:1;margin-bottom:8px}
 .hp-row{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid rgba(var(--ov),.06);font-size:12px}
@@ -188,11 +233,20 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 .lc-tab{padding:7px 15px;border-radius:20px;border:1px solid rgba(var(--ov),.12);background:rgba(var(--ov),.05);color:var(--text2);font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;transition:all .2s;white-space:nowrap}
 .lc-tab:hover{background:rgba(var(--ov),.09)}
 .lc-tab.active{background:var(--ac1);color:#06170f;border-color:var(--ac1)}
+.mes-tab{padding:3px 9px;border-radius:14px;border:1px solid rgba(var(--ov),.12);background:rgba(var(--ov),.05);color:var(--text2);font-size:10px;font-weight:700;cursor:pointer;font-family:inherit;transition:all .2s}
+.mes-tab:hover{background:rgba(var(--ov),.09)}
+.mes-tab.active{background:var(--ac1);color:#06170f;border-color:var(--ac1)}
+.mes-tab.has-items::after{content:'';display:inline-block;width:4px;height:4px;border-radius:50%;background:currentColor;margin-left:4px;vertical-align:middle;opacity:.7}
 .lc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px 20px}
-.lc-item{display:flex;align-items:flex-start;gap:8px;padding:4px 0;border-bottom:1px solid rgba(var(--ov),.05)}
+.lc-item{display:flex;align-items:flex-start;flex-wrap:wrap;gap:5px 8px;padding:4px 0;border-bottom:1px solid rgba(var(--ov),.05)}
 .lc-item input[type="checkbox"]{margin-top:3px;width:13px;height:13px;accent-color:var(--g);cursor:pointer;flex-shrink:0}
 .lc-item label{font-size:12px;color:var(--text2);line-height:1.4;cursor:pointer}
+.lc-item label.lc-item-txt{flex:1;min-width:140px}
 .lc-item input:checked+label{color:var(--text3);text-decoration:line-through}
+/* Dos tiendas por producto (Amazon + Mercado Libre) — Adán quiere comparar en ambas, no una sola */
+.lc-item-shop{display:flex;gap:6px;margin-left:21px;flex-basis:100%}
+.lc-shop-link{font-size:10px;font-weight:700;color:var(--cy);text-decoration:none;padding:2px 7px;border-radius:10px;background:rgba(var(--ov),.05);white-space:nowrap}
+.lc-shop-link:hover{background:rgba(var(--ov),.1);text-decoration:underline}
 .lc-aisle{margin-top:16px}
 .lc-aisle:first-child{margin-top:0}
 .lc-aisle-title{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:var(--ac1);margin-bottom:6px;padding-bottom:5px;border-bottom:1px solid rgba(var(--ov),.1)}
@@ -230,14 +284,18 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 .sc-val{font-family:var(--mono);font-size:13px;font-weight:800;margin-left:auto}
 .sc-primer{font-size:clamp(11.5px,1vw,13px);color:var(--text2);line-height:1.55}
 .sc-primer b{color:var(--text);font-weight:700}
-.sc-res{font-size:11px;color:var(--text3);margin-top:auto;padding-top:8px;border-top:1px solid rgba(var(--ov),.06)}
+.sc-res{font-size:11px;color:var(--text3);padding-top:8px;border-top:1px solid rgba(var(--ov),.06)}
 .sc-res b{color:var(--p);font-weight:700}
+.sc-w{font-size:10px;color:var(--text3);font-family:var(--mono)}
+.sc-link{margin-top:auto;padding-top:8px;font-size:11.5px;font-weight:700;color:var(--cy);text-decoration:none}
+.sc-link:hover{text-decoration:underline}
 
 @media(max-width:900px){.g4{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:repeat(2,1fr)}.g3>*:last-child{grid-column:1/-1}.g6{grid-template-columns:repeat(3,1fr)}}
 @media(max-width:600px){.g2,.g4,.g3,.g6{grid-template-columns:1fr}}
 
-/* ─── HUD: barra de progreso hacia el siguiente slide ────── */
-.hud-progress{width:180px;height:3px;background:rgba(var(--ov),.1);border-radius:3px;overflow:hidden;margin-top:2px}
+/* ─── HUD: barra de progreso hacia el siguiente slide (angosta — vive dentro de la barra
+   vertical derecha, ya no en una fila horizontal de 180px) ────── */
+.hud-progress{width:44px;height:3px;background:rgba(var(--ov),.1);border-radius:3px;overflow:hidden;margin-top:2px}
 .hud-progress-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--g),var(--p));border-radius:3px}
 .hud-progress-fill.anim{transition:width linear}
 
@@ -248,7 +306,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 .mark-done-btn:hover{background:rgba(0,232,122,.22);transform:translateY(-1px)}
 .mark-done-btn:disabled{opacity:.5;cursor:default;transform:none}
 
-/* ─── Overlays flotantes: menú, ajustes, ayuda (mismo look que .hud-row) ─ */
+/* ─── Overlays flotantes: menú, ajustes, ayuda (mismo look que .hud-side) ─ */
 .float-panel{position:fixed;left:50%;bottom:78px;transform:translateX(-50%) translateY(10px);width:min(420px,92vw);
   max-height:60vh;overflow-y:auto;background:var(--bar2);border:1px solid rgba(var(--ov),.12);backdrop-filter:blur(20px);
   border-radius:20px;padding:16px;z-index:70;opacity:0;pointer-events:none;transition:opacity .22s,transform .22s;
@@ -280,6 +338,29 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
   box-shadow:0 10px 30px rgba(0,0,0,.4);z-index:90;opacity:0;transition:all .3s;pointer-events:none;backdrop-filter:blur(14px)}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
+/* ─── Detalle de meta — "subpágina" in-page (2026-08-07): clic en una tarjeta de Mis Metas
+   abre este overlay con foto grande + plan personalizado, sin salir de dashboard.html. ─── */
+.meta-detail-overlay{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.72);backdrop-filter:blur(6px);
+  display:flex;align-items:center;justify-content:center;padding:4vh 3vw;opacity:0;pointer-events:none;transition:opacity .25s}
+.meta-detail-overlay.open{opacity:1;pointer-events:auto}
+.meta-detail-card{width:min(760px,100%);max-height:92vh;overflow-y:auto;background:var(--bar2);border:1px solid rgba(var(--ov),.14);
+  border-radius:24px;box-shadow:0 30px 90px rgba(0,0,0,.55);transform:translateY(18px);transition:transform .25s}
+.meta-detail-overlay.open .meta-detail-card{transform:translateY(0)}
+.meta-detail-hero{position:relative;height:clamp(200px,32vh,320px);background-size:cover;background-position:center;border-radius:24px 24px 0 0}
+.meta-detail-hero::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,var(--bar2) 0%,rgba(0,0,0,.25) 55%,rgba(0,0,0,.05) 100%);border-radius:24px 24px 0 0}
+.meta-detail-close{position:absolute;top:14px;right:14px;z-index:2;width:38px;height:38px;border-radius:50%;background:rgba(0,0,0,.5);
+  border:1px solid rgba(255,255,255,.22);color:#fff;font-size:17px;cursor:pointer;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(6px)}
+.meta-detail-close:hover{background:rgba(0,0,0,.78)}
+.meta-detail-titlewrap{position:absolute;left:26px;right:26px;bottom:18px;z-index:1}
+.meta-detail-title{font-family:var(--font-title);font-size:clamp(24px,3.2vw,34px);font-weight:600;color:#fff;text-shadow:0 2px 14px rgba(0,0,0,.65)}
+.meta-detail-body{padding:22px 28px 30px}
+.meta-detail-frase{font-size:14px;color:var(--text2);font-style:italic;margin-bottom:20px;line-height:1.55;border-left:3px solid var(--g);padding-left:14px}
+.meta-detail-steps{display:flex;flex-direction:column;gap:11px}
+.meta-detail-step{display:flex;gap:12px;align-items:flex-start;background:rgba(var(--ov),.05);border:1px solid rgba(var(--ov),.08);border-radius:14px;padding:12px 14px}
+.meta-detail-step-n{flex-shrink:0;width:26px;height:26px;border-radius:50%;background:var(--g);color:#04140c;font-weight:800;font-size:12px;display:flex;align-items:center;justify-content:center;margin-top:1px}
+.meta-detail-step-txt{font-size:13.5px;line-height:1.6;color:var(--text)}
+@media(max-width:600px){.meta-detail-body{padding:18px 18px 24px}.meta-detail-titlewrap{left:16px;right:16px}}
+
 /* ─── RESPONSIVE — iPad / iPhone 15 Pro (2026-08-03) ───────
    El diseño original asume un monitor sin scroll ("screensaver de comando").
    Medido con Playwright: incluso en iPad (820×1180) el contenido real de
@@ -295,13 +376,24 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 @media(max-width:1024px){
   .slide{align-items:flex-start}
   .slide.active{overflow-y:auto;-webkit-overflow-scrolling:touch}
-  .slide-inner{height:auto;min-height:100%;padding-bottom:calc(var(--hud-h,90px) + 24px)}
+  .slide-inner{height:auto;min-height:100%;padding-bottom:170px}
   /* El botón "Ocultar finanzas" es absoluto (left:16px) para quedar pegado
      al borde izquierdo en pantallas anchas — en ≤1024px el grupo de
      píldoras centrado ya no deja ese hueco libre y se le monta encima
      (visto en iPad, 820px). Se vuelve un elemento normal del flex, primero
      por `order`, así sigue siendo lo primero que se ve sin pisar nada. */
   .priv-btn{position:static;transform:none;order:-1;margin:0 0 2px}
+  /* Las 2 barras verticales (nav izquierda + controles derecha, ver "Navegación rápida" en
+     el README) son un layout de escritorio — en táctil/angosto no caben pegadas a los bordes
+     laterales sin robarle ancho al contenido, así que ambas bajan al centro-abajo, apiladas
+     una encima de la otra, en fila horizontal (como el HUD original antes del rediseño). */
+  .hud-side{position:fixed;top:auto;left:50%;right:auto;transform:translateX(-50%);flex-direction:row;flex-wrap:wrap;justify-content:center;max-width:92vw;padding:8px 14px;border-radius:20px}
+  .hud-side-left{bottom:76px}
+  .hud-side-right{bottom:12px}
+  .dots{flex-direction:row}
+  .dot-btn.on{width:22px;height:8px;background:linear-gradient(90deg,var(--g),var(--p))}
+  .hud-clock{text-align:left}
+  .hud-clock br{display:none}
 }
 @media(max-width:480px){
   .qa-bar{gap:5px;padding:6px 8px}
@@ -311,10 +403,8 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
   .slide{padding:3vh 3.5vw}
   .week-strip{grid-template-columns:repeat(4,1fr);gap:6px}
   .ws-gym-lbl{min-height:14px}
-  .hud-row{flex-wrap:wrap;justify-content:center;gap:8px;max-width:92vw;border-radius:20px}
-  .hud{padding-bottom:12px}
   .lc-grid{grid-template-columns:1fr}
-  .float-panel{bottom:120px;max-height:64vh}
+  .float-panel{bottom:170px;max-height:56vh}
 }
 </style>
 <script>
@@ -331,9 +421,46 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 
 <div class="slides" id="slides">
 
-  <!-- 0 · HERO — tu semana completa (deja de ser la pantalla principal el 2026-08-02: ese
-       lugar ahora es Mi Día/Rutina, pero Hero sigue siendo la primera parada del carrusel) -->
-  <section class="slide theme-hero" data-i="0">
+  <!-- 0 · MI DÍA — pantalla principal, y ahora también la primera parada física del carrusel
+       (invertida con Hero el 2026-08-07 a petición de Adán: "el número 1 de slide quiero lo de
+       mi rutina" — antes Hero era data-i=0 y Mi Día vivía en data-i=1 con un override en JS para
+       abrir ahí por defecto; ese override ya no hace falta, ver showSlide()/loadSettings() abajo) -->
+  <section class="slide theme-dia" data-i="0">
+    <div class="slide-inner">
+      <div class="eyebrow reveal d1"><span class="dot"></span> Mi Día · <span id="diaClock">00:00</span></div>
+      <div class="slide-title reveal d2" id="diaFecha">—</div>
+
+      <div class="grid g2 reveal d3" style="margin-bottom:18px;align-items:stretch">
+        <div class="tile tile-glow">
+          <div class="lbl">🟢 Ahora mismo</div>
+          <div style="font-weight:800;font-size:clamp(16px,1.8vw,22px);margin-top:8px;line-height:1.4" id="diaAhora">—</div>
+          <div id="diaAhoraBtn"></div>
+        </div>
+        <div class="tile tile-glow">
+          <div class="lbl">🗓️ Importante este mes</div>
+          <div id="mesTabs" style="display:flex;gap:5px;flex-wrap:wrap;margin-top:8px"></div>
+          <div style="margin-top:8px;display:flex;flex-direction:column" id="mesEventos">—</div>
+        </div>
+      </div>
+
+      <div class="tile reveal d4" style="margin-bottom:12px;padding:12px 18px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+          <div class="lbl">✅ Progreso de hoy</div>
+          <div class="sub" id="diaProgresoTxt" style="margin-top:0">0/0</div>
+        </div>
+        <div class="pbar" style="height:4px"><div class="pfill" id="diaProgresoBar" style="width:0%;background:linear-gradient(90deg,var(--g),var(--cy))"></div></div>
+      </div>
+
+      <div class="tile reveal d5" id="diaTimeline" style="max-height:52vh;overflow-y:auto"></div>
+
+      <div class="reveal d6" style="margin-top:14px">
+        <a href="../Coach/Coach_v2.html#rutina" style="color:var(--cy);font-size:12px;font-weight:600;text-decoration:none">Ver/editar rutina completa en Coach →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 1 · HERO — tu semana completa -->
+  <section class="slide theme-hero" data-i="1">
     <div class="slide-inner">
       <div class="flex-hero-top reveal d1">
         <div class="eyebrow" style="margin-bottom:0"><span class="dot"></span> JARVIS · Tu semana completa</div>
@@ -354,42 +481,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
     </div>
   </section>
 
-  <!-- 1 · MI DÍA — pantalla principal desde el 2026-08-02, a petición de Adán: "quiero que
-       la pantalla principal sea la de rutina" -->
-  <section class="slide theme-dia" data-i="1">
-    <div class="slide-inner">
-      <div class="eyebrow reveal d1"><span class="dot"></span> Mi Día · <span id="diaClock">00:00</span></div>
-      <div class="slide-title reveal d2" id="diaFecha">—</div>
-
-      <div class="grid g2 reveal d3" style="margin-bottom:18px;align-items:stretch">
-        <div class="tile tile-glow">
-          <div class="lbl">🟢 Ahora mismo</div>
-          <div style="font-weight:800;font-size:clamp(16px,1.8vw,22px);margin-top:8px;line-height:1.4" id="diaAhora">—</div>
-          <div id="diaAhoraBtn"></div>
-        </div>
-        <div class="tile tile-glow">
-          <div class="lbl">🔜 Siguiente</div>
-          <div style="font-weight:800;font-size:clamp(16px,1.8vw,22px);margin-top:8px;line-height:1.4" id="diaSiguiente">—</div>
-        </div>
-      </div>
-
-      <div class="tile reveal d4" style="margin-bottom:12px;padding:12px 18px">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
-          <div class="lbl">✅ Progreso de hoy</div>
-          <div class="sub" id="diaProgresoTxt" style="margin-top:0">0/0</div>
-        </div>
-        <div class="pbar" style="height:4px"><div class="pfill" id="diaProgresoBar" style="width:0%;background:linear-gradient(90deg,var(--g),var(--cy))"></div></div>
-      </div>
-
-      <div class="tile reveal d5" id="diaTimeline" style="max-height:40vh;overflow-y:auto"></div>
-
-      <div class="reveal d6" style="margin-top:14px">
-        <a href="../Coach/Coach_v2.html#rutina" style="color:var(--cy);font-size:12px;font-weight:600;text-decoration:none">Ver/editar rutina completa en Coach →</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- 1 · COACH: PLAN MAESTRO -->
+  <!-- 2 · COACH: PLAN MAESTRO -->
   <section class="slide theme-coach" data-i="2">
     <div class="slide-inner">
       <div class="eyebrow reveal d1"><span class="dot"></span> Coach · Plan Maestro</div>
@@ -416,19 +508,24 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
     </div>
   </section>
 
-  <!-- 3 · COACH: HABILIDADES -->
-  <section class="slide theme-skills" data-i="3">
+  <!-- 3 · MIS METAS -->
+  <section class="slide theme-metas" data-i="3">
+    <div class="slide-inner">
+      <div class="eyebrow reveal d1"><span class="dot"></span> Mis Metas</div>
+      <div class="slide-title reveal d2"><span class="ico">🎯</span> Corto, mediano y largo plazo</div>
+      <div class="grid g4 reveal d3" id="metasProgreso" style="margin-bottom:18px"></div>
+      <div class="grid g-metas reveal d4" id="metasListas"></div>
+    </div>
+  </section>
+
+  <!-- 4 · COACH: HABILIDADES -->
+  <section class="slide theme-skills" data-i="4">
     <div class="slide-inner">
       <div class="eyebrow reveal d1"><span class="dot"></span> Coach · Radar de habilidades</div>
-      <div class="slide-title reveal d2">🧠 En qué invertir tu tiempo</div>
+      <div class="slide-title reveal d2"><span class="ico">🧠</span> En qué invertir tu tiempo</div>
 
-      <div class="grid reveal d3" style="grid-template-columns:1fr 1fr;align-items:center;margin-bottom:clamp(16px,2.2vh,26px)">
-        <div class="tile chart-wrap"><canvas id="chSkills"></canvas></div>
-        <div class="tile tile-glow" style="text-align:center">
-          <div class="lbl">OVR general</div>
-          <div class="big-num" style="font-size:clamp(56px,7vw,96px)" id="skillOvr">—</div>
-          <div id="skillOvrLabel" style="font-weight:800;font-size:15px">—</div>
-        </div>
+      <div class="tile chart-wrap-lg reveal d3" style="margin-bottom:clamp(16px,2.2vh,26px)">
+        <div class="chart-wrap" style="width:100%;height:100%"><canvas id="chSkills"></canvas></div>
       </div>
 
       <div class="skill-priority-title reveal d4">⚠️ Habilidades a mejorar — primer paso de esta semana
@@ -438,22 +535,12 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
     </div>
   </section>
 
-  <!-- 4 · MIS METAS -->
-  <section class="slide theme-metas" data-i="4">
-    <div class="slide-inner">
-      <div class="eyebrow reveal d1"><span class="dot"></span> Mis Metas</div>
-      <div class="slide-title reveal d2">🎯 Corto, mediano y largo plazo</div>
-      <div class="grid g4 reveal d3" id="metasProgreso" style="margin-bottom:18px"></div>
-      <div class="grid g2 reveal d4" id="metasListas"></div>
-    </div>
-  </section>
-
   <!-- 5 · LISTA DE COMPRAS -->
   <section class="slide theme-lista" data-i="5">
     <div class="slide-inner">
       <div class="eyebrow reveal d1"><span class="dot"></span> Lista de Compras</div>
       <div class="reveal d2" style="display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:10px;margin-bottom:12px">
-        <div class="slide-title" style="margin-bottom:0">🛒 Todo lo que hay que comprar</div>
+        <div class="slide-title" style="margin-bottom:0"><span class="ico">🛒</span> Todo lo que hay que comprar</div>
         <div id="listaCatTabs" style="display:flex;gap:6px;flex-wrap:wrap"></div>
       </div>
       <div class="tile reveal d3" id="listaCompraBody" style="max-height:70vh;overflow-y:auto"></div>
@@ -506,20 +593,19 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 
 </div>
 
-<div class="hud">
-  <div class="hud-clock"><span id="hudClock">—</span> <span class="hud-sync" id="hudSync"></span></div>
+<div class="hud-side hud-side-left" id="hudNav"></div>
+<div class="hud-side hud-side-right">
+  <div class="hud-clock"><span id="hudClock">—</span><br><span class="hud-sync" id="hudSync"></span></div>
   <div class="hud-progress"><div class="hud-progress-fill" id="hudProgressFill"></div></div>
-  <div class="hud-row">
-    <button class="hud-btn" onclick="toggleMenu()" title="Menú (M)" id="menuBtn">☰</button>
-    <button class="hud-btn" onclick="prevSlide()" title="Anterior (←)">‹</button>
-    <div class="dots" id="dots"></div>
-    <button class="hud-btn" onclick="nextSlide()" title="Siguiente (→)">›</button>
-    <button class="hud-btn" id="playBtn" onclick="togglePlay()" title="Pausar/Reanudar (Espacio)">⏸</button>
-    <button class="hud-btn" onclick="toggleFullscreen()" title="Pantalla completa (F)" id="fsBtn">⛶</button>
-    <button class="hud-btn" onclick="toggleSettings()" title="Ajustes">⚙️</button>
-    <button class="hud-btn" onclick="toggleHelp()" title="Atajos de teclado (?)">?</button>
-    <button class="hud-btn" id="theme-toggle-btn" onclick="toggleTheme()" title="Cambiar tema claro/oscuro" aria-label="Cambiar tema claro/oscuro">🌙</button>
-  </div>
+  <button class="hud-btn" onclick="toggleMenu()" title="Menú (M)" id="menuBtn">☰</button>
+  <button class="hud-btn" onclick="prevSlide()" title="Anterior (←)">‹</button>
+  <div class="dots" id="dots"></div>
+  <button class="hud-btn" onclick="nextSlide()" title="Siguiente (→)">›</button>
+  <button class="hud-btn" id="playBtn" onclick="togglePlay()" title="Pausar/Reanudar (Espacio)">⏸</button>
+  <button class="hud-btn" onclick="toggleFullscreen()" title="Pantalla completa (F)" id="fsBtn">⛶</button>
+  <button class="hud-btn" onclick="toggleSettings()" title="Ajustes">⚙️</button>
+  <button class="hud-btn" onclick="toggleHelp()" title="Atajos de teclado (?)">?</button>
+  <button class="hud-btn" id="theme-toggle-btn" onclick="toggleTheme()" title="Cambiar tema claro/oscuro" aria-label="Cambiar tema claro/oscuro">🌙</button>
 </div>
 
 <!-- ─── MENÚ DE NAVEGACIÓN ─── -->
@@ -560,6 +646,20 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 </div>
 
 <div class="toast" id="toast"></div>
+
+<!-- ─── DETALLE DE META (subpágina in-page) ─── -->
+<div class="meta-detail-overlay" id="metaDetailOverlay" onclick="if(event.target===this) cerrarMetaDetalle()">
+  <div class="meta-detail-card">
+    <div class="meta-detail-hero" id="metaDetailHero">
+      <button class="meta-detail-close" onclick="cerrarMetaDetalle()" aria-label="Cerrar">✕</button>
+      <div class="meta-detail-titlewrap"><div class="meta-detail-title" id="metaDetailTitle"></div></div>
+    </div>
+    <div class="meta-detail-body">
+      <div class="meta-detail-frase" id="metaDetailFrase"></div>
+      <div class="meta-detail-steps" id="metaDetailSteps"></div>
+    </div>
+  </div>
+</div>
 
 <script>
 // ══════════════════════════════════════════════════════════════════════════
@@ -610,6 +710,22 @@ function fixBanamexIfNeeded(){
   rawSet('finanzasmx_v2', fin);
   localStorage.setItem('finanzasmx_v2_banamex9k','1');
 }
+// Mismo problema y mismo patrón que fixBanamexIfNeeded(): el miércoles cambió de "Espalda +
+// Hombros + Cardio" a "Natación" en el CÓDIGO (S.rutina de ejercicio.html) el 2026-08-07, pero
+// si Adán ya había abierto ejercicio.html antes de ese cambio, su `mirutina_v1` real en este
+// navegador sigue guardado con el miércoles viejo — D.gym.rutina siempre gana sobre
+// GYM_RUTINA_DEFAULT (ver loadAll()), así que el código nuevo nunca se ve reflejado solo.
+// Corrige el dato ya guardado, una sola vez, y solo si sigue siendo exactamente el default viejo
+// (si Adán ya personalizó el miércoles a otra cosa, no se toca — eso es una decisión suya).
+function fixMiercolesNatacionIfNeeded(){
+  if(localStorage.getItem('mirutina_v1_miercoles_natacion')) return;
+  const gym=rawGet('mirutina_v1', null);
+  if(gym&&gym.rutina&&gym.rutina[3]&&gym.rutina[3].nombre==='Espalda + Hombros + Cardio'){
+    gym.rutina[3]={nombre:'Natación',tipo:'cardio',ejercicios:[{id:'e057',series:1,reps:45,unidad:'min',descanso:0}]};
+    rawSet('mirutina_v1', gym);
+  }
+  localStorage.setItem('mirutina_v1_miercoles_natacion','1');
+}
 let toastTimer=null;
 function toast(msg){
   const t=document.getElementById('toast'); if(!t)return;
@@ -626,7 +742,7 @@ const SK=[
   {id:'liderazgo', name:'Liderazgo',  icon:'👑', val:80, w:1.0},
   {id:'codigo',    name:'Código',     icon:'💻', val:60, w:1.2},
   {id:'ia',        name:'IA',         icon:'🤖', val:30, w:1.2},
-  {id:'datos',     name:'Datos',      icon:'📊', val:15, w:1.0},
+  {id:'datos',     name:'Datos',      icon:'📊', val:55, w:1.0},
   {id:'inversion', name:'Inversión',  icon:'📈', val:25, w:1.2},
   {id:'finanzas',  name:'Finanzas',   icon:'💰', val:20, w:1.1},
   {id:'ingles',    name:'Inglés',     icon:'🌐', val:80, w:1.1},
@@ -650,7 +766,15 @@ function loadAll(){
 const RUTINA_TASKS=[
   // Común entre semana (Lun–Vie) — horario real confirmado 2026-08-02
   {id:'wd01', dias:[1,2,3,4,5], hora:'07:00', cat:'salud',    txt:'Despertar sin snooze — celular fuera del cuarto'},
-  {id:'wd02', dias:[1,2,3,4,5], hora:'07:03', cat:'salud',    txt:'Bañarte — los días de lavado (Lun/Jue/Sáb) lava también el cabello, ver Cuidado del Cabello'},
+  {id:'wd02lav', dias:[1,4], hora:'07:03', cat:'salud', txt:'🚿 Bañarte + lavar cabello', subtareas:[
+    {id:'wd02la', txt:'Champú: Darrow Doctar (shampoo con alcatrão/coal tar, anticaspa) — masajea el cuero cabelludo 2-3 min, deja actuar antes de enjuagar', link:{href:'../CuidadoPersonal/cuidadopersonal.html?tab=cabello', label:'✂️ Ver Cuidado del Cabello'}},
+    {id:'wd02lb', txt:'Acondicionador: TRESemmé Keratin Smooth Conditioner — solo de medios a puntas, nunca en la raíz (en cabello fino y graso, ponerlo en la raíz lo aplana y engrasa más rápido)'},
+    {id:'wd02lc', txt:'Aceite en puntas (opcional, con el cabello ya seco): Moroccanoil Treatment Light — 2-3 gotas, solo puntas'},
+  ]},
+  {id:'wd02co', dias:[2,3,5], hora:'07:03', cat:'salud', txt:'🚿 Bañarte + cabello (sin champú hoy)', subtareas:[
+    {id:'wd02ca', txt:'Acondicionador: TRESemmé Keratin Smooth Conditioner — solo de medios a puntas (co-wash, sin champú: hoy no toca el anticaída, eso es Lun/Jue/Sáb — usarlo a diario resecaría el cuero cabelludo)'},
+    {id:'wd02cb', txt:'Aceite en puntas (opcional, con el cabello ya seco): Moroccanoil Treatment Light — 2-3 gotas, solo puntas'},
+  ]},
   {id:'wd0304', dias:[1,2,3,4,5], hora:'07:20', cat:'salud', txt:'🧴 Skincare + 🍂 Minoxidil — AM', subtareas:[
     {id:'wd03a', txt:'Limpiador suave (ej. CeraVe Espuma o Cetaphil) — quita grasa y sudor de la noche sin resecar'},
     {id:'wd03b', txt:'Sérum de niacinamida 10% — controla grasa y afina los poros'},
@@ -691,15 +815,16 @@ const RUTINA_TASKS=[
     {id:'wd20c', txt:'Exhala 4 segundos por la boca'},
     {id:'wd20d', txt:'Sostén sin aire 4 segundos — repite el ciclo (~10 veces en 10 min)'},
   ]},
+  {id:'wd20e', dias:[1,2,3,4,5], hora:'23:10', cat:'descanso', txt:'Tiempo libre / relajación antes de dormir'},
   {id:'wd21', dias:[1,2,3,4,5], hora:'23:55', cat:'salud',    txt:'Apagar pantallas. Dormir — buscas ~7h (medianoche a 7:00am)'},
   // Bolsa GBM — solo lunes, porque solo inviertes al inicio de semana
   {id:'lu-gbm', dias:[1], hora:'09:00', cat:'admin', txt:'💰 Bolsa GBM: revisar portafolio + VOO + USD/MXN e invertir — solo lunes'},
-  // Lectura (21:45) — cambia cada día, libros ya recomendados en Aprendizaje/Perfil del Rico
-  {id:'l1', dias:[1], hora:'21:45', cat:'descanso', txt:'📖 Lectura (30 min): "$100M Offers" — Alex Hormozi'},
-  {id:'l2', dias:[2], hora:'21:45', cat:'descanso', txt:'📖 Lectura (30 min): "Storytelling with Data" — Cole Nussbaumer Knaflic'},
-  {id:'l3', dias:[3], hora:'21:45', cat:'descanso', txt:'📖 Lectura (30 min): "Psicología del Dinero" — Morgan Housel'},
-  {id:'l4', dias:[4], hora:'21:45', cat:'descanso', txt:'📖 Lectura (30 min): "The Millionaire Next Door" — Thomas Stanley'},
-  {id:'l5', dias:[5], hora:'21:45', cat:'descanso', txt:'📖 Lectura (30 min): "Never Split the Difference" — Chris Voss'},
+  // Lectura (21:45) — genérica por ahora, sin libro fijo hasta que se compren (sugerencias en Aprendizaje/Perfil del Rico)
+  {id:'l1', dias:[1], hora:'21:45', cat:'descanso', txt:'📖 Lectura (30 min)'},
+  {id:'l2', dias:[2], hora:'21:45', cat:'descanso', txt:'📖 Lectura (30 min)'},
+  {id:'l3', dias:[3], hora:'21:45', cat:'descanso', txt:'📖 Lectura (30 min)'},
+  {id:'l4', dias:[4], hora:'21:45', cat:'descanso', txt:'📖 Lectura (30 min)'},
+  {id:'l5', dias:[5], hora:'21:45', cat:'descanso', txt:'📖 Lectura (30 min)'},
   // Ejercicio (17:40, después de la Didi corta) y bloque de habilidad — cambian cada día
   {id:'e1', dias:[1], hora:'17:40', cat:'salud', txt:'🏋️ Ejercicio: Empuje (pecho / hombro / tríceps)', subtareas:[
     {id:'e1a', txt:'Press de banca — 4×8'},
@@ -714,12 +839,7 @@ const RUTINA_TASKS=[
     {id:'e2c', txt:'Elevación de piernas — 3×15'},
   ]},
   {id:'k2', dias:[2], hora:'19:00', cat:'aprender', txt:'📊 Datos: 30 min de SQL (SQLZoo/Kaggle)'},
-  {id:'e3', dias:[3], hora:'17:40', cat:'salud', txt:'🏋️ Ejercicio: Jalón (espalda / bíceps)', subtareas:[
-    {id:'e3a', txt:'Dominadas o jalón en polea — 4×8'},
-    {id:'e3b', txt:'Remo con barra o mancuerna — 4×10'},
-    {id:'e3c', txt:'Curl con barra — 3×10'},
-    {id:'e3d', txt:'Curl martillo — 3×12'},
-  ]},
+  {id:'e3', dias:[3], hora:'17:40', cat:'salud', txt:'🏊 Ejercicio: Natación — 45 min (alberca Francisco Márquez, Doctores)'},
   {id:'e4', dias:[4], hora:'17:40', cat:'salud', txt:'🏋️ Ejercicio: Cardio / HIIT', subtareas:[
     {id:'e4a', txt:'HIIT: 30 seg esfuerzo máximo / 90 seg suave — 8 rondas (~18 min)'},
     {id:'e4b', txt:'Battle ropes o burpees — 3×30 seg'},
@@ -742,7 +862,12 @@ const RUTINA_TASKS=[
   ]},
   {id:'sa03',  dias:[6], hora:'07:18', cat:'salud', txt:'🍳 Preparar y desayunar tranquilo', link:{href:'../CuidadoPersonal/comida.html?s=desayunos', label:'Ver desayunos'}},
   {id:'sa04',  dias:[6], hora:'07:35', cat:'salud',    txt:'Ejercicio 1h — entreno largo / lo que falte en la semana'},
-  {id:'sa05',  dias:[6], hora:'08:35', cat:'salud',    txt:'Ducha'},
+  {id:'sa0506', dias:[6], hora:'08:35', cat:'salud', txt:'🚿 Ducha + lavar cabello', subtareas:[
+    {id:'sa05a', txt:'Champú: Darrow Doctar (shampoo con alcatrão/coal tar, anticaspa) — masajea el cuero cabelludo 2-3 min, deja actuar antes de enjuagar', link:{href:'../CuidadoPersonal/cuidadopersonal.html?tab=cabello', label:'✂️ Ver Cuidado del Cabello'}},
+    {id:'sa05b', txt:'Acondicionador: TRESemmé Keratin Smooth Conditioner — solo de medios a puntas, nunca en la raíz'},
+    {id:'sa05c', txt:"Mascarilla capilar (1 vez por semana, hazla hoy): L'Oréal Elvive Total Repair 5 — puntas y medios, deja actuar 5-10 min, enjuaga bien"},
+    {id:'sa05d', txt:'Aceite en puntas (opcional, con el cabello ya seco): Moroccanoil Treatment Light — 2-3 gotas, solo puntas'},
+  ]},
   {id:'sa06',  dias:[6], hora:'08:50', cat:'profundo', txt:'🎯 Bloque profundo 4h: prioridad activa del Plan Maestro'},
   {id:'sa07',  dias:[6], hora:'12:50', cat:'salud',    txt:'Almuerzo'},
   {id:'sa08',  dias:[6], hora:'13:20', cat:'aprender', txt:'🤖 IA aplicada — 30 min construyendo (n8n, Cursor, mini-proyecto propio)'},
@@ -765,6 +890,10 @@ const RUTINA_TASKS=[
   ]},
   {id:'do03',  dias:[0], hora:'07:48', cat:'salud', txt:'🍳 Preparar y desayunar tranquilo', link:{href:'../CuidadoPersonal/comida.html?s=desayunos', label:'Ver desayunos'}},
   {id:'do04',  dias:[0], hora:'08:05', cat:'salud',    txt:'Ejercicio: descanso activo — caminata o movilidad 30 min'},
+  {id:'do045', dias:[0], hora:'08:35', cat:'salud', txt:'🚿 Bañarte + cabello (sin champú hoy)', subtareas:[
+    {id:'do045a', txt:'Acondicionador: TRESemmé Keratin Smooth Conditioner — solo de medios a puntas (co-wash, sin champú: hoy no toca el anticaída, eso es Lun/Jue/Sáb — usarlo a diario resecaría el cuero cabelludo)'},
+    {id:'do045b', txt:'Aceite en puntas (opcional, con el cabello ya seco): Moroccanoil Treatment Light — 2-3 gotas, solo puntas'},
+  ]},
   {id:'do05',  dias:[0], hora:'09:00', cat:'descanso', txt:'Tiempo libre / familia'},
   {id:'do06',  dias:[0], hora:'20:00', cat:'admin',    txt:'💰 Finanzas: revisión de presupuesto + planificar semana + revisar inversiones'},
   {id:'do07',  dias:[0], hora:'20:30', cat:'profundo', txt:'🎯 Revisar Plan Maestro: ¿la fase actual sigue en verde? Ajustar si hace falta'},
@@ -809,11 +938,68 @@ function rutinaAhoraSiguiente(){
   tareasHoy.forEach(t=>{ if(t.hora<=hhmm) actual=t; else if(!siguiente) siguiente=t; });
   return {tareasHoy, actual, siguiente};
 }
+// Lista compacta del tile "🔜 Siguiente" — ya no solo la próxima tarea, sino
+// varias por venir hoy, en texto chico para que quepan sin agrandar el tile.
+// ── "🗓️ Importante este mes" (tile de Mi Día, antes mostraba las próximas tareas del día) ──
+// Mezcla 2 fuentes, ambas reales, ninguna inventada:
+//  1) Pendientes que Adán dio explícitamente (dentista, embajada, gastritis) — no existen en
+//     ningún otro módulo (Dentista/Salud no tienen estos datos capturados), es texto a mano.
+//  2) Hitos derivados de PHASES de este mismo archivo (fechas de inicio/fin de cada Fase del
+//     Plan Maestro, ya reales y ya usadas en el slide Coach) — para que el mes no se vea vacío
+//     cuando sí hay algo real y ya documentado que mostrar, sin inventar nada nuevo.
+// Mismo patrón que LISTA_COMPRAS/GYM_RUTINA_DEFAULT — hay que seguir agregando a mano conforme
+// surjan más pendientes reales; no se actualiza sola.
+const EVENTOS_MES={
+  '2026-08':[
+    {ico:'🦷',txt:'Ir al dentista'},
+    {ico:'🇺🇸',txt:'Agendar cita para tu papá en la embajada de USA'},
+  ],
+  '2026-09':[
+    {ico:'🩺',txt:'Ir al doctor por la gastritis'},
+    {ico:'🎯',txt:'Vence Fase 0 del Plan Maestro (30 sep) — revisa fondo de emergencia $10k y Banamex/BBVA en $0'},
+  ],
+  '2026-10':[
+    {ico:'🪙',txt:'Arranca Fase 1 del Plan Maestro (1 oct) — los $3,868/mes liberados entran en acción + primer ingreso real'},
+  ],
+};
+const MES_LABEL=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+function mesKey(d){ return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0'); }
+function mesesVisibles(n){
+  const hoy=new Date();
+  return Array.from({length:n||6},(_,i)=>{
+    const d=new Date(hoy.getFullYear(),hoy.getMonth()+i,1);
+    return {key:mesKey(d),label:MES_LABEL[d.getMonth()]+(d.getFullYear()!==hoy.getFullYear()?" '"+String(d.getFullYear()).slice(2):'')};
+  });
+}
+let mesSel=mesKey(new Date());
+function renderEventosMes(){
+  const meses=mesesVisibles(6);
+  document.getElementById('mesTabs').innerHTML=meses.map(m=>
+    `<button class="mes-tab${m.key===mesSel?' active':''}${(EVENTOS_MES[m.key]||[]).length?' has-items':''}" onclick="verMesEventos('${m.key}')">${m.label}</button>`
+  ).join('');
+  const eventos=EVENTOS_MES[mesSel]||[];
+  document.getElementById('mesEventos').innerHTML=eventos.length
+    ? eventos.map(e=>`<div class="ds-row"><span class="ds-hora">${e.ico}</span><span class="ds-txt" style="white-space:normal">${e.txt}</span></div>`).join('')
+    : '<div class="ds-empty">Sin pendientes registrados este mes</div>';
+}
+function verMesEventos(key){ mesSel=key; renderEventosMes(); }
 
 // Semana calendario (Domingo→Sábado), misma convención que ejercicio.html → renderDashboard()
 function semanaActual(){const hoy=new Date();const dow=hoy.getDay();return Array.from({length:7},(_,i)=>{const d=new Date(hoy);d.setDate(d.getDate()-dow+i);return d.toISOString().slice(0,10);});}
 const DIAS_CORTOS=['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+const DIAS_LARGO=['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
 
+// Foto real por tipo de ejercicio para la tira de 7 días del Hero (ver renderHero() más abajo) —
+// URLs de Unsplash verificadas con curl antes de usarlas, más la foto de natación ya usada en
+// ejercicio.html → sección Deportes (Wikimedia Commons, alberca Francisco Márquez). Si se agrega
+// un tipo nuevo a GYM_RUTINA_DEFAULT/S.rutina, hay que agregar su foto aquí también.
+const TIPO_FOTO={
+  brazos:'https://images.unsplash.com/photo-1598268030450-7a476f602bf6?w=400&q=70&auto=format&fit=crop',
+  piernas:'https://images.unsplash.com/photo-1770664612843-b44e26070024?w=400&q=70&auto=format&fit=crop',
+  empuje:'https://images.unsplash.com/photo-1690731033723-ad718c6e585a?w=400&q=70&auto=format&fit=crop',
+  cardio:'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c8/US_Navy_110520-N-CD297-071_Aviation_Ordnanceman_2nd_Class_Selemani_Johnson_swims_in_the_100-meter_Freestyle_event_as_a_member_of_Team_Navy-Coast_Gu.jpg/500px-US_Navy_110520-N-CD297-071_Aviation_Ordnanceman_2nd_Class_Selemani_Johnson_swims_in_the_100-meter_Freestyle_event_as_a_member_of_Team_Navy-Coast_Gu.jpg',
+  descanso:'https://images.unsplash.com/photo-1520206444322-d2df0dd4e78e?w=400&q=70&auto=format&fit=crop',
+};
 // Copia liviana (solo nombre + tipo) del programa semanal por defecto de ejercicio.html → S.rutina.
 // El Hero la usa como respaldo cuando D.gym.rutina viene vacío — así "qué toca hoy" se ve completo
 // desde la primera vez que se abre el Dashboard, sin depender de haber abierto ejercicio.html antes.
@@ -824,8 +1010,8 @@ const GYM_RUTINA_DEFAULT={
      ejercicios:[{id:'e021',series:4,reps:9,descanso:90},{id:'e027',series:4,reps:10,descanso:90},{id:'e023',series:3,reps:12,descanso:60},{id:'e028',series:3,reps:12,descanso:60},{id:'e045',series:3,reps:45,unidad:'seg',descanso:45}]},
   2:{nombre:'Piernas A — Cuádriceps',tipo:'piernas',
      ejercicios:[{id:'e032',series:4,reps:8,descanso:120},{id:'e033',series:4,reps:12,descanso:90},{id:'e034',series:3,reps:15,descanso:60},{id:'e036',series:3,reps:12,descanso:60},{id:'e039',series:4,reps:20,descanso:45}]},
-  3:{nombre:'Espalda + Hombros + Cardio',tipo:'halar',
-     ejercicios:[{id:'e008',series:4,reps:8,descanso:120},{id:'e009',series:4,reps:10,descanso:90},{id:'e015',series:3,reps:10,descanso:90},{id:'e017',series:3,reps:15,descanso:45},{id:'e056',series:5,reps:30,unidad:'seg',descanso:30}]},
+  3:{nombre:'Natación',tipo:'cardio',
+     ejercicios:[{id:'e057',series:1,reps:45,unidad:'min',descanso:0}]},
   4:{nombre:'Brazos B — Bíceps + Tríceps',tipo:'brazos',
      ejercicios:[{id:'e022',series:4,reps:12,descanso:60},{id:'e031',series:4,reps:12,descanso:60},{id:'e026',series:3,reps:10,descanso:60},{id:'e029',series:3,reps:15,descanso:60},{id:'e047',series:3,reps:15,descanso:45}]},
   5:{nombre:'Piernas B — Glúteo + Femoral',tipo:'piernas',
@@ -839,37 +1025,37 @@ const GYM_RUTINA_DEFAULT={
 // duplicado de EJ_DB (ejercicio.html), solo con lo necesario para mostrar el detalle
 // aquí sin cargar la biblioteca completa de ~56 ejercicios.
 const EJ_LOOKUP={
-  e001:{nombre:'Press de Banca',cue:'Escápulas retraídas y pegadas al banco, baja la barra controlada hasta rozar el pecho y empuja en línea recta hacia arriba.'},
-  e002:{nombre:'Press Inclinado con Barra',cue:'Banco a 30-45°. La barra baja a la parte alta del pecho — más ángulo, más pecho superior.'},
-  e004:{nombre:'Aperturas con Mancuerna',cue:'Codos ligeramente flexionados y fijos — es un abrazo amplio, no un press. Siente el estiramiento en el pecho.'},
-  e008:{nombre:'Dominadas',cue:'Agarre un poco más ancho que los hombros, sube hasta que la barbilla pase la barra, baja controlado hasta extender el brazo.'},
-  e009:{nombre:'Remo con Barra',cue:'Torso inclinado ~45°, espalda recta, jala la barra hacia el abdomen apretando los omóplatos al final.'},
-  e015:{nombre:'Press Militar con Barra',cue:'Core apretado, empuja la barra en línea recta sobre la cabeza sin arquear la espalda baja.'},
-  e017:{nombre:'Elevaciones Laterales',cue:'Codos ligeramente flexionados, sube hasta la altura del hombro, lidera con el codo. Peso ligero, técnica estricta.'},
-  e021:{nombre:'Curl con Barra',cue:'Codos pegados al torso todo el movimiento — si se mueven hacia adelante, estás usando impulso, no bíceps.'},
-  e022:{nombre:'Curl con Mancuerna',cue:'Gira la muñeca conforme subes para contraer más el bíceps arriba. Baja siempre controlado, 2-3 segundos.'},
-  e023:{nombre:'Curl Martillo',cue:'Agarre neutro (palmas viéndose todo el tiempo) — construye antebrazo y da grosor extra al brazo.'},
-  e026:{nombre:'Curl Scott (Predicador)',cue:'El banco fija el codo y elimina el impulso — aísla 100% el bíceps.'},
-  e027:{nombre:'Press Francés',cue:'Codos apuntando al techo y fijos, baja hacia la frente doblando solo el codo — el que más masa agrega al tríceps.'},
-  e028:{nombre:'Extensión en Polea (Pushdown)',cue:'Codos pegados al costado sin moverse, extiende hasta bloquear el codo y aprieta el tríceps 1 seg abajo.'},
-  e029:{nombre:'Fondos en Banco',cue:'Manos en el borde del banco, baja hasta 90° de codo sin encoger los hombros hacia las orejas.'},
-  e031:{nombre:'Extensión sobre Cabeza',cue:'Codos apuntando al frente/arriba y fijos junto a la cabeza, baja la mancuerna detrás de la nuca.'},
-  e032:{nombre:'Sentadilla con Barra',cue:'Pecho arriba, rodillas siguiendo la línea de los pies, baja hasta que el muslo pase de paralelo y empuja con los talones.'},
-  e033:{nombre:'Prensa de Piernas',cue:'Pies a la anchura de hombros, baja hasta 90° de rodilla sin despegar la zona lumbar del respaldo.'},
-  e034:{nombre:'Extensión de Cuádriceps',cue:'Extiende por completo y aprieta el cuádriceps 1 seg arriba, baja controlado.'},
-  e035:{nombre:'Curl de Femoral Tumbado',cue:'Cadera pegada al banco todo el movimiento, flexiona la rodilla llevando el talón al glúteo sin impulso.'},
-  e036:{nombre:'Zancadas',cue:'Paso largo hacia adelante, baja hasta que ambas rodillas formen 90° sin golpear el piso. Torso recto.'},
-  e037:{nombre:'Sentadilla Búlgara',cue:'Pie trasero elevado en un banco, baja recto hacia abajo — empieza con poco peso.'},
-  e038:{nombre:'Peso Muerto Rumano',cue:'Rodillas casi rectas, empuja la cadera hacia atrás con la barra pegada a las piernas — sientes el femoral, no la espalda baja.'},
-  e039:{nombre:'Elevación de Pantorrilla',cue:'Sube hasta la punta de los pies y aprieta arriba 1 seg, baja dejando caer el talón para el estiramiento completo.'},
-  e041:{nombre:'Hip Thrust',cue:'Espalda alta apoyada en el banco, barra sobre la cadera, empuja hasta alinear torso y muslos, aprieta el glúteo arriba.'},
-  e044:{nombre:'Abducción de Cadera',cue:'Empuja las piernas hacia afuera contra la resistencia, controla la vuelta — trabaja el glúteo medio.'},
-  e045:{nombre:'Plancha',cue:'Cuerpo en línea recta de cabeza a talones, glúteo y abdomen apretados, no dejes caer la cadera.'},
-  e047:{nombre:'Elevación de Piernas',cue:'Espalda baja pegada al piso, sube las piernas rectas hasta 90° sin impulso, baja controlado.'},
-  e048:{nombre:'Rueda Abdominal',cue:'De rodillas, rueda hacia adelante con el abdomen apretado — solo hasta donde puedas regresar sin arquear la espalda.'},
+  e001:{nombre:'Press de Banca',cue:'Aprieta los hombros hacia atrás y abajo, pegados al banco. Baja la barra despacio hasta casi tocar el pecho y empújala derecho hacia arriba.'},
+  e002:{nombre:'Press Inclinado con Barra',cue:'Banco inclinado a 30-45°. La barra baja hacia la parte de arriba del pecho — entre más inclinado, más trabaja esa parte.'},
+  e004:{nombre:'Aperturas con Mancuerna',cue:'Codos un poco doblados y sin moverlos — es como abrazar un árbol grande, no un empuje. Debes sentir que se estira el pecho.'},
+  e008:{nombre:'Dominadas',cue:'Agarra un poco más ancho que tus hombros, sube hasta que tu barbilla pase la barra, baja despacio hasta estirar el brazo completo.'},
+  e009:{nombre:'Remo con Barra',cue:'Inclina el cuerpo hacia adelante como a 45°, espalda derecha, jala la barra hacia tu abdomen apretando los hombros hacia atrás al final.'},
+  e015:{nombre:'Press Militar con Barra',cue:'Aprieta el abdomen, empuja la barra derecho hacia arriba sobre tu cabeza sin arquear la espalda baja.'},
+  e017:{nombre:'Elevaciones Laterales',cue:'Codos un poco doblados, sube los brazos hasta la altura del hombro, el movimiento sale del codo. Poco peso, buena forma.'},
+  e021:{nombre:'Curl con Barra',cue:'Mantén los codos pegados a tu cuerpo — si se mueven hacia adelante, estás usando impulso en vez del músculo.'},
+  e022:{nombre:'Curl con Mancuerna',cue:'Gira la muñeca hacia arriba conforme subes para apretar más el músculo. Baja siempre despacio, en 2-3 segundos.'},
+  e023:{nombre:'Curl Martillo',cue:'Agarra con las palmas viéndose entre sí todo el tiempo (como un martillo) — le da más grosor al brazo.'},
+  e026:{nombre:'Curl Scott (Predicador)',cue:'El banco inclinado fija tu codo y evita que uses impulso — así trabaja solo el bíceps.'},
+  e027:{nombre:'Press Francés',cue:'Codos apuntando al techo y sin moverse, baja hacia tu frente doblando solo el codo — muy efectivo para el brazo de atrás.'},
+  e028:{nombre:'Extensión en Polea (Pushdown)',cue:'Codos pegados a tus costados sin moverse, estira el brazo hasta el fondo y aprieta 1 segundo.'},
+  e029:{nombre:'Fondos en Banco',cue:'Manos en el borde del banco, baja hasta que el codo forme 90°, sin subir los hombros hacia las orejas.'},
+  e031:{nombre:'Extensión sobre Cabeza',cue:'Codos apuntando hacia arriba y fijos junto a tu cabeza, baja la mancuerna detrás de la nuca.'},
+  e032:{nombre:'Sentadilla con Barra',cue:'Pecho arriba, rodillas apuntando hacia donde apuntan tus pies. Baja hasta que el muslo quede más abajo que paralelo al piso.'},
+  e033:{nombre:'Prensa de Piernas',cue:'Pies a lo ancho de tus hombros, baja hasta que la rodilla forme 90° sin despegar la espalda baja del respaldo.'},
+  e034:{nombre:'Extensión de Cuádriceps',cue:'Estira la pierna por completo y aprieta el frente del muslo 1 segundo arriba, baja despacio.'},
+  e035:{nombre:'Curl de Femoral Tumbado',cue:'Cadera pegada al banco todo el tiempo, dobla la rodilla llevando el talón hacia el glúteo, sin impulso.'},
+  e036:{nombre:'Zancadas',cue:'Da un paso largo hacia adelante, baja hasta que las dos rodillas formen 90° sin golpear el piso. Cuerpo derecho.'},
+  e037:{nombre:'Sentadilla Búlgara',cue:'Con el pie de atrás apoyado en un banco, baja derecho hacia abajo — empieza con poco peso.'},
+  e038:{nombre:'Peso Muerto Rumano',cue:'Rodillas casi estiradas, empuja la cadera hacia atrás con la barra pegada a tus piernas — debes sentir el estiramiento en la parte de atrás del muslo, no en la espalda baja.'},
+  e039:{nombre:'Elevación de Pantorrilla',cue:'Sube hasta la punta de los pies y aprieta 1 segundo arriba, baja dejando caer el talón para estirar bien.'},
+  e041:{nombre:'Hip Thrust',cue:'Apoya la parte alta de la espalda en el banco, barra sobre la cadera, empuja hasta quedar derecho y aprieta el glúteo arriba.'},
+  e044:{nombre:'Abducción de Cadera',cue:'Empuja las piernas hacia afuera contra la resistencia de la máquina, controla el regreso — ayuda a la estabilidad de tu cadera.'},
+  e045:{nombre:'Plancha',cue:'Cuerpo derecho de cabeza a talones, glúteo y abdomen apretados, no dejes caer la cadera.'},
+  e047:{nombre:'Elevación de Piernas',cue:'Espalda baja pegada al piso, sube las piernas estiradas hasta 90° sin impulso, baja despacio.'},
+  e048:{nombre:'Rueda Abdominal',cue:'De rodillas, rueda hacia adelante con el abdomen apretado — solo hasta donde puedas regresar sin arquear la espalda baja.'},
   e051:{nombre:'Caminata en Cinta',cue:'Ritmo cómodo y sostenido — recuperación activa, no exigencia.'},
-  e054:{nombre:'Elíptica',cue:'Ritmo constante, postura erguida sin colgarte de los brazos — bajo impacto, ideal para cardio largo.'},
-  e056:{nombre:'Battle Ropes',cue:'Rodillas ligeramente flexionadas, core apretado, ondas fuertes y rápidas — intervalos de 20-30s.'}
+  e054:{nombre:'Elíptica',cue:'Ritmo constante, cuerpo derecho, sin colgarte de los brazos — bajo impacto, ideal para cardio largo.'},
+  e057:{nombre:'Nadar',cue:'Alterna estilos (libre y dorso) para no cansar siempre el mismo hombro — cardio de bajo impacto.'}
 };
 
 // ── NUTRICIÓN — muestra de recetas de Comida (nombre + macros), no el consumo real del
@@ -878,28 +1064,28 @@ const EJ_LOOKUP={
 //    CuidadoPersonal/comida.html → RECETAS (solo nombre/tiempo/macros, sin ingredientes/pasos).
 const RECETAS_MINI={
   desayuno:[
-    {nombre:'Avena con plátano, canela y miel',tiempo:'10 min',cal:480,prot:15},
-    {nombre:'Huevos revueltos con espinaca y pan integral',tiempo:'10 min',cal:430,prot:26},
-    {nombre:'Claras de huevo con avena y manzana',tiempo:'12 min',cal:370,prot:28},
-    {nombre:'Yogurt griego con avena, miel y pera',tiempo:'5 min',cal:420,prot:24},
-    {nombre:'Licuado de plátano, avena y crema de cacahuate',tiempo:'5 min',cal:480,prot:18},
-    {nombre:'Hot cakes de avena y plátano (sin harina)',tiempo:'15 min',cal:430,prot:22},
-    {nombre:'Omelette de claras con queso panela y pan tostado',tiempo:'12 min',cal:420,prot:38},
-    {nombre:'Pan tostado con aguacate y huevo cocido',tiempo:'12 min',cal:450,prot:22},
-    {nombre:'Avena overnight con manzana y canela (para llevar)',tiempo:'5 min + reposo',cal:380,prot:10},
-    {nombre:'Quesadillas de claras con queso panela y nopales',tiempo:'12 min',cal:380,prot:30}
+    {nombre:'Avena con plátano, canela y miel',tiempo:'10 min',cal:480,prot:15,ing:['Avena en hojuelas · 40 g','Leche entera · 250 ml','Plátano · 1 pza','Canela en polvo · al gusto','Miel de abeja · 1 cda']},
+    {nombre:'Huevos revueltos con espinaca y pan integral',tiempo:'10 min',cal:430,prot:26,ing:['Huevo · 3 pza','Espinaca · 1 taza','Aceite de oliva · 1 cdta','Pan integral · 2 rebanadas','Sal · poca']},
+    {nombre:'Claras de huevo con avena y manzana',tiempo:'12 min',cal:370,prot:28,ing:['Clara de huevo · 6 pza','Avena en hojuelas · 40 g','Manzana · 1 pza','Canela en polvo · al gusto']},
+    {nombre:'Yogurt griego con avena, miel y pera',tiempo:'5 min',cal:420,prot:24,ing:['Yogurt griego natural · 200 g','Avena en hojuelas · 30 g','Miel de abeja · 1 cda','Pera · 1 pza']},
+    {nombre:'Licuado de plátano, avena y crema de cacahuate',tiempo:'5 min',cal:480,prot:18,ing:['Plátano · 1 pza','Avena en hojuelas · 30 g','Crema de cacahuate · 1 cda','Leche entera · 300 ml']},
+    {nombre:'Hot cakes de avena y plátano (sin harina)',tiempo:'15 min',cal:430,prot:22,ing:['Avena en hojuelas · 50 g (molida)','Plátano · 1 pza','Huevo · 2 pza','Canela en polvo · al gusto','Miel de abeja · 1 cda, para servir']},
+    {nombre:'Omelette de claras con queso panela y pan tostado',tiempo:'12 min',cal:420,prot:38,ing:['Clara de huevo · 6 pza','Queso panela · 40 g','Pan integral · 2 rebanadas','Espinaca · 1 taza','Aceite de oliva · 1 cdta']},
+    {nombre:'Pan tostado con aguacate y huevo cocido',tiempo:'12 min',cal:450,prot:22,ing:['Pan integral · 2 rebanadas','Aguacate · 1/2 pza','Huevo · 2 pza','Sal · poca']},
+    {nombre:'Avena overnight con manzana y canela (para llevar)',tiempo:'5 min + reposo',cal:380,prot:10,ing:['Avena en hojuelas · 40 g','Leche de avena · 200 ml','Manzana · 1 pza, rallada','Canela en polvo · al gusto','Miel de abeja · 1 cdta']},
+    {nombre:'Quesadillas de claras con queso panela y nopales',tiempo:'12 min',cal:380,prot:30,ing:['Tortilla de maíz · 2 pza','Clara de huevo · 4 pza','Queso panela · 40 g','Nopales cocidos · 1/2 taza']}
   ],
   cena:[
-    {nombre:'Pechuga de pollo a la plancha con arroz y verduras',tiempo:'20 min',cal:520,prot:50},
-    {nombre:'Pescado blanco al vapor con papa y ejotes',tiempo:'20 min',cal:330,prot:33},
-    {nombre:'Sopa de pollo con chayote, zanahoria y calabaza',tiempo:'25 min',cal:300,prot:40},
-    {nombre:'Atún con arroz y ensalada de pepino',tiempo:'10 min',cal:400,prot:34},
-    {nombre:'Pavo molido con puré de papa y brócoli',tiempo:'25 min',cal:450,prot:38},
-    {nombre:'Tacos de pollo deshebrado con nopales',tiempo:'20 min',cal:420,prot:42},
-    {nombre:'Omelette de claras con verduras (cena ligera)',tiempo:'10 min',cal:200,prot:24},
-    {nombre:'Caldo de pollo con verduras y arroz',tiempo:'25 min',cal:380,prot:42},
-    {nombre:'Filete de pescado al horno con camote',tiempo:'30 min',cal:350,prot:32},
-    {nombre:'Ensalada tibia de pollo, quinoa y verduras',tiempo:'20 min',cal:480,prot:48}
+    {nombre:'Pechuga de pollo a la plancha con arroz y verduras',tiempo:'20 min',cal:520,prot:50,ing:['Pechuga de pollo · 150 g','Arroz blanco cocido · 1 taza','Brócoli · 1 taza','Zanahoria · 1 pza','Aceite de oliva · 1 cdta']},
+    {nombre:'Pescado blanco al vapor con papa y ejotes',tiempo:'20 min',cal:330,prot:33,ing:['Filete de tilapia · 150 g','Papa · 1 pza mediana','Ejotes · 1 taza','Sal · poca']},
+    {nombre:'Sopa de pollo con chayote, zanahoria y calabaza',tiempo:'25 min',cal:300,prot:40,ing:['Pechuga de pollo · 150 g','Chayote · 1 taza','Zanahoria · 1 pza','Calabaza · 1 taza','Caldo de pollo bajo en sodio · 500 ml']},
+    {nombre:'Atún con arroz y ensalada de pepino',tiempo:'10 min',cal:400,prot:34,ing:['Atún en agua · 1 lata','Arroz blanco cocido · 1 taza','Pepino · 1 taza','Aceite de oliva · 1 cdta']},
+    {nombre:'Pavo molido con puré de papa y brócoli',tiempo:'25 min',cal:450,prot:38,ing:['Pavo molido · 150 g','Papa · 2 pza','Leche entera · 50 ml','Brócoli · 1 taza']},
+    {nombre:'Tacos de pollo deshebrado con nopales',tiempo:'20 min',cal:420,prot:42,ing:['Pechuga de pollo · 150 g','Tortilla de maíz · 4 pza','Nopales cocidos · 1 taza','Cebolla · poca, cocida']},
+    {nombre:'Omelette de claras con verduras (cena ligera)',tiempo:'10 min',cal:200,prot:24,ing:['Clara de huevo · 6 pza','Calabaza · 1/2 taza','Zanahoria · 1/2 pza, rallada','Aceite de oliva · 1 cdta']},
+    {nombre:'Caldo de pollo con verduras y arroz',tiempo:'25 min',cal:380,prot:42,ing:['Pechuga de pollo · 150 g','Caldo de pollo bajo en sodio · 500 ml','Zanahoria · 1 pza','Calabaza · 1 taza','Arroz blanco cocido · 1/2 taza']},
+    {nombre:'Filete de pescado al horno con camote',tiempo:'30 min',cal:350,prot:32,ing:['Filete de tilapia · 150 g','Camote · 1 pza mediana','Aceite de oliva · 1 cdta','Hierbas de olor · al gusto']},
+    {nombre:'Ensalada tibia de pollo, quinoa y verduras',tiempo:'20 min',cal:480,prot:48,ing:['Pechuga de pollo · 150 g','Quinoa cocida · 1 taza','Brócoli · 1/2 taza','Zanahoria · 1/2 pza','Aceite de oliva · 1 cdta']}
   ]
 };
 
@@ -925,17 +1111,17 @@ const LISTA_COMPRAS={
     'Panadería y Tortillas':['Pan integral','Tortilla de maíz'],
   },
   skincare:[
-    'Limpiador — La Roche-Posay Effaclar Gel Purificante o CeraVe Limpiador Espumoso o Cetaphil Gel Limpiador o CeraVe Limpiador Hidratante',
+    'Limpiador — CeraVe Limpiador Espumoso (verde)',
     'Exfoliante (BHA/AHA) — The Ordinary Ácido Salicílico 2% o Neutrogena Rapid Clear o The Ordinary Ácido Láctico 5%',
     'Sérum AM — The Ordinary Niacinamida 10% + Zinc 1% o La Roche-Posay Pure Vitamin C10',
-    'Hidratante AM — CeraVe Loción Hidratante AM SPF30 o Neutrogena Hydro Boost Water Gel',
+    'Hidratante AM — Eucerin Hyaluron-Filler + Epigenetic Día SPF15',
     'Protector solar — Isdin Fusion Water Oil-Free SPF50 o La Roche-Posay Anthelios Oil Free SPF50 o Neutrogena Ultra Sheer SPF50',
     'Tratamiento PM (retinoide) — Differin Adapaleno 0.1% Gel o The Ordinary Retinol 0.2% en Escualano',
-    'Hidratante PM — CeraVe Loción Hidratante PM o Cetaphil Crema Hidratante',
+    'Hidratante PM — Eucerin Hyaluron-Filler + Epigenetic Noche',
     'Mascarilla semanal — Aztec Secret Indian Healing Clay o The Ordinary Salicylic Acid 2% Masque',
   ],
   cabello:[
-    'Champú — Vichy Dercos Energising (Aminexil) o Alpecin Caffeine Shampoo C1 o Pantene Pro-V Anti-Caída o Head & Shoulders Anticaspa',
+    'Champú — Darrow Doctar (alcatrão/coal tar, anticaspa)',
     'Acondicionador — TRESemmé Keratin Smooth o Pantene Pro-V Cabello Fino o Kérastase Nutritive',
     'Mascarilla — L\'Oréal Elvive Total Repair 5 o Moroccanoil Hydrating Mask',
     'Minoxidil 5% Solución/Espuma (Kirkland Signature o genérico)',
@@ -972,12 +1158,32 @@ let listaCatSel='comida';
 function lcSlug(txt){
   return txt.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'');
 }
-function lcRenderItems(items,checks){
+// Categorías donde el nombre del producto es un link de búsqueda en Amazon (checkbox queda solo para tachar)
+const LC_AMAZON_CATS=['skincare','cabello','suplementos'];
+// El texto trae formato "Categoría — Marca/Producto A o Marca/Producto B o ..." (o solo "Producto" en suplementos)
+// — se busca en Amazon el primer producto mencionado (la recomendación principal), no la frase completa.
+function lcAmazonQuery(txt){
+  const tras=txt.includes(' — ')?txt.split(' — ')[1]:txt;
+  return tras.split(' o ')[0].trim();
+}
+function lcAmazonUrl(q){ return 'https://www.amazon.com.mx/s?k='+encodeURIComponent(q); }
+function lcMercadoLibreUrl(q){ return 'https://listado.mercadolibre.com.mx/'+encodeURIComponent(q.replace(/\s+/g,'-')); }
+function lcRenderItems(items,checks,conLinkAmazon){
   return items.map(txt=>{
     const id='lc-'+listaCatSel+'-'+lcSlug(txt);
+    const checked=checks[id]?'checked':'';
+    let shopHtml='';
+    if(conLinkAmazon){
+      const q=lcAmazonQuery(txt);
+      shopHtml=`<span class="lc-item-shop">
+        <a href="${lcAmazonUrl(q)}" target="_blank" rel="noopener" class="lc-shop-link" title="Buscar en Amazon">Amazon ↗</a>
+        <a href="${lcMercadoLibreUrl(q)}" target="_blank" rel="noopener" class="lc-shop-link" title="Buscar en Mercado Libre">Mercado Libre ↗</a>
+      </span>`;
+    }
     return `<div class="lc-item">
-      <input type="checkbox" id="${id}" ${checks[id]?'checked':''} onchange="toggleListaItem('${id}')">
-      <label for="${id}">${txt}</label>
+      <input type="checkbox" id="${id}" ${checked} onchange="toggleListaItem('${id}')">
+      <label for="${id}" class="lc-item-txt">${txt}</label>
+      ${shopHtml}
     </div>`;
   }).join('');
 }
@@ -988,12 +1194,13 @@ function renderListaCompras(){
   }).join('');
   const checks=rawGet('dash-lista-compras',{});
   const data=LISTA_COMPRAS[listaCatSel];
+  const conLinkAmazon=LC_AMAZON_CATS.includes(listaCatSel);
   const html=Array.isArray(data)
-    ? `<div>${lcRenderItems(data,checks)}</div>`
+    ? `<div>${lcRenderItems(data,checks,conLinkAmazon)}</div>`
     : Object.entries(data).map(([pasillo,items])=>`
       <div class="lc-aisle">
         <div class="lc-aisle-title">${pasillo}</div>
-        <div class="lc-grid">${lcRenderItems(items,checks)}</div>
+        <div class="lc-grid">${lcRenderItems(items,checks,conLinkAmazon)}</div>
       </div>`).join('');
   document.getElementById('listaCompraBody').innerHTML=html;
 }
@@ -1109,76 +1316,103 @@ function renderEntrevista(){
 //    Todas atadas a hechos reales de su plan (gym, Hyrox, ajedrez, deudas, GBM, Didi,
 //    negocio de su papá, background de testing/mecatrónica) — nada genérico de calendario.
 const FRASES_MOTIVACION=[
-  'La disciplina de hoy en el gym es el mismo músculo que necesitas para el negocio.',
-  'No necesitas verte al espejo todos los días — necesitas seguir apareciendo.',
-  'Cada peso a Banamex y BBVA es un peso que ya no te cobra intereses.',
-  'El cuerpo cambia en semanas, no en un entrenamiento. Sigue apareciendo.',
-  'Una hora real puesta en el negocio de tu papá vale más que diez "algún día lo hago".',
-  'La consistencia aburrida gana — la motivación es solo lo que te hace empezar.',
-  'Cada pausa activa que tomas hoy es una espalda que no te va a doler a los 40.',
-  'No compites contra nadie del gym — compites contra el Adán que no fue.',
-  'El fondo de emergencia no es para gastarlo — es para dormir tranquilo.',
-  'Publica la plantilla imperfecta hoy. La perfecta nunca sale.',
-  'Cada comida que sí armas de la lista es una decisión que ya no tienes que pensar dos veces.',
-  'El Hyrox no se corre en la carrera, se corre en cada sesión de piernas que no te saltaste.',
-  '$1,000,000 para 2030 no es un salto — son miles de decisiones pequeñas y aburridas.',
-  'Ir sin ganas y hacerlo de todos modos es la definición real de disciplina.',
-  'Menos deuda cara este mes que el mes pasado ya es ganar.',
-  'El jaque mate del ajedrez y el plan de negocio se ganan igual: pensando 3 jugadas adelante.',
-  'Tu yo de dentro de 4 años ya te está agradeciendo lo que hagas hoy.',
-  'No se trata de tener tiempo — se trata de que esto sí importe lo suficiente.',
-  'Cada kilo de más que baja de la panza es un kilo que ya no cargas en cada sentadilla.',
-  'La cuenta de banco y el cuerpo se construyen con el mismo principio: superávit sostenido.',
-  'Cada pasajero que subes a Didi es un peso menos que le debes al banco, no un rato perdido.',
-  'El minoxidil no funciona en la dosis de hoy — funciona en las 120 dosis seguidas que no te saltas.',
-  'Nadie te contrata por tu régimen fiscal — te contratan por lo que entregas. Eso ya lo tienes.',
-  'La foto del negocio de tu papá que revisas hoy es el primer ladrillo, no el edificio completo.',
-  'En Bosch y Continental aprendiste a encontrar el bug antes de que reventara en producción — ese mismo ojo sirve para ver el gasto antes de que reviente tu quincena.',
-  'Un lunes con la bolsa GBM revisada a las 9am vale más que cinco lunes indecisos todo el día.',
-  'El ajedrez te enseñó a sacrificar una pieza para ganar la partida — a veces posponer el negocio de tu papá también es eso.',
-  'No es que no tengas tiempo — es que Didi, gym y negocio comparten la misma hora, y eso también es una decisión.',
-  'Cocinar una sola vez para cenar y llevar mañana no es flojera — es la misma disciplina que aplicas revisando código.',
-  'El testing automotriz te enseñó que un sistema sin pruebas repetidas falla en el peor momento — tu rutina diaria es exactamente esa prueba repetida.',
-  'Cada vez que apagas la pantalla a las 23:55 en vez de scrollear, le ganas una hora de sueño a la versión cansada de ti.',
-  'Cinco minutos de diario hoy son la única prueba real de que la semana no se te fue en automático.',
-  'Tu miedo real no es fracasar — es quedarte estancado. Cada bloque de tu rutina de hoy es un voto en contra de eso.',
-  'El BYD se paga solo con el mínimo, pero Banamex y BBVA se pagan porque tú decides pagarlos primero.',
-  'No necesitas motivación para lavarte la cara — necesitas el mismo hábito aburrido, todos los días, sin negociar.',
-  'Elegir 1 sola tarea importante mañana en vez de diez es lo que separa un plan de una lista de deseos.',
-  'El Cupra Formentor no se compra con ganas — se compra con la deuda cara en $0 primero.',
-  'Cada peso que metes a inversión el lunes es un peso que ya no puede gastarse por accidente entre semana.',
-  'El mismo Adán que aprendió alemán A2 sin prisa puede aprender a vender sin prisa también.',
-  'No subestimes 40 minutos de Didi a Buenavista — es dinero real hoy, mientras el negocio propio todavía no lo es.',
-  'Ponerle atención real a las fotos del negocio de tu papá hoy vale más que una llamada apurada el mes que entra.',
-  'El cuerpo que quieres para el Hyrox se construye en las series que haces cansado después de un día completo de trabajo, no en las que haces descansado.',
+  // Disciplina general
+  'No necesitas sentir ganas. Solo necesitas seguir apareciendo, tengas ganas o no.',
+  'La disciplina no es motivación. Es hacerlo aunque no tengas motivación.',
+  'Cada día que cumples tu rutina completa, te demuestras que sí puedes confiar en ti.',
+  'No se trata de tener un día perfecto. Se trata de no fallar dos días seguidos.',
+  'Lo aburrido y repetido es lo que en realidad construye resultados grandes.',
+  'Hoy no necesitas un cambio enorme. Necesitas hacer bien lo de siempre.',
+  'Tu palabra vale más cada vez que cumples lo que te prometiste a ti mismo.',
+  'El progreso real no se ve en un día. Se ve cuando volteas a ver el mes completo.',
+  'No compites contra nadie más. Compites contra el Adán de ayer.',
+  'Empieza aunque no tengas ganas. Las ganas llegan después de empezar, no antes.',
+  'Hacerlo mal pero hacerlo es mejor que esperar a hacerlo perfecto.',
+  'Cumplir lo pequeño de hoy es lo que te da permiso de creerte lo grande de mañana.',
+  'No necesitas motivación todos los días. Necesitas el hábito ya armado para los días sin motivación.',
+  // Gym / cuerpo
+  'Tu cuerpo cambia en semanas de entrenar, no en un solo entrenamiento.',
+  'Cada serie que haces cansado, después de un día completo de trabajo, cuenta doble.',
+  'No necesitas verte diferente hoy en el espejo. Necesitas entrenar hoy también.',
+  'Subir un poco más de peso esta semana que la pasada — así se ve el progreso real.',
+  'Cada pausa activa de hoy es una espalda que no te va a doler a los 40.',
+  'El cuerpo que quieres para el Hyrox se construye hoy, en el entrenamiento que no te saltas.',
+  'Bajar la panza no pasa en un día de dieta. Pasa en semanas de comer bien, sin excepción.',
+  'Cada vaso de agua, cada serie, cada comida — nada se ve en una semana, pero todo se ve en un año.',
+  'Dormir tus horas completas no es un lujo. Es el único suplemento gratis que sí funciona.',
+  'Nadar los miércoles no es solo cardio — es un día menos de desgastar tus rodillas y tu espalda.',
+  'Cada vez que eliges entrenar cansado en vez de cancelar, ese es el entrenamiento que más cuenta.',
+  'Tu cuerpo no necesita un mes perfecto. Necesita que no falles dos entrenamientos seguidos.',
+  // Finanzas / deuda
+  'Cada peso que le pagas a Banamex y BBVA es un peso que ya no te va a cobrar intereses después.',
+  'El fondo de emergencia no es para gastarlo. Es para poder dormir tranquilo si algo sale mal.',
+  'Menos deuda cara este mes que el mes pasado ya es una victoria real.',
+  'El Cupra Formentor no se compra con ganas. Se compra primero dejando la deuda cara en $0.',
+  'Cada peso que metes a tu inversión el lunes es un peso que ya no puedes gastar sin querer entre semana.',
+  'Tu cuenta en números rojos no te define. Lo que hagas la próxima semana con ella sí.',
+  'No necesitas ganar más todavía. Primero necesitas dejar de perder dinero en cosas evitables.',
+  '$1,000,000 para 2030 no es un salto. Son miles de decisiones pequeñas, repetidas sin fallar.',
+  'El BYD se paga solo con el pago mínimo. Pero tú decides pagar primero lo que sí te cobra intereses.',
+  'Revisar tu inversión en GBM un lunes en la mañana vale más que cinco lunes dudando todo el día.',
+  'Revisar tus gastos con honestidad hoy es más valioso que prometerte ahorrar mañana.',
+  'Cada MSI que no aceptas hoy es una deuda futura que ya no vas a tener que pagar.',
+  'El dinero que no gastas en algo innecesario hoy ya está trabajando para ti sin que hagas nada más.',
+  // Negocio / trabajo extra
+  'Publica la versión imperfecta hoy. La versión perfecta nunca sale.',
+  'Una hora real dedicada al negocio de tu papá vale más que diez veces decir "algún día lo hago".',
+  'Facturar por Didi no te hace menos ingeniero. Te hace alguien que no espera permiso para generar ingresos.',
+  'Publicar tu plantilla en una sola comunidad de GBM ya es más de lo que hizo el 90% de la gente que solo lo piensa.',
+  'El negocio no necesita que tengas todo resuelto. Necesita que des el siguiente paso pequeño.',
+  'No es el negocio de tu papá, ni la plantilla, ni el régimen fiscal por separado — es hacer cada cosa completa, no a medias, lo que suma.',
+  'Construir en las noches después de Didi no es tu plan B. Es tu plan, hasta que ya no lo necesites.',
+  'Cada mensaje que no mandas hoy porque elegiste enfocarte en el negocio también es una decisión de negocio.',
+  'No compares tu quincena 1 en el negocio con la quincena 50 de alguien más.',
+  'Ver con atención real las fotos del negocio de tu papá hoy es el primer ladrillo, no el edificio completo.',
+  'No necesitas la idea perfecta de negocio. Necesitas probar la idea que ya tienes, aunque sea pequeña.',
+  'Cada cliente o venta pequeña de hoy es información real — vale más que un plan perfecto sin probar.',
+  // Trabajo en ALTEN / carrera
+  'Lo que aprendiste probando sistemas en Bosch y Continental —encontrar el error antes de que truene— también sirve para ver el gasto antes de que truene tu quincena.',
+  'Nadie te contrata por tu régimen fiscal. Te contratan por lo que sabes hacer. Eso ya lo tienes.',
   'Cada consulta de SQL que practicas hoy es una habilidad que nadie te puede quitar, ni con crisis ni con despidos.',
-  'La misma paciencia que usas para dejar reposar la avena overnight es la que necesitas para dejar crecer una inversión.',
-  'Dormir 7 horas no es un lujo — es el único suplemento gratis que ya demostró funcionar.',
-  'Cada vez que dices "eso lo hago mañana" y sí lo haces mañana, tu palabra vale un poco más — contigo mismo primero.',
-  'Tu cuenta en -$308,830 no te define — lo que hagas la próxima semana con ella sí.',
-  'El testing en HIL/SIL te enseñó a confiar solo en lo que se probó, no en lo que se supone que funciona — aplica lo mismo a tus propias excusas.',
-  'Publicar la plantilla en una sola comunidad de GBM ya es más que lo que hizo el 90% de la gente que solo lo piensa.',
-  'Cada kilómetro que corres pensando en el Hyrox internacional empieza en México, sudando en un gimnasio cualquiera un martes.',
-  'No compares tu quincena 1 del negocio con la quincena 50 de alguien más.',
-  'El mismo enfoque que usas para depurar un script sirve para depurar tus propios hábitos.',
-  'Tu papá construyó algo con sus manos — ponerle atención real a sus fotos es empezar a construir con las tuyas.',
-  'Cada vaso de agua, cada serie, cada peso a la deuda — nada de esto se ve en una semana, pero todo se ve en un año.',
-  'Facturar por Didi hoy no te hace menos ingeniero — te hace alguien que no espera permiso de nadie para generar ingreso.',
-  'El fondo de emergencia a $10,000 no es la meta — es lo que te permite no volver a endeudarte cuando la vida te sorprenda.',
-  'Nadie ve las 22:45 de meditación en silencio, pero ahí es donde se sostiene todo lo demás.',
-  'Cada mensaje que NO mandas hoy porque decidiste enfocarte en el negocio de tu papá también es una decisión de negocio.',
-  'El peso que subes en el press de banca esta semana un poco más que la pasada — así se ve el progreso real, no en un día.',
-  'La misma calma que necesitas para manejar Didi en tráfico pesado la necesitas para no gastar en MSI cuando algo brilla en una tienda.',
-  'Un ingeniero en mecatrónica sabe algo que muchos emprendedores no: todo sistema se puede desarmar, entender y volver a armar mejor. Tu vida financiera no es diferente.',
-  'Cada vez que eliges leer 30 minutos en vez del celular, entrenas el mismo enfoque profundo que el negocio va a exigirte.',
-  'El torneo de ajedrez al que quieres ir empieza por ganarle hoy la partida al aburrimiento de la rutina.',
-  'No es régimen fiscal, ni el negocio de tu papá, ni la plantilla solos — es la suma de las cosas hechas completas, no a medias, lo que despega.',
-  'Un domingo de revisión honesta vale más que seis días de avanzar sin mirar atrás.',
-  'La versión de ti que corre su primer Hyrox ya empezó a entrenar — es la misma persona leyendo esto ahora.',
-  'Cada vez que escribes "ninguno" en el gasto evitable del día, es una señal real de que el plan está funcionando.',
-  'El BYD, el Cupra, el depa — todo eso espera a que la deuda cara llegue a $0 primero. En ese orden, sin excepción.',
-  'Construir en las noches después de Didi no es el plan B — es exactamente el plan, hasta que el negocio no lo necesite.',
-  'Cada foto del negocio de tu papá que revisas con atención real es una hora que tu yo de 2030 no va a tener que recuperar.'
+  'El mismo cuidado que usas para revisar un sistema en el trabajo, úsalo para revisar tus propios hábitos.',
+  'Ya sabes desarmar, entender y volver a armar un sistema completo. Tu vida financiera funciona igual.',
+  'Trabajar remoto no se pide, se demuestra con resultados. Cada entrega bien hecha te acerca a eso.',
+  'El mismo enfoque que usas para encontrar un error en el código sirve para encontrar el hábito que te está frenando.',
+  'Ser bueno en tu trabajo actual no te encierra ahí. Te da la base para negociar algo mejor.',
+  // Aprendizaje (alemán, entrevista, lectura)
+  'El alemán no se aprende en una sesión. Se aprende en la sesión de hoy, sin saltártela.',
+  'Practicar la entrevista de hoy, aunque no tengas una programada, es lo que hace que no te agarre desprevenido cuando sí la tengas.',
+  'Leer 30 minutos hoy en vez de abrir el celular entrena el mismo enfoque profundo que tu negocio va a necesitar.',
+  'No necesitas el B2 de alemán hoy. Necesitas la sesión de hoy, la de mañana, y la de pasado mañana.',
+  'Cinco minutos de lectura o alemán hoy son la prueba real de que la semana no se te fue en automático.',
+  'Cada palabra nueva de alemán que aprendes hoy es una puerta que se abre un poco más para trabajar afuera.',
+  'No necesitas hablar alemán perfecto. Necesitas hablarlo un poco mejor que ayer.',
+  // Papá / familia
+  'Tu papá construyó algo con sus manos. Ponerle atención real a su negocio es empezar a construir con las tuyas.',
+  'Escuchar a tu papá sin prometer nada todavía también es avanzar — no toda ayuda empieza con un compromiso grande.',
+  'Cada foto del negocio de tu papá que revisas con calma hoy es tiempo que tu yo de 2030 no va a tener que recuperar.',
+  'No tienes que resolver todo el negocio de tu papá en una sola conversación. Solo el siguiente paso.',
+  // Sueño / hábitos nocturnos
+  'Apagar la pantalla a tiempo en vez de seguir scrolleando le regala una hora de sueño a la versión cansada de mañana.',
+  'Los 10 minutos de meditación antes de dormir no se ven, pero son los que sostienen todo lo demás del día.',
+  'Dormir bien hoy es lo que decide si mañana sí tienes la energía para cumplir tu rutina completa.',
+  'Una noche de mal sueño no arruina el plan. Una semana entera de eso sí — cuida que no se repita.',
+  // Metas específicas (Hyrox, ajedrez, viajes, depa)
+  'El Hyrox no se gana el día de la carrera. Se gana en cada entrenamiento que no te saltaste antes.',
+  'El torneo de ajedrez que quieres jugar empieza por ganarle hoy la partida al aburrimiento de la rutina.',
+  'El BYD, el Cupra, el depa — todos esperan a que la deuda cara llegue primero a $0. En ese orden, sin excepción.',
+  'Cada kilómetro que corres pensando en competir afuera del país empieza aquí, sudando un martes cualquiera.',
+  'El depa que quieres no se compra con ganas. Se compra con años de decisiones financieras aburridas, bien hechas.',
+  'Pelear en Tailandia, correr un Hyrox afuera, todo eso se ve lejano — pero se acerca solo con lo que entrenas hoy.',
+  'Un viaje grande no se paga con ganas. Se paga con meses de no gastar en lo que no importa.',
+  // Cierre / visión largo plazo
+  'Tu yo de dentro de 4 años ya te está agradeciendo lo que decidas hacer hoy.',
+  'No se trata de tener tiempo de sobra. Se trata de que esto sí te importe lo suficiente como para hacerle espacio.',
+  'El miedo real no es fracasar. Es quedarte igual. Cada tarea de tu rutina de hoy es un voto en contra de quedarte igual.',
+  'Un domingo de revisar tu semana con honestidad vale más que seis días de avanzar sin voltear a ver atrás.',
+  'La versión de ti que ya logró la meta empezó exactamente donde estás ahora — haciendo lo de hoy.',
+  'Lo que decidiste hace un año ya se nota en quién eres hoy. Lo que decidas hoy se va a notar en un año.',
+  'No necesitas saber todo el camino. Necesitas dar el paso de hoy con lo que ya sabes.'
 ];
 function diaDelAnio(){const n=new Date();const ini=new Date(n.getFullYear(),0,0);return Math.floor((n-ini)/86400000);}
 
@@ -1251,15 +1485,7 @@ function renderDia(){
   document.getElementById('diaFecha').textContent=new Date().toLocaleDateString('es-MX',{weekday:'long',day:'numeric',month:'long'});
   document.getElementById('diaAhora').textContent=actual?(actual.hora+' — '+actual.txt):(tareasHoy.length?'Aún no empieza tu rutina de hoy':'Sin bloques configurados para hoy');
   updateMarkDoneBtn(actual);
-  if(siguiente){
-    const[sh,sm]=siguiente.hora.split(':').map(Number);
-    const dest=new Date();dest.setHours(sh,sm,0,0);
-    const diffMin=Math.max(0,Math.round((dest-new Date())/60000));
-    const faltan=diffMin>=60?Math.floor(diffMin/60)+'h '+(diffMin%60)+'m':diffMin+'m';
-    document.getElementById('diaSiguiente').textContent=siguiente.hora+' — '+siguiente.txt+' (en '+faltan+')';
-  } else {
-    document.getElementById('diaSiguiente').textContent=tareasHoy.length?'Ya terminaste tu rutina de hoy 🎉':'—';
-  }
+  renderEventosMes();
 
   const contables=tareasHoy.filter(t=>!t.fijo).flatMap(leafItems); // el bloque de ALTEN no lleva checkbox; las agrupadas cuentan por subtarea
   const doneCount=contables.filter(it=>doneHoy.includes(it.id)).length;
@@ -1346,36 +1572,63 @@ function renderHero(){
 
   // ── Tira de 7 días: qué rutina de gym tocaba/se hizo. Sin "calorías de hoy" (asume
   //    registro diario que Adán no hace) y sin ❌ en días pasados sin sesión logueada:
-  //    no registrar no es lo mismo que no haber ido, así que no se marca como fallo. ──
+  //    no registrar no es lo mismo que no haber ido, así que no se marca como fallo.
+  //    2026-08-07: se reemplazó el emoji de tipo de ejercicio por una foto real (Adán:
+  //    "sé que cada día hago diferentes ejercicios, ponme imágenes en vez de emojis") — el
+  //    emoji de ESTADO (✅/⏳/😴/🏋️) se conserva, ahora como badge chico sobre la foto. ──
   document.getElementById('heroWeekStrip').innerHTML=semana.map((d,dow)=>{
     const esHoy=d===hoyStr, esFuturo=d>hoyStr, esPasado=d<hoyStr;
     const sesion=(D.gym.sesiones||[]).find(s=>s.fecha===d);
     const rutinaDia=gymRutina[dow];
-    let gymIco='—', gymLbl='', lblCls='';
-    if(sesion){ gymIco='✅'; gymLbl=sesion.nombre||'Entrenado'; }
-    else if(rutinaDia?.tipo==='descanso'){ gymIco='😴'; gymLbl='Descanso'; }
+    let badge='—', gymLbl='', lblCls='';
+    if(sesion){ badge='✅'; gymLbl=sesion.nombre||'Entrenado'; }
+    else if(rutinaDia?.tipo==='descanso'){ badge='😴'; gymLbl='Descanso'; }
     else if(rutinaDia?.nombre){
-      gymIco=(esFuturo||esHoy)?'⏳':'🏋️';
+      badge=(esFuturo||esHoy)?'⏳':'🏋️';
       gymLbl=rutinaDia.nombre;
       if(esPasado) lblCls='pend'; // pasado y sin sesión logueada: neutro, no se asume que falló
     }
-    return `<div class="ws-day ${esHoy?'today':''}">
+    const foto=TIPO_FOTO[rutinaDia?.tipo]||TIPO_FOTO.descanso;
+    const sel=heroGymDiaSel===dow?' sel':'';
+    return `<div class="ws-day ${esHoy?'today':''}${sel}" onclick="verHeroGymDia(${dow})" title="Ver ejercicios de ${DIAS_LARGO[dow]}">
       <div class="ws-dname">${DIAS_CORTOS[dow]}${esHoy?' •':''}</div>
       <div class="ws-ddate">${parseInt(d.split('-')[2])}/${parseInt(d.split('-')[1])}</div>
-      <div class="ws-gym-ico">${gymIco}</div>
-      <div class="ws-gym-lbl ${lblCls}">${gymLbl}</div>
+      <div class="ws-gym-photo" style="background-image:url('${foto}')">
+        <div class="ws-gym-badge">${badge}</div>
+        <div class="ws-gym-lbl ${lblCls}">${gymLbl}</div>
+      </div>
     </div>`;
   }).join('');
 
-  // ── Panel 1: Gym — qué toca hoy, con cada ejercicio explicado (series×reps + técnica) ──
-  const rutinaHoy=gymRutina[dowHoy];
-  const yaEntrenoHoy=(D.gym.sesiones||[]).some(s=>s.fecha===hoyStr);
-  const esDescansoHoy=rutinaHoy?.tipo==='descanso';
+  renderHeroGymPanel();
+  renderHeroNutri();
+}
+
+// ── Panel "🏋️ Hoy toca"/"Gym" — qué ejercicios tocan, con cada uno explicado (series×reps +
+// técnica). 2026-08-07: clic en cualquier día de la tira de 7 (arriba) muestra los ejercicios
+// de ESE día en vez de solo "hoy" — antes solo mostraba el día actual, sin forma de ver los
+// demás. `heroGymDiaSel` (null = hoy) se resetea solo al recargar/rotar el slide.
+let heroGymDiaSel=null;
+function verHeroGymDia(dow){
+  heroGymDiaSel=(heroGymDiaSel===dow)?null:dow; // clic de nuevo en el mismo día → vuelve a "hoy"
+  document.querySelectorAll('#heroWeekStrip .ws-day').forEach((el,i)=>el.classList.toggle('sel',heroGymDiaSel===i));
+  renderHeroGymPanel();
+}
+function renderHeroGymPanel(){
+  const el=document.getElementById('heroGymPanel');
+  if(!el)return;
+  const gymRutina=(D.gym.rutina&&Object.keys(D.gym.rutina).length)?D.gym.rutina:GYM_RUTINA_DEFAULT;
+  const dowHoy=new Date().getDay();
+  const dow=heroGymDiaSel!==null?heroGymDiaSel:dowHoy;
+  const esHoy=dow===dowHoy;
+  const rutinaDia=gymRutina[dow];
+  const yaEntreno=esHoy&&(D.gym.sesiones||[]).some(s=>s.fecha===today());
+  const esDescanso=rutinaDia?.tipo==='descanso';
   let gymBody;
-  if(esDescansoHoy){
-    gymBody=`<div class="hp-empty">😴 Hoy toca descanso — caminata ligera opcional, sin gimnasio.</div>`;
-  } else if(rutinaHoy?.ejercicios?.length){
-    gymBody=`<div class="hp-ex-scroll">${rutinaHoy.ejercicios.map(ej=>{
+  if(esDescanso){
+    gymBody=`<div class="hp-empty">😴 ${esHoy?'Hoy toca':'Ese día toca'} descanso — caminata ligera opcional, sin gimnasio.</div>`;
+  } else if(rutinaDia?.ejercicios?.length){
+    gymBody=`<div class="hp-ex-scroll">${rutinaDia.ejercicios.map(ej=>{
       const info=EJ_LOOKUP[ej.id];
       const nombre=info?.nombre||'Ejercicio';
       const sr=ej.series+'×'+ej.reps+(ej.unidad?' '+ej.unidad:'');
@@ -1385,37 +1638,43 @@ function renderHero(){
       </div>`;
     }).join('')}</div>`;
   } else {
-    gymBody='<div class="hp-empty">Sin rutina configurada para hoy.</div>';
+    gymBody=`<div class="hp-empty">Sin rutina configurada ${esHoy?'para hoy':'ese día'}.</div>`;
   }
-  document.getElementById('heroGymPanel').innerHTML=`
+  const titulo=esHoy?(yaEntreno?'✅ Hoy hiciste':'🏋️ Hoy toca'):`🏋️ ${DIAS_LARGO[dow]}`;
+  el.innerHTML=`
     <div class="hp-title">
-      <span>${yaEntrenoHoy?'✅ Hoy hiciste':'🏋️ Hoy toca'}: ${rutinaHoy?.nombre||'—'}</span>
+      <span>${titulo}: ${rutinaDia?.nombre||'—'}</span>
       <a href="../CuidadoPersonal/ejercicio.html" class="hp-link">Ver en Ejercicio →</a>
     </div>
     ${gymBody}
   `;
+}
 
-  // ── Panel 2: Ideas de comida — 1 desayuno + 1 cena del recetario (rota por día, no
-  //    "lo que comiste hoy" porque Adán no registra diario) ──
+// ── Panel "🍽️ Ideas para hoy" — 1 desayuno + 1 cena del recetario (rota por día, no
+//    "lo que comiste hoy" porque Adán no registra diario), en subtabs (mismo patrón que
+//    .mes-tab/.lc-tab) — solo nombre + ingredientes, sin macros ni pasos de preparación.
+let nutriTabSel='desayuno';
+function renderHeroNutri(){
+  const el=document.getElementById('heroNutriPanel');
+  if(!el)return;
+  const diaIdx=diaDelAnio();
   const desayuno=RECETAS_MINI.desayuno[diaIdx%RECETAS_MINI.desayuno.length];
   const cena=RECETAS_MINI.cena[diaIdx%RECETAS_MINI.cena.length];
-  document.getElementById('heroNutriPanel').innerHTML=`
+  const r=nutriTabSel==='cena'?cena:desayuno;
+  el.innerHTML=`
     <div class="hp-title">
       <span>🍽️ Ideas para hoy</span>
       <a href="../CuidadoPersonal/comida.html" class="hp-link">Ver recetario →</a>
     </div>
-    <div class="hp-meal">
-      <div class="hp-meal-lbl">🌅 Desayuno · ${desayuno.tiempo}</div>
-      <div class="hp-meal-name">${desayuno.nombre}</div>
-      <div class="hp-meal-macro">${desayuno.cal} kcal · ${desayuno.prot}g proteína</div>
+    <div style="display:flex;gap:6px;margin:8px 0 10px">
+      <button class="mes-tab${nutriTabSel==='desayuno'?' active':''}" onclick="verNutriTab('desayuno')">🌅 Desayuno</button>
+      <button class="mes-tab${nutriTabSel==='cena'?' active':''}" onclick="verNutriTab('cena')">🌙 Cena</button>
     </div>
-    <div class="hp-meal">
-      <div class="hp-meal-lbl">🌙 Cena · ${cena.tiempo}</div>
-      <div class="hp-meal-name">${cena.nombre}</div>
-      <div class="hp-meal-macro">${cena.cal} kcal · ${cena.prot}g proteína</div>
-    </div>
+    <div class="hp-meal-name" style="margin-bottom:6px">${r.nombre}</div>
+    <div style="display:flex;flex-direction:column">${r.ing.map(i=>`<div class="ds-row"><span class="ds-txt" style="white-space:normal">${i}</span></div>`).join('')}</div>
   `;
 }
+function verNutriTab(tab){ nutriTabSel=tab; renderHeroNutri(); }
 
 function renderCoach(){
   const ph=activePhase();
@@ -1516,11 +1775,6 @@ const APRENDIZAJE={
 const PRIORIDAD_N = 4; // cuántas prioridades mostrar en el Dashboard (las N más bajas) — el resto sigue completo en Coach → Aprendizaje
 let chSkills=null;
 function renderSkills(){
-  const ovr=calcOVR(), lv=skLevel(ovr);
-  document.getElementById('skillOvr').textContent=ovr;
-  document.getElementById('skillOvrLabel').textContent=lv.l;
-  document.getElementById('skillOvrLabel').style.color=lv.c;
-
   // Top N prioridades reales, siempre visibles (nada de clics — este slide es pasivo, rota
   // solo y se ve de reojo mientras se trabaja), cada una en una tarjeta grande y detallada.
   const priority=Object.keys(APRENDIZAJE).map(id=>SK.find(s=>s.id===id)).filter(Boolean).sort((a,b)=>a.val-b.val).slice(0,PRIORIDAD_N);
@@ -1533,8 +1787,10 @@ function renderSkills(){
           <div class="sc-name">${s.name}</div>
           <div class="sc-val" style="color:${l.c}">${s.val}</div>
         </div>
+        <div class="sc-w">Ponderación en el OVR: ×${s.w}</div>
         <div class="sc-primer">🎯 <b>Esta semana:</b> ${a.primer}</div>
         <div class="sc-res">📚 <b>${a.recursos[0].n}</b> · ${a.recursos[1].n}</div>
+        <a class="sc-link" href="../Coach/Coach_v2.html?skill=${s.id}#aprendizaje">✏️ Ajustar ${s.name} en Coach →</a>
       </div>
     </div>`;
   }).join('');
@@ -1554,7 +1810,7 @@ function renderQuickApps(){
   const t=today();
   const apps=[
     {ico:'🪙',n:'Coach',href:'../Coach/Coach_v2.html',stat:activePhase().tag},
-    {ico:'💰',n:'Finanzas',href:'../Finanzas/Finanzas.html',stat:hasFinData()?money(patrimonioNeto()):'',fin:true},
+    {ico:'💰',n:'Finanzas',href:'../Finanzas/Finanzas.html',stat:''},
     {ico:'🧴',n:'Skincare',href:'../CuidadoPersonal/cuidadopersonal.html?tab=skincare',stat:''},
     {ico:'🥦',n:'Salud',href:'../CuidadoPersonal/cuidadopersonal.html?tab=salud',
      stat:(()=>{const c=(D.sal.alimentos||[]).filter(a=>a.fecha===t).reduce((s,a)=>s+(a.cal||0),0);return c?fmt(c)+' kcal':'';})()},
@@ -1578,13 +1834,109 @@ function renderQuickApps(){
 // pueden envolver a más de una fila) — el .slides fijo de arriba debe
 // empezar justo debajo, si no la barra tapa el inicio del slide activo.
 function syncSlidesTop(){
-  const bar=document.getElementById('qaBar'), slides=document.querySelector('.slides'), hud=document.querySelector('.hud');
+  const bar=document.getElementById('qaBar'), slides=document.querySelector('.slides');
   if(bar&&slides) slides.style.top=bar.offsetHeight+'px';
-  if(hud) document.documentElement.style.setProperty('--hud-h',hud.offsetHeight+'px');
 }
 window.addEventListener('resize',syncSlidesTop);
 
 // ── MIS METAS — progreso real (Finanzas) + bucket list (Coach → Metas) ──────
+// Detalle in-page (2026-08-07) — pedido explícito: "no crees otro html", cada meta abre aquí mismo
+// una "subpágina" con foto motivadora + plan paso a paso, usando el contexto real de Adán (Fases del
+// Plan Maestro, deudas reales, negocio de su papá, rutina de gym, alemán, etc. — ver PHASES arriba).
+const META_DETALLE={
+  ajedrez:{titulo:'Torneo de ajedrez',frase:'No necesitas ser el mejor del torneo. Necesitas inscribirte al primero.',pasos:[
+    'Practica 15-20 minutos diarios de puzzles tácticos en Lichess o Chess.com — puedes usar el bloque de tiempo libre que ya tienes antes de dormir (23:10, justo después de la meditación).',
+    'Revisa tus partidas perdidas como revisas un sistema en el trabajo: encuentra el punto exacto donde se rompió el plan, no te quedes solo con "perdí".',
+    'Busca un club de ajedrez presencial en CDMX (por ejemplo en Parque México o Parque España) para jugar partidas reales contra otras personas, no solo contra la computadora.',
+    'Inscríbete a un torneo rápido o amateur como primera meta concreta — no esperes a "estar listo", el primer torneo es para agarrar experiencia, no para ganar.',
+    'Ponle fecha: elige un torneo específico dentro de los próximos 2-3 meses y anótalo, igual que haces con tus otras metas.'
+  ]},
+  hyrox:{titulo:'Primer Hyrox',frase:'Tu cuerpo ya está construyendo la base — el Hyrox se corre con lo que entrenas hoy.',pasos:[
+    'Tu rutina ya tiene la base: fuerza en brazos y piernas 2 veces por semana, natación los miércoles (45 min) y cardio los sábados (elíptica 25 min) — el Hyrox combina exactamente fuerza + resistencia, no partes de cero.',
+    'Agrega intervalos de carrera (por ejemplo 6-8 repeticiones de 400 metros) al bloque de cardio del sábado, empezando 8-10 semanas antes de la carrera — es el esfuerzo que más se parece a las estaciones del Hyrox.',
+    'Busca la próxima fecha de un evento Hyrox en México (CDMX o Guadalajara) e inscríbete con al menos 3 meses de anticipación — la fecha límite es lo que va a ordenar tu entrenamiento.',
+    'Practica los movimientos funcionales que no están en tu rutina actual (empujar/jalar un peso, cargar peso caminando) — puedes simularlos en Fitsi con el equipo que ya tienes disponible.',
+    'Las últimas 2 semanas antes de la carrera, baja el peso en brazos/piernas y prioriza el descanso — llegar fresco importa más que un último entrenamiento fuerte.'
+  ]},
+  remoto:{titulo:'Trabajar remoto',frase:'Trabajar remoto no se pide — se construye con evidencia de lo que ya sabes hacer.',pasos:[
+    'Tu base ya existe: experiencia real de testing automotriz en Bosch y Continental, más SQL — son habilidades que sí se piden en trabajos remotos de ingeniería y datos. Documéntalas bien en tu perfil.',
+    'El plan financiero ya tiene un paso pensado para esto: cerrar tu primer contrato freelance (Opción 2 del negocio) es la forma más directa de probar que puedes generar ingreso fuera de un horario de oficina fijo.',
+    'Actualiza tu LinkedIn y CV enfocados en resultados medibles de tu trabajo (errores encontrados antes de producción, sistemas probados), no solo en tareas — es lo primero que revisa un reclutador remoto.',
+    'Aplica a 2-3 vacantes remotas por semana en empresas automotrices o de ingeniería que sí contratan remoto, aunque no te sientas 100% listo — practicar entrevistas es parte del proceso (usa tu slide de Entrevista del día).',
+    'Negocia primero con ALTEN: pregunta directamente si existe la opción de días remotos — a veces la ruta más rápida es la que ya tienes enfrente, no la que hay que construir desde cero.'
+  ]},
+  byd:{titulo:'Liquidar el BYD Dolphin Mini',frase:'El orden ya está definido: primero la deuda que sí te cobra intereses, después el coche.',pasos:[
+    'El plan ya tiene un orden fijo: 1) fondo de emergencia a $10,000, 2) Banamex en $0, 3) BBVA en $0 — el BYD se queda en pago mínimo mientras tanto, porque no es la deuda que más te cuesta en intereses.',
+    'En cuanto BBVA llegue a $0 (cierre de la Fase 2, para diciembre de 2028 según el plan), todo el pago que le dabas a esas dos tarjetas se redirige completo al BYD — ahí es cuando se acelera de verdad.',
+    'Antes de eso, cualquier ingreso extra de Didi o del negocio que no esté ya comprometido puede ir como abono a capital del BYD, no solo a las tarjetas — pregunta si tu crédito permite pagos extraordinarios sin penalización.',
+    'Revisa el saldo del BYD en Finanzas cada mes junto con tus otras deudas — verlo bajar, aunque sea lento al principio, es lo que sostiene la disciplina de seguir el orden.'
+  ]},
+  cupra:{titulo:'Cupra Formentor',frase:'El Cupra es el premio, no el punto de partida — llega después de la deuda, no antes.',pasos:[
+    'Regla no negociable del plan: nada de MSI ni crédito nuevo para el Cupra hasta que la deuda cara (Banamex + BBVA) esté en $0 — ya lo tienes clarísimo en tus propias frases del Dashboard.',
+    'Una vez liquidado el BYD, en vez de dejar ese pago mensual libre para gastarlo, redirígelo a un fondo de ahorro específico para el Cupra — ya estás acostumbrado a ese monto, solo cambia de destino.',
+    'Apunta a comprarlo con el menor financiamiento posible (idealmente de contado o con un enganche grande) una vez tu patrimonio esté cerca de la meta de $1,000,000 — no antes, aunque el ingreso del negocio ya se sienta cómodo.',
+    'Trátalo como la recompensa de la Fase 3 del plan, no como un gasto de la Fase 0 o 1 — es el mismo orden que ya definiste: deuda cara, luego BYD, luego esto.'
+  ]},
+  empresa:{titulo:'Empresa ya creada',frase:'No empieza con una empresa formal — empieza con la primera opción que sí muestre tracción.',pasos:[
+    'Fase 0 ya está en marcha: validar en pequeño la plantilla de Finanzas para comunidades de GBM y ponerle atención real al negocio de tu papá, sin comprometer capital grande todavía.',
+    'Fase 1 es cuando debe aparecer el primer ingreso real: cerrar tu primer contrato freelance (Opción 2) o las primeras ventas o mentorías cobradas — ahí es donde sabes cuál opción tiene tracción de verdad.',
+    'Fase 2 es doblar la apuesta: en vez de seguir probando varias opciones a la vez, te concentras en la que ya mostró ingreso recurrente, y ahí entra la Opción 4 (CodeReview productizado), que sí necesita algo de capital — capital que ya tendrás disponible tras liquidar Banamex y BBVA.',
+    'Formalizar la empresa (RFC de persona moral, facturación, tal vez tu primer colaborador) tiene sentido hasta que el ingreso sea consistente mes con mes, no antes — formalizar antes de tiempo solo agrega gastos fijos que no necesitas todavía.',
+    'Usa tu experiencia real de testing en Bosch y Continental como argumento de venta: pocos emprendedores saben "probar antes de confiar" tan bien como tú ya sabes hacerlo en ingeniería.'
+  ]},
+  depa:{titulo:'Depa en la zona que quieras',frase:'Un depa no se compra con ganas — se compra con historial financiero limpio y patrimonio real.',pasos:[
+    'Pagar Banamex y BBVA a tiempo, en el orden que ya tienes en el plan, no solo baja tu deuda — construye el historial crediticio limpio que un banco revisa antes de darte una hipoteca.',
+    'El fondo de emergencia a $10,000 y las inversiones que vas construyendo (GBM, CETES) son la base del enganche — entre más patrimonio acumules camino a $1,000,000, menos hipoteca vas a necesitar.',
+    'Una vez la deuda cara esté en $0 (fin de la Fase 2), separa un porcentaje fijo del ingreso del negocio específicamente para el enganche del depa, igual que harías con el fondo del Cupra.',
+    'Investiga con tiempo 2-3 zonas reales donde te gustaría vivir y sus precios actuales — tener el número exacto, no una idea vaga, hace que la meta se sienta alcanzable y te dice cuánto enganche necesitas de verdad.',
+    'No mezcles esta meta con la del Cupra al mismo tiempo — decide cuál va primero según lo que más te importe cuando llegue el momento, el plan ya prioriza en orden.'
+  ]},
+  tailandia:{titulo:'Pelear en Tailandia',frase:'La pelea en Tailandia empieza en un gimnasio de box en CDMX, no en el avión.',pasos:[
+    'Ya tienes el boxeo identificado como deporte a explorar en tu propia sección de Deportes — empieza ahí: 2-3 clases por semana en un gimnasio de box o Muay Thai en CDMX para construir la técnica base.',
+    'Tu condición física ya tiene buena base (fuerza 4 días, natación, cardio) — súmale trabajo de resistencia específico de box (rounds de 3 minutos, sparring ligero) los últimos meses antes del viaje.',
+    'Investiga campamentos de Muay Thai en Tailandia (Phuket o Chiang Mai son los más conocidos y reciben extranjeros todo el año) y su costo real de estancia + entrenamiento, no solo el vuelo.',
+    'Planea este viaje para después de que la deuda cara esté resuelta — se disfruta mucho más una meta así sin estar pagándola en intereses después.',
+    'No necesita ser una pelea profesional para cumplir la meta — muchos campamentos organizan peleas amistosas para extranjeros al final de la estancia, eso ya cuenta.'
+  ]},
+  hongkong:{titulo:'Rascacielos en Hong Kong',frase:'No necesitas construirlo — necesitas ir a pararte frente a él.',pasos:[
+    'Como ingeniero en mecatrónica, ver de cerca el skyline de Hong Kong (uno de los más densos e impresionantes del mundo en ingeniería estructural) conecta directo con lo que ya te apasiona de sistemas complejos.',
+    'Trátalo como un viaje de la Fase 3 del plan: una vez el patrimonio esté cerca de $1,000,000 y la deuda cara resuelta, es un premio que se paga de contado, sin financiarlo.',
+    'Aprovecha para investigar si ALTEN u otra empresa automotriz o tecnológica tiene operación en Asia — si algún día te interesa una asignación internacional, conocer la zona primero como turista te da información real.',
+    'Combínalo con otra meta de la lista si el presupuesto lo permite — un viaje grande a Asia rinde más si cumple dos metas a la vez que uno solo.'
+  ]},
+  spacex:{titulo:'Lanzamiento de SpaceX',frase:'De todas las metas de la lista, esta es de las que menos tiene que esperar.',pasos:[
+    'Ver un lanzamiento de SpaceX en vivo (Starbase en Boca Chica o Cabo Cañaveral) es de las metas más accesibles: no requiere que tu patrimonio esté cerca de $1,000,000, solo un viaje bien planeado.',
+    'Puedes ubicarla en la Fase 1 o 2 del plan, no hasta el final — en cuanto tengas el primer ingreso extra estable (freelance, mentorías), ya es un viaje que puedes pagar de contado sin afectar el plan de deudas.',
+    'Revisa el calendario público de lanzamientos con 2-3 meses de anticipación y compra vuelos y hospedaje con tiempo — los lanzamientos a veces se posponen, así que da margen de 2-3 días en el viaje.',
+    'Como ingeniero, aprovecha el viaje para visitar también el centro de visitantes o museo espacial de la zona — le suma contexto técnico real a la experiencia, no es solo turismo.',
+    'Es una meta perfecta para usar como premio pequeño cuando cierres una fase del plan (por ejemplo al liquidar Banamex) — te motiva sin descarrilar las metas grandes.'
+  ]},
+  maestria:{titulo:'Maestría en Alemania',frase:'La maestría no se canceló — se pausó a propósito, con fecha de regreso ya definida.',pasos:[
+    'La decisión ya está tomada y es consciente: se pausaron las aportaciones desde julio de 2026 por un año, y los $53,740 ya ahorrados se quedan intactos — no es dinero perdido, es dinero esperando la fecha correcta.',
+    'La nueva meta es octubre de 2028: sigue con tu práctica diaria de alemán (ya la tienes integrada en tu rutina, slide "Alemán del día") para llegar a ese momento con el nivel que de verdad pida el programa, no empezando de cero.',
+    'En la Fase 3 del plan (2029) toca revisar la decisión con datos reales del negocio: retomarla en octubre de 2028 si el ingreso ya la puede sostener, o posponerla de nuevo, pero de forma consciente, no por default.',
+    'Investiga con tiempo 2-3 programas de maestría en Alemania relacionados con mecatrónica o ingeniería automotriz y sus requisitos reales de idioma (muchos piden B2, algunos aceptan B1 con curso puente) — te dice a qué nivel de alemán apuntar.',
+    'Revisa el fondo específico de la maestría de vez en cuando en tu slide de Mis Metas — verlo, aunque esté "pausado", es la prueba de que la meta sigue viva, no abandonada.'
+  ]}
+};
+function abrirMetaDetalle(id,img){
+  const info=META_DETALLE[id];
+  if(!info) return;
+  document.getElementById('metaDetailHero').style.backgroundImage=`url('${img}')`;
+  document.getElementById('metaDetailTitle').textContent=info.titulo;
+  document.getElementById('metaDetailFrase').textContent=info.frase;
+  document.getElementById('metaDetailSteps').innerHTML=info.pasos.map((p,i)=>`
+    <div class="meta-detail-step">
+      <div class="meta-detail-step-n">${i+1}</div>
+      <div class="meta-detail-step-txt">${p}</div>
+    </div>`).join('');
+  document.getElementById('metaDetailOverlay').classList.add('open');
+  clearInterval(timer);
+}
+function cerrarMetaDetalle(){
+  document.getElementById('metaDetailOverlay').classList.remove('open');
+  restartTimer();
+}
 function metaDebtInfo(matcher){
   const d=(D.fin.debts||[]).find(matcher);
   return d?{balance:d.balance||0,total:d.total||d.balance||0,found:true}:{balance:0,total:0,found:false};
@@ -1619,41 +1971,43 @@ function renderMetasSlide(){
     </div>`).join('');
 
   const cortoMediano=[
-    {ico:'🏆',t:'Torneo de ajedrez'},
-    {ico:'🏋️',t:'Primer Hyrox'},
-    {ico:'💻',t:'Trabajar remoto'},
-    {ico:'🚙',t:'Cupra Formentor'},
-    {ico:'🚗',t:'Liquidar el BYD'+(carro.found?' · '+money(carro.balance)+' restantes':'')}
+    {id:'ajedrez',ico:'🏆',t:'Torneo de ajedrez',img:'https://images.unsplash.com/photo-1529699211952-734e80c4d42b?w=800&q=80&auto=format&fit=crop'},
+    {id:'hyrox',ico:'🏋️',t:'Primer Hyrox',img:'https://images.unsplash.com/photo-1739283180407-21e27d5c0735?w=800&q=80&auto=format&fit=crop'},
+    {id:'remoto',ico:'💻',t:'Trabajar remoto',img:'https://images.unsplash.com/photo-1586227740560-8cf2732c1531?w=800&q=80&auto=format&fit=crop'},
+    {id:'byd',ico:'🚗',t:'Liquidar el BYD Dolphin Mini'+(carro.found?' · '+money(carro.balance)+' restantes':''),img:'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bb/BYD_DOLPHIN_MINI_%28BRAZIL%29_BYD_SEAGULL.jpg/960px-BYD_DOLPHIN_MINI_%28BRAZIL%29_BYD_SEAGULL.jpg'},
+    {id:'cupra',ico:'🚙',t:'Cupra Formentor',img:'https://images.unsplash.com/photo-1655288808681-17caed2fc987?w=800&q=80&auto=format&fit=crop'}
   ];
   const largoExtras=[
-    {ico:'🏢',t:'Empresa ya creada'},
-    {ico:'🏙️',t:'Depa en la zona que quieras'},
-    {ico:'🥊',t:'Pelear en Tailandia'},
-    {ico:'🌃',t:'Rascacielos en Hong Kong'},
-    {ico:'🚀',t:'Lanzamiento de SpaceX'},
-    {ico:'🎓',t:'Maestría en Alemania'},
-    {ico:'🏋️',t:'Hyrox internacional'}
+    {id:'empresa',ico:'🏢',t:'Empresa ya creada',img:'https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&q=80&auto=format&fit=crop'},
+    {id:'depa',ico:'🏙️',t:'Depa en la zona que quieras',img:'https://images.unsplash.com/photo-1594873604892-b599f847e859?w=800&q=80&auto=format&fit=crop'},
+    {id:'tailandia',ico:'🥊',t:'Pelear en Tailandia',img:'https://images.unsplash.com/photo-1564097147829-44f8c74a8549?w=800&q=80&auto=format&fit=crop'},
+    {id:'hongkong',ico:'🌃',t:'Rascacielos en Hong Kong',img:'https://images.unsplash.com/photo-1620015092538-e33c665fc181?w=800&q=80&auto=format&fit=crop'},
+    {id:'spacex',ico:'🚀',t:'Lanzamiento de SpaceX',img:'https://images.unsplash.com/photo-1541185933-ef5d8ed016c2?w=800&q=80&auto=format&fit=crop'},
+    {id:'maestria',ico:'🎓',t:'Maestría en Alemania',img:'https://images.unsplash.com/photo-1627556704302-624286467c65?w=800&q=80&auto=format&fit=crop'}
   ];
-  const listHtml=arr=>arr.map(i=>`<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid rgba(var(--ov),.06);font-size:clamp(13px,1.1vw,15px)"><span style="font-size:18px">${i.ico}</span>${i.t}</div>`).join('');
+  // Corto/mediano y largo plazo: tarjeta con foto de fondo (motiva más que una fila de texto plano) — ver readme_dashboard.md para el origen de cada URL.
+  // sizeCls='' → tarjeta grande (corto/mediano, columna ancha, 5 ítems); sizeCls='sm' → tarjeta chica (largo plazo, columna angosta, 7 ítems) para que quepan en el mismo espacio ya asignado.
+  // Clic en cualquier tarjeta abre el detalle in-page (abrirMetaDetalle) con el plan personalizado de META_DETALLE — nunca navega a otro archivo.
+  const imgListHtml=(arr,sizeCls)=>`<div class="meta-img-grid${sizeCls?' meta-img-grid-'+sizeCls:''}">${arr.map(i=>`<div class="meta-img-card${sizeCls?' meta-img-card-'+sizeCls:''}" style="background-image:url('${i.img}')" onclick="abrirMetaDetalle('${i.id}','${i.img}')" role="button" tabindex="0"><div class="meta-img-txt${sizeCls?' meta-img-txt-'+sizeCls:''}">${i.ico} ${i.t}</div></div>`).join('')}</div>`;
   document.getElementById('metasListas').innerHTML=`
     <div class="tile">
       <div class="lbl" style="margin-bottom:8px">🚩 Corto & mediano plazo</div>
-      ${listHtml(cortoMediano)}
+      ${imgListHtml(cortoMediano)}
     </div>
     <div class="tile">
       <div class="lbl" style="margin-bottom:8px">🏔️ Largo plazo & bucket list</div>
-      ${listHtml(largoExtras)}
-      <div class="sub" style="margin-top:10px"><a href="../Coach/Coach_v2.html#perfil" style="color:var(--cy);text-decoration:none">Ver detalle completo en Coach → Metas →</a></div>
+      ${imgListHtml(largoExtras,'sm')}
+      <div class="sub" style="margin-top:8px"><a href="../Coach/Coach_v2.html#perfil" style="color:var(--cy);text-decoration:none">Ver detalle completo en Coach → Metas →</a></div>
     </div>`;
 }
 
-const RENDERS=[renderHero,renderDia,renderCoach,renderSkills,renderMetasSlide,renderListaCompras,renderAleman,renderEntrevista];
+const RENDERS=[renderDia,renderHero,renderCoach,renderMetasSlide,renderSkills,renderListaCompras,renderAleman,renderEntrevista];
 const SLIDE_MENU_META=[
-  {ico:'🌟',n:'Hero · JARVIS'},
   {ico:'🕐',n:'Mi Día'},
+  {ico:'🌟',n:'Hero · JARVIS'},
   {ico:'🪙',n:'Coach · Plan Maestro'},
-  {ico:'🧠',n:'Habilidades'},
   {ico:'🎯',n:'Mis Metas'},
+  {ico:'🧠',n:'Habilidades'},
   {ico:'🛒',n:'Lista de Compras'},
   {ico:'🇩🇪',n:'Alemán del día'},
   {ico:'💻',n:'Entrevista del día'},
@@ -1668,12 +2022,12 @@ let AUTO_MS=180000; // 3 minutos por defecto — puede cambiar desde Ajustes
 
 // ── Ajustes propios del Dashboard (clave 'dash-settings', NO compartida con el resto) ──
 function loadSettings(){
-  const s=rawGet('dash-settings',{autoMs:180000,remember:false,lastSlide:1});
+  const s=rawGet('dash-settings',{autoMs:180000,remember:false,lastSlide:0});
   AUTO_MS=s.autoMs;
   return s;
 }
 function saveSettings(patch){
-  const s=rawGet('dash-settings',{autoMs:AUTO_MS,remember:false,lastSlide:1});
+  const s=rawGet('dash-settings',{autoMs:AUTO_MS,remember:false,lastSlide:0});
   const merged={...s,...patch};
   rawSet('dash-settings',merged);
   return merged;
@@ -1689,7 +2043,7 @@ function toggleRemember(){
   const next=!s.remember;
   saveSettings({remember:next,lastSlide:cur});
   document.getElementById('setRemember').classList.toggle('on',next);
-  toast(next?'📍 Vas a abrir donde te quedaste':'🏠 Siempre vas a abrir en Hero');
+  toast(next?'📍 Vas a abrir donde te quedaste':'🏠 Siempre vas a abrir en Mi Día');
 }
 
 function buildDots(){
@@ -1697,6 +2051,13 @@ function buildDots(){
     `<button class="dot-btn" onclick="goTo(${i})" aria-label="Pantalla ${i+1}"></button>`).join('');
 }
 function paintDots(){document.querySelectorAll('.dot-btn').forEach((d,i)=>d.classList.toggle('on',i===cur));}
+// Navegación rápida del HUD (lado izquierdo) — un botón-ícono por pantalla, salto directo sin
+// abrir el menú ☰. Mismos íconos/nombres que SLIDE_MENU_META, para no duplicar esa lista.
+function buildHudNav(){
+  document.getElementById('hudNav').innerHTML=SLIDE_MENU_META.map((it,i)=>
+    `<button class="hud-btn hud-nav-btn" onclick="goTo(${i})" title="${it.n}" aria-label="${it.n}">${it.ico}</button>`).join('');
+}
+function paintHudNav(){document.querySelectorAll('.hud-nav-btn').forEach((b,i)=>b.classList.toggle('on',i===cur));}
 
 function showSlide(i){
   i=Math.min(Math.max(0,i),N-1);
@@ -1704,7 +2065,7 @@ function showSlide(i){
   RENDERS[i]();
   renderQuickApps();
   document.querySelectorAll('.slide').forEach(s=>s.classList.toggle('active',parseInt(s.dataset.i)===i));
-  cur=i; paintDots();
+  cur=i; paintDots(); paintHudNav();
   const s=rawGet('dash-settings',null);
   if(s&&s.remember) saveSettings({lastSlide:i});
   if(document.getElementById('navMenuPanel').classList.contains('open')) renderNavMenu();
@@ -1743,11 +2104,11 @@ function renderNavMenu(){
   const doneCount=contables.filter(it=>doneHoy.includes(it.id)).length;
   const ph=activePhase();
   const stats=[
-    'Tu semana completa',
     contables.length?`${doneCount}/${contables.length} hecho hoy${actual&&!actual.fijo?' · '+actual.txt:''}`:'Sin bloques hoy',
+    'Tu semana completa',
     ph.tag+' — '+ph.title,
-    'OVR '+calcOVR(),
     'Corto, mediano y largo plazo',
+    'OVR '+calcOVR(),
     'Comida, skincare, cabello y suplementos',
     (()=>{const t=alemanTemaHoy();return `${t.nivel} · ${t.de}`;})(),
     (()=>{try{const win=document.getElementById('enFrame').contentWindow;const keys=win.eval('Object.keys(T)');return win.eval('T['+JSON.stringify(keys[diaDelAnio()%keys.length])+'].title');}catch(e){return '229 temas técnicos';}})(),
@@ -1782,7 +2143,7 @@ function toggleHelp(){
   if(willOpen) p.classList.add('open');
 }
 document.addEventListener('click',e=>{
-  if(!e.target.closest('.float-panel')&&!e.target.closest('.hud-row')) closeAllPanels();
+  if(!e.target.closest('.float-panel')&&!e.target.closest('.hud-side')) closeAllPanels();
 });
 
 // ── Pantalla completa ───────────────────────────────────────────────────────
@@ -1797,6 +2158,7 @@ document.addEventListener('fullscreenchange',()=>{
 
 document.addEventListener('keydown',e=>{
   if(e.target.tagName==='SELECT'||e.target.tagName==='INPUT') return;
+  if(e.key==='Escape'&&document.getElementById('metaDetailOverlay').classList.contains('open')){ cerrarMetaDetalle(); return; }
   if(e.key==='ArrowRight') nextSlide();
   if(e.key==='ArrowLeft') prevSlide();
   if(e.key===' '){e.preventDefault();togglePlay();}
@@ -1842,33 +2204,24 @@ function tickClock(){
   const hd=document.getElementById('heroDate'); if(hd) hd.textContent=n.toLocaleDateString('es-MX',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
   const sy=document.getElementById('hudSync'); if(sy){const s=Math.round((Date.now()-lastSync)/1000);sy.textContent='· sync hace '+(s<60?s+'s':Math.round(s/60)+'m');}
   const dc=document.getElementById('diaClock'); if(dc) dc.textContent=`${hh}:${mm}`;
-  const da=document.getElementById('diaAhora'), ds=document.getElementById('diaSiguiente');
-  if(da||ds){
-    const {tareasHoy,actual,siguiente}=rutinaAhoraSiguiente();
-    if(da) da.textContent=actual?(actual.hora+' — '+actual.txt):(tareasHoy.length?'Aún no empieza tu rutina de hoy':'Sin bloques configurados para hoy');
+  const da=document.getElementById('diaAhora');
+  if(da){
+    const {tareasHoy,actual}=rutinaAhoraSiguiente();
+    da.textContent=actual?(actual.hora+' — '+actual.txt):(tareasHoy.length?'Aún no empieza tu rutina de hoy':'Sin bloques configurados para hoy');
     updateMarkDoneBtn(actual);
-    if(ds){
-      if(siguiente){
-        const[sh,sm]=siguiente.hora.split(':').map(Number);
-        const dest=new Date();dest.setHours(sh,sm,0,0);
-        const diffMin=Math.max(0,Math.round((dest-n)/60000));
-        const faltan=diffMin>=60?Math.floor(diffMin/60)+'h '+(diffMin%60)+'m':diffMin+'m';
-        ds.textContent=siguiente.hora+' — '+siguiente.txt+' (en '+faltan+')';
-      } else {
-        ds.textContent=tareasHoy.length?'Ya terminaste tu rutina de hoy 🎉':'—';
-      }
-    }
   }
 }
 setInterval(tickClock,1000);
 
 // ── Init ─────────────────────────────────────────────────────────────────
 buildDots();
+buildHudNav();
 const _settings=loadSettings();
 fixBanamexIfNeeded();
+fixMiercolesNatacionIfNeeded();
 loadAll();
 tickClock();
-showSlide(_settings.remember&&_settings.lastSlide!=null?_settings.lastSlide:1);
+showSlide(_settings.remember&&_settings.lastSlide!=null?_settings.lastSlide:0);
 restartTimer();
 const themeBtn=document.getElementById('theme-toggle-btn');
 if(themeBtn) themeBtn.textContent=document.documentElement.getAttribute('data-theme')==='dark'?'☀️':'🌙';

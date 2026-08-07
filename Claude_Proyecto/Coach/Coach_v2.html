@@ -3611,7 +3611,15 @@
   const RUTINA_TASKS = [
     // ── Común entre semana (Lun–Vie) — horario real confirmado 2026-08-02 ──
     {id:'wd01', dias:[1,2,3,4,5], hora:'07:00', cat:'salud',    txt:'Despertar sin snooze — celular fuera del cuarto'},
-    {id:'wd02', dias:[1,2,3,4,5], hora:'07:03', cat:'salud',    txt:'Bañarte — los días de lavado (Lun/Jue/Sáb) lava también el cabello, ver Cuidado del Cabello'},
+    {id:'wd02lav', dias:[1,4], hora:'07:03', cat:'salud', txt:'🚿 Bañarte + lavar cabello', subtareas:[
+      {id:'wd02la', txt:'Champú: Darrow Doctar (shampoo con alcatrão/coal tar, anticaspa) — masajea el cuero cabelludo 2-3 min, deja actuar antes de enjuagar', link:{href:'../CuidadoPersonal/cuidadopersonal.html?tab=cabello', label:'✂️ Ver Cuidado del Cabello'}},
+      {id:'wd02lb', txt:'Acondicionador: TRESemmé Keratin Smooth Conditioner — solo de medios a puntas, nunca en la raíz (en cabello fino y graso, ponerlo en la raíz lo aplana y engrasa más rápido)'},
+      {id:'wd02lc', txt:'Aceite en puntas (opcional, con el cabello ya seco): Moroccanoil Treatment Light — 2-3 gotas, solo puntas'},
+    ]},
+    {id:'wd02co', dias:[2,3,5], hora:'07:03', cat:'salud', txt:'🚿 Bañarte + cabello (sin champú hoy)', subtareas:[
+      {id:'wd02ca', txt:'Acondicionador: TRESemmé Keratin Smooth Conditioner — solo de medios a puntas (co-wash, sin champú: hoy no toca el anticaída, eso es Lun/Jue/Sáb — usarlo a diario resecaría el cuero cabelludo)'},
+      {id:'wd02cb', txt:'Aceite en puntas (opcional, con el cabello ya seco): Moroccanoil Treatment Light — 2-3 gotas, solo puntas'},
+    ]},
     {id:'wd0304', dias:[1,2,3,4,5], hora:'07:20', cat:'salud', txt:'🧴 Skincare + 🍂 Minoxidil — AM', subtareas:[
       {id:'wd03a', txt:'Limpiador suave (ej. CeraVe Espuma o Cetaphil) — quita grasa y sudor de la noche sin resecar'},
       {id:'wd03b', txt:'Sérum de niacinamida 10% — controla grasa y afina los poros'},
@@ -3652,17 +3660,18 @@
       {id:'wd20c', txt:'Exhala 4 segundos por la boca'},
       {id:'wd20d', txt:'Sostén sin aire 4 segundos — repite el ciclo (~10 veces en 10 min)'},
     ]},
+    {id:'wd20e', dias:[1,2,3,4,5], hora:'23:10', cat:'descanso', txt:'Tiempo libre / relajación antes de dormir'},
     {id:'wd21', dias:[1,2,3,4,5], hora:'23:55', cat:'salud',    txt:'Apagar pantallas. Dormir — buscas ~7h (medianoche a 7:00am)'},
 
     // ── Bolsa GBM — solo lunes, porque solo inviertes al inicio de semana ──
     {id:'lu-gbm', dias:[1], hora:'09:00', cat:'admin', txt:'💰 Bolsa GBM: revisar portafolio + VOO + USD/MXN e invertir — solo lunes'},
 
-    // ── Lectura (21:45) — cambia cada día, libros ya recomendados en Aprendizaje/Perfil del Rico ──
-    {id:'l1', dias:[1], hora:'21:45', cat:'descanso', txt:'📖 Lectura (30 min): "$100M Offers" — Alex Hormozi'},
-    {id:'l2', dias:[2], hora:'21:45', cat:'descanso', txt:'📖 Lectura (30 min): "Storytelling with Data" — Cole Nussbaumer Knaflic'},
-    {id:'l3', dias:[3], hora:'21:45', cat:'descanso', txt:'📖 Lectura (30 min): "Psicología del Dinero" — Morgan Housel'},
-    {id:'l4', dias:[4], hora:'21:45', cat:'descanso', txt:'📖 Lectura (30 min): "The Millionaire Next Door" — Thomas Stanley'},
-    {id:'l5', dias:[5], hora:'21:45', cat:'descanso', txt:'📖 Lectura (30 min): "Never Split the Difference" — Chris Voss'},
+    // ── Lectura (21:45) — genérica por ahora, sin libro fijo hasta que se compren (sugerencias en Aprendizaje/Perfil del Rico) ──
+    {id:'l1', dias:[1], hora:'21:45', cat:'descanso', txt:'📖 Lectura (30 min)'},
+    {id:'l2', dias:[2], hora:'21:45', cat:'descanso', txt:'📖 Lectura (30 min)'},
+    {id:'l3', dias:[3], hora:'21:45', cat:'descanso', txt:'📖 Lectura (30 min)'},
+    {id:'l4', dias:[4], hora:'21:45', cat:'descanso', txt:'📖 Lectura (30 min)'},
+    {id:'l5', dias:[5], hora:'21:45', cat:'descanso', txt:'📖 Lectura (30 min)'},
 
     // ── Ejercicio (17:40, después de la Didi corta) y bloque de habilidad — cambian cada día ──
     {id:'e1', dias:[1], hora:'17:40', cat:'salud', txt:'🏋️ Ejercicio: Empuje (pecho / hombro / tríceps)', subtareas:[
@@ -3678,12 +3687,7 @@
       {id:'e2c', txt:'Elevación de piernas — 3×15'},
     ]},
     {id:'k2', dias:[2], hora:'19:00', cat:'aprender', txt:'📊 Datos: 30 min de SQL (SQLZoo/Kaggle)'},
-    {id:'e3', dias:[3], hora:'17:40', cat:'salud', txt:'🏋️ Ejercicio: Jalón (espalda / bíceps)', subtareas:[
-      {id:'e3a', txt:'Dominadas o jalón en polea — 4×8'},
-      {id:'e3b', txt:'Remo con barra o mancuerna — 4×10'},
-      {id:'e3c', txt:'Curl con barra — 3×10'},
-      {id:'e3d', txt:'Curl martillo — 3×12'},
-    ]},
+    {id:'e3', dias:[3], hora:'17:40', cat:'salud', txt:'🏊 Ejercicio: Natación — 45 min (alberca Francisco Márquez, Doctores)'},
     {id:'e4', dias:[4], hora:'17:40', cat:'salud', txt:'🏋️ Ejercicio: Cardio / HIIT', subtareas:[
       {id:'e4a', txt:'HIIT: 30 seg esfuerzo máximo / 90 seg suave — 8 rondas (~18 min)'},
       {id:'e4b', txt:'Battle ropes o burpees — 3×30 seg'},
@@ -3707,7 +3711,12 @@
     ]},
     {id:'sa03',  dias:[6], hora:'07:18', cat:'salud', txt:'🍳 Preparar y desayunar tranquilo', link:{href:'../CuidadoPersonal/comida.html?s=desayunos', label:'Ver desayunos'}},
     {id:'sa04',  dias:[6], hora:'07:35', cat:'salud',    txt:'Ejercicio 1h — entreno largo / lo que falte en la semana'},
-    {id:'sa05',  dias:[6], hora:'08:35', cat:'salud',    txt:'Ducha'},
+    {id:'sa0506', dias:[6], hora:'08:35', cat:'salud', txt:'🚿 Ducha + lavar cabello', subtareas:[
+      {id:'sa05a', txt:'Champú: Darrow Doctar (shampoo con alcatrão/coal tar, anticaspa) — masajea el cuero cabelludo 2-3 min, deja actuar antes de enjuagar', link:{href:'../CuidadoPersonal/cuidadopersonal.html?tab=cabello', label:'✂️ Ver Cuidado del Cabello'}},
+      {id:'sa05b', txt:'Acondicionador: TRESemmé Keratin Smooth Conditioner — solo de medios a puntas, nunca en la raíz'},
+      {id:'sa05c', txt:"Mascarilla capilar (1 vez por semana, hazla hoy): L'Oréal Elvive Total Repair 5 — puntas y medios, deja actuar 5-10 min, enjuaga bien"},
+      {id:'sa05d', txt:'Aceite en puntas (opcional, con el cabello ya seco): Moroccanoil Treatment Light — 2-3 gotas, solo puntas'},
+    ]},
     {id:'sa06',  dias:[6], hora:'08:50', cat:'profundo', txt:'🎯 Bloque profundo 4h: prioridad activa del Plan Maestro'},
     {id:'sa07',  dias:[6], hora:'12:50', cat:'salud',    txt:'Almuerzo'},
     {id:'sa08',  dias:[6], hora:'13:20', cat:'aprender', txt:'🤖 IA aplicada — 30 min construyendo (n8n, Cursor, mini-proyecto propio)'},
@@ -3732,6 +3741,10 @@
     ]},
     {id:'do03',  dias:[0], hora:'07:48', cat:'salud', txt:'🍳 Preparar y desayunar tranquilo', link:{href:'../CuidadoPersonal/comida.html?s=desayunos', label:'Ver desayunos'}},
     {id:'do04',  dias:[0], hora:'08:05', cat:'salud',    txt:'Ejercicio: descanso activo — caminata o movilidad 30 min'},
+    {id:'do045', dias:[0], hora:'08:35', cat:'salud', txt:'🚿 Bañarte + cabello (sin champú hoy)', subtareas:[
+      {id:'do045a', txt:'Acondicionador: TRESemmé Keratin Smooth Conditioner — solo de medios a puntas (co-wash, sin champú: hoy no toca el anticaída, eso es Lun/Jue/Sáb — usarlo a diario resecaría el cuero cabelludo)'},
+      {id:'do045b', txt:'Aceite en puntas (opcional, con el cabello ya seco): Moroccanoil Treatment Light — 2-3 gotas, solo puntas'},
+    ]},
     {id:'do05',  dias:[0], hora:'09:00', cat:'descanso', txt:'Tiempo libre / familia'},
     {id:'do06',  dias:[0], hora:'20:00', cat:'admin',    txt:'💰 Finanzas: revisión de presupuesto + planificar semana + revisar inversiones'},
     {id:'do07',  dias:[0], hora:'20:30', cat:'profundo', txt:'🎯 Revisar Plan Maestro: ¿la fase actual sigue en verde? Ajustar si hace falta'},
@@ -3944,7 +3957,7 @@
       {id:'liderazgo', name:'Liderazgo',  full:'Liderazgo & Equipos',      icon:'👑', val:80, w:1.0, cat:'negocios', desc:'Probado en Bosch: supiste dirigir las habilidades de tu equipo para potenciarlo, y te eligieron líder del equipo de México para una asignación de 4 meses en Stuttgart ante otros líderes globales. Es real y ya reconocido más allá de tu equipo inmediato.'},
       {id:'codigo',    name:'Código',     full:'Programación & Software',  icon:'💻', val:60, w:1.2, cat:'tecnico',  desc:'Bueno leyendo y dirigiendo código, débil escribiéndolo desde cero. Tu Mecatrónica de IPN ya te dio base formal de microcontroladores, PLCs y control — no partes de cero técnico, solo de la escritura pura. Con ejemplo o ayuda de IA ejecutas exactamente lo que quieres: eres director de código, no programador puro.'},
       {id:'ia',        name:'IA',         full:'IA & Automatización',      icon:'🤖', val:30, w:1.2, cat:'tecnico',  desc:'Te sientes principiante, pero ya validaste IA generativa para Google, usas Claude Code a diario en producción, y tu carrera incluyó Visión Artificial y Sistemas Neurodifusos — tienes base formal que no te has reconocido. Es tu fortaleza más subestimada.'},
-      {id:'datos',     name:'Datos',      full:'Análisis de Datos',        icon:'📊', val:15, w:1.0, cat:'tecnico',  desc:'Débil. No es tu terreno natural — mejor delegarlo a herramientas/IA que forzarte a dominarlo por gusto.'},
+      {id:'datos',     name:'Datos',      full:'Análisis de Datos',        icon:'📊', val:55, w:1.0, cat:'tecnico',  desc:'Nivel medio — mejor de lo que reflejaba antes (Adán confirmó que este terreno sí lo domina más que el valor viejo). Ajusta el slider de abajo si quieres un número más preciso.'},
       {id:'inversion', name:'Inversión',  full:'Inversión en Mercados',    icon:'📈', val:25, w:1.2, cat:'finanzas', desc:'Principiante real, aprendiendo poco a poco. Ya diste el primer paso (CETES, BTC, acciones) — falta volumen y estructura.'},
       {id:'finanzas',  name:'Finanzas',   full:'Finanzas Personales',      icon:'💰', val:20, w:1.1, cat:'finanzas', desc:'Te excedes en gastos mensuales seguido (deuda ~$366k vs. inversión ~$55k). Es tu debilidad más cara — literalmente, en intereses.'},
       {id:'ingles',    name:'Inglés',     full:'Inglés / Idioma Global',   icon:'🌐', val:80, w:1.1, cat:'personal', desc:'B2 real, confirmado. Es tu pasaporte a clientes, mercados y sueldos en dólares — úsalo como ventaja, no solo como requisito de trabajo.'},
@@ -4070,7 +4083,7 @@
           row.style.cssText='margin-bottom:18px;padding-bottom:18px;border-bottom:1px solid var(--border);';
           row.innerHTML=`
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;gap:12px;">
-              <span style="font-size:14px;font-weight:700;">${s.icon} ${s.full}</span>
+              <span style="font-size:14px;font-weight:700;">${s.icon} ${s.full} <span style="font-size:10px;font-weight:700;color:var(--muted);font-family:var(--mono, monospace);">· ponderación ×${s.w}</span></span>
               <div style="display:flex;align-items:center;gap:10px;flex-shrink:0;">
                 <span id="lv_${s.id}" style="font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:${lv.c};">${lv.l}</span>
                 <span id="val_${s.id}" style="font-size:24px;font-weight:900;color:var(--gold);min-width:36px;text-align:right;">${s.val}</span>
@@ -4141,7 +4154,14 @@
     };
 
     window.redrawSkillRadar=draw;
-    document.addEventListener('DOMContentLoaded',function(){buildSliders();draw();});
+    document.addEventListener('DOMContentLoaded',function(){
+      buildSliders();draw();
+      // Link directo desde el Dashboard ("✏️ Ajustar X en Coach →", cada tarjeta de habilidad
+      // débil): ?skill=<id> abre de una vez el detalle de esa habilidad, sin tener que buscarla
+      // entre las 12 a mano.
+      const skillId=new URLSearchParams(location.search).get('skill');
+      if(skillId&&SK.some(s=>s.id===skillId)) setTimeout(()=>goToSkillDetail(skillId),200);
+    });
   })();
 
   // Checkboxes con tachado + persistencia real (2026-08-01).

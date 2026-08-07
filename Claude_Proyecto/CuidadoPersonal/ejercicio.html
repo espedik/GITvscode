@@ -119,6 +119,7 @@ tbody tr:hover td{background:rgba(255,107,53,.03)}
 .ws-day{border-radius:12px;border:1px solid rgba(var(--ov),.09);background:rgba(var(--ov),.03);padding:10px 6px;text-align:center;cursor:pointer;transition:all .2s}
 .ws-day:hover{background:rgba(var(--ov),.07)}
 .ws-day.today{border-color:var(--p);background:rgba(255,107,53,.1)}
+.ws-day.sel{border-color:var(--g);background:rgba(0,232,122,.12);box-shadow:0 0 0 1px var(--g)}
 .ws-dname{font-size:10px;font-weight:800;color:var(--text2);text-transform:uppercase;letter-spacing:.04em}
 .ws-day.today .ws-dname{color:var(--p)}
 .ws-ddate{font-size:9px;color:var(--text3);margin-bottom:6px}
@@ -223,10 +224,9 @@ tbody tr:hover td{background:rgba(255,107,53,.03)}
         <div class="ts" style="color:var(--text2);line-height:1.6">Por eso brazos y piernas se entrenan <strong style="color:var(--text)">2 veces por semana</strong> cada uno (Lun/Jue y Mar/Vie) — el resto se mantiene 1x/semana para no perder desarrollo. Sobre la panza, honestidad primero: <strong style="color:var(--text)">no existe la reducción localizada de grasa</strong> — el core fuerte de esta rutina define músculo debajo, pero lo que realmente baja la grasa de la zona media es el déficit calórico sostenido (registra tus comidas en <a href="../CuidadoPersonal/cuidadopersonal.html?tab=salud" style="color:var(--p)">Cuidado de la Salud</a>) + el cardio de miércoles y sábado.</div>
       </div>
 
-      <div class="g4" id="d-kpis" style="margin-bottom:16px"></div>
       <div id="d-semana" style="margin-bottom:16px"></div>
 
-      <div class="sh" style="margin-top:6px"><h2 style="font-size:15px">🏋️ Ejercicios de la semana</h2></div>
+      <div class="sh" style="margin-top:6px"><h2 style="font-size:15px" id="rutina-semana-title">🏋️ Ejercicios de la semana</h2></div>
       <div id="rutina-semana"></div>
     </section>
 
@@ -525,158 +525,160 @@ const EJ_DB = [
   // PECHO
   {id:'e001',nombre:'Press de Banca',musculo:'Pecho',secundarios:['Tríceps','Hombros'],equipo:'Barra',tipo:'Compuesto',
     img:'https://upload.wikimedia.org/wikipedia/commons/a/a8/Bench-press-1.png',
-    cue:'Escápulas retraídas y pegadas al banco, pies firmes en el piso, baja la barra controlada hasta rozar el pecho y empuja en línea recta hacia arriba.'},
+    cue:'Aprieta los hombros hacia atrás y abajo, pegados al banco, pies firmes en el piso. Baja la barra despacio hasta casi tocar el pecho y empújala derecho hacia arriba.'},
   {id:'e002',nombre:'Press Inclinado con Barra',musculo:'Pecho',secundarios:['Tríceps'],equipo:'Barra',tipo:'Compuesto',
     img:'https://upload.wikimedia.org/wikipedia/commons/8/86/Incline-bench-press-1.png',
-    cue:'Banco a 30-45°. Igual que el press plano pero la barra baja a la parte alta del pecho — más ángulo, más pecho superior.'},
+    cue:'Banco inclinado a 30-45°. Es como el press normal, pero la barra baja hacia la parte de arriba del pecho — entre más inclinado el banco, más trabaja esa parte.'},
   {id:'e003',nombre:'Press con Mancuernas',musculo:'Pecho',secundarios:['Tríceps'],equipo:'Mancuernas',tipo:'Compuesto',
     img:'https://upload.wikimedia.org/wikipedia/commons/2/2e/Dumbbell-bench-press-1.png',
-    cue:'Mayor rango de movimiento que la barra — deja que las mancuernas bajen un poco más allá de los hombros sin perder el control.'},
+    cue:'Con mancuernas bajas más que con la barra — déjalas bajar un poco más allá de los hombros, siempre con control.'},
   {id:'e004',nombre:'Aperturas con Mancuerna',musculo:'Pecho',secundarios:[],equipo:'Mancuernas',tipo:'Aislamiento',
-    cue:'Codos ligeramente flexionados y fijos durante todo el movimiento — es un abrazo amplio, no un press. Siente el estiramiento en el pecho, no en el hombro.'},
+    cue:'Codos un poco doblados y sin moverlos durante todo el ejercicio — es como abrazar un árbol grande, no un empuje. Debes sentir que se estira el pecho, no el hombro.'},
   {id:'e005',nombre:'Fondos (Dips)',musculo:'Pecho',secundarios:['Tríceps'],equipo:'Cuerpo',tipo:'Compuesto',
     img:'https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/Dipexercise.svg/960px-Dipexercise.svg.png',
-    cue:'Inclina el torso hacia adelante para enfatizar pecho (más vertical = más tríceps). Baja hasta 90° de codo, sin hundir los hombros.'},
+    cue:'Inclina el cuerpo hacia adelante para trabajar más el pecho (si te mantienes derecho, trabajas más el brazo de atrás). Baja hasta que el codo forme un ángulo de 90°, sin encoger los hombros.'},
   {id:'e006',nombre:'Flexiones',musculo:'Pecho',secundarios:['Tríceps','Hombros'],equipo:'Cuerpo',tipo:'Compuesto',
     img:'https://upload.wikimedia.org/wikipedia/commons/9/9e/Push-up-1.png',
-    cue:'Cuerpo en línea recta de cabeza a talones, baja hasta que el pecho casi toque el piso, codos a 45° del torso (no pegados ni en cruz).'},
+    cue:'Cuerpo derecho de la cabeza a los talones (como una tabla), baja hasta que el pecho casi toque el piso. Los codos apuntan hacia atrás en diagonal, ni pegados al cuerpo ni abiertos como cruz.'},
   {id:'e007',nombre:'Aperturas en Polea',musculo:'Pecho',secundarios:[],equipo:'Máquina',tipo:'Aislamiento',
     img:'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1c/Cable_crossover_1.svg/960px-Cable_crossover_1.svg.png',
-    cue:'Sentado o de pie entre dos poleas, junta las manos al frente en un arco amplio como si abrazaras un árbol — mantén una ligera flexión de codo fija todo el movimiento.'},
+    cue:'Sentado o de pie entre dos cables, junta las manos al frente haciendo un arco amplio, como si abrazaras algo grande. Mantén los codos un poco doblados y sin cambiar esa posición durante todo el movimiento.'},
   // ESPALDA
   {id:'e008',nombre:'Dominadas',musculo:'Espalda',secundarios:['Bíceps'],equipo:'Cuerpo',tipo:'Compuesto',
-    cue:'Agarre un poco más ancho que los hombros, sube hasta que la barbilla pase la barra, baja controlado hasta extender el brazo por completo. Usa banda de asistencia si no llegas al número de reps.'},
+    cue:'Agarra la barra un poco más ancho que tus hombros, sube hasta que tu barbilla pase la barra, y baja despacio hasta estirar el brazo completo. Si no logras hacer todas las repeticiones, usa una banda elástica de ayuda.'},
   {id:'e009',nombre:'Remo con Barra',musculo:'Espalda',secundarios:['Bíceps'],equipo:'Barra',tipo:'Compuesto',
     img:'https://upload.wikimedia.org/wikipedia/commons/a/af/Barbell-rear-delt-row-1.png',
-    cue:'Torso inclinado ~45°, espalda recta (no redondeada), jala la barra hacia el abdomen apretando los omóplatos al final.'},
+    cue:'Inclina el cuerpo hacia adelante como a 45°, con la espalda derecha (no encorvada). Jala la barra hacia tu abdomen y aprieta los hombros hacia atrás al final del movimiento.'},
   {id:'e010',nombre:'Jalón al Pecho',musculo:'Espalda',secundarios:['Bíceps'],equipo:'Máquina',tipo:'Compuesto',
-    cue:'Jala con los codos hacia abajo y atrás, no con los brazos — imagina que llevas los codos a los bolsillos traseros.'},
+    cue:'Jala usando los codos, llevándolos hacia abajo y atrás — no jales solo con los brazos. Imagina que quieres meter los codos en las bolsas traseras de tu pantalón.'},
   {id:'e011',nombre:'Remo con Mancuerna',musculo:'Espalda',secundarios:['Bíceps'],equipo:'Mancuernas',tipo:'Compuesto',
-    cue:'Apoya una rodilla y una mano en el banco, jala la mancuerna hacia la cadera (no hacia el hombro) apretando el omóplato al final.'},
+    cue:'Apoya una rodilla y una mano en el banco. Jala la mancuerna hacia tu cadera (no hacia el hombro) y aprieta el hombro hacia atrás al final del movimiento.'},
   {id:'e012',nombre:'Peso Muerto',musculo:'Espalda',secundarios:['Glúteos','Piernas'],equipo:'Barra',tipo:'Compuesto',
-    cue:'Barra pegada a las espinillas, espalda neutra (no redondeada), empuja el piso con los talones — la fuerza sale de cadera y piernas, no de la espalda baja.'},
+    cue:'Mantén la barra pegada a tus espinillas, la espalda derecha (no encorvada), y empuja el piso con los talones al levantarte. La fuerza debe salir de la cadera y las piernas, no de la espalda baja.'},
   {id:'e013',nombre:'Remo en Polea Baja',musculo:'Espalda',secundarios:['Bíceps'],equipo:'Máquina',tipo:'Compuesto',
     img:'https://upload.wikimedia.org/wikipedia/commons/2/2d/Cable-seated-rows-1.png',
-    cue:'Espalda recta, jala el agarre hacia el abdomen sin usar impulso de balanceo — el movimiento sale de la espalda, no de los brazos.'},
+    cue:'Espalda derecha, jala el agarre hacia tu abdomen sin balancear el cuerpo para ayudarte — el movimiento debe salir de la espalda, no de los brazos.'},
   {id:'e014',nombre:'Pull-over con Mancuerna',musculo:'Espalda',secundarios:['Pecho'],equipo:'Mancuernas',tipo:'Aislamiento',
     img:'https://upload.wikimedia.org/wikipedia/commons/b/bf/Dumbbell-bent-arm-pullover-1.png',
-    cue:'Acostado perpendicular al banco (solo la espalda alta apoyada), baja la mancuerna en arco detrás de la cabeza sintiendo el estiramiento en el pecho y dorsal, sube al mismo arco.'},
+    cue:'Acuéstate cruzado sobre el banco, con solo la parte alta de la espalda apoyada. Baja la mancuerna en un arco hacia atrás de tu cabeza — debes sentir que se estira el pecho y la espalda — y sube por el mismo arco.'},
   // HOMBROS
   {id:'e015',nombre:'Press Militar con Barra',musculo:'Hombros',secundarios:['Tríceps'],equipo:'Barra',tipo:'Compuesto',
     img:'https://upload.wikimedia.org/wikipedia/commons/6/62/Seated-military-shoulder-press-1.png',
-    cue:'Core apretado, empuja la barra en línea recta sobre la cabeza sin arquear la espalda baja — la cabeza se mueve ligeramente atrás para dejar pasar la barra.'},
+    cue:'Aprieta el abdomen, empuja la barra derecho hacia arriba sobre tu cabeza sin arquear la espalda baja. Mueve un poco la cabeza hacia atrás para dejar pasar la barra.'},
   {id:'e016',nombre:'Press con Mancuernas (Hombros)',musculo:'Hombros',secundarios:['Tríceps'],equipo:'Mancuernas',tipo:'Compuesto',
     img:'https://upload.wikimedia.org/wikipedia/commons/1/15/Dumbbell-shoulder-press-1.png',
-    cue:'Sentado o de pie, empuja las mancuernas hacia arriba sin que se junten arriba del todo — controla más el descenso que el empuje.'},
+    cue:'Sentado o de pie, empuja las mancuernas hacia arriba sin juntarlas del todo arriba. Controla más la bajada que la subida.'},
   {id:'e017',nombre:'Elevaciones Laterales',musculo:'Hombros',secundarios:[],equipo:'Mancuernas',tipo:'Aislamiento',
     img:'https://upload.wikimedia.org/wikipedia/commons/f/fd/Dumbbell-lateral-raises-1.png',
-    cue:'Codos ligeramente flexionados, sube hasta la altura del hombro (no más), lidera con el codo, no con la muñeca. Peso ligero, técnica estricta.'},
+    cue:'Codos un poco doblados, sube los brazos hasta la altura del hombro (no más arriba), y que el movimiento salga del codo, no de la muñeca. Usa poco peso y hazlo con buena forma.'},
   {id:'e018',nombre:'Elevaciones Frontales',musculo:'Hombros',secundarios:[],equipo:'Mancuernas',tipo:'Aislamiento',
     img:'https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Front_dumbbell_raise_1.svg/960px-Front_dumbbell_raise_1.svg.png',
-    cue:'Sube las mancuernas al frente hasta la altura del hombro con los brazos casi rectos, sin usar impulso de cadera. Alterna o sube ambos brazos a la vez.'},
+    cue:'Sube las mancuernas al frente hasta la altura del hombro, con los brazos casi estirados, sin ayudarte moviendo la cadera. Puedes alternar los brazos o subir los dos juntos.'},
   {id:'e019',nombre:'Pájaros (Rear Delt)',musculo:'Hombros',secundarios:[],equipo:'Mancuernas',tipo:'Aislamiento',
-    cue:'Inclinado hacia adelante, sube las mancuernas hacia los lados con los codos ligeramente flexionados — enfócate en apretar el omóplato, no en levantar peso.'},
+    cue:'Inclinado hacia adelante, sube las mancuernas hacia los lados con los codos un poco doblados. Concéntrate en apretar los hombros hacia atrás, no en levantar mucho peso.'},
   {id:'e020',nombre:'Face Pull',musculo:'Hombros',secundarios:['Espalda'],equipo:'Máquina',tipo:'Aislamiento',
-    cue:'Jala la cuerda hacia la cara separando las manos al final, codos altos — clave para salud de hombro, no para ego-lifting con mucho peso.'},
+    cue:'Jala la cuerda hacia tu cara separando las manos al final, con los codos arriba. Es un ejercicio para cuidar el hombro, no para usar mucho peso.'},
   // BÍCEPS
   {id:'e021',nombre:'Curl con Barra',musculo:'Bíceps',secundarios:[],equipo:'Barra',tipo:'Aislamiento',
     img:'https://upload.wikimedia.org/wikipedia/commons/7/7f/Biceps-curl-1.png',
-    cue:'Codos pegados al torso durante todo el movimiento — si se mueven hacia adelante, estás usando impulso, no bíceps.'},
+    cue:'Mantén los codos pegados a tu cuerpo durante todo el movimiento — si se mueven hacia adelante, estás usando impulso del cuerpo en vez del músculo.'},
   {id:'e022',nombre:'Curl con Mancuerna',musculo:'Bíceps',secundarios:[],equipo:'Mancuernas',tipo:'Aislamiento',
     img:'https://upload.wikimedia.org/wikipedia/commons/6/66/Biceps-curl-2.png',
-    cue:'Gira la muñeca (supina) conforme subes para contraer más el bíceps arriba. Baja siempre controlado, 2-3 segundos.'},
+    cue:'Gira la muñeca hacia arriba (palma viendo al techo) conforme subes, para apretar más el músculo arriba. Baja siempre despacio, en 2-3 segundos.'},
   {id:'e023',nombre:'Curl Martillo',musculo:'Bíceps',secundarios:['Antebrazo'],equipo:'Mancuernas',tipo:'Aislamiento',
     img:'https://upload.wikimedia.org/wikipedia/commons/thumb/0/06/Bicep_hammer_curl_with_dumbbell_1.svg/960px-Bicep_hammer_curl_with_dumbbell_1.svg.png',
-    cue:'Agarre neutro (palmas viéndose todo el tiempo, como un martillo) — construye antebrazo y el músculo braquial, dando grosor extra al brazo.'},
+    cue:'Agarra con las palmas viéndose entre sí todo el tiempo (como sosteniendo un martillo) — esto trabaja el antebrazo y le da más grosor al brazo.'},
   {id:'e024',nombre:'Curl en Polea',musculo:'Bíceps',secundarios:[],equipo:'Máquina',tipo:'Aislamiento',
     img:'https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/Overhead_curl_with_cable_1.svg/960px-Overhead_curl_with_cable_1.svg.png',
-    cue:'De pie frente a la polea, codos fijos al costado, sube el agarre en arco hacia los hombros sin balancear el torso.'},
+    cue:'De pie frente al cable, con los codos fijos a los costados, sube el agarre en arco hacia tus hombros sin balancear el cuerpo.'},
   {id:'e025',nombre:'Curl Concentrado',musculo:'Bíceps',secundarios:[],equipo:'Mancuernas',tipo:'Aislamiento',
     img:'https://upload.wikimedia.org/wikipedia/commons/6/6a/Concentration-curls-1.png',
-    cue:'Sentado, codo apoyado contra la cara interna del muslo, sube la mancuerna en arco completo sin despegar el codo de la pierna.'},
+    cue:'Sentado, apoya el codo contra la parte de adentro de tu muslo. Sube la mancuerna en un arco completo sin despegar el codo de la pierna.'},
   {id:'e026',nombre:'Curl Scott (Predicador)',musculo:'Bíceps',secundarios:[],equipo:'Barra',tipo:'Aislamiento',
     img:'https://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/Preacher_curl_with_barbell_1.svg/960px-Preacher_curl_with_barbell_1.svg.png',
-    cue:'El banco fija el codo y elimina el impulso — aísla 100% el bíceps. No extiendas el codo por completo abajo si sientes tirón.'},
+    cue:'El banco inclinado fija tu codo y evita que uses impulso — así trabaja solo el bíceps. Si sientes un tirón feo, no estires el codo del todo abajo.'},
   // TRÍCEPS
   {id:'e027',nombre:'Press Francés',musculo:'Tríceps',secundarios:[],equipo:'Barra',tipo:'Aislamiento',
     img:'https://upload.wikimedia.org/wikipedia/commons/3/3f/Lying-triceps-extension-2.gif',
-    cue:'Codos apuntando al techo y fijos, baja la barra/mancuerna hacia la frente doblando solo el codo — es el ejercicio que más masa agrega al tríceps.'},
+    cue:'Codos apuntando al techo y sin moverse, baja la barra o mancuerna hacia tu frente doblando solo el codo — es de los mejores ejercicios para hacer crecer el brazo de atrás (tríceps).'},
   {id:'e028',nombre:'Extensión en Polea (Pushdown)',musculo:'Tríceps',secundarios:[],equipo:'Máquina',tipo:'Aislamiento',
     img:'https://upload.wikimedia.org/wikipedia/commons/thumb/1/13/Triceps_pushdown_with_cable_1.svg/960px-Triceps_pushdown_with_cable_1.svg.png',
-    cue:'Codos pegados al costado sin moverse, extiende hasta bloquear el codo y aprieta el tríceps 1 segundo abajo.'},
+    cue:'Codos pegados a tus costados sin moverse, estira el brazo hasta el fondo y aprieta el músculo de atrás del brazo 1 segundo.'},
   {id:'e029',nombre:'Fondos en Banco',musculo:'Tríceps',secundarios:[],equipo:'Cuerpo',tipo:'Aislamiento',
     img:'https://upload.wikimedia.org/wikipedia/commons/d/d0/Bench-dips-1.png',
-    cue:'Manos en el borde del banco, baja hasta 90° de codo sin encoger los hombros hacia las orejas. Piernas estiradas = más difícil.'},
+    cue:'Manos en el borde del banco, baja hasta que el codo forme 90°, sin subir los hombros hacia las orejas. Si estiras las piernas, es más difícil.'},
   {id:'e030',nombre:'Patada de Tríceps',musculo:'Tríceps',secundarios:[],equipo:'Mancuernas',tipo:'Aislamiento',
     img:'https://upload.wikimedia.org/wikipedia/commons/thumb/4/40/Triceps_kickback_with_dumbbell_1.svg/960px-Triceps_kickback_with_dumbbell_1.svg.png',
-    cue:'Torso inclinado hacia adelante, codo fijo pegado al costado, extiende el brazo hacia atrás y aprieta el tríceps arriba sin mover el hombro.'},
+    cue:'Inclina el cuerpo hacia adelante, mantén el codo fijo pegado a tu costado, y estira el brazo hacia atrás apretando el músculo de atrás del brazo, sin mover el hombro.'},
   {id:'e031',nombre:'Extensión sobre Cabeza',musculo:'Tríceps',secundarios:[],equipo:'Mancuernas',tipo:'Aislamiento',
     img:'https://upload.wikimedia.org/wikipedia/commons/c/ca/Seated-overhead-triceps-extension-1.gif',
-    cue:'Codos apuntando al frente/arriba y fijos junto a la cabeza, baja la mancuerna detrás de la nuca y extiende sin abrir los codos hacia afuera.'},
+    cue:'Codos apuntando hacia arriba y fijos junto a tu cabeza, baja la mancuerna detrás de la nuca y estira el brazo sin abrir los codos hacia los lados.'},
   // PIERNAS
   {id:'e032',nombre:'Sentadilla con Barra',musculo:'Piernas',secundarios:['Glúteos'],equipo:'Barra',tipo:'Compuesto',
     img:'https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Squats.svg/960px-Squats.svg.png',
-    cue:'Pecho arriba, rodillas siguiendo la línea de los pies, baja hasta que el muslo pase de paralelo al piso y empuja con los talones al subir.'},
+    cue:'Pecho arriba, las rodillas apuntando hacia donde apuntan tus pies. Baja hasta que el muslo quede más abajo que paralelo al piso, y empuja con los talones al subir.'},
   {id:'e033',nombre:'Prensa de Piernas',musculo:'Piernas',secundarios:['Glúteos'],equipo:'Máquina',tipo:'Compuesto',
-    cue:'Pies a la anchura de hombros en la plataforma, baja hasta 90° de rodilla sin despegar la zona lumbar del respaldo.'},
+    cue:'Pies a lo ancho de tus hombros sobre la plataforma. Baja hasta que la rodilla forme 90°, sin despegar la espalda baja del respaldo.'},
   {id:'e034',nombre:'Extensión de Cuádriceps',musculo:'Piernas',secundarios:[],equipo:'Máquina',tipo:'Aislamiento',
     img:'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Leg_extensions_1.svg/960px-Leg_extensions_1.svg.png',
-    cue:'Extiende por completo y aprieta el cuádriceps 1 segundo arriba, baja controlado sin dejar caer el peso.'},
+    cue:'Estira la pierna por completo y aprieta el frente del muslo 1 segundo arriba. Baja despacio, sin dejar caer el peso de golpe.'},
   {id:'e035',nombre:'Curl de Femoral Tumbado',musculo:'Piernas',secundarios:[],equipo:'Máquina',tipo:'Aislamiento',
     img:'https://upload.wikimedia.org/wikipedia/commons/thumb/9/96/Lying_leg_curl_machine_1.svg/960px-Lying_leg_curl_machine_1.svg.png',
-    cue:'Cadera pegada al banco durante todo el movimiento, flexiona la rodilla llevando el talón al glúteo sin impulso.'},
+    cue:'Mantén la cadera pegada al banco todo el tiempo, dobla la rodilla llevando el talón hacia el glúteo, sin usar impulso.'},
   {id:'e036',nombre:'Zancadas',musculo:'Piernas',secundarios:['Glúteos'],equipo:'Mancuernas',tipo:'Compuesto',
-    cue:'Paso largo hacia adelante, baja hasta que ambas rodillas formen 90° sin que la rodilla de atrás toque el piso con fuerza. Torso recto.'},
+    cue:'Da un paso largo hacia adelante, baja hasta que las dos rodillas formen 90°, sin golpear la rodilla de atrás contra el piso. Mantén el cuerpo derecho.'},
   {id:'e037',nombre:'Sentadilla Búlgara',musculo:'Piernas',secundarios:['Glúteos'],equipo:'Mancuernas',tipo:'Compuesto',
-    cue:'Pie trasero elevado en un banco, baja recto hacia abajo (no hacia adelante) — brutal para piernas y glúteo, empieza con poco peso.'},
+    cue:'Con el pie de atrás apoyado en un banco, baja derecho hacia abajo (no hacia adelante) — es muy efectivo para piernas y glúteo, empieza con poco peso porque cuesta trabajo.'},
   {id:'e038',nombre:'Peso Muerto Rumano',musculo:'Piernas',secundarios:['Glúteos'],equipo:'Barra',tipo:'Compuesto',
     img:'https://upload.wikimedia.org/wikipedia/commons/e/e8/Romanian-deadlift-1.png',
-    cue:'Rodillas casi rectas (ligera flexión fija), empuja la cadera hacia atrás manteniendo la barra pegada a las piernas — sientes el estiramiento en el femoral, no en la espalda baja.'},
+    cue:'Rodillas casi estiradas (con una ligera doblada fija), empuja la cadera hacia atrás mientras mantienes la barra pegada a tus piernas — debes sentir el estiramiento en la parte de atrás del muslo, no en la espalda baja.'},
   {id:'e039',nombre:'Elevación de Pantorrilla',musculo:'Piernas',secundarios:[],equipo:'Máquina',tipo:'Aislamiento',
     img:'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Standing_calf_raises_using_machine_2.svg/960px-Standing_calf_raises_using_machine_2.svg.png',
-    cue:'Sube hasta la punta de los pies y aprieta arriba 1 segundo, baja dejando que el talón caiga por debajo del escalón para el estiramiento completo.'},
+    cue:'Sube hasta la punta de los pies y aprieta 1 segundo arriba. Baja dejando que el talón caiga por debajo del escalón para estirar bien la pantorrilla.'},
   {id:'e040',nombre:'Hack Squat',musculo:'Piernas',secundarios:[],equipo:'Máquina',tipo:'Compuesto',
     img:'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c0/Hack_squat_machine_1.svg/960px-Hack_squat_machine_1.svg.png',
-    cue:'Espalda y hombros apoyados en el respaldo inclinado, pies en la plataforma un poco adelantados, baja controlado y empuja sin bloquear las rodillas de golpe.'},
+    cue:'Espalda y hombros apoyados en el respaldo inclinado, pies un poco adelantados en la plataforma. Baja despacio y empuja sin trabar las rodillas de golpe al terminar.'},
   // GLÚTEOS
   {id:'e041',nombre:'Hip Thrust',musculo:'Glúteos',secundarios:['Piernas'],equipo:'Barra',tipo:'Compuesto',
     img:'https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/Glute-bridge.png/960px-Glute-bridge.png',
-    cue:'Espalda alta apoyada en el banco, barra sobre la cadera, empuja hasta que el torso quede en línea recta con los muslos y aprieta el glúteo arriba.'},
+    cue:'Apoya la parte alta de la espalda en el banco, con la barra sobre tu cadera. Empuja hasta que el cuerpo quede derecho, en línea con los muslos, y aprieta el glúteo arriba.'},
   {id:'e042',nombre:'Glute Bridge',musculo:'Glúteos',secundarios:[],equipo:'Cuerpo',tipo:'Aislamiento',
     img:'https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/Glute-bridge.png/960px-Glute-bridge.png',
-    cue:'Versión sin peso del Hip Thrust, en el piso — perfecta para activar el glúteo antes de sentadillas o pesomuerto.'},
+    cue:'Es la versión sin peso del Hip Thrust, hecha en el piso — sirve para "despertar" el glúteo antes de hacer sentadillas o peso muerto.'},
   {id:'e043',nombre:'Patada de Glúteo en Polea',musculo:'Glúteos',secundarios:[],equipo:'Máquina',tipo:'Aislamiento',
-    cue:'De pie frente a la polea con el tobillo en el agarre, patea la pierna hacia atrás apretando el glúteo sin arquear la espalda baja.'},
+    cue:'De pie frente al cable, con el agarre en tu tobillo, patea la pierna hacia atrás apretando el glúteo, sin arquear la espalda baja.'},
   {id:'e044',nombre:'Abducción de Cadera',musculo:'Glúteos',secundarios:[],equipo:'Máquina',tipo:'Aislamiento',
-    cue:'Empuja las piernas hacia afuera contra la resistencia, controla la vuelta — trabaja el glúteo medio, clave para estabilidad de cadera.'},
+    cue:'Empuja las piernas hacia afuera contra la resistencia de la máquina, y controla el regreso — este ejercicio ayuda a la estabilidad de tu cadera.'},
   // CORE
   {id:'e045',nombre:'Plancha',musculo:'Core',secundarios:[],equipo:'Cuerpo',tipo:'Compuesto',
-    cue:'Cuerpo en línea recta de cabeza a talones, glúteo y abdomen apretados, no dejes caer la cadera. Respira, no aguantes el aire.'},
+    cue:'Cuerpo derecho de la cabeza a los talones (como una tabla), con el glúteo y el abdomen apretados — no dejes que la cadera se caiga. Sigue respirando normal, no aguantes el aire.'},
   {id:'e046',nombre:'Crunch Abdominal',musculo:'Core',secundarios:[],equipo:'Cuerpo',tipo:'Aislamiento',
     img:'https://upload.wikimedia.org/wikipedia/commons/e/ef/Crunches-2.png',
-    cue:'Manos detrás de la cabeza sin jalar el cuello, sube solo los omóplatos del piso apretando el abdomen — rango corto pero controlado.'},
+    cue:'Manos detrás de la cabeza sin jalarte el cuello, sube solo un poco los hombros del piso apretando el abdomen — es un movimiento corto pero controlado.'},
   {id:'e047',nombre:'Elevación de Piernas',musculo:'Core',secundarios:[],equipo:'Cuerpo',tipo:'Aislamiento',
     img:'https://upload.wikimedia.org/wikipedia/commons/7/7a/Leg-raises-2.png',
-    cue:'Espalda baja pegada al piso (o banco), sube las piernas rectas hasta 90° sin usar impulso, baja controlado sin tocar el piso entre reps.'},
+    cue:'Espalda baja pegada al piso (o al banco), sube las piernas estiradas hasta 90° sin impulso, y baja despacio sin tocar el piso entre repetición y repetición.'},
   {id:'e048',nombre:'Rueda Abdominal',musculo:'Core',secundarios:[],equipo:'Rueda',tipo:'Compuesto',
-    cue:'De rodillas, rueda hacia adelante manteniendo el abdomen apretado y la espalda recta — solo hasta donde puedas regresar sin arquear la espalda baja.'},
+    cue:'De rodillas, rueda hacia adelante con el abdomen apretado y la espalda derecha — solo avanza hasta donde puedas regresar sin que se arquee tu espalda baja.'},
   {id:'e049',nombre:'Oblicuos con Cable',musculo:'Core',secundarios:[],equipo:'Máquina',tipo:'Aislamiento',
-    cue:'De pie con la polea al costado, gira el torso jalando el agarre en diagonal manteniendo la cadera fija — el giro sale del core, no de los brazos.'},
+    cue:'De pie con el cable a un costado, gira tu cuerpo jalando el agarre en diagonal, manteniendo la cadera quieta — el giro debe salir del abdomen, no de los brazos.'},
   {id:'e050',nombre:'Dead Bug',musculo:'Core',secundarios:[],equipo:'Cuerpo',tipo:'Compuesto',
-    cue:'Espalda baja pegada al piso todo el ejercicio, extiende brazo y pierna opuestos lentamente sin arquear la zona lumbar.'},
+    cue:'Espalda baja pegada al piso durante todo el ejercicio. Estira un brazo y la pierna contraria despacio, sin que se arquee tu espalda baja.'},
   // CARDIO
   {id:'e051',nombre:'Caminata en Cinta',musculo:'Cardio',secundarios:[],equipo:'Máquina',tipo:'Cardio',
-    cue:'Postura erguida, brazos se mueven de forma natural, aumenta la inclinación antes que la velocidad para elevar la intensidad sin dañar rodillas.'},
+    cue:'Camina derecho, deja que los brazos se muevan natural. Si quieres más intensidad, sube la inclinación antes que la velocidad — así cuidas tus rodillas.'},
   {id:'e052',nombre:'Correr',musculo:'Cardio',secundarios:[],equipo:'Cuerpo',tipo:'Cardio',
-    cue:'Pisada de medio pie (no de talón), brazos relajados a 90°, respiración rítmica — empieza con trotes cortos antes de aumentar distancia.'},
+    cue:'Pisa con la mitad del pie (no con el talón), brazos relajados doblados a 90°, respira con ritmo — empieza con trotes cortos antes de correr distancias largas.'},
   {id:'e053',nombre:'Bicicleta Estática',musculo:'Cardio',secundarios:[],equipo:'Máquina',tipo:'Cardio',
-    cue:'Ajusta el asiento para que la rodilla quede con ligera flexión en el punto más bajo del pedaleo, mantén cadencia constante.'},
+    cue:'Ajusta el asiento para que tu rodilla quede un poco doblada en el punto más bajo del pedaleo, y mantén un ritmo constante.'},
   {id:'e054',nombre:'Elíptica',musculo:'Cardio',secundarios:[],equipo:'Máquina',tipo:'Cardio',
-    cue:'Ritmo constante, postura erguida sin colgarte de los brazos — bajo impacto, ideal para cardio largo sin desgastar rodillas.'},
+    cue:'Mantén un ritmo constante, cuerpo derecho, sin colgarte de los brazos — es de bajo impacto, ideal para cardio largo sin desgastar tus rodillas.'},
   {id:'e055',nombre:'Saltar la Cuerda',musculo:'Cardio',secundarios:[],equipo:'Cuerda',tipo:'Cardio',
-    cue:'Codos pegados al cuerpo, el giro de la cuerda sale de las muñecas, no de los hombros, salta lo mínimo necesario para despegar del piso.'},
+    cue:'Codos pegados a tu cuerpo, gira la cuerda con las muñecas, no con los hombros, y salta lo mínimo necesario para despegar del piso.'},
   {id:'e056',nombre:'Battle Ropes',musculo:'Cardio',secundarios:['Hombros'],equipo:'Cuerda',tipo:'Cardio',
-    cue:'Rodillas ligeramente flexionadas, core apretado, ondas fuertes y rápidas — intervalos de 20-30s son los que más queman.'},
+    cue:'Rodillas un poco dobladas, abdomen apretado, haz ondas fuertes y rápidas con las cuerdas — los intervalos de 20 a 30 segundos son los que más te van a costar (y los que más funcionan).'},
+  {id:'e057',nombre:'Nadar',musculo:'Cardio',secundarios:['Espalda','Hombros'],equipo:'Alberca',tipo:'Cardio',
+    cue:'Alterna estilos (libre y dorso) para no cansar siempre el mismo hombro — es cardio de bajo impacto, un buen complemento a tus sentadillas y peso muerto sin desgastar más tus articulaciones. Ver sección Deportes → Natación para dónde practicarlo.'},
 ];
 
 const MUSCULOS_ALL = ['Pecho','Espalda','Hombros','Bíceps','Tríceps','Piernas','Glúteos','Core','Cardio'];
@@ -699,8 +701,8 @@ let S = {
        ejercicios:[{id:'e005',series:4,reps:8,peso:0,descanso:90},{id:'e021',series:4,reps:9,peso:0,descanso:90},{id:'e027',series:4,reps:10,peso:0,descanso:90},{id:'e023',series:3,reps:12,peso:0,descanso:60},{id:'e028',series:3,reps:12,peso:0,descanso:60}]},
     2:{nombre:'Piernas A — Cuádriceps',tipo:'piernas',foco:'Prioridad: masa en piernas. Enfoque cuádriceps.',
        ejercicios:[{id:'e032',series:4,reps:8,peso:0,descanso:120},{id:'e033',series:4,reps:12,peso:0,descanso:90},{id:'e034',series:3,reps:15,peso:0,descanso:60},{id:'e036',series:3,reps:12,peso:0,descanso:60},{id:'e039',series:4,reps:20,peso:0,descanso:45}]},
-    3:{nombre:'Espalda + Hombros + Cardio',tipo:'halar',foco:'No es tu día de "brazos" pero sí les aporta: dominadas, remo y press militar son compuestos donde bíceps/tríceps trabajan como secundarios — frecuencia extra de brazos sin otro día dedicado. Los battle ropes (HIIT) son tu motor de cardio para bajar panza.',
-       ejercicios:[{id:'e008',series:4,reps:8,peso:0,descanso:120},{id:'e009',series:4,reps:10,peso:0,descanso:90},{id:'e015',series:3,reps:10,peso:0,descanso:90},{id:'e017',series:3,reps:15,peso:0,descanso:45},{id:'e056',series:5,reps:30,unidad:'seg',peso:0,descanso:30}]},
+    3:{nombre:'Natación',tipo:'cardio',foco:'Reemplazó a "Espalda + Hombros + Cardio" (2026-08-07, a petición de Adán: "quiero nadar"). Mismo cardio de bajo impacto que ya tenías identificado en Deportes → Natación (alberca Francisco Márquez, Doctores) — complementa el volumen de sentadilla/peso muerto de Piernas sin sumarle más desgaste articular. El trabajo de espalda/hombros que cubría este día se sigue viendo en Lunes/Martes/Jueves/Viernes como secundario de otros ejercicios.',
+       ejercicios:[{id:'e057',series:1,reps:45,unidad:'min',peso:0,descanso:0}]},
     4:{nombre:'Brazos B — Bíceps + Tríceps',tipo:'brazos',foco:'Prioridad: masa en brazos. Volumen, ejercicios distintos al lunes — Fondos en Banco de compuesto (más ligero que los Fondos del lunes) antes del aislamiento.',
        ejercicios:[{id:'e022',series:4,reps:12,peso:0,descanso:60},{id:'e031',series:4,reps:12,peso:0,descanso:60},{id:'e026',series:3,reps:10,peso:0,descanso:60},{id:'e029',series:3,reps:15,peso:0,descanso:60},{id:'e047',series:3,reps:15,peso:0,descanso:45}]},
     5:{nombre:'Piernas B — Glúteo + Femoral',tipo:'piernas',foco:'Prioridad: masa en piernas. Enfoque glúteo/femoral, complementa el martes.',
@@ -721,6 +723,20 @@ const today = () => new Date().toISOString().slice(0,10);
 const uid = () => Date.now().toString(36)+Math.random().toString(36).slice(2);
 const save = () => localStorage.setItem(KEY, JSON.stringify(S));
 const load = () => { try { const d=localStorage.getItem(KEY); if(d) S={...S,...JSON.parse(d)}; } catch(e){} };
+// El miércoles cambió de "Espalda + Hombros + Cardio" a "Natación" en el código (2026-08-07),
+// pero load() hace un merge superficial: si ya había un `rutina` guardado en este navegador
+// (de cualquier apertura anterior de esta página), reemplaza TODO el objeto por el guardado —
+// el cambio de código nunca llega a aplicarse solo. Corrige el dato ya guardado una sola vez,
+// y solo si el miércoles sigue siendo exactamente el default viejo (si Adán ya lo personalizó
+// a otra cosa, no se toca). Mismo patrón que fixBanamexIfNeeded() en Dashboard/dashboard.html.
+function fixMiercolesNatacionIfNeeded(){
+  if(localStorage.getItem('mirutina_v1_miercoles_natacion')) return;
+  if(S.rutina&&S.rutina[3]&&S.rutina[3].nombre==='Espalda + Hombros + Cardio'){
+    S.rutina[3]={nombre:'Natación',tipo:'cardio',foco:'Reemplazó a "Espalda + Hombros + Cardio" (2026-08-07, a petición de Adán: "quiero nadar"). Mismo cardio de bajo impacto que ya tenías identificado en Deportes → Natación (alberca Francisco Márquez, Doctores) — complementa el volumen de sentadilla/peso muerto de Piernas sin sumarle más desgaste articular. El trabajo de espalda/hombros que cubría este día se sigue viendo en Lunes/Martes/Jueves/Viernes como secundario de otros ejercicios.',
+       ejercicios:[{id:'e057',series:1,reps:45,unidad:'min',peso:0,descanso:0}]};
+  }
+  localStorage.setItem('mirutina_v1_miercoles_natacion','1');
+}
 const getAllEj = () => [...EJ_DB, ...(S.ejerciciosCustom||[])];
 const findEj = id => getAllEj().find(e=>e.id===id);
 
@@ -768,36 +784,13 @@ function renderResumenSemana() {
   const hoy = new Date();
   const diaHoy = hoy.getDay();
   const semana = Array.from({length:7},(_,i)=>{ const d=new Date(hoy); d.setDate(d.getDate()-diaHoy+i); return d.toISOString().slice(0,10); });
-  const diasEntreno = ORDEN_DIAS.filter(d=>S.rutina[d] && S.rutina[d].tipo!=='descanso');
-  const diasDescanso = ORDEN_DIAS.filter(d=>!S.rutina[d] || S.rutina[d].tipo==='descanso');
-  const rutinaHoy = S.rutina[diaHoy];
 
-  document.getElementById('d-kpis').innerHTML=`
-    <div class="card" style="border-left:4px solid var(--p)">
-      <div class="card-title" style="color:var(--p)">🏋️ Días de entreno</div>
-      <div class="card-val" style="color:var(--p)">${diasEntreno.length}<span style="font-size:14px;opacity:.5">/7</span></div>
-      <div class="card-sub">a la semana</div>
-    </div>
-    <div class="card" style="border-left:4px solid var(--g)">
-      <div class="card-title" style="color:var(--g)">😴 Descanso</div>
-      <div class="card-val" style="color:var(--g)">${diasDescanso.length}<span style="font-size:14px;opacity:.5">/7</span></div>
-      <div class="card-sub">días de recuperación</div>
-    </div>
-    <div class="card" style="border-left:4px solid var(--b)">
-      <div class="card-title" style="color:var(--b)">💪 Grupos musculares</div>
-      <div class="card-val" style="color:var(--b)">${new Set(ORDEN_DIAS.flatMap(d=>(S.rutina[d]?.ejercicios||[]).map(e=>findEj(e.id)?.musculo).filter(Boolean))).size}</div>
-      <div class="card-sub">cubiertos en la semana</div>
-    </div>
-    <div class="card" style="border-left:4px solid var(--w)">
-      <div class="card-title" style="color:var(--w)">📅 Hoy toca</div>
-      <div class="card-val" style="color:var(--w);font-size:16px">${rutinaHoy?.nombre||'Sin asignar'}</div>
-      <div class="card-sub">${DIAS_STR[diaHoy]}</div>
-    </div>`;
-
-  // Semana visual, tira horizontal — de un vistazo, qué toca cada día (sin depender de sesiones registradas)
+  // Semana visual, tira horizontal — de un vistazo, qué toca cada día. Clic en un día filtra
+  // "Ejercicios de la semana" abajo para mostrar solo ese día (ver renderRutinaSemana()) —
+  // antes hacía scroll a ese día entre los 7 completos; ahora los esconde todos menos ese.
   document.getElementById('d-semana').innerHTML=`
     <div class="card">
-      <div class="card-title" style="margin-bottom:12px">🗓️ Esta semana</div>
+      <div class="card-title" style="margin-bottom:12px">🗓️ Esta semana — clic en un día para ver solo sus ejercicios</div>
       <div class="week-strip">
         ${semana.map(d=>{
           const dW=new Date(d).getDay();
@@ -806,7 +799,8 @@ function renderResumenSemana() {
           const isHoy=d===today();
           const col=rut?.tipo?TIPO_COL[rut.tipo]:'rgba(var(--ov),.25)';
           const esDescanso=rut?.tipo==='descanso'||!rut;
-          return `<div class="ws-day ${isHoy?'today':''}" onclick="nav('rutina');scrollToRutinaDia(${dW})">
+          const activo=rutinaDiaFiltro===dW;
+          return `<div class="ws-day ${isHoy?'today':''} ${activo?'sel':''}" onclick="verSoloDia(${dW})">
             <div class="ws-dname">${DIAS_SHORT[dW]}${isHoy?' •':''}</div>
             <div class="ws-ddate">${parseInt(day)}/${parseInt(m)}</div>
             ${esDescanso?'<div class="ws-ico">😴</div>':`<div class="ws-dot" style="background:${col}"></div>`}
@@ -817,18 +811,29 @@ function renderResumenSemana() {
     </div>`;
 }
 
-// ─── MI RUTINA — los 7 días completos, uno debajo del otro (sin selector de "un día a la
-//    vez"): cada día muestra su encabezado + resumen de músculos + todos sus ejercicios con
-//    imagen. La tira semanal (`.ws-day` de renderResumenSemana) hace scroll hasta el día
-//    correspondiente en vez de "seleccionarlo" — ya no hay un solo día activo a la vez.
+// ─── MI RUTINA — 2026-08-07: clic en un día de la tira semanal muestra SOLO ese día (todos
+//    sus ejercicios) y esconde los demás — antes (2026-08-04) mostraba los 7 días completos
+//    uno debajo del otro y el clic solo hacía scroll hasta el día. Adán: "quita [los KPIs]...
+//    cada vez que dé clic... enséñame todos los ejercicios y esconde los demás".
 const ORDEN_DIAS = [1,2,3,4,5,6,0];
+let rutinaDiaFiltro = null; // null = los 7 días completos; número (0-6) = solo ese día
 
-function scrollToRutinaDia(d) {
-  document.getElementById('rutina-dia-'+d)?.scrollIntoView({behavior:'smooth',block:'start'});
+function verSoloDia(d) {
+  rutinaDiaFiltro = d;
+  nav('rutina');
+  renderMiRutina();
+}
+function verTodaLaSemana() {
+  rutinaDiaFiltro = null;
+  renderMiRutina();
 }
 
 function renderRutinaSemana() {
-  document.getElementById('rutina-semana').innerHTML = ORDEN_DIAS.map(d=>{
+  const titleEl = document.getElementById('rutina-semana-title');
+  if (titleEl) titleEl.textContent = rutinaDiaFiltro!==null ? `🏋️ Ejercicios del ${DIAS_STR[rutinaDiaFiltro]}` : '🏋️ Ejercicios de la semana';
+  const dias = rutinaDiaFiltro!==null ? [rutinaDiaFiltro] : ORDEN_DIAS;
+  const volverBtn = rutinaDiaFiltro!==null ? `<button class="btn btn-o btn-sm" onclick="verTodaLaSemana()" style="margin-bottom:16px">← Ver los 7 días</button>` : '';
+  document.getElementById('rutina-semana').innerHTML = volverBtn + dias.map(d=>{
     const rut = S.rutina[d]||{nombre:'Sin asignar',tipo:'',ejercicios:[]};
     const isHoy = d===new Date().getDay();
     const col = TIPO_COL[rut.tipo]||'rgba(var(--ov),.3)';
@@ -1048,6 +1053,7 @@ function exportData(){ const b=new Blob([JSON.stringify(S,null,2)],{type:'applic
 // ─── INIT ────────────────────────────────────────────────────────────────────
 function init() {
   load();
+  fixMiercolesNatacionIfNeeded();
   save(); // persiste la rutina semanal por defecto en localStorage desde la primera apertura,
           // igual que salud.html — si no, el Dashboard no puede leer "qué toca hoy" hasta que
           // el usuario guarde algo a mano (configurar día, registrar entrenamiento o exportar).

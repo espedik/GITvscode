@@ -843,10 +843,7 @@ function skSave(){localStorage.setItem(SK_KEY,JSON.stringify(SK));}
 // ─── BASE DE PRODUCTOS REALES (disponibles en México: farmacias, Walmart, Amazon.mx, Sephora) ───
 const SKIN_DB={
   limpiador:[
-    {n:'La Roche-Posay Effaclar Gel Purificante',tipos:['grasa','mixta'],presu:['medio','alto'],ayuda:['acne'],uso:'Masajea sobre piel húmeda 30-60 seg, enjuaga con agua tibia (no caliente). 2 veces al día, mañana y noche.'},
-    {n:'CeraVe Limpiador Espumoso (Foaming Facial Cleanser)',tipos:['grasa','mixta','normal'],presu:['medio','alto'],ayuda:[],uso:'Igual que el anterior — con ceramidas, no deja la piel jalada aunque hagas espuma.'},
-    {n:'Cetaphil Gel Limpiador Piel Grasa/Mixta',tipos:['grasa','mixta'],presu:['economico','medio'],ayuda:['acne'],uso:'Opción de entrada más barata con el mismo objetivo: limpiar sin resecar de más.'},
-    {n:'CeraVe Limpiador Hidratante (Hydrating Facial Cleanser)',tipos:['seca','sensible','normal'],presu:['medio','alto'],ayuda:['sensibilidad'],uso:'En crema, no hace espuma — para piel seca/sensible que se irrita con limpiadores fuertes.'},
+    {n:'CeraVe Limpiador Espumoso (Foaming Facial Cleanser, verde)',tipos:['grasa','mixta','normal','seca','sensible'],presu:['economico','medio','alto'],ayuda:['acne','manchas','arrugas','sensibilidad'],uso:'Masajea sobre piel húmeda 30-60 seg, enjuaga con agua tibia (no caliente). 2 veces al día, mañana y noche — con ceramidas, no deja la piel jalada aunque hagas espuma.'},
   ],
   exfoliante:[
     {n:'The Ordinary Ácido Salicílico 2% Solución',tipos:['grasa','mixta'],presu:['economico','medio','alto'],ayuda:['acne'],uso:'Aplica una capa fina sobre piel limpia y seca, 2-3 noches por semana (NO diario, NO la misma noche que el retinoide). Deja actuar, no enjuagues.'},
@@ -858,8 +855,7 @@ const SKIN_DB={
     {n:'La Roche-Posay Pure Vitamin C10',tipos:['grasa','mixta','normal','seca'],presu:['medio','alto'],ayuda:['manchas','arrugas'],uso:'Por la mañana antes del protector solar — potencia la protección contra el sol y ayuda a iluminar manchas.'},
   ],
   hidratanteAM:[
-    {n:'CeraVe Loción Facial Hidratante AM SPF30',tipos:['grasa','mixta','normal'],presu:['medio','alto'],ayuda:['manchas','arrugas'],uso:'2 en 1: hidrata ligero y ya trae protector solar — simplifica la rutina de la mañana a un solo paso final.'},
-    {n:'Neutrogena Hydro Boost Water Gel',tipos:['grasa','mixta'],presu:['economico','medio'],ayuda:[],uso:'Gel oil-free con ácido hialurónico. Si usas este, necesitas un protector solar aparte (ver abajo).'},
+    {n:'Eucerin Hyaluron-Filler + Epigenetic Día SPF15',tipos:['grasa','mixta','normal','seca','sensible'],presu:['medio','alto'],ayuda:['arrugas','manchas'],uso:'Por la mañana después del sérum — hidrata y rellena líneas de expresión con ácido hialurónico. Trae SPF15, ligero: igual necesitas el protector solar SPF50 aparte (ver abajo) como protección real del día.'},
   ],
   spf:[
     {n:'Isdin Fusion Water Oil-Free SPF50',tipos:['grasa','mixta'],presu:['medio','alto'],ayuda:['manchas','arrugas'],uso:'2 dedos completos para cara+cuello, todos los días sin excepción (nublado incluido). Es el paso más importante de toda la rutina.'},
@@ -871,8 +867,7 @@ const SKIN_DB={
     {n:'The Ordinary Retinol 0.2% en Escualano',tipos:['grasa','mixta','normal','seca'],presu:['economico','medio'],ayuda:['arrugas','manchas'],uso:'Punto de entrada más suave si el Adapaleno irrita mucho al inicio. Mismo esquema: 2 noches/semana subiendo gradual.'},
   ],
   hidratantePM:[
-    {n:'CeraVe Loción Facial Hidratante PM',tipos:['grasa','mixta','normal'],presu:['medio','alto'],ayuda:[],uso:'Último paso de la noche — ayuda a amortiguar la irritación del retinoide/BHA. Con niacinamida y ceramidas.'},
-    {n:'Cetaphil Crema Hidratante',tipos:['seca','sensible','normal'],presu:['economico','medio'],ayuda:['sensibilidad'],uso:'Más rica, para piel seca/sensible que necesita más hidratación nocturna.'},
+    {n:'Eucerin Hyaluron-Filler + Epigenetic Noche',tipos:['grasa','mixta','normal','seca','sensible'],presu:['medio','alto'],ayuda:['arrugas','manchas'],uso:'Último paso de la noche — ayuda a amortiguar la irritación del retinoide/BHA mientras rellena líneas de expresión con ácido hialurónico mientras duermes.'},
   ],
   semanal:[
     {n:'Aztec Secret Indian Healing Clay',tipos:['grasa','mixta'],presu:['economico','medio'],ayuda:['acne'],uso:'Mezcla con agua o vinagre de manzana hasta pasta, aplica 10-15 min, enjuaga. Solo 1 vez por semana — controla grasa y afina poros, pero reseca si abusas.'},
@@ -1075,10 +1070,7 @@ function caSave(){localStorage.setItem(CA_KEY,JSON.stringify(CA));}
 // ─── BASE DE PRODUCTOS REALES para cabello (disponibles en México) ───
 const HAIR_DB={
   champu:[
-    {n:'Vichy Dercos Energising Shampoo (con Aminexil)',grosor:['fino','medio','grueso'],presu:['medio','alto'],ayuda:['caida'],uso:'Masajea el cuero cabelludo (no las puntas) 2-3 min, deja actuar 2-3 min más, enjuaga bien. 2-3 veces por semana.'},
-    {n:'Alpecin Caffeine Shampoo C1',grosor:['fino','medio','grueso'],presu:['economico','medio'],ayuda:['caida'],uso:'Mismo uso — la cafeína se queda activa en el cuero cabelludo unas horas, no lo enjuagues de inmediato tras aplicar.'},
-    {n:'Pantene Pro-V Anti-Caída',grosor:['fino','medio'],presu:['economico'],ayuda:['caida'],uso:'Opción de entrada más económica, mismo objetivo de fortalecer desde la raíz.'},
-    {n:'Head & Shoulders Anticaspa Classic Clean',grosor:['fino','medio','grueso'],presu:['economico','medio'],ayuda:['caspa'],uso:'Masajea el cuero cabelludo 2-3 min, deja actuar antes de enjuagar. Úsalo los días de lavado si la caspa es tu preocupación principal.'},
+    {n:'Darrow Doctar (shampoo con alcatrão/coal tar)',grosor:['fino','medio','grueso'],presu:['economico','medio','alto'],ayuda:['caspa'],uso:'Masajea el cuero cabelludo 2-3 min, deja actuar antes de enjuagar. 2-3 veces por semana, los días de lavado.'},
   ],
   acondicionador:[
     {n:'TRESemmé Keratin Smooth Conditioner',grosor:['fino','medio'],presu:['economico','medio'],ayuda:['resequedad'],uso:'Aplica solo de medios a puntas, nunca en la raíz/cuero cabelludo — en cabello fino y graso, poner acondicionador en la raíz lo aplana y engrasa más rápido.'},

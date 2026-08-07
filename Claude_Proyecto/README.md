@@ -2,6 +2,14 @@
 
 Este documento es el **índice central** de todo lo que vive en `Claude_Proyecto/`: qué apps existen, dónde están sus datos, cómo se relacionan entre sí, y qué hay que tocar cuando se edita algo. Está pensado para leerse **antes** de tocar cualquier archivo — evita tener que releer miles de líneas de HTML/JS para entender cómo encaja todo.
 
+## Propósito de este proyecto (pedido explícito de Adán, 2026-08-07)
+
+> "Tú existes para hacer la mejor versión de mí, para eso es el dashboard. Mi meta es ser millonario."
+
+Esta es la instrucción que debe guiar **todo** lo que se construye o cambia aquí, no solo el Dashboard: cada app de este ecosistema (Coach, Finanzas, CuidadoPersonal, Dashboard) existe para ayudar a Adán a convertirse en su mejor versión — salud, disciplina, habilidades, negocio y dinero — con la meta explícita de llegar a **$1,000,000 de patrimonio líquido para el 01/01/2030** (ya codificada como `GOAL` en `Dashboard/dashboard.html → renderMetasSlide()` y como la meta central del Plan Maestro en `Coach/Coach_v2.html`).
+
+**Cómo aplica esto en la práctica**: cuando Adán pide una funcionalidad nueva (p. ej. "ponme las cosas importantes del mes"), la expectativa no es solo ejecutar literalmente lo pedido con el mínimo de datos — es usar **todo lo que ya se sabe de él en el resto del proyecto** (fases del Plan Maestro, metas financieras, rutina de salud, etc.) para que el resultado realmente lo ayude a avanzar, y ser explícito sobre qué es dato real documentado en el proyecto vs. qué haría falta que él mismo proporcione (nunca inventar cifras, fechas o hechos que no existan en ningún archivo — eso rompe la confianza en el sistema completo).
+
 **Regla del proyecto (pedida por Adán, 2026-07-29): toda la aplicación (todas las apps de vida/negocio, no las de estudio) debe estar bien referenciada y trazable.**
 - **Cada archivo `.html` tiene su propio `.md`** con la misma información que un futuro Claude necesitaría para modificarlo sin releer todo el código: estructura, modelo de datos (`localStorage`), funciones clave, y referencias cruzadas a otros archivos.
 - **Convención de nombres (pedida por Adán, 2026-07-30):** el `.md` de cada `.html` se llama `readme_{nombrehtml}.md` (ej. `Coach_v2.html` → `readme_coach_v2.md`) para diferenciarlos rápido de un vistazo en el árbol de carpetas. Este `README.md` de la raíz es la única excepción — es el mapa maestro, no el doc de un `.html` específico.
