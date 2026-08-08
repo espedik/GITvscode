@@ -170,3 +170,11 @@ Se abre `CuidadoPersonal/cuidadopersonal.html` (subtab Cuidado de la Salud) o di
 ## Fix: agregar un suplemento del catálogo dos veces lo duplicaba (2026-08-05)
 
 Encontrado en una auditoría general del ecosistema pedida por Adán ("mejora todos los html, ve funciones o cosas que les falten"). `addFromCatalog(i)` (botón "➕ Agregar a mi lista" de Suplementos) hacía `push()` directo sin comprobar si ese suplemento del `SUPP_CATALOG` ya estaba en `S.suplementos.lista` — un doble clic (o volver a pulsar el mismo suplemento) creaba una fila duplicada, cada una con su propio checkbox independiente de "tomado hoy". Fix: `if(S.suplementos.lista.some(x=>x.nombre===s.nombre)) return toast('Ya está en tu lista')` antes del `push()`. Verificado con Playwright: agregar el mismo suplemento del catálogo dos veces deja la lista en 1 solo ítem; cero errores de consola.
+
+## Deep-link `?tab=` para enlazar directo a una pestaña (2026-08-07)
+
+Necesario para que las nuevas tareas de suplementos AM/PM de `RUTINA_TASKS` (Coach y Dashboard, ver `readme_coach_v2.md`/`readme_dashboard.md` misma fecha) pudieran enlazar directo a la pestaña Suplementos en vez de a la pantalla de inicio — mismo patrón que ya usaban `cuidadopersonal.html` (`?tab=cabello`) y `comida.html` (`?s=desayunos`/`?s=cenas`), que `salud.html` no tenía todavía.
+
+- `init()` ahora lee `new URLSearchParams(location.search).get('tab')` y, si el valor está en `SECS` (las 8 secciones válidas: dashboard, medidas, digestiva, examenes, postura, mental, suplementos, metas), llama `nav(tabInicial)` en vez de `renderDashboard()` por defecto.
+- Usado ahora mismo por `salud.html?tab=suplementos` desde las tareas de rutina; queda disponible para cualquier otro link futuro hacia una pestaña específica de esta app.
+- Verificado con Playwright: `salud.html?tab=suplementos` abre directo con "💊 Suplementos" como título activo y la sección `#s-suplementos` marcada `active` (en vez de caer en el Dashboard por defecto); sin parámetro, el comportamiento no cambió; cero errores de consola.

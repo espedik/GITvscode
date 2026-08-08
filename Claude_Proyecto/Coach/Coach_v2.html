@@ -557,6 +557,19 @@
       .skill-radar-card { width: 100% !important; max-width: 360px; position: static !important; margin: 0 auto 20px; }
     }
 
+    /* Barras de habilidades — reemplaza el radar/canvas (2026-08-07, mismo componente que
+       Dashboard/dashboard.html → slide Habilidades, adaptado a las variables de tema de este
+       archivo). Delgadas a propósito, mismo criterio que la versión del Dashboard. */
+    .skill-bars-list{display:flex;flex-direction:column;margin:14px 0}
+    .skbar-row{padding:4px 0;border-bottom:1px solid var(--border)}
+    .skbar-row:last-child{border-bottom:none}
+    .skbar-head{display:flex;align-items:center;gap:5px}
+    .skbar-ico{font-size:12px;flex-shrink:0}
+    .skbar-name{font-size:11px;font-weight:700;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .skbar-chip{font-size:7.5px;font-weight:800;letter-spacing:.02em;padding:1px 5px;border-radius:20px;border:1px solid transparent;flex-shrink:0}
+    .skbar-val{margin-left:auto;font-family:var(--mono);font-size:10.5px;font-weight:800;flex-shrink:0;white-space:nowrap}
+    .skbar-val small{font-size:8.5px;font-weight:600;color:var(--muted)}
+
     .skill-tab-btn {
       background: var(--surface);
       border: 1px solid var(--border);
@@ -1090,11 +1103,11 @@
       <div class="skill-radar-grid" style="display:grid;grid-template-columns:auto 1fr;gap:28px;align-items:start;">
 
         <!-- FIFA Card -->
-        <div class="skill-radar-card" style="background:var(--surface);border:1px solid var(--accent);border-radius:var(--radius);padding:22px;text-align:center;width:320px;position:sticky;top:80px;">
+        <div class="skill-radar-card" style="background:var(--surface);border:1px solid var(--accent);border-radius:var(--radius);padding:22px;text-align:center;width:360px;position:sticky;top:80px;">
           <p style="font-size:9px;letter-spacing:3px;color:var(--muted);margin-bottom:2px;text-transform:uppercase;">Constructor de Riqueza · 2026</p>
           <div id="ovrValue" class="num" style="font-size:72px;font-weight:800;color:var(--accent);line-height:1;">52</div>
           <div id="ovrLabel" style="font-size:11px;font-weight:800;letter-spacing:2px;color:#e08c14;margin-bottom:12px;">MEDIO</div>
-          <canvas id="skillRadar" width="460" height="460" style="max-width:280px;display:block;margin:0 auto;"></canvas>
+          <div id="skillBars" class="skill-bars-list" style="text-align:left"></div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px;">
             <div style="background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:8px;">
               <div style="font-size:9px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:3px;">Top habilidad</div>
@@ -2248,9 +2261,8 @@
       <div class="card mt-16" style="margin-top:16px;">
         <h3 class="fw-700 mb-12">💊 Suplementación</h3>
         <p class="fs-13 text-muted" style="line-height:1.7;">
-          Fuera de prioridad mientras el fondo de emergencia esté en $0 y haya deuda cara sin liquidar (ver Mi Perfil
-          Real). Lo único no negociable sin costo: dormir 7h, tomar agua, y proteína suficiente en tus comidas.
-          Cuando el fondo de emergencia llegue a $10,000, revisa un stack básico (D3, Omega-3, Magnesio) — no antes.
+          Ya integrado en tu <a href="#rutina" class="inline-link">Rutina</a> — bloque de AM (Vitamina D3, Multivitamínico, Omega 3, Creatina) y bloque de PM (Magnesio, Proteína Whey si no llegaste a tu meta de proteína). Detalle de dosis y momento en <a href="../CuidadoPersonal/salud.html?tab=suplementos" class="inline-link" target="_blank">Mi Salud → Suplementos</a>.
+          Decidiste priorizarlo ya, antes de que el fondo de emergencia llegue a $10,000 (ver Mi Perfil Real) — para no descarrilar Fase 0, cómpralos de uno en uno conforme se te terminen, no los 6 de golpe.
         </p>
       </div>
 
@@ -2285,8 +2297,8 @@
        4. TRACKER DE HÁBITOS
   ══════════════════════════════════════════ -->
   <section id="aprendizaje">
-    <h2 class="section-title">📚 Aprendizaje — Ataca tus 5 debilidades</h2>
-    <p class="fs-13 text-muted mb-12">El nivel real de tus 12 habilidades y el roadmap 0→100 completo de cada una viven en el radar de <a href="#perfil" class="inline-link">Mi Perfil Real</a>. Esto es el plan de ataque concreto para tus 5 prioridades reales — con el primer paso de esta semana, el hábito que lo sostiene, y los recursos exactos. Ninguna está iniciada todavía.</p>
+    <h2 class="section-title">📚 Aprendizaje — Ataca tus 6 debilidades</h2>
+    <p class="fs-13 text-muted mb-12">El nivel real de tus 12 habilidades y el roadmap 0→100 completo de cada una viven en el radar de <a href="#perfil" class="inline-link">Mi Perfil Real</a>. Esto es el plan de ataque concreto para tus 6 prioridades reales — por qué está baja específicamente en tu caso (no un texto genérico), el primer paso de esta semana, cómo profundizar en las semanas 2-4, el hábito que lo sostiene, el error más común que la aleja, y los recursos exactos. Ninguna está iniciada todavía.</p>
 
     <div class="card" style="margin-bottom:16px;">
       <div style="display:flex; align-items:flex-start; gap:12px; margin-bottom:8px;">
@@ -2327,8 +2339,10 @@
         <span class="tag pendiente" style="flex-shrink:0;">Sin iniciar</span>
       </div>
 
-      <p class="fs-13 mb-4" style="margin-top:10px;"><strong style="color:var(--accent);">🎯 Primer paso esta semana:</strong> lee el capítulo 1 de "Influence" (reciprocidad) y envía 1 mensaje personalizado — no genérico — a un prospecto real de tu red de Ford/Continental/Bosch.</p>
-      <p class="fs-13 mb-12"><strong style="color:var(--accent);">🔁 Hábito recomendado:</strong> 5 mensajes personalizados/día a prospectos, más follow-up de contactos anteriores en los días 1-3-7-14-30.</p>
+      <p class="fs-13 mb-4" style="margin-top:10px;"><strong style="color:var(--accent);">🎯 Primer paso esta semana:</strong> lee el capítulo 1 de "Influence" (reciprocidad) y úsalo en el mensaje de venta que ya tienes listo en <a href="#plantillas-mensajes" class="inline-link">Plantillas de mensajes</a>: personalízalo con tu precio de lanzamiento ($99 MXN) y publícalo en 1 comunidad real de GBM/inversión.</p>
+      <p class="fs-13 mb-4"><strong style="color:var(--accent);">📆 Semanas 2-4:</strong> arma un embudo simple de 3 columnas (Contactado / Respondió / Cerró) para la plantilla Finanzas.html y llénalo con 5 conversaciones reales por semana — sin medirlo, no vas a saber si estás mejorando o solo ocupado.</p>
+      <p class="fs-13 mb-4"><strong style="color:var(--accent);">🔁 Hábito recomendado:</strong> 5 mensajes personalizados/día a prospectos, más follow-up de contactos anteriores en los días 1-3-7-14-30.</p>
+      <p class="fs-13 mb-12"><strong style="color:var(--accent);">⚠️ Error común:</strong> rendirte después de un "no" o un silencio. La mayoría de las ventas B2B cierran entre el 3er y 5to contacto, no en el primero — el follow-up es la venta, no un extra opcional.</p>
 
       <hr class="divider">
       <h4 style="color:var(--accent); margin-bottom:8px; font-size:12px;">📚 Recursos</h4>
@@ -2353,7 +2367,9 @@
       </div>
 
       <p class="fs-13 mb-4" style="margin-top:10px;"><strong style="color:var(--accent);">🎯 Primer paso esta semana:</strong> termina el módulo de fundamentos de Google Digital Garage y publica tu primer post de valor en LinkedIn sobre la plantilla Finanzas.html.</p>
-      <p class="fs-13 mb-12"><strong style="color:var(--accent);">🔁 Hábito recomendado:</strong> 3 publicaciones/semana en LinkedIn con contenido de valor — lunes, miércoles y viernes.</p>
+      <p class="fs-13 mb-4"><strong style="color:var(--accent);">📆 Semanas 2-4:</strong> publica 4 semanas seguidas (1 post/semana mínimo) y anota views/comentarios/DMs de cada uno en una nota simple — al final del mes vas a saber qué formato (texto, carrusel, caso real) te funcionó mejor, en vez de seguir adivinando.</p>
+      <p class="fs-13 mb-4"><strong style="color:var(--accent);">🔁 Hábito recomendado:</strong> 3 publicaciones/semana en LinkedIn con contenido de valor — lunes, miércoles y viernes.</p>
+      <p class="fs-13 mb-12"><strong style="color:var(--accent);">⚠️ Error común:</strong> perfeccionar el post en vez de publicarlo. La versión imperfecta que sí sale hoy vale más que la perfecta que nunca sale — puedes editar/mejorar el siguiente con lo que aprendas de este.</p>
 
       <hr class="divider">
       <h4 style="color:var(--accent); margin-bottom:8px; font-size:12px;">📚 Recursos</h4>
@@ -2378,7 +2394,9 @@
       </div>
 
       <p class="fs-13 mb-4" style="margin-top:10px;"><strong style="color:var(--accent);">🎯 Primer paso esta semana:</strong> instala YNAB o Finerio y conecta tus cuentas para categorizar automáticamente los gastos de este mes.</p>
-      <p class="fs-13 mb-12"><strong style="color:var(--accent);">🔁 Hábito recomendado:</strong> revisión de 10 min cada domingo — clasifica los gastos de la semana y compáralos contra tu presupuesto.</p>
+      <p class="fs-13 mb-4"><strong style="color:var(--accent);">📆 Semanas 2-4:</strong> clasifica 30 días completos de gastos reales (no estimados) y encuentra las 3 categorías donde más se te va el dinero sin darte cuenta — esos son los primeros pesos que recortas, no los obvios.</p>
+      <p class="fs-13 mb-4"><strong style="color:var(--accent);">🔁 Hábito recomendado:</strong> revisión de 10 min cada domingo — clasifica los gastos de la semana y compáralos contra tu presupuesto.</p>
+      <p class="fs-13 mb-12"><strong style="color:var(--accent);">⚠️ Error común:</strong> tratar los MSI como "dinero gratis" en vez de deuda ya comprometida. Cada MSI nuevo reduce el excedente real que tienes disponible para pagar Banamex/BBVA ese mes, aunque no lo sientas de inmediato.</p>
 
       <hr class="divider">
       <h4 style="color:var(--accent); margin-bottom:8px; font-size:12px;">📚 Recursos</h4>
@@ -2388,7 +2406,7 @@
       <div class="recurso-item"><span class="recurso-tipo r-libro">Libro</span><div><strong>Psicología del Dinero</strong> — Morgan Housel · el mayor riesgo es no entender tu propio comportamiento con el dinero.</div></div>
     </div>
 
-    <div class="card">
+    <div class="card" style="margin-bottom:16px;">
       <div style="display:flex; align-items:flex-start; gap:12px; margin-bottom:8px;">
         <input type="checkbox" id="cu5" style="margin-top:4px; width:16px; height:16px; accent-color:var(--accent); flex-shrink:0;">
         <div style="flex:1;">
@@ -2397,13 +2415,15 @@
             <span class="fs-13 text-muted" style="font-family:var(--mono); font-weight:700; flex-shrink:0;">30/100</span>
           </div>
           <div class="progress-bar" style="margin:8px 0;"><div class="progress-fill" style="width:30%;"></div></div>
-          <p class="fs-13 text-muted">Ya la usas en el trabajo — falta aplicarla a tus propios proyectos (Opción 1, 3). Es tu habilidad más alta de las 5, la más rápida de subir porque ya tienes la base técnica.</p>
+          <p class="fs-13 text-muted">Te sientes principiante, pero ya validaste IA generativa para Google y usas Claude Code a diario en producción — el hueco real no es técnico, es que nunca lo has aplicado a un proyecto tuyo, solo al trabajo de otros.</p>
         </div>
         <span class="tag pendiente" style="flex-shrink:0;">Sin iniciar</span>
       </div>
 
       <p class="fs-13 mb-4" style="margin-top:10px;"><strong style="color:var(--accent);">🎯 Primer paso esta semana:</strong> construye una primera automatización simple en n8n.io conectando un formulario a Google Sheets — menos de 1 hora.</p>
-      <p class="fs-13 mb-12"><strong style="color:var(--accent);">🔁 Hábito recomendado:</strong> 1 bloque de 30 min/semana para construir (no solo leer) un mini-proyecto de IA aplicado a tus opciones de negocio.</p>
+      <p class="fs-13 mb-4"><strong style="color:var(--accent);">📆 Semanas 2-4:</strong> aplica esa misma automatización a un problema real tuyo (ej. capturar leads de la plantilla Finanzas.html sin revisar mensajes a mano) — la diferencia entre "saber IA" y "usar IA" es tenerla resolviendo algo tuyo, no un ejercicio de práctica.</p>
+      <p class="fs-13 mb-4"><strong style="color:var(--accent);">🔁 Hábito recomendado:</strong> 1 bloque de 30 min/semana para construir (no solo leer) un mini-proyecto de IA aplicado a tus opciones de negocio.</p>
+      <p class="fs-13 mb-12"><strong style="color:var(--accent);">⚠️ Error común:</strong> quedarte en el modo "leer sobre IA" indefinidamente. Ya tienes más base real que la mayoría (Visión Artificial, Sistemas Neurodifusos en tu carrera) — te falta construir, no aprender más teoría.</p>
 
       <hr class="divider">
       <h4 style="color:var(--accent); margin-bottom:8px; font-size:12px;">📚 Recursos</h4>
@@ -2411,6 +2431,33 @@
       <div class="recurso-item"><span class="recurso-tipo r-curso">Curso</span><div><strong>Fast.ai</strong> — el mejor curso de deep learning del mundo, gratis, enfoque top-down.</div></div>
       <div class="recurso-item"><span class="recurso-tipo r-tool">Tool</span><div><strong>n8n.io</strong> — automatización sin código, ideal para venderla como servicio a PYMES.</div></div>
       <div class="recurso-item"><span class="recurso-tipo r-tool">Tool</span><div><strong>Cursor IDE</strong> — el editor más productivo con IA integrada, tu velocidad de código se duplica en 2 semanas.</div></div>
+    </div>
+
+    <div class="card">
+      <div style="display:flex; align-items:flex-start; gap:12px; margin-bottom:8px;">
+        <input type="checkbox" id="cu6" style="margin-top:4px; width:16px; height:16px; accent-color:var(--accent); flex-shrink:0;">
+        <div style="flex:1;">
+          <div style="display:flex; justify-content:space-between; align-items:baseline; gap:10px;">
+            <h3 class="fw-700" style="font-size:15px;">📈 Inversión en Mercados</h3>
+            <span class="fs-13 text-muted" style="font-family:var(--mono); font-weight:700; flex-shrink:0;">25/100</span>
+          </div>
+          <div class="progress-bar" style="margin:8px 0;"><div class="progress-fill" style="width:25%;"></div></div>
+          <p class="fs-13 text-muted">Ya diste el primer paso real (CETES, BTC, acciones en GBM) — la mayoría de la gente nunca llega ahí. Lo que falta no es empezar, es estructura: decides monto e instrumento cada lunes sobre la marcha, en vez de seguir una asignación ya definida.</p>
+        </div>
+        <span class="tag pendiente" style="flex-shrink:0;">Sin iniciar</span>
+      </div>
+
+      <p class="fs-13 mb-4" style="margin-top:10px;"><strong style="color:var(--accent);">🎯 Primer paso esta semana:</strong> define por escrito, una sola vez, tu asignación objetivo (ej. % CETES/renta fija, % índice VOO, % BTC) — deja de decidirlo cada lunes desde cero.</p>
+      <p class="fs-13 mb-4"><strong style="color:var(--accent);">📆 Semanas 2-4:</strong> automatiza un monto fijo cada lunes hacia esa asignación (aunque sea pequeño) durante 4 semanas seguidas — la consistencia del monto importa más que acertarle al mejor momento para invertir.</p>
+      <p class="fs-13 mb-4"><strong style="color:var(--accent);">🔁 Hábito recomendado:</strong> revisar portafolio + VOO + USD/MXN e invertir, todos los lunes en la mañana antes de que empiece el ruido del día (ya está en tu rutina — la meta es que nunca se salte).</p>
+      <p class="fs-13 mb-12"><strong style="color:var(--accent);">⚠️ Error común:</strong> sacar dinero de la inversión para cubrir un gasto del mes. Eso convierte tu inversión de largo plazo en un fondo de emergencia mal disfrazado — para eso ya existe el fondo de emergencia aparte.</p>
+
+      <hr class="divider">
+      <h4 style="color:var(--accent); margin-bottom:8px; font-size:12px;">📚 Recursos</h4>
+      <div class="recurso-item"><span class="recurso-tipo r-libro">Libro</span><div><strong>The Intelligent Investor</strong> — Benjamin Graham · el libro base de inversión en valor, aplicable a cualquier mercado.</div></div>
+      <div class="recurso-item"><span class="recurso-tipo r-libro">Libro</span><div><strong>The Little Book of Common Sense Investing</strong> — John Bogle · por qué los fondos indexados (como tu VOO) le ganan a casi todos los que intentan adivinar el mercado.</div></div>
+      <div class="recurso-item"><span class="recurso-tipo r-libro">Libro</span><div><strong>A Random Walk Down Wall Street</strong> — Burton Malkiel · clásico sobre por qué la consistencia le gana al timing perfecto.</div></div>
+      <div class="recurso-item"><span class="recurso-tipo r-libro">Libro</span><div><strong>One Up On Wall Street</strong> — Peter Lynch · cómo evaluar una inversión con lo que ya observas en tu día a día, sin ser experto de tiempo completo.</div></div>
     </div>
   </section>
 
@@ -2985,7 +3032,7 @@
     </div><!-- /negocio-grid -->
 
     <!-- PLANTILLAS -->
-    <div class="card mb-16" style="margin-bottom:16px;">
+    <div class="card mb-16" id="plantillas-mensajes" style="margin-bottom:16px;">
       <h3 class="fw-700 mb-12">Plantillas de mensajes — listas para copiar</h3>
       <p class="fs-13 text-muted mb-12">Tu bloqueo no es no saber qué decir — es no tener nada escrito para empezar. Copia esto, ajusta el nombre, y mándalo. Editar algo que ya existe es mucho más fácil que crear desde cero.</p>
 
@@ -2994,9 +3041,25 @@
         "Hola [nombre], ¿cómo va todo en [empresa]? Te escribo porque ando abriendo un poco de tiempo para proyectos freelance de automatización de pruebas (Python, CAPL, HIL/CI-CD) — nada que compita con Ford/ALTEN, más bien para otros equipos o proveedores. ¿Tu equipo anda necesitando apoyo extra en algo así, o conoces a alguien que sí? Sin compromiso, solo preguntando."
       </p>
 
-      <h5 class="mt-8">Opción 1 — post para comunidades de GBM</h5>
+      <h5 class="mt-8">Opción 1 — post para comunidades de GBM (ya terminado, listo para publicar)</h5>
+      <p class="fs-13 text-muted mb-4" style="margin-top:6px;">No es una plantilla con huecos — está terminado. Solo cámbiale el precio si decides arrancar en otro número, y pégalo tal cual en el grupo.</p>
       <p class="fs-13" style="line-height:1.6;background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 14px;font-style:italic;">
-        "Hice una plantilla de Excel/HTML para trackear mi patrimonio neto, deudas, inversiones y presupuesto en un solo lugar — la empecé a usar hace [tiempo] porque ninguna app gratuita me dejaba ver todo junto. Quedó bien completa así que decidí ponerla disponible por $[precio] — [1-2 líneas de qué incluye]. Si a alguien le sirve algo así, con gusto se las paso."
+        "Hace unos meses me cansé de tener mi dinero repartido entre el Excel del banco, la app de GBM y notas sueltas — armé mi propia plantilla en HTML para ver patrimonio neto, deudas, inversiones y presupuesto en un solo lugar. La usé yo mismo varios meses, la limpié de mis datos y la dejé lista para quien le sirva.<br><br>
+        Qué incluye:<br>
+        📊 Dashboard con tu patrimonio neto en tiempo real<br>
+        💳 Transacciones y presupuesto por categoría<br>
+        🏦 Seguimiento de deudas (tasa, plazo, cuánto te falta)<br>
+        📈 Plan de inversiones pensado para quien invierte en GBM/CETES/índices<br>
+        🎯 Metas de ahorro con avance visual<br>
+        📐 Indicadores financieros clave, todo en un solo lugar<br><br>
+        No es una app con servidor ni suscripción: es un archivo que corre en tu navegador, tus datos se quedan en tu computadora, nadie más los ve.<br><br>
+        Precio de lanzamiento: $99 MXN (para los primeros, después sube). Si te late o tienes dudas, mándame DM."
+      </p>
+
+      <h5 class="mt-8">Opción 1 — mensaje directo a un prospecto individual</h5>
+      <p class="fs-13 text-muted mb-4" style="margin-top:6px;">Para cuando alguien reacciona al post, comenta algo relacionado a finanzas en el grupo, o quieres abrir la conversación tú primero en un chat privado.</p>
+      <p class="fs-13" style="line-height:1.6;background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 14px;font-style:italic;">
+        "Oye [nombre], vi que andas metido en temas de inversión — armé una plantilla para llevar patrimonio neto, deudas, presupuesto e inversiones en un solo lugar, la uso yo desde hace meses. La dejé lista para pasarla a $99 MXN de lanzamiento. ¿Te interesa que te la mande o prefieres que te enseñe primero cómo se ve?"
       </p>
 
       <h5 class="mt-8">Opción 3 — post de mentoría (LinkedIn)</h5>
@@ -3626,6 +3689,12 @@
       {id:'wd03c', txt:'Hidratante con protector solar SPF 50 (ej. La Roche-Posay Anthelios) — hidrata y protege del sol, obligatorio de día'},
       {id:'wd04', txt:'Minoxidil 5% en cuero cabelludo seco — estimula el folículo, dosis de la mañana'},
     ]},
+    {id:'wdSupAm', dias:[1,2,3,4,5], hora:'07:25', cat:'salud', txt:'💊 Suplementos AM', subtareas:[
+      {id:'wdSupAm1', txt:'Vitamina D3 — 2000-4000 UI, con algo de grasa en la comida', link:{href:'../CuidadoPersonal/salud.html?tab=suplementos', label:'💊 Ver Suplementos'}},
+      {id:'wdSupAm2', txt:'Multivitamínico — 1 tableta'},
+      {id:'wdSupAm3', txt:'Omega 3 — 1-2g EPA+DHA, con alimento'},
+      {id:'wdSupAm4', txt:'Creatina monohidratada — 5g (todos los días, no solo si entrenas hoy)'},
+    ]},
     {id:'wd05', dias:[1,2,3,4,5], hora:'07:33', cat:'descanso', txt:'Vestirte y alistarte'},
     {id:'wd06', dias:[1,2,3,4,5], hora:'07:40', cat:'descanso', txt:'Salir de casa — traslado a ALTEN (~20 min manejando)'},
     {id:'wd07', dias:[1,2,3,4,5], hora:'08:00', cat:'trabajo',  txt:'🏢 ALTEN — jornada laboral (HIL/SIL Ford)', fijo:true},
@@ -3659,6 +3728,10 @@
       {id:'wd20b', txt:'Sostén el aire 4 segundos'},
       {id:'wd20c', txt:'Exhala 4 segundos por la boca'},
       {id:'wd20d', txt:'Sostén sin aire 4 segundos — repite el ciclo (~10 veces en 10 min)'},
+    ]},
+    {id:'wdSupPm', dias:[1,2,3,4,5], hora:'23:05', cat:'salud', txt:'💊 Suplementos PM', subtareas:[
+      {id:'wdSupPm1', txt:'Magnesio (glicinato) — 200-400mg, 30-60 min antes de dormir', link:{href:'../CuidadoPersonal/salud.html?tab=suplementos', label:'💊 Ver Suplementos'}},
+      {id:'wdSupPm2', txt:'Proteína Whey — 25-30g si hoy no llegaste a tu meta de proteína (186g/día)'},
     ]},
     {id:'wd20e', dias:[1,2,3,4,5], hora:'23:10', cat:'descanso', txt:'Tiempo libre / relajación antes de dormir'},
     {id:'wd21', dias:[1,2,3,4,5], hora:'23:55', cat:'salud',    txt:'Apagar pantallas. Dormir — buscas ~7h (medianoche a 7:00am)'},
@@ -3701,7 +3774,7 @@
       {id:'e5d', txt:'Hip thrust — 3×12'},
       {id:'e5e', txt:'Elevación de pantorrilla — 3×15'},
     ]},
-    {id:'k5', dias:[5], hora:'19:00', cat:'creativo', txt:'✍️ Copy: mejora o escribe 1 mensaje de venta / la landing de la plantilla GBM'},
+    {id:'k5', dias:[5], hora:'19:00', cat:'creativo', txt:'📣 GBM: personaliza el post de venta ya escrito (precio/fecha) y publícalo en 1 comunidad real de inversión', link:{href:'#plantillas-mensajes', label:'Ver mensaje ya escrito'}},
 
     // ── Sábado ───────────────────────────────────────────────────────────
     {id:'sa01',  dias:[6], hora:'07:00', cat:'salud',    txt:'Despertar (sin alarma agresiva)'},
@@ -3710,6 +3783,12 @@
       {id:'sa02b', txt:'Minoxidil 5% en cuero cabelludo seco — dosis de la mañana'},
     ]},
     {id:'sa03',  dias:[6], hora:'07:18', cat:'salud', txt:'🍳 Preparar y desayunar tranquilo', link:{href:'../CuidadoPersonal/comida.html?s=desayunos', label:'Ver desayunos'}},
+    {id:'saSupAm', dias:[6], hora:'07:30', cat:'salud', txt:'💊 Suplementos AM', subtareas:[
+      {id:'saSupAm1', txt:'Vitamina D3 — 2000-4000 UI, con algo de grasa en la comida', link:{href:'../CuidadoPersonal/salud.html?tab=suplementos', label:'💊 Ver Suplementos'}},
+      {id:'saSupAm2', txt:'Multivitamínico — 1 tableta'},
+      {id:'saSupAm3', txt:'Omega 3 — 1-2g EPA+DHA, con alimento'},
+      {id:'saSupAm4', txt:'Creatina monohidratada — 5g (todos los días, no solo si entrenas hoy)'},
+    ]},
     {id:'sa04',  dias:[6], hora:'07:35', cat:'salud',    txt:'Ejercicio 1h — entreno largo / lo que falte en la semana'},
     {id:'sa0506', dias:[6], hora:'08:35', cat:'salud', txt:'🚿 Ducha + lavar cabello', subtareas:[
       {id:'sa05a', txt:'Champú: Darrow Doctar (shampoo con alcatrão/coal tar, anticaspa) — masajea el cuero cabelludo 2-3 min, deja actuar antes de enjuagar', link:{href:'../CuidadoPersonal/cuidadopersonal.html?tab=cabello', label:'✂️ Ver Cuidado del Cabello'}},
@@ -3727,6 +3806,10 @@
       {id:'sa13', txt:'Skincare PM — limpiador + tratamiento (ácido salicílico/retinol) + hidratante nocturno'},
       {id:'sa13b', txt:'Minoxidil 5% en cuero cabelludo seco — dosis de la noche'},
     ]},
+    {id:'saSupPm', dias:[6], hora:'21:15', cat:'salud', txt:'💊 Suplementos PM', subtareas:[
+      {id:'saSupPm1', txt:'Magnesio (glicinato) — 200-400mg, 30-60 min antes de dormir', link:{href:'../CuidadoPersonal/salud.html?tab=suplementos', label:'💊 Ver Suplementos'}},
+      {id:'saSupPm2', txt:'Proteína Whey — 25-30g si hoy no llegaste a tu meta de proteína (186g/día)'},
+    ]},
     {id:'sa14',  dias:[6], hora:'21:30', cat:'descanso', txt:'🧘 Meditación — misma respiración box 4-4-4-4 que entre semana'},
     {id:'sa15',  dias:[6], hora:'21:45', cat:'salud',    txt:'Apagar pantallas. Dormir'},
 
@@ -3740,6 +3823,12 @@
       {id:'do02b', txt:'Minoxidil 5% en cuero cabelludo seco — dosis de la mañana'},
     ]},
     {id:'do03',  dias:[0], hora:'07:48', cat:'salud', txt:'🍳 Preparar y desayunar tranquilo', link:{href:'../CuidadoPersonal/comida.html?s=desayunos', label:'Ver desayunos'}},
+    {id:'doSupAm', dias:[0], hora:'07:55', cat:'salud', txt:'💊 Suplementos AM', subtareas:[
+      {id:'doSupAm1', txt:'Vitamina D3 — 2000-4000 UI, con algo de grasa en la comida', link:{href:'../CuidadoPersonal/salud.html?tab=suplementos', label:'💊 Ver Suplementos'}},
+      {id:'doSupAm2', txt:'Multivitamínico — 1 tableta'},
+      {id:'doSupAm3', txt:'Omega 3 — 1-2g EPA+DHA, con alimento'},
+      {id:'doSupAm4', txt:'Creatina monohidratada — 5g (todos los días, no solo si entrenas hoy)'},
+    ]},
     {id:'do04',  dias:[0], hora:'08:05', cat:'salud',    txt:'Ejercicio: descanso activo — caminata o movilidad 30 min'},
     {id:'do045', dias:[0], hora:'08:35', cat:'salud', txt:'🚿 Bañarte + cabello (sin champú hoy)', subtareas:[
       {id:'do045a', txt:'Acondicionador: TRESemmé Keratin Smooth Conditioner — solo de medios a puntas (co-wash, sin champú: hoy no toca el anticaída, eso es Lun/Jue/Sáb — usarlo a diario resecaría el cuero cabelludo)'},
@@ -3757,6 +3846,10 @@
     {id:'do1013', dias:[0], hora:'21:40', cat:'salud', txt:'🧴 Skincare + 🍂 Minoxidil — PM', subtareas:[
       {id:'do10', txt:'Skincare PM — limpiador + tratamiento (ácido salicílico/retinol) + hidratante nocturno'},
       {id:'do10b', txt:'Minoxidil 5% en cuero cabelludo seco — dosis de la noche'},
+    ]},
+    {id:'doSupPm', dias:[0], hora:'21:45', cat:'salud', txt:'💊 Suplementos PM', subtareas:[
+      {id:'doSupPm1', txt:'Magnesio (glicinato) — 200-400mg, 30-60 min antes de dormir', link:{href:'../CuidadoPersonal/salud.html?tab=suplementos', label:'💊 Ver Suplementos'}},
+      {id:'doSupPm2', txt:'Proteína Whey — 25-30g si hoy no llegaste a tu meta de proteína (186g/día)'},
     ]},
     {id:'do11',  dias:[0], hora:'22:00', cat:'descanso', txt:'🧘 Meditación — misma respiración box 4-4-4-4 que entre semana'},
     {id:'do12',  dias:[0], hora:'22:15', cat:'salud',    txt:'Apagar pantallas. Dormir'},
@@ -3976,82 +4069,30 @@
       return          {l:'PRINCIPIANTE',c:'#ef4444'};
     }
 
+    // Barras de habilidades — reemplaza el radar/canvas (2026-08-07, "pon ese mismo grafico en
+    // coach y reemplaza el radar", mismo componente que Dashboard/dashboard.html → slide
+    // Habilidades: ordenadas de más débil a más fuerte, icono+nombre+nivel+valor+ponderación
+    // y una barra delgada de color por nivel, reusando `.progress-bar`/`.progress-fill` ya
+    // existentes en este archivo en vez de duplicar esas clases.
     function draw(){
-      const cv=document.getElementById('skillRadar');
-      if(!cv)return;
-      const isDark=document.documentElement.getAttribute('data-theme')==='dark';
-      const ctx=cv.getContext('2d'),W=cv.width,H=cv.height,cx=W/2,cy=H/2,R=W*0.315,N=SK.length;
-      ctx.clearRect(0,0,W,H);
-
-      // Grid rings
-      [20,40,60,80,100].forEach((lv,li)=>{
-        ctx.beginPath();
-        for(let i=0;i<N;i++){
-          const a=(i*2*Math.PI/N)-Math.PI/2,r=R*lv/100;
-          i===0?ctx.moveTo(cx+r*Math.cos(a),cy+r*Math.sin(a)):ctx.lineTo(cx+r*Math.cos(a),cy+r*Math.sin(a));
-        }
-        ctx.closePath();
-        ctx.strokeStyle=li===4?'rgba(212,160,0,0.5)':(isDark?'rgba(255,255,255,0.12)':'rgba(0,0,0,0.08)');
-        ctx.lineWidth=li===4?1.5:1;
-        ctx.stroke();
-        // Ring labels
-        ctx.fillStyle=isDark?'rgba(255,255,255,0.45)':'rgba(0,0,0,0.35)';
-        ctx.font='9px Segoe UI';
-        ctx.textAlign='center';
-        ctx.textBaseline='middle';
-        ctx.fillText(lv,cx+4,cy-R*lv/100-4);
-      });
-
-      // Axis lines
-      for(let i=0;i<N;i++){
-        const a=(i*2*Math.PI/N)-Math.PI/2;
-        ctx.beginPath();ctx.moveTo(cx,cy);
-        ctx.lineTo(cx+R*Math.cos(a),cy+R*Math.sin(a));
-        ctx.strokeStyle=isDark?'rgba(255,255,255,0.16)':'rgba(0,0,0,0.1)';ctx.lineWidth=1;ctx.stroke();
-      }
-
-      // Filled polygon
-      ctx.beginPath();
-      SK.forEach((s,i)=>{
-        const a=(i*2*Math.PI/N)-Math.PI/2,r=R*s.val/100;
-        i===0?ctx.moveTo(cx+r*Math.cos(a),cy+r*Math.sin(a)):ctx.lineTo(cx+r*Math.cos(a),cy+r*Math.sin(a));
-      });
-      ctx.closePath();
-      ctx.fillStyle='rgba(240,180,41,0.14)';ctx.fill();
-      ctx.strokeStyle='#f0b429';ctx.lineWidth=2.5;ctx.stroke();
-
-      // Data points
-      SK.forEach((s,i)=>{
-        const a=(i*2*Math.PI/N)-Math.PI/2,r=R*s.val/100,lv=getLv(s.val);
-        ctx.beginPath();ctx.arc(cx+r*Math.cos(a),cy+r*Math.sin(a),5,0,Math.PI*2);
-        ctx.fillStyle=lv.c;ctx.fill();
-        ctx.strokeStyle=isDark?'rgba(255,255,255,0.55)':'rgba(0,0,0,0.5)';ctx.lineWidth=1;ctx.stroke();
-      });
-
-      // Labels around the radar
-      const LR=R+40;
-      SK.forEach((s,i)=>{
-        const a=(i*2*Math.PI/N)-Math.PI/2;
-        const lx=cx+LR*Math.cos(a),ly=cy+LR*Math.sin(a);
+      const el=document.getElementById('skillBars');
+      if(!el)return;
+      const ordenadas=[...SK].sort((a,b)=>a.val-b.val);
+      el.innerHTML=ordenadas.map(s=>{
         const lv=getLv(s.val);
-        ctx.textAlign='center';ctx.textBaseline='middle';
-        ctx.fillStyle=isDark?'#d8d8d8':'#333333';ctx.font='10px Segoe UI';
-        ctx.fillText(s.icon+' '+s.name,lx,ly-9);
-        ctx.fillStyle=lv.c;ctx.font='bold 13px Segoe UI';
-        ctx.fillText(s.val,lx,ly+9);
-      });
-
-      // Center OVR badge
-      const ovr=calcOVR();
-      ctx.beginPath();ctx.arc(cx,cy,34,0,Math.PI*2);
-      ctx.fillStyle='rgba(0,0,0,0.7)';ctx.fill();
-      ctx.strokeStyle='rgba(240,180,41,0.6)';ctx.lineWidth=1.5;ctx.stroke();
-      ctx.fillStyle='#f0b429';ctx.font='bold 23px Segoe UI';
-      ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(ovr,cx,cy-9);
-      ctx.fillStyle='rgba(255,255,255,0.45)';ctx.font='bold 9px Segoe UI';
-      ctx.fillText('OVR',cx,cy+10);
+        return `<div class="skbar-row">
+          <div class="skbar-head">
+            <span class="skbar-ico">${s.icon}</span>
+            <span class="skbar-name">${s.name}</span>
+            <span class="skbar-chip" style="background:${lv.c}22;color:${lv.c};border-color:${lv.c}55">${lv.l}</span>
+            <span class="skbar-val" style="color:${lv.c}">${s.val}<small>/100 · ×${s.w}</small></span>
+          </div>
+          <div class="progress-bar" style="height:5px"><div class="progress-fill" style="width:${s.val}%;background:${lv.c}"></div></div>
+        </div>`;
+      }).join('');
 
       // Update DOM elements
+      const ovr=calcOVR(),N=SK.length;
       const oE=document.getElementById('ovrValue'),oL=document.getElementById('ovrLabel');
       if(oE)oE.textContent=ovr;
       if(oL){const lv=getLv(ovr);oL.textContent=lv.l;oL.style.color=lv.c;}

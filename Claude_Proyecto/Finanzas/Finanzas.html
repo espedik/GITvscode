@@ -2389,7 +2389,7 @@ function renderIndicators() {
         background:${_activeM===snap.month?'rgba(0,212,255,.1)':'transparent'};
         color:${_activeM===snap.month?'var(--primary)':'var(--text2)'};
         font-weight:${_activeM===snap.month?800:500}">
-      🔒 ${_fmtM(snap.month)}
+      ${snap.backfilled?'🕓':'🔒'} ${_fmtM(snap.month)}
     </button>`).join('')}
   </div>`;
 
@@ -2401,11 +2401,13 @@ function renderIndicators() {
       const MNs2=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
       const [_y,_mn]=_snap.month.split('-');
       const _mesLabel=MNs2[parseInt(_mn)-1]+' '+_y;
-      const _frozenBanner=`<div style="display:flex;align-items:center;gap:10px;padding:10px 16px;background:rgba(0,212,255,.06);border:1px solid rgba(0,212,255,.15);border-radius:10px;margin-bottom:14px">
-        <span style="font-size:18px">🔒</span>
+      const _isBackfilled = !!_snap.backfilled;
+      const _fromLabel = _isBackfilled ? (()=>{const[_by,_bm]=_snap.backfilledFrom.split('-');return MNs2[parseInt(_bm)-1]+' '+_by;})() : '';
+      const _frozenBanner=`<div style="display:flex;align-items:center;gap:10px;padding:10px 16px;background:${_isBackfilled?'rgba(255,217,61,.07)':'rgba(0,212,255,.06)'};border:1px solid ${_isBackfilled?'rgba(255,217,61,.2)':'rgba(0,212,255,.15)'};border-radius:10px;margin-bottom:14px">
+        <span style="font-size:18px">${_isBackfilled?'🕓':'🔒'}</span>
         <div style="flex:1">
-          <div style="font-size:13px;font-weight:700;color:var(--primary)">Datos históricos — ${_mesLabel}</div>
-          <div style="font-size:10px;color:var(--text3)">Guardado el ${_snap.savedAt} · Solo lectura</div>
+          <div style="font-size:13px;font-weight:700;color:${_isBackfilled?'var(--warning)':'var(--primary)'}">${_isBackfilled?'Estimado — no se abrió la app ese mes':'Datos históricos'} — ${_mesLabel}</div>
+          <div style="font-size:10px;color:var(--text3)">${_isBackfilled?`No hay registro real de ${_mesLabel} — estos números son los de ${_fromLabel} (mes anterior más cercano), no una medición de ${_mesLabel}`:`Guardado el ${_snap.savedAt} · Solo lectura`}</div>
         </div>
         ${_curSnap?`<div style="text-align:right">
           <div style="font-size:10px;color:var(--text3)">Score entonces vs hoy</div>
@@ -2503,7 +2505,50 @@ function autoSaveCurrentMonthSnapshot() {
     didiMonthly:     S.didiMonthly||0,
   });
   S.indicatorHistory.sort((a,b)=>a.month.localeCompare(b.month));
+  backfillMissingMonthSnapshots();
   save();
+}
+
+// ── REGLA FIJA: el historial de Indicadores nunca debe tener meses sin registrar ──
+// autoSaveCurrentMonthSnapshot() de arriba solo guarda el mes ACTUAL (el que corre
+// mientras la app está abierta) — si Adán no abre Finanzas.html durante todo un mes
+// natural (ej. junio 2026), ese mes se quedaba sin snapshot para siempre, con un
+// hueco permanente en el historial. Esta función corre justo después, en cada carga
+// de la app, y rellena cualquier hueco entre el snapshot más antiguo y el más
+// reciente usando los datos del mes anterior más cercano (carry-forward) — nunca
+// datos de un mes futuro, para no fabricar historia que no existió. Cada mes
+// rellenado así queda marcado con `backfilled:true` y `backfilledFrom:'YYYY-MM'`
+// para que la interfaz lo muestre como estimado, no como un registro real de ese
+// mes (ver `_frozenBanner` y el tab bar en renderIndicators()). No se debe volver a
+// depender de "espero a que Adán abra la app justo ese mes" para tener historial
+// completo — este backfill es lo que lo garantiza para siempre.
+function backfillMissingMonthSnapshots() {
+  if(!S.indicatorHistory || S.indicatorHistory.length < 2) return;
+  const addMonth = (ym, n) => {
+    const [y,m] = ym.split('-').map(Number);
+    const d = new Date(y, (m-1)+n, 1);
+    return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+  };
+  const byMonth = {};
+  S.indicatorHistory.forEach(s=>byMonth[s.month]=s);
+  const sortedMonths = Object.keys(byMonth).sort();
+  const first = sortedMonths[0], last = sortedMonths[sortedMonths.length-1];
+  let cursor = first, changed = false;
+  while(cursor < last) {
+    const next = addMonth(cursor, 1);
+    if(!byMonth[next]) {
+      const filled = JSON.parse(JSON.stringify(byMonth[cursor]));
+      filled.month = next;
+      filled.savedAt = new Date().toISOString().split('T')[0];
+      filled.backfilled = true;
+      filled.backfilledFrom = byMonth[cursor].backfilled ? byMonth[cursor].backfilledFrom : cursor;
+      byMonth[next] = filled;
+      S.indicatorHistory.push(filled);
+      changed = true;
+    }
+    cursor = next;
+  }
+  if(changed) S.indicatorHistory.sort((a,b)=>a.month.localeCompare(b.month));
 }
 
 function renderSnapshotView(snap, curSnap) {
@@ -3569,6 +3614,20 @@ function importData(input) {
 const SEED_VER = '23'; // incrementar cada vez que cambie el seed — v23: meta Maestría refleja la pausa de 1 año decidida en Coach (date 2028-10-01, pausadaHasta 2027-07-18)
 function seedData() {
   if (localStorage.getItem(KEY+'_v') === SEED_VER) return;
+  // REGLA FIJA: `indicatorHistory` (historial mensual de Indicadores) nunca debe
+  // perderse en un reseed. A diferencia del resto de este seed (transacciones, deudas,
+  // metas...), que sí es contenido que Claude mantiene a mano para reflejar la
+  // realidad, `indicatorHistory` es un registro que la propia app genera solo con el
+  // paso del tiempo — si se borra, no hay forma de reconstruir después cuál era el
+  // patrimonio neto real de un mes ya pasado. Por eso se rescata ANTES de borrar
+  // `localStorage[KEY]` y se reinyecta después de sembrar los datos nuevos, para que
+  // subir SEED_VER (ya van 23+ veces en este proyecto, y seguirá pasando) nunca vuelva
+  // a borrar meses que Adán ya tenía registrados — como pasó con junio 2026.
+  let _preservedHistory = [];
+  try {
+    const _prevS = JSON.parse(localStorage.getItem(KEY) || 'null');
+    if (_prevS && Array.isArray(_prevS.indicatorHistory)) _preservedHistory = _prevS.indicatorHistory;
+  } catch(e) { /* localStorage corrupto o vacío — no hay nada que rescatar */ }
   localStorage.removeItem(KEY);
   S = {
     transactions: [
@@ -3759,6 +3818,7 @@ function seedData() {
     currentBtcPrice: 63875,
     usdMxn: 19.5
   };
+  S.indicatorHistory = _preservedHistory;
   save();
   localStorage.setItem(KEY+'_v', SEED_VER);
 }

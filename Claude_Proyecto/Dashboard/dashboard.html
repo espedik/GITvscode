@@ -6,12 +6,17 @@
 <title>JARVIS — Dashboard</title>
 <meta name="description" content="Salvapantallas de mando: rotación automática de pantallas con lo más importante y pendiente de Coach, Finanzas y el resto de mis proyectos.">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='46' fill='%2305050a' stroke='%2300e0c0' stroke-width='4'/%3E%3Ccircle cx='50' cy='50' r='14' fill='%2300e0c0'/%3E%3Ccircle cx='50' cy='50' r='30' fill='none' stroke='%2300e0c0' stroke-width='2' opacity='.5'/%3E%3C/svg%3E">
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <!-- Contenido real de las 35 lecciones de Aleman/ (ALEMAN_CONTENT), extraído automáticamente por
      Aleman/_generar-datos-dashboard.js — ver "Alemán del día" en readme_dashboard.md. No es un
      resumen ni texto reescrito a mano: es el vocabulario/diálogos/ejercicios reales de cada
      lección, listo para pintarse con el estilo nativo del Dashboard. -->
 <script src="aleman-data.js"></script>
+<!-- Contenido real de los 229 temas de Entrevistas/ (ENTREVISTA_TEMAS/ENTREVISTA_CONTENT/
+     ENTREVISTA_CSS), extraído automáticamente por Entrevistas/_generar-datos-dashboard.js — ver
+     "Entrevista del día" en readme_dashboard.md. Es el HTML real de cada tema (ya escrito a mano
+     en Entrevistas/js/data-*.js, no scrapeado de un render), más el CSS de sus propias clases de
+     contenido reescrito con el prefijo .en-content — ya no vive dentro de un <iframe>. -->
+<script src="entrevistas-data.js"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;700&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&display=swap');
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -180,11 +185,26 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 .ds-txt{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text2)}
 .ds-empty{color:var(--text3);font-size:14px}
 
-.chart-wrap{position:relative;height:clamp(240px,34vh,420px)}
-/* El tile ya no ocupa todo el ancho de la fila (dejaba mucho fondo vacío a los lados del
-   círculo del radar) — se angosta al tamaño real que necesita el gráfico + sus etiquetas, y
-   queda centrado; el resto del slide (título + tarjetas de abajo) sigue a ancho completo. */
-.chart-wrap-lg{display:flex;justify-content:center;align-items:center;height:clamp(320px,54vh,560px);max-width:680px;margin:0 auto}
+/* ─── HABILIDADES — barras detalladas a todo el ancho (2026-08-07, reemplaza el radar) ───
+   Pedido explícito: "en vez del radar mejor ponlo en barras y se muy detallado, asi abarcamos
+   todo el ancho de la pagina". 2 columnas en desktop (6+6 filas), 1 columna en pantallas angostas. */
+#skillBars.tile{padding:8px 12px}
+.skill-bars-head{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px;margin-bottom:2px}
+.skill-bars-ovr{font-size:11px;color:var(--text2)}
+.skill-bars-ovr b{font-family:var(--mono);font-size:13px;color:var(--text)}
+.skill-bars-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 28px}
+@media(max-width:900px){.skill-bars-grid{grid-template-columns:1fr}}
+/* Filas delgadas a propósito (2026-08-07, "hazlo mas delgado... que no abarque mucho
+   verticalmente") — ponderación fusionada en la misma línea del valor, ya no lleva su
+   propia fila, y la barra bajó de 12px a 5px de alto. */
+.skbar-row{padding:1px 0;border-bottom:1px solid rgba(var(--ov),.05)}
+.skbar-row:last-child{border-bottom:none}
+.skbar-head{display:flex;align-items:center;gap:6px}
+.skbar-ico{font-size:12px;flex-shrink:0}
+.skbar-name{font-size:11.5px;font-weight:800;color:var(--text)}
+.skbar-chip{font-size:8px;font-weight:800;letter-spacing:.03em;padding:1px 6px;border-radius:20px;border:1px solid transparent;flex-shrink:0}
+.skbar-val{margin-left:auto;font-family:var(--mono);font-size:11.5px;font-weight:800;flex-shrink:0;white-space:nowrap}
+.skbar-val small{font-size:9px;font-weight:600;color:var(--text3)}
 
 /* ─── HERO — semana completa (tira de 7 días + 3 paneles detallados) ────── */
 .flex-hero-top{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:16px}
@@ -232,9 +252,21 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 .hp-meal-name{font-size:13px;font-weight:700;color:var(--text);line-height:1.35}
 .hp-meal-macro{font-size:10.5px;color:var(--text2);font-family:var(--mono);margin-top:3px}
 /* "Ideas para hoy" (2026-08-07) — 3 opciones apiladas, no 1 sola, con scroll interno si no caben */
-.hp-meal-list{display:flex;flex-direction:column;gap:8px;max-height:clamp(220px,32vh,340px);overflow-y:auto;padding-right:2px}
-.hp-meal-card{background:rgba(var(--ov),.04);border:1px solid rgba(var(--ov),.08);border-radius:12px;padding:9px 12px}
-.hp-meal-card .hp-meal-name{margin-bottom:4px}
+.hp-meal-list{display:flex;flex-direction:column;gap:5px;max-height:clamp(180px,26vh,300px);overflow-y:auto;padding-right:2px}
+.hp-meal-card{background:rgba(var(--ov),.04);border:1px solid rgba(var(--ov),.08);border-radius:10px;padding:6px 10px}
+.hp-meal-card .hp-meal-name{margin-bottom:0;font-size:11.5px}
+/* Recetas contraídas por default, ingredientes al hacer click (2026-08-07) — pedido explícito:
+   "contrae todas las recetas y cuando haga click a una ya muestrame los ingredientes" */
+.hp-meal-head{display:flex;justify-content:space-between;align-items:center;gap:8px;cursor:pointer}
+.hp-meal-chevron{font-size:9px;color:var(--text3);flex-shrink:0;transition:transform .2s}
+.hp-meal-card.open .hp-meal-chevron{transform:rotate(180deg)}
+.hp-meal-ing{display:none;flex-direction:column;margin-top:5px;padding-top:5px;border-top:1px solid rgba(var(--ov),.06)}
+.hp-meal-card.open .hp-meal-ing{display:flex}
+/* Ingredientes más compactos que el resto de usos de .ds-row/.ds-txt en el archivo (2026-08-07,
+   "hazlas mas compactas de letra y tamaño") — override propio, sin tocar el componente compartido
+   con "Importante este mes" (#diaTimeline) ni los pasos de deuda. */
+.hp-meal-ing .ds-row{padding:1.5px 0}
+.hp-meal-ing .ds-txt{font-size:10px;margin:0;line-height:1.3}
 
 /* ─── COACH · PLAN MAESTRO — ruta de deuda cara + to-do de fase (2026-07-30) ─ */
 .debt-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
@@ -256,6 +288,11 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 .lc-tab{padding:7px 15px;border-radius:20px;border:1px solid rgba(var(--ov),.12);background:rgba(var(--ov),.05);color:var(--text2);font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;transition:all .2s;white-space:nowrap}
 .lc-tab:hover{background:rgba(var(--ov),.09)}
 .lc-tab.active{background:var(--ac1);color:#06170f;border-color:var(--ac1)}
+/* "X/Y comprado" por categoría, visible en la pestaña sin tener que abrirla (2026-08-07) */
+.lc-tab-pct{font-family:var(--mono);font-size:10px;font-weight:800;opacity:.7;margin-left:2px}
+.lc-tab.active .lc-tab-pct{opacity:.8}
+.lc-tab.done:not(.active){border-color:rgba(0,232,122,.4);color:var(--g)}
+.lc-tab.done:not(.active) .lc-tab-pct{color:var(--g);opacity:1}
 .mes-tab{padding:3px 9px;border-radius:14px;border:1px solid rgba(var(--ov),.12);background:rgba(var(--ov),.05);color:var(--text2);font-size:10px;font-weight:700;cursor:pointer;font-family:inherit;transition:all .2s}
 .mes-tab:hover{background:rgba(var(--ov),.09)}
 .mes-tab.active{background:var(--ac1);color:#06170f;border-color:var(--ac1)}
@@ -289,14 +326,38 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 .td-counter{font-size:11px;color:var(--text3);font-family:var(--mono);white-space:nowrap}
 .td-open{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:20px;background:var(--ac1);color:#06170f;text-decoration:none;font-weight:800;font-size:12px;white-space:nowrap;transition:transform .2s}
 .td-open:hover{transform:translateY(-1px)}
+/* Navegación manual dentro del propio slide (2026-08-07) — "haz que pueda cambiar de leccion
+   siguiente u otro tema siguiente": antes Alemán/Entrevista solo mostraban el tema del día,
+   sin forma de explorar otro sin esperar a mañana o salir del Dashboard. */
+.td-next{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:20px;background:rgba(var(--ov),.08);color:var(--text);border:1px solid rgba(var(--ov),.14);font-weight:800;font-size:12px;white-space:nowrap;cursor:pointer;font-family:inherit;transition:transform .2s,background .2s}
+.td-next:hover{transform:translateY(-1px);background:rgba(var(--ov),.13)}
 .td-title{font-size:clamp(22px,2.6vw,34px);font-weight:900;color:var(--text);margin-top:12px}
 .td-sub{font-size:clamp(13px,1.15vw,16px);color:var(--text2);margin-top:4px}
 .td-tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
 .td-tag{padding:5px 12px;border-radius:20px;background:rgba(var(--ov),.06);border:1px solid rgba(var(--ov),.1);font-size:11.5px;font-family:var(--mono);color:var(--text2)}
-.td-frame-wrap{border-radius:18px;overflow:hidden;border:1px solid var(--card-br);background:#f5f4f0;box-shadow:0 10px 40px rgba(0,0,0,.35);margin-top:16px;flex:1;min-height:0}
-.td-frame-wrap iframe{width:100%;height:100%;border:0;display:block}
-@media(max-width:1024px){.td-frame-wrap{min-height:60vh}}
 @media(max-width:640px){.debt-steps{grid-template-columns:1fr}}
+
+/* ─── ENTREVISTA DEL DÍA — contenido real, nativo, sin iframe (2026-08-07) ────────────────────
+   Mismo tratamiento que "Alemán del día" (pedido explícito: "lo mismo que hiciste en la sección
+   de alemán visualmente y que cambia cada día, hazlo con entrevistas, que se vea muy bien") — el
+   HTML real de cada tema (ENTREVISTA_CONTENT) se pinta directo aquí dentro, ya no en un
+   <iframe>. `.en-content` es el contenedor con scroll; el resto de las ~150 reglas que dan
+   estilo a las tarjetas/tablas/quizzes de adentro vienen inyectadas en runtime desde
+   `ENTREVISTA_CSS` (ver `injectEntrevistaCss()`), no repetidas a mano aquí. */
+.en-content-wrap{position:relative;margin-top:16px;flex:1;min-height:0;display:flex}
+.en-content{flex:1;min-height:0;overflow-y:auto;padding-right:6px}
+/* Aviso de "hay más abajo" (2026-08-07) — Adán señaló el tema "Data Pipeline" como ejemplo de
+   "contenido flojo": en realidad tiene 3 bloques completos (código Python de validación real +
+   runbook día a día), pero solo el primero cabe sin hacer scroll y no había ninguna señal de que
+   faltaba más — se veía como una tarjeta autocontenida y completa, no como el primero de tres.
+   `updateEnScrollHint()` (JS) mide si `#enContent` tiene más contenido debajo del scroll visible
+   y muestra/oculta este aviso — no es un gradiente de desvanecido (el fondo detrás varía, son las
+   manchas animadas del slide, no un color plano) sino una píldora de vidrio como `.mes-tab`, que
+   se ve bien encima de cualquier fondo. */
+.en-scroll-hint{position:absolute;left:50%;bottom:6px;transform:translateX(-50%);display:flex;align-items:center;gap:6px;padding:6px 16px;border-radius:20px;background:var(--card);border:1px solid var(--card-br);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);font-size:11px;font-weight:700;color:var(--text2);box-shadow:0 4px 16px rgba(0,0,0,.25);pointer-events:none;opacity:0;transition:opacity .25s}
+.en-scroll-hint.show{opacity:1}
+.en-scroll-hint .arrow{display:inline-block;animation:enHintBounce 1.4s ease-in-out infinite}
+@keyframes enHintBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(3px)}}
 
 /* ─── ALEMÁN DEL DÍA — contenido real, nativo, sin iframe (2026-08-07, versión final) ─────────
    Adán, tras ver la versión con iframe integrado: "la sección de alemán no me gustó, revisa bien
@@ -373,20 +434,29 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 .al-loading{color:var(--text3);font-size:13px;padding:20px 4px}
 @media(max-width:640px){.al-phrase-grid,.al-mini-grid{grid-template-columns:1fr 1fr}}
 
-/* ─── HABILIDADES — tarjetas grandes, una por prioridad (slide pasivo, sin clics) ─ */
-.skill-priority-title{font-size:clamp(15px,1.6vw,19px);font-weight:900;color:var(--text);margin-bottom:12px;display:flex;align-items:center;gap:8px}
-.skill-card{display:flex;flex-direction:column;gap:8px;min-height:100%}
-.skill-card-head{display:flex;align-items:center;gap:10px}
-.sc-badge{width:38px;height:38px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0}
-.sc-name{font-size:clamp(14px,1.3vw,16px);font-weight:800;color:var(--text)}
-.sc-val{font-family:var(--mono);font-size:13px;font-weight:800;margin-left:auto}
-.sc-primer{font-size:clamp(11.5px,1vw,13px);color:var(--text2);line-height:1.55}
-.sc-primer b{color:var(--text);font-weight:700}
-.sc-res{font-size:11px;color:var(--text3);padding-top:8px;border-top:1px solid rgba(var(--ov),.06)}
+/* ─── HABILIDADES — tarjetas grandes, una por prioridad (slide pasivo, sin clics) ─
+   Rediseñado 2026-08-07 ("esas 4 habilidades... me estas diciendo cosas comunes, dame mas
+   info y retroalimentacion... pon texto pequeño para que quepa todo, y trata de abarcar mas
+   pantalla") — de 4 columnas con 2 líneas de texto a 2 columnas con 6 bloques de contenido
+   por tarjeta (diagnóstico, plan de 2-4 semanas, hábito y error común, además de lo que ya
+   había): letra más chica para que quepa, tarjetas el doble de anchas para usar la pantalla. */
+.skill-priority-title{font-size:clamp(13px,1.4vw,16px);font-weight:900;color:var(--text);margin-bottom:4px;display:flex;align-items:center;gap:8px}
+#skillPriority.grid.g2{gap:5px}
+#skillPriority .tile{padding:6px 9px}
+.skill-card{display:flex;flex-direction:column;gap:2px;min-height:100%}
+.skill-card-head{display:flex;align-items:center;gap:6px;margin-bottom:0}
+.sc-badge{width:22px;height:22px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0}
+.sc-name{font-size:12px;font-weight:800;color:var(--text)}
+.sc-lvl{font-size:7.5px;font-weight:800;letter-spacing:.03em;padding:1px 5px;border-radius:20px;flex-shrink:0}
+.sc-val{font-family:var(--mono);font-size:11.5px;font-weight:800;margin-left:auto;flex-shrink:0}
+.sc-val small{font-size:8px;font-weight:600;color:var(--text3)}
+.sc-diag,.sc-primer,.sc-plan,.sc-habito,.sc-error{font-size:9.5px;color:var(--text2);line-height:1.26}
+.sc-diag b,.sc-primer b,.sc-plan b,.sc-habito b,.sc-error b{color:var(--text);font-weight:700}
+.sc-res{font-size:9px;color:var(--text3);padding-top:2px;border-top:1px solid rgba(var(--ov),.06);line-height:1.25}
 .sc-res b{color:var(--p);font-weight:700}
-.sc-w{font-size:10px;color:var(--text3);font-family:var(--mono)}
-.sc-link{margin-top:auto;padding-top:8px;font-size:11.5px;font-weight:700;color:var(--cy);text-decoration:none}
+.sc-link{margin-top:auto;padding-top:2px;font-size:10px;font-weight:700;color:var(--cy);text-decoration:none}
 .sc-link:hover{text-decoration:underline}
+@media(max-width:900px){#skillPriority.grid.g2{grid-template-columns:1fr}}
 
 @media(max-width:900px){.g4{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:repeat(2,1fr)}.g3>*:last-child{grid-column:1/-1}.g6{grid-template-columns:repeat(3,1fr)}}
 @media(max-width:600px){.g2,.g4,.g3,.g6{grid-template-columns:1fr}}
@@ -620,17 +690,15 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
   <!-- 4 · COACH: HABILIDADES -->
   <section class="slide theme-skills" data-i="4">
     <div class="slide-inner">
-      <div class="eyebrow reveal d1"><span class="dot"></span> Coach · Radar de habilidades</div>
+      <div class="eyebrow reveal d1"><span class="dot"></span> Coach · Habilidades</div>
       <div class="slide-title reveal d2"><span class="ico">🧠</span> En qué invertir tu tiempo</div>
 
-      <div class="tile chart-wrap-lg reveal d3" style="margin-bottom:clamp(16px,2.2vh,26px)">
-        <div class="chart-wrap" style="width:100%;height:100%"><canvas id="chSkills"></canvas></div>
-      </div>
+      <div class="tile reveal d3" id="skillBars" style="margin-bottom:6px"></div>
 
       <div class="skill-priority-title reveal d4">⚠️ Habilidades a mejorar — primer paso de esta semana
         <a href="../Coach/Coach_v2.html#aprendizaje" style="margin-left:auto;font-size:12px;font-weight:600;color:var(--cy);text-decoration:none">Ver las 5 + hábitos y recursos en Coach →</a>
       </div>
-      <div class="grid g4 reveal d5" id="skillPriority"></div>
+      <div class="grid g2 reveal d5" id="skillPriority"></div>
     </div>
   </section>
 
@@ -649,7 +717,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
   <!-- 6 · ALEMÁN DEL DÍA -->
   <section class="slide theme-aleman" data-i="6">
     <div class="slide-inner">
-      <div class="eyebrow reveal d1"><span class="dot"></span> Alemán del día</div>
+      <div class="eyebrow reveal d1"><span class="dot"></span> 🇩🇪 Alemán del día</div>
       <div class="td-top reveal d2">
         <div>
           <div class="td-title" id="alDe">Deutsch</div>
@@ -658,6 +726,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
         <div class="td-right">
           <span class="al-level" id="alLevel"></span>
           <span class="td-counter" id="alCounter"></span>
+          <button class="td-next" onclick="alemanSiguiente()" title="Ir a la siguiente lección, sin esperar a mañana">Siguiente lección →</button>
           <a class="td-open" id="alOpen" href="#" target="_blank" rel="noopener">↗ Ver lección original</a>
         </div>
       </div>
@@ -678,12 +747,14 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
         <div class="td-right">
           <span class="td-badge" id="enBadge"></span>
           <span class="td-counter" id="enCounter"></span>
+          <button class="td-next" onclick="entrevistaSiguiente()" title="Ir al siguiente tema, sin esperar a mañana">Siguiente tema →</button>
           <a class="td-open" id="enOpen" href="../Entrevistas/entrevistas.html" target="_blank" rel="noopener">↗ Abrir en pestaña nueva</a>
         </div>
       </div>
       <div class="td-tags reveal d3" id="enTags"></div>
-      <div class="td-frame-wrap reveal d4" id="enFrameWrap">
-        <iframe id="enFrame" title="Tema de entrevista técnica del día"></iframe>
+      <div class="en-content-wrap reveal d4">
+        <div class="en-content" id="enContent"></div>
+        <div class="en-scroll-hint" id="enScrollHint"><span class="arrow">↓</span> más contenido — desliza para ver todo</div>
       </div>
     </div>
   </section>
@@ -878,6 +949,12 @@ const RUTINA_TASKS=[
     {id:'wd03c', txt:'Hidratante con protector solar SPF 50 (ej. La Roche-Posay Anthelios) — hidrata y protege del sol, obligatorio de día'},
     {id:'wd04', txt:'Minoxidil 5% en cuero cabelludo seco — estimula el folículo, dosis de la mañana'},
   ]},
+  {id:'wdSupAm', dias:[1,2,3,4,5], hora:'07:25', cat:'salud', txt:'💊 Suplementos AM', subtareas:[
+    {id:'wdSupAm1', txt:'Vitamina D3 — 2000-4000 UI, con algo de grasa en la comida', link:{href:'../CuidadoPersonal/salud.html?tab=suplementos', label:'💊 Ver Suplementos'}},
+    {id:'wdSupAm2', txt:'Multivitamínico — 1 tableta'},
+    {id:'wdSupAm3', txt:'Omega 3 — 1-2g EPA+DHA, con alimento'},
+    {id:'wdSupAm4', txt:'Creatina monohidratada — 5g (todos los días, no solo si entrenas hoy)'},
+  ]},
   {id:'wd05', dias:[1,2,3,4,5], hora:'07:33', cat:'descanso', txt:'Vestirte y alistarte'},
   {id:'wd06', dias:[1,2,3,4,5], hora:'07:40', cat:'descanso', txt:'Salir de casa — traslado a ALTEN (~20 min manejando)'},
   {id:'wd07', dias:[1,2,3,4,5], hora:'08:00', cat:'trabajo',  txt:'🏢 ALTEN — jornada laboral (HIL/SIL Ford)', fijo:true},
@@ -911,6 +988,10 @@ const RUTINA_TASKS=[
     {id:'wd20b', txt:'Sostén el aire 4 segundos'},
     {id:'wd20c', txt:'Exhala 4 segundos por la boca'},
     {id:'wd20d', txt:'Sostén sin aire 4 segundos — repite el ciclo (~10 veces en 10 min)'},
+  ]},
+  {id:'wdSupPm', dias:[1,2,3,4,5], hora:'23:05', cat:'salud', txt:'💊 Suplementos PM', subtareas:[
+    {id:'wdSupPm1', txt:'Magnesio (glicinato) — 200-400mg, 30-60 min antes de dormir', link:{href:'../CuidadoPersonal/salud.html?tab=suplementos', label:'💊 Ver Suplementos'}},
+    {id:'wdSupPm2', txt:'Proteína Whey — 25-30g si hoy no llegaste a tu meta de proteína (186g/día)'},
   ]},
   {id:'wd20e', dias:[1,2,3,4,5], hora:'23:10', cat:'descanso', txt:'Tiempo libre / relajación antes de dormir'},
   {id:'wd21', dias:[1,2,3,4,5], hora:'23:55', cat:'salud',    txt:'Apagar pantallas. Dormir — buscas ~7h (medianoche a 7:00am)'},
@@ -950,7 +1031,7 @@ const RUTINA_TASKS=[
     {id:'e5d', txt:'Hip thrust — 3×12'},
     {id:'e5e', txt:'Elevación de pantorrilla — 3×15'},
   ]},
-  {id:'k5', dias:[5], hora:'19:00', cat:'creativo', txt:'✍️ Copy: mejora o escribe 1 mensaje de venta / la landing de la plantilla GBM'},
+  {id:'k5', dias:[5], hora:'19:00', cat:'creativo', txt:'📣 GBM: personaliza el post de venta ya escrito (precio/fecha) y publícalo en 1 comunidad real de inversión', link:{href:'../Coach/Coach_v2.html#plantillas-mensajes', label:'Ver mensaje ya escrito'}},
   // Sábado
   {id:'sa01',  dias:[6], hora:'07:00', cat:'salud',    txt:'Despertar (sin alarma agresiva)'},
   {id:'sa0203', dias:[6], hora:'07:05', cat:'salud', txt:'🧴 Skincare + 🍂 Minoxidil — AM', subtareas:[
@@ -958,6 +1039,12 @@ const RUTINA_TASKS=[
     {id:'sa02b', txt:'Minoxidil 5% en cuero cabelludo seco — dosis de la mañana'},
   ]},
   {id:'sa03',  dias:[6], hora:'07:18', cat:'salud', txt:'🍳 Preparar y desayunar tranquilo', link:{href:'../CuidadoPersonal/comida.html?s=desayunos', label:'Ver desayunos'}},
+  {id:'saSupAm', dias:[6], hora:'07:30', cat:'salud', txt:'💊 Suplementos AM', subtareas:[
+    {id:'saSupAm1', txt:'Vitamina D3 — 2000-4000 UI, con algo de grasa en la comida', link:{href:'../CuidadoPersonal/salud.html?tab=suplementos', label:'💊 Ver Suplementos'}},
+    {id:'saSupAm2', txt:'Multivitamínico — 1 tableta'},
+    {id:'saSupAm3', txt:'Omega 3 — 1-2g EPA+DHA, con alimento'},
+    {id:'saSupAm4', txt:'Creatina monohidratada — 5g (todos los días, no solo si entrenas hoy)'},
+  ]},
   {id:'sa04',  dias:[6], hora:'07:35', cat:'salud',    txt:'Ejercicio 1h — entreno largo / lo que falte en la semana'},
   {id:'sa0506', dias:[6], hora:'08:35', cat:'salud', txt:'🚿 Ducha + lavar cabello', subtareas:[
     {id:'sa05a', txt:'Champú: Darrow Doctar (shampoo con alcatrão/coal tar, anticaspa) — masajea el cuero cabelludo 2-3 min, deja actuar antes de enjuagar', link:{href:'../CuidadoPersonal/cuidadopersonal.html?tab=cabello', label:'✂️ Ver Cuidado del Cabello'}},
@@ -975,6 +1062,10 @@ const RUTINA_TASKS=[
     {id:'sa13', txt:'Skincare PM — limpiador + tratamiento (ácido salicílico/retinol) + hidratante nocturno'},
     {id:'sa13b', txt:'Minoxidil 5% en cuero cabelludo seco — dosis de la noche'},
   ]},
+  {id:'saSupPm', dias:[6], hora:'21:15', cat:'salud', txt:'💊 Suplementos PM', subtareas:[
+    {id:'saSupPm1', txt:'Magnesio (glicinato) — 200-400mg, 30-60 min antes de dormir', link:{href:'../CuidadoPersonal/salud.html?tab=suplementos', label:'💊 Ver Suplementos'}},
+    {id:'saSupPm2', txt:'Proteína Whey — 25-30g si hoy no llegaste a tu meta de proteína (186g/día)'},
+  ]},
   {id:'sa14',  dias:[6], hora:'21:30', cat:'descanso', txt:'🧘 Meditación — misma respiración box 4-4-4-4 que entre semana'},
   {id:'sa15',  dias:[6], hora:'21:45', cat:'salud',    txt:'Apagar pantallas. Dormir'},
   // Compartido Sábado y Domingo
@@ -986,6 +1077,12 @@ const RUTINA_TASKS=[
     {id:'do02b', txt:'Minoxidil 5% en cuero cabelludo seco — dosis de la mañana'},
   ]},
   {id:'do03',  dias:[0], hora:'07:48', cat:'salud', txt:'🍳 Preparar y desayunar tranquilo', link:{href:'../CuidadoPersonal/comida.html?s=desayunos', label:'Ver desayunos'}},
+  {id:'doSupAm', dias:[0], hora:'07:55', cat:'salud', txt:'💊 Suplementos AM', subtareas:[
+    {id:'doSupAm1', txt:'Vitamina D3 — 2000-4000 UI, con algo de grasa en la comida', link:{href:'../CuidadoPersonal/salud.html?tab=suplementos', label:'💊 Ver Suplementos'}},
+    {id:'doSupAm2', txt:'Multivitamínico — 1 tableta'},
+    {id:'doSupAm3', txt:'Omega 3 — 1-2g EPA+DHA, con alimento'},
+    {id:'doSupAm4', txt:'Creatina monohidratada — 5g (todos los días, no solo si entrenas hoy)'},
+  ]},
   {id:'do04',  dias:[0], hora:'08:05', cat:'salud',    txt:'Ejercicio: descanso activo — caminata o movilidad 30 min'},
   {id:'do045', dias:[0], hora:'08:35', cat:'salud', txt:'🚿 Bañarte + cabello (sin champú hoy)', subtareas:[
     {id:'do045a', txt:'Acondicionador: TRESemmé Keratin Smooth Conditioner — solo de medios a puntas (co-wash, sin champú: hoy no toca el anticaída, eso es Lun/Jue/Sáb — usarlo a diario resecaría el cuero cabelludo)'},
@@ -1003,6 +1100,10 @@ const RUTINA_TASKS=[
   {id:'do1013', dias:[0], hora:'21:40', cat:'salud', txt:'🧴 Skincare + 🍂 Minoxidil — PM', subtareas:[
     {id:'do10', txt:'Skincare PM — limpiador + tratamiento (ácido salicílico/retinol) + hidratante nocturno'},
     {id:'do10b', txt:'Minoxidil 5% en cuero cabelludo seco — dosis de la noche'},
+  ]},
+  {id:'doSupPm', dias:[0], hora:'21:45', cat:'salud', txt:'💊 Suplementos PM', subtareas:[
+    {id:'doSupPm1', txt:'Magnesio (glicinato) — 200-400mg, 30-60 min antes de dormir', link:{href:'../CuidadoPersonal/salud.html?tab=suplementos', label:'💊 Ver Suplementos'}},
+    {id:'doSupPm2', txt:'Proteína Whey — 25-30g si hoy no llegaste a tu meta de proteína (186g/día)'},
   ]},
   {id:'do11',  dias:[0], hora:'22:00', cat:'descanso', txt:'🧘 Meditación — misma respiración box 4-4-4-4 que entre semana'},
   {id:'do12',  dias:[0], hora:'22:15', cat:'salud',    txt:'Apagar pantallas. Dormir'},
@@ -1166,34 +1267,45 @@ const EJ_LOOKUP={
   e057:{nombre:'Nadar',cue:'Alterna estilos (libre y dorso) para no cansar siempre el mismo hombro — cardio de bajo impacto.'}
 };
 
-// ── NUTRICIÓN — muestra de recetas de Comida (nombre + macros), no el consumo real del
-//    día: Adán registra en Salud/Comida a lo mucho semanalmente, no diario, así que mostrar
-//    "calorías de hoy" casi siempre estaría en 0 y se ve mal. Duplicado ligero de
-//    CuidadoPersonal/comida.html → RECETAS (solo nombre/tiempo/macros, sin ingredientes/pasos).
+// ── NUTRICIÓN — muestra de recetas de Comida (nombre + macros + ingredientes), no el consumo
+//    real del día: Adán registra en Salud/Comida a lo mucho semanalmente, no diario, así que
+//    mostrar "calorías de hoy" casi siempre estaría en 0 y se ve mal. Duplicado ligero de
+//    CuidadoPersonal/comida.html → RECETAS (nombre/tiempo/macros/ingredientes, sin pasos/tip).
+//    Reescrito por completo el 2026-08-07 junto con la fuente real — ver esa misma nota en
+//    comida.html → const RECETAS para el detalle completo de qué cambió y por qué (12
+//    ingredientes que no le gustan a Adán, quitados de las 28 recetas; antes 10+10, ahora 14+14).
 const RECETAS_MINI={
   desayuno:[
-    {nombre:'Avena con plátano, canela y miel',tiempo:'10 min',cal:480,prot:15,ing:['Avena en hojuelas · 40 g','Leche entera · 250 ml','Plátano · 1 pza','Canela en polvo · al gusto','Miel de abeja · 1 cda']},
-    {nombre:'Huevos revueltos con espinaca y pan integral',tiempo:'10 min',cal:430,prot:26,ing:['Huevo · 3 pza','Espinaca · 1 taza','Aceite de oliva · 1 cdta','Pan integral · 2 rebanadas','Sal · poca']},
-    {nombre:'Claras de huevo con avena y manzana',tiempo:'12 min',cal:370,prot:28,ing:['Clara de huevo · 6 pza','Avena en hojuelas · 40 g','Manzana · 1 pza','Canela en polvo · al gusto']},
-    {nombre:'Yogurt griego con avena, miel y pera',tiempo:'5 min',cal:420,prot:24,ing:['Yogurt griego natural · 200 g','Avena en hojuelas · 30 g','Miel de abeja · 1 cda','Pera · 1 pza']},
-    {nombre:'Licuado de plátano, avena y crema de cacahuate',tiempo:'5 min',cal:480,prot:18,ing:['Plátano · 1 pza','Avena en hojuelas · 30 g','Crema de cacahuate · 1 cda','Leche entera · 300 ml']},
-    {nombre:'Hot cakes de avena y plátano (sin harina)',tiempo:'15 min',cal:430,prot:22,ing:['Avena en hojuelas · 50 g (molida)','Plátano · 1 pza','Huevo · 2 pza','Canela en polvo · al gusto','Miel de abeja · 1 cda, para servir']},
-    {nombre:'Omelette de claras con queso panela y pan tostado',tiempo:'12 min',cal:420,prot:38,ing:['Clara de huevo · 6 pza','Queso panela · 40 g','Pan integral · 2 rebanadas','Espinaca · 1 taza','Aceite de oliva · 1 cdta']},
+    {nombre:'Molletes de frijol con queso panela',tiempo:'15 min',cal:420,prot:24,ing:['Pan integral · 2 rebanadas','Frijoles negros · 1/2 taza','Queso panela · 40 g','Jitomate · 1/2 pza, picado']},
+    {nombre:'Tacos de huevo con jamón de pavo y queso panela',tiempo:'10 min',cal:440,prot:32,ing:['Huevo · 3 pza','Jamón de pavo · 60 g (2-3 rebanadas)','Queso panela · 30 g','Tortilla de maíz · 3 pza']},
+    {nombre:'Yogurt griego con granola de amaranto, miel y pera',tiempo:'5 min',cal:400,prot:22,ing:['Yogurt griego natural · 200 g','Granola de amaranto · 30 g','Miel de abeja · 1 cda','Pera · 1 pza']},
+    {nombre:'Licuado de plátano, yogurt griego y miel',tiempo:'5 min',cal:380,prot:20,ing:['Plátano · 1 pza','Yogurt griego natural · 150 g','Miel de abeja · 1 cda','Leche entera · 200 ml']},
+    {nombre:'Pan francés integral con canela',tiempo:'15 min',cal:410,prot:18,ing:['Pan integral · 3 rebanadas','Huevo · 2 pza','Leche entera · 80 ml','Canela en polvo · al gusto','Miel de abeja · 1 cda, para servir']},
+    {nombre:'Omelette de claras con champiñones y queso panela',tiempo:'12 min',cal:340,prot:34,ing:['Clara de huevo · 6 pza','Champiñones · 1 taza, rebanados','Queso panela · 30 g','Aceite de oliva · 1 cdta']},
+    {nombre:'Burrito de huevo, frijoles y queso panela',tiempo:'12 min',cal:460,prot:30,ing:['Huevo · 3 pza','Frijoles negros · 1/2 taza','Queso panela · 30 g','Tortilla de maíz · 2 pza grandes']},
     {nombre:'Pan tostado con aguacate y huevo cocido',tiempo:'12 min',cal:450,prot:22,ing:['Pan integral · 2 rebanadas','Aguacate · 1/2 pza','Huevo · 2 pza','Sal · poca']},
-    {nombre:'Avena overnight con manzana y canela (para llevar)',tiempo:'5 min + reposo',cal:380,prot:10,ing:['Avena en hojuelas · 40 g','Leche de avena · 200 ml','Manzana · 1 pza, rallada','Canela en polvo · al gusto','Miel de abeja · 1 cdta']},
-    {nombre:'Quesadillas de claras con queso panela y nopales',tiempo:'12 min',cal:380,prot:30,ing:['Tortilla de maíz · 2 pza','Clara de huevo · 4 pza','Queso panela · 40 g','Nopales cocidos · 1/2 taza']}
+    {nombre:'Papaya con yogurt griego, granola de amaranto y miel',tiempo:'5 min',cal:320,prot:16,ing:['Papaya · 1 taza, en cubos','Yogurt griego natural · 150 g','Granola de amaranto · 25 g','Miel de abeja · 1 cdta']},
+    {nombre:'Quesadillas de claras con queso panela y nopales',tiempo:'12 min',cal:380,prot:30,ing:['Tortilla de maíz · 2 pza','Clara de huevo · 4 pza','Queso panela · 40 g','Nopales cocidos · 1/2 taza']},
+    {nombre:'Tostadas de requesón con miel y plátano',tiempo:'8 min',cal:380,prot:18,ing:['Tortilla de maíz · 3 pza, tostadas','Requesón · 100 g','Plátano · 1 pza','Miel de abeja · 1 cda']},
+    {nombre:'Huevos a la mexicana suaves con tortilla',tiempo:'10 min',cal:380,prot:24,ing:['Huevo · 3 pza','Jitomate · 1/2 pza, picado, sin semillas','Cebolla · poca, cocida','Tortilla de maíz · 2 pza']},
+    {nombre:'Hot cakes de plátano y huevo (sin harina)',tiempo:'12 min',cal:340,prot:20,ing:['Plátano · 2 pza','Huevo · 3 pza','Canela en polvo · al gusto','Miel de abeja · 1 cda, para servir']},
+    {nombre:'Sándwich de pan integral con huevo, jitomate y queso panela',tiempo:'10 min',cal:420,prot:26,ing:['Pan integral · 2 rebanadas','Huevo · 2 pza','Jitomate · 1/2 pza, rebanado','Queso panela · 30 g']}
   ],
   cena:[
-    {nombre:'Pechuga de pollo a la plancha con arroz y verduras',tiempo:'20 min',cal:520,prot:50,ing:['Pechuga de pollo · 150 g','Arroz blanco cocido · 1 taza','Brócoli · 1 taza','Zanahoria · 1 pza','Aceite de oliva · 1 cdta']},
-    {nombre:'Pescado blanco al vapor con papa y ejotes',tiempo:'20 min',cal:330,prot:33,ing:['Filete de tilapia · 150 g','Papa · 1 pza mediana','Ejotes · 1 taza','Sal · poca']},
-    {nombre:'Sopa de pollo con chayote, zanahoria y calabaza',tiempo:'25 min',cal:300,prot:40,ing:['Pechuga de pollo · 150 g','Chayote · 1 taza','Zanahoria · 1 pza','Calabaza · 1 taza','Caldo de pollo bajo en sodio · 500 ml']},
+    {nombre:'Salmón al horno con puré de papa y champiñones',tiempo:'30 min',cal:520,prot:40,ing:['Filete de salmón · 150 g','Papa · 2 pza','Champiñones · 1 taza','Leche entera · 50 ml','Aceite de oliva · 1 cdta']},
+    {nombre:'Pechuga de pollo con arroz y champiñones salteados',tiempo:'20 min',cal:480,prot:48,ing:['Pechuga de pollo · 150 g','Arroz blanco cocido · 1 taza','Champiñones · 1 taza','Aceite de oliva · 1 cdta']},
+    {nombre:'Camarones al ajillo suave con arroz blanco',tiempo:'15 min',cal:400,prot:38,ing:['Camarón · 150 g','Ajo · 2 dientes','Aceite de oliva · 1 cda','Arroz blanco cocido · 1 taza']},
     {nombre:'Atún con arroz y ensalada de pepino',tiempo:'10 min',cal:400,prot:34,ing:['Atún en agua · 1 lata','Arroz blanco cocido · 1 taza','Pepino · 1 taza','Aceite de oliva · 1 cdta']},
-    {nombre:'Pavo molido con puré de papa y brócoli',tiempo:'25 min',cal:450,prot:38,ing:['Pavo molido · 150 g','Papa · 2 pza','Leche entera · 50 ml','Brócoli · 1 taza']},
+    {nombre:'Filete de res magro con puré de papa y chayote',tiempo:'25 min',cal:490,prot:42,ing:['Filete de res magro · 150 g','Papa · 2 pza','Chayote · 1 taza','Leche entera · 50 ml']},
     {nombre:'Tacos de pollo deshebrado con nopales',tiempo:'20 min',cal:420,prot:42,ing:['Pechuga de pollo · 150 g','Tortilla de maíz · 4 pza','Nopales cocidos · 1 taza','Cebolla · poca, cocida']},
-    {nombre:'Omelette de claras con verduras (cena ligera)',tiempo:'10 min',cal:200,prot:24,ing:['Clara de huevo · 6 pza','Calabaza · 1/2 taza','Zanahoria · 1/2 pza, rallada','Aceite de oliva · 1 cdta']},
-    {nombre:'Caldo de pollo con verduras y arroz',tiempo:'25 min',cal:380,prot:42,ing:['Pechuga de pollo · 150 g','Caldo de pollo bajo en sodio · 500 ml','Zanahoria · 1 pza','Calabaza · 1 taza','Arroz blanco cocido · 1/2 taza']},
-    {nombre:'Filete de pescado al horno con camote',tiempo:'30 min',cal:350,prot:32,ing:['Filete de tilapia · 150 g','Camote · 1 pza mediana','Aceite de oliva · 1 cdta','Hierbas de olor · al gusto']},
-    {nombre:'Ensalada tibia de pollo, quinoa y verduras',tiempo:'20 min',cal:480,prot:48,ing:['Pechuga de pollo · 150 g','Quinoa cocida · 1 taza','Brócoli · 1/2 taza','Zanahoria · 1/2 pza','Aceite de oliva · 1 cdta']}
+    {nombre:'Omelette de claras con champiñones y pimiento (cena ligera)',tiempo:'10 min',cal:210,prot:25,ing:['Clara de huevo · 6 pza','Champiñones · 1/2 taza','Pimiento morrón · 1/2 pza, sin semillas','Aceite de oliva · 1 cdta']},
+    {nombre:'Sopa de pollo casera con chayote y fideo',tiempo:'30 min',cal:320,prot:38,ing:['Pechuga de pollo · 150 g','Chayote · 1 taza','Fideo · 1/2 taza','Sal · poca']},
+    {nombre:'Filete de pescado al horno con papa y pimiento',tiempo:'30 min',cal:340,prot:32,ing:['Filete de tilapia · 150 g','Papa · 1 pza mediana','Pimiento morrón · 1/2 pza','Aceite de oliva · 1 cdta']},
+    {nombre:'Ensalada tibia de pollo, quinoa, champiñones y pepino',tiempo:'20 min',cal:470,prot:46,ing:['Pechuga de pollo · 150 g','Quinoa cocida · 1 taza','Champiñones · 1/2 taza','Pepino · 1/2 taza','Aceite de oliva · 1 cdta']},
+    {nombre:'Tostadas de atún con lechuga, jitomate y aguacate',tiempo:'10 min',cal:380,prot:32,ing:['Atún en agua · 1 lata','Tortilla de maíz · 3 pza, tostadas','Lechuga · 1 taza','Jitomate · 1/2 pza','Aguacate · 1/4 pza']},
+    {nombre:'Pechuga rellena de queso panela con papas al horno',tiempo:'30 min',cal:510,prot:52,ing:['Pechuga de pollo · 180 g','Queso panela · 40 g','Papa · 2 pza','Aceite de oliva · 1 cdta']},
+    {nombre:'Pescado a la veracruzana suave con arroz',tiempo:'25 min',cal:400,prot:34,ing:['Filete de tilapia · 150 g','Jitomate · 1 taza, picado, sin semillas','Cebolla · poca, cocida','Arroz blanco cocido · 1 taza']},
+    {nombre:'Tinga de pollo suave con tostadas y queso panela',tiempo:'25 min',cal:440,prot:40,ing:['Pechuga de pollo · 150 g','Jitomate · 1 taza','Cebolla · poca, cocida','Tortilla de maíz · 3 pza, tostadas','Queso panela · 30 g']}
   ]
 };
 
@@ -1202,9 +1314,11 @@ const RECETAS_MINI={
 //    Todo duplicado de datos 100% reales ya existentes en otras apps, mismo patrón que
 //    RECETAS_MINI/GYM_RUTINA_DEFAULT/APRENDIZAJE — si cambian las recetas o los catálogos de
 //    producto en el archivo de origen, replicar aquí a mano.
-//    - comida: ingredientes únicos de las 20 recetas de CuidadoPersonal/comida.html → RECETAS
-//      (desayuno+cena) + 3 extra de PLAN_ITEMS (frijoles negros, lechuga, jitomate) que no
-//      aparecían en ninguna receta pero sí en el Plan Masa Muscular.
+//    - comida: ingredientes únicos de las 28 recetas de CuidadoPersonal/comida.html → RECETAS
+//      (desayuno+cena, reescritas por completo el 2026-08-07 — ver esa fecha en comida.html
+//      para el detalle de qué ingredientes se quitaron y cuáles se agregaron). Ya no hace falta
+//      sumar nada de PLAN_ITEMS aparte: frijoles negros/lechuga/jitomate ahora sí aparecen de
+//      forma orgánica dentro de las recetas nuevas.
 //    - skincare / cabello: opciones reales (marca+producto, disponibles en México) de
 //      CuidadoPersonal/cuidadopersonal.html → SKIN_DB/HAIR_DB, agrupadas por paso de la rutina
 //      (no es la selección personalizada de skPick()/haPick() — esto es el catálogo completo
@@ -1212,10 +1326,10 @@ const RECETAS_MINI={
 //    - suplementos: los 6 de CuidadoPersonal/salud.html → SUPP_CATALOG, tal cual.
 const LISTA_COMPRAS={
   comida:{
-    'Frutas y Verduras':['Aguacate','Brócoli','Calabaza','Camote','Cebolla','Chayote','Ejotes','Espinaca','Hierbas de olor','Jitomate','Lechuga','Manzana','Nopales cocidos','Papa','Pepino','Pera','Plátano','Zanahoria'],
-    'Carnes y Pescados':['Filete de tilapia','Pavo molido','Pechuga de pollo'],
-    'Lácteos y Huevo':['Clara de huevo','Huevo','Leche de avena','Leche entera','Queso panela','Yogurt griego natural'],
-    'Abarrotes y Despensa':['Aceite de oliva','Arroz blanco cocido','Atún en agua','Avena en hojuelas','Caldo de pollo bajo en sodio','Canela en polvo','Crema de cacahuate','Frijoles negros','Miel de abeja','Quinoa cocida','Sal'],
+    'Frutas y Verduras':['Aguacate','Ajo','Cebolla','Champiñones','Chayote','Jitomate','Lechuga','Nopales cocidos','Papa','Papaya','Pepino','Pera','Pimiento morrón','Plátano'],
+    'Carnes y Pescados':['Camarón','Filete de res magro','Filete de salmón','Filete de tilapia','Jamón de pavo','Pechuga de pollo'],
+    'Lácteos y Huevo':['Clara de huevo','Huevo','Leche entera','Queso panela','Requesón','Yogurt griego natural'],
+    'Abarrotes y Despensa':['Aceite de oliva','Arroz blanco cocido','Atún en agua','Canela en polvo','Fideo','Frijoles negros','Granola de amaranto','Miel de abeja','Quinoa cocida','Sal'],
     'Panadería y Tortillas':['Pan integral','Tortilla de maíz'],
   },
   skincare:[
@@ -1243,15 +1357,21 @@ const LISTA_COMPRAS={
   // the Difference" en Ventas y en Networking). 9ª estructura duplicada del tipo "Datos duplicados"
   // del README: si Adán cambia/agrega una recomendación en Coach_v2.html → #aprendizaje o
   // #perfil-rico, replicar aquí a mano.
+  // Categorías reordenadas el 2026-08-07 (pedido explícito: "ordenalos deacuerdo a las
+  // debilidades de mis habilidades") — de más débil a más fuerte según el valor real de cada
+  // skill en `SK` (Coach_v2.html → Radar FIFA): Ventas 15, Marketing 20, Finanzas 20/Inversión
+  // 25 (categoría combinada), Copy/Datos/Networking empatados en 55 (Copy primero por tener
+  // mayor ponderación real, ×1.2 vs ×1.0), Programación 60, Liderazgo 80, Mentalidad 85 (su
+  // habilidad más fuerte de las 12 — por eso esta categoría queda al final, no al principio).
   libros:{
     'Ventas':['Influence — Robert Cialdini','$100M Offers — Alex Hormozi','SPIN Selling — Neil Rackham','Never Split the Difference — Chris Voss','The Psychology of Selling — Brian Tracy'],
-    'Copywriting':['Breakthrough Advertising — Eugene Schwartz','Ca$hvertising — Drew Eric Whitman','The Adweek Copywriting Handbook — Joseph Sugarman','Building a StoryBrand — Donald Miller'],
     'Marketing':['$100M Leads — Alex Hormozi','Hacking Growth — Sean Ellis','Traffic Secrets — Russell Brunson','Jab, Jab, Jab, Right Hook — Gary Vaynerchuk'],
-    'Networking':['Never Eat Alone — Keith Ferrazzi','Cómo Ganar Amigos e Influir sobre las Personas — Dale Carnegie','Give and Take — Adam Grant','The Art of Gathering — Priya Parker','The Like Switch — Jack Schafer'],
-    'Liderazgo':['Extreme Ownership — Jocko Willink','Good to Great — Jim Collins','The Hard Thing About Hard Things — Ben Horowitz','Leaders Eat Last — Simon Sinek','The Five Dysfunctions of a Team — Patrick Lencioni'],
-    'Programación':['Clean Code — Robert C. Martin','Designing Data-Intensive Applications — Martin Kleppmann','The Pragmatic Programmer — Hunt & Thomas','A Philosophy of Software Design — John Ousterhout'],
-    'Datos':['Storytelling with Data — Cole Nussbaumer Knaflic','Python for Data Analysis — Wes McKinney'],
     'Finanzas e Inversión':['The Intelligent Investor — Benjamin Graham','The Little Book of Common Sense Investing — John Bogle','A Random Walk Down Wall Street — Burton Malkiel','One Up On Wall Street — Peter Lynch','Psicología del Dinero — Morgan Housel','I Will Teach You to Be Rich — Ramit Sethi','The Millionaire Next Door — Thomas Stanley','Tu Dinero o Tu Vida — Vicki Robin','Padre Rico, Padre Pobre — Robert Kiyosaki','The Millionaire Fastlane — MJ DeMarco'],
+    'Copywriting':['Breakthrough Advertising — Eugene Schwartz','Ca$hvertising — Drew Eric Whitman','The Adweek Copywriting Handbook — Joseph Sugarman','Building a StoryBrand — Donald Miller'],
+    'Datos':['Storytelling with Data — Cole Nussbaumer Knaflic','Python for Data Analysis — Wes McKinney'],
+    'Networking':['Never Eat Alone — Keith Ferrazzi','Cómo Ganar Amigos e Influir sobre las Personas — Dale Carnegie','Give and Take — Adam Grant','The Art of Gathering — Priya Parker','The Like Switch — Jack Schafer'],
+    'Programación':['Clean Code — Robert C. Martin','Designing Data-Intensive Applications — Martin Kleppmann','The Pragmatic Programmer — Hunt & Thomas','A Philosophy of Software Design — John Ousterhout'],
+    'Liderazgo':['Extreme Ownership — Jocko Willink','Good to Great — Jim Collins','The Hard Thing About Hard Things — Ben Horowitz','Leaders Eat Last — Simon Sinek','The Five Dysfunctions of a Team — Patrick Lencioni'],
     'Hábitos y Mentalidad':['Atomic Habits — James Clear','Mindset: The New Psychology of Success — Carol Dweck',"Can't Hurt Me — David Goggins",'The Obstacle is the Way — Ryan Holiday','Meditaciones — Marco Aurelio'],
   },
 };
@@ -1266,23 +1386,48 @@ let listaCatSel='comida';
 function lcSlug(txt){
   return txt.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'');
 }
+function lcItemId(cat,txt){ return 'lc-'+cat+'-'+lcSlug(txt); }
+// % comprado por categoría (2026-08-07) — pedido explícito: "un indicador tipo '12/40 comprado'
+// visible en la pestaña misma, no solo al abrirla". Cuenta contra todos los ítems de la categoría
+// (aplana comida/libros, que van agrupados por pasillo/tema, a una lista plana para contar).
+function lcCatProgress(cat,checks){
+  const data=LISTA_COMPRAS[cat];
+  const items=Array.isArray(data)?data:Object.values(data).flat();
+  const done=items.filter(txt=>checks[lcItemId(cat,txt)]).length;
+  return {done,total:items.length};
+}
+function renderListaCatTabs(){
+  const checks=rawGet('dash-lista-compras',{});
+  document.getElementById('listaCatTabs').innerHTML=Object.keys(LISTA_COMPRAS).map(cat=>{
+    const m=LISTA_CAT_META[cat];
+    const {done,total}=lcCatProgress(cat,checks);
+    return `<button class="lc-tab ${cat===listaCatSel?'active':''}${done===total&&total?' done':''}" onclick="verListaCat('${cat}')">${m.ico} ${m.label} <span class="lc-tab-pct">${done}/${total}</span></button>`;
+  }).join('');
+}
 // Categorías donde el nombre del producto es un link de búsqueda en Amazon (checkbox queda solo para tachar)
-const LC_AMAZON_CATS=['skincare','cabello','suplementos'];
-// El texto trae formato "Categoría — Marca/Producto A o Marca/Producto B o ..." (o solo "Producto" en suplementos)
-// — se busca en Amazon el primer producto mencionado (la recomendación principal), no la frase completa.
-function lcAmazonQuery(txt){
+// — "libros" se agregó el 2026-08-07 ("dame tambien los links de los libros en amazon y mercado
+// libre"), junto con las 3 que ya lo tenían.
+const LC_AMAZON_CATS=['skincare','cabello','suplementos','libros'];
+// El texto trae formato "Categoría — Marca/Producto A o Marca/Producto B o ..." (o solo "Producto"
+// en suplementos) — se busca en Amazon el primer producto mencionado, no la frase completa.
+// "libros" es un caso distinto (formato "Título — Autor", sin "o" de alternativas): tomar solo lo
+// de después de " — " buscaría por el AUTOR solo, que da resultados pobres/ambiguos en Amazon —
+// se busca "Título Autor" completo (sin el guion largo), la forma estándar de encontrar un libro
+// exacto.
+function lcAmazonQuery(cat,txt){
+  if(cat==='libros') return txt.replace(' — ',' ').trim();
   const tras=txt.includes(' — ')?txt.split(' — ')[1]:txt;
   return tras.split(' o ')[0].trim();
 }
 function lcAmazonUrl(q){ return 'https://www.amazon.com.mx/s?k='+encodeURIComponent(q); }
 function lcMercadoLibreUrl(q){ return 'https://listado.mercadolibre.com.mx/'+encodeURIComponent(q.replace(/\s+/g,'-')); }
-function lcRenderItems(items,checks,conLinkAmazon){
+function lcRenderItems(cat,items,checks,conLinkAmazon){
   return items.map(txt=>{
-    const id='lc-'+listaCatSel+'-'+lcSlug(txt);
+    const id=lcItemId(cat,txt);
     const checked=checks[id]?'checked':'';
     let shopHtml='';
     if(conLinkAmazon){
-      const q=lcAmazonQuery(txt);
+      const q=lcAmazonQuery(cat,txt);
       shopHtml=`<span class="lc-item-shop">
         <a href="${lcAmazonUrl(q)}" target="_blank" rel="noopener" class="lc-shop-link" title="Buscar en Amazon">Amazon ↗</a>
         <a href="${lcMercadoLibreUrl(q)}" target="_blank" rel="noopener" class="lc-shop-link" title="Buscar en Mercado Libre">Mercado Libre ↗</a>
@@ -1296,19 +1441,16 @@ function lcRenderItems(items,checks,conLinkAmazon){
   }).join('');
 }
 function renderListaCompras(){
-  document.getElementById('listaCatTabs').innerHTML=Object.keys(LISTA_COMPRAS).map(cat=>{
-    const m=LISTA_CAT_META[cat];
-    return `<button class="lc-tab ${cat===listaCatSel?'active':''}" onclick="verListaCat('${cat}')">${m.ico} ${m.label}</button>`;
-  }).join('');
+  renderListaCatTabs();
   const checks=rawGet('dash-lista-compras',{});
   const data=LISTA_COMPRAS[listaCatSel];
   const conLinkAmazon=LC_AMAZON_CATS.includes(listaCatSel);
   const html=Array.isArray(data)
-    ? `<div>${lcRenderItems(data,checks,conLinkAmazon)}</div>`
+    ? `<div>${lcRenderItems(listaCatSel,data,checks,conLinkAmazon)}</div>`
     : Object.entries(data).map(([pasillo,items])=>`
       <div class="lc-aisle">
         <div class="lc-aisle-title">${pasillo}</div>
-        <div class="lc-grid">${lcRenderItems(items,checks,conLinkAmazon)}</div>
+        <div class="lc-grid">${lcRenderItems(listaCatSel,items,checks,conLinkAmazon)}</div>
       </div>`).join('');
   document.getElementById('listaCompraBody').innerHTML=html;
 }
@@ -1318,6 +1460,7 @@ function toggleListaItem(id){
   const cb=document.getElementById(id);
   if(cb&&cb.checked) checks[id]=true; else delete checks[id];
   rawSet('dash-lista-compras',checks);
+  renderListaCatTabs(); // refresca el "X/Y" de la pestaña sin re-pintar la lista completa (pierde el scroll/foco si no)
 }
 
 // ── Alemán del día (2026-08-04, contenido nativo definitivo desde 2026-08-07) — un tema
@@ -1383,10 +1526,22 @@ const ALEMAN_TEMAS=[
   {file:'a2-19-einkaufen.html',nivel:'A2',ico:'🛒',de:'Einkaufen & Preise',es:'Compras y precios',tags:['Supermarkt','Rabatt','bezahlen']},
   {file:'a2-20-medien.html',nivel:'A2',ico:'📱',de:'Medien & Technologie',es:'Medios y tecnología',tags:['Internet','Handy','Nachrichten']},
 ];
-function alemanTemaHoy(){ return ALEMAN_TEMAS[diaDelAnio()%ALEMAN_TEMAS.length]; }
+// `alemanIdx` en null usa el tema del día (diaDelAnio()%N); en cuanto Adán pide "Siguiente
+// lección →" queda fijo en esa posición por el resto de la sesión (hasta recargar la página) —
+// mismo criterio que "Recordar última pantalla" del resto del Dashboard: una vez que navega a
+// mano, no lo regresamos solos al valor automático.
+let alemanIdx=null;
+function alemanTemaHoy(){
+  if(alemanIdx===null)alemanIdx=diaDelAnio()%ALEMAN_TEMAS.length;
+  return ALEMAN_TEMAS[alemanIdx];
+}
+function alemanSiguiente(){
+  alemanIdx=((alemanIdx===null?diaDelAnio():alemanIdx)+1)%ALEMAN_TEMAS.length;
+  renderAleman();
+}
 function renderAleman(){
   const t=alemanTemaHoy();
-  const idx=ALEMAN_TEMAS.indexOf(t)+1;
+  const idx=alemanIdx+1;
   document.getElementById('alDe').textContent=`${t.ico} ${t.de}`;
   document.getElementById('alEs').textContent=t.es;
   const lvl=document.getElementById('alLevel');
@@ -1444,138 +1599,186 @@ function renderAlemanContent(data,t){
 //    Entrevistas/js/core.js) dentro del propio iframe, así que se lee en vivo vía
 //    `frame.contentWindow.T` una vez que el iframe carga, y se navega con la función `go(id)`
 //    que la app ya expone — nada que sincronizar a mano si se agregan/quitan temas allá.
+// ── Entrevista técnica del día (2026-08-07, versión nativa sin iframe) — mismo tratamiento que
+//    "Alemán del día": un tema distinto cada día, de los 229 reales de Entrevistas/js/core.js +
+//    js/data-*.js, extraídos por Entrevistas/_generar-datos-dashboard.js a
+//    `entrevistas-data.js` (ENTREVISTA_TEMAS/ENTREVISTA_CONTENT/ENTREVISTA_CSS, cargado por
+//    <script src> en el <head>). Antes se leía en vivo desde un <iframe> vía `win.eval('T')` —
+//    Adán: "la sección de alemán no me gustó [con iframe]... lo mismo que hiciste ahí, hazlo con
+//    entrevistas" — así que se reemplazó por el mismo patrón: contenido real pre-extraído,
+//    pintado nativo dentro del Dashboard, sin iframe ni duplicar HTML a mano.
+let entrevistaCssInjected=false;
+function injectEntrevistaCss(){
+  if(entrevistaCssInjected||typeof ENTREVISTA_CSS==='undefined')return;
+  const style=document.createElement('style');
+  style.id='enStyle';
+  style.textContent=ENTREVISTA_CSS;
+  document.head.appendChild(style);
+  entrevistaCssInjected=true;
+}
+// Mismo criterio que `alemanIdx`: null = tema del día; tras "Siguiente tema →" queda fijo en la sesión.
+let entrevistaIdx=null;
+function entrevistaTemaHoy(){
+  if(typeof ENTREVISTA_TEMAS==='undefined'||!ENTREVISTA_TEMAS.length)return null;
+  if(entrevistaIdx===null)entrevistaIdx=diaDelAnio()%ENTREVISTA_TEMAS.length;
+  return ENTREVISTA_TEMAS[entrevistaIdx];
+}
+function entrevistaSiguiente(){
+  if(typeof ENTREVISTA_TEMAS==='undefined'||!ENTREVISTA_TEMAS.length)return;
+  entrevistaIdx=((entrevistaIdx===null?diaDelAnio():entrevistaIdx)+1)%ENTREVISTA_TEMAS.length;
+  renderEntrevista();
+}
+let enScrollListenerAttached=false;
 function renderEntrevista(){
-  const frame=document.getElementById('enFrame');
-  const src='../Entrevistas/entrevistas.html';
-  function paint(){
-    try{
-      const win=frame.contentWindow;
-      // `T` es un `const` de nivel superior en core.js: vive en el scope léxico del script,
-      // no como propiedad de `window` (a diferencia de `function go(){}`, que sí cuelga de
-      // window por ser function declaration) — hay que leerlo con eval indirecto sobre el
-      // propio contentWindow para que se resuelva en SU scope global, no en el del Dashboard.
-      const keys=win.eval('Object.keys(T)');
-      const idx=diaDelAnio()%keys.length;
-      const id=keys[idx];
-      const d=win.eval('T['+JSON.stringify(id)+']');
-      document.getElementById('enTitle').textContent=`${d.icon} ${d.title}`;
-      document.getElementById('enSub').textContent=d.hint||'';
-      document.getElementById('enBadge').textContent=d.mod.toUpperCase();
-      document.getElementById('enCounter').textContent=`Tema ${idx+1} de ${keys.length} · cambia cada día`;
-      document.getElementById('enTags').innerHTML=(d.tags||[]).map(tag=>`<span class="td-tag">${tag}</span>`).join('');
-      win.go(id);
-    }catch(e){ /* si el iframe aún no expone T/go, no rompe el slide — el iframe se ve igual */ }
+  injectEntrevistaCss();
+  const cont=document.getElementById('enContent');
+  if(cont&&!enScrollListenerAttached){ cont.addEventListener('scroll',updateEnScrollHint); enScrollListenerAttached=true; }
+  const t=entrevistaTemaHoy();
+  if(!t){
+    document.getElementById('enTitle').textContent='Sin datos';
+    document.getElementById('enSub').textContent='';
+    if(cont)cont.innerHTML='<div class="al-loading">No se encontró entrevistas-data.js. Corre Entrevistas/_generar-datos-dashboard.js.</div>';
+    return;
   }
-  if(!frame.dataset.loaded){
-    frame.addEventListener('load',()=>{ frame.dataset.loaded='1'; paint(); });
-    frame.src=src;
-  } else {
-    paint();
-  }
+  const idx=entrevistaIdx+1;
+  document.getElementById('enTitle').textContent=`${t.icon} ${t.title}`;
+  document.getElementById('enSub').textContent=t.hint||'';
+  document.getElementById('enBadge').textContent=(t.mod||'').toUpperCase();
+  document.getElementById('enCounter').textContent=`Tema ${idx} de ${ENTREVISTA_TEMAS.length} · cambia cada día`;
+  document.getElementById('enTags').innerHTML=(t.tags||[]).map(tag=>`<span class="td-tag">${tag}</span>`).join('');
+  const html=(typeof ENTREVISTA_CONTENT!=='undefined')?ENTREVISTA_CONTENT[t.id]:null;
+  if(cont)cont.innerHTML=html||'<div class="al-loading">Sin contenido para este tema.</div>';
+  if(cont)cont.scrollTop=0; // el tema cambia todos los días — siempre debe arrancar arriba
+  requestAnimationFrame(updateEnScrollHint); // tras el reflow real del nuevo HTML, no antes
+}
+// Muestra "↓ más contenido" mientras quede algo debajo del área visible de #enContent, y lo
+// oculta al llegar al fondo — ver nota CSS de .en-scroll-hint arriba para el motivo completo.
+function updateEnScrollHint(){
+  const cont=document.getElementById('enContent'), hint=document.getElementById('enScrollHint');
+  if(!cont||!hint)return;
+  const hasMore=cont.scrollHeight-cont.scrollTop-cont.clientHeight>24;
+  hint.classList.toggle('show',hasMore);
+}
+// Helpers de interacción dentro del HTML de cada tema (copiados literal de
+// Entrevistas/js/core.js — el contenido real trae onclick="toggleQuiz(this)" /
+// onclick="switchTab(this,...)" incrustado, así que estas dos funciones deben existir tal cual).
+function toggleQuiz(el){
+  el.classList.toggle('open');
+  el.nextElementSibling.classList.toggle('open');
+}
+function switchTab(btn,panelId,groupClass){
+  const container=btn.closest('.tab-group-'+groupClass);
+  container.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  container.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById(panelId)?.classList.add('active');
 }
 
-// ── Frases motivacionales — 70 en total (ampliado de 20 a 70 el 2026-08-02, a petición
-//    de Adán), rotan una por día (no por render, para que no cambien a media pantalla).
-//    Todas atadas a hechos reales de su plan (gym, Hyrox, ajedrez, deudas, GBM, Didi,
-//    negocio de su papá, background de testing/mecatrónica) — nada genérico de calendario.
+// ── Frases motivacionales — 87 en total, reescritas con tono de exigencia (2026-08-07, a
+//    petición de Adán: "las frases no me gustan, son muy x [blandas], deben invitarme a
+//    lograr mis metas pero con exigencia") — ya no son solo tough-love filosófico: cada una
+//    nombra la excusa concreta y exige la acción, en segunda persona directa. Rotan una por
+//    día (no por render, para que no cambien a media pantalla). Todas atadas a hechos reales
+//    de su plan (gym, Hyrox, ajedrez, deudas, GBM, Didi, negocio de su papá, background de
+//    testing/mecatrónica) — nada genérico de calendario tipo "cree en ti".
 const FRASES_MOTIVACION=[
   // Disciplina general
-  'No necesitas sentir ganas. Solo necesitas seguir apareciendo, tengas ganas o no.',
-  'La disciplina no es motivación. Es hacerlo aunque no tengas motivación.',
-  'Cada día que cumples tu rutina completa, te demuestras que sí puedes confiar en ti.',
-  'No se trata de tener un día perfecto. Se trata de no fallar dos días seguidos.',
-  'Lo aburrido y repetido es lo que en realidad construye resultados grandes.',
-  'Hoy no necesitas un cambio enorme. Necesitas hacer bien lo de siempre.',
-  'Tu palabra vale más cada vez que cumples lo que te prometiste a ti mismo.',
-  'El progreso real no se ve en un día. Se ve cuando volteas a ver el mes completo.',
-  'No compites contra nadie más. Compites contra el Adán de ayer.',
-  'Empieza aunque no tengas ganas. Las ganas llegan después de empezar, no antes.',
-  'Hacerlo mal pero hacerlo es mejor que esperar a hacerlo perfecto.',
-  'Cumplir lo pequeño de hoy es lo que te da permiso de creerte lo grande de mañana.',
-  'No necesitas motivación todos los días. Necesitas el hábito ya armado para los días sin motivación.',
+  'Las ganas no son un requisito. Preséntate igual, sientas lo que sientas.',
+  'La disciplina no negocia con tu estado de ánimo. Hoy toca, así que hoy se hace.',
+  'Cada bloque que te saltas es una prueba de que tu palabra no vale lo que dices. Cúmplela hoy.',
+  'Un día flojo se perdona. Dos seguidos ya es un patrón — no dejes que llegue ahí.',
+  'Si te aburre, vas por buen camino: lo aburrido y repetido es lo único que de verdad construye algo grande.',
+  'Deja de buscar el cambio enorme. Exígete hacer bien, sin atajos, lo de siempre.',
+  'Cada promesa que te haces y no cumples te enseña a no creerte. Rompe ese patrón hoy.',
+  'No mires el día de hoy buscando resultados. Exígete el mes completo y ahí sí vas a ver si valió la pena.',
+  'Deja de compararte con nadie más. Tu único rival real es el Adán que ayer sí se saltó algo.',
+  'No esperes las ganas — empieza sin ellas. Si esperas sentirte listo, nunca vas a empezar.',
+  'La excusa de "hacerlo bien" es la forma más cómoda de no hacerlo. Hazlo mal, pero hazlo ya.',
+  'No te has ganado todavía soñar en grande si sigues fallando en lo pequeño de hoy.',
+  'La motivación te va a fallar la mayoría de los días. Exígete el hábito, no la motivación.',
   // Gym / cuerpo
-  'Tu cuerpo cambia en semanas de entrenar, no en un solo entrenamiento.',
-  'Cada serie que haces cansado, después de un día completo de trabajo, cuenta doble.',
-  'No necesitas verte diferente hoy en el espejo. Necesitas entrenar hoy también.',
-  'Subir un poco más de peso esta semana que la pasada — así se ve el progreso real.',
-  'Cada pausa activa de hoy es una espalda que no te va a doler a los 40.',
-  'El cuerpo que quieres para el Hyrox se construye hoy, en el entrenamiento que no te saltas.',
-  'Bajar la panza no pasa en un día de dieta. Pasa en semanas de comer bien, sin excepción.',
-  'Cada vaso de agua, cada serie, cada comida — nada se ve en una semana, pero todo se ve en un año.',
-  'Dormir tus horas completas no es un lujo. Es el único suplemento gratis que sí funciona.',
-  'Nadar los miércoles no es solo cardio — es un día menos de desgastar tus rodillas y tu espalda.',
-  'Cada vez que eliges entrenar cansado en vez de cancelar, ese es el entrenamiento que más cuenta.',
-  'Tu cuerpo no necesita un mes perfecto. Necesita que no falles dos entrenamientos seguidos.',
+  'Un entrenamiento no cambia nada. Exígete las semanas completas, sin negociar ninguna.',
+  'Cualquiera entrena descansado. La serie que de verdad cuenta es la que haces cansado, después de un día completo — no la canceles.',
+  'Deja de buscarte en el espejo todos los días. Lo único que necesitas hoy es entrenar, otra vez.',
+  'Si esta semana levantaste lo mismo que la pasada, no avanzaste. Exígete un poco más de peso, siempre.',
+  'Saltarte la pausa activa hoy es una espalda que te va a cobrar la factura a los 40. No la debas.',
+  'El Hyrox no perdona entrenamientos saltados. El cuerpo que necesitas para esa carrera se gana hoy o no se gana.',
+  'Un día bien comido no compensa nada. Exígete semanas completas, sin una sola excepción.',
+  'Cada vaso de agua que no tomas, cada serie que recortas, no se nota hoy — se nota en un año, y para entonces ya es tarde para reclamarte.',
+  'Quítate la idea de que dormir menos es aguantar más. Sin tus horas completas, todo lo demás que haces rinde menos.',
+  'Saltarte la natación del miércoles no es "solo un cardio menos" — es una rodilla y una espalda que vas a seguir desgastando sin necesidad.',
+  'Cancelar por cansancio es la salida fácil. El entrenamiento que de verdad te define es el que haces cansado, no el que te saltas por estarlo.',
+  'No busques el mes perfecto de gym. Exígete algo más simple y no negociable: nunca dos entrenamientos seguidos fallados.',
   // Finanzas / deuda
-  'Cada peso que le pagas a Banamex y BBVA es un peso que ya no te va a cobrar intereses después.',
-  'El fondo de emergencia no es para gastarlo. Es para poder dormir tranquilo si algo sale mal.',
-  'Menos deuda cara este mes que el mes pasado ya es una victoria real.',
-  'El Cupra Formentor no se compra con ganas. Se compra primero dejando la deuda cara en $0.',
-  'Cada peso que metes a tu inversión el lunes es un peso que ya no puedes gastar sin querer entre semana.',
-  'Tu cuenta en números rojos no te define. Lo que hagas la próxima semana con ella sí.',
-  'No necesitas ganar más todavía. Primero necesitas dejar de perder dinero en cosas evitables.',
-  '$1,000,000 para 2030 no es un salto. Son miles de decisiones pequeñas, repetidas sin fallar.',
-  'El BYD se paga solo con el pago mínimo. Pero tú decides pagar primero lo que sí te cobra intereses.',
-  'Revisar tu inversión en GBM un lunes en la mañana vale más que cinco lunes dudando todo el día.',
-  'Revisar tus gastos con honestidad hoy es más valioso que prometerte ahorrar mañana.',
-  'Cada MSI que no aceptas hoy es una deuda futura que ya no vas a tener que pagar.',
-  'El dinero que no gastas en algo innecesario hoy ya está trabajando para ti sin que hagas nada más.',
+  'Cada peso que no le abonas a Banamex y BBVA hoy es un peso que te va a seguir cobrando intereses mañana. Págalo.',
+  'El fondo de emergencia no se toca por antojo. Constrúyelo con la misma disciplina con la que exiges resultados en el gym.',
+  'Si este mes debes lo mismo o más que el pasado, no hay excusa que valga — exígete que la deuda cara baje, siempre.',
+  'Olvídate del Cupra Formentor hasta que la deuda cara esté en $0. No hay atajo ni excepción para eso.',
+  'Si no metes el peso a tu inversión el lunes, te lo vas a gastar sin darte cuenta entre semana. No le des esa oportunidad.',
+  'Los números rojos de hoy no son la excusa — son la exigencia. Lo que hagas la próxima semana con ellos es lo único que importa.',
+  'Deja de buscar ganar más mientras sigues perdiendo dinero en cosas evitables. Cierra la fuga primero, sin excusas.',
+  '$1,000,000 para 2030 no perdona decisiones chiquitas mal tomadas. Cada una cuenta, y no puedes fallar la mayoría.',
+  'Pagar solo el mínimo del BYD es la salida cómoda. Exígete pagar primero lo que sí te cobra intereses — el BYD puede esperar.',
+  'Dudar todo el lunes sin revisar GBM no es cautela, es evasión. Revísala en la mañana y ya.',
+  'Prometerte ahorrar mañana es la excusa más vieja del libro. Revisa tus gastos con honestidad hoy, no mañana.',
+  'Cada MSI que aceptas por comodidad hoy es una deuda que te vas a exigir pagar después. No la crees.',
+  'Cada gasto innecesario de hoy es dinero que le quitas a tu meta de 2030. Piénsalo antes de sacar la tarjeta.',
   // Negocio / trabajo extra
-  'Publica la versión imperfecta hoy. La versión perfecta nunca sale.',
-  'Una hora real dedicada al negocio de tu papá vale más que diez veces decir "algún día lo hago".',
-  'Facturar por Didi no te hace menos ingeniero. Te hace alguien que no espera permiso para generar ingresos.',
-  'Publicar tu plantilla en una sola comunidad de GBM ya es más de lo que hizo el 90% de la gente que solo lo piensa.',
-  'El negocio no necesita que tengas todo resuelto. Necesita que des el siguiente paso pequeño.',
-  'No es el negocio de tu papá, ni la plantilla, ni el régimen fiscal por separado — es hacer cada cosa completa, no a medias, lo que suma.',
-  'Construir en las noches después de Didi no es tu plan B. Es tu plan, hasta que ya no lo necesites.',
-  'Cada mensaje que no mandas hoy porque elegiste enfocarte en el negocio también es una decisión de negocio.',
-  'No compares tu quincena 1 en el negocio con la quincena 50 de alguien más.',
-  'Ver con atención real las fotos del negocio de tu papá hoy es el primer ladrillo, no el edificio completo.',
-  'No necesitas la idea perfecta de negocio. Necesitas probar la idea que ya tienes, aunque sea pequeña.',
-  'Cada cliente o venta pequeña de hoy es información real — vale más que un plan perfecto sin probar.',
+  'Deja de esperar la versión perfecta — esa nunca sale. Publica la imperfecta hoy, sin más pretextos.',
+  '"Algún día lo hago" no cuenta como avance. Exígete la hora real dedicada al negocio de tu papá, hoy.',
+  'Si te da pena facturar por Didi, supéralo. Te hace alguien que genera ingresos en vez de esperar que se los den.',
+  'Pensar en publicar la plantilla no cuenta. Publícala en una comunidad de GBM hoy — el 90% se queda solo pensándolo.',
+  'Deja de esperar tener todo resuelto para avanzar — esa es la excusa perfecta para no dar el siguiente paso. Date el paso, hoy.',
+  'Nada de lo que empiezas a medias suma. Ni el negocio de tu papá, ni la plantilla, ni nada — termínalo completo o no cuenta.',
+  'Estar cansado después de Didi no es excusa para no construir. Es tu plan real, hasta que ya no lo necesites — no antes.',
+  'Postergar un mensaje "porque hoy te enfocas en el negocio" también es una decisión — exígete que sea la correcta, no la cómoda.',
+  'Compararte con la quincena 50 de alguien más solo te da excusa para rendirte en tu quincena 1. No lo hagas.',
+  'Ver las fotos del negocio de tu papá "cuando tengas tiempo" nunca va a pasar. Hazlo hoy, es el primer ladrillo que debes.',
+  'Buscar la idea perfecta es una forma elegante de no empezar. Prueba la que ya tienes, hoy, aunque sea pequeña.',
+  'Un plan perfecto sin probar no vale nada. Sal a buscar el cliente o la venta pequeña de hoy — esa sí es información real.',
   // Trabajo en ALTEN / carrera
-  'Lo que aprendiste probando sistemas en Bosch y Continental —encontrar el error antes de que truene— también sirve para ver el gasto antes de que truene tu quincena.',
-  'Nadie te contrata por tu régimen fiscal. Te contratan por lo que sabes hacer. Eso ya lo tienes.',
-  'Cada consulta de SQL que practicas hoy es una habilidad que nadie te puede quitar, ni con crisis ni con despidos.',
-  'El mismo cuidado que usas para revisar un sistema en el trabajo, úsalo para revisar tus propios hábitos.',
-  'Ya sabes desarmar, entender y volver a armar un sistema completo. Tu vida financiera funciona igual.',
-  'Trabajar remoto no se pide, se demuestra con resultados. Cada entrega bien hecha te acerca a eso.',
-  'El mismo enfoque que usas para encontrar un error en el código sirve para encontrar el hábito que te está frenando.',
-  'Ser bueno en tu trabajo actual no te encierra ahí. Te da la base para negociar algo mejor.',
+  'Ya sabes encontrar el error antes de que truene — te lo enseñaron Bosch y Continental. Exígete usar esa misma disciplina con cada gasto, antes de que truene tu quincena.',
+  'Deja de esconderte detrás del régimen fiscal como pretexto. Te contratan por lo que sabes hacer, y eso ya lo tienes — úsalo.',
+  'Saltarte la práctica de SQL hoy es dejar pasar una habilidad que nadie te puede quitar. No la desperdicies por flojera.',
+  'Le exiges rigor a un sistema en el trabajo y se lo perdonas todo a tus propios hábitos. Cámbialo — revísate con la misma exigencia.',
+  'Ya sabes desarmar, entender y volver a armar un sistema completo. No tienes excusa para no hacerle lo mismo a tu vida financiera.',
+  'Trabajar remoto no se pide, se gana. Cada entrega a medias te aleja de eso — exígete la entrega completa.',
+  'Si le dedicas horas a encontrar un bug pero ni cinco minutos a encontrar el hábito que te frena, estás mal priorizado. Corrígelo.',
+  'No dejes que ser bueno en tu trabajo actual sea tu techo. Úsalo como base para exigir algo mejor, no como excusa para quedarte cómodo.',
   // Aprendizaje (alemán, entrevista, lectura)
-  'El alemán no se aprende en una sesión. Se aprende en la sesión de hoy, sin saltártela.',
-  'Practicar la entrevista de hoy, aunque no tengas una programada, es lo que hace que no te agarre desprevenido cuando sí la tengas.',
-  'Leer 30 minutos hoy en vez de abrir el celular entrena el mismo enfoque profundo que tu negocio va a necesitar.',
-  'No necesitas el B2 de alemán hoy. Necesitas la sesión de hoy, la de mañana, y la de pasado mañana.',
-  'Cinco minutos de lectura o alemán hoy son la prueba real de que la semana no se te fue en automático.',
-  'Cada palabra nueva de alemán que aprendes hoy es una puerta que se abre un poco más para trabajar afuera.',
-  'No necesitas hablar alemán perfecto. Necesitas hablarlo un poco mejor que ayer.',
+  'Saltarte la sesión de alemán de hoy "porque total es solo una" es exactamente cómo nunca se aprende un idioma. No te la saltes.',
+  'Si esperas a tener la entrevista programada para practicar, ya llegaste tarde. Practica hoy, sin que nadie te la pida.',
+  'Cada vez que abres el celular en vez de leer tus 30 minutos, le restas enfoque profundo al negocio que dices que quieres construir.',
+  'Deja de pensar en el B2. Exígete la sesión de hoy, la de mañana y la de pasado — el nivel es consecuencia, no meta diaria.',
+  'Si no puedes ni con cinco minutos de lectura o alemán hoy, la semana se te está yendo en automático. No lo permitas.',
+  'Cada sesión de alemán que te saltas es una puerta que se cierra un poco más para trabajar afuera. Ábrela hoy, no la cierres.',
+  'Nadie te está pidiendo alemán perfecto. Te estás pidiendo tú mejorar un poco cada día — no lo bajes.',
   // Papá / familia
-  'Tu papá construyó algo con sus manos. Ponerle atención real a su negocio es empezar a construir con las tuyas.',
-  'Escuchar a tu papá sin prometer nada todavía también es avanzar — no toda ayuda empieza con un compromiso grande.',
-  'Cada foto del negocio de tu papá que revisas con calma hoy es tiempo que tu yo de 2030 no va a tener que recuperar.',
-  'No tienes que resolver todo el negocio de tu papá en una sola conversación. Solo el siguiente paso.',
+  'Tu papá ya construyó algo con sus manos. Ponerle atención a medias a su negocio no es suficiente — exígete la atención completa.',
+  'No tienes excusa para no sentarte a escuchar a tu papá solo porque no estás listo para comprometerte a algo grande. Siéntate igual.',
+  'Postergar la revisión de las fotos del negocio de tu papá es una deuda de tiempo que tu yo de 2030 va a tener que pagar. No la generes.',
+  'Dejar de avanzar porque "no tienes toda la solución del negocio de tu papá" es la excusa fácil. Exígete solo el siguiente paso, hoy.',
   // Sueño / hábitos nocturnos
-  'Apagar la pantalla a tiempo en vez de seguir scrolleando le regala una hora de sueño a la versión cansada de mañana.',
-  'Los 10 minutos de meditación antes de dormir no se ven, pero son los que sostienen todo lo demás del día.',
-  'Dormir bien hoy es lo que decide si mañana sí tienes la energía para cumplir tu rutina completa.',
-  'Una noche de mal sueño no arruina el plan. Una semana entera de eso sí — cuida que no se repita.',
+  'Seguir scrolleando en vez de apagar la pantalla a tiempo es robarle una hora de sueño a la versión de ti que mañana sí necesita rendir. No lo hagas.',
+  'Saltarte los 10 minutos de meditación "porque ya es tarde" es exactamente lo que hace que el resto del día se empiece a caer. No te la saltes.',
+  'Si no duermes bien hoy, mañana no vas a tener la energía para exigirte la rutina completa. Duerme como si mañana dependiera de eso, porque depende.',
+  'Una mala noche se perdona. Que se repita toda la semana no — corta el patrón antes de que te cueste el plan completo.',
   // Metas específicas (Hyrox, ajedrez, viajes, depa)
-  'El Hyrox no se gana el día de la carrera. Se gana en cada entrenamiento que no te saltaste antes.',
-  'El torneo de ajedrez que quieres jugar empieza por ganarle hoy la partida al aburrimiento de la rutina.',
-  'El BYD, el Cupra, el depa — todos esperan a que la deuda cara llegue primero a $0. En ese orden, sin excepción.',
-  'Cada kilómetro que corres pensando en competir afuera del país empieza aquí, sudando un martes cualquiera.',
-  'El depa que quieres no se compra con ganas. Se compra con años de decisiones financieras aburridas, bien hechas.',
-  'Pelear en Tailandia, correr un Hyrox afuera, todo eso se ve lejano — pero se acerca solo con lo que entrenas hoy.',
-  'Un viaje grande no se paga con ganas. Se paga con meses de no gastar en lo que no importa.',
+  'El día de la carrera del Hyrox solo cobra lo que ya entrenaste. Si te saltas hoy, ya perdiste algo que ese día no vas a poder recuperar.',
+  'Antes de jugar el torneo de ajedrez que quieres, gánale hoy la partida al aburrimiento de tu rutina. Esa la juegas todos los días.',
+  'El BYD, el Cupra, el depa — ninguno se adelanta a la deuda cara en $0. No negocies el orden, ni una sola vez.',
+  'Nadie compite afuera del país sin antes sudar un martes cualquiera aquí. Exígete ese kilómetro hoy, no cuando "sí cuente".',
+  'El depa no se compra con ganas ni con un buen mes. Se compra con años de decisiones aburridas que no vas a dejar de tomar.',
+  'Pelear en Tailandia o correr un Hyrox afuera no se acerca solo porque lo desees. Se acerca con el entrenamiento de hoy — sin ese, sigue igual de lejos.',
+  'Un viaje grande se paga negándote hoy los gastos que no importan. Si no puedes con eso, tampoco vas a poder con el viaje.',
   // Cierre / visión largo plazo
-  'Tu yo de dentro de 4 años ya te está agradeciendo lo que decidas hacer hoy.',
-  'No se trata de tener tiempo de sobra. Se trata de que esto sí te importe lo suficiente como para hacerle espacio.',
-  'El miedo real no es fracasar. Es quedarte igual. Cada tarea de tu rutina de hoy es un voto en contra de quedarte igual.',
-  'Un domingo de revisar tu semana con honestidad vale más que seis días de avanzar sin voltear a ver atrás.',
-  'La versión de ti que ya logró la meta empezó exactamente donde estás ahora — haciendo lo de hoy.',
-  'Lo que decidiste hace un año ya se nota en quién eres hoy. Lo que decidas hoy se va a notar en un año.',
-  'No necesitas saber todo el camino. Necesitas dar el paso de hoy con lo que ya sabes.'
+  'Tu yo de dentro de 4 años no va a agradecerte las excusas de hoy. Decide algo que sí valga la pena agradecer.',
+  'Nunca vas a tener tiempo de sobra. O le exiges espacio a esto porque de verdad te importa, o admite que no tanto.',
+  'Fracasar no es lo que debería darte miedo. Quedarte exactamente igual sí. Cada tarea de hoy que te saltas es un voto a favor de eso.',
+  'Avanzar seis días sin revisar nada no es disciplina, es evitar lo incómodo. Exígete el domingo de revisión honesta, sin excusas.',
+  'No existe una versión de ti que llegó a la meta sin pasar por exactamente lo de hoy. Deja de buscar el atajo que no existe.',
+  'Lo que decidiste hace un año ya te delató en quién eres hoy. Lo que decidas hoy te va a delatar en un año — decide con eso en mente.',
+  'No saber todo el camino no es excusa para no dar el paso de hoy. Exígete avanzar con lo que ya sabes, no con lo que te falta.'
 ];
 function diaDelAnio(){const n=new Date();const ini=new Date(n.getFullYear(),0,0);return Math.floor((n-ini)/86400000);}
 
@@ -1825,6 +2028,7 @@ function renderHeroGymPanel(){
 //    esto debe variar" — ahora muestra una ventana de 3 recetas que además se recorre un lugar
 //    cada día (`pickN`), así siempre hay variedad Y cambia de un día a otro, no las mismas 3 fijas.
 let nutriTabSel='desayuno';
+let nutriExpandido=new Set(); // recetas abiertas ('tab|nombre') — se colapsan de nuevo al recargar, no persiste
 function pickN(arr,startIdx,n){ const out=[]; for(let i=0;i<n;i++) out.push(arr[(startIdx+i)%arr.length]); return out; }
 function renderHeroNutri(){
   const el=document.getElementById('heroNutriPanel');
@@ -1842,15 +2046,22 @@ function renderHeroNutri(){
       <button class="mes-tab${nutriTabSel==='desayuno'?' active':''}" onclick="verNutriTab('desayuno')">🌅 Desayuno</button>
       <button class="mes-tab${nutriTabSel==='cena'?' active':''}" onclick="verNutriTab('cena')">🌙 Cena</button>
     </div>
-    <div class="hp-meal-list">${recetas.map(r=>`
-      <div class="hp-meal-card">
-        <div class="hp-meal-name">${r.nombre}</div>
-        <div style="display:flex;flex-direction:column">${r.ing.map(i=>`<div class="ds-row"><span class="ds-txt" style="white-space:normal">${i}</span></div>`).join('')}</div>
-      </div>`).join('')}
+    <div class="hp-meal-list">${recetas.map(r=>{
+      const key=nutriTabSel+'|'+r.nombre;
+      const open=nutriExpandido.has(key);
+      return `<div class="hp-meal-card${open?' open':''}">
+        <div class="hp-meal-head" onclick="toggleRecetaCard('${key.replace(/'/g,"\\'")}')">
+          <span class="hp-meal-name">${r.nombre}</span>
+          <span class="hp-meal-chevron">▾</span>
+        </div>
+        <div class="hp-meal-ing">${r.ing.map(i=>`<div class="ds-row"><span class="ds-txt" style="white-space:normal">${i}</span></div>`).join('')}</div>
+      </div>`;
+    }).join('')}
     </div>
   `;
 }
 function verNutriTab(tab){ nutriTabSel=tab; renderHeroNutri(); }
+function toggleRecetaCard(key){ nutriExpandido.has(key)?nutriExpandido.delete(key):nutriExpandido.add(key); renderHeroNutri(); }
 
 function renderCoach(){
   const ph=activePhase();
@@ -1926,30 +2137,63 @@ function skLevel(v){
 // Plan de ataque de las 5 prioridades reales — mismo contenido que Coach_v2.html → #aprendizaje
 // (primer paso de la semana, hábito recomendado y recursos exactos). Copiado a mano, igual que
 // RUTINA_TASKS/PHASES/SK — si se edita #aprendizaje en Coach, replicar aquí.
+// Reescrito el 2026-08-07 (pedido explícito: "inversion tiene menos que IA entonces deberias
+// poner inversion" + "esas 4 habilidades siento que eso que me dices no voy a llegar lejos me
+// estas diciendo cosas comunes, dame mas info y retroalimentacion") — 2 cambios de fondo:
+// 1) se agregó `inversion` (25/100, antes no vivía en APRENDIZAJE aunque sí en SK/el radar) —
+//    al ordenar por valor ascendente, Inversión (25) ahora desplaza a IA (30) del top-4 que
+//    muestra el Dashboard, tal como pidió Adán.
+// 2) cada entrada ganó `diagnostico` (por qué está baja, específico a su situación real, no
+//    genérico), `semana24` (plan más allá de "esta semana") y `error` (el error común que la
+//    mayoría comete ahí) — antes solo había `primer` + 2 recursos, que se sentía como consejo
+//    de calendario, no retroalimentación real. `habito` ya existía pero nunca se mostraba en
+//    el Dashboard — ahora sí. Replicado en Coach_v2.html → #aprendizaje (mismo texto, ver esa
+//    sección) — sigue siendo la 6ª+7ª estructura duplicada del tipo de la tabla de arriba.
 const APRENDIZAJE={
-  datos:{corto:'Kaggle Learn (Python/Pandas) + dashboard de gastos en Looker Studio',
+  datos:{
+    diagnostico:'Ya no es tu debilidad real (subiste el valor tú mismo a 55/100), pero el hueco que queda es de herramienta, no de criterio: sabes leer un problema de datos, te falta soltura en Python/SQL para no depender de Excel.',
     primer:'Módulos de Python y Pandas en Kaggle Learn (2-3h, gratis) + arma un dashboard simple de tus gastos en Google Looker Studio.',
+    semana24:'Repite el mismo dashboard con datos de otra app tuya (ejercicio o comida) — el segundo dashboard te toma la mitad del tiempo del primero, esa caída es la señal real de que se está volviendo hábito.',
     habito:'10 min/día de SQL en SQLZoo o LeetCode SQL, 30 días seguidos.',
+    error:'Ver tutoriales sin escribir código en paralelo — Pandas/SQL se te va a olvidar en una semana si no lo tecleas tú mismo con tus propios datos reales.',
     recursos:[{t:'Curso',n:'Kaggle Learn'},{t:'Curso',n:'Google Data Analytics Certificate'},{t:'Libro',n:'Storytelling with Data — Cole Nussbaumer Knaflic'},{t:'Tool',n:'Google Looker Studio'}]},
-  ventas:{corto:'Lee "Influence" + 1 mensaje personalizado/día a un prospecto real',
-    primer:'Lee el cap. 1 de "Influence" (reciprocidad) y envía 1 mensaje personalizado a un prospecto real de tu red Ford/Continental/Bosch.',
+  ventas:{
+    diagnostico:'No es que no sepas vender — vendes bien tu propio sueldo al cambiar de empresa (ya lo hiciste con Ford→Continental→Bosch). El hueco real es vender en frío a un extraño que no te conoce, sin la credibilidad de una entrevista formal detrás.',
+    primer:'Lee el cap. 1 de "Influence" (reciprocidad) y úsalo en el mensaje de venta que ya tienes listo (Coach → Posibles Negocios → Plantillas de mensajes): personalízalo con tu precio de lanzamiento ($99 MXN) y publícalo en 1 comunidad real de GBM/inversión.',
+    semana24:'Arma un embudo simple de 3 columnas (Contactado / Respondió / Cerró) para la plantilla Finanzas.html y llénalo con 5 conversaciones reales por semana — sin medirlo, no vas a saber si estás mejorando o solo ocupado.',
     habito:'5 mensajes personalizados/día a prospectos + follow-up en días 1-3-7-14-30.',
+    error:'Rendirte después de un "no" o un silencio. La mayoría de las ventas B2B cierran entre el 3er y 5to contacto, no en el primero — el follow-up es la venta, no un extra opcional.',
     recursos:[{t:'Libro',n:'Influence — Robert Cialdini'},{t:'Libro',n:'$100M Offers — Alex Hormozi'},{t:'Libro',n:'Never Split the Difference — Chris Voss'},{t:'YouTube',n:'Alex Hormozi'}]},
-  marketing:{corto:'Google Digital Garage + 1er post en LinkedIn de tu plantilla',
+  marketing:{
+    diagnostico:'Tu problema no es de ideas — ya vendiste tus activos ociosos en Marketplace sin ayuda. Es de constancia: publicas una vez, no ves resultado inmediato, y lo dejas — el marketing orgánico premia repetición, no un post perfecto aislado.',
     primer:'Termina el módulo de fundamentos de Google Digital Garage y publica tu primer post de valor en LinkedIn sobre la plantilla Finanzas.html.',
+    semana24:'Publica 4 semanas seguidas (1 post/semana mínimo) y anota views/comentarios/DMs de cada uno en una nota simple — al final del mes vas a saber qué formato (texto, carrusel, caso real) te funcionó mejor, en vez de seguir adivinando.',
     habito:'3 publicaciones/semana en LinkedIn — lunes, miércoles y viernes.',
+    error:'Perfeccionar el post en vez de publicarlo. La versión imperfecta que sí sale hoy vale más que la perfecta que nunca sale — puedes editar/mejorar el siguiente con lo que aprendas de este.',
     recursos:[{t:'Curso',n:'Google Digital Garage'},{t:'Curso',n:'HubSpot Academy'},{t:'Curso',n:'Meta Blueprint'},{t:'Libro',n:'$100M Leads — Alex Hormozi'}]},
-  finanzas:{corto:'Instala YNAB y categoriza los gastos de este mes',
+  finanzas:{
+    diagnostico:'No es falta de conocimiento básico — es que revisas tus gastos de forma reactiva (cuando ya se fue el dinero), no proactiva. La deuda actual de Banamex/BBVA no fue mala suerte, fue no trackear antes de gastar.',
     primer:'Instala YNAB o Finerio y conecta tus cuentas para categorizar los gastos de este mes.',
+    semana24:'Clasifica 30 días completos de gastos reales (no estimados) y encuentra las 3 categorías donde más se te va el dinero sin darte cuenta — esos son los primeros pesos que recortas, no los obvios.',
     habito:'Revisión de 10 min cada domingo — clasifica gastos vs. presupuesto.',
+    error:'Tratar los MSI como "dinero gratis" en vez de deuda ya comprometida. Cada MSI nuevo reduce el excedente real que tienes disponible para pagar Banamex/BBVA ese mes, aunque no lo sientas de inmediato.',
     recursos:[{t:'Libro',n:'I Will Teach You to Be Rich — Ramit Sethi'},{t:'App',n:'YNAB'},{t:'Libro',n:'The Millionaire Next Door — Thomas Stanley'},{t:'Libro',n:'Psicología del Dinero — Morgan Housel'}]},
-  ia:{corto:'Automatización simple en n8n.io: formulario → Google Sheets',
+  inversion:{
+    diagnostico:'Ya diste el primer paso real (CETES, BTC, acciones en GBM) — la mayoría de la gente nunca llega ahí. Lo que falta no es empezar, es estructura: decides monto e instrumento cada lunes sobre la marcha, en vez de seguir una asignación ya definida.',
+    primer:'Define por escrito, una sola vez, tu asignación objetivo (ej. % CETES/renta fija, % índice VOO, % BTC) — deja de decidirlo cada lunes desde cero.',
+    semana24:'Automatiza un monto fijo cada lunes hacia esa asignación (aunque sea pequeño) durante 4 semanas seguidas — la consistencia del monto importa más que acertarle al mejor momento para invertir.',
+    habito:'Revisar portafolio + VOO + USD/MXN e invertir, todos los lunes en la mañana antes de que empiece el ruido del día (ya está en tu rutina — la meta es que nunca se salte).',
+    error:'Sacar dinero de la inversión para cubrir un gasto del mes. Eso convierte tu inversión de largo plazo en un fondo de emergencia mal disfrazado — para eso ya existe el fondo de emergencia aparte.',
+    recursos:[{t:'Libro',n:'The Intelligent Investor — Benjamin Graham'},{t:'Libro',n:'The Little Book of Common Sense Investing — John Bogle'},{t:'Libro',n:'A Random Walk Down Wall Street — Burton Malkiel'},{t:'Libro',n:'One Up On Wall Street — Peter Lynch'}]},
+  ia:{
+    diagnostico:'Te sientes principiante, pero ya validaste IA generativa para Google y usas Claude Code a diario en producción — el hueco real no es técnico, es que nunca lo has aplicado a un proyecto tuyo, solo al trabajo de otros.',
     primer:'Construye una automatización simple en n8n.io conectando un formulario a Google Sheets — menos de 1h.',
+    semana24:'Aplica esa misma automatización a un problema real tuyo (ej. capturar leads de la plantilla Finanzas.html sin revisar mensajes a mano) — la diferencia entre "saber IA" y "usar IA" es tenerla resolviendo algo tuyo, no un ejercicio de práctica.',
     habito:'1 bloque de 30 min/semana construyendo (no solo leyendo) un mini-proyecto de IA.',
+    error:'Quedarte en el modo "leer sobre IA" indefinidamente. Ya tienes más base real que la mayoría (Visión Artificial, Sistemas Neurodifusos en tu carrera) — te falta construir, no aprender más teoría.',
     recursos:[{t:'Curso',n:'DeepLearning.AI — Prompt Engineering for Developers'},{t:'Curso',n:'Fast.ai'},{t:'Tool',n:'n8n.io'},{t:'Tool',n:'Cursor IDE'}]}
 };
 const PRIORIDAD_N = 4; // cuántas prioridades mostrar en el Dashboard (las N más bajas) — el resto sigue completo en Coach → Aprendizaje
-let chSkills=null;
 function renderSkills(){
   // Top N prioridades reales, siempre visibles (nada de clics — este slide es pasivo, rota
   // solo y se ve de reojo mientras se trabaja), cada una en una tarjeta grande y detallada.
@@ -1961,24 +2205,42 @@ function renderSkills(){
         <div class="skill-card-head">
           <div class="sc-badge" style="background:${l.c}22">${s.icon}</div>
           <div class="sc-name">${s.name}</div>
-          <div class="sc-val" style="color:${l.c}">${s.val}</div>
+          <span class="sc-lvl" style="background:${l.c}22;color:${l.c}">${l.l}</span>
+          <div class="sc-val" style="color:${l.c}">${s.val}<small>/100 · ×${s.w}</small></div>
         </div>
-        <div class="sc-w">Ponderación en el OVR: ×${s.w}</div>
+        <div class="sc-diag">🔍 <b>Por qué está baja:</b> ${a.diagnostico}</div>
         <div class="sc-primer">🎯 <b>Esta semana:</b> ${a.primer}</div>
-        <div class="sc-res">📚 <b>${a.recursos[0].n}</b> · ${a.recursos[1].n}</div>
+        <div class="sc-plan">📆 <b>Semanas 2-4:</b> ${a.semana24}</div>
+        <div class="sc-habito">🔁 <b>Hábito:</b> ${a.habito}</div>
+        <div class="sc-error">⚠️ <b>Error común:</b> ${a.error}</div>
+        <div class="sc-res">📚 <b>${a.recursos[0].n}</b> · ${a.recursos[1].n} · ${a.recursos[2].n}</div>
         <a class="sc-link" href="../Coach/Coach_v2.html?skill=${s.id}#aprendizaje">✏️ Ajustar ${s.name} en Coach →</a>
       </div>
     </div>`;
   }).join('');
 
-  if(chSkills)chSkills.destroy();
-  const ctx=document.getElementById('chSkills');
-  if(ctx) chSkills=new Chart(ctx,{type:'radar',
-    data:{labels:SK.map(s=>s.icon+' '+s.name),datasets:[{label:'Nivel actual',data:SK.map(s=>s.val),
-      backgroundColor:cssVar('--p-l'),borderColor:cssVar('--p'),borderWidth:2,pointBackgroundColor:cssVar('--p'),pointRadius:3}]},
-    options:{responsive:true,maintainAspectRatio:false,
-      scales:{r:{min:0,max:100,grid:{color:'rgba('+cssVar('--ov')+',.08)'},angleLines:{color:'rgba('+cssVar('--ov')+',.08)'},ticks:{display:false,backdropColor:'transparent'},pointLabels:{color:cssVar('--text2'),font:{size:10,weight:'600'}}}},
-      plugins:{legend:{display:false}}}});
+  const barsEl=document.getElementById('skillBars');
+  if(barsEl){
+    const ordenadas=[...SK].sort((a,b)=>a.val-b.val); // más débil arriba — coincide con "en qué invertir tu tiempo"
+    barsEl.innerHTML=`
+      <div class="skill-bars-head">
+        <span class="skill-bars-ovr">Nivel general (OVR): <b>${calcOVR()}</b> · promedio ponderado de tus 12 habilidades</span>
+        <span class="skill-bars-ovr">Ordenadas de más débil a más fuerte</span>
+      </div>
+      <div class="skill-bars-grid">${ordenadas.map(s=>{
+        const l=skLevel(s.val);
+        return `<div class="skbar-row">
+          <div class="skbar-head">
+            <span class="skbar-ico">${s.icon}</span>
+            <span class="skbar-name">${s.name}</span>
+            <span class="skbar-chip" style="background:${l.c}22;color:${l.c};border-color:${l.c}55">${l.l}</span>
+            <span class="skbar-val" style="color:${l.c}">${s.val}<small>/100 · ×${s.w}</small></span>
+          </div>
+          <div class="pbar" style="height:5px;margin-top:3px"><div class="pfill" style="width:${s.val}%;background:${l.c}"></div></div>
+        </div>`;
+      }).join('')}</div>
+    `;
+  }
 }
 
 // ── BARRA SUPERIOR — acceso directo a los demás proyectos (persistente, no rota) ─
@@ -2287,7 +2549,7 @@ function renderNavMenu(){
     'OVR '+calcOVR(),
     'Comida, skincare, cabello y suplementos',
     (()=>{const t=alemanTemaHoy();return `${t.nivel} · ${t.de}`;})(),
-    (()=>{try{const win=document.getElementById('enFrame').contentWindow;const keys=win.eval('Object.keys(T)');return win.eval('T['+JSON.stringify(keys[diaDelAnio()%keys.length])+'].title');}catch(e){return '229 temas técnicos';}})(),
+    (()=>{const t=entrevistaTemaHoy();return t?t.title:'229 temas técnicos';})(),
   ];
   document.getElementById('navMenuList').innerHTML=SLIDE_MENU_META.map((it,i)=>`
     <div class="menu-item ${i===cur?'on':''}" onclick="goTo(${i});toggleMenu()">
