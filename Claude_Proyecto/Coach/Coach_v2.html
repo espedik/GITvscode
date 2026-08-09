@@ -492,6 +492,37 @@
     .fase-checkpoint { display: flex; gap: 10px; align-items: flex-start; background: rgba(212,160,0,.08); border: 1px solid rgba(212,160,0,.25); border-radius: var(--radius-sm); padding: 11px 13px; margin-top: 13px; font-size: 12px; line-height: 1.65; }
     .fase-checkpoint .fc-icon { flex-shrink: 0; }
 
+    /* ─── FASE — desglose mes a mes (2026-08-09) ───────────────────────────
+       Antes cada fase mostraba TODO su checklist de una sola vez (hasta 10 semanas juntas en
+       Fase 0) — Adán: "me estoy saturando y no estoy haciendo nada". Cada .fase-checklist ahora
+       agrupa sus check-item dentro de <details class="fase-month" data-month="YYYY-MM">, uno por
+       mes calendario real. JS (abajo, IIFE al final del <script>) abre SOLO el mes actual y arma
+       el badge "X/Y" — así de un vistazo se ve nada más lo que toca AHORA, sin dejar de poder
+       abrir julio (catch-up) o septiembre (qué viene) con un clic. */
+    .fase-month { border: 1px solid var(--border); border-radius: var(--radius-sm); margin-bottom: 9px; overflow: hidden; background: var(--bg); }
+    .fase-month:last-child { margin-bottom: 0; }
+    .fase-month summary { cursor: pointer; list-style: none; padding: 10px 13px; display: flex; align-items: center; justify-content: space-between; gap: 10px; background: var(--surface-2); font-size: 12.5px; font-weight: 800; }
+    .fase-month summary::-webkit-details-marker { display: none; }
+    .fase-month summary::after { content: '▾'; color: var(--muted); font-size: 10px; margin-left: auto; }
+    .fase-month[open] summary::after { content: '▴'; }
+    .fase-month-badge { font-family: var(--mono); font-size: 9px; font-weight: 800; padding: 3px 9px; border-radius: 20px; text-transform: uppercase; letter-spacing: .3px; white-space: nowrap; }
+    .fase-month.is-current summary { background: var(--accent-soft); }
+    .fase-month.is-current .fase-month-badge { background: var(--accent); color: #fff; }
+    .fase-month.is-past .fase-month-badge { background: var(--green-soft); color: var(--green); }
+    .fase-month.is-future summary { opacity: .72; }
+    .fase-month.is-future .fase-month-badge { background: var(--surface-2); color: var(--muted); border: 1px solid var(--border); }
+    .fase-month-body { padding: 5px 13px 10px; }
+
+    /* Fases que todavía no arrancan (2026-08-09) — colapsadas por default, un clic para ver el
+       desglose completo. Fase 1/2/3 no tienen semanas con fecha exacta como Fase 0 (son
+       secuencias condicionadas a eventos — "primer peso cobrado", "con tracción sostenida" — no
+       calendario fijo), así que forzar un mes por tarea inventaría precisión que no existe; en
+       vez de eso se colapsan enteras para no competir visualmente con el mes actual de Fase 0. */
+    .fase-collapse summary { cursor: pointer; list-style: none; font-size: 12px; font-weight: 700; color: var(--accent); padding: 8px 0; }
+    .fase-collapse summary::-webkit-details-marker { display: none; }
+    .fase-collapse summary::before { content: '▸ '; }
+    .fase-collapse[open] summary::before { content: '▾ '; }
+
     /* ─── HISTORIA — línea de tiempo de vida ────────────── */
     .historia-item { position: relative; padding: 2px 0 22px 26px; border-left: 2px solid var(--border); margin-left: 6px; }
     .historia-item:last-of-type { padding-bottom: 2px; }
@@ -1802,13 +1833,28 @@
         <h4>Cerrar la fuga y arrancar ingreso, no solo pensar</h4>
         <div class="fase-meta"><span>🎯</span><span>Fondo de emergencia a <strong>$10,000</strong> + <strong>$14,000-15,000</strong> de activos vendidos aplicados a Banamex.</span></div>
         <div class="fase-checklist">
-          <div class="check-item"><input type="checkbox" id="s0-1"><label for="s0-1"><strong>Semana 1-2:</strong> corrige "Deudas" a $13,372 en Finanzas.html · cero MSI nuevo.</label></div>
-          <div class="check-item"><input type="checkbox" id="s0-2"><label for="s0-2"><strong>Semana 1-2:</strong> revisar las fotos y el material del negocio de tu papá y ponerle atención real — primer paso concreto de la <a href="#" class="inline-link" onclick="irANegocios('negocio5');return false;">Opción 5</a>.</label></div>
-          <div class="check-item"><input type="checkbox" id="s0-3"><label for="s0-3"><strong>Semana 2-3:</strong> versión limpia (sin tus datos) de la plantilla Finanzas.html + post de venta para comunidades de GBM (<a href="#" class="inline-link" onclick="irANegocios('negocio1');return false;">Opción 1</a>).</label></div>
-          <div class="check-item"><input type="checkbox" id="s0-4"><label for="s0-4"><strong>Semana 3-4:</strong> publica la plantilla en 2-3 comunidades de GBM · sube a Marketplace tus activos ociosos (PS5, control, monitores, iPad).</label></div>
-          <div class="check-item"><input type="checkbox" id="s0-5"><label for="s0-5"><strong>Semana 4-6:</strong> con las fotos ya revisadas, agenda la llamada exploratoria de 30 min con tu papá — solo escuchar, sin compromiso (<a href="#" class="inline-link" onclick="irANegocios('negocio5');return false;">Opción 5</a>).</label></div>
-          <div class="check-item"><input type="checkbox" id="s0-6"><label for="s0-6"><strong>Jul 2026:</strong> pausa aportaciones a la Maestría 1 año (hasta 18 jul 2027) — los $53,740 quedan intactos, nueva meta oct 2028.</label></div>
-          <div class="check-item"><input type="checkbox" id="s0-7"><label for="s0-7"><strong>Semana 6-10:</strong> cada peso de ventas/activos va, en orden: (1) fondo de emergencia a $10,000, (2) resto a Banamex.</label></div>
+          <details class="fase-month" data-month="2026-07">
+            <summary><span>📅 Julio 2026</span><span class="fase-month-badge" data-badge>—</span></summary>
+            <div class="fase-month-body">
+              <div class="check-item"><input type="checkbox" id="s0-1"><label for="s0-1">Corrige "Deudas" a $13,372 en Finanzas.html · cero MSI nuevo.</label></div>
+              <div class="check-item"><input type="checkbox" id="s0-2"><label for="s0-2">Revisar las fotos y el material del negocio de tu papá y ponerle atención real — primer paso concreto de la <a href="#" class="inline-link" onclick="irANegocios('negocio5');return false;">Opción 5</a>.</label></div>
+              <div class="check-item"><input type="checkbox" id="s0-6"><label for="s0-6">Pausa aportaciones a la Maestría 1 año (hasta 18 jul 2027) — los $53,740 quedan intactos, nueva meta oct 2028.</label></div>
+            </div>
+          </details>
+          <details class="fase-month" data-month="2026-08">
+            <summary><span>📅 Agosto 2026</span><span class="fase-month-badge" data-badge>—</span></summary>
+            <div class="fase-month-body">
+              <div class="check-item"><input type="checkbox" id="s0-3"><label for="s0-3">Versión limpia (sin tus datos) de la plantilla Finanzas.html + post de venta para comunidades de GBM (<a href="#" class="inline-link" onclick="irANegocios('negocio1');return false;">Opción 1</a>).</label></div>
+              <div class="check-item"><input type="checkbox" id="s0-4"><label for="s0-4">Publica la plantilla en 2-3 comunidades de GBM · sube a Marketplace tus activos ociosos (PS5, control, monitores, iPad).</label></div>
+              <div class="check-item"><input type="checkbox" id="s0-5"><label for="s0-5">Con las fotos ya revisadas, agenda la llamada exploratoria de 30 min con tu papá — solo escuchar, sin compromiso (<a href="#" class="inline-link" onclick="irANegocios('negocio5');return false;">Opción 5</a>).</label></div>
+            </div>
+          </details>
+          <details class="fase-month" data-month="2026-09">
+            <summary><span>📅 Septiembre 2026</span><span class="fase-month-badge" data-badge>—</span></summary>
+            <div class="fase-month-body">
+              <div class="check-item"><input type="checkbox" id="s0-7"><label for="s0-7">Cada peso de ventas/activos va, en orden: (1) fondo de emergencia a $10,000, (2) resto a Banamex — este mes cierra la fase.</label></div>
+            </div>
+          </details>
         </div>
         <div class="fase-checkpoint"><span class="fc-icon">🚩</span><div><strong>Checkpoint 30 sep 2026:</strong> sin haberle puesto atención real al negocio de tu papá, o plantilla sin publicar → no es falta de tiempo, es tu patrón de abandono otra vez.</div></div>
       </div>
@@ -1817,14 +1863,17 @@
         <span class="fase-tag">Fase 1 · Oct 2026 – Mar 2027 (6 meses)</span><span class="fase-status" id="faseStatus1">—</span>
         <h4>Los $3,868/mes liberados entran en acción + primer ingreso real</h4>
         <div class="fase-meta"><span>🎯</span><span>Primer contrato freelance o <strong>20+ ventas</strong> de la plantilla cobradas; <strong>Banamex liquidada</strong>.</span></div>
-        <div class="fase-checklist">
-          <div class="check-item"><input type="checkbox" id="s1-1"><label for="s1-1">Oct 2026: los $3,868/mes liberados de MSI van, en orden fijo: fondo de emergencia a $10,000 → 100% Banamex → BBVA.</label></div>
-          <div class="check-item"><input type="checkbox" id="s1-2"><label for="s1-2">Prioridad: cerrar el primer contrato freelance (<a href="#" class="inline-link" onclick="irANegocios('negocio2');return false;">Opción 2</a>) + 1 post de seguimiento mensual de la plantilla GBM (<a href="#" class="inline-link" onclick="irANegocios('negocio1');return false;">Opción 1</a>).</label></div>
-          <div class="check-item"><input type="checkbox" id="s1-3"><label for="s1-3">En paralelo: primer post de mentoría pagada (<a href="#" class="inline-link" onclick="irANegocios('negocio3');return false;">Opción 3</a>) — bajo riesgo, casi sin preparación.</label></div>
-          <div class="check-item"><input type="checkbox" id="s1-4"><label for="s1-4">Primer peso cobrado en Opción 1-3 → esas horas de DiDi se mueven ahí (<a href="#" class="inline-link" onclick="irANegocios('negocio6');return false;">Opción 6</a>), no antes.</label></div>
-          <div class="check-item"><input type="checkbox" id="s1-5"><label for="s1-5">iPhone 15 MSI sigue corriendo ($494/mes) hasta jun 2028 — ya comprometido, no toca tu excedente nuevo.</label></div>
-          <div class="check-item"><input type="checkbox" id="s1-6"><label for="s1-6">Foco de habilidad (<a href="#radarFIFA" class="inline-link">Radar FIFA</a>): sube <strong>Copy</strong> (55→) escribiendo los posts, y <strong>Finanzas</strong> (20→) sosteniendo el presupuesto corregido. Solo estas dos.</label></div>
-        </div>
+        <details class="fase-collapse">
+          <summary>Ver el desglose completo (6 tareas) — arranca en octubre, todavía no es tu mes</summary>
+          <div class="fase-checklist">
+            <div class="check-item"><input type="checkbox" id="s1-1"><label for="s1-1">Oct 2026: los $3,868/mes liberados de MSI van, en orden fijo: fondo de emergencia a $10,000 → 100% Banamex → BBVA.</label></div>
+            <div class="check-item"><input type="checkbox" id="s1-2"><label for="s1-2">Prioridad: cerrar el primer contrato freelance (<a href="#" class="inline-link" onclick="irANegocios('negocio2');return false;">Opción 2</a>) + 1 post de seguimiento mensual de la plantilla GBM (<a href="#" class="inline-link" onclick="irANegocios('negocio1');return false;">Opción 1</a>).</label></div>
+            <div class="check-item"><input type="checkbox" id="s1-3"><label for="s1-3">En paralelo: primer post de mentoría pagada (<a href="#" class="inline-link" onclick="irANegocios('negocio3');return false;">Opción 3</a>) — bajo riesgo, casi sin preparación.</label></div>
+            <div class="check-item"><input type="checkbox" id="s1-4"><label for="s1-4">Primer peso cobrado en Opción 1-3 → esas horas de DiDi se mueven ahí (<a href="#" class="inline-link" onclick="irANegocios('negocio6');return false;">Opción 6</a>), no antes.</label></div>
+            <div class="check-item"><input type="checkbox" id="s1-5"><label for="s1-5">iPhone 15 MSI sigue corriendo ($494/mes) hasta jun 2028 — ya comprometido, no toca tu excedente nuevo.</label></div>
+            <div class="check-item"><input type="checkbox" id="s1-6"><label for="s1-6">Foco de habilidad (<a href="#radarFIFA" class="inline-link">Radar FIFA</a>): sube <strong>Copy</strong> (55→) escribiendo los posts, y <strong>Finanzas</strong> (20→) sosteniendo el presupuesto corregido. Solo estas dos.</label></div>
+          </div>
+        </details>
         <div class="fase-checkpoint"><span class="fc-icon">🚩</span><div><strong>Checkpoint 31 mar 2027:</strong> cero contratos, cero ventas y cero avance de mentoría tras 6 meses → problema de canal, no de esfuerzo. Cambia de distribución (ej. LinkedIn outreach a leads de Tier 2) antes de soltar la vía completa.</div></div>
       </div>
 
@@ -1832,13 +1881,16 @@
         <span class="fase-tag">Fase 2 · Abr 2027 – Dic 2028 (21 meses)</span><span class="fase-status" id="faseStatus2">—</span>
         <h4>Doblar apuesta en lo que mostró tracción</h4>
         <div class="fase-meta"><span>🎯</span><span>BBVA liquidada, deuda cara en <strong>$0</strong>, ingreso extra estable de al menos <strong>$10,000-15,000/mes</strong>.</span></div>
-        <div class="fase-checklist">
-          <div class="check-item"><input type="checkbox" id="s2-1"><label for="s2-1">Elige la opción (1, 2 o 3) con ingreso recurrente real y concéntrate ahí — resiste saltar a "algo mejor".</label></div>
-          <div class="check-item"><input type="checkbox" id="s2-2"><label for="s2-2">Con tracción sostenida, arranca la <a href="#" class="inline-link" onclick="irANegocios('negocio4');return false;">Opción 4</a> (CodeReview productizado) — único punto del plan que requiere capital, ya disponible tras liquidar Banamex/BBVA.</label></div>
-          <div class="check-item"><input type="checkbox" id="s2-3"><label for="s2-3">Usa IA para construir tu propio sistema de ventas/argumentos — tu fuerza real, en vez de improvisar en vivo.</label></div>
-          <div class="check-item"><input type="checkbox" id="s2-4"><label for="s2-4">Jun 2028: se libera el iPhone MSI ($494/mes) — súmalo a inversión, no a gasto nuevo.</label></div>
-          <div class="check-item"><input type="checkbox" id="s2-5"><label for="s2-5">Foco de habilidad: sube <strong>Ventas</strong> (15→) y <strong>Marketing</strong> (20→) lo mínimo para vender la Opción 4 sin depender solo de referidos.</label></div>
-        </div>
+        <details class="fase-collapse">
+          <summary>Ver el desglose completo (5 tareas) — arranca en abril 2027, todavía falta</summary>
+          <div class="fase-checklist">
+            <div class="check-item"><input type="checkbox" id="s2-1"><label for="s2-1">Elige la opción (1, 2 o 3) con ingreso recurrente real y concéntrate ahí — resiste saltar a "algo mejor".</label></div>
+            <div class="check-item"><input type="checkbox" id="s2-2"><label for="s2-2">Con tracción sostenida, arranca la <a href="#" class="inline-link" onclick="irANegocios('negocio4');return false;">Opción 4</a> (CodeReview productizado) — único punto del plan que requiere capital, ya disponible tras liquidar Banamex/BBVA.</label></div>
+            <div class="check-item"><input type="checkbox" id="s2-3"><label for="s2-3">Usa IA para construir tu propio sistema de ventas/argumentos — tu fuerza real, en vez de improvisar en vivo.</label></div>
+            <div class="check-item"><input type="checkbox" id="s2-4"><label for="s2-4">Jun 2028: se libera el iPhone MSI ($494/mes) — súmalo a inversión, no a gasto nuevo.</label></div>
+            <div class="check-item"><input type="checkbox" id="s2-5"><label for="s2-5">Foco de habilidad: sube <strong>Ventas</strong> (15→) y <strong>Marketing</strong> (20→) lo mínimo para vender la Opción 4 sin depender solo de referidos.</label></div>
+          </div>
+        </details>
         <div class="fase-checkpoint"><span class="fc-icon">🚩</span><div><strong>Checkpoint dic 2028:</strong> compara patrimonio líquido real contra la trayectoria estimada (≈+$250,000). Muy por debajo → la Fase 3 arranca con plan de contingencia, no con el plan original intacto.</div></div>
       </div>
 
@@ -1846,12 +1898,15 @@
         <span class="fase-tag">Fase 3 · Ene 2029 – 01 Ene 2030 (12 meses)</span><span class="fase-status" id="faseStatus3">—</span>
         <h4>Escalar, cerrar la brecha de $31,540/mes y reevaluar</h4>
         <div class="fase-meta"><span>🎯</span><span>Cerrar la distancia final a <strong>$1,000,000</strong> líquido con el negocio como fuente principal de excedente.</span></div>
-        <div class="fase-checklist">
-          <div class="check-item"><input type="checkbox" id="s3-1"><label for="s3-1">El negocio debe cubrir ya parte real de la brecha. Ingreso extra cercano a cero en 2029 = problema de opción elegida, no de timing — revisa <a href="#" class="inline-link" onclick="irANegocios('negocio1');return false;">Posibles Negocios</a>.</label></div>
-          <div class="check-item"><input type="checkbox" id="s3-2"><label for="s3-2">Todo ingreso adicional va primero a inversión (CETES, fondos indexados, ampliar BTC/acciones) — nunca a consumo nuevo.</label></div>
-          <div class="check-item"><input type="checkbox" id="s3-3"><label for="s3-3">La decisión de Maestría (18 jul 2027) ya está tomada: retomarla en oct 2028 con datos reales del negocio, o posponerla de nuevo, conscientemente.</label></div>
-          <div class="check-item"><input type="checkbox" id="s3-4"><label for="s3-4">Reevalúa la meta de $1,000,000 líquido con números reales del negocio y ajusta la fecha si hace falta — sin abandonarlo.</label></div>
-        </div>
+        <details class="fase-collapse">
+          <summary>Ver el desglose completo (4 tareas) — arranca en enero 2029, todavía falta</summary>
+          <div class="fase-checklist">
+            <div class="check-item"><input type="checkbox" id="s3-1"><label for="s3-1">El negocio debe cubrir ya parte real de la brecha. Ingreso extra cercano a cero en 2029 = problema de opción elegida, no de timing — revisa <a href="#" class="inline-link" onclick="irANegocios('negocio1');return false;">Posibles Negocios</a>.</label></div>
+            <div class="check-item"><input type="checkbox" id="s3-2"><label for="s3-2">Todo ingreso adicional va primero a inversión (CETES, fondos indexados, ampliar BTC/acciones) — nunca a consumo nuevo.</label></div>
+            <div class="check-item"><input type="checkbox" id="s3-3"><label for="s3-3">La decisión de Maestría (18 jul 2027) ya está tomada: retomarla en oct 2028 con datos reales del negocio, o posponerla de nuevo, conscientemente.</label></div>
+            <div class="check-item"><input type="checkbox" id="s3-4"><label for="s3-4">Reevalúa la meta de $1,000,000 líquido con números reales del negocio y ajusta la fecha si hace falta — sin abandonarlo.</label></div>
+          </div>
+        </details>
       </div>
     </div>
 
@@ -4229,8 +4284,36 @@
       if (label) label.style.textDecoration = e.target.checked ? 'line-through' : '';
       if (e.target.checked) checksState[cb.id] = true; else delete checksState[cb.id];
       checksSave(checksState);
+      updateFaseMonthBadges();
     });
   });
+
+  // ─── Fase 0 por mes — abre solo el mes actual, arma el badge "X/Y" (2026-08-09) ───
+  // Adán: "me estoy saturando y no estoy haciendo nada" viendo toda la fase junta. Cada
+  // <details class="fase-month" data-month="YYYY-MM"> se clasifica solo comparando data-month
+  // contra el mes real de hoy — no hay que tocar esto a mano cada mes. El abrir/cerrar
+  // (`.open`) solo se fija UNA VEZ al cargar la página (abre el mes actual, cierra el resto);
+  // después de eso, marcar un checkbox solo actualiza el texto del badge, nunca vuelve a tocar
+  // `.open` — así un clic manual de Adán para cerrar/abrir un mes nunca se pelea con el código.
+  function updateFaseMonthBadges(){
+    const hoy = new Date();
+    const curYM = hoy.getFullYear() + '-' + String(hoy.getMonth()+1).padStart(2,'0');
+    document.querySelectorAll('.fase-month').forEach(el => {
+      const ym = el.dataset.month;
+      el.classList.remove('is-current','is-past','is-future');
+      el.classList.add(ym === curYM ? 'is-current' : ym < curYM ? 'is-past' : 'is-future');
+      const boxes = el.querySelectorAll('.check-item input[type="checkbox"]');
+      const done = Array.from(boxes).filter(b => b.checked).length;
+      const badge = el.querySelector('[data-badge]');
+      if (badge) badge.textContent = (ym === curYM ? 'MES ACTUAL' : ym < curYM ? 'PASADO' : 'PRÓXIMO') + ' · ' + done + '/' + boxes.length;
+    });
+  }
+  (function initFaseMonths(){
+    const hoy = new Date();
+    const curYM = hoy.getFullYear() + '-' + String(hoy.getMonth()+1).padStart(2,'0');
+    document.querySelectorAll('.fase-month').forEach(el => { el.open = (el.dataset.month === curYM); });
+  })();
+  updateFaseMonthBadges();
 </script>
 
 </body>

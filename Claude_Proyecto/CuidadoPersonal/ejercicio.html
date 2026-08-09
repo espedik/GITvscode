@@ -1062,7 +1062,13 @@ function init() {
   if(themeBtn) themeBtn.textContent=document.documentElement.getAttribute('data-theme')==='dark'?'☀️':'🌙';
   const check=()=>{ const mb=document.getElementById('menuBtn'); mb.style.display=window.innerWidth<640?'':'none'; if(window.innerWidth>=640)document.getElementById('sidebar').classList.remove('open'); };
   window.addEventListener('resize',check); check();
-  renderMiRutina();
+  // Deep-link "?dia=N" (0=Dom...6=Sáb) — usado por Dashboard → "Ver en Ejercicio →" para abrir
+  // directo en el día que se estaba viendo ahí (tira semanal del Hero), en vez de siempre caer
+  // en la semana completa sin importar qué día tenía seleccionado. Adán: "cuando doy click a ver
+  // el ejercicio, no se me muestra el del día que estoy viendo".
+  const diaParam=parseInt(new URLSearchParams(location.search).get('dia'),10);
+  if(!isNaN(diaParam)&&diaParam>=0&&diaParam<=6) verSoloDia(diaParam);
+  else renderMiRutina();
 }
 init();
 </script>

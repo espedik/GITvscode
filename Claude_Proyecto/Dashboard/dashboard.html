@@ -99,6 +99,11 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 .grid{display:grid;gap:clamp(12px,1.4vw,20px)}
 .g2{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:repeat(3,1fr)}.g4{grid-template-columns:repeat(4,1fr)}.g6{grid-template-columns:repeat(6,1fr)}
 .g-metas{grid-template-columns:1.7fr 1fr}
+/* Fila secundaria de Mi Día — "Hoy toca" (gym, columna del medio) más ancho que "Importante
+   este mes"/"Ideas para hoy" a los lados (2026-08-09, pedido explícito: los de los lados más
+   chicos de ancho, el espacio ganado para el de ejercicio). Responsivo en @media(max-width:1024px)
+   más abajo, que sigue colapsando las 3 a 1 columna en tablet/celular. */
+#miDiaSecundarios{grid-template-columns:1fr 2fr 1fr}
 @media(max-width:900px){.g-metas{grid-template-columns:1fr}}
 
 /* ─── Tarjetas con foto — metas de corto/mediano/largo plazo (slide Mis Metas) ───
@@ -142,23 +147,45 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 .hud-nav-btn.on{background:linear-gradient(180deg,var(--g),var(--p));border-color:transparent;box-shadow:0 0 10px rgba(0,232,122,.4)}
 .hud-sync{font-size:9px;color:var(--text3)}
 
-/* ─── TIMELINE DE ACTIVIDADES (Mi Día) — detalle por bloque ─ */
-.rt2-card{display:flex;align-items:flex-start;gap:12px;padding:12px 4px;border-bottom:1px solid rgba(var(--ov),.06);transition:background .2s}
+/* ─── TIMELINE DE ACTIVIDADES (Mi Día) — detalle por bloque. Padding/tipografía reducidos el
+   2026-08-08 al fusionarse con Hero: la línea de tiempo ya no es la única pieza de contenido del
+   slide, comparte espacio con la tira de días + 2 filas de tarjetas de arriba, así que cada
+   entrada ocupa menos alto para que quepan más de un vistazo.
+   Pulido visual (2026-08-09, "esta es la base de toda mi rutina, hazlo mejor visualmente"):
+   línea conectora detrás de los puntos (::before de #diaTimeline, medida en JS — ver renderDia())
+   + acento de color a la izquierda de cada tarjeta que reutiliza el mismo `dotColor` ya calculado
+   por tarjeta, así el borde y el punto nunca se contradicen entre sí. ─ */
+#diaTimeline{position:relative;z-index:0}
+#diaTimeline::before{content:'';position:absolute;top:var(--tl-top,0);height:var(--tl-h,0);left:16px;width:1px;background:rgba(var(--ov),.16);z-index:-1}
+.rt2-card{display:flex;align-items:flex-start;gap:10px;padding:7px 4px 7px 8px;border-left:3px solid transparent;border-bottom:1px solid rgba(var(--ov),.06);transition:background .2s,border-color .3s}
 .rt2-card:last-child{border-bottom:none}
-.rt2-dot{width:11px;height:11px;border-radius:50%;margin-top:6px;flex-shrink:0;transition:all .3s}
+.rt2-dot{width:10px;height:10px;border-radius:50%;margin-top:5px;flex-shrink:0;transition:all .3s}
 .rt2-body{flex:1;min-width:0}
-.rt2-top{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:4px}
+.rt2-top{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:3px}
 .rt2-cat{font-size:7px;font-weight:800;letter-spacing:.03em;text-transform:uppercase;padding:1px 6px;border-radius:20px;border:1px solid}
-.rt2-time{font-family:var(--mono);font-size:12px;color:var(--text2);font-weight:600}
+.rt2-time{font-family:var(--mono);font-size:11px;color:var(--text2);font-weight:600}
 /* Título de cada bloque — siempre en negritas (antes solo el bloque activo), para que se lea
    claramente como encabezado frente a las subtareas/explicación de abajo (.rt2-sub-item) */
-.rt2-txt{font-size:clamp(13px,1.15vw,15px);color:var(--text);font-weight:700;line-height:1.4}
-.rt2-check{font-size:16px;margin-top:5px;flex-shrink:0}
-.rt2-now{background:rgba(var(--ov),.04);border-radius:12px;padding:12px 10px;margin:0 -10px}
-.rt2-now .rt2-txt{color:#fff}
+.rt2-txt{font-size:clamp(12px,1.05vw,14px);color:var(--text);font-weight:700;line-height:1.35}
+.rt2-check{font-size:15px;margin-top:4px;flex-shrink:0}
+.rt2-now{background:rgba(var(--ov),.05);border-radius:0 12px 12px 0}
 .rt2-done .rt2-txt{opacity:.5;text-decoration:line-through}
 .rt2-fijo{opacity:.85}
-.rt2-cat-chip{display:inline-flex;align-items:center;gap:5px;border-radius:20px;padding:5px 12px;font-size:11px;font-weight:700;border:1px solid}
+/* "Volver a hoy" — visible solo cuando #diaTimelineTitle está activo (ver verDiaSemana()) */
+#diaTimelineTitle a{color:var(--cy);text-decoration:none;font-weight:700;cursor:pointer}
+#diaTimelineTitle a:hover{text-decoration:underline}
+
+/* ─── "Ahora mismo" — banner hero de Mi Día (2026-08-09) ───
+   Antes era una tarjeta más entre 4 con el mismo peso visual que "Importante este mes"/gym/
+   nutrición, pero es el único dato que responde a "qué hago en este momento" — la razón de ser
+   de esta pantalla — así que pasó a ocupar el ancho completo, con acento de color por categoría
+   (mismo `meta.c` de CAT_META que ya pinta la píldora de cada bloque de la línea de tiempo) en
+   vez de compartir la misma tarjeta genérica blanca/gris que el resto. */
+.now-hero{border-left:3px solid var(--card-br);transition:border-color .3s,box-shadow .3s}
+.now-hero-row{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.now-hero-txt{font-weight:800;font-size:clamp(15px,1.6vw,19px);margin-top:5px;line-height:1.3;color:var(--text)}
+.now-live-dot{width:7px;height:7px;border-radius:50%;background:var(--g);box-shadow:0 0 8px var(--g);display:inline-block;animation:pulse 2s ease-in-out infinite}
+
 /* Subtareas (2026-08-07, resaltadas a petición de Adán: "ni se ven", "de otro estilo, color") —
    cada una es su propia tarjetita (fondo + borde), no solo texto suelto en itálica, para que se
    note de un vistazo que hay una lista debajo del título. Dentro de cada una, si el texto trae
@@ -167,11 +194,14 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
    (el producto/ítem) en un color de acento y la segunda (la acción) en el color de texto
    secundario — ambos colores ya están definidos para tema claro Y oscuro (`--cy`/`--text2` en
    :root arriba), así se ve bien en los dos sin reglas extra por tema.  */
-.rt2-sub{margin-top:7px;display:flex;flex-direction:column;gap:6px}
-.rt2-sub-item{display:flex;align-items:flex-start;gap:7px;font-size:11.5px;line-height:1.5;
-  background:rgba(var(--ov),.045);border:1px solid rgba(var(--ov),.09);border-left:3px solid var(--cy);
-  border-radius:9px;padding:7px 10px}
-.rt2-sub-check{flex-shrink:0;margin-top:1px;font-size:11px}
+/* Subtareas más chicas que la tarea principal (2026-08-08, pedido explícito: "los subtask de las
+   rutinas, debes hacerlas mas pequeñas y la tarea principal el tamaño esta bien") — font-size,
+   padding y gaps reducidos; .rt2-txt (tarea principal, arriba en el CSS) no se tocó. */
+.rt2-sub{margin-top:4px;display:flex;flex-direction:column;gap:3px}
+.rt2-sub-item{display:flex;align-items:flex-start;gap:5px;font-size:8.5px;line-height:1.3;
+  background:rgba(var(--ov),.045);border:1px solid rgba(var(--ov),.09);border-left:2px solid var(--cy);
+  border-radius:6px;padding:4px 7px}
+.rt2-sub-check{flex-shrink:0;margin-top:1px;font-size:8px}
 .rt2-sub-prod{font-weight:800;color:var(--cy)}
 .rt2-sub-dash{color:var(--text3)}
 .rt2-sub-action{color:var(--text2)}
@@ -206,44 +236,48 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 .skbar-val{margin-left:auto;font-family:var(--mono);font-size:11.5px;font-weight:800;flex-shrink:0;white-space:nowrap}
 .skbar-val small{font-size:9px;font-weight:600;color:var(--text3)}
 
-/* ─── HERO — semana completa (tira de 7 días + 3 paneles detallados) ────── */
+/* ─── HERO — semana completa (tira de 7 días + 2 paneles detallados) — compactado el 2026-08-08
+   al fusionarse con "Mi Día" en una sola pantalla (ver sección "Unificación Mi Día + Hero" en el
+   .md): paddings/alturas reducidos, la tira de 7 días con fotos se conservó a propósito (pedido
+   explícito de Adán) solo con dimensiones algo más chicas. ────────────────────────────────── */
 .flex-hero-top{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:16px}
-.week-strip{display:grid;grid-template-columns:repeat(7,1fr);gap:8px}
-.ws-day{background:var(--card);border:1px solid var(--card-br);border-radius:14px;padding:8px 6px 6px;text-align:center;backdrop-filter:blur(10px);display:flex;flex-direction:column;overflow:hidden;cursor:pointer;transition:border-color .2s}
+.week-strip{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+.ws-day{background:var(--card);border:1px solid var(--card-br);border-radius:12px;padding:6px 5px 4px;text-align:center;backdrop-filter:blur(10px);display:flex;flex-direction:column;overflow:hidden;cursor:pointer;transition:border-color .2s}
 .ws-day.today{border-color:var(--ac1);box-shadow:0 0 14px rgba(var(--ov),.08)}
 .ws-day.sel{border-color:var(--g);box-shadow:0 0 14px rgba(0,232,122,.25)}
-.ws-dname{font-size:10px;font-weight:800;color:var(--text2);text-transform:uppercase;letter-spacing:.04em}
-.ws-ddate{font-size:9px;color:var(--text3);margin-bottom:6px}
+.ws-dname{font-size:9px;font-weight:800;color:var(--text2);text-transform:uppercase;letter-spacing:.04em}
+.ws-ddate{font-size:8px;color:var(--text3);margin-bottom:4px}
 /* Foto real por tipo de ejercicio (brazos/piernas/empuje/cardio/descanso) en vez de un emoji
    genérico — el emoji de estado (✅/⏳/😴/🏋️) se queda como badge chico encima de la foto. */
-.ws-gym-photo{position:relative;margin:0 -6px;flex:1;min-height:64px;background-size:cover;background-position:center;border-radius:0 0 12px 12px}
+.ws-gym-photo{position:relative;margin:0 -5px;flex:1;min-height:46px;background-size:cover;background-position:center;border-radius:0 0 10px 10px}
 .ws-gym-photo::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.78) 0%,rgba(0,0,0,.12) 55%,transparent 75%);border-radius:inherit}
-.ws-gym-badge{position:absolute;top:5px;right:5px;font-size:12px;z-index:1;line-height:1;filter:drop-shadow(0 1px 2px rgba(0,0,0,.7))}
-.ws-gym-lbl{position:absolute;left:5px;right:5px;bottom:5px;z-index:1;font-size:8px;color:#fff;line-height:1.25;text-align:left;text-shadow:0 1px 3px rgba(0,0,0,.8)}
+.ws-gym-badge{position:absolute;top:4px;right:4px;font-size:11px;z-index:1;line-height:1;filter:drop-shadow(0 1px 2px rgba(0,0,0,.7))}
+.ws-gym-lbl{position:absolute;left:4px;right:4px;bottom:4px;z-index:1;font-size:7.5px;color:#fff;line-height:1.2;text-align:left;text-shadow:0 1px 3px rgba(0,0,0,.8)}
 .ws-gym-lbl.pend{opacity:.8}
-.hp-title{font-size:11.5px;font-weight:800;color:var(--text2);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;gap:6px}
+.hp-title{font-size:10.5px;font-weight:800;color:var(--text2);text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px;display:flex;justify-content:space-between;align-items:center;gap:6px}
 .hp-big{font-family:var(--mono);font-weight:700;font-size:clamp(26px,3vw,38px);line-height:1;margin-bottom:8px}
 .hp-row{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid rgba(var(--ov),.06);font-size:12px}
 .hp-row:last-child{border-bottom:none}
-.hp-empty{font-size:12px;color:var(--text3);text-align:center;padding:12px 0}
-.hp-link{font-size:10.5px;font-weight:700;color:var(--cy);text-decoration:none;white-space:nowrap}
+.hp-empty{font-size:11px;color:var(--text3);text-align:center;padding:6px 0}
+.hp-link{font-size:10px;font-weight:700;color:var(--cy);text-decoration:none;white-space:nowrap}
 
 /* Frase motivacional (Hero) */
 .hero-frase{display:flex;align-items:center;gap:12px;padding:12px 18px;border-radius:16px;background:rgba(var(--ov),.035);
   border:1px solid rgba(var(--ov),.08);margin-bottom:14px}
-.hero-frase .q{font-size:20px;flex-shrink:0;opacity:.7}
-.hero-frase .txt{font-size:clamp(12.5px,1.15vw,15px);font-style:italic;color:var(--text);line-height:1.4}
+.hero-frase .q{font-size:16px;flex-shrink:0;opacity:.7}
+.hero-frase .txt{font-size:clamp(11px,1.05vw,13px);font-style:italic;color:var(--text);line-height:1.35}
 .hero-frase .txt b{font-style:normal;color:var(--ac1)}
 
-/* Panel de gym con ejercicios detallados (Hero) — más alto desde 2026-08-02: se quitaron
-   las tarjetas de Peso actual/Agua hoy y ese espacio vertical se le dio a Ejercicio */
-.hp-ex-scroll{max-height:320px;overflow-y:auto;margin-top:4px}
-.hp-ex-row{padding:7px 0;border-bottom:1px solid rgba(var(--ov),.06)}
+/* Panel de gym con ejercicios detallados (Hero) — reducido de 320px a 118px el 2026-08-08 al
+   compartir slide con "Mi Día": ya no es un panel a pantalla completa, es una de 4 tarjetas
+   apiladas, así que solo alcanza a mostrar 2-3 ejercicios antes de necesitar scroll interno. */
+.hp-ex-scroll{max-height:118px;overflow-y:auto;margin-top:2px}
+.hp-ex-row{padding:5px 0;border-bottom:1px solid rgba(var(--ov),.06)}
 .hp-ex-row:last-child{border-bottom:none}
 .hp-ex-top{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
-.hp-ex-name{font-size:12.5px;font-weight:700;color:var(--text)}
-.hp-ex-sr{font-size:11px;color:var(--text2);font-family:var(--mono);white-space:nowrap}
-.hp-ex-cue{font-size:10.5px;color:var(--text3);line-height:1.4;margin-top:2px}
+.hp-ex-name{font-size:11.5px;font-weight:700;color:var(--text)}
+.hp-ex-sr{font-size:10px;color:var(--text2);font-family:var(--mono);white-space:nowrap}
+.hp-ex-cue{font-size:9.5px;color:var(--text3);line-height:1.3;margin-top:1px}
 
 /* Panel de sugerencias de comida (Hero) */
 .hp-meal{padding:9px 0;border-bottom:1px solid rgba(var(--ov),.06)}
@@ -251,10 +285,11 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 .hp-meal-lbl{font-size:9.5px;font-weight:800;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px}
 .hp-meal-name{font-size:13px;font-weight:700;color:var(--text);line-height:1.35}
 .hp-meal-macro{font-size:10.5px;color:var(--text2);font-family:var(--mono);margin-top:3px}
-/* "Ideas para hoy" (2026-08-07) — 3 opciones apiladas, no 1 sola, con scroll interno si no caben */
-.hp-meal-list{display:flex;flex-direction:column;gap:5px;max-height:clamp(180px,26vh,300px);overflow-y:auto;padding-right:2px}
-.hp-meal-card{background:rgba(var(--ov),.04);border:1px solid rgba(var(--ov),.08);border-radius:10px;padding:6px 10px}
-.hp-meal-card .hp-meal-name{margin-bottom:0;font-size:11.5px}
+/* "Ideas para hoy" (2026-08-07) — 3 opciones apiladas, con scroll interno si no caben.
+   Máxima altura reducida de 180-300px a 90-118px el 2026-08-08, mismo motivo que .hp-ex-scroll. */
+.hp-meal-list{display:flex;flex-direction:column;gap:4px;max-height:clamp(90px,14vh,118px);overflow-y:auto;padding-right:2px}
+.hp-meal-card{background:rgba(var(--ov),.04);border:1px solid rgba(var(--ov),.08);border-radius:10px;padding:5px 9px}
+.hp-meal-card .hp-meal-name{margin-bottom:0;font-size:11px}
 /* Recetas contraídas por default, ingredientes al hacer click (2026-08-07) — pedido explícito:
    "contrae todas las recetas y cuando haga click a una ya muestrame los ingredientes" */
 .hp-meal-head{display:flex;justify-content:space-between;align-items:center;gap:8px;cursor:pointer}
@@ -283,6 +318,16 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 .sem-check input[type="checkbox"]{margin-top:3px;width:13px;height:13px;accent-color:var(--g);cursor:pointer;flex-shrink:0}
 .sem-check label{font-size:11.5px;color:var(--text2);line-height:1.4;cursor:pointer}
 .sem-check input:checked+label{color:var(--text3);text-decoration:line-through}
+/* Fase 0 por mes (2026-08-09) — Adán: "en el dashboard son muchas tareas y no me enfoco en
+   ninguna". Reusa el mismo componente `.mes-tab`/`.lc-tab-pct` que ya pintan "Importante este
+   mes" y Lista de Compras, para que se sienta como el mismo lenguaje visual del resto del
+   Dashboard, no un widget nuevo aparte. */
+.coach-mes-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.mes-tab.done:not(.active){border-color:rgba(0,232,122,.4);color:var(--g)}
+.mes-tab.done:not(.active) .lc-tab-pct{color:var(--g);opacity:1}
+.coach-mes-pendientes{display:flex;align-items:center;gap:8px;background:color-mix(in srgb,var(--w) 12%,transparent);border:1px solid color-mix(in srgb,var(--w) 35%,transparent);border-radius:10px;padding:8px 12px;margin-bottom:10px;font-size:11.5px;color:var(--text2)}
+.coach-mes-pendientes a{color:var(--w);font-weight:700;text-decoration:none;white-space:nowrap;cursor:pointer}
+.coach-mes-pendientes a:hover{text-decoration:underline}
 
 /* Lista de Compras */
 .lc-tab{padding:7px 15px;border-radius:20px;border:1px solid rgba(var(--ov),.12);background:rgba(var(--ov),.05);color:var(--text2);font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;transition:all .2s;white-space:nowrap}
@@ -542,6 +587,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
    `.slides{top}` ya no se fija aquí — lo calcula `syncSlidesTop()` en JS
    según la altura real de `.qa-bar`, que ahora puede variar. */
 @media(max-width:1024px){
+  #miDiaSecundarios{grid-template-columns:1fr}
   .slide{align-items:flex-start}
   .slide.active{overflow-y:auto;-webkit-overflow-scrolling:touch}
   .slide-inner{height:auto;min-height:100%;padding-bottom:170px}
@@ -589,69 +635,66 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 
 <div class="slides" id="slides">
 
-  <!-- 0 · MI DÍA — pantalla principal, y ahora también la primera parada física del carrusel
-       (invertida con Hero el 2026-08-07 a petición de Adán: "el número 1 de slide quiero lo de
-       mi rutina" — antes Hero era data-i=0 y Mi Día vivía en data-i=1 con un override en JS para
-       abrir ahí por defecto; ese override ya no hace falta, ver showSlide()/loadSettings() abajo) -->
+  <!-- 0 · MI DÍA + JARVIS — unificadas en una sola pantalla (2026-08-08, pedido explícito de Adán:
+       "quiero unificar la pagina 1 y 2 del dashboard, haz las cosas mas pequeñas para que queden
+       bien... quiero mantener las imagenes de los dias de la semana"). Antes eran 2 slides
+       separados (Mi Día data-i=0, Hero data-i=1) que se turnaban en el carrusel; ahora todo vive
+       en una sola pantalla compacta, sin perder ningún dato: reloj+fecha, frase motivacional, la
+       tira de 7 días con fotos (la pieza que Adán pidió conservar tal cual), "Ahora mismo",
+       "Importante este mes", los 2 paneles de detalle (Gym/Nutrición, ahora más chicos) y la línea
+       de tiempo completa. Ver sección "Unificación Mi Día + Hero" en el .md para el detalle de qué
+       se compactó y por qué. -->
   <section class="slide theme-dia" data-i="0">
     <div class="slide-inner">
-      <div class="eyebrow reveal d1"><span class="dot"></span> Mi Día · <span id="diaClock">00:00</span></div>
-      <div class="slide-title reveal d2" id="diaFecha">—</div>
+      <div class="flex-hero-top reveal d1" style="margin-bottom:8px">
+        <div class="eyebrow" style="margin-bottom:0"><span class="dot"></span> Mi Día · JARVIS</div>
+        <div style="text-align:right">
+          <div style="font-family:var(--mono);font-size:clamp(16px,1.6vw,20px);font-weight:700" id="diaClock">00:00</div>
+          <div style="font-size:10.5px;color:var(--text2);text-transform:capitalize" id="diaFecha">—</div>
+        </div>
+      </div>
 
-      <div class="grid g2 reveal d3" style="margin-bottom:18px;align-items:stretch">
-        <div class="tile tile-glow">
-          <div class="lbl">🟢 Ahora mismo</div>
-          <div style="font-weight:800;font-size:clamp(16px,1.8vw,22px);margin-top:8px;line-height:1.4" id="diaAhora">—</div>
-          <div id="diaAhoraSub"></div>
+      <div class="hero-frase reveal d1" id="heroFrase" style="padding:7px 14px;margin-bottom:8px"></div>
+
+      <div class="week-strip reveal d2" id="heroWeekStrip" style="margin-bottom:10px"></div>
+
+      <div class="tile tile-glow now-hero reveal d3" id="diaAhoraTile" style="margin-bottom:8px;padding:11px 18px">
+        <div class="now-hero-row">
+          <div style="min-width:0;flex:1">
+            <div class="lbl" style="display:flex;align-items:center;gap:7px;flex-wrap:wrap">
+              <span class="now-live-dot"></span>Ahora mismo
+              <span class="rt2-cat" id="diaAhoraCat" style="display:none"></span>
+            </div>
+            <div class="now-hero-txt" id="diaAhora">—</div>
+          </div>
           <div id="diaAhoraBtn"></div>
         </div>
-        <div class="tile tile-glow">
+      </div>
+
+      <div class="grid g3 reveal d4" style="margin-bottom:8px;align-items:stretch" id="miDiaSecundarios">
+        <div class="tile" style="padding:9px 14px">
           <div class="lbl">🗓️ Importante este mes</div>
-          <div id="mesTabs" style="display:flex;gap:5px;flex-wrap:wrap;margin-top:8px"></div>
-          <div style="margin-top:8px;display:flex;flex-direction:column" id="mesEventos">—</div>
+          <div id="mesTabs" style="display:flex;gap:5px;flex-wrap:wrap;margin-top:5px"></div>
+          <div style="margin-top:5px;display:flex;flex-direction:column" id="mesEventos">—</div>
         </div>
+        <div class="tile" style="padding:9px 14px" id="heroGymPanel"></div>
+        <div class="tile" style="padding:9px 14px" id="heroNutriPanel"></div>
       </div>
 
-      <div class="tile reveal d4" style="margin-bottom:12px;padding:12px 18px">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
-          <div class="lbl">✅ Progreso de hoy</div>
-          <div class="sub" id="diaProgresoTxt" style="margin-top:0">0/0</div>
-        </div>
-        <div class="pbar" style="height:4px"><div class="pfill" id="diaProgresoBar" style="width:0%;background:linear-gradient(90deg,var(--g),var(--cy))"></div></div>
-      </div>
+      <!-- Sin clase "reveal": este elemento pasa de display:none a visible dinámicamente (ver
+           verDiaSemana()), y las animaciones .reveal se reinician cada vez que un elemento vuelve
+           de display:none — se quedaba invisible (opacity:0) un momento tras cada clic. -->
+      <div id="diaTimelineTitle" style="display:none;align-items:center;gap:8px;margin-bottom:5px;font-size:11.5px;font-weight:700;color:var(--text2)"></div>
+      <div class="tile reveal d5" id="diaTimeline" style="flex:1;min-height:0;overflow-y:auto;padding:10px 14px"></div>
 
-      <div class="tile reveal d5" id="diaTimeline" style="max-height:52vh;overflow-y:auto"></div>
-
-      <div class="reveal d6" style="margin-top:14px">
+      <div class="reveal d6" style="margin-top:8px">
         <a href="../Coach/Coach_v2.html#rutina" style="color:var(--cy);font-size:12px;font-weight:600;text-decoration:none">Ver/editar rutina completa en Coach →</a>
       </div>
     </div>
   </section>
 
-  <!-- 1 · HERO — tu semana completa -->
-  <section class="slide theme-hero" data-i="1">
-    <div class="slide-inner">
-      <div class="flex-hero-top reveal d1">
-        <div class="eyebrow" style="margin-bottom:0"><span class="dot"></span> JARVIS · Tu semana completa</div>
-        <div style="text-align:right">
-          <div style="font-family:var(--mono);font-size:clamp(20px,2.2vw,28px);font-weight:700" id="heroClock">00:00:00</div>
-          <div style="font-size:11px;color:var(--text2);text-transform:capitalize" id="heroDate">—</div>
-        </div>
-      </div>
-
-      <div class="hero-frase reveal d2" id="heroFrase"></div>
-
-      <div class="week-strip reveal d2" id="heroWeekStrip"></div>
-
-      <div class="grid g2 reveal d3" style="margin-top:16px;align-items:stretch">
-        <div class="tile" id="heroGymPanel"></div>
-        <div class="tile" id="heroNutriPanel"></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- 2 · COACH: PLAN MAESTRO -->
-  <section class="slide theme-coach" data-i="2">
+  <!-- 1 · COACH: PLAN MAESTRO -->
+  <section class="slide theme-coach" data-i="1">
     <div class="slide-inner">
       <div class="eyebrow reveal d1"><span class="dot"></span> Coach · Plan Maestro</div>
       <div class="reveal d2" style="display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:4px">
@@ -671,14 +714,14 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
       </div>
 
       <div class="tile reveal d5" style="padding:14px 18px">
-        <div class="lbl" style="margin-bottom:6px">📋 Qué hacer en esta fase — semana a semana</div>
+        <div class="lbl" style="margin-bottom:6px" id="coachPrioritiesLbl">📋 Qué hacer en esta fase — semana a semana</div>
         <div id="coachPriorities"></div>
       </div>
     </div>
   </section>
 
-  <!-- 3 · MIS METAS -->
-  <section class="slide theme-metas" data-i="3">
+  <!-- 2 · MIS METAS -->
+  <section class="slide theme-metas" data-i="2">
     <div class="slide-inner">
       <div class="eyebrow reveal d1"><span class="dot"></span> Mis Metas</div>
       <div class="slide-title reveal d2"><span class="ico">🎯</span> Corto, mediano y largo plazo</div>
@@ -687,8 +730,8 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
     </div>
   </section>
 
-  <!-- 4 · COACH: HABILIDADES -->
-  <section class="slide theme-skills" data-i="4">
+  <!-- 3 · COACH: HABILIDADES -->
+  <section class="slide theme-skills" data-i="3">
     <div class="slide-inner">
       <div class="eyebrow reveal d1"><span class="dot"></span> Coach · Habilidades</div>
       <div class="slide-title reveal d2"><span class="ico">🧠</span> En qué invertir tu tiempo</div>
@@ -702,8 +745,8 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
     </div>
   </section>
 
-  <!-- 5 · LISTA DE COMPRAS -->
-  <section class="slide theme-lista" data-i="5">
+  <!-- 4 · LISTA DE COMPRAS -->
+  <section class="slide theme-lista" data-i="4">
     <div class="slide-inner">
       <div class="eyebrow reveal d1"><span class="dot"></span> Lista de Compras</div>
       <div class="reveal d2" style="display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:10px;margin-bottom:12px">
@@ -714,8 +757,8 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
     </div>
   </section>
 
-  <!-- 6 · ALEMÁN DEL DÍA -->
-  <section class="slide theme-aleman" data-i="6">
+  <!-- 5 · ALEMÁN DEL DÍA -->
+  <section class="slide theme-aleman" data-i="5">
     <div class="slide-inner">
       <div class="eyebrow reveal d1"><span class="dot"></span> 🇩🇪 Alemán del día</div>
       <div class="td-top reveal d2">
@@ -735,8 +778,8 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
     </div>
   </section>
 
-  <!-- 7 · ENTREVISTA TÉCNICA DEL DÍA -->
-  <section class="slide theme-entrevista" data-i="7">
+  <!-- 6 · ENTREVISTA TÉCNICA DEL DÍA -->
+  <section class="slide theme-entrevista" data-i="6">
     <div class="slide-inner">
       <div class="eyebrow reveal d1"><span class="dot"></span> Entrevista del día</div>
       <div class="td-top reveal d2">
@@ -809,7 +852,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
   <div class="help-row"><span class="help-key">Espacio</span> Pausar / reanudar rotación</div>
   <div class="help-row"><span class="help-key">M</span> Abrir/cerrar el menú</div>
   <div class="help-row"><span class="help-key">F</span> Pantalla completa</div>
-  <div class="help-row"><span class="help-key">1-8</span> Ir directo a esa pantalla</div>
+  <div class="help-row"><span class="help-key">1-7</span> Ir directo a esa pantalla</div>
   <div class="help-row"><span class="help-key">?</span> Esta ayuda</div>
 </div>
 
@@ -1118,6 +1161,13 @@ const CAT_META={
   creativo: {ico:'✍️',label:'Creativo', c:'#b06eff'},
   trabajo:  {ico:'🏢',label:'Trabajo',  c:'#00e0c0'}
 };
+// 2026-08-09: separada de rutinaTareasHoy() para poder pedir el horario de CUALQUIER día de la
+// semana (no solo hoy) — la usa la línea de tiempo cuando se navega un día distinto desde la tira
+// semanal del Hero (ver verDiaSemana()/renderDia() más abajo).
+function rutinaTareasDelDia(dow){return RUTINA_TASKS.filter(t=>t.dias.includes(dow)).sort((a,b)=>a.hora.localeCompare(b.hora));}
+function rutinaTareasHoy(){return rutinaTareasDelDia(new Date().getDay());}
+// Duración total del bloque (hora de inicio → hora del siguiente bloque), en texto corto — 2026-08-08,
+// pedido explícito: "tambien agrega la duracion total de la task", junto al rango de horas de .rt2-time.
 function rtDur(fromHora,toHora){
   const[fh,fm]=fromHora.split(':').map(Number);
   const[th,tm]=toHora.split(':').map(Number);
@@ -1125,7 +1175,6 @@ function rtDur(fromHora,toHora){
   if(mins<=0) mins+=24*60;
   return mins>=60?(Math.floor(mins/60)+'h'+(mins%60?' '+(mins%60)+'m':'')):mins+'m';
 }
-function rutinaTareasHoy(){const dow=new Date().getDay();return RUTINA_TASKS.filter(t=>t.dias.includes(dow)).sort((a,b)=>a.hora.localeCompare(b.hora));}
 // Igual que Coach_v2.html: una tarea agrupada (.subtareas) cuenta cada subtarea por separado
 function leafItems(t){ return (t.subtareas&&t.subtareas.length) ? t.subtareas : [{id:t.id, txt:t.txt, link:t.link}]; }
 // Pinta la lista de subtareas de un bloque, resaltando "producto — acción" cuando el texto trae
@@ -1139,12 +1188,18 @@ function subtareasHtml(leaves,doneHoy){
     return `<div class="rt2-sub-item${done?' rt2-sub-done':''}"><span class="rt2-sub-check">${done?'✅':'▫️'}</span><span>${body}</span></div>`;
   }).join('')}</div>`;
 }
-function rutinaAhoraSiguiente(){
-  const now=new Date();
-  const hhmm=String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0');
-  const tareasHoy=rutinaTareasHoy();
+function horaAhora(){ const n=new Date(); return String(n.getHours()).padStart(2,'0')+':'+String(n.getMinutes()).padStart(2,'0'); }
+// Separada de rutinaAhoraSiguiente() el 2026-08-09 para poder calcular "qué tarea toca a esta
+// hora" en CUALQUIER lista de tareas (no solo las de hoy) — la usa la línea de tiempo cuando se
+// navega un día distinto desde la tira semanal (ver renderDia() más abajo).
+function tareaActivaEnHora(tareas,hhmm){
   let actual=null, siguiente=null;
-  tareasHoy.forEach(t=>{ if(t.hora<=hhmm) actual=t; else if(!siguiente) siguiente=t; });
+  tareas.forEach(t=>{ if(t.hora<=hhmm) actual=t; else if(!siguiente) siguiente=t; });
+  return {actual, siguiente};
+}
+function rutinaAhoraSiguiente(){
+  const tareasHoy=rutinaTareasHoy();
+  const {actual,siguiente}=tareaActivaEnHora(tareasHoy,horaAhora());
   return {tareasHoy, actual, siguiente};
 }
 // Lista compacta del tile "🔜 Siguiente" — ya no solo la próxima tarea, sino
@@ -1172,6 +1227,8 @@ const EVENTOS_MES={
   ],
 };
 const MES_LABEL=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+const MES_LABEL_FULL=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+function mesLabelFull(ym){ const [y,m]=ym.split('-').map(Number); return MES_LABEL_FULL[m-1]+' '+y; }
 function mesKey(d){ return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0'); }
 function mesesVisibles(n){
   const hoy=new Date();
@@ -1788,13 +1845,13 @@ const PHASES=[
    meta:'Fondo de emergencia a $10,000 + $14,000–15,000 de activos vendidos aplicados a Banamex.',
    explica:'Fase 0 es el arranque del plan (18 jul – 30 sep 2026, ~10 semanas). Todavía no se trata de ganar mucho — se trata de cerrar la fuga de dinero y sentar las bases, en este orden exacto: 1) fondo de emergencia, 2) Banamex, 3) BBVA. En paralelo arrancas el negocio: dedicar atención real al negocio de tu papá y publicar tu primera plantilla en comunidades de GBM.',
    semanas:[
-     {id:'s0-1', txt:'<strong>Semana 1-2:</strong> corrige "Deudas" a $13,372 en Finanzas.html · cero MSI nuevo.'},
-     {id:'s0-2', txt:'<strong>Semana 1-2:</strong> revisar las fotos y el material del negocio de tu papá y ponerle atención real — primer paso concreto de la Opción 5.'},
-     {id:'s0-3', txt:'<strong>Semana 2-3:</strong> versión limpia (sin tus datos) de la plantilla Finanzas.html + post de venta para comunidades de GBM (Opción 1).'},
-     {id:'s0-4', txt:'<strong>Semana 3-4:</strong> publica la plantilla en 2-3 comunidades de GBM · sube a Marketplace tus activos ociosos (PS5, control, monitores, iPad).'},
-     {id:'s0-5', txt:'<strong>Semana 4-6:</strong> con las fotos ya revisadas, agenda la llamada exploratoria de 30 min con tu papá — solo escuchar, sin compromiso (Opción 5).'},
-     {id:'s0-6', txt:'<strong>Jul 2026:</strong> pausa aportaciones a la Maestría 1 año (hasta 18 jul 2027) — los $53,740 quedan intactos, nueva meta oct 2028.'},
-     {id:'s0-7', txt:'<strong>Semana 6-10:</strong> cada peso de ventas/activos va, en orden: (1) fondo de emergencia a $10,000, (2) resto a Banamex.'},
+     {id:'s0-1', mes:'2026-07', txt:'Corrige "Deudas" a $13,372 en Finanzas.html · cero MSI nuevo.'},
+     {id:'s0-2', mes:'2026-07', txt:'Revisar las fotos y el material del negocio de tu papá y ponerle atención real — primer paso concreto de la Opción 5.'},
+     {id:'s0-6', mes:'2026-07', txt:'Pausa aportaciones a la Maestría 1 año (hasta 18 jul 2027) — los $53,740 quedan intactos, nueva meta oct 2028.'},
+     {id:'s0-3', mes:'2026-08', txt:'Versión limpia (sin tus datos) de la plantilla Finanzas.html + post de venta para comunidades de GBM (Opción 1).'},
+     {id:'s0-4', mes:'2026-08', txt:'Publica la plantilla en 2-3 comunidades de GBM · sube a Marketplace tus activos ociosos (PS5, control, monitores, iPad).'},
+     {id:'s0-5', mes:'2026-08', txt:'Con las fotos ya revisadas, agenda la llamada exploratoria de 30 min con tu papá — solo escuchar, sin compromiso (Opción 5).'},
+     {id:'s0-7', mes:'2026-09', txt:'Cada peso de ventas/activos va, en orden: (1) fondo de emergencia a $10,000, (2) resto a Banamex — este mes cierra la fase.'},
    ]},
   {start:new Date(2026,9,1),  end:new Date(2027,2,31),  tag:'Fase 1', title:'Los $3,868/mes liberados entran en acción + primer ingreso real',
    meta:'Primer contrato freelance o 20+ ventas de la plantilla cobradas; Banamex liquidada.',
@@ -1850,46 +1907,74 @@ function renderDia(){
 
   document.getElementById('diaFecha').textContent=new Date().toLocaleDateString('es-MX',{weekday:'long',day:'numeric',month:'long'});
   document.getElementById('diaAhora').textContent=actual?(actual.hora+' — '+actual.txt):(tareasHoy.length?'Aún no empieza tu rutina de hoy':'Sin bloques configurados para hoy');
-  // El bloque "Ahora mismo" solo mostraba el título — si la tarea actual está agrupada (subtareas)
-  // no se veía ninguna, había que buscarla en la línea de tiempo de abajo. Pedido explícito de
-  // Adán ("en el ahora mismo ni se ven las subtask, debe mostrar todo"): mostrarlas aquí directo.
-  document.getElementById('diaAhoraSub').innerHTML=(actual&&!actual.fijo&&actual.subtareas)?
-    subtareasHtml(leafItems(actual),(D.rut.completado||{})[today()]||[]):'';
+  // El bloque "Ahora mismo" ya no repite las subtareas aquí (2026-08-08, unificación con Hero):
+  // con las 2 pantallas fusionadas, la línea de tiempo de abajo queda a la vista en el mismo
+  // slide, con la tarjeta "ahora" ya resaltada (.rt2-now) y sus subtareas completas — mostrarlas
+  // dos veces solo quitaba espacio vertical sin aportar nada nuevo.
+  // "Ahora mismo" pasó a banner hero a todo el ancho (2026-08-09) — se le pinta el acento de
+  // color real de la categoría (CAT_META), en vez de compartir el borde/tile genérico gris.
+  const ahoraMeta=actual?(CAT_META[actual.cat]||null):null;
+  const ahoraTile=document.getElementById('diaAhoraTile');
+  const ahoraCat=document.getElementById('diaAhoraCat');
+  if(ahoraMeta){
+    ahoraTile.style.borderLeftColor=ahoraMeta.c;
+    ahoraTile.style.boxShadow=`0 10px 40px rgba(0,0,0,.35), -3px 0 20px ${ahoraMeta.c}30`;
+    ahoraCat.style.display='inline-flex';
+    ahoraCat.style.background=ahoraMeta.c+'22'; ahoraCat.style.color=ahoraMeta.c; ahoraCat.style.borderColor=ahoraMeta.c+'55';
+    ahoraCat.textContent=`${ahoraMeta.ico} ${ahoraMeta.label}`;
+  } else {
+    ahoraTile.style.borderLeftColor='';
+    ahoraTile.style.boxShadow='';
+    ahoraCat.style.display='none';
+  }
   updateMarkDoneBtn(actual);
   renderEventosMes();
 
-  const contables=tareasHoy.filter(t=>!t.fijo).flatMap(leafItems); // el bloque de ALTEN no lleva checkbox; las agrupadas cuentan por subtarea
-  const doneCount=contables.filter(it=>doneHoy.includes(it.id)).length;
-  document.getElementById('diaProgresoTxt').textContent=doneCount+'/'+contables.length;
-  document.getElementById('diaProgresoBar').style.width=(contables.length?doneCount/contables.length*100:0)+'%';
+  // Línea de tiempo — hoy en tiempo real, o el día elegido en la tira semanal del Hero.
+  // 2026-08-09, segundo ajuste: Adán pidió explícitamente que, sin importar el día elegido, la
+  // línea de tiempo se dirija a la tarea que tocaría A ESTA HORA en ESE día (no solo en días
+  // futuros/pasados se veía la lista completa desde arriba) — así que el "ancla" siempre se
+  // calcula comparando la hora real del reloj contra el horario de ese día (`tareaActivaEnHora`),
+  // sea o no el día de hoy. Solo "Ahora mismo" (arriba) y "Marcar hecho" siguen atados al HOY real.
+  const dowHoy=new Date().getDay();
+  const diaMostrado=diaSemanaSel!==null?diaSemanaSel:dowHoy;
+  const esHoyMostrado=diaMostrado===dowHoy;
+  const tareasDia=esHoyMostrado?tareasHoy:rutinaTareasDelDia(diaMostrado);
+  const {actual:anchorTask,siguiente:anchorSig}=esHoyMostrado?{actual,siguiente}:tareaActivaEnHora(tareasDia,horaAhora());
 
-  // No mostrar el día completo desde el inicio: 3 bloques antes de "ahora" + el actual + todos los de después
-  const idxAnchor = actual ? tareasHoy.findIndex(t=>t.id===actual.id) : (siguiente ? tareasHoy.findIndex(t=>t.id===siguiente.id) : -1);
-  const visibles = idxAnchor<=0 ? tareasHoy : tareasHoy.slice(Math.max(0,idxAnchor-3));
+  const tlTitleEl=document.getElementById('diaTimelineTitle');
+  let doneTimeline;
+  if(esHoyMostrado){
+    doneTimeline=doneHoy;
+    tlTitleEl.style.display='none';
+    tlTitleEl.innerHTML='';
+  } else {
+    // Estado hecho/pendiente de ese día real — vacío si es un día futuro sin nada marcado
+    // todavía (no se inventa nada, es lo que hay de verdad en coach_rutina_v1.completado).
+    const fechaSel=semanaActual()[diaMostrado];
+    doneTimeline=(D.rut.completado||{})[fechaSel]||[];
+    tlTitleEl.style.display='flex';
+    tlTitleEl.innerHTML=`🗓️ Rutina del ${DIAS_LARGO[diaMostrado]} <a href="javascript:void(0)" onclick="verDiaSemana(${diaMostrado})">· Volver a hoy →</a>`;
+  }
 
-  // Resumen del día por categoría — de un vistazo, cuántos bloques de cada tipo hay hoy
-  const resumenCats={};
-  tareasHoy.forEach(t=>{ const k=t.fijo?'trabajo':t.cat; resumenCats[k]=(resumenCats[k]||0)+1; });
-  const resumenHtml=Object.entries(resumenCats).map(([cat,n])=>{
-    const meta=CAT_META[cat]||{ico:'•',label:cat,c:'#565a72'};
-    return `<span class="rt2-cat-chip" style="background:${meta.c}22;color:${meta.c};border-color:${meta.c}55">${meta.ico} ${meta.label} · ${n}</span>`;
-  }).join('');
+  // No mostrar el día completo desde el inicio: 3 bloques antes del ancla + el ancla + todos los de después
+  const idxAnchor = anchorTask ? tareasDia.findIndex(t=>t.id===anchorTask.id) : (anchorSig ? tareasDia.findIndex(t=>t.id===anchorSig.id) : -1);
+  const visibles = idxAnchor<=0 ? tareasDia : tareasDia.slice(Math.max(0,idxAnchor-3));
 
   const itemsHtml=visibles.length?visibles.map((t,idx)=>{
-    const isNow=actual&&t.id===actual.id;
+    const isNow=anchorTask&&t.id===anchorTask.id;
     const meta=CAT_META[t.cat]||{ico:'•',label:t.cat,c:'#565a72'};
     const nextT=visibles[idx+1];
-    const dur=nextT?rtDur(t.hora,nextT.hora):'';
     const leaves=leafItems(t);
-    const done=!t.fijo&&leaves.every(it=>doneHoy.includes(it.id));
+    const done=!t.fijo&&leaves.every(it=>doneTimeline.includes(it.id));
     const dotColor=t.fijo?(isNow?meta.c:'#3a3d52'):(done?'#00e87a':isNow?meta.c:'#3a3d52');
-    const subHtml=(!t.fijo&&t.subtareas)?subtareasHtml(leaves,doneHoy):'';
-    return `<div class="rt2-card ${isNow?'rt2-now':''} ${done?'rt2-done':''} ${t.fijo?'rt2-fijo':''}">
+    const subHtml=(!t.fijo&&t.subtareas)?subtareasHtml(leaves,doneTimeline):'';
+    return `<div class="rt2-card ${isNow?'rt2-now':''} ${done?'rt2-done':''} ${t.fijo?'rt2-fijo':''}" style="border-left-color:${dotColor}">
       <div class="rt2-dot" style="background:${dotColor};box-shadow:${(isNow||done)?'0 0 10px '+dotColor:'none'}"></div>
       <div class="rt2-body">
         <div class="rt2-top">
           <span class="rt2-cat" style="background:${meta.c}22;color:${meta.c};border-color:${meta.c}55">${meta.ico} ${meta.label}</span>
-          <span class="rt2-time">${t.hora}${dur?' · '+dur:''}</span>
+          <span class="rt2-time">${t.hora}${nextT?' – '+nextT.hora+' · '+rtDur(t.hora,nextT.hora):''}</span>
         </div>
         <div class="rt2-txt">${t.txt}</div>
         ${subHtml}
@@ -1898,7 +1983,32 @@ function renderDia(){
     </div>`;
   }).join(''):'<div style="text-align:center;padding:20px;color:var(--text3)">Sin bloques de rutina configurados para hoy. Configúralos en Coach → Rutina.</div>';
 
-  document.getElementById('diaTimeline').innerHTML=(resumenHtml?`<div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px">${resumenHtml}</div>`:'')+itemsHtml;
+  const tlEl=document.getElementById('diaTimeline');
+  tlEl.innerHTML=itemsHtml;
+  requestAnimationFrame(()=>{
+    // Scroll directo a la tarjeta ancla ("ahora", real o por hora del día elegido) — pedido
+    // explícito de Adán: tanto al hacer clic en un día de la tira semanal como al volver a esta
+    // pantalla desde cualquier otra parte del Dashboard, debe verse de inmediato la tarea activa,
+    // sin tener que buscarla a mano dentro de la línea de tiempo. Se recalcula en CADA render
+    // (cambio de slide, clic en un día, marcar/desmarcar una tarea) — nunca conserva un scroll viejo.
+    const anchorCard=tlEl.querySelector('.rt2-now');
+    tlEl.scrollTop=anchorCard?Math.max(0,anchorCard.offsetTop-12):0;
+    // Línea conectora detrás de los puntos — medida en pixeles reales (no adivinada en CSS) para
+    // que quede perfectamente alineada con el primer y último punto sin importar cuánto midan las
+    // tarjetas de en medio (varía con subtareas).
+    const dots=tlEl.querySelectorAll('.rt2-dot');
+    if(dots.length>1){
+      const tlTop=tlEl.getBoundingClientRect().top;
+      const firstR=dots[0].getBoundingClientRect();
+      const lastR=dots[dots.length-1].getBoundingClientRect();
+      const top=(firstR.top+firstR.height/2)-tlTop+tlEl.scrollTop;
+      const bottom=(lastR.top+lastR.height/2)-tlTop+tlEl.scrollTop;
+      tlEl.style.setProperty('--tl-top',top+'px');
+      tlEl.style.setProperty('--tl-h',(bottom-top)+'px');
+    } else {
+      tlEl.style.setProperty('--tl-h','0px');
+    }
+  });
 }
 
 // ── ACCIONES RÁPIDAS — únicos 2 puntos donde el Dashboard SÍ escribe en el
@@ -1960,8 +2070,8 @@ function renderHero(){
       if(esPasado) lblCls='pend'; // pasado y sin sesión logueada: neutro, no se asume que falló
     }
     const foto=TIPO_FOTO[rutinaDia?.tipo]||TIPO_FOTO.descanso;
-    const sel=heroGymDiaSel===dow?' sel':'';
-    return `<div class="ws-day ${esHoy?'today':''}${sel}" onclick="verHeroGymDia(${dow})" title="Ver ejercicios de ${DIAS_LARGO[dow]}">
+    const sel=diaSemanaSel===dow?' sel':'';
+    return `<div class="ws-day ${esHoy?'today':''}${sel}" onclick="verDiaSemana(${dow})" title="Ver la rutina completa de ${DIAS_LARGO[dow]}">
       <div class="ws-dname">${DIAS_CORTOS[dow]}${esHoy?' •':''}</div>
       <div class="ws-ddate">${parseInt(d.split('-')[2])}/${parseInt(d.split('-')[1])}</div>
       <div class="ws-gym-photo" style="background-image:url('${foto}')">
@@ -1975,22 +2085,26 @@ function renderHero(){
   renderHeroNutri();
 }
 
-// ── Panel "🏋️ Hoy toca"/"Gym" — qué ejercicios tocan, con cada uno explicado (series×reps +
-// técnica). 2026-08-07: clic en cualquier día de la tira de 7 (arriba) muestra los ejercicios
-// de ESE día en vez de solo "hoy" — antes solo mostraba el día actual, sin forma de ver los
-// demás. `heroGymDiaSel` (null = hoy) se resetea solo al recargar/rotar el slide.
-let heroGymDiaSel=null;
-function verHeroGymDia(dow){
-  heroGymDiaSel=(heroGymDiaSel===dow)?null:dow; // clic de nuevo en el mismo día → vuelve a "hoy"
-  document.querySelectorAll('#heroWeekStrip .ws-day').forEach((el,i)=>el.classList.toggle('sel',heroGymDiaSel===i));
+// ── Tira semanal del Hero — un solo estado de "día elegido" que ahora maneja TODO lo que
+// depende del día (2026-08-09, antes solo el panel de gym): panel "🏋️ Hoy toca" Y la línea de
+// tiempo de "Mi Día" (`renderDia()`, más abajo). Antes clic en un día de la tira solo cambiaba el
+// panel de gym — Adán reportó explícitamente "cuando doy click a algún día... no se actualiza...
+// la rutina, eso creo ni esta implementado", y tenía razón: la línea de tiempo se había quedado
+// hardcodeada a "hoy" sin enterarse de la selección. `diaSemanaSel` (null = hoy) se resetea solo
+// al recargar/rotar el slide.
+let diaSemanaSel=null;
+function verDiaSemana(dow){
+  diaSemanaSel=(diaSemanaSel===dow)?null:dow; // clic de nuevo en el mismo día → vuelve a "hoy"
+  document.querySelectorAll('#heroWeekStrip .ws-day').forEach((el,i)=>el.classList.toggle('sel',diaSemanaSel===i));
   renderHeroGymPanel();
+  renderDia();
 }
 function renderHeroGymPanel(){
   const el=document.getElementById('heroGymPanel');
   if(!el)return;
   const gymRutina=(D.gym.rutina&&Object.keys(D.gym.rutina).length)?D.gym.rutina:GYM_RUTINA_DEFAULT;
   const dowHoy=new Date().getDay();
-  const dow=heroGymDiaSel!==null?heroGymDiaSel:dowHoy;
+  const dow=diaSemanaSel!==null?diaSemanaSel:dowHoy;
   const esHoy=dow===dowHoy;
   const rutinaDia=gymRutina[dow];
   const yaEntreno=esHoy&&(D.gym.sesiones||[]).some(s=>s.fecha===today());
@@ -2015,7 +2129,7 @@ function renderHeroGymPanel(){
   el.innerHTML=`
     <div class="hp-title">
       <span>${titulo}: ${rutinaDia?.nombre||'—'}</span>
-      <a href="../CuidadoPersonal/ejercicio.html" class="hp-link">Ver en Ejercicio →</a>
+      <a href="../CuidadoPersonal/ejercicio.html?dia=${dow}" class="hp-link">Ver en Ejercicio →</a>
     </div>
     ${gymBody}
   `;
@@ -2109,13 +2223,38 @@ function renderCoach(){
     `Vence ${ph.end.toLocaleDateString('es-MX',{day:'numeric',month:'short',year:'numeric'})} · ${fmt(diasFase)} día(s) restantes`;
 
   const faseChecks=rawGet('coach_checks_v1',{});
+
+  // Checklist por mes (2026-08-09) — Adán: "en el dashboard son muchas tareas y no me enfoco en
+  // ninguna". Si la fase activa trae `mes` en sus items (hoy solo Fase 0 — Fase 1/2/3 no tienen
+  // fecha calendario real todavía, ver readme_coach_v2.md), se agrupa por mes con tabs y solo se
+  // pinta el mes elegido; si no trae `mes` (fases futuras sin desglosar aún), cae de vuelta al
+  // comportamiento viejo (todo el checklist de la fase junto).
+  const mesesFase=[...new Set(ph.semanas.map(s=>s.mes).filter(Boolean))].sort();
+  const curYM=mesKey(new Date());
+  let itemsMes=ph.semanas, mesActivo=null;
+  let tabsHtml='', pendientesHtml='';
+  if(mesesFase.length){
+    mesActivo=(coachMesSel&&mesesFase.includes(coachMesSel))?coachMesSel:(mesesFase.includes(curYM)?curYM:mesesFase[0]);
+    itemsMes=ph.semanas.filter(s=>s.mes===mesActivo);
+    tabsHtml=`<div class="coach-mes-tabs">${mesesFase.map(my=>{
+      const doneN=ph.semanas.filter(s=>s.mes===my&&faseChecks[s.id]).length;
+      const totalN=ph.semanas.filter(s=>s.mes===my).length;
+      return `<button class="mes-tab${my===mesActivo?' active':''}${doneN===totalN?' done':''}" onclick="verCoachMes('${my}')">${MES_LABEL_FULL[parseInt(my.slice(5),10)-1]}${my===curYM?' •':''} <span class="lc-tab-pct">${doneN}/${totalN}</span></button>`;
+    }).join('')}</div>`;
+    const pendientesPasados=ph.semanas.filter(s=>s.mes&&s.mes<curYM&&s.mes!==mesActivo&&!faseChecks[s.id]);
+    if(pendientesPasados.length) pendientesHtml=`<div class="coach-mes-pendientes">⚠️ ${pendientesPasados.length} pendiente${pendientesPasados.length>1?'s':''} de ${mesLabelFull(pendientesPasados[0].mes)} sin marcar — <a onclick="verCoachMes('${pendientesPasados[0].mes}')">revisar →</a></div>`;
+  }
+  document.getElementById('coachPrioritiesLbl').textContent=mesesFase.length?`📅 ${mesLabelFull(mesActivo)} — tu enfoque este mes`:'📋 Qué hacer en esta fase — semana a semana';
   document.getElementById('coachPriorities').innerHTML=
+    tabsHtml+pendientesHtml+
     (ph.meta?`<div class="sub" style="margin-bottom:6px">🎯 ${ph.meta}</div>`:'')+
-    ph.semanas.map(s=>`<div class="sem-check">
+    itemsMes.map(s=>`<div class="sem-check">
       <input type="checkbox" id="dchk-${s.id}" ${faseChecks[s.id]?'checked':''} onchange="toggleFaseCheck('${s.id}')">
       <label for="dchk-${s.id}">${s.txt}</label>
     </div>`).join('');
 }
+let coachMesSel=null;
+function verCoachMes(ym){ coachMesSel=ym; renderCoach(); }
 // Checklist semana a semana de "Qué hacer en esta fase" — comparte coach_checks_v1 con
 // Coach_v2.html (mismos ids sN-M), igual patrón de escritura cruzada que quickMarkDone().
 function toggleFaseCheck(id){
@@ -2439,10 +2578,13 @@ function renderMetasSlide(){
     </div>`;
 }
 
-const RENDERS=[renderDia,renderHero,renderCoach,renderMetasSlide,renderSkills,renderListaCompras,renderAleman,renderEntrevista];
+// Slide 0 fusiona "Mi Día" y "Hero" en una sola pantalla (2026-08-08) — ambas funciones siguen
+// existiendo por separado (pintan ids de DOM distintos, todos ahora dentro de la misma <section>),
+// esta solo las llama en secuencia.
+function renderDiaHero(){ renderDia(); renderHero(); }
+const RENDERS=[renderDiaHero,renderCoach,renderMetasSlide,renderSkills,renderListaCompras,renderAleman,renderEntrevista];
 const SLIDE_MENU_META=[
-  {ico:'🕐',n:'Mi Día'},
-  {ico:'🌟',n:'Hero · JARVIS'},
+  {ico:'🕐',n:'Mi Día · JARVIS'},
   {ico:'🪙',n:'Coach · Plan Maestro'},
   {ico:'🎯',n:'Mis Metas'},
   {ico:'🧠',n:'Habilidades'},
@@ -2499,6 +2641,11 @@ function paintHudNav(){document.querySelectorAll('.hud-nav-btn').forEach((b,i)=>
 
 function showSlide(i){
   i=Math.min(Math.max(0,i),N-1);
+  // Salir de "Mi Día" (slide 0) hacia cualquier otra pantalla resetea el día que se estaba
+  // explorando en la tira semanal — pedido explícito de Adán: si se va a otra parte del Dashboard
+  // y regresa, debe ver de nuevo la tarea activa de HOY, no quedarse trabado en un día viejo que
+  // dejó seleccionado sin darse cuenta.
+  if(cur===0&&i!==0) diaSemanaSel=null;
   loadAll();
   RENDERS[i]();
   renderQuickApps();
@@ -2543,7 +2690,6 @@ function renderNavMenu(){
   const ph=activePhase();
   const stats=[
     contables.length?`${doneCount}/${contables.length} hecho hoy${actual&&!actual.fijo?' · '+actual.txt:''}`:'Sin bloques hoy',
-    'Tu semana completa',
     ph.tag+' — '+ph.title,
     'Corto, mediano y largo plazo',
     'OVR '+calcOVR(),
@@ -2604,7 +2750,7 @@ document.addEventListener('keydown',e=>{
   if(e.key==='f'||e.key==='F') toggleFullscreen();
   if(e.key==='?') toggleHelp();
   if(e.key==='Escape') closeAllPanels();
-  if(/^[1-8]$/.test(e.key)) goTo(parseInt(e.key,10)-1);
+  if(/^[1-7]$/.test(e.key)) goTo(parseInt(e.key,10)-1);
 });
 // Swipe táctil (iPad/iPhone) — un dedo, izq/der cambia de pantalla, igual que las flechas del teclado.
 // Solo se dispara si el gesto es más horizontal que vertical, para no pelearse con el scroll

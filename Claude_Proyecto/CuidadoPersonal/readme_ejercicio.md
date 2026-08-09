@@ -227,6 +227,14 @@ Adán reportó: *"ahí en dashboard de ejercicio la descripción del ejercicio n
 - **`EJ_LOOKUP` en `Dashboard/dashboard.html`** (subconjunto de 30 ejercicios usado en el panel de gym del Hero) se reescribió con el mismo criterio y el mismo texto simplificado donde aplica, para no tener dos versiones (una simple, una en jerga) del mismo ejercicio en el ecosistema.
 - Verificado por texto: cero ocurrencias de "omóplat", "supina", "lumbar", "cadencia" en ambos archivos tras el cambio; "femoral" y "aislamiento" solo sobreviven como nombre propio de ejercicio (p.ej. "Curl de Femoral Tumbado") o como categoría interna (`tipo:`), nunca dentro de una instrucción.
 
+## Deep-link `?dia=N` desde el Dashboard (2026-08-08)
+
+Adán reportó un bug real: en el Dashboard (slide "Mi Día · JARVIS"), al hacer clic en un día de la tira de 7 (`#heroWeekStrip`) sí cambiaba el panel "🏋️ Hoy toca" para mostrar los ejercicios de ese día — pero el link "Ver en Ejercicio →" de ese mismo panel siempre abría `ejercicio.html` a secas, sin importar qué día se estaba viendo, así que aterrizaba en la semana completa (o en "hoy") en vez de en el día que Adán acababa de elegir.
+
+- **`init()` ahora lee `?dia=N` de la URL** (`new URLSearchParams(location.search).get('dia')`, `N` = 0-6, mismo `getDay()` de JS que usa el resto del ecosistema — 0=domingo) y, si viene un valor válido, llama `verSoloDia(N)` en vez de `renderMiRutina()` — la misma función que ya usa el clic en la tira semanal interna de esta página (`#d-semana`), así que el comportamiento es idéntico a como si Adán hubiera hecho clic él mismo en ese día: filtra a solo ese día y muestra el botón "← Ver los 7 días" para volver.
+- **`Dashboard/dashboard.html` → `renderHeroGymPanel()`**: el link cambió de `href="../CuidadoPersonal/ejercicio.html"` a `href="../CuidadoPersonal/ejercicio.html?dia=${dow}"`, donde `dow` es la misma variable que ya decide qué día mostrar en el panel (el día clickeado en la tira, o `hoy` si no se ha clickeado ninguno) — no fue necesario ningún estado nuevo, solo pasar el dato que el panel ya tenía.
+- Verificado con Playwright: clic en "Domingo" en la tira del Dashboard → el link del panel queda en `ejercicio.html?dia=0` → al abrirlo, "Mi Rutina" carga directo en "🏋️ Ejercicios del Domingo" con el botón "← Ver los 7 días" visible y el día correcto resaltado en la tira interna; cero errores de consola en ambos archivos.
+
 ## Cómo usarlo
 
 Se abre `CuidadoPersonal/cuidadopersonal.html` (subtab Ejercicio) o directamente `ejercicio.html` en cualquier navegador, sin instalación ni servidor. No hay sincronización entre dispositivos salvo mediante exportación manual del JSON.
