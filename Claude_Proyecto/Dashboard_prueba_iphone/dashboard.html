@@ -6,6 +6,14 @@
 <title>JARVIS — Dashboard</title>
 <meta name="description" content="Salvapantallas de mando: rotación automática de pantallas con lo más importante y pendiente de Coach, Finanzas y el resto de mis proyectos.">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='46' fill='%2305050a' stroke='%2300e0c0' stroke-width='4'/%3E%3Ccircle cx='50' cy='50' r='14' fill='%2300e0c0'/%3E%3Ccircle cx='50' cy='50' r='30' fill='none' stroke='%2300e0c0' stroke-width='2' opacity='.5'/%3E%3C/svg%3E">
+<!-- PWA de prueba (Nivel A) — solo en este clon, no tocar el dashboard.html original -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#05050a">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="JARVIS">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 <!-- Contenido real de las 35 lecciones de Aleman/ (ALEMAN_CONTENT), extraído automáticamente por
      Aleman/_generar-datos-dashboard.js — ver "Alemán del día" en readme_dashboard.md. No es un
      resumen ni texto reescrito a mano: es el vocabulario/diálogos/ejercicios reales de cada
@@ -21,14 +29,14 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;700&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&display=swap');
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#05050a; --text:#f4f4f8; --text2:#9a9db3; --text3:#8589a8;
+  --bg:#05050a; --text:#f4f4f8; --text2:#9a9db3; --text3:#565a72;
   --card:rgba(var(--ov),.06); --card-br:rgba(var(--ov),.13);
   --g:#00e87a; --o:#ff8a3d; --b:#3b82f6; --p:#b06eff; --p-l:rgba(176,110,255,.16); --w:#ffd93d; --r:#ff5c5c; --cy:#00e0c0;
   --font:'Inter',-apple-system,sans-serif; --mono:'Space Grotesk',monospace; --font-title:'Fraunces',Georgia,serif;
   --ov:255,255,255; --bar:rgba(6,6,14,.65); --bar2:rgba(10,10,20,.55);
 }
 :root[data-theme="light"]{
-  --bg:#f2f2f6; --text:#16161a; --text2:#5c5f70; --text3:#63667c;
+  --bg:#f2f2f6; --text:#16161a; --text2:#5c5f70; --text3:#82859a;
   --card:rgba(255,255,255,.85); --card-br:rgba(var(--ov),.12);
   --g:#00a758; --o:#b8632c; --b:#2563eb; --p:#7f4fb8; --p-l:rgba(127,79,184,.14); --w:#a8790a; --r:#c81e3a; --cy:#047a6b;
   --ov:0,0,0; --bar:rgba(255,255,255,.72); --bar2:rgba(255,255,255,.6);
@@ -58,14 +66,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 .slides{position:fixed;top:58px;left:0;right:0;bottom:0;overflow:hidden}
 .slide{
   position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
-  /* padding horizontal: max(6vw, 120px) — no solo 6vw. Las barras HUD fijas de los lados
-     (.hud-side-left/-right) tienen ancho FIJO en px (el reloj hace la derecha ~85px), así que
-     un padding solo proporcional al viewport se queda corto en anchos de laptop comunes
-     (1366px medido: el contenido invadía 19px por debajo del HUD derecho) — el piso fijo
-     garantiza espacio libre sin importar el ancho, y en pantallas grandes el 6vw ya es mayor
-     de todos modos, así que no se pierde espacio ahí. 2026-08-09, Adán: "las cosas se ven muy
-     amontonadas". */
-  padding:5vh max(6vw,120px);opacity:0;transform:scale(1.045);filter:blur(10px);
+  padding:5vh 6vw;opacity:0;transform:scale(1.045);filter:blur(10px);
   transition:opacity 1.3s cubic-bezier(.22,.61,.36,1), transform 1.8s cubic-bezier(.22,.61,.36,1), filter 1.3s ease;
   pointer-events:none; overflow:hidden;
 }
@@ -106,11 +107,6 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 .grid{display:grid;gap:clamp(12px,1.4vw,20px)}
 .g2{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:repeat(3,1fr)}.g4{grid-template-columns:repeat(4,1fr)}.g6{grid-template-columns:repeat(6,1fr)}
 .g-metas{grid-template-columns:1.7fr 1fr}
-/* Fila secundaria de Mi Día — "Hoy toca" (gym, columna del medio) más ancho que "Importante
-   este mes"/"Ideas para hoy" a los lados (2026-08-09, pedido explícito: los de los lados más
-   chicos de ancho, el espacio ganado para el de ejercicio). Responsivo en @media(max-width:1024px)
-   más abajo, que sigue colapsando las 3 a 1 columna en tablet/celular. */
-#miDiaSecundarios{grid-template-columns:1fr 2fr 1fr}
 @media(max-width:900px){.g-metas{grid-template-columns:1fr}}
 
 /* ─── Tarjetas con foto — metas de corto/mediano/largo plazo (slide Mis Metas) ───
@@ -157,14 +153,8 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 /* ─── TIMELINE DE ACTIVIDADES (Mi Día) — detalle por bloque. Padding/tipografía reducidos el
    2026-08-08 al fusionarse con Hero: la línea de tiempo ya no es la única pieza de contenido del
    slide, comparte espacio con la tira de días + 2 filas de tarjetas de arriba, así que cada
-   entrada ocupa menos alto para que quepan más de un vistazo.
-   Pulido visual (2026-08-09, "esta es la base de toda mi rutina, hazlo mejor visualmente"):
-   línea conectora detrás de los puntos (::before de #diaTimeline, medida en JS — ver renderDia())
-   + acento de color a la izquierda de cada tarjeta que reutiliza el mismo `dotColor` ya calculado
-   por tarjeta, así el borde y el punto nunca se contradicen entre sí. ─ */
-#diaTimeline{position:relative;z-index:0}
-#diaTimeline::before{content:'';position:absolute;top:var(--tl-top,0);height:var(--tl-h,0);left:16px;width:1px;background:rgba(var(--ov),.16);z-index:-1}
-.rt2-card{display:flex;align-items:flex-start;gap:10px;padding:7px 4px 7px 8px;border-left:3px solid transparent;border-bottom:1px solid rgba(var(--ov),.06);transition:background .2s,border-color .3s}
+   entrada ocupa menos alto para que quepan más de un vistazo. ─ */
+.rt2-card{display:flex;align-items:flex-start;gap:10px;padding:7px 4px;border-bottom:1px solid rgba(var(--ov),.06);transition:background .2s}
 .rt2-card:last-child{border-bottom:none}
 .rt2-dot{width:10px;height:10px;border-radius:50%;margin-top:5px;flex-shrink:0;transition:all .3s}
 .rt2-body{flex:1;min-width:0}
@@ -175,24 +165,10 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
    claramente como encabezado frente a las subtareas/explicación de abajo (.rt2-sub-item) */
 .rt2-txt{font-size:clamp(12px,1.05vw,14px);color:var(--text);font-weight:700;line-height:1.35}
 .rt2-check{font-size:15px;margin-top:4px;flex-shrink:0}
-.rt2-now{background:rgba(var(--ov),.05);border-radius:0 12px 12px 0}
+.rt2-now{background:rgba(var(--ov),.04);border-radius:12px;padding:8px 8px;margin:0 -8px}
+.rt2-now .rt2-txt{color:#fff}
 .rt2-done .rt2-txt{opacity:.5;text-decoration:line-through}
 .rt2-fijo{opacity:.85}
-/* "Volver a hoy" — visible solo cuando #diaTimelineTitle está activo (ver verDiaSemana()) */
-#diaTimelineTitle a{color:var(--cy);text-decoration:none;font-weight:700;cursor:pointer}
-#diaTimelineTitle a:hover{text-decoration:underline}
-
-/* ─── "Ahora mismo" — banner hero de Mi Día (2026-08-09) ───
-   Antes era una tarjeta más entre 4 con el mismo peso visual que "Importante este mes"/gym/
-   nutrición, pero es el único dato que responde a "qué hago en este momento" — la razón de ser
-   de esta pantalla — así que pasó a ocupar el ancho completo, con acento de color por categoría
-   (mismo `meta.c` de CAT_META que ya pinta la píldora de cada bloque de la línea de tiempo) en
-   vez de compartir la misma tarjeta genérica blanca/gris que el resto. */
-.now-hero{border-left:3px solid var(--card-br);transition:border-color .3s,box-shadow .3s}
-.now-hero-row{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
-.now-hero-txt{font-weight:800;font-size:clamp(15px,1.6vw,19px);margin-top:5px;line-height:1.3;color:var(--text)}
-.now-live-dot{width:7px;height:7px;border-radius:50%;background:var(--g);box-shadow:0 0 8px var(--g);display:inline-block;animation:pulse 2s ease-in-out infinite}
-
 /* Subtareas (2026-08-07, resaltadas a petición de Adán: "ni se ven", "de otro estilo, color") —
    cada una es su propia tarjetita (fondo + borde), no solo texto suelto en itálica, para que se
    note de un vistazo que hay una lista debajo del título. Dentro de cada una, si el texto trae
@@ -201,14 +177,11 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
    (el producto/ítem) en un color de acento y la segunda (la acción) en el color de texto
    secundario — ambos colores ya están definidos para tema claro Y oscuro (`--cy`/`--text2` en
    :root arriba), así se ve bien en los dos sin reglas extra por tema.  */
-/* Subtareas más chicas que la tarea principal (2026-08-08, pedido explícito: "los subtask de las
-   rutinas, debes hacerlas mas pequeñas y la tarea principal el tamaño esta bien") — font-size,
-   padding y gaps reducidos; .rt2-txt (tarea principal, arriba en el CSS) no se tocó. */
-.rt2-sub{margin-top:4px;display:flex;flex-direction:column;gap:3px}
-.rt2-sub-item{display:flex;align-items:flex-start;gap:5px;font-size:8.5px;line-height:1.3;
-  background:rgba(var(--ov),.045);border:1px solid rgba(var(--ov),.09);border-left:2px solid var(--cy);
-  border-radius:6px;padding:4px 7px}
-.rt2-sub-check{flex-shrink:0;margin-top:1px;font-size:8px}
+.rt2-sub{margin-top:7px;display:flex;flex-direction:column;gap:6px}
+.rt2-sub-item{display:flex;align-items:flex-start;gap:7px;font-size:11.5px;line-height:1.5;
+  background:rgba(var(--ov),.045);border:1px solid rgba(var(--ov),.09);border-left:3px solid var(--cy);
+  border-radius:9px;padding:7px 10px}
+.rt2-sub-check{flex-shrink:0;margin-top:1px;font-size:11px}
 .rt2-sub-prod{font-weight:800;color:var(--cy)}
 .rt2-sub-dash{color:var(--text3)}
 .rt2-sub-action{color:var(--text2)}
@@ -310,49 +283,21 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 .hp-meal-ing .ds-row{padding:1.5px 0}
 .hp-meal-ing .ds-txt{font-size:10px;margin:0;line-height:1.3}
 
-/* ─── COACH · PLAN MAESTRO — ruta de deuda cara + to-do de fase (2026-07-30) ───
-   Pulido 2026-08-09 (tercera vuelta el mismo día — "los bloques de en medio hazlos mas
-   pequeños... separa las cajas de info"): las 3 cajas de paso se achicaron (menos padding,
-   letra un escalón más chica) y se separaron más entre sí (gap 14→22px); el bloque completo
-   ganó más aire arriba (antes del label) y abajo (antes de "Avance real") para que no se sienta
-   pegado al header de la tarjeta ni a la barra de progreso. */
-.debt-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin:10px 0}
-.debt-step{background:rgba(var(--ov),.03);border:1px solid rgba(var(--ov),.08);border-radius:12px;padding:9px 8px;text-align:center;position:relative}
+/* ─── COACH · PLAN MAESTRO — ruta de deuda cara + to-do de fase (2026-07-30) ─ */
+.debt-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.debt-step{background:rgba(var(--ov),.03);border:1px solid rgba(var(--ov),.08);border-radius:14px;padding:12px 10px;text-align:center;position:relative}
 .debt-step.activo{border-color:var(--ac1);box-shadow:0 0 14px rgba(var(--ov),.08)}
 .debt-step.done{border-color:rgba(0,232,122,.35);background:rgba(0,232,122,.04)}
-.ds-num{position:absolute;top:7px;left:7px;width:14px;height:14px;border-radius:50%;background:rgba(var(--ov),.08);font-size:8px;font-weight:800;display:flex;align-items:center;justify-content:center;color:var(--text2)}
+.ds-num{position:absolute;top:8px;left:8px;width:16px;height:16px;border-radius:50%;background:rgba(var(--ov),.08);font-size:9px;font-weight:800;display:flex;align-items:center;justify-content:center;color:var(--text2)}
 .debt-step.done .ds-num{background:rgba(0,232,122,.2);color:var(--g)}
-.ds-ico{font-size:11px;margin-bottom:2px}
-.ds-lbl{font-size:11px;font-weight:800;color:var(--text)}
-.ds-txt{font-size:10.5px;color:var(--text2);margin:3px 0 5px;font-family:var(--mono)}
-/* Checklist semana a semana de "Qué hacer en esta fase" — comparte coach_checks_v1 con Coach_v2.html.
-   Pulido visual (2026-08-09, "se ve amontonado... no esta claro a que se refiere esa seccion"):
-   cada tarea pasó de fila plana (solo separada por una línea) a su propia tarjeta — igual patrón
-   que ya usan las subtareas de "Mi Día" (.rt2-sub-item), para que el ojo distinga cada tarea como
-   una unidad, no como texto corrido. */
-.sem-check{display:flex;align-items:flex-start;gap:10px;padding:7px 12px;margin-bottom:5px;background:rgba(var(--ov),.03);border:1px solid rgba(var(--ov),.07);border-radius:10px;transition:background .2s,border-color .2s}
-.sem-check:last-child{margin-bottom:0}
-.sem-check input[type="checkbox"]{margin-top:2px;width:14px;height:14px;accent-color:var(--g);cursor:pointer;flex-shrink:0}
-.sem-check label{font-size:12px;color:var(--text2);line-height:1.5;cursor:pointer}
+.ds-ico{font-size:13px;margin-bottom:2px}
+.ds-lbl{font-size:12px;font-weight:800;color:var(--text)}
+.ds-txt{font-size:11.5px;color:var(--text2);margin:3px 0 6px;font-family:var(--mono)}
+/* Checklist semana a semana de "Qué hacer en esta fase" — comparte coach_checks_v1 con Coach_v2.html */
+.sem-check{display:flex;align-items:flex-start;gap:9px;padding:3px 0;border-bottom:1px solid rgba(var(--ov),.06)}
+.sem-check input[type="checkbox"]{margin-top:3px;width:13px;height:13px;accent-color:var(--g);cursor:pointer;flex-shrink:0}
+.sem-check label{font-size:11.5px;color:var(--text2);line-height:1.4;cursor:pointer}
 .sem-check input:checked+label{color:var(--text3);text-decoration:line-through}
-.sem-check:has(input:checked){background:rgba(0,232,122,.05);border-color:rgba(0,232,122,.18)}
-/* 2 tarjetas del slide Coach, cada una con su propia identidad de color — antes las 2 eran el
-   mismo blanco/gris genérico, sin nada que dijera "esto es deuda" vs. "esto es tu mes" a primera
-   vista. Verde = dinero/deuda (mismo verde que ya usa la barra "Avance real"); dorado = el acento
-   del tema Coach (--ac1), reservado para la pieza más importante del slide — tu enfoque del mes. */
-.coach-accent-debt{border-left:3px solid var(--g)}
-.coach-accent-month{border-left:3px solid var(--ac1)}
-.coach-month-title{font-size:clamp(15px,1.6vw,19px);font-weight:800;color:var(--text);margin-bottom:10px;line-height:1.3}
-/* Fase 0 por mes (2026-08-09) — Adán: "en el dashboard son muchas tareas y no me enfoco en
-   ninguna". Reusa el mismo componente `.mes-tab`/`.lc-tab-pct` que ya pintan "Importante este
-   mes" y Lista de Compras, para que se sienta como el mismo lenguaje visual del resto del
-   Dashboard, no un widget nuevo aparte. */
-.coach-mes-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
-.mes-tab.done:not(.active){border-color:rgba(0,232,122,.4);color:var(--g)}
-.mes-tab.done:not(.active) .lc-tab-pct{color:var(--g);opacity:1}
-.coach-mes-pendientes{display:flex;align-items:center;gap:8px;background:color-mix(in srgb,var(--w) 12%,transparent);border:1px solid color-mix(in srgb,var(--w) 35%,transparent);border-radius:10px;padding:8px 12px;margin-bottom:10px;font-size:11.5px;color:var(--text2)}
-.coach-mes-pendientes a{color:var(--w);font-weight:700;text-decoration:none;white-space:nowrap;cursor:pointer}
-.coach-mes-pendientes a:hover{text-decoration:underline}
 
 /* Lista de Compras */
 .lc-tab{padding:7px 15px;border-radius:20px;border:1px solid rgba(var(--ov),.12);background:rgba(var(--ov),.05);color:var(--text2);font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;transition:all .2s;white-space:nowrap}
@@ -612,12 +557,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
    `.slides{top}` ya no se fija aquí — lo calcula `syncSlidesTop()` en JS
    según la altura real de `.qa-bar`, que ahora puede variar. */
 @media(max-width:1024px){
-  #miDiaSecundarios{grid-template-columns:1fr}
-  /* El piso de 120px del padding horizontal (ver regla base de .slide) existe solo para no
-     chocar con el HUD lateral fijo — en ≤1024px el HUD ya se mueve abajo-centro (ver
-     .hud-side más abajo), así que aquí se vuelve a un padding puramente proporcional; con el
-     piso fijo, un iPhone angosto se hubiera quedado con casi todo el ancho como padding. */
-  .slide{padding:5vh 6vw;align-items:flex-start}
+  .slide{align-items:flex-start}
   .slide.active{overflow-y:auto;-webkit-overflow-scrolling:touch}
   .slide-inner{height:auto;min-height:100%;padding-bottom:170px}
   /* El botón "Ocultar finanzas" es absoluto (left:16px) para quedar pegado
@@ -687,33 +627,24 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 
       <div class="week-strip reveal d2" id="heroWeekStrip" style="margin-bottom:10px"></div>
 
-      <div class="tile tile-glow now-hero reveal d3" id="diaAhoraTile" style="margin-bottom:8px;padding:11px 18px">
-        <div class="now-hero-row">
-          <div style="min-width:0;flex:1">
-            <div class="lbl" style="display:flex;align-items:center;gap:7px;flex-wrap:wrap">
-              <span class="now-live-dot"></span>Ahora mismo
-              <span class="rt2-cat" id="diaAhoraCat" style="display:none"></span>
-            </div>
-            <div class="now-hero-txt" id="diaAhora">—</div>
-          </div>
+      <div class="grid g2 reveal d3" style="margin-bottom:8px;align-items:stretch">
+        <div class="tile tile-glow" style="padding:9px 14px">
+          <div class="lbl">🟢 Ahora mismo</div>
+          <div style="font-weight:800;font-size:clamp(12.5px,1.2vw,15px);margin-top:5px;line-height:1.35" id="diaAhora">—</div>
           <div id="diaAhoraBtn"></div>
         </div>
-      </div>
-
-      <div class="grid g3 reveal d4" style="margin-bottom:8px;align-items:stretch" id="miDiaSecundarios">
         <div class="tile" style="padding:9px 14px">
           <div class="lbl">🗓️ Importante este mes</div>
           <div id="mesTabs" style="display:flex;gap:5px;flex-wrap:wrap;margin-top:5px"></div>
           <div style="margin-top:5px;display:flex;flex-direction:column" id="mesEventos">—</div>
         </div>
+      </div>
+
+      <div class="grid g2 reveal d4" style="margin-bottom:8px;align-items:stretch">
         <div class="tile" style="padding:9px 14px" id="heroGymPanel"></div>
         <div class="tile" style="padding:9px 14px" id="heroNutriPanel"></div>
       </div>
 
-      <!-- Sin clase "reveal": este elemento pasa de display:none a visible dinámicamente (ver
-           verDiaSemana()), y las animaciones .reveal se reinician cada vez que un elemento vuelve
-           de display:none — se quedaba invisible (opacity:0) un momento tras cada clic. -->
-      <div id="diaTimelineTitle" style="display:none;align-items:center;gap:8px;margin-bottom:5px;font-size:11.5px;font-weight:700;color:var(--text2)"></div>
       <div class="tile reveal d5" id="diaTimeline" style="flex:1;min-height:0;overflow-y:auto;padding:10px 14px"></div>
 
       <div class="reveal d6" style="margin-top:8px">
@@ -730,20 +661,20 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
         <div class="slide-title" id="coachPhaseTitle" style="margin-bottom:0">Fase —</div>
         <div id="coachFaseFecha" style="font-size:clamp(11px,1vw,13px);color:var(--text2);white-space:nowrap">—</div>
       </div>
-      <div class="reveal d2" style="font-size:clamp(12px,1.05vw,14px);color:var(--text2);line-height:1.45;margin-bottom:32px;max-width:820px" id="coachFaseExplica">—</div>
+      <div class="reveal d2" style="font-size:clamp(12px,1.05vw,14px);color:var(--text2);line-height:1.45;margin-bottom:10px;max-width:820px" id="coachFaseExplica">—</div>
 
-      <div class="tile reveal d3 coach-accent-debt" style="margin-bottom:32px;padding:12px 18px">
+      <div class="tile reveal d3" style="margin-bottom:10px;padding:14px 18px">
         <div class="lbl" style="margin-bottom:8px">💰 Tu ruta hacia deuda cara en $0 — en este orden, sin excepción</div>
         <div class="debt-steps" id="coachDebtSteps"></div>
-        <div style="display:flex;align-items:center;gap:10px;margin-top:8px;padding-top:7px;border-top:1px solid rgba(var(--ov),.07)">
-          <span class="lbl" style="white-space:nowrap">Avance real (promedio de los 3 pasos)</span>
+        <div style="display:flex;align-items:center;gap:10px;margin-top:10px;padding-top:9px;border-top:1px solid rgba(var(--ov),.07)">
+          <span class="lbl" style="white-space:nowrap">Avance real</span>
           <div class="pbar" style="flex:1;height:4px;margin-top:0"><div class="pfill" id="coachRutaPctBar" style="width:0%;background:linear-gradient(90deg,var(--g),var(--cy))"></div></div>
           <span class="big-num" style="font-size:15px;color:var(--g)" id="coachRutaPct">—</span>
         </div>
       </div>
 
-      <div class="tile reveal d5 coach-accent-month" style="padding:13px 18px">
-        <div class="coach-month-title" id="coachPrioritiesLbl">📋 Qué hacer en esta fase — semana a semana</div>
+      <div class="tile reveal d5" style="padding:14px 18px">
+        <div class="lbl" style="margin-bottom:6px">📋 Qué hacer en esta fase — semana a semana</div>
         <div id="coachPriorities"></div>
       </div>
     </div>
@@ -1190,20 +1121,7 @@ const CAT_META={
   creativo: {ico:'✍️',label:'Creativo', c:'#b06eff'},
   trabajo:  {ico:'🏢',label:'Trabajo',  c:'#00e0c0'}
 };
-// 2026-08-09: separada de rutinaTareasHoy() para poder pedir el horario de CUALQUIER día de la
-// semana (no solo hoy) — la usa la línea de tiempo cuando se navega un día distinto desde la tira
-// semanal del Hero (ver verDiaSemana()/renderDia() más abajo).
-function rutinaTareasDelDia(dow){return RUTINA_TASKS.filter(t=>t.dias.includes(dow)).sort((a,b)=>a.hora.localeCompare(b.hora));}
-function rutinaTareasHoy(){return rutinaTareasDelDia(new Date().getDay());}
-// Duración total del bloque (hora de inicio → hora del siguiente bloque), en texto corto — 2026-08-08,
-// pedido explícito: "tambien agrega la duracion total de la task", junto al rango de horas de .rt2-time.
-function rtDur(fromHora,toHora){
-  const[fh,fm]=fromHora.split(':').map(Number);
-  const[th,tm]=toHora.split(':').map(Number);
-  let mins=(th*60+tm)-(fh*60+fm);
-  if(mins<=0) mins+=24*60;
-  return mins>=60?(Math.floor(mins/60)+'h'+(mins%60?' '+(mins%60)+'m':'')):mins+'m';
-}
+function rutinaTareasHoy(){const dow=new Date().getDay();return RUTINA_TASKS.filter(t=>t.dias.includes(dow)).sort((a,b)=>a.hora.localeCompare(b.hora));}
 // Igual que Coach_v2.html: una tarea agrupada (.subtareas) cuenta cada subtarea por separado
 function leafItems(t){ return (t.subtareas&&t.subtareas.length) ? t.subtareas : [{id:t.id, txt:t.txt, link:t.link}]; }
 // Pinta la lista de subtareas de un bloque, resaltando "producto — acción" cuando el texto trae
@@ -1217,18 +1135,12 @@ function subtareasHtml(leaves,doneHoy){
     return `<div class="rt2-sub-item${done?' rt2-sub-done':''}"><span class="rt2-sub-check">${done?'✅':'▫️'}</span><span>${body}</span></div>`;
   }).join('')}</div>`;
 }
-function horaAhora(){ const n=new Date(); return String(n.getHours()).padStart(2,'0')+':'+String(n.getMinutes()).padStart(2,'0'); }
-// Separada de rutinaAhoraSiguiente() el 2026-08-09 para poder calcular "qué tarea toca a esta
-// hora" en CUALQUIER lista de tareas (no solo las de hoy) — la usa la línea de tiempo cuando se
-// navega un día distinto desde la tira semanal (ver renderDia() más abajo).
-function tareaActivaEnHora(tareas,hhmm){
-  let actual=null, siguiente=null;
-  tareas.forEach(t=>{ if(t.hora<=hhmm) actual=t; else if(!siguiente) siguiente=t; });
-  return {actual, siguiente};
-}
 function rutinaAhoraSiguiente(){
+  const now=new Date();
+  const hhmm=String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0');
   const tareasHoy=rutinaTareasHoy();
-  const {actual,siguiente}=tareaActivaEnHora(tareasHoy,horaAhora());
+  let actual=null, siguiente=null;
+  tareasHoy.forEach(t=>{ if(t.hora<=hhmm) actual=t; else if(!siguiente) siguiente=t; });
   return {tareasHoy, actual, siguiente};
 }
 // Lista compacta del tile "🔜 Siguiente" — ya no solo la próxima tarea, sino
@@ -1256,8 +1168,6 @@ const EVENTOS_MES={
   ],
 };
 const MES_LABEL=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
-const MES_LABEL_FULL=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
-function mesLabelFull(ym){ const [y,m]=ym.split('-').map(Number); return MES_LABEL_FULL[m-1]+' '+y; }
 function mesKey(d){ return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0'); }
 function mesesVisibles(n){
   const hoy=new Date();
@@ -1268,11 +1178,7 @@ function mesesVisibles(n){
 }
 let mesSel=mesKey(new Date());
 function renderEventosMes(){
-  // 4 meses, no 6 (2026-08-09, "las cosas se ven muy amontonadas") — solo agosto/sep/oct tienen
-  // eventos reales hoy (EVENTOS_MES arriba); 6 pestañas casi vacías en una columna angosta
-  // envolvían a 2 líneas y estiraban las 3 tarjetas vecinas (align-items:stretch). 4 alcanza para
-  // ver todo lo real + 1 mes de colchón, y cabe en una sola fila.
-  const meses=mesesVisibles(4);
+  const meses=mesesVisibles(6);
   document.getElementById('mesTabs').innerHTML=meses.map(m=>
     `<button class="mes-tab${m.key===mesSel?' active':''}${(EVENTOS_MES[m.key]||[]).length?' has-items':''}" onclick="verMesEventos('${m.key}')">${m.label}</button>`
   ).join('');
@@ -1878,13 +1784,13 @@ const PHASES=[
    meta:'Fondo de emergencia a $10,000 + $14,000–15,000 de activos vendidos aplicados a Banamex.',
    explica:'Fase 0 es el arranque del plan (18 jul – 30 sep 2026, ~10 semanas). Todavía no se trata de ganar mucho — se trata de cerrar la fuga de dinero y sentar las bases, en este orden exacto: 1) fondo de emergencia, 2) Banamex, 3) BBVA. En paralelo arrancas el negocio: dedicar atención real al negocio de tu papá y publicar tu primera plantilla en comunidades de GBM.',
    semanas:[
-     {id:'s0-1', mes:'2026-07', txt:'Corrige "Deudas" a $13,372 en Finanzas.html · cero MSI nuevo.'},
-     {id:'s0-2', mes:'2026-07', txt:'Revisar las fotos y el material del negocio de tu papá y ponerle atención real — primer paso concreto de la Opción 5.'},
-     {id:'s0-6', mes:'2026-07', txt:'Pausa aportaciones a la Maestría 1 año (hasta 18 jul 2027) — los $53,740 quedan intactos, nueva meta oct 2028.'},
-     {id:'s0-3', mes:'2026-08', txt:'Versión limpia (sin tus datos) de la plantilla Finanzas.html + post de venta para comunidades de GBM (Opción 1).'},
-     {id:'s0-4', mes:'2026-08', txt:'Publica la plantilla en 2-3 comunidades de GBM · sube a Marketplace tus activos ociosos (PS5, control, monitores, iPad).'},
-     {id:'s0-5', mes:'2026-08', txt:'Con las fotos ya revisadas, agenda la llamada exploratoria de 30 min con tu papá — solo escuchar, sin compromiso (Opción 5).'},
-     {id:'s0-7', mes:'2026-09', txt:'Cada peso de ventas/activos va, en orden: (1) fondo de emergencia a $10,000, (2) resto a Banamex — este mes cierra la fase.'},
+     {id:'s0-1', txt:'<strong>Semana 1-2:</strong> corrige "Deudas" a $13,372 en Finanzas.html · cero MSI nuevo.'},
+     {id:'s0-2', txt:'<strong>Semana 1-2:</strong> revisar las fotos y el material del negocio de tu papá y ponerle atención real — primer paso concreto de la Opción 5.'},
+     {id:'s0-3', txt:'<strong>Semana 2-3:</strong> versión limpia (sin tus datos) de la plantilla Finanzas.html + post de venta para comunidades de GBM (Opción 1).'},
+     {id:'s0-4', txt:'<strong>Semana 3-4:</strong> publica la plantilla en 2-3 comunidades de GBM · sube a Marketplace tus activos ociosos (PS5, control, monitores, iPad).'},
+     {id:'s0-5', txt:'<strong>Semana 4-6:</strong> con las fotos ya revisadas, agenda la llamada exploratoria de 30 min con tu papá — solo escuchar, sin compromiso (Opción 5).'},
+     {id:'s0-6', txt:'<strong>Jul 2026:</strong> pausa aportaciones a la Maestría 1 año (hasta 18 jul 2027) — los $53,740 quedan intactos, nueva meta oct 2028.'},
+     {id:'s0-7', txt:'<strong>Semana 6-10:</strong> cada peso de ventas/activos va, en orden: (1) fondo de emergencia a $10,000, (2) resto a Banamex.'},
    ]},
   {start:new Date(2026,9,1),  end:new Date(2027,2,31),  tag:'Fase 1', title:'Los $3,868/mes liberados entran en acción + primer ingreso real',
    meta:'Primer contrato freelance o 20+ ventas de la plantilla cobradas; Banamex liquidada.',
@@ -1944,70 +1850,27 @@ function renderDia(){
   // con las 2 pantallas fusionadas, la línea de tiempo de abajo queda a la vista en el mismo
   // slide, con la tarjeta "ahora" ya resaltada (.rt2-now) y sus subtareas completas — mostrarlas
   // dos veces solo quitaba espacio vertical sin aportar nada nuevo.
-  // "Ahora mismo" pasó a banner hero a todo el ancho (2026-08-09) — se le pinta el acento de
-  // color real de la categoría (CAT_META), en vez de compartir el borde/tile genérico gris.
-  const ahoraMeta=actual?(CAT_META[actual.cat]||null):null;
-  const ahoraTile=document.getElementById('diaAhoraTile');
-  const ahoraCat=document.getElementById('diaAhoraCat');
-  if(ahoraMeta){
-    ahoraTile.style.borderLeftColor=ahoraMeta.c;
-    ahoraTile.style.boxShadow=`0 10px 40px rgba(0,0,0,.35), -3px 0 20px ${ahoraMeta.c}30`;
-    ahoraCat.style.display='inline-flex';
-    ahoraCat.style.background=ahoraMeta.c+'22'; ahoraCat.style.color=ahoraMeta.c; ahoraCat.style.borderColor=ahoraMeta.c+'55';
-    ahoraCat.textContent=`${ahoraMeta.ico} ${ahoraMeta.label}`;
-  } else {
-    ahoraTile.style.borderLeftColor='';
-    ahoraTile.style.boxShadow='';
-    ahoraCat.style.display='none';
-  }
   updateMarkDoneBtn(actual);
   renderEventosMes();
 
-  // Línea de tiempo — hoy en tiempo real, o el día elegido en la tira semanal del Hero.
-  // 2026-08-09, segundo ajuste: Adán pidió explícitamente que, sin importar el día elegido, la
-  // línea de tiempo se dirija a la tarea que tocaría A ESTA HORA en ESE día (no solo en días
-  // futuros/pasados se veía la lista completa desde arriba) — así que el "ancla" siempre se
-  // calcula comparando la hora real del reloj contra el horario de ese día (`tareaActivaEnHora`),
-  // sea o no el día de hoy. Solo "Ahora mismo" (arriba) y "Marcar hecho" siguen atados al HOY real.
-  const dowHoy=new Date().getDay();
-  const diaMostrado=diaSemanaSel!==null?diaSemanaSel:dowHoy;
-  const esHoyMostrado=diaMostrado===dowHoy;
-  const tareasDia=esHoyMostrado?tareasHoy:rutinaTareasDelDia(diaMostrado);
-  const {actual:anchorTask,siguiente:anchorSig}=esHoyMostrado?{actual,siguiente}:tareaActivaEnHora(tareasDia,horaAhora());
-
-  const tlTitleEl=document.getElementById('diaTimelineTitle');
-  let doneTimeline;
-  if(esHoyMostrado){
-    doneTimeline=doneHoy;
-    tlTitleEl.style.display='none';
-    tlTitleEl.innerHTML='';
-  } else {
-    // Estado hecho/pendiente de ese día real — vacío si es un día futuro sin nada marcado
-    // todavía (no se inventa nada, es lo que hay de verdad en coach_rutina_v1.completado).
-    const fechaSel=semanaActual()[diaMostrado];
-    doneTimeline=(D.rut.completado||{})[fechaSel]||[];
-    tlTitleEl.style.display='flex';
-    tlTitleEl.innerHTML=`🗓️ Rutina del ${DIAS_LARGO[diaMostrado]} <a href="javascript:void(0)" onclick="verDiaSemana(${diaMostrado})">· Volver a hoy →</a>`;
-  }
-
-  // No mostrar el día completo desde el inicio: 3 bloques antes del ancla + el ancla + todos los de después
-  const idxAnchor = anchorTask ? tareasDia.findIndex(t=>t.id===anchorTask.id) : (anchorSig ? tareasDia.findIndex(t=>t.id===anchorSig.id) : -1);
-  const visibles = idxAnchor<=0 ? tareasDia : tareasDia.slice(Math.max(0,idxAnchor-3));
+  // No mostrar el día completo desde el inicio: 3 bloques antes de "ahora" + el actual + todos los de después
+  const idxAnchor = actual ? tareasHoy.findIndex(t=>t.id===actual.id) : (siguiente ? tareasHoy.findIndex(t=>t.id===siguiente.id) : -1);
+  const visibles = idxAnchor<=0 ? tareasHoy : tareasHoy.slice(Math.max(0,idxAnchor-3));
 
   const itemsHtml=visibles.length?visibles.map((t,idx)=>{
-    const isNow=anchorTask&&t.id===anchorTask.id;
+    const isNow=actual&&t.id===actual.id;
     const meta=CAT_META[t.cat]||{ico:'•',label:t.cat,c:'#565a72'};
     const nextT=visibles[idx+1];
     const leaves=leafItems(t);
-    const done=!t.fijo&&leaves.every(it=>doneTimeline.includes(it.id));
+    const done=!t.fijo&&leaves.every(it=>doneHoy.includes(it.id));
     const dotColor=t.fijo?(isNow?meta.c:'#3a3d52'):(done?'#00e87a':isNow?meta.c:'#3a3d52');
-    const subHtml=(!t.fijo&&t.subtareas)?subtareasHtml(leaves,doneTimeline):'';
-    return `<div class="rt2-card ${isNow?'rt2-now':''} ${done?'rt2-done':''} ${t.fijo?'rt2-fijo':''}" style="border-left-color:${dotColor}">
+    const subHtml=(!t.fijo&&t.subtareas)?subtareasHtml(leaves,doneHoy):'';
+    return `<div class="rt2-card ${isNow?'rt2-now':''} ${done?'rt2-done':''} ${t.fijo?'rt2-fijo':''}">
       <div class="rt2-dot" style="background:${dotColor};box-shadow:${(isNow||done)?'0 0 10px '+dotColor:'none'}"></div>
       <div class="rt2-body">
         <div class="rt2-top">
           <span class="rt2-cat" style="background:${meta.c}22;color:${meta.c};border-color:${meta.c}55">${meta.ico} ${meta.label}</span>
-          <span class="rt2-time">${t.hora}${nextT?' – '+nextT.hora+' · '+rtDur(t.hora,nextT.hora):''}</span>
+          <span class="rt2-time">${t.hora}${nextT?' – '+nextT.hora:''}</span>
         </div>
         <div class="rt2-txt">${t.txt}</div>
         ${subHtml}
@@ -2016,32 +1879,7 @@ function renderDia(){
     </div>`;
   }).join(''):'<div style="text-align:center;padding:20px;color:var(--text3)">Sin bloques de rutina configurados para hoy. Configúralos en Coach → Rutina.</div>';
 
-  const tlEl=document.getElementById('diaTimeline');
-  tlEl.innerHTML=itemsHtml;
-  requestAnimationFrame(()=>{
-    // Scroll directo a la tarjeta ancla ("ahora", real o por hora del día elegido) — pedido
-    // explícito de Adán: tanto al hacer clic en un día de la tira semanal como al volver a esta
-    // pantalla desde cualquier otra parte del Dashboard, debe verse de inmediato la tarea activa,
-    // sin tener que buscarla a mano dentro de la línea de tiempo. Se recalcula en CADA render
-    // (cambio de slide, clic en un día, marcar/desmarcar una tarea) — nunca conserva un scroll viejo.
-    const anchorCard=tlEl.querySelector('.rt2-now');
-    tlEl.scrollTop=anchorCard?Math.max(0,anchorCard.offsetTop-12):0;
-    // Línea conectora detrás de los puntos — medida en pixeles reales (no adivinada en CSS) para
-    // que quede perfectamente alineada con el primer y último punto sin importar cuánto midan las
-    // tarjetas de en medio (varía con subtareas).
-    const dots=tlEl.querySelectorAll('.rt2-dot');
-    if(dots.length>1){
-      const tlTop=tlEl.getBoundingClientRect().top;
-      const firstR=dots[0].getBoundingClientRect();
-      const lastR=dots[dots.length-1].getBoundingClientRect();
-      const top=(firstR.top+firstR.height/2)-tlTop+tlEl.scrollTop;
-      const bottom=(lastR.top+lastR.height/2)-tlTop+tlEl.scrollTop;
-      tlEl.style.setProperty('--tl-top',top+'px');
-      tlEl.style.setProperty('--tl-h',(bottom-top)+'px');
-    } else {
-      tlEl.style.setProperty('--tl-h','0px');
-    }
-  });
+  document.getElementById('diaTimeline').innerHTML=itemsHtml;
 }
 
 // ── ACCIONES RÁPIDAS — únicos 2 puntos donde el Dashboard SÍ escribe en el
@@ -2103,8 +1941,8 @@ function renderHero(){
       if(esPasado) lblCls='pend'; // pasado y sin sesión logueada: neutro, no se asume que falló
     }
     const foto=TIPO_FOTO[rutinaDia?.tipo]||TIPO_FOTO.descanso;
-    const sel=diaSemanaSel===dow?' sel':'';
-    return `<div class="ws-day ${esHoy?'today':''}${sel}" onclick="verDiaSemana(${dow})" title="Ver la rutina completa de ${DIAS_LARGO[dow]}">
+    const sel=heroGymDiaSel===dow?' sel':'';
+    return `<div class="ws-day ${esHoy?'today':''}${sel}" onclick="verHeroGymDia(${dow})" title="Ver ejercicios de ${DIAS_LARGO[dow]}">
       <div class="ws-dname">${DIAS_CORTOS[dow]}${esHoy?' •':''}</div>
       <div class="ws-ddate">${parseInt(d.split('-')[2])}/${parseInt(d.split('-')[1])}</div>
       <div class="ws-gym-photo" style="background-image:url('${foto}')">
@@ -2118,26 +1956,22 @@ function renderHero(){
   renderHeroNutri();
 }
 
-// ── Tira semanal del Hero — un solo estado de "día elegido" que ahora maneja TODO lo que
-// depende del día (2026-08-09, antes solo el panel de gym): panel "🏋️ Hoy toca" Y la línea de
-// tiempo de "Mi Día" (`renderDia()`, más abajo). Antes clic en un día de la tira solo cambiaba el
-// panel de gym — Adán reportó explícitamente "cuando doy click a algún día... no se actualiza...
-// la rutina, eso creo ni esta implementado", y tenía razón: la línea de tiempo se había quedado
-// hardcodeada a "hoy" sin enterarse de la selección. `diaSemanaSel` (null = hoy) se resetea solo
-// al recargar/rotar el slide.
-let diaSemanaSel=null;
-function verDiaSemana(dow){
-  diaSemanaSel=(diaSemanaSel===dow)?null:dow; // clic de nuevo en el mismo día → vuelve a "hoy"
-  document.querySelectorAll('#heroWeekStrip .ws-day').forEach((el,i)=>el.classList.toggle('sel',diaSemanaSel===i));
+// ── Panel "🏋️ Hoy toca"/"Gym" — qué ejercicios tocan, con cada uno explicado (series×reps +
+// técnica). 2026-08-07: clic en cualquier día de la tira de 7 (arriba) muestra los ejercicios
+// de ESE día en vez de solo "hoy" — antes solo mostraba el día actual, sin forma de ver los
+// demás. `heroGymDiaSel` (null = hoy) se resetea solo al recargar/rotar el slide.
+let heroGymDiaSel=null;
+function verHeroGymDia(dow){
+  heroGymDiaSel=(heroGymDiaSel===dow)?null:dow; // clic de nuevo en el mismo día → vuelve a "hoy"
+  document.querySelectorAll('#heroWeekStrip .ws-day').forEach((el,i)=>el.classList.toggle('sel',heroGymDiaSel===i));
   renderHeroGymPanel();
-  renderDia();
 }
 function renderHeroGymPanel(){
   const el=document.getElementById('heroGymPanel');
   if(!el)return;
   const gymRutina=(D.gym.rutina&&Object.keys(D.gym.rutina).length)?D.gym.rutina:GYM_RUTINA_DEFAULT;
   const dowHoy=new Date().getDay();
-  const dow=diaSemanaSel!==null?diaSemanaSel:dowHoy;
+  const dow=heroGymDiaSel!==null?heroGymDiaSel:dowHoy;
   const esHoy=dow===dowHoy;
   const rutinaDia=gymRutina[dow];
   const yaEntreno=esHoy&&(D.gym.sesiones||[]).some(s=>s.fecha===today());
@@ -2162,7 +1996,7 @@ function renderHeroGymPanel(){
   el.innerHTML=`
     <div class="hp-title">
       <span>${titulo}: ${rutinaDia?.nombre||'—'}</span>
-      <a href="../CuidadoPersonal/ejercicio.html?dia=${dow}" class="hp-link">Ver en Ejercicio →</a>
+      <a href="../CuidadoPersonal/ejercicio.html" class="hp-link">Ver en Ejercicio →</a>
     </div>
     ${gymBody}
   `;
@@ -2256,43 +2090,13 @@ function renderCoach(){
     `Vence ${ph.end.toLocaleDateString('es-MX',{day:'numeric',month:'short',year:'numeric'})} · ${fmt(diasFase)} día(s) restantes`;
 
   const faseChecks=rawGet('coach_checks_v1',{});
-
-  // Checklist por mes (2026-08-09) — Adán: "en el dashboard son muchas tareas y no me enfoco en
-  // ninguna". Si la fase activa trae `mes` en sus items (hoy solo Fase 0 — Fase 1/2/3 no tienen
-  // fecha calendario real todavía, ver readme_coach_v2.md), se agrupa por mes con tabs y solo se
-  // pinta el mes elegido; si no trae `mes` (fases futuras sin desglosar aún), cae de vuelta al
-  // comportamiento viejo (todo el checklist de la fase junto).
-  const mesesFase=[...new Set(ph.semanas.map(s=>s.mes).filter(Boolean))].sort();
-  const curYM=mesKey(new Date());
-  let itemsMes=ph.semanas, mesActivo=null;
-  let tabsHtml='', pendientesHtml='';
-  if(mesesFase.length){
-    mesActivo=(coachMesSel&&mesesFase.includes(coachMesSel))?coachMesSel:(mesesFase.includes(curYM)?curYM:mesesFase[0]);
-    itemsMes=ph.semanas.filter(s=>s.mes===mesActivo);
-    tabsHtml=`<div class="coach-mes-tabs">${mesesFase.map(my=>{
-      const doneN=ph.semanas.filter(s=>s.mes===my&&faseChecks[s.id]).length;
-      const totalN=ph.semanas.filter(s=>s.mes===my).length;
-      return `<button class="mes-tab${my===mesActivo?' active':''}${doneN===totalN?' done':''}" onclick="verCoachMes('${my}')">${MES_LABEL_FULL[parseInt(my.slice(5),10)-1]}${my===curYM?' •':''} <span class="lc-tab-pct">${doneN}/${totalN}</span></button>`;
-    }).join('')}</div>`;
-    const pendientesPasados=ph.semanas.filter(s=>s.mes&&s.mes<curYM&&s.mes!==mesActivo&&!faseChecks[s.id]);
-    if(pendientesPasados.length) pendientesHtml=`<div class="coach-mes-pendientes">⚠️ ${pendientesPasados.length} pendiente${pendientesPasados.length>1?'s':''} de ${mesLabelFull(pendientesPasados[0].mes)} sin marcar — <a onclick="verCoachMes('${pendientesPasados[0].mes}')">revisar →</a></div>`;
-  }
-  document.getElementById('coachPrioritiesLbl').textContent=mesesFase.length?`📅 ${mesLabelFull(mesActivo)} — tu enfoque este mes`:'📋 Qué hacer en esta fase — semana a semana';
-  // ph.meta (la meta $ de la fase completa) solo se muestra aquí cuando NO hay meses — si ya hay
-  // tabs de mes, ph.meta repite justo lo que la tarjeta de deuda de arriba ya muestra con números
-  // reales (mismo texto, 2 veces en la misma pantalla) — pedido explícito de Adán, "no esta claro
-  // a que se refiere esa seccion" (2026-08-09). En fases sin desglose mensual sí se deja: ahí es
-  // el único lugar que da la meta numérica concreta de la fase.
   document.getElementById('coachPriorities').innerHTML=
-    tabsHtml+pendientesHtml+
-    (!mesesFase.length&&ph.meta?`<div class="sub" style="margin-bottom:6px">🎯 ${ph.meta}</div>`:'')+
-    itemsMes.map(s=>`<div class="sem-check">
+    (ph.meta?`<div class="sub" style="margin-bottom:6px">🎯 ${ph.meta}</div>`:'')+
+    ph.semanas.map(s=>`<div class="sem-check">
       <input type="checkbox" id="dchk-${s.id}" ${faseChecks[s.id]?'checked':''} onchange="toggleFaseCheck('${s.id}')">
       <label for="dchk-${s.id}">${s.txt}</label>
     </div>`).join('');
 }
-let coachMesSel=null;
-function verCoachMes(ym){ coachMesSel=ym; renderCoach(); }
 // Checklist semana a semana de "Qué hacer en esta fase" — comparte coach_checks_v1 con
 // Coach_v2.html (mismos ids sN-M), igual patrón de escritura cruzada que quickMarkDone().
 function toggleFaseCheck(id){
@@ -2300,11 +2104,6 @@ function toggleFaseCheck(id){
   const cb=document.getElementById('dchk-'+id);
   if(cb&&cb.checked) checks[id]=true; else delete checks[id];
   rawSet('coach_checks_v1',checks);
-  // Sin esto, el contador "X/Y" de la pestaña del mes y el aviso de "N pendientes" se quedaban
-  // con el valor viejo hasta cambiar de mes a mano — solo se refrescaban si el usuario hacía
-  // clic en una pestaña (que sí llama a renderCoach()). Encontrado verificando el rediseño del
-  // 2026-08-09 con Playwright.
-  renderCoach();
 }
 
 function calcOVR(){let t=0,w=0;SK.forEach(s=>{t+=s.val*s.w;w+=100*s.w;});return Math.round(t/w*100);}
@@ -2684,11 +2483,6 @@ function paintHudNav(){document.querySelectorAll('.hud-nav-btn').forEach((b,i)=>
 
 function showSlide(i){
   i=Math.min(Math.max(0,i),N-1);
-  // Salir de "Mi Día" (slide 0) hacia cualquier otra pantalla resetea el día que se estaba
-  // explorando en la tira semanal — pedido explícito de Adán: si se va a otra parte del Dashboard
-  // y regresa, debe ver de nuevo la tarea activa de HOY, no quedarse trabado en un día viejo que
-  // dejó seleccionado sin darse cuenta.
-  if(cur===0&&i!==0) diaSemanaSel=null;
   loadAll();
   RENDERS[i]();
   renderQuickApps();
