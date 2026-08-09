@@ -82,6 +82,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 .theme-coach  {--ac1:#e0b020;--ac2:#ff8a3d}
 .theme-skills {--ac1:#b06eff;--ac2:#ff6bd6}
 .theme-metas  {--ac1:#ffd93d;--ac2:#00e0c0}
+.theme-basicas{--ac1:#ff5470;--ac2:#ffb100}
 .theme-lista  {--ac1:#3ddc97;--ac2:#00b8d9}
 .theme-aleman {--ac1:#dd0000;--ac2:#ffce00}
 .theme-entrevista{--ac1:#4f8cff;--ac2:#22d3a8}
@@ -113,24 +114,39 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 #miDiaSecundarios{grid-template-columns:1fr 2fr 1fr}
 @media(max-width:900px){.g-metas{grid-template-columns:1fr}}
 
-/* ─── Tarjetas con foto — metas de corto/mediano/largo plazo (slide Mis Metas) ───
-   #metasListas crece para llenar todo el alto libre del slide (flex:1 dentro de
-   .slide-inner, que es flex-column) — las fotos usan toda la pantalla disponible
-   en vez de una altura fija. Cada .tile de adentro es flex-column para que su
-   grid de fotos también se estire, y las filas del grid usan 1fr (no una altura
-   fija por tarjeta) para repartirse ese alto por partes iguales. */
+/* ─── Tarjetas con foto — metas de corto/mediano/largo plazo (slide Mis Metas) Y
+   habilidades base (slide Habilidades Base) comparten la misma pieza visual
+   (.img-goal-*): foto grande con texto encima, clic abre el detalle in-page, y
+   una barra de progreso delgada debajo de la foto para marcar tu avance (2026-08-09,
+   pedido explícito: "abajo de cada imagen debes poner una barra de progreso...
+   al igual esto hazlo con metas"). Clic en la barra (no en la foto) fija el % en
+   el punto exacto donde diste clic — ver setImgProgreso().
+   #metasListas/#habilidadesGrid crecen para llenar todo el alto libre del slide
+   (flex:1 dentro de .slide-inner, que es flex-column) — las fotos usan toda la
+   pantalla disponible en vez de una altura fija. Cada .tile de adentro es
+   flex-column para que su grid de fotos también se estire, y las filas del grid
+   usan 1fr (no una altura fija por tarjeta) para repartirse ese alto por partes
+   iguales. */
 #metasListas{flex:1;min-height:0}
 #metasListas>.tile{display:flex;flex-direction:column;min-height:0}
-.meta-img-grid{flex:1;min-height:0;display:grid;grid-template-columns:repeat(2,1fr);grid-template-rows:repeat(3,1fr);gap:10px;margin-top:2px}
-.meta-img-card{position:relative;border-radius:16px;overflow:hidden;background-size:cover;background-position:center;box-shadow:0 6px 18px rgba(0,0,0,.3);cursor:pointer;transition:transform .2s,box-shadow .2s}
-.meta-img-card:hover{transform:scale(1.02);box-shadow:0 10px 26px rgba(0,0,0,.4)}
-.meta-img-card::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.78) 0%,rgba(0,0,0,.2) 60%,transparent 85%)}
-.meta-img-card:last-child:nth-child(odd){grid-column:1/-1}
-.meta-img-txt{position:absolute;left:0;right:0;bottom:0;padding:6px 10px;z-index:1;display:flex;align-items:center;gap:6px;font-weight:800;font-size:clamp(10px,0.95vw,12px);color:#fff;text-shadow:0 1px 4px rgba(0,0,0,.6)}
+.img-goal-grid{flex:1;min-height:0;display:grid;grid-template-columns:repeat(2,1fr);grid-template-rows:repeat(3,1fr);gap:10px;margin-top:2px}
+.img-goal-cell{display:flex;flex-direction:column;gap:4px;min-height:0}
+.img-goal-photo{position:relative;flex:1;min-height:0;border-radius:16px;overflow:hidden;background-size:cover;background-position:center;box-shadow:0 6px 18px rgba(0,0,0,.3);cursor:pointer;transition:transform .2s,box-shadow .2s}
+.img-goal-photo:hover{transform:scale(1.02);box-shadow:0 10px 26px rgba(0,0,0,.4)}
+.img-goal-photo::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.78) 0%,rgba(0,0,0,.2) 60%,transparent 85%)}
+.img-goal-cell:last-child:nth-child(odd){grid-column:1/-1}
+.img-goal-txt{position:absolute;left:0;right:0;bottom:0;padding:6px 10px;z-index:1;display:flex;align-items:center;gap:6px;font-weight:800;font-size:clamp(10px,0.95vw,12px);color:#fff;text-shadow:0 1px 4px rgba(0,0,0,.6)}
+.img-goal-pbar-row{display:flex;align-items:center;gap:6px;padding:0 1px;flex-shrink:0}
+.img-goal-pbar{flex:1;height:6px;border-radius:20px;background:rgba(var(--ov),.14);overflow:hidden;cursor:pointer}
+.img-goal-pbar-fill{height:100%;border-radius:20px;background:var(--g);transition:width .3s}
+.img-goal-pbar-pct{font-family:var(--mono);font-size:9px;font-weight:700;color:var(--text3);flex-shrink:0;min-width:2.4em;text-align:right}
 /* Variante chica — largo plazo, columna angosta con más ítems (6 → 3 filas) */
-.meta-img-grid-sm{gap:7px;grid-template-rows:repeat(3,1fr)}
-.meta-img-card-sm{border-radius:12px}
-.meta-img-txt-sm{padding:4px 7px;gap:4px;font-size:clamp(8px,0.75vw,10px)}
+.img-goal-grid-sm{gap:7px;grid-template-rows:repeat(3,1fr)}
+.img-goal-photo-sm{border-radius:12px}
+.img-goal-txt-sm{padding:4px 7px;gap:4px;font-size:clamp(8px,0.75vw,10px)}
+/* Variante de 8 celdas — Habilidades Base, una sola sección (no corto/largo plazo) */
+.img-goal-grid-8{grid-template-columns:repeat(4,1fr);grid-template-rows:repeat(2,1fr)}
+@media(max-width:900px){.img-goal-grid-8{grid-template-columns:repeat(2,1fr);grid-template-rows:repeat(4,1fr)}}
 .big-num{font-family:var(--mono);font-weight:700;letter-spacing:-.02em;line-height:1}
 .pbar{height:11px;background:rgba(var(--ov),.08);border-radius:20px;overflow:hidden;margin-top:9px;position:relative}
 .pfill{height:100%;border-radius:20px;transition:width 1.2s cubic-bezier(.22,.61,.36,1);position:relative}
@@ -759,8 +775,23 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
     </div>
   </section>
 
-  <!-- 3 · COACH: HABILIDADES -->
-  <section class="slide theme-skills" data-i="3">
+  <!-- 3 · HABILIDADES BASE — distinta de "Habilidades" (radar/carrera, más abajo): estas son 8
+       habilidades de vida (nadar, cocinar, defensa personal, dinero, etc.), pedido explícito de
+       Adán (2026-08-09) con la misma mecánica visual de Mis Metas: foto grande + clic abre el
+       detalle in-page + barra de progreso debajo para marcar tu avance real. -->
+  <section class="slide theme-basicas" data-i="3">
+    <div class="slide-inner">
+      <div class="eyebrow reveal d1"><span class="dot"></span> Habilidades Base</div>
+      <div class="slide-title reveal d2"><span class="ico">🧬</span> Lo que todo hombre debería saber hacer</div>
+      <div class="tile reveal d3" style="flex:1;min-height:0;display:flex;flex-direction:column">
+        <div class="lbl" style="margin-bottom:8px">💪 Domínalas una por una — clic en cada foto para ver cómo, clic en la barra para marcar tu avance</div>
+        <div class="img-goal-grid img-goal-grid-8" id="habilidadesGrid"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4 · COACH: HABILIDADES -->
+  <section class="slide theme-skills" data-i="4">
     <div class="slide-inner">
       <div class="eyebrow reveal d1"><span class="dot"></span> Coach · Habilidades</div>
       <div class="slide-title reveal d2"><span class="ico">🧠</span> En qué invertir tu tiempo</div>
@@ -774,8 +805,8 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
     </div>
   </section>
 
-  <!-- 4 · LISTA DE COMPRAS -->
-  <section class="slide theme-lista" data-i="4">
+  <!-- 5 · LISTA DE COMPRAS -->
+  <section class="slide theme-lista" data-i="5">
     <div class="slide-inner">
       <div class="eyebrow reveal d1"><span class="dot"></span> Lista de Compras</div>
       <div class="reveal d2" style="display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:10px;margin-bottom:12px">
@@ -786,8 +817,8 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
     </div>
   </section>
 
-  <!-- 5 · ALEMÁN DEL DÍA -->
-  <section class="slide theme-aleman" data-i="5">
+  <!-- 6 · ALEMÁN DEL DÍA -->
+  <section class="slide theme-aleman" data-i="6">
     <div class="slide-inner">
       <div class="eyebrow reveal d1"><span class="dot"></span> 🇩🇪 Alemán del día</div>
       <div class="td-top reveal d2">
@@ -807,8 +838,8 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
     </div>
   </section>
 
-  <!-- 6 · ENTREVISTA TÉCNICA DEL DÍA -->
-  <section class="slide theme-entrevista" data-i="6">
+  <!-- 7 · ENTREVISTA TÉCNICA DEL DÍA -->
+  <section class="slide theme-entrevista" data-i="7">
     <div class="slide-inner">
       <div class="eyebrow reveal d1"><span class="dot"></span> Entrevista del día</div>
       <div class="td-top reveal d2">
@@ -881,7 +912,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
   <div class="help-row"><span class="help-key">Espacio</span> Pausar / reanudar rotación</div>
   <div class="help-row"><span class="help-key">M</span> Abrir/cerrar el menú</div>
   <div class="help-row"><span class="help-key">F</span> Pantalla completa</div>
-  <div class="help-row"><span class="help-key">1-7</span> Ir directo a esa pantalla</div>
+  <div class="help-row"><span class="help-key">1-8</span> Ir directo a esa pantalla</div>
   <div class="help-row"><span class="help-key">?</span> Esta ayuda</div>
 </div>
 
@@ -2607,8 +2638,19 @@ function renderMetasSlide(){
   ];
   // Corto/mediano y largo plazo: tarjeta con foto de fondo (motiva más que una fila de texto plano) — ver readme_dashboard.md para el origen de cada URL.
   // sizeCls='' → tarjeta grande (corto/mediano, columna ancha, 5 ítems); sizeCls='sm' → tarjeta chica (largo plazo, columna angosta, 7 ítems) para que quepan en el mismo espacio ya asignado.
-  // Clic en cualquier tarjeta abre el detalle in-page (abrirMetaDetalle) con el plan personalizado de META_DETALLE — nunca navega a otro archivo.
-  const imgListHtml=(arr,sizeCls)=>`<div class="meta-img-grid${sizeCls?' meta-img-grid-'+sizeCls:''}">${arr.map(i=>`<div class="meta-img-card${sizeCls?' meta-img-card-'+sizeCls:''}" style="background-image:url('${i.img}')" onclick="abrirMetaDetalle('${i.id}','${i.img}')" role="button" tabindex="0"><div class="meta-img-txt${sizeCls?' meta-img-txt-'+sizeCls:''}">${i.ico} ${i.t}</div></div>`).join('')}</div>`;
+  // Clic en la foto abre el detalle in-page (abrirMetaDetalle) con el plan personalizado de META_DETALLE — nunca navega a otro archivo.
+  // Clic en la barra de abajo (independiente de la foto) marca tu avance real de esa meta — ver setImgProgreso().
+  const metaProg=rawGet('metas_img_progreso_v1',{});
+  const imgListHtml=(arr,sizeCls)=>`<div class="img-goal-grid${sizeCls?' img-goal-grid-'+sizeCls:''}">${arr.map(i=>{
+    const pct=metaProg[i.id]||0;
+    return `<div class="img-goal-cell">
+      <div class="img-goal-photo${sizeCls?' img-goal-photo-'+sizeCls:''}" style="background-image:url('${i.img}')" onclick="abrirMetaDetalle('${i.id}','${i.img}')" role="button" tabindex="0"><div class="img-goal-txt${sizeCls?' img-goal-txt-'+sizeCls:''}">${i.ico} ${i.t}</div></div>
+      <div class="img-goal-pbar-row">
+        <div class="img-goal-pbar" onclick="setImgProgreso(event,'metas_img_progreso_v1','${i.id}',renderMetasSlide)" title="Clic para marcar tu avance"><div class="img-goal-pbar-fill" style="width:${pct}%"></div></div>
+        <span class="img-goal-pbar-pct">${pct}%</span>
+      </div>
+    </div>`;
+  }).join('')}</div>`;
   document.getElementById('metasListas').innerHTML=`
     <div class="tile">
       <div class="lbl" style="margin-bottom:8px">🚩 Corto & mediano plazo</div>
@@ -2621,15 +2663,136 @@ function renderMetasSlide(){
     </div>`;
 }
 
+// Clic en cualquier barra de progreso .img-goal-pbar (Mis Metas Y Habilidades Base) — fija el %
+// en el punto exacto donde diste clic (como un seek bar), snapeado a múltiplos de 5, y guarda por
+// id en el store de localStorage indicado (independiente entre metas y habilidades). e.stopPropagation()
+// evita que el clic también dispare el onclick de la foto (abrir el detalle) si algún día quedan anidados.
+function setImgProgreso(e,storeKey,id,renderFn){
+  e.stopPropagation();
+  const rect=e.currentTarget.getBoundingClientRect();
+  const x=Math.min(Math.max(0,e.clientX-rect.left),rect.width);
+  const pct=Math.round((x/rect.width)*20)*5;
+  const store=rawGet(storeKey,{});
+  store[id]=pct;
+  rawSet(storeKey,store);
+  renderFn();
+  toast(`📊 Avance actualizado: ${pct}%`);
+}
+
+// ── HABILIDADES BASE — 2026-08-09, pedido explícito: "asi como existe... la pestaña de metas,
+// creame una para habilidades base, esta va ser diferente a mis habilidades generales" (esas son
+// el radar/barras profesionales de renderSkills, slide "Coach · Habilidades"). Estas 8 son
+// habilidades de vida, no de carrera. Misma mecánica que Mis Metas: foto grande, clic abre el
+// detalle in-page con pasos concretos, barra de progreso debajo para marcar tu avance real —
+// ver imgListHtml()/setImgProgreso() arriba. URLs de Unsplash y Wikimedia Commons verificadas con
+// curl antes de usarlas (igual que TIPO_FOTO y META_DETALLE); la foto de nadar reutiliza la misma
+// que ya usa TIPO_FOTO.cardio (US Navy, dominio público) para no duplicar la búsqueda.
+const HABILIDADES_BASE=[
+  {id:'nadar',    ico:'🏊', t:'Saber nadar',                         img:'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c8/US_Navy_110520-N-CD297-071_Aviation_Ordnanceman_2nd_Class_Selemani_Johnson_swims_in_the_100-meter_Freestyle_event_as_a_member_of_Team_Navy-Coast_Gu.jpg/960px-US_Navy_110520-N-CD297-071_Aviation_Ordnanceman_2nd_Class_Selemani_Johnson_swims_in_the_100-meter_Freestyle_event_as_a_member_of_Team_Navy-Coast_Gu.jpg'},
+  {id:'cocinar',  ico:'🍳', t:'Saber cocinar',                       img:'https://images.unsplash.com/photo-1556910103-1c02745aae4d?w=800&q=80&auto=format&fit=crop'},
+  {id:'armas',    ico:'🎯', t:'Tirar armas de fuego',                img:'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/210126-A-DO858-0016_-_M17_pistol_training_%28Image_1_of_9%29.jpg/960px-210126-A-DO858-0016_-_M17_pistol_training_%28Image_1_of_9%29.jpg'},
+  {id:'pelear',   ico:'🥊', t:'Saber pelear',                        img:'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/US_Navy_081012-N-5345W-033_Dave_Cruz%2C_right%2C_an_assistant_coach_with_757_Boxing_Club_in_Virginia_Beach%2C_Va.%2C_gives_his_fighter_pointers_between_rounds_during_a_sparring_session_at_the_All-Navy_Boxing_Team_mini-camp_at_Rockwell.jpg/960px-thumbnail.jpg'},
+  {id:'decirno',  ico:'🚫', t:'Saber decir que no',                  img:'https://images.unsplash.com/photo-1517048676732-d65bc937f952?w=800&q=80&auto=format&fit=crop'},
+  {id:'dinero',   ico:'💰', t:'Generar, administrar y hacer crecer dinero', img:'https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?w=800&q=80&auto=format&fit=crop'},
+  {id:'manejar',  ico:'🚗', t:'Manejar todo tipo de vehículos',      img:'https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?w=800&q=80&auto=format&fit=crop'},
+  {id:'recuperar',ico:'🧘', t:'Saber recuperarte',                   img:'https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=800&q=80&auto=format&fit=crop'}
+];
+const HABILIDAD_DETALLE={
+  nadar:{titulo:'Saber nadar de verdad, no solo mantenerte a flote',frase:'La técnica te hace nadar más lejos con menos esfuerzo — no se trata de fuerza, se trata de forma.',pasos:[
+    'Ya tienes natación los miércoles (45 min) en tu rutina de gym — úsala para trabajar técnica, no solo para hacer cardio: pide a un instructor de tu alberca que te revise el estilo libre.',
+    'Domina primero la respiración bilateral y la flotación relajada antes de perseguir velocidad — es la base que evita que te canses en los primeros 10 minutos.',
+    'Aprende al menos 2 estilos (crol y dorso) para no fatigar siempre el mismo grupo muscular y poder sostener más tiempo en el agua.',
+    'Ponte una meta medible, como nadar 500m continuos sin parar, y usa tus miércoles ya agendados para subir la distancia poco a poco.',
+    'Si tu meta de Hyrox o algún viaje futuro lo justifica, considera un curso corto de aguas abiertas — la técnica en alberca y en mar/lago no es igual.'
+  ]},
+  cocinar:{titulo:'Cocinar bien, no solo sobrevivir con Didi Food',frase:'Cocinar es la forma más barata y precisa de controlar lo que comes — nadie ajusta tu plato mejor que tú.',pasos:[
+    'Empieza por 5 recetas base que puedas repetir de memoria (arroz, proteína a la plancha, salteado de verduras, huevos, una sopa) — dominar pocas recetas bien vale más que 50 a medias.',
+    'Ya sigues un control de calorías/proteína en tu Registro Diario (comida.html) — cocinar tú mismo es la forma más exacta de cumplir esos números, en vez de depender de restaurantes.',
+    'Aprende primero las técnicas base (cortar, sellar, hervir a punto, sazonar) antes que recetas complejas — son las que reutilizas en todo lo demás.',
+    'Cocina en lote un día a la semana (domingo, por ejemplo) para tener comida lista entre semana — así reduces el Didi Food por flojera, no por antojo real.',
+    'Súmale una técnica nueva cada mes (asar, hornear, un platillo internacional) — para que el aprendizaje no se estanque una vez que ya sabes lo básico.'
+  ]},
+  armas:{titulo:'Manejo seguro de armas de fuego, con instrucción real',frase:'El respeto por el arma se aprende antes que la puntería — la seguridad siempre va primero.',pasos:[
+    'Empieza siempre con instrucción formal y certificada — busca un club de tiro deportivo registrado en CDMX o zona metropolitana en vez de intentar aprender por tu cuenta.',
+    'Domina primero las 4 reglas básicas de seguridad (trátala como cargada, no apuntes a nada que no vayas a destruir, dedo fuera del gatillo hasta apuntar, conoce tu objetivo y lo que hay detrás) antes de la primera clase de puntería.',
+    'Practica con regularidad, no solo una vez — el manejo seguro y la puntería se pierden rápido sin práctica constante en polígono.',
+    'Conoce el marco legal mexicano (Ley Federal de Armas de Fuego y Explosivos) antes de pensar en posesión personal — un club certificado te orienta en esto como parte del curso.',
+    'Trátalo como cualquier otra habilidad física de tu lista: constancia mensual en el polígono, no un evento único que haces una vez y ya.'
+  ]},
+  pelear:{titulo:'Defensa personal real, construida sobre tu base física',frase:'No se trata de buscar pelea — se trata de que nunca te tome desprevenido.',pasos:[
+    'Ya tienes Tailandia en tu bucket list y el boxeo identificado en tu sección de Deportes — no esperes al viaje, empieza ahora con 2-3 clases semanales de box o Muay Thai en un gimnasio de CDMX.',
+    'Tu rutina de gym ya te da la base física (fuerza 4 días, cardio, natación) — pelear se construye encima de esa base, no la reemplaza.',
+    'Prioriza técnica y defensa (guardia, esquivar, desplazamiento) antes que pegar fuerte — eso es lo que de verdad te protege en una situación real.',
+    'Practica sparring ligero y controlado solo cuando el instructor lo indique — es la única forma de probar la técnica bajo presión sin lastimarte.',
+    'Ponle una meta concreta, como tu primera pelea amistosa en Tailandia — le da fecha y propósito real a las clases semanales.'
+  ]},
+  decirno:{titulo:'Decir que no sin culpa ni explicación de más',frase:'Cada no que proteges es un sí que le puedes dar después a lo que sí importa.',pasos:[
+    'Practica primero en situaciones de bajo riesgo (un vendedor, una invitación que no te interesa) antes de aplicarlo en decisiones grandes de dinero o tiempo — se entrena como cualquier otra habilidad.',
+    'Usa una frase corta y directa, sin justificar de más ("no puedo, gracias" es suficiente) — entre más explicación das, más espacio dejas para que insistan.',
+    'Aplícalo directo a tu plan financiero: cada MSI o gasto fuera del orden ya definido (deuda cara primero, BYD después, Cupra al final) es una oportunidad real de practicar un no con datos de tu lado.',
+    'Identifica a las 2-3 personas o situaciones donde más te cuesta decir que no, y prepara tu respuesta con anticipación — improvisar bajo presión social es lo que más falla.',
+    'Recuerda que decir que no a lo que no importa es lo que te deja tiempo y dinero para decir que sí a lo que sí importa: tu negocio, tu familia, tu salud.'
+  ]},
+  dinero:{titulo:'Generar, administrar y hacer crecer tu dinero — las 3 a la vez',frase:'Generar sin administrar se evapora. Administrar sin generar se estanca. Necesitas las tres.',pasos:[
+    'Generar ya está en marcha con tu Plan Maestro (Fases 0-3: negocio de tu papá, freelance, CodeReview productizado) — sigue ese orden, no lo abandones a medio camino.',
+    'Administrar es lo que ya haces en Finanzas: registrar cada gasto e ingreso real, sin excepciones, es lo que evita que el dinero que generas se escape sin control.',
+    'Generar riqueza empieza donde termina la deuda cara — cada peso que hoy va a Banamex/BBVA, después va a inversión (GBM, CETES) sin cambiar tu estilo de vida, solo el destino del dinero.',
+    'Aprende lo básico de inversión mientras pagas la deuda (no antes de tener el fondo de emergencia) — así llegas a la Fase 2 sabiendo dónde poner el dinero, no improvisando.',
+    'Revisa tu patrimonio hacia $1,000,000 en tu slide de Mis Metas cada mes — verlo moverse, aunque sea lento, es lo que entrena el hábito de administrar bien, no solo de ganar más.'
+  ]},
+  manejar:{titulo:'Manejar cualquier vehículo, no solo el que ya conoces',frase:'Entre más vehículos dominas, menos dependes de que alguien más maneje por ti.',pasos:[
+    'Domina primero manual y automático en auto — si solo sabes uno de los dos, esa es la primera brecha a cerrar, y es la base de cualquier otro vehículo.',
+    'Súmale motocicleta con un curso formal de manejo, no autodidacta — el equilibrio y el frenado son distintos a los de un auto, y un curso corto reduce el riesgo real.',
+    'Ya manejas para Didi — cada viaje es práctica real de manejo defensivo en tráfico de CDMX, míralo como entrenamiento, no solo como ingreso extra.',
+    'Si te interesa (por el negocio de tu papá o futuros viajes), suma nociones básicas de vehículos más grandes, como una pickup con remolque — es una habilidad que muy poca gente tiene.',
+    'Ponte una meta clara: sentirte igual de cómodo en cualquier vehículo que te presten, sin necesitar minutos de adaptación antes de arrancar.'
+  ]},
+  recuperar:{titulo:'Descansar también es una habilidad que se entrena',frase:'El descanso no es lo que le quitas al gym, al trabajo y al negocio — es lo que sostiene a los tres.',pasos:[
+    'Ya tienes bloques fijos para esto en tu rutina (meditación 23:10, sueño) — la base ya existe, el trabajo es respetarlos con la misma disciplina que le das al gym o al trabajo.',
+    'Aprende a distinguir cansancio físico de mental — el primero se resuelve con sueño y los días de descanso de tu rutina de gym, el segundo con desconexión real (sin celular, sin pendientes del negocio).',
+    'Prográmate descansos activos, no solo parar — una caminata sin celular o estirar 10 minutos recupera más que quedarte scrolleando en el sillón.',
+    'Revisa tus señales de sobre-entrenamiento o sobre-trabajo (mal sueño, irritabilidad, rendimiento bajando pese a esforzarte más) — son la alarma de que toca bajarle antes de lesionarte o quemarte con el negocio.',
+    'Trátalo como inversión, no como pérdida de tiempo: un buen descanso es lo que sostiene que puedas rendir en gym, trabajo y negocio al mismo tiempo, no algo que le quitas a esas tres cosas.'
+  ]}
+};
+function abrirHabilidadDetalle(id,img){
+  const info=HABILIDAD_DETALLE[id];
+  if(!info) return;
+  document.getElementById('metaDetailHero').style.backgroundImage=`url('${img}')`;
+  document.getElementById('metaDetailTitle').textContent=info.titulo;
+  document.getElementById('metaDetailFrase').textContent=info.frase;
+  document.getElementById('metaDetailSteps').innerHTML=info.pasos.map((p,i)=>`
+    <div class="meta-detail-step">
+      <div class="meta-detail-step-n">${i+1}</div>
+      <div class="meta-detail-step-txt">${p}</div>
+    </div>`).join('');
+  document.getElementById('metaDetailOverlay').classList.add('open');
+  clearInterval(timer);
+}
+function renderHabilidadesBase(){
+  const store=rawGet('habilidades_base_v1',{});
+  document.getElementById('habilidadesGrid').innerHTML=HABILIDADES_BASE.map(h=>{
+    const pct=store[h.id]||0;
+    return `<div class="img-goal-cell">
+      <div class="img-goal-photo" style="background-image:url('${h.img}')" onclick="abrirHabilidadDetalle('${h.id}','${h.img}')" role="button" tabindex="0"><div class="img-goal-txt">${h.ico} ${h.t}</div></div>
+      <div class="img-goal-pbar-row">
+        <div class="img-goal-pbar" onclick="setImgProgreso(event,'habilidades_base_v1','${h.id}',renderHabilidadesBase)" title="Clic para marcar tu avance"><div class="img-goal-pbar-fill" style="width:${pct}%"></div></div>
+        <span class="img-goal-pbar-pct">${pct}%</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
 // Slide 0 fusiona "Mi Día" y "Hero" en una sola pantalla (2026-08-08) — ambas funciones siguen
 // existiendo por separado (pintan ids de DOM distintos, todos ahora dentro de la misma <section>),
 // esta solo las llama en secuencia.
 function renderDiaHero(){ renderDia(); renderHero(); }
-const RENDERS=[renderDiaHero,renderCoach,renderMetasSlide,renderSkills,renderListaCompras,renderAleman,renderEntrevista];
+const RENDERS=[renderDiaHero,renderCoach,renderMetasSlide,renderHabilidadesBase,renderSkills,renderListaCompras,renderAleman,renderEntrevista];
 const SLIDE_MENU_META=[
   {ico:'🕐',n:'Mi Día · JARVIS'},
   {ico:'🪙',n:'Coach · Plan Maestro'},
   {ico:'🎯',n:'Mis Metas'},
+  {ico:'🧬',n:'Habilidades Base'},
   {ico:'🧠',n:'Habilidades'},
   {ico:'🛒',n:'Lista de Compras'},
   {ico:'🇩🇪',n:'Alemán del día'},
@@ -2793,7 +2956,7 @@ document.addEventListener('keydown',e=>{
   if(e.key==='f'||e.key==='F') toggleFullscreen();
   if(e.key==='?') toggleHelp();
   if(e.key==='Escape') closeAllPanels();
-  if(/^[1-7]$/.test(e.key)) goTo(parseInt(e.key,10)-1);
+  if(/^[1-8]$/.test(e.key)) goTo(parseInt(e.key,10)-1);
 });
 // Swipe táctil (iPad/iPhone) — un dedo, izq/der cambia de pantalla, igual que las flechas del teclado.
 // Solo se dispara si el gesto es más horizontal que vertical, para no pelearse con el scroll
