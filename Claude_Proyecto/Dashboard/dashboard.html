@@ -379,6 +379,14 @@ a.rt2-sub-prod:hover{text-decoration:underline}
    con "Importante este mes" (#diaTimeline) ni los pasos de deuda. */
 .hp-meal-ing .ds-row{padding:1.5px 0}
 .hp-meal-ing .ds-txt{font-size:10px;margin:0;line-height:1.3}
+/* Precio por ingrediente (2026-08-11, segundo pedido el mismo día: "en cada producto de la
+   comida o receta, pon el precio") — píldora chica al final de cada renglón; .ds-row ya es
+   flex con .ds-txt a flex:1, así que esta cae alineada a la derecha sin tocar ese componente
+   compartido con "Importante este mes"/pasos de deuda. */
+.hp-meal-ing .hp-ing-costo{flex-shrink:0;font-size:9.5px;font-weight:800;color:var(--g);font-family:var(--mono)}
+/* Costo aproximado de cocinar la receta completa (2026-08-11) — visible solo al expandir, debajo
+   de los ingredientes; mismo lenguaje de "número en verde" que .lc-total en Lista de Compras. */
+.hp-meal-costo{font-size:10px;font-weight:800;color:var(--g);font-family:var(--mono);margin-top:4px;padding-top:4px;border-top:1px dashed rgba(var(--ov),.1);cursor:default}
 
 /* ─── COACH · PLAN MAESTRO — ruta de deuda cara + to-do de fase (2026-07-30) ───
    Pulido 2026-08-09 (tercera vuelta el mismo día — "los bloques de en medio hazlos mas
@@ -447,6 +455,16 @@ a.rt2-sub-prod:hover{text-decoration:underline}
 .lc-item-shop{display:flex;gap:6px;margin-left:21px;flex-basis:100%}
 .lc-shop-link{font-size:10px;font-weight:700;color:var(--cy);text-decoration:none;padding:2px 7px;border-radius:10px;background:rgba(var(--ov),.05);white-space:nowrap}
 .lc-shop-link:hover{background:rgba(var(--ov),.1);text-decoration:underline}
+/* Precio real (ticket de Walmart) vs. estimado, junto a cada producto de "Comida" (2026-08-11) */
+.lc-price{display:inline-flex;align-items:center;gap:3px;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:800;font-family:var(--mono);white-space:nowrap;flex-shrink:0}
+.lc-price-real{background:rgba(0,232,122,.12);color:var(--g);border:1px solid rgba(0,232,122,.3)}
+.lc-price-est{background:rgba(255,138,61,.12);color:var(--o);border:1px solid rgba(255,138,61,.3)}
+.lc-price-leyenda{display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:11px;color:var(--text3);margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid rgba(var(--ov),.08)}
+/* Total marcado (solo Comida) + botón para vaciar el checklist de la categoría activa (2026-08-11) */
+.lc-toolbar{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.lc-total{font-size:12.5px;font-weight:800;color:var(--text);font-family:var(--mono);cursor:default}
+.lc-clear-btn{padding:6px 13px;border-radius:20px;border:1px solid rgba(255,92,92,.3);background:rgba(255,92,92,.08);color:var(--r);font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap;transition:background .2s}
+.lc-clear-btn:hover{background:rgba(255,92,92,.16)}
 .lc-aisle{margin-top:16px}
 .lc-aisle:first-child{margin-top:0}
 .lc-aisle-title{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:var(--ac1);margin-bottom:6px;padding-bottom:5px;border-bottom:1px solid rgba(var(--ov),.1)}
@@ -722,6 +740,29 @@ a.rt2-sub-prod:hover{text-decoration:underline}
   background:rgba(0,224,192,.1);border:1px solid rgba(0,224,192,.3);padding:3px 9px;border-radius:20px;transition:background .2s}
 .meta-detail-step-link:hover{background:rgba(0,224,192,.2)}
 @media(max-width:600px){.meta-detail-body{padding:14px 16px 20px}.meta-detail-titlewrap{left:16px;right:16px}.meta-detail-frase{padding:8px 14px 8px 30px}.meta-detail-frase::before{font-size:28px;left:8px}}
+
+/* ─── IMAGEN DE EJERCICIO (2026-08-11) — clic en "🏋️ Hoy toca" → ver diagrama de técnica ───
+   Mismo lenguaje visual que .meta-detail-overlay (overlay fijo + card con blur + cierre por
+   click-fuera/Escape/✕), pero mucho más simple — no necesita hero de fondo ni checklist,
+   solo imagen + nombre + técnica en 1 línea. */
+.ej-img-overlay{position:fixed;inset:0;z-index:210;background:rgba(0,0,0,.72);backdrop-filter:blur(6px);
+  display:flex;align-items:center;justify-content:center;padding:4vh 3vw;opacity:0;pointer-events:none;transition:opacity .25s}
+.ej-img-overlay.open{opacity:1;pointer-events:auto}
+.ej-img-card{position:relative;width:min(360px,92vw);max-height:88vh;overflow-y:auto;background:var(--bar2);
+  border:1px solid rgba(var(--ov),.14);border-radius:22px;box-shadow:0 30px 90px rgba(0,0,0,.55);
+  padding:22px 22px 20px;text-align:center;transform:translateY(18px);transition:transform .25s}
+.ej-img-overlay.open .ej-img-card{transform:translateY(0)}
+.ej-img-close{position:absolute;top:10px;right:10px;width:30px;height:30px;border-radius:50%;background:rgba(var(--ov),.08);
+  border:1px solid rgba(var(--ov),.15);color:var(--text);font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.ej-img-close:hover{background:rgba(var(--ov),.16)}
+.ej-img-title{font-family:var(--font-title);font-size:17px;font-weight:700;color:var(--text);margin-bottom:12px;padding-right:26px}
+.ej-img-body img{width:100%;max-height:44vh;object-fit:contain;background:#fff;border-radius:12px;padding:12px;display:block}
+.ej-img-body-empty{font-size:12px;color:var(--text3);padding:22px 8px;line-height:1.5}
+.ej-img-cue{font-size:11.5px;color:var(--text2);line-height:1.5;margin-top:12px;text-align:left}
+/* Nombre clicable dentro de la tarjeta "🏋️ Hoy toca" — mismo hp-ex-name de siempre, solo gana
+   señal visual de que se puede tocar (antes era texto plano). */
+.hp-ex-name{cursor:pointer;text-decoration:underline;text-decoration-style:dotted;text-decoration-color:rgba(var(--ov),.4);text-underline-offset:3px;transition:color .15s}
+.hp-ex-name:hover{color:var(--ac1)}
 
 /* ─── RESPONSIVE — iPad / iPhone 15 Pro (2026-08-03) ───────
    El diseño original asume un monitor sin scroll ("screensaver de comando").
@@ -1040,6 +1081,16 @@ a.rt2-sub-prod:hover{text-decoration:underline}
       <div class="meta-detail-progress" id="metaDetailProgress"></div>
       <div class="meta-detail-steps" id="metaDetailSteps"></div>
     </div>
+  </div>
+</div>
+
+<!-- ─── IMAGEN DE EJERCICIO (2026-08-11) — clic en el nombre dentro de "🏋️ Hoy toca" ─── -->
+<div class="ej-img-overlay" id="ejImgOverlay" onclick="if(event.target===this) cerrarImagenEjercicio()">
+  <div class="ej-img-card">
+    <button class="ej-img-close" onclick="cerrarImagenEjercicio()" aria-label="Cerrar">✕</button>
+    <div class="ej-img-title" id="ejImgTitle"></div>
+    <div class="ej-img-body" id="ejImgBody"></div>
+    <div class="ej-img-cue" id="ejImgCue"></div>
   </div>
 </div>
 
@@ -1494,35 +1545,51 @@ const GYM_RUTINA_DEFAULT={
 // MANO, no el total. `pesoIni:'corporal'` = ejercicio de peso corporal, sin carga externa. Sin
 // `pesoIni` = cardio puro (caminata/elíptica/nadar), no aplica un peso. Son puntos de partida, NO
 // un 1RM — Adán debe ajustarlos con retroalimentación real de cuánto aguanta (ver pesoLabel()).
+// `img` (2026-08-11, pedido explícito: "cuando toque el nombre del ejercicio, debes mostrarme
+// la imagen que tienes en el html, de ese ejercicio") — mismo campo/URL que EJ_DB de
+// ejercicio.html (Wikimedia Commons, licencia libre), copiado a mano solo para los 31 ejercicios
+// que aparecen aquí. 5 no traen `img` porque EJ_DB tampoco tiene imagen para ellos todavía
+// (e037 Sentadilla Búlgara, e045 Plancha, e051/e054/e057 — todo Cardio salvo Nadar en la sección
+// Deportes): `verImagenEjercicio()` muestra un aviso en vez de una imagen rota. **e041 Hip
+// Thrust es la única excepción a "copiado de EJ_DB"** (mismo día, pedido explícito: "el
+// ejercicio de hip trust la imagen no es igual a las demas, mejor creala tu y ponla ahi") — en
+// EJ_DB, e041 comparte literalmente la misma imagen que e042 Glute Bridge (Glute-bridge.png, un
+// ejercicio distinto: sin banco ni barra), así que en vez de copiar esa imagen equivocada se
+// dibujó un diagrama de línea propio (banco + figura en la posición alta del hip thrust + disco
+// de barra sobre la cadera), mismo estilo minimalista en negro que el resto, como
+// `data:image/svg+xml;base64,...` inline — no depende de ningún archivo externo ni de internet.
+// EJ_DB (ejercicio.html) NO se tocó — sigue mostrando la imagen equivocada para Hip Thrust ahí,
+// pendiente de corregir por separado si hace falta. Si se agrega una imagen nueva a EJ_DB para
+// otro ejercicio, replicarla aquí a mano — mismo patrón que el resto de esta constante.
 const EJ_LOOKUP={
-  e001:{nombre:'Press de Banca',pesoIni:40,cue:'Aprieta los hombros hacia atrás y abajo, pegados al banco. Baja la barra despacio hasta casi tocar el pecho y empújala derecho hacia arriba.'},
-  e002:{nombre:'Press Inclinado con Barra',pesoIni:30,cue:'Banco inclinado a 30-45°. La barra baja hacia la parte de arriba del pecho — entre más inclinado, más trabaja esa parte.'},
-  e004:{nombre:'Aperturas con Mancuerna',pesoIni:8,porLado:true,cue:'Codos un poco doblados y sin moverlos — es como abrazar un árbol grande, no un empuje. Debes sentir que se estira el pecho.'},
-  e008:{nombre:'Dominadas',pesoIni:'corporal',cue:'Agarra un poco más ancho que tus hombros, sube hasta que tu barbilla pase la barra, baja despacio hasta estirar el brazo completo.'},
-  e009:{nombre:'Remo con Barra',pesoIni:30,cue:'Inclina el cuerpo hacia adelante como a 45°, espalda derecha, jala la barra hacia tu abdomen apretando los hombros hacia atrás al final.'},
-  e015:{nombre:'Press Militar con Barra',pesoIni:25,cue:'Aprieta el abdomen, empuja la barra derecho hacia arriba sobre tu cabeza sin arquear la espalda baja.'},
-  e017:{nombre:'Elevaciones Laterales',pesoIni:5,porLado:true,cue:'Codos un poco doblados, sube los brazos hasta la altura del hombro, el movimiento sale del codo. Poco peso, buena forma.'},
-  e021:{nombre:'Curl con Barra',pesoIni:20,cue:'Mantén los codos pegados a tu cuerpo — si se mueven hacia adelante, estás usando impulso en vez del músculo.'},
-  e022:{nombre:'Curl con Mancuerna',pesoIni:8,porLado:true,cue:'Gira la muñeca hacia arriba conforme subes para apretar más el músculo. Baja siempre despacio, en 2-3 segundos.'},
-  e023:{nombre:'Curl Martillo',pesoIni:8,porLado:true,cue:'Agarra con las palmas viéndose entre sí todo el tiempo (como un martillo) — le da más grosor al brazo.'},
-  e026:{nombre:'Curl Scott (Predicador)',pesoIni:15,cue:'El banco inclinado fija tu codo y evita que uses impulso — así trabaja solo el bíceps.'},
-  e027:{nombre:'Press Francés',pesoIni:15,cue:'Codos apuntando al techo y sin moverse, baja hacia tu frente doblando solo el codo — muy efectivo para el brazo de atrás.'},
-  e028:{nombre:'Extensión en Polea (Pushdown)',pesoIni:15,cue:'Codos pegados a tus costados sin moverse, estira el brazo hasta el fondo y aprieta 1 segundo.'},
-  e029:{nombre:'Fondos en Banco',pesoIni:'corporal',cue:'Manos en el borde del banco, baja hasta que el codo forme 90°, sin subir los hombros hacia las orejas.'},
-  e031:{nombre:'Extensión sobre Cabeza',pesoIni:10,cue:'Codos apuntando hacia arriba y fijos junto a tu cabeza, baja la mancuerna detrás de la nuca.'},
-  e032:{nombre:'Sentadilla con Barra',pesoIni:50,cue:'Pecho arriba, rodillas apuntando hacia donde apuntan tus pies. Baja hasta que el muslo quede más abajo que paralelo al piso.'},
-  e033:{nombre:'Prensa de Piernas',pesoIni:80,cue:'Pies a lo ancho de tus hombros, baja hasta que la rodilla forme 90° sin despegar la espalda baja del respaldo.'},
-  e034:{nombre:'Extensión de Cuádriceps',pesoIni:25,cue:'Estira la pierna por completo y aprieta el frente del muslo 1 segundo arriba, baja despacio.'},
-  e035:{nombre:'Curl de Femoral Tumbado',pesoIni:20,cue:'Cadera pegada al banco todo el tiempo, dobla la rodilla llevando el talón hacia el glúteo, sin impulso.'},
-  e036:{nombre:'Zancadas',pesoIni:10,porLado:true,cue:'Da un paso largo hacia adelante, baja hasta que las dos rodillas formen 90° sin golpear el piso. Cuerpo derecho.'},
+  e001:{nombre:'Press de Banca',pesoIni:40,img:'https://upload.wikimedia.org/wikipedia/commons/a/a8/Bench-press-1.png',cue:'Aprieta los hombros hacia atrás y abajo, pegados al banco. Baja la barra despacio hasta casi tocar el pecho y empújala derecho hacia arriba.'},
+  e002:{nombre:'Press Inclinado con Barra',pesoIni:30,img:'https://upload.wikimedia.org/wikipedia/commons/8/86/Incline-bench-press-1.png',cue:'Banco inclinado a 30-45°. La barra baja hacia la parte de arriba del pecho — entre más inclinado, más trabaja esa parte.'},
+  e004:{nombre:'Aperturas con Mancuerna',pesoIni:8,porLado:true,img:'https://upload.wikimedia.org/wikipedia/commons/a/ae/Dumbbell-flys-1.png',cue:'Codos un poco doblados y sin moverlos — es como abrazar un árbol grande, no un empuje. Debes sentir que se estira el pecho.'},
+  e008:{nombre:'Dominadas',pesoIni:'corporal',img:'https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Pull_ups_1.svg/960px-Pull_ups_1.svg.png',cue:'Agarra un poco más ancho que tus hombros, sube hasta que tu barbilla pase la barra, baja despacio hasta estirar el brazo completo.'},
+  e009:{nombre:'Remo con Barra',pesoIni:30,img:'https://upload.wikimedia.org/wikipedia/commons/a/af/Barbell-rear-delt-row-1.png',cue:'Inclina el cuerpo hacia adelante como a 45°, espalda derecha, jala la barra hacia tu abdomen apretando los hombros hacia atrás al final.'},
+  e015:{nombre:'Press Militar con Barra',pesoIni:25,img:'https://upload.wikimedia.org/wikipedia/commons/6/62/Seated-military-shoulder-press-1.png',cue:'Aprieta el abdomen, empuja la barra derecho hacia arriba sobre tu cabeza sin arquear la espalda baja.'},
+  e017:{nombre:'Elevaciones Laterales',pesoIni:5,porLado:true,img:'https://upload.wikimedia.org/wikipedia/commons/f/fd/Dumbbell-lateral-raises-1.png',cue:'Codos un poco doblados, sube los brazos hasta la altura del hombro, el movimiento sale del codo. Poco peso, buena forma.'},
+  e021:{nombre:'Curl con Barra',pesoIni:20,img:'https://upload.wikimedia.org/wikipedia/commons/7/7f/Biceps-curl-1.png',cue:'Mantén los codos pegados a tu cuerpo — si se mueven hacia adelante, estás usando impulso en vez del músculo.'},
+  e022:{nombre:'Curl con Mancuerna',pesoIni:8,porLado:true,img:'https://upload.wikimedia.org/wikipedia/commons/6/66/Biceps-curl-2.png',cue:'Gira la muñeca hacia arriba conforme subes para apretar más el músculo. Baja siempre despacio, en 2-3 segundos.'},
+  e023:{nombre:'Curl Martillo',pesoIni:8,porLado:true,img:'https://upload.wikimedia.org/wikipedia/commons/thumb/0/06/Bicep_hammer_curl_with_dumbbell_1.svg/960px-Bicep_hammer_curl_with_dumbbell_1.svg.png',cue:'Agarra con las palmas viéndose entre sí todo el tiempo (como un martillo) — le da más grosor al brazo.'},
+  e026:{nombre:'Curl Scott (Predicador)',pesoIni:15,img:'https://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/Preacher_curl_with_barbell_1.svg/960px-Preacher_curl_with_barbell_1.svg.png',cue:'El banco inclinado fija tu codo y evita que uses impulso — así trabaja solo el bíceps.'},
+  e027:{nombre:'Press Francés',pesoIni:15,img:'https://upload.wikimedia.org/wikipedia/commons/3/3f/Lying-triceps-extension-2.gif',cue:'Codos apuntando al techo y sin moverse, baja hacia tu frente doblando solo el codo — muy efectivo para el brazo de atrás.'},
+  e028:{nombre:'Extensión en Polea (Pushdown)',pesoIni:15,img:'https://upload.wikimedia.org/wikipedia/commons/thumb/1/13/Triceps_pushdown_with_cable_1.svg/960px-Triceps_pushdown_with_cable_1.svg.png',cue:'Codos pegados a tus costados sin moverse, estira el brazo hasta el fondo y aprieta 1 segundo.'},
+  e029:{nombre:'Fondos en Banco',pesoIni:'corporal',img:'https://upload.wikimedia.org/wikipedia/commons/d/d0/Bench-dips-1.png',cue:'Manos en el borde del banco, baja hasta que el codo forme 90°, sin subir los hombros hacia las orejas.'},
+  e031:{nombre:'Extensión sobre Cabeza',pesoIni:10,img:'https://upload.wikimedia.org/wikipedia/commons/c/ca/Seated-overhead-triceps-extension-1.gif',cue:'Codos apuntando hacia arriba y fijos junto a tu cabeza, baja la mancuerna detrás de la nuca.'},
+  e032:{nombre:'Sentadilla con Barra',pesoIni:50,img:'https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Squats.svg/960px-Squats.svg.png',cue:'Pecho arriba, rodillas apuntando hacia donde apuntan tus pies. Baja hasta que el muslo quede más abajo que paralelo al piso.'},
+  e033:{nombre:'Prensa de Piernas',pesoIni:80,img:'https://upload.wikimedia.org/wikipedia/commons/0/0c/Leg-press-1-1024x670.png',cue:'Pies a lo ancho de tus hombros, baja hasta que la rodilla forme 90° sin despegar la espalda baja del respaldo.'},
+  e034:{nombre:'Extensión de Cuádriceps',pesoIni:25,img:'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Leg_extensions_1.svg/960px-Leg_extensions_1.svg.png',cue:'Estira la pierna por completo y aprieta el frente del muslo 1 segundo arriba, baja despacio.'},
+  e035:{nombre:'Curl de Femoral Tumbado',pesoIni:20,img:'https://upload.wikimedia.org/wikipedia/commons/thumb/9/96/Lying_leg_curl_machine_1.svg/960px-Lying_leg_curl_machine_1.svg.png',cue:'Cadera pegada al banco todo el tiempo, dobla la rodilla llevando el talón hacia el glúteo, sin impulso.'},
+  e036:{nombre:'Zancadas',pesoIni:10,porLado:true,img:'https://upload.wikimedia.org/wikipedia/commons/5/55/Lunges-1.png',cue:'Da un paso largo hacia adelante, baja hasta que las dos rodillas formen 90° sin golpear el piso. Cuerpo derecho.'},
   e037:{nombre:'Sentadilla Búlgara',pesoIni:8,porLado:true,cue:'Con el pie de atrás apoyado en un banco, baja derecho hacia abajo — empieza con poco peso.'},
-  e038:{nombre:'Peso Muerto Rumano',pesoIni:50,cue:'Rodillas casi estiradas, empuja la cadera hacia atrás con la barra pegada a tus piernas — debes sentir el estiramiento en la parte de atrás del muslo, no en la espalda baja.'},
-  e039:{nombre:'Elevación de Pantorrilla',pesoIni:30,cue:'Sube hasta la punta de los pies y aprieta 1 segundo arriba, baja dejando caer el talón para estirar bien.'},
-  e041:{nombre:'Hip Thrust',pesoIni:50,cue:'Apoya la parte alta de la espalda en el banco, barra sobre la cadera, empuja hasta quedar derecho y aprieta el glúteo arriba.'},
-  e044:{nombre:'Abducción de Cadera',pesoIni:25,cue:'Empuja las piernas hacia afuera contra la resistencia de la máquina, controla el regreso — ayuda a la estabilidad de tu cadera.'},
+  e038:{nombre:'Peso Muerto Rumano',pesoIni:50,img:'https://upload.wikimedia.org/wikipedia/commons/e/e8/Romanian-deadlift-1.png',cue:'Rodillas casi estiradas, empuja la cadera hacia atrás con la barra pegada a tus piernas — debes sentir el estiramiento en la parte de atrás del muslo, no en la espalda baja.'},
+  e039:{nombre:'Elevación de Pantorrilla',pesoIni:30,img:'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Standing_calf_raises_using_machine_2.svg/960px-Standing_calf_raises_using_machine_2.svg.png',cue:'Sube hasta la punta de los pies y aprieta 1 segundo arriba, baja dejando caer el talón para estirar bien.'},
+  e041:{nombre:'Hip Thrust',pesoIni:50,img:'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMDAgMjAwIj4KICA8IS0tIFBpc28gLS0+CiAgPGxpbmUgeDE9IjEwIiB5MT0iMTc1IiB4Mj0iMjkwIiB5Mj0iMTc1IiBzdHJva2U9IiMyMjIyMjIiIHN0cm9rZS13aWR0aD0iMyIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CiAgPCEtLSBCYW5jbyAtLT4KICA8cmVjdCB4PSIxNSIgeT0iMTE4IiB3aWR0aD0iNzAiIGhlaWdodD0iMTQiIHJ4PSIzIiBmaWxsPSIjMjIyMjIyIi8+CiAgPHJlY3QgeD0iMjMiIHk9IjEzMiIgd2lkdGg9IjYiIGhlaWdodD0iNDMiIGZpbGw9IiMyMjIyMjIiLz4KICA8cmVjdCB4PSI3NyIgeT0iMTMyIiB3aWR0aD0iNiIgaGVpZ2h0PSI0MyIgZmlsbD0iIzIyMjIyMiIvPgogIDwhLS0gRmlndXJhOiBwb3NpY2nDs24gYWx0YSBkZWwgaGlwIHRocnVzdCDigJQgaG9tYnJvcyBlbiBlbCBiYW5jbywgY2FkZXJhIGFycmliYSwgcm9kaWxsYSBkb2JsYWRhLCBwaWUgZW4gZWwgcGlzbyAtLT4KICA8ZyBmaWxsPSJub25lIiBzdHJva2U9IiMyMjIyMjIiIHN0cm9rZS13aWR0aD0iOSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4KICAgIDwhLS0gVG9yc286IGhvbWJybyAoZW4gZWwgYmFuY28pIGEgY2FkZXJhIChhcnJpYmEpIC0tPgogICAgPGxpbmUgeDE9Ijg1IiB5MT0iMTE2IiB4Mj0iMTg1IiB5Mj0iOTAiLz4KICAgIDwhLS0gTXVzbG86IGNhZGVyYSBhIHJvZGlsbGEgLS0+CiAgICA8bGluZSB4MT0iMTg1IiB5MT0iOTAiIHgyPSIyMjUiIHkyPSIxMzUiLz4KICAgIDwhLS0gRXNwaW5pbGxhOiByb2RpbGxhIGEgcGllIC0tPgogICAgPGxpbmUgeDE9IjIyNSIgeTE9IjEzNSIgeDI9IjIxMCIgeTI9IjE3NSIvPgogICAgPCEtLSBCcmF6bzogaG9tYnJvIGEgbWFubywgc29zdGVuaWVuZG8gbGEgYmFycmEgc29icmUgbGEgY2FkZXJhIC0tPgogICAgPGxpbmUgeDE9Ijg1IiB5MT0iMTE2IiB4Mj0iMTUwIiB5Mj0iOTUiLz4KICA8L2c+CiAgPCEtLSBQaWUgLS0+CiAgPGxpbmUgeDE9IjIwMCIgeTE9IjE3NiIgeDI9IjIyNCIgeTI9IjE3NiIgc3Ryb2tlPSIjMjIyMjIyIiBzdHJva2Utd2lkdGg9IjciIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgogIDwhLS0gQ2FiZXphIC0tPgogIDxjaXJjbGUgY3g9IjYwIiBjeT0iMTA0IiByPSIxMyIgZmlsbD0iIzIyMjIyMiIvPgogIDwhLS0gRGlzY28gZGUgbGEgYmFycmEsIGFwb3lhZG8gZW4gbGEgY2FkZXJhIC0tPgogIDxjaXJjbGUgY3g9IjE4OCIgY3k9IjgyIiByPSIxNyIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMjIyMjIyIiBzdHJva2Utd2lkdGg9IjYiLz4KPC9zdmc+Cg==',cue:'Apoya la parte alta de la espalda en el banco, barra sobre la cadera, empuja hasta quedar derecho y aprieta el glúteo arriba.'},
+  e044:{nombre:'Abducción de Cadera',pesoIni:25,img:'https://upload.wikimedia.org/wikipedia/commons/2/29/Thigh-abductor-1.gif',cue:'Empuja las piernas hacia afuera contra la resistencia de la máquina, controla el regreso — ayuda a la estabilidad de tu cadera.'},
   e045:{nombre:'Plancha',pesoIni:'corporal',cue:'Cuerpo derecho de cabeza a talones, glúteo y abdomen apretados, no dejes caer la cadera.'},
-  e047:{nombre:'Elevación de Piernas',pesoIni:'corporal',cue:'Espalda baja pegada al piso, sube las piernas estiradas hasta 90° sin impulso, baja despacio.'},
-  e048:{nombre:'Rueda Abdominal',pesoIni:'corporal',cue:'De rodillas, rueda hacia adelante con el abdomen apretado — solo hasta donde puedas regresar sin arquear la espalda baja.'},
+  e047:{nombre:'Elevación de Piernas',pesoIni:'corporal',img:'https://upload.wikimedia.org/wikipedia/commons/7/7a/Leg-raises-2.png',cue:'Espalda baja pegada al piso, sube las piernas estiradas hasta 90° sin impulso, baja despacio.'},
+  e048:{nombre:'Rueda Abdominal',pesoIni:'corporal',img:'https://upload.wikimedia.org/wikipedia/commons/a/a6/Ab-rollout-1.png',cue:'De rodillas, rueda hacia adelante con el abdomen apretado — solo hasta donde puedas regresar sin arquear la espalda baja.'},
   e051:{nombre:'Caminata en Cinta',cue:'Ritmo cómodo y sostenido — recuperación activa, no exigencia.'},
   e054:{nombre:'Elíptica',cue:'Ritmo constante, cuerpo derecho, sin colgarte de los brazos — bajo impacto, ideal para cardio largo.'},
   e057:{nombre:'Nadar',cue:'Alterna estilos (libre y dorso) para no cansar siempre el mismo hombro — cardio de bajo impacto.'}
@@ -1546,28 +1613,48 @@ function pesoLabel(info){
 //    de desayuno; Salmón, Camarones, Sopa de pollo, Ensalada de quinoa, Pescado a la veracruzana
 //    y Tinga de pollo de cena. El Omelette de desayuno cambió champiñones por pimiento morrón
 //    (NO espinaca — Adán no la quiere, ver comentario en comida.html).
+// `costoAprox` + precio por ingrediente (2026-08-11) — pedido explícito: "cuando haga click en
+// cada comida o cena, debes mostrarme cuanto me costaria cocinarme eso, de acuerdo a todos los
+// ingredientes" y, en un segundo pedido el mismo día, "en cada producto de la comida o receta,
+// pon el precio". `ing` pasó de array de strings a array de `{txt,costo}` — `costo` (MXN) es lo
+// que cuesta ESA cantidad exacta del ingrediente (no el producto completo, a diferencia de
+// `monto` en LISTA_COMPRAS_PRECIOS), calculado con una tarifa por gramo/ml/pieza derivada del
+// mismo `precio` de esa constante, con el tamaño de presentación típico documentado en el script
+// de cálculo (`scratchpad/costo_ingredientes.js` de esa sesión, no versionado en el repo):
+// fruta/verdura y carnes/pescado por $/kg ÷1000; huevo $29/cartón de 18 → $1.6/pza; clara
+// $45/envase 946ml → ~$1.6/pza (33ml); queso panela $42/paquete ~400g; yogurt griego $38/envase
+// ~1kg; jamón de pavo $57/250g; pan integral $75/paquete ~24 rebanadas; tortilla $17/kg
+// (~25g/pza); aceite de oliva $150/500ml; miel $90/frasco 500g; granola $60/bolsa 400g; frijoles
+// negros $24/lata 560g; atún $20/lata completa (la receta ya pide "1 lata", sin conversión);
+// arroz blanco cocido usa el equivalente en crudo (÷3, el arroz casi triplica su peso al cocer)
+// sobre $28/kg. "Cebolla · poca" (única cantidad no numérica del catálogo) se estimó en 30g.
+// `costoAprox` de cada receta es la SUMA de los `costo` YA REDONDEADOS de sus ingredientes (no
+// el total redondeado por separado) — a propósito, para que lo que se ve desglosado siempre
+// cuadre exacto con el total mostrado; sumar el raw sin redondear y redondear aparte daba
+// diferencias de ±$1 contra la suma de las partes en 8 de las 18 recetas. Estimado para comparar
+// recetas entre sí, no una cotización exacta de súper.
 const RECETAS_MINI={
   desayuno:[
-    {nombre:'Molletes de frijol con queso panela',tiempo:'15 min',cal:420,prot:24,ing:['Pan integral · 2 rebanadas','Frijoles negros · 1/2 taza','Queso panela · 40 g','Jitomate · 1/2 pza, picado']},
-    {nombre:'Tacos de huevo con jamón de pavo y queso panela',tiempo:'10 min',cal:440,prot:32,ing:['Huevo · 3 pza','Jamón de pavo · 60 g (2-3 rebanadas)','Queso panela · 30 g','Tortilla de maíz · 3 pza']},
-    {nombre:'Yogurt griego con granola de amaranto, miel y pera',tiempo:'5 min',cal:400,prot:22,ing:['Yogurt griego natural · 200 g','Granola de amaranto · 30 g','Miel de abeja · 1 cda','Pera · 1 pza']},
-    {nombre:'Licuado de plátano, yogurt griego y miel',tiempo:'5 min',cal:380,prot:20,ing:['Plátano · 1 pza','Yogurt griego natural · 150 g','Miel de abeja · 1 cda','Leche entera · 200 ml']},
-    {nombre:'Omelette de claras con pimiento morrón y queso panela',tiempo:'12 min',cal:340,prot:34,ing:['Clara de huevo · 6 pza','Pimiento morrón · 1/2 pza, sin semillas','Queso panela · 30 g','Aceite de oliva · 1 cdta']},
-    {nombre:'Burrito de huevo, frijoles y queso panela',tiempo:'12 min',cal:460,prot:30,ing:['Huevo · 3 pza','Frijoles negros · 1/2 taza','Queso panela · 30 g','Tortilla de maíz · 2 pza grandes']},
-    {nombre:'Papaya con yogurt griego, granola de amaranto y miel',tiempo:'5 min',cal:320,prot:16,ing:['Papaya · 1 taza, en cubos','Yogurt griego natural · 150 g','Granola de amaranto · 25 g','Miel de abeja · 1 cdta']},
-    {nombre:'Quesadillas de claras con queso panela y nopales',tiempo:'12 min',cal:380,prot:30,ing:['Tortilla de maíz · 2 pza','Clara de huevo · 4 pza','Queso panela · 40 g','Nopales cocidos · 1/2 taza']},
-    {nombre:'Huevos a la mexicana suaves con tortilla',tiempo:'10 min',cal:380,prot:24,ing:['Huevo · 3 pza','Jitomate · 1/2 pza, picado, sin semillas','Cebolla · poca, cocida','Tortilla de maíz · 2 pza']},
-    {nombre:'Sándwich de pan integral con huevo, jitomate y queso panela',tiempo:'10 min',cal:420,prot:26,ing:['Pan integral · 2 rebanadas','Huevo · 2 pza','Jitomate · 1/2 pza, rebanado','Queso panela · 30 g']}
+    {nombre:'Molletes de frijol con queso panela',tiempo:'15 min',cal:420,prot:24,costoAprox:15,ing:[{txt:'Pan integral · 2 rebanadas',costo:6},{txt:'Frijoles negros · 1/2 taza',costo:4},{txt:'Queso panela · 40 g',costo:4},{txt:'Jitomate · 1/2 pza, picado',costo:1}]},
+    {nombre:'Tacos de huevo con jamón de pavo y queso panela',tiempo:'10 min',cal:440,prot:32,costoAprox:23,ing:[{txt:'Huevo · 3 pza',costo:5},{txt:'Jamón de pavo · 60 g (2-3 rebanadas)',costo:14},{txt:'Queso panela · 30 g',costo:3},{txt:'Tortilla de maíz · 3 pza',costo:1}]},
+    {nombre:'Yogurt griego con granola de amaranto, miel y pera',tiempo:'5 min',cal:400,prot:22,costoAprox:26,ing:[{txt:'Yogurt griego natural · 200 g',costo:8},{txt:'Granola de amaranto · 30 g',costo:5},{txt:'Miel de abeja · 1 cda',costo:3},{txt:'Pera · 1 pza',costo:10}]},
+    {nombre:'Licuado de plátano, yogurt griego y miel',tiempo:'5 min',cal:380,prot:20,costoAprox:17,ing:[{txt:'Plátano · 1 pza',costo:3},{txt:'Yogurt griego natural · 150 g',costo:6},{txt:'Miel de abeja · 1 cda',costo:3},{txt:'Leche entera · 200 ml',costo:5}]},
+    {nombre:'Omelette de claras con pimiento morrón y queso panela',tiempo:'12 min',cal:340,prot:34,costoAprox:18,ing:[{txt:'Clara de huevo · 6 pza',costo:9},{txt:'Pimiento morrón · 1/2 pza, sin semillas',costo:4},{txt:'Queso panela · 30 g',costo:3},{txt:'Aceite de oliva · 1 cdta',costo:2}]},
+    {nombre:'Burrito de huevo, frijoles y queso panela',tiempo:'12 min',cal:460,prot:30,costoAprox:13,ing:[{txt:'Huevo · 3 pza',costo:5},{txt:'Frijoles negros · 1/2 taza',costo:4},{txt:'Queso panela · 30 g',costo:3},{txt:'Tortilla de maíz · 2 pza grandes',costo:1}]},
+    {nombre:'Papaya con yogurt griego, granola de amaranto y miel',tiempo:'5 min',cal:320,prot:16,costoAprox:17,ing:[{txt:'Papaya · 1 taza, en cubos',costo:6},{txt:'Yogurt griego natural · 150 g',costo:6},{txt:'Granola de amaranto · 25 g',costo:4},{txt:'Miel de abeja · 1 cdta',costo:1}]},
+    {nombre:'Quesadillas de claras con queso panela y nopales',tiempo:'12 min',cal:380,prot:30,costoAprox:15,ing:[{txt:'Tortilla de maíz · 2 pza',costo:1},{txt:'Clara de huevo · 4 pza',costo:6},{txt:'Queso panela · 40 g',costo:4},{txt:'Nopales cocidos · 1/2 taza',costo:4}]},
+    {nombre:'Huevos a la mexicana suaves con tortilla',tiempo:'10 min',cal:380,prot:24,costoAprox:9,ing:[{txt:'Huevo · 3 pza',costo:5},{txt:'Jitomate · 1/2 pza, picado, sin semillas',costo:1},{txt:'Cebolla · poca, cocida',costo:2},{txt:'Tortilla de maíz · 2 pza',costo:1}]},
+    {nombre:'Sándwich de pan integral con huevo, jitomate y queso panela',tiempo:'10 min',cal:420,prot:26,costoAprox:13,ing:[{txt:'Pan integral · 2 rebanadas',costo:6},{txt:'Huevo · 2 pza',costo:3},{txt:'Jitomate · 1/2 pza, rebanado',costo:1},{txt:'Queso panela · 30 g',costo:3}]}
   ],
   cena:[
-    {nombre:'Pechuga de pollo con arroz y champiñones salteados',tiempo:'20 min',cal:480,prot:48,ing:['Pechuga de pollo · 150 g','Arroz blanco cocido · 1 taza','Champiñones · 1 taza','Aceite de oliva · 1 cdta']},
-    {nombre:'Atún con arroz y ensalada de pepino',tiempo:'10 min',cal:400,prot:34,ing:['Atún en agua · 1 lata','Arroz blanco cocido · 1 taza','Pepino · 1 taza','Aceite de oliva · 1 cdta']},
-    {nombre:'Filete de res magro con puré de papa y chayote',tiempo:'25 min',cal:490,prot:42,ing:['Filete de res magro · 150 g','Papa · 2 pza','Chayote · 1 taza','Leche entera · 50 ml']},
-    {nombre:'Tacos de pollo deshebrado con nopales',tiempo:'20 min',cal:420,prot:42,ing:['Pechuga de pollo · 150 g','Tortilla de maíz · 4 pza','Nopales cocidos · 1 taza','Cebolla · poca, cocida']},
-    {nombre:'Omelette de claras con champiñones y pimiento (cena ligera)',tiempo:'10 min',cal:210,prot:25,ing:['Clara de huevo · 6 pza','Champiñones · 1/2 taza','Pimiento morrón · 1/2 pza, sin semillas','Aceite de oliva · 1 cdta']},
-    {nombre:'Filete de pescado al horno con papa y pimiento',tiempo:'30 min',cal:340,prot:32,ing:['Filete de tilapia · 150 g','Papa · 1 pza mediana','Pimiento morrón · 1/2 pza','Aceite de oliva · 1 cdta']},
-    {nombre:'Tostadas de atún con lechuga, jitomate y aguacate',tiempo:'10 min',cal:380,prot:32,ing:['Atún en agua · 1 lata','Tortilla de maíz · 3 pza, tostadas','Lechuga · 1 taza','Jitomate · 1/2 pza','Aguacate · 1/4 pza']},
-    {nombre:'Pechuga rellena de queso panela con papas al horno',tiempo:'30 min',cal:510,prot:52,ing:['Pechuga de pollo · 180 g','Queso panela · 40 g','Papa · 2 pza','Aceite de oliva · 1 cdta']}
+    {nombre:'Pechuga de pollo con arroz y champiñones salteados',tiempo:'20 min',cal:480,prot:48,costoAprox:46,ing:[{txt:'Pechuga de pollo · 150 g',costo:37},{txt:'Arroz blanco cocido · 1 taza',costo:2},{txt:'Champiñones · 1 taza',costo:5},{txt:'Aceite de oliva · 1 cdta',costo:2}]},
+    {nombre:'Atún con arroz y ensalada de pepino',tiempo:'10 min',cal:400,prot:34,costoAprox:26,ing:[{txt:'Atún en agua · 1 lata',costo:20},{txt:'Arroz blanco cocido · 1 taza',costo:2},{txt:'Pepino · 1 taza',costo:2},{txt:'Aceite de oliva · 1 cdta',costo:2}]},
+    {nombre:'Filete de res magro con puré de papa y chayote',tiempo:'25 min',cal:490,prot:42,costoAprox:46,ing:[{txt:'Filete de res magro · 150 g',costo:33},{txt:'Papa · 2 pza',costo:9},{txt:'Chayote · 1 taza',costo:3},{txt:'Leche entera · 50 ml',costo:1}]},
+    {nombre:'Tacos de pollo deshebrado con nopales',tiempo:'20 min',cal:420,prot:42,costoAprox:48,ing:[{txt:'Pechuga de pollo · 150 g',costo:37},{txt:'Tortilla de maíz · 4 pza',costo:2},{txt:'Nopales cocidos · 1 taza',costo:7},{txt:'Cebolla · poca, cocida',costo:2}]},
+    {nombre:'Omelette de claras con champiñones y pimiento (cena ligera)',tiempo:'10 min',cal:210,prot:25,costoAprox:17,ing:[{txt:'Clara de huevo · 6 pza',costo:9},{txt:'Champiñones · 1/2 taza',costo:2},{txt:'Pimiento morrón · 1/2 pza, sin semillas',costo:4},{txt:'Aceite de oliva · 1 cdta',costo:2}]},
+    {nombre:'Filete de pescado al horno con papa y pimiento',tiempo:'30 min',cal:340,prot:32,costoAprox:30,ing:[{txt:'Filete de tilapia · 150 g',costo:20},{txt:'Papa · 1 pza mediana',costo:4},{txt:'Pimiento morrón · 1/2 pza',costo:4},{txt:'Aceite de oliva · 1 cdta',costo:2}]},
+    {nombre:'Tostadas de atún con lechuga, jitomate y aguacate',tiempo:'10 min',cal:380,prot:32,costoAprox:27,ing:[{txt:'Atún en agua · 1 lata',costo:20},{txt:'Tortilla de maíz · 3 pza, tostadas',costo:1},{txt:'Lechuga · 1 taza',costo:2},{txt:'Jitomate · 1/2 pza',costo:1},{txt:'Aguacate · 1/4 pza',costo:3}]},
+    {nombre:'Pechuga rellena de queso panela con papas al horno',tiempo:'30 min',cal:510,prot:52,costoAprox:60,ing:[{txt:'Pechuga de pollo · 180 g',costo:45},{txt:'Queso panela · 40 g',costo:4},{txt:'Papa · 2 pza',costo:9},{txt:'Aceite de oliva · 1 cdta',costo:2}]}
   ]
 };
 
@@ -1637,6 +1724,53 @@ const LISTA_COMPRAS={
     'Hábitos y Mentalidad':['Atomic Habits — James Clear','Mindset: The New Psychology of Success — Carol Dweck',"Can't Hurt Me — David Goggins",'The Obstacle is the Way — Ryan Holiday','Meditaciones — Marco Aurelio'],
   },
 };
+// Precios de referencia — Lista de Compras → Comida (2026-08-11). "real:true" viene del
+// ticket de Walmart de Adán (10-ago-2026, 22:51h) mapeado al producto de la lista más
+// parecido — con `nota` cuando el producto exacto del ticket no es 100% el mismo (p. ej.
+// compró "Jamón Virginia" y la etiqueta no dice "de pavo"). "real:false" no aparece en ese
+// ticket: precio investigado (Walmart México / Profeco "Quién es Quién en los Precios",
+// ago-2026), aproximado — varía por sucursal y temporada. Solo cubre la categoría `comida`;
+// `lcPrecioHtml()` no pinta nada para skincare/cabello/suplementos/libros.
+// `monto` (2026-08-11) — número en MXN usado SOLO para sumar el total marcado (`lcTotalComida()`),
+// no es lo mismo que `precio` (que muestra precio unitario/por kg, útil como referencia de
+// mercado). `monto` asume una cantidad típica de una sola compra — para los 11 productos
+// `real:true` con presentación por peso, es la cantidad exacta que Adán compró ese día en el
+// ticket (aguacate 0.2kg, cebolla 0.375kg, jitomate 0.38kg, papaya 1.43kg, plátano 0.895kg);
+// para el resto, una porción razonable (≈0.3-1kg fruta/verdura cruda, 0.5kg carne/pescado, 1
+// paquete/lata/frasco/bolsa) — por eso `monto` casi nunca es igual al número que aparece en
+// `precio` (ese es por kg o por unidad, `monto` ya multiplicó por la cantidad típica).
+const LISTA_COMPRAS_PRECIOS={
+  'Aguacate':{precio:'$59/kg',real:true,monto:12},
+  'Cebolla':{precio:'$62/kg',real:true,monto:23},
+  'Champiñones':{precio:'$70/kg',real:false,monto:18},
+  'Chayote':{precio:'$22/kg',real:false,monto:13},
+  'Jitomate':{precio:'$15/kg',real:true,monto:6},
+  'Lechuga':{precio:'$18/pza',real:false,monto:18},
+  'Nopales cocidos':{precio:'$20 (bolsa 400g)',real:false,monto:20},
+  'Papa':{precio:'$24/kg',real:false,monto:24},
+  'Papaya':{precio:'$40/kg',real:true,monto:57},
+  'Pepino':{precio:'$18/kg',real:false,monto:9},
+  'Pera':{precio:'$55/kg',real:false,monto:28},
+  'Pimiento morrón':{precio:'$50/kg',real:false,monto:15},
+  'Plátano':{precio:'$24/kg',real:true,monto:21},
+  'Filete de res magro':{precio:'$220/kg',real:false,monto:110},
+  'Filete de tilapia':{precio:'$130/kg',real:false,monto:65,nota:'En tu ticket compraste Filete de Basa, no tilapia (pagaste $55, 1 pieza con descuento) — precio de tilapia investigado aparte.'},
+  'Jamón de pavo':{precio:'$57 (250g)',real:true,monto:57,nota:'Ticket: "Jamón Virginia" — casi siempre es la variante de pavo en súper, pero la etiqueta no lo dice explícito.'},
+  'Pechuga de pollo':{precio:'$66 (paquete ~265g)',real:true,monto:66,nota:'Ticket: "Milanesa de Pechuga" — mismo corte, ya fileteado delgado.'},
+  'Clara de huevo':{precio:'$45 (envase 946ml)',real:false,monto:45},
+  'Huevo':{precio:'$29 (Bachoco)',real:true,monto:29},
+  'Leche entera':{precio:'$26/L',real:false,monto:26,nota:'En tu ticket compraste Lala Deslactosada, no entera — precio de leche entera investigado aparte.'},
+  'Queso panela':{precio:'$42 (con descuento)',real:true,monto:42},
+  'Yogurt griego natural':{precio:'$38 (envase)',real:false,monto:38,nota:'En tu ticket compraste Yoplait ($12 c/u) — no es griego. Precio de yogurt griego investigado aparte.'},
+  'Aceite de oliva':{precio:'$150 (500ml)',real:false,monto:150},
+  'Arroz blanco cocido':{precio:'$28/kg (crudo)',real:false,monto:28},
+  'Atún en agua':{precio:'$20 (lata, con descuento)',real:true,monto:20},
+  'Frijoles negros':{precio:'$24 (lata 560g)',real:false,monto:24},
+  'Granola de amaranto':{precio:'$60 (bolsa 400g)',real:false,monto:60},
+  'Miel de abeja':{precio:'$90 (frasco 500g)',real:false,monto:90},
+  'Pan integral':{precio:'$75 (paquete grande)',real:true,monto:75,nota:'Ticket: "Pan Doble" (Bimbo Doble Fibra) — no dice "integral", pero es el pan de caja más cercano que compraste.'},
+  'Tortilla de maíz':{precio:'$17/kg',real:false,monto:17},
+};
 const LISTA_CAT_META={
   comida:{ico:'🍽️',label:'Comida'},
   skincare:{ico:'🧴',label:'Skincare'},
@@ -1683,6 +1817,18 @@ function lcAmazonQuery(cat,txt){
 }
 function lcAmazonUrl(q){ return 'https://www.amazon.com.mx/s?k='+encodeURIComponent(q); }
 function lcMercadoLibreUrl(q){ return 'https://listado.mercadolibre.com.mx/'+encodeURIComponent(q.replace(/\s+/g,'-')); }
+// Píldora de precio junto al producto — verde "✓" = precio real de tu ticket de Walmart,
+// naranja "≈" = estimado (no está en ese ticket). Solo aplica a la categoría `comida`
+// (ver LISTA_COMPRAS_PRECIOS arriba); el resto de categorías no tienen precio asociado.
+function lcPrecioHtml(cat,txt){
+  if(cat!=='comida') return '';
+  const p=LISTA_COMPRAS_PRECIOS[txt];
+  if(!p) return '';
+  const cls=p.real?'lc-price-real':'lc-price-est';
+  const icono=p.real?'✓':'≈';
+  const titulo=p.nota?` title="${p.nota.replace(/"/g,'&quot;')}"`:'';
+  return `<span class="lc-price ${cls}"${titulo}>${icono} ${p.precio}</span>`;
+}
 function lcRenderItems(cat,items,checks,conLinkAmazon){
   return items.map(txt=>{
     const id=lcItemId(cat,txt);
@@ -1698,15 +1844,62 @@ function lcRenderItems(cat,items,checks,conLinkAmazon){
     return `<div class="lc-item">
       <input type="checkbox" id="${id}" ${checked} onchange="toggleListaItem('${id}')">
       <label for="${id}" class="lc-item-txt">${txt}</label>
+      ${lcPrecioHtml(cat,txt)}
       ${shopHtml}
     </div>`;
   }).join('');
+}
+// Suma cuánto costará lo ya marcado en el checklist de "comida" — pedido explícito: "las
+// cosas que marque en el checklist debemos sumar la cantidad total de cuanto me costara".
+// Usa LISTA_COMPRAS_PRECIOS[txt].monto (compra típica), no `precio` (unitario/por kg) — ver
+// nota en esa constante. Solo tiene sentido en "comida", la única categoría con precio.
+function lcTotalComida(checks){
+  const items=Object.values(LISTA_COMPRAS.comida).flat();
+  let total=0,n=0;
+  items.forEach(txt=>{
+    if(!checks[lcItemId('comida',txt)]) return;
+    const p=LISTA_COMPRAS_PRECIOS[txt];
+    if(p&&typeof p.monto==='number'){ total+=p.monto; n++; }
+  });
+  return {total,n};
+}
+function lcTotalBarHtml(checks){
+  const {total,n}=lcTotalComida(checks);
+  const txt=n?`🧮 Total marcado: $${total.toLocaleString('es-MX')} (${n} producto${n===1?'':'s'})`:'🧮 Total marcado: $0 — no has marcado nada todavía';
+  return `<span id="lcTotalBar" class="lc-total" title="Suma un monto estimado por cada producto marcado (cantidad típica de una compra, no las cantidades exactas que tú elijas ese día) — ver detalle en readme_dashboard.md.">${txt}</span>`;
+}
+// Refresca solo el número del total (llamado desde toggleListaItem, sin re-pintar toda la
+// lista — mismo motivo que renderListaCatTabs ahí: no perder scroll/foco al marcar un check).
+function actualizarLcTotal(){
+  const el=document.getElementById('lcTotalBar');
+  if(!el) return;
+  el.outerHTML=lcTotalBarHtml(rawGet('dash-lista-compras',{}));
+}
+// Vacía los marcados de la categoría activa — pedido explícito: "un boton para borrar la
+// seleccion de productos cuando vaya al super de nuevo" (arrancar una lista nueva sin
+// desmarcar uno por uno). Pide confirmación porque borra progreso ya marcado, sin deshacer.
+function vaciarListaCat(cat){
+  const data=LISTA_COMPRAS[cat];
+  const items=Array.isArray(data)?data:Object.values(data).flat();
+  const ids=items.map(txt=>lcItemId(cat,txt));
+  const checks=rawGet('dash-lista-compras',{});
+  const marcados=ids.filter(id=>checks[id]).length;
+  if(!marcados) return;
+  if(!confirm(`¿Vaciar los ${marcados} producto${marcados===1?'':'s'} marcados de "${LISTA_CAT_META[cat].label}"? No se puede deshacer.`)) return;
+  ids.forEach(id=>delete checks[id]);
+  rawSet('dash-lista-compras',checks);
+  renderListaCompras();
 }
 function renderListaCompras(){
   renderListaCatTabs();
   const checks=rawGet('dash-lista-compras',{});
   const data=LISTA_COMPRAS[listaCatSel];
   const conLinkAmazon=LC_AMAZON_CATS.includes(listaCatSel);
+  const esComida=listaCatSel==='comida';
+  const barra=`<div class="lc-toolbar">${esComida?lcTotalBarHtml(checks):'<span></span>'}<button class="lc-clear-btn" onclick="vaciarListaCat('${listaCatSel}')">🗑️ Vaciar marcados</button></div>`;
+  const leyenda=esComida
+    ? `<div class="lc-price-leyenda"><span class="lc-price lc-price-real">✓ $</span> precio real de tu ticket de Walmart &nbsp;·&nbsp; <span class="lc-price lc-price-est">≈ $</span> estimado, no está en ese ticket</div>`
+    : '';
   const html=Array.isArray(data)
     ? `<div>${lcRenderItems(listaCatSel,data,checks,conLinkAmazon)}</div>`
     : Object.entries(data).map(([pasillo,items])=>`
@@ -1714,7 +1907,7 @@ function renderListaCompras(){
         <div class="lc-aisle-title">${pasillo}</div>
         <div class="lc-grid">${lcRenderItems(listaCatSel,items,checks,conLinkAmazon)}</div>
       </div>`).join('');
-  document.getElementById('listaCompraBody').innerHTML=html;
+  document.getElementById('listaCompraBody').innerHTML=barra+leyenda+html;
 }
 function verListaCat(cat){ listaCatSel=cat; renderListaCompras(); }
 function toggleListaItem(id){
@@ -1723,6 +1916,7 @@ function toggleListaItem(id){
   if(cb&&cb.checked) checks[id]=true; else delete checks[id];
   rawSet('dash-lista-compras',checks);
   renderListaCatTabs(); // refresca el "X/Y" de la pestaña sin re-pintar la lista completa (pierde el scroll/foco si no)
+  actualizarLcTotal();
 }
 
 // ── Alemán del día (2026-08-04, contenido nativo definitivo desde 2026-08-07) — un tema
@@ -2443,7 +2637,7 @@ function renderHeroGymPanel(){
       const peso=pesoLabel(info);
       const sr=ej.series+'×'+ej.reps+(ej.unidad?' '+ej.unidad:'');
       return `<div class="hp-ex-row">
-        <div class="hp-ex-top"><span class="hp-ex-name">${nombre}</span><span class="hp-ex-sr">${sr}${peso?` · <span class="hp-ex-peso">${peso}</span>`:''}</span></div>
+        <div class="hp-ex-top"><span class="hp-ex-name" onclick="verImagenEjercicio('${ej.id}')" title="Ver imagen">${nombre}</span><span class="hp-ex-sr">${sr}${peso?` · <span class="hp-ex-peso">${peso}</span>`:''}</span></div>
         ${info?.cue?`<div class="hp-ex-cue">${info.cue}</div>`:''}
       </div>`;
     }).join('')}</div>`;
@@ -2458,6 +2652,26 @@ function renderHeroGymPanel(){
     </div>
     ${gymBody}
   `;
+}
+
+// Imagen de un ejercicio (2026-08-11) — pedido explícito: "cuando toque el nombre del
+// ejercicio, debes mostrarme la imagen que tienes en el html, de ese ejercicio, para ver como
+// es". Clic en `.hp-ex-name` dentro de "🏋️ Hoy toca" abre este overlay reusando EJ_LOOKUP[id].img
+// (ver nota en esa constante). Mismo patrón de overlay que abrirMetaDetalle()/cerrarMetaDetalle()
+// más abajo: fixed + backdrop blur + cierre por click-fuera/Escape/✕.
+function verImagenEjercicio(id){
+  const info=EJ_LOOKUP[id];
+  const overlay=document.getElementById('ejImgOverlay');
+  if(!overlay||!info) return;
+  document.getElementById('ejImgTitle').textContent=info.nombre;
+  document.getElementById('ejImgBody').innerHTML=info.img
+    ? `<img src="${info.img}" alt="Cómo hacer ${info.nombre}" loading="lazy">`
+    : `<div class="ej-img-body-empty">🖼️ Todavía no tengo una imagen guardada para "${info.nombre}" — se agrega a mano en EJ_LOOKUP (Dashboard) cuando ejercicio.html tenga una.</div>`;
+  document.getElementById('ejImgCue').textContent=info.cue||'';
+  overlay.classList.add('open');
+}
+function cerrarImagenEjercicio(){
+  document.getElementById('ejImgOverlay')?.classList.remove('open');
 }
 
 // ── Panel "🍽️ Ideas para hoy" — 3 opciones rotativas de desayuno + 3 de cena del recetario
@@ -2493,7 +2707,10 @@ function renderHeroNutri(){
           <span class="hp-meal-name">${r.nombre}</span>
           <span class="hp-meal-chevron">▾</span>
         </div>
-        <div class="hp-meal-ing">${r.ing.map(i=>`<div class="ds-row"><span class="ds-txt" style="white-space:normal">${i}</span></div>`).join('')}</div>
+        <div class="hp-meal-ing">
+          ${r.ing.map(i=>`<div class="ds-row"><span class="ds-txt" style="white-space:normal">${i.txt}</span>${typeof i.costo==='number'?`<span class="hp-ing-costo">$${i.costo}</span>`:''}</div>`).join('')}
+          ${typeof r.costoAprox==='number'?`<div class="hp-meal-costo" title="Suma el costo de cada ingrediente de arriba, en la cantidad exacta de la receta — ver readme_dashboard.md para las tarifas usadas.">🧮 Costo aproximado: ~$${r.costoAprox} MXN</div>`:''}
+        </div>
       </div>`;
     }).join('')}
     </div>
@@ -3372,6 +3589,7 @@ document.addEventListener('fullscreenchange',()=>{
 document.addEventListener('keydown',e=>{
   if(e.target.tagName==='SELECT'||e.target.tagName==='INPUT') return;
   if(e.key==='Escape'&&document.getElementById('metaDetailOverlay').classList.contains('open')){ cerrarMetaDetalle(); return; }
+  if(e.key==='Escape'&&document.getElementById('ejImgOverlay').classList.contains('open')){ cerrarImagenEjercicio(); return; }
   if(e.key==='ArrowRight') nextSlide();
   if(e.key==='ArrowLeft') prevSlide();
   if(e.key===' '){e.preventDefault();togglePlay();}
