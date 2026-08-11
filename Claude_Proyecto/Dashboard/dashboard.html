@@ -53,6 +53,13 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 .priv-btn:hover{background:rgba(var(--ov),.1);color:var(--text)}
 .priv-btn.on{background:rgba(255,92,92,.12);border-color:rgba(255,92,92,.35);color:var(--r)}
 .fin-hidden{filter:blur(7px);user-select:none}
+/* Botón para colapsar/expandir la barra superior en celular (2026-08-11) — oculto por defecto
+   (solo aplica en escritorio); se vuelve visible dentro de @media(max-width:480px) más abajo,
+   donde además .qa-collapsed oculta las píldoras. En escritorio el elemento existe en el DOM
+   (lo pinta renderQuickApps()) pero nunca se ve, así que ahí la barra sigue igual que siempre. */
+.qa-toggle-btn{display:none;align-items:center;gap:5px;padding:6px 12px;border-radius:30px;background:rgba(var(--ov),.045);border:1px solid rgba(var(--ov),.08);color:var(--text2);font-size:11px;font-weight:700;font-family:inherit;cursor:pointer}
+.qa-toggle-chevron{display:inline-block;font-size:9px;transition:transform .2s}
+#qaBar:not(.qa-collapsed) .qa-toggle-chevron{transform:rotate(180deg)}
 
 /* ─── SLIDES ENGINE ─────────────────────────────────────── */
 .slides{position:fixed;top:58px;left:0;right:0;bottom:0;overflow:hidden}
@@ -152,9 +159,13 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 .img-goal-grid-sm{gap:7px;grid-template-rows:repeat(3,1fr)}
 .img-goal-photo-sm{border-radius:12px}
 .img-goal-txt-sm{padding:4px 7px;gap:4px;font-size:clamp(8px,0.75vw,10px)}
-/* Variante de 8 celdas — Habilidades Base, una sola sección (no corto/largo plazo) */
-.img-goal-grid-8{grid-template-columns:repeat(4,1fr);grid-template-rows:repeat(2,1fr)}
-@media(max-width:900px){.img-goal-grid-8{grid-template-columns:repeat(2,1fr);grid-template-rows:repeat(4,1fr)}}
+/* Habilidades Base — 4 columnas, filas automáticas con scroll interno (2026-08-11: subió de 8 a
+   15 tarjetas — "añade todo eso en el dashboard... y muy completa" — ya no cabe en una
+   cuadrícula de altura fija de 2 filas exactas como la vieja `.img-goal-grid-8`. `minmax(150px,
+   1fr)` evita que las fotos se vean angostas cuando hay muchas filas; `overflow-y:auto` deja que
+   la última fila incompleta se vea completa con scroll en vez de recortarse o aplastar todo. */
+.img-goal-grid-4col{grid-template-columns:repeat(4,1fr);grid-template-rows:none;grid-auto-rows:minmax(150px,1fr);overflow-y:auto;padding-right:2px}
+@media(max-width:900px){.img-goal-grid-4col{grid-template-columns:repeat(2,1fr)}}
 .big-num{font-family:var(--mono);font-weight:700;letter-spacing:-.02em;line-height:1}
 .pbar{height:11px;background:rgba(var(--ov),.08);border-radius:20px;overflow:hidden;margin-top:9px;position:relative}
 .pfill{height:100%;border-radius:20px;transition:width 1.2s cubic-bezier(.22,.61,.36,1);position:relative}
@@ -813,6 +824,22 @@ a.rt2-sub-prod:hover{text-decoration:underline}
   .ws-gym-lbl{min-height:14px}
   .lc-grid{grid-template-columns:1fr}
   .float-panel{bottom:170px;max-height:56vh}
+  /* Barra superior colapsada de entrada en celular (2026-08-11, pedido explícito: "de primera
+     estancia en la version movil, colapsame todos los botones... siento que me roban espacio")
+     — .qa-toggle-btn (oculto en escritorio, ver regla base más arriba) se hace visible aquí y es
+     lo único que se ve mientras el contenedor #qaBar tenga la clase .qa-collapsed (ya viene así
+     desde el HTML); toggleQaBar() la quita/pone y llama a syncSlidesTop() para que el
+     slide recupere el alto que antes ocupaban las 10 píldoras + el botón de privacidad. */
+  .qa-toggle-btn{display:inline-flex}
+  .qa-bar.qa-collapsed .qa-pill,.qa-bar.qa-collapsed .priv-btn{display:none}
+  /* "cambiar de slide" (‹, puntos, ›) se oculta en celular — pedido explícito: "abajo estan
+     amontonados lo que hace de cambiar de slide y lo que te lleva directo a que pagina de
+     dashboard quieres... ocultes la de cambiar slide". Cambiar de slide en celular ya se hace
+     por swipe (ver el listener de touch más abajo en el JS) o tocando un ícono de #hudNav
+     (salto directo), así que ‹/puntos/› quedan redundantes y solo ocupaban espacio. ▶/⏸ NO se
+     oculta — sigue siendo el único botón que arranca la rotación automática (ver `playing`
+     arriba, arranca en `false`). */
+  .hud-slidenav{display:none}
 }
 </style>
 <script>
@@ -825,7 +852,7 @@ a.rt2-sub-prod:hover{text-decoration:underline}
 </head>
 <body>
 
-<div class="qa-bar" id="qaBar"></div>
+<div class="qa-bar qa-collapsed" id="qaBar"></div>
 
 <div class="slides" id="slides">
 
@@ -935,7 +962,7 @@ a.rt2-sub-prod:hover{text-decoration:underline}
       <div class="slide-title reveal d2"><span class="ico">🧬</span> Lo que todo hombre debería saber hacer</div>
       <div class="tile reveal d3" style="flex:1;min-height:0;display:flex;flex-direction:column">
         <div class="lbl" style="margin-bottom:8px">💪 Domínalas una por una — clic en cada foto para ver cómo y marcar tu checklist, la barra se llena sola</div>
-        <div class="img-goal-grid img-goal-grid-8" id="habilidadesGrid"></div>
+        <div class="img-goal-grid img-goal-grid-4col" id="habilidadesGrid"></div>
       </div>
     </div>
   </section>
@@ -1019,10 +1046,10 @@ a.rt2-sub-prod:hover{text-decoration:underline}
   <div class="hud-clock"><span id="hudClock">—</span><br><span class="hud-sync" id="hudSync"></span></div>
   <div class="hud-progress"><div class="hud-progress-fill" id="hudProgressFill"></div></div>
   <button class="hud-btn" onclick="toggleMenu()" title="Menú (M)" id="menuBtn">☰</button>
-  <button class="hud-btn" onclick="prevSlide()" title="Anterior (←)">‹</button>
-  <div class="dots" id="dots"></div>
-  <button class="hud-btn" onclick="nextSlide()" title="Siguiente (→)">›</button>
-  <button class="hud-btn" id="playBtn" onclick="togglePlay()" title="Pausar/Reanudar (Espacio)">⏸</button>
+  <button class="hud-btn hud-slidenav" onclick="prevSlide()" title="Anterior (←)">‹</button>
+  <div class="dots hud-slidenav" id="dots"></div>
+  <button class="hud-btn hud-slidenav" onclick="nextSlide()" title="Siguiente (→)">›</button>
+  <button class="hud-btn" id="playBtn" onclick="togglePlay()" title="Pausar/Reanudar (Espacio)">▶</button>
   <button class="hud-btn" onclick="toggleFullscreen()" title="Pantalla completa (F)" id="fsBtn">⛶</button>
   <button class="hud-btn" onclick="toggleSettings()" title="Ajustes">⚙️</button>
   <button class="hud-btn" onclick="toggleHelp()" title="Atajos de teclado (?)">?</button>
@@ -2959,11 +2986,20 @@ function renderQuickApps(){
     {ico:'💻',n:'Entrevistas',href:'../Entrevistas/entrevistas.html',stat:''}
   ];
   document.getElementById('qaBar').innerHTML=
+    `<button class="qa-toggle-btn" onclick="toggleQaBar()" aria-label="Mostrar u ocultar accesos directos" title="Mostrar/ocultar accesos directos">🔗 Apps <span class="qa-toggle-chevron">▾</span></button>`+
     `<button class="priv-btn${privado?' on':''}" id="priv-btn" onclick="togglePrivado()">${privado?'🙈 Modo privado':'👁️ Ocultar finanzas'}</button>`+
     apps.map(a=>`<a href="${a.href}" class="qa-pill" title="${a.n}">
     <span class="qa-ico">${a.ico}</span>
     <span class="qa-txt"><span class="qa-name">${a.n}</span>${a.stat?`<span class="qa-stat${a.fin&&privado?' fin-hidden':''}">${a.stat}</span>`:''}</span>
   </a>`).join('');
+  syncSlidesTop();
+}
+// Colapsa/expande la barra superior — solo tiene efecto visual en celular (≤480px, ver CSS de
+// .qa-toggle-btn/.qa-collapsed); en escritorio el botón que la dispara ni siquiera se muestra.
+// La clase vive en #qaBar (el contenedor fijo, no en su innerHTML) para sobrevivir cada
+// renderQuickApps() — ese solo reemplaza el contenido de adentro, nunca el propio div.
+function toggleQaBar(){
+  document.getElementById('qaBar').classList.toggle('qa-collapsed');
   syncSlidesTop();
 }
 
@@ -3327,7 +3363,21 @@ const HABILIDADES_BASE=[
   {id:'decirno',  ico:'🚫', t:'Saber decir que no',                  img:'https://images.unsplash.com/photo-1517048676732-d65bc937f952?w=800&q=80&auto=format&fit=crop'},
   {id:'dinero',   ico:'💰', t:'Generar, administrar y hacer crecer dinero', img:'https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?w=800&q=80&auto=format&fit=crop'},
   {id:'manejar',  ico:'🚗', t:'Manejar todo tipo de vehículos',      img:'https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?w=800&q=80&auto=format&fit=crop'},
-  {id:'recuperar',ico:'🧘', t:'Saber recuperarte',                   img:'https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=800&q=80&auto=format&fit=crop'}
+  {id:'recuperar',ico:'🧘', t:'Saber recuperarte',                   img:'https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=800&q=80&auto=format&fit=crop'},
+  // 7 nuevas (2026-08-11, pedido explícito: "en coach hay una seccion de habilidades de valor,
+  // añade todo eso en el dashboard, del mismo estilo en que estan ya y muy completa") — mismo
+  // catálogo de Coach_v2.html → #habilidades-valor ("🎩 Habilidades de un Hombre de Valor"), las
+  // 7 tarjetas de esa sección (sin duplicar la 8ª pieza de ahí, el checklist "Cuáles ya
+  // dominas" hv1-hv7, que es un resumen de estas mismas 7 — no aporta una habilidad nueva).
+  // Fotos nuevas verificadas con curl (HTTP 200) antes de usarlas, mismo criterio que las 8 de
+  // arriba: Unsplash para las de estilo de vida, Wikimedia Commons para las más "documentales".
+  {id:'modales',  ico:'🍽️', t:'Modales y etiqueta esencial',        img:'https://images.unsplash.com/photo-1519167758481-83f550bb49b3?w=800&q=80&auto=format&fit=crop'},
+  {id:'fogata',   ico:'🔥', t:'Hacer una fogata correctamente',      img:'https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/Camp_fire.jpg/960px-Camp_fire.jpg'},
+  {id:'vino',     ico:'🍷', t:'Catar y servir vino',                 img:'https://images.unsplash.com/photo-1755437014505-355cb34add6b?w=800&q=80&auto=format&fit=crop'},
+  {id:'coctel',   ico:'🥃', t:'Coctelería básica',                   img:'https://images.unsplash.com/photo-1754490865411-ef87ef00f75f?w=800&q=80&auto=format&fit=crop'},
+  {id:'nudos',    ico:'🪢', t:'Nudos que de verdad sirven',          img:'https://images.unsplash.com/photo-1716236376206-899880b92530?w=800&q=80&auto=format&fit=crop'},
+  {id:'mecanica', ico:'🔧', t:'Mecánica básica de auto',             img:'https://images.unsplash.com/photo-1553594403-528c652927f9?w=800&q=80&auto=format&fit=crop'},
+  {id:'auxilios', ico:'🩹', t:'Primeros auxilios básicos',           img:'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/CPR_training-01.jpg/960px-CPR_training-01.jpg'}
 ];
 const HABILIDAD_DETALLE={
   nadar:{titulo:'Saber nadar de verdad, no solo mantenerte a flote',frase:'La técnica te hace nadar más lejos con menos esfuerzo — no se trata de fuerza, se trata de forma.',pasos:[
@@ -3389,6 +3439,62 @@ const HABILIDAD_DETALLE={
     {t:'Descansos activos',d:'Una caminata sin celular o estirar 10 minutos recupera más que quedarte scrolleando en el sillón.'},
     {t:'Revisa tus señales de alarma',d:'Mal sueño, irritabilidad, rendimiento bajando pese a esforzarte más — la señal de bajarle antes de lesionarte.'},
     {t:'Trátalo como inversión',d:'No como pérdida de tiempo: un buen descanso sostiene que rindas en gym, trabajo y negocio al mismo tiempo.'}
+  ]},
+  // 7 nuevas (2026-08-11) — mismo contenido real de Coach_v2.html → #habilidades-valor,
+  // condensado al formato titulo/frase/pasos que ya usa este objeto (no son ideas nuevas,
+  // son las mismas 7 tarjetas de Coach reescritas como checklist accionable).
+  modales:{titulo:'Modales que separan a alguien que sabe desenvolverse de alguien que no',frase:'El respeto se nota en los detalles pequeños — un apretón de manos, ponerte de pie, ceder la palabra.',pasos:[
+    {t:'Cubiertos de afuera hacia adentro',d:'Conforme avanzan los tiempos de la comida usa siempre el cubierto más externo primero — el que se queda quieto es el de la izquierda.'},
+    {t:'Servilleta y postura en la mesa',d:'Va sobre las piernas apenas te sientas (nunca en el cuello); no hables con la boca llena ni apoyes los codos mientras comes; espera a que todos tengan su plato antes de empezar.'},
+    {t:'Apretón de manos firme',d:'Ni de "pescado muerto" ni de aplastar, 2-3 segundos con contacto visual — y ponte de pie si estás sentado cuando alguien llega a saludarte.'},
+    {t:'Puntualidad real',d:'Llegar 5 minutos antes es puntual; llegar a la hora exacta ya es tarde socialmente.'},
+    {t:'Vestimenta según la ocasión',d:'La guía completa (formal, casual de negocios, boda) vive en Vestimenta — revísala antes de cualquier evento donde no estés seguro qué ponerte.'}
+  ]},
+  fogata:{titulo:'Hacer y apagar una fogata de verdad, no solo prenderla',frase:'Yesca, leña delgada, leña gruesa — en ese orden, o se apaga sola.',pasos:[
+    {t:'3 materiales en orden',d:'Yesca (pasto seco, corteza, papel — prende con una sola chispa), leña delgada (grosor de lápiz) y hasta el final la leña gruesa. Ponerla gruesa desde el inicio apaga el fuego antes de que crezca — el error #1.'},
+    {t:'Armado tipi',d:'Ramas delgadas paradas en cono sobre la yesca — arde rápido y da mucha luz, ideal para encender rápido, pero se consume pronto.'},
+    {t:'Armado cabaña',d:'Dos troncos paralelos con la yesca en medio, encima otros dos cruzados en capas — arde lento y parejo, la mejor para cocinar.'},
+    {t:'Armado estrella',d:'Troncos gruesos como los rayos de una rueda, empujándolos hacia el centro conforme se consumen — la que más dura con menos leña.'},
+    {t:'Seguridad, no negociable',d:'Nunca bajo ramas o cerca de pasto seco, agua o tierra siempre a la mano, nunca sola encendida ni un minuto.'},
+    {t:'Apagarla de verdad',d:'Agua, remueve las cenizas, agua otra vez, y toca cerca (sin tocar) con el dorso de la mano para confirmar que ya no hay calor — una fogata "apagada" que sigue caliente por dentro es la causa #1 de incendios forestales por descuido.'}
+  ]},
+  vino:{titulo:'Catar y servir vino con seguridad, no solo tomarlo',frase:'No hace falta ser sommelier — hace falta saber los 3 pasos y no apenarte de preguntar.',pasos:[
+    {t:'Cómo se hace',d:'Se cosecha la uva, se prensa (mosto), y las levaduras fermentan sus azúcares en alcohol 1-4 semanas — el tinto fermenta con la piel de la uva (de ahí su color), el blanco sin ella.'},
+    {t:'Cata en 3 pasos',d:'Vista (inclina la copa sobre fondo blanco, mira color y "piernas"), Nariz (gira para airear, huele dos veces), Boca (trago pequeño, pásalo por toda la lengua antes de tragar).'},
+    {t:'Temperatura correcta',d:'Tinto 16-18°C (fresco, no ambiente de casa), blanco/rosado 8-10°C, espumoso 6-8°C.'},
+    {t:'Abrir la botella',d:'Corta la cápsula debajo del reborde del cuello, enrosca el sacacorchos derecho sin llegar al fondo, saca con palanca firme y constante — nunca de un jalón.'},
+    {t:'Maridaje simple',d:'Tinto con carnes rojas y quesos curados, blanco con pescado/mariscos/pollo, rosado con picante o calor, espumoso para empezar o celebrar.'},
+    {t:'Si no sabes qué pedir',d:'Di tu presupuesto y qué vas a comer, y deja que el sommelier o mesero recomiende — es su trabajo, no hay nada inseguro en preguntar.'}
+  ]},
+  coctel:{titulo:'Preparar al menos 2 de los 5 cocteles clásicos',frase:'Whisky, tequila y mezcal no son lo mismo — saber la diferencia ya te distingue en cualquier barra.',pasos:[
+    {t:'La diferencia real',d:'Whisky se destila de granos fermentados y reposa en barrica mínimo 2-3 años. Tequila se destila de agave azul (solo Jalisco y alrededores); mezcal, de cualquier agave, cocido en horno de tierra con leña — el tequila es técnicamente un tipo de mezcal.'},
+    {t:'Old Fashioned',d:'Whisky, azúcar, angostura y una twist de naranja sobre hielo grande — el coctel "de caballero" por excelencia.'},
+    {t:'Negroni',d:'Partes iguales de gin, vermut rojo y Campari — amargo, directo, sin trucos. El que más impresiona por lo simple que es de pedir bien.'},
+    {t:'Margarita',d:'Tequila, triple sec y limón en partes 2:1:1, con sal en el borde — el que nunca falla en México.'},
+    {t:'Whisky Sour',d:'Whisky, limón, jarabe simple y clara de huevo (opcional, da espuma) — equilibrio perfecto entre fuerte y fresco.'},
+    {t:'Mojito',d:'Ron blanco, hierbabuena machacada, limón, azúcar y soda — el que mejor cae en clima caliente. Cualquier licor fuerte "derecho" se toma a sorbos pequeños, nunca de un trago.'}
+  ]},
+  nudos:{titulo:'Los 4 nudos esenciales, sin buscar el diagrama cada vez',frase:'No necesitas saber 50 nudos — necesitas saber 4 de memoria, bajo presión.',pasos:[
+    {t:'As de guía',d:'Forma un aro fijo que no se cierra ni se afloja bajo tensión — el nudo de rescate por excelencia, para asegurar algo (o a alguien) sin riesgo de que se ahorque.'},
+    {t:'Ocho',d:'El más simple de todos, se usa como tope al final de una cuerda para que no se salga de una polea o argolla — el primero que cualquiera debería aprender.'},
+    {t:'Nudo llano (rizo)',d:'Une dos cuerdas del mismo grosor rápido y seguro — ideal para amarrar un paquete o unir dos cabos para que alcancen más longitud.'},
+    {t:'Ballestrinque',d:'Fija una cuerda a un poste o tubo de forma instantánea y se puede ajustar sin desamarrar — el que más se usa para tender una lona o amarrar algo al remolque del auto.'},
+    {t:'Practica bajo presión',d:'De nada sirve saberlo despacio en tu casa si no lo puedes hacer rápido con las manos frías o con lluvia — practica hasta que sea automático.'}
+  ]},
+  mecanica:{titulo:'Cambiar una llanta y pasar corriente sin ayuda ni manual',frase:'No se trata de ser mecánico — se trata de no quedarte varado por algo que se resuelve en 10 minutos.',pasos:[
+    {t:'Cambiar una llanta ponchada',d:'Intermitentes y freno de mano, afloja (sin quitar) los birlos antes de levantar con el gato, levanta hasta que no toque el piso, quita birlos y llanta, monta la de refacción, y aprieta los birlos en cruz (nunca en círculo) — primero a mano, luego a tope con el auto en el piso.'},
+    {t:'Pasar corriente',d:'Ambos autos apagados: rojo-positivo al positivo del auto muerto, luego rojo-positivo al positivo del que da corriente, negro-negativo al negativo del que da corriente, y el último cable negro a metal sin pintura del motor del auto muerto (nunca a su negativo directo). Enciende el que da corriente, espera 2-3 min, intenta encender el otro.'},
+    {t:'Revisar el nivel de aceite',d:'Auto en frío y en plano, saca la varilla, límpiala, métela hasta el fondo, sácala de nuevo y lee entre las marcas mín/máx.'},
+    {t:'Si se sobrecalienta',d:'Apágalo de inmediato, nunca abras el radiador caliente (el vapor a presión quema), espera a que baje la temperatura antes de revisar el refrigerante.'},
+    {t:'Practica antes de necesitarlo',d:'La primera vez que cambies una llanta no debería ser de noche, en la lluvia, solo — hazlo una vez en calma para que ya sepas cómo se siente.'}
+  ]},
+  auxilios:{titulo:'RCP y Heimlich — practicado alguna vez, no solo leído',frase:'Primeros auxilios ganan tiempo, no reemplazan atención médica real — pero ese tiempo salva vidas.',pasos:[
+    {t:'Atragantamiento (Heimlich)',d:'Párate detrás de la persona, haz un puño arriba del ombligo, cúbrelo con la otra mano, y da compresiones firmes hacia adentro y arriba hasta que expulse el objeto.'},
+    {t:'RCP básico (adulto)',d:'30 compresiones fuertes en el centro del pecho (5-6 cm de profundidad, ritmo ~100-120 por minuto — el ritmo de "Stayin\' Alive") por 2 respiraciones, y repetir sin parar hasta que llegue ayuda.'},
+    {t:'Cortada',d:'Presión directa y firme con tela limpia hasta que pare el sangrado, eleva la extremidad, limpia con agua (no alcohol directo en la herida abierta) antes de cubrir.'},
+    {t:'Quemadura',d:'Agua fría corriendo (no hielo directo) 10-15 min, nunca truenes una ampolla, nunca pongas pasta de dientes ni mantequilla — mito peligroso, retiene el calor.'},
+    {t:'Cuándo esto no basta',d:'Llama a emergencias (911) siempre que haya pérdida de conciencia, sangrado que no para con presión directa, quemadura grande o en cara/manos/genitales, o cualquier duda real — ante la duda, siempre llama.'},
+    {t:'Toma un curso real',d:'Un curso certificado de RCP/primeros auxilios (la Cruz Roja los ofrece en CDMX) convierte esto de teoría leída a reflejo entrenado — ahí está la diferencia real.'}
   ]}
 };
 function abrirHabilidadDetalle(id,img){
@@ -3443,7 +3549,12 @@ const SLIDE_MENU_META=[
 // SLIDE ENGINE — avance automático (velocidad configurable) + transición + controles
 // ══════════════════════════════════════════════════════════════════════════
 const N=RENDERS.length;
-let cur=0, playing=true, timer=null;
+// playing arranca en false (2026-08-11, pedido explícito: "siempre pausa la transicion y que no
+// se mueva de la pagina 1, debo hacer click en la opcion de play para que se transicione
+// automaticamente") — antes arrancaba en true y el temporizador de restartTimer() (ver Init al
+// final del archivo) empezaba a avanzar de slide solo desde el primer segundo, sin que nadie lo
+// pidiera. El botón ▶/⏸ (togglePlay()) sigue siendo la única forma de arrancar la rotación.
+let cur=0, playing=false, timer=null;
 let AUTO_MS=180000; // 3 minutos por defecto — puede cambiar desde Ajustes
 
 // ── Ajustes propios del Dashboard (clave 'dash-settings', NO compartida con el resto) ──
