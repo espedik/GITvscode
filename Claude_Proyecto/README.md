@@ -60,8 +60,8 @@ Un conjunto de aplicaciones web de una sola página (HTML + CSS + JS, **sin back
 | `dash-privado` | `Dashboard/dashboard.html` | *(nadie más — clave propia del Dashboard, no compartida; oculta cifras financieras en su propia pantalla, no afecta a `Finanzas/Finanzas.html`)* |
 | `radarp_{id}` × 12 | `Coach/Coach_v2.html` | *(nadie más — el radar del Dashboard usa sus propios valores base duplicados, no lee estas claves)* |
 | `dash-lista-compras` | `Dashboard/dashboard.html` (nuevo 2026-08-03 — checklist del slide "🛒 Lista de Compras") | *(nadie más — clave propia del Dashboard; el catálogo en sí, `LISTA_COMPRAS`, es una copia duplicada de datos de `comida.html`/`cuidadopersonal.html`/`salud.html`, no una lectura en vivo de `localStorage`, ver "Ramificaciones" #4)* |
-| `habilidades_base_v1` | `Dashboard/dashboard.html` (nuevo 2026-08-09 — % de avance autoevaluado de las 8 tarjetas del slide "Habilidades Base") | *(nadie más — clave propia del Dashboard, sin fuente de datos automática en ninguna otra app)* |
-| `metas_img_progreso_v1` | `Dashboard/dashboard.html` (nuevo 2026-08-09 — % de avance autoevaluado de las tarjetas con foto del slide "Mis Metas", independiente de los 4 medidores con datos reales de Finanzas que ya tenía esa pantalla) | *(nadie más — clave propia del Dashboard)* |
+| `metas_checklist_v1` | `Dashboard/dashboard.html` (nuevo 2026-08-09 — checklist real por meta del slide "Mis Metas"; el % de la barra de cada tarjeta se calcula solo de esto, ver `detailPct()`) | *(nadie más — clave propia del Dashboard)* |
+| `habilidades_checklist_v1` | `Dashboard/dashboard.html` (nuevo 2026-08-09 — mismo mecanismo que `metas_checklist_v1`, para las 8 tarjetas del slide "Habilidades Base") | *(nadie más — clave propia del Dashboard, sin fuente de datos automática en ninguna otra app)* |
 
 `Dashboard/dashboard.html` es el único archivo que lee prácticamente todo. Desde el 2026-08-01 también **escribe** en 2 claves ajenas (ver punto 3bis abajo) — ya no es 100% de solo lectura. Si agregas una app nueva o una clave nueva, decide explícitamente si el Dashboard debe leerla (`loadAll()`) y actualiza esta tabla.
 

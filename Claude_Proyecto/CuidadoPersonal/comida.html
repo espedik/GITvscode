@@ -295,7 +295,7 @@ canvas{max-width:100%}
       <div class="card" style="margin-bottom:18px">
         <div class="card-title" style="margin-bottom:10px">📋 Cómo usar esta lista</div>
         <p style="font-size:12.5px;color:var(--text2);line-height:1.6">
-          Es la lista <b style="color:var(--text)">completa y consolidada</b> de todo lo que necesitas comprar para poder cocinar las 28 recetas de arriba (14 desayunos + 14 cenas), sin repetir ingredientes. Márcalos conforme los vayas metiendo al carrito — se guarda automáticamente. No son cantidades exactas por semana (cada receta ya trae su cantidad) — es tu lista maestra de despensa.
+          Es la lista <b style="color:var(--text)">completa y consolidada</b> de todo lo que necesitas comprar para poder cocinar las 24 recetas de arriba (10 desayunos + 8 cenas), sin repetir ingredientes. Márcalos conforme los vayas metiendo al carrito — se guarda automáticamente. No son cantidades exactas por semana (cada receta ya trae su cantidad) — es tu lista maestra de despensa.
         </p>
       </div>
       <div class="shop-progress">
@@ -373,35 +373,65 @@ canvas{max-width:100%}
 <script>
 // ─── Categorías de ingredientes — para armar la lista del súper consolidada ──
 // Reescrito el 2026-08-07 junto con RECETAS (ver esa fecha más abajo) — 12 ingredientes que
-// no le gustan a Adán salieron del recetario y de este mapa; se agregaron los de las 8 recetas
-// nuevas (champiñones, pimiento morrón, camarón, filete de salmón, filete de res magro, jamón
-// de pavo, requesón, papaya, granola de amaranto, fideo, ajo). `Frijoles negros` no tenía
+// no le gustan a Adán salieron del recetario y de este mapa. `Frijoles negros` no tenía
 // categoría antes (caía al fallback "Condimentos y otros" de renderSuper()) — ahora sí.
+// 2026-08-09: segunda ronda de curación de recetas (ver RECETAS más abajo, misma fecha) — Ajo,
+// Camarón, Filete de salmón, Requesón, Canela en polvo, Fideo, Quinoa cocida y Sal quedaron sin
+// ninguna receta que los use tras quitar Camarones al ajillo/Salmón al horno/Tostadas de
+// requesón/Pan francés/Hot cakes/Sopa de pollo/Ensalada de quinoa/Pan tostado, así que salieron
+// también de este mapa — evita entradas muertas que no corresponden a ningún ingrediente real.
 const CATEGORIA_ING = {
   'Huevo':'🥚 Proteínas','Clara de huevo':'🥚 Proteínas','Pechuga de pollo':'🥚 Proteínas','Filete de res magro':'🥚 Proteínas',
-  'Filete de salmón':'🥚 Proteínas','Filete de tilapia':'🥚 Proteínas','Camarón':'🥚 Proteínas','Jamón de pavo':'🥚 Proteínas',
-  'Atún en agua':'🥚 Proteínas','Queso panela':'🥚 Proteínas','Requesón':'🥚 Proteínas','Yogurt griego natural':'🥚 Proteínas','Frijoles negros':'🥚 Proteínas',
+  'Filete de tilapia':'🥚 Proteínas','Jamón de pavo':'🥚 Proteínas',
+  'Atún en agua':'🥚 Proteínas','Queso panela':'🥚 Proteínas','Yogurt griego natural':'🥚 Proteínas','Frijoles negros':'🥚 Proteínas',
   'Leche entera':'🥛 Lácteos',
   'Arroz blanco cocido':'🌾 Granos y carbohidratos','Pan integral':'🌾 Granos y carbohidratos','Tortilla de maíz':'🌾 Granos y carbohidratos',
-  'Quinoa cocida':'🌾 Granos y carbohidratos','Papa':'🌾 Granos y carbohidratos','Fideo':'🌾 Granos y carbohidratos','Granola de amaranto':'🌾 Granos y carbohidratos',
+  'Papa':'🌾 Granos y carbohidratos','Granola de amaranto':'🌾 Granos y carbohidratos',
   'Plátano':'🍎 Frutas','Pera':'🍎 Frutas','Aguacate':'🍎 Frutas','Papaya':'🍎 Frutas',
   'Chayote':'🥦 Verduras','Pepino':'🥦 Verduras','Nopales cocidos':'🥦 Verduras','Cebolla':'🥦 Verduras','Champiñones':'🥦 Verduras',
-  'Pimiento morrón':'🥦 Verduras','Jitomate':'🥦 Verduras','Lechuga':'🥦 Verduras','Ajo':'🥦 Verduras',
-  'Canela en polvo':'🧂 Condimentos y otros','Miel de abeja':'🧂 Condimentos y otros','Aceite de oliva':'🧂 Condimentos y otros','Sal':'🧂 Condimentos y otros'
+  'Pimiento morrón':'🥦 Verduras','Jitomate':'🥦 Verduras','Lechuga':'🥦 Verduras',
+  'Miel de abeja':'🧂 Condimentos y otros','Aceite de oliva':'🧂 Condimentos y otros'
 };
 const ORDEN_CAT = ['🥚 Proteínas','🥛 Lácteos','🌾 Granos y carbohidratos','🍎 Frutas','🥦 Verduras','🧂 Condimentos y otros'];
 
-// ─── Recetario — 14 desayunos + 14 cenas, sencillos, reales, con macros aproximados ──
+// ─── Recetario — 10 desayunos + 8 cenas, sencillos, reales, con macros aproximados ──
 // Reescrito por completo el 2026-08-07 (pedido explícito de Adán: *"en compras, ni me gusta la
 // calabaza, ejotes, hierbas de olor, brocoli, camote, espinaca zanahoria, pavo molido, leche de
 // avena, crema de cacahuate, caldo de pollo, avena en hojuelas, entonces dame mas recetas y pon
 // otros ingredientes"*) — las 16 de las 20 recetas originales que usaban alguno de esos 12
 // ingredientes se reemplazaron por completo (solo sobreviven d8/d10/c4/c6, que nunca los usaban);
-// se agregaron además 8 recetas nuevas (de 10+10 a 14+14) usando ingredientes distintos
-// (champiñones, pimiento morrón, camarón, salmón, filete de res magro, jamón de pavo, requesón,
-// papaya, granola de amaranto, fideo, ajo) que no aparecían antes en el recetario. Se conserva el
-// mismo criterio de cuidado con el reflujo que ya tenían las recetas originales (sal moderada,
-// nada picante, jitomate/manzana sin semilla o cáscara cuando aplica, cocciones suaves).
+// se agregaron además 8 recetas nuevas usando ingredientes distintos (champiñones, pimiento
+// morrón, camarón, salmón, filete de res magro, jamón de pavo, requesón, papaya, granola de
+// amaranto, fideo, ajo) que no aparecían antes en el recetario, subiendo de 10+10 a 14+14. Se
+// conserva el mismo criterio de cuidado con el reflujo que ya tenían las recetas originales (sal
+// moderada, nada picante, jitomate/manzana sin semilla o cáscara cuando aplica, cocciones suaves).
+//
+// Segunda ronda, 2026-08-09 — pedido explícito: *"quitame el pan frances, el omellette dejalo
+// pero otra cosa en vez de champiñones, quita lo de pan tostado, tostadas de requeson quitalas,
+// quita hotcakes / en cena quita salmon, quita camarones, quita sopa de pollo, quita ensalada,
+// quita pescado a la veracruzana, quita tinga de pollo"*. De 14+14 bajó a **10 desayunos + 8
+// cenas** (24 recetas). Se quitaron por completo: d5 Pan francés, d8 Pan tostado, d11 Tostadas de
+// requesón, d13 Hot cakes (desayuno); c1 Salmón, c3 Camarones al ajillo, c8 Sopa de pollo, c10
+// Ensalada de quinoa, c13 Pescado a la veracruzana, c14 Tinga de pollo (cena). Los `id` de las que
+// quedaron NO se renumeraron (d6/d7/d9/d10/d12/d14, c2/c4/c5/c6/c7/c9/c11/c12) — evita romper
+// cualquier referencia externa a un id específico y deja claro en el propio código qué huecos son
+// intencionales, no un error de conteo.
+//
+// **d6 (Omelette) se conservó pero cambió su vegetal**: tenía champiñones, que Adán ya no quiere
+// ahí. Se sustituyó por **pimiento morrón**, NO por espinaca — espinaca está en la lista de
+// ingredientes que a Adán no le gustan (ver comentario del 2026-08-07 arriba), así que hubiera
+// sido repetir un error ya corregido una vez. Pimiento morrón ya era un ingrediente probado y
+// querido en el recetario (c7/c9 originales), y de hecho ya se combinaba con champiñones en el
+// omelette de cena (c7) — mismo perfil de sabor, sin el ingrediente que sobraba.
+//
+// **Huérfanos limpiados de `CATEGORIA_ING`** (arriba): Ajo, Camarón, Filete de salmón, Requesón,
+// Canela en polvo, Fideo, Quinoa cocida y Sal ya no los usa ninguna receta — se verificó con grep
+// que cada uno solo aparecía en las recetas que se acaban de quitar antes de borrarlos del mapa.
+//
+// **`Dashboard/dashboard.html → RECETAS_MINI` es un duplicado ligero de este mismo recetario**
+// (ver su propio comentario ahí) — se replicaron los mismos 10 recortes + el cambio de d6 ahí
+// también, y se limpiaron los mismos 8 ingredientes huérfanos de `LISTA_COMPRAS.comida` (ver
+// readme_dashboard.md → "Recetario recortado..." para el detalle completo de esa sincronización).
 const RECETAS = {
   desayuno: [
     {id:'d1', nombre:'Molletes de frijol con queso panela', tiempo:'15 min',
@@ -424,26 +454,16 @@ const RECETAS = {
      pasos:['Licúa todos los ingredientes 1 minuto hasta que quede cremoso.','Sirve frío.'],
      macros:{cal:380,prot:20,carbs:55,gra:8},
      tip:'Para llevar en tu traslado a ALTEN — la proteína del yogurt te rinde más que un licuado solo de fruta.'},
-    {id:'d5', nombre:'Pan francés integral con canela', tiempo:'15 min',
-     ingredientes:[{n:'Pan integral',c:'3 rebanadas'},{n:'Huevo',c:'2 pza'},{n:'Leche entera',c:'80 ml'},{n:'Canela en polvo',c:'al gusto'},{n:'Miel de abeja',c:'1 cda, para servir'}],
-     pasos:['Bate el huevo con la leche y la canela.','Remoja cada rebanada de pan unos segundos por lado.','Cocina en sartén antiadherente a fuego bajo, 2 min por lado.','Sirve con miel.'],
-     macros:{cal:410,prot:18,carbs:52,gra:14},
-     tip:'Usa pan de un día anterior — absorbe mejor la mezcla sin deshacerse.'},
-    {id:'d6', nombre:'Omelette de claras con champiñones y queso panela', tiempo:'12 min',
-     ingredientes:[{n:'Clara de huevo',c:'6 pza'},{n:'Champiñones',c:'1 taza, rebanados'},{n:'Queso panela',c:'30 g'},{n:'Aceite de oliva',c:'1 cdta'}],
-     pasos:['Sofríe los champiñones en el aceite 3 min hasta que suelten el agua y se doren.','Agrega las claras batidas y cocina a fuego bajo.','Añade el queso en cubos y dobla el omelette a la mitad.'],
+    {id:'d6', nombre:'Omelette de claras con pimiento morrón y queso panela', tiempo:'12 min',
+     ingredientes:[{n:'Clara de huevo',c:'6 pza'},{n:'Pimiento morrón',c:'1/2 pza, sin semillas'},{n:'Queso panela',c:'30 g'},{n:'Aceite de oliva',c:'1 cdta'}],
+     pasos:['Sofríe el pimiento morrón en el aceite 3 min hasta que se suavice.','Agrega las claras batidas y cocina a fuego bajo.','Añade el queso en cubos y dobla el omelette a la mitad.'],
      macros:{cal:340,prot:34,carbs:8,gra:16},
-     tip:'Los champiñones bien cocidos, no crudos, son más suaves para el estómago.'},
+     tip:'El pimiento morrón es dulce y no pica — buena opción de vegetal en la mañana sin arriesgar el reflujo.'},
     {id:'d7', nombre:'Burrito de huevo, frijoles y queso panela', tiempo:'12 min',
      ingredientes:[{n:'Huevo',c:'3 pza'},{n:'Frijoles negros',c:'1/2 taza'},{n:'Queso panela',c:'30 g'},{n:'Tortilla de maíz',c:'2 pza grandes'}],
      pasos:['Cocina el huevo revuelto.','Calienta los frijoles.','Arma el burrito con huevo, frijoles y queso panela en la tortilla, enróllalo bien.'],
      macros:{cal:460,prot:30,carbs:40,gra:20},
      tip:'Envuélvelo en papel aluminio si te lo llevas de camino a ALTEN — se mantiene caliente más tiempo.'},
-    {id:'d8', nombre:'Pan tostado con aguacate y huevo cocido', tiempo:'12 min',
-     ingredientes:[{n:'Pan integral',c:'2 rebanadas'},{n:'Aguacate',c:'1/2 pza'},{n:'Huevo',c:'2 pza'},{n:'Sal',c:'poca'}],
-     pasos:['Cuece los huevos 8 min, pélalos y rebánalos.','Machaca el aguacate sobre el pan tostado.','Corona con el huevo rebanado.'],
-     macros:{cal:450,prot:22,carbs:35,gra:25},
-     tip:'Evita el limón si sientes ardor ese día — el aguacate solo ya tiene buen sabor.'},
     {id:'d9', nombre:'Papaya con yogurt griego, granola de amaranto y miel', tiempo:'5 min',
      ingredientes:[{n:'Papaya',c:'1 taza, en cubos'},{n:'Yogurt griego natural',c:'150 g'},{n:'Granola de amaranto',c:'25 g'},{n:'Miel de abeja',c:'1 cdta'}],
      pasos:['Sirve la papaya en un tazón.','Agrega el yogurt encima.','Corona con la granola y la miel.'],
@@ -454,21 +474,11 @@ const RECETAS = {
      pasos:['Cocina las claras revueltas en un sartén.','Rellena las tortillas con las claras, el queso y los nopales.','Dobla y calienta en comal hasta que el queso gratine.'],
      macros:{cal:380,prot:30,carbs:30,gra:14},
      tip:'Los nopales cocidos son alcalinos — buenos para el estómago, a diferencia de los crudos en salsa.'},
-    {id:'d11', nombre:'Tostadas de requesón con miel y plátano', tiempo:'8 min',
-     ingredientes:[{n:'Tortilla de maíz',c:'3 pza, tostadas'},{n:'Requesón',c:'100 g'},{n:'Plátano',c:'1 pza'},{n:'Miel de abeja',c:'1 cda'}],
-     pasos:['Tuesta las tortillas en comal si no vienen ya tostadas.','Unta el requesón encima.','Corona con el plátano rebanado y la miel.'],
-     macros:{cal:380,prot:18,carbs:50,gra:12},
-     tip:'El requesón es más ligero que el queso panela — buena opción en días de estómago sensible.'},
     {id:'d12', nombre:'Huevos a la mexicana suaves con tortilla', tiempo:'10 min',
      ingredientes:[{n:'Huevo',c:'3 pza'},{n:'Jitomate',c:'1/2 pza, picado, sin semillas'},{n:'Cebolla',c:'poca, cocida'},{n:'Tortilla de maíz',c:'2 pza'}],
      pasos:['Sofríe la cebolla y el jitomate 2 min a fuego bajo.','Agrega los huevos batidos y revuelve hasta que cuajen.','Sirve con las tortillas calientes.'],
      macros:{cal:380,prot:24,carbs:26,gra:18},
      tip:'Sin chile y con el jitomate sin semillas — la versión clásica suele ser más ácida de lo que te conviene.'},
-    {id:'d13', nombre:'Hot cakes de plátano y huevo (sin harina)', tiempo:'12 min',
-     ingredientes:[{n:'Plátano',c:'2 pza'},{n:'Huevo',c:'3 pza'},{n:'Canela en polvo',c:'al gusto'},{n:'Miel de abeja',c:'1 cda, para servir'}],
-     pasos:['Machaca el plátano y bátelo junto con los huevos y la canela hasta integrar.','Cocina en sartén antiadherente a fuego bajo, 2 min por lado.','Sirve con miel.'],
-     macros:{cal:340,prot:20,carbs:38,gra:10},
-     tip:'Solo 2 ingredientes base — la versión más rápida de armar entre semana.'},
     {id:'d14', nombre:'Sándwich de pan integral con huevo, jitomate y queso panela', tiempo:'10 min',
      ingredientes:[{n:'Pan integral',c:'2 rebanadas'},{n:'Huevo',c:'2 pza'},{n:'Jitomate',c:'1/2 pza, rebanado'},{n:'Queso panela',c:'30 g'}],
      pasos:['Cuece o fríe los huevos como más te gusten.','Arma el sándwich con el huevo, el jitomate y el queso panela entre el pan.'],
@@ -476,21 +486,11 @@ const RECETAS = {
      tip:'Tuesta ligeramente el pan para que no se humedezca con el jitomate.'},
   ],
   cena: [
-    {id:'c1', nombre:'Salmón al horno con puré de papa y champiñones', tiempo:'30 min',
-     ingredientes:[{n:'Filete de salmón',c:'150 g'},{n:'Papa',c:'2 pza'},{n:'Champiñones',c:'1 taza'},{n:'Leche entera',c:'50 ml'},{n:'Aceite de oliva',c:'1 cdta'}],
-     pasos:['Hornea el salmón con aceite 15 min a 200°C.','Cuece y machaca la papa con la leche para el puré.','Saltea los champiñones 4 min.','Sirve todo junto.'],
-     macros:{cal:520,prot:40,carbs:40,gra:22},
-     tip:'El salmón tiene grasa saludable (omega 3) — buena cena en días de entrenamiento pesado.'},
     {id:'c2', nombre:'Pechuga de pollo con arroz y champiñones salteados', tiempo:'20 min',
      ingredientes:[{n:'Pechuga de pollo',c:'150 g'},{n:'Arroz blanco cocido',c:'1 taza'},{n:'Champiñones',c:'1 taza'},{n:'Aceite de oliva',c:'1 cdta'}],
      pasos:['Sazona el pollo con poca sal y cocínalo a la plancha 5-6 min por lado.','Saltea los champiñones en el aceite 4 min.','Sirve todo junto con el arroz.'],
      macros:{cal:480,prot:48,carbs:50,gra:8},
      tip:'Cena base de la semana — fácil de repetir y de escalar en porción si entrenaste ese día.'},
-    {id:'c3', nombre:'Camarones al ajillo suave con arroz blanco', tiempo:'15 min',
-     ingredientes:[{n:'Camarón',c:'150 g'},{n:'Ajo',c:'2 dientes'},{n:'Aceite de oliva',c:'1 cda'},{n:'Arroz blanco cocido',c:'1 taza'}],
-     pasos:['Sofríe el ajo picado en el aceite a fuego bajo, sin dorar de más.','Agrega los camarones y cocina 3-4 min hasta que estén rosados.','Sirve con el arroz.'],
-     macros:{cal:400,prot:38,carbs:42,gra:10},
-     tip:'Sin chile de árbol — el ajo solo ya le da todo el sabor sin arriesgar el reflujo.'},
     {id:'c4', nombre:'Atún con arroz y ensalada de pepino', tiempo:'10 min',
      ingredientes:[{n:'Atún en agua',c:'1 lata'},{n:'Arroz blanco cocido',c:'1 taza'},{n:'Pepino',c:'1 taza'},{n:'Aceite de oliva',c:'1 cdta'}],
      pasos:['Escurre el atún y mézclalo con el arroz.','Sirve con el pepino en rebanadas y un toque de aceite de oliva.'],
@@ -511,21 +511,11 @@ const RECETAS = {
      pasos:['Sofríe los champiñones y el pimiento 3 minutos.','Agrega las claras y cocina a fuego bajo hasta que cuajen.'],
      macros:{cal:210,prot:25,carbs:8,gra:7},
      tip:'La cena más ligera de todas — el pimiento morrón es más dulce y menos ácido que el poblano.'},
-    {id:'c8', nombre:'Sopa de pollo casera con chayote y fideo', tiempo:'30 min',
-     ingredientes:[{n:'Pechuga de pollo',c:'150 g'},{n:'Chayote',c:'1 taza'},{n:'Fideo',c:'1/2 taza'},{n:'Sal',c:'poca'}],
-     pasos:['Cuece el pollo en agua 20 min a fuego medio — esto hace tu propio caldo, sin necesitar concentrado.','Deshebra el pollo.','Agrega el chayote y el fideo, cuece 8 min más.'],
-     macros:{cal:320,prot:38,carbs:28,gra:4},
-     tip:'Hacer el caldo desde cero con la misma pechuga te da mejor control de la sal que un caldo concentrado — y mejor sabor real.'},
     {id:'c9', nombre:'Filete de pescado al horno con papa y pimiento', tiempo:'30 min',
      ingredientes:[{n:'Filete de tilapia',c:'150 g'},{n:'Papa',c:'1 pza mediana'},{n:'Pimiento morrón',c:'1/2 pza'},{n:'Aceite de oliva',c:'1 cdta'}],
      pasos:['Hornea la papa en rebanadas 25 min a 200°C.','Agrega el pescado y el pimiento en rebanadas, hornea 15 min más con el aceite.'],
      macros:{cal:340,prot:32,carbs:30,gra:6},
      tip:'El pimiento morrón asado se vuelve dulce y suave — mejor tolerado que crudo.'},
-    {id:'c10', nombre:'Ensalada tibia de pollo, quinoa, champiñones y pepino', tiempo:'20 min',
-     ingredientes:[{n:'Pechuga de pollo',c:'150 g'},{n:'Quinoa cocida',c:'1 taza'},{n:'Champiñones',c:'1/2 taza'},{n:'Pepino',c:'1/2 taza'},{n:'Aceite de oliva',c:'1 cdta'}],
-     pasos:['Cocina el pollo a la plancha y córtalo en cubos.','Saltea los champiñones 3 min.','Mezcla todo con la quinoa y el pepino, agrega el aceite.'],
-     macros:{cal:470,prot:46,carbs:44,gra:10},
-     tip:'La cena con más proteína de la lista — para los días de Brazos A/B.'},
     {id:'c11', nombre:'Tostadas de atún con lechuga, jitomate y aguacate', tiempo:'10 min',
      ingredientes:[{n:'Atún en agua',c:'1 lata'},{n:'Tortilla de maíz',c:'3 pza, tostadas'},{n:'Lechuga',c:'1 taza'},{n:'Jitomate',c:'1/2 pza'},{n:'Aguacate',c:'1/4 pza'}],
      pasos:['Escurre el atún.','Arma las tostadas con la lechuga, el atún, el jitomate y el aguacate encima.'],
@@ -536,16 +526,6 @@ const RECETAS = {
      pasos:['Abre la pechuga en mariposa, rellénala con el queso panela y ciérrala con palillos.','Cocina a la plancha 5-6 min por lado.','Hornea las papas en rebanadas con el aceite 25 min a 200°C.'],
      macros:{cal:510,prot:52,carbs:38,gra:16},
      tip:'Buena opción para los días de Piernas — carbohidrato extra de las papas.'},
-    {id:'c13', nombre:'Pescado a la veracruzana suave con arroz', tiempo:'25 min',
-     ingredientes:[{n:'Filete de tilapia',c:'150 g'},{n:'Jitomate',c:'1 taza, picado, sin semillas'},{n:'Cebolla',c:'poca, cocida'},{n:'Arroz blanco cocido',c:'1 taza'}],
-     pasos:['Sofríe la cebolla y el jitomate 5 min hasta formar una salsa suave.','Agrega el pescado y cocina tapado 10 min a fuego bajo.','Sirve con el arroz.'],
-     macros:{cal:400,prot:34,carbs:45,gra:8},
-     tip:'Versión suave, sin aceitunas ni chiles — el jitomate sin semillas es menos ácido.'},
-    {id:'c14', nombre:'Tinga de pollo suave con tostadas y queso panela', tiempo:'25 min',
-     ingredientes:[{n:'Pechuga de pollo',c:'150 g'},{n:'Jitomate',c:'1 taza'},{n:'Cebolla',c:'poca, cocida'},{n:'Tortilla de maíz',c:'3 pza, tostadas'},{n:'Queso panela',c:'30 g'}],
-     pasos:['Cuece el pollo y deshébralo.','Sofríe la cebolla y el jitomate 5 min, agrega el pollo deshebrado y cocina 5 min más.','Sirve sobre las tostadas con el queso panela encima.'],
-     macros:{cal:440,prot:40,carbs:38,gra:14},
-     tip:'Tinga sin chipotle — la versión clásica suele picar más de lo que te conviene.'},
   ]
 };
 

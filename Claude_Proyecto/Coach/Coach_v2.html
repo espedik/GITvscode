@@ -59,11 +59,6 @@
       --shadow-md: 0 4px 24px rgba(0,0,0,.55);
       --purple:  #9b8cf5;
     }
-    :root[data-theme="dark"] nav {
-      background: rgba(18,18,18,.9);
-      border-bottom-color: rgba(255,255,255,.08);
-      box-shadow: 0 1px 8px rgba(0,0,0,.35);
-    }
     :root[data-theme="dark"] ::-webkit-scrollbar-thumb { background: rgba(255,255,255,.18); }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -88,35 +83,91 @@
     .card > h3, .riesgo-box > h3, .moat-box > h3 { margin-bottom: 14px; }
     p { line-height: 1.6; }
 
-    /* ─── NAV ─────────────────────────────────────────── */
-    nav {
+    /* ─── APP SHELL — sidebar izquierdo + contenido ──────
+       Rediseño 2026-08-10: antes la navegación era una barra horizontal
+       arriba con las 8-12 secciones de cada modo apiladas en scroll
+       infinito (todas visibles siempre). Ahora es un sidebar izquierdo
+       con secciones agrupadas por prioridad, y solo la sección elegida
+       se muestra — ver "main > section" más abajo e irASeccion() en el
+       bloque de JavaScript al final del archivo. ─── */
+    .app-shell { display: flex; align-items: flex-start; position: relative; }
+
+    .sidebar {
+      width: 252px;
+      flex-shrink: 0;
       position: sticky;
-      top: 0;
-      z-index: 100;
-      background: rgba(245,244,240,.95);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border-bottom: 1px solid rgba(0,0,0,.08);
-      box-shadow: 0 1px 8px rgba(0,0,0,.06);
+      top: 64px;
+      height: calc(100vh - 64px);
+      overflow-y: auto;
       display: flex;
-      align-items: center;
-      gap: 4px;
-      padding: 0 24px;
-      height: 62px;
-      overflow-x: auto;
-      scrollbar-width: none;
+      flex-direction: column;
+      gap: 20px;
+      padding: 22px 14px 26px;
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      scrollbar-width: thin;
     }
-    nav::-webkit-scrollbar { display: none; }
+
+    .sidebar-overlay { display: none; }
+
+    .hamburger-btn {
+      display: none;
+      width: 38px; height: 38px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      font-size: 16px;
+      cursor: pointer;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    @media (max-width: 880px) {
+      .hamburger-btn { display: flex; }
+      .sidebar {
+        position: fixed;
+        top: 64px;
+        left: 0;
+        height: calc(100vh - 64px);
+        width: 82vw;
+        max-width: 300px;
+        z-index: 100;
+        transform: translateX(-100%);
+        transition: transform .25s ease;
+        box-shadow: var(--shadow-md);
+      }
+      .app-shell.sidebar-open .sidebar { transform: translateX(0); }
+      .sidebar-overlay {
+        display: block;
+        position: fixed;
+        inset: 64px 0 0 0;
+        background: rgba(0,0,0,.4);
+        z-index: 95;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity .2s ease;
+      }
+      .app-shell.sidebar-open .sidebar-overlay { opacity: 1; pointer-events: auto; }
+    }
 
     /* ─── MODO SWITCH — Coach Personal vs. Coach Empresa ─── */
     .modo-switch {
+      position: sticky;
+      top: 0;
+      z-index: 110;
       display: flex;
-      justify-content: center;
+      align-items: center;
+      justify-content: space-between;
       gap: 10px;
-      padding: 14px 24px;
+      padding: 0 20px;
+      height: 64px;
       background: var(--surface-2);
       border-bottom: 1px solid var(--border);
     }
+    .modo-switch-center { display: flex; gap: 10px; margin: 0 auto; }
+    .modo-switch-right { display: flex; gap: 8px; }
     .modo-btn {
       font-family: var(--font);
       font-size: 13px;
@@ -151,20 +202,7 @@
     .vista-panel { display: none; }
     .vista-panel.active { display: block; }
 
-    nav a {
-      color: var(--muted);
-      text-decoration: none;
-      font-size: 12.5px;
-      font-weight: 600;
-      padding: 8px 15px;
-      border-radius: 20px;
-      white-space: nowrap;
-      border: 1px solid transparent;
-      transition: color .15s, background .15s, border-color .15s;
-    }
-    nav a:hover { color: var(--text); background: var(--surface-2); }
-    nav a.active { color: var(--accent); background: var(--accent-soft); border-color: rgba(212,160,0,.3); }
-    nav .logo {
+    .sidebar-logo {
       font-family: var(--font-serif);
       font-size: 19px;
       font-weight: 900;
@@ -172,21 +210,73 @@
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
-      margin-right: 14px;
-      padding: 0;
       letter-spacing: .2px;
-      border: none;
-      border-radius: 0;
+      padding: 0 6px 4px;
+    }
+
+    .sb-group { display: flex; flex-direction: column; gap: 3px; }
+    .sb-group + .sb-group { padding-top: 10px; border-top: 1px solid var(--border); }
+    .sb-group-label {
+      font-size: 10.5px;
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--muted-2);
+      padding: 2px 12px 6px;
+    }
+    .sb-item { display: flex; flex-direction: column; }
+    .sb-subitems {
+      display: flex;
+      flex-direction: column;
+      margin-left: 14px;
+      border-left: 1px solid var(--border);
+      padding-left: 8px;
+      gap: 1px;
+      margin-top: 1px;
+      margin-bottom: 4px;
+    }
+
+    .sb-link, .sb-header-link, .sb-sublink {
+      display: block;
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 9px 12px;
+      border-radius: var(--radius-sm);
       white-space: nowrap;
-      flex-shrink: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      transition: color .15s, background .15s;
+    }
+    .sb-header-link { font-weight: 700; }
+    .sb-sublink { font-size: 12.5px; padding: 7px 12px; }
+    .sb-link:hover, .sb-header-link:hover, .sb-sublink:hover { color: var(--text); background: var(--surface-2); }
+    .sb-link.active, .sb-header-link.active, .sb-sublink.active {
+      color: var(--accent);
+      background: var(--accent-soft);
+      font-weight: 700;
+    }
+
+    .sb-dashboard {
+      margin-top: auto;
+      padding-top: 14px;
+      border-top: 1px solid var(--border);
+      color: var(--accent);
+      font-weight: 700;
     }
 
     /* ─── LAYOUT ──────────────────────────────────────── */
-    main { max-width: 1080px; margin: 0 auto; padding: 40px 24px 100px; }
+    main { flex: 1; min-width: 0; max-width: 1080px; margin: 0; padding: 36px 32px 100px; }
+    @media (max-width: 700px) { main { padding: 24px 16px 100px; } }
 
     section { margin-bottom: 64px; scroll-margin-top: 78px; }
 
-    main { counter-reset: section-counter; }
+    /* Solo la sección elegida en el sidebar se muestra — ver irASeccion()
+       al final del archivo. Antes todas las secciones de un modo estaban
+       apiladas y visibles a la vez (scroll infinito). */
+    main > section { display: none; }
+    main > section.active-section { display: block; }
 
     h2.section-title {
       display: flex;
@@ -201,8 +291,10 @@
       border-bottom: none;
     }
     h2.section-title::before {
-      counter-increment: section-counter;
-      content: counter(section-counter, decimal-leading-zero);
+      /* data-num en vez de un counter() de CSS: un counter no incrementa en
+         elementos con display:none, y ahora solo la sección elegida en el
+         sidebar está visible a la vez — con counter(), todas mostrarían "01". */
+      content: attr(data-num);
       flex-shrink: 0;
       font-family: var(--mono);
       font-size: 11px;
@@ -268,9 +360,7 @@
     /* Numbers — the visual signature of this page: always monospace */
     .num, .meta-grande, .countdown, .stat-badge span:first-child,
     .hz-val, .salud-val, .sd-label span:last-child, .imp-fecha,
-    #ovrValue, #val_ventas, #val_copy, #val_marketing, #val_network,
-    #val_liderazgo, #val_codigo, #val_ia, #val_datos, #val_inversion,
-    #val_finanzas, #val_ingles, #val_mente {
+    #skillOvrNum, .skfull-val {
       font-family: var(--mono);
       font-variant-numeric: tabular-nums;
     }
@@ -580,26 +670,43 @@
     .hz-grid > * { min-width: 0; }
     @media (max-width: 480px) { .hz-grid { grid-template-columns: repeat(2,1fr); } }
 
-    /* Tarjeta FIFA del radar (#aprendizaje) — ancho fijo de 320px pensado para
-       escritorio junto a los sliders; en pantallas angostas (iPad/iPhone) no
-       cabe: se apila arriba de los sliders y deja de ser sticky. */
-    @media (max-width: 800px) {
-      .skill-radar-grid { grid-template-columns: 1fr !important; }
-      .skill-radar-card { width: 100% !important; max-width: 360px; position: static !important; margin: 0 auto 20px; }
-    }
+    /* ─── Gráfico de Habilidades (2026-08-09) — reemplazó por completo la tarjeta FIFA de 360px
+       fija a un lado + sliders siempre abiertos a la derecha: Adán pidió que "las barras deben
+       verse completamente y no estar a un lado" y que la descripción de cada habilidad solo se
+       muestre al hacer clic (antes vivía siempre visible en #skillSliders). Ahora es una sola
+       lista a todo el ancho, agrupada por categoría, con acordeón: colapsada solo se ve
+       ícono+nombre+nivel+valor+barra completa; el clic revela descripción+slider+el botón de
+       roadmap. La tarjeta OVR/Top/Área crítica pasó de sidebar sticky a una fila de 3 estadísticas
+       arriba, a todo el ancho también. ───────────────────────────────────────────────────── */
+    .skill-stats-row{display:grid;grid-template-columns:200px 1fr 1fr;gap:14px;margin-bottom:16px}
+    @media (max-width: 700px){ .skill-stats-row{grid-template-columns:1fr} }
+    .skill-ovr-card{background:var(--surface);border:1px solid var(--accent);border-radius:var(--radius);padding:14px 16px;text-align:center;display:flex;flex-direction:column;justify-content:center}
+    .skill-ovr-eyebrow{font-size:9px;letter-spacing:3px;color:var(--muted);text-transform:uppercase}
+    #skillOvrNum{font-size:48px;font-weight:900;color:var(--accent);line-height:1;margin:2px 0}
+    .skill-ovr-lvl{font-size:11px;font-weight:800;letter-spacing:2px}
+    .skill-mini-stat{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;display:flex;flex-direction:column;justify-content:center;gap:5px}
+    .skill-mini-lbl{font-size:9px;color:var(--muted);letter-spacing:1px;text-transform:uppercase}
+    .skill-mini-val{font-size:16px;font-weight:800}
 
-    /* Barras de habilidades — reemplaza el radar/canvas (2026-08-07, mismo componente que
-       Dashboard/dashboard.html → slide Habilidades, adaptado a las variables de tema de este
-       archivo). Delgadas a propósito, mismo criterio que la versión del Dashboard. */
-    .skill-bars-list{display:flex;flex-direction:column;margin:14px 0}
-    .skbar-row{padding:4px 0;border-bottom:1px solid var(--border)}
-    .skbar-row:last-child{border-bottom:none}
-    .skbar-head{display:flex;align-items:center;gap:5px}
-    .skbar-ico{font-size:12px;flex-shrink:0}
-    .skbar-name{font-size:11px;font-weight:700;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-    .skbar-chip{font-size:7.5px;font-weight:800;letter-spacing:.02em;padding:1px 5px;border-radius:20px;border:1px solid transparent;flex-shrink:0}
-    .skbar-val{margin-left:auto;font-family:var(--mono);font-size:10.5px;font-weight:800;flex-shrink:0;white-space:nowrap}
-    .skbar-val small{font-size:8.5px;font-weight:600;color:var(--muted)}
+    .skill-scale-strip{display:flex;flex-wrap:wrap;gap:6px 18px;padding:10px 16px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);margin-bottom:20px;font-size:11.5px;color:var(--muted)}
+
+    .skfull-cat{font-size:12px;font-weight:800;color:var(--gold);padding-bottom:6px;border-bottom:2px solid var(--border);margin:22px 0 12px}
+    .skfull-cat:first-child{margin-top:0}
+    .skfull-row{border:1px solid var(--border);border-radius:var(--radius);margin-bottom:8px;background:var(--surface);overflow:hidden;transition:border-color .2s}
+    .skfull-row.open{border-color:var(--accent)}
+    .skfull-btn{width:100%;display:block;text-align:left;background:none;border:none;padding:13px 16px;cursor:pointer;font-family:inherit;color:inherit}
+    .skfull-btn:hover{background:var(--surface-2)}
+    .skfull-top{display:flex;align-items:center;gap:10px}
+    .skfull-ico{font-size:18px;flex-shrink:0}
+    .skfull-name{font-size:14px;font-weight:800;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .skfull-chip{font-size:9px;font-weight:800;letter-spacing:.03em;padding:2px 8px;border-radius:20px;border:1px solid transparent;flex-shrink:0}
+    .skfull-val{font-family:var(--mono);font-size:16px;font-weight:900;flex-shrink:0;min-width:82px;text-align:right}
+    .skfull-val small{font-size:10px;font-weight:600;color:var(--muted)}
+    .skfull-chevron{font-size:11px;color:var(--muted);transition:transform .2s;flex-shrink:0}
+    .skfull-row.open .skfull-chevron{transform:rotate(180deg)}
+    .skfull-bar{margin-top:9px}
+    .skfull-detail{padding:0 16px 16px;border-top:1px solid var(--border)}
+    .skfull-detail-inner{padding-top:14px}
 
     .skill-tab-btn {
       background: var(--surface);
@@ -872,10 +979,15 @@
      MODO — Coach Personal vs. Coach Empresa
 ════════════════════════════════════════════ -->
 <div class="modo-switch">
-  <button class="modo-btn active" id="modo-btn-personal" onclick="cambiarModo('personal')">🪙 Coach — Personal</button>
-  <button class="modo-btn" id="modo-btn-empresa" onclick="cambiarModo('empresa')">🏢 Coach — Empresa</button>
-  <button class="theme-toggle-btn" id="theme-toggle-btn" onclick="toggleTheme()" title="Cambiar tema claro/oscuro" aria-label="Cambiar tema claro/oscuro">🌙</button>
-  <button class="theme-toggle-btn" onclick="exportCoachData()" title="Exportar respaldo (rutina, radar de habilidades, checklists)" aria-label="Exportar respaldo">⬇️</button>
+  <button class="hamburger-btn" id="hamburger-btn" onclick="toggleSidebar()" title="Abrir menú" aria-label="Abrir menú">☰</button>
+  <div class="modo-switch-center">
+    <button class="modo-btn active" id="modo-btn-personal" onclick="cambiarModo('personal')">🪙 Coach — Personal</button>
+    <button class="modo-btn" id="modo-btn-empresa" onclick="cambiarModo('empresa')">🏢 Coach — Empresa</button>
+  </div>
+  <div class="modo-switch-right">
+    <button class="theme-toggle-btn" id="theme-toggle-btn" onclick="toggleTheme()" title="Cambiar tema claro/oscuro" aria-label="Cambiar tema claro/oscuro">🌙</button>
+    <button class="theme-toggle-btn" onclick="exportCoachData()" title="Exportar respaldo (rutina, radar de habilidades, checklists)" aria-label="Exportar respaldo">⬇️</button>
+  </div>
 </div>
 
 <div id="vista-personal" class="vista-panel active">
@@ -883,29 +995,51 @@
 <!-- ════════════════════════════════════════════
      NAVEGACIÓN
 ════════════════════════════════════════════ -->
-<nav>
-  <span class="logo">🪙 Coach</span>
-  <a href="#perfil" class="active">Mi Perfil Real</a>
-  <a href="#perfil" onclick="goToPerfilTab('metas');return false;">🎯 Metas</a>
-  <a href="#perfil" onclick="goToPerfilTab('dan-prime');return false;">⚡ Adán Prime</a>
-  <a href="#perfil" onclick="goToPerfilTab('cv');return false;">📄 CV</a>
-  <a href="#rutina">Rutina</a>
-  <a href="#aprendizaje">Aprendizaje</a>
-  <a href="#perfil-rico">Perfil del Rico</a>
-  <a href="#networking">Networking</a>
-  <a href="#marca-personal">Marca Personal</a>
-  <a href="#legal-personal">Legal & Personal</a>
-  <a href="#habilidades-valor">Habilidades de Valor</a>
-  <a href="../Dashboard/dashboard.html" style="margin-left:auto">🚀 Dashboard</a>
+<div class="app-shell">
+<nav class="sidebar" id="sidebar-personal">
+  <div class="sidebar-logo">🪙 Coach</div>
+
+  <div class="sb-group">
+    <div class="sb-item">
+      <a class="sb-header-link active" href="#perfil" data-sec="perfil" data-tab="diagnostico" onclick="irASeccion('perfil','diagnostico',this);return false;">🧭 Mi Perfil Real</a>
+      <div class="sb-subitems">
+        <a class="sb-sublink" href="#perfil" data-sec="perfil" data-tab="metas" onclick="irASeccion('perfil','metas',this);return false;">🎯 Metas</a>
+        <a class="sb-sublink" href="#perfil" data-sec="perfil" data-tab="dan-prime" onclick="irASeccion('perfil','dan-prime',this);return false;">⚡ Adán Prime</a>
+        <a class="sb-sublink" href="#perfil" data-sec="perfil" data-tab="cv" onclick="irASeccion('perfil','cv',this);return false;">📄 CV Completo</a>
+      </div>
+    </div>
+    <a class="sb-link" href="#rutina" data-sec="rutina" onclick="irASeccion('rutina',null,this);return false;">☀️ Rutina Diaria</a>
+  </div>
+
+  <div class="sb-group">
+    <div class="sb-group-label">Crecimiento</div>
+    <a class="sb-link" href="#aprendizaje" data-sec="aprendizaje" onclick="irASeccion('aprendizaje',null,this);return false;">📚 Aprendizaje</a>
+    <a class="sb-link" href="#perfil-rico" data-sec="perfil-rico" onclick="irASeccion('perfil-rico',null,this);return false;">💎 Perfil del Rico</a>
+  </div>
+
+  <div class="sb-group">
+    <div class="sb-group-label">Relaciones & Imagen</div>
+    <a class="sb-link" href="#networking" data-sec="networking" onclick="irASeccion('networking',null,this);return false;">🤝 Networking</a>
+    <a class="sb-link" href="#marca-personal" data-sec="marca-personal" onclick="irASeccion('marca-personal',null,this);return false;">📣 Marca Personal</a>
+  </div>
+
+  <div class="sb-group">
+    <div class="sb-group-label">Referencia</div>
+    <a class="sb-link" href="#legal-personal" data-sec="legal-personal" onclick="irASeccion('legal-personal',null,this);return false;">⚖️ Legal & Personal</a>
+    <a class="sb-link" href="#habilidades-valor" data-sec="habilidades-valor" onclick="irASeccion('habilidades-valor',null,this);return false;">🎩 Habilidades de Valor</a>
+  </div>
+
+  <a class="sb-link sb-dashboard" href="../Dashboard/dashboard.html">🚀 Dashboard</a>
 </nav>
+<div class="sidebar-overlay" onclick="closeSidebar()"></div>
 
 <main>
 
   <!-- ══════════════════════════════════════════
        MI PERFIL REAL — PORTADA, DIAGNÓSTICO Y PLAN MAESTRO
   ══════════════════════════════════════════ -->
-  <section id="perfil">
-    <h2 class="section-title">🧭 Mi Perfil Real</h2>
+  <section id="perfil" class="active-section">
+    <h2 class="section-title" data-num="01">🧭 Mi Perfil Real</h2>
 
     <div class="subtab-nav">
       <button class="subtab-btn active" onclick="showSubtab('perfil','diagnostico',this)">Diagnóstico & Plan</button>
@@ -1121,52 +1255,31 @@
       </div>
     </div>
 
-    <!-- ─── RADAR FIFA DE HABILIDADES ─────────────────────── -->
-    <div class="card span-2" id="radarFIFA" style="margin-top:20px;">
-      <h3 class="fw-700 mb-12">Radar de Habilidades — Estilo FIFA · Las 12 que Generan Riqueza</h3>
+    <!-- ─── GRÁFICO DE HABILIDADES ─────────────────────── -->
+    <div class="card span-2" id="skillsSection" style="margin-top:20px;">
+      <h3 class="fw-700 mb-12">📊 Gráfico de Habilidades — Estilo FIFA · Las 12 que Generan Riqueza</h3>
       <p class="fs-13 text-muted" style="margin-bottom:18px;line-height:1.6;">
-        Ya está precargado con tu autoevaluación honesta (no valores genéricos). Mueve los sliders conforme mejores
-        cada habilidad (0 = nunca lo practicaste, 100 = élite global). El <strong style="color:var(--gold);">OVR</strong>
+        Ya está precargado con tu autoevaluación honesta (no valores genéricos). Haz clic en cualquier habilidad
+        para ver por qué está en ese nivel y ajustar el valor con el slider. El <strong style="color:var(--gold);">OVR</strong>
         es tu puntuación ponderada — las habilidades con mayor impacto económico tienen más peso en el cálculo.
         Tus cambios se guardan automáticamente en el navegador.
       </p>
 
-      <div class="skill-radar-grid" style="display:grid;grid-template-columns:auto 1fr;gap:28px;align-items:start;">
+      <!-- OVR + Top habilidad + Área crítica, a todo el ancho -->
+      <div id="skillStatsRow" class="skill-stats-row"></div>
 
-        <!-- FIFA Card -->
-        <div class="skill-radar-card" style="background:var(--surface);border:1px solid var(--accent);border-radius:var(--radius);padding:22px;text-align:center;width:360px;position:sticky;top:80px;">
-          <p style="font-size:9px;letter-spacing:3px;color:var(--muted);margin-bottom:2px;text-transform:uppercase;">Constructor de Riqueza · 2026</p>
-          <div id="ovrValue" class="num" style="font-size:72px;font-weight:800;color:var(--accent);line-height:1;">52</div>
-          <div id="ovrLabel" style="font-size:11px;font-weight:800;letter-spacing:2px;color:#e08c14;margin-bottom:12px;">MEDIO</div>
-          <div id="skillBars" class="skill-bars-list" style="text-align:left"></div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px;">
-            <div style="background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:8px;">
-              <div style="font-size:9px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:3px;">Top habilidad</div>
-              <div id="topSkill" style="font-size:11px;font-weight:700;color:var(--green);">Inglés · 80</div>
-            </div>
-            <div style="background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:8px;">
-              <div style="font-size:9px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:3px;">Área crítica</div>
-              <div id="weakSkill" style="font-size:11px;font-weight:700;color:var(--red);">Copy · 25</div>
-            </div>
-          </div>
-          <!-- Escala -->
-          <div style="margin-top:14px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px;text-align:left;">
-            <p style="font-size:9px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;">Escala de niveles</p>
-            <div style="display:flex;flex-direction:column;gap:4px;font-size:12px;">
-              <div><span style="color:#22c55e;font-weight:800;">90-100</span> <span style="color:var(--muted);">· ÉLITE · Top 1% mundial</span></div>
-              <div><span style="color:#84cc16;font-weight:800;">80-89</span>  <span style="color:var(--muted);">· AVANZADO · Destacado</span></div>
-              <div><span style="color:#f0b429;font-weight:800;">70-79</span>  <span style="color:var(--muted);">· BUENO · Sobre la media</span></div>
-              <div><span style="color:#fb923c;font-weight:800;">55-69</span>  <span style="color:var(--muted);">· MEDIO · Nivel funcional</span></div>
-              <div><span style="color:#f87171;font-weight:800;">40-54</span>  <span style="color:var(--muted);">· BÁSICO · Principiante activo</span></div>
-              <div><span style="color:#ef4444;font-weight:800;">0-39</span>   <span style="color:var(--muted);">· PRINCIPIANTE · Sin práctica</span></div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Sliders por categoría -->
-        <div id="skillSliders" style="padding-right:4px;"></div>
-
+      <!-- Escala de niveles, franja compacta (antes ocupaba su propia tarjeta de 360px) -->
+      <div class="skill-scale-strip">
+        <span><b style="color:#22c55e">90-100</b> Élite</span>
+        <span><b style="color:#84cc16">80-89</b> Avanzado</span>
+        <span><b style="color:#f0b429">70-79</b> Bueno</span>
+        <span><b style="color:#fb923c">55-69</b> Medio</span>
+        <span><b style="color:#f87171">40-54</b> Básico</span>
+        <span><b style="color:#ef4444">0-39</b> Principiante</span>
       </div>
+
+      <!-- Barras a todo el ancho, agrupadas por categoría — clic en cualquiera abre descripción + slider -->
+      <div id="skillBarsFull"></div>
     </div>
 
     <!-- ═══ CÓMO MEJORAR CADA HABILIDAD ═══ -->
@@ -1871,7 +1984,7 @@
             <div class="check-item"><input type="checkbox" id="s1-3"><label for="s1-3">En paralelo: primer post de mentoría pagada (<a href="#" class="inline-link" onclick="irANegocios('negocio3');return false;">Opción 3</a>) — bajo riesgo, casi sin preparación.</label></div>
             <div class="check-item"><input type="checkbox" id="s1-4"><label for="s1-4">Primer peso cobrado en Opción 1-3 → esas horas de DiDi se mueven ahí (<a href="#" class="inline-link" onclick="irANegocios('negocio6');return false;">Opción 6</a>), no antes.</label></div>
             <div class="check-item"><input type="checkbox" id="s1-5"><label for="s1-5">iPhone 15 MSI sigue corriendo ($494/mes) hasta jun 2028 — ya comprometido, no toca tu excedente nuevo.</label></div>
-            <div class="check-item"><input type="checkbox" id="s1-6"><label for="s1-6">Foco de habilidad (<a href="#radarFIFA" class="inline-link">Radar FIFA</a>): sube <strong>Copy</strong> (55→) escribiendo los posts, y <strong>Finanzas</strong> (20→) sosteniendo el presupuesto corregido. Solo estas dos.</label></div>
+            <div class="check-item"><input type="checkbox" id="s1-6"><label for="s1-6">Foco de habilidad (<a href="#skillsSection" class="inline-link">Gráfico de Habilidades</a>): sube <strong>Copy</strong> (55→) escribiendo los posts, y <strong>Finanzas</strong> (20→) sosteniendo el presupuesto corregido. Solo estas dos.</label></div>
           </div>
         </details>
         <div class="fase-checkpoint"><span class="fc-icon">🚩</span><div><strong>Checkpoint 31 mar 2027:</strong> cero contratos, cero ventas y cero avance de mentoría tras 6 meses → problema de canal, no de esfuerzo. Cambia de distribución (ej. LinkedIn outreach a leads de Tier 2) antes de soltar la vía completa.</div></div>
@@ -1924,7 +2037,7 @@
       <h3 class="fw-700 mb-12">Cadencia de revisión — usa las Revisiones que ya tienes en el dashboard</h3>
       <div class="fd-item"><span class="fd-icon">📓</span><div><h4>Semanal (Revisión Semanal)</h4><p>¿Cumpliste los bloques de tiempo asignados al negocio? ¿Hubo algún contacto/venta nueva? ¿Algo se fue a MSI otra vez?</p></div></div>
       <div class="fd-item"><span class="fd-icon">📅</span><div><h4>Mensual (Revisión Mensual)</h4><p>Patrimonio líquido actualizado vs. la trayectoria estimada de este plan. Saldo del fondo de emergencia. Ingreso extra generado ese mes, por opción.</p></div></div>
-      <div class="fd-item"><span class="fd-icon">🗓️</span><div><h4>Trimestral</h4><p>Decisión consciente de go/no-go por opción de negocio. Ajuste del foco de habilidad en el 🕹️ Radar FIFA — ¿subió lo que tocaba subir esta fase?</p></div></div>
+      <div class="fd-item"><span class="fd-icon">🗓️</span><div><h4>Trimestral</h4><p>Decisión consciente de go/no-go por opción de negocio. Ajuste del foco de habilidad en el 📊 Gráfico de Habilidades — ¿subió lo que tocaba subir esta fase?</p></div></div>
       <div class="fd-item"><span class="fd-icon">🚩</span><div><h4>Fechas fijas que no se mueven</h4><p>18 jul 2027 (decisión Maestría), dic 2028 (checkpoint de negocio consolidado), 01 ene 2030 (meta final). Estas tres van también en tu 🗓️ Revisión Anual.</p></div></div>
     </div>
 
@@ -2261,7 +2374,7 @@
   </section>
 
   <section id="rutina">
-    <h2 class="section-title">☀️ Rutina Diaria</h2>
+    <h2 class="section-title" data-num="02">☀️ Rutina Diaria</h2>
 
     <div id="rutina-mi-rutina">
 
@@ -2352,7 +2465,7 @@
        4. TRACKER DE HÁBITOS
   ══════════════════════════════════════════ -->
   <section id="aprendizaje">
-    <h2 class="section-title">📚 Aprendizaje — Ataca tus 6 debilidades</h2>
+    <h2 class="section-title" data-num="03">📚 Aprendizaje — Ataca tus 6 debilidades</h2>
     <p class="fs-13 text-muted mb-12">El nivel real de tus 12 habilidades y el roadmap 0→100 completo de cada una viven en el radar de <a href="#perfil" class="inline-link">Mi Perfil Real</a>. Esto es el plan de ataque concreto para tus 6 prioridades reales — por qué está baja específicamente en tu caso (no un texto genérico), el primer paso de esta semana, cómo profundizar en las semanas 2-4, el hábito que lo sostiene, el error más común que la aleja, y los recursos exactos. Ninguna está iniciada todavía.</p>
 
     <div class="card" style="margin-bottom:16px;">
@@ -2517,7 +2630,7 @@
   </section>
 
   <section id="perfil-rico">
-    <h2 class="section-title">💎 Perfil del Rico — Cómo piensa, gasta y se comporta alguien que sí llegó</h2>
+    <h2 class="section-title" data-num="04">💎 Perfil del Rico — Cómo piensa, gasta y se comporta alguien que sí llegó</h2>
     <p class="fs-13 text-muted mb-12">Esto <strong>no es una persona inventada al azar ni un caso real específico</strong> — es un compuesto honesto basado en la investigación más citada sobre millonarios reales en Norteamérica (<a href="#" class="inline-link" onclick="return false" style="cursor:default">The Millionaire Next Door</a>, Thomas Stanley & William Danko, que entrevistó y encuestó a miles de millonarios reales durante 20 años) más patrones públicos y bien documentados de fundadores/inversionistas conocidos por su frugalidad (Warren Buffett sigue viviendo en la misma casa que compró en 1958). El hallazgo central de esa investigación, que contradice el estereotipo de Hollywood: <strong>la mayoría de los millonarios reales viven muy por debajo de sus posibilidades y son casi invisibles</strong> — no manejan el auto más caro ni visten marcas obvias. Úsalo como espejo: qué de esto ya haces, qué te falta.</p>
 
     <div class="card" style="margin-bottom:16px;">
@@ -2575,7 +2688,7 @@
   </section>
 
   <section id="networking">
-    <h2 class="section-title">🤝 Networking — Construye tu red de alto valor</h2>
+    <h2 class="section-title" data-num="05">🤝 Networking — Construye tu red de alto valor</h2>
     <p class="fs-13 text-muted mb-12">Networking es tu skill #3 más baja del radar (<a href="#perfil" class="inline-link">55/100</a>) y a la vez la que más apalanca a todas las demás: tu red de Bosch en Stuttgart ya te dio la Opción 8, tus ex-colegas de Ford/Continental son la vía más rápida de la Opción 2, y GBM es la audiencia completa de la Opción 1. No es una skill "suave" y opcional — es infraestructura directa para tu Plan Maestro. Esta sección es el manual concreto: cómo generar conversación, cómo caer bien de verdad, cómo persuadir sin ser manipulador, y sobre todo <strong>dónde</strong> — con lugares y situaciones reales en CDMX, no consejos genéricos de LinkedIn.</p>
 
     <div class="card" style="margin-bottom:16px;">
@@ -2584,6 +2697,26 @@
       <p class="fs-13 mb-4" style="line-height:1.7;"><strong style="color:var(--accent);">Preguntas que abren, no las que cierran.</strong> "¿Qué es lo que más te ha sorprendido de [tema]?" abre 5 minutos de conversación; "¿Te gusta tu trabajo?" se responde con un sí/no y se muere ahí. Prepara 2-3 preguntas abiertas antes de entrar a cualquier evento — igual que preparas casos de prueba antes de una sesión de HIL.</p>
       <p class="fs-13 mb-4" style="line-height:1.7;"><strong style="color:var(--accent);">Da antes de pedir.</strong> Comparte un dato, una recomendación o una presentación de valor real antes de pedir nada — tu plantilla de Finanzas.html es un activo perfecto para esto: "oye, hice algo que me ayudó mucho a organizar mis finanzas, si quieres te la paso" es una entrada de conversación con valor real, no un pitch.</p>
       <p class="fs-13" style="line-height:1.7;"><strong style="color:var(--accent);">Silencio incómodo = normal, no señal de fracaso.</strong> No lo llenes con nervios — una pausa de 2-3 segundos antes de responder te hace ver más seguro, no más torpe.</p>
+    </div>
+
+    <div class="card" style="margin-bottom:16px;">
+      <h3 class="fw-700 mb-12">🧭 Guía la conversación — deja de hablar de ti, identifica qué puede aportar la otra persona</h3>
+      <p class="fs-13 text-muted mb-12">Tu propio diagnóstico: hablas mucho de ti, no porque te importe hablar de ti, sino porque no tienes todavía el reflejo de dirigir la conversación hacia el otro. Es exactamente el mismo tipo de habilidad que ya tienes en testing: encontrar la causa raíz haciendo la pregunta correcta en vez de suponer — aquí el "sistema bajo prueba" es una persona, no un ECU.</p>
+      <p class="fs-13 mb-4" style="line-height:1.7;"><strong style="color:var(--accent);">El switch mental.</strong> Cada vez que alguien te pregunte algo, responde en 1-2 frases y cierra con una pregunta de vuelta — no sigas explicando. Tu turno de hablar no es para llenar el silencio con más sobre ti, es para regresarle el balón a la otra persona. Si llevas más de 2 minutos seguidos hablando de ti sin que la otra persona haya preguntado nada, ya perdiste el hilo — regrésalo con una pregunta.</p>
+      <p class="fs-13 mb-4" style="line-height:1.7;"><strong style="color:var(--accent);">Las 3 cosas que necesitas sacar de cualquier conversación nueva:</strong></p>
+      <ol style="padding-left:18px;font-size:12.5px;line-height:1.9;margin-bottom:10px;">
+        <li><strong>Qué hace de verdad</strong> — no el puesto de LinkedIn, sino el problema real que resuelve día a día.</li>
+        <li><strong>En qué es bueno</strong> — su expertise real, lo que lo hace valioso en su campo (no lo que dice que hace, lo que la gente le pide a él específicamente).</li>
+        <li><strong>Dónde se cruza con lo que tú necesitas</strong> — ¿es cliente potencial de alguna Opción, puede darte un referido, tiene un contacto que sí lo es, o sabe algo que a ti te falta?</li>
+      </ol>
+      <p class="fs-13 mb-4" style="line-height:1.7;"><strong style="color:var(--accent);">Preguntas calibradas, no interrogatorio.</strong> Chris Voss (ya en tus recursos, "Never Split the Difference") enseña que las preguntas que empiezan con <strong>"Qué"</strong> y <strong>"Cómo"</strong> abren, mientras que "Por qué" suena a que tienes que justificarse. Ejemplos directos para las 3 cosas de arriba:</p>
+      <ul style="padding-left:18px;font-size:12.5px;line-height:1.8;margin-bottom:10px;">
+        <li>"¿Qué es lo que más tiempo te quita en tu trabajo día a día?" → revela qué hace de verdad.</li>
+        <li>"¿Cómo terminaste haciendo justo eso?" → revela su expertise sin que suene a examen.</li>
+        <li>"¿Qué tipo de proyectos son los que más te gusta que te lleguen?" → revela dónde te puede ayudar (o a quién te puede presentar).</li>
+        <li>"¿Cómo decides con quién trabajar?" → te dice exactamente cómo venderte a él después, con sus propios criterios.</li>
+      </ul>
+      <p class="fs-13" style="line-height:1.7;"><strong style="color:var(--accent);">La técnica del espejo (mirroring, también de Voss).</strong> Repite en tono de pregunta las últimas 2-3 palabras que dijo la persona ("...¿un embudo que no estaba convirtiendo?") — mantiene a la otra persona hablando y profundizando, sin que tengas que inventar la siguiente pregunta sobre la marcha. Y en cuanto termine la conversación (no un mes después): anota en 1 línea qué hace, en qué es bueno, y en qué te puede ayudar — es el dato que después alimenta tu seguimiento 1-3-7-30 de abajo.</p>
     </div>
 
     <div class="card" style="margin-bottom:16px;">
@@ -2663,7 +2796,7 @@
   </section>
 
   <section id="marca-personal">
-    <h2 class="section-title">📣 Redes Sociales y Marca Personal</h2>
+    <h2 class="section-title" data-num="06">📣 Redes Sociales y Marca Personal</h2>
     <p class="fs-13 text-muted mb-12">Diagnóstico honesto: hoy no tienes presencia digital construida — y tu skill de Marketing Digital es de las más bajas del radar (<a href="#perfil" class="inline-link">20/100</a>). Esto no es "vanidad de redes sociales" — es infraestructura directa para 3 de tus <a href="#" class="inline-link" onclick="cambiarModo('empresa');return false;">Posibles Negocios</a>: nadie compra una plantilla, contrata un freelancer o paga una mentoría de alguien que no puede encontrar en 30 segundos de búsqueda. Aquí están todos los escenarios reales para tu caso — no una lista genérica de "sé activo en redes" — y qué hacer concretamente en cada uno.</p>
 
     <div class="card" style="margin-bottom:16px;">
@@ -2752,7 +2885,7 @@
   </section>
 
   <section id="legal-personal">
-    <h2 class="section-title">⚖️ Legal & Personal — Protege lo que ya tienes</h2>
+    <h2 class="section-title" data-num="07">⚖️ Legal & Personal — Protege lo que ya tienes</h2>
 
     <div class="grid-2">
 
@@ -2819,7 +2952,7 @@
   </section>
 
   <section id="habilidades-valor">
-    <h2 class="section-title">🎩 Habilidades de un Hombre de Valor</h2>
+    <h2 class="section-title" data-num="08">🎩 Habilidades de un Hombre de Valor</h2>
     <p class="fs-13 text-muted mb-12">Cultura general práctica: cosas que no enseñan en la escuela ni en el trabajo, pero que separan a alguien que sabe desenvolverse en cualquier situación de alguien que no. No son habilidades de negocio — son las que hacen que te muevas con seguridad en una cena formal, un campamento, una cata de vino o una emergencia real.</p>
 
     <div class="card" style="margin-bottom:16px;">
@@ -2905,6 +3038,8 @@
 
 </main>
 
+</div><!-- /app-shell -->
+
 </div><!-- /vista-personal -->
 
 <!-- ════════════════════════════════════════════
@@ -2912,19 +3047,37 @@
 ════════════════════════════════════════════ -->
 <div id="vista-empresa" class="vista-panel">
 
-<nav>
-  <span class="logo">🏢 Coach Empresa</span>
-  <a href="#posibles-negocios" class="active">Posibles Negocios</a>
-  <a href="#mas-ideas">Más Ideas de Negocio</a>
-  <a href="#crear-empresa">Crear tu Empresa</a>
-  <a href="#legal">Legal & Fiscal</a>
-  <a href="../Dashboard/dashboard.html" style="margin-left:auto">🚀 Dashboard</a>
+<div class="app-shell">
+<nav class="sidebar" id="sidebar-empresa">
+  <div class="sidebar-logo">🏢 Coach Empresa</div>
+
+  <div class="sb-group">
+    <div class="sb-group-label">Explorar</div>
+    <a class="sb-link active" href="#posibles-negocios" data-sec="posibles-negocios" onclick="irASeccion('posibles-negocios',null,this);return false;">💡 Posibles Negocios</a>
+    <a class="sb-link" href="#mas-ideas" data-sec="mas-ideas" onclick="irASeccion('mas-ideas',null,this);return false;">💼 Más Ideas de Negocio</a>
+  </div>
+
+  <div class="sb-group">
+    <div class="sb-group-label">Ejecutar</div>
+    <div class="sb-item">
+      <a class="sb-header-link" href="#crear-empresa" data-sec="crear-empresa" data-tab="tipo" onclick="irASeccion('crear-empresa','tipo',this);return false;">🏢 Crear tu Empresa</a>
+      <div class="sb-subitems">
+        <a class="sb-sublink" href="#crear-empresa" data-sec="crear-empresa" data-tab="tramites" onclick="irASeccion('crear-empresa','tramites',this);return false;">Trámites paso a paso</a>
+        <a class="sb-sublink" href="#crear-empresa" data-sec="crear-empresa" data-tab="costos" onclick="irASeccion('crear-empresa','costos',this);return false;">Costos y tiempos</a>
+        <a class="sb-sublink" href="#crear-empresa" data-sec="crear-empresa" data-tab="post" onclick="irASeccion('crear-empresa','post',this);return false;">Después de constituir</a>
+      </div>
+    </div>
+    <a class="sb-link" href="#legal" data-sec="legal" onclick="irASeccion('legal',null,this);return false;">⚖️ Legal & Fiscal</a>
+  </div>
+
+  <a class="sb-link sb-dashboard" href="../Dashboard/dashboard.html">🚀 Dashboard</a>
 </nav>
+<div class="sidebar-overlay" onclick="closeSidebar()"></div>
 
 <main>
 
-  <section id="posibles-negocios">
-    <h2 class="section-title">💡 Posibles Negocios</h2>
+  <section id="posibles-negocios" class="active-section">
+    <h2 class="section-title" data-num="01">💡 Posibles Negocios</h2>
 
     <div class="card mb-16" style="margin-bottom:16px;">
       <h3 class="fw-700 mb-12">Posibles Negocios — evaluados contra tu perfil real, no contra una idea bonita</h3>
@@ -2937,7 +3090,8 @@
       <p class="fs-13 mt-8" style="line-height:1.7;color:var(--muted);">
         Las Opciones 7 y 8 se agregaron después: al profundizar en tu historia real (mantenimiento industrial
         farmacéutico antes de Ford, y tu red activa en Alemania) aparecieron dos ángulos que las primeras 6
-        opciones no cubrían.
+        opciones no cubrían. La Opción 9 (automatizaciones con Claude + n8n) es la misma idea de la Opción 4
+        —dirigir IA para construir producto— aplicada a un mercado más amplio que el software embebido.
       </p>
     </div>
 
@@ -3084,6 +3238,24 @@
       <p>Es una relación profesional, no una amistad cercana — trátala con el mismo cuidado que a un cliente potencial, no como favor. Revisa cláusulas de exclusividad con ALTEN/Ford antes de facturarle a cualquier entidad relacionada con Bosch, igual que en la Opción 2.</p>
     </div>
 
+    <!-- OPCIÓN 9 -->
+    <div class="negocio-card" id="negocio9">
+      <div class="negocio-rank">Apuesta de mediano plazo, en paralelo — mismo patrón que la Opción 4</div>
+      <h3>9. Automatizaciones con Claude + n8n para empresas medianas</h3>
+      <div class="grid-3" style="margin-bottom:10px;">
+        <div class="stat-badge"><span style="color:#c2410c">Medio</span><span>Requiere ventas</span></div>
+        <div class="stat-badge"><span class="text-red">2-4 meses</span><span>A primer ingreso</span></div>
+        <div class="stat-badge"><span class="text-green">Alto</span><span>Techo de escala</span></div>
+      </div>
+      <p><strong>Qué es:</strong> diseñar e implementar automatizaciones de procesos de negocio para empresas medianas (50-500 empleados) que hoy hacen todo a mano — clasificar y responder correos, dar seguimiento a leads, armar reportes, extraer datos de PDFs/facturas — combinando n8n (plataforma de automatización de flujos, open source y auto-hospedada, conecta CRM/correo/WhatsApp/hojas de cálculo/bases de datos sin escribir un backend desde cero) como el "motor" que mueve los datos, y Claude como la capa que razona sobre esos datos: lee, clasifica, resume, redacta y decide qué hacer con cada caso.</p>
+      <h5>Por qué encaja</h5>
+      <p>Es la misma habilidad que ya probaste en la Opción 4 (CodeReview en ALTEN, con Claude Code): diseñar el flujo, dirigir a la IA con el ejemplo correcto, y validar que el resultado sea confiable — solo que aquí el cliente ya no es un equipo de software, es cualquier empresa mediana con procesos repetitivos y sin equipo interno de IA/automatización. n8n al ser open source mantiene el costo de infraestructura por cliente bajo, y una vez que tengas 2-3 flujos reutilizables (ej. "clasificador de correos", "extractor de datos de factura"), cada cliente nuevo cuesta menos tiempo que el anterior.</p>
+      <h5>Primer paso esta semana</h5>
+      <p>Nada todavía si sigues en Fase 0 — mismo criterio que la Opción 4, dispersarte entre proyectos a la vez es tu patrón de abandono. Anótalo. Cuando llegue el momento: arma 1 automatización de demo con datos ficticios (por ejemplo, un flujo que lee correos de "contacto", los clasifica con Claude por tipo de solicitud y genera un resumen en una hoja de cálculo) para tener algo tangible que mostrar antes de ofrecerlo a nadie.</p>
+      <h5>Riesgo principal</h5>
+      <p>Vender automatización con IA a una empresa mediana es venta consultiva — ciclos de decisión de semanas o meses, no días como las Opciones 1-3. No la trates como la apuesta de primer ingreso rápido: es complemento de mediano plazo, igual que la Opción 4.</p>
+    </div>
+
     </div><!-- /negocio-grid -->
 
     <!-- PLANTILLAS -->
@@ -3166,8 +3338,8 @@
   <!-- fin posibles-negocios -->
 
   <section id="mas-ideas">
-    <h2 class="section-title">💼 Más Ideas de Negocio — Convencionales y No Convencionales</h2>
-    <p class="fs-13 text-muted mb-12">A diferencia de <a href="#posibles-negocios" class="inline-link">Posibles Negocios</a> (8 opciones rankeadas contra tu perfil real), esto es un banco de ideas más amplio para explorar — sin evaluar contra tus habilidades específicas. Sirve como lista de referencia si en algún momento quieres algo con menos dependencia de tu tiempo experto y más de capital/operación.</p>
+    <h2 class="section-title" data-num="02">💼 Más Ideas de Negocio — Convencionales y No Convencionales</h2>
+    <p class="fs-13 text-muted mb-12">A diferencia de <a href="#posibles-negocios" class="inline-link">Posibles Negocios</a> (9 opciones rankeadas contra tu perfil real), esto es un banco de ideas más amplio para explorar — sin evaluar contra tus habilidades específicas. Sirve como lista de referencia si en algún momento quieres algo con menos dependencia de tu tiempo experto y más de capital/operación.</p>
 
     <div class="riesgo-box mb-16" style="margin-bottom:16px;">
       <h3>⚠️ Un límite claro</h3>
@@ -3264,7 +3436,7 @@
   </section>
 
   <section id="crear-empresa">
-    <h2 class="section-title">🏢 Crear tu Empresa — Guía completa en México</h2>
+    <h2 class="section-title" data-num="03">🏢 Crear tu Empresa — Guía completa en México</h2>
 
     <div class="subtab-nav">
       <button class="subtab-btn active" onclick="showSubtab('crear-empresa','tipo',this)">Tipo de entidad</button>
@@ -3407,7 +3579,7 @@
   </section>
 
   <section id="legal">
-    <h2 class="section-title">⚖️ Legal & Fiscal — Protege el negocio</h2>
+    <h2 class="section-title" data-num="04">⚖️ Legal & Fiscal — Protege el negocio</h2>
 
     <div class="grid-2">
 
@@ -3498,6 +3670,8 @@
 
 </main>
 
+</div><!-- /app-shell -->
+
 </div><!-- /vista-empresa -->
 
 <script>
@@ -3511,30 +3685,38 @@
   const jFecha = document.getElementById('journal-fecha');
   if (jFecha) jFecha.textContent = fechaLarga.charAt(0).toUpperCase() + fechaLarga.slice(1);
 
-  // Navegación activa por scroll — solo dentro del panel de modo visible
-  let sections = [];
-  let navLinks = [];
-  function refrescarScrollSpy() {
-    const panelActivo = document.querySelector('.vista-panel.active');
-    sections = panelActivo ? panelActivo.querySelectorAll('section[id]') : [];
-    navLinks  = panelActivo ? panelActivo.querySelectorAll('nav a') : [];
-  }
-  refrescarScrollSpy();
-  window.addEventListener('scroll', () => {
-    let current = '';
-    sections.forEach(s => {
-      if (window.scrollY >= s.offsetTop - 100) current = s.id;
-    });
-    // Si ya se llegó al fondo de la página, resalta la última sección aunque su
-    // contenido sea más corto que un viewport y scrollY nunca alcance su offsetTop-100
-    // (p. ej. "Legal & Personal"/"Legal & Fiscal", las últimas de cada modo).
-    if (sections.length && window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2) {
-      current = sections[sections.length - 1].id;
+  // Navegación del sidebar — solo la sección elegida se muestra, el resto queda
+  // oculto (2026-08-10, rediseño: antes era una barra horizontal arriba con TODAS
+  // las secciones visibles en scroll infinito y un scroll-spy que iba resaltando
+  // el link correspondiente; ahora es click-to-show, así que ese scroll-spy ya no
+  // aplica y se reemplaza por esta función).
+  function irASeccion(sec, tab, el) {
+    const panel = el ? el.closest('.vista-panel') : document.querySelector('.vista-panel.active');
+    if (!panel) return;
+    panel.querySelectorAll('main > section').forEach(s => s.classList.remove('active-section'));
+    const target = document.getElementById(sec);
+    if (target) target.classList.add('active-section');
+    if (tab) {
+      const btn = panel.querySelector('#' + sec + ' .subtab-btn[onclick*="\'' + tab + '\'"]');
+      showSubtab(sec, tab, btn);
     }
-    navLinks.forEach(a => {
-      a.classList.toggle('active', a.getAttribute('href') === '#' + current);
-    });
-  });
+    panel.querySelectorAll('.sb-link, .sb-header-link, .sb-sublink').forEach(a => a.classList.remove('active'));
+    if (el) el.classList.add('active');
+    const shell = panel.querySelector('.app-shell');
+    if (shell && shell.scrollIntoView) shell.scrollIntoView({ block: 'start' });
+    window.scrollTo(0, 0);
+    closeSidebar();
+  }
+
+  // Sidebar en móvil — off-canvas, se abre con el botón ☰ y se cierra al elegir
+  // una sección o tocar el overlay.
+  function toggleSidebar() {
+    const shell = document.querySelector('.vista-panel.active .app-shell');
+    if (shell) shell.classList.toggle('sidebar-open');
+  }
+  function closeSidebar() {
+    document.querySelectorAll('.app-shell').forEach(s => s.classList.remove('sidebar-open'));
+  }
 
   // Modo — Coach Personal vs. Coach Empresa
   function cambiarModo(modo) {
@@ -3543,7 +3725,7 @@
     document.getElementById('modo-btn-personal').classList.toggle('active', modo === 'personal');
     document.getElementById('modo-btn-empresa').classList.toggle('active', modo === 'empresa');
     window.scrollTo(0, 0);
-    refrescarScrollSpy();
+    closeSidebar();
   }
 
   // Exportar respaldo — Coach era la única app "grande" del ecosistema sin esto
@@ -3571,7 +3753,7 @@
     localStorage.setItem('coach-theme', next);
     const btn = document.getElementById('theme-toggle-btn');
     if (btn) btn.textContent = next === 'dark' ? '☀️' : '🌙';
-    if (window.redrawSkillRadar) window.redrawSkillRadar();
+    if (window.redrawSkillBars) window.redrawSkillBars();
   }
   document.addEventListener('DOMContentLoaded', function () {
     const btn = document.getElementById('theme-toggle-btn');
@@ -3589,18 +3771,6 @@
     if (btn) btn.classList.add('active');
   }
 
-  // Salta directo a un subtab de Mi Perfil Real desde el <nav> de arriba (2026-08-03) — pedido
-  // explícito de Adán: "faltan subtabs arriba... me es tardado hacer scroll down". Sin esto, un
-  // <a href="#perfil-metas"> normal no serviría de nada porque ese panel empieza oculto
-  // (display:none hasta que showSubtab le pone .active) — mismo tipo de bug que ya se corrigió
-  // antes en Dashboard con el HUD tapando un link.
-  function goToPerfilTab(tab) {
-    const btn = document.querySelector('#perfil .subtab-btn[onclick*="\'' + tab + '\'"]');
-    showSubtab('perfil', tab, btn);
-    const el = document.getElementById('perfil');
-    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }
-
   // Tarjeta colapsable
   function toggleCard(id, btn) {
     const body = document.getElementById(id);
@@ -3611,6 +3781,8 @@
   // Salta a una tarjeta de 💡 Posibles Negocios (Coach Empresa) desde cualquier mención en el Plan Maestro
   function irANegocios(id) {
     cambiarModo('empresa');
+    const link = document.querySelector('#sidebar-empresa .sb-link[data-sec="posibles-negocios"]');
+    irASeccion('posibles-negocios', null, link);
     setTimeout(() => {
       const el = document.getElementById(id);
       if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -3729,19 +3901,19 @@
   const RUTINA_TASKS = [
     // ── Común entre semana (Lun–Vie) — horario real confirmado 2026-08-02 ──
     {id:'wd01', dias:[1,2,3,4,5], hora:'07:00', cat:'salud',    txt:'Despertar sin snooze — celular fuera del cuarto'},
-    {id:'wd02lav', dias:[1,4], hora:'07:03', cat:'salud', txt:'🚿 Bañarte + lavar cabello', subtareas:[
+    {id:'wd02lav', dias:[1,4], hora:'07:03', cat:'salud', txt:'🚿 Bañarte + lavar cabello', producto:true, subtareas:[
       {id:'wd02la', txt:'Champú: Darrow Doctar (shampoo con alcatrão/coal tar, anticaspa) — masajea el cuero cabelludo 2-3 min, deja actuar antes de enjuagar', link:{href:'../CuidadoPersonal/cuidadopersonal.html?tab=cabello', label:'✂️ Ver Cuidado del Cabello'}},
       {id:'wd02lb', txt:'Acondicionador: TRESemmé Keratin Smooth Conditioner — solo de medios a puntas, nunca en la raíz (en cabello fino y graso, ponerlo en la raíz lo aplana y engrasa más rápido)'},
       {id:'wd02lc', txt:'Aceite en puntas (opcional, con el cabello ya seco): Moroccanoil Treatment Light — 2-3 gotas, solo puntas'},
     ]},
-    {id:'wd02co', dias:[2,3,5], hora:'07:03', cat:'salud', txt:'🚿 Bañarte + cabello (sin champú hoy)', subtareas:[
+    {id:'wd02co', dias:[2,3,5], hora:'07:03', cat:'salud', txt:'🚿 Bañarte + cabello (sin champú hoy)', producto:true, subtareas:[
       {id:'wd02ca', txt:'Acondicionador: TRESemmé Keratin Smooth Conditioner — solo de medios a puntas (co-wash, sin champú: hoy no toca el anticaída, eso es Lun/Jue/Sáb — usarlo a diario resecaría el cuero cabelludo)'},
       {id:'wd02cb', txt:'Aceite en puntas (opcional, con el cabello ya seco): Moroccanoil Treatment Light — 2-3 gotas, solo puntas'},
     ]},
-    {id:'wd0304', dias:[1,2,3,4,5], hora:'07:20', cat:'salud', txt:'🧴 Skincare + 🍂 Minoxidil — AM', subtareas:[
-      {id:'wd03a', txt:'Limpiador suave (ej. CeraVe Espuma o Cetaphil) — quita grasa y sudor de la noche sin resecar'},
-      {id:'wd03b', txt:'Sérum de niacinamida 10% — controla grasa y afina los poros'},
-      {id:'wd03c', txt:'Hidratante con protector solar SPF 50 (ej. La Roche-Posay Anthelios) — hidrata y protege del sol, obligatorio de día'},
+    {id:'wd0304', dias:[1,2,3,4,5], hora:'07:20', cat:'salud', txt:'🧴 Skincare + 🍂 Minoxidil — AM', producto:true, subtareas:[
+      {id:'wd03a', txt:'Limpiador suave: CeraVe Limpiador Espumoso (verde) — quita grasa y sudor de la noche sin resecar'},
+      {id:'wd03b', txt:'Sérum de niacinamida 10%: The Ordinary Niacinamida 10% + Zinc 1% — controla grasa y afina los poros'},
+      {id:'wd03c', txt:'Hidratante con protector solar SPF 50: La Roche-Posay Anthelios — hidrata y protege del sol, obligatorio de día'},
       {id:'wd04', txt:'Minoxidil 5% en cuero cabelludo seco — estimula el folículo, dosis de la mañana'},
     ]},
     {id:'wdSupAm', dias:[1,2,3,4,5], hora:'07:25', cat:'salud', txt:'💊 Suplementos AM', subtareas:[
@@ -3768,10 +3940,10 @@
       {id:'wd16b', txt:'1 cosa que salió mal o que aprendiste — sin autocastigo, solo para no repetirla'},
       {id:'wd16c', txt:'1 gasto que pudiste evitar hoy (o "ninguno" si no hubo)'},
     ]},
-    {id:'wd1718', dias:[1,2,3,4,5], hora:'22:30', cat:'salud', txt:'🧴 Skincare + 🍂 Minoxidil — PM', subtareas:[
-      {id:'wd17a', txt:'Limpiador (doble limpieza si usaste protector solar) — remueve el bloqueador y el sudor del día'},
-      {id:'wd17b', txt:'Tratamiento con ácido salicílico o retinol, alternando noches — controla brotes y mejora la textura'},
-      {id:'wd17c', txt:'Hidratante nocturno — repara la piel mientras duermes'},
+    {id:'wd1718', dias:[1,2,3,4,5], hora:'22:30', cat:'salud', txt:'🧴 Skincare + 🍂 Minoxidil — PM', producto:true, subtareas:[
+      {id:'wd17a', txt:'Limpiador (doble limpieza si usaste protector solar): CeraVe Limpiador Espumoso (verde) — remueve el bloqueador y el sudor del día'},
+      {id:'wd17b', txt:'Tratamiento con retinoide: Differin Adapaleno 0.1% Gel — controla brotes y mejora la textura'},
+      {id:'wd17c', txt:'Hidratante nocturno: Eucerin Hyaluron-Filler + Epigenetic Noche — repara la piel mientras duermes'},
       {id:'wd18', txt:'Minoxidil 5% en cuero cabelludo seco — dosis de la noche'},
     ]},
     {id:'wd19', dias:[1,2,3,4,5], hora:'22:45', cat:'profundo', txt:'🎯 Planear el día de mañana (5 min)', subtareas:[
@@ -3803,31 +3975,31 @@
 
     // ── Ejercicio (17:40, después de la Didi corta) y bloque de habilidad — cambian cada día ──
     {id:'e1', dias:[1], hora:'17:40', cat:'salud', txt:'🏋️ Ejercicio: Empuje (pecho / hombro / tríceps)', subtareas:[
-      {id:'e1a', txt:'Press de banca — 4×8'},
-      {id:'e1b', txt:'Press inclinado con mancuerna — 3×10'},
-      {id:'e1c', txt:'Press militar — 3×10'},
-      {id:'e1d', txt:'Elevaciones laterales — 3×12'},
-      {id:'e1e', txt:'Fondos en banco — 3×12'},
+      {id:'e1a', txt:'Press de banca — 4×8 · 40kg / 88lb'},
+      {id:'e1b', txt:'Press inclinado con mancuerna — 3×10 · 12kg / 26lb c/u'},
+      {id:'e1c', txt:'Press militar — 3×10 · 25kg / 55lb'},
+      {id:'e1d', txt:'Elevaciones laterales — 3×12 · 5kg / 11lb c/u'},
+      {id:'e1e', txt:'Fondos en banco — 3×12 · peso corporal'},
     ]},
     {id:'e2', dias:[2], hora:'17:40', cat:'salud', txt:'🏋️ Ejercicio: Cardio + core', subtareas:[
       {id:'e2a', txt:'Cardio continuo (correr/bici/elíptica) — 25 min a ritmo constante'},
-      {id:'e2b', txt:'Plancha — 3×45 seg'},
-      {id:'e2c', txt:'Elevación de piernas — 3×15'},
+      {id:'e2b', txt:'Plancha — 3×45 seg · peso corporal'},
+      {id:'e2c', txt:'Elevación de piernas — 3×15 · peso corporal'},
     ]},
     {id:'k2', dias:[2], hora:'19:00', cat:'aprender', txt:'📊 Datos: 30 min de SQL (SQLZoo/Kaggle)'},
     {id:'e3', dias:[3], hora:'17:40', cat:'salud', txt:'🏊 Ejercicio: Natación — 45 min (alberca Francisco Márquez, Doctores)'},
     {id:'e4', dias:[4], hora:'17:40', cat:'salud', txt:'🏋️ Ejercicio: Cardio / HIIT', subtareas:[
       {id:'e4a', txt:'HIIT: 30 seg esfuerzo máximo / 90 seg suave — 8 rondas (~18 min)'},
-      {id:'e4b', txt:'Battle ropes o burpees — 3×30 seg'},
-      {id:'e4c', txt:'Plancha lateral — 2×30 seg por lado'},
+      {id:'e4b', txt:'Battle ropes o burpees — 3×30 seg · peso corporal'},
+      {id:'e4c', txt:'Plancha lateral — 2×30 seg por lado · peso corporal'},
     ]},
     {id:'k4', dias:[4], hora:'19:00', cat:'aprender', txt:'📊 Datos: 30 min de SQL'},
     {id:'e5', dias:[5], hora:'17:40', cat:'salud', txt:'🏋️ Ejercicio: Piernas / glúteo', subtareas:[
-      {id:'e5a', txt:'Sentadilla con barra — 4×8'},
-      {id:'e5b', txt:'Peso muerto rumano — 3×10'},
-      {id:'e5c', txt:'Zancadas o sentadilla búlgara — 3×12 por pierna'},
-      {id:'e5d', txt:'Hip thrust — 3×12'},
-      {id:'e5e', txt:'Elevación de pantorrilla — 3×15'},
+      {id:'e5a', txt:'Sentadilla con barra — 4×8 · 50kg / 110lb'},
+      {id:'e5b', txt:'Peso muerto rumano — 3×10 · 50kg / 110lb'},
+      {id:'e5c', txt:'Zancadas o sentadilla búlgara — 3×12 por pierna · 10kg / 22lb c/u'},
+      {id:'e5d', txt:'Hip thrust — 3×12 · 50kg / 110lb'},
+      {id:'e5e', txt:'Elevación de pantorrilla — 3×15 · 30kg / 66lb'},
     ]},
     {id:'k5', dias:[5], hora:'19:00', cat:'creativo', txt:'📣 GBM: personaliza el post de venta ya escrito (precio/fecha) y publícalo en 1 comunidad real de inversión', link:{href:'#plantillas-mensajes', label:'Ver mensaje ya escrito'}},
 
@@ -3845,7 +4017,7 @@
       {id:'saSupAm4', txt:'Creatina monohidratada — 5g (todos los días, no solo si entrenas hoy)'},
     ]},
     {id:'sa04',  dias:[6], hora:'07:35', cat:'salud',    txt:'Ejercicio 1h — entreno largo / lo que falte en la semana'},
-    {id:'sa0506', dias:[6], hora:'08:35', cat:'salud', txt:'🚿 Ducha + lavar cabello', subtareas:[
+    {id:'sa0506', dias:[6], hora:'08:35', cat:'salud', txt:'🚿 Ducha + lavar cabello', producto:true, subtareas:[
       {id:'sa05a', txt:'Champú: Darrow Doctar (shampoo con alcatrão/coal tar, anticaspa) — masajea el cuero cabelludo 2-3 min, deja actuar antes de enjuagar', link:{href:'../CuidadoPersonal/cuidadopersonal.html?tab=cabello', label:'✂️ Ver Cuidado del Cabello'}},
       {id:'sa05b', txt:'Acondicionador: TRESemmé Keratin Smooth Conditioner — solo de medios a puntas, nunca en la raíz'},
       {id:'sa05c', txt:"Mascarilla capilar (1 vez por semana, hazla hoy): L'Oréal Elvive Total Repair 5 — puntas y medios, deja actuar 5-10 min, enjuaga bien"},
@@ -3858,7 +4030,7 @@
     {id:'sa11',  dias:[6], hora:'20:00', cat:'salud', txt:'🍽️ Cena', link:{href:'../CuidadoPersonal/comida.html?s=cenas', label:'Ver cenas'}},
     {id:'sa12',  dias:[6], hora:'20:30', cat:'descanso', txt:'Tiempo libre / familia / lectura'},
     {id:'sa1113', dias:[6], hora:'21:00', cat:'salud', txt:'🧴 Skincare + 🍂 Minoxidil — PM', subtareas:[
-      {id:'sa13', txt:'Skincare PM — limpiador + tratamiento (ácido salicílico/retinol) + hidratante nocturno'},
+      {id:'sa13', txt:'Skincare PM — limpiador + retinoide + hidratante nocturno'},
       {id:'sa13b', txt:'Minoxidil 5% en cuero cabelludo seco — dosis de la noche'},
     ]},
     {id:'saSupPm', dias:[6], hora:'21:15', cat:'salud', txt:'💊 Suplementos PM', subtareas:[
@@ -3885,11 +4057,11 @@
       {id:'doSupAm4', txt:'Creatina monohidratada — 5g (todos los días, no solo si entrenas hoy)'},
     ]},
     {id:'do04',  dias:[0], hora:'08:05', cat:'salud',    txt:'Ejercicio: descanso activo — caminata o movilidad 30 min'},
-    {id:'do045', dias:[0], hora:'08:35', cat:'salud', txt:'🚿 Bañarte + cabello (sin champú hoy)', subtareas:[
+    {id:'do045', dias:[0], hora:'08:35', cat:'salud', txt:'🚿 Bañarte + cabello (sin champú hoy)', producto:true, subtareas:[
       {id:'do045a', txt:'Acondicionador: TRESemmé Keratin Smooth Conditioner — solo de medios a puntas (co-wash, sin champú: hoy no toca el anticaída, eso es Lun/Jue/Sáb — usarlo a diario resecaría el cuero cabelludo)'},
       {id:'do045b', txt:'Aceite en puntas (opcional, con el cabello ya seco): Moroccanoil Treatment Light — 2-3 gotas, solo puntas'},
     ]},
-    {id:'do05',  dias:[0], hora:'09:00', cat:'descanso', txt:'Tiempo libre / familia'},
+    {id:'do05',  dias:[0], hora:'09:00', cat:'admin',    txt:'🚗 Trabajar en Didi'},
     {id:'do06',  dias:[0], hora:'20:00', cat:'admin',    txt:'💰 Finanzas: revisión de presupuesto + planificar semana + revisar inversiones'},
     {id:'do07',  dias:[0], hora:'20:30', cat:'profundo', txt:'🎯 Revisar Plan Maestro: ¿la fase actual sigue en verde? Ajustar si hace falta'},
     {id:'do08',  dias:[0], hora:'21:00', cat:'salud', txt:'🍽️ Cena ligera', link:{href:'../CuidadoPersonal/comida.html?s=cenas', label:'Ver cenas'}},
@@ -3899,7 +4071,7 @@
       {id:'do09c', txt:'1 ajuste concreto para la semana que entra'},
     ]},
     {id:'do1013', dias:[0], hora:'21:40', cat:'salud', txt:'🧴 Skincare + 🍂 Minoxidil — PM', subtareas:[
-      {id:'do10', txt:'Skincare PM — limpiador + tratamiento (ácido salicílico/retinol) + hidratante nocturno'},
+      {id:'do10', txt:'Skincare PM — limpiador + retinoide + hidratante nocturno'},
       {id:'do10b', txt:'Minoxidil 5% en cuero cabelludo seco — dosis de la noche'},
     ]},
     {id:'doSupPm', dias:[0], hora:'21:45', cat:'salud', txt:'💊 Suplementos PM', subtareas:[
@@ -4095,7 +4267,7 @@
     renderRutinaLive();
   }
 
-  // ─── RADAR FIFA DE HABILIDADES ──────────────────────────
+  // ─── GRÁFICO DE HABILIDADES ──────────────────────────
   (function(){
     const SK=[
       {id:'ventas',    name:'Ventas',     full:'Ventas & Negociación',     icon:'🤝', val:15, w:1.5, cat:'negocios', desc:'No sabes regatear ni sostener un precio. Única excepción: negocias muy bien tu propio sueldo al cambiar de empresa — sabes venderte a ti mismo en una entrevista, no un producto en frío.'},
@@ -4124,85 +4296,111 @@
       return          {l:'PRINCIPIANTE',c:'#ef4444'};
     }
 
-    // Barras de habilidades — reemplaza el radar/canvas (2026-08-07, "pon ese mismo grafico en
-    // coach y reemplaza el radar", mismo componente que Dashboard/dashboard.html → slide
-    // Habilidades: ordenadas de más débil a más fuerte, icono+nombre+nivel+valor+ponderación
-    // y una barra delgada de color por nivel, reusando `.progress-bar`/`.progress-fill` ya
-    // existentes en este archivo en vez de duplicar esas clases.
-    function draw(){
-      const el=document.getElementById('skillBars');
-      if(!el)return;
-      const ordenadas=[...SK].sort((a,b)=>a.val-b.val);
-      el.innerHTML=ordenadas.map(s=>{
-        const lv=getLv(s.val);
-        return `<div class="skbar-row">
-          <div class="skbar-head">
-            <span class="skbar-ico">${s.icon}</span>
-            <span class="skbar-name">${s.name}</span>
-            <span class="skbar-chip" style="background:${lv.c}22;color:${lv.c};border-color:${lv.c}55">${lv.l}</span>
-            <span class="skbar-val" style="color:${lv.c}">${s.val}<small>/100 · ×${s.w}</small></span>
-          </div>
-          <div class="progress-bar" style="height:5px"><div class="progress-fill" style="width:${s.val}%;background:${lv.c}"></div></div>
-        </div>`;
-      }).join('');
+    const CATS=[
+      {id:'negocios',name:'🤝 Negocios, Ventas & Marketing — Las que más dinero generan directamente'},
+      {id:'tecnico', name:'💻 Habilidades Técnicas & Digitales — Construir y automatizar'},
+      {id:'finanzas',name:'📈 Finanzas & Inversión — Hacer crecer lo que ganas'},
+      {id:'personal',name:'🧠 Personal & Mentalidad — La base que sostiene todo lo demás'},
+    ];
 
-      // Update DOM elements
-      const ovr=calcOVR(),N=SK.length;
-      const oE=document.getElementById('ovrValue'),oL=document.getElementById('ovrLabel');
-      if(oE)oE.textContent=ovr;
-      if(oL){const lv=getLv(ovr);oL.textContent=lv.l;oL.style.color=lv.c;}
+    // id de la habilidad con el acordeón abierto — null si ninguna (2026-08-09, rediseño:
+    // "cuando haga click en cada habilidad debes mostrarme la descripcion y cuanto de habilidad
+    // le puse... pero solo muestralo cuando haga click" — antes la descripción de las 12
+    // habilidades vivía siempre visible en #skillSliders; ahora colapsada solo se ve
+    // ícono+nombre+nivel+valor+barra completa, y un clic revela descripción+slider+botón de
+    // roadmap de ESA habilidad. Solo una abierta a la vez, como un acordeón normal.
+    let openId=null;
+
+    // Fila de estadísticas (OVR + Top + Área crítica) — se re-renderiza completa solo en draw()
+    // (clic en una fila, o carga inicial). Mientras se arrastra el slider, updateSkillVal() la
+    // actualiza con updateStatsRow() (sin volver a construir el HTML) para no perder el foco del
+    // input a medio arrastre.
+    function statsRowHtml(){
+      const ovr=calcOVR(),ovrLv=getLv(ovr),N=SK.length;
       const sorted=[...SK].sort((a,b)=>b.val-a.val);
-      const tE=document.getElementById('topSkill'),wE=document.getElementById('weakSkill');
-      if(tE)tE.textContent=sorted[0].icon+' '+sorted[0].name+' · '+sorted[0].val;
-      if(wE)wE.textContent=sorted[N-1].icon+' '+sorted[N-1].name+' · '+sorted[N-1].val;
+      const top=sorted[0],weak=sorted[N-1];
+      return `
+        <div class="skill-ovr-card">
+          <div class="skill-ovr-eyebrow">Constructor de Riqueza · 2026</div>
+          <div id="skillOvrNum">${ovr}</div>
+          <div id="skillOvrLvl" class="skill-ovr-lvl" style="color:${ovrLv.c}">${ovrLv.l}</div>
+        </div>
+        <div class="skill-mini-stat">
+          <div class="skill-mini-lbl">Top habilidad</div>
+          <div id="skillTopVal" class="skill-mini-val" style="color:var(--green)">${top.icon} ${top.name} · ${top.val}</div>
+        </div>
+        <div class="skill-mini-stat">
+          <div class="skill-mini-lbl">Área crítica</div>
+          <div id="skillWeakVal" class="skill-mini-val" style="color:var(--red)">${weak.icon} ${weak.name} · ${weak.val}</div>
+        </div>
+      `;
     }
 
-    function buildSliders(){
-      const cont=document.getElementById('skillSliders');
-      if(!cont)return;
-      const cats=[
-        {id:'negocios',name:'🤝 Negocios, Ventas & Marketing — Las que más dinero generan directamente'},
-        {id:'tecnico', name:'💻 Habilidades Técnicas & Digitales — Construir y automatizar'},
-        {id:'finanzas',name:'📈 Finanzas & Inversión — Hacer crecer lo que ganas'},
-        {id:'personal',name:'🧠 Personal & Mentalidad — La base que sostiene todo lo demás'},
-      ];
-      cats.forEach(cat=>{
-        const sk=SK.filter(s=>s.cat===cat.id);
-        const wrap=document.createElement('div');wrap.style.cssText='margin-bottom:24px;';
-        const hdr=document.createElement('div');
-        hdr.textContent=cat.name;
-        hdr.style.cssText='font-size:12px;font-weight:800;color:var(--gold);padding-bottom:8px;border-bottom:2px solid var(--border);margin-bottom:14px;line-height:1.4;';
-        wrap.appendChild(hdr);
-        sk.forEach(s=>{
-          const lv=getLv(s.val);
-          const row=document.createElement('div');
-          row.style.cssText='margin-bottom:18px;padding-bottom:18px;border-bottom:1px solid var(--border);';
-          row.innerHTML=`
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;gap:12px;">
-              <span style="font-size:14px;font-weight:700;">${s.icon} ${s.full} <span style="font-size:10px;font-weight:700;color:var(--muted);font-family:var(--mono, monospace);">· ponderación ×${s.w}</span></span>
-              <div style="display:flex;align-items:center;gap:10px;flex-shrink:0;">
-                <span id="lv_${s.id}" style="font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:${lv.c};">${lv.l}</span>
-                <span id="val_${s.id}" style="font-size:24px;font-weight:900;color:var(--gold);min-width:36px;text-align:right;">${s.val}</span>
-              </div>
-            </div>
-            <p style="font-size:12px;color:var(--muted);margin-bottom:8px;line-height:1.5;">${s.desc}</p>
+    function updateStatsRow(){
+      const ovr=calcOVR(),ovrLv=getLv(ovr),N=SK.length;
+      const sorted=[...SK].sort((a,b)=>b.val-a.val);
+      const top=sorted[0],weak=sorted[N-1];
+      const numEl=document.getElementById('skillOvrNum'),lvlEl=document.getElementById('skillOvrLvl');
+      if(numEl)numEl.textContent=ovr;
+      if(lvlEl){lvlEl.textContent=ovrLv.l;lvlEl.style.color=ovrLv.c;}
+      const topEl=document.getElementById('skillTopVal'),weakEl=document.getElementById('skillWeakVal');
+      if(topEl)topEl.textContent=`${top.icon} ${top.name} · ${top.val}`;
+      if(weakEl)weakEl.textContent=`${weak.icon} ${weak.name} · ${weak.val}`;
+    }
+
+    // Una fila por habilidad: icono+nombre+nivel+valor+barra siempre visible (el "gráfico de
+    // barras" en sí — a todo el ancho de la tarjeta, ya no encajonado en una columna de 360px);
+    // el bloque de descripción+slider+roadmap solo se agrega al HTML si openId===s.id, en vez de
+    // ocultarlo con CSS — así nunca hay un <input type=range> fantasma fuera de pantalla.
+    function skillRowHtml(s){
+      const lv=getLv(s.val);
+      const open=openId===s.id;
+      const detail=open?`
+        <div class="skfull-detail">
+          <div class="skfull-detail-inner">
+            <p style="font-size:12.5px;color:var(--muted);line-height:1.6;margin-bottom:10px;">${s.desc}</p>
             <input type="range" min="0" max="100" value="${s.val}" id="rng_${s.id}"
               style="width:100%;accent-color:var(--gold);cursor:pointer;"
-              oninput="updateRadarSkill('${s.id}',this.value)">
+              oninput="updateSkillVal('${s.id}',this.value)">
             <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--muted);margin-top:4px;">
               <span>0 · Principiante</span><span>40 · Básico</span><span>70 · Bueno</span><span>90+ · Élite</span>
             </div>
-            <button onclick="goToSkillDetail('${s.id}')"
-              style="margin-top:8px;width:100%;padding:5px 0;font-size:11px;font-weight:700;color:var(--gold);background:rgba(240,180,41,0.07);border:1px solid rgba(240,180,41,0.22);border-radius:7px;cursor:pointer;font-family:inherit;transition:background .2s;"
+            <button onclick="event.stopPropagation();goToSkillDetail('${s.id}')"
+              style="margin-top:10px;width:100%;padding:6px 0;font-size:11px;font-weight:700;color:var(--gold);background:rgba(240,180,41,0.07);border:1px solid rgba(240,180,41,0.22);border-radius:7px;cursor:pointer;font-family:inherit;transition:background .2s;"
               onmouseover="this.style.background='rgba(240,180,41,0.15)'"
               onmouseout="this.style.background='rgba(240,180,41,0.07)'">
               📖 Cómo mejorar ${s.icon} ${s.name} →
             </button>
-          `;
-          wrap.appendChild(row);
-        });
-        cont.appendChild(wrap);
-      });
+          </div>
+        </div>`:'';
+      return `<div class="skfull-row${open?' open':''}" id="skfull-${s.id}">
+        <button class="skfull-btn" onclick="toggleSkillRow('${s.id}')" aria-expanded="${open}">
+          <div class="skfull-top">
+            <span class="skfull-ico">${s.icon}</span>
+            <span class="skfull-name">${s.full}</span>
+            <span class="skfull-chip" id="skfull-chip-${s.id}" style="background:${lv.c}22;color:${lv.c};border-color:${lv.c}55">${lv.l}</span>
+            <span class="skfull-val" id="skfull-val-${s.id}" style="color:${lv.c}">${s.val}<small>/100 · ×${s.w}</small></span>
+            <span class="skfull-chevron">▾</span>
+          </div>
+          <div class="progress-bar skfull-bar" style="height:8px"><div class="progress-fill" id="skfull-fill-${s.id}" style="width:${s.val}%;background:${lv.c}"></div></div>
+        </button>
+        ${detail}
+      </div>`;
+    }
+
+    // Render completo — llamado al cargar y cada vez que se abre/cierra un acordeón. NO se llama
+    // en cada tick del slider (eso destruiría y recrearía el <input> activo a medio arrastre,
+    // interrumpiendo el gesto) — para eso existe updateSkillVal(), que solo toca nodos puntuales.
+    function draw(){
+      const statsEl=document.getElementById('skillStatsRow');
+      if(statsEl)statsEl.innerHTML=statsRowHtml();
+
+      const cont=document.getElementById('skillBarsFull');
+      if(!cont)return;
+      cont.innerHTML=CATS.map(cat=>{
+        const sk=SK.filter(s=>s.cat===cat.id);
+        return `<div class="skfull-cat">${cat.name}</div>`+sk.map(skillRowHtml).join('');
+      }).join('');
     }
 
     // Mapa de nombres para el título dinámico
@@ -4238,25 +4436,46 @@
       }
     };
 
-  window.updateRadarSkill=function(id,val){
+    // Abre/cierra el acordeón de una habilidad (clic en la fila completa) — clic de nuevo en la
+    // misma la cierra; clic en otra cierra la anterior y abre la nueva (una sola a la vez).
+    window.toggleSkillRow=function(id){
+      openId=openId===id?null:id;
+      draw();
+      if(openId===id){
+        setTimeout(()=>{
+          const row=document.getElementById('skfull-'+id);
+          if(row)row.scrollIntoView({behavior:'smooth',block:'nearest'});
+        },60);
+      }
+    };
+
+    // Arrastrar el slider actualiza SOLO los nodos puntuales de esa fila + la fila de
+    // estadísticas — nunca llama a draw() (ver comentario de draw() arriba, por qué).
+    window.updateSkillVal=function(id,val){
       const s=SK.find(x=>x.id===id);if(!s)return;
       s.val=parseInt(val);
       localStorage.setItem('radarp_'+id,val);
       const lv=getLv(s.val);
-      const vE=document.getElementById('val_'+id),lE=document.getElementById('lv_'+id);
-      if(vE)vE.textContent=val;
-      if(lE){lE.textContent=lv.l;lE.style.color=lv.c;}
-      draw();
+      const valEl=document.getElementById('skfull-val-'+id);
+      if(valEl){valEl.innerHTML=`${s.val}<small>/100 · ×${s.w}</small>`;valEl.style.color=lv.c;}
+      const chipEl=document.getElementById('skfull-chip-'+id);
+      if(chipEl){chipEl.textContent=lv.l;chipEl.style.background=lv.c+'22';chipEl.style.color=lv.c;chipEl.style.borderColor=lv.c+'55';}
+      const fillEl=document.getElementById('skfull-fill-'+id);
+      if(fillEl){fillEl.style.width=s.val+'%';fillEl.style.background=lv.c;}
+      updateStatsRow();
     };
 
-    window.redrawSkillRadar=draw;
+    window.redrawSkillBars=draw;
     document.addEventListener('DOMContentLoaded',function(){
-      buildSliders();draw();
+      draw();
       // Link directo desde el Dashboard ("✏️ Ajustar X en Coach →", cada tarjeta de habilidad
-      // débil): ?skill=<id> abre de una vez el detalle de esa habilidad, sin tener que buscarla
-      // entre las 12 a mano.
+      // débil): ?skill=<id> abre de una vez el acordeón de esa habilidad Y el roadmap completo,
+      // sin tener que buscarla entre las 12 a mano.
       const skillId=new URLSearchParams(location.search).get('skill');
-      if(skillId&&SK.some(s=>s.id===skillId)) setTimeout(()=>goToSkillDetail(skillId),200);
+      if(skillId&&SK.some(s=>s.id===skillId)){
+        openId=skillId;draw();
+        setTimeout(()=>goToSkillDetail(skillId),200);
+      }
     });
   })();
 
