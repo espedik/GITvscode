@@ -99,6 +99,12 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
 .slide-title{font-family:var(--font-title);font-size:clamp(28px,3.6vw,48px);font-weight:600;letter-spacing:-.01em;margin-bottom:clamp(20px,3vh,40px);
   background:linear-gradient(90deg,var(--text),var(--text2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+/* Título de "Mis Metas" más chico que el resto de los slides (2026-08-11, pedido explícito:
+   "reduce el titulo de esa pag del dashboard") — le deja más alto disponible a las fotos de
+   metas de abajo, que se quieren más grandes. Solo esta página, vía su clase de tema
+   (`.theme-metas`, la misma que ya usa para su color de acento) — el resto de los slides
+   conserva el tamaño de título original. */
+.theme-metas .slide-title{font-size:clamp(20px,2.4vw,30px);margin-bottom:clamp(10px,1.4vh,18px)}
 /* El emoji del título hereda -webkit-text-fill-color:transparent del gradiente de arriba y se ve apagado/
    casi invisible (los emojis no participan del gradiente, solo pierden su color nativo) — este span lo saca
    del clip de texto para que se vea con sus colores reales. */
@@ -142,16 +148,32 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
    poco), sin afectar la altura de fila del grid ni arriesgar overflow. */
 #metasListas{flex:1;min-height:0}
 #metasListas>.tile{display:flex;flex-direction:column;min-height:0}
-.img-goal-grid{flex:1;min-height:0;display:grid;grid-template-columns:repeat(2,1fr);grid-template-rows:repeat(3,1fr);gap:10px;margin-top:2px}
-.img-goal-cell{display:flex;flex-direction:column;gap:3px;min-height:0}
-.img-goal-photo{position:relative;flex:1;min-height:0;border-radius:16px;overflow:hidden;background-size:cover;background-position:center;box-shadow:0 6px 18px rgba(0,0,0,.3);cursor:pointer;transition:transform .2s,box-shadow .2s}
+/* grid-auto-rows en vez de grid-template-rows fijo (2026-08-11) — "corto y mediano plazo" subió
+   de 5 a 7 tarjetas (ver cortoMediano más abajo) y con `repeat(3,1fr)` fijo a 3 filas exactas la
+   4ª fila (item 7 solo) se quedaba sin sizing propio y desentonaba de alto contra las otras 3.
+   `minmax(_,1fr)` + `overflow-y:auto` es el mismo patrón ya usado en `.img-goal-grid-4col`
+   (Habilidades Base, mismo problema el mismo día): cualquier número de tarjetas reparte el alto
+   disponible por igual, y si no alcanza, hace scroll interno en vez de aplastarlas. Las otras 2
+   variantes (`-sm` para largo plazo, `-4col` para habilidades) ya redefinen esta propiedad ellas
+   mismas, así que este cambio no las afecta.
+   El mínimo bajó de 150px a 64px, y horas después volvió a subir a 100px (mismo día, pedido
+   explícito: primero "acomoda el tamaño para que aparezcan todas y no use el scroll down... esto
+   de la imagen hazlo muchisimo mas pequeño"; después "quiero que esten mas grandes las fotos de
+   metas a mediano y corto plazo, entonces reduce de tamaño lo de mi edad y ademas reduce el
+   titulo de esa pag" — el espacio para agrandar las fotos salió de achicar los números de los
+   KPIs, la barra de edad y el título del slide (`.theme-metas .slide-title`, ver arriba), no de
+   reducir la calidad de la cuadrícula de fotos. El scroll interno sigue como respaldo si en una
+   pantalla muy angosta aun así no alcanza. */
+.img-goal-grid{flex:1;min-height:0;display:grid;grid-template-columns:repeat(2,1fr);grid-template-rows:none;grid-auto-rows:minmax(100px,1fr);overflow-y:auto;gap:6px;margin-top:2px;padding-right:2px}
+.img-goal-cell{display:flex;flex-direction:column;gap:2px;min-height:0}
+.img-goal-photo{position:relative;flex:1;min-height:0;border-radius:12px;overflow:hidden;background-size:cover;background-position:center;box-shadow:0 6px 18px rgba(0,0,0,.3);cursor:pointer;transition:transform .2s,box-shadow .2s}
 .img-goal-photo:hover{transform:scale(1.02);box-shadow:0 10px 26px rgba(0,0,0,.4)}
 .img-goal-photo::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.78) 0%,rgba(0,0,0,.2) 60%,transparent 85%)}
 .img-goal-cell:last-child:nth-child(odd){grid-column:1/-1}
-.img-goal-txt{position:absolute;left:0;right:0;bottom:0;padding:6px 10px;z-index:1;display:flex;align-items:center;gap:6px;font-weight:800;font-size:clamp(10px,0.95vw,12px);color:#fff;text-shadow:0 1px 4px rgba(0,0,0,.6)}
+.img-goal-txt{position:absolute;left:0;right:0;bottom:0;padding:4px 8px;z-index:1;display:flex;align-items:center;gap:5px;font-weight:800;font-size:clamp(9px,0.85vw,11px);color:#fff;text-shadow:0 1px 4px rgba(0,0,0,.6)}
 .img-goal-pbar-row{display:flex;align-items:center;gap:5px;padding:0 1px;flex-shrink:0}
 .img-goal-pbar-ico{font-size:7px;flex-shrink:0;line-height:1}
-.img-goal-pbar{flex:1;height:6px;border-radius:20px;background:rgba(var(--ov),.14);overflow:hidden}
+.img-goal-pbar{flex:1;height:4px;border-radius:20px;background:rgba(var(--ov),.14);overflow:hidden}
 .img-goal-pbar-fill{height:100%;border-radius:20px;background:var(--g);transition:width .3s}
 .img-goal-pbar-row-money .img-goal-pbar-fill{background:var(--cy)}
 .img-goal-pbar-pct{font-family:var(--mono);font-size:9px;font-weight:700;color:var(--text3);flex-shrink:0;min-width:2.4em;text-align:right}
@@ -171,13 +193,37 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 .pfill{height:100%;border-radius:20px;transition:width 1.2s cubic-bezier(.22,.61,.36,1);position:relative}
 .lbl{font-size:clamp(10px,.9vw,12px);color:var(--text2);text-transform:uppercase;letter-spacing:.08em;font-weight:700}
 .sub{font-size:clamp(11px,1vw,13px);color:var(--text3);margin-top:4px}
+/* Fila de KPIs de "Mis Metas" (2026-08-11, pedido explícito: "esto de la imagen hazlo muchisimo
+   mas pequeño y la lineas bar mas delgadas") — el emoji dentro de .lbl heredaba el mismo
+   font-size que el texto (10-12px), pero un emoji a color se renderiza notoriamente más grande
+   que el texto latino al mismo tamaño nominal (típico de las fuentes de emoji de iOS/Android) —
+   por eso se veía como "una imagen" enorme junto a la etiqueta en mayúsculas. Separado en su
+   propio span con tamaño fijo chico, y estas 4 tarjetas/su barra (no el .pbar/.tile genérico que
+   se usa en el resto del Dashboard) más compactas para ganar el alto que le faltaba a las metas
+   de abajo. */
+#metasProgreso.grid{gap:8px}
+#metasProgreso .tile{padding:8px 12px}
+#metasProgreso .metas-kpi-ico{font-size:10px}
+#metasProgreso .lbl{font-size:9px}
+#metasProgreso .pbar{height:4px;margin-top:4px}
+#metasProgreso .sub{font-size:9px;margin-top:2px}
+/* Otra vuelta más chico (2026-08-11, pedido explícito: "haz todavia mas pequeñas los
+   indicadores de arriba, los 4") — mismo criterio que la ronda anterior: el espacio que se
+   libera aquí es el que gana la cuadrícula de fotos de metas de abajo. */
 
 /* Barra de edad (2026-08-10) — vive dentro de la tarjeta "Corto & mediano plazo", justo debajo de
    #metasProgreso. Fondo/borde propios en vez de anidar otro .tile completo dentro del .tile que
    ya envuelve esta sección (se vería como una tarjeta dentro de otra tarjeta, doble blur/sombra).
    Color cian (pedido explícito, 2026-08-10 mismo día: "esta barra ponla en cyan"; antes morado). */
-.edad-bar{cursor:pointer;background:rgba(var(--ov),.04);border:1px solid rgba(var(--ov),.09);border-radius:14px;padding:12px 16px;margin-bottom:14px;transition:background .2s,border-color .2s}
+.edad-bar{cursor:pointer;background:rgba(var(--ov),.04);border:1px solid rgba(var(--ov),.09);border-radius:12px;padding:6px 12px;margin-bottom:6px;transition:background .2s,border-color .2s}
 .edad-bar:hover{background:rgba(var(--ov),.07);border-color:var(--cy)}
+/* Más compacta (2026-08-11, "achicar todo para que quepa sin scroll" y su vuelta el mismo día,
+   "reduce de tamaño lo de mi edad" — para dejarle más alto a las fotos de metas, que se quieren
+   más grandes) — padding/margen siguieron bajando, y .lbl/.sub (genéricos, compartidos con el
+   resto del Dashboard) se achican solo dentro de esta barra, sin tocar sus reglas base. */
+.edad-bar .pbar{height:4px;margin-top:4px}
+.edad-bar .lbl{font-size:11px}
+.edad-bar .sub{font-size:10px;margin-top:2px}
 
 /* Overlay de detalle de la barra de edad — "Ritmo real" (2026-08-10, pedido explícito: "cuando
    des click pon otra barra mas o menos como linea de tiempo de las cosas que ya debo conseguir...
@@ -750,6 +796,11 @@ a.rt2-sub-prod:hover{text-decoration:underline}
 .meta-detail-step-link{display:inline-flex;align-items:center;gap:4px;margin-top:5px;font-size:10px;font-weight:800;color:var(--cy);text-decoration:none;
   background:rgba(0,224,192,.1);border:1px solid rgba(0,224,192,.3);padding:3px 9px;border-radius:20px;transition:background .2s}
 .meta-detail-step-link:hover{background:rgba(0,224,192,.2)}
+/* Imagen dentro de un paso del checklist (2026-08-11) — foto/diagrama real que ilustra esa fase
+   de una progresión (empezando por "Saber nadar", Habilidades Base). object-fit:cover con un
+   alto máximo fijo para que una foto muy alta/muy panorámica no se coma media pantalla del
+   overlay — el punto es apoyar el texto, no reemplazarlo. */
+.meta-detail-step-img{display:block;width:100%;max-height:180px;object-fit:cover;border-radius:10px;margin:7px 0}
 @media(max-width:600px){.meta-detail-body{padding:14px 16px 20px}.meta-detail-titlewrap{left:16px;right:16px}.meta-detail-frase{padding:8px 14px 8px 30px}.meta-detail-frase::before{font-size:28px;left:8px}}
 
 /* ─── IMAGEN DE EJERCICIO (2026-08-11) — clic en "🏋️ Hoy toca" → ver diagrama de técnica ───
@@ -831,6 +882,11 @@ a.rt2-sub-prod:hover{text-decoration:underline}
      desde el HTML); toggleQaBar() la quita/pone y llama a syncSlidesTop() para que el
      slide recupere el alto que antes ocupaban las 10 píldoras + el botón de privacidad. */
   .qa-toggle-btn{display:inline-flex}
+  /* Colapsado, el botón ocupa todo el ancho de la barra en vez de quedar como una píldora
+     chica centrada con espacio vacío a los lados (2026-08-11, pedido explícito: "la barra
+     superior debe abarcar todo el rectangulo de arriba... el ancho que abarque todo lo largo de
+     arriba" — la altura no cambia, sigue siendo la misma). */
+  .qa-bar.qa-collapsed .qa-toggle-btn{width:100%;justify-content:center;border-radius:12px}
   .qa-bar.qa-collapsed .qa-pill,.qa-bar.qa-collapsed .priv-btn{display:none}
   /* "cambiar de slide" (‹, puntos, ›) se oculta en celular — pedido explícito: "abajo estan
      amontonados lo que hace de cambiar de slide y lo que te lleva directo a que pagina de
@@ -1185,6 +1241,21 @@ function fixMiercolesNatacionIfNeeded(){
     rawSet('mirutina_v1', gym);
   }
   localStorage.setItem('mirutina_v1_miercoles_natacion','1');
+}
+// Siembra las 2 metas "ya logradas" de cortoMediano (ipn11k, aleman5) al 100% desde la primera
+// carga de este navegador (2026-08-11) — mismo patrón que fixBanamexIfNeeded()/
+// fixMiercolesNatacionIfNeeded(): corre una sola vez (bandera propia en localStorage) y nunca
+// vuelve a forzar el valor después, así que si Adán decide desmarcarlas manualmente no se
+// re-marcan solas en la siguiente carga. Sin esto, ambas abrirían en 0% (checklist real vacío,
+// como cualquier meta activa) hasta que alguien marcara a mano algo que ya pasó — no tiene
+// sentido pedir eso para un hecho histórico.
+function seedMetasLogradasIfNeeded(){
+  if(localStorage.getItem('metas_logradas_seed_v1')) return;
+  const store=rawGet('metas_checklist_v1',{});
+  if(!store.ipn11k) store.ipn11k={0:true};
+  if(!store.aleman5) store.aleman5={0:true};
+  rawSet('metas_checklist_v1',store);
+  localStorage.setItem('metas_logradas_seed_v1','1');
 }
 let toastTimer=null;
 function toast(msg){
@@ -3143,6 +3214,16 @@ const META_DETALLE={
     {t:'Mercedes-Benz · Inspire',d:'Programa graduate rotacional internacional, pide maestría/MBA y máximo 3 años de experiencia.',href:'https://group.mercedes-benz.com/careers/graduates/inspire-journey/',label:'Mercedes-Benz — Inspire'},
     {t:'BMW · Masterprogramm Fastlane',d:'Para maestría con 18+ meses restantes y desempeño sobresaliente — solicitud reportada 1-31 de mayo, inicio en octubre.',href:'https://www.bmwgroup.jobs/de/de/studierende/einstiegs-und-foerderprogramme/masterprogramm-fastlane.html',label:'BMW — Masterprogramm Fastlane'},
     {t:'Revisión en Fase 3',d:'En 2029 toca revisar la decisión con datos reales del negocio: retomarla si el ingreso la sostiene, o posponerla de forma consciente.'}
+  ]},
+  // Las 2 de abajo son metas YA CUMPLIDAS, no activas — un solo paso que resume el logro (no una
+  // lista de pendientes por hacer), sembrado ya marcado desde la primera carga del navegador (ver
+  // seedMetasLogradasIfNeeded() en Init). Mismo criterio ya usado en Coach_v2.html → #perfil-metas
+  // → tarjeta "🏆 Ya logradas" — registro histórico, no checklist para trackear.
+  ipn11k:{titulo:'11K de la Carrera IPN — ya corridos',frase:'La meta no era terminar — era terminar bien, y 1:10:00 lo confirma.',pasos:[
+    {t:'Meta cumplida',d:'Corriste los 11K de la Carrera del Politécnico (IPN) en 1 hora 10 minutos. Este registro queda como evidencia de que ya pasó, no como algo pendiente.'}
+  ]},
+  aleman5:{titulo:'Básico 5 de alemán — ya alcanzado',frase:'Cada nivel que subes en el CENLEX es un paso real hacia la Maestría en Alemania.',pasos:[
+    {t:'Meta cumplida',d:'Avanzaste a Básico 5 de alemán en el CENLEX Santo Tomás. Este registro queda como evidencia de que ya pasó, no como algo pendiente.'}
   ]}
 };
 // Barra de dinero real (BYD y Maestría) — se recalcula en cada renderMetasSlide() con datos reales
@@ -3185,9 +3266,16 @@ function pintarDetailOverlay(dataDict,storeKey,id,toggleFnName,moneyInfo){
   document.getElementById('metaDetailSteps').innerHTML=info.pasos.map((p,i)=>{
     const checked=!!store[i];
     const listHtml=p.list?`<ul class="meta-detail-step-list">${p.list.map(li=>`<li>${li}</li>`).join('')}</ul>`:'';
+    // Imagen opcional dentro de un paso (2026-08-11, pedido explícito: "si puedes ilustrarlo a
+    // veces con imagenes en hd que encuentres en internet, haz que se vea muy bien") — hasta
+    // ahora un paso solo tenía texto + lista + link; para progresiones reales (Habilidades Base,
+    // empezando por "Saber nadar") una foto o diagrama de la técnica vale más que la descripción
+    // sola. Opcional a propósito: la mayoría de los pasos existentes (Mis Metas) no traen `img` y
+    // se ven exactamente igual que antes.
+    const imgHtml=p.img?`<img class="meta-detail-step-img" src="${p.img}" alt="${p.t}" loading="lazy">`:'';
     return `<label class="meta-detail-step${p.href?' step-link':''}${checked?' done':''}">
       <input type="checkbox" ${checked?'checked':''} onchange="${toggleFnName}('${id}',${i})">
-      <div class="meta-detail-step-body"><div class="meta-detail-step-txt"><span class="meta-detail-step-title">${p.t}:</span> ${p.d}</div>${listHtml}${pasoLinkHtml(p)}</div>
+      <div class="meta-detail-step-body"><div class="meta-detail-step-txt"><span class="meta-detail-step-title">${p.t}:</span> ${p.d}</div>${imgHtml}${listHtml}${pasoLinkHtml(p)}</div>
     </label>`;
   }).join('');
 }
@@ -3266,8 +3354,8 @@ function renderMetasSlide(){
   ];
   document.getElementById('metasProgreso').innerHTML=tiles.map(x=>`
     <div class="tile">
-      <div class="lbl" style="color:${x.c}">${x.ico} ${x.lbl}</div>
-      <div class="big-num${privado?' fin-hidden':''}" style="font-size:clamp(20px,2.2vw,30px);color:${x.c}">${x.val}</div>
+      <div class="lbl" style="color:${x.c}"><span class="metas-kpi-ico">${x.ico}</span> ${x.lbl}</div>
+      <div class="big-num${privado?' fin-hidden':''}" style="font-size:clamp(12px,1.3vw,16px);color:${x.c}">${x.val}</div>
       <div class="pbar${privado?' fin-hidden':''}"><div class="pfill" style="width:${x.pct}%;background:${x.c}"></div></div>
       <div class="sub${privado?' fin-hidden':''}">${x.sub}</div>
     </div>`).join('');
@@ -3290,7 +3378,15 @@ function renderMetasSlide(){
     {id:'hyrox',ico:'🏋️',t:'Primer Hyrox',img:'https://images.unsplash.com/photo-1739283180407-21e27d5c0735?w=800&q=80&auto=format&fit=crop'},
     {id:'remoto',ico:'💻',t:'Trabajar remoto',img:'https://images.unsplash.com/photo-1586227740560-8cf2732c1531?w=800&q=80&auto=format&fit=crop'},
     {id:'byd',ico:'🚗',t:'Liquidar el BYD Dolphin Mini'+(carro.found?' · '+money(carro.balance)+' restantes':''),img:'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bb/BYD_DOLPHIN_MINI_%28BRAZIL%29_BYD_SEAGULL.jpg/960px-BYD_DOLPHIN_MINI_%28BRAZIL%29_BYD_SEAGULL.jpg',money:METAS_MONEYBAR.byd},
-    {id:'maestria',ico:'🎓',t:'Maestría en Alemania',img:'https://images.unsplash.com/photo-1627556704302-624286467c65?w=800&q=80&auto=format&fit=crop',money:METAS_MONEYBAR.maestria}
+    {id:'maestria',ico:'🎓',t:'Maestría en Alemania',img:'https://images.unsplash.com/photo-1627556704302-624286467c65?w=800&q=80&auto=format&fit=crop',money:METAS_MONEYBAR.maestria},
+    // 2 metas YA LOGRADAS (2026-08-11, pedido explícito: "en las metas a corto y mediano plazo,
+    // no pusiste mi carrera de 11k ni que estaba estudiando aleman" — corrige la omisión de la
+    // ronda anterior, donde estas 2 solo se agregaron a Coach y no aquí). Mismo mecanismo de
+    // checklist/% que el resto — no un badge estático — pero sembradas ya al 100% desde la
+    // primera carga (ver seedMetasLogradasIfNeeded() en Init, al final del archivo), porque no
+    // tiene sentido pedirle a Adán que "marque" algo que ya pasó para que se vea completo.
+    {id:'ipn11k',ico:'🏃',t:'Correr los 11K de la Carrera IPN (1:10:00)',img:'https://images.unsplash.com/photo-1714963145999-f35277765fe6?w=800&q=80&auto=format&fit=crop'},
+    {id:'aleman5',ico:'🇩🇪',t:'Básico 5 de alemán (CENLEX Santo Tomás)',img:'https://images.unsplash.com/photo-1705573384249-3eff0565c04d?w=800&q=80&auto=format&fit=crop'}
   ];
   const largoExtras=[
     {id:'empresa',ico:'🏢',t:'Empresa ya creada',img:'https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&q=80&auto=format&fit=crop'},
@@ -3377,124 +3473,486 @@ const HABILIDADES_BASE=[
   {id:'coctel',   ico:'🥃', t:'Coctelería básica',                   img:'https://images.unsplash.com/photo-1754490865411-ef87ef00f75f?w=800&q=80&auto=format&fit=crop'},
   {id:'nudos',    ico:'🪢', t:'Nudos que de verdad sirven',          img:'https://images.unsplash.com/photo-1716236376206-899880b92530?w=800&q=80&auto=format&fit=crop'},
   {id:'mecanica', ico:'🔧', t:'Mecánica básica de auto',             img:'https://images.unsplash.com/photo-1553594403-528c652927f9?w=800&q=80&auto=format&fit=crop'},
-  {id:'auxilios', ico:'🩹', t:'Primeros auxilios básicos',           img:'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/CPR_training-01.jpg/960px-CPR_training-01.jpg'}
+  {id:'auxilios', ico:'🩹', t:'Primeros auxilios básicos',           img:'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/CPR_training-01.jpg/960px-CPR_training-01.jpg'},
+  // 3 nuevas (2026-08-11) — pedido explícito, tras una lluvia de ideas: "lo de aire libre todo,
+  // lo de reparaciones basicas nadamas, pero hay habilidades que pueden ir juntas, ponlas como
+  // sea acorde mejor". De las 3 de "aire libre" propuestas (orientarte con brújula, asar carne,
+  // afilar un cuchillo), las 2 últimas se fusionaron en una sola tarjeta — afilar bien el
+  // cuchillo es parte real de cocinar/preparar la carne, no una habilidad aparte sin relación —
+  // y "reparaciones del hogar" quedó sola, sin la de coser un botón (Adán no la pidió).
+  {id:'brujula',      ico:'🧭', t:'Orientarte con mapa y brújula',              img:'https://images.unsplash.com/photo-1566341013452-946caa457784?w=800&q=80&auto=format&fit=crop'},
+  {id:'asado',        ico:'🥩', t:'Asar carne y mantener tu cuchillo afilado',  img:'https://images.unsplash.com/photo-1534177616072-ef7dc120449d?w=800&q=80&auto=format&fit=crop'},
+  {id:'reparaciones', ico:'🔨', t:'Reparaciones básicas del hogar',             img:'https://images.unsplash.com/photo-1596496182209-5193de4ed72d?w=800&q=80&auto=format&fit=crop'}
 ];
 const HABILIDAD_DETALLE={
+  // Reescrito por completo el 2026-08-11 (pedido explícito: "en saber nadar ni siquiera me das
+  // las cosas de como hacerlo, debes decirme eso a detalle, pero de progresion... que tecnicas,
+  // que constancia y demas cosas, hazlo completo... ilustrarlo a veces con imagenes en hd") — ya
+  // no son 6 tips sueltos, son 4 fases reales con técnica específica (`list`), frecuencia de
+  // práctica explícita en cada `d`, y 2 fotos reales verificadas con curl (deslizamiento en
+  // alberca, brazada de crol respirando a un lado). Plantilla que se repite en el resto de
+  // Habilidades Base a partir de aquí — ver readme_dashboard.md.
   nadar:{titulo:'Saber nadar de verdad, no solo mantenerte a flote',frase:'La técnica te hace nadar más lejos con menos esfuerzo — no se trata de fuerza, se trata de forma.',pasos:[
-    {t:'Aprovecha tu miércoles',d:'Ya tienes natación (45 min) en tu rutina de gym — úsala para trabajar técnica, no solo cardio: pide a un instructor que te revise el estilo libre.'},
-    {t:'Alberca Francisco Márquez',d:'Opción pública real en CDMX (Ciudad Deportiva) si buscas clases estructuradas o carriles para nadar largo — ya la tienes en tu sección de Deportes.'},
-    {t:'Domina la respiración primero',d:'Bilateral y flotación relajada, antes de perseguir velocidad — es la base que evita que te canses en los primeros 10 minutos.'},
-    {t:'Aprende 2 estilos',d:'Crol y dorso, para no fatigar siempre el mismo grupo muscular y poder sostener más tiempo en el agua.'},
-    {t:'Meta medible',d:'Nadar 500m continuos sin parar — usa tus miércoles ya agendados para subir la distancia poco a poco.'},
-    {t:'Aguas abiertas si aplica',d:'Si tu meta de Hyrox o algún viaje futuro lo justifica, considera un curso corto — la técnica en alberca y en mar/lago no es igual.'}
+    {t:'Fase 1 — Comodidad en el agua y respiración (semanas 1-2, 2-3 sesiones/semana de 20-30 min)',
+     d:'Antes de nadar un solo metro con estilo, tu cuerpo tiene que dejar de tratar el agua como una amenaza — todo lo demás se construye sobre esto.',
+     img:'https://images.unsplash.com/photo-1461567933755-6c82be2197da?w=800&q=80&auto=format&fit=crop',
+     list:[
+       'Burbujeo controlado: mete la cara al agua, exhala lento por nariz y boca, sal a inhalar — repite 10-15 veces seguidas hasta que sea reflejo, no pánico.',
+       'Flotación boca abajo (float muerto): brazos y piernas extendidos, cara abajo, deja que el agua te sostenga sin patalear.',
+       'Flotación de espalda: para saber descansar a medio nado sin hundirte.',
+       'Deslizamiento desde la pared (streamline): empuja con las piernas en posición de flecha, brazos estirados sobre la cabeza, y deja que el impulso te lleve — es la base de cualquier estilo que aprendas después.'
+     ]},
+    {t:'Fase 2 — Patada y respiración lateral (semanas 3-4, mismas 2-3 sesiones/semana)',
+     d:'Con la respiración ya cómoda, ahora se trata de que la patada te dé impulso sin que te canses en el primer largo.',
+     list:[
+       'Patada de crol con tabla: piernas casi rectas, el movimiento sale de la cadera, no de la rodilla — corta y rápida, no como de rana.',
+       'Respiración lateral: gira solo la cabeza, no el cuerpo completo — un ojo se queda bajo el agua. Practícalo parado en la orilla antes de intentarlo nadando.',
+       'Ritmo fijo: respira cada 2 o 3 brazadas, siempre al mismo lado mientras aprendes — la respiración bilateral (a ambos lados) viene después, no al inicio.'
+     ]},
+    {t:'Fase 3 — Brazada de crol / estilo libre (semanas 5-7, sube a 3-4 sesiones/semana si puedes)',
+     d:'Aquí se nota la diferencia real entre nadar y "no ahogarte" — la brazada es lo que te hace avanzar sin gastar toda tu energía en los primeros 20 metros.',
+     img:'https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/FrontCrawlSwimming.JPG/960px-FrontCrawlSwimming.JPG',
+     list:[
+       'Entrada de mano: los dedos entran al agua primero, no la palma plana — como perforando el agua, no aplastándola.',
+       'Tirón (pull) en forma de "S" bajo el cuerpo, no en línea recta — así agarras más agua con cada brazada.',
+       'Recobro con codo alto: el brazo regresa al frente con el codo arriba del agua, relajado, no rígido.',
+       'Rotación desde la cadera con cada brazada, no solo los hombros — alarga la brazada y gasta menos energía.'
+     ]},
+    {t:'Fase 4 — Resistencia y continuidad (semana 8 en adelante, 2-3 sesiones/semana sin cortes)',
+     d:'La técnica ya está — de aquí en adelante es sostenerla mientras subes la distancia, sin perder la forma por cansancio.',
+     list:[
+       'Sube la distancia poco a poco: 25m → 50m → 100m → 200m → 500m continuos, nunca de golpe.',
+       'Aprovecha tu miércoles de natación ya agendado en la Alberca Francisco Márquez (Ciudad Deportiva) — pide a un instructor que revise tu forma cada 2-3 semanas, no solo cuentes vueltas.',
+       'Segundo estilo (dorso) una vez que el crol sea sólido, para no fatigar siempre el mismo hombro.',
+       'Constancia real: la técnica se pierde más rápido que la fuerza si dejas de practicar — 2-3 sesiones por semana desde el día 1, sin saltarte semanas completas.'
+     ]}
   ]},
   cocinar:{titulo:'Cocinar bien, no solo sobrevivir con Didi Food',frase:'Cocinar es la forma más barata y precisa de controlar lo que comes — nadie ajusta tu plato mejor que tú.',pasos:[
-    {t:'5 recetas base',d:'Que puedas repetir de memoria (arroz, proteína a la plancha, salteado de verduras, huevos, una sopa) — dominar pocas recetas bien vale más que 50 a medias.'},
-    {t:'Ya llevas el control',d:'Calorías/proteína en tu Registro Diario (comida.html) — cocinar tú mismo es la forma más exacta de cumplir esos números.'},
-    {t:'Técnicas antes que recetas',d:'Cortar, sellar, hervir a punto, sazonar — son las que reutilizas en todo lo demás.'},
-    {t:'Cocina en lote',d:'Un día a la semana (domingo, por ejemplo) para tener comida lista entre semana — reduce el Didi Food por flojera, no por antojo real.'},
-    {t:'Suma una técnica al mes',d:'Asar, hornear, un platillo internacional — para que el aprendizaje no se estanque una vez que ya sabes lo básico.'},
-    {t:'Invierte en utensilios base',d:'2-3 que multiplican lo que puedes cocinar bien (un buen cuchillo, una sartén decente, una tabla grande).'}
+    {t:'Fase 1 — Domina la técnica antes que la receta (semanas 1-3, cocina 3-4 veces/semana)',
+     d:'Una técnica bien aprendida sirve para 50 platillos distintos — una receta memorizada solo sirve para uno.',
+     img:'https://images.unsplash.com/photo-1556911220-dabc1f02913a?w=800&q=80&auto=format&fit=crop',
+     list:[
+       'Cortes básicos de cuchillo: julianas, brunoise, rodajas — practica con una cebolla y una zanahoria hasta no tener que mirar tanto el cuchillo.',
+       'Sellar proteína: sartén bien caliente antes de poner nada, no la muevas hasta que se despegue sola — si se pega, no está lista para voltear.',
+       'Sazona en capas: sala durante el proceso, no todo al final — prueba y ajusta en cada paso, no solo al servir.',
+       'Hervir a punto: pasta/arroz con el agua ya hirviendo antes de meterlos, nunca desde fría.',
+       'Cómo saber que el aceite está listo: mete la punta de una cuchara de madera — si burbujea alrededor, ya está a temperatura; meter comida antes hace que absorba grasa en vez de dorarse.',
+       'Mise en place: ten todos los ingredientes cortados y medidos ANTES de prender la estufa — es lo que separa cocinar tranquilo de cocinar corriendo y quemando cosas.'
+     ]},
+    {t:'Fase 2 — 5 recetas de memoria (semanas 4-6, mismo ritmo)',
+     d:'Con la técnica ya cómoda, el objetivo es tener un repertorio que repitas sin pensar, no una colección de recetas que nunca vuelves a hacer.',
+     list:[
+       'Domina de memoria: arroz, proteína a la plancha, salteado de verduras, huevos en 2 formas, y una sopa — repítelas hasta no necesitar la receta enfrente.',
+       'Ya llevas el control de calorías/proteína en tu Registro Diario (comida.html) — cocinar tú mismo es la forma más exacta de cumplir esos números.',
+       'Cocina en lote un día a la semana (domingo, por ejemplo) — reduce el Didi Food por flojera, no por antojo real.',
+       'Escala cada receta a tus macros: si tu Registro Diario pide 40g de proteína en la cena, ajusta la porción de proteína de la receta a eso — no cocines "a ojo" y luego adivines cuánto comiste.'
+     ]},
+    {t:'Fase 3 — Amplía el repertorio (mes 2 en adelante, suma 1 técnica nueva al mes)',
+     d:'Que el aprendizaje no se estanque una vez que ya sabes lo básico.',
+     list:[
+       'Asar, hornear, un platillo internacional — un técnica nueva al mes es suficiente para seguir mejorando sin abrumarte.',
+       'Invierte en 2-3 utensilios que multiplican lo que puedes cocinar bien: un buen cuchillo, una sartén decente, una tabla grande.',
+       'Constancia real: cocinar 3-4 veces por semana sostiene la habilidad — cocinar "cuando te acuerdas" te regresa a cero cada vez.',
+       'Rescatar un platillo: si quedó salado, una papa cruda cocida junto absorbe algo de sal; si le falta sabor, sal + un ácido (limón, vinagre) casi siempre lo arregla — son los 2 errores más comunes y ambos tienen solución.'
+     ]}
   ]},
   armas:{titulo:'Manejo seguro de armas de fuego, con instrucción real',frase:'El respeto por el arma se aprende antes que la puntería — la seguridad siempre va primero.',pasos:[
-    {t:'Instrucción certificada primero',d:'Busca un club de tiro deportivo registrado y con permiso de la SEDENA cerca de ti — el filtro más simple para saber si es legítimo.'},
-    {t:'Las 4 reglas básicas',d:'Trátala como cargada, no apuntes a nada que no vayas a destruir, dedo fuera del gatillo hasta apuntar, conoce tu objetivo y lo que hay detrás.'},
-    {t:'Práctica regular',d:'No solo una vez — el manejo seguro y la puntería se pierden rápido sin práctica constante en polígono.'},
-    {t:'Conoce el marco legal',d:'Ley Federal de Armas de Fuego y Explosivos, antes de pensar en posesión personal — un club certificado te orienta en esto.'},
-    {t:'Constancia mensual',d:'Trátalo como cualquier otra habilidad física de tu lista, no un evento único que haces una vez y ya.'}
+    {t:'Fase 1 — Instrucción certificada, antes que nada (mes 1)',
+     d:'Nunca aprendas por tu cuenta con un arma real — la seguridad se aprende de un instructor, no de un video.',
+     list:[
+       'Busca un club de tiro deportivo registrado y con permiso de la SEDENA cerca de ti — el filtro más simple para saber si es legítimo.',
+       'Las 4 reglas básicas de memoria antes de tocar cualquier arma: trátala como cargada siempre, no apuntes a nada que no vayas a destruir, dedo fuera del gatillo hasta apuntar, conoce tu objetivo y lo que hay detrás.',
+       'Primera sesión supervisada: postura, agarre y respiración — antes de pensar en puntería, el instructor debe ver que manejas el arma de forma segura de manera consistente.',
+       'Nunca mezcles alcohol con manejo de armas — ni una copa, sin excepción, ni antes ni durante la práctica; es la regla que más se rompe y la más grave.'
+     ]},
+    {t:'Fase 2 — Fundamentos de puntería (meses 2-3, 1-2 sesiones/mes en polígono)',
+     d:'La puntería es técnica repetible, no talento — se construye con las mismas 2-3 cosas cada vez.',
+     img:'https://images.unsplash.com/photo-1643538215747-c98de7f7ebf3?w=800&q=80&auto=format&fit=crop',
+     list:[
+       'Alineación de miras y aprieto de gatillo controlado — la mayoría de los tiros fallados vienen de jalar el gatillo, no de mala mira.',
+       'Respiración: exhala parcial y dispara en la pausa natural, sin aguantar el aire por completo.',
+       'Evalúa por grupo de tiros (5-10 disparos seguidos al mismo blanco), no por un tiro perfecto aislado — así ves tu consistencia real.',
+       'Postura isósceles (pies a la anchura de hombros, brazos extendidos simétricos) es la más estable para empezar — más fácil de repetir consistentemente que posturas asimétricas de competencia.'
+     ]},
+    {t:'Fase 3 — Mantenimiento del hábito y marco legal (constante, mínimo 1 sesión/mes)',
+     d:'El manejo seguro se pierde rápido sin práctica — trátalo como cualquier otra habilidad física de tu lista, no un evento único.',
+     list:[
+       'Práctica regular en polígono, no solo cuando te acuerdas — la consistencia es lo que hace que la seguridad sea un reflejo, no un esfuerzo consciente cada vez.',
+       'Conoce la Ley Federal de Armas de Fuego y Explosivos antes de pensar en posesión personal — tu club certificado te orienta en esto.',
+       'Constancia real: mínimo 1 sesión al mes en polígono para no perder la forma — más si compites o lo tomas en serio.',
+       'Si algún día tienes un arma en casa: guárdala descargada y separada de la munición, en un lugar que solo tú puedas acceder — la seguridad en casa es tan importante como la seguridad en el polígono.'
+     ]}
   ]},
   pelear:{titulo:'Defensa personal real, construida sobre tu base física',frase:'No se trata de buscar pelea — se trata de que nunca te tome desprevenido.',pasos:[
-    {t:'No esperes al viaje',d:'Ya tienes Tailandia en tu bucket list y el boxeo en tu sección de Deportes — empieza ahora con 2-3 clases semanales en un gimnasio de CDMX.'},
-    {t:'Se construye sobre tu base',d:'Tu rutina de gym ya te da fuerza, cardio y natación — pelear se construye encima de esa base, no la reemplaza.'},
-    {t:'Técnica y defensa primero',d:'Guardia, esquivar, desplazamiento — eso es lo que de verdad te protege en una situación real, antes que pegar fuerte.'},
-    {t:'Sparring solo con instructor',d:'Ligero y controlado, solo cuando lo indique — es la única forma de probar la técnica bajo presión sin lastimarte.'},
-    {t:'Meta concreta',d:'Tu primera pelea amistosa en Tailandia (ver esa meta para campamentos reales) — le da fecha y propósito a las clases semanales.'}
+    {t:'Fase 1 — Guardia y desplazamiento (semanas 1-3, 2-3 clases/semana)',
+     d:'Antes de aprender a golpear, aprende a no ser golpeado — es la base de todo lo demás.',
+     img:'https://images.unsplash.com/photo-1734191797121-de71b48ba038?w=800&q=80&auto=format&fit=crop',
+     list:[
+       'Guardia básica: puños arriba protegiendo la cara, barbilla abajo, codos pegados al torso.',
+       'Desplazamiento: pasos cortos, nunca cruces los pies — moverte bien te saca de la línea de ataque sin necesitar bloquear todo.',
+       'Jab (golpe recto de tu mano de adelante): el golpe que más usarás, sale del hombro, no del brazo.',
+       'Postura base: pie de atrás a 45°, peso distribuido 50/50, rodillas ligeramente dobladas — te da equilibrio para golpear y moverte sin perder el balance.'
+     ]},
+    {t:'Fase 2 — Combinaciones básicas (semanas 4-8)',
+     d:'Ya tienes las piezas sueltas — ahora se trata de unirlas sin pensar en cada una por separado.',
+     list:[
+       'Jab-cross (1-2): el combo más básico y más útil — practícalo hasta que salga sin pensar.',
+       'Esquivar y responder: agáchate o gira ante un golpe y responde de inmediato, no te quedes cerca después de esquivar.',
+       'Sparring ligero solo con instructor presente — es la única forma de probar la técnica bajo presión real sin lastimarte.',
+       'Cadera y hombro giran juntos en cada golpe — la potencia real no sale del brazo, sale de la rotación del cuerpo; un golpe "de brazo" se siente débil y cansa rápido.'
+     ]},
+    {t:'Fase 3 — Constrúyelo sobre tu base física (constante, 2-3 clases/semana)',
+     d:'Ya tienes Tailandia en tu bucket list y el boxeo en tu sección de Deportes — esto es lo que le da propósito a esas clases semanales.',
+     list:[
+       'Tu rutina de gym ya te da fuerza, cardio y natación — pelear se construye encima de esa base, no la reemplaza.',
+       'Meta concreta: tu primera pelea amistosa en Tailandia le da fecha real a las clases, no solo "algún día".',
+       'Constancia real: 2-3 clases por semana mínimo — es un deporte de repetición, no de sesiones esporádicas.',
+       'Protector bucal y vendas en cada sesión de contacto, sin excepción — son 2 accesorios baratos que evitan lesiones caras que te sacan meses de la rutina.'
+     ]}
   ]},
   decirno:{titulo:'Decir que no sin culpa ni explicación de más',frase:'Cada no que proteges es un sí que le puedes dar después a lo que sí importa.',pasos:[
-    {t:'Empieza en bajo riesgo',d:'Un vendedor, una invitación que no te interesa — antes de aplicarlo en decisiones grandes de dinero o tiempo.'},
-    {t:'Frase corta, sin justificar',d:'"No puedo, gracias" es suficiente — entre más explicación das, más espacio dejas para que insistan.'},
-    {t:'Tu plan financiero es tu aliado',d:'Cada MSI o gasto fuera del orden ya definido es una oportunidad real de practicar un no con datos de tu lado.'},
-    {t:'Identifica tus puntos débiles',d:'Las 2-3 personas o situaciones donde más te cuesta decir que no, y prepara tu respuesta con anticipación.'},
-    {t:'24 horas de margen',d:'Antes de responder que sí a un compromiso nuevo que no esperabas — la mayoría de los "sí" impulsivos no sobreviven ese día.'},
-    {t:'El no protege al sí',d:'Decir que no a lo que no importa te deja tiempo y dinero para decir que sí a lo que sí importa: negocio, familia, salud.'}
+    {t:'Fase 1 — Practica en bajo riesgo (semanas 1-2)',
+     d:'Empieza donde perder no cuesta nada, antes de aplicarlo en decisiones grandes de dinero o tiempo.',
+     img:'https://images.unsplash.com/photo-1755549746558-1d0d212c46c3?w=800&q=80&auto=format&fit=crop',
+     list:[
+       'Un vendedor, una invitación que no te interesa — el terreno de práctica más seguro que existe.',
+       'Frase corta, sin justificar: "No puedo, gracias" es suficiente — entre más explicación das, más espacio dejas para que insistan.',
+       'Anota cada vez que cedes cuando no querías — identificar el patrón es el primer paso para cambiarlo.'
+     ]},
+    {t:'Fase 2 — Identifica tus puntos débiles (semanas 3-4)',
+     d:'Casi todos ceden en los mismos 2-3 lugares una y otra vez — encontrarlos te deja preparar la respuesta antes de necesitarla.',
+     list:[
+       'Las 2-3 personas o situaciones donde más te cuesta decir que no — prepara tu respuesta con anticipación, no la improvises en el momento.',
+       '24 horas de margen antes de responder que sí a un compromiso nuevo que no esperabas — la mayoría de los "sí" impulsivos no sobreviven ese día.',
+       'Tu plan financiero es tu aliado: cada MSI o gasto fuera del orden ya definido es una oportunidad real de practicar un no con datos de tu lado.'
+     ]},
+    {t:'Fase 3 — Hazlo un hábito (constante, revisión mensual)',
+     d:'El no protege al sí: decir que no a lo que no importa te deja tiempo y dinero para decir que sí a lo que sí importa.',
+     list:[
+       'Negocio, familia, salud — eso es lo que realmente protege cada no bien puesto.',
+       'La regla del amigo: si un amigo te contara la misma situación, ¿le dirías que diga que sí? Si la respuesta es no, tampoco tú deberías.',
+       'Constancia real: revisa una vez al mes si sigues cediendo en los mismos puntos débiles que identificaste — el patrón no desaparece solo, hay que vigilarlo.'
+     ]}
   ]},
   dinero:{titulo:'Generar, administrar y hacer crecer tu dinero — las 3 a la vez',frase:'Generar sin administrar se evapora. Administrar sin generar se estanca. Necesitas las tres.',pasos:[
-    {t:'Generar ya está en marcha',d:'Tu Plan Maestro (Fases 0-3: negocio de tu papá, freelance, CodeReview productizado) — sigue ese orden, no lo abandones a medio camino.'},
-    {t:'Administrar es Finanzas',d:'Registrar cada gasto e ingreso real, sin excepciones, evita que el dinero que generas se escape sin control.'},
-    {t:'Riqueza empieza tras la deuda',d:'Cada peso que hoy va a Banamex/BBVA, después va a inversión (GBM, CETES) sin cambiar tu estilo de vida.'},
-    {t:'Aprende mientras pagas',d:'Lo básico de inversión mientras pagas la deuda (no antes del fondo de emergencia) — llegas a la Fase 2 sabiendo dónde poner el dinero.'},
-    {t:'Revisa tu patrimonio mensual',d:'Hacia $1,000,000 en tu slide de Mis Metas — verlo moverse, aunque sea lento, entrena el hábito de administrar bien.'}
+    {t:'Fase 1 — Generar (ya en marcha)',
+     d:'Tu Plan Maestro ya define el orden — el trabajo es no abandonarlo a medio camino.',
+     list:[
+       'Fases 0-3: negocio de tu papá, freelance, CodeReview productizado — en ese orden, no salteado.',
+       'Meta medible: primer ingreso extra estable antes de pensar en diversificar cómo generas.',
+       'No dependas de una sola fuente — cada opción de tu Plan Maestro que avanza reduce el riesgo de quedarte sin ingreso si una falla.'
+     ]},
+    {t:'Fase 2 — Administrar (constante, revisión semanal fija)',
+     d:'Lo que no se registra, no se controla — por bien que generes, sin esto se te escapa igual.',
+     img:'https://images.unsplash.com/photo-1709880945165-d2208c6ad2ec?w=800&q=80&auto=format&fit=crop',
+     list:[
+       'Registra cada gasto e ingreso real en Finanzas, sin excepciones.',
+       'Categoriza cada gasto (fijo, variable, deuda, ahorro) — sin categorías, un registro de gastos es solo una lista larga que no te dice nada.',
+       'Revisión semanal en el mismo día cada semana — no esperes a fin de mes para ver cómo vas.'
+     ]},
+    {t:'Fase 3 — Hacer crecer (empieza tras el fondo de emergencia)',
+     d:'Este paso viene al final a propósito — hacer crecer dinero que no administras bien solo amplifica el desorden.',
+     list:[
+       'Cada peso que hoy va a Banamex/BBVA, después va a inversión (GBM, CETES) sin cambiar tu estilo de vida.',
+       'Aprende lo básico de inversión mientras pagas la deuda (no antes del fondo de emergencia) — llegas a la Fase 2 sabiendo dónde poner el dinero.',
+       'Constancia real: revisa tu patrimonio neto una vez al mes en tu slide de Mis Metas — verlo moverse, aunque sea lento, entrena el hábito de administrar bien.'
+     ]}
   ]},
   manejar:{titulo:'Manejar cualquier vehículo, no solo el que ya conoces',frase:'Entre más vehículos dominas, menos dependes de que alguien más maneje por ti.',pasos:[
-    {t:'Manual y automático',d:'Si solo sabes uno de los dos, esa es la primera brecha a cerrar, y es la base de cualquier otro vehículo.'},
-    {t:'Motocicleta con curso formal',d:'No autodidacta — el equilibrio y el frenado son distintos a los de un auto, y un curso corto reduce el riesgo real.'},
-    {t:'Licencia tipo A',d:'Para manejar moto en CDMX necesitas la licencia motociclista ante la SEMOVI, con su propio examen — no es la misma de auto.'},
-    {t:'Didi como entrenamiento',d:'Cada viaje es práctica real de manejo defensivo en tráfico de CDMX, míralo como entrenamiento, no solo como ingreso extra.'},
-    {t:'Vehículos más grandes',d:'Si te interesa (negocio de tu papá o futuros viajes), suma nociones básicas de una pickup con remolque.'},
-    {t:'Meta clara',d:'Sentirte igual de cómodo en cualquier vehículo que te presten, sin necesitar minutos de adaptación antes de arrancar.'}
+    {t:'Fase 1 — Cierra la brecha básica (mes 1)',
+     d:'Si solo sabes manual o solo automático, ese es el primer hueco a cerrar antes de sumar nada más.',
+     list:[
+       'Practica el que no domines en un lugar vacío antes de salir a la calle con tráfico.',
+       'Frenado de emergencia controlado: pisa firme y derecho, sin bloquear las llantas si tu auto no tiene ABS.',
+       'Estacionarte en batería y en paralelo sin ayuda de cámara — practica hasta que no necesites 3 intentos.'
+     ]},
+    {t:'Fase 2 — Motocicleta con curso formal (meses 2-3)',
+     d:'No autodidacta — el equilibrio y el frenado son distintos a los de un auto.',
+     list:[
+       'Un curso corto reduce el riesgo real más que cualquier cantidad de práctica sola sin guía.',
+       'Practica primero en un estacionamiento vacío: arranques, frenados y vueltas cerradas antes de salir a avenida.',
+       'Licencia tipo A ante la SEMOVI para manejar moto en CDMX — no es la misma que la de auto.'
+     ]},
+    {t:'Fase 3 — Manejo defensivo constante (ya lo haces, todos los días)',
+     d:'Cada viaje en Didi ya es práctica real — el trabajo es hacerla consciente, no solo automática.',
+     img:'https://images.unsplash.com/photo-1718564420308-8eb8324f7d1c?w=800&q=80&auto=format&fit=crop',
+     list:[
+       'Míralo como entrenamiento de manejo defensivo en tráfico de CDMX, no solo como ingreso extra.',
+       'Anticipa, no reacciones: deja espacio de frenado, revisa espejos cada pocos segundos, nunca asumas que el otro te vio.',
+       'Deja siempre una salida: nunca te quedes atrapado entre 2 carriles sin poder cambiar de línea si algo pasa adelante.'
+     ]},
+    {t:'Fase 4 — Vehículos más grandes (si aplica)',
+     d:'Si te interesa (negocio de tu papá o futuros viajes), suma nociones básicas de manejar una pickup con remolque.',
+     list:[
+       'Practica maniobras de reversa con remolque en un espacio abierto antes de intentarlo en la calle — es contraintuitivo, el volante gira "al revés" de lo que esperas.',
+       'Constancia real: la meta es sentirte igual de cómodo en cualquier vehículo que te presten, sin necesitar minutos de adaptación antes de arrancar.'
+     ]}
   ]},
   recuperar:{titulo:'Descansar también es una habilidad que se entrena',frase:'El descanso no es lo que le quitas al gym, al trabajo y al negocio — es lo que sostiene a los tres.',pasos:[
-    {t:'Ya tienes los bloques',d:'Meditación 23:10 y sueño ya en tu rutina — el trabajo es respetarlos con la misma disciplina que le das al gym.'},
-    {t:'Distingue el tipo de cansancio',d:'Físico se resuelve con sueño y días de descanso del gym; mental con desconexión real (sin celular, sin pendientes del negocio).'},
-    {t:'Descansos activos',d:'Una caminata sin celular o estirar 10 minutos recupera más que quedarte scrolleando en el sillón.'},
-    {t:'Revisa tus señales de alarma',d:'Mal sueño, irritabilidad, rendimiento bajando pese a esforzarte más — la señal de bajarle antes de lesionarte.'},
-    {t:'Trátalo como inversión',d:'No como pérdida de tiempo: un buen descanso sostiene que rindas en gym, trabajo y negocio al mismo tiempo.'}
+    {t:'Fase 1 — Respeta los bloques que ya tienes (constante desde ya)',
+     d:'Meditación 23:10 y sueño ya están en tu rutina — el trabajo real es respetarlos con la misma disciplina que le das al gym.',
+     img:'https://images.unsplash.com/photo-1585577529540-a8095ea25427?w=800&q=80&auto=format&fit=crop',
+     list:[
+       'No te los saltes cuando se complica el día — es justo cuando más los necesitas.',
+       'Distingue el tipo de cansancio: físico se resuelve con sueño y días de descanso del gym; mental con desconexión real (sin celular, sin pendientes del negocio).',
+       'Un ritual fijo antes de dormir (mismo orden cada noche) le dice a tu cuerpo que ya casi es hora, y concilias el sueño más rápido.'
+     ]},
+    {t:'Fase 2 — Descansos activos (semanas 2-4)',
+     d:'No todo el descanso es quedarte quieto — algunas formas activas recuperan más que el sillón.',
+     list:[
+       'Una caminata sin celular o estirar 10 minutos recupera más que quedarte scrolleando — pruébalo una semana y compara cómo te sientes.',
+       'Un día de descanso completo del gym cada semana no es opcional — es cuando el músculo de verdad se repara.',
+       'Revisa tus señales de alarma: mal sueño, irritabilidad, rendimiento bajando pese a esforzarte más — es la señal de bajarle antes de lesionarte.'
+     ]},
+    {t:'Fase 3 — Trátalo como inversión (constante, revisión semanal)',
+     d:'No como pérdida de tiempo: un buen descanso sostiene que rindas en gym, trabajo y negocio al mismo tiempo.',
+     list:[
+       'Diferencia el descanso planeado (que programas) del descanso forzado (que tu cuerpo te impone cuando ya no puedes más) — el primero previene el segundo.',
+       'Constancia real: revisa cada domingo cómo dormiste esa semana — si fueron menos de 6 horas más de 2 noches, ese es tu foco de la semana siguiente, no uno más de trabajo.'
+     ]}
   ]},
   // 7 nuevas (2026-08-11) — mismo contenido real de Coach_v2.html → #habilidades-valor,
   // condensado al formato titulo/frase/pasos que ya usa este objeto (no son ideas nuevas,
   // son las mismas 7 tarjetas de Coach reescritas como checklist accionable).
   modales:{titulo:'Modales que separan a alguien que sabe desenvolverse de alguien que no',frase:'El respeto se nota en los detalles pequeños — un apretón de manos, ponerte de pie, ceder la palabra.',pasos:[
-    {t:'Cubiertos de afuera hacia adentro',d:'Conforme avanzan los tiempos de la comida usa siempre el cubierto más externo primero — el que se queda quieto es el de la izquierda.'},
-    {t:'Servilleta y postura en la mesa',d:'Va sobre las piernas apenas te sientas (nunca en el cuello); no hables con la boca llena ni apoyes los codos mientras comes; espera a que todos tengan su plato antes de empezar.'},
-    {t:'Apretón de manos firme',d:'Ni de "pescado muerto" ni de aplastar, 2-3 segundos con contacto visual — y ponte de pie si estás sentado cuando alguien llega a saludarte.'},
-    {t:'Puntualidad real',d:'Llegar 5 minutos antes es puntual; llegar a la hora exacta ya es tarde socialmente.'},
-    {t:'Vestimenta según la ocasión',d:'La guía completa (formal, casual de negocios, boda) vive en Vestimenta — revísala antes de cualquier evento donde no estés seguro qué ponerte.'}
+    {t:'Fase 1 — En la mesa (practica en tu próxima comida)',
+     d:'Los detalles de mesa se notan más por ausencia que por presencia — nadie aplaude que los hagas bien, pero todos notan si no.',
+     list:[
+       'Cubiertos de afuera hacia adentro conforme avanzan los tiempos — el que se queda quieto es siempre el de la izquierda.',
+       'Servilleta sobre las piernas apenas te sientas, nunca en el cuello.',
+       'No hables con la boca llena, no apoyes los codos en la mesa mientras comes (sí puedes al conversar entre platillos).',
+       'Espera a que todos tengan su plato antes de empezar; si brindas, mira a los ojos de la persona, no al vaso.',
+       'Si no sabes qué cubierto usar, observa al anfitrión o espera un segundo antes de tomar el tuyo — nadie nota una pequeña pausa, todos notan el cubierto equivocado.'
+     ]},
+    {t:'Fase 2 — Al presentarte (practica en tu próxima reunión)',
+     d:'Los primeros 5 segundos de un saludo dicen más de ti que los siguientes 5 minutos de conversación.',
+     img:'https://images.unsplash.com/photo-1745847768380-2caeadbb3b71?w=800&q=80&auto=format&fit=crop',
+     list:[
+       'Apretón de manos firme (ni de "pescado muerto" ni de aplastar), 2-3 segundos, con contacto visual.',
+       'Ponte de pie si estás sentado cuando alguien llega a saludarte — la señal de respeto más simple que existe y casi nadie la hace ya.',
+       'Recuerda el nombre repitiéndolo en la conversación poco después de escucharlo ("Mucho gusto, Carlos") — la forma más simple de no olvidarlo a los 2 minutos.'
+     ]},
+    {t:'Fase 3 — Puntualidad y vestimenta (constante)',
+     d:'Esto no se aprende una sola vez — se repite hasta que sea automático.',
+     list:[
+       'Llegar 5 minutos antes es puntual; llegar a la hora exacta ya es tarde socialmente.',
+       'Para saber qué ponerte según la ocasión, ya tienes la guía completa en Vestimenta — úsala antes de cualquier evento donde no estés seguro.',
+       'Constancia real: repítelo en cada comida/reunión hasta que sea reflejo, no algo que recuerdas a medias.',
+       'En videollamadas de trabajo, la puntualidad significa estar conectado y listo 2-3 minutos antes, no entrando justo a la hora.'
+     ]}
   ]},
   fogata:{titulo:'Hacer y apagar una fogata de verdad, no solo prenderla',frase:'Yesca, leña delgada, leña gruesa — en ese orden, o se apaga sola.',pasos:[
-    {t:'3 materiales en orden',d:'Yesca (pasto seco, corteza, papel — prende con una sola chispa), leña delgada (grosor de lápiz) y hasta el final la leña gruesa. Ponerla gruesa desde el inicio apaga el fuego antes de que crezca — el error #1.'},
-    {t:'Armado tipi',d:'Ramas delgadas paradas en cono sobre la yesca — arde rápido y da mucha luz, ideal para encender rápido, pero se consume pronto.'},
-    {t:'Armado cabaña',d:'Dos troncos paralelos con la yesca en medio, encima otros dos cruzados en capas — arde lento y parejo, la mejor para cocinar.'},
-    {t:'Armado estrella',d:'Troncos gruesos como los rayos de una rueda, empujándolos hacia el centro conforme se consumen — la que más dura con menos leña.'},
-    {t:'Seguridad, no negociable',d:'Nunca bajo ramas o cerca de pasto seco, agua o tierra siempre a la mano, nunca sola encendida ni un minuto.'},
-    {t:'Apagarla de verdad',d:'Agua, remueve las cenizas, agua otra vez, y toca cerca (sin tocar) con el dorso de la mano para confirmar que ya no hay calor — una fogata "apagada" que sigue caliente por dentro es la causa #1 de incendios forestales por descuido.'}
+    {t:'Fase 1 — Los 3 materiales, en orden (tu primera fogata)',
+     d:'El error #1 de quien recién empieza: poner leña gruesa desde el inicio, y apagar el fuego antes de que crezca.',
+     img:'https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/Camp_fire.jpg/960px-Camp_fire.jpg',
+     list:[
+       'Yesca (pasto seco, corteza, papel) — prende con una sola chispa.',
+       'Leña delgada, del grosor de un lápiz — la que hace crecer el fuego antes de pedirle más.',
+       'Leña gruesa, hasta el final — cuando ya hay brasa suficiente para sostenerla.',
+       'Elige el sitio antes de juntar materiales: superficie despejada, lejos de raíces y ramas bajas, idealmente sobre tierra o piedra, nunca sobre pasto seco.'
+     ]},
+    {t:'Fase 2 — Elige el armado según lo que necesites',
+     d:'No hay un solo armado correcto — cada uno sirve para algo distinto.',
+     list:[
+       'Tipi: ramas delgadas paradas en cono sobre la yesca — arde rápido y da mucha luz, ideal para encender rápido, pero se consume pronto.',
+       'Cabaña: dos troncos paralelos con la yesca en medio, encima otros dos cruzados en capas — arde lento y parejo, la mejor para cocinar.',
+       'Estrella: troncos gruesos como los rayos de una rueda, empujándolos hacia el centro conforme se consumen — la que más dura con menos leña.',
+       'Si la leña está húmeda por lluvia reciente, pélale la corteza exterior con la navaja — casi siempre está seca por dentro aunque se sienta mojada por fuera.'
+     ]},
+    {t:'Fase 3 — Seguridad, no negociable (cada vez, sin excepción)',
+     d:'Una fogata "apagada" que sigue caliente por dentro es la causa #1 de incendios forestales por descuido.',
+     list:[
+       'Nunca bajo ramas o cerca de pasto seco; agua o tierra siempre a la mano; nunca sola encendida ni un minuto.',
+       'Apagarla de verdad: agua, remueve las cenizas, agua otra vez, y toca cerca (sin tocar) con el dorso de la mano para confirmar que ya no hay calor.',
+       'Constancia real: repasa este paso cada vez que la apagues, nunca por memoria — es el único paso de esta habilidad donde el descuido cuesta caro.',
+       'Ten el balde de agua o la pala de tierra lista ANTES de prender el primer cerillo, no cuando ya la necesites — el plan de apagado se prepara al inicio, no a medio susto.'
+     ]}
   ]},
   vino:{titulo:'Catar y servir vino con seguridad, no solo tomarlo',frase:'No hace falta ser sommelier — hace falta saber los 3 pasos y no apenarte de preguntar.',pasos:[
-    {t:'Cómo se hace',d:'Se cosecha la uva, se prensa (mosto), y las levaduras fermentan sus azúcares en alcohol 1-4 semanas — el tinto fermenta con la piel de la uva (de ahí su color), el blanco sin ella.'},
-    {t:'Cata en 3 pasos',d:'Vista (inclina la copa sobre fondo blanco, mira color y "piernas"), Nariz (gira para airear, huele dos veces), Boca (trago pequeño, pásalo por toda la lengua antes de tragar).'},
-    {t:'Temperatura correcta',d:'Tinto 16-18°C (fresco, no ambiente de casa), blanco/rosado 8-10°C, espumoso 6-8°C.'},
-    {t:'Abrir la botella',d:'Corta la cápsula debajo del reborde del cuello, enrosca el sacacorchos derecho sin llegar al fondo, saca con palanca firme y constante — nunca de un jalón.'},
-    {t:'Maridaje simple',d:'Tinto con carnes rojas y quesos curados, blanco con pescado/mariscos/pollo, rosado con picante o calor, espumoso para empezar o celebrar.'},
-    {t:'Si no sabes qué pedir',d:'Di tu presupuesto y qué vas a comer, y deja que el sommelier o mesero recomiende — es su trabajo, no hay nada inseguro en preguntar.'}
+    {t:'Fase 1 — Cómo se hace (para entender qué estás tomando)',
+     d:'Saber esto te da contexto real cada vez que catas o eliges una botella, no es solo dato curioso.',
+     list:[
+       'Se cosecha la uva, se prensa (mosto), y las levaduras fermentan sus azúcares en alcohol 1-4 semanas.',
+       'El tinto fermenta con la piel de la uva (de ahí su color); el blanco fermenta sin ella.',
+       'Vinos "varietales" llevan el nombre de la uva en la etiqueta (Cabernet, Malbec, Chardonnay); los de "corte" o "blend" mezclan varias — ninguno es superior, son estilos distintos.'
+     ]},
+    {t:'Fase 2 — Cómo catarlo, en 3 pasos (practica en tu próxima copa)',
+     d:'Vista, nariz y boca, en ese orden — saltarte uno te hace perder la mitad de la información.',
+     img:'https://images.unsplash.com/photo-1657487281555-4bda4fd2bb73?w=800&q=80&auto=format&fit=crop',
+     list:[
+       'Vista: inclina la copa sobre un fondo blanco, mira el color y qué tan denso escurre ("las piernas").',
+       'Nariz: gira la copa para airearlo y huele dos veces — la primera detecta la fruta, la segunda notas más complejas.',
+       'Boca: un trago pequeño, pásalo por toda la lengua antes de tragar, y nota si es ácido, tánico o afrutado.',
+       'Vocabulario simple que sí te sirve: un vino con mucho "cuerpo" se siente pesado en la boca, como leche entera vs. leche descremada — más útil que memorizar términos de sommelier.'
+     ]},
+    {t:'Fase 3 — Temperatura, servicio y maridaje (constante)',
+     d:'Un buen vino mal servido sabe peor que uno normal bien servido — la temperatura importa más de lo que parece.',
+     list:[
+       'Tinto 16-18°C, blanco/rosado 8-10°C, espumoso 6-8°C — nunca a temperatura ambiente de casa.',
+       'Al abrir: corta la cápsula debajo del reborde, enrosca el sacacorchos derecho sin llegar al fondo, saca con palanca firme y constante.',
+       'Maridaje simple: tinto con carnes rojas, blanco con pescado/pollo, rosado con picante, espumoso para empezar o celebrar.',
+       'Constancia real: si no sabes qué pedir, di tu presupuesto y qué vas a comer, y deja que el sommelier recomiende — practícalo, no hay nada inseguro en preguntar.',
+       'Una botella abierta de tinto dura 3-5 días bien tapada en el refrigerador (sí, el tinto también se refrigera una vez abierto); blanco y rosado, un poco menos, 3-4 días.'
+     ]}
   ]},
   coctel:{titulo:'Preparar al menos 2 de los 5 cocteles clásicos',frase:'Whisky, tequila y mezcal no son lo mismo — saber la diferencia ya te distingue en cualquier barra.',pasos:[
-    {t:'La diferencia real',d:'Whisky se destila de granos fermentados y reposa en barrica mínimo 2-3 años. Tequila se destila de agave azul (solo Jalisco y alrededores); mezcal, de cualquier agave, cocido en horno de tierra con leña — el tequila es técnicamente un tipo de mezcal.'},
-    {t:'Old Fashioned',d:'Whisky, azúcar, angostura y una twist de naranja sobre hielo grande — el coctel "de caballero" por excelencia.'},
-    {t:'Negroni',d:'Partes iguales de gin, vermut rojo y Campari — amargo, directo, sin trucos. El que más impresiona por lo simple que es de pedir bien.'},
-    {t:'Margarita',d:'Tequila, triple sec y limón en partes 2:1:1, con sal en el borde — el que nunca falla en México.'},
-    {t:'Whisky Sour',d:'Whisky, limón, jarabe simple y clara de huevo (opcional, da espuma) — equilibrio perfecto entre fuerte y fresco.'},
-    {t:'Mojito',d:'Ron blanco, hierbabuena machacada, limón, azúcar y soda — el que mejor cae en clima caliente. Cualquier licor fuerte "derecho" se toma a sorbos pequeños, nunca de un trago.'}
+    {t:'Fase 1 — Entiende lo que estás sirviendo',
+     d:'Saber la diferencia real entre licores te hace pedir mejor y preparar mejor.',
+     list:[
+       'Whisky se destila de granos fermentados y reposa en barrica mínimo 2-3 años.',
+       'Tequila se destila de agave azul (solo Jalisco y alrededores); mezcal, de cualquier agave, cocido en horno de tierra — el tequila es técnicamente un tipo de mezcal.',
+       'El hielo importa: cubos grandes se derriten más lento (diluyen menos tu trago) que hielo picado — para tragos "on the rocks" busca o haz hielo grande.'
+     ]},
+    {t:'Fase 2 — Domina 2 primero (semanas 1-2, practica 1 cada fin de semana)',
+     d:'Los 2 más simples de ejecutar bien — empieza aquí antes de complicarte con los otros 3.',
+     img:'https://images.unsplash.com/photo-1756521973702-b7b496adab70?w=800&q=80&auto=format&fit=crop',
+     list:[
+       'Old Fashioned: whisky, azúcar, angostura y una twist de naranja sobre hielo grande — el coctel "de caballero" por excelencia.',
+       'Margarita: tequila, triple sec y limón en partes 2:1:1, con sal en el borde — el que nunca falla en México.',
+       'Old Fashioned, el detalle que casi todos se saltan: disuelve el azúcar con 2-3 gotas de agua y la angostura ANTES de agregar el whisky — si no se disuelve bien, queda arenoso en el fondo del vaso.'
+     ]},
+    {t:'Fase 3 — Suma los otros 3 (semanas 3-5)',
+     d:'Con los 2 primeros ya cómodos, estos completan tu repertorio de los 5 clásicos.',
+     list:[
+       'Negroni: partes iguales de gin, vermut rojo y Campari — amargo, directo, sin trucos.',
+       'Whisky Sour: whisky, limón, jarabe simple y clara de huevo opcional — equilibrio entre fuerte y fresco.',
+       'Mojito: ron blanco, hierbabuena machacada, limón, azúcar y soda — el que mejor cae en clima caliente.',
+       'Constancia real: practica un coctel nuevo cada 1-2 semanas hasta dominar los 5 — y cualquier licor fuerte "derecho" se toma a sorbos pequeños, nunca de un trago.',
+       'La proporción "2:1:1" del Margarita es una guía, no una ley — ajusta el limón según qué tan ácido te guste; probar y ajustar es parte de aprender coctelería, no un error.'
+     ]}
   ]},
   nudos:{titulo:'Los 4 nudos esenciales, sin buscar el diagrama cada vez',frase:'No necesitas saber 50 nudos — necesitas saber 4 de memoria, bajo presión.',pasos:[
-    {t:'As de guía',d:'Forma un aro fijo que no se cierra ni se afloja bajo tensión — el nudo de rescate por excelencia, para asegurar algo (o a alguien) sin riesgo de que se ahorque.'},
-    {t:'Ocho',d:'El más simple de todos, se usa como tope al final de una cuerda para que no se salga de una polea o argolla — el primero que cualquiera debería aprender.'},
-    {t:'Nudo llano (rizo)',d:'Une dos cuerdas del mismo grosor rápido y seguro — ideal para amarrar un paquete o unir dos cabos para que alcancen más longitud.'},
-    {t:'Ballestrinque',d:'Fija una cuerda a un poste o tubo de forma instantánea y se puede ajustar sin desamarrar — el que más se usa para tender una lona o amarrar algo al remolque del auto.'},
-    {t:'Practica bajo presión',d:'De nada sirve saberlo despacio en tu casa si no lo puedes hacer rápido con las manos frías o con lluvia — practica hasta que sea automático.'}
+    {t:'Fase 1 — Los 2 más importantes (semana 1, practica 10 veces seguidas cada uno)',
+     d:'Si solo aprendes 2 nudos en tu vida, que sean estos — cubren la mayoría de los casos reales.',
+     img:'https://upload.wikimedia.org/wikipedia/commons/d/d0/Bowline_in_four_steps.png',
+     list:[
+       'As de guía: forma un aro fijo que no se cierra ni se afloja bajo tensión — el nudo de rescate por excelencia.',
+       'As de guía, la forma de recordarlo: "el conejo sale de la madriguera, rodea el árbol, y regresa a la madriguera" — visualízalo así en vez de memorizar pasos sueltos.',
+       'Ocho: el más simple de todos, se usa como tope al final de una cuerda para que no se salga de una polea o argolla.'
+     ]},
+    {t:'Fase 2 — Los otros 2 (semana 2)',
+     d:'Con los 2 primeros ya automáticos, estos completan el set de 4 que de verdad sirven.',
+     list:[
+       'Nudo llano (rizo): une dos cuerdas del mismo grosor rápido y seguro — ideal para amarrar un paquete o unir dos cabos.',
+       'Ballestrinque: fija una cuerda a un poste o tubo de forma instantánea y se ajusta sin desamarrar — el que más se usa para tender una lona o amarrar algo al remolque del auto.',
+       'Ballestrinque rápido con una sola mano: haz 2 vueltas con la cuerda en el aire y encímalas para formar el nudo antes de ponerlo sobre el poste — útil cuando ya está en su lugar y no lo puedes rodear.'
+     ]},
+    {t:'Fase 3 — Practica bajo presión (constante, repaso mensual)',
+     d:'De nada sirve saberlo despacio en tu casa si no lo puedes hacer rápido con las manos frías o con lluvia.',
+     list:[
+       'Constancia real: practica cada nudo hasta que tus manos lo hagan sin mirar, luego repásalo una vez al mes para no olvidarlo.'
+     ]}
   ]},
   mecanica:{titulo:'Cambiar una llanta y pasar corriente sin ayuda ni manual',frase:'No se trata de ser mecánico — se trata de no quedarte varado por algo que se resuelve en 10 minutos.',pasos:[
-    {t:'Cambiar una llanta ponchada',d:'Intermitentes y freno de mano, afloja (sin quitar) los birlos antes de levantar con el gato, levanta hasta que no toque el piso, quita birlos y llanta, monta la de refacción, y aprieta los birlos en cruz (nunca en círculo) — primero a mano, luego a tope con el auto en el piso.'},
-    {t:'Pasar corriente',d:'Ambos autos apagados: rojo-positivo al positivo del auto muerto, luego rojo-positivo al positivo del que da corriente, negro-negativo al negativo del que da corriente, y el último cable negro a metal sin pintura del motor del auto muerto (nunca a su negativo directo). Enciende el que da corriente, espera 2-3 min, intenta encender el otro.'},
-    {t:'Revisar el nivel de aceite',d:'Auto en frío y en plano, saca la varilla, límpiala, métela hasta el fondo, sácala de nuevo y lee entre las marcas mín/máx.'},
-    {t:'Si se sobrecalienta',d:'Apágalo de inmediato, nunca abras el radiador caliente (el vapor a presión quema), espera a que baje la temperatura antes de revisar el refrigerante.'},
-    {t:'Practica antes de necesitarlo',d:'La primera vez que cambies una llanta no debería ser de noche, en la lluvia, solo — hazlo una vez en calma para que ya sepas cómo se siente.'}
+    {t:'Fase 1 — Las 2 emergencias más comunes (mes 1, practica una vez en calma)',
+     d:'La primera vez que hagas esto no debería ser de noche, en la lluvia, solo — practícalo antes de necesitarlo de verdad.',
+     list:[
+       'Cambiar una llanta ponchada: intermitentes y freno de mano, afloja (sin quitar) los birlos antes de levantar con el gato, levanta, quita birlos y llanta, monta la de refacción, y aprieta en cruz (nunca en círculo) — primero a mano, luego a tope con el auto en el piso.',
+       'Pasar corriente: ambos autos apagados, rojo-positivo al positivo del auto muerto, luego rojo-positivo al positivo del que da corriente, negro-negativo al negativo del que da corriente, y el último cable negro a metal sin pintura del motor del auto muerto (nunca a su negativo directo). Enciende el que da corriente, espera 2-3 min, intenta encender el otro.',
+       'Guarda siempre el manual del auto en la guantera — tiene el par de apriete correcto y la ubicación exacta de gato/birlos/batería para tu modelo específico, no todos los autos son iguales.'
+     ]},
+    {t:'Fase 2 — Mantenimiento básico (revisión mensual)',
+     d:'Prevenir cuesta 10 minutos al mes — un motor sobrecalentado cuesta mucho más.',
+     img:'https://images.unsplash.com/photo-1643700973089-baa86a1ab9ee?w=800&q=80&auto=format&fit=crop',
+     list:[
+       'Revisar el nivel de aceite: auto en frío y en plano, saca la varilla, límpiala, métela hasta el fondo, sácala de nuevo y lee entre las marcas mín/máx.',
+       'Si se sobrecalienta: apágalo de inmediato, nunca abras el radiador caliente (el vapor a presión quema), espera a que baje la temperatura antes de revisar el refrigerante.',
+       'Constancia real: revisa el aceite una vez al mes, y practica el cambio de llanta al menos una vez al año en calma — así no se te olvida cuando de verdad lo necesites.',
+       'Revisa también la presión de las 4 llantas una vez al mes (incluida la de refacción) — una llanta baja de aire se desgasta disparejo y gasta más gasolina sin que lo notes a simple vista.'
+     ]}
   ]},
   auxilios:{titulo:'RCP y Heimlich — practicado alguna vez, no solo leído',frase:'Primeros auxilios ganan tiempo, no reemplazan atención médica real — pero ese tiempo salva vidas.',pasos:[
-    {t:'Atragantamiento (Heimlich)',d:'Párate detrás de la persona, haz un puño arriba del ombligo, cúbrelo con la otra mano, y da compresiones firmes hacia adentro y arriba hasta que expulse el objeto.'},
-    {t:'RCP básico (adulto)',d:'30 compresiones fuertes en el centro del pecho (5-6 cm de profundidad, ritmo ~100-120 por minuto — el ritmo de "Stayin\' Alive") por 2 respiraciones, y repetir sin parar hasta que llegue ayuda.'},
-    {t:'Cortada',d:'Presión directa y firme con tela limpia hasta que pare el sangrado, eleva la extremidad, limpia con agua (no alcohol directo en la herida abierta) antes de cubrir.'},
-    {t:'Quemadura',d:'Agua fría corriendo (no hielo directo) 10-15 min, nunca truenes una ampolla, nunca pongas pasta de dientes ni mantequilla — mito peligroso, retiene el calor.'},
-    {t:'Cuándo esto no basta',d:'Llama a emergencias (911) siempre que haya pérdida de conciencia, sangrado que no para con presión directa, quemadura grande o en cara/manos/genitales, o cualquier duda real — ante la duda, siempre llama.'},
-    {t:'Toma un curso real',d:'Un curso certificado de RCP/primeros auxilios (la Cruz Roja los ofrece en CDMX) convierte esto de teoría leída a reflejo entrenado — ahí está la diferencia real.'}
+    {t:'Fase 1 — Las 2 emergencias que más importan (toma un curso, repasa cada 6 meses)',
+     d:'Estas 2 son las que de verdad salvan una vida en los primeros minutos, antes de que llegue ayuda.',
+     img:'https://upload.wikimedia.org/wikipedia/commons/0/01/Heimlich-manoeuver.jpg',
+     list:[
+       'Atragantamiento (Heimlich): párate detrás de la persona, haz un puño arriba del ombligo, cúbrelo con la otra mano, y da compresiones firmes hacia adentro y arriba hasta que expulse el objeto.',
+       'RCP básico (adulto): 30 compresiones fuertes en el centro del pecho (5-6 cm de profundidad, ritmo ~100-120 por minuto — el ritmo de "Stayin\' Alive") por 2 respiraciones, y repetir sin parar hasta que llegue ayuda.',
+       'Si estás solo y nadie más puede llamar: en México marca tú mismo al 911 y ponlo en altavoz mientras sigues las compresiones o el Heimlich — no dejes de actuar para hablar por teléfono.'
+     ]},
+    {t:'Fase 2 — Heridas comunes',
+     d:'Menos dramáticas que un paro, pero mucho más frecuentes en el día a día.',
+     list:[
+       'Cortada: presión directa y firme con tela limpia hasta que pare el sangrado, eleva la extremidad, limpia con agua (no alcohol directo en la herida abierta) antes de cubrir.',
+       'Quemadura: agua fría corriendo (no hielo directo) 10-15 min, nunca truenes una ampolla, nunca pongas pasta de dientes ni mantequilla — mito peligroso, retiene el calor.',
+       'Esguince o torcedura (tobillo, muñeca): método RICE — Reposo, hielo envuelto en tela (nunca directo en la piel) 15-20 min, Compresión con venda elástica no muy apretada, Elevación por encima del corazón.'
+     ]},
+    {t:'Fase 3 — Cuándo esto no basta, y cómo mantener el reflejo (constante)',
+     d:'Primeros auxilios ganan tiempo, no reemplazan atención médica real.',
+     list:[
+       'Llama a emergencias (911) siempre que haya pérdida de conciencia, sangrado que no para con presión directa, quemadura grande o en cara/manos/genitales, o cualquier duda real.',
+       'Constancia real: un curso certificado de RCP/primeros auxilios (la Cruz Roja los ofrece en CDMX) convierte esto de teoría leída a reflejo entrenado — repásalo cada 6-12 meses, la técnica de compresión se olvida con el tiempo.'
+     ]}
+  ]},
+  // 3 nuevas (2026-08-11) — mismo criterio de pasos accionables que el resto de este objeto.
+  brujula:{titulo:'Orientarte sin depender del celular',frase:'Un mapa y una brújula nunca se quedan sin batería.',pasos:[
+    {t:'Fase 1 — Lo básico (semana 1, practica en una caminata conocida)',
+     d:'Antes de navegar hacia algo, tienes que saber leer dónde estás parado.',
+     img:'https://images.unsplash.com/photo-1566341013452-946caa457784?w=800&q=80&auto=format&fit=crop',
+     list:[
+       'Los 4 puntos cardinales de memoria: norte, sur, este, oeste — y cómo ubicarlos sin brújula con el sol como respaldo (sale por el este) si la llegas a perder.',
+       'Orienta el mapa antes de leerlo: alinea el norte del mapa con la aguja de la brújula — un mapa mal orientado te hace caminar en la dirección contraria sin darte cuenta.',
+       'La declinación magnética (diferencia entre el norte magnético que marca la brújula y el norte real del mapa) varía según dónde estés — en CDMX es pequeña, pero en mapas topográficos revisa siempre el dato impreso y ajústalo.'
+     ]},
+    {t:'Fase 2 — Navegación real (semana 2)',
+     d:'Aquí es donde el mapa y la brújula dejan de ser objetos separados y empiezan a trabajar juntos.',
+     list:[
+       'Toma un azimut (rumbo): apunta la brújula hacia tu destino, lee el grado, y camina siguiendo ese número — así llegas en línea recta aunque el terreno no te deje ver el punto final.',
+       'Lee las curvas de nivel: líneas cerradas y juntas en un mapa topográfico son subidas empinadas; separadas, terreno plano.',
+       'Si el rumbo te lleva directo a un obstáculo (un río, un barranco): rodéalo contando tus pasos de ida y los mismos de vuelta antes de retomar el azimut original — así no pierdes la línea recta real.'
+     ]},
+    {t:'Fase 3 — Practícalo antes de necesitarlo (constante)',
+     d:'La meta es que sea automático, no un manual que consultas a medio camino.',
+     list:[
+       'Úsalo en una caminata sencilla y ya conocida primero, no la primera vez que te internas en algo nuevo.',
+       'Constancia real: repásalo antes de cada salida nueva al monte — perder la práctica es más fácil de lo que crees.'
+     ]}
+  ]},
+  asado:{titulo:'Asar carne de verdad, y mantener tu cuchillo listo para hacerlo',frase:'Una parrilla no perdona el apuro, y un cuchillo desafilado es más peligroso que uno afilado.',pasos:[
+    {t:'Fase 1 — Controla el fuego (tu primera parrillada)',
+     d:'El fuego es lo primero que hay que dominar — la carne perdona errores de sazón, no de fuego.',
+     img:'https://images.unsplash.com/photo-1627843337825-9c1ba8d21669?w=800&q=80&auto=format&fit=crop',
+     list:[
+       'Deja que el carbón llegue a brasa (ceniza gris, sin llama directa) antes de poner nada — cocinar sobre llama viva quema por fuera y deja crudo por dentro.',
+       '2 zonas de calor: una directa (fuerte, para sellar) y otra indirecta (sin brasas debajo, para terminar sin quemar) — mueve la carne entre las dos según lo que necesite.'
+     ]},
+    {t:'Fase 2 — La carne (cada parrillada)',
+     d:'Sellar y dejar descansar es lo que separa una carne jugosa de una seca.',
+     list:[
+       'Sella cada lado a fuego fuerte para encerrar los jugos, y déjala reposar 5 minutos fuera del fuego antes de cortar — cortarla de inmediato deja que el jugo se escurra en el plato, no en la carne.',
+       'Saca la carne del refrigerador 20-30 minutos antes de asarla — una carne fría de la nevera se cocina disparejo (fría por dentro, quemada por fuera).',
+       'Con termómetro de cocina, más preciso que solo mirar el color: 54-57°C término medio-rojo, 60-63°C término medio, 68°C+ bien cocido.'
+     ]},
+    {t:'Fase 3 — Mantén tu cuchillo afilado (revisión antes de cada uso)',
+     d:'Un cuchillo desafilado necesita más fuerza y se resbala — la mayoría de los cortes en la cocina pasan con cuchillos sin filo, no con los bien afilados.',
+     list:[
+       'Afila con ángulo constante: 15-20° contra la piedra, siempre el mismo número de pasadas de cada lado.',
+       'Prueba de papel, no de dedo: un cuchillo bien afilado corta una hoja de papel limpio, sin rasgarla.',
+       'Constancia real: revísalo antes de cada uso, no solo cuando ya no corta nada.'
+     ]}
+  ]},
+  reparaciones:{titulo:'Reparaciones básicas del hogar, sin llamar a nadie',frase:'La mayoría de los arreglos de casa no son difíciles — solo nadie te enseñó a hacerlos una vez.',pasos:[
+    {t:'Fase 1 — Lo eléctrico y colgar cosas (mes 1)',
+     d:'Los 2 arreglos más comunes en cualquier depa, y los que más se malinterpretan como "difíciles".',
+     img:'https://images.unsplash.com/photo-1593307315564-c96172dc89dc?w=800&q=80&auto=format&fit=crop',
+     list:[
+       'Colgar algo en la pared de verdad: taquete correcto según el peso (no cualquier tornillo en cualquier hueco) y nivel para que quede derecho.',
+       'Cambiar un foco o un apagador: apaga el interruptor general antes de tocar cualquier cable — con la corriente cortada, es tan simple como quitar 2 tornillos y reconectar los mismos cables del lado correcto.',
+       'Antes de perforar una pared, verifica que no haya tubería o cableado detrás — un buscador de metales/cables barato (200-400 MXN) evita un accidente caro.'
+     ]},
+    {t:'Fase 2 — Plomería básica',
+     d:'Empieza siempre por lo más simple antes de recurrir a algo agresivo.',
+     list:[
+       'Destapar un caño: empieza con una pistola de aire o desatascador antes que con químicos agresivos — más simple, más barato, y no daña la tubería con el tiempo.',
+       'Si el desatascador no funciona, revisa el sifón (el tubo curvo bajo el lavabo) — se desarma fácil quitando 2 tuercas con las manos, casi siempre el tapón está ahí atorado, no más adentro.'
+     ]},
+    {t:'Fase 3 — Taladro y kit mínimo (constante)',
+     d:'Con un taladro y estas herramientas resuelves la mayoría de lo que se rompe en un depa.',
+     list:[
+       'Usar un taladro sin miedo: broca correcta según el material (no es la misma para concreto que para madera), velocidad baja para empezar el hoyo, y aprieta después.',
+       'Kit mínimo en casa: taladro, nivel, desarmadores plano/cruz, taquetes surtidos y una llave ajustable.',
+       'Constancia real: la mayoría de los hoyos chuecos salen de ir rápido desde el inicio — no hay prisa, hay repetición.'
+     ]}
   ]}
 };
 function abrirHabilidadDetalle(id,img){
@@ -3761,6 +4219,7 @@ buildHudNav();
 const _settings=loadSettings();
 fixBanamexIfNeeded();
 fixMiercolesNatacionIfNeeded();
+seedMetasLogradasIfNeeded();
 loadAll();
 tickClock();
 showSlide(_settings.remember&&_settings.lastSlide!=null?_settings.lastSlide:0);
