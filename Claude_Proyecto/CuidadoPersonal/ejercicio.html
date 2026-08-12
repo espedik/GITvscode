@@ -690,6 +690,21 @@ const EJ_DB = [
     cue:'Rodillas un poco dobladas, abdomen apretado, haz ondas fuertes y rápidas con las cuerdas — los intervalos de 20 a 30 segundos son los que más te van a costar (y los que más funcionan).'},
   {id:'e057',nombre:'Nadar',musculo:'Cardio',secundarios:['Espalda','Hombros'],equipo:'Alberca',tipo:'Cardio',
     cue:'Alterna estilos (libre y dorso) para no cansar siempre el mismo hombro — es cardio de bajo impacto, un buen complemento a tus sentadillas y peso muerto sin desgastar más tus articulaciones. Ver sección Deportes → Natación para dónde practicarlo.'},
+  // NATACIÓN — APRENDIZAJE (2026-08-12) — pedido explícito: "en natacion tambien ponme una rutina,
+  // recuerda que ni se nadar y quiero aprender poco a poco". El día de natación decía solo "Nadar,
+  // 45 min", que no le sirve a alguien que todavía no sabe nadar. Estos 5 ejercicios son los
+  // bloques reales de una sesión de aprendizaje, en el mismo orden en que se enseña, y coinciden
+  // con las 4 fases de la habilidad "Saber nadar" del Dashboard (Habilidades Base).
+  {id:'e058',nombre:'Flotación y respiración (natación)',musculo:'Cardio',secundarios:[],equipo:'Alberca',tipo:'Cardio',
+    cue:'En la parte donde haces pie: agárrate del borde, mete la cara y suelta burbujas por la nariz 10 veces seguidas. Luego flota de pecho (medusa) y de espalda, con la nariz y la boca fuera del agua. La clave es soltar el aire DEBAJO del agua y solo tomar aire arriba — casi todo el pánico en el agua viene de aguantar la respiración.'},
+  {id:'e059',nombre:'Patada con tabla (natación)',musculo:'Cardio',secundarios:['Piernas'],equipo:'Alberca',tipo:'Cardio',
+    cue:'Con la tabla estirada al frente y los brazos rectos: patada de crol desde la CADERA, no desde la rodilla, con las piernas casi estiradas y los tobillos sueltos. Movimiento corto y rápido — si sacas mucho el pie del agua, estás pateando desde la rodilla y avanzas menos.'},
+  {id:'e060',nombre:'Respiración lateral con tabla (natación)',musculo:'Cardio',secundarios:[],equipo:'Alberca',tipo:'Cardio',
+    cue:'Misma patada con tabla, pero ahora GIRA la cabeza a un lado para respirar en vez de levantarla al frente. Una oreja se queda en el agua, tomas aire por la boca y regresas la cara abajo soltando burbujas. Levantar la cabeza al frente hunde las piernas — es el error #1 al aprender.'},
+  {id:'e061',nombre:'Brazada de crol (natación)',musculo:'Cardio',secundarios:['Espalda','Hombros'],equipo:'Alberca',tipo:'Cardio',
+    cue:'Empújate del borde en posición de flecha (brazos estirados, cabeza entre los brazos) y suma la brazada: la mano entra al agua frente al hombro, empuja el agua hacia atrás hasta el muslo, y regresa por fuera con el codo alto. Alterna brazos y respira de lado cada 2-3 brazadas.'},
+  {id:'e062',nombre:'Nado continuo (natación)',musculo:'Cardio',secundarios:['Espalda','Hombros'],equipo:'Alberca',tipo:'Cardio',
+    cue:'Todo junto y sin parar: patada + brazada + respiración lateral. Empieza con lo que aguantes (aunque sea media alberca), descansa en el borde, y repite. No busques velocidad — busca terminar el largo sin quedarte sin aire.'},
 ];
 
 const MUSCULOS_ALL = ['Pecho','Espalda','Hombros','Bíceps','Tríceps','Piernas','Glúteos','Core','Cardio'];
@@ -710,14 +725,14 @@ let S = {
   rutina: {
     1:{nombre:'Brazos A — Bíceps + Tríceps',tipo:'brazos',foco:'Prioridad: masa en brazos. Empiezas con Fondos (compuesto pesado, tríceps+pecho) antes que el aislamiento — el compuesto construye más masa total que solo curls, y hacerlo primero (con energía fresca) es cuando más rinde.',
        ejercicios:[{id:'e005',series:4,reps:8,peso:0,descanso:90},{id:'e021',series:4,reps:9,peso:0,descanso:90},{id:'e027',series:4,reps:10,peso:0,descanso:90},{id:'e023',series:3,reps:12,peso:0,descanso:60},{id:'e028',series:3,reps:12,peso:0,descanso:60}]},
-    2:{nombre:'Piernas A — Cuádriceps',tipo:'piernas',foco:'Prioridad: masa en piernas. Enfoque cuádriceps.',
-       ejercicios:[{id:'e032',series:4,reps:8,peso:0,descanso:120},{id:'e033',series:4,reps:12,peso:0,descanso:90},{id:'e034',series:3,reps:15,peso:0,descanso:60},{id:'e036',series:3,reps:12,peso:0,descanso:60},{id:'e039',series:4,reps:20,peso:0,descanso:45}]},
-    3:{nombre:'Natación',tipo:'cardio',foco:'Reemplazó a "Espalda + Hombros + Cardio" (2026-08-07, a petición de Adán: "quiero nadar"). Mismo cardio de bajo impacto que ya tenías identificado en Deportes → Natación (alberca Francisco Márquez, Doctores) — complementa el volumen de sentadilla/peso muerto de Piernas sin sumarle más desgaste articular. El trabajo de espalda/hombros que cubría este día se sigue viendo en Lunes/Martes/Jueves/Viernes como secundario de otros ejercicios.',
-       ejercicios:[{id:'e057',series:1,reps:45,unidad:'min',peso:0,descanso:0}]},
+    2:{nombre:'Piernas — completa',tipo:'piernas',foco:'Único día de pierna de la semana (2026-08-12, pedido de Adán: "combina los dias de pierna el a y el b, solo quiero uno"). Junta lo que antes eran Piernas A (cuádriceps) y Piernas B (glúteo/femoral) en una sola sesión, SIN los 4 ejercicios que pidió quitar: sentadilla con barra, zancadas, peso muerto rumano e hip thrust. En su lugar el compuesto pesado del día es Hack Squat — misma función (cuádriceps con carga) pero en máquina, con la espalda apoyada y sin barra encima. Son 7 ejercicios porque ahora cubre pierna completa en un solo día: 3 de cuádriceps, 2 de femoral/glúteo, 1 de abductor y 1 de pantorrilla.',
+       ejercicios:[{id:'e040',series:4,reps:10,peso:0,descanso:120},{id:'e033',series:4,reps:12,peso:0,descanso:90},{id:'e034',series:3,reps:15,peso:0,descanso:60},{id:'e035',series:3,reps:12,peso:0,descanso:60},{id:'e037',series:3,reps:10,peso:0,descanso:60},{id:'e044',series:3,reps:15,peso:0,descanso:45},{id:'e039',series:4,reps:20,peso:0,descanso:45}]},
+    3:{nombre:'Natación — aprender a nadar',tipo:'cardio',foco:'Reestructurado el 2026-08-12 (pedido: "recuerda que ni se nadar y quiero aprender poco a poco"). Antes decía solo "Nadar, 45 min", que no sirve si todavía no sabes nadar. Ahora la sesión sigue el orden real en que se aprende: primero perderle el miedo al agua y respirar, luego las piernas, luego la respiración de lado, luego los brazos, y al final juntarlo todo. Los mismos 45 minutos, pero divididos en bloques. Haz esta misma sesión cada miércoles: las primeras semanas vas a pasar casi todo el tiempo en los 3 primeros bloques y apenas tocar el último — eso es exactamente lo esperado. Conforme te salga, le vas quitando minutos a los bloques de abajo y sumándoselos al nado continuo, hasta que en unos meses el día sea puro nadar. Alberca Francisco Márquez (Doctores), ver Deportes → Natación. Cuando puedas, toma 3-4 clases con instructor al inicio: acorta meses de avance y corrige errores que solo no vas a notar.',
+       ejercicios:[{id:'e058',series:1,reps:8,unidad:'min',peso:0,descanso:60},{id:'e059',series:4,reps:3,unidad:'min',peso:0,descanso:60},{id:'e060',series:3,reps:3,unidad:'min',peso:0,descanso:60},{id:'e061',series:3,reps:3,unidad:'min',peso:0,descanso:60},{id:'e062',series:1,reps:10,unidad:'min',peso:0,descanso:0}]},
     4:{nombre:'Brazos B — Bíceps + Tríceps',tipo:'brazos',foco:'Prioridad: masa en brazos. Volumen, ejercicios distintos al lunes — Fondos en Banco de compuesto (más ligero que los Fondos del lunes) antes del aislamiento.',
        ejercicios:[{id:'e022',series:4,reps:12,peso:0,descanso:60},{id:'e031',series:4,reps:12,peso:0,descanso:60},{id:'e026',series:3,reps:10,peso:0,descanso:60},{id:'e029',series:3,reps:15,peso:0,descanso:60},{id:'e047',series:3,reps:15,peso:0,descanso:45}]},
-    5:{nombre:'Piernas B — Glúteo + Femoral',tipo:'piernas',foco:'Prioridad: masa en piernas. Enfoque glúteo/femoral, complementa el martes.',
-       ejercicios:[{id:'e038',series:4,reps:8,peso:0,descanso:120},{id:'e041',series:4,reps:12,peso:0,descanso:90},{id:'e035',series:3,reps:12,peso:0,descanso:60},{id:'e037',series:3,reps:10,peso:0,descanso:60},{id:'e044',series:3,reps:15,peso:0,descanso:45}]},
+    5:{nombre:'Abdomen — bajar panza',tipo:'core',foco:'Día nuevo (2026-08-12) — quedó libre al fusionar Piernas A+B en el martes, y Adán pidió usarlo para abdomen ("estoy como que excesivo de pansa y quisiera hacer abs"). IMPORTANTE, para que esto sirva de verdad: NO existe la reducción localizada — hacer abdominales fortalece y engrosa el músculo, pero no quema la grasa que está encima de él. La panza baja con déficit calórico sostenido (tu Registro Diario en comida.html) + cardio, y estos ejercicios son los que hacen que, cuando la grasa baje, sí haya un abdomen marcado debajo. Por eso el día combina las 2 cosas: 5 ejercicios de core que cubren las 3 funciones reales del abdomen (anti-extensión con plancha y dead bug, flexión con crunch y elevación de piernas, rotación con oblicuos) + 25 min de elíptica al final.',
+       ejercicios:[{id:'e045',series:3,reps:45,unidad:'seg',peso:0,descanso:45},{id:'e047',series:3,reps:15,peso:0,descanso:45},{id:'e046',series:3,reps:20,peso:0,descanso:45},{id:'e049',series:3,reps:15,peso:0,descanso:45},{id:'e050',series:3,reps:10,peso:0,descanso:45},{id:'e054',series:1,reps:25,unidad:'min',peso:0,descanso:0}]},
     6:{nombre:'Pecho + Cardio + Core',tipo:'empuje',foco:'El press de banca/inclinado también trabaja tríceps como secundario, extra frecuencia de brazos. Pero el foco real de hoy es bajar panza: 25 min de elíptica (tu bloque de cardio más largo de la semana) + rueda abdominal — junto con el HIIT del miércoles, son tus 2 herramientas de ejercicio contra la grasa de la zona media.',
        ejercicios:[{id:'e001',series:4,reps:8,peso:0,descanso:120},{id:'e002',series:3,reps:10,peso:0,descanso:90},{id:'e004',series:3,reps:12,peso:0,descanso:60},{id:'e054',series:1,reps:25,unidad:'min',peso:0,descanso:0},{id:'e048',series:3,reps:10,peso:0,descanso:60}]},
     0:{nombre:'Descanso activo',tipo:'descanso',foco:'Recuperación — caminata ligera opcional, sin gimnasio.',ejercicios:[{id:'e051',series:1,reps:30,unidad:'min',peso:0,descanso:0}]},
@@ -727,6 +742,10 @@ let S = {
   // su web) — un texto libre por día, ver sección Fitsi.
   fitsiCalendario: {1:'',2:'',3:'',4:'',5:'',6:'',0:''}
 };
+// Foto de los 3 días que cambiaron el 2026-08-12, tomada del default de arriba ANTES de que
+// load() lo sobrescriba con lo que hubiera guardado en localStorage — es lo que usa
+// fixRutina20260812IfNeeded() para aplicar el cambio a un navegador que ya tenía la rutina vieja.
+const RUTINA_DEFAULT_20260812=JSON.parse(JSON.stringify({2:S.rutina[2],3:S.rutina[3],5:S.rutina[5]}));
 let editId=null, confCb=null;
 let rutinaDiaEditing=null, rutinaEjsSeleccionados=[];
 
@@ -747,6 +766,22 @@ function fixMiercolesNatacionIfNeeded(){
        ejercicios:[{id:'e057',series:1,reps:45,unidad:'min',peso:0,descanso:0}]};
   }
   localStorage.setItem('mirutina_v1_miercoles_natacion','1');
+}
+// Reestructura del 2026-08-12 (mismo patrón y mismo motivo que fixMiercolesNatacionIfNeeded:
+// load() hace merge superficial, así que un `rutina` ya guardado gana sobre el default nuevo y
+// estos 3 cambios nunca se aplicarían solos). Pedido de Adán, textual: "combina los dias de
+// pierna el a y el b, solo quiero uno, pero quitame el ejercicio de sentadilla con barra,
+// zancadas, peso muerto, hip trust, el otro dia que queda ponme ejercicios para bajar la panza"
+// y "en natacion tambien ponme una rutina, recuerda que ni se nadar".
+// Cada día se corrige SOLO si sigue siendo exactamente el default viejo (se compara por nombre) —
+// si Adán ya lo había personalizado a mano, se respeta y no se toca.
+function fixRutina20260812IfNeeded(){
+  if(localStorage.getItem('mirutina_v1_pierna_abs_natacion')) return;
+  if(!S.rutina){ localStorage.setItem('mirutina_v1_pierna_abs_natacion','1'); return; }
+  if(S.rutina[2]&&S.rutina[2].nombre==='Piernas A — Cuádriceps') S.rutina[2]=JSON.parse(JSON.stringify(RUTINA_DEFAULT_20260812[2]));
+  if(S.rutina[5]&&S.rutina[5].nombre==='Piernas B — Glúteo + Femoral') S.rutina[5]=JSON.parse(JSON.stringify(RUTINA_DEFAULT_20260812[5]));
+  if(S.rutina[3]&&S.rutina[3].nombre==='Natación') S.rutina[3]=JSON.parse(JSON.stringify(RUTINA_DEFAULT_20260812[3]));
+  localStorage.setItem('mirutina_v1_pierna_abs_natacion','1');
 }
 const getAllEj = () => [...EJ_DB, ...(S.ejerciciosCustom||[])];
 const findEj = id => getAllEj().find(e=>e.id===id);
@@ -1065,6 +1100,7 @@ function exportData(){ const b=new Blob([JSON.stringify(S,null,2)],{type:'applic
 function init() {
   load();
   fixMiercolesNatacionIfNeeded();
+  fixRutina20260812IfNeeded();
   save(); // persiste la rutina semanal por defecto en localStorage desde la primera apertura,
           // igual que salud.html — si no, el Dashboard no puede leer "qué toca hoy" hasta que
           // el usuario guarde algo a mano (configurar día, registrar entrenamiento o exportar).
