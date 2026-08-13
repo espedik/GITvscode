@@ -454,3 +454,30 @@ Pedido explícito: *"en la seccion de mediano a largo plazo, quiero otras metas 
 - **Tarjeta nueva `card span-2`** al final de `#perfil-metas` (después de "Largo plazo"/"Extras — bucket list", en su propio `.perfil-grid.mt-16` a todo el ancho) — mismo patrón exacto que el resto de esta pestaña: `<h4>` + subtítulo `.fs-13.text-muted` + `.check-item` por meta. Los 2 checkboxes (`mty1`, `mty2`) llevan el atributo `checked` desde el HTML (no hay ningún id nuevo que colisione, verificado con grep) — a diferencia de las demás metas de la pestaña, estas no se "destrackean": son hechos ya cumplidos, no algo en progreso, así que aparecen tachadas de entrada (la regla CSS `.check-item input:checked + label{text-decoration:line-through}` ya existente las tacha sin código nuevo) y quedan como registro histórico, no como checklist activo.
 - **No se replicaron en `Dashboard/dashboard.html`** — el "Mis Metas" del Dashboard (`METAS_CORTO_MEDIANO`/`cortoMediano`/`largoExtras` dentro de `renderMetasSlide()`) es un sistema de tarjetas con foto + checklist real + barra de "ritmo vs. calendario" (`pintarEdadPace()`) pensado para metas **activas**, con progreso 0→100% — no encaja con 2 hechos que ya están 100% cumplidos y no requieren seguimiento. Si Adán pide llevarlas también al Dashboard como registro, es un cambio aparte (tarjeta de solo lectura, sin barra de progreso ni detalle).
 - Verificado con Node: los 2 bloques `<script>` reales pasan `new Function()` sin errores, balance de `{`/`}` del CSS (438/438 — no se tocó ninguna regla CSS, solo HTML), y balance exacto de apertura/cierre de `<div>` (1578/1578), `<nav>` (2/2), `<main>` (2/2), `<section>` (12/12) en todo el archivo.
+
+## Los 2 bloques semanales de SQL ya no correspondían a sus habilidades reales (2026-08-12)
+
+Lo detectó Adán, no la revisión: *"por que me recomiendas esto, si ya actualizamos las habilidades y esa no es de las bajas 📊 Datos: 30 min de SQL (SQLZoo/Kaggle)"*. Tenía razón, y era una inconsistencia real entre 2 partes de la misma app.
+
+**El diagnóstico**, con los valores actuales de `SK` (Coach_v2.html → Radar FIFA):
+
+| Habilidad | Valor | Peso | Bloques semanales que tenía |
+|---|---|---|---|
+| Ventas | **15** | **1.5** (el más alto) | solo el post de GBM del viernes |
+| Marketing | 20 | 1.2 | — |
+| Finanzas | 20 | 1.1 | — |
+| Inversión | 25 | 1.2 | — |
+| IA | 30 | 1.2 | sábado |
+| **Datos** | **55** | 1.0 | **martes + jueves** |
+
+Datos está **7º de 12** y con el peso más bajo, y aun así se llevaba **2 de los 4 bloques de aprendizaje de la semana** (1 hora), mientras que Ventas —su valor más bajo y el de mayor peso— no tenía ninguno propio. El origen es histórico: esos bloques se escribieron cuando Datos valía menos, y **Adán mismo subió el valor a 55**; la rutina semanal nunca se actualizó. La app hasta lo dice en la ficha de Datos (*"Ya no es tu debilidad real"*) mientras seguía agendándolo 2 veces por semana — 2 partes del mismo producto contradiciéndose.
+
+**No se cambió por decisión propia**: se le preguntó en qué quería esos 2 bloques (Ventas ×2 / Ventas+Finanzas / Ventas+Marketing / dejarlo en SQL) y eligió **Ventas + Finanzas**.
+
+- **Martes 19:00 (`k2`)** → *"🤝 Ventas: 30 min — 1 capítulo de Influence / $100M Offers y escribe cómo lo aplicarías a GBM o CodeReview"*, con link a Coach → Aprendizaje. **Es estudio y aplicación por escrito, NO contactar prospectos** — respeta la regla ya establecida de no mandarlo a vender sin una oferta/mensaje terminado.
+- **Jueves 19:00 (`k4`)** → *"💰 Finanzas: 30 min — categoriza los gastos de la semana y revisa cuánto bajó la deuda"*, con link directo a `Finanzas.html`. Es el bloque con retorno más directo: su deuda ronda los $366k contra ~$55k invertidos, así que media hora ahí se paga sola en intereses.
+- Los 2 se replicaron **idénticos en `Dashboard/dashboard.html` y `Coach/Coach_v2.html`** (ambos tienen su copia de `RUTINA_TASKS`), verificado con Node comparando el `txt` carácter por carácter.
+- Se actualizó también **la frase motivacional** que decía *"Saltarte la práctica de SQL hoy es…"* — habría seguido empujando una tarea que ya no existe.
+- Verificado con Node: sintaxis OK en las 2 apps, CSS y `<div>` balanceados (dashboard 520/520 y 283/283, Coach 438/438 y 1578/1578); `k2`/`k4` idénticos entre apps; 0 menciones restantes de SQL como tarea semanal o en frases.
+
+**Nota para el futuro**: `SK` (los valores del radar) y `RUTINA_TASKS` (los bloques semanales) son 2 estructuras separadas y **nada las mantiene sincronizadas**. Si Adán vuelve a mover un valor del radar, hay que revisar a mano si los bloques de aprendizaje siguen apuntando a sus habilidades más bajas — no se corrige solo.

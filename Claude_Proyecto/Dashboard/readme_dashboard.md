@@ -1440,3 +1440,30 @@ El `foco` se quitó **solo del render** del Dashboard, no de los datos. `GYM_RUT
 Cada tanda de estos cambios necesitó **bumpear la bandera** (`mirutina_v1_pierna_abs_natacion` → `_v2` → `_v3`) en las 2 apps: una vez que la migración corre, deja su bandera puesta y no vuelve a tocar nada, así que sin bump los cambios nuevos **nunca llegarían al navegador de Adán**. Además, cada versión tuvo que **aceptar como "todavía es el default" los nombres intermedios** que ella misma pudo haber guardado antes (`Piernas — completa`, `Abdomen — bajar panza`, `Abdomen — Core + Cardio`, `Natación — aprender a nadar`) — si solo comparara contra los nombres originales de julio, un navegador ya migrado se quedaría congelado en la versión intermedia. Se extendió también a los días 1 y 6, que antes no estaban cubiertos porque no habían cambiado.
 
 - Verificado con Node en los 2 archivos: sintaxis OK; CSS y `<div>` balanceados (dashboard 520/520 y 283/283, ejercicio 156/156 y 173/173); los 7 días **sincronizados** entre `S.rutina` y `GYM_RUTINA_DEFAULT` (nombre + lista de ejercicios) y los 7 `foco` **idénticos**; **0 ejercicios sin entrada** en `EJ_LOOKUP` ni en `EJ_DB`; **0 de los 5 ejercicios retirados** (`e027`, `e037`, `e048`, `e049`, `e060`) siguen en la rutina — todos se quedaron en la biblioteca por si algún día los quiere de vuelta; bandera `_v3` presente en ambas apps. Las 2 URLs de imagen nuevas responden 200.
+
+## Los 2 bloques semanales de SQL ya no correspondían a sus habilidades reales (2026-08-12)
+
+Lo detectó Adán, no la revisión: *"por que me recomiendas esto, si ya actualizamos las habilidades y esa no es de las bajas 📊 Datos: 30 min de SQL (SQLZoo/Kaggle)"*. Tenía razón, y era una inconsistencia real entre 2 partes de la misma app.
+
+**El diagnóstico**, con los valores actuales de `SK` (Coach_v2.html → Radar FIFA):
+
+| Habilidad | Valor | Peso | Bloques semanales que tenía |
+|---|---|---|---|
+| Ventas | **15** | **1.5** (el más alto) | solo el post de GBM del viernes |
+| Marketing | 20 | 1.2 | — |
+| Finanzas | 20 | 1.1 | — |
+| Inversión | 25 | 1.2 | — |
+| IA | 30 | 1.2 | sábado |
+| **Datos** | **55** | 1.0 | **martes + jueves** |
+
+Datos está **7º de 12** y con el peso más bajo, y aun así se llevaba **2 de los 4 bloques de aprendizaje de la semana** (1 hora), mientras que Ventas —su valor más bajo y el de mayor peso— no tenía ninguno propio. El origen es histórico: esos bloques se escribieron cuando Datos valía menos, y **Adán mismo subió el valor a 55**; la rutina semanal nunca se actualizó. La app hasta lo dice en la ficha de Datos (*"Ya no es tu debilidad real"*) mientras seguía agendándolo 2 veces por semana — 2 partes del mismo producto contradiciéndose.
+
+**No se cambió por decisión propia**: se le preguntó en qué quería esos 2 bloques (Ventas ×2 / Ventas+Finanzas / Ventas+Marketing / dejarlo en SQL) y eligió **Ventas + Finanzas**.
+
+- **Martes 19:00 (`k2`)** → *"🤝 Ventas: 30 min — 1 capítulo de Influence / $100M Offers y escribe cómo lo aplicarías a GBM o CodeReview"*, con link a Coach → Aprendizaje. **Es estudio y aplicación por escrito, NO contactar prospectos** — respeta la regla ya establecida de no mandarlo a vender sin una oferta/mensaje terminado.
+- **Jueves 19:00 (`k4`)** → *"💰 Finanzas: 30 min — categoriza los gastos de la semana y revisa cuánto bajó la deuda"*, con link directo a `Finanzas.html`. Es el bloque con retorno más directo: su deuda ronda los $366k contra ~$55k invertidos, así que media hora ahí se paga sola en intereses.
+- Los 2 se replicaron **idénticos en `Dashboard/dashboard.html` y `Coach/Coach_v2.html`** (ambos tienen su copia de `RUTINA_TASKS`), verificado con Node comparando el `txt` carácter por carácter.
+- Se actualizó también **la frase motivacional** que decía *"Saltarte la práctica de SQL hoy es…"* — habría seguido empujando una tarea que ya no existe.
+- Verificado con Node: sintaxis OK en las 2 apps, CSS y `<div>` balanceados (dashboard 520/520 y 283/283, Coach 438/438 y 1578/1578); `k2`/`k4` idénticos entre apps; 0 menciones restantes de SQL como tarea semanal o en frases.
+
+**Nota para el futuro**: `SK` (los valores del radar) y `RUTINA_TASKS` (los bloques semanales) son 2 estructuras separadas y **nada las mantiene sincronizadas**. Si Adán vuelve a mover un valor del radar, hay que revisar a mano si los bloques de aprendizaje siguen apuntando a sus habilidades más bajas — no se corrige solo.
