@@ -806,17 +806,30 @@ a.rt2-sub-prod:hover{text-decoration:underline}
 .meta-detail-overlay{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.72);backdrop-filter:blur(6px);
   display:flex;align-items:center;justify-content:center;padding:4vh 3vw;opacity:0;pointer-events:none;transition:opacity .25s}
 .meta-detail-overlay.open{opacity:1;pointer-events:auto}
-.meta-detail-card{width:min(980px,96vw);max-height:92vh;overflow-y:auto;background:var(--bar2);border:1px solid rgba(var(--ov),.14);
+/* Ancho subido de 980px a 1280px el 2026-08-12 ("esa ventana al hacer click hazla mas ancha,
+   para todos, para que se muestre mejor"). Aplica a los 2 usos del overlay —Habilidades Base y
+   Mis Metas— porque comparten estas clases. El `96vw` sube a `94vw` para que en pantallas
+   angostas siga quedando un respiro visible del fondo a los lados en vez de tocar los bordes. */
+.meta-detail-card{width:min(1280px,94vw);max-height:92vh;overflow-y:auto;background:var(--bar2);border:1px solid rgba(var(--ov),.14);
   border-radius:26px;box-shadow:0 30px 90px rgba(0,0,0,.55);transform:translateY(18px);transition:transform .25s}
 .meta-detail-overlay.open .meta-detail-card{transform:translateY(0)}
-.meta-detail-hero{position:relative;height:clamp(150px,22vh,230px);background-size:cover;background-position:center;border-radius:26px 26px 0 0}
-.meta-detail-hero::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,var(--bar2) 0%,rgba(0,0,0,.25) 55%,rgba(0,0,0,.05) 100%);border-radius:26px 26px 0 0}
+/* La foto también creció (era clamp(150px,22vh,230px)): con la tarjeta más ancha, una franja de
+   150px dejaba la imagen como una tira recortadísima — `cover` tiraba casi todo el encuadre.
+   Con más alto se ve la foto, no un recorte de ella. `image-rendering:auto` es explícito a
+   propósito: si el navegador la escala, que interpole en vez de dejarla dentada. */
+.meta-detail-hero{position:relative;height:clamp(200px,30vh,340px);background-size:cover;background-position:center;
+  border-radius:26px 26px 0 0;image-rendering:auto}
+/* El degradado tapaba demasiado: arrancaba opaco (var(--bar2) al 0%) y a media altura ya iba en
+   .25 de negro, así que apagaba la foto entera. Ahora solo oscurece el tercio inferior, que es
+   donde va el título — el resto de la imagen se ve limpia. */
+.meta-detail-hero::after{content:'';position:absolute;inset:0;border-radius:26px 26px 0 0;
+  background:linear-gradient(to top,var(--bar2) 0%,rgba(0,0,0,.45) 30%,rgba(0,0,0,.12) 58%,rgba(0,0,0,0) 100%)}
 .meta-detail-close{position:absolute;top:12px;right:12px;z-index:2;width:34px;height:34px;border-radius:50%;background:rgba(0,0,0,.5);
   border:1px solid rgba(255,255,255,.22);color:#fff;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(6px)}
 .meta-detail-close:hover{background:rgba(0,0,0,.78)}
 .meta-detail-titlewrap{position:absolute;left:26px;right:26px;bottom:14px;z-index:1}
 .meta-detail-title{font-family:var(--font-title);font-size:clamp(21px,2.6vw,30px);font-weight:600;color:#fff;text-shadow:0 2px 14px rgba(0,0,0,.65)}
-.meta-detail-body{padding:18px 30px 26px}
+.meta-detail-body{padding:20px 38px 28px}
 /* Cita motivadora — comillas grandes decorativas, fondo con tinte de color, tipografía serif —
    pero compacta: ya no domina la parte de arriba de la pantalla como en la ronda anterior. */
 .meta-detail-frase{position:relative;font-family:var(--font-title);font-size:clamp(13px,1.3vw,15px);font-weight:500;font-style:italic;
@@ -875,9 +888,9 @@ a.rt2-sub-prod:hover{text-decoration:underline}
    el diagrama completo), fondo blanco fijo (el trazo negro siempre contrasta, en los 2 temas) y
    más alto — un diagrama mal recortado o invisible no sirve de nada, y aquí puede ser el
    diagrama de una maniobra que salva una vida. */
-.meta-detail-step-img{display:block;width:100%;max-height:220px;object-fit:cover;border-radius:10px;margin:7px 0}
-.meta-detail-step-img.is-diagram{max-height:300px;object-fit:contain;background:#fff;padding:8px}
-@media(max-width:600px){.meta-detail-body{padding:14px 16px 20px}.meta-detail-titlewrap{left:16px;right:16px}.meta-detail-frase{padding:8px 14px 8px 30px}.meta-detail-frase::before{font-size:28px;left:8px}}
+.meta-detail-step-img{display:block;width:100%;max-height:300px;object-fit:cover;border-radius:10px;margin:9px 0}
+.meta-detail-step-img.is-diagram{max-height:400px;object-fit:contain;background:#fff;padding:10px}
+@media(max-width:600px){.meta-detail-body{padding:14px 16px 20px}.meta-detail-step-img{max-height:200px}.meta-detail-step-img.is-diagram{max-height:260px}.meta-detail-titlewrap{left:16px;right:16px}.meta-detail-frase{padding:8px 14px 8px 30px}.meta-detail-frase::before{font-size:28px;left:8px}}
 
 /* ─── IMAGEN DE EJERCICIO (2026-08-11) — clic en "🏋️ Hoy toca" → ver diagrama de técnica ───
    Mismo lenguaje visual que .meta-detail-overlay (overlay fijo + card con blur + cierre por
@@ -3711,14 +3724,14 @@ function renderMetasSlide(){
 // reutiliza la misma que ya usa TIPO_FOTO.cardio (US Navy, dominio público) para no duplicar la
 // búsqueda.
 const HABILIDADES_BASE=[
-  {id:'nadar',    ico:'🏊', t:'Saber nadar',                         img:'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c8/US_Navy_110520-N-CD297-071_Aviation_Ordnanceman_2nd_Class_Selemani_Johnson_swims_in_the_100-meter_Freestyle_event_as_a_member_of_Team_Navy-Coast_Gu.jpg/960px-US_Navy_110520-N-CD297-071_Aviation_Ordnanceman_2nd_Class_Selemani_Johnson_swims_in_the_100-meter_Freestyle_event_as_a_member_of_Team_Navy-Coast_Gu.jpg'},
-  {id:'cocinar',  ico:'🍳', t:'Saber cocinar',                       img:'https://images.unsplash.com/photo-1556910103-1c02745aae4d?w=800&q=80&auto=format&fit=crop'},
-  {id:'armas',    ico:'🎯', t:'Tirar armas de fuego',                img:'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/210126-A-DO858-0016_-_M17_pistol_training_%28Image_1_of_9%29.jpg/960px-210126-A-DO858-0016_-_M17_pistol_training_%28Image_1_of_9%29.jpg'},
-  {id:'pelear',   ico:'🥊', t:'Saber pelear',                        img:'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/US_Navy_081012-N-5345W-033_Dave_Cruz%2C_right%2C_an_assistant_coach_with_757_Boxing_Club_in_Virginia_Beach%2C_Va.%2C_gives_his_fighter_pointers_between_rounds_during_a_sparring_session_at_the_All-Navy_Boxing_Team_mini-camp_at_Rockwell.jpg/960px-thumbnail.jpg'},
-  {id:'decirno',  ico:'🚫', t:'Saber decir que no',                  img:'https://images.unsplash.com/photo-1517048676732-d65bc937f952?w=800&q=80&auto=format&fit=crop'},
-  {id:'dinero',   ico:'💰', t:'Generar, administrar y hacer crecer dinero', img:'https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?w=800&q=80&auto=format&fit=crop'},
-  {id:'manejar',  ico:'🚗', t:'Manejar todo tipo de vehículos',      img:'https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?w=800&q=80&auto=format&fit=crop'},
-  {id:'recuperar',ico:'🧘', t:'Saber recuperarte',                   img:'https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=800&q=80&auto=format&fit=crop'},
+  {id:'nadar',    ico:'🏊', t:'Saber nadar',                         img:'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c8/US_Navy_110520-N-CD297-071_Aviation_Ordnanceman_2nd_Class_Selemani_Johnson_swims_in_the_100-meter_Freestyle_event_as_a_member_of_Team_Navy-Coast_Gu.jpg/1280px-US_Navy_110520-N-CD297-071_Aviation_Ordnanceman_2nd_Class_Selemani_Johnson_swims_in_the_100-meter_Freestyle_event_as_a_member_of_Team_Navy-Coast_Gu.jpg'},
+  {id:'cocinar',  ico:'🍳', t:'Saber cocinar',                       img:'https://images.unsplash.com/photo-1556910103-1c02745aae4d?w=1600&q=80&auto=format&fit=crop'},
+  {id:'armas',    ico:'🎯', t:'Tirar armas de fuego',                img:'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/210126-A-DO858-0016_-_M17_pistol_training_%28Image_1_of_9%29.jpg/1280px-210126-A-DO858-0016_-_M17_pistol_training_%28Image_1_of_9%29.jpg'},
+  {id:'pelear',   ico:'🥊', t:'Saber pelear',                        img:'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/US_Navy_081012-N-5345W-033_Dave_Cruz%2C_right%2C_an_assistant_coach_with_757_Boxing_Club_in_Virginia_Beach%2C_Va.%2C_gives_his_fighter_pointers_between_rounds_during_a_sparring_session_at_the_All-Navy_Boxing_Team_mini-camp_at_Rockwell.jpg/1280px-thumbnail.jpg'},
+  {id:'decirno',  ico:'🚫', t:'Saber decir que no',                  img:'https://images.unsplash.com/photo-1517048676732-d65bc937f952?w=1600&q=80&auto=format&fit=crop'},
+  {id:'dinero',   ico:'💰', t:'Generar, administrar y hacer crecer dinero', img:'https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?w=1600&q=80&auto=format&fit=crop'},
+  {id:'manejar',  ico:'🚗', t:'Manejar todo tipo de vehículos',      img:'https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?w=1600&q=80&auto=format&fit=crop'},
+  {id:'recuperar',ico:'🧘', t:'Saber recuperarte',                   img:'https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=1600&q=80&auto=format&fit=crop'},
   // 7 nuevas (2026-08-11, pedido explícito: "en coach hay una seccion de habilidades de valor,
   // añade todo eso en el dashboard, del mismo estilo en que estan ya y muy completa") — mismo
   // catálogo de Coach_v2.html → #habilidades-valor ("🎩 Habilidades de un Hombre de Valor"), las
@@ -3726,22 +3739,22 @@ const HABILIDADES_BASE=[
   // dominas" hv1-hv7, que es un resumen de estas mismas 7 — no aporta una habilidad nueva).
   // Fotos nuevas verificadas con curl (HTTP 200) antes de usarlas, mismo criterio que las 8 de
   // arriba: Unsplash para las de estilo de vida, Wikimedia Commons para las más "documentales".
-  {id:'modales',  ico:'🍽️', t:'Modales y etiqueta esencial',        img:'https://images.unsplash.com/photo-1519167758481-83f550bb49b3?w=800&q=80&auto=format&fit=crop'},
-  {id:'fogata',   ico:'🔥', t:'Hacer una fogata correctamente',      img:'https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/Camp_fire.jpg/960px-Camp_fire.jpg'},
-  {id:'vino',     ico:'🍷', t:'Catar y servir vino',                 img:'https://images.unsplash.com/photo-1755437014505-355cb34add6b?w=800&q=80&auto=format&fit=crop'},
-  {id:'coctel',   ico:'🥃', t:'Coctelería básica',                   img:'https://images.unsplash.com/photo-1754490865411-ef87ef00f75f?w=800&q=80&auto=format&fit=crop'},
-  {id:'nudos',    ico:'🪢', t:'Nudos que de verdad sirven',          img:'https://images.unsplash.com/photo-1716236376206-899880b92530?w=800&q=80&auto=format&fit=crop'},
-  {id:'mecanica', ico:'🔧', t:'Mecánica básica de auto',             img:'https://images.unsplash.com/photo-1553594403-528c652927f9?w=800&q=80&auto=format&fit=crop'},
-  {id:'auxilios', ico:'🩹', t:'Primeros auxilios básicos',           img:'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/CPR_training-01.jpg/960px-CPR_training-01.jpg'},
+  {id:'modales',  ico:'🍽️', t:'Modales y etiqueta esencial',        img:'https://images.unsplash.com/photo-1519167758481-83f550bb49b3?w=1600&q=80&auto=format&fit=crop'},
+  {id:'fogata',   ico:'🔥', t:'Hacer una fogata correctamente',      img:'https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/Camp_fire.jpg/1280px-Camp_fire.jpg'},
+  {id:'vino',     ico:'🍷', t:'Catar y servir vino',                 img:'https://images.unsplash.com/photo-1755437014505-355cb34add6b?w=1600&q=80&auto=format&fit=crop'},
+  {id:'coctel',   ico:'🥃', t:'Coctelería básica',                   img:'https://images.unsplash.com/photo-1754490865411-ef87ef00f75f?w=1600&q=80&auto=format&fit=crop'},
+  {id:'nudos',    ico:'🪢', t:'Nudos que de verdad sirven',          img:'https://images.unsplash.com/photo-1716236376206-899880b92530?w=1600&q=80&auto=format&fit=crop'},
+  {id:'mecanica', ico:'🔧', t:'Mecánica básica de auto',             img:'https://images.unsplash.com/photo-1553594403-528c652927f9?w=1600&q=80&auto=format&fit=crop'},
+  {id:'auxilios', ico:'🩹', t:'Primeros auxilios básicos',           img:'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/CPR_training-01.jpg/1280px-CPR_training-01.jpg'},
   // 3 nuevas (2026-08-11) — pedido explícito, tras una lluvia de ideas: "lo de aire libre todo,
   // lo de reparaciones basicas nadamas, pero hay habilidades que pueden ir juntas, ponlas como
   // sea acorde mejor". De las 3 de "aire libre" propuestas (orientarte con brújula, asar carne,
   // afilar un cuchillo), las 2 últimas se fusionaron en una sola tarjeta — afilar bien el
   // cuchillo es parte real de cocinar/preparar la carne, no una habilidad aparte sin relación —
   // y "reparaciones del hogar" quedó sola, sin la de coser un botón (Adán no la pidió).
-  {id:'brujula',      ico:'🧭', t:'Orientarte con mapa y brújula',              img:'https://images.unsplash.com/photo-1566341013452-946caa457784?w=800&q=80&auto=format&fit=crop'},
-  {id:'asado',        ico:'🥩', t:'Asar carne y mantener tu cuchillo afilado',  img:'https://images.unsplash.com/photo-1534177616072-ef7dc120449d?w=800&q=80&auto=format&fit=crop'},
-  {id:'reparaciones', ico:'🔨', t:'Reparaciones básicas del hogar',             img:'https://images.unsplash.com/photo-1596496182209-5193de4ed72d?w=800&q=80&auto=format&fit=crop'}
+  {id:'brujula',      ico:'🧭', t:'Orientarte con mapa y brújula',              img:'https://images.unsplash.com/photo-1566341013452-946caa457784?w=1600&q=80&auto=format&fit=crop'},
+  {id:'asado',        ico:'🥩', t:'Asar carne y mantener tu cuchillo afilado',  img:'https://images.unsplash.com/photo-1534177616072-ef7dc120449d?w=1600&q=80&auto=format&fit=crop'},
+  {id:'reparaciones', ico:'🔨', t:'Reparaciones básicas del hogar',             img:'https://images.unsplash.com/photo-1596496182209-5193de4ed72d?w=1600&q=80&auto=format&fit=crop'}
 ];
 const HABILIDAD_DETALLE={
   // Reescrito por completo el 2026-08-11 (pedido explícito: "en saber nadar ni siquiera me das
@@ -3754,7 +3767,7 @@ const HABILIDAD_DETALLE={
   nadar:{titulo:'Saber nadar de verdad, no solo mantenerte a flote',frase:'La técnica te hace nadar más lejos con menos esfuerzo — no se trata de fuerza, se trata de forma.',pasos:[
     {t:'Fase 1 — Comodidad en el agua y respiración (semanas 1-2, 2-3 sesiones/semana de 20-30 min)',
      d:'Antes de nadar un solo metro con estilo, tu cuerpo tiene que dejar de tratar el agua como una amenaza — todo lo demás se construye sobre esto.',
-     img:'https://images.unsplash.com/photo-1461567933755-6c82be2197da?w=800&q=80&auto=format&fit=crop',
+     img:'https://images.unsplash.com/photo-1461567933755-6c82be2197da?w=1600&q=80&auto=format&fit=crop',
      list:[
        'Burbujeo controlado: mete la cara al agua, exhala lento por nariz y boca, sal a inhalar — repite 10-15 veces seguidas hasta que sea reflejo, no pánico.',
        'Flotación boca abajo (float muerto): brazos y piernas extendidos, cara abajo, deja que el agua te sostenga sin patalear.',
@@ -3814,7 +3827,7 @@ const HABILIDAD_DETALLE={
   cocinar:{titulo:'Cocinar bien, no solo sobrevivir con Didi Food',frase:'Cocinar es la forma más barata y precisa de controlar lo que comes — nadie ajusta tu plato mejor que tú.',pasos:[
     {t:'Fase 1 — 3 recetas fáciles de tu recetario real (semana 1-2, 2-3 veces cada una)',
      d:'No son recetas nuevas inventadas aquí — ya están en tu recetario de comida.html y las usas para tu Registro Diario. El punto de partida es dominarlas de memoria, no buscar otras.',
-     img:'https://images.unsplash.com/photo-1556911220-dabc1f02913a?w=800&q=80&auto=format&fit=crop',
+     img:'https://images.unsplash.com/photo-1556911220-dabc1f02913a?w=1600&q=80&auto=format&fit=crop',
      list:[
        'Tacos de huevo con jamón de pavo y queso panela (comida.html → Desayunos, 10 min): pica y sofríe el jamón 1 minuto, agrega el huevo batido y revuelve a fuego bajo sin dejar de mover — así queda cremoso, no seco ni correoso.',
        'Atún con arroz y ensalada de pepino (comida.html → Cenas, 10 min): la cena más simple de armar de todo el recetario — perfecta para practicar el arroz de la Fase 4 sin ninguna otra distracción.',
@@ -3843,7 +3856,7 @@ const HABILIDAD_DETALLE={
      ]},
     {t:'Fase 4 — Lo que todo cocinero debe saber, aparte de seguir una receta (constante)',
      d:'Esto es lo que te permite improvisar en el súper y en la cocina sin traer una receta enfrente — la diferencia real entre "seguir instrucciones" y "saber cocinar".',
-     img:'https://images.unsplash.com/photo-1625980319455-985e5442c5ae?w=800&q=80&auto=format&fit=crop',
+     img:'https://images.unsplash.com/photo-1625980319455-985e5442c5ae?w=1600&q=80&auto=format&fit=crop',
      list:[
        'Cortes de res más comunes y para qué sirve cada uno: bistec/bola (delgado, para milanesa o a la plancha), arrachera (para asar, se corta contra la fibra), aguayón (magro, para guisos y filete), pulpa negra (para deshebrar o moler), costilla (para caldo o barbacoa) — pide el corte por su nombre, no solo "carne de res".',
        'Cómo pedir en la carnicería sin pena: di el corte por nombre, el gramaje aproximado ("200 gramos de bistec de bola") y si lo quieres en trozo entero o en filetes/rebanadas — el carnicero lo corta ahí mismo, y siempre puedes pedir que te lo muestre antes de que te lo envuelva.',
@@ -3852,7 +3865,7 @@ const HABILIDAD_DETALLE={
      ]},
     {t:'Fase 5 — Tu primer platillo difícil de verdad: chiles rellenos de queso capeados (cuando ya domines las 4 fases anteriores)',
      d:'El salto real de "seguir una receta" a "cocinar de verdad": necesita 3 técnicas juntas —asar y pelar el chile, rellenarlo sin que se rompa, y capearlo (batir claras a punto de nieve) sin que se baje— nada de esto se puede hacer con prisa.',
-     img:'https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Chile_Rellenos.jpg/960px-Chile_Rellenos.jpg',
+     img:'https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Chile_Rellenos.jpg/1280px-Chile_Rellenos.jpg',
      list:[
        'Asa 4 chiles poblanos directo sobre la flama (o comal muy caliente) volteándolos hasta que la piel esté negra y ampollada por todos lados — no antes, si te quedas corto no vas a poder pelarlos.',
        'Mételos de inmediato a una bolsa de plástico cerrada o tapados con un trapo 10-15 min — el vapor atrapado afloja la piel sola; después se pela fácil con los dedos, sin cuchillo.',
@@ -3878,7 +3891,7 @@ const HABILIDAD_DETALLE={
      ]},
     {t:'Fase 2 — Fundamentos de puntería (meses 2-3, 1-2 sesiones/mes en polígono)',
      d:'La puntería es técnica repetible, no talento — se construye con las mismas 2-3 cosas cada vez.',
-     img:'https://images.unsplash.com/photo-1643538215747-c98de7f7ebf3?w=800&q=80&auto=format&fit=crop',
+     img:'https://images.unsplash.com/photo-1643538215747-c98de7f7ebf3?w=1600&q=80&auto=format&fit=crop',
      list:[
        'Alineación de miras y aprieto de gatillo controlado — la mayoría de los tiros fallados vienen de jalar el gatillo, no de mala mira.',
        'Respiración: exhala parcial y dispara en la pausa natural, sin aguantar el aire por completo.',
@@ -3905,7 +3918,7 @@ const HABILIDAD_DETALLE={
   pelear:{titulo:'Defensa personal real, construida sobre tu base física',frase:'No se trata de buscar pelea — se trata de que nunca te tome desprevenido.',pasos:[
     {t:'Fase 1 — Guardia y desplazamiento (semanas 1-3, 2-3 clases/semana)',
      d:'Antes de aprender a golpear, aprende a no ser golpeado — es la base de todo lo demás.',
-     img:'https://images.unsplash.com/photo-1734191797121-de71b48ba038?w=800&q=80&auto=format&fit=crop',
+     img:'https://images.unsplash.com/photo-1734191797121-de71b48ba038?w=1600&q=80&auto=format&fit=crop',
      list:[
        'Guardia básica: puños arriba protegiendo la cara, barbilla abajo, codos pegados al torso.',
        'Desplazamiento: pasos cortos, nunca cruces los pies — moverte bien te saca de la línea de ataque sin necesitar bloquear todo.',
@@ -3946,7 +3959,7 @@ const HABILIDAD_DETALLE={
   decirno:{titulo:'Decir que no sin culpa ni explicación de más',frase:'Cada no que proteges es un sí que le puedes dar después a lo que sí importa.',pasos:[
     {t:'Fase 1 — Practica en bajo riesgo (semanas 1-2)',
      d:'Empieza donde perder no cuesta nada, antes de aplicarlo en decisiones grandes de dinero o tiempo.',
-     img:'https://images.unsplash.com/photo-1755549746558-1d0d212c46c3?w=800&q=80&auto=format&fit=crop',
+     img:'https://images.unsplash.com/photo-1755549746558-1d0d212c46c3?w=1600&q=80&auto=format&fit=crop',
      list:[
        'Un vendedor, una invitación que no te interesa — el terreno de práctica más seguro que existe.',
        'Frase corta, sin justificar: "No puedo, gracias" es suficiente — entre más explicación das, más espacio dejas para que insistan.',
@@ -3992,7 +4005,7 @@ const HABILIDAD_DETALLE={
      ]},
     {t:'Fase 2 — Administrar (constante, revisión semanal fija)',
      d:'Lo que no se registra, no se controla — por bien que generes, sin esto se te escapa igual.',
-     img:'https://images.unsplash.com/photo-1709880945165-d2208c6ad2ec?w=800&q=80&auto=format&fit=crop',
+     img:'https://images.unsplash.com/photo-1709880945165-d2208c6ad2ec?w=1600&q=80&auto=format&fit=crop',
      list:[
        'Registra cada gasto e ingreso real en Finanzas, sin excepciones.',
        'Categoriza cada gasto (fijo, variable, deuda, ahorro) — sin categorías, un registro de gastos es solo una lista larga que no te dice nada.',
@@ -4040,7 +4053,7 @@ const HABILIDAD_DETALLE={
      ]},
     {t:'Fase 3 — Manejo defensivo constante (ya lo haces, todos los días)',
      d:'Cada viaje en Didi ya es práctica real — el trabajo es hacerla consciente, no solo automática.',
-     img:'https://images.unsplash.com/photo-1718564420308-8eb8324f7d1c?w=800&q=80&auto=format&fit=crop',
+     img:'https://images.unsplash.com/photo-1718564420308-8eb8324f7d1c?w=1600&q=80&auto=format&fit=crop',
      list:[
        'Míralo como entrenamiento de manejo defensivo en tráfico de CDMX, no solo como ingreso extra.',
        'Anticipa, no reacciones: deja espacio de frenado, revisa espejos cada pocos segundos, nunca asumas que el otro te vio.',
@@ -4063,7 +4076,7 @@ const HABILIDAD_DETALLE={
   recuperar:{titulo:'Descansar también es una habilidad que se entrena',frase:'El descanso no es lo que le quitas al gym, al trabajo y al negocio — es lo que sostiene a los tres.',pasos:[
     {t:'Fase 1 — Respeta los bloques que ya tienes (constante desde ya)',
      d:'Meditación 23:10 y sueño ya están en tu rutina — el trabajo real es respetarlos con la misma disciplina que le das al gym.',
-     img:'https://images.unsplash.com/photo-1585577529540-a8095ea25427?w=800&q=80&auto=format&fit=crop',
+     img:'https://images.unsplash.com/photo-1585577529540-a8095ea25427?w=1600&q=80&auto=format&fit=crop',
      list:[
        'No te los saltes cuando se complica el día — es justo cuando más los necesitas.',
        'Distingue el tipo de cansancio: físico se resuelve con sueño y días de descanso del gym; mental con desconexión real (sin celular, sin pendientes del negocio).',
@@ -4117,7 +4130,7 @@ const HABILIDAD_DETALLE={
      ]},
     {t:'Fase 2 — Al presentarte (practica en tu próxima reunión)',
      d:'Los primeros 5 segundos de un saludo dicen más de ti que los siguientes 5 minutos de conversación.',
-     img:'https://images.unsplash.com/photo-1745847768380-2caeadbb3b71?w=800&q=80&auto=format&fit=crop',
+     img:'https://images.unsplash.com/photo-1745847768380-2caeadbb3b71?w=1600&q=80&auto=format&fit=crop',
      list:[
        'Apretón de manos firme (ni de "pescado muerto" ni de aplastar), 2-3 segundos, con contacto visual.',
        'Ponte de pie si estás sentado cuando alguien llega a saludarte — la señal de respeto más simple que existe y casi nadie la hace ya.',
@@ -4145,7 +4158,7 @@ const HABILIDAD_DETALLE={
   fogata:{titulo:'Hacer y apagar una fogata de verdad, no solo prenderla',frase:'Yesca, leña delgada, leña gruesa — en ese orden, o se apaga sola.',pasos:[
     {t:'Fase 1 — Los 3 materiales, en orden (tu primera fogata)',
      d:'El error #1 de quien recién empieza: poner leña gruesa desde el inicio, y apagar el fuego antes de que crezca.',
-     img:'https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/Camp_fire.jpg/960px-Camp_fire.jpg',
+     img:'https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/Camp_fire.jpg/1280px-Camp_fire.jpg',
      list:[
        'Yesca (pasto seco, corteza, papel) — prende con una sola chispa.',
        'Leña delgada, del grosor de un lápiz — la que hace crecer el fuego antes de pedirle más.',
@@ -4202,7 +4215,7 @@ const HABILIDAD_DETALLE={
      ]},
     {t:'Fase 2 — Cómo catarlo, en 3 pasos (practica en tu próxima copa)',
      d:'Vista, nariz y boca, en ese orden — saltarte uno te hace perder la mitad de la información.',
-     img:'https://images.unsplash.com/photo-1657487281555-4bda4fd2bb73?w=800&q=80&auto=format&fit=crop',
+     img:'https://images.unsplash.com/photo-1657487281555-4bda4fd2bb73?w=1600&q=80&auto=format&fit=crop',
      list:[
        'Vista: inclina la copa sobre un fondo blanco, mira el color y qué tan denso escurre ("las piernas").',
        'Nariz: gira la copa para airearlo y huele dos veces — la primera detecta la fruta, la segunda notas más complejas.',
@@ -4242,7 +4255,7 @@ const HABILIDAD_DETALLE={
      ]},
     {t:'Fase 2 — Domina 2 primero (semanas 1-2, practica 1 cada fin de semana)',
      d:'Los 2 más simples de ejecutar bien — empieza aquí antes de complicarte con los otros 3.',
-     img:'https://images.unsplash.com/photo-1756521973702-b7b496adab70?w=800&q=80&auto=format&fit=crop',
+     img:'https://images.unsplash.com/photo-1756521973702-b7b496adab70?w=1600&q=80&auto=format&fit=crop',
      list:[
        'Old Fashioned: whisky, azúcar, angostura y una twist de naranja sobre hielo grande — el coctel "de caballero" por excelencia.',
        'Margarita: tequila, triple sec y limón en partes 2:1:1, con sal en el borde — el que nunca falla en México.',
@@ -4287,7 +4300,7 @@ const HABILIDAD_DETALLE={
      href:'https://www.animatedknots.com/bowline-knot', label:'Verlo animado paso a paso (Animated Knots)'},
     {t:'Nudo 2 — Ocho (figure eight): el tope que no deja que la cuerda se escape',
      d:'El más simple de todos y el que más rápido aprendes. Se pone al final de una cuerda para que no se salga de una polea, una argolla o un ojal.',
-     img:'https://upload.wikimedia.org/wikipedia/commons/thumb/d/db/Figure-eight_knot.svg/960px-Figure-eight_knot.svg.png',
+     img:'https://upload.wikimedia.org/wikipedia/commons/thumb/d/db/Figure-eight_knot.svg/1280px-Figure-eight_knot.svg.png',
      imgTipo:'diagrama',
      list:[
        'Paso 1: haz un bucle cruzando la punta sobre la parte larga de la cuerda.',
@@ -4299,7 +4312,7 @@ const HABILIDAD_DETALLE={
      href:'https://www.animatedknots.com/figure-8-knot', label:'Verlo animado paso a paso (Animated Knots)'},
     {t:'Nudo 3 — Llano o rizo (square knot): unir dos cuerdas del MISMO grosor',
      d:'Rápido y fácil, pero con una regla estricta: solo para cuerdas del mismo grosor y para cosas que no cargan peso crítico (un paquete, una lona, un vendaje).',
-     img:'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/Square_knot.svg/960px-Square_knot.svg.png',
+     img:'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/Square_knot.svg/1280px-Square_knot.svg.png',
      imgTipo:'diagrama',
      list:[
        'Paso 1: cruza la punta izquierda SOBRE la derecha y pásala por debajo (como el primer paso de amarrarte los zapatos).',
@@ -4311,7 +4324,7 @@ const HABILIDAD_DETALLE={
      href:'https://www.animatedknots.com/square-knot', label:'Verlo animado paso a paso (Animated Knots)'},
     {t:'Nudo 4 — Vuelta de escota (sheet bend): unir dos cuerdas de DISTINTO grosor',
      d:'El que casi nadie conoce y el que más falta hace: cuando las 2 cuerdas no son del mismo grosor, el nudo llano falla y este no.',
-     img:'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/Schotstek_rechts.jpg/960px-Schotstek_rechts.jpg',
+     img:'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/Schotstek_rechts.jpg/1280px-Schotstek_rechts.jpg',
      imgTipo:'diagrama',
      list:[
        'Paso 1: con la cuerda MÁS GRUESA, haz una "U" (un bucle abierto, como un gancho) y sostenlo.',
@@ -4324,7 +4337,7 @@ const HABILIDAD_DETALLE={
      href:'https://www.animatedknots.com/sheet-bend-knot', label:'Verlo animado paso a paso (Animated Knots)'},
     {t:'Nudo 5 — Ballestrinque (clove hitch): amarrar a un poste en 2 segundos',
      d:'El más rápido para fijar una cuerda a un poste, tubo o argolla — y se ajusta sin desamarrarlo. Ideal como amarre temporal.',
-     img:'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/Clove_Hitch_-_ABoK_11_-_USCG.jpg/960px-Clove_Hitch_-_ABoK_11_-_USCG.jpg',
+     img:'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/Clove_Hitch_-_ABoK_11_-_USCG.jpg/1280px-Clove_Hitch_-_ABoK_11_-_USCG.jpg',
      imgTipo:'diagrama',
      list:[
        'Paso 1 (rodeando el poste): da una vuelta completa alrededor del poste con la punta de la cuerda, cruzando sobre la parte larga.',
@@ -4336,7 +4349,7 @@ const HABILIDAD_DETALLE={
      href:'https://www.animatedknots.com/clove-hitch-knot-rope-end', label:'Verlo animado paso a paso (Animated Knots)'},
     {t:'Nudo 6 — Dos medios cotes (two half hitches): el amarre seguro que sí aguanta',
      d:'Lo que el ballestrinque no te da: un amarre a un poste o argolla que no se afloja solo. Es el que usas cuando la cuerda va a quedar puesta y con carga.',
-     img:'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Dubbelehalvesteek.svg/960px-Dubbelehalvesteek.svg.png',
+     img:'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Dubbelehalvesteek.svg/1280px-Dubbelehalvesteek.svg.png',
      imgTipo:'diagrama',
      list:[
        'Paso 1: pasa la punta de la cuerda alrededor del poste o por la argolla, y regrésala hacia la parte larga.',
@@ -4349,7 +4362,7 @@ const HABILIDAD_DETALLE={
      href:'https://www.animatedknots.com/two-half-hitches-knot', label:'Verlo animado paso a paso (Animated Knots)'},
     {t:'Nudo 7 — Nudo tensor (taut-line / Midshipman\'s hitch): tensa y se ajusta con la mano',
      d:'Un aro que puedes deslizar con la mano para tensar o aflojar, pero que se queda fijo en cuanto le pones carga. El nudo de los vientos de una casa de campaña.',
-     img:'https://upload.wikimedia.org/wikipedia/commons/thumb/6/63/Topsegelschotstek.jpg/960px-Topsegelschotstek.jpg',
+     img:'https://upload.wikimedia.org/wikipedia/commons/thumb/6/63/Topsegelschotstek.jpg/1280px-Topsegelschotstek.jpg',
      imgTipo:'diagrama',
      list:[
        'Paso 1: pasa la punta alrededor del punto de anclaje (la estaca, el árbol) y regrésala hacia la parte larga.',
@@ -4388,7 +4401,7 @@ const HABILIDAD_DETALLE={
   mecanica:{titulo:'Mecánica de vehículo — cada emergencia real explicada a fondo',frase:'No se trata de ser mecánico — se trata de no quedarte varado por algo que se resuelve en minutos si sabes cómo.',pasos:[
     {t:'Fase 1 — Cambiar una llanta ponchada, paso a paso completo',
      d:'La emergencia más común de todas — que la primera vez que la hagas no sea de noche, en la lluvia, sin haberla practicado nunca antes.',
-     img:'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2d/Changing_car_tire_20170513_01.jpg/960px-Changing_car_tire_20170513_01.jpg',
+     img:'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2d/Changing_car_tire_20170513_01.jpg/1280px-Changing_car_tire_20170513_01.jpg',
      list:[
        'Frena y estaciónate seguro: intermitentes puestos de inmediato, busca un tramo recto y plano lejos del tráfico (el acotamiento, nunca en una curva ciega), y pon el freno de mano antes de bajarte del auto.',
        'Coloca cuñas o piedras grandes junto a la llanta diagonal opuesta a la que vas a cambiar — evita que el auto ruede mientras está sobre el gato, sobre todo si hay algo de pendiente.',
@@ -4442,7 +4455,7 @@ const HABILIDAD_DETALLE={
      ]},
     {t:'Fase 6 — Leer las luces de advertencia del tablero',
      d:'Cada luz tiene un nivel de urgencia distinto — tratarlas todas igual (ignorarlas todas, o entrar en pánico con cualquiera) es el error más común.',
-     img:'https://images.unsplash.com/photo-1518280241376-e0c321a3b9c8?w=800&q=80&auto=format&fit=crop',
+     img:'https://images.unsplash.com/photo-1518280241376-e0c321a3b9c8?w=1600&q=80&auto=format&fit=crop',
      list:[
        'Check Engine (contorno de un motor, ámbar): fija (sin parpadear) puedes seguir manejando con cuidado y llevarlo a revisar pronto, puede ser algo tan menor como la tapa de gasolina floja; si PARPADEA es urgente, orillate y no sigas manejando, hay un fallo activo que puede dañar el catalizador.',
        'Batería (rectángulo con + y −, roja): el sistema de carga no está funcionando — el auto corre con lo que le queda de batería y se puede apagar en cualquier momento; maneja directo a revisión y evita paradas largas donde te puedas quedar sin poder reencender.',
@@ -4453,7 +4466,7 @@ const HABILIDAD_DETALLE={
      ]},
     {t:'Fase 7 — Kit de emergencia y seguridad en la carretera (constante)',
      d:'Todo lo anterior se hace mucho mejor —y más seguro— si ya traes esto listo en la cajuela antes de necesitarlo.',
-     img:'https://upload.wikimedia.org/wikipedia/commons/thumb/2/25/Red_triangle_of_a_car.jpg/960px-Red_triangle_of_a_car.jpg',
+     img:'https://upload.wikimedia.org/wikipedia/commons/thumb/2/25/Red_triangle_of_a_car.jpg/1280px-Red_triangle_of_a_car.jpg',
      list:[
        'Kit mínimo permanente en la cajuela: gato y llave de cruz (revisa que sí vengan, algunos autos usados ya no los traen), llanta de refacción con aire, cables para pasar corriente, triángulos o señalizantes reflejantes, linterna, guantes, y los fusibles de repuesto de la Fase 5.',
        'Si te quedas varado en carretera: baja del auto por el lado que da lejos del tráfico (nunca por el lado del carril), ponte un chaleco reflejante si tienes uno, y coloca los triángulos de advertencia detrás de tu auto —unos 30-45 metros en carretera abierta, menos en calle de ciudad— para que los autos que vienen atrás tengan tiempo real de reaccionar.',
@@ -4479,7 +4492,7 @@ const HABILIDAD_DETALLE={
      ]},
     {t:'Fase 2 — Atragantamiento (maniobra de Heimlich): consciente, tú mismo solo, y bebés',
      d:'Se usa cuando alguien no puede hablar, toser ni respirar y se lleva las manos al cuello — si todavía tose fuerte, NO intervengas, la tos es más efectiva que cualquier maniobra.',
-     img:'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/AbdominalThrust_HeimlichManoeuvre.svg/960px-AbdominalThrust_HeimlichManoeuvre.svg.png',
+     img:'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/AbdominalThrust_HeimlichManoeuvre.svg/1280px-AbdominalThrust_HeimlichManoeuvre.svg.png',
      imgTipo:'diagrama',
      list:[
        'Confirma que es real: pregúntale "¿te estás ahogando?" — si asiente y no puede hablar ni toser, actúa de inmediato, no esperes a ver si se resuelve solo.',
@@ -4526,7 +4539,7 @@ const HABILIDAD_DETALLE={
      ]},
     {t:'Fase 6 — Reacción alérgica severa (anafilaxia): puede matar en minutos',
      d:'Cierra la vía aérea por hinchazón — si ves las señales de alarma, actúa de inmediato, no esperes a ver si mejora sola.',
-     img:'https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Intramuscular_site_of_adrenaline.jpg/960px-Intramuscular_site_of_adrenaline.jpg',
+     img:'https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Intramuscular_site_of_adrenaline.jpg/1280px-Intramuscular_site_of_adrenaline.jpg',
      imgTipo:'diagrama',
      list:[
        'Señales de alarma reales, no solo ronchas en la piel: dificultad para respirar o tragar, hinchazón de labios/lengua/garganta, voz ronca de repente, mareo o casi-desmayo, opresión fuerte en el pecho — si aparece cualquiera de estas junto con una posible exposición a un alérgeno (comida, piquete, medicamento), trátalo como anafilaxia hasta que se demuestre lo contrario.',
@@ -4552,7 +4565,7 @@ const HABILIDAD_DETALLE={
   brujula:{titulo:'Orientarte sin depender del celular',frase:'Un mapa y una brújula nunca se quedan sin batería.',pasos:[
     {t:'Fase 1 — Lo básico (semana 1, practica en una caminata conocida)',
      d:'Antes de navegar hacia algo, tienes que saber leer dónde estás parado.',
-     img:'https://images.unsplash.com/photo-1566341013452-946caa457784?w=800&q=80&auto=format&fit=crop',
+     img:'https://images.unsplash.com/photo-1566341013452-946caa457784?w=1600&q=80&auto=format&fit=crop',
      list:[
        'Los 4 puntos cardinales de memoria: norte, sur, este, oeste — y cómo ubicarlos sin brújula con el sol como respaldo (sale por el este) si la llegas a perder.',
        'Orienta el mapa antes de leerlo: alinea el norte del mapa con la aguja de la brújula — un mapa mal orientado te hace caminar en la dirección contraria sin darte cuenta.',
@@ -4592,7 +4605,7 @@ const HABILIDAD_DETALLE={
   asado:{titulo:'Carne asada de verdad — del carbón al corte, paso a paso',frase:'Una parrilla no perdona el apuro, y un cuchillo desafilado es más peligroso que uno afilado.',pasos:[
     {t:'Fase 1 — Prender el carbón y armar las 2 zonas de calor',
      d:'El fuego es lo primero que hay que dominar — la carne perdona errores de sazón, no de fuego. Aquí se decide el 70% del resultado, antes de poner un solo trozo de carne.',
-     img:'https://images.unsplash.com/photo-1627843337825-9c1ba8d21669?w=800&q=80&auto=format&fit=crop',
+     img:'https://images.unsplash.com/photo-1627843337825-9c1ba8d21669?w=1600&q=80&auto=format&fit=crop',
      list:[
        'Cómo prenderlo sin líquido de encendedor: acomoda el carbón en pirámide, mete 2-3 pastillas de encendedor (o papel con un poco de aceite) por abajo y préndelas — el líquido de encendedor le deja sabor a químico a la carne, es el error más común de un asador nuevo.',
        'Espera de verdad a que llegue a brasa: 20-30 minutos, hasta que el carbón esté cubierto de ceniza gris y ya no haya llama directa. Poner la carne antes es lo que la deja quemada por fuera y cruda por dentro.',
@@ -4633,7 +4646,7 @@ const HABILIDAD_DETALLE={
      ]},
     {t:'Fase 5 — Mantén tu cuchillo afilado (revisión antes de cada uso)',
      d:'Un cuchillo desafilado necesita más fuerza y se resbala — la mayoría de los cortes en la cocina pasan con cuchillos sin filo, no con los bien afilados.',
-     img:'https://images.unsplash.com/photo-1509460364839-ef5b594e0ee8?w=800&q=80&auto=format&fit=crop',
+     img:'https://images.unsplash.com/photo-1509460364839-ef5b594e0ee8?w=1600&q=80&auto=format&fit=crop',
      list:[
        'Afilar vs. asentar son cosas distintas: afilar (piedra) quita metal y crea filo nuevo, se hace cada 2-3 meses; asentar (chaira, la varilla de metal) solo endereza el filo que ya existe, se hace cada 2-3 usos. Confundirlos es por qué mucha gente cree que su cuchillo "no agarra filo".',
        'Con piedra de agua: remójala 10 minutos, empieza por el lado grueso (grano 400-1000), mantén un ángulo constante de 15-20° (más o menos 2 monedas de grosor bajo el lomo del cuchillo) y desliza como si rebanaras una capa delgada de la piedra.',
@@ -4647,7 +4660,7 @@ const HABILIDAD_DETALLE={
   reparaciones:{titulo:'Reparaciones del hogar — cada arreglo explicado a fondo',frase:'La mayoría de los arreglos de casa no son difíciles — solo nadie te enseñó a hacerlos una vez.',pasos:[
     {t:'Fase 1 — Usar el taladro y colgar algo que no se caiga',
      d:'La reparación más común de todas, y la que peor sale cuando no sabes qué taquete usar — no es el tornillo el que sostiene, es el taquete.',
-     img:'https://images.unsplash.com/photo-1593307315564-c96172dc89dc?w=800&q=80&auto=format&fit=crop',
+     img:'https://images.unsplash.com/photo-1593307315564-c96172dc89dc?w=1600&q=80&auto=format&fit=crop',
      list:[
        'Identifica primero el tipo de pared, todo depende de eso: golpéala con el nudillo — si suena hueco es tablaroca (drywall), si suena macizo y no cede es concreto o tabique.',
        'Broca según el material: broca de concreto (punta de widia, más ancha y robusta) para muro macizo, con el taladro en modo PERCUSIÓN o "martillo"; broca de metal/madera común para tablaroca, con el taladro en modo normal — usar percusión en tablaroca destroza el agujero y ya no agarra el taquete.',
@@ -4671,7 +4684,7 @@ const HABILIDAD_DETALLE={
      ]},
     {t:'Fase 3 — Plomería: fugas, caños tapados y el WC que no para',
      d:'Casi toda la plomería doméstica se resuelve con una llave ajustable, cinta de teflón y paciencia — empieza siempre por lo más simple antes de recurrir a algo agresivo.',
-     img:'https://upload.wikimedia.org/wikipedia/commons/thumb/2/27/Brass_P_trap.jpg/960px-Brass_P_trap.jpg',
+     img:'https://upload.wikimedia.org/wikipedia/commons/thumb/2/27/Brass_P_trap.jpg/1280px-Brass_P_trap.jpg',
      list:[
        'Antes de cualquier cosa, aprende dónde está la llave de paso general de tu depa y la llave individual bajo el lavabo/WC — saberlo ANTES de una fuga es lo que convierte una emergencia en un trámite.',
        'Caño tapado, en orden de menos a más agresivo: 1) agua muy caliente + un chorro de detergente líquido, 2) media taza de bicarbonato + una taza de vinagre, tapa 15 minutos y enjuaga con agua hirviendo, 3) desatascador (chupón) con agua cubriendo la copa, empujando y jalando con fuerza 15-20 veces, 4) desarmar el sifón. Los químicos agresivos van al final: dañan la tubería con el tiempo y no siempre funcionan.',
@@ -4683,7 +4696,7 @@ const HABILIDAD_DETALLE={
      ]},
     {t:'Fase 4 — Paredes, puertas y los arreglos cosméticos',
      d:'Los detalles que hacen que un depa se vea cuidado o descuidado, y que casi nadie sabe que se arreglan en minutos.',
-     img:'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Tasselli_wall_plug.jpg/960px-Tasselli_wall_plug.jpg',
+     img:'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Tasselli_wall_plug.jpg/1280px-Tasselli_wall_plug.jpg',
      list:[
        'Tapar un agujero de clavo o taquete: mete un poco de pasta o resanador con una espátula pequeña, deja que rebase un poco el nivel de la pared, espera a que seque (2-4 horas), lija suave con lija fina hasta emparejar, y pinta encima. Un agujero mal tapado se nota más que el agujero.',
        'Puerta que rechina: 2-3 gotas de aceite (WD-40, aceite de máquina, incluso aceite de cocina en apuro) en las bisagras, y abre y cierra varias veces para que penetre — 30 segundos de trabajo para algo que molesta todos los días.',

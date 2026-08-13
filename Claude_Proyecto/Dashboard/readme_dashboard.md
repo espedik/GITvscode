@@ -1622,3 +1622,26 @@ Pedido con captura: *"los botones de la derecha me quitan mucho espacio y eso ap
 En total se le devuelven al contenido del tema alrededor de 80-90px de alto y todo el ancho que antes se comía la columna derecha.
 
 - Verificado con Node: sintaxis OK en los 2 bloques `<script>` reales; CSS 535/535 llaves; `<div>` 281/281 (sin cambios: no se tocó el HTML); las 3 reglas nuevas presentes.
+
+## Habilidades Base: overlay más ancho e imágenes en mayor resolución (2026-08-12)
+
+Pedido: *"las fotos de cada elemento ya cuando le das click, como que no se ven bien digo ni son hd y no se ven visualmente, puede mejorarlo y ademas esa ventana al hacer click hazla mas ancha, para todos, para que se muestre mejor"*.
+
+**Por qué se veían mal — eran 3 causas sumadas, no solo la resolución:**
+
+1. **Se estaban escalando hacia arriba.** Las portadas se pedían a 800px (Unsplash) o 960px (Wikimedia) pero la tarjeta ya medía 980px de ancho: el navegador las estiraba, y estirar una imagen siempre la ablanda. Al ensancharla a 1280px habría empeorado.
+2. **La franja era demasiado baja** (`clamp(150px,22vh,230px)`). Con `background-size:cover`, una tira de 150px sobre una foto apaisada tira casi todo el encuadre: se veía un recorte, no la foto.
+3. **El degradado la apagaba entera.** Arrancaba opaco abajo y a media altura ya iba en `.25` de negro sobre TODA la imagen, no solo detrás del título.
+
+**Lo que se hizo:**
+
+- **Resolución subida y verificada una por una.** Unsplash de `w=800` a `w=1600`; Wikimedia de `960px` a `1280px`. Total: **59 URLs**, de las cuales 29 quedaron en 1600px y 18 en 1280px.
+- **9 imágenes se dejaron en 960px a propósito**, porque su archivo original en Commons es más chico que 1280 (`Recovery_Position` mide 512px, `Square_knot` 592px, `TruckersHitch` 837px, `FrontCrawl` 1024px…). Pedir un thumbnail mayor que el original no lo mejora: Commons devuelve error 400. Se consultó el ancho real de cada archivo por la API antes de decidir, en vez de asumir.
+- **Los SVG sí se subieron aunque su tamaño nominal sea chico** (`Figure-eight_knot` dice 600px, `Dubbelehalvesteek` 590px): son vectores, se renderizan a cualquier tamaño sin perder un pixel de nitidez. Tratarlos como fotos habría dejado los diagramas de nudos innecesariamente borrosos.
+- **Overlay de `min(980px,96vw)` a `min(1280px,94vw)`** — aplica también a Mis Metas, que comparte estas clases. El `96vw→94vw` deja un respiro del fondo a los lados en pantallas angostas en vez de tocar los bordes.
+- **Foto de `clamp(150px,22vh,230px)` a `clamp(200px,30vh,340px)`** y **degradado reescrito** para que solo oscurezca el tercio inferior (donde va el título) y el resto de la imagen se vea limpio.
+- **Ajustes al ancho nuevo**: padding interno de `18px 30px` a `20px 38px`, imágenes de paso de 220px a 300px de alto, diagramas de 300px a 400px — y en móvil se bajan a 200/260px, porque ahí el ancho no creció y el alto sí estorbaba.
+
+**Nota operativa sobre la verificación**: al comprobar 59 imágenes seguidas, `upload.wikimedia.org` devuelve **429 (rate limit)** en varias — no es que falten. Las 50 restantes dieron 200 por `curl`, y las 9 con 429 se confirmaron existentes consultando la **API de Commons**, que no aplica ese límite. Ninguna dio 404.
+
+- Verificado con Node: sintaxis OK en los 2 bloques `<script>` reales; CSS 537/537 llaves; `<div>` 281/281 (no se tocó el HTML); overlay en `min(1280px,94vw)` y foto en `clamp(200px,30vh,340px)`; 0 imágenes quedaron por debajo de 960px.
