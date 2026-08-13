@@ -585,8 +585,19 @@ a.rt2-sub-prod:hover{text-decoration:underline}
 /* Clases genéricas ".td-*" (topic-of-the-day) — compartidas por los slides "Alemán del día"
    y "Entrevista del día": mismo layout (encabezado + tags + iframe grande), solo cambia el
    color de acento (--ac1/--ac2 del .theme-* del slide) y, en Alemán, el badge de nivel. */
-.td-top{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:14px}
-.td-right{display:flex;flex-direction:column;align-items:flex-end;gap:8px;flex-shrink:0}
+/* 2026-08-12 — el encabezado pasó de 2 columnas a 2 FILAS. Pedido de Adán con captura: "los
+   botones de la derecha me quitan mucho espacio y eso aprovechalo en el contenido, esto tambien
+   pasa en aleman". Antes `.td-top` era `space-between` con `.td-right` apilando badge, contador
+   y 2 botones en vertical: esa columna se comía ~380px de ancho Y forzaba ~110px de alto (4
+   elementos apilados), dejando el título en una franja angosta y un hueco enorme en medio.
+   Ahora los controles van en una sola fila horizontal arriba (ocupan 1 renglón en vez de 4) y
+   el título + subtítulo quedan debajo a TODO el ancho. Es el mismo cambio para los 2 slides,
+   Alemán y Python, porque comparten estas clases. */
+.td-top{display:flex;flex-direction:column;align-items:stretch;gap:10px}
+.td-right{display:flex;flex-direction:row;align-items:center;justify-content:flex-end;gap:10px;flex-wrap:wrap}
+/* El contador deja de ser un bloque aparte y se va a la izquierda de la fila, empujando los
+   botones a la derecha — así la fila se llena en vez de quedar todo amontonado en una esquina. */
+.td-right .td-counter{margin-right:auto}
 .al-level{display:inline-flex;align-items:center;gap:6px;padding:5px 13px;border-radius:20px;font-size:11px;font-weight:800;letter-spacing:.04em;white-space:nowrap}
 .al-level.a1{background:rgba(61,220,151,.14);color:#3ddc97;border:1px solid rgba(61,220,151,.32)}
 .al-level.a2{background:rgba(0,184,217,.14);color:#00b8d9;border:1px solid rgba(0,184,217,.32)}
@@ -599,9 +610,12 @@ a.rt2-sub-prod:hover{text-decoration:underline}
    sin forma de explorar otro sin esperar a mañana o salir del Dashboard. */
 .td-next{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:20px;background:rgba(var(--ov),.08);color:var(--text);border:1px solid rgba(var(--ov),.14);font-weight:800;font-size:12px;white-space:nowrap;cursor:pointer;font-family:inherit;transition:transform .2s,background .2s}
 .td-next:hover{transform:translateY(-1px);background:rgba(var(--ov),.13)}
-.td-title{font-size:clamp(22px,2.6vw,34px);font-weight:900;color:var(--text);margin-top:12px}
+/* margin-top bajó de 12px a 4px y el de .td-tags de 14px a 10px (2026-08-12): con el encabezado
+   ya en 2 filas compactas, esos huecos heredados del layout viejo eran espacio regalado que
+   ahora se le queda al contenido. */
+.td-title{font-size:clamp(22px,2.6vw,34px);font-weight:900;color:var(--text);margin-top:4px}
 .td-sub{font-size:clamp(13px,1.15vw,16px);color:var(--text2);margin-top:4px}
-.td-tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.td-tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
 .td-tag{padding:5px 12px;border-radius:20px;background:rgba(var(--ov),.06);border:1px solid rgba(var(--ov),.1);font-size:11.5px;font-family:var(--mono);color:var(--text2)}
 @media(max-width:640px){.debt-steps{grid-template-columns:1fr}}
 
@@ -612,7 +626,7 @@ a.rt2-sub-prod:hover{text-decoration:underline}
    <iframe>. `.en-content` es el contenedor con scroll; el resto de las ~150 reglas que dan
    estilo a las tarjetas/tablas/quizzes de adentro vienen inyectadas en runtime desde
    `ENTREVISTA_CSS` (ver `injectEntrevistaCss()`), no repetidas a mano aquí. */
-.en-content-wrap{position:relative;margin-top:16px;flex:1;min-height:0;display:flex}
+.en-content-wrap{position:relative;margin-top:10px;flex:1;min-height:0;display:flex}
 .en-content{flex:1;min-height:0;overflow-y:auto;padding-right:6px}
 /* Aviso de "hay más abajo" (2026-08-07) — Adán señaló el tema "Data Pipeline" como ejemplo de
    "contenido flojo": en realidad tiene 3 bloques completos (código Python de validación real +
@@ -641,7 +655,7 @@ a.rt2-sub-prod:hover{text-decoration:underline}
    Clases: cada sección de una lección es un `.tile.al-card` (vocabulario, diálogos, frases,
    ejercicios, reglas, conjugaciones, y una rejilla genérica `.al-mini-grid` para los widgets
    visuales únicos de cada lección A1 — números, colores, días, familia, artículos, pronombres). */
-.al-content{margin-top:16px;flex:1;min-height:0;overflow-y:auto;padding-right:6px;display:flex;flex-direction:column;gap:14px}
+.al-content{margin-top:10px;flex:1;min-height:0;overflow-y:auto;padding-right:6px;display:flex;flex-direction:column;gap:14px}
 .al-card-h{display:flex;align-items:center;gap:9px;font-family:var(--font-title);font-size:clamp(15px,1.4vw,19px);font-weight:600;color:var(--text);margin-bottom:12px}
 .al-card-h span:first-child{font-size:1.15em}
 .al-intro{font-size:12.5px;color:var(--text3);line-height:1.55;margin:-4px 0 14px}

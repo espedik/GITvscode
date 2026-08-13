@@ -1606,3 +1606,19 @@ Resultado en Dataclasses: el subtítulo ahora dice *"Un atajo para las clases qu
 `.py-intro` se estila con las variables del Dashboard (`--ac1`, `--text2`, `--ov`), no con las de Entrevistas, así que se adapta solo al tema claro/oscuro y al acento del slide — mismo criterio que la integración visual de la ronda anterior. Va con barra de acento a la izquierda para que se lea como contexto y no como una tarjeta más de contenido, etiquetas en versalitas a la izquierda y texto a la derecha; abajo de 640px las filas se apilan para no exprimir el texto en una columna de 100px.
 
 - Verificado con Node: **41/41 temas con bloque de explicación** y con "Resumen técnico"; 0 subtítulos con HTML crudo y 0 por encima de 170 caracteres (el más largo quedó en 153); el CSS generado incluye `.py-intro`; y en `dashboard.html` la sintaxis de los 2 bloques `<script>` reales sigue OK con CSS 534/534 y `<div>` 281/281.
+
+## El encabezado de Python y Alemán pasa de 2 columnas a 2 filas (2026-08-12)
+
+Pedido con captura: *"los botones de la derecha me quitan mucho espacio y eso aprovechalo en el contenido, esto tambien pasa en aleman"*.
+
+**Qué estaba pasando**: `.td-top` era `space-between` con `.td-right` apilando en vertical el badge, el contador y los 2 botones. Esa columna cobraba doble: se llevaba ~380px de **ancho** (dejando el título en una franja angosta con un hueco enorme en medio) y forzaba ~110px de **alto**, porque 4 elementos apilados marcan la altura de toda la fila aunque el título ocupe la mitad.
+
+- **`.td-top` pasó a `flex-direction:column`** y **`.td-right` a `row`**. Ahora el encabezado son 2 renglones: arriba el título + subtítulo a **todo el ancho**, abajo una barra compacta con badge, contador y botones — 1 renglón en vez de 4.
+- **`.td-right .td-counter{margin-right:auto}`** empuja los botones al extremo derecho y deja el badge y el contador a la izquierda, así la barra se reparte a lo ancho en vez de amontonarse en una esquina.
+- **No hizo falta tocar el HTML de ninguna de las 2 slides**: con `.td-top` en columna, el orden que ya tenían (bloque de título primero, `.td-right` después) da exactamente la disposición deseada. Cero riesgo de romper ids o listeners.
+- Se recortaron además los huecos heredados del layout viejo, que ahora eran espacio regalado: `.td-title` de 12px a 4px de margen superior, `.td-tags` de 14px a 10px, y el margen superior del contenido (`.en-content-wrap` y `.al-content`) de 16px a 10px.
+- **Un solo cambio arregla las 2 pantallas** porque Alemán y Python comparten las clases `.td-*` desde que se unificaron — que era justo lo que Adán señaló al decir "esto también pasa en alemán".
+
+En total se le devuelven al contenido del tema alrededor de 80-90px de alto y todo el ancho que antes se comía la columna derecha.
+
+- Verificado con Node: sintaxis OK en los 2 bloques `<script>` reales; CSS 535/535 llaves; `<div>` 281/281 (sin cambios: no se tocó el HTML); las 3 reglas nuevas presentes.
