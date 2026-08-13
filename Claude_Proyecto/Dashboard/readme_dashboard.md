@@ -1537,3 +1537,40 @@ Se revisó que el duplicado estuviera solo aquí: Coach y Finanzas aparecían en
 - **El acceso en el menú**: en vez de quitar el renglón "🛒 Lista del Súper", ahora es un enlace directo al Dashboard (con ↗). Si Adán lo busca donde siempre estuvo, lo lleva a donde ahora vive en vez de dejarlo preguntándose si se perdió.
 
 - Verificado con Node: sintaxis OK en los 2 bloques `<script>`; CSS 138/138, `<div>` 120/120, `<section>` 5/5; `SECS`, `STITLE` y las secciones reales del HTML coinciden exacto (0 huérfanos en cualquier dirección); 0 referencias vivas a `shop-body`/`shop-pfill`/`cnt-super`/`s-super`/`S.comprado` (las 2 que quedan de `resetShop`/`renderSuper` son comentarios que documentan la eliminación); 0 enlaces internos rotos en las 10 apps; y la lista del Dashboard sigue completa y cuadrada contra las recetas (30 ingredientes, 0 de más y 0 de menos).
+
+## "Entrevista del día" pasa a ser "🐍 Python del día", y se borra la copia iPhone (2026-08-12)
+
+Pedido: *"borra copia iphone, en el dashboard la pagina de entrevista del dia quiero que solo me muestres la seccion de python, eso es loq ue me interesa, nadamas, no me muestres mas secciones, pero lo de python debe cambiar cada dia, ademas no se ve integrado, asi como le hiciste con lo del dashboard de aleman, lo quiero asi muy bien presentado visualmente"*.
+
+### Qué es "la sección de Python", exactamente
+
+No hay un módulo llamado "python". Se tomaron los que la **propia app agrupa bajo ese nombre** en su menú (los `m-label` de `entrevistas.html`): `pyfund` "Python — Fundamentos" (13), `poo` "Python — POO" (7), `testing` "Python — Testing" (20) y `pycheat` (1, el cheat sheet de métodos, que en la app no tiene módulo propio pero es del mismo tema). **41 temas** — más de un mes sin repetir.
+
+Se verificó que `testing` sí es Python y no testing genérico antes de incluirlo: sus 20 temas son unittest, pytest, mock/patch, fixtures, parametrize, conftest, coverage, Faker y GitHub Actions + pytest. Encaja además con su trabajo real de QA.
+
+### El filtro vive en el generador, no en el Dashboard
+
+`MODULOS_DASHBOARD` en `Entrevistas/_generar-datos-dashboard.js`. Filtrar en origen y no al pintar tiene 2 ventajas concretas:
+- **El archivo de datos bajó de 2.5 MB a 930 KB**, porque el HTML de los 188 temas descartados ya ni se copia. También se filtró la recolección de clases CSS (de 25 KB a 14 KB de reglas) y el `<style>` embebido de `wayve-algo-approach`, que venía de un módulo ya excluido y era peso muerto.
+- **El Dashboard no necesitó lógica nueva**: recibe 41 temas en vez de 229 y toda la rotación diaria (`diaDelAnio() % total`), el botón "Siguiente tema" y el contador siguen funcionando sin tocarse. Para volver a incluir otro módulo se agrega su id en el generador y se corre de nuevo.
+- **La app Entrevistas no se tocó**: ahí siguen los 229 temas completos. Esto solo cambia qué subconjunto viaja al Dashboard.
+
+### Integración visual — la causa real de que "no se viera integrado"
+
+La ronda anterior ya había remapeado `--white`/`--border` al vidrio del Dashboard, pero **el resto seguía siendo la paleta de Entrevistas** (su azul `#2563EB`, sus textos, sus fondos), así que el bloque se leía como una app ajena pegada encima. Ahora todo lo que es *color de interfaz* se toma de las variables del Dashboard, que ya cambian solas con el tema y con el slide activo: `--accent` → `var(--ac1)` (el acento del propio slide), `--text-muted` → `var(--text2)`, `--bg`/`--white` → transparente y `var(--card)`, `--border` → `var(--card-br)`, `--tag-*` → el gris translúcido de las píldoras del Dashboard.
+
+**Lo que se dejó con color fijo, a propósito**: los colores *semánticos* (verde de "correcto", ámbar de aviso, fondo oscuro de las tablas de código). Ahí el color **es** la información — remapearlos al acento del slide se llevaría el significado. Como ya no dependen del tema, el bloque de tema oscuro se redujo a esos pocos ajustes.
+
+**Bug encontrado y corregido en el camino**: la primera versión declaraba `--text:var(--text)` dentro de `.en-content`. Se ve razonable pero es una **autorreferencia**: el CSS la trata como ciclo, invalida la variable y el texto se queda sin color definido. La solución correcta es no declararla — las variables CSS se heredan, así que `var(--text)` dentro del bloque ya resuelve solo al valor del Dashboard.
+
+### Presentación
+
+- La slide se llama ahora **"🐍 Python del día"** (era "Entrevista del día").
+- El badge mostraba el id crudo del módulo (`PYFUND`, `POO`). Ahora usa etiquetas legibles vía `PY_MOD_LABEL`, sin el prefijo "Python —" que la app sí usa: aquí la pantalla entera ya es de Python y repetirlo en cada badge sería ruido.
+- También se corrigió un **log que mentía**: el generador reportaba "104 reglas del `<style>` embebido" aunque el filtro ya hubiera dejado ese tema fuera y el resultado real fuera 0, porque contaba sobre `RICH` en vez de sobre lo que de verdad se embebió.
+
+### Copia iPhone borrada
+
+`Dashboard_prueba_iphone/` (8 archivos, un solo commit, sin ninguna función de las últimas semanas). **Se avisó antes de borrar** que era el único lugar con configuración PWA — `manifest.json` + `apple-touch-icon.png` + `icon-192/512.png`, lo que permitía instalar el Dashboard en la pantalla de inicio del iPhone — y que el Dashboard real **no** la tiene. Se borró igual porque así se pidió; queda recuperable desde el historial de git si algún día se quiere montar el PWA sobre el Dashboard bueno.
+
+- Verificado con Node: sintaxis OK en los 2 bloques `<script>` reales; CSS 534/534 llaves, `<div>` 281/281; los 41 temas tienen contenido (0 huérfanos); los 4 módulos tienen etiqueta legible (0 sin mapear); rotación diaria simulada del 12 al 16 de agosto da 5 temas distintos; 0 rastros del azul viejo `#2563EB`/`#3B82F6` y 0 autorreferencias de `--text` en el CSS generado.

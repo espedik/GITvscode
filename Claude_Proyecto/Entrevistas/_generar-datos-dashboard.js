@@ -82,8 +82,32 @@ console.log(`OK: ${tIds.length} temas en T, ${richIds.length} con contenido RICH
 // ══════════════════════════════════════════════════════════════════════════
 // 2) ENTREVISTA_TEMAS — metadata plana (title/icon/mod/tags/hint), en el mismo
 //    orden en que aparecen en T (que ya está agrupado por módulo temático).
+//
+//    FILTRO A PYTHON (2026-08-12) — pedido de Adán: "en el dashboard la pagina de
+//    entrevista del dia quiero que solo me muestres la seccion de python, eso es lo que me
+//    interesa, nadamas, no me muestres mas secciones". El Dashboard ya no recibe los 229
+//    temas, solo los 4 módulos que la propia app agrupa bajo Python (ver los `m-label` de
+//    entrevistas.html): `pyfund` "Python — Fundamentos", `poo` "Python — POO", `testing`
+//    "Python — Testing" (unittest/pytest/mock/fixtures/coverage, todo Python) y `pycheat`
+//    (el cheat sheet de métodos, que en la app no tiene módulo propio pero es del mismo
+//    tema). Son 41 temas — más que suficiente para que el "tema del día" no se repita en
+//    más de un mes.
+//    Efecto secundario importante: el archivo generado baja de ~2.5 MB a una fracción,
+//    porque `ENTREVISTA_CONTENT` deja de cargar el HTML de los 188 temas que ya no se usan.
+//    La app Entrevistas NO se toca: ahí siguen estando los 229 completos. Esto solo cambia
+//    qué subconjunto viaja al Dashboard.
+//    Para volver a incluir otro módulo, basta agregar su id aquí y correr el generador.
 // ══════════════════════════════════════════════════════════════════════════
-const ENTREVISTA_TEMAS = tIds.map(id => ({ id, ...T[id] }));
+const MODULOS_DASHBOARD = ['pyfund', 'poo', 'testing', 'pycheat'];
+const idsFiltrados = tIds.filter(id => MODULOS_DASHBOARD.includes(T[id].mod));
+if (!idsFiltrados.length) {
+  console.error('El filtro MODULOS_DASHBOARD no dejó ningún tema — revisar los ids de módulo.');
+  process.exit(1);
+}
+const porMod = MODULOS_DASHBOARD.map(m => `${m}:${idsFiltrados.filter(id => T[id].mod === m).length}`).join(' · ');
+console.log(`Filtrado a Python: ${idsFiltrados.length} de ${tIds.length} temas (${porMod}).`);
+
+const ENTREVISTA_TEMAS = idsFiltrados.map(id => ({ id, ...T[id] }));
 
 // ══════════════════════════════════════════════════════════════════════════
 // 3) ENTREVISTA_CONTENT — HTML real de cada tema, con 2 limpiezas puntuales
@@ -104,8 +128,10 @@ const ENTREVISTA_TEMAS = tIds.map(id => ({ id, ...T[id] }));
 // ══════════════════════════════════════════════════════════════════════════
 const NOTES_CARD_RE = /<div class="notes-card"[^>]*>\s*<div class="notes-card-label">[^<]*<\/div>\s*<p class="notes-placeholder">([\s\S]*?)<\/p>\s*<\/div>/g;
 let notesStripped = 0, notesKept = 0;
+// Solo el HTML de los temas que pasaron el filtro de módulo — es de donde sale el grueso del
+// ahorro de peso del archivo generado (el resto de los temas ni siquiera se copia).
 const ENTREVISTA_CONTENT = {};
-Object.keys(RICH).forEach(id => {
+idsFiltrados.forEach(id => {
   let html = RICH[id].replace(NOTES_CARD_RE, (block, texto) => {
     if (/^\s*Agrega aquí/i.test(texto)) { notesStripped++; return ''; }
     notesKept++; return block;
@@ -119,9 +145,12 @@ console.log(`Placeholders "notes-card" genéricos quitados: ${notesStripped} · 
 // 4) ENTREVISTA_CSS — solo las reglas de styles.css que de verdad usan las
 //    clases presentes en el contenido, reescritas con el prefijo `.en-content`.
 // ══════════════════════════════════════════════════════════════════════════
+// Escanea SOLO el contenido ya filtrado (no `RICH` completo): así el CSS generado se queda
+// únicamente con las reglas que los temas de Python de verdad usan, en vez de arrastrar las de
+// los 188 temas que ya no viajan al Dashboard.
 function collectClasses() {
   const set = new Set();
-  Object.values(RICH).forEach(html => {
+  Object.values(ENTREVISTA_CONTENT).forEach(html => {
     [...html.matchAll(/class="([^"]+)"/g)].forEach(m => m[1].split(/\s+/).forEach(c => c && set.add(c)));
   });
   return set;
@@ -215,8 +244,11 @@ scopedRules = scopedRules.map(r => r.replace(/animation:\s*fadeIn\b/g, 'animatio
 // primero para que también reciban el vidrio del Dashboard (`addGlassIfWhiteBg`). El único
 // `color:#fff` real del bloque (texto, no fondo) usa un espacio distinto (`color: #fff` vs
 // `background:#fff`) así que el reemplazo dirigido a `background:` no lo toca.
+// 2026-08-12 — ahora solo se incluye si ese tema sobrevive al filtro de módulos. Con el
+// Dashboard limitado a Python, `wayve-algo-approach` (módulo `coding`) queda fuera, así que
+// su CSS embebido sería peso muerto: reglas para clases que ningún tema del archivo usa.
 let embeddedCss = '';
-const codingSrc = RICH['wayve-algo-approach'] || '';
+const codingSrc = ENTREVISTA_CONTENT['wayve-algo-approach'] || '';
 const styleMatch = codingSrc.match(/<style>([\s\S]*?)<\/style>/);
 if (styleMatch) {
   const normalized = styleMatch[1].replace(/background:#fff\b/g, 'background:var(--white)');
@@ -232,23 +264,41 @@ if (styleMatch) {
 // se sientan parte del mismo sistema visual que el resto del Dashboard, no una app ajena
 // pegada encima. El resto de las variables (verde/rojo/ámbar semánticos, texto, tags) se
 // queda igual que en Entrevistas — esos sí tienen significado propio que no debe perderse.
+// 2026-08-12 — segunda vuelta de integración visual, pedido de Adán: "no se ve integrado, asi
+// como le hiciste con lo del dashboard de aleman, lo quiero asi muy bien presentado
+// visualmente". La ronda anterior ya había remapeado `--white`/`--border` al vidrio del
+// Dashboard, pero el resto seguía siendo la paleta de Entrevistas (azul #2563EB, textos y
+// fondos propios) — por eso el bloque se seguía viendo como una app ajena pegada encima.
+// Ahora TODO lo que es "color de interfaz" se toma de las variables del Dashboard, que ya
+// cambian solas con el tema claro/oscuro y con el slide activo:
+//   --accent      -> var(--ac1)   (el acento del propio slide: el azul de theme-entrevista)
+//   --text-muted  -> var(--text2)
+//   --text        -> NO se declara. El Dashboard ya define `--text` y las variables CSS se
+//                    heredan, así que dentro de `.en-content` `var(--text)` resuelve solo al
+//                    valor correcto. Declararlo como `--text:var(--text)` sería una
+//                    autorreferencia: el CSS lo trata como ciclo, invalida la variable y el
+//                    texto se queda sin color definido. Es un error que se ve "bien" al
+//                    escribirlo y rompe en pantalla.
+//   --bg/--white  -> var(--card)  (el mismo vidrio de las tarjetas del Dashboard)
+//   --border      -> var(--card-br)
+//   --tag-*       -> el mismo gris translúcido que usan las píldoras del Dashboard
+// Lo único que se deja con color fijo son los colores SEMÁNTICOS (verde de "correcto", ámbar
+// de aviso, fondo oscuro de tabla de código): ahí el color ES la información, y remapearlos
+// al acento del slide se llevaría el significado. Como ya no dependen del tema, el bloque
+// oscuro se reduce a esos pocos ajustes.
 const CSS_VARS_LIGHT = `.en-content{
-  --sidebar-bg:#FBFCFE; --table-dark-bg:#0F172A;
-  --accent:#2563EB; --accent-light:#EFF6FF;
-  --green:#16A34A; --green-light:#F0FDF4;
-  --text:#111827; --text-muted:#6B7280;
-  --border:var(--card-br); --bg:#F9FAFB; --white:var(--card);
-  --tag-bg:#F1F5F9; --tag-text:#475569;
-  --wayve:#D97706; --wayve-dark:#92400E; --wayve-light:#FFFBEB; --wayve-border:#FCD34D;
+  --sidebar-bg:transparent; --table-dark-bg:#0F172A;
+  --accent:var(--ac1); --accent-light:rgba(var(--ov),.06);
+  --green:#16A34A; --green-light:rgba(22,163,74,.10);
+  --text-muted:var(--text2);
+  --border:var(--card-br); --bg:transparent; --white:var(--card);
+  --tag-bg:rgba(var(--ov),.07); --tag-text:var(--text2);
+  --wayve:#D97706; --wayve-dark:#92400E; --wayve-light:rgba(217,119,6,.10); --wayve-border:rgba(217,119,6,.35);
 }`;
 const CSS_VARS_DARK = `[data-theme="dark"] .en-content{
-  --sidebar-bg:#0B1220; --table-dark-bg:#05080F;
-  --accent:#3B82F6; --accent-light:rgba(59,130,246,.16);
+  --table-dark-bg:#05080F;
   --green:#4ADE80; --green-light:rgba(74,222,128,.14);
-  --text:#E2E8F0; --text-muted:#94A3B8;
-  --bg:#0B1220;
-  --tag-bg:#1E293B; --tag-text:#CBD5E1;
-  --wayve:#FBBF24; --wayve-dark:#FDE68A; --wayve-light:rgba(217,119,6,.14); --wayve-border:#92400E;
+  --wayve:#FBBF24; --wayve-dark:#FDE68A; --wayve-light:rgba(217,119,6,.14); --wayve-border:rgba(251,191,36,.35);
 }`;
 
 const ENTREVISTA_CSS = [CSS_VARS_LIGHT, CSS_VARS_DARK, scopedRules.join('\n'), embeddedCss].join('\n\n');
@@ -265,4 +315,7 @@ const out = header +
   'const ENTREVISTA_CSS = ' + JSON.stringify(ENTREVISTA_CSS) + ';\n';
 fs.writeFileSync(OUTPUT_FILE, out);
 console.log('Escrito', OUTPUT_FILE, '—', fs.statSync(OUTPUT_FILE).size, 'bytes,', ENTREVISTA_TEMAS.length, 'temas,', scopedRules.length, 'reglas CSS portadas +', innerBlocksCountSafe(), 'del <style> embebido.');
-function innerBlocksCountSafe(){ try{ return topBlocks((RICH['wayve-algo-approach'].match(/<style>([\s\S]*?)<\/style>/)||[,''])[1]).length; }catch(e){ return 0; } }
+// Cuenta lo que DE VERDAD se embebió, no lo que traía el tema origen: antes leía siempre de
+// `RICH` y por eso seguía reportando 104 reglas aunque el filtro de módulos ya hubiera dejado
+// ese tema fuera y `embeddedCss` hubiera salido vacío — un log que mentía sobre el resultado.
+function innerBlocksCountSafe(){ return embeddedCss ? topBlocks(embeddedCss).length : 0; }

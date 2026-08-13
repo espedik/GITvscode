@@ -1139,7 +1139,7 @@ a.rt2-sub-prod:hover{text-decoration:underline}
   <!-- 7 · ENTREVISTA TÉCNICA DEL DÍA -->
   <section class="slide theme-entrevista" data-i="7">
     <div class="slide-inner">
-      <div class="eyebrow reveal d1"><span class="dot"></span> Entrevista del día</div>
+      <div class="eyebrow reveal d1"><span class="dot"></span> 🐍 Python del día</div>
       <div class="td-top reveal d2">
         <div>
           <div class="td-title" id="enTitle">Cargando…</div>
@@ -2367,14 +2367,27 @@ function renderAlemanContent(data,t){
 //    Entrevistas/js/core.js) dentro del propio iframe, así que se lee en vivo vía
 //    `frame.contentWindow.T` una vez que el iframe carga, y se navega con la función `go(id)`
 //    que la app ya expone — nada que sincronizar a mano si se agregan/quitan temas allá.
-// ── Entrevista técnica del día (2026-08-07, versión nativa sin iframe) — mismo tratamiento que
-//    "Alemán del día": un tema distinto cada día, de los 229 reales de Entrevistas/js/core.js +
-//    js/data-*.js, extraídos por Entrevistas/_generar-datos-dashboard.js a
-//    `entrevistas-data.js` (ENTREVISTA_TEMAS/ENTREVISTA_CONTENT/ENTREVISTA_CSS, cargado por
+// Etiqueta legible por módulo de Python — el id crudo ('pyfund') no le dice nada a nadie. Se
+// omite a propósito el prefijo "Python —" que sí usa la app de Entrevistas en su menú: aquí la
+// pantalla completa ya es de Python, repetirlo en cada badge sería ruido.
+const PY_MOD_LABEL={pyfund:'Fundamentos',poo:'POO',testing:'Testing',pycheat:'Cheat Sheet'};
+
+// ── Python del día (2026-08-07, versión nativa sin iframe) — mismo tratamiento que
+//    "Alemán del día": un tema distinto cada día, extraído por Entrevistas/_generar-datos-dashboard.js
+//    a `entrevistas-data.js` (ENTREVISTA_TEMAS/ENTREVISTA_CONTENT/ENTREVISTA_CSS, cargado por
 //    <script src> en el <head>). Antes se leía en vivo desde un <iframe> vía `win.eval('T')` —
 //    Adán: "la sección de alemán no me gustó [con iframe]... lo mismo que hiciste ahí, hazlo con
 //    entrevistas" — así que se reemplazó por el mismo patrón: contenido real pre-extraído,
 //    pintado nativo dentro del Dashboard, sin iframe ni duplicar HTML a mano.
+//
+//    2026-08-12 — dejó de ser "Entrevista del día" (los 229 temas de todos los módulos) para ser
+//    SOLO Python: "quiero que solo me muestres la seccion de python... nadamas, no me muestres
+//    mas secciones". El filtro NO vive aquí sino en el generador (MODULOS_DASHBOARD), así que
+//    este archivo simplemente recibe 41 temas en vez de 229 y toda la lógica de abajo —rotación
+//    diaria por `diaDelAnio()`, botón de siguiente, contador— sigue igual sin tocarse. Ventaja
+//    de filtrar en origen: el archivo de datos bajó de 2.5 MB a ~930 KB, porque el HTML de los
+//    188 temas descartados ya ni se copia. Para volver a incluir otro módulo, se agrega su id en
+//    el generador y se corre de nuevo — no hay nada que cambiar en el Dashboard.
 let entrevistaCssInjected=false;
 function injectEntrevistaCss(){
   if(entrevistaCssInjected||typeof ENTREVISTA_CSS==='undefined')return;
@@ -2411,7 +2424,10 @@ function renderEntrevista(){
   const idx=entrevistaIdx+1;
   document.getElementById('enTitle').textContent=`${t.icon} ${t.title}`;
   document.getElementById('enSub').textContent=t.hint||'';
-  document.getElementById('enBadge').textContent=(t.mod||'').toUpperCase();
+  // El badge mostraba el id crudo del módulo ("PYFUND", "POO"…). Desde el 2026-08-12 usa la
+  // misma etiqueta legible que la app de Entrevistas pone en su menú, sin el prefijo "Python —"
+  // (que aquí sobra: la pantalla entera ya es de Python).
+  document.getElementById('enBadge').textContent=PY_MOD_LABEL[t.mod]||(t.mod||'').toUpperCase();
   document.getElementById('enCounter').textContent=`Tema ${idx} de ${ENTREVISTA_TEMAS.length} · cambia cada día`;
   document.getElementById('enTags').innerHTML=(t.tags||[]).map(tag=>`<span class="td-tag">${tag}</span>`).join('');
   const html=(typeof ENTREVISTA_CONTENT!=='undefined')?ENTREVISTA_CONTENT[t.id]:null;
