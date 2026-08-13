@@ -1645,3 +1645,29 @@ Pedido: *"las fotos de cada elemento ya cuando le das click, como que no se ven 
 **Nota operativa sobre la verificación**: al comprobar 59 imágenes seguidas, `upload.wikimedia.org` devuelve **429 (rate limit)** en varias — no es que falten. Las 50 restantes dieron 200 por `curl`, y las 9 con 429 se confirmaron existentes consultando la **API de Commons**, que no aplica ese límite. Ninguna dio 404.
 
 - Verificado con Node: sintaxis OK en los 2 bloques `<script>` reales; CSS 537/537 llaves; `<div>` 281/281 (no se tocó el HTML); overlay en `min(1280px,94vw)` y foto en `clamp(200px,30vh,340px)`; 0 imágenes quedaron por debajo de 960px.
+
+## La tarjeta "31 → 32 años" se reescribe: deja de medir casillas y mide realidad (2026-08-12)
+
+Pedido, viendo la pantalla: *"esto no me aporta nada, mejorala"*. Tenía razón, y el problema era de fondo, no de redacción.
+
+**Qué estaba mal, en concreto:**
+
+1. **Pintaba 5 renglones idénticos.** Las 5 metas mostraban exactamente lo mismo: *"0% avanzado · ritmo esperado 12% · ⚠️ Atrasado 12pts"*. Repetir el mismo número 5 veces no informa — ocupaba media pantalla para decir una sola cosa.
+2. **Medía casillas marcadas, no avance real.** `detailPct()` cuenta cuántos ítems del checklist tocó. Si nunca abre esos checklists, da 0% para siempre aunque su deuda esté bajando de verdad. **La propia frase de cierre lo admitía** (*"marcar un checklist no es lo mismo que lograrlo"*): el bloque sabía que su dato no servía y aun así regañaba con él.
+3. **Ignoraba los datos duros que la app ya lee en vivo de Finanzas** — deuda cara, fondo de emergencia, fondo de Maestría. Mostrar "BYD 0%" teniendo el saldo real es sencillamente falso.
+4. **Cerraba con culpa no accionable**: *"un checklist en 0% … sí es una señal real de que todavía no empezaste"*. Ninguna de las 5 frases rotativas decía qué hacer.
+
+**Qué muestra ahora**, con 3 piezas que sí cambian y sí se pueden usar:
+
+- **Los deadlines reales que caen dentro de esta ventana de edad**, con cuenta regresiva. Se derivan de `PHASES` (no se escriben a mano) y se filtran a los que vencen antes del próximo cumpleaños. Hoy salen 2: *Fase 0 cierra — 30 sep 2026, 49 días* (en ámbar, porque abajo de 60 días deja de ser "algún día") y *Fase 1 cierra — 31 mar 2027, 231 días*. Cada uno con su meta concreta debajo.
+- **Lo que sí está medido en dinero real**, leído de Finanzas: deuda cara, fondo de emergencia y fondo de Maestría, con su cifra y su meta.
+- **Una sola conclusión accionable** construida con el dato más urgente que exista: *"Lo más cercano que tienes enfrente es Fase 0 cierra, en 49 días. Antes de cumplir 32 te quedan 323 días — de esos, solo 49 para este hito."*
+
+**Lo que no tiene dato duro ahora lo dice**, en vez de inventar un 0%: si una cifra no está registrada en Finanzas, aparece atenuada como *"Sin medir"* con la instrucción de dónde registrarla (`.sin-dato`, al 55% de opacidad, para que no se lea como si fuera un valor real).
+
+**Limpieza que arrastró el cambio:**
+- Se borraron las 9 clases CSS de la versión vieja (`.edad-pace-row/-head/-name/-status/-bar/-fill/-marker/-nums` y las 4 `.status-*`), que quedaron sin un solo uso.
+- Se borró **`METAS_CORTO_MEDIANO`**, una copia de los 5 ids/íconos de `cortoMediano` que existía solo para alimentar ese bloque. Era una duplicación más que había que mantener sincronizada a mano; al quedarse sin consumidor, se elimina en vez de dejarla ahí.
+- El cierre pasó de rojo con cursiva de cita a acento normal: ya no es un reclamo, es la conclusión.
+
+- Verificado con Node: sintaxis OK en los 2 bloques `<script>` reales; CSS 538/538 llaves; `<div>` 286/286; las 14 clases que usa el bloque nuevo tienen su regla CSS (0 faltantes); 0 referencias vivas a las clases y a la constante borradas; y simulando la fecha real (12 ago 2026) los hitos y la cuenta regresiva salen correctos.

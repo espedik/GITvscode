@@ -241,22 +241,33 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
    (barra delgada, relleno redondeado), reusado aquí en vez de inventar un componente nuevo. */
 .edad-pace-block{margin-bottom:12px;padding:12px 14px;background:linear-gradient(135deg,rgba(0,224,192,.08),rgba(0,224,192,.01));border:1px solid rgba(0,224,192,.18);border-radius:12px}
 .edad-pace-intro{font-size:11.5px;color:var(--text2);line-height:1.5;margin-bottom:12px}
-.edad-pace-row{margin-bottom:11px}
-.edad-pace-row:last-child{margin-bottom:0}
-.edad-pace-head{display:flex;align-items:center;gap:6px;margin-bottom:4px;font-size:12px}
-.edad-pace-name{font-weight:700;color:var(--text);flex:1;min-width:0}
-.edad-pace-status{font-size:9.5px;font-weight:800;padding:2px 7px;border-radius:20px;white-space:nowrap;flex-shrink:0}
-.status-critico{background:rgba(255,92,107,.18);color:var(--r)}
-.status-atrasado{background:rgba(255,217,61,.18);color:var(--w)}
-.status-ok{background:rgba(0,232,122,.18);color:var(--g)}
-.status-adelantado{background:rgba(0,224,192,.18);color:var(--cy)}
-.edad-pace-bar-wrap{position:relative;padding-top:3px}
-.edad-pace-bar{height:7px;border-radius:20px;background:rgba(var(--ov),.14);overflow:hidden}
-.edad-pace-fill{height:100%;border-radius:20px;background:var(--cy);transition:width .3s}
-.edad-pace-marker{position:absolute;top:0;width:2px;height:13px;background:var(--text);border-radius:2px}
-.edad-pace-marker::after{content:'';position:absolute;top:-5px;left:50%;transform:translateX(-50%);border-left:4px solid transparent;border-right:4px solid transparent;border-top:5px solid var(--text)}
-.edad-pace-nums{font-size:10px;color:var(--text3);margin-top:4px}
-.edad-rigor{margin-top:0;padding:13px 16px;background:linear-gradient(135deg,rgba(255,92,107,.09),rgba(255,92,107,.01));border:1px solid rgba(255,92,107,.24);border-radius:12px;font-family:var(--font-title);font-style:italic;font-size:12.5px;line-height:1.65;color:var(--text)}
+/* 2026-08-12 — las clases de la versión vieja (.edad-pace-row/-head/-name/-status/-bar/-fill/
+   -marker/-nums y las 4 .status-*) se borraron con ella: pintaban 5 barras idénticas de un dato
+   que no medía nada real. Las reemplazan estas 2 piezas — hitos con cuenta regresiva y cifras
+   medidas en dinero. */
+/* Hito con fecha real y días restantes. El número se pone rojo abajo de 60 días, que es cuando
+   deja de ser "algún día" y pasa a ser algo que hay que atender esta semana. */
+.edad-hito{padding:9px 11px;border-radius:10px;background:rgba(var(--ov),.05);border:1px solid rgba(var(--ov),.09);border-left:3px solid var(--cy);margin-bottom:8px}
+.edad-hito:last-child{margin-bottom:0}
+.edad-hito-top{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
+.edad-hito-t{font-size:12.5px;font-weight:800;color:var(--text)}
+.edad-hito-d{font-size:12px;font-weight:800;font-family:var(--mono);color:var(--cy);white-space:nowrap}
+.edad-hito-d.urge{color:var(--w)}
+.edad-hito-f{font-size:10px;color:var(--text3);margin-top:1px}
+.edad-hito-meta{font-size:11px;color:var(--text2);line-height:1.5;margin-top:5px}
+/* Cifras medidas con datos de Finanzas. `sin-dato` se atenúa a propósito: que se vea distinto de
+   una cifra real evita que un "Sin medir" se lea como si fuera un valor. */
+.edad-medidos{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px}
+.edad-medido{padding:9px 11px;border-radius:10px;background:rgba(var(--ov),.05);border:1px solid rgba(var(--ov),.09)}
+.edad-medido.sin-dato{opacity:.55}
+.edad-medido-t{font-size:10.5px;font-weight:700;color:var(--text2)}
+.edad-medido-v{font-size:16px;font-weight:900;font-family:var(--mono);color:var(--text);margin-top:3px}
+.edad-medido.sin-dato .edad-medido-v{font-size:13px;color:var(--text3)}
+.edad-medido-s{font-size:10px;color:var(--text3);margin-top:2px;line-height:1.4}
+/* El cierre dejó de ser un reclamo en rojo: ahora es la conclusión accionable, así que va en el
+   color de acento y sin cursiva de cita. */
+.edad-rigor{margin-top:0;padding:13px 16px;background:linear-gradient(135deg,rgba(0,224,192,.09),rgba(0,224,192,.01));border:1px solid rgba(0,224,192,.24);border-radius:12px;font-size:12.5px;line-height:1.65;color:var(--text2)}
+.edad-rigor b{color:var(--text)}
 
 /* ─── HUD — 2 barras flotantes VERTICALES, una por borde (2026-08-07: antes era 1 sola
    franja horizontal abajo, dividida en 2 mitades L/R; Adán pidió explícitamente que cada
@@ -2683,17 +2694,10 @@ const EDAD_DETALLE={
     {t:`${PHASES[2].tag} arranca — ${PHASES[2].start.toLocaleDateString('es-MX',FECHA_LARGA)}`, d:PHASES[2].meta},
   ]}
 };
-// "Ritmo real" (2026-08-10) — mismos 5 ids/íconos/nombres que `cortoMediano` dentro de
-// renderMetasSlide() (no se duplica el detalle, solo el mínimo para poder pintar la fila e ir a
-// buscar el % real de cada una con detailPct(META_DETALLE,'metas_checklist_v1',id) — el dato vivo
-// real vive en META_DETALLE, esto es solo la lista de qué comparar).
-const METAS_CORTO_MEDIANO=[
-  {id:'ajedrez',ico:'🏆',t:'Torneo de ajedrez'},
-  {id:'hyrox',ico:'🏋️',t:'Primer Hyrox'},
-  {id:'remoto',ico:'💻',t:'Trabajar remoto'},
-  {id:'byd',ico:'🚗',t:'Liquidar el BYD Dolphin Mini'},
-  {id:'maestria',ico:'🎓',t:'Maestría en Alemania'},
-];
+// (Aquí vivió `METAS_CORTO_MEDIANO` — una copia de los 5 ids/íconos de `cortoMediano` que existía
+// solo para que la versión vieja de pintarEdadPace() pudiera pintar una fila por meta con su
+// `detailPct()`. Al reescribir ese bloque el 2026-08-12 quedó sin un solo uso, así que se borró
+// en vez de dejar una duplicación más que mantener sincronizada a mano.)
 // Compara, meta por meta, EL RITMO QUE DEBERÍAS LLEVAR (marcador = % del año ya transcurrido,
 // edadInfo().pct) contra TU AVANCE REAL (relleno = % del checklist real ya marcado, detailPct())
 // — pedido explícito: "de los 31 a 32 años pon como un deadline en la barra para conseguir las
@@ -2702,45 +2706,84 @@ const METAS_CORTO_MEDIANO=[
 // dinero, se reusa el mismo slot vacío para esta pieza en su lugar). Se llama DESPUÉS de
 // pintarDetailOverlay() en abrirEdadDetalle()/toggleEdadChecklist() porque esa función siempre
 // deja ese div en '' si no le pasan moneyInfo — si se llamara antes, quedaría borrado.
+// Reescrito el 2026-08-12 — Adán, viendo esta pantalla: "esto no me aporta nada, mejorala".
+// Tenía razón, y el problema era de fondo, no de redacción:
+//   1) Pintaba 5 renglones IDÉNTICOS ("0% avanzado · ritmo esperado 12% · ⚠️ Atrasado 12pts").
+//      Repetir el mismo número 5 veces no informa: ocupaba media pantalla para decir una cosa.
+//   2) Medía CASILLAS MARCADAS, no avance real. `detailPct()` cuenta cuántos ítems del checklist
+//      tocó — si nunca abre esos checklists da 0% para siempre, aunque su deuda esté bajando de
+//      verdad. La propia frase lo admitía ("marcar un checklist no es lo mismo que lograrlo"),
+//      o sea que el bloque sabía que su dato no servía y aun así regañaba con él.
+//   3) Ignoraba los datos DUROS que la app ya lee en vivo de Finanzas: deuda cara, fondo de
+//      emergencia, fondo de Maestría. Decir "BYD 0%" teniendo el saldo real es simplemente falso.
+//   4) Cerraba con una frase de culpa no accionable ("todavía no empezaste").
+// Ahora muestra 3 cosas que sí cambian y sí se pueden usar: los deadlines reales que caen dentro
+// de esta ventana de edad con sus días restantes, el avance medido en dinero real, y una sola
+// conclusión concreta. Lo que no tiene dato duro se dice "sin medir" en vez de inventar un 0%.
 function pintarEdadPace(){
   const ei=edadInfo();
-  const rows=METAS_CORTO_MEDIANO.map(m=>{
-    const actual=detailPct(META_DETALLE,'metas_checklist_v1',m.id);
-    const gap=ei.pct-actual;
-    let st;
-    if(gap>15) st={label:`🚨 Muy atrasado — ${gap}pts`,cls:'status-critico'};
-    else if(gap>0) st={label:`⚠️ Atrasado ${gap}pts`,cls:'status-atrasado'};
-    else if(actual<ei.pct+15) st={label:'✅ En ritmo',cls:'status-ok'};
-    else st={label:`🔥 Adelantado +${-gap}pts`,cls:'status-adelantado'};
-    return {...m,actual,gap,st};
-  });
-  const peor=[...rows].sort((a,b)=>b.gap-a.gap)[0];
-  const rigorFrases=[
-    `No estás compitiendo contra nadie más que contra el calendario, y el calendario no negocia: ya se fue el ${ei.pct}% de este año y tu meta más atrasada — ${peor.t} — sigue en ${peor.actual}%. Si nada cambia, cumples ${ei.edadSig} exactamente donde estás hoy.`,
-    `Tu propio Gráfico de Habilidades te pone Mentalidad en 85 — tu fortaleza más alta de las 12. El problema nunca fue que no puedas. Elige una sola meta de esta lista y da un paso real hoy, no uno más de planeación.`,
-    `Faltan ${ei.diasFaltan} días para tu siguiente cumpleaños. No son "muchos días" — son los únicos que tienes para esta ventana. Cada semana que dejas una meta en 0% es una semana que no regresa.`,
-    `5 metas, ${ei.pct}% del año ya recorrido. Si hoy tuvieras que defender frente a alguien qué hiciste con este año, ¿qué le enseñarías?`,
-    `Marcar un checklist no es lo mismo que lograrlo — pero un checklist en 0% a los ${ei.diasPasados} días de haber cumplido ${ei.edad} sí es una señal real de que todavía no empezaste.`,
+  const hoy=new Date(); hoy.setHours(0,0,0,0);
+  const dias=d=>Math.round((d-hoy)/86400000);
+
+  // ── 1. Deadlines reales dentro de esta ventana de edad (de un cumpleaños al siguiente) ──
+  const hitos=[
+    {t:`${PHASES[0].tag} cierra`, f:PHASES[0].end, d:PHASES[0].meta},
+    {t:`${PHASES[1].tag} cierra`, f:PHASES[1].end, d:PHASES[1].meta},
+    {t:'Decisión Maestría',       f:new Date(2027,6,18), d:'Retomarla con datos reales del negocio, o posponerla otra vez — pero conscientemente.'},
+  ].filter(h=>h.f>hoy&&h.f<=ei.siguienteCumple).sort((a,b)=>a.f-b.f);
+
+  // ── 2. Avance MEDIDO (dinero real de Finanzas), no casillas marcadas ──
+  const num=v=>typeof v==='number'&&isFinite(v);
+  const deudas=D.fin.debts||[];
+  const bd=n=>deudas.find(x=>new RegExp(n,'i').test(x.name||''));
+  const bana=bd('banamex'), bbva=bd('bbva');
+  const deudaCara=(bana?bana.balance||0:0)+(bbva?bbva.balance||0:0);
+  const hayDeuda=!!(bana||bbva);
+  const ef=D.fin.emergencyFund||0;
+  const goalMae=(D.fin.goals||[]).find(g=>g.id==='g001'||/maestr/i.test(g.name||''));
+  const medidos=[
+    {ico:'💳',t:'Deuda cara',      hay:hayDeuda, val:money(deudaCara), sub:deudaCara<=0?'Liquidada 🎉':'restante en Banamex + BBVA', falta:'Regístrala en Finanzas para medirla aquí'},
+    {ico:'🆘',t:'Fondo de emergencia', hay:ef>0, val:money(ef),        sub:`de ${money(10000)} · ${Math.min(100,Math.round(ef/10000*100))}%`, falta:'Aún en $0 — es el primer paso de Fase 0'},
+    {ico:'🎓',t:'Fondo Maestría',  hay:!!goalMae&&num(goalMae.current), val:goalMae?money(goalMae.current||0):'—', sub:goalMae&&goalMae.target?`de ${money(goalMae.target)}`:'', falta:'Créala en Finanzas → Metas'},
   ];
-  const frase=rigorFrases[diaDelAnio()%rigorFrases.length];
+
+  // ── 3. Una sola conclusión, construida con el dato más urgente que exista ──
+  const prox=hitos[0];
+  let cierre;
+  if(prox){
+    const n=dias(prox.f);
+    cierre=`Lo más cercano que tienes enfrente es <b>${prox.t}</b>, en <b>${n} día${n===1?'':'s'}</b>. Antes de cumplir ${ei.edadSig} te quedan ${ei.diasFaltan} días — de esos, solo ${n} para este hito.`;
+  } else {
+    cierre=`No queda ningún hito del Plan Maestro dentro de esta ventana. Te faltan ${ei.diasFaltan} días para cumplir ${ei.edadSig}: es tiempo para adelantar, no para esperar.`;
+  }
+
   document.getElementById('metaDetailMoneybar').innerHTML=`
     <div class="edad-pace-block">
-      <div class="edad-pace-intro">Llevas recorrido el <b style="color:var(--cy)">${ei.pct}%</b> de este año. Si tus 5 metas de corto/mediano plazo avanzaran al mismo ritmo que el calendario, todas deberían estar cerca de ese número — esto es lo que hay de verdad:</div>
-      ${rows.map(r=>`
-        <div class="edad-pace-row">
-          <div class="edad-pace-head">
-            <span>${r.ico}</span>
-            <span class="edad-pace-name">${r.t}</span>
-            <span class="edad-pace-status ${r.st.cls}">${r.st.label}</span>
+      <div class="edad-pace-intro">Llevas <b style="color:var(--cy)">${ei.diasPasados} días</b> de este año y te quedan <b style="color:var(--cy)">${ei.diasFaltan}</b>. Esto es lo que cae dentro de esa ventana:</div>
+      ${hitos.length?hitos.map(h=>{
+        const n=dias(h.f);
+        const urgente=n<=60;
+        return `<div class="edad-hito">
+          <div class="edad-hito-top">
+            <span class="edad-hito-t">${h.t}</span>
+            <span class="edad-hito-d ${urgente?'urge':''}">${n} días</span>
           </div>
-          <div class="edad-pace-bar-wrap">
-            <div class="edad-pace-bar"><div class="edad-pace-fill" style="width:${r.actual}%"></div></div>
-            <div class="edad-pace-marker" style="left:${ei.pct}%" title="Ritmo esperado: ${ei.pct}%"></div>
-          </div>
-          <div class="edad-pace-nums">${r.actual}% avanzado · ritmo esperado ${ei.pct}%</div>
-        </div>`).join('')}
+          <div class="edad-hito-f">${h.f.toLocaleDateString('es-MX',FECHA_LARGA)}</div>
+          <div class="edad-hito-meta">${h.d}</div>
+        </div>`;
+      }).join(''):'<div class="edad-hito"><div class="edad-hito-meta">Ningún hito del Plan Maestro vence antes de tu próximo cumpleaños.</div></div>'}
+
+      <div class="edad-pace-intro" style="margin-top:14px">Y esto es lo que sí está <b style="color:var(--cy)">medido con dinero real</b> de Finanzas — no con casillas marcadas:</div>
+      <div class="edad-medidos">
+        ${medidos.map(m=>`
+          <div class="edad-medido${m.hay?'':' sin-dato'}">
+            <div class="edad-medido-t">${m.ico} ${m.t}</div>
+            <div class="edad-medido-v">${m.hay?m.val:'Sin medir'}</div>
+            <div class="edad-medido-s">${m.hay?m.sub:m.falta}</div>
+          </div>`).join('')}
+      </div>
     </div>
-    <div class="edad-rigor">"${frase}"</div>
+    <div class="edad-rigor">${cierre}</div>
   `;
 }
 
