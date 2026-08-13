@@ -70,3 +70,35 @@ La ronda anterior ya había remapeado `--white`/`--border` al vidrio del Dashboa
 `Dashboard_prueba_iphone/` (8 archivos, un solo commit, sin ninguna función de las últimas semanas). **Se avisó antes de borrar** que era el único lugar con configuración PWA — `manifest.json` + `apple-touch-icon.png` + `icon-192/512.png`, lo que permitía instalar el Dashboard en la pantalla de inicio del iPhone — y que el Dashboard real **no** la tiene. Se borró igual porque así se pidió; queda recuperable desde el historial de git si algún día se quiere montar el PWA sobre el Dashboard bueno.
 
 - Verificado con Node: sintaxis OK en los 2 bloques `<script>` reales; CSS 534/534 llaves, `<div>` 281/281; los 41 temas tienen contenido (0 huérfanos); los 4 módulos tienen etiqueta legible (0 sin mapear); rotación diaria simulada del 12 al 16 de agosto da 5 temas distintos; 0 rastros del azul viejo `#2563EB`/`#3B82F6` y 0 autorreferencias de `--text` en el CSS generado.
+
+## Los 41 temas de Python ahora se explican antes de entrar en jerga (2026-08-12)
+
+Pedido, con captura de "Dataclasses": *"hay temas que ni siquiera se que son y no me das ni explicacion, arregla todo lo de python para que sea informacion valiosa y bien explicada, revisa cada uno de los temas y pon informacion que importa para saber de que se trata"*.
+
+**El diagnóstico**: tanto el subtítulo (`hint`) como el `concept-intro` de cada tema estaban escritos **para alguien que ya sabe Python**. "Dataclasses" abría con *«@dataclass auto-genera `__init__`, `__repr__`, `__eq__`»* — si no sabes qué es un dunder ni qué es boilerplate, eso no explica nada: solo confirma que no entiendes. Y acto seguido venía una tabla de parámetros, sin haber dicho nunca qué es una dataclass ni para qué sirve.
+
+### Qué se agregó
+
+Un archivo nuevo, `Entrevistas/js/data-python-intro.js`, con una entrada por tema y 3 campos escritos en español llano:
+
+- **Qué es** — sin jerga, con analogía cuando ayuda ("una clase es el molde, el objeto es lo que sale del molde"; un diccionario es "como una agenda: buscas por nombre y te da el teléfono").
+- **Para qué sirve** — cuándo lo vas a escribir de verdad, con ejemplos de su terreno (recorrer resultados de prueba, parsear un log, leer un CSV).
+- **Lo que importa** — lo que más se malentiende o lo que suelen preguntar en entrevista. Ej.: que 100% de cobertura **no** significa bien probado; que mockear de más hace que el test pase siempre sin comprobar nada; que `except:` a secas esconde bugs reales.
+
+Los 41 quedaron cubiertos (el generador lo verifica y **falla ruidosamente** si alguno se queda sin explicación: imprime la lista de ids faltantes).
+
+### Dos decisiones de diseño
+
+**1. Archivo aparte, no editar el HTML existente.** El contenido de los temas son template strings largos dentro de `core.js` / `data-*.js`; tocarlos para insertar 41 bloques era riesgo puro de romper lo que ya funcionaba. El generador antepone el bloque al vuelo, así que reescribir una explicación es editar un objeto y volver a correr el generador. Si el archivo se borrara, el generador sigue funcionando (comprueba con `typeof`) y simplemente no antepone nada.
+
+**2. El resumen técnico no se tira, se mueve.** El `hint` original (*"@dataclass auto-genera `__init__`…"*) sí es útil **como índice de qué cubre el tema, para quien ya lo conoce** — el problema era que estuviera de primero. Ahora:
+- el **subtítulo** grande bajo el título pasa a ser la primera frase de "Qué es" (plano, sin HTML, cortado en el primer punto — se acortaron 4 explicaciones cuya primera frase salía larga para ese espacio: `poo-metodos`, `ut-estructura`, `ut-asserts`, `pt-reportes`);
+- el técnico baja al final del bloque como cuarta fila, **"Resumen técnico"**.
+
+Resultado en Dataclasses: el subtítulo ahora dice *"Un atajo para las clases que solo guardan datos y casi no tienen lógica"*, y la jerga aparece al final, cuando ya sabes de qué se está hablando.
+
+### Presentación
+
+`.py-intro` se estila con las variables del Dashboard (`--ac1`, `--text2`, `--ov`), no con las de Entrevistas, así que se adapta solo al tema claro/oscuro y al acento del slide — mismo criterio que la integración visual de la ronda anterior. Va con barra de acento a la izquierda para que se lea como contexto y no como una tarjeta más de contenido, etiquetas en versalitas a la izquierda y texto a la derecha; abajo de 640px las filas se apilan para no exprimir el texto en una columna de 100px.
+
+- Verificado con Node: **41/41 temas con bloque de explicación** y con "Resumen técnico"; 0 subtítulos con HTML crudo y 0 por encima de 170 caracteres (el más largo quedó en 153); el CSS generado incluye `.py-intro`; y en `dashboard.html` la sintaxis de los 2 bloques `<script>` reales sigue OK con CSS 534/534 y `<div>` 281/281.

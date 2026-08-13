@@ -60,12 +60,17 @@ DATA_FILES.forEach(f => {
   richNamesPerFile[f] = [...code.matchAll(/^const\s+(\w+_RICH\w*)\s*=/gm)].map(m => m[1]);
 });
 const allRichNames = Object.values(richNamesPerFile).flat();
+// `PY_INTRO` (data-python-intro.js) no sigue el patrón `*_RICH`, así que se puentea aparte. El
+// `typeof` evita romper el generador si algún día se borra ese archivo — simplemente no habría
+// explicaciones que anteponer.
 const bridge = 'globalThis.__T__=T; globalThis.__RICH__={};' +
-  allRichNames.map(n => `Object.assign(globalThis.__RICH__, ${n});`).join(' ');
+  allRichNames.map(n => `Object.assign(globalThis.__RICH__, ${n});`).join(' ') +
+  ' globalThis.__PYINTRO__ = (typeof PY_INTRO !== "undefined") ? PY_INTRO : {};';
 vm.runInContext(bridge, ctx, { filename: 'bridge.js' });
 
 const T = ctx.__T__;
 const RICH = ctx.__RICH__;
+const PY_INTRO = ctx.__PYINTRO__;
 
 const tIds = Object.keys(T);
 const richIds = Object.keys(RICH);
@@ -107,7 +112,9 @@ if (!idsFiltrados.length) {
 const porMod = MODULOS_DASHBOARD.map(m => `${m}:${idsFiltrados.filter(id => T[id].mod === m).length}`).join(' · ');
 console.log(`Filtrado a Python: ${idsFiltrados.length} de ${tIds.length} temas (${porMod}).`);
 
-const ENTREVISTA_TEMAS = idsFiltrados.map(id => ({ id, ...T[id] }));
+// `hint` se sustituye por el subtítulo en lenguaje llano (ver subtituloLlano, más abajo); el
+// original no se pierde, viaja dentro del bloque de explicación como "Resumen técnico".
+const ENTREVISTA_TEMAS = idsFiltrados.map(id => ({ ...T[id], id, hint: subtituloLlano(id, T[id].hint) }));
 
 // ══════════════════════════════════════════════════════════════════════════
 // 3) ENTREVISTA_CONTENT — HTML real de cada tema, con 2 limpiezas puntuales
@@ -128,6 +135,36 @@ const ENTREVISTA_TEMAS = idsFiltrados.map(id => ({ id, ...T[id] }));
 // ══════════════════════════════════════════════════════════════════════════
 const NOTES_CARD_RE = /<div class="notes-card"[^>]*>\s*<div class="notes-card-label">[^<]*<\/div>\s*<p class="notes-placeholder">([\s\S]*?)<\/p>\s*<\/div>/g;
 let notesStripped = 0, notesKept = 0;
+// Bloque de explicación en lenguaje llano que va ANTES de todo lo demás (2026-08-12, ver
+// data-python-intro.js). Se construye aquí y no se guarda en el HTML original de los temas: si
+// mañana se reescribe una explicación, basta correr el generador de nuevo.
+function introHtml(id, hintTecnico) {
+  const i = PY_INTRO[id];
+  if (!i) return '';
+  const fila = (etq, txt) => txt ? `<div class="pyi-row"><span class="pyi-k">${etq}</span><span class="pyi-v">${txt}</span></div>` : '';
+  // El `hint` original (el resumen con la jerga: "@dataclass auto-genera __init__, __repr__…")
+  // NO se tira: sigue siendo un buen índice de qué cubre el tema para quien ya lo conoce. Solo
+  // se mueve al FINAL del bloque, para que lo primero que se lea sea la explicación en llano y
+  // no la lista de nombres técnicos — que era justo el reclamo.
+  return `<div class="py-intro">
+    ${fila('Qué es', i.que)}
+    ${fila('Para qué sirve', i.usa)}
+    ${fila('Lo que importa', i.ojo)}
+    ${fila('Resumen técnico', hintTecnico)}
+  </div>`;
+}
+// Subtítulo del tema (lo que se ve grande debajo del título): pasa de ser el resumen técnico a
+// la primera frase de "Qué es". Se corta en el primer punto y se le quitan las etiquetas HTML,
+// porque ahí solo cabe texto plano.
+function subtituloLlano(id, hintOriginal) {
+  const i = PY_INTRO[id];
+  if (!i || !i.que) return hintOriginal;
+  const plano = i.que.replace(/<[^>]+>/g, '');
+  const corte = plano.indexOf('. ');
+  return (corte > 0 ? plano.slice(0, corte + 1) : plano).trim();
+}
+let conIntro = 0, sinIntro = [];
+
 // Solo el HTML de los temas que pasaron el filtro de módulo — es de donde sale el grueso del
 // ahorro de peso del archivo generado (el resto de los temas ni siquiera se copia).
 const ENTREVISTA_CONTENT = {};
@@ -137,9 +174,12 @@ idsFiltrados.forEach(id => {
     notesKept++; return block;
   });
   html = html.replace(/style="background:#fff;/g, 'style="background:var(--white);');
-  ENTREVISTA_CONTENT[id] = html;
+  const intro = introHtml(id, T[id].hint);
+  if (intro) conIntro++; else sinIntro.push(id);
+  ENTREVISTA_CONTENT[id] = intro + html;
 });
 console.log(`Placeholders "notes-card" genéricos quitados: ${notesStripped} · con consejo real conservados: ${notesKept}`);
+console.log(`Explicación en lenguaje llano: ${conIntro}/${idsFiltrados.length} temas` + (sinIntro.length ? ` — SIN explicación: ${sinIntro.join(', ')}` : ' — todos cubiertos.'));
 
 // ══════════════════════════════════════════════════════════════════════════
 // 4) ENTREVISTA_CSS — solo las reglas de styles.css que de verdad usan las
@@ -301,7 +341,30 @@ const CSS_VARS_DARK = `[data-theme="dark"] .en-content{
   --wayve:#FBBF24; --wayve-dark:#FDE68A; --wayve-light:rgba(217,119,6,.14); --wayve-border:rgba(251,191,36,.35);
 }`;
 
-const ENTREVISTA_CSS = [CSS_VARS_LIGHT, CSS_VARS_DARK, scopedRules.join('\n'), embeddedCss].join('\n\n');
+// Estilo del bloque de explicación (2026-08-12). No sale de styles.css — es propio del Dashboard,
+// así que se escribe aquí y usa sus variables (`--ac1`, `--text2`, `--ov`) para que combine solo
+// con el tema y con el acento del slide. Va con barra de acento a la izquierda para que se lea
+// como "esto es el contexto", distinto de las tarjetas de contenido que vienen después.
+const CSS_INTRO = `.en-content .py-intro{
+  margin:0 0 18px; padding:14px 16px; border-radius:12px;
+  background:rgba(var(--ov),.04); border:1px solid rgba(var(--ov),.09);
+  border-left:3px solid var(--ac1);
+}
+.en-content .pyi-row{display:flex; gap:10px; align-items:baseline; padding:5px 0}
+.en-content .pyi-row + .pyi-row{border-top:1px solid rgba(var(--ov),.07)}
+.en-content .pyi-k{
+  flex:0 0 108px; font-size:10px; font-weight:800; letter-spacing:.06em;
+  text-transform:uppercase; color:var(--ac1); padding-top:2px;
+}
+.en-content .pyi-v{flex:1; min-width:0; font-size:13.5px; line-height:1.6; color:var(--text2)}
+.en-content .pyi-v b{color:var(--text); font-weight:700}
+.en-content .pyi-v code{font-size:12px}
+@media(max-width:640px){
+  .en-content .pyi-row{flex-direction:column; gap:2px}
+  .en-content .pyi-k{flex:none}
+}`;
+
+const ENTREVISTA_CSS = [CSS_VARS_LIGHT, CSS_VARS_DARK, CSS_INTRO, scopedRules.join('\n'), embeddedCss].join('\n\n');
 
 // ══════════════════════════════════════════════════════════════════════════
 // 5) Escribir el archivo generado
