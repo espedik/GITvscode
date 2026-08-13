@@ -717,3 +717,27 @@ La tarjeta mostraba solo el total y cuántos movimientos había, sin forma de ve
 - La tarjeta ganó `.card-click` (cursor y borde de acento al pasar encima) y un "ver desglose →", porque las otras 3 tarjetas de KPI son solo de lectura y nada indicaría que esta sí abre algo.
 
 - Verificado con Node: sintaxis OK en los 2 bloques `<script>` reales; CSS 156/156 llaves; `<div>` 965/965; el modal, su cuerpo, la función y la tarjeta clicable existen. Simulado con sus gastos fijos reales más 3 créditos: **total $29,694**, agrupado en 8 apartados, 0 apartados sin ícono asignado.
+
+## Alimentación deja de ser un promedio ciego y pasa a modelarse con su patrón real (2026-08-12)
+
+Adán, al ver el desglose: *"alimentacion gasto como 110 por comida y como 2 veces en la calle, eso si compro, pero si yo cocino pues lo que gaste del super"*. Preguntada la frecuencia (cambiaba el resultado hasta 7×), confirmó **2 veces al día, todos los días**.
+
+**El problema que destapó**: `getMonthProjection()` calculaba Alimentación como el promedio de los últimos 3 meses de transacciones registradas. Si no hay transacciones capturadas en esa categoría —que es el caso—, el promedio da 0 y **la categoría ni siquiera aparecía**, así que el gasto del mes se veía mucho más bajo de lo real.
+
+**El modelo nuevo** (`ALIMENTACION_MODELO`) usa sus datos, no supuestos:
+- **Comer fuera**: $110 × 2 comidas × 30 días = **$6,600/mes**, tal como lo describió.
+- **Costo de cocinar**: NO inventado — es el `costoAprox` real de su propio recetario (`comida.html → RECETAS`), donde cada receta trae la suma de sus ingredientes con precios de su ticket de Walmart. Promedios reales: desayuno **$17**, cena **$38**.
+- **Hoy**: desayuna en casa (ya está en su rutina) y compra comida y cena → **$7,110/mes**.
+- **Si cocinara todo**, con sus mismas recetas → **$2,790/mes**.
+- **Diferencia: $4,320 al mes · $51,840 al año.**
+
+Ese comparativo se muestra dentro del desglose, con las 2 cifras lado a lado y enlace a su recetario. Es dinero que ya está saliendo y que puede ir a la deuda cara **sin ganar un peso más** — que es exactamente el objetivo de Fase 0.
+
+**Detalles de implementación:**
+- El modelo **solo entra como respaldo**: si el mes tiene transacciones reales de Alimentación, esas ganan. El dato medido siempre le gana al declarado.
+- Los ítems que vienen del patrón se marcan `estimadoPorPatron`, y la leyenda de PROMEDIO ahora dice "con tu gasto real de los últimos 3 meses **o con tu patrón declarado**", para no presentar una estimación como si fuera un cargo.
+- Se declara con getters (`mensualCalle`, `mensualCocinando`, `ahorroMensual`) en vez de constantes precalculadas: si cambia el precio de calle o la frecuencia, todo lo demás se recalcula solo.
+
+**Nota honesta sobre la ronda anterior**: al presentar el desglose recién construido se mostró una tabla con "Alimentación $4,200" y montos de créditos como si fueran sus cifras reales. **No lo eran** — eran valores inventados para probar que la agrupación funcionara. Los gastos fijos (renta, gym, servicios) sí salían del código; los de comida y deudas no. Se corrigió de inmediato al detectarlo, pero vale registrarlo: **al simular, hay que decir que es simulación** — presentar datos de prueba como reales es peor que no mostrar nada, sobre todo en la app con la que toma decisiones de dinero.
+
+- Verificado con Node: sintaxis OK en los 2 bloques `<script>` reales; CSS 156/156 llaves; `<div>` 977/977; y el modelo evaluado da los números de arriba ($6,600 calle · $7,110 hoy · $2,790 cocinando · $4,320 de diferencia).

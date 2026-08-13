@@ -2656,6 +2656,34 @@ function renderSnapshotView(snap, curSnap) {
     </div>`:''}`
 ;}
 
+// ─── ALIMENTACIÓN — modelo real (2026-08-12) ─────────────────────────────────
+// Adán, textual: "alimentacion gasto como 110 por comida y como 2 veces en la calle, eso si
+// compro, pero si yo cocino pues lo que gaste del super". Al preguntarle la frecuencia confirmó
+// **2 veces al día, todos los días**.
+//
+// Los costos de cocinar NO son inventados: son el `costoAprox` real de su propio recetario
+// (CuidadoPersonal/comida.html → RECETAS, replicado en Dashboard → RECETAS_MINI), donde cada
+// receta trae el costo sumado de sus ingredientes con precios de su ticket de Walmart.
+// Promedios de ahí: desayuno ~$17, cena ~$38. Se usa el de cena ($38) como referencia para
+// comida y cena porque son platillos completos con proteína; el desayuno se cuenta aparte.
+//
+// Se declara arriba de getMonthProjection() a propósito: esa función lo usa como respaldo cuando
+// no hay historial real, y el desglose de gastos lo usa para el comparativo de abajo.
+const ALIMENTACION_MODELO={
+  precioCalle:110,      // lo que gasta por comida comprada fuera
+  vecesPorDia:2,        // comida y cena
+  diasPorMes:30,        // todos los días
+  costoDesayunoCasa:17, // promedio real de sus 10 recetas de desayuno
+  costoCenaCasa:38,     // promedio real de sus 8 recetas de cena
+  get mensualCalle(){ return this.precioCalle*this.vecesPorDia*this.diasPorMes; },
+  get mensualDesayuno(){ return this.costoDesayunoCasa*this.diasPorMes; },
+  // Hoy: desayuna en casa (ya está en su rutina) y compra comida y cena fuera.
+  get mensualActual(){ return this.mensualCalle+this.mensualDesayuno; },
+  // Si cocinara también comida y cena, con sus mismas recetas.
+  get mensualCocinando(){ return (this.costoDesayunoCasa+this.costoCenaCasa*this.vecesPorDia)*this.diasPorMes; },
+  get ahorroMensual(){ return this.mensualActual-this.mensualCocinando; },
+};
+
 // ─── PROJECTION & RECURRING ───────────────────────────────────────────────────
 function getMonthProjection(month) {
   const [yr, mn] = month.split('-').map(Number);
@@ -2699,6 +2727,12 @@ function getMonthProjection(month) {
   const varItems = varCats.map(cat=>({
     cat, amount: past3M.reduce((s,m)=>s+spentCat(cat,m),0)/3
   })).filter(v=>v.amount>0);
+  // Alimentación: si NO hay historial real de los últimos 3 meses, se usa el patrón que Adán
+  // describió el 2026-08-12 en vez de dejar la categoría en $0 — que era lo que pasaba antes y
+  // hacía que el gasto del mes se viera mucho más bajo de lo que es. Ver ALIMENTACION_MODELO.
+  if(!varItems.some(v=>v.cat==='Alimentación')){
+    varItems.push({cat:'Alimentación', amount:ALIMENTACION_MODELO.mensualActual, estimadoPorPatron:true});
+  }
   const varExp = varItems.reduce((s,v)=>s+v.amount, 0);
 
   return {inc:BASE_INC, fixedExp, varExp, fixed, varItems, totalExp:fixedExp+varExp, balance:BASE_INC-fixedExp-varExp};
@@ -2775,9 +2809,30 @@ function abrirDesgloseGastos(m){
           </div>`).join('')}
       </div>`;
     }).join('')}
+    ${(()=>{const A=ALIMENTACION_MODELO;return `
+    <div style="margin:4px 0 14px;padding:14px 16px;border-radius:10px;background:rgba(255,183,3,.06);border:1px solid rgba(255,183,3,.28)">
+      <div style="font-size:11px;font-weight:800;color:var(--warning);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">🍽️ Comer fuera vs. cocinar</div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px">
+        <div style="flex:1;min-width:150px;padding:10px 12px;border-radius:9px;background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.22)">
+          <div style="font-size:10px;font-weight:700;color:var(--danger);text-transform:uppercase">Como hoy</div>
+          <div style="font-size:20px;font-weight:900;color:var(--danger);margin-top:3px">${fmt(A.mensualActual)}</div>
+          <div style="font-size:10px;color:var(--text3);margin-top:3px;line-height:1.4">${fmt(A.precioCalle)} × ${A.vecesPorDia} comidas fuera × ${A.diasPorMes} días, más tu desayuno en casa</div>
+        </div>
+        <div style="flex:1;min-width:150px;padding:10px 12px;border-radius:9px;background:rgba(0,232,122,.08);border:1px solid rgba(0,232,122,.22)">
+          <div style="font-size:10px;font-weight:700;color:var(--success);text-transform:uppercase">Cocinando todo</div>
+          <div style="font-size:20px;font-weight:900;color:var(--success);margin-top:3px">${fmt(A.mensualCocinando)}</div>
+          <div style="font-size:10px;color:var(--text3);margin-top:3px;line-height:1.4">Con el costo real de tus propias recetas: desayuno ${fmt(A.costoDesayunoCasa)}, cena ${fmt(A.costoCenaCasa)}</div>
+        </div>
+      </div>
+      <div style="font-size:11.5px;color:var(--text2);line-height:1.6">
+        Diferencia: <b style="color:var(--warning)">${fmt(A.ahorroMensual)} al mes</b> — ${fmt(A.ahorroMensual*12)} al año.
+        Es dinero que ya estás gastando y que podría ir a tu deuda cara sin ganar un peso más.
+        <a href="../CuidadoPersonal/comida.html" style="color:var(--primary);font-weight:700;text-decoration:none">Ver tus recetas →</a>
+      </div>
+    </div>`;})()}
     <div style="font-size:10.5px;color:var(--text3);line-height:1.6;padding-top:6px;border-top:1px solid rgba(var(--ov),.08)">
       <b style="color:var(--text3)">FIJO</b> = se repite cada mes (renta, servicios, pagos de crédito) ·
-      <b style="color:var(--warning)">PROMEDIO</b> = estimado con tu gasto real de los últimos 3 meses ·
+      <b style="color:var(--warning)">PROMEDIO</b> = estimado con tu gasto real de los últimos 3 meses o con tu patrón declarado ·
       <b style="color:var(--success)">REGISTRADO</b> = movimiento que tú capturaste este mes.
     </div>`;
   document.getElementById('mo-gastos').classList.add('open');
