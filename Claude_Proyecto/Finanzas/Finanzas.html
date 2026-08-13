@@ -71,6 +71,11 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
   box-shadow:var(--sh);
   transition:border-color .2s,box-shadow .2s}
 .card:hover{border-color:rgba(var(--ov),.15);box-shadow:var(--shm)}
+/* Tarjeta que abre un detalle al tocarla (2026-08-12, "Gastos del Mes" → desglose por apartado).
+   El cambio de cursor y el borde de acento al pasar encima son lo que la distingue de las otras
+   3 tarjetas de KPI, que son solo de lectura — sin eso no habría forma de saber que es clicable. */
+.card-click{cursor:pointer}
+.card-click:hover{border-color:var(--danger);box-shadow:var(--shm)}
 .card-title{font-size:11px;font-weight:600;color:var(--text2);margin-bottom:8px;
   display:flex;align-items:center;gap:5px;text-transform:uppercase;letter-spacing:.06em}
 .card-val{font-size:26px;font-weight:800;color:var(--text);letter-spacing:-.5px}
@@ -452,6 +457,21 @@ select option{background:var(--surface-solid);color:var(--text)}
 
   </div><!-- /content -->
 </main>
+
+<!-- ===== MODAL DESGLOSE DE GASTOS DEL MES (2026-08-12) =====
+     Pedido: "en el recuadro de gastos del mes, cuando haga click muestrame todos los gastos que
+     tengo... con el costo y costo total y desglozado por apartados". Se abre al tocar la tarjeta
+     "📤 Gastos del Mes" de los KPIs. Modal más ancho que el resto (900px) porque aquí sí hay una
+     tabla que leer, no un formulario de 3 campos. -->
+<div class="mo" id="mo-gastos">
+  <div class="modal" style="max-width:900px">
+    <div class="modal-h">
+      <div class="modal-title" id="mo-gastos-title">📤 Gastos del mes</div>
+      <button class="modal-x" onclick="closeMo('mo-gastos')">✕</button>
+    </div>
+    <div id="mo-gastos-body"></div>
+  </div>
+</div>
 
 <!-- ===== MODAL ACTIVO FÍSICO ===== -->
 <div class="mo" id="mo-activo">
@@ -2684,6 +2704,85 @@ function getMonthProjection(month) {
   return {inc:BASE_INC, fixedExp, varExp, fixed, varItems, totalExp:fixedExp+varExp, balance:BASE_INC-fixedExp-varExp};
 }
 
+// ─── DESGLOSE DE GASTOS DEL MES (2026-08-12) ─────────────────────────────────
+// Pedido: "en el recuadro de gastos del mes, cuando haga click muestrame todos los gastos que
+// tengo... y los creditos que tengo y rentas y lo de comida y ponmelo con el costo y costo total
+// y desglozado por apartados".
+//
+// No inventa nada: junta las 2 fuentes que la app ya tiene y las agrupa por categoría.
+//   · Lo FIJO viene de getMonthProjection(m).fixed — renta, servicios, gym, suscripciones y los
+//     pagos mínimos de cada deuda/crédito (esos se generan solos desde S.debts, así que el
+//     desglose se mantiene solo cuando una deuda se liquida o cambia de mínimo).
+//   · Lo VARIABLE (comida, restaurantes, entretenimiento) sale de `varItems`, que es el promedio
+//     real de los últimos 3 meses — por eso se marca como "promedio", no como cargo del mes.
+//   · Si el mes YA tiene transacciones reales registradas, se muestran esas en vez del estimado:
+//     el dato medido siempre le gana a la proyección.
+// El orden de los apartados es fijo (ORDEN_APARTADOS) para que el más grande no salte de lugar
+// cada mes según el monto; los que no existan ese mes simplemente no se pintan.
+const GASTO_APARTADO_ICO={'Hogar/Renta':'🏠','Deudas':'💳','Servicios':'🔌','Alimentación':'🍽️','Restaurantes':'🍔','Salud':'💪','Suscripciones':'📱','Inversiones':'📈','Transporte':'🚗','Entretenimiento':'🎬','Educación':'📚','Ropa':'👕','Otros':'📦'};
+const ORDEN_APARTADOS=['Hogar/Renta','Deudas','Servicios','Alimentación','Restaurantes','Transporte','Salud','Suscripciones','Educación','Ropa','Entretenimiento','Inversiones','Otros'];
+
+function abrirDesgloseGastos(m){
+  const proj=getMonthProjection(m);
+  const mtx=S.transactions.filter(t=>ym(t.date)===m&&t.type==='expense');
+  const hayReales=mtx.length>0;
+
+  // grupos: {apartado: [{desc, amount, tipo}]}
+  const g={};
+  const add=(cat,desc,amount,tipo)=>{ (g[cat]=g[cat]||[]).push({desc,amount,tipo}); };
+
+  proj.fixed.forEach(f=>add(f.cat,f.desc,f.amount,'fijo'));
+  proj.varItems.forEach(v=>add(v.cat,`${v.cat} (promedio de los últimos 3 meses)`,v.amount,'prom'));
+  mtx.forEach(t=>add(t.cat||'Otros',t.desc||'(sin descripción)',t.amount,'real'));
+
+  const cats=Object.keys(g).sort((a,b)=>{
+    const ia=ORDEN_APARTADOS.indexOf(a), ib=ORDEN_APARTADOS.indexOf(b);
+    return (ia<0?99:ia)-(ib<0?99:ib);
+  });
+  const total=cats.reduce((s,c)=>s+g[c].reduce((x,i)=>x+i.amount,0),0);
+
+  const etiqueta={fijo:'fijo',prom:'promedio',real:'registrado'};
+  const colorTipo={fijo:'var(--text3)',prom:'var(--warning)',real:'var(--success)'};
+
+  document.getElementById('mo-gastos-title').textContent=`📤 Gastos de ${m.slice(5)}/${m.slice(0,4)}`;
+  document.getElementById('mo-gastos-body').innerHTML=`
+    <div style="display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;padding:14px 16px;border-radius:10px;background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.25);margin-bottom:16px">
+      <span style="font-size:11px;font-weight:800;color:var(--danger);text-transform:uppercase;letter-spacing:.05em">Costo total del mes</span>
+      <span style="font-size:26px;font-weight:900;color:var(--danger);margin-left:auto">${fmt(total)}</span>
+    </div>
+    <div style="font-size:11px;color:var(--text3);line-height:1.6;margin-bottom:14px">
+      ${hayReales
+        ? `Incluye <b style="color:var(--success)">${mtx.length} movimiento${mtx.length===1?'':'s'} ya registrado${mtx.length===1?'':'s'}</b> de este mes, más tus gastos fijos.`
+        : `Este mes aún no tiene movimientos registrados, así que son tus <b>gastos fijos</b> más el <b style="color:var(--warning)">promedio real de los últimos 3 meses</b> en comida y entretenimiento.`}
+    </div>
+    ${cats.map(c=>{
+      const items=g[c].sort((a,b)=>b.amount-a.amount);
+      const sub=items.reduce((s,i)=>s+i.amount,0);
+      const pct=total>0?Math.round(sub/total*100):0;
+      return `
+      <div style="margin-bottom:14px;border:1px solid rgba(var(--ov),.09);border-radius:10px;overflow:hidden">
+        <div style="display:flex;align-items:center;gap:8px;padding:9px 13px;background:rgba(var(--ov),.05)">
+          <span style="font-size:14px">${GASTO_APARTADO_ICO[c]||'📦'}</span>
+          <span style="font-size:12.5px;font-weight:800;color:var(--text)">${c}</span>
+          <span style="font-size:10px;color:var(--text3);font-family:var(--mono,monospace)">${pct}% del total</span>
+          <span style="margin-left:auto;font-size:14px;font-weight:900;color:var(--text)">${fmt(sub)}</span>
+        </div>
+        ${items.map(i=>`
+          <div style="display:flex;align-items:baseline;gap:8px;padding:7px 13px;border-top:1px solid rgba(var(--ov),.06)">
+            <span style="font-size:12px;color:var(--text2);flex:1;min-width:0">${i.desc}</span>
+            <span style="font-size:9.5px;font-weight:700;color:${colorTipo[i.tipo]};text-transform:uppercase;letter-spacing:.04em;white-space:nowrap">${etiqueta[i.tipo]}</span>
+            <span style="font-size:12.5px;font-weight:800;color:var(--text);white-space:nowrap;min-width:80px;text-align:right">${fmt(i.amount)}</span>
+          </div>`).join('')}
+      </div>`;
+    }).join('')}
+    <div style="font-size:10.5px;color:var(--text3);line-height:1.6;padding-top:6px;border-top:1px solid rgba(var(--ov),.08)">
+      <b style="color:var(--text3)">FIJO</b> = se repite cada mes (renta, servicios, pagos de crédito) ·
+      <b style="color:var(--warning)">PROMEDIO</b> = estimado con tu gasto real de los últimos 3 meses ·
+      <b style="color:var(--success)">REGISTRADO</b> = movimiento que tú capturaste este mes.
+    </div>`;
+  document.getElementById('mo-gastos').classList.add('open');
+}
+
 function removeRecurringForMonth(month) {
   const txs = S.transactions.filter(t=>ym(t.date)===month&&t.notes==='[recurrente]');
   if(!txs.length) return toast('No hay recurrentes que quitar en este mes.');
@@ -2865,8 +2964,9 @@ function renderDashboard() {
       <div class="card-val tc-ok">${fmt(inc)}</div>
       <div class="card-sub">Base ${fmt(BASE_INC)}${extrasTotal?` + extras ${fmt(extrasTotal)}`:''}</div>
     </div>
-    <div class="card">
-      <div class="card-title">📤 Gastos del Mes</div>
+    <div class="card card-click" onclick="abrirDesgloseGastos('${m}')" role="button" tabindex="0"
+         title="Ver todos los gastos del mes, desglosados por apartado">
+      <div class="card-title">📤 Gastos del Mes <span style="float:right;font-size:10px;color:var(--text3);font-weight:700">ver desglose →</span></div>
       <div class="card-val tc-err">${fmt(exp)}</div>
       <div class="card-sub">${(isFuture&&!hasActualTx)?'📊 Estimado (fijos + variables prom.)':`${mtx.filter(t=>t.type==='expense').length} movimientos registrados`}</div>
     </div>

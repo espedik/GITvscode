@@ -695,3 +695,25 @@ Adán reportó: *"en el html de finanzas no dejaste registrado en junio, debes d
 - Ambas reglas quedaron documentadas como comentario fijo en el código, justo arriba de `seedData()` y de `backfillMissingMonthSnapshots()`, explicando por qué existen y qué no se debe volver a hacer.
 - Verificado con `node --check` sobre el script inline extraído, y con Playwright en dos escenarios simulados en `localStorage` (reproduciendo el bug real sin necesidad del navegador de Adán): (1) historial con mayo y julio pero sin junio → tras recargar, junio aparece automáticamente marcado `backfilled:true, backfilledFrom:'2026-05'`, visible en el tab bar y con el banner de "Estimado" correcto; (2) historial completo de mayo/junio/julio + `localStorage[KEY+'_v']` desactualizado (simulando que sube `SEED_VER`) → tras recargar, `seedData()` corre su reseed normal pero los tres meses sobreviven intactos, más agosto (mes actual) añadido. Cero errores de consola en ambos casos.
 - **Nota importante**: este fix previene que el problema se repita hacia adelante y rellena honestamente cualquier hueco ya existente con datos estimados — pero si el snapshot real de junio ya se perdió por un reseed anterior a este fix (sin backup en ningún lado), esos números originales de junio no se pueden recuperar; lo que Adán va a ver es la estimación por carry-forward, correctamente etiquetada como tal, no el dato original.
+
+## "Gastos del Mes" ahora abre el desglose completo por apartado (2026-08-12)
+
+Pedido: *"en el recuadro de gastos del mes, cuando haga click muestrame todos los gastos que tengo, en ese de finanzas ya sabes que gasto al mes y los creditos que tengo y rentas y lo de comida y ponmelo con el costo y costo total y desglozado por apartados"*.
+
+La tarjeta mostraba solo el total y cuántos movimientos había, sin forma de ver qué lo componía. **No hizo falta inventar ni capturar datos nuevos**: `getMonthProjection()` ya devolvía todo el desglose, solo que nadie lo pintaba en esta pantalla.
+
+**Qué junta el modal**, de las 2 fuentes que la app ya tiene:
+- **Gastos fijos** (`proj.fixed`): renta, servicios (celular, internet, gas, agua/luz), gym, suscripciones, limpieza y CETES.
+- **Créditos**: los pagos mínimos de cada deuda salen solos de `S.debts` dentro de esa misma función, así que el desglose **se mantiene actualizado sin tocar nada** cuando una deuda se liquida o le cambia el mínimo.
+- **Comida y entretenimiento** (`proj.varItems`): el promedio real de los últimos 3 meses, no una cifra inventada.
+- **Movimientos reales** del mes, si los hay.
+
+**Decisiones de diseño:**
+- **Cada renglón lleva su origen etiquetado**: `FIJO` (se repite cada mes), `PROMEDIO` (estimado con su gasto real de los últimos 3 meses) o `REGISTRADO` (movimiento que él capturó). Sin esa distinción, un promedio se leería como un cargo confirmado — y ya vimos hoy, con la tarjeta de edad, lo que pasa cuando un número aparenta una precisión que no tiene.
+- **Orden fijo de apartados** (`ORDEN_APARTADOS`), no por monto. Si se ordenara por importe, el mismo apartado saltaría de lugar cada mes y habría que buscarlo de nuevo cada vez.
+- **Porcentaje del total por apartado**, que es lo que de verdad responde "¿en qué se me va el dinero?". Con sus cifras reales: Hogar/Renta 38%, Deudas 28%, Alimentación 14%.
+- **El dato medido le gana a la proyección**: si el mes ya tiene transacciones registradas, se muestran esas y el texto de arriba lo dice.
+- Modal de 900px en vez de los 500px del resto — aquí hay una tabla que leer, no un formulario de 3 campos.
+- La tarjeta ganó `.card-click` (cursor y borde de acento al pasar encima) y un "ver desglose →", porque las otras 3 tarjetas de KPI son solo de lectura y nada indicaría que esta sí abre algo.
+
+- Verificado con Node: sintaxis OK en los 2 bloques `<script>` reales; CSS 156/156 llaves; `<div>` 965/965; el modal, su cuerpo, la función y la tarjeta clicable existen. Simulado con sus gastos fijos reales más 3 créditos: **total $29,694**, agrupado en 8 apartados, 0 apartados sin ícono asignado.
