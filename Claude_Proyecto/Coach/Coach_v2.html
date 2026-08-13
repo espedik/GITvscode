@@ -585,8 +585,8 @@
     /* ─── FASE — desglose mes a mes (2026-08-09) ───────────────────────────
        Antes cada fase mostraba TODO su checklist de una sola vez (hasta 10 semanas juntas en
        Fase 0) — Adán: "me estoy saturando y no estoy haciendo nada". Cada .fase-checklist ahora
-       agrupa sus check-item dentro de <details class="fase-month" data-month="YYYY-MM">, uno por
-       mes calendario real. JS (abajo, IIFE al final del <script>) abre SOLO el mes actual y arma
+       agrupa sus check-item dentro de un elemento details con clase .fase-month y atributo
+       data-month="YYYY-MM", uno por mes calendario real. El JS del final abre SOLO el mes y arma
        el badge "X/Y" — así de un vistazo se ve nada más lo que toca AHORA, sin dejar de poder
        abrir julio (catch-up) o septiembre (qué viene) con un clic. */
     .fase-month { border: 1px solid var(--border); border-radius: var(--radius-sm); margin-bottom: 9px; overflow: hidden; background: var(--bg); }
@@ -1058,7 +1058,7 @@
         </div>
         <p class="p-today">Hoy · <span id="fecha-hoy"></span></p>
       </div>
-      <p class="fs-13 text-muted" style="margin-top:10px;">📸 Punto de partida de Fase 0 — congelado al 18 jul 2026, no cambia aunque tus finanzas mejoren. Para ver el avance real de hoy comparado contra esto, ve la tarjeta "📈 Progreso real" más abajo.</p>
+      <p class="fs-13 text-muted" style="margin-top:10px;">📸 Punto de partida — foto de tus finanzas del 18 jul 2026, la medición previa al arranque de Fase 0 (1 ago). No cambia aunque tus finanzas mejoren. Para ver el avance real de hoy comparado contra esto, ve la tarjeta "📈 Progreso real" más abajo.</p>
       <div class="hero-kpis">
         <div class="stat-badge"><span class="num neg">-$308,830</span><span>Patrimonio líquido al iniciar</span></div>
         <div class="stat-badge"><span class="num neg">$366,137</span><span>Deuda total al iniciar</span></div>
@@ -1900,7 +1900,7 @@
     <!-- PROGRESO REAL vs. PUNTO DE PARTIDA -->
     <div class="card mb-16 span-2" style="margin-bottom:16px;">
       <h3 class="fw-700 mb-12">📈 Progreso real vs. el inicio de Fase 0</h3>
-      <p class="fs-13 text-muted mb-12" id="progresoRealSub">Leído en vivo de <a href="../Finanzas/Finanzas.html" class="inline-link">Finanzas.html</a> cada vez que abres esta pestaña — comparado contra los números de arriba, congelados al 18 jul 2026. Si vas más rápido de lo que marca la "Trayectoria estimada" de abajo, es la señal para avisar y ajustar la estrategia de las siguientes fases; si vas más lento, es la señal para revisar qué opción de negocio no está jalando.</p>
+      <p class="fs-13 text-muted mb-12" id="progresoRealSub">Leído en vivo de <a href="../Finanzas/Finanzas.html" class="inline-link">Finanzas.html</a> cada vez que abres esta pestaña — comparado contra los números de arriba, congelados el 18 jul 2026 (la foto previa al arranque de Fase 0). Si vas más rápido de lo que marca la "Trayectoria estimada" de abajo, es la señal para avisar y ajustar la estrategia de las siguientes fases; si vas más lento, es la señal para revisar qué opción de negocio no está jalando.</p>
       <div class="grid-3" id="progresoRealGrid"></div>
     </div>
 
@@ -1908,7 +1908,7 @@
     <div class="card mb-16" style="margin-bottom:16px;">
       <h3 class="fw-700 mb-12">Trayectoria estimada de patrimonio líquido — hipótesis, no promesa</h3>
       <p class="fs-13 text-muted mb-12">Números redondeados a propósito — son un norte para comparar contra la realidad en cada Revisión Mensual, no un pronóstico exacto. Ajústalos con datos reales conforme avances.</p>
-      <div class="impuesto-row"><span class="imp-nombre">Hoy — 18 jul 2026</span><span class="imp-fecha text-red">-$308,830</span></div>
+      <div class="impuesto-row"><span class="imp-nombre">Punto de partida — 18 jul 2026</span><span class="imp-fecha text-red">-$308,830</span></div>
       <div class="impuesto-row"><span class="imp-nombre">Dic 2026 — fondo emergencia + venta de activos + MSI redirigido + primeras ventas plantilla GBM</span><span class="imp-fecha text-red">≈ -$270,000</span></div>
       <div class="impuesto-row"><span class="imp-nombre">Dic 2027 — freelance/mentoría/plantilla con ingreso mensual regular</span><span class="imp-fecha" style="color:#c2410c">≈ -$80,000</span></div>
       <div class="impuesto-row"><span class="imp-nombre">Dic 2028 — negocio consolidado, deuda cara liquidada</span><span class="imp-fecha text-green">≈ +$250,000</span></div>
@@ -1942,21 +1942,19 @@
       </div>
 
       <div class="fase-item" id="fase0">
-        <span class="fase-tag">Fase 0 · 18 jul – 30 sep 2026 (~10 semanas)</span><span class="fase-status" id="faseStatus0">—</span>
+        <span class="fase-tag">Fase 0 · 1 ago – 30 sep 2026 (~9 semanas)</span><span class="fase-status" id="faseStatus0">—</span>
         <h4>Cerrar la fuga y arrancar ingreso, no solo pensar</h4>
         <div class="fase-meta"><span>🎯</span><span>Fondo de emergencia a <strong>$10,000</strong> + <strong>$14,000-15,000</strong> de activos vendidos aplicados a Banamex.</span></div>
         <div class="fase-checklist">
-          <details class="fase-month" data-month="2026-07">
-            <summary><span>📅 Julio 2026</span><span class="fase-month-badge" data-badge>—</span></summary>
+          <!-- El bloque "📅 Julio 2026" desapareció el 2026-08-12 al mover el arranque de la fase
+               a agosto: sus 3 tareas (s0-1, s0-2, s0-6) se movieron aquí arriba, conservando sus
+               ids intactos para no perder lo que Adán ya tuviera marcado en localStorage. -->
+          <details class="fase-month" data-month="2026-08">
+            <summary><span>📅 Agosto 2026</span><span class="fase-month-badge" data-badge>—</span></summary>
             <div class="fase-month-body">
               <div class="check-item"><input type="checkbox" id="s0-1"><label for="s0-1">Corrige "Deudas" a $13,372 en Finanzas.html · cero MSI nuevo.</label></div>
               <div class="check-item"><input type="checkbox" id="s0-2"><label for="s0-2">Revisar las fotos y el material del negocio de tu papá y ponerle atención real — primer paso concreto de la <a href="#" class="inline-link" onclick="irANegocios('negocio5');return false;">Opción 5</a>.</label></div>
               <div class="check-item"><input type="checkbox" id="s0-6"><label for="s0-6">Pausa aportaciones a la Maestría 1 año (hasta 18 jul 2027) — los $53,740 quedan intactos, nueva meta oct 2028.</label></div>
-            </div>
-          </details>
-          <details class="fase-month" data-month="2026-08">
-            <summary><span>📅 Agosto 2026</span><span class="fase-month-badge" data-badge>—</span></summary>
-            <div class="fase-month-body">
               <div class="check-item"><input type="checkbox" id="s0-3"><label for="s0-3">Versión limpia (sin tus datos) de la plantilla Finanzas.html + post de venta para comunidades de GBM (<a href="#" class="inline-link" onclick="irANegocios('negocio1');return false;">Opción 1</a>).</label></div>
               <div class="check-item"><input type="checkbox" id="s0-4"><label for="s0-4">Publica la plantilla en 2-3 comunidades de GBM · sube a Marketplace tus activos ociosos (PS5, control, monitores, iPad).</label></div>
               <div class="check-item"><input type="checkbox" id="s0-5"><label for="s0-5">Con las fotos ya revisadas, agenda la llamada exploratoria de 30 min con tu papá — solo escuchar, sin compromiso (<a href="#" class="inline-link" onclick="irANegocios('negocio5');return false;">Opción 5</a>).</label></div>
@@ -2390,7 +2388,7 @@
     <div id="rutina-mi-rutina">
 
       <div class="context-banner">
-        <p><strong>Tu contexto ahora mismo:</strong> estás en <strong>Fase 0</strong> del <a href="#perfil" class="inline-link">Plan Maestro</a> (18 jul – 30 sep 2026) — ponerle atención real al negocio de tu papá, la plantilla Finanzas.html lista para publicarse en comunidades de GBM, y sostener el fondo de emergencia + los pagos a Banamex, son las 3 cosas que definen si esta fase se cumple o no.
+        <p><strong>Tu contexto ahora mismo:</strong> estás en <strong>Fase 0</strong> del <a href="#perfil" class="inline-link">Plan Maestro</a> (1 ago – 30 sep 2026) — ponerle atención real al negocio de tu papá, la plantilla Finanzas.html lista para publicarse en comunidades de GBM, y sostener el fondo de emergencia + los pagos a Banamex, son las 3 cosas que definen si esta fase se cumple o no.
           Horario real confirmado: te levantas <strong>7:00</strong>, te bañas de inmediato, sales <strong>7:40</strong>, manejas hasta <strong>8:00</strong>, comes en tu descanso de las <strong>13:00</strong>, y trabajas en ALTEN hasta las <strong>17:00</strong> — con solo 40 min entre despertar y salir, esa ventana de la mañana es únicamente higiene/skincare, así que el ejercicio y el bloque de habilidad se movieron a después del trabajo, donde sí hay tiempo. Al salir de ALTEN (<strong>17:00</strong>) manejas Didi ~40 min con un pasajero rumbo a Buenavista, y de ahí entras directo al gym a las <strong>17:40</strong>. Por la noche retomas Didi hasta ~<strong>21:00</strong>; justo al terminar Didi haces tu prioridad activa de Fase 0 (no antes, para no cortar el impulso de manejar), y después preparas la cena y la comida de mañana en una sola sesión. Duermes alrededor de <strong>medianoche</strong> (~7h de sueño). <strong>Skincare y el tratamiento anticaída (minoxidil) están en la rutina al despertar y antes de dormir, todos los días</strong> — el lavado de cabello (Lun/Jue/Sáb) se hace en la ducha de la mañana. El ejercicio y el bloque de habilidad cambian cada día de la semana (tomados de tus 5 prioridades en <a href="#aprendizaje" class="inline-link">Aprendizaje</a>), y el fin de semana tiene su propio horario, sin ALTEN. Usa las pestañas de abajo para ver cualquier día — solo el día de hoy guarda tu avance.
           <em style="color:var(--muted-2)">Los 40 min de Didi a Buenavista y la sesión de la noche son estimados — ajusta las horas si tu tráfico o tus viajes reales varían.</em>
         </p>
@@ -3802,7 +3800,11 @@
 
   // ─── PLAN MAESTRO — fase activa, progreso y días reales (recalculado con la fecha de hoy) ───
   (function () {
-    const inicio = new Date(2026, 6, 18);   // 18 jul 2026
+    // 1 ago 2026 — corregido el 2026-08-12 a petición de Adán ("el dashboard de fase 0 y coach,
+    // que no empiece de julio, debe empezar en agosto"). Antes era el 18 jul 2026. De aquí salen
+    // los días transcurridos/restantes y el % del Plan Maestro hacia el 01 ene 2030, así que este
+    // es el único lugar donde se define el arranque real del plan en esta app.
+    const inicio = new Date(2026, 7, 1);    // 1 ago 2026
     const meta   = new Date(2030, 0, 1);    // 01 ene 2030
     const hoyPM  = new Date(); hoyPM.setHours(0, 0, 0, 0);
     const msDia = 86400000;
@@ -3815,7 +3817,7 @@
     if (kpiDias) kpiDias.textContent = diasRestantes.toLocaleString('es-MX');
 
     const fases = [
-      { id: 'fase0', num: 0, ini: new Date(2026, 6, 18), fin: new Date(2026, 8, 30) },
+      { id: 'fase0', num: 0, ini: new Date(2026, 7, 1),  fin: new Date(2026, 8, 30) },
       { id: 'fase1', num: 1, ini: new Date(2026, 9, 1),  fin: new Date(2027, 2, 31) },
       { id: 'fase2', num: 2, ini: new Date(2027, 3, 1),  fin: new Date(2028, 11, 31) },
       { id: 'fase3', num: 3, ini: new Date(2029, 0, 1),  fin: new Date(2030, 0, 1) },
@@ -3870,7 +3872,7 @@
     }
     const bana = fin.debts.find(d => d.id === 'd002');
     const bbva = fin.debts.find(d => d.id === 'd001');
-    const deudaCaraInicial = 46693; // Banamex $14,349.72 + BBVA $32,343.31 al arrancar Fase 0 (18 jul 2026)
+    const deudaCaraInicial = 46693; // Banamex $14,349.72 + BBVA $32,343.31 — medido el 18 jul 2026, la foto previa al arranque de Fase 0 (1 ago 2026)
     const deudaCaraHoy     = (bana ? bana.balance : 0) + (bbva ? bbva.balance : 0);
     const deudaTotalHoy    = fin.debts.reduce((s, d) => s + (d.balance || 0), 0);
     const invValue         = (fin.investments || []).reduce((s, i) => s + (i.value || 0), 0);
@@ -4520,7 +4522,7 @@
 
   // ─── Fase 0 por mes — abre solo el mes actual, arma el badge "X/Y" (2026-08-09) ───
   // Adán: "me estoy saturando y no estoy haciendo nada" viendo toda la fase junta. Cada
-  // <details class="fase-month" data-month="YYYY-MM"> se clasifica solo comparando data-month
+  // elemento details con clase .fase-month se clasifica solo comparando su data-month
   // contra el mes real de hoy — no hay que tocar esto a mano cada mes. El abrir/cerrar
   // (`.open`) solo se fija UNA VEZ al cargar la página (abre el mes actual, cierra el resto);
   // después de eso, marcar un checkbox solo actualiza el texto del badge, nunca vuelve a tocar

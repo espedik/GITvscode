@@ -2535,13 +2535,17 @@ function diaDelAnio(){const n=new Date();const ini=new Date(n.getFullYear(),0,0)
 
 // ── COACH — Plan Maestro (fechas ancla, igual que Coach_v2.html) ────────────
 const PHASES=[
-  {start:new Date(2026,6,18), end:new Date(2026,8,30),  tag:'Fase 0', title:'Cerrar la fuga y arrancar ingreso, no solo pensar',
+  // start movido de 18 jul a 1 ago 2026 el 2026-08-12 ("el dashboard de fase 0 y coach, que no
+  // empiece de julio, debe empezar en agosto"). Las 3 tareas que estaban en `mes:'2026-07'`
+  // (s0-1, s0-2, s0-6) pasaron a agosto conservando su id — mismo cambio y mismo orden que en
+  // Coach_v2.html, que es la copia gemela de esta estructura.
+  {start:new Date(2026,7,1),  end:new Date(2026,8,30),  tag:'Fase 0', title:'Cerrar la fuga y arrancar ingreso, no solo pensar',
    meta:'Fondo de emergencia a $10,000 + $14,000–15,000 de activos vendidos aplicados a Banamex.',
-   explica:'Fase 0 es el arranque del plan (18 jul – 30 sep 2026, ~10 semanas). Todavía no se trata de ganar mucho — se trata de cerrar la fuga de dinero y sentar las bases, en este orden exacto: 1) fondo de emergencia, 2) Banamex, 3) BBVA. En paralelo arrancas el negocio: dedicar atención real al negocio de tu papá y publicar tu primera plantilla en comunidades de GBM.',
+   explica:'Fase 0 es el arranque del plan (1 ago – 30 sep 2026, ~9 semanas). Todavía no se trata de ganar mucho — se trata de cerrar la fuga de dinero y sentar las bases, en este orden exacto: 1) fondo de emergencia, 2) Banamex, 3) BBVA. En paralelo arrancas el negocio: dedicar atención real al negocio de tu papá y publicar tu primera plantilla en comunidades de GBM.',
    semanas:[
-     {id:'s0-1', mes:'2026-07', txt:'Corrige "Deudas" a $13,372 en Finanzas.html · cero MSI nuevo.'},
-     {id:'s0-2', mes:'2026-07', txt:'Revisar las fotos y el material del negocio de tu papá y ponerle atención real — primer paso concreto de la Opción 5.'},
-     {id:'s0-6', mes:'2026-07', txt:'Pausa aportaciones a la Maestría 1 año (hasta 18 jul 2027) — los $53,740 quedan intactos, nueva meta oct 2028.'},
+     {id:'s0-1', mes:'2026-08', txt:'Corrige "Deudas" a $13,372 en Finanzas.html · cero MSI nuevo.'},
+     {id:'s0-2', mes:'2026-08', txt:'Revisar las fotos y el material del negocio de tu papá y ponerle atención real — primer paso concreto de la Opción 5.'},
+     {id:'s0-6', mes:'2026-08', txt:'Pausa aportaciones a la Maestría 1 año (hasta 18 jul 2027) — los $53,740 quedan intactos, nueva meta oct 2028.'},
      {id:'s0-3', mes:'2026-08', txt:'Versión limpia (sin tus datos) de la plantilla Finanzas.html + post de venta para comunidades de GBM (Opción 1).'},
      {id:'s0-4', mes:'2026-08', txt:'Publica la plantilla en 2-3 comunidades de GBM · sube a Marketplace tus activos ociosos (PS5, control, monitores, iPad).'},
      {id:'s0-5', mes:'2026-08', txt:'Con las fotos ya revisadas, agenda la llamada exploratoria de 30 min con tu papá — solo escuchar, sin compromiso (Opción 5).'},

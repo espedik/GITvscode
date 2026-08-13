@@ -1481,3 +1481,24 @@ Pedido con captura, textual: *"necesitamos abarcar todo este espacio, entonces p
 - **`.flex-hero-top` se borró**: era la fila vieja y quedó sin un solo uso en el archivo. Se dejó un comentario en su lugar apuntando a `.dia-topbar` en vez de dejar CSS muerto.
 - Los ids `diaClock`, `diaFecha` y `heroFrase` se conservaron intactos, así que `tickClock()`, `renderDia()` y el render de la frase siguen funcionando sin tocar una línea de JS.
 - Verificado con Node: sintaxis OK en los 2 bloques `<script>` reales; CSS 532/532 llaves; `<div>` 281/281 y `<span>` 109/109 (bajó 2 divs a propósito: el envoltorio del reloj y su contenedor `text-align:right` se volvieron 2 `<span>`); las 4 reglas nuevas presentes; 0 usos restantes de `.flex-hero-top`.
+
+## Fase 0 arranca el 1 de agosto, no el 18 de julio (2026-08-12)
+
+Pedido: *"el dashboard de fase 0 y coach, que no empiece de julio, debe empezar en agosto"*. Antes de tocar nada se le preguntaron las 2 cosas que cambiaban el resultado, porque esa fecha alimenta cálculos en vivo (días transcurridos/restantes al 01 ene 2030, % del Plan Maestro, fase activa y comparativa de deuda). Eligió **1 ago 2026** y **conservar la foto financiera con su fecha real de julio**.
+
+- **Fase 0: 18 jul – 30 sep (~10 semanas) → 1 ago – 30 sep 2026 (~9 semanas)**. Las fases 1, 2 y 3 **no se movieron** — Fase 1 sigue arrancando el 1 oct 2026, así que el cambio no arrastra nada del resto del plan.
+- **3 lugares distintos definían la fecha** y los 3 se actualizaron: `PHASES[0].start` en `dashboard.html`, y en `Coach_v2.html` tanto `const inicio` (el que calcula días y % hacia 2030) como el arreglo `fases[]` que decide qué fase está EN CURSO. Si solo se cambiara uno, la app mostraría una fase activa y un porcentaje que no concuerdan entre sí.
+- **El mes de julio del checklist desapareció**: sus 3 tareas (`s0-1` corregir Deudas, `s0-2` revisar el material del negocio del papá, `s0-6` pausar la Maestría) se movieron al bloque de agosto, **conservando sus ids intactos** — es lo que evita que Adán pierda lo que ya tuviera marcado, porque el checklist se guarda en localStorage por id. Agosto queda con 6 tareas y septiembre con 1. Mismo cambio replicado en las 2 apps (`PHASES[0].semanas[].mes` en el Dashboard, los grupos `data-month` en Coach).
+- **Efecto secundario bueno**: el aviso de "⚠️ N pendientes de julio sin marcar" del Dashboard ya no puede dispararse, porque julio dejó de ser un mes de la fase.
+
+### La foto financiera se queda en julio, a propósito
+
+Los 4 números congelados (deuda total −$308,830, deuda cara $46,693 = Banamex $14,349.72 + BBVA $32,343.31) **son una medición real tomada el 18 jul 2026**, y son la base contra la que la tarjeta "📈 Progreso real" compara los datos que lee en vivo de `Finanzas.html`. Re-etiquetarlos a agosto habría sido afirmar que se midieron un día en el que no se midieron, y volver a tomarlos habría borrado como avance todo lo logrado entre julio y hoy. Se dejaron con su fecha y se **reescribió el texto** para que quede claro qué son: *"foto de tus finanzas del 18 jul 2026, la medición previa al arranque de Fase 0 (1 ago)"*. Igual se aclaró el comentario de `deudaCaraInicial` en el código.
+
+**Lo que NO se tocó y por qué**: la fecha `18 jul 2027` de la revisión de la Maestría. No depende del arranque del plan — es el vencimiento de una pausa de 1 año exacto que Adán decidió el 18 jul 2026, con su propio "1 año | 18 jul 2026 → 18 jul 2027" en la interfaz. Moverla habría cambiado un compromiso que él ya tomó.
+
+### De paso: falso positivo conocido en el conteo de `<details>`
+
+Al verificar el balance de etiquetas, Coach daba 7 aperturas contra 5 cierres. **No era un error real ni lo introdujo este cambio** (en `HEAD` daba 8/6, el mismo desbalance de 2): eran 2 **comentarios** —uno de CSS y uno de JS— que citaban la etiqueta literal `<details class="fase-month" ...>` como texto. Es exactamente el mismo tropiezo ya documentado en este proyecto con `<script>` dentro de comentarios. Se reescribieron los 2 comentarios para describir el elemento en prosa ("un elemento details con clase .fase-month") en vez de citarlo con corchetes angulares, y el conteo quedó en 5/5 limpio.
+
+- Verificado con Node: sintaxis OK en las 2 apps; CSS 532/532 y 438/438; `<div>` 281/281 y 1577/1577; `<details>` 5/5. Simulando hoy (12 ago 2026): **Fase 0 sale como activa**, con rango 1 ago → 30 sep; los meses de la fase son solo `2026-08` (6 tareas) y `2026-09` (1); los 7 ids `s0-1`…`s0-7` siguen presentes en las 2 apps; `const inicio` y `fases[0].ini` coinciden en `2026, 7, 1`.
