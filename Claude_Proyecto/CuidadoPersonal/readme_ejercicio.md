@@ -26,7 +26,7 @@ Trae precargados 57 ejercicios (`EJ_DB`) organizados por músculo (Pecho, Espald
   8. 🤸 **Calistenia en parques** — gratis, extensión directa de las dominadas/fondos que ya hace en su split de brazos/espalda.
   9. ♟️🥊 **Bonus — Chessboxing** (`.sport-card.bonus`, ancho completo) — intersección literal de dos metas ya en su lista (torneo de ajedrez + boxeo).
 
-  Todas las referencias de ubicación (Santa María la Ribera, Parque España/México, Alberca Olímpica Francisco Márquez, Desierto de los Leones, Monkey Bloc, Reforma/Muévete en Bici) y de costo son aproximaciones razonables para CDMX, no verificadas contra una fuente en vivo — si cambian precios/ubicaciones reales, actualizar aquí a mano. Las 9 URLs de imagen se verificaron una por una con `curl` (HTTP 200) antes de insertarlas, mismo estándar que `EJ_DB.img`.
+  Todas las referencias de ubicación (Santa María la Ribera, Parque España/México, Desierto de los Leones, Monkey Bloc, Reforma/Muévete en Bici) y de costo son aproximaciones razonables para CDMX, no verificadas contra una fuente en vivo — si cambian precios/ubicaciones reales, actualizar aquí a mano. **Excepción: la de Natación ya no es una aproximación** — el 2026-08-12 Adán confirmó que nada en la alberca semiolímpica de su propio gimnasio (Fitsi Buenavista), no en la Alberca Olímpica Francisco Márquez de Doctores que se había puesto como estimación; se corrigió ahí y en las otras 3 apps que lo repetían. Las 9 URLs de imagen se verificaron una por una con `curl` (HTTP 200) antes de insertarlas, mismo estándar que `EJ_DB.img`.
 
 ## Programa por defecto — a la medida de la meta de Adán (2026-07-30)
 
@@ -35,10 +35,10 @@ Pedido explícito: *"mi meta es ganar masa muscular de brazos y piernas, bajar p
 | Día | Rutina | Por qué |
 |---|---|---|
 | Lunes | 💪 Brazos A — Fondos (compuesto) + Bíceps + Tríceps (pesado) | Prioridad #1: brazos 2x/semana |
-| Martes | 🦵 Piernas A — Cuádriceps | Prioridad #1: piernas 2x/semana |
-| Miércoles | 🏊 Natación — 45 min (alberca Francisco Márquez) | Cardio de bajo impacto articular; reemplazó a "Espalda + Hombros + Cardio HIIT" el 2026-08-07 — ver sección dedicada más abajo |
+| Martes | 🦵 Piernas — completa (7 ejercicios) | **Único día de pierna desde el 2026-08-12** — fusiona lo que eran Piernas A y B, sin sentadilla con barra, zancadas, peso muerto ni hip thrust; Hack Squat es el compuesto del día. Ver sección dedicada más abajo |
+| Miércoles | 🏊 Natación — 45 min en 5 bloques de aprendizaje (alberca del Fitsi Buenavista) | Cardio de bajo impacto articular; reemplazó a "Espalda + Hombros + Cardio HIIT" el 2026-08-07 y pasó de "nadar 45 min" a sesión progresiva el 2026-08-12 — ver secciones dedicadas más abajo |
 | Jueves | 💪 Brazos B — Bíceps + Tríceps (volumen, ejercicios distintos al lunes) | Prioridad #1: brazos 2x/semana |
-| Viernes | 🦵 Piernas B — Glúteo + Femoral | Prioridad #1: piernas 2x/semana |
+| Viernes | 🧘 Abdomen — bajar panza (5 de core + 25 min elíptica) | **Día nuevo desde el 2026-08-12**, quedó libre al fusionar los 2 días de pierna. Cubre las 3 funciones del abdomen + cardio; el `foco` deja claro que la reducción localizada no existe |
 | Sábado | 🔥 Pecho (tríceps secundario) + Cardio (elíptica 25 min) + Core (rueda abdominal) | Extra frecuencia de brazos + bloque de cardio más largo de la semana contra la panza |
 | Domingo | 😴 Descanso activo (caminata opcional) | Recuperación |
 
@@ -263,3 +263,29 @@ Pedido explícito, textual: *"combina los dias de pierna el a y el b, solo quier
 ## Cómo usarlo
 
 Se abre `CuidadoPersonal/cuidadopersonal.html` (subtab Ejercicio) o directamente `ejercicio.html` en cualquier navegador, sin instalación ni servidor. No hay sincronización entre dispositivos salvo mediante exportación manual del JSON.
+
+## Natación se muda al Fitsi Buenavista, y "🏋️ Hoy toca" ahora explica la sesión (2026-08-12)
+
+Dos correcciones de Adán el mismo día: *"el miercoles voy a natacion en el fitsi de buenavista, cambia eso de la doctores"* y *"y en hoy toca natacion, no es nada explicativo"*.
+
+### Ubicación: era un dato inventado, no uno real
+
+La Alberca Olímpica Francisco Márquez (Doctores) venía de la sección Deportes de `ejercicio.html`, donde se había puesto como **estimación razonable** de dónde podría nadar — nunca fue un dato confirmado (así estaba advertido en este mismo README). Adán aclaró que nada en la **alberca semiolímpica de su propio gimnasio, Fitsi Buenavista**, que ya aparecía en `FITSI_INSTALACIONES` desde el 2026-08-02. Cambiado en las **4 apps que repetían el dato**:
+
+- `CuidadoPersonal/ejercicio.html` — tarjeta de Natación en Deportes (ubicación y costo: pasó de "$20-50/visita en alberca pública" a "Incluido en tu membresía de Fitsi") y el `foco` del miércoles.
+- `Dashboard/dashboard.html` — la tarea `e3` de `RUTINA_TASKS`, la habilidad `nadar` de Habilidades Base, y un comentario de `TIPO_FOTO`.
+- `Coach/Coach_v2.html` — la tarea `e3` de su propia copia de `RUTINA_TASKS`.
+- **No se tocó `Dashboard_prueba_iphone/dashboard.html`**: es una copia congelada (un solo commit, 0 de las funciones de las últimas semanas, no aparece en ningún README) — no es una app viva.
+
+Es un cambio a mejor y no solo de texto: la alberca ya está pagada dentro de su membresía, es el mismo lugar al que va los otros días (cero traslado extra) y Fitsi da clases de Aquafit, que sirven justo para la fase 1 de su progresión. Todo eso quedó dicho en el `foco` del día.
+
+### "Hoy toca" no explicaba nada — y la causa de fondo era peor que un texto faltante
+
+Al revisar el reclamo salieron **2 problemas distintos**:
+
+1. **La migración solo corría en `ejercicio.html`.** `fixRutina20260812IfNeeded()` se había puesto únicamente ahí, pero el Dashboard lee `mirutina_v1` de localStorage y **`D.gym.rutina` siempre gana sobre `GYM_RUTINA_DEFAULT`**. Como Adán normalmente abre el Dashboard y no `ejercicio.html`, seguía viendo el miércoles viejo — *"Natación · Nadar 1×45 min"*, una sola línea — aunque el código ya tuviera los 5 bloques nuevos. Es decir: los cambios de la rutina del turno anterior **no le habían llegado**. Se agregó el espejo exacto de esa migración en `dashboard.html` (mismo nombre de bandera `mirutina_v1_pierna_abs_natacion`, mismas condiciones por nombre exacto, corre antes de `loadAll()`), y de paso cubre también el lunes que estaba desincronizado. Ahora da igual cuál de las 2 apps abra primero.
+2. **El panel nunca pintaba el `foco`.** `renderHeroGymPanel()` solo listaba nombre + series×reps + `cue` por ejercicio. Para un día de fuerza eso alcanza, pero para una sesión de aprendizaje de natación —donde lo que importa es que los bloques van EN ORDEN y que al inicio es normal no llegar al último— una lista suelta no dice nada. Ahora se pinta `rutinaDia.foco` arriba de la lista (`.hp-foco`, con barra de acento, recortado a 5 líneas y el texto completo en `title`).
+   - `foco` ya existía en `S.rutina` de `ejercicio.html` pero **`GYM_RUTINA_DEFAULT` no lo tenía** (es la copia ligera). Se le agregó a los 7 días, para que el panel explique igual venga la rutina de donde venga.
+   - Los `foco` de los 3 días reestructurados se **reescribieron para ser texto de usuario**: traían prosa de changelog ("Reestructurado el 2026-08-12 (pedido de Adán: ...)"), que es justo lo que no debe leerse en la UI ahora que este campo es visible en 2 apps. Esa parte histórica vive en este README, que es su lugar.
+   - Los 7 `foco` quedaron **idénticos carácter por carácter entre `ejercicio.html` y `dashboard.html`**, copiados con un script desde `S.rutina` (la fuente de verdad) en vez de a mano. No es cosmético: las 2 migraciones comparten la bandera `mirutina_v1_pierna_abs_natacion` y escriben en la misma clave de localStorage, así que **la primera app que Adán abra es la que gana** — si los textos difirieran, el contenido del panel dependería de por dónde entró ese día. Verificado con Node (7/7 iguales).
+- Verificado con Node en los 3 archivos tocados: `new Function()` sobre los bloques `<script>` reales sin errores; CSS y `<div>` balanceados (dashboard 521/521 y 284/284, ejercicio 156/156 y 173/173, Coach 438/438 y 1578/1578); los 7 días siguen sincronizados entre `S.rutina` y `GYM_RUTINA_DEFAULT` (nombre y lista de ejercicios); 7/7 días con `foco` en el default; 0 referencias a "Francisco Márquez" en las apps vivas.

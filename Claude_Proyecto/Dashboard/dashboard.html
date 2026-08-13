@@ -408,6 +408,14 @@ a.rt2-sub-prod:hover{text-decoration:underline}
 .hp-ex-sr{font-size:10px;color:var(--text2);font-family:var(--mono);white-space:nowrap}
 .hp-ex-peso{color:var(--o);font-weight:700}
 .hp-ex-cue{font-size:9.5px;color:var(--text3);line-height:1.3;margin-top:1px}
+/* Explicación de la sesión del día (2026-08-12, `foco`) — va arriba de la lista de ejercicios,
+   con barra de acento a la izquierda para que se lea como contexto y no como un ejercicio más.
+   Los focos que vienen de ejercicio.html son largos (párrafos de documentación), así que se
+   recorta a 5 líneas con el texto completo disponible al pasar el cursor; los de
+   GYM_RUTINA_DEFAULT se escribieron cortos a propósito para caber sin recorte. */
+.hp-foco{font-size:10px;color:var(--text2);line-height:1.4;margin:4px 0 2px;padding:6px 9px;
+  background:rgba(var(--ov),.05);border-left:2px solid var(--ac1);border-radius:0 8px 8px 0;
+  display:-webkit-box;-webkit-line-clamp:5;-webkit-box-orient:vertical;overflow:hidden}
 
 /* Panel de sugerencias de comida (Hero) */
 .hp-meal{padding:9px 0;border-bottom:1px solid rgba(var(--ov),.06)}
@@ -1255,6 +1263,25 @@ function fixMiercolesNatacionIfNeeded(){
   }
   localStorage.setItem('mirutina_v1_miercoles_natacion','1');
 }
+// Espejo exacto de fixRutina20260812IfNeeded() de ejercicio.html (2026-08-12) — tiene que estar
+// en LAS DOS apps: la de allá solo corre si Adán abre ejercicio.html, y él normalmente abre el
+// Dashboard. Sin esto, "🏋️ Hoy toca" seguiría mostrando el miércoles viejo ("Natación · Nadar
+// 1×45 min", una sola línea sin nada que explique cómo aprender) aunque el código ya tenga los
+// 5 bloques nuevos — que fue justo el reclamo de Adán: "en hoy toca natacion, no es nada
+// explicativo". Mismas 3 condiciones por nombre exacto: si él ya personalizó ese día, no se toca.
+function fixRutina20260812IfNeeded(){
+  if(localStorage.getItem('mirutina_v1_pierna_abs_natacion')) return;
+  const gym=rawGet('mirutina_v1', null);
+  if(gym&&gym.rutina){
+    const R=gym.rutina;
+    if(R[2]&&R[2].nombre==='Piernas A — Cuádriceps') R[2]=JSON.parse(JSON.stringify(GYM_RUTINA_DEFAULT[2]));
+    if(R[5]&&R[5].nombre==='Piernas B — Glúteo + Femoral') R[5]=JSON.parse(JSON.stringify(GYM_RUTINA_DEFAULT[5]));
+    if(R[3]&&R[3].nombre==='Natación') R[3]=JSON.parse(JSON.stringify(GYM_RUTINA_DEFAULT[3]));
+    if(R[1]&&R[1].nombre==='Brazos A — Bíceps + Tríceps') R[1]=JSON.parse(JSON.stringify(GYM_RUTINA_DEFAULT[1]));
+    rawSet('mirutina_v1', gym);
+  }
+  localStorage.setItem('mirutina_v1_pierna_abs_natacion','1');
+}
 // Siembra las 2 metas "ya logradas" de cortoMediano (ipn11k, aleman5) al 100% desde la primera
 // carga de este navegador (2026-08-11) — mismo patrón que fixBanamexIfNeeded()/
 // fixMiercolesNatacionIfNeeded(): corre una sola vez (bandera propia en localStorage) y nunca
@@ -1393,7 +1420,7 @@ const RUTINA_TASKS=[
     {id:'e2c', txt:'Elevación de piernas — 3×15 · peso corporal'},
   ]},
   {id:'k2', dias:[2], hora:'19:00', cat:'aprender', txt:'📊 Datos: 30 min de SQL (SQLZoo/Kaggle)'},
-  {id:'e3', dias:[3], hora:'17:40', cat:'salud', txt:'🏊 Ejercicio: Natación — 45 min (alberca Francisco Márquez, Doctores)'},
+  {id:'e3', dias:[3], hora:'17:40', cat:'salud', txt:'🏊 Ejercicio: Natación — 45 min (alberca del Fitsi Buenavista)'},
   {id:'e4', dias:[4], hora:'17:40', cat:'salud', txt:'🏋️ Ejercicio: Cardio / HIIT', subtareas:[
     {id:'e4a', txt:'HIIT: 30 seg esfuerzo máximo / 90 seg suave — 8 rondas (~18 min)'},
     {id:'e4b', txt:'Battle ropes o burpees — 3×30 seg · peso corporal'},
@@ -1617,7 +1644,7 @@ const DIAS_LARGO=['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','S�
 
 // Foto real por tipo de ejercicio para la tira de 7 días del Hero (ver renderHero() más abajo) —
 // URLs de Unsplash verificadas con curl antes de usarlas, más la foto de natación ya usada en
-// ejercicio.html → sección Deportes (Wikimedia Commons, alberca Francisco Márquez). Si se agrega
+// ejercicio.html → sección Deportes (Wikimedia Commons, foto genérica de un nadador). Si se agrega
 // un tipo nuevo a GYM_RUTINA_DEFAULT/S.rutina, hay que agregar su foto aquí también.
 const TIPO_FOTO={
   brazos:'https://images.unsplash.com/photo-1598268030450-7a476f602bf6?w=400&q=70&auto=format&fit=crop',
@@ -1641,18 +1668,24 @@ const GYM_RUTINA_DEFAULT={
   // (e005, el compuesto pesado del día) y no lleva Plancha. Se detectó al comparar los 7 días de
   // los 2 archivos con Node durante la reestructura de la rutina; ahora coinciden exactamente.
   1:{nombre:'Brazos A — Bíceps + Tríceps',tipo:'brazos',
+     foco:'Prioridad: masa en brazos. Empiezas con Fondos (compuesto pesado, tríceps+pecho) antes que el aislamiento — el compuesto construye más masa total que solo curls, y hacerlo primero (con energía fresca) es cuando más rinde.',
      ejercicios:[{id:'e005',series:4,reps:8,descanso:90},{id:'e021',series:4,reps:9,descanso:90},{id:'e027',series:4,reps:10,descanso:90},{id:'e023',series:3,reps:12,descanso:60},{id:'e028',series:3,reps:12,descanso:60}]},
   2:{nombre:'Piernas — completa',tipo:'piernas',
+     foco:'Tu único día de pierna, así que cubre todo: 3 de cuádriceps, 2 de femoral/glúteo, 1 de abductor y 1 de pantorrilla. El Hack Squat es el pesado del día — hazlo primero, con energía fresca. Es sentadilla con carga pero en máquina, con la espalda apoyada y sin barra encima.',
      ejercicios:[{id:'e040',series:4,reps:10,descanso:120},{id:'e033',series:4,reps:12,descanso:90},{id:'e034',series:3,reps:15,descanso:60},{id:'e035',series:3,reps:12,descanso:60},{id:'e037',series:3,reps:10,descanso:60},{id:'e044',series:3,reps:15,descanso:45},{id:'e039',series:4,reps:20,descanso:45}]},
   3:{nombre:'Natación — aprender a nadar',tipo:'cardio',
+     foco:'Sesión de aprendizaje en la alberca semiolímpica del Fitsi Buenavista (tu mismo gimnasio, ya incluida en tu membresía), en el orden real en que se aprende a nadar: primero perderle el miedo al agua y respirar, luego piernas, luego respirar de lado, luego brazos, y al final todo junto. Haz los bloques EN ORDEN. Las primeras semanas es normal que casi toda la sesión se te vaya en los primeros 2 y apenas toques el nado continuo — eso no es atraso, es el plan. Conforme te salga, le quitas minutos a los de arriba y se los sumas al último, hasta que en unos meses el día sea puro nadar. Toca el nombre de cada bloque para ver la técnica. Cuando puedas, toma 3-4 clases con instructor al inicio: acorta meses de avance y corrige errores que solo no vas a notar — Fitsi también da Aquafit, que sirve para agarrar confianza en el agua.',
      ejercicios:[{id:'e058',series:1,reps:8,unidad:'min',descanso:60},{id:'e059',series:4,reps:3,unidad:'min',descanso:60},{id:'e060',series:3,reps:3,unidad:'min',descanso:60},{id:'e061',series:3,reps:3,unidad:'min',descanso:60},{id:'e062',series:1,reps:10,unidad:'min',descanso:0}]},
   4:{nombre:'Brazos B — Bíceps + Tríceps',tipo:'brazos',
+     foco:'Prioridad: masa en brazos. Volumen, ejercicios distintos al lunes — Fondos en Banco de compuesto (más ligero que los Fondos del lunes) antes del aislamiento.',
      ejercicios:[{id:'e022',series:4,reps:12,descanso:60},{id:'e031',series:4,reps:12,descanso:60},{id:'e026',series:3,reps:10,descanso:60},{id:'e029',series:3,reps:15,descanso:60},{id:'e047',series:3,reps:15,descanso:45}]},
   5:{nombre:'Abdomen — bajar panza',tipo:'core',
+     foco:'Los 5 ejercicios cubren las 3 funciones reales del abdomen (anti-extensión con plancha y dead bug, flexión con crunch y elevación de piernas, rotación con oblicuos) + 25 min de elíptica al final. IMPORTANTE para que esto sirva de verdad: NO existe la reducción localizada — hacer abdominales fortalece el músculo, pero no quema la grasa que está encima. La panza baja con déficit calórico sostenido (tu Registro Diario en comida.html) + cardio; estos ejercicios son los que hacen que, cuando la grasa baje, sí haya un abdomen marcado debajo.',
      ejercicios:[{id:'e045',series:3,reps:45,unidad:'seg',descanso:45},{id:'e047',series:3,reps:15,descanso:45},{id:'e046',series:3,reps:20,descanso:45},{id:'e049',series:3,reps:15,descanso:45},{id:'e050',series:3,reps:10,descanso:45},{id:'e054',series:1,reps:25,unidad:'min',descanso:0}]},
   6:{nombre:'Pecho + Cardio + Core',tipo:'empuje',
+     foco:'El press de banca/inclinado también trabaja tríceps como secundario, extra frecuencia de brazos. Pero el foco real de hoy es bajar panza: 25 min de elíptica (tu bloque de cardio más largo de la semana) + rueda abdominal — junto con el HIIT del miércoles, son tus 2 herramientas de ejercicio contra la grasa de la zona media.',
      ejercicios:[{id:'e001',series:4,reps:8,descanso:120},{id:'e002',series:3,reps:10,descanso:90},{id:'e004',series:3,reps:12,descanso:60},{id:'e054',series:1,reps:25,unidad:'min',descanso:0},{id:'e048',series:3,reps:10,descanso:60}]},
-  0:{nombre:'Descanso activo',tipo:'descanso',ejercicios:[{id:'e051',series:1,reps:30,unidad:'min',descanso:0}]}
+  0:{nombre:'Descanso activo',tipo:'descanso',foco:'Recuperación — caminata ligera opcional, sin gimnasio. El músculo crece hoy, no en el gym.',ejercicios:[{id:'e051',series:1,reps:30,unidad:'min',descanso:0}]}
 };
 
 // Nombre + técnica de cada ejercicio que aparece en GYM_RUTINA_DEFAULT — subconjunto
@@ -2868,11 +2901,19 @@ function renderHeroGymPanel(){
     gymBody=`<div class="hp-empty">Sin rutina configurada ${esHoy?'para hoy':'ese día'}.</div>`;
   }
   const titulo=esHoy?(yaEntreno?'✅ Hoy hiciste':'🏋️ Hoy toca'):`🏋️ ${DIAS_LARGO[dow]}`;
+  // `foco` (2026-08-12) — pedido explícito: "en hoy toca natacion, no es nada explicativo".
+  // Este panel solo listaba ejercicio + series×reps + cue, sin decir de qué va la sesión: en un
+  // día de natación de aprendizaje (bloques que van en orden, con un ritmo esperado por semana)
+  // esa lista sola no dice nada. `foco` ya existía en S.rutina de ejercicio.html pero el Dashboard
+  // nunca lo pintaba; ahora se muestra aquí y se agregó también a los 7 días de
+  // GYM_RUTINA_DEFAULT, para que se vea igual venga de donde venga la rutina.
+  const focoHtml=rutinaDia?.foco?`<div class="hp-foco" title="${rutinaDia.foco.replace(/"/g,'&quot;')}">${rutinaDia.foco}</div>`:'';
   el.innerHTML=`
     <div class="hp-title">
       <span>${titulo}: ${rutinaDia?.nombre||'—'}</span>
       <a href="../CuidadoPersonal/ejercicio.html?dia=${dow}" class="hp-link">Ver en Ejercicio →</a>
     </div>
+    ${focoHtml}
     ${gymBody}
   `;
 }
@@ -3669,7 +3710,7 @@ const HABILIDAD_DETALLE={
      d:'La técnica ya está — de aquí en adelante es sostenerla mientras subes la distancia, sin perder la forma por cansancio.',
      list:[
        'Sube la distancia poco a poco: 25m → 50m → 100m → 200m → 500m continuos, nunca de golpe.',
-       'Aprovecha tu miércoles de natación ya agendado en la Alberca Francisco Márquez (Ciudad Deportiva) — pide a un instructor que revise tu forma cada 2-3 semanas, no solo cuentes vueltas.',
+       'Aprovecha tu miércoles de natación ya agendado en la alberca semiolímpica del Fitsi Buenavista, tu propio gimnasio — pide a un instructor que revise tu forma cada 2-3 semanas, no solo cuentes vueltas.',
        'Segundo estilo (dorso) una vez que el crol sea sólido, para no fatigar siempre el mismo hombro.',
        'Constancia real: la técnica se pierde más rápido que la fuerza si dejas de practicar — 2-3 sesiones por semana desde el día 1, sin saltarte semanas completas.',
        'Entrena por intervalos, no nadando de corrido hasta morir: 8 × 25 m con 30 segundos de descanso entre cada uno te da más volumen total y mejor técnica que intentar 200 m seguidos ahogándote al final.',
@@ -4836,6 +4877,7 @@ buildHudNav();
 const _settings=loadSettings();
 fixBanamexIfNeeded();
 fixMiercolesNatacionIfNeeded();
+fixRutina20260812IfNeeded();
 seedMetasLogradasIfNeeded();
 loadAll();
 tickClock();

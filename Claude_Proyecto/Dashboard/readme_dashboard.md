@@ -1380,3 +1380,29 @@ Se midió con Node el detalle real de las 18 habilidades y se ordenó de menos a
 ### Extra: desincronización del lunes, encontrada de paso
 
 Al comparar con Node los 7 días de `GYM_RUTINA_DEFAULT` (dashboard.html) contra `S.rutina` (ejercicio.html) para validar la reestructura, salió un **error que ya existía desde antes y que nadie había notado**: el lunes ("Brazos A") estaba distinto en los 2 archivos — aquí empezaba con Curl con Barra y cerraba con Plancha, cuando el día real empieza con Fondos (`e005`, el compuesto pesado del día) y no lleva Plancha. Además `e005` **ni siquiera existía en `EJ_LOOKUP`**, así que de haberse usado se habría pintado sin nombre en "qué toca hoy" del Hero. Se corrigió el día y se agregó `e005` al lookup con su imagen y su `cue` copiados de `EJ_DB`. Ahora los 7 días coinciden exactamente entre los 2 archivos (verificado con Node: 0 desincronizaciones, 0 ejercicios sin entrada en `EJ_LOOKUP` ni en `EJ_DB`).
+
+## Natación se muda al Fitsi Buenavista, y "🏋️ Hoy toca" ahora explica la sesión (2026-08-12)
+
+Dos correcciones de Adán el mismo día: *"el miercoles voy a natacion en el fitsi de buenavista, cambia eso de la doctores"* y *"y en hoy toca natacion, no es nada explicativo"*.
+
+### Ubicación: era un dato inventado, no uno real
+
+La Alberca Olímpica Francisco Márquez (Doctores) venía de la sección Deportes de `ejercicio.html`, donde se había puesto como **estimación razonable** de dónde podría nadar — nunca fue un dato confirmado (así estaba advertido en este mismo README). Adán aclaró que nada en la **alberca semiolímpica de su propio gimnasio, Fitsi Buenavista**, que ya aparecía en `FITSI_INSTALACIONES` desde el 2026-08-02. Cambiado en las **4 apps que repetían el dato**:
+
+- `CuidadoPersonal/ejercicio.html` — tarjeta de Natación en Deportes (ubicación y costo: pasó de "$20-50/visita en alberca pública" a "Incluido en tu membresía de Fitsi") y el `foco` del miércoles.
+- `Dashboard/dashboard.html` — la tarea `e3` de `RUTINA_TASKS`, la habilidad `nadar` de Habilidades Base, y un comentario de `TIPO_FOTO`.
+- `Coach/Coach_v2.html` — la tarea `e3` de su propia copia de `RUTINA_TASKS`.
+- **No se tocó `Dashboard_prueba_iphone/dashboard.html`**: es una copia congelada (un solo commit, 0 de las funciones de las últimas semanas, no aparece en ningún README) — no es una app viva.
+
+Es un cambio a mejor y no solo de texto: la alberca ya está pagada dentro de su membresía, es el mismo lugar al que va los otros días (cero traslado extra) y Fitsi da clases de Aquafit, que sirven justo para la fase 1 de su progresión. Todo eso quedó dicho en el `foco` del día.
+
+### "Hoy toca" no explicaba nada — y la causa de fondo era peor que un texto faltante
+
+Al revisar el reclamo salieron **2 problemas distintos**:
+
+1. **La migración solo corría en `ejercicio.html`.** `fixRutina20260812IfNeeded()` se había puesto únicamente ahí, pero el Dashboard lee `mirutina_v1` de localStorage y **`D.gym.rutina` siempre gana sobre `GYM_RUTINA_DEFAULT`**. Como Adán normalmente abre el Dashboard y no `ejercicio.html`, seguía viendo el miércoles viejo — *"Natación · Nadar 1×45 min"*, una sola línea — aunque el código ya tuviera los 5 bloques nuevos. Es decir: los cambios de la rutina del turno anterior **no le habían llegado**. Se agregó el espejo exacto de esa migración en `dashboard.html` (mismo nombre de bandera `mirutina_v1_pierna_abs_natacion`, mismas condiciones por nombre exacto, corre antes de `loadAll()`), y de paso cubre también el lunes que estaba desincronizado. Ahora da igual cuál de las 2 apps abra primero.
+2. **El panel nunca pintaba el `foco`.** `renderHeroGymPanel()` solo listaba nombre + series×reps + `cue` por ejercicio. Para un día de fuerza eso alcanza, pero para una sesión de aprendizaje de natación —donde lo que importa es que los bloques van EN ORDEN y que al inicio es normal no llegar al último— una lista suelta no dice nada. Ahora se pinta `rutinaDia.foco` arriba de la lista (`.hp-foco`, con barra de acento, recortado a 5 líneas y el texto completo en `title`).
+   - `foco` ya existía en `S.rutina` de `ejercicio.html` pero **`GYM_RUTINA_DEFAULT` no lo tenía** (es la copia ligera). Se le agregó a los 7 días, para que el panel explique igual venga la rutina de donde venga.
+   - Los `foco` de los 3 días reestructurados se **reescribieron para ser texto de usuario**: traían prosa de changelog ("Reestructurado el 2026-08-12 (pedido de Adán: ...)"), que es justo lo que no debe leerse en la UI ahora que este campo es visible en 2 apps. Esa parte histórica vive en este README, que es su lugar.
+   - Los 7 `foco` quedaron **idénticos carácter por carácter entre `ejercicio.html` y `dashboard.html`**, copiados con un script desde `S.rutina` (la fuente de verdad) en vez de a mano. No es cosmético: las 2 migraciones comparten la bandera `mirutina_v1_pierna_abs_natacion` y escriben en la misma clave de localStorage, así que **la primera app que Adán abra es la que gana** — si los textos difirieran, el contenido del panel dependería de por dónde entró ese día. Verificado con Node (7/7 iguales).
+- Verificado con Node en los 3 archivos tocados: `new Function()` sobre los bloques `<script>` reales sin errores; CSS y `<div>` balanceados (dashboard 521/521 y 284/284, ejercicio 156/156 y 173/173, Coach 438/438 y 1578/1578); los 7 días siguen sincronizados entre `S.rutina` y `GYM_RUTINA_DEFAULT` (nombre y lista de ejercicios); 7/7 días con `foco` en el default; 0 referencias a "Francisco Márquez" en las apps vivas.
