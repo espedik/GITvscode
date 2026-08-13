@@ -1269,18 +1269,22 @@ function fixMiercolesNatacionIfNeeded(){
 // 1×45 min", una sola línea sin nada que explique cómo aprender) aunque el código ya tenga los
 // 5 bloques nuevos — que fue justo el reclamo de Adán: "en hoy toca natacion, no es nada
 // explicativo". Mismas 3 condiciones por nombre exacto: si él ya personalizó ese día, no se toca.
+// Bandera bumpeada a `_v2` el mismo día (ver la nota igual en ejercicio.html): el viernes se
+// llamó unas horas "Abdomen — bajar panza" y Adán pidió un nombre más presentable, así que hay
+// que aceptar también ese nombre intermedio como "todavía es el default" y volver a correr.
 function fixRutina20260812IfNeeded(){
-  if(localStorage.getItem('mirutina_v1_pierna_abs_natacion')) return;
+  if(localStorage.getItem('mirutina_v1_pierna_abs_natacion_v2')) return;
   const gym=rawGet('mirutina_v1', null);
   if(gym&&gym.rutina){
     const R=gym.rutina;
-    if(R[2]&&R[2].nombre==='Piernas A — Cuádriceps') R[2]=JSON.parse(JSON.stringify(GYM_RUTINA_DEFAULT[2]));
-    if(R[5]&&R[5].nombre==='Piernas B — Glúteo + Femoral') R[5]=JSON.parse(JSON.stringify(GYM_RUTINA_DEFAULT[5]));
-    if(R[3]&&R[3].nombre==='Natación') R[3]=JSON.parse(JSON.stringify(GYM_RUTINA_DEFAULT[3]));
-    if(R[1]&&R[1].nombre==='Brazos A — Bíceps + Tríceps') R[1]=JSON.parse(JSON.stringify(GYM_RUTINA_DEFAULT[1]));
+    const esDefault=(dia,nombres)=>R[dia]&&nombres.includes(R[dia].nombre);
+    if(esDefault(2,['Piernas A — Cuádriceps'])) R[2]=JSON.parse(JSON.stringify(GYM_RUTINA_DEFAULT[2]));
+    if(esDefault(5,['Piernas B — Glúteo + Femoral','Abdomen — bajar panza'])) R[5]=JSON.parse(JSON.stringify(GYM_RUTINA_DEFAULT[5]));
+    if(esDefault(3,['Natación'])) R[3]=JSON.parse(JSON.stringify(GYM_RUTINA_DEFAULT[3]));
+    if(esDefault(1,['Brazos A — Bíceps + Tríceps'])) R[1]=JSON.parse(JSON.stringify(GYM_RUTINA_DEFAULT[1]));
     rawSet('mirutina_v1', gym);
   }
-  localStorage.setItem('mirutina_v1_pierna_abs_natacion','1');
+  localStorage.setItem('mirutina_v1_pierna_abs_natacion_v2','1');
 }
 // Siembra las 2 metas "ya logradas" de cortoMediano (ipn11k, aleman5) al 100% desde la primera
 // carga de este navegador (2026-08-11) — mismo patrón que fixBanamexIfNeeded()/
@@ -1679,11 +1683,11 @@ const GYM_RUTINA_DEFAULT={
   4:{nombre:'Brazos B — Bíceps + Tríceps',tipo:'brazos',
      foco:'Prioridad: masa en brazos. Volumen, ejercicios distintos al lunes — Fondos en Banco de compuesto (más ligero que los Fondos del lunes) antes del aislamiento.',
      ejercicios:[{id:'e022',series:4,reps:12,descanso:60},{id:'e031',series:4,reps:12,descanso:60},{id:'e026',series:3,reps:10,descanso:60},{id:'e029',series:3,reps:15,descanso:60},{id:'e047',series:3,reps:15,descanso:45}]},
-  5:{nombre:'Abdomen — bajar panza',tipo:'core',
-     foco:'Los 5 ejercicios cubren las 3 funciones reales del abdomen (anti-extensión con plancha y dead bug, flexión con crunch y elevación de piernas, rotación con oblicuos) + 25 min de elíptica al final. IMPORTANTE para que esto sirva de verdad: NO existe la reducción localizada — hacer abdominales fortalece el músculo, pero no quema la grasa que está encima. La panza baja con déficit calórico sostenido (tu Registro Diario en comida.html) + cardio; estos ejercicios son los que hacen que, cuando la grasa baje, sí haya un abdomen marcado debajo.',
+  5:{nombre:'Abdomen — Core + Cardio',tipo:'core',
+     foco:'Los 5 ejercicios cubren las 3 funciones reales del abdomen (anti-extensión con plancha y dead bug, flexión con crunch y elevación de piernas, rotación con oblicuos) + 25 min de elíptica al final. IMPORTANTE para que esto sirva de verdad: NO existe la reducción localizada — hacer abdominales fortalece el músculo, pero no quema la grasa que está encima. La grasa de la zona media baja con déficit calórico sostenido (tu Registro Diario en comida.html) + cardio; estos ejercicios son los que hacen que, cuando esa grasa baje, sí haya un abdomen marcado debajo.',
      ejercicios:[{id:'e045',series:3,reps:45,unidad:'seg',descanso:45},{id:'e047',series:3,reps:15,descanso:45},{id:'e046',series:3,reps:20,descanso:45},{id:'e049',series:3,reps:15,descanso:45},{id:'e050',series:3,reps:10,descanso:45},{id:'e054',series:1,reps:25,unidad:'min',descanso:0}]},
   6:{nombre:'Pecho + Cardio + Core',tipo:'empuje',
-     foco:'El press de banca/inclinado también trabaja tríceps como secundario, extra frecuencia de brazos. Pero el foco real de hoy es bajar panza: 25 min de elíptica (tu bloque de cardio más largo de la semana) + rueda abdominal — junto con el HIIT del miércoles, son tus 2 herramientas de ejercicio contra la grasa de la zona media.',
+     foco:'El press de banca/inclinado también trabaja tríceps como secundario, extra frecuencia de brazos. Pero el foco real de hoy es la definición de la zona media: 25 min de elíptica (tu bloque de cardio más largo de la semana) + rueda abdominal — junto con el HIIT del miércoles, son tus 2 herramientas de ejercicio contra la grasa de la zona media.',
      ejercicios:[{id:'e001',series:4,reps:8,descanso:120},{id:'e002',series:3,reps:10,descanso:90},{id:'e004',series:3,reps:12,descanso:60},{id:'e054',series:1,reps:25,unidad:'min',descanso:0},{id:'e048',series:3,reps:10,descanso:60}]},
   0:{nombre:'Descanso activo',tipo:'descanso',foco:'Recuperación — caminata ligera opcional, sin gimnasio. El músculo crece hoy, no en el gym.',ejercicios:[{id:'e051',series:1,reps:30,unidad:'min',descanso:0}]}
 };
