@@ -83,6 +83,14 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 @keyframes driftA{0%{transform:translate(0,0) scale(1)}100%{transform:translate(6vw,5vh) scale(1.18)}}
 @keyframes driftB{0%{transform:translate(0,0) scale(1)}100%{transform:translate(-6vw,-5vh) scale(1.12)}}
 .slide-inner{position:relative;z-index:1;width:100%;max-width:1400px;height:100%;display:flex;flex-direction:column;justify-content:center}
+/* Mi Día llena la pantalla, no se centra (2026-08-12) — pedido de Adán con captura: entre la
+   barra de apps y el título quedaba una franja muerta de ~5vh. Es la pantalla con más contenido
+   del Dashboard (frase, tira de 7 días, "Ahora mismo", 3 paneles y la línea de tiempo), así que
+   centrarla verticalmente solo servía para desperdiciar arriba y abajo. Con `flex-start` arranca
+   pegada a la barra y `#diaTimeline` (que ya trae `flex:1`) se estira para ocupar lo que sobre —
+   el resto de los slides sí conserva el centrado, que ahí sí se ve bien. */
+.slide.theme-dia{padding-top:1.4vh;padding-bottom:2.2vh}
+.theme-dia .slide-inner{justify-content:flex-start}
 
 .theme-dia    {--ac1:#00e0ff;--ac2:#00e87a}
 .theme-hero   {--ac1:#3ddc97;--ac2:#7c6cff}
@@ -369,7 +377,9 @@ a.rt2-sub-prod:hover{text-decoration:underline}
    al fusionarse con "Mi Día" en una sola pantalla (ver sección "Unificación Mi Día + Hero" en el
    .md): paddings/alturas reducidos, la tira de 7 días con fotos se conservó a propósito (pedido
    explícito de Adán) solo con dimensiones algo más chicas. ────────────────────────────────── */
-.flex-hero-top{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:16px}
+/* (`.flex-hero-top` vivió aquí hasta el 2026-08-12 — era la fila de eyebrow + reloj de Mi Día.
+   Al fusionar esa fila con la de la frase quedó sin un solo uso en el archivo, así que se borró
+   en vez de dejarla como CSS muerto. Su reemplazo es `.dia-topbar`, más abajo.) */
 .week-strip{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
 .ws-day{background:var(--card);border:1px solid var(--card-br);border-radius:12px;padding:6px 5px 4px;text-align:center;backdrop-filter:blur(10px);display:flex;flex-direction:column;overflow:hidden;cursor:pointer;transition:border-color .2s}
 .ws-day.today{border-color:var(--ac1);box-shadow:0 0 14px rgba(var(--ov),.08)}
@@ -396,6 +406,25 @@ a.rt2-sub-prod:hover{text-decoration:underline}
 .hero-frase .q{font-size:16px;flex-shrink:0;opacity:.7}
 .hero-frase .txt{font-size:clamp(11px,1.05vw,13px);font-style:italic;color:var(--text);line-height:1.35}
 .hero-frase .txt b{font-style:normal;color:var(--ac1)}
+
+/* Fila única del encabezado de Mi Día (2026-08-12) — etiqueta + frase + reloj/fecha en el mismo
+   renglón, para no gastar 2 filas en lo que cabe en una. La frase es la que se estira (`flex:1`)
+   y las otras 2 se quedan de su ancho natural; `min-width:0` es lo que le permite encogerse en
+   vez de empujar al reloj fuera de pantalla cuando la frase es larga. */
+.dia-topbar{display:flex;align-items:center;gap:14px;margin-bottom:10px}
+.dia-topbar .eyebrow{flex-shrink:0}
+.dia-topbar .hero-frase{flex:1;min-width:0;margin-bottom:0;padding:7px 14px}
+.dia-reloj{display:flex;align-items:baseline;gap:8px;flex-shrink:0;white-space:nowrap}
+.dia-reloj #diaClock{font-family:var(--mono);font-size:clamp(16px,1.6vw,20px);font-weight:700;line-height:1}
+.dia-reloj #diaFecha{font-size:10.5px;color:var(--text2);text-transform:capitalize}
+/* En pantallas angostas la fila se parte en 2: arriba etiqueta + reloj (que es justo el orden
+   viejo), abajo la frase a todo lo ancho — sigue ahorrando espacio sin apretujar el texto. */
+@media(max-width:900px){
+  .dia-topbar{flex-wrap:wrap;gap:8px}
+  .dia-topbar .eyebrow{order:1}
+  .dia-reloj{order:2;margin-left:auto}
+  .dia-topbar .hero-frase{order:3;flex-basis:100%}
+}
 
 /* Panel de gym con ejercicios detallados (Hero) — reducido de 320px a 118px el 2026-08-08 al
    compartir slide con "Mi Día": ya no es un panel a pantalla completa, es una de 4 tarjetas
@@ -939,15 +968,18 @@ a.rt2-sub-prod:hover{text-decoration:underline}
        se compactó y por qué. -->
   <section class="slide theme-dia" data-i="0">
     <div class="slide-inner">
-      <div class="flex-hero-top reveal d1" style="margin-bottom:8px">
+      <!-- 2026-08-12 — antes esto eran 2 filas (eyebrow+reloj arriba, frase abajo). Adán pidió
+           juntarlas: "el reloj y lo del dia, lo puedes poner a la par de la frase del dia, esto
+           para ahorrar espacio". Ahora es 1 sola fila: etiqueta a la izquierda, frase al centro
+           (se estira), reloj+fecha a la derecha — se ahorra una fila completa de alto. -->
+      <div class="dia-topbar reveal d1">
         <div class="eyebrow" style="margin-bottom:0"><span class="dot"></span> Mi Día · JARVIS</div>
-        <div style="text-align:right">
-          <div style="font-family:var(--mono);font-size:clamp(16px,1.6vw,20px);font-weight:700" id="diaClock">00:00</div>
-          <div style="font-size:10.5px;color:var(--text2);text-transform:capitalize" id="diaFecha">—</div>
+        <div class="hero-frase" id="heroFrase"></div>
+        <div class="dia-reloj">
+          <span id="diaClock">00:00</span>
+          <span id="diaFecha">—</span>
         </div>
       </div>
-
-      <div class="hero-frase reveal d1" id="heroFrase" style="padding:7px 14px;margin-bottom:8px"></div>
 
       <div class="week-strip reveal d2" id="heroWeekStrip" style="margin-bottom:10px"></div>
 

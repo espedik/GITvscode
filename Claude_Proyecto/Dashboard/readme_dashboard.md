@@ -1467,3 +1467,17 @@ Datos está **7º de 12** y con el peso más bajo, y aun así se llevaba **2 de 
 - Verificado con Node: sintaxis OK en las 2 apps, CSS y `<div>` balanceados (dashboard 520/520 y 283/283, Coach 438/438 y 1578/1578); `k2`/`k4` idénticos entre apps; 0 menciones restantes de SQL como tarea semanal o en frases.
 
 **Nota para el futuro**: `SK` (los valores del radar) y `RUTINA_TASKS` (los bloques semanales) son 2 estructuras separadas y **nada las mantiene sincronizadas**. Si Adán vuelve a mover un valor del radar, hay que revisar a mano si los bloques de aprendizaje siguen apuntando a sus habilidades más bajas — no se corrige solo.
+
+## Mi Día: se recupera la franja muerta de arriba y el encabezado baja de 2 filas a 1 (2026-08-12)
+
+Pedido con captura, textual: *"necesitamos abarcar todo este espacio, entonces pon que se vea completo, ademas el reloj y lo del dia, lo puedes poner a la par de la frase del dia, esto para ahorrar espacio"*. En la captura venía marcada en rojo una banda vacía a todo lo ancho, entre la barra de apps y el título "MI DÍA · JARVIS".
+
+**Qué era esa banda**: el `padding:5vh` superior de `.slide`, más el hecho de que `.slide-inner` centra verticalmente (`justify-content:center`). En los otros 7 slides el centrado se ve bien porque traen poco contenido, pero **Mi Día es la pantalla más cargada del Dashboard** (frase, tira de 7 días, "Ahora mismo", 3 paneles y la línea de tiempo): ahí centrar solo servía para regalar espacio arriba y abajo.
+
+- **`.slide.theme-dia`** baja el `padding-top` de `5vh` a `1.4vh` (y el inferior a `2.2vh`), y **`.theme-dia .slide-inner`** pasa a `justify-content:flex-start`. El contenido arranca pegado a la barra de apps y `#diaTimeline` —que ya traía `flex:1;min-height:0`— se estira para ocupar lo que sobre, así que la pantalla queda llena de arriba a abajo sin estirar nada a la fuerza. **Los otros 7 slides no se tocaron**: siguen centrados, que es como se ven bien.
+- **Encabezado de 2 filas a 1** (`.dia-topbar`, nueva): antes eran la fila de eyebrow + reloj/fecha y, debajo, la fila de la frase. Ahora es un solo renglón — etiqueta a la izquierda, frase al centro, reloj + fecha a la derecha. La frase es la que se estira (`flex:1` + `min-width:0`, que es lo que le permite encogerse en vez de empujar al reloj fuera de pantalla cuando el texto es largo); las otras 2 se quedan de su ancho natural con `flex-shrink:0`.
+- **Reloj y fecha ahora van en línea** (`.dia-reloj`, `display:flex` con `align-items:baseline`) en vez de apilados, que es lo que permitió que la fila no creciera de alto.
+- **Responsive**: abajo de 900px la fila se parte en 2 con `order` — arriba etiqueta + reloj (justo el orden viejo), abajo la frase a todo lo ancho. Sigue ahorrando espacio sin apretujar el texto en pantallas angostas.
+- **`.flex-hero-top` se borró**: era la fila vieja y quedó sin un solo uso en el archivo. Se dejó un comentario en su lugar apuntando a `.dia-topbar` en vez de dejar CSS muerto.
+- Los ids `diaClock`, `diaFecha` y `heroFrase` se conservaron intactos, así que `tickClock()`, `renderDia()` y el render de la frase siguen funcionando sin tocar una línea de JS.
+- Verificado con Node: sintaxis OK en los 2 bloques `<script>` reales; CSS 532/532 llaves; `<div>` 281/281 y `<span>` 109/109 (bajó 2 divs a propósito: el envoltorio del reloj y su contenedor `text-align:right` se volvieron 2 `<span>`); las 4 reglas nuevas presentes; 0 usos restantes de `.flex-hero-top`.
