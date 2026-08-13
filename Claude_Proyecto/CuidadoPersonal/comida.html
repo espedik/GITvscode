@@ -97,21 +97,9 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var
 .receta-actions{margin-top:auto;padding-top:8px;display:flex;justify-content:flex-end}
 
 /* Lista del súper */
-.shop-cat{margin-bottom:22px}
-.shop-cat-title{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:800;color:var(--w);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid rgba(255,217,61,.15)}
-.shop-cat-title .n{margin-left:auto;font-size:10px;color:var(--text3);font-family:monospace;text-transform:none;letter-spacing:0}
-.shop-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:6px}
-.shop-item{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:8px;background:rgba(var(--ov),.02);border:1px solid rgba(var(--ov),.05);cursor:pointer;transition:all .15s;user-select:none}
-.shop-item:hover{background:rgba(var(--ov),.05)}
-.shop-item.checked{opacity:.45}
-.shop-item.checked .shop-name{text-decoration:line-through}
-.shop-check{width:17px;height:17px;border-radius:5px;border:1.5px solid rgba(var(--ov),.25);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:11px}
-.shop-item.checked .shop-check{background:var(--g);border-color:var(--g);color:#001a0d}
-.shop-name{font-size:12.5px;flex:1}
-.shop-progress{display:flex;align-items:center;gap:10px;margin-bottom:18px}
-.shop-progress .pbar{flex:1;height:8px;background:rgba(var(--ov),.08);border-radius:20px;overflow:hidden}
-.shop-progress .pfill{height:100%;border-radius:20px;background:linear-gradient(90deg,var(--w),var(--g));transition:width .4s}
-.shop-progress .ptxt{font-size:12px;color:var(--text2);font-weight:700;white-space:nowrap}
+/* Las 15 reglas .shop-* (categorías, cuadrícula, ítem con check, barra de progreso) vivían aquí
+   y se borraron el 2026-08-12 con la sección de la Lista del Súper — no quedaba un solo elemento
+   en el HTML que las usara. La lista ahora vive solo en el Dashboard, con su propio CSS. */
 
 .toast{position:fixed;bottom:24px;right:24px;background:var(--surface-3);color:var(--text);border:1px solid rgba(var(--ov),.1);
   padding:10px 18px;border-radius:var(--rs);font-size:13px;font-weight:600;box-shadow:var(--sh);z-index:500;opacity:0;transform:translateY(8px);transition:all .3s;pointer-events:none}
@@ -185,7 +173,7 @@ tbody tr:hover td{background:rgba(255,217,61,.02)}
 /* Responsivo iPad/iPhone (2026-08-03): los hijos de grid tienen min-width:auto implícito
    y no se encogen aunque la columna sea 1fr, lo que puede desbordar el viewport (mismo
    patrón resuelto en salud.html). Forzamos min-width:0 en los hijos directos de cada grid. */
-.g4>*,.g3>*,.g2>*,.fr>*,.recetas-grid>*,.shop-grid>*,.psem-grid>*,.pm-hero>*{min-width:0}
+.g4>*,.g3>*,.g2>*,.fr>*,.recetas-grid>*,.psem-grid>*,.pm-hero>*{min-width:0}
 canvas{max-width:100%}
 </style>
 <script>
@@ -212,11 +200,12 @@ canvas{max-width:100%}
     <div class="nav-item" onclick="nav('registro')"><span class="ico">📔</span>Registro Diario</div>
     <div class="nav-item" onclick="nav('planSemana')"><span class="ico">📅</span>Plan Semanal</div>
     <div class="nav-label">Compras</div>
-    <div class="nav-item" onclick="nav('super')"><span class="ico">🛒</span>Lista del Súper<span class="count" id="cnt-super"></span></div>
+    <!-- "🛒 Lista del Súper" se quitó del menú el 2026-08-12: ahora vive solo en el Dashboard. -->
+    <a class="nav-item" href="../Dashboard/dashboard.html" style="text-decoration:none;color:inherit"><span class="ico">🛒</span>Lista del Súper<span class="count" style="font-size:9px;opacity:.6">↗</span></a>
   </nav>
-  <div style="padding:12px;border-top:1px solid rgba(var(--ov),.06);display:flex;flex-direction:column;gap:6px">
-    <button class="btn btn-o" style="width:100%;font-size:12px" onclick="resetShop()">↺ Reiniciar lista del súper</button>
-  </div>
+  <!-- Aquí estaba el botón "↺ Reiniciar lista del súper", que llamaba a la función resetShop. Se
+       borró el 2026-08-12 junto con la sección: la función ya no existe, así que el botón habría
+       lanzado un error al tocarlo. Su equivalente ("Vaciar marcados") está en el Dashboard. -->
 </aside>
 
 <main class="main">
@@ -290,20 +279,9 @@ canvas{max-width:100%}
       <div id="plan-semana-body"></div>
     </section>
 
-    <!-- SÚPER -->
-    <section id="s-super" class="section">
-      <div class="card" style="margin-bottom:18px">
-        <div class="card-title" style="margin-bottom:10px">📋 Cómo usar esta lista</div>
-        <p style="font-size:12.5px;color:var(--text2);line-height:1.6">
-          Es la lista <b style="color:var(--text)">completa y consolidada</b> de todo lo que necesitas comprar para poder cocinar las 24 recetas de arriba (10 desayunos + 8 cenas), sin repetir ingredientes. Márcalos conforme los vayas metiendo al carrito — se guarda automáticamente. No son cantidades exactas por semana (cada receta ya trae su cantidad) — es tu lista maestra de despensa.
-        </p>
-      </div>
-      <div class="shop-progress">
-        <div class="pbar"><div class="pfill" id="shop-pfill" style="width:0%"></div></div>
-        <span class="ptxt" id="shop-ptxt">0/0</span>
-      </div>
-      <div id="shop-body"></div>
-    </section>
+    <!-- La sección "Lista del Súper" se eliminó el 2026-08-12 — ahora vive solo en el Dashboard
+         (pestaña 🛒 Lista de Compras), que además trae precio por producto y total de lo marcado.
+         Ver la nota en el JS, más abajo, para el porqué. -->
 
   </div>
 </main>
@@ -371,10 +349,16 @@ canvas{max-width:100%}
 <div class="toast" id="toast"></div>
 
 <script>
-// ─── Categorías de ingredientes — para armar la lista del súper consolidada ──
+// ─── Categorías de ingredientes ──────────────────────────────────────────────
+// Servían para agrupar por pasillo la lista del súper que vivía en este archivo. Esa sección se
+// movió al Dashboard el 2026-08-12, así que este mapa y ORDEN_CAT **ya no los usa nadie aquí** —
+// se conservan a propósito, no por descuido: son la clasificación curada de los 30 ingredientes
+// reales del recetario (con 2 rondas de limpieza encima, ver historial abajo) y es justo lo que
+// hay que consultar si algún día se agrega una receta y toca acomodar su ingrediente nuevo en la
+// categoría correcta de `LISTA_COMPRAS.comida` del Dashboard.
 // Reescrito el 2026-08-07 junto con RECETAS (ver esa fecha más abajo) — 12 ingredientes que
 // no le gustan a Adán salieron del recetario y de este mapa. `Frijoles negros` no tenía
-// categoría antes (caía al fallback "Condimentos y otros" de renderSuper()) — ahora sí.
+// categoría antes (caía al fallback "Condimentos y otros") — ahora sí.
 // 2026-08-09: segunda ronda de curación de recetas (ver RECETAS más abajo, misma fecha) — Ajo,
 // Camarón, Filete de salmón, Requesón, Canela en polvo, Fideo, Quinoa cocida y Sal quedaron sin
 // ninguna receta que los use tras quitar Camarones al ajillo/Salmón al horno/Tostadas de
@@ -531,7 +515,10 @@ const RECETAS = {
 
 // ─── Estado — lista del súper + plan semanal (localStorage) ────────────────
 const KEY='comida_v1';
-let S={comprado:{},planSemana:{}};
+// `comprado` (el checklist del súper) se retiró del estado el 2026-08-12 junto con la sección.
+// Si un navegador ya tenía datos guardados ahí, siguen en `comida_v1.comprado` sin estorbar —
+// no se borran a propósito, por si algún día quisiera recuperarlos; simplemente ya nadie los lee.
+let S={planSemana:{}};
 const save=()=>localStorage.setItem(KEY,JSON.stringify(S));
 const load=()=>{try{const d=localStorage.getItem(KEY);if(d)S={...S,...JSON.parse(d)};}catch(e){}};
 
@@ -573,8 +560,11 @@ function toggleTheme(){
 }
 
 // ─── Navegación ─────────────────────────────────────────────────────────────
-const SECS=['desayunos','cenas','rutina','registro','planSemana','super'];
-const STITLE={desayunos:'🌅 Desayunos',cenas:'🌙 Cenas',rutina:'🥩 Plan Masa Muscular',registro:'📔 Registro Diario',planSemana:'📅 Plan Semanal',super:'🛒 Lista del Súper'};
+// 'super' salió de las 2 listas el 2026-08-12 (la sección se movió al Dashboard). Ojo: al quitarlo
+// de SECS también deja de ser un destino válido de `?s=`, así que un enlace viejo del tipo
+// `comida.html?s=super` ya no abre nada raro — simplemente se ignora y carga la vista por defecto.
+const SECS=['desayunos','cenas','rutina','registro','planSemana'];
+const STITLE={desayunos:'🌅 Desayunos',cenas:'🌙 Cenas',rutina:'🥩 Plan Masa Muscular',registro:'📔 Registro Diario',planSemana:'📅 Plan Semanal'};
 const RENDERS={registro:renderRegistro,planSemana:renderPlanSemana};
 function nav(s){
   SECS.forEach(x=>document.getElementById('s-'+x).classList.toggle('active',x===s));
@@ -926,34 +916,17 @@ function savePickReceta(){
   save(); closeMo('mo-pick'); renderPlanSemana();
 }
 
-// ─── Lista del súper — consolidada, deduplicada, con checklist persistente ──
-function listaSuperUnica(){
-  const set=new Set();
-  [...RECETAS.desayuno,...RECETAS.cena].forEach(r=>r.ingredientes.forEach(i=>set.add(i.n)));
-  return [...set];
-}
-function renderSuper(){
-  const items=listaSuperUnica();
-  const porCat={};
-  items.forEach(n=>{const cat=CATEGORIA_ING[n]||'🧂 Condimentos y otros';(porCat[cat]=porCat[cat]||[]).push(n);});
-  document.getElementById('shop-body').innerHTML=ORDEN_CAT.filter(c=>porCat[c]).map(cat=>{
-    const lista=porCat[cat].sort((a,b)=>a.localeCompare(b,'es'));
-    return `<div class="shop-cat">
-      <div class="shop-cat-title">${cat}<span class="n">${lista.filter(n=>S.comprado[n]).length}/${lista.length}</span></div>
-      <div class="shop-grid">${lista.map(n=>`
-        <div class="shop-item ${S.comprado[n]?'checked':''}" onclick="toggleShop('${n.replace(/'/g,"\\'")}')">
-          <span class="shop-check">${S.comprado[n]?'✓':''}</span>
-          <span class="shop-name">${n}</span>
-        </div>`).join('')}</div>
-    </div>`;
-  }).join('');
-  const total=items.length, hechos=items.filter(n=>S.comprado[n]).length;
-  document.getElementById('shop-pfill').style.width=(total?hechos/total*100:0)+'%';
-  document.getElementById('shop-ptxt').textContent=hechos+'/'+total;
-  document.getElementById('cnt-super').textContent=hechos+'/'+total;
-}
-function toggleShop(n){ S.comprado[n]=!S.comprado[n]; save(); renderSuper(); }
-function resetShop(){ S.comprado={}; save(); renderSuper(); toast('↺ Lista reiniciada'); }
+// La "Lista del Súper" vivía aquí (listaSuperUnica/renderSuper/toggleShop/resetShop) y se borró
+// el 2026-08-12 a petición de Adán: "solo quiero la lista de compras en mi dashboard, borra los
+// duplicados de otros lugares". Estaba duplicada de verdad, no solo parecida: esta guardaba en
+// `comida_v1.comprado` y la del Dashboard en `dash-lista-compras`, y el Dashboard nunca leyó
+// `comida_v1` — o sea que marcar un producto aquí no se veía allá y viceversa. La del Dashboard
+// es la que se queda porque hace más: precio por producto (real de ticket vs. estimado), forma de
+// venta (peso/pieza/paquete), total de lo marcado y botón para vaciar.
+// La lista se sigue derivando de los mismos ingredientes de RECETAS (aquí abajo), solo que ahora
+// esa derivación vive en el Dashboard → LISTA_COMPRAS.comida. Si se agrega o quita una receta en
+// este archivo, hay que replicar el cambio allá a mano — mismo criterio que el resto de datos
+// duplicados del ecosistema (ver readme_dashboard.md).
 
 // ─── Init ────────────────────────────────────────────────────────────────────
 function init(){
@@ -961,7 +934,6 @@ function init(){
   document.getElementById('f-fecha-al').value=today();
   renderRecetas();
   renderRutinaMuscular();
-  renderSuper();
   const themeBtn=document.getElementById('theme-toggle-btn');
   if(themeBtn) themeBtn.textContent=document.documentElement.getAttribute('data-theme')==='dark'?'☀️':'🌙';
   const s=new URLSearchParams(location.search).get('s');

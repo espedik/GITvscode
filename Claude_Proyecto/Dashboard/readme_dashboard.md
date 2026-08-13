@@ -1515,3 +1515,25 @@ Pedido con captura: *"hay veces que la lista de ejercicios es mas larga que la d
   - en **móvil** las 3 tarjetas se apilan (`#miDiaSecundarios` pasa a 1 columna) y desaparece el "alto sobrante" que absorber: con `flex:1` y `min-height:0` la lista habría colapsado casi a 0 y no se vería ninguna receta.
 - **No se tocó el panel de gym** (`.hp-ex-scroll`, ya en `max-height:none`): es el que marca el alto de la fila, y era el comportamiento correcto.
 - Verificado con Node: sintaxis OK en los 2 bloques `<script>` reales; CSS 534/534 llaves; `<div>` 281/281; `.hp-meal-list` ya sin `max-height` y las 2 reglas nuevas presentes.
+
+## La Lista del Súper queda solo en el Dashboard (2026-08-12)
+
+Salió de una auditoría del ecosistema que pidió Adán (*"rivisa las demas apps y ve que cosas faltan"*), y al confirmarse el duplicado decidió: *"solo quiero la lista de compras en mi dashboard, borra los duplicados de otros lugares"*.
+
+**Era un duplicado real, no dos vistas del mismo dato**: esta sección guardaba en `comida_v1.comprado` y la del Dashboard en `dash-lista-compras`, y **el Dashboard nunca leyó `comida_v1`** (verificado: 0 referencias). Marcar jitomate aquí no se veía allá y viceversa — dos verdades para la misma compra. Se quedó la del Dashboard porque hace bastante más: precio por producto (verde si viene del ticket real, naranja si es estimado), forma de venta (⚖️ peso / 🔢 pieza / 📦 paquete), total de lo marcado y botón para vaciar.
+
+Se revisó que el duplicado estuviera solo aquí: Coach y Finanzas aparecían en la búsqueda pero eran falsos positivos ("comprador", "BTC comprado").
+
+**Qué se borró de `comida.html`** — la pieza completa, sin dejar restos:
+- La `<section id="s-super">` entera y su entrada en `SECS`/`STITLE`.
+- Las 4 funciones (`listaSuperUnica`, `renderSuper`, `toggleShop`, `resetShop`) y su llamada en `init()`.
+- **Un botón que habría quedado roto**: "↺ Reiniciar lista del súper" seguía en la barra lateral llamando a `resetShop`, que ya no existía — al tocarlo habría lanzado un error. Era el resto más fácil de pasar por alto, porque vive fuera de la sección que se eliminó.
+- Las 15 reglas CSS `.shop-*` y la mención de `.shop-grid` en la regla compartida de `min-width:0`.
+- `comprado` del estado `S`.
+
+**Qué se conservó a propósito:**
+- **`CATEGORIA_ING` y `ORDEN_CAT`**, aunque ya no los use nadie en ese archivo. Son la clasificación curada de los 30 ingredientes reales del recetario, con 2 rondas de limpieza encima, y es justo lo que hay que consultar si algún día se agrega una receta y toca meter su ingrediente nuevo en la categoría correcta de `LISTA_COMPRAS.comida`. Quedó dicho en el comentario para que no se lea como código muerto.
+- **Los datos ya guardados en `comida_v1.comprado`** de navegadores donde existían: no se borran, simplemente ya nadie los lee.
+- **El acceso en el menú**: en vez de quitar el renglón "🛒 Lista del Súper", ahora es un enlace directo al Dashboard (con ↗). Si Adán lo busca donde siempre estuvo, lo lleva a donde ahora vive en vez de dejarlo preguntándose si se perdió.
+
+- Verificado con Node: sintaxis OK en los 2 bloques `<script>`; CSS 138/138, `<div>` 120/120, `<section>` 5/5; `SECS`, `STITLE` y las secciones reales del HTML coinciden exacto (0 huérfanos en cualquier dirección); 0 referencias vivas a `shop-body`/`shop-pfill`/`cnt-super`/`s-super`/`S.comprado` (las 2 que quedan de `resetShop`/`renderSuper` son comentarios que documentan la eliminación); 0 enlaces internos rotos en las 10 apps; y la lista del Dashboard sigue completa y cuadrada contra las recetas (30 ingredientes, 0 de más y 0 de menos).

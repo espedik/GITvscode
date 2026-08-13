@@ -124,3 +124,25 @@ Se abre `cuidadopersonal.html` (pestaña Comida) o directamente `comida.html` en
 ## Fix: registrar una comida dos veces duplicaba calorías sin avisar (2026-08-05)
 
 Encontrado en una auditoría general del ecosistema pedida por Adán ("mejora todos los html, ve funciones o cosas que les falten"). `registrarReceta(id,tipo)` y `registrarRutinaMeal(idx)` hacían `push()` directo a `misalud_v1.alimentos` sin comprobar si esa receta/plan ya se había registrado hoy — un doble tap accidental (fácil en iPad/iPhone, donde esta app ya está optimizada para touch) duplicaba silenciosamente las calorías/macros, inflando tanto el Registro Diario como el panel "🥗 Nutrición de hoy" del Hero del Dashboard. Fix: ambas funciones ahora comprueban si ya existe un registro con el mismo `nombre`+`fecha`+`comida` (o, en el caso del Plan Masa Muscular, la misma `notas:'Plan Masa Muscular'` para ese bloque) antes de agregar, y si ya existe piden confirmación (`confirm()`) en vez de duplicar sin preguntar — cancelar no agrega nada, aceptar sí permite registrar la misma comida dos veces si de verdad se repitió. Verificado con Playwright: primer registro no pide nada; segundo registro de la misma receta dispara el diálogo, y cancelarlo deja el conteo en 1; cero errores de consola.
+
+## La Lista del Súper queda solo en el Dashboard (2026-08-12)
+
+Salió de una auditoría del ecosistema que pidió Adán (*"rivisa las demas apps y ve que cosas faltan"*), y al confirmarse el duplicado decidió: *"solo quiero la lista de compras en mi dashboard, borra los duplicados de otros lugares"*.
+
+**Era un duplicado real, no dos vistas del mismo dato**: esta sección guardaba en `comida_v1.comprado` y la del Dashboard en `dash-lista-compras`, y **el Dashboard nunca leyó `comida_v1`** (verificado: 0 referencias). Marcar jitomate aquí no se veía allá y viceversa — dos verdades para la misma compra. Se quedó la del Dashboard porque hace bastante más: precio por producto (verde si viene del ticket real, naranja si es estimado), forma de venta (⚖️ peso / 🔢 pieza / 📦 paquete), total de lo marcado y botón para vaciar.
+
+Se revisó que el duplicado estuviera solo aquí: Coach y Finanzas aparecían en la búsqueda pero eran falsos positivos ("comprador", "BTC comprado").
+
+**Qué se borró de `comida.html`** — la pieza completa, sin dejar restos:
+- La `<section id="s-super">` entera y su entrada en `SECS`/`STITLE`.
+- Las 4 funciones (`listaSuperUnica`, `renderSuper`, `toggleShop`, `resetShop`) y su llamada en `init()`.
+- **Un botón que habría quedado roto**: "↺ Reiniciar lista del súper" seguía en la barra lateral llamando a `resetShop`, que ya no existía — al tocarlo habría lanzado un error. Era el resto más fácil de pasar por alto, porque vive fuera de la sección que se eliminó.
+- Las 15 reglas CSS `.shop-*` y la mención de `.shop-grid` en la regla compartida de `min-width:0`.
+- `comprado` del estado `S`.
+
+**Qué se conservó a propósito:**
+- **`CATEGORIA_ING` y `ORDEN_CAT`**, aunque ya no los use nadie en ese archivo. Son la clasificación curada de los 30 ingredientes reales del recetario, con 2 rondas de limpieza encima, y es justo lo que hay que consultar si algún día se agrega una receta y toca meter su ingrediente nuevo en la categoría correcta de `LISTA_COMPRAS.comida`. Quedó dicho en el comentario para que no se lea como código muerto.
+- **Los datos ya guardados en `comida_v1.comprado`** de navegadores donde existían: no se borran, simplemente ya nadie los lee.
+- **El acceso en el menú**: en vez de quitar el renglón "🛒 Lista del Súper", ahora es un enlace directo al Dashboard (con ↗). Si Adán lo busca donde siempre estuvo, lo lleva a donde ahora vive en vez de dejarlo preguntándose si se perdió.
+
+- Verificado con Node: sintaxis OK en los 2 bloques `<script>`; CSS 138/138, `<div>` 120/120, `<section>` 5/5; `SECS`, `STITLE` y las secciones reales del HTML coinciden exacto (0 huérfanos en cualquier dirección); 0 referencias vivas a `shop-body`/`shop-pfill`/`cnt-super`/`s-super`/`S.comprado` (las 2 que quedan de `resetShop`/`renderSuper` son comentarios que documentan la eliminación); 0 enlaces internos rotos en las 10 apps; y la lista del Dashboard sigue completa y cuadrada contra las recetas (30 ingredientes, 0 de más y 0 de menos).
