@@ -448,8 +448,25 @@ a.rt2-sub-prod:hover{text-decoration:underline}
 .hp-meal-name{font-size:13px;font-weight:700;color:var(--text);line-height:1.35}
 .hp-meal-macro{font-size:10.5px;color:var(--text2);font-family:var(--mono);margin-top:3px}
 /* "Ideas para hoy" (2026-08-07) — opciones apiladas, con scroll interno si no caben.
-   Máxima altura reducida de 180-300px a 90-118px el 2026-08-08, mismo motivo que .hp-ex-scroll. */
-.hp-meal-list{display:flex;flex-direction:column;gap:3px;max-height:clamp(90px,14vh,118px);overflow-y:auto;padding-right:2px}
+   2026-08-12 — se quitó el tope fijo de altura (era `max-height:clamp(90px,14vh,118px)`). Pedido
+   de Adán con captura: "hay veces que la lista de ejercicios es mas larga que la de comer hoy,
+   entonces ajusta la de comer hoy para que sean como del mismo tamaño, por que hay tamaño
+   desperdiciado ahi". Las 3 tarjetas de esa fila ya miden lo mismo de alto (`align-items:stretch`
+   en #miDiaSecundarios), pero el tope fijo hacía que la lista de recetas se cortara mucho antes
+   del borde de su propia tarjeta cuando el panel de gym era más largo — ese era el hueco.
+   Ahora la lista se estira para llenar lo que le toque (ver `#heroNutriPanel` abajo). */
+.hp-meal-list{display:flex;flex-direction:column;gap:3px;overflow-y:auto;padding-right:2px}
+/* El panel es una columna flex para que la lista pueda absorber el alto sobrante. `flex:1` la
+   hace crecer hasta el borde de la tarjeta, y el `min-height` funciona como PISO, no como techo:
+   - en escritorio, si el panel de gym es más largo, la lista se estira hasta alcanzarlo (que es
+     justo lo que se pidió) y solo hace scroll si aun así no caben las 14 recetas;
+   - si el gym es más corto, la fila la sigue marcando este piso — o sea el mismo alto de antes,
+     sin regresión;
+   - en móvil las 3 tarjetas se apilan (#miDiaSecundarios pasa a 1 columna) y ya no hay "alto
+     sobrante" que absorber: sin este piso la lista colapsaría casi a 0 y no se vería ninguna
+     receta. Por eso el valor es exactamente el `max-height` que tenía antes. */
+#heroNutriPanel{display:flex;flex-direction:column}
+#heroNutriPanel .hp-meal-list{flex:1;min-height:clamp(90px,14vh,118px)}
 .hp-meal-card{background:rgba(var(--ov),.04);border:1px solid rgba(var(--ov),.08);border-radius:8px;padding:3px 8px}
 /* Nombre mucho más chico que el resto de usos de .hp-meal-name (2026-08-09, "haz el nombre de
    desayuno mucho mas pequeña para que quepan varias") — bajó de 11px a 9px, y el padding de la

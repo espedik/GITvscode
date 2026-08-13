@@ -1502,3 +1502,16 @@ Los 4 números congelados (deuda total −$308,830, deuda cara $46,693 = Banamex
 Al verificar el balance de etiquetas, Coach daba 7 aperturas contra 5 cierres. **No era un error real ni lo introdujo este cambio** (en `HEAD` daba 8/6, el mismo desbalance de 2): eran 2 **comentarios** —uno de CSS y uno de JS— que citaban la etiqueta literal `<details class="fase-month" ...>` como texto. Es exactamente el mismo tropiezo ya documentado en este proyecto con `<script>` dentro de comentarios. Se reescribieron los 2 comentarios para describir el elemento en prosa ("un elemento details con clase .fase-month") en vez de citarlo con corchetes angulares, y el conteo quedó en 5/5 limpio.
 
 - Verificado con Node: sintaxis OK en las 2 apps; CSS 532/532 y 438/438; `<div>` 281/281 y 1577/1577; `<details>` 5/5. Simulando hoy (12 ago 2026): **Fase 0 sale como activa**, con rango 1 ago → 30 sep; los meses de la fase son solo `2026-08` (6 tareas) y `2026-09` (1); los 7 ids `s0-1`…`s0-7` siguen presentes en las 2 apps; `const inicio` y `fases[0].ini` coinciden en `2026, 7, 1`.
+
+## "Ideas para hoy" se estira hasta el borde de su tarjeta (2026-08-12)
+
+Pedido con captura: *"hay veces que la lista de ejercicios es mas larga que la de comer hoy, entonces ajusta la de comer hoy para que sean como del mismo tamaño, por que hay tamaño desperdiciado ahi"*.
+
+**La causa no era que las tarjetas midieran distinto** — las 3 de esa fila ya miden exactamente lo mismo de alto, porque `#miDiaSecundarios` usa `align-items:stretch`. El problema era interno: `.hp-meal-list` tenía un **tope fijo** de `max-height:clamp(90px,14vh,118px)` (puesto el 2026-08-08 cuando se compactó la pantalla), así que la lista de recetas se cortaba mucho antes del borde inferior de su propia tarjeta cada vez que el panel de gym era más largo. Ese hueco entre el final de la lista y el borde era el "tamaño desperdiciado".
+
+- **Se quitó el `max-height`** y el panel pasó a ser columna flex (`#heroNutriPanel{display:flex;flex-direction:column}`) con `#heroNutriPanel .hp-meal-list{flex:1}`. Así la lista absorbe todo el alto que dejan el título y las pestañas, hasta el borde de la tarjeta, y solo hace scroll interno si aun así no caben las 14 recetas.
+- **El `min-height` se conserva como PISO, no como techo** (mismo valor que tenía el tope viejo), y es lo que cubre los 2 casos que se romperían sin él:
+  - si el panel de gym llega a ser **más corto** que la lista, la fila la sigue marcando este piso — o sea el alto de antes, sin regresión;
+  - en **móvil** las 3 tarjetas se apilan (`#miDiaSecundarios` pasa a 1 columna) y desaparece el "alto sobrante" que absorber: con `flex:1` y `min-height:0` la lista habría colapsado casi a 0 y no se vería ninguna receta.
+- **No se tocó el panel de gym** (`.hp-ex-scroll`, ya en `max-height:none`): es el que marca el alto de la fila, y era el comportamiento correcto.
+- Verificado con Node: sintaxis OK en los 2 bloques `<script>` reales; CSS 534/534 llaves; `<div>` 281/281; `.hp-meal-list` ya sin `max-height` y las 2 reglas nuevas presentes.
