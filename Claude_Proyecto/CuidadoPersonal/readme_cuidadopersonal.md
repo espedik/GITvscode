@@ -176,30 +176,3 @@ Screenshots de referencia (iPad y iPhone — topnav antes/después, Skincare, Ej
 ## Cómo usarlo
 
 Se abre `cuidadopersonal.html` directamente en cualquier navegador, sin instalación ni servidor. No hay sincronización entre dispositivos. Skincare y Cabello no tienen botón de exportar JSON todavía (a diferencia de Salud y Ejercicio, que sí lo tienen dentro de su propio iframe).
-
-## Cuidado Personal pasa a la distribución de Coach: sidebar izquierdo (2026-08-12)
-
-Pedido: *"la interfaz de cabello, comida, skincare y dentista, la quiero con la misma distribucion que coach, es decir los botones a la izquierda que solo aparezcan cosas cuando de click y que se vea muy bien"*.
-
-`cuidadopersonal.html` es el contenedor de las 7 secciones (3 propias — Skincare, Cabello, Dentista — y 4 en iframe — Salud, Ejercicio, Comida, Vestimenta). Tenía la navegación en una **barra horizontal arriba** con 7 pestañas + Dashboard.
-
-- **`.topnav` → `.sidebar` de 252px**, con el mismo ancho, estructura de grupos y lenguaje visual de `Coach_v2.html`. El `body` pasó de columna a fila (sidebar | contenido).
-- **Agrupado por tipo, no como lista plana de 7**: *Imagen* (Skincare, Cabello, Dentista), *Cuerpo* (Salud, Ejercicio, Comida) y *Referencia* (Vestimenta, que es guía de consulta y no algo de todos los días). Mismo criterio que Coach, que agrupa por prioridad.
-- **Se conservó el color de acento por sección** — cada área ya tenía el suyo y es lo que permite reconocer de un vistazo dónde estás.
-- **Barra superior nueva con el título de la sección activa.** Antes no hacía falta porque la pestaña activa se veía arriba; ahora que la navegación está a la izquierda (y en móvil se esconde), sin esto no habría forma de saber en qué sección estás.
-- **Móvil**: el menú sale de pantalla y entra con el botón ☰, con velo para cerrar tocando fuera y con Escape — mismo comportamiento que Coach. Elegir una sección lo cierra solo.
-
-### El problema que había que resolver: dos sidebars encimados
-
-Salud, Ejercicio, Comida y Vestimenta **se cargan en iframe y son apps completas que ya traen su propio sidebar de 245px** (verificado: las 4 usan `--sw:245px`). Con este menú de 252px al lado serían **497px de pura navegación — el 36% de una laptop de 1366px**, y el contenido se quedaría sin espacio. Eso habría echado abajo el "que se vea muy bien".
-
-Solución: **al entrar a una de esas 4 secciones el menú se encoge solo a una barra de íconos de 62px**. Se sigue pudiendo cambiar de sección, pero el ancho se lo queda la app de adentro. Al volver a una sección propia (Skincare, Cabello, Dentista), que no tiene menú con el que competir, se expande solo. Hay además un botón para forzarlo a mano.
-
-En móvil el modo barra se desactiva por completo: ahí el menú ya está oculto tras el ☰ y no compite con nada, así que encogerlo solo serviría para dejar los íconos sin etiqueta.
-
-### Limpieza y un bug evitado
-
-- Se borró el CSS de `.topnav`/`.tabs`/`.tab-btn`, incluida una media query que existía para que las 7 pestañas no envolvieran a 4-5 filas en móvil (hasta 276px de alto en iPhone). **Con la navegación en el sidebar ese problema desapareció de raíz.**
-- **Bug detectado antes de que llegara a pantalla**: el botón de tema hacía `btn.textContent = '☀️'`. Con la barra vieja el botón era solo el emoji, pero en el sidebar lleva también la etiqueta "Cambiar tema" — el primer clic la habría borrado. Se cambió para que solo se actualice un `<span>` con el ícono.
-
-- Verificado con Node: sintaxis OK en los 2 bloques `<script>` reales; CSS 354/354 llaves; `<div>` 188/188, `<span>` 83/83, `<main>` 7/7; las 7 secciones tienen botón, vista y título (0 huérfanos en cualquier dirección); las 4 marcadas como "con menú propio" son efectivamente las que tienen iframe; las 4 funciones de navegación existen; y 0 restos de las clases de la barra vieja.

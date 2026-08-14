@@ -38,80 +38,28 @@
   --sh:0 2px 14px rgba(0,0,0,.08);
 }
 html,body{height:100%}
-/* 2026-08-12 — la navegación pasó de barra horizontal arriba a SIDEBAR IZQUIERDO, con el mismo
-   lenguaje visual de Coach_v2. Pedido de Adán: "la interfaz de cabello, comida, skincare y
-   dentista, la quiero con la misma distribucion que coach, es decir los botones a la izquierda,
-   que solo aparezcan cosas cuando de click y que se vea muy bien".
-   El body pasa de columna a fila (sidebar | contenido) — de ahí que las vistas ya no tengan que
-   convivir con una barra que envolvía a 2 renglones en pantallas medianas. */
 body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);font-size:14px;
-  display:flex;overflow:hidden}
+  display:flex;flex-direction:column;overflow:hidden}
 ::-webkit-scrollbar{width:4px;height:4px}
 ::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:rgba(var(--ov),.12);border-radius:2px}
 
-/* SIDEBAR — mismo ancho (252px) y misma estructura de grupos que Coach_v2 */
-.sidebar{width:252px;flex:none;height:100vh;overflow-y:auto;display:flex;flex-direction:column;gap:18px;
-  padding:20px 14px 24px;background:var(--surface);border-right:1px solid rgba(var(--ov),.08);z-index:100}
-.sb-logo{font-size:16px;font-weight:800;color:var(--text);padding:0 8px 14px;border-bottom:1px solid rgba(var(--ov),.07)}
-.sb-group{display:flex;flex-direction:column;gap:3px}
-.sb-group-label{font-size:9.5px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;
-  color:var(--text3);padding:0 8px 5px}
-.sb-link{display:flex;align-items:center;gap:9px;padding:9px 11px;border-radius:9px;border:1px solid transparent;
-  background:transparent;color:var(--text2);font-weight:600;font-size:13px;cursor:pointer;text-align:left;
-  transition:background .15s,color .15s,border-color .15s;font-family:inherit;width:100%;text-decoration:none}
-.sb-link:hover{background:rgba(var(--ov),.06);color:var(--text)}
-/* El color de acento por sección se conserva del diseño anterior: cada área de cuidado personal
-   ya tenía su color y es lo que hace que se reconozca de un vistazo en qué sección estás. */
-.sb-link[data-tab="skincare"].active{background:var(--pk-l);color:var(--pk);border-color:rgba(255,107,214,.4)}
-.sb-link[data-tab="cabello"].active{background:var(--am-l);color:var(--am);border-color:rgba(224,160,32,.4)}
-.sb-link[data-tab="salud"].active{background:var(--g-l);color:var(--g);border-color:rgba(0,232,122,.4)}
-.sb-link[data-tab="ejercicio"].active{background:var(--o-l);color:var(--o);border-color:rgba(255,107,53,.4)}
-.sb-link[data-tab="comida"].active{background:var(--w-l);color:var(--w);border-color:rgba(255,217,61,.4)}
-.sb-link[data-tab="dentista"].active{background:var(--mt-l);color:var(--mt);border-color:rgba(79,214,173,.4)}
-.sb-link[data-tab="vestimenta"].active{background:var(--ve-l);color:var(--ve);border-color:rgba(193,127,74,.4)}
-.sb-ico{flex:none;width:18px;text-align:center}
-.sb-txt{min-width:0;overflow:hidden;white-space:nowrap}
-.sb-foot{margin-top:auto;display:flex;flex-direction:column;gap:6px;padding-top:14px;border-top:1px solid rgba(var(--ov),.07)}
-
-/* MODO BARRA DE ÍCONOS — Salud, Ejercicio, Comida y Vestimenta se cargan en iframe y son apps
-   completas que YA traen su propio sidebar de 245px. Con este menú a 252px serían casi 500px de
-   pura navegación (36% de una laptop de 1366px), y el contenido se quedaría sin espacio.
-   Por eso, al entrar a una de esas 4 secciones el menú se encoge solo a una barra de íconos de
-   62px: sigues pudiendo cambiar de sección, pero el ancho se lo queda la app de adentro. Al
-   volver a una sección propia (Skincare, Cabello, Dentista), que no tiene menú propio con el que
-   competir, se expande solo otra vez. El botón de abajo permite forzarlo a mano en cualquier
-   momento. */
-.sidebar.rail{width:62px;padding-left:9px;padding-right:9px}
-.sidebar.rail .sb-txt,.sidebar.rail .sb-group-label{display:none}
-.sidebar.rail .sb-logo{font-size:19px;text-align:center;padding-left:0;padding-right:0}
-.sidebar.rail .sb-link{justify-content:center;padding-left:0;padding-right:0}
-@media(max-width:900px){ .sidebar.rail{width:80vw;max-width:290px;padding-left:14px;padding-right:14px}
-  .sidebar.rail .sb-txt,.sidebar.rail .sb-group-label{display:revert}
-  .sidebar.rail .sb-link{justify-content:flex-start;padding-left:11px;padding-right:11px}
-  .sidebar.rail .sb-logo{font-size:16px;text-align:left} }
-
-/* Barra superior del contenido — se queda solo con el título de la sección activa y el tema.
-   En escritorio no lleva navegación; en móvil aparece además el botón de menú. */
-.topbar{flex:none;display:flex;align-items:center;gap:10px;padding:12px 20px;background:var(--surface);
-  border-bottom:1px solid rgba(var(--ov),.08);z-index:50}
-.topbar-title{font-size:15px;font-weight:800;color:var(--text)}
-.menu-btn{display:none;width:36px;height:36px;border-radius:9px;border:1px solid rgba(var(--ov),.12);
-  background:transparent;color:var(--text);font-size:15px;cursor:pointer;align-items:center;justify-content:center;flex:none}
-.main{flex:1;min-width:0;display:flex;flex-direction:column;overflow:hidden}
-
-/* Móvil: el sidebar se sale de pantalla y entra al tocar el botón de menú, con un velo detrás
-   para poder cerrarlo tocando fuera — mismo comportamiento que Coach. */
-.sb-overlay{display:none}
-@media(max-width:900px){
-  .menu-btn{display:flex}
-  .sidebar{position:fixed;top:0;left:0;bottom:0;width:80vw;max-width:290px;
-    transform:translateX(-100%);transition:transform .25s ease;box-shadow:0 10px 40px rgba(0,0,0,.4)}
-  body.sb-open .sidebar{transform:translateX(0)}
-  .sb-overlay{display:block;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:90;
-    opacity:0;pointer-events:none;transition:opacity .2s}
-  body.sb-open .sb-overlay{opacity:1;pointer-events:auto}
-}
+/* TOPNAV */
+.topnav{flex:none;display:flex;align-items:center;justify-content:space-between;gap:16px;
+  padding:12px 20px;background:var(--surface);
+  border-bottom:1px solid rgba(var(--ov),.08);position:relative;z-index:100;flex-wrap:wrap}
+.brand{font-size:16px;font-weight:800;color:var(--text);white-space:nowrap}
+.tabs{display:flex;gap:6px;flex-wrap:wrap}
+.tab-btn{display:flex;align-items:center;gap:7px;padding:9px 16px;border-radius:20px;border:1px solid transparent;
+  background:transparent;color:var(--text2);font-weight:600;font-size:13px;cursor:pointer;transition:all .2s;font-family:inherit}
+.tab-btn:hover{background:rgba(var(--ov),.06);color:var(--text)}
+.tab-btn[data-tab="skincare"].active{background:var(--pk-l);color:var(--pk);border-color:rgba(255,107,214,.4)}
+.tab-btn[data-tab="cabello"].active{background:var(--am-l);color:var(--am);border-color:rgba(224,160,32,.4)}
+.tab-btn[data-tab="salud"].active{background:var(--g-l);color:var(--g);border-color:rgba(0,232,122,.4)}
+.tab-btn[data-tab="ejercicio"].active{background:var(--o-l);color:var(--o);border-color:rgba(255,107,53,.4)}
+.tab-btn[data-tab="comida"].active{background:var(--w-l);color:var(--w);border-color:rgba(255,217,61,.4)}
+.tab-btn[data-tab="dentista"].active{background:var(--mt-l);color:var(--mt);border-color:rgba(79,214,173,.4)}
+.tab-btn[data-tab="vestimenta"].active{background:var(--ve-l);color:var(--ve);border-color:rgba(193,127,74,.4)}
 
 /* VIEWS */
 .view{flex:1;min-height:0;display:none}
@@ -498,10 +446,15 @@ tbody tr:hover td{background:rgba(var(--ov),.02)}
 @media(max-width:900px){.g4{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:640px){.g4,.g3,.g2{grid-template-columns:1fr}.fr{grid-template-columns:1fr}
   .sk-step,.ca-step,.de-step{flex-direction:column}.sk-hero-top,.ca-hero-top,.de-hero-top{flex-direction:column}
-  /* (Aquí vivían los ajustes de `.topnav`/`.tabs`/`.tab-btn` para que las 7 pestañas no
-     envolvieran a 4-5 filas en móvil. Con la navegación ya en el sidebar el problema desapareció
-     de raíz: en móvil el menú se esconde por completo y no le roba ni un pixel al contenido.) */
-  .topbar{padding:10px 14px}
+  /* Topnav compacto — antes el .brand{width:100%} forzaba las 6 pestañas + Dashboard a envolver en
+     4-5 filas propias (hasta 276px de alto en iPhone 15 Pro, ~32% del viewport), robándole altura
+     al iframe de Salud/Ejercicio/Comida. Ahora las pestañas son una tira horizontal con scroll
+     propio — 1 sola fila de nav, mismo patrón que un tab-bar nativo. */
+  .topnav{flex-wrap:nowrap;padding:10px 14px;gap:10px}
+  .brand{font-size:14px;flex-shrink:0}
+  .tabs{flex:1 1 auto;min-width:0;flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+  .tabs::-webkit-scrollbar{display:none}
+  .tab-btn{flex-shrink:0;white-space:nowrap}
 }
 
 /* ══════════════════════════════════════════════════════════════════════
@@ -600,44 +553,20 @@ tbody tr:hover td{background:rgba(var(--ov),.02)}
 </head>
 <body>
 
-<!-- Sidebar (2026-08-12) — agrupado por tipo de cuidado, no como una lista plana de 7: las 3
-     primeras son rutinas de imagen que se atienden a diario, las 3 siguientes son cuerpo, y
-     Vestimenta va aparte porque es una guía de consulta, no algo que se haga cada día. -->
-<div class="sb-overlay" onclick="toggleSidebar(false)"></div>
-<nav class="sidebar" id="sidebar">
-  <div class="sb-logo">💆 Cuidado Personal</div>
-
-  <div class="sb-group">
-    <div class="sb-group-label">Imagen</div>
-    <button class="sb-link active" data-tab="skincare" onclick="mainTab('skincare')" title="Skincare"><span class="sb-ico">🧴</span><span class="sb-txt">Skincare</span></button>
-    <button class="sb-link" data-tab="cabello" onclick="mainTab('cabello')" title="Cabello"><span class="sb-ico">💇</span><span class="sb-txt">Cabello</span></button>
-    <button class="sb-link" data-tab="dentista" onclick="mainTab('dentista')" title="Dentista"><span class="sb-ico">🦷</span><span class="sb-txt">Dentista</span></button>
-  </div>
-
-  <div class="sb-group">
-    <div class="sb-group-label">Cuerpo</div>
-    <button class="sb-link" data-tab="salud" onclick="mainTab('salud')" title="Salud"><span class="sb-ico">🥗</span><span class="sb-txt">Salud</span></button>
-    <button class="sb-link" data-tab="ejercicio" onclick="mainTab('ejercicio')" title="Ejercicio"><span class="sb-ico">🏋️</span><span class="sb-txt">Ejercicio</span></button>
-    <button class="sb-link" data-tab="comida" onclick="mainTab('comida')" title="Comida"><span class="sb-ico">🍳</span><span class="sb-txt">Comida</span></button>
-  </div>
-
-  <div class="sb-group">
-    <div class="sb-group-label">Referencia</div>
-    <button class="sb-link" data-tab="vestimenta" onclick="mainTab('vestimenta')" title="Vestimenta"><span class="sb-ico">👔</span><span class="sb-txt">Vestimenta</span></button>
-  </div>
-
-  <div class="sb-foot">
-    <a href="../Dashboard/dashboard.html" class="sb-link" title="Dashboard"><span class="sb-ico">🚀</span><span class="sb-txt">Dashboard</span></a>
-    <button class="sb-link" onclick="toggleTheme()" title="Cambiar tema claro/oscuro"><span class="sb-ico" id="theme-ico">🌙</span><span class="sb-txt">Cambiar tema</span></button>
-    <button class="sb-link" onclick="toggleRail()" title="Expandir o encoger el menú"><span class="sb-ico" id="rail-ico">⟨</span><span class="sb-txt">Encoger menú</span></button>
-  </div>
-</nav>
-
-<div class="main">
-  <div class="topbar">
-    <button class="menu-btn" onclick="toggleSidebar()" aria-label="Abrir menú">☰</button>
-    <span class="topbar-title" id="topbarTitle">🧴 Skincare</span>
-  </div>
+<header class="topnav">
+  <div class="brand">💆 Cuidado Personal</div>
+  <nav class="tabs" id="mainTabs">
+    <button class="tab-btn active" data-tab="skincare" onclick="mainTab('skincare')">🧴 Skincare</button>
+    <button class="tab-btn" data-tab="cabello" onclick="mainTab('cabello')">💇 Cuidado del Cabello</button>
+    <button class="tab-btn" data-tab="salud" onclick="mainTab('salud')">🥗 Cuidado de la Salud</button>
+    <button class="tab-btn" data-tab="ejercicio" onclick="mainTab('ejercicio')">🏋️ Ejercicio</button>
+    <button class="tab-btn" data-tab="comida" onclick="mainTab('comida')">🍳 Comida</button>
+    <button class="tab-btn" data-tab="dentista" onclick="mainTab('dentista')">🦷 Dentista</button>
+    <button class="tab-btn" data-tab="vestimenta" onclick="mainTab('vestimenta')">👔 Vestimenta</button>
+    <a href="../Dashboard/dashboard.html" class="tab-btn" style="text-decoration:none;margin-left:8px;border-left:1px solid rgba(var(--ov),.12);padding-left:16px">🚀 Dashboard</a>
+  </nav>
+  <button class="theme-toggle-btn" id="theme-toggle-btn" onclick="toggleTheme()" title="Cambiar tema claro/oscuro" aria-label="Cambiar tema claro/oscuro">🌙</button>
+</header>
 
 <!-- ══════════════ SKINCARE ══════════════ -->
 <main class="view view-native active" id="view-skincare">
@@ -840,8 +769,6 @@ tbody tr:hover td{background:rgba(var(--ov),.02)}
   <div id="de-guia-body"></div>
 </main>
 
-</div><!-- /.main — cierra el contenedor de contenido que abre junto al sidebar -->
-
 <!-- CONFIRM -->
 <div class="conf" id="conf">
   <div class="conf-box">
@@ -880,10 +807,8 @@ function toggleTheme(){
   const next=html.getAttribute('data-theme')==='dark'?'light':'dark';
   html.setAttribute('data-theme',next);
   localStorage.setItem('coach-theme',next);
-  // Solo se cambia el emoji, no todo el textContent: el botón ahora lleva también la etiqueta
-  // "Cambiar tema" y sobrescribirlo entero la borraría al primer clic.
-  const ico=document.getElementById('theme-ico');
-  if(ico) ico.textContent=next==='dark'?'☀️':'🌙';
+  const btn=document.getElementById('theme-toggle-btn');
+  if(btn) btn.textContent=next==='dark'?'☀️':'🌙';
   // Empuja el tema a los iframes ya cargados (Salud/Ejercicio/Comida/Vestimenta) para que no queden desincronizados
   ['frame-salud','frame-ejercicio','frame-comida','frame-vestimenta'].forEach(id=>{
     try{
@@ -897,41 +822,14 @@ function toggleTheme(){
 // ══════════════════════════════════════════════════════════════════════════
 // NAVEGACIÓN PRINCIPAL — 7 subtabs
 // ══════════════════════════════════════════════════════════════════════════
-// Título que se muestra arriba del contenido — antes no hacía falta porque la pestaña activa se
-// veía en la barra superior; ahora que la navegación está a la izquierda (y en móvil se esconde
-// tras el botón de menú), sin esto no habría forma de saber en qué sección estás.
-const TAB_TITULO={skincare:'🧴 Skincare',cabello:'💇 Cuidado del Cabello',dentista:'🦷 Dentista',
-  salud:'🥗 Cuidado de la Salud',ejercicio:'🏋️ Ejercicio',comida:'🍳 Comida',vestimenta:'👔 Vestimenta'};
-
 function mainTab(tab){
-  document.querySelectorAll('.sb-link[data-tab]').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));
   document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id==='view-'+tab));
-  const t=document.getElementById('topbarTitle'); if(t) t.textContent=TAB_TITULO[tab]||'';
   if(tab==='salud'){const f=document.getElementById('frame-salud');if(!f.getAttribute('src'))f.src='salud.html';}
   if(tab==='ejercicio'){const f=document.getElementById('frame-ejercicio');if(!f.getAttribute('src'))f.src='ejercicio.html';}
   if(tab==='comida'){const f=document.getElementById('frame-comida');if(!f.getAttribute('src'))f.src='comida.html';}
   if(tab==='vestimenta'){const f=document.getElementById('frame-vestimenta');if(!f.getAttribute('src'))f.src='../Vestimenta/vestimenta.html';}
-  setRail(TABS_CON_MENU_PROPIO.includes(tab)); // ver la nota de `.sidebar.rail` en el CSS
-  toggleSidebar(false); // en móvil, elegir una sección cierra el menú; en escritorio no hace nada
 }
-
-// Las 4 secciones que se cargan en iframe y traen su propio sidebar de 245px — con ellas el menú
-// de aquí se encoge a barra de íconos para no sumar 500px de navegación.
-const TABS_CON_MENU_PROPIO=['salud','ejercicio','comida','vestimenta'];
-
-function setRail(encoger){
-  const sb=document.getElementById('sidebar'); if(!sb) return;
-  sb.classList.toggle('rail',!!encoger);
-  const ico=document.getElementById('rail-ico');
-  if(ico) ico.textContent=encoger?'⟩':'⟨';
-}
-function toggleRail(){ setRail(!document.getElementById('sidebar').classList.contains('rail')); }
-
-// Abre/cierra el sidebar en móvil. Sin argumento alterna; con `false` fuerza cerrado.
-function toggleSidebar(abrir){
-  document.body.classList.toggle('sb-open', abrir===undefined?!document.body.classList.contains('sb-open'):!!abrir);
-}
-document.addEventListener('keydown',e=>{ if(e.key==='Escape') toggleSidebar(false); });
 
 // ══════════════════════════════════════════════════════════════════════════
 // SKINCARE
@@ -1557,8 +1455,8 @@ deRenderGuia();
 
 const initialTab=new URLSearchParams(location.search).get('tab');
 if(['skincare','cabello','salud','ejercicio','comida','dentista','vestimenta'].includes(initialTab)) mainTab(initialTab);
-const themeIco=document.getElementById('theme-ico');
-if(themeIco) themeIco.textContent=document.documentElement.getAttribute('data-theme')==='dark'?'☀️':'🌙';
+const themeBtn=document.getElementById('theme-toggle-btn');
+if(themeBtn) themeBtn.textContent=document.documentElement.getAttribute('data-theme')==='dark'?'☀️':'🌙';
 </script>
 </body>
 </html>
