@@ -61,6 +61,56 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var
 .tab-btn[data-tab="dentista"].active{background:var(--mt-l);color:var(--mt);border-color:rgba(79,214,173,.4)}
 .tab-btn[data-tab="vestimenta"].active{background:var(--ve-l);color:var(--ve);border-color:rgba(193,127,74,.4)}
 
+/* ─── GUÍA CON MENÚ LATERAL (2026-08-12) ─────────────────────────────────────
+   Pedido de Adán: que Skincare, Cabello y Dentista tengan "la misma distribución que Coach, es
+   decir los botones a la izquierda y que solo aparezcan cosas cuando dé click". (Comida ya la
+   tenía en su propio archivo.) Antes cada una era UNA sola página larguísima: el perfil, y
+   debajo las 5-9 secciones de la guía apiladas en scroll infinito — había que bajar mucho para
+   llegar a "Tu lista de compras" o a "Qué no mezclar".
+   Ahora cada una es menú a la izquierda + una sección a la vez a la derecha, igual que Coach.
+   El menú NO está escrito a mano: se construye leyendo los encabezados de la guía ya generada
+   (ver guiaEnSecciones() en el JS), así que si mañana la guía gana o pierde una sección porque
+   cambió el perfil de Adán, el menú se actualiza solo. */
+.guia-shell{display:flex;align-items:flex-start;gap:20px;height:100%}
+.guia-nav{width:216px;flex:none;position:sticky;top:0;max-height:100%;overflow-y:auto;
+  display:flex;flex-direction:column;gap:3px;padding:4px 0}
+.guia-main{flex:1;min-width:0}
+.guia-nav-label{font-size:9.5px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;
+  color:var(--text3);padding:8px 10px 5px}
+.guia-nav-item{display:flex;align-items:center;gap:9px;padding:9px 11px;border-radius:9px;
+  border:1px solid transparent;background:transparent;color:var(--text2);font-weight:600;
+  font-size:12.5px;cursor:pointer;text-align:left;font-family:inherit;width:100%;
+  transition:background .15s,color .15s,border-color .15s}
+.guia-nav-item:hover{background:rgba(var(--ov),.06);color:var(--text)}
+.guia-nav-item .ico{flex:none;width:18px;text-align:center;font-size:14px}
+.guia-nav-item .txt{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+/* El acento del ítem activo usa el color de cada área (rosa skincare, ámbar cabello, menta
+   dentista), tomado de la variable que ya define cada vista — así el menú se siente parte de su
+   sección y no un componente genérico pegado encima. */
+#view-skincare .guia-nav-item.active{background:var(--pk-l);color:var(--pk);border-color:rgba(255,107,214,.4)}
+#view-cabello  .guia-nav-item.active{background:var(--am-l);color:var(--am);border-color:rgba(224,160,32,.4)}
+#view-dentista .guia-nav-item.active{background:var(--mt-l);color:var(--mt);border-color:rgba(79,214,173,.4)}
+/* Cada sección de la guía se muestra solo cuando su ítem está elegido. */
+.guia-sec{display:none}
+.guia-sec.active{display:block}
+/* El primer encabezado de cada sección ya no necesita el margen superior grande que lo separaba
+   de la sección anterior: ahora es lo primero que se ve. */
+.guia-sec > .sk-section-h:first-child,
+.guia-sec > .ca-section-h:first-child,
+.guia-sec > .de-section-h:first-child{margin-top:4px}
+@media(max-width:900px){
+  /* En pantallas angostas el menú pasa arriba como una tira horizontal con scroll propio: en
+     una columna de 200px los nombres de sección no caben, y apilarlos verticalmente empujaría
+     todo el contenido fuera de la pantalla. */
+  .guia-shell{flex-direction:column;gap:12px;height:auto}
+  .guia-nav{width:100%;position:static;flex-direction:row;overflow-x:auto;gap:6px;
+    scrollbar-width:none;padding-bottom:8px;border-bottom:1px solid rgba(var(--ov),.08)}
+  .guia-nav::-webkit-scrollbar{display:none}
+  .guia-nav-label{display:none}
+  .guia-nav-item{width:auto;flex:none;white-space:nowrap;border-radius:20px}
+  .guia-main{width:100%}
+}
+
 /* VIEWS */
 .view{flex:1;min-height:0;display:none}
 .view.active{display:block}
@@ -570,6 +620,9 @@ tbody tr:hover td{background:rgba(var(--ov),.02)}
 
 <!-- ══════════════ SKINCARE ══════════════ -->
 <main class="view view-native active" id="view-skincare">
+  <div class="guia-shell">
+  <nav class="guia-nav" id="sk-nav"></nav>
+  <div class="guia-main">
   <div class="sk-hero">
     <div class="sk-hero-top">
       <div>
@@ -622,10 +675,15 @@ tbody tr:hover td{background:rgba(var(--ov),.02)}
     <button class="btn btn-g" onclick="skSavePerfil()">Guardar perfil y actualizar guía</button>
   </div>
   <div id="sk-guia-body"></div>
+  </div><!-- /.guia-main -->
+  </div><!-- /.guia-shell -->
 </main>
 
 <!-- ══════════════ CABELLO ══════════════ -->
 <main class="view view-native" id="view-cabello">
+  <div class="guia-shell">
+  <nav class="guia-nav" id="ca-nav"></nav>
+  <div class="guia-main">
   <div class="ca-hero">
     <div class="ca-hero-top">
       <div>
@@ -694,6 +752,8 @@ tbody tr:hover td{background:rgba(var(--ov),.02)}
     <button class="btn btn-g" onclick="caSavePerfil()">Guardar perfil y actualizar guía</button>
   </div>
   <div id="ca-guia-body"></div>
+  </div><!-- /.guia-main -->
+  </div><!-- /.guia-shell -->
 </main>
 
 <!-- ══════════════ SALUD (app completa embebida) ══════════════ -->
@@ -718,6 +778,9 @@ tbody tr:hover td{background:rgba(var(--ov),.02)}
 
 <!-- ══════════════ DENTISTA ══════════════ -->
 <main class="view view-native" id="view-dentista">
+  <div class="guia-shell">
+  <nav class="guia-nav" id="de-nav"></nav>
+  <div class="guia-main">
   <div class="de-hero">
     <div class="de-hero-top">
       <div>
@@ -767,6 +830,8 @@ tbody tr:hover td{background:rgba(var(--ov),.02)}
   </div>
 
   <div id="de-guia-body"></div>
+  </div><!-- /.guia-main -->
+  </div><!-- /.guia-shell -->
 </main>
 
 <!-- CONFIRM -->
@@ -822,6 +887,106 @@ function toggleTheme(){
 // ══════════════════════════════════════════════════════════════════════════
 // NAVEGACIÓN PRINCIPAL — 7 subtabs
 // ══════════════════════════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════════════════════════════
+// GUÍA CON MENÚ LATERAL — Skincare / Cabello / Dentista (2026-08-12)
+// ══════════════════════════════════════════════════════════════════════════
+// Convierte una guía ya renderizada (que es HTML plano: un encabezado de sección, luego su
+// contenido, luego el siguiente encabezado…) en el layout de Coach: menú a la izquierda y una
+// sección a la vez.
+//
+// Se hace por post-proceso a propósito, en vez de reescribir las 3 plantillas gigantes que
+// generan las guías: esas plantillas dependen del perfil de Adán y cambian de secciones según
+// lo que responda (si no tiene acné, la sección de acné no existe). Leyendo los encabezados YA
+// generados, el menú siempre coincide con lo que de verdad se pintó — no hay una lista de
+// secciones escrita a mano que se pueda desincronizar.
+//
+// `guiaEnSecciones` se llama al final de cada render de guía, así que también corre cuando Adán
+// guarda un perfil nuevo y la guía se vuelve a generar.
+function guiaEnSecciones(bodyId, navId, claseHeader, formCardId){
+  const body=document.getElementById(bodyId), nav=document.getElementById(navId);
+  if(!body||!nav) return;
+
+  // 1. Agrupar: cada encabezado abre una sección y se lleva todo lo que venga hasta el siguiente.
+  const secciones=[]; let actual=null;
+  [...body.children].forEach(el=>{
+    if(el.classList.contains(claseHeader)){
+      const h3=el.querySelector('h3'), ico=el.querySelector('.ico');
+      actual={titulo:(h3?h3.textContent:'Sección').trim(), ico:ico?ico.textContent.trim():'•', nodos:[]};
+      secciones.push(actual);
+    }
+    if(actual) actual.nodos.push(el);
+  });
+  if(!secciones.length) return; // guía vacía o con otro formato — mejor dejarla como está
+
+  // 2. Envolver cada grupo en su contenedor.
+  body.innerHTML='';
+  secciones.forEach((sec,i)=>{
+    const div=document.createElement('div');
+    div.className='guia-sec'+(i===0?' active':'');
+    sec.nodos.forEach(n=>div.appendChild(n));
+    body.appendChild(div);
+    sec.el=div;
+  });
+
+  // 3. Construir el menú. "Mi perfil" va primero porque es lo que alimenta todo lo demás.
+  nav.innerHTML='';
+  const addItem=(ico,txt,onClick,activo)=>{
+    const b=document.createElement('button');
+    b.className='guia-nav-item'+(activo?' active':'');
+    b.innerHTML=`<span class="ico">${ico}</span><span class="txt">${txt}</span>`;
+    b.title=txt;
+    b.onclick=()=>{
+      nav.querySelectorAll('.guia-nav-item').forEach(x=>x.classList.remove('active'));
+      b.classList.add('active');
+      onClick();
+    };
+    nav.appendChild(b);
+    return b;
+  };
+  const lbl=document.createElement('div');
+  lbl.className='guia-nav-label'; lbl.textContent='Tu guía';
+  const mostrarSec=idx=>{
+    secciones.forEach((s,i)=>s.el.classList.toggle('active',i===idx));
+    const form=formCardId?document.getElementById(formCardId):null;
+    if(form) form.style.display='none';
+    body.style.display='';
+  };
+  if(formCardId){
+    addItem('📋','Mi perfil',()=>{
+      secciones.forEach(s=>s.el.classList.remove('active'));
+      const form=document.getElementById(formCardId);
+      if(form) form.style.display='block';
+    },false);
+  }
+  nav.appendChild(lbl);
+  secciones.forEach((sec,i)=>addItem(sec.ico,sec.titulo,()=>mostrarSec(i),i===0));
+}
+
+// El hero de cada guía conserva su botón "✏️ Editar mi perfil", que abre y cierra el formulario
+// por su cuenta. Sin esto, cerrarlo desde ahí dejaba el área de contenido en blanco: el ítem
+// "Mi perfil" del menú había ocultado todas las secciones y nadie las volvía a mostrar.
+// Estas 2 funciones mantienen menú y contenido de acuerdo, se toque el botón o el menú.
+function guiaMostrarPrimera(bodyId,navId){
+  const body=document.getElementById(bodyId), nav=document.getElementById(navId);
+  if(!body||!nav) return;
+  const secs=body.querySelectorAll('.guia-sec');
+  if(!secs.length) return;
+  secs.forEach((s,i)=>s.classList.toggle('active',i===0));
+  const items=nav.querySelectorAll('.guia-nav-item');
+  items.forEach(x=>x.classList.remove('active'));
+  // El primer ítem de sección es el que sigue a "Mi perfil" cuando ese existe.
+  const idx=items.length>secs.length?1:0;
+  if(items[idx]) items[idx].classList.add('active');
+}
+function guiaSoloPerfil(bodyId,navId){
+  const body=document.getElementById(bodyId), nav=document.getElementById(navId);
+  if(!body||!nav) return;
+  body.querySelectorAll('.guia-sec').forEach(s=>s.classList.remove('active'));
+  const items=nav.querySelectorAll('.guia-nav-item');
+  items.forEach(x=>x.classList.remove('active'));
+  if(items[0]) items[0].classList.add('active'); // "Mi perfil" siempre es el primero
+}
+
 function mainTab(tab){
   document.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));
   document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id==='view-'+tab));
@@ -913,6 +1078,7 @@ function skToggleForm(){
   const open=card.style.display!=='none';
   card.style.display=open?'none':'block';
   btn.textContent=open?'✏️ Editar mi perfil':'✕ Cerrar';
+  if(open) guiaMostrarPrimera('sk-guia-body','sk-nav'); else guiaSoloPerfil('sk-guia-body','sk-nav');
 }
 
 const SK_CONCERN_META={
@@ -1051,6 +1217,7 @@ function skRenderGuiaContent(){
     <div class="card">${consejos.map(cn=>`<div class="sk-tip"><span class="ico">${cn.ico}</span><div class="sk-tip-txt">${cn.t}</div></div>`).join('')}</div>
 
     <div class="sk-disclaimer">Esto es orientación general con productos reales de venta libre en México, no sustituye a un dermatólogo — si el acné es severo, quístico, o algo te irrita fuerte y no mejora, ve con uno.</div>`;
+  guiaEnSecciones('sk-guia-body','sk-nav','sk-section-h','sk-form-card');
 }
 function skRenderGuia(){
   skPintarPerfilForm();
@@ -1127,6 +1294,7 @@ function caToggleForm(){
   const open=card.style.display!=='none';
   card.style.display=open?'none':'block';
   btn.textContent=open?'✏️ Editar mi perfil':'✕ Cerrar';
+  if(open) guiaMostrarPrimera('ca-guia-body','ca-nav'); else guiaSoloPerfil('ca-guia-body','ca-nav');
 }
 function caLeerPerfilForm(){
   return{
@@ -1272,6 +1440,7 @@ function caRenderGuiaContent(){
     <div class="card">${consejos.map(cn=>`<div class="ca-tip"><span class="ico">${cn.ico}</span><div class="ca-tip-txt">${cn.t}</div></div>`).join('')}</div>
 
     <div class="ca-disclaimer">Esto es orientación general con productos reales de venta libre en México, no sustituye a un dermatólogo o tricólogo — si la caída es abrupta, en mechones, o viene con otros síntomas, busca atención profesional.</div>`;
+  guiaEnSecciones('ca-guia-body','ca-nav','ca-section-h','ca-form-card');
 }
 function caRenderGuia(){
   caPintarPerfilForm();
@@ -1327,6 +1496,7 @@ function deToggleForm(){
   const open=card.style.display!=='none';
   card.style.display=open?'none':'block';
   btn.textContent=open?'✏️ Editar mi perfil':'✕ Cerrar';
+  if(open) guiaMostrarPrimera('de-guia-body','de-nav'); else guiaSoloPerfil('de-guia-body','de-nav');
 }
 function deLeerPerfilForm(){
   return{
@@ -1439,6 +1609,7 @@ function deRenderGuiaContent(){
   html+=`<div class="de-disclaimer">Esto es orientación general, no sustituye una revisión profesional — si tienes dolor, sangrado abundante o cualquier señal de alerta de arriba, agenda una cita en vez de esperar a que la guía "se sienta suficiente".</div>`;
 
   document.getElementById('de-guia-body').innerHTML=html;
+  guiaEnSecciones('de-guia-body','de-nav','de-section-h','de-form-card');
 }
 function deRenderGuia(){
   dePintarPerfilForm();

@@ -176,3 +176,37 @@ Screenshots de referencia (iPad y iPhone — topnav antes/después, Skincare, Ej
 ## Cómo usarlo
 
 Se abre `cuidadopersonal.html` directamente en cualquier navegador, sin instalación ni servidor. No hay sincronización entre dispositivos. Skincare y Cabello no tienen botón de exportar JSON todavía (a diferencia de Salud y Ejercicio, que sí lo tienen dentro de su propio iframe).
+
+## Skincare, Cabello y Dentista pasan a la distribución de Coach — cada una por dentro (2026-08-12)
+
+Pedido: *"la interfaz de cabello, comida, skincare y dentista, la quiero con la misma distribucion que coach, es decir los botones a la izquierda que solo aparezcan cosas cuando de click y que se vea muy bien"*.
+
+**Primero se hizo mal.** Se interpretó como "poner un menú lateral en el contenedor Cuidado Personal que agrupe las 7 secciones", y Adán lo corrigió: *"eso no fue lo que te pedi, te dije que en especifico esas que te mencione deberian tener la distribucion de coach, en especifico, no que las englobaras en cuidado personal"*. Tenía razón — pedía que **cada una de esas interfaces** tuviera el layout por dentro, no una capa más por encima. Ese cambio se revirtió con `git revert` antes de hacer lo correcto, así que la barra de pestañas del contenedor quedó tal como estaba.
+
+**Qué eran antes**: cada una era **una sola página larguísima** — el perfil arriba y debajo sus 5-9 secciones apiladas en scroll infinito. Para llegar a "Tu lista de compras" o "Qué no mezclar" había que bajar mucho. (Comida ya tenía menú lateral en su propio archivo, por eso no se tocó.)
+
+**Ahora**: menú a la izquierda con sus secciones y una sola a la vez a la derecha, igual que Coach.
+
+| Guía | Secciones en el menú |
+|---|---|
+| Skincare | 8 — rutina de mañana, de noche, rotación semanal, qué esperar, mascarilla, qué no mezclar, lista de compras, consejos |
+| Cabello | 9 — lavado, anticaída, después de lavar, calendario, qué esperar, mascarilla, qué evitar, lista de compras, consejos |
+| Dentista | 5 — rutina diaria, cuidado especial, señales de alerta, lista de compras, consejos |
+
+### La decisión clave: el menú no está escrito a mano
+
+`guiaEnSecciones()` **lee los encabezados de la guía ya generada** y arma el menú con ellos, agrupando cada encabezado con todo el contenido que le sigue hasta el siguiente.
+
+Se hizo así, y no reescribiendo las 3 plantillas, porque **las guías cambian de secciones según el perfil de Adán**: si no tiene acné, la sección de acné no se genera; si no eligió mascarilla, esa sección no existe. Una lista de secciones escrita a mano se desincronizaría en cuanto él editara su perfil. Leyendo lo que de verdad se pintó, el menú siempre coincide. Y como se llama al final de cada render, también corre al guardar un perfil nuevo.
+
+### El conflicto que había que resolver
+
+Cada guía conserva su botón "✏️ Editar mi perfil" en el hero, que abre y cierra el formulario por su cuenta. Con el menú nuevo eso chocaba: el ítem "Mi perfil" oculta todas las secciones, así que **cerrar el formulario desde el botón dejaba el área de contenido en blanco** — nadie volvía a mostrar ninguna sección.
+
+Se resolvió con `guiaMostrarPrimera()` / `guiaSoloPerfil()`, enganchadas a las 3 funciones `*ToggleForm`: se toque el botón o el menú, ambos quedan de acuerdo.
+
+### Responsive
+
+Abajo de 900px el menú pasa arriba como tira horizontal con scroll propio y los ítems se vuelven píldoras. En una columna de 200px los nombres de sección no caben, y apilarlos verticalmente empujaría todo el contenido fuera de la pantalla.
+
+- Verificado con Node: sintaxis OK en los 2 bloques `<script>` reales; CSS 356/356 llaves; `<div>` 184/184, `<nav>` 4/4, `<main>` 7/7; la barra de pestañas del contenedor sigue intacta; las 3 guías tienen su `nav`, su llamada a `guiaEnSecciones` y su sincronización con el botón del hero; las 3 funciones nuevas existen; y simulando el agrupado, los menús salen con 8, 9 y 5 secciones con sus íconos correctos.
