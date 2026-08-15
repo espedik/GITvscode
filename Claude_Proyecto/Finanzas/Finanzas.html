@@ -965,6 +965,13 @@ function saveBudget() {
 function delBudget(id) { S.budgets=S.budgets.filter(b=>b.id!==id); save(); renderBudgets(); toast('🗑️ Eliminado'); }
 
 // ─── DEBTS ────────────────────────────────────────────────────────────────────
+// Una deuda en $0 ya no exige pago mínimo ni promedia tasa: sigue en la lista como
+// registro histórico, pero no debe contaminar ningún total ni el plan mensual.
+function deudasActivas(){ return (S.debts||[]).filter(d=>d.balance>0); }
+function minimosVigentes(){ return deudasActivas().reduce((s,d)=>s+(d.min||0),0); }
+// Mínimos de tarjeta de crédito realmente exigibles este mes (usado por el plan GBM).
+function minimosTC(){ return deudasActivas().filter(d=>d.type==='credit_card').reduce((s,d)=>s+(d.min||0),0); }
+
 function renderDebts() {
   const list=document.getElementById('debt-list');
   const empty=document.getElementById('debt-empty');
@@ -972,16 +979,18 @@ function renderDebts() {
   if(!S.debts.length){list.innerHTML='';empty.style.display='';sum.innerHTML='';return;}
   empty.style.display='none';
 
-  const totBal=S.debts.reduce((s,d)=>s+d.balance,0);
-  const totMin=S.debts.reduce((s,d)=>s+(d.min||0),0);
-  const avgRate=S.debts.reduce((s,d)=>s+(d.rate||0),0)/S.debts.length;
+  const activas=deudasActivas();
+  const liquidadas=S.debts.filter(d=>d.balance<=0);
+  const totBal=activas.reduce((s,d)=>s+d.balance,0);
+  const totMin=minimosVigentes();
+  const avgRate=activas.length?activas.reduce((s,d)=>s+(d.rate||0),0)/activas.length:0;
 
   sum.innerHTML=`
-    <div class="card card-hi"><div class="card-title">💳 Deuda Total</div><div class="card-val">${fmt(totBal)}</div><div class="card-sub">${S.debts.length} obligación(es)</div></div>
+    <div class="card card-hi"><div class="card-title">💳 Deuda Total</div><div class="card-val">${fmt(totBal)}</div><div class="card-sub">${activas.length} obligación(es) activa(s)${liquidadas.length?` · ${liquidadas.length} liquidada(s) ✅`:''}</div></div>
     <div class="card"><div class="card-title">📅 Pagos Mínimos / Mes</div><div class="card-val tc-err">${fmt(totMin)}</div><div class="card-sub">compromiso mensual</div></div>
     <div class="card"><div class="card-title">📊 Tasa Promedio Anual</div><div class="card-val tc-w">${avgRate.toFixed(2)}%</div><div class="card-sub">interés promedio</div></div>`;
 
-  list.innerHTML=S.debts.map(d=>{
+  list.innerHTML=activas.map(d=>{
     const paidPct=d.total>0?Math.max(0,Math.min(100,((d.total-d.balance)/d.total)*100)):0;
     const months=d.remainingMonths||(d.min>0?Math.ceil(d.balance/d.min):null);
     return `<div class="card">
@@ -1018,7 +1027,26 @@ function renderDebts() {
         </div>
       </div>`:''}
     </div>`;
-  }).join('');
+  }).join('')
+
+  + (liquidadas.length?`
+    <div style="font-size:10px;font-weight:700;color:var(--success);text-transform:uppercase;letter-spacing:.08em;margin:18px 0 8px">
+      ✅ Liquidadas — ya no generan pago mensual
+    </div>
+    ${liquidadas.map(d=>`
+    <div class="card" style="padding:12px 16px;border-left:3px solid var(--success);opacity:.75">
+      <div class="flex jb aic" style="gap:10px;flex-wrap:wrap">
+        <div>
+          <div class="fw7" style="font-size:13px;color:var(--success)">${d.name}</div>
+          <div class="ts tm" style="margin-top:2px">${DTYPE[d.type]||d.type} · pagada en su totalidad${d.total>0?` · original ${fmt(d.total)}`:''}</div>
+        </div>
+        <div class="flex gap6 aic">
+          <span style="font-size:15px;font-weight:800;color:var(--success)">$0</span>
+          <button class="btn btn-o btn-sm btn-ico" onclick="openDebtModal('${d.id}')">✏️</button>
+          <button class="btn btn-o btn-sm btn-ico" onclick="askDel('deuda',()=>delDebt('${d.id}'))">🗑️</button>
+        </div>
+      </div>
+    </div>`).join('')}`:'');
 }
 
 function openDebtModal(id=null) {
@@ -1228,8 +1256,14 @@ function renderGBM() {
   const SUB_GYM=1500, SUB_CLAUDE=380, SUB_ICLOUD=50;
   const SERVICIOS = SVC_CELULAR+SVC_INTERNET+SVC_GAS+SVC_AGUA+SVC_LIMPIEZA; // 1,264
   const SUSCRIPCIONES = SUB_GYM+SUB_CLAUDE+SUB_ICLOUD;                       // 1,930
-  const TC_BBVA=1500, TC_BANAMEX=810;
-  const TC_MINS=TC_BBVA+TC_BANAMEX; // 2,310
+  // Los mínimos de TC salen de las deudas reales, no de un número escrito a mano: si una
+  // tarjeta queda en $0 (Banamex, 13 ago 2026) su mínimo desaparece solo del plan semanal,
+  // y si Adán vuelve a usarla reaparece sin tocar código.
+  const _tcBBVA=(S.debts||[]).find(d=>d.id==='d001');
+  const _tcBanamex=(S.debts||[]).find(d=>d.id==='d002');
+  const TC_BBVA=(_tcBBVA&&_tcBBVA.balance>0)?(_tcBBVA.min||0):0;
+  const TC_BANAMEX=(_tcBanamex&&_tcBanamex.balance>0)?(_tcBanamex.min||0):0;
+  const TC_MINS=minimosTC();
   const CETES_DIA15 = 1500; // ahorro recurrente fijo día 15
 
   // ── Mes seleccionado (tabs) ───────────────────────────────────────────────────
@@ -1661,7 +1695,7 @@ function renderGBM() {
                   {l:'TC BBVA',a:TC_BBVA},
                   {l:'TC Banamex',a:TC_BANAMEX},
                   ...(msiActive>0?[{l:'MSI activas',a:Math.round(msiActive)}]:[]),
-                ].map(s=>`<div style="display:flex;justify-content:space-between;font-size:10px;margin-bottom:2px">
+                ].filter(s=>s.a>0).map(s=>`<div style="display:flex;justify-content:space-between;font-size:10px;margin-bottom:2px">
                   <span style="color:var(--text3)">${s.l}</span>
                   <span style="color:var(--text2);font-weight:600">${fmt(s.a)}</span>
                 </div>`).join('')}
@@ -2022,7 +2056,11 @@ function autoBalance(d, refDate) {
   // Créditos con interés y TCs se quedan manuales — dependen de pagos reales hechos
   if(!d.start || !d.balance || !d.min || d.rate !== 0 || d.type !== 'other') return d.balance;
   const start = new Date(d.start);
-  const months = Math.max(0, Math.round((refDate - start) / (30.44 * 24 * 3600 * 1000)));
+  // floor, no round: solo cuentan las cuotas YA cobradas. Con round, una cuota que aún
+  // no se cobra (p.ej. el Apple Watch cobra el 18 y hoy es 13) se daba por pagada y el
+  // saldo salía una cuota más bajo de lo real. Con floor, el iPhone 15 MSI cuadra exacto
+  // contra su saldo registrado, que es la prueba de que esta es la semántica correcta.
+  const months = Math.max(0, Math.floor((refDate - start) / (30.44 * 24 * 3600 * 1000)));
   if(months === 0) return d.balance;
   const cal = Math.max(0, (d.total || d.balance) - months * d.min);
   return Math.min(d.balance, cal);
@@ -2057,7 +2095,7 @@ function renderIndicatorsHTML(src) {
   const _msiEst2=srcDebts.filter(d=>d.rate===0&&d.balance>0&&d.type==='other'&&d.start)
     .reduce((s,d)=>{const st=new Date(d.start),tm=d.total>0&&d.min>0?Math.round(d.total/d.min):0;
       const ed=new Date(st);ed.setMonth(ed.getMonth()+tm);return new Date()<ed?s+(d.min||0):s;},0);
-  const _fixedFloor2=11000+6700+(600+200+179+135+150)+(1500+380+50)+(1500+810)+1500+_msiEst2;
+  const _fixedFloor2=11000+6700+(600+200+179+135+150)+(1500+380+50)+minimosTC()+1500+_msiEst2;
   const _fallback2=_fixedFloor2+Math.round(BASE_INC*0.15); // +15% variable (comida, transporte, etc.)
   const avgExp2 = src.avgExp !== undefined ? src.avgExp :
     (()=>{
@@ -2470,7 +2508,7 @@ function autoSaveCurrentMonthSnapshot() {
   const totAct=finAct+liqAct+fisAct+btcV;
   const totPas=S.debts.reduce((s,d)=>s+d.balance,0);
   const netW=totAct-totPas;
-  const totMin=S.debts.reduce((s,d)=>s+(d.min||0),0);
+  const totMin=minimosVigentes();
   const dti=(totMin/BASE_INC)*100;
   const p3=Array.from({length:3},(_,i)=>{
     const d=new Date(now.getFullYear(),now.getMonth()-i-1,1);
@@ -2480,7 +2518,7 @@ function autoSaveCurrentMonthSnapshot() {
   const _msiSnap=(S.debts||[]).filter(d=>d.rate===0&&d.balance>0&&d.type==='other'&&d.start)
     .reduce((s,d)=>{const st=new Date(d.start),tm=d.total>0&&d.min>0?Math.round(d.total/d.min):0;
       const ed=new Date(st);ed.setMonth(ed.getMonth()+tm);return now<ed?s+(d.min||0):s;},0);
-  const _fixedFloor=11000+6700+(600+200+179+135+150)+(1500+380+50)+(1500+810)+1500+_msiSnap;
+  const _fixedFloor=11000+6700+(600+200+179+135+150)+(1500+380+50)+minimosTC()+1500+_msiSnap;
   const avgE=vE.length>0?vE.reduce((s,e)=>s+e,0)/vE.length:_fixedFloor+Math.round(BASE_INC*0.15);
   const savRate=Math.max(0,((BASE_INC-avgE)/BASE_INC)*100);
   const mae=S.goals.find(g=>g.id==='g001')||S.goals.find(g=>g.icon==='🎓');
@@ -2723,7 +2761,12 @@ function getMonthProjection(month) {
     const d=new Date(now.getFullYear(),now.getMonth()-i,1);
     past3M.push(`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`);
   }
-  const varCats = ['Alimentación','Restaurantes','Entretenimiento'];
+  // Solo Alimentación se estima por promedio. Restaurantes y Entretenimiento salieron de aquí
+  // el 2026-08-13 a petición de Adán: su promedio venía del historial ene-jun 2026 y le estaba
+  // cargando ~$2,987/mes de gasto que hoy no tiene, inflando el costo del mes con dinero que no
+  // sale. Si vuelve a registrar movimientos reales en esas categorías, sí aparecen en el
+  // desglose — pero como REGISTRADO (transacción suya), no como estimación.
+  const varCats = ['Alimentación'];
   const varItems = varCats.map(cat=>({
     cat, amount: past3M.reduce((s,m)=>s+spentCat(cat,m),0)/3
   })).filter(v=>v.amount>0);
@@ -2747,14 +2790,46 @@ function getMonthProjection(month) {
 //   · Lo FIJO viene de getMonthProjection(m).fixed — renta, servicios, gym, suscripciones y los
 //     pagos mínimos de cada deuda/crédito (esos se generan solos desde S.debts, así que el
 //     desglose se mantiene solo cuando una deuda se liquida o cambia de mínimo).
-//   · Lo VARIABLE (comida, restaurantes, entretenimiento) sale de `varItems`, que es el promedio
-//     real de los últimos 3 meses — por eso se marca como "promedio", no como cargo del mes.
+//   · Lo VARIABLE sale de `varItems`, que es el promedio real de los últimos 3 meses — por eso se
+//     marca como "promedio", no como cargo del mes. Desde el 2026-08-13 la ÚNICA categoría que se
+//     estima así es Alimentación (ver `varCats` en getMonthProjection).
 //   · Si el mes YA tiene transacciones reales registradas, se muestran esas en vez del estimado:
 //     el dato medido siempre le gana a la proyección.
 // El orden de los apartados es fijo (ORDEN_APARTADOS) para que el más grande no salte de lugar
 // cada mes según el monto; los que no existan ese mes simplemente no se pintan.
 const GASTO_APARTADO_ICO={'Hogar/Renta':'🏠','Deudas':'💳','Servicios':'🔌','Alimentación':'🍽️','Restaurantes':'🍔','Salud':'💪','Suscripciones':'📱','Inversiones':'📈','Transporte':'🚗','Entretenimiento':'🎬','Educación':'📚','Ropa':'👕','Otros':'📦'};
 const ORDEN_APARTADOS=['Hogar/Renta','Deudas','Servicios','Alimentación','Restaurantes','Transporte','Salud','Suscripciones','Educación','Ropa','Entretenimiento','Inversiones','Otros'];
+
+// Los 2 escenarios de comida (comer fuera vs. cocinar) viven DENTRO del apartado Alimentación
+// desde el 2026-08-13 — antes eran un bloque suelto al final del modal, después de todos los
+// apartados, y Adán pidió verlos "ahí mismo". Recibe el subtotal que el desglose ya calculó para
+// Alimentación para poder contrastarlo contra los 2 escenarios sin recalcular nada.
+function escenariosAlimentacionHTML(subtotalMes){
+  const A=ALIMENTACION_MODELO;
+  return `
+  <div style="padding:12px 13px;border-top:1px solid rgba(var(--ov),.06);background:rgba(255,183,3,.05)">
+    <div style="font-size:10px;font-weight:800;color:var(--warning);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">Tus 2 escenarios</div>
+    <div style="display:flex;gap:9px;flex-wrap:wrap;margin-bottom:9px">
+      <div style="flex:1;min-width:145px;padding:9px 11px;border-radius:9px;background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.22)">
+        <div style="font-size:9.5px;font-weight:700;color:var(--danger);text-transform:uppercase">Comprando como hoy</div>
+        <div style="font-size:19px;font-weight:900;color:var(--danger);margin-top:3px">${fmt(A.mensualActual)}</div>
+        <div style="font-size:9.5px;color:var(--text3);margin-top:3px;line-height:1.4">${fmt(A.precioCalle)} × ${A.vecesPorDia} comidas fuera × ${A.diasPorMes} días, más tu desayuno en casa</div>
+      </div>
+      <div style="flex:1;min-width:145px;padding:9px 11px;border-radius:9px;background:rgba(0,232,122,.08);border:1px solid rgba(0,232,122,.22)">
+        <div style="font-size:9.5px;font-weight:700;color:var(--success);text-transform:uppercase">Cocinando todo</div>
+        <div style="font-size:19px;font-weight:900;color:var(--success);margin-top:3px">${fmt(A.mensualCocinando)}</div>
+        <div style="font-size:9.5px;color:var(--text3);margin-top:3px;line-height:1.4">Con el costo real de tus recetas: desayuno ${fmt(A.costoDesayunoCasa)}, cena ${fmt(A.costoCenaCasa)}</div>
+      </div>
+    </div>
+    <div style="font-size:11px;color:var(--text2);line-height:1.6">
+      Diferencia: <b style="color:var(--warning)">${fmt(A.ahorroMensual)} al mes</b> · ${fmt(A.ahorroMensual*12)} al año — dinero que ya sale y que puede ir a BBVA sin ganar un peso más.
+      <a href="../CuidadoPersonal/comida.html" style="color:var(--primary);font-weight:700;text-decoration:none">Ver tus recetas →</a>
+    </div>
+    ${subtotalMes>0?`<div style="font-size:10px;color:var(--text3);line-height:1.5;margin-top:7px;padding-top:7px;border-top:1px solid rgba(var(--ov),.07)">
+      Arriba se cuentan <b style="color:var(--text2)">${fmt(subtotalMes)}</b> para este mes, que es lo medido. Los escenarios son tu patrón declarado — si la diferencia es grande, es señal de que falta registrar gasto de comida.
+    </div>`:''}
+  </div>`;
+}
 
 function abrirDesgloseGastos(m){
   const proj=getMonthProjection(m);
@@ -2787,7 +2862,7 @@ function abrirDesgloseGastos(m){
     <div style="font-size:11px;color:var(--text3);line-height:1.6;margin-bottom:14px">
       ${hayReales
         ? `Incluye <b style="color:var(--success)">${mtx.length} movimiento${mtx.length===1?'':'s'} ya registrado${mtx.length===1?'':'s'}</b> de este mes, más tus gastos fijos.`
-        : `Este mes aún no tiene movimientos registrados, así que son tus <b>gastos fijos</b> más el <b style="color:var(--warning)">promedio real de los últimos 3 meses</b> en comida y entretenimiento.`}
+        : `Este mes aún no tiene movimientos registrados, así que son tus <b>gastos fijos</b> más el <b style="color:var(--warning)">promedio real de los últimos 3 meses</b> en comida.`}
     </div>
     ${cats.map(c=>{
       const items=g[c].sort((a,b)=>b.amount-a.amount);
@@ -2807,29 +2882,9 @@ function abrirDesgloseGastos(m){
             <span style="font-size:9.5px;font-weight:700;color:${colorTipo[i.tipo]};text-transform:uppercase;letter-spacing:.04em;white-space:nowrap">${etiqueta[i.tipo]}</span>
             <span style="font-size:12.5px;font-weight:800;color:var(--text);white-space:nowrap;min-width:80px;text-align:right">${fmt(i.amount)}</span>
           </div>`).join('')}
+        ${c==='Alimentación'?escenariosAlimentacionHTML(sub):''}
       </div>`;
     }).join('')}
-    ${(()=>{const A=ALIMENTACION_MODELO;return `
-    <div style="margin:4px 0 14px;padding:14px 16px;border-radius:10px;background:rgba(255,183,3,.06);border:1px solid rgba(255,183,3,.28)">
-      <div style="font-size:11px;font-weight:800;color:var(--warning);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">🍽️ Comer fuera vs. cocinar</div>
-      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px">
-        <div style="flex:1;min-width:150px;padding:10px 12px;border-radius:9px;background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.22)">
-          <div style="font-size:10px;font-weight:700;color:var(--danger);text-transform:uppercase">Como hoy</div>
-          <div style="font-size:20px;font-weight:900;color:var(--danger);margin-top:3px">${fmt(A.mensualActual)}</div>
-          <div style="font-size:10px;color:var(--text3);margin-top:3px;line-height:1.4">${fmt(A.precioCalle)} × ${A.vecesPorDia} comidas fuera × ${A.diasPorMes} días, más tu desayuno en casa</div>
-        </div>
-        <div style="flex:1;min-width:150px;padding:10px 12px;border-radius:9px;background:rgba(0,232,122,.08);border:1px solid rgba(0,232,122,.22)">
-          <div style="font-size:10px;font-weight:700;color:var(--success);text-transform:uppercase">Cocinando todo</div>
-          <div style="font-size:20px;font-weight:900;color:var(--success);margin-top:3px">${fmt(A.mensualCocinando)}</div>
-          <div style="font-size:10px;color:var(--text3);margin-top:3px;line-height:1.4">Con el costo real de tus propias recetas: desayuno ${fmt(A.costoDesayunoCasa)}, cena ${fmt(A.costoCenaCasa)}</div>
-        </div>
-      </div>
-      <div style="font-size:11.5px;color:var(--text2);line-height:1.6">
-        Diferencia: <b style="color:var(--warning)">${fmt(A.ahorroMensual)} al mes</b> — ${fmt(A.ahorroMensual*12)} al año.
-        Es dinero que ya estás gastando y que podría ir a tu deuda cara sin ganar un peso más.
-        <a href="../CuidadoPersonal/comida.html" style="color:var(--primary);font-weight:700;text-decoration:none">Ver tus recetas →</a>
-      </div>
-    </div>`;})()}
     <div style="font-size:10.5px;color:var(--text3);line-height:1.6;padding-top:6px;border-top:1px solid rgba(var(--ov),.08)">
       <b style="color:var(--text3)">FIJO</b> = se repite cada mes (renta, servicios, pagos de crédito) ·
       <b style="color:var(--warning)">PROMEDIO</b> = estimado con tu gasto real de los últimos 3 meses o con tu patrón declarado ·
@@ -3186,7 +3241,7 @@ function renderSpecials(freeMonth, refDate=new Date()) {
   // ── Cálculo realista del sobrante mensual (igual que plan GBM) ──────────────
   const _gbmQUINc=Math.round(41000/2);
   const _gbmRENTA=11000,_gbmAUTO=6700;
-  const _gbmSVC=600+200+179+135+150,_gbmSUB=1500+380+50,_gbmTC=1500+810,_gbmCETES=1500;
+  const _gbmSVC=600+200+179+135+150,_gbmSUB=1500+380+50,_gbmTC=minimosTC(),_gbmCETES=1500;
   const _gbmMSI=(S.debts||[]).filter(d=>d.rate===0&&d.balance>0&&d.type==='other'&&d.start)
     .reduce((s,d)=>{
       const st=new Date(d.start),tm=d.total>0&&d.min>0?Math.round(d.total/d.min):0;
@@ -3463,7 +3518,7 @@ function renderSpecials(freeMonth, refDate=new Date()) {
       <div class="card-title" style="margin-bottom:6px">🗺️ Hoja de Ruta: Libertad de Deudas</div>
       <div class="ts tm" style="margin-bottom:14px">
         Deuda total: <strong style="color:var(--danger)">${fmt(S.debts.reduce((s,d)=>s+d.balance,0))}</strong> ·
-        Pagos mensuales: <strong style="color:var(--warning)">${fmt(S.debts.reduce((s,d)=>s+(d.min||0),0))}/mes</strong>
+        Pagos mensuales: <strong style="color:var(--warning)">${fmt(minimosVigentes())}/mes</strong>
       </div>
       <div style="display:flex;flex-direction:column;gap:8px">
 
@@ -3618,9 +3673,12 @@ function renderSubscriptions(refDate=new Date()) {
     .map(d=>{
       const st = new Date(d.start);
       const totalM = d.total>0&&d.min>0 ? Math.round(d.total/d.min) : Math.ceil(d.balance/(d.min||1));
-      const endD = new Date(st); endD.setMonth(endD.getMonth()+totalM);
-      const elapsed = Math.max(0, Math.round((now-st)/2592000000));
-      const remaining = Math.max(0, totalM-elapsed);
+      // Las cuotas que faltan salen del saldo, no de contar meses desde la fecha de compra:
+      // el saldo es el dato que se mantiene a mano contra el estado de cuenta real, mientras
+      // que aproximar meses con bloques de 30 días se desfasaba y quitaba una cuota de más.
+      const remaining = d.min>0 ? Math.ceil(d.balance/d.min) : 0;
+      // Última cuota = este mes + (restantes − 1), en el día de cobro de la deuda.
+      const endD = new Date(now.getFullYear(), now.getMonth()+Math.max(0,remaining-1), d.day||28);
       return {...d, _totalM:totalM, _remaining:remaining, _endDate:endD};
     })
     .filter(d=>d._remaining>0)
@@ -3786,6 +3844,9 @@ function seedData() {
   localStorage.removeItem(KEY);
   S = {
     transactions: [
+      // ── AGOSTO 2026 ──
+      {id:'s064',type:'expense',desc:'Liquidación total TC Banamex',   amount:9000,   date:'2026-08-13',cat:'Deudas',                notes:'Pago del saldo completo — tarjeta a $0'},
+      {id:'s065',type:'expense',desc:'Boletos Ticketmaster (3/3)',     amount:1260,   date:'2026-08-13',cat:'Entretenimiento',        notes:'MSI 0% interés — última cuota, liquidado'},
       // ── JUNIO 2026 ──
       {id:'s001',type:'income', desc:'Salario',                        amount:41000,  date:'2026-06-01',cat:'Salario',                notes:''},
       {id:'s001b',type:'income',desc:'Didi — conductor',              amount:11200,  date:'2026-06-28',cat:'Freelance/Honorarios',  notes:'~$400/día × 28 días'},
@@ -3924,7 +3985,11 @@ function seedData() {
       {id:'b002',cat:'Alimentación',    limit:3000},
       {id:'b003',cat:'Restaurantes',    limit:2000},
       {id:'b004',cat:'Servicios',       limit:1200},
-      {id:'b005',cat:'Deudas',          limit:11700},
+      // $8,200 = crédito automotriz $6,700 + mínimo TC BBVA $1,500. Bajó de $11,700 el
+      // 13 ago 2026 al liquidarse Banamex: su mínimo de $810 ya no se debe, y el resto del
+      // colchón viejo cubría deudas que resultaron no existir. Los MSI NO entran aquí —
+      // `loadRecurringForMonth()` los carga en la categoría Suscripciones.
+      {id:'b005',cat:'Deudas',          limit:8200},
       {id:'b006',cat:'Suscripciones',   limit:2000},
       {id:'b007',cat:'Viajes',          limit:500},
       {id:'b008',cat:'Transporte',      limit:2000},
@@ -3933,13 +3998,25 @@ function seedData() {
     ],
     debts: [
       {id:'d001',name:'Tarjeta BBVA',                  type:'credit_card',total:32343.31,  balance:32343.31,  rate:10,    min:1500, day:11,start:'2024-01-22'},
-      {id:'d002',name:'Tarjeta Banamex',               type:'credit_card',total:14349.72,  balance:9000,      rate:10,    min:810,  day:8, start:'2024-06-18', noInterest:12238},
+      // Liquidada el 13 ago 2026 — Adán pagó el saldo completo. Se conserva en la lista
+      // como registro (la tarjeta sigue existiendo), pero ya no exige mínimo ni interés.
+      {id:'d002',name:'Tarjeta Banamex',               type:'credit_card',total:14349.72,  balance:0,         rate:10,    min:810,  day:8, start:'2024-06-18', noInterest:0},
       {id:'d003',name:'Crédito Automotriz',            type:'car',        total:315800,    balance:299000,    rate:12.99, min:6700, day:1, start:'2026-01-01', remainingMonths:61},
-      {id:'d004',name:'Apple Watch MSI (TC Banamex)',  type:'other',      total:10248,     balance:2562,      rate:0,     min:854,  day:16,start:'2025-09-16'},
-      {id:'d005',name:'Vuelo Viva Aerobus (TC BBVA)',  type:'other',      total:5280,      balance:1320,      rate:0,     min:440,  day:16,start:'2025-09-16'},
-      {id:'d006',name:'Mercado Libre (MSI)',           type:'other',      total:3940,      balance:3940,      rate:0,     min:1314, day:0, start:'2026-06-20'},
-      {id:'d007',name:'Boletos Ticketmaster (MSI)',   type:'other',      total:3780,      balance:1260,      rate:0,     min:1260, day:0, start:'2026-04-20'},
-      {id:'d008',name:'iPhone 15 MSI',               type:'other',      total:13337.46,  balance:11361.54,  rate:0,     min:493.98,day:0, start:'2026-03-20'}
+      // Quedan 2 cuotas: 18 ago y 18 sep 2026 (confirmado por Adán el 13 ago 2026).
+      {id:'d004',name:'Apple Watch MSI (TC Banamex)',  type:'other',      total:10248,     balance:1708,      rate:0,     min:854,  day:18,start:'2025-09-16'},
+      // d005 (Vuelo Viva Aerobus) y d006 (Mercado Libre) se ELIMINARON el 13 ago 2026: Adán
+      // revisó su historial real de BBVA y esos dos MSI no existen — no aparecen en ningún
+      // movimiento. Se borran en vez de ponerlos en $0 porque nunca fueron deuda suya.
+      // Liquidados el 13 ago 2026 — se pagó la última de las 3 cuotas MSI.
+      {id:'d007',name:'Boletos Ticketmaster (MSI)',   type:'other',      total:3780,      balance:0,         rate:0,     min:1260, day:0, start:'2026-04-20'},
+      {id:'d008',name:'iPhone 15 MSI',               type:'other',      total:13337.46,  balance:11361.54,  rate:0,     min:493.98,day:0, start:'2026-03-20'},
+      // MSI reales de la TC BBVA, leídos del estado de cuenta con corte del 22 jul 2026
+      // (captura que mandó Adán el 13 ago 2026). El `start` de cada uno está puesto para que
+      // `autoBalance()` reproduzca exactamente las cuotas ya cobradas: 30.44 días por mes desde
+      // esa fecha dan el número de cargos que se ven en el estado de cuenta, ni uno más.
+      {id:'d009',name:'Zap Stylo (MSI TC BBVA)',      type:'other',      total:1002,      balance:334,       rate:0,     min:167,  day:22,start:'2026-03-22'},
+      {id:'d010',name:'Merpago*Merca (MSI TC BBVA)', type:'other',      total:1791,      balance:597,       rate:0,     min:597,  day:22,start:'2026-05-22'},
+      {id:'d011',name:'Mercado Pago (MSI TC BBVA)',  type:'other',      total:2151,      balance:717,       rate:0,     min:717,  day:22,start:'2026-05-22'}
     ],
     goals: [
       {id:'g001',name:'Maestría en Alemania', target:500000, current:53740, date:'2028-10-01', pausadaHasta:'2027-07-18',icon:'🎓'},
@@ -4126,7 +4203,7 @@ function renderPatrimonio() {
   document.getElementById('pat-debts-summary').innerHTML=`
     <div class="card-title" style="margin-bottom:12px">💳 Resumen de Pasivos</div>
     <div style="display:flex;flex-direction:column;gap:6px">
-      ${S.debts.map(d=>{
+      ${S.debts.filter(d=>d.balance>0).map(d=>{
         const pct=totalPasivos>0?(d.balance/totalPasivos)*100:0;
         const col=d.rate===0?'var(--success)':d.type==='car'?'var(--danger)':'var(--warning)';
         return `<div class="flex jb aic" style="padding:7px 0;border-bottom:1px solid rgba(255,255,255,.05)">
@@ -4609,6 +4686,49 @@ function init() {
     const _banamex=S.debts.find(d=>d.id==='d002');
     if(_banamex){_banamex.balance=9000;save();}
     localStorage.setItem(KEY+'_banamex9k','1');
+  }
+  // Migración 2026-08-13: Adán liquidó la TC Banamex (saldo $0) y pagó la última cuota de
+  // los Boletos Ticketmaster. Además confirmó que del Apple Watch MSI solo quedan 2 cuotas
+  // —18 ago y 18 sep 2026, $1,708— y no las 3 que estaban registradas. Misma técnica de
+  // bandera propia que la migración anterior: se aplica una sola vez sobre lo que ya tenga
+  // el navegador, sin subir SEED_VER (eso borraría los movimientos que Adán haya capturado
+  // a mano en julio y agosto, meses que el seed todavía no cubre).
+  if(!localStorage.getItem(KEY+'_pagos20260813')){
+    const _bx=S.debts.find(d=>d.id==='d002');
+    if(_bx){_bx.balance=0;_bx.noInterest=0;}
+    const _tm=S.debts.find(d=>d.id==='d007');
+    if(_tm) _tm.balance=0;
+    const _aw=S.debts.find(d=>d.id==='d004');
+    if(_aw){_aw.balance=1708;_aw.day=18;}
+    if(!S.transactions.some(t=>t.id==='s064'))
+      S.transactions.push({id:'s064',type:'expense',desc:'Liquidación total TC Banamex',amount:9000,date:'2026-08-13',cat:'Deudas',notes:'Pago del saldo completo — tarjeta a $0'});
+    if(!S.transactions.some(t=>t.id==='s065'))
+      S.transactions.push({id:'s065',type:'expense',desc:'Boletos Ticketmaster (3/3)',amount:1260,date:'2026-08-13',cat:'Entretenimiento',notes:'MSI 0% interés — última cuota, liquidado'});
+    save();
+    localStorage.setItem(KEY+'_pagos20260813','1');
+  }
+  // Migración 2026-08-13b: Adán revisó su historial real de BBVA contra lo registrado aquí.
+  // (1) El "Vuelo Viva Aerobus" y el "Mercado Libre (MSI)" NO existen — no aparecen en ningún
+  //     movimiento suyo. Se BORRAN del array (no se ponen en $0): nunca fueron deuda real, y
+  //     dejarlos en $0 los mostraría para siempre en el bloque de "Liquidadas" como si los
+  //     hubiera pagado.
+  // (2) En su lugar entran los 3 MSI reales de la TC BBVA que sí salen en su estado de cuenta
+  //     con corte del 22 jul 2026: Zap Stylo (cuota 4 de 6), Merpago*Merca y Mercado Pago
+  //     (cuota 2 de 3 cada uno).
+  // (3) El presupuesto de Deudas baja de $11,700 a $8,200 (auto $6,700 + mínimo BBVA $1,500),
+  //     que es el compromiso real ahora que Banamex está en $0.
+  if(!localStorage.getItem(KEY+'_msibbva20260813')){
+    S.debts=S.debts.filter(d=>d.id!=='d005'&&d.id!=='d006');
+    const _msiBBVA=[
+      {id:'d009',name:'Zap Stylo (MSI TC BBVA)',     type:'other',total:1002,balance:334,rate:0,min:167,day:22,start:'2026-03-22'},
+      {id:'d010',name:'Merpago*Merca (MSI TC BBVA)',type:'other',total:1791,balance:597,rate:0,min:597,day:22,start:'2026-05-22'},
+      {id:'d011',name:'Mercado Pago (MSI TC BBVA)', type:'other',total:2151,balance:717,rate:0,min:717,day:22,start:'2026-05-22'},
+    ];
+    _msiBBVA.forEach(n=>{ if(!S.debts.some(d=>d.id===n.id)) S.debts.push(n); });
+    const _bDeudas=S.budgets.find(b=>b.id==='b005'||b.cat==='Deudas');
+    if(_bDeudas) _bDeudas.limit=8200;
+    save();
+    localStorage.setItem(KEY+'_msibbva20260813','1');
   }
   // Asegurar que el fondo de emergencia exista en metas
   if(!S.goals.find(g=>g.id==='ef-001')) {

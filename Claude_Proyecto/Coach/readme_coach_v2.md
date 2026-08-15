@@ -502,3 +502,75 @@ Los 4 números congelados (deuda total −$308,830, deuda cara $46,693 = Banamex
 Al verificar el balance de etiquetas, Coach daba 7 aperturas contra 5 cierres. **No era un error real ni lo introdujo este cambio** (en `HEAD` daba 8/6, el mismo desbalance de 2): eran 2 **comentarios** —uno de CSS y uno de JS— que citaban la etiqueta literal `<details class="fase-month" ...>` como texto. Es exactamente el mismo tropiezo ya documentado en este proyecto con `<script>` dentro de comentarios. Se reescribieron los 2 comentarios para describir el elemento en prosa ("un elemento details con clase .fase-month") en vez de citarlo con corchetes angulares, y el conteo quedó en 5/5 limpio.
 
 - Verificado con Node: sintaxis OK en las 2 apps; CSS 532/532 y 438/438; `<div>` 281/281 y 1577/1577; `<details>` 5/5. Simulando hoy (12 ago 2026): **Fase 0 sale como activa**, con rango 1 ago → 30 sep; los meses de la fase son solo `2026-08` (6 tareas) y `2026-09` (1); los 7 ids `s0-1`…`s0-7` siguen presentes en las 2 apps; `const inicio` y `fases[0].ini` coinciden en `2026, 7, 1`.
+
+## Plan Maestro rehecho: Banamex liquidada 5 meses antes y la cascada de deuda recorrida (2026-08-13)
+
+Adán liquidó la TC Banamex el 13 ago 2026 pagando los $9,000 completos, no el mínimo. El Plan Maestro la daba por liquidada hasta **ene 2027** como meta de Fase 1, así que toda la cascada estaba desactualizada. Pidió explícitamente actualizarlo *"pon como check que ya pagué Banamex y la fecha"*.
+
+### Qué cambió en Diagnóstico & Plan
+
+**Calendario real de tu deuda** — reescrito contra los datos reales de `Finanzas.html`. Salieron el Vuelo Viva Aerobus MSI y el Mercado Libre MSI (no existen en su historial de BBVA, ver [`../Finanzas/readme_finanzas.md`](../Finanzas/readme_finanzas.md)) y entraron los 3 MSI reales (Merpago*Merca, Mercado Pago, Zap Stylo). Banamex y Ticketmaster aparecen ahora como filas ✅ en verde con la fecha. La cifra de flujo liberado se recalculó: la carga de MSI cae **$2,829 → $1,515 → $494** entre agosto y octubre, liberando **$2,335/mes**, más los **$810/mes** del mínimo de Banamex = **$3,145/mes** (antes decía $3,868, que era la suma del set viejo de MSI).
+
+**Simulación de pago de deuda** — rehecha entera. Ya no hay dos tarjetas en cascada: BBVA es la única deuda cara. Recibe $2,310/mes en agosto, $3,624 en septiembre y $4,645 de octubre en adelante conforme caen los MSI. Proyección con interés del 10% anual incluido: **BBVA liquidada en mar 2027, deuda cara en $0 en abr 2027** — 4 meses antes que el plan viejo (ago 2027) y 3 meses antes de su fecha de revisión de la Maestría.
+
+**Fase 0 y Fase 1** — la meta de Fase 0 pasa de "activos vendidos aplicados a Banamex" a BBVA, con la liquidación marcada en verde. La meta financiera de Fase 1 era literalmente "Banamex liquidada"; como ya se cumplió, se sustituyó por **bajar BBVA de $32,343 a menos de $15,000**, que es lo que sí queda por hacer en esa ventana. `s0-7`, `s1-1` y `pf9` (orden de a dónde va cada peso extra) apuntan ahora a BBVA.
+
+### Checks nuevos y sembrados
+
+Tres tareas quedaron cumplidas: `s0-1`/`pf1` (corregir el presupuesto de Deudas, que quedó en $8,200) y la liquidación en sí. Se agregó `s0-8` ("Liquidar la TC Banamex") en Fase 0 para que el hecho tenga su propia casilla con fecha, y `mtc6` ("Cancelar la tarjeta Banamex ahora que está en $0") en 🚩 Corto plazo — porque la meta original `mtc3` decía *"liquidar la deuda **y cancelar la tarjeta**"* y solo se cumplió la primera mitad; marcarla entera habría sido dar por hecho algo que no pasó.
+
+`seedChecks20260813()` siembra `s0-1`, `s0-8`, `pf1` y `mtc3` como marcadas en `coach_checks_v1`. **No** se usó el atributo `checked` en el HTML: se re-aplicaría en cada carga y Adán no podría desmarcarlas nunca. Es el mismo patrón que `seedMetasLogradasIfNeeded()` del Dashboard — bandera propia (`coach_checks_v1_seed20260813`), corre una sola vez, y solo escribe la clave si no existía ya (`st[id] === undefined`), así que no pisa una decisión previa suya.
+
+`renderProgresoReal()` no necesitó tocarse: lee `finanzasmx_v2` en vivo, así que la deuda cara ya refleja Banamex en $0 sola. Los 4 números congelados del 18 jul 2026 (`deudaCaraInicial = 46693`) se quedan como están — son la medición de referencia contra la que se mide justamente este avance.
+
+Verificado con Playwright: los 4 checks aparecen marcados en una carga limpia, `mtc6` sin marcar, el calendario ya no menciona el Mercado Libre MSI, aparecen los 3 MSI nuevos, "Ene 2027" desapareció y "Mar 2027" está presente. Y la prueba que importa del patrón de siembra: **desmarcando `mtc3` a mano y recargando, sigue desmarcado** — el seed no lo vuelve a forzar.
+
+## Segunda pasada del Plan Maestro: lo que quedó desfasado en Metas y Diagnóstico (2026-08-13)
+
+Adán revisó la ronda anterior y detectó lo que faltaba: *"Corto, mediano y largo plazo aquí no actualizaste la deuda"*. Tenía razón — se habían actualizado los ítems del checklist (`mtc3`, `mtc4`, `mtc6`, `mtm1`) pero no los **textos introductorios** de cada tarjeta de plazo, que seguían citando el calendario viejo:
+
+- **🚩 Corto plazo** decía "coincide casi exacto con dejar la deuda cara en $0" refiriéndose a jul 2027. Ahora dice que Banamex ya cayó y la deuda cara se proyecta a **abr 2027, 3 meses antes** de la revisión de la Maestría.
+- **🧭 Mediano plazo** decía "una vez que la deuda cara esté en $0" sin fecha. Ahora cita abr 2027 y aclara que ya solo falta BBVA.
+
+### Los 3 hallazgos del diagnóstico también estaban muertos
+
+El **hallazgo 01** ("Tu presupuesto de deudas está subfinanciado") comparaba $13,372/mes de mínimos contra un presupuesto de $11,700 = hueco de $1,672. Los dos números cambiaron: los mínimos vigentes son **$11,028.98** y el presupuesto quedó corregido en $8,200, que cuadra exacto. En vez de borrar el hallazgo, **se reescribió mostrando que la fuga se movió**: los MSI se contabilizan en la categoría *Suscripciones*, no en *Deudas*, y ahí van $3,259/mes ($2,829 de MSI + $430 de Claude Code e iCloud) contra un presupuesto de $2,000 — **hueco real hoy: $1,259/mes**, que se cierra solo en octubre cuando los MSI bajen a $494. Un hallazgo que se vuelve falso no se tacha, se actualiza a lo que sí es verdad ahora.
+
+El **hallazgo 02** ("El margen real de tu sueldo es mínimo") calculaba $26,000 + $13,372 = $39,372, dejando ~$1,628/mes de margen. Con los mínimos reales: $26,000 + $11,029 = **$37,029**, margen de **$3,971/mes** — más del doble. Se mantiene la conclusión de fondo (su capacidad de maniobra viene de lo extra que genere, no del sueldo) porque sigue siendo cierta, pero con el número correcto.
+
+### Y la copia gemela en el Dashboard
+
+`PHASES` y `META_DETALLE` de `dashboard.html` son duplicados a mano del Plan Maestro y de las metas (ver [README maestro](../README.md) → "Ramificaciones" #3), así que habían quedado desincronizados de la ronda anterior. Se replicó todo: meta y `explica` de Fase 0/1/2, `s0-1`, `s0-7`, `s1-1`, `s2-2`, el nuevo `s0-8`, los pasos de deuda dentro de `META_DETALLE` (`byd`, `cupra`, `depa`, `empresa`) y los 2 avisos de calendario de sep/oct 2026. Detalle en [`../Dashboard/readme_dashboard.md`](../Dashboard/readme_dashboard.md).
+
+**Lección para la próxima**: al actualizar un hecho financiero en Coach no basta con los ítems de checklist — hay que barrer también los párrafos introductorios, los hallazgos del diagnóstico y las 2 estructuras duplicadas del Dashboard. Un `grep` de las cifras viejas (`13,372`, `3,868`, `Ene 2027`) sobre los dos archivos habría encontrado todo esto de una vez.
+
+## Fase 0 reordenada por prioridad real (2026-08-13, tercera pasada)
+
+Instrucción de Adán: *"lo de fase 0, la prioridad ahora es tener mi fondo de emergencia y después otra tarea es liquidar BBVA, deja ahí que ya liquidé Banamex, lo de revisar fotos eso déjalo pendiente, pero lo de llamada exploratoria quítalo —eso ya sé qué hacer con mi papá—, lo de la plantilla de Finanzas déjalo en una sola tarea"*.
+
+### Nuevo orden del checklist de agosto
+
+Las 2 prioridades financieras van **primero y numeradas**, y lo ya cumplido baja al final para no competir por su atención:
+
+| # | id | Tarea |
+|---|---|---|
+| 1 | `s0-9` **(nuevo)** | **Prioridad 1** — Fondo de emergencia a $10,000 |
+| 2 | `s0-10` **(nuevo)** | **Prioridad 2** — Liquidar la TC BBVA ($32,343) |
+| 3 | `s0-4` | Subir activos ociosos a Marketplace — es lo que financia la Prioridad 1 |
+| 4 | `s0-3` | Plantilla Finanzas.html, de principio a fin (una sola tarea) |
+| 5 | `s0-2` | Revisar las fotos y el material del negocio de su papá |
+| 6 | `s0-6` | Pausa de aportaciones a la Maestría |
+| 7 | `s0-8` | ✅ Liquidar la TC Banamex (13 ago 2026) |
+| 8 | `s0-1` | ✅ Corregir "Deudas" en Finanzas ($8,200) |
+
+**`s0-5` eliminada** (agendar la llamada exploratoria con su papá). **`s0-3` y `s0-4` refundidas**: la plantilla era una tarea partida en dos —crear la versión limpia por un lado, publicarla por otro— y ahora es una sola de principio a fin. `s0-4` conserva su id pero se queda solo con la venta de activos, que nunca fue parte de la plantilla y además es la fuente más rápida para completar el fondo de emergencia.
+
+**Por qué se conservan los ids en vez de renumerar todo**: `coach_checks_v1` guarda el estado por id. Renumerar habría borrado lo que Adán ya tuviera marcado. Los ids nuevos (`s0-9`, `s0-10`, `pf11`, `pf12`) son para tareas que antes no existían; el `s0-5` huérfano en localStorage es inofensivo.
+
+También se reordenaron los "Próximos 14 días" (`pf11`/`pf12` nuevos con las 2 prioridades arriba, `pf7` de la llamada exploratoria fuera, `pf6` con la plantilla completa) y el párrafo de contexto de la sección de Negocios, que listaba "las 3 cosas que definen si esta fase se cumple" con Banamex todavía dentro.
+
+### El conteo de acciones ahora se calcula solo
+
+El párrafo de "Próximos 14 días" decía "Estas 9 acciones" escrito a mano. Al quitar una y agregar dos quedó en 10 y el texto se desincronizó — de hecho se escribió mal "8" en la primera versión de este cambio, y lo detectó la verificación con Playwright, no la lectura del código. Ahora hay un `<span id="pfCount">` que se llena contando los checkboxes reales del card al cargar. Un número escrito a mano sobre una lista que cambia es una promesa que se rompe sola.
+
+Verificado con Playwright: el orden de Fase 0 es `s0-9 → s0-10 → s0-4 → s0-3 → s0-2 → s0-6 → s0-8 → s0-1 → s0-7`, la palabra "exploratoria" ya no aparece en ninguna parte del archivo renderizado, la plantilla sale como una sola tarea, el conteo declarado (10) cuadra con el real, los 4 checks sembrados siguen marcados, y marcar `s0-9` persiste tras recargar.

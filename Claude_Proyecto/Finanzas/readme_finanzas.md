@@ -46,8 +46,8 @@ Variables globales adicionales: `editId`, `confCb`, `payDebtId`, `contribGoalId`
 | Crédito Dolphin Mini | $6,700    | Día 14         |
 | Celular (datos)      | $600      | Día 15 (Sem 3) |
 | Gym                  | $1,500    | Día 15 (Sem 3) |
-| TC BBVA mínimo       | $1,500    | Día 15 (Sem 3) |
-| TC Banamex mínimo    | $810      | Día 15 (Sem 3) |
+| TC BBVA mínimo       | $1,500    | Día 15 (Sem 3) — ya **no** hardcodeado, sale de `S.debts` (ver abajo) |
+| TC Banamex mínimo    | $0        | Liquidada el 2026-08-13 — desaparece sola del plan |
 | Internet             | $200      | Día 15 (Sem 3) |
 | Gas                  | $179      | Día 15 (Sem 3) |
 | Claude Code          | $380      | Día 15 (Sem 3) |
@@ -188,8 +188,16 @@ Elimina presupuesto por `id`, guarda y refresca.
 
 ## Módulo: Deudas
 
+### Helpers de deuda vigente (2026-08-13)
+Tres funciones de nivel superior que existen para que una deuda liquidada nunca contamine un total:
+- `deudasActivas()` — `S.debts` filtrado por `balance > 0`
+- `minimosVigentes()` — suma de `min` solo de las activas
+- `minimosTC()` — suma de `min` solo de tarjetas de crédito activas; es lo que consume `renderGBM` en vez del viejo `TC_BBVA + TC_BANAMEX` escrito a mano
+
 ### `renderDebts()`
 Renderiza KPIs (deuda total, pagos mínimos/mes, tasa promedio) y las tarjetas individuales de cada deuda con barra de progreso de pago. Si la deuda tiene `noInterest`, muestra bloque especial de "paga antes del día X".
+
+Los tres KPIs se calculan **solo sobre `deudasActivas()`**: una tarjeta en $0 no exige pago mínimo ni debe promediar su tasa. Las deudas con `balance <= 0` se listan aparte, al final, en un bloque compacto **"✅ Liquidadas — ya no generan pago mensual"** (verde, sin mínimo ni barra de progreso, conservando editar/eliminar). Se conservan en vez de borrarse porque la tarjeta sigue existiendo y Adán puede volver a usarla; el contador del KPI las reporta como `N liquidada(s) ✅`.
 
 ### `openDebtModal(id=null)`
 Abre `mo-debt`. Si `id` existe, carga todos los campos de la deuda.
@@ -439,7 +447,7 @@ Lee el archivo seleccionado con `FileReader`. Si es JSON válido, pide confirmac
 ## Módulo: Seed Data
 
 ### `seedData()`
-Solo se ejecuta si `localStorage['finanzasmx_v2_v'] !== SEED_VER` (actualmente `'22'`). Borra el estado anterior e inyecta datos de ejemplo con 6 meses de transacciones (ene-jun 2026), presupuestos, deudas reales, metas, inversiones, activos físicos e historial BTC. Incrementar `SEED_VER` para forzar re-seed.
+Solo se ejecuta si `localStorage['finanzasmx_v2_v'] !== SEED_VER` (actualmente `'23'`). Borra el estado anterior e inyecta datos de ejemplo con 6 meses de transacciones (ene-jun 2026) más los movimientos sueltos de agosto 2026, presupuestos, deudas reales, metas, inversiones, activos físicos e historial BTC. Incrementar `SEED_VER` para forzar re-seed.
 
 ---
 
@@ -546,6 +554,8 @@ if(!localStorage.getItem(KEY+'_banamex9k')){
 `debts[].total` (14349.72) se dejó intacto a propósito — sigue siendo el monto original de la deuda, usado para calcular el % pagado (`1-balance/total`) en Dashboard y en el propio `renderDebts()`. Solo `balance` (lo que falta por pagar hoy) cambió. La inversión `i003` (NVIDIA — GBM+) se eliminó del array por completo, no se puso en `$0`, porque ya no existe esa posición. El seed base (más abajo, dentro de `seedData()`) también se actualizó con estos mismos valores, para que una instalación nueva desde cero ya nazca correcta — pero **sin** bumpear `SEED_VER`, así que no dispara un re-seed destructivo en el navegador donde Adán ya tiene datos reales.
 
 **Por qué la migración de Banamex usa una bandera y no `balance===14349.72` (corregido el mismo día, segunda vuelta)**: la primera versión comparaba el balance contra el valor exacto del seed original. Adán reportó que el Dashboard seguía mostrando ~$17,000 — su balance real ya había cambiado (probablemente por interés acumulado, `rate:10`) y ya no coincidía con `14349.72`, así que la comparación estricta nunca disparaba el fix. La versión con bandera (`KEY+'_banamex9k'` en `localStorage`) corrige el balance a $9,000 **una sola vez, sin importar qué valor tuviera antes**, y no vuelve a tocarlo — así que si Adán paga más adelante y baja de $9,000 por su cuenta, esta migración no se lo revierte en la siguiente carga. Este es el patrón a preferir sobre comparar por igualdad exacta cuando se corrige un dato que pudo haber cambiado por el uso normal de la app entre que se escribió la migración y que el usuario la corrió.
+
+**Segunda migración con este patrón, `_pagos20260813`** (ver la sección fechada al final de este documento): liquidación de la TC Banamex, Boletos Ticketmaster pagados y Apple Watch MSI corregido a 2 cuotas. Igual que la anterior, está **replicada en `Dashboard/dashboard.html`** (`fixPagos20260813IfNeeded()`, bandera compartida) porque Adán normalmente abre el Dashboard antes que Finanzas — regla general: **toda migración de `finanzasmx_v2` tiene que existir en las dos apps**.
 
 Verificado con Playwright: una carga limpia (`localStorage` vacío) usa el seed corregido directamente; un `localStorage` ya sembrado con un balance distinto (simulando el drift real que reportó Adán, ~$17,000) se corrige a $9,000 en la siguiente carga sin perder una transacción manual de prueba agregada aparte; y si después se simula que Adán paga y baja el balance a $5,000 por su cuenta, una recarga posterior **no lo revierte** — confirma que la migración es de un solo uso.
 
@@ -741,3 +751,127 @@ Ese comparativo se muestra dentro del desglose, con las 2 cifras lado a lado y e
 **Nota honesta sobre la ronda anterior**: al presentar el desglose recién construido se mostró una tabla con "Alimentación $4,200" y montos de créditos como si fueran sus cifras reales. **No lo eran** — eran valores inventados para probar que la agrupación funcionara. Los gastos fijos (renta, gym, servicios) sí salían del código; los de comida y deudas no. Se corrigió de inmediato al detectarlo, pero vale registrarlo: **al simular, hay que decir que es simulación** — presentar datos de prueba como reales es peor que no mostrar nada, sobre todo en la app con la que toma decisiones de dinero.
 
 - Verificado con Node: sintaxis OK en los 2 bloques `<script>` reales; CSS 156/156 llaves; `<div>` 977/977; y el modelo evaluado da los números de arriba ($6,600 calle · $7,110 hoy · $2,790 cocinando · $4,320 de diferencia).
+
+---
+
+## TC Banamex liquidada y Ticketmaster pagado (2026-08-13)
+
+Adán reportó dos cosas: **la Tarjeta Banamex quedó en $0** (pagó el saldo completo, no el mínimo) y **los Boletos Ticketmaster (MSI) ya están pagados**. Al preguntarle por el Apple Watch MSI —que se cobra a esa misma tarjeta— aclaró que **le quedan 2 cuotas: 18 ago y 18 sep 2026**, no las 3 que tenía registradas. También pidió que los pagos quedaran registrados como movimientos de agosto.
+
+### Cambios de dato
+
+| Registro | Antes | Ahora |
+|---|---|---|
+| `d002` Tarjeta Banamex | `balance: 9000`, `noInterest: 12238` | `balance: 0`, `noInterest: 0` |
+| `d007` Boletos Ticketmaster (MSI) | `balance: 1260` | `balance: 0` |
+| `d004` Apple Watch MSI | `balance: 2562`, `day: 16` | `balance: 1708` (2 × $854), `day: 18` |
+
+`total` se dejó intacto en los tres (sigue siendo el monto original, base del % pagado). Las dos deudas liquidadas **no se borran**: la tarjeta sigue existiendo y el MSI es historial.
+
+Dos transacciones nuevas en agosto 2026 (`s064`, `s065`): *Liquidación total TC Banamex* $9,000 (cat. Deudas) y *Boletos Ticketmaster (3/3)* $1,260 (cat. Entretenimiento, misma categoría que sus dos cuotas anteriores `s062`/`s063`).
+
+### Migración `_pagos20260813`
+
+Mismo patrón de bandera propia que `_banamex9k`, y por la misma razón amplificada: **el seed ya no cubre julio ni agosto**, así que bumpear `SEED_VER` borraría cualquier movimiento que Adán haya capturado a mano en esos dos meses. La migración corrige los tres saldos y hace *push* de las dos transacciones solo si sus `id` no existen ya (idempotente), y luego marca la bandera. El seed base también quedó actualizado, para que una instalación desde cero nazca correcta.
+
+### Los mínimos de TC dejaron de estar hardcodeados
+
+El bug de fondo: `renderGBM` tenía `const TC_BBVA=1500, TC_BANAMEX=810` a mano, y ese `810` se repetía en tres fórmulas más de "piso de gasto fijo" (`_fixedFloor2` en Indicadores, `_fixedFloor` en el snapshot mensual, `_gbmTC` en la Hoja de Ruta). Con la tarjeta en $0 el plan semanal habría seguido apartando $810 al mes que ya no se deben.
+
+Ahora los cuatro lugares llaman a `minimosTC()`, que suma los mínimos de las tarjetas **con saldo > 0**. Si Adán vuelve a usar la Banamex, el mínimo reaparece solo; no hay que tocar código. En el panel "💳 Tarjetas" del plan semanal se agregó `.filter(s=>s.a>0)` para que una tarjeta liquidada no salga listada en `$0`.
+
+Lo mismo con las sumas de mínimos que no filtraban por saldo y por eso seguían contando deudas muertas: KPI "Pagos Mínimos / Mes" en `renderDebts`, `totMin` del snapshot mensual de Indicadores (alimenta DTI y ratio de liquidez), y "Pagos mensuales" de la Hoja de Ruta. El resumen de pasivos de Patrimonio también filtra ahora `balance > 0`, para no listar renglones en `$0 · 0.0% del total`.
+
+### `autoBalance`: `Math.round` → `Math.floor`
+
+`autoBalance(d, refDate)` recalcula el saldo de un MSI como `total − meses_transcurridos × cuota`. Usaba `Math.round`, que **da por pagada una cuota que todavía no se cobra**: el Apple Watch cobra el día 18 y hoy es 13, así que redondeaba 10.8 meses a 11 y devolvía $854 en vez de los $1,708 reales que Adán acaba de confirmar.
+
+La prueba de que `floor` es la semántica correcta está en los propios datos: con `floor`, el iPhone 15 MSI cuadra **exacto** contra su saldo registrado ($11,361.54); con `round` no. Efecto colateral esperado en Indicadores y Patrimonio: el Vuelo Viva Aerobus pasa de $440 a $880 y Mercado Libre de $1,312 a $2,626 — ambos suben, es decir la lectura anterior subestimaba la deuda.
+
+### Cuotas restantes de MSI: del saldo, no del calendario
+
+En el panel de Suscripciones, `msiSubs` calculaba las cuotas que faltan contando bloques de 30 días desde la fecha de compra (`Math.round((now-st)/2592000000)`), lo cual se desfasa y quitaba una cuota de más. Ahora sale de `Math.ceil(balance / min)` —el saldo es el dato que se mantiene a mano contra el estado de cuenta— y la fecha de última cuota se arma como *mes actual + (restantes − 1)* en el `day` de cobro de la deuda.
+
+### Verificación (Node)
+
+- Sintaxis OK en los 2 bloques `<script>` reales.
+- Deudas activas: 6 · deuda total **$349,672.85** · mínimos vigentes **$11,301.98** · mínimos de TC **$1,500** (solo BBVA).
+- `autoBalance` con `floor`: Apple Watch **$1,708** ✅ (coincide con las 2 cuotas que reportó Adán), iPhone 15 **$11,361.54** ✅ (cuadra exacto con el saldo guardado).
+- Cuotas restantes: Apple Watch **2**, última **2026-09-18** ✅ — exactamente lo que dijo.
+- El reducer de "MSI que aún cobran este mes" sigue incluyendo al Apple Watch en agosto y septiembre y lo suelta en octubre, correcto.
+
+### Pendiente que se dejó a propósito
+
+- El presupuesto `b005` "Deudas" sigue en `$11,700`. Con la Banamex liquidada el compromiso mensual real de esa categoría baja a $8,200 (auto $6,700 + TC BBVA $1,500), pero bajar un presupuesto es decisión de Adán, no del código. Además agosto se verá muy por encima del límite por el pago único de $9,000, y eso es correcto: sí salió ese dinero.
+- Las etiquetas históricas del Apple Watch en las transacciones del seed (`(10/12)` en junio, `(9/12)` en mayo…) quedaron un mes adelantadas respecto a la serie real que implica "2 cuotas restantes en agosto". Son etiquetas de un registro ya pasado, no afectan ningún cálculo, y reescribirlas exigiría una migración frágil sobre datos históricos.
+
+---
+
+## Los MSI de BBVA corregidos contra el estado de cuenta real (2026-08-13, segunda vuelta)
+
+Adán mandó la captura de sus movimientos de BBVA (corte del 22 jul 2026) y con eso corrigió dos cosas suyas que estaban mal en el seed:
+
+**Se eliminaron 2 deudas que no existen.** `d005` "Vuelo Viva Aerobus (TC BBVA)" ($1,320) y `d006` "Mercado Libre (MSI)" ($3,940) no aparecen en ningún movimiento de su historial — *"no sé qué pasó con esas 2, ya no me aparecen"*. Se **borran del array**, no se ponen en `balance: 0`: nunca fueron deuda suya, y dejarlas en $0 las mostraría para siempre en el bloque "✅ Liquidadas" como si las hubiera pagado, que es una afirmación falsa distinta.
+
+**Entraron los 3 MSI que sí salen en el estado de cuenta:**
+
+| id | Nombre | Cuota | Estado en el corte | Saldo | Última cuota |
+|---|---|---|---|---|---|
+| `d009` | Zap Stylo (MSI TC BBVA) | $167 | 04 de 06 | $334 | 22 sep 2026 |
+| `d010` | Merpago*Merca (MSI TC BBVA) | $597 | 02 de 03 | $597 | 22 ago 2026 |
+| `d011` | Mercado Pago (MSI TC BBVA) | $717 | 02 de 03 | $717 | 22 ago 2026 |
+
+Los nombres se dejaron **literales como aparecen en el estado de cuenta** (incluido el truncado `Merpago*Merca`) para que Adán los reconozca al conciliar. No se renombró el `d010` a "Mercado Libre" pese a que el prefijo `merpago*` lo sugiere: acababa de rechazar precisamente esa etiqueta.
+
+### Cómo se eligió el `start` de cada uno
+
+No es la fecha de compra literal, es **la fecha que hace que `autoBalance()` reproduzca exactamente las cuotas ya cobradas**. `autoBalance` cuenta `floor((hoy − start) / 30.44 días)` como cuotas pagadas, así que el `start` tiene que caer en la ventana que da ese número y no otro. Con `2026-03-22` (Zap Stylo) salen 4 cuotas cobradas y `1002 − 4×167 = $334`; con `2026-05-22` (los dos de Mercado Pago) salen 2 y `1791 − 2×597 = $597` / `2151 − 2×717 = $717`. Los tres cuadran al peso contra el saldo registrado.
+
+La misma fecha tiene que servir para el otro cálculo, el de "¿este MSI todavía cobra este mes?" (`start + totalM`), que decide si su cuota entra en el plan semanal. Con estas fechas: Merpago y Mercado Pago salen del plan después de agosto, Zap Stylo después de septiembre. Si se hubiera elegido un `start` unos días distinto, uno de los dos cálculos habría quedado corrido un mes — por eso las fechas se verificaron contra ambos, no solo contra el saldo.
+
+### Presupuesto de "Deudas": $11,700 → $8,200
+
+Petición explícita de Adán. $8,200 = crédito automotriz $6,700 + mínimo TC BBVA $1,500, que es exactamente lo que `loadRecurringForMonth()` genera en esa categoría ahora que Banamex está en $0. Los MSI **no** cuentan aquí: el generador de recurrentes los carga en `Suscripciones`, no en `Deudas`.
+
+### Migración `_msibbva20260813`
+
+Tercera con este patrón, y también **replicada en `Dashboard/dashboard.html`** (`fixMsiBBVA20260813IfNeeded()`, bandera compartida). Borra `d005`/`d006`, inserta los 3 nuevos solo si su `id` no existe ya, y baja `b005` a $8,200.
+
+### Efecto en el flujo mensual
+
+La carga de MSI cae en escalera: **$2,828.98 en agosto → $1,514.98 en septiembre → $493.98 de octubre en adelante** (solo el iPhone 15). Eso libera $2,335/mes para octubre, sumados a los $810/mes del mínimo de Banamex que ya no se pagan. Mínimos vigentes totales: **$11,028.98/mes**. Deuda activa total: **$346,060.85**.
+
+### Verificación (Node + Playwright)
+
+- Sintaxis OK en `Finanzas.html`, `Dashboard/dashboard.html` y `Coach/Coach_v2.html`.
+- `autoBalance` reproduce al peso los 3 saldos nuevos ($334 / $597 / $717) y sigue cuadrando el Apple Watch ($1,708) y el iPhone ($11,361.54).
+- Cuotas restantes y fecha de última cuota correctas en los 5 MSI activos.
+- MSI que cobran por mes: ago $2,828.98 · sep $1,514.98 · oct $493.98 · nov $493.98.
+- Sembrando `localStorage` con los datos viejos (d005/d006 presentes, presupuesto en $11,700) y abriendo **solo el Dashboard**: las 2 fantasma se borran, entran las 3 reales, el presupuesto baja a $8,200 y una transacción capturada a mano sobrevive.
+- Recorrido completo de las 8 secciones de Finanzas: cero errores de consola.
+
+---
+
+## El desglose de gastos deja de inventar Restaurantes y Entretenimiento (2026-08-13)
+
+Adán señaló dos apartados del modal "Gastos del Mes" y pidió quitarlos: **Entretenimiento** ($3,346.67, de los cuales $2,086.67 eran un promedio estimado) y **Restaurantes** ($900, 100% promedio).
+
+**Se quitaron las estimaciones, no las transacciones reales.** Se le preguntó explícitamente antes de tocar nada, porque dentro de Entretenimiento convivían dos cosas distintas: el promedio inventado y los $1,260 del Ticketmaster que sí pagó ese mismo día. Confirmó: solo las estimaciones. El apartado Entretenimiento sigue existiendo con el Ticketmaster marcado como REGISTRADO; Restaurantes desaparece por completo porque no le quedaba nada real.
+
+El cambio es de una línea en `getMonthProjection()`:
+
+```js
+const varCats = ['Alimentación'];   // antes: ['Alimentación','Restaurantes','Entretenimiento']
+```
+
+Esos promedios salían del historial ene–jun 2026 del seed y le estaban cargando **~$2,987/mes de gasto que hoy no tiene**. El costo total del mes bajó de ~$41,700 a **$38,749.65**. Si vuelve a registrar movimientos reales en esas categorías, siguen apareciendo — pero como REGISTRADO (transacción suya), no como estimación. La distinción importa: la app no debe afirmar que gastó algo que no gastó.
+
+### Los 2 escenarios de comida se movieron dentro de Alimentación
+
+Petición textual: *"y en alimentación dame los 2 escenarios ahí mismo"*. El bloque "Comer fuera vs. cocinar" existía desde el 2026-08-12 pero vivía **suelto al final del modal**, después de todos los apartados, así que no se leía como parte de Alimentación.
+
+Ahora se extrajo a `escenariosAlimentacionHTML(subtotalMes)` y se renderiza **dentro de la tarjeta del apartado Alimentación**, debajo de sus renglones. Recibe el subtotal que el desglose ya calculó para no recalcular nada, y agrega un renglón de contraste al pie: *"Arriba se cuentan $1,766.67 para este mes, que es lo medido. Los escenarios son tu patrón declarado — si la diferencia es grande, es señal de que falta registrar gasto de comida."*
+
+Ese contraste es el valor real del cambio: el promedio medido ($1,766.67) contra su patrón declarado ($7,110) ahora se ven juntos, y la brecha de $5,343 queda a la vista en vez de estar repartida entre dos zonas del modal. **No se tocó la regla de fondo** —el dato medido siempre le gana al declarado, ver la sección de Alimentación de 2026-08-12— solo dónde se muestra.
+
+Verificado con Playwright: Restaurantes ya no aparece, Entretenimiento conserva el Ticketmaster, `varItems` devuelve solo Alimentación, los 2 escenarios se renderizan dentro del apartado 🍽️, y el recorrido de las 8 secciones no lanza errores.

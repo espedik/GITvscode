@@ -562,6 +562,62 @@ a.rt2-sub-prod:hover{text-decoration:underline}
 .mes-tab:hover{background:rgba(var(--ov),.09)}
 .mes-tab.active{background:var(--ac1);color:#06170f;border-color:var(--ac1)}
 .mes-tab.has-items::after{content:'';display:inline-block;width:4px;height:4px;border-radius:50%;background:currentColor;margin-left:4px;vertical-align:middle;opacity:.7}
+/* Un mes con TODO marcado deja de mostrar el punto de "hay algo" y se pinta en verde, igual que
+   las pestañas de la Lista de Compras — así se distingue de un vistazo "hay pendientes" de "ya
+   quedó", sin abrir el mes. */
+.mes-tab.done:not(.active){border-color:rgba(0,232,122,.4);color:var(--g)}
+.mes-tab.done:not(.active).has-items::after{display:none}
+
+/* ─── Pendientes del mes: CRUD (2026-08-13) ───────────────────────────────────
+   Filas con checkbox + acciones de editar/borrar. Las acciones viven siempre en el DOM (no
+   aparecen solo en :hover) porque el Dashboard también se usa en pantalla táctil, donde no hay
+   hover: se atenúan al 45% y suben a 100% al pasar el cursor o al enfocar con teclado. */
+.ev-row{display:flex;align-items:flex-start;gap:6px;padding:4px 0;font-size:12px}
+.ev-row+.ev-row{border-top:1px solid rgba(var(--ov),.06)}
+.ev-check{background:none;border:0;padding:0;margin:0;cursor:pointer;font-size:14px;line-height:1.25;color:var(--text2);flex-shrink:0;font-family:inherit}
+.ev-check:hover{color:var(--ac1)}
+.ev-ico{flex-shrink:0;line-height:1.35}
+.ev-txt{flex:1;min-width:0;color:var(--text2);line-height:1.35;word-break:break-word}
+.ev-row.ev-done .ev-txt{text-decoration:line-through;opacity:.5}
+.ev-row.ev-done .ev-check{color:var(--g)}
+.ev-acts{display:flex;gap:2px;flex-shrink:0;opacity:.45;transition:opacity .15s}
+.ev-row:hover .ev-acts,.ev-acts:focus-within{opacity:1}
+.ev-act{background:none;border:0;padding:0 2px;cursor:pointer;font-size:11px;line-height:1.3;font-family:inherit}
+.ev-act:hover{transform:scale(1.15)}
+.ev-resumen{margin-top:6px;padding-top:5px;border-top:1px solid rgba(var(--ov),.08);font-size:10px;color:var(--text3)}
+
+.mes-nav{padding:3px 7px;border-radius:14px;border:1px solid rgba(var(--ov),.12);background:rgba(var(--ov),.05);color:var(--text2);font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;line-height:1;transition:all .2s}
+.mes-nav:hover{background:rgba(var(--ov),.12);color:var(--text)}
+.mes-nav-add{border-color:rgba(0,232,122,.4);color:var(--g);font-size:10px;padding:3px 9px;white-space:nowrap}
+/* La fila de pestañas nunca envuelve; si no cabe, se desliza. Barra de scroll oculta porque en
+   una tira de 5 botones estorba más de lo que informa — las flechas ‹ › ya dicen que hay más. */
+/* Tira de logros bajo la ruta de deuda (2026-08-13) — `grid-column:1/-1` para que ocupe el ancho
+   completo de la fila de 3 pasos en vez de meterse como una cuarta columna. */
+.logros-tira{grid-column:1/-1;margin-top:10px;padding-top:9px;border-top:1px solid rgba(var(--ov),.1)}
+.logros-lbl{font-size:9.5px;font-weight:800;color:var(--g);text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px}
+.logro-item{display:flex;align-items:baseline;gap:7px;font-size:11px;padding:2px 0;color:var(--text2)}
+.logro-txt{flex:1;min-width:0}
+.logro-fecha{font-family:var(--mono);font-size:9.5px;color:var(--text3);white-space:nowrap}
+
+.mes-tabs-row{scrollbar-width:none;-ms-overflow-style:none}
+.mes-tabs-row::-webkit-scrollbar{display:none}
+.mes-tabs-row>*{flex-shrink:0}
+.mes-nav-add:hover{background:rgba(0,232,122,.15)}
+
+.ev-editor{margin-top:6px;padding:8px;border-radius:9px;background:rgba(var(--ov),.05);border:1px solid rgba(var(--ov),.14)}
+.ev-editor-row{display:flex;gap:6px}
+.ev-ico-input,.ev-txt-input{border-radius:7px;border:1px solid rgba(var(--ov),.18);background:rgba(var(--ov),.06);color:var(--text);font-family:inherit;font-size:12px;padding:5px 7px}
+.ev-ico-input{width:44px;text-align:center;flex-shrink:0}
+.ev-txt-input{flex:1;min-width:0}
+.ev-ico-input:focus,.ev-txt-input:focus{outline:none;border-color:var(--ac1)}
+.ev-ico-picker{display:flex;flex-wrap:wrap;gap:3px;margin-top:6px}
+.ev-ico-op{background:rgba(var(--ov),.06);border:1px solid rgba(var(--ov),.12);border-radius:6px;cursor:pointer;font-size:13px;line-height:1;padding:3px 4px;font-family:inherit}
+.ev-ico-op:hover{background:rgba(var(--ov),.16);transform:scale(1.1)}
+.ev-editor-btns{display:flex;gap:6px;margin-top:7px}
+.ev-btn{border-radius:7px;border:1px solid rgba(var(--ov),.18);background:rgba(var(--ov),.06);color:var(--text2);font-family:inherit;font-size:11px;font-weight:700;padding:4px 10px;cursor:pointer}
+.ev-btn:hover{background:rgba(var(--ov),.14);color:var(--text)}
+.ev-btn-ok{border-color:rgba(0,232,122,.45);color:var(--g)}
+.ev-btn-ok:hover{background:rgba(0,232,122,.16)}
 .lc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px 20px}
 .lc-item{display:flex;align-items:flex-start;flex-wrap:wrap;gap:5px 8px;padding:4px 0;border-bottom:1px solid rgba(var(--ov),.05)}
 .lc-item input[type="checkbox"]{margin-top:3px;width:13px;height:13px;accent-color:var(--g);cursor:pointer;flex-shrink:0}
@@ -1054,9 +1110,21 @@ a.rt2-sub-prod:hover{text-decoration:underline}
 
       <div class="grid g3 reveal d4" style="margin-bottom:8px;align-items:stretch" id="miDiaSecundarios">
         <div class="tile" style="padding:9px 14px">
-          <div class="lbl">🗓️ Importante este mes</div>
-          <div id="mesTabs" style="display:flex;gap:5px;flex-wrap:wrap;margin-top:5px"></div>
-          <div style="margin-top:5px;display:flex;flex-direction:column" id="mesEventos">—</div>
+          <!-- El botón "+" va en el encabezado, no en la fila de pestañas: ahí abajo compite con
+               las 4 pestañas y las 2 flechas de navegación, y en esta columna angosta empujaba
+               todo a una segunda línea. -->
+          <div style="display:flex;align-items:center;gap:8px">
+            <div class="lbl" style="margin:0">🗓️ Importante este mes</div>
+            <span id="mesAddBtn" style="margin-left:auto"></span>
+          </div>
+          <!-- nowrap + scroll horizontal en vez de flex-wrap: medido con Playwright, este tile
+               baja a ~227px de ancho en iPad y ahí las 3 pestañas más las flechas se partían en
+               2 líneas, estirando las tarjetas vecinas. Con scroll la fila mide siempre lo mismo
+               sin importar el ancho, y las flechas ‹ › siguen siendo la forma principal de moverse. -->
+          <div id="mesTabs" class="mes-tabs-row" style="display:flex;gap:4px;flex-wrap:nowrap;align-items:center;margin-top:5px;overflow-x:auto"></div>
+          <!-- max-height + scroll propio: esta tarjeta vive en un grid con align-items:stretch, así
+               que si la lista crece sin tope estira también al panel de Gym y al de Nutrición. -->
+          <div style="margin-top:5px;display:flex;flex-direction:column;max-height:240px;overflow-y:auto" id="mesEventos">—</div>
         </div>
         <div class="tile" style="padding:9px 14px" id="heroGymPanel"></div>
         <div class="tile" style="padding:9px 14px" id="heroNutriPanel"></div>
@@ -1329,6 +1397,54 @@ function fixBanamexIfNeeded(){
   rawSet('finanzasmx_v2', fin);
   localStorage.setItem('finanzasmx_v2_banamex9k','1');
 }
+// Espejo exacto de la migración `_pagos20260813` de Finanzas.html → init(), por la misma razón
+// que fixBanamexIfNeeded(): el 13 ago 2026 Adán liquidó la TC Banamex y terminó de pagar los
+// Boletos Ticketmaster, y confirmó que del Apple Watch MSI solo quedan 2 cuotas (18 ago y 18 sep)
+// = $1,708. Si abre el Dashboard sin haber recargado Finanzas.html en este navegador, la deuda
+// cara seguiría mostrando los $9,000 de Banamex que ya no debe. Misma bandera compartida, así que
+// la primera de las dos apps que arranque aplica el fix y la otra ya no lo repite. Corre una sola
+// vez: si después Adán mueve esos saldos por su cuenta, esto no se los revierte.
+function fixPagos20260813IfNeeded(){
+  if(localStorage.getItem('finanzasmx_v2_pagos20260813')) return;
+  const fin=rawGet('finanzasmx_v2', null);
+  if(!fin||!fin.debts) return;
+  const bx=fin.debts.find(d=>d.id==='d002');
+  if(bx){bx.balance=0;bx.noInterest=0;}
+  const tm=fin.debts.find(d=>d.id==='d007');
+  if(tm) tm.balance=0;
+  const aw=fin.debts.find(d=>d.id==='d004');
+  if(aw){aw.balance=1708;aw.day=18;}
+  if(Array.isArray(fin.transactions)){
+    if(!fin.transactions.some(t=>t.id==='s064'))
+      fin.transactions.push({id:'s064',type:'expense',desc:'Liquidación total TC Banamex',amount:9000,date:'2026-08-13',cat:'Deudas',notes:'Pago del saldo completo — tarjeta a $0'});
+    if(!fin.transactions.some(t=>t.id==='s065'))
+      fin.transactions.push({id:'s065',type:'expense',desc:'Boletos Ticketmaster (3/3)',amount:1260,date:'2026-08-13',cat:'Entretenimiento',notes:'MSI 0% interés — última cuota, liquidado'});
+  }
+  rawSet('finanzasmx_v2', fin);
+  localStorage.setItem('finanzasmx_v2_pagos20260813','1');
+}
+// Espejo de la migración `_msibbva20260813` de Finanzas.html → init(), mismo motivo que las
+// dos anteriores. Adán revisó su historial real de BBVA el 13 ago 2026: el Vuelo Viva Aerobus
+// y el Mercado Libre MSI no existen (se BORRAN, no se ponen en $0 — nunca fueron deuda suya),
+// y en su lugar entran los 3 MSI que sí salen en su estado de cuenta con corte del 22 jul 2026.
+// El presupuesto de Deudas baja a $8,200 (auto $6,700 + mínimo BBVA $1,500).
+function fixMsiBBVA20260813IfNeeded(){
+  if(localStorage.getItem('finanzasmx_v2_msibbva20260813')) return;
+  const fin=rawGet('finanzasmx_v2', null);
+  if(!fin||!fin.debts) return;
+  fin.debts=fin.debts.filter(d=>d.id!=='d005'&&d.id!=='d006');
+  [
+    {id:'d009',name:'Zap Stylo (MSI TC BBVA)',     type:'other',total:1002,balance:334,rate:0,min:167,day:22,start:'2026-03-22'},
+    {id:'d010',name:'Merpago*Merca (MSI TC BBVA)',type:'other',total:1791,balance:597,rate:0,min:597,day:22,start:'2026-05-22'},
+    {id:'d011',name:'Mercado Pago (MSI TC BBVA)', type:'other',total:2151,balance:717,rate:0,min:717,day:22,start:'2026-05-22'},
+  ].forEach(n=>{ if(!fin.debts.some(d=>d.id===n.id)) fin.debts.push(n); });
+  if(Array.isArray(fin.budgets)){
+    const b=fin.budgets.find(x=>x.id==='b005'||x.cat==='Deudas');
+    if(b) b.limit=8200;
+  }
+  rawSet('finanzasmx_v2', fin);
+  localStorage.setItem('finanzasmx_v2_msibbva20260813','1');
+}
 // Mismo problema y mismo patrón que fixBanamexIfNeeded(): el miércoles cambió de "Espalda +
 // Hombros + Cardio" a "Natación" en el CÓDIGO (S.rutina de ejercicio.html) el 2026-08-07, pero
 // si Adán ya había abierto ejercicio.html antes de ese cambio, su `mirutina_v1` real en este
@@ -1376,6 +1492,20 @@ function fixRutina20260812IfNeeded(){
 // re-marcan solas en la siguiente carga. Sin esto, ambas abrirían en 0% (checklist real vacío,
 // como cualquier meta activa) hasta que alguien marcara a mano algo que ya pasó — no tiene
 // sentido pedir eso para un hecho histórico.
+// Siembra los 2 logros que Adán ya consiguió y confirmó (13 ago 2026), para el caso en que abra
+// el Dashboard en un navegador donde nunca abrió Finanzas.html: ahí no existe `finanzasmx_v2`,
+// detectarLogros() no tiene de dónde deducirlos y la ruta de deuda le decía "Sin datos en
+// Finanzas" — que es exactamente el reporte que originó la libreta de logros. Son hechos reales
+// con fecha real, no un valor de relleno. Mismo patrón de bandera de una sola vez que el resto:
+// si después los borra a mano, no se vuelven a sembrar.
+function seedLogros20260813IfNeeded(){
+  if(localStorage.getItem('dash_logros_seed20260813')) return;
+  const l=rawGet(LOGROS_KEY,{});
+  if(!l['banamex-liquidada'])      l['banamex-liquidada']={txt:'TC Banamex liquidada',fecha:'2026-08-13'};
+  if(!l['ticketmaster-liquidado']) l['ticketmaster-liquidado']={txt:'Boletos Ticketmaster (MSI) pagados',fecha:'2026-08-13'};
+  rawSet(LOGROS_KEY,l);
+  localStorage.setItem('dash_logros_seed20260813','1');
+}
 function seedMetasLogradasIfNeeded(){
   if(localStorage.getItem('metas_logradas_seed_v1')) return;
   const store=rawGet('metas_checklist_v1',{});
@@ -1418,6 +1548,64 @@ function loadAll(){
     gym: tryParse('mirutina_v1',{rutina:{},sesiones:[],metas:{frecuencia:6}})
   };
   SK.forEach(s=>{const v=localStorage.getItem('radarp_'+s.id);if(v!==null)s.val=Math.min(100,Math.max(0,parseInt(v)));});
+  detectarLogros();
+}
+
+// ─── LIBRETA DE LOGROS — lo conseguido no se borra nunca (2026-08-13) ─────────
+// Adán, textual: "debes tener los registros siempre porque si no sentiré que no logro nada".
+// El disparador fue concreto: el paso "Banamex" de la ruta de deuda mostraba "Sin datos en
+// Finanzas" en vez de "Liquidada", porque TODO se derivaba en vivo del array `debts`. Ese diseño
+// tiene una falla de fondo para alguien que mide su avance aquí: **el logro desaparecía junto con
+// el dato**. Si la deuda se borra, se renombra, o el navegador todavía no tiene `finanzasmx_v2`,
+// el sistema le decía que no había logrado nada — justo lo contrario de para lo que existe.
+//
+// Solución: cuando se DETECTA un hito cumplido se graba en `dash-logros-v1` con su fecha, y a
+// partir de ahí el registro manda. Nunca se sobrescribe ni se borra solo, aunque la fuente
+// original desaparezca. Es la misma idea que `indicatorHistory` en Finanzas: un hecho pasado no
+// se puede reconstruir después, así que se guarda cuando se ve.
+const LOGROS_KEY='dash-logros-v1';
+function logrosLoad(){ return rawGet(LOGROS_KEY,{}); }
+// Fecha LOCAL, no `toISOString()`: en México (UTC-6) el ISO ya está en el día siguiente a partir
+// de las 18:00, así que un logro conseguido por la noche quedaba fechado mañana.
+function hoyLocal(){ const d=new Date(); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+function registrarLogro(id,txt,fecha){
+  const l=logrosLoad();
+  if(l[id]) return l[id];   // ya registrado: se respeta la fecha original, no se pisa
+  l[id]={txt,fecha:fecha||hoyLocal()};
+  rawSet(LOGROS_KEY,l);
+  return l[id];
+}
+function logro(id){ return logrosLoad()[id]||null; }
+function fechaLogro(id){
+  const l=logro(id); if(!l||!l.fecha) return '';
+  return new Date(l.fecha+'T12:00:00').toLocaleDateString('es-MX',{day:'numeric',month:'short',year:'numeric'});
+}
+// Busca la TARJETA de crédito por nombre, no cualquier deuda que mencione al banco: `/banamex/i`
+// a secas también matchea "Apple Watch MSI (TC Banamex)", y al borrar la tarjeta el paso pasaba a
+// mostrar el saldo del reloj como si fuera la deuda de la tarjeta.
+function tcPorNombre(re){ return (D.fin.debts||[]).find(d=>re.test(d.name||'')&&(!d.type||d.type==='credit_card')); }
+function detectarLogros(){
+  const fin=D.fin||{}, txs=fin.transactions||[], debts=fin.debts||[];
+  const hayDatos=debts.length>0||txs.length>0;
+
+  // Banamex: 3 señales independientes, para que ninguna sola pueda "desaparecer" el logro.
+  const txBana=txs.find(t=>t.id==='s064');
+  const tcBana=tcPorNombre(/banamex/i);
+  if(txBana) registrarLogro('banamex-liquidada','TC Banamex liquidada',txBana.date);
+  else if(localStorage.getItem('finanzasmx_v2_pagos20260813')) registrarLogro('banamex-liquidada','TC Banamex liquidada','2026-08-13');
+  else if(tcBana&&tcBana.balance<=0) registrarLogro('banamex-liquidada','TC Banamex liquidada');
+
+  const txTm=txs.find(t=>t.id==='s065');
+  if(txTm) registrarLogro('ticketmaster-liquidado','Boletos Ticketmaster (MSI) pagados',txTm.date);
+
+  if(hayDatos){
+    const tcBbva=tcPorNombre(/bbva/i);
+    if(tcBbva&&tcBbva.balance<=0) registrarLogro('bbva-liquidada','TC BBVA liquidada');
+    if(tcBana&&tcBbva&&tcBana.balance<=0&&tcBbva.balance<=0) registrarLogro('deuda-cara-cero','Deuda cara en $0');
+    if((fin.emergencyFund||0)>=10000) registrarLogro('fondo-emergencia','Fondo de emergencia completo ($10,000)');
+    const auto=debts.find(d=>d.type==='car');
+    if(auto&&auto.balance<=0) registrarLogro('byd-liquidado','Crédito del BYD Dolphin Mini liquidado');
+  }
 }
 
 // ── RUTINA DIARIA — mismo horario que Coach_v2.html → #rutina (fuente única) ─
@@ -1690,39 +1878,162 @@ const EVENTOS_MES={
   ],
   '2026-09':[
     {ico:'🩺',txt:'Ir al doctor por la gastritis'},
-    {ico:'🎯',txt:'Vence Fase 0 del Plan Maestro (30 sep) — revisa fondo de emergencia $10k y Banamex/BBVA en $0'},
+    {ico:'🎯',txt:'Vence Fase 0 del Plan Maestro (30 sep) — revisa fondo de emergencia $10k y el avance de BBVA (Banamex ya en $0 desde el 13 ago)'},
   ],
   '2026-10':[
-    {ico:'🪙',txt:'Arranca Fase 1 del Plan Maestro (1 oct) — los $3,868/mes liberados entran en acción + primer ingreso real'},
+    {ico:'🪙',txt:'Arranca Fase 1 del Plan Maestro (1 oct) — los $3,145/mes liberados entran en acción, 100% a BBVA + primer ingreso real'},
   ],
 };
 const MES_LABEL=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
 const MES_LABEL_FULL=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
 function mesLabelFull(ym){ const [y,m]=ym.split('-').map(Number); return MES_LABEL_FULL[m-1]+' '+y; }
 function mesKey(d){ return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0'); }
+
+// ─── Pendientes del mes: CRUD real con persistencia (2026-08-13) ─────────────
+// Petición de Adán: "pon check boxes en cada uno, además dame la habilidad de poner tareas
+// nuevas, borrar tareas, editar, etc. para todos los meses, debo poder hacer muchas cosas aquí".
+//
+// EVENTOS_MES (arriba) pasa de ser LA lista a ser solo la SEMILLA: se copia una sola vez a
+// `dash-eventos-mes-v1` y desde ese momento el localStorage es la fuente de verdad. Es la única
+// forma de que borrar un pendiente signifique algo — si el código siguiera mandando, cualquier
+// cosa que Adán borrara reaparecería en la siguiente carga. Consecuencia a tener presente: si
+// más adelante se agrega un evento nuevo a EVENTOS_MES en el código, NO va a aparecer solo en su
+// navegador; hay que decírselo para que lo capture él, o bumpear la bandera de siembra.
+const EVENTOS_KEY='dash-eventos-mes-v1';
+function evUid(){ return 'e'+Date.now().toString(36)+Math.random().toString(36).slice(2,7); }
+function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function eventosLoad(){
+  const st=rawGet(EVENTOS_KEY,null);
+  if(st) return st;
+  // Primera vez en este navegador: sembrar desde EVENTOS_MES conservando el orden.
+  const seed={};
+  Object.keys(EVENTOS_MES).forEach(k=>{ seed[k]=EVENTOS_MES[k].map(e=>({id:evUid(),ico:e.ico,txt:e.txt,done:false})); });
+  rawSet(EVENTOS_KEY,seed);
+  return seed;
+}
+function eventosSave(st){ rawSet(EVENTOS_KEY,st); }
+function eventosDe(mes){ return (eventosLoad()[mes]||[]); }
+
+const EV_ICONOS=['🦷','🩺','💊','🎯','🪙','💳','📄','✈️','🏋️','📞','🛒','🎂','🚗','🏠','📌'];
+// 3 pestañas visibles, no 4: medido con Playwright, en esta columna (~262px útiles) las 4 más las
+// flechas ‹ › envolvían a una segunda línea. El límite dejó de importar cuando se agregó la
+// navegación — con las flechas se llega a CUALQUIER mes, así que ver 3 a la vez no quita alcance.
+const MESES_VISIBLES=3;
+let mesSel=mesKey(new Date());
+let mesOffset=0;          // 0 = la ventana de 4 pestañas arranca en el mes actual
+let evEditId=null;        // id del pendiente que se está editando ('nuevo' = alta)
+
+// La rotación automática de slides tiene que parar mientras Adán escribe, o el Dashboard le
+// cambia de pantalla a media frase. Se para el intervalo y la barra de progreso a mano en vez de
+// tocar `playing`, para no confundir el botón ▶/⏸ del HUD: al cerrar el editor, restartTimer()
+// devuelve todo al estado que el botón ya indicaba.
+function pausarRotacionPorEdicion(){
+  clearInterval(timer);
+  const f=document.getElementById('hudProgressFill');
+  if(f){ f.classList.remove('anim'); f.style.transition='none'; f.style.width='0%'; }
+}
+
 function mesesVisibles(n){
   const hoy=new Date();
   return Array.from({length:n||6},(_,i)=>{
-    const d=new Date(hoy.getFullYear(),hoy.getMonth()+i,1);
+    const d=new Date(hoy.getFullYear(),hoy.getMonth()+i+mesOffset,1);
     return {key:mesKey(d),label:MES_LABEL[d.getMonth()]+(d.getFullYear()!==hoy.getFullYear()?" '"+String(d.getFullYear()).slice(2):'')};
   });
 }
-let mesSel=mesKey(new Date());
-function renderEventosMes(){
-  // 4 meses, no 6 (2026-08-09, "las cosas se ven muy amontonadas") — solo agosto/sep/oct tienen
-  // eventos reales hoy (EVENTOS_MES arriba); 6 pestañas casi vacías en una columna angosta
-  // envolvían a 2 líneas y estiraban las 3 tarjetas vecinas (align-items:stretch). 4 alcanza para
-  // ver todo lo real + 1 mes de colchón, y cabe en una sola fila.
-  const meses=mesesVisibles(4);
-  document.getElementById('mesTabs').innerHTML=meses.map(m=>
-    `<button class="mes-tab${m.key===mesSel?' active':''}${(EVENTOS_MES[m.key]||[]).length?' has-items':''}" onclick="verMesEventos('${m.key}')">${m.label}</button>`
-  ).join('');
-  const eventos=EVENTOS_MES[mesSel]||[];
-  document.getElementById('mesEventos').innerHTML=eventos.length
-    ? eventos.map(e=>`<div class="ds-row"><span class="ds-hora">${e.ico}</span><span class="ds-txt" style="white-space:normal">${e.txt}</span></div>`).join('')
-    : '<div class="ds-empty">Sin pendientes registrados este mes</div>';
+function moverMeses(delta){
+  mesOffset+=delta;
+  // Si el mes seleccionado se sale de la ventana, seleccionar el primero de la nueva — así nunca
+  // queda una lista visible que no corresponde a ninguna pestaña marcada.
+  const vis=mesesVisibles(MESES_VISIBLES).map(m=>m.key);
+  if(!vis.includes(mesSel)) mesSel=vis[0];
+  evEditId=null; renderEventosMes();
 }
-function verMesEventos(key){ mesSel=key; renderEventosMes(); }
+function verMesEventos(key){ mesSel=key; evEditId=null; renderEventosMes(); }
+
+function evToggle(id){
+  const st=eventosLoad(); const arr=st[mesSel]||[];
+  const it=arr.find(e=>e.id===id); if(!it) return;
+  it.done=!it.done; eventosSave(st); renderEventosMes();
+}
+function evEditar(id){ evEditId=id; pausarRotacionPorEdicion(); renderEventosMes(); }
+function evCancelar(){ evEditId=null; renderEventosMes(); restartTimer(); }
+function evBorrar(id){
+  const st=eventosLoad(); const arr=st[mesSel]||[];
+  const it=arr.find(e=>e.id===id); if(!it) return;
+  if(!confirm(`¿Borrar "${it.txt}"?`)) return;
+  st[mesSel]=arr.filter(e=>e.id!==id);
+  if(!st[mesSel].length) delete st[mesSel];
+  eventosSave(st); evEditId=null; renderEventosMes(); toast('🗑️ Pendiente borrado');
+}
+function evGuardar(){
+  const txt=(document.getElementById('evTxt')||{}).value;
+  const ico=((document.getElementById('evIco')||{}).value||'📌').trim()||'📌';
+  if(!txt||!txt.trim()) return alert('Escribe de qué se trata el pendiente.');
+  const st=eventosLoad();
+  if(evEditId==='nuevo'){
+    (st[mesSel]=st[mesSel]||[]).push({id:evUid(),ico,txt:txt.trim(),done:false});
+    toast('✅ Pendiente agregado');
+  } else {
+    const it=(st[mesSel]||[]).find(e=>e.id===evEditId);
+    if(it){ it.ico=ico; it.txt=txt.trim(); toast('✅ Pendiente actualizado'); }
+  }
+  eventosSave(st); evEditId=null; renderEventosMes(); restartTimer();
+}
+function evNuevo(){ evEditId='nuevo'; pausarRotacionPorEdicion(); renderEventosMes(); }
+function evPickIco(ico){ const i=document.getElementById('evIco'); if(i){ i.value=ico; i.focus(); } }
+// Enter guarda, Escape cancela — en una tarjeta chica el teclado es más rápido que apuntar al ✓.
+function evKey(e){ if(e.key==='Enter'){e.preventDefault();evGuardar();} else if(e.key==='Escape'){e.preventDefault();evCancelar();} }
+
+function evEditorHTML(it){
+  return `
+  <div class="ev-editor">
+    <div class="ev-editor-row">
+      <input id="evIco" class="ev-ico-input" maxlength="4" value="${esc(it?it.ico:'📌')}" aria-label="Ícono">
+      <input id="evTxt" class="ev-txt-input" placeholder="¿Qué tienes que hacer este mes?" value="${esc(it?it.txt:'')}" onkeydown="evKey(event)" aria-label="Pendiente">
+    </div>
+    <div class="ev-ico-picker">${EV_ICONOS.map(i=>`<button type="button" class="ev-ico-op" onclick="evPickIco('${i}')">${i}</button>`).join('')}</div>
+    <div class="ev-editor-btns">
+      <button type="button" class="ev-btn ev-btn-ok" onclick="evGuardar()">✓ Guardar</button>
+      <button type="button" class="ev-btn" onclick="evCancelar()">Cancelar</button>
+    </div>
+  </div>`;
+}
+
+function renderEventosMes(){
+  const meses=mesesVisibles(MESES_VISIBLES);
+  const store=eventosLoad();
+  document.getElementById('mesTabs').innerHTML=
+    `<button class="mes-nav" onclick="moverMeses(-1)" title="Meses anteriores">‹</button>`
+    + meses.map(m=>{
+        const arr=store[m.key]||[];
+        const pend=arr.filter(e=>!e.done).length;
+        return `<button class="mes-tab${m.key===mesSel?' active':''}${arr.length?' has-items':''}${arr.length&&pend===0?' done':''}" onclick="verMesEventos('${m.key}')">${m.label}${pend?`<span class="lc-tab-pct">${pend}</span>`:''}</button>`;
+      }).join('')
+    + `<button class="mes-nav" onclick="moverMeses(1)" title="Meses siguientes">›</button>`
+    + (mesOffset!==0?`<button class="mes-nav" onclick="moverMeses(${-mesOffset})" title="Volver al mes actual">hoy</button>`:'');
+  document.getElementById('mesAddBtn').innerHTML=
+    `<button class="mes-nav mes-nav-add" onclick="evNuevo()" title="Agregar pendiente a ${esc(mesLabelFull(mesSel))}">+ Nuevo</button>`;
+
+  const eventos=store[mesSel]||[];
+  const hechas=eventos.filter(e=>e.done).length;
+  const filas=eventos.map(e=> e.id===evEditId ? evEditorHTML(e) : `
+    <div class="ev-row${e.done?' ev-done':''}">
+      <button type="button" class="ev-check" onclick="evToggle('${e.id}')" title="${e.done?'Marcar como pendiente':'Marcar como hecho'}">${e.done?'☑':'☐'}</button>
+      <span class="ev-ico">${esc(e.ico)}</span>
+      <span class="ev-txt">${esc(e.txt)}</span>
+      <span class="ev-acts">
+        <button type="button" class="ev-act" onclick="evEditar('${e.id}')" title="Editar">✏️</button>
+        <button type="button" class="ev-act" onclick="evBorrar('${e.id}')" title="Borrar">🗑️</button>
+      </span>
+    </div>`).join('');
+
+  document.getElementById('mesEventos').innerHTML=
+    (eventos.length?filas:(evEditId==='nuevo'?'':`<div class="ds-empty" style="font-size:12px">Sin pendientes en ${esc(mesLabelFull(mesSel))} — toca <b>+</b> para agregar uno.</div>`))
+    + (evEditId==='nuevo'?evEditorHTML(null):'')
+    + (eventos.length?`<div class="ev-resumen">${eventos.length-hechas} pendiente${eventos.length-hechas===1?'':'s'}${hechas?` · ${hechas} hecha${hechas===1?'':'s'}`:''} en ${esc(mesLabelFull(mesSel))}</div>`:'');
+
+  const inp=document.getElementById('evTxt'); if(inp) inp.focus();
+}
 
 // Semana calendario (Domingo→Sábado), misma convención que ejercicio.html → renderDashboard()
 function semanaActual(){const hoy=new Date();const dow=hoy.getDay();return Array.from({length:7},(_,i)=>{const d=new Date(hoy);d.setDate(d.getDate()-dow+i);return d.toISOString().slice(0,10);});}
@@ -2611,22 +2922,29 @@ const PHASES=[
   // (s0-1, s0-2, s0-6) pasaron a agosto conservando su id — mismo cambio y mismo orden que en
   // Coach_v2.html, que es la copia gemela de esta estructura.
   {start:new Date(2026,7,1),  end:new Date(2026,8,30),  tag:'Fase 0', title:'Cerrar la fuga y arrancar ingreso, no solo pensar',
-   meta:'Fondo de emergencia a $10,000 + $14,000–15,000 de activos vendidos aplicados a Banamex.',
-   explica:'Fase 0 es el arranque del plan (1 ago – 30 sep 2026, ~9 semanas). Todavía no se trata de ganar mucho — se trata de cerrar la fuga de dinero y sentar las bases, en este orden exacto: 1) fondo de emergencia, 2) Banamex, 3) BBVA. En paralelo arrancas el negocio: dedicar atención real al negocio de tu papá y publicar tu primera plantilla en comunidades de GBM.',
+   meta:'✅ Banamex liquidada el 13 ago 2026 (era meta de Fase 1, para ene 2027). Quedan 2 objetivos financieros, en este orden: 1) fondo de emergencia a $10,000, 2) abonos extra a BBVA.',
+   explica:'Fase 0 es el arranque del plan (1 ago – 30 sep 2026, ~9 semanas). Todavía no se trata de ganar mucho — se trata de cerrar la fuga de dinero y sentar las bases. El orden era 1) fondo de emergencia, 2) Banamex, 3) BBVA: el paso 2 ya está hecho desde el 13 ago 2026, así que la prioridad es el fondo de emergencia y, en cuanto llegue a $10,000, todo excedente a BBVA. En paralelo arrancas el negocio: dedicar atención real al negocio de tu papá y publicar tu primera plantilla en comunidades de GBM.',
    semanas:[
-     {id:'s0-1', mes:'2026-08', txt:'Corrige "Deudas" a $13,372 en Finanzas.html · cero MSI nuevo.'},
+     // Reordenado el 2026-08-13 (petición de Adán): las 2 prioridades financieras primero y
+     // numeradas, lo ya hecho al final. `s0-5` (llamada exploratoria con su papá) eliminada —
+     // "eso ya sé qué hacer con mi papá". `s0-3` absorbió la publicación de la plantilla, que
+     // estaba partida con `s0-4`; `s0-4` se quedó solo con la venta de activos. Espejo exacto de
+     // Coach_v2.html → #fase0.
+     {id:'s0-9', mes:'2026-08', txt:'Prioridad 1 — Fondo de emergencia a $10,000. Antes que cualquier abono extra a deuda: es el colchón que evita que un imprevisto te regrese a la tarjeta. (hoy en $0)'},
+     {id:'s0-10',mes:'2026-08', txt:'Prioridad 2 — Liquidar la TC BBVA ($32,343). Única deuda cara que queda. En cuanto el fondo llegue a $10,000, todo excedente va aquí. (proyección: $0 en mar 2027)'},
+     {id:'s0-4', mes:'2026-08', txt:'Sube a Marketplace tus activos ociosos (PS5, control, monitores, iPad) — es la fuente más rápida para completar el fondo de emergencia de la Prioridad 1.'},
+     {id:'s0-3', mes:'2026-08', txt:'Plantilla Finanzas.html, de principio a fin: versión limpia sin tus datos + post de venta + publicarla en 2-3 comunidades de GBM (Opción 1).'},
      {id:'s0-2', mes:'2026-08', txt:'Revisar las fotos y el material del negocio de tu papá y ponerle atención real — primer paso concreto de la Opción 5.'},
      {id:'s0-6', mes:'2026-08', txt:'Pausa aportaciones a la Maestría 1 año (hasta 18 jul 2027) — los $53,740 quedan intactos, nueva meta oct 2028.'},
-     {id:'s0-3', mes:'2026-08', txt:'Versión limpia (sin tus datos) de la plantilla Finanzas.html + post de venta para comunidades de GBM (Opción 1).'},
-     {id:'s0-4', mes:'2026-08', txt:'Publica la plantilla en 2-3 comunidades de GBM · sube a Marketplace tus activos ociosos (PS5, control, monitores, iPad).'},
-     {id:'s0-5', mes:'2026-08', txt:'Con las fotos ya revisadas, agenda la llamada exploratoria de 30 min con tu papá — solo escuchar, sin compromiso (Opción 5).'},
-     {id:'s0-7', mes:'2026-09', txt:'Cada peso de ventas/activos va, en orden: (1) fondo de emergencia a $10,000, (2) resto a Banamex — este mes cierra la fase.'},
+     {id:'s0-8', mes:'2026-08', txt:'Liquidar la TC Banamex. (✅ 13 ago 2026 — pagaste los $9,000 completos, no el mínimo, 5 meses antes de la meta)'},
+     {id:'s0-1', mes:'2026-08', txt:'Corrige "Deudas" en Finanzas.html · cero MSI nuevo. (✅ 13 ago 2026: quedó en $8,200 = auto $6,700 + mínimo BBVA $1,500)'},
+     {id:'s0-7', mes:'2026-09', txt:'Cada peso de ventas/activos va, en orden fijo: (1) fondo de emergencia a $10,000, (2) resto a BBVA — Banamex ya está en $0. Este mes cierra la fase.'},
    ]},
-  {start:new Date(2026,9,1),  end:new Date(2027,2,31),  tag:'Fase 1', title:'Los $3,868/mes liberados entran en acción + primer ingreso real',
-   meta:'Primer contrato freelance o 20+ ventas de la plantilla cobradas; Banamex liquidada.',
-   explica:'Fase 1 (oct 2026 – mar 2027) arranca cuando los $3,868/mes que hoy se van en MSI de gadgets quedan libres. Ese dinero sigue la misma fila que en Fase 0: termina de dejar Banamex en $0, y lo que sobre empieza a atacar BBVA. En paralelo, buscas tu primer ingreso real fuera de ALTEN.',
+  {start:new Date(2026,9,1),  end:new Date(2027,2,31),  tag:'Fase 1', title:'Los $3,145/mes liberados entran en acción + primer ingreso real',
+   meta:'Primer contrato freelance o 20+ ventas de la plantilla cobradas. La meta vieja —Banamex liquidada— ya se cumplió el 13 ago 2026, así que el objetivo financiero pasa a bajar BBVA de $32,343 a menos de $15,000.',
+   explica:'Fase 1 (oct 2026 – mar 2027) arranca cuando los $2,335/mes de MSI de gadgets quedan libres, que sumados a los $810 del mínimo de Banamex ya liquidada dan $3,145/mes nuevos. Con Banamex en $0 desde agosto, ese dinero tiene un solo destino: fondo de emergencia a $10,000 y todo lo demás a BBVA, la única deuda cara que queda. En paralelo, buscas tu primer ingreso real fuera de ALTEN.',
    semanas:[
-     {id:'s1-1', txt:'Oct 2026: los $3,868/mes liberados de MSI van, en orden fijo: fondo de emergencia a $10,000 → 100% Banamex → BBVA.'},
+     {id:'s1-1', txt:'Oct 2026: los $2,335/mes liberados de MSI + los $810 del mínimo de Banamex van, en orden fijo: fondo de emergencia a $10,000 → 100% BBVA (única deuda cara restante) = $4,645/mes.'},
      {id:'s1-2', txt:'Prioridad: cerrar el primer contrato freelance (Opción 2) + 1 post de seguimiento mensual de la plantilla GBM (Opción 1).'},
      {id:'s1-3', txt:'En paralelo: primer post de mentoría pagada (Opción 3) — bajo riesgo, casi sin preparación.'},
      {id:'s1-4', txt:'Primer peso cobrado en Opción 1-3 → esas horas de Didi se mueven ahí (Opción 6), no antes.'},
@@ -2635,10 +2953,10 @@ const PHASES=[
    ]},
   {start:new Date(2027,3,1),  end:new Date(2028,11,31), tag:'Fase 2', title:'Doblar apuesta en lo que mostró tracción',
    meta:'BBVA liquidada, deuda cara en $0, ingreso extra estable de al menos $10,000–15,000/mes.',
-   explica:'Fase 2 (abr 2027 – dic 2028) es la fase más larga. Con Banamex ya resuelto, todo el excedente ataca BBVA hasta dejar la deuda cara en $0 — mientras doblas la apuesta en la opción de negocio que ya mostró tracción real, en vez de dispersarte entre varias.',
+   explica:'Fase 2 (abr 2027 – dic 2028) es la fase más larga. Con Banamex resuelta desde el 13 ago 2026 y BBVA proyectada a mar 2027, esta fase debería arrancar ya con la deuda cara en $0 — el excedente completo se va a doblar la apuesta en la opción de negocio que ya mostró tracción real, en vez de dispersarte entre varias.',
    semanas:[
      {id:'s2-1', txt:'Elige la opción (1, 2 o 3) con ingreso recurrente real y concéntrate ahí — resiste saltar a "algo mejor".'},
-     {id:'s2-2', txt:'Con tracción sostenida, arranca la Opción 4 (CodeReview productizado) — único punto del plan que requiere capital, ya disponible tras liquidar Banamex/BBVA.'},
+     {id:'s2-2', txt:'Con tracción sostenida, arranca la Opción 4 (CodeReview productizado) — único punto del plan que requiere capital, ya disponible tras liquidar BBVA.'},
      {id:'s2-3', txt:'Usa IA para construir tu propio sistema de ventas/argumentos — tu fuerza real, en vez de improvisar en vivo.'},
      {id:'s2-4', txt:'Jun 2028: se libera el iPhone MSI ($494/mes) — súmalo a inversión, no a gasto nuevo.'},
      {id:'s2-5', txt:'Foco de habilidad: sube <strong>Ventas</strong> (15→) y <strong>Marketing</strong> (20→) lo mínimo para vender la Opción 4 sin depender solo de referidos.'},
@@ -2735,14 +3053,18 @@ function pintarEdadPace(){
   // ── 2. Avance MEDIDO (dinero real de Finanzas), no casillas marcadas ──
   const num=v=>typeof v==='number'&&isFinite(v);
   const deudas=D.fin.debts||[];
-  const bd=n=>deudas.find(x=>new RegExp(n,'i').test(x.name||''));
+  // Solo tarjetas de crédito: `/banamex/i` a secas también matchea "Apple Watch MSI (TC Banamex)",
+  // y si la tarjeta se borra o se renombra, el MSI del reloj pasaba a hacerse pasar por ella.
+  const bd=n=>deudas.find(x=>new RegExp(n,'i').test(x.name||'')&&(!x.type||x.type==='credit_card'));
   const bana=bd('banamex'), bbva=bd('bbva');
   const deudaCara=(bana?bana.balance||0:0)+(bbva?bbva.balance||0:0);
   const hayDeuda=!!(bana||bbva);
   const ef=D.fin.emergencyFund||0;
   const goalMae=(D.fin.goals||[]).find(g=>g.id==='g001'||/maestr/i.test(g.name||''));
   const medidos=[
-    {ico:'💳',t:'Deuda cara',      hay:hayDeuda, val:money(deudaCara), sub:deudaCara<=0?'Liquidada 🎉':'restante en Banamex + BBVA', falta:'Regístrala en Finanzas para medirla aquí'},
+    // El subtítulo nombra solo las tarjetas que TODAVÍA deben: desde que Banamex quedó en $0
+    // (13 ago 2026), decir "restante en Banamex + BBVA" sugería que las dos siguen vivas.
+    {ico:'💳',t:'Deuda cara',      hay:hayDeuda||!!logro('banamex-liquidada'), val:money(deudaCara), sub:deudaCara<=0?'Liquidada 🎉':'restante en '+[bana&&bana.balance>0?'Banamex':null,bbva&&bbva.balance>0?'BBVA':null].filter(Boolean).join(' + '), falta:'Regístrala en Finanzas para medirla aquí'},
     {ico:'🆘',t:'Fondo de emergencia', hay:ef>0, val:money(ef),        sub:`de ${money(10000)} · ${Math.min(100,Math.round(ef/10000*100))}%`, falta:'Aún en $0 — es el primer paso de Fase 0'},
     {ico:'🎓',t:'Fondo Maestría',  hay:!!goalMae&&num(goalMae.current), val:goalMae?money(goalMae.current||0):'—', sub:goalMae&&goalMae.target?`de ${money(goalMae.target)}`:'', falta:'Créala en Finanzas → Metas'},
   ];
@@ -3133,25 +3455,38 @@ function renderCoach(){
   document.getElementById('coachPhaseTitle').textContent=`${ph.tag} — ${ph.title}`;
   document.getElementById('coachFaseExplica').innerHTML=`${ph.explica||ph.meta}`;
 
-  // ── Ruta real hacia deuda cara en $0: fondo de emergencia → Banamex → BBVA,
-  //    en ese orden, con $ reales de Finanzas (mismo matching que usa Mis Metas) ──
+  // ── Ruta real hacia deuda cara en $0: fondo de emergencia → Banamex → BBVA ──
+  // Un paso se da por cumplido si el saldo en vivo dice que sí **o si ya está en la libreta de
+  // logros** (ver detectarLogros()). Ese "o" es el arreglo de fondo del 2026-08-13: antes el paso
+  // Banamex mostraba "Sin datos en Finanzas" en cuanto la deuda dejaba de encontrarse —borrada,
+  // renombrada, o `finanzasmx_v2` inexistente en ese navegador— y le decía a Adán que no había
+  // logrado nada. Un logro registrado ya no se puede "desregistrar" por un dato que cambió.
   const ef=D.fin.emergencyFund||0, efMeta=10000;
-  const bana=metaDebtInfo(d=>/banamex/i.test(d.name||''));
+  const bana=metaDebtInfo(d=>/banamex/i.test(d.name||'')&&(!d.type||d.type==='credit_card'));
   const bbva=metaDebtInfo(d=>/bbva/i.test(d.name||'')&&(!d.type||d.type==='credit_card'));
-  const efPct=Math.min(100,ef/efMeta*100), efDone=ef>=efMeta;
-  const banaPct=bana.found&&bana.total>0?Math.max(0,Math.min(100,(1-bana.balance/bana.total)*100)):0;
-  const banaDone=bana.found&&bana.balance<=0;
-  const bbvaPct=bbva.found&&bbva.total>0?Math.max(0,Math.min(100,(1-bbva.balance/bbva.total)*100)):0;
-  const bbvaDone=bbva.found&&bbva.balance<=0;
+  const lgBana=logro('banamex-liquidada'), lgBbva=logro('bbva-liquidada'), lgEf=logro('fondo-emergencia');
+  const efDone=ef>=efMeta||!!lgEf;
+  const efPct=efDone?100:Math.min(100,ef/efMeta*100);
+  const banaDone=!!lgBana||(bana.found&&bana.balance<=0);
+  const banaPct=banaDone?100:(bana.found&&bana.total>0?Math.max(0,Math.min(100,(1-bana.balance/bana.total)*100)):0);
+  const bbvaDone=!!lgBbva||(bbva.found&&bbva.balance<=0);
+  const bbvaPct=bbvaDone?100:(bbva.found&&bbva.total>0?Math.max(0,Math.min(100,(1-bbva.balance/bbva.total)*100)):0);
+  const liq=(id,fallback)=>'Liquidada 🎉'+(fechaLogro(id)?' · '+fechaLogro(id):(fallback||''));
 
   const steps=[
-    {n:1,ico:'🆘',lbl:'Fondo de emergencia',done:efDone,activo:!efDone,pct:efPct,
-     txt:`${money(ef)} / ${money(efMeta)}`},
-    {n:2,ico:'💳',lbl:'Banamex',done:banaDone,activo:efDone&&!banaDone,pct:banaPct,
-     txt:!bana.found?'Sin datos en Finanzas':banaDone?'Liquidada 🎉':money(bana.balance)+' restante'},
-    {n:3,ico:'💳',lbl:'BBVA TC',done:bbvaDone,activo:banaDone&&!bbvaDone,pct:bbvaPct,
-     txt:!bbva.found?'Sin datos en Finanzas':bbvaDone?'Liquidada 🎉':money(bbva.balance)+' restante'},
+    {n:1,ico:'🆘',lbl:'Fondo de emergencia',done:efDone,pct:efPct,
+     txt:efDone?'Completo 🎉'+(fechaLogro('fondo-emergencia')?' · '+fechaLogro('fondo-emergencia'):''):`${money(ef)} / ${money(efMeta)}`},
+    {n:2,ico:'💳',lbl:'Banamex',done:banaDone,pct:banaPct,
+     txt:banaDone?liq('banamex-liquidada'):(bana.found?money(bana.balance)+' restante':'Sin datos en Finanzas')},
+    {n:3,ico:'💳',lbl:'BBVA TC',done:bbvaDone,pct:bbvaPct,
+     txt:bbvaDone?liq('bbva-liquidada'):(bbva.found?money(bbva.balance)+' restante':'Sin datos en Finanzas')},
   ];
+  // Un solo paso activo: el primero sin terminar. Antes cada paso calculaba su propio `activo`
+  // encadenado al anterior (`efDone&&!banaDone`), y al quedar Banamex liquidada con el fondo
+  // todavía en $0 se encendían DOS a la vez — fondo de emergencia y BBVA — que es justo lo que
+  // Adán pidió corregir el 2026-08-13: la prioridad es el fondo, y BBVA entra después.
+  const _iActivo=steps.findIndex(s=>!s.done);
+  steps.forEach((s,i)=>{ s.activo=(i===_iActivo); });
   document.getElementById('coachDebtSteps').innerHTML=steps.map(s=>`
     <div class="debt-step ${s.done?'done':''} ${s.activo?'activo':''}">
       <div class="ds-num">${s.done?'✅':s.n}</div>
@@ -3159,7 +3494,20 @@ function renderCoach(){
       <div class="ds-lbl">${s.lbl}</div>
       <div class="ds-txt${privado?' fin-hidden':''}">${s.txt}</div>
       <div class="pbar${privado?' fin-hidden':''}" style="height:3px;margin-top:0"><div class="pfill" style="width:${s.pct}%;background:${s.done?'var(--g)':s.activo?'var(--w)':'var(--text3)'}"></div></div>
-    </div>`).join('');
+    </div>`).join('')
+    // Tira de logros: la lista completa de lo ya conseguido, con su fecha, siempre visible bajo
+    // la ruta. Sin esto los hitos cumplidos solo se veían como un ✅ dentro de su paso y se perdían
+    // de vista en cuanto la ruta avanzaba — que es justo lo que Adán señaló ("si no, sentiré que
+    // no logro nada"). No se oculta con el modo privado: no muestra montos, solo hechos y fechas.
+    + (()=>{
+        const L=logrosLoad(); const ids=Object.keys(L);
+        if(!ids.length) return '';
+        ids.sort((a,b)=>String(L[a].fecha).localeCompare(String(L[b].fecha)));
+        return `<div class="logros-tira">
+          <div class="logros-lbl">🏅 Ya conseguido — esto no se borra</div>
+          ${ids.map(id=>`<div class="logro-item"><span>✅</span><span class="logro-txt">${esc(L[id].txt)}</span><span class="logro-fecha">${esc(fechaLogro(id))}</span></div>`).join('')}
+        </div>`;
+      })();
 
   // Avance real = promedio de los 3 pasos con datos reales (no días transcurridos)
   const rutaPct=Math.round((efPct+banaPct+bbvaPct)/3);
@@ -3455,16 +3803,16 @@ const META_DETALLE={
   ]},
   byd:{titulo:'Liquidar el BYD Dolphin Mini',frase:'El orden ya está definido: primero la deuda que sí te cobra intereses, después el coche.',pasos:[
     {t:'Paso 1 · Fondo de emergencia',d:'A $10,000 — antes de tocar el BYD, esto va primero.'},
-    {t:'Paso 2 · Banamex en $0',d:'La primera de las 2 deudas caras.'},
-    {t:'Paso 3 · BBVA en $0',d:'Cierre de la Fase 2, para diciembre de 2028 según el plan — hasta aquí el BYD se queda en pago mínimo.'},
-    {t:'Se acelera de verdad',d:'En cuanto BBVA llegue a $0, todo el pago que le dabas a esas 2 tarjetas se redirige completo al BYD.'},
+    {t:'✅ Paso 2 · Banamex en $0',d:'Hecho el 13 ago 2026: pagaste el saldo completo, no el mínimo, 5 meses antes de la meta.'},
+    {t:'Paso 3 · BBVA en $0',d:'La única deuda cara que queda: $32,343. Proyectada a marzo de 2027 con los $4,645/mes que se liberan en octubre — hasta aquí el BYD se queda en pago mínimo.'},
+    {t:'Se acelera de verdad',d:'En cuanto BBVA llegue a $0 (abr 2027), todo ese pago se redirige completo al BYD.'},
     {t:'Pregunta por pagos extra',d:'A tu crédito del BYD, si permite pagos extraordinarios a capital sin penalización — resuélvelo antes de necesitarlo.'},
     {t:'Ingresos extra a capital',d:'Cualquier ingreso extra de Didi o del negocio que no esté ya comprometido va como abono a capital del BYD.'},
     {t:'Revisa el saldo cada mes',d:'En Finanzas, junto con tus otras deudas — verlo bajar es lo que sostiene la disciplina de seguir el orden.'},
     {t:'BYD liquidado 🎉',d:'Desde ese momento, ese mismo pago mensual se redirige al fondo del Cupra Formentor (ahora tu meta de largo plazo).'}
   ]},
   cupra:{titulo:'Cupra Formentor',frase:'El Cupra es el premio, no el punto de partida — llega después de la deuda, no antes.',pasos:[
-    {t:'Regla no negociable',d:'Nada de MSI ni crédito nuevo para el Cupra hasta que la deuda cara (Banamex + BBVA) esté en $0.'},
+    {t:'Regla no negociable',d:'Nada de MSI ni crédito nuevo para el Cupra hasta que la deuda cara esté en $0. Banamex ya cayó el 13 ago 2026; falta BBVA, proyectada a mar 2027.'},
     {t:'Redirige el pago del BYD',d:'Una vez liquidado (ver esa meta), ese mismo monto —ya estás acostumbrado a él— va a un fondo de ahorro específico para el Cupra.'},
     {t:'Mínimo financiamiento',d:'Apunta a comprarlo de contado o con enganche grande, una vez tu patrimonio esté cerca de la meta de $1,000,000.'},
     {t:'Revisa el precio real',d:'Directo en la página oficial de Cupra México o en tu agencia de confianza, cada 6 meses — el número exacto, no una idea vaga.'},
@@ -3478,12 +3826,12 @@ const META_DETALLE={
     {t:'Fase 2 · Empieza a facturar',d:'Emite CFDI desde tu primer peso cobrado — obligatorio, y la evidencia de ingresos que un banco te va a pedir después.'},
     {t:'Fase 2 · Si escalas a sociedad',d:'Permiso de denominación, acta constitutiva ante notario e inscripción en el Registro Público de Comercio — o la alternativa en línea y sin costo, la SAS.',href:'https://www.gob.mx/tuempresa/articulos/crea-tu-sociedad-por-acciones',label:'SAS — gob.mx/tuempresa'},
     {t:'Fase 3 · Primer ingreso real',d:'Tu primer contrato freelance cerrado o las primeras ventas/mentorías cobradas.'},
-    {t:'Fase 3 · Dobla la apuesta',d:'En la opción que ya mostró ingreso recurrente (Opción 4, CodeReview productizado), con el capital que tendrás tras liquidar Banamex y BBVA.'},
+    {t:'Fase 3 · Dobla la apuesta',d:'En la opción que ya mostró ingreso recurrente (Opción 4, CodeReview productizado), con el capital que tendrás tras liquidar BBVA — Banamex ya está en $0 desde el 13 ago 2026.'},
     {t:'Fase 3 · Contador cuando crezca',d:'No obligatorio para empezar, pero evita errores de declaración costosos.'},
     {t:'Fase 3 · Tu argumento de venta',d:'Tu experiencia real de testing en Bosch y Continental — pocos emprendedores saben "probar antes de confiar" tan bien como tú.'}
   ]},
   depa:{titulo:'Depa en la zona que quieras',frase:'Un depa no se compra con ganas — se compra con historial financiero limpio y patrimonio real.',pasos:[
-    {t:'Historial crediticio limpio',d:'Pagar Banamex y BBVA a tiempo, en el orden del plan, construye lo que un banco revisa antes de darte una hipoteca.'},
+    {t:'Historial crediticio limpio',d:'Banamex liquidada el 13 ago 2026 — eso ya cuenta. Sostén BBVA a tiempo hasta dejarla en $0 y tendrás justo lo que un banco revisa antes de darte una hipoteca.'},
     {t:'Base del enganche',d:'Fondo de emergencia a $10,000 más las inversiones (GBM, CETES) — entre más patrimonio acumules, menos hipoteca necesitas.'},
     {t:'Aparta un % fijo',d:'Una vez la deuda cara esté en $0, separa un porcentaje fijo del ingreso del negocio específicamente para el enganche.'},
     {t:'Investiga zonas reales',d:'2-3 zonas donde te gustaría vivir en portales como Inmuebles24 o Vivanuncios, y anota precios actuales — el número exacto, no una idea vaga.'},
@@ -3647,7 +3995,8 @@ function metaDebtInfo(matcher){
   return d?{balance:d.balance||0,total:d.total||d.balance||0,found:true}:{balance:0,total:0,found:false};
 }
 function renderMetasSlide(){
-  const bana=metaDebtInfo(d=>/banamex/i.test(d.name||''));
+  // Solo la tarjeta, no cualquier deuda que mencione al banco (ver la nota en renderCoach()).
+  const bana=metaDebtInfo(d=>/banamex/i.test(d.name||'')&&(!d.type||d.type==='credit_card'));
   const bbva=metaDebtInfo(d=>/bbva/i.test(d.name||'')&&(!d.type||d.type==='credit_card'));
   const carro=metaDebtInfo(d=>d.type==='car');
   const goalMae=(D.fin.goals||[]).find(g=>g.id==='g001'||/maestr/i.test(g.name||''));
@@ -3663,7 +4012,8 @@ function renderMetasSlide(){
 
   const tiles=[
     {ico:'🆘',lbl:'Fondo de emergencia',val:money(ef),pct:Math.min(100,ef/10000*100),sub:'Meta: $10,000',c:'var(--w)'},
-    {ico:'💳',lbl:'Deuda cara (Banamex+BBVA)',val:deudaCaraTieneDatos?money(deudaCaraBal):'Sin datos',pct:deudaCaraTieneDatos?deudaCaraPct:0,sub:deudaCaraTieneDatos?(deudaCaraBal<=0?'Liquidada 🎉':'restante'):'Regístralas en Finanzas',c:'var(--r)'},
+    // La etiqueta lista solo las tarjetas con saldo vivo (ver la nota igual en renderCoach()).
+    {ico:'💳',lbl:'Deuda cara'+(deudaCaraBal>0?' ('+[bana.balance>0?'Banamex':null,bbva.balance>0?'BBVA':null].filter(Boolean).join('+')+')':''),val:deudaCaraTieneDatos?money(deudaCaraBal):'Sin datos',pct:deudaCaraTieneDatos?deudaCaraPct:0,sub:deudaCaraTieneDatos?(deudaCaraBal<=0?'Liquidada 🎉':'restante'):'Regístralas en Finanzas',c:'var(--r)'},
     {ico:'🎓',lbl:'Fondo Maestría',val:goalMae?money(goalMae.current||0):'Sin datos',pct:goalMae&&goalMae.target?Math.min(100,(goalMae.current||0)/goalMae.target*100):0,sub:goalMae?`Meta: ${money(goalMae.target)}`:'Meta en Finanzas → Metas',c:'var(--cy)'},
     {ico:'💰',lbl:'Patrimonio hacia $1M',val:hasFinData()?money(pat):'Sin datos',pct:patPct,sub:'Meta: $1,000,000 · 01 ene 2030',c:'var(--g)'}
   ];
@@ -5021,9 +5371,12 @@ buildDots();
 buildHudNav();
 const _settings=loadSettings();
 fixBanamexIfNeeded();
+fixPagos20260813IfNeeded();
+fixMsiBBVA20260813IfNeeded();
 fixMiercolesNatacionIfNeeded();
 fixRutina20260812IfNeeded();
 seedMetasLogradasIfNeeded();
+seedLogros20260813IfNeeded();
 loadAll();
 tickClock();
 showSlide(_settings.remember&&_settings.lastSlide!=null?_settings.lastSlide:0);

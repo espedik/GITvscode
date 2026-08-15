@@ -1671,3 +1671,135 @@ Pedido, viendo la pantalla: *"esto no me aporta nada, mejorala"*. Tenía razón,
 - El cierre pasó de rojo con cursiva de cita a acento normal: ya no es un reclamo, es la conclusión.
 
 - Verificado con Node: sintaxis OK en los 2 bloques `<script>` reales; CSS 538/538 llaves; `<div>` 286/286; las 14 clases que usa el bloque nuevo tienen su regla CSS (0 faltantes); 0 referencias vivas a las clases y a la constante borradas; y simulando la fecha real (12 ago 2026) los hitos y la cuenta regresiva salen correctos.
+
+## TC Banamex liquidada — la migración de Finanzas replicada aquí otra vez (2026-08-13)
+
+Adán liquidó la TC Banamex (saldo $0), terminó de pagar los Boletos Ticketmaster y confirmó que del Apple Watch MSI solo quedan 2 cuotas ($1,708). El cambio de fondo vive en `Finanzas/Finanzas.html` (ver [`../Finanzas/readme_finanzas.md`](../Finanzas/readme_finanzas.md) → "TC Banamex liquidada y Ticketmaster pagado").
+
+Igual que en agosto de 2026 con los $9,000, la migración de allá **solo corre dentro del `init()` de Finanzas.html**, y Adán normalmente abre el Dashboard primero. Sin replicarla, el debt-step "💳 Banamex" del slide Coach y el patrimonio de "🎯 Mis Metas" seguirían mostrando los $9,000 que ya no debe. Se agregó `fixPagos20260813IfNeeded()`, espejo exacto de la migración de allá con `rawGet`/`rawSet` sobre `finanzasmx_v2`, llamada justo después de `fixBanamexIfNeeded()` antes del primer `loadAll()`:
+
+- Corrige los 3 saldos (`d002` → 0 y `noInterest` 0, `d007` → 0, `d004` → 1708 con `day:18`).
+- Agrega las 2 transacciones de agosto (`s064` $9,000 cat. Deudas, `s065` $1,260 cat. Entretenimiento) solo si sus `id` no existen ya — idempotente, no duplica si Finanzas ya corrió primero.
+- **Bandera compartida** `finanzasmx_v2_pagos20260813`: la primera de las dos apps que arranque aplica el fix y la otra ya no lo repite.
+- Si `finanzasmx_v2` no existe todavía en ese navegador, no pone la bandera — se corrige después, sin importar qué app abra primero.
+
+Verificado con Playwright: sembrando `finanzasmx_v2` con los datos viejos (Banamex $9,000, Ticketmaster $1,260, Apple Watch $2,562) y abriendo **solo el Dashboard**, sin volver a pasar por Finanzas.html, los tres saldos quedan corregidos, las 2 transacciones se agregan sin duplicar, la deuda total baja a $349,672.85 y no hay errores de consola.
+
+## Tercera migración espejo de Finanzas — los MSI reales de BBVA (2026-08-13)
+
+Mismo día y mismo motivo que `fixPagos20260813IfNeeded()`, en una segunda ronda: Adán mandó su estado de cuenta de BBVA y resultó que 2 de los MSI registrados no existen (Vuelo Viva Aerobus, Mercado Libre) mientras que 3 reales no estaban (Zap Stylo, Merpago*Merca, Mercado Pago). Detalle completo en [`../Finanzas/readme_finanzas.md`](../Finanzas/readme_finanzas.md) → "Los MSI de BBVA corregidos contra el estado de cuenta real".
+
+`fixMsiBBVA20260813IfNeeded()` (bandera `finanzasmx_v2_msibbva20260813`, llamada justo después de `fixPagos20260813IfNeeded()`):
+- **Borra** `d005` y `d006` del array — no los pone en $0, porque nunca fueron deuda real y en $0 aparecerían para siempre como "liquidadas".
+- Inserta `d009`/`d010`/`d011` solo si su `id` no existe ya.
+- Baja el presupuesto `b005` "Deudas" de $11,700 a $8,200.
+
+Ya van **3 migraciones espejo** en este archivo (`fixBanamexIfNeeded`, `fixPagos20260813IfNeeded`, `fixMsiBBVA20260813IfNeeded`). El patrón está estable y documentado como regla en el [README maestro](../README.md) → "Cómo mantener esto al día" #5.
+
+Verificado con Playwright: `localStorage` sembrado con los datos viejos y abriendo **solo el Dashboard**, sin pasar por Finanzas.html — las 2 deudas fantasma desaparecen, entran las 3 reales con sus saldos ($334/$597/$717), el presupuesto queda en $8,200, la deuda total baja a $346,060.85 y una transacción capturada a mano sobrevive intacta.
+
+## Las 2 copias gemelas resincronizadas tras el cambio de deuda (2026-08-13)
+
+Al actualizar el Plan Maestro en Coach por la liquidación de Banamex, `PHASES` y `META_DETALLE` de este archivo —copias a mano de esas estructuras— quedaron desfasadas. Adán lo detectó viendo las metas por plazo. Se replicó todo:
+
+- **`PHASES`**: meta y `explica` de Fase 0 (Banamex ya liquidada, el excedente va ahora a BBVA), Fase 1 (título de $3,868 → $3,145/mes; la meta "Banamex liquidada" se sustituyó por "bajar BBVA a menos de $15,000") y Fase 2. Tareas `s0-1`, `s0-7`, `s1-1`, `s2-2` reescritas, y se agregó `s0-8` ("Liquidar la TC Banamex", con fecha) para que coincida con Coach.
+- **`META_DETALLE`**: los pasos de deuda dentro de las metas `byd` (Paso 2 marcado ✅ con fecha, Paso 3 con la proyección real de mar 2027), `cupra`, `depa` y `empresa`.
+- **Avisos de calendario**: el de 30 sep ya no pide revisar "Banamex/BBVA en $0" sino solo el avance de BBVA; el de 1 oct dice $3,145/mes en vez de $3,868.
+
+### Etiquetas de deuda cara ahora dinámicas
+
+Dos lugares nombraban las tarjetas a mano: el tile "Deuda cara (Banamex+BBVA)" del slide Mis Metas y el subtítulo "restante en Banamex + BBVA" de `renderCoach()`. Con Banamex en $0 eso sugería que las dos siguen vivas. Ahora ambos arman la lista **solo con las tarjetas que tienen saldo > 0**, así que hoy muestran "Deuda cara (BBVA)" y mañana se ajustan solos sin tocar código.
+
+El debt-step `#coachDebtSteps` no necesitó cambios: ya leía saldos en vivo y muestra "Banamex · Liquidada 🎉" con el ✅ por su cuenta.
+
+Verificado con Playwright recorriendo los slides: el paso de Banamex sale liquidado, el tile dice "DEUDA CARA (BBVA) $32,343", y ni `3,868` ni `13,372` aparecen ya en ninguna parte del archivo renderizado.
+
+## "Importante este mes" pasa de lista fija a agenda editable (2026-08-13)
+
+Petición de Adán: *"pon check boxes en cada uno, además dame la habilidad de poner tareas nuevas, borrar tareas, editar, etc. para todos los meses, debo poder hacer muchas cosas aquí"*. El tile era de solo lectura: pintaba `EVENTOS_MES`, una constante en código que solo Claude podía tocar.
+
+### El cambio de fondo: quién es la fuente de verdad
+
+`EVENTOS_MES` deja de ser LA lista y pasa a ser solo la **semilla**. En la primera carga de cada navegador se copia a la clave nueva `dash-eventos-mes-v1` (`{ '2026-08': [{id, ico, txt, done}], … }`) y desde ahí el `localStorage` manda.
+
+Es el punto que hace que todo lo demás funcione: **si el código siguiera mandando, borrar un pendiente no significaría nada** — reaparecería en la siguiente carga, igual que pasó con `GYM_RUTINA_DEFAULT`. La contraparte a tener presente: si más adelante se agrega un evento a `EVENTOS_MES` en el código, **no** va a aparecer solo en el navegador de Adán. Hay que decírselo para que lo capture él, o bumpear la bandera de siembra.
+
+### Lo que se puede hacer ahora
+
+- **Checkbox por pendiente** (`☐`/`☑`), con tachado y persistencia. La pestaña del mes muestra el número de **pendientes** (no el total) y se pinta verde cuando ya no queda ninguno, reusando `.mes-tab.done` de la Lista de Compras.
+- **Agregar** con el botón `+ Nuevo` del encabezado, **editar** con ✏️ y **borrar** con 🗑️ (con `confirm` que cita el texto del pendiente).
+- **Cualquier mes**, no solo los 4 fijos: flechas `‹ ›` desplazan la ventana y aparece un botón `hoy` en cuanto te alejas del mes actual.
+- **Selector de ícono**: 15 emojis frecuentes de recordatorio en una tira clicable, más un input libre por si quiere otro.
+- **Enter guarda, Escape cancela** — en una tarjeta de este tamaño el teclado es más rápido que apuntar al ✓.
+- Pie con el conteo: *"2 pendientes · 1 hecha en Agosto 2026"*.
+
+### Dos detalles que sí importaban
+
+**La rotación de slides se pausa mientras escribe.** Sin esto el Dashboard le cambia de pantalla a media frase. Se para el intervalo y la barra de progreso a mano (`pausarRotacionPorEdicion()`) en vez de tocar `playing`, para no dejar el botón ▶/⏸ del HUD diciendo una cosa distinta de la que pasa; al cerrar el editor, `restartTimer()` devuelve todo al estado que ese botón ya indicaba.
+
+**El texto se escapa.** Los pendientes ahora los escribe Adán, así que un texto con comillas o `<>` se inyectaba crudo en el `innerHTML`. Se agregó `esc()` (no existía en este archivo) y los `onclick` pasan el `id`, nunca el texto. Verificado con `Llamar a "Juan" <del taller> & pedir cotización`.
+
+### Layout
+
+Medido con Playwright a 1920/1440/1180px: el tile baja hasta ~227px de ancho en iPad, y ahí las pestañas más las flechas se partían en 2 líneas, estirando los paneles de Gym y Nutrición vecinos (`align-items:stretch`). Dos ajustes: la fila usa `flex-wrap:nowrap` con scroll horizontal y barra oculta —mide siempre 21px de alto sin importar el ancho—, y `MESES_VISIBLES` bajó de 4 a 3, lo cual ya no quita alcance porque las flechas llegan a cualquier mes. El botón `+ Nuevo` se movió al encabezado, donde no compite con las pestañas. La lista tiene `max-height:240px` con scroll propio por la misma razón del stretch.
+
+Verificado con Playwright: alta, edición, borrado con confirmación, marcar/desmarcar, navegación a meses fuera de la ventana inicial, persistencia tras recargar, cancelar sin guardar, guardar vacío bloqueado con aviso, escapado de HTML, y —con el auto-play encendido— la barra se detiene al abrir el editor, el slide no cambia mientras se escribe y ambos se reanudan al cerrar. Cero errores de consola en tema claro y oscuro.
+
+## Fase 0: espejo del reorden y un bug de dos pasos activos a la vez (2026-08-13)
+
+`PHASES[0].semanas` se resincronizó con el reorden de Coach (ver [`../Coach/readme_coach_v2.md`](../Coach/readme_coach_v2.md) → "Fase 0 reordenada por prioridad real"): mismas 8 tareas de agosto en el mismo orden, `s0-9`/`s0-10` nuevas con las 2 prioridades, `s0-5` eliminada, `s0-3` absorbiendo la publicación de la plantilla. Meta y `explica` de la fase actualizadas al mismo texto.
+
+### El bug que salió al hacerlo
+
+`#coachDebtSteps` (💰 Tu ruta hacia deuda cara en $0) calculaba el paso activo encadenado al anterior: `{activo: efDone && !banaDone}` para Banamex, `{activo: banaDone && !bbvaDone}` para BBVA. Con Banamex liquidada pero el fondo de emergencia todavía en $0, esa fórmula encendía **dos pasos a la vez** — fondo de emergencia y BBVA — que es exactamente lo contrario de la prioridad que Adán acababa de pedir.
+
+Se sustituyó por el primer paso sin terminar, uno solo:
+
+```js
+const _iActivo=steps.findIndex(s=>!s.done);
+steps.forEach((s,i)=>{ s.activo=(i===_iActivo); });
+```
+
+Ahora el activo es el fondo de emergencia y, en cuanto llegue a $10,000, salta solo a BBVA. La forma encadenada asumía que los pasos se completan en orden; en cuanto uno se cumplió antes de tiempo, dejó de sostenerse.
+
+También, la fecha de liquidación de Banamex en ese paso (`Liquidada 🎉 · 13 ago 2026`) **no está escrita a mano**: sale de la transacción real del pago (`s064`) en `finanzasmx_v2`, así que si algún día vuelve a usar y liquidar la tarjeta, el dato se mantiene solo.
+
+Verificado con Playwright: `PHASES[0]` idéntico a Coach, sin `s0-5`, y en la ruta de deuda exactamente **1 paso activo** (antes 2) con la fecha correcta leída de la transacción.
+
+## Libreta de logros: lo conseguido deja de depender del dato que lo produjo (2026-08-13)
+
+Adán reportó que el paso "Banamex" de la ruta de deuda mostraba **"Sin datos en Finanzas"** en vez de "Liquidada", y explicó por qué le importa: *"debes tener los registros siempre porque si no sentiré que no logro nada"*.
+
+### La falla de diseño detrás del síntoma
+
+Todo el avance se derivaba **en vivo** del array `debts` de `finanzasmx_v2`. Eso significa que **el logro desaparecía junto con el dato**: si la deuda se borra (y en el bloque "✅ Liquidadas" de Finanzas ahora hay un botón 🗑️ que invita a hacerlo), se renombra, o el navegador todavía no tiene `finanzasmx_v2`, el Dashboard le decía que no había logrado nada. Para una app cuyo propósito declarado es sostener su avance, es el peor modo de fallo posible.
+
+**`dash-logros-v1`** invierte la dependencia: cuando se **detecta** un hito cumplido se graba con su fecha, y a partir de ahí el registro manda. Nunca se sobrescribe ni se borra solo, aunque la fuente original desaparezca — misma lógica que `indicatorHistory` en Finanzas: un hecho pasado no se puede reconstruir después, así que se guarda cuando se ve.
+
+`detectarLogros()` corre dentro de `loadAll()` y cubre: Banamex liquidada, Ticketmaster pagado, BBVA liquidada, deuda cara en $0, fondo de emergencia completo, BYD liquidado. Banamex se detecta por **3 señales independientes** (la transacción `s064`, la bandera de migración `finanzasmx_v2_pagos20260813`, o la tarjeta con saldo ≤ 0) precisamente para que ninguna sola pueda hacer desaparecer el logro.
+
+Para el caso extremo —Dashboard abierto en un navegador donde nunca se abrió Finanzas, donde no hay ninguna señal que detectar— `seedLogros20260813IfNeeded()` siembra los 2 hitos que Adán ya confirmó, con su fecha real. Bandera de una sola vez, así que si los borra a mano no vuelven.
+
+### Un segundo bug que salió en el camino
+
+El matcher era `/banamex/i` sobre el nombre, sin filtrar por tipo. Eso también matchea **"Apple Watch MSI (TC Banamex)"**: al borrar la tarjeta, el paso pasaba a mostrar `$1,708 restante` —el saldo del reloj— haciéndose pasar por la deuda de la tarjeta. Reproducido con Playwright antes de arreglarlo. Ahora los 3 lugares que lo usaban (`renderCoach`, `renderMetasSlide`, la ruta de deuda) exigen `type === 'credit_card'`, como BBVA ya hacía.
+
+### Tira "🏅 Ya conseguido — esto no se borra"
+
+Bajo la ruta de deuda, la lista completa de logros con su fecha, ordenada cronológicamente. Sin esto los hitos solo se veían como un ✅ dentro de su paso y se perdían de vista conforme la ruta avanzaba. **No se oculta con el modo privado**: no muestra montos, solo hechos y fechas.
+
+### Fecha local, no UTC
+
+`registrarLogro()` usa `hoyLocal()` en vez de `toISOString().slice(0,10)`. En México (UTC-6) el ISO ya está en el día siguiente a partir de las 18:00, así que un logro conseguido por la noche quedaba fechado mañana.
+
+### Verificación (Playwright, 5 escenarios)
+
+| Escenario | Resultado |
+|---|---|
+| Normal | ✅ Liquidada 🎉 · 13 ago 2026 |
+| Deuda `d002` **borrada** de Finanzas | ✅ sigue liquidada (antes: "$1,708 restante" del Apple Watch) |
+| Borrada **y** sin la transacción `s064` | ✅ sigue liquidada |
+| Dashboard **sin haber abierto Finanzas nunca** | ✅ sigue liquidada (antes: "Sin datos en Finanzas") |
+| Fondo completo + BBVA en $0 | ✅ los 3 pasos hechos, 5 logros en la tira |
+
+Además: borrar un logro a mano y recargar **no** lo re-siembra, y una fecha editada a mano se respeta en vez de pisarse. Cero errores de consola.
