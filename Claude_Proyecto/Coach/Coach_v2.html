@@ -2417,7 +2417,7 @@
 
       <div class="context-banner">
         <p><strong>Tu contexto ahora mismo:</strong> estás en <strong>Fase 0</strong> del <a href="#perfil" class="inline-link">Plan Maestro</a> (1 ago – 30 sep 2026). Con Banamex ya liquidada desde el 13 ago, las 3 cosas que definen si esta fase se cumple son, en orden: <strong>1)</strong> el fondo de emergencia a $10,000, <strong>2)</strong> los abonos extra a BBVA una vez completo, y <strong>3)</strong> la plantilla Finanzas.html publicada en comunidades de GBM + atención real al negocio de tu papá.
-          Horario real confirmado: te levantas <strong>7:00</strong>, te bañas de inmediato, sales <strong>7:40</strong>, manejas hasta <strong>8:00</strong>, comes en tu descanso de las <strong>13:00</strong>, y trabajas en ALTEN hasta las <strong>17:00</strong> — con solo 40 min entre despertar y salir, esa ventana de la mañana es únicamente higiene/skincare, así que el ejercicio y el bloque de habilidad se movieron a después del trabajo, donde sí hay tiempo. Al salir de ALTEN (<strong>17:00</strong>) manejas Didi ~40 min con un pasajero rumbo a Buenavista, y de ahí entras directo al gym a las <strong>17:40</strong>. Por la noche retomas Didi hasta ~<strong>21:00</strong>; justo al terminar Didi haces tu prioridad activa de Fase 0 (no antes, para no cortar el impulso de manejar), y después preparas la cena y la comida de mañana en una sola sesión. Duermes alrededor de <strong>medianoche</strong> (~7h de sueño). <strong>Skincare y el tratamiento anticaída (minoxidil) están en la rutina al despertar y antes de dormir, todos los días</strong> — el lavado de cabello (Lun/Jue/Sáb) se hace en la ducha de la mañana. El ejercicio y el bloque de habilidad cambian cada día de la semana (tomados de tus 5 prioridades en <a href="#aprendizaje" class="inline-link">Aprendizaje</a>), y el fin de semana tiene su propio horario, sin ALTEN. Usa las pestañas de abajo para ver cualquier día — solo el día de hoy guarda tu avance.
+          Horario real confirmado: te levantas <strong>6:40</strong> y arrancas el día con <strong>20 min construyendo este mismo ecosistema</strong>, te bañas a las <strong>7:03</strong>, sales <strong>7:40</strong> ya manejando <strong>Didi con direccionamiento</strong> rumbo a ALTEN (~50 min con el desvío del pasajero), entras <strong>8:30</strong>, comes en tu descanso de las <strong>13:00</strong>, y sales a las <strong>17:00</strong> — la ventana de la mañana solo alcanza para el bloque de la aplicación más higiene/skincare, así que el ejercicio y el bloque de habilidad se movieron a después del trabajo, donde sí hay tiempo. Al salir de ALTEN (<strong>17:00</strong>) manejas Didi ~40 min con un pasajero rumbo a Buenavista, y de ahí entras directo al gym a las <strong>17:40</strong>. Por la noche retomas Didi en una sesión corta hasta ~<strong>20:00</strong>, y de ahí tienes <strong>1h15 seguidas</strong> para tu prioridad activa de Fase 0 (no antes, para no cortar el impulso de manejar), y después preparas la cena y la comida de mañana en una sola sesión. <strong>Dos de tus tres bloques diarios de Didi son trayectos que ya manejabas</strong> —a ALTEN y al gym—, así que casi todo ese ingreso no te cuesta tiempo nuevo. A las <strong>23:30</strong> vuelves a la aplicación hasta las <strong>00:00</strong>, a veces hasta la <strong>01:00</strong> — eso te deja entre <strong>5h40 y 6h40 de sueño</strong>, por debajo de las 7h que la rutina asumía antes. <strong>Skincare y el tratamiento anticaída (minoxidil) están en la rutina al despertar y antes de dormir, todos los días</strong> — el lavado de cabello (Lun/Jue/Sáb) se hace en la ducha de la mañana. El ejercicio y el bloque de habilidad cambian cada día de la semana (tomados de tus 5 prioridades en <a href="#aprendizaje" class="inline-link">Aprendizaje</a>), y el fin de semana tiene su propio horario, sin ALTEN. Usa las pestañas de abajo para ver cualquier día — solo el día de hoy guarda tu avance.
           <em style="color:var(--muted-2)">Los 40 min de Didi a Buenavista y la sesión de la noche son estimados — ajusta las horas si tu tráfico o tus viajes reales varían.</em>
         </p>
       </div>
@@ -3941,7 +3941,13 @@
   // para "ahora/siguiente", pero no llevan checkbox ni cuentan en el progreso.
   const RUTINA_TASKS = [
     // ── Común entre semana (Lun–Vie) — horario real confirmado 2026-08-02 ──
-    {id:'wd01', dias:[1,2,3,4,5], hora:'07:00', cat:'salud',    txt:'Despertar sin snooze — celular fuera del cuarto'},
+    // Adán se despierta a las 06:40, no a las 07:00, y arranca el día con 20 min construyendo este
+    // mismo ecosistema (aclarado el 2026-08-15: "me despierto entre semana 6:40 y continuo armando
+    // esta aplicacion... 20 min"). Las 07:00 que decía wd01 eran en realidad la hora a la que ya
+    // estaba metiéndose a bañar. Este bloque y su gemelo de la noche (wd-app-pm) son su práctica
+    // real de IA aplicada — por eso van en cat:'aprender' y no en 'profundo'.
+    {id:'wd01', dias:[1,2,3,4,5], hora:'06:40', cat:'salud',    txt:'Despertar sin snooze — celular fuera del cuarto'},
+    {id:'wd-app-am', dias:[1,2,3,4,5], hora:'06:43', cat:'aprender', txt:'💻 Construir esta aplicación — 20 min antes de arrancar el día'},
     {id:'wd02lav', dias:[1,4], hora:'07:03', cat:'salud', txt:'🚿 Bañarte + lavar cabello', producto:true, subtareas:[
       {id:'wd02la', txt:'Champú: Darrow Doctar (shampoo con alcatrão/coal tar, anticaspa) — masajea el cuero cabelludo 2-3 min, deja actuar antes de enjuagar', link:{href:'../CuidadoPersonal/cuidadopersonal.html?tab=cabello', label:'✂️ Ver Cuidado del Cabello'}},
       {id:'wd02lb', txt:'Acondicionador: TRESemmé Keratin Smooth Conditioner — solo de medios a puntas, nunca en la raíz (en cabello fino y graso, ponerlo en la raíz lo aplana y engrasa más rápido)'},
@@ -3964,14 +3970,27 @@
       {id:'wdSupAm4', txt:'Creatina monohidratada — 5g (todos los días, no solo si entrenas hoy)'},
     ]},
     {id:'wd05', dias:[1,2,3,4,5], hora:'07:33', cat:'descanso', txt:'Vestirte y alistarte'},
-    {id:'wd06', dias:[1,2,3,4,5], hora:'07:40', cat:'descanso', txt:'Salir de casa — traslado a ALTEN (~20 min manejando)'},
-    {id:'wd07', dias:[1,2,3,4,5], hora:'08:00', cat:'trabajo',  txt:'🏢 ALTEN — jornada laboral (HIL/SIL Ford)', fijo:true},
+    // 2026-08-15: el traslado a ALTEN deja de ser tiempo muerto y pasa a ser el tercer bloque de
+    // Didi entre semana, usando la opción de direccionamiento (pasajeros que van hacia su destino).
+    // Cuesta ~20 min extra sobre los ~20 del trayecto normal, más el margen de que le asignen el
+    // viaje — por eso sale igual a las 07:40 pero llega 08:30 en vez de 08:00. Él confirmó que su
+    // horario en ALTEN es flexible y que aun entrando 08:30 sigue saliendo a las 17:00, así que
+    // NADA de la tarde se recorre (gym 17:40, Didi corta 19:20, Fase 0 20:00-21:15 intactos).
+    // Junto con wd08 (17:00, rumbo al gym en Buenavista), 2 de sus 3 bloques diarios de Didi son
+    // trayectos que ya manejaba de todos modos: ingreso sin costo real de tiempo.
+    {id:'wd06', dias:[1,2,3,4,5], hora:'07:40', cat:'admin', txt:'🚗 Didi con direccionamiento — camino a ALTEN (~50 min: el traslado normal + el desvío del pasajero)'},
+    {id:'wd07', dias:[1,2,3,4,5], hora:'08:30', cat:'trabajo',  txt:'🏢 ALTEN — jornada laboral (HIL/SIL Ford) — entras 08:30, sales 17:00', fijo:true},
     {id:'wd12b', dias:[1,2,3,4,5], hora:'13:00', cat:'salud',   txt:'🛒 Comprar comida — descanso de ALTEN'},
     {id:'wd12c', dias:[1,2,3,4,5], hora:'13:40', cat:'trabajo', txt:'🏢 ALTEN — de vuelta a la jornada laboral', fijo:true},
     {id:'wd08', dias:[1,2,3,4,5], hora:'17:00', cat:'admin',    txt:'🚗 Didi — 1 pasajero a Buenavista (~40 min)'},
     {id:'wd09', dias:[1,2,3,4,5], hora:'18:30', cat:'salud',    txt:'Ducha rápida post-ejercicio'},
-    {id:'wd-didi2', dias:[1,2,3,4,5], hora:'19:20', cat:'admin', txt:'🚗 Didi — sesión de la noche (hasta ~21:00)'},
-    {id:'wd11', dias:[1,2,3,4,5], hora:'21:00', cat:'profundo', txt:'🎯 Prioridad activa de Fase 0: negocio de tu papá o plantilla GBM — 1 avance real'},
+    // 2026-08-15, "entre semana deberia enfocarme en lo demas y dedicarme menos tiempo a trabajar
+    // en didi": la sesión nocturna se recorta de ~1h40 a ~40 min y esa hora se la lleva wd11, la
+    // prioridad de Fase 0, que hasta hoy tenía 15 min simbólicos antes de la cena. wd08 (17:00) NO
+    // se toca: ese pasajero va rumbo a Buenavista, que es a donde él maneja de todos modos para
+    // llegar al gym de las 17:40 — quitarlo no le devolvería tiempo, solo le quitaría el ingreso.
+    {id:'wd-didi2', dias:[1,2,3,4,5], hora:'19:20', cat:'admin', txt:'🚗 Didi — sesión corta de la noche (hasta ~20:00)'},
+    {id:'wd11', dias:[1,2,3,4,5], hora:'20:00', cat:'profundo', txt:'🎯 Prioridad activa de Fase 0: negocio de tu papá o plantilla GBM — 1h15 de avance real (20:00–21:15)'},
     {id:'wd14', dias:[1,2,3,4,5], hora:'21:15', cat:'salud', txt:'🍽️ Cena + preparar la comida de mañana', subtareas:[
       {id:'wd14a', txt:'Cocina un solo platillo para cenar hoy y llevar de comida mañana a ALTEN — ahorra tiempo, sin carbohidratos refinados en la cena', link:{href:'../CuidadoPersonal/comida.html?s=cenas', label:'🍳 Ver cenas'}},
       {id:'wd14b', txt:'Deja todo empacado y listo junto a la puerta para salir rápido mañana', link:{href:'../CuidadoPersonal/comida.html?s=desayunos', label:'🍳 Ver desayunos'}},
@@ -4001,8 +4020,12 @@
       {id:'wdSupPm1', txt:'Magnesio (glicinato) — 200-400mg, 30-60 min antes de dormir', link:{href:'../CuidadoPersonal/salud.html?tab=suplementos', label:'💊 Ver Suplementos'}},
       {id:'wdSupPm2', txt:'Proteína Whey — 25-30g si hoy no llegaste a tu meta de proteína (186g/día)'},
     ]},
-    {id:'wd20e', dias:[1,2,3,4,5], hora:'23:10', cat:'descanso', txt:'Tiempo libre / relajación antes de dormir'},
-    {id:'wd21', dias:[1,2,3,4,5], hora:'23:55', cat:'salud',    txt:'Apagar pantallas. Dormir — buscas ~7h (medianoche a 7:00am)'},
+    {id:'wd20e', dias:[1,2,3,4,5], hora:'23:10', cat:'descanso', txt:'Tiempo libre / relajación (20 min, hasta las 23:30)'},
+    {id:'wd-app-pm', dias:[1,2,3,4,5], hora:'23:30', cat:'aprender', txt:'💻 Construir esta aplicación — de 23:30 a 00:00, a veces hasta la 01:00'},
+    // wd21 se ancla en 23:59 y no en 00:00 a propósito: el timeline ordena con
+    // hora.localeCompare(), así que un '00:00' se iría al PRINCIPIO del día en vez del final, y
+    // "Dormir" aparecería como la primera tarea de la mañana. La hora real vive en el texto.
+    {id:'wd21', dias:[1,2,3,4,5], hora:'23:59', cat:'salud',    txt:'Apagar pantallas y dormir en cuanto cierres la app — entre 00:00 y 01:00 (5h40–6h40 de sueño con el despertar de las 06:40)'},
 
     // ── Bolsa GBM — solo lunes, porque solo inviertes al inicio de semana ──
     {id:'lu-gbm', dias:[1], hora:'09:00', cat:'admin', txt:'💰 Bolsa GBM: revisar portafolio + VOO + USD/MXN e invertir — solo lunes'},
@@ -4064,25 +4087,35 @@
       {id:'sa05c', txt:"Mascarilla capilar (1 vez por semana, hazla hoy): L'Oréal Elvive Total Repair 5 — puntas y medios, deja actuar 5-10 min, enjuaga bien"},
       {id:'sa05d', txt:'Aceite en puntas (opcional, con el cabello ya seco): Moroccanoil Treatment Light — 2-3 gotas, solo puntas'},
     ]},
-    {id:'sa06',  dias:[6], hora:'08:50', cat:'profundo', txt:'🎯 Bloque profundo 4h: prioridad activa del Plan Maestro'},
-    {id:'sa07',  dias:[6], hora:'12:50', cat:'salud',    txt:'Almuerzo'},
-    {id:'sa08',  dias:[6], hora:'13:20', cat:'aprender', txt:'🤖 IA aplicada — 30 min construyendo (n8n, Cursor, mini-proyecto propio)'},
-    {id:'sa10',  dias:[6], hora:'16:00', cat:'admin',    txt:'💰 Revisión semanal: finanzas, metas, hábitos cumplidos'},
-    {id:'sa11',  dias:[6], hora:'20:00', cat:'salud', txt:'🍽️ Cena', link:{href:'../CuidadoPersonal/comida.html?s=cenas', label:'Ver cenas'}},
-    {id:'sa12',  dias:[6], hora:'20:30', cat:'descanso', txt:'Tiempo libre / familia / lectura'},
-    {id:'sa1113', dias:[6], hora:'21:00', cat:'salud', txt:'🧴 Skincare + 🍂 Minoxidil — PM', subtareas:[
+    // El sábado se convierte en día de ingreso (2026-08-15, "el sábado quiero trabajar de día en
+    // didi y en la tarde noche también"): dos bloques de Didi de ~5h sustituyen al bloque profundo
+    // de 4h, a los 30 min de IA aplicada y al freelance de las 17:00 (fl1, que baja a solo domingo).
+    // Lo único que sobrevive del trabajo propio es la revisión semanal, reubicada en la ventana
+    // entre los dos bloques. Todo el cierre del día se recorre ~1h15 y la hora de dormir pasa de
+    // 21:45 a 23:00 — sigue durmiendo ~8h porque el despertar de las 07:00 no se movió.
+    {id:'sa-didi1', dias:[6], hora:'09:00', cat:'admin', txt:'🚗 Didi — bloque de día (~09:00 a 14:00, 5h)'},
+    {id:'sa07',  dias:[6], hora:'14:00', cat:'salud',    txt:'Almuerzo'},
+    {id:'sa10',  dias:[6], hora:'14:40', cat:'admin',    txt:'💰 Revisión semanal: finanzas, metas, hábitos cumplidos'},
+    {id:'sa12',  dias:[6], hora:'15:30', cat:'descanso', txt:'Tiempo libre / familia — descanso antes del segundo bloque de Didi'},
+    {id:'sa-didi2', dias:[6], hora:'17:00', cat:'admin', txt:'🚗 Didi — bloque de tarde-noche (~17:00 a 22:00, 5h)'},
+    {id:'sa11',  dias:[6], hora:'22:00', cat:'salud', txt:'🍽️ Cena', link:{href:'../CuidadoPersonal/comida.html?s=cenas', label:'Ver cenas'}},
+    {id:'sa1113', dias:[6], hora:'22:20', cat:'salud', txt:'🧴 Skincare + 🍂 Minoxidil — PM', subtareas:[
       {id:'sa13', txt:'Skincare PM — limpiador + retinoide + hidratante nocturno'},
       {id:'sa13b', txt:'Minoxidil 5% en cuero cabelludo seco — dosis de la noche'},
     ]},
-    {id:'saSupPm', dias:[6], hora:'21:15', cat:'salud', txt:'💊 Suplementos PM', subtareas:[
+    {id:'saSupPm', dias:[6], hora:'22:30', cat:'salud', txt:'💊 Suplementos PM', subtareas:[
       {id:'saSupPm1', txt:'Magnesio (glicinato) — 200-400mg, 30-60 min antes de dormir', link:{href:'../CuidadoPersonal/salud.html?tab=suplementos', label:'💊 Ver Suplementos'}},
       {id:'saSupPm2', txt:'Proteína Whey — 25-30g si hoy no llegaste a tu meta de proteína (186g/día)'},
     ]},
-    {id:'sa14',  dias:[6], hora:'21:30', cat:'descanso', txt:'🧘 Meditación — misma respiración box 4-4-4-4 que entre semana'},
-    {id:'sa15',  dias:[6], hora:'21:45', cat:'salud',    txt:'Apagar pantallas. Dormir'},
+    {id:'sa14',  dias:[6], hora:'22:45', cat:'descanso', txt:'🧘 Meditación — misma respiración box 4-4-4-4 que entre semana'},
+    {id:'sa15',  dias:[6], hora:'23:00', cat:'salud',    txt:'Apagar pantallas. Dormir'},
 
-    // ── Compartido Sábado y Domingo ─────────────────────────────────────
-    {id:'fl1', dias:[6,0], hora:'17:00', cat:'descanso', txt:'Bloque largo de freelance/plantilla si ya hay cliente o ventas activas'},
+    // fl1 ("Bloque largo de freelance/plantilla si ya hay cliente o ventas activas") se eliminó por
+    // completo el 2026-08-15: primero perdió el sábado y ahora el domingo, porque las 2 franjas que
+    // ocupaba son turnos de Didi. Era un bloque condicional que en la práctica estaba vacío —
+    // todavía no hay cliente ni ventas. Cuando se cobre el primer peso en las Opciones 1-3 hay que
+    // volver a crearlo: el Plan Maestro (Fase 1, paso s1-4) dice que ahí es donde las horas de Didi
+    // se mueven al negocio, "no antes".
 
     // ── Domingo ──────────────────────────────────────────────────────────
     {id:'do01',  dias:[0], hora:'07:30', cat:'salud',    txt:'Despertar'},
@@ -4102,25 +4135,32 @@
       {id:'do045a', txt:'Acondicionador: TRESemmé Keratin Smooth Conditioner — solo de medios a puntas (co-wash, sin champú: hoy no toca el anticaída, eso es Lun/Jue/Sáb — usarlo a diario resecaría el cuero cabelludo)'},
       {id:'do045b', txt:'Aceite en puntas (opcional, con el cabello ya seco): Moroccanoil Treatment Light — 2-3 gotas, solo puntas'},
     ]},
-    {id:'do05',  dias:[0], hora:'09:00', cat:'admin',    txt:'🚗 Trabajar en Didi'},
-    {id:'do06',  dias:[0], hora:'20:00', cat:'admin',    txt:'💰 Finanzas: revisión de presupuesto + planificar semana + revisar inversiones'},
-    {id:'do07',  dias:[0], hora:'20:30', cat:'profundo', txt:'🎯 Revisar Plan Maestro: ¿la fase actual sigue en verde? Ajustar si hace falta'},
+    // Domingo de máximo ingreso (2026-08-15, "el domingo tambien quiero trabajar mucho mas en
+    // didi"): el bloque único e indefinido de las 09:00 se parte en dos turnos con un almuerzo real
+    // en medio —do05 antes no decía hasta cuándo y el domingo no tenía comida agendada en absoluto—
+    // y se estira hasta las 21:00. El cierre de semana (do06/do07/do09) no se elimina: se comprime
+    // en 40 min corridos después de la cena, porque es lo que mantiene vivo el Plan Maestro.
+    {id:'do05',  dias:[0], hora:'09:00', cat:'admin',    txt:'🚗 Didi — bloque de día (~09:00 a 14:00, 5h)'},
+    {id:'do-alm', dias:[0], hora:'14:00', cat:'salud',   txt:'🍽️ Almuerzo — come de verdad antes del segundo turno, son 6h más al volante'},
+    {id:'do-didi2', dias:[0], hora:'14:40', cat:'admin', txt:'🚗 Didi — bloque de tarde-noche (~14:40 a 21:00, 6h20)'},
     {id:'do08',  dias:[0], hora:'21:00', cat:'salud', txt:'🍽️ Cena ligera', link:{href:'../CuidadoPersonal/comida.html?s=cenas', label:'Ver cenas'}},
-    {id:'do09',  dias:[0], hora:'21:20', cat:'descanso', txt:'📓 Diario de cierre de semana (10 min)', subtareas:[
+    {id:'do06',  dias:[0], hora:'21:20', cat:'admin',    txt:'💰 Finanzas: revisión de presupuesto + planificar semana + revisar inversiones'},
+    {id:'do07',  dias:[0], hora:'21:35', cat:'profundo', txt:'🎯 Revisar Plan Maestro: ¿la fase actual sigue en verde? Ajustar si hace falta'},
+    {id:'do09',  dias:[0], hora:'21:45', cat:'descanso', txt:'📓 Diario de cierre de semana (10 min)', subtareas:[
       {id:'do09a', txt:'Qué avanzó esta semana en el Plan Maestro'},
       {id:'do09b', txt:'Qué NO avanzó y por qué'},
       {id:'do09c', txt:'1 ajuste concreto para la semana que entra'},
     ]},
-    {id:'do1013', dias:[0], hora:'21:40', cat:'salud', txt:'🧴 Skincare + 🍂 Minoxidil — PM', subtareas:[
+    {id:'do1013', dias:[0], hora:'22:00', cat:'salud', txt:'🧴 Skincare + 🍂 Minoxidil — PM', subtareas:[
       {id:'do10', txt:'Skincare PM — limpiador + retinoide + hidratante nocturno'},
       {id:'do10b', txt:'Minoxidil 5% en cuero cabelludo seco — dosis de la noche'},
     ]},
-    {id:'doSupPm', dias:[0], hora:'21:45', cat:'salud', txt:'💊 Suplementos PM', subtareas:[
+    {id:'doSupPm', dias:[0], hora:'22:15', cat:'salud', txt:'💊 Suplementos PM', subtareas:[
       {id:'doSupPm1', txt:'Magnesio (glicinato) — 200-400mg, 30-60 min antes de dormir', link:{href:'../CuidadoPersonal/salud.html?tab=suplementos', label:'💊 Ver Suplementos'}},
       {id:'doSupPm2', txt:'Proteína Whey — 25-30g si hoy no llegaste a tu meta de proteína (186g/día)'},
     ]},
-    {id:'do11',  dias:[0], hora:'22:00', cat:'descanso', txt:'🧘 Meditación — misma respiración box 4-4-4-4 que entre semana'},
-    {id:'do12',  dias:[0], hora:'22:15', cat:'salud',    txt:'Apagar pantallas. Dormir'},
+    {id:'do11',  dias:[0], hora:'22:30', cat:'descanso', txt:'🧘 Meditación — misma respiración box 4-4-4-4 que entre semana'},
+    {id:'do12',  dias:[0], hora:'22:45', cat:'salud',    txt:'Apagar pantallas. Dormir — el lunes te levantas a las 06:40'},
   ];
   const RUTINA_KEY = 'coach_rutina_v1';
   const DIA_TABS = [1,2,3,4,5,6,0];

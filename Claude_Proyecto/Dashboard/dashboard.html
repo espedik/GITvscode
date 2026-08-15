@@ -812,6 +812,82 @@ a.rt2-sub-prod:hover{text-decoration:underline}
 .sc-link:hover{text-decoration:underline}
 @media(max-width:900px){#skillPriority.grid.g2{grid-template-columns:1fr}}
 
+/* ─── Franja "Qué escuchar en Didi" (2026-08-15) ───────────────────────────
+   Pedido: "cuando maneje en didi ponga podcast, audiolibros... pon que hacer en didi".
+   Tras el reparto de horas del mismo día son ~28h semanales al volante — el bloque de
+   tiempo más grande que tiene, y hasta hoy improductivo. La franja va COMPACTA (una fila,
+   ~52px) porque este slide ya está lleno y tiene alto fijo con overflow:hidden; todo el
+   catálogo vive en el overlay que abre el botón, así el slide sigue leyéndose de reojo
+   sin clics (su principio de diseño) y el detalle es opt-in. */
+.didi-strip{display:flex;align-items:center;gap:10px;padding:6px 12px;
+  border-radius:11px;background:linear-gradient(90deg,rgba(var(--ov),.07),rgba(var(--ov),.03));
+  border:1px solid rgba(var(--ov),.08);flex-shrink:0}
+.didi-strip-ico{font-size:18px;flex-shrink:0}
+.didi-strip-txt{font-size:11.5px;color:var(--text2);line-height:1.3;min-width:0}
+.didi-strip-txt b{color:var(--text);font-weight:800}
+.didi-strip-hrs{font-family:var(--mono);color:var(--cy);font-weight:800}
+.didi-strip-btn{margin-left:auto;flex-shrink:0;padding:6px 13px;border-radius:9px;border:none;
+  cursor:pointer;font-family:inherit;font-size:11.5px;font-weight:800;color:#0b0616;
+  background:var(--cy);transition:transform .12s ease}
+.didi-strip-btn:hover{transform:translateY(-1px)}
+@media(max-width:900px){.didi-strip{flex-wrap:wrap}.didi-strip-btn{margin-left:0;width:100%}}
+
+/* Overlay del catálogo — mismo lenguaje visual que .meta-detail-overlay (fondo oscurecido con
+   blur, card que sube al abrir, cierre por clic fuera / ✕ / Escape), pero con su propia clase
+   para no acoplarse a las 2 pantallas que ya usan aquella. */
+.didi-overlay{position:fixed;inset:0;z-index:220;background:rgba(0,0,0,.72);backdrop-filter:blur(6px);
+  display:flex;align-items:center;justify-content:center;padding:4vh 4vw;opacity:0;pointer-events:none;
+  transition:opacity .22s ease}
+.didi-overlay.open{opacity:1;pointer-events:auto}
+.didi-card{width:min(1100px,100%);max-height:92vh;overflow-y:auto;border-radius:20px;position:relative;
+  background:var(--card);border:1px solid rgba(var(--ov),.12);box-shadow:0 24px 70px rgba(0,0,0,.5);
+  transform:translateY(18px);transition:transform .22s ease}
+.didi-overlay.open .didi-card{transform:translateY(0)}
+.didi-head{position:sticky;top:0;z-index:2;padding:18px 24px 14px;background:var(--card);
+  border-bottom:1px solid rgba(var(--ov),.08)}
+.didi-head h2{font-size:clamp(17px,2vw,23px);font-weight:900;color:var(--text);margin-bottom:3px}
+.didi-head p{font-size:12px;color:var(--text3);line-height:1.4}
+.didi-close{position:absolute;top:14px;right:16px;width:32px;height:32px;border-radius:50%;border:none;
+  cursor:pointer;background:rgba(var(--ov),.1);color:var(--text);font-size:15px;line-height:1}
+.didi-close:hover{background:rgba(var(--ov),.18)}
+.didi-body{padding:16px 24px 24px}
+.didi-sec-t{font-size:13px;font-weight:900;color:var(--text);margin:16px 0 8px;display:flex;
+  align-items:center;gap:7px}
+.didi-sec-t:first-child{margin-top:0}
+.didi-note{font-size:11.5px;color:var(--text3);line-height:1.45;margin-bottom:10px}
+.didi-note b{color:var(--text2);font-weight:700}
+/* Tabla de "qué cabe en cada trayecto" — su rutina real, no franjas genéricas */
+.didi-slots{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:8px;margin-bottom:6px}
+.didi-slot{padding:9px 12px;border-radius:10px;background:rgba(var(--ov),.05);
+  border:1px solid rgba(var(--ov),.07)}
+.didi-slot-h{font-size:11px;font-weight:800;color:var(--text);margin-bottom:2px}
+.didi-slot-h span{font-family:var(--mono);color:var(--cy);font-weight:800}
+.didi-slot-d{font-size:10.5px;color:var(--text3);line-height:1.35}
+/* Bloque por habilidad */
+.didi-skill{border-radius:13px;background:rgba(var(--ov),.04);border:1px solid rgba(var(--ov),.07);
+  padding:11px 14px;margin-bottom:9px}
+.didi-skill-h{display:flex;align-items:center;gap:9px;margin-bottom:3px;flex-wrap:wrap}
+.didi-skill-n{font-size:13.5px;font-weight:900;color:var(--text)}
+.didi-skill-v{font-family:var(--mono);font-size:11.5px;font-weight:800}
+.didi-skill-why{font-size:11px;color:var(--text3);line-height:1.35;margin-bottom:7px}
+.didi-items{display:flex;flex-direction:column;gap:5px}
+.didi-item{display:flex;align-items:flex-start;gap:8px;font-size:11.5px;line-height:1.35}
+.didi-tag{flex-shrink:0;font-size:9px;font-weight:900;letter-spacing:.03em;padding:2px 6px;
+  border-radius:5px;margin-top:1px;min-width:64px;text-align:center}
+.didi-t-audio{background:rgba(167,139,250,.18);color:#c4b5fd}
+.didi-t-pod{background:rgba(34,211,238,.16);color:#67e8f9}
+.didi-t-yt{background:rgba(248,113,113,.16);color:#fca5a5}
+.didi-item-b{min-width:0}
+.didi-item-n{color:var(--text);font-weight:700}
+.didi-item-d{color:var(--text3);font-size:10.5px;line-height:1.3}
+.didi-links{display:inline-flex;gap:6px;margin-left:2px;flex-wrap:wrap}
+.didi-links a{font-size:10px;font-weight:800;padding:1px 7px;border-radius:5px;text-decoration:none;
+  background:rgba(var(--ov),.09);color:var(--cy);white-space:nowrap}
+.didi-links a:hover{background:rgba(var(--ov),.16)}
+.didi-warn{margin-top:14px;padding:10px 13px;border-radius:11px;background:rgba(251,191,36,.09);
+  border:1px solid rgba(251,191,36,.2);font-size:11px;color:var(--text2);line-height:1.45}
+.didi-warn b{color:#fbbf24;font-weight:800}
+
 @media(max-width:900px){.g4{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:repeat(2,1fr)}.g3>*:last-child{grid-column:1/-1}.g6{grid-template-columns:repeat(3,1fr)}}
 @media(max-width:600px){.g2,.g4,.g3,.g6{grid-template-columns:1fr}}
 
@@ -1198,7 +1274,13 @@ a.rt2-sub-prod:hover{text-decoration:underline}
   <section class="slide theme-skills" data-i="4">
     <div class="slide-inner">
       <div class="eyebrow reveal d1"><span class="dot"></span> Coach · Habilidades</div>
-      <div class="slide-title reveal d2"><span class="ico">🧠</span> En qué invertir tu tiempo</div>
+      <!-- Título + franja de Didi en la MISMA fila (mismo patrón que el slide de Lista de Compras):
+           este slide ya venía desbordando su alto fijo antes de tocarlo, así que la franja no puede
+           costar una fila propia. Medido con Playwright: en fila aparte sumaba ~56px. -->
+      <div class="reveal d2" style="display:flex;justify-content:space-between;align-items:center;gap:18px;flex-wrap:wrap;margin-bottom:10px">
+        <div class="slide-title" style="margin-bottom:0"><span class="ico">🧠</span> En qué invertir tu tiempo</div>
+        <div class="didi-strip" id="didiStrip"></div>
+      </div>
 
       <div class="tile reveal d3" id="skillBars" style="margin-bottom:6px"></div>
 
@@ -1335,6 +1417,18 @@ a.rt2-sub-prod:hover{text-decoration:underline}
       <div class="meta-detail-progress" id="metaDetailProgress"></div>
       <div class="meta-detail-steps" id="metaDetailSteps"></div>
     </div>
+  </div>
+</div>
+
+<!-- ─── QUÉ ESCUCHAR EN DIDI (2026-08-15) — abre desde la franja del slide de Habilidades ─── -->
+<div class="didi-overlay" id="didiOverlay" onclick="if(event.target===this) cerrarDidi()">
+  <div class="didi-card">
+    <div class="didi-head">
+      <button class="didi-close" onclick="cerrarDidi()" aria-label="Cerrar">✕</button>
+      <h2>🚗 Qué escuchar mientras manejas</h2>
+      <p id="didiHeadSub"></p>
+    </div>
+    <div class="didi-body" id="didiBody"></div>
   </div>
 </div>
 
@@ -1611,7 +1705,13 @@ function detectarLogros(){
 // ── RUTINA DIARIA — mismo horario que Coach_v2.html → #rutina (fuente única) ─
 const RUTINA_TASKS=[
   // Común entre semana (Lun–Vie) — horario real confirmado 2026-08-02
-  {id:'wd01', dias:[1,2,3,4,5], hora:'07:00', cat:'salud',    txt:'Despertar sin snooze — celular fuera del cuarto'},
+  // Adán se despierta a las 06:40, no a las 07:00, y arranca el día con 20 min construyendo este
+  // mismo ecosistema (aclarado el 2026-08-15: "me despierto entre semana 6:40 y continuo armando
+  // esta aplicacion... 20 min"). Las 07:00 que decía wd01 eran en realidad la hora a la que ya
+  // estaba metiéndose a bañar. Este bloque y su gemelo de la noche (wd-app-pm) son su práctica
+  // real de IA aplicada — por eso van en cat:'aprender' y no en 'profundo'.
+  {id:'wd01', dias:[1,2,3,4,5], hora:'06:40', cat:'salud',    txt:'Despertar sin snooze — celular fuera del cuarto'},
+  {id:'wd-app-am', dias:[1,2,3,4,5], hora:'06:43', cat:'aprender', txt:'💻 Construir esta aplicación — 20 min antes de arrancar el día'},
   {id:'wd02lav', dias:[1,4], hora:'07:03', cat:'salud', txt:'🚿 Bañarte + lavar cabello', producto:true, subtareas:[
     {id:'wd02la', txt:'Champú: Darrow Doctar (shampoo con alcatrão/coal tar, anticaspa) — masajea el cuero cabelludo 2-3 min, deja actuar antes de enjuagar', link:{href:'../CuidadoPersonal/cuidadopersonal.html?tab=cabello', label:'✂️ Ver Cuidado del Cabello'}},
     {id:'wd02lb', txt:'Acondicionador: TRESemmé Keratin Smooth Conditioner — solo de medios a puntas, nunca en la raíz (en cabello fino y graso, ponerlo en la raíz lo aplana y engrasa más rápido)'},
@@ -1634,14 +1734,27 @@ const RUTINA_TASKS=[
     {id:'wdSupAm4', txt:'Creatina monohidratada — 5g (todos los días, no solo si entrenas hoy)'},
   ]},
   {id:'wd05', dias:[1,2,3,4,5], hora:'07:33', cat:'descanso', txt:'Vestirte y alistarte'},
-  {id:'wd06', dias:[1,2,3,4,5], hora:'07:40', cat:'descanso', txt:'Salir de casa — traslado a ALTEN (~20 min manejando)'},
-  {id:'wd07', dias:[1,2,3,4,5], hora:'08:00', cat:'trabajo',  txt:'🏢 ALTEN — jornada laboral (HIL/SIL Ford)', fijo:true},
+  // 2026-08-15: el traslado a ALTEN deja de ser tiempo muerto y pasa a ser el tercer bloque de
+  // Didi entre semana, usando la opción de direccionamiento (pasajeros que van hacia su destino).
+  // Cuesta ~20 min extra sobre los ~20 del trayecto normal, más el margen de que le asignen el
+  // viaje — por eso sale igual a las 07:40 pero llega 08:30 en vez de 08:00. Él confirmó que su
+  // horario en ALTEN es flexible y que aun entrando 08:30 sigue saliendo a las 17:00, así que
+  // NADA de la tarde se recorre (gym 17:40, Didi corta 19:20, Fase 0 20:00-21:15 intactos).
+  // Junto con wd08 (17:00, rumbo al gym en Buenavista), 2 de sus 3 bloques diarios de Didi son
+  // trayectos que ya manejaba de todos modos: ingreso sin costo real de tiempo.
+  {id:'wd06', dias:[1,2,3,4,5], hora:'07:40', cat:'admin', txt:'🚗 Didi con direccionamiento — camino a ALTEN (~50 min: el traslado normal + el desvío del pasajero)'},
+  {id:'wd07', dias:[1,2,3,4,5], hora:'08:30', cat:'trabajo',  txt:'🏢 ALTEN — jornada laboral (HIL/SIL Ford) — entras 08:30, sales 17:00', fijo:true},
   {id:'wd12b', dias:[1,2,3,4,5], hora:'13:00', cat:'salud',   txt:'🛒 Comprar comida — descanso de ALTEN'},
   {id:'wd12c', dias:[1,2,3,4,5], hora:'13:40', cat:'trabajo', txt:'🏢 ALTEN — de vuelta a la jornada laboral', fijo:true},
   {id:'wd08', dias:[1,2,3,4,5], hora:'17:00', cat:'admin',    txt:'🚗 Didi — 1 pasajero a Buenavista (~40 min)'},
   {id:'wd09', dias:[1,2,3,4,5], hora:'18:30', cat:'salud',    txt:'Ducha rápida post-ejercicio'},
-  {id:'wd-didi2', dias:[1,2,3,4,5], hora:'19:20', cat:'admin', txt:'🚗 Didi — sesión de la noche (hasta ~21:00)'},
-  {id:'wd11', dias:[1,2,3,4,5], hora:'21:00', cat:'profundo', txt:'🎯 Prioridad activa de Fase 0: negocio de tu papá o plantilla GBM — 1 avance real'},
+  // 2026-08-15, "entre semana deberia enfocarme en lo demas y dedicarme menos tiempo a trabajar
+  // en didi": la sesión nocturna se recorta de ~1h40 a ~40 min y esa hora se la lleva wd11, la
+  // prioridad de Fase 0, que hasta hoy tenía 15 min simbólicos antes de la cena. wd08 (17:00) NO
+  // se toca: ese pasajero va rumbo a Buenavista, que es a donde él maneja de todos modos para
+  // llegar al gym de las 17:40 — quitarlo no le devolvería tiempo, solo le quitaría el ingreso.
+  {id:'wd-didi2', dias:[1,2,3,4,5], hora:'19:20', cat:'admin', txt:'🚗 Didi — sesión corta de la noche (hasta ~20:00)'},
+  {id:'wd11', dias:[1,2,3,4,5], hora:'20:00', cat:'profundo', txt:'🎯 Prioridad activa de Fase 0: negocio de tu papá o plantilla GBM — 1h15 de avance real (20:00–21:15)'},
   {id:'wd14', dias:[1,2,3,4,5], hora:'21:15', cat:'salud', txt:'🍽️ Cena + preparar la comida de mañana', subtareas:[
     {id:'wd14a', txt:'Cocina un solo platillo para cenar hoy y llevar de comida mañana a ALTEN — ahorra tiempo, sin carbohidratos refinados en la cena', link:{href:'../CuidadoPersonal/comida.html?s=cenas', label:'🍳 Ver cenas'}},
     {id:'wd14b', txt:'Deja todo empacado y listo junto a la puerta para salir rápido mañana', link:{href:'../CuidadoPersonal/comida.html?s=desayunos', label:'🍳 Ver desayunos'}},
@@ -1671,8 +1784,12 @@ const RUTINA_TASKS=[
     {id:'wdSupPm1', txt:'Magnesio (glicinato) — 200-400mg, 30-60 min antes de dormir', link:{href:'../CuidadoPersonal/salud.html?tab=suplementos', label:'💊 Ver Suplementos'}},
     {id:'wdSupPm2', txt:'Proteína Whey — 25-30g si hoy no llegaste a tu meta de proteína (186g/día)'},
   ]},
-  {id:'wd20e', dias:[1,2,3,4,5], hora:'23:10', cat:'descanso', txt:'Tiempo libre / relajación antes de dormir'},
-  {id:'wd21', dias:[1,2,3,4,5], hora:'23:55', cat:'salud',    txt:'Apagar pantallas. Dormir — buscas ~7h (medianoche a 7:00am)'},
+  {id:'wd20e', dias:[1,2,3,4,5], hora:'23:10', cat:'descanso', txt:'Tiempo libre / relajación (20 min, hasta las 23:30)'},
+  {id:'wd-app-pm', dias:[1,2,3,4,5], hora:'23:30', cat:'aprender', txt:'💻 Construir esta aplicación — de 23:30 a 00:00, a veces hasta la 01:00'},
+  // wd21 se ancla en 23:59 y no en 00:00 a propósito: rutinaTareasDelDia() ordena con
+  // hora.localeCompare(), así que un '00:00' se iría al PRINCIPIO del día en vez del final, y
+  // "Dormir" aparecería como la primera tarea de la mañana. La hora real vive en el texto.
+  {id:'wd21', dias:[1,2,3,4,5], hora:'23:59', cat:'salud',    txt:'Apagar pantallas y dormir en cuanto cierres la app — entre 00:00 y 01:00 (5h40–6h40 de sueño con el despertar de las 06:40)'},
   // Bolsa GBM — solo lunes, porque solo inviertes al inicio de semana
   {id:'lu-gbm', dias:[1], hora:'09:00', cat:'admin', txt:'💰 Bolsa GBM: revisar portafolio + VOO + USD/MXN e invertir — solo lunes'},
   // Lectura (21:45) — genérica por ahora, sin libro fijo hasta que se compren (sugerencias en Aprendizaje/Perfil del Rico)
@@ -1730,24 +1847,34 @@ const RUTINA_TASKS=[
     {id:'sa05c', txt:"Mascarilla capilar (1 vez por semana, hazla hoy): L'Oréal Elvive Total Repair 5 — puntas y medios, deja actuar 5-10 min, enjuaga bien"},
     {id:'sa05d', txt:'Aceite en puntas (opcional, con el cabello ya seco): Moroccanoil Treatment Light — 2-3 gotas, solo puntas'},
   ]},
-  {id:'sa06',  dias:[6], hora:'08:50', cat:'profundo', txt:'🎯 Bloque profundo 4h: prioridad activa del Plan Maestro'},
-  {id:'sa07',  dias:[6], hora:'12:50', cat:'salud',    txt:'Almuerzo'},
-  {id:'sa08',  dias:[6], hora:'13:20', cat:'aprender', txt:'🤖 IA aplicada — 30 min construyendo (n8n, Cursor, mini-proyecto propio)'},
-  {id:'sa10',  dias:[6], hora:'16:00', cat:'admin',    txt:'💰 Revisión semanal: finanzas, metas, hábitos cumplidos'},
-  {id:'sa11',  dias:[6], hora:'20:00', cat:'salud', txt:'🍽️ Cena', link:{href:'../CuidadoPersonal/comida.html?s=cenas', label:'Ver cenas'}},
-  {id:'sa12',  dias:[6], hora:'20:30', cat:'descanso', txt:'Tiempo libre / familia / lectura'},
-  {id:'sa1113', dias:[6], hora:'21:00', cat:'salud', txt:'🧴 Skincare + 🍂 Minoxidil — PM', subtareas:[
+  // El sábado se convierte en día de ingreso (2026-08-15, "el sábado quiero trabajar de día en
+  // didi y en la tarde noche también"): dos bloques de Didi de ~5h sustituyen al bloque profundo
+  // de 4h, a los 30 min de IA aplicada y al freelance de las 17:00 (fl1, que baja a solo domingo).
+  // Lo único que sobrevive del trabajo propio es la revisión semanal, reubicada en la ventana
+  // entre los dos bloques. Todo el cierre del día se recorre ~1h15 y la hora de dormir pasa de
+  // 21:45 a 23:00 — sigue durmiendo ~8h porque el despertar de las 07:00 no se movió.
+  {id:'sa-didi1', dias:[6], hora:'09:00', cat:'admin', txt:'🚗 Didi — bloque de día (~09:00 a 14:00, 5h)'},
+  {id:'sa07',  dias:[6], hora:'14:00', cat:'salud',    txt:'Almuerzo'},
+  {id:'sa10',  dias:[6], hora:'14:40', cat:'admin',    txt:'💰 Revisión semanal: finanzas, metas, hábitos cumplidos'},
+  {id:'sa12',  dias:[6], hora:'15:30', cat:'descanso', txt:'Tiempo libre / familia — descanso antes del segundo bloque de Didi'},
+  {id:'sa-didi2', dias:[6], hora:'17:00', cat:'admin', txt:'🚗 Didi — bloque de tarde-noche (~17:00 a 22:00, 5h)'},
+  {id:'sa11',  dias:[6], hora:'22:00', cat:'salud', txt:'🍽️ Cena', link:{href:'../CuidadoPersonal/comida.html?s=cenas', label:'Ver cenas'}},
+  {id:'sa1113', dias:[6], hora:'22:20', cat:'salud', txt:'🧴 Skincare + 🍂 Minoxidil — PM', subtareas:[
     {id:'sa13', txt:'Skincare PM — limpiador + retinoide + hidratante nocturno'},
     {id:'sa13b', txt:'Minoxidil 5% en cuero cabelludo seco — dosis de la noche'},
   ]},
-  {id:'saSupPm', dias:[6], hora:'21:15', cat:'salud', txt:'💊 Suplementos PM', subtareas:[
+  {id:'saSupPm', dias:[6], hora:'22:30', cat:'salud', txt:'💊 Suplementos PM', subtareas:[
     {id:'saSupPm1', txt:'Magnesio (glicinato) — 200-400mg, 30-60 min antes de dormir', link:{href:'../CuidadoPersonal/salud.html?tab=suplementos', label:'💊 Ver Suplementos'}},
     {id:'saSupPm2', txt:'Proteína Whey — 25-30g si hoy no llegaste a tu meta de proteína (186g/día)'},
   ]},
-  {id:'sa14',  dias:[6], hora:'21:30', cat:'descanso', txt:'🧘 Meditación — misma respiración box 4-4-4-4 que entre semana'},
-  {id:'sa15',  dias:[6], hora:'21:45', cat:'salud',    txt:'Apagar pantallas. Dormir'},
-  // Compartido Sábado y Domingo
-  {id:'fl1', dias:[6,0], hora:'17:00', cat:'descanso', txt:'Bloque largo de freelance/plantilla si ya hay cliente o ventas activas'},
+  {id:'sa14',  dias:[6], hora:'22:45', cat:'descanso', txt:'🧘 Meditación — misma respiración box 4-4-4-4 que entre semana'},
+  {id:'sa15',  dias:[6], hora:'23:00', cat:'salud',    txt:'Apagar pantallas. Dormir'},
+  // fl1 ("Bloque largo de freelance/plantilla si ya hay cliente o ventas activas") se eliminó por
+  // completo el 2026-08-15: primero perdió el sábado y ahora el domingo, porque las 2 franjas que
+  // ocupaba son turnos de Didi. Era un bloque condicional que en la práctica estaba vacío —
+  // todavía no hay cliente ni ventas. Cuando se cobre el primer peso en las Opciones 1-3 hay que
+  // volver a crearlo: el Plan Maestro (Fase 1, paso s1-4) dice que ahí es donde las horas de Didi
+  // se mueven al negocio, "no antes".
   // Domingo
   {id:'do01',  dias:[0], hora:'07:30', cat:'salud',    txt:'Despertar'},
   {id:'do0203', dias:[0], hora:'07:35', cat:'salud', txt:'🧴 Skincare + 🍂 Minoxidil — AM', subtareas:[
@@ -1766,25 +1893,32 @@ const RUTINA_TASKS=[
     {id:'do045a', txt:'Acondicionador: TRESemmé Keratin Smooth Conditioner — solo de medios a puntas (co-wash, sin champú: hoy no toca el anticaída, eso es Lun/Jue/Sáb — usarlo a diario resecaría el cuero cabelludo)'},
     {id:'do045b', txt:'Aceite en puntas (opcional, con el cabello ya seco): Moroccanoil Treatment Light — 2-3 gotas, solo puntas'},
   ]},
-  {id:'do05',  dias:[0], hora:'09:00', cat:'admin',    txt:'🚗 Trabajar en Didi'},
-  {id:'do06',  dias:[0], hora:'20:00', cat:'admin',    txt:'💰 Finanzas: revisión de presupuesto + planificar semana + revisar inversiones'},
-  {id:'do07',  dias:[0], hora:'20:30', cat:'profundo', txt:'🎯 Revisar Plan Maestro: ¿la fase actual sigue en verde? Ajustar si hace falta'},
+  // Domingo de máximo ingreso (2026-08-15, "el domingo tambien quiero trabajar mucho mas en
+  // didi"): el bloque único e indefinido de las 09:00 se parte en dos turnos con un almuerzo real
+  // en medio —do05 antes no decía hasta cuándo y el domingo no tenía comida agendada en absoluto—
+  // y se estira hasta las 21:00. El cierre de semana (do06/do07/do09) no se elimina: se comprime
+  // en 40 min corridos después de la cena, porque es lo que mantiene vivo el Plan Maestro.
+  {id:'do05',  dias:[0], hora:'09:00', cat:'admin',    txt:'🚗 Didi — bloque de día (~09:00 a 14:00, 5h)'},
+  {id:'do-alm', dias:[0], hora:'14:00', cat:'salud',   txt:'🍽️ Almuerzo — come de verdad antes del segundo turno, son 6h más al volante'},
+  {id:'do-didi2', dias:[0], hora:'14:40', cat:'admin', txt:'🚗 Didi — bloque de tarde-noche (~14:40 a 21:00, 6h20)'},
   {id:'do08',  dias:[0], hora:'21:00', cat:'salud', txt:'🍽️ Cena ligera', link:{href:'../CuidadoPersonal/comida.html?s=cenas', label:'Ver cenas'}},
-  {id:'do09',  dias:[0], hora:'21:20', cat:'descanso', txt:'📓 Diario de cierre de semana (10 min)', subtareas:[
+  {id:'do06',  dias:[0], hora:'21:20', cat:'admin',    txt:'💰 Finanzas: revisión de presupuesto + planificar semana + revisar inversiones'},
+  {id:'do07',  dias:[0], hora:'21:35', cat:'profundo', txt:'🎯 Revisar Plan Maestro: ¿la fase actual sigue en verde? Ajustar si hace falta'},
+  {id:'do09',  dias:[0], hora:'21:45', cat:'descanso', txt:'📓 Diario de cierre de semana (10 min)', subtareas:[
     {id:'do09a', txt:'Qué avanzó esta semana en el Plan Maestro'},
     {id:'do09b', txt:'Qué NO avanzó y por qué'},
     {id:'do09c', txt:'1 ajuste concreto para la semana que entra'},
   ]},
-  {id:'do1013', dias:[0], hora:'21:40', cat:'salud', txt:'🧴 Skincare + 🍂 Minoxidil — PM', subtareas:[
+  {id:'do1013', dias:[0], hora:'22:00', cat:'salud', txt:'🧴 Skincare + 🍂 Minoxidil — PM', subtareas:[
     {id:'do10', txt:'Skincare PM — limpiador + retinoide + hidratante nocturno'},
     {id:'do10b', txt:'Minoxidil 5% en cuero cabelludo seco — dosis de la noche'},
   ]},
-  {id:'doSupPm', dias:[0], hora:'21:45', cat:'salud', txt:'💊 Suplementos PM', subtareas:[
+  {id:'doSupPm', dias:[0], hora:'22:15', cat:'salud', txt:'💊 Suplementos PM', subtareas:[
     {id:'doSupPm1', txt:'Magnesio (glicinato) — 200-400mg, 30-60 min antes de dormir', link:{href:'../CuidadoPersonal/salud.html?tab=suplementos', label:'💊 Ver Suplementos'}},
     {id:'doSupPm2', txt:'Proteína Whey — 25-30g si hoy no llegaste a tu meta de proteína (186g/día)'},
   ]},
-  {id:'do11',  dias:[0], hora:'22:00', cat:'descanso', txt:'🧘 Meditación — misma respiración box 4-4-4-4 que entre semana'},
-  {id:'do12',  dias:[0], hora:'22:15', cat:'salud',    txt:'Apagar pantallas. Dormir'},
+  {id:'do11',  dias:[0], hora:'22:30', cat:'descanso', txt:'🧘 Meditación — misma respiración box 4-4-4-4 que entre semana'},
+  {id:'do12',  dias:[0], hora:'22:45', cat:'salud',    txt:'Apagar pantallas. Dormir — el lunes te levantas a las 06:40'},
 ];
 // Categorías visuales — mismo mapa de colores/íconos que Coach_v2.html → #rutina (CAT_META)
 const CAT_META={
@@ -3650,7 +3784,139 @@ const PRIORIDAD_N = 2; // cuántas prioridades mostrar en el Dashboard (las N m�
 // nunca vuelvan a colarse aquí — siguen completas en Coach → Aprendizaje y en la lista de las 12
 // habilidades de #skillBars más abajo, esto solo afecta qué se destaca como prioridad accionable.
 const PRIORIDAD_EXCLUIDAS = ['ventas', 'marketing'];
+// ─── QUÉ ESCUCHAR EN DIDI (2026-08-15) ────────────────────────────────────────
+// Pedido: "cuando maneje en didi ponga podcast, audiolibros, usar youtube premium en un
+// audicular y mientras manejo puedo escuchar infinidad de libro... pon que hacer en didi
+// y debes guaiarte en lo que te dije ademas debes darme links".
+//
+// Los links son BÚSQUEDAS prellenadas de Spotify/YouTube, no URLs de episodio o de álbum.
+// Es deliberado: un ID de Spotify escrito a mano aquí se rompe en silencio si el catálogo
+// cambia de región (México no tiene el mismo catálogo que US) o si el show se re-sube, y el
+// resultado sería un 404 dentro de su propia app. Una búsqueda por título+autor no caduca y
+// siempre aterriza en el contenido correcto. Ningún título de esta lista está inventado:
+// todos los libros salen de APRENDIZAJE[].recursos, que ya vivían en el proyecto.
+const didiSpo = q => `https://open.spotify.com/search/${encodeURIComponent(q)}`;
+const didiYt  = q => `https://www.youtube.com/results?search_query=${encodeURIComponent(q)}`;
+
+// Horas reales al volante, derivadas de RUTINA_TASKS tras el reparto del 2026-08-15:
+// L-V (50min + 40min + 40min) × 5 = ~10h50 · Sábado ~10h · Domingo ~11h20.
+const DIDI_SLOTS=[
+  {d:'Lun–Vie · 07:40', t:'~50 min', q:'Camino a ALTEN con direccionamiento', s:'Un capítulo de audiolibro. Es tu trayecto más largo entre semana y arrancas el día con la cabeza fresca — aquí va lo más denso.'},
+  {d:'Lun–Vie · 17:00', t:'~40 min', q:'Camino al gym en Buenavista', s:'Un episodio de podcast. Vienes saliendo de ALTEN y no aguantas algo pesado; que sea conversación, no manual.'},
+  {d:'Lun–Vie · 19:20', t:'~40 min', q:'Sesión corta de la noche', s:'Sigue el mismo podcast del trayecto anterior — no arranques algo nuevo a esta hora.'},
+  {d:'Sábado · 09:00 y 17:00', t:'~10h', q:'Los dos turnos largos', s:'Un audiolibro completo cabe aquí. La mayoría dura 6-9h: el sábado solo te alcanza para terminar uno.'},
+  {d:'Domingo · 09:00 y 14:40', t:'~11h20', q:'Los dos turnos largos', s:'Otro audiolibro completo, o termina el del sábado y empieza el siguiente.'},
+];
+
+// Ordenado por prioridad real = el valor de SK de menor a mayor, ponderado. Ventas primero
+// porque es 15/100 con peso ×1.5: la combinación más urgente de las 12.
+const DIDI_AUDIO=[
+  {sk:'ventas', why:'Tu habilidad más baja Y la de mayor peso (×1.5). Una hora escuchando ventas rinde más que una hora en cualquier otra de las 12 — y es escuchar, no vender: no rompe la regla de no contactar prospectos sin oferta lista.', items:[
+    {tipo:'audio', n:'Influence — Robert Cialdini', d:'Los 6 principios de persuasión. El más citado del tema y el más fácil de seguir manejando: son historias, no teoría.', q:'Influence Robert Cialdini'},
+    {tipo:'audio', n:'$100M Offers — Alex Hormozi', d:'Cómo armar una oferta que sea difícil de rechazar. Directamente aplicable a tu plantilla de GBM.', q:'100M Offers Alex Hormozi'},
+    {tipo:'audio', n:'Never Split the Difference — Chris Voss', d:'Negociación por un ex-negociador de rehenes del FBI. Sirve igual para vender que para tu sueldo en ALTEN.', q:'Never Split the Difference Chris Voss'},
+    {tipo:'pod', n:'The Game — Alex Hormozi', d:'Episodios de 10-40 min, sin relleno. Ideal para los trayectos cortos.', q:'The Game Alex Hormozi podcast'},
+    {tipo:'yt', n:'Alex Hormozi (canal)', d:'Ya estaba en tus recursos de Ventas. Con YouTube Premium se reproduce en segundo plano con la pantalla apagada.', q:'Alex Hormozi'},
+  ]},
+  {sk:'finanzas', why:'20/100. Tu diagnóstico dice que el hueco no es de conocimiento sino de hábito: revisas gastos de forma reactiva. Estos tres atacan justo eso.', items:[
+    {tipo:'audio', n:'I Will Teach You to Be Rich — Ramit Sethi', d:'Sistema de automatización de finanzas personales. Es el primer recurso que ya tenías listado en Finanzas.', q:'I Will Teach You to Be Rich Ramit Sethi'},
+    {tipo:'audio', n:'Psicología del Dinero — Morgan Housel', d:'Por qué la gente toma malas decisiones con dinero aunque sepa la teoría. Hay edición en español.', q:'Psicologia del Dinero Morgan Housel'},
+    {tipo:'audio', n:'The Millionaire Next Door — Thomas Stanley', d:'El patrimonio real se construye con gasto bajo, no con ingreso alto. Antídoto directo al error de los MSI.', q:'The Millionaire Next Door Thomas Stanley'},
+    {tipo:'pod', n:'I Will Teach You To Be Rich — Ramit Sethi', d:'Sesiones reales con parejas y sus finanzas. Escuchar los errores ajenos pega más que la teoría.', q:'I Will Teach You To Be Rich podcast Ramit Sethi'},
+  ]},
+  {sk:'marketing', why:'20/100. No está en tus 2 prioridades del Dashboard (la decisión de no empujar ventas sin producto sigue en pie), pero escuchar sí es gratis.', items:[
+    {tipo:'audio', n:'$100M Leads — Alex Hormozi', d:'Cómo conseguir que gente desconocida se interese. La secuela de $100M Offers, ya estaba en tus recursos.', q:'100M Leads Alex Hormozi'},
+    {tipo:'pod', n:'Marketing School — Neil Patel & Eric Siu', d:'Episodios de ~10 min. Perfecto para el tramo del gym cuando no quieres empezar algo largo.', q:'Marketing School Neil Patel'},
+  ]},
+  {sk:'inversion', why:'25/100. Ya invertiste en CETES, BTC y GBM — lo que falta es criterio para no decidir cada lunes desde cero. Estos tres te dan el marco.', items:[
+    {tipo:'audio', n:'The Little Book of Common Sense Investing — John Bogle', d:'EMPIEZA POR ESTE: es corto (~5h), y su tesis —índices de bajo costo— es exactamente tu VOO de los lunes.', q:'Little Book of Common Sense Investing John Bogle'},
+    {tipo:'audio', n:'A Random Walk Down Wall Street — Burton Malkiel', d:'Por qué casi nadie le gana al mercado de forma sostenida. Refuerza la disciplina de la asignación fija.', q:'A Random Walk Down Wall Street Malkiel'},
+    {tipo:'audio', n:'One Up On Wall Street — Peter Lynch', d:'El más entretenido de los tres, lleno de anécdotas. Buen premio después de los otros dos.', q:'One Up On Wall Street Peter Lynch'},
+    {tipo:'pod', n:'We Study Billionaires — The Investor\'s Podcast', d:'Episodios largos (1h+). Encaja en los turnos de fin de semana, no en los trayectos cortos.', q:'We Study Billionaires investors podcast'},
+  ]},
+  {sk:'ia', why:'30/100 — aunque tu práctica real de IA es construir esta aplicación dos veces al día. Lo que falta es contexto amplio, y eso sí se absorbe escuchando.', items:[
+    {tipo:'pod', n:'Lex Fridman Podcast', d:'Entrevistas de 2-3h con investigadores de IA. Hechas para los turnos largos del fin de semana.', q:'Lex Fridman Podcast'},
+    {tipo:'pod', n:'The AI Daily Brief', d:'Resumen diario de ~15 min. Cabe entero en el trayecto al gym y te mantiene al día sin esfuerzo.', q:'The AI Daily Brief podcast'},
+    {tipo:'yt', n:'DeepLearning.AI', d:'Ya estaba en tus recursos de IA. Las charlas y paneles funcionan bien en audio; los cursos con código no.', q:'DeepLearning AI'},
+  ]},
+];
+
+// Recursos en español — no son un "nivel fácil", son para los días en que el inglés cansa.
+const DIDI_ESPANOL=[
+  {tipo:'pod', n:'Libros para Emprendedores — Luis Ramos', d:'Resúmenes de un libro de negocios por episodio, en español. La forma más rápida de cubrir mucho terreno mientras manejas.', q:'Libros para Emprendedores Luis Ramos'},
+  {tipo:'pod', n:'Cracks Podcast — Oso Trava', d:'Entrevistas a emprendedores, mexicano. Contexto de negocio en México, que es donde tú vas a vender.', q:'Cracks Podcast Oso Trava'},
+];
+
+const DIDI_TAG={audio:{c:'didi-t-audio',l:'AUDIOLIBRO'},pod:{c:'didi-t-pod',l:'PODCAST'},yt:{c:'didi-t-yt',l:'YOUTUBE'}};
+
+function didiItemHtml(it){
+  const tag=DIDI_TAG[it.tipo];
+  return `<div class="didi-item">
+    <span class="didi-tag ${tag.c}">${tag.l}</span>
+    <div class="didi-item-b">
+      <span class="didi-item-n">${it.n}</span>
+      <span class="didi-links"><a href="${didiSpo(it.q)}" target="_blank" rel="noopener">Spotify ↗</a><a href="${didiYt(it.q)}" target="_blank" rel="noopener">YouTube ↗</a></span>
+      <div class="didi-item-d">${it.d}</div>
+    </div>
+  </div>`;
+}
+
+function renderDidiStrip(){
+  const el=document.getElementById('didiStrip');
+  if(!el) return;
+  // Texto MUY corto a propósito: la franja comparte fila con el título y el ancho útil del slide
+  // es 1049px, así que todo lo que pase de ~427px la manda a una segunda línea y roba alto que
+  // este slide no tiene. Medido con Playwright, no a ojo. El gancho completo ("3-4 audiolibros al
+  // mes", qué cabe en cada trayecto, los 20 recursos) vive en el overlay.
+  el.innerHTML=`<span class="didi-strip-ico">🎧</span>
+    <div class="didi-strip-txt"><b><span class="didi-strip-hrs">~28h</span>/semana al volante</b></div>
+    <button class="didi-strip-btn" onclick="abrirDidi()">🚗 Qué escuchar →</button>`;
+}
+
+function abrirDidi(){
+  const ov=document.getElementById('didiOverlay'), body=document.getElementById('didiBody');
+  if(!ov||!body) return;
+  const sub=document.getElementById('didiHeadSub');
+  if(sub) sub.textContent='~28h semanales al volante — tu bloque de tiempo más grande, y hasta hoy el único improductivo. Ordenado por tus habilidades más bajas: lo de arriba es lo que más te falta.';
+
+  const slots=`<div class="didi-sec-t">🕐 Qué cabe en cada trayecto</div>
+    <div class="didi-note">Tus bloques reales de Didi, tomados de tu rutina. La regla es simple: <b>lo denso va en la mañana y en los turnos largos, lo ligero en los tramos cortos.</b></div>
+    <div class="didi-slots">${DIDI_SLOTS.map(s=>`<div class="didi-slot">
+      <div class="didi-slot-h">${s.d} · <span>${s.t}</span></div>
+      <div class="didi-slot-d"><b style="color:var(--text2)">${s.q}</b> — ${s.s}</div>
+    </div>`).join('')}</div>`;
+
+  const skills=DIDI_AUDIO.map(g=>{
+    const s=SK.find(x=>x.id===g.sk); if(!s) return '';
+    const l=skLevel(s.val);
+    return `<div class="didi-skill">
+      <div class="didi-skill-h">
+        <span style="font-size:15px">${s.icon}</span>
+        <span class="didi-skill-n">${s.name}</span>
+        <span class="didi-skill-v" style="color:${l.c}">${s.val}/100 · ×${s.w}</span>
+      </div>
+      <div class="didi-skill-why">${g.why}</div>
+      <div class="didi-items">${g.items.map(didiItemHtml).join('')}</div>
+    </div>`;
+  }).join('');
+
+  body.innerHTML=`${slots}
+    <div class="didi-sec-t">🎯 Por habilidad — de la más débil a la menos débil</div>
+    ${skills}
+    <div class="didi-sec-t">🇲🇽 En español, para cuando el inglés canse</div>
+    <div class="didi-items" style="margin-bottom:4px">${DIDI_ESPANOL.map(didiItemHtml).join('')}</div>
+    <div class="didi-warn">
+      <b>Tres cosas antes de darle play:</b><br>
+      • <b>Tu inglés está en 80/100.</b> Escuchar en inglés te paga doble: la habilidad del audiolibro y el idioma que necesitas para la maestría en Alemania. No busques la versión traducida si puedes con la original.<br>
+      • <b>Con pasajero, baja el volumen o pausa.</b> Tu calificación en Didi es parte del ingreso, y nadie quiere subirse a una clase de finanzas ajena.<br>
+      • <b>Solo audio, nunca video.</b> YouTube Premium reproduce en segundo plano con la pantalla apagada — esa es la función que lo hace útil aquí. <b>The Intelligent Investor</b> (tu recurso #1 de Inversión) es la excepción del catálogo: está lleno de tablas y notas al pie, así que ese déjalo para leer, no para manejar.
+    </div>`;
+  ov.classList.add('open');
+}
+function cerrarDidi(){document.getElementById('didiOverlay')?.classList.remove('open');}
+
 function renderSkills(){
+  renderDidiStrip();
   // Top N prioridades reales, siempre visibles (nada de clics — este slide es pasivo, rota
   // solo y se ve de reojo mientras se trabaja), cada una en una tarjeta grande y detallada.
   const priority=Object.keys(APRENDIZAJE).filter(id=>!PRIORIDAD_EXCLUIDAS.includes(id)).map(id=>SK.find(s=>s.id===id)).filter(Boolean).sort((a,b)=>a.val-b.val).slice(0,PRIORIDAD_N);
@@ -5312,6 +5578,7 @@ document.addEventListener('keydown',e=>{
   if(e.target.tagName==='SELECT'||e.target.tagName==='INPUT') return;
   if(e.key==='Escape'&&document.getElementById('metaDetailOverlay').classList.contains('open')){ cerrarMetaDetalle(); return; }
   if(e.key==='Escape'&&document.getElementById('ejImgOverlay').classList.contains('open')){ cerrarImagenEjercicio(); return; }
+  if(e.key==='Escape'&&document.getElementById('didiOverlay').classList.contains('open')){ cerrarDidi(); return; }
   if(e.key==='ArrowRight') nextSlide();
   if(e.key==='ArrowLeft') prevSlide();
   if(e.key===' '){e.preventDefault();togglePlay();}

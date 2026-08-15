@@ -102,14 +102,14 @@ Reescrita por completo el 2026-07-29 para dejar de ser un checklist visual sin m
 
 Array top-level `{id, dias:[0-6], hora:'HH:MM', cat, txt, fijo?:true, subtareas?:[{id,txt,link?}], link?:{href,label}}` (dias: 0=domingo…6=sábado). Se filtra y ordena por hora para obtener el horario de cualquier día (`rutinaTareasDia(dow)` / `rutinaTareasHoy()`). `link` es opcional en una tarea simple o en cualquier subtarea — se renderiza como un enlace inline `→` que abre en pestaña nueva (`taskLabelHtml()`).
 
-**Reescrito por completo el 2026-08-02** (reemplazó la versión del 2026-07-29 que asumía que salía de ALTEN directo a casa) — Adán detalló su horario real de tarde/noche: sale de ALTEN, maneja Didi un rato corto, va al gym, y por la noche retoma Didi hasta cerca de las 9pm antes de cenar. Se levanta **7:00**, se baña de inmediato (~7:03), sale de casa **7:40**, maneja **~20 min**, trabaja en ALTEN **8:00–17:00** (con su descanso para comer a la **13:00**), y duerme alrededor de **medianoche** (~7h de sueño).
+**Reescrito por completo el 2026-08-02** (reemplazó la versión del 2026-07-29 que asumía que salía de ALTEN directo a casa) — Adán detalló su horario real de tarde/noche: sale de ALTEN, maneja Didi un rato corto, va al gym, y por la noche retoma Didi hasta cerca de las 9pm antes de cenar. Se levanta **6:40** (corregido el 2026-08-15 — antes decía 7:00, que era en realidad la hora del baño), dedica **20 min a construir este ecosistema**, se baña ~**7:03**, sale de casa **7:40** ya manejando **Didi con direccionamiento** rumbo a ALTEN (~50 min, cambio del 2026-08-15), trabaja en ALTEN **8:30–17:00** (con su descanso para comer a la **13:00**; el horario de entrada es flexible y la hora de salida no se recorre), y se duerme entre **00:00 y 01:00** tras un segundo bloque de la aplicación a las 23:30 — **5h40–6h40 de sueño**, no las ~7h que este documento afirmaba antes.
 
-- **Común Lun-Vie** (`dias:[1,2,3,4,5]`): despertar 07:00 → bañarse — `wd02lav` (Lun/Jue) agrupada con detalle real de lavado de cabello (champú/acondicionador/aceite en puntas, ver "Cuidado del cabello en la ducha" abajo) o `wd02` (Mar/Mié/Vie) ducha normal sin lavado → **`wd0304` = 🧴 Skincare + 🍂 Minoxidil AM** (agrupada, 4 subtareas — ver "Skincare con productos y beneficio" abajo) → vestirse → salir 7:40 → traslado (~20 min) → **`wd07` = 🏢 ALTEN, jornada laboral 8:00–17:00, `fijo:true`** → **`wd12b` = 🛒 Comprar comida, 13:00** (en el descanso de ALTEN) → **`wd08` = 🚗 Didi, 1 pasajero a Buenavista (~40 min), 17:00** → **ejercicio del día, 17:40** (agrupada, sublista detallada de ejercicios — ver abajo) → ducha rápida (18:30) → prioridad activa de Fase 0 (18:40) → bloque de habilidad del día solo Mar/Jue/Vie (19:00) → **`wd-didi2` = 🚗 Didi, sesión de la noche hasta ~21:00, 19:20** → **`wd14` = 🍽️ Cena + preparar la comida de mañana, 21:00** (agrupada, mismo platillo para cenar hoy y llevar mañana a ALTEN — ver nota de eficiencia abajo) → lectura (21:30) → **`wd16` = 📓 Diario del día, 22:00** (agrupada, clarificada — ver abajo) → **`wd1718` = 🧴 Skincare + 🍂 Minoxidil PM, 22:15** (agrupada, 4 subtareas) → **`wd19` = 🎯 Planear el día de mañana, 22:30** (agrupada, clarificada — ver abajo) → meditación (22:45) → dormir 23:55.
+- **Común Lun-Vie** (`dias:[1,2,3,4,5]`) — horas verificadas contra el código el 2026-08-15, este párrafo llevaba tiempo desfasado 15-30 min respecto a `RUTINA_TASKS`: despertar **06:40** → **`wd-app-am` = 💻 Construir esta aplicación, 06:43** (20 min, ver abajo) → bañarse 07:03 — `wd02lav` (Lun/Jue) agrupada con detalle real de lavado de cabello (champú/acondicionador/aceite en puntas, ver "Cuidado del cabello en la ducha" abajo) o `wd02co` (Mar/Mié/Vie) ducha normal sin lavado → **`wd0304` = 🧴 Skincare + 🍂 Minoxidil AM, 07:20** (agrupada, 4 subtareas — ver "Skincare con productos y beneficio" abajo) → suplementos AM (07:25) → vestirse (07:33) → **`wd06` = 🚗 Didi con direccionamiento camino a ALTEN, 07:40** (~50 min, era "Salir de casa — traslado ~20 min" hasta el 2026-08-15) → **`wd07` = 🏢 ALTEN, jornada laboral 8:30–17:00, `fijo:true`** → **`wd12b` = 🛒 Comprar comida, 13:00** (en el descanso de ALTEN) → **`wd08` = 🚗 Didi, 1 pasajero a Buenavista (~40 min), 17:00** → **ejercicio del día, 17:40** (agrupada, sublista detallada de ejercicios — ver abajo) → ducha rápida (18:30) → bloque de habilidad del día solo Mar/Jue/Vie (19:00) → **`wd-didi2` = 🚗 Didi, sesión **corta** de la noche hasta ~20:00, 19:20** (recortada el 2026-08-15) → **prioridad activa de Fase 0, 20:00–21:15** (1h15, era de 15 min) → **`wd14` = 🍽️ Cena + preparar la comida de mañana, 21:15** (agrupada, mismo platillo para cenar hoy y llevar mañana a ALTEN — ver nota de eficiencia abajo) → lectura (21:45) → **`wd16` = 📓 Diario del día, 22:15** (agrupada, clarificada — ver abajo) → **`wd1718` = 🧴 Skincare + 🍂 Minoxidil PM, 22:30** (agrupada, 4 subtareas) → **`wd19` = 🎯 Planear el día de mañana, 22:45** (agrupada, clarificada — ver abajo) → meditación (23:00) → suplementos PM (23:05) → tiempo libre (23:10, 20 min) → **`wd-app-pm` = 💻 Construir esta aplicación, 23:30** (hasta 00:00, a veces 01:00) → dormir `wd21` (anclada en 23:59, ver abajo por qué no es 00:00).
 - **Bolsa GBM — solo lunes** (`lu-gbm`, `dias:[1]`, 09:00): "💰 Bolsa GBM: revisar portafolio + VOO + USD/MXN e invertir — solo lunes". Antes era un bloque diario a las 18:35 — Adán aclaró que solo invierte al inicio de semana, así que se quitó de los demás días entre semana.
 - **Ejercicio (17:40, después de la Didi corta) y bloque de habilidad** (`e1`-`e5`, `k2`/`k4`/`k5`, un id por día 1-5): Lun=Empuje (pecho/hombro/tríceps), Mar=Cardio+core+Datos/SQL, **Mié=Natación** (45 min, alberca Francisco Márquez — reemplazó a "Jalón (espalda/bíceps)" el 2026-08-07, ver sección propia más abajo), Jue=Cardio/HIIT+Datos/SQL, Vie=Piernas/glúteo+Copy. **Lun y Mié ya no tienen bloque de habilidad** — antes ahí iba "publica 1 post de LinkedIn" (`k1`/`k3`), que se quitó por completo (ver "Marketing pospuesto" abajo).
-- **Sábado** (`sa01`-`sa15`, `dias:[6]`): despertar 07:00, skincare+minoxidil AM, desayuno, entreno largo, **`sa0506` = 🚿 Ducha + lavar cabello** (agrupada, mismo cuidado capilar que Lun/Jue más una mascarilla semanal — ver abajo), bloque profundo de 4h para la prioridad del Plan Maestro, almuerzo, IA aplicada, revisión semanal de finanzas, cena, skincare+minoxidil PM, dormir. **Ya no tiene el bloque de "Ventas: 5 mensajes"** (`sa09`, eliminado — ver abajo).
-- **Domingo** (`do01`-`do12`+`do045`, `dias:[0]`): despertar 07:30, skincare+minoxidil AM, desayuno, descanso activo, **`do045` = bañarte** (ducha normal, sin lavado de cabello — nueva el 2026-08-07, ver abajo), finanzas (revisión de presupuesto + planificar semana), checkpoint explícito del Plan Maestro, cena ligera, **`do09` = 📓 Diario de cierre de semana** (agrupada, clarificada), skincare+minoxidil PM, dormir.
-- **Compartida Sáb/Dom** (`fl1`, `dias:[6,0]`, 17:00): bloque largo de freelance/plantilla si hay cliente o ventas activas.
+- **Sábado** (`sa01`-`sa15` + `sa-didi1`/`sa-didi2`, `dias:[6]`): **día de ingreso desde el 2026-08-15** — despertar 07:00, skincare+minoxidil AM, desayuno, entreno largo, **`sa0506` = 🚿 Ducha + lavar cabello** (agrupada, mismo cuidado capilar que Lun/Jue más una mascarilla semanal — ver abajo), **`sa-didi1` = 🚗 Didi bloque de día 09:00–14:00**, almuerzo (14:00), revisión semanal de finanzas (14:40), tiempo libre/familia (15:30), **`sa-didi2` = 🚗 Didi bloque de tarde-noche 17:00–22:00**, cena (22:00), skincare+minoxidil PM, suplementos, meditación, dormir 23:00. **Ya no tiene** el bloque de "Ventas: 5 mensajes" (`sa09`), el bloque profundo de 4h (`sa06`) ni los 30 min de IA aplicada (`sa08`) — los 2 últimos cedieron su lugar a los turnos de Didi (ver abajo).
+- **Domingo** (`do01`-`do12` + `do045`/`do-alm`/`do-didi2`, `dias:[0]`): **día de máximo ingreso desde el 2026-08-15** — despertar 07:30, skincare+minoxidil AM, desayuno, descanso activo, **`do045` = bañarte** (ducha normal, sin lavado de cabello — nueva el 2026-08-07, ver abajo), **`do05` = 🚗 Didi bloque de día 09:00–14:00**, **`do-alm` = 🍽️ Almuerzo 14:00** (nueva — el domingo no tenía comida agendada en absoluto), **`do-didi2` = 🚗 Didi tarde-noche 14:40–21:00**, cena ligera (21:00), y el cierre de semana comprimido en 40 min corridos: finanzas (21:20), checkpoint del Plan Maestro (21:35), **`do09` = 📓 Diario de cierre de semana** (21:45, agrupada), skincare+minoxidil PM (22:00), suplementos (22:15), meditación (22:30), dormir 22:45.
+- **`fl1` ya no existe** (eliminado el 2026-08-15). Era "bloque largo de freelance/plantilla si ya hay cliente o ventas activas", `dias:[6,0]` a las 17:00 — perdió el sábado y luego el domingo, porque ambas franjas son ahora turnos de Didi. Era condicional y en la práctica estaba vacío. **Hay que volver a crearlo cuando se cobre el primer peso en las Opciones 1-3**, que es el momento que marca `s1-4` del Plan Maestro para mover horas de Didi al negocio.
 
 Tareas con `fijo:true` (solo `wd07`, el bloque de ALTEN) se muestran en la línea de tiempo y cuentan para "ahora/siguiente", pero **no llevan checkbox y no cuentan en el % de progreso**.
 
@@ -574,3 +574,101 @@ También se reordenaron los "Próximos 14 días" (`pf11`/`pf12` nuevos con las 2
 El párrafo de "Próximos 14 días" decía "Estas 9 acciones" escrito a mano. Al quitar una y agregar dos quedó en 10 y el texto se desincronizó — de hecho se escribió mal "8" en la primera versión de este cambio, y lo detectó la verificación con Playwright, no la lectura del código. Ahora hay un `<span id="pfCount">` que se llena contando los checkboxes reales del card al cargar. Un número escrito a mano sobre una lista que cambia es una promesa que se rompe sola.
 
 Verificado con Playwright: el orden de Fase 0 es `s0-9 → s0-10 → s0-4 → s0-3 → s0-2 → s0-6 → s0-8 → s0-1 → s0-7`, la palabra "exploratoria" ya no aparece en ninguna parte del archivo renderizado, la plantilla sale como una sola tarea, el conteo declarado (10) cuadra con el real, los 4 checks sembrados siguen marcados, y marcar `s0-9` persiste tras recargar.
+
+## El sábado se convierte en día de ingreso: dos bloques de Didi (2026-08-15)
+
+Pedido de Adán: *"en mi dia, el sabado quiero trabajar de dia en didi y en la tarde noche tambien"*.
+
+El sábado era el día de trabajo propio y **no tenía nada de Didi**. Meter dos turnos al volante no era añadir tareas sino elegir qué se sacrifica, así que se le presentaron 3 repartos completos del día antes de tocar el código; eligió *"Didi manda (máximo ingreso)"*.
+
+| Antes | Después |
+|---|---|
+| 08:50 🎯 Bloque profundo 4h (Plan Maestro) | **09:00 🚗 Didi — bloque de día (~5h)** |
+| 12:50 Almuerzo · 13:20 🤖 IA aplicada · 16:00 💰 Revisión semanal | 14:00 Almuerzo · 14:40 💰 Revisión semanal · 15:30 tiempo libre |
+| 17:00 Freelance/plantilla (`fl1`, compartido con domingo) | **17:00 🚗 Didi — tarde-noche (~5h)** |
+| 20:00 Cena → 21:45 Dormir | 22:00 Cena → 23:00 Dormir |
+
+Cambios en `RUTINA_TASKS`: **+2** (`sa-didi1` 09:00, `sa-didi2` 17:00, ambas `cat:'admin'` como los demás bloques de Didi), **−2** (`sa06` bloque profundo, `sa08` IA aplicada), **`fl1` de `dias:[6,0]` a `dias:[0]`**, y 8 tareas recorridas de hora. La mañana (07:00–08:35: despertar, skincare, desayuno, suplementos, ejercicio 1h, ducha) queda intacta, y el cierre completo se conserva entero, solo desplazado 1h15 — como el despertar de las 07:00 no se movió, sigue durmiendo ~8h.
+
+**Nota corregida el mismo día**: la primera versión decía que al quitar `sa08` IA se quedaba sin práctica semanal. Adán lo corrigió (*"en IA no practico pero ando haciendo esta aplicacion"*) — la práctica sí existía, solo que nunca había estado escrita en `RUTINA_TASKS`, así que ninguna app del ecosistema la veía. Ver la sección siguiente.
+
+Replicado idéntico en `Dashboard/dashboard.html` (misma copia de `RUTINA_TASKS`), comparado carácter por carácter. Verificado con Node en los 2 archivos: sintaxis OK, 68 tareas, 16 en sábado en orden cronológico estricto, sin IDs duplicados ni referencias huérfanas a `sa06`/`sa08`.
+
+## La rutina entre semana registra por fin el trabajo en esta aplicación (2026-08-15)
+
+Al documentar el cambio del sábado se afirmó que Adán se había quedado sin práctica de IA. Su respuesta: *"en IA no practico pero ando haciendo esta aplicacion, esto le dedico 20 min cuando me despierto... me despierto entre semana 6:40... y en las noches entre semana igualmente, 11:30 empiezo a trabajar en esta aplicacion hasta las 12 o a veces 1 am"*.
+
+Dos bloques diarios que **no existían en ninguna parte del ecosistema**, y de paso dos datos que estaban **mal**, no solo incompletos:
+
+| Dato | Decía | Es |
+|---|---|---|
+| Despertar (`wd01`) | 07:00 | **06:40** — las 07:00 eran la hora del baño |
+| 06:40–07:00 | *nada* | **20 min construyendo esta aplicación** |
+| 23:10–23:55 | tiempo libre (45 min) | tiempo libre 20 min + **app desde las 23:30** |
+| Dormir (`wd21`) | 23:55, *"~7h (medianoche a 7:00am)"* | **00:00, a veces 01:00** → **5h40–6h40** |
+
+Nuevas: **`wd-app-am`** (06:43) y **`wd-app-pm`** (23:30), ambas `cat:'aprender'` — **son su práctica real de IA aplicada**, no lectura sobre IA. La habilidad `ia` del radar tenía práctica diaria y el sistema no la veía.
+
+**`wd21` se ancla en 23:59, no en 00:00**, porque el timeline ordena con `hora.localeCompare()` (comparación de texto): un `'00:00'` es menor que `'06:40'` y "Dormir" se habría renderizado como la primera tarea de la mañana. No hay soporte para días que cruzan medianoche en el modelo actual — cualquier tarea futura pasada de las 00:00 tiene el mismo problema.
+
+También se reescribió el **`context-banner` de `#rutina`** (texto visible en la app, no comentario), que afirmaba *"te levantas 7:00"* y *"Duermes alrededor de medianoche (~7h de sueño)"*, y el párrafo "Común Lun-Vie" de este mismo documento, que llevaba tiempo desfasado 15-30 min respecto al código real (decía prioridad de Fase 0 a las 18:40 cuando está a las 21:00, cena 21:00 cuando es 21:15, meditación 22:45 cuando es 23:00, etc.).
+
+Verificado con Node en los 2 archivos: sintaxis OK, 70 tareas, sin IDs duplicados, lunes con 26 tareas en orden cronológico estricto de 06:40 a 23:59. **Pendiente**: Adán dijo "entre semana", así que sábado y domingo no se tocaron.
+
+## El fin de semana se lleva el Didi y las noches entre semana se liberan (2026-08-15)
+
+Tercer ajuste del mismo día: *"el domingo tambien quiero trabajar mucho mas en didi, entre semana deberia enfocarme en lo demas y dedicarme menos tiempo a trabajar en didi"*. No es recorte de ingreso, es **traslado**: las horas al volante se concentran en fin de semana y las noches L-V quedan para construir.
+
+Dos hallazgos del propio proyecto antes de proponer nada:
+
+- **`wd08` (17:00) no cuesta tiempo real** — el pasajero va a Buenavista, que es a donde maneja de todos modos para el gym de las 17:40. El que cuesta es `wd-didi2` (~1h40).
+- **`s1-4` (Fase 1) ya decía**: *"Primer peso cobrado en Opción 1-3 → esas horas de DiDi se mueven ahí, no antes."* Estamos en Fase 0, pero mover horas al fin de semana no contradice esa regla — no deja de manejar.
+
+### Domingo: de 8h indefinidas a 11h20
+
+`do05` decía solo *"🚗 Trabajar en Didi"* sin hora de término, y **el domingo no tenía almuerzo agendado**: de las 09:00 a la cena de las 21:00 sin comer.
+
+| Antes | Después |
+|---|---|
+| 09:00 Didi (sin término) | **09:00 Didi — bloque de día (~5h)** |
+| *nada* | **14:00 🍽️ Almuerzo** (`do-alm`, nuevo) |
+| 17:00 Freelance (`fl1`) | **14:40 Didi — tarde-noche (~6h20)** |
+| 20:00 Finanzas · 20:30 Plan Maestro · 21:00 Cena · 21:20 Diario | 21:00 Cena · **21:20 / 21:35 / 21:45** (cierre en 40 min corridos) |
+| 22:15 Dormir | 22:45 Dormir |
+
+El cierre de semana no se elimina, se comprime — es lo que mantiene vivo el Plan Maestro.
+
+### Entre semana: la prioridad de Fase 0 pasa de 15 min a 1h15
+
+`wd-didi2` se recorta a ~40 min (hasta las 20:00) y esa hora se la lleva `wd11`, que pasa de **21:00–21:15 (15 min encajados antes de la cena)** a **20:00–21:15 (1h15)**. Es el bloque que Fase 0 marca como prioridad activa (negocio de su papá / plantilla GBM): **~6h15 semanales que antes no existían**.
+
+### `fl1` eliminado del proyecto
+
+Perdió el sábado y ahora el domingo. Era condicional (*"si ya hay cliente o ventas activas"*) y en la práctica estaba vacío. **Cuando se cobre el primer peso en las Opciones 1-3 hay que volver a crearlo** — es el momento que `s1-4` señala. Anotado en comentario en los 2 archivos.
+
+### Reparto final
+
+Lun–Vie ~1h20/día · Sábado ~10h · Domingo ~11h20 = **~28h semanales**, contra ~19h antes de hoy. Más ingreso total y noches libres entre semana.
+
+Verificado con Node: sintaxis OK, **71 tareas**, sin IDs duplicados, domingo con 17 en orden cronológico estricto. `RUTINA_TASKS` idéntico entre Coach y Dashboard salvo los `href` de `k2`/`k5`, que difieren por diseño (ancla interna aquí, ruta relativa allá) — diferencia preexistente, confirmada contra `git HEAD`.
+
+## El traslado a ALTEN deja de ser tiempo muerto (2026-08-15)
+
+Cuarto ajuste del día: *"de lunes a viernes, tambien deberia manejar al trabajo pero en didi, hay una opcion de direccionamiento... aun que llegue 8:30 al trabajo esta bien"*.
+
+Preguntó si debía hacerlo. Sí: es el mismo razonamiento que ya justificaba `wd08` — ese trayecto lo maneja de todos modos, el único costo nuevo son los ~20 min del desvío.
+
+**La pregunta que sí importaba** era si la hora de salida se recorría. Si ALTEN le descontara esos 30 min, toda la tarde se movería y el bloque de Fase 0 recién ampliado bajaría de 1h15 a 45 min — 2h30 semanales perdidas por ~1h45 de Didi ganada. Confirmó que **su horario de entrada es flexible y sigue saliendo a las 17:00**, así que la tarde queda intacta.
+
+| | Antes | Después |
+|---|---|---|
+| `wd06` (07:40) | "Salir de casa — traslado (~20 min)", `cat:'descanso'` | **"🚗 Didi con direccionamiento — camino a ALTEN (~50 min)"**, `cat:'admin'` |
+| `wd07` | 08:00 | **08:30**, con la salida de las 17:00 explícita en el texto |
+
+Sale a la misma hora (07:40), así que la mañana no cambia: el bloque de la aplicación de las 06:43 y la higiene quedan intactos.
+
+**Dos de sus tres bloques diarios de Didi ya no cuestan tiempo**: `wd06` (~20 min de costo real) y `wd08` (~0, ya manejaba a Buenavista para el gym). Solo `wd-didi2` (19:20–20:00) es tiempo dedicado. El tiempo dedicado a Didi bajó y el ingreso subió — justo lo que pidió esta misma mañana.
+
+También se reescribió el **`context-banner` de `#rutina`**, que decía *"sales 7:40, manejas hasta 8:00"* y *"retomas Didi hasta ~21:00"*, ambas ya falsas tras los cambios de hoy.
+
+Verificado con Node: sintaxis OK, 71 tareas, sin IDs duplicados, lunes en orden estricto de 06:40 a 23:59 con ALTEN entrando 08:30 y la tarde sin moverse.

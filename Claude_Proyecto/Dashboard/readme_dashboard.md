@@ -1803,3 +1803,239 @@ Bajo la ruta de deuda, la lista completa de logros con su fecha, ordenada cronol
 | Fondo completo + BBVA en $0 | ✅ los 3 pasos hechos, 5 logros en la tira |
 
 Además: borrar un logro a mano y recargar **no** lo re-siembra, y una fecha editada a mano se respeta en vez de pisarse. Cero errores de consola.
+
+## El sábado se convierte en día de ingreso: dos bloques de Didi (2026-08-15)
+
+Pedido de Adán: *"en mi dia, el sabado quiero trabajar de dia en didi y en la tarde noche tambien"*.
+
+El sábado no tenía **nada** de Didi. Era el día de trabajo propio: un bloque profundo de 4h (08:50–12:50) para la prioridad del Plan Maestro, 30 min de IA aplicada, la revisión semanal a las 16:00 y el bloque de freelance de las 17:00. Meter dos turnos al volante no era añadir tareas, era **decidir qué se sacrifica** — por eso se le presentaron 3 repartos concretos del día completo antes de tocar el código, y eligió *"Didi manda (máximo ingreso)"*.
+
+### El sábado antes y después
+
+| Antes | Después |
+|---|---|
+| 07:00–08:50 despertar, skincare, desayuno, suplementos, ejercicio 1h, ducha | **sin cambios** |
+| 08:50 🎯 Bloque profundo 4h (Plan Maestro) | **09:00 🚗 Didi — bloque de día (~5h)** |
+| 12:50 Almuerzo | 14:00 Almuerzo |
+| 13:20 🤖 IA aplicada 30 min | **eliminado** |
+| 16:00 💰 Revisión semanal | 14:40 💰 Revisión semanal |
+| 17:00 Freelance/plantilla (`fl1`, compartido con domingo) | **17:00 🚗 Didi — tarde-noche (~5h)** |
+| 20:30 Tiempo libre / familia / lectura | 15:30 Tiempo libre / familia (entre los dos turnos) |
+| 20:00 Cena → 21:45 Dormir | 22:00 Cena → 23:00 Dormir |
+
+Resultado: **~10h al volante** repartidas en dos turnos, con la ventana de 14:00–17:00 como único hueco de trabajo propio y descanso.
+
+### Cambios en `RUTINA_TASKS`
+
+- **2 tareas nuevas**: `sa-didi1` (09:00) y `sa-didi2` (17:00), ambas `cat:'admin'` — la misma categoría que usan los bloques de Didi entre semana (`wd08`, `wd-didi2`) y el del domingo (`do05`).
+- **2 tareas eliminadas**: `sa06` (bloque profundo 4h) y `sa08` (IA aplicada).
+- **`fl1` pasa de `dias:[6,0]` a `dias:[0]`** — las 17:00 del sábado ahora son el segundo turno de Didi. El bloque de freelance sobrevive intacto en domingo.
+- **8 tareas recorridas de hora**: `sa07` 12:50→14:00, `sa10` 16:00→14:40, `sa12` 20:30→15:30, `sa11` 20:00→22:00, `sa1113` 21:00→22:20, `saSupPm` 21:15→22:30, `sa14` 21:30→22:45, `sa15` 21:45→23:00.
+
+La hora de dormir se recorre 1h15 (21:45 → 23:00), pero **el despertar de las 07:00 no se movió**, así que sigue durmiendo ~8h. El cierre completo (cena, skincare+minoxidil PM, suplementos, meditación) se conserva entero, solo desplazado — es la parte de la rutina que no se negocia.
+
+### Replicado en las 2 copias
+
+`RUTINA_TASKS` vive duplicado en `Dashboard/dashboard.html` y `Coach/Coach_v2.html` (ver tabla "Datos duplicados"). Los 16 bloques del sábado se compararon **carácter por carácter** entre ambos archivos tras el cambio: idénticos.
+
+### La alarma por IA que resultó ser falsa (corregido el mismo día)
+
+La primera versión de esta nota decía que al quitar `sa08` **IA se quedaba sin práctica en toda la semana**. Adán lo corrigió de inmediato: *"en IA no practico pero ando haciendo esta aplicacion"*. La práctica existía —y es mucho más real que 30 min de sábado leyendo sobre n8n— solo que **nunca había estado en la rutina**, así que ninguna app del ecosistema la veía. Ver la sección siguiente, donde se agrega.
+
+La lección no es sobre IA: es que **`RUTINA_TASKS` solo conoce lo que alguien escribió en él**. Un hueco en el horario no prueba que la actividad no ocurra, prueba que no está registrada — y aquí la actividad no registrada era, literalmente, construir la aplicación que muestra el horario.
+
+### Verificación (Node)
+
+Sintaxis JS OK en los 2 archivos (2 bloques `<script>` cada uno, 0 errores). `RUTINA_TASKS` evaluado de verdad en ambos: 68 tareas, 16 en sábado, **en orden cronológico estricto** y sin IDs duplicados. Cero referencias huérfanas a `sa06` o `sa08` en el resto del código.
+
+## La rutina entre semana registra por fin el trabajo en esta aplicación (2026-08-15)
+
+Al documentar el cambio del sábado se afirmó que Adán se había quedado sin práctica de IA. Su respuesta:
+
+> *"en IA no practico pero ando haciendo esta aplicacion, esto le dedico 20 min cuando me despierto, es decir me despierto entre semana 6:40 y continuo armando esta aplicacion, hasta 7 [am] que comienza toda mi rutina y en las noches entre semana igualmente, 11:30 empiezo a trabajar en esta aplicacion hasta las 12 o a veces 1 am"*
+
+Dos bloques diarios, todos los días entre semana, que **no existían en ninguna parte del ecosistema**. La rutina daba por hecho que despertaba a las 07:00 y dormía ~7h; ninguna de las dos cosas era cierta desde hacía tiempo.
+
+### Lo que estaba mal, no solo incompleto
+
+| Dato | Decía | Es |
+|---|---|---|
+| Hora de despertar (`wd01`) | 07:00 | **06:40** — las 07:00 eran la hora a la que ya se estaba bañando |
+| 06:40–07:00 | *nada* | **20 min construyendo esta aplicación** |
+| 23:10–23:55 | "Tiempo libre / relajación antes de dormir" (45 min) | tiempo libre 20 min + **app desde las 23:30** |
+| Hora de dormir (`wd21`) | 23:55, *"buscas ~7h (medianoche a 7:00am)"* | **00:00, a veces 01:00** |
+| Sueño real | ~7h | **5h40–6h40** |
+
+### Cambios en `RUTINA_TASKS`
+
+- **`wd-app-am`** (06:43, `cat:'aprender'`) — 20 min exactos hasta el baño de las 07:03.
+- **`wd-app-pm`** (23:30, `cat:'aprender'`) — hasta las 00:00, a veces la 01:00.
+- **`wd01` de 07:00 a 06:40**, y `wd20e` (tiempo libre) acortado a sus 20 min reales.
+- **`wd21` de 23:55 a 23:59**, con el texto reescrito para decir la hora real de dormir y el rango de sueño que implica.
+
+Van en `cat:'aprender'` y no en `'profundo'` a propósito: **son su práctica real de IA aplicada**. No es leer sobre IA, es construir software con Claude Code todos los días — la habilidad `ia` del radar (valor 30, peso 1.2) tenía práctica diaria y el sistema no la veía.
+
+### Por qué `wd21` se ancla en 23:59 y no en 00:00
+
+`rutinaTareasDelDia()` ordena con `a.hora.localeCompare(b.hora)`, comparación de **texto**, no de tiempo. Un `'00:00'` es lexicográficamente menor que `'06:40'`, así que "Apagar pantallas. Dormir" se habría renderizado como **la primera tarea de la mañana**, y `siguienteTarea()` (que recorre `t.hora<=hhmm`) habría dado "ahora/siguiente" mal todo el día. `rtDur()` sí maneja el cruce de medianoche (`if(mins<=0) mins+=24*60`), pero el orden no. La hora real vive en el texto de la tarea, que es donde no rompe nada. **Cualquier tarea futura que caiga después de medianoche tiene el mismo problema** — no hay soporte para días que cruzan la medianoche en el modelo actual.
+
+### Prosa corregida en Coach
+
+El `context-banner` de `#rutina` en `Coach_v2.html` (texto visible, no comentario) afirmaba *"te levantas 7:00"* y *"Duermes alrededor de medianoche (~7h de sueño)"*. Reescrito con el horario real, incluidos los dos bloques de la aplicación y el rango de sueño verdadero.
+
+### Verificación (Node)
+
+Sintaxis OK en los 2 archivos. `RUTINA_TASKS` evaluado: **70 tareas** (68 + 2), sin IDs duplicados. El lunes renderiza 26 tareas en orden cronológico estricto de 06:40 a 23:59, y el sábado sigue en sus 16 en orden. Los bloques nuevos son idénticos entre Dashboard y Coach.
+
+### Lo que queda pendiente de decidir
+
+Adán dijo **"entre semana"** para los dos bloques, así que el sábado (que en el cambio anterior quedó durmiendo a las 23:00) y el domingo **no se tocaron**. Si también construye la app los fines de semana, hay que replicarlo ahí.
+
+## El fin de semana se lleva el Didi y las noches entre semana se liberan (2026-08-15)
+
+Tercer ajuste del mismo día, y el que cierra la reorganización: *"el domingo tambien quiero trabajar mucho mas en didi, entre semana deberia enfocarme en lo demas y dedicarme menos tiempo a trabajar en didi"*.
+
+No es un recorte de ingreso, es un **traslado**: las horas al volante se concentran en sábado y domingo, y las noches de lunes a viernes quedan para construir. Antes de proponer nada se revisaron dos cosas del propio proyecto:
+
+- **`wd08` (17:00, "1 pasajero a Buenavista ~40 min") no es tiempo perdido.** Su gym está en Buenavista y entra a las 17:40, así que ese trayecto lo maneja de todos modos — el pasajero es ingreso prácticamente gratis. El que sí cuesta tiempo real es `wd-didi2` (19:20–21:00, ~1h40).
+- **El Plan Maestro ya tenía una regla al respecto**, en Fase 1 (`s1-4`): *"Primer peso cobrado en Opción 1-3 → esas horas de DiDi se mueven ahí (Opción 6), **no antes**."* Estamos en Fase 0 y no hay primer peso cobrado, pero lo que pidió no la contradice: no deja de manejar, mueve las horas al fin de semana.
+
+Se le ofrecieron 3 repartos para el domingo y 3 grados de recorte entre semana. Eligió **máximo ingreso el domingo** y **el recorte suave entre semana** (conservar los dos bloques, acortando el de la noche).
+
+### Domingo: de 8h indefinidas a 11h20 en dos turnos
+
+`do05` decía solo *"🚗 Trabajar en Didi"*, sin hora de término — se asumía que terminaba a las 17:00 porque ahí entraba el bloque de freelance. Y **el domingo no tenía comida agendada en absoluto**: iba de las 09:00 a la cena de las 21:00 sin almuerzo.
+
+| Antes | Después |
+|---|---|
+| 09:00 🚗 Didi (sin hora de término) | **09:00 🚗 Didi — bloque de día (~5h)** |
+| *nada* | **14:00 🍽️ Almuerzo** (`do-alm`, nuevo) |
+| 17:00 Freelance/plantilla (`fl1`) | **14:40 🚗 Didi — tarde-noche (~6h20)** |
+| 20:00 Finanzas · 20:30 Plan Maestro · 21:00 Cena · 21:20 Diario | 21:00 Cena · **21:20 Finanzas · 21:35 Plan Maestro · 21:45 Diario** |
+| 22:15 Dormir | 22:45 Dormir |
+
+El cierre de semana **no se eliminó**, se comprimió a 40 min corridos después de la cena. Es lo que mantiene vivo el Plan Maestro: si desaparece, nada revisa si la fase sigue en verde.
+
+### Entre semana: la prioridad de Fase 0 pasa de 15 min a 1h15
+
+`wd-didi2` se recorta de ~1h40 a ~40 min (hasta las 20:00), y esa hora entera se la lleva `wd11`:
+
+| | Antes | Después |
+|---|---|---|
+| `wd-didi2` | 19:20 → ~21:00 | 19:20 → **~20:00** |
+| `wd11` (Prioridad Fase 0) | **21:00 → 21:15 (15 min)** | **20:00 → 21:15 (1h15)** |
+
+Ese bloque —*"negocio de tu papá o plantilla GBM, 1 avance real"*— es lo que Fase 0 marca como prioridad activa, y tenía **quince minutos** encajados entre el fin de Didi y la cena. Ahora tiene 1h15 reales, cinco veces más, cinco días a la semana: **~6h15 semanales que antes no existían**.
+
+### `fl1` se eliminó del proyecto
+
+Perdió el sábado en el primer cambio del día y ahora el domingo. Era condicional (*"si ya hay cliente o ventas activas"*) y en la práctica estaba vacío — no hay cliente todavía. **Cuando se cobre el primer peso en las Opciones 1-3 hay que volver a crearlo**: es justo el momento que `s1-4` señala para mover horas de Didi al negocio. Queda anotado en un comentario del código, en los dos archivos.
+
+### Reparto final de Didi
+
+| Día | Bloques | Total |
+|---|---|---|
+| Lun–Vie | 17:00 (camino al gym) + 19:20–20:00 | ~1h20/día |
+| Sábado | 09:00–14:00 + 17:00–22:00 | ~10h |
+| Domingo | 09:00–14:00 + 14:40–21:00 | ~11h20 |
+
+**~28h a la semana**, contra las ~19h de antes del día de hoy — más ingreso total, y aun así las noches entre semana quedaron libres.
+
+### Verificación (Node)
+
+Sintaxis OK en los 2 archivos. **71 tareas** (70 − `fl1` + `do-alm` + `do-didi2`), sin IDs duplicados. Domingo con 17 tareas en orden cronológico estricto; lunes con 26, de 06:40 a 23:59; sábado con 16. `RUTINA_TASKS` comparado tarea por tarea entre Dashboard y Coach: **idéntico salvo los `href` de `k2` y `k5`**, que deben diferir por diseño (el Dashboard apunta a `../Coach/Coach_v2.html#aprendizaje`, Coach al ancla interna `#aprendizaje`) — verificado contra `git HEAD` que esa diferencia es preexistente y correcta.
+
+## El traslado a ALTEN deja de ser tiempo muerto (2026-08-15)
+
+Cuarto y último ajuste del día: *"de lunes a viernes, tambien deberia manejar al trabajo pero en didi, hay una opcion de direccionamiento, entonces eso tomaria 20 min mas pero si lo hare o deberia hacerlo, aun que llegue 8:30 al trabajo esta bien"*.
+
+Preguntó si debía hacerlo, y la respuesta es que sí: es **el mismo razonamiento que ya justificaba `wd08`**. Ese trayecto lo maneja todos los días de todas formas; el único costo nuevo son los ~20 min del desvío del pasajero. El resto del tiempo ya estaba gastado en gasolina sin producir nada.
+
+### La pregunta que sí importaba
+
+Llegar a las 8:30 solo es gratis si **la hora de salida no se recorre**. Si ALTEN le descontara esos 30 min, toda la tarde se movería y el bloque de Fase 0 que acababa de crecer a 1h15 bajaría a 45 min — 2h30 semanales perdidas para ganar ~1h45 de Didi. Confirmó que **su horario de entrada es flexible y sigue saliendo a las 17:00**, así que nada de la tarde se mueve.
+
+| | Antes | Después |
+|---|---|---|
+| `wd06` (07:40) | "Salir de casa — traslado a ALTEN (~20 min manejando)", `cat:'descanso'` | **"🚗 Didi con direccionamiento — camino a ALTEN (~50 min)"**, `cat:'admin'` |
+| `wd07` (ALTEN) | 08:00, *"jornada laboral (HIL/SIL Ford)"* | **08:30**, *"entras 08:30, sales 17:00"* |
+
+Los ~50 min son los ~20 del trayecto normal + los ~20 del desvío + margen para que le asignen el viaje. Sale a la misma hora que antes (07:40), así que **la mañana no cambia en nada**: el bloque de la aplicación de las 06:43 y toda la rutina de higiene quedan intactos.
+
+### Dos de sus tres bloques diarios de Didi ya no cuestan tiempo
+
+| Bloque | Franja | Costo real de tiempo |
+|---|---|---|
+| `wd06` — camino a ALTEN | 07:40–08:30 | **~20 min** (el desvío) |
+| `wd08` — camino al gym en Buenavista | 17:00–17:40 | **~0** (ya manejaba ahí) |
+| `wd-didi2` — sesión corta de la noche | 19:20–20:00 | 40 min |
+
+~2h10 diarias al volante entre semana, de las cuales solo ~1h es tiempo que no estaría usando en otra cosa. Es exactamente lo que pidió esta misma mañana —*"dedicarme menos tiempo a trabajar en didi"*— sin perder ingreso: el tiempo dedicado bajó, el ingreso subió.
+
+### Prosa corregida
+
+El `context-banner` de `#rutina` en `Coach_v2.html` decía *"sales 7:40, manejas hasta 8:00"* y *"Por la noche retomas Didi hasta ~21:00"* — las dos cosas ya eran falsas tras los cambios de hoy. Reescrito completo, incluida la nota de que 2 de los 3 bloques son trayectos que ya hacía.
+
+### Verificación (Node)
+
+Sintaxis OK en los 2 archivos, 71 tareas, sin IDs duplicados. Lunes con 26 tareas en orden cronológico estricto de 06:40 a 23:59, con ALTEN entrando a las 08:30 y la tarde sin moverse (gym 17:40, Fase 0 20:00). `RUTINA_TASKS` equivalente entre Dashboard y Coach salvo los `href` de `k2`/`k5`, que difieren por diseño.
+
+## "Qué escuchar en Didi": las 28h al volante dejan de ser tiempo perdido (2026-08-15)
+
+Cierre del día. Tras concentrar el Didi en fin de semana, Adán ató los dos cabos él solo: *"existe la manera de que cuando maneje en didi ponga podcast, audiolibros, usar youtube premium en un audicular y mientras manejo puedo escuchar infinidad de libro, entonces en esa seccion pon que hacer en didi... ademas debes darme links"*.
+
+Es la observación más rentable de la jornada: **~28h semanales de atención disponible** que ninguna app del ecosistema estaba contando. A 6-9h por audiolibro son **3-4 libros al mes**, sin robarle un minuto a nada.
+
+### Dónde vive
+
+- **Franja `#didiStrip`** en el slide de Habilidades, **en la misma fila que el título** (patrón que ya usaba el slide de Lista de Compras). Una línea: *"🎧 ~28h/semana al volante"* + botón.
+- **Overlay `#didiOverlay`** con todo el catálogo. Mismo lenguaje visual que `.meta-detail-overlay` (fondo con blur, card que sube, cierre por ✕/clic fuera/Escape) pero con clase propia para no acoplarse a las 2 pantallas que ya usan aquella.
+
+El slide declara en su código que es **pasivo** —*"nada de clics, rota solo y se ve de reojo"*— y eso se respeta: la franja se lee sin tocar nada y el detalle es opt-in.
+
+### Qué contiene (20 recursos, 40 links)
+
+Ordenado por el valor real de `SK`, de la habilidad más débil a la menos débil — no por gusto:
+
+| Habilidad | Valor | Qué se ofrece |
+|---|---|---|
+| 🤝 Ventas | 15 · ×1.5 | Cialdini, $100M Offers, Chris Voss, The Game, canal de Hormozi |
+| 💰 Finanzas | 20 · ×1.1 | Ramit Sethi (libro + podcast), Morgan Housel, Millionaire Next Door |
+| 📣 Marketing | 20 · ×1.2 | $100M Leads, Marketing School |
+| 📈 Inversión | 25 · ×1.2 | Bogle, Malkiel, Peter Lynch, We Study Billionaires |
+| 🤖 IA | 30 · ×1.2 | Lex Fridman, The AI Daily Brief, DeepLearning.AI |
+
+Más 2 en español (Libros para Emprendedores, Cracks Podcast) y una tabla de **qué cabe en cada trayecto**, construida sobre sus bloques reales de `RUTINA_TASKS`: lo denso en el trayecto de 50 min a ALTEN y en los turnos largos de fin de semana, lo ligero en los tramos de 40 min.
+
+**Ningún título está inventado.** Todos los libros salen de `APRENDIZAJE[].recursos`, que ya vivían en el proyecto — el trabajo fue decidir cuáles funcionan en audio, en qué orden y en qué hueco.
+
+### Los links son búsquedas, no IDs — a propósito
+
+`didiSpo()`/`didiYt()` generan `open.spotify.com/search/…` y `youtube.com/results?search_query=…`. Un ID de episodio escrito a mano se rompe en silencio si el catálogo cambia de región (México ≠ US) o si el show se re-sube, y el resultado sería un 404 dentro de su propia app. Una búsqueda por título+autor no caduca.
+
+### Tres avisos que el catálogo incluye
+
+- **Su inglés está en 80/100**: escuchar en inglés le paga doble (la habilidad + el idioma que necesita para la maestría en Alemania).
+- **Con pasajero, bajar el volumen**: su calificación en Didi es parte del ingreso.
+- **`The Intelligent Investor` es la excepción**: es su recurso #1 de Inversión pero está lleno de tablas y notas al pie — ese se lee, no se maneja. Es el único recurso del proyecto que el catálogo desaconseja explícitamente.
+
+### Verificación (Playwright, 4 resoluciones)
+
+**El slide ya venía desbordando su alto fijo antes de tocarlo** — y la primera versión de la franja, en fila propia, lo empeoraba. Se midió, se movió a la fila del título y se recortó el texto hasta que dejó de hacer wrap (el ancho útil es 1049px; título 604 + franja 483 + gap 18 = 1105 lo rompía). Resultado, comparado contra `git HEAD`:
+
+| Resolución | Antes | Después |
+|---|---|---|
+| 1920×1080 | cabe +242px | **cabe +270px** |
+| 1440×900 | cabe +54px | **cabe +71px** |
+| 1366×768 | desborda 65px | **desborda 46px** |
+| 1280×800 | desborda 60px | **desborda 44px** |
+
+La franja quedó con **coste cero de alto** (la fila del título mide 63px con y sin ella) y de paso el slide mejoró 16-28px en las 4 resoluciones, porque el `margin-bottom:clamp(20px,3vh,40px)` del título se sustituyó por 10px en la fila contenedora.
+
+**El desborde de 1366×768 y 1280×800 sigue vivo y es preexistente.** Corta el eyebrow arriba y los links "Ajustar … en Coach →" abajo. No se arregló aquí porque la única salida real es quitar texto de las tarjetas de `#skillPriority` (encogerlas contradice el feedback ya establecido de que *compacto = menos texto, no elementos chicos*), y eso es una decisión de producto que no se pidió. En las pantallas donde Adán trabaja normalmente cabe con holgura.
+
+Verificado además: el overlay abre y cierra (✕, clic fuera, Escape), renderiza 5 habilidades, 5 franjas horarias, 20 recursos y 40 links —20 Spotify + 20 YouTube, los 40 con `target="_blank"` y `rel="noopener"`— y cero errores de consola.
+
+### Ojo al futuro
+
+`DIDI_AUDIO` referencia `SK` por id (`ventas`, `finanzas`, …) y pinta el valor en vivo, así que si Adán mueve un valor del radar el catálogo se reordena solo. Pero **el texto del campo `why` de cada habilidad está escrito a mano y menciona el número** ("20/100. Tu diagnóstico dice…"): si el valor cambia, ese texto hay que actualizarlo a mano. Mismo tipo de desincronización que ya documentada entre `SK` y `RUTINA_TASKS`.
