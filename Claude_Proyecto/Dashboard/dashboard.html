@@ -95,7 +95,14 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 .theme-dia    {--ac1:#00e0ff;--ac2:#00e87a}
 .theme-hero   {--ac1:#3ddc97;--ac2:#7c6cff}
 .theme-coach  {--ac1:#e0b020;--ac2:#ff8a3d}
-.theme-skills {--ac1:#b06eff;--ac2:#ff6bd6}
+/* 2026-08-15, Adán con captura: "el color morado no me gusta y visualmente se me hace mucho".
+   Eran los 2 tonos más saturados de las 9 pantallas (#b06eff + #ff6bd6) pintando 2 manchas de
+   58vmax al 20% de opacidad, encima de unas barras de habilidad que ya traen su propia escala
+   rojo→verde: dos capas de color fuerte compitiendo. Verde bosque, y la opacidad de las manchas
+   baja a .16 solo en este slide — el color pasa a ser el de las barras, que es donde significa
+   algo. Se le mostraron 4 variantes renderizadas en su tema oscuro y eligió esta. */
+.theme-skills {--ac1:#2d6a4f;--ac2:#40916c}
+.theme-skills::before,.theme-skills::after{opacity:.16}
 .theme-metas  {--ac1:#ffd93d;--ac2:#00e0c0}
 .theme-basicas{--ac1:#ff5470;--ac2:#ffb100}
 .theme-lista  {--ac1:#3ddc97;--ac2:#00b8d9}
@@ -637,6 +644,38 @@ a.rt2-sub-prod:hover{text-decoration:underline}
    va a costar, y es el número que suma el total de la barra de arriba. */
 .lc-price-compra{background:rgba(var(--ov),.06);color:var(--text3);border:1px solid rgba(var(--ov),.12)}
 .lc-price-leyenda{display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:11px;color:var(--text3);margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid rgba(var(--ov),.08)}
+/* Contador por producto (2026-08-15) — pedido: "no me pongas el precio unitario, eso calculalo
+   tu, mejor dame la opcion que en cosas asi como fruta, tenga la opcion de añadir el mismo
+   producto, osea un contador y al final tu me das el precio a prox". Sustituye a la píldora del
+   precio por kg/pza, que se quitó de la UI: el número unitario sigue en LISTA_COMPRAS_PRECIOS y
+   se usa para calcular, pero ya no se muestra — lo que se ve es la cantidad y lo que costará. */
+.lc-qty{display:inline-flex;align-items:center;border-radius:7px;overflow:hidden;flex-shrink:0;
+  border:1px solid rgba(var(--ov),.14);background:rgba(var(--ov),.05)}
+.lc-qty button{width:19px;height:19px;border:none;background:transparent;color:var(--text2);
+  cursor:pointer;font-size:13px;font-weight:800;line-height:1;font-family:inherit;padding:0;
+  display:flex;align-items:center;justify-content:center}
+.lc-qty button:hover{background:rgba(var(--ov),.14);color:var(--text)}
+.lc-qty button:disabled{opacity:.3;cursor:default;background:transparent}
+.lc-qty .lc-qty-n{min-width:19px;text-align:center;font-family:var(--mono);font-size:11px;
+  font-weight:800;color:var(--text)}
+/* Subtotal de ESE renglón = monto de la cantidad típica × el contador. Verde cuando lleva más
+   de 1, para que se note de un vistazo dónde se está yendo el ticket. */
+.lc-sub{font-family:var(--mono);font-size:11px;font-weight:800;color:var(--text3);flex-shrink:0}
+.lc-sub.mult{color:var(--g)}
+/* "dura ~N sem" — solo en lo que no se acaba en la semana */
+.lc-dura{font-size:9px;font-weight:700;color:var(--text3);opacity:.75;white-space:nowrap;
+  padding:1px 5px;border-radius:4px;background:rgba(var(--ov),.05);flex-shrink:0}
+/* Subtotal por pasillo, alineado a la derecha del nombre del pasillo */
+.lc-aisle-sub{margin-left:auto;font-family:var(--mono);font-size:11px;font-weight:800;
+  color:var(--g);letter-spacing:0;text-transform:none}
+.lc-aisle-title{display:flex;align-items:baseline;gap:8px}
+/* Barra de totales: ticket de hoy + proyección mensual */
+.lc-total{display:inline-flex;align-items:baseline;gap:14px;flex-wrap:wrap}
+.lc-total-main b{color:var(--g)}
+.lc-total-main small{font-family:inherit;font-size:11px;font-weight:600;color:var(--text3)}
+.lc-total-mes{font-size:12px;color:var(--text3);cursor:default}
+.lc-total-mes b{color:var(--text2)}
+.lc-total-vacio{color:var(--text3);font-weight:600}
 /* Total marcado (solo Comida) + botón para vaciar el checklist de la categoría activa (2026-08-11) */
 .lc-toolbar{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:12px}
 .lc-total{font-size:12.5px;font-weight:800;color:var(--text);font-family:var(--mono);cursor:default}
@@ -831,6 +870,7 @@ a.rt2-sub-prod:hover{text-decoration:underline}
   background:var(--cy);transition:transform .12s ease}
 .didi-strip-btn:hover{transform:translateY(-1px)}
 @media(max-width:900px){.didi-strip{flex-wrap:wrap}.didi-strip-btn{margin-left:0;width:100%}}
+@media(max-width:820px){.didi-skills{grid-template-columns:1fr}.didi-slots.s3,.didi-slots.s2{grid-template-columns:1fr}}
 
 /* Overlay del catálogo — mismo lenguaje visual que .meta-detail-overlay (fondo oscurecido con
    blur, card que sube al abrir, cierre por clic fuera / ✕ / Escape), pero con su propia clase
@@ -856,16 +896,29 @@ a.rt2-sub-prod:hover{text-decoration:underline}
 .didi-sec-t:first-child{margin-top:0}
 .didi-note{font-size:11.5px;color:var(--text3);line-height:1.45;margin-bottom:10px}
 .didi-note b{color:var(--text2);font-weight:700}
-/* Tabla de "qué cabe en cada trayecto" — su rutina real, no franjas genéricas */
-.didi-slots{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:8px;margin-bottom:6px}
+/* "Qué cabe en cada trayecto" — agrupado en entre semana / fin de semana (2026-08-15, "como lo
+   distribuiste no se me hace bien"). Antes eran 5 tarjetas en un auto-fit que metía 4 en la
+   primera fila y dejaba Domingo huérfano en la segunda, medio vacío. Agrupadas 3+2 el reparto
+   cuadra solo y además dice algo: los tramos cortos son los de diario, los largos los del finde. */
+.didi-slot-group{margin-bottom:9px}
+.didi-group-t{font-size:10px;font-weight:900;letter-spacing:.07em;text-transform:uppercase;
+  color:var(--text3);margin-bottom:5px}
+.didi-slots{display:grid;gap:8px}
+.didi-slots.s3{grid-template-columns:repeat(3,1fr)}
+.didi-slots.s2{grid-template-columns:repeat(2,1fr)}
 .didi-slot{padding:9px 12px;border-radius:10px;background:rgba(var(--ov),.05);
   border:1px solid rgba(var(--ov),.07)}
 .didi-slot-h{font-size:11px;font-weight:800;color:var(--text);margin-bottom:2px}
 .didi-slot-h span{font-family:var(--mono);color:var(--cy);font-weight:800}
 .didi-slot-d{font-size:10.5px;color:var(--text3);line-height:1.35}
-/* Bloque por habilidad */
+/* Habilidades en 2 columnas en vez de una sola tira vertical de 5 — con el ancho de 1100px del
+   overlay, apilarlas obligaba a scrollear el doble. Ventas va a ancho completo: es 15/100 con
+   peso ×1.5 (la prioridad absoluta) y la que más recursos trae, así que la jerarquía visual
+   coincide con la real en vez de pelearse con ella. */
+.didi-skills{display:grid;grid-template-columns:1fr 1fr;gap:9px;align-items:start}
+.didi-skills>.didi-skill:first-child{grid-column:1/-1}
 .didi-skill{border-radius:13px;background:rgba(var(--ov),.04);border:1px solid rgba(var(--ov),.07);
-  padding:11px 14px;margin-bottom:9px}
+  padding:11px 14px}
 .didi-skill-h{display:flex;align-items:center;gap:9px;margin-bottom:3px;flex-wrap:wrap}
 .didi-skill-n{font-size:13.5px;font-weight:900;color:var(--text)}
 .didi-skill-v{font-family:var(--mono);font-size:11.5px;font-weight:800}
@@ -877,13 +930,19 @@ a.rt2-sub-prod:hover{text-decoration:underline}
 .didi-t-audio{background:rgba(167,139,250,.18);color:#c4b5fd}
 .didi-t-pod{background:rgba(34,211,238,.16);color:#67e8f9}
 .didi-t-yt{background:rgba(248,113,113,.16);color:#fca5a5}
-.didi-item-b{min-width:0}
+.didi-item-b{min-width:0;flex:1}
+/* Título y links en la misma línea pero en extremos opuestos — antes los links iban pegados
+   al final del título y partían la lectura del nombre del libro por la mitad. */
+.didi-item-top{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
 .didi-item-n{color:var(--text);font-weight:700}
-.didi-item-d{color:var(--text3);font-size:10.5px;line-height:1.3}
-.didi-links{display:inline-flex;gap:6px;margin-left:2px;flex-wrap:wrap}
+.didi-item-d{color:var(--text3);font-size:10.5px;line-height:1.3;margin-top:1px}
+.didi-links{display:inline-flex;gap:6px;margin-left:auto;flex-wrap:wrap;flex-shrink:0}
 .didi-links a{font-size:10px;font-weight:800;padding:1px 7px;border-radius:5px;text-decoration:none;
   background:rgba(var(--ov),.09);color:var(--cy);white-space:nowrap}
 .didi-links a:hover{background:rgba(var(--ov),.16)}
+/* Apple en tono propio para distinguirla de un vistazo: son 2 destinos distintos según el tipo
+   (Books para audiolibros, Podcasts para podcasts) y conviene que no se lea como "otro Spotify". */
+.didi-l-ap{color:var(--text2)!important}
 .didi-warn{margin-top:14px;padding:10px 13px;border-radius:11px;background:rgba(251,191,36,.09);
   border:1px solid rgba(251,191,36,.2);font-size:11px;color:var(--text2);line-height:1.45}
 .didi-warn b{color:#fbbf24;font-weight:800}
@@ -2464,39 +2523,46 @@ const LISTA_COMPRAS={
 //   real   — true = precio de tu ticket de Walmart (10-ago-2026, 22:51h); false = investigado
 //            (Walmart MX / Profeco "Quién es Quién en los Precios", ago-2026), aproximado.
 //   nota   — cuando el producto del ticket no es exactamente el de la lista.
+//   sem    — (2026-08-15) SEMANAS que dura esa `compra` con su consumo real, estimado a partir
+//            del tamaño de presentación y de sus metas de salud.html (3115 kcal / 186 g de
+//            proteína al día — come mucho, así que las proteínas duran poco). Existe porque el
+//            total mezclaba cosas que no son comparables: marcar todo daba $1,206, pero ahí
+//            convivían un aceite de 500 ml que dura ~2 meses con un jitomate que dura 3 días.
+//            Ese número no era ni un ticket semanal ni un gasto mensual — no era nada. Con `sem`
+//            se puede separar lo que pagas HOY en caja de lo que te cuesta AL MES el hábito.
 // Para los `real:true` vendidos por peso, `compra`/`monto` son la cantidad y el importe EXACTOS
 // que Adán pagó ese día; para el resto, una porción razonable de una compra normal.
 const LISTA_COMPRAS_PRECIOS={
-  'Aguacate':{tipo:'peso',precio:59,unidad:'kg',compra:'≈200 g (1 pza)',monto:12,real:true},
-  'Cebolla':{tipo:'peso',precio:62,unidad:'kg',compra:'≈375 g (2 pza)',monto:23,real:true},
-  'Champiñones':{tipo:'peso',precio:70,unidad:'kg',compra:'≈250 g',monto:18,real:false},
-  'Chayote':{tipo:'peso',precio:22,unidad:'kg',compra:'≈600 g (2 pza)',monto:13,real:false},
-  'Jitomate':{tipo:'peso',precio:15,unidad:'kg',compra:'≈380 g (3 pza)',monto:6,real:true},
-  'Lechuga':{tipo:'pieza',precio:18,unidad:'pza',compra:'1 pza',monto:18,real:false},
-  'Nopales cocidos':{tipo:'paquete',precio:20,unidad:'bolsa 400 g',compra:'1 bolsa',monto:20,real:false},
-  'Papa':{tipo:'peso',precio:24,unidad:'kg',compra:'1 kg',monto:24,real:false},
-  'Papaya':{tipo:'peso',precio:40,unidad:'kg',compra:'≈1.43 kg (1 pza)',monto:57,real:true},
-  'Pepino':{tipo:'peso',precio:18,unidad:'kg',compra:'≈500 g (2 pza)',monto:9,real:false},
-  'Pera':{tipo:'peso',precio:55,unidad:'kg',compra:'≈500 g (3 pza)',monto:28,real:false},
-  'Pimiento morrón':{tipo:'peso',precio:50,unidad:'kg',compra:'≈300 g (2 pza)',monto:15,real:false},
-  'Plátano':{tipo:'peso',precio:24,unidad:'kg',compra:'≈895 g (6 pza)',monto:21,real:true},
-  'Filete de res magro':{tipo:'peso',precio:220,unidad:'kg',compra:'500 g',monto:110,real:false},
-  'Filete de tilapia':{tipo:'peso',precio:130,unidad:'kg',compra:'500 g',monto:65,real:false,nota:'En tu ticket compraste Filete de Basa, no tilapia (pagaste $55, 1 pieza con descuento) — precio de tilapia investigado aparte.'},
-  'Jamón de pavo':{tipo:'paquete',precio:57,unidad:'paquete 250 g',compra:'1 paquete',monto:57,real:true,nota:'Ticket: "Jamón Virginia" — casi siempre es la variante de pavo en súper, pero la etiqueta no lo dice explícito.'},
-  'Pechuga de pollo':{tipo:'paquete',precio:66,unidad:'paquete ≈265 g',compra:'1 paquete',monto:66,real:true,nota:'Ticket: "Milanesa de Pechuga" — mismo corte, ya fileteado delgado. Se vende por paquete ya pesado, sale a ≈$249/kg.'},
-  'Clara de huevo':{tipo:'paquete',precio:45,unidad:'envase 946 ml',compra:'1 envase',monto:45,real:false},
-  'Huevo':{tipo:'paquete',precio:29,unidad:'paquete 12 pza',compra:'1 paquete',monto:29,real:true,nota:'Ticket: Bachoco. También se vende suelto por pieza o por kg en mercado — el paquete de 12 sale más barato por huevo.'},
-  'Leche entera':{tipo:'paquete',precio:26,unidad:'L',compra:'1 L',monto:26,real:false,nota:'En tu ticket compraste Lala Deslactosada, no entera — precio de leche entera investigado aparte.'},
-  'Queso panela':{tipo:'paquete',precio:42,unidad:'paquete ≈400 g',compra:'1 paquete',monto:42,real:true,nota:'Precio con descuento en tu ticket. También se vende por peso en cremería, a ≈$120-140/kg.'},
-  'Yogurt griego natural':{tipo:'paquete',precio:38,unidad:'envase ≈900 g',compra:'1 envase',monto:38,real:false,nota:'En tu ticket compraste Yoplait ($12 c/u) — no es griego. Precio de yogurt griego investigado aparte.'},
-  'Aceite de oliva':{tipo:'paquete',precio:150,unidad:'botella 500 ml',compra:'1 botella',monto:150,real:false},
-  'Arroz blanco cocido':{tipo:'peso',precio:28,unidad:'kg (crudo)',compra:'1 kg',monto:28,real:false},
-  'Atún en agua':{tipo:'pieza',precio:20,unidad:'lata 140 g',compra:'1 lata',monto:20,real:true,nota:'Precio con descuento en tu ticket. En paquete de 4-6 latas sale más barato por lata.'},
-  'Frijoles negros':{tipo:'paquete',precio:24,unidad:'lata 560 g',compra:'1 lata',monto:24,real:false},
-  'Granola de amaranto':{tipo:'paquete',precio:60,unidad:'bolsa 400 g',compra:'1 bolsa',monto:60,real:false},
-  'Miel de abeja':{tipo:'paquete',precio:90,unidad:'frasco 500 g',compra:'1 frasco',monto:90,real:false},
-  'Pan integral':{tipo:'paquete',precio:75,unidad:'paquete grande',compra:'1 paquete',monto:75,real:true,nota:'Ticket: "Pan Doble" (Bimbo Doble Fibra) — no dice "integral", pero es el pan de caja más cercano que compraste.'},
-  'Tortilla de maíz':{tipo:'peso',precio:17,unidad:'kg',compra:'1 kg',monto:17,real:false},
+  'Aguacate':{tipo:'peso',precio:59,unidad:'kg',compra:'≈200 g (1 pza)',monto:12,real:true,sem:1},
+  'Cebolla':{tipo:'peso',precio:62,unidad:'kg',compra:'≈375 g (2 pza)',monto:23,real:true,sem:2},
+  'Champiñones':{tipo:'peso',precio:70,unidad:'kg',compra:'≈250 g',monto:18,real:false,sem:1},
+  'Chayote':{tipo:'peso',precio:22,unidad:'kg',compra:'≈600 g (2 pza)',monto:13,real:false,sem:1},
+  'Jitomate':{tipo:'peso',precio:15,unidad:'kg',compra:'≈380 g (3 pza)',monto:6,real:true,sem:1},
+  'Lechuga':{tipo:'pieza',precio:18,unidad:'pza',compra:'1 pza',monto:18,real:false,sem:1},
+  'Nopales cocidos':{tipo:'paquete',precio:20,unidad:'bolsa 400 g',compra:'1 bolsa',monto:20,real:false,sem:1},
+  'Papa':{tipo:'peso',precio:24,unidad:'kg',compra:'1 kg',monto:24,real:false,sem:2},
+  'Papaya':{tipo:'peso',precio:40,unidad:'kg',compra:'≈1.43 kg (1 pza)',monto:57,real:true,sem:1},
+  'Pepino':{tipo:'peso',precio:18,unidad:'kg',compra:'≈500 g (2 pza)',monto:9,real:false,sem:1},
+  'Pera':{tipo:'peso',precio:55,unidad:'kg',compra:'≈500 g (3 pza)',monto:28,real:false,sem:1},
+  'Pimiento morrón':{tipo:'peso',precio:50,unidad:'kg',compra:'≈300 g (2 pza)',monto:15,real:false,sem:1},
+  'Plátano':{tipo:'peso',precio:24,unidad:'kg',compra:'≈895 g (6 pza)',monto:21,real:true,sem:1},
+  'Filete de res magro':{tipo:'peso',precio:220,unidad:'kg',compra:'500 g',monto:110,real:false,sem:1},
+  'Filete de tilapia':{tipo:'peso',precio:130,unidad:'kg',compra:'500 g',monto:65,real:false,nota:'En tu ticket compraste Filete de Basa, no tilapia (pagaste $55, 1 pieza con descuento) — precio de tilapia investigado aparte.',sem:1},
+  'Jamón de pavo':{tipo:'paquete',precio:57,unidad:'paquete 250 g',compra:'1 paquete',monto:57,real:true,nota:'Ticket: "Jamón Virginia" — casi siempre es la variante de pavo en súper, pero la etiqueta no lo dice explícito.',sem:1},
+  'Pechuga de pollo':{tipo:'paquete',precio:66,unidad:'paquete ≈265 g',compra:'1 paquete',monto:66,real:true,nota:'Ticket: "Milanesa de Pechuga" — mismo corte, ya fileteado delgado. Se vende por paquete ya pesado, sale a ≈$249/kg.',sem:1},
+  'Clara de huevo':{tipo:'paquete',precio:45,unidad:'envase 946 ml',compra:'1 envase',monto:45,real:false,sem:2},
+  'Huevo':{tipo:'paquete',precio:29,unidad:'paquete 12 pza',compra:'1 paquete',monto:29,real:true,nota:'Ticket: Bachoco. También se vende suelto por pieza o por kg en mercado — el paquete de 12 sale más barato por huevo.',sem:1},
+  'Leche entera':{tipo:'paquete',precio:26,unidad:'L',compra:'1 L',monto:26,real:false,nota:'En tu ticket compraste Lala Deslactosada, no entera — precio de leche entera investigado aparte.',sem:1},
+  'Queso panela':{tipo:'paquete',precio:42,unidad:'paquete ≈400 g',compra:'1 paquete',monto:42,real:true,nota:'Precio con descuento en tu ticket. También se vende por peso en cremería, a ≈$120-140/kg.',sem:2},
+  'Yogurt griego natural':{tipo:'paquete',precio:38,unidad:'envase ≈900 g',compra:'1 envase',monto:38,real:false,nota:'En tu ticket compraste Yoplait ($12 c/u) — no es griego. Precio de yogurt griego investigado aparte.',sem:2},
+  'Aceite de oliva':{tipo:'paquete',precio:150,unidad:'botella 500 ml',compra:'1 botella',monto:150,real:false,sem:8},
+  'Arroz blanco cocido':{tipo:'peso',precio:28,unidad:'kg (crudo)',compra:'1 kg',monto:28,real:false,sem:4},
+  'Atún en agua':{tipo:'pieza',precio:20,unidad:'lata 140 g',compra:'1 lata',monto:20,real:true,nota:'Precio con descuento en tu ticket. En paquete de 4-6 latas sale más barato por lata.',sem:1},
+  'Frijoles negros':{tipo:'paquete',precio:24,unidad:'lata 560 g',compra:'1 lata',monto:24,real:false,sem:2},
+  'Granola de amaranto':{tipo:'paquete',precio:60,unidad:'bolsa 400 g',compra:'1 bolsa',monto:60,real:false,sem:3},
+  'Miel de abeja':{tipo:'paquete',precio:90,unidad:'frasco 500 g',compra:'1 frasco',monto:90,real:false,sem:8},
+  'Pan integral':{tipo:'paquete',precio:75,unidad:'paquete grande',compra:'1 paquete',monto:75,real:true,nota:'Ticket: "Pan Doble" (Bimbo Doble Fibra) — no dice "integral", pero es el pan de caja más cercano que compraste.',sem:2},
+  'Tortilla de maíz':{tipo:'peso',precio:17,unidad:'kg',compra:'1 kg',monto:17,real:false,sem:1},
 };
 // Ícono + etiqueta por forma de venta — el punto de la reestructura: que de un vistazo sepas si
 // ese producto lo eliges tú por peso (puedes llevar más o menos), viene en presentación cerrada,
@@ -2599,11 +2665,14 @@ function lcPrecioHtml(cat,txt){
     const cls=p.real?'lc-price-real':'lc-price-est';
     const icono=p.real?'✓':'≈';
     const tm=LC_TIPO_META[p.tipo]||{ico:'',label:''};
-    const titulo=p.nota?` title="${p.nota.replace(/"/g,'&quot;')}"`:` title="Se vende ${tm.label}."`;
-    // 2 píldoras separadas: el precio de referencia (comparable entre productos del mismo tipo)
-    // y lo que cuesta la cantidad típica que sí llevas (que es lo que suma el total de abajo).
-    return `<span class="lc-price ${cls}"${titulo}>${icono} $${p.precio}/${p.unidad}</span>`+
-           `<span class="lc-price lc-price-compra" title="Cantidad típica de una compra tuya — es lo que suma el total de arriba.">${tm.ico} ${p.compra} = $${p.monto}</span>`;
+    const base=p.nota?p.nota:`Se vende ${tm.label}.`;
+    // 2026-08-15: se quitó la píldora del precio unitario ("✓ $59/kg"). El dato sigue en
+    // LISTA_COMPRAS_PRECIOS y se usa para calcular, pero mostrarlo obligaba a Adán a hacer la
+    // multiplicación de cabeza — que es justo lo que pidió que hiciera la app. Queda la cantidad
+    // típica (sin el "= $12", que ahora lo dice el subtotal, ya multiplicado por el contador) y
+    // el origen del precio se conserva en el ✓/≈ y en el title.
+    const t=`${base} Precio ${p.real?'de tu ticket de Walmart':'estimado'}: $${p.precio}/${p.unidad}.`;
+    return `<span class="lc-price ${cls}" title="${t.replace(/"/g,'&quot;')}">${icono} ${tm.ico} ${p.compra}</span>`;
   }
   // Resto de categorías (2026-08-12): precio estimado por plataforma, siempre naranja "≈" porque
   // ninguno es un precio en vivo — ver LISTA_COMPRAS_PRECIOS_OTROS.
@@ -2615,51 +2684,130 @@ function lcPrecioHtml(cat,txt){
   return `<span class="lc-price lc-price-est" title="${t}">≈ $${o.amazon} Amazon</span>`+
          `<span class="lc-price lc-price-est" title="${t}">≈ $${o.ml} M. Libre</span>`;
 }
+// ── Cantidades por producto (2026-08-15) ──────────────────────────────────────
+// `dash-lista-compras` guardaba `true` por producto marcado. Ahora guarda un NÚMERO (cuántas
+// veces lo llevas). Los `true` de listas ya guardadas se leen como 1, así que nadie pierde su
+// checklist al actualizar — por eso lcQty() normaliza en vez de asumir número.
+function lcQty(id){
+  const v=rawGet('dash-lista-compras',{})[id];
+  if(v===true) return 1;
+  return (typeof v==='number'&&v>0)?v:0;
+}
+// El contador solo aparece donde se puede calcular un importe: productos de `comida` con entrada
+// en LISTA_COMPRAS_PRECIOS. En skincare/cabello/suplementos/libros no hay `monto` que multiplicar
+// —son compras de 1 pieza cada varios meses— así que ahí el checkbox se queda como estaba.
+function lcTieneQty(cat,txt){ return cat==='comida'&&!!LISTA_COMPRAS_PRECIOS[txt]; }
+function lcSetQty(id,n){
+  const c=rawGet('dash-lista-compras',{});
+  if(n>0) c[id]=n; else delete c[id];
+  rawSet('dash-lista-compras',c);
+}
+// +1 / −1. Al llegar a 0 el producto queda desmarcado (el checkbox y el contador son la misma
+// cosa: "cuántos llevo"), y por eso se re-pinta el renglón completo en vez de solo el número.
+function lcCambiarQty(cat,txt,delta){
+  const id=lcItemId(cat,txt);
+  const n=Math.max(0,Math.min(99,lcQty(id)+delta));
+  lcSetQty(id,n);
+  const fila=document.getElementById(id+'-row');
+  if(fila) fila.outerHTML=lcItemHtml(cat,txt,LC_AMAZON_CATS.includes(cat));
+  renderListaCatTabs();
+  actualizarLcTotal();
+}
+function lcItemHtml(cat,txt,conLinkAmazon){
+  const id=lcItemId(cat,txt);
+  const n=lcQty(id);
+  const checked=n>0?'checked':'';
+  let shopHtml='';
+  if(conLinkAmazon){
+    const q=lcAmazonQuery(cat,txt);
+    shopHtml=`<span class="lc-item-shop">
+      <a href="${lcAmazonUrl(q)}" target="_blank" rel="noopener" class="lc-shop-link" title="Buscar en Amazon">Amazon ↗</a>
+      <a href="${lcMercadoLibreUrl(q)}" target="_blank" rel="noopener" class="lc-shop-link" title="Buscar en Mercado Libre">Mercado Libre ↗</a>
+    </span>`;
+  }
+  let qtyHtml='';
+  if(lcTieneQty(cat,txt)){
+    const p=LISTA_COMPRAS_PRECIOS[txt];
+    const sub=p.monto*Math.max(1,n);
+    qtyHtml=`<span class="lc-qty" title="Cuántos llevas de este producto">
+        <button onclick="lcCambiarQty('${cat}','${txt.replace(/'/g,"\\'")}',-1)" ${n?'':'disabled'} aria-label="Quitar uno">−</button>
+        <span class="lc-qty-n">${n}</span>
+        <button onclick="lcCambiarQty('${cat}','${txt.replace(/'/g,"\\'")}',1)" aria-label="Agregar uno">+</button>
+      </span>
+      <span class="lc-sub${n>1?' mult':''}" title="${n>1?`${n} × $${p.monto}`:'Lo que costará esta cantidad'}">${n?'$'+sub.toLocaleString('es-MX'):''}</span>`;
+    // Aviso de duración solo en lo que NO se acaba en la semana. Es la mitad útil del dato:
+    // ver "dura ~8 sem" junto al aceite de $150 evita volver a meterlo al carro cada sábado.
+    if(p.sem>1) qtyHtml+=`<span class="lc-dura" title="Una compra de este producto te dura aproximadamente ${p.sem} semanas con tu consumo — no hace falta llevarlo cada vez.">dura ~${p.sem} sem</span>`;
+  }
+  return `<div class="lc-item" id="${id}-row">
+    <input type="checkbox" id="${id}" ${checked} onchange="toggleListaItem('${id}','${cat}','${txt.replace(/'/g,"\\'")}')">
+    <label for="${id}" class="lc-item-txt">${txt}</label>
+    ${lcPrecioHtml(cat,txt)}
+    ${qtyHtml}
+    ${shopHtml}
+  </div>`;
+}
 function lcRenderItems(cat,items,checks,conLinkAmazon){
-  return items.map(txt=>{
-    const id=lcItemId(cat,txt);
-    const checked=checks[id]?'checked':'';
-    let shopHtml='';
-    if(conLinkAmazon){
-      const q=lcAmazonQuery(cat,txt);
-      shopHtml=`<span class="lc-item-shop">
-        <a href="${lcAmazonUrl(q)}" target="_blank" rel="noopener" class="lc-shop-link" title="Buscar en Amazon">Amazon ↗</a>
-        <a href="${lcMercadoLibreUrl(q)}" target="_blank" rel="noopener" class="lc-shop-link" title="Buscar en Mercado Libre">Mercado Libre ↗</a>
-      </span>`;
-    }
-    return `<div class="lc-item">
-      <input type="checkbox" id="${id}" ${checked} onchange="toggleListaItem('${id}')">
-      <label for="${id}" class="lc-item-txt">${txt}</label>
-      ${lcPrecioHtml(cat,txt)}
-      ${shopHtml}
-    </div>`;
-  }).join('');
+  return items.map(txt=>lcItemHtml(cat,txt,conLinkAmazon)).join('');
 }
 // Suma cuánto costará lo ya marcado en el checklist de "comida" — pedido explícito: "las
 // cosas que marque en el checklist debemos sumar la cantidad total de cuanto me costara".
 // Usa LISTA_COMPRAS_PRECIOS[txt].monto (compra típica), no `precio` (unitario/por kg) — ver
 // nota en esa constante. Solo tiene sentido en "comida", la única categoría con precio.
+// 2026-08-15: ahora multiplica por el contador de cada producto. `piezas` (suma de cantidades)
+// y `n` (productos distintos) son números distintos a propósito — 3 aguacates y 2 papayas son
+// 5 piezas de 2 productos, y en el súper las dos cifras dicen cosas distintas.
+const LC_SEM_MES=4.33; // semanas por mes (52/12), para proyectar el gasto recurrente
+// Devuelve las 2 cifras que de verdad significan algo, más el desglose por pasillo:
+//   ticket  — lo que pagas HOY en caja por lo marcado.
+//   mensual — lo que te cuesta AL MES sostener eso, cada producto prorrateado por lo que dura
+//             (`sem`). Un aceite de $150 que dura 8 semanas no son $150/mes, son ~$81.
 function lcTotalComida(checks){
-  const items=Object.values(LISTA_COMPRAS.comida).flat();
-  let total=0,n=0;
-  items.forEach(txt=>{
-    if(!checks[lcItemId('comida',txt)]) return;
-    const p=LISTA_COMPRAS_PRECIOS[txt];
-    if(p&&typeof p.monto==='number'){ total+=p.monto; n++; }
-  });
-  return {total,n};
+  let ticket=0,mensual=0,n=0,piezas=0;
+  const porPasillo={};
+  for(const [pasillo,items] of Object.entries(LISTA_COMPRAS.comida)){
+    let sub=0;
+    items.forEach(txt=>{
+      const q=lcQty(lcItemId('comida',txt));
+      if(!q) return;
+      const p=LISTA_COMPRAS_PRECIOS[txt];
+      if(!p||typeof p.monto!=='number') return;
+      const imp=p.monto*q;
+      ticket+=imp; sub+=imp; n++; piezas+=q;
+      mensual+=imp*(LC_SEM_MES/(p.sem||1));
+    });
+    if(sub) porPasillo[pasillo]=sub;
+  }
+  return {total:ticket,ticket,mensual:Math.round(mensual),n,piezas,porPasillo};
 }
 function lcTotalBarHtml(checks){
-  const {total,n}=lcTotalComida(checks);
-  const txt=n?`🧮 Total marcado: $${total.toLocaleString('es-MX')} (${n} producto${n===1?'':'s'})`:'🧮 Total marcado: $0 — no has marcado nada todavía';
-  return `<span id="lcTotalBar" class="lc-total" title="Suma un monto estimado por cada producto marcado (cantidad típica de una compra, no las cantidades exactas que tú elijas ese día) — ver detalle en readme_dashboard.md.">${txt}</span>`;
+  const {ticket,mensual,n,piezas}=lcTotalComida(checks);
+  if(!n) return `<span id="lcTotalBar" class="lc-total lc-total-vacio">🧮 Marca lo que vas a llevar y aquí sale el ticket</span>`;
+  const detalle=`${n} producto${n===1?'':'s'}${piezas>n?` · ${piezas} piezas`:''}`;
+  // Las 2 cifras juntas y etiquetadas: el ticket es lo que sacas de la cartera hoy, el mensual
+  // es lo que ese carrito implica si lo sostienes — que es el número que importa para el
+  // presupuesto, y el que antes no existía en ninguna parte.
+  return `<span id="lcTotalBar" class="lc-total">
+    <span class="lc-total-main" title="Lo que pagas hoy en caja por lo marcado. Precios de tu ticket de Walmart del 10-ago-2026 (✓) o investigados (≈) — varían por sucursal y temporada.">🧮 Ticket: <b>$${ticket.toLocaleString('es-MX')}</b> <small>${detalle}</small></span>
+    <span class="lc-total-mes" title="Lo que cuesta AL MES sostener este carrito, prorrateando cada producto por lo que dura: el aceite de oliva dura ~8 semanas, el jitomate ~1. No es el ticket × 4.">📅 Al mes: <b>$${mensual.toLocaleString('es-MX')}</b></span>
+  </span>`;
 }
 // Refresca solo el número del total (llamado desde toggleListaItem, sin re-pintar toda la
 // lista — mismo motivo que renderListaCatTabs ahí: no perder scroll/foco al marcar un check).
 function actualizarLcTotal(){
   const el=document.getElementById('lcTotalBar');
   if(!el) return;
-  el.outerHTML=lcTotalBarHtml(rawGet('dash-lista-compras',{}));
+  const checks=rawGet('dash-lista-compras',{});
+  el.outerHTML=lcTotalBarHtml(checks);
+  // Los subtotales por pasillo se refrescan aquí y no en el render completo: cambiar una
+  // cantidad solo repinta su renglón (para no perder scroll ni foco), así que el encabezado
+  // del pasillo se quedaría con la cifra vieja si no se actualiza aparte.
+  if(listaCatSel!=='comida') return;
+  const {porPasillo}=lcTotalComida(checks);
+  Object.keys(LISTA_COMPRAS.comida).forEach(pasillo=>{
+    const s=document.getElementById('lcsub-'+lcSlug(pasillo));
+    if(s) s.textContent=porPasillo[pasillo]?'$'+porPasillo[pasillo].toLocaleString('es-MX'):'';
+  });
 }
 // Vacía los marcados de la categoría activa — pedido explícito: "un boton para borrar la
 // seleccion de productos cuando vaya al super de nuevo" (arrancar una lista nueva sin
@@ -2687,29 +2835,38 @@ function renderListaCompras(){
   // el resto explica que los 2 precios son por plataforma y siempre aproximados.
   const leyenda=esComida
     ? `<div class="lc-price-leyenda">
-         <span class="lc-price lc-price-real">✓ $</span> precio real de tu ticket de Walmart &nbsp;·&nbsp;
-         <span class="lc-price lc-price-est">≈ $</span> estimado &nbsp;·&nbsp;
-         <span class="lc-price lc-price-compra">⚖️ cant. = $</span> lo que cuesta la cantidad típica (es lo que suma el total)
-         &nbsp;·&nbsp; ⚖️ por peso · 🔢 por pieza · 📦 por paquete
+         <span class="lc-price lc-price-real">✓</span> cantidad de tu ticket de Walmart &nbsp;·&nbsp;
+         <span class="lc-price lc-price-est">≈</span> estimada &nbsp;·&nbsp;
+         ⚖️ por peso · 🔢 por pieza · 📦 por paquete &nbsp;·&nbsp;
+         usa <b style="color:var(--text2)">− +</b> para llevar más de uno &nbsp;·&nbsp;
+         <span class="lc-dura">dura ~N sem</span> lo que no hace falta comprar cada vez — por eso <b style="color:var(--text2)">"Al mes"</b> no es el ticket ×4
        </div>`
     : `<div class="lc-price-leyenda">
          <span class="lc-price lc-price-est">≈ $</span> precio de lista aproximado (ago-2026) en cada plataforma — cambia seguido, toca el nombre del producto para ver el precio real del momento
        </div>`;
   const html=Array.isArray(data)
     ? `<div>${lcRenderItems(listaCatSel,data,checks,conLinkAmazon)}</div>`
-    : Object.entries(data).map(([pasillo,items])=>`
-      <div class="lc-aisle">
-        <div class="lc-aisle-title">${pasillo}</div>
+    : Object.entries(data).map(([pasillo,items])=>{
+        // Subtotal por pasillo (2026-08-15) — recorres el súper por pasillos, así que saber
+        // que Carnes ya va en $240 sirve mientras estás ahí parado, no al llegar a la caja.
+        const sub=esComida?(lcTotalComida(checks).porPasillo[pasillo]||0):0;
+        return `<div class="lc-aisle">
+        <div class="lc-aisle-title">${pasillo}<span class="lc-aisle-sub" id="lcsub-${lcSlug(pasillo)}">${sub?'$'+sub.toLocaleString('es-MX'):''}</span></div>
         <div class="lc-grid">${lcRenderItems(listaCatSel,items,checks,conLinkAmazon)}</div>
-      </div>`).join('');
+      </div>`;}).join('');
   document.getElementById('listaCompraBody').innerHTML=barra+leyenda+html;
 }
 function verListaCat(cat){ listaCatSel=cat; renderListaCompras(); }
-function toggleListaItem(id){
-  const checks=rawGet('dash-lista-compras',{});
+// El checkbox pone la cantidad en 1 (o en 0 al desmarcar). En los productos con contador se
+// re-pinta el renglón para que el "− 0 +" y el subtotal queden en sync con la casilla; en el
+// resto sigue funcionando igual que antes, sin repintar nada.
+function toggleListaItem(id,cat,txt){
   const cb=document.getElementById(id);
-  if(cb&&cb.checked) checks[id]=true; else delete checks[id];
-  rawSet('dash-lista-compras',checks);
+  lcSetQty(id, cb&&cb.checked?1:0);
+  if(cat&&txt&&lcTieneQty(cat,txt)){
+    const fila=document.getElementById(id+'-row');
+    if(fila) fila.outerHTML=lcItemHtml(cat,txt,LC_AMAZON_CATS.includes(cat));
+  }
   renderListaCatTabs(); // refresca el "X/Y" de la pestaña sin re-pintar la lista completa (pierde el scroll/foco si no)
   actualizarLcTotal();
 }
@@ -3797,15 +3954,29 @@ const PRIORIDAD_EXCLUIDAS = ['ventas', 'marketing'];
 // todos los libros salen de APRENDIZAJE[].recursos, que ya vivían en el proyecto.
 const didiSpo = q => `https://open.spotify.com/search/${encodeURIComponent(q)}`;
 const didiYt  = q => `https://www.youtube.com/results?search_query=${encodeURIComponent(q)}`;
+// Apple (2026-08-15, "ponme audiolibros tambien los links de apple"). Apple separa el catálogo
+// en 2 apps distintas, así que el link depende del tipo: los audiolibros van a Apple Books y los
+// podcasts a Apple Podcasts. Mandar un audiolibro a Podcasts (o al revés) da 0 resultados, por
+// eso didiApple() recibe el tipo en vez de una sola URL para todo.
+const didiApB = q => `https://books.apple.com/mx/search?term=${encodeURIComponent(q)}`;
+const didiApP = q => `https://podcasts.apple.com/mx/search?term=${encodeURIComponent(q)}`;
+const didiApple = (tipo,q) => tipo==='pod' ? didiApP(q) : didiApB(q);
 
 // Horas reales al volante, derivadas de RUTINA_TASKS tras el reparto del 2026-08-15:
 // L-V (50min + 40min + 40min) × 5 = ~10h50 · Sábado ~10h · Domingo ~11h20.
+// Agrupados en 2 bloques (3 tramos de diario + 2 turnos de fin de semana) en vez de 5 tarjetas
+// sueltas: el reparto 3+2 cuadra visualmente y de paso agrupa por lo que de verdad las separa
+// —tramos cortos vs. turnos largos—, que es justo el criterio para elegir qué poner.
 const DIDI_SLOTS=[
-  {d:'Lun–Vie · 07:40', t:'~50 min', q:'Camino a ALTEN con direccionamiento', s:'Un capítulo de audiolibro. Es tu trayecto más largo entre semana y arrancas el día con la cabeza fresca — aquí va lo más denso.'},
-  {d:'Lun–Vie · 17:00', t:'~40 min', q:'Camino al gym en Buenavista', s:'Un episodio de podcast. Vienes saliendo de ALTEN y no aguantas algo pesado; que sea conversación, no manual.'},
-  {d:'Lun–Vie · 19:20', t:'~40 min', q:'Sesión corta de la noche', s:'Sigue el mismo podcast del trayecto anterior — no arranques algo nuevo a esta hora.'},
-  {d:'Sábado · 09:00 y 17:00', t:'~10h', q:'Los dos turnos largos', s:'Un audiolibro completo cabe aquí. La mayoría dura 6-9h: el sábado solo te alcanza para terminar uno.'},
-  {d:'Domingo · 09:00 y 14:40', t:'~11h20', q:'Los dos turnos largos', s:'Otro audiolibro completo, o termina el del sábado y empieza el siguiente.'},
+  {g:'Entre semana · tramos cortos', cols:'s3', items:[
+    {d:'Lun–Vie · 07:40', t:'~50 min', q:'Camino a ALTEN con direccionamiento', s:'Un capítulo de audiolibro. Es tu trayecto más largo entre semana y arrancas el día con la cabeza fresca — aquí va lo más denso.'},
+    {d:'Lun–Vie · 17:00', t:'~40 min', q:'Camino al gym en Buenavista', s:'Un episodio de podcast. Vienes saliendo de ALTEN y no aguantas algo pesado; que sea conversación, no manual.'},
+    {d:'Lun–Vie · 19:20', t:'~40 min', q:'Sesión corta de la noche', s:'Sigue el mismo podcast del trayecto anterior — no arranques algo nuevo a esta hora.'},
+  ]},
+  {g:'Fin de semana · turnos largos', cols:'s2', items:[
+    {d:'Sábado · 09:00 y 17:00', t:'~10h', q:'Los dos turnos largos', s:'Un audiolibro completo cabe aquí. La mayoría dura 6-9h: el sábado solo te alcanza para terminar uno.'},
+    {d:'Domingo · 09:00 y 14:40', t:'~11h20', q:'Los dos turnos largos', s:'Otro audiolibro completo, o termina el del sábado y empieza el siguiente.'},
+  ]},
 ];
 
 // Ordenado por prioridad real = el valor de SK de menor a mayor, ponderado. Ventas primero
@@ -3842,20 +4013,40 @@ const DIDI_AUDIO=[
 ];
 
 // Recursos en español — no son un "nivel fácil", son para los días en que el inglés cansa.
+// Ampliado el 2026-08-15 ("añademe tambien podcast o audiolibros en español"): de 2 a 8, con
+// audiolibros y no solo podcasts. Los 3 audiolibros son ediciones en español de títulos que ya
+// estaban en el catálogo en inglés, así que no se añadió ningún autor nuevo — es el mismo
+// contenido en el idioma en que no tiene que traducir mientras maneja.
 const DIDI_ESPANOL=[
-  {tipo:'pod', n:'Libros para Emprendedores — Luis Ramos', d:'Resúmenes de un libro de negocios por episodio, en español. La forma más rápida de cubrir mucho terreno mientras manejas.', q:'Libros para Emprendedores Luis Ramos'},
-  {tipo:'pod', n:'Cracks Podcast — Oso Trava', d:'Entrevistas a emprendedores, mexicano. Contexto de negocio en México, que es donde tú vas a vender.', q:'Cracks Podcast Oso Trava'},
+  {tipo:'audio', n:'Psicología del Dinero — Morgan Housel', d:'El de Finanzas, en su edición en español. Si solo escuchas uno de esta lista, que sea este: es el más fácil de seguir sin cuaderno.', q:'Psicologia del Dinero Morgan Housel audiolibro'},
+  {tipo:'audio', n:'Influencia — Robert Cialdini', d:'El de Ventas (tu 15/100) en español. Los 6 principios pierden poco en la traducción porque son historias.', q:'Influencia Robert Cialdini audiolibro español'},
+  {tipo:'audio', n:'Padre Rico, Padre Pobre — Robert Kiyosaki', d:'Discutido y simplificado, pero es el que instala la distinción activo/pasivo — la misma que separa tu deuda del BYD de tu portafolio en GBM.', q:'Padre Rico Padre Pobre Kiyosaki audiolibro'},
+  {tipo:'pod', n:'Libros para Emprendedores — Luis Ramos', d:'Resúmenes de un libro de negocios por episodio. La forma más rápida de cubrir mucho terreno mientras manejas.', q:'Libros para Emprendedores Luis Ramos'},
+  {tipo:'pod', n:'Cracks Podcast — Oso Trava', d:'Entrevistas a emprendedores, mexicano. Contexto de negocio en México, que es donde vas a vender.', q:'Cracks Podcast Oso Trava'},
+  {tipo:'pod', n:'Dementes — Diego Barrazas', d:'Historias de fundadores mexicanos contadas largo. Encaja en los turnos de fin de semana.', q:'Dementes podcast Diego Barrazas'},
+  {tipo:'pod', n:'Tengo un Plan — Sergio Beguería y Juan Domínguez', d:'Finanzas personales e inversión en español, sin jerga. El complemento natural de tu bloque de GBM de los lunes.', q:'Tengo un Plan podcast finanzas'},
+  {tipo:'pod', n:'Whitepaper — Jorge Combe', d:'Negocios y tecnología en México. Útil para Marketing e IA sin cambiar de idioma.', q:'Whitepaper podcast Jorge Combe'},
 ];
 
 const DIDI_TAG={audio:{c:'didi-t-audio',l:'AUDIOLIBRO'},pod:{c:'didi-t-pod',l:'PODCAST'},yt:{c:'didi-t-yt',l:'YOUTUBE'}};
 
 function didiItemHtml(it){
   const tag=DIDI_TAG[it.tipo];
+  // Apple se omite en los items de tipo 'yt': son canales de YouTube (Alex Hormozi,
+  // DeepLearning.AI), y un canal no existe ni en Apple Books ni en Apple Podcasts — el link
+  // llevaría a una búsqueda vacía, que es peor que no ofrecerlo.
+  const links=[
+    `<a href="${didiSpo(it.q)}" target="_blank" rel="noopener">Spotify ↗</a>`,
+    it.tipo==='yt' ? '' : `<a class="didi-l-ap" href="${didiApple(it.tipo,it.q)}" target="_blank" rel="noopener" title="${it.tipo==='pod'?'Apple Podcasts':'Apple Books'}">Apple ↗</a>`,
+    `<a href="${didiYt(it.q)}" target="_blank" rel="noopener">YouTube ↗</a>`,
+  ].join('');
   return `<div class="didi-item">
     <span class="didi-tag ${tag.c}">${tag.l}</span>
     <div class="didi-item-b">
-      <span class="didi-item-n">${it.n}</span>
-      <span class="didi-links"><a href="${didiSpo(it.q)}" target="_blank" rel="noopener">Spotify ↗</a><a href="${didiYt(it.q)}" target="_blank" rel="noopener">YouTube ↗</a></span>
+      <div class="didi-item-top">
+        <span class="didi-item-n">${it.n}</span>
+        <span class="didi-links">${links}</span>
+      </div>
       <div class="didi-item-d">${it.d}</div>
     </div>
   </div>`;
@@ -3881,10 +4072,13 @@ function abrirDidi(){
 
   const slots=`<div class="didi-sec-t">🕐 Qué cabe en cada trayecto</div>
     <div class="didi-note">Tus bloques reales de Didi, tomados de tu rutina. La regla es simple: <b>lo denso va en la mañana y en los turnos largos, lo ligero en los tramos cortos.</b></div>
-    <div class="didi-slots">${DIDI_SLOTS.map(s=>`<div class="didi-slot">
-      <div class="didi-slot-h">${s.d} · <span>${s.t}</span></div>
-      <div class="didi-slot-d"><b style="color:var(--text2)">${s.q}</b> — ${s.s}</div>
-    </div>`).join('')}</div>`;
+    ${DIDI_SLOTS.map(g=>`<div class="didi-slot-group">
+      <div class="didi-group-t">${g.g}</div>
+      <div class="didi-slots ${g.cols}">${g.items.map(s=>`<div class="didi-slot">
+        <div class="didi-slot-h">${s.d} · <span>${s.t}</span></div>
+        <div class="didi-slot-d"><b style="color:var(--text2)">${s.q}</b> — ${s.s}</div>
+      </div>`).join('')}</div>
+    </div>`).join('')}`;
 
   const skills=DIDI_AUDIO.map(g=>{
     const s=SK.find(x=>x.id===g.sk); if(!s) return '';
@@ -3902,9 +4096,10 @@ function abrirDidi(){
 
   body.innerHTML=`${slots}
     <div class="didi-sec-t">🎯 Por habilidad — de la más débil a la menos débil</div>
-    ${skills}
+    <div class="didi-skills">${skills}</div>
     <div class="didi-sec-t">🇲🇽 En español, para cuando el inglés canse</div>
-    <div class="didi-items" style="margin-bottom:4px">${DIDI_ESPANOL.map(didiItemHtml).join('')}</div>
+    <div class="didi-note">Los 3 audiolibros son la edición en español de títulos que ya están arriba — mismo contenido, sin traducir de cabeza mientras manejas.</div>
+    <div class="didi-skills"><div class="didi-skill" style="grid-column:auto"><div class="didi-items">${DIDI_ESPANOL.filter(x=>x.tipo==='audio').map(didiItemHtml).join('')}</div></div><div class="didi-skill" style="grid-column:auto"><div class="didi-items">${DIDI_ESPANOL.filter(x=>x.tipo!=='audio').map(didiItemHtml).join('')}</div></div></div>
     <div class="didi-warn">
       <b>Tres cosas antes de darle play:</b><br>
       • <b>Tu inglés está en 80/100.</b> Escuchar en inglés te paga doble: la habilidad del audiolibro y el idioma que necesitas para la maestría en Alemania. No busques la versión traducida si puedes con la original.<br>

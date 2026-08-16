@@ -2039,3 +2039,129 @@ Verificado además: el overlay abre y cierra (✕, clic fuera, Escape), renderiz
 ### Ojo al futuro
 
 `DIDI_AUDIO` referencia `SK` por id (`ventas`, `finanzas`, …) y pinta el valor en vivo, así que si Adán mueve un valor del radar el catálogo se reordena solo. Pero **el texto del campo `why` de cada habilidad está escrito a mano y menciona el número** ("20/100. Tu diagnóstico dice…"): si el valor cambia, ese texto hay que actualizarlo a mano. Mismo tipo de desincronización que ya documentada entre `SK` y `RUTINA_TASKS`.
+
+## El slide de Habilidades deja el morado, y el catálogo se redistribuye (2026-08-15)
+
+Dos correcciones sobre lo entregado el mismo día: *"me gusta el contenido aqui pero el color morado no me gusta y visualmente se me hace mucho"* y, sobre el catálogo, *"no le metas mas, solo que ordenadamente o como lo distribuiste no se me hace bien"*.
+
+### El color: no era solo el tono
+
+`theme-skills` usaba `#b06eff` + `#ff6bd6`, **los 2 tonos más saturados de las 9 pantallas**, pintando las 2 manchas de 58vmax de `.slide::before/::after` al 20% de opacidad. Encima, `#skillBars` ya trae su propia escala rojo→verde. Eran dos capas de color fuerte compitiendo por la misma pantalla, y por eso "se me hace mucho" apuntaba a la intensidad tanto como al tono.
+
+Se renderizaron **4 variantes en su tema oscuro** (no descripciones: capturas reales del slide) y se publicaron como artifact para que comparara:
+
+| Variante | Colores | Resultado |
+|---|---|---|
+| Actual | `#b06eff` + `#ff6bd6`, op .20 | el problema |
+| A · Acero + teal | `#4a7fb5` + `#2a9d8f`, op .14 | recomendada; descartada por él |
+| B · Grafito frío | `#3f4a6b` + `#2c6e7e`, op .16 | descartada al verla: dejaba el texto lavado |
+| **C · Verde bosque** | **`#2d6a4f` + `#40916c`, op .16** | **elegida** |
+| D · Mismo morado tenue | `#b06eff` + `#ff6bd6`, op .10 | descartada |
+
+La opacidad baja a `.16` **solo en este slide** (`.theme-skills::before/::after`), sin tocar la regla global de `.slide`. El tema claro ya tenía su propio `.12` y no se toca.
+
+### La distribución del catálogo: 3 arreglos, 0 contenido nuevo
+
+Pidió explícitamente **no agregar nada** —se habían propuesto alemán, Copy y un orden de arranque, y los rechazó— solo reordenar. Los 20 recursos y 40 links son exactamente los mismos.
+
+**1. Las franjas horarias estaban desbalanceadas.** Eran 5 tarjetas en `auto-fit minmax(215px,1fr)`: entraban 4 en la primera fila y **Domingo quedaba huérfano** en una segunda fila medio vacía. Ahora van en 2 grupos con encabezado —*Entre semana · tramos cortos* (3 en fila) y *Fin de semana · turnos largos* (2 en fila)—, que además agrupa por el criterio que de verdad las separa: la duración es lo que decide si cabe un podcast o un audiolibro.
+
+**2. Las 5 habilidades eran una tira vertical.** Con 1100px de ancho de overlay, apilarlas obligaba al doble de scroll. Ahora `#didi-skills` es un grid de 2 columnas con **Ventas a ancho completo** (`grid-column:1/-1`): es 15/100 con peso ×1.5 —la prioridad absoluta— y la que más recursos trae, así que la jerarquía visual coincide con la real en vez de pelearse con ella. Las 4 restantes quedan en 2×2 respetando el orden por debilidad.
+
+**3. Los links partían el nombre del libro.** `Spotify ↗ YouTube ↗` iba pegado al final del título, así que la vista chocaba con ellos antes de terminar de leer *"The Little Book of Common Sense Investing — John Bogle"*. Ahora hay un `.didi-item-top` en flex con los links empujados a la derecha (`margin-left:auto`): el título se lee limpio y los links quedan en una columna alineada.
+
+Se añadió un breakpoint en 820px que devuelve todo a 1 columna.
+
+### Verificación (Playwright, tema oscuro)
+
+2 grupos de franjas con sus 5 tramos, habilidades en grid de `520.5px 520.5px`, Ventas confirmada a ancho completo, 20 items y 40 links intactos, cero errores de consola. El slide sigue cabiendo igual que antes del cambio de color (1920×1080 sobran 265px, 1440×900 sobran 76px; el desborde preexistente de ~43px en 1366×768 y 1280×800 no se movió, ver la sección anterior).
+
+Un 404 que apareció en una corrida no se reprodujo en carga limpia **ni en la versión de `git HEAD`** — era de red, no del código.
+
+## La Lista del Súper aprende a contar, y el catálogo de Didi suma Apple y español (2026-08-15)
+
+### Lista de Compras: fuera el precio unitario, dentro el contador
+
+Pedido: *"no me pongas el precio unitario, eso calculalo tu, mejor dame la opcion que en cosas asi como fruta, tenga la opcion de añadir el mismo producto, osea un contador y al final tu me das el precio a prox"*.
+
+Cada renglón mostraba **2 píldoras de precio**: la de referencia (`✓ $59/kg`) y la de la compra típica (`⚖️ ≈200 g = $12`). La primera obligaba a multiplicar de cabeza en el pasillo — justo el trabajo que la app debería hacer. Y no había forma de decir "llevo 3 aguacates": el checklist era binario, así que el total mentía en cuanto compraba más de uno de algo.
+
+| Antes | Después |
+|---|---|
+| `Aguacate` `✓ $59/kg` `⚖️ ≈200 g (1 pza) = $12` | `Aguacate` `✓ ⚖️ ≈200 g (1 pza)` `[− 3 +]` `$36` |
+
+El precio unitario **no se borró del modelo**: `LISTA_COMPRAS_PRECIOS[].precio` sigue ahí, se usa para calcular y ahora vive en el `title` del renglón junto al origen del dato. Lo que desapareció es la obligación de leerlo.
+
+**El dato persistido cambió de tipo.** `dash-lista-compras` guardaba `true` por producto; ahora guarda un **número**. `lcQty()` normaliza `true → 1`, así que las listas ya guardadas en el navegador de Adán siguen funcionando sin migración ni bandera.
+
+**Dónde aparece el contador**: solo en `comida` con entrada en `LISTA_COMPRAS_PRECIOS` (`lcTieneQty()`) — 30 productos. En skincare/cabello/suplementos/libros no hay `monto` que multiplicar (son compras de 1 pieza cada varios meses), así que ahí el checkbox se queda igual. Eso responde al *"solo hazlo en productos que son parecidos y puedes hacerlo"*.
+
+**Detalles de comportamiento**:
+- El checkbox y el contador son la misma cosa: marcar pone 1, bajar a 0 desmarca. Por eso `lcCambiarQty()` repinta el renglón entero (`#<id>-row`) en vez de solo el número — si no, la casilla y el contador se desincronizaban.
+- El `−` va `disabled` en 0, y el tope es 99.
+- El subtotal del renglón se pinta en verde cuando lleva más de 1, para ver de un vistazo dónde se va el ticket.
+- La barra de arriba pasó de *"Total marcado"* a **"Aproximado del ticket"**, y distingue **productos** de **piezas**: 3 aguacates y 2 papayas son *"2 productos · 5 piezas"*. Antes decía "2 productos" y sumaba $12+$29 aunque llevara cinco cosas.
+- Se reescribió la leyenda, que seguía explicando la píldora de precio unitario que ya no existe.
+
+### Didi: Apple en todos los recursos y el español pasa de 2 a 8
+
+Pedido: *"ponme audiolibros tambien los links de apple y añademe tambien podcast o audiolibros en español"*.
+
+**Apple son 2 destinos, no uno.** Los audiolibros viven en Apple Books y los podcasts en Apple Podcasts; mandar uno al buscador del otro da 0 resultados. Por eso `didiApple(tipo,q)` decide según el tipo del recurso — `books.apple.com/mx/search` o `podcasts.apple.com/mx/search`, ambos con dominio `/mx/`. **Se omite en los items de tipo `yt`** (Alex Hormozi, DeepLearning.AI): son canales de YouTube y no existen en ninguna de las dos tiendas, así que el link llevaría a una búsqueda vacía — peor que no ofrecerlo.
+
+**Español: de 2 a 8 recursos**, ahora con audiolibros y no solo podcasts. Los 3 audiolibros (Psicología del Dinero, Influencia, Padre Rico Padre Pobre) son **ediciones en español de títulos que ya estaban en el catálogo en inglés**, salvo Kiyosaki: mismo contenido, sin traducir de cabeza mientras maneja. Los 5 podcasts suman Dementes, Tengo un Plan y Whitepaper a los 2 que ya había. La sección se pinta en 2 columnas (audiolibros | podcasts) reusando el `.didi-skills` que ya se había creado para las habilidades.
+
+### Verificación (Playwright, tema oscuro)
+
+**Lista**: 30 contadores, **cero precios unitarios visibles** (regex sobre el texto renderizado), y la aritmética comprobada de punta a punta — marcar Aguacate da `$12 (1 producto)`, subirlo a 3 da `$36 (1 producto · 3 piezas)` y el subtotal del renglón dice `$36`.
+
+**Didi**: 26 recursos (20 + 6 nuevos), **76 links**. Apple aparece en 24 — 13 Books + 11 Podcasts — que son exactamente los 26 menos los 2 canales de YouTube. Sección en español con 8 items. Links verificados uno de cada tipo: `books.apple.com/mx/search?term=Influence Robert Cialdini` y `podcasts.apple.com/mx/search?term=The Game Alex Hormozi podcast`.
+
+Cero errores de consola en ambas pantallas.
+
+## La Lista del Súper se vuelve realista: ticket de hoy vs. costo al mes (2026-08-15)
+
+*"mejora lo de compras si es necesario, lo quiero lo mas completa y realista posible"*.
+
+La auditoría de los datos salió limpia en lo obvio —**30 productos de comida, los 30 con precio**, 11 del ticket real de Walmart y 19 investigados, sin huecos— así que el problema no era falta de datos. Era que **el total sumaba cosas que no son comparables**.
+
+### El número que no significaba nada
+
+Marcar toda la lista daba **$1,206**. Pero ahí convivían:
+
+| Producto | Importe | Cuánto dura |
+|---|---|---|
+| Aceite de oliva 500 ml | $150 | ~8 semanas |
+| Miel de abeja 500 g | $90 | ~8 semanas |
+| Arroz 1 kg | $28 | ~4 semanas |
+| Jitomate ≈380 g | $6 | ~1 semana |
+
+$1,206 no era un ticket semanal, ni un gasto mensual, ni nada. Y al proyectarlo mentalmente el error se multiplica: ticket × 4 asume que compras aceite de oliva cada sábado.
+
+### `sem`: cuánto dura cada compra
+
+Campo nuevo en `LISTA_COMPRAS_PRECIOS` — semanas que dura esa `compra` típica con su consumo real, estimado desde el tamaño de presentación y **sus metas de `salud.html` (3115 kcal / 186 g de proteína al día**, que es mucho: por eso las carnes duran 1 semana y el aceite 8).
+
+Con eso, la barra pasa de una cifra a dos:
+
+- **🧮 Ticket** — lo que pagas hoy en caja.
+- **📅 Al mes** — lo que cuesta sostener ese carrito, cada producto prorrateado por `4.33 / sem`.
+
+Ejemplo real verificado: 1 aceite + 3 aguacates + 1 pechuga = **ticket $252**, pero **al mes $523**, no $1,091. El aceite aporta $81/mes de sus $150, los aguacates y la pechuga aportan su importe completo ×4.33.
+
+### Otros dos arreglos de la misma pasada
+
+**Subtotal por pasillo**, alineado a la derecha de cada encabezado. Recorres el súper por pasillos, así que saber que Carnes ya va en $66 sirve mientras estás parado ahí, no al llegar a la caja. Se refresca desde `actualizarLcTotal()` y no desde el render completo, porque cambiar una cantidad solo repinta su renglón (para no perder scroll ni foco) y si no el encabezado se quedaba con la cifra vieja.
+
+**Aviso `dura ~N sem`** en los 11 productos que no se acaban en la semana. Es la mitad útil del dato: ver "dura ~8 sem" junto al aceite de $150 evita volver a meterlo al carrito cada sábado.
+
+La barra vacía también cambió: en vez de *"Total marcado: $0 — no has marcado nada todavía"* ahora invita (*"Marca lo que vas a llevar y aquí sale el ticket"*).
+
+### Lo que se evaluó y se descartó
+
+- **Cruzar con el presupuesto de Finanzas**: `Finanzas.html` tiene una sección de presupuestos, pero `budgets:[]` arranca vacío y no hay una categoría de súper definida. Cruzar contra un presupuesto inexistente habría sido inventar el número de referencia.
+- **Cuánta proteína cubre el carrito**: sería el complemento natural de la meta de 186 g/día, pero las macros de `comida.html` están **por receta** (`macros:{cal,prot,carbs,gra}` en cada platillo), no por ingrediente. Calcularlo exigía inventar una tabla nutricional por producto, y además duplicaría en el Dashboard una responsabilidad que ya es de `comida.html`.
+
+### Verificación (Playwright)
+
+Aritmética comprobada contra el cálculo a mano: `150 + 12×3 + 66 = $252` de ticket, y `150×(4.33/8) + 36×4.33 + 66×4.33 = $523` al mes — la app da exactamente esos dos números. Subtotales por pasillo correctos (Frutas $36 · Carnes $66 · Abarrotes $150), 11 avisos de duración, cero errores de consola.
