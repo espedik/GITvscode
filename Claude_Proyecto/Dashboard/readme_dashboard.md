@@ -2294,3 +2294,37 @@ En la Lista de Compras van marcados con 🩺 **en el propio nombre**, porque esa
 Kit: 34 productos, 7 bolsas, 68 links, 6 pestañas de categoría. Cabello: 7 productos con dutasteride y oral presentes, 2 marcados con 🩺. Gym: 18 kg (40 lb) y 22.5 kg. Sintaxis OK y divs balanceados en `dashboard.html`, `cuidadopersonal.html` y `Coach_v2.html`; cero errores de consola.
 
 **Pendiente del pedido**: el kit se pidió "con imágenes" y por ahora lleva links de compra, no fotos — los links sí llevan a la imagen real del producto en la tienda, pero no es lo mismo.
+
+## 2 bugs reportados: los links de compra y el overlay de Didi en celular (2026-08-15)
+
+### `lcAmazonQuery()` generaba búsquedas basura — 21 de 55 rotas
+
+Adán: *"esto ni me abre lo de mercado libre ni amazon: Minoxidil + Dutasteride tópico (fórmula magistral — 🩺 pide receta al dermatólogo)"*.
+
+La función partía el texto por `' — '` **sin quitar antes los paréntesis**, así que se quedaba con lo que venía después del guion — que en ese producto vive *dentro* del paréntesis. La búsqueda que abría era literalmente **`"🩺 pide receta al dermatólogo)"`**.
+
+Al auditar las 5 categorías con link salieron **21 queries defectuosas de 55**, y el fallo era **preexistente** — no solo de los productos nuevos:
+
+| Fallo | Ejemplo real |
+|---|---|
+| Paréntesis buscado tal cual | `"Chanclas de ducha (hotel, gym, alberca de Fitsi)"` |
+| `' — '` dentro del paréntesis | `"se degrada)"` · `"el aerosol da problemas en avión)"` |
+| `' o '` dentro del paréntesis | `"Magnesio (glicinato"` · `"Analgésico (paracetamol"` — cortados a la mitad |
+
+El arreglo es de orden de operaciones: **primero se quitan los paréntesis** (son aclaraciones para él, nunca parte del nombre comercial) y los emojis, y solo después se separa el prefijo de categoría y las alternativas de `' o '`.
+
+Resultado: **0 de 99 queries defectuosas** (las 99 incluyen libros). `"Minoxidil + Dutasteride tópico"`, `"Magnesio"`, `"Darrow Doctar"`, `"Desodorante en barra"`.
+
+### El overlay de "Qué escuchar en Didi" no se veía en celular
+
+*"esa seccion no se ve nada bien en el celular"*. Medido en 390px y 360px, y era peor de lo que parecía: **el `@media` que escribí para móvil no estaba aplicando**, porque lo puse **antes** de las reglas base y perdía por orden de cascada. Consecuencia: en un card de 359px el grid seguía en **2 columnas de 184px**, y las 3 franjas de "entre semana" quedaban en columnas de ~100px con el texto partido en tiras de una palabra por línea.
+
+El bloque móvil se movió al final y se amplió:
+
+- **Overlay a pantalla completa** (`padding:0`, card al 100% sin bordes redondeados): 4vw de margen a cada lado es tirar ancho que en 390px no sobra.
+- **Todo a una columna** — habilidades, franjas de 3 y de 2.
+- **La ✕ ya no se encima con el título** (`padding-right:52px` en el head).
+- **El tag pasa de columna a etiqueta sobre el título**: esos 64px fijos se comían un quinto del ancho y dejaban el nombre del libro en 2 letras por línea.
+- **Links pegados al título** (se quita el `margin-left:auto`) y con área táctil más grande.
+
+Verificado: **de 79-81 elementos desbordando a 0**, en 390px y en 360px, sin scroll horizontal.
