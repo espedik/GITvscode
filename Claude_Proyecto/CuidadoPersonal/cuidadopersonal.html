@@ -59,6 +59,7 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var
 .tab-btn[data-tab="ejercicio"].active{background:var(--o-l);color:var(--o);border-color:rgba(255,107,53,.4)}
 .tab-btn[data-tab="comida"].active{background:var(--w-l);color:var(--w);border-color:rgba(255,217,61,.4)}
 .tab-btn[data-tab="dentista"].active{background:var(--mt-l);color:var(--mt);border-color:rgba(79,214,173,.4)}
+.tab-btn[data-tab="ojos"].active{background:rgba(79,140,255,.12);color:#4f8cff;border-color:rgba(79,140,255,.4)}
 .tab-btn[data-tab="vestimenta"].active{background:var(--ve-l);color:var(--ve);border-color:rgba(193,127,74,.4)}
 
 /* ─── GUÍA CON MENÚ LATERAL (2026-08-12) ─────────────────────────────────────
@@ -612,6 +613,7 @@ tbody tr:hover td{background:rgba(var(--ov),.02)}
     <button class="tab-btn" data-tab="ejercicio" onclick="mainTab('ejercicio')">🏋️ Ejercicio</button>
     <button class="tab-btn" data-tab="comida" onclick="mainTab('comida')">🍳 Comida</button>
     <button class="tab-btn" data-tab="dentista" onclick="mainTab('dentista')">🦷 Dentista</button>
+    <button class="tab-btn" data-tab="ojos" onclick="mainTab('ojos')">👁️ Ojos y Vista</button>
     <button class="tab-btn" data-tab="vestimenta" onclick="mainTab('vestimenta')">👔 Vestimenta</button>
     <a href="../Dashboard/dashboard.html" class="tab-btn" style="text-decoration:none;margin-left:8px;border-left:1px solid rgba(var(--ov),.12);padding-left:16px">🚀 Dashboard</a>
   </nav>
@@ -834,6 +836,31 @@ tbody tr:hover td{background:rgba(var(--ov),.02)}
   </div><!-- /.guia-shell -->
 </main>
 
+<!-- OJOS Y VISTA (2026-08-15) - pedido: "en cuidado personal anade el cuidado de los ojos/vista,
+     con todos los productos en compras y esa pestana que anadas debe estar muy completa".
+     Reusa el esqueleto y las clases .de-* del tab de Dentista en vez de duplicar un sistema
+     visual nuevo. A diferencia de Skincare / Cabello / Dentista, esta guia NO tiene formulario
+     de perfil: el contenido no cambia segun respuestas, asi que va estatica y guiaEnSecciones()
+     se llama con formCardId nulo. -->
+<main class="view view-native" id="view-ojos">
+  <div class="guia-shell">
+  <nav class="guia-nav" id="oj-nav"></nav>
+  <div class="guia-main">
+  <div class="de-hero">
+    <div class="de-hero-top">
+      <div>
+        <div class="de-eyebrow">👁️ Salud visual</div>
+        <h2 class="de-title">Cuidado de los Ojos y la Vista</h2>
+        <p class="de-desc">Manejas ~28h a la semana y pasas el resto del día frente a una pantalla, entre ALTEN, los 2 bloques de esta aplicación y Didi de noche. Tus ojos son el órgano que más castigas y el único que no tenía nada en este proyecto.</p>
+      </div>
+    </div>
+  </div>
+  <div id="oj-guia-body"></div>
+  </div>
+  </div>
+</main>
+
+
 <!-- CONFIRM -->
 <div class="conf" id="conf">
   <div class="conf-box">
@@ -987,7 +1014,135 @@ function guiaSoloPerfil(bodyId,navId){
   if(items[0]) items[0].classList.add('active'); // "Mi perfil" siempre es el primero
 }
 
+// ══════════════════════════════════════════════════════════════════════════
+// OJOS Y VISTA (2026-08-15)
+// ══════════════════════════════════════════════════════════════════════════
+// Guía estática (sin formulario de perfil): el contenido no cambia según respuestas, así que se
+// escribe una vez y guiaEnSecciones() la parte en secciones con menú lateral igual que las otras
+// 3. Reusa las clases .de-* del tab de Dentista en vez de crear un sistema visual nuevo.
+//
+// Todo está anclado a su exposición REAL, que es lo que separa esta guía de una lista genérica:
+// ~28h/semana al volante (UV de día, deslumbramiento de noche), jornada completa de pantalla en
+// ALTEN más 2 bloques diarios construyendo esta app, y 5h40-6h40 de sueño. Los 3 datos salen de
+// su rutina real, no de un promedio de población.
+const OJ_PRODUCTOS=[
+  {ico:'💧',n:'Lágrimas artificiales SIN conservadores (monodosis)',cat:'Ojo seco — el básico, úsalas sin miedo'},
+  {ico:'🧴',n:'Lágrimas en gel para la noche',cat:'Ojo seco — más espesas, para dormir'},
+  {ico:'♨️',n:'Compresa o antifaz térmico para ojos (de microondas)',cat:'Ojo seco — destapa las glándulas del párpado'},
+  {ico:'🧼',n:'Toallitas limpiadoras de párpados (higiene palpebral)',cat:'Ojo seco y blefaritis'},
+  {ico:'🕶️',n:'Lentes de sol polarizados con UV400',cat:'Al volante — de día'},
+  {ico:'🌙',n:'Antirreflejante para tus lentes graduados',cat:'Al volante — de noche'},
+  {ico:'💻',n:'Lentes con filtro de luz azul y antirreflejante',cat:'Pantalla — ALTEN y la app'},
+  {ico:'🖥️',n:'Soporte para elevar el monitor a la altura de los ojos',cat:'Pantalla — ergonomía'},
+  {ico:'💡',n:'Lámpara de escritorio de luz cálida regulable',cat:'Pantalla — para el bloque de las 23:30'},
+  {ico:'💊',n:'Suplemento de Luteína + Zeaxantina (10 mg / 2 mg)',cat:'Nutrición — protege la mácula'},
+  {ico:'👁️',n:'Gotas humectantes con ácido hialurónico',cat:'Alivio rápido a media jornada'},
+  {ico:'🫙',n:'Crema de contorno de ojos con cafeína',cat:'Ojeras vasculares — las tuyas'},
+];
+function ojRenderGuia(){
+  const B=document.getElementById('oj-guia-body');
+  if(!B) return;
+  const H=(ico,t)=>`<div class="de-section-h"><span class="ico">${ico}</span><h3>${t}</h3><span class="line"></span></div>`;
+  const tip=(ico,t)=>`<div class="de-tip"><span class="ico">${ico}</span><div class="de-tip-txt">${t}</div></div>`;
+  let h='';
+
+  h+=H('📊','Tu exposición real — por qué esto te toca a ti');
+  h+=deStepHtml('1','var(--de-blue)','~28h a la semana manejando',
+    'Didi de día y de noche, más el trayecto a ALTEN. Al volante te pegan dos cosas distintas: <b>radiación UV</b> de día (el parabrisas filtra parte pero la ventanilla lateral casi no filtra nada) y <b>deslumbramiento</b> de noche por los faros LED que hoy trae todo el mundo.',
+    'El sol de CDMX a 2,240 m pega más fuerte que a nivel del mar: hay alrededor de 10% más radiación UV por cada 1,000 m de altura.');
+  h+=deStepHtml('2','var(--de-amber)','Jornada completa de pantalla, y luego 2 bloques más',
+    'ALTEN de 8:30 a 17:00, más tus 20 min de las 06:43 y el bloque de 23:30 a 00:00/01:00 construyendo esta aplicación. Son fácilmente <b>10-12 horas de pantalla al día</b>.',
+    'Frente a una pantalla parpadeas hasta 66% menos: de unas 15 veces por minuto bajas a 5. Ese solo dato explica casi todo el ojo seco de oficina.');
+  h+=deStepHtml('3','var(--de-coral)','5h40-6h40 de sueño',
+    'El ojo se repara y se lubrica mientras duermes. Dormir poco es de las causas más directas de ojos rojos, irritados y con ojeras marcadas — y en tu caso no es un mal día suelto, es tu promedio.',
+    'Es la única de las 3 que se arregla sin comprar nada.');
+
+  h+=H('🖥️','Fatiga visual digital — lo que sí funciona');
+  h+=deStepHtml('1','var(--de-mint)','La regla 20-20-20',
+    'Cada <b>20 minutos</b>, mira algo a <b>6 metros</b> durante <b>20 segundos</b>. Relaja el músculo ciliar, que es el que se agarrota de enfocar de cerca durante horas seguidas.',
+    'Ponlo en el mismo temporizador que ya usas para tus bloques — acordarte solo no va a pasar.');
+  h+=deStepHtml('2','var(--de-blue)','Parpadea a propósito',
+    'Suena tonto y es la medida con mejor relación esfuerzo-resultado de toda esta guía. Cada vez que termines un párrafo o un commit, cierra los ojos con fuerza 2 segundos y ábrelos. Eso reparte la lágrima por toda la córnea.');
+  h+=deStepHtml('3','var(--de-amber)','Monitor: altura, distancia y brillo',
+    'El borde superior de la pantalla <b>a la altura de tus ojos o un poco más abajo</b> (mirar ligeramente hacia abajo deja el párpado más cerrado y el ojo se seca menos), a <b>50-70 cm</b> de distancia, y con el <b>brillo parecido al de la habitación</b> — si la pantalla parece una lámpara en un cuarto oscuro, está muy alta.');
+  h+=deStepHtml('4','var(--de-coral)','El bloque de las 23:30 es el más agresivo',
+    'Pantalla brillante, cuarto oscuro y ojos que ya llevan 16 horas despiertos. Baja el brillo, activa el modo cálido del sistema y enciende una lámpara tibia — no trabajes con la pantalla como única fuente de luz del cuarto.',
+    'La luz azul de noche además retrasa la melatonina, así que esto también te ayuda con las horas de sueño que ya traes justas.');
+  h+=tip('🔎','Si tienes que acercarte a la pantalla o subir el zoom para leer cómodo, eso ya no es fatiga: es una graduación que hace falta revisar.');
+
+  h+=H('💧','Ojo seco — el problema número uno en tu caso');
+  h+=deStepHtml('1','var(--de-blue)','Lágrimas artificiales SIN conservadores',
+    'Las de monodosis, esas ampolletas pequeñas de un solo uso. Puedes usarlas <b>tantas veces al día como necesites</b>: no crean dependencia ni tienen efecto rebote. Las de frasco con conservador sí irritan si las usas más de 4 veces al día.',
+    'No las confundas con las gotas "para quitar el rojo" tipo Visine: esas son vasoconstrictores, alivian 20 minutos y con el uso repetido dejan el ojo MÁS rojo que antes. Úsalas puntualmente, nunca a diario.');
+  h+=deStepHtml('2','var(--de-mint)','Compresa térmica 10 min, de noche',
+    'La mayoría del ojo seco no es falta de agua sino falta de <b>aceite</b>: las glándulas del borde del párpado se tapan y la lágrima se evapora antes de tiempo. El calor las derrite y las destapa.',
+    'Es un antifaz que metes al microondas 20 segundos. Hazlo durante tu meditación de las 23:00 y no te cuesta ni un minuto extra.');
+  h+=deStepHtml('3','var(--de-amber)','Higiene del borde del párpado',
+    'Justo después de la compresa, pasa una toallita de higiene palpebral por la línea de las pestañas, con el ojo cerrado. Arrastra lo que el calor acaba de aflojar — sin este paso, la compresa sirve a medias.');
+  h+=deStepHtml('4','var(--de-coral)','Lo que ya haces bien',
+    'Tu <b>Omega 3</b> de las 07:25 tiene evidencia razonable para mejorar la calidad de la lágrima. No lo agregues dos veces: ya está en tu bloque de suplementos AM.');
+
+  h+=H('🚗','Al volante — 28h semanales de exposición');
+  h+=deStepHtml('1','var(--de-amber)','De día: polarizados con UV400',
+    '<b>UV400</b> significa que bloquea el 100% de UVA y UVB, y es el único dato que importa — no tiene nada que ver con qué tan oscuro sea el lente. Un lente oscuro SIN filtro UV es peor que no traer nada: la pupila se dilata por la oscuridad y deja entrar más radiación.',
+    '<b>Polarizado</b> es otra cosa distinta: corta el reflejo del asfalto y de los cofres. Para manejar todo el día es la diferencia entre terminar con dolor de cabeza o no.');
+  h+=deStepHtml('2','var(--de-blue)','De noche: NUNCA lentes oscuros',
+    'Los "lentes de noche" amarillos no mejoran la visión nocturna: reducen la luz que te llega, y de noche necesitas toda la que puedas. Lo que sí sirve es un <b>antirreflejante</b> de buena calidad en tus lentes graduados, que corta los halos de los faros LED.',
+    'Si el deslumbramiento nocturno te está costando trabajo de verdad, eso se revisa: puede ser el inicio de una catarata, o simplemente una graduación desactualizada.');
+  h+=deStepHtml('3','var(--de-mint)','Trucos del propio auto',
+    'Usa el aire acondicionado pero <b>desvía las salidas para que no te den en la cara</b>: el aire directo seca el ojo en minutos. Y mantén el parabrisas limpio <b>por dentro</b> — la película de grasa que se forma dispersa la luz de los faros y multiplica el deslumbramiento.');
+
+  h+=H('🩺','Exámenes — qué toca a los 31 y cada cuándo');
+  h+=deStepHtml('1','var(--de-blue)','Un examen completo cada 2 años',
+    'A tu edad y sin síntomas, cada <b>2 años</b>. Si empiezas a usar lentes o aparece cualquier señal de la sección de alarma, pasa a <b>anual</b>.',
+    'Ahora mismo no hay ningún registro de examen de la vista en todo el proyecto — esta es probablemente la acción más valiosa de toda la pestaña.');
+  h+=deStepHtml('2','var(--de-mint)','Qué debe incluir (pídelo por nombre)',
+    '<b>Agudeza visual</b> (la cartilla de letras) · <b>Refracción</b> (tu graduación exacta) · <b>Presión intraocular</b> (descarta glaucoma, que no da síntomas hasta que ya hizo daño) · <b>Fondo de ojo con pupila dilatada</b> (deja ver retina y nervio óptico) · <b>Evaluación de superficie ocular</b>, si mencionas la sequedad.',
+    'El fondo de ojo dilatado es el que la gente se salta porque te deja la vista borrosa 4-6 horas. Agéndalo un día que no manejes Didi después.');
+  h+=deStepHtml('3','var(--de-amber)','Optometrista vs. oftalmólogo',
+    'El <b>optometrista</b> mide y gradúa: para lentes está perfecto y sale más barato. El <b>oftalmólogo</b> es médico, y es a quien vas si hay síntomas, presión alta o para el fondo de ojo. Para tu examen de referencia a los 31, ve con oftalmólogo una vez y luego mantente con optometrista.');
+  h+=tip('👨‍👩‍👦','Pregunta en tu familia si hay glaucoma, desprendimiento de retina o degeneración macular. Son hereditarios y cambian con qué frecuencia te toca revisarte. Es una llamada de 5 minutos que puede valer tu vista.');
+
+  h+=H('🥗','Nutrición — lo que sí tiene evidencia');
+  h+=deStepHtml('1','var(--de-mint)','Luteína y zeaxantina',
+    'Se acumulan en la mácula y actúan como un filtro solar interno. Están en <b>espinaca, kale, brócoli y yema de huevo</b>, y tú ya comes huevo a diario. Un suplemento de 10 mg / 2 mg es la vía cómoda si no comes verdura de hoja verde seguido.');
+  h+=deStepHtml('2','var(--de-blue)','Omega 3',
+    'Mejora la capa de aceite de la lágrima. <b>Ya lo tomas</b> en tu bloque AM — no lo dupliques.');
+  h+=deStepHtml('3','var(--de-amber)','Vitamina A y zinc',
+    'La vitamina A es literalmente parte de la molécula con la que ves en penumbra. En tu lista del súper ya la cubres con <b>huevo, papaya y lácteos</b>. El zinc ayuda a transportarla hasta el ojo.');
+  h+=tip('💧','Tu meta son 10 vasos de agua al día. Un cuerpo deshidratado produce menos lágrima — a veces el ojo seco es solo eso.');
+
+  h+=H('🌙','Ojeras y contorno — qué es real y qué no');
+  h+=deStepHtml('1','var(--de-coral)','Primero identifica cuál tienes',
+    'Jala suavemente la piel bajo el ojo hacia afuera. Si la mancha <b>se aclara</b>, es pigmentaria (melanina) y responde a vitamina C y protector solar. Si <b>no cambia</b>, es vascular (se transparentan los vasos) y responde a sueño, frío y cafeína tópica. Si es una <b>sombra por hundimiento</b>, ninguna crema la va a quitar: eso es estructura ósea.',
+    'Con 5h40-6h40 de sueño, lo más probable es que la tuya sea vascular — justo la que sí mejora durmiendo.');
+  h+=deStepHtml('2','var(--de-blue)','Lo que funciona',
+    '<b>Dormir</b> (la única que de verdad mueve la aguja) · <b>frío</b> por la mañana, 2 minutos con una cuchara fría o compresa, baja la hinchazón · <b>cafeína tópica</b> en el contorno, que es vasoconstrictor suave · <b>protector solar</b> también bajo el ojo, que ya te lo aplicas.');
+  h+=deStepHtml('3','var(--de-amber)','Lo que no',
+    'Ninguna crema quita una ojera estructural ni compensa dormir 5 horas. Y ojo con el retinoide cerca del ojo: la piel del contorno es la más delgada del cuerpo y se irrita fácil — deja un margen de un dedo.');
+
+  h+=H('🚨','Señales de alarma — esto no espera a la próxima cita');
+  h+=`<div class="de-warn"><div class="de-warn-title">🚨 Ve a urgencias oftalmológicas el mismo día si notas:</div><ul>
+    <li><b>Pérdida de visión súbita</b>, en un ojo o en los dos, aunque se recupere sola a los minutos.</li>
+    <li><b>Una cortina o telón</b> que baja o sube tapando parte de tu campo visual — puede ser desprendimiento de retina.</li>
+    <li><b>Lluvia repentina de puntos flotantes</b> o destellos de luz, sobre todo si aparecen de golpe.</li>
+    <li><b>Dolor ocular intenso</b> con ojo rojo, náusea y halos alrededor de las luces — puede ser un glaucoma agudo.</li>
+    <li><b>Visión doble</b> que aparece de repente.</li>
+    <li>Cualquier <b>golpe directo</b> en el ojo, o algo que se te haya clavado o salpicado (químico, viruta, aceite).</li>
+    <li><b>Ojo rojo que no mejora</b> en 2-3 días, o con secreción abundante y pegajosa.</li>
+  </ul></div>`;
+  h+=tip('📵','Ninguna de estas se resuelve buscándola en internet a las 2 de la mañana. Si aparece una, vas.');
+
+  h+=H('🛒','Qué comprar');
+  h+=OJ_PRODUCTOS.map(c=>`<div class="de-shop"><div class="de-shop-ico">${c.ico}</div><div><div class="de-shop-name">${c.n}</div><div class="de-shop-cat">${c.cat}</div></div></div>`).join('');
+  h+=`<div class="de-disclaimer">Los 12 productos están también en el Dashboard → Lista de Compras → 👁️ Ojos, con sus links de Amazon y Mercado Libre. Esta guía es orientación general y no sustituye un examen: nada de lo que leas aquí reemplaza que un profesional te vea el fondo de ojo y te mida la presión intraocular.</div>`;
+
+  B.innerHTML=h;
+  guiaEnSecciones('oj-guia-body','oj-nav','de-section-h',null);
+}
+
 function mainTab(tab){
+  if(tab==='ojos'&&!document.getElementById('oj-guia-body').innerHTML) ojRenderGuia();
   document.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));
   document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id==='view-'+tab));
   if(tab==='salud'){const f=document.getElementById('frame-salud');if(!f.getAttribute('src'))f.src='salud.html';}

@@ -223,3 +223,27 @@ Pedido: *"agrega tratamientos para cabello, usar minoxidil con dutasteride... mi
 **La condición médica va dentro del campo `uso` de cada uno, no en una nota al pie**: dutasteride requiere prescripción en México, no tiene aprobación FDA para alopecia y altera el PSA; el minoxidil oral es sistémico (presión, retención de líquidos, taquicardia, hipertricosis) y exige control de presión antes y durante. La dosis y la condición viajan juntas o el dato es peligroso.
 
 Replicado en `Dashboard/dashboard.html` → `LISTA_COMPRAS.cabello`, ahí marcados con 🩺 en el propio nombre del producto porque esa lista se lee en el pasillo del súper, sin contexto alrededor.
+
+## Pestaña nueva: Ojos y Vista (2026-08-15)
+
+*"en cuidado personal añade el cuidado de los ojos/vista, con todos los productos en compras y esa pestaña que añadas debe estar muy completa"*.
+
+Sexta pestaña nativa (`#view-ojos`), con **9 secciones, 23 pasos numerados, 7 señales de alarma y 12 productos**. Reusa el esqueleto y las clases `.de-*` del tab de Dentista en vez de crear un sistema visual nuevo, y el menú lateral sale del mismo `guiaEnSecciones()` que las otras 3 — pero con `formCardId` nulo, porque esta guía **no tiene formulario de perfil**: el contenido no cambia según respuestas, así que va estática.
+
+### Lo que la hace distinta de una lista genérica de consejos
+
+Todo está anclado a **su exposición real**, y esa es la primera sección:
+
+- **~28h/semana al volante** → UV de día (la ventanilla lateral casi no filtra, y en CDMX a 2,240 m hay ~10% más radiación por cada 1,000 m) y deslumbramiento de noche por faros LED.
+- **10-12h de pantalla al día** entre ALTEN y los 2 bloques de la app → frente a una pantalla se parpadea hasta 66% menos, de ~15 veces por minuto a 5. Ese dato explica casi todo el ojo seco.
+- **5h40-6h40 de sueño** → ojos rojos y ojeras; es la única de las tres que se arregla sin comprar nada.
+
+Secciones: exposición real · fatiga visual digital · ojo seco · al volante · exámenes · nutrición · ojeras · señales de alarma · qué comprar.
+
+Detalles que conectan con lo que ya existe: el **Omega 3 de las 07:25** ya cubre parte del ojo seco (se dice explícitamente que no lo duplique), la **compresa térmica** se hace durante su meditación de las 23:00 sin costar tiempo extra, y el **fondo de ojo dilatado** se agenda un día que no maneje Didi después, porque deja la vista borrosa 4-6 horas.
+
+Correcciones de creencias comunes que la guía desmonta: las gotas "para quitar el rojo" son vasoconstrictores y con uso diario dejan el ojo **más** rojo; un lente oscuro **sin** UV400 es peor que no traer nada porque la pupila se dilata y entra más radiación; y los lentes amarillos "de noche" no mejoran la visión nocturna, reducen la luz que llega.
+
+### Un incidente que vale documentar
+
+La primera versión del script de inserción abrió el archivo destino con `io.open(F,'w')` **antes** de tener el contenido listo. Ese modo trunca al instante, y el script falló después por un problema de encoding — resultado: `cuidadopersonal.html` quedó en **0 bytes**. Se recuperó con `git checkout` sin pérdida (los tratamientos de cabello ya estaban commiteados) y se rehízo escribiendo a un `.tmp` que solo reemplaza el original tras validar tamaño y sintaxis. **Los scripts que editan archivos del proyecto escriben a temporal, nunca al destino directo.**

@@ -2328,3 +2328,33 @@ El bloque móvil se movió al final y se amplió:
 - **Links pegados al título** (se quita el `margin-left:auto`) y con área táctil más grande.
 
 Verificado: **de 79-81 elementos desbordando a 0**, en 390px y en 360px, sin scroll horizontal.
+
+## Habilidad 19: Saber meditar, y la categoría Ojos en compras (2026-08-15)
+
+*"añade saber meditar pero explicalo muy muy detalladamente, recuerda que haz todas esas secciones para alguien que no sabe nada de nada y apenas anda aprendiendo, hazla y checa las demas"*.
+
+### `meditar` — la más detallada de las 19
+
+**7 fases, 49 items**, y arranca con una **Fase 0 que no se practica, se entiende**: desmontar el "dejar la mente en blanco". Sin eso, la primera sesión se siente como un fracaso y no hay segunda — es la razón número uno por la que la gente abandona en la semana 1.
+
+La idea que estructura toda la habilidad: **la distracción no es el fallo, es el ejercicio**. Igual que en el gym el músculo no crece por sostener la pesa arriba sino por cada repetición, aquí cada vez que la mente se va y vuelve cuenta como una. "Si te distrajiste 30 veces en 5 minutos, hiciste 30 repeticiones."
+
+Escrita asumiendo **cero conocimiento previo**: dónde sentarse (una silla normal, no en el piso con las piernas cruzadas — eso es para gente con años de práctica y a un principiante solo le duele la rodilla), qué hacer con las manos y por qué (si cuelgan, los hombros se tensan sin que lo notes), qué hacer con los ojos, y qué decirse al distraerse.
+
+**Fase 2 explica el bloque que ya tiene en su rutina**: las 23:00 decían "🧘 Meditación — respiración box (10 min)" sin ninguna explicación. Ahora está el 4-4-4-4 paso a paso, por qué funciona (la exhalación larga activa el nervio vago, mecanismo físico y medible), y qué hacer si se marea (bajar a 3-3-3-3).
+
+**Fase 4 existe solo para que no abandone**: qué se siente realmente en los días 1-7 (aburrido e inútil), en las semanas 2-4 (notas *cuánto* se distrae tu mente, y eso es el progreso, no un retroceso), y en el mes 2 (el primer efecto fuera de la sesión). Y lo que **no** va a pasar: no dejará de enojarse ni de estresarse.
+
+El criterio de dominio no es sentir paz: es que **entre que alguien te hace enojar y tu respuesta exista medio segundo**. Con 28h semanales en el tráfico de CDMX y pasajeros difíciles, ese hueco es todo el punto.
+
+Imagen verificada vía la API de Wikimedia Commons (original 5184×3456, servida a 1920px). La API exige un `User-Agent` identificable: sin él devuelve HTML en vez de JSON.
+
+### "Checa las demás" — auditadas, y salieron limpias
+
+Se revisaron las 18 anteriores buscando **jerga usada sin explicar cerca**: `crol`, `sellar`, `recámara`, `sparring`, `taninos`, `birlos`, `taquete`, `yesca`, `azimut`, `anafilaxia`, `chicote`… **0 términos sin explicación en contexto**. La plantilla que se estableció al reescribir `nadar` ya traía ese cuidado y se mantuvo en el resto.
+
+### Categoría 👁️ Ojos en la Lista de Compras
+
+12 productos en 4 grupos, espejo de `OJ_PRODUCTOS` de la pestaña nueva. Agrupados por para-qué-sirve y no por tipo de producto —igual que el Kit de Higiene—, porque en la tienda decides "necesito algo para el ojo seco", no "necesito un gel". Con sus links de Amazon y Mercado Libre, y **0 queries defectuosas** tras el arreglo de `lcAmazonQuery()`.
+
+La Lista de Compras queda en **7 categorías**: Comida · Skincare · Cabello · Suplementos · Kit de Higiene · Ojos · Libros.

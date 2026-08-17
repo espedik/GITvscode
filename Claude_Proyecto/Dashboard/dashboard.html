@@ -2566,6 +2566,31 @@ const LISTA_COMPRAS={
       'Suplementos en pastillero por días',
     ],
   },
+  // Espejo de OJ_PRODUCTOS en CuidadoPersonal/cuidadopersonal.html -> pestana "Ojos y Vista"
+  // (2026-08-15). Agrupado por para-que-sirve y no por tipo de producto, igual que el kit de
+  // higiene: en la tienda lo que decides es "necesito algo para el ojo seco", no "necesito un gel".
+  ojos:{
+    'Ojo seco — el problema número uno con 10-12h de pantalla':[
+      'Lágrimas artificiales sin conservadores (monodosis)',
+      'Lágrimas en gel para la noche',
+      'Compresa o antifaz térmico para ojos de microondas',
+      'Toallitas limpiadoras de párpados',
+      'Gotas humectantes con ácido hialurónico',
+    ],
+    'Al volante — 28h a la semana de exposición':[
+      'Lentes de sol polarizados con UV400',
+      'Antirreflejante para lentes graduados (se pide en la óptica)',
+    ],
+    'Pantalla — ALTEN y los 2 bloques de la app':[
+      'Lentes con filtro de luz azul y antirreflejante',
+      'Soporte para elevar el monitor a la altura de los ojos',
+      'Lámpara de escritorio de luz cálida regulable',
+    ],
+    'Nutrición y contorno':[
+      'Suplemento de Luteína + Zeaxantina 10 mg / 2 mg',
+      'Crema de contorno de ojos con cafeína',
+    ],
+  },
   // 45 libros únicos recomendados dentro de Coach_v2.html → #aprendizaje (5 cards de skill: Ventas,
   // Copywriting, Marketing, Networking, Liderazgo, más las secciones de Datos/Finanzas/Software del
   // mismo bloque) y #perfil-rico, agrupados por el mismo tema bajo el que Coach los presenta —
@@ -2712,6 +2737,7 @@ const LISTA_CAT_META={
   cabello:{ico:'💇',label:'Cabello'},
   suplementos:{ico:'💊',label:'Suplementos'},
   higiene:{ico:'🧳',label:'Kit de Higiene'},
+  ojos:{ico:'👁️',label:'Ojos'},
   libros:{ico:'📚',label:'Libros'},
 };
 let listaCatSel='comida';
@@ -2739,7 +2765,7 @@ function renderListaCatTabs(){
 // Categorías donde el nombre del producto es un link de búsqueda en Amazon (checkbox queda solo para tachar)
 // — "libros" se agregó el 2026-08-07 ("dame tambien los links de los libros en amazon y mercado
 // libre"), junto con las 3 que ya lo tenían.
-const LC_AMAZON_CATS=['skincare','cabello','suplementos','libros','higiene'];
+const LC_AMAZON_CATS=['skincare','cabello','suplementos','libros','higiene','ojos'];
 // El texto trae formato "Categoría — Marca/Producto A o Marca/Producto B o ..." (o solo "Producto"
 // en suplementos) — se busca en Amazon el primer producto mencionado, no la frase completa.
 // "libros" es un caso distinto (formato "Título — Autor", sin "o" de alternativas): tomar solo lo
@@ -4724,6 +4750,11 @@ const HABILIDADES_BASE=[
   {id:'brujula',      ico:'🧭', t:'Orientarte con mapa y brújula',              img:'https://images.unsplash.com/photo-1566341013452-946caa457784?w=2400&q=85&auto=format&fit=crop'},
   {id:'asado',        ico:'🥩', t:'Asar carne y mantener tu cuchillo afilado',  img:'https://images.unsplash.com/photo-1534177616072-ef7dc120449d?w=2400&q=85&auto=format&fit=crop'},
   {id:'reparaciones', ico:'🔨', t:'Reparaciones básicas del hogar',             img:'https://images.unsplash.com/photo-1596496182209-5193de4ed72d?w=2400&q=85&auto=format&fit=crop'}
+,
+  // 2026-08-15, pedido: "añade saber meditar pero explicalo muy muy detalladamente,
+  // recuerda que haz todas esas secciones para alguien que no sabe nada de nada".
+  // Foto verificada vía la API de Wikimedia Commons (5184x3456 original, servida a 1920px).
+  {id:'meditar', ico:'🧘', t:'Saber meditar', img:'https://upload.wikimedia.org/wikipedia/commons/thumb/b/be/Man-3224891.jpg/1920px-Man-3224891.jpg'}
 ];
 const HABILIDAD_DETALLE={
   // Reescrito por completo el 2026-08-11 (pedido explícito: "en saber nadar ni siquiera me das
@@ -5606,6 +5637,71 @@ const HABILIDAD_DETALLE={
         'Cambias un contacto o un apagador <b>con la corriente cortada y verificada</b>, y queda firme y sin chispas.',
         'Destapas un caño y arreglas un WC que sigue corriendo <b>sin llamar a nadie</b> — las 2 fallas más frecuentes y más caras de delegar.',
         'Sabes <b>cuándo parar</b>: gas, instalación eléctrica del centro de carga hacia atrás, o humedad estructural van con profesional. Reconocer el límite es parte de dominar esto, no lo contrario.',
+      ]},
+    ]},
+  meditar:{titulo:'Meditar de verdad, empezando desde cero absoluto',frase:'No se trata de dejar la mente en blanco. Se trata de darte cuenta de que te fuiste, y volver. Eso es todo, y eso es el ejercicio completo.',pasos:[
+      {t:'Fase 0 — Qué es y qué NO es (léelo antes de intentarlo)',d:'Casi todo el mundo abandona en la primera semana porque cree que lo está haciendo mal. No lo está haciendo mal: está haciendo justo el ejercicio y no lo sabe. Esta fase no se practica, se entiende.',img:'https://upload.wikimedia.org/wikipedia/commons/thumb/b/be/Man-3224891.jpg/1920px-Man-3224891.jpg',list:[
+        '<b>NO es dejar la mente en blanco.</b> Eso es imposible y nadie lo hace, ni los monjes con 40 años de práctica. Tu mente va a producir pensamientos igual que tu corazón late — no puedes apagarla y no es el objetivo.',
+        '<b>Qué es en realidad:</b> eliges una cosa en la que poner tu atención (normalmente tu respiración). Tu mente se va a ir a otro lado. Cuando <i>te das cuenta</i> de que se fue, la traes de vuelta. Eso es una repetición.',
+        '<b>La distracción NO es el fallo, es el ejercicio.</b> Es exactamente igual que el gym: el músculo no crece por sostener la pesa arriba, crece por cada repetición. Cada vez que tu mente se va y la regresas, hiciste una repetición. Si te distrajiste 30 veces en 5 minutos, hiciste 30 repeticiones — esa fue una sesión excelente.',
+        '<b>No es religión</b> y no tienes que creer en nada. Lo que vas a entrenar es la capacidad de notar dónde está tu atención y decidir moverla. Es una habilidad mecánica, como aprender a manejar estándar.',
+        '<b>No necesitas comprar nada.</b> Ni cojín, ni app, ni ropa, ni incienso. Una silla y un temporizador. Puedes empezar hoy.',
+        '<b>Para qué te sirve a ti, en concreto:</b> manejas ~28h a la semana, muchas en tráfico de CDMX, con pasajeros que a veces son difíciles. Meditar no hace que el tráfico desaparezca — hace que se abra un hueco entre "me cerraron el paso" y tu reacción. Ese hueco es todo el punto.',
+      ]},
+      {t:'Fase 1 — Tu primera sesión, hoy, 2 minutos (semana 1)',d:'Dos minutos, no diez. Empezar con 10 min es el error que hace que lo dejes el jueves. Vas a hacer esto 2 minutos al día durante una semana completa, aunque se sienta ridículamente poco.',list:[
+        '<b>Paso 1 — Dónde:</b> siéntate en una silla normal, la de tu escritorio sirve. NO necesitas cruzar las piernas en el piso; esa postura es para gente con años de práctica y a un principiante solo le duele la rodilla y lo distrae.',
+        '<b>Paso 2 — El cuerpo, exacto:</b> los dos pies planos en el piso, separados al ancho de tus caderas. La espalda recta pero no rígida — imagina un hilo que te jala suavemente desde la coronilla hacia el techo. Los hombros caídos y sueltos, no hacia las orejas.',
+        '<b>Paso 3 — Las manos:</b> apoyadas sobre los muslos, palmas hacia abajo. No tienen que hacer ninguna forma especial. La razón de apoyarlas es que si las dejas colgando, los hombros se tensan sin que lo notes.',
+        '<b>Paso 4 — Los ojos:</b> ciérralos. Si cerrarlos te da sueño o te incomoda, déjalos entreabiertos mirando el piso a metro y medio, sin enfocar nada en particular.',
+        '<b>Paso 5 — Pon un temporizador de 2 minutos</b> y déjalo boca abajo. Sin temporizador vas a estar calculando cuánto llevas, y eso ya es distracción.',
+        '<b>Paso 6 — Qué hacer con la atención:</b> siente el aire entrando y saliendo por tu nariz. No lo controles, no respires hondo a propósito, no cuentes. Solo <i>siente</i> el aire un poco frío al entrar y un poco tibio al salir. Ese es todo el trabajo.',
+        '<b>Paso 7 — Cuando te distraigas</b> (y va a pasar en 5 segundos): en cuanto lo notes, dite mentalmente "pensando", sin regañarte, y regresa a sentir el aire. Repítelo tantas veces como haga falta. No hay un número máximo.',
+        '<b>Paso 8 — Cuando suene:</b> ya. No evalúes si "salió bien". Lo hiciste, eso es todo lo que cuenta esta semana.',
+        '⚠️ <b>Error más común de la primera semana:</b> pensar "no estoy sintiendo nada, esto no funciona". No tiene que sentirse nada. Esperar una sensación especial es lo que hace que la gente lo deje — el resultado no aparece durante la sesión, aparece semanas después, fuera de la sesión.',
+      ]},
+      {t:'Fase 2 — La respiración box, que ya tienes en tu rutina (semanas 2-3)',d:'A las 23:00 tu rutina ya dice "🧘 Meditación — respiración box (10 min)" con el ciclo 4-4-4-4. Aquí está lo que ese bloque significa realmente y cómo hacerlo bien, porque hasta ahora era una línea sin explicación.',list:[
+        '<b>Qué es la respiración box:</b> cuatro tiempos iguales que forman los cuatro lados de un cuadrado. Inhalas 4 segundos → sostienes el aire 4 → exhalas 4 → te quedas sin aire 4. Y vuelves a empezar.',
+        '<b>Paso 1:</b> inhala por la nariz contando lento hasta 4. El aire debe hinchar tu abdomen, no tu pecho — pon una mano en la panza y compruébalo: si sube la mano de la panza, vas bien.',
+        '<b>Paso 2:</b> sostén el aire 4 segundos. Sin apretar la garganta ni inflar los cachetes, solo pausa.',
+        '<b>Paso 3:</b> exhala por la boca, lento, contando hasta 4, como si soplaras una vela sin apagarla.',
+        '<b>Paso 4:</b> quédate sin aire 4 segundos. Esta es la parte que incomoda al principio y es normal — si te agobia, baja a 3 segundos solo en esta fase.',
+        '<b>Cuántas veces:</b> un ciclo completo son 16 segundos, así que 10 minutos son unos 37 ciclos. No los cuentes: pon el temporizador y ya.',
+        '<b>Por qué funciona</b> (no es magia): la exhalación larga y la pausa activan el nervio vago, que es el que le dice a tu cuerpo que baje el pulso. Es un mecanismo físico, medible — por eso lo usan militares y paramédicos antes de entrar a una situación difícil.',
+        '<b>Dónde más usarla:</b> antes de una llamada difícil, en el semáforo cuando vas alterado, o los 2 minutos antes de entrar a ALTEN. No necesita que estés sentado ni con los ojos cerrados.',
+        '⚠️ <b>Error más común:</b> forzar la respiración hasta marearte. Si te mareas, los tiempos son muy largos para ti — baja a 3-3-3-3. Que sea cómodo importa más que llegar a 4.',
+      ]},
+      {t:'Fase 3 — Subir el tiempo y sumar el escaneo corporal (semanas 4-8)',d:'Solo cuando lleves 7 días seguidos de 2 minutos. La regla es simple: no subes el tiempo hasta que la semana anterior esté completa. Es el mismo principio que subir peso en el gym.',list:[
+        '<b>La progresión:</b> 2 min una semana → 5 min dos semanas → 10 min de ahí en adelante. No hay prisa por llegar a 20; 10 minutos diarios sostenidos valen infinitamente más que 30 minutos los domingos.',
+        '<b>El escaneo corporal, paso a paso:</b> es la segunda técnica que vale la pena y es más fácil que seguir la respiración, porque el cuerpo da más señales a las que agarrarse.',
+        '<b>Paso 1:</b> acostado o sentado, lleva toda tu atención a los dedos de los pies. No los muevas: solo <i>nota</i> qué se siente ahí. Puede ser calor, hormigueo, presión del calcetín, o nada. "Nada" también es una respuesta válida.',
+        '<b>Paso 2:</b> sube lentamente — pies, tobillos, pantorrillas, rodillas, muslos, cadera, abdomen, pecho, manos, brazos, hombros, cuello, cara. Dedica unos 20-30 segundos a cada zona.',
+        '<b>Paso 3:</b> cuando encuentres tensión (casi siempre estará en hombros, mandíbula o entrecejo), no intentes forzarla a que se vaya. Solo dirige ahí la respiración un par de ciclos. Muchas veces se suelta sola.',
+        '<b>Para qué sirve en tu caso:</b> tú entrenas 6 días y manejas 28h. El escaneo te enseña a notar dónde estás cargando tensión <i>antes</i> de que se convierta en dolor de cuello o de espalda baja.',
+        '<b>Meditación caminando</b>, si estar sentado te desespera: caminas lento y pones la atención en la planta de los pies tocando el piso. Talón, planta, dedos. Sirve igual y es más fácil para mentes inquietas.',
+        '⚠️ <b>Error más común al subir de tiempo:</b> saltar de 2 a 15 minutos porque un día te sentiste bien. Sube de a poco: la constancia es la única variable que de verdad importa aquí.',
+      ]},
+      {t:'Fase 4 — Qué va a pasar de verdad, semana a semana',d:'Esta fase existe para que no abandones. Casi nadie te cuenta cómo se siente realmente el proceso, y ese silencio es la razón principal por la que la gente lo deja al décimo día.',list:[
+        '<b>Días 1-7:</b> se va a sentir aburrido, incómodo y probablemente inútil. Te va a picar la nariz, te vas a acordar de pendientes, vas a mirar el reloj. <b>Todo eso es normal y no significa que lo hagas mal.</b>',
+        '<b>Semanas 2-4:</b> empiezas a notar <i>cuánto</i> se distrae tu mente. Mucha gente lo interpreta como "estoy peor". Es al revés: siempre fue así, lo que cambió es que ahora te das cuenta. Eso ES el progreso, y es el primer resultado real.',
+        '<b>Mes 2:</b> aparece el primer efecto fuera de la sesión. Suele ser un momento concreto — alguien te cierra el paso en Circuito y notas el enojo subir <i>sin</i> reaccionar de inmediato. Ese medio segundo de espacio es lo que estabas entrenando.',
+        '<b>Mes 3 en adelante:</b> te cuesta menos volver al trabajo después de una interrupción, y notas antes cuándo estás cansado de verdad y cuándo solo estás disperso. Para alguien con 3 frentes a la vez (ALTEN, Didi y el negocio), eso vale más que la calma.',
+        '<b>Lo que NO va a pasar:</b> no vas a dejar de enojarte, ni de tener ansiedad, ni de estresarte. La meta no es sentir paz permanente. La meta es que entre el estímulo y tu reacción exista una rendija donde puedas decidir.',
+        '<b>Si te saltas un día</b>, no pasa nada y no empiezas de cero. Retomas al siguiente. Lo único que rompe el hábito es dejarlo 2 semanas, no fallar un martes.',
+      ]},
+      {t:'Fase 5 — Los 6 errores que hacen que la gente lo deje',d:'Todos son evitables y todos son de principiante. Si alguno te suena, no es que no seas apto para meditar: es que nadie te lo advirtió.',list:[
+        '<b>1. Querer dejar la mente en blanco.</b> El más común de todos. Ya lo cubrimos en la Fase 0, y vale la pena releerlo cada vez que te frustres.',
+        '<b>2. Empezar con sesiones largas.</b> 20 minutos el primer día garantiza que no haya segundo día. 2 minutos que sí haces valen más que 20 que abandonas.',
+        '<b>3. Regañarte por distraerte.</b> Cuando notes que te fuiste, no te digas "otra vez, qué mal lo hago". Solo "pensando", y vuelves. El regaño es un pensamiento más y encima te desanima.',
+        '<b>4. Buscar una sensación especial.</b> No hay luces, ni cosquilleo, ni paz profunda. La mayoría de las sesiones se sienten normales y algo aburridas. Eso no es un problema, es el estado normal.',
+        '<b>5. Meditar solo cuando estás estresado.</b> Es como ir al gym solo el día que te sientes débil. El valor está en practicarlo los días tranquilos, para que la herramienta ya exista el día difícil.',
+        '<b>6. Depender de una app para siempre.</b> Las guiadas están bien para arrancar (Insight Timer es gratis, Medito también). Pero pásate a silencio con temporizador en un par de meses: si solo puedes meditar con una voz guiándote, aprendiste a seguir instrucciones, no a meditar.',
+      ]},
+      {t:'✅ Ya lo dominas cuando…',d:'Ninguno de estos es "sentir paz". Todos son verificables, y el más importante es el último.',list:[
+        'Llevas <b>30 días seguidos</b> sin saltarte más de 2 días en total. La constancia es la habilidad; la técnica es la parte fácil.',
+        'Puedes sentarte <b>10 minutos en silencio, sin app ni voz guiándote</b>, y sin mirar el reloj a la mitad.',
+        'Cuando tu mente se va, <b>vuelves sin frustrarte</b>. Notas la distracción, dices "pensando" y regresas — sin el comentario de "lo estoy haciendo mal".',
+        'Usas la respiración box <b>fuera de la sesión</b>, en el momento en que la necesitas: un semáforo, una llamada difícil, un pasajero pesado.',
+        '<b>El criterio de verdad:</b> alguien te hace enojar y notas el enojo <i>antes</i> de responder. No que no te enojes — que exista ese medio segundo. Si eso ya te pasa, dominaste esta habilidad, aunque tus sesiones sigan sintiéndose desordenadas.',
       ]},
     ]},
 };
