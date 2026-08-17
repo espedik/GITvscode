@@ -2165,3 +2165,132 @@ La barra vacía también cambió: en vez de *"Total marcado: $0 — no has marca
 ### Verificación (Playwright)
 
 Aritmética comprobada contra el cálculo a mano: `150 + 12×3 + 66 = $252` de ticket, y `150×(4.33/8) + 36×4.33 + 66×4.33 = $523` al mes — la app da exactamente esos dos números. Subtotales por pasillo correctos (Frutas $36 · Carnes $66 · Abarrotes $150), 11 avisos de duración, cero errores de consola.
+
+## Habilidades Base: las 18 ganan error común y criterio verificable de dominio (2026-08-15)
+
+*"debes ser mas claro y especifico y con ejemplos en cada uno, debes ser minucioso y revisar el contenido, tiene que ser contenido valioso, por favor revisa todas las habilidades"*.
+
+### Lo que salió al medirlas
+
+La auditoría no encontró habilidades vacías —las 18 tenían título, frase, fases con listas e imagen— pero sí **dos huecos transversales** y una diferencia grande de profundidad entre unas y otras:
+
+| Elemento | Antes | Ahora |
+|---|---|---|
+| ⚠️ Error más común | **6 de 18** | **18 de 18** (35 avisos) |
+| ✅ Criterio de dominio | **2 de 18** | **18 de 18** |
+
+Y el contraste de fondo: `nudos` tenía 9 fases con 8 imágenes y pasos literales ("Paso 1: haz un ojal…"), mientras que 11 habilidades se quedaban en 3 fases con 1 imagen. El contenido de esas 11 no era malo —tenían 21-30 items útiles— pero les faltaba lo que convierte una lista de consejos en algo entrenable.
+
+### Los 2 arreglos, aplicados a las 18
+
+**1. `⚠️ Error más común`** — 34 avisos nuevos, colocados en la fase donde ese error concreto descarrila el aprendizaje, no al final como apéndice. No son genéricos; cada uno es el error real de esa disciplina:
+
+- *Nadar*: doblar la rodilla al patalear como si pedalearas — la patada sale de la cadera.
+- *RCP*: comprimir suave por miedo a lastimar. Son **5-6 cm** de profundidad y las costillas pueden tronar; una costilla se arregla, un paro sin RCP no.
+- *Vino*: servir el tinto "a temperatura ambiente" — esa regla es europea; en CDMX el ambiente son 22-24°C y el tinto va a 16-18°C.
+- *Fogata*: apagarla con tierra. La tierra aísla y mantiene la brasa viva horas.
+- *Dinero*: tratar los MSI como dinero gratis; *Decir que no*: explicar de más, porque cada razón extra es una puerta para que te negocien.
+
+**2. `✅ Ya lo dominas cuando…`** — un paso final en cada una, con criterios **comprobables**, nunca "sentirte seguro". Es lo que faltaba para que el checklist deje de ser una lista de deseos:
+
+- *Nadar*: 400 m continuos de crol sin parar · flotar 3 min relajado · cruzar 25 m en ≤18 brazadas.
+- *Mecánica*: cambiar llanta en <20 min solo · pasar corriente en el orden correcto sin dudar.
+- *Nudos*: los 8 de memoria dos días distintos · el as de guía a oscuras o con una mano.
+- *Decir que no*: 3 noes en el último mes que puedas nombrar · un mes sin gastos aceptados por no incomodar.
+- *Recuperar*: **hoy duerme 5h40–6h40** (dato real de su rutina) — se domina el mes que llegue a 7h sostenidas sin que se caiga otro bloque.
+
+Los criterios están anclados a **su** contexto, no a uno genérico: la alberca de Fitsi Buenavista, estacionarse en la Cuauhtémoc, manejar de noche bajo lluvia en Circuito Interior, el 911 y la SEDENA, su bloque `wd14` de cena de las 21:15.
+
+### Detalles que salieron de revisar el contenido
+
+- *Auxilios* es la única de las 18 que **caduca**: se marca revalidación cada 2 años, porque los protocolos cambian y las manos se olvidan. Y es la única donde se dice tajante que leerlo no basta: curso presencial de Cruz Roja, con maniquí.
+- *Reparaciones* y *Armas* incluyen ahora el **límite** como parte del dominio: saber cuándo NO hacerlo tú (gas, centro de carga) y el marco legal real (portación ≠ posesión) cuentan como dominar la habilidad, no como lo contrario.
+- *Manejar* cierra remitiendo a *Mecánica básica*: las dos juntas son las que de verdad cubren manejar bien, y ahora se dicen la una a la otra.
+
+### Cómo se aplicó, y por qué así
+
+El bloque `HABILIDAD_DETALLE` son ~960 líneas. Editar 18 objetos a mano era la vía segura de romper algo, así que se parseó con `vm`, se inyectaron los campos y se reserializó al mismo estilo del archivo (comillas simples, `t`/`d`/`img`/`list`). Los 3 bloques de comentarios internos se reinsertaron por posición.
+
+### Verificación (conteo real, no muestra)
+
+Comparación tarea por tarea contra la copia previa del archivo: **18 → 18 habilidades**, ninguna perdió items (40→46, 26→32, 51→55…), **ninguna perdió imágenes** (2→2, 8→8, 7→7…), y títulos y frases idénticos. Las 18 pasan las 3 condiciones: tienen aviso de error, tienen criterio de dominio, y no perdieron contenido.
+
+En navegador se abrieron **las 18 una por una**: las 18 abren, las 18 muestran "Ya lo dominas", las 18 muestran al menos un aviso de error (35 visibles en total), los checkboxes suben de 3-9 a 4-10 por habilidad, y cero errores de consola.
+
+## Habilidades Base: imágenes al 50% de tamaño y todas en HD verificado (2026-08-15)
+
+*"las imagenes no me gustan y ponlas mas pequeñas, quiero que si o si sean hd"*.
+
+### Más pequeñas
+
+`.meta-detail-step-img` pasa de `max-height:300px` a **150px**, y los diagramas (`.is-diagram`) de 400 a **240px** — bajan menos porque en ellos el detalle *es* el contenido: un nudo o una maniobra de RCP a 150px ya no se distingue. En móvil, 200→130px y 260→200px.
+
+Se añadió también **`max-width`** (420px fotos, 340px diagramas). Sin eso, una foto apaisada limitada solo por alto y con `width:100%` se recortaba a una tira inservible. Verificado: la foto de Recuperar renderiza ahora a **225×150px**, cuando antes ocupaba media pantalla y empujaba la lista de la fase fuera del área visible.
+
+### HD: lo que la URL decía vs. lo que el archivo pesaba
+
+Son **61 imágenes** (18 de portada + 43 dentro de los detalles). Subirlas fue menos trivial de lo esperado:
+
+- **Wikimedia responde 403 sin `User-Agent`.** La primera verificación daba "roto" en todo Wikimedia; no estaban rotas, faltaba la cabecera.
+- **Wikimedia aplica rate-limit (429)** en ráfagas. Hicieron falta 3 pasadas con pausas crecientes (0.45s → 2.5s → 6s con reintentos de 25s) para no confundir "no existe" con "ahora no".
+- **La resolución de la URL miente.** 7 imágenes no tenían parámetro `/NNNpx-` porque apuntaban al **archivo original** de Commons, y esos originales resultaron ser de 194 a 1038px. Solo se detectó midiendo `naturalWidth` en el navegador, no leyendo la URL.
+
+Regla aplicada: Wikimedia `/NNNpx-` → `/1920px-`, Unsplash `w=N` → `w=2400&q=85`, y **si la versión HD no responde 200, se conserva la original** — mejor una imagen que carga a 1280px que un hueco a 1920px.
+
+**El caso del torniquete**: `auxilios/p3` era un SVG servido como archivo original a **194px** — prácticamente un ícono en un diagrama que ilustra cómo detener una hemorragia. Al ser vectorial se pudo rasterizar vía `/thumb/…/1920px-`, así que pasó de 194 a **1920px**.
+
+### Resultado verificado en navegador
+
+| | Resultado |
+|---|---|
+| Imágenes que cargan | **61/61** ✓ |
+| Portadas (18) | **todas ≥1920px reales** ✓ |
+| Reparto de resolución | 30×2400px · 13×1920px · 11×1280px · 7 originales |
+| Por debajo de 1280px real | **6** (ver abajo) |
+
+Las 6 restantes son archivos originales de Commons que **no existen en mayor resolución** — Wikimedia no puede generar un thumbnail más grande que el original: `nudos/p1` (559px), `mecanica/p3` (612px), `mecanica/p5` (1024px), `auxilios/p1` (846px), `auxilios/p5` (1038px), `asado/p2` (511px). Como se muestran a 340px máximo, se ven correctas; para subirlas hay que **sustituir la imagen**, no reescalarla.
+
+Nota: el patrón de reemplazo alcanzó también imágenes de la pantalla de Ejercicios (diagramas SVG de gimnasio). Las sube a HD igual — no rompe nada, pero no era el objetivo del pedido.
+
+### Pendiente: el estilo
+
+*"las imágenes no me gustan"* + la elección de **cambiar las 61** quedó sin ejecutar, a la espera de definir a qué estilo. Cambiarlas a ciegas son 61 búsquedas para acaso volver a empezar. Queda advertido en la conversación que ~26 de esas imágenes (los 8 nudos, las 7 maniobras de auxilios, los 6 pasos de mecánica) **son el contenido**, no decoración: sustituirlas por tomas más bonitas empeora la explicación.
+
+## Kit de Higiene, tratamientos con receta y 2 pesos reales de gym (2026-08-15)
+
+Cinco pedidos en un mensaje. Uno resultó no ser un pedido.
+
+### "No has puesto cambiar una llanta, pasar batería" — sí estaban
+
+`Cambiar una llanta ponchada, paso a paso completo` y `Pasar corriente (jump start), en el orden exacto` son las **Fases 1 y 2 de `mecanica`**, con el detalle completo (aflojar birlos en patrón de estrella antes de levantar el auto, el orden exacto de los 4 cables). No faltaban: están **dentro** del overlay de "Mecánica básica de auto", así que solo se ven si abres esa tarjeta. Es un problema de descubribilidad, no de contenido — queda pendiente decidir si se promueven a tarjetas propias del grid.
+
+### Kit de Higiene — categoría nueva en la Lista de Compras
+
+`higiene` (🧳), **34 productos en 7 bolsas**, agrupados por *bolsa* y no por tipo de producto: cuando armas la maleta importa qué meter en el neceser, no si algo es "cuidado bucal" o "corporal".
+
+Bolsa base (4) · Cuidado bucal (5) · Afeitado y barba (5) · Cuerpo y ducha (5) · Manos, uñas y pies (4) · Botiquín mínimo (7) · "Los que ya tienes, solo cámbialos a tamaño viaje" (4).
+
+Esa última bolsa existe para **no duplicar** lo que ya vive en Skincare y Cabello: ahí solo se recuerda pasarlos a envase de 100 ml, con la excepción del minoxidil (en su envase original — se degrada si se trasvasa). Detalles pensados para viaje real: desodorante en barra y no aerosol, la bolsa transparente de 1 L de la regla de aeropuerto, chanclas de ducha para la alberca de Fitsi.
+
+Se añadió `higiene` a `LC_AMAZON_CATS`, así que los 34 productos traen sus 68 links de compra (Amazon + Mercado Libre) automáticamente.
+
+### Tratamientos de cabello con receta
+
+`HAIR_DB.tratamientoCaida` pasa de 1 a 3 opciones, y las 2 nuevas van **después** del minoxidil tópico a propósito: no son alternativas de la misma categoría, son otro escalón.
+
+- **Minoxidil tópico + Dutasteride** (fórmula magistral). El minoxidil hace crecer; el dutasteride ataca la causa bloqueando la DHT, e inhibe los 2 tipos de 5-alfa-reductasa, no solo uno como el finasteride.
+- **Minoxidil oral 2.5-5 mg**. Más fácil de sostener que aplicarse la solución 2 veces al día, y la constancia es la mitad del resultado.
+
+**Los dos llevan la condición escrita en el propio campo `uso`, no en una nota aparte**: el dutasteride requiere prescripción en México, no está aprobado por la FDA para alopecia y altera el valor del PSA (dato que importa en una revisión de próstata); el minoxidil oral es sistémico y puede bajar la presión, causar retención de líquidos e hipertricosis, así que exige control médico de presión antes y durante. Poner la dosis sin poner la condición sería lo irresponsable.
+
+En la Lista de Compras van marcados con 🩺 **en el propio nombre**, porque esa lista se lee en el pasillo y ahí no hay contexto: sin la marca parecerían productos de mostrador.
+
+### 2 pesos reales de gym
+
+`EJ_LOOKUP.pesoIni` deja de ser estimación en estos dos: **Curl con Barra 20 → 18 kg** (los 40 lb que levantó) y **Extensión en Polea 15 → 22.5 kg** (50% más de lo que el default asumía).
+
+### Verificación
+
+Kit: 34 productos, 7 bolsas, 68 links, 6 pestañas de categoría. Cabello: 7 productos con dutasteride y oral presentes, 2 marcados con 🩺. Gym: 18 kg (40 lb) y 22.5 kg. Sintaxis OK y divs balanceados en `dashboard.html`, `cuidadopersonal.html` y `Coach_v2.html`; cero errores de consola.
+
+**Pendiente del pedido**: el kit se pidió "con imágenes" y por ahora lleva links de compra, no fotos — los links sí llevan a la imagen real del producto en la tienda, pero no es lo mismo.

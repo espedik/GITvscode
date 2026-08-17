@@ -210,3 +210,16 @@ Se resolvió con `guiaMostrarPrimera()` / `guiaSoloPerfil()`, enganchadas a las 
 Abajo de 900px el menú pasa arriba como tira horizontal con scroll propio y los ítems se vuelven píldoras. En una columna de 200px los nombres de sección no caben, y apilarlos verticalmente empujaría todo el contenido fuera de la pantalla.
 
 - Verificado con Node: sintaxis OK en los 2 bloques `<script>` reales; CSS 356/356 llaves; `<div>` 184/184, `<nav>` 4/4, `<main>` 7/7; la barra de pestañas del contenedor sigue intacta; las 3 guías tienen su `nav`, su llamada a `guiaEnSecciones` y su sincronización con el botón del hero; las 3 funciones nuevas existen; y simulando el agrupado, los menús salen con 8, 9 y 5 secciones con sus íconos correctos.
+
+## Tratamientos de caída con prescripción (2026-08-15)
+
+Pedido: *"agrega tratamientos para cabello, usar minoxidil con dutasteride... minoxidil oral tambien"*.
+
+`HAIR_DB.tratamientoCaida` pasa de 1 a 3 opciones. Las 2 nuevas van después del minoxidil tópico porque no son alternativas equivalentes, son otro escalón de tratamiento:
+
+- **Minoxidil tópico + Dutasteride** (fórmula magistral) — el minoxidil hace crecer, el dutasteride ataca la causa bloqueando la DHT. Inhibe los 2 tipos de 5-alfa-reductasa, no solo uno como el finasteride. Aplicado en piel la absorción sistémica es menor que en pastilla, pero no es cero.
+- **Minoxidil oral 2.5-5 mg** — se receta fuera de indicación (su registro original es antihipertensivo). Ventaja real: tomar una pastilla es más sostenible que aplicarse la solución 2 veces al día.
+
+**La condición médica va dentro del campo `uso` de cada uno, no en una nota al pie**: dutasteride requiere prescripción en México, no tiene aprobación FDA para alopecia y altera el PSA; el minoxidil oral es sistémico (presión, retención de líquidos, taquicardia, hipertricosis) y exige control de presión antes y durante. La dosis y la condición viajan juntas o el dato es peligroso.
+
+Replicado en `Dashboard/dashboard.html` → `LISTA_COMPRAS.cabello`, ahí marcados con 🩺 en el propio nombre del producto porque esa lista se lee en el pasillo del súper, sin contexto alrededor.

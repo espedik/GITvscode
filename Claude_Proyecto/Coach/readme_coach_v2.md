@@ -672,3 +672,19 @@ Sale a la misma hora (07:40), así que la mañana no cambia: el bloque de la apl
 También se reescribió el **`context-banner` de `#rutina`**, que decía *"sales 7:40, manejas hasta 8:00"* y *"retomas Didi hasta ~21:00"*, ambas ya falsas tras los cambios de hoy.
 
 Verificado con Node: sintaxis OK, 71 tareas, sin IDs duplicados, lunes en orden estricto de 06:40 a 23:59 con ALTEN entrando 08:30 y la tarde sin moverse.
+
+## Opción 10 de Negocios: llevar el ecosistema a Kickstarter (2026-08-15)
+
+*"en negocios en empresa quiero ver la posibilidad de poner esta aplicacion en kick starter"*.
+
+Nueva tarjeta `#negocio10` con el mismo formato que las 9 anteriores (qué es · por qué encaja · primer paso · riesgo). La diferencia: aquí el primer paso es **verificar 3 supuestos que pueden matar la idea** antes de invertir una hora en la campaña.
+
+1. **¿Kickstarter admite creadores desde México?** Requisitos de país, identificación y cuenta bancaria cambian con el tiempo — se confirma en su página, no se asume.
+2. **¿Es el lugar correcto para software?** Su público busca objetos, juegos y obra creativa; el software compite en desventaja porque no hay nada que enviar. Y el modelo es **todo o nada**.
+3. **¿Alguien más lo quiere?** El ecosistema está hecho a su medida —su deuda, su rutina de Didi, su meta de 2030—, que es justo lo que lo hace bueno para él y difícil de vender tal cual.
+
+**El primer paso propuesto cuesta cero y no requiere campaña**: al publicar la plantilla de Finanzas.html (Opción 1), añadir una línea pidiendo el correo de quien quiera probar la versión completa. Si junta correos, tiene validación y lista de lanzamiento; si no junta ninguno, se ahorró 3 meses.
+
+Se documentan alternativas mejor ajustadas si la validación sale bien (venta directa tipo Gumroad, suscripción, Product Hunt), con el criterio explícito: **Kickstarter tiene sentido para financiar lo que todavía no existe**, y aquí el producto ya está de pie.
+
+El riesgo principal enlaza con el que ya tenía la Opción 1: el ecosistema contiene su sueldo, deudas, saldos de GBM y horario completo. Cualquier versión pública nace de una copia limpia con datos de ejemplo, y eso es trabajo real, no un buscar-y-reemplazar.

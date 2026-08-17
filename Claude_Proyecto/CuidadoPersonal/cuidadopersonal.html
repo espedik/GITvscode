@@ -1249,7 +1249,15 @@ const HAIR_DB={
     {n:'Moroccanoil Hydrating Mask',grosor:['medio','grueso'],presu:['alto'],ayuda:['resequedad'],uso:'Mismo uso, versión premium con aceite de argán — más rica, úsala con moderación en cabello fino.'},
   ],
   tratamientoCaida:[
+    // 2026-08-15, pedido de Adán: "usar minoxidil con dutasteride... minoxidil oral tambien".
+    // Los 2 nuevos van DESPUÉS del minoxidil tópico a propósito: no son alternativas de la misma
+    // categoría, son un escalón distinto. El tópico se compra sin receta; estos dos NO — el
+    // dutasteride es un inhibidor de 5-alfa-reductasa que en México requiere prescripción, y el
+    // minoxidil oral se usa fuera de indicación (su registro es como antihipertensivo). Poner
+    // la dosis sin poner esa condición sería lo irresponsable, así que va en el propio `uso`.
     {n:'Minoxidil 5% Solución/Espuma (Kirkland Signature o genérico)',grosor:['fino','medio','grueso'],presu:['economico','medio','alto'],ayuda:['caida'],uso:'1ml (la tapa dosificadora) en cuero cabelludo seco, 2 veces al día (mañana y noche), constante — no lo apliques en cabello mojado ni justo después de lavar.'},
+    {n:'Minoxidil tópico + Dutasteride (fórmula magistral — REQUIERE RECETA)',grosor:['fino','medio','grueso'],presu:['medio','alto'],ayuda:['caida'],uso:'Combina el minoxidil que ya usas con dutasteride en la misma solución, preparada por farmacia magistral. El minoxidil hace crecer; el dutasteride ataca la CAUSA, bloqueando la DHT que miniaturiza el folículo — es más potente que el finasteride porque inhibe los 2 tipos de 5-alfa-reductasa, no solo uno. Aplicado en la piel la absorción sistémica es mucho menor que en pastilla, pero NO es cero. ⚠️ Necesitas dermatólogo: en México el dutasteride es de prescripción, no está aprobado por la FDA para alopecia (sí en Corea y Japón) y altera el valor del PSA, dato que importa si alguna vez te revisan la próstata — avísale al médico que lo usas. Efectos posibles: baja del deseo sexual o dificultad eréctil en un porcentaje pequeño de hombres.'},
+    {n:'Minoxidil ORAL en dosis baja (2.5-5 mg — REQUIERE RECETA Y SEGUIMIENTO)',grosor:['fino','medio','grueso'],presu:['economico','medio'],ayuda:['caida'],uso:'La pastilla. Se receta fuera de indicación (su registro original es como antihipertensivo) y funciona para quien no tolera el tópico o no logra ser constante con él — tomar una pastilla es más fácil de sostener que aplicarse la solución 2 veces al día, y la constancia es la mitad del resultado. ⚠️ Esta SÍ es sistémica: puede bajar la presión, causar retención de líquidos, hinchazón de tobillos, taquicardia y vello de más en cara y cuerpo (hipertricosis, el efecto más frecuente). Requiere que un médico revise tu presión antes y durante. No la empieces por tu cuenta ni la combines con el tópico sin que él lo indique.'},
   ],
   aceitePuntas:[
     {n:'Moroccanoil Treatment Light',grosor:['fino'],presu:['medio','alto'],ayuda:['resequedad'],uso:'2-3 gotas en las palmas, aplica solo en puntas con el cabello húmedo o seco. La versión "Light" es clave para cabello fino — la original regular puede pesarlo/engrasarlo.'},
