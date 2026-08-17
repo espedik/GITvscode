@@ -4730,6 +4730,19 @@ function init() {
     save();
     localStorage.setItem(KEY+'_msibbva20260813','1');
   }
+  // Migración 2026-08-17: saldos reales de ahorro que Adán reportó ("de fondo de emergencia,
+  // ya tengo 4,000 actualizalo y de cetes ya tengo 6,500 ahorrado"). Bandera propia, se aplica
+  // una sola vez sobre lo que ya tenga el navegador.
+  if(!localStorage.getItem(KEY+'_ahorro20260817')){
+    S.emergencyFund=4000;
+    const _ef=S.goals.find(g=>g.id==='ef-001');
+    if(_ef) _ef.current=4000;
+    let _c=S.investments.find(i=>i.type==='cetes'||/cetes/i.test(i.name||''));
+    if(_c){ _c.invested=6500; _c.value=6500; }
+    else S.investments.push({id:'inv-cetes-001',name:'CETES 28 días',type:'cetes',invested:6500,value:6500,date:'2026-08-17',notes:'Saldo real reportado el 17-ago-2026 — aporte recurrente de $1,500 el día 15.'});
+    save();
+    localStorage.setItem(KEY+'_ahorro20260817','1');
+  }
   // Asegurar que el fondo de emergencia exista en metas
   if(!S.goals.find(g=>g.id==='ef-001')) {
     S.goals.unshift({

@@ -1637,6 +1637,25 @@ function fixMsiBBVA20260813IfNeeded(){
 // GYM_RUTINA_DEFAULT (ver loadAll()), así que el código nuevo nunca se ve reflejado solo.
 // Corrige el dato ya guardado, una sola vez, y solo si sigue siendo exactamente el default viejo
 // (si Adán ya personalizó el miércoles a otra cosa, no se toca — eso es una decisión suya).
+// Espejo de la migración _ahorro20260817 de Finanzas.html (2026-08-17): saldos reales de
+// ahorro. Va aquí por el mismo motivo que las 3 anteriores — Adán abre el Dashboard primero,
+// y la migración de Finanzas solo corre si abre Finanzas. Misma bandera, así que la primera
+// app que arranque la aplica y la otra ya no la repite.
+function fixAhorro20260817IfNeeded(){
+  const K='finanzasmx_v2';
+  if(localStorage.getItem(K+'_ahorro20260817')) return;
+  const d=rawGet(K,null);
+  if(!d) return;
+  d.emergencyFund=4000;
+  if(Array.isArray(d.goals)){ const ef=d.goals.find(g=>g.id==='ef-001'); if(ef) ef.current=4000; }
+  if(Array.isArray(d.investments)){
+    const c=d.investments.find(i=>i.type==='cetes'||/cetes/i.test(i.name||''));
+    if(c){ c.invested=6500; c.value=6500; }
+    else d.investments.push({id:'inv-cetes-001',name:'CETES 28 días',type:'cetes',invested:6500,value:6500,date:'2026-08-17',notes:'Saldo real reportado el 17-ago-2026.'});
+  }
+  rawSet(K,d);
+  localStorage.setItem(K+'_ahorro20260817','1');
+}
 function fixMiercolesNatacionIfNeeded(){
   if(localStorage.getItem('mirutina_v1_miercoles_natacion')) return;
   const gym=rawGet('mirutina_v1', null);
@@ -4362,130 +4381,131 @@ window.addEventListener('resize',syncSlidesTop);
 // "FASE N · Etiqueta — " a mano dentro de cada string; ahora esa etiqueta vive en `t` como el resto.
 const META_DETALLE={
   ajedrez:{titulo:'Torneo de ajedrez',frase:'No necesitas ser el mejor del torneo. Necesitas inscribirte al primero.',pasos:[
-    {t:'Practica diario',d:'15-20 minutos de puzzles tácticos — puedes usar el bloque de tiempo libre que ya tienes antes de dormir (23:10, justo después de la meditación).',href:'https://lichess.org/training',label:'Puzzles en Lichess'},
-    {t:'Club presencial',d:'Únete a uno real en CDMX para jugar contra gente, no solo contra la computadora — el Club de Ajedrez Mercenarios (Col. Del Valle) y el Club de Ajedrez Cuauhtémoc (Tabacalera) son 2 opciones activas.'},
-    {t:'Ajedrez callejero gratis',d:'Si prefieres sin compromiso: mesas activas los fines de semana en Jardín Centenario (Coyoacán) y los domingos en la Alameda Central.'},
-    {t:'Calendario de torneos',d:'Revisa el calendario nacional de torneos amateur con inscripción abierta.',href:'https://mexicochess.com/',label:'Calendario en MéxicoChess'},
-    {t:'Federación oficial',d:'FENAMAC es el organismo oficial — confirma ahí qué torneos están avalados y sus requisitos reales de inscripción.',href:'https://fenamac.info/',label:'FENAMAC'},
-    {t:'Torneos grandes en CDMX',d:'Copa Independencia y Copa Revolución — la fecha y el costo cambian cada año, revisa la convocatoria vigente antes de apuntarte.',href:'https://copaindependencia.com.mx/',label:'Copa Independencia'},
-    {t:'Tu primer torneo',d:'Busca uno rápido o amateur avalado por Acadfac — es más accesible que un clásico largo para agarrar experiencia real.',href:'https://www.acadfac.org.mx/',label:'Acadfac'},
-    {t:'Analiza tus derrotas',d:'Revísalas como revisas un sistema en el trabajo: encuentra el punto exacto donde se rompió el plan, no te quedes solo con "perdí".'},
-    {t:'Ponle fecha',d:'Elige un torneo específico dentro de los próximos 2-3 meses y anótalo, igual que haces con tus otras metas.'}
-  ]},
+      {t:'Practica diario',d:'15-20 minutos de puzzles tácticos — puedes usar el bloque de tiempo libre que ya tienes antes de dormir (23:10, justo después de la meditación).'},
+      {t:'Club presencial',d:'Únete a uno real en CDMX para jugar contra gente, no solo contra la computadora — el Club de Ajedrez Mercenarios (Col. Del Valle) y el Club de Ajedrez Cuauhtémoc (Tabacalera) son 2 opciones activas.'},
+      {t:'Ajedrez callejero gratis',d:'Si prefieres sin compromiso: mesas activas los fines de semana en Jardín Centenario (Coyoacán) y los domingos en la Alameda Central.'},
+      {t:'Calendario de torneos',d:'Revisa el calendario nacional de torneos amateur con inscripción abierta.'},
+      {t:'Federación oficial',d:'FENAMAC es el organismo oficial — confirma ahí qué torneos están avalados y sus requisitos reales de inscripción.'},
+      {t:'Torneos grandes en CDMX',d:'Copa Independencia y Copa Revolución — la fecha y el costo cambian cada año, revisa la convocatoria vigente antes de apuntarte.'},
+      {t:'Tu primer torneo',d:'Busca uno rápido o amateur avalado por Acadfac — es más accesible que un clásico largo para agarrar experiencia real.'},
+      {t:'Analiza tus derrotas',d:'Revísalas como revisas un sistema en el trabajo: encuentra el punto exacto donde se rompió el plan, no te quedes solo con "perdí".'},
+      {t:'Ponle fecha',d:'Elige un torneo específico dentro de los próximos 2-3 meses y anótalo, igual que haces con tus otras metas.'},
+    ]},
   hyrox:{titulo:'Primer Hyrox',frase:'Tu cuerpo ya está construyendo la base — el Hyrox se corre con lo que entrenas hoy.',pasos:[
-    {t:'Qué es Hyrox',d:'8 km de running divididos en 8 tramos de 1 km, alternados con 8 estaciones de trabajo funcional, siempre en el mismo orden — un híbrido con reglas fijas, no una carrera normal.'},
-    {t:'Las 8 estaciones',d:'Peso/distancia oficial de tu categoría (Men Open) y el tiempo promedio real que tarda un atleta en cada una (mediana, Temporadas 7-8, 395,452 resultados):',list:[
-      'SkiErg — 1000 m · promedio 4:29',
-      'Sled Push — 50 m con 152 kg · promedio 3:04',
-      'Sled Pull — 50 m con 103 kg · promedio 5:03',
-      'Burpee Broad Jumps — 80 m · promedio 5:22',
-      'Rowing — 1000 m · promedio 4:49',
-      'Farmers Carry — 200 m con 2×24 kg · promedio 2:09 (la más rápida)',
-      'Sandbag Lunges — 100 m con 20 kg · promedio 5:13',
-      'Wall Balls — 100 reps con 6 kg · promedio 6:52 (la más lenta de las 8)'
-    ],href:'https://hyroxdatalab.com/articles/average-hyrox-station-times',label:'Promedios reales — HyroxDataLab'},
-    {t:'Entrena el SkiErg',d:'Caderas altas, agarre suave, exhala fuerte en cada jalón — practica intervalos largos y cortos para sostener el ritmo después de correr.'},
-    {t:'Entrena Sled Push/Pull',d:'Inclinación agresiva (~45°), pasos cortos y potentes sin detenerte, esfuerzo al 85% (no sprint) — el calzado con buen agarre importa más aquí que en otra estación.'},
-    {t:'Entrena Wall Balls',d:'La última estación, con las piernas cansadas: sentadilla profunda, espalda recta, lanza a la altura correcta y recibe en sentadilla — la técnica evita repeticiones no válidas.'},
-    {t:'Tu base ya existe',d:'Fuerza 2×/semana, natación miércoles y cardio sábado — agrega intervalos de carrera (6-8×400m) al sábado, empezando 8-10 semanas antes del evento.'},
-    {t:'Fecha confirmada',d:'HYROX Ciudad de México: 30 oct al 1 nov de 2026, Centro Banamex (Hipódromo de las Américas) — el costo no salió confirmado en la búsqueda, revísalo en el registro oficial.',href:'https://mexico.hyrox.com/event/hyrox-mexico-city-season-26-27-glbt3x',label:'Registro oficial HYROX CDMX'},
-    {t:'Sedes alternas',d:'Si prefieres o se te pasó CDMX: Dallas, TX (18-22 nov 2026) y Chicago, IL (11-15 feb 2027), ya confirmadas en Norteamérica.'},
-    {t:'Últimas 2 semanas',d:'Baja el peso en brazos/piernas y prioriza el descanso — llegar fresco importa más que un último entrenamiento fuerte.'}
-  ]},
+      {t:'Qué es Hyrox',d:'8 km de running divididos en 8 tramos de 1 km, alternados con 8 estaciones de trabajo funcional, siempre en el mismo orden — un híbrido con reglas fijas, no una carrera normal.'},
+      {t:'Las 8 estaciones',d:'Peso/distancia oficial de tu categoría (Men Open) y el tiempo promedio real que tarda un atleta en cada una (mediana, Temporadas 7-8, 395,452 resultados):'},
+      {t:'Entrena el SkiErg',d:'Caderas altas, agarre suave, exhala fuerte en cada jalón — practica intervalos largos y cortos para sostener el ritmo después de correr.'},
+      {t:'Entrena Sled Push/Pull',d:'Inclinación agresiva (~45°), pasos cortos y potentes sin detenerte, esfuerzo al 85% (no sprint) — el calzado con buen agarre importa más aquí que en otra estación.'},
+      {t:'Entrena Wall Balls',d:'La última estación, con las piernas cansadas: sentadilla profunda, espalda recta, lanza a la altura correcta y recibe en sentadilla — la técnica evita repeticiones no válidas.'},
+      {t:'Tu base ya existe',d:'Fuerza 2×/semana, natación miércoles y cardio sábado — agrega intervalos de carrera (6-8×400m) al sábado, empezando 8-10 semanas antes del evento.'},
+      {t:'Fecha confirmada',d:'HYROX Ciudad de México: 30 oct al 1 nov de 2026, Centro Banamex (Hipódromo de las Américas) — el costo no salió confirmado en la búsqueda, revísalo en el registro oficial.'},
+      {t:'Sedes alternas',d:'Si prefieres o se te pasó CDMX: Dallas, TX (18-22 nov 2026) y Chicago, IL (11-15 feb 2027), ya confirmadas en Norteamérica.'},
+      {t:'Últimas 2 semanas',d:'Baja el peso en brazos/piernas y prioriza el descanso — llegar fresco importa más que un último entrenamiento fuerte.'},
+      {t:'💸 Costo de inscripción y cómo registrarte',d:'El registro se hace en <b>mexico.hyrox.com</b>, evento "HYROX Ciudad de México". El precio de atleta <b>no está publicado</b> en las páginas de referencia — hay que verlo en el registro oficial, y sube por oleadas: entre más te tardes, más caro. Lo que sí está confirmado: la <b>entrada de espectador cuesta $250 MXN</b>, por si vas a llevar a alguien. Regístrate en cuanto abran las inscripciones, no en las últimas semanas.'},
+      {t:'📍 Dónde y cuándo, exacto',d:'<b>30 de octubre al 1 de noviembre de 2026</b>, en el <b>Centro Banamex</b> — Av. del Conscripto 311, Lomas de Sotelo, 11610, CDMX. Está a ~20 min de tu casa manejando y es la misma zona del Hipódromo de las Américas. Elige tu día con cuidado: el <b>viernes 30</b> suele estar menos saturado y el <b>domingo 1</b> es el de más ambiente. Si eliges sábado, ojo con tus turnos de Didi: ese día tienes 10h agendadas.'},
+      {t:'📅 Cuenta regresiva desde hoy',d:'Del 17 de agosto al 30 de octubre son <b>~10 semanas</b>, que es justo la ventana de preparación que recomienda tu propio plan (8-10 semanas de intervalos antes del evento). Si vas a correrlo este año, <b>el bloque de carrera empieza ya</b>: 6-8×400m los sábados, sumados a lo que ya haces. Si prefieres llegar mejor preparado, la siguiente opción en Norteamérica es <b>Chicago, 11-15 feb 2027</b>.'},
+    ]},
   remoto:{titulo:'Trabajar remoto',frase:'Trabajar remoto no se pide — se construye con evidencia de lo que ya sabes hacer.',pasos:[
-    {t:'Tu base ya existe',d:'Experiencia real de testing automotriz en Bosch y Continental, más SQL — documenta esto primero en tu perfil, es justo lo que piden estos trabajos.'},
-    {t:'LinkedIn con señal remota',d:'Titular explícito de disponibilidad y zona horaria (ej. "QA/Test Engineer · Automotive · GMT-6 · Remote") — así filtran los reclutadores remotos.'},
-    {t:'Bolsas especializadas',d:'We Work Remotely (sección QA), RemoteOK y Himalayas — revísalas cada semana, no solo una vez.',href:'https://weworkremotely.com/remote-qa-jobs',label:'We Work Remotely — QA'},
-    {t:'Wellfound',d:'Más de 130,000 vacantes activas publicadas directo por el empleador, sin agencias, con filtro de trabajo remoto.',href:'https://wellfound.com/remote',label:'Wellfound — remoto'},
-    {t:'GetOnBoard LatAm',d:'Exige que las vacantes publiquen rango salarial y stack tecnológico — te ahorra tiempo filtrando antes de aplicar.',href:'https://www.getonbrd.com.co/jobs-latam-remote-work',label:'GetOnBoard LatAm'},
-    {t:'ALTEN ya publica remoto',d:'Vacantes reales de tu propia empresa: "Quality Assurance Test Engineer" y "Test and Validation Engineer" (automotriz, HIL, CANoe/CANape) — tu perfil calza casi exacto.',href:'https://remotive.com/remote-jobs/qa/quality-assurance-test-engineer-2071338',label:'Ejemplo real: QA remoto en ALTEN'},
-    {t:'Pregunta primero adentro',d:'Antes de buscar afuera, pregunta directo con tu gerente en ALTEN si existe la opción de días remotos.'},
-    {t:'Portales directos',d:'Revisa los de Bosch y Continental con el filtro de remoto activado — las bolsas generales no siempre muestran sus vacantes internas.'},
-    {t:'Aplica constante',d:'2-3 vacantes remotas por semana aunque no te sientas 100% listo — practicar entrevistas es parte del proceso (tu slide de Entrevista del día).'}
-  ]},
+      {t:'Tu base ya existe',d:'Experiencia real de testing automotriz en Bosch y Continental, más SQL — documenta esto primero en tu perfil, es justo lo que piden estos trabajos.'},
+      {t:'LinkedIn con señal remota',d:'Titular explícito de disponibilidad y zona horaria (ej. "QA/Test Engineer · Automotive · GMT-6 · Remote") — así filtran los reclutadores remotos.'},
+      {t:'Bolsas especializadas',d:'We Work Remotely (sección QA), RemoteOK y Himalayas — revísalas cada semana, no solo una vez.'},
+      {t:'Wellfound',d:'Más de 130,000 vacantes activas publicadas directo por el empleador, sin agencias, con filtro de trabajo remoto.'},
+      {t:'GetOnBoard LatAm',d:'Exige que las vacantes publiquen rango salarial y stack tecnológico — te ahorra tiempo filtrando antes de aplicar.'},
+      {t:'ALTEN ya publica remoto',d:'Vacantes reales de tu propia empresa: "Quality Assurance Test Engineer" y "Test and Validation Engineer" (automotriz, HIL, CANoe/CANape) — tu perfil calza casi exacto.'},
+      {t:'Pregunta primero adentro',d:'Antes de buscar afuera, pregunta directo con tu gerente en ALTEN si existe la opción de días remotos.'},
+      {t:'Portales directos',d:'Revisa los de Bosch y Continental con el filtro de remoto activado — las bolsas generales no siempre muestran sus vacantes internas.'},
+      {t:'Aplica constante',d:'2-3 vacantes remotas por semana aunque no te sientas 100% listo — practicar entrevistas es parte del proceso (tu slide de Entrevista del día).'},
+    ]},
   byd:{titulo:'Liquidar el BYD Dolphin Mini',frase:'El orden ya está definido: primero la deuda que sí te cobra intereses, después el coche.',pasos:[
-    {t:'Paso 1 · Fondo de emergencia',d:'A $10,000 — antes de tocar el BYD, esto va primero.'},
-    {t:'✅ Paso 2 · Banamex en $0',d:'Hecho el 13 ago 2026: pagaste el saldo completo, no el mínimo, 5 meses antes de la meta.'},
-    {t:'Paso 3 · BBVA en $0',d:'La única deuda cara que queda: $32,343. Proyectada a marzo de 2027 con los $4,645/mes que se liberan en octubre — hasta aquí el BYD se queda en pago mínimo.'},
-    {t:'Se acelera de verdad',d:'En cuanto BBVA llegue a $0 (abr 2027), todo ese pago se redirige completo al BYD.'},
-    {t:'Pregunta por pagos extra',d:'A tu crédito del BYD, si permite pagos extraordinarios a capital sin penalización — resuélvelo antes de necesitarlo.'},
-    {t:'Ingresos extra a capital',d:'Cualquier ingreso extra de Didi o del negocio que no esté ya comprometido va como abono a capital del BYD.'},
-    {t:'Revisa el saldo cada mes',d:'En Finanzas, junto con tus otras deudas — verlo bajar es lo que sostiene la disciplina de seguir el orden.'},
-    {t:'BYD liquidado 🎉',d:'Desde ese momento, ese mismo pago mensual se redirige al fondo del Cupra Formentor (ahora tu meta de largo plazo).'}
-  ]},
+      {t:'Paso 1 · Fondo de emergencia',d:'A $10,000 — antes de tocar el BYD, esto va primero.'},
+      {t:'✅ Paso 2 · Banamex en $0',d:'Hecho el 13 ago 2026: pagaste el saldo completo, no el mínimo, 5 meses antes de la meta.'},
+      {t:'Paso 3 · BBVA en $0',d:'La única deuda cara que queda: $32,343. Proyectada a marzo de 2027 con los $4,645/mes que se liberan en octubre — hasta aquí el BYD se queda en pago mínimo.'},
+      {t:'Se acelera de verdad',d:'En cuanto BBVA llegue a $0 (abr 2027), todo ese pago se redirige completo al BYD.'},
+      {t:'Pregunta por pagos extra',d:'A tu crédito del BYD, si permite pagos extraordinarios a capital sin penalización — resuélvelo antes de necesitarlo.'},
+      {t:'Ingresos extra a capital',d:'Cualquier ingreso extra de Didi o del negocio que no esté ya comprometido va como abono a capital del BYD.'},
+      {t:'Revisa el saldo cada mes',d:'En Finanzas, junto con tus otras deudas — verlo bajar es lo que sostiene la disciplina de seguir el orden.'},
+      {t:'BYD liquidado 🎉',d:'Desde ese momento, ese mismo pago mensual se redirige al fondo del Cupra Formentor (ahora tu meta de largo plazo).'},
+    ]},
   cupra:{titulo:'Cupra Formentor',frase:'El Cupra es el premio, no el punto de partida — llega después de la deuda, no antes.',pasos:[
-    {t:'Regla no negociable',d:'Nada de MSI ni crédito nuevo para el Cupra hasta que la deuda cara esté en $0. Banamex ya cayó el 13 ago 2026; falta BBVA, proyectada a mar 2027.'},
-    {t:'Redirige el pago del BYD',d:'Una vez liquidado (ver esa meta), ese mismo monto —ya estás acostumbrado a él— va a un fondo de ahorro específico para el Cupra.'},
-    {t:'Mínimo financiamiento',d:'Apunta a comprarlo de contado o con enganche grande, una vez tu patrimonio esté cerca de la meta de $1,000,000.'},
-    {t:'Revisa el precio real',d:'Directo en la página oficial de Cupra México o en tu agencia de confianza, cada 6 meses — el número exacto, no una idea vaga.'},
-    {t:'La recompensa de Fase 3',d:'No un gasto de la Fase 0 o 1 — es el mismo orden que ya definiste: deuda cara, luego BYD, luego esto.'}
-  ]},
+      {t:'Regla no negociable',d:'Nada de MSI ni crédito nuevo para el Cupra hasta que la deuda cara esté en $0. Banamex ya cayó el 13 ago 2026; falta BBVA, proyectada a mar 2027.'},
+      {t:'Redirige el pago del BYD',d:'Una vez liquidado (ver esa meta), ese mismo monto —ya estás acostumbrado a él— va a un fondo de ahorro específico para el Cupra.'},
+      {t:'Mínimo financiamiento',d:'Apunta a comprarlo de contado o con enganche grande, una vez tu patrimonio esté cerca de la meta de $1,000,000.'},
+      {t:'Revisa el precio real',d:'Directo en la página oficial de Cupra México o en tu agencia de confianza, cada 6 meses — el número exacto, no una idea vaga.'},
+      {t:'La recompensa de Fase 3',d:'No un gasto de la Fase 0 o 1 — es el mismo orden que ya definiste: deuda cara, luego BYD, luego esto.'},
+    ]},
   empresa:{titulo:'Empresa ya creada',frase:'No empieza con una empresa formal — empieza con decidir qué quieres, después lo legal, después operar.',pasos:[
-    {t:'Fase 1 · Elige el negocio',d:'Freelance/testing (Opción 2), CodeReview productizado (Opción 4), o el negocio de tu papá (Opción 5) — Fase 0-1 del plan es para validar cuál tiene tracción real.'},
-    {t:'Fase 1 · Elige el tipo',d:'Para empezar solo, con ingresos bajos/medianos, lo normal es persona física con actividad empresarial, no persona moral todavía.'},
-    {t:'Fase 2 · Da de alta tu RFC',d:'Con actividad empresarial ante el SAT: trámite gratuito, pide CURP, identificación oficial y comprobante de domicilio, dentro del mes siguiente a iniciar actividad.',href:'https://citas.sat.gob.mx/',label:'Citas SAT'},
-    {t:'Fase 2 · Régimen RESICO',d:'Si tus ingresos anuales no pasan de $3,500,000: tasas de ISR de 1% a 2.5%, mucho más simple que el régimen general.'},
-    {t:'Fase 2 · Empieza a facturar',d:'Emite CFDI desde tu primer peso cobrado — obligatorio, y la evidencia de ingresos que un banco te va a pedir después.'},
-    {t:'Fase 2 · Si escalas a sociedad',d:'Permiso de denominación, acta constitutiva ante notario e inscripción en el Registro Público de Comercio — o la alternativa en línea y sin costo, la SAS.',href:'https://www.gob.mx/tuempresa/articulos/crea-tu-sociedad-por-acciones',label:'SAS — gob.mx/tuempresa'},
-    {t:'Fase 3 · Primer ingreso real',d:'Tu primer contrato freelance cerrado o las primeras ventas/mentorías cobradas.'},
-    {t:'Fase 3 · Dobla la apuesta',d:'En la opción que ya mostró ingreso recurrente (Opción 4, CodeReview productizado), con el capital que tendrás tras liquidar BBVA — Banamex ya está en $0 desde el 13 ago 2026.'},
-    {t:'Fase 3 · Contador cuando crezca',d:'No obligatorio para empezar, pero evita errores de declaración costosos.'},
-    {t:'Fase 3 · Tu argumento de venta',d:'Tu experiencia real de testing en Bosch y Continental — pocos emprendedores saben "probar antes de confiar" tan bien como tú.'}
-  ]},
+      {t:'Fase 1 · Elige el negocio',d:'Freelance/testing (Opción 2), CodeReview productizado (Opción 4), o el negocio de tu papá (Opción 5) — Fase 0-1 del plan es para validar cuál tiene tracción real.'},
+      {t:'Fase 1 · Elige el tipo',d:'Para empezar solo, con ingresos bajos/medianos, lo normal es persona física con actividad empresarial, no persona moral todavía.'},
+      {t:'Fase 2 · Da de alta tu RFC',d:'Con actividad empresarial ante el SAT: trámite gratuito, pide CURP, identificación oficial y comprobante de domicilio, dentro del mes siguiente a iniciar actividad.'},
+      {t:'Fase 2 · Régimen RESICO',d:'Si tus ingresos anuales no pasan de $3,500,000: tasas de ISR de 1% a 2.5%, mucho más simple que el régimen general.'},
+      {t:'Fase 2 · Empieza a facturar',d:'Emite CFDI desde tu primer peso cobrado — obligatorio, y la evidencia de ingresos que un banco te va a pedir después.'},
+      {t:'Fase 2 · Si escalas a sociedad',d:'Permiso de denominación, acta constitutiva ante notario e inscripción en el Registro Público de Comercio — o la alternativa en línea y sin costo, la SAS.'},
+      {t:'Fase 3 · Primer ingreso real',d:'Tu primer contrato freelance cerrado o las primeras ventas/mentorías cobradas.'},
+      {t:'Fase 3 · Dobla la apuesta',d:'En la opción que ya mostró ingreso recurrente (Opción 4, CodeReview productizado), con el capital que tendrás tras liquidar BBVA — Banamex ya está en $0 desde el 13 ago 2026.'},
+      {t:'Fase 3 · Contador cuando crezca',d:'No obligatorio para empezar, pero evita errores de declaración costosos.'},
+      {t:'Fase 3 · Tu argumento de venta',d:'Tu experiencia real de testing en Bosch y Continental — pocos emprendedores saben "probar antes de confiar" tan bien como tú.'},
+    ]},
   depa:{titulo:'Depa en la zona que quieras',frase:'Un depa no se compra con ganas — se compra con historial financiero limpio y patrimonio real.',pasos:[
-    {t:'Historial crediticio limpio',d:'Banamex liquidada el 13 ago 2026 — eso ya cuenta. Sostén BBVA a tiempo hasta dejarla en $0 y tendrás justo lo que un banco revisa antes de darte una hipoteca.'},
-    {t:'Base del enganche',d:'Fondo de emergencia a $10,000 más las inversiones (GBM, CETES) — entre más patrimonio acumules, menos hipoteca necesitas.'},
-    {t:'Aparta un % fijo',d:'Una vez la deuda cara esté en $0, separa un porcentaje fijo del ingreso del negocio específicamente para el enganche.'},
-    {t:'Investiga zonas reales',d:'2-3 zonas donde te gustaría vivir en portales como Inmuebles24 o Vivanuncios, y anota precios actuales — el número exacto, no una idea vaga.'},
-    {t:'Compara opciones de crédito',d:'Hipotecario bancario contra Infonavit/Fovissste si aplican, simulando con la calculadora oficial de cada uno.'},
-    {t:'No mezcles metas',d:'No compitas esta meta con la del Cupra al mismo tiempo — decide cuál va primero, el plan ya prioriza en orden.'}
-  ]},
+      {t:'Historial crediticio limpio',d:'Banamex liquidada el 13 ago 2026 — eso ya cuenta. Sostén BBVA a tiempo hasta dejarla en $0 y tendrás justo lo que un banco revisa antes de darte una hipoteca.'},
+      {t:'Base del enganche',d:'Fondo de emergencia a $10,000 más las inversiones (GBM, CETES) — entre más patrimonio acumules, menos hipoteca necesitas.'},
+      {t:'Aparta un % fijo',d:'Una vez la deuda cara esté en $0, separa un porcentaje fijo del ingreso del negocio específicamente para el enganche.'},
+      {t:'Investiga zonas reales',d:'2-3 zonas donde te gustaría vivir en portales como Inmuebles24 o Vivanuncios, y anota precios actuales — el número exacto, no una idea vaga.'},
+      {t:'Compara opciones de crédito',d:'Hipotecario bancario contra Infonavit/Fovissste si aplican, simulando con la calculadora oficial de cada uno.'},
+      {t:'No mezcles metas',d:'No compitas esta meta con la del Cupra al mismo tiempo — decide cuál va primero, el plan ya prioriza en orden.'},
+    ]},
   tailandia:{titulo:'Pelear en Tailandia',frase:'La pelea en Tailandia empieza en un gimnasio de box en CDMX, no en el avión.',pasos:[
-    {t:'Empieza ya en CDMX',d:'Ya tienes el boxeo identificado en tu sección de Deportes — 2-3 clases por semana en un gimnasio de box o Muay Thai.'},
-    {t:'Súmale resistencia',d:'Tu base ya existe (fuerza, natación, cardio) — agrega resistencia específica de box (rounds de 3 min, sparring ligero) antes del viaje.'},
-    {t:'Tiger Muay Thai',d:'Campamento real en Phuket, de los más grandes, recibe extranjeros todo el año — organiza peleas amistosas para estudiantes en su evento mensual.',href:'https://www.tigermuaythai.com/',label:'Tiger Muay Thai'},
-    {t:'Sumalee Boxing Gym',d:'Otra opción real en Phuket — clase suelta 500 THB, mensual 5,000-9,000 THB, con programa de 12 semanas para tu primera pelea real.',href:'https://sumaleeboxinggym.com/',label:'Sumalee Boxing Gym'},
-    {t:'Santai Muay Thai',d:'Campamento real en Chiang Mai — semanal desde ~$240 USD, mensual ~$665 USD, entrenamiento 2×/día y alojamiento, ayudan a organizar tu primera pelea.',href:'https://muay-thai-santai.com/',label:'Santai Muay Thai'},
-    {t:'No necesita ser profesional',d:'Varios campamentos organizan peleas amistosas para extranjeros al final de la estancia, eso ya cuenta.'},
-    {t:'Después de la deuda cara',d:'Planea este viaje para cuando esté resuelta — se disfruta mucho más sin estar pagándola en intereses después.'}
-  ]},
+      {t:'Empieza ya en CDMX',d:'Ya tienes el boxeo identificado en tu sección de Deportes — 2-3 clases por semana en un gimnasio de box o Muay Thai.'},
+      {t:'Súmale resistencia',d:'Tu base ya existe (fuerza, natación, cardio) — agrega resistencia específica de box (rounds de 3 min, sparring ligero) antes del viaje.'},
+      {t:'Tiger Muay Thai',d:'Campamento real en Phuket, de los más grandes, recibe extranjeros todo el año — organiza peleas amistosas para estudiantes en su evento mensual.'},
+      {t:'Sumalee Boxing Gym',d:'Otra opción real en Phuket — clase suelta 500 THB, mensual 5,000-9,000 THB, con programa de 12 semanas para tu primera pelea real.'},
+      {t:'Santai Muay Thai',d:'Campamento real en Chiang Mai — semanal desde ~$240 USD, mensual ~$665 USD, entrenamiento 2×/día y alojamiento, ayudan a organizar tu primera pelea.'},
+      {t:'No necesita ser profesional',d:'Varios campamentos organizan peleas amistosas para extranjeros al final de la estancia, eso ya cuenta.'},
+      {t:'Después de la deuda cara',d:'Planea este viaje para cuando esté resuelta — se disfruta mucho más sin estar pagándola en intereses después.'},
+      {t:'💸 Lo que cuesta, con números reales',d:'Cotizado el 17-ago-2026. <b>Vuelo redondo CDMX → Bangkok: $16,500-$27,500 MXN</b> en octubre, y <b>abril es el mes más barato (~$11,300)</b>. No hay vuelos directos y el trayecto son ~27 horas con escalas. Presupuesto completo para <b>1 mes de campamento</b>: vuelo ~$22,000 · Santai (entrenamiento 2×/día + alojamiento, ~$665 USD) ~$12,500 · comida ~$5,600 (Tailandia es barato, ~$10 USD/día) · vuelo interno a Chiang Mai o Phuket ~$1,500 · seguro de viaje ~$1,500 · margen para imprevistos ~$5,000. <b>Total: ~$48,000 MXN.</b> Los vuelos se mueven solos: vuelve a cotizar cuando tengas fecha.'},
+      {t:'📅 Cuánto ahorrar al mes, según cuándo quieras ir',d:'Sobre los ~$48,000: <b>a 24 meses son $2,000/mes</b>, <b>a 18 meses $2,670/mes</b>, <b>a 12 meses $4,000/mes</b>. Guárdalo en una cuenta aparte de tu fondo de emergencia — si vive en la misma cuenta, se gasta. La condición no es la fecha, es que tu deuda cara esté resuelta: pagar 40% de interés mientras ahorras para un viaje es perder dinero dos veces.'},
+      {t:'🗓️ La ventana que conviene, y por qué',d:'<b>Apunta a abril.</b> Es el mes más barato para volar (ahorras ~$10,000 solo en el boleto) y cae en temporada seca en Tailandia, antes de las lluvias de mayo. Evita jul-oct: es temporada de monzón y entrenar con esa humedad es otro deporte. Con tu plan de deuda, la primera ventana realista es <b>abril de 2028</b> — ahorrando $2,000/mes desde que liquides BBVA, llegas con el viaje pagado de contado.'},
+      {t:'🥊 Las 12 semanas antes del viaje — qué entrenar exactamente',d:'<b>Semanas 1-4:</b> técnica base — postura, guardia, jab/cross, teep (patada frontal) y el clinch, que es lo que más te va a sorprender del Muay Thai. 3 clases/semana. <b>Semanas 5-8:</b> suma condición específica — 6 rounds de 3 min con 1 de descanso, saltar cuerda 15 min diarios (es LA herramienta del Muay Thai, no un calentamiento), y patadas bajas con espinilleras. <b>Semanas 9-12:</b> sparring ligero 2×/semana, obligatorio — si tu primer contacto real es en Tailandia, la vas a pasar mal. En paralelo, todo el bloque: acondiciona las espinillas de forma progresiva (nunca golpeando cosas duras de golpe, eso lesiona) y baja al peso en el que quieras pelear con tiempo, no en la última semana.'},
+      {t:'🏠 Dónde: los 3 campamentos, comparados',d:'<b>Santai (Chiang Mai)</b> — el más completo para ti: ~$240 USD/semana o ~$665 USD/mes <b>ya con alojamiento incluido</b>, 2 sesiones diarias, y organizan tu primera pelea. Chiang Mai es más barato y más tranquilo que Phuket. <b>Sumalee (Phuket)</b> — 500 THB la clase suelta, 5,000-9,000 THB al mes, con un programa de 12 semanas enfocado a tu primera pelea real. <b>Tiger Muay Thai (Phuket)</b> — el más grande y con más ambiente internacional, organiza peleas amistosas para estudiantes en su evento mensual; es el más caro y el más lleno. Escríbeles por correo antes de reservar y pregunta directo: cuántas semanas necesitan para meterte en una pelea amistosa.'},
+      {t:'📋 Trámites que se hacen antes de comprar el boleto',d:'Con pasaporte mexicano <b>no necesitas visa para turismo</b> hasta 60 días (verifícalo en la embajada antes de viajar, esto cambia). Tu pasaporte debe tener <b>6 meses de vigencia</b> a partir de la fecha de entrada. Contrata seguro de viaje <b>que cubra deportes de contacto</b> — el seguro normal excluye Muay Thai y ahí está justo el riesgo. Y hazte un chequeo médico antes: los campamentos serios te lo van a pedir para dejarte pelear.'},
+    ]},
   hongkong:{titulo:'Rascacielos en Hong Kong',frase:'No necesitas construirlo — necesitas ir a pararte frente a él.',pasos:[
-    {t:'Por qué te conecta',d:'Como ingeniero en mecatrónica, ver de cerca el skyline de Hong Kong —de los más densos del mundo en ingeniería estructural— conecta con lo que te apasiona.'},
-    {t:'Los 2 miradores clásicos',d:'Victoria Peak (el más alto, panorámica completa) y el Sky100 en el ICC (a nivel del rascacielos) — considera ir a los 2.'},
-    {t:'Viaje de Fase 3',d:'Una vez el patrimonio esté cerca de $1,000,000 y la deuda cara resuelta, es un premio que se paga de contado.'},
-    {t:'Investiga operación en Asia',d:'Si ALTEN u otra empresa automotriz/tecnológica tiene presencia ahí — te da información real para una futura asignación internacional.'},
-    {t:'Combínalo con otra meta',d:'Un viaje grande a Asia rinde más si cumple dos metas a la vez, si el presupuesto lo permite.'}
-  ]},
+      {t:'Por qué te conecta',d:'Como ingeniero en mecatrónica, ver de cerca el skyline de Hong Kong —de los más densos del mundo en ingeniería estructural— conecta con lo que te apasiona.'},
+      {t:'Los 2 miradores clásicos',d:'Victoria Peak (el más alto, panorámica completa) y el Sky100 en el ICC (a nivel del rascacielos) — considera ir a los 2.'},
+      {t:'Viaje de Fase 3',d:'Una vez el patrimonio esté cerca de $1,000,000 y la deuda cara resuelta, es un premio que se paga de contado.'},
+      {t:'Investiga operación en Asia',d:'Si ALTEN u otra empresa automotriz/tecnológica tiene presencia ahí — te da información real para una futura asignación internacional.'},
+      {t:'Combínalo con otra meta',d:'Un viaje grande a Asia rinde más si cumple dos metas a la vez, si el presupuesto lo permite.'},
+      {t:'💸 Lo que cuesta, con números reales',d:'Cotizado el 17-ago-2026. <b>Vuelo redondo CDMX → Hong Kong: $31,500-$48,500 MXN</b> según aerolínea y fecha. En destino, un viaje sin lujos ronda <b>$93 USD/día</b>: hostal o hotel económico 250-340 HKD la noche, comer en fondas y restaurantes locales ~67 HKD por comida, y el transporte es de lo mejor y más barato del mundo (12 HKD el viaje sencillo, 500 HKD el pase mensual). Para <b>7 días</b>: vuelo ~$40,000 · hospedaje ~$5,000 · comida ~$5,000 · transporte y miradores ~$3,000. <b>Total: ~$53,000 MXN.</b>'},
+      {t:'📅 Cuánto ahorrar al mes',d:'Sobre los ~$53,000: <b>a 24 meses son $2,210/mes</b>, <b>a 18 meses $2,950/mes</b>, <b>a 12 meses $4,420/mes</b>. Es un viaje de Fase 3 en tu Plan Maestro: se paga de contado, con la deuda cara ya resuelta y el patrimonio encaminado. Si lo pones a meses en una tarjeta, deja de ser un premio y se vuelve otra deuda.'},
+      {t:'🗓️ Cuándo ir — la temporada importa mucho aquí',d:'<b>Octubre a diciembre es la mejor ventana:</b> temperatura agradable, poca humedad y cielos despejados, que es exactamente lo que necesitas para que el skyline se vea. Evita <b>junio-septiembre</b>: es temporada de tifones y de calor húmedo, y con neblina o lluvia los miradores no sirven de nada — habrás volado 20 horas para ver una nube. Marzo y abril traen niebla frecuente.'},
+      {t:'🏙️ El itinerario de ingeniería, que es lo que a ti te interesa',d:'<b>Victoria Peak</b> — sube en el Peak Tram (histórico, de 1888) y ve al atardecer para agarrar día y noche en la misma visita. <b>Sky100</b>, en el piso 100 del ICC, el edificio más alto de la ciudad: es la vista <i>desde dentro</i> del rascacielos. <b>Symphony of Lights</b>, el espectáculo nocturno de luces sobre el puerto, gratis, desde el paseo de Tsim Sha Tsui. Y el <b>Star Ferry</b> cruzando el puerto: cuesta centavos y es la mejor vista a nivel del agua de toda la ciudad. Para tu lado técnico: el <b>puente Tsing Ma</b> es de los puentes colgantes con carga ferroviaria más largos del mundo.'},
+      {t:'🧳 Trámites y logística',d:'Los mexicanos <b>no necesitan visa</b> para Hong Kong hasta 90 días como turista (verifícalo antes, esto cambia). Hong Kong usa <b>dólar hongkonés (HKD)</b>, no yuan. Compra una tarjeta <b>Octopus</b> apenas llegues: sirve para metro, autobús, ferry y hasta tiendas de conveniencia, y te ahorra estar comprando boleto cada vez. El aeropuerto está conectado al centro por el <b>Airport Express</b> en 24 minutos.'},
+    ]},
   spacex:{titulo:'Lanzamiento de SpaceX',frase:'De todas las metas de la lista, esta es de las que menos tiene que esperar.',pasos:[
-    {t:'De las más accesibles',d:'No requiere que tu patrimonio esté cerca de $1,000,000, solo un viaje bien planeado.'},
-    {t:'Calendario público',d:'Revisa el calendario real y actualizado de próximos lanzamientos — cambia según pruebas y clima.',href:'https://nextspaceflight.com/',label:'Next Spaceflight — calendario'},
-    {t:'Starbase, Texas',d:'El mejor punto público es Isla Blanca Park, en South Padre Island, a ~8 km del sitio — no hay centro de visitantes oficial ahí.',href:'https://www.spacelaunchschedule.com/viewing-locations/isla-blanca-park/',label:'Isla Blanca Park'},
-    {t:'Cabo Cañaveral',d:'El Kennedy Space Center tiene la vista más cercana a la plataforma, y Space View Park en Titusville es gratis con audio en vivo del control de misión.',href:'https://www.kennedyspacecenter.com/launches-and-events/see-a-launch/launch-viewing-locations/',label:'Kennedy Space Center — dónde ver'},
-    {t:'No reserves de más',d:'No compres vuelos ni hospedaje no reembolsable hasta que el lanzamiento tenga estatus "Go" confirmado — los scrubs son comunes.'},
-    {t:'Ubícala temprano',d:'Fase 1 o 2 del plan, no hasta el final — en cuanto tengas el primer ingreso extra estable, ya es un viaje que puedes pagar de contado.'},
-    {t:'Suma contexto técnico',d:'Aprovecha el viaje para visitar también el centro de visitantes/museo espacial de la zona — no es solo turismo.'}
-  ]},
+      {t:'De las más accesibles',d:'No requiere que tu patrimonio esté cerca de $1,000,000, solo un viaje bien planeado.'},
+      {t:'Calendario público',d:'Revisa el calendario real y actualizado de próximos lanzamientos — cambia según pruebas y clima.'},
+      {t:'Starbase, Texas',d:'El mejor punto público es Isla Blanca Park, en South Padre Island, a ~8 km del sitio — no hay centro de visitantes oficial ahí.'},
+      {t:'Cabo Cañaveral',d:'El Kennedy Space Center tiene la vista más cercana a la plataforma, y Space View Park en Titusville es gratis con audio en vivo del control de misión.'},
+      {t:'No reserves de más',d:'No compres vuelos ni hospedaje no reembolsable hasta que el lanzamiento tenga estatus "Go" confirmado — los scrubs son comunes.'},
+      {t:'Ubícala temprano',d:'Fase 1 o 2 del plan, no hasta el final — en cuanto tengas el primer ingreso extra estable, ya es un viaje que puedes pagar de contado.'},
+      {t:'Suma contexto técnico',d:'Aprovecha el viaje para visitar también el centro de visitantes/museo espacial de la zona — no es solo turismo.'},
+    ]},
   maestria:{titulo:'Maestría en Alemania',frase:'La maestría no se canceló — se pausó a propósito, con fecha de regreso ya definida.',pasos:[
-    {t:'La decisión ya está tomada',d:'Se pausaron las aportaciones desde julio de 2026 por un año, y los $53,740 ya ahorrados se quedan intactos — nueva meta: octubre de 2028.'},
-    {t:'Sigue con tu alemán',d:'Ya integrado en tu rutina, slide "Alemán del día" — vas a necesitar al menos A2 certificado, algunos programas piden C1.'},
-    {t:'Esslingen · Automotive Systems',d:'Maestría en inglés, 3 semestres: licenciatura en Ingeniería Automotriz/Mecánica/Mecatrónica/Eléctrica, mejor 35% de tu generación, inglés IELTS ≥6.0. Solicitud 4 nov-31 mar, inicio en septiembre.',href:'https://www.hs-esslingen.de/en/international/coming-to-esslingen-uas/international-masters-programmes-graduate-school/master-degree-programmes/automotive-systems-meng',label:'Automotive Systems M.Eng. — Esslingen'},
-    {t:'Esslingen conecta directo',d:'Su Industry Advisory Board incluye a Mercedes-Benz, Bosch y Porsche, y tienen la beca "BMW SpeedUp" solo para sus estudiantes.'},
-    {t:'HTW Berlin · alternativa',d:'Maestría "Future Automotive Technology" en alemán, C1 mínimo, 4 semestres. Fecha límite reportada ronda mediados de junio — no confirmada al 100%, verifícala directo.',href:'https://future-automotive-technology.htw-berlin.de/',label:'Future Automotive Technology — HTW Berlin'},
-    {t:'Bosch · Werkstudent',d:'Hasta 10h/semana en semestre, 35h en vacaciones; también "Praktikum" (1 a 6 meses).',href:'https://www.bosch.de/karriere/dein-einstieg/studentinnen-und-studenten/werkstudententaetigkeit/',label:'Bosch — Werkstudent'},
-    {t:'Mercedes-Benz · Inspire',d:'Programa graduate rotacional internacional, pide maestría/MBA y máximo 3 años de experiencia.',href:'https://group.mercedes-benz.com/careers/graduates/inspire-journey/',label:'Mercedes-Benz — Inspire'},
-    {t:'BMW · Masterprogramm Fastlane',d:'Para maestría con 18+ meses restantes y desempeño sobresaliente — solicitud reportada 1-31 de mayo, inicio en octubre.',href:'https://www.bmwgroup.jobs/de/de/studierende/einstiegs-und-foerderprogramme/masterprogramm-fastlane.html',label:'BMW — Masterprogramm Fastlane'},
-    {t:'Revisión en Fase 3',d:'En 2029 toca revisar la decisión con datos reales del negocio: retomarla si el ingreso la sostiene, o posponerla de forma consciente.'}
-  ]},
-  // Las 2 de abajo son metas YA CUMPLIDAS, no activas — un solo paso que resume el logro (no una
-  // lista de pendientes por hacer), sembrado ya marcado desde la primera carga del navegador (ver
-  // seedMetasLogradasIfNeeded() en Init). Mismo criterio ya usado en Coach_v2.html → #perfil-metas
-  // → tarjeta "🏆 Ya logradas" — registro histórico, no checklist para trackear.
+      {t:'La decisión ya está tomada',d:'Se pausaron las aportaciones desde julio de 2026 por un año, y los $53,740 ya ahorrados se quedan intactos — nueva meta: octubre de 2028.'},
+      {t:'Sigue con tu alemán',d:'Ya integrado en tu rutina, slide "Alemán del día" — vas a necesitar al menos A2 certificado, algunos programas piden C1.'},
+      {t:'Esslingen · Automotive Systems',d:'Maestría en inglés, 3 semestres: licenciatura en Ingeniería Automotriz/Mecánica/Mecatrónica/Eléctrica, mejor 35% de tu generación, inglés IELTS ≥6.0. Solicitud 4 nov-31 mar, inicio en septiembre.'},
+      {t:'Esslingen conecta directo',d:'Su Industry Advisory Board incluye a Mercedes-Benz, Bosch y Porsche, y tienen la beca "BMW SpeedUp" solo para sus estudiantes.'},
+      {t:'HTW Berlin · alternativa',d:'Maestría "Future Automotive Technology" en alemán, C1 mínimo, 4 semestres. Fecha límite reportada ronda mediados de junio — no confirmada al 100%, verifícala directo.'},
+      {t:'Bosch · Werkstudent',d:'Hasta 10h/semana en semestre, 35h en vacaciones; también "Praktikum" (1 a 6 meses).'},
+      {t:'Mercedes-Benz · Inspire',d:'Programa graduate rotacional internacional, pide maestría/MBA y máximo 3 años de experiencia.'},
+      {t:'BMW · Masterprogramm Fastlane',d:'Para maestría con 18+ meses restantes y desempeño sobresaliente — solicitud reportada 1-31 de mayo, inicio en octubre.'},
+      {t:'Revisión en Fase 3',d:'En 2029 toca revisar la decisión con datos reales del negocio: retomarla si el ingreso la sostiene, o posponerla de forma consciente.'},
+    ]},
   ipn11k:{titulo:'11K de la Carrera IPN — ya corridos',frase:'La meta no era terminar — era terminar bien, y 1:10:00 lo confirma.',pasos:[
-    {t:'Meta cumplida',d:'Corriste los 11K de la Carrera del Politécnico (IPN) en 1 hora 10 minutos. Este registro queda como evidencia de que ya pasó, no como algo pendiente.'}
-  ]},
+      {t:'Meta cumplida',d:'Corriste los 11K de la Carrera del Politécnico (IPN) en 1 hora 10 minutos. Este registro queda como evidencia de que ya pasó, no como algo pendiente.'},
+    ]},
   aleman5:{titulo:'Básico 5 de alemán — ya alcanzado',frase:'Cada nivel que subes en el CENLEX es un paso real hacia la Maestría en Alemania.',pasos:[
-    {t:'Meta cumplida',d:'Avanzaste a Básico 5 de alemán en el CENLEX Santo Tomás. Este registro queda como evidencia de que ya pasó, no como algo pendiente.'}
-  ]}
+      {t:'Meta cumplida',d:'Avanzaste a Básico 5 de alemán en el CENLEX Santo Tomás. Este registro queda como evidencia de que ya pasó, no como algo pendiente.'},
+    ]},
 };
 // Barra de dinero real (BYD y Maestría) — se recalcula en cada renderMetasSlide() con datos reales
 // de Finanzas y la usa abrirMetaDetalle() para pintarla también dentro del overlay de detalle.
@@ -5971,6 +5991,7 @@ const _settings=loadSettings();
 fixBanamexIfNeeded();
 fixPagos20260813IfNeeded();
 fixMsiBBVA20260813IfNeeded();
+  fixAhorro20260817IfNeeded();
 fixMiercolesNatacionIfNeeded();
 fixRutina20260812IfNeeded();
 seedMetasLogradasIfNeeded();
