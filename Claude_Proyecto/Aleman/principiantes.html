@@ -31,6 +31,16 @@
 .sd-pos3{background:rgba(16,185,129,.1);color:#059669;border:1px solid rgba(16,185,129,.25)}
 .sd-end{background:rgba(139,92,246,.1);color:#7c3aed;border:1px solid rgba(139,92,246,.25)}
 .sd-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;display:block;text-align:center;margin-top:2px}
+
+/* Tablas y bloques anchos en celular (2026-08-17) — una tabla que no cabe hacía zoom-out de
+   toda la página (medido: innerWidth 516 en una pantalla de 390). Ahora scrollean dentro de
+   su propia caja y el documento nunca se sale a lo ancho. */
+@media(max-width:820px){
+  table{display:block;width:100%;max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
+  table thead,table tbody{width:max-content;min-width:100%}
+  pre,code{max-width:100%;overflow-x:auto}
+  img,video,canvas{max-width:100%;height:auto}
+}
 </style>
 </head>
 <body>

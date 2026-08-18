@@ -19,6 +19,16 @@
 .dialog-speaker{font-size:11px;font-weight:800;color:var(--red);text-transform:uppercase;letter-spacing:.06em;white-space:nowrap;min-width:30px;margin-top:2px}
 .dialog-de{font-size:14px;font-weight:600;color:var(--black)}
 .dialog-es{font-size:12px;color:var(--text2);margin-top:1px}
+
+/* Tablas y bloques anchos en celular (2026-08-17) — una tabla que no cabe hacía zoom-out de
+   toda la página (medido: innerWidth 516 en una pantalla de 390). Ahora scrollean dentro de
+   su propia caja y el documento nunca se sale a lo ancho. */
+@media(max-width:820px){
+  table{display:block;width:100%;max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
+  table thead,table tbody{width:max-content;min-width:100%}
+  pre,code{max-width:100%;overflow-x:auto}
+  img,video,canvas{max-width:100%;height:auto}
+}
 </style>
 </head>
 <body>

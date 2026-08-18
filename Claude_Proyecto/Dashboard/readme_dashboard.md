@@ -2358,3 +2358,47 @@ Se revisaron las 18 anteriores buscando **jerga usada sin explicar cerca**: `cro
 12 productos en 4 grupos, espejo de `OJ_PRODUCTOS` de la pestaña nueva. Agrupados por para-qué-sirve y no por tipo de producto —igual que el Kit de Higiene—, porque en la tienda decides "necesito algo para el ojo seco", no "necesito un gel". Con sus links de Amazon y Mercado Libre, y **0 queries defectuosas** tras el arreglo de `lcAmazonQuery()`.
 
 La Lista de Compras queda en **7 categorías**: Comida · Skincare · Cabello · Suplementos · Kit de Higiene · Ojos · Libros.
+
+## Revisión móvil de los 48 HTML: el HUD deja de estorbar (2026-08-17)
+
+*"revisa todos los html y quiero que la version celular funcione muy bien... eso de cambiar pagina o la barra del dashboard de las demas aplicaciones, se ve muy mal ya amontonado... que no estorbe esa barra en el modo celular"*.
+
+### El culpable no era la barra de apps
+
+`#qaBar` ya colapsaba correctamente a **42px** con un botón "🔗 Apps ▾" (cambio del 2026-08-11). Lo que se veía amontonado eran **los 2 paneles del HUD**: `.hud-side` es `position:fixed` con `left:16px` / `right:16px`, y la media query de ≤1024px los movía abajo-centro con `left:50%` + `translateX(-50%)` + `max-width:92vw`.
+
+En 390px eso no cabe: dos paneles de ~195px sobre 358px disponibles **se encontraban en el centro y se encimaban entre sí**, dejando **14 botones apilados sobre el contenido**, a media pantalla. Se ve clarísimo en la captura que mandó Adán.
+
+### Barra inferior, que es donde llega el pulgar
+
+| | Antes | Ahora |
+|---|---|---|
+| Panel izquierdo (`#hudNav`, 10 iconos de pantalla) | flotando sobre el contenido | **oculto** — esa navegación ya vive en el menú ☰ y en la barra de Apps |
+| Panel derecho | bloque flotante de 195px | **barra fija abajo**, 390×59px, a todo lo ancho |
+| Botones visibles | 14 apilados | **5: ☰ · ‹ · › · ▶ · 🌙** |
+| Tamaño táctil | 30px | **40px** |
+| Puntos de pantalla | ocultos en ≤1024px | visibles, horizontales, como indicador de posición |
+
+Se recuperó `.hud-slidenav` (los ‹ › y los puntos), que ≤1024px ocultaba: **cambiar de pantalla es justo lo que Adán reportó como incómodo**, y con la barra abajo son los dos botones que más se tocan. Reloj, progreso, fullscreen, ajustes y ayuda se ocultan en móvil — el reloj ya está en el encabezado de cada pantalla y los otros tres son de teclado.
+
+**El bloque va al final del `<style>`, no junto a `.hud-btn`.** Escrito arriba perdía por cascada contra la media query de ≤1024px, que redefine `.hud-side` entera. Es el mismo error que ya había pasado con el overlay de Didi — dos veces la misma lección.
+
+### El hallazgo grande: tablas que hacían zoom-out de la página entera
+
+`Aleman/principiantes.html` reportaba **`innerWidth=516` en una pantalla de 390**. No era un desborde local: el navegador estaba **achicando toda la página** para que cupiera, dejando el texto diminuto.
+
+La cadena, medida: `table.vocab-table` (459px) → `.card` (476) → `.content-full` (484) → `.container` (500) → `.topic-content` (516).
+
+Arreglado en **33 archivos con `<style>` propio** + `Aleman/styles.css` (que cubre las 39 lecciones sin `<style>`): las tablas pasan a `display:block; overflow-x:auto`, así scrollean dentro de su caja y no empujan el documento. Se sumaron `pre`, `code`, `img`, `video` y `canvas` por el mismo motivo.
+
+### `gramatica.html`: el bug clásico de CSS Grid
+
+Seguía en `innerWidth=827` aunque su `.gram-layout` **sí** colapsaba a 1 columna en ≤900px. Causa: los items de un grid traen **`min-width:auto`** por defecto, así que `main` no podía encogerse por debajo del ancho de su contenido y empujaba el contenedor a 816px. `min-width:0` en los hijos es lo que lo destraba.
+
+### `Entrevistas`: header de 3 filas a 2
+
+Buscador y bloque de progreso tomaban `flex-basis:100%` cada uno, así que el header ocupaba **132px — el 15% de la pantalla**. Compartiendo fila baja a **88px**, y se hizo `sticky`.
+
+### Verificación
+
+**48/48 archivos sin zoom-out ni scroll horizontal en 390px** (antes 47/48, y antes de eso varios con la página achicada). Escritorio intacto: en 1920 los dos paneles siguen a los lados (x=16 y x=1818), verticales, sin errores de consola. En tablet de 820px la barra inferior ocupa el ancho completo.
