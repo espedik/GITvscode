@@ -343,3 +343,32 @@ Al mapear la semana salió que **nada 45 min en alberca y la ducha posterior no 
 Los 6 bloques donde aparecía (AM y PM de lunes a domingo) decían "Minoxidil 5%" a secas. Ahora dicen **espuma Kirkland**, con el motivo escrito en la propia tarea: la solución líquida lleva propilenglicol y es la causa de buena parte de la resequedad.
 
 Replicado en las 2 copias de `RUTINA_TASKS`; verificado que las 71 tareas quedan equivalentes salvo los `href` de `k2`/`k5`, que deben diferir por diseño.
+
+## "¿A qué te refieres con mascarilla?" — la guía decía cuándo, no qué (2026-08-18)
+
+Adán preguntó qué es una mascarilla capilar. Al revisarlo, la descripción decía *"1 vez por semana, en puntas y medios, deja actuar 5-10 min, enjuaga bien"* — es decir, **cuándo** y **cómo**, pero en ninguna parte **qué es**. Daba por sabido el concepto.
+
+Es el mismo fallo que ya se corrigió en Habilidades Base y que él mismo había señalado: *"esta es una guía para personas que no saben nada"*. Aquí volvió a colarse.
+
+### Cómo se explica ahora
+
+La analogía usa **su propia rutina de cara**, que ya domina — así no aprende un concepto nuevo, reconoce uno que ya tiene:
+
+| En la cara | En el pelo |
+|---|---|
+| Hidratante, todos los días | **Acondicionador**, cada baño |
+| Retinoide (Differin), el tratamiento | **Mascarilla**, 1 vez por semana |
+
+Y se añade **cómo distinguirla en la tienda**, que era el dato práctico que faltaba: el acondicionador viene en **botella** con tapa de chorro, la mascarilla en **tarro o pote**, porque es espesa y se saca con los dedos. Sin eso, "mascarilla" en un pasillo de súper no significa nada.
+
+También se aclara lo que nadie le había dicho: **no se usan las dos el mismo día**. La mascarilla ya hace el trabajo del acondicionador, y en cabello fino ponerle ambas lo apelmaza.
+
+### El otro término sin explicar
+
+Al auditar la rutina apareció que **"sin enjuague" se usaba 5 veces sin definirse ni una**. Ahora dice explícitamente: *"se pone y NO se enjuaga — de ahí el nombre. Se queda en el pelo todo el día, igual que tu hidratante de cara se queda en la piel"*, y se distingue de las otras dos cosas con las que se confunde: del acondicionador (ese sí se enjuaga) y del aceite (ese va sobre pelo **seco**, no húmedo).
+
+### La explicación viaja con la tarea
+
+No basta con arreglarlo en la guía: **7 pasos de `RUTINA_TASKS`** llevan ahora la explicación embebida, en las 2 copias. El sábado por la mañana, leyendo la tarea, ya se sabe qué es una mascarilla sin abrir otra pantalla — que es cuando de verdad hace falta saberlo.
+
+`HAIR_DB.mascarilla` pasa además de 2 opciones a **1**: la segunda (Moroccanoil) era una alternativa, y las alternativas ya se habían eliminado del resto del sistema.

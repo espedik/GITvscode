@@ -336,6 +336,39 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 .now-hero-time{font-family:var(--mono);font-size:11px;color:var(--text2);font-weight:600}
 .now-live-dot{width:7px;height:7px;border-radius:50%;background:var(--g);box-shadow:0 0 8px var(--g);display:inline-block;animation:pulse 2s ease-in-out infinite}
 
+/* ─── Fila "Ahora mismo" + acceso a "Qué invertir hoy" (2026-08-18) ───
+   Pedido explícito: "la pestaña que invertir hoy, tambien quiero verla al apretar un boton...
+   quiero que este alado de ahora mismo a la derecha y tome el tamaño de ideas para hoy".
+   Hasta hoy el panel de inversión solo se abría tocando el bloque `lu-gbm` de la línea de tiempo,
+   que existe únicamente los lunes (`dias:[1]`): de martes a domingo no había ninguna vía de llegar
+   a él. Este botón lo deja disponible los 7 días, sin quitarle el clic al bloque del lunes.
+   Las columnas repiten las de #miDiaSecundarios (1fr 2fr 1fr) con "Ahora mismo" ocupando las 2
+   primeras — así el botón mide exactamente lo mismo que "Ideas para hoy", la tercera columna de la
+   fila de abajo, y los dos bordes derechos quedan alineados en cualquier ancho de pantalla. Un
+   ancho suelto (ej. 320px fijos) se habría desalineado en cuanto cambiara el viewport. */
+.dia-ahora-row{display:grid;grid-template-columns:1fr 2fr 1fr;gap:clamp(12px,1.4vw,20px);align-items:stretch;margin-bottom:8px}
+.dia-ahora-row>#diaAhoraTile{grid-column:1/3;margin-bottom:0}
+/* Es <button> y no <div onclick>: así entra en el orden de tabulación y responde a Enter/Espacio
+   sin JS extra. `font:inherit` + `text-align:left` deshacen lo que el navegador impone a los
+   botones (fuente del sistema, texto centrado), que aquí desentonaría con el resto de tarjetas.
+   El borde izquierdo de color lo pinta pintarInvertirBtn() según el paso que toque, igual que
+   .now-hero se pinta con el color de la categoría activa. */
+.inv-btn{display:flex;flex-direction:column;justify-content:center;gap:2px;width:100%;text-align:left;
+  font:inherit;cursor:pointer;border-radius:22px;padding:11px 16px;
+  background:var(--card);border:1px solid var(--card-br);border-left:3px solid var(--g);
+  backdrop-filter:blur(16px);box-shadow:0 10px 40px rgba(0,0,0,.35);
+  transition:transform .18s,box-shadow .18s,border-color .3s}
+.inv-btn:hover{transform:translateY(-2px);box-shadow:0 14px 44px rgba(0,0,0,.42)}
+.inv-btn:active{transform:translateY(0)}
+.inv-btn-lbl{display:flex;align-items:center;gap:8px;font-size:10px;font-weight:800;
+  letter-spacing:.07em;text-transform:uppercase;color:var(--text3)}
+.inv-btn-go{margin-left:auto;color:var(--cy);letter-spacing:.02em}
+.inv-btn-paso{font-weight:800;font-size:clamp(14px,1.35vw,17px);line-height:1.25;margin-top:3px}
+/* 2 líneas y corta: el subtítulo cambia de largo según el paso (y con el modo privado las cifras
+   se vuelven "$••,•••"), así que se le pone tope en vez de dejar que estire la fila entera. */
+.inv-btn-sub{font-size:10.5px;color:var(--text2);line-height:1.35;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+
 /* Subtareas (2026-08-07, resaltadas a petición de Adán: "ni se ven", "de otro estilo, color") —
    cada una es su propia tarjetita (fondo + borde), no solo texto suelto en itálica, para que se
    note de un vistazo que hay una lista debajo del título. Dentro de cada una, si el texto trae
@@ -1163,6 +1196,10 @@ a.rt2-sub-prod:hover{text-decoration:underline}
    según la altura real de `.qa-bar`, que ahora puede variar. */
 @media(max-width:1024px){
   #miDiaSecundarios{grid-template-columns:1fr}
+  /* Misma lógica que la fila de abajo: apiladas. El botón de inversión queda debajo de "Ahora
+     mismo" en vez de espachurrarse a un tercio de un ancho que ya de por sí es angosto. */
+  .dia-ahora-row{grid-template-columns:1fr}
+  .dia-ahora-row>#diaAhoraTile{grid-column:auto}
   /* El piso de 120px del padding horizontal (ver regla base de .slide) existe solo para no
      chocar con el HUD lateral fijo — en ≤1024px el HUD ya se mueve abajo-centro (ver
      .hud-side más abajo), así que aquí se vuelve a un padding puramente proporcional; con el
@@ -1459,7 +1496,12 @@ a.rt2-sub-prod:hover{text-decoration:underline}
 
       <div class="week-strip reveal d2" id="heroWeekStrip" style="margin-bottom:10px"></div>
 
-      <div class="tile tile-glow now-hero reveal d3" id="diaAhoraTile" style="margin-bottom:8px;padding:11px 18px">
+      <!-- 2026-08-18 — "Ahora mismo" dejó de ir solo a todo el ancho: ahora comparte fila con el
+           acceso directo al panel de inversión (ver .dia-ahora-row en el CSS para el porqué del
+           reparto de columnas). El margin-bottom se mudó del tile a la fila, y la clase .reveal
+           también: si se quedaba en el tile, el botón entraba sin la animación de los demás. -->
+      <div class="dia-ahora-row reveal d3">
+      <div class="tile tile-glow now-hero" id="diaAhoraTile" style="padding:11px 18px">
         <div class="now-hero-row">
           <div style="min-width:0;flex:1">
             <div class="lbl" style="display:flex;align-items:center;gap:7px;flex-wrap:wrap">
@@ -1471,6 +1513,12 @@ a.rt2-sub-prod:hover{text-decoration:underline}
           </div>
           <div id="diaAhoraBtn"></div>
         </div>
+      </div>
+        <!-- Se pinta en pintarInvertirBtn() con el paso que toca hoy, no con texto fijo: el botón
+             adelanta la respuesta ("primero tu fondo" / "abona a tu deuda" / "hoy sí inviertes")
+             sin obligar a abrir el panel para saberla. -->
+        <button class="inv-btn" id="diaInvertirBtn" onclick="abrirGBM()"
+                title="Qué invertir hoy — precios en vivo y tus saldos reales de Finanzas"></button>
       </div>
 
       <div class="grid g3 reveal d4" style="margin-bottom:8px;align-items:stretch" id="miDiaSecundarios">
@@ -3692,6 +3740,7 @@ function renderDia(){
   }
   updateMarkDoneBtn(actual);
   renderEventosMes();
+  pintarInvertirBtn();
 
   // Línea de tiempo — hoy en tiempo real, o el día elegido en la tira semanal del Hero.
   // 2026-08-09, segundo ajuste: Adán pidió explícitamente que, sin importar el día elegido, la
@@ -4520,30 +4569,62 @@ async function cargarPreciosGBM(){
   }catch(e){ pon('gbmUsd', '<b class="gbm-err">sin conexión</b><small>ver Banxico abajo</small>'); }
 }
 
-function renderGBMPanel(){
-  const b = document.getElementById('gbmBody');
-  if(!b) return;
+// La regla que ya está escrita en tu Plan Maestro, aplicada al saldo de hoy. Vive aparte desde el
+// 2026-08-18 porque ahora la leen DOS piezas: el panel completo (renderGBMPanel) y el botón de Mi
+// Día (pintarInvertirBtn). Con el if/else duplicado en cada una, el botón habría podido decir "hoy
+// sí inviertes" mientras el panel decía "primero tu fondo" en cuanto una de las dos copias se
+// tocara sin la otra. `corto`/`sub` son la versión de una línea para el botón; `detalle` es el
+// texto largo del panel — mismo veredicto, distinto largo.
+function pasoInversionHoy(){
   const F = rawGet('finanzasmx_v2', {}) || {};
   const inv = F.investments || [];
-  const ef = F.emergencyFund || 0;
+  const ef = +F.emergencyFund || 0;
   const metaEf = 10000;
   const totalInv = inv.reduce((s,i)=>s+(+i.value||+i.invested||0), 0);
   const cetes = inv.filter(i=>i.type==='cetes').reduce((s,i)=>s+(+i.value||+i.invested||0),0);
   const deudaCara = (F.debts||[]).filter(d=>d.rate>0 && d.balance>0).reduce((s,d)=>s+d.balance,0);
   const mon = n => '$'+Math.round(n).toLocaleString('es-MX');
 
-  // La regla que ya está escrita en tu Plan Maestro, aplicada al saldo de hoy.
-  let paso, color, detalle;
+  let paso, color, detalle, corto, sub;
   if(ef < metaEf){
     paso = '1º Fondo de emergencia'; color = 'var(--o)';
     detalle = 'Te faltan <b>'+mon(metaEf-ef)+'</b> para los '+mon(metaEf)+'. <b>Hoy no compras nada más</b>: el fondo va antes que cualquier inversión y antes que abonos extra a deuda. Es el colchón que evita que un imprevisto te regrese a la tarjeta.';
+    corto = 'Primero tu fondo';
+    // money() y no mon(): este texto se ve en la pantalla principal, donde el modo privado
+    // ("Ocultar finanzas") tiene que tapar las cifras igual que en el resto de Mi Día.
+    sub = 'Faltan '+money(metaEf-ef)+' de '+money(metaEf)+' — hoy no compras nada más.';
   }else if(deudaCara > 0){
     paso = '2º Deuda cara'; color = 'var(--r)';
     detalle = 'Fondo completo ✅. Quedan <b>'+mon(deudaCara)+'</b> de deuda con interés. Cualquier tasa de tarjeta le gana a cualquier rendimiento — <b>el excedente va ahí</b>, no a GBM.';
+    corto = 'Abona a tu deuda';
+    sub = 'Fondo completo. Quedan '+money(deudaCara)+' con interés — van antes que GBM.';
   }else{
     paso = '3º Invertir'; color = 'var(--g)';
     detalle = 'Fondo completo y sin deuda cara: <b>este es el momento de invertir</b>. Reparte según tu asignación escrita y ejecuta sin pensarlo dos veces.';
+    corto = 'Hoy sí inviertes';
+    sub = 'Fondo completo y sin deuda cara — reparte y ejecuta.';
   }
+  return {F, inv, ef, metaEf, totalInv, cetes, deudaCara, mon, paso, color, detalle, corto, sub};
+}
+
+// Botón "📈 Qué invertir hoy" de Mi Día (2026-08-18) — abre el mismo panel que el bloque de GBM de
+// la línea de tiempo, pero cualquier día de la semana. Se repinta en cada renderDia(), así que
+// sigue al saldo real de Finanzas y al modo privado sin trabajo extra.
+function pintarInvertirBtn(){
+  const el = document.getElementById('diaInvertirBtn');
+  if(!el) return;
+  const p = pasoInversionHoy();
+  el.style.borderLeftColor = p.color;
+  el.innerHTML =
+    '<div class="inv-btn-lbl"><span>📈 Qué invertir hoy</span><span class="inv-btn-go">Abrir →</span></div>'+
+    '<div class="inv-btn-paso" style="color:'+p.color+'">'+p.corto+'</div>'+
+    '<div class="inv-btn-sub">'+p.sub+'</div>';
+}
+
+function renderGBMPanel(){
+  const b = document.getElementById('gbmBody');
+  if(!b) return;
+  const {inv, ef, metaEf, totalInv, cetes, mon, paso, color, detalle} = pasoInversionHoy();
 
   const asignacion = inv.length
     ? inv.map(i=>{
