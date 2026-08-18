@@ -2431,3 +2431,42 @@ Navegación de año con ‹ ›, acotada al horizonte real del plan (`PHASES[0].
 Escritorio: abre con clic real en el reloj, **12 meses · 365 días · hoy marcado · 5 meses con fase en 2026** (ago-sep Fase 0, oct-dic Fase 1). Agosto sale preseleccionado por ser el mes actual, con sus 8 tareas de Fase 0 y la barra de avance. Elegir octubre cambia a Fase 1; pasar a 2027 mantiene Fase 1. Cierra con ✕, clic fuera y Escape. Cero errores de consola.
 
 Celular (390 y 360px): overlay a pantalla completa, **2 columnas de meses**, días de 21px, **0 elementos desbordados y sin scroll horizontal**.
+
+## Las Fases 1-3 pasan de tareas de fase a tareas por mes (2026-08-17)
+
+*"Las Fases 1, 2 y 3 tienen tareas de fase, no de mes, esto debe estar por meses, arregla lo de coach y dashboard"*.
+
+Solo Fase 0 etiquetaba sus tareas con `mes`. Las otras tres eran una lista suelta, así que el calendario nuevo no tenía qué mostrar mes a mes y Coach las presentaba todas juntas sin orden temporal.
+
+### El problema de fondo: no hay una tarea por mes
+
+**Fase 2 dura 21 meses y tiene 5 tareas. Fase 3 dura 13 y tiene 4.** Repartir una por mes habría exigido inventar 25 tareas que Adán nunca definió — relleno disfrazado de plan.
+
+La solución distingue dos cosas que antes estaban mezcladas:
+
+- **`mes:'AAAA-MM'`** — arranca en un mes concreto. El mes sale del propio texto cuando ya lo decía (`s1-1` empieza con *"Oct 2026:"*, `s2-4` con *"Jun 2028:"*) y del punto lógico del tramo cuando no (`s2-1`, elegir la opción, va en el primer mes de su fase; `s2-2`, *"con tracción sostenida"*, seis meses después).
+- **`cont:true`** — aplica a **todo** el tramo. El foco de habilidad de la fase, el iPhone MSI que corre hasta 2028, la regla de mover las horas de Didi al cobrar el primer peso. Estas se repiten en cada mes de su fase.
+
+| Fase | Tareas | Con mes | Continuas | Meses asignados |
+|---|---|---|---|---|
+| 1 · oct 2026–mar 2027 | 6 | 2 | 4 | 2026-10, 2026-11 |
+| 2 · abr 2027–dic 2028 | 5 | 3 | 2 | 2027-04, 2027-10, 2028-06 |
+| 3 · ene 2029–ene 2030 | 4 | 2 | 2 | 2029-01, 2029-07 |
+
+### En el Dashboard
+
+`renderCalendario()` ya no usa `filter(s=>!s.mes)` como caso de respaldo: ahora muestra **siempre** dos bloques — *"🎯 Qué toca este mes"* y *"🔁 Durante toda la Fase N"*. Si un mes no arranca nada nuevo lo dice explícitamente (*"Este mes no arranca nada nuevo — sostienes lo de abajo"*) en vez de quedarse callado.
+
+Comprobado mes a mes en los 4 tramos, incluidos meses "huecos" como dic 2026, ago 2027 y nov 2029: **0 meses sin contenido**.
+
+### En Coach
+
+Las Fases 1-3 adoptan la misma estructura `<details class="fase-month" data-month="…">` que ya usaba Fase 0, más un bloque `data-month="cont-N"` con las continuas. El JS de badges es genérico y las tomó solas.
+
+Lo único que hubo que tocar: `cont-N` **no es un mes**, así que comparar con la fecha de hoy le ponía "PRÓXIMO" e `initFaseMonths` lo cerraba. Ahora recibe su propio badge (**TODO EL TRAMO · n/m**) y se queda abierto — cerrar por "no ser el mes actual" algo que aplica siempre habría escondido justo lo que sí toca hoy.
+
+Verificado: **12 bloques, 24 tareas, 0 duplicadas, 0 sueltas fuera de un mes**, badges que se actualizan al marcar, y cero errores de consola.
+
+### Una inconsistencia que queda anotada
+
+`s3-3` está en Fase 3 (ene 2029 en adelante) pero su texto dice *"retomarla en oct 2028"*, que cae en Fase 2. Se dejó como continua porque es una decisión informativa, no una tarea con fecha de ejecución — pero si se quiere que aparezca en octubre de 2028, hay que moverla de fase, no solo de mes.

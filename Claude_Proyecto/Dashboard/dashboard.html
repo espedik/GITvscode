@@ -3522,59 +3522,38 @@ function diaDelAnio(){const n=new Date();const ini=new Date(n.getFullYear(),0,0)
 
 // ── COACH — Plan Maestro (fechas ancla, igual que Coach_v2.html) ────────────
 const PHASES=[
-  // start movido de 18 jul a 1 ago 2026 el 2026-08-12 ("el dashboard de fase 0 y coach, que no
-  // empiece de julio, debe empezar en agosto"). Las 3 tareas que estaban en `mes:'2026-07'`
-  // (s0-1, s0-2, s0-6) pasaron a agosto conservando su id — mismo cambio y mismo orden que en
-  // Coach_v2.html, que es la copia gemela de esta estructura.
-  {start:new Date(2026,7,1),  end:new Date(2026,8,30),  tag:'Fase 0', title:'Cerrar la fuga y arrancar ingreso, no solo pensar',
-   meta:'✅ Banamex liquidada el 13 ago 2026 (era meta de Fase 1, para ene 2027). Quedan 2 objetivos financieros, en este orden: 1) fondo de emergencia a $10,000, 2) abonos extra a BBVA.',
-   explica:'Fase 0 es el arranque del plan (1 ago – 30 sep 2026, ~9 semanas). Todavía no se trata de ganar mucho — se trata de cerrar la fuga de dinero y sentar las bases. El orden era 1) fondo de emergencia, 2) Banamex, 3) BBVA: el paso 2 ya está hecho desde el 13 ago 2026, así que la prioridad es el fondo de emergencia y, en cuanto llegue a $10,000, todo excedente a BBVA. En paralelo arrancas el negocio: dedicar atención real al negocio de tu papá y publicar tu primera plantilla en comunidades de GBM.',
-   semanas:[
-     // Reordenado el 2026-08-13 (petición de Adán): las 2 prioridades financieras primero y
-     // numeradas, lo ya hecho al final. `s0-5` (llamada exploratoria con su papá) eliminada —
-     // "eso ya sé qué hacer con mi papá". `s0-3` absorbió la publicación de la plantilla, que
-     // estaba partida con `s0-4`; `s0-4` se quedó solo con la venta de activos. Espejo exacto de
-     // Coach_v2.html → #fase0.
-     {id:'s0-9', mes:'2026-08', txt:'Prioridad 1 — Fondo de emergencia a $10,000. Antes que cualquier abono extra a deuda: es el colchón que evita que un imprevisto te regrese a la tarjeta. (hoy en $0)'},
-     {id:'s0-10',mes:'2026-08', txt:'Prioridad 2 — Liquidar la TC BBVA ($32,343). Única deuda cara que queda. En cuanto el fondo llegue a $10,000, todo excedente va aquí. (proyección: $0 en mar 2027)'},
-     {id:'s0-4', mes:'2026-08', txt:'Sube a Marketplace tus activos ociosos (PS5, control, monitores, iPad) — es la fuente más rápida para completar el fondo de emergencia de la Prioridad 1.'},
-     {id:'s0-3', mes:'2026-08', txt:'Plantilla Finanzas.html, de principio a fin: versión limpia sin tus datos + post de venta + publicarla en 2-3 comunidades de GBM (Opción 1).'},
-     {id:'s0-2', mes:'2026-08', txt:'Revisar las fotos y el material del negocio de tu papá y ponerle atención real — primer paso concreto de la Opción 5.'},
-     {id:'s0-6', mes:'2026-08', txt:'Pausa aportaciones a la Maestría 1 año (hasta 18 jul 2027) — los $53,740 quedan intactos, nueva meta oct 2028.'},
-     {id:'s0-8', mes:'2026-08', txt:'Liquidar la TC Banamex. (✅ 13 ago 2026 — pagaste los $9,000 completos, no el mínimo, 5 meses antes de la meta)'},
-     {id:'s0-1', mes:'2026-08', txt:'Corrige "Deudas" en Finanzas.html · cero MSI nuevo. (✅ 13 ago 2026: quedó en $8,200 = auto $6,700 + mínimo BBVA $1,500)'},
-     {id:'s0-7', mes:'2026-09', txt:'Cada peso de ventas/activos va, en orden fijo: (1) fondo de emergencia a $10,000, (2) resto a BBVA — Banamex ya está en $0. Este mes cierra la fase.'},
-   ]},
-  {start:new Date(2026,9,1),  end:new Date(2027,2,31),  tag:'Fase 1', title:'Los $3,145/mes liberados entran en acción + primer ingreso real',
-   meta:'Primer contrato freelance o 20+ ventas de la plantilla cobradas. La meta vieja —Banamex liquidada— ya se cumplió el 13 ago 2026, así que el objetivo financiero pasa a bajar BBVA de $32,343 a menos de $15,000.',
-   explica:'Fase 1 (oct 2026 – mar 2027) arranca cuando los $2,335/mes de MSI de gadgets quedan libres, que sumados a los $810 del mínimo de Banamex ya liquidada dan $3,145/mes nuevos. Con Banamex en $0 desde agosto, ese dinero tiene un solo destino: fondo de emergencia a $10,000 y todo lo demás a BBVA, la única deuda cara que queda. En paralelo, buscas tu primer ingreso real fuera de ALTEN.',
-   semanas:[
-     {id:'s1-1', txt:'Oct 2026: los $2,335/mes liberados de MSI + los $810 del mínimo de Banamex van, en orden fijo: fondo de emergencia a $10,000 → 100% BBVA (única deuda cara restante) = $4,645/mes.'},
-     {id:'s1-2', txt:'Prioridad: cerrar el primer contrato freelance (Opción 2) + 1 post de seguimiento mensual de la plantilla GBM (Opción 1).'},
-     {id:'s1-3', txt:'En paralelo: primer post de mentoría pagada (Opción 3) — bajo riesgo, casi sin preparación.'},
-     {id:'s1-4', txt:'Primer peso cobrado en Opción 1-3 → esas horas de Didi se mueven ahí (Opción 6), no antes.'},
-     {id:'s1-5', txt:'iPhone 15 MSI sigue corriendo ($494/mes) hasta jun 2028 — ya comprometido, no toca tu excedente nuevo.'},
-     {id:'s1-6', txt:'Foco de habilidad (Radar): sube <strong>Copy</strong> (55→) escribiendo los posts, y <strong>Finanzas</strong> (20→) sosteniendo el presupuesto corregido. Solo estas dos.'},
-   ]},
-  {start:new Date(2027,3,1),  end:new Date(2028,11,31), tag:'Fase 2', title:'Doblar apuesta en lo que mostró tracción',
-   meta:'BBVA liquidada, deuda cara en $0, ingreso extra estable de al menos $10,000–15,000/mes.',
-   explica:'Fase 2 (abr 2027 – dic 2028) es la fase más larga. Con Banamex resuelta desde el 13 ago 2026 y BBVA proyectada a mar 2027, esta fase debería arrancar ya con la deuda cara en $0 — el excedente completo se va a doblar la apuesta en la opción de negocio que ya mostró tracción real, en vez de dispersarte entre varias.',
-   semanas:[
-     {id:'s2-1', txt:'Elige la opción (1, 2 o 3) con ingreso recurrente real y concéntrate ahí — resiste saltar a "algo mejor".'},
-     {id:'s2-2', txt:'Con tracción sostenida, arranca la Opción 4 (CodeReview productizado) — único punto del plan que requiere capital, ya disponible tras liquidar BBVA.'},
-     {id:'s2-3', txt:'Usa IA para construir tu propio sistema de ventas/argumentos — tu fuerza real, en vez de improvisar en vivo.'},
-     {id:'s2-4', txt:'Jun 2028: se libera el iPhone MSI ($494/mes) — súmalo a inversión, no a gasto nuevo.'},
-     {id:'s2-5', txt:'Foco de habilidad: sube <strong>Ventas</strong> (15→) y <strong>Marketing</strong> (20→) lo mínimo para vender la Opción 4 sin depender solo de referidos.'},
-   ]},
-  {start:new Date(2029,0,1),  end:new Date(2030,0,1),   tag:'Fase 3', title:'Escalar, cerrar la brecha de $31,540/mes y reevaluar',
-   meta:'Cerrar la distancia final a $1,000,000 líquido con el negocio como fuente principal de excedente.',
-   explica:'Fase 3 (ene 2029 – ene 2030) es el cierre. Con la deuda cara ya en $0 desde la fase anterior, todo el excedente nuevo va directo a cerrar la brecha final hacia $1,000,000 de patrimonio líquido — la meta central de todo el Plan Maestro.',
-   semanas:[
-     {id:'s3-1', txt:'El negocio debe cubrir ya parte real de la brecha. Ingreso extra cercano a cero en 2029 = problema de opción elegida, no de timing — revisa Posibles Negocios.'},
-     {id:'s3-2', txt:'Todo ingreso adicional va primero a inversión (CETES, fondos indexados, ampliar BTC/acciones) — nunca a consumo nuevo.'},
-     {id:'s3-3', txt:'La decisión de Maestría (18 jul 2027) ya está tomada: retomarla en oct 2028 con datos reales del negocio, o posponerla de nuevo, conscientemente.'},
-     {id:'s3-4', txt:'Reevalúa la meta de $1,000,000 líquido con números reales del negocio y ajusta la fecha si hace falta — sin abandonarlo.'},
-   ]},
+  {start:new Date(2026,7,1),end:new Date(2026,8,30),tag:"Fase 0",title:"Cerrar la fuga y arrancar ingreso, no solo pensar",meta:"✅ Banamex liquidada el 13 ago 2026 (era meta de Fase 1, para ene 2027). Quedan 2 objetivos financieros, en este orden: 1) fondo de emergencia a $10,000, 2) abonos extra a BBVA.",explica:"Fase 0 es el arranque del plan (1 ago – 30 sep 2026, ~9 semanas). Todavía no se trata de ganar mucho — se trata de cerrar la fuga de dinero y sentar las bases. El orden era 1) fondo de emergencia, 2) Banamex, 3) BBVA: el paso 2 ya está hecho desde el 13 ago 2026, así que la prioridad es el fondo de emergencia y, en cuanto llegue a $10,000, todo excedente a BBVA. En paralelo arrancas el negocio: dedicar atención real al negocio de tu papá y publicar tu primera plantilla en comunidades de GBM.",semanas:[
+    {id:"s0-9",mes:"2026-08",txt:"Prioridad 1 — Fondo de emergencia a $10,000. Antes que cualquier abono extra a deuda: es el colchón que evita que un imprevisto te regrese a la tarjeta. (hoy en $0)"},
+    {id:"s0-10",mes:"2026-08",txt:"Prioridad 2 — Liquidar la TC BBVA ($32,343). Única deuda cara que queda. En cuanto el fondo llegue a $10,000, todo excedente va aquí. (proyección: $0 en mar 2027)"},
+    {id:"s0-4",mes:"2026-08",txt:"Sube a Marketplace tus activos ociosos (PS5, control, monitores, iPad) — es la fuente más rápida para completar el fondo de emergencia de la Prioridad 1."},
+    {id:"s0-3",mes:"2026-08",txt:"Plantilla Finanzas.html, de principio a fin: versión limpia sin tus datos + post de venta + publicarla en 2-3 comunidades de GBM (Opción 1)."},
+    {id:"s0-2",mes:"2026-08",txt:"Revisar las fotos y el material del negocio de tu papá y ponerle atención real — primer paso concreto de la Opción 5."},
+    {id:"s0-6",mes:"2026-08",txt:"Pausa aportaciones a la Maestría 1 año (hasta 18 jul 2027) — los $53,740 quedan intactos, nueva meta oct 2028."},
+    {id:"s0-8",mes:"2026-08",txt:"Liquidar la TC Banamex. (✅ 13 ago 2026 — pagaste los $9,000 completos, no el mínimo, 5 meses antes de la meta)"},
+    {id:"s0-1",mes:"2026-08",txt:"Corrige \"Deudas\" en Finanzas.html · cero MSI nuevo. (✅ 13 ago 2026: quedó en $8,200 = auto $6,700 + mínimo BBVA $1,500)"},
+    {id:"s0-7",mes:"2026-09",txt:"Cada peso de ventas/activos va, en orden fijo: (1) fondo de emergencia a $10,000, (2) resto a BBVA — Banamex ya está en $0. Este mes cierra la fase."},
+  ]},
+  {start:new Date(2026,9,1),end:new Date(2027,2,31),tag:"Fase 1",title:"Los $3,145/mes liberados entran en acción + primer ingreso real",meta:"Primer contrato freelance o 20+ ventas de la plantilla cobradas. La meta vieja —Banamex liquidada— ya se cumplió el 13 ago 2026, así que el objetivo financiero pasa a bajar BBVA de $32,343 a menos de $15,000.",explica:"Fase 1 (oct 2026 – mar 2027) arranca cuando los $2,335/mes de MSI de gadgets quedan libres, que sumados a los $810 del mínimo de Banamex ya liquidada dan $3,145/mes nuevos. Con Banamex en $0 desde agosto, ese dinero tiene un solo destino: fondo de emergencia a $10,000 y todo lo demás a BBVA, la única deuda cara que queda. En paralelo, buscas tu primer ingreso real fuera de ALTEN.",semanas:[
+    {id:"s1-1",mes:"2026-10",txt:"Oct 2026: los $2,335/mes liberados de MSI + los $810 del mínimo de Banamex van, en orden fijo: fondo de emergencia a $10,000 → 100% BBVA (única deuda cara restante) = $4,645/mes."},
+    {id:"s1-2",cont:true,txt:"Prioridad: cerrar el primer contrato freelance (Opción 2) + 1 post de seguimiento mensual de la plantilla GBM (Opción 1)."},
+    {id:"s1-3",mes:"2026-11",txt:"En paralelo: primer post de mentoría pagada (Opción 3) — bajo riesgo, casi sin preparación."},
+    {id:"s1-4",cont:true,txt:"Primer peso cobrado en Opción 1-3 → esas horas de Didi se mueven ahí (Opción 6), no antes."},
+    {id:"s1-5",cont:true,txt:"iPhone 15 MSI sigue corriendo ($494/mes) hasta jun 2028 — ya comprometido, no toca tu excedente nuevo."},
+    {id:"s1-6",cont:true,txt:"Foco de habilidad (Radar): sube <strong>Copy</strong> (55→) escribiendo los posts, y <strong>Finanzas</strong> (20→) sosteniendo el presupuesto corregido. Solo estas dos."},
+  ]},
+  {start:new Date(2027,3,1),end:new Date(2028,11,31),tag:"Fase 2",title:"Doblar apuesta en lo que mostró tracción",meta:"BBVA liquidada, deuda cara en $0, ingreso extra estable de al menos $10,000–15,000/mes.",explica:"Fase 2 (abr 2027 – dic 2028) es la fase más larga. Con Banamex resuelta desde el 13 ago 2026 y BBVA proyectada a mar 2027, esta fase debería arrancar ya con la deuda cara en $0 — el excedente completo se va a doblar la apuesta en la opción de negocio que ya mostró tracción real, en vez de dispersarte entre varias.",semanas:[
+    {id:"s2-1",mes:"2027-04",txt:"Elige la opción (1, 2 o 3) con ingreso recurrente real y concéntrate ahí — resiste saltar a \"algo mejor\"."},
+    {id:"s2-2",mes:"2027-10",txt:"Con tracción sostenida, arranca la Opción 4 (CodeReview productizado) — único punto del plan que requiere capital, ya disponible tras liquidar BBVA."},
+    {id:"s2-3",cont:true,txt:"Usa IA para construir tu propio sistema de ventas/argumentos — tu fuerza real, en vez de improvisar en vivo."},
+    {id:"s2-4",mes:"2028-06",txt:"Jun 2028: se libera el iPhone MSI ($494/mes) — súmalo a inversión, no a gasto nuevo."},
+    {id:"s2-5",cont:true,txt:"Foco de habilidad: sube <strong>Ventas</strong> (15→) y <strong>Marketing</strong> (20→) lo mínimo para vender la Opción 4 sin depender solo de referidos."},
+  ]},
+  {start:new Date(2029,0,1),end:new Date(2030,0,1),tag:"Fase 3",title:"Escalar, cerrar la brecha de $31,540/mes y reevaluar",meta:"Cerrar la distancia final a $1,000,000 líquido con el negocio como fuente principal de excedente.",explica:"Fase 3 (ene 2029 – ene 2030) es el cierre. Con la deuda cara ya en $0 desde la fase anterior, todo el excedente nuevo va directo a cerrar la brecha final hacia $1,000,000 de patrimonio líquido — la meta central de todo el Plan Maestro.",semanas:[
+    {id:"s3-1",mes:"2029-01",txt:"El negocio debe cubrir ya parte real de la brecha. Ingreso extra cercano a cero en 2029 = problema de opción elegida, no de timing — revisa Posibles Negocios."},
+    {id:"s3-2",cont:true,txt:"Todo ingreso adicional va primero a inversión (CETES, fondos indexados, ampliar BTC/acciones) — nunca a consumo nuevo."},
+    {id:"s3-3",cont:true,txt:"La decisión de Maestría (18 jul 2027) ya está tomada: retomarla en oct 2028 con datos reales del negocio, o posponerla de nuevo, conscientemente."},
+    {id:"s3-4",mes:"2029-07",txt:"Reevalúa la meta de $1,000,000 líquido con números reales del negocio y ajusta la fecha si hace falta — sin abandonarlo."},
+  ]},
 ];
 function activePhase(){
   const t=new Date(); t.setHours(0,0,0,0);
@@ -4509,7 +4488,10 @@ function renderCalendario(){
     const f=PHASES[fi], color=CAL_FASE_COLOR[fi];
     const checks=rawGet('coach_checks_v1',{})||{};
     const tareas=(f.semanas||[]).filter(s=>s.mes===key);
-    const generales=(f.semanas||[]).filter(s=>!s.mes);
+    // `cont:true` = aplica a TODO el tramo de la fase, no a un mes suelto (2026-08-17).
+    // Fase 2 dura 21 meses y Fase 3 dura 13: fabricar una tarea por mes habria sido
+    // relleno, asi que lo continuo se repite en cada mes de su fase y ninguno queda vacio.
+    const generales=(f.semanas||[]).filter(s=>s.cont);
     h=`<div class="cal-det-h">
         <span class="cal-det-mes">${CAL_MESES[calMesSel]} ${calAnio}</span>
         <span class="cal-det-badge" style="background:${color}22;color:${color}">${f.tag}</span>
@@ -4524,11 +4506,15 @@ function renderCalendario(){
       h+=`<div class="cal-prog"><span>${Math.round(hechas/tareas.length*100)}%</span>
         <div class="cal-prog-bar"><div class="cal-prog-fill" style="width:${hechas/tareas.length*100}%"></div></div>
         <span>${hechas} de ${tareas.length}</span></div>`;
-    }else if(generales.length){
+    }else{
+      h+=`<div class="cal-sec">🎯 Qué toca este mes</div>
+          <div class="cal-vacio">Este mes no arranca nada nuevo — sostienes lo de abajo, que corre durante toda la ${f.tag}.</div>`;
+    }
+    if(generales.length){
       // Fases 1-3 no etiquetan mes: se muestra lo que aplica a toda la fase.
-      h+=`<div class="cal-sec">🎯 Aplica a toda la ${f.tag} (${f.start.toLocaleDateString('es-MX',{month:'short',year:'numeric'})} – ${f.end.toLocaleDateString('es-MX',{month:'short',year:'numeric'})})</div>`;
+      h+=`<div class="cal-sec">🔁 Durante toda la ${f.tag} (${f.start.toLocaleDateString('es-MX',{month:'short',year:'numeric'})} – ${f.end.toLocaleDateString('es-MX',{month:'short',year:'numeric'})})</div>`;
       h+=generales.map(t=>`<div class="cal-item${checks[t.id]?' done':''}">
-        <span class="cal-item-ico">${checks[t.id]?'✅':'▫️'}</span><div>${t.txt}</div></div>`).join('');
+        <span class="cal-item-ico">${checks[t.id]?'✅':'🔁'}</span><div>${t.txt}</div></div>`).join('');
     }
     // Pendientes que él mismo capturó en "Importante este mes"
     const evs=eventos[key]||[];
