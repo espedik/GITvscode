@@ -1355,6 +1355,69 @@ a.rt2-sub-prod:hover{text-decoration:underline}
   .cal-grid{grid-template-columns:repeat(2,1fr);gap:8px}
   .cal-det{padding:13px 14px}
 }
+
+/* ─── PANEL DE INVERSIÓN DEL LUNES (2026-08-18) ─────────────────────────────
+   Se abre tocando el bloque de GBM en Mi Día, que solo existe los lunes. Mismo
+   patrón visual que .cal-overlay / .didi-overlay. */
+.rt2-card.rt2-gbm{cursor:pointer;transition:background .16s}
+.rt2-card.rt2-gbm:hover{background:rgba(var(--ov),.05)}
+.rt2-gbm .rt2-txt::after{content:' 📈 ver qué invertir';font-size:10.5px;color:var(--cy);font-weight:800}
+.gbm-overlay{position:fixed;inset:0;z-index:220;background:rgba(0,0,0,.72);backdrop-filter:blur(6px);
+  display:flex;align-items:center;justify-content:center;padding:4vh 4vw;opacity:0;pointer-events:none;
+  transition:opacity .22s ease}
+.gbm-overlay.open{opacity:1;pointer-events:auto}
+.gbm-card{width:min(760px,100%);max-height:92vh;overflow-y:auto;border-radius:20px;position:relative;
+  background:var(--card);border:1px solid rgba(var(--ov),.12);box-shadow:0 24px 70px rgba(0,0,0,.5);
+  transform:translateY(18px);transition:transform .22s ease}
+.gbm-overlay.open .gbm-card{transform:translateY(0)}
+.gbm-head{position:sticky;top:0;z-index:2;padding:16px 22px 13px;background:var(--card);
+  border-bottom:1px solid rgba(var(--ov),.08)}
+.gbm-head h2{font-size:clamp(16px,2vw,20px);font-weight:900;color:var(--text);margin:0 0 3px}
+.gbm-head p{font-size:11.5px;color:var(--text3);line-height:1.4}
+.gbm-close{position:absolute;top:13px;right:15px;width:30px;height:30px;border-radius:50%;border:none;
+  cursor:pointer;background:rgba(var(--ov),.1);color:var(--text);font-size:14px;line-height:1}
+.gbm-close:hover{background:rgba(var(--ov),.18)}
+.gbm-body{padding:14px 22px 24px}
+.gbm-sec{font-size:11px;font-weight:900;letter-spacing:.05em;text-transform:uppercase;color:var(--text3);
+  margin:15px 0 7px}
+.gbm-sec:first-child{margin-top:0}
+.gbm-precios{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.gbm-precio{border-radius:11px;padding:9px 11px;background:rgba(var(--ov),.05);border:1px solid rgba(var(--ov),.07)}
+.gbm-precio-off{opacity:.62}
+.gbm-tk{font-size:9.5px;font-weight:900;letter-spacing:.05em;color:var(--text3);display:block;margin-bottom:3px}
+.gbm-precio b{display:block;font-family:var(--mono);font-size:14px;font-weight:800;color:var(--text);line-height:1.2}
+.gbm-precio small{display:block;font-size:9.5px;color:var(--text3);margin-top:1px}
+.gbm-err{color:var(--o)!important;font-size:12px!important}
+.gbm-nota{font-size:11px;color:var(--text3);line-height:1.45;margin-top:8px;padding:8px 11px;
+  border-radius:9px;background:rgba(var(--ov),.04)}
+.gbm-nota b{color:var(--text2)}
+.gbm-paso{border-radius:12px;border:1px solid;padding:11px 13px;margin-bottom:9px}
+.gbm-paso-t{font-size:13.5px;font-weight:900;margin-bottom:3px}
+.gbm-paso-d{font-size:12px;color:var(--text2);line-height:1.45}
+.gbm-row{display:flex;justify-content:space-between;gap:10px;font-size:12px;color:var(--text2);
+  padding:5px 0;border-bottom:1px solid rgba(var(--ov),.05)}
+.gbm-row-tot{font-weight:800;color:var(--text);border-bottom:none}
+.gbm-mono{font-family:var(--mono);font-weight:700;color:var(--text)}
+.gbm-bar{height:6px;border-radius:6px;background:rgba(var(--ov),.1);overflow:hidden;margin-top:6px}
+.gbm-bar-f{height:100%;border-radius:6px;background:linear-gradient(90deg,var(--o),var(--g))}
+.gbm-vacio{font-size:12px;color:var(--text3);font-style:italic;padding:6px 0}
+.gbm-check{margin:0;padding-left:19px;display:flex;flex-direction:column;gap:5px}
+.gbm-check li{font-size:12px;color:var(--text2);line-height:1.45}
+.gbm-check li b{color:var(--text)}
+.gbm-links{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.gbm-links a{display:block;padding:9px 12px;border-radius:11px;text-decoration:none;
+  background:rgba(var(--ov),.05);border:1px solid rgba(var(--ov),.08);transition:background .15s}
+.gbm-links a:hover{background:rgba(var(--ov),.11)}
+.gbm-links b{display:block;font-size:12px;color:var(--cy);font-weight:800}
+.gbm-links span{display:block;font-size:10.5px;color:var(--text3);margin-top:1px}
+@media(max-width:640px){
+  .gbm-overlay{padding:0}
+  .gbm-card{width:100%;height:100%;max-height:100%;border-radius:0}
+  .gbm-head{padding:12px 14px 10px}
+  .gbm-body{padding:12px 14px 28px}
+  .gbm-precios{grid-template-columns:1fr}
+  .gbm-links{grid-template-columns:1fr}
+}
 </style>
 <script>
 (function () {
@@ -1643,6 +1706,18 @@ a.rt2-sub-prod:hover{text-decoration:underline}
       <div class="meta-detail-progress" id="metaDetailProgress"></div>
       <div class="meta-detail-steps" id="metaDetailSteps"></div>
     </div>
+  </div>
+</div>
+
+<!-- ─── PANEL DE INVERSIÓN DEL LUNES (2026-08-18) — se abre desde el bloque de GBM ─── -->
+<div class="gbm-overlay" id="gbmOverlay" onclick="if(event.target===this) cerrarGBM()">
+  <div class="gbm-card">
+    <div class="gbm-head">
+      <button class="gbm-close" onclick="cerrarGBM()" aria-label="Cerrar">✕</button>
+      <h2>📈 Qué invertir hoy</h2>
+      <p>Tu compra rápida de los lunes, con precios en vivo y tus saldos reales de Finanzas.</p>
+    </div>
+    <div class="gbm-body" id="gbmBody"></div>
   </div>
 </div>
 
@@ -2055,7 +2130,7 @@ const RUTINA_TASKS=[
   // "Dormir" aparecería como la primera tarea de la mañana. La hora real vive en el texto.
   {id:'wd21', dias:[1,2,3,4,5], hora:'23:59', cat:'salud',    txt:'Apagar pantallas y dormir en cuanto cierres la app — entre 00:00 y 01:00 (5h40–6h40 de sueño con el despertar de las 06:40)'},
   // Bolsa GBM — solo lunes, porque solo inviertes al inicio de semana
-  {id:'lu-gbm', dias:[1], hora:'09:00', cat:'admin', txt:'💰 Bolsa GBM: revisar portafolio + VOO + USD/MXN e invertir — solo lunes'},
+  {id:'lu-gbm', dias:[1], hora:'09:00', cat:'admin', txt:'💰 Bolsa GBM (20 min): compra rápida — revisa qué toca hoy y ejecuta. Solo lunes.'},
   // Lectura (21:45) — genérica por ahora, sin libro fijo hasta que se compren (sugerencias en Aprendizaje/Perfil del Rico)
   {id:'l1', dias:[1], hora:'21:45', cat:'descanso', txt:'📖 Lectura (30 min)'},
   {id:'l2', dias:[2], hora:'21:45', cat:'descanso', txt:'📖 Lectura (30 min)'},
@@ -2270,16 +2345,17 @@ function rutinaAhoraSiguiente(){
 // Mismo patrón que LISTA_COMPRAS/GYM_RUTINA_DEFAULT — hay que seguir agregando a mano conforme
 // surjan más pendientes reales; no se actualiza sola.
 const EVENTOS_MES={
-  '2026-08':[
-    {ico:'🦷',txt:'Ir al dentista'},
-    {ico:'🇺🇸',txt:'Agendar cita para tu papá en la embajada de USA'},
+  "2026-08":[
+    {ico:"🦷",txt:"Ir al dentista"},
+    {ico:"🇺🇸",txt:"Agendar cita para tu papá en la embajada de USA"},
+    {ico:"🏋️",txt:"Cancelar la membresía de Fitsi — ya estás con Total Pass ($650, día 17)"},
   ],
-  '2026-09':[
-    {ico:'🩺',txt:'Ir al doctor por la gastritis'},
-    {ico:'🎯',txt:'Vence Fase 0 del Plan Maestro (30 sep) — revisa fondo de emergencia $10k y el avance de BBVA (Banamex ya en $0 desde el 13 ago)'},
+  "2026-09":[
+    {ico:"🩺",txt:"Ir al doctor por la gastritis"},
+    {ico:"🎯",txt:"Vence Fase 0 del Plan Maestro (30 sep) — revisa fondo de emergencia $10k y el avance de BBVA (Banamex ya en $0 desde el 13 ago)"},
   ],
-  '2026-10':[
-    {ico:'🪙',txt:'Arranca Fase 1 del Plan Maestro (1 oct) — los $3,145/mes liberados entran en acción, 100% a BBVA + primer ingreso real'},
+  "2026-10":[
+    {ico:"🪙",txt:"Arranca Fase 1 del Plan Maestro (1 oct) — los $3,145/mes liberados entran en acción, 100% a BBVA + primer ingreso real"},
   ],
 };
 const MES_LABEL=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
@@ -3795,7 +3871,7 @@ function renderDia(){
     const done=!t.fijo&&leaves.every(it=>doneTimeline.includes(it.id));
     const dotColor=t.fijo?(isNow?meta.c:'#3a3d52'):(done?'#00e87a':isNow?meta.c:'#3a3d52');
     const subHtml=(!t.fijo&&t.subtareas)?subtareasHtml(leaves,doneTimeline,t.producto):'';
-    return `<div class="rt2-card ${isNow?'rt2-now':''} ${done?'rt2-done':''} ${t.fijo?'rt2-fijo':''}" style="border-left-color:${dotColor}">
+    return `<div class="rt2-card ${isNow?'rt2-now':''} ${done?'rt2-done':''} ${t.fijo?'rt2-fijo':''} ${t.id==='lu-gbm'?'rt2-gbm':''}" style="border-left-color:${dotColor}"${t.id==='lu-gbm'?' onclick="abrirGBM()"':''}>
       <div class="rt2-dot" style="background:${dotColor};box-shadow:${(isNow||done)?'0 0 10px '+dotColor:'none'}"></div>
       <div class="rt2-body">
         <div class="rt2-top">
@@ -4525,6 +4601,128 @@ function renderCalendario(){
       : '<div class="cal-vacio">Sin pendientes capturados. Se agregan desde “Importante este mes”, en Mi Día.</div>';
   }
   document.getElementById('calDet').innerHTML=h;
+}
+
+
+// ─── PANEL DE INVERSIÓN DEL LUNES (2026-08-18) ───────────────────────────────
+// Se abre tocando el bloque "Bolsa GBM" en Mi Día. Solo existe los lunes, que es el
+// único día que ese bloque aparece en la rutina.
+//
+// Qué es REAL y qué no, para no vender humo:
+//  · BTC en vivo → api.coingecko.com, la misma que ya usa Finanzas.
+//  · USD/MXN → open.er-api.com, gratis y sin API key. Se actualiza UNA VEZ AL DÍA,
+//    no al segundo: se muestra la hora del dato para que se vea de cuándo es.
+//  · VOO → NO se puede leer desde un archivo local. Yahoo Finance y Stooq bloquean
+//    por CORS y las demás piden API key. Probado, no supuesto. Se pone un link
+//    directo en vez de inventar un precio.
+//  · Tu portafolio y tu excedente salen de finanzasmx_v2 (localStorage), que es
+//    donde ya vive tu dinero real — no se duplica aquí.
+const GBM_LINKS = [
+  { t: 'GBM+ · tu portafolio', u: 'https://gbm.com/', d: 'Entra y ejecuta la compra' },
+  { t: 'VOO · precio en vivo', u: 'https://www.google.com/finance/quote/VOO:NYSEARCA', d: 'El dato que no se puede traer aquí' },
+  { t: 'CETES Directo', u: 'https://www.cetesdirecto.com/', d: 'Tasa vigente y compra a 28 días' },
+  { t: 'Banxico · tipo de cambio FIX', u: 'https://www.banxico.org.mx/tipcamb/tipCamMIAction.do', d: 'El oficial, para comparar' },
+];
+
+function esLunes(){ return new Date().getDay() === 1; }
+
+async function abrirGBM(){
+  const ov = document.getElementById('gbmOverlay');
+  if(!ov) return;
+  ov.classList.add('open');
+  clearInterval(timer);
+  renderGBMPanel();          // pinta ya con lo local
+  cargarPreciosGBM();        // y rellena lo de red cuando llegue
+}
+function cerrarGBM(){ document.getElementById('gbmOverlay')?.classList.remove('open'); }
+
+// Precios en vivo. Cada fuente falla por separado: si una se cae, la otra se sigue viendo.
+async function cargarPreciosGBM(){
+  const box = document.getElementById('gbmPrecios');
+  if(!box) return;
+  const pon = (id, html) => { const e = document.getElementById(id); if(e) e.innerHTML = html; };
+  // BTC
+  try{
+    const r = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd,mxn');
+    const j = await r.json();
+    pon('gbmBtc', '<b>$'+Number(j.bitcoin.usd).toLocaleString('en-US')+' USD</b><small>$'+Number(j.bitcoin.mxn).toLocaleString('es-MX')+' MXN</small>');
+  }catch(e){ pon('gbmBtc', '<b class="gbm-err">sin conexión</b><small>revísalo en GBM</small>'); }
+  // USD/MXN
+  try{
+    const r = await fetch('https://open.er-api.com/v6/latest/USD');
+    const j = await r.json();
+    const f = new Date(j.time_last_update_utc);
+    pon('gbmUsd', '<b>$'+Number(j.rates.MXN).toFixed(2)+'</b><small>dato del '+f.toLocaleDateString('es-MX',{day:'numeric',month:'short'})+'</small>');
+  }catch(e){ pon('gbmUsd', '<b class="gbm-err">sin conexión</b><small>ver Banxico abajo</small>'); }
+}
+
+function renderGBMPanel(){
+  const b = document.getElementById('gbmBody');
+  if(!b) return;
+  const F = rawGet('finanzasmx_v2', {}) || {};
+  const inv = F.investments || [];
+  const ef = F.emergencyFund || 0;
+  const metaEf = 10000;
+  const totalInv = inv.reduce((s,i)=>s+(+i.value||+i.invested||0), 0);
+  const cetes = inv.filter(i=>i.type==='cetes').reduce((s,i)=>s+(+i.value||+i.invested||0),0);
+  const deudaCara = (F.debts||[]).filter(d=>d.rate>0 && d.balance>0).reduce((s,d)=>s+d.balance,0);
+  const mon = n => '$'+Math.round(n).toLocaleString('es-MX');
+
+  // La regla que ya está escrita en tu Plan Maestro, aplicada al saldo de hoy.
+  let paso, color, detalle;
+  if(ef < metaEf){
+    paso = '1º Fondo de emergencia'; color = 'var(--o)';
+    detalle = 'Te faltan <b>'+mon(metaEf-ef)+'</b> para los '+mon(metaEf)+'. <b>Hoy no compras nada más</b>: el fondo va antes que cualquier inversión y antes que abonos extra a deuda. Es el colchón que evita que un imprevisto te regrese a la tarjeta.';
+  }else if(deudaCara > 0){
+    paso = '2º Deuda cara'; color = 'var(--r)';
+    detalle = 'Fondo completo ✅. Quedan <b>'+mon(deudaCara)+'</b> de deuda con interés. Cualquier tasa de tarjeta le gana a cualquier rendimiento — <b>el excedente va ahí</b>, no a GBM.';
+  }else{
+    paso = '3º Invertir'; color = 'var(--g)';
+    detalle = 'Fondo completo y sin deuda cara: <b>este es el momento de invertir</b>. Reparte según tu asignación escrita y ejecuta sin pensarlo dos veces.';
+  }
+
+  const asignacion = inv.length
+    ? inv.map(i=>{
+        const v = +i.value || +i.invested || 0;
+        const pct = totalInv ? Math.round(v/totalInv*100) : 0;
+        return '<div class="gbm-row"><span>'+esc(i.name)+'</span><span class="gbm-mono">'+mon(v)+' · '+pct+'%</span></div>';
+      }).join('')
+    : '<div class="gbm-vacio">Todavía no hay inversiones registradas en Finanzas.</div>';
+
+  b.innerHTML =
+    '<div class="gbm-sec">📡 Precios ahora</div>'+
+    '<div class="gbm-precios" id="gbmPrecios">'+
+      '<div class="gbm-precio"><span class="gbm-tk">BTC</span><div id="gbmBtc"><b>…</b><small>cargando</small></div></div>'+
+      '<div class="gbm-precio"><span class="gbm-tk">USD/MXN</span><div id="gbmUsd"><b>…</b><small>cargando</small></div></div>'+
+      '<div class="gbm-precio gbm-precio-off"><span class="gbm-tk">VOO</span><div><b>no disponible aquí</b><small>ábrelo abajo ↓</small></div></div>'+
+    '</div>'+
+    '<div class="gbm-nota">El dólar se actualiza una vez al día, no al segundo. <b>VOO no se puede leer desde este archivo</b> — Yahoo y Stooq bloquean la petición y las demás piden llave de pago; por eso va como link, no como número inventado.</div>'+
+
+    '<div class="gbm-sec">🎯 Qué te toca hoy</div>'+
+    '<div class="gbm-paso" style="border-color:'+color+'55;background:'+color+'12">'+
+      '<div class="gbm-paso-t" style="color:'+color+'">'+paso+'</div>'+
+      '<div class="gbm-paso-d">'+detalle+'</div>'+
+    '</div>'+
+    '<div class="gbm-row"><span>Fondo de emergencia</span><span class="gbm-mono">'+mon(ef)+' / '+mon(metaEf)+'</span></div>'+
+    '<div class="gbm-bar"><div class="gbm-bar-f" style="width:'+Math.min(100,ef/metaEf*100)+'%"></div></div>'+
+
+    '<div class="gbm-sec">💼 Tu portafolio hoy</div>'+
+    asignacion+
+    (totalInv?'<div class="gbm-row gbm-row-tot"><span>Total invertido</span><span class="gbm-mono">'+mon(totalInv)+'</span></div>':'')+
+    (cetes?'<div class="gbm-nota">CETES aporta '+mon(cetes)+'. Tu aporte recurrente es de $1,500 el día 15.</div>':'')+
+
+    '<div class="gbm-sec">⏱️ La compra rápida, en 20 minutos</div>'+
+    '<ol class="gbm-check">'+
+      '<li>Abre GBM+ y mira el saldo disponible (2 min).</li>'+
+      '<li>Compara contra el paso de arriba: ¿toca fondo, deuda o invertir? (1 min)</li>'+
+      '<li>Si toca invertir: ejecuta la orden según tu asignación ya definida (5 min).</li>'+
+      '<li>Regístralo en Finanzas → Plan de Inversiones para que el dashboard quede al día (5 min).</li>'+
+      '<li>Cierra la app. <b>No revises precios otra vez hasta el próximo lunes</b> — mirar a diario es lo que hace vender en pánico (7 min de sobra).</li>'+
+    '</ol>'+
+    '<div class="gbm-nota">⚠️ Sigues sin una <b>asignación objetivo escrita</b> (% CETES / % VOO / % BTC). Es la tarea pendiente de tu habilidad de Inversión: definirla una vez evita decidir cada lunes desde cero, que es justo lo que tu diagnóstico señala como el hueco real.</div>'+
+
+    '<div class="gbm-sec">🔗 Dónde ejecutar</div>'+
+    '<div class="gbm-links">'+GBM_LINKS.map(l=>'<a href="'+l.u+'" target="_blank" rel="noopener"><b>'+l.t+'</b><span>'+l.d+'</span></a>').join('')+'</div>';
 }
 
 function renderSkills(){
@@ -6195,6 +6393,7 @@ document.addEventListener('keydown',e=>{
   if(e.key==='Escape'&&document.getElementById('ejImgOverlay').classList.contains('open')){ cerrarImagenEjercicio(); return; }
   if(e.key==='Escape'&&document.getElementById('didiOverlay').classList.contains('open')){ cerrarDidi(); return; }
   if(e.key==='Escape'&&document.getElementById('calOverlay').classList.contains('open')){ cerrarCalendario(); return; }
+  if(e.key==='Escape'&&document.getElementById('gbmOverlay').classList.contains('open')){ cerrarGBM(); return; }
   if(e.key==='ArrowRight') nextSlide();
   if(e.key==='ArrowLeft') prevSlide();
   if(e.key===' '){e.preventDefault();togglePlay();}

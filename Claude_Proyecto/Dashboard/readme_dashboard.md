@@ -2519,3 +2519,52 @@ El estado real era peor de lo que parecía: **39 lecciones de Alemán, `salud.ht
 `#btnVolverDash` se inserta como **bloque autónomo justo después de `<body>`**, con su propio `<style>`: así funciona igual en las 39 lecciones que solo cargan `styles.css` externo. Va fijo arriba a la derecha, esquina que estaba libre en todos los archivos (lo fijo de cada app vive abajo-derecha o en un sidebar izquierdo). En ≤600px se reduce a solo el cohete, para no tapar títulos.
 
 Verificado en los 47, en escritorio (1600px) y celular (390px): **47/47 correctos en ambos** — existe, es visible, está arriba a la derecha, apunta al dashboard, y `elementFromPoint` sobre su centro confirma que **nada lo tapa**.
+
+## El bloque de GBM abre un panel de "qué invertir hoy" (2026-08-18)
+
+*"esto de Bolsa GBM solamente dura 20 min, es compra rapida... hay alguna forma de que cuando haga click en esa actividad, solamente los lunes me muestre una pantalla con info completa tomando datos reales y en tiempo real de que puedo invertir"*.
+
+El bloque decía *"revisar portafolio + VOO + USD/MXN e invertir"*, que sonaba a sesión de análisis. Ahora dice **"Bolsa GBM (20 min): compra rápida — revisa qué toca hoy y ejecuta"**, y la tarjeta es clickeable: abre `#gbmOverlay`. Solo aparece los lunes porque `lu-gbm` es `dias:[1]`.
+
+### Qué es tiempo real y qué no — probado, no supuesto
+
+Se probaron 6 fuentes desde un contexto `file://`, que es como Adán abre el dashboard:
+
+| Fuente | Resultado |
+|---|---|
+| **CoinGecko** (BTC) | ✅ 200, ya la usa Finanzas |
+| **open.er-api.com** (USD/MXN) | ✅ 200, gratis y sin API key |
+| exchangerate.host | ❌ responde 200 pero exige API key |
+| frankfurter · Stooq · Yahoo Finance | ❌ **bloqueadas por CORS** |
+
+**VOO no se puede leer desde un archivo local.** No hay fuente gratuita con CORS abierto, y las que existen piden llave de pago o un servidor intermedio. En vez de inventar un precio o dejar el hueco callado, el panel muestra la casilla de VOO en gris con *"no disponible aquí"* y un link directo a Google Finance. El propio panel explica por qué.
+
+También se dice explícitamente que **el dólar se actualiza una vez al día**, no al segundo, y se muestra la fecha del dato — llamarlo "en vivo" sin más habría sido impreciso.
+
+### Lo que sí calcula, con sus datos reales
+
+Lee `finanzasmx_v2` de localStorage —donde ya vive su dinero— y aplica la regla que su Plan Maestro ya tiene escrita, al saldo de hoy:
+
+1. **Fondo < $10,000** → *"hoy no compras nada más"*, con lo que falta.
+2. **Fondo completo pero queda deuda cara** → el excedente va a la deuda; ninguna tasa de rendimiento le gana a una de tarjeta.
+3. **Ni deuda ni fondo pendiente** → toca invertir.
+
+Con su estado actual (fondo $4,000 de $10,000) el panel muestra el paso 1, con barra de avance. Debajo: su portafolio real con el % de cada instrumento, la compra rápida en 5 pasos cronometrados que suman 20 minutos, y 4 links para ejecutar (GBM+, VOO, CETES Directo, Banxico).
+
+Cierra con el aviso de que **sigue sin una asignación objetivo escrita** (% CETES / % VOO / % BTC) — la tarea pendiente de su habilidad de Inversión, y la causa real de decidir cada lunes desde cero.
+
+### Un bug de JavaScript que vale documentar
+
+La primera inserción truncó el script del dashboard. Causa: `String.prototype.replace` con un **string** de reemplazo interpreta `$&`, `` $` ``, `$'` y `$1` como patrones — y este panel contiene la secuencia `'<b>$'`, así que `$'` pegó todo el resto del documento y cortó el archivo a la mitad.
+
+Se arregló pasando **funciones** de reemplazo (`replace(a, () => b)`), que no interpretan `$`. Cualquier script futuro que inserte texto con `$` en este proyecto tiene que hacer lo mismo.
+
+### Verificación
+
+Escritorio y celular, con llamadas de red reales: BTC `$64,285 USD / $1,096,748 MXN`, dólar `$17.03` con su fecha, el paso correcto según su saldo, sus $4,000 y $6,500 leídos de Finanzas, 5 pasos, 4 links, **0 elementos desbordados** en 390px y cero errores de consola.
+
+## 3 datos corregidos (2026-08-18)
+
+- **Gimnasio**: Fitsi $1,500 → **Total Pass $650, día 17**. Son $850/mes menos, $10,200 al año, que van directo al excedente. Actualizado en `SUB_GYM` y etiquetado con su día de cobro en el plan semanal, como ya se hacía con CETES.
+- **Bloque de GBM**: pasa a decir 20 minutos y "compra rápida".
+- **Nota en "Importante este mes"**: *"Cancelar la membresía de Fitsi — ya estás con Total Pass"*. Solo nota, sin tocar nada más, como se pidió.
