@@ -1834,6 +1834,11 @@ function togglePrivado(){
   const btn=document.getElementById('priv-btn');
   if(btn){ btn.classList.toggle('on',privado); btn.innerHTML=privado?'🙈 Modo privado':'👁️ Ocultar finanzas'; }
   showSlide(cur);
+  // El panel de inversión vive fuera de los slides, así que showSlide() no lo alcanza: si está
+  // abierto cuando se pulsa el botón, hay que repintarlo a mano o se quedaría con las cifras
+  // destapadas hasta cerrarlo y volverlo a abrir. cargarPreciosGBM() va detrás porque el repintado
+  // deja los recuadros de BTC/USD otra vez en "cargando".
+  if(document.getElementById('gbmOverlay')?.classList.contains('open')){ renderGBMPanel(); cargarPreciosGBM(); }
 }
 const fmtD=d=>{if(!d)return'';const[y,m,day]=d.split('-');const mn=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];return `${parseInt(day)} ${mn[parseInt(m)-1]} ${y}`;};
 function tryParse(key,def){try{const r=localStorage.getItem(key);if(!r)return def;const p=JSON.parse(r);return typeof p==='object'&&p?{...def,...p}:def;}catch(e){return def;}}
@@ -4575,6 +4580,11 @@ async function cargarPreciosGBM(){
 // sí inviertes" mientras el panel decía "primero tu fondo" en cuanto una de las dos copias se
 // tocara sin la otra. `corto`/`sub` son la versión de una línea para el botón; `detalle` es el
 // texto largo del panel — mismo veredicto, distinto largo.
+// Todas las cantidades pasan por money() (2026-08-18, pedido explícito: "el modo privado deberia
+// funcionar aqui tambien con los datos de ahi") — antes este panel tenía su propio formateador que
+// imprimía el número tal cual, así que con "Ocultar finanzas" activo el resto del Dashboard se
+// tapaba pero al abrir la inversión su fondo, su deuda y su portafolio quedaban a la vista. Los
+// precios de mercado (BTC, USD/MXN) NO se tapan: son públicos, no son su dinero.
 function pasoInversionHoy(){
   const F = rawGet('finanzasmx_v2', {}) || {};
   const inv = F.investments || [];
@@ -4583,21 +4593,19 @@ function pasoInversionHoy(){
   const totalInv = inv.reduce((s,i)=>s+(+i.value||+i.invested||0), 0);
   const cetes = inv.filter(i=>i.type==='cetes').reduce((s,i)=>s+(+i.value||+i.invested||0),0);
   const deudaCara = (F.debts||[]).filter(d=>d.rate>0 && d.balance>0).reduce((s,d)=>s+d.balance,0);
-  const mon = n => '$'+Math.round(n).toLocaleString('es-MX');
+  const mon = n => money(n);
 
   let paso, color, detalle, corto, sub;
   if(ef < metaEf){
     paso = '1º Fondo de emergencia'; color = 'var(--o)';
     detalle = 'Te faltan <b>'+mon(metaEf-ef)+'</b> para los '+mon(metaEf)+'. <b>Hoy no compras nada más</b>: el fondo va antes que cualquier inversión y antes que abonos extra a deuda. Es el colchón que evita que un imprevisto te regrese a la tarjeta.';
     corto = 'Primero tu fondo';
-    // money() y no mon(): este texto se ve en la pantalla principal, donde el modo privado
-    // ("Ocultar finanzas") tiene que tapar las cifras igual que en el resto de Mi Día.
-    sub = 'Faltan '+money(metaEf-ef)+' de '+money(metaEf)+' — hoy no compras nada más.';
+    sub = 'Faltan '+mon(metaEf-ef)+' de '+mon(metaEf)+' — hoy no compras nada más.';
   }else if(deudaCara > 0){
     paso = '2º Deuda cara'; color = 'var(--r)';
     detalle = 'Fondo completo ✅. Quedan <b>'+mon(deudaCara)+'</b> de deuda con interés. Cualquier tasa de tarjeta le gana a cualquier rendimiento — <b>el excedente va ahí</b>, no a GBM.';
     corto = 'Abona a tu deuda';
-    sub = 'Fondo completo. Quedan '+money(deudaCara)+' con interés — van antes que GBM.';
+    sub = 'Fondo completo. Quedan '+mon(deudaCara)+' con interés — van antes que GBM.';
   }else{
     paso = '3º Invertir'; color = 'var(--g)';
     detalle = 'Fondo completo y sin deuda cara: <b>este es el momento de invertir</b>. Reparte según tu asignación escrita y ejecuta sin pensarlo dos veces.';
@@ -4654,7 +4662,7 @@ function renderGBMPanel(){
     '<div class="gbm-sec">💼 Tu portafolio hoy</div>'+
     asignacion+
     (totalInv?'<div class="gbm-row gbm-row-tot"><span>Total invertido</span><span class="gbm-mono">'+mon(totalInv)+'</span></div>':'')+
-    (cetes?'<div class="gbm-nota">CETES aporta '+mon(cetes)+'. Tu aporte recurrente es de $1,500 el día 15.</div>':'')+
+    (cetes?'<div class="gbm-nota">CETES aporta '+mon(cetes)+'. Tu aporte recurrente es de '+mon(1500)+' el día 15.</div>':'')+
 
     '<div class="gbm-sec">⏱️ La compra rápida, en 20 minutos</div>'+
     '<ol class="gbm-check">'+

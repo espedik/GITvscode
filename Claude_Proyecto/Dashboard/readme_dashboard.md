@@ -2568,3 +2568,47 @@ Escritorio y celular, con llamadas de red reales: BTC `$64,285 USD / $1,096,748 
 - **Gimnasio**: Fitsi $1,500 → **Total Pass $650, día 17**. Son $850/mes menos, $10,200 al año, que van directo al excedente. Actualizado en `SUB_GYM` y etiquetado con su día de cobro en el plan semanal, como ya se hacía con CETES.
 - **Bloque de GBM**: pasa a decir 20 minutos y "compra rápida".
 - **Nota en "Importante este mes"**: *"Cancelar la membresía de Fitsi — ya estás con Total Pass"*. Solo nota, sin tocar nada más, como se pidió.
+
+## "Qué invertir hoy" ya no depende del lunes: botón fijo en Mi Día (2026-08-18)
+
+*"la pestaña que invertir hoy, tambien quiero verla al apretar un boton y quiero que este en el dashboard, quiero que este alado de ahora mismo a la derecha y tome el tamaño de ideas para hoy"* — con un rectángulo rojo marcando el hueco exacto a la derecha del banner.
+
+El panel de inversión existía desde esta misma mañana, pero su única entrada era el bloque `lu-gbm` de la línea de tiempo, y ese bloque es `dias:[1]`. **De martes a domingo no había forma de abrirlo**: la pantalla estaba construida y era inalcanzable 6 de cada 7 días.
+
+### Por qué el ancho sale solo y no a ojo
+
+"Ahora mismo" ocupaba todo el ancho. Ahora vive dentro de `.dia-ahora-row`, un grid que **repite las columnas de `#miDiaSecundarios` (`1fr 2fr 1fr`)** con el banner tomando las dos primeras (`grid-column:1/3`) y el botón la tercera. Así el botón no "mide parecido" a Ideas para hoy: mide **lo mismo**, calculado por el navegador, y los dos bordes derechos coinciden en cualquier viewport — medido en Playwright, `x=1154 w=334` en ambos. Un ancho fijo (320px) se habría desalineado en cuanto cambiara el tamaño de la ventana. En ≤1024px la fila colapsa a 1 columna, igual que la de abajo.
+
+El botón es un `<button>` real, no un `<div onclick>`: entra en el orden de tabulación y responde a Enter/Espacio sin JS extra.
+
+### El botón ya responde antes de abrirlo
+
+No dice "ver panel". Dice el paso que toca hoy, con su color: **"Primero tu fondo"** (naranja), **"Abona a tu deuda"** (rojo) o **"Hoy sí inviertes"** (verde), más una línea con las cifras. Se repinta en cada `renderDia()`, así que sigue al saldo real de Finanzas.
+
+Para lograrlo, la regla del Plan Maestro salió de `renderGBMPanel()` a **`pasoInversionHoy()`**, que ahora leen las dos piezas. Duplicar el `if/else` habría dejado que el botón dijera una cosa y el panel otra en cuanto se tocara una sola de las copias.
+
+### El modo privado ahora también entra al panel
+
+*"el modo privado deberia funcionar aqui tambien con los datos de ahi"*.
+
+El panel tenía su propio formateador (`mon = n => '$'+n.toLocaleString()`) que imprimía el número tal cual. Resultado: con **Ocultar finanzas** activo, todo el Dashboard se tapaba y bastaba abrir la inversión para ver el fondo, la deuda y el portafolio completos. `mon()` ahora delega en `money()`, la misma función del resto del archivo, y el aporte recurrente a CETES dejó de estar escrito a mano como `$1,500`.
+
+Lo que **no** se tapa son los precios de mercado (BTC, USD/MXN): son públicos y no dicen nada de su dinero.
+
+`togglePrivado()` además repinta el panel si está abierto en ese momento — vive fuera de los slides, así que `showSlide()` no lo alcanzaba y se quedaba destapado hasta cerrarlo y volverlo a abrir.
+
+### Verificación (Playwright, escritorio 1600px y celular 390px)
+
+| Comprobación | Resultado |
+|---|---|
+| Ancho y bordes contra "Ideas para hoy" | idénticos (`w=334`, misma `x`) |
+| Misma fila, a la derecha de "Ahora mismo" | ✅ |
+| Clic abre `#gbmOverlay` | ✅ |
+| Los 3 pasos según el saldo sembrado | fondo $4,000 → *Primero tu fondo* · $12,000 con deuda → *Abona a tu deuda* · $12,000 sin deuda → *Hoy sí inviertes* |
+| Modo privado en botón **y** panel | `$••,•••`; solo sobreviven BTC y USD/MXN |
+| 390px | apilado bajo el banner, **0 elementos desbordados** |
+| Consola | sin errores |
+
+### Nota para scripts futuros: `dashboard.html` tiene finales de línea MIXTOS
+
+6,097 líneas CRLF y 238 LF. Un script que lea con las *universal newlines* de Python y vuelva a escribir normaliza el archivo entero y produce un diff de 12,000 líneas para un cambio de 100. Hay que leer y escribir con `newline=''` — y si se inserta texto nuevo, hacerlo con `\r\n`, que es el estilo dominante.
