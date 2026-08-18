@@ -294,3 +294,52 @@ Su intuición es correcta, pero conviene precisar el motivo: **cortar no acelera
 ### Lista de compras
 
 `LISTA_COMPRAS.cabello` pasa de 7 a **12 productos, y el orden ES la recomendación**: primero el champú suave que le faltaba, luego los 2 medicados con su frecuencia escrita en el propio nombre, después lo que repara, y al final los 2 con receta. Las 12 generan búsquedas limpias (24 links, Amazon + Mercado Libre) tras el arreglo de `lcAmazonQuery()`.
+
+## La rutina completa sigue el plan, y sin alternativas (2026-08-18)
+
+*"debes modificar mi rutina de todos los dias para que sigas el plan que me estas creando, pero solo debes darme productos en especificos, no me des alternativas, por que si no al final no comprare nada"*.
+
+Dos reglas aplicadas en los 3 archivos a la vez:
+
+### 1. Un producto por necesidad, el mismo en todos lados
+
+Antes había `X o Y`, `Solución/Espuma`, `Kirkland Signature o genérico`, y varios `(opcional)`. **Lo opcional no se hace**, y una alternativa en la lista del súper es una decisión más que tomar de pie en el pasillo.
+
+| Necesidad | El producto, sin más opciones |
+|---|---|
+| Champú base | **CeraVe Champú Hidratante sin sulfatos** |
+| Champú anticaída | **Pilexil Anticaída 300 ml** |
+| Champú caspa (rescate) | **Darrow Doctar alcatrão** |
+| Acondicionador | **TRESemmé Keratin Smooth** |
+| Mascarilla | **L'Oréal Elvive Total Repair 5** |
+| Sin enjuague | **L'Oréal Elvive Total Repair 5 crema** |
+| Aceite de puntas | **Moroccanoil Treatment Light** |
+| Minoxidil | **5% en ESPUMA, Kirkland** |
+| Almohada | **Funda de satín** |
+
+Los nombres son **idénticos** en `RUTINA_TASKS`, `HAIR_DB` y `LISTA_COMPRAS`. Si la rutina dijera una marca y la lista otra, volvería justo la duda que se quería quitar. `LISTA_COMPRAS.cabello` queda en 11 productos con 22 links y **0 queries defectuosas**.
+
+También se quitó el protector térmico de la lista: dependía de un "si usas secadora" que nadie ha confirmado, y una compra condicional es otra alternativa disfrazada. Se queda en la guía como nota.
+
+### 2. La semana entera, coherente
+
+| Día | Qué toca |
+|---|---|
+| **Lun · Jue** | Pilexil (tratamiento de caída) |
+| **Mar · Vie · Dom** | Sin champú — solo acondicionador de medios a puntas |
+| **Mié** | Sin champú en la mañana, pero **lavado obligatorio después de nadar** |
+| **Sáb** | CeraVe + mascarilla — el día de reparación |
+
+Y **todos los días**, sin excepción: crema sin enjuague sobre el pelo húmedo. Antes ese paso decía "(opcional)" y aparecía solo algunos días.
+
+### El hallazgo del miércoles
+
+Al mapear la semana salió que **nada 45 min en alberca y la ducha posterior no mencionaba el cabello**. El cloro se queda en el pelo y lo sigue resecando durante horas — sobre un cabello ya dañado es de lo más agresivo que hay.
+
+`wd09` (la ducha post-ejercicio) ahora incluye el lavado obligatorio de los miércoles, y el truco que más rinde: **mojar el pelo con agua limpia ANTES de meterse a la alberca**. El pelo mojado absorbe mucho menos cloro, igual que una esponja que ya viene llena.
+
+### Minoxidil
+
+Los 6 bloques donde aparecía (AM y PM de lunes a domingo) decían "Minoxidil 5%" a secas. Ahora dicen **espuma Kirkland**, con el motivo escrito en la propia tarea: la solución líquida lleva propilenglicol y es la causa de buena parte de la resequedad.
+
+Replicado en las 2 copias de `RUTINA_TASKS`; verificado que las 71 tareas quedan equivalentes salvo los `href` de `k2`/`k5`, que deben diferir por diseño.
