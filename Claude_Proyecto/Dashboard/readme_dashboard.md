@@ -2470,3 +2470,52 @@ Verificado: **12 bloques, 24 tareas, 0 duplicadas, 0 sueltas fuera de un mes**, 
 ### Una inconsistencia que queda anotada
 
 `s3-3` está en Fase 3 (ene 2029 en adelante) pero su texto dice *"retomarla en oct 2028"*, que cae en Fase 2. Se dejó como continua porque es una decisión informativa, no una tarea con fecha de ejecución — pero si se quiere que aparezca en octubre de 2028, hay que moverla de fase, no solo de mes.
+
+## Reparación: el serializador de metas borraba campos en silencio (2026-08-18)
+
+*"en hyrox, eliminaste completamente la lista de ejercicios y el tiempo promedio... al igual que en tailandia, no me pones links ni space x ya me habias puesto pagina para calendario... no estas siendo nada minucioso y eso me asusta"*.
+
+Tenía razón. **Fue un error mío, y grave.**
+
+### Qué pasó
+
+El script que añadió las cotizaciones a Tailandia / Hong Kong / Hyrox reserializó `META_DETALLE` completo con este serializador:
+
+```js
+const ser = o => typeof o === 'string' ? q(o) : '{t:' + q(o.t) + (o.d ? ',d:' + q(o.d) : '') + '}';
+```
+
+**Solo contempla `t` y `d`.** Cualquier otro campo se perdió sin ruido: `list` (las 8 estaciones de Hyrox con su peso, distancia y tiempo promedio real) y los `href`/`label` de todos los links, en **7 de 13 metas**.
+
+Lo peor no es el bug, es que **la validación no lo detectó**: comprobaba sintaxis JS y que el archivo creciera. Las dos cosas se cumplen perfectamente mientras borras contenido — el archivo crecía porque los pasos nuevos pesaban más que lo borrado.
+
+| Meta | Campos borrados |
+|---|---|
+| hyrox | `list`, `href`, `label` |
+| tailandia · spacex · maestria · ajedrez · remoto · empresa | `href`, `label` |
+
+### La reparación
+
+Se tomó `META_DETALLE` íntegro del commit `7574a97` (anterior al daño) y se fusionó con lo actual: **base = original completo**, encima solo los pasos nuevos que no existían, comparando por título. El serializador nuevo es recursivo y preserva **cualquier** campo a cualquier profundidad — el fallo no se puede repetir por omisión.
+
+Y la validación ahora compara **meta por meta** que no falte ningún campo ni ningún paso respecto al original, antes de escribir. Si algo falta, no escribe.
+
+Restaurado: 7 metas, la tabla de 8 estaciones de Hyrox y los 24 links.
+
+### Lo que sí faltaba de verdad, ya añadido
+
+Con el daño reparado quedó claro qué era pérdida y qué era hueco real:
+
+**Hyrox** (+3 pasos): plan de **10 semanas** —el tiempo exacto que queda hasta el 30 de octubre— dividido en bloques, con el error típico señalado (entrenar carrera y fuerza por separado y llegar sin saber cómo se sienten juntas); link al **listado oficial de eventos de México**, que es lo que hay que revisar en vez de una fecha copiada aquí que puede quedar vieja; y qué tiempo apuntar en una primera (1h20–1h40 en Men Open, con la meta correcta siendo terminar sin caminar, no un número).
+
+**Hong Kong** (+4 pasos): no tenía **ni un solo link**. Ahora lleva Sky100, el Peak Tram, la tarjeta Octopus y la guía oficial de turismo en español.
+
+## Un botón para volver al Dashboard, igual en los 47 archivos (2026-08-18)
+
+*"todos los html relacionados en mi aplicacion dashboard deben tener un boton arriba a la derecha para poder regresar a la pagina principal, esto debido a que no todos lo tienen o esta en diferente posicion"*.
+
+El estado real era peor de lo que parecía: **39 lecciones de Alemán, `salud.html`, `entrevistas.html` y `vestimenta.html` no tenían ninguna vía de regreso**. Y los 5 que sí lo tenían lo llevaban metido en su propia navegación —sidebar en Coach, `nav-item` en Finanzas y comida, `tab-btn` en cuidadopersonal—, cada uno en un sitio distinto.
+
+`#btnVolverDash` se inserta como **bloque autónomo justo después de `<body>`**, con su propio `<style>`: así funciona igual en las 39 lecciones que solo cargan `styles.css` externo. Va fijo arriba a la derecha, esquina que estaba libre en todos los archivos (lo fijo de cada app vive abajo-derecha o en un sidebar izquierdo). En ≤600px se reduce a solo el cohete, para no tapar títulos.
+
+Verificado en los 47, en escritorio (1600px) y celular (390px): **47/47 correctos en ambos** — existe, es visible, está arriba a la derecha, apunta al dashboard, y `elementFromPoint` sobre su centro confirma que **nada lo tapa**.
