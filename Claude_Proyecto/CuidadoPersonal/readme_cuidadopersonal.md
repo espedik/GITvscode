@@ -247,3 +247,50 @@ Correcciones de creencias comunes que la guía desmonta: las gotas "para quitar 
 ### Un incidente que vale documentar
 
 La primera versión del script de inserción abrió el archivo destino con `io.open(F,'w')` **antes** de tener el contenido listo. Ese modo trunca al instante, y el script falló después por un problema de encoding — resultado: `cuidadopersonal.html` quedó en **0 bytes**. Se recuperó con `git checkout` sin pérdida (los tratamientos de cabello ya estaban commiteados) y se rehízo escribiendo a un `.tmp` que solo reemplaza el original tras validar tamaño y sintaxis. **Los scripts que editan archivos del proyecto escriben a temporal, nunca al destino directo.**
+
+## Cabello seco y dañado: el problema era la acumulación de tratamientos (2026-08-18)
+
+*"mi cabello luce muy seco y dañado actualmente y pienso cortarmelo... los productos que uso son minoxidil folcress y tambien darrow doctar y pilexil shampoo anticaida... debes decirme si debo agregar mas cosas o cambiar esto que uso"*.
+
+### El hallazgo
+
+Estaba usando **dos champús de tratamiento a la vez**:
+
+- **Darrow Doctar** es coal tar (alquitrán), un detergente potente indicado para dermatitis seborreica. **Resecar es su efecto adverso conocido**, no un accidente.
+- **Pilexil anticaída** es otro champú de tratamiento, no de mantenimiento.
+- **Minoxidil 2×/día**: en presentación de SOLUCIÓN, el vehículo lleva propilenglicol, que reseca el tallo.
+
+Tres fuentes de resequedad simultáneas sobre un perfil que el propio proyecto ya registraba como *fino*, *cuero graso* y con *resequedad* entre sus preocupaciones. No era mala suerte, era la combinación.
+
+**Y `HAIR_DB` solo tenía 1 champú, el medicado.** Faltaba por completo un champú suave para los días sin tratamiento — el hueco que hacía inevitable usar un medicado siempre.
+
+### Lo que cambia
+
+**Champús: de 1 a 3, con rol y frecuencia.** El paso 1 de la rutina de lavado mostraba **un solo producto** (`haPick` con `n=1`), lo que escondía justo la recomendación central. Ahora `caChampusHtml()` muestra los tres:
+
+| Cuándo | Cuál |
+|---|---|
+| Los días normales | **Champú suave sin sulfatos** — la base que faltaba |
+| 2-3 veces por semana | **Pilexil anticaída** — al cuero cabelludo, no al largo |
+| Solo si hay caspa activa | **Darrow Doctar** — máx. 2×/semana, **nunca el mismo día que el Pilexil** |
+
+**Minoxidil en espuma en vez de solución.** Es el cambio más directo contra la resequedad sin perder el tratamiento: la espuma no lleva propilenglicol. Va anotado en la guía y en la lista de compras.
+
+**3 productos nuevos en `HAIR_DB.reparacion`**: funda de almohada de satín (lo más barato con más efecto — el algodón tiene fricción y absorbe humedad durante 6-7 horas cada noche), protector térmico (solo si usa secadora), y sérum leave-in, distinguiendo que **el leave-in va sobre pelo húmedo y el aceite sobre pelo seco** — son dos productos en dos momentos, no intercambiables.
+
+### La rutina de lavado, reescrita en las 2 copias
+
+`wd02lav` (Lun/Jue) y `sa0506` (Sáb) dejan de decir "champú: Darrow Doctar" siempre:
+
+- **Lun y Jue** → Pilexil (tratamiento de caída) + acondicionador + leave-in en húmedo, con la regla explícita de cambiar a Darrow **solo** si ese día hay descamación activa.
+- **Sábado** → champú suave + **mascarilla**, marcada como *"el paso que más repara de toda tu semana; si te saltas uno, que no sea este"*. Cierra revisando puntas abiertas.
+
+Replicado en `Coach_v2.html` copiando las subtareas desde el Dashboard en vez de reescribirlas, para que no puedan divergir por un typo. Comprobado que las 71 tareas quedan equivalentes salvo los `href` de `k2`/`k5`, que deben diferir por diseño.
+
+### Sobre cortarse las puntas
+
+Su intuición es correcta, pero conviene precisar el motivo: **cortar no acelera el crecimiento** — eso ocurre en el folículo, no en la punta. Lo que sí hace es eliminar las puntas abiertas, que se siguen partiendo hacia arriba si se dejan. Va en la rutina del sábado como criterio verificable: si se ven pelos abiertos en forma de Y, toca corte; cada 8-12 semanas, 1-2 cm.
+
+### Lista de compras
+
+`LISTA_COMPRAS.cabello` pasa de 7 a **12 productos, y el orden ES la recomendación**: primero el champú suave que le faltaba, luego los 2 medicados con su frecuencia escrita en el propio nombre, después lo que repara, y al final los 2 con receta. Las 12 generan búsquedas limpias (24 links, Amazon + Mercado Libre) tras el arreglo de `lcAmazonQuery()`.

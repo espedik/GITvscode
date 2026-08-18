@@ -1413,6 +1413,8 @@ function caSave(){localStorage.setItem(CA_KEY,JSON.stringify(CA));}
 // ─── BASE DE PRODUCTOS REALES para cabello (disponibles en México) ───
 const HAIR_DB={
   champu:[
+    {n:"Champú suave sin sulfatos (uso frecuente) — CeraVe Hydrating o Vichy Dercos Nutrientes",grosor:["fino","medio","grueso"],presu:["medio","alto"],ayuda:["resequedad"],uso:"ESTE es el que te falta y el que debería ser tu base. Los días que no toca tratamiento, lavas con este: limpia sin arrastrar los aceites naturales. Los champús medicados (coal tar, anticaída) son TRATAMIENTO, no mantenimiento — usarlos a diario es lo que deja el pelo como paja."},
+    {n:"Pilexil Champú Anticaída 300 ml",grosor:["fino","medio","grueso"],presu:["medio","alto"],ayuda:["caida"],uso:"El que ya usas. Va 2-3 veces por semana, NO a diario y NUNCA el mismo día que el Darrow Doctar. Masajea el cuero cabelludo 2 min y enjuaga. Su trabajo es el cuero cabelludo, así que el largo del pelo solo recibe lo que escurre — no lo frotes ahí."},
     {n:'Darrow Doctar (shampoo con alcatrão/coal tar)',grosor:['fino','medio','grueso'],presu:['economico','medio','alto'],ayuda:['caspa'],uso:'Masajea el cuero cabelludo 2-3 min, deja actuar antes de enjuagar. 2-3 veces por semana, los días de lavado.'},
   ],
   acondicionador:[
@@ -1434,6 +1436,11 @@ const HAIR_DB={
     {n:'Minoxidil 5% Solución/Espuma (Kirkland Signature o genérico)',grosor:['fino','medio','grueso'],presu:['economico','medio','alto'],ayuda:['caida'],uso:'1ml (la tapa dosificadora) en cuero cabelludo seco, 2 veces al día (mañana y noche), constante — no lo apliques en cabello mojado ni justo después de lavar.'},
     {n:'Minoxidil tópico + Dutasteride (fórmula magistral — REQUIERE RECETA)',grosor:['fino','medio','grueso'],presu:['medio','alto'],ayuda:['caida'],uso:'Combina el minoxidil que ya usas con dutasteride en la misma solución, preparada por farmacia magistral. El minoxidil hace crecer; el dutasteride ataca la CAUSA, bloqueando la DHT que miniaturiza el folículo — es más potente que el finasteride porque inhibe los 2 tipos de 5-alfa-reductasa, no solo uno. Aplicado en la piel la absorción sistémica es mucho menor que en pastilla, pero NO es cero. ⚠️ Necesitas dermatólogo: en México el dutasteride es de prescripción, no está aprobado por la FDA para alopecia (sí en Corea y Japón) y altera el valor del PSA, dato que importa si alguna vez te revisan la próstata — avísale al médico que lo usas. Efectos posibles: baja del deseo sexual o dificultad eréctil en un porcentaje pequeño de hombres.'},
     {n:'Minoxidil ORAL en dosis baja (2.5-5 mg — REQUIERE RECETA Y SEGUIMIENTO)',grosor:['fino','medio','grueso'],presu:['economico','medio'],ayuda:['caida'],uso:'La pastilla. Se receta fuera de indicación (su registro original es como antihipertensivo) y funciona para quien no tolera el tópico o no logra ser constante con él — tomar una pastilla es más fácil de sostener que aplicarse la solución 2 veces al día, y la constancia es la mitad del resultado. ⚠️ Esta SÍ es sistémica: puede bajar la presión, causar retención de líquidos, hinchazón de tobillos, taquicardia y vello de más en cara y cuerpo (hipertricosis, el efecto más frecuente). Requiere que un médico revise tu presión antes y durante. No la empieces por tu cuenta ni la combines con el tópico sin que él lo indique.'},
+  ],
+  reparacion:[
+    {n:"Funda de almohada de satín o seda",grosor:["fino","medio","grueso"],presu:["economico","medio"],ayuda:["resequedad"],uso:"Lo más barato con más efecto para un pelo ya dañado. El algodón tiene fricción y absorbe la humedad del cabello: pasas 6-7 horas cada noche frotándolo contra la almohada. El satín no absorbe y desliza. No repara nada por sí solo, pero deja de romper lo que ya está frágil."},
+    {n:"Protector térmico en spray",grosor:["fino","medio","grueso"],presu:["economico","medio"],ayuda:["resequedad"],uso:"Solo si usas secadora. Sobre el pelo húmedo, antes de secar. Si no usas calor, no lo necesitas — y si tu pelo está tan seco como dices, secar al aire un tiempo es la decisión más rentable de toda esta lista."},
+    {n:"Sérum o leave-in reparador de puntas (con el pelo húmedo)",grosor:["fino"],presu:["economico","medio"],ayuda:["resequedad"],uso:"Distinto del aceite: el leave-in va sobre el pelo HÚMEDO recién lavado y sella la cutícula mientras se seca; el aceite va al final, sobre el pelo ya seco. Con cabello fino, una cantidad del tamaño de un chícharo basta — más lo apelmaza."},
   ],
   aceitePuntas:[
     {n:'Moroccanoil Treatment Light',grosor:['fino'],presu:['medio','alto'],ayuda:['resequedad'],uso:'2-3 gotas en las palmas, aplica solo en puntas con el cabello húmedo o seco. La versión "Light" es clave para cabello fino — la original regular puede pesarlo/engrasarlo.'},
@@ -1509,6 +1516,34 @@ function caSavePerfil(){
   toast('Perfil guardado — guía actualizada');
 }
 
+// Los 3 champús a la vez, con su rol y frecuencia (2026-08-18). Antes se mostraba solo 1
+// (haPick con n=1) y eso escondía la recomendación que de verdad importa en su caso: no
+// acumular tratamientos. Reportó pelo seco y dañado usando Darrow Doctar (coal tar) y
+// Pilexil anticaída a la vez, más minoxidil 2x/día — 3 fuentes de resequedad al mismo tiempo.
+function caChampusHtml(){
+  const R = [
+    {c:"var(--ca-green)", t:"Los días normales", n:"Champú suave sin sulfatos", 
+     d:"Tu base. Limpia sin arrastrar los aceites naturales. Es el que faltaba en tu rutina y el que debería usarse la mayoría de las veces."},
+    {c:"var(--ca-blue)", t:"2-3 veces por semana", n:"Pilexil Anticaída", 
+     d:"Tratamiento para la caída. Va al cuero cabelludo, masaje de 2 min. No lo frotes en el largo del pelo: ahí no hace nada y sí reseca."},
+    {c:"var(--ca-amber)", t:"Solo si hay caspa activa", n:"Darrow Doctar (coal tar)", 
+     d:"Máximo 2 veces por semana y NUNCA el mismo día que el Pilexil. El alquitrán es un detergente potente: es medicamento para la descamación, no champú de diario. Si no tienes caspa esta semana, no lo uses."},
+  ];
+  return "<div class='ca-step'>" +
+    "<div class='ca-step-num' style='background:var(--ca-blue)'>1</div>" +
+    "<div class='ca-step-body'>" +
+      "<div class='ca-step-name'>Champú — alterna, no acumules</div>" +
+      "<div class='ca-step-block'><div class='ca-step-label'>Por qué</div><div class='ca-step-text'>" +
+        "Usar 2 champús de tratamiento a la vez es lo que deja el pelo seco y quebradizo. Cada uno tiene su día y su motivo:" +
+      "</div></div>" +
+      R.map(function(x){ return "<div class='ca-step-block' style='border-left:3px solid " + x.c + ";padding-left:9px'>" +
+        "<div class='ca-step-label' style='color:" + x.c + "'>" + x.t + "</div>" +
+        "<div class='ca-step-text'><b>" + x.n + "</b> — " + x.d + "</div></div>"; }).join("") +
+      "<div class='ca-step-block'><div class='ca-step-label'>Nota</div><div class='ca-step-text' style='color:var(--ca-amber-d);font-weight:700'>" +
+        "Si tu minoxidil es en SOLUCIÓN, su vehículo lleva propilenglicol, que reseca el tallo. La versión en ESPUMA no lo lleva y es el cambio más directo contra la resequedad, sin perder el tratamiento." +
+      "</div></div>" +
+    "</div></div>";
+}
 function caStepHtml(num,color,prod,nota){
   if(!prod)return'';
   const tags=(prod.ayuda||[]).map(k=>{const m=HAIR_CONCERN_META[k];return m?`<span class="ca-pill small ${m.cls}">${m.emoji} ${m.label}</span>`:'';}).join('');
@@ -1570,7 +1605,7 @@ function caRenderGuiaContent(){
   function pick1(cat,catLabel){const arr=haPick(cat,perfil,1);if(arr.length){usados.push({p:arr[0],catLabel});return arr[0];}return null;}
 
   const lavado=[
-    caStepHtml(1,'var(--ca-blue)',pick1('champu',tieneCaida?'Champú anticaída':'Champú'),'Aplica solo en el cuero cabelludo, masajea, no lo pongas en las puntas.'),
+    caChampusHtml(),
     caStepHtml(2,'var(--ca-blue)',pick1('acondicionador','Acondicionador'),'Solo de medios a puntas — nunca en la raíz.'),
   ].join('');
 

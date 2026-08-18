@@ -4046,227 +4046,77 @@
   // Los bloques con fijo:true (ALTEN) se muestran en la línea de tiempo y cuentan
   // para "ahora/siguiente", pero no llevan checkbox ni cuentan en el progreso.
   const RUTINA_TASKS = [
-    // ── Común entre semana (Lun–Vie) — horario real confirmado 2026-08-02 ──
-    // Adán se despierta a las 06:40, no a las 07:00, y arranca el día con 20 min construyendo este
-    // mismo ecosistema (aclarado el 2026-08-15: "me despierto entre semana 6:40 y continuo armando
-    // esta aplicacion... 20 min"). Las 07:00 que decía wd01 eran en realidad la hora a la que ya
-    // estaba metiéndose a bañar. Este bloque y su gemelo de la noche (wd-app-pm) son su práctica
-    // real de IA aplicada — por eso van en cat:'aprender' y no en 'profundo'.
-    {id:'wd01', dias:[1,2,3,4,5], hora:'06:40', cat:'salud',    txt:'Despertar sin snooze — celular fuera del cuarto'},
-    {id:'wd-app-am', dias:[1,2,3,4,5], hora:'06:43', cat:'aprender', txt:'💻 Construir esta aplicación — 20 min antes de arrancar el día'},
-    {id:'wd02lav', dias:[1,4], hora:'07:03', cat:'salud', txt:'🚿 Bañarte + lavar cabello', producto:true, subtareas:[
-      {id:'wd02la', txt:'Champú: Darrow Doctar (shampoo con alcatrão/coal tar, anticaspa) — masajea el cuero cabelludo 2-3 min, deja actuar antes de enjuagar', link:{href:'../CuidadoPersonal/cuidadopersonal.html?tab=cabello', label:'✂️ Ver Cuidado del Cabello'}},
-      {id:'wd02lb', txt:'Acondicionador: TRESemmé Keratin Smooth Conditioner — solo de medios a puntas, nunca en la raíz (en cabello fino y graso, ponerlo en la raíz lo aplana y engrasa más rápido)'},
-      {id:'wd02lc', txt:'Aceite en puntas (opcional, con el cabello ya seco): Moroccanoil Treatment Light — 2-3 gotas, solo puntas'},
-    ]},
-    {id:'wd02co', dias:[2,3,5], hora:'07:03', cat:'salud', txt:'🚿 Bañarte + cabello (sin champú hoy)', producto:true, subtareas:[
-      {id:'wd02ca', txt:'Acondicionador: TRESemmé Keratin Smooth Conditioner — solo de medios a puntas (co-wash, sin champú: hoy no toca el anticaída, eso es Lun/Jue/Sáb — usarlo a diario resecaría el cuero cabelludo)'},
-      {id:'wd02cb', txt:'Aceite en puntas (opcional, con el cabello ya seco): Moroccanoil Treatment Light — 2-3 gotas, solo puntas'},
-    ]},
-    {id:'wd0304', dias:[1,2,3,4,5], hora:'07:20', cat:'salud', txt:'🧴 Skincare + 🍂 Minoxidil — AM', producto:true, subtareas:[
-      {id:'wd03a', txt:'Limpiador suave: CeraVe Limpiador Espumoso (verde) — quita grasa y sudor de la noche sin resecar'},
-      {id:'wd03b', txt:'Sérum de niacinamida 10%: The Ordinary Niacinamida 10% + Zinc 1% — controla grasa y afina los poros'},
-      {id:'wd03c', txt:'Hidratante con protector solar SPF 50: La Roche-Posay Anthelios — hidrata y protege del sol, obligatorio de día'},
-      {id:'wd04', txt:'Minoxidil 5% en cuero cabelludo seco — estimula el folículo, dosis de la mañana'},
-    ]},
-    {id:'wdSupAm', dias:[1,2,3,4,5], hora:'07:25', cat:'salud', txt:'💊 Suplementos AM', subtareas:[
-      {id:'wdSupAm1', txt:'Vitamina D3 — 2000-4000 UI, con algo de grasa en la comida', link:{href:'../CuidadoPersonal/salud.html?tab=suplementos', label:'💊 Ver Suplementos'}},
-      {id:'wdSupAm2', txt:'Multivitamínico — 1 tableta'},
-      {id:'wdSupAm3', txt:'Omega 3 — 1-2g EPA+DHA, con alimento'},
-      {id:'wdSupAm4', txt:'Creatina monohidratada — 5g (todos los días, no solo si entrenas hoy)'},
-    ]},
-    {id:'wd05', dias:[1,2,3,4,5], hora:'07:33', cat:'descanso', txt:'Vestirte y alistarte'},
-    // 2026-08-15: el traslado a ALTEN deja de ser tiempo muerto y pasa a ser el tercer bloque de
-    // Didi entre semana, usando la opción de direccionamiento (pasajeros que van hacia su destino).
-    // Cuesta ~20 min extra sobre los ~20 del trayecto normal, más el margen de que le asignen el
-    // viaje — por eso sale igual a las 07:40 pero llega 08:30 en vez de 08:00. Él confirmó que su
-    // horario en ALTEN es flexible y que aun entrando 08:30 sigue saliendo a las 17:00, así que
-    // NADA de la tarde se recorre (gym 17:40, Didi corta 19:20, Fase 0 20:00-21:15 intactos).
-    // Junto con wd08 (17:00, rumbo al gym en Buenavista), 2 de sus 3 bloques diarios de Didi son
-    // trayectos que ya manejaba de todos modos: ingreso sin costo real de tiempo.
-    {id:'wd06', dias:[1,2,3,4,5], hora:'07:40', cat:'admin', txt:'🚗 Didi con direccionamiento — camino a ALTEN (~50 min: el traslado normal + el desvío del pasajero)'},
-    {id:'wd07', dias:[1,2,3,4,5], hora:'08:30', cat:'trabajo',  txt:'🏢 ALTEN — jornada laboral (HIL/SIL Ford) — entras 08:30, sales 17:00', fijo:true},
-    {id:'wd12b', dias:[1,2,3,4,5], hora:'13:00', cat:'salud',   txt:'🛒 Comprar comida — descanso de ALTEN'},
-    {id:'wd12c', dias:[1,2,3,4,5], hora:'13:40', cat:'trabajo', txt:'🏢 ALTEN — de vuelta a la jornada laboral', fijo:true},
-    {id:'wd08', dias:[1,2,3,4,5], hora:'17:00', cat:'admin',    txt:'🚗 Didi — 1 pasajero a Buenavista (~40 min)'},
-    {id:'wd09', dias:[1,2,3,4,5], hora:'18:30', cat:'salud',    txt:'Ducha rápida post-ejercicio'},
-    // 2026-08-15, "entre semana deberia enfocarme en lo demas y dedicarme menos tiempo a trabajar
-    // en didi": la sesión nocturna se recorta de ~1h40 a ~40 min y esa hora se la lleva wd11, la
-    // prioridad de Fase 0, que hasta hoy tenía 15 min simbólicos antes de la cena. wd08 (17:00) NO
-    // se toca: ese pasajero va rumbo a Buenavista, que es a donde él maneja de todos modos para
-    // llegar al gym de las 17:40 — quitarlo no le devolvería tiempo, solo le quitaría el ingreso.
-    {id:'wd-didi2', dias:[1,2,3,4,5], hora:'19:20', cat:'admin', txt:'🚗 Didi — sesión corta de la noche (hasta ~20:00)'},
-    {id:'wd11', dias:[1,2,3,4,5], hora:'20:00', cat:'profundo', txt:'🎯 Prioridad activa de Fase 0: negocio de tu papá o plantilla GBM — 1h15 de avance real (20:00–21:15)'},
-    {id:'wd14', dias:[1,2,3,4,5], hora:'21:15', cat:'salud', txt:'🍽️ Cena + preparar la comida de mañana', subtareas:[
-      {id:'wd14a', txt:'Cocina un solo platillo para cenar hoy y llevar de comida mañana a ALTEN — ahorra tiempo, sin carbohidratos refinados en la cena', link:{href:'../CuidadoPersonal/comida.html?s=cenas', label:'🍳 Ver cenas'}},
-      {id:'wd14b', txt:'Deja todo empacado y listo junto a la puerta para salir rápido mañana', link:{href:'../CuidadoPersonal/comida.html?s=desayunos', label:'🍳 Ver desayunos'}},
-    ]},
-    {id:'wd16', dias:[1,2,3,4,5], hora:'22:15', cat:'descanso', txt:'📓 Diario del día (5 min) — libreta o notas del cel', subtareas:[
-      {id:'wd16a', txt:'Escribe 3 cosas que sí lograste hoy, aunque sean pequeñas'},
-      {id:'wd16b', txt:'1 cosa que salió mal o que aprendiste — sin autocastigo, solo para no repetirla'},
-      {id:'wd16c', txt:'1 gasto que pudiste evitar hoy (o "ninguno" si no hubo)'},
-    ]},
-    {id:'wd1718', dias:[1,2,3,4,5], hora:'22:30', cat:'salud', txt:'🧴 Skincare + 🍂 Minoxidil — PM', producto:true, subtareas:[
-      {id:'wd17a', txt:'Limpiador (doble limpieza si usaste protector solar): CeraVe Limpiador Espumoso (verde) — remueve el bloqueador y el sudor del día'},
-      {id:'wd17b', txt:'Tratamiento con retinoide: Differin Adapaleno 0.1% Gel — controla brotes y mejora la textura'},
-      {id:'wd17c', txt:'Hidratante nocturno: Eucerin Hyaluron-Filler + Epigenetic Noche — repara la piel mientras duermes'},
-      {id:'wd18', txt:'Minoxidil 5% en cuero cabelludo seco — dosis de la noche'},
-    ]},
-    {id:'wd19', dias:[1,2,3,4,5], hora:'22:45', cat:'profundo', txt:'🎯 Planear el día de mañana (5 min)', subtareas:[
-      {id:'wd19a', txt:'Elige 1 sola tarea que, si mañana solo lograras esa, el día ya valió la pena — tu tarea más importante (MIT)'},
-      {id:'wd19b', txt:'Anota 4 tareas más chicas para mañana, en el orden en que las harás'},
-    ]},
-    {id:'wd20', dias:[1,2,3,4,5], hora:'23:00', cat:'descanso', txt:'🧘 Meditación — respiración box (10 min)', subtareas:[
-      {id:'wd20a', txt:'Inhala 4 segundos por la nariz'},
-      {id:'wd20b', txt:'Sostén el aire 4 segundos'},
-      {id:'wd20c', txt:'Exhala 4 segundos por la boca'},
-      {id:'wd20d', txt:'Sostén sin aire 4 segundos — repite el ciclo (~10 veces en 10 min)'},
-    ]},
-    {id:'wdSupPm', dias:[1,2,3,4,5], hora:'23:05', cat:'salud', txt:'💊 Suplementos PM', subtareas:[
-      {id:'wdSupPm1', txt:'Magnesio (glicinato) — 200-400mg, 30-60 min antes de dormir', link:{href:'../CuidadoPersonal/salud.html?tab=suplementos', label:'💊 Ver Suplementos'}},
-      {id:'wdSupPm2', txt:'Proteína Whey — 25-30g si hoy no llegaste a tu meta de proteína (186g/día)'},
-    ]},
-    {id:'wd20e', dias:[1,2,3,4,5], hora:'23:10', cat:'descanso', txt:'Tiempo libre / relajación (20 min, hasta las 23:30)'},
-    {id:'wd-app-pm', dias:[1,2,3,4,5], hora:'23:30', cat:'aprender', txt:'💻 Construir esta aplicación — de 23:30 a 00:00, a veces hasta la 01:00'},
-    // wd21 se ancla en 23:59 y no en 00:00 a propósito: el timeline ordena con
-    // hora.localeCompare(), así que un '00:00' se iría al PRINCIPIO del día en vez del final, y
-    // "Dormir" aparecería como la primera tarea de la mañana. La hora real vive en el texto.
-    {id:'wd21', dias:[1,2,3,4,5], hora:'23:59', cat:'salud',    txt:'Apagar pantallas y dormir en cuanto cierres la app — entre 00:00 y 01:00 (5h40–6h40 de sueño con el despertar de las 06:40)'},
-
-    // ── Bolsa GBM — solo lunes, porque solo inviertes al inicio de semana ──
-    {id:'lu-gbm', dias:[1], hora:'09:00', cat:'admin', txt:'💰 Bolsa GBM: revisar portafolio + VOO + USD/MXN e invertir — solo lunes'},
-
-    // ── Lectura (21:45) — genérica por ahora, sin libro fijo hasta que se compren (sugerencias en Aprendizaje/Perfil del Rico) ──
-    {id:'l1', dias:[1], hora:'21:45', cat:'descanso', txt:'📖 Lectura (30 min)'},
-    {id:'l2', dias:[2], hora:'21:45', cat:'descanso', txt:'📖 Lectura (30 min)'},
-    {id:'l3', dias:[3], hora:'21:45', cat:'descanso', txt:'📖 Lectura (30 min)'},
-    {id:'l4', dias:[4], hora:'21:45', cat:'descanso', txt:'📖 Lectura (30 min)'},
-    {id:'l5', dias:[5], hora:'21:45', cat:'descanso', txt:'📖 Lectura (30 min)'},
-
-    // ── Ejercicio (17:40, después de la Didi corta) y bloque de habilidad — cambian cada día ──
-    {id:'e1', dias:[1], hora:'17:40', cat:'salud', txt:'🏋️ Ejercicio: Empuje (pecho / hombro / tríceps)', subtareas:[
-      {id:'e1a', txt:'Press de banca — 4×8 · 40kg / 88lb'},
-      {id:'e1b', txt:'Press inclinado con mancuerna — 3×10 · 12kg / 26lb c/u'},
-      {id:'e1c', txt:'Press militar — 3×10 · 25kg / 55lb'},
-      {id:'e1d', txt:'Elevaciones laterales — 3×12 · 5kg / 11lb c/u'},
-      {id:'e1e', txt:'Fondos en banco — 3×12 · peso corporal'},
-    ]},
-    {id:'e2', dias:[2], hora:'17:40', cat:'salud', txt:'🏋️ Ejercicio: Cardio + core', subtareas:[
-      {id:'e2a', txt:'Cardio continuo (correr/bici/elíptica) — 25 min a ritmo constante'},
-      {id:'e2b', txt:'Plancha — 3×45 seg · peso corporal'},
-      {id:'e2c', txt:'Elevación de piernas — 3×15 · peso corporal'},
-    ]},
-    {id:'k2', dias:[2], hora:'19:00', cat:'aprender', txt:'🤝 Ventas: 30 min — 1 capítulo de Influence / $100M Offers y escribe cómo lo aplicarías a GBM o CodeReview', link:{href:'#aprendizaje', label:'📚 Ver libros de Ventas'}},
-    {id:'e3', dias:[3], hora:'17:40', cat:'salud', txt:'🏊 Ejercicio: Natación — 45 min (alberca del Fitsi Buenavista)'},
-    {id:'e4', dias:[4], hora:'17:40', cat:'salud', txt:'🏋️ Ejercicio: Cardio / HIIT', subtareas:[
-      {id:'e4a', txt:'HIIT: 30 seg esfuerzo máximo / 90 seg suave — 8 rondas (~18 min)'},
-      {id:'e4b', txt:'Battle ropes o burpees — 3×30 seg · peso corporal'},
-      {id:'e4c', txt:'Plancha lateral — 2×30 seg por lado · peso corporal'},
-    ]},
-    {id:'k4', dias:[4], hora:'19:00', cat:'aprender', txt:'💰 Finanzas: 30 min — categoriza los gastos de la semana y revisa cuánto bajó la deuda', link:{href:'../Finanzas/Finanzas.html', label:'💰 Abrir Finanzas'}},
-    {id:'e5', dias:[5], hora:'17:40', cat:'salud', txt:'🏋️ Ejercicio: Piernas / glúteo', subtareas:[
-      {id:'e5a', txt:'Sentadilla con barra — 4×8 · 50kg / 110lb'},
-      {id:'e5b', txt:'Peso muerto rumano — 3×10 · 50kg / 110lb'},
-      {id:'e5c', txt:'Zancadas o sentadilla búlgara — 3×12 por pierna · 10kg / 22lb c/u'},
-      {id:'e5d', txt:'Hip thrust — 3×12 · 50kg / 110lb'},
-      {id:'e5e', txt:'Elevación de pantorrilla — 3×15 · 30kg / 66lb'},
-    ]},
-    {id:'k5', dias:[5], hora:'19:00', cat:'creativo', txt:'📣 GBM: personaliza el post de venta ya escrito (precio/fecha) y publícalo en 1 comunidad real de inversión', link:{href:'#plantillas-mensajes', label:'Ver mensaje ya escrito'}},
-
-    // ── Sábado ───────────────────────────────────────────────────────────
-    {id:'sa01',  dias:[6], hora:'07:00', cat:'salud',    txt:'Despertar (sin alarma agresiva)'},
-    {id:'sa0203', dias:[6], hora:'07:05', cat:'salud', txt:'🧴 Skincare + 🍂 Minoxidil — AM', subtareas:[
-      {id:'sa02', txt:'Skincare AM — limpiador + niacinamida + hidratante con SPF 50 (mismos productos que entre semana)'},
-      {id:'sa02b', txt:'Minoxidil 5% en cuero cabelludo seco — dosis de la mañana'},
-    ]},
-    {id:'sa03',  dias:[6], hora:'07:18', cat:'salud', txt:'🍳 Preparar y desayunar tranquilo', link:{href:'../CuidadoPersonal/comida.html?s=desayunos', label:'Ver desayunos'}},
-    {id:'saSupAm', dias:[6], hora:'07:30', cat:'salud', txt:'💊 Suplementos AM', subtareas:[
-      {id:'saSupAm1', txt:'Vitamina D3 — 2000-4000 UI, con algo de grasa en la comida', link:{href:'../CuidadoPersonal/salud.html?tab=suplementos', label:'💊 Ver Suplementos'}},
-      {id:'saSupAm2', txt:'Multivitamínico — 1 tableta'},
-      {id:'saSupAm3', txt:'Omega 3 — 1-2g EPA+DHA, con alimento'},
-      {id:'saSupAm4', txt:'Creatina monohidratada — 5g (todos los días, no solo si entrenas hoy)'},
-    ]},
-    {id:'sa04',  dias:[6], hora:'07:35', cat:'salud',    txt:'Ejercicio 1h — entreno largo / lo que falte en la semana'},
-    {id:'sa0506', dias:[6], hora:'08:35', cat:'salud', txt:'🚿 Ducha + lavar cabello', producto:true, subtareas:[
-      {id:'sa05a', txt:'Champú: Darrow Doctar (shampoo con alcatrão/coal tar, anticaspa) — masajea el cuero cabelludo 2-3 min, deja actuar antes de enjuagar', link:{href:'../CuidadoPersonal/cuidadopersonal.html?tab=cabello', label:'✂️ Ver Cuidado del Cabello'}},
-      {id:'sa05b', txt:'Acondicionador: TRESemmé Keratin Smooth Conditioner — solo de medios a puntas, nunca en la raíz'},
-      {id:'sa05c', txt:"Mascarilla capilar (1 vez por semana, hazla hoy): L'Oréal Elvive Total Repair 5 — puntas y medios, deja actuar 5-10 min, enjuaga bien"},
-      {id:'sa05d', txt:'Aceite en puntas (opcional, con el cabello ya seco): Moroccanoil Treatment Light — 2-3 gotas, solo puntas'},
-    ]},
-    // El sábado se convierte en día de ingreso (2026-08-15, "el sábado quiero trabajar de día en
-    // didi y en la tarde noche también"): dos bloques de Didi de ~5h sustituyen al bloque profundo
-    // de 4h, a los 30 min de IA aplicada y al freelance de las 17:00 (fl1, que baja a solo domingo).
-    // Lo único que sobrevive del trabajo propio es la revisión semanal, reubicada en la ventana
-    // entre los dos bloques. Todo el cierre del día se recorre ~1h15 y la hora de dormir pasa de
-    // 21:45 a 23:00 — sigue durmiendo ~8h porque el despertar de las 07:00 no se movió.
-    {id:'sa-didi1', dias:[6], hora:'09:00', cat:'admin', txt:'🚗 Didi — bloque de día (~09:00 a 14:00, 5h)'},
-    {id:'sa07',  dias:[6], hora:'14:00', cat:'salud',    txt:'Almuerzo'},
-    {id:'sa10',  dias:[6], hora:'14:40', cat:'admin',    txt:'💰 Revisión semanal: finanzas, metas, hábitos cumplidos'},
-    {id:'sa12',  dias:[6], hora:'15:30', cat:'descanso', txt:'Tiempo libre / familia — descanso antes del segundo bloque de Didi'},
-    {id:'sa-didi2', dias:[6], hora:'17:00', cat:'admin', txt:'🚗 Didi — bloque de tarde-noche (~17:00 a 22:00, 5h)'},
-    {id:'sa11',  dias:[6], hora:'22:00', cat:'salud', txt:'🍽️ Cena', link:{href:'../CuidadoPersonal/comida.html?s=cenas', label:'Ver cenas'}},
-    {id:'sa1113', dias:[6], hora:'22:20', cat:'salud', txt:'🧴 Skincare + 🍂 Minoxidil — PM', subtareas:[
-      {id:'sa13', txt:'Skincare PM — limpiador + retinoide + hidratante nocturno'},
-      {id:'sa13b', txt:'Minoxidil 5% en cuero cabelludo seco — dosis de la noche'},
-    ]},
-    {id:'saSupPm', dias:[6], hora:'22:30', cat:'salud', txt:'💊 Suplementos PM', subtareas:[
-      {id:'saSupPm1', txt:'Magnesio (glicinato) — 200-400mg, 30-60 min antes de dormir', link:{href:'../CuidadoPersonal/salud.html?tab=suplementos', label:'💊 Ver Suplementos'}},
-      {id:'saSupPm2', txt:'Proteína Whey — 25-30g si hoy no llegaste a tu meta de proteína (186g/día)'},
-    ]},
-    {id:'sa14',  dias:[6], hora:'22:45', cat:'descanso', txt:'🧘 Meditación — misma respiración box 4-4-4-4 que entre semana'},
-    {id:'sa15',  dias:[6], hora:'23:00', cat:'salud',    txt:'Apagar pantallas. Dormir'},
-
-    // fl1 ("Bloque largo de freelance/plantilla si ya hay cliente o ventas activas") se eliminó por
-    // completo el 2026-08-15: primero perdió el sábado y ahora el domingo, porque las 2 franjas que
-    // ocupaba son turnos de Didi. Era un bloque condicional que en la práctica estaba vacío —
-    // todavía no hay cliente ni ventas. Cuando se cobre el primer peso en las Opciones 1-3 hay que
-    // volver a crearlo: el Plan Maestro (Fase 1, paso s1-4) dice que ahí es donde las horas de Didi
-    // se mueven al negocio, "no antes".
-
-    // ── Domingo ──────────────────────────────────────────────────────────
-    {id:'do01',  dias:[0], hora:'07:30', cat:'salud',    txt:'Despertar'},
-    {id:'do0203', dias:[0], hora:'07:35', cat:'salud', txt:'🧴 Skincare + 🍂 Minoxidil — AM', subtareas:[
-      {id:'do02', txt:'Skincare AM — limpiador + niacinamida + hidratante con SPF 50 (mismos productos que entre semana)'},
-      {id:'do02b', txt:'Minoxidil 5% en cuero cabelludo seco — dosis de la mañana'},
-    ]},
-    {id:'do03',  dias:[0], hora:'07:48', cat:'salud', txt:'🍳 Preparar y desayunar tranquilo', link:{href:'../CuidadoPersonal/comida.html?s=desayunos', label:'Ver desayunos'}},
-    {id:'doSupAm', dias:[0], hora:'07:55', cat:'salud', txt:'💊 Suplementos AM', subtareas:[
-      {id:'doSupAm1', txt:'Vitamina D3 — 2000-4000 UI, con algo de grasa en la comida', link:{href:'../CuidadoPersonal/salud.html?tab=suplementos', label:'💊 Ver Suplementos'}},
-      {id:'doSupAm2', txt:'Multivitamínico — 1 tableta'},
-      {id:'doSupAm3', txt:'Omega 3 — 1-2g EPA+DHA, con alimento'},
-      {id:'doSupAm4', txt:'Creatina monohidratada — 5g (todos los días, no solo si entrenas hoy)'},
-    ]},
-    {id:'do04',  dias:[0], hora:'08:05', cat:'salud',    txt:'Ejercicio: descanso activo — caminata o movilidad 30 min'},
-    {id:'do045', dias:[0], hora:'08:35', cat:'salud', txt:'🚿 Bañarte + cabello (sin champú hoy)', producto:true, subtareas:[
-      {id:'do045a', txt:'Acondicionador: TRESemmé Keratin Smooth Conditioner — solo de medios a puntas (co-wash, sin champú: hoy no toca el anticaída, eso es Lun/Jue/Sáb — usarlo a diario resecaría el cuero cabelludo)'},
-      {id:'do045b', txt:'Aceite en puntas (opcional, con el cabello ya seco): Moroccanoil Treatment Light — 2-3 gotas, solo puntas'},
-    ]},
-    // Domingo de máximo ingreso (2026-08-15, "el domingo tambien quiero trabajar mucho mas en
-    // didi"): el bloque único e indefinido de las 09:00 se parte en dos turnos con un almuerzo real
-    // en medio —do05 antes no decía hasta cuándo y el domingo no tenía comida agendada en absoluto—
-    // y se estira hasta las 21:00. El cierre de semana (do06/do07/do09) no se elimina: se comprime
-    // en 40 min corridos después de la cena, porque es lo que mantiene vivo el Plan Maestro.
-    {id:'do05',  dias:[0], hora:'09:00', cat:'admin',    txt:'🚗 Didi — bloque de día (~09:00 a 14:00, 5h)'},
-    {id:'do-alm', dias:[0], hora:'14:00', cat:'salud',   txt:'🍽️ Almuerzo — come de verdad antes del segundo turno, son 6h más al volante'},
-    {id:'do-didi2', dias:[0], hora:'14:40', cat:'admin', txt:'🚗 Didi — bloque de tarde-noche (~14:40 a 21:00, 6h20)'},
-    {id:'do08',  dias:[0], hora:'21:00', cat:'salud', txt:'🍽️ Cena ligera', link:{href:'../CuidadoPersonal/comida.html?s=cenas', label:'Ver cenas'}},
-    {id:'do06',  dias:[0], hora:'21:20', cat:'admin',    txt:'💰 Finanzas: revisión de presupuesto + planificar semana + revisar inversiones'},
-    {id:'do07',  dias:[0], hora:'21:35', cat:'profundo', txt:'🎯 Revisar Plan Maestro: ¿la fase actual sigue en verde? Ajustar si hace falta'},
-    {id:'do09',  dias:[0], hora:'21:45', cat:'descanso', txt:'📓 Diario de cierre de semana (10 min)', subtareas:[
-      {id:'do09a', txt:'Qué avanzó esta semana en el Plan Maestro'},
-      {id:'do09b', txt:'Qué NO avanzó y por qué'},
-      {id:'do09c', txt:'1 ajuste concreto para la semana que entra'},
-    ]},
-    {id:'do1013', dias:[0], hora:'22:00', cat:'salud', txt:'🧴 Skincare + 🍂 Minoxidil — PM', subtareas:[
-      {id:'do10', txt:'Skincare PM — limpiador + retinoide + hidratante nocturno'},
-      {id:'do10b', txt:'Minoxidil 5% en cuero cabelludo seco — dosis de la noche'},
-    ]},
-    {id:'doSupPm', dias:[0], hora:'22:15', cat:'salud', txt:'💊 Suplementos PM', subtareas:[
-      {id:'doSupPm1', txt:'Magnesio (glicinato) — 200-400mg, 30-60 min antes de dormir', link:{href:'../CuidadoPersonal/salud.html?tab=suplementos', label:'💊 Ver Suplementos'}},
-      {id:'doSupPm2', txt:'Proteína Whey — 25-30g si hoy no llegaste a tu meta de proteína (186g/día)'},
-    ]},
-    {id:'do11',  dias:[0], hora:'22:30', cat:'descanso', txt:'🧘 Meditación — misma respiración box 4-4-4-4 que entre semana'},
-    {id:'do12',  dias:[0], hora:'22:45', cat:'salud',    txt:'Apagar pantallas. Dormir — el lunes te levantas a las 06:40'},
+    {id:"wd01",dias:[1,2,3,4,5],hora:"06:40",cat:"salud",txt:"Despertar sin snooze — celular fuera del cuarto"},
+    {id:"wd-app-am",dias:[1,2,3,4,5],hora:"06:43",cat:"aprender",txt:"💻 Construir esta aplicación — 20 min antes de arrancar el día"},
+    {id:"wd02lav",dias:[1,4],hora:"07:03",cat:"salud",txt:"🚿 Bañarte + lavar cabello",producto:true,subtareas:[{id:"wd02a",txt:"Champú: Pilexil Anticaída — masajea el cuero cabelludo 2 min y enjuaga. NO lo frotes en el largo: su trabajo es la raíz, al pelo solo le llega lo que escurre."},{id:"wd02b",txt:"Acondicionador: TRESemmé Keratin Smooth — solo de medios a puntas, nunca en la raíz. Con cuero graso, en la raíz apelmaza."},{id:"wd02c",txt:"Leave-in en puntas con el pelo AÚN HÚMEDO — cantidad de un chícharo. Sella la cutícula mientras se seca."},{id:"wd02d",txt:"Deja secar al aire si puedes. Si usas secadora: protector térmico antes, aire tibio y nunca caliente."},{id:"wd02e",txt:"⚠️ Si hoy hay caspa o descamación activa, HOY usas Darrow Doctar en lugar del Pilexil — nunca los dos el mismo día."}]},
+    {id:"wd02co",dias:[2,3,5],hora:"07:03",cat:"salud",txt:"🚿 Bañarte + cabello (sin champú hoy)",producto:true,subtareas:[{id:"wd02ca",txt:"Acondicionador: TRESemmé Keratin Smooth Conditioner — solo de medios a puntas (co-wash, sin champú: hoy no toca el anticaída, eso es Lun/Jue/Sáb — usarlo a diario resecaría el cuero cabelludo)"},{id:"wd02cb",txt:"Aceite en puntas (opcional, con el cabello ya seco): Moroccanoil Treatment Light — 2-3 gotas, solo puntas"}]},
+    {id:"wd0304",dias:[1,2,3,4,5],hora:"07:20",cat:"salud",txt:"🧴 Skincare + 🍂 Minoxidil — AM",producto:true,subtareas:[{id:"wd03a",txt:"Limpiador suave: CeraVe Limpiador Espumoso (verde) — quita grasa y sudor de la noche sin resecar"},{id:"wd03b",txt:"Sérum de niacinamida 10%: The Ordinary Niacinamida 10% + Zinc 1% — controla grasa y afina los poros"},{id:"wd03c",txt:"Hidratante con protector solar SPF 50: La Roche-Posay Anthelios — hidrata y protege del sol, obligatorio de día"},{id:"wd04",txt:"Minoxidil 5% en cuero cabelludo seco — estimula el folículo, dosis de la mañana"}]},
+    {id:"wdSupAm",dias:[1,2,3,4,5],hora:"07:25",cat:"salud",txt:"💊 Suplementos AM",subtareas:[{id:"wdSupAm1",txt:"Vitamina D3 — 2000-4000 UI, con algo de grasa en la comida",link:{href:"../CuidadoPersonal/salud.html?tab=suplementos",label:"💊 Ver Suplementos"}},{id:"wdSupAm2",txt:"Multivitamínico — 1 tableta"},{id:"wdSupAm3",txt:"Omega 3 — 1-2g EPA+DHA, con alimento"},{id:"wdSupAm4",txt:"Creatina monohidratada — 5g (todos los días, no solo si entrenas hoy)"}]},
+    {id:"wd05",dias:[1,2,3,4,5],hora:"07:33",cat:"descanso",txt:"Vestirte y alistarte"},
+    {id:"wd06",dias:[1,2,3,4,5],hora:"07:40",cat:"admin",txt:"🚗 Didi con direccionamiento — camino a ALTEN (~50 min: el traslado normal + el desvío del pasajero)"},
+    {id:"wd07",dias:[1,2,3,4,5],hora:"08:30",cat:"trabajo",txt:"🏢 ALTEN — jornada laboral (HIL/SIL Ford) — entras 08:30, sales 17:00",fijo:true},
+    {id:"wd12b",dias:[1,2,3,4,5],hora:"13:00",cat:"salud",txt:"🛒 Comprar comida — descanso de ALTEN"},
+    {id:"wd12c",dias:[1,2,3,4,5],hora:"13:40",cat:"trabajo",txt:"🏢 ALTEN — de vuelta a la jornada laboral",fijo:true},
+    {id:"wd08",dias:[1,2,3,4,5],hora:"17:00",cat:"admin",txt:"🚗 Didi — 1 pasajero a Buenavista (~40 min)"},
+    {id:"wd09",dias:[1,2,3,4,5],hora:"18:30",cat:"salud",txt:"Ducha rápida post-ejercicio"},
+    {id:"wd-didi2",dias:[1,2,3,4,5],hora:"19:20",cat:"admin",txt:"🚗 Didi — sesión corta de la noche (hasta ~20:00)"},
+    {id:"wd11",dias:[1,2,3,4,5],hora:"20:00",cat:"profundo",txt:"🎯 Prioridad activa de Fase 0: negocio de tu papá o plantilla GBM — 1h15 de avance real (20:00–21:15)"},
+    {id:"wd14",dias:[1,2,3,4,5],hora:"21:15",cat:"salud",txt:"🍽️ Cena + preparar la comida de mañana",subtareas:[{id:"wd14a",txt:"Cocina un solo platillo para cenar hoy y llevar de comida mañana a ALTEN — ahorra tiempo, sin carbohidratos refinados en la cena",link:{href:"../CuidadoPersonal/comida.html?s=cenas",label:"🍳 Ver cenas"}},{id:"wd14b",txt:"Deja todo empacado y listo junto a la puerta para salir rápido mañana",link:{href:"../CuidadoPersonal/comida.html?s=desayunos",label:"🍳 Ver desayunos"}}]},
+    {id:"wd16",dias:[1,2,3,4,5],hora:"22:15",cat:"descanso",txt:"📓 Diario del día (5 min) — libreta o notas del cel",subtareas:[{id:"wd16a",txt:"Escribe 3 cosas que sí lograste hoy, aunque sean pequeñas"},{id:"wd16b",txt:"1 cosa que salió mal o que aprendiste — sin autocastigo, solo para no repetirla"},{id:"wd16c",txt:"1 gasto que pudiste evitar hoy (o \"ninguno\" si no hubo)"}]},
+    {id:"wd1718",dias:[1,2,3,4,5],hora:"22:30",cat:"salud",txt:"🧴 Skincare + 🍂 Minoxidil — PM",producto:true,subtareas:[{id:"wd17a",txt:"Limpiador (doble limpieza si usaste protector solar): CeraVe Limpiador Espumoso (verde) — remueve el bloqueador y el sudor del día"},{id:"wd17b",txt:"Tratamiento con retinoide: Differin Adapaleno 0.1% Gel — controla brotes y mejora la textura"},{id:"wd17c",txt:"Hidratante nocturno: Eucerin Hyaluron-Filler + Epigenetic Noche — repara la piel mientras duermes"},{id:"wd18",txt:"Minoxidil 5% en cuero cabelludo seco — dosis de la noche"}]},
+    {id:"wd19",dias:[1,2,3,4,5],hora:"22:45",cat:"profundo",txt:"🎯 Planear el día de mañana (5 min)",subtareas:[{id:"wd19a",txt:"Elige 1 sola tarea que, si mañana solo lograras esa, el día ya valió la pena — tu tarea más importante (MIT)"},{id:"wd19b",txt:"Anota 4 tareas más chicas para mañana, en el orden en que las harás"}]},
+    {id:"wd20",dias:[1,2,3,4,5],hora:"23:00",cat:"descanso",txt:"🧘 Meditación — respiración box (10 min)",subtareas:[{id:"wd20a",txt:"Inhala 4 segundos por la nariz"},{id:"wd20b",txt:"Sostén el aire 4 segundos"},{id:"wd20c",txt:"Exhala 4 segundos por la boca"},{id:"wd20d",txt:"Sostén sin aire 4 segundos — repite el ciclo (~10 veces en 10 min)"}]},
+    {id:"wdSupPm",dias:[1,2,3,4,5],hora:"23:05",cat:"salud",txt:"💊 Suplementos PM",subtareas:[{id:"wdSupPm1",txt:"Magnesio (glicinato) — 200-400mg, 30-60 min antes de dormir",link:{href:"../CuidadoPersonal/salud.html?tab=suplementos",label:"💊 Ver Suplementos"}},{id:"wdSupPm2",txt:"Proteína Whey — 25-30g si hoy no llegaste a tu meta de proteína (186g/día)"}]},
+    {id:"wd20e",dias:[1,2,3,4,5],hora:"23:10",cat:"descanso",txt:"Tiempo libre / relajación (20 min, hasta las 23:30)"},
+    {id:"wd-app-pm",dias:[1,2,3,4,5],hora:"23:30",cat:"aprender",txt:"💻 Construir esta aplicación — de 23:30 a 00:00, a veces hasta la 01:00"},
+    {id:"wd21",dias:[1,2,3,4,5],hora:"23:59",cat:"salud",txt:"Apagar pantallas y dormir en cuanto cierres la app — entre 00:00 y 01:00 (5h40–6h40 de sueño con el despertar de las 06:40)"},
+    {id:"lu-gbm",dias:[1],hora:"09:00",cat:"admin",txt:"💰 Bolsa GBM (20 min): compra rápida — revisa qué toca hoy y ejecuta. Solo lunes."},
+    {id:"l1",dias:[1],hora:"21:45",cat:"descanso",txt:"📖 Lectura (30 min)"},
+    {id:"l2",dias:[2],hora:"21:45",cat:"descanso",txt:"📖 Lectura (30 min)"},
+    {id:"l3",dias:[3],hora:"21:45",cat:"descanso",txt:"📖 Lectura (30 min)"},
+    {id:"l4",dias:[4],hora:"21:45",cat:"descanso",txt:"📖 Lectura (30 min)"},
+    {id:"l5",dias:[5],hora:"21:45",cat:"descanso",txt:"📖 Lectura (30 min)"},
+    {id:"e1",dias:[1],hora:"17:40",cat:"salud",txt:"🏋️ Ejercicio: Empuje (pecho / hombro / tríceps)",subtareas:[{id:"e1a",txt:"Press de banca — 4×8 · 40kg / 88lb"},{id:"e1b",txt:"Press inclinado con mancuerna — 3×10 · 12kg / 26lb c/u"},{id:"e1c",txt:"Press militar — 3×10 · 25kg / 55lb"},{id:"e1d",txt:"Elevaciones laterales — 3×12 · 5kg / 11lb c/u"},{id:"e1e",txt:"Fondos en banco — 3×12 · peso corporal"}]},
+    {id:"e2",dias:[2],hora:"17:40",cat:"salud",txt:"🏋️ Ejercicio: Cardio + core",subtareas:[{id:"e2a",txt:"Cardio continuo (correr/bici/elíptica) — 25 min a ritmo constante"},{id:"e2b",txt:"Plancha — 3×45 seg · peso corporal"},{id:"e2c",txt:"Elevación de piernas — 3×15 · peso corporal"}]},
+    {id:"k2",dias:[2],hora:"19:00",cat:"aprender",txt:"🤝 Ventas: 30 min — 1 capítulo de Influence / $100M Offers y escribe cómo lo aplicarías a GBM o CodeReview",link:{href:"#aprendizaje",label:"📚 Ver libros de Ventas"}},
+    {id:"e3",dias:[3],hora:"17:40",cat:"salud",txt:"🏊 Ejercicio: Natación — 45 min (alberca del Fitsi Buenavista)"},
+    {id:"e4",dias:[4],hora:"17:40",cat:"salud",txt:"🏋️ Ejercicio: Cardio / HIIT",subtareas:[{id:"e4a",txt:"HIIT: 30 seg esfuerzo máximo / 90 seg suave — 8 rondas (~18 min)"},{id:"e4b",txt:"Battle ropes o burpees — 3×30 seg · peso corporal"},{id:"e4c",txt:"Plancha lateral — 2×30 seg por lado · peso corporal"}]},
+    {id:"k4",dias:[4],hora:"19:00",cat:"aprender",txt:"💰 Finanzas: 30 min — categoriza los gastos de la semana y revisa cuánto bajó la deuda",link:{href:"../Finanzas/Finanzas.html",label:"💰 Abrir Finanzas"}},
+    {id:"e5",dias:[5],hora:"17:40",cat:"salud",txt:"🏋️ Ejercicio: Piernas / glúteo",subtareas:[{id:"e5a",txt:"Sentadilla con barra — 4×8 · 50kg / 110lb"},{id:"e5b",txt:"Peso muerto rumano — 3×10 · 50kg / 110lb"},{id:"e5c",txt:"Zancadas o sentadilla búlgara — 3×12 por pierna · 10kg / 22lb c/u"},{id:"e5d",txt:"Hip thrust — 3×12 · 50kg / 110lb"},{id:"e5e",txt:"Elevación de pantorrilla — 3×15 · 30kg / 66lb"}]},
+    {id:"k5",dias:[5],hora:"19:00",cat:"creativo",txt:"📣 GBM: personaliza el post de venta ya escrito (precio/fecha) y publícalo en 1 comunidad real de inversión",link:{href:"#plantillas-mensajes",label:"Ver mensaje ya escrito"}},
+    {id:"sa01",dias:[6],hora:"07:00",cat:"salud",txt:"Despertar (sin alarma agresiva)"},
+    {id:"sa0203",dias:[6],hora:"07:05",cat:"salud",txt:"🧴 Skincare + 🍂 Minoxidil — AM",subtareas:[{id:"sa02",txt:"Skincare AM — limpiador + niacinamida + hidratante con SPF 50 (mismos productos que entre semana)"},{id:"sa02b",txt:"Minoxidil 5% en cuero cabelludo seco — dosis de la mañana"}]},
+    {id:"sa03",dias:[6],hora:"07:18",cat:"salud",txt:"🍳 Preparar y desayunar tranquilo",link:{href:"../CuidadoPersonal/comida.html?s=desayunos",label:"Ver desayunos"}},
+    {id:"saSupAm",dias:[6],hora:"07:30",cat:"salud",txt:"💊 Suplementos AM",subtareas:[{id:"saSupAm1",txt:"Vitamina D3 — 2000-4000 UI, con algo de grasa en la comida",link:{href:"../CuidadoPersonal/salud.html?tab=suplementos",label:"💊 Ver Suplementos"}},{id:"saSupAm2",txt:"Multivitamínico — 1 tableta"},{id:"saSupAm3",txt:"Omega 3 — 1-2g EPA+DHA, con alimento"},{id:"saSupAm4",txt:"Creatina monohidratada — 5g (todos los días, no solo si entrenas hoy)"}]},
+    {id:"sa04",dias:[6],hora:"07:35",cat:"salud",txt:"Ejercicio 1h — entreno largo / lo que falte en la semana"},
+    {id:"sa0506",dias:[6],hora:"08:35",cat:"salud",txt:"🚿 Ducha + lavar cabello",producto:true,subtareas:[{id:"sa05a",txt:"Champú suave sin sulfatos (CeraVe Hydrating) — hoy toca el día de reparación, no de tratamiento."},{id:"sa05b",txt:"Mascarilla capilar L'Oréal Elvive Total Repair 5 — medios y puntas, 5-10 min actuando. Este es el paso que más repara de toda tu semana; si te saltas uno, que no sea este."},{id:"sa05c",txt:"Acondicionador solo si sientes el pelo áspero tras la mascarilla — muchas veces ya no hace falta."},{id:"sa05d",txt:"Leave-in con el pelo húmedo, y aceite Moroccanoil en puntas cuando ya esté seco. Son 2 productos distintos en 2 momentos distintos."},{id:"sa05e",txt:"Revisa las puntas: si ves pelos abiertos en Y, ya toca corte. Cada 8-12 semanas, 1-2 cm."}]},
+    {id:"sa-didi1",dias:[6],hora:"09:00",cat:"admin",txt:"🚗 Didi — bloque de día (~09:00 a 14:00, 5h)"},
+    {id:"sa07",dias:[6],hora:"14:00",cat:"salud",txt:"Almuerzo"},
+    {id:"sa10",dias:[6],hora:"14:40",cat:"admin",txt:"💰 Revisión semanal: finanzas, metas, hábitos cumplidos"},
+    {id:"sa12",dias:[6],hora:"15:30",cat:"descanso",txt:"Tiempo libre / familia — descanso antes del segundo bloque de Didi"},
+    {id:"sa-didi2",dias:[6],hora:"17:00",cat:"admin",txt:"🚗 Didi — bloque de tarde-noche (~17:00 a 22:00, 5h)"},
+    {id:"sa11",dias:[6],hora:"22:00",cat:"salud",txt:"🍽️ Cena",link:{href:"../CuidadoPersonal/comida.html?s=cenas",label:"Ver cenas"}},
+    {id:"sa1113",dias:[6],hora:"22:20",cat:"salud",txt:"🧴 Skincare + 🍂 Minoxidil — PM",subtareas:[{id:"sa13",txt:"Skincare PM — limpiador + retinoide + hidratante nocturno"},{id:"sa13b",txt:"Minoxidil 5% en cuero cabelludo seco — dosis de la noche"}]},
+    {id:"saSupPm",dias:[6],hora:"22:30",cat:"salud",txt:"💊 Suplementos PM",subtareas:[{id:"saSupPm1",txt:"Magnesio (glicinato) — 200-400mg, 30-60 min antes de dormir",link:{href:"../CuidadoPersonal/salud.html?tab=suplementos",label:"💊 Ver Suplementos"}},{id:"saSupPm2",txt:"Proteína Whey — 25-30g si hoy no llegaste a tu meta de proteína (186g/día)"}]},
+    {id:"sa14",dias:[6],hora:"22:45",cat:"descanso",txt:"🧘 Meditación — misma respiración box 4-4-4-4 que entre semana"},
+    {id:"sa15",dias:[6],hora:"23:00",cat:"salud",txt:"Apagar pantallas. Dormir"},
+    {id:"do01",dias:[0],hora:"07:30",cat:"salud",txt:"Despertar"},
+    {id:"do0203",dias:[0],hora:"07:35",cat:"salud",txt:"🧴 Skincare + 🍂 Minoxidil — AM",subtareas:[{id:"do02",txt:"Skincare AM — limpiador + niacinamida + hidratante con SPF 50 (mismos productos que entre semana)"},{id:"do02b",txt:"Minoxidil 5% en cuero cabelludo seco — dosis de la mañana"}]},
+    {id:"do03",dias:[0],hora:"07:48",cat:"salud",txt:"🍳 Preparar y desayunar tranquilo",link:{href:"../CuidadoPersonal/comida.html?s=desayunos",label:"Ver desayunos"}},
+    {id:"doSupAm",dias:[0],hora:"07:55",cat:"salud",txt:"💊 Suplementos AM",subtareas:[{id:"doSupAm1",txt:"Vitamina D3 — 2000-4000 UI, con algo de grasa en la comida",link:{href:"../CuidadoPersonal/salud.html?tab=suplementos",label:"💊 Ver Suplementos"}},{id:"doSupAm2",txt:"Multivitamínico — 1 tableta"},{id:"doSupAm3",txt:"Omega 3 — 1-2g EPA+DHA, con alimento"},{id:"doSupAm4",txt:"Creatina monohidratada — 5g (todos los días, no solo si entrenas hoy)"}]},
+    {id:"do04",dias:[0],hora:"08:05",cat:"salud",txt:"Ejercicio: descanso activo — caminata o movilidad 30 min"},
+    {id:"do045",dias:[0],hora:"08:35",cat:"salud",txt:"🚿 Bañarte + cabello (sin champú hoy)",producto:true,subtareas:[{id:"do045a",txt:"Acondicionador: TRESemmé Keratin Smooth Conditioner — solo de medios a puntas (co-wash, sin champú: hoy no toca el anticaída, eso es Lun/Jue/Sáb — usarlo a diario resecaría el cuero cabelludo)"},{id:"do045b",txt:"Aceite en puntas (opcional, con el cabello ya seco): Moroccanoil Treatment Light — 2-3 gotas, solo puntas"}]},
+    {id:"do05",dias:[0],hora:"09:00",cat:"admin",txt:"🚗 Didi — bloque de día (~09:00 a 14:00, 5h)"},
+    {id:"do-alm",dias:[0],hora:"14:00",cat:"salud",txt:"🍽️ Almuerzo — come de verdad antes del segundo turno, son 6h más al volante"},
+    {id:"do-didi2",dias:[0],hora:"14:40",cat:"admin",txt:"🚗 Didi — bloque de tarde-noche (~14:40 a 21:00, 6h20)"},
+    {id:"do08",dias:[0],hora:"21:00",cat:"salud",txt:"🍽️ Cena ligera",link:{href:"../CuidadoPersonal/comida.html?s=cenas",label:"Ver cenas"}},
+    {id:"do06",dias:[0],hora:"21:20",cat:"admin",txt:"💰 Finanzas: revisión de presupuesto + planificar semana + revisar inversiones"},
+    {id:"do07",dias:[0],hora:"21:35",cat:"profundo",txt:"🎯 Revisar Plan Maestro: ¿la fase actual sigue en verde? Ajustar si hace falta"},
+    {id:"do09",dias:[0],hora:"21:45",cat:"descanso",txt:"📓 Diario de cierre de semana (10 min)",subtareas:[{id:"do09a",txt:"Qué avanzó esta semana en el Plan Maestro"},{id:"do09b",txt:"Qué NO avanzó y por qué"},{id:"do09c",txt:"1 ajuste concreto para la semana que entra"}]},
+    {id:"do1013",dias:[0],hora:"22:00",cat:"salud",txt:"🧴 Skincare + 🍂 Minoxidil — PM",subtareas:[{id:"do10",txt:"Skincare PM — limpiador + retinoide + hidratante nocturno"},{id:"do10b",txt:"Minoxidil 5% en cuero cabelludo seco — dosis de la noche"}]},
+    {id:"doSupPm",dias:[0],hora:"22:15",cat:"salud",txt:"💊 Suplementos PM",subtareas:[{id:"doSupPm1",txt:"Magnesio (glicinato) — 200-400mg, 30-60 min antes de dormir",link:{href:"../CuidadoPersonal/salud.html?tab=suplementos",label:"💊 Ver Suplementos"}},{id:"doSupPm2",txt:"Proteína Whey — 25-30g si hoy no llegaste a tu meta de proteína (186g/día)"}]},
+    {id:"do11",dias:[0],hora:"22:30",cat:"descanso",txt:"🧘 Meditación — misma respiración box 4-4-4-4 que entre semana"},
+    {id:"do12",dias:[0],hora:"22:45",cat:"salud",txt:"Apagar pantallas. Dormir — el lunes te levantas a las 06:40"},
   ];
   const RUTINA_KEY = 'coach_rutina_v1';
   const DIA_TABS = [1,2,3,4,5,6,0];
