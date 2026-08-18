@@ -2402,3 +2402,32 @@ Buscador y bloque de progreso tomaban `flex-basis:100%` cada uno, así que el he
 ### Verificación
 
 **48/48 archivos sin zoom-out ni scroll horizontal en 390px** (antes 47/48, y antes de eso varios con la página achicada). Escritorio intacto: en 1920 los dos paneles siguen a los lados (x=16 y x=1818), verticales, sin errores de consola. En tablet de 820px la barra inferior ocupa el ancho completo.
+
+## El reloj de Mi Día abre el calendario del año (2026-08-17)
+
+*"en el dashboard en la primer pagina, cuando haga click a la hora, quiero que se muestre calendario completo de los meses y dias del año y abajo info de que tengo que hacer ese mes, de acuerdo a fase 0"*.
+
+`.dia-reloj` deja de ser texto y pasa a ser botón (`role="button"`, `tabindex="0"`, con un 📅 discreto que lo anuncia). Abre `#calOverlay`, que reusa el patrón visual de `.didi-overlay`: fondo con blur, card que sube, cierre por ✕ / clic fuera / Escape.
+
+### Lo que muestra
+
+**Los 12 meses del año con sus días reales.** La semana arranca en lunes —`(primero.getDay()+6)%7`, porque `getDay()` devuelve 0 para domingo—, el día de hoy va resaltado, los fines de semana atenuados, y cada mes lleva la **etiqueta de la fase del Plan Maestro que lo cubre**, con el color de esa fase. Los meses anteriores a agosto 2026 salen sin etiqueta: el plan todavía no empezaba.
+
+Navegación de año con ‹ ›, acotada al horizonte real del plan (`PHASES[0].start` … `PHASES[3].end`), así que no se puede navegar a años donde no hay nada que ver.
+
+**Abajo, el detalle del mes elegido**, y nada de esto es contenido nuevo:
+
+| Fuente | Qué aporta |
+|---|---|
+| `PHASES[].semanas` filtrado por `mes` | las tareas de ese mes exacto — Fase 0 las etiqueta con `mes:'2026-08'` / `'2026-09'` |
+| `PHASES[].meta` y `.title` | el objetivo de la fase, para el encabezado |
+| `coach_checks_v1` | cuáles ya están hechas, con barra de progreso real |
+| `dash-eventos-mes-v1` | los pendientes que él mismo capturó en "Importante este mes" |
+
+**Fases 1-3 no etiquetan sus tareas con `mes`.** En vez de dejar el panel vacío, se muestra lo que aplica a toda la fase, con su rango de fechas — es la información que sí es cierta para ese tramo. Sin ese caso, tocar octubre habría dado una pantalla en blanco.
+
+### Verificación
+
+Escritorio: abre con clic real en el reloj, **12 meses · 365 días · hoy marcado · 5 meses con fase en 2026** (ago-sep Fase 0, oct-dic Fase 1). Agosto sale preseleccionado por ser el mes actual, con sus 8 tareas de Fase 0 y la barra de avance. Elegir octubre cambia a Fase 1; pasar a 2027 mantiene Fase 1. Cierra con ✕, clic fuera y Escape. Cero errores de consola.
+
+Celular (390 y 360px): overlay a pantalla completa, **2 columnas de meses**, días de 21px, **0 elementos desbordados y sin scroll horizontal**.

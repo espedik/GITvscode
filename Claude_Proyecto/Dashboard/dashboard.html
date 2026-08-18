@@ -1277,6 +1277,84 @@ a.rt2-sub-prod:hover{text-decoration:underline}
   pre,code{max-width:100%;overflow-x:auto}
   img,video,canvas{max-width:100%;height:auto}
 }
+
+/* ─── CALENDARIO DEL AÑO (2026-08-17) ───────────────────────────────────────
+   Pedido: "en el dashboard en la primer pagina, cuando haga click a la hora, quiero
+   que se muestre calendario completo de los meses y dias del año y abajo info de que
+   tengo que hacer ese mes, de acuerdo a fase 0".
+   El reloj de Mi Día pasa a ser un botón. El overlay reusa el patrón visual de
+   .didi-overlay (fondo con blur, card que sube, cierre por ✕/clic fuera/Escape).
+   El detalle del mes NO se inventa: sale de PHASES[].semanas filtrado por `mes`,
+   de los eventos de dash-eventos-mes-v1, y del avance real en coach_checks_v1. */
+.dia-reloj{cursor:pointer;border-radius:10px;padding:3px 8px;margin:-3px -8px;transition:background .18s}
+.dia-reloj:hover{background:rgba(var(--ov),.08)}
+.dia-reloj::after{content:'📅';font-size:11px;opacity:.5;margin-left:2px}
+
+.cal-overlay{position:fixed;inset:0;z-index:220;background:rgba(0,0,0,.72);backdrop-filter:blur(6px);
+  display:flex;align-items:center;justify-content:center;padding:4vh 4vw;opacity:0;pointer-events:none;
+  transition:opacity .22s ease}
+.cal-overlay.open{opacity:1;pointer-events:auto}
+.cal-card{width:min(1180px,100%);max-height:92vh;overflow-y:auto;border-radius:20px;position:relative;
+  background:var(--card);border:1px solid rgba(var(--ov),.12);box-shadow:0 24px 70px rgba(0,0,0,.5);
+  transform:translateY(18px);transition:transform .22s ease}
+.cal-overlay.open .cal-card{transform:translateY(0)}
+.cal-head{position:sticky;top:0;z-index:2;padding:16px 22px 13px;background:var(--card);
+  border-bottom:1px solid rgba(var(--ov),.08);display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.cal-head h2{font-size:clamp(16px,2vw,21px);font-weight:900;color:var(--text);margin:0}
+.cal-yearnav{display:flex;align-items:center;gap:6px;margin-left:auto}
+.cal-yearnav button{width:28px;height:28px;border-radius:8px;border:1px solid rgba(var(--ov),.12);
+  background:rgba(var(--ov),.05);color:var(--text);cursor:pointer;font-size:14px;font-family:inherit}
+.cal-yearnav button:hover{background:rgba(var(--ov),.14)}
+.cal-yearnav button:disabled{opacity:.3;cursor:default}
+.cal-year{font-family:var(--mono);font-size:15px;font-weight:800;color:var(--text);min-width:52px;text-align:center}
+.cal-close{width:30px;height:30px;border-radius:50%;border:none;cursor:pointer;
+  background:rgba(var(--ov),.1);color:var(--text);font-size:14px;line-height:1;flex-shrink:0}
+.cal-close:hover{background:rgba(var(--ov),.18)}
+.cal-body{padding:14px 22px 24px}
+/* Los 12 meses */
+.cal-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.cal-mes{border-radius:13px;padding:9px 10px 10px;cursor:pointer;border:1px solid rgba(var(--ov),.07);
+  background:rgba(var(--ov),.04);transition:border-color .16s,background .16s}
+.cal-mes:hover{background:rgba(var(--ov),.08)}
+.cal-mes.sel{border-color:var(--cy);background:rgba(var(--ov),.09)}
+.cal-mes-h{display:flex;align-items:baseline;gap:6px;margin-bottom:6px}
+.cal-mes-n{font-size:12.5px;font-weight:800;color:var(--text);text-transform:capitalize}
+.cal-mes-fase{font-size:8.5px;font-weight:900;letter-spacing:.04em;padding:1px 5px;border-radius:4px;margin-left:auto}
+.cal-dow,.cal-dias{display:grid;grid-template-columns:repeat(7,1fr);gap:1px}
+.cal-dow span{font-size:8px;font-weight:800;color:var(--text3);text-align:center;padding-bottom:2px}
+.cal-dia{aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:9.5px;
+  color:var(--text2);border-radius:4px;font-family:var(--mono)}
+.cal-dia.vacio{visibility:hidden}
+.cal-dia.hoy{background:var(--cy);color:#06170f;font-weight:900}
+.cal-dia.finde{color:var(--text3);opacity:.55}
+.cal-dia.conEvento{box-shadow:inset 0 -2px 0 var(--o)}
+/* Detalle del mes elegido */
+.cal-det{margin-top:16px;border-radius:14px;border:1px solid rgba(var(--ov),.08);
+  background:rgba(var(--ov),.03);padding:15px 17px}
+.cal-det-h{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-bottom:4px}
+.cal-det-mes{font-size:16px;font-weight:900;color:var(--text);text-transform:capitalize}
+.cal-det-badge{font-size:9.5px;font-weight:900;letter-spacing:.04em;padding:2px 8px;border-radius:20px}
+.cal-det-title{font-size:12px;color:var(--text2);margin-bottom:10px;line-height:1.4}
+.cal-sec{font-size:11px;font-weight:900;letter-spacing:.05em;text-transform:uppercase;color:var(--text3);
+  margin:13px 0 6px;display:flex;align-items:center;gap:6px}
+.cal-item{display:flex;align-items:flex-start;gap:8px;font-size:12px;color:var(--text2);
+  line-height:1.4;padding:5px 0;border-bottom:1px solid rgba(var(--ov),.05)}
+.cal-item:last-child{border-bottom:none}
+.cal-item.done{color:var(--text3);text-decoration:line-through}
+.cal-item-ico{flex-shrink:0;font-size:12px;width:16px;text-align:center}
+.cal-vacio{font-size:12px;color:var(--text3);font-style:italic;padding:6px 0}
+.cal-prog{display:flex;align-items:center;gap:9px;margin-top:10px;font-size:11px;color:var(--text3)}
+.cal-prog-bar{flex:1;height:5px;border-radius:5px;background:rgba(var(--ov),.1);overflow:hidden}
+.cal-prog-fill{height:100%;border-radius:5px;background:linear-gradient(90deg,var(--g),var(--cy))}
+@media(max-width:900px){.cal-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:640px){
+  .cal-overlay{padding:0}
+  .cal-card{width:100%;height:100%;max-height:100%;border-radius:0}
+  .cal-head{padding:12px 14px 10px}
+  .cal-body{padding:12px 14px 28px}
+  .cal-grid{grid-template-columns:repeat(2,1fr);gap:8px}
+  .cal-det{padding:13px 14px}
+}
 </style>
 <script>
 (function () {
@@ -1310,7 +1388,7 @@ a.rt2-sub-prod:hover{text-decoration:underline}
       <div class="dia-topbar reveal d1">
         <div class="eyebrow" style="margin-bottom:0"><span class="dot"></span> Mi Día · JARVIS</div>
         <div class="hero-frase" id="heroFrase"></div>
-        <div class="dia-reloj">
+        <div class="dia-reloj" onclick="abrirCalendario()" title="Ver el calendario del año y qué toca cada mes" role="button" tabindex="0">
           <span id="diaClock">00:00</span>
           <span id="diaFecha">—</span>
         </div>
@@ -1564,6 +1642,25 @@ a.rt2-sub-prod:hover{text-decoration:underline}
       <div id="metaDetailMoneybar"></div>
       <div class="meta-detail-progress" id="metaDetailProgress"></div>
       <div class="meta-detail-steps" id="metaDetailSteps"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── CALENDARIO DEL AÑO (2026-08-17) — se abre tocando el reloj de Mi Día ─── -->
+<div class="cal-overlay" id="calOverlay" onclick="if(event.target===this) cerrarCalendario()">
+  <div class="cal-card">
+    <div class="cal-head">
+      <h2>📅 Tu año completo</h2>
+      <div class="cal-yearnav">
+        <button id="calPrev" onclick="calCambiarAnio(-1)" aria-label="Año anterior">‹</button>
+        <span class="cal-year" id="calYear">2026</span>
+        <button id="calNext" onclick="calCambiarAnio(1)" aria-label="Año siguiente">›</button>
+      </div>
+      <button class="cal-close" onclick="cerrarCalendario()" aria-label="Cerrar">✕</button>
+    </div>
+    <div class="cal-body">
+      <div class="cal-grid" id="calGrid"></div>
+      <div class="cal-det" id="calDet"></div>
     </div>
   </div>
 </div>
@@ -4327,6 +4424,123 @@ function abrirDidi(){
 }
 function cerrarDidi(){document.getElementById('didiOverlay')?.classList.remove('open');}
 
+
+// ─── CALENDARIO DEL AÑO (2026-08-17) ─────────────────────────────────────────
+// Se abre tocando el reloj de Mi Día. Muestra los 12 meses con sus días y, al elegir
+// uno, qué toca ese mes según la fase del Plan Maestro que lo cubre.
+//
+// Nada aquí es contenido nuevo: el detalle sale de PHASES[].semanas filtrado por `mes`
+// (el mismo campo que ya usa el slide de Coach), de los eventos que Adán capturó en
+// dash-eventos-mes-v1, y del avance real marcado en coach_checks_v1. Si una fase no
+// tiene tareas con `mes` para ese mes concreto (Fases 1-3 no las etiquetan), se muestra
+// la meta de la fase, que es la información que sí aplica a todo ese tramo.
+const CAL_MESES=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+const CAL_DOW=['L','M','M','J','V','S','D'];
+const CAL_FASE_COLOR=['#00e87a','#00e0ff','#e0b020','#ff6bd6'];
+let calAnio=new Date().getFullYear(), calMesSel=new Date().getMonth();
+
+// Devuelve el índice de la fase que cubre ese mes, o -1 si el mes cae fuera del plan.
+function calFaseDe(anio,mes){
+  const ini=new Date(anio,mes,1), fin=new Date(anio,mes+1,0);
+  return PHASES.findIndex(f=>f.start<=fin&&f.end>=ini);
+}
+function calMesKey(anio,mes){ return anio+'-'+String(mes+1).padStart(2,'0'); }
+
+function abrirCalendario(){
+  const ov=document.getElementById('calOverlay');
+  if(!ov) return;
+  const hoy=new Date();
+  calAnio=hoy.getFullYear(); calMesSel=hoy.getMonth();
+  renderCalendario();
+  ov.classList.add('open');
+  clearInterval(timer);
+}
+function cerrarCalendario(){ document.getElementById('calOverlay')?.classList.remove('open'); }
+function calCambiarAnio(d){ calAnio+=d; calMesSel=0; renderCalendario(); }
+function calSeleccionar(m){ calMesSel=m; renderCalendario(); }
+
+function renderCalendario(){
+  const hoy=new Date();
+  const eventos=rawGet(EVENTOS_KEY,{})||{};
+  document.getElementById('calYear').textContent=calAnio;
+  // El plan va de 2026 a 2030 — fuera de ese rango no hay nada que mostrar.
+  const min=PHASES[0].start.getFullYear(), max=PHASES[PHASES.length-1].end.getFullYear();
+  document.getElementById('calPrev').disabled=calAnio<=min;
+  document.getElementById('calNext').disabled=calAnio>=max;
+
+  // ── Los 12 meses ──
+  let g='';
+  for(let m=0;m<12;m++){
+    const fi=calFaseDe(calAnio,m);
+    const color=fi>=0?CAL_FASE_COLOR[fi]:'var(--text3)';
+    const primero=new Date(calAnio,m,1);
+    // getDay(): 0=domingo. Se convierte a semana que empieza en lunes.
+    const offset=(primero.getDay()+6)%7;
+    const dias=new Date(calAnio,m+1,0).getDate();
+    const key=calMesKey(calAnio,m);
+    const tieneEventos=(eventos[key]||[]).length>0;
+    let d='';
+    for(let i=0;i<offset;i++) d+='<div class="cal-dia vacio"></div>';
+    for(let n=1;n<=dias;n++){
+      const dow=(offset+n-1)%7;
+      const esHoy=calAnio===hoy.getFullYear()&&m===hoy.getMonth()&&n===hoy.getDate();
+      d+=`<div class="cal-dia${esHoy?' hoy':''}${dow>=5?' finde':''}">${n}</div>`;
+    }
+    g+=`<div class="cal-mes${m===calMesSel?' sel':''}" onclick="calSeleccionar(${m})">
+      <div class="cal-mes-h">
+        <span class="cal-mes-n">${CAL_MESES[m]}</span>
+        ${fi>=0?`<span class="cal-mes-fase" style="background:${color}22;color:${color}">${PHASES[fi].tag}</span>`:''}
+      </div>
+      <div class="cal-dow">${CAL_DOW.map(x=>`<span>${x}</span>`).join('')}</div>
+      <div class="cal-dias">${d}</div>
+      ${tieneEventos?'<div style="font-size:9px;color:var(--o);margin-top:4px">● pendientes</div>':''}
+    </div>`;
+  }
+  document.getElementById('calGrid').innerHTML=g;
+
+  // ── Detalle del mes elegido ──
+  const fi=calFaseDe(calAnio,calMesSel);
+  const key=calMesKey(calAnio,calMesSel);
+  let h='';
+  if(fi<0){
+    h=`<div class="cal-det-h"><span class="cal-det-mes">${CAL_MESES[calMesSel]} ${calAnio}</span></div>
+       <div class="cal-vacio">Este mes queda fuera del Plan Maestro (${PHASES[0].start.getFullYear()}–${PHASES[PHASES.length-1].end.getFullYear()}).</div>`;
+  }else{
+    const f=PHASES[fi], color=CAL_FASE_COLOR[fi];
+    const checks=rawGet('coach_checks_v1',{})||{};
+    const tareas=(f.semanas||[]).filter(s=>s.mes===key);
+    const generales=(f.semanas||[]).filter(s=>!s.mes);
+    h=`<div class="cal-det-h">
+        <span class="cal-det-mes">${CAL_MESES[calMesSel]} ${calAnio}</span>
+        <span class="cal-det-badge" style="background:${color}22;color:${color}">${f.tag}</span>
+       </div>
+       <div class="cal-det-title">${esc(f.title)} · <b style="color:var(--text2)">${esc(f.meta)}</b></div>`;
+    // Tareas del mes exacto (Fase 0 las etiqueta con `mes`)
+    if(tareas.length){
+      const hechas=tareas.filter(t=>checks[t.id]).length;
+      h+=`<div class="cal-sec">🎯 Qué toca este mes (${hechas}/${tareas.length})</div>`;
+      h+=tareas.map(t=>`<div class="cal-item${checks[t.id]?' done':''}">
+        <span class="cal-item-ico">${checks[t.id]?'✅':'▫️'}</span><div>${t.txt}</div></div>`).join('');
+      h+=`<div class="cal-prog"><span>${Math.round(hechas/tareas.length*100)}%</span>
+        <div class="cal-prog-bar"><div class="cal-prog-fill" style="width:${hechas/tareas.length*100}%"></div></div>
+        <span>${hechas} de ${tareas.length}</span></div>`;
+    }else if(generales.length){
+      // Fases 1-3 no etiquetan mes: se muestra lo que aplica a toda la fase.
+      h+=`<div class="cal-sec">🎯 Aplica a toda la ${f.tag} (${f.start.toLocaleDateString('es-MX',{month:'short',year:'numeric'})} – ${f.end.toLocaleDateString('es-MX',{month:'short',year:'numeric'})})</div>`;
+      h+=generales.map(t=>`<div class="cal-item${checks[t.id]?' done':''}">
+        <span class="cal-item-ico">${checks[t.id]?'✅':'▫️'}</span><div>${t.txt}</div></div>`).join('');
+    }
+    // Pendientes que él mismo capturó en "Importante este mes"
+    const evs=eventos[key]||[];
+    h+=`<div class="cal-sec">📌 Tus pendientes de este mes</div>`;
+    h+=evs.length
+      ? evs.map(e=>`<div class="cal-item${e.done?' done':''}">
+          <span class="cal-item-ico">${e.done?'✅':(e.ico||'▫️')}</span><div>${esc(e.txt)}</div></div>`).join('')
+      : '<div class="cal-vacio">Sin pendientes capturados. Se agregan desde “Importante este mes”, en Mi Día.</div>';
+  }
+  document.getElementById('calDet').innerHTML=h;
+}
+
 function renderSkills(){
   renderDidiStrip();
   // Top N prioridades reales, siempre visibles (nada de clics — este slide es pasivo, rota
@@ -5987,6 +6201,7 @@ document.addEventListener('keydown',e=>{
   if(e.key==='Escape'&&document.getElementById('metaDetailOverlay').classList.contains('open')){ cerrarMetaDetalle(); return; }
   if(e.key==='Escape'&&document.getElementById('ejImgOverlay').classList.contains('open')){ cerrarImagenEjercicio(); return; }
   if(e.key==='Escape'&&document.getElementById('didiOverlay').classList.contains('open')){ cerrarDidi(); return; }
+  if(e.key==='Escape'&&document.getElementById('calOverlay').classList.contains('open')){ cerrarCalendario(); return; }
   if(e.key==='ArrowRight') nextSlide();
   if(e.key==='ArrowLeft') prevSlide();
   if(e.key===' '){e.preventDefault();togglePlay();}
