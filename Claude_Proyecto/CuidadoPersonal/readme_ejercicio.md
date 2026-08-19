@@ -315,3 +315,11 @@ El `foco` se quitó **solo del render** del Dashboard, no de los datos. `GYM_RUT
 Cada tanda de estos cambios necesitó **bumpear la bandera** (`mirutina_v1_pierna_abs_natacion` → `_v2` → `_v3`) en las 2 apps: una vez que la migración corre, deja su bandera puesta y no vuelve a tocar nada, así que sin bump los cambios nuevos **nunca llegarían al navegador de Adán**. Además, cada versión tuvo que **aceptar como "todavía es el default" los nombres intermedios** que ella misma pudo haber guardado antes (`Piernas — completa`, `Abdomen — bajar panza`, `Abdomen — Core + Cardio`, `Natación — aprender a nadar`) — si solo comparara contra los nombres originales de julio, un navegador ya migrado se quedaría congelado en la versión intermedia. Se extendió también a los días 1 y 6, que antes no estaban cubiertos porque no habían cambiado.
 
 - Verificado con Node en los 2 archivos: sintaxis OK; CSS y `<div>` balanceados (dashboard 520/520 y 283/283, ejercicio 156/156 y 173/173); los 7 días **sincronizados** entre `S.rutina` y `GYM_RUTINA_DEFAULT` (nombre + lista de ejercicios) y los 7 `foco` **idénticos**; **0 ejercicios sin entrada** en `EJ_LOOKUP` ni en `EJ_DB`; **0 de los 5 ejercicios retirados** (`e027`, `e037`, `e048`, `e049`, `e060`) siguen en la rutina — todos se quedaron en la biblioteca por si algún día los quiere de vuelta; bandera `_v3` presente en ambas apps. Las 2 URLs de imagen nuevas responden 200.
+
+## El enlace al Dashboard vive en la `.topbar` (2026-08-18)
+
+*"hay botones dashboard que ni si quiera van acorde a la interfaz del html, osea sobre ponen a otros botones y eso esta mal, debe ser parte de la interfaz de todos"*.
+
+El bloque flotante `#btnVolverDash` (`position:fixed`, fondo oscuro propio, z-index 9999) que se había insertado esta mañana **se encimaba sobre el botón de tema en pantallas angostas** y no seguía el tema de este archivo. Se retiró junto con su `<style>`: ahora el enlace es un botón redondo con el 🚀 antes del de tema, con la clase `.theme-toggle-btn` que ya usan sus vecinos, así que hereda tema y estilos sin CSS nuevo.
+
+Detalle completo y medición en `../Dashboard/readme_dashboard.md` → "El botón de Dashboard deja de flotar".

@@ -146,3 +146,11 @@ Se revisó que el duplicado estuviera solo aquí: Coach y Finanzas aparecían en
 - **El acceso en el menú**: en vez de quitar el renglón "🛒 Lista del Súper", ahora es un enlace directo al Dashboard (con ↗). Si Adán lo busca donde siempre estuvo, lo lleva a donde ahora vive en vez de dejarlo preguntándose si se perdió.
 
 - Verificado con Node: sintaxis OK en los 2 bloques `<script>`; CSS 138/138, `<div>` 120/120, `<section>` 5/5; `SECS`, `STITLE` y las secciones reales del HTML coinciden exacto (0 huérfanos en cualquier dirección); 0 referencias vivas a `shop-body`/`shop-pfill`/`cnt-super`/`s-super`/`S.comprado` (las 2 que quedan de `resetShop`/`renderSuper` son comentarios que documentan la eliminación); 0 enlaces internos rotos en las 10 apps; y la lista del Dashboard sigue completa y cuadrada contra las recetas (30 ingredientes, 0 de más y 0 de menos).
+
+## El enlace al Dashboard vive en la `.topbar` (2026-08-18)
+
+*"hay botones dashboard que ni si quiera van acorde a la interfaz del html, osea sobre ponen a otros botones y eso esta mal, debe ser parte de la interfaz de todos"*.
+
+El bloque flotante `#btnVolverDash` (`position:fixed`, fondo oscuro propio, z-index 9999) que se había insertado esta mañana **se encimaba sobre el botón de tema en pantallas angostas** y no seguía el tema de este archivo. Se retiró junto con su `<style>`: ahora el enlace es un botón redondo con el 🚀 antes del de tema, con la clase `.theme-toggle-btn` que ya usan sus vecinos, así que hereda tema y estilos sin CSS nuevo.
+
+Detalle completo y medición en `../Dashboard/readme_dashboard.md` → "El botón de Dashboard deja de flotar".

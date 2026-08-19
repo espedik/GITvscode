@@ -688,3 +688,19 @@ Nueva tarjeta `#negocio10` con el mismo formato que las 9 anteriores (qué es ·
 Se documentan alternativas mejor ajustadas si la validación sale bien (venta directa tipo Gumroad, suscripción, Product Hunt), con el criterio explícito: **Kickstarter tiene sentido para financiar lo que todavía no existe**, y aquí el producto ya está de pie.
 
 El riesgo principal enlaza con el que ya tenía la Opción 1: el ecosistema contiene su sueldo, deudas, saldos de GBM y horario completo. Cualquier versión pública nace de una copia limpia con datos de ejemplo, y eso es trabajo real, no un buscar-y-reemplazar.
+
+## Los sidebars ya no llevan enlace al Dashboard (2026-08-18)
+
+*"en algunos html el boton de dashboard se repite y esto no debe ser, solo debe estar el de la esquina superior derecha"*.
+
+`<a class="sb-link sb-dashboard">🚀 Dashboard</a>` estaba al pie de **los dos** sidebars — `#sidebar-personal` y `#sidebar-empresa`, que son navegaciones completas e independientes — y repetía lo que ya hace `#btnVolverDash`, el botón fijo arriba a la derecha que llevan los 47 HTML del proyecto desde esta misma mañana.
+
+Se fueron los dos enlaces y, con ellos, la regla `.sb-dashboard` del `<style>`: sus `margin-top:auto` y borde superior existían solo para despegar ese enlace del resto de los `.sb-link`, así que sin ellos era CSS muerto. Los sidebars conservan sus 7 y 3 enlaces de navegación reales. Detalle completo en `../Dashboard/readme_dashboard.md` → "Una sola vía de regreso".
+
+## El enlace al Dashboard vive en el grupo de botones de la cabecera (2026-08-18)
+
+*"hay botones dashboard que ni si quiera van acorde a la interfaz del html, osea sobre ponen a otros botones y eso esta mal, debe ser parte de la interfaz de todos"*.
+
+El bloque flotante `#btnVolverDash` (`position:fixed`, fondo oscuro propio, z-index 9999) que se había insertado esta mañana **se encimaba sobre el botón de tema (`#theme-toggle-btn`)** y no seguía el tema de este archivo. Se retiró junto con su `<style>`: ahora el enlace es un botón redondo más de `.modo-switch-right`, con el 🚀 solo, con la clase `.theme-toggle-btn` que ya usan sus vecinos, así que hereda tema y estilos sin CSS nuevo.
+
+Detalle completo y medición en `../Dashboard/readme_dashboard.md` → "El botón de Dashboard deja de flotar".

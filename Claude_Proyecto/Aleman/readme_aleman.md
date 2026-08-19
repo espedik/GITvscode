@@ -40,3 +40,11 @@ El mismo patrón se usa en `Entrevistas/_generar-datos-dashboard.js`, con una di
 - **Las 35 lecciones que el Dashboard referencia existen todas** (verificado en la auditoría del 2026-08-12: 35 archivos referenciados, 0 inexistentes).
 - **No guarda progreso**: no hay ninguna clave de `localStorage` en toda la carpeta. Las lecciones son material de consulta, no un curso con avance registrado. Si algún día se quiere marcar "lección vista" o llevar racha, hay que agregarlo — hoy no existe.
 - Por lo mismo, el Dashboard **no puede mostrar cuánto lleva avanzado** de las 35, solo la lección del día. Se propuso agregarlo el 2026-08-12 y Adán lo descartó ("ya están en otras páginas").
+
+## El enlace al Dashboard vive en la `<nav>` de cada página (2026-08-18)
+
+*"hay botones dashboard que ni si quiera van acorde a la interfaz del html, osea sobre ponen a otros botones y eso esta mal, debe ser parte de la interfaz de todos"*.
+
+El bloque flotante `#btnVolverDash` (`position:fixed`, fondo oscuro propio, z-index 9999) que se había insertado esta mañana **se encimaba sobre el enlace "← Índice" de las 35 lecciones y sobre "📖 Vocabulario" en los índices** y no seguía el tema de este archivo. Se retiró junto con su `<style>`: ahora el enlace es un `<a class="nav-back">🚀 Dashboard</a>` dentro de `nav.nav`, con la clase `.nav-back` que ya usan sus vecinos, así que hereda tema y estilos sin CSS nuevo.
+
+Detalle completo y medición en `../Dashboard/readme_dashboard.md` → "El botón de Dashboard deja de flotar".

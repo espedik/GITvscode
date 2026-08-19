@@ -2612,3 +2612,64 @@ Lo que **no** se tapa son los precios de mercado (BTC, USD/MXN): son públicos y
 ### Nota para scripts futuros: `dashboard.html` tiene finales de línea MIXTOS
 
 6,097 líneas CRLF y 238 LF. Un script que lea con las *universal newlines* de Python y vuelva a escribir normaliza el archivo entero y produce un diff de 12,000 líneas para un cambio de 100. Hay que leer y escribir con `newline=''` — y si se inserta texto nuevo, hacerlo con `\r\n`, que es el estilo dominante.
+
+## Una sola vía de regreso: fuera los 4 botones de Dashboard que sobraban (2026-08-18)
+
+*"en algunos html el boton de dashboard se repite y esto no debe ser, solo debe estar el de la esquina superior derecha"*.
+
+Al insertar `#btnVolverDash` en los 47 archivos esta misma mañana, las 4 apps que **ya** tenían su propia vía de regreso se quedaron con dos. El barrido, contando enlaces `href` reales y no impresiones:
+
+| Archivo | Lo que sobraba | Dónde estaba |
+|---|---|---|
+| `Coach/Coach_v2.html` | 2 × `<a class="sb-link sb-dashboard">🚀 Dashboard` | al pie de los **dos** sidebars (`#sidebar-personal` y `#sidebar-empresa`) |
+| `Finanzas/Finanzas.html` | `nav-item` "🚀 Volver al Dashboard" | primer ítem del menú lateral |
+| `CuidadoPersonal/cuidadopersonal.html` | `tab-btn` "🚀 Dashboard" | última pestaña de la fila de secciones |
+
+Coach tenía **dos** porque el archivo lleva dos sidebars completos, uno por modo. Buscar solo la primera coincidencia habría dejado el del modo Empresa vivo.
+
+Con los enlaces fuera, el CSS `.sb-dashboard` (`margin-top:auto` + borde superior, que separaba ese enlace del resto del sidebar) se quedó sin un solo elemento al que aplicar, así que se borró también en vez de dejarlo como CSS muerto. En Finanzas se fue además la etiqueta `<div class="nav-label">Navegación</div>`: existía solo para encabezar ese enlace y, sin él, encabezaba un grupo vacío.
+
+### Lo que NO se tocó, y por qué
+
+- **`comida.html` → "🛒 Lista del Súper ↗"**: apunta a `dashboard.html`, sí, pero no es un botón de regreso — es el acceso a la Lista de Compras, que se mudó al Dashboard el 2026-08-12. Sigue en pie. Con una salvedad: el enlace **no lleva a la lista**, cae en la pantalla que el Dashboard tenga activa, porque el Dashboard no lee `hash` ni parámetros de la URL. Es un deep-link pendiente, no un duplicado.
+- **`salud.html` y `Finanzas.html` → `nav-item` "📊 Dashboard" con `onclick="nav('dashboard')"`**: son secciones internas de esas apps que se llaman así. No salen del archivo.
+
+### Verificación (Playwright, 1600px y 390px)
+
+Los 47 HTML tienen exactamente **1** `#btnVolverDash`, y de los enlaces a `dashboard.html` queda **1 visible por archivo** (los 2 de `comida.html` son el botón y la Lista del Súper). En los 10 archivos probados a fondo, en ambos anchos: el botón está arriba a la derecha, `elementFromPoint` sobre su centro confirma que nada lo tapa, y la navegación propia quedó intacta — Coach 7 + 3 enlaces de sidebar, Finanzas 8 ítems en 2 grupos (Principal / Análisis), Cuidado Personal 8 pestañas, todas reales. Cero errores de consola.
+
+## El botón de Dashboard deja de flotar y entra en la barra de cada app (2026-08-18)
+
+*"pero hay botones dashboard que ni si quiera van acorde a la interfaz del html, osea sobre ponen a otros botones y eso esta mal, debe ser parte de la interfaz de todos"*.
+
+Tenía razón en las dos cosas, y ambas se pueden medir.
+
+`#btnVolverDash` nació como un bloque `position:fixed; z-index:9999` con su propio `<style>`, idéntico en los 47 archivos. Esa decisión resolvía el problema de esa mañana —meterlo en 39 lecciones que solo cargan un `styles.css` externo— pero lo hacía **encima** de la interfaz, no dentro. Medido con Playwright, elemento por elemento:
+
+| | Antes |
+|---|---|
+| Archivos donde tapaba algo clicable | **43 de 47** |
+| Qué tapaba | el "← Índice" de las 35 lecciones de Alemán · el botón de tema de Coach, Vestimenta y los 4 de CuidadoPersonal · "+ Nueva transacción" (Finanzas) · "+ Pesarme hoy" (Salud) · el buscador y el "↺ Reset" (Entrevistas) |
+| Archivos donde desentonaba | **47 de 47** — su fondo era `rgba(20,22,30,.82)` con texto blanco, fijo, y los 47 se cargan con fondo claro |
+
+### La solución: dejar de ser un injerto
+
+Ahora **no hay ningún CSS propio del botón**. Es un enlace más dentro del grupo de acciones que cada app ya tenía arriba a la derecha, con **las clases nativas de esa app**, así que hereda su tema, sus colores, su tipografía y su comportamiento responsivo sin una sola regla nueva:
+
+| App | Dónde vive ahora | Con qué clase |
+|---|---|---|
+| Alemán (39 archivos) | dentro de `<nav class="nav">`, junto al "← Índice" | `.nav-back` |
+| Coach | `.modo-switch-right` | `.theme-toggle-btn` |
+| Finanzas · Salud · Ejercicio · Comida · Vestimenta | grupo derecho de la `.topbar` | `.theme-toggle-btn` |
+| Cuidado Personal | `header.topnav`, junto al botón de tema | `.theme-toggle-btn` |
+| Entrevistas | `.header-right` | `.btn-theme` |
+
+Las 20 lecciones A2 llevaban el "← Índice" como hijo directo de `.nav`, que es `justify-content:space-between`: añadir un tercer hijo habría separado los tres en vez de agrupar los dos de la derecha, así que ahí los dos enlaces se envuelven juntos en un `.nav-links`.
+
+**Dónde va el texto y dónde solo el cohete**: en Alemán, cuya `nav` tiene enlaces con texto y espacio de sobra, dice "🚀 Dashboard". En el resto, donde los vecinos son iconos redondos de 30-38px, va solo el 🚀 con `title` y `aria-label` — alargar esas barras con texto es exactamente lo que rompió la topnav de Cuidado Personal en iPhone (ver `../CuidadoPersonal/readme_cuidadopersonal.md` → "Responsivo").
+
+### Verificación (Playwright, 47 archivos × 2 anchos)
+
+**1600px: 47/47 correctos. 390px: 47/47** una vez descontados los desbordes preexistentes (ver abajo). En cada archivo se comprobó, por geometría de rectángulos y no por impresión: el botón existe y es visible, **no se solapa con ningún otro elemento interactivo**, no es `fixed` ni `absolute` (está en el flujo), y queda arriba y a la derecha.
+
+Los desbordes horizontales que aparecen en las lecciones de Alemán a 390px (12 a 104 elementos según el archivo) son **preexistentes y no cambiaron ni en uno**: medidos contra la versión en `HEAD`, `a1-10-laender` daba 104 antes y 104 después; `a1-01-saludos`, 36 y 36; `a2-01-modalverben`, 44 y 44. Son celdas `td.vocab-*` de las tablas de vocabulario dentro de su contenedor con scroll. La `nav` no desborda en ninguno (60px de alto, igual que antes), y la `.topbar` de Finanzas sigue midiendo 128px en móvil con un control más.

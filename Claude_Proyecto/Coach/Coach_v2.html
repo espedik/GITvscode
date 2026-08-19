@@ -258,14 +258,6 @@
       font-weight: 700;
     }
 
-    .sb-dashboard {
-      margin-top: auto;
-      padding-top: 14px;
-      border-top: 1px solid var(--border);
-      color: var(--accent);
-      font-weight: 700;
-    }
-
     /* ─── LAYOUT ──────────────────────────────────────── */
     main { flex: 1; min-width: 0; max-width: 1080px; margin: 0; padding: 36px 32px 100px; }
     @media (max-width: 700px) { main { padding: 24px 16px 100px; } }
@@ -974,26 +966,6 @@
   </script>
 </head>
 <body>
-<!-- Volver al Dashboard — bloque común a todos los HTML del proyecto (2026-08-18) -->
-<a href="../Dashboard/dashboard.html" id="btnVolverDash" title="Volver al Dashboard" aria-label="Volver al Dashboard">
-  <span class="bvd-ico">🚀</span><span class="bvd-txt">Dashboard</span>
-</a>
-<style>
-#btnVolverDash{position:fixed;top:10px;right:10px;z-index:9999;display:inline-flex;align-items:center;
-  gap:7px;padding:7px 13px;border-radius:22px;text-decoration:none;font-size:12.5px;font-weight:800;
-  font-family:inherit;line-height:1;white-space:nowrap;
-  background:rgba(20,22,30,.82);color:#fff;border:1px solid rgba(255,255,255,.16);
-  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
-  box-shadow:0 4px 16px rgba(0,0,0,.28);transition:transform .15s ease,background .15s ease}
-#btnVolverDash:hover{transform:translateY(-1px);background:rgba(20,22,30,.94)}
-#btnVolverDash .bvd-ico{font-size:14px}
-@media(max-width:600px){
-  #btnVolverDash{padding:9px;border-radius:50%;gap:0;top:8px;right:8px}
-  #btnVolverDash .bvd-txt{display:none}
-  #btnVolverDash .bvd-ico{font-size:16px}
-}
-@media print{#btnVolverDash{display:none}}
-</style>
 
 
 <!-- ════════════════════════════════════════════
@@ -1006,6 +978,7 @@
     <button class="modo-btn" id="modo-btn-empresa" onclick="cambiarModo('empresa')">🏢 Coach — Empresa</button>
   </div>
   <div class="modo-switch-right">
+    <a href="../Dashboard/dashboard.html" class="theme-toggle-btn" id="btnVolverDash" title="Volver al Dashboard" aria-label="Volver al Dashboard" style="text-decoration:none">🚀</a>
     <button class="theme-toggle-btn" id="theme-toggle-btn" onclick="toggleTheme()" title="Cambiar tema claro/oscuro" aria-label="Cambiar tema claro/oscuro">🌙</button>
     <button class="theme-toggle-btn" onclick="exportCoachData()" title="Exportar respaldo (rutina, radar de habilidades, checklists)" aria-label="Exportar respaldo">⬇️</button>
   </div>
@@ -1050,7 +1023,8 @@
     <a class="sb-link" href="#habilidades-valor" data-sec="habilidades-valor" onclick="irASeccion('habilidades-valor',null,this);return false;">🎩 Habilidades de Valor</a>
   </div>
 
-  <a class="sb-link sb-dashboard" href="../Dashboard/dashboard.html">🚀 Dashboard</a>
+  <!-- El enlace "🚀 Dashboard" al pie del sidebar se quitó el 2026-08-18: repetía lo que ya
+       hace #btnVolverDash, fijo arriba a la derecha en los 47 HTML del proyecto. -->
 </nav>
 <div class="sidebar-overlay" onclick="closeSidebar()"></div>
 
@@ -3181,7 +3155,8 @@
     <a class="sb-link" href="#legal" data-sec="legal" onclick="irASeccion('legal',null,this);return false;">⚖️ Legal & Fiscal</a>
   </div>
 
-  <a class="sb-link sb-dashboard" href="../Dashboard/dashboard.html">🚀 Dashboard</a>
+  <!-- El enlace "🚀 Dashboard" al pie del sidebar se quitó el 2026-08-18: repetía lo que ya
+       hace #btnVolverDash, fijo arriba a la derecha en los 47 HTML del proyecto. -->
 </nav>
 <div class="sidebar-overlay" onclick="closeSidebar()"></div>
 

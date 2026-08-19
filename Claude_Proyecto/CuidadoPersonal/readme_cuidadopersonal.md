@@ -372,3 +372,19 @@ Al auditar la rutina apareció que **"sin enjuague" se usaba 5 veces sin definir
 No basta con arreglarlo en la guía: **7 pasos de `RUTINA_TASKS`** llevan ahora la explicación embebida, en las 2 copias. El sábado por la mañana, leyendo la tarea, ya se sabe qué es una mascarilla sin abrir otra pantalla — que es cuando de verdad hace falta saberlo.
 
 `HAIR_DB.mascarilla` pasa además de 2 opciones a **1**: la segunda (Moroccanoil) era una alternativa, y las alternativas ya se habían eliminado del resto del sistema.
+
+## La pestaña de Dashboard salió de la fila (2026-08-18)
+
+*"en algunos html el boton de dashboard se repite y esto no debe ser, solo debe estar el de la esquina superior derecha"*.
+
+La fila de `.tab-btn` terminaba con un `<a>` "🚀 Dashboard" separado por un borde izquierdo — el que se cuenta como séptimo botón en la nota de responsivo de arriba, donde se midió el alto de `.topnav` en iPhone. Se eliminó: `#btnVolverDash` (fijo arriba a la derecha desde esta misma mañana, en los 47 HTML del proyecto) hace exactamente lo mismo.
+
+La fila queda con **8 pestañas, todas secciones reales** de esta app: Skincare, Cabello, Salud, Ejercicio, Comida, Dentista, Ojos y Vista, Vestimenta. El tratamiento de tira con scroll horizontal del breakpoint `max-width:640px` no se tocó — sigue aplicando igual, ahora con un botón menos que empujar. Detalle completo en `../Dashboard/readme_dashboard.md` → "Una sola vía de regreso".
+
+## El enlace al Dashboard vive en el `header.topnav` (2026-08-18)
+
+*"hay botones dashboard que ni si quiera van acorde a la interfaz del html, osea sobre ponen a otros botones y eso esta mal, debe ser parte de la interfaz de todos"*.
+
+El bloque flotante `#btnVolverDash` (`position:fixed`, fondo oscuro propio, z-index 9999) que se había insertado esta mañana **se encimaba sobre el botón de tema en pantallas angostas** y no seguía el tema de este archivo. Se retiró junto con su `<style>`: ahora el enlace es un botón redondo con el 🚀 junto al de tema, fuera de la fila de pestañas, con la clase `.theme-toggle-btn` que ya usan sus vecinos, así que hereda tema y estilos sin CSS nuevo.
+
+Detalle completo y medición en `../Dashboard/readme_dashboard.md` → "El botón de Dashboard deja de flotar".

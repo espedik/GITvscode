@@ -178,3 +178,11 @@ Necesario para que las nuevas tareas de suplementos AM/PM de `RUTINA_TASKS` (Coa
 - `init()` ahora lee `new URLSearchParams(location.search).get('tab')` y, si el valor está en `SECS` (las 8 secciones válidas: dashboard, medidas, digestiva, examenes, postura, mental, suplementos, metas), llama `nav(tabInicial)` en vez de `renderDashboard()` por defecto.
 - Usado ahora mismo por `salud.html?tab=suplementos` desde las tareas de rutina; queda disponible para cualquier otro link futuro hacia una pestaña específica de esta app.
 - Verificado con Playwright: `salud.html?tab=suplementos` abre directo con "💊 Suplementos" como título activo y la sección `#s-suplementos` marcada `active` (en vez de caer en el Dashboard por defecto); sin parámetro, el comportamiento no cambió; cero errores de consola.
+
+## El enlace al Dashboard vive en la `.topbar` (2026-08-18)
+
+*"hay botones dashboard que ni si quiera van acorde a la interfaz del html, osea sobre ponen a otros botones y eso esta mal, debe ser parte de la interfaz de todos"*.
+
+El bloque flotante `#btnVolverDash` (`position:fixed`, fondo oscuro propio, z-index 9999) que se había insertado esta mañana **se encimaba sobre el botón "+ Pesarme hoy"** y no seguía el tema de este archivo. Se retiró junto con su `<style>`: ahora el enlace es un botón redondo con el 🚀 antes del de tema, con la clase `.theme-toggle-btn` que ya usan sus vecinos, así que hereda tema y estilos sin CSS nuevo.
+
+Detalle completo y medición en `../Dashboard/readme_dashboard.md` → "El botón de Dashboard deja de flotar".

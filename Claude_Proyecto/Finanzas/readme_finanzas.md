@@ -681,7 +681,7 @@ No se modificó ninguna función, variable, estructura de dato ni clave de `loca
 ## Referencias cruzadas
 
 - El **Dashboard** (`../Dashboard/dashboard.html`) lee `finanzasmx_v2` directamente (`D.fin`): usa `investments`, `emergencyFund`, `debts` (patrimonio neto, fondo de emergencia, deuda total del slide "💰 Finanzas") y `transactions` del mes actual (ingresos/gastos, score de finanzas del Vida Score). Si cambias la forma de `S.investments`/`S.debts`/`S.transactions`/`S.emergencyFund` aquí, revisa `patrimonioNeto()`, `hasFinData()`, `calcScores()` y `renderFinanzas()` en `Dashboard/dashboard.html`.
-- El enlace "🚀 Volver al Dashboard" **sí existe** en el sidebar (confirmado 2026-08-01) — la nota anterior que decía que faltaba estaba desactualizada.
+- El enlace "🚀 Volver al Dashboard" del sidebar **se eliminó el 2026-08-18**, junto con su etiqueta de grupo "Navegación", que se quedaba sin ítems. Duplicaba a `#btnVolverDash`, el botón fijo arriba a la derecha que desde esa fecha llevan los 47 HTML del proyecto (ver `../Dashboard/readme_dashboard.md` → "Una sola vía de regreso"). El `nav-item` "📊 Dashboard" que sigue en el menú **no** sale de Finanzas: es la sección interna de esta app.
 - Mapa completo del proyecto: [`../README.md`](../README.md).
 - **Auditoría completa realizada el 2026-08-01** (la primera desde la creación de este documento): se verificaron contra el código real todos los cálculos financieros, se corrigió el sueldo base documentado ($43,000 → $41,000, el código nunca tuvo $43,000 — era el `.md` el que estaba mal), se corrigió la fórmula semanal de GBM (ya no reparte Didi por semana), se documentó el módulo de snapshots mensuales que no tenía entrada propia, y se restauró en el código la gráfica `ch-cat` (dona de gastos por categoría del mes) que el propio `.md` ya describía como existente pero había sido removida del HTML/JS — ver `renderDashCharts(mtx)` arriba, ya vuelve a estar en el Dashboard junto a la gráfica de balance. No se encontró ningún botón muerto, cálculo con división por cero sin manejar, ni referencia a función/ID inexistente en todo el archivo (4340 líneas).
 
@@ -875,3 +875,11 @@ Ahora se extrajo a `escenariosAlimentacionHTML(subtotalMes)` y se renderiza **de
 Ese contraste es el valor real del cambio: el promedio medido ($1,766.67) contra su patrón declarado ($7,110) ahora se ven juntos, y la brecha de $5,343 queda a la vista en vez de estar repartida entre dos zonas del modal. **No se tocó la regla de fondo** —el dato medido siempre le gana al declarado, ver la sección de Alimentación de 2026-08-12— solo dónde se muestra.
 
 Verificado con Playwright: Restaurantes ya no aparece, Entretenimiento conserva el Ticketmaster, `varItems` devuelve solo Alimentación, los 2 escenarios se renderizan dentro del apartado 🍽️, y el recorrido de las 8 secciones no lanza errores.
+
+## El enlace al Dashboard vive en la `.topbar-actions` (2026-08-18)
+
+*"hay botones dashboard que ni si quiera van acorde a la interfaz del html, osea sobre ponen a otros botones y eso esta mal, debe ser parte de la interfaz de todos"*.
+
+El bloque flotante `#btnVolverDash` (`position:fixed`, fondo oscuro propio, z-index 9999) que se había insertado esta mañana **se encimaba sobre el botón "+ Nueva transacción"** y no seguía el tema de este archivo. Se retiró junto con su `<style>`: ahora el enlace es un botón redondo con el 🚀 antes del de tema, con la clase `.theme-toggle-btn` que ya usan sus vecinos, así que hereda tema y estilos sin CSS nuevo.
+
+Detalle completo y medición en `../Dashboard/readme_dashboard.md` → "El botón de Dashboard deja de flotar".

@@ -102,3 +102,11 @@ Resultado en Dataclasses: el subtítulo ahora dice *"Un atajo para las clases qu
 `.py-intro` se estila con las variables del Dashboard (`--ac1`, `--text2`, `--ov`), no con las de Entrevistas, así que se adapta solo al tema claro/oscuro y al acento del slide — mismo criterio que la integración visual de la ronda anterior. Va con barra de acento a la izquierda para que se lea como contexto y no como una tarjeta más de contenido, etiquetas en versalitas a la izquierda y texto a la derecha; abajo de 640px las filas se apilan para no exprimir el texto en una columna de 100px.
 
 - Verificado con Node: **41/41 temas con bloque de explicación** y con "Resumen técnico"; 0 subtítulos con HTML crudo y 0 por encima de 170 caracteres (el más largo quedó en 153); el CSS generado incluye `.py-intro`; y en `dashboard.html` la sintaxis de los 2 bloques `<script>` reales sigue OK con CSS 534/534 y `<div>` 281/281.
+
+## El enlace al Dashboard vive en la `.header-right` (2026-08-18)
+
+*"hay botones dashboard que ni si quiera van acorde a la interfaz del html, osea sobre ponen a otros botones y eso esta mal, debe ser parte de la interfaz de todos"*.
+
+El bloque flotante `#btnVolverDash` (`position:fixed`, fondo oscuro propio, z-index 9999) que se había insertado esta mañana **se encimaba sobre el buscador y el botón "↺ Reset"** y no seguía el tema de este archivo. Se retiró junto con su `<style>`: ahora el enlace es un botón con el 🚀 junto al de tema, con la clase `.btn-theme` que ya usan sus vecinos, así que hereda tema y estilos sin CSS nuevo.
+
+Detalle completo y medición en `../Dashboard/readme_dashboard.md` → "El botón de Dashboard deja de flotar".
