@@ -2,7 +2,9 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- viewport-fit=cover: sin él, `env(safe-area-inset-*)` vale 0 en iOS y la barra inferior
+     se monta sobre el home indicator del iPhone (2026-08-19, reportado por Adán). -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>JARVIS — Dashboard</title>
 <meta name="description" content="Salvapantallas de mando: rotación automática de pantallas con lo más importante y pendiente de Coach, Finanzas y el resto de mis proyectos.">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='46' fill='%2305050a' stroke='%2300e0c0' stroke-width='4'/%3E%3Ccircle cx='50' cy='50' r='14' fill='%2300e0c0'/%3E%3Ccircle cx='50' cy='50' r='30' fill='none' stroke='%2300e0c0' stroke-width='2' opacity='.5'/%3E%3C/svg%3E">
@@ -193,7 +195,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 .img-goal-pbar-row-money .img-goal-pbar-fill{background:var(--cy)}
 .img-goal-pbar-pct{font-family:var(--mono);font-size:9px;font-weight:700;color:var(--text3);flex-shrink:0;min-width:2.4em;text-align:right}
 /* Variante chica — largo plazo, columna angosta con más ítems (6 → 3 filas) */
-.img-goal-grid-sm{gap:7px;grid-template-rows:repeat(3,1fr)}
+.img-goal-grid-sm{gap:7px;grid-template-rows:repeat(3,minmax(96px,1fr))}
 .img-goal-photo-sm{border-radius:12px}
 .img-goal-txt-sm{padding:4px 7px;gap:4px;font-size:clamp(8px,0.75vw,10px)}
 /* Habilidades Base — 4 columnas, filas automáticas con scroll interno (2026-08-11: subió de 8 a
@@ -1203,7 +1205,9 @@ a.rt2-sub-prod:hover{text-decoration:underline}
      piso fijo, un iPhone angosto se hubiera quedado con casi todo el ancho como padding. */
   .slide{padding:5vh 6vw;align-items:flex-start}
   .slide.active{overflow-y:auto;-webkit-overflow-scrolling:touch}
-  .slide-inner{height:auto;min-height:100%;padding-bottom:170px}
+  /* +env(): la barra inferior creció con el área segura, y sin este hueco el último
+     bloque de cada pantalla quedaba debajo de ella. */
+  .slide-inner{height:auto;min-height:100%;padding-bottom:calc(170px + env(safe-area-inset-bottom,0px))}
   /* El botón "Ocultar finanzas" es absoluto (left:16px) para quedar pegado
      al borde izquierdo en pantallas anchas — en ≤1024px el grupo de
      píldoras centrado ya no deja ese hueco libre y se le monta encima
@@ -1279,7 +1283,10 @@ a.rt2-sub-prod:hover{text-decoration:underline}
     top:auto;bottom:0;left:0;right:0;transform:none;
     max-width:none;                     /* la regla de ≤1024px lo dejaba en 92vw (359 de 390) */
     flex-direction:row;flex-wrap:nowrap;justify-content:center;gap:12px;
-    padding:9px 12px calc(9px + env(safe-area-inset-bottom,0px));
+    /* El piso de 40px es el que de verdad protege: la franja del gesto de inicio del iPhone
+       mide ~34px, y con 22px seguian quedando 3 botones dentro de ella cuando env() no esta
+       disponible. Con area segura (iPhone real) quedan 12+34=46px. */
+    padding:9px 12px max(40px,calc(12px + env(safe-area-inset-bottom,0px)));
     border-radius:18px 18px 0 0;border-left:none;border-right:none;border-bottom:none;
     opacity:1;z-index:70;
   }
@@ -2659,7 +2666,7 @@ const LISTA_COMPRAS={
   // alternativas, por que si no al final no comprare nada"). Son exactamente los mismos que
   // nombra su rutina diaria — si aquí dijera una marca y allá otra, volvería la duda.
   cabello:[
-    'CeraVe Champú Hidratante sin sulfatos (tu base: martes, viernes, sábado y después de nadar)',
+    'CeraVe Champú Hidratante sin sulfatos (tu base: sábados, y los miércoles después de nadar)',
     'Pilexil Anticaída 300 ml (lunes y jueves)',
     'Champú Darrow Doctar alcatrão (solo si hay caspa activa, nunca junto al Pilexil)',
     'Acondicionador TRESemmé Keratin Smooth (todos los días, solo medios y puntas)',
@@ -4796,6 +4803,15 @@ const META_DETALLE={
       {t:"Analiza tus derrotas",d:"Revísalas como revisas un sistema en el trabajo: encuentra el punto exacto donde se rompió el plan, no te quedes solo con \"perdí\"."},
       {t:"Ponle fecha",d:"Elige un torneo específico dentro de los próximos 2-3 meses y anótalo, igual que haces con tus otras metas."},
     ]},
+  istqbgenai:{titulo:"Certificación ISTQB CT-GenAI",frase:"Ya tienes el Foundation Level desde 2025 — esta certificación no te pide empezar de cero, te pide dar el siguiente paso.",pasos:[
+      {t:"Qué es exactamente",d:"<b>ISTQB® Certified Tester Specialist: Testing with Generative AI (CT-GenAI)</b>. Ojo con la confusión más común: NO es la de <i>probar</i> sistemas de IA (esa es la CT-AI). Esta es sobre <b>usar IA generativa para probar mejor</b> — que es justo lo que ya haces a diario construyendo esta app.",href:"https://www.brightest.org/en/certifications/ISTQB-CT-GenAI/",label:"CT-GenAI en Brightest"},
+      {t:"El requisito ya lo cumples",d:"La certificación exige tener el <b>ISTQB Foundation Level (CTFL)</b>. El tuyo es de <b>2025</b> y está en tu perfil de Coach. No necesitas ningún curso previo ni otra credencial intermedia: puedes inscribirte al examen cuando quieras."},
+      {t:"Cómo es el examen",d:"<b>40 preguntas</b> de opción múltiple en <b>60 minutos</b>. El costo ronda los <b>200-249 USD</b> y varía por país — Brightest cotiza según tu región, así que pide el precio para México antes de presupuestarlo.",href:"https://www.brightest.org/en/",label:"Brightest · pedir cotización"},
+      {t:"El temario, en 4 bloques",d:"Syllabus <b>v1.1</b>, vigente desde el 27 de abril de 2026:",list:["Prompt engineering aplicado a las pruebas — cómo pedirle a un modelo lo que de verdad necesitas","Riesgos y limitaciones de la IA generativa en un proceso de calidad","Infraestructura de pruebas con IA generativa","Adopción organizacional: cómo se mete esto en un equipo que ya trabaja de otra forma"],href:"https://istqb.org/certifications/",label:"Syllabus oficial · ISTQB"},
+      {t:"Tu material de repaso ya está en Entrevistas",d:"Tu propia app de <b>Entrevistas</b> tiene el módulo <b>📜 ISTQB CTFL</b> con los 6 capítulos completos (Fundamentos del Testing · Testing en el SDLC · Pruebas estáticas · Test Analysis and Design · Managing the Test Activities · Test Tools) más el glosario. El CT-GenAI <b>da por sabido</b> ese vocabulario, así que ahí tienes el repaso hecho — empieza por el Capítulo 1 y el 4, que son los que más se dan por supuestos.",href:"../Entrevistas/entrevistas.html",label:"Abrir Entrevistas → módulo ISTQB CTFL"},
+      {t:"Por qué esta y por qué ahora",d:"Conecta las dos cosas que ya haces todos los días: el testing en ALTEN y las 20 horas al mes que le metes a construir con IA. Es la credencial que convierte esa práctica en algo que se puede poner en un CV y defender en una entrevista — el mismo hueco que tu meta de <b>trabajar remoto</b> necesita cerrar."},
+      {t:"Ponle fecha",d:"Igual que con el Hyrox: sin fecha no es una meta, es una intención. Elige un mes, pide la cotización a Brightest y agenda el examen — el temario son 4 bloques, no un año de estudio."},
+    ]},
   hyrox:{titulo:"Primer Hyrox",frase:"Tu cuerpo ya está construyendo la base — el Hyrox se corre con lo que entrenas hoy.",pasos:[
       {t:"Qué es Hyrox",d:"8 km de running divididos en 8 tramos de 1 km, alternados con 8 estaciones de trabajo funcional, siempre en el mismo orden — un híbrido con reglas fijas, no una carrera normal."},
       {t:"Las 8 estaciones",d:"Peso/distancia oficial de tu categoría (Men Open) y el tiempo promedio real que tarda un atleta en cada una (mediana, Temporadas 7-8, 395,452 resultados):",list:["SkiErg — 1000 m · promedio 4:29","Sled Push — 50 m con 152 kg · promedio 3:04","Sled Pull — 50 m con 103 kg · promedio 5:03","Burpee Broad Jumps — 80 m · promedio 5:22","Rowing — 1000 m · promedio 4:49","Farmers Carry — 200 m con 2×24 kg · promedio 2:09 (la más rápida)","Sandbag Lunges — 100 m con 20 kg · promedio 5:13","Wall Balls — 100 reps con 6 kg · promedio 6:52 (la más lenta de las 8)"],href:"https://hyroxdatalab.com/articles/average-hyrox-station-times",label:"Promedios reales — HyroxDataLab"},
@@ -5078,6 +5094,9 @@ function renderMetasSlide(){
     {id:'remoto',ico:'💻',t:'Trabajar remoto',img:'https://images.unsplash.com/photo-1586227740560-8cf2732c1531?w=800&q=80&auto=format&fit=crop'},
     {id:'byd',ico:'🚗',t:'Liquidar el BYD Dolphin Mini'+(carro.found?' · '+money(carro.balance)+' restantes':''),img:'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bb/BYD_DOLPHIN_MINI_%28BRAZIL%29_BYD_SEAGULL.jpg/960px-BYD_DOLPHIN_MINI_%28BRAZIL%29_BYD_SEAGULL.jpg',money:METAS_MONEYBAR.byd},
     {id:'maestria',ico:'🎓',t:'Maestría en Alemania',img:'https://images.unsplash.com/photo-1627556704302-624286467c65?w=800&q=80&auto=format&fit=crop',money:METAS_MONEYBAR.maestria},
+    // Mediano plazo, añadida el 2026-08-19 a petición de Adán. Es la única meta suya que se
+    // apoya en una credencial que YA tiene (el CTFL de 2025): no empieza de cero.
+    {id:'istqbgenai',ico:'🤖',t:'Certificación ISTQB CT-GenAI',img:'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&q=80&auto=format&fit=crop'},
     // 2 metas YA LOGRADAS (2026-08-11, pedido explícito: "en las metas a corto y mediano plazo,
     // no pusiste mi carrera de 11k ni que estaba estudiando aleman" — corrige la omisión de la
     // ronda anterior, donde estas 2 solo se agregaron a Coach y no aquí). Mismo mecanismo de

@@ -154,3 +154,19 @@ Se revisó que el duplicado estuviera solo aquí: Coach y Finanzas aparecían en
 El bloque flotante `#btnVolverDash` (`position:fixed`, fondo oscuro propio, z-index 9999) que se había insertado esta mañana **se encimaba sobre el botón de tema en pantallas angostas** y no seguía el tema de este archivo. Se retiró junto con su `<style>`: ahora el enlace es un botón redondo con el 🚀 antes del de tema, con la clase `.theme-toggle-btn` que ya usan sus vecinos, así que hereda tema y estilos sin CSS nuevo.
 
 Detalle completo y medición en `../Dashboard/readme_dashboard.md` → "El botón de Dashboard deja de flotar".
+
+## El iPad desperdiciaba un tercio de la pantalla (2026-08-19)
+
+*"la seccion de comida, no se ve muy bien en version de ipad"*.
+
+Medido en 820 px, que es el iPad vertical: la barra lateral se llevaba **245 px fijos — el 30% de la pantalla** — y dejaba 531 px útiles. Como `.recetas-grid` pide columnas de `minmax(300px,1fr)`, ahí solo cabía **una**, así que las recetas salían en una tira de una sola columna con medio iPad en blanco al lado. El breakpoint que colapsa la barra estaba en 640 px, muy por debajo de cualquier tablet, así que este rango no lo cubría nadie.
+
+Nuevo bloque `@media(min-width:641px) and (max-width:1100px)`: la barra baja a **190 px** (sigue visible — que es lo que hace útil una tablet, no un menú escondido tras un botón) y las tarjetas piden 250 px en vez de 300.
+
+| | Antes | Después |
+|---|---|---|
+| Barra lateral | 245 px (30%) | **190 px (23%)** |
+| Ancho para el contenido | 531 px | **630 px** |
+| Recetas | **1 columna** | **2 columnas de 291 px** |
+
+Los otros tamaños no se movieron: iPhone 390 px sigue con la barra oculta y 1 columna, iPad horizontal y escritorio siguen con la barra de 245 px y 2 y 3 columnas respectivamente. 0 desbordes en los cuatro.

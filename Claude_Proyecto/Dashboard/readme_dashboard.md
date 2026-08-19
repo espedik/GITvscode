@@ -2687,3 +2687,51 @@ La leyenda decía *"`dura ~N sem` lo que no hace falta comprar cada vez — por 
 ### Verificación
 
 Con 1 aceite de oliva (`sem:8`), 1 jitomate y 2 aguacates marcados desde la propia API de la lista: **0 elementos `.lc-dura`** en el DOM y ni un "dura ~N sem" en el texto de la página, 30 renglones intactos, barra viva con **Ticket $180 · Al mes $211** — y $211 < $720 confirma que el prorrateo por duración sigue aplicándose. Cero errores de consola y 0 desbordes en 1600px y 390px.
+
+## Cuatro arreglos y una meta nueva (2026-08-19)
+
+### Las metas de largo plazo no se veían en celular
+
+*"metas a largo plazo, no se ven en celular"*.
+
+No era scroll ni un bloque oculto: **las 6 fotos medían 0 px de alto**. `.img-goal-grid` (corto y mediano plazo) declara `grid-auto-rows:minmax(100px,1fr)` — con piso. `.img-goal-grid-sm`, el de largo plazo, lo pisaba con `grid-template-rows:repeat(3,1fr)`, **sin mínimo**. En escritorio da igual, porque el slide tiene alto fijo y el `flex:1` reparte espacio real; pero en ≤1024px `.slide-inner` pasa a `height:auto` y, sin alto que repartir, `1fr` resuelve a 0.
+
+Medido antes: bloque de **137 px**, celdas de 14 px, fotos de 0 px. Después de cambiar a `repeat(3,minmax(96px,1fr))`: bloque de **386 px**, las 6 fotos a 83 px.
+
+### La barra inferior caía sobre el gesto del iPhone
+
+*"haz de cuenta que el iphone tiene como una barra hasta abajo enmedio y si hago click se enciende siri, entonces arreglalo para que no lo presione sin querer"*.
+
+El CSS **ya** reservaba `env(safe-area-inset-bottom)` en el padding de la barra. El problema es que `env()` devuelve **0** mientras el `<meta name="viewport">` no lleve `viewport-fit=cover` — y no lo llevaba. Resultado real medido en 390×844: los botones `‹`, `▶` y `›` a **9 px** del borde, y **11 botones** dentro de la franja de ~34 px donde vive el home indicator.
+
+Dos cambios: `viewport-fit=cover` en el meta, y el padding pasa a `max(40px, calc(12px + env(safe-area-inset-bottom,0px)))`. El piso de 40 px es el que de verdad protege — con 22 px todavía quedaban 3 botones dentro de la franja cuando `env()` no está disponible (Android con barra de gestos, navegador de escritorio). En un iPhone real quedan 12+34 = **46 px**. `.slide-inner` suma el mismo `env()` a su `padding-bottom` para que el último bloque no quede debajo de la barra.
+
+Verificado: **0 botones** en la franja del home indicator, contra 11 antes.
+
+### El martes no es día de champú ni de nadar
+
+*"error de ducha, los martes no voy a nadar, y no me ducho, solo miercoles"*.
+
+La lista de compras decía que el CeraVe era su base *"martes, viernes, sábado y después de nadar"*. Contra `RUTINA_TASKS`, que es la fuente real, eso era falso en dos de los tres días: martes y viernes son `wd02co` — *"sin champú hoy"* —, el CeraVe solo aparece en `sa0506` (sábado) y la natación es `e3`, `dias:[1]`→miércoles. Ahora dice **"tu base: sábados, y los miércoles después de nadar"**.
+
+Es una sola línea, pero era la que hacía que el martes pareciera día de lavado. Las tareas de ducha de `RUTINA_TASKS` no se tocaron: se sigue bañando a diario, lo que cambia es qué producto toca.
+
+### Meta nueva de mediano plazo: certificación ISTQB CT-GenAI
+
+*"agrega una meta a mediano plazo, certificacion ISTQB GENAI de brightest, llanala de info y ademas en la seccion entrevistas ya tenemos algo de info para poder hacer el examen, haz referencia a eso"*.
+
+`istqbgenai`, con checklist de **7 pasos** y 4 enlaces. Todo el contenido está verificado, no supuesto:
+
+| Dato | Fuente |
+|---|---|
+| Nombre oficial: **ISTQB® Certified Tester Specialist: Testing with Generative AI (CT-GenAI)** | istqb.org |
+| Brightest es proveedor oficial del examen | brightest.org/en/certifications/ISTQB-CT-GenAI/ |
+| 40 preguntas de opción múltiple en 60 minutos, ~200-249 USD según región | Brightest / ASTQB |
+| Exige el Foundation Level (CTFL) | ISTQB |
+| Syllabus **v1.1**, vigente desde el 27 abr 2026 | ISTQB |
+
+Dos cosas que el paso 2 dice y que no son detalle menor: **el prerrequisito ya lo cumple** — su CTFL es de 2025 y está en `Coach_v2.html` —, así que puede inscribirse cuando quiera; y la confusión más común, que CT-GenAI **no** es la de *probar* sistemas de IA (esa es la CT-AI), sino la de *usar* IA generativa para probar.
+
+El paso 5 enlaza a `../Entrevistas/entrevistas.html`: su módulo **📜 ISTQB CTFL** ya tiene los 6 capítulos completos (Fundamentos · SDLC · Pruebas estáticas · Test Analysis and Design · Managing the Test Activities · Test Tools) más el glosario, y el CT-GenAI da ese vocabulario por sabido. Va sin ancla porque `entrevistas.html` no lee `hash` ni parámetros de URL — es el mismo deep-link pendiente que la Lista del Súper.
+
+Verificado en 1600px y 390px: la tarjeta entra en el grid, la imagen carga (800 px reales), el detalle abre con sus 7 pasos y 4 enlaces, 0 desbordes y sin errores de consola.
