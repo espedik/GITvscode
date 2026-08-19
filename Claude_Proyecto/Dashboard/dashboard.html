@@ -695,9 +695,6 @@ a.rt2-sub-prod:hover{text-decoration:underline}
    de 1, para que se note de un vistazo dónde se está yendo el ticket. */
 .lc-sub{font-family:var(--mono);font-size:11px;font-weight:800;color:var(--text3);flex-shrink:0}
 .lc-sub.mult{color:var(--g)}
-/* "dura ~N sem" — solo en lo que no se acaba en la semana */
-.lc-dura{font-size:9px;font-weight:700;color:var(--text3);opacity:.75;white-space:nowrap;
-  padding:1px 5px;border-radius:4px;background:rgba(var(--ov),.05);flex-shrink:0}
 /* Subtotal por pasillo, alineado a la derecha del nombre del pasillo */
 .lc-aisle-sub{margin-left:auto;font-family:var(--mono);font-size:11px;font-weight:800;
   color:var(--g);letter-spacing:0;text-transform:none}
@@ -3042,9 +3039,9 @@ function lcItemHtml(cat,txt,conLinkAmazon){
         <button onclick="lcCambiarQty('${cat}','${txt.replace(/'/g,"\\'")}',1)" aria-label="Agregar uno">+</button>
       </span>
       <span class="lc-sub${n>1?' mult':''}" title="${n>1?`${n} × $${p.monto}`:'Lo que costará esta cantidad'}">${n?'$'+sub.toLocaleString('es-MX'):''}</span>`;
-    // Aviso de duración solo en lo que NO se acaba en la semana. Es la mitad útil del dato:
-    // ver "dura ~8 sem" junto al aceite de $150 evita volver a meterlo al carro cada sábado.
-    if(p.sem>1) qtyHtml+=`<span class="lc-dura" title="Una compra de este producto te dura aproximadamente ${p.sem} semanas con tu consumo — no hace falta llevarlo cada vez.">dura ~${p.sem} sem</span>`;
+    // La píldora "dura ~N sem" que iba aquí se quitó el 2026-08-19 a petición de Adán. El dato
+    // `sem` sigue vivo y no se toca: es lo que usa lcTotalComida() para prorratear cada producto
+    // y calcular el "Al mes" de la barra de totales — solo dejó de pintarse en cada renglón.
   }
   return `<div class="lc-item" id="${id}-row">
     <input type="checkbox" id="${id}" ${checked} onchange="toggleListaItem('${id}','${cat}','${txt.replace(/'/g,"\\'")}')">
@@ -3146,7 +3143,7 @@ function renderListaCompras(){
          <span class="lc-price lc-price-est">≈</span> estimada &nbsp;·&nbsp;
          ⚖️ por peso · 🔢 por pieza · 📦 por paquete &nbsp;·&nbsp;
          usa <b style="color:var(--text2)">− +</b> para llevar más de uno &nbsp;·&nbsp;
-         <span class="lc-dura">dura ~N sem</span> lo que no hace falta comprar cada vez — por eso <b style="color:var(--text2)">"Al mes"</b> no es el ticket ×4
+         <b style="color:var(--text2)">"Al mes"</b> no es el ticket ×4: cada producto se prorratea por lo que dura
        </div>`
     : `<div class="lc-price-leyenda">
          <span class="lc-price lc-price-est">≈ $</span> precio de lista aproximado (ago-2026) en cada plataforma — cambia seguido, toca el nombre del producto para ver el precio real del momento

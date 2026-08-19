@@ -2153,7 +2153,7 @@ Ejemplo real verificado: 1 aceite + 3 aguacates + 1 pechuga = **ticket $252**, p
 
 **Subtotal por pasillo**, alineado a la derecha de cada encabezado. Recorres el súper por pasillos, así que saber que Carnes ya va en $66 sirve mientras estás parado ahí, no al llegar a la caja. Se refresca desde `actualizarLcTotal()` y no desde el render completo, porque cambiar una cantidad solo repinta su renglón (para no perder scroll ni foco) y si no el encabezado se quedaba con la cifra vieja.
 
-**Aviso `dura ~N sem`** en los 11 productos que no se acaban en la semana. Es la mitad útil del dato: ver "dura ~8 sem" junto al aceite de $150 evita volver a meterlo al carrito cada sábado.
+**Aviso `dura ~N sem`** en los 11 productos que no se acaban en la semana. Es la mitad útil del dato: ver "dura ~8 sem" junto al aceite de $150 evita volver a meterlo al carrito cada sábado. *(La etiqueta se quitó el 2026-08-19 a petición de Adán — ver "Fuera la etiqueta" al final. El dato `sem` sigue vivo: es lo que prorratea el "Al mes".)*
 
 La barra vacía también cambió: en vez de *"Total marcado: $0 — no has marcado nada todavía"* ahora invita (*"Marca lo que vas a llevar y aquí sale el ticket"*).
 
@@ -2673,3 +2673,17 @@ Las 20 lecciones A2 llevaban el "← Índice" como hijo directo de `.nav`, que e
 **1600px: 47/47 correctos. 390px: 47/47** una vez descontados los desbordes preexistentes (ver abajo). En cada archivo se comprobó, por geometría de rectángulos y no por impresión: el botón existe y es visible, **no se solapa con ningún otro elemento interactivo**, no es `fixed` ni `absolute` (está en el flujo), y queda arriba y a la derecha.
 
 Los desbordes horizontales que aparecen en las lecciones de Alemán a 390px (12 a 104 elementos según el archivo) son **preexistentes y no cambiaron ni en uno**: medidos contra la versión en `HEAD`, `a1-10-laender` daba 104 antes y 104 después; `a1-01-saludos`, 36 y 36; `a2-01-modalverben`, 44 y 44. Son celdas `td.vocab-*` de las tablas de vocabulario dentro de su contenedor con scroll. La `nav` no desborda en ninguno (60px de alto, igual que antes), y la `.topbar` de Finanzas sigue midiendo 128px en móvil con un control más.
+
+## Fuera la etiqueta "dura ~N sem" de la Lista de Compras (2026-08-19)
+
+*"en la lista de compras en comida, quita esto dura ~2 sem"*.
+
+Era una píldora gris junto a la cantidad, en los productos con `sem>1`. Se fue con su CSS (`.lc-dura`, que quedaba sin un solo uso) y con la mención que tenía en la leyenda de precios.
+
+**Lo que NO se tocó: el dato `sem` de cada producto.** No es solo el texto de esa etiqueta — es lo que `lcTotalComida()` usa para prorratear (`mensual += imp * (LC_SEM_MES / p.sem)`) y sacar el "📅 Al mes" de la barra de totales. Borrarlo habría convertido ese número en el ticket ×4.33, que es exactamente el error que ese cálculo existe para evitar.
+
+La leyenda decía *"`dura ~N sem` lo que no hace falta comprar cada vez — por eso «Al mes» no es el ticket ×4"*. Como el "Al mes" sigue ahí, la explicación se conserva sin la parte que ya no existe: **«Al mes» no es el ticket ×4: cada producto se prorratea por lo que dura**.
+
+### Verificación
+
+Con 1 aceite de oliva (`sem:8`), 1 jitomate y 2 aguacates marcados desde la propia API de la lista: **0 elementos `.lc-dura`** en el DOM y ni un "dura ~N sem" en el texto de la página, 30 renglones intactos, barra viva con **Ticket $180 · Al mes $211** — y $211 < $720 confirma que el prorrateo por duración sigue aplicándose. Cero errores de consola y 0 desbordes en 1600px y 390px.
