@@ -905,3 +905,11 @@ Investigado aquí: la meta `g001` guarda **`current: 53740` como una sola cifra*
 Es un hueco de datos real, no un fallo del Dashboard: **con lo que hay registrado es imposible decir de qué se compone**. Para poder verlo desglosado habría que dar de alta en **Finanzas → Inversiones** dónde está guardado ese dinero (qué instrumento, en qué institución y con qué saldo), y entonces el panel del Dashboard lo pintaría solo.
 
 Mientras tanto, el panel avisa de la limitación en vez de mostrar una barra única que aparente un desglose que no existe — ver `../Dashboard/readme_dashboard.md` → "Fondo Maestría".
+
+## Los `activos` no cuentan en el patrimonio, y Bitcoin no está registrado (2026-08-19)
+
+Dos cosas que salieron al desglosar el patrimonio en el Dashboard:
+
+1. **`activos` no entra en `patrimonioNeto()`.** Aquí hay 15 bienes registrados —BYD, PC, teléfonos, PS5, monitores, efectivo y cuenta— por unos **$540,600**, y la fórmula del Dashboard solo suma `investments + emergencyFund − debts`. Se decidió **no cambiar la fórmula** (la meta del millón se mide en dinero disponible, y el punto de partida histórico de −$308,830 se calculó así), pero el panel ahora **muestra los bienes aparte** y da la cifra con y sin ellos. El efectivo y la cuenta bancaria, que sí son `type:'liquido'`, se listan del lado del dinero.
+
+2. **No hay Bitcoin en `investments`.** Adán lo menciona como parte de su portafolio y el panel de inversión de los lunes lo trata como tal, pero en los datos solo están CETES y el depósito de renta. Mientras no se dé de alta, ni el patrimonio ni el reparto del portafolio pueden contarlo.

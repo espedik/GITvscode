@@ -5323,24 +5323,62 @@ function kpiDetalle(id){
 
   if(id==='patrimonio'){
     const START=-308830, GOAL=1000000;
-    const efectivo=ef, comp=[
-      {n:'Inversiones', v:totalInv, c:V},
-      {n:'Fondo de emergencia', v:efectivo, c:W},
-      {n:'Deudas (resta)', v:-deudaTot, c:R},
-    ];
-    const bruto=totalInv+efectivo;
     const avance=pat-START, camino=GOAL-START;
     const meses2030=Math.max(1,Math.round((new Date(2030,0,1)-new Date())/(1000*60*60*24*30.4)));
     const ritmo=(GOAL-pat)/meses2030;
-    return {titulo:'💰 Patrimonio hacia $1M', sub:'Qué suma, qué resta, y a qué ritmo tendrías que ir.',
+
+    // Cada peso por su nombre (2026-08-19). Antes eran 3 barras agregadas —"Inversiones",
+    // "Fondo", "Deudas"— y no se veía ni un CETE ni una tarjeta. Ahora sale línea por línea.
+    const activos=F.activos||[];
+    const liquidos=activos.filter(a=>a.type==='liquido');
+    const bienes=activos.filter(a=>a.type!=='liquido');
+    const totalLiq=liquidos.reduce((a,x)=>a+(+x.value||0),0);
+    const totalBienes=bienes.reduce((a,x)=>a+(+x.value||0),0);
+    const tieneHoy=totalInv+ef+totalLiq;
+    const escala=Math.max(tieneHoy,deudaTot,1);   // misma escala en las dos listas: comparables
+    const patTotal=pat+totalBienes;
+
+    const filasTengo=[]
+      .concat(inv.map(i=>({n:esc(i.name),v:+i.value||+i.invested||0,c:V,d:'Inversión registrada en Finanzas'})))
+      .concat(ef>0?[{n:'Fondo de emergencia',v:ef,c:W,d:'Tu colchón — no se toca para invertir'}]:[])
+      .concat(liquidos.map(a=>({n:esc(a.name),v:+a.value||0,c:C,d:'Disponible ya, sin vender nada'})))
+      .filter(x=>x.v!==0).sort((a,b)=>b.v-a.v);
+
+    const filasDebo=debts.filter(d=>+d.balance>0).sort((a,b)=>b.balance-a.balance)
+      .map(d=>({n:esc(d.name),v:+d.balance,c:d.rate>0?R:P,
+        d:(d.rate>0?'Tasa '+d.rate+'% · te cuesta '+money(d.balance*(d.rate/100)/12)+'/mes':'Sin interés')+
+          (d.remainingMonths?' · '+d.remainingMonths+' pagos restantes':'')}));
+
+    const filasBienes=bienes.sort((a,b)=>(+b.value||0)-(+a.value||0))
+      .map(a=>({n:esc(a.name),v:+a.value||0,d:a.notes?esc(a.notes):''}));
+
+    return {titulo:'💰 Patrimonio hacia $1M', sub:'Cada peso que suma, cada uno que resta, y a qué ritmo tendrías que ir.',
       html:
       '<div class="kpi-cifra" style="color:'+(pat>=0?V:R)+'">'+money(pat)+'</div>'+
       '<div class="kpi-cifra-sub">Meta: '+money(GOAL)+' el 01 ene 2030 · llevas <b>'+Math.round(avance/camino*100)+'%</b> del camino desde tu punto de partida</div>'+
-      kpiSec('📊 Cómo se compone')+
-      '<div class="kpi-desglose">'+comp.map(x=>kpiBarra(x.n, money(x.v), bruto>0?Math.abs(x.v)/Math.max(bruto,deudaTot)*100:0, x.c)).join('')+'</div>'+
-      kpiNota('Patrimonio = lo que tienes − lo que debes. Por eso sale negativo mientras la deuda pese más que los activos: <b>no es que no avances</b>, es que el punto de partida (18-jul-2026) era '+money(START)+'.')+
+
+      kpiSec('🟢 Lo que tienes · '+money(tieneHoy))+
+      '<div class="kpi-desglose">'+(filasTengo.length
+        ? filasTengo.map(x=>kpiBarra(x.n, money(x.v), x.v/escala*100, x.c, x.d)).join('')
+        : '<div class="gbm-vacio">Sin activos financieros registrados.</div>')+'</div>'+
+
+      kpiSec('🔴 Lo que debes · '+money(deudaTot))+
+      '<div class="kpi-desglose">'+(filasDebo.length
+        ? filasDebo.map(x=>kpiBarra(x.n, '−'+money(x.v), x.v/escala*100, x.c, x.d)).join('')
+        : '<div class="gbm-vacio">Sin deudas vivas. 🎉</div>')+'</div>'+
+      kpiNota('<b>'+money(tieneHoy)+' − '+money(deudaTot)+' = '+money(pat)+'</b>. Sale negativo mientras la deuda pese más que el dinero: <b>no es que no avances</b> — el punto de partida del 18-jul-2026 era '+money(START)+'.')+
+
+      (filasBienes.length?
+        kpiSec('🚗 Y además tienes en bienes · '+money(totalBienes))+
+        '<div class="kpi-desglose">'+filasBienes.slice(0,8).map(x=>kpiBarra(x.n, money(x.v), x.v/Math.max(totalBienes,1)*100, P, x.d)).join('')+'</div>'+
+        (filasBienes.length>8?kpiNota('Y '+(filasBienes.length-8)+' cosas más registradas en Finanzas → Activos.'):'')+
+        kpiPaso('Tu patrimonio contando bienes: '+money(patTotal),
+          'Los bienes <b>no entran</b> en el número de arriba, y es a propósito: la meta del millón se mide en <b>dinero</b>, y no vas a vender el coche ni la PC para llegar. Pero ignorarlos da una foto falsa — <b>'+money(totalBienes)+' en cosas tuyas es patrimonio real</b>, aunque no líquido. Las dos cifras son ciertas: '+money(pat)+' es lo que tienes disponible, '+money(patTotal)+' es lo que vales hoy.',
+          patTotal>=0?V:O)
+        :'')+
+
       kpiSec('📈 El ritmo que pide la meta')+
-      kpiPaso('Para llegar en '+meses2030+' meses','Necesitarías sumar <b>'+money(ritmo)+' al mes</b> de patrimonio neto — y ojo: <b>pagar deuda cuenta igual que ahorrar</b>, porque sube el mismo número. Cada peso que le quitas a la tarjeta es un peso de patrimonio.',C)+
+      kpiPaso('Para llegar en '+meses2030+' meses','Necesitarías sumar <b>'+money(ritmo)+' al mes</b> de patrimonio — y ojo: <b>pagar deuda cuenta igual que ahorrar</b>, porque mueve el mismo número. Cada peso que le quitas a la tarjeta es un peso de patrimonio.',C)+
       kpiNota('Este número baja solo conforme la deuda se apaga: no lo leas como una cuota fija, sino como el ritmo de hoy.')};
   }
 

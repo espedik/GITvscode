@@ -3072,3 +3072,35 @@ El panel no lo plantea como un fracaso sino como una decisión que conviene toma
 ### Verificación
 
 Con la meta real sembrada: 4 barras y 4 secciones, las fechas formateadas desde `pausadaHasta` y `date`, el ritmo calculado sobre los meses reales entre ambas, y ningún `undefined`, `NaN` ni `Invalid Date` — el riesgo de trabajar con fechas que pueden faltar. Sin errores de consola.
+
+## Patrimonio, peso por peso — y los $540,600 que nadie contaba (2026-08-19)
+
+*"aqui ni siquiera me pones lo que tengo en cetes, deposito, bitcoin, ni tampoco la deuda de bbva, ni de mi carro, ni otras cosas desglozadas, aqui debes poner todo eso y mas"*.
+
+El panel resumía todo en **3 barras agregadas** —Inversiones, Fondo, Deudas— donde no se veía ni un CETE ni una tarjeta. Ahora sale línea por línea:
+
+**🟢 Lo que tienes** — cada inversión con su nombre, el fondo de emergencia, y el dinero líquido que estaba en `activos` (efectivo y cuenta) y no aparecía en ningún lado.
+
+**🔴 Lo que debes** — cada deuda con su saldo, su tasa, **lo que cuesta al mes en intereses** y, si es a plazo, los pagos que faltan. Ordenadas de mayor a menor.
+
+Las dos listas comparten escala, así que las barras son comparables entre sí: se ve de un vistazo que el crédito del coche es casi todo lo que debe.
+
+### El "y más" resultó ser lo importante
+
+Finanzas tiene **15 activos registrados** —el BYD, la PC, los teléfonos, la PS5, los monitores— que `patrimonioNeto()` **nunca sumó**. Con los datos actuales son **$540,600**.
+
+| | |
+|---|---|
+| Patrimonio líquido (el de la meta) | **−$311,241** |
+| Bienes registrados | **+$540,600** |
+| **Patrimonio contando bienes** | **+$229,359** |
+
+El panel muestra los 8 bienes más grandes con su barra y **no cambia la fórmula del KPI**, a propósito: la meta del millón se mide en dinero, y no va a vender el coche ni la PC para llegar. Pero ignorar medio millón en cosas suyas da una foto falsa de "no tengo nada". Las dos cifras son ciertas y el panel lo dice así: *"−$311,241 es lo que tienes disponible, $229,359 es lo que vales hoy"*.
+
+### Un hueco que el desglose deja a la vista
+
+Adán mencionó **Bitcoin** entre lo que esperaba ver, y no aparece: **no hay ningún BTC en `investments`**. Sus inversiones registradas son CETES y un depósito de renta. El panel de inversión del lunes habla de BTC como parte de su portafolio, pero en los datos no está. En cuanto lo dé de alta en Finanzas → Inversiones, aparece aquí solo, sin tocar nada.
+
+### Verificación
+
+Con sus datos reales sembrados: **18 barras**, las 3 secciones con sus subtotales ($23,425 / $332,991 / $540,600), la resta explicada con sus dos operandos, los 8 bienes mayores más el "y 5 cosas más", y ningún `undefined` ni `NaN`. Sin errores de consola.
