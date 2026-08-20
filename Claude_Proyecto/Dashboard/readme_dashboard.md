@@ -3136,3 +3136,42 @@ El párrafo menciona el orden *"1) fondo de emergencia, 2) Banamex, 3) BBVA"* �
 ### Verificación
 
 Escritorio, iPad y iPhone: el chip y el título separados, la barra al **31.7%** con el marcador de hoy en la misma posición, las 3 cifras correctas (41 días / 9 semanas / 32%), la primera frase destacada, y **0 desbordes** en los tres. Sin errores de consola.
+
+## Totales y "ya lo tengo" en las categorías que no son el súper (2026-08-20)
+
+*"en compras no me pusiste todos los precios y no sumas los precios cuando selecciono varios, ademas otro check de comprar y otro de ya lo tengo, pero excluye esto que te digo de supermercado"*.
+
+El súper ya tenía ticket, total mensual y contadores; **queda fuera del cambio tal como pidió**. Lo nuevo es para las otras 6 categorías: skincare, cabello, suplementos, higiene, ojos y libros.
+
+### El total se va sumando
+
+`lcTotalCat()` suma lo marcado y pinta la barra con **los dos precios de plataforma**: `🧮 ≈$830 Amazon · ≈$715 M. Libre · 3 productos marcados`. No es una versión recortada del ticket del súper — aquí no hay contadores ni prorrateo mensual porque no aplican: un protector solar no se compra cada semana.
+
+### "Ya lo tengo", que son dos preguntas distintas
+
+Un producto responde a dos cosas: **"¿lo llevo?"** (el checkbox de siempre) y **"¿ya está en mi casa?"**. Por eso son dos controles y dos claves — `dash-lista-compras` y `dash-lista-tengo` —, así marcar la compra nunca pisa lo otro.
+
+Lo marcado como que ya tienes: **sale del total, se apaga el renglón, se deshabilita su checkbox de compra y desaparece del denominador de la pestaña** (`Skincare 2/7` en vez de 2/8). Pero **no se borra de la lista**: borrarlo sería perder el catálogo de lo que hay que tener.
+
+No aparece en el súper, a propósito: ahí todo se vuelve a comprar cada semana y "ya lo tengo" no significaría nada.
+
+### Los precios: 17 nuevos, y por qué faltan los demás
+
+| Categoría | Antes | Ahora |
+|---|---|---|
+| Cabello | 1/11 | **8/11** |
+| Ojos | 0/12 | **4/12** |
+| Higiene | 0/34 | **6/34** |
+| Skincare · Suplementos · Libros · Comida | completos | completos |
+
+**4 de los de cabello no hacían falta buscarlos**: ya existían en el proyecto, pero con el nombre anterior del producto. Al renombrarlos el 18-ago las claves dejaron de coincidir y **el precio se perdió en silencio** — el mismo fallo que se documentó al cambiar el acondicionador, ahora encontrado en 4 productos más.
+
+Los 13 restantes se buscaron en tiendas mexicanas reales: Sanborns, Farmacias del Ahorro, Prixz, Walmart, Amazon MX y Mercado Libre.
+
+**Lo que falta es Higiene sobre todo, y hay una razón**: son artículos genéricos —curitas, lima de uñas, talco, tijeras de cejas— cuyo precio varía tanto entre marcas que una búsqueda devuelve rangos, no cifras. Poner un número inventado ahí haría que el total mintiera, que es peor que dejarlo vacío. Por eso la barra **cuenta los que no tienen precio y lo dice** (`⚠ 6 sin precio`), en vez de sumar como si estuvieran todos.
+
+Además, 4 de los 34 de Higiene (*"Champú y acondicionador en envase de 100 ml (los tuyos)"*, *"Skincare AM/PM en botellas pequeñas"*, *"Minoxidil en su envase original"*, *"Suplementos en pastillero"*) **no son compras**: son "usa lo que ya tienes, en tamaño de viaje". Encajan exactamente con el botón nuevo de "Ya lo tengo".
+
+### Verificación
+
+Marcando 3 productos de Skincare: la barra suma **$830 / $715**. Al marcar uno como "ya lo tengo" baja a **$550 / $460**, aparece `✓ ya tienes 1`, el renglón se apaga, su checkbox se deshabilita y la pestaña pasa de 2/8 a **2/7**. En el súper hay **0 botones** de "ya lo tengo" y conserva su barra de ticket. 0 desbordes y sin errores de consola.

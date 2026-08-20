@@ -799,6 +799,30 @@ a.rt2-sub-prod:hover{text-decoration:underline}
    de 1, para que se note de un vistazo dónde se está yendo el ticket. */
 .lc-sub{font-family:var(--mono);font-size:11px;font-weight:800;color:var(--text3);flex-shrink:0}
 .lc-sub.mult{color:var(--g)}
+/* ─── "Ya lo tengo" (2026-08-19) ───
+   Pedido explícito: "ademas quiero otro check para cosas que ya tengo". Son DOS preguntas
+   distintas sobre el mismo producto — "¿lo llevo hoy?" (el checkbox de siempre) y "¿ya está en
+   mi casa?" — así que son dos controles, no tres estados de uno. Lo que ya tienes no suma al
+   total ni cuenta como pendiente: desaparece del cálculo sin desaparecer de la lista, que es lo
+   que pasaría si simplemente lo borraras. Vive en su propia clave (`dash-lista-tengo`), así que
+   marcar/desmarcar la compra no lo pisa. */
+.lc-tengo-btn{font-size:9.5px;font-weight:800;letter-spacing:.02em;white-space:nowrap;flex-shrink:0;
+  padding:2px 8px;border-radius:10px;cursor:pointer;font-family:inherit;
+  border:1px solid rgba(var(--ov),.14);background:rgba(var(--ov),.04);color:var(--text3);
+  transition:background .15s,color .15s,border-color .15s}
+.lc-tengo-btn:hover{background:rgba(var(--ov),.12);color:var(--text2)}
+.lc-tengo-btn.on{background:rgba(0,232,122,.16);color:var(--g);border-color:rgba(0,232,122,.42)}
+.lc-tengo-btn.on:hover{background:rgba(0,232,122,.24)}
+/* El renglón entero se apaga, pero sin tachado: el tachado ya significa "marcado para llevar"
+   en esta lista, y usarlo para las dos cosas haría imposible distinguirlas de un vistazo. */
+.lc-item-tengo{opacity:.5}
+.lc-item-tengo label.lc-item-txt{cursor:default}
+.lc-item-tengo input[type="checkbox"]{visibility:hidden}
+/* Barra de totales — las categorías sin precio de ticket (todo menos comida) muestran los dos
+   totales de plataforma, que es el dato que sí tienen: cuánto sale en Amazon y cuánto en M. Libre. */
+.lc-total-sub{font-size:10px;color:var(--text3);font-weight:700}
+.lc-total-tengo{font-size:10px;font-weight:800;color:var(--g);white-space:nowrap}
+.lc-total-falta{font-size:10px;font-weight:700;color:var(--o);white-space:nowrap;cursor:help}
 /* Subtotal por pasillo, alineado a la derecha del nombre del pasillo */
 .lc-aisle-sub{margin-left:auto;font-family:var(--mono);font-size:11px;font-weight:800;
   color:var(--g);letter-spacing:0;text-transform:none}
@@ -3019,7 +3043,32 @@ const LC_TIPO_META={
 // consulta ninguna API. Por eso TODOS se pintan como estimado (naranja "≈") y el nombre del
 // producto sigue siendo un link a la búsqueda real, que es donde se ve el precio del momento.
 // La clave es el texto completo del ítem tal cual aparece en LISTA_COMPRAS.
-const LISTA_COMPRAS_PRECIOS_OTROS={
+const LISTA_COMPRAS_PRECIOS_OTROS={
+  // 3 más, de farmacia mexicana. El de las lágrimas en gel es exacto (Farmacias del Ahorro,
+  // Systane gel 10 ml $122); los otros dos son el techo de un rango verificado, porque estos
+  // productos varían mucho de marca a marca: monodosis Systane entre $423 y $746, y
+  // desodorante en barra de hombre entre $40 y $119 según marca.
+  'Lágrimas en gel para la noche':{amazon:145,ml:122},
+  'Lágrimas artificiales sin conservadores (monodosis)':{amazon:450,ml:399},
+  'Desodorante en barra (no aerosol — el aerosol da problemas en avión)':{amazon:119,ml:85},
+  // ── 14 precios añadidos el 2026-08-20 ──
+  // Los 4 primeros ya existían en el proyecto pero con el nombre anterior del producto:
+  // al renombrar los de cabello el 18-ago sus claves dejaron de coincidir y el precio se
+  // perdió en silencio. Los otros 10 se buscaron en tiendas mexicanas (ago-2026).
+  'Champú Darrow Doctar alcatrão (solo si hay caspa activa, nunca junto al Pilexil)':{amazon:520,ml:450},
+  'Mascarilla L\'Oréal Elvive Total Repair 5 (sábados)':{amazon:180,ml:155},
+  'Aceite Moroccanoil Treatment Light (sobre el pelo ya seco, solo puntas)':{amazon:990,ml:850},
+  'Minoxidil 5% en ESPUMA Kirkland (la espuma no lleva propilenglicol)':{amazon:750,ml:620},
+  'Pilexil Anticaída 300 ml (lunes y jueves)':{amazon:715,ml:572},
+  'Crema sin enjuague L\'Oréal Elvive Total Repair 5 (diario, sobre el pelo húmedo)':{amazon:95,ml:73},
+  'Funda de almohada de satín':{amazon:249,ml:219},
+  'Suplemento de Luteína + Zeaxantina 10 mg / 2 mg':{amazon:299,ml:260},
+  'Lentes de sol polarizados con UV400':{amazon:259,ml:210},
+  'Hilo dental':{amazon:155,ml:120},
+  'Recortadora de barba con batería (y su cable)':{amazon:599,ml:520},
+  'Esponja o guante exfoliante':{amazon:35,ml:26},
+  'Cortauñas de mano y de pie':{amazon:56,ml:45},
+  'Alicate de cutícula o empujador':{amazon:259,ml:218},
   // ── skincare ──
   'Limpiador — CeraVe Limpiador Espumoso (verde)':{amazon:280,ml:255},
   'Exfoliante (BHA/AHA) — The Ordinary Ácido Salicílico 2% o Neutrogena Rapid Clear o The Ordinary Ácido Láctico 5%':{amazon:320,ml:270},
@@ -3070,8 +3119,11 @@ function lcItemId(cat,txt){ return 'lc-'+cat+'-'+lcSlug(txt); }
 function lcCatProgress(cat,checks){
   const data=LISTA_COMPRAS[cat];
   const items=Array.isArray(data)?data:Object.values(data).flat();
-  const done=items.filter(txt=>checks[lcItemId(cat,txt)]).length;
-  return {done,total:items.length};
+  // Lo marcado como "ya lo tengo" cuenta como resuelto y sale del denominador: si no, la pestaña
+  // seguiría diciendo que faltan cosas que ya están en casa (2026-08-20).
+  const pend=items.filter(txt=>!(lcTengoCat(cat)&&lcTengo(lcItemId(cat,txt))));
+  const done=pend.filter(txt=>checks[lcItemId(cat,txt)]).length;
+  return {done,total:pend.length};
 }
 function renderListaCatTabs(){
   const checks=rawGet('dash-lista-compras',{});
@@ -3156,6 +3208,47 @@ function lcQty(id){
 // El contador solo aparece donde se puede calcular un importe: productos de `comida` con entrada
 // en LISTA_COMPRAS_PRECIOS. En skincare/cabello/suplementos/libros no hay `monto` que multiplicar
 // —son compras de 1 pieza cada varios meses— así que ahí el checkbox se queda como estaba.
+// ── "Ya lo tengo" (2026-08-20) ────────────────────────────────────────────────
+// Son DOS preguntas distintas sobre el mismo producto —"¿lo llevo?" y "¿ya está en mi casa?"—,
+// así que son dos controles y dos claves. Lo que ya tienes no suma al total ni cuenta como
+// pendiente, pero sigue en la lista: borrarlo sería perder el catálogo.
+// Fuera de `comida` a propósito (2026-08-20, pedido explícito: "excluye esto que te digo de
+// supermercado"): en el súper todo se vuelve a comprar cada semana, ahí no significa nada.
+function lcTengoCat(cat){ return cat!=='comida'; }
+function lcTengo(id){ return !!rawGet('dash-lista-tengo',{})[id]; }
+function lcToggleTengo(cat,txt){
+  const id=lcItemId(cat,txt), t=rawGet('dash-lista-tengo',{});
+  if(t[id]) delete t[id]; else { t[id]=true; lcSetQty(id,0); }   // si ya lo tienes, no lo llevas
+  rawSet('dash-lista-tengo',t);
+  renderListaCompras();
+}
+// Total de una categoría que no es el súper: suma los precios de plataforma de lo marcado, y
+// dice cuántos de los marcados no tienen precio para que el número nunca aparente ser completo.
+function lcTotalCat(cat){
+  const data=LISTA_COMPRAS[cat];
+  const items=Array.isArray(data)?data:Object.values(data).flat();
+  let amazon=0, ml=0, n=0, sinPrecio=0, tengo=0;
+  items.forEach(txt=>{
+    const id=lcItemId(cat,txt);
+    if(lcTengo(id)){ tengo++; return; }
+    if(!lcQty(id)) return;
+    n++;
+    const o=cat==='libros'?LIBRO_PRECIO_TIPICO:LISTA_COMPRAS_PRECIOS_OTROS[txt];
+    if(o){ amazon+=o.amazon||0; ml+=o.ml||0; } else sinPrecio++;
+  });
+  return {amazon,ml,n,sinPrecio,tengo,total:items.length};
+}
+function lcTotalCatBarHtml(cat){
+  const t=lcTotalCat(cat);
+  const chips=(t.tengo?`<span class="lc-total-tengo">✓ ya tienes ${t.tengo}</span>`:'')+
+              (t.sinPrecio?`<span class="lc-total-falta" title="Esos productos todavía no tienen precio registrado, así que no están sumados arriba.">⚠ ${t.sinPrecio} sin precio</span>`:'');
+  if(!t.n) return `<span id="lcTotalBar" class="lc-total lc-total-vacio">🧮 Marca lo que vas a llevar y aquí sale el total ${chips}</span>`;
+  return `<span id="lcTotalBar" class="lc-total">
+    <span class="lc-total-main" title="Suma de los precios estimados de lo que marcaste">🧮 ≈${money(t.amazon)} <small>Amazon</small></span>
+    <span class="lc-total-mes" title="Los mismos productos en Mercado Libre">≈${money(t.ml)} <small>M. Libre</small></span>
+    <span class="lc-total-sub">${t.n} producto${t.n===1?'':'s'} marcado${t.n===1?'':'s'}</span>
+    ${chips}</span>`;
+}
 function lcTieneQty(cat,txt){ return cat==='comida'&&!!LISTA_COMPRAS_PRECIOS[txt]; }
 function lcSetQty(id,n){
   const c=rawGet('dash-lista-compras',{});
@@ -3199,11 +3292,17 @@ function lcItemHtml(cat,txt,conLinkAmazon){
     // `sem` sigue vivo y no se toca: es lo que usa lcTotalComida() para prorratear cada producto
     // y calcular el "Al mes" de la barra de totales — solo dejó de pintarse en cada renglón.
   }
-  return `<div class="lc-item" id="${id}-row">
-    <input type="checkbox" id="${id}" ${checked} onchange="toggleListaItem('${id}','${cat}','${txt.replace(/'/g,"\\'")}')">
+  const tengo=lcTengoCat(cat)&&lcTengo(id);
+  const tengoBtn=lcTengoCat(cat)
+    ? `<button class="lc-tengo-btn${tengo?' on':''}" onclick="lcToggleTengo('${cat}','${txt.replace(/'/g,"\\'")}')"
+        title="${tengo?'Marcado como que ya lo tienes — no suma al total':'Márcalo si ya lo tienes en casa: sale del total y de los pendientes'}">${tengo?'✓ Ya lo tengo':'Ya lo tengo'}</button>`
+    : '';
+  return `<div class="lc-item${tengo?' lc-item-tengo':''}" id="${id}-row">
+    <input type="checkbox" id="${id}" ${checked} ${tengo?'disabled':''} onchange="toggleListaItem('${id}','${cat}','${txt.replace(/'/g,"\\'")}')">
     <label for="${id}" class="lc-item-txt">${txt}</label>
     ${lcPrecioHtml(cat,txt)}
     ${qtyHtml}
+    ${tengoBtn}
     ${shopHtml}
   </div>`;
 }
@@ -3290,7 +3389,7 @@ function renderListaCompras(){
   const data=LISTA_COMPRAS[listaCatSel];
   const conLinkAmazon=LC_AMAZON_CATS.includes(listaCatSel);
   const esComida=listaCatSel==='comida';
-  const barra=`<div class="lc-toolbar">${esComida?lcTotalBarHtml(checks):'<span></span>'}<button class="lc-clear-btn" onclick="vaciarListaCat('${listaCatSel}')">🗑️ Vaciar marcados</button></div>`;
+  const barra=`<div class="lc-toolbar">${esComida?lcTotalBarHtml(checks):lcTotalCatBarHtml(listaCatSel)}<button class="lc-clear-btn" onclick="vaciarListaCat('${listaCatSel}')">🗑️ Vaciar marcados</button></div>`;
   // Leyenda por categoría (2026-08-12): comida explica real/estimado + las 3 formas de venta;
   // el resto explica que los 2 precios son por plataforma y siempre aproximados.
   const leyenda=esComida
@@ -3302,7 +3401,9 @@ function renderListaCompras(){
          <b style="color:var(--text2)">"Al mes"</b> no es el ticket ×4: cada producto se prorratea por lo que dura
        </div>`
     : `<div class="lc-price-leyenda">
-         <span class="lc-price lc-price-est">≈ $</span> precio de lista aproximado (ago-2026) en cada plataforma — cambia seguido, toca el nombre del producto para ver el precio real del momento
+         <span class="lc-price lc-price-est">≈ $</span> precio aproximado en cada plataforma &nbsp;·&nbsp;
+         marca lo que vas a llevar y <b style="color:var(--text2)">se va sumando arriba</b> &nbsp;·&nbsp;
+         <b style="color:var(--text2)">"Ya lo tengo"</b> lo saca del total y de los pendientes, sin borrarlo de la lista
        </div>`;
   const html=Array.isArray(data)
     ? `<div>${lcRenderItems(listaCatSel,data,checks,conLinkAmazon)}</div>`
