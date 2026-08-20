@@ -110,3 +110,15 @@ Resultado en Dataclasses: el subtítulo ahora dice *"Un atajo para las clases qu
 El bloque flotante `#btnVolverDash` (`position:fixed`, fondo oscuro propio, z-index 9999) que se había insertado esta mañana **se encimaba sobre el buscador y el botón "↺ Reset"** y no seguía el tema de este archivo. Se retiró junto con su `<style>`: ahora el enlace es un botón con el 🚀 junto al de tema, con la clase `.btn-theme` que ya usan sus vecinos, así que hereda tema y estilos sin CSS nuevo.
 
 Detalle completo y medición en `../Dashboard/readme_dashboard.md` → "El botón de Dashboard deja de flotar".
+
+## Deep-link por hash (2026-08-19)
+
+*"mi meta en dashboard del istqb gen ai no cuando doy click para que me mande al html que tiene esa seccion, no me abre bien, no me muestra eso"*.
+
+Este archivo no leía la URL: daba igual con qué enlace llegaras, siempre abría en la pantalla de bienvenida. El Dashboard enlaza aquí desde la meta de la certificación **ISTQB CT-GenAI**, y el resultado era caer en la portada sin ninguna pista de a dónde ir.
+
+`irDesdeHash()`, al final de `js/ui.js`, acepta `#<id-de-tema>` (`#istqb-ch4`) y también `#<data-mod>` (`#istqb`, que abre el primer capítulo de ese módulo). La segunda forma es la que conviene usar desde fuera: **los ids de tema cambian al reordenar un módulo, el `data-mod` no**.
+
+Antes de llamar a `go()` despliega el módulo que contiene el destino y hace `scrollIntoView` del enlace — sin eso la página abre pero el sidebar no señala dónde estás, que es justo lo que hace pensar que el enlace falló. Está enganchada a `hashchange` además de correr en el arranque, y **tiene prioridad sobre el `go('wayve-plan')` de primera visita**.
+
+Un hash que no corresponde a ningún tema ni módulo devuelve `false` y no toca nada.

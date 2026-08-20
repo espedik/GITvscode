@@ -231,8 +231,44 @@ enhanceExampleColumns();
 refreshSidebar();
 refreshProgress();
 updateThemeIcon(document.documentElement.getAttribute('data-theme'));
-// Auto-navigate to study plan on first load (reset key so it opens again)
-if (!localStorage.getItem('wayve-visited-v2')) {
+// ═════════════════════════════════════════════════
+//  DEEP-LINK POR HASH (2026-08-19)
+// ═════════════════════════════════════════════════
+// `entrevistas.html#istqb-ch1` abre ese tema directo; `#istqb` abre el módulo completo en su
+// primer capítulo. Lo pidió Adán: desde su meta de la certificación CT-GenAI, el Dashboard
+// enlazaba aquí y caía en la pantalla de bienvenida — "no me abre bien, no me muestra eso" —
+// porque este archivo nunca había leído la URL. Acepta las dos formas a propósito: los ids de
+// tema cambian cuando se reordena un módulo, el `data-mod` no.
+function irDesdeHash() {
+  const id = decodeURIComponent((location.hash || '').replace(/^#/, '')).trim();
+  if (!id) return false;
+
+  // ¿es un tema? -> existe su página. ¿es un módulo? -> su primer tema.
+  let destino = document.getElementById('page-' + id) ? id : null;
+  if (!destino) {
+    const mod = document.querySelector('.module[data-mod="' + id.replace(/["\\]/g, '') + '"]');
+    const primero = mod && mod.querySelector('.s-link');
+    const m = primero && (primero.getAttribute('onclick') || '').match(/go\('([^']+)'\)/);
+    if (m) destino = m[1];
+  }
+  if (!destino) return false;
+
+  // El módulo que lo contiene puede estar plegado: sin esto se abre la página pero el sidebar
+  // no muestra dónde está parado, que es justo lo que hace sentir que "no abrió bien".
+  const link = [...document.querySelectorAll('.s-link')]
+    .find(l => (l.getAttribute('onclick') || '').includes("'" + destino + "'"));
+  const header = link && link.closest('.module') && link.closest('.module').querySelector('.module-header');
+  if (header && !header.classList.contains('open')) toggleMod(header);
+
+  go(destino);
+  if (link) link.scrollIntoView({ block: 'center' });
+  return true;
+}
+window.addEventListener('hashchange', irDesdeHash);
+
+// El deep-link gana a la bienvenida de primera visita: si vienes con una URL concreta, es a eso
+// a lo que vienes.
+if (!irDesdeHash() && !localStorage.getItem('wayve-visited-v2')) {
   localStorage.setItem('wayve-visited-v2', '1');
   go('wayve-plan');
 }

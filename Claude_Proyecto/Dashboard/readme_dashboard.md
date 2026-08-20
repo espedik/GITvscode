@@ -2772,3 +2772,49 @@ El escritorio no se movió, que era la condición: ahí ya se veía bien. Compro
 ### Nota de método, porque costó un commit
 
 La primera versión de esta misma sección se escribió con `python -c "…"` desde bash, y **bash expandió los backticks del texto como sustitución de comandos** antes de que Python los viera: cada `` `.lc-grid` `` y cada `` `min-width:0` `` desapareció del archivo, dejando frases cortadas a la mitad. Es la misma familia de trampa que el `$` en `String.prototype.replace` ya documentada aquí. Regla: cualquier texto con backticks, `$` o paréntesis va en un archivo `.py`, nunca en un `python -c` entre comillas dobles.
+
+## La meta CT-GenAI ahora abre material de verdad (2026-08-19)
+
+*"mi meta en dashboard del istqb gen ai no cuando doy click para que me mande al html que tiene esa seccion, no me abre bien, no me muestra eso. ademas no me abres ningun syllabus genai ni nada, ademas ya agende el examen de brightest"*.
+
+Tres cosas, y las dos primeras eran fallas reales de la versión de esta mañana.
+
+### El enlace a Entrevistas caía en la bienvenida
+
+`entrevistas.html` **nunca había leído la URL**: no miraba `hash` ni parámetros. Enlazar ahí abría el archivo en su pantalla de bienvenida, sin ninguna señal de a dónde ir — de ahí el "no me abre bien, no me muestra eso". La nota anterior de este readme lo daba por sabido y lo dejaba como pendiente; ya no lo es.
+
+`irDesdeHash()` en `Entrevistas/js/ui.js` acepta **dos formas**:
+
+| URL | Qué hace |
+|---|---|
+| `entrevistas.html#istqb` | abre el módulo ISTQB en su primer capítulo |
+| `entrevistas.html#istqb-ch4` | abre ese capítulo concreto |
+
+Acepta el id del módulo (`data-mod`) además del id del tema a propósito: **los ids de tema cambian cuando se reordena un módulo, el `data-mod` no**, así que el enlace del Dashboard usa `#istqb` y sobrevive a que mañana se añada un capítulo.
+
+Dos detalles que decidían si el enlace "se siente" bien: **despliega el módulo** si estaba plegado (si no, la página abre pero el sidebar no muestra dónde estás parado, que es exactamente la sensación de que no funcionó) y hace `scrollIntoView` del enlace activo. Va enganchado también a `hashchange`, no solo a la carga. Y **gana a la bienvenida de primera visita**: si llegas con una URL concreta, es a eso a lo que vienes.
+
+Un hash desconocido no rompe nada: la función devuelve `false` y la página se queda como estaba.
+
+### No abría ningún syllabus
+
+El paso del temario apuntaba a `istqb.org/certifications/` — la portada del catálogo, no un syllabus. Ahora la meta enlaza a **material descargable verificado**, no a portadas:
+
+| Enlace | Qué es |
+|---|---|
+| `ISTQB-CT-GenAI-Syllabus-v1.1.pdf` | el syllabus completo v1.1 (918 KB, comprobado que descarga) |
+| `Sample-Exam-A-Questions_v1.1.pdf` | examen de muestra oficial, 40 preguntas |
+| `Sample-Exam-A-Answers_v1.1.pdf` | sus respuestas razonadas |
+| ASTQB · reglas del examen | número de preguntas, duración y prerrequisitos |
+
+Y dos pasos nuevos con el método, que es lo que faltaba para que la meta sirviera: **hacer el examen de muestra antes de estudiar** —en 40 preguntas te dice qué ya sabes y qué no— y revisar las respuestas después de contestar, nunca mientras.
+
+Se añadió además un dato que no estaba y que le aplica directo: el examen dura 60 minutos, pero **él tiene 75** — ISTQB da 15 minutos extra a quien presenta en un idioma que no es el suyo. Son casi 2 minutos por pregunta.
+
+### El examen ya está agendado
+
+El último paso era *"Ponle fecha"*. Ya no aplica: lo agendó con Brightest. Ahora ese paso es el plan de estudio —muestra primero, capítulos fallados después, segundo set la semana del examen— y deja anotado que **falta la fecha exacta de presentación**, que es el dato que convertiría esto en una cuenta regresiva como la de los días a 2030.
+
+### Verificación
+
+`#istqb`, `#istqb-ch1` y `#istqb-ch4` abren la página correcta con el módulo desplegado y el enlace marcado como activo; `hashchange` en caliente también; sin hash se conserva el comportamiento de siempre; un hash inexistente no navega ni rompe. La meta abre con **9 pasos y 6 enlaces**, y cero errores de consola.
