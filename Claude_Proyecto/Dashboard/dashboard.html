@@ -1927,6 +1927,21 @@ function rawSet(key,obj){localStorage.setItem(key,JSON.stringify(obj));}
 // pone la bandera todavía (para poder corregirlo en cuanto sí exista, sin importar quién abra
 // primero). Una vez corregido, no se vuelve a tocar — si Adán paga más y baja de $9,000 por su
 // cuenta, esto no se lo revierte en una carga futura.
+// Mismo patrón que fixBanamexIfNeeded(): la semilla nueva no sirve de nada si el navegador ya
+// tiene datos guardados, y los de Adán los tiene desde hace meses. Esto corrige la tasa DENTRO de
+// `finanzasmx_v2`, y solo si sigue en el 10 original — si alguna vez la ajusta a mano, no se pisa.
+function fixTasaTCIfNeeded(){
+  const fin=tryParse('finanzasmx_v2',null);
+  if(!fin||!Array.isArray(fin.debts)) return;
+  let toco=false;
+  fin.debts.forEach(d=>{
+    if(d.type==='credit_card' && +d.rate===10){ d.rate=55.7; toco=true; }
+  });
+  if(toco){
+    try{ localStorage.setItem('finanzasmx_v2',JSON.stringify(fin)); }catch(e){}
+    D.fin=fin;
+  }
+}
 function fixBanamexIfNeeded(){
   if(localStorage.getItem('finanzasmx_v2_banamex9k')) return;
   const fin=rawGet('finanzasmx_v2', null);
@@ -5301,6 +5316,22 @@ function kpiDetalle(id){
       (iniInt>0?kpiSec('📉 Lo que ya dejaste de pagar')+
         '<div class="kpi-desglose">'+kpiBarra('Reducción desde el saldo original', Math.round(bajada)+'%', bajada, V,
           'Cuando debías el total pagabas '+money(iniInt)+'/mes de intereses. Hoy pagas '+money(mesInt)+' — <b>'+money(iniInt-mesInt)+' menos cada mes</b>.')+'</div>':'')+
+      // El hallazgo que ningún medidor decía: si el pago mensual no supera al interés, el saldo
+      // no baja nunca. Se compara `min` (el pago programado) contra el interés de esa misma deuda.
+      (function(){
+        const conPago=conTasa.filter(d=>d.balance>0&&+d.min>0);
+        if(!conPago.length) return '';
+        return kpiSec('⚠️ Tu pago contra tu interés')+conPago.map(d=>{
+          const im=d.balance*(d.rate/100)/12, pg=+d.min, baja=pg-im;
+          const cuota=n=>{ const i=(d.rate/100)/12; return d.balance*i/(1-Math.pow(1+i,-n)); };
+          return kpiPaso(esc(d.name)+' · pagas '+money(pg)+' al mes',
+            baja>0
+              ? 'De ese pago, <b>'+money(im)+' son intereses</b> y solo <b>'+money(baja)+' bajan el saldo</b>. A este ritmo tardarías años en liquidarla.'
+              : 'De ese pago, <b>'+money(im)+' son intereses</b>: no baja el saldo <b>ni un peso</b>. Llevas pagando desde '+(d.start||'hace tiempo')+' y debes lo mismo que el primer día — todo se va en renta del dinero.',
+            baja>0?'var(--o)':'var(--r)')+
+            kpiNota('Para liquidarla de verdad: <b>'+money(cuota(24))+'/mes la cierra en 2 años</b>, o '+money(cuota(12))+'/mes en 1. Cualquier peso por encima de '+money(im)+' es el único que trabaja para ti.');
+        }).join('');
+      })()+
       (mesInt>0?
         kpiSec('🎯 Cómo bajarlo')+
         kpiPaso('Cada abono extra vale doble','Abonar <b>'+money(1000)+'</b> a '+(peor?esc(peor.name):'tu deuda más cara')+' te ahorra <b>'+money(ahorro1k)+' al año</b> de intereses, para siempre. No hay inversión que te dé ese rendimiento garantizado: por eso la deuda cara va antes que invertir.',R)+
@@ -6761,7 +6792,7 @@ setInterval(tickClock,1000);
 buildDots();
 buildHudNav();
 const _settings=loadSettings();
-fixBanamexIfNeeded();
+fixTasaTCIfNeeded(); fixBanamexIfNeeded();
 fixPagos20260813IfNeeded();
 fixMsiBBVA20260813IfNeeded();
   fixAhorro20260817IfNeeded();

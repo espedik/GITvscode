@@ -4012,10 +4012,19 @@ function seedData() {
       {id:'b010',cat:'Salud',           limit:1800}
     ],
     debts: [
-      {id:'d001',name:'Tarjeta BBVA',                  type:'credit_card',total:32343.31,  balance:32343.31,  rate:10,    min:1500, day:11,start:'2024-01-22'},
+      // rate 10 -> 55.7 (2026-08-19). El 10% anual daba $270/mes de intereses, y Adán reportó
+      // ~$1,500. Sus propios registros lo confirman sin necesidad de creerle a nadie: esta
+      // tarjeta lleva `total == balance` desde el 22-ene-2024 pagando $1,500 al mes — 31 meses,
+      // $46,500 pagados, saldo intacto. Si el saldo no baja, el interés mensual ES el pago:
+      // 1500 × 12 / 32,343.31 = 55.7% anual, que es una tasa normal de tarjeta en México.
+      // ⚠️ Confirmar contra el estado de cuenta (ahí viene la tasa y el CAT) y ajustar si difiere.
+      {id:'d001',name:'Tarjeta BBVA',                  type:'credit_card',total:32343.31,  balance:32343.31,  rate:55.7,  min:1500, day:11,start:'2024-01-22'},
       // Liquidada el 13 ago 2026 — Adán pagó el saldo completo. Se conserva en la lista
       // como registro (la tarjeta sigue existiendo), pero ya no exige mínimo ni interés.
-      {id:'d002',name:'Tarjeta Banamex',               type:'credit_card',total:14349.72,  balance:0,         rate:10,    min:810,  day:8, start:'2024-06-18', noInterest:0},
+      // Misma corrección por coherencia; está liquidada (balance 0), así que su tasa ya no
+      // afecta a ningún interés vivo — solo al histórico. 55.7 es un supuesto tomado de la BBVA,
+      // no un dato medido de esta tarjeta.
+      {id:'d002',name:'Tarjeta Banamex',               type:'credit_card',total:14349.72,  balance:0,         rate:55.7,  min:810,  day:8, start:'2024-06-18', noInterest:0},
       {id:'d003',name:'Crédito Automotriz',            type:'car',        total:315800,    balance:299000,    rate:12.99, min:6700, day:1, start:'2026-01-01', remainingMonths:61},
       // Quedan 2 cuotas: 18 ago y 18 sep 2026 (confirmado por Adán el 13 ago 2026).
       {id:'d004',name:'Apple Watch MSI (TC Banamex)',  type:'other',      total:10248,     balance:1708,      rate:0,     min:854,  day:18,start:'2025-09-16'},

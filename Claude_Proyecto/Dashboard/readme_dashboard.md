@@ -2947,3 +2947,41 @@ La barra del medidor no mide "cuánto interés pagas" (eso no tiene meta), sino 
 ### Verificación
 
 Con los mismos datos sembrados: el medidor muestra **$1,213 al mes · $14,554 al año**, y su panel abre con 2 barras, 3 secciones, 1 paso y 2 notas, sin `undefined` ni `NaN`. Los otros 7 siguen intactos. 0 desbordes en 1600px, 820px y 390px; sin errores de consola.
+
+## La tasa de las tarjetas estaba en 10% — y el pago de la BBVA no amortiza nada (2026-08-19)
+
+*"intereses son como 1500 al mes de bbva, por que debo como 32,000"*.
+
+Tenía razón, y el error era grande: `d001` (Tarjeta BBVA) estaba registrada con **`rate:10`**. Al 10% anual, un saldo de $32,343 genera **$270 al mes** de intereses. Él reportó ~$1,500. Factor de error: **5.5×**.
+
+### La confirmación no vino de creerle, vino de sus propios datos
+
+La deuda lleva registrada `total == balance == 32,343.31` desde el **22-ene-2024**, con un pago de `min:1500` al mes que aparece puntualmente en las transacciones de cada mes.
+
+| | |
+|---|---|
+| Meses pagando | **31** |
+| Pagado en total | **$46,500** |
+| Saldo hoy | **$32,343.31** — el mismo del primer día |
+
+Un saldo que no se mueve pagando $1,500 al mes solo puede significar una cosa: **el interés mensual es igual al pago**. De ahí sale la tasa: `1500 × 12 ÷ 32,343.31 = 55.7% anual`, que es una tasa perfectamente normal para una tarjeta en México — y la que hacía falta para que las cuentas cuadraran con lo que él ve en su estado de cuenta.
+
+Corregido a **55.7%** en `d001` y, por coherencia, en `d002` (Banamex, ya liquidada: su tasa solo afecta al histórico, y ese 55.7 es un supuesto tomado de la BBVA, no un dato medido de esa tarjeta). **Falta confirmarlo contra el estado de cuenta**, que trae la tasa y el CAT reales.
+
+### El hallazgo que ningún medidor decía
+
+El panel de intereses gana una sección nueva, **"Tu pago contra tu interés"**, que compara el pago programado de cada deuda (`min`) con lo que esa deuda genera de interés:
+
+> **Tarjeta BBVA · pagas $1,500 al mes**
+> De ese pago, **$1,501 son intereses**: no baja el saldo **ni un peso**. Llevas pagando desde 2024-01-22 y debes lo mismo que el primer día — todo se va en renta del dinero.
+> Para liquidarla de verdad: **$2,263/mes la cierra en 2 años**, o $3,576/mes en 1. Cualquier peso por encima de $1,501 es el único que trabaja para ti.
+
+Las cuotas salen de la fórmula de amortización real (`P·i / (1 − (1+i)^−n)`), no de dividir el saldo entre los meses.
+
+### Que el arreglo llegue a su navegador
+
+Cambiar la semilla de `Finanzas.html` no sirve de nada cuando el navegador ya tiene datos guardados desde hace meses. Por eso va acompañado de `fixTasaTCIfNeeded()`, mismo patrón que `fixBanamexIfNeeded()`: corrige la tasa **dentro de `finanzasmx_v2`**, y solo si sigue en el 10 original — si alguna vez la ajusta a mano, no se pisa.
+
+### Verificación
+
+Sembrando sus datos **con el `rate:10` viejo**, al abrir el Dashboard la tasa queda en 55.7 sola, el medidor pasa de $270 a **$1,501 al mes · $18,015 al año** —el número que él dijo— y el panel muestra las tres secciones nuevas sin `undefined` ni `NaN`. Sin errores de consola.

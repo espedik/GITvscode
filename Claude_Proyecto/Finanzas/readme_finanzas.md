@@ -883,3 +883,15 @@ Verificado con Playwright: Restaurantes ya no aparece, Entretenimiento conserva 
 El bloque flotante `#btnVolverDash` (`position:fixed`, fondo oscuro propio, z-index 9999) que se había insertado esta mañana **se encimaba sobre el botón "+ Nueva transacción"** y no seguía el tema de este archivo. Se retiró junto con su `<style>`: ahora el enlace es un botón redondo con el 🚀 antes del de tema, con la clase `.theme-toggle-btn` que ya usan sus vecinos, así que hereda tema y estilos sin CSS nuevo.
 
 Detalle completo y medición en `../Dashboard/readme_dashboard.md` → "El botón de Dashboard deja de flotar".
+
+## La tasa de las tarjetas estaba en 10% anual (2026-08-19)
+
+*"intereses son como 1500 al mes de bbva, por que debo como 32,000"*.
+
+`d001` (Tarjeta BBVA) tenía **`rate:10`**, que sobre $32,343 da $270/mes de intereses. Lo real son ~$1,500.
+
+Lo confirman los propios registros de este archivo: la deuda lleva `total == balance == 32,343.31` desde el **22-ene-2024** con un pago de $1,500 mensual que aparece en las transacciones de cada mes. **31 meses, $46,500 pagados, saldo intacto** — eso solo pasa si el interés se come el pago completo. Tasa implícita: `1500 × 12 ÷ 32,343.31 = 55.7% anual`.
+
+Corregido a **55.7** en `d001` y en `d002` (Banamex, liquidada — ahí es un supuesto tomado de la BBVA, no un dato medido). **Pendiente confirmarlo contra el estado de cuenta**, que trae la tasa y el CAT reales; si difiere, se ajusta aquí y todo lo demás lo sigue solo.
+
+Como la semilla no alcanza a los navegadores que ya tienen datos guardados, el Dashboard lleva `fixTasaTCIfNeeded()`, que corrige el valor dentro de `finanzasmx_v2` solo si sigue en el 10 original (ver `../Dashboard/readme_dashboard.md`). Este dato alimenta el medidor "🔥 Intereses este mes" y su panel, que ahora avisa de que **el pago de $1,500 no amortiza nada**.
