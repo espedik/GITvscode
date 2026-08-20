@@ -2740,23 +2740,23 @@ Verificado en 1600px y 390px: la tarjeta entra en el grid, la imagen carga (800 
 
 *"sigue sin verse bien la version de ipad de la lista de compras, no se ve ordenada se ve bien descuadrada"*.
 
-El arreglo anterior fue en ; esto es otra pantalla — el slide **🛒 Lista de Compras** del Dashboard. Aquí el problema era el grid de productos, , fijado a **3 columnas** pasara lo que pasara.
+El arreglo anterior fue en `comida.html`; esto es otra pantalla — el slide **🛒 Lista de Compras** del Dashboard. Aquí el problema era el grid de productos, `.lc-grid`, fijado a **3 columnas** pasara lo que pasara.
 
-Cada renglón lleva 4 piezas en fila: casilla, nombre, píldora de precio y contador . Eso entra en una línea a partir de unos **340 px de columna**. Con 3 columnas fijas:
+Cada renglón lleva 4 piezas en fila: casilla, nombre, píldora de precio y contador `− n +`. Eso entra en una sola línea a partir de unos **340 px de columna**. Con 3 columnas fijas:
 
 | | Ancho de columna | Alturas de renglón |
 |---|---|---|
 | Escritorio 1600px | 422 px | 31 px — todas iguales |
 | **iPad horizontal 1180px** | **284 px** | **56 px — los 30 partidos en dos líneas** |
 | **iPad vertical 820px** | **333 px** | **30, 36 y 56 px mezcladas** |
-| iPhone 390px | 329 px | 30, 35 y 55 mezcladas |
+| iPhone 390px | 329 px | 30, 35 y 55 px mezcladas |
 
 El caso feo es el de en medio: unos renglones caben en una línea y otros no, así que la cuadrícula quedaba con filas de tres alturas distintas. De ahí el "descuadrado" — no era un desbordamiento, era que la mitad de los renglones se partía y la otra mitad no.
 
-**Dos cambios y ninguna regla nueva de breakpoint:**
+**Dos cambios, y ninguna regla nueva de breakpoint:**
 
-1.  — el número de columnas lo decide el ancho disponible. 340 px es el ancho medido en que un renglón entra en una sola línea.
-2.  pasa de  a . Ese piso era el culpable de fondo: sin poder encogerse, el nombre empujaba el precio y el contador a una segunda fila en cuanto la columna bajaba de ~420 px. Con  el nombre cede el espacio justo y nada salta. ( pasa además a , que era lo que hacía ver los contadores desalineados respecto al texto.)
+1. `grid-template-columns:repeat(auto-fill,minmax(340px,1fr))` — el número de columnas lo decide el ancho disponible. Los 340 px son el ancho medido en que un renglón entra en una sola línea.
+2. `.lc-item-txt` pasa de `min-width:140px` a `min-width:0`. Ese piso era el culpable de fondo: sin poder encogerse, el nombre empujaba el precio y el contador a una segunda fila en cuanto la columna bajaba de unos 420 px. Con `min-width:0` el nombre cede el espacio justo y nada salta. (`.lc-item` pasa además a `align-items:center`, que era lo que dejaba los contadores desalineados respecto al texto.)
 
 ### Resultado medido
 
@@ -2768,3 +2768,7 @@ El caso feo es el de en medio: unos renglones caben en una línea y otros no, as
 | iPhone 390px | 1 col · **3 alturas** | **1 col · 1 altura** |
 
 El escritorio no se movió, que era la condición: ahí ya se veía bien. Comprobadas las **7 categorías** en iPad: 0 textos recortados y 0 desbordes en todas, sin errores de consola. Skincare, Higiene, Ojos y Libros conservan renglones de altura distinta, pero por una razón legítima que no es descuadre: sus nombres ocupan una, dos o tres líneas y llevan además los enlaces de tienda en una fila propia.
+
+### Nota de método, porque costó un commit
+
+La primera versión de esta misma sección se escribió con `python -c "…"` desde bash, y **bash expandió los backticks del texto como sustitución de comandos** antes de que Python los viera: cada `` `.lc-grid` `` y cada `` `min-width:0` `` desapareció del archivo, dejando frases cortadas a la mitad. Es la misma familia de trampa que el `$` en `String.prototype.replace` ya documentada aquí. Regla: cualquier texto con backticks, `$` o paréntesis va en un archivo `.py`, nunca en un `python -c` entre comillas dobles.

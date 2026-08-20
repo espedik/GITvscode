@@ -22,6 +22,7 @@ Los `.html` de `Claude_Proyecto/` son archivos grandes (`dashboard.html` pasa de
 - **Escribir a un temporal y `os.replace` al final.** `open(p,'w')` trunca el archivo *antes* de escribir: si el `write` falla a mitad (un emoji escrito como par subrogado, por ejemplo), el archivo se queda en 0 bytes. Ya pasó una vez con `dashboard.html`.
 - Copiar el archivo al scratchpad antes de tocarlo, y comparar con `diff` al final: solo deben aparecer las líneas que se quisieron cambiar.
 - `String.prototype.replace` de JavaScript interpreta `$&`, `` $` ``, `$'` y `$1` en el string de reemplazo. Si el texto insertado lleva `$` (y aquí casi siempre lleva, son cifras), pasar una **función** de reemplazo.
+- **Nunca meter texto largo en `python -c "…"` desde bash.** Bash expande lo que hay entre backticks como sustitución de comandos y también toca `$` y los paréntesis: un párrafo de documentación que mencione `` `.lc-grid` `` llega a Python ya mutilado, con las frases cortadas. Pasó el 2026-08-19 con `readme_dashboard.md` y costó rehacer el commit. El script va en un archivo `.py` en el scratchpad y se ejecuta con `python archivo.py`.
 
 ## Verificar en el navegador
 
