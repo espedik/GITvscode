@@ -5284,16 +5284,41 @@ function kpiDetalle(id){
     const goal=(F.goals||[]).find(x=>x.id==='g001'||/maestr/i.test(x.name||''));
     const cur=goal?(+goal.current||0):0, tgt=goal?(+goal.target||0):0;
     const pct=tgt>0?cur/tgt*100:0, falta=Math.max(0,tgt-cur);
-    return {titulo:'🎓 Fondo de la Maestría', sub:'Lo ahorrado, lo que falta y por qué ahora mismo no aportas.',
+    // Fechas reales de la meta: la pausa y el plazo salen del propio registro, no de un texto.
+    const fReanuda=goal&&goal.pausadaHasta?new Date(goal.pausadaHasta+'T00:00:00'):null;
+    const fMeta=goal&&goal.date?new Date(goal.date+'T00:00:00'):null;
+    const hoy=new Date();
+    const mesesPausa=fReanuda?Math.max(0,Math.round((fReanuda-hoy)/(86400000*30.44))):0;
+    const mesesUtiles=(fReanuda&&fMeta)?Math.max(1,Math.round((fMeta-fReanuda)/(86400000*30.44))):0;
+    const ritmo=mesesUtiles?falta/mesesUtiles:0;
+    const fmtF=d=>d?d.toLocaleDateString('es-MX',{month:'long',year:'numeric'}):'—';
+    // Lo que Finanzas SÍ tiene trazado como inversión, para poder decir si el fondo está ahí.
+    const invLista=inv.map(i=>({n:i.name,v:+i.value||+i.invested||0}));
+    const invTotal=invLista.reduce((a,x)=>a+x.v,0);
+
+    return {titulo:'🎓 Fondo de la Maestría', sub:'De qué se compone, qué falta y a qué ritmo tendría que ir.',
       html:
       '<div class="kpi-cifra" style="color:'+C+'">'+money(cur)+' <span style="font-size:14px;color:var(--text3)">de '+money(tgt)+'</span></div>'+
       '<div class="kpi-cifra-sub">'+Math.round(pct)+'% de la meta · faltan <b>'+money(falta)+'</b></div>'+
-      kpiSec('📊 De dónde sale')+
-      '<div class="kpi-desglose">'+kpiBarra('Ahorrado para la maestría', money(cur), pct, C,
-        goal?'Meta registrada en Finanzas → Metas':'Sin meta registrada en Finanzas')+'</div>'+
-      kpiSec('⏸️ Por qué está en pausa')+
-      kpiPaso('Decisión ya tomada, no un olvido','Las aportaciones están <b>pausadas un año</b> (hasta jul-2027) y la meta se movió a oct-2028. Los '+money(cur)+' ya ahorrados <b>quedan intactos</b>: no se tocan para nada más. La prioridad de este año es fondo de emergencia y deuda cara — ese orden es el que hace que la maestría sea posible después, no el que la retrasa.',C)+
-      kpiNota('Está documentado en Coach → Plan Maestro (checklist s0-6). Si algún día decides retomar antes, cámbialo ahí y este medidor lo refleja solo.')};
+
+      kpiSec('📊 Cómo se reparte la meta')+
+      '<div class="kpi-desglose">'+
+        kpiBarra('Ya ahorrado', money(cur), pct, V, 'Quieto e invertido desde la pausa — no se toca para nada más')+
+        kpiBarra('Lo que falta', money(falta), 100-pct, O, 'Es '+(cur>0?(falta/cur).toFixed(1):'—')+' veces lo que llevas')+
+      '</div>'+
+
+      kpiSec('🔍 Qué compone esos '+money(cur))+
+      kpiNota('⚠️ <b>Finanzas no lo tiene desglosado.</b> La meta guarda <b>una sola cifra</b> ('+money(cur)+'), sin instrumentos ni aportaciones ligadas. Lo único trazado como inversión son '+(invLista.length?invLista.map(x=>esc(x.n)+' '+money(x.v)).join(' y '):'ninguna inversión')+' — '+money(invTotal)+' en total, que <b>no es este fondo</b>. Para poder ver de qué se compone hay que registrar en Finanzas → Inversiones dónde está guardado ese dinero.')+
+      (invLista.length?'<div class="kpi-desglose">'+invLista.map(x=>kpiBarra(esc(x.n), money(x.v), invTotal>0?x.v/invTotal*100:0, P, 'Registrado en Finanzas → Inversiones')).join('')+'</div>':'')+
+
+      kpiSec('⏸️ Por qué ahora no aportas')+
+      kpiPaso('Decisión tomada, no un olvido','Las aportaciones están <b>pausadas hasta '+fmtF(fReanuda)+'</b>'+(mesesPausa?' (faltan '+mesesPausa+' meses)':'')+' y la meta se movió a <b>'+fmtF(fMeta)+'</b>. Los '+money(cur)+' quedan intactos. La prioridad de este año es fondo de emergencia y deuda cara — ese orden es el que hace posible la maestría después, no el que la retrasa.',C)+
+
+      (mesesUtiles?
+        kpiSec('📈 El ritmo que pediría la meta')+
+        kpiPaso('⚠️ Los números no cuadran con la fecha actual','Al reanudar en '+fmtF(fReanuda)+' quedarían <b>'+mesesUtiles+' meses</b> hasta '+fmtF(fMeta)+'. Para juntar los '+money(falta)+' que faltan habría que ahorrar <b>'+money(ritmo)+' al mes</b> — más de la mitad de todo lo que ganas, y eso sin contar renta, deuda ni comida.','var(--r)')+
+        kpiNota('Esto no significa renunciar: significa que <b>la fecha o el monto tendrán que moverse</b>, y es mejor saberlo hoy que en 2027. Tres salidas reales: correr la meta a 2030, bajar el objetivo a una maestría más barata (o con beca/DAAD), o financiar parte con ingreso nuevo en vez de con ahorro. Decidirlo es tarea de Coach → Plan Maestro, no de este panel.')
+        :'')};
   }
 
   if(id==='patrimonio'){

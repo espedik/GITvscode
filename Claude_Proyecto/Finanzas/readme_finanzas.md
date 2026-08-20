@@ -895,3 +895,13 @@ Lo confirman los propios registros de este archivo: la deuda lleva `total == bal
 Corregido a **55.7** en `d001` y en `d002` (Banamex, liquidada — ahí es un supuesto tomado de la BBVA, no un dato medido). **Pendiente confirmarlo contra el estado de cuenta**, que trae la tasa y el CAT reales; si difiere, se ajusta aquí y todo lo demás lo sigue solo.
 
 Como la semilla no alcanza a los navegadores que ya tienen datos guardados, el Dashboard lleva `fixTasaTCIfNeeded()`, que corrige el valor dentro de `finanzasmx_v2` solo si sigue en el 10 original (ver `../Dashboard/readme_dashboard.md`). Este dato alimenta el medidor "🔥 Intereses este mes" y su panel, que ahora avisa de que **el pago de $1,500 no amortiza nada**.
+
+## El fondo de la Maestría no está desglosado (2026-08-19)
+
+*"fondo de maestria no desglozaste las cantidades que conforman ese numero ni las barras de ellas, debes investigar en finanzas"*.
+
+Investigado aquí: la meta `g001` guarda **`current: 53740` como una sola cifra**. No hay instrumentos ligados a ella, ni historial de aportaciones, ni una cuenta asociada. Las únicas entradas de `investments` son CETES y un depósito de renta, que **no son ese fondo**.
+
+Es un hueco de datos real, no un fallo del Dashboard: **con lo que hay registrado es imposible decir de qué se compone**. Para poder verlo desglosado habría que dar de alta en **Finanzas → Inversiones** dónde está guardado ese dinero (qué instrumento, en qué institución y con qué saldo), y entonces el panel del Dashboard lo pintaría solo.
+
+Mientras tanto, el panel avisa de la limitación en vez de mostrar una barra única que aparente un desglose que no existe — ver `../Dashboard/readme_dashboard.md` → "Fondo Maestría".

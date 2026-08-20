@@ -3041,3 +3041,34 @@ El coche sigue contando donde corresponde: en **Deuda total** y en **Intereses e
 ### Verificación
 
 Con sus deudas reales sembradas (BBVA $32,343 al 55.7% y crédito automotriz $299,000 al 12.99% con 61 meses): el panel muestra el plazo y el interés total restante en el coche, mantiene la alarma en la tarjeta, y "Deuda cara" queda en $32,343 — solo la tarjeta, igual que su medidor. Sin `undefined` ni `NaN`, sin errores de consola.
+
+## Fondo Maestría: el desglose que faltaba, y el que no existe (2026-08-19)
+
+*"fondo de maestria no desglozaste las cantidades que conforman ese numero ni las barras de ellas, debes investigar en finanzas"*.
+
+Se investigó, y el resultado es en sí mismo el hallazgo: **en Finanzas ese número no está desglosado**. La meta `g001` guarda `current: 53740` como **una sola cifra**, sin instrumentos ligados, sin aportaciones históricas y sin cuentas asociadas. Lo único trazado como inversión son CETES y un depósito de renta, que ni suman esa cantidad ni pretenden ser ese fondo.
+
+El panel ahora **lo dice en vez de callarlo**, y muestra todo lo que sí se puede derivar:
+
+| Sección | Qué muestra |
+|---|---|
+| 📊 Cómo se reparte la meta | dos barras: lo ahorrado (11%) y lo que falta ($446,260, **8.3 veces** lo que lleva) |
+| 🔍 Qué compone esos $53,740 | el aviso de que Finanzas no lo tiene desglosado, con lo que sí está registrado como inversión y su barra |
+| ⏸️ Por qué ahora no aportas | la pausa, con **fechas leídas de la propia meta** (`pausadaHasta`, `date`), no de un texto fijo |
+| 📈 El ritmo que pediría la meta | lo que nadie había calculado |
+
+### El número que cambia la conversación
+
+Las fechas ya estaban en los datos, solo que nadie las había multiplicado:
+
+- Reanuda aportaciones en **julio de 2027**
+- Meta fechada en **octubre de 2028**
+- Quedan **14 meses útiles** para juntar **$446,260**
+
+Eso son **$31,876 al mes** — más de la mitad de todo lo que gana, sin contar renta, deuda ni comida. **La meta, con su fecha actual, no es alcanzable.**
+
+El panel no lo plantea como un fracaso sino como una decisión que conviene tomar hoy y no en 2027, con tres salidas concretas: correr la meta a 2030, bajar el objetivo (maestría más barata, beca, DAAD), o financiar parte con ingreso nuevo en vez de con ahorro. Y deja claro que **decidirlo es tarea de Coach → Plan Maestro**, no de un panel de lectura.
+
+### Verificación
+
+Con la meta real sembrada: 4 barras y 4 secciones, las fechas formateadas desde `pausadaHasta` y `date`, el ritmo calculado sobre los meses reales entre ambas, y ningún `undefined`, `NaN` ni `Invalid Date` — el riesgo de trabajar con fechas que pueden faltar. Sin errores de consola.
