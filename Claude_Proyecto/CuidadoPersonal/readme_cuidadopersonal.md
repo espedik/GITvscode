@@ -418,3 +418,45 @@ La clave de `LISTA_COMPRAS_PRECIOS_OTROS` se cambió junto con el nombre: si se 
 ### Verificación
 
 Las 4 tareas de rutina afectadas (`wd02lav`, `wd02co`, `wd09`, `do045`) son **las mismas en Dashboard y en Coach**, que llevan copias separadas de `RUTINA_TASKS` — comprobado comparando las dos listas, no leyéndolas. Cero menciones de TRESemmé en los 3 archivos, el renglón de la lista muestra sus dos precios y sus dos enlaces de tienda, y la sintaxis JS de los 3 archivos valida. Sin errores de consola.
+
+## La guía de cabello pasa de 9 secciones a una, ordenada por momento del día (2026-08-19)
+
+*"en este de cuidado de cabello hiciste muchas secciones, eso no me gusta, de preferencia de una pero dividela cuando y como debo usar cada producto, osea yo no se si en la mañana debo bañarme con shampoo y despues acondicionador y despues minoxidil o en la noche solo shampo […] yo no se nada, no soy experto, tu debes actuar como experto ayudandome a saber como usarlo y cuando"*.
+
+La guía tenía **9 secciones navegables**: Rutina de lavado · Tratamiento anticaída · Después de lavar · Calendario semanal · Qué esperar · Mascarilla · Qué evitar · Lista de compras · Consejos. Cada una decía algo cierto, y ninguna respondía su pregunta.
+
+El diagnóstico es de estructura, no de contenido: **la información estaba organizada por categoría de producto, y hace falta por orden de uso.** Saber que existe un "tratamiento anticaída" no dice si va antes o después de bañarte.
+
+### Ahora es un solo hilo, en el orden en que ocurre el día
+
+| | Momento | Qué responde |
+|---|---|---|
+| 📌 | Hoy es *(día)* | si **hoy** toca champú y cuál — calculado con la fecha real |
+| ☀️ 1 | En la ducha de la mañana | agua tibia → ¿champú hoy? → 2 min de masaje → acondicionador solo medios a puntas → esperar 1-2 min |
+| 💧 2 | Al salir, con el pelo aún húmedo | toalla a toques, crema sin enjuague, peine de dientes anchos |
+| 🍂 3 | Con el cuero **ya seco** — minoxidil AM | media tapa de espuma, cuero seco, masaje, manos lavadas |
+| ✨ 4 | Con el pelo seco | 2 gotas de aceite en puntas, solo si está áspero |
+| 🌙 5 | Antes de dormir | segunda dosis de minoxidil, y después ya no mojarse |
+| 🧖 6 | Solo los sábados | mascarilla 5 min, **sustituye** al acondicionador |
+| 📅 | Tu semana de un vistazo | los 7 días con el de hoy resaltado |
+
+Son **17 pasos numerados** en total, y sigue habiendo un solo `.ca-section-h`, así que el menú lateral queda en 2 ítems (Mi perfil + la guía) en vez de 10. Los sub-encabezados usan una clase nueva, `.ca-momento`, precisamente para **no** convertirse en ítems de menú.
+
+### Lo que un experto tenía que decirle y no estaba escrito
+
+- **El minoxidil no va sobre pelo mojado ni recién salido de la ducha.** Va sobre cuero cabelludo seco, y una vez puesto **tienen que pasar ~4 h antes de volver a mojarse la cabeza**. Por eso va después de bañarse y nunca antes.
+- **El champú solo en el cuero cabelludo, nunca en el largo**: al enjuagar, lo que escurre ya limpia el resto.
+- **Los días sin champú no son días sucios**, son descanso para un cuero que ya está seco.
+- **El sábado la mascarilla sustituye al acondicionador**, no se usan los dos.
+- **Nunca el Pilexil y el Darrow el mismo día**: el de alquitrán sustituye al otro cuando hay caspa activa.
+- **Son 2 dosis de minoxidil al día**, y saltarse días es lo que hace que la gente concluya que no funciona.
+
+### Un conflicto real encontrado en su horario
+
+Al cruzar la guía con `RUTINA_TASKS` apareció algo que no cuadraba: **sábado y domingo el minoxidil AM estaba a las 07:05 y 07:35, y la ducha a las 08:35**. Es decir, se aplicaba el producto y **se lo lavaba una hora después**, sin darle nada del tiempo que necesita para absorberse. Entre semana el orden ya era el correcto (ducha 07:03 → minoxidil 07:20).
+
+Corregido: las dos tareas de fin de semana se movieron a las **09:00**, después de la ducha. El cambio se aplicó en las dos copias de `RUTINA_TASKS` (Dashboard y Coach).
+
+### Verificación
+
+Escritorio y celular: **1 sección** (antes 9), menú de 2 ítems, los 10 momentos en orden, 17 pasos numerados, la tabla semanal con el día de hoy resaltado, y el aviso de "hoy" correcto según la fecha real — probado en miércoles, que además avisa de lavar tras nadar. Sin `undefined`, sin desbordes y sin errores de consola.

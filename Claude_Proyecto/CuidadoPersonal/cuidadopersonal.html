@@ -78,6 +78,24 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var
 .guia-main{flex:1;min-width:0}
 .guia-nav-label{font-size:9.5px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;
   color:var(--text3);padding:8px 10px 5px}
+/* ─── Guía de cabello por momentos (2026-08-19) ───
+   Sub-encabezados DENTRO de la única sección. No llevan la clase .ca-section-h a propósito: esa
+   es la que guiaEnSecciones() convierte en ítem de menú, y el punto era dejar un solo ítem. */
+.ca-momento{display:flex;align-items:center;gap:8px;margin:18px 0 8px;font-size:14px;font-weight:800;
+  color:var(--ca-text,inherit);letter-spacing:.01em}
+.ca-momento span{font-size:16px}
+.ca-pasos{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:9px}
+.ca-pasos li{font-size:13px;line-height:1.65}
+.ca-sub-nota{font-size:11.5px;line-height:1.55;opacity:.78;margin-top:5px}
+.ca-hoy{border-left:3px solid var(--ca-amber,#e0a020)}
+.ca-hoy-lbl{font-size:10px;font-weight:900;letter-spacing:.06em;text-transform:uppercase;opacity:.7}
+.ca-hoy-txt{font-size:14px;line-height:1.5;margin-top:4px}
+.ca-semana-tabla{display:flex;flex-direction:column;gap:2px}
+.ca-sem-fila{display:flex;align-items:center;gap:9px;padding:6px 8px;border-radius:8px;font-size:12.5px}
+.ca-sem-fila.hoy{background:var(--am-l,rgba(224,160,32,.12));font-weight:700}
+.ca-sem-ico{flex:none;width:18px;text-align:center}
+.ca-sem-dia{flex:none;width:80px;font-weight:700}
+.ca-sem-que{flex:1;min-width:0;opacity:.85}
 .guia-nav-item{display:flex;align-items:center;gap:9px;padding:9px 11px;border-radius:9px;
   border:1px solid transparent;background:transparent;color:var(--text2);font-weight:600;
   font-size:12.5px;cursor:pointer;text-align:left;font-family:inherit;width:100%;
@@ -1616,31 +1634,107 @@ function caRenderGuiaContent(){
     {ico:'🛏️',t:'Una funda de almohada de seda o satín reduce la fricción que rompe/reseca el cabello mientras duermes.'},
   ].filter(Boolean);
 
+  // ── UNA sola sección, ordenada por MOMENTO del día (2026-08-19) ──────────────
+  // Antes eran 9 secciones navegables (lavado, anticaída, después de lavar, calendario, qué
+  // esperar, mascarilla, qué evitar, compras, consejos). Cada una decía algo cierto, pero
+  // ninguna respondía la pregunta real: "¿me baño con champú y luego acondicionador y luego
+  // minoxidil?". La información estaba por CATEGORÍA DE PRODUCTO y hacía falta por ORDEN DE USO.
+  // Ahora es un solo hilo: la ducha, el pelo húmedo, el cuero seco, la noche, y el sábado.
+  const hoyDow=new Date().getDay();               // 0=domingo
+  const CHAMPU_DIA={1:'pilexil',4:'pilexil',6:'cerave',0:null,2:null,3:null,5:null};
+  const hoyChampu=CHAMPU_DIA[hoyDow];
+  const nomDia=['domingo','lunes','martes','miércoles','jueves','viernes','sábado'][hoyDow];
+  const hoyTxt=hoyChampu==='pilexil'
+    ? 'Hoy <b>sí lleva champú</b>: el <b>Pilexil Anticaída</b>, solo en el cuero cabelludo.'
+    : hoyChampu==='cerave'
+      ? 'Hoy <b>sí lleva champú</b>: el <b>CeraVe Hidratante sin sulfatos</b>, tu lavado suave de la semana.'
+      : 'Hoy <b>no lleva champú</b>. Mojas, acondicionador de medios a puntas, y ya.'
+      + (hoyDow===3?' <b>Ojo:</b> hoy nadas — al salir de la alberca sí lavas con CeraVe, el cloro no se queda.':'');
+
   document.getElementById('ca-guia-body').innerHTML=`
     ${notaMedica}
-    <div class="ca-section-h"><span class="ico">🚿</span><h3>Rutina de lavado</h3><span class="line"></span></div>
-    ${lavado}
-    ${tratCaida?`<div class="ca-section-h"><span class="ico">💊</span><h3>Tratamiento anticaída diario</h3><span class="line"></span></div>${tratCaida}`:''}
-    ${puntas?`<div class="ca-section-h"><span class="ico">✨</span><h3>Después de lavar</h3><span class="line"></span></div>${puntas}`:''}
+    <div class="ca-section-h"><span class="ico">🚿</span><h3>Tu rutina, paso a paso</h3><span class="line"></span></div>
 
-    <div class="ca-section-h"><span class="ico">🗓️</span><h3>Calendario semanal</h3><span class="line"></span></div>
-    <div class="card" style="margin-bottom:8px"><div class="ts" style="display:block;margin-bottom:12px">${perfil.cuero==='graso'?'Cuero graso: no te excedas lavando todos los días, reparte los lavados así:':'Reparte tus lavados así:'}</div><div class="ca-week">${semanaHtml}</div>${tieneCaida?`<div class="ts" style="margin-top:10px;display:block">💊 El tratamiento anticaída va aparte — todos los días, sin importar si es día de lavado.</div>`:''}</div>
+    <div class="card ca-hoy">
+      <div class="ca-hoy-lbl">📌 Hoy es ${nomDia}</div>
+      <div class="ca-hoy-txt">${hoyTxt}</div>
+    </div>
 
-    <div class="ca-section-h"><span class="ico">⏳</span><h3>Qué esperar y cuándo</h3><span class="line"></span></div>
+    <div class="ca-momento"><span>☀️</span> 1 · En la ducha de la mañana</div>
+    <div class="card">
+      <ol class="ca-pasos">
+        <li><b>Moja con agua tibia</b>, nunca caliente. El agua caliente reseca las puntas y no quita mejor la grasa.</li>
+        <li><b>¿Champú hoy?</b> Depende del día — <b>lunes y jueves: Pilexil Anticaída</b>. <b>Sábado: CeraVe Hidratante</b>. <b>Martes, miércoles, viernes y domingo: ninguno</b>, solo agua.
+            <div class="ca-sub-nota">Lavar a diario con champú es lo que termina de resecar un pelo que ya está seco. Los días sin champú no son días sucios: son días de descanso para el cuero cabelludo.</div></li>
+        <li><b>El champú va SOLO en el cuero cabelludo</b>, nunca en el largo. Masajea <b>2 minutos con las yemas</b> — no con las uñas — y enjuaga. Al enjuagar, lo que escurre ya limpia el resto del pelo.</li>
+        <li><b>Acondicionador ${'L\'Oréal Elvive Reparación Total 5'}</b>, todos los días, se laves o no. <b>Solo de medios a puntas</b>: en la raíz aplana el pelo y lo engrasa antes.</li>
+        <li><b>Espera 1-2 minutos</b> y enjuaga con agua fresca. Ese minuto es lo que hace que el acondicionador sirva de algo.</li>
+      </ol>
+      <div class="ca-warn" style="margin-top:10px"><div class="ca-warn-title">⚠️ La regla que más se rompe</div><ul>
+        <li><b>Nunca uses el Pilexil y el Darrow Doctar el mismo día.</b> El Darrow (alquitrán) es solo para cuando hay caspa activa, y ese día <b>sustituye</b> al Pilexil, no se suma.</li>
+      </ul></div>
+    </div>
+
+    <div class="ca-momento"><span>💧</span> 2 · Al salir, con el pelo AÚN húmedo</div>
+    <div class="card">
+      <ol class="ca-pasos">
+        <li><b>Seca a toques con la toalla</b>, sin frotar. El pelo mojado se rompe mucho más fácil que el seco.</li>
+        <li><b>Crema sin enjuague ${'L\'Oréal Elvive'}</b>, cantidad de un chícharo, <b>solo en la mitad de abajo</b>. Esto va <b>todos los días</b>, no solo los que te lavas.</li>
+        <li><b>Desenreda con peine de dientes anchos</b>, de puntas hacia arriba. Nunca cepillo en mojado.</li>
+        <li>Deja secar al aire. Si tienes prisa y usas secadora: <b>aire tibio, a 20 cm</b>, nunca caliente ni pegado.</li>
+      </ol>
+    </div>
+
+    <div class="ca-momento"><span>🍂</span> 3 · Con el cuero cabelludo YA SECO — minoxidil de la mañana</div>
+    <div class="card">
+      <div class="ca-note" style="margin-bottom:10px"><div class="ca-note-title">Esto es lo que casi todos hacen mal</div><div class="ca-note-text">
+        El minoxidil <b>no va sobre el pelo mojado</b> ni recién salido de la ducha. Va sobre <b>cuero cabelludo seco</b>, porque en húmedo se reparte irregular y se diluye. Y una vez puesto, <b>tienen que pasar unas 4 horas antes de volver a mojarte la cabeza</b> — por eso va <b>después</b> de bañarte y nunca antes.
+      </div></div>
+      <ol class="ca-pasos">
+        <li><b>Cabeza seca.</b> Si acabas de salir de la ducha, espera a que el cuero esté seco al tacto.</li>
+        <li><b>Media tapa de espuma</b> (Minoxidil 5% Kirkland) en la palma. La espuma se elige sobre el líquido porque no lleva propilenglicol, que es lo que reseca e irrita.</li>
+        <li><b>Repártela con los dedos directo en el cuero cabelludo</b> de la zona a tratar — no en el pelo. Masajea 30 segundos.</li>
+        <li><b>Lávate las manos</b> en cuanto termines.</li>
+        <li>Deja que seque solo. No peines ni pongas nada encima los primeros minutos.</li>
+      </ol>
+    </div>
+
+    <div class="ca-momento"><span>✨</span> 4 · Con el pelo ya seco (solo si lo notas áspero)</div>
+    <div class="card">
+      <div class="ca-step-text"><b>2 gotas de aceite Moroccanoil Treatment Light, solo en las puntas.</b> No es diario ni obligatorio: es para el día que el pelo se sienta rasposo. En raíz no va nunca, y de más engrasa.</div>
+    </div>
+
+    <div class="ca-momento"><span>🌙</span> 5 · Antes de dormir</div>
+    <div class="card">
+      <ol class="ca-pasos">
+        <li><b>Segunda dosis de minoxidil</b>, misma técnica: cuero seco, media tapa, masaje, manos lavadas. Son <b>2 dosis al día</b> — una sola no da el mismo resultado, y saltarse días es lo que hace que la gente concluya "no me funcionó".</li>
+        <li><b>Después de esta dosis ya no te mojes el pelo.</b> Si vas a bañarte de noche, báñate <b>antes</b> de aplicarlo.</li>
+        <li><b>Funda de almohada de satín.</b> Menos fricción durante 7 horas cada noche; es lo más barato que puedes hacer por tu pelo.</li>
+      </ol>
+    </div>
+
+    <div class="ca-momento"><span>🧖</span> 6 · Solo los sábados</div>
+    <div class="card">
+      <div class="ca-step-text"><b>Mascarilla ${'L\'Oréal Elvive Reparación Total 5'}, 5 minutos, de medios a puntas — ese día sustituye al acondicionador, no se usan los dos.</b> Es el día del CeraVe, así que el pelo queda limpio y la mascarilla entra mejor.</div>
+    </div>
+
+    <div class="ca-momento"><span>📅</span> Tu semana de un vistazo</div>
+    <div class="card"><div class="ca-semana-tabla">
+      ${[['Lunes','Pilexil','🧴'],['Martes','Solo agua + acondicionador','💧'],['Miércoles','Solo agua + acondicionador · <b>al nadar: CeraVe</b>','🏊'],['Jueves','Pilexil','🧴'],['Viernes','Solo agua + acondicionador','💧'],['Sábado','CeraVe + <b>mascarilla</b>','🧖'],['Domingo','Solo agua + acondicionador','💧']]
+        .map(([d,q,i],idx)=>`<div class="ca-sem-fila${idx===(hoyDow===0?6:hoyDow-1)?' hoy':''}"><span class="ca-sem-ico">${i}</span><span class="ca-sem-dia">${d}</span><span class="ca-sem-que">${q}</span></div>`).join('')}
+      <div class="ca-sub-nota" style="margin-top:8px">Y todos los días, sin excepción: acondicionador de medios a puntas, crema sin enjuague en húmedo, y <b>minoxidil mañana y noche</b>.</div>
+    </div></div>
+
+    <div class="ca-momento"><span>⚠️</span> Lo que no debes hacer</div>
+    <div class="ca-warn"><div class="ca-warn-title">Errores que arruinan el resultado</div><ul>${caWarnHtml(tieneCaida)}</ul></div>
+
+    <div class="ca-momento"><span>⏳</span> Qué esperar y cuándo</div>
     <div class="card"><div class="ca-timeline">${caTimeline(tieneCaida)}</div></div>
 
-    ${mascProd?`<div class="ca-section-h"><span class="ico">🧖</span><h3>Mascarilla hidratante</h3><span class="line"></span></div>${caStepHtml('★','var(--ca-green)',mascProd,'El día de mascarilla, sustituye al acondicionador normal.')}`:''}
-
-    <div class="ca-section-h"><span class="ico">⚠️</span><h3>Qué evitar</h3><span class="line"></span></div>
-    <div class="ca-warn"><div class="ca-warn-title">⚠️ Errores comunes que empeoran esto</div><ul>${caWarnHtml(tieneCaida)}</ul></div>
-
-    <div class="ca-section-h"><span class="ico">🛒</span><h3>Tu lista de compras</h3><span class="line"></span></div>
+    <div class="ca-momento"><span>🛒</span> Lo que tienes que comprar</div>
     <div class="card">${caListaHtml(usados)}</div>
 
-    <div class="ca-section-h"><span class="ico">💡</span><h3>Consejos</h3><span class="line"></span></div>
-    <div class="card">${consejos.map(cn=>`<div class="ca-tip"><span class="ico">${cn.ico}</span><div class="ca-tip-txt">${cn.t}</div></div>`).join('')}</div>
-
-    <div class="ca-disclaimer">Esto es orientación general con productos reales de venta libre en México, no sustituye a un dermatólogo o tricólogo — si la caída es abrupta, en mechones, o viene con otros síntomas, busca atención profesional.</div>`;
+    <div class="ca-disclaimer">Esto es orientación general con productos reales de venta libre en México, no sustituye a un dermatólogo o tricólogo — si la caída es abrupta, en parches o con picazón fuerte, eso se revisa en consulta.</div>`;
   guiaEnSecciones('ca-guia-body','ca-nav','ca-section-h','ca-form-card');
 }
 function caRenderGuia(){
