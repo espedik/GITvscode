@@ -2924,3 +2924,26 @@ El panel reutiliza las clases `.gbm-*` del panel de inversión en vez de duplica
 ### Verificación
 
 Con datos sembrados realistas (fondo $4,000, BBVA $32,343 al 45%, crédito del coche a 0%, 3 instrumentos, 10 movimientos repartidos en 4 meses): los **8 paneles abren con su cifra, sus barras y sus secciones**, y **ninguno muestra `undefined` ni `NaN`** — que es el riesgo real de calcular todo en vivo sobre datos que pueden faltar. 0 desbordes en 1600px, 820px y 390px, y cero errores de consola.
+
+## El medidor de ahorro se cambia por el de intereses (2026-08-19)
+
+*"pon otra cosa en ahorr este mes"*.
+
+**Ahorro de este mes** tenía un defecto de origen: se calculaba de las transacciones del mes en curso, así que si Adán no las captura en Finanzas, el medidor sale en ceros y no dice nada. Un indicador que depende de un hábito que todavía no existe no informa, estorba.
+
+En su lugar, **🔥 Intereses este mes**, elegido por él entre cuatro alternativas. Sale de `saldo × tasa ÷ 12`, datos que **siempre están** en `debts`, y es el número más accionable de todos: baja únicamente cuando abona.
+
+### Qué muestra al abrirlo
+
+- **Quién cobra qué**: cada deuda con su tasa y lo que aporta al interés mensual, ordenadas de mayor a menor tasa.
+- **Lo que ya dejaste de pagar**: una barra que compara el interés de hoy contra el que pagaba cuando debía el saldo original de cada deuda (`total` contra `balance`). No es un porcentaje decorativo — mide dinero que dejó de salir cada mes.
+- **Cuánto vale abonar**: qué ahorra al año un abono extra de $1,000 a su deuda de tasa más alta. Con una tarjeta al 45%, son $450 anuales garantizados y para siempre — el argumento de por qué la deuda cara va antes que invertir, dicho con su número.
+- El recordatorio de que **ya bajó este número de golpe una vez**: liquidar la Banamex el 13-ago-2026 apagó su parte de intereses para siempre.
+
+La barra del medidor no mide "cuánto interés pagas" (eso no tiene meta), sino **cuánto ha bajado desde el saldo original**: así avanza de verdad cada vez que abona, en vez de quedarse clavada.
+
+`kpiMesActual()`, que solo alimentaba el medidor viejo, se borró en el mismo cambio en lugar de quedarse como código muerto.
+
+### Verificación
+
+Con los mismos datos sembrados: el medidor muestra **$1,213 al mes · $14,554 al año**, y su panel abre con 2 barras, 3 secciones, 1 paso y 2 notas, sin `undefined` ni `NaN`. Los otros 7 siguen intactos. 0 desbordes en 1600px, 820px y 390px; sin errores de consola.

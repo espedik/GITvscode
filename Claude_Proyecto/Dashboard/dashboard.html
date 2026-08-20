@@ -5172,13 +5172,6 @@ function kpiGastoMensual(){
   if(!claves.length) return {prom:0, meses:0};
   return {prom: claves.reduce((a,k)=>a+porMes[k],0)/claves.length, meses: claves.length};
 }
-function kpiMesActual(){
-  const m=today().slice(0,7);
-  const txs=(D.fin.transactions||[]).filter(t=>(t.date||'').slice(0,7)===m);
-  const ing=txs.filter(t=>t.type==='income').reduce((a,t)=>a+(+t.amount||0),0);
-  const gas=txs.filter(t=>t.type==='expense').reduce((a,t)=>a+(+t.amount||0),0);
-  return {ing, gas, saldo:ing-gas, n:txs.length};
-}
 function abrirKpi(id){
   const ov=document.getElementById('kpiOverlay');
   if(!ov) return;
@@ -5195,7 +5188,7 @@ function cerrarKpi(){ document.getElementById('kpiOverlay')?.classList.remove('o
 function kpiDetalle(id){
   const F=D.fin||{}, debts=F.debts||[], inv=F.investments||[];
   const ef=+F.emergencyFund||0, metaEf=10000;
-  const g=kpiGastoMensual(), mes=kpiMesActual();
+  const g=kpiGastoMensual();
   const pat=patrimonioNeto();
   const totalInv=inv.reduce((a,i)=>a+(+i.value||+i.invested||0),0);
   const deudaTot=debts.reduce((a,d)=>a+(+d.balance||0),0);
@@ -5286,23 +5279,34 @@ function kpiDetalle(id){
       kpiNota('Este número baja solo conforme la deuda se apaga: no lo leas como una cuota fija, sino como el ritmo de hoy.')};
   }
 
-  if(id==='ahorro'){
-    const tasa=mes.ing>0?mes.saldo/mes.ing*100:0;
-    return {titulo:'💸 Ahorro de este mes', sub:'Lo que entró, lo que salió y qué te quedó.',
+  if(id==='intereses'){
+    const conTasa=debts.filter(d=>d.rate>0);
+    const mesInt=conTasa.reduce((a,d)=>a+(+d.balance||0)*(d.rate/100)/12,0);
+    const iniInt=conTasa.reduce((a,d)=>a+(+d.total||+d.balance||0)*(d.rate/100)/12,0);
+    const bajada=iniInt>0?(1-mesInt/iniInt)*100:100;
+    // Qué pasa si abonas $1,000 extra a la deuda de tasa más alta.
+    const peor=conTasa.slice().sort((a,b)=>b.rate-a.rate)[0];
+    const ahorro1k=peor?1000*(peor.rate/100):0;
+    const filas=conTasa.filter(d=>d.balance>0).sort((a,b)=>b.rate-a.rate).map(d=>{
+      const im=d.balance*(d.rate/100)/12;
+      return kpiBarra(esc(d.name)+' · '+d.rate+'%', money(im)+'/mes', mesInt>0?im/mesInt*100:0, R,
+        'Sobre un saldo de '+money(d.balance)+' · '+money(im*12)+' al año');
+    }).join('');
+    return {titulo:'🔥 Intereses que pagas al mes', sub:'Lo que cuesta la deuda solo por existir, antes de bajar un peso del saldo.',
       html:
-      '<div class="kpi-cifra" style="color:'+(mes.saldo>=0?V:R)+'">'+money(mes.saldo)+'</div>'+
-      '<div class="kpi-cifra-sub">'+mes.n+' movimientos registrados este mes · tasa de ahorro <b>'+Math.round(tasa)+'%</b></div>'+
-      kpiSec('📊 Entradas y salidas')+
-      '<div class="kpi-desglose">'+
-        kpiBarra('Ingresos del mes', money(mes.ing), 100, V)+
-        kpiBarra('Gastos del mes', money(mes.gas), mes.ing>0?mes.gas/mes.ing*100:0, O,
-          mes.ing>0?'Te comen el '+Math.round(mes.gas/mes.ing*100)+'% de lo que entró':'')+
-      '</div>'+
-      kpiSec('🎯 Qué mirar')+
-      kpiPaso(tasa>=20?'Vas bien':'Hay margen', tasa>=20
-        ? 'Estás ahorrando el <b>'+Math.round(tasa)+'%</b> de lo que ganas. Por encima del 20% ya es un ritmo que construye patrimonio de verdad — sostenerlo importa más que subirlo.'
-        : 'Ahorras el <b>'+Math.round(tasa)+'%</b>. El primer objetivo razonable es <b>20%</b>, y sale más rápido de recortar las 3 categorías más grandes que de cuidar los gastos chicos.', tasa>=20?V:O)+
-      kpiNota('Con ingreso variable como el de Didi, mira este número como promedio de 3 meses, no mes a mes: un mes flojo no significa que el sistema falle.')};
+      '<div class="kpi-cifra" style="color:'+(mesInt>0?R:V)+'">'+money(mesInt)+' <span style="font-size:14px;color:var(--text3)">al mes</span></div>'+
+      '<div class="kpi-cifra-sub">'+money(mesInt*12)+' al año si el saldo no se mueve'+(mesInt>0?' · es dinero que <b>no</b> baja tu deuda':'')+'</div>'+
+      kpiSec('📊 Quién cobra qué')+
+      '<div class="kpi-desglose">'+(filas||'<div class="gbm-vacio">No pagas intereses. 🎉</div>')+'</div>'+
+      (iniInt>0?kpiSec('📉 Lo que ya dejaste de pagar')+
+        '<div class="kpi-desglose">'+kpiBarra('Reducción desde el saldo original', Math.round(bajada)+'%', bajada, V,
+          'Cuando debías el total pagabas '+money(iniInt)+'/mes de intereses. Hoy pagas '+money(mesInt)+' — <b>'+money(iniInt-mesInt)+' menos cada mes</b>.')+'</div>':'')+
+      (mesInt>0?
+        kpiSec('🎯 Cómo bajarlo')+
+        kpiPaso('Cada abono extra vale doble','Abonar <b>'+money(1000)+'</b> a '+(peor?esc(peor.name):'tu deuda más cara')+' te ahorra <b>'+money(ahorro1k)+' al año</b> de intereses, para siempre. No hay inversión que te dé ese rendimiento garantizado: por eso la deuda cara va antes que invertir.',R)+
+        kpiNota('Ordena siempre por <b>tasa</b>, no por saldo. Pagar primero la deuda chica se siente mejor, pero pagar primero la cara cuesta menos dinero.')
+        :kpiPaso('Sin intereses ✅','No hay deuda con tasa cobrándote. Todo lo que abones a partir de aquí baja saldo, no intereses.',V))+
+      kpiNota('🏅 Ya bajaste este número una vez de golpe: <b>liquidar la Banamex el 13-ago-2026</b> apagó su parte de intereses para siempre.')};
   }
 
   if(id==='invertido'){
@@ -5374,7 +5378,12 @@ function renderMetasSlide(){
   const patPct=hasFinData()?Math.min(100,Math.max(0,(pat-START)/(GOAL-START)*100)):0;
 
   // Datos de los 4 medidores nuevos, calculados aquí para no repetir el recorrido en cada tile.
-  const mesAct=kpiMesActual();
+  // El interés inicial usa `total` (el saldo con el que nació cada deuda) y el actual usa
+  // `balance`: la diferencia es lo que ya se dejó de pagar, y es lo que llena la barra.
+  const conTasa=(D.fin.debts||[]).filter(d=>d.rate>0);
+  const interesMesKpi=conTasa.reduce((a,d)=>a+(+d.balance||0)*(d.rate/100)/12,0);
+  const interesIniKpi=conTasa.reduce((a,d)=>a+(+d.total||+d.balance||0)*(d.rate/100)/12,0);
+  const interesPctKpi=interesIniKpi>0?Math.max(0,Math.min(100,(1-interesMesKpi/interesIniKpi)*100)):100;
   const totalInvKpi=(D.fin.investments||[]).reduce((a,i)=>a+(+i.value||+i.invested||0),0);
   const deudaTotKpi=(D.fin.debts||[]).reduce((a,d)=>a+(+d.balance||0),0);
   const deudaCaraBalKpi=(D.fin.debts||[]).filter(d=>d.rate>0&&d.balance>0).reduce((a,d)=>a+d.balance,0);
@@ -5389,7 +5398,11 @@ function renderMetasSlide(){
     {ico:'💰',lbl:'Patrimonio hacia $1M',val:hasFinData()?money(pat):'Sin datos',pct:patPct,sub:'Meta: $1,000,000 · 01 ene 2030',c:'var(--g)',id:'patrimonio'},
     // 4 medidores nuevos (2026-08-19, "tambien si puedes agregar mas, hazlo"). Los 4 salen de
     // datos que ya existían en `finanzasmx_v2` y que no se estaban mirando en ninguna pantalla.
-    {ico:'💸',lbl:'Ahorro de este mes',val:hasFinData()?money(mesAct.saldo):'Sin datos',pct:mesAct.ing>0?Math.max(0,Math.min(100,mesAct.saldo/mesAct.ing*100)):0,sub:mesAct.ing>0?`Tasa de ahorro: ${Math.round(mesAct.saldo/mesAct.ing*100)}%`:'Sin movimientos este mes',c:mesAct.saldo>=0?'var(--g)':'var(--r)',id:'ahorro'},
+    // 2026-08-19 — este medidor era "Ahorro de este mes", pero dependía de tener capturados los
+    // movimientos del mes: sin capturarlos salía en ceros. Los intereses se calculan de saldo ×
+    // tasa, que siempre está, y la barra mide cuánto ha bajado el interés desde que debía el
+    // total original — así avanza de verdad cada vez que abona.
+    {ico:'🔥',lbl:'Intereses este mes',val:hasFinData()?money(interesMesKpi):'Sin datos',pct:interesPctKpi,sub:interesMesKpi>0?`${money(interesMesKpi*12)} al año si no cambia`:'Sin deuda con interés 🎉',c:'var(--r)',id:'intereses'},
     {ico:'📈',lbl:'Total invertido',val:money(totalInvKpi),pct:totalInvKpi>0?Math.min(100,totalInvKpi/50000*100):0,sub:`${(D.fin.investments||[]).length} instrumento(s) · toca para ver el reparto`,c:'var(--cy)',id:'invertido'},
     {ico:'🧾',lbl:'Deuda total',val:hasFinData()?money(deudaTotKpi):'Sin datos',pct:deudaTotKpi>0?100:0,sub:deudaTotKpi>0?`${money(deudaCaraBalKpi)} con interés`:'Sin deudas vivas 🎉',c:'var(--r)',id:'deudatotal'},
     {ico:'⏳',lbl:'Camino a 2030',val:diasA2030.toLocaleString('es-MX')+' días',pct:pct2030,sub:`${Math.round(pct2030)}% del plan recorrido`,c:'var(--p)',id:'meta2030'}
