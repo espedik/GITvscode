@@ -2818,3 +2818,15 @@ El último paso era *"Ponle fecha"*. Ya no aplica: lo agendó con Brightest. Aho
 ### Verificación
 
 `#istqb`, `#istqb-ch1` y `#istqb-ch4` abren la página correcta con el módulo desplegado y el enlace marcado como activo; `hashchange` en caliente también; sin hash se conserva el comportamiento de siempre; un hash inexistente no navega ni rompe. La meta abre con **9 pasos y 6 enlaces**, y cero errores de consola.
+
+## Imagen nueva, y en HD, para la meta CT-GenAI (2026-08-19)
+
+*"pon otra imagen hd para esa meta"*.
+
+La anterior era el típico letrero **AI** azul de banco de imágenes. La nueva es una placa de circuito en cian (`photo-1550751827-4bd374c3f58b`), elegida entre 9 candidatas comprobando primero que las 9 cargaran de verdad a 1920 px — no vale poner una URL que se vea rota mañana.
+
+Dos razones además de la estética: es **oscura**, así que el título blanco y el gradiente de `.img-goal-photo::after` se leen sin competir con el fondo (el letrero azul anterior tenía zonas claras justo donde cae el texto), y es genérica de tecnología sin ser el cliché de "IA" que ya usaban mil sitios.
+
+**Se pide en HD a propósito**: `w=1920&q=85`, frente al `w=800&q=80` del resto de metas. La diferencia no se nota en la tarjeta del grid (391×93 px) pero sí en el **hero del detalle**, que mide 270 px de alto a todo el ancho de la tarjeta — ahí una imagen de 800 px se estira y se ve blanda. Solo esta meta lo lleva; las demás siguen en 800.
+
+Comprobado con un clic real sobre la tarjeta (no llamando a `abrirMetaDetalle()` a mano, que es lo que hace la app): el hero carga la imagen de 1920×1281 y el título se lee encima.
