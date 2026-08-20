@@ -388,3 +388,33 @@ La fila queda con **8 pestañas, todas secciones reales** de esta app: Skincare,
 El bloque flotante `#btnVolverDash` (`position:fixed`, fondo oscuro propio, z-index 9999) que se había insertado esta mañana **se encimaba sobre el botón de tema en pantallas angostas** y no seguía el tema de este archivo. Se retiró junto con su `<style>`: ahora el enlace es un botón redondo con el 🚀 junto al de tema, fuera de la fila de pestañas, con la clase `.theme-toggle-btn` que ya usan sus vecinos, así que hereda tema y estilos sin CSS nuevo.
 
 Detalle completo y medición en `../Dashboard/readme_dashboard.md` → "El botón de Dashboard deja de flotar".
+
+## El acondicionador pasa a Elvive, de la misma línea que la mascarilla (2026-08-19)
+
+*"este cambiamelo, por que no lo encuentro facil, dame opciones — Acondicionador TRESemmé Keratin Smooth"*.
+
+El problema no era el producto, era encontrarlo. Se le dieron 4 opciones y eligió el **acondicionador L'Oréal Elvive Reparación Total 5**, que resuelve el problema de raíz por una razón que no tiene que ver con la fórmula:
+
+> **es el acondicionador de la misma línea que la mascarilla y la crema sin enjuague que ya usa a diario.**
+
+Pasa de buscar 3 productos de 2 marcas a buscar **una sola línea en un solo pasillo**. Si encuentra uno, encuentra los tres.
+
+| | |
+|---|---|
+| Presentación | 680 ml |
+| Mercado Libre | **$150** |
+| Soriana | $166.50 |
+| DelSol | $111.23 |
+| También en | Walmart, Chedraui, H-E-B |
+
+Precios verificados en ago-2026. El nombre quedó como aparece en el estante mexicano — **"Reparación Total 5"**, no "Total Repair 5" — precisamente porque el punto era que lo encontrara.
+
+### Dónde estaba
+
+11 menciones en 3 archivos, todas cambiadas: **6 en `dashboard.html`** (4 subtareas de rutina, el renglón de la lista de compras y su clave de precios), **4 en `Coach_v2.html`** (su copia de `RUTINA_TASKS`) y **1 en `cuidadopersonal.html`** (`HAIR_DB`).
+
+La clave de `LISTA_COMPRAS_PRECIOS_OTROS` se cambió junto con el nombre: si se hubiera renombrado solo el producto, el renglón se habría quedado **sin precio** y habría dejado de sumar en el total de la categoría — el mismo tipo de desincronización silenciosa que ya se documentó con los nombres de cabello.
+
+### Verificación
+
+Las 4 tareas de rutina afectadas (`wd02lav`, `wd02co`, `wd09`, `do045`) son **las mismas en Dashboard y en Coach**, que llevan copias separadas de `RUTINA_TASKS` — comprobado comparando las dos listas, no leyéndolas. Cero menciones de TRESemmé en los 3 archivos, el renglón de la lista muestra sus dos precios y sus dos enlaces de tienda, y la sintaxis JS de los 3 archivos valida. Sin errores de consola.
