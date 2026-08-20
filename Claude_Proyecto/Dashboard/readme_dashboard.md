@@ -3175,3 +3175,13 @@ Además, 4 de los 34 de Higiene (*"Champú y acondicionador en envase de 100 ml 
 ### Verificación
 
 Marcando 3 productos de Skincare: la barra suma **$830 / $715**. Al marcar uno como "ya lo tengo" baja a **$550 / $460**, aparece `✓ ya tienes 1`, el renglón se apaga, su checkbox se deshabilita y la pestaña pasa de 2/8 a **2/7**. En el súper hay **0 botones** de "ya lo tengo" y conserva su barra de ticket. 0 desbordes y sin errores de consola.
+
+### El pasillo "Los que ya tienes" nace marcado (2026-08-20)
+
+*"añadelo"*.
+
+De los 34 productos del kit de higiene, 4 no son compras y su propio pasillo lo dice: **"Los que ya tienes — solo cámbialos a tamaño viaje"** (champú y acondicionador rellenados, skincare en botellas pequeñas, minoxidil en su envase original y suplementos en pastillero). Estaban inflando los pendientes desde el primer día.
+
+`seedTengoViajeIfNeeded()` los marca como "ya lo tengo" en la primera carga, con el mismo patrón de bandera que `seedMetasLogradasIfNeeded()`. La pestaña pasa de **0/34 a 0/30**, que es el número real de cosas por comprar.
+
+**Se siembra una sola vez, y eso importa**: si algún día se le acaba el champú y sí tiene que comprarlo, lo desmarca y no se le vuelve a marcar en la siguiente carga. Comprobado: 4 marcados en carga limpia → desmarca uno → recarga → siguen 3.

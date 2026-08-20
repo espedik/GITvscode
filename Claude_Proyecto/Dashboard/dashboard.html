@@ -2167,6 +2167,20 @@ function seedLogros20260813IfNeeded(){
   rawSet(LOGROS_KEY,l);
   localStorage.setItem('dash_logros_seed20260813','1');
 }
+// El pasillo "Los que ya tienes — solo cámbialos a tamaño viaje" del kit de higiene es lo único
+// de toda la lista que, por su propio nombre, NO es una compra: son cosas que Adán ya tiene y que
+// solo hay que pasar a envase de viaje. Nacen marcadas como "ya lo tengo" para que no inflen los
+// pendientes ni el total desde el primer día (2026-08-20). Se siembra una sola vez: si las
+// desmarca porque se le acabó el champú y sí necesita comprarlo, no se le vuelven a marcar.
+function seedTengoViajeIfNeeded(){
+  if(localStorage.getItem('lista_tengo_seed_v1')) return;
+  const grupo=(LISTA_COMPRAS.higiene||{})['Los que ya tienes — solo cámbialos a tamaño viaje'];
+  if(!Array.isArray(grupo)) return;
+  const t=rawGet('dash-lista-tengo',{});
+  grupo.forEach(txt=>{ t[lcItemId('higiene',txt)]=true; });
+  rawSet('dash-lista-tengo',t);
+  localStorage.setItem('lista_tengo_seed_v1','1');
+}
 function seedMetasLogradasIfNeeded(){
   if(localStorage.getItem('metas_logradas_seed_v1')) return;
   const store=rawGet('metas_checklist_v1',{});
@@ -7082,7 +7096,8 @@ fixMsiBBVA20260813IfNeeded();
   fixAhorro20260817IfNeeded();
 fixMiercolesNatacionIfNeeded();
 fixRutina20260812IfNeeded();
-seedMetasLogradasIfNeeded();
+seedMetasLogradasIfNeeded();
+seedTengoViajeIfNeeded();
 seedLogros20260813IfNeeded();
 loadAll();
 tickClock();
