@@ -2830,3 +2830,37 @@ Dos razones además de la estética: es **oscura**, así que el título blanco y
 **Se pide en HD a propósito**: `w=1920&q=85`, frente al `w=800&q=80` del resto de metas. La diferencia no se nota en la tarjeta del grid (391×93 px) pero sí en el **hero del detalle**, que mide 270 px de alto a todo el ancho de la tarjeta — ahí una imagen de 800 px se estira y se ve blanda. Solo esta meta lo lleva; las demás siguen en 800.
 
 Comprobado con un clic real sobre la tarjeta (no llamando a `abrirMetaDetalle()` a mano, que es lo que hace la app): el hero carga la imagen de 1920×1281 y el título se lee encima.
+
+## Finanzas e Inversión: de "diagnóstico y hábito" a las habilidades una por una (2026-08-19)
+
+*"quita esto 🔁 Hábito: Revisión de 10 min cada domingo… para finanzas e inversion, tambien lo de error comun quitalo, quita tambien lo de esta semana y lo de por que esta baja, aqui debes listarme las habilidades una po una de inversion y de finanzas que debo saber y explicar detalladamente como crecer esa habilidad y con recursos como libros… por que teniamos cosas inutiles pero esto si me va servir"*.
+
+Las 6 habilidades de `APRENDIZAJE` se pintaban todas igual: diagnóstico, primer paso, semanas 2-4, hábito y error común. Para Finanzas e Inversión eso decía **cómo empezar**, pero nunca **qué hay que saber**. Ahora esas dos llevan una lista numerada de sub-habilidades: **7 de finanzas y 9 de inversión**, cada una con qué es, cómo desarrollarla con pasos medibles, y el libro que la cubre.
+
+| Finanzas | Inversión |
+|---|---|
+| Saber a dónde se va tu dinero | Interés compuesto y horizonte |
+| Presupuestar sobre ingreso variable | **Escribir tu asignación objetivo** |
+| Dimensionar el fondo de emergencia | Conocer los instrumentos mexicanos |
+| Calcular el costo real de la deuda | Ver las comisiones antes que el rendimiento |
+| Leer tu propio balance | Aportar periódicamente y automatizarlo |
+| Entender tus impuestos | Rebalancear una vez al año |
+| Decidir con la cabeza fría | Saber qué impuestos pagas al invertir |
+| | Aguantar sin vender |
+| | Saber cuándo NO invertir |
+
+El contenido está atado a su situación real, no es teoría general: el presupuesto parte de que su ingreso es mixto (ALTEN fijo, Didi variable) y manda presupuestar **sobre el mínimo de 3 meses, nunca sobre el promedio**; el fondo se compara contra su meta viva de $10,000; "escribir tu asignación objetivo" señala explícitamente el hueco que su propio diagnóstico venía marcando desde hace semanas; y "saber cuándo NO invertir" enlaza con la regla que el panel de *Qué invertir hoy* ya aplica a su saldo.
+
+Los libros son reales y en buena parte **en español y de México** — `Pequeño Cerdo Capitalista` de Sofía Macías aparece en finanzas y su edición de *Inversiones* en la otra: habla de CETES, Afore y pesos, no de 401k.
+
+### Cómo conviven los dos formatos
+
+`renderSkills()` pinta uno u otro **según exista `subs`** en la habilidad. Las otras 4 (Ventas, Marketing, Datos, IA) conservan el formato anterior sin tocar una línea, y el día que alguna se reescriba basta con darle su `subs`. Nada de una segunda función ni de una rama duplicada.
+
+`recursos` **no se tocó** aunque ya no se pinta en estas dos: de ahí salen los audiolibros de *Qué escuchar en Didi*. Borrarlo por "limpieza" habría vaciado esa pantalla en silencio.
+
+La lista lleva `max-height:340px` con scroll propio: son 7 y 9 entradas largas, y sin tope la tarjeta empujaba fuera de pantalla al resto del slide.
+
+### Verificación
+
+Escritorio y celular: **7 y 9** sub-habilidades pintadas, **0** rastros de los 5 campos retirados, un recurso por sub-habilidad, scroll interno activo y 0 desbordes. Sin errores de consola.

@@ -409,6 +409,23 @@ a.rt2-sub-prod:hover{text-decoration:underline}
    Pedido explícito: "en vez del radar mejor ponlo en barras y se muy detallado, asi abarcamos
    todo el ancho de la pagina". 2 columnas en desktop (6+6 filas), 1 columna en pantallas angostas. */
 #skillBars.tile{padding:8px 12px}
+/* ─── Sub-habilidades (2026-08-19) ───
+   Formato nuevo de Finanzas e Inversión: en vez de un diagnóstico y un hábito, la lista de lo
+   que hay que saber, numerada, cada una con cómo desarrollarla y con qué libro. Scroll propio
+   porque son 7 y 9 entradas: sin tope, la tarjeta empujaba fuera de pantalla al resto del slide,
+   que es lo mismo que le pasaba a "Importante este mes" en Mi Día. */
+.sc-subs-lbl{font-size:10px;font-weight:900;letter-spacing:.04em;text-transform:uppercase;
+  color:var(--text3);margin:6px 0 4px}
+.sc-subs{display:flex;flex-direction:column;gap:6px;max-height:340px;overflow-y:auto;padding-right:4px}
+.sc-sub{border-left:2px solid var(--cy);border-radius:0 8px 8px 0;padding:6px 9px;
+  background:rgba(var(--ov),.04)}
+.sc-sub-h{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:800;color:var(--text);line-height:1.3}
+.sc-sub-n{flex-shrink:0;width:16px;height:16px;border-radius:50%;background:var(--cy);color:#04231f;
+  font-family:var(--mono);font-size:9px;font-weight:900;display:flex;align-items:center;justify-content:center}
+.sc-sub-q{font-size:11px;color:var(--text3);line-height:1.45;margin-top:3px}
+.sc-sub-c{font-size:11px;color:var(--text2);line-height:1.5;margin-top:4px}
+.sc-sub-c b{color:var(--text)}
+.sc-sub-r{font-size:10px;color:var(--cy);font-weight:700;line-height:1.4;margin-top:4px}
 .skill-bars-head{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px;margin-bottom:2px}
 .skill-bars-ovr{font-size:11px;color:var(--text2)}
 .skill-bars-ovr b{font-family:var(--mono);font-size:13px;color:var(--text)}
@@ -4210,18 +4227,38 @@ const APRENDIZAJE={
     error:'Perfeccionar el post en vez de publicarlo. La versión imperfecta que sí sale hoy vale más que la perfecta que nunca sale — puedes editar/mejorar el siguiente con lo que aprendas de este.',
     recursos:[{t:'Curso',n:'Google Digital Garage'},{t:'Curso',n:'HubSpot Academy'},{t:'Curso',n:'Meta Blueprint'},{t:'Libro',n:'$100M Leads — Alex Hormozi'}]},
   finanzas:{
-    diagnostico:'No es falta de conocimiento básico — es que revisas tus gastos de forma reactiva (cuando ya se fue el dinero), no proactiva. La deuda actual de Banamex/BBVA no fue mala suerte, fue no trackear antes de gastar.',
-    primer:'Instala YNAB o Finerio y conecta tus cuentas para categorizar los gastos de este mes.',
-    semana24:'Clasifica 30 días completos de gastos reales (no estimados) y encuentra las 3 categorías donde más se te va el dinero sin darte cuenta — esos son los primeros pesos que recortas, no los obvios.',
-    habito:'Revisión de 10 min cada domingo — clasifica gastos vs. presupuesto.',
-    error:'Tratar los MSI como "dinero gratis" en vez de deuda ya comprometida. Cada MSI nuevo reduce el excedente real que tienes disponible para pagar Banamex/BBVA ese mes, aunque no lo sientas de inmediato.',
+    // 2026-08-19 — Adán pidió cambiar el formato de estas dos: fuera diagnóstico,
+    // "esta semana", plan de semanas, hábito y error común; en su lugar, la lista de
+    // sub-habilidades concretas, cada una con cómo desarrollarla y con qué recurso.
+    // Las otras 4 habilidades conservan el formato viejo — renderSkills() pinta uno u
+    // otro según exista `subs`, así que ambos conviven sin ramas duplicadas.
+    subs:[
+      {n:'Saber a dónde se va tu dinero',q:'Es la base de todo lo demás. Sin el dato real, cualquier presupuesto es una suposición y cualquier recorte es adivinar.',c:'Registra <b>30 días seguidos</b>, cada gasto el mismo día en que ocurre — no el domingo de memoria, porque ahí ya perdiste los chicos, que son justo los que no ves. Cinco categorías bastan: fijos, comida, transporte, deuda y gusto. Al día 30 ordénalas de mayor a menor y mira solo las tres primeras: ahí está el 80% de lo que puedes mover. Tu app de <b>Finanzas</b> ya hace esto, no necesitas otra herramienta.',r:'Pequeño Cerdo Capitalista — Sofía Macías (los capítulos de gastos hormiga; es de México, habla de pesos y de CETES, no de 401k)'},
+      {n:'Presupuestar sobre ingreso variable',q:'Tu ingreso no es uno: ALTEN es fijo y Didi cambia cada semana. Presupuestar sobre el promedio es lo que hace que un mes flojo te descuadre.',c:'Presupuesta sobre el <b>mínimo de tus últimos 3 meses</b>, nunca sobre el promedio ni sobre el mejor mes. Lo que entre por encima de ese mínimo no es para gastar: va al fondo, a la deuda o a inversión, en ese orden. Págate un "sueldo" fijo cada mes desde lo que junta Didi, en vez de gastar lo que va entrando.',r:'Profit First — Mike Michalowicz (el método de repartir el ingreso en cuentas separadas antes de gastarlo)'},
+      {n:'Dimensionar el fondo de emergencia',q:'No es un número redondo que suena bien: son <b>3 a 6 meses de tus gastos fijos</b>. Sin él, cualquier imprevisto vuelve a la tarjeta y deshace el avance de meses.',c:'Suma tus fijos reales de un mes (renta, comida, transporte, gym, suscripciones) y multiplica por 3. Ese es tu piso; por 6 es tu techo. Tu meta actual son <b>$10,000</b> y llevas $4,000 — compara ese $10,000 contra el número que te dé la suma y ajústalo si sale corto. Guárdalo donde puedas sacarlo en 24-48 h: CETES a 28 días o una cuenta de ahorro, nunca en algo que pueda valer menos el día que lo necesites.',r:'The Simple Path to Wealth — JL Collins (capítulo del fondo y por qué va antes que invertir)'},
+      {n:'Calcular el costo real de la deuda',q:'La tasa que anuncian no es lo que pagas. El CAT sí, porque mete comisiones y seguros. Sin ese número no puedes comparar dos créditos ni saber si un MSI te conviene.',c:'Aprende a leer el <b>CAT</b> de cada estado de cuenta y ordena tus deudas por tasa, de mayor a menor: eso es el <b>método avalancha</b> y es el que menos intereses te cuesta (la bola de nieve, de menor a mayor saldo, solo gana en motivación). Antes de un MSI, calcula qué porcentaje de tu excedente mensual te compromete y por cuántos meses: un MSI no es dinero gratis, es un pago fijo que ya vendiste.',r:'Pequeño Cerdo Capitalista — Sofía Macías (deuda y CAT explicados con productos mexicanos)'},
+      {n:'Leer tu propio balance',q:'Flujo (lo que entra y sale cada mes) y patrimonio (lo que tienes menos lo que debes) son dos cosas distintas. Puedes tener buen flujo y patrimonio negativo, que es donde estabas hace un año.',c:'Una vez al mes anota <b>activos − pasivos</b>: efectivo + fondo + inversiones + valor del BYD, menos lo que reste de deuda. Ese número, no tu quincena, es el que tiene que subir todos los meses rumbo al millón. El Dashboard ya lo calcula en <b>patrimonio neto</b>: tu trabajo es mirarlo una vez al mes, no cada día.',r:'The Millionaire Next Door — Thomas J. Stanley (por qué el patrimonio y el ingreso no son lo mismo)'},
+      {n:'Entender tus impuestos',q:'Lo que ganas fuera de la nómina tiene reglas propias. No saberlas cuesta dinero de dos formas: multas, y deducciones que dejas en la mesa.',c:'Aprende primero tres cosas concretas: qué régimen te corresponde por lo que ganas fuera de ALTEN, qué gastos son deducibles para una persona física (salud, colegiaturas, intereses de crédito hipotecario) y cuándo cae la declaración anual. Empieza por leer tu propia constancia de situación fiscal en el portal del SAT antes que cualquier guía: ahí ya está tu situación real.',r:'Portal del SAT · Guía de Personas Físicas (gratis y es la fuente, no una interpretación)'},
+      {n:'Decidir con la cabeza fría',q:'Casi ninguna mala decisión de dinero viene por no saber matemáticas. Viene por decidir cansado, con prisa o comparándote.',c:'Ponle una regla mecánica a lo que te cuesta: <b>72 horas</b> entre querer algo de más de $2,000 y comprarlo. Si a las 72 h sigues queriéndolo, cómpralo sin culpa. Y escribe la razón de cada decisión grande antes de tomarla — al releerla en 6 meses aprendes más de ti que de cualquier libro.',r:'Psicología del Dinero — Morgan Housel (18 historias cortas; se lee en una semana)'},
+    ],
     recursos:[{t:'Libro',n:'I Will Teach You to Be Rich — Ramit Sethi'},{t:'App',n:'YNAB'},{t:'Libro',n:'The Millionaire Next Door — Thomas Stanley'},{t:'Libro',n:'Psicología del Dinero — Morgan Housel'}]},
   inversion:{
-    diagnostico:'Ya diste el primer paso real (CETES, BTC, acciones en GBM) — la mayoría de la gente nunca llega ahí. Lo que falta no es empezar, es estructura: decides monto e instrumento cada lunes sobre la marcha, en vez de seguir una asignación ya definida.',
-    primer:'Define por escrito, una sola vez, tu asignación objetivo (ej. % CETES/renta fija, % índice VOO, % BTC) — deja de decidirlo cada lunes desde cero.',
-    semana24:'Automatiza un monto fijo cada lunes hacia esa asignación (aunque sea pequeño) durante 4 semanas seguidas — la consistencia del monto importa más que acertarle al mejor momento para invertir.',
-    habito:'Revisar portafolio + VOO + USD/MXN e invertir, todos los lunes en la mañana antes de que empiece el ruido del día (ya está en tu rutina — la meta es que nunca se salte).',
-    error:'Sacar dinero de la inversión para cubrir un gasto del mes. Eso convierte tu inversión de largo plazo en un fondo de emergencia mal disfrazado — para eso ya existe el fondo de emergencia aparte.',
+    // 2026-08-19 — Adán pidió cambiar el formato de estas dos: fuera diagnóstico,
+    // "esta semana", plan de semanas, hábito y error común; en su lugar, la lista de
+    // sub-habilidades concretas, cada una con cómo desarrollarla y con qué recurso.
+    // Las otras 4 habilidades conservan el formato viejo — renderSkills() pinta uno u
+    // otro según exista `subs`, así que ambos conviven sin ramas duplicadas.
+    subs:[
+      {n:'Interés compuesto y horizonte',q:'Es el motor de todo. Y lo que lo mueve no es la tasa, es el <b>tiempo</b>: cada año que pospones cuesta más que cualquier punto extra de rendimiento.',c:'Haz el cálculo una vez con tus números reales, no con ejemplos de libro: lo que puedes aportar al mes, un rendimiento conservador (8-10% anual nominal en México) y los años hasta 2030. Repítelo restando un año de aportaciones y compara — ver esa diferencia en pesos es lo que hace que ya no te saltes un mes.',r:'The Little Book of Common Sense Investing — John C. Bogle (corto y va directo al punto)'},
+      {n:'Escribir tu asignación objetivo',q:'<b>Esta es la que te falta</b>, y es la razón real de que cada lunes decidas desde cero. Una asignación es un reparto en porcentajes, escrito una sola vez, que decide por ti cuando el mercado te esté gritando.',c:'Define <b>tres porcentajes que sumen 100</b>: renta fija (CETES), índice global o S&P 500, y una porción chica de riesgo alto (BTC). Escríbelos con fecha en un solo renglón y guárdalos. La regla que evita el error clásico: en lo volátil no pongas más de lo que puedas ver caer un 50% sin tocarlo. Cada compra del lunes deja de ser una decisión y pasa a ser rellenar el porcentaje que quedó abajo.',r:'The Bogleheads’ Guide to Investing (capítulo de asset allocation) · Pequeño Cerdo Capitalista: Inversiones — Sofía Macías'},
+      {n:'Conocer los instrumentos mexicanos',q:'No puedes repartir entre cosas que no distingues. En México tienes acceso directo a más de lo que parece, y cada instrumento tiene un para qué distinto.',c:'Aprende de cada uno tres datos: <b>plazo, riesgo y cómo se le cobran impuestos</b>. Empieza por los que ya usas — CETES a 28 días (cetesdirecto, sin comisión), un índice como VOO vía GBM, y BTC — y añade solo lo que entiendas: Bonos M, Udibonos si te preocupa la inflación, y tu Afore, que es inversión aunque no lo parezca y casi nadie revisa.',r:'Banxico · Educación financiera y cetesdirecto.com (fuentes oficiales, sin nadie vendiéndote nada)'},
+      {n:'Ver las comisiones antes que el rendimiento',q:'El rendimiento no lo controlas; el costo sí. Un 1% anual de comisión, sostenido 20 años, se come cerca de una quinta parte de lo que habrías acumulado.',c:'De cada instrumento busca tres costos: <b>comisión de administración</b> (anual, el que más pesa), <b>comisión por operación</b> y el <b>spread</b> de compra-venta si es en dólares o cripto. Compara el mismo índice en dos casas antes de comprarlo: la diferencia entre 0.03% y 1.5% anual es la diferencia entre llegar y no llegar al millón en 2030.',r:'A Random Walk Down Wall Street — Burton Malkiel (por qué los costos predicen mejor que las estrellas de un fondo)'},
+      {n:'Aportar periódicamente y automatizarlo',q:'Aportar lo mismo cada periodo (DCA) compra más barato cuando el mercado cae y menos caro cuando sube, sin que tengas que adivinar. Y quita la decisión de en medio.',c:'Fija un <b>monto y un día</b> — tú ya tienes el bloque de GBM de los lunes y los $1,500 a CETES el día 15. Súbelo cuando suba tu ingreso, nunca lo bajes por cómo se vea el mercado. La prueba de que funciona es aburrida a propósito: 12 meses seguidos sin saltarte uno.',r:'The Simple Path to Wealth — JL Collins'},
+      {n:'Rebalancear una vez al año',q:'Con el tiempo, lo que sube se lleva más peso del que le asignaste y tu cartera termina siendo más arriesgada de lo que decidiste.',c:'Una vez al año, o cuando algo se desvíe más de <b>5 puntos</b> de su porcentaje, vuelve a los números que escribiste. Lo más fácil: no vendas nada, dirige las aportaciones nuevas a lo que quedó abajo hasta emparejar. Rebalancear obliga a vender caro y comprar barato, que es justo lo contrario de lo que pide el instinto.',r:'The Bogleheads’ Guide to Investing'},
+      {n:'Saber qué impuestos pagas al invertir',q:'El rendimiento que ves no es el que te queda. En México hay retención sobre intereses y un ISR distinto para ganancias de bolsa y para cripto.',c:'Aprende cómo tributa cada cosa que tienes: la retención anual sobre el capital en instrumentos de deuda, el <b>10% sobre la ganancia</b> en enajenación de acciones en bolsa, y que la ganancia por cripto se acumula a tus demás ingresos. Guarda tus constancias anuales de GBM y cetesdirecto en la misma carpeta desde ahora: en abril valen oro.',r:'Portal del SAT · Constancias de tus instituciones financieras'},
+      {n:'Aguantar sin vender',q:'La diferencia entre lo que rinde un fondo y lo que gana la gente que lo tiene se explica casi entera por comprar arriba y vender abajo. Es la habilidad que más dinero vale y la única que no se estudia, se entrena.',c:'Escribe <b>hoy</b>, con el mercado tranquilo, qué vas a hacer si tu cartera cae 30% — y déjalo junto a la asignación. En la caída no se decide, se ejecuta lo que ya está escrito. Regla de higiene: revisa precios una vez por semana, en tu bloque del lunes, y no vuelvas a abrir la app hasta el siguiente.',r:'Psicología del Dinero — Morgan Housel · El Inversor Inteligente — Benjamin Graham (los capítulos 8 y 20, que son los que Buffett señala)'},
+      {n:'Saber cuándo NO invertir',q:'Invertir con deuda cara viva o sin fondo de emergencia no es ser agresivo, es perder dinero con más pasos.',c:'Ordena siempre igual: <b>1) fondo de emergencia completo · 2) deuda con tasa alta a cero · 3) invertir</b>. Ninguna tasa de rendimiento razonable le gana a una tarjeta. Tu panel de "Qué invertir hoy" ya aplica esta regla a tu saldo real cada vez que lo abres — la habilidad es respetarla cuando el mercado esté subiendo y dé comezón saltarse un paso.',r:'I Will Teach You to Be Rich — Ramit Sethi (el orden de operaciones, capítulos 1 a 4)'},
+    ],
     recursos:[{t:'Libro',n:'The Intelligent Investor — Benjamin Graham'},{t:'Libro',n:'The Little Book of Common Sense Investing — John Bogle'},{t:'Libro',n:'A Random Walk Down Wall Street — Burton Malkiel'},{t:'Libro',n:'One Up On Wall Street — Peter Lynch'}]},
   ia:{
     diagnostico:'Te sientes principiante, pero ya validaste IA generativa para Google y usas Claude Code a diario en producción — el hueco real no es técnico, es que nunca lo has aplicado a un proyecto tuyo, solo al trabajo de otros.',
@@ -4705,12 +4742,22 @@ function renderSkills(){
           <span class="sc-lvl" style="background:${l.c}22;color:${l.c}">${l.l}</span>
           <div class="sc-val" style="color:${l.c}">${s.val}<small>/100 · ×${s.w}</small></div>
         </div>
+        ${a.subs ? `
+        <div class="sc-subs-lbl">${a.subs.length} habilidades que debes dominar — una por una</div>
+        <div class="sc-subs">${a.subs.map((x,i)=>`
+          <div class="sc-sub">
+            <div class="sc-sub-h"><span class="sc-sub-n">${i+1}</span>${x.n}</div>
+            <div class="sc-sub-q">${x.q}</div>
+            <div class="sc-sub-c"><b>Cómo desarrollarla:</b> ${x.c}</div>
+            <div class="sc-sub-r">📚 ${x.r}</div>
+          </div>`).join('')}
+        </div>` : `
         <div class="sc-diag">🔍 <b>Por qué está baja:</b> ${a.diagnostico}</div>
         <div class="sc-primer">🎯 <b>Esta semana:</b> ${a.primer}</div>
         <div class="sc-plan">📆 <b>Semanas 2-4:</b> ${a.semana24}</div>
         <div class="sc-habito">🔁 <b>Hábito:</b> ${a.habito}</div>
         <div class="sc-error">⚠️ <b>Error común:</b> ${a.error}</div>
-        <div class="sc-res">📚 <b>${a.recursos[0].n}</b> · ${a.recursos[1].n} · ${a.recursos[2].n}</div>
+        <div class="sc-res">📚 <b>${a.recursos[0].n}</b> · ${a.recursos[1].n} · ${a.recursos[2].n}</div>`}
         <a class="sc-link" href="../Coach/Coach_v2.html?skill=${s.id}#aprendizaje">✏️ Ajustar ${s.name} en Coach →</a>
       </div>
     </div>`;

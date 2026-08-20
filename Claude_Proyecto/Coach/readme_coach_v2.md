@@ -704,3 +704,23 @@ Se fueron los dos enlaces y, con ellos, la regla `.sb-dashboard` del `<style>`: 
 El bloque flotante `#btnVolverDash` (`position:fixed`, fondo oscuro propio, z-index 9999) que se había insertado esta mañana **se encimaba sobre el botón de tema (`#theme-toggle-btn`)** y no seguía el tema de este archivo. Se retiró junto con su `<style>`: ahora el enlace es un botón redondo más de `.modo-switch-right`, con el 🚀 solo, con la clase `.theme-toggle-btn` que ya usan sus vecinos, así que hereda tema y estilos sin CSS nuevo.
 
 Detalle completo y medición en `../Dashboard/readme_dashboard.md` → "El botón de Dashboard deja de flotar".
+
+## Finanzas e Inversión: las habilidades una por una (2026-08-19)
+
+*"tambien la parte de coach hazla de esta manera, por que teniamos cosas inutiles pero esto si me va servir"*.
+
+Las tarjetas de **💰 Finanzas personales** y **📈 Inversión en Mercados** de la sección de aprendizaje tenían los mismos 4 párrafos que el Dashboard —primer paso, semanas 2-4, hábito recomendado y error común— y los pierden por la misma razón: decían cómo empezar, no qué hay que saber.
+
+En su lugar, **7 sub-habilidades de finanzas y 9 de inversión**, numeradas, cada una con qué es, cómo desarrollarla y con qué libro. El contenido es exactamente el mismo que el del Dashboard —se generó de una sola fuente para las dos apps, así que no pueden desincronizarse como pasó con `RUTINA_TASKS`— pero pintado con las clases propias de Coach (`.subhab*`, en el mismo lenguaje visual que `.recurso-item`).
+
+El bloque de **📚 Recursos** al final de cada tarjeta se conserva: son los 4 libros base de cada área y siguen siendo válidos como punto de entrada.
+
+### De paso, un desbordamiento propio
+
+Al medir el resultado en 390px aparecieron 4 elementos desbordados. Comparado contra `006fae4^` resultó que **2 de ellos los había introducido este mismo proyecto el día anterior**: al integrar el botón de Dashboard en `.modo-switch-right`, ese grupo pasó de 2 iconos a 3 y la barra dejó de caber, porque los botones de modo llevan texto largo ("🪙 Coach — Personal") y `justify-content:space-between` no deja de dónde sacar espacio.
+
+Arreglado dejando que la barra **envuelva** en ≤700px en vez de esconder alguno de los tres botones —ninguno sobra— y con el texto más compacto en ≤420px, para que los dos botones de modo sigan compartiendo fila y la barra no se vaya a 3 filas (medido: 136px de alto en 360px antes del segundo ajuste, 91px después).
+
+### Verificación
+
+1400px, 820px, 390px y 360px: **7 y 9** sub-habilidades en las dos tarjetas, 0 rastros de los 4 párrafos retirados, y **0 desbordes propios** — los 2 que quedan (`.subtab-btn`) son anteriores a todos estos cambios, comprobado contra el mismo commit. Sin errores de consola.

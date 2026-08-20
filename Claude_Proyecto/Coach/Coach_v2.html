@@ -181,6 +181,29 @@
       transition: color .15s, background .15s, border-color .15s;
     }
     .modo-btn:hover { color: var(--text); }
+
+    /* ─── Barra de modo en pantallas angostas (2026-08-19) ───
+       Corrige un desbordamiento que introdujo el propio proyecto el 18-ago: al integrar el botón
+       de Dashboard, `.modo-switch-right` pasó de 2 iconos a 3 y la fila dejó de caber en 390px
+       (medido contra 006fae4^: 2 elementos desbordados antes, 4 después). Los 2 botones de modo
+       llevan texto largo -"🪙 Coach — Personal"- y con `justify-content:space-between` no había
+       de dónde sacar espacio.
+       Se deja envolver en vez de esconder alguno de los tres: ninguno sobra, y una barra de 2
+       filas es preferible a un control que se sale de la pantalla. */
+    @media (max-width: 700px) {
+      .modo-switch { flex-wrap: wrap; height: auto; padding: 8px 12px; row-gap: 8px; }
+      .modo-switch-center { margin: 0; gap: 8px; }
+      .modo-btn { padding: 8px 13px; font-size: 11.5px; }
+      .modo-switch-right { margin-left: auto; }
+      .modo-switch .theme-toggle-btn { width: 32px; height: 32px; font-size: 13px; }
+    }
+    /* Por debajo de 420px los dos botones de modo ya no caben juntos ni encogidos, y la barra se
+       iba a 3 filas (136px de alto en 360px, sobre un sticky). Con el texto más corto vuelven a
+       compartir fila. */
+    @media (max-width: 420px) {
+      .modo-btn { padding: 7px 9px; font-size: 10.5px; }
+      .modo-switch { padding: 7px 9px; gap: 6px; }
+    }
     .modo-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
     .theme-toggle-btn {
       width: 38px;
@@ -729,6 +752,34 @@
     .rm-50 { background: rgba(212,160,0,.14); color: var(--accent); }
     .rm-70 { background: var(--green-soft); color: var(--green); }
     .rm-85 { background: var(--green-soft); color: var(--green); }
+
+    /* ─── Sub-habilidades (2026-08-19) ───
+       Finanzas e Inversión dejaron el formato de "primer paso + hábito + error común" por la
+       lista de lo que hay que saber, una por una, con cómo desarrollarla y con qué libro. El
+       resto de habilidades de esta sección conserva el formato anterior. */
+    .subhab {
+      border-left: 2px solid var(--accent);
+      border-radius: 0 8px 8px 0;
+      background: var(--surface-2, rgba(127,127,127,.06));
+      padding: 9px 12px;
+      margin-bottom: 8px;
+    }
+    .subhab-h {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 13.5px; font-weight: 700; color: var(--text); line-height: 1.35;
+    }
+    .subhab-n {
+      flex-shrink: 0; width: 19px; height: 19px; border-radius: 50%;
+      background: var(--accent); color: #fff;
+      font-size: 10px; font-weight: 800;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .subhab-q { margin: 5px 0 0; line-height: 1.6; color: var(--muted); }
+    .subhab-c { margin: 6px 0 0; line-height: 1.7; }
+    .subhab-r {
+      margin-top: 7px; font-size: 12px; font-weight: 600;
+      color: var(--accent); line-height: 1.5;
+    }
 
     .recurso-item { display: flex; gap: 10px; align-items: flex-start; padding: 9px 0; border-bottom: 1px solid var(--border); font-size: 12px; color: var(--muted); }
     .recurso-item:last-child { border-bottom: none; }
@@ -2646,10 +2697,49 @@
         <span class="tag pendiente" style="flex-shrink:0;">Sin iniciar</span>
       </div>
 
-      <p class="fs-13 mb-4" style="margin-top:10px;"><strong style="color:var(--accent);">🎯 Primer paso esta semana:</strong> instala YNAB o Finerio y conecta tus cuentas para categorizar automáticamente los gastos de este mes.</p>
-      <p class="fs-13 mb-4"><strong style="color:var(--accent);">📆 Semanas 2-4:</strong> clasifica 30 días completos de gastos reales (no estimados) y encuentra las 3 categorías donde más se te va el dinero sin darte cuenta — esos son los primeros pesos que recortas, no los obvios.</p>
-      <p class="fs-13 mb-4"><strong style="color:var(--accent);">🔁 Hábito recomendado:</strong> revisión de 10 min cada domingo — clasifica los gastos de la semana y compáralos contra tu presupuesto.</p>
-      <p class="fs-13 mb-12"><strong style="color:var(--accent);">⚠️ Error común:</strong> tratar los MSI como "dinero gratis" en vez de deuda ya comprometida. Cada MSI nuevo reduce el excedente real que tienes disponible para pagar Banamex/BBVA ese mes, aunque no lo sientas de inmediato.</p>
+      <h4 style="color:var(--accent); margin:14px 0 8px; font-size:12px;">🧩 Las 7 habilidades de finanzas que debes dominar — una por una</h4>
+      <div class="subhab">
+        <div class="subhab-h"><span class="subhab-n">1</span>Saber a dónde se va tu dinero</div>
+        <p class="fs-13 subhab-q">Es la base de todo lo demás. Sin el dato real, cualquier presupuesto es una suposición y cualquier recorte es adivinar.</p>
+        <p class="fs-13 subhab-c"><strong>Cómo desarrollarla:</strong> Registra <b>30 días seguidos</b>, cada gasto el mismo día en que ocurre — no el domingo de memoria, porque ahí ya perdiste los chicos, que son justo los que no ves. Cinco categorías bastan: fijos, comida, transporte, deuda y gusto. Al día 30 ordénalas de mayor a menor y mira solo las tres primeras: ahí está el 80% de lo que puedes mover. Tu app de <b>Finanzas</b> ya hace esto, no necesitas otra herramienta.</p>
+        <div class="subhab-r">📚 Pequeño Cerdo Capitalista — Sofía Macías (los capítulos de gastos hormiga; es de México, habla de pesos y de CETES, no de 401k)</div>
+      </div>
+      <div class="subhab">
+        <div class="subhab-h"><span class="subhab-n">2</span>Presupuestar sobre ingreso variable</div>
+        <p class="fs-13 subhab-q">Tu ingreso no es uno: ALTEN es fijo y Didi cambia cada semana. Presupuestar sobre el promedio es lo que hace que un mes flojo te descuadre.</p>
+        <p class="fs-13 subhab-c"><strong>Cómo desarrollarla:</strong> Presupuesta sobre el <b>mínimo de tus últimos 3 meses</b>, nunca sobre el promedio ni sobre el mejor mes. Lo que entre por encima de ese mínimo no es para gastar: va al fondo, a la deuda o a inversión, en ese orden. Págate un "sueldo" fijo cada mes desde lo que junta Didi, en vez de gastar lo que va entrando.</p>
+        <div class="subhab-r">📚 Profit First — Mike Michalowicz (el método de repartir el ingreso en cuentas separadas antes de gastarlo)</div>
+      </div>
+      <div class="subhab">
+        <div class="subhab-h"><span class="subhab-n">3</span>Dimensionar el fondo de emergencia</div>
+        <p class="fs-13 subhab-q">No es un número redondo que suena bien: son <b>3 a 6 meses de tus gastos fijos</b>. Sin él, cualquier imprevisto vuelve a la tarjeta y deshace el avance de meses.</p>
+        <p class="fs-13 subhab-c"><strong>Cómo desarrollarla:</strong> Suma tus fijos reales de un mes (renta, comida, transporte, gym, suscripciones) y multiplica por 3. Ese es tu piso; por 6 es tu techo. Tu meta actual son <b>$10,000</b> y llevas $4,000 — compara ese $10,000 contra el número que te dé la suma y ajústalo si sale corto. Guárdalo donde puedas sacarlo en 24-48 h: CETES a 28 días o una cuenta de ahorro, nunca en algo que pueda valer menos el día que lo necesites.</p>
+        <div class="subhab-r">📚 The Simple Path to Wealth — JL Collins (capítulo del fondo y por qué va antes que invertir)</div>
+      </div>
+      <div class="subhab">
+        <div class="subhab-h"><span class="subhab-n">4</span>Calcular el costo real de la deuda</div>
+        <p class="fs-13 subhab-q">La tasa que anuncian no es lo que pagas. El CAT sí, porque mete comisiones y seguros. Sin ese número no puedes comparar dos créditos ni saber si un MSI te conviene.</p>
+        <p class="fs-13 subhab-c"><strong>Cómo desarrollarla:</strong> Aprende a leer el <b>CAT</b> de cada estado de cuenta y ordena tus deudas por tasa, de mayor a menor: eso es el <b>método avalancha</b> y es el que menos intereses te cuesta (la bola de nieve, de menor a mayor saldo, solo gana en motivación). Antes de un MSI, calcula qué porcentaje de tu excedente mensual te compromete y por cuántos meses: un MSI no es dinero gratis, es un pago fijo que ya vendiste.</p>
+        <div class="subhab-r">📚 Pequeño Cerdo Capitalista — Sofía Macías (deuda y CAT explicados con productos mexicanos)</div>
+      </div>
+      <div class="subhab">
+        <div class="subhab-h"><span class="subhab-n">5</span>Leer tu propio balance</div>
+        <p class="fs-13 subhab-q">Flujo (lo que entra y sale cada mes) y patrimonio (lo que tienes menos lo que debes) son dos cosas distintas. Puedes tener buen flujo y patrimonio negativo, que es donde estabas hace un año.</p>
+        <p class="fs-13 subhab-c"><strong>Cómo desarrollarla:</strong> Una vez al mes anota <b>activos − pasivos</b>: efectivo + fondo + inversiones + valor del BYD, menos lo que reste de deuda. Ese número, no tu quincena, es el que tiene que subir todos los meses rumbo al millón. El Dashboard ya lo calcula en <b>patrimonio neto</b>: tu trabajo es mirarlo una vez al mes, no cada día.</p>
+        <div class="subhab-r">📚 The Millionaire Next Door — Thomas J. Stanley (por qué el patrimonio y el ingreso no son lo mismo)</div>
+      </div>
+      <div class="subhab">
+        <div class="subhab-h"><span class="subhab-n">6</span>Entender tus impuestos</div>
+        <p class="fs-13 subhab-q">Lo que ganas fuera de la nómina tiene reglas propias. No saberlas cuesta dinero de dos formas: multas, y deducciones que dejas en la mesa.</p>
+        <p class="fs-13 subhab-c"><strong>Cómo desarrollarla:</strong> Aprende primero tres cosas concretas: qué régimen te corresponde por lo que ganas fuera de ALTEN, qué gastos son deducibles para una persona física (salud, colegiaturas, intereses de crédito hipotecario) y cuándo cae la declaración anual. Empieza por leer tu propia constancia de situación fiscal en el portal del SAT antes que cualquier guía: ahí ya está tu situación real.</p>
+        <div class="subhab-r">📚 Portal del SAT · Guía de Personas Físicas (gratis y es la fuente, no una interpretación)</div>
+      </div>
+      <div class="subhab">
+        <div class="subhab-h"><span class="subhab-n">7</span>Decidir con la cabeza fría</div>
+        <p class="fs-13 subhab-q">Casi ninguna mala decisión de dinero viene por no saber matemáticas. Viene por decidir cansado, con prisa o comparándote.</p>
+        <p class="fs-13 subhab-c"><strong>Cómo desarrollarla:</strong> Ponle una regla mecánica a lo que te cuesta: <b>72 horas</b> entre querer algo de más de $2,000 y comprarlo. Si a las 72 h sigues queriéndolo, cómpralo sin culpa. Y escribe la razón de cada decisión grande antes de tomarla — al releerla en 6 meses aprendes más de ti que de cualquier libro.</p>
+        <div class="subhab-r">📚 Psicología del Dinero — Morgan Housel (18 historias cortas; se lee en una semana)</div>
+      </div>
 
       <hr class="divider">
       <h4 style="color:var(--accent); margin-bottom:8px; font-size:12px;">📚 Recursos</h4>
@@ -2700,10 +2790,61 @@
         <span class="tag pendiente" style="flex-shrink:0;">Sin iniciar</span>
       </div>
 
-      <p class="fs-13 mb-4" style="margin-top:10px;"><strong style="color:var(--accent);">🎯 Primer paso esta semana:</strong> define por escrito, una sola vez, tu asignación objetivo (ej. % CETES/renta fija, % índice VOO, % BTC) — deja de decidirlo cada lunes desde cero.</p>
-      <p class="fs-13 mb-4"><strong style="color:var(--accent);">📆 Semanas 2-4:</strong> automatiza un monto fijo cada lunes hacia esa asignación (aunque sea pequeño) durante 4 semanas seguidas — la consistencia del monto importa más que acertarle al mejor momento para invertir.</p>
-      <p class="fs-13 mb-4"><strong style="color:var(--accent);">🔁 Hábito recomendado:</strong> revisar portafolio + VOO + USD/MXN e invertir, todos los lunes en la mañana antes de que empiece el ruido del día (ya está en tu rutina — la meta es que nunca se salte).</p>
-      <p class="fs-13 mb-12"><strong style="color:var(--accent);">⚠️ Error común:</strong> sacar dinero de la inversión para cubrir un gasto del mes. Eso convierte tu inversión de largo plazo en un fondo de emergencia mal disfrazado — para eso ya existe el fondo de emergencia aparte.</p>
+      <h4 style="color:var(--accent); margin:14px 0 8px; font-size:12px;">🧩 Las 9 habilidades de inversión que debes dominar — una por una</h4>
+      <div class="subhab">
+        <div class="subhab-h"><span class="subhab-n">1</span>Interés compuesto y horizonte</div>
+        <p class="fs-13 subhab-q">Es el motor de todo. Y lo que lo mueve no es la tasa, es el <b>tiempo</b>: cada año que pospones cuesta más que cualquier punto extra de rendimiento.</p>
+        <p class="fs-13 subhab-c"><strong>Cómo desarrollarla:</strong> Haz el cálculo una vez con tus números reales, no con ejemplos de libro: lo que puedes aportar al mes, un rendimiento conservador (8-10% anual nominal en México) y los años hasta 2030. Repítelo restando un año de aportaciones y compara — ver esa diferencia en pesos es lo que hace que ya no te saltes un mes.</p>
+        <div class="subhab-r">📚 The Little Book of Common Sense Investing — John C. Bogle (corto y va directo al punto)</div>
+      </div>
+      <div class="subhab">
+        <div class="subhab-h"><span class="subhab-n">2</span>Escribir tu asignación objetivo</div>
+        <p class="fs-13 subhab-q"><b>Esta es la que te falta</b>, y es la razón real de que cada lunes decidas desde cero. Una asignación es un reparto en porcentajes, escrito una sola vez, que decide por ti cuando el mercado te esté gritando.</p>
+        <p class="fs-13 subhab-c"><strong>Cómo desarrollarla:</strong> Define <b>tres porcentajes que sumen 100</b>: renta fija (CETES), índice global o S&P 500, y una porción chica de riesgo alto (BTC). Escríbelos con fecha en un solo renglón y guárdalos. La regla que evita el error clásico: en lo volátil no pongas más de lo que puedas ver caer un 50% sin tocarlo. Cada compra del lunes deja de ser una decisión y pasa a ser rellenar el porcentaje que quedó abajo.</p>
+        <div class="subhab-r">📚 The Bogleheads’ Guide to Investing (capítulo de asset allocation) · Pequeño Cerdo Capitalista: Inversiones — Sofía Macías</div>
+      </div>
+      <div class="subhab">
+        <div class="subhab-h"><span class="subhab-n">3</span>Conocer los instrumentos mexicanos</div>
+        <p class="fs-13 subhab-q">No puedes repartir entre cosas que no distingues. En México tienes acceso directo a más de lo que parece, y cada instrumento tiene un para qué distinto.</p>
+        <p class="fs-13 subhab-c"><strong>Cómo desarrollarla:</strong> Aprende de cada uno tres datos: <b>plazo, riesgo y cómo se le cobran impuestos</b>. Empieza por los que ya usas — CETES a 28 días (cetesdirecto, sin comisión), un índice como VOO vía GBM, y BTC — y añade solo lo que entiendas: Bonos M, Udibonos si te preocupa la inflación, y tu Afore, que es inversión aunque no lo parezca y casi nadie revisa.</p>
+        <div class="subhab-r">📚 Banxico · Educación financiera y cetesdirecto.com (fuentes oficiales, sin nadie vendiéndote nada)</div>
+      </div>
+      <div class="subhab">
+        <div class="subhab-h"><span class="subhab-n">4</span>Ver las comisiones antes que el rendimiento</div>
+        <p class="fs-13 subhab-q">El rendimiento no lo controlas; el costo sí. Un 1% anual de comisión, sostenido 20 años, se come cerca de una quinta parte de lo que habrías acumulado.</p>
+        <p class="fs-13 subhab-c"><strong>Cómo desarrollarla:</strong> De cada instrumento busca tres costos: <b>comisión de administración</b> (anual, el que más pesa), <b>comisión por operación</b> y el <b>spread</b> de compra-venta si es en dólares o cripto. Compara el mismo índice en dos casas antes de comprarlo: la diferencia entre 0.03% y 1.5% anual es la diferencia entre llegar y no llegar al millón en 2030.</p>
+        <div class="subhab-r">📚 A Random Walk Down Wall Street — Burton Malkiel (por qué los costos predicen mejor que las estrellas de un fondo)</div>
+      </div>
+      <div class="subhab">
+        <div class="subhab-h"><span class="subhab-n">5</span>Aportar periódicamente y automatizarlo</div>
+        <p class="fs-13 subhab-q">Aportar lo mismo cada periodo (DCA) compra más barato cuando el mercado cae y menos caro cuando sube, sin que tengas que adivinar. Y quita la decisión de en medio.</p>
+        <p class="fs-13 subhab-c"><strong>Cómo desarrollarla:</strong> Fija un <b>monto y un día</b> — tú ya tienes el bloque de GBM de los lunes y los $1,500 a CETES el día 15. Súbelo cuando suba tu ingreso, nunca lo bajes por cómo se vea el mercado. La prueba de que funciona es aburrida a propósito: 12 meses seguidos sin saltarte uno.</p>
+        <div class="subhab-r">📚 The Simple Path to Wealth — JL Collins</div>
+      </div>
+      <div class="subhab">
+        <div class="subhab-h"><span class="subhab-n">6</span>Rebalancear una vez al año</div>
+        <p class="fs-13 subhab-q">Con el tiempo, lo que sube se lleva más peso del que le asignaste y tu cartera termina siendo más arriesgada de lo que decidiste.</p>
+        <p class="fs-13 subhab-c"><strong>Cómo desarrollarla:</strong> Una vez al año, o cuando algo se desvíe más de <b>5 puntos</b> de su porcentaje, vuelve a los números que escribiste. Lo más fácil: no vendas nada, dirige las aportaciones nuevas a lo que quedó abajo hasta emparejar. Rebalancear obliga a vender caro y comprar barato, que es justo lo contrario de lo que pide el instinto.</p>
+        <div class="subhab-r">📚 The Bogleheads’ Guide to Investing</div>
+      </div>
+      <div class="subhab">
+        <div class="subhab-h"><span class="subhab-n">7</span>Saber qué impuestos pagas al invertir</div>
+        <p class="fs-13 subhab-q">El rendimiento que ves no es el que te queda. En México hay retención sobre intereses y un ISR distinto para ganancias de bolsa y para cripto.</p>
+        <p class="fs-13 subhab-c"><strong>Cómo desarrollarla:</strong> Aprende cómo tributa cada cosa que tienes: la retención anual sobre el capital en instrumentos de deuda, el <b>10% sobre la ganancia</b> en enajenación de acciones en bolsa, y que la ganancia por cripto se acumula a tus demás ingresos. Guarda tus constancias anuales de GBM y cetesdirecto en la misma carpeta desde ahora: en abril valen oro.</p>
+        <div class="subhab-r">📚 Portal del SAT · Constancias de tus instituciones financieras</div>
+      </div>
+      <div class="subhab">
+        <div class="subhab-h"><span class="subhab-n">8</span>Aguantar sin vender</div>
+        <p class="fs-13 subhab-q">La diferencia entre lo que rinde un fondo y lo que gana la gente que lo tiene se explica casi entera por comprar arriba y vender abajo. Es la habilidad que más dinero vale y la única que no se estudia, se entrena.</p>
+        <p class="fs-13 subhab-c"><strong>Cómo desarrollarla:</strong> Escribe <b>hoy</b>, con el mercado tranquilo, qué vas a hacer si tu cartera cae 30% — y déjalo junto a la asignación. En la caída no se decide, se ejecuta lo que ya está escrito. Regla de higiene: revisa precios una vez por semana, en tu bloque del lunes, y no vuelvas a abrir la app hasta el siguiente.</p>
+        <div class="subhab-r">📚 Psicología del Dinero — Morgan Housel · El Inversor Inteligente — Benjamin Graham (los capítulos 8 y 20, que son los que Buffett señala)</div>
+      </div>
+      <div class="subhab">
+        <div class="subhab-h"><span class="subhab-n">9</span>Saber cuándo NO invertir</div>
+        <p class="fs-13 subhab-q">Invertir con deuda cara viva o sin fondo de emergencia no es ser agresivo, es perder dinero con más pasos.</p>
+        <p class="fs-13 subhab-c"><strong>Cómo desarrollarla:</strong> Ordena siempre igual: <b>1) fondo de emergencia completo · 2) deuda con tasa alta a cero · 3) invertir</b>. Ninguna tasa de rendimiento razonable le gana a una tarjeta. Tu panel de "Qué invertir hoy" ya aplica esta regla a tu saldo real cada vez que lo abres — la habilidad es respetarla cuando el mercado esté subiendo y dé comezón saltarse un paso.</p>
+        <div class="subhab-r">📚 I Will Teach You to Be Rich — Ramit Sethi (el orden de operaciones, capítulos 1 a 4)</div>
+      </div>
 
       <hr class="divider">
       <h4 style="color:var(--accent); margin-bottom:8px; font-size:12px;">📚 Recursos</h4>
