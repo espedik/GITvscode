@@ -3007,3 +3007,37 @@ El mismo cambio se aplicó a las 16 tarjetas de Coach (7 de finanzas + 9 de inve
 ### Verificación
 
 Dashboard en escritorio y celular: **7 y 9 botones**, todos cerrados al cargar, **0 cuerpos visibles**, y al hacer clic el primero abre con `aria-expanded="true"` y su contenido a la vista. En Coach, los 16 cerrados y el toggle funcionando — comprobado **después de navegar a la sección**, porque `#aprendizaje` carga con `display:none` y medir ahí daba un falso negativo. 0 desbordes y sin errores de consola.
+
+## Un crédito a plazo no se juzga como una tarjeta revolvente (2026-08-19)
+
+*"esto esta bien calculado, sabiendo el tiempo del credito automotriz? — Crédito Automotriz · pagas $6,700 al mes. De ese pago, $3,237 son intereses y solo $3,463 bajan el saldo. A este ritmo tardarías años en liquidarla."*.
+
+**El cálculo estaba bien; la conclusión no.** Los números se comprobaron uno por uno:
+
+| | |
+|---|---|
+| Interés mensual | `299,000 × 12.99% ÷ 12` = **$3,237** ✅ |
+| Amortización | `6,700 − 3,237` = **$3,463** ✅ |
+| Cuota teórica para 61 meses | **$6,722** contra los $6,700 reales — cuadra |
+
+Lo que fallaba era la frase final. *"A este ritmo tardarías años en liquidarla"* es el texto pensado para una **tarjeta revolvente**, donde el pago mínimo puede no amortizar y eso sí es una alarma. Un crédito automotriz tiene **plazo pactado y mensualidad calculada para liquidarlo en esa fecha** — y la propia deuda ya traía el dato: **`remainingMonths: 61`**, que el panel estaba ignorando.
+
+### Ahora distingue los dos tipos
+
+**Deuda a plazo** (trae `remainingMonths`) — la pregunta útil no es cuándo acaba, que ya se sabe, sino cuánto de lo que falta es interés:
+
+> **Crédito Automotriz · pagas $6,700 al mes**
+> De ese pago, $3,237 son intereses y $3,463 bajan el saldo — **y va según lo pactado: te quedan 61 pagos, hasta septiembre de 2031**.
+> De aquí al final pagarás **$408,700**, de los cuales **$109,700 son intereses**. Adelantar pagos aquí sí ahorra, pero **menos que en la tarjeta**: 12.99% contra la tasa de tus tarjetas. Primero la cara.
+
+**Deuda revolvente** (sin plazo) conserva la alarma, y ahora además **calcula los meses** con la fórmula del logaritmo en vez de decir "años" a ojo.
+
+### De paso: dos números distintos con el mismo nombre
+
+Revisando esto apareció otra incoherencia. El **medidor** "Deuda cara" la calcula con las tarjetas (Banamex + BBVA), pero el **panel** la calculaba con `rate > 0`, que mete al crédito del coche al 12.99%. La misma pantalla mostraba dos cifras distintas bajo el mismo nombre. El panel ahora filtra por `type === 'credit_card'`, igual que el medidor.
+
+El coche sigue contando donde corresponde: en **Deuda total** y en **Intereses este mes**, porque intereses sí paga — $3,237 de los $4,738 mensuales, de hecho.
+
+### Verificación
+
+Con sus deudas reales sembradas (BBVA $32,343 al 55.7% y crédito automotriz $299,000 al 12.99% con 61 meses): el panel muestra el plazo y el interés total restante en el coche, mantiene la alarma en la tarjeta, y "Deuda cara" queda en $32,343 — solo la tarjeta, igual que su medidor. Sin `undefined` ni `NaN`, sin errores de consola.
