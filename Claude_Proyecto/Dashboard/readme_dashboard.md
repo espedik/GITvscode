@@ -2864,3 +2864,28 @@ La lista lleva `max-height:340px` con scroll propio: son 7 y 9 entradas largas, 
 ### Verificación
 
 Escritorio y celular: **7 y 9** sub-habilidades pintadas, **0** rastros de los 5 campos retirados, un recurso por sub-habilidad, scroll interno activo y 0 desbordes. Sin errores de consola.
+
+## El hover de las tarjetas movía el título, no solo la foto (2026-08-19)
+
+*"hay un error y lo observo en mi pc, cuando paso el mouse a mis metas en lo de byd y den ai, se hacen mas grandes las imagenes y hace cosas raras"*.
+
+El efecto era `transform:scale(1.02)` sobre `.img-goal-photo` — pero eso **no es la imagen, es el contenedor**. Al escalarlo se escalaba todo lo que lleva dentro: el gradiente `::after` y, sobre todo, el título `.img-goal-txt`, que al re-renderizarse a un tamaño intermedio se ve borroso y corrido.
+
+Por qué justo en esas dos y no en el resto: **son los dos títulos más largos**. "Liquidar el BYD Dolphin Mini · $X restantes" —que además lleva dinero en vivo— y "Certificación ISTQB CT-GenAI" ocupan casi todo el ancho de su tarjeta, así que un 2% de corrimiento se ve; en "Primer Hyrox" no hay dónde notarlo. No era cosa de esas dos imágenes: el defecto estaba en las 33 tarjetas y solo se apreciaba en las de título largo.
+
+Medido antes del arreglo: la tarjeta escalada **se salía unos 4 px de su celda por cada lado**, invadiendo el espacio de las vecinas.
+
+### El arreglo
+
+La imagen pasa a un `::before` que hereda el `background-image` inline del padre (`background:inherit`), y es **ese pseudo-elemento** el que escala:
+
+```
+.img-goal-photo::before{...background:inherit;transition:transform .25s}
+.img-goal-photo:hover::before{transform:scale(1.06)}
+```
+
+El contenedor ya no se mueve, así que ni arrastra al texto ni se sale de la celda, y el `overflow:hidden` que ya tenía recorta el zoom dentro de la tarjeta. Como ahora nada compite por espacio, el zoom pudo subir de 1.02 a **1.06**: se nota más y molesta menos. `::after` (gradiente) y `.img-goal-txt` recibieron `z-index` explícito para quedar por encima de la imagen.
+
+### Verificación
+
+En las 4 tarjetas probadas —BYD, CT-GenAI, Hyrox y Maestría— con el hover activo: la foto **mantiene su tamaño exacto** (391×79 → 391×79), el **título no se mueve ni un píxel**, y **no se sale de su celda**. La captura sí cambia con el puntero encima, o sea que el zoom se ve. Las **33 tarjetas** con foto del archivo (14 metas + 19 habilidades base) heredan la imagen correctamente en el pseudo-elemento, incluidas las que no vienen de Unsplash —la del BYD es de Wikimedia—, en escritorio y en celular. Cero errores de consola.

@@ -184,10 +184,24 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 .img-goal-grid{flex:1;min-height:0;display:grid;grid-template-columns:repeat(2,1fr);grid-template-rows:none;grid-auto-rows:minmax(100px,1fr);overflow-y:auto;gap:6px;margin-top:2px;padding-right:2px}
 .img-goal-cell{display:flex;flex-direction:column;gap:2px;min-height:0}
 .img-goal-photo{position:relative;flex:1;min-height:0;border-radius:12px;overflow:hidden;background-size:cover;background-position:center;box-shadow:0 6px 18px rgba(0,0,0,.3);cursor:pointer;transition:transform .2s,box-shadow .2s}
-.img-goal-photo:hover{transform:scale(1.02);box-shadow:0 10px 26px rgba(0,0,0,.4)}
-.img-goal-photo::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.78) 0%,rgba(0,0,0,.2) 60%,transparent 85%)}
+/* ─── El zoom del hover lo hace la IMAGEN, no la tarjeta (2026-08-19) ───
+   Antes era `transform:scale(1.02)` sobre `.img-goal-photo`, que es el contenedor: escalaba con
+   él TODO lo que lleva dentro — el gradiente `::after` y, sobre todo, el título `.img-goal-txt`,
+   que al re-renderizarse a un tamaño intermedio se ve borroso y desplazado. Por eso Adán lo notó
+   justo en el BYD y en la CT-GenAI: son los dos títulos más largos ("Liquidar el BYD Dolphin
+   Mini · $X restantes" lleva además dinero en vivo), y en un texto largo el corrimiento se ve;
+   en "Primer Hyrox" casi no. Medido además: la tarjeta escalada se salía ~4px de su celda por
+   cada lado, invadiendo el espacio de las vecinas.
+   Ahora la foto vive en un `::before` que hereda el `background-image` inline del padre y es ESE
+   pseudo-elemento el que escala. El contenedor no se mueve —así que no se sale de la celda ni
+   arrastra al texto— y `overflow:hidden`, que ya estaba, recorta el zoom dentro de la tarjeta. */
+.img-goal-photo::before{content:'';position:absolute;inset:0;background:inherit;
+  background-size:cover;background-position:center;transition:transform .25s ease}
+.img-goal-photo:hover::before{transform:scale(1.06)}
+.img-goal-photo:hover{box-shadow:0 10px 26px rgba(0,0,0,.4)}
+.img-goal-photo::after{content:'';position:absolute;inset:0;z-index:1;background:linear-gradient(to top,rgba(0,0,0,.78) 0%,rgba(0,0,0,.2) 60%,transparent 85%)}
 .img-goal-cell:last-child:nth-child(odd){grid-column:1/-1}
-.img-goal-txt{position:absolute;left:0;right:0;bottom:0;padding:4px 8px;z-index:1;display:flex;align-items:center;gap:5px;font-weight:800;font-size:clamp(9px,0.85vw,11px);color:#fff;text-shadow:0 1px 4px rgba(0,0,0,.6)}
+.img-goal-txt{position:absolute;left:0;right:0;bottom:0;padding:4px 8px;z-index:2;display:flex;align-items:center;gap:5px;font-weight:800;font-size:clamp(9px,0.85vw,11px);color:#fff;text-shadow:0 1px 4px rgba(0,0,0,.6)}
 .img-goal-pbar-row{display:flex;align-items:center;gap:5px;padding:0 1px;flex-shrink:0}
 .img-goal-pbar-ico{font-size:7px;flex-shrink:0;line-height:1}
 .img-goal-pbar{flex:1;height:4px;border-radius:20px;background:rgba(var(--ov),.14);overflow:hidden}
