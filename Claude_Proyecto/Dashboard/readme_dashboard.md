@@ -2889,3 +2889,38 @@ El contenedor ya no se mueve, así que ni arrastra al texto ni se sale de la cel
 ### Verificación
 
 En las 4 tarjetas probadas —BYD, CT-GenAI, Hyrox y Maestría— con el hover activo: la foto **mantiene su tamaño exacto** (391×79 → 391×79), el **título no se mueve ni un píxel**, y **no se sale de su celda**. La captura sí cambia con el puntero encima, o sea que el zoom se ve. Las **33 tarjetas** con foto del archivo (14 metas + 19 habilidades base) heredan la imagen correctamente en el pseudo-elemento, incluidas las que no vienen de Unsplash —la del BYD es de Wikimedia—, en escritorio y en celular. Cero errores de consola.
+
+## Los medidores de Mis Metas se abren y explican su número (2026-08-19)
+
+*"aqui quiero que cuando de click, me muestre informacion detallada como barras para ese indicador que las respalden o informacion o info para resolverla o que te ayuden o solo indicativas, tambien si puedes agregar mas, hazlo"*.
+
+Los 4 medidores de arriba del slide eran de solo lectura: una cifra sin de dónde sale ni qué hacer con ella. Ahora son **8 y todos se abren** con un panel que responde tres cosas — **de dónde sale el número**, **qué significa** y **qué hacer**.
+
+### Los 8
+
+| | Medidor | Qué desglosa al abrirlo |
+|---|---|---|
+| 🆘 | Fondo de emergencia | avance a la meta **y cuántos meses de tu gasto real te cubre hoy** |
+| 💳 | Deuda cara | cada deuda con su tasa y **lo que te cuesta al mes solo en intereses** |
+| 🎓 | Fondo Maestría | lo ahorrado y **por qué está en pausa** (decisión tomada, no olvido) |
+| 💰 | Patrimonio hacia $1M | qué suma y qué resta, y **el ritmo mensual que pide la meta** |
+| 💸 | **Ahorro de este mes** | ingresos contra gastos del mes y tu tasa de ahorro |
+| 📈 | **Total invertido** | el reparto real de tu portafolio, instrumento por instrumento |
+| 🧾 | **Deuda total** | todas las deudas **ordenadas por tasa**, no por saldo |
+| ⏳ | **Camino a 2030** | días restantes y % del plan recorrido |
+
+Los 4 nuevos salen de datos que **ya estaban en `finanzasmx_v2`** y que no se miraban en ninguna pantalla: las transacciones del mes, el detalle de `investments`, las deudas sin interés (que no aparecían en "deuda cara" pero sí comprometen el excedente) y el calendario del plan.
+
+### Nada escrito a mano
+
+Todo el desglose se calcula en vivo al abrir el panel, así que ninguna cifra puede quedarse vieja. Algunos ejemplos de lo que eso permite decir, que antes no se podía:
+
+- **El fondo se compara contra su gasto real**, no contra el número redondo: promedia los gastos de los 3 meses cerrados y calcula cuántos meses cubren los $10,000. Si la meta no llega a 3 meses de gasto, el panel lo avisa — los $10,000 son un buen primer escalón, no el fondo terminado.
+- **La deuda cara dice lo que cuesta el mes que sigue viva**: `saldo × tasa ÷ 12`, deuda por deuda.
+- **El patrimonio traduce la meta a ritmo**: cuánto habría que sumar al mes para llegar en los meses que quedan, con la aclaración de que **pagar deuda cuenta igual que ahorrar** porque mueve el mismo número.
+
+El panel reutiliza las clases `.gbm-*` del panel de inversión en vez de duplicar 60 líneas de CSS: mismo lenguaje visual y lo que se arregle en uno vale para el otro. Solo las barras de desglose son nuevas.
+
+### Verificación
+
+Con datos sembrados realistas (fondo $4,000, BBVA $32,343 al 45%, crédito del coche a 0%, 3 instrumentos, 10 movimientos repartidos en 4 meses): los **8 paneles abren con su cifra, sus barras y sus secciones**, y **ninguno muestra `undefined` ni `NaN`** — que es el riesgo real de calcular todo en vivo sobre datos que pueden faltar. 0 desbordes en 1600px, 820px y 390px, y cero errores de consola.

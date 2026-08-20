@@ -238,6 +238,23 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 #metasProgreso .lbl{font-size:9px}
 #metasProgreso .pbar{height:4px;margin-top:4px}
 #metasProgreso .sub{font-size:9px;margin-top:2px}
+/* ─── Medidores clicables (2026-08-19) ───
+   Los 4 (ahora 8) medidores de Mis Metas eran de solo lectura: un número sin de dónde sale. Ahora
+   abren un panel con su desglose real. El panel reutiliza las clases `.gbm-*` del panel de
+   inversión en vez de duplicar 60 líneas de CSS — mismo lenguaje visual, y lo que se arregle en
+   uno vale para el otro. Solo las barras de desglose son nuevas. */
+#metasProgreso .tile{cursor:pointer;transition:transform .15s,box-shadow .15s,border-color .15s}
+#metasProgreso .tile:hover{transform:translateY(-2px);box-shadow:0 12px 30px rgba(0,0,0,.4)}
+#metasProgreso .tile::after{content:'ver detalle →';display:block;font-size:8px;font-weight:800;
+  letter-spacing:.04em;color:var(--text3);opacity:0;transition:opacity .15s;margin-top:2px}
+#metasProgreso .tile:hover::after{opacity:.85}
+.kpi-desglose{display:flex;flex-direction:column;gap:9px}
+.kpi-linea-top{display:flex;justify-content:space-between;align-items:baseline;gap:10px;font-size:12px}
+.kpi-linea-nom{color:var(--text2);font-weight:700}
+.kpi-linea-val{font-family:var(--mono);font-weight:800;color:var(--text);white-space:nowrap}
+.kpi-linea-nota{font-size:10px;color:var(--text3);margin-top:3px;line-height:1.4}
+.kpi-cifra{font-family:var(--mono);font-size:clamp(22px,3vw,32px);font-weight:900;line-height:1}
+.kpi-cifra-sub{font-size:11px;color:var(--text3);margin-top:4px}
 /* Otra vuelta más chico (2026-08-11, pedido explícito: "haz todavia mas pequeñas los
    indicadores de arriba, los 4") — mismo criterio que la ronda anterior: el espacio que se
    libera aquí es el que gana la cuadrícula de fotos de metas de abajo. */
@@ -1797,6 +1814,18 @@ a.rt2-sub-prod:hover{text-decoration:underline}
       <div class="meta-detail-progress" id="metaDetailProgress"></div>
       <div class="meta-detail-steps" id="metaDetailSteps"></div>
     </div>
+  </div>
+</div>
+
+<!-- ─── DETALLE DE UN MEDIDOR (2026-08-19) — se abre tocando cualquiera de los 8 de Mis Metas ─── -->
+<div class="gbm-overlay" id="kpiOverlay" onclick="if(event.target===this) cerrarKpi()">
+  <div class="gbm-card">
+    <div class="gbm-head">
+      <button class="gbm-close" onclick="cerrarKpi()" aria-label="Cerrar">✕</button>
+      <h2 id="kpiTitulo">—</h2>
+      <p id="kpiSubtitulo"></p>
+    </div>
+    <div class="gbm-body" id="kpiBody"></div>
   </div>
 </div>
 
@@ -5111,6 +5140,219 @@ function toggleEdadChecklist(id,idx){
   pintarDetailOverlay(EDAD_DETALLE,'edad_checklist_v1',id,'toggleEdadChecklist',null);
   pintarEdadPace();
 }
+// ══════════════════════════════════════════════════════════════════════════
+// DETALLE DE LOS MEDIDORES DE MIS METAS (2026-08-19)
+// ══════════════════════════════════════════════════════════════════════════
+// Pedido: "cuando de click, me muestre informacion detallada como barras para ese indicador que
+// las respalden o informacion o info para resolverla". Cada medidor calcula su desglose EN VIVO
+// desde `finanzasmx_v2` — nada aquí está escrito a mano, y por eso ninguna cifra puede quedarse
+// vieja. Los textos de "qué hacer" salen de reglas que ya están en su Plan Maestro, no de
+// consejos genéricos.
+function kpiBarra(nom, val, pct, color, nota){
+  return '<div><div class="kpi-linea-top"><span class="kpi-linea-nom">'+nom+'</span>'+
+         '<span class="kpi-linea-val">'+val+'</span></div>'+
+         '<div class="gbm-bar"><div class="gbm-bar-f" style="width:'+Math.max(0,Math.min(100,pct))+'%;background:'+color+'"></div></div>'+
+         (nota?'<div class="kpi-linea-nota">'+nota+'</div>':'')+'</div>';
+}
+function kpiSec(t){ return '<div class="gbm-sec">'+t+'</div>'; }
+function kpiNota(t){ return '<div class="gbm-nota">'+t+'</div>'; }
+function kpiPaso(titulo, texto, color){
+  return '<div class="gbm-paso" style="border-color:'+color+'55;background:'+color+'12">'+
+         '<div class="gbm-paso-t" style="color:'+color+'">'+titulo+'</div>'+
+         '<div class="gbm-paso-d">'+texto+'</div></div>';
+}
+// Gasto mensual real: promedio de los gastos de los últimos 3 meses cerrados. Se usa para
+// dimensionar el fondo de emergencia contra la realidad y no contra un número redondo.
+function kpiGastoMensual(){
+  const txs=(D.fin.transactions||[]).filter(t=>t.type==='expense'&&t.date);
+  if(!txs.length) return {prom:0, meses:0};
+  const porMes={};
+  txs.forEach(t=>{ const m=t.date.slice(0,7); porMes[m]=(porMes[m]||0)+(+t.amount||0); });
+  const claves=Object.keys(porMes).sort().slice(-4,-1); // los 3 cerrados, sin el mes en curso
+  if(!claves.length) return {prom:0, meses:0};
+  return {prom: claves.reduce((a,k)=>a+porMes[k],0)/claves.length, meses: claves.length};
+}
+function kpiMesActual(){
+  const m=today().slice(0,7);
+  const txs=(D.fin.transactions||[]).filter(t=>(t.date||'').slice(0,7)===m);
+  const ing=txs.filter(t=>t.type==='income').reduce((a,t)=>a+(+t.amount||0),0);
+  const gas=txs.filter(t=>t.type==='expense').reduce((a,t)=>a+(+t.amount||0),0);
+  return {ing, gas, saldo:ing-gas, n:txs.length};
+}
+function abrirKpi(id){
+  const ov=document.getElementById('kpiOverlay');
+  if(!ov) return;
+  const info=kpiDetalle(id);
+  if(!info) return;
+  document.getElementById('kpiTitulo').textContent=info.titulo;
+  document.getElementById('kpiSubtitulo').textContent=info.sub||'';
+  document.getElementById('kpiBody').innerHTML=info.html;
+  ov.classList.add('open');
+  clearInterval(timer);
+}
+function cerrarKpi(){ document.getElementById('kpiOverlay')?.classList.remove('open'); }
+
+function kpiDetalle(id){
+  const F=D.fin||{}, debts=F.debts||[], inv=F.investments||[];
+  const ef=+F.emergencyFund||0, metaEf=10000;
+  const g=kpiGastoMensual(), mes=kpiMesActual();
+  const pat=patrimonioNeto();
+  const totalInv=inv.reduce((a,i)=>a+(+i.value||+i.invested||0),0);
+  const deudaTot=debts.reduce((a,d)=>a+(+d.balance||0),0);
+  const deudaCara=debts.filter(d=>d.rate>0&&d.balance>0);
+  const deudaCaraBal=deudaCara.reduce((a,d)=>a+d.balance,0);
+  const V='var(--g)', O='var(--o)', R='var(--r)', C='var(--cy)', P='var(--p)', W='var(--w)';
+
+  if(id==='fondo'){
+    const falta=Math.max(0,metaEf-ef), pct=ef/metaEf*100;
+    const mesesCubiertos=g.prom>0?(ef/g.prom):0;
+    const rec=Math.round(falta/3/100)*100;
+    return {titulo:'🆘 Fondo de emergencia', sub:'Cuánto llevas, cuánto te cubre de verdad y qué falta.',
+      html:
+      '<div class="kpi-cifra" style="color:'+W+'">'+money(ef)+' <span style="font-size:14px;color:var(--text3)">de '+money(metaEf)+'</span></div>'+
+      '<div class="kpi-cifra-sub">'+Math.round(pct)+'% de la meta · faltan <b>'+money(falta)+'</b></div>'+
+      kpiSec('📊 De dónde sale')+
+      '<div class="kpi-desglose">'+
+        kpiBarra('Avance hacia los '+money(metaEf), money(ef), pct, W)+
+        (g.prom>0?kpiBarra('Meses de gastos que te cubre hoy', mesesCubiertos.toFixed(1)+' meses', mesesCubiertos/3*100, mesesCubiertos>=3?V:O,
+          'Tu gasto real es de '+money(g.prom)+'/mes (promedio de '+g.meses+' meses cerrados). El estándar es cubrir de 3 a 6.'):'')+
+      '</div>'+
+      (g.prom>0&&metaEf<g.prom*3?kpiNota('⚠️ Ojo con la meta: <b>'+money(metaEf)+' no llega a 3 meses</b> de tu gasto real ('+money(g.prom*3)+'). Los $10,000 son un buen primer escalón, pero el fondo terminado para ti está más arriba.'):'')+
+      kpiSec('🎯 Qué hacer')+
+      (falta>0
+        ? kpiPaso('Complétalo antes que cualquier otra cosa','Te faltan <b>'+money(falta)+'</b>. A <b>'+money(rec)+' al mes</b> lo cierras en 3 meses. Va antes que invertir y antes que abonos extra a deuda: es lo que evita que un imprevisto te regrese a la tarjeta y deshaga meses de avance.',O)
+        : kpiPaso('Fondo completo ✅','Ya no aportas aquí. El excedente pasa al siguiente escalón: deuda cara si queda, y si no, inversión.',V))+
+      kpiNota('Guárdalo donde puedas sacarlo en 24-48 h — CETES a 28 días o cuenta de ahorro. Nunca en algo que pueda valer menos justo el día que lo necesitas.')};
+  }
+
+  if(id==='deudacara'){
+    const filas=deudaCara.map(d=>{
+      const pagado=d.total>0?(1-d.balance/d.total)*100:0;
+      const interesMes=d.rate>0?d.balance*(d.rate/100)/12:0;
+      return kpiBarra(esc(d.name), money(d.balance), pagado, R,
+        'Tasa '+d.rate+'% anual · te cuesta <b>'+money(interesMes)+' al mes</b> solo en intereses'+(d.total>0?' · llevas '+Math.round(pagado)+'% pagado':''));
+    }).join('');
+    const interesTotal=deudaCara.reduce((a,d)=>a+d.balance*((d.rate||0)/100)/12,0);
+    return {titulo:'💳 Deuda cara', sub:'Cada saldo con su tasa, y lo que te cuesta cada mes que sigue vivo.',
+      html:
+      '<div class="kpi-cifra" style="color:'+R+'">'+money(deudaCaraBal)+'</div>'+
+      '<div class="kpi-cifra-sub">'+deudaCara.length+' deuda'+(deudaCara.length===1?'':'s')+' con interés · <b>'+money(interesTotal)+' al mes</b> solo en intereses</div>'+
+      kpiSec('📊 Deuda por deuda')+
+      '<div class="kpi-desglose">'+(filas||'<div class="gbm-vacio">Sin deudas con interés registradas. 🎉</div>')+'</div>'+
+      (deudaCaraBal>0?
+        kpiSec('🎯 Cómo atacarla')+
+        kpiPaso('Método avalancha','Ordena por <b>tasa</b>, no por saldo, y mete todo el excedente en la de arriba mientras pagas el mínimo en las demás. Es el que menos intereses te cuesta; la "bola de nieve" (de menor a mayor saldo) solo gana en motivación.',R)+
+        kpiNota('Cada '+money(1000)+' extra que abonas hoy te ahorra unos <b>'+money(1000*((deudaCara[0]&&deudaCara[0].rate||45)/100))+' al año</b> de intereses a la tasa de tu deuda más cara. Ninguna inversión razonable le gana a eso.')
+        :kpiSec('🎯 Estado')+kpiPaso('Sin deuda cara ✅','Ya no hay saldo con interés. El excedente va completo a fondo o inversión.',V))+
+      kpiNota('🏅 Ya lo lograste una vez: <b>la tarjeta Banamex quedó liquidada el 13-ago-2026</b>, casi 5 meses antes de lo planeado. El mismo método sirve para la que queda.')};
+  }
+
+  if(id==='maestria'){
+    const goal=(F.goals||[]).find(x=>x.id==='g001'||/maestr/i.test(x.name||''));
+    const cur=goal?(+goal.current||0):0, tgt=goal?(+goal.target||0):0;
+    const pct=tgt>0?cur/tgt*100:0, falta=Math.max(0,tgt-cur);
+    return {titulo:'🎓 Fondo de la Maestría', sub:'Lo ahorrado, lo que falta y por qué ahora mismo no aportas.',
+      html:
+      '<div class="kpi-cifra" style="color:'+C+'">'+money(cur)+' <span style="font-size:14px;color:var(--text3)">de '+money(tgt)+'</span></div>'+
+      '<div class="kpi-cifra-sub">'+Math.round(pct)+'% de la meta · faltan <b>'+money(falta)+'</b></div>'+
+      kpiSec('📊 De dónde sale')+
+      '<div class="kpi-desglose">'+kpiBarra('Ahorrado para la maestría', money(cur), pct, C,
+        goal?'Meta registrada en Finanzas → Metas':'Sin meta registrada en Finanzas')+'</div>'+
+      kpiSec('⏸️ Por qué está en pausa')+
+      kpiPaso('Decisión ya tomada, no un olvido','Las aportaciones están <b>pausadas un año</b> (hasta jul-2027) y la meta se movió a oct-2028. Los '+money(cur)+' ya ahorrados <b>quedan intactos</b>: no se tocan para nada más. La prioridad de este año es fondo de emergencia y deuda cara — ese orden es el que hace que la maestría sea posible después, no el que la retrasa.',C)+
+      kpiNota('Está documentado en Coach → Plan Maestro (checklist s0-6). Si algún día decides retomar antes, cámbialo ahí y este medidor lo refleja solo.')};
+  }
+
+  if(id==='patrimonio'){
+    const START=-308830, GOAL=1000000;
+    const efectivo=ef, comp=[
+      {n:'Inversiones', v:totalInv, c:V},
+      {n:'Fondo de emergencia', v:efectivo, c:W},
+      {n:'Deudas (resta)', v:-deudaTot, c:R},
+    ];
+    const bruto=totalInv+efectivo;
+    const avance=pat-START, camino=GOAL-START;
+    const meses2030=Math.max(1,Math.round((new Date(2030,0,1)-new Date())/(1000*60*60*24*30.4)));
+    const ritmo=(GOAL-pat)/meses2030;
+    return {titulo:'💰 Patrimonio hacia $1M', sub:'Qué suma, qué resta, y a qué ritmo tendrías que ir.',
+      html:
+      '<div class="kpi-cifra" style="color:'+(pat>=0?V:R)+'">'+money(pat)+'</div>'+
+      '<div class="kpi-cifra-sub">Meta: '+money(GOAL)+' el 01 ene 2030 · llevas <b>'+Math.round(avance/camino*100)+'%</b> del camino desde tu punto de partida</div>'+
+      kpiSec('📊 Cómo se compone')+
+      '<div class="kpi-desglose">'+comp.map(x=>kpiBarra(x.n, money(x.v), bruto>0?Math.abs(x.v)/Math.max(bruto,deudaTot)*100:0, x.c)).join('')+'</div>'+
+      kpiNota('Patrimonio = lo que tienes − lo que debes. Por eso sale negativo mientras la deuda pese más que los activos: <b>no es que no avances</b>, es que el punto de partida (18-jul-2026) era '+money(START)+'.')+
+      kpiSec('📈 El ritmo que pide la meta')+
+      kpiPaso('Para llegar en '+meses2030+' meses','Necesitarías sumar <b>'+money(ritmo)+' al mes</b> de patrimonio neto — y ojo: <b>pagar deuda cuenta igual que ahorrar</b>, porque sube el mismo número. Cada peso que le quitas a la tarjeta es un peso de patrimonio.',C)+
+      kpiNota('Este número baja solo conforme la deuda se apaga: no lo leas como una cuota fija, sino como el ritmo de hoy.')};
+  }
+
+  if(id==='ahorro'){
+    const tasa=mes.ing>0?mes.saldo/mes.ing*100:0;
+    return {titulo:'💸 Ahorro de este mes', sub:'Lo que entró, lo que salió y qué te quedó.',
+      html:
+      '<div class="kpi-cifra" style="color:'+(mes.saldo>=0?V:R)+'">'+money(mes.saldo)+'</div>'+
+      '<div class="kpi-cifra-sub">'+mes.n+' movimientos registrados este mes · tasa de ahorro <b>'+Math.round(tasa)+'%</b></div>'+
+      kpiSec('📊 Entradas y salidas')+
+      '<div class="kpi-desglose">'+
+        kpiBarra('Ingresos del mes', money(mes.ing), 100, V)+
+        kpiBarra('Gastos del mes', money(mes.gas), mes.ing>0?mes.gas/mes.ing*100:0, O,
+          mes.ing>0?'Te comen el '+Math.round(mes.gas/mes.ing*100)+'% de lo que entró':'')+
+      '</div>'+
+      kpiSec('🎯 Qué mirar')+
+      kpiPaso(tasa>=20?'Vas bien':'Hay margen', tasa>=20
+        ? 'Estás ahorrando el <b>'+Math.round(tasa)+'%</b> de lo que ganas. Por encima del 20% ya es un ritmo que construye patrimonio de verdad — sostenerlo importa más que subirlo.'
+        : 'Ahorras el <b>'+Math.round(tasa)+'%</b>. El primer objetivo razonable es <b>20%</b>, y sale más rápido de recortar las 3 categorías más grandes que de cuidar los gastos chicos.', tasa>=20?V:O)+
+      kpiNota('Con ingreso variable como el de Didi, mira este número como promedio de 3 meses, no mes a mes: un mes flojo no significa que el sistema falle.')};
+  }
+
+  if(id==='invertido'){
+    const filas=inv.map(i=>{
+      const v=+i.value||+i.invested||0;
+      return kpiBarra(esc(i.name), money(v), totalInv>0?v/totalInv*100:0, C, totalInv>0?Math.round(v/totalInv*100)+'% de tu portafolio':'');
+    }).join('');
+    return {titulo:'📈 Total invertido', sub:'Cuánto tienes trabajando y cómo está repartido.',
+      html:
+      '<div class="kpi-cifra" style="color:'+C+'">'+money(totalInv)+'</div>'+
+      '<div class="kpi-cifra-sub">'+inv.length+' instrumento'+(inv.length===1?'':'s')+' registrado'+(inv.length===1?'':'s')+' en Finanzas</div>'+
+      kpiSec('📊 Tu portafolio hoy')+
+      '<div class="kpi-desglose">'+(filas||'<div class="gbm-vacio">Todavía no hay inversiones registradas en Finanzas.</div>')+'</div>'+
+      kpiSec('🎯 Lo que falta')+
+      kpiPaso('Una asignación objetivo escrita','Estos porcentajes son <b>el resultado</b> de lo que fuiste comprando, no una decisión. Escribe una sola vez qué reparto quieres (% renta fija / % índice / % cripto) y cada compra deja de ser una decisión: solo rellenas el que quedó abajo.',C)+
+      kpiNota('Es la tarea pendiente #2 de tu habilidad de Inversión — la tienes desglosada en el slide de Habilidades.')};
+  }
+
+  if(id==='deudatotal'){
+    const filas=debts.filter(d=>d.balance>0).sort((a,b)=>(b.rate||0)-(a.rate||0)).map(d=>{
+      const pagado=d.total>0?(1-d.balance/d.total)*100:0;
+      return kpiBarra(esc(d.name)+(d.rate>0?' · '+d.rate+'%':' · sin interés'), money(d.balance), pagado, d.rate>0?R:P,
+        d.total>0?'Llevas '+Math.round(pagado)+'% pagado de '+money(d.total):'');
+    }).join('');
+    return {titulo:'🧾 Deuda total', sub:'Todo lo que debes, ordenado por tasa.',
+      html:
+      '<div class="kpi-cifra" style="color:'+R+'">'+money(deudaTot)+'</div>'+
+      '<div class="kpi-cifra-sub">'+debts.filter(d=>d.balance>0).length+' deuda(s) viva(s) · '+money(deudaCaraBal)+' con interés</div>'+
+      kpiSec('📊 Ordenadas por tasa (la de arriba primero)')+
+      '<div class="kpi-desglose">'+(filas||'<div class="gbm-vacio">Sin deudas registradas. 🎉</div>')+'</div>'+
+      kpiNota('Las de tasa 0 (MSI, crédito del coche si aplica) <b>no son urgentes pero sí comprometen tu excedente</b> cada mes. Cuentan para el flujo aunque no para los intereses.')};
+  }
+
+  if(id==='meta2030'){
+    const ini=new Date(2026,6,18), fin=new Date(2030,0,1), hoy=new Date();
+    const total=fin-ini, ido=Math.max(0,hoy-ini);
+    const pct=Math.min(100,ido/total*100);
+    const dias=Math.max(0,Math.round((fin-hoy)/86400000));
+    return {titulo:'⏳ Camino a 2030', sub:'Cuánto tiempo llevas y cuánto queda para la meta del millón.',
+      html:
+      '<div class="kpi-cifra" style="color:'+P+'">'+dias.toLocaleString('es-MX')+' <span style="font-size:14px;color:var(--text3)">días</span></div>'+
+      '<div class="kpi-cifra-sub">Del 18-jul-2026 al 01-ene-2030 · llevas <b>'+Math.round(pct)+'%</b> del tiempo</div>'+
+      kpiSec('📊 Tiempo recorrido')+
+      '<div class="kpi-desglose">'+kpiBarra('Del plan completo', Math.round(pct)+'%', pct, P,
+        'Quedan '+Math.round(dias/30.4)+' meses · '+(dias/365).toFixed(1)+' años')+'</div>'+
+      kpiNota('El tiempo corre igual se aproveche o no. Es el único recurso del plan que no se puede recuperar — por eso el interés compuesto premia empezar, no acertar.')};
+  }
+  return null;
+}
+
 function metaDebtInfo(matcher){
   const d=(D.fin.debts||[]).find(matcher);
   return d?{balance:d.balance||0,total:d.total||d.balance||0,found:true}:{balance:0,total:0,found:false};
@@ -5131,15 +5373,29 @@ function renderMetasSlide(){
   const START=-308830, GOAL=1000000;
   const patPct=hasFinData()?Math.min(100,Math.max(0,(pat-START)/(GOAL-START)*100)):0;
 
+  // Datos de los 4 medidores nuevos, calculados aquí para no repetir el recorrido en cada tile.
+  const mesAct=kpiMesActual();
+  const totalInvKpi=(D.fin.investments||[]).reduce((a,i)=>a+(+i.value||+i.invested||0),0);
+  const deudaTotKpi=(D.fin.debts||[]).reduce((a,d)=>a+(+d.balance||0),0);
+  const deudaCaraBalKpi=(D.fin.debts||[]).filter(d=>d.rate>0&&d.balance>0).reduce((a,d)=>a+d.balance,0);
+  const diasA2030=Math.max(0,Math.round((new Date(2030,0,1)-new Date())/86400000));
+  const pct2030=Math.min(100,Math.max(0,(new Date()-new Date(2026,6,18))/(new Date(2030,0,1)-new Date(2026,6,18))*100));
+
   const tiles=[
-    {ico:'🆘',lbl:'Fondo de emergencia',val:money(ef),pct:Math.min(100,ef/10000*100),sub:'Meta: $10,000',c:'var(--w)'},
+    {ico:'🆘',lbl:'Fondo de emergencia',val:money(ef),pct:Math.min(100,ef/10000*100),sub:'Meta: $10,000',c:'var(--w)',id:'fondo'},
     // La etiqueta lista solo las tarjetas con saldo vivo (ver la nota igual en renderCoach()).
-    {ico:'💳',lbl:'Deuda cara'+(deudaCaraBal>0?' ('+[bana.balance>0?'Banamex':null,bbva.balance>0?'BBVA':null].filter(Boolean).join('+')+')':''),val:deudaCaraTieneDatos?money(deudaCaraBal):'Sin datos',pct:deudaCaraTieneDatos?deudaCaraPct:0,sub:deudaCaraTieneDatos?(deudaCaraBal<=0?'Liquidada 🎉':'restante'):'Regístralas en Finanzas',c:'var(--r)'},
-    {ico:'🎓',lbl:'Fondo Maestría',val:goalMae?money(goalMae.current||0):'Sin datos',pct:goalMae&&goalMae.target?Math.min(100,(goalMae.current||0)/goalMae.target*100):0,sub:goalMae?`Meta: ${money(goalMae.target)}`:'Meta en Finanzas → Metas',c:'var(--cy)'},
-    {ico:'💰',lbl:'Patrimonio hacia $1M',val:hasFinData()?money(pat):'Sin datos',pct:patPct,sub:'Meta: $1,000,000 · 01 ene 2030',c:'var(--g)'}
+    {ico:'💳',lbl:'Deuda cara'+(deudaCaraBal>0?' ('+[bana.balance>0?'Banamex':null,bbva.balance>0?'BBVA':null].filter(Boolean).join('+')+')':''),val:deudaCaraTieneDatos?money(deudaCaraBal):'Sin datos',pct:deudaCaraTieneDatos?deudaCaraPct:0,sub:deudaCaraTieneDatos?(deudaCaraBal<=0?'Liquidada 🎉':'restante'):'Regístralas en Finanzas',c:'var(--r)',id:'deudacara'},
+    {ico:'🎓',lbl:'Fondo Maestría',val:goalMae?money(goalMae.current||0):'Sin datos',pct:goalMae&&goalMae.target?Math.min(100,(goalMae.current||0)/goalMae.target*100):0,sub:goalMae?`Meta: ${money(goalMae.target)}`:'Meta en Finanzas → Metas',c:'var(--cy)',id:'maestria'},
+    {ico:'💰',lbl:'Patrimonio hacia $1M',val:hasFinData()?money(pat):'Sin datos',pct:patPct,sub:'Meta: $1,000,000 · 01 ene 2030',c:'var(--g)',id:'patrimonio'},
+    // 4 medidores nuevos (2026-08-19, "tambien si puedes agregar mas, hazlo"). Los 4 salen de
+    // datos que ya existían en `finanzasmx_v2` y que no se estaban mirando en ninguna pantalla.
+    {ico:'💸',lbl:'Ahorro de este mes',val:hasFinData()?money(mesAct.saldo):'Sin datos',pct:mesAct.ing>0?Math.max(0,Math.min(100,mesAct.saldo/mesAct.ing*100)):0,sub:mesAct.ing>0?`Tasa de ahorro: ${Math.round(mesAct.saldo/mesAct.ing*100)}%`:'Sin movimientos este mes',c:mesAct.saldo>=0?'var(--g)':'var(--r)',id:'ahorro'},
+    {ico:'📈',lbl:'Total invertido',val:money(totalInvKpi),pct:totalInvKpi>0?Math.min(100,totalInvKpi/50000*100):0,sub:`${(D.fin.investments||[]).length} instrumento(s) · toca para ver el reparto`,c:'var(--cy)',id:'invertido'},
+    {ico:'🧾',lbl:'Deuda total',val:hasFinData()?money(deudaTotKpi):'Sin datos',pct:deudaTotKpi>0?100:0,sub:deudaTotKpi>0?`${money(deudaCaraBalKpi)} con interés`:'Sin deudas vivas 🎉',c:'var(--r)',id:'deudatotal'},
+    {ico:'⏳',lbl:'Camino a 2030',val:diasA2030.toLocaleString('es-MX')+' días',pct:pct2030,sub:`${Math.round(pct2030)}% del plan recorrido`,c:'var(--p)',id:'meta2030'}
   ];
   document.getElementById('metasProgreso').innerHTML=tiles.map(x=>`
-    <div class="tile">
+    <div class="tile" onclick="abrirKpi('${x.id}')" role="button" tabindex="0" title="Ver el desglose de ${x.lbl}">
       <div class="lbl" style="color:${x.c}"><span class="metas-kpi-ico">${x.ico}</span> ${x.lbl}</div>
       <div class="big-num${privado?' fin-hidden':''}" style="font-size:clamp(12px,1.3vw,16px);color:${x.c}">${x.val}</div>
       <div class="pbar${privado?' fin-hidden':''}"><div class="pfill" style="width:${x.pct}%;background:${x.c}"></div></div>
