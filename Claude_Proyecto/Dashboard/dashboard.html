@@ -635,6 +635,42 @@ a.rt2-sub-prod:hover{text-decoration:underline}
    mismo blanco/gris genérico, sin nada que dijera "esto es deuda" vs. "esto es tu mes" a primera
    vista. Verde = dinero/deuda (mismo verde que ya usa la barra "Avance real"); dorado = el acento
    del tema Coach (--ac1), reservado para la pieza más importante del slide — tu enfoque del mes. */
+/* ─── Encabezado de la fase activa (2026-08-19) ───
+   Antes: título + una línea gris de 11px + 5 renglones de texto corrido. Adán lo describió como
+   "muy plano y no tiene ni diseño", y el problema de fondo era que el dato con más fuerza —el
+   tiempo que queda— estaba escrito en palabras en vez de mostrado. Ahora la fase se ve: una
+   barra con la posición de hoy entre el inicio y el fin, y las 3 cifras que importan. */
+.fase-hero{margin-bottom:26px;padding:16px 20px 15px;border-radius:20px;
+  background:linear-gradient(135deg,rgba(var(--ov),.07),rgba(var(--ov),.025));
+  border:1px solid rgba(var(--ov),.10);border-left:3px solid var(--w)}
+.fase-hero-head{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.fase-chip{flex-shrink:0;font-family:var(--mono);font-size:11px;font-weight:900;letter-spacing:.08em;
+  text-transform:uppercase;padding:5px 11px;border-radius:20px;
+  background:var(--w);color:#2a1f00;box-shadow:0 3px 12px rgba(255,217,61,.28)}
+/* La barra del tiempo de la fase: llena lo transcurrido y marca dónde cae hoy. */
+.fase-linea{margin-bottom:13px}
+.fase-linea-barra{position:relative;height:7px;border-radius:20px;background:rgba(var(--ov),.10);overflow:visible}
+.fase-linea-fill{height:100%;border-radius:20px;background:linear-gradient(90deg,var(--w),var(--o));transition:width .5s}
+.fase-linea-hoy{position:absolute;top:50%;width:13px;height:13px;margin:-6.5px 0 0 -6.5px;border-radius:50%;
+  background:var(--text);border:3px solid var(--bg);box-shadow:0 2px 8px rgba(0,0,0,.45)}
+.fase-linea-rot{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-top:7px;
+  font-size:10.5px;color:var(--text3);font-family:var(--mono)}
+.fase-linea-hoy-lbl{font-weight:800;color:var(--w);font-family:var(--font);font-size:11.5px}
+/* Las 3 cifras de la fase. Números grandes en mono, etiqueta chica debajo: el mismo lenguaje que
+   los medidores de Mis Metas, para que se lean como la misma familia. */
+.fase-kpis{display:flex;gap:22px;flex-wrap:wrap;margin-bottom:12px;padding-bottom:12px;
+  border-bottom:1px solid rgba(var(--ov),.08)}
+.fase-kpi b{display:block;font-family:var(--mono);font-size:clamp(17px,1.9vw,22px);font-weight:900;line-height:1}
+.fase-kpi span{display:block;font-size:9.5px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;
+  color:var(--text3);margin-top:3px}
+/* El texto explicativo: la primera frase manda, el resto acompaña. */
+.fase-explica{font-size:clamp(12px,1.05vw,13.5px);color:var(--text2);line-height:1.6;max-width:900px}
+.fase-explica .lead{display:block;font-size:clamp(13px,1.15vw,15px);color:var(--text);font-weight:700;
+  line-height:1.5;margin-bottom:6px}
+@media(max-width:640px){
+  .fase-kpis{gap:16px}
+  .fase-hero{padding:13px 15px 12px}
+}
 .coach-accent-debt{border-left:3px solid var(--g)}
 .coach-accent-month{border-left:3px solid var(--ac1)}
 .coach-month-title{font-size:clamp(15px,1.6vw,19px);font-weight:800;color:var(--text);margin-bottom:10px;line-height:1.3}
@@ -1629,11 +1665,29 @@ a.rt2-sub-prod:hover{text-decoration:underline}
   <section class="slide theme-coach" data-i="1">
     <div class="slide-inner">
       <div class="eyebrow reveal d1"><span class="dot"></span> Coach · Plan Maestro</div>
-      <div class="reveal d2" style="display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:4px">
-        <div class="slide-title" id="coachPhaseTitle" style="margin-bottom:0">Fase —</div>
-        <div id="coachFaseFecha" style="font-size:clamp(11px,1vw,13px);color:var(--text2);white-space:nowrap">—</div>
+      <!-- Encabezado de fase rediseñado el 2026-08-19 (ver .fase-hero en el CSS): el tiempo que
+           queda pasa de ser una frase en gris a una barra con la posición de hoy y 3 cifras. -->
+      <div class="fase-hero reveal d2">
+        <div class="fase-hero-head">
+          <span class="fase-chip" id="coachFaseChip">Fase —</span>
+          <div class="slide-title" id="coachPhaseTitle" style="margin-bottom:0">—</div>
+        </div>
+
+        <div class="fase-linea">
+          <div class="fase-linea-barra">
+            <div class="fase-linea-fill" id="coachFaseFill" style="width:0%"></div>
+            <div class="fase-linea-hoy" id="coachFaseHoy" style="left:0%"></div>
+          </div>
+          <div class="fase-linea-rot">
+            <span id="coachFaseIni">—</span>
+            <span id="coachFaseFecha" class="fase-linea-hoy-lbl">—</span>
+            <span id="coachFaseFin">—</span>
+          </div>
+        </div>
+
+        <div class="fase-kpis" id="coachFaseKpis"></div>
+        <div class="fase-explica" id="coachFaseExplica">—</div>
       </div>
-      <div class="reveal d2" style="font-size:clamp(12px,1.05vw,14px);color:var(--text2);line-height:1.45;margin-bottom:32px;max-width:820px" id="coachFaseExplica">—</div>
 
       <div class="tile reveal d3 coach-accent-debt" style="margin-bottom:32px;padding:12px 18px">
         <div class="lbl" style="margin-bottom:8px">💰 Tu ruta hacia deuda cara en $0 — en este orden, sin excepción</div>
@@ -4129,8 +4183,15 @@ function toggleRecetaCard(key){ nutriExpandido.has(key)?nutriExpandido.delete(ke
 
 function renderCoach(){
   const ph=activePhase();
-  document.getElementById('coachPhaseTitle').textContent=`${ph.tag} — ${ph.title}`;
-  document.getElementById('coachFaseExplica').innerHTML=`${ph.explica||ph.meta}`;
+  document.getElementById('coachFaseChip').textContent=ph.tag;
+  document.getElementById('coachPhaseTitle').textContent=ph.title;
+  // La primera frase del texto se destaca como entrada. Se corta en el primer punto seguido de
+  // espacio y mayúscula, para no partir "30 sep. 2026" ni una abreviatura por accidente.
+  const txt=String(ph.explica||ph.meta||'');
+  const corte=txt.search(/\.\s+[A-ZÁÉÍÓÚ¿¡]/);
+  document.getElementById('coachFaseExplica').innerHTML= corte>0
+    ? `<span class="lead">${txt.slice(0,corte+1)}</span>${txt.slice(corte+1).trim()}`
+    : txt;
 
   // ── Ruta real hacia deuda cara en $0: fondo de emergencia → Banamex → BBVA ──
   // Un paso se da por cumplido si el saldo en vivo dice que sí **o si ya está en la libreta de
@@ -4194,9 +4255,25 @@ function renderCoach(){
   document.getElementById('coachRutaPctBar').style.width=rutaPct+'%';
   document.getElementById('coachRutaPctBar').closest('.pbar').classList.toggle('fin-hidden',privado);
 
-  const diasFase=Math.max(0,Math.round((ph.end-new Date())/86400000));
+  // ── La fase, en tiempo (2026-08-19) ──────────────────────────────────────
+  const hoyF=new Date();
+  const diasFase=Math.max(0,Math.round((ph.end-hoyF)/86400000));
+  const totalDias=Math.max(1,Math.round((ph.end-ph.start)/86400000));
+  const idos=Math.max(0,Math.min(totalDias,Math.round((hoyF-ph.start)/86400000)));
+  const pctFase=Math.max(0,Math.min(100,idos/totalDias*100));
+  const dFmt=d=>d.toLocaleDateString('es-MX',{day:'numeric',month:'short'});
+
+  document.getElementById('coachFaseFill').style.width=pctFase+'%';
+  document.getElementById('coachFaseHoy').style.left=pctFase+'%';
+  document.getElementById('coachFaseIni').textContent=dFmt(ph.start);
+  document.getElementById('coachFaseFin').textContent=dFmt(ph.end)+' '+ph.end.getFullYear();
   document.getElementById('coachFaseFecha').textContent=
-    `Vence ${ph.end.toLocaleDateString('es-MX',{day:'numeric',month:'short',year:'numeric'})} · ${fmt(diasFase)} día(s) restantes`;
+    diasFase>0?`Hoy · quedan ${fmt(diasFase)} días`:'Fase vencida';
+  document.getElementById('coachFaseKpis').innerHTML=[
+    {n:fmt(diasFase),l:'días restantes',c:diasFase<=14?'var(--r)':diasFase<=30?'var(--o)':'var(--w)'},
+    {n:Math.round(totalDias/7)+'',l:'semanas en total',c:'var(--cy)'},
+    {n:Math.round(pctFase)+'%',l:'transcurrido',c:'var(--text)'},
+  ].map(k=>`<div class="fase-kpi"><b style="color:${k.c}">${k.n}</b><span>${k.l}</span></div>`).join('');
 
   const faseChecks=rawGet('coach_checks_v1',{});
 

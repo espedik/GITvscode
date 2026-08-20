@@ -3104,3 +3104,35 @@ Adán mencionó **Bitcoin** entre lo que esperaba ver, y no aparece: **no hay ni
 ### Verificación
 
 Con sus datos reales sembrados: **18 barras**, las 3 secciones con sus subtotales ($23,425 / $332,991 / $540,600), la resta explicada con sus dos operandos, los 8 bienes mayores más el "y 5 cosas más", y ningún `undefined` ni `NaN`. Sin errores de consola.
+
+## El encabezado de la fase deja de ser plano (2026-08-19)
+
+*"esto se ve visualmente muy mal, es muy plano y no tiene ni diseño y se ve muy plano"*.
+
+Era un título, una línea de 11 px en gris (*"Vence 30 sep 2026 · 41 día(s) restantes"*) y cinco renglones de texto corrido. El problema de fondo no era el color: **el dato con más fuerza —el tiempo que queda— estaba escrito en palabras en vez de mostrado**, y competía en tamaño con el resto.
+
+### Lo que hay ahora
+
+**Una barra con la fase completa** y el marcador de dónde cae hoy entre el inicio y el fin. Lo transcurrido se llena con degradado, y el punto de hoy se mueve solo. De un vistazo se ve cuánto se ha ido y cuánto queda, que es lo que una fecha de vencimiento nunca comunica.
+
+**Las tres cifras que importan**, en números grandes:
+
+| | |
+|---|---|
+| **41** | días restantes — cambia de color: amarillo, naranja bajo 30 días, rojo bajo 14 |
+| **9** | semanas en total |
+| **32%** | transcurrido |
+
+**El chip de la fase** separado del título, para que "Fase 0" no compita con el nombre de la fase.
+
+**La primera frase del texto se destaca** como entrada, y el resto queda de apoyo. El corte se busca con `/\.\s+[A-ZÁÉÍÓÚ¿¡]/` en vez de partir por el primer punto, para no romper en "30 sep. 2026" ni en una abreviatura.
+
+Todo el bloque va en una tarjeta con degradado y borde de acento, en el mismo lenguaje visual que los medidores de Mis Metas.
+
+### Lo que deliberadamente no se tocó
+
+El párrafo menciona el orden *"1) fondo de emergencia, 2) Banamex, 3) BBVA"* — y esos tres pasos **ya viven justo debajo**, en "Tu ruta hacia deuda cara en $0", con su estado real y su avance. Convertirlos también en tarjetas aquí habría duplicado la misma información dos veces en la misma pantalla.
+
+### Verificación
+
+Escritorio, iPad y iPhone: el chip y el título separados, la barra al **31.7%** con el marcador de hoy en la misma posición, las 3 cifras correctas (41 días / 9 semanas / 32%), la primera frase destacada, y **0 desbordes** en los tres. Sin errores de consola.
