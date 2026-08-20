@@ -2735,3 +2735,36 @@ Dos cosas que el paso 2 dice y que no son detalle menor: **el prerrequisito ya l
 El paso 5 enlaza a `../Entrevistas/entrevistas.html`: su módulo **📜 ISTQB CTFL** ya tiene los 6 capítulos completos (Fundamentos · SDLC · Pruebas estáticas · Test Analysis and Design · Managing the Test Activities · Test Tools) más el glosario, y el CT-GenAI da ese vocabulario por sabido. Va sin ancla porque `entrevistas.html` no lee `hash` ni parámetros de URL — es el mismo deep-link pendiente que la Lista del Súper.
 
 Verificado en 1600px y 390px: la tarjeta entra en el grid, la imagen carga (800 px reales), el detalle abre con sus 7 pasos y 4 enlaces, 0 desbordes y sin errores de consola.
+
+## La Lista de Compras estaba descuadrada en iPad (2026-08-19)
+
+*"sigue sin verse bien la version de ipad de la lista de compras, no se ve ordenada se ve bien descuadrada"*.
+
+El arreglo anterior fue en ; esto es otra pantalla — el slide **🛒 Lista de Compras** del Dashboard. Aquí el problema era el grid de productos, , fijado a **3 columnas** pasara lo que pasara.
+
+Cada renglón lleva 4 piezas en fila: casilla, nombre, píldora de precio y contador . Eso entra en una línea a partir de unos **340 px de columna**. Con 3 columnas fijas:
+
+| | Ancho de columna | Alturas de renglón |
+|---|---|---|
+| Escritorio 1600px | 422 px | 31 px — todas iguales |
+| **iPad horizontal 1180px** | **284 px** | **56 px — los 30 partidos en dos líneas** |
+| **iPad vertical 820px** | **333 px** | **30, 36 y 56 px mezcladas** |
+| iPhone 390px | 329 px | 30, 35 y 55 mezcladas |
+
+El caso feo es el de en medio: unos renglones caben en una línea y otros no, así que la cuadrícula quedaba con filas de tres alturas distintas. De ahí el "descuadrado" — no era un desbordamiento, era que la mitad de los renglones se partía y la otra mitad no.
+
+**Dos cambios y ninguna regla nueva de breakpoint:**
+
+1.  — el número de columnas lo decide el ancho disponible. 340 px es el ancho medido en que un renglón entra en una sola línea.
+2.  pasa de  a . Ese piso era el culpable de fondo: sin poder encogerse, el nombre empujaba el precio y el contador a una segunda fila en cuanto la columna bajaba de ~420 px. Con  el nombre cede el espacio justo y nada salta. ( pasa además a , que era lo que hacía ver los contadores desalineados respecto al texto.)
+
+### Resultado medido
+
+| | Antes | Después |
+|---|---|---|
+| Escritorio 1600px | 3 col × 422 px · 1 altura | **igual: 3 col × 422 px · 1 altura** |
+| iPad horizontal 1180px | 3 col × 284 px · todo a 56 px | **2 col × 435 px · 1 altura (30 px)** |
+| iPad vertical 820px | 2 col × 333 px · **3 alturas** | **2 col × 333 px · 1 altura (30 px)** |
+| iPhone 390px | 1 col · **3 alturas** | **1 col · 1 altura** |
+
+El escritorio no se movió, que era la condición: ahí ya se veía bien. Comprobadas las **7 categorías** en iPad: 0 textos recortados y 0 desbordes en todas, sin errores de consola. Skincare, Higiene, Ojos y Libros conservan renglones de altura distinta, pero por una razón legítima que no es descuadre: sus nombres ocupan una, dos o tres líneas y llevan además los enlaces de tienda en una fila propia.

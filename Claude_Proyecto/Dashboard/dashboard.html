@@ -660,11 +660,19 @@ a.rt2-sub-prod:hover{text-decoration:underline}
 .ev-btn:hover{background:rgba(var(--ov),.14);color:var(--text)}
 .ev-btn-ok{border-color:rgba(0,232,122,.45);color:var(--g)}
 .ev-btn-ok:hover{background:rgba(0,232,122,.16)}
-.lc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px 20px}
-.lc-item{display:flex;align-items:flex-start;flex-wrap:wrap;gap:5px 8px;padding:4px 0;border-bottom:1px solid rgba(var(--ov),.05)}
+/* Columnas por ancho disponible, no 3 fijas (2026-08-19). Reportado por Adán: "sigue sin verse
+   bien la version de ipad de la lista de compras, no se ve ordenada se ve bien descuadrada".
+   Con 3 columnas fijas, en iPad horizontal cada una quedaba en 284px y el contenido del renglón
+   —nombre + precio + contador + subtotal— no cabía en una línea: los 30 renglones se partían en
+   dos. En iPad vertical era peor, porque unos se partían y otros no: alturas de 30, 36 y 56px
+   mezcladas en la misma cuadrícula, que es de donde venía el aspecto descuadrado.
+   El mínimo de 340px es el ancho medido en que un renglón entra en una sola línea. Escritorio
+   conserva sus 3 columnas (1140px útiles / 340 = 3), iPad baja a 2 y el celular a 1. */
+.lc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:2px 20px}
+.lc-item{display:flex;align-items:center;flex-wrap:wrap;gap:5px 8px;padding:4px 0;border-bottom:1px solid rgba(var(--ov),.05)}
 .lc-item input[type="checkbox"]{margin-top:3px;width:13px;height:13px;accent-color:var(--g);cursor:pointer;flex-shrink:0}
 .lc-item label{font-size:12px;color:var(--text2);line-height:1.4;cursor:pointer}
-.lc-item label.lc-item-txt{flex:1;min-width:140px}
+.lc-item label.lc-item-txt{flex:1;min-width:0}
 .lc-item input:checked+label{color:var(--text3);text-decoration:line-through}
 /* Dos tiendas por producto (Amazon + Mercado Libre) — Adán quiere comparar en ambas, no una sola */
 .lc-item-shop{display:flex;gap:6px;margin-left:21px;flex-basis:100%}
