@@ -2985,3 +2985,25 @@ Cambiar la semilla de `Finanzas.html` no sirve de nada cuando el navegador ya ti
 ### Verificación
 
 Sembrando sus datos **con el `rate:10` viejo**, al abrir el Dashboard la tasa queda en 55.7 sola, el medidor pasa de $270 a **$1,501 al mes · $18,015 al año** —el número que él dijo— y el panel muestra las tres secciones nuevas sin `undefined` ni `NaN`. Sin errores de consola.
+
+## Las sub-habilidades se pliegan: la tarjeta pasa a ser un índice (2026-08-19)
+
+*"todo esto en finanzas y inversion, no muestres todo, solo lo importante, pero hazlo en forma de boton […] esto para que cuando haga click ya muestres toda la info"*.
+
+El contenido estaba bien, el problema era mostrarlo entero de golpe: con las 7 y 9 entradas desplegadas, la tarjeta era un muro de texto donde había que scrollear solo para saber **qué habilidades hay**.
+
+Ahora cada sub-habilidad es un **botón cerrado** con su número y su nombre. El título solo ya dice cuál es cada una, y el "qué es / cómo desarrollarla / con qué libro" aparece al tocarla. La tarjeta se lee como el **índice de lo que hay que aprender**, y el desarrollo se pide cuando se quiere.
+
+| | Antes | Después |
+|---|---|---|
+| Alto de la tarjeta (escritorio) | 432 px con scroll interno | **391 px, todo a la vista** |
+| Alto en celular (Finanzas) | 436 px | **323 px** |
+| Entradas visibles de un vistazo | ~2 de 7 | **las 7** |
+
+Detalles que importan: es un `<button>` real, así que entra en el orden de tabulación y responde a Enter y Espacio, y lleva `aria-expanded` que cambia con el estado. Ocupa **todo el ancho** de la fila para que sea fácil de atinar con el dedo. Y **se pueden tener varias abiertas a la vez** a propósito — sirve para comparar dos habilidades sin ir cerrando.
+
+El mismo cambio se aplicó a las 16 tarjetas de Coach (7 de finanzas + 9 de inversión), con sus propias clases.
+
+### Verificación
+
+Dashboard en escritorio y celular: **7 y 9 botones**, todos cerrados al cargar, **0 cuerpos visibles**, y al hacer clic el primero abre con `aria-expanded="true"` y su contenido a la vista. En Coach, los 16 cerrados y el toggle funcionando — comprobado **después de navegar a la sección**, porque `#aprendizaje` carga con `display:none` y medir ahí daba un falso negativo. 0 desbordes y sin errores de consola.

@@ -724,3 +724,13 @@ Arreglado dejando que la barra **envuelva** en ≤700px en vez de esconder algun
 ### Verificación
 
 1400px, 820px, 390px y 360px: **7 y 9** sub-habilidades en las dos tarjetas, 0 rastros de los 4 párrafos retirados, y **0 desbordes propios** — los 2 que quedan (`.subtab-btn`) son anteriores a todos estos cambios, comprobado contra el mismo commit. Sin errores de consola.
+
+## Las sub-habilidades se pliegan (2026-08-19)
+
+*"no muestres todo, solo lo importante, pero hazlo en forma de boton… para que cuando haga click ya muestres toda la info"*.
+
+Las **16** sub-habilidades de Finanzas e Inversión (7 + 9) pasan de bloque de texto abierto a **botón plegable**: se ve el número y el nombre, y el "qué es / cómo desarrollarla / con qué libro" aparece al tocarlo. La sección se lee como un índice en vez de como un muro.
+
+Mismo cambio y mismo contenido que en el Dashboard (ver `../Dashboard/readme_dashboard.md` → "Las sub-habilidades se pliegan"), con las clases de aquí: `.subhab-h` pasa a `<button>` a todo el ancho, `.subhab-body` nace en `display:none` y `.subhab.open` lo muestra.
+
+**Al verificarlo apareció una trampa que conviene recordar**: medir el alto del cuerpo justo después del clic daba 0 y parecía que el botón no funcionaba. No era el botón — `#aprendizaje` carga con `display:none`, como todas las secciones de este archivo salvo la activa, y dentro de un contenedor oculto cualquier `offsetHeight` es 0. Navegando primero a la sección, el cuerpo pasa de 0 a 115 px al primer clic.

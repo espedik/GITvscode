@@ -447,12 +447,22 @@ a.rt2-sub-prod:hover{text-decoration:underline}
    que es lo mismo que le pasaba a "Importante este mes" en Mi Día. */
 .sc-subs-lbl{font-size:10px;font-weight:900;letter-spacing:.04em;text-transform:uppercase;
   color:var(--text3);margin:6px 0 4px}
-.sc-subs{display:flex;flex-direction:column;gap:6px;max-height:340px;overflow-y:auto;padding-right:4px}
-.sc-sub{border-left:2px solid var(--cy);border-radius:0 8px 8px 0;padding:6px 9px;
-  background:rgba(var(--ov),.04)}
-.sc-sub-h{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:800;color:var(--text);line-height:1.3}
-.sc-sub-n{flex-shrink:0;width:16px;height:16px;border-radius:50%;background:var(--cy);color:#04231f;
-  font-family:var(--mono);font-size:9px;font-weight:900;display:flex;align-items:center;justify-content:center}
+.sc-subs-lbl small{font-weight:700;text-transform:none;letter-spacing:0;color:var(--cy)}
+.sc-subs{display:flex;flex-direction:column;gap:5px;max-height:340px;overflow-y:auto;padding-right:4px}
+.sc-sub{border-left:2px solid var(--cy);border-radius:0 8px 8px 0;
+  background:rgba(var(--ov),.04);overflow:hidden}
+/* El encabezado es el botón: ocupa todo el ancho para que sea fácil de atinar con el dedo. */
+.sc-sub-h{display:flex;align-items:center;gap:6px;width:100%;padding:7px 9px;
+  font:inherit;font-size:12px;font-weight:800;color:var(--text);line-height:1.3;text-align:left;
+  background:none;border:none;cursor:pointer;transition:background .15s}
+.sc-sub-h:hover{background:rgba(var(--ov),.06)}
+.sc-sub-t{flex:1;min-width:0}
+.sc-sub-caret{flex-shrink:0;font-size:10px;color:var(--text3);transition:transform .2s}
+.sc-sub.open .sc-sub-caret{transform:rotate(180deg)}
+/* Cerrado por defecto: la tarjeta se lee como un índice de lo que hay que aprender, y el
+   desarrollo aparece solo en la que se toca. */
+.sc-sub-body{display:none;padding:0 9px 8px}
+.sc-sub.open .sc-sub-body{display:block}
 .sc-sub-q{font-size:11px;color:var(--text3);line-height:1.45;margin-top:3px}
 .sc-sub-c{font-size:11px;color:var(--text2);line-height:1.5;margin-top:4px}
 .sc-sub-c b{color:var(--text)}
@@ -4787,6 +4797,15 @@ function renderGBMPanel(){
     '<div class="gbm-links">'+GBM_LINKS.map(l=>'<a href="'+l.u+'" target="_blank" rel="noopener"><b>'+l.t+'</b><span>'+l.d+'</span></a>').join('')+'</div>';
 }
 
+// Abre/cierra una sub-habilidad (2026-08-19). Pedido: "no muestres todo, solo lo importante,
+// pero hazlo en forma de boton… para que cuando haga click ya muestres toda la info". Con las 7
+// y 9 entradas desplegadas de golpe, la tarjeta era un muro de texto que había que scrollear para
+// ver qué habilidades hay; el título solo ya dice cuál es cada una, y el detalle aparece cuando
+// se pide. Se permite tener varias abiertas a la vez a propósito: sirve para comparar dos.
+function toggleSubhab(btn){
+  const abierto=btn.parentElement.classList.toggle('open');
+  btn.setAttribute('aria-expanded', abierto?'true':'false');
+}
 function renderSkills(){
   renderDidiStrip();
   // Top N prioridades reales, siempre visibles (nada de clics — este slide es pasivo, rota
@@ -4803,13 +4822,17 @@ function renderSkills(){
           <div class="sc-val" style="color:${l.c}">${s.val}<small>/100 · ×${s.w}</small></div>
         </div>
         ${a.subs ? `
-        <div class="sc-subs-lbl">${a.subs.length} habilidades que debes dominar — una por una</div>
+        <div class="sc-subs-lbl">${a.subs.length} habilidades que debes dominar <small>· toca una para ver cómo</small></div>
         <div class="sc-subs">${a.subs.map((x,i)=>`
           <div class="sc-sub">
-            <div class="sc-sub-h"><span class="sc-sub-n">${i+1}</span>${x.n}</div>
-            <div class="sc-sub-q">${x.q}</div>
-            <div class="sc-sub-c"><b>Cómo desarrollarla:</b> ${x.c}</div>
-            <div class="sc-sub-r">📚 ${x.r}</div>
+            <button class="sc-sub-h" onclick="toggleSubhab(this)" aria-expanded="false">
+              <span class="sc-sub-n">${i+1}</span><span class="sc-sub-t">${x.n}</span><span class="sc-sub-caret">▾</span>
+            </button>
+            <div class="sc-sub-body">
+              <div class="sc-sub-q">${x.q}</div>
+              <div class="sc-sub-c"><b>Cómo desarrollarla:</b> ${x.c}</div>
+              <div class="sc-sub-r">📚 ${x.r}</div>
+            </div>
           </div>`).join('')}
         </div>` : `
         <div class="sc-diag">🔍 <b>Por qué está baja:</b> ${a.diagnostico}</div>
