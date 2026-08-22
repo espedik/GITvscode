@@ -3185,3 +3185,27 @@ De los 34 productos del kit de higiene, 4 no son compras y su propio pasillo lo 
 `seedTengoViajeIfNeeded()` los marca como "ya lo tengo" en la primera carga, con el mismo patrón de bandera que `seedMetasLogradasIfNeeded()`. La pestaña pasa de **0/34 a 0/30**, que es el número real de cosas por comprar.
 
 **Se siembra una sola vez, y eso importa**: si algún día se le acaba el champú y sí tiene que comprarlo, lo desmarca y no se le vuelve a marcar en la siguiente carga. Comprobado: 4 marcados en carga limpia → desmarca uno → recarga → siguen 3.
+
+## "Ideas para hoy" muestra la mitad y el resto va con scroll (2026-08-20)
+
+*"lo de ideas para hoy quiero que me muestres la mitad y lo demas le haga scroll down para verlo"*.
+
+La lista tenía `flex:1` sin techo desde el 2026-08-12 —se le quitó el `max-height` para que se estirara hasta igualar al panel de gym, que era lo que se había pedido entonces— y el efecto acumulado es que **mostraba las 10 recetas y no hacía scroll nunca**.
+
+Medido antes de tocar: 10 tarjetas de 20 px con 3 px de gap = **23 px cada una**, en una lista de 227-238 px. La mitad son 5 tarjetas = **115 px**.
+
+| | Antes | Después |
+|---|---|---|
+| Recetas visibles | 10 de 10 | **5 de 10** |
+| Alto de la lista | 227-238 px | **115 px** |
+| Alto del panel | 306-317 px | **194-242 px** |
+
+### Dos detalles que hacían falta
+
+**El `min-height` tuvo que bajar de `clamp(90px,14vh,118px)` a 92 px.** En CSS un `min-height` mayor que el `max-height` **gana**, así que en cualquier pantalla donde `14vh` superara los 115 px el techo no habría servido de nada. Los 92 px siguen cumpliendo su función original: que en móvil, donde no hay alto sobrante que absorber, la lista no colapse.
+
+**Una máscara de degradado en los últimos 18 px.** Una lista cortada limpia parece una lista completa; con la última tarjeta desvaneciéndose se ve que sigue. Es constante y suave a propósito, no un indicador que aparezca y desaparezca: el scroll no cambia el DOM, así que un `:has()` no podría detectarlo.
+
+### Verificación
+
+Escritorio, monitor grande, iPad e iPhone: **5 de 10 visibles** en los cuatro, con la lista en 115 px sobre un contenido de 227-238 px. Y no basta con que haya barra: se comprobó llevando el scroll al fondo que **llega hasta el final y la décima receta es alcanzable**. Sin errores de consola.

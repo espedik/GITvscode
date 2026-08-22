@@ -576,8 +576,21 @@ a.rt2-sub-prod:hover{text-decoration:underline}
    - en móvil las 3 tarjetas se apilan (#miDiaSecundarios pasa a 1 columna) y ya no hay "alto
      sobrante" que absorber: sin este piso la lista colapsaría casi a 0 y no se vería ninguna
      receta. Por eso el valor es exactamente el `max-height` que tenía antes. */
-#heroNutriPanel{display:flex;flex-direction:column}
-#heroNutriPanel .hp-meal-list{flex:1;min-height:clamp(90px,14vh,118px)}
+#heroNutriPanel{display:flex;flex-direction:column;position:relative}
+/* Techo de media lista (2026-08-20, pedido explícito: "quiero que me muestres la mitad y lo demas
+   le haga scroll down para verlo"). Medido: 10 tarjetas de 20px + 3px de gap = 23px cada una, y
+   la lista las mostraba las 10 sin llegar a hacer scroll nunca. 5 × 23 = 115px es exactamente la
+   mitad. El `min-height` baja a 4 tarjetas para que en móvil, donde no hay alto sobrante que
+   absorber, la lista no colapse — y para que no pise al `max-height`, porque en CSS un
+   `min-height` mayor gana siempre sobre el `max-height` y el techo no serviría de nada. */
+#heroNutriPanel .hp-meal-list{flex:1;min-height:92px;max-height:115px}
+/* Aviso de que hay más abajo: sin esto, una lista cortada limpia parece una lista completa. Se
+   desvanece la última tarjeta con una máscara y se apaga sola al llegar al final del scroll
+   (:has(...) no sirve aquí porque el scroll no cambia el DOM; por eso el degradado es constante
+   y suave, no un indicador que aparezca y desaparezca). */
+#heroNutriPanel .hp-meal-list{
+  -webkit-mask-image:linear-gradient(to bottom,#000 calc(100% - 18px),transparent 100%);
+  mask-image:linear-gradient(to bottom,#000 calc(100% - 18px),transparent 100%)}
 .hp-meal-card{background:rgba(var(--ov),.04);border:1px solid rgba(var(--ov),.08);border-radius:8px;padding:3px 8px}
 /* Nombre mucho más chico que el resto de usos de .hp-meal-name (2026-08-09, "haz el nombre de
    desayuno mucho mas pequeña para que quepan varias") — bajó de 11px a 9px, y el padding de la
