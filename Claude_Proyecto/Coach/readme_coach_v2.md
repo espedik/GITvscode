@@ -734,3 +734,37 @@ Las **16** sub-habilidades de Finanzas e Inversión (7 + 9) pasan de bloque de t
 Mismo cambio y mismo contenido que en el Dashboard (ver `../Dashboard/readme_dashboard.md` → "Las sub-habilidades se pliegan"), con las clases de aquí: `.subhab-h` pasa a `<button>` a todo el ancho, `.subhab-body` nace en `display:none` y `.subhab.open` lo muestra.
 
 **Al verificarlo apareció una trampa que conviene recordar**: medir el alto del cuerpo justo después del clic daba 0 y parecía que el botón no funcionaba. No era el botón — `#aprendizaje` carga con `display:none`, como todas las secciones de este archivo salvo la activa, y dentro de un contenedor oculto cualquier `offsetHeight` es 0. Navegando primero a la sección, el cuerpo pasa de 0 a 115 px al primer clic.
+
+## Cuatro habilidades sociales, con sus libros y con foto (2026-08-20)
+
+*"en lo que todo hombre deberia saber, agrega hacer networkin, persuadir a las personas, como relacionarte con las personas, sacarle lo mejor a una persona, esto detallalo muy bien basate en libros de como influir en las personas, dame la informacion valiosa, no importa que sea muy largo, lo quiero bien detallado y con imagenes en hd, para que me ponga a estudiarlo"*.
+
+La sección tenía 10 tarjetas de habilidades **físicas y de protocolo** —modales, fogata, vino, nudos, mecánica, primeros auxilios— y ni una sola de trato con personas, que es donde de verdad se decide una carrera. Ahora abre con cuatro tarjetas nuevas, **~27,000 caracteres** de contenido:
+
+| Tarjeta | De dónde sale |
+|---|---|
+| 🤝 **Hacer networking de verdad** | *Never Eat Alone* (Ferrazzi) · *Give and Take* (Adam Grant) · *Superconnector* |
+| 🎯 **Persuadir con ética — los 7 principios de Cialdini** | *Influence* y *Pre-Suasion* (Cialdini) · *Never Split the Difference* (Chris Voss) |
+| 💬 **Cómo relacionarte con las personas** | *Cómo ganar amigos e influir sobre las personas* (Carnegie) · *Crucial Conversations* · *How to Talk to Anyone* |
+| 🌱 **Sacarle lo mejor a una persona** | *Multipliers* (Wiseman) · *Radical Candor* (Kim Scott) · *Drive* (Pink) · *Los 7 hábitos* (Covey) |
+
+**13 libros citados**, cada tarjeta cierra con los suyos y con una línea de por qué ese y no otro.
+
+### Cómo está escrito, y por qué así
+
+No es un resumen de contraportadas. Cada bloque lleva **el mecanismo** (por qué funciona, no solo qué hacer), **guiones textuales** listos para usar —el mensaje de seguimiento a 48 horas, las cuatro herramientas de Voss, las cuatro preguntas que abren a cualquiera— y **el error que arruina la técnica**, que suele ser lo que falta en los resúmenes.
+
+Y todos los ejemplos están **aterrizados a lo suyo**: vender la plantilla de Finanzas en las comunidades de GBM, el negocio de su papá, las entrevistas de trabajo remoto, la CT-GenAI como señal de autoridad. La tarjeta de "sacarle lo mejor" cierra aplicándolo al negocio de su papá — llegar con preguntas en vez de con la solución hecha, porque lo que se le ocurra a él lo sostiene y lo que le impongan lo abandona.
+
+Dos cosas que se cuidaron a propósito:
+
+- **La ética de la persuasión no es un párrafo de relleno.** Cialdini insiste en que solo se puede señalar lo que ya es verdad, y la tarjeta lo dice con su razón práctica: los siete principios funcionan porque hay confianza, y una mentira descubierta la elimina para siempre.
+- **Los matices que la versión popular se salta**: que dar sin criterio hunde carreras (Grant), que casi ningún "disminuidor" sabe que lo es (Wiseman), que la empatía ruinosa es el error de la gente buena (Scott), y que los premios empeoran el desempeño en trabajo que requiere pensar (Pink).
+
+### Las fotos
+
+Cabecera de 1920 px en cada tarjeta, con `aspect-ratio: 21/6` en vez de alto fijo para que no se deforme al estrecharse (16/9 en móvil), gradiente al pie y el título encima. Las 4 URLs se comprobaron cargando de verdad a 1920 px antes de escribirlas — el mismo control que se usa para las metas.
+
+### Verificación
+
+Escritorio, iPad y iPhone: **4 cabeceras**, las 4 imágenes cargando a **1920×1280** reales, 13 libros citados, 12 tarjetas en la sección y **0 desbordes** en los tres anchos. Sin errores de consola.

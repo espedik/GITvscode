@@ -790,6 +790,30 @@
       color: var(--accent); line-height: 1.5;
     }
 
+    /* ─── Tarjetas con foto de "Habilidades de un Hombre de Valor" (2026-08-20) ───
+       Las 4 habilidades sociales llevan cabecera en HD (w=1920) porque Adán las pidió "para
+       ponerme a estudiarlo": una foto ancha marca dónde empieza cada bloque en una sección que
+       ya es larga, y da un punto de descanso al ojo entre muros de texto.
+       `aspect-ratio` en vez de alto fijo para que la foto no se deforme al estrecharse. */
+    .hv-hero {
+      position: relative; margin: -18px -18px 14px; border-radius: 14px 14px 0 0;
+      aspect-ratio: 21 / 6; min-height: 120px;
+      background-size: cover; background-position: center; overflow: hidden;
+    }
+    .hv-hero::after {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,.88) 0%, rgba(0,0,0,.35) 55%, rgba(0,0,0,.1) 100%);
+    }
+    .hv-hero-txt { position: absolute; left: 18px; right: 18px; bottom: 12px; z-index: 1; }
+    .hv-hero-txt h3 { color: #fff; margin: 0 0 3px; font-size: 17px; font-weight: 800;
+      text-shadow: 0 2px 8px rgba(0,0,0,.7); }
+    .hv-hero-txt p { color: rgba(255,255,255,.88); margin: 0; font-size: 12.5px; line-height: 1.45;
+      text-shadow: 0 1px 6px rgba(0,0,0,.8); }
+    @media (max-width: 700px) {
+      .hv-hero { aspect-ratio: 16 / 9; min-height: 0; }
+      .hv-hero-txt h3 { font-size: 15px; }
+    }
+
     .recurso-item { display: flex; gap: 10px; align-items: flex-start; padding: 9px 0; border-bottom: 1px solid var(--border); font-size: 12px; color: var(--muted); }
     .recurso-item:last-child { border-bottom: none; }
     .recurso-item strong { color: var(--text); }
@@ -3254,6 +3278,169 @@
     <h2 class="section-title" data-num="08">🎩 Habilidades de un Hombre de Valor</h2>
     <p class="fs-13 text-muted mb-12">Cultura general práctica: cosas que no enseñan en la escuela ni en el trabajo, pero que separan a alguien que sabe desenvolverse en cualquier situación de alguien que no. No son habilidades de negocio — son las que hacen que te muevas con seguridad en una cena formal, un campamento, una cata de vino o una emergencia real.</p>
 
+
+    <!-- ══ 4 habilidades sociales (2026-08-20) ══════════════════════════════════════
+         Pedido de Adán: networking, persuasión, cómo relacionarse y cómo sacar lo mejor de
+         alguien, "bien detallado y con imagenes en hd, para que me ponga a estudiarlo".
+         Todo el contenido sale de libros reales y cada tarjeta cierra citando cuáles; los
+         ejemplos están aterrizados a lo suyo (vender la plantilla en GBM, el negocio de su
+         papá, las entrevistas de remoto). Las fotos son Unsplash a 1920px, comprobadas. -->
+    <div class="card" style="margin-bottom:16px;overflow:hidden">
+      <div class="hv-hero" style="background-image:url('https://images.unsplash.com/photo-1511578314322-379afb476865?w=1920&q=85&auto=format&fit=crop')">
+        <div class="hv-hero-txt"><h3>🤝 Hacer networking de verdad</h3><p>La red no se construye cuando la necesitas — se construye antes.</p></div>
+      </div>
+      <h5>La idea que lo cambia todo</h5>
+      <p class="fs-13 mb-8" style="line-height:1.75;">Keith Ferrazzi lo resume en una frase en <strong>Never Eat Alone</strong>: <em>"no hagas networking cuando necesites algo — para entonces ya es tarde"</em>. La red no se construye el día que buscas trabajo o cliente; se construye antes, cuando no necesitas nada. Por eso el networking hecho bien <strong>se siente raro al principio</strong>: estás invirtiendo en algo que no da resultado inmediato.</p>
+      <p class="fs-13 mb-12" style="line-height:1.75;">Y no es coleccionar contactos. Mil personas que te vieron una vez valen menos que <strong>veinte que te deben un favor de verdad</strong>.</p>
+
+      <h5 class="mt-8">Dar antes de pedir — y el matiz que casi todos se saltan</h5>
+      <p class="fs-13 mb-4" style="line-height:1.75;">Adam Grant, en <strong>Give and Take</strong>, estudió a miles de profesionales y encontró algo incómodo: los que <em>dan</em> ocupan <strong>tanto la cima como el fondo</strong> del ranking de éxito. La diferencia entre unos y otros no es cuánto dan, sino <strong>cómo</strong>:</p>
+      <div class="recurso-item"><span class="recurso-tipo r-tool">Fondo</span><div>El que da sin criterio: dice que sí a todo, se queda sin tiempo y sin energía, y nadie le devuelve nada porque su ayuda no era memorable.</div></div>
+      <div class="recurso-item"><span class="recurso-tipo r-tool">Cima</span><div>El que da <strong>lo que a él le cuesta poco y al otro le vale mucho</strong>: una presentación, un dato que ya tiene, cinco minutos de su especialidad. Es específico, es útil, y se acuerda de él.</div></div>
+      <p class="fs-13 mt-8 mb-12" style="line-height:1.75;">Tú tienes tres cosas que a mucha gente le valen y a ti te cuestan poco: <strong>sabes automatizar pruebas</strong>, <strong>sabes construir herramientas con IA</strong> —lo haces todos los días con esta app— y <strong>entiendes de finanzas personales mejor que el 90%</strong>. Eso es tu moneda.</p>
+
+      <h5 class="mt-8">El sistema, en cuatro pasos concretos</h5>
+      <p class="fs-13 mb-4" style="line-height:1.7;"><strong>1 · La lista de 20.</strong> Escribe 20 personas que quieres en tu red dentro de un año. No 200. Por cada una anota qué hace, por qué te interesa y —esto es lo importante— <strong>qué podrías darle tú</strong>. Si no se te ocurre nada que darle, todavía no es tu contacto.</p>
+      <p class="fs-13 mb-4" style="line-height:1.7;"><strong>2 · La regla de las 48 horas.</strong> A todo el que conoces, le escribes en menos de dos días. Después de 48 horas ya no se acuerda de tu cara y el mensaje se vuelve incómodo. El mensaje lleva tres cosas y nada más: dónde se conocieron, algo específico que él dijo, y <strong>algo que le mandas sin que lo pida</strong>.</p>
+      <div class="riesgo-box"><p class="fs-13" style="line-height:1.7;margin:0"><strong>Guion que funciona:</strong> <em>"Rodrigo, mucho gusto ayer en el meetup de GBM. Me quedé pensando en lo que dijiste de que llevas tus inversiones en tres hojas de Excel distintas. Te dejo la plantilla que armé para lo mío, por si te sirve — sin compromiso, la hice para mí. Cualquier duda, aquí ando."</em></p></div>
+      <p class="fs-13 mt-8 mb-4" style="line-height:1.7;"><strong>3 · El ping trimestral.</strong> Cada 3 meses, un mensaje a los de tu lista <strong>sin pedir nada</strong>: un artículo que le sirve, una felicitación por algo real, una presentación con alguien. Ferrazzi lo llama mantener el fuego encendido; sin esto, el contacto se enfría y volver a escribir se siente como pedir.</p>
+      <p class="fs-13 mb-12" style="line-height:1.7;"><strong>4 · Pide tarde, pide claro.</strong> Cuando por fin pidas, que sea <strong>concreto y fácil de conceder</strong>. "¿Me puedes ayudar a conseguir trabajo?" es imposible de responder. "¿Conoces a alguien en el equipo de QA de X a quien le pueda escribir?" se responde en treinta segundos.</p>
+
+      <h5 class="mt-8">Cómo entrar a una conversación cuando no conoces a nadie</h5>
+      <p class="fs-13 mb-4" style="line-height:1.7;">No busques al grupo grande y cerrado: busca <strong>al que está solo</strong> o al grupo de tres con un hueco abierto. Entra por el hueco, escucha treinta segundos antes de hablar, y arranca preguntando por lo que ya está pasando: <em>"¿ustedes de dónde vienen?"</em>, <em>"¿alcanzaron a ver la primera charla?"</em>.</p>
+      <p class="fs-13 mb-12" style="line-height:1.7;">Y para salir sin quedar mal —que es lo que más traba a la gente—: <em>"Oye, me dio mucho gusto. Voy a saludar a alguien allá, pero te escribo por LinkedIn para seguir con esto"</em>. Salir bien te permite entrar a la siguiente conversación.</p>
+
+      <h5 class="mt-8">Los tres errores que matan una red</h5>
+      <div class="recurso-item"><span class="recurso-tipo r-tool">1</span><div><strong>Pedir en el primer contacto.</strong> Es la señal más rápida de que no te interesa la persona, te interesa lo que tiene.</div></div>
+      <div class="recurso-item"><span class="recurso-tipo r-tool">2</span><div><strong>Aparecer solo cuando necesitas.</strong> Si tu último mensaje fue hace dos años y el nuevo es una petición, ya sabe exactamente qué eres para él.</div></div>
+      <div class="recurso-item"><span class="recurso-tipo r-tool">3</span><div><strong>Hablar de ti todo el rato.</strong> La gente recuerda cómo la hiciste sentir, no tu currículum. Ver la tarjeta de abajo, "cómo relacionarte".</div></div>
+
+      <hr class="divider">
+      <h4 style="color:var(--accent); margin-bottom:8px; font-size:12px;">📚 Para estudiarlo a fondo</h4>
+      <div class="recurso-item"><span class="recurso-tipo r-libro">Libro</span><div><strong>Never Eat Alone</strong> — Keith Ferrazzi · el manual del networking generoso; de aquí salen la regla de las 48 h y el ping.</div></div>
+      <div class="recurso-item"><span class="recurso-tipo r-libro">Libro</span><div><strong>Give and Take</strong> — Adam Grant · la investigación de por qué dar funciona, y por qué dar mal arruina tu carrera.</div></div>
+      <div class="recurso-item"><span class="recurso-tipo r-libro">Libro</span><div><strong>Superconnector</strong> — Scott Gerber y Ryan Paugh · el argumento de por qué coleccionar contactos ya no sirve para nada.</div></div>
+    </div>
+    <div class="card" style="margin-bottom:16px;overflow:hidden">
+      <div class="hv-hero" style="background-image:url('https://images.unsplash.com/photo-1552664730-d307ca884978?w=1920&q=85&auto=format&fit=crop')">
+        <div class="hv-hero-txt"><h3>🎯 Persuadir con ética — los 7 principios de Cialdini</h3><p>Los atajos por los que pasa casi todo el "sí" humano.</p></div>
+      </div>
+      <p class="fs-13 mb-12" style="line-height:1.75;">Robert Cialdini pasó tres años infiltrado en agencias de ventas, telemarketing y recaudación para escribir <strong>Influence</strong>. Encontró que casi todo el "sí" humano pasa por <strong>siete atajos mentales</strong>. No son trucos: son mecanismos que el cerebro usa para no tener que analizar cada decisión desde cero. Conocerlos sirve para dos cosas — <strong>que te digan que sí más veces, y darte cuenta cuando te los están aplicando a ti</strong>.</p>
+
+      <h5>Los 7 principios, con su mecanismo y tu ejemplo</h5>
+
+      <p class="fs-13 mb-4" style="line-height:1.7;"><strong>1 · Reciprocidad.</strong> Recibir algo genera una deuda incómoda hasta que la pagas. Por eso funcionan las muestras gratis. <em>Lo que casi nadie sabe</em>: lo que dispara la reciprocidad no es el valor de lo que das, sino que sea <strong>inesperado y personalizado</strong>.<br><span style="color:var(--muted)">→ <strong>Tu caso:</strong> regalar la versión gratis de tu plantilla en la comunidad de GBM, sin pedir nada, antes de vender la completa.</span></p>
+
+      <p class="fs-13 mb-4" style="line-height:1.7;"><strong>2 · Compromiso y coherencia.</strong> Una vez que alguien dice algo en voz alta, defiende esa postura para no contradecirse. Un compromiso <strong>público, escrito y voluntario</strong> es cinco veces más fuerte que uno mental.<br><span style="color:var(--muted)">→ <strong>Tu caso:</strong> en vez de "¿te interesa la plantilla?", pregunta "¿te gustaría llevar tus finanzas más ordenadas este año?". Quien contesta que sí ya se comprometió con la idea; la herramienta viene después.</span></p>
+
+      <p class="fs-13 mb-4" style="line-height:1.7;"><strong>3 · Prueba social.</strong> Ante la duda, hacemos lo que hacen los demás — y pesa mucho más si esos demás <strong>se nos parecen</strong>. La prueba social de un desconocido famoso convence menos que la de alguien en tu misma situación.<br><span style="color:var(--muted)">→ <strong>Tu caso:</strong> "la usan 40 personas de esta comunidad" convence más que cualquier adjetivo que le pongas tú.</span></p>
+
+      <p class="fs-13 mb-4" style="line-height:1.7;"><strong>4 · Autoridad.</strong> Obedecemos a quien percibimos como experto. Y la autoridad se transmite con <strong>señales</strong>: credenciales, precisión en los datos, o admitir un defecto pequeño antes de dar el argumento fuerte ("no es bonita, pero no falla") — esto último dispara la credibilidad de todo lo demás.<br><span style="color:var(--muted)">→ <strong>Tu caso:</strong> tu ISTQB, tus años en ADAS, y la CT-GenAI que estás por presentar. No es presumir: es dar el dato que permite confiar en ti.</span></p>
+
+      <p class="fs-13 mb-4" style="line-height:1.7;"><strong>5 · Simpatía.</strong> Decimos que sí a quien nos cae bien, y nos cae bien quien <strong>se nos parece, nos elogia con sinceridad y colabora con nosotros</strong> hacia un objetivo común. Es el principio más subestimado y el más fácil de trabajar.<br><span style="color:var(--muted)">→ <strong>Tu caso:</strong> las similitudes reales primero — que también manejas Didi, que también empezaste de cero con las finanzas.</span></p>
+
+      <p class="fs-13 mb-4" style="line-height:1.7;"><strong>6 · Escasez.</strong> Valoramos más lo que se puede acabar, y <strong>duele más perder que ilusiona ganar</strong>. Por eso "te quedan 2 días" mueve más que "aprovecha".<br><span style="color:var(--muted)">→ <strong>Tu caso:</strong> úsalo solo cuando sea <strong>verdad</strong>. Una escasez inventada que se descubre destruye los otros seis principios de golpe.</span></p>
+
+      <p class="fs-13 mb-12" style="line-height:1.7;"><strong>7 · Unidad.</strong> El más potente, y el que Cialdini añadió treinta años después. No es parecerse: es <strong>ser del mismo grupo</strong> — la familia, el barrio, la escuela, la profesión. El "nosotros" real vence a todo lo anterior.<br><span style="color:var(--muted)">→ <strong>Tu caso:</strong> "los que trabajamos en automotriz sabemos que…" no es una frase de venta, es una declaración de pertenencia.</span></p>
+
+      <h5 class="mt-8">Antes de hablar: el momento importa tanto como el mensaje</h5>
+      <p class="fs-13 mb-12" style="line-height:1.75;">En <strong>Pre-Suasion</strong>, Cialdini demuestra algo raro: <strong>lo que ocurre justo antes de tu petición cambia la respuesta</strong>. Preguntar "¿te consideras una persona aventurera?" antes de ofrecer algo nuevo sube la aceptación de forma medible. No es magia — es que dirigiste la atención a la parte de su identidad que tu propuesta necesita. La aplicación honesta: <strong>abre por el terreno donde tu propuesta ya tiene sentido</strong>, no por la propuesta.</p>
+
+      <h5 class="mt-8">Negociar: las cuatro herramientas de Chris Voss</h5>
+      <p class="fs-13 mb-4" style="line-height:1.7;">Voss fue negociador jefe de secuestros del FBI y escribió <strong>Never Split the Difference</strong> contra la idea de "partir la diferencia". Sus herramientas se aprenden en una tarde y se notan de inmediato:</p>
+      <div class="recurso-item"><span class="recurso-tipo r-tool">Etiquetar</span><div><strong>"Parece que te preocupa el precio."</strong> Poner nombre a la emoción del otro la desactiva. Se dice sin "yo": no <em>"creo que te preocupa"</em>, sino <em>"parece que…"</em> — así no lo obligas a defenderse de ti.</div></div>
+      <div class="recurso-item"><span class="recurso-tipo r-tool">Espejear</span><div>Repetir <strong>las últimas 3 palabras</strong> de lo que dijo, con entonación de pregunta. Suena tonto y funciona: la persona amplía sola, y en lo que amplía está la información que necesitas.</div></div>
+      <div class="recurso-item"><span class="recurso-tipo r-tool">Calibrar</span><div>Preguntas de <strong>"cómo" y "qué"</strong>, nunca de "por qué" (el "por qué" acusa). <em>"¿Cómo se supone que haga eso?"</em> convierte tu negativa en el problema del otro, sin pelear.</div></div>
+      <div class="recurso-item"><span class="recurso-tipo r-tool">Buscar el "no"</span><div>El "sí" fácil compromete a nadie. <em>"¿Sería una locura si…?"</em> deja al otro decir que no —que es donde se siente seguro— y desde ahí empieza la conversación real.</div></div>
+
+      <div class="riesgo-box mt-8"><p class="fs-13" style="line-height:1.75;margin:0"><strong>⚠️ Influencia no es manipulación, y la diferencia es exacta.</strong> Cialdini insiste en una regla: <strong>solo puedes señalar lo que ya es verdad</strong>. Si tu producto de verdad lo usan 40 personas, decirlo es informar. Si inventas el número, es fraude — y además es mal negocio: los siete principios funcionan porque hay confianza, y una mentira descubierta la elimina para siempre.</p></div>
+
+      <hr class="divider">
+      <h4 style="color:var(--accent); margin-bottom:8px; font-size:12px;">📚 Para estudiarlo a fondo</h4>
+      <div class="recurso-item"><span class="recurso-tipo r-libro">Libro</span><div><strong>Influence: The Psychology of Persuasion</strong> — Robert Cialdini · el libro base. Si solo lees uno de persuasión, es este.</div></div>
+      <div class="recurso-item"><span class="recurso-tipo r-libro">Libro</span><div><strong>Pre-Suasion</strong> — Robert Cialdini · la secuela: cómo el instante previo cambia la respuesta.</div></div>
+      <div class="recurso-item"><span class="recurso-tipo r-libro">Libro</span><div><strong>Never Split the Difference</strong> — Chris Voss · negociación aplicada; el más práctico de los tres.</div></div>
+    </div>
+    <div class="card" style="margin-bottom:16px;overflow:hidden">
+      <div class="hv-hero" style="background-image:url('https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=1920&q=85&auto=format&fit=crop')">
+        <div class="hv-hero-txt"><h3>💬 Cómo relacionarte con las personas</h3><p>El otro está más interesado en sí mismo que en ti. Quien lo entiende deja de pelear por atención.</p></div>
+      </div>
+      <p class="fs-13 mb-12" style="line-height:1.75;">Dale Carnegie publicó <strong>Cómo ganar amigos e influir sobre las personas</strong> en 1936 y sigue vendiendo porque no envejeció: describe cómo funciona la gente, no una moda. La tesis del libro cabe en una línea — <strong>el otro está infinitamente más interesado en sí mismo que en ti</strong>, y quien entiende eso deja de pelear por atención.</p>
+
+      <h5>Las tres reglas que sostienen todo lo demás</h5>
+      <div class="recurso-item"><span class="recurso-tipo r-tool">1</span><div><strong>No critiques, no condenes, no te quejes.</strong> La crítica pone al otro a la defensiva y lo obliga a justificarse. Nadie cambió nunca de opinión sintiéndose atacado.</div></div>
+      <div class="recurso-item"><span class="recurso-tipo r-tool">2</span><div><strong>Reconoce lo bueno, con honestidad.</strong> No es adular: es <strong>decir en voz alta algo que de verdad viste</strong>. La diferencia entre el elogio y la adulación es que el primero es específico.</div></div>
+      <div class="recurso-item"><span class="recurso-tipo r-tool">3</span><div><strong>Despierta en el otro un deseo vehemente.</strong> Nadie hace algo por tus razones; lo hace por las suyas. Antes de pedir, contesta: <em>¿qué gana él?</em></div></div>
+
+      <h5 class="mt-8">Seis formas de agradar — y por qué cada una funciona</h5>
+      <p class="fs-13 mb-4" style="line-height:1.7;"><strong>Interésate de verdad por el otro.</strong> Carnegie lo dice sin rodeos: harás más amigos en dos meses interesándote por la gente que en dos años intentando que se interesen por ti.</p>
+      <p class="fs-13 mb-4" style="line-height:1.7;"><strong>Sonríe.</strong> Suena trivial hasta que ves lo que hace: la sonrisa dice "no soy una amenaza" antes de que abras la boca, y es lo primero que el otro procesa.</p>
+      <p class="fs-13 mb-4" style="line-height:1.7;"><strong>Usa su nombre.</strong> <em>"El nombre de una persona es, para ella, el sonido más dulce en cualquier idioma"</em>. Repítelo al conocerla, úsalo una vez a mitad de la conversación y otra al despedirte — y lo recordarás de verdad.</p>
+      <p class="fs-13 mb-4" style="line-height:1.7;"><strong>Escucha. En serio.</strong> No es callarte mientras piensas tu respuesta: es <strong>preguntar por lo último que dijo</strong>. La señal de que escuchaste es tu siguiente pregunta, no tu cara.</p>
+      <p class="fs-13 mb-4" style="line-height:1.7;"><strong>Habla de lo que a él le interesa.</strong> Roosevelt estudiaba la noche anterior el tema favorito de quien lo visitaba. No era simpatía: era trabajo.</p>
+      <p class="fs-13 mb-12" style="line-height:1.7;"><strong>Haz que se sienta importante — con sinceridad.</strong> Todo el libro cabe aquí. Y el "con sinceridad" no es un adorno: es la única forma de que funcione más de una vez.</p>
+
+      <h5 class="mt-8">Cuando hay desacuerdo</h5>
+      <p class="fs-13 mb-4" style="line-height:1.7;"><strong>La única forma de ganar una discusión es evitarla.</strong> Aunque ganes, el otro se queda con su opinión y ahora además te tiene ganas.</p>
+      <p class="fs-13 mb-4" style="line-height:1.7;"><strong>Nunca digas "estás equivocado".</strong> Cambia a <em>"puede que me equivoque, déjame ver si entendí bien…"</em> y repite su postura mejor de lo que él la dijo. Eso desarma cualquier defensa.</p>
+      <p class="fs-13 mb-4" style="line-height:1.7;"><strong>Si te equivocaste, admítelo rápido y con energía.</strong> Quitarte tú mismo la razón deja al otro sin nada que atacar, y sube tu credibilidad en vez de bajarla.</p>
+      <p class="fs-13 mb-12" style="line-height:1.7;"><strong>Deja que la idea sea suya.</strong> La gente defiende con uñas lo que cree que se le ocurrió. Pregunta hasta que llegue solo a donde querías.</p>
+
+      <h5 class="mt-8">Las conversaciones difíciles</h5>
+      <p class="fs-13 mb-4" style="line-height:1.75;">Para lo que Carnegie no cubre —el momento en que hay algo real en juego y las emociones se disparan— está <strong>Crucial Conversations</strong>. Su aporte central es el concepto de <strong>seguridad psicológica</strong>: la gente no se cierra por el tema, se cierra cuando siente que la están atacando o que va a perder algo. Si notas que se cerró, <strong>no sigas con el tema: repara la seguridad primero</strong> ("no busco echarte la culpa, busco que esto no se repita") y luego vuelve.</p>
+      <p class="fs-13 mb-12" style="line-height:1.75;">Y una fórmula que sirve siempre: <strong>hechos → tu historia → pregunta</strong>. <em>"Llegaron tres reportes tarde esta semana (hecho). Empecé a pensar que quizá el plazo no era realista (mi interpretación, no una acusación). ¿Cómo lo ves tú?"</em></p>
+
+      <hr class="divider">
+      <h4 style="color:var(--accent); margin-bottom:8px; font-size:12px;">📚 Para estudiarlo a fondo</h4>
+      <div class="recurso-item"><span class="recurso-tipo r-libro">Libro</span><div><strong>Cómo ganar amigos e influir sobre las personas</strong> — Dale Carnegie · empieza por aquí. Se lee en una semana y se practica toda la vida.</div></div>
+      <div class="recurso-item"><span class="recurso-tipo r-libro">Libro</span><div><strong>Crucial Conversations</strong> — Patterson, Grenny, McMillan y Switzler · para cuando hay algo en juego y las emociones suben.</div></div>
+      <div class="recurso-item"><span class="recurso-tipo r-libro">Libro</span><div><strong>How to Talk to Anyone</strong> — Leil Lowndes · 92 tácticas concretas; el más práctico si lo tuyo es arrancar conversaciones.</div></div>
+    </div>
+    <div class="card" style="margin-bottom:16px;overflow:hidden">
+      <div class="hv-hero" style="background-image:url('https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=1920&q=85&auto=format&fit=crop')">
+        <div class="hv-hero-txt"><h3>🌱 Sacarle lo mejor a una persona</h3><p>La gente rinde a la altura de lo que esperas de ella — y tus expectativas se filtran aunque no las digas.</p></div>
+      </div>
+      <p class="fs-13 mb-12" style="line-height:1.75;">Esta es la habilidad que separa a alguien que trabaja bien de alguien a quien <strong>la gente quiere tener cerca</strong>. Y no va de motivar con discursos: va de crear las condiciones donde el otro rinde por encima de lo que él mismo creía.</p>
+
+      <h5>El experimento que lo demuestra</h5>
+      <p class="fs-13 mb-12" style="line-height:1.75;">En 1965, Rosenthal y Jacobson dieron a unos maestros los nombres de alumnos que —según una prueba— iban a destacar ese año. Los alumnos eran <strong>elegidos al azar</strong>. Al final del curso, esos niños habían mejorado significativamente más que el resto. Lo único distinto fue <strong>lo que el maestro esperaba de ellos</strong>: les daba más tiempo para responder, más pistas, más atención. Se llama <strong>efecto Pigmalión</strong>, y la conclusión práctica es dura: <strong>la gente tiende a rendir a la altura de lo que tú esperas de ella</strong>, y tus expectativas se filtran aunque no las digas.</p>
+
+      <h5 class="mt-8">Multiplicadores y disminuidores</h5>
+      <p class="fs-13 mb-4" style="line-height:1.75;">Liz Wiseman estudió en <strong>Multipliers</strong> a más de 150 líderes y encontró dos tipos. Los <em>disminuidores</em> obtienen cerca de la mitad de la capacidad de su gente; los <em>multiplicadores</em>, casi el doble. Lo revelador es que <strong>casi ningún disminuidor sabe que lo es</strong> — muchos son gente brillante y bienintencionada:</p>
+      <div class="recurso-item"><span class="recurso-tipo r-tool">Disminuye</span><div>Es el más listo del cuarto y lo demuestra. Da la respuesta. Rescata al equipo cuando se atora. Resultado: dejan de pensar, porque para qué.</div></div>
+      <div class="recurso-item"><span class="recurso-tipo r-tool">Multiplica</span><div>Hace la pregunta difícil y <strong>aguanta el silencio</strong>. Deja que se equivoquen en lo reversible. Da el problema entero, no la tarea partida. Resultado: crecen.</div></div>
+      <p class="fs-13 mt-8 mb-12" style="line-height:1.75;"><strong>La prueba más rápida para saber cuál eres:</strong> en tu última junta, ¿qué porcentaje del tiempo hablaste tú? Si pasa del 30%, estás disminuyendo sin darte cuenta.</p>
+
+      <h5 class="mt-8">Franqueza radical: el feedback que sí sirve</h5>
+      <p class="fs-13 mb-4" style="line-height:1.75;">Kim Scott, en <strong>Radical Candor</strong>, cruza dos ejes —<strong>preocuparte personalmente</strong> por el otro y <strong>desafiarlo directamente</strong>— y salen cuatro cuadrantes. Solo uno funciona, y los otros tres describen a casi todo el mundo:</p>
+      <div class="recurso-item"><span class="recurso-tipo r-tool">✅ Franqueza radical</span><div>Te importa la persona <strong>y</strong> le dices la verdad. "Te lo digo porque quiero que te vaya bien: la presentación no se entendió."</div></div>
+      <div class="recurso-item"><span class="recurso-tipo r-tool">Empatía ruinosa</span><div>Te importa pero te callas por no incomodar. Es el error más común de la gente buena — y el que más daño hace a largo plazo, porque el otro nunca se entera.</div></div>
+      <div class="recurso-item"><span class="recurso-tipo r-tool">Agresividad odiosa</span><div>Dices la verdad sin que te importe la persona. Funciona una vez y quema la relación.</div></div>
+      <div class="recurso-item"><span class="recurso-tipo r-tool">Insinceridad manipuladora</span><div>Ni te importa ni dices la verdad. Es la política de pasillo.</div></div>
+      <p class="fs-13 mt-8 mb-12" style="line-height:1.75;"><strong>El orden importa:</strong> primero se gana el derecho —demostrando que te importa— y después se desafía. Al revés solo es agresividad. Y el elogio se da <strong>en público y con el mismo detalle</strong> que la crítica: "buen trabajo" no enseña nada; "la forma en que reordenaste el reporte hizo que se entendiera a la primera" sí.</p>
+
+      <h5 class="mt-8">Qué mueve de verdad a la gente</h5>
+      <p class="fs-13 mb-4" style="line-height:1.75;">Daniel Pink resume en <strong>Drive</strong> décadas de investigación con una conclusión incómoda para cualquier jefe: pasado el punto en que el dinero deja de ser una preocupación, <strong>los premios y castigos empeoran el desempeño</strong> en tareas que requieren pensar. Lo que sí funciona son tres cosas:</p>
+      <div class="recurso-item"><span class="recurso-tipo r-tool">Autonomía</span><div>Decidir cómo, cuándo y con quién hacerlo. Da el resultado esperado, no el método.</div></div>
+      <div class="recurso-item"><span class="recurso-tipo r-tool">Maestría</span><div>Sentir que se progresa en algo difícil. La gente no se quema por trabajar mucho, se quema por no avanzar.</div></div>
+      <div class="recurso-item"><span class="recurso-tipo r-tool">Propósito</span><div>Saber para qué sirve lo que hace, y a quién. Es lo primero que se pierde y lo último que se explica.</div></div>
+
+      <h5 class="mt-8">Cuatro preguntas que abren a cualquiera</h5>
+      <p class="fs-13 mb-4" style="line-height:1.7;">Guárdalas: sirven con tu papá, con un compañero de trabajo y en una entrevista.</p>
+      <div class="recurso-item"><span class="recurso-tipo r-tool">1</span><div><strong>"¿Qué parte de esto es la que más disfrutas?"</strong> — te dice dónde está su energía, que es donde va a rendir.</div></div>
+      <div class="recurso-item"><span class="recurso-tipo r-tool">2</span><div><strong>"Si pudieras cambiar una cosa de cómo lo hacemos, ¿cuál sería?"</strong> — la gente casi siempre sabe qué está mal y casi nunca se lo preguntan.</div></div>
+      <div class="recurso-item"><span class="recurso-tipo r-tool">3</span><div><strong>"¿Qué necesitas de mí para que esto salga?"</strong> — convierte tu ayuda en algo concreto en vez de un "avísame si necesitas algo" que nadie usa.</div></div>
+      <div class="recurso-item"><span class="recurso-tipo r-tool">4</span><div><strong>"¿Dónde te ves haciendo esto dentro de dos años?"</strong> — y luego <strong>recuérdalo</strong>. Preguntar y olvidar es peor que no preguntar.</div></div>
+
+      <div class="riesgo-box mt-8"><p class="fs-13" style="line-height:1.75;margin:0"><strong>Lo aplicable hoy mismo:</strong> el negocio de tu papá es exactamente este ejercicio. No llegues con la solución hecha —eso sería disminuir—. Llega con las cuatro preguntas, escucha sin corregir, y deja que las mejoras salgan de él. Lo que se le ocurra a él lo va a sostener; lo que le impongas tú lo va a abandonar en dos semanas.</p></div>
+
+      <hr class="divider">
+      <h4 style="color:var(--accent); margin-bottom:8px; font-size:12px;">📚 Para estudiarlo a fondo</h4>
+      <div class="recurso-item"><span class="recurso-tipo r-libro">Libro</span><div><strong>Multipliers</strong> — Liz Wiseman · por qué la gente rinde el doble con unos y la mitad con otros.</div></div>
+      <div class="recurso-item"><span class="recurso-tipo r-libro">Libro</span><div><strong>Radical Candor</strong> — Kim Scott · cómo decir la verdad sin romper la relación.</div></div>
+      <div class="recurso-item"><span class="recurso-tipo r-libro">Libro</span><div><strong>Drive</strong> — Daniel Pink · autonomía, maestría y propósito, con la investigación detrás.</div></div>
+      <div class="recurso-item"><span class="recurso-tipo r-libro">Libro</span><div><strong>The 7 Habits of Highly Effective People</strong> — Stephen Covey · el hábito 5, "busca primero entender", es la base de todo lo de arriba.</div></div>
+    </div>
     <div class="card" style="margin-bottom:16px;">
       <h3 class="fw-700 mb-12">🍽️ Modales y etiqueta esencial</h3>
       <p class="fs-13 mb-4" style="line-height:1.7;"><strong style="color:var(--accent);">En la mesa.</strong> Los cubiertos se usan de afuera hacia adentro conforme avanzan los tiempos; el que se queda quieto es siempre el de la izquierda. La servilleta va sobre las piernas apenas te sientas, nunca en el cuello. No hables con la boca llena, no apoyes los codos en la mesa mientras comes (sí puedes al conversar entre platillos), y espera a que todos tengan su plato antes de empezar. Si brindas, mira a los ojos de la persona a la que brindas — no al vaso.</p>
