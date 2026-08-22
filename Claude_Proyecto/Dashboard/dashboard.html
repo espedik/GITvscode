@@ -685,6 +685,34 @@ a.rt2-sub-prod:hover{text-decoration:underline}
   .fase-hero{padding:13px 15px 12px}
 }
 .coach-accent-debt{border-left:3px solid var(--g)}
+/* ─── El slide de Coach no cabe entero, y el que sobra es el checklist (2026-08-20) ───
+   Reportado como "se pasa de los bordes". El `.slide-inner` es flex-column con
+   `justify-content:center` y alto fijo: cuando el contenido pasa del alto disponible, el exceso
+   se reparte arriba y abajo y el slide, que es `overflow-y:hidden` en escritorio, lo recorta sin
+   dejar forma de llegar a él. Medido en 1366×768: el checklist mide 404 px y se salía 150 px.
+   Arreglo: en este slide el contenido se ancla arriba en vez de centrarse, y el checklist —que es
+   la única pieza que crece sin tope, porque depende de cuántas tareas tenga la fase— absorbe el
+   alto sobrante y hace su propio scroll. El patrón es el mismo de "Importante este mes" en Mi Día
+   y de #diaTimeline: la lista larga scrollea dentro de su tarjeta, no empuja al resto. */
+.theme-coach .slide-inner{justify-content:flex-start;height:auto;min-height:100%;padding-bottom:24px}
+/* El slide scrollea en vez de recortar. Es la diferencia entre "no cabe, mala suerte" y "no cabe,
+   baja a verlo": el resto de pantallas del Dashboard son de vistazo y caben, pero esta lleva el
+   plan de la fase completo —encabezado, ruta de deuda y el checklist entero— y en 720-900 px de
+   alto no entra. Darle el alto sobrante al checklist (primer intento) no servía: en esas alturas
+   no hay sobrante, así que se quedaba en 0 px. `overscroll-behavior:contain` evita que el scroll
+   se propague al carrusel cuando se llega al final de la lista. */
+.slide.theme-coach.active{overflow-y:auto;overscroll-behavior:contain}
+.theme-coach .coach-accent-month{flex:none}
+/* En pantallas de poca altura el hero de la fase cede espacio: es un encabezado, y el checklist
+   es la parte con la que de verdad se trabaja. El texto explicativo se limita a 3 líneas — sigue
+   completo en el `title`, no se pierde. */
+@media(max-height:820px){
+  .fase-hero{margin-bottom:16px;padding:12px 16px 11px}
+  .fase-hero-head{margin-bottom:10px}
+  .fase-linea{margin-bottom:10px}
+  .fase-kpis{margin-bottom:9px;padding-bottom:9px;gap:18px}
+  .fase-explica{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+}
 .coach-accent-month{border-left:3px solid var(--ac1)}
 .coach-month-title{font-size:clamp(15px,1.6vw,19px);font-weight:800;color:var(--text);margin-bottom:10px;line-height:1.3}
 /* Fase 0 por mes (2026-08-09) — Adán: "en el dashboard son muchas tareas y no me enfoco en

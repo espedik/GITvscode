@@ -3209,3 +3209,27 @@ Medido antes de tocar: 10 tarjetas de 20 px con 3 px de gap = **23 px cada una**
 ### Verificación
 
 Escritorio, monitor grande, iPad e iPhone: **5 de 10 visibles** en los cuatro, con la lista en 115 px sobre un contenido de 227-238 px. Y no basta con que haya barra: se comprobó llevando el scroll al fondo que **llega hasta el final y la décima receta es alcanzable**. Sin errores de consola.
+
+## El slide de Coach se salía de la pantalla (2026-08-20)
+
+*"la segunda pagina del dashboard no se ve bien, se pasa de los bordes"*.
+
+Medido en 1366×768 antes de tocar nada: el tile del checklist mide 404 px y **se salía 150 px por debajo del borde**. Como el slide es `overflow-y:hidden` en escritorio, esa parte quedaba recortada **sin ninguna forma de llegar a ella**.
+
+**El desbordamiento ya existía**; el rediseño del encabezado de fase del 19-ago lo agravó de 150 a 204 px, porque el hero pasó de 249 px a 362 px. Comprobado contra `4569997^`, no supuesto.
+
+### El primer intento no sirvió, y por qué
+
+Lo natural era dar el alto sobrante al checklist con `flex:1` y que scrolleara dentro de su tarjeta — el patrón que ya usan "Importante este mes" y `#diaTimeline`. Medido: en FHD funcionaba, pero **en 1600×900 el checklist quedó en 22 px y en 1366×768 en 0 px**. La razón es simple: `flex:1` reparte el espacio *sobrante*, y en esas alturas no sobra nada. El resultado era peor que el problema.
+
+### Lo que sí lo arregla
+
+**El slide scrollea en vez de recortar.** Es la diferencia entre *"no cabe, mala suerte"* y *"no cabe, baja a verlo"*. Las demás pantallas del Dashboard son de vistazo y caben; esta lleva el plan de la fase completo —encabezado, ruta de deuda y el checklist entero— y en 720-900 px de alto no entra por diseño, no por accidente.
+
+- `.slide.theme-coach.active{overflow-y:auto;overscroll-behavior:contain}` — el `overscroll-behavior` evita que al llegar al final el scroll se propague al carrusel.
+- `.slide-inner` pasa a `height:auto;min-height:100%` con el contenido anclado arriba, en vez de centrado: centrar contenido que no cabe lo recorta **por los dos lados**.
+- En `@media(max-height:820px)` el hero de la fase cede espacio (paddings menores y el texto explicativo a 3 líneas). Es un encabezado; el checklist es la parte con la que se trabaja.
+
+### Verificación
+
+**7 resoluciones, 7 correctas**: FHD, 1600×900, 1366×768, 1280×720, MacBook 1440×900, iPad y iPhone. En todas: **0 desbordes horizontales**, y llevando el scroll al fondo se comprueba que **el último bloque queda visible** — que es lo que de verdad se pedía, no solo que existiera barra. El checklist se muestra completo (341-705 px según el tamaño). Sin errores de consola.
