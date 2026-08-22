@@ -768,3 +768,25 @@ Cabecera de 1920 px en cada tarjeta, con `aspect-ratio: 21/6` en vez de alto fij
 ### Verificación
 
 Escritorio, iPad y iPhone: **4 cabeceras**, las 4 imágenes cargando a **1920×1280** reales, 13 libros citados, 12 tarjetas en la sección y **0 desbordes** en los tres anchos. Sin errores de consola.
+
+### El repaso de las tarjetas sociales (2026-08-20)
+
+*"revisallo de nuevo tiene que quedar muuuy bien"*.
+
+Mirarlas renderizadas una por una encontró tres cosas que leyendo el código no se veían:
+
+**1 · Dos tarjetas eran un muro de texto.** "Sacarle lo mejor" se leía sola porque usaba bloques con etiqueta; persuasión tenía los 7 principios como 7 párrafos corridos, y Carnegie igual con las 6 formas de agradar y las 4 reglas del desacuerdo. Ahora las cuatro comparten el mismo bloque: **número en círculo, título destacado y el ejemplo propio en su propia caja** (`.hv-p`). Son **21 bloques** en total y 7 cajas de "tu caso".
+
+**2 · Contenido duplicado.** El primer arreglo insertó los 4 pasos del networking pero dejó los párrafos 3 y 4 del formato viejo más abajo — el guion de ejemplo estaba *entre medias* y cortó mal el reemplazo. Los pasos aparecían dos veces. El guion pasó al final del bloque, etiquetado como "paso 2", que es a donde pertenece.
+
+**3 · Un `{` sin cerrar tumbó el CSS de media página.** El intento de insertar el CSS nuevo usó como ancla `    .hv-hero {`, que aparece **dos veces** (la regla y su media query). El reemplazo dejó `.hv-hero {` seguido de la cola de un comentario, y a partir de ahí **el navegador descartó todas las reglas siguientes**: `.recurso-tipo` y `.recurso-item` dejaron de pintarse en todo el archivo — se veían como texto plano de 15 px en vez de etiquetas. Se detectó comparando el `backgroundColor` calculado (`rgba(0,0,0,0)`) contra el esperado, no a ojo.
+
+> El script se rehízo anclando en una línea **completa y única**, y ahora **verifica que el número de llaves del `<style>` cuadre** antes de escribir. Es la comprobación que faltaba: la sintaxis JS ya se validaba, la del CSS no.
+
+**Y dos fotos cambiadas por otras que dicen lo que la tarjeta dice**: networking tenía una sala de conferencias **vacía** y ahora tiene gente conversando; "relacionarte" tenía unas manos frente a una laptop y ahora una conversación real.
+
+**Precisión del dato de Rosenthal**, verificado antes de dejarlo: el experimento fue en **1965** y se publicó en **1968** como *Pygmalion in the Classroom*; el test se llamaba *"Harvard Test of Inflected Acquisition"*, **no existía**, y el 20% señalado estaba elegido al azar. Ese detalle estaba resumido de más y ahora está completo.
+
+### Verificación
+
+Escritorio, iPad e iPhone: 4 cabeceras con las **4 imágenes a 1920×1280 reales**, 21 bloques, 13 libros, **0 duplicados**, **0 desbordes**, y una comprobación explícita de que **el CSS de la página sigue intacto** (que una etiqueta conocida conserve su fondo). Sin errores de consola.

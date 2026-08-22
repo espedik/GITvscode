@@ -804,6 +804,31 @@
       content: ''; position: absolute; inset: 0;
       background: linear-gradient(to top, rgba(0,0,0,.88) 0%, rgba(0,0,0,.35) 55%, rgba(0,0,0,.1) 100%);
     }
+    /* Bloque numerado de las tarjetas sociales (2026-08-20, segunda pasada). Los 7 principios de
+       Cialdini y los 4 pasos del networking estaban como párrafos corridos y se leían como un
+       muro; la tarjeta de "sacarle lo mejor" ya usaba bloques con etiqueta y se leía sola. Se
+       unifica: número en círculo, nombre destacado, y el ejemplo propio en su propia línea con
+       fondo — que es lo que de verdad se busca al releer. */
+    .hv-p {
+      display: flex; gap: 11px; align-items: flex-start;
+      padding: 10px 12px; margin-bottom: 8px;
+      border-radius: 10px; background: var(--surface-2);
+      border-left: 2px solid var(--accent);
+    }
+    .hv-p-n {
+      flex: none; width: 24px; height: 24px; border-radius: 50%;
+      background: var(--accent); color: #fff;
+      font-size: 11px; font-weight: 800;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .hv-p-b { flex: 1; min-width: 0; font-size: 13px; line-height: 1.7; }
+    .hv-p-t { font-weight: 800; color: var(--text); }
+    .hv-caso {
+      display: block; margin-top: 7px; padding: 7px 10px;
+      border-radius: 8px; background: var(--accent-soft);
+      font-size: 12.5px; line-height: 1.6;
+    }
+    .hv-caso b { color: var(--accent); }
     .hv-hero-txt { position: absolute; left: 18px; right: 18px; bottom: 12px; z-index: 1; }
     .hv-hero-txt h3 { color: #fff; margin: 0 0 3px; font-size: 17px; font-weight: 800;
       text-shadow: 0 2px 8px rgba(0,0,0,.7); }
@@ -3286,7 +3311,7 @@
          ejemplos están aterrizados a lo suyo (vender la plantilla en GBM, el negocio de su
          papá, las entrevistas de remoto). Las fotos son Unsplash a 1920px, comprobadas. -->
     <div class="card" style="margin-bottom:16px;overflow:hidden">
-      <div class="hv-hero" style="background-image:url('https://images.unsplash.com/photo-1511578314322-379afb476865?w=1920&q=85&auto=format&fit=crop')">
+      <div class="hv-hero" style="background-image:url('https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=1920&q=85&auto=format&fit=crop')">
         <div class="hv-hero-txt"><h3>🤝 Hacer networking de verdad</h3><p>La red no se construye cuando la necesitas — se construye antes.</p></div>
       </div>
       <h5>La idea que lo cambia todo</h5>
@@ -3300,11 +3325,11 @@
       <p class="fs-13 mt-8 mb-12" style="line-height:1.75;">Tú tienes tres cosas que a mucha gente le valen y a ti te cuestan poco: <strong>sabes automatizar pruebas</strong>, <strong>sabes construir herramientas con IA</strong> —lo haces todos los días con esta app— y <strong>entiendes de finanzas personales mejor que el 90%</strong>. Eso es tu moneda.</p>
 
       <h5 class="mt-8">El sistema, en cuatro pasos concretos</h5>
-      <p class="fs-13 mb-4" style="line-height:1.7;"><strong>1 · La lista de 20.</strong> Escribe 20 personas que quieres en tu red dentro de un año. No 200. Por cada una anota qué hace, por qué te interesa y —esto es lo importante— <strong>qué podrías darle tú</strong>. Si no se te ocurre nada que darle, todavía no es tu contacto.</p>
-      <p class="fs-13 mb-4" style="line-height:1.7;"><strong>2 · La regla de las 48 horas.</strong> A todo el que conoces, le escribes en menos de dos días. Después de 48 horas ya no se acuerda de tu cara y el mensaje se vuelve incómodo. El mensaje lleva tres cosas y nada más: dónde se conocieron, algo específico que él dijo, y <strong>algo que le mandas sin que lo pida</strong>.</p>
-      <div class="riesgo-box"><p class="fs-13" style="line-height:1.7;margin:0"><strong>Guion que funciona:</strong> <em>"Rodrigo, mucho gusto ayer en el meetup de GBM. Me quedé pensando en lo que dijiste de que llevas tus inversiones en tres hojas de Excel distintas. Te dejo la plantilla que armé para lo mío, por si te sirve — sin compromiso, la hice para mí. Cualquier duda, aquí ando."</em></p></div>
-      <p class="fs-13 mt-8 mb-4" style="line-height:1.7;"><strong>3 · El ping trimestral.</strong> Cada 3 meses, un mensaje a los de tu lista <strong>sin pedir nada</strong>: un artículo que le sirve, una felicitación por algo real, una presentación con alguien. Ferrazzi lo llama mantener el fuego encendido; sin esto, el contacto se enfría y volver a escribir se siente como pedir.</p>
-      <p class="fs-13 mb-12" style="line-height:1.7;"><strong>4 · Pide tarde, pide claro.</strong> Cuando por fin pidas, que sea <strong>concreto y fácil de conceder</strong>. "¿Me puedes ayudar a conseguir trabajo?" es imposible de responder. "¿Conoces a alguien en el equipo de QA de X a quien le pueda escribir?" se responde en treinta segundos.</p>
+      <div class="hv-p"><div class="hv-p-n">1</div><div class="hv-p-b"><span class="hv-p-t">La lista de 20.</span> Escribe 20 personas que quieres en tu red dentro de un año. No 200. Por cada una anota qué hace, por qué te interesa y —esto es lo importante— <strong>qué podrías darle tú</strong>. Si no se te ocurre nada que darle, todavía no es tu contacto.</div></div>
+      <div class="hv-p"><div class="hv-p-n">2</div><div class="hv-p-b"><span class="hv-p-t">La regla de las 48 horas.</span> A todo el que conoces, le escribes en menos de dos días. Después de 48 horas ya no se acuerda de tu cara y el mensaje se vuelve incómodo. Lleva tres cosas y nada más: dónde se conocieron, algo específico que él dijo, y <strong>algo que le mandas sin que lo pida</strong>.</div></div>
+      <div class="hv-p"><div class="hv-p-n">3</div><div class="hv-p-b"><span class="hv-p-t">El ping trimestral.</span> Cada 3 meses, un mensaje a los de tu lista <strong>sin pedir nada</strong>: un artículo que le sirve, una felicitación por algo real, una presentación con alguien. Ferrazzi lo llama mantener el fuego encendido; sin esto el contacto se enfría y volver a escribir se siente como pedir.</div></div>
+      <div class="hv-p"><div class="hv-p-n">4</div><div class="hv-p-b"><span class="hv-p-t">Pide tarde, pide claro.</span> Cuando por fin pidas, que sea <strong>concreto y fácil de conceder</strong>. "¿Me puedes ayudar a conseguir trabajo?" es imposible de responder. "¿Conoces a alguien en el equipo de QA de X a quien le pueda escribir?" se responde en treinta segundos.</div></div>
+      <div class="riesgo-box"><p class="fs-13" style="line-height:1.7;margin:0"><strong>Guion que funciona (paso 2):</strong> <em>"Rodrigo, mucho gusto ayer en el meetup de GBM. Me quedé pensando en lo que dijiste de que llevas tus inversiones en tres hojas de Excel distintas. Te dejo la plantilla que armé para lo mío, por si te sirve — sin compromiso, la hice para mí. Cualquier duda, aquí ando."</em></p></div>
 
       <h5 class="mt-8">Cómo entrar a una conversación cuando no conoces a nadie</h5>
       <p class="fs-13 mb-4" style="line-height:1.7;">No busques al grupo grande y cerrado: busca <strong>al que está solo</strong> o al grupo de tres con un hueco abierto. Entra por el hueco, escucha treinta segundos antes de hablar, y arranca preguntando por lo que ya está pasando: <em>"¿ustedes de dónde vienen?"</em>, <em>"¿alcanzaron a ver la primera charla?"</em>.</p>
@@ -3329,19 +3354,13 @@
 
       <h5>Los 7 principios, con su mecanismo y tu ejemplo</h5>
 
-      <p class="fs-13 mb-4" style="line-height:1.7;"><strong>1 · Reciprocidad.</strong> Recibir algo genera una deuda incómoda hasta que la pagas. Por eso funcionan las muestras gratis. <em>Lo que casi nadie sabe</em>: lo que dispara la reciprocidad no es el valor de lo que das, sino que sea <strong>inesperado y personalizado</strong>.<br><span style="color:var(--muted)">→ <strong>Tu caso:</strong> regalar la versión gratis de tu plantilla en la comunidad de GBM, sin pedir nada, antes de vender la completa.</span></p>
-
-      <p class="fs-13 mb-4" style="line-height:1.7;"><strong>2 · Compromiso y coherencia.</strong> Una vez que alguien dice algo en voz alta, defiende esa postura para no contradecirse. Un compromiso <strong>público, escrito y voluntario</strong> es cinco veces más fuerte que uno mental.<br><span style="color:var(--muted)">→ <strong>Tu caso:</strong> en vez de "¿te interesa la plantilla?", pregunta "¿te gustaría llevar tus finanzas más ordenadas este año?". Quien contesta que sí ya se comprometió con la idea; la herramienta viene después.</span></p>
-
-      <p class="fs-13 mb-4" style="line-height:1.7;"><strong>3 · Prueba social.</strong> Ante la duda, hacemos lo que hacen los demás — y pesa mucho más si esos demás <strong>se nos parecen</strong>. La prueba social de un desconocido famoso convence menos que la de alguien en tu misma situación.<br><span style="color:var(--muted)">→ <strong>Tu caso:</strong> "la usan 40 personas de esta comunidad" convence más que cualquier adjetivo que le pongas tú.</span></p>
-
-      <p class="fs-13 mb-4" style="line-height:1.7;"><strong>4 · Autoridad.</strong> Obedecemos a quien percibimos como experto. Y la autoridad se transmite con <strong>señales</strong>: credenciales, precisión en los datos, o admitir un defecto pequeño antes de dar el argumento fuerte ("no es bonita, pero no falla") — esto último dispara la credibilidad de todo lo demás.<br><span style="color:var(--muted)">→ <strong>Tu caso:</strong> tu ISTQB, tus años en ADAS, y la CT-GenAI que estás por presentar. No es presumir: es dar el dato que permite confiar en ti.</span></p>
-
-      <p class="fs-13 mb-4" style="line-height:1.7;"><strong>5 · Simpatía.</strong> Decimos que sí a quien nos cae bien, y nos cae bien quien <strong>se nos parece, nos elogia con sinceridad y colabora con nosotros</strong> hacia un objetivo común. Es el principio más subestimado y el más fácil de trabajar.<br><span style="color:var(--muted)">→ <strong>Tu caso:</strong> las similitudes reales primero — que también manejas Didi, que también empezaste de cero con las finanzas.</span></p>
-
-      <p class="fs-13 mb-4" style="line-height:1.7;"><strong>6 · Escasez.</strong> Valoramos más lo que se puede acabar, y <strong>duele más perder que ilusiona ganar</strong>. Por eso "te quedan 2 días" mueve más que "aprovecha".<br><span style="color:var(--muted)">→ <strong>Tu caso:</strong> úsalo solo cuando sea <strong>verdad</strong>. Una escasez inventada que se descubre destruye los otros seis principios de golpe.</span></p>
-
-      <p class="fs-13 mb-12" style="line-height:1.7;"><strong>7 · Unidad.</strong> El más potente, y el que Cialdini añadió treinta años después. No es parecerse: es <strong>ser del mismo grupo</strong> — la familia, el barrio, la escuela, la profesión. El "nosotros" real vence a todo lo anterior.<br><span style="color:var(--muted)">→ <strong>Tu caso:</strong> "los que trabajamos en automotriz sabemos que…" no es una frase de venta, es una declaración de pertenencia.</span></p>
+      <div class="hv-p"><div class="hv-p-n">1</div><div class="hv-p-b"><span class="hv-p-t">Reciprocidad.</span> Recibir algo genera una deuda incómoda hasta que la pagas. Por eso funcionan las muestras gratis. <em>Lo que casi nadie sabe</em>: lo que dispara la reciprocidad no es el valor de lo que das, sino que sea <strong>inesperado y personalizado</strong>.<span class="hv-caso"><b>Tu caso:</b> regalar la versión gratis de tu plantilla en la comunidad de GBM, sin pedir nada, antes de vender la completa.</span></div></div>
+      <div class="hv-p"><div class="hv-p-n">2</div><div class="hv-p-b"><span class="hv-p-t">Compromiso y coherencia.</span> Una vez que alguien dice algo en voz alta, defiende esa postura para no contradecirse. Un compromiso <strong>público, escrito y voluntario</strong> es mucho más fuerte que uno mental.<span class="hv-caso"><b>Tu caso:</b> en vez de "¿te interesa la plantilla?", pregunta "¿te gustaría llevar tus finanzas más ordenadas este año?". Quien contesta que sí ya se comprometió con la idea; la herramienta viene después.</span></div></div>
+      <div class="hv-p"><div class="hv-p-n">3</div><div class="hv-p-b"><span class="hv-p-t">Prueba social.</span> Ante la duda, hacemos lo que hacen los demás — y pesa mucho más si esos demás <strong>se nos parecen</strong>. La prueba social de un desconocido famoso convence menos que la de alguien en tu misma situación.<span class="hv-caso"><b>Tu caso:</b> "la usan 40 personas de esta comunidad" convence más que cualquier adjetivo que le pongas tú.</span></div></div>
+      <div class="hv-p"><div class="hv-p-n">4</div><div class="hv-p-b"><span class="hv-p-t">Autoridad.</span> Obedecemos a quien percibimos como experto. Y la autoridad se transmite con <strong>señales</strong>: credenciales, precisión en los datos, o admitir un defecto pequeño antes de dar el argumento fuerte ("no es bonita, pero no falla") — esto último dispara la credibilidad de todo lo demás.<span class="hv-caso"><b>Tu caso:</b> tu ISTQB, tus años en ADAS y la CT-GenAI que estás por presentar. No es presumir: es dar el dato que permite confiar en ti.</span></div></div>
+      <div class="hv-p"><div class="hv-p-n">5</div><div class="hv-p-b"><span class="hv-p-t">Simpatía.</span> Decimos que sí a quien nos cae bien, y nos cae bien quien <strong>se nos parece, nos elogia con sinceridad y colabora con nosotros</strong> hacia un objetivo común. Es el principio más subestimado y el más fácil de trabajar.<span class="hv-caso"><b>Tu caso:</b> las similitudes reales primero — que también manejas Didi, que también empezaste de cero con las finanzas.</span></div></div>
+      <div class="hv-p"><div class="hv-p-n">6</div><div class="hv-p-b"><span class="hv-p-t">Escasez.</span> Valoramos más lo que se puede acabar, y <strong>duele más perder que ilusiona ganar</strong>. Por eso "te quedan 2 días" mueve más que "aprovecha".<span class="hv-caso"><b>Tu caso:</b> úsalo <strong>solo cuando sea verdad</strong>. Una escasez inventada que se descubre destruye los otros seis principios de golpe.</span></div></div>
+      <div class="hv-p"><div class="hv-p-n">7</div><div class="hv-p-b"><span class="hv-p-t">Unidad.</span> El más potente, y el que Cialdini añadió tres décadas después del libro original. No es parecerse: es <strong>ser del mismo grupo</strong> — la familia, el barrio, la escuela, la profesión. El "nosotros" real vence a todo lo anterior.<span class="hv-caso"><b>Tu caso:</b> "los que trabajamos en automotriz sabemos que…" no es una frase de venta, es una declaración de pertenencia.</span></div></div>
 
       <h5 class="mt-8">Antes de hablar: el momento importa tanto como el mensaje</h5>
       <p class="fs-13 mb-12" style="line-height:1.75;">En <strong>Pre-Suasion</strong>, Cialdini demuestra algo raro: <strong>lo que ocurre justo antes de tu petición cambia la respuesta</strong>. Preguntar "¿te consideras una persona aventurera?" antes de ofrecer algo nuevo sube la aceptación de forma medible. No es magia — es que dirigiste la atención a la parte de su identidad que tu propuesta necesita. La aplicación honesta: <strong>abre por el terreno donde tu propuesta ya tiene sentido</strong>, no por la propuesta.</p>
@@ -3362,7 +3381,7 @@
       <div class="recurso-item"><span class="recurso-tipo r-libro">Libro</span><div><strong>Never Split the Difference</strong> — Chris Voss · negociación aplicada; el más práctico de los tres.</div></div>
     </div>
     <div class="card" style="margin-bottom:16px;overflow:hidden">
-      <div class="hv-hero" style="background-image:url('https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=1920&q=85&auto=format&fit=crop')">
+      <div class="hv-hero" style="background-image:url('https://images.unsplash.com/photo-1543269865-cbf427effbad?w=1920&q=85&auto=format&fit=crop')">
         <div class="hv-hero-txt"><h3>💬 Cómo relacionarte con las personas</h3><p>El otro está más interesado en sí mismo que en ti. Quien lo entiende deja de pelear por atención.</p></div>
       </div>
       <p class="fs-13 mb-12" style="line-height:1.75;">Dale Carnegie publicó <strong>Cómo ganar amigos e influir sobre las personas</strong> en 1936 y sigue vendiendo porque no envejeció: describe cómo funciona la gente, no una moda. La tesis del libro cabe en una línea — <strong>el otro está infinitamente más interesado en sí mismo que en ti</strong>, y quien entiende eso deja de pelear por atención.</p>
@@ -3373,18 +3392,18 @@
       <div class="recurso-item"><span class="recurso-tipo r-tool">3</span><div><strong>Despierta en el otro un deseo vehemente.</strong> Nadie hace algo por tus razones; lo hace por las suyas. Antes de pedir, contesta: <em>¿qué gana él?</em></div></div>
 
       <h5 class="mt-8">Seis formas de agradar — y por qué cada una funciona</h5>
-      <p class="fs-13 mb-4" style="line-height:1.7;"><strong>Interésate de verdad por el otro.</strong> Carnegie lo dice sin rodeos: harás más amigos en dos meses interesándote por la gente que en dos años intentando que se interesen por ti.</p>
-      <p class="fs-13 mb-4" style="line-height:1.7;"><strong>Sonríe.</strong> Suena trivial hasta que ves lo que hace: la sonrisa dice "no soy una amenaza" antes de que abras la boca, y es lo primero que el otro procesa.</p>
-      <p class="fs-13 mb-4" style="line-height:1.7;"><strong>Usa su nombre.</strong> <em>"El nombre de una persona es, para ella, el sonido más dulce en cualquier idioma"</em>. Repítelo al conocerla, úsalo una vez a mitad de la conversación y otra al despedirte — y lo recordarás de verdad.</p>
-      <p class="fs-13 mb-4" style="line-height:1.7;"><strong>Escucha. En serio.</strong> No es callarte mientras piensas tu respuesta: es <strong>preguntar por lo último que dijo</strong>. La señal de que escuchaste es tu siguiente pregunta, no tu cara.</p>
-      <p class="fs-13 mb-4" style="line-height:1.7;"><strong>Habla de lo que a él le interesa.</strong> Roosevelt estudiaba la noche anterior el tema favorito de quien lo visitaba. No era simpatía: era trabajo.</p>
-      <p class="fs-13 mb-12" style="line-height:1.7;"><strong>Haz que se sienta importante — con sinceridad.</strong> Todo el libro cabe aquí. Y el "con sinceridad" no es un adorno: es la única forma de que funcione más de una vez.</p>
+      <div class="hv-p"><div class="hv-p-n">1</div><div class="hv-p-b"><span class="hv-p-t">Interésate de verdad por el otro.</span> Carnegie lo dice sin rodeos: harás más amigos en dos meses interesándote por la gente que en dos años intentando que se interesen por ti.</div></div>
+      <div class="hv-p"><div class="hv-p-n">2</div><div class="hv-p-b"><span class="hv-p-t">Sonríe.</span> Suena trivial hasta que ves lo que hace: la sonrisa dice "no soy una amenaza" antes de que abras la boca, y es lo primero que el otro procesa.</div></div>
+      <div class="hv-p"><div class="hv-p-n">3</div><div class="hv-p-b"><span class="hv-p-t">Usa su nombre.</span> <em>"El nombre de una persona es, para ella, el sonido más dulce en cualquier idioma"</em>. Repítelo al conocerla, úsalo una vez a mitad de la conversación y otra al despedirte — y lo recordarás de verdad.</div></div>
+      <div class="hv-p"><div class="hv-p-n">4</div><div class="hv-p-b"><span class="hv-p-t">Escucha. En serio.</span> No es callarte mientras piensas tu respuesta: es <strong>preguntar por lo último que dijo</strong>. La señal de que escuchaste es tu siguiente pregunta, no tu cara.</div></div>
+      <div class="hv-p"><div class="hv-p-n">5</div><div class="hv-p-b"><span class="hv-p-t">Habla de lo que a él le interesa.</span> Roosevelt estudiaba la noche anterior el tema favorito de quien lo visitaba. No era simpatía: era trabajo.</div></div>
+      <div class="hv-p"><div class="hv-p-n">6</div><div class="hv-p-b"><span class="hv-p-t">Haz que se sienta importante — con sinceridad.</span> Todo el libro cabe aquí. Y el "con sinceridad" no es un adorno: es la única forma de que funcione más de una vez.</div></div>
 
       <h5 class="mt-8">Cuando hay desacuerdo</h5>
-      <p class="fs-13 mb-4" style="line-height:1.7;"><strong>La única forma de ganar una discusión es evitarla.</strong> Aunque ganes, el otro se queda con su opinión y ahora además te tiene ganas.</p>
-      <p class="fs-13 mb-4" style="line-height:1.7;"><strong>Nunca digas "estás equivocado".</strong> Cambia a <em>"puede que me equivoque, déjame ver si entendí bien…"</em> y repite su postura mejor de lo que él la dijo. Eso desarma cualquier defensa.</p>
-      <p class="fs-13 mb-4" style="line-height:1.7;"><strong>Si te equivocaste, admítelo rápido y con energía.</strong> Quitarte tú mismo la razón deja al otro sin nada que atacar, y sube tu credibilidad en vez de bajarla.</p>
-      <p class="fs-13 mb-12" style="line-height:1.7;"><strong>Deja que la idea sea suya.</strong> La gente defiende con uñas lo que cree que se le ocurrió. Pregunta hasta que llegue solo a donde querías.</p>
+      <div class="hv-p"><div class="hv-p-n">1</div><div class="hv-p-b"><span class="hv-p-t">La única forma de ganar una discusión es evitarla.</span> Aunque ganes, el otro se queda con su opinión y ahora además te tiene ganas.</div></div>
+      <div class="hv-p"><div class="hv-p-n">2</div><div class="hv-p-b"><span class="hv-p-t">Nunca digas "estás equivocado".</span> Cambia a <em>"puede que me equivoque, déjame ver si entendí bien…"</em> y repite su postura mejor de lo que él la dijo. Eso desarma cualquier defensa.</div></div>
+      <div class="hv-p"><div class="hv-p-n">3</div><div class="hv-p-b"><span class="hv-p-t">Si te equivocaste, admítelo rápido y con energía.</span> Quitarte tú mismo la razón deja al otro sin nada que atacar, y sube tu credibilidad en vez de bajarla.</div></div>
+      <div class="hv-p"><div class="hv-p-n">4</div><div class="hv-p-b"><span class="hv-p-t">Deja que la idea sea suya.</span> La gente defiende con uñas lo que cree que se le ocurrió. Pregunta hasta que llegue solo a donde querías.</div></div>
 
       <h5 class="mt-8">Las conversaciones difíciles</h5>
       <p class="fs-13 mb-4" style="line-height:1.75;">Para lo que Carnegie no cubre —el momento en que hay algo real en juego y las emociones se disparan— está <strong>Crucial Conversations</strong>. Su aporte central es el concepto de <strong>seguridad psicológica</strong>: la gente no se cierra por el tema, se cierra cuando siente que la están atacando o que va a perder algo. Si notas que se cerró, <strong>no sigas con el tema: repara la seguridad primero</strong> ("no busco echarte la culpa, busco que esto no se repita") y luego vuelve.</p>
@@ -3403,7 +3422,7 @@
       <p class="fs-13 mb-12" style="line-height:1.75;">Esta es la habilidad que separa a alguien que trabaja bien de alguien a quien <strong>la gente quiere tener cerca</strong>. Y no va de motivar con discursos: va de crear las condiciones donde el otro rinde por encima de lo que él mismo creía.</p>
 
       <h5>El experimento que lo demuestra</h5>
-      <p class="fs-13 mb-12" style="line-height:1.75;">En 1965, Rosenthal y Jacobson dieron a unos maestros los nombres de alumnos que —según una prueba— iban a destacar ese año. Los alumnos eran <strong>elegidos al azar</strong>. Al final del curso, esos niños habían mejorado significativamente más que el resto. Lo único distinto fue <strong>lo que el maestro esperaba de ellos</strong>: les daba más tiempo para responder, más pistas, más atención. Se llama <strong>efecto Pigmalión</strong>, y la conclusión práctica es dura: <strong>la gente tiende a rendir a la altura de lo que tú esperas de ella</strong>, y tus expectativas se filtran aunque no las digas.</p>
+      <p class="fs-13 mb-12" style="line-height:1.75;">En 1965, Rosenthal y Jacobson aplicaron en una primaria un test llamado <em>"Harvard Test of Inflected Acquisition"</em> y les dijeron a los maestros qué niños iban a destacar ese año. El test <strong>no existía</strong> y ese 20% de alumnos estaba <strong>elegido al azar</strong>. Al final del curso, esos niños habían mejorado significativamente más que el resto. Lo único distinto fue <strong>lo que el maestro esperaba de ellos</strong>: les daba más tiempo para responder, más pistas, más atención. Se llama <strong>efecto Pigmalión</strong> —lo publicaron en 1968 como <em>Pygmalion in the Classroom</em>—, y la conclusión práctica es dura: <strong>la gente tiende a rendir a la altura de lo que tú esperas de ella</strong>, y tus expectativas se filtran aunque no las digas.</p>
 
       <h5 class="mt-8">Multiplicadores y disminuidores</h5>
       <p class="fs-13 mb-4" style="line-height:1.75;">Liz Wiseman estudió en <strong>Multipliers</strong> a más de 150 líderes y encontró dos tipos. Los <em>disminuidores</em> obtienen cerca de la mitad de la capacidad de su gente; los <em>multiplicadores</em>, casi el doble. Lo revelador es que <strong>casi ningún disminuidor sabe que lo es</strong> — muchos son gente brillante y bienintencionada:</p>
