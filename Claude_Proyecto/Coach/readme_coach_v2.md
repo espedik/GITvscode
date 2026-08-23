@@ -993,3 +993,35 @@ Vivía encima de la lista con scroll; al quitarla quedó suelto al final del sli
 - El aviso de día **no solapa con ninguna tarjeta** a 1500, 820 ni 390px.
 - **Ninguna subtarea perdida**: 84 antes, 85 ahora — la nueva es la lectura.
 - `RUTINA_TASKS` queda en **58 tareas**, replicado en Coach y Dashboard, sin errores de consola en ninguna.
+
+## El bloque de ejercicio lee la rutina real, con imágenes (2026-08-23)
+
+> *"cuando sea el tiempo de ejercicio, veo que esta mal, los ejercicios correctos son los que tienen imagenes, los del bloque de abajo, pero eso debe mostrarse en el bloque de ahora mismo, ademas igual mostrar imagenes, tiene que tener la misma informacion"*
+
+**Los bloques de ejercicio de `RUTINA_TASKS` estaban desfasados.** Traían su propia lista escrita a mano:
+
+| Día | El bloque decía | La rutina real es |
+|---|---|---|
+| Lunes | Empuje — press de banca, press militar… | **Brazos A — bíceps + tríceps** (Fondos, Curl con Barra…) |
+| Martes | Cardio + core | **Piernas — completa** |
+| Jueves | Cardio / HIIT | **Brazos B — bíceps + tríceps** |
+| Viernes | Piernas / glúteo | **Abdomen — core + cardio** |
+
+Ahora esos bloques **no guardan ejercicios**: leen `D.gym.rutina` (`mirutina_v1`), la misma fuente que el panel de abajo, y muestran nombre, series, peso, el consejo de cada ejercicio y **su imagen** (de `EJ_LOOKUP`: 30 de los 42 ejercicios tienen). Clic en la foto o en el nombre abre el visor grande que ya existía.
+
+El título del bloque también sale de ahí (`gym:true` → `tituloBloque()`), así que la cinta y el panel dicen *"Brazos A — Bíceps + Tríceps"*, no el nombre viejo.
+
+De paso se corrigió el **dato** en los dos archivos: los bloques de gym perdieron sus listas obsoletas y su título ahora coincide con la rutina real, para que **Coach** —que muestra el mismo array y no lee `mirutina_v1`— deje de enseñar ejercicios que no hace.
+
+### El panel de un bloque fijo
+
+> *"los bloques de alten entre semana en la mañana visualmente al hacer click no se ve bien, parece que esta mal algo, pero los tiempos que abarcan son correctos"*
+
+Los tiempos estaban bien; lo que fallaba era el hueco. Un bloque fijo no tiene botón de marcar ni subtareas, así que el panel quedaba con **las flechas descolgadas sobre un vacío**. Ahora esos bloques llevan una nota: *"Este bloque no se marca: es horario fijo."* — el panel pasa de 141px con hueco a 172px con contenido.
+
+### Verificación
+
+- **Los 7 días comparados uno a uno** contra el panel de abajo: la lista de ejercicios **coincide exactamente** en los siete, incluido el domingo (descanso activo, con su nota en vez de lista).
+- Las **5 imágenes del lunes cargan de verdad** (`naturalWidth > 0`), no solo el `<img>`.
+- 142 tramos recorridos a 1500, 820 y 390px: ningún fallo, ninguna hora inválida, **0 desbordes**.
+- Sin errores de consola en Dashboard ni en Coach.
