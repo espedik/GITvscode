@@ -790,3 +790,33 @@ Mirarlas renderizadas una por una encontró tres cosas que leyendo el código no
 ### Verificación
 
 Escritorio, iPad e iPhone: 4 cabeceras con las **4 imágenes a 1920×1280 reales**, 21 bloques, 13 libros, **0 duplicados**, **0 desbordes**, y una comprobación explícita de que **el CSS de la página sigue intacto** (que una etiqueta conocida conserve su fondo). Sin errores de consola.
+
+### Una sola casa para el tema: fuera la sección Networking (2026-08-23)
+
+*"pero eso lo quiero en habilidades que todo hombre debe tener"*.
+
+Al revisar por qué Adán no encontraba las tarjetas nuevas apareció la causa real: **Coach ya tenía una sección `#networking`** de 19,119 caracteres, con enlace propio en el sidebar, cubriendo el mismo terreno. Lo más probable es que fuera ahí a buscarlas.
+
+Medido bloque por bloque, **~10,500 de esos 19,119 caracteres se repetían** con las tarjetas nuevas: cómo generar conversación, guiar la conversación, cómo caer bien, cómo persuadir y los recursos. Lo que **no** se repetía eran tres bloques operativos, y esos se mudaron a la tarjeta de networking en vez de perderse:
+
+| Bloque rescatado | Qué aporta |
+|---|---|
+| **El mapa: dónde conocer gente de alto valor en CDMX** (4,712 chars) | el terreno concreto — pádel, EGADE, clases presenciales de alemán |
+| **Plantillas de primer paso** (1,773) | qué escribir, palabra por palabra |
+| **Hábito semanal** (1,265) | cada cuánto hacerlo |
+
+Entran bajo un epígrafe nuevo, *"Dónde practicarlo — y con qué palabras"*, que es justo lo que le faltaba al método: la tarjeta explicaba **cómo**, y ahora dice también **dónde** y **con qué palabras**. Los `<h3>` de la sección vieja bajaron a `<h5>` para encajar dentro de la tarjeta.
+
+La sección pasa de 27,864 a **33,383 caracteres**.
+
+### Dos enlaces que se habrían quedado rotos
+
+Borrar una sección no es solo borrar su HTML. En el Perfil del Rico había **dos `<a href="#networking">`** incrustados en el texto que habrían llevado a ninguna parte. Ahora apuntan a `#habilidades-valor` y nombran la tarjeta.
+
+La verificación anterior no los habría encontrado: resolvía los `data-sec` del sidebar contra el DOM, pero no los `href="#..."` del cuerpo. Ahora el script comprueba **todas las anclas internas del archivo** contra los `id` existentes — quedan **cero rotas**.
+
+**No se tocó `#sdp-network`**, que es otra cosa pese al nombre: el panel de detalle de la habilidad "Networking" del radar de 12 habilidades, con su propio propósito.
+
+### Verificación
+
+Escritorio, iPad e iPhone: el sidebar ya no ofrece Networking, ningún enlace del sidebar ni del cuerpo apunta al vacío, la sección duplicada no existe, las 4 tarjetas siguen y los tres bloques rescatados están dentro. 0 desbordes, `<style>` y `<section>` cuadrados, sin errores de consola. Y Coach carga ahora en **453 ms**.
