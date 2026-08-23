@@ -3508,3 +3508,48 @@ En escritorio (1500px), iPad (820px, tema claro) y iPhone (390px), más un celul
 - Marcar guarda en `coach_rutina_v1`, la cabecera pasa de 0 a 1 y el tramo se raya.
 - Cambiar de día repinta la cinta (25 tramos el miércoles) y vuelve al bloque activo de ese día.
 - **0 desbordes y sin errores de consola.**
+
+## "Ahora mismo" y el detalle del bloque son ya un solo panel (2026-08-23)
+
+> *"hay 2 bloques muy similares y solo quiero uno, en ahora mismo quiero que muestres lo que pusiste abajo, es decir cuando en la barra haga click en ahora mismo ahi debe de mostrarme la seccion que hice click, y el otro bloque debe desaparecer, pero tambien el ahora mismo debe funcionar mostrando la actividad que toca en la hora que estamos"*
+
+Tenía razón: al meter la cinta quedaron dos tarjetas casi idénticas — "Ahora mismo" arriba y el detalle del tramo tocado abajo. Ahora hay una.
+
+**`#diaAhoraTile` es el panel único.** Lo pinta `pintarBloqueDetalle()`, y funciona en los dos modos que pidió:
+
+- **Sin tocar nada** muestra la actividad de la hora actual, con el punto verde pulsante y la etiqueta "Ahora mismo" de siempre.
+- **Al tocar un tramo** de la cinta muestra ese bloque: la etiqueta cambia a "Bloque del día", desaparece el punto pulsante y aparece "● Volver a ahora".
+
+El acento de color a la izquierda y el halo siguen la categoría del bloque mostrado, igual que hacía "Ahora mismo" desde agosto. Se conservan las subtareas marcables, el botón de marcar, el contador (*7 de 17*) y las flechas ‹ ›.
+
+### El reloj ya no repinta cada segundo
+
+`tickClock()` llamaba a `pintarAhora()` + `updateMarkDoneBtn()` **60 veces por minuto**. Con el panel viejo daba igual —solo mostraba el bloque activo—, pero con el panel unificado eso te quitaría de debajo del cursor el tramo que acabas de tocar.
+
+Ahora el reloj:
+- **Repinta entero solo cuando el bloque activo CAMBIA de verdad** (`_ultimoBloqueActivo`), unas 17 a 26 veces al día en vez de 86,400.
+- **Mueve la línea verde de "ahora"** cada segundo con `moverMarcadorCinta()`, que solo toca el `left` de un div — la cinta publica su rango en `data-ini`/`data-fin` al construirse.
+
+Comprobado: con un tramo tocado, el panel sigue mostrándolo tras 3 segundos de reloj.
+
+### Un detalle que solo se ve navegando
+
+Viendo **otro día** de la tira semanal, el panel decía "Ahora mismo" — pero ese día no es hoy, y lo que muestra es *lo que tocaría a esa hora ese día*. Ahora la etiqueta dice **"A esta hora, ese día"** y el botón de volver a ahora no aparece, porque no aplica.
+
+### Lo que se fue
+
+`pintarAhora()`, `updateMarkDoneBtn()`, el `<div id="diaBloque">` de abajo y el markup interno de `#diaAhoraTile` (`#diaAhora`, `#diaAhoraCat`, `#diaAhoraTime`, `#diaAhoraBtn`). `quickMarkDone()` se queda por si vuelve a hacer falta un marcado directo. El botón **"Qué invertir hoy" no se tocó**: sigue a la derecha del panel.
+
+### El espacio que sobró
+
+Al fusionar los dos bloques quedaban ~350px libres. Van a la fila de abajo con un tope de 430px: **"Ideas para hoy" deja de cortar la lista de recetas** sin que las otras dos tarjetas queden absurdamente vacías. En tablet y celular el tope se anula (`@media(max-width:1024px)`), porque ahí las tres se apilan en una columna y 430px no les alcanzan.
+
+### Verificación
+
+Escritorio (1500px), iPad (820px, tema claro) e iPhone (390px):
+
+- Los **17 tramos del domingo tocados uno por uno**: cada uno pinta su bloque y **siempre hay un solo panel** en pantalla.
+- Marcar desde el panel guarda en `coach_rutina_v1`, sube el contador de la cinta y raya el tramo.
+- Tras **3 segundos de reloj**, el bloque tocado sigue en pantalla.
+- Cambiar de día muestra "A esta hora, ese día"; al volver, "Ahora mismo".
+- **0 desbordes horizontales** en los cuatro anchos, los 8 slides recorridos y sin errores de consola.

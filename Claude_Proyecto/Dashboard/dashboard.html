@@ -151,6 +151,9 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
    chicos de ancho, el espacio ganado para el de ejercicio). Responsivo en @media(max-width:1024px)
    más abajo, que sigue colapsando las 3 a 1 columna en tablet/celular. */
 #miDiaSecundarios{grid-template-columns:1fr 2fr 1fr}
+/* El tope de 430px (inline) reparte el espacio que dejo el panel unico del 2026-08-23 sin
+   que las tarjetas queden vacias. En una sola columna estorba: las tres apiladas no caben. */
+@media(max-width:1024px){#miDiaSecundarios{max-height:none!important;flex:none!important}}
 @media(max-width:900px){.g-metas{grid-template-columns:1fr}}
 
 /* ─── Tarjetas con foto — metas de corto/mediano/largo plazo (slide Mis Metas) Y
@@ -1806,19 +1809,11 @@ a.rt2-sub-prod:hover{text-decoration:underline}
            reparto de columnas). El margin-bottom se mudó del tile a la fila, y la clase .reveal
            también: si se quedaba en el tile, el botón entraba sin la animación de los demás. -->
       <div class="dia-ahora-row reveal d3">
-      <div class="tile tile-glow now-hero" id="diaAhoraTile" style="padding:11px 18px">
-        <div class="now-hero-row">
-          <div style="min-width:0;flex:1">
-            <div class="lbl" style="display:flex;align-items:center;gap:7px;flex-wrap:wrap">
-              <span class="now-live-dot"></span>Ahora mismo
-              <span class="rt2-cat" id="diaAhoraCat" style="display:none"></span>
-              <span class="now-hero-time" id="diaAhoraTime" style="display:none"></span>
-            </div>
-            <div class="now-hero-txt" id="diaAhora">—</div>
-          </div>
-          <div id="diaAhoraBtn"></div>
-        </div>
-      </div>
+      <!-- 2026-08-23 — un solo panel. Antes había dos bloques casi iguales: este ("Ahora mismo")
+           y el detalle del tramo tocado en la cinta, abajo. Ahora este es el único: por defecto
+           muestra la actividad de la hora actual, y al tocar un tramo de la cinta muestra ese.
+           Lo pinta pintarBloqueDetalle(). -->
+      <div class="tile tile-glow now-hero" id="diaAhoraTile" style="padding:12px 18px"></div>
         <!-- Se pinta en pintarInvertirBtn() con el paso que toca hoy, no con texto fijo: el botón
              adelanta la respuesta ("primero tu fondo" / "abona a tu deuda" / "hoy sí inviertes")
              sin obligar a abrir el panel para saberla. -->
@@ -1826,7 +1821,7 @@ a.rt2-sub-prod:hover{text-decoration:underline}
                 title="Qué invertir hoy — precios en vivo y tus saldos reales de Finanzas"></button>
       </div>
 
-      <div class="grid g3 reveal d4" style="margin-bottom:8px;align-items:stretch" id="miDiaSecundarios">
+      <div class="grid g3 reveal d4" style="margin-bottom:8px;align-items:stretch;flex:1;min-height:0;max-height:430px" id="miDiaSecundarios">
         <div class="tile" style="padding:9px 14px">
           <!-- El botón "+" va en el encabezado, no en la fila de pestañas: ahí abajo compite con
                las 4 pestañas y las 2 flechas de navegación, y en esta columna angosta empujaba
@@ -1852,7 +1847,6 @@ a.rt2-sub-prod:hover{text-decoration:underline}
            verDiaSemana()), y las animaciones .reveal se reinician cada vez que un elemento vuelve
            de display:none — se quedaba invisible (opacity:0) un momento tras cada clic. -->
       <div id="diaTimelineTitle" style="display:none;align-items:center;gap:8px;margin-bottom:5px;font-size:11.5px;font-weight:700;color:var(--text2)"></div>
-      <div class="tile reveal d5" id="diaBloque" style="flex:none;min-height:158px;max-height:38vh;overflow-y:auto;padding:14px 18px"></div>
 
       <div class="reveal d6" style="margin-top:8px">
         <a href="../Coach/Coach_v2.html#rutina" style="color:var(--cy);font-size:12px;font-weight:600;text-decoration:none">Ver/editar rutina completa en Coach →</a>
@@ -4167,53 +4161,15 @@ function hasFinData(){return (D.fin.transactions||[]).length+(D.fin.debts||[]).l
 
 // ══════════════════════════════════════════════════════════════════════════
 // RENDER — una función por pantalla
-// ══════════════════════════════════════════════════════════════════════════
-// Pinta el bloque "Ahora mismo" (texto + rango de horario/duración) — usada por renderDia() Y por
-// tickClock() (reloj vivo, cada segundo), antes cada una tenía su propia copia del mismo textContent
-// y se desincronizaron (tickClock sobrescribía el formato nuevo con el viejo cada segundo, ver
-// readme_dashboard.md). Única fuente de verdad ahora, 2026-08-09.
-function pintarAhora(tareasHoy,actual,siguiente){
-  document.getElementById('diaAhora').textContent=actual?actual.txt:(tareasHoy.length?'Aún no empieza tu rutina de hoy':'Sin bloques configurados para hoy');
-  // Inicio, fin y duración del bloque activo (pedido explícito: "en ahora mismo no me muestra el
-  // inicio y fin de la actividad ni la duracion completa") — el fin es la hora del siguiente bloque
-  // de hoy (rtDur() ya existe y la usa la línea de tiempo de abajo, mismo cálculo reutilizado aquí
-  // para que ambas coincidan). Si es el último bloque del día, no hay `siguiente` que dé el fin —
-  // se muestra solo el inicio en vez de inventar una hora de cierre.
-  const diaAhoraTimeEl=document.getElementById('diaAhoraTime');
-  if(actual){
-    diaAhoraTimeEl.style.display='inline';
-    diaAhoraTimeEl.textContent=siguiente?`${actual.hora}–${siguiente.hora} · ${rtDur(actual.hora,siguiente.hora)}`:`Desde las ${actual.hora}`;
-  } else {
-    diaAhoraTimeEl.style.display='none';
-  }
-}
 function renderDia(){
   const {tareasHoy,actual,siguiente}=rutinaAhoraSiguiente();
   const doneHoy=(D.rut.completado||{})[today()]||[];
 
   document.getElementById('diaFecha').textContent=new Date().toLocaleDateString('es-MX',{weekday:'long',day:'numeric',month:'long'});
-  pintarAhora(tareasHoy,actual,siguiente);
   // El bloque "Ahora mismo" ya no repite las subtareas aquí (2026-08-08, unificación con Hero):
   // con las 2 pantallas fusionadas, la línea de tiempo de abajo queda a la vista en el mismo
   // slide, con la tarjeta "ahora" ya resaltada (.rt2-now) y sus subtareas completas — mostrarlas
   // dos veces solo quitaba espacio vertical sin aportar nada nuevo.
-  // "Ahora mismo" pasó a banner hero a todo el ancho (2026-08-09) — se le pinta el acento de
-  // color real de la categoría (CAT_META), en vez de compartir el borde/tile genérico gris.
-  const ahoraMeta=actual?(CAT_META[actual.cat]||null):null;
-  const ahoraTile=document.getElementById('diaAhoraTile');
-  const ahoraCat=document.getElementById('diaAhoraCat');
-  if(ahoraMeta){
-    ahoraTile.style.borderLeftColor=ahoraMeta.c;
-    ahoraTile.style.boxShadow=`0 10px 40px rgba(0,0,0,.35), -3px 0 20px ${ahoraMeta.c}30`;
-    ahoraCat.style.display='inline-flex';
-    ahoraCat.style.background=ahoraMeta.c+'22'; ahoraCat.style.color=ahoraMeta.c; ahoraCat.style.borderColor=ahoraMeta.c+'55';
-    ahoraCat.textContent=`${ahoraMeta.ico} ${ahoraMeta.label}`;
-  } else {
-    ahoraTile.style.borderLeftColor='';
-    ahoraTile.style.boxShadow='';
-    ahoraCat.style.display='none';
-  }
-  updateMarkDoneBtn(actual);
   renderEventosMes();
   pintarInvertirBtn();
 
@@ -4322,7 +4278,7 @@ function pintarCintaDia(tareas, anchor, done, esHoy){
         ${esHoy?`<span class="cinta-sep"></span><span class="cinta-falta">${faltaMin>0?'quedan '+Math.floor(faltaMin/60)+'h '+(faltaMin%60)+'m':'día cerrado'}</span>`:''}
       </div>
     </div>
-    <div class="cinta">${segs}${marcador}</div>
+    <div class="cinta" data-ini="${ini}" data-fin="${fin}">${segs}${marcador}</div>
     <div class="cinta-horas">${horasCinta(ini,fin)}</div>`;
 }
 
@@ -4336,10 +4292,11 @@ function horasCinta(ini,fin){
   return marcas.join('');
 }
 
-// El detalle del bloque tocado — es lo que ocupa el sitio de la lista larga.
+// El panel único: por defecto el bloque de la hora actual, o el que hayas tocado en la cinta.
 function pintarBloqueDetalle(tareas, anchor, done, esHoy){
-  const el=document.getElementById('diaBloque'); if(!el) return;
+  const el=document.getElementById('diaAhoraTile'); if(!el) return;
   if(!tareas.length){
+    el.style.borderLeftColor=''; el.style.boxShadow='';
     el.innerHTML='<div class="blq-vacio">Sin bloques de rutina para este día.<br>Configúralos en Coach → Rutina.</div>';
     return;
   }
@@ -4350,14 +4307,23 @@ function pintarBloqueDetalle(tareas, anchor, done, esHoy){
   const meta=CAT_META[t.cat]||{ico:'•',label:t.cat,c:'#565a72'};
   const leaves=leafItems(t);
   const hecho=!t.fijo&&leaves.every(it=>done.includes(it.id));
-  const esAhora=anchor&&t.id===anchor.id;
-  const pill=(bg,col,br,txt)=>`<span class="rt2-cat" style="background:${bg};color:${col};border-color:${br}">${txt}</span>`;
+  // "Ahora mismo" solo si de verdad es hoy: navegando a otro día de la tira semanal el ancla es
+  // "lo que tocaría a esta hora ESE día", que no es lo mismo.
+  const esAhora=esHoy&&anchor&&t.id===anchor.id;
 
+  // El acento de color a la izquierda y el halo siguen a la categoría del bloque mostrado, como
+  // hacía "Ahora mismo" desde el 2026-08-09.
+  el.style.borderLeftColor=meta.c;
+  el.style.boxShadow=`0 10px 40px rgba(0,0,0,.35), -3px 0 20px ${meta.c}30`;
+
+  const pill=(bg,col,br,txt)=>`<span class="rt2-cat" style="background:${bg};color:${col};border-color:${br}">${txt}</span>`;
   el.innerHTML=`
     <div class="blq-head">
+      ${esAhora
+        ? '<span class="lbl" style="display:inline-flex;align-items:center;gap:7px;margin:0"><span class="now-live-dot"></span>Ahora mismo</span>'
+        : `<span class="lbl" style="margin:0">${esHoy?'Bloque del día':'A esta hora, ese día'}</span>`}
       ${pill(meta.c+'22',meta.c,meta.c+'55',meta.ico+' '+meta.label)}
-      <span class="blq-dur">${t.hora}${sig?' – '+sig.hora+' · '+rtDur(t.hora,sig.hora):''}</span>
-      ${esAhora?pill('rgba(0,232,122,.16)','var(--g)','rgba(0,232,122,.4)','● Ahora mismo'):''}
+      <span class="blq-dur">${t.hora}${sig?' – '+sig.hora+' · '+rtDur(t.hora,sig.hora):' · último del día'}</span>
       ${hecho?pill('rgba(0,232,122,.16)','var(--g)','rgba(0,232,122,.4)','✅ Hecho'):''}
       ${t.fijo?pill('rgba(var(--ov),.06)','var(--text3)','rgba(var(--ov),.14)','🔒 Bloque fijo'):''}
     </div>
@@ -4397,14 +4363,6 @@ function marcarBloque(id){
 // ── ACCIONES RÁPIDAS — únicos 2 puntos donde el Dashboard SÍ escribe en el
 //    localStorage de otra app (antes solo leía). Ambas leen el objeto crudo,
 //    tocan solo el campo necesario y lo regresan igual — ver rawGet/rawSet arriba.
-function updateMarkDoneBtn(actual){
-  const el=document.getElementById('diaAhoraBtn'); if(!el)return;
-  if(!actual||actual.fijo){ el.innerHTML=''; return; }
-  const doneHoy=(D.rut.completado||{})[today()]||[];
-  const leaves=leafItems(actual);
-  const allDone=leaves.every(it=>doneHoy.includes(it.id));
-  el.innerHTML=`<button class="mark-done-btn" onclick="quickMarkDone()">${allDone?'↩️ Desmarcar':'✅ Marcar hecho'}</button>`;
-}
 function quickMarkDone(){
   const {actual}=rutinaAhoraSiguiente();
   if(!actual||actual.fijo)return;
@@ -7072,12 +7030,35 @@ function tickClock(){
   const hd=document.getElementById('heroDate'); if(hd) hd.textContent=n.toLocaleDateString('es-MX',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
   const sy=document.getElementById('hudSync'); if(sy){const s=Math.round((Date.now()-lastSync)/1000);sy.textContent='· sync hace '+(s<60?s+'s':Math.round(s/60)+'m');}
   const dc=document.getElementById('diaClock'); if(dc) dc.textContent=`${hh}:${mm}`;
-  const da=document.getElementById('diaAhora');
-  if(da){
-    const {tareasHoy,actual,siguiente}=rutinaAhoraSiguiente();
-    pintarAhora(tareasHoy,actual,siguiente);
-    updateMarkDoneBtn(actual);
+  // El panel del bloque NO se repinta cada segundo (2026-08-23). Antes sí, porque solo mostraba
+  // el bloque activo; ahora puede estar mostrando el tramo que tocaste en la cinta, y repintarlo
+  // te lo quitaría de debajo del cursor 60 veces por minuto. Se repinta solo cuando el bloque
+  // activo CAMBIA de verdad — unas 17-26 veces al día.
+  const panel=document.getElementById('diaAhoraTile');
+  if(panel){
+    const {actual}=rutinaAhoraSiguiente();
+    const idActivo=actual?actual.id:null;
+    if(idActivo!==_ultimoBloqueActivo){
+      _ultimoBloqueActivo=idActivo;
+      renderDia();
+    } else {
+      moverMarcadorCinta();   // lo único que sí avanza segundo a segundo
+    }
   }
+}
+let _ultimoBloqueActivo;
+
+// Desliza la línea verde de "ahora" sobre la cinta sin volver a pintarla: la cinta guarda su
+// rango en data-ini/data-fin al construirse.
+function moverMarcadorCinta(){
+  const c=document.querySelector('.cinta'); if(!c) return;
+  const marc=c.querySelector('.cinta-ahora'); if(!marc) return;
+  const ini=+c.dataset.ini, fin=+c.dataset.fin;
+  if(!isFinite(ini)||!isFinite(fin)||fin<=ini) return;
+  const ahora=minutosDe(horaAhora());
+  if(ahora<ini||ahora>fin){ marc.style.display='none'; return; }
+  marc.style.display='';
+  marc.style.left=`calc(${((ahora-ini)/(fin-ini)*100).toFixed(3)}% - 1px)`;
 }
 setInterval(tickClock,1000);
 
