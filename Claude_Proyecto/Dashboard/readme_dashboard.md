@@ -3392,3 +3392,51 @@ De paso, el botón mostraba *"Marcar como domin…"* cortado en el celular: por 
 - Las **23 habilidades** abiertas completas sin un error de consola.
 - El temario con 20 entradas hace scroll y **el paso activo siempre queda a la vista**.
 - Marcar sigue guardando en `habilidades_checklist_v1` y actualizando la barra de la tarjeta.
+
+## Las otras 19 habilidades, al mismo nivel (2026-08-23)
+
+> *"haz lo mismo para las demas"*
+
+Después de ampliar las 4 sociales, las otras 19 quedaron a **1,381 palabras de media contra 2,532**, y muchas tenían solo 4 pasos. Ahora las 23 están al mismo nivel: **322 pasos en total** (antes 150) y **45,500 palabras** (antes 36,400).
+
+| Habilidad | Antes | Ahora | | Habilidad | Antes | Ahora |
+|---|---|---|---|---|---|---|
+| 💰 Dinero | 4 | **18** | | 🔧 Mecánica | 8 | **13** |
+| 🚫 Decir que no | 4 | **16** | | 🪢 Nudos | 10 | **13** |
+| 🧘 Recuperarte | 4 | **16** | | 🍳 Cocinar | 6 | **13** |
+| 🍷 Vino | 4 | **14** | | 🍽️ Modales | 4 | **13** |
+| 🧭 Brújula | 4 | **14** | | 🥃 Coctelería | 4 | **13** |
+| 🧘 Meditar | 7 | **14** | | 🥊 Pelear | 4 | **12** |
+| 🩹 Primeros auxilios | 8 | **12** | | 🏊 Nadar | 5 | **12** |
+| 🥩 Asado | 6 | **13** | | 🚗 Manejar | 5 | **11** |
+| 🔥 Fogata | 4 | **14** | | 🔨 Reparaciones | 6 | **11** |
+| 🎯 Armas | 4 | **13** | | | | |
+
+### El problema no era la longitud, era la forma
+
+Casi todas tenían el mismo defecto: **4 "Fases" gigantes con listas de 8 a 10 viñetas cada una**. Con el panel viejo daba igual —era una lista plana de todas formas—, pero con el diseño "Estudio" un paso es una pantalla de lectura, y una fase con diez viñetas es ilegible. Se desglosaron en pasos temáticos: un paso, una idea.
+
+### Qué se añadió de verdad
+
+No es relleno. Lo que faltaba era lo mismo en todas: **el porqué, los errores concretos y qué hacer esta semana**.
+
+- **💰 Dinero** (la de su meta de $1M) — las tres formas de generar y el techo de cada una, subir el precio antes que las horas, el fondo de emergencia antes de invertir, avalancha contra bola de nieve, por qué los MSI no son dinero gratis, el número del interés compuesto, los instrumentos mexicanos uno por uno (CETES, Udibonos, ETF vía GBM, Afore), **impuestos y RESICO** al pasar de sueldo a ingreso propio, cómo detectar un fraude, y una revisión mensual de 20 minutos en 5 preguntas.
+- **🚫 Decir que no** — los tres miedos que lo hacen difícil, la fórmula de tres partes, decir el "no" al principio y no al final, las tres muletillas que lo convierten en un quizá, el disco rayado, **el caso de la familia mexicana**, cómo negarse en el trabajo priorizando en vez de negando, y decirte que no a ti mismo.
+- **🧘 Recuperarte** — su dato real (5h40–6h40) y qué significa, las cuatro palancas del sueño en orden de impacto, la cuenta de la cafeína (un café a las 4 pm sigue actuando a las 10), por qué el alcohol no es un somnífero, dolor normal contra señal de alarma, y las señales tempranas de quemarse.
+- **🍷 Vino** — las 5 uvas que resuelven cualquier carta, catar en 4 pasos, **la temperatura como error número uno**, descorchar, decantar, maridar (incluido que el picante rompe el tinto), vino mexicano, cómo pedirlo en un restaurante y cómo reconocer uno picado.
+- **🥃 Coctelería** — la ecuación fuerte + ácido + dulce, agitar contra revolver y por qué, jarabe natural, y cinco clásicos con su plantilla exacta.
+- **🍽️ Modales** — la regla que ordena todo (que el otro esté cómodo), la mesa, los dos códigos de cubiertos, ser buen invitado y buen anfitrión, brindar, y **lo que cambia en Alemania**.
+- **🥊 Pelear** — la jerarquía evitar → desescalar → escapar → pelear, los códigos de color de Cooper, desescalar con la voz, qué disciplina entrenar, y **la legítima defensa en México** con el riesgo real para su visa.
+- **🎯 Armas** — el marco legal mexicano completo (SEDENA, UCAM, poseer contra portar), las cuatro reglas de seguridad, fundamentos de puntería, limpieza, y la ética.
+- **🚗 Manejar** — manejo defensivo, **manejar estándar paso a paso** (para Alemania), lo específico de su eléctrico, aquaplaning y ABS, y qué hacer tras un accidente.
+- **🏊 Nadar**, **🔥 Fogata**, **🧭 Brújula**, **🍳 Cocinar**, **🥩 Asado**, **🔨 Reparaciones**, **🧘 Meditar** — todas reestructuradas con el mismo criterio.
+- **🔧 Mecánica**, **🩹 Primeros auxilios**, **🪢 Nudos** — estas tres **no se reescribieron**: ya tenían un paso por tema con su imagen verificada. Se les añadieron pasos alrededor (seguridad de la escena y protocolo, qué llevar siempre en el coche, lo específico del eléctrico, lo legal de auxiliar en México, cuidar la cuerda, cómo practicar).
+
+Cada una cierra con **📚 qué leer** cuando el tema tiene bibliografía real, y todas conservan su paso "✅ Ya lo dominas cuando…" con criterios comprobables.
+
+### Verificación
+
+- Las **23 habilidades** abiertas y sus **322 pasos recorridos uno por uno**: ninguno sin título, ninguno con descripción vacía, ninguna etiqueta HTML cruda, y el último paso de cada una sigue siendo "Ya lo dominas".
+- **44 imágenes** en pasos conservadas — ninguna se perdió al reescribir.
+- El pie del panel visible en los 322 pasos a **1500, 820, 390 y 360px**.
+- **Sin errores de consola**, y el rendimiento intacto: primer texto en pantalla ~1.0 s, abrir el panel de la habilidad más larga (20 pasos) **36 ms**.
