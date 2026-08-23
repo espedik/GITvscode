@@ -881,3 +881,37 @@ Eso hizo crecer el panel hasta **pisar la fila de abajo**: el tope de altura lo 
 - Las **3 secciones** aparecen en el bloque de la mañana, en Dashboard y en Coach.
 - **Sin solapes** con la fila de abajo ni con el pie a 1500, 1366, 820 y 390px — el panel scrollea por dentro cuando hace falta.
 - Los 15 tramos del día recorridos, un solo panel siempre, y sin errores de consola en ninguna de las dos apps.
+
+## También la noche: un solo bloque (2026-08-23)
+
+> *"al final del dia, hay bloques sueltos de skincare y suplementos, esos tambien los quiero unicos en toda la semana y con lineas divisoras, igual que el que hiciste"*
+
+**6 bloques pasaron a 3**, con el mismo tratamiento que el de la mañana: título general, **25 minutos** los siete días y las líneas divisoras entre **PIEL Y MINOXIDIL** y **SUPLEMENTOS**.
+
+| Día | Bloque | Hora | Pasos |
+|---|---|---|---|
+| Lun – Vie | `wd-pm` | 22:30 – 22:55 | 6 |
+| Sábado | `sa-pm` | 22:20 – 22:45 | 4 |
+| Domingo | `do-pm` | 22:05 – 22:30 | 4 |
+
+**🌙 Rutina de la noche — piel, minoxidil y suplementos**
+
+### Lo que hubo que mover
+
+Casi nada, porque los huecos ya daban:
+
+- **Entre semana**: el único cambio es *"Planear el día de mañana"*, que pasa de 22:45 a **22:55**. La meditación de las 23:00 y todo lo que viene después quedan **exactamente igual**.
+- **Sábado**: nada. El bloque cabe entre la cena (22:00) y la meditación (22:45).
+- **Domingo**: nada tampoco. El diario de cierre de semana simplemente se alarga de 15 a 20 minutos (21:45 → 22:05).
+
+### Un detalle sobre el magnesio
+
+Su paso dice *"200-400mg, **30-60 min antes de dormir**"*. Con el bloque a las 22:30 y el cierre a las 23:59, entre semana quedan **89 minutos** — antes eran 54, porque los suplementos iban sueltos a las 23:05. En fin de semana sí encaja (40 min en ambos). Si prefieres tomarlo más tarde, el paso está para leerlo, no para atarlo a esa hora.
+
+### Verificación
+
+- Los **7 días** con su bloque de noche, todos de **25 minutos**, con sus **2 secciones**.
+- **Ningún bloque suelto** de skincare o suplementos queda en toda la semana, ni de mañana ni de noche.
+- **84 subtareas antes, 84 después**: ninguna perdida ni inventada, con sus ids intactos, así que el progreso marcado se conserva.
+- `RUTINA_TASKS` queda en **62 tareas** (eran 71 antes de empezar con las fusiones), replicado en Coach y Dashboard.
+- Sin errores de consola en ninguna de las dos apps.
