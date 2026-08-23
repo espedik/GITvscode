@@ -344,25 +344,76 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
    slide, comparte espacio con la tira de días + 2 filas de tarjetas de arriba, así que cada
    entrada ocupa menos alto para que quepan más de un vistazo.
    Pulido visual (2026-08-09, "esta es la base de toda mi rutina, hazlo mejor visualmente"):
-   línea conectora detrás de los puntos (::before de #diaTimeline, medida en JS — ver renderDia())
+   la cinta del día y el detalle del bloque tocado (ver .cinta-* más abajo)
    + acento de color a la izquierda de cada tarjeta que reutiliza el mismo `dotColor` ya calculado
    por tarjeta, así el borde y el punto nunca se contradicen entre sí. ─ */
-#diaTimeline{position:relative;z-index:0}
-#diaTimeline::before{content:'';position:absolute;top:var(--tl-top,0);height:var(--tl-h,0);left:16px;width:1px;background:rgba(var(--ov),.16);z-index:-1}
-.rt2-card{display:flex;align-items:flex-start;gap:10px;padding:7px 4px 7px 8px;border-left:3px solid transparent;border-bottom:1px solid rgba(var(--ov),.06);transition:background .2s,border-color .3s}
-.rt2-card:last-child{border-bottom:none}
-.rt2-dot{width:10px;height:10px;border-radius:50%;margin-top:5px;flex-shrink:0;transition:all .3s}
-.rt2-body{flex:1;min-width:0}
-.rt2-top{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:3px}
+/* ─── Cinta del día (2026-08-23) ───
+   El día entero en una barra horizontal en vez de una lista de 17-26 tarjetas con scroll. Cada
+   tramo mide lo que dura el bloque, lleva el color de su categoría (CAT_META, el mismo de la
+   píldora de siempre) y al tocarlo pinta su detalle debajo, en #diaBloque.
+   Por qué se fue la lista: con 26 bloques entre semana, la vista se cortaba a la mitad del día y
+   había que scrollear para ver el resto; la cinta cabe entera y de paso muestra la proporción
+   real de cada cosa — los dos bloques de Didi son más de la mitad del día despierto. */
+.cinta-wrap{margin-bottom:10px;padding:11px 14px 9px;border-radius:16px;
+  background:rgba(var(--ov),.05);border:1px solid rgba(var(--ov),.11)}
+.cinta-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:9px;flex-wrap:wrap}
+.cinta-head-l{display:flex;align-items:baseline;gap:9px;min-width:0}
+.cinta-tit{font-size:10px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--text3)}
+.cinta-rango{font-family:var(--mono);font-size:10.5px;color:var(--text3)}
+.cinta-head-r{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.cinta-prog{font-family:var(--mono);font-size:15px;font-weight:700;color:var(--g)}
+.cinta-prog-lbl{font-size:10.5px;color:var(--text2)}
+.cinta-sep{width:1px;height:12px;background:rgba(var(--ov),.16)}
+.cinta-falta{font-family:var(--mono);font-size:11px;font-weight:700;color:var(--cy)}
+/* La barra. `overflow:visible` a propósito: el marcador de "ahora" sobresale por arriba y abajo. */
+.cinta{position:relative;display:flex;height:36px}
+/* Cada tramo es un <button> de verdad — se puede tabular y activar con Enter, como el resto de
+   los elementos clicables del Dashboard. flex:<minutos> reparte el ancho en proporción a la
+   duración; min-width evita que un bloque de 10 min quede imposible de tocar en el celular. */
+.cinta-seg{position:relative;min-width:0;padding:0 0 0 8px;cursor:pointer;overflow:hidden;
+  border:none;border-right:1px solid rgba(5,5,10,.55);
+  display:flex;align-items:center;font-family:inherit;text-align:left;
+  transition:filter .15s,box-shadow .15s}
+.cinta-seg:first-child{border-radius:9px 0 0 9px}
+.cinta-seg:last-child{border-radius:0 9px 9px 0}
+.cinta-seg:hover{filter:brightness(1.4)}
+.cinta-seg.sel{box-shadow:inset 0 0 0 2px var(--text)}
+.cinta-seg.hecho::after{content:'';position:absolute;inset:0;
+  background:repeating-linear-gradient(135deg,transparent 0 5px,rgba(0,0,0,.22) 5px 10px)}
+.cinta-seg-txt{font-size:10.5px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  pointer-events:none;position:relative;z-index:1}
+.cinta-ahora{position:absolute;top:-5px;bottom:-5px;width:2px;background:var(--g);
+  box-shadow:0 0 10px rgba(0,232,122,.9);pointer-events:none;border-radius:2px}
+.cinta-horas{display:flex;justify-content:space-between;margin-top:6px;font-family:var(--mono);
+  font-size:9.5px;color:var(--text3)}
+/* En el celular la cinta se estrecha: los tramos cortos se vuelven intocables por debajo de
+   ~10px, así que se les sube el mínimo y desaparece el texto de dentro. */
+@media(max-width:700px){
+  .cinta-seg{padding-left:5px}
+  .cinta-seg-txt{display:none}
+  .cinta{height:44px}
+}
+
+/* ─── Detalle del bloque que tocas en la cinta ─── */
+.blq-head{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-bottom:9px}
+.blq-txt{font-family:var(--font-title);font-size:clamp(17px,2vw,23px);font-weight:600;line-height:1.2;
+  color:var(--text);margin-bottom:4px}
+.blq-dur{font-family:var(--mono);font-size:11.5px;color:var(--text3)}
+.blq-acciones{display:flex;align-items:center;gap:9px;margin-top:13px;flex-wrap:wrap}
+.blq-btn{display:flex;align-items:center;gap:7px;padding:9px 16px;border-radius:12px;cursor:pointer;
+  font-family:inherit;font-size:12.5px;font-weight:800;transition:background .15s,border-color .15s;
+  border:1px solid rgba(0,232,122,.4);background:rgba(0,232,122,.14);color:var(--g)}
+.blq-btn:hover{background:rgba(0,232,122,.24)}
+.blq-btn.off{border-color:rgba(var(--ov),.16);background:rgba(var(--ov),.05);color:var(--text2)}
+.blq-nav{width:34px;height:34px;border-radius:10px;cursor:pointer;font-family:inherit;font-size:15px;
+  border:1px solid rgba(var(--ov),.14);background:rgba(var(--ov),.05);color:var(--text2);
+  display:flex;align-items:center;justify-content:center;padding:0}
+.blq-nav:hover:not(:disabled){background:rgba(var(--ov),.11);color:var(--text)}
+.blq-nav:disabled{opacity:.3;cursor:default}
+.blq-vacio{text-align:center;padding:26px 10px;color:var(--text3);font-size:12.5px}
 .rt2-cat{font-size:7px;font-weight:800;letter-spacing:.03em;text-transform:uppercase;padding:1px 6px;border-radius:20px;border:1px solid}
-.rt2-time{font-family:var(--mono);font-size:11px;color:var(--text2);font-weight:600}
 /* Título de cada bloque — siempre en negritas (antes solo el bloque activo), para que se lea
    claramente como encabezado frente a las subtareas/explicación de abajo (.rt2-sub-item) */
-.rt2-txt{font-size:clamp(12px,1.05vw,14px);color:var(--text);font-weight:700;line-height:1.35}
-.rt2-check{font-size:15px;margin-top:4px;flex-shrink:0}
-.rt2-now{background:rgba(var(--ov),.05);border-radius:0 12px 12px 0}
-.rt2-done .rt2-txt{opacity:.5;text-decoration:line-through}
-.rt2-fijo{opacity:.85}
 /* "Volver a hoy" — visible solo cuando #diaTimelineTitle está activo (ver verDiaSemana()) */
 #diaTimelineTitle a{color:var(--cy);text-decoration:none;font-weight:700;cursor:pointer}
 #diaTimelineTitle a:hover{text-decoration:underline}
@@ -1647,9 +1698,6 @@ a.rt2-sub-prod:hover{text-decoration:underline}
 /* ─── PANEL DE INVERSIÓN DEL LUNES (2026-08-18) ─────────────────────────────
    Se abre tocando el bloque de GBM en Mi Día, que solo existe los lunes. Mismo
    patrón visual que .cal-overlay / .didi-overlay. */
-.rt2-card.rt2-gbm{cursor:pointer;transition:background .16s}
-.rt2-card.rt2-gbm:hover{background:rgba(var(--ov),.05)}
-.rt2-gbm .rt2-txt::after{content:' 📈 ver qué invertir';font-size:10.5px;color:var(--cy);font-weight:800}
 .gbm-overlay{position:fixed;inset:0;z-index:220;background:rgba(0,0,0,.72);backdrop-filter:blur(6px);
   display:flex;align-items:center;justify-content:center;padding:4vh 4vw;opacity:0;pointer-events:none;
   transition:opacity .22s ease}
@@ -1745,6 +1793,12 @@ a.rt2-sub-prod:hover{text-decoration:underline}
         </div>
       </div>
 
+      <!-- Cinta del día (2026-08-23) — sustituye a la lista con scroll de toda la rutina:
+           "arriba quiero que pongas esta barra que me propusiste y quitando toda la lista del
+           scroll donde muestras toda mi rutina... al tocar cada seccion me des mas detalles".
+           Cada tramo es un bloque real de RUTINA_TASKS, con ancho proporcional a su duración. -->
+      <div class="cinta-wrap reveal d2" id="cintaDia"></div>
+
       <div class="week-strip reveal d2" id="heroWeekStrip" style="margin-bottom:10px"></div>
 
       <!-- 2026-08-18 — "Ahora mismo" dejó de ir solo a todo el ancho: ahora comparte fila con el
@@ -1798,7 +1852,7 @@ a.rt2-sub-prod:hover{text-decoration:underline}
            verDiaSemana()), y las animaciones .reveal se reinician cada vez que un elemento vuelve
            de display:none — se quedaba invisible (opacity:0) un momento tras cada clic. -->
       <div id="diaTimelineTitle" style="display:none;align-items:center;gap:8px;margin-bottom:5px;font-size:11.5px;font-weight:700;color:var(--text2)"></div>
-      <div class="tile reveal d5" id="diaTimeline" style="flex:1;min-height:0;overflow-y:auto;padding:10px 14px"></div>
+      <div class="tile reveal d5" id="diaBloque" style="flex:none;min-height:158px;max-height:38vh;overflow-y:auto;padding:14px 18px"></div>
 
       <div class="reveal d6" style="margin-top:8px">
         <a href="../Coach/Coach_v2.html#rutina" style="color:var(--cy);font-size:12px;font-weight:600;text-decoration:none">Ver/editar rutina completa en Coach →</a>
@@ -4190,61 +4244,154 @@ function renderDia(){
     tlTitleEl.innerHTML=`🗓️ Rutina del ${DIAS_LARGO[diaMostrado]} <a href="javascript:void(0)" onclick="verDiaSemana(${diaMostrado})">· Volver a hoy →</a>`;
   }
 
-  // Día completo siempre visible (2026-08-09: recortar a "3 bloques antes del ancla" escondía
-  // la rutina de la mañana — bañarte, skincare+minoxidil AM, suplementos AM — en cuanto revisabas
-  // el día después de las ~8am, porque quedaban a más de 3 bloques de la tarea "actual" por hora.
-  // El auto-scroll de abajo ya lleva la vista a la tarjeta ancla, así que no hace falta recortar
-  // la lista para eso; con la lista completa además puedes subir a revisar lo que ya hiciste).
-  const visibles = tareasDia;
+  // ── CINTA DEL DÍA (2026-08-23) ──────────────────────────────────────────
+  // Sustituye a la lista de 17-26 tarjetas con scroll (pedido: "quitando toda la lista del scroll
+  // donde muestras toda mi rutina... esa barra que me propusiste quiero que al tocar cada seccion
+  // me des mas detalles acerca de esa seccion"). Cada bloque es un tramo con ancho proporcional a
+  // su duración; se toca uno y su detalle se pinta debajo, en #diaBloque.
+  pintarCintaDia(tareasDia, anchorTask, doneTimeline, esHoyMostrado);
+  pintarBloqueDetalle(tareasDia, anchorTask, doneTimeline, esHoyMostrado);
+}
 
-  const itemsHtml=visibles.length?visibles.map((t,idx)=>{
-    const isNow=anchorTask&&t.id===anchorTask.id;
+// Minutos desde medianoche. Las horas de RUTINA_TASKS nunca cruzan las 00:00 (el día más largo va
+// de 06:40 a 23:59), así que basta una escala lineal de la primera a la última.
+function minutosDe(hhmm){ const[h,m]=hhmm.split(':').map(Number); return h*60+m; }
+// El texto de una tarea trae HTML (negritas, enlaces): para la cinta se quiere solo la frase.
+function rtSoloTitulo(txt){ return String(txt).replace(/<[^>]*>/g,'').trim(); }
+
+// `cintaSel` guarda qué bloque estás mirando. En null sigue al bloque ACTUAL, que es lo que
+// quieres casi siempre; en cuanto tocas otro se queda ahí hasta que pulses "Volver a ahora" o
+// cambies de día en la tira semanal.
+let cintaSel=null;
+function tocarBloque(id){ cintaSel=id; renderDia(); }
+function volverABloqueAhora(){ cintaSel=null; renderDia(); }
+
+function pintarCintaDia(tareas, anchor, done, esHoy){
+  const wrap=document.getElementById('cintaDia'); if(!wrap) return;
+  if(!tareas.length){ wrap.innerHTML=''; wrap.style.display='none'; return; }
+  wrap.style.display='';
+
+  const ini=minutosDe(tareas[0].hora);
+  // El último bloque no tiene "siguiente" que le marque el final: se le dan 30 min de cola para
+  // que se vea como tramo y no como una raya.
+  const fin=minutosDe(tareas[tareas.length-1].hora)+30;
+  const total=Math.max(1, fin-ini);
+
+  let hechos=0;
+  const segs=tareas.map((t,i)=>{
+    const desde=minutosDe(t.hora);
+    const hasta=i+1<tareas.length?minutosDe(tareas[i+1].hora):fin;
+    // 5 minutos de suelo: dos bloques que empiezan a la misma hora no pueden desaparecer.
+    const mins=Math.max(5, hasta-desde);
     const meta=CAT_META[t.cat]||{ico:'•',label:t.cat,c:'#565a72'};
-    const nextT=visibles[idx+1];
     const leaves=leafItems(t);
-    const done=!t.fijo&&leaves.every(it=>doneTimeline.includes(it.id));
-    const dotColor=t.fijo?(isNow?meta.c:'#3a3d52'):(done?'#00e87a':isNow?meta.c:'#3a3d52');
-    const subHtml=(!t.fijo&&t.subtareas)?subtareasHtml(leaves,doneTimeline,t.producto):'';
-    return `<div class="rt2-card ${isNow?'rt2-now':''} ${done?'rt2-done':''} ${t.fijo?'rt2-fijo':''} ${t.id==='lu-gbm'?'rt2-gbm':''}" style="border-left-color:${dotColor}"${t.id==='lu-gbm'?' onclick="abrirGBM()"':''}>
-      <div class="rt2-dot" style="background:${dotColor};box-shadow:${(isNow||done)?'0 0 10px '+dotColor:'none'}"></div>
-      <div class="rt2-body">
-        <div class="rt2-top">
-          <span class="rt2-cat" style="background:${meta.c}22;color:${meta.c};border-color:${meta.c}55">${meta.ico} ${meta.label}</span>
-          <span class="rt2-time">${t.hora}${nextT?' – '+nextT.hora+' · '+rtDur(t.hora,nextT.hora):''}</span>
-        </div>
-        <div class="rt2-txt">${t.txt}</div>
-        ${subHtml}
-      </div>
-      ${done?'<span class="rt2-check">✅</span>':''}
-    </div>`;
-  }).join(''):'<div style="text-align:center;padding:20px;color:var(--text3)">Sin bloques de rutina configurados para hoy. Configúralos en Coach → Rutina.</div>';
+    const hecho=!t.fijo&&leaves.every(it=>done.includes(it.id));
+    if(hecho) hechos++;
+    const esAhora=anchor&&t.id===anchor.id;
+    const sel=cintaSel?t.id===cintaSel:esAhora;
+    const titulo=rtSoloTitulo(t.txt);
+    // El texto solo cabe en los tramos largos; en los cortos sobra y el overflow lo recorta feo.
+    const txt=mins>=45?`<span class="cinta-seg-txt" style="color:${meta.c}">${meta.ico} ${esc(titulo)}</span>`:'';
+    return `<button class="cinta-seg${sel?' sel':''}${hecho?' hecho':''}" style="flex:${mins} 1 0;min-width:11px;background:${meta.c}${hecho?'33':'72'}"
+      onclick="tocarBloque('${t.id}')" title="${esc(t.hora+' · '+meta.label+' · '+titulo)}"
+      aria-label="${esc(t.hora+' '+titulo)}">${txt}</button>`;
+  }).join('');
 
-  const tlEl=document.getElementById('diaTimeline');
-  tlEl.innerHTML=itemsHtml;
-  requestAnimationFrame(()=>{
-    // Scroll directo a la tarjeta ancla ("ahora", real o por hora del día elegido) — pedido
-    // explícito de Adán: tanto al hacer clic en un día de la tira semanal como al volver a esta
-    // pantalla desde cualquier otra parte del Dashboard, debe verse de inmediato la tarea activa,
-    // sin tener que buscarla a mano dentro de la línea de tiempo. Se recalcula en CADA render
-    // (cambio de slide, clic en un día, marcar/desmarcar una tarea) — nunca conserva un scroll viejo.
-    const anchorCard=tlEl.querySelector('.rt2-now');
-    tlEl.scrollTop=anchorCard?Math.max(0,anchorCard.offsetTop-12):0;
-    // Línea conectora detrás de los puntos — medida en pixeles reales (no adivinada en CSS) para
-    // que quede perfectamente alineada con el primer y último punto sin importar cuánto midan las
-    // tarjetas de en medio (varía con subtareas).
-    const dots=tlEl.querySelectorAll('.rt2-dot');
-    if(dots.length>1){
-      const tlTop=tlEl.getBoundingClientRect().top;
-      const firstR=dots[0].getBoundingClientRect();
-      const lastR=dots[dots.length-1].getBoundingClientRect();
-      const top=(firstR.top+firstR.height/2)-tlTop+tlEl.scrollTop;
-      const bottom=(lastR.top+lastR.height/2)-tlTop+tlEl.scrollTop;
-      tlEl.style.setProperty('--tl-top',top+'px');
-      tlEl.style.setProperty('--tl-h',(bottom-top)+'px');
-    } else {
-      tlEl.style.setProperty('--tl-h','0px');
+  // Marcador de "ahora": solo cuando miras el día de hoy y el reloj cae dentro del rango.
+  let marcador='';
+  if(esHoy){
+    const ahora=minutosDe(horaAhora());
+    if(ahora>=ini&&ahora<=fin){
+      const pct=((ahora-ini)/total*100).toFixed(2);
+      marcador=`<div class="cinta-ahora" style="left:calc(${pct}% - 1px)"></div>`;
     }
-  });
+  }
+
+  const marcables=tareas.filter(t=>!t.fijo).length;
+  const faltaMin=esHoy?Math.max(0, fin-minutosDe(horaAhora())):0;
+
+  wrap.innerHTML=`
+    <div class="cinta-head">
+      <div class="cinta-head-l">
+        <span class="cinta-tit">Tu día completo</span>
+        <span class="cinta-rango">de ${tareas[0].hora} a ${tareas[tareas.length-1].hora}</span>
+      </div>
+      <div class="cinta-head-r">
+        <span class="cinta-prog">${hechos}</span>
+        <span class="cinta-prog-lbl">de ${marcables} bloques hechos</span>
+        ${esHoy?`<span class="cinta-sep"></span><span class="cinta-falta">${faltaMin>0?'quedan '+Math.floor(faltaMin/60)+'h '+(faltaMin%60)+'m':'día cerrado'}</span>`:''}
+      </div>
+    </div>
+    <div class="cinta">${segs}${marcador}</div>
+    <div class="cinta-horas">${horasCinta(ini,fin)}</div>`;
+}
+
+// Cinco marcas de hora repartidas por el ancho de la cinta.
+function horasCinta(ini,fin){
+  const marcas=[];
+  for(let i=0;i<=4;i++){
+    const m=Math.round(ini+(fin-ini)*i/4);
+    marcas.push(`<span>${String(Math.floor(m/60)).padStart(2,'0')}:${String(m%60).padStart(2,'0')}</span>`);
+  }
+  return marcas.join('');
+}
+
+// El detalle del bloque tocado — es lo que ocupa el sitio de la lista larga.
+function pintarBloqueDetalle(tareas, anchor, done, esHoy){
+  const el=document.getElementById('diaBloque'); if(!el) return;
+  if(!tareas.length){
+    el.innerHTML='<div class="blq-vacio">Sin bloques de rutina para este día.<br>Configúralos en Coach → Rutina.</div>';
+    return;
+  }
+  let i=cintaSel?tareas.findIndex(t=>t.id===cintaSel):-1;
+  if(i<0) i=anchor?tareas.findIndex(t=>t.id===anchor.id):0;
+  if(i<0) i=0;
+  const t=tareas[i], sig=tareas[i+1];
+  const meta=CAT_META[t.cat]||{ico:'•',label:t.cat,c:'#565a72'};
+  const leaves=leafItems(t);
+  const hecho=!t.fijo&&leaves.every(it=>done.includes(it.id));
+  const esAhora=anchor&&t.id===anchor.id;
+  const pill=(bg,col,br,txt)=>`<span class="rt2-cat" style="background:${bg};color:${col};border-color:${br}">${txt}</span>`;
+
+  el.innerHTML=`
+    <div class="blq-head">
+      ${pill(meta.c+'22',meta.c,meta.c+'55',meta.ico+' '+meta.label)}
+      <span class="blq-dur">${t.hora}${sig?' – '+sig.hora+' · '+rtDur(t.hora,sig.hora):''}</span>
+      ${esAhora?pill('rgba(0,232,122,.16)','var(--g)','rgba(0,232,122,.4)','● Ahora mismo'):''}
+      ${hecho?pill('rgba(0,232,122,.16)','var(--g)','rgba(0,232,122,.4)','✅ Hecho'):''}
+      ${t.fijo?pill('rgba(var(--ov),.06)','var(--text3)','rgba(var(--ov),.14)','🔒 Bloque fijo'):''}
+    </div>
+    <div class="blq-txt">${t.txt}</div>
+    ${(!t.fijo&&t.subtareas)?subtareasHtml(leaves,done,t.producto):''}
+    <div class="blq-acciones">
+      ${t.fijo?'':`<button class="blq-btn${hecho?' off':''}" onclick="marcarBloque('${t.id}')">${hecho?'↩️ Desmarcar':'✅ Marcar hecho'}</button>`}
+      ${(!esAhora&&esHoy&&anchor)?'<button class="blq-btn off" onclick="volverABloqueAhora()">● Volver a ahora</button>':''}
+      <div style="flex:1"></div>
+      <span class="blq-dur">${i+1} de ${tareas.length}</span>
+      <button class="blq-nav" onclick="tocarBloque('${tareas[Math.max(0,i-1)].id}')" ${i===0?'disabled':''} aria-label="Bloque anterior">‹</button>
+      <button class="blq-nav" onclick="tocarBloque('${tareas[Math.min(tareas.length-1,i+1)].id}')" ${i===tareas.length-1?'disabled':''} aria-label="Bloque siguiente">›</button>
+    </div>`;
+}
+
+// Marca/desmarca CUALQUIER bloque, no solo el actual: es la versión general de quickMarkDone(),
+// que sigue existiendo para el botón de "Ahora mismo". Escribe sobre el día que estás viendo.
+function marcarBloque(id){
+  const t=RUTINA_TASKS.find(x=>x.id===id);
+  if(!t||t.fijo) return;
+  const raw=rawGet('coach_rutina_v1',{completado:{}});
+  raw.completado=raw.completado||{};
+  const dowHoy=new Date().getDay();
+  const dia=diaSemanaSel!==null?diaSemanaSel:dowHoy;
+  const fecha=dia===dowHoy?today():semanaActual()[dia];
+  raw.completado[fecha]=raw.completado[fecha]||[];
+  const leaves=leafItems(t);
+  const allDone=leaves.every(it=>raw.completado[fecha].includes(it.id));
+  if(allDone) raw.completado[fecha]=raw.completado[fecha].filter(x=>!leaves.some(it=>it.id===x));
+  else leaves.forEach(it=>{ if(!raw.completado[fecha].includes(it.id)) raw.completado[fecha].push(it.id); });
+  rawSet('coach_rutina_v1',raw);
+  loadAll();
+  renderDia();
+  toast(allDone?'↩️ Desmarcado':'✅ Marcado como hecho');
 }
 
 // ── ACCIONES RÁPIDAS — únicos 2 puntos donde el Dashboard SÍ escribe en el
@@ -4330,6 +4477,7 @@ function renderHero(){
 // al recargar/rotar el slide.
 let diaSemanaSel=null;
 function verDiaSemana(dow){
+  cintaSel=null;   // el bloque que mirabas era de otro día: se vuelve al activo del nuevo
   diaSemanaSel=(diaSemanaSel===dow)?null:dow; // clic de nuevo en el mismo día → vuelve a "hoy"
   document.querySelectorAll('#heroWeekStrip .ws-day').forEach((el,i)=>el.classList.toggle('sel',diaSemanaSel===i));
   renderHeroGymPanel();

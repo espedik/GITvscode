@@ -3467,3 +3467,44 @@ En el de 4 columnas la fila incompleta simplemente deja hueco, que es el comport
 
 - Las **23 tarjetas miden lo mismo** (298px) a 1500px, y los tres grids —2 columnas, `-sm` y 4 columnas— quedan uniformes también a 820 y 390px.
 - **La regla sigue viva donde sí hace falta**: con 9 tarjetas simuladas en Mis Metas, la novena llena la fila (363 y 731px). Con 24 en Habilidades, todas siguen iguales.
+
+## La cinta del día sustituye a la lista con scroll (2026-08-23)
+
+> *"el diseño tal cual como lo tenemos, me gusta, pero propuestas que me hiciste me gustaron mas y vamos a probar. Arriba de las tarjetas donde estan las imagenes de los ejercicios de los dias de la semana, arriba quiero que pongas esta barra que me propusiste y quitando toda la lista del scroll donde muestras toda mi rutina, entonces esa barra que me propusiste quiero que al tocar cada seccion me des mas detalles acerca de esa seccion"*
+
+De las cuatro direcciones que se dibujaron en el lienzo, eligió la **A · El día en una cinta** — y solo esa pieza: el resto de Mi Día se queda como estaba.
+
+### Qué cambió
+
+**Se fue** `#diaTimeline`, la lista de 17 a 26 tarjetas con scroll que ocupaba la mitad inferior de la pantalla. Con 26 bloques entre semana se cortaba a mitad del día y había que scrollear para ver el resto.
+
+**Llegó** `#cintaDia`, encima de la tira semanal: el día entero en una barra horizontal. Cada tramo es un bloque real de `RUTINA_TASKS`, con **ancho proporcional a su duración** y el color de su categoría (el mismo `CAT_META` de la píldora de siempre). La cabecera lleva el rango del día, cuántos bloques van hechos y cuánto queda; el marcador verde es la hora actual.
+
+De paso, la cinta muestra algo que la lista escondía: **los dos bloques de Didi son más de la mitad del día despierto.**
+
+**Al tocar un tramo**, su detalle se pinta abajo, en `#diaBloque`, donde estaba la lista: categoría, rango y duración, el título completo, las subtareas marcables (las mismas de siempre, con sus enlaces a Mercado Libre) y los botones de marcar. Las flechas ‹ › recorren el día bloque a bloque, que es como se navega en el celular, donde un tramo de 11px es difícil de acertar.
+
+`cintaSel` guarda qué bloque estás mirando: **en `null` sigue al bloque actual**, que es lo que quieres al abrir el Dashboard. En cuanto tocas otro se queda ahí, con un botón "● Volver a ahora", y se resetea al cambiar de día en la tira semanal.
+
+### Decisiones que salieron de probarlo
+
+- **El detalle no hereda el `flex:1` de la lista.** Con un bloque de 20 minutos sin subtareas quedaba una tarjeta enorme y vacía. Ahora crece con su contenido, con `min-height:158px` para que no dé un salto al pasar de un bloque con subtareas a uno sin ellas.
+- **Estirar la fila secundaria para llenar el hueco fue peor**: "Importante este mes" y "Hoy toca" no tienen contenido para tanto alto. El slide simplemente termina antes.
+- **El `gap` entre tramos se fue.** Con 26 bloques, los 25 huecos de 2px suman 50px y la cinta se salía 3px en el celular. El separador pasó a ser un `border-right` dentro de cada tramo, que con `box-sizing:border-box` no ocupa ancho extra.
+- **`marcarBloque()`** es nuevo: marca cualquier bloque, no solo el actual, y escribe sobre **el día que estás viendo**, no siempre sobre hoy. `quickMarkDone()` sigue existiendo para el botón de "Ahora mismo".
+- El acceso a **GBM no se perdió** al quitar la lista: vive en el botón "Qué invertir hoy", que no se tocó.
+
+### Limpieza
+
+Se retiraron **16 reglas CSS** de la lista larga: la línea conectora (`#diaTimeline::before`, que se medía en JS), `.rt2-card` y todas sus partes, y las tres de `.rt2-gbm`. `.rt2-cat` y `.rt2-sub*` se quedan — los usa el detalle nuevo.
+
+### Verificación
+
+En escritorio (1500px), iPad (820px, tema claro) y iPhone (390px), más un celular de 360px:
+
+- **Los 17 tramos del domingo recorridos uno por uno**: todos pintan su detalle, ninguno sin título.
+- El peor caso, **el lunes con 26 bloques**: cabe entero sin desbordar en los cuatro anchos (el tramo más fino, 11px).
+- Las flechas llegan del primer al último bloque y se deshabilitan en los extremos.
+- Marcar guarda en `coach_rutina_v1`, la cabecera pasa de 0 a 1 y el tramo se raya.
+- Cambiar de día repinta la cinta (25 tramos el miércoles) y vuelve al bloque activo de ese día.
+- **0 desbordes y sin errores de consola.**
