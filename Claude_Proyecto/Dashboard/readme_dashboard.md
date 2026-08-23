@@ -3680,3 +3680,49 @@ De paso: la última marca de hora de la cinta mostraba **"24:29"** entre semana 
 - **Ninguna hora inválida** en las marcas de la cinta, en ninguno de los siete días.
 - 0 desbordes a 1500, 820 y 390px, y sin errores de consola.
 - `dur` está también en `Coach_v2.html`, que lleva la otra copia del horario.
+
+## Cierre del día en un bloque, y la tarde entra al CENLEX (2026-08-23)
+
+> *"el bloque de lectura y Diario del día (5 min) y el de Planear el día de mañana (5 min), esto hazlo en uno mismo e igualmente haz bloques divisorios. Ademas entre semana mi jornada laboral deberia terminar 4:40 debido a que ya entre a mis clases de aleman y de 4:40 manejo al cenlex santo tomas y de 5:00 pm a 6 pm ya son mis clases de aleman, entonces elimina lo que ocupaba ese espacio y acomoda lo demas"*
+
+### 1 · 📓 Cierre del día — lectura, diario y plan de mañana
+
+**7 bloques pasaron a 1**: la lectura estaba repetida cinco veces (`l1`…`l5`, un bloque idéntico por día), más el diario y el plan de mañana. Ahora es uno solo, **21:45 – 22:30 · 45 min**, con sus tres divisores:
+
+**LECTURA** ──── · **DIARIO DEL DÍA** ──── · **PLAN DE MAÑANA** ────
+
+El plan de mañana estaba **después** de la rutina de la noche (22:55); al entrar aquí, la rutina de la noche pasa a durar 30 minutos en vez de 25 y la meditación de las 23:00 no se mueve.
+
+La lectura pasa a ser una subtarea con id propio (`wd-lect`), así que su histórico anterior queda en los ids viejos — es lo único que no se arrastra en todo este cambio.
+
+### 2 · La tarde, con las clases de alemán
+
+| Hora | Bloque |
+|---|---|
+| 13:40 – **16:40** | 🏢 ALTEN — de vuelta a la jornada (ahora con `dur:180`) |
+| **16:40** | 🚗 Manejar al CENLEX Santo Tomás (~20 min) |
+| **17:00 – 18:00** | 🇩🇪 Clase de alemán — CENLEX Santo Tomás |
+| **18:00** | 🚗 Del CENLEX al gimnasio (~15 min) |
+| 18:15 | 🏋️ Ejercicio (antes 17:40) |
+| 19:05 | 🚿 Ducha post-ejercicio (antes 18:30) |
+| 19:30 | 🚗 Didi — sesión corta de la noche (antes 19:20) |
+| 20:00 | 🎯 Prioridad de Fase 0 — **sin cambios** |
+
+**Se eliminó** `wd08` — *"🚗 Didi — 1 pasajero a Buenavista (~40 min)"*, a las 17:00 —, que era exactamente lo que ocupaba el hueco de las clases.
+
+Todo lo posterior a las 20:00 queda igual: solo se corrieron el ejercicio, la ducha y el Didi de la noche, y el bloque de las 20:00 vuelve a caer en su hora.
+
+**El traslado del CENLEX al gimnasio son 15 minutos estimados** — es el único dato que no salía de la rutina existente. Si tardas más o si entrenas en otro sitio ahora, se ajusta.
+
+También se corrigieron los textos que quedaban mintiendo: *"entras 08:30, sales 17:00"* → *"sales 16:40"*, y el bloque de la tarde ahora dice *"(hasta las 16:40)"*.
+
+### El aviso de "Rutina del Lunes"
+
+Vivía encima de la lista con scroll; al quitarla quedó suelto al final del slide, **encima de otras tarjetas**. Ahora va junto a la cinta, que es lo que cambia cuando navegas a otro día — y sigue desapareciendo al volver a hoy.
+
+### Verificación
+
+- **142 tramos** recorridos (los 7 días × 3 tamaños): ningún fallo de duración ni de contenido, ninguna hora inválida, **0 desbordes**.
+- El aviso de día **no solapa con ninguna tarjeta** a 1500, 820 ni 390px.
+- **Ninguna subtarea perdida**: 84 antes, 85 ahora — la nueva es la lectura.
+- `RUTINA_TASKS` queda en **58 tareas**, replicado en Coach y Dashboard, sin errores de consola en ninguna.
