@@ -3590,3 +3590,27 @@ Las subtareas se reutilizan **con sus ids intactos** (`wd02a`, `wd03a`, `wdSupAm
 - Al tocar el tramo en la cinta, el panel despliega **los pasos completos**: cabello, skincare, minoxidil y los cuatro suplementos, con sus enlaces de compra.
 - `RUTINA_TASKS` quedó en **65 tareas** (antes 71) y sigue **replicado en `Coach_v2.html` y `dashboard.html`**, comprobado en los dos.
 - Sin errores de consola en ninguna de las dos apps.
+
+## Línea divisora entre los grupos de un bloque (2026-08-23)
+
+> *"pero aqui pon una linea divisora para los 3, esto para todos los bloques"*
+
+El bloque grande de la mañana juntaba trece pasos seguidos sin distinguir dónde acaba la ducha y dónde empiezan los suplementos. Ahora van separados:
+
+**DUCHA Y CABELLO** ──────── · **PIEL Y MINOXIDIL** ──────── · **SUPLEMENTOS** ────────
+
+Es un **mecanismo general**, no un apaño para este bloque: cualquier subtarea puede llevar `sec:"…"` y el render dibuja ahí la cabecera con su línea. Un bloque cuyas subtareas no traen `sec` se pinta exactamente igual que antes — comprobado: los 3 bloques con subtareas que no tienen secciones siguen sin divisiones.
+
+Funciona en las dos apps, que pintan la rutina con código distinto: `.rt2-sec` en el Dashboard y `.rt-sec` en Coach.
+
+### De paso, los pasos se leen
+
+Estaban a **8.5px**, un tamaño que venía de cuando vivían dentro de las tarjetas pequeñas de la lista con scroll. Ahora que son el contenido principal del panel, están a **12px** con más interlineado.
+
+Eso hizo crecer el panel hasta **pisar la fila de abajo**: el tope de altura lo llevaba `#diaBloque`, que desapareció al fusionar los dos paneles, y `#diaAhoraTile` nunca lo tuvo. Ahora tiene `max-height:44vh` con scroll propio.
+
+### Verificación
+
+- Las **3 secciones** aparecen en el bloque de la mañana, en Dashboard y en Coach.
+- **Sin solapes** con la fila de abajo ni con el pie a 1500, 1366, 820 y 390px — el panel scrollea por dentro cuando hace falta.
+- Los 15 tramos del día recorridos, un solo panel siempre, y sin errores de consola en ninguna de las dos apps.
