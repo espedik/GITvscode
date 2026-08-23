@@ -915,3 +915,35 @@ Su paso dice *"200-400mg, **30-60 min antes de dormir**"*. Con el bloque a las 2
 - **84 subtareas antes, 84 después**: ninguna perdida ni inventada, con sus ids intactos, así que el progreso marcado se conserva.
 - `RUTINA_TASKS` queda en **62 tareas** (eran 71 antes de empezar con las fusiones), replicado en Coach y Dashboard.
 - Sin errores de consola en ninguna de las dos apps.
+
+## Duración propia para los bloques que caben dentro de otro (2026-08-23)
+
+> *"esta seccion, solamente dura 20 min y no 4 hrs, por que despues de los 20 min, ya continuo mi jornada laboral en ALTEN"*
+
+La duración se calculaba **siempre** como "hasta el bloque siguiente". Eso vale para una rutina en fila, pero falla cuando un bloque es un **paréntesis dentro de otro**: la Bolsa GBM son 20 minutos a media jornada de ALTEN, y el panel decía **09:00 – 13:00 · 4h**, que son las horas hasta el siguiente bloque de la lista.
+
+Ahora una tarea puede traer **`dur:<minutos>`** y esa cifra manda sobre el cálculo:
+
+| Bloque | Antes | Ahora |
+|---|---|---|
+| 💰 Bolsa GBM | 09:00 – 13:00 · 4h | **09:00 – 09:20 · 20m** |
+| 🏢 ALTEN (mañana) | 08:30 – 09:00 · 30m | **08:30 – 13:00 · 4h 30m** |
+
+ALTEN tenía el mismo problema al revés: su tramo se cortaba en GBM y decía 30 minutos, cuando esa parte de la jornada va hasta la comida de las 13:00.
+
+### En la cinta
+
+El tramo de GBM mide lo que dura — **2.3% del día**, 28px de 1230 — y el tiempo restante se pinta como **continuación de lo que lo envuelve**: mismo color que ALTEN, más apagado y sin texto, porque no es un bloque propio sino lo que sigue corriendo debajo. Al tocarlo se abre ALTEN.
+
+### Se buscaron más casos
+
+Se recorrieron los 7 días comparando la duración calculada contra la que declara el texto de cada bloque. **GBM era el único caso real**; los otros tres que saltaron eran falsos positivos del detector (leía "4h 45m" como "4h").
+
+De paso: la última marca de hora de la cinta mostraba **"24:29"** entre semana — el último bloque es a las 23:59 y la cola de 30 minutos se pasaba de la medianoche.
+
+### Verificación
+
+- **142 tramos** recorridos (los 7 días × 3 tamaños de pantalla): **ningún fallo** de duración ni de contenido.
+- **Ninguna hora inválida** en las marcas de la cinta, en ninguno de los siete días.
+- 0 desbordes a 1500, 820 y 390px, y sin errores de consola.
+- `dur` está también en `Coach_v2.html`, que lleva la otra copia del horario.

@@ -381,6 +381,9 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 .cinta-seg:last-child{border-radius:0 9px 9px 0}
 .cinta-seg:hover{filter:brightness(1.4)}
 .cinta-seg.sel{box-shadow:inset 0 0 0 2px var(--text)}
+/* Continuación de un bloque que envuelve a otro: el tiempo de ALTEN que sigue corriendo debajo de
+   los 20 min de GBM. Más apagado y sin texto — no es un bloque propio, es lo que sigue. */
+.cinta-seg.cinta-cont{cursor:pointer;opacity:.55}
 .cinta-seg.hecho::after{content:'';position:absolute;inset:0;
   background:repeating-linear-gradient(135deg,transparent 0 5px,rgba(0,0,0,.22) 5px 10px)}
 .cinta-seg-txt{font-size:10.5px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
@@ -2494,7 +2497,7 @@ const RUTINA_TASKS=[
     {id:"do-am",dias:[0],hora:"08:35",cat:"salud",txt:"🚿 Rutina de la mañana — ducha, cabello, piel y suplementos",producto:true,subtareas:[{id:"do045a",sec:"Ducha y cabello",txt:"Hoy <b>no lleva champú</b>: <b>L'Oréal Elvive Reparación Total 5</b> de medios a puntas y enjuaga."},{id:"do045b",txt:"Con el pelo húmedo: <b>L'Oréal Elvive Total Repair 5 crema sin enjuague</b>, un chícharo."},{id:"do045c",txt:"Antes de dormir, <b>funda de almohada de satín</b>. Pasas 7 horas frotando el pelo contra la almohada: el algodón lo rompe y le roba humedad, el satín no."},{id:"do02",sec:"Piel y minoxidil",txt:"Skincare AM — limpiador + niacinamida + hidratante con SPF 50 (mismos productos que entre semana)"},{id:"do02b",txt:"<b>Minoxidil 5% en ESPUMA (Kirkland)</b> en cuero cabelludo seco — la espuma no lleva propilenglicol, que es lo que reseca el tallo en la versión líquida — dosis de la mañana"},{id:"doSupAm1",sec:"Suplementos",txt:"Vitamina D3 — 2000-4000 UI, con algo de grasa en la comida",link:{href:"../CuidadoPersonal/salud.html?tab=suplementos",label:"💊 Ver Suplementos"}},{id:"doSupAm2",txt:"Multivitamínico — 1 tableta"},{id:"doSupAm3",txt:"Omega 3 — 1-2g EPA+DHA, con alimento"},{id:"doSupAm4",txt:"Creatina monohidratada — 5g (todos los días, no solo si entrenas hoy)"}]},
     {id:"wd05",dias:[1,2,3,4,5],hora:"07:33",cat:"descanso",txt:"Vestirte y alistarte"},
     {id:"wd06",dias:[1,2,3,4,5],hora:"07:40",cat:"admin",txt:"🚗 Didi con direccionamiento — camino a ALTEN (~50 min: el traslado normal + el desvío del pasajero)"},
-    {id:"wd07",dias:[1,2,3,4,5],hora:"08:30",cat:"trabajo",txt:"🏢 ALTEN — jornada laboral (HIL/SIL Ford) — entras 08:30, sales 17:00",fijo:true},
+    {id:"wd07",dias:[1,2,3,4,5],hora:"08:30",dur:270,cat:"trabajo",txt:"🏢 ALTEN — jornada laboral (HIL/SIL Ford) — entras 08:30, sales 17:00",fijo:true},
     {id:"wd12b",dias:[1,2,3,4,5],hora:"13:00",cat:"salud",txt:"🛒 Comprar comida — descanso de ALTEN"},
     {id:"wd12c",dias:[1,2,3,4,5],hora:"13:40",cat:"trabajo",txt:"🏢 ALTEN — de vuelta a la jornada laboral",fijo:true},
     {id:"wd08",dias:[1,2,3,4,5],hora:"17:00",cat:"admin",txt:"🚗 Didi — 1 pasajero a Buenavista (~40 min)"},
@@ -2511,7 +2514,7 @@ const RUTINA_TASKS=[
     {id:"wd20e",dias:[1,2,3,4,5],hora:"23:10",cat:"descanso",txt:"Tiempo libre / relajación (20 min, hasta las 23:30)"},
     {id:"wd-app-pm",dias:[1,2,3,4,5],hora:"23:30",cat:"aprender",txt:"💻 Construir esta aplicación — de 23:30 a 00:00, a veces hasta la 01:00"},
     {id:"wd21",dias:[1,2,3,4,5],hora:"23:59",cat:"salud",txt:"Apagar pantallas y dormir en cuanto cierres la app — entre 00:00 y 01:00 (5h40–6h40 de sueño con el despertar de las 06:40)"},
-    {id:"lu-gbm",dias:[1],hora:"09:00",cat:"admin",txt:"💰 Bolsa GBM (20 min): compra rápida — revisa qué toca hoy y ejecuta. Solo lunes."},
+    {id:"lu-gbm",dias:[1],hora:"09:00",dur:20,cat:"admin",txt:"💰 Bolsa GBM (20 min): compra rápida — revisa qué toca hoy y ejecuta. Solo lunes."},
     {id:"l1",dias:[1],hora:"21:45",cat:"descanso",txt:"📖 Lectura (30 min)"},
     {id:"l2",dias:[2],hora:"21:45",cat:"descanso",txt:"📖 Lectura (30 min)"},
     {id:"l3",dias:[3],hora:"21:45",cat:"descanso",txt:"📖 Lectura (30 min)"},
@@ -4217,6 +4220,11 @@ function renderDia(){
 // Minutos desde medianoche. Las horas de RUTINA_TASKS nunca cruzan las 00:00 (el día más largo va
 // de 06:40 a 23:59), así que basta una escala lineal de la primera a la última.
 function minutosDe(hhmm){ const[h,m]=hhmm.split(':').map(Number); return h*60+m; }
+function horaMas(hhmm,mins){ const t=minutosDe(hhmm)+mins;
+  return String(Math.floor(t/60)%24).padStart(2,'0')+':'+String(t%60).padStart(2,'0'); }
+// Cuándo termina un bloque de verdad: su `dur` si la trae (un paréntesis dentro de otro bloque,
+// como los 20 min de GBM a media jornada de ALTEN), o la hora del siguiente.
+function finDeBloque(t,sig){ return t.dur?horaMas(t.hora,t.dur):(sig?sig.hora:null); }
 // El texto de una tarea trae HTML (negritas, enlaces): para la cinta se quiere solo la frase.
 function rtSoloTitulo(txt){ return String(txt).replace(/<[^>]*>/g,'').trim(); }
 
@@ -4243,7 +4251,11 @@ function pintarCintaDia(tareas, anchor, done, esHoy){
     const desde=minutosDe(t.hora);
     const hasta=i+1<tareas.length?minutosDe(tareas[i+1].hora):fin;
     // 5 minutos de suelo: dos bloques que empiezan a la misma hora no pueden desaparecer.
-    const mins=Math.max(5, hasta-desde);
+    const hueco=Math.max(5, hasta-desde);
+    // Con `dur`, el tramo mide solo lo que dura el bloque y el resto del hueco se pinta como
+    // continuación de lo que lo envuelve (el bloque anterior, que sigue vigente).
+    const mins=t.dur?Math.min(t.dur,hueco):hueco;
+    const resto=hueco-mins;
     const meta=CAT_META[t.cat]||{ico:'•',label:t.cat,c:'#565a72'};
     const leaves=leafItems(t);
     const hecho=!t.fijo&&leaves.every(it=>done.includes(it.id));
@@ -4253,9 +4265,18 @@ function pintarCintaDia(tareas, anchor, done, esHoy){
     const titulo=rtSoloTitulo(t.txt);
     // El texto solo cabe en los tramos largos; en los cortos sobra y el overflow lo recorta feo.
     const txt=mins>=45?`<span class="cinta-seg-txt" style="color:${meta.c}">${meta.ico} ${esc(titulo)}</span>`:'';
+    let cont='';
+    if(resto>0){
+      // El bloque de antes es el que sigue corriendo debajo (ALTEN, en el caso de GBM).
+      const prev=tareas[i-1];
+      const mp=prev?(CAT_META[prev.cat]||meta):meta;
+      cont=`<button class="cinta-seg cinta-cont" style="flex:${resto} 1 0;min-width:6px;background:${mp.c}3a"
+        onclick="tocarBloque('${prev?prev.id:t.id}')"
+        title="${esc(prev?horaMas(t.hora,mins)+' · sigue: '+rtSoloTitulo(prev.txt):'')}" aria-hidden="true"></button>`;
+    }
     return `<button class="cinta-seg${sel?' sel':''}${hecho?' hecho':''}" style="flex:${mins} 1 0;min-width:11px;background:${meta.c}${hecho?'33':'72'}"
       onclick="tocarBloque('${t.id}')" title="${esc(t.hora+' · '+meta.label+' · '+titulo)}"
-      aria-label="${esc(t.hora+' '+titulo)}">${txt}</button>`;
+      aria-label="${esc(t.hora+' '+titulo)}">${txt}</button>`+cont;
   }).join('');
 
   // Marcador de "ahora": solo cuando miras el día de hoy y el reloj cae dentro del rango.
@@ -4292,7 +4313,8 @@ function horasCinta(ini,fin){
   const marcas=[];
   for(let i=0;i<=4;i++){
     const m=Math.round(ini+(fin-ini)*i/4);
-    marcas.push(`<span>${String(Math.floor(m/60)).padStart(2,'0')}:${String(m%60).padStart(2,'0')}</span>`);
+    // %24: el último bloque entre semana es a las 23:59 y con la cola de 30 min salía "24:29".
+    marcas.push(`<span>${String(Math.floor(m/60)%24).padStart(2,'0')}:${String(m%60).padStart(2,'0')}</span>`);
   }
   return marcas.join('');
 }
@@ -4328,7 +4350,8 @@ function pintarBloqueDetalle(tareas, anchor, done, esHoy){
         ? '<span class="lbl" style="display:inline-flex;align-items:center;gap:7px;margin:0"><span class="now-live-dot"></span>Ahora mismo</span>'
         : `<span class="lbl" style="margin:0">${esHoy?'Bloque del día':'A esta hora, ese día'}</span>`}
       ${pill(meta.c+'22',meta.c,meta.c+'55',meta.ico+' '+meta.label)}
-      <span class="blq-dur">${t.hora}${sig?' – '+sig.hora+' · '+rtDur(t.hora,sig.hora):' · último del día'}</span>
+      <span class="blq-dur">${(()=>{ const f=finDeBloque(t,sig);
+        return f?`${t.hora} – ${f} · ${rtDur(t.hora,f)}`:`${t.hora} · último del día`; })()}</span>
       ${hecho?pill('rgba(0,232,122,.16)','var(--g)','rgba(0,232,122,.4)','✅ Hecho'):''}
       ${t.fijo?pill('rgba(var(--ov),.06)','var(--text3)','rgba(var(--ov),.14)','🔒 Bloque fijo'):''}
     </div>
