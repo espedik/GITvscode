@@ -3283,3 +3283,67 @@ Cada una cierra con un paso **"✅ Ya lo dominas cuando…"** con criterios comp
 ### Verificación
 
 Escritorio, iPad e iPhone: **23 habilidades y 23 tarjetas pintadas**, las 4 nuevas en cabeza, **ninguna sin su detalle** (se comprobó cruzando `HABILIDADES_BASE` contra `HABILIDAD_DETALLE`, que es donde una tarjeta nueva se queda muda si se olvida), las 4 fotos cargando a **1920×1280** reales, y el detalle de "Persuadir" abriendo con sus 11 pasos. 0 desbordes y sin errores de consola.
+
+## El panel que se abre al hacer clic, rediseñado (2026-08-23)
+
+> *"es pagina del dashboard, mejora el diseño cuando hago click a cada una"* → tres direcciones en un canvas → *"me gusta el b, hazlo para todos al hacer click"*.
+
+### Qué estaba mal
+
+El panel era una **lista plana de hasta 11 pasos**, y con las habilidades sociales recién agregadas se notó:
+
+- La foto se llevaba **340px de alto** antes de leer una sola palabra.
+- El título de cada paso iba **pegado al texto**, en el mismo párrafo.
+- El cuerpo era de **11.5px** — tamaño de dato, no de algo que te sientas a estudiar.
+- La barra de progreso quedaba arriba del todo y **se perdía al bajar**.
+- Con 11 pasos no había forma de saber **por dónde ibas** ni cuánto faltaba.
+
+### Lo que hay ahora — dirección "Estudio"
+
+De las tres direcciones que se dibujaron (**A · Ruta**, un recorrido con nodos; **B · Estudio**; **C · Fichas**, un acordeón), eligió la B.
+
+| Antes | Ahora |
+|---|---|
+| Foto a 340px | Miniatura de 78px en la franja del título |
+| Lista de 11 pasos | **Un paso a la vez**, a 15px |
+| Sin saber dónde vas | **Temario** en columna, con el paso activo marcado y ✓ en los hechos |
+| Barra que se perdía | Barra + `3/11` fijos en la cabecera |
+| "Tu caso" como una viñeta más | **Caja propia en cian** — es lo único escrito para él, el resto es teoría del libro |
+| Casilla por paso | Botón **"Marcar como dominado"** en el pie, con ‹ › al lado |
+
+Detalles que salieron de probarlo, no del diseño:
+
+- **Retoma donde te quedaste.** Al reabrir una habilidad a medias, arranca en el primer paso *pendiente*, no en el primero. Marcar tres pasos y volver te deja en el 4.
+- **Marcar no te devuelve al principio.** Marcar repinta el panel entero; sin guardar el paso actual en `mdEstado`, cada check te tiraba al paso 1.
+- **El temario se arrastra solo** hasta el paso activo — en el celular es una tira horizontal y el paso 9 quedaba fuera de vista.
+- **Teclado**: ← → cambian de paso, Espacio marca. El recorrido es lineal, no hace falta el ratón.
+- **Ancho de lectura de 72ch.** El panel mide 1280px: sin tope, un párrafo se estiraba a ~180 caracteres por línea (681px medidos ahora, ~1300 antes).
+
+### Los tres sitios que lo usan
+
+El mismo panel abre desde **Mis Metas**, **Habilidades Base** y la **barra de edad** — de ahí el *"hazlo para todos"*. Las tres funciones de apertura (`abrirMetaDetalle`, `abrirHabilidadDetalle`, `abrirEdadDetalle`) no cambiaron de firma; solo se les añadió el epígrafe que ahora encabeza el panel: *Corto y mediano plazo* / *Largo plazo* / *Lo que todo hombre debería saber* / *Tu año 31*.
+
+El guardado es **el de siempre**: `mdMarcar()` llama por nombre a `toggleMetaChecklist` / `toggleHabilidadChecklist` / `toggleEdadChecklist`, que escriben en `metas_checklist_v1`, `habilidades_checklist_v1` y `edad_checklist_v1`. Ningún dato existente se migró ni se perdió.
+
+### Dos errores que encontró el navegador
+
+Ninguno de los dos se veía leyendo el código:
+
+1. **El título salía blanco sobre fondo blanco** en tema claro. El `color:#fff` venía de cuando el título iba encima de la foto a sangre; en la franja nueva desaparecía. Lo mismo el cuerpo del paso, con un gris claro fijo (`#d8d9e4`) en vez de la variable del tema.
+2. **El botón "Siguiente" con el texto fuera de su caja** en el celular: al reducir `.md-nav` a 34px aplasté también el `width:auto` de `.md-nav-next`.
+
+También se subió la opacidad del panel al 94% (antes heredaba `--bar2`, al 55-60%): para un vistazo daba igual, pero aquí se leen párrafos y las fotos del slide de atrás se colaban bajo el texto.
+
+### Limpieza
+
+Se retiró el código del diseño anterior, que ya no genera nada: **41 líneas** entre el CSS del checklist plano (`.meta-detail-step*`, 24), las imágenes del paso viejo, la barra de progreso vieja, `.meta-detail-body` y la función `pasoLinkHtml()`. Los dos comentarios que describían ese diseño se reescribieron para contar el actual en vez de quedarse mintiendo.
+
+### Verificación
+
+Escritorio (1500px), iPad (820px) y iPhone (390px), en **los dos temas**:
+
+- Las **tres entradas** abren: Mis Metas (9 metas recorridas, con la barra 💰 de BYD y Maestría intacta), Habilidades Base y la barra de edad.
+- Marcar **guarda en `localStorage`** y la barra de la tarjeta de atrás se actualiza (3/11 → 27%).
+- **6 cajas "Tu caso"** en los 11 pasos de Persuadir, y **ninguna** quedó suelta como viñeta.
+- **0 desbordes** de la página; los del temario son su scroll horizontal, a propósito.
+- Los 8 slides recorridos sin un solo error de consola.
