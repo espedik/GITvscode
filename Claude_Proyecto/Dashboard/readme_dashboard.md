@@ -3758,3 +3758,90 @@ Los tiempos estaban bien; lo que fallaba era el hueco. Un bloque fijo no tiene b
 - Las **5 imágenes del lunes cargan de verdad** (`naturalWidth > 0`), no solo el `<img>`.
 - 142 tramos recorridos a 1500, 820 y 390px: ningún fallo, ninguna hora inválida, **0 desbordes**.
 - Sin errores de consola en Dashboard ni en Coach.
+
+## La cinta de Mi Día pasó a riel + fichas (2026-08-23)
+
+Adán, sobre la barra que se había estrenado esa misma mañana: *"de la primer pagina del dashboard, me puedes dar mejores diseños de la barra de la rutina?"*. Se le propusieron cuatro y eligió la tercera: *"me gusto la opcion del c, riel mas fichas"*.
+
+### Por qué la barra anterior no daba más de sí
+
+El problema no era de estilo, era de escala, y se midió sobre el lunes real (23 bloques entre las 06:40 y las 23:59):
+
+- **14 de los 23 bloques miden menos de 45 minutos**, que era justo el umbral que `pintarCintaDia()` exigía para escribir el nombre dentro del tramo. O sea: en la mayoría del día la barra era color sin texto.
+- Un bloque de 10 minutos ocupaba **11px** — el `min-width` que tenía — imposible de acertar con el dedo.
+- **ALTEN entraba partido en tres trozos** (30 min + 220 apagados + 180) porque los 20 min de GBM lo interrumpen, así que las 8h 10m de jornada no se leían como un bloque.
+- Lo cumplido se rellenaba al 20% con hachura diagonal, así que **lo hecho parecía lo desactivado**.
+
+### La solución: dos piezas con un trabajo cada una
+
+- **El riel** (`.cinta`, 11px de alto) es el mapa: proporción real del día y la línea verde de "ahora". Sin texto — a 45 minutos un tramo mide 40px y nunca cupo un nombre.
+- **Las fichas** (`.cinta-fic`) son lo que se toca: **148×60px todas**, con hora, nombre completo y duración. Muy por encima del mínimo de 44px para el pulgar. Se deslizan con las flechas ‹ › (`cintaScroll()`) y la ficha activa se centra sola al repintar (`centrarFichaActiva()`, con `scrollLeft` a mano y **no** `scrollIntoView()`, que arrastraría el scroll del carrusel entero).
+
+Se invirtió el contraste: **hecho = encendido, pendiente = apagado**.
+
+### El verde es "ahora", y solo eso
+
+Segunda pasada, tras verlo funcionando: *"no me queda claro que esta sucediendo ahora mismo, entonces cuando pase eso ponlo de verde futurista como transparente todo ese"*.
+
+Antes la ficha activa se pintaba con el color de **su categoría** — amarillo si era un bloque profundo, rojo si era de salud — exactamente igual que la ficha que solo estabas mirando. Al tocar otra, la de "ahora" perdía su marca. Ahora hay tres estados excluyentes y en este orden: `.ahora` (verde) gana sobre `.sel` (color de categoría) gana sobre `.hecho` (apagado). El verde se propaga a las tres piezas: el tramo del riel, la ficha, y el acento del panel "Ahora mismo" (`pintarBloqueDetalle()` lee `--g` de la variable, no a mano, para que siga funcionando en tema claro).
+
+### La tira de 7 días subió y adelgazó
+
+*"quiero que los dias de la semana esten abajo de la frase y del reloj, y arriba de la barra de la rutina, pero quiero que esos iconos de los dias con las imagenes, hazlas mas peque;as a lo alto"*.
+
+Tiene sentido de lectura: primero eliges el día, luego ves el día que elegiste. Al bajar de ~106px a **66px** hubo que cambiar la anatomía de la tarjeta: antes era encabezado arriba + franja de foto abajo; ahora la foto es el fondo de toda la tarjeta (`.ws-gym-photo` en `position:absolute`) y el texto va encima. Partida en dos, la foto quedaba en ~40px y el degradado se la comía entera; por eso el degradado también se aclaró arriba (`.26` en vez de transparente).
+
+### Fuera el gym y el recetario, entran tres tarjetas nuevas
+
+*"para no repetir lo del gym, muestrame mas cosas"*. La rutina del día salía **tres veces en la misma pantalla**: la tira de 7 días, la ficha de las 18:15 y su propia tarjeta. El recetario era un catálogo de 28 recetas para hojear, no algo que haga falta al abrir el día. `renderHeroGymPanel()` y `renderHeroNutri()` **siguen en el archivo** con su guarda `if(!el)return`: devolverlas es volver a poner sus dos `<div>`.
+
+Las tres nuevas leen fuentes que ya existían, ninguna calcula nada por su cuenta:
+
+| Tarjeta | De dónde sale |
+|---|---|
+| 💰 Tu dinero | `pasoInversionHoy()` → `finanzasmx_v2` — la misma función del botón "Qué invertir hoy" |
+| 🎯 Fase | `activePhase()` y `PHASES[].semanas`, como el slide de Coach |
+| 🎓 Hoy aprendes | `alemanTemaHoy()` y `entrevistaTemaHoy()`, las mismas que pintan sus slides |
+
+La tercera se repinta desde `alemanSiguiente()`/`entrevistaSiguiente()`: sin eso, avanzar de lección en el slide de Alemán dejaba la tarjeta de Mi Día mostrando la anterior.
+
+### Dos errores propios, encontrados midiendo
+
+La primera versión se entregó sin medir geometría y tenía dos fallos que se vieron en cuanto se cargó la página en Chrome:
+
+- **Las 14 fichas del día tenían el texto encimado.** La duración estaba en `position:absolute` abajo a la derecha, pero en 60px de alto no caben dos líneas de título más una tercera flotando. Se movió a la misma fila de la hora (`.cinta-fic-top`). Solapamientos medidos: **14 → 0**.
+- **Las cuatro tarjetas de abajo estaban medio vacías.** Llevaban `flex:1` y `max-height:430px` con un contenido que mide entre 117 y 213px: **217px de hueco muerto** dentro de cada una. Quitado el alto forzado, la fila mide su contenido. Hueco: **217px → 14px**; la fila bajó de 430 a **227px**.
+
+Además, `.g4` reparte con `repeat(4,1fr)`, y con `1fr` el mínimo de cada columna es su propio contenido: el título largo de la fase ensanchaba su columna y estrechaba las otras tres. `#miDiaSecundarios` lo sobreescribe con `repeat(4,minmax(0,1fr))` y gap fijo de 12px (el `clamp` general se abre a 20px en 1440). Las cuatro miden ahora **331px exactos, mismo top y mismo alto**.
+
+### Verificación
+
+Cargado en Chrome headless, no solo validando sintaxis: **13 de 13 comprobaciones** (las tres tarjetas con su contenido real, 7 días con sus 7 fotos, riel con tramos, una ficha por bloque, flechas, panel "Ahora mismo", y la tira **antes** de la cinta en el orden del DOM) y **0 errores de JavaScript** al cargar. En la corrida real la ficha verde salió en `AHORA · 14:40 🚗 Didi — bloque de tarde-noche`, con su tramo verde en el riel y el panel en `rgb(0, 232, 122)`.
+
+## El Plan Maestro pasó a tablero de tres columnas (2026-08-23)
+
+*"ahora ayudame a mejorar el diseño de la segunda pagina del dashboard"*. Se propusieron tres direcciones y eligió la tercera: *"la opcion c me gussto, hazla"*.
+
+### Lo que estaba mal, medido antes de tocar nada
+
+- **No cabía en pantalla**: el `.slide-inner` necesitaba **1092px** de alto contra 1000 de ventana, y lo que se cortaba por arriba era justo el título de la fase.
+- **Todo en una columna a ancho completo.** En 1600px de pantalla sobraba media, mientras el contenido se apilaba hacia abajo.
+- **Dos muros de texto seguidos**: el párrafo de `explica` (4 líneas a ancho completo) y las 8 tareas del mes, todas con el mismo peso visual — las dos que de verdad importan, "Prioridad 1" y "Prioridad 2", no se distinguían del resto.
+
+### La estructura nueva
+
+`.fase-hero` y los dos tiles apilados se sustituyeron por tres piezas:
+
+1. **`.coach-fase-band`** — chip, título, barra con la posición de hoy y las 3 cifras, todo en **una fila**.
+2. **`.coach-ruta-band`** — los tres pasos hacia deuda cara en $0, del mismo ancho entre sí: son hitos de una secuencia, no magnitudes comparables.
+3. **`.coach-cols`** — el tablero: **Ahora / Este mes / Hecho**. Cada columna scrollea por su cuenta, así que un mes con 12 tareas hace crecer la columna, no la página — que era exactamente el desbordamiento anterior.
+
+Una tarea es prioridad si su texto empieza por `Prioridad N`, que es como las escribe `PHASES[].semanas`. Es el único marcador que existe hoy: añadir un campo nuevo obligaría a mantenerlo sincronizado a mano con `Coach_v2.html`, que lee los mismos objetos. El número del chip sale del **texto**, no de la posición en la lista: al marcar la Prioridad 1, la 2 sigue llamándose 2.
+
+La columna **"Hecho"** reúne las tareas marcadas del mes y la libreta de logros (`logrosLoad()`), que es lo único que no se "desmarca" solo porque un saldo cambió. Sigue existiendo por el pedido de Adán del 2026-08-13: *"si no, sentiré que no logro nada"*.
+
+El párrafo de `explica` **salió de la pantalla** y vive como `title` de la banda de fase, en texto plano: repetía lo que la banda de ruta ya dice con números reales.
+
+### Verificación
+
+Medido a **1600 y 390px**: el slide pasa de 1092 a **841px** de alto en escritorio — ya cabe con margen —, tres columnas de **444×668** iguales, **0 solapamientos** entre el checkbox y el título, sin scroll horizontal de página y **0 errores de JavaScript** en ninguno de los dos anchos. El tooltip de la fase conserva los 496 caracteres del párrafo.

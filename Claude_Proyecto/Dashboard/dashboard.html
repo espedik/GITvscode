@@ -19,16 +19,16 @@
      en Entrevistas/js/data-*.js, no scrapeado de un render), más el CSS de sus propias clases de
      contenido reescrito con el prefijo .en-content — ya no vive dentro de un <iframe>. -->
 <script src="entrevistas-data.js"></script>
-<!-- La fuente se carga SIN bloquear el pintado (2026-08-23). Antes era un `@import` dentro
-     del <style>: el navegador no lo descubría hasta parsear el CSS y, mientras Google no
-     contestaba, no pintaba nada — con la conexión lenta o caída, la página se quedaba
-     esperando. Con media="print" la hoja no bloquea, y el onload la activa al llegar.
-     La tipografía de respaldo ya está en cada font-family, así que el texto se lee desde
-     el primer instante. -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;700&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&display=swap" media="print" onload="this.media='all'">
-<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;700&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&display=swap"></noscript>
+<!-- La fuente se carga SIN bloquear el pintado (2026-08-23). Antes era un `@import` dentro
+     del <style>: el navegador no lo descubría hasta parsear el CSS y, mientras Google no
+     contestaba, no pintaba nada — con la conexión lenta o caída, la página se quedaba
+     esperando. Con media="print" la hoja no bloquea, y el onload la activa al llegar.
+     La tipografía de respaldo ya está en cada font-family, así que el texto se lee desde
+     el primer instante. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;700&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&display=swap" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;700&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&display=swap"></noscript>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -368,36 +368,89 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 .cinta-prog-lbl{font-size:10.5px;color:var(--text2)}
 .cinta-sep{width:1px;height:12px;background:rgba(var(--ov),.16)}
 .cinta-falta{font-family:var(--mono);font-size:11px;font-weight:700;color:var(--cy)}
-/* La barra. `overflow:visible` a propósito: el marcador de "ahora" sobresale por arriba y abajo. */
-.cinta{position:relative;display:flex;height:36px}
-/* Cada tramo es un <button> de verdad — se puede tabular y activar con Enter, como el resto de
-   los elementos clicables del Dashboard. flex:<minutos> reparte el ancho en proporción a la
-   duración; min-width evita que un bloque de 10 min quede imposible de tocar en el celular. */
-.cinta-seg{position:relative;min-width:0;padding:0 0 0 8px;cursor:pointer;overflow:hidden;
-  border:none;border-right:1px solid rgba(5,5,10,.55);
-  display:flex;align-items:center;font-family:inherit;text-align:left;
-  transition:filter .15s,box-shadow .15s}
-.cinta-seg:first-child{border-radius:9px 0 0 9px}
-.cinta-seg:last-child{border-radius:0 9px 9px 0}
-.cinta-seg:hover{filter:brightness(1.4)}
-.cinta-seg.sel{box-shadow:inset 0 0 0 2px var(--text)}
+/* ─── Riel + fichas (2026-08-23, segunda iteración) ───
+   La barra de 36px con el nombre dentro se partió en DOS piezas con trabajos distintos, porque
+   estaba intentando hacer los dos a la vez y fallaba en ambos: con 23 bloques en 17 horas, un
+   tramo de 45 min mide 40px — nunca cupo un nombre, y un tramo de 10 min quedaba en 11px, que no
+   se puede tocar con el dedo.
+     · El RIEL (.cinta) es el mapa: 11px de alto, proporción real del día, dónde estás. Sin texto.
+     · Las FICHAS (.cinta-fic) son lo que tocas: todas del mismo ancho, con hora y nombre
+       legibles y 60px de alto — por encima del mínimo de 44px para el pulgar. Se deslizan.
+   `overflow:visible` en el riel a propósito: el marcador de "ahora" sobresale por arriba y abajo. */
+.cinta{position:relative;display:flex;gap:1px;height:11px;margin-bottom:5px}
+/* Cada tramo sigue siendo un <button> de verdad — se puede tabular y activar con Enter, como el
+   resto de los elementos clicables del Dashboard. flex:<minutos> reparte el ancho en proporción
+   a la duración. Ya no hace falta un min-width grande: tocar es trabajo de las fichas. */
+.cinta-seg{position:relative;min-width:3px;border-radius:3px;border:none;padding:0;cursor:pointer;
+  font-family:inherit;transition:filter .15s}
+.cinta-seg:hover{filter:brightness(1.35)}
+.cinta-seg.sel{box-shadow:0 0 0 1.5px var(--text)}
 /* Continuación de un bloque que envuelve a otro: el tiempo de ALTEN que sigue corriendo debajo de
-   los 20 min de GBM. Más apagado y sin texto — no es un bloque propio, es lo que sigue. */
-.cinta-seg.cinta-cont{cursor:pointer;opacity:.55}
-.cinta-seg.hecho::after{content:'';position:absolute;inset:0;
-  background:repeating-linear-gradient(135deg,transparent 0 5px,rgba(0,0,0,.22) 5px 10px)}
-.cinta-seg-txt{font-size:10.5px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-  pointer-events:none;position:relative;z-index:1}
-.cinta-ahora{position:absolute;top:-5px;bottom:-5px;width:2px;background:var(--g);
+   los 20 min de GBM. Más apagado — no es un bloque propio, es lo que sigue. */
+.cinta-seg.cinta-cont{cursor:pointer;opacity:.5}
+.cinta-ahora{position:absolute;top:-6px;bottom:-6px;width:2px;background:var(--g);
   box-shadow:0 0 10px rgba(0,232,122,.9);pointer-events:none;border-radius:2px}
-.cinta-horas{display:flex;justify-content:space-between;margin-top:6px;font-family:var(--mono);
+.cinta-horas{display:flex;justify-content:space-between;margin-bottom:11px;font-family:var(--mono);
   font-size:9.5px;color:var(--text3)}
-/* En el celular la cinta se estrecha: los tramos cortos se vuelven intocables por debajo de
-   ~10px, así que se les sube el mínimo y desaparece el texto de dentro. */
+
+.cinta-fichas{display:flex;gap:8px;align-items:center}
+/* scrollbar oculta a propósito: las flechas ‹ › y el arrastre son la forma de moverse, y una
+   barra de scroll nativa debajo de las fichas rompe la altura de la fila. */
+.cinta-fic-scroll{display:flex;gap:8px;overflow-x:auto;scroll-behavior:smooth;flex:1;min-width:0;
+  padding:2px 0;scrollbar-width:none;-ms-overflow-style:none}
+.cinta-fic-scroll::-webkit-scrollbar{display:none}
+.cinta-fic{position:relative;width:148px;flex-shrink:0;height:60px;box-sizing:border-box;
+  padding:8px 11px 8px 13px;border-radius:13px;background:rgba(var(--ov),.04);
+  border:1px solid rgba(var(--ov),.09);overflow:hidden;cursor:pointer;text-align:left;
+  font-family:inherit;color:inherit;transition:background .15s,border-color .15s}
+.cinta-fic:hover{background:rgba(var(--ov),.08)}
+.cinta-fic-acc{position:absolute;left:0;top:0;bottom:0;width:3px}
+/* Hora a la izquierda y duración a la derecha, en la MISMA fila. La duración vivía en
+   position:absolute abajo a la derecha y se encimaba con la segunda línea del título en las 14
+   fichas del día — en 60px de alto no caben dos líneas de título y una tercera flotando encima. */
+.cinta-fic-top{display:flex;align-items:baseline;justify-content:space-between;gap:6px}
+.cinta-fic-h{font-family:var(--mono);font-size:10.5px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cinta-fic-t{font-size:11px;font-weight:700;color:var(--text);line-height:1.25;margin-top:3px;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.cinta-fic-d{font-family:var(--mono);font-size:8.5px;color:var(--text3);flex-shrink:0}
+/* Hecho = apagado, pendiente = encendido. Al revés de como estaba la cinta vieja, donde lo
+   cumplido se rellenaba al 20% con hachura y terminaba pareciendo lo desactivado. */
+.cinta-fic.hecho .cinta-fic-t{color:var(--text2)}
+.cinta-fic.hecho .cinta-fic-acc{opacity:.45}
+.cinta-fic-prog{position:absolute;left:0;bottom:0;height:3px}
+
+/* ─── El bloque que está corriendo AHORA ─── (2026-08-23, tercera iteración: "no me queda claro
+   que esta sucediendo ahora mismo... ponlo de verde futurista como transparente todo ese")
+   Antes la ficha activa se pintaba con el color de SU categoría, igual que la ficha que solo
+   estás mirando — y en cuanto tocabas otro bloque perdías de vista cuál estaba pasando. Ahora
+   el verde significa una sola cosa en toda la pantalla: esto está ocurriendo. Es el mismo verde
+   del marcador del riel y del punto de "Ahora mismo", así que las tres piezas se leen juntas.
+   El relleno va translúcido (.13) para que el verde tiña la ficha entera sin tapar el texto. */
+.cinta-fic.ahora{background:rgba(0,232,122,.13);border-color:var(--g);
+  box-shadow:0 0 20px rgba(0,232,122,.3),inset 0 0 24px rgba(0,232,122,.07)}
+/* Empata en especificidad con .cinta-fic:hover y va después, así que sin esta regla la ficha
+   verde se quedaba sin respuesta al pasar el ratón. */
+.cinta-fic.ahora:hover{background:rgba(0,232,122,.2)}
+/* `opacity` explícito: si marcas hecho un bloque que TODAVÍA está corriendo, .hecho apagaría
+   este acento al 45% — y el verde de "ahora" tiene que seguir a tope. */
+.cinta-fic.ahora .cinta-fic-acc{background:var(--g);width:3px;opacity:1;box-shadow:0 0 9px var(--g)}
+.cinta-fic.ahora .cinta-fic-h,.cinta-fic.ahora .cinta-fic-d{color:var(--g)}
+.cinta-fic.ahora .cinta-fic-t{color:var(--text)}
+.cinta-fic.ahora .cinta-fic-prog{background:var(--g);box-shadow:0 0 8px var(--g)}
+/* El punto late: reusa .now-live-dot y su animación `pulse`, más chico que el del panel. */
+.cinta-fic .now-live-dot{width:5px;height:5px;margin-right:5px;vertical-align:middle}
+/* Y el tramo del riel que corre ahora, en el mismo verde: es lo que ata la ficha con su
+   posición real dentro del día. */
+.cinta-seg.ahora{background:var(--g);box-shadow:0 0 10px rgba(0,232,122,.75)}
+.cinta-nav{width:30px;height:60px;flex-shrink:0;border-radius:11px;border:1px solid rgba(var(--ov),.1);
+  background:rgba(var(--ov),.04);color:var(--text2);cursor:pointer;font-family:inherit;font-size:15px;
+  display:flex;align-items:center;justify-content:center;padding:0;transition:background .15s}
+.cinta-nav:hover{background:rgba(var(--ov),.09);color:var(--text)}
+/* En el celular las flechas estorban (no hay dónde apuntar con precisión) y el pulgar arrastra
+   mejor sobre fichas un poco más anchas. */
 @media(max-width:700px){
-  .cinta-seg{padding-left:5px}
-  .cinta-seg-txt{display:none}
-  .cinta{height:44px}
+  .cinta-fic{width:168px}
+  .cinta-nav{display:none}
 }
 
 /* ─── Detalle del bloque que tocas en la cinta ─── */
@@ -588,17 +641,24 @@ a.rt2-sub-prod:hover{text-decoration:underline}
    Al fusionar esa fila con la de la frase quedó sin un solo uso en el archivo, así que se borró
    en vez de dejarla como CSS muerto. Su reemplazo es `.dia-topbar`, más abajo.) */
 .week-strip{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
-.ws-day{background:var(--card);border:1px solid var(--card-br);border-radius:12px;padding:6px 5px 4px;text-align:center;backdrop-filter:blur(10px);display:flex;flex-direction:column;overflow:hidden;cursor:pointer;transition:border-color .2s}
+/* 2026-08-23 — la tarjeta de día bajó de ~106px a 66px ("hazlas mas peque;as a lo alto") y con
+   ello cambió de anatomía: antes era encabezado arriba + franja de foto abajo, dos zonas
+   apiladas; ahora la foto es el fondo de TODA la tarjeta y el texto va encima. A 66px de alto,
+   partir la tarjeta en dos dejaba la foto en ~40px, donde el degradado se la comía entera. Por
+   eso el degradado también se aclaró arriba (.26 en vez de transparente): con menos alto, el
+   texto necesita fondo en toda la altura, no solo abajo. */
+.ws-day{position:relative;height:66px;background:var(--card);border:1px solid var(--card-br);border-radius:12px;padding:6px 8px 5px;backdrop-filter:blur(10px);display:flex;flex-direction:column;justify-content:space-between;overflow:hidden;cursor:pointer;transition:border-color .2s,box-shadow .2s}
 .ws-day.today{border-color:var(--ac1);box-shadow:0 0 14px rgba(var(--ov),.08)}
 .ws-day.sel{border-color:var(--g);box-shadow:0 0 14px rgba(0,232,122,.25)}
-.ws-dname{font-size:9px;font-weight:800;color:var(--text2);text-transform:uppercase;letter-spacing:.04em}
-.ws-ddate{font-size:8px;color:var(--text3);margin-bottom:4px}
+.ws-dhead{position:relative;z-index:1;display:flex;align-items:baseline;gap:5px}
+.ws-dname{font-size:9px;font-weight:800;color:#fff;text-transform:uppercase;letter-spacing:.04em;text-shadow:0 1px 3px rgba(0,0,0,.9)}
+.ws-ddate{font-size:8px;color:rgba(255,255,255,.72);text-shadow:0 1px 3px rgba(0,0,0,.9)}
 /* Foto real por tipo de ejercicio (brazos/piernas/empuje/cardio/descanso) en vez de un emoji
    genérico — el emoji de estado (✅/⏳/😴/🏋️) se queda como badge chico encima de la foto. */
-.ws-gym-photo{position:relative;margin:0 -5px;flex:1;min-height:46px;background-size:cover;background-position:center;border-radius:0 0 10px 10px}
-.ws-gym-photo::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.78) 0%,rgba(0,0,0,.12) 55%,transparent 75%);border-radius:inherit}
-.ws-gym-badge{position:absolute;top:4px;right:4px;font-size:11px;z-index:1;line-height:1;filter:drop-shadow(0 1px 2px rgba(0,0,0,.7))}
-.ws-gym-lbl{position:absolute;left:4px;right:4px;bottom:4px;z-index:1;font-size:7.5px;color:#fff;line-height:1.2;text-align:left;text-shadow:0 1px 3px rgba(0,0,0,.8)}
+.ws-gym-photo{position:absolute;inset:0;background-size:cover;background-position:center}
+.ws-gym-photo::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.86) 0%,rgba(0,0,0,.44) 54%,rgba(0,0,0,.26) 100%)}
+.ws-gym-badge{margin-left:auto;font-size:11px;line-height:1;filter:drop-shadow(0 1px 2px rgba(0,0,0,.8))}
+.ws-gym-lbl{position:relative;z-index:1;font-size:8px;color:#fff;line-height:1.2;text-align:left;text-shadow:0 1px 3px rgba(0,0,0,.9)}
 .ws-gym-lbl.pend{opacity:.8}
 .hp-title{font-size:10.5px;font-weight:800;color:var(--text2);text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px;display:flex;justify-content:space-between;align-items:center;gap:6px}
 .hp-big{font-family:var(--mono);font-weight:700;font-size:clamp(26px,3vw,38px);line-height:1;margin-bottom:8px}
@@ -606,6 +666,45 @@ a.rt2-sub-prod:hover{text-decoration:underline}
 .hp-row:last-child{border-bottom:none}
 .hp-empty{font-size:11px;color:var(--text3);text-align:center;padding:6px 0}
 .hp-link{font-size:10px;font-weight:700;color:var(--cy);text-decoration:none;white-space:nowrap}
+
+/* ─── Las 3 tarjetas nuevas de Mi Día (2026-08-23): dinero, fase y aprendizaje ───
+   Reusan .hp-title/.hp-row/.hp-link de los paneles viejos a propósito: son vecinas del tile de
+   "Importante este mes" y tienen que leerse como la misma familia, no como un injerto. */
+.hp-cifra{font-family:var(--mono);font-size:clamp(20px,2.1vw,26px);font-weight:700;line-height:1}
+.hp-cifra-sub{font-family:var(--mono);font-size:11px;color:var(--text3)}
+.hp-bar{height:5px;border-radius:3px;background:rgba(var(--ov),.09);overflow:hidden}
+.hp-bar-f{height:100%;border-radius:3px}
+/* La barra de la fase lleva la marca de HOY encima, mismo recurso que .fase-linea en el slide de
+   Coach: el porcentaje solo no dice si vas tarde, la posición sí. */
+.hp-fase-bar{position:relative;height:5px;border-radius:3px;background:rgba(var(--ov),.09)}
+.hp-fase-f{height:100%;border-radius:3px}
+.hp-fase-hoy{position:absolute;top:-4px;width:2px;height:13px;background:var(--text);border-radius:2px}
+.hp-mini{display:flex;gap:8px;align-items:flex-start;padding:7px 0;border-top:1px solid rgba(var(--ov),.07);
+  font-size:10.5px;color:var(--text2);line-height:1.4}
+.hp-mini-n{font-family:var(--mono);font-size:9px;font-weight:700;flex-shrink:0;padding-top:2px}
+.hp-lec{padding:9px 11px;border-radius:11px;margin-bottom:8px}
+.hp-lec:last-child{margin-bottom:0}
+.hp-lec-top{display:flex;align-items:center;gap:7px;margin-bottom:5px}
+.hp-lec-tag{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
+.hp-lec-n{margin-left:auto;font-family:var(--mono);font-size:9px;color:var(--text3)}
+.hp-lec-t{font-size:12.5px;font-weight:700;color:var(--text);margin-bottom:2px}
+.hp-lec-d{font-size:10px;color:var(--text3);line-height:1.4}
+
+/* ─── La fila de 4 tarjetas de Mi Día ─── (2026-08-23)
+   Sobreescribe .grid/.g4 SOLO aquí, porque las reglas generales rompían el reparto en 4:
+   · `minmax(0,1fr)` en vez de `1fr`: con `1fr` el mínimo de cada columna es su propio contenido,
+     así que un título largo (el de la fase, el nombre de una deuda) ensancha su columna y
+     estrecha las otras tres — las cuatro dejaban de medir lo mismo. Es la causa de que la fila
+     se viera descuadrada.
+   · gap fijo de 12px en vez del clamp general, que a 1440px se abre hasta 20px y se come 24px
+     de ancho útil repartidos en tres huecos.
+   · radio y padding idénticos en las cuatro: la de "Importante este mes" venía del diseño viejo
+     con 9px/14px y su contenido arrancaba más arriba que el de las vecinas.
+   El media query propio hace falta porque un selector de id le gana al `.g4{...}` de 900px, y
+   sin él la fila se quedaría en 4 columnas también en pantallas angostas. */
+#miDiaSecundarios{grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+#miDiaSecundarios>.tile{border-radius:16px;padding:13px 15px}
+@media(max-width:900px){#miDiaSecundarios{grid-template-columns:repeat(2,minmax(0,1fr))}}
 
 /* Frase motivacional (Hero) */
 .hero-frase{display:flex;align-items:center;gap:12px;padding:12px 18px;border-radius:16px;background:rgba(var(--ov),.035);
@@ -821,6 +920,70 @@ a.rt2-sub-prod:hover{text-decoration:underline}
 .coach-mes-pendientes{display:flex;align-items:center;gap:8px;background:color-mix(in srgb,var(--w) 12%,transparent);border:1px solid color-mix(in srgb,var(--w) 35%,transparent);border-radius:10px;padding:8px 12px;margin-bottom:10px;font-size:11.5px;color:var(--text2)}
 .coach-mes-pendientes a{color:var(--w);font-weight:700;text-decoration:none;white-space:nowrap;cursor:pointer}
 .coach-mes-pendientes a:hover{text-decoration:underline}
+
+/* ─── Tablero del Plan Maestro (2026-08-23) ───
+   Sustituye a .fase-hero + los 2 tiles apilados. El problema medido era de ALTO: 1092px de
+   contenido en 1000 de ventana, con el título de la fase cortado por arriba. La solución no es
+   encoger tipografías, es repartir a lo ancho — en 1600px sobraba media pantalla.
+   Tres piezas: banda de fase (una fila), banda con la ruta de deuda (una fila) y el tablero. */
+.coach-fase-band{display:flex;align-items:center;gap:15px;padding:12px 17px;border-radius:16px;
+  background:color-mix(in srgb,var(--w) 7%,transparent);
+  border:1px solid color-mix(in srgb,var(--w) 24%,transparent);margin-bottom:12px;flex-shrink:0}
+.cfb-chip{flex-shrink:0;font-family:var(--mono);font-size:11px;font-weight:900;letter-spacing:.08em;
+  padding:5px 11px;border-radius:8px;background:var(--w);color:#05050a}
+.cfb-t{flex-shrink:0;font-family:var(--font-title);font-size:clamp(14px,1.45vw,19px);font-weight:600;line-height:1.15}
+.cfb-linea{flex:1;min-width:110px;padding:0 6px}
+.cfb-barra{position:relative;height:5px;border-radius:3px;background:rgba(var(--ov),.12)}
+.cfb-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--w),var(--o))}
+.cfb-hoy{position:absolute;top:-4px;width:2px;height:13px;background:var(--text);border-radius:2px}
+.cfb-rot{display:flex;justify-content:space-between;font-family:var(--mono);font-size:9px;color:var(--text3);margin-top:5px}
+.cfb-kpis{display:flex;gap:18px;flex-shrink:0}
+.cfb-kpi b{display:block;font-family:var(--mono);font-size:20px;font-weight:900;line-height:1}
+.cfb-kpi span{display:block;font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.06em;
+  text-transform:uppercase;color:var(--text3);margin-top:3px}
+
+.coach-ruta-band{display:flex;align-items:center;gap:11px;padding:11px 17px;border-radius:16px;
+  background:rgba(var(--ov),.04);border:1px solid rgba(var(--ov),.09);margin-bottom:12px;flex-shrink:0}
+.crb-lbl{flex-shrink:0;font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--text3)}
+/* Cada paso ocupa lo mismo: son tres hitos de una secuencia, no tres magnitudes comparables. */
+.crb-paso{position:relative;flex:1;min-width:0;display:flex;align-items:center;gap:9px;
+  padding:8px 12px 14px;border-radius:11px;background:rgba(var(--ov),.03);border:1px solid rgba(var(--ov),.07)}
+.crb-paso.activo{border-color:var(--w);background:color-mix(in srgb,var(--w) 9%,transparent)}
+.crb-paso.done{border-color:rgba(0,232,122,.35);background:rgba(0,232,122,.05)}
+.crb-nom{flex:1;min-width:0;font-size:12px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.crb-val{font-family:var(--mono);font-size:11px;font-weight:700;flex-shrink:0}
+.crb-b{position:absolute;left:12px;right:12px;bottom:5px;height:3px;border-radius:2px;background:rgba(var(--ov),.09)}
+.crb-b i{display:block;height:100%;border-radius:2px}
+.crb-pct{flex-shrink:0;font-family:var(--mono);font-size:15px;font-weight:900;color:var(--g)}
+
+.coach-cols{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;flex:1;min-height:0}
+/* Cada columna scrollea por su cuenta: si un mes trae 12 tareas, crece la columna, no la página
+   — que es exactamente el desbordamiento que teníamos antes. */
+.coach-col{display:flex;flex-direction:column;border-radius:16px;background:rgba(var(--ov),.03);
+  border:1px solid rgba(var(--ov),.08);padding:12px 13px;min-width:0;overflow-y:auto}
+.coach-col-ahora{border-color:color-mix(in srgb,var(--w) 30%,transparent);
+  background:color-mix(in srgb,var(--w) 5%,transparent)}
+.coach-col-hecho{border-color:rgba(0,232,122,.24);background:rgba(0,232,122,.04)}
+.cc-h{display:flex;align-items:center;gap:8px;margin-bottom:11px;flex-shrink:0;flex-wrap:wrap}
+.cc-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.cc-lbl{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase}
+.cc-n{margin-left:auto;font-family:var(--mono);font-size:11px;font-weight:700}
+.cc-list{display:flex;flex-direction:column;gap:9px}
+.cc-card{position:relative;padding:11px 13px;border-radius:12px;background:rgba(var(--ov),.04);
+  border:1px solid rgba(var(--ov),.08);font-size:11px;color:var(--text2);line-height:1.45}
+.cc-card.prio{background:color-mix(in srgb,var(--w) 10%,transparent);
+  border-color:color-mix(in srgb,var(--w) 40%,transparent)}
+.cc-card.done{background:rgba(0,232,122,.07);border-color:rgba(0,232,122,.22)}
+.cc-chip{display:inline-block;font-family:var(--mono);font-size:8.5px;font-weight:900;letter-spacing:.1em;
+  padding:3px 7px;border-radius:5px;margin-bottom:8px}
+.cc-t{font-size:12.5px;font-weight:700;color:var(--text);line-height:1.3;margin-bottom:5px}
+.cc-row{display:flex;align-items:flex-start;gap:9px}
+.cc-row input{margin:2px 0 0;flex-shrink:0;cursor:pointer;accent-color:var(--w)}
+.cc-foot{margin-top:auto;padding-top:10px;border-top:1px solid rgba(var(--ov),.07);font-size:10.5px;
+  color:var(--text3);flex-shrink:0}
+.cc-vacio{font-size:11px;color:var(--text3);text-align:center;padding:14px 6px;line-height:1.5}
+@media(max-width:900px){.coach-cols{grid-template-columns:1fr}}
 
 /* Lista de Compras */
 .lc-tab{padding:7px 15px;border-radius:20px;border:1px solid rgba(var(--ov),.12);background:rgba(var(--ov),.05);color:var(--text2);font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;transition:all .2s;white-space:nowrap}
@@ -1825,14 +1988,20 @@ a.rt2-sub-prod:hover{text-decoration:underline}
         </div>
       </div>
 
+      <!-- Orden de estos dos bloques (2026-08-23, segunda iteración): la tira de 7 días va ARRIBA
+           de la cinta, no debajo — "quiero que los dias de la semana esten abajo de la frase y del
+           reloj, y arriba de la barra de la rutina". Tiene sentido de lectura: primero eliges el
+           día, luego ves el día que elegiste. Al mover el bloque también bajó de alto (ver
+           .ws-day en el CSS): pasó de foto + encabezado apilados a foto de fondo con el texto
+           encima, que a 66px se lee mejor. -->
+      <div class="week-strip reveal d2" id="heroWeekStrip" style="margin-bottom:10px"></div>
+
       <!-- Cinta del día (2026-08-23) — sustituye a la lista con scroll de toda la rutina:
            "arriba quiero que pongas esta barra que me propusiste y quitando toda la lista del
            scroll donde muestras toda mi rutina... al tocar cada seccion me des mas detalles".
            Cada tramo es un bloque real de RUTINA_TASKS, con ancho proporcional a su duración. -->
       <div id="diaTimelineTitle" style="display:none;align-items:center;gap:8px;margin-bottom:5px;font-size:11.5px;font-weight:700;color:var(--text2)"></div>
       <div class="cinta-wrap reveal d2" id="cintaDia"></div>
-
-      <div class="week-strip reveal d2" id="heroWeekStrip" style="margin-bottom:10px"></div>
 
       <!-- 2026-08-18 — "Ahora mismo" dejó de ir solo a todo el ancho: ahora comparte fila con el
            acceso directo al panel de inversión (ver .dia-ahora-row en el CSS para el porqué del
@@ -1851,8 +2020,23 @@ a.rt2-sub-prod:hover{text-decoration:underline}
                 title="Qué invertir hoy — precios en vivo y tus saldos reales de Finanzas"></button>
       </div>
 
-      <div class="grid g3 reveal d4" style="margin-bottom:8px;align-items:stretch;flex:1;min-height:0;max-height:430px" id="miDiaSecundarios">
-        <div class="tile" style="padding:9px 14px">
+      <!-- 2026-08-23 — esta fila pasó de 3 tarjetas a 4, y cambió qué muestra. Fuera el panel de
+           gym: la rutina del día ya salía TRES veces en esta misma pantalla (la tira de 7 días,
+           la ficha de las 18:15 en la cinta, y esta tarjeta) — "para no repetir lo del gym,
+           muestrame mas cosas". Fuera también el recetario, que era un catálogo de 28 recetas
+           para hojear, no algo que necesites ver al abrir el día. Ambos paneles siguen vivos en
+           sus propias apps (ejercicio.html y comida.html) y sus funciones de render siguen aquí
+           con su guarda `if(!el)return`, por si algún día vuelven a esta pantalla.
+           En su lugar entran tres datos que hoy te obligan a cambiar de slide para consultarlos:
+           tu dinero, en qué punto va la fase del Plan Maestro, y qué toca aprender hoy. -->
+      <!-- Sin `flex:1` ni `max-height` fijos: con 4 tarjetas cuyo contenido mide entre 117 y 213px,
+           forzar 430px dejaba 217px de vacío dentro de cada una — media tarjeta hueca. Ahora la
+           fila mide lo que mide su contenido y `align-items:stretch` las iguala entre sí. -->
+      <div class="grid g4 reveal d4" style="margin-bottom:8px;align-items:stretch" id="miDiaSecundarios">
+        <div class="tile" id="heroDineroPanel"></div>
+        <div class="tile" id="heroFasePanel"></div>
+        <div class="tile" id="heroAprenderPanel"></div>
+        <div class="tile">
           <!-- El botón "+" va en el encabezado, no en la fila de pestañas: ahí abajo compite con
                las 4 pestañas y las 2 flechas de navegación, y en esta columna angosta empujaba
                todo a una segunda línea. -->
@@ -1869,8 +2053,6 @@ a.rt2-sub-prod:hover{text-decoration:underline}
                que si la lista crece sin tope estira también al panel de Gym y al de Nutrición. -->
           <div style="margin-top:5px;display:flex;flex-direction:column;max-height:240px;overflow-y:auto" id="mesEventos">—</div>
         </div>
-        <div class="tile" style="padding:9px 14px" id="heroGymPanel"></div>
-        <div class="tile" style="padding:9px 14px" id="heroNutriPanel"></div>
       </div>
 
       <!-- Sin clase "reveal": este elemento pasa de display:none a visible dinámicamente (ver
@@ -1886,44 +2068,22 @@ a.rt2-sub-prod:hover{text-decoration:underline}
   <!-- 1 · COACH: PLAN MAESTRO -->
   <section class="slide theme-coach" data-i="1">
     <div class="slide-inner">
-      <div class="eyebrow reveal d1"><span class="dot"></span> Coach · Plan Maestro</div>
-      <!-- Encabezado de fase rediseñado el 2026-08-19 (ver .fase-hero en el CSS): el tiempo que
-           queda pasa de ser una frase en gris a una barra con la posición de hoy y 3 cifras. -->
-      <div class="fase-hero reveal d2">
-        <div class="fase-hero-head">
-          <span class="fase-chip" id="coachFaseChip">Fase —</span>
-          <div class="slide-title" id="coachPhaseTitle" style="margin-bottom:0">—</div>
-        </div>
-
-        <div class="fase-linea">
-          <div class="fase-linea-barra">
-            <div class="fase-linea-fill" id="coachFaseFill" style="width:0%"></div>
-            <div class="fase-linea-hoy" id="coachFaseHoy" style="left:0%"></div>
-          </div>
-          <div class="fase-linea-rot">
-            <span id="coachFaseIni">—</span>
-            <span id="coachFaseFecha" class="fase-linea-hoy-lbl">—</span>
-            <span id="coachFaseFin">—</span>
-          </div>
-        </div>
-
-        <div class="fase-kpis" id="coachFaseKpis"></div>
-        <div class="fase-explica" id="coachFaseExplica">—</div>
-      </div>
-
-      <div class="tile reveal d3 coach-accent-debt" style="margin-bottom:32px;padding:12px 18px">
-        <div class="lbl" style="margin-bottom:8px">💰 Tu ruta hacia deuda cara en $0 — en este orden, sin excepción</div>
-        <div class="debt-steps" id="coachDebtSteps"></div>
-        <div style="display:flex;align-items:center;gap:10px;margin-top:8px;padding-top:7px;border-top:1px solid rgba(var(--ov),.07)">
-          <span class="lbl" style="white-space:nowrap">Avance real (promedio de los 3 pasos)</span>
-          <div class="pbar" style="flex:1;height:4px;margin-top:0"><div class="pfill" id="coachRutaPctBar" style="width:0%;background:linear-gradient(90deg,var(--g),var(--cy))"></div></div>
-          <span class="big-num" style="font-size:15px;color:var(--g)" id="coachRutaPct">—</span>
-        </div>
-      </div>
-
-      <div class="tile reveal d5 coach-accent-month" style="padding:13px 18px">
-        <div class="coach-month-title" id="coachPrioritiesLbl">📋 Qué hacer en esta fase — semana a semana</div>
-        <div id="coachPriorities"></div>
+      <!-- 2026-08-23 — la página pasó de tres bloques apilados a un TABLERO. Medida en Chrome, la
+           versión anterior necesitaba 1092px de alto contra 1000 de ventana: el título de la fase
+           se cortaba por arriba, y todo iba en una sola columna a ancho completo desperdiciando
+           media pantalla. Además las 8 tareas del mes se pintaban con el mismo peso, así que las
+           dos que de verdad importan ("Prioridad 1" y "Prioridad 2") no se distinguían del resto.
+           Ahora: banda de fase compacta + banda con la ruta de deuda + 3 columnas
+           (Ahora / Este mes / Hecho). La columna "Hecho" existe por un pedido explícito de Adán
+           sobre los logros — "si no, sentiré que no logro nada".
+           El párrafo largo de `explica` salió de la pantalla y vive ahora en el `title` de la
+           banda de fase: repetía lo que la ruta de deuda ya dice con números reales. -->
+      <div class="coach-fase-band reveal d1" id="coachFaseBand"></div>
+      <div class="coach-ruta-band reveal d2" id="coachRutaBand"></div>
+      <div class="coach-cols reveal d3">
+        <div class="coach-col coach-col-ahora" id="coachColAhora"></div>
+        <div class="coach-col" id="coachColMes"></div>
+        <div class="coach-col coach-col-hecho" id="coachColHecho"></div>
       </div>
     </div>
   </section>
@@ -3278,7 +3438,7 @@ const LC_TIPO_META={
 // consulta ninguna API. Por eso TODOS se pintan como estimado (naranja "≈") y el nombre del
 // producto sigue siendo un link a la búsqueda real, que es donde se ve el precio del momento.
 // La clave es el texto completo del ítem tal cual aparece en LISTA_COMPRAS.
-const LISTA_COMPRAS_PRECIOS_OTROS={
+const LISTA_COMPRAS_PRECIOS_OTROS={
   // 3 más, de farmacia mexicana. El de las lágrimas en gel es exacto (Farmacias del Ahorro,
   // Systane gel 10 ml $122); los otros dos son el techo de un rango verificado, porque estos
   // productos varían mucho de marca a marca: monodosis Systane entre $423 y $746, y
@@ -3286,23 +3446,23 @@ const LISTA_COMPRAS_PRECIOS_OTROS={
   'Lágrimas en gel para la noche':{amazon:145,ml:122},
   'Lágrimas artificiales sin conservadores (monodosis)':{amazon:450,ml:399},
   'Desodorante en barra (no aerosol — el aerosol da problemas en avión)':{amazon:119,ml:85},
-  // ── 14 precios añadidos el 2026-08-20 ──
-  // Los 4 primeros ya existían en el proyecto pero con el nombre anterior del producto:
-  // al renombrar los de cabello el 18-ago sus claves dejaron de coincidir y el precio se
-  // perdió en silencio. Los otros 10 se buscaron en tiendas mexicanas (ago-2026).
-  'Champú Darrow Doctar alcatrão (solo si hay caspa activa, nunca junto al Pilexil)':{amazon:520,ml:450},
-  'Mascarilla L\'Oréal Elvive Total Repair 5 (sábados)':{amazon:180,ml:155},
-  'Aceite Moroccanoil Treatment Light (sobre el pelo ya seco, solo puntas)':{amazon:990,ml:850},
-  'Minoxidil 5% en ESPUMA Kirkland (la espuma no lleva propilenglicol)':{amazon:750,ml:620},
-  'Pilexil Anticaída 300 ml (lunes y jueves)':{amazon:715,ml:572},
-  'Crema sin enjuague L\'Oréal Elvive Total Repair 5 (diario, sobre el pelo húmedo)':{amazon:95,ml:73},
-  'Funda de almohada de satín':{amazon:249,ml:219},
-  'Suplemento de Luteína + Zeaxantina 10 mg / 2 mg':{amazon:299,ml:260},
-  'Lentes de sol polarizados con UV400':{amazon:259,ml:210},
-  'Hilo dental':{amazon:155,ml:120},
-  'Recortadora de barba con batería (y su cable)':{amazon:599,ml:520},
-  'Esponja o guante exfoliante':{amazon:35,ml:26},
-  'Cortauñas de mano y de pie':{amazon:56,ml:45},
+  // ── 14 precios añadidos el 2026-08-20 ──
+  // Los 4 primeros ya existían en el proyecto pero con el nombre anterior del producto:
+  // al renombrar los de cabello el 18-ago sus claves dejaron de coincidir y el precio se
+  // perdió en silencio. Los otros 10 se buscaron en tiendas mexicanas (ago-2026).
+  'Champú Darrow Doctar alcatrão (solo si hay caspa activa, nunca junto al Pilexil)':{amazon:520,ml:450},
+  'Mascarilla L\'Oréal Elvive Total Repair 5 (sábados)':{amazon:180,ml:155},
+  'Aceite Moroccanoil Treatment Light (sobre el pelo ya seco, solo puntas)':{amazon:990,ml:850},
+  'Minoxidil 5% en ESPUMA Kirkland (la espuma no lleva propilenglicol)':{amazon:750,ml:620},
+  'Pilexil Anticaída 300 ml (lunes y jueves)':{amazon:715,ml:572},
+  'Crema sin enjuague L\'Oréal Elvive Total Repair 5 (diario, sobre el pelo húmedo)':{amazon:95,ml:73},
+  'Funda de almohada de satín':{amazon:249,ml:219},
+  'Suplemento de Luteína + Zeaxantina 10 mg / 2 mg':{amazon:299,ml:260},
+  'Lentes de sol polarizados con UV400':{amazon:259,ml:210},
+  'Hilo dental':{amazon:155,ml:120},
+  'Recortadora de barba con batería (y su cable)':{amazon:599,ml:520},
+  'Esponja o guante exfoliante':{amazon:35,ml:26},
+  'Cortauñas de mano y de pie':{amazon:56,ml:45},
   'Alicate de cutícula o empujador':{amazon:259,ml:218},
   // ── skincare ──
   'Limpiador — CeraVe Limpiador Espumoso (verde)':{amazon:280,ml:255},
@@ -3742,6 +3902,7 @@ function alemanTemaHoy(){
 function alemanSiguiente(){
   alemanIdx=((alemanIdx===null?diaDelAnio():alemanIdx)+1)%ALEMAN_TEMAS.length;
   renderAleman();
+  renderHeroAprender();   // la tarjeta de Mi Día lee el mismo índice: si no, quedaría desfasada
 }
 function renderAleman(){
   const t=alemanTemaHoy();
@@ -3844,6 +4005,7 @@ function entrevistaSiguiente(){
   if(typeof ENTREVISTA_TEMAS==='undefined'||!ENTREVISTA_TEMAS.length)return;
   entrevistaIdx=((entrevistaIdx===null?diaDelAnio():entrevistaIdx)+1)%ENTREVISTA_TEMAS.length;
   renderEntrevista();
+  renderHeroAprender();   // misma razón que en alemanSiguiente()
 }
 let enScrollListenerAttached=false;
 function renderEntrevista(){
@@ -4280,8 +4442,11 @@ function pintarCintaDia(tareas, anchor, done, esHoy){
   const fin=minutosDe(tareas[tareas.length-1].hora)+30;
   const total=Math.max(1, fin-ini);
 
+  const ahoraMin=minutosDe(horaAhora());
   let hechos=0;
-  const segs=tareas.map((t,i)=>{
+  const segs=[], fichas=[];
+
+  tareas.forEach((t,i)=>{
     const desde=minutosDe(t.hora);
     const hasta=i+1<tareas.length?minutosDe(tareas[i+1].hora):fin;
     // 5 minutos de suelo: dos bloques que empiezan a la misma hora no pueden desaparecer.
@@ -4294,37 +4459,58 @@ function pintarCintaDia(tareas, anchor, done, esHoy){
     const leaves=leafItems(t);
     const hecho=!t.fijo&&leaves.every(it=>done.includes(it.id));
     if(hecho) hechos++;
-    const esAhora=anchor&&t.id===anchor.id;
-    const sel=cintaSel?t.id===cintaSel:esAhora;
+    const esAncla=anchor&&t.id===anchor.id;
+    const sel=cintaSel?t.id===cintaSel:esAncla;
+    // `esAncla` marca el bloque activo de CUALQUIER día que estés viendo; `esAhora` exige además
+    // que ese día sea hoy — es lo que decide si la ficha lleva barra de avance y "quedan X".
+    const esAhora=esHoy&&esAncla;
     const titulo=rtSoloTitulo(tituloBloque(t,dow));
-    // El texto solo cabe en los tramos largos; en los cortos sobra y el overflow lo recorta feo.
-    const txt=mins>=45?`<span class="cinta-seg-txt" style="color:${meta.c}">${meta.ico} ${esc(titulo)}</span>`:'';
-    let cont='';
+
+    // ── El riel: solo color y proporción, sin texto. Hecho = color pleno, pendiente = atenuado.
+    //    El tramo que corre ahora va en verde por CSS (.cinta-seg.ahora), así que a ese NO se le
+    //    escribe `background` inline: un estilo en línea le ganaría a la clase.
+    segs.push(`<button class="cinta-seg${esAhora?' ahora':(sel?' sel':'')}" style="flex:${mins} 1 0${esAhora?'':`;background:${meta.c}${hecho?'':'52'}`}"
+      onclick="tocarBloque('${t.id}')" title="${esc(t.hora+' · '+meta.label+' · '+titulo)}"
+      aria-label="${esc(t.hora+' '+titulo)}"></button>`);
     if(resto>0){
       // El bloque de antes es el que sigue corriendo debajo (ALTEN, en el caso de GBM).
       const prev=tareas[i-1];
       const mp=prev?(CAT_META[prev.cat]||meta):meta;
-      cont=`<button class="cinta-seg cinta-cont" style="flex:${resto} 1 0;min-width:6px;background:${mp.c}3a"
+      segs.push(`<button class="cinta-seg cinta-cont" style="flex:${resto} 1 0;background:${mp.c}52"
         onclick="tocarBloque('${prev?prev.id:t.id}')"
-        title="${esc(prev?horaMas(t.hora,mins)+' · sigue: '+rtSoloTitulo(prev.txt):'')}" aria-hidden="true"></button>`;
+        title="${esc(prev?horaMas(t.hora,mins)+' · sigue: '+rtSoloTitulo(prev.txt):'')}" aria-hidden="true"></button>`);
     }
-    return `<button class="cinta-seg${sel?' sel':''}${hecho?' hecho':''}" style="flex:${mins} 1 0;min-width:11px;background:${meta.c}${hecho?'33':'72'}"
-      onclick="tocarBloque('${t.id}')" title="${esc(t.hora+' · '+meta.label+' · '+titulo)}"
-      aria-label="${esc(t.hora+' '+titulo)}">${txt}</button>`+cont;
-  }).join('');
+
+    // ── La ficha: hora y nombre completos, del mismo tamaño para todos los bloques.
+    //    Tres estados excluyentes, y en este orden: `ahora` (verde, lo que está pasando) gana
+    //    sobre `sel` (lo que estás mirando, en el color de su categoría). Cuando tocas otra
+    //    ficha, la verde se queda verde: eso es justo lo que faltaba para no perder el hilo.
+    //    Por eso en la ficha verde no se escribe NINGÚN color en línea — todos vienen del CSS.
+    const transcurrido=esAhora?Math.max(0,Math.min(mins, ahoraMin-desde)):0;
+    const prog=esAhora?`<span class="cinta-fic-prog" style="width:${(transcurrido/mins*100).toFixed(1)}%"></span>`:'';
+    // "queda 5h13" en vez de "quedan 5 h 13": comparte fila con la hora y solo hay ~122px útiles.
+    const dur=esAhora?('queda '+durCorta(mins-transcurrido).replace(/ /g,'')):durCorta(mins);
+    const selSolo=sel&&!esAhora;
+    fichas.push(`<button class="cinta-fic${esAhora?' ahora':(sel?' sel':'')}${hecho?' hecho':''}" onclick="tocarBloque('${t.id}')"
+      ${selSolo?`style="background:${meta.c}1f;border-color:${meta.c};box-shadow:0 0 18px ${meta.c}40"`:''}
+      title="${esc((esAhora?'Ahora mismo · ':'')+t.hora+' · '+meta.label+' · '+titulo)}">
+      <span class="cinta-fic-acc"${esAhora?'':` style="background:${meta.c}"`}></span>${prog}
+      <span class="cinta-fic-top">
+        <span class="cinta-fic-h"${esAhora?'':` style="color:${meta.c}"`}>${esAhora?'<span class="now-live-dot"></span>':''}${t.hora}${hecho?' <span style="color:var(--g)">✓</span>':''}</span>
+        <span class="cinta-fic-d">${dur}</span>
+      </span>
+      <span class="cinta-fic-t">${meta.ico} ${esc(titulo)}</span>
+    </button>`);
+  });
 
   // Marcador de "ahora": solo cuando miras el día de hoy y el reloj cae dentro del rango.
   let marcador='';
-  if(esHoy){
-    const ahora=minutosDe(horaAhora());
-    if(ahora>=ini&&ahora<=fin){
-      const pct=((ahora-ini)/total*100).toFixed(2);
-      marcador=`<div class="cinta-ahora" style="left:calc(${pct}% - 1px)"></div>`;
-    }
+  if(esHoy&&ahoraMin>=ini&&ahoraMin<=fin){
+    marcador=`<div class="cinta-ahora" style="left:calc(${((ahoraMin-ini)/total*100).toFixed(2)}% - 1px)"></div>`;
   }
 
   const marcables=tareas.filter(t=>!t.fijo).length;
-  const faltaMin=esHoy?Math.max(0, fin-minutosDe(horaAhora())):0;
+  const faltaMin=esHoy?Math.max(0, fin-ahoraMin):0;
 
   wrap.innerHTML=`
     <div class="cinta-head">
@@ -4338,8 +4524,41 @@ function pintarCintaDia(tareas, anchor, done, esHoy){
         ${esHoy?`<span class="cinta-sep"></span><span class="cinta-falta">${faltaMin>0?'quedan '+Math.floor(faltaMin/60)+'h '+(faltaMin%60)+'m':'día cerrado'}</span>`:''}
       </div>
     </div>
-    <div class="cinta" data-ini="${ini}" data-fin="${fin}">${segs}${marcador}</div>
-    <div class="cinta-horas">${horasCinta(ini,fin)}</div>`;
+    <div class="cinta" data-ini="${ini}" data-fin="${fin}">${segs.join('')}${marcador}</div>
+    <div class="cinta-horas">${horasCinta(ini,fin)}</div>
+    <div class="cinta-fichas">
+      <button class="cinta-nav" onclick="cintaScroll(-1)" title="Bloques anteriores" aria-label="Bloques anteriores">‹</button>
+      <div class="cinta-fic-scroll">${fichas.join('')}</div>
+      <button class="cinta-nav" onclick="cintaScroll(1)" title="Bloques siguientes" aria-label="Bloques siguientes">›</button>
+    </div>`;
+
+  centrarFichaActiva(wrap);
+}
+
+// Duración en formato corto para la esquina de la ficha: "45 min", "1 h", "1 h 15".
+function durCorta(m){
+  if(m<60) return m+' min';
+  const h=Math.floor(m/60), r=m%60;
+  return r?h+' h '+r:h+' h';
+}
+
+// Deja la ficha activa centrada en su carril. A mano y no con scrollIntoView() a propósito: esa
+// función arrastraría también el scroll del slide, y "Mi Día" vive dentro de un carrusel a
+// pantalla completa — saltaría la pantalla entera cada vez que cambia el bloque activo.
+function centrarFichaActiva(wrap){
+  const scr=wrap.querySelector('.cinta-fic-scroll'); if(!scr) return;
+  const s=scr.querySelector('.cinta-fic.sel'); if(!s) return;
+  const prev=scr.style.scrollBehavior;
+  scr.style.scrollBehavior='auto';   // en un repintado se salta directo, sin animar el arrastre
+  scr.scrollLeft=Math.max(0, s.offsetLeft-(scr.clientWidth-s.offsetWidth)/2);
+  scr.style.scrollBehavior=prev;
+}
+
+// Flechas ‹ ›: mueven algo menos de una pantalla de fichas, para que siempre quede una a la
+// vista como referencia de dónde estabas.
+function cintaScroll(dir){
+  const scr=document.querySelector('#cintaDia .cinta-fic-scroll'); if(!scr) return;
+  scr.scrollLeft+=dir*Math.max(156, scr.clientWidth*0.7);
 }
 
 // Cinco marcas de hora repartidas por el ancho de la cinta.
@@ -4373,9 +4592,15 @@ function pintarBloqueDetalle(tareas, anchor, done, esHoy){
   const esAhora=esHoy&&anchor&&t.id===anchor.id;
 
   // El acento de color a la izquierda y el halo siguen a la categoría del bloque mostrado, como
-  // hacía "Ahora mismo" desde el 2026-08-09.
-  el.style.borderLeftColor=meta.c;
-  el.style.boxShadow=`0 10px 40px rgba(0,0,0,.35), -3px 0 20px ${meta.c}30`;
+  // hacía "Ahora mismo" desde el 2026-08-09 — SALVO cuando el bloque está corriendo ahora: ahí
+  // manda el verde, igual que en la ficha de la cinta y en el marcador del riel (2026-08-23).
+  // El verde se lee de la variable y no a mano porque cambia entre tema oscuro y claro.
+  const acento=esAhora
+    ? (getComputedStyle(document.documentElement).getPropertyValue('--g').trim()||'#00e87a')
+    : meta.c;
+  el.style.borderLeftColor=acento;
+  el.style.boxShadow=`0 10px 40px rgba(0,0,0,.35), -3px 0 20px ${acento}30`;
+  el.style.background=esAhora?'rgba(0,232,122,.05)':'';
 
   const pill=(bg,col,br,txt)=>`<span class="rt2-cat" style="background:${bg};color:${col};border-color:${br}">${txt}</span>`;
   el.innerHTML=`
@@ -4506,18 +4731,26 @@ function renderHero(){
     }
     const foto=TIPO_FOTO[rutinaDia?.tipo]||TIPO_FOTO.descanso;
     const sel=diaSemanaSel===dow?' sel':'';
+    // La foto va primero y en position:absolute (ver .ws-gym-photo): es el FONDO de la tarjeta,
+    // no una franja dentro de ella. El nombre del día, la fecha y el badge de estado comparten
+    // ahora una sola fila (.ws-dhead) para que quepan en los 66px de alto.
     return `<div class="ws-day ${esHoy?'today':''}${sel}" onclick="verDiaSemana(${dow})" title="Ver la rutina completa de ${DIAS_LARGO[dow]}">
-      <div class="ws-dname">${DIAS_CORTOS[dow]}${esHoy?' •':''}</div>
-      <div class="ws-ddate">${parseInt(d.split('-')[2])}/${parseInt(d.split('-')[1])}</div>
-      <div class="ws-gym-photo" style="background-image:url('${foto}')">
-        <div class="ws-gym-badge">${badge}</div>
-        <div class="ws-gym-lbl ${lblCls}">${gymLbl}</div>
+      <div class="ws-gym-photo" style="background-image:url('${foto}')"></div>
+      <div class="ws-dhead">
+        <span class="ws-dname">${DIAS_CORTOS[dow]}${esHoy?' •':''}</span>
+        <span class="ws-ddate">${parseInt(d.split('-')[2])}/${parseInt(d.split('-')[1])}</span>
+        <span class="ws-gym-badge">${badge}</span>
       </div>
+      <div class="ws-gym-lbl ${lblCls}">${gymLbl}</div>
     </div>`;
   }).join('');
 
-  renderHeroGymPanel();
-  renderHeroNutri();
+  // Las 3 tarjetas nuevas de la fila de abajo (2026-08-23). renderHeroGymPanel()/renderHeroNutri()
+  // ya no se llaman desde aquí: sus tiles salieron de esta pantalla. Las funciones siguen en el
+  // archivo, con su guarda `if(!el)return`, para poder devolverlas sin reescribirlas.
+  renderHeroDinero();
+  renderHeroFase();
+  renderHeroAprender();
 }
 
 // ── Tira semanal del Hero — un solo estado de "día elegido" que ahora maneja TODO lo que
@@ -4532,9 +4765,112 @@ function verDiaSemana(dow){
   cintaSel=null;   // el bloque que mirabas era de otro día: se vuelve al activo del nuevo
   diaSemanaSel=(diaSemanaSel===dow)?null:dow; // clic de nuevo en el mismo día → vuelve a "hoy"
   document.querySelectorAll('#heroWeekStrip .ws-day').forEach((el,i)=>el.classList.toggle('sel',diaSemanaSel===i));
-  renderHeroGymPanel();
   renderDia();
 }
+// ── 💰 Tu dinero — exactamente los mismos números que el botón "Qué invertir hoy", que salen de
+//    pasoInversionHoy() → finanzasmx_v2. Nada se calcula dos veces ni se escribe a mano aquí: si
+//    Finanzas cambia, esta tarjeta cambia sola. En modo privado money() ya devuelve "$••,•••".
+function renderHeroDinero(){
+  const el=document.getElementById('heroDineroPanel'); if(!el) return;
+  const {F, ef, metaEf, mon}=pasoInversionHoy();
+  const pct=metaEf?Math.min(100, ef/metaEf*100):0;
+  // Las deudas salen tal cual de Finanzas, de mayor a menor saldo. Las que ya están en $0 se
+  // muestran igual y en verde: ver "Banamex — liquidada ✓" es parte del avance, no es ruido.
+  const deudas=(F.debts||[]).slice().sort((a,b)=>(+b.balance||0)-(+a.balance||0)).slice(0,3);
+  el.innerHTML=`
+    <div class="hp-title">
+      <span>💰 Tu dinero</span>
+      <a href="../Finanzas/Finanzas.html" class="hp-link">Finanzas →</a>
+    </div>
+    <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:3px">
+      <span class="hp-cifra" style="color:var(--o)">${mon(ef)}</span>
+      <span class="hp-cifra-sub">/ ${mon(metaEf)}</span>
+    </div>
+    <div style="font-size:10.5px;color:var(--text2);margin-bottom:9px">Fondo de emergencia · Prioridad 1</div>
+    <div class="hp-bar" style="margin-bottom:2px"><div class="hp-bar-f" style="width:${pct.toFixed(1)}%;background:var(--o)"></div></div>
+    ${deudas.length
+      ? deudas.map(d=>{
+          const b=+d.balance||0;
+          return `<div class="hp-row"><span>${esc(d.name||d.nombre||'Deuda')}</span>`+
+                 `<span style="font-family:var(--mono);font-weight:700;color:${b>0?'var(--r)':'var(--g)'}">`+
+                 `${b>0?mon(b):'liquidada ✓'}</span></div>`;
+        }).join('')
+      : '<div class="hp-empty">Registra tus deudas en Finanzas para verlas aquí.</div>'}`;
+}
+
+// ── 🎯 La fase del Plan Maestro — la misma activePhase() que usa el slide de Coach. Lo que aporta
+//    aquí es la POSICIÓN de hoy dentro de la fase: un porcentaje solo no dice si vas tarde.
+function renderHeroFase(){
+  const el=document.getElementById('heroFasePanel'); if(!el) return;
+  const f=activePhase();
+  const hoy=new Date(); hoy.setHours(0,0,0,0);
+  const total=Math.max(1,(f.end-f.start)/86400000);
+  const van=Math.min(total, Math.max(0,(hoy-f.start)/86400000));
+  const pct=van/total*100;
+  const faltan=Math.max(0, Math.round(total-van));
+  const dm={day:'numeric',month:'short'};
+  // Las tareas salen de PHASES[].semanas filtradas por el mes en curso — la misma fuente que el
+  // detalle del calendario, no una lista aparte que habría que mantener sincronizada a mano.
+  const mesId=`${hoy.getFullYear()}-${String(hoy.getMonth()+1).padStart(2,'0')}`;
+  let items=(f.semanas||[]).filter(s=>s.mes===mesId);
+  if(!items.length) items=(f.semanas||[]);
+  items=items.slice(0,2);
+  // El texto de `semanas` viene largo y con HTML (son párrafos completos en el slide de Coach):
+  // aquí solo cabe la primera frase, así que se corta en el primer punto o a 92 caracteres.
+  const corto=s=>{
+    const plano=String(s).replace(/<[^>]*>/g,'').trim();
+    const p=plano.indexOf('. ');
+    const t=(p>0&&p<100)?plano.slice(0,p+1):plano;
+    return esc(t.length>92?t.slice(0,91).trimEnd()+'…':t);
+  };
+  el.innerHTML=`
+    <div class="hp-title">
+      <span>🎯 ${esc(f.tag)}</span>
+      <a href="../Coach/Coach_v2.html" class="hp-link">Plan Maestro →</a>
+    </div>
+    <div style="font-size:12.5px;font-weight:700;color:var(--text);line-height:1.3;margin-bottom:10px">${esc(f.title)}</div>
+    <div class="hp-fase-bar" style="margin-bottom:5px">
+      <div class="hp-fase-f" style="width:${pct.toFixed(1)}%;background:var(--w)"></div>
+      <div class="hp-fase-hoy" style="left:${pct.toFixed(1)}%"></div>
+    </div>
+    <div style="display:flex;justify-content:space-between;font-family:var(--mono);font-size:9px;color:var(--text3);margin-bottom:6px">
+      <span>${f.start.toLocaleDateString('es-MX',dm)}</span>
+      <span style="color:var(--w);font-weight:700">${faltan>0?'quedan '+faltan+' día'+(faltan===1?'':'s'):'última jornada'}</span>
+      <span>${f.end.toLocaleDateString('es-MX',dm)}</span>
+    </div>
+    ${items.map((s,i)=>`<div class="hp-mini">
+      <span class="hp-mini-n" style="color:${i===0?'var(--o)':'var(--text3)'}">0${i+1}</span>
+      <span>${corto(s.txt)}</span>
+    </div>`).join('')}`;
+}
+
+// ── 🎓 Hoy aprendes — la lección de alemán y el tema de Python del día. Llama a las MISMAS
+//    alemanTemaHoy()/entrevistaTemaHoy() que pintan sus slides, así que si avanzas con
+//    "Siguiente lección →" allá, esta tarjeta muestra la misma (por eso se repinta desde
+//    alemanSiguiente()/entrevistaSiguiente()).
+function renderHeroAprender(){
+  const el=document.getElementById('heroAprenderPanel'); if(!el) return;
+  const a=(typeof alemanTemaHoy==='function')?alemanTemaHoy():null;
+  const p=(typeof entrevistaTemaHoy==='function')?entrevistaTemaHoy():null;
+  const nAl=(typeof ALEMAN_TEMAS!=='undefined')?ALEMAN_TEMAS.length:0;
+  const nPy=(typeof ENTREVISTA_TEMAS!=='undefined')?ENTREVISTA_TEMAS.length:0;
+  const bloque=(cfg)=>`
+    <div class="hp-lec" style="background:${cfg.c}12;border:1px solid ${cfg.c}2e">
+      <div class="hp-lec-top">
+        <span style="font-size:12px">${cfg.ico}</span>
+        <span class="hp-lec-tag" style="color:${cfg.c}">${esc(cfg.tag)}</span>
+        <span class="hp-lec-n">${cfg.n}</span>
+      </div>
+      <div class="hp-lec-t">${esc(cfg.t)}</div>
+      <div class="hp-lec-d">${esc(cfg.d)}</div>
+    </div>`;
+  el.innerHTML=`
+    <div class="hp-title"><span>🎓 Hoy aprendes</span></div>
+    ${a?bloque({c:'#00e87a',ico:'🇩🇪',tag:'Alemán · '+a.nivel,n:(alemanIdx+1)+' / '+nAl,t:a.de,d:a.es+' — '+(a.tags||[]).join(', ')}):''}
+    ${p?bloque({c:'#00e0c0',ico:p.icon||'🐍',tag:'Python · '+(p.mod||''),n:(entrevistaIdx+1)+' / '+nPy,t:p.title,d:p.hint||''})
+       :'<div class="hp-empty">El catálogo de Python no cargó — revisa entrevistas-data.js.</div>'}`;
+}
+
 function renderHeroGymPanel(){
   const el=document.getElementById('heroGymPanel');
   if(!el)return;
@@ -4646,15 +4982,10 @@ function toggleRecetaCard(key){ nutriExpandido.has(key)?nutriExpandido.delete(ke
 
 function renderCoach(){
   const ph=activePhase();
-  document.getElementById('coachFaseChip').textContent=ph.tag;
-  document.getElementById('coachPhaseTitle').textContent=ph.title;
-  // La primera frase del texto se destaca como entrada. Se corta en el primer punto seguido de
-  // espacio y mayúscula, para no partir "30 sep. 2026" ni una abreviatura por accidente.
-  const txt=String(ph.explica||ph.meta||'');
-  const corte=txt.search(/\.\s+[A-ZÁÉÍÓÚ¿¡]/);
-  document.getElementById('coachFaseExplica').innerHTML= corte>0
-    ? `<span class="lead">${txt.slice(0,corte+1)}</span>${txt.slice(corte+1).trim()}`
-    : txt;
+  // El párrafo de `explica` dejó de pintarse en la pantalla (2026-08-23): ocupaba cuatro líneas a
+  // ancho completo repitiendo lo que la ruta de deuda de abajo ya dice con números reales. Sigue
+  // disponible como tooltip de la banda de fase, en texto plano (un `title` no renderiza HTML).
+  const explicaTxt=String(ph.explica||ph.meta||'').replace(/<[^>]*>/g,'');
 
   // ── Ruta real hacia deuda cara en $0: fondo de emergencia → Banamex → BBVA ──
   // Un paso se da por cumplido si el saldo en vivo dice que sí **o si ya está en la libreta de
@@ -4688,35 +5019,19 @@ function renderCoach(){
   // Adán pidió corregir el 2026-08-13: la prioridad es el fondo, y BBVA entra después.
   const _iActivo=steps.findIndex(s=>!s.done);
   steps.forEach((s,i)=>{ s.activo=(i===_iActivo); });
-  document.getElementById('coachDebtSteps').innerHTML=steps.map(s=>`
-    <div class="debt-step ${s.done?'done':''} ${s.activo?'activo':''}">
-      <div class="ds-num">${s.done?'✅':s.n}</div>
-      <div class="ds-ico">${s.ico}</div>
-      <div class="ds-lbl">${s.lbl}</div>
-      <div class="ds-txt${privado?' fin-hidden':''}">${s.txt}</div>
-      <div class="pbar${privado?' fin-hidden':''}" style="height:3px;margin-top:0"><div class="pfill" style="width:${s.pct}%;background:${s.done?'var(--g)':s.activo?'var(--w)':'var(--text3)'}"></div></div>
-    </div>`).join('')
-    // Tira de logros: la lista completa de lo ya conseguido, con su fecha, siempre visible bajo
-    // la ruta. Sin esto los hitos cumplidos solo se veían como un ✅ dentro de su paso y se perdían
-    // de vista en cuanto la ruta avanzaba — que es justo lo que Adán señaló ("si no, sentiré que
-    // no logro nada"). No se oculta con el modo privado: no muestra montos, solo hechos y fechas.
-    + (()=>{
-        const L=logrosLoad(); const ids=Object.keys(L);
-        if(!ids.length) return '';
-        ids.sort((a,b)=>String(L[a].fecha).localeCompare(String(L[b].fecha)));
-        return `<div class="logros-tira">
-          <div class="logros-lbl">🏅 Ya conseguido — esto no se borra</div>
-          ${ids.map(id=>`<div class="logro-item"><span>✅</span><span class="logro-txt">${esc(L[id].txt)}</span><span class="logro-fecha">${esc(fechaLogro(id))}</span></div>`).join('')}
-        </div>`;
-      })();
-
-  // Avance real = promedio de los 3 pasos con datos reales (no días transcurridos)
+  // ── Banda 2: la ruta de deuda. Los tres pasos ocupan lo mismo a propósito: son hitos de una
+  //    secuencia, no magnitudes comparables entre sí.
   const rutaPct=Math.round((efPct+banaPct+bbvaPct)/3);
-  const coachRutaPctEl=document.getElementById('coachRutaPct');
-  coachRutaPctEl.textContent=rutaPct+'%';
-  coachRutaPctEl.classList.toggle('fin-hidden',privado);
-  document.getElementById('coachRutaPctBar').style.width=rutaPct+'%';
-  document.getElementById('coachRutaPctBar').closest('.pbar').classList.toggle('fin-hidden',privado);
+  document.getElementById('coachRutaBand').innerHTML=
+    `<span class="crb-lbl">💰 Ruta a deuda cara en $0</span>`+
+    steps.map(s=>`
+      <div class="crb-paso ${s.done?'done':''} ${s.activo?'activo':''}" title="${esc(s.lbl+' · '+s.txt)}">
+        <span style="font-size:13px">${s.done?'✅':s.ico}</span>
+        <span class="crb-nom"${s.done?' style="color:var(--text2)"':''}>${esc(s.lbl)}</span>
+        <span class="crb-val${privado?' fin-hidden':''}" style="color:${s.done?'var(--g)':s.activo?'var(--w)':'var(--r)'}">${s.txt}</span>
+        <span class="crb-b"><i style="width:${s.pct}%;background:${s.done?'var(--g)':s.activo?'var(--w)':'var(--text3)'}"></i></span>
+      </div>`).join('')+
+    `<span class="crb-pct${privado?' fin-hidden':''}" title="Promedio real de los 3 pasos, no días transcurridos">${rutaPct}%</span>`;
 
   // ── La fase, en tiempo (2026-08-19) ──────────────────────────────────────
   const hoyF=new Date();
@@ -4726,17 +5041,29 @@ function renderCoach(){
   const pctFase=Math.max(0,Math.min(100,idos/totalDias*100));
   const dFmt=d=>d.toLocaleDateString('es-MX',{day:'numeric',month:'short'});
 
-  document.getElementById('coachFaseFill').style.width=pctFase+'%';
-  document.getElementById('coachFaseHoy').style.left=pctFase+'%';
-  document.getElementById('coachFaseIni').textContent=dFmt(ph.start);
-  document.getElementById('coachFaseFin').textContent=dFmt(ph.end)+' '+ph.end.getFullYear();
-  document.getElementById('coachFaseFecha').textContent=
-    diasFase>0?`Hoy · quedan ${fmt(diasFase)} días`:'Fase vencida';
-  document.getElementById('coachFaseKpis').innerHTML=[
-    {n:fmt(diasFase),l:'días restantes',c:diasFase<=14?'var(--r)':diasFase<=30?'var(--o)':'var(--w)'},
-    {n:Math.round(totalDias/7)+'',l:'semanas en total',c:'var(--cy)'},
-    {n:Math.round(pctFase)+'%',l:'transcurrido',c:'var(--text)'},
-  ].map(k=>`<div class="fase-kpi"><b style="color:${k.c}">${k.n}</b><span>${k.l}</span></div>`).join('');
+  // ── Banda 1: fase + título + barra con la posición de hoy + 3 cifras, todo en una fila ──
+  const bandaFase=document.getElementById('coachFaseBand');
+  bandaFase.innerHTML=`
+    <span class="cfb-chip">${esc(ph.tag)}</span>
+    <span class="cfb-t">${esc(ph.title)}</span>
+    <div class="cfb-linea">
+      <div class="cfb-barra">
+        <div class="cfb-fill" style="width:${pctFase}%"></div>
+        <div class="cfb-hoy" style="left:${pctFase}%"></div>
+      </div>
+      <div class="cfb-rot">
+        <span>${dFmt(ph.start)} ${ph.start.getFullYear()}</span>
+        <span style="color:var(--w);font-weight:700">${diasFase>0?'quedan '+fmt(diasFase)+' días':'fase vencida'}</span>
+        <span>${dFmt(ph.end)} ${ph.end.getFullYear()}</span>
+      </div>
+    </div>
+    <div class="cfb-kpis">
+      <div class="cfb-kpi"><b style="color:${diasFase<=14?'var(--r)':diasFase<=30?'var(--o)':'var(--w)'}">${fmt(diasFase)}</b><span>días</span></div>
+      <div class="cfb-kpi"><b style="color:var(--cy)">${Math.round(totalDias/7)}</b><span>semanas</span></div>
+      <div class="cfb-kpi"><b>${Math.round(pctFase)}%</b><span>transcurrido</span></div>
+    </div>`;
+  // El párrafo largo de la fase ya no ocupa media pantalla: vive aquí como tooltip.
+  bandaFase.title=explicaTxt;
 
   const faseChecks=rawGet('coach_checks_v1',{});
 
@@ -4752,7 +5079,7 @@ function renderCoach(){
   if(mesesFase.length){
     mesActivo=(coachMesSel&&mesesFase.includes(coachMesSel))?coachMesSel:(mesesFase.includes(curYM)?curYM:mesesFase[0]);
     itemsMes=ph.semanas.filter(s=>s.mes===mesActivo);
-    tabsHtml=`<div class="coach-mes-tabs">${mesesFase.map(my=>{
+    tabsHtml=`<div class="coach-mes-tabs" style="margin:0 0 0 auto">${mesesFase.map(my=>{
       const doneN=ph.semanas.filter(s=>s.mes===my&&faseChecks[s.id]).length;
       const totalN=ph.semanas.filter(s=>s.mes===my).length;
       return `<button class="mes-tab${my===mesActivo?' active':''}${doneN===totalN?' done':''}" onclick="verCoachMes('${my}')">${MES_LABEL_FULL[parseInt(my.slice(5),10)-1]}${my===curYM?' •':''} <span class="lc-tab-pct">${doneN}/${totalN}</span></button>`;
@@ -4760,19 +5087,83 @@ function renderCoach(){
     const pendientesPasados=ph.semanas.filter(s=>s.mes&&s.mes<curYM&&s.mes!==mesActivo&&!faseChecks[s.id]);
     if(pendientesPasados.length) pendientesHtml=`<div class="coach-mes-pendientes">⚠️ ${pendientesPasados.length} pendiente${pendientesPasados.length>1?'s':''} de ${mesLabelFull(pendientesPasados[0].mes)} sin marcar — <a onclick="verCoachMes('${pendientesPasados[0].mes}')">revisar →</a></div>`;
   }
-  document.getElementById('coachPrioritiesLbl').textContent=mesesFase.length?`📅 ${mesLabelFull(mesActivo)} — tu enfoque este mes`:'📋 Qué hacer en esta fase — semana a semana';
-  // ph.meta (la meta $ de la fase completa) solo se muestra aquí cuando NO hay meses — si ya hay
-  // tabs de mes, ph.meta repite justo lo que la tarjeta de deuda de arriba ya muestra con números
-  // reales (mismo texto, 2 veces en la misma pantalla) — pedido explícito de Adán, "no esta claro
-  // a que se refiere esa seccion" (2026-08-09). En fases sin desglose mensual sí se deja: ahí es
-  // el único lugar que da la meta numérica concreta de la fase.
-  document.getElementById('coachPriorities').innerHTML=
-    tabsHtml+pendientesHtml+
-    (!mesesFase.length&&ph.meta?`<div class="sub" style="margin-bottom:6px">🎯 ${ph.meta}</div>`:'')+
-    itemsMes.map(s=>`<div class="sem-check">
-      <input type="checkbox" id="dchk-${s.id}" ${faseChecks[s.id]?'checked':''} onchange="toggleFaseCheck('${s.id}')">
-      <label for="dchk-${s.id}">${s.txt}</label>
-    </div>`).join('');
+
+  // ── El reparto en 3 columnas ──
+  // Una tarea es PRIORIDAD si su texto empieza por "Prioridad N", que es como las escribe
+  // PHASES[].semanas. Es el único marcador que existe hoy: añadir un campo nuevo obligaría a
+  // mantenerlo sincronizado a mano con Coach_v2.html, que lee los mismos objetos.
+  const esPrio=s=>/^\s*Prioridad\s*\d/i.test(String(s.txt).replace(/<[^>]*>/g,''));
+  const hechas=itemsMes.filter(s=>faseChecks[s.id]);
+  const prios=itemsMes.filter(s=>!faseChecks[s.id]&&esPrio(s));
+  const resto=itemsMes.filter(s=>!faseChecks[s.id]&&!esPrio(s));
+
+  // Cada item es un párrafo entero: la primera frase se sube a título y el resto queda de cuerpo.
+  // Si el texto trae HTML (negritas, enlaces) no se parte — cortar por el punto podría partir una
+  // etiqueta a la mitad y dejar el marcado roto.
+  const parte=s=>{
+    const plano=String(s.txt);
+    if(plano.indexOf('<')>=0) return {t:plano,d:''};
+    const c=plano.search(/[.:]\s+/);
+    return (c>0&&c<90) ? {t:plano.slice(0,c+1), d:plano.slice(c+1).trim()} : {t:plano, d:''};
+  };
+  // `quitarPrefijo` borra el "Prioridad 1 — " del título en las tarjetas que YA llevan el chip
+  // PRIORIDAD 1 encima: si no, la misma frase se lee dos veces seguidas en la misma tarjeta.
+  const cuerpo=(s,colorT,quitarPrefijo)=>{
+    const p=parte(s);
+    const t=quitarPrefijo?p.t.replace(/^\s*Prioridad\s*\d+\s*[—–-]\s*/i,''):p.t;
+    return `<span class="cc-row"><input type="checkbox" id="dchk-${s.id}" ${faseChecks[s.id]?'checked':''} onchange="toggleFaseCheck('${s.id}')">`+
+      `<span><span class="cc-t"${colorT?` style="color:${colorT}"`:''}>${t}</span>`+
+      `${p.d?`<span style="display:block">${p.d}</span>`:''}</span></span>`;
+  };
+  // El número del chip sale del TEXTO, no de la posición en la lista: si marcas la Prioridad 1,
+  // la 2 sigue siendo la 2 y no pasa a llamarse "PRIORIDAD 1" por quedarse sola.
+  const numPrio=s=>{
+    const m=String(s.txt).replace(/<[^>]*>/g,'').match(/^\s*Prioridad\s*(\d+)/i);
+    return m?m[1]:'';
+  };
+
+  document.getElementById('coachColAhora').innerHTML=
+    `<div class="cc-h"><span class="cc-dot" style="background:var(--w);box-shadow:0 0 8px var(--w)"></span>`+
+    `<span class="cc-lbl" style="color:var(--w)">Ahora — sin excepción</span>`+
+    `<span class="cc-n" style="color:var(--w)">${prios.length}</span></div>`+
+    (prios.length
+      ? `<div class="cc-list">${prios.map(s=>`<div class="cc-card prio">`+
+          `<span class="cc-chip" style="background:var(--w);color:#05050a">PRIORIDAD ${numPrio(s)}</span>`+
+          cuerpo(s,null,true)+`</div>`).join('')}</div>`
+      : `<div class="cc-vacio">Sin prioridades abiertas este mes.<br>Todo lo urgente ya está marcado.</div>`);
+
+  document.getElementById('coachColMes').innerHTML=
+    `<div class="cc-h"><span class="cc-dot" style="background:var(--o)"></span>`+
+    `<span class="cc-lbl" style="color:var(--o)">${mesActivo?mesLabelFull(mesActivo):'Esta fase'}</span>`+
+    `<span class="cc-n" style="color:var(--text3)">${resto.length}</span>${tabsHtml}</div>`+
+    pendientesHtml+
+    (resto.length
+      ? `<div class="cc-list">${resto.map(s=>`<div class="cc-card">${cuerpo(s)}</div>`).join('')}</div>`
+      : `<div class="cc-vacio">Nada más pendiente en ${mesActivo?mesLabelFull(mesActivo):'esta fase'}.</div>`);
+
+  // Columna "Hecho": las tareas marcadas del mes + la libreta de logros. Los logros van aquí
+  // porque son lo único que no se puede "desmarcar" solo porque un saldo cambió — pedido
+  // explícito de Adán ("si no, sentiré que no logro nada").
+  const L=logrosLoad();
+  const lids=Object.keys(L).sort((a,b)=>String(L[a].fecha).localeCompare(String(L[b].fecha)));
+  const totalHecho=hechas.length+lids.length;
+  document.getElementById('coachColHecho').innerHTML=
+    `<div class="cc-h"><span class="cc-dot" style="background:var(--g);box-shadow:0 0 8px var(--g)"></span>`+
+    `<span class="cc-lbl" style="color:var(--g)">Hecho — esto no se borra</span>`+
+    `<span class="cc-n" style="color:var(--g)">${totalHecho}</span></div>`+
+    (totalHecho
+      ? `<div class="cc-list">`+
+          hechas.map(s=>`<div class="cc-card done">${cuerpo(s,'var(--text2)')}</div>`).join('')+
+          lids.map(id=>`<div class="cc-card done"><div style="display:flex;align-items:center;gap:8px">`+
+            `<span style="color:var(--g)">✅</span>`+
+            `<span class="cc-t" style="margin:0;flex:1">${esc(L[id].txt)}</span>`+
+            `<span style="font-family:var(--mono);font-size:9px;color:var(--text3);flex-shrink:0">${esc(fechaLogro(id))}</span>`+
+          `</div></div>`).join('')+
+        `</div>`+
+        `<div class="cc-foot" style="border-top-color:rgba(0,232,122,.16);display:flex;align-items:baseline;gap:8px">`+
+          `<span class="crb-pct${privado?' fin-hidden':''}" style="font-size:22px">${rutaPct}%</span>`+
+          `<span>de la ruta hacia deuda cara en $0</span></div>`
+      : `<div class="cc-vacio">Todavía nada marcado.<br>En cuanto marques algo, se queda aquí.</div>`);
 }
 let coachMesSel=null;
 function verCoachMes(ym){ coachMesSel=ym; renderCoach(); }
@@ -6148,8 +6539,8 @@ function renderMetasSlide(){
   const tiles=[
     {ico:'🆘',lbl:'Fondo de emergencia',val:money(ef),pct:Math.min(100,ef/10000*100),sub:'Meta: $10,000',c:'var(--w)',id:'fondo'},
     // La etiqueta lista solo las tarjetas con saldo vivo (ver la nota igual en renderCoach()).
-    {ico:'💳',lbl:'Deuda cara'+(deudaCaraBal>0?' ('+[bana.balance>0?'Banamex':null,bbva.balance>0?'BBVA':null].filter(Boolean).join('+')+')':''),val:deudaCaraTieneDatos?money(deudaCaraBal):'Sin datos',pct:deudaCaraTieneDatos?deudaCaraPct:0,sub:deudaCaraTieneDatos?(deudaCaraBal<=0?'Liquidada 🎉':'restante'):'Regístralas en Finanzas',c:'var(--r)',id:'deudacara'},
-    {ico:'🎓',lbl:'Fondo Maestría',val:goalMae?money(goalMae.current||0):'Sin datos',pct:goalMae&&goalMae.target?Math.min(100,(goalMae.current||0)/goalMae.target*100):0,sub:goalMae?`Meta: ${money(goalMae.target)}`:'Meta en Finanzas → Metas',c:'var(--cy)',id:'maestria'},
+    {ico:'💳',lbl:'Deuda cara'+(deudaCaraBal>0?' ('+[bana.balance>0?'Banamex':null,bbva.balance>0?'BBVA':null].filter(Boolean).join('+')+')':''),val:deudaCaraTieneDatos?money(deudaCaraBal):'Sin datos',pct:deudaCaraTieneDatos?deudaCaraPct:0,sub:deudaCaraTieneDatos?(deudaCaraBal<=0?'Liquidada 🎉':'restante'):'Regístralas en Finanzas',c:'var(--r)',id:'deudacara'},
+    {ico:'🎓',lbl:'Fondo Maestría',val:goalMae?money(goalMae.current||0):'Sin datos',pct:goalMae&&goalMae.target?Math.min(100,(goalMae.current||0)/goalMae.target*100):0,sub:goalMae?`Meta: ${money(goalMae.target)}`:'Meta en Finanzas → Metas',c:'var(--cy)',id:'maestria'},
     {ico:'💰',lbl:'Patrimonio hacia $1M',val:hasFinData()?money(pat):'Sin datos',pct:patPct,sub:'Meta: $1,000,000 · 01 ene 2030',c:'var(--g)',id:'patrimonio'},
     // 4 medidores nuevos (2026-08-19, "tambien si puedes agregar mas, hazlo"). Los 4 salen de
     // datos que ya existían en `finanzasmx_v2` y que no se estaban mirando en ninguna pantalla.
@@ -7166,7 +7557,7 @@ fixMsiBBVA20260813IfNeeded();
   fixAhorro20260817IfNeeded();
 fixMiercolesNatacionIfNeeded();
 fixRutina20260812IfNeeded();
-seedMetasLogradasIfNeeded();
+seedMetasLogradasIfNeeded();
 seedTengoViajeIfNeeded();
 seedLogros20260813IfNeeded();
 loadAll();
