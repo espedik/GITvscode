@@ -3347,3 +3347,48 @@ Escritorio (1500px), iPad (820px) y iPhone (390px), en **los dos temas**:
 - **6 cajas "Tu caso"** en los 11 pasos de Persuadir, y **ninguna** quedó suelta como viñeta.
 - **0 desbordes** de la página; los del temario son su scroll horizontal, a propósito.
 - Los 8 slides recorridos sin un solo error de consola.
+
+## Las 4 habilidades sociales, ahora completas (2026-08-23)
+
+> *"estas 4 no tienen informacion suficiente, debe estar muy muy completa, con info que me pueda ayudar y ser muy util"*
+
+Tenía razón: con el panel nuevo cabía mucho más de lo que había. Pasaron de **32 pasos y ~2,900 palabras** a **67 pasos y 10,100 palabras**.
+
+| Habilidad | Antes | Ahora |
+|---|---|---|
+| 🤝 Hacer networking de verdad | 8 pasos | **20** |
+| 🎯 Persuadir sin manipular | 11 pasos | **18** |
+| 💬 Relacionarte con las personas | 6 pasos | **14** |
+| 🌱 Sacarle lo mejor a una persona | 7 pasos | **15** |
+
+### Qué se añadió, no solo cuánto
+
+Lo que faltaba no era volumen, era **lo accionable**: qué decir, cuándo, y qué hacer esta semana.
+
+**Networking** — se añadió el mito del extrovertido (Susan Cain), la fuerza de los vínculos débiles de Granovetter (por qué el trabajo remoto no va a salir de sus amigos de CDMX), su inventario de qué tiene él para dar, la presentación de 20 segundos con la versión mala y la buena, cómo entrar en un grupo que ya está hablando, cómo salir sin quedar mal, la plantilla exacta del mensaje de 48 horas, los 5 tipos de ping, LinkedIn para reclutadores de fuera, cómo presentar a dos personas (double opt-in), los 5 errores que matan una red y **un plan de 90 días** con la semana en que va cada cosa.
+
+**Persuadir** — cada uno de los 7 principios pasó a tener paso propio con su experimento (los caramelos del camarero, las toallas del hotel, el frasco de galletas, la calcomanía del jardín), un paso entero sobre **la diferencia real entre influir y manipular** con la prueba de las tres preguntas, las 4 herramientas de Voss desglosadas una por paso, una semana de ejercicios día por día, y un paso sobre **cómo defenderte cuando te los aplican a ti** — con la regla que le sirve directo: *ninguna buena decisión financiera necesita tomarse hoy*.
+
+**Relacionarte** — los tres niveles de escucha, cómo recordar nombres sin buena memoria (repetir → asociar → anotar el mismo día), cómo criticar sin romper nada (incluido por qué el "pero" borra todo lo que va antes), **cómo pedir perdón de verdad** con las cuatro partes obligatorias y las tres disculpas falsas, y cómo mantener las relaciones que ya tiene — que es lo difícil y de lo que nadie habla.
+
+**Sacarle lo mejor** — el efecto Golem además del Pigmalión, un paso para revisar **qué espera él de cada persona** antes de aplicar nada, las 7 preguntas de *The Coaching Habit*, aguantar el silencio (contar hasta siete), cómo dar feedback sin que el otro se cierre y por qué el sándwich está desacreditado, elogiar el esfuerzo y no el talento (Dweck), y el triaje de **¿no sabe, no puede o no quiere?** — que es donde se pierde a la gente buena tratando un problema del sistema como si fuera de actitud.
+
+Las cuatro cierran con **📚 qué leer y en qué orden**, con la edición en español cuando existe, y con el paso "✅ Ya lo dominas cuando…" reforzado a cuatro criterios comprobables.
+
+### Las cajas de "Tu caso" y "Plantilla"
+
+`pintarDetailOverlay()` ya sacaba de la lista los ítems que empiezan por *Tu caso* para darles su caja en cian. Se generalizó a **cualquier etiqueta accionable** — `Tu caso`, `Tu caso concreto`, `Plantilla…`, `Ejemplo…` — porque el mensaje de las 48 horas, que es literalmente para copiar y pegar, estaba perdido como una viñeta más. Son **10 cajas** repartidas en las cuatro; se recorrieron las **23 habilidades completas** para confirmar que no aparece ninguna caja donde no toca.
+
+### Un fallo que solo apareció con el contenido largo
+
+**El pie con "Marcar" y ‹ › se salía de la pantalla en el celular.** `.md-main` tenía `min-width:0` pero no `min-height:0`; en la columna del móvil crecía con su contenido en vez de dejar que `.md-paso` hiciera scroll, y empujaba las acciones fuera. Con 8 pasos cortos no se notaba; con 20 pasos largos, sí. Comprobado ahora en los 67 pasos a 1500, 820, 390 y 360px: el pie siempre visible.
+
+De paso, el botón mostraba *"Marcar como domin…"* cortado en el celular: por debajo de 600px dice **"Marcar"**, y se repinta al girar el teléfono.
+
+### Verificación
+
+- **67 pasos recorridos uno por uno** en las 4 habilidades: ninguno vacío, todos con su lista, ninguna etiqueta HTML cruda.
+- **10,104 palabras** medidas en el DOM, no en el archivo.
+- Las **23 habilidades** abiertas completas sin un error de consola.
+- El temario con 20 entradas hace scroll y **el paso activo siempre queda a la vista**.
+- Marcar sigue guardando en `habilidades_checklist_v1` y actualizando la barra de la tarjeta.
