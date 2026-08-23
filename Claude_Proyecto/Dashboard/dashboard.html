@@ -19,8 +19,17 @@
      en Entrevistas/js/data-*.js, no scrapeado de un render), más el CSS de sus propias clases de
      contenido reescrito con el prefijo .en-content — ya no vive dentro de un <iframe>. -->
 <script src="entrevistas-data.js"></script>
+<!-- La fuente se carga SIN bloquear el pintado (2026-08-23). Antes era un `@import` dentro
+     del <style>: el navegador no lo descubría hasta parsear el CSS y, mientras Google no
+     contestaba, no pintaba nada — con la conexión lenta o caída, la página se quedaba
+     esperando. Con media="print" la hoja no bloquea, y el onload la activa al llegar.
+     La tipografía de respaldo ya está en cada font-family, así que el texto se lee desde
+     el primer instante. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;700&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&display=swap" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;700&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&display=swap"></noscript>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;700&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&display=swap');
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
   --bg:#05050a; --text:#f4f4f8; --text2:#9a9db3; --text3:#8589a8;

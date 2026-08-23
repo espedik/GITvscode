@@ -3233,3 +3233,23 @@ Lo natural era dar el alto sobrante al checklist con `flex:1` y que scrolleara d
 ### Verificación
 
 **7 resoluciones, 7 correctas**: FHD, 1600×900, 1366×768, 1280×720, MacBook 1440×900, iPad y iPhone. En todas: **0 desbordes horizontales**, y llevando el scroll al fondo se comprueba que **el último bloque queda visible** — que es lo que de verdad se pedía, no solo que existiera barra. El checklist se muestra completo (341-705 px según el tamaño). Sin errores de consola.
+
+## La fuente dejaba la página esperando a Google (2026-08-23)
+
+*"como que se traba esa pagina"*.
+
+Medido en Coach: el único recurso externo de la página es la hoja de **Google Fonts**, y tardaba entre **400 y 1,440 ms** — el recurso más lento por goleada. Estaba cargada con `@import` **dentro del `<style>`**, que es la peor forma posible: el navegador no la descubre hasta parsear el CSS y, mientras Google no contesta, **no pinta nada**. Sin internet o con conexión lenta, la página se queda en blanco esperando a un servidor que no va a responder.
+
+Estaba así en **las 8 apps** del proyecto, desde siempre.
+
+Ahora se carga con `<link ... media="print" onload="this.media='all'">` más los `preconnect`: la hoja se descarga sin bloquear el pintado y se activa al llegar. El `<noscript>` cubre el caso sin JavaScript, y la tipografía de respaldo ya estaba en cada `font-family`, así que el texto se lee desde el primer instante.
+
+| | Con red | **Con Google Fonts caído** |
+|---|---|---|
+| Coach | 920 → **612 ms** | **481 ms**, texto completo |
+| Dashboard | **550-808 ms** | **550 ms**, texto completo |
+| Vestimenta | **216 ms** | **146 ms**, texto completo |
+
+La prueba que importa es la segunda columna: se bloqueó `fonts.*` en el navegador y **las 8 apps cargan igual de rápido y muestran todo su texto**. Antes, ese escenario dejaba la página esperando.
+
+**Lo que NO era**: las 4 tarjetas sociales nuevas de Coach. Comparado contra `a06c8b4^` en 3 corridas, la versión anterior y la actual cargan igual (~920 ms de DOM). El `@import` ya estaba antes.

@@ -5,8 +5,17 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mi Salud & Nutrición</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<!-- La fuente se carga SIN bloquear el pintado (2026-08-23). Antes era un `@import` dentro
+     del <style>: el navegador no lo descubría hasta parsear el CSS y, mientras Google no
+     contestaba, no pintaba nada — con la conexión lenta o caída, la página se quedaba
+     esperando. Con media="print" la hoja no bloquea, y el onload la activa al llegar.
+     La tipografía de respaldo ya está en cada font-family, así que el texto se lee desde
+     el primer instante. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"></noscript>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
   --g:#00e87a;--g-d:#00b860;--g-l:rgba(0,232,122,.1);
