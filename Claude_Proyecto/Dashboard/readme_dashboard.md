@@ -3253,3 +3253,33 @@ Ahora se carga con `<link ... media="print" onload="this.media='all'">` más los
 La prueba que importa es la segunda columna: se bloqueó `fonts.*` en el navegador y **las 8 apps cargan igual de rápido y muestran todo su texto**. Antes, ese escenario dejaba la página esperando.
 
 **Lo que NO era**: las 4 tarjetas sociales nuevas de Coach. Comparado contra `a06c8b4^` en 3 corridas, la versión anterior y la actual cargan igual (~920 ms de DOM). El `@import` ya estaba antes.
+
+## Las 4 habilidades sociales, ahora en el sitio correcto (2026-08-23)
+
+*"sigo sin verlo aqui"* — con una captura del slide **Habilidades Base**.
+
+Y con razón: el 20-ago el contenido se escribió en `Coach_v2.html`, en la sección "Habilidades de un Hombre de Valor". Pero el sitio que él tenía en mente es este slide del Dashboard, cuyo título es literalmente **"Lo que todo hombre debería saber hacer"**. Dos secciones con nombres casi idénticos en apps distintas, y el contenido fue a la que no era.
+
+Ahora están donde las buscaba, en el mismo formato que las 19 que ya vivían ahí:
+
+| | Habilidad | Pasos de checklist |
+|---|---|---|
+| 🤝 | Hacer networking de verdad | 8 |
+| 🎯 | Persuadir sin manipular | 11 |
+| 💬 | Relacionarte con las personas | 6 |
+| 🌱 | Sacarle lo mejor a una persona | 7 |
+
+**32 pasos**, cada uno marcable, llenando la barra de progreso de su tarjeta como el resto.
+
+**Van primero en el array a propósito.** Las otras 19 son habilidades físicas o de protocolo —nadar, fogata, nudos, mecánica—; estas cuatro son las que mueven una carrera, y en la primera fila es donde se ven sin scroll.
+
+Cada una cierra con un paso **"✅ Ya lo dominas cuando…"** con criterios comprobables, siguiendo el patrón de las 19 existentes. No dicen "cuando te sientas seguro":
+
+- **Networking**: cuando alguien de tu lista te presenta a un tercero **sin que se lo pidas**.
+- **Persuadir**: cuando descartas un argumento que funcionaba **porque no era verdad**.
+- **Relacionarte**: cuando sales de una conversación sabiendo tres cosas del otro y él casi nada nuevo de ti.
+- **Sacarle lo mejor**: cuando dices algo incómodo y la relación queda **mejor**, no peor.
+
+### Verificación
+
+Escritorio, iPad e iPhone: **23 habilidades y 23 tarjetas pintadas**, las 4 nuevas en cabeza, **ninguna sin su detalle** (se comprobó cruzando `HABILIDADES_BASE` contra `HABILIDAD_DETALLE`, que es donde una tarjeta nueva se queda muda si se olvida), las 4 fotos cargando a **1920×1280** reales, y el detalle de "Persuadir" abriendo con sus 11 pasos. 0 desbordes y sin errores de consola.
