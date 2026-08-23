@@ -820,3 +820,40 @@ La verificación anterior no los habría encontrado: resolvía los `data-sec` de
 ### Verificación
 
 Escritorio, iPad e iPhone: el sidebar ya no ofrece Networking, ningún enlace del sidebar ni del cuerpo apunta al vacío, la sección duplicada no existe, las 4 tarjetas siguen y los tres bloques rescatados están dentro. 0 desbordes, `<style>` y `<section>` cuadrados, sin errores de consola. Y Coach carga ahora en **453 ms**.
+
+## Un solo bloque para ducha, cabello, piel y suplementos (2026-08-23)
+
+> *"los suplementos, bañarme y ski care, deben ir en uno solo, y entonces ponle un titulo en general para esos y debe durar 40 min, esto es para todos los dias de la semana, solo acomoda bien donde deben ir, esto es para que creemos un bloque grande y no tengamos muchos pequeños, ademas cuando de click a ese bloque me debe desplegar la informacion de todo"*
+
+**10 bloques pasaron a 4** (uno por variante de día), todos con el mismo título:
+**🚿 Rutina de la mañana — ducha, cabello, piel y suplementos**, y **40 minutos exactos los siete días**.
+
+| Día | Bloque | Hora | Pasos |
+|---|---|---|---|
+| Lun · Jue | `wd-am-lav` | 06:53 – 07:33 | 13 |
+| Mar · Mié · Vie | `wd-am-co` | 06:53 – 07:33 | 11 |
+| Sábado | `sa-am` | 08:35 – 09:15 | 11 |
+| Domingo | `do-am` | 08:35 – 09:15 | 9 |
+
+Son cuatro y no uno porque **el cabello cambia por día**: champú Pilexil los lunes y jueves, sin champú martes/miércoles/viernes y domingo, mascarilla el sábado. El título es el mismo en todos; lo que cambia son los pasos de dentro.
+
+### De dónde salieron los 10 minutos que faltaban
+
+Los tres bloques sumaban 30 minutos (07:03 → 07:33 entre semana). Para llegar a 40 había que sacarlos de algún sitio:
+
+- **Entre semana**: del bloque **💻 Construir esta aplicación** de la mañana, que pasa de 20 a 10 minutos (06:43 → 06:53). Todo lo demás queda intacto: vestirte a las 07:33 y el Didi camino a ALTEN a las 07:40, así que **no se toca la hora de llegada a ALTEN**.
+- **Sábado y domingo**: los suplementos iban sueltos **antes** del ejercicio (07:30 y 07:55) y ahora van con la ducha, después. El bloque va de 08:35 a 09:15 y el **Didi del fin de semana arranca 09:15** en vez de 09:00 — 15 minutos menos de turno, el único coste real del cambio.
+
+Los textos que quedaban mintiendo se corrigieron: *"20 min antes de arrancar"* → *"10 min"*, y *"Didi — bloque de día (~09:00 a 14:00, 5h)"* → *"(~09:15 a 14:00, 4h 45m)"*.
+
+### El progreso ya marcado no se pierde
+
+Las subtareas se reutilizan **con sus ids intactos** (`wd02a`, `wd03a`, `wdSupAm1`…), porque `coach_rutina_v1.completado` guarda ids de subtarea, no del bloque padre. Comprobado contra el archivo anterior: **84 subtareas antes, 84 después, ninguna perdida ni inventada**, y ninguna repetida dentro de un mismo día.
+
+### Verificación
+
+- Los **7 días** tienen su bloque, todos duran **exactamente 40 minutos** hasta el bloque siguiente.
+- **Ningún bloque suelto** de suplementos, ducha o skincare AM quedó por ahí.
+- Al tocar el tramo en la cinta, el panel despliega **los pasos completos**: cabello, skincare, minoxidil y los cuatro suplementos, con sus enlaces de compra.
+- `RUTINA_TASKS` quedó en **65 tareas** (antes 71) y sigue **replicado en `Coach_v2.html` y `dashboard.html`**, comprobado en los dos.
+- Sin errores de consola en ninguna de las dos apps.
