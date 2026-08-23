@@ -3440,3 +3440,30 @@ Cada una cierra con **📚 qué leer** cuando el tema tiene bibliografía real, 
 - **44 imágenes** en pasos conservadas — ninguna se perdió al reescribir.
 - El pie del panel visible en los 322 pasos a **1500, 820, 390 y 360px**.
 - **Sin errores de consola**, y el rendimiento intacto: primer texto en pantalla ~1.0 s, abrir el panel de la habilidad más larga (20 pasos) **36 ms**.
+
+## "Saber meditar" salía estirada a lo ancho (2026-08-23)
+
+> *"la de meditar hazla pequeña como los demas"*
+
+La tarjeta medía **1208px contra los 298px** de las otras 22: ocupaba las cuatro columnas ella sola.
+
+No era nada del contenido de meditar. Era esta regla:
+
+```css
+.img-goal-cell:last-child:nth-child(odd){grid-column:1/-1}
+```
+
+Está pensada para el grid de **2 columnas** de Mis Metas: si hay un número impar de tarjetas, la última queda sola en su fila y se estira para llenarla, que ahí es lo correcto. Pero el mismo selector alcanzaba al grid de **4 columnas** de Habilidades Base, donde las 23 tarjetas hacen que la 23ª sea impar — y "Saber meditar", que es la última del array, se iba a lo ancho completo.
+
+Ahora la regla está acotada al grid que la necesita:
+
+```css
+.img-goal-grid:not(.img-goal-grid-4col)>.img-goal-cell:last-child:nth-child(odd){grid-column:1/-1}
+```
+
+En el de 4 columnas la fila incompleta simplemente deja hueco, que es el comportamiento correcto.
+
+### Verificación
+
+- Las **23 tarjetas miden lo mismo** (298px) a 1500px, y los tres grids —2 columnas, `-sm` y 4 columnas— quedan uniformes también a 820 y 390px.
+- **La regla sigue viva donde sí hace falta**: con 9 tarjetas simuladas en Mis Metas, la novena llena la fila (363 y 731px). Con 24 en Habilidades, todas siguen iguales.

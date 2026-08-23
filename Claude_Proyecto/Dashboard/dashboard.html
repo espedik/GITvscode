@@ -209,7 +209,11 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 .img-goal-photo:hover::before{transform:scale(1.06)}
 .img-goal-photo:hover{box-shadow:0 10px 26px rgba(0,0,0,.4)}
 .img-goal-photo::after{content:'';position:absolute;inset:0;z-index:1;background:linear-gradient(to top,rgba(0,0,0,.78) 0%,rgba(0,0,0,.2) 60%,transparent 85%)}
-.img-goal-cell:last-child:nth-child(odd){grid-column:1/-1}
+/* Una tarjeta suelta en la ultima fila llena el ancho — pensado para el grid de 2 columnas de
+   Mis Metas. En el de 4 columnas (Habilidades Base) NO aplica: con 23 tarjetas la 23a es impar
+   y "Saber meditar" salia estirada a lo ancho de las cuatro (2026-08-23). Ahi la fila
+   incompleta simplemente deja hueco, que es lo correcto. */
+.img-goal-grid:not(.img-goal-grid-4col)>.img-goal-cell:last-child:nth-child(odd){grid-column:1/-1}
 .img-goal-txt{position:absolute;left:0;right:0;bottom:0;padding:4px 8px;z-index:2;display:flex;align-items:center;gap:5px;font-weight:800;font-size:clamp(9px,0.85vw,11px);color:#fff;text-shadow:0 1px 4px rgba(0,0,0,.6)}
 .img-goal-pbar-row{display:flex;align-items:center;gap:5px;padding:0 1px;flex-shrink:0}
 .img-goal-pbar-ico{font-size:7px;flex-shrink:0;line-height:1}
