@@ -3044,6 +3044,8 @@ Con sus deudas reales sembradas (BBVA $32,343 al 55.7% y crédito automotriz $29
 
 ## Fondo Maestría: el desglose que faltaba, y el que no existe (2026-08-19)
 
+> ⚠️ **Superada el 2026-08-23.** La conclusión de esta sección —"en Finanzas ese número no está desglosado"— era **falsa**, y el panel la mostró durante cuatro días. Sí está desglosado, y la pieza más grande es su Bitcoin. Ver ["El fondo sí estaba desglosado"](#el-fondo-sí-estaba-desglosado-y-dos-tercios-son-bitcoin-2026-08-23) al final de este documento.
+
 *"fondo de maestria no desglozaste las cantidades que conforman ese numero ni las barras de ellas, debes investigar en finanzas"*.
 
 Se investigó, y el resultado es en sí mismo el hallazgo: **en Finanzas ese número no está desglosado**. La meta `g001` guarda `current: 53740` como **una sola cifra**, sin instrumentos ligados, sin aportaciones históricas y sin cuentas asociadas. Lo único trazado como inversión son CETES y un depósito de renta, que ni suman esa cantidad ni pretenden ser ese fondo.
@@ -3775,9 +3777,25 @@ El problema no era de estilo, era de escala, y se midió sobre el lunes real (23
 ### La solución: dos piezas con un trabajo cada una
 
 - **El riel** (`.cinta`, 11px de alto) es el mapa: proporción real del día y la línea verde de "ahora". Sin texto — a 45 minutos un tramo mide 40px y nunca cupo un nombre.
-- **Las fichas** (`.cinta-fic`) son lo que se toca: **148×60px todas**, con hora, nombre completo y duración. Muy por encima del mínimo de 44px para el pulgar. Se deslizan con las flechas ‹ › (`cintaScroll()`) y la ficha activa se centra sola al repintar (`centrarFichaActiva()`, con `scrollLeft` a mano y **no** `scrollIntoView()`, que arrastraría el scroll del carrusel entero).
+- **Las fichas** (`.cinta-fic`) son lo que se toca: **60px de alto y un ancho que depende de la duración** (`anchoFicha()`, ver abajo), con hora, nombre completo y duración. Muy por encima del mínimo de 44px para el pulgar. Se deslizan con las flechas ‹ › (`cintaScroll()`) y la ficha activa se centra sola al repintar (`centrarFichaActiva()`, con `scrollLeft` a mano y **no** `scrollIntoView()`, que arrastraría el scroll del carrusel entero).
 
 Se invirtió el contraste: **hecho = encendido, pendiente = apagado**.
+
+### Las fichas dejaron de medir todas lo mismo (2026-08-24)
+
+*"abajo de la barra de actividades todas las cajas tienen el mismo tamaño y eso no debería ser"*.
+
+Las fichas nacieron a 148px fijos porque su trabajo era ser tocables, y la proporción se la dejaban entera al riel. El efecto secundario: en la fila, los **20 minutos de GBM** y las **8h 10m de ALTEN** ocupaban exactamente el mismo espacio, así que la fila contradecía al riel que tiene justo encima.
+
+Ahora el ancho lo pone `anchoFicha(mins)` y viaja al CSS como la variable `--fw` (`.cinta-fic{width:var(--fw,148px)}`; la **altura sigue fija** a 60px, para que la fila quede a ras). La escala es de **raíz cuadrada, no regla de tres**: en el mismo carril conviven bloques de 10 min y de 5 h, y en proporción directa el largo mediría 30 veces el corto — se comería la fila y los cortos caerían por debajo del mínimo tocable.
+
+| Duración | 10-30 min | 45 min | 1 h | 1 h 30 | 2 h | 3 h | 4 h | 5 h |
+|---|---|---|---|---|---|---|---|---|
+| Ancho | 104px | 127px | 147px | 180px | 208px | 255px | 294px | 300px |
+
+El **suelo de 104px** es lo que necesita la fila de arriba para que la hora y la duración no se pisen; el **techo de 300px** evita que una sola ficha tape a todas sus vecinas. En móvil (`max-width:700px`) la media query ya no fija `width` — eso aplastaba la proporción —, solo sube el suelo a `min-width:132px`, porque el pulgar necesita más blanco que el cursor.
+
+No contradice a **`.coach-ruta-band`**, cuyos tres pasos sí miden lo mismo entre sí: aquellos son hitos de una secuencia y estos son magnitudes comparables. Es el mismo criterio aplicado a los dos casos.
 
 ### El verde es "ahora", y solo eso
 
@@ -3845,3 +3863,173 @@ El párrafo de `explica` **salió de la pantalla** y vive como `title` de la ban
 ### Verificación
 
 Medido a **1600 y 390px**: el slide pasa de 1092 a **841px** de alto en escritorio — ya cabe con margen —, tres columnas de **444×668** iguales, **0 solapamientos** entre el checkbox y el título, sin scroll horizontal de página y **0 errores de JavaScript** en ninguno de los dos anchos. El tooltip de la fase conserva los 496 caracteres del párrafo.
+
+
+## El fondo sí estaba desglosado, y dos tercios son Bitcoin (2026-08-23)
+
+*"esta parte no esta muy clara, ademas esa suma contiene lo del precio en bitcoin que tengo guardado, revisa todo eso"*.
+
+Tenía razón, y el panel decía exactamente lo contrario. El bloque "🔍 Qué compone esos $53,740" afirmaba que **Finanzas no lo tenía desglosado**. Es la afirmación de la sección del 2026-08-19, y es falsa.
+
+### Lo que se había pasado por alto
+
+`Finanzas.html` **sí** compone ese fondo, en `renderIndicatorsHTML()`, y hasta lo pinta con cinco barras de colores:
+
+```js
+const cur = isMae ? (efV2 + cetesV2 + accV2 + rentaV2 + btcValue2) : (g.current || 0);
+```
+
+Cinco piezas: fondo de emergencia, CETES, acciones, depósito de renta y **Bitcoin** — este último valuado en vivo desde `btcHistory` × `currentBtcPrice` × `usdMxn`, que Finanzas refresca contra CoinGecko.
+
+El Dashboard nunca miró nada de eso. Leía `goal.current` — los `53740` escritos a mano en el seed — y, de paso, la palabra `btcHistory` **no aparecía ni una sola vez en todo `dashboard.html`**. La pieza más grande del dinero de Adán no existía en ninguna pantalla del Dashboard: ni en el fondo de la maestría, ni en el patrimonio, ni en el medidor de invertido.
+
+### Los números (con los datos del seed de Finanzas)
+
+| Pieza | Monto | % del fondo |
+|---|---:|---:|
+| Fondo de emergencia | $4,000 | 6% |
+| CETES | $6,500 | 10% |
+| Depósito de renta | $11,250 | 18% |
+| **Bitcoin** | **$40,492** | **65%** |
+| **Total vivo** | **$62,242** | |
+| Cifra a mano en `g001.current` | $53,740 | −$8,502 de diferencia |
+
+El Bitcoin son **0.032509 BTC** de 3 compras: entraron $2,878 USD y hoy valen $2,077 USD (−$801 USD). Y son el **65% de una meta a la que aún le faltan 26 meses** — una caída del 40%, normal en ese activo, le quita $16,197 al fondo en semanas.
+
+### Qué se cambió
+
+**`fondoMaestria()`** (nueva, junto a `patrimonioNeto()`) es ahora la **única fuente** de esa cifra en todo el archivo. Suma fondo de emergencia + cada inversión + Bitcoin, y devuelve también el total sin el fondo de emergencia, los datos del BTC y una bandera de doble conteo. **`btcInfo()`** valora el BTC: monedas, USD puestos, USD de hoy, MXN y qué tan viejo está el precio guardado.
+
+Diferencia deliberada contra Finanzas: allá se suma **por tipo** (`cetes` + `acciones` + `otro`), así que un instrumento de tipo `fondos`, `crypto`, `deuda` o `inmuebles` se caería del total sin avisar. Aquí se lista **cada inversión por su nombre** — no se pierde ninguna. *(Ese hueco sigue vivo en `Finanzas.html`; no se tocó ese archivo en esta ronda.)*
+
+Las cuatro piezas que hablaban del fondo dejaron de leer `goal.current`: el medidor 🎓 de Mis Metas, la barra de dinero de la tarjeta "Maestría en Alemania", el bloque "medido con dinero real" de la barra de edad, y el panel de detalle.
+
+El panel se reescribió entero:
+
+| Sección | Qué muestra |
+|---|---|
+| 🔍 De qué se compone, pieza por pieza | una barra por pieza real, con su % del fondo |
+| ₿ La pieza que se mueve sola | el BTC: monedas, precio, tipo de cambio, ganancia/pérdida en USD, y lo que le quitaría una caída del 40% |
+| ⚠️ Doble conteo | los $4,000 del fondo de emergencia se cuentan aquí **y** en su propio medidor — se dice, con la cifra sin él |
+| 📌 Desfase con Finanzas | avisa cuando `g001.current` ya no coincide con el fondo vivo, y por cuánto |
+| ⏸️ Por qué ahora no aportas | igual que antes, pero sin prometer que el saldo "queda intacto": lo mueve el BTC |
+| 📈 El ritmo que pediría la meta | igual, ahora comparado contra su gasto mensual real cuando hay transacciones |
+
+### De paso, otros dos arreglos
+
+**El Bitcoin entró al panel de Patrimonio**, con su propia fila. Y ahí salió un error de aritmética que llevaba tiempo: la nota presentaba `tieneHoy − deudaTot = pat` como una identidad, pero `tieneHoy` incluía el efectivo y la cuenta y `patrimonioNeto()` no — la resta no daba. Ahora la nota usa la fórmula real (`inversiones + fondo − deudas`), explica por qué está congelada (para seguir siendo comparable contra el punto de partida de −$308,830 del 18-jul-2026, decisión de `readme_finanzas`) y dice aparte los $42,167 que deja fuera y que también son dinero suyo.
+
+**El precio del BTC ya no depende de abrir Finanzas.** `guardarPrecioBtc()` guarda en `finanzasmx_v2` el precio que el panel de inversión del lunes ya le pedía a CoinGecko — misma semántica que `fetchBtcPrice()` de Finanzas, y solo escribe si ya hay historial de compras. Sin esto, un precio de hace meses valuaba el 65% del fondo. El panel avisa cuando el precio guardado tiene más de 2 días.
+
+`META_DETALLE.maestria` dejó de citar "$53,740" (es texto estático, no puede calcular) y ahora manda al medidor que sí lo hace en vivo.
+
+### Verificación
+
+`node --check` sobre los dos bloques `<script>` del archivo: sin errores. Las funciones reales (`fondoMaestria`, `btcInfo`, `patrimonioNeto`, `kpiDetalle`) se extrajeron del HTML y se corrieron en Node contra los datos del seed de Finanzas: el fondo da **$62,242** repartido en 4 piezas, el panel de patrimonio ahora cuadra (`$21,750 − $341,362 = −$319,612`) y ninguna cifra sale `NaN` ni `undefined`.
+
+**Lo que queda pendiente y no se tocó:** en `Finanzas.html`, `g001.current` sigue guardando los $53,740 a mano (el panel ahora lo avisa en vez de creerle), y su suma por tipo sigue pudiendo perder instrumentos de tipo `fondos`/`crypto`/`deuda`/`inmuebles`.
+
+## Habilidades pasó a "Foco": una habilidad grande y el ranking por retorno (2026-08-23)
+
+*"en el dashboard en la pagina 5 dame opciones de diseños, futuristas y modernos"*. Se le dibujaron tres direcciones y eligió la segunda: *"realiza la opcion b"*.
+
+### Lo que estaba mal, medido antes de tocar nada
+
+- **Las 16 sub-habilidades salían las 16 cerradas.** Ese es el problema de fondo: el slide se diseñó para leerse de reojo mientras se trabaja — está escrito en su propio comentario, *"nada de clics — este slide es pasivo"* — pero desde el 2026-08-19 el 100% de lo accionable (el cómo, el recurso) vivía detrás de un clic. De reojo solo se leían 16 títulos.
+- **90px de hueco muerto** en la tarjeta de Finanzas: tiene 7 pasos contra los 9 de Inversión y el grid las igualaba a 418px de alto.
+- **Las 12 barras se ordenaban por el valor crudo e ignoraban el peso**, que iba como texto de 9px (`×1.5`). El slide se llama *En qué invertir tu tiempo* y no calculaba en ningún lado dónde rinde la hora.
+
+### La estructura nueva
+
+`#skillBars` (las 12 barras) y `#skillPriority` (las 2 tarjetas) desaparecen. En su lugar, dos columnas 1.75 : 1:
+
+1. **`#habFoco`** — una sola habilidad con **un solo paso abierto y legible entero**: por qué esa, cómo desarrollarla, con qué libro, y la rejilla de los N pasos donde se toca otro.
+2. **`#habOvr` + `#habRank` + la franja de Didi** — el nivel general, las 12 ordenadas por retorno, y el contexto de siempre.
+
+La franja de Didi bajó del título a la columna derecha: ahí ya no le pelea la fila al título y queda junto al resto del contexto. Sigue siendo el mismo `#didiStrip`, con la misma `renderDidiStrip()`.
+
+### El retorno, que es lo que el título promete
+
+`skRetorno(s) = peso × (100 − valor)`. No es cuál está más baja, es cuánto mueve el nivel general por hora invertida. Con el peso dentro, el orden cambia: **Inversión (25, ×1.2 → 90) rinde más que Finanzas (20, ×1.1 → 88)** aunque su valor sea mayor. Por eso el foco por omisión es Inversión.
+
+Las candidatas se siguen eligiendo igual que antes — las `PRIORIDAD_N` más bajas de las que no están en `PRIORIDAD_EXCLUIDAS` — para no tocar la decisión del 2026-08-09 de dejar Ventas y Marketing fuera. Lo único nuevo es que **entre esas dos manda el retorno, no el valor**.
+
+Ventas y Marketing sí aparecen en el ranking, encabezándolo (127 y 96) pero **apagadas y marcadas EN PAUSA**. Es deliberado: son las que más rendirían y verlas ahí explica por qué no son la habilidad de la semana. Ocultarlas dejaría la pregunta sin respuesta.
+
+### Las cifras se calculan, no se estiman
+
+La línea del OVR promete un número concreto (*"Llevar Inversión de 25 a 40 lo sube a 48"*), así que sale de `calcOVRcon()`, que es `calcOVR()` con un valor sustituido — misma fórmula, mismo redondeo. El `40` es el siguiente escalón de `skLevel()` por encima del valor actual, no un número elegido a ojo.
+
+En el borrador la frase remataba con *"es el movimiento más grande que tienes disponible"*. Al calcularlo resultó **falso**: Finanzas está más lejos de su escalón (20→40 son 20 puntos contra 15) y da el mismo 48. La comparación entre las dos candidatas ahora **solo se escribe si de verdad gana una**; hoy empatan y no se escribe nada.
+
+### Qué se guarda
+
+`dash_habfoco_v1`, y solo dos cosas: cuál de las dos candidatas está en el foco y en qué paso va cada una. **No hay "completado"**: marcar pasos como hechos sería un modelo nuevo que habría que mantener sincronizado a mano con `Coach_v2.html`, igual que ya pasa con `SK` y `APRENDIZAJE`. El paso seleccionado *es* el estado, y cada habilidad recuerda el suyo por separado.
+
+Si el campo `skill` viene vacío (nunca se tocó el botón), el foco lo decide el retorno. Así, si mañana Finanzas adelanta a Inversión, el slide se mueve solo en vez de quedarse congelado en la última elección.
+
+### Una sola ruta de pintado para las dos formas de APRENDIZAJE
+
+`habPasos(id)` normaliza las dos que conviven: las que ganaron `subs` el 2026-08-19 (Finanzas e Inversión) y las del formato viejo (diagnóstico / esta semana / semanas 2-4 / hábito / error), que se convierten en 5 pasos. Así no hay rama duplicada y, si mañana IA o Datos entran al foco porque cambian los valores, el slide ya sabe mostrarlas. Con esto se fueron `toggleSubhab()` y todo el CSS de `.sc-*`, `.skbar-*` y `.skill-card`, que ya no tenían usuario.
+
+### Pantallas bajas: el problema que solo aparece barriendo todos los pasos
+
+El alto del panel de foco lo manda el largo del texto del paso, y ese largo varía mucho — el paso 4 de Inversión ocupa casi el doble que el 8. Midiendo **solo el paso que estaba abierto** todo cabía; barriendo **los 16 pasos en 15 resoluciones**, en 1440×900, 1366×768 y 1280×720 los más largos se salían entre **9 y 31px**.
+
+La corrección va en `@media(max-height:940px)` y recupera espacio en tres frentes a la vez, para que aguante el peor paso y no solo el que estaba abierto al medir:
+
+1. la rejilla de 9 pasos con nombre (**166px fijos**) pasa a una tira de números (**~70px**) — el nombre del paso abierto sigue en el título grande y el de cada número está en su `title`;
+2. título, cifra del OVR y cuerpo bajan un escalón de tamaño;
+3. se aprietan gaps y paddings.
+
+El corte va en 940px de alto a propósito, para cubrir las laptops de 900. La misma tira compacta se usa en móvil, donde además sube el área de toque de 30 a 46px: las 9 fichas apiladas costaban ~360px y empujaban el slide a 1704px de alto.
+
+### Verificación
+
+**15 resoluciones × 16 pasos = 240 combinaciones, todas sin desborde ni error de JavaScript**, de 1920×1080 a 360×740, en tema oscuro y claro. Además se probó la interacción completa en Chrome: tocar un paso, cambiar de habilidad, recargar y comprobar que cada habilidad vuelve a su propio paso. En escritorio el slide mide **841px** en ventana de 1000 y en móvil **1325px** (antes 1488). Ningún control queda por debajo de 32px.
+
+## Habilidades Base pasa a "consola táctica": la barra de avance se vuelve una marca por paso (2026-08-23)
+
+Pedido: *"de la 4 pagina del dashboard, dame alternativas de diseño moderno y futurista"*. Se le mostraron a Adán **cuatro direcciones renderizadas**, cada una a 1440×900 con la carcasa real del Dashboard (barra de apps, rieles del HUD, manchas `--ac1`/`--ac2` de `.theme-basicas`) y con las 23 habilidades, sus fotos y el número real de pasos de cada checklist — no maquetas con texto de relleno:
+
+| | Dirección | Qué proponía | Por qué no |
+|---|---|---|---|
+| **A** | Consola táctica | Instrumentación: retícula, brackets de HUD, mono al frente, franja de instrumentos arriba | **Elegida** |
+| B | Vitrina cinemática | Una habilidad ocupando media pantalla con su siguiente paso; las otras 22 en un riel | 22 de 23 quedaban en miniaturas de 32px |
+| C | Bento de cristal | La misma rejilla pero con vidrio real, halo de neón por estado y jerarquía por tamaño | Los tamaños desiguales sugerían una prioridad que los datos no tienen |
+| D | Núcleo orbital | Las 23 como nodos en tres órbitas por familia, con el progreso global al centro | Comparar dos habilidades cuesta más que en una rejilla, y no escala a 40 |
+
+Respuesta: *"me gusta la opcion a, quiero que la hagas"*.
+
+### El cambio que justificó el rediseño
+
+**La barra de progreso deja de ser una barra.** Antes cada tarjeta pintaba `.img-goal-pbar` (una barra sólida) más el `%` de `detailPct()`. Ahora pinta **una marca por cada paso real del checklist de esa habilidad**: 20 marcas en "Hacer networking de verdad", 12 en "Saber nadar", 11 en "Manejar todo tipo de vehículos". El dato ya existía (`HABILIDAD_DETALLE[id].pasos.length`) y no se estaba usando en ningún lado — la pantalla decía "15 %" donde podía decir "3 de 20, te faltan 17". Es la diferencia entre un medidor y un temario.
+
+Piezas nuevas:
+
+- **`hbAvance(id)`** — hermana de `detailPct()`, devuelve `{hechos, total, pct}` en vez de solo el porcentaje. `detailPct()` **no se tocó**: la comparte Mis Metas (`imgListHtml()`) y ahí el % basta.
+- **Franja de instrumentos `#hbBay`** — progreso global, ecualizador de las 23 habilidades (una barra por habilidad, ordenadas como el temario, con piso de 18 % para que una en 0 % siga siendo un elemento visible) y cuatro lecturas: dominadas / en curso / sin empezar / pasos totales. Con los datos de prueba: 41 %, 2 dominadas, 19 en curso, 2 sin empezar, 131 de 322 pasos.
+- **Ficha "SIGUIENTE"** — con 23 tarjetas hacía falta un punto de entrada o la pantalla se vuelve un catálogo. La regla es **la habilidad empezada que está más cerca de terminar** (mayor % sin llegar a 100): cerrar algo que ya llevas a medias motiva más que abrir una novena habilidad en 1 paso. Si no hay ninguna empezada (navegador nuevo) marca la primera del temario, para que nunca se quede sin marcar. Se distingue con brackets en los 4 ángulos en `--ac1` en vez de 2, y el chip de `%` baja a `top:22px` para no chocar con la etiqueta.
+- **Celda de lectura** — la última de la rejilla explica las marcas, el verde de "dominada" y el rosa de "sin empezar". No es relleno: las marcas por paso son un lenguaje nuevo en el Dashboard y sin esa celda no hay dónde explicarlas.
+
+### Decisiones de implementación
+
+- **Clases propias `.hb-*`, no `.img-goal-*`.** Esas las comparte con Mis Metas (slide 2) y con `imgListHtml()`, que no cambian. Se conservó de ahí el truco de `::before` con `background:inherit` para el zoom del hover — el que evita que el título se re-renderice borroso (ver el comentario largo en `.img-goal-photo::before`).
+- **`grid-template-columns:repeat(auto-fill,minmax(178px,1fr))`** en vez de un número fijo de columnas. Con 23 fichas + la celda de lectura el número correcto depende del ancho real, y una sola regla cubre monitor (7 columnas a 1920), escritorio (6 a 1440), iPad (3) y celular (2). Las filas siguen el patrón de siempre — `minmax(128px,1fr)` + `overflow-y:auto`, "estira si cabe, scrollea si no" — con 128 en vez de 150 porque la fila de marcas mide 12px y la vieja fila de barra medía más.
+- **Se eliminó `.img-goal-grid-4col`**, que quedó muerta al migrar esta pantalla (mismo criterio con que se borró `.img-goal-grid-8` en su día, verificado con grep: no quedan referencias fuera de comentarios históricos). Con ella se fue el `:not(.img-goal-grid-4col)` de la regla de "tarjeta suelta en la última fila llena el ancho" — esa excepción existía solo para Habilidades Base.
+- **Los alfa rosados literales son a propósito**: `--ac1` (`#ff5470`) lo fija `.theme-basicas` y no se redefine en tema claro, y las `.hb-*` solo viven dentro de ese slide. Los degradados oscuros van encima de una foto, igual que el `.img-goal-photo::after` de siempre, así que tampoco siguen al tema.
+- **Un override puntual de tema claro**: `:root[data-theme="light"] .hb-eq i{opacity:.8}`. En claro el verde es `#00a758` sobre fondo casi blanco y al 55 % el ecualizador se lavaba. Mismo patrón que ya usan `.slide::before` y `.meta-detail-card`.
+- **Barras del ecualizador con `max-width:16px` + `justify-content:space-between`**: a `flex:1` puro, 23 barras en un monitor de 1440 salían de ~27px cada una y la franja se leía como bloques, no como instrumento. En celular, donde 23×16px ya no caben, el tope no aplica y se encogen solas.
+
+### Verificado con Playwright
+
+Cinco combinaciones renderizadas con progreso de prueba sembrado en `habilidades_checklist_v1`, **sin un solo error de JavaScript y sin desborde horizontal en ninguna**:
+
+| Viewport | Tema | Columnas | Foto | Scroll de la rejilla |
+|---|---|---|---|---|
+| 1440×900 | oscuro y claro | 6 | 117px | 0 |
+| 1366×768 | oscuro | 6 | 112px | 91px |
+| 820×1180 (iPad) | oscuro | 3 | 134px | 0 (el slide entero scrollea) |
+| 390×844 (iPhone) | oscuro | 2 | 134px | 0 (ídem) |
+
+Los 91px de scroll en la laptop de 768px de alto son **menos** de lo que scrolleaba el diseño anterior (filas de 150px contra 128px). En ≤1024px la franja de instrumentos se parte en dos filas y el ecualizador baja completo debajo, donde tiene ancho para que 23 barras se lean; la rejilla suelta su scroll propio (`overflow:visible`) porque ahí el slide ya scrollea entero.

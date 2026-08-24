@@ -180,11 +180,11 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 /* grid-auto-rows en vez de grid-template-rows fijo (2026-08-11) — "corto y mediano plazo" subió
    de 5 a 7 tarjetas (ver cortoMediano más abajo) y con `repeat(3,1fr)` fijo a 3 filas exactas la
    4ª fila (item 7 solo) se quedaba sin sizing propio y desentonaba de alto contra las otras 3.
-   `minmax(_,1fr)` + `overflow-y:auto` es el mismo patrón ya usado en `.img-goal-grid-4col`
-   (Habilidades Base, mismo problema el mismo día): cualquier número de tarjetas reparte el alto
-   disponible por igual, y si no alcanza, hace scroll interno en vez de aplastarlas. Las otras 2
-   variantes (`-sm` para largo plazo, `-4col` para habilidades) ya redefinen esta propiedad ellas
-   mismas, así que este cambio no las afecta.
+   `minmax(_,1fr)` + `overflow-y:auto` es el mismo patrón que estrenó Habilidades Base
+   (mismo problema el mismo día, con las clases que esa pantalla ya no usa): cualquier número de tarjetas reparte el alto
+   disponible por igual, y si no alcanza, hace scroll interno en vez de aplastarlas. La otra
+   variante (`-sm`, largo plazo) ya redefine esta propiedad ella misma, así que este cambio no la
+   afecta.
    El mínimo bajó de 150px a 64px, y horas después volvió a subir a 100px (mismo día, pedido
    explícito: primero "acomoda el tamaño para que aparezcan todas y no use el scroll down... esto
    de la imagen hazlo muchisimo mas pequeño"; después "quiero que esten mas grandes las fotos de
@@ -212,11 +212,11 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 .img-goal-photo:hover::before{transform:scale(1.06)}
 .img-goal-photo:hover{box-shadow:0 10px 26px rgba(0,0,0,.4)}
 .img-goal-photo::after{content:'';position:absolute;inset:0;z-index:1;background:linear-gradient(to top,rgba(0,0,0,.78) 0%,rgba(0,0,0,.2) 60%,transparent 85%)}
-/* Una tarjeta suelta en la ultima fila llena el ancho — pensado para el grid de 2 columnas de
-   Mis Metas. En el de 4 columnas (Habilidades Base) NO aplica: con 23 tarjetas la 23a es impar
-   y "Saber meditar" salia estirada a lo ancho de las cuatro (2026-08-23). Ahi la fila
-   incompleta simplemente deja hueco, que es lo correcto. */
-.img-goal-grid:not(.img-goal-grid-4col)>.img-goal-cell:last-child:nth-child(odd){grid-column:1/-1}
+/* Una tarjeta suelta en la última fila llena el ancho — pensado para el grid de 2 columnas de
+   Mis Metas. El `:not(.img-goal-grid-4col)` que excluía a Habilidades Base se fue junto con esa
+   clase, cuando la pantalla pasó a sus propias `.hb-*` (2026-08-23); las 2 variantes que quedan
+   (la base y `-sm`) sí quieren este comportamiento. */
+.img-goal-grid>.img-goal-cell:last-child:nth-child(odd){grid-column:1/-1}
 .img-goal-txt{position:absolute;left:0;right:0;bottom:0;padding:4px 8px;z-index:2;display:flex;align-items:center;gap:5px;font-weight:800;font-size:clamp(9px,0.85vw,11px);color:#fff;text-shadow:0 1px 4px rgba(0,0,0,.6)}
 .img-goal-pbar-row{display:flex;align-items:center;gap:5px;padding:0 1px;flex-shrink:0}
 .img-goal-pbar-ico{font-size:7px;flex-shrink:0;line-height:1}
@@ -228,13 +228,153 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 .img-goal-grid-sm{gap:7px;grid-template-rows:repeat(3,minmax(96px,1fr))}
 .img-goal-photo-sm{border-radius:12px}
 .img-goal-txt-sm{padding:4px 7px;gap:4px;font-size:clamp(8px,0.75vw,10px)}
-/* Habilidades Base — 4 columnas, filas automáticas con scroll interno (2026-08-11: subió de 8 a
-   15 tarjetas — "añade todo eso en el dashboard... y muy completa" — ya no cabe en una
-   cuadrícula de altura fija de 2 filas exactas como la vieja `.img-goal-grid-8`. `minmax(150px,
-   1fr)` evita que las fotos se vean angostas cuando hay muchas filas; `overflow-y:auto` deja que
-   la última fila incompleta se vea completa con scroll en vez de recortarse o aplastar todo. */
-.img-goal-grid-4col{grid-template-columns:repeat(4,1fr);grid-template-rows:none;grid-auto-rows:minmax(150px,1fr);overflow-y:auto;padding-right:2px}
-@media(max-width:900px){.img-goal-grid-4col{grid-template-columns:repeat(2,1fr)}}
+/* ═══ PANTALLA 4 · HABILIDADES BASE — "consola táctica" (2026-08-23) ═══════════════════════
+   Rediseño elegido por Adán entre 4 direcciones que se le mostraron renderizadas (consola
+   táctica / vitrina cinemática / bento de cristal / núcleo orbital). Qué cambia respecto a la
+   rejilla anterior, que era `.img-goal-*` compartida con Mis Metas:
+   · LA BARRA DE AVANCE DEJA DE SER UNA BARRA. Se vuelve una marca por cada paso REAL del
+     checklist de esa habilidad — 20 marcas en "Hacer networking de verdad", 12 en "Saber
+     nadar" — así que la ficha dice cuánto FALTA y no solo un porcentaje redondeado. Es la
+     pieza que justificó el rediseño: el dato ya existía (`HABILIDAD_DETALLE[id].pasos`) y no
+     se estaba usando.
+   · Aparece una franja de instrumentos (`#hbBay`) con el progreso global, el ecualizador de
+     las 23 habilidades y los tres conteos (dominadas / en curso / sin empezar).
+   · Esquinas rectas de 3px con brackets de HUD en las fotos, en vez de los 12px redondeados.
+   · Se va el `.tile` que envolvía la rejilla: las fichas se apoyan directo en el slide.
+   Clases propias `.hb-*` y NO `.img-goal-*` a propósito: esas las comparte con "Mis Metas"
+   (slide 2) y con `imgListHtml()`, que no cambian. Los alfa literales rosados son `--ac1`
+   (#ff5470) de `.theme-basicas`, que no se redefine en tema claro; los degradados oscuros
+   sobre foto también son literales, igual que el `.img-goal-photo::after` de siempre — van
+   encima de una imagen, no de la superficie de la página, así que no siguen al tema. */
+.theme-basicas .slide-title{font-size:clamp(22px,2.8vw,40px);margin-bottom:clamp(10px,1.4vh,16px)}
+.hb-hd{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;
+  margin-bottom:clamp(8px,1.2vh,12px)}
+.hb-hd .eyebrow{margin-bottom:0}
+.hb-hint{font-family:var(--mono);font-size:clamp(8px,.7vw,9.5px);font-weight:700;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--text3);padding:4px 11px;border-radius:3px;
+  border:1px solid rgba(var(--ov),.12);background:rgba(var(--ov),.03)}
+
+/* ─── Franja de instrumentos ─────────────────────────────────────────── */
+.hb-bay{flex-shrink:0;display:flex;align-items:stretch;gap:clamp(12px,1.5vw,20px);position:relative;
+  padding:10px clamp(12px,1.4vw,18px);margin-bottom:clamp(9px,1.3vh,16px);
+  background:rgba(var(--ov),.045);border:1px solid rgba(var(--ov),.11);border-radius:3px;
+  box-shadow:0 10px 34px rgba(0,0,0,.28),inset 0 1px 0 rgba(var(--ov),.05)}
+.hb-bay::before{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--ac1);
+  box-shadow:0 0 14px var(--ac1)}
+.hb-k{font-family:var(--mono);font-size:8.5px;font-weight:700;letter-spacing:.19em;color:var(--text3);
+  white-space:nowrap}
+.hb-n{display:flex;flex-direction:column;justify-content:space-between;gap:5px;min-width:96px}
+.hb-v{display:flex;align-items:baseline;gap:2px;line-height:1}
+.hb-v b{font-family:var(--mono);font-size:clamp(24px,3vw,38px);font-weight:700;letter-spacing:-.02em;color:var(--text)}
+.hb-v i{font-family:var(--mono);font-size:clamp(11px,1.1vw,15px);font-weight:700;font-style:normal;color:var(--text2)}
+.hb-d{width:1px;background:rgba(var(--ov),.1);flex-shrink:0}
+.hb-eqw{flex:1;min-width:0;display:flex;flex-direction:column;justify-content:space-between;gap:5px}
+/* Una barra por habilidad, ordenadas como el temario. El piso de 18% existe para que una
+   habilidad en 0% siga siendo un elemento visible (y clicable de leer) y no un hueco. */
+/* `max-width` + `space-between`: con 23 barras a `flex:1` puro cada una salía de ~27px en un
+   monitor de 1440 y el ecualizador se leía como bloques, no como instrumento. Con el tope se
+   quedan delgadas y el aire sobrante se reparte entre ellas; en celular, donde 23x16px ya no
+   caben, el tope no aplica y vuelven a encogerse solas. */
+.hb-eq{display:flex;align-items:flex-end;justify-content:space-between;gap:3px;
+  height:clamp(24px,3.4vh,36px)}
+.hb-eq i{flex:1;max-width:16px;border-radius:2px 2px 0 0;background:var(--g);opacity:.55}
+.hb-eq i.ok{opacity:1;box-shadow:0 0 9px var(--g)}
+.hb-eq i.zero{background:var(--ac1);opacity:.6}
+/* En claro el verde es #00a758 sobre fondo casi blanco: al 55% se lava y el ecualizador deja de
+   leerse. Mismo patrón de override puntual que ya usan .slide::before y .meta-detail-card. */
+:root[data-theme="light"] .hb-eq i{opacity:.8}
+:root[data-theme="light"] .hb-eq i.zero{opacity:.75}
+.hb-s{display:flex;align-items:center;gap:clamp(12px,1.6vw,22px);flex-shrink:0}
+.hb-rd{display:flex;flex-direction:column;gap:3px}
+.hb-rv{font-family:var(--mono);font-size:clamp(15px,1.5vw,21px);font-weight:700;line-height:1;color:var(--text)}
+.hb-rv.ok{color:var(--g)}
+.hb-rv.zero{color:var(--ac1)}
+.hb-rv small{font-size:.55em;color:var(--text3);font-weight:500}
+
+/* ─── Rejilla de fichas ──────────────────────────────────────────────── */
+/* `auto-fill` en vez de un número fijo de columnas: con 23 fichas + la celda de lectura, el
+   número correcto de columnas depende del ancho real (7 en un monitor de 1920, 6 en 1440,
+   5 en una laptop angosta, 4 en iPad) y una sola regla cubre todos los casos. El
+   `minmax(128px,1fr)` de las filas es el mismo patrón de "estira si cabe, scrollea si no"
+   que ya usaba la rejilla anterior de esta pantalla — con 128 en vez de 150 porque la ficha es más
+   compacta (la fila de marcas mide 12px, la vieja fila de barra medía más). */
+.hb-grid{flex:1;min-height:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(178px,1fr));
+  grid-auto-rows:minmax(128px,1fr);gap:clamp(8px,.8vw,11px);overflow-y:auto;padding-right:2px}
+.hb-card{display:flex;flex-direction:column;gap:4px;min-height:0}
+.hb-ph{position:relative;flex:1;min-height:0;overflow:hidden;border-radius:3px;cursor:pointer;
+  background-size:cover;background-position:center;border:1px solid rgba(var(--ov),.1);
+  box-shadow:0 6px 18px rgba(0,0,0,.4);transition:box-shadow .2s,border-color .2s}
+/* Mismo truco que `.img-goal-photo::before` (ver ahí el porqué largo): el zoom del hover lo
+   hace un pseudo-elemento que hereda el background inline, nunca el contenedor — así el
+   título y las marcas no se re-renderizan borrosos ni se salen de la celda. */
+.hb-ph::before{content:'';position:absolute;inset:0;background:inherit;background-size:cover;
+  background-position:center;transition:transform .25s ease}
+.hb-ph:hover::before{transform:scale(1.06)}
+.hb-ph:hover{box-shadow:0 10px 26px rgba(0,0,0,.5)}
+.hb-sc{position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:linear-gradient(to top,rgba(0,0,0,.9) 0%,rgba(0,0,0,.4) 54%,rgba(0,0,0,.04) 100%),
+    repeating-linear-gradient(to bottom,rgba(255,255,255,.05) 0 1px,transparent 1px 3px)}
+.hb-sc::before,.hb-sc::after{content:'';position:absolute;width:11px;height:11px;
+  border-color:rgba(255,255,255,.45);border-style:solid;border-width:0}
+.hb-sc::before{top:5px;left:5px;border-top-width:1.5px;border-left-width:1.5px}
+.hb-sc::after{bottom:5px;right:5px;border-bottom-width:1.5px;border-right-width:1.5px}
+.hb-tt{position:absolute;left:0;right:0;bottom:0;z-index:2;padding:6px 8px;pointer-events:none;
+  display:flex;align-items:flex-end;gap:5px;font-weight:800;font-size:clamp(9px,.85vw,11px);
+  line-height:1.22;color:#fff;text-shadow:0 1px 4px rgba(0,0,0,.6)}
+.hb-tt .e{font-size:1.15em;line-height:1;flex-shrink:0}
+.hb-pc{position:absolute;top:5px;right:5px;z-index:2;pointer-events:none;font-family:var(--mono);
+  font-size:9px;font-weight:700;color:#fff;padding:2px 5px;border-radius:2px;
+  background:rgba(0,0,0,.6);border:1px solid rgba(255,255,255,.16)}
+.hb-card.ok .hb-pc{color:var(--g);border-color:rgba(0,232,122,.5)}
+.hb-card.zero .hb-pc{color:var(--ac1);border-color:rgba(255,84,112,.5)}
+.hb-sg{height:12px;flex-shrink:0;display:flex;align-items:center;gap:7px}
+.hb-tk{flex:1;display:flex;gap:2px;min-width:0}
+.hb-tk i{flex:1;height:4px;border-radius:1px;background:rgba(var(--ov),.15)}
+.hb-tk i.on{background:var(--g)}
+.hb-card.ok .hb-tk i.on{box-shadow:0 0 6px rgba(0,232,122,.5)}
+.hb-ct{font-family:var(--mono);font-size:9px;font-weight:700;color:var(--text3);flex-shrink:0}
+
+/* La ficha marcada como "siguiente" — brackets completos en los 4 ángulos, no 2 */
+.hb-card.next .hb-ph{border-color:var(--ac1);
+  box-shadow:0 0 0 1px rgba(255,84,112,.45),0 14px 34px rgba(255,84,112,.22)}
+.hb-card.next .hb-sc::before,.hb-card.next .hb-sc::after{border-color:var(--ac1)}
+.hb-br{position:absolute;width:11px;height:11px;z-index:2;pointer-events:none;
+  border-color:var(--ac1);border-style:solid;border-width:0}
+.hb-br-tr{top:5px;right:5px;border-top-width:1.5px;border-right-width:1.5px}
+.hb-br-bl{bottom:5px;left:5px;border-bottom-width:1.5px;border-left-width:1.5px}
+.hb-next{position:absolute;top:5px;left:20px;z-index:2;pointer-events:none;font-family:var(--mono);
+  font-size:7.5px;font-weight:700;letter-spacing:.16em;color:var(--ac1);padding:2px 5px;
+  border-radius:2px;background:rgba(255,84,112,.16);border:1px solid rgba(255,84,112,.45)}
+.hb-card.next .hb-pc{top:22px}
+
+/* Celda de lectura — última de la rejilla. No es relleno: las marcas por paso son un lenguaje
+   nuevo en el Dashboard y sin esta celda no hay dónde explicarlas. */
+.hb-lg{border:1px dashed rgba(var(--ov),.18);border-radius:3px;padding:10px 12px;gap:7px;
+  justify-content:center;background:rgba(var(--ov),.02)}
+.hb-lgh{font-family:var(--mono);font-size:8.5px;font-weight:700;letter-spacing:.2em;color:var(--text3)}
+.hb-lgr{display:flex;align-items:center;gap:7px;font-size:9.5px;line-height:1.3;color:var(--text2);font-weight:600}
+.hb-tkm{display:flex;gap:2px;width:34px;flex-shrink:0}
+.hb-tkm i{flex:1;height:4px;border-radius:1px;background:rgba(var(--ov),.15)}
+.hb-tkm i.on{background:var(--g)}
+.hb-sw{width:9px;height:9px;border-radius:2px;flex-shrink:0}
+.hb-sw.ok{background:var(--g);box-shadow:0 0 8px rgba(0,232,122,.5)}
+.hb-sw.zero{background:var(--ac1);opacity:.7}
+
+/* En ≤1024px el slide ya scrollea entero (ver "RESPONSIVE" más abajo) y `.slide-inner` pasa a
+   alto automático, así que la rejilla no puede seguir siendo `flex:1` con scroll propio: se
+   vuelve una lista que crece. La franja de instrumentos se parte en dos filas y el ecualizador
+   —que necesita ancho para que 23 barras se lean— baja completo debajo. */
+@media(max-width:1024px){
+  .hb-bay{flex-wrap:wrap}
+  .hb-d{display:none}
+  .hb-eqw{flex-basis:100%;order:3}
+  .hb-grid{overflow:visible;grid-auto-rows:minmax(150px,auto)}
+}
+@media(max-width:640px){
+  .hb-grid{grid-template-columns:repeat(2,1fr)}
+  .hb-hint{display:none}
+  .hb-eq{height:26px}
+}
 .big-num{font-family:var(--mono);font-weight:700;letter-spacing:-.02em;line-height:1}
 .pbar{height:11px;background:rgba(var(--ov),.08);border-radius:20px;overflow:hidden;margin-top:9px;position:relative}
 .pfill{height:100%;border-radius:20px;transition:width 1.2s cubic-bezier(.22,.61,.36,1);position:relative}
@@ -374,8 +514,11 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
    tramo de 45 min mide 40px — nunca cupo un nombre, y un tramo de 10 min quedaba en 11px, que no
    se puede tocar con el dedo.
      · El RIEL (.cinta) es el mapa: 11px de alto, proporción real del día, dónde estás. Sin texto.
-     · Las FICHAS (.cinta-fic) son lo que tocas: todas del mismo ancho, con hora y nombre
-       legibles y 60px de alto — por encima del mínimo de 44px para el pulgar. Se deslizan.
+     · Las FICHAS (.cinta-fic) son lo que tocas: con hora y nombre legibles y 60px de alto — por
+       encima del mínimo de 44px para el pulgar. Se deslizan. El ANCHO de cada una lo calcula
+       `anchoFicha(mins)` en el JS y viaja como --fw: un bloque de 4 h se ve ancho y uno de 20 min
+       corto, para que la fila cuente la misma historia que el riel (2026-08-24, "todas las cajas
+       tienen el mismo tamaño y eso no debería ser").
    `overflow:visible` en el riel a propósito: el marcador de "ahora" sobresale por arriba y abajo. */
 .cinta{position:relative;display:flex;gap:1px;height:11px;margin-bottom:5px}
 /* Cada tramo sigue siendo un <button> de verdad — se puede tabular y activar con Enter, como el
@@ -399,7 +542,9 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 .cinta-fic-scroll{display:flex;gap:8px;overflow-x:auto;scroll-behavior:smooth;flex:1;min-width:0;
   padding:2px 0;scrollbar-width:none;-ms-overflow-style:none}
 .cinta-fic-scroll::-webkit-scrollbar{display:none}
-.cinta-fic{position:relative;width:148px;flex-shrink:0;height:60px;box-sizing:border-box;
+/* `--fw` la escribe el JS ficha por ficha (ver anchoFicha). Los 148px son solo el respaldo por si
+   alguna se pinta sin la variable; la ALTURA sí sigue fija, la fila tiene que quedar a ras. */
+.cinta-fic{position:relative;width:var(--fw,148px);flex-shrink:0;height:60px;box-sizing:border-box;
   padding:8px 11px 8px 13px;border-radius:13px;background:rgba(var(--ov),.04);
   border:1px solid rgba(var(--ov),.09);overflow:hidden;cursor:pointer;text-align:left;
   font-family:inherit;color:inherit;transition:background .15s,border-color .15s}
@@ -449,7 +594,9 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 /* En el celular las flechas estorban (no hay dónde apuntar con precisión) y el pulgar arrastra
    mejor sobre fichas un poco más anchas. */
 @media(max-width:700px){
-  .cinta-fic{width:168px}
+  /* Sin `width` fija aquí: aplastaría la proporción por duración. Solo se sube el suelo, porque
+     el pulgar necesita más blanco que el cursor para acertar en las fichas cortas. */
+  .cinta-fic{min-width:132px}
   .cinta-nav{display:none}
 }
 
@@ -585,53 +732,6 @@ a.rt2-sub-prod:hover{text-decoration:underline}
 .ds-txt{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text2)}
 .ds-empty{color:var(--text3);font-size:14px}
 
-/* ─── HABILIDADES — barras detalladas a todo el ancho (2026-08-07, reemplaza el radar) ───
-   Pedido explícito: "en vez del radar mejor ponlo en barras y se muy detallado, asi abarcamos
-   todo el ancho de la pagina". 2 columnas en desktop (6+6 filas), 1 columna en pantallas angostas. */
-#skillBars.tile{padding:8px 12px}
-/* ─── Sub-habilidades (2026-08-19) ───
-   Formato nuevo de Finanzas e Inversión: en vez de un diagnóstico y un hábito, la lista de lo
-   que hay que saber, numerada, cada una con cómo desarrollarla y con qué libro. Scroll propio
-   porque son 7 y 9 entradas: sin tope, la tarjeta empujaba fuera de pantalla al resto del slide,
-   que es lo mismo que le pasaba a "Importante este mes" en Mi Día. */
-.sc-subs-lbl{font-size:10px;font-weight:900;letter-spacing:.04em;text-transform:uppercase;
-  color:var(--text3);margin:6px 0 4px}
-.sc-subs-lbl small{font-weight:700;text-transform:none;letter-spacing:0;color:var(--cy)}
-.sc-subs{display:flex;flex-direction:column;gap:5px;max-height:340px;overflow-y:auto;padding-right:4px}
-.sc-sub{border-left:2px solid var(--cy);border-radius:0 8px 8px 0;
-  background:rgba(var(--ov),.04);overflow:hidden}
-/* El encabezado es el botón: ocupa todo el ancho para que sea fácil de atinar con el dedo. */
-.sc-sub-h{display:flex;align-items:center;gap:6px;width:100%;padding:7px 9px;
-  font:inherit;font-size:12px;font-weight:800;color:var(--text);line-height:1.3;text-align:left;
-  background:none;border:none;cursor:pointer;transition:background .15s}
-.sc-sub-h:hover{background:rgba(var(--ov),.06)}
-.sc-sub-t{flex:1;min-width:0}
-.sc-sub-caret{flex-shrink:0;font-size:10px;color:var(--text3);transition:transform .2s}
-.sc-sub.open .sc-sub-caret{transform:rotate(180deg)}
-/* Cerrado por defecto: la tarjeta se lee como un índice de lo que hay que aprender, y el
-   desarrollo aparece solo en la que se toca. */
-.sc-sub-body{display:none;padding:0 9px 8px}
-.sc-sub.open .sc-sub-body{display:block}
-.sc-sub-q{font-size:11px;color:var(--text3);line-height:1.45;margin-top:3px}
-.sc-sub-c{font-size:11px;color:var(--text2);line-height:1.5;margin-top:4px}
-.sc-sub-c b{color:var(--text)}
-.sc-sub-r{font-size:10px;color:var(--cy);font-weight:700;line-height:1.4;margin-top:4px}
-.skill-bars-head{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px;margin-bottom:2px}
-.skill-bars-ovr{font-size:11px;color:var(--text2)}
-.skill-bars-ovr b{font-family:var(--mono);font-size:13px;color:var(--text)}
-.skill-bars-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 28px}
-@media(max-width:900px){.skill-bars-grid{grid-template-columns:1fr}}
-/* Filas delgadas a propósito (2026-08-07, "hazlo mas delgado... que no abarque mucho
-   verticalmente") — ponderación fusionada en la misma línea del valor, ya no lleva su
-   propia fila, y la barra bajó de 12px a 5px de alto. */
-.skbar-row{padding:1px 0;border-bottom:1px solid rgba(var(--ov),.05)}
-.skbar-row:last-child{border-bottom:none}
-.skbar-head{display:flex;align-items:center;gap:6px}
-.skbar-ico{font-size:12px;flex-shrink:0}
-.skbar-name{font-size:11.5px;font-weight:800;color:var(--text)}
-.skbar-chip{font-size:8px;font-weight:800;letter-spacing:.03em;padding:1px 6px;border-radius:20px;border:1px solid transparent;flex-shrink:0}
-.skbar-val{margin-left:auto;font-family:var(--mono);font-size:11.5px;font-weight:800;flex-shrink:0;white-space:nowrap}
-.skbar-val small{font-size:9px;font-weight:600;color:var(--text3)}
 
 /* ─── HERO — semana completa (tira de 7 días + 2 paneles detallados) — compactado el 2026-08-08
    al fusionarse con "Mi Día" en una sola pantalla (ver sección "Unificación Mi Día + Hero" en el
@@ -1280,34 +1380,133 @@ a.rt2-sub-prod:hover{text-decoration:underline}
 .al-loading{color:var(--text3);font-size:13px;padding:20px 4px}
 @media(max-width:640px){.al-phrase-grid,.al-mini-grid{grid-template-columns:1fr 1fr}}
 
-/* ─── HABILIDADES — tarjetas grandes, una por prioridad (slide pasivo, sin clics) ─
-   Rediseñado 2026-08-07 ("esas 4 habilidades... me estas diciendo cosas comunes, dame mas
-   info y retroalimentacion... pon texto pequeño para que quepa todo, y trata de abarcar mas
-   pantalla") — de 4 columnas con 2 líneas de texto a 2 columnas con 6 bloques de contenido
-   por tarjeta (diagnóstico, plan de 2-4 semanas, hábito y error común, además de lo que ya
-   había): letra más chica para que quepa, tarjetas el doble de anchas para usar la pantalla.
-   Reajustado 2026-08-09 (PRIORIDAD_N bajó de 4 a 2 — ver PRIORIDAD_EXCLUIDAS arriba en el JS):
-   con la mitad de tarjetas ya no hace falta pelear por espacio vertical, así que todo el bloque
-   creció de vuelta (padding, gap, tipografía) para usar bien la pantalla en vez de dejarla con
-   aire vacío — mismo espíritu del pedido original ("abarcar mas pantalla"), solo que ahora hay
-   más pantalla real disponible por tarjeta. */
-.skill-priority-title{font-size:clamp(14px,1.6vw,18px);font-weight:900;color:var(--text);margin-bottom:8px;display:flex;align-items:center;gap:8px}
-#skillPriority.grid.g2{gap:14px}
-#skillPriority .tile{padding:12px 16px}
-.skill-card{display:flex;flex-direction:column;gap:4px;min-height:100%}
-.skill-card-head{display:flex;align-items:center;gap:10px;margin-bottom:1px}
-.sc-badge{width:30px;height:30px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
-.sc-name{font-size:15px;font-weight:800;color:var(--text)}
-.sc-lvl{font-size:9px;font-weight:800;letter-spacing:.03em;padding:2px 7px;border-radius:20px;flex-shrink:0}
-.sc-val{font-family:var(--mono);font-size:14px;font-weight:800;margin-left:auto;flex-shrink:0}
-.sc-val small{font-size:9.5px;font-weight:600;color:var(--text3)}
-.sc-diag,.sc-primer,.sc-plan,.sc-habito,.sc-error{font-size:11.5px;color:var(--text2);line-height:1.28}
-.sc-diag b,.sc-primer b,.sc-plan b,.sc-habito b,.sc-error b{color:var(--text);font-weight:700}
-.sc-res{font-size:11px;color:var(--text3);padding-top:4px;border-top:1px solid rgba(var(--ov),.06);line-height:1.35}
-.sc-res b{color:var(--p);font-weight:700}
-.sc-link{margin-top:auto;padding-top:3px;font-size:12px;font-weight:700;color:var(--cy);text-decoration:none}
-.sc-link:hover{text-decoration:underline}
-@media(max-width:900px){#skillPriority.grid.g2{grid-template-columns:1fr}}
+/* ─── HABILIDADES — "Foco": una sola habilidad grande + ranking por retorno (2026-08-23) ─
+   Adán eligió esta de tres opciones dibujadas ("realiza la opcion b"). Sustituye a las 12
+   barras iguales de #skillBars y a las 2 tarjetas de #skillPriority. Lo que motivó el cambio,
+   medido en Chrome sobre la página real: las 16 sub-habilidades salían las 16 cerradas, así
+   que de reojo —que es como se lee este slide— solo se veían títulos, nunca el cómo ni el
+   recurso; y la tarjeta de Finanzas dejaba 90px de hueco muerto porque tiene 7 pasos contra
+   los 9 de Inversión y el grid las igualaba a 418px.
+   La columna izquierda muestra UN paso completo y legible sin tocar nada; la derecha ordena
+   las 12 por retorno (peso × lo que falta para 100), que es lo que de verdad responde el
+   título del slide. */
+.hab-cols{display:grid;grid-template-columns:minmax(0,1.75fr) minmax(0,1fr);gap:14px;align-items:stretch}
+.hab-side{display:flex;flex-direction:column;gap:14px;min-height:0}
+
+.hab-foco{position:relative;overflow:hidden;padding:20px 24px;display:flex;flex-direction:column;gap:11px;justify-content:space-between}
+.hab-foco::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--g),transparent)}
+.hf-top{display:flex;align-items:center;gap:11px;flex-wrap:wrap}
+.hf-chip{font-size:9.5px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;padding:4px 10px;border-radius:20px;background:var(--g);color:#05050a}
+.hf-badge{width:26px;height:26px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
+.hf-name{font-size:14px;font-weight:800;color:var(--text)}
+.hf-lvl{font-size:9px;font-weight:800;letter-spacing:.03em;padding:2px 7px;border-radius:20px;flex-shrink:0}
+.hf-val{font-family:var(--mono);font-size:12px;font-weight:800;color:var(--text3)}
+.hf-why{margin-left:auto;font-size:11px;color:var(--text3);text-align:right}
+.hf-why b{color:var(--text2);font-weight:700}
+/* El título grande es el nombre del PASO, no el de la habilidad: la habilidad ya la dice la
+   fila de arriba, y lo que se tiene que leer de lejos es qué toca hacer. */
+.hf-h1{font-family:var(--font-title);font-size:clamp(24px,2.9vw,44px);font-weight:600;line-height:1.08;letter-spacing:-.01em;color:var(--text);text-wrap:pretty}
+.hf-lbl{font-size:9.5px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--text3);margin-bottom:6px}
+.hf-q{font-size:14px;color:var(--text2);line-height:1.5}
+.hf-c{font-size:13.5px;color:var(--text2);line-height:1.5}
+.hf-q b,.hf-c b,.hf-res-t b{color:var(--text);font-weight:700}
+.hf-res{padding:11px 14px;border-radius:12px;background:rgba(0,232,122,.07);border:1px solid rgba(0,232,122,.2)}
+.hf-res .hf-lbl{color:var(--g);margin-bottom:4px}
+.hf-res-t{font-size:12.5px;color:var(--text);line-height:1.45}
+.hf-pasos{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+.hf-paso{display:flex;align-items:center;gap:8px;padding:8px 10px;min-height:38px;border-radius:9px;box-sizing:border-box;text-align:left;
+  background:rgba(var(--ov),.03);border:1px solid transparent;cursor:pointer;font-family:inherit;transition:background .15s,border-color .15s}
+.hf-paso:hover{background:rgba(var(--ov),.07)}
+.hf-paso.act{background:rgba(0,232,122,.12);border-color:rgba(0,232,122,.45)}
+.hf-paso-n{font-family:var(--mono);font-size:10.5px;font-weight:800;color:var(--text3);flex-shrink:0}
+.hf-paso.act .hf-paso-n{color:var(--g)}
+.hf-paso-t{font-size:11px;font-weight:700;color:var(--text3);line-height:1.25}
+.hf-paso.act .hf-paso-t{color:var(--text)}
+.hf-pie{display:flex;align-items:center;gap:12px;padding-top:9px;border-top:1px solid rgba(var(--ov),.07)}
+.hf-pie-t{font-size:11px;color:var(--text3)}
+.hf-pie-t b{color:var(--text2);font-weight:700}
+.hf-acts{margin-left:auto;display:flex;gap:8px;flex-shrink:0}
+.hf-btn{display:inline-flex;align-items:center;padding:9px 16px;border-radius:10px;font-family:inherit;font-size:12px;font-weight:800;
+  background:rgba(var(--ov),.06);border:1px solid var(--card-br);color:var(--text);cursor:pointer;text-decoration:none;white-space:nowrap;transition:background .15s}
+.hf-btn:hover{background:rgba(var(--ov),.11)}
+
+.hab-ovr{padding:15px 17px}
+.ho-lbl{font-size:9.5px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--text3);margin-bottom:5px}
+.ho-n{display:flex;align-items:baseline;gap:8px}
+.ho-n b{font-family:var(--mono);font-size:42px;font-weight:800;color:var(--text);line-height:1}
+.ho-n span{font-size:12px;color:var(--text3)}
+.ho-txt{font-size:11px;color:var(--text3);line-height:1.42;margin-top:9px}
+.ho-txt b{color:var(--text2);font-weight:700}
+.ho-txt i{font-style:normal;font-family:var(--mono);font-weight:800;color:var(--g)}
+
+.hab-rank{padding:15px 17px;flex:1;min-height:0;display:flex;flex-direction:column}
+.hr-head{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:8px}
+.hr-t{font-size:9.5px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--text3)}
+.hr-sub{font-size:10px;color:var(--text3);opacity:.75;white-space:nowrap}
+.hr-rows{display:flex;flex-direction:column;justify-content:space-between;flex:1;gap:4px}
+.hr-row{display:flex;align-items:center;gap:8px}
+/* Ventas y Marketing siguen en la lista pero apagadas: están fuera del foco por decisión
+   explícita del 2026-08-09 (PRIORIDAD_EXCLUIDAS) y encabezan el retorno — verlas apagadas
+   explica por qué no son la habilidad de la semana, cosa que ocultarlas no haría. */
+.hr-row.pausa{opacity:.42}
+.hr-row.foco{padding:5px 7px;margin:0 -7px;border-radius:8px;background:rgba(0,232,122,.09)}
+.hr-n{font-family:var(--mono);font-size:9.5px;font-weight:700;color:var(--text3);width:14px;flex-shrink:0}
+.hr-row.foco .hr-n{color:var(--g)}
+.hr-ico{font-size:11px;flex-shrink:0}
+.hr-name{font-size:11px;font-weight:700;color:var(--text2);width:74px;flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hr-row.foco .hr-name{font-weight:800;color:var(--text)}
+.hr-bar{flex:1;height:4px;background:rgba(var(--ov),.08);border-radius:3px;overflow:hidden;min-width:0}
+.hr-fill{height:100%;border-radius:3px}
+.hr-v{font-family:var(--mono);font-size:9.5px;font-weight:800;color:var(--text2);width:54px;text-align:right;flex-shrink:0}
+.hr-v.pausa{font-family:var(--font);font-size:8px;font-weight:800;letter-spacing:.05em;color:var(--text3)}
+
+/* PANTALLAS BAJAS — el alto del panel de foco lo manda el largo del texto del paso, y ese
+   largo varía mucho: el paso 4 de Inversión ("Ver las comisiones antes que el rendimiento")
+   ocupa casi el doble que el 8 ("Aguantar sin vender"). Barriendo los 16 pasos en 15
+   resoluciones, en 1440x900, 1366x768 y 1280x720 los más largos se salían entre 9 y 31px.
+   Aquí se recupera espacio en tres frentes a la vez, para que aguante el peor paso y no solo
+   el que estaba abierto al medir:
+     1) la rejilla de 9 pasos con nombre (166px fijos) pasa a tira de números (~70px) — el
+        nombre del paso abierto sigue en el título grande y el de cada número en su title;
+     2) título, cifra del OVR y cuerpo bajan un escalón de tamaño;
+     3) se aprietan gaps y paddings.
+   El corte va en 940px de alto para cubrir las laptops de 900. */
+@media(max-height:940px){
+  .hf-pasos{grid-template-columns:repeat(auto-fit,minmax(44px,1fr));gap:7px}
+  .hf-paso{justify-content:center;min-height:44px;padding:8px 4px}
+  .hf-paso-n{font-size:14px}
+  .hf-paso-t{display:none}
+  .hf-h1{font-size:clamp(23px,2.4vw,34px)}
+  .ho-n b{font-size:34px}
+  .hab-foco{padding:16px 22px;gap:8px}
+  .hf-q{font-size:12.5px}
+  .hf-c{font-size:12.5px;line-height:1.45}
+  .hf-res{padding:9px 12px}
+  .hf-res-t{font-size:11.5px}
+  .hf-lbl{margin-bottom:4px}
+  .hf-pie{padding-top:7px}
+  .hab-ovr,.hab-rank{padding:13px 15px}
+}
+/* Por debajo de ~1340px de ancho, la nota de la derecha de la fila de arriba parte esa fila
+   en dos y cuesta 25px. Solo se quita cuando además la ventana es baja — 1280x720 medido, y
+   también cualquier teléfono, donde esa fila ya va a dos renglones. Es lo menos importante
+   de la fila: el mismo dato está en el ranking de la derecha, donde el foco sale resaltado. */
+@media(max-height:940px) and (max-width:1340px){.hf-why{display:none}}
+@media(max-width:900px){
+  .hab-cols{grid-template-columns:1fr}
+  .hf-why{margin-left:0;text-align:left;width:100%}
+  .hf-pie{flex-wrap:wrap}
+  .hf-acts{margin-left:0;width:100%}
+  .hf-btn{flex:1;justify-content:center}
+  /* Las 9 fichas apiladas cuestan ~360px en un teléfono y empujaban el slide a 1704px.
+     Aquí pasan a una tira de números: el nombre del paso abierto ya está en el título
+     grande, así que no se pierde nada, y el área de toque sube de 30px a 46px. */
+  .hf-pasos{grid-template-columns:repeat(auto-fit,minmax(44px,1fr));gap:7px}
+  .hf-paso{justify-content:center;min-height:46px;padding:8px 4px}
+  .hf-paso-n{font-size:14px}
+  .hf-paso-t{display:none}
+}
+
 
 /* ─── Franja "Qué escuchar en Didi" (2026-08-15) ───────────────────────────
    Pedido: "cuando maneje en didi ponga podcast, audiolibros... pon que hacer en didi".
@@ -2104,12 +2303,13 @@ a.rt2-sub-prod:hover{text-decoration:underline}
        detalle in-page + barra de progreso debajo para marcar tu avance real. -->
   <section class="slide theme-basicas" data-i="3">
     <div class="slide-inner">
-      <div class="eyebrow reveal d1"><span class="dot"></span> Habilidades Base</div>
-      <div class="slide-title reveal d2"><span class="ico">🧬</span> Lo que todo hombre debería saber hacer</div>
-      <div class="tile reveal d3" style="flex:1;min-height:0;display:flex;flex-direction:column">
-        <div class="lbl" style="margin-bottom:8px">💪 Domínalas una por una — clic en cada foto para ver cómo y marcar tu checklist, la barra se llena sola</div>
-        <div class="img-goal-grid img-goal-grid-4col" id="habilidadesGrid"></div>
+      <div class="hb-hd reveal d1">
+        <div class="eyebrow"><span class="dot"></span> Habilidades Base</div>
+        <div class="hb-hint">Toca una ficha para abrir su checklist</div>
       </div>
+      <div class="slide-title reveal d2"><span class="ico">🧬</span> Lo que todo hombre debería saber hacer</div>
+      <div class="hb-bay reveal d3" id="hbBay"></div>
+      <div class="hb-grid reveal d4" id="habilidadesGrid"></div>
     </div>
   </section>
 
@@ -2117,20 +2317,18 @@ a.rt2-sub-prod:hover{text-decoration:underline}
   <section class="slide theme-skills" data-i="4">
     <div class="slide-inner">
       <div class="eyebrow reveal d1"><span class="dot"></span> Coach · Habilidades</div>
-      <!-- Título + franja de Didi en la MISMA fila (mismo patrón que el slide de Lista de Compras):
-           este slide ya venía desbordando su alto fijo antes de tocarlo, así que la franja no puede
-           costar una fila propia. Medido con Playwright: en fila aparte sumaba ~56px. -->
-      <div class="reveal d2" style="display:flex;justify-content:space-between;align-items:center;gap:18px;flex-wrap:wrap;margin-bottom:10px">
-        <div class="slide-title" style="margin-bottom:0"><span class="ico">🧠</span> En qué invertir tu tiempo</div>
-        <div class="didi-strip" id="didiStrip"></div>
+      <!-- La franja de Didi bajó a la columna derecha el 2026-08-23 (rediseño "Foco"): ahí
+           ya no compite con el título por la misma fila y queda junto al resto del contexto,
+           que es donde se mira de reojo. Sigue siendo el mismo #didiStrip. -->
+      <div class="slide-title reveal d2" style="margin-bottom:14px"><span class="ico">🧠</span> En qué invertir tu tiempo</div>
+      <div class="hab-cols reveal d3">
+        <div class="tile hab-foco" id="habFoco"></div>
+        <div class="hab-side">
+          <div class="tile hab-ovr" id="habOvr"></div>
+          <div class="tile hab-rank" id="habRank"></div>
+          <div class="didi-strip" id="didiStrip"></div>
+        </div>
       </div>
-
-      <div class="tile reveal d3" id="skillBars" style="margin-bottom:6px"></div>
-
-      <div class="skill-priority-title reveal d4">⚠️ Habilidades a mejorar — primer paso de esta semana
-        <a href="../Coach/Coach_v2.html#aprendizaje" style="margin-left:auto;font-size:12px;font-weight:600;color:var(--cy);text-decoration:none">Ver las 5 + hábitos y recursos en Coach →</a>
-      </div>
-      <div class="grid g2 reveal d5" id="skillPriority"></div>
     </div>
   </section>
 
@@ -4289,12 +4487,15 @@ function pintarEdadPace(){
   const hayDeuda=!!(bana||bbva);
   const ef=D.fin.emergencyFund||0;
   const goalMae=(D.fin.goals||[]).find(g=>g.id==='g001'||/maestr/i.test(g.name||''));
+  // 2026-08-23: el fondo de la maestria se compone en vivo (ver fondoMaestria()), ya no se lee
+  // de `goalMae.current` — esa cifra estaba escrita a mano y dejaba fuera el Bitcoin.
+  const fmMae=fondoMaestria();
   const medidos=[
     // El subtítulo nombra solo las tarjetas que TODAVÍA deben: desde que Banamex quedó en $0
     // (13 ago 2026), decir "restante en Banamex + BBVA" sugería que las dos siguen vivas.
     {ico:'💳',t:'Deuda cara',      hay:hayDeuda||!!logro('banamex-liquidada'), val:money(deudaCara), sub:deudaCara<=0?'Liquidada 🎉':'restante en '+[bana&&bana.balance>0?'Banamex':null,bbva&&bbva.balance>0?'BBVA':null].filter(Boolean).join(' + '), falta:'Regístrala en Finanzas para medirla aquí'},
     {ico:'🆘',t:'Fondo de emergencia', hay:ef>0, val:money(ef),        sub:`de ${money(10000)} · ${Math.min(100,Math.round(ef/10000*100))}%`, falta:'Aún en $0 — es el primer paso de Fase 0'},
-    {ico:'🎓',t:'Fondo Maestría',  hay:!!goalMae&&num(goalMae.current), val:goalMae?money(goalMae.current||0):'—', sub:goalMae&&goalMae.target?`de ${money(goalMae.target)}`:'', falta:'Créala en Finanzas → Metas'},
+    {ico:'🎓',t:'Fondo Maestría',  hay:fmMae.total>0, val:money(fmMae.total), sub:goalMae&&goalMae.target?`de ${money(goalMae.target)} · ${fmMae.comps.length} piezas`:`${fmMae.comps.length} piezas sumadas`, falta:'Créala en Finanzas → Metas'},
   ];
 
   // ── 3. Una sola conclusión, construida con el dato más urgente que exista ──
@@ -4343,6 +4544,51 @@ function patrimonioNeto(){
   const ef=D.fin.emergencyFund||0;
   const deuda=(D.fin.debts||[]).reduce((s,d)=>s+(d.balance||0),0);
   return inv+ef-deuda;
+}
+// ── EL FONDO DE LA MAESTRÍA, COMPUESTO EN VIVO (2026-08-23) ───────────────────
+// Reporte de Adán: "esa suma contiene lo del precio en bitcoin que tengo guardado".
+// Tenía razón, y el panel decía lo contrario. Hasta hoy el Dashboard leía `goal.current`
+// —los $53,740 escritos a mano en el seed de Finanzas— y encima afirmaba que "Finanzas no
+// lo tiene desglosado". Las dos cosas eran falsas: Finanzas.html SÍ lo compone, en
+// renderIndicatorsHTML() → `cur = efV2+cetesV2+accV2+rentaV2+btcValue2`, con sus 5 barras de
+// colores. `goal.current` es solo una foto vieja que nadie recalcula, y el BTC —la pieza más
+// grande y la única que se mueve sola— no aparecía por ningún lado del Dashboard.
+//
+// Esta función es la fuente única para las 4 piezas que hablan del fondo (el medidor, la
+// barra de dinero de Metas, el bloque de "medido con dinero real" y el panel de detalle).
+// Diferencia deliberada contra Finanzas: allá se suman por TIPO (cetes/acciones/otro), así
+// que un instrumento de tipo `fondos`, `crypto`, `deuda` o `inmuebles` se caería del total
+// sin avisar. Aquí se lista cada inversión por su nombre — no se pierde ninguna.
+function btcInfo(){
+  const F=D.fin||{}, h=F.btcHistory||[];
+  const held  = h.reduce((s,x)=>s+(+x.btc||0),0);
+  const usdIn = h.reduce((s,x)=>s+(+x.usd||0),0);
+  const price = +F.currentBtcPrice||0;
+  const fx    = +F.usdMxn||19.5;
+  const t     = F.btcLastFetch?new Date(F.btcLastFetch).getTime():0;
+  return {held, usdIn, price, fx, usdNow:held*price, mxn:held*price*fx,
+          compras:h.length, fetch:t,
+          diasViejo: t?Math.floor((Date.now()-t)/86400000):null};
+}
+function fondoMaestria(){
+  const F=D.fin||{}, inv=F.investments||[], b=btcInfo();
+  const comps=[];
+  const ef=+F.emergencyFund||0;
+  if(ef>0) comps.push({k:'ef',n:'Fondo de emergencia',v:ef,c:'var(--w)',
+    d:'Cuenta aquí porque así lo suma Finanzas — pero su trabajo es cubrir imprevistos, no pagar la maestría'});
+  inv.forEach(i=>{
+    const v=+i.value||+i.invested||0;
+    if(!v) return;
+    comps.push({k:'inv',n:esc(i.name||'Inversión'),v,c:i.type==='cetes'?'var(--b)':i.type==='acciones'?'var(--p)':'var(--o)',
+      d:'Registrado en Finanzas → Inversiones'+(i.rate?' · '+i.rate+'% anual':''), tipo:i.type||''});
+  });
+  if(b.mxn>0) comps.push({k:'btc',n:'Bitcoin',v:b.mxn,c:'#f7931a',
+    d:b.held.toFixed(6)+' BTC × $'+Math.round(b.price).toLocaleString('en-US')+' USD × '+b.fx.toFixed(2)+' MXN'});
+  const total=comps.reduce((a,x)=>a+x.v,0);
+  // Si alguna vez registra el BTC TAMBIÉN como inversión de tipo `crypto`, estaría contado dos
+  // veces: una por la fila de Inversiones y otra por btcHistory. Se detecta, no se adivina.
+  const dobleCrypto = b.mxn>0 && inv.some(i=>i.type==='crypto'&&(+i.value||+i.invested||0)>0);
+  return {comps, total, ef, btc:b, sinEf:total-ef, dobleCrypto};
 }
 function hasFinData(){return (D.fin.transactions||[]).length+(D.fin.debts||[]).length+(D.fin.investments||[]).length>0 || (D.fin.emergencyFund||0)>0;}
 
@@ -4481,7 +4727,7 @@ function pintarCintaDia(tareas, anchor, done, esHoy){
         title="${esc(prev?horaMas(t.hora,mins)+' · sigue: '+rtSoloTitulo(prev.txt):'')}" aria-hidden="true"></button>`);
     }
 
-    // ── La ficha: hora y nombre completos, del mismo tamaño para todos los bloques.
+    // ── La ficha: hora y nombre completos, y un ancho proporcional a lo que dura el bloque.
     //    Tres estados excluyentes, y en este orden: `ahora` (verde, lo que está pasando) gana
     //    sobre `sel` (lo que estás mirando, en el color de su categoría). Cuando tocas otra
     //    ficha, la verde se queda verde: eso es justo lo que faltaba para no perder el hilo.
@@ -4491,8 +4737,11 @@ function pintarCintaDia(tareas, anchor, done, esHoy){
     // "queda 5h13" en vez de "quedan 5 h 13": comparte fila con la hora y solo hay ~122px útiles.
     const dur=esAhora?('queda '+durCorta(mins-transcurrido).replace(/ /g,'')):durCorta(mins);
     const selSolo=sel&&!esAhora;
+    // El ancho viaja como variable CSS y no como `width` suelto para que el `min-width` del
+    // móvil pueda seguir ganándole a la proporción en los bloques más cortos.
+    const estFic=`--fw:${anchoFicha(mins)}px`+(selSolo?`;background:${meta.c}1f;border-color:${meta.c};box-shadow:0 0 18px ${meta.c}40`:'');
     fichas.push(`<button class="cinta-fic${esAhora?' ahora':(sel?' sel':'')}${hecho?' hecho':''}" onclick="tocarBloque('${t.id}')"
-      ${selSolo?`style="background:${meta.c}1f;border-color:${meta.c};box-shadow:0 0 18px ${meta.c}40"`:''}
+      style="${estFic}"
       title="${esc((esAhora?'Ahora mismo · ':'')+t.hora+' · '+meta.label+' · '+titulo)}">
       <span class="cinta-fic-acc"${esAhora?'':` style="background:${meta.c}"`}></span>${prog}
       <span class="cinta-fic-top">
@@ -4533,6 +4782,17 @@ function pintarCintaDia(tareas, anchor, done, esHoy){
     </div>`;
 
   centrarFichaActiva(wrap);
+}
+
+// Ancho de cada ficha según lo que dura su bloque (2026-08-24). Raíz cuadrada y no regla de tres:
+// en el mismo carril conviven bloques de 10 min y de 5 h, y en proporción directa el de Didi
+// mediría 30 veces el corto — se comería la fila entera y los cortos caerían por debajo del mínimo
+// tocable. Con √, 4 h se ve ~3× lo que 30 min: bastante para leer "esto dura mucho más" de un
+// vistazo sin que el carril deje de ser navegable.
+//   · Suelo 104px: es lo que necesita la fila de arriba para que la hora y la duración no se pisen.
+//   · Techo 300px: más ancho que eso y una sola ficha tapa a todas sus vecinas.
+function anchoFicha(m){
+  return Math.round(Math.min(300, Math.max(104, 104*Math.sqrt(m/30))));
 }
 
 // Duración en formato corto para la esquina de la ficha: "45 min", "1 h", "1 h 15".
@@ -5275,8 +5535,10 @@ const PRIORIDAD_N = 2; // cuántas prioridades mostrar en el Dashboard (las N m�
 // siga siendo el más bajo del set (consistente con la decisión ya tomada de no enfocarse en
 // vender hasta tener una oferta/mensaje terminado, ver feedback_ventas_sin_producto en memoria).
 // Se excluyen del cálculo (no se ocultan con CSS) para que, si sus valores cambian más adelante,
-// nunca vuelvan a colarse aquí — siguen completas en Coach → Aprendizaje y en la lista de las 12
-// habilidades de #skillBars más abajo, esto solo afecta qué se destaca como prioridad accionable.
+// nunca vuelvan a colarse aquí — siguen completas en Coach → Aprendizaje y en el ranking de las
+// 12 de #habRank, esto solo afecta qué se destaca como prioridad accionable. Desde el rediseño
+// "Foco" (2026-08-23) esa lista además las marca EN PAUSA: encabezan el retorno, y verlas
+// apagadas explica por qué no son la habilidad de la semana.
 const PRIORIDAD_EXCLUIDAS = ['ventas', 'marketing'];
 // ─── QUÉ ESCUCHAR EN DIDI (2026-08-15) ────────────────────────────────────────
 // Pedido: "cuando maneje en didi ponga podcast, audiolibros, usar youtube premium en un
@@ -5614,6 +5876,7 @@ async function cargarPreciosGBM(){
     const r = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd,mxn');
     const j = await r.json();
     pon('gbmBtc', '<b>$'+Number(j.bitcoin.usd).toLocaleString('en-US')+' USD</b><small>$'+Number(j.bitcoin.mxn).toLocaleString('es-MX')+' MXN</small>');
+    guardarPrecioBtc(Number(j.bitcoin.usd), Number(j.bitcoin.mxn));
   }catch(e){ pon('gbmBtc', '<b class="gbm-err">sin conexión</b><small>revísalo en GBM</small>'); }
   // USD/MXN
   try{
@@ -5622,6 +5885,25 @@ async function cargarPreciosGBM(){
     const f = new Date(j.time_last_update_utc);
     pon('gbmUsd', '<b>$'+Number(j.rates.MXN).toFixed(2)+'</b><small>dato del '+f.toLocaleDateString('es-MX',{day:'numeric',month:'short'})+'</small>');
   }catch(e){ pon('gbmUsd', '<b class="gbm-err">sin conexión</b><small>ver Banxico abajo</small>'); }
+}
+
+// El fondo de la maestría y el patrimonio se valuaban con `currentBtcPrice`/`usdMxn` de
+// `finanzasmx_v2`, que solo se refrescan cuando Adán abre Finanzas.html — y él normalmente
+// abre el Dashboard. Con el precio viejo, el fondo entero queda viejo. Este archivo ya le pedía
+// el precio a CoinGecko para el panel del lunes: ahora, de paso, lo guarda donde Finanzas lo
+// lee. Misma semántica que fetchBtcPrice() de Finanzas.html: el tipo de cambio se deriva de
+// mxn/usd de la misma respuesta. Solo escribe si ya existe historial de compras — sin BTC
+// registrado no hay nada que valuar y no se toca el archivo de nadie.
+function guardarPrecioBtc(usd, mxn){
+  if(!(usd>0)) return;
+  const fin=rawGet('finanzasmx_v2', null);
+  if(!fin||!Array.isArray(fin.btcHistory)||!fin.btcHistory.length) return;
+  fin.currentBtcPrice=usd;
+  if(mxn>0) fin.usdMxn=Math.round((mxn/usd)*100)/100;
+  fin.btcLastFetch=new Date().toISOString();
+  try{ rawSet('finanzasmx_v2', fin); }catch(e){ return; }
+  D.fin=fin;
+  if(document.getElementById('metasProgreso')) renderMetasSlide();
 }
 
 // La regla que ya está escrita en tu Plan Maestro, aplicada al saldo de hoy. Vive aparte desde el
@@ -5728,77 +6010,155 @@ function renderGBMPanel(){
     '<div class="gbm-links">'+GBM_LINKS.map(l=>'<a href="'+l.u+'" target="_blank" rel="noopener"><b>'+l.t+'</b><span>'+l.d+'</span></a>').join('')+'</div>';
 }
 
-// Abre/cierra una sub-habilidad (2026-08-19). Pedido: "no muestres todo, solo lo importante,
-// pero hazlo en forma de boton… para que cuando haga click ya muestres toda la info". Con las 7
-// y 9 entradas desplegadas de golpe, la tarjeta era un muro de texto que había que scrollear para
-// ver qué habilidades hay; el título solo ya dice cuál es cada una, y el detalle aparece cuando
-// se pide. Se permite tener varias abiertas a la vez a propósito: sirve para comparar dos.
-function toggleSubhab(btn){
-  const abierto=btn.parentElement.classList.toggle('open');
-  btn.setAttribute('aria-expanded', abierto?'true':'false');
+// ─── Slide de Habilidades — "Foco" (2026-08-23) ─────────────────────────
+// Adán eligió esta forma entre tres dibujadas: "realiza la opcion b". El slide deja de ser
+// un inventario (12 barras iguales + 2 tarjetas con 16 sub-habilidades cerradas) y pasa a
+// mostrar UNA habilidad con UN paso completo, más el ranking de las 12 al lado.
+//
+// Qué se guarda: solo dos cosas, cuál de las dos candidatas está en el foco y en qué paso va
+// cada una. Nada de "completado": marcar pasos como hechos sería un modelo nuevo que habría
+// que mantener sincronizado a mano con Coach_v2.html, igual que ya pasa con SK y APRENDIZAJE.
+const HABFOCO_KEY = 'dash_habfoco_v1';
+function habFocoLoad(){ const o = rawGet(HABFOCO_KEY, {}); return { skill: o.skill || '', paso: o.paso || {} }; }
+function habFocoSave(o){ rawSet(HABFOCO_KEY, o); }
+
+// Retorno = peso × lo que le falta para 100. Es lo que responde el título del slide ("en qué
+// invertir tu tiempo"): no cuál está más baja, sino cuál mueve más el nivel general por hora
+// invertida. Con el peso dentro, el orden cambia respecto al de solo el valor — Finanzas
+// (20, ×1.1 → 88) queda por debajo de Inversión (25, ×1.2 → 90) aunque su valor sea menor.
+function skRetorno(s){ return Math.round(s.w * (100 - s.val)); }
+
+// El siguiente escalón de skLevel() por encima del valor actual, para poder decir cuánto sube
+// el OVR si esta habilidad llega a su próximo nivel. calcOVRcon() es calcOVR() con un valor
+// sustituido — misma fórmula, para que la cifra prometida sea la que de verdad va a salir.
+const SK_ESCALONES = [40, 55, 70, 80, 90, 100];
+function skSiguienteEscalon(v){ return SK_ESCALONES.find(x => x > v) || 100; }
+function calcOVRcon(id, valor){
+  let t = 0, w = 0;
+  SK.forEach(s => { t += (s.id === id ? valor : s.val) * s.w; w += 100 * s.w; });
+  return Math.round(t / w * 100);
 }
+
+// APRENDIZAJE tiene dos formas conviviendo: las que ganaron `subs` el 2026-08-19 (Finanzas e
+// Inversión) y las que conservan el formato viejo (diagnóstico / esta semana / semanas 2-4 /
+// hábito / error). Esto las normaliza a una sola lista de pasos, así el pintado no se bifurca
+// y si mañana IA o Datos entran al foco, el slide ya sabe mostrarlas.
+function habPasos(id){
+  const a = APRENDIZAJE[id]; if(!a) return [];
+  if(a.subs) return a.subs.map(x => ({ n: x.n, q: x.q, c: x.c, r: x.r }));
+  const r = (a.recursos || []).slice(0, 2).map(x => x.n).join(' · ');
+  return [
+    { n: 'Por qué está baja', c: a.diagnostico, r: r },
+    { n: 'Esta semana',        c: a.primer,       r: r },
+    { n: 'Semanas 2-4',        c: a.semana24,     r: r },
+    { n: 'El hábito',          c: a.habito,       r: r },
+    { n: 'El error común',     c: a.error,        r: r },
+  ];
+}
+
+// Las candidatas al foco se eligen igual que antes (las PRIORIDAD_N más bajas de las que no
+// están en PRIORIDAD_EXCLUIDAS), para no tocar la decisión del 2026-08-09 de dejar Ventas y
+// Marketing fuera. Lo único nuevo es que entre esas dos manda el retorno, no el valor.
+function habCandidatas(){
+  return Object.keys(APRENDIZAJE).filter(id => !PRIORIDAD_EXCLUIDAS.includes(id))
+    .map(id => SK.find(s => s.id === id)).filter(Boolean)
+    .sort((a, b) => a.val - b.val).slice(0, PRIORIDAD_N)
+    .sort((a, b) => skRetorno(b) - skRetorno(a));
+}
+function habFocoActual(){
+  const c = habCandidatas(); if(!c.length) return null;
+  const st = habFocoLoad();
+  return c.find(s => s.id === st.skill) || c[0];
+}
+function habFocoSet(id){ const st = habFocoLoad(); st.skill = id; habFocoSave(st); renderSkills(); }
+function habPasoSet(i){
+  const f = habFocoActual(); if(!f) return;
+  const st = habFocoLoad(); st.paso[f.id] = i; habFocoSave(st); renderSkills();
+}
+// Para title="": el texto de APRENDIZAJE trae <b> y comillas dobles ("Influence", "$100M
+// Offers"), que romperían el atributo si se metieran tal cual.
+function habAttr(t){ return String(t || '').replace(/<[^>]*>/g, '').replace(/"/g, '&quot;'); }
+
 function renderSkills(){
   renderDidiStrip();
-  // Top N prioridades reales, siempre visibles (nada de clics — este slide es pasivo, rota
-  // solo y se ve de reojo mientras se trabaja), cada una en una tarjeta grande y detallada.
-  const priority=Object.keys(APRENDIZAJE).filter(id=>!PRIORIDAD_EXCLUIDAS.includes(id)).map(id=>SK.find(s=>s.id===id)).filter(Boolean).sort((a,b)=>a.val-b.val).slice(0,PRIORIDAD_N);
-  document.getElementById('skillPriority').innerHTML=priority.map(s=>{
-    const l=skLevel(s.val), a=APRENDIZAJE[s.id];
-    return `<div class="tile">
-      <div class="skill-card">
-        <div class="skill-card-head">
-          <div class="sc-badge" style="background:${l.c}22">${s.icon}</div>
-          <div class="sc-name">${s.name}</div>
-          <span class="sc-lvl" style="background:${l.c}22;color:${l.c}">${l.l}</span>
-          <div class="sc-val" style="color:${l.c}">${s.val}<small>/100 · ×${s.w}</small></div>
-        </div>
-        ${a.subs ? `
-        <div class="sc-subs-lbl">${a.subs.length} habilidades que debes dominar <small>· toca una para ver cómo</small></div>
-        <div class="sc-subs">${a.subs.map((x,i)=>`
-          <div class="sc-sub">
-            <button class="sc-sub-h" onclick="toggleSubhab(this)" aria-expanded="false">
-              <span class="sc-sub-n">${i+1}</span><span class="sc-sub-t">${x.n}</span><span class="sc-sub-caret">▾</span>
-            </button>
-            <div class="sc-sub-body">
-              <div class="sc-sub-q">${x.q}</div>
-              <div class="sc-sub-c"><b>Cómo desarrollarla:</b> ${x.c}</div>
-              <div class="sc-sub-r">📚 ${x.r}</div>
-            </div>
-          </div>`).join('')}
-        </div>` : `
-        <div class="sc-diag">🔍 <b>Por qué está baja:</b> ${a.diagnostico}</div>
-        <div class="sc-primer">🎯 <b>Esta semana:</b> ${a.primer}</div>
-        <div class="sc-plan">📆 <b>Semanas 2-4:</b> ${a.semana24}</div>
-        <div class="sc-habito">🔁 <b>Hábito:</b> ${a.habito}</div>
-        <div class="sc-error">⚠️ <b>Error común:</b> ${a.error}</div>
-        <div class="sc-res">📚 <b>${a.recursos[0].n}</b> · ${a.recursos[1].n} · ${a.recursos[2].n}</div>`}
-        <a class="sc-link" href="../Coach/Coach_v2.html?skill=${s.id}#aprendizaje">✏️ Ajustar ${s.name} en Coach →</a>
-      </div>
-    </div>`;
-  }).join('');
+  const cand = habCandidatas(); if(!cand.length) return;
+  const foco = habFocoActual();
+  const otra = cand.find(s => s.id !== foco.id);
+  const pasos = habPasos(foco.id); if(!pasos.length) return;
+  const st = habFocoLoad();
+  let i = st.paso[foco.id] || 0; if(i < 0 || i >= pasos.length) i = 0;
+  const p = pasos[i], l = skLevel(foco.val), esTop = cand[0].id === foco.id;
 
-  const barsEl=document.getElementById('skillBars');
-  if(barsEl){
-    const ordenadas=[...SK].sort((a,b)=>a.val-b.val); // más débil arriba — coincide con "en qué invertir tu tiempo"
-    barsEl.innerHTML=`
-      <div class="skill-bars-head">
-        <span class="skill-bars-ovr">Nivel general (OVR): <b>${calcOVR()}</b> · promedio ponderado de tus 12 habilidades</span>
-        <span class="skill-bars-ovr">Ordenadas de más débil a más fuerte</span>
-      </div>
-      <div class="skill-bars-grid">${ordenadas.map(s=>{
-        const l=skLevel(s.val);
-        return `<div class="skbar-row">
-          <div class="skbar-head">
-            <span class="skbar-ico">${s.icon}</span>
-            <span class="skbar-name">${s.name}</span>
-            <span class="skbar-chip" style="background:${l.c}22;color:${l.c};border-color:${l.c}55">${l.l}</span>
-            <span class="skbar-val" style="color:${l.c}">${s.val}<small>/100 · ×${s.w}</small></span>
-          </div>
-          <div class="pbar" style="height:5px;margin-top:3px"><div class="pfill" style="width:${s.val}%;background:${l.c}"></div></div>
-        </div>`;
-      }).join('')}</div>
-    `;
+  // ── Columna izquierda: la habilidad de la semana, con el paso abierto y legible entero.
+  document.getElementById('habFoco').innerHTML = `
+    <div class="hf-top">
+      <span class="hf-chip">Esta semana</span>
+      <div class="hf-badge" style="background:${l.c}22">${foco.icon}</div>
+      <span class="hf-name">${foco.name}</span>
+      <span class="hf-lvl" style="background:${l.c}22;color:${l.c}">${l.l}</span>
+      <span class="hf-val">${foco.val}/100 · ×${foco.w}</span>
+      <span class="hf-why">${esTop
+        ? 'Es la que <b>más rinde</b> de las que están activas'
+        : `Rinde <b>${skRetorno(foco)}</b> · la que más rinde es ${cand[0].name}`}</span>
+    </div>
+    <div class="hf-h1">${p.n}</div>
+    ${p.q ? `<div><div class="hf-lbl">Por qué esta</div><div class="hf-q">${p.q}</div></div>` : ''}
+    <div><div class="hf-lbl">Cómo desarrollarla</div><div class="hf-c">${p.c}</div></div>
+    ${p.r ? `<div class="hf-res"><div class="hf-lbl">Con qué</div><div class="hf-res-t">📚 ${p.r}</div></div>` : ''}
+    <div>
+      <div class="hf-lbl">Los ${pasos.length} pasos de ${foco.name} <span style="font-weight:600;text-transform:none;letter-spacing:0">· toca uno para verlo</span></div>
+      <div class="hf-pasos">${pasos.map((x, j) => `
+        <button class="hf-paso${j === i ? ' act' : ''}" onclick="habPasoSet(${j})" title="${j + 1}. ${habAttr(x.n)} — ${habAttr(x.q || x.c).slice(0, 170)}">
+          <span class="hf-paso-n">${j + 1}</span><span class="hf-paso-t">${x.n}</span>
+        </button>`).join('')}</div>
+    </div>
+    <div class="hf-pie">
+      <span class="hf-pie-t">${i + 1 < pasos.length
+        ? `Cuando la cierres sigue <b>${pasos[i + 1].n}</b>`
+        : `Es el último de los ${pasos.length}`}</span>
+      <span class="hf-acts">
+        ${otra ? `<button class="hf-btn" onclick="habFocoSet('${otra.id}')">Cambiar a ${otra.name} ${otra.icon}</button>` : ''}
+        <a class="hf-btn" href="../Coach/Coach_v2.html?skill=${foco.id}#aprendizaje">✏️ Ajustar en Coach →</a>
+      </span>
+    </div>`;
+
+  // ── Nivel general. La frase promete una cifra concreta, así que se calcula con calcOVRcon()
+  // en vez de estimarse; y la comparación con la otra candidata solo se escribe si de verdad
+  // gana — hoy empatan en 48, y afirmar "es el mayor salto" sería falso.
+  const ovr = calcOVR();
+  const meta = skSiguienteEscalon(foco.val), ovrF = calcOVRcon(foco.id, meta);
+  let extra = '';
+  if(otra){
+    const metaO = skSiguienteEscalon(otra.val), ovrO = calcOVRcon(otra.id, metaO);
+    if(ovrO > ovrF) extra = ` ${otra.name} daría <i>${ovrO}</i>: está más lejos de su siguiente nivel.`;
   }
+  document.getElementById('habOvr').innerHTML = `
+    <div class="ho-lbl">Nivel general</div>
+    <div class="ho-n"><b>${ovr}</b><span>/100 · OVR ponderado</span></div>
+    <div class="pbar" style="height:6px;margin-top:9px"><div class="pfill" style="width:${ovr}%;background:${skLevel(ovr).c}"></div></div>
+    <div class="ho-txt">Llevar ${foco.name} de <b>${foco.val} a ${meta}</b> lo sube a <i>${ovrF}</i>.${extra}</div>`;
+
+  // ── Las 12 ordenadas por retorno. Sustituye a #skillBars: mismo set completo, pero puestas
+  // en el orden que el título del slide promete. El valor crudo y el peso siguen a mano en el
+  // title de cada fila, para no llenar 490px con cuatro cifras por renglón.
+  const orden = [...SK].sort((a, b) => skRetorno(b) - skRetorno(a));
+  const maxR = skRetorno(orden[0]) || 1;
+  document.getElementById('habRank').innerHTML = `
+    <div class="hr-head"><span class="hr-t">Las ${SK.length}, por retorno</span><span class="hr-sub">peso × lo que falta</span></div>
+    <div class="hr-rows">${orden.map((s, j) => {
+      const lv = skLevel(s.val), r = skRetorno(s);
+      const pausa = PRIORIDAD_EXCLUIDAS.includes(s.id), esFoco = s.id === foco.id;
+      const relleno = pausa
+        ? `repeating-linear-gradient(135deg,${lv.c} 0 4px,transparent 4px 8px)`
+        : lv.c;
+      return `<div class="hr-row${pausa ? ' pausa' : ''}${esFoco ? ' foco' : ''}" title="${s.name}: ${s.val}/100 · ${lv.l} · peso ×${s.w} · rinde ${r}${pausa ? ' · fuera del foco por decisión propia' : ''}">
+        <span class="hr-n">${String(j + 1).padStart(2, '0')}</span>
+        <span class="hr-ico">${s.icon}</span>
+        <span class="hr-name">${s.name}</span>
+        <div class="hr-bar"><div class="hr-fill" style="width:${Math.round(r / maxR * 100)}%;background:${relleno}"></div></div>
+        <span class="hr-v${pausa ? ' pausa' : ''}">${pausa ? 'EN PAUSA' : r}</span>
+      </div>`;
+    }).join('')}</div>`;
 }
 
 // ── BARRA SUPERIOR — acceso directo a los demás proyectos (persistente, no rota) ─
@@ -5989,7 +6349,11 @@ const META_DETALLE={
       {t:"Suma contexto técnico",d:"Aprovecha el viaje para visitar también el centro de visitantes/museo espacial de la zona — no es solo turismo."},
     ]},
   maestria:{titulo:"Maestría en Alemania",frase:"La maestría no se canceló — se pausó a propósito, con fecha de regreso ya definida.",pasos:[
-      {t:"La decisión ya está tomada",d:"Se pausaron las aportaciones desde julio de 2026 por un año, y los $53,740 ya ahorrados se quedan intactos — nueva meta: octubre de 2028."},
+      // 2026-08-23: decía "los $53,740 ya ahorrados". Esa cifra estaba escrita a mano aquí y
+      // en el seed de Finanzas, y ya no era cierta — dos tercios del fondo son Bitcoin, que se
+      // mueve solo. Este texto es estático y no puede calcular, así que se manda al medidor
+      // que sí lo hace en vivo (ver fondoMaestria()) en lugar de repetir un número congelado.
+      {t:"La decisión ya está tomada",d:"Se pausaron las aportaciones desde julio de 2026 por un año y lo ya ahorrado se queda intacto — nueva meta: octubre de 2028. La cifra exacta de hoy, con su desglose (fondo de emergencia, CETES, depósito de renta y Bitcoin), está en el medidor 🎓 Fondo Maestría de esta misma pantalla."},
       {t:"Sigue con tu alemán",d:"Ya integrado en tu rutina, slide \"Alemán del día\" — vas a necesitar al menos A2 certificado, algunos programas piden C1."},
       {t:"Esslingen · Automotive Systems",d:"Maestría en inglés, 3 semestres: licenciatura en Ingeniería Automotriz/Mecánica/Mecatrónica/Eléctrica, mejor 35% de tu generación, inglés IELTS ≥6.0. Solicitud 4 nov-31 mar, inicio en septiembre.",href:"https://www.hs-esslingen.de/en/international/coming-to-esslingen-uas/international-masters-programmes-graduate-school/master-degree-programmes/automotive-systems-meng",label:"Automotive Systems M.Eng. — Esslingen"},
       {t:"Esslingen conecta directo",d:"Su Industry Advisory Board incluye a Mercedes-Benz, Bosch y Porsche, y tienen la beca \"BMW SpeedUp\" solo para sus estudiantes."},
@@ -6289,10 +6653,20 @@ function kpiDetalle(id){
       kpiNota('🏅 Ya lo lograste una vez: <b>la tarjeta Banamex quedó liquidada el 13-ago-2026</b>, casi 5 meses antes de lo planeado. El mismo método sirve para la que queda.')};
   }
 
+  // 2026-08-23 — reescrito entero. Antes este panel leia `goal.current` (la cifra a mano de
+  // Finanzas) y afirmaba que "Finanzas no lo tiene desglosado". Adan reporto lo contrario:
+  // esa suma incluye su Bitcoin. Ver el comentario largo sobre fondoMaestria(), que ahora es
+  // la unica fuente de esta cifra en todo el archivo.
   if(id==='maestria'){
     const goal=(F.goals||[]).find(x=>x.id==='g001'||/maestr/i.test(x.name||''));
-    const cur=goal?(+goal.current||0):0, tgt=goal?(+goal.target||0):0;
+    const tgt=(goal&&+goal.target)||500000;
+    const fm=fondoMaestria(), bt=fm.btc;
+    const cur=fm.total, guardado=goal?(+goal.current||0):0;
     const pct=tgt>0?cur/tgt*100:0, falta=Math.max(0,tgt-cur);
+    const pctDe=v=>cur>0?v/cur*100:0;
+    const btcPct=pctDe(bt.mxn);
+    const plUsd=bt.usdNow-bt.usdIn;
+    const usd=n=>'$'+Math.round(Math.abs(n)).toLocaleString('en-US')+' USD';
     // Fechas reales de la meta: la pausa y el plazo salen del propio registro, no de un texto.
     const fReanuda=goal&&goal.pausadaHasta?new Date(goal.pausadaHasta+'T00:00:00'):null;
     const fMeta=goal&&goal.date?new Date(goal.date+'T00:00:00'):null;
@@ -6301,31 +6675,46 @@ function kpiDetalle(id){
     const mesesUtiles=(fReanuda&&fMeta)?Math.max(1,Math.round((fMeta-fReanuda)/(86400000*30.44))):0;
     const ritmo=mesesUtiles?falta/mesesUtiles:0;
     const fmtF=d=>d?d.toLocaleDateString('es-MX',{month:'long',year:'numeric'}):'—';
-    // Lo que Finanzas SÍ tiene trazado como inversión, para poder decir si el fondo está ahí.
-    const invLista=inv.map(i=>({n:i.name,v:+i.value||+i.invested||0}));
-    const invTotal=invLista.reduce((a,x)=>a+x.v,0);
+    // Cuanto se moveria el fondo si el BTC hace lo que el BTC hace. No es una prediccion: es el
+    // tamano del riesgo que ya esta corriendo, medido con su propio saldo.
+    const caida40=bt.mxn*0.4;
 
-    return {titulo:'🎓 Fondo de la Maestría', sub:'De qué se compone, qué falta y a qué ritmo tendría que ir.',
+    return {titulo:'🎓 Fondo de la Maestría', sub:'De qué se compone hoy, cuánto de eso se mueve solo, y a qué ritmo tendría que ir.',
       html:
       '<div class="kpi-cifra" style="color:'+C+'">'+money(cur)+' <span style="font-size:14px;color:var(--text3)">de '+money(tgt)+'</span></div>'+
-      '<div class="kpi-cifra-sub">'+Math.round(pct)+'% de la meta · faltan <b>'+money(falta)+'</b></div>'+
+      '<div class="kpi-cifra-sub">'+Math.round(pct)+'% de la meta · faltan <b>'+money(falta)+'</b> · '+fm.comps.length+' pieza'+(fm.comps.length===1?'':'s')+', sumadas en vivo</div>'+
+
+      kpiSec('🔍 De qué se compone, pieza por pieza')+
+      '<div class="kpi-desglose">'+(fm.comps.length
+        ? fm.comps.map(x=>kpiBarra(x.n, money(x.v), pctDe(x.v), x.c, x.d+' · <b>'+Math.round(pctDe(x.v))+'% del fondo</b>')).join('')
+        : '<div class="gbm-vacio">Sin nada registrado todavía en Finanzas.</div>')+'</div>'+
+      kpiNota('Ninguna de estas cifras está escrita a mano: salen de Finanzas → Inversiones, del fondo de emergencia y del historial de compras de BTC, y se vuelven a sumar cada vez que abres esto.')+
+
+      (bt.mxn>0?
+        kpiSec('₿ La pieza que se mueve sola')+
+        kpiPaso('El Bitcoin es el '+Math.round(btcPct)+'% de tu fondo',
+          'Son <b>'+bt.held.toFixed(6)+' BTC</b> de '+bt.compras+' compra'+(bt.compras===1?'':'s')+', valuados a <b>$'+Math.round(bt.price).toLocaleString('en-US')+' USD</b> con el dólar a '+bt.fx.toFixed(2)+' → <b>'+money(bt.mxn)+'</b>. Metiste '+usd(bt.usdIn)+' y hoy valen '+usd(bt.usdNow)+': '+(plUsd>=0?'vas <b>+'+usd(plUsd)+'</b> arriba':'vas <b>−'+usd(plUsd)+'</b> abajo')+'.',
+          '#f7931a')+
+        kpiNota('⚠️ Esto es lo que el panel no te decía antes: <b>una parte grande de tu fondo no la controlas tú</b>. Una caída del 40% —normal en Bitcoin, ya pasó varias veces— le quita <b>'+money(caida40)+'</b> a esta meta en semanas, sin que hagas nada mal. Tu propia regla de Coach lo dice: en lo volátil, solo lo que puedas ver caer sin tocarlo.')+
+        ((bt.diasViejo===null||bt.diasViejo>2)?kpiNota('🕒 El precio que se está usando es el último que guardó Finanzas'+(bt.diasViejo!==null?' hace '+bt.diasViejo+' día'+(bt.diasViejo===1?'':'s'):' (nunca se ha actualizado en línea)')+'. Abre Finanzas → Bitcoin o el panel de inversión del lunes para refrescarlo.'):'')
+        :'')+
+
+      (fm.ef>0?kpiNota('⚠️ <b>Ojo con el doble conteo.</b> Tus '+money(fm.ef)+' de fondo de emergencia están sumados aquí <b>y</b> en el medidor de Fondo de emergencia. Así lo hace Finanzas, pero ese dinero tiene un solo trabajo —cubrir un imprevisto— y si lo usas para eso, la maestría baja. <b>Sin contarlo, este fondo es de '+money(fm.sinEf)+'.</b>'):'')+
+      (fm.dobleCrypto?kpiNota('⚠️ Hay una inversión de tipo <b>Criptomonedas</b> en Finanzas → Inversiones además del historial de compras de BTC. Si es el mismo dinero, está contado dos veces: déjalo en un solo lado.'):'')+
+      (guardado>0&&Math.abs(guardado-cur)>=1?kpiNota('📌 En Finanzas → Metas la meta guarda <b>'+money(guardado)+'</b> escrito a mano. Ese número no se recalcula solo y ya no coincide: hoy el fondo real es <b>'+money(cur)+'</b> ('+(cur>guardado?'+':'−')+money(Math.abs(cur-guardado))+'). Actualízalo ahí, o déjalo sabiendo que la cifra viva es esta.'):'')+
 
       kpiSec('📊 Cómo se reparte la meta')+
       '<div class="kpi-desglose">'+
-        kpiBarra('Ya ahorrado', money(cur), pct, V, 'Quieto e invertido desde la pausa — no se toca para nada más')+
+        kpiBarra('Ya lo tienes', money(cur), pct, V, 'Repartido en las '+fm.comps.length+' piezas de arriba')+
         kpiBarra('Lo que falta', money(falta), 100-pct, O, 'Es '+(cur>0?(falta/cur).toFixed(1):'—')+' veces lo que llevas')+
       '</div>'+
 
-      kpiSec('🔍 Qué compone esos '+money(cur))+
-      kpiNota('⚠️ <b>Finanzas no lo tiene desglosado.</b> La meta guarda <b>una sola cifra</b> ('+money(cur)+'), sin instrumentos ni aportaciones ligadas. Lo único trazado como inversión son '+(invLista.length?invLista.map(x=>esc(x.n)+' '+money(x.v)).join(' y '):'ninguna inversión')+' — '+money(invTotal)+' en total, que <b>no es este fondo</b>. Para poder ver de qué se compone hay que registrar en Finanzas → Inversiones dónde está guardado ese dinero.')+
-      (invLista.length?'<div class="kpi-desglose">'+invLista.map(x=>kpiBarra(esc(x.n), money(x.v), invTotal>0?x.v/invTotal*100:0, P, 'Registrado en Finanzas → Inversiones')).join('')+'</div>':'')+
-
       kpiSec('⏸️ Por qué ahora no aportas')+
-      kpiPaso('Decisión tomada, no un olvido','Las aportaciones están <b>pausadas hasta '+fmtF(fReanuda)+'</b>'+(mesesPausa?' (faltan '+mesesPausa+' meses)':'')+' y la meta se movió a <b>'+fmtF(fMeta)+'</b>. Los '+money(cur)+' quedan intactos. La prioridad de este año es fondo de emergencia y deuda cara — ese orden es el que hace posible la maestría después, no el que la retrasa.',C)+
+      kpiPaso('Decisión tomada, no un olvido','Las aportaciones están <b>pausadas hasta '+fmtF(fReanuda)+'</b>'+(mesesPausa?' (faltan '+mesesPausa+' meses)':'')+' y la meta se movió a <b>'+fmtF(fMeta)+'</b>. No sacas nada de aquí: lo único que mueve el saldo mientras tanto es el precio del BTC. La prioridad de este año es fondo de emergencia y deuda cara — ese orden es el que hace posible la maestría después, no el que la retrasa.',C)+
 
       (mesesUtiles?
         kpiSec('📈 El ritmo que pediría la meta')+
-        kpiPaso('⚠️ Los números no cuadran con la fecha actual','Al reanudar en '+fmtF(fReanuda)+' quedarían <b>'+mesesUtiles+' meses</b> hasta '+fmtF(fMeta)+'. Para juntar los '+money(falta)+' que faltan habría que ahorrar <b>'+money(ritmo)+' al mes</b> — más de la mitad de todo lo que ganas, y eso sin contar renta, deuda ni comida.','var(--r)')+
+        kpiPaso('⚠️ Los números no cuadran con la fecha actual','Al reanudar en '+fmtF(fReanuda)+' quedarían <b>'+mesesUtiles+' meses</b> hasta '+fmtF(fMeta)+'. Para juntar los '+money(falta)+' que faltan habría que ahorrar <b>'+money(ritmo)+' al mes</b>'+(g.prom>0?' — <b>'+(ritmo/g.prom).toFixed(1)+' veces todo lo que gastas en un mes</b> ('+money(g.prom)+'), y eso además de seguir viviendo':' — más de la mitad de todo lo que ganas, y eso sin contar renta, deuda ni comida')+'.','var(--r)')+
         kpiNota('Esto no significa renunciar: significa que <b>la fecha o el monto tendrán que moverse</b>, y es mejor saberlo hoy que en 2027. Tres salidas reales: correr la meta a 2030, bajar el objetivo a una maestría más barata (o con beca/DAAD), o financiar parte con ingreso nuevo en vez de con ahorro. Decidirlo es tarea de Coach → Plan Maestro, no de este panel.')
         :'')};
   }
@@ -6343,13 +6732,23 @@ function kpiDetalle(id){
     const bienes=activos.filter(a=>a.type!=='liquido');
     const totalLiq=liquidos.reduce((a,x)=>a+(+x.value||0),0);
     const totalBienes=bienes.reduce((a,x)=>a+(+x.value||0),0);
-    const tieneHoy=totalInv+ef+totalLiq;
+    // 2026-08-23 — dos arreglos aquí. (1) El Bitcoin no salía en ninguna pantalla del
+    // Dashboard aunque es de las piezas más grandes de su dinero. (2) La nota de abajo
+    // presentaba `tieneHoy − deudaTot = pat` como una identidad, y no lo era: `tieneHoy` ya
+    // incluía el efectivo y la cuenta, que `patrimonioNeto()` deja fuera a propósito
+    // (la fórmula se conserva congelada para poder comparar contra el punto de partida del
+    // 18-jul-2026, ver readme_finanzas). Ahora se dice cuál es cada cifra en vez de sumar mal.
+    const btcP=btcInfo();
+    const fuera=totalLiq+btcP.mxn;                // dinero real que la fórmula congelada no cuenta
+    const tieneHoy=totalInv+ef+fuera;
     const escala=Math.max(tieneHoy,deudaTot,1);   // misma escala en las dos listas: comparables
-    const patTotal=pat+totalBienes;
+    const patDisp=pat+fuera;                      // patrimonio disponible de verdad, hoy
+    const patTotal=patDisp+totalBienes;
 
     const filasTengo=[]
       .concat(inv.map(i=>({n:esc(i.name),v:+i.value||+i.invested||0,c:V,d:'Inversión registrada en Finanzas'})))
       .concat(ef>0?[{n:'Fondo de emergencia',v:ef,c:W,d:'Tu colchón — no se toca para invertir'}]:[])
+      .concat(btcP.mxn>0?[{n:'Bitcoin',v:btcP.mxn,c:'#f7931a',d:btcP.held.toFixed(6)+' BTC a $'+Math.round(btcP.price).toLocaleString('en-US')+' USD — sube y baja solo, y no entra en la fórmula del número grande'}]:[])
       .concat(liquidos.map(a=>({n:esc(a.name),v:+a.value||0,c:C,d:'Disponible ya, sin vender nada'})))
       .filter(x=>x.v!==0).sort((a,b)=>b.v-a.v);
 
@@ -6375,14 +6774,15 @@ function kpiDetalle(id){
       '<div class="kpi-desglose">'+(filasDebo.length
         ? filasDebo.map(x=>kpiBarra(x.n, '−'+money(x.v), x.v/escala*100, x.c, x.d)).join('')
         : '<div class="gbm-vacio">Sin deudas vivas. 🎉</div>')+'</div>'+
-      kpiNota('<b>'+money(tieneHoy)+' − '+money(deudaTot)+' = '+money(pat)+'</b>. Sale negativo mientras la deuda pese más que el dinero: <b>no es que no avances</b> — el punto de partida del 18-jul-2026 era '+money(START)+'.')+
+      kpiNota('<b>'+money(totalInv+ef)+' − '+money(deudaTot)+' = '+money(pat)+'</b>. El número grande usa la fórmula congelada desde el 18-jul-2026 —inversiones + fondo de emergencia − deudas— para que el avance siga siendo comparable contra el punto de partida de '+money(START)+'. Sale negativo mientras la deuda pese más que el dinero: <b>no es que no avances</b>.')+
+      (fuera>0?kpiNota('➕ Fuera de esa fórmula tienes '+money(fuera)+' que también son dinero tuyo: '+[btcP.mxn>0?'<b>'+money(btcP.mxn)+'</b> en Bitcoin':null,totalLiq>0?'<b>'+money(totalLiq)+'</b> en efectivo y cuenta':null].filter(Boolean).join(' y ')+'. Contándolos, tu patrimonio disponible hoy es <b>'+money(patDisp)+'</b>.'):'')+
 
       (filasBienes.length?
         kpiSec('🚗 Y además tienes en bienes · '+money(totalBienes))+
         '<div class="kpi-desglose">'+filasBienes.slice(0,8).map(x=>kpiBarra(x.n, money(x.v), x.v/Math.max(totalBienes,1)*100, P, x.d)).join('')+'</div>'+
         (filasBienes.length>8?kpiNota('Y '+(filasBienes.length-8)+' cosas más registradas en Finanzas → Activos.'):'')+
         kpiPaso('Tu patrimonio contando bienes: '+money(patTotal),
-          'Los bienes <b>no entran</b> en el número de arriba, y es a propósito: la meta del millón se mide en <b>dinero</b>, y no vas a vender el coche ni la PC para llegar. Pero ignorarlos da una foto falsa — <b>'+money(totalBienes)+' en cosas tuyas es patrimonio real</b>, aunque no líquido. Las dos cifras son ciertas: '+money(pat)+' es lo que tienes disponible, '+money(patTotal)+' es lo que vales hoy.',
+          'Los bienes <b>no entran</b> en el número de arriba, y es a propósito: la meta del millón se mide en <b>dinero</b>, y no vas a vender el coche ni la PC para llegar. Pero ignorarlos da una foto falsa — <b>'+money(totalBienes)+' en cosas tuyas es patrimonio real</b>, aunque no líquido. Las dos cifras son ciertas: '+money(patDisp)+' es lo que tienes disponible, '+money(patTotal)+' es lo que vales hoy.',
           patTotal>=0?V:O)
         :'')+
 
@@ -6513,6 +6913,11 @@ function renderMetasSlide(){
   const bbva=metaDebtInfo(d=>/bbva/i.test(d.name||'')&&(!d.type||d.type==='credit_card'));
   const carro=metaDebtInfo(d=>d.type==='car');
   const goalMae=(D.fin.goals||[]).find(g=>g.id==='g001'||/maestr/i.test(g.name||''));
+  // Misma correccion que en renderCoach() (2026-08-23): el fondo se suma en vivo de sus piezas
+  // reales —fondo de emergencia, inversiones y Bitcoin— en vez de leer la foto vieja de
+  // `goalMae.current`. Ver fondoMaestria().
+  const fmMae=fondoMaestria();
+  const maeTgt=(goalMae&&+goalMae.target)||0;
 
   const deudaCaraBal=bana.balance+bbva.balance, deudaCaraTot=bana.total+bbva.total;
   const deudaCaraTieneDatos=bana.found||bbva.found;
@@ -6540,7 +6945,7 @@ function renderMetasSlide(){
     {ico:'🆘',lbl:'Fondo de emergencia',val:money(ef),pct:Math.min(100,ef/10000*100),sub:'Meta: $10,000',c:'var(--w)',id:'fondo'},
     // La etiqueta lista solo las tarjetas con saldo vivo (ver la nota igual en renderCoach()).
     {ico:'💳',lbl:'Deuda cara'+(deudaCaraBal>0?' ('+[bana.balance>0?'Banamex':null,bbva.balance>0?'BBVA':null].filter(Boolean).join('+')+')':''),val:deudaCaraTieneDatos?money(deudaCaraBal):'Sin datos',pct:deudaCaraTieneDatos?deudaCaraPct:0,sub:deudaCaraTieneDatos?(deudaCaraBal<=0?'Liquidada 🎉':'restante'):'Regístralas en Finanzas',c:'var(--r)',id:'deudacara'},
-    {ico:'🎓',lbl:'Fondo Maestría',val:goalMae?money(goalMae.current||0):'Sin datos',pct:goalMae&&goalMae.target?Math.min(100,(goalMae.current||0)/goalMae.target*100):0,sub:goalMae?`Meta: ${money(goalMae.target)}`:'Meta en Finanzas → Metas',c:'var(--cy)',id:'maestria'},
+    {ico:'🎓',lbl:'Fondo Maestría',val:fmMae.total>0?money(fmMae.total):'Sin datos',pct:maeTgt>0?Math.min(100,fmMae.total/maeTgt*100):0,sub:maeTgt>0?`Meta: ${money(maeTgt)}${fmMae.btc.mxn>0?` · ${Math.round(fmMae.btc.mxn/fmMae.total*100)}% en BTC`:''}`:'Meta en Finanzas → Metas',c:'var(--cy)',id:'maestria'},
     {ico:'💰',lbl:'Patrimonio hacia $1M',val:hasFinData()?money(pat):'Sin datos',pct:patPct,sub:'Meta: $1,000,000 · 01 ene 2030',c:'var(--g)',id:'patrimonio'},
     // 4 medidores nuevos (2026-08-19, "tambien si puedes agregar mas, hazlo"). Los 4 salen de
     // datos que ya existían en `finanzasmx_v2` y que no se estaban mirando en ninguna pantalla.
@@ -6564,10 +6969,10 @@ function renderMetasSlide(){
   // Barra de dinero real de BYD/Maestría (2026-08-09, pedido explícito) — de solo lectura, calculada
   // aquí con los mismos datos de Finanzas que ya usan los 4 medidores de arriba, no se toca con clic.
   const carroPct=carro.found&&carro.total>0?Math.max(0,Math.min(100,(1-carro.balance/carro.total)*100)):0;
-  const maePct=goalMae&&goalMae.target?Math.max(0,Math.min(100,(goalMae.current||0)/goalMae.target*100)):0;
+  const maePct=maeTgt>0?Math.max(0,Math.min(100,fmMae.total/maeTgt*100)):0;
   METAS_MONEYBAR={
     byd:{pct:Math.round(carroPct),lbl:carro.found?`Pagado real: ${money(carro.total-carro.balance)} de ${money(carro.total)}`:'Pagado real: sin datos en Finanzas'},
-    maestria:{pct:Math.round(maePct),lbl:goalMae?`Ahorrado: ${money(goalMae.current||0)} de ${money(goalMae.target||0)}`:'Ahorrado: sin datos en Finanzas'}
+    maestria:{pct:Math.round(maePct),lbl:maeTgt>0?`Ahorrado: ${money(fmMae.total)} de ${money(maeTgt)}`:'Ahorrado: sin datos en Finanzas'}
   };
 
   // Cupra↔Maestría intercambiados el 2026-08-09 (pedido explícito: "lo del cupra formentos
@@ -7281,18 +7686,72 @@ function toggleHabilidadChecklist(id,idx){
   pintarDetailOverlay(HABILIDAD_DETALLE,'habilidades_checklist_v1',id,'toggleHabilidadChecklist',null);
   renderHabilidadesBase();
 }
+// Igual que detailPct() pero devolviendo también el conteo bruto. La consola táctica pinta UNA
+// MARCA POR PASO, no un porcentaje redondeado, así que necesita hechos/total; detailPct() se
+// queda como está porque lo comparte Mis Metas y ahí solo hace falta el %.
+function hbAvance(id){
+  const info=HABILIDAD_DETALLE[id];
+  const total=(info&&info.pasos)?info.pasos.length:0;
+  if(!total) return {hechos:0,total:0,pct:0};
+  const store=(rawGet('habilidades_checklist_v1',{})[id])||{};
+  const hechos=info.pasos.filter((_,i)=>store[i]).length;
+  return {hechos,total,pct:Math.round(hechos/total*100)};
+}
 function renderHabilidadesBase(){
-  document.getElementById('habilidadesGrid').innerHTML=HABILIDADES_BASE.map(h=>{
-    const pct=detailPct(HABILIDAD_DETALLE,'habilidades_checklist_v1',h.id);
-    return `<div class="img-goal-cell">
-      <div class="img-goal-photo" style="background-image:url('${h.img}')" onclick="abrirHabilidadDetalle('${h.id}','${h.img}')" role="button" tabindex="0"><div class="img-goal-txt">${h.ico} ${h.t}</div></div>
-      <div class="img-goal-pbar-row">
-        <span class="img-goal-pbar-ico">✅</span>
-        <div class="img-goal-pbar"><div class="img-goal-pbar-fill" style="width:${pct}%"></div></div>
-        <span class="img-goal-pbar-pct">${pct}%</span>
-      </div>
+  const av=HABILIDADES_BASE.map(h=>Object.assign({h},hbAvance(h.id)));
+  const sumHechos=av.reduce((a,x)=>a+x.hechos,0), sumTotal=av.reduce((a,x)=>a+x.total,0);
+  const pctGlobal=sumTotal?Math.round(sumHechos/sumTotal*100):0;
+  const dominadas=av.filter(x=>x.total&&x.hechos===x.total).length;
+  const enCurso=av.filter(x=>x.hechos>0&&x.hechos<x.total).length;
+  const sinEmpezar=av.filter(x=>x.hechos===0).length;
+  const estado=x=>(x.total&&x.hechos===x.total)?'ok':(x.hechos===0?'zero':'');
+
+  // "SIGUIENTE" = la habilidad EMPEZADA que está más cerca de terminar. Cerrar algo que ya
+  // llevas a medias motiva más que abrir una novena habilidad en 1 paso, y con 23 fichas hace
+  // falta un punto de entrada o la pantalla se vuelve un catálogo. Si no hay ninguna empezada
+  // (navegador nuevo), marca la primera del temario para que nunca se quede sin marcar.
+  let sig=null,mejor=-1;
+  av.forEach(x=>{ if(x.hechos>0&&x.hechos<x.total&&x.pct>mejor){mejor=x.pct;sig=x.h.id;} });
+  if(!sig&&av.length) sig=av[0].h.id;
+
+  const eq=av.map(x=>`<i class="${estado(x)}" style="height:${Math.round(18+x.pct*0.82)}%" title="${x.h.t} — ${x.pct}%"></i>`).join('');
+  document.getElementById('hbBay').innerHTML=`
+    <div class="hb-n">
+      <span class="hb-k">PROGRESO GLOBAL</span>
+      <span class="hb-v"><b>${pctGlobal}</b><i>%</i></span>
+    </div>
+    <div class="hb-d"></div>
+    <div class="hb-eqw">
+      <span class="hb-k">AVANCE POR HABILIDAD</span>
+      <div class="hb-eq">${eq}</div>
+    </div>
+    <div class="hb-d"></div>
+    <div class="hb-s">
+      <div class="hb-rd"><span class="hb-rv ok">${dominadas}</span><span class="hb-k">DOMINADAS</span></div>
+      <div class="hb-rd"><span class="hb-rv">${enCurso}</span><span class="hb-k">EN CURSO</span></div>
+      <div class="hb-rd"><span class="hb-rv zero">${sinEmpezar}</span><span class="hb-k">SIN EMPEZAR</span></div>
+      <div class="hb-rd"><span class="hb-rv">${sumHechos}<small>/${sumTotal}</small></span><span class="hb-k">PASOS</span></div>
     </div>`;
-  }).join('');
+
+  document.getElementById('habilidadesGrid').innerHTML=av.map(x=>{
+    const h=x.h, esSig=h.id===sig;
+    const tk=Array.from({length:x.total},(_,i)=>`<i class="${i<x.hechos?'on':''}"></i>`).join('');
+    return `<div class="hb-card ${estado(x)}${esSig?' next':''}">
+      <div class="hb-ph" style="background-image:url('${h.img}')" onclick="abrirHabilidadDetalle('${h.id}','${h.img}')" role="button" tabindex="0" title="${h.t}">
+        <span class="hb-sc"></span>
+        ${esSig?'<span class="hb-br hb-br-tr"></span><span class="hb-br hb-br-bl"></span><span class="hb-next">SIGUIENTE</span>':''}
+        <span class="hb-pc">${x.pct}%</span>
+        <span class="hb-tt"><span class="e">${h.ico}</span>${h.t}</span>
+      </div>
+      <div class="hb-sg"><span class="hb-tk">${tk}</span><span class="hb-ct">${x.hechos}/${x.total}</span></div>
+    </div>`;
+  }).join('')+`
+    <div class="hb-card hb-lg">
+      <span class="hb-lgh">LECTURA</span>
+      <span class="hb-lgr"><span class="hb-tkm"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span><span>cada marca = un paso del checklist</span></span>
+      <span class="hb-lgr"><span class="hb-sw ok"></span><span>dominada — 100 %</span></span>
+      <span class="hb-lgr"><span class="hb-sw zero"></span><span>sin empezar</span></span>
+    </div>`;
 }
 
 // Slide 0 fusiona "Mi Día" y "Hero" en una sola pantalla (2026-08-08) — ambas funciones siguen
