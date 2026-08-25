@@ -166,14 +166,17 @@ entrada difiere. Sale con código 1 si algo está roto, así que vale tal cual p
 
 Qué revisa:
 
-- Que **nadie haya vuelto a incrustar** `RUTINA_TASKS` en un HTML en vez de pedirla al maestro.
-- `SK` (el radar) y `GYM_RUTINA_DEFAULT` contra `ejercicio.html`, que siguen duplicadas.
-- Las cifras que ya tienen variable pero siguen escritas a mano — salen como **aviso**, no como
-  problema: coinciden hoy, pero cada una es un sitio que tocar cuando ese dato cambie.
+- Que **nadie haya vuelto a incrustar** ninguna de las seis estructuras en un HTML en vez de
+  leerla del maestro. Es la guardia de la Regla 1.
+- `GYM_RUTINA_DEFAULT` contra `ejercicio.html`, que sigue siendo un respaldo duplicado.
+- Que las fases y las prioridades del maestro aparezcan en el HTML de Coach.
+- Las cifras que ya tienen variable pero siguen escritas a mano.
 - Los `{{marcadores}}` que no existan en el catálogo.
 
-Ignora a propósito los campos `full`/`cat`/`desc` de `SK`, que solo usa el panel de Coach: no es
-divergencia, es que cada app usa lo que necesita.
+Lleva una lista de **excepciones documentadas**: números que coinciden con una variable pero
+significan otra cosa (el precio de un servicio, el ahorro en un boleto de avión, la meta de la
+maestría *antes* de reagendarse). Cada una con su razón. Un aviso que nunca se puede cerrar acaba
+ignorándose, y entonces el verificador deja de servir.
 
 **Un hook `Stop` lo corre solo** al final de cada turno, con `--hook`: solo habla cuando encuentra
 un problema. Un verificador que saluda cuando todo está bien se vuelve ruido y se acaba ignorando.
@@ -186,15 +189,30 @@ al Dashboard: 6 días divergentes sin que nadie lo notara.
 
 ## Lo que todavía está duplicado
 
-`RUTINA_TASKS` ya se movió aquí. **Siguen copiadas a mano** cinco estructuras:
+Ya no queda ninguna estructura copiada entre archivos. Las seis viven aquí:
 
-| Estructura | Copias |
-|---|---|
-| `PHASES` (4 fases del Plan Maestro) | Dashboard ↔ Coach |
-| `SK` (12 valores del radar) | Dashboard ↔ Coach |
-| `APRENDIZAJE` (5 prioridades) | Dashboard ↔ Coach |
-| `GYM_RUTINA_DEFAULT` | Dashboard ↔ ejercicio.html |
-| `LISTA_COMPRAS` | Dashboard ↔ comida + cuidadopersonal + salud |
+| Estructura | Qué es | Cómo se lee |
+|---|---|---|
+| `DEUDAS_SEED` | Punto de partida de las deudas | `CIFRAS.DEUDAS_SEED` |
+| `RUTINA_TASKS` | 58 bloques del horario | `CIFRAS.rutina(base)` |
+| `SK` | 12 habilidades del radar | `CIFRAS.SK` |
+| `PHASES` | 4 fases del Plan Maestro | `CIFRAS.PHASES` |
+| `APRENDIZAJE` | 6 prioridades de aprendizaje | `CIFRAS.APRENDIZAJE` |
+| `LISTA_COMPRAS` | Catálogo de compras por pasillos | `CIFRAS.LISTA_COMPRAS` |
 
-`verificar-sincronia.js` vigila `SK` y `GYM_RUTINA_DEFAULT`. **No hay impedimento técnico** para
-moverlas — el camino está probado con `RUTINA_TASKS`; solo falta el trabajo.
+`verificar-sincronia.js` vigila que **ninguna vuelva a incrustarse** en un HTML.
+
+### Los dos casos que no son literal contra literal
+
+No todo era una copia que se pudiera mover, y conviene saber por qué siguen necesitando cuidado:
+
+- **`GYM_RUTINA_DEFAULT`** es solo el respaldo para un navegador que nunca abrió `ejercicio.html`;
+  esa app guarda la rutina real en su propio `localStorage` y gana sobre este literal. El
+  verificador compara los 7 días.
+- **El texto de `PHASES` y `APRENDIZAJE` en Coach** está escrito como HTML a mano en sus
+  secciones, no generado desde el literal. Convertirlo exigiría rediseñar esas secciones. El
+  verificador comprueba que las fases y las prioridades del maestro aparezcan ahí, y las cifras
+  que contienen ya usan `{{marcadores}}`.
+- **`LISTA_COMPRAS`** se armó cruzando `RECETAS` de comida.html, `SKIN_DB`/`HAIR_DB` de
+  cuidadopersonal.html y `SUPP_CATALOG` de salud.html: tres estructuras distintas, así que no se
+  puede derivar en vivo. Vive aquí para tener un solo sitio donde editarlo.

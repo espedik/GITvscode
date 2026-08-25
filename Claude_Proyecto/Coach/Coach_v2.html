@@ -1183,7 +1183,7 @@
       <div class="hero-kpis">
         <div class="stat-badge"><span class="num neg">-$308,830</span><span>Patrimonio líquido al iniciar</span></div>
         <div class="stat-badge"><span class="num neg">$366,137</span><span>Deuda total al iniciar</span></div>
-        <div class="stat-badge"><span class="num">$0 / $10,000</span><span>Fondo emergencia al iniciar</span></div>
+        <div class="stat-badge"><span class="num">$0 / {{fondoMeta}}</span><span>Fondo emergencia al iniciar</span></div>
         <div class="stat-badge"><span class="num" id="kpiDiasMeta">1,263</span><span>Días hasta 01 ene 2030</span></div>
       </div>
       <p class="p-quote">"Mi mayor miedo no es fracasar. Es no explotar mi potencial y quedarme estancado y pobre." Este perfil existe para que eso nunca pase.</p>
@@ -1248,7 +1248,7 @@
     <div class="card mb-16 span-2" style="margin-bottom:16px;">
       <h3 class="fw-700 mb-12">Diagnóstico financiero real — los números que importan</h3>
       <div class="grid-3">
-        <div class="stat-badge"><span class="num">$41,000</span><span>Sueldo/mes (ALTEN)</span></div>
+        <div class="stat-badge"><span class="num">{{sueldo}}</span><span>Sueldo/mes ({{empleador}})</span></div>
         <div class="stat-badge"><span class="num neg">$366,137</span><span>Deuda total exacta</span></div>
         <div class="stat-badge"><span class="num neg">-$308,830</span><span>Patrimonio líquido real</span></div>
       </div>
@@ -1278,7 +1278,7 @@
           <p>Este hallazgo decía $13,372/mes de mínimos contra un presupuesto de $11,700 — un hueco de $1,672.
             Ya no aplica: al liquidar Banamex tus mínimos vigentes bajaron a <strong class="text-green">$11,028.98/mes</strong>
             y la categoría "Deudas" quedó corregida en $8,200, que <strong>cuadra exacto</strong> con el crédito del auto
-            ($6,700) más el mínimo de BBVA ($1,500).</p>
+            ({{autoPago}}) más el mínimo de BBVA ({{tcBbvaMin}}).</p>
           <p style="margin-top:8px;">Pero la fuga no desapareció, se movió: los MSI no se contabilizan en "Deudas" sino
             en <strong>"Suscripciones"</strong>, y ahí van <strong class="text-red">$3,259/mes</strong> ($2,829 de MSI +
             $430 de Claude Code e iCloud) contra un presupuesto de solo $2,000. <strong>Hueco real hoy: $1,259/mes.</strong>
@@ -1291,7 +1291,7 @@
           <h4>El margen real de tu sueldo es mínimo</h4>
           <p>Renta + comida + servicios + suscripciones + transporte + entretenimiento + salud ($26,000) más los
             mínimos reales de deuda (<strong class="text-green">$11,029</strong>, ya sin Banamex) =
-            <strong>$37,029 de tus $41,000</strong>. Te quedan ~<strong class="text-green">$3,971/mes</strong> de margen
+            <strong>$37,029 de tus {{sueldo}}</strong>. Te quedan ~<strong class="text-green">$3,971/mes</strong> de margen
             del sueldo antes de contar lo de DiDi — más del doble que los $1,628 que tenías al arrancar Fase 0. En
             octubre, cuando caigan los MSI, sube otros $2,335. Aun así, tu capacidad de maniobra real sigue viniendo
             de lo extra que generes, no del sueldo.</p>
@@ -1327,7 +1327,7 @@
       <div class="impuesto-row"><span class="imp-nombre text-green">✅ Ticketmaster MSI ($1,260) — LIQUIDADO, última cuota pagada</span><span class="imp-fecha text-green">13 ago 2026</span></div>
       <div class="impuesto-row"><span class="imp-nombre">Merpago*Merca MSI ($597) — última cuota, se liquida</span><span class="imp-fecha">22 ago 2026</span></div>
       <div class="impuesto-row"><span class="imp-nombre">Mercado Pago MSI ($717) — última cuota, se liquida</span><span class="imp-fecha">22 ago 2026</span></div>
-      <div class="impuesto-row"><span class="imp-nombre">Apple Watch MSI ($1,708) — quedan 2 cuotas de $854</span><span class="imp-fecha">18 sep 2026</span></div>
+      <div class="impuesto-row"><span class="imp-nombre">Apple Watch MSI ({{appleWatch}}) — cuotas de $854</span><span class="imp-fecha">18 sep 2026</span></div>
       <div class="impuesto-row"><span class="imp-nombre">Zap Stylo MSI ({{zapStylo}}) — cuotas de {{zapStyloCuota}}</span><span class="imp-fecha">22 sep 2026</span></div>
       <div class="impuesto-row"><span class="imp-nombre">iPhone 15 MSI ({{iphone}}) — se liquida</span><span class="imp-fecha">Jun 2028</span></div>
       <div class="impuesto-row"><span class="imp-nombre">Tarjeta BBVA ({{tcBbva}} al {{tcBbvaTasa}}) — única deuda cara que queda, sin fecha fija</span><span class="imp-fecha text-red">Abierta</span></div>
@@ -1336,12 +1336,12 @@
       <p class="fs-13" style="line-height:1.7;">
         Tu carga de MSI cae en escalera: <strong>$2,829/mes hoy → $1,515 en septiembre → $494 en octubre</strong>
         (solo el iPhone). Eso libera <strong class="text-green">$2,335/mes</strong> para octubre, y ya tienes libres
-        los <strong class="text-green">$810/mes</strong> del mínimo de Banamex desde este mes — <strong class="text-green">$3,145/mes</strong>
+        los <strong class="text-green">{{banamexMin}}/mes</strong> del mínimo de Banamex desde este mes — <strong class="text-green">$3,145/mes</strong>
         en total contra como arrancaste Fase 0.
       </p>
       <p class="fs-13" style="line-height:1.7;">
         Ese dinero tiene un solo destino y ya no hay que decidirlo: primero completar el fondo de emergencia
-        a $10,000, y todo lo demás <strong>100% a BBVA</strong> — es la única deuda cara que te queda. Si no lo
+        a {{fondoMeta}}, y todo lo demás <strong>100% a BBVA</strong> — es la única deuda cara que te queda. Si no lo
         rediriges de inmediato, se te va a ir en gastos hormiga sin que lo notes; es justo tu patrón de fuga, y
         acabas de demostrar que no es inevitable.
       </p>
@@ -1369,8 +1369,8 @@
 
       <div class="grid-3" style="margin:14px 0;">
         <div class="stat-badge" style="min-width:auto;"><span class="num">1 año</span><span>18 jul 2026 → 18 jul 2027</span></div>
-        <div class="stat-badge" style="min-width:auto;"><span class="num">$53,740</span><span>Quietos, invertidos, sin tocar</span></div>
-        <div class="stat-badge" style="min-width:auto;"><span class="num text-gold">Oct 2028</span><span>Nueva meta ($500,000)</span></div>
+        <div class="stat-badge" style="min-width:auto;"><span class="num">{{maestria}}</span><span>Quietos, invertidos, sin tocar</span></div>
+        <div class="stat-badge" style="min-width:auto;"><span class="num text-gold">Oct 2028</span><span>Nueva meta ({{maestriaMeta}})</span></div>
       </div>
 
       <p class="fs-13" style="line-height:1.7;">
@@ -2027,7 +2027,7 @@
       <div class="concepto-item"><strong>Tiempo</strong>Este plan asume ~10-12 horas/semana disponibles fuera de ALTEN (2-3 noches entre semana + un bloque de fin de semana). No es tiempo nuevo de la nada — son los bloques de 🟣 Creativo, 📚 Aprendizaje y 🟢 Networking que ya tienes definidos en tu Rutina diaria, reasignados al negocio en vez de a consumo pasivo. Si en la práctica tienes menos, los plazos de cada fase se corren proporcionalmente — pero el orden de prioridades no cambia.</div>
       <div class="concepto-item">
         <strong>"Fondo de negocio" no es lo mismo que "fondo de emergencia"</strong>
-        Las Opciones 1 y 2 de 💡 Posibles Negocios (plantilla GBM y freelance) no requieren capital, solo tu tiempo y lo que ya sabes hacer. El capital real solo se vuelve relevante en la Opción 4 (CodeReview productizado, Fase 2). Por eso el excedente que liberes en Fase 0-1 va primero a un <strong class="text-gold">fondo de emergencia de $10,000</strong> (la meta que tu propio Finanzas.html ya trae integrada, hoy en $0) y después a deuda cara — no a un "fondo semilla" que todavía no tiene para qué usarse.
+        Las Opciones 1 y 2 de 💡 Posibles Negocios (plantilla GBM y freelance) no requieren capital, solo tu tiempo y lo que ya sabes hacer. El capital real solo se vuelve relevante en la Opción 4 (CodeReview productizado, Fase 2). Por eso el excedente que liberes en Fase 0-1 va primero a un <strong class="text-gold">fondo de emergencia de {{fondoMeta}}</strong> (la meta que tu propio Finanzas.html ya trae integrada, hoy en $0) y después a deuda cara — no a un "fondo semilla" que todavía no tiene para qué usarse.
       </div>
       <div class="concepto-item" style="border:none;"><strong>Régimen fiscal — ya resuelto</strong>Para facturar honorarios freelance (Opción 2) o vender un producto digital de forma recurrente (Opción 1) necesitas régimen fiscal activo. Ya diste de alta el trámite en el SAT, así que este punto queda cerrado — no vuelve a aparecer como pendiente en Fase 0.</div>
     </div>
@@ -2079,7 +2079,7 @@
       <div class="fase-item" id="fase0">
         <span class="fase-tag">Fase 0 · 1 ago – 30 sep 2026 (~9 semanas)</span><span class="fase-status" id="faseStatus0">—</span>
         <h4>Cerrar la fuga y arrancar ingreso, no solo pensar</h4>
-        <div class="fase-meta"><span>🎯</span><span><span class="text-green">✅ Banamex liquidada el 13 ago 2026</span> (era meta de Fase 1, para ene 2027). Quedan 2 objetivos financieros, en este orden: <strong>1) fondo de emergencia a $10,000</strong>, <strong>2) abonos extra a BBVA</strong>.</span></div>
+        <div class="fase-meta"><span>🎯</span><span><span class="text-green">✅ Banamex liquidada el 13 ago 2026</span> (era meta de Fase 1, para ene 2027). Quedan 2 objetivos financieros, en este orden: <strong>1) fondo de emergencia a {{fondoMeta}}</strong>, <strong>2) abonos extra a BBVA</strong>.</span></div>
         <div class="fase-checklist">
           <!-- El bloque "📅 Julio 2026" desapareció el 2026-08-12 al mover el arranque de la fase
                a agosto: sus 3 tareas (s0-1, s0-2, s0-6) se movieron aquí arriba, conservando sus
@@ -2093,24 +2093,24 @@
           <details class="fase-month" data-month="2026-08">
             <summary><span>📅 Agosto 2026</span><span class="fase-month-badge" data-badge>—</span></summary>
             <div class="fase-month-body">
-              <div class="check-item"><input type="checkbox" id="s0-9"><label for="s0-9"><strong>Prioridad 1 — Fondo de emergencia a $10,000.</strong> Antes que cualquier abono extra a deuda: es el colchón que evita que un imprevisto te regrese a la tarjeta. <span class="text-muted">(hoy en $0 · se alimenta con la venta de activos y lo de Didi)</span></label></div>
-              <div class="check-item"><input type="checkbox" id="s0-10"><label for="s0-10"><strong>Prioridad 2 — Liquidar la TC BBVA ({{tcBbva}}).</strong> Única deuda cara que queda. En cuanto el fondo llegue a $10,000, todo excedente va aquí. <span class="text-muted">(proyección: $0 en mar 2027 — ver la simulación en Diagnóstico &amp; Plan)</span></label></div>
+              <div class="check-item"><input type="checkbox" id="s0-9"><label for="s0-9"><strong>Prioridad 1 — Fondo de emergencia a {{fondoMeta}}.</strong> Antes que cualquier abono extra a deuda: es el colchón que evita que un imprevisto te regrese a la tarjeta. <span class="text-muted">(hoy en $0 · se alimenta con la venta de activos y lo de Didi)</span></label></div>
+              <div class="check-item"><input type="checkbox" id="s0-10"><label for="s0-10"><strong>Prioridad 2 — Liquidar la TC BBVA ({{tcBbva}}).</strong> Única deuda cara que queda. En cuanto el fondo llegue a {{fondoMeta}}, todo excedente va aquí. <span class="text-muted">(proyección: $0 en mar 2027 — ver la simulación en Diagnóstico &amp; Plan)</span></label></div>
               <div class="check-item"><input type="checkbox" id="s0-4"><label for="s0-4">Sube a Marketplace tus activos ociosos (PS5, control, monitores, iPad) — es la fuente más rápida para completar el fondo de emergencia de la Prioridad 1.</label></div>
               <div class="check-item"><input type="checkbox" id="s0-3"><label for="s0-3">Plantilla Finanzas.html, de principio a fin: versión limpia sin tus datos + post de venta + publicarla en 2-3 comunidades de GBM (<a href="#" class="inline-link" onclick="irANegocios('negocio1');return false;">Opción 1</a>).</label></div>
               <div class="check-item"><input type="checkbox" id="s0-2"><label for="s0-2">Revisar las fotos y el material del negocio de tu papá y ponerle atención real — primer paso concreto de la <a href="#" class="inline-link" onclick="irANegocios('negocio5');return false;">Opción 5</a>.</label></div>
-              <div class="check-item"><input type="checkbox" id="s0-6"><label for="s0-6">Pausa aportaciones a la Maestría 1 año (hasta 18 jul 2027) — los $53,740 quedan intactos, nueva meta oct 2028.</label></div>
+              <div class="check-item"><input type="checkbox" id="s0-6"><label for="s0-6">Pausa aportaciones a la Maestría 1 año (hasta 18 jul 2027) — los {{maestria}} quedan intactos, nueva meta oct 2028.</label></div>
               <div class="check-item"><input type="checkbox" id="s0-8"><label for="s0-8">Liquidar la TC Banamex. <span class="text-muted">(✅ hecho el 13 ago 2026 — pagaste los $9,000 completos, no el mínimo, 5 meses antes de la meta)</span></label></div>
-              <div class="check-item"><input type="checkbox" id="s0-1"><label for="s0-1">Corrige "Deudas" en Finanzas.html · cero MSI nuevo. <span class="text-muted">(✅ hecho el 13 ago 2026: quedó en $8,200 = auto $6,700 + mínimo BBVA $1,500, ya sin el mínimo de Banamex)</span></label></div>
+              <div class="check-item"><input type="checkbox" id="s0-1"><label for="s0-1">Corrige "Deudas" en Finanzas.html · cero MSI nuevo. <span class="text-muted">(✅ hecho el 13 ago 2026: quedó en $8,200 = auto {{autoPago}} + mínimo BBVA {{tcBbvaMin}}, ya sin el mínimo de Banamex)</span></label></div>
             </div>
           </details>
           <details class="fase-month" data-month="2026-09">
             <summary><span>📅 Septiembre 2026</span><span class="fase-month-badge" data-badge>—</span></summary>
             <div class="fase-month-body">
-              <div class="check-item"><input type="checkbox" id="s0-7"><label for="s0-7">Cada peso de ventas/activos va, en orden fijo: <strong>(1)</strong> fondo de emergencia a $10,000, <strong>(2)</strong> resto a BBVA — Banamex ya está en $0. Este mes cierra la fase.</label></div>
+              <div class="check-item"><input type="checkbox" id="s0-7"><label for="s0-7">Cada peso de ventas/activos va, en orden fijo: <strong>(1)</strong> fondo de emergencia a {{fondoMeta}}, <strong>(2)</strong> resto a BBVA — Banamex ya está en $0. Este mes cierra la fase.</label></div>
             </div>
           </details>
         </div>
-        <div class="fase-checkpoint"><span class="fc-icon">🚩</span><div><strong>Checkpoint 30 sep 2026:</strong> fondo de emergencia todavía por debajo de $10,000, o plantilla sin publicar → no es falta de tiempo, es tu patrón de abandono otra vez.</div></div>
+        <div class="fase-checkpoint"><span class="fc-icon">🚩</span><div><strong>Checkpoint 30 sep 2026:</strong> fondo de emergencia todavía por debajo de {{fondoMeta}}, o plantilla sin publicar → no es falta de tiempo, es tu patrón de abandono otra vez.</div></div>
       </div>
 
       <div class="fase-item" id="fase1">
@@ -2123,7 +2123,7 @@
             <details class="fase-month" data-month="2026-10">
               <summary><span>📅 Octubre 2026</span><span class="fase-month-badge" data-badge>—</span></summary>
               <div class="fase-month-body">
-                <div class="check-item"><input type="checkbox" id="s1-1"><label for="s1-1">Oct 2026: los $2,335/mes liberados de MSI + los $810 del mínimo de Banamex van, en orden fijo: fondo de emergencia a $10,000 → 100% <strong>BBVA</strong> (única deuda cara restante) = $4,645/mes.</label></div>
+                <div class="check-item"><input type="checkbox" id="s1-1"><label for="s1-1">Oct 2026: los $2,335/mes liberados de MSI + los {{banamexMin}} del mínimo de Banamex van, en orden fijo: fondo de emergencia a {{fondoMeta}} → 100% <strong>BBVA</strong> (única deuda cara restante) = $4,645/mes.</label></div>
               </div>
             </details>
             <details class="fase-month" data-month="2026-11">
@@ -2220,7 +2220,7 @@
     <!-- CONTINGENCIAS -->
     <div class="card mb-16" style="margin-bottom:16px;">
       <h3 class="fw-700 mb-12">Qué hacer si algo se rompe — contingencias, no improvisación</h3>
-      <div class="fd-item"><span class="fd-icon">⚠️</span><div><h4>Pierdes el contrato de ALTEN/Ford (riesgo real: eres outsourcing, no planta)</h4><p>Por eso el fondo de emergencia de $10,000 es lo primero del plan, no lo último. Si ya tienes freelance/mentoría activos, ese ingreso se vuelve tu colchón mientras buscas el siguiente puesto — otra razón para no depender 100% de un solo cliente/vía.</p></div></div>
+      <div class="fd-item"><span class="fd-icon">⚠️</span><div><h4>Pierdes el contrato de ALTEN/Ford (riesgo real: eres outsourcing, no planta)</h4><p>Por eso el fondo de emergencia de {{fondoMeta}} es lo primero del plan, no lo último. Si ya tienes freelance/mentoría activos, ese ingreso se vuelve tu colchón mientras buscas el siguiente puesto — otra razón para no depender 100% de un solo cliente/vía.</p></div></div>
       <div class="fd-item"><span class="fd-icon">📉</span><div><h4>0 de 5 ex-colegas responden en 8 semanas (Fase 0-1)</h4><p>No es que el freelance no funcione — es que el canal de "solo referidos cálidos" se agotó rápido. Pivotea a outreach directo en LinkedIn a leads de Tier 2/3, con tu portafolio real (los frameworks que construiste en Bosch/Continental) como prueba.</p></div></div>
       <div class="fd-item"><span class="fd-icon">🛒</span><div><h4>La plantilla GBM no vende nada el primer mes</h4><p>Antes de asumir que el producto está mal, prueba: otro precio (más bajo para validar volumen), otro mensaje/hook, y una comunidad distinta. Un producto de $150 MXN necesita muy poco volumen para justificar el esfuerzo — no lo abandones tras un solo intento.</p></div></div>
       <div class="fd-item"><span class="fd-icon">🏥</span><div><h4>Imprevisto grande (salud, reparación mayor del auto, etc.)</h4><p>Se paga con el fondo de emergencia, nunca con tarjeta de crédito nueva — eso es exactamente el patrón que este plan existe para romper. Si el fondo no alcanza, se repone antes de retomar el abono extra a deuda.</p></div></div>
@@ -2243,14 +2243,14 @@
     <div class="card span-2" id="pf14dias">
       <h3 class="fw-700 mb-12">Próximos 14 días — esto empieza hoy, no "cuando tenga tiempo"</h3>
       <p class="fs-13 text-muted mb-12">Tu patrón es abandonar cuando no ves avance rápido. Estas <span id="pfCount">10</span> acciones son deliberadamente pequeñas y concretas para que en 2 semanas ya tengas evidencia de movimiento real. Las 2 primeras son <strong>las prioridades de Fase 0, en ese orden</strong>.</p>
-      <div class="check-item"><input type="checkbox" id="pf11"><label for="pf11"><strong>Prioridad 1:</strong> llevar el fondo de emergencia a $10,000 — antes que cualquier abono extra a deuda</label></div>
+      <div class="check-item"><input type="checkbox" id="pf11"><label for="pf11"><strong>Prioridad 1:</strong> llevar el fondo de emergencia a {{fondoMeta}} — antes que cualquier abono extra a deuda</label></div>
       <div class="check-item"><input type="checkbox" id="pf12"><label for="pf12"><strong>Prioridad 2:</strong> con el fondo completo, todo excedente a liquidar la TC BBVA ({{tcBbva}}, única deuda cara restante)</label></div>
       <div class="check-item"><input type="checkbox" id="pf3"><label for="pf3">Hacer inventario de activos físicos ociosos (PS5, Control PS5, monitores extra, iPad) y publicarlos en Marketplace — es lo que financia la Prioridad 1</label></div>
       <div class="check-item"><input type="checkbox" id="pf4"><label for="pf4">Cancelar/evitar cualquier compra nueva a MSI esta quincena</label></div>
       <div class="check-item"><input type="checkbox" id="pf5"><label for="pf5">Revisar las fotos y el material del negocio de tu papá, y ponerle atención real — primer paso de la Opción 5</label></div>
       <div class="check-item"><input type="checkbox" id="pf6"><label for="pf6">Plantilla Finanzas.html completa: versión limpia sin tus datos + post de venta + publicarla en 2-3 comunidades de GBM (Opción 1)</label></div>
       <div class="check-item"><input type="checkbox" id="pf1"><label for="pf1">Corregir la categoría "Deudas" del presupuesto en Finanzas.html <span class="text-muted">(✅ 13 ago 2026: quedó en $8,200 reales)</span></label></div>
-      <div class="check-item"><input type="checkbox" id="pf8"><label for="pf8">Pausar nuevas aportaciones a "Maestría en Alemania" por 1 año exacto (hasta 18 jul 2027) — sin tocar los $53,740 ya ahorrados</label></div>
+      <div class="check-item"><input type="checkbox" id="pf8"><label for="pf8">Pausar nuevas aportaciones a "Maestría en Alemania" por 1 año exacto (hasta 18 jul 2027) — sin tocar los {{maestria}} ya ahorrados</label></div>
       <div class="check-item"><input type="checkbox" id="pf9"><label for="pf9">Todo abono extra va a <strong>BBVA</strong> — con Banamex en $0 desde el 13 ago 2026, ya no hay decisión que tomar, es la única deuda cara que queda</label></div>
       <div class="check-item"><input type="checkbox" id="pf10"><label for="pf10">Revisar este apartado completo una vez por semana en tu Revisión Semanal — no dejar que se vuelva un documento que escribiste una vez y ya</label></div>
     </div>
@@ -2280,14 +2280,14 @@
           <div class="check-item"><input type="checkbox" id="mtc3"><label for="mtc3">Liquidar la deuda de Banamex <span class="text-green">(✅ 13 ago 2026 — pagaste los $9,000 completos, 5 meses antes de la meta de ene 2027)</span></label></div>
           <div class="check-item"><input type="checkbox" id="mtc6"><label for="mtc6">Cancelar la tarjeta Banamex ahora que está en $0 <span class="text-muted">(era la segunda mitad de la meta anterior — sigue pendiente)</span></label></div>
           <div class="check-item"><input type="checkbox" id="mtc4"><label for="mtc4">Liquidar la TC de BBVA <span class="text-muted">(meta recorrida a mar 2027 al liquidar Banamex antes — ya en tu Plan Maestro)</span></label></div>
-          <div class="check-item"><input type="checkbox" id="mtc5"><label for="mtc5">Fondo de emergencia completo a $10,000 <span class="text-muted">(meta: sep 2026, Fase 0)</span></label></div>
+          <div class="check-item"><input type="checkbox" id="mtc5"><label for="mtc5">Fondo de emergencia completo a {{fondoMeta}} <span class="text-muted">(meta: sep 2026, Fase 0)</span></label></div>
         </div>
 
         <div class="card">
           <h4 class="fw-700 mb-12">🧭 Mediano plazo</h4>
           <p class="fs-13 text-muted mb-12">2027-2029, una vez que la deuda cara esté en $0 (proyectada a abr 2027, ya solo falta BBVA) y el negocio tenga tracción real.</p>
-          <div class="check-item"><input type="checkbox" id="mtm1"><label for="mtm1">Liquidar el crédito del BYD Dolphin Mini <span class="text-muted">(pagando solo el mínimo cuesta $109,700 en puro interés; hoy el excedente libre va a BBVA y al fondo de $500,000 — decide cuánto extra meterle aquí en cuanto BBVA llegue a $0, proyectado abr 2027)</span></label></div>
-          <div class="check-item"><input type="checkbox" id="mtm2"><label for="mtm2">$500,000 ahorrados <span class="text-muted">(ya es tu meta oficial de la Maestría, reagendada a oct 2028 — hoy vas $53,740 quietos e invertidos)</span></label></div>
+          <div class="check-item"><input type="checkbox" id="mtm1"><label for="mtm1">Liquidar el crédito del BYD Dolphin Mini <span class="text-muted">(pagando solo el mínimo cuesta $109,700 en puro interés; hoy el excedente libre va a BBVA y al fondo de {{maestriaMeta}} — decide cuánto extra meterle aquí en cuanto BBVA llegue a $0, proyectado abr 2027)</span></label></div>
+          <div class="check-item"><input type="checkbox" id="mtm2"><label for="mtm2">{{maestriaMeta}} ahorrados <span class="text-muted">(ya es tu meta oficial de la Maestría, reagendada a oct 2028 — hoy vas {{maestria}} quietos e invertidos)</span></label></div>
           <div class="check-item"><input type="checkbox" id="mtm3"><label for="mtm3">Poder trabajar remoto <span class="text-muted">(se habilita con tracción real del negocio — ver <a href="#" class="inline-link" onclick="irANegocios('negocio8');return false;">Opción 8</a>, consultoría con tu red de Bosch en Stuttgart)</span></label></div>
           <div class="check-item"><input type="checkbox" id="mtm4"><label for="mtm4">Comprarte una Cupra Formentor para viajar por el mundo</label></div>
         </div>
@@ -2340,7 +2340,7 @@
 
         <div class="card">
           <h4 class="fw-700 mb-12">💰 Financiero</h4>
-          <p class="fs-13 mb-8" style="line-height:1.7;">Patrimonio líquido/invertible en <strong style="color:var(--accent);">$1,000,000</strong> (hoy: <strong class="text-red">-$308,830</strong> al arrancar el plan). Banamex y BBVA en <strong style="color:var(--accent);">$0</strong> — deuda cara liquidada por completo. El BYD Dolphin Mini pagado o refinanciado sin presión. Fondo de emergencia de $10,000 sosteniéndose solo, sin haberlo tocado en un imprevisto real.</p>
+          <p class="fs-13 mb-8" style="line-height:1.7;">Patrimonio líquido/invertible en <strong style="color:var(--accent);">$1,000,000</strong> (hoy: <strong class="text-red">-$308,830</strong> al arrancar el plan). Banamex y BBVA en <strong style="color:var(--accent);">$0</strong> — deuda cara liquidada por completo. El BYD Dolphin Mini pagado o refinanciado sin presión. Fondo de emergencia de {{fondoMeta}} sosteniéndose solo, sin haberlo tocado en un imprevisto real.</p>
           <div class="grid-2"><div class="stat-badge"><span class="num text-green">$1,000,000</span><span>Patrimonio líquido</span></div><div class="stat-badge"><span class="num text-green">$0</span><span>Deuda cara</span></div></div>
         </div>
 
@@ -2590,7 +2590,7 @@
     <div id="rutina-mi-rutina">
 
       <div class="context-banner">
-        <p><strong>Tu contexto ahora mismo:</strong> estás en <strong>Fase 0</strong> del <a href="#perfil" class="inline-link">Plan Maestro</a> (1 ago – 30 sep 2026). Con Banamex ya liquidada desde el 13 ago, las 3 cosas que definen si esta fase se cumple son, en orden: <strong>1)</strong> el fondo de emergencia a $10,000, <strong>2)</strong> los abonos extra a BBVA una vez completo, y <strong>3)</strong> la plantilla Finanzas.html publicada en comunidades de GBM + atención real al negocio de tu papá.
+        <p><strong>Tu contexto ahora mismo:</strong> estás en <strong>Fase 0</strong> del <a href="#perfil" class="inline-link">Plan Maestro</a> (1 ago – 30 sep 2026). Con Banamex ya liquidada desde el 13 ago, las 3 cosas que definen si esta fase se cumple son, en orden: <strong>1)</strong> el fondo de emergencia a {{fondoMeta}}, <strong>2)</strong> los abonos extra a BBVA una vez completo, y <strong>3)</strong> la plantilla Finanzas.html publicada en comunidades de GBM + atención real al negocio de tu papá.
           Horario real confirmado: te levantas <strong>6:40</strong> y arrancas el día con <strong>20 min construyendo este mismo ecosistema</strong>, te bañas a las <strong>7:03</strong>, sales <strong>7:40</strong> ya manejando <strong>Didi con direccionamiento</strong> rumbo a ALTEN (~50 min con el desvío del pasajero), entras <strong>8:30</strong>, comes en tu descanso de las <strong>13:00</strong>, y sales a las <strong>17:00</strong> — la ventana de la mañana solo alcanza para el bloque de la aplicación más higiene/skincare, así que el ejercicio y el bloque de habilidad se movieron a después del trabajo, donde sí hay tiempo. Al salir de ALTEN (<strong>17:00</strong>) manejas Didi ~40 min con un pasajero rumbo a Buenavista, y de ahí entras directo al gym a las <strong>17:40</strong>. Por la noche retomas Didi en una sesión corta hasta ~<strong>20:00</strong>, y de ahí tienes <strong>1h15 seguidas</strong> para tu prioridad activa de Fase 0 (no antes, para no cortar el impulso de manejar), y después preparas la cena y la comida de mañana en una sola sesión. <strong>Dos de tus tres bloques diarios de Didi son trayectos que ya manejabas</strong> —a ALTEN y al gym—, así que casi todo ese ingreso no te cuesta tiempo nuevo. A las <strong>23:30</strong> vuelves a la aplicación hasta las <strong>00:00</strong>, a veces hasta la <strong>01:00</strong> — eso te deja entre <strong>5h40 y 6h40 de sueño</strong>, por debajo de las 7h que la rutina asumía antes. <strong>Skincare y el tratamiento anticaída (minoxidil) están en la rutina al despertar y antes de dormir, todos los días</strong> — el lavado de cabello (Lun/Jue/Sáb) se hace en la ducha de la mañana. El ejercicio y el bloque de habilidad cambian cada día de la semana (tomados de tus 5 prioridades en <a href="#aprendizaje" class="inline-link">Aprendizaje</a>), y el fin de semana tiene su propio horario, sin ALTEN. Usa las pestañas de abajo para ver cualquier día — solo el día de hoy guarda tu avance.
           <em style="color:var(--muted-2)">Los 40 min de Didi a Buenavista y la sesión de la noche son estimados — ajusta las horas si tu tráfico o tus viajes reales varían.</em>
         </p>
@@ -2641,7 +2641,7 @@
         <h3 class="fw-700 mb-12">💊 Suplementación</h3>
         <p class="fs-13 text-muted" style="line-height:1.7;">
           Ya integrado en tu <a href="#rutina" class="inline-link">Rutina</a> — bloque de AM (Vitamina D3, Multivitamínico, Omega 3, Creatina) y bloque de PM (Magnesio, Proteína Whey si no llegaste a tu meta de proteína). Detalle de dosis y momento en <a href="../CuidadoPersonal/salud.html?tab=suplementos" class="inline-link" target="_blank">Mi Salud → Suplementos</a>.
-          Decidiste priorizarlo ya, antes de que el fondo de emergencia llegue a $10,000 (ver Mi Perfil Real) — para no descarrilar Fase 0, cómpralos de uno en uno conforme se te terminen, no los 6 de golpe.
+          Decidiste priorizarlo ya, antes de que el fondo de emergencia llegue a {{fondoMeta}} (ver Mi Perfil Real) — para no descarrilar Fase 0, cómpralos de uno en uno conforme se te terminen, no los 6 de golpe.
         </p>
       </div>
 
@@ -2799,7 +2799,7 @@
         </button>
         <div class="subhab-body">
           <p class="fs-13 subhab-q">No es un número redondo que suena bien: son <b>3 a 6 meses de tus gastos fijos</b>. Sin él, cualquier imprevisto vuelve a la tarjeta y deshace el avance de meses.</p>
-          <p class="fs-13 subhab-c"><strong>Cómo desarrollarla:</strong> Suma tus fijos reales de un mes (renta, comida, transporte, gym, suscripciones) y multiplica por 3. Ese es tu piso; por 6 es tu techo. Tu meta actual son <b>$10,000</b> y llevas $4,000 — compara ese $10,000 contra el número que te dé la suma y ajústalo si sale corto. Guárdalo donde puedas sacarlo en 24-48 h: CETES a 28 días o una cuenta de ahorro, nunca en algo que pueda valer menos el día que lo necesites.</p>
+          <p class="fs-13 subhab-c"><strong>Cómo desarrollarla:</strong> Suma tus fijos reales de un mes (renta, comida, transporte, gym, suscripciones) y multiplica por 3. Ese es tu piso; por 6 es tu techo. Tu meta actual son <b>{{fondoMeta}}</b> y llevas {{fondo}} — compara ese {{fondoMeta}} contra el número que te dé la suma y ajústalo si sale corto. Guárdalo donde puedas sacarlo en 24-48 h: CETES a 28 días o una cuenta de ahorro, nunca en algo que pueda valer menos el día que lo necesites.</p>
           <div class="subhab-r">📚 The Simple Path to Wealth — JL Collins (capítulo del fondo y por qué va antes que invertir)</div>
         </div>
       </div>
@@ -4590,20 +4590,8 @@
 
   // ─── GRÁFICO DE HABILIDADES ──────────────────────────
   (function(){
-    const SK=[
-      {id:'ventas',    name:'Ventas',     full:'Ventas & Negociación',     icon:'🤝', val:15, w:1.5, cat:'negocios', desc:'No sabes regatear ni sostener un precio. Única excepción: negocias muy bien tu propio sueldo al cambiar de empresa — sabes venderte a ti mismo en una entrevista, no un producto en frío.'},
-      {id:'copy',      name:'Copy',       full:'Copywriting & Persuasión', icon:'✍️', val:55, w:1.2, cat:'negocios', desc:'No sabes redactar copy clásico, pero generas ideas y expectativa con facilidad, y con IA ese efecto se multiplica. Tu fuerza real es el "gancho", no la redacción fina.'},
-      {id:'marketing', name:'Marketing',  full:'Marketing Digital',        icon:'📣', val:20, w:1.2, cat:'negocios', desc:'Generas ideas (ej. al vender en Marketplace) pero nunca las ejecutas. Es una habilidad de práctica pura — hoy vale cero porque no se ha probado.'},
-      {id:'network',   name:'Networking', full:'Networking & Relaciones',  icon:'🔗', val:55, w:1.0, cat:'negocios', desc:'Naturalmente bueno haciendo amigos 1 a 1, pero sin estructura para hacer networking con intención. Sí tienes red real: 4 empresas de trayectoria (Ford, Continental, Bosch, Google), y sobre todo contacto activo con líderes de Bosch en Stuttgart más mexicanos expatriados ahí — una red internacional que hoy casi no explotas.'},
-      {id:'liderazgo', name:'Liderazgo',  full:'Liderazgo & Equipos',      icon:'👑', val:80, w:1.0, cat:'negocios', desc:'Probado en Bosch: supiste dirigir las habilidades de tu equipo para potenciarlo, y te eligieron líder del equipo de México para una asignación de 4 meses en Stuttgart ante otros líderes globales. Es real y ya reconocido más allá de tu equipo inmediato.'},
-      {id:'codigo',    name:'Código',     full:'Programación & Software',  icon:'💻', val:60, w:1.2, cat:'tecnico',  desc:'Bueno leyendo y dirigiendo código, débil escribiéndolo desde cero. Tu Mecatrónica de IPN ya te dio base formal de microcontroladores, PLCs y control — no partes de cero técnico, solo de la escritura pura. Con ejemplo o ayuda de IA ejecutas exactamente lo que quieres: eres director de código, no programador puro.'},
-      {id:'ia',        name:'IA',         full:'IA & Automatización',      icon:'🤖', val:30, w:1.2, cat:'tecnico',  desc:'Te sientes principiante, pero ya validaste IA generativa para Google, usas Claude Code a diario en producción, y tu carrera incluyó Visión Artificial y Sistemas Neurodifusos — tienes base formal que no te has reconocido. Es tu fortaleza más subestimada.'},
-      {id:'datos',     name:'Datos',      full:'Análisis de Datos',        icon:'📊', val:55, w:1.0, cat:'tecnico',  desc:'Nivel medio — mejor de lo que reflejaba antes (Adán confirmó que este terreno sí lo domina más que el valor viejo). Ajusta el slider de abajo si quieres un número más preciso.'},
-      {id:'inversion', name:'Inversión',  full:'Inversión en Mercados',    icon:'📈', val:25, w:1.2, cat:'finanzas', desc:'Principiante real, aprendiendo poco a poco. Ya diste el primer paso (CETES, BTC, acciones) — falta volumen y estructura.'},
-      {id:'finanzas',  name:'Finanzas',   full:'Finanzas Personales',      icon:'💰', val:20, w:1.1, cat:'finanzas', desc:'Te excedes en gastos mensuales seguido (deuda ~$366k vs. inversión ~$55k). Es tu debilidad más cara — literalmente, en intereses.'},
-      {id:'ingles',    name:'Inglés',     full:'Inglés / Idioma Global',   icon:'🌐', val:80, w:1.1, cat:'personal', desc:'B2 real, confirmado. Es tu pasaporte a clientes, mercados y sueldos en dólares — úsalo como ventaja, no solo como requisito de trabajo.'},
-      {id:'mente',     name:'Mentalidad', full:'Mentalidad & Ejecución',   icon:'🚀', val:85, w:1.0, cat:'personal', desc:'Tu activo más grande. Tolerancia al riesgo alta, resiliencia real ante pérdidas, y ahora mismo estás en el punto de romper años de inacción. Esto es lo que hace que todo lo demás sea entrenable.'},
-    ];
+    // Habilidades — viven en ../Dashboard/datos-maestros.js (fuente única).
+    const SK = window.CIFRAS ? CIFRAS.SK : [];
     SK.forEach(s=>{const v=localStorage.getItem('radarp_'+s.id);if(v!==null)s.val=Math.min(100,Math.max(0,parseInt(v)));});
 
     function calcOVR(){let t=0,w=0;SK.forEach(s=>{t+=s.val*s.w;w+=100*s.w;});return Math.round(t/w*100);}

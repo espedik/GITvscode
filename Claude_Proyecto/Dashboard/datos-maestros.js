@@ -243,6 +243,290 @@ window.CIFRAS = (function () {
     fix(copia);
     return copia;
   }
+  /* ── HABILIDADES (el radar) ────────────────────────────────────────────────────────────────
+     Las 12 habilidades con su nivel (`val` 0-100) y su peso (`w`) en el promedio.
+     Estaba copiado en dashboard.html y Coach_v2.html. Se conserva la versión de Coach, que es
+     el superconjunto: `full`, `cat` y `desc` los usa su panel explicativo y el Dashboard no los
+     pinta — no era divergencia, era que cada app usaba lo que necesitaba.
+     Los overrides que Adán ajusta a mano viven en localStorage (`radarp_{id}`) y ganan sobre
+     el `val` de aquí; esto es el punto de partida. */
+  const SK = [
+      {id:'ventas',    name:'Ventas',     full:'Ventas & Negociación',     icon:'🤝', val:15, w:1.5, cat:'negocios', desc:'No sabes regatear ni sostener un precio. Única excepción: negocias muy bien tu propio sueldo al cambiar de empresa — sabes venderte a ti mismo en una entrevista, no un producto en frío.'},
+      {id:'copy',      name:'Copy',       full:'Copywriting & Persuasión', icon:'✍️', val:55, w:1.2, cat:'negocios', desc:'No sabes redactar copy clásico, pero generas ideas y expectativa con facilidad, y con IA ese efecto se multiplica. Tu fuerza real es el "gancho", no la redacción fina.'},
+      {id:'marketing', name:'Marketing',  full:'Marketing Digital',        icon:'📣', val:20, w:1.2, cat:'negocios', desc:'Generas ideas (ej. al vender en Marketplace) pero nunca las ejecutas. Es una habilidad de práctica pura — hoy vale cero porque no se ha probado.'},
+      {id:'network',   name:'Networking', full:'Networking & Relaciones',  icon:'🔗', val:55, w:1.0, cat:'negocios', desc:'Naturalmente bueno haciendo amigos 1 a 1, pero sin estructura para hacer networking con intención. Sí tienes red real: 4 empresas de trayectoria (Ford, Continental, Bosch, Google), y sobre todo contacto activo con líderes de Bosch en Stuttgart más mexicanos expatriados ahí — una red internacional que hoy casi no explotas.'},
+      {id:'liderazgo', name:'Liderazgo',  full:'Liderazgo & Equipos',      icon:'👑', val:80, w:1.0, cat:'negocios', desc:'Probado en Bosch: supiste dirigir las habilidades de tu equipo para potenciarlo, y te eligieron líder del equipo de México para una asignación de 4 meses en Stuttgart ante otros líderes globales. Es real y ya reconocido más allá de tu equipo inmediato.'},
+      {id:'codigo',    name:'Código',     full:'Programación & Software',  icon:'💻', val:60, w:1.2, cat:'tecnico',  desc:'Bueno leyendo y dirigiendo código, débil escribiéndolo desde cero. Tu Mecatrónica de IPN ya te dio base formal de microcontroladores, PLCs y control — no partes de cero técnico, solo de la escritura pura. Con ejemplo o ayuda de IA ejecutas exactamente lo que quieres: eres director de código, no programador puro.'},
+      {id:'ia',        name:'IA',         full:'IA & Automatización',      icon:'🤖', val:30, w:1.2, cat:'tecnico',  desc:'Te sientes principiante, pero ya validaste IA generativa para Google, usas Claude Code a diario en producción, y tu carrera incluyó Visión Artificial y Sistemas Neurodifusos — tienes base formal que no te has reconocido. Es tu fortaleza más subestimada.'},
+      {id:'datos',     name:'Datos',      full:'Análisis de Datos',        icon:'📊', val:55, w:1.0, cat:'tecnico',  desc:'Nivel medio — mejor de lo que reflejaba antes (Adán confirmó que este terreno sí lo domina más que el valor viejo). Ajusta el slider de abajo si quieres un número más preciso.'},
+      {id:'inversion', name:'Inversión',  full:'Inversión en Mercados',    icon:'📈', val:25, w:1.2, cat:'finanzas', desc:'Principiante real, aprendiendo poco a poco. Ya diste el primer paso (CETES, BTC, acciones) — falta volumen y estructura.'},
+      {id:'finanzas',  name:'Finanzas',   full:'Finanzas Personales',      icon:'💰', val:20, w:1.1, cat:'finanzas', desc:'Te excedes en gastos mensuales seguido (deuda ~$366k vs. inversión ~$55k). Es tu debilidad más cara — literalmente, en intereses.'},
+      {id:'ingles',    name:'Inglés',     full:'Inglés / Idioma Global',   icon:'🌐', val:80, w:1.1, cat:'personal', desc:'B2 real, confirmado. Es tu pasaporte a clientes, mercados y sueldos en dólares — úsalo como ventaja, no solo como requisito de trabajo.'},
+      {id:'mente',     name:'Mentalidad', full:'Mentalidad & Ejecución',   icon:'🚀', val:85, w:1.0, cat:'personal', desc:'Tu activo más grande. Tolerancia al riesgo alta, resiliencia real ante pérdidas, y ahora mismo estás en el punto de romper años de inacción. Esto es lo que hace que todo lo demás sea entrenable.'},
+    ];
+  /* ── EL PLAN MAESTRO ───────────────────────────────────────────────────────────────────────
+     Las 4 fases hacia $1,000,000 líquido: fechas ancla, título, meta, explicación y el
+     checklist de cada mes. Los ids `sN-M` de las tareas son el contrato con Coach_v2.html, que
+     guarda su estado en `coach_checks_v1[id]` — si se renombra un id aquí, se pierde lo marcado.
+     Coach tiene las mismas fases escritas como HTML en su sección #perfil. Ese texto NO se puede
+     generar desde aquí sin rediseñar la sección, así que sigue a mano: `verificar-sincronia.js`
+     compara los títulos y las metas de fase entre este literal y ese HTML. */
+  const PHASES = [
+    {start:new Date(2026,7,1),end:new Date(2026,8,30),tag:"Fase 0",title:"Cerrar la fuga y arrancar ingreso, no solo pensar",meta:"✅ Banamex liquidada el 13 ago 2026 (era meta de Fase 1, para ene 2027). Quedan 2 objetivos financieros, en este orden: 1) fondo de emergencia a {{fondoMeta}}, 2) abonos extra a BBVA.",explica:"Fase 0 es el arranque del plan (1 ago – 30 sep 2026, ~9 semanas). Todavía no se trata de ganar mucho — se trata de cerrar la fuga de dinero y sentar las bases. El orden era 1) fondo de emergencia, 2) Banamex, 3) BBVA: el paso 2 ya está hecho desde el 13 ago 2026, así que la prioridad es el fondo de emergencia y, en cuanto llegue a {{fondoMeta}}, todo excedente a BBVA. En paralelo arrancas el negocio: dedicar atención real al negocio de tu papá y publicar tu primera plantilla en comunidades de GBM.",semanas:[
+      {id:"s0-9",mes:"2026-08",txt:"Prioridad 1 — Fondo de emergencia a {{fondoMeta}}. Antes que cualquier abono extra a deuda: es el colchón que evita que un imprevisto te regrese a la tarjeta. (hoy en $0)"},
+      {id:"s0-10",mes:"2026-08",txt:"Prioridad 2 — Liquidar la TC BBVA ({{tcBbva}}). Única deuda cara que queda — y sigue SUBIENDO: el mínimo de {{tcBbvaMin}} no cubre el interés. En cuanto el fondo llegue a {{fondoMeta}}, todo excedente va aquí. (la proyección de “$0 en mar 2027” se hizo con $32,343 al 10% anual; con el saldo real y la tasa real de 55.7% hay que rehacerla)"},
+      {id:"s0-4",mes:"2026-08",txt:"Sube a Marketplace tus activos ociosos (PS5, control, monitores, iPad) — es la fuente más rápida para completar el fondo de emergencia de la Prioridad 1."},
+      {id:"s0-3",mes:"2026-08",txt:"Plantilla Finanzas.html, de principio a fin: versión limpia sin tus datos + post de venta + publicarla en 2-3 comunidades de GBM (Opción 1)."},
+      {id:"s0-2",mes:"2026-08",txt:"Revisar las fotos y el material del negocio de tu papá y ponerle atención real — primer paso concreto de la Opción 5."},
+      {id:"s0-6",mes:"2026-08",txt:"Pausa aportaciones a la Maestría 1 año (hasta 18 jul 2027) — los {{maestria}} quedan intactos, nueva meta oct 2028."},
+      {id:"s0-8",mes:"2026-08",txt:"Liquidar la TC Banamex. (✅ 13 ago 2026 — pagaste los $9,000 completos, no el mínimo, 5 meses antes de la meta)"},
+      {id:"s0-1",mes:"2026-08",txt:"Corrige \"Deudas\" en Finanzas.html · cero MSI nuevo. (✅ 13 ago 2026: quedó en $8,200 = auto {{autoPago}} + mínimo BBVA {{tcBbvaMin}})"},
+      {id:"s0-7",mes:"2026-09",txt:"Cada peso de ventas/activos va, en orden fijo: (1) fondo de emergencia a {{fondoMeta}}, (2) resto a BBVA — Banamex ya está en $0. Este mes cierra la fase."},
+    ]},
+    {start:new Date(2026,9,1),end:new Date(2027,2,31),tag:"Fase 1",title:"Los $3,145/mes liberados entran en acción + primer ingreso real",meta:"Primer contrato freelance o 20+ ventas de la plantilla cobradas. La meta vieja —Banamex liquidada— ya se cumplió el 13 ago 2026, así que el objetivo financiero pasa a bajar BBVA de {{tcBbva}} a menos de $15,000.",explica:"Fase 1 (oct 2026 – mar 2027) arranca cuando los $2,335/mes de MSI de gadgets quedan libres, que sumados a los {{banamexMin}} del mínimo de Banamex ya liquidada dan $3,145/mes nuevos. Con Banamex en $0 desde agosto, ese dinero tiene un solo destino: fondo de emergencia a {{fondoMeta}} y todo lo demás a BBVA, la única deuda cara que queda. En paralelo, buscas tu primer ingreso real fuera de ALTEN.",semanas:[
+      {id:"s1-1",mes:"2026-10",txt:"Oct 2026: los $2,335/mes liberados de MSI + los {{banamexMin}} del mínimo de Banamex van, en orden fijo: fondo de emergencia a {{fondoMeta}} → 100% BBVA (única deuda cara restante) = $4,645/mes."},
+      {id:"s1-2",cont:true,txt:"Prioridad: cerrar el primer contrato freelance (Opción 2) + 1 post de seguimiento mensual de la plantilla GBM (Opción 1)."},
+      {id:"s1-3",mes:"2026-11",txt:"En paralelo: primer post de mentoría pagada (Opción 3) — bajo riesgo, casi sin preparación."},
+      {id:"s1-4",cont:true,txt:"Primer peso cobrado en Opción 1-3 → esas horas de Didi se mueven ahí (Opción 6), no antes."},
+      {id:"s1-5",cont:true,txt:"iPhone 15 MSI sigue corriendo ($494/mes) hasta jun 2028 — ya comprometido, no toca tu excedente nuevo."},
+      {id:"s1-6",cont:true,txt:"Foco de habilidad (Radar): sube <strong>Copy</strong> (55→) escribiendo los posts, y <strong>Finanzas</strong> (20→) sosteniendo el presupuesto corregido. Solo estas dos."},
+    ]},
+    {start:new Date(2027,3,1),end:new Date(2028,11,31),tag:"Fase 2",title:"Doblar apuesta en lo que mostró tracción",meta:"BBVA liquidada, deuda cara en $0, ingreso extra estable de al menos $10,000–15,000/mes.",explica:"Fase 2 (abr 2027 – dic 2028) es la fase más larga. Con Banamex resuelta desde el 13 ago 2026 y BBVA proyectada a mar 2027, esta fase debería arrancar ya con la deuda cara en $0 — el excedente completo se va a doblar la apuesta en la opción de negocio que ya mostró tracción real, en vez de dispersarte entre varias.",semanas:[
+      {id:"s2-1",mes:"2027-04",txt:"Elige la opción (1, 2 o 3) con ingreso recurrente real y concéntrate ahí — resiste saltar a \"algo mejor\"."},
+      {id:"s2-2",mes:"2027-10",txt:"Con tracción sostenida, arranca la Opción 4 (CodeReview productizado) — único punto del plan que requiere capital, ya disponible tras liquidar BBVA."},
+      {id:"s2-3",cont:true,txt:"Usa IA para construir tu propio sistema de ventas/argumentos — tu fuerza real, en vez de improvisar en vivo."},
+      {id:"s2-4",mes:"2028-06",txt:"Jun 2028: se libera el iPhone MSI ($494/mes) — súmalo a inversión, no a gasto nuevo."},
+      {id:"s2-5",cont:true,txt:"Foco de habilidad: sube <strong>Ventas</strong> (15→) y <strong>Marketing</strong> (20→) lo mínimo para vender la Opción 4 sin depender solo de referidos."},
+    ]},
+    {start:new Date(2029,0,1),end:new Date(2030,0,1),tag:"Fase 3",title:"Escalar, cerrar la brecha de $31,540/mes y reevaluar",meta:"Cerrar la distancia final a $1,000,000 líquido con el negocio como fuente principal de excedente.",explica:"Fase 3 (ene 2029 – ene 2030) es el cierre. Con la deuda cara ya en $0 desde la fase anterior, todo el excedente nuevo va directo a cerrar la brecha final hacia $1,000,000 de patrimonio líquido — la meta central de todo el Plan Maestro.",semanas:[
+      {id:"s3-1",mes:"2029-01",txt:"El negocio debe cubrir ya parte real de la brecha. Ingreso extra cercano a cero en 2029 = problema de opción elegida, no de timing — revisa Posibles Negocios."},
+      {id:"s3-2",cont:true,txt:"Todo ingreso adicional va primero a inversión (CETES, fondos indexados, ampliar BTC/acciones) — nunca a consumo nuevo."},
+      {id:"s3-3",cont:true,txt:"La decisión de Maestría (18 jul 2027) ya está tomada: retomarla en oct 2028 con datos reales del negocio, o posponerla de nuevo, conscientemente."},
+      {id:"s3-4",mes:"2029-07",txt:"Reevalúa la meta de $1,000,000 líquido con números reales del negocio y ajusta la fecha si hace falta — sin abandonarlo."},
+    ]},
+  ];
+
+  /* ── APRENDIZAJE ───────────────────────────────────────────────────────────────────────────
+     Las 5 prioridades (Datos, Ventas, Marketing, Finanzas, IA) con diagnóstico, primer paso,
+     hábito, el error típico y los recursos. Coach_v2.html tiene lo mismo como HTML en
+     #aprendizaje; igual que con PHASES, ese texto sigue a mano y el verificador lo compara. */
+  const APRENDIZAJE = {
+    datos:{
+      diagnostico:'Ya no es tu debilidad real (subiste el valor tú mismo a 55/100), pero el hueco que queda es de herramienta, no de criterio: sabes leer un problema de datos, te falta soltura en Python/SQL para no depender de Excel.',
+      primer:'Módulos de Python y Pandas en Kaggle Learn (2-3h, gratis) + arma un dashboard simple de tus gastos en Google Looker Studio.',
+      semana24:'Repite el mismo dashboard con datos de otra app tuya (ejercicio o comida) — el segundo dashboard te toma la mitad del tiempo del primero, esa caída es la señal real de que se está volviendo hábito.',
+      habito:'10 min/día de SQL en SQLZoo o LeetCode SQL, 30 días seguidos.',
+      error:'Ver tutoriales sin escribir código en paralelo — Pandas/SQL se te va a olvidar en una semana si no lo tecleas tú mismo con tus propios datos reales.',
+      recursos:[{t:'Curso',n:'Kaggle Learn'},{t:'Curso',n:'Google Data Analytics Certificate'},{t:'Libro',n:'Storytelling with Data — Cole Nussbaumer Knaflic'},{t:'Tool',n:'Google Looker Studio'}]},
+    ventas:{
+      diagnostico:'No es que no sepas vender — vendes bien tu propio sueldo al cambiar de empresa (ya lo hiciste con Ford→Continental→Bosch). El hueco real es vender en frío a un extraño que no te conoce, sin la credibilidad de una entrevista formal detrás.',
+      primer:'Lee el cap. 1 de "Influence" (reciprocidad) y úsalo en el mensaje de venta que ya tienes listo (Coach → Posibles Negocios → Plantillas de mensajes): personalízalo con tu precio de lanzamiento ($99 MXN) y publícalo en 1 comunidad real de GBM/inversión.',
+      semana24:'Arma un embudo simple de 3 columnas (Contactado / Respondió / Cerró) para la plantilla Finanzas.html y llénalo con 5 conversaciones reales por semana — sin medirlo, no vas a saber si estás mejorando o solo ocupado.',
+      habito:'5 mensajes personalizados/día a prospectos + follow-up en días 1-3-7-14-30.',
+      error:'Rendirte después de un "no" o un silencio. La mayoría de las ventas B2B cierran entre el 3er y 5to contacto, no en el primero — el follow-up es la venta, no un extra opcional.',
+      recursos:[{t:'Libro',n:'Influence — Robert Cialdini'},{t:'Libro',n:'$100M Offers — Alex Hormozi'},{t:'Libro',n:'Never Split the Difference — Chris Voss'},{t:'YouTube',n:'Alex Hormozi'}]},
+    marketing:{
+      diagnostico:'Tu problema no es de ideas — ya vendiste tus activos ociosos en Marketplace sin ayuda. Es de constancia: publicas una vez, no ves resultado inmediato, y lo dejas — el marketing orgánico premia repetición, no un post perfecto aislado.',
+      primer:'Termina el módulo de fundamentos de Google Digital Garage y publica tu primer post de valor en LinkedIn sobre la plantilla Finanzas.html.',
+      semana24:'Publica 4 semanas seguidas (1 post/semana mínimo) y anota views/comentarios/DMs de cada uno en una nota simple — al final del mes vas a saber qué formato (texto, carrusel, caso real) te funcionó mejor, en vez de seguir adivinando.',
+      habito:'3 publicaciones/semana en LinkedIn — lunes, miércoles y viernes.',
+      error:'Perfeccionar el post en vez de publicarlo. La versión imperfecta que sí sale hoy vale más que la perfecta que nunca sale — puedes editar/mejorar el siguiente con lo que aprendas de este.',
+      recursos:[{t:'Curso',n:'Google Digital Garage'},{t:'Curso',n:'HubSpot Academy'},{t:'Curso',n:'Meta Blueprint'},{t:'Libro',n:'$100M Leads — Alex Hormozi'}]},
+    finanzas:{
+      // 2026-08-19 — Adán pidió cambiar el formato de estas dos: fuera diagnóstico,
+      // "esta semana", plan de semanas, hábito y error común; en su lugar, la lista de
+      // sub-habilidades concretas, cada una con cómo desarrollarla y con qué recurso.
+      // Las otras 4 habilidades conservan el formato viejo — renderSkills() pinta uno u
+      // otro según exista `subs`, así que ambos conviven sin ramas duplicadas.
+      subs:[
+        {n:'Saber a dónde se va tu dinero',q:'Es la base de todo lo demás. Sin el dato real, cualquier presupuesto es una suposición y cualquier recorte es adivinar.',c:'Registra <b>30 días seguidos</b>, cada gasto el mismo día en que ocurre — no el domingo de memoria, porque ahí ya perdiste los chicos, que son justo los que no ves. Cinco categorías bastan: fijos, comida, transporte, deuda y gusto. Al día 30 ordénalas de mayor a menor y mira solo las tres primeras: ahí está el 80% de lo que puedes mover. Tu app de <b>Finanzas</b> ya hace esto, no necesitas otra herramienta.',r:'Pequeño Cerdo Capitalista — Sofía Macías (los capítulos de gastos hormiga; es de México, habla de pesos y de CETES, no de 401k)'},
+        {n:'Presupuestar sobre ingreso variable',q:'Tu ingreso no es uno: ALTEN es fijo y Didi cambia cada semana. Presupuestar sobre el promedio es lo que hace que un mes flojo te descuadre.',c:'Presupuesta sobre el <b>mínimo de tus últimos 3 meses</b>, nunca sobre el promedio ni sobre el mejor mes. Lo que entre por encima de ese mínimo no es para gastar: va al fondo, a la deuda o a inversión, en ese orden. Págate un "sueldo" fijo cada mes desde lo que junta Didi, en vez de gastar lo que va entrando.',r:'Profit First — Mike Michalowicz (el método de repartir el ingreso en cuentas separadas antes de gastarlo)'},
+        {n:'Dimensionar el fondo de emergencia',q:'No es un número redondo que suena bien: son <b>3 a 6 meses de tus gastos fijos</b>. Sin él, cualquier imprevisto vuelve a la tarjeta y deshace el avance de meses.',c:'Suma tus fijos reales de un mes (renta, comida, transporte, gym, suscripciones) y multiplica por 3. Ese es tu piso; por 6 es tu techo. Tu meta actual son <b>{{fondoMeta}}</b> y llevas {{fondo}} — compara ese {{fondoMeta}} contra el número que te dé la suma y ajústalo si sale corto. Guárdalo donde puedas sacarlo en 24-48 h: CETES a 28 días o una cuenta de ahorro, nunca en algo que pueda valer menos el día que lo necesites.',r:'The Simple Path to Wealth — JL Collins (capítulo del fondo y por qué va antes que invertir)'},
+        {n:'Calcular el costo real de la deuda',q:'La tasa que anuncian no es lo que pagas. El CAT sí, porque mete comisiones y seguros. Sin ese número no puedes comparar dos créditos ni saber si un MSI te conviene.',c:'Aprende a leer el <b>CAT</b> de cada estado de cuenta y ordena tus deudas por tasa, de mayor a menor: eso es el <b>método avalancha</b> y es el que menos intereses te cuesta (la bola de nieve, de menor a mayor saldo, solo gana en motivación). Antes de un MSI, calcula qué porcentaje de tu excedente mensual te compromete y por cuántos meses: un MSI no es dinero gratis, es un pago fijo que ya vendiste.',r:'Pequeño Cerdo Capitalista — Sofía Macías (deuda y CAT explicados con productos mexicanos)'},
+        {n:'Leer tu propio balance',q:'Flujo (lo que entra y sale cada mes) y patrimonio (lo que tienes menos lo que debes) son dos cosas distintas. Puedes tener buen flujo y patrimonio negativo, que es donde estabas hace un año.',c:'Una vez al mes anota <b>activos − pasivos</b>: efectivo + fondo + inversiones + valor del BYD, menos lo que reste de deuda. Ese número, no tu quincena, es el que tiene que subir todos los meses rumbo al millón. El Dashboard ya lo calcula en <b>patrimonio neto</b>: tu trabajo es mirarlo una vez al mes, no cada día.',r:'The Millionaire Next Door — Thomas J. Stanley (por qué el patrimonio y el ingreso no son lo mismo)'},
+        {n:'Entender tus impuestos',q:'Lo que ganas fuera de la nómina tiene reglas propias. No saberlas cuesta dinero de dos formas: multas, y deducciones que dejas en la mesa.',c:'Aprende primero tres cosas concretas: qué régimen te corresponde por lo que ganas fuera de ALTEN, qué gastos son deducibles para una persona física (salud, colegiaturas, intereses de crédito hipotecario) y cuándo cae la declaración anual. Empieza por leer tu propia constancia de situación fiscal en el portal del SAT antes que cualquier guía: ahí ya está tu situación real.',r:'Portal del SAT · Guía de Personas Físicas (gratis y es la fuente, no una interpretación)'},
+        {n:'Decidir con la cabeza fría',q:'Casi ninguna mala decisión de dinero viene por no saber matemáticas. Viene por decidir cansado, con prisa o comparándote.',c:'Ponle una regla mecánica a lo que te cuesta: <b>72 horas</b> entre querer algo de más de $2,000 y comprarlo. Si a las 72 h sigues queriéndolo, cómpralo sin culpa. Y escribe la razón de cada decisión grande antes de tomarla — al releerla en 6 meses aprendes más de ti que de cualquier libro.',r:'Psicología del Dinero — Morgan Housel (18 historias cortas; se lee en una semana)'},
+      ],
+      recursos:[{t:'Libro',n:'I Will Teach You to Be Rich — Ramit Sethi'},{t:'App',n:'YNAB'},{t:'Libro',n:'The Millionaire Next Door — Thomas Stanley'},{t:'Libro',n:'Psicología del Dinero — Morgan Housel'}]},
+    inversion:{
+      // 2026-08-19 — Adán pidió cambiar el formato de estas dos: fuera diagnóstico,
+      // "esta semana", plan de semanas, hábito y error común; en su lugar, la lista de
+      // sub-habilidades concretas, cada una con cómo desarrollarla y con qué recurso.
+      // Las otras 4 habilidades conservan el formato viejo — renderSkills() pinta uno u
+      // otro según exista `subs`, así que ambos conviven sin ramas duplicadas.
+      subs:[
+        {n:'Interés compuesto y horizonte',q:'Es el motor de todo. Y lo que lo mueve no es la tasa, es el <b>tiempo</b>: cada año que pospones cuesta más que cualquier punto extra de rendimiento.',c:'Haz el cálculo una vez con tus números reales, no con ejemplos de libro: lo que puedes aportar al mes, un rendimiento conservador (8-10% anual nominal en México) y los años hasta 2030. Repítelo restando un año de aportaciones y compara — ver esa diferencia en pesos es lo que hace que ya no te saltes un mes.',r:'The Little Book of Common Sense Investing — John C. Bogle (corto y va directo al punto)'},
+        {n:'Escribir tu asignación objetivo',q:'<b>Esta es la que te falta</b>, y es la razón real de que cada lunes decidas desde cero. Una asignación es un reparto en porcentajes, escrito una sola vez, que decide por ti cuando el mercado te esté gritando.',c:'Define <b>tres porcentajes que sumen 100</b>: renta fija (CETES), índice global o S&P 500, y una porción chica de riesgo alto (BTC). Escríbelos con fecha en un solo renglón y guárdalos. La regla que evita el error clásico: en lo volátil no pongas más de lo que puedas ver caer un 50% sin tocarlo. Cada compra del lunes deja de ser una decisión y pasa a ser rellenar el porcentaje que quedó abajo.',r:'The Bogleheads’ Guide to Investing (capítulo de asset allocation) · Pequeño Cerdo Capitalista: Inversiones — Sofía Macías'},
+        {n:'Conocer los instrumentos mexicanos',q:'No puedes repartir entre cosas que no distingues. En México tienes acceso directo a más de lo que parece, y cada instrumento tiene un para qué distinto.',c:'Aprende de cada uno tres datos: <b>plazo, riesgo y cómo se le cobran impuestos</b>. Empieza por los que ya usas — CETES a 28 días (cetesdirecto, sin comisión), un índice como VOO vía GBM, y BTC — y añade solo lo que entiendas: Bonos M, Udibonos si te preocupa la inflación, y tu Afore, que es inversión aunque no lo parezca y casi nadie revisa.',r:'Banxico · Educación financiera y cetesdirecto.com (fuentes oficiales, sin nadie vendiéndote nada)'},
+        {n:'Ver las comisiones antes que el rendimiento',q:'El rendimiento no lo controlas; el costo sí. Un 1% anual de comisión, sostenido 20 años, se come cerca de una quinta parte de lo que habrías acumulado.',c:'De cada instrumento busca tres costos: <b>comisión de administración</b> (anual, el que más pesa), <b>comisión por operación</b> y el <b>spread</b> de compra-venta si es en dólares o cripto. Compara el mismo índice en dos casas antes de comprarlo: la diferencia entre 0.03% y 1.5% anual es la diferencia entre llegar y no llegar al millón en 2030.',r:'A Random Walk Down Wall Street — Burton Malkiel (por qué los costos predicen mejor que las estrellas de un fondo)'},
+        {n:'Aportar periódicamente y automatizarlo',q:'Aportar lo mismo cada periodo (DCA) compra más barato cuando el mercado cae y menos caro cuando sube, sin que tengas que adivinar. Y quita la decisión de en medio.',c:'Fija un <b>monto y un día</b> — tú ya tienes el bloque de GBM de los lunes y los $1,500 a CETES el día 15. Súbelo cuando suba tu ingreso, nunca lo bajes por cómo se vea el mercado. La prueba de que funciona es aburrida a propósito: 12 meses seguidos sin saltarte uno.',r:'The Simple Path to Wealth — JL Collins'},
+        {n:'Rebalancear una vez al año',q:'Con el tiempo, lo que sube se lleva más peso del que le asignaste y tu cartera termina siendo más arriesgada de lo que decidiste.',c:'Una vez al año, o cuando algo se desvíe más de <b>5 puntos</b> de su porcentaje, vuelve a los números que escribiste. Lo más fácil: no vendas nada, dirige las aportaciones nuevas a lo que quedó abajo hasta emparejar. Rebalancear obliga a vender caro y comprar barato, que es justo lo contrario de lo que pide el instinto.',r:'The Bogleheads’ Guide to Investing'},
+        {n:'Saber qué impuestos pagas al invertir',q:'El rendimiento que ves no es el que te queda. En México hay retención sobre intereses y un ISR distinto para ganancias de bolsa y para cripto.',c:'Aprende cómo tributa cada cosa que tienes: la retención anual sobre el capital en instrumentos de deuda, el <b>10% sobre la ganancia</b> en enajenación de acciones en bolsa, y que la ganancia por cripto se acumula a tus demás ingresos. Guarda tus constancias anuales de GBM y cetesdirecto en la misma carpeta desde ahora: en abril valen oro.',r:'Portal del SAT · Constancias de tus instituciones financieras'},
+        {n:'Aguantar sin vender',q:'La diferencia entre lo que rinde un fondo y lo que gana la gente que lo tiene se explica casi entera por comprar arriba y vender abajo. Es la habilidad que más dinero vale y la única que no se estudia, se entrena.',c:'Escribe <b>hoy</b>, con el mercado tranquilo, qué vas a hacer si tu cartera cae 30% — y déjalo junto a la asignación. En la caída no se decide, se ejecuta lo que ya está escrito. Regla de higiene: revisa precios una vez por semana, en tu bloque del lunes, y no vuelvas a abrir la app hasta el siguiente.',r:'Psicología del Dinero — Morgan Housel · El Inversor Inteligente — Benjamin Graham (los capítulos 8 y 20, que son los que Buffett señala)'},
+        {n:'Saber cuándo NO invertir',q:'Invertir con deuda cara viva o sin fondo de emergencia no es ser agresivo, es perder dinero con más pasos.',c:'Ordena siempre igual: <b>1) fondo de emergencia completo · 2) deuda con tasa alta a cero · 3) invertir</b>. Ninguna tasa de rendimiento razonable le gana a una tarjeta. Tu panel de "Qué invertir hoy" ya aplica esta regla a tu saldo real cada vez que lo abres — la habilidad es respetarla cuando el mercado esté subiendo y dé comezón saltarse un paso.',r:'I Will Teach You to Be Rich — Ramit Sethi (el orden de operaciones, capítulos 1 a 4)'},
+      ],
+      recursos:[{t:'Libro',n:'The Intelligent Investor — Benjamin Graham'},{t:'Libro',n:'The Little Book of Common Sense Investing — John Bogle'},{t:'Libro',n:'A Random Walk Down Wall Street — Burton Malkiel'},{t:'Libro',n:'One Up On Wall Street — Peter Lynch'}]},
+    ia:{
+      diagnostico:'Te sientes principiante, pero ya validaste IA generativa para Google y usas Claude Code a diario en producción — el hueco real no es técnico, es que nunca lo has aplicado a un proyecto tuyo, solo al trabajo de otros.',
+      primer:'Construye una automatización simple en n8n.io conectando un formulario a Google Sheets — menos de 1h.',
+      semana24:'Aplica esa misma automatización a un problema real tuyo (ej. capturar leads de la plantilla Finanzas.html sin revisar mensajes a mano) — la diferencia entre "saber IA" y "usar IA" es tenerla resolviendo algo tuyo, no un ejercicio de práctica.',
+      habito:'1 bloque de 30 min/semana construyendo (no solo leyendo) un mini-proyecto de IA.',
+      error:'Quedarte en el modo "leer sobre IA" indefinidamente. Ya tienes más base real que la mayoría (Visión Artificial, Sistemas Neurodifusos en tu carrera) — te falta construir, no aprender más teoría.',
+      recursos:[{t:'Curso',n:'DeepLearning.AI — Prompt Engineering for Developers'},{t:'Curso',n:'Fast.ai'},{t:'Tool',n:'n8n.io'},{t:'Tool',n:'Cursor IDE'}]}
+  };
+
+  /* ── LISTA DE COMPRAS ──────────────────────────────────────────────────────────────────────
+     El catálogo por pasillos. Su contenido se armó a mano cruzando `RECETAS` de comida.html,
+     `SKIN_DB`/`HAIR_DB` de cuidadopersonal.html y `SUPP_CATALOG` de salud.html — tres apps con
+     estructuras distintas, así que no es una copia literal que se pueda leer en vivo.
+     Vive aquí para que exista UN sitio donde editarlo, y para que el día que esas apps expongan
+     sus catálogos se pueda derivar en vez de mantener a mano. */
+  const LISTA_COMPRAS = {
+    comida:{
+      'Frutas y Verduras':['Aguacate','Cebolla','Champiñones','Chayote','Jitomate','Lechuga','Nopales cocidos','Papa','Papaya','Pepino','Pera','Pimiento morrón','Plátano'],
+      'Carnes y Pescados':['Filete de res magro','Filete de tilapia','Jamón de pavo','Pechuga de pollo'],
+      'Lácteos y Huevo':['Clara de huevo','Huevo','Leche entera','Queso panela','Yogurt griego natural'],
+      'Abarrotes y Despensa':['Aceite de oliva','Arroz blanco cocido','Atún en agua','Frijoles negros','Granola de amaranto','Miel de abeja'],
+      'Panadería y Tortillas':['Pan integral','Tortilla de maíz'],
+    },
+    skincare:[
+      'Limpiador — CeraVe Limpiador Espumoso (verde)',
+      'Exfoliante (BHA/AHA) — The Ordinary Ácido Salicílico 2% o Neutrogena Rapid Clear o The Ordinary Ácido Láctico 5%',
+      'Sérum AM — The Ordinary Niacinamida 10% + Zinc 1% o La Roche-Posay Pure Vitamin C10',
+      'Hidratante AM — Eucerin Hyaluron-Filler + Epigenetic Día SPF15',
+      'Protector solar — Isdin Fusion Water Oil-Free SPF50 o La Roche-Posay Anthelios Oil Free SPF50 o Neutrogena Ultra Sheer SPF50',
+      'Tratamiento PM (retinoide) — Differin Adapaleno 0.1% Gel o The Ordinary Retinol 0.2% en Escualano',
+      'Hidratante PM — Eucerin Hyaluron-Filler + Epigenetic Noche',
+      'Mascarilla semanal — Aztec Secret Indian Healing Clay o The Ordinary Salicylic Acid 2% Masque',
+    ],
+    // Reordenada el 2026-08-18 tras el reporte de Adán ("mi cabello luce muy seco y dañado").
+    // El orden ES la recomendación: primero el champú suave que le faltaba y que debe ser su
+    // base, luego los 2 medicados que ya tiene con su frecuencia real, y al final lo que repara.
+    // Un producto por necesidad, sin alternativas (2026-08-18, pedido explícito: "no me des
+    // alternativas, por que si no al final no comprare nada"). Son exactamente los mismos que
+    // nombra su rutina diaria — si aquí dijera una marca y allá otra, volvería la duda.
+    cabello:[
+      'CeraVe Champú Hidratante sin sulfatos (tu base: sábados, y los miércoles después de nadar)',
+      'Pilexil Anticaída 300 ml (lunes y jueves)',
+      'Champú Darrow Doctar alcatrão (solo si hay caspa activa, nunca junto al Pilexil)',
+      'Acondicionador L\'Oréal Elvive Reparación Total 5, 680 ml (todos los días, solo medios y puntas)',
+      'Mascarilla L\'Oréal Elvive Total Repair 5 (sábados)',
+      'Crema sin enjuague L\'Oréal Elvive Total Repair 5 (diario, sobre el pelo húmedo)',
+      'Aceite Moroccanoil Treatment Light (sobre el pelo ya seco, solo puntas)',
+      'Funda de almohada de satín',
+      'Minoxidil 5% en ESPUMA Kirkland (la espuma no lleva propilenglicol)',
+      // Los 2 con receta van al final: no son de mostrador. Ver CuidadoPersonal -> Cabello.
+      'Minoxidil + Dutasteride tópico (fórmula magistral — 🩺 pide receta al dermatólogo)',
+      'Minoxidil ORAL 2.5-5 mg (🩺 receta + revisión de presión antes y durante)',
+    ],
+    suplementos:['Proteína Whey (suero de leche)','Creatina monohidratada','Vitamina D3','Omega 3 (aceite de pescado)','Multivitamínico','Magnesio (glicinato o citrato)'],
+    // ── KIT DE HIGIENE (2026-08-15, pedido: "en alguna parte debes poner un kit de higiene super
+    // completo, ya sea para viajes o persona, con imagenes y productos que comprar") ────────────
+    // Agrupado por bolsa, no por tipo de producto: cuando armas la maleta lo que importa es qué
+    // meter en el neceser, no si algo es "cuidado bucal" o "cuidado corporal". Lo que ya vive en
+    // Skincare y Cabello NO se duplica aquí — esta lista es lo que hay que COMPRAR APARTE en
+    // tamaño de viaje o lo que solo existe en el neceser (cortauñas, rastrillo, botiquín).
+    higiene:{
+      'Bolsa base — el neceser en sí':[
+        'Neceser con gancho para colgar (impermeable por dentro)',
+        'Botellas de viaje rellenables 100 ml (set de 4, aptas para equipaje de mano)',
+        'Bolsa de plástico con cierre para líquidos (regla de aeropuerto: 1 L transparente)',
+        'Toalla de microfibra de secado rápido',
+      ],
+      'Cuidado bucal':[
+        'Cepillo de dientes de viaje con tapa',
+        'Pasta dental tamaño viaje (≤75 ml)',
+        'Hilo dental',
+        'Enjuague bucal tamaño viaje',
+        'Cepillos interdentales o irrigador de viaje',
+      ],
+      'Afeitado y barba':[
+        'Rastrillo + cartuchos de repuesto',
+        'Gel o espuma de afeitar tamaño viaje',
+        'Bálsamo after-shave sin alcohol',
+        'Recortadora de barba con batería (y su cable)',
+        'Tijeras pequeñas para nariz y cejas',
+      ],
+      'Cuerpo y ducha':[
+        'Gel de baño tamaño viaje',
+        'Desodorante en barra (no aerosol — el aerosol da problemas en avión)',
+        'Esponja o guante exfoliante',
+        'Chanclas de ducha (hotel, gym, alberca de Fitsi)',
+        'Talco o polvo antifricción para pies',
+      ],
+      'Manos, uñas y pies':[
+        'Cortauñas de mano y de pie',
+        'Lima de uñas',
+        'Alicate de cutícula o empujador',
+        'Crema para manos y pies',
+      ],
+      'Botiquín mínimo':[
+        'Curitas surtidas + gasas estériles',
+        'Alcohol en gel y toallitas antibacteriales',
+        'Analgésico (paracetamol o ibuprofeno)',
+        'Antidiarreico y suero oral en sobre',
+        'Antihistamínico (alergias)',
+        'Protector solar SPF 50 tamaño viaje',
+        'Repelente de insectos (si el viaje es a zona tropical)',
+      ],
+      'Los que ya tienes — solo cámbialos a tamaño viaje':[
+        'Champú y acondicionador en envase de 100 ml (los tuyos, rellenados)',
+        'Skincare AM/PM en botellas pequeñas (limpiador, sérum, hidratante con SPF, retinoide)',
+        'Minoxidil en su envase original (no lo pases a otro frasco — se degrada)',
+        'Suplementos en pastillero por días',
+      ],
+    },
+    // Espejo de OJ_PRODUCTOS en CuidadoPersonal/cuidadopersonal.html -> pestana "Ojos y Vista"
+    // (2026-08-15). Agrupado por para-que-sirve y no por tipo de producto, igual que el kit de
+    // higiene: en la tienda lo que decides es "necesito algo para el ojo seco", no "necesito un gel".
+    ojos:{
+      'Ojo seco — el problema número uno con 10-12h de pantalla':[
+        'Lágrimas artificiales sin conservadores (monodosis)',
+        'Lágrimas en gel para la noche',
+        'Compresa o antifaz térmico para ojos de microondas',
+        'Toallitas limpiadoras de párpados',
+        'Gotas humectantes con ácido hialurónico',
+      ],
+      'Al volante — 28h a la semana de exposición':[
+        'Lentes de sol polarizados con UV400',
+        'Antirreflejante para lentes graduados (se pide en la óptica)',
+      ],
+      'Pantalla — ALTEN y los 2 bloques de la app':[
+        'Lentes con filtro de luz azul y antirreflejante',
+        'Soporte para elevar el monitor a la altura de los ojos',
+        'Lámpara de escritorio de luz cálida regulable',
+      ],
+      'Nutrición y contorno':[
+        'Suplemento de Luteína + Zeaxantina 10 mg / 2 mg',
+        'Crema de contorno de ojos con cafeína',
+      ],
+    },
+    // 45 libros únicos recomendados dentro de Coach_v2.html → #aprendizaje (5 cards de skill: Ventas,
+    // Copywriting, Marketing, Networking, Liderazgo, más las secciones de Datos/Finanzas/Software del
+    // mismo bloque) y #perfil-rico, agrupados por el mismo tema bajo el que Coach los presenta —
+    // deduplicados donde el mismo libro aparece recomendado en más de una sección (ej. "Never Split
+    // the Difference" en Ventas y en Networking). 9ª estructura duplicada del tipo "Datos duplicados"
+    // del README: si Adán cambia/agrega una recomendación en Coach_v2.html → #aprendizaje o
+    // #perfil-rico, replicar aquí a mano.
+    // Categorías reordenadas el 2026-08-07 (pedido explícito: "ordenalos deacuerdo a las
+    // debilidades de mis habilidades") — de más débil a más fuerte según el valor real de cada
+    // skill en `SK` (Coach_v2.html → Radar FIFA): Ventas 15, Marketing 20, Finanzas 20/Inversión
+    // 25 (categoría combinada), Copy/Datos/Networking empatados en 55 (Copy primero por tener
+    // mayor ponderación real, ×1.2 vs ×1.0), Programación 60, Liderazgo 80, Mentalidad 85 (su
+    // habilidad más fuerte de las 12 — por eso esta categoría queda al final, no al principio).
+    libros:{
+      'Ventas':['Influence — Robert Cialdini','$100M Offers — Alex Hormozi','SPIN Selling — Neil Rackham','Never Split the Difference — Chris Voss','The Psychology of Selling — Brian Tracy'],
+      'Marketing':['$100M Leads — Alex Hormozi','Hacking Growth — Sean Ellis','Traffic Secrets — Russell Brunson','Jab, Jab, Jab, Right Hook — Gary Vaynerchuk'],
+      'Finanzas e Inversión':['The Intelligent Investor — Benjamin Graham','The Little Book of Common Sense Investing — John Bogle','A Random Walk Down Wall Street — Burton Malkiel','One Up On Wall Street — Peter Lynch','Psicología del Dinero — Morgan Housel','I Will Teach You to Be Rich — Ramit Sethi','The Millionaire Next Door — Thomas Stanley','Tu Dinero o Tu Vida — Vicki Robin','Padre Rico, Padre Pobre — Robert Kiyosaki','The Millionaire Fastlane — MJ DeMarco'],
+      'Copywriting':['Breakthrough Advertising — Eugene Schwartz','Ca$hvertising — Drew Eric Whitman','The Adweek Copywriting Handbook — Joseph Sugarman','Building a StoryBrand — Donald Miller'],
+      'Datos':['Storytelling with Data — Cole Nussbaumer Knaflic','Python for Data Analysis — Wes McKinney'],
+      'Networking':['Never Eat Alone — Keith Ferrazzi','Cómo Ganar Amigos e Influir sobre las Personas — Dale Carnegie','Give and Take — Adam Grant','The Art of Gathering — Priya Parker','The Like Switch — Jack Schafer'],
+      'Programación':['Clean Code — Robert C. Martin','Designing Data-Intensive Applications — Martin Kleppmann','The Pragmatic Programmer — Hunt & Thomas','A Philosophy of Software Design — John Ousterhout'],
+      'Liderazgo':['Extreme Ownership — Jocko Willink','Good to Great — Jim Collins','The Hard Thing About Hard Things — Ben Horowitz','Leaders Eat Last — Simon Sinek','The Five Dysfunctions of a Team — Patrick Lencioni'],
+      'Hábitos y Mentalidad':['Atomic Habits — James Clear','Mindset: The New Psychology of Success — Carol Dweck',"Can't Hurt Me — David Goggins",'The Obstacle is the Way — Ryan Holiday','Meditaciones — Marco Aurelio'],
+    },
+  };
+
   /* ── MIGRACIONES COMPARTIDAS ────────────────────────────────────────────────────────────────
      Correcciones puntuales sobre `finanzasmx_v2` cuando Adán reporta un saldo nuevo.
 
@@ -443,6 +727,10 @@ window.CIFRAS = (function () {
     claves: function () { return Object.keys(CLAVES); },
     DEUDAS_SEED: DEUDAS_SEED,
     rutina: rutina,
+    SK: SK,
+    PHASES: PHASES,
+    APRENDIZAJE: APRENDIZAJE,
+    LISTA_COMPRAS: LISTA_COMPRAS,
     PROYECTO: PROYECTO,
     get datos() { return fin; }
   };

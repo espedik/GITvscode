@@ -16,7 +16,7 @@ en una página.
 
 | Archivo | Qué es |
 |---|---|
-| `dashboard.html` | La app entera: HTML, CSS y JS en un archivo (~870 KB) |
+| `dashboard.html` | La app entera: HTML, CSS y JS en un archivo (~854 KB) |
 | `datos-maestros.js` | **Fuente única** de las variables del proyecto. Lo cargan también Coach y Finanzas |
 | `DATOS-MAESTROS.md` | Índice del proyecto: catálogo de variables, mapa de apps, cómo se corrige un saldo |
 | `verificar-sincronia.js` | Comprueba que nada se haya vuelto a duplicar. Lo corre un hook al final de cada turno |
@@ -130,25 +130,25 @@ pero no llevan checkbox ni suman al progreso.
 
 ---
 
-## Datos que todavía se duplican
+## Los datos no se declaran aquí
 
-`datos-maestros.js` ya absorbió las cifras financieras y `RUTINA_TASKS`. **Siguen copiadas a mano**
-cinco estructuras:
+El Dashboard **no declara ninguna de sus estructuras grandes**: las lee de `datos-maestros.js`.
 
-| Estructura | Gemela en |
-|---|---|
-| `PHASES` (4 fases del Plan Maestro) | `Coach_v2.html` |
-| `SK` (12 valores del radar) | `Coach_v2.html` |
-| `APRENDIZAJE` (5 prioridades) | `Coach_v2.html` |
-| `GYM_RUTINA_DEFAULT` (respaldo de la rutina de gym) | `ejercicio.html` |
-| `LISTA_COMPRAS` | `comida.html` + `cuidadopersonal.html` + `salud.html` |
+```js
+const RUTINA_TASKS  = CIFRAS.rutina('../Coach/Coach_v2.html');
+const SK            = CIFRAS.SK;
+const PHASES        = CIFRAS.PHASES;
+const APRENDIZAJE   = CIFRAS.APRENDIZAJE;
+const LISTA_COMPRAS = CIFRAS.LISTA_COMPRAS;
+```
 
-`verificar-sincronia.js` vigila `SK` y `GYM_RUTINA_DEFAULT`. **No hay impedimento técnico para
-moverlas** al maestro — solo trabajo pendiente.
+Cada una llevaba su gemela a mano en otro archivo. Moverlas quitó ~57 KB de este HTML y, sobre
+todo, quitó cinco sitios donde un cambio podía quedarse a medias.
 
-`GYM_RUTINA_DEFAULT` es solo respaldo: si Adán abrió `ejercicio.html` alguna vez en este navegador,
-gana `D.gym.rutina`. Por eso un cambio de rutina en el código no se refleja solo, y hay migraciones
-`fix*IfNeeded()` que corrigen el dato ya guardado.
+**`GYM_RUTINA_DEFAULT` es la excepción** y sigue aquí: no es una copia de datos, es el *respaldo*
+para un navegador que nunca abrió `ejercicio.html`. Si esa app se usó alguna vez, gana
+`D.gym.rutina`. Por eso un cambio de rutina en el código no se refleja solo, y hay migraciones
+`fix*IfNeeded()` que corrigen el dato ya guardado. El verificador compara los 7 días.
 
 ---
 

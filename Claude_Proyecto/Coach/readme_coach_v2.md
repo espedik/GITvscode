@@ -165,14 +165,19 @@ ejes hacía ilegibles las etiquetas y escondía el peso de cada una.
 
 ---
 
-## Estructuras duplicadas con el Dashboard
+## Estructuras compartidas
 
-Siguen copiadas a mano y hay que editarlas **en los dos archivos**:
+`SK` —las 12 habilidades del radar— **ya no se declara aquí**: se lee con `CIFRAS.SK`. Esta app
+tenía el superconjunto (con `full`, `cat` y `desc` para su panel explicativo), así que esa fue la
+versión que se movió al maestro; el Dashboard usa solo los campos que pinta.
 
-`PHASES`/fases del Plan Maestro · `SK` (12 valores del radar) · `APRENDIZAJE` (5 prioridades).
+Los overrides que Adán ajusta a mano siguen en `radarp_{id}` y ganan sobre el `val` del maestro.
 
-`verificar-sincronia.js` vigila `SK`. Se pueden mover al maestro igual que se hizo con
-`RUTINA_TASKS`; es trabajo pendiente, no un impedimento técnico.
+**Lo que sigue a mano** es el *texto* de las fases del Plan Maestro y de las prioridades de
+aprendizaje: en esta app están escritos como HTML en `#perfil` y `#aprendizaje`, no generados
+desde el literal, y convertirlos exigiría rediseñar esas secciones. Las cifras que contienen ya
+usan `{{marcadores}}`, y `verificar-sincronia.js` comprueba que las fases y prioridades del
+maestro aparezcan aquí.
 
 ---
 
