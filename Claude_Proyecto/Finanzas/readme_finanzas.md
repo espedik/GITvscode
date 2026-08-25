@@ -701,15 +701,24 @@ Detalle en [`../Dashboard/DATOS-MAESTROS.md`](../Dashboard/DATOS-MAESTROS.md).
 |---|---|---|---|
 | `d001` | Tarjeta BBVA | **$34,000** ⚠️ | Subiendo: el mínimo de $1,500 no cubre el interés |
 | `d002` | Tarjeta Banamex | $0 ✅ | Liquidada el 13-ago-2026, saldo completo |
-| `d003` | Crédito Automotriz | $292,000 | 12.99%, $6,700/mes |
+| `d003` | Crédito Automotriz | $293,000 | 12.99%, $6,700/mes — ver nota abajo |
 | `d004` | Apple Watch MSI | $1,708 | Últimas cuotas |
 | `d007` | Boletos Ticketmaster | $0 ✅ | Liquidado |
 | `d008` | iPhone 15 MSI | $11,362 | |
 | `d009` | Zap Stylo (MSI BBVA) | $334 | "El de los zapatos" — el único MSI de BBVA vivo |
 | `d010`, `d011` | Merpago, Mercado Pago | $0 ✅ | Liquidados el 24-ago-2026 |
 
-Deuda total **$339,404**. Los valores vivos están en `finanzasmx_v2`; esta tabla es la foto para
+Deuda total **$340,404**. Los valores vivos están en `finanzasmx_v2`; esta tabla es la foto para
 orientarse rápido.
+
+### El auto subió $1,000 el 25-ago-2026
+
+De $292,000 a **$293,000**, un día después. En un crédito con pagos mensuales el saldo no sube:
+o el dato del 24 era una estimación, o ese mes cargó interés sin que entrara el abono. **Sin
+confirmar contra el estado de cuenta.** Se registró el número tal cual lo reportó Adán.
+
+Conviene resolverlo junto con lo de la TC BBVA: son los dos saldos que se están moviendo hacia
+arriba, y ambos alimentan las proyecciones del Plan Maestro que siguen sin rehacerse.
 
 `d005` y `d006` **se borraron**, no se pusieron en $0: eran un vuelo y un MSI que nunca existieron
 en el historial real de BBVA. Dejarlos en $0 los mostraría para siempre en "✅ Liquidadas", que es

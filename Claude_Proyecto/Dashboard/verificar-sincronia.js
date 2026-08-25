@@ -132,12 +132,35 @@ const sinComentarios = s => s.replace(/\/\*[\s\S]*?\*\//g, '')
 
 /* ── 4. Cifras que ya tienen variable pero siguen escritas a mano ───────────────────────────── */
 (function cifrasAMano() {
-  const VARS = {
-    '292,000': 'autoSaldo', '34,000': 'tcBbva', '315,800': 'autoTotal', '6,700': 'autoPago',
-    '11,362': 'iphone', '1,708': 'appleWatch', '41,000': 'sueldo', '11,000': 'renta',
-    '11,200': 'didiMes', '53,740': 'maestria', '10,000': 'fondoMeta', '500,000': 'maestriaMeta',
-    '4,000': 'fondo', '6,500': 'cetes', '810': 'banamexMin',
-  };
+  /* Los valores NO se escriben aquí: se piden al propio maestro. Tenerlos a mano era el mismo
+     fallo que este script persigue — cada vez que un saldo cambiaba, el control seguía vigilando
+     el número viejo y dejaba de ver el nuevo escrito a mano. Ahora se ajusta solo. */
+  let CIFRAS;
+  try {
+    global.window = {}; global.localStorage = { getItem: () => null, setItem: () => {} };
+    eval(maestro);
+    CIFRAS = global.window.CIFRAS;
+  } catch (e) { avisos.push('No se pudo cargar el maestro para leer las cifras: ' + e.message); return; }
+  if (!CIFRAS) { avisos.push('El maestro no expone CIFRAS'); return; }
+
+  /* Claves cuyo valor es un número DEMASIADO COMÚN para buscarlo por su cifra: $1,500 aparece
+     como aporte a CETES, precio de un servicio, honorarios de contador, viáticos y hasta un
+     vuelo interno. Rastrearlas daría ocho falsos positivos que crecerían con cada texto nuevo,
+     y un aviso que no se puede cerrar acaba ignorándose. Se vigilan por contexto, no por número:
+     donde SÍ significan la variable, ya llevan su marcador. */
+  const AMBIGUAS = ['tcBbvaMin'];
+
+  // Solo las que son dinero y valen la pena rastrear en prosa.
+  const SEGUIR = ['autoSaldo', 'autoTotal', 'autoPago', 'tcBbva', 'tcBbvaMin', 'banamexMin',
+                  'iphone', 'appleWatch', 'sueldo', 'renta', 'didiMes', 'maestria',
+                  'maestriaMeta', 'fondo', 'fondoMeta', 'cetes'];
+  const VARS = {};
+  SEGUIR.forEach(k => {
+    if (AMBIGUAS.indexOf(k) !== -1) return;
+    const v = CIFRAS.v(k);
+    if (v && v.charAt(0) === '$') VARS[v.slice(1)] = k;     // "$293,000" → "293,000"
+  });
+
   /* Coincidencias numéricas que NO son la variable. Van con su razón: un aviso que nunca se
      puede cerrar acaba ignorándose, y entonces el verificador deja de servir. Si aparece un
      número nuevo que sí es la variable, salta igual — estas excepciones son literales exactos. */
@@ -151,7 +174,7 @@ const sinComentarios = s => s.replace(/\/\*[\s\S]*?\*\//g, '')
   ];
   let total = 0;
   const filas = [];
-  for (const [rel, src] of APPS.concat([['Dashboard/datos-maestros.js', maestro]])) {
+  for (const [rel, src] of APPS) {
     let s = sinComentarios(src);
     EXCEPCIONES.forEach(e => { s = s.split(e).join(''); });
     for (const [val, v] of Object.entries(VARS)) {
@@ -161,7 +184,7 @@ const sinComentarios = s => s.replace(/\/\*[\s\S]*?\*\//g, '')
   }
   if (total) avisos.push('Cifras con variable, todavía escritas a mano: ' + total +
     ' (coinciden hoy, pero cada una es un sitio que tocar cuando ese dato cambie)\n' + filas.join('\n'));
-  else ok.push('Ninguna cifra con variable escrita a mano');
+  else ok.push('Ninguna cifra con variable escrita a mano (' + Object.keys(VARS).length + ' valores comprobados, leídos del maestro)');
 })();
 
 /* ── 5. Marcadores huérfanos ── */

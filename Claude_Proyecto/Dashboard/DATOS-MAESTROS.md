@@ -21,7 +21,7 @@ apps lo leen. Nunca se copia un número a mano en un HTML.
 En la prosa se escribe un marcador y el módulo lo sustituye al cargar la página:
 
 ```html
-<p>un crédito de {{autoSaldo}}</p>        →   un crédito de $292,000
+<p>un crédito de {{autoSaldo}}</p>        →   un crédito de $293,000
 <p>ganas {{sueldo}} en {{empleador}}</p>  →   ganas $41,000 en ALTEN
 ```
 
@@ -70,13 +70,13 @@ desde JS. En consola, `CIFRAS.tabla()` las lista con su valor actual.
 
 | Marcador | Valor hoy | id |
 |---|---|---|
-| `{{autoSaldo}}` `{{autoTotal}}` `{{autoPago}}` `{{autoTasa}}` `{{autoMeses}}` | $292,000 · $315,800 · $6,700 · 12.99% · 61 | `d003` |
+| `{{autoSaldo}}` `{{autoTotal}}` `{{autoPago}}` `{{autoTasa}}` `{{autoMeses}}` | $293,000 · $315,800 · $6,700 · 12.99% · 61 | `d003` |
 | `{{tcBbva}}` `{{tcBbvaMin}}` `{{tcBbvaTasa}}` | $34,000 ⚠️ subiendo · $1,500 · 55.7% | `d001` |
 | `{{banamex}}` `{{banamexMin}}` | $0 ✅ liquidada · $810 | `d002` |
 | `{{iphone}}` | $11,362 | `d008` |
 | `{{appleWatch}}` | $1,708 | `d004` |
 | `{{zapStylo}}` `{{zapStyloCuota}}` | $334 · $167 — "el de los zapatos" | `d009` |
-| `{{deudaTotal}}` `{{deudaCara}}` `{{deudaMsi}}` | $339,404 · $34,000 · $13,404 | derivadas |
+| `{{deudaTotal}}` `{{deudaCara}}` `{{deudaMsi}}` | $340,404 · $34,000 · $13,404 | derivadas |
 | `{{minimosDeuda}}` `{{margen}}` | suma de mínimos vivos · lo que sobra al mes | derivadas |
 
 **Derivadas del auto**, que antes se escribían a mano y se quedaban congeladas:

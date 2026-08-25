@@ -131,8 +131,8 @@ window.CIFRAS = (function () {
     // afecta a ningún interés vivo — solo al histórico. 55.7 es un supuesto tomado de la BBVA,
     // no un dato medido de esta tarjeta.
     {id:'d002',name:'Tarjeta Banamex',               type:'credit_card',total:14349.72,  balance:0,         rate:55.7,  min:810,  day:8, start:'2024-06-18', noInterest:0},
-    // Saldo real reportado por Adán el 24-ago-2026: bajó de $299,000 a $292,000.
-    {id:'d003',name:'Crédito Automotriz',            type:'car',        total:315800,    balance:292000,    rate:12.99, min:6700, day:1, start:'2026-01-01', remainingMonths:61},
+    // Saldo reportado por Adán: $299,000 (24-ago) → $292,000 → $293,000 (25-ago-2026).
+    {id:'d003',name:'Crédito Automotriz',            type:'car',        total:315800,    balance:293000,    rate:12.99, min:6700, day:1, start:'2026-01-01', remainingMonths:61},
     // Quedan 2 cuotas: 18 ago y 18 sep 2026 (confirmado por Adán el 13 ago 2026).
     {id:'d004',name:'Apple Watch MSI (TC Banamex)',  type:'other',      total:10248,     balance:1708,      rate:0,     min:854,  day:18,start:'2025-09-16'},
     // d005 (Vuelo Viva Aerobus) y d006 (Mercado Libre) se ELIMINARON el 13 ago 2026: Adán
@@ -559,6 +559,17 @@ window.CIFRAS = (function () {
           const m = (f.debts || []).find(d => d.id === id);
           if (m) m.balance = 0;
         });
+      }
+    },
+    {
+      // 2026-08-25 · "la deuda de mi crédito automotriz es 293,000". Sube $1,000 sobre el dato
+      // de ayer; en un crédito con pagos mensuales eso solo pasa si el saldo anterior era una
+      // estimación o si el mes cargó interés sin abono. Se registra el dato tal cual y queda
+      // anotado en readme_finanzas.md para contrastarlo contra el estado de cuenta.
+      flag: '_auto20260825',
+      hacer: function (f) {
+        const auto = (f.debts || []).find(d => d.id === 'd003');
+        if (auto) auto.balance = 293000;
       }
     },
   ];
