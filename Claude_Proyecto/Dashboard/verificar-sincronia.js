@@ -187,7 +187,48 @@ const sinComentarios = s => s.replace(/\/\*[\s\S]*?\*\//g, '')
   else ok.push('Ninguna cifra con variable escrita a mano (' + Object.keys(VARS).length + ' valores comprobados, leídos del maestro)');
 })();
 
-/* ── 5. Marcadores huérfanos ── */
+/* ── 5. Números CRUDOS del maestro escritos en el código ──────────────────────────────────────
+   El punto ciego que dejó pasar `ef/10000*100` y, peor, un gimnasio con dos precios a la vez:
+   $650 en una función de Finanzas y $1,500 en otras cuatro del mismo archivo, meses después de
+   cambiar de Fitsi a Total Pass. El control 4 solo mira cifras con `$`; este mira el número pelado.
+
+   Dos patrones se aceptan y NO se reportan:
+   · `dato?.campo || 500000` — un fallback tras leer el dato vivo. Ese número solo se usa cuando
+     no hay nada guardado, así que no puede contradecir a nada.
+   · las migraciones — `balance = 1708` dentro de un fix es una FOTO de un momento, no una copia:
+     tiene que quedarse con su valor histórico aunque el saldo de hoy sea otro. */
+(function numerosCrudos() {
+  if (!global.window || !global.window.CIFRAS) return;   // el control 4 ya avisó
+  const C = global.window.CIFRAS;
+  const VALS = {};
+  C.claves().forEach(k => {
+    const n = C.n(k);
+    if (typeof n === 'number' && Number.isInteger(n) && n >= 1000) VALS[n] = k;
+  });
+  const AMBIGUOS = ['1500', '4000'];   // dosis de vitaminas, cuotas de ahorro, precios sueltos
+  const hallazgos = [];
+  for (const [rel, src] of APPS.concat([['Dashboard/datos-maestros.js', maestro]])) {
+    const limpio = sinComentarios(src);
+    for (const [val, k] of Object.entries(VALS)) {
+      if (AMBIGUOS.indexOf(val) !== -1) continue;
+      const re = new RegExp('(?<![\\$\\d.,])' + val + '(?![\\d.,]|px|%|ms|em)', 'g');
+      let m;
+      while ((m = re.exec(limpio)) !== null) {
+        const antes = limpio.slice(Math.max(0, m.index - 90), m.index);
+        if (/\|\|\s*$/.test(antes)) continue;                                     // fallback legítimo
+        if (/(balance|total|current|target|invested|value|emergencyFund)\s*=\s*$/.test(antes)) continue;  // migración
+        const ctx = limpio.slice(Math.max(0, m.index - 60), m.index + 40).replace(/\s+/g, ' ');
+        hallazgos.push('     ' + String(val).padEnd(8) + '(' + k + ')  en ' + rel + '  …' + ctx + '…');
+      }
+    }
+  }
+  if (hallazgos.length) avisos.push('Números del maestro escritos crudos en el código: ' +
+    hallazgos.length + '\n' + hallazgos.slice(0, 12).join('\n') +
+    (hallazgos.length > 12 ? '\n     … y ' + (hallazgos.length - 12) + ' más' : ''));
+  else ok.push('Ningún número del maestro escrito crudo en el código');
+})();
+
+/* ── 6. Marcadores huérfanos ── */
 (function marcadores() {
   const conocidos = new Set();
   const cat = maestro.slice(maestro.indexOf('const CLAVES'), maestro.indexOf('// ── Formato'));

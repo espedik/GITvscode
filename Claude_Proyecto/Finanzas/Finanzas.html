@@ -716,6 +716,14 @@ select option{background:var(--surface-solid);color:var(--text)}
 <script>
 // ─── STATE ───────────────────────────────────────────────────────────────────
 const KEY = 'finanzasmx_v2';
+/* Datos del proyecto: viven en ../Dashboard/datos-maestros.js, no aquí. Estaban escritos a mano
+   en CINCO sitios de este archivo, y el gym llegó a tener dos valores a la vez —$650 en
+   renderGBM() y $1,500 en los otros cuatro— desde el cambio de gimnasio del 18-ago-2026.
+   `_PG()` da las constantes; `_autoMin()` y `_metaFondo()` prefieren el dato VIVO de S y solo
+   caen al maestro si todavía no hay nada guardado. */
+const _PG = () => (window.CIFRAS && window.CIFRAS.PROYECTO) || {};
+const _autoMin = () => { const d=(S.debts||[]).find(x=>x.id==='d003'); return (d&&+d.min)||_PG().autoPago||0; };
+const _metaFondo = () => { const g=(S.goals||[]).find(x=>x.id==='ef-001'); return (g&&+g.target)||10000; };
 let S = { transactions:[], budgets:[], debts:[], goals:[], investments:[], activos:[], btcHistory:[], currentBtcPrice:0, usdMxn:19.5, btcLastFetch:'', weeklyLeftover:0, sivaleBalance:0, sivaleLastMonth:'', emergencyFund:0, didiMonthly:0, gbmMonth:'', indicatorHistory:[] };
 let editId = null, confCb = null, payDebtId = null, contribGoalId = null;
 let btcEditId = null, activoEditId = null;
@@ -1272,19 +1280,17 @@ const WEEKLY_PICKS = {
 
 function renderGBM() {
   // ── Ingresos ─────────────────────────────────────────────────────────────────
-  const BASE_SALARY=41000;
+  const BASE_SALARY=_PG().sueldo;
   const QUINC = Math.round(BASE_SALARY / 2); // $21,500/quincena
 
   // ── Gastos fijos por fecha ──────────────────────────────────────────────────
-  const RENTA=11000;   // día 1 de cada mes
-  const AUTO=6700;     // día 14 de cada mes — Dolphin Mini
-  // Desglose individual de servicios y suscripciones
-  const SVC_CELULAR=600, SVC_INTERNET=200, SVC_GAS=179, SVC_AGUA=135, SVC_LIMPIEZA=150;
-  // 2026-08-18: cambio de gimnasio. Fitsi ($1,500) -> Total Pass ($650), que se cobra el
-  // día 17 de cada mes. Son $850/mes menos, $10,200 al año — va directo al excedente.
-  const SUB_GYM=650, SUB_CLAUDE=380, SUB_ICLOUD=50;
-  const SERVICIOS = SVC_CELULAR+SVC_INTERNET+SVC_GAS+SVC_AGUA+SVC_LIMPIEZA; // 1,264
-  const SUSCRIPCIONES = SUB_GYM+SUB_CLAUDE+SUB_ICLOUD;                       // 1,930
+  const RENTA=_PG().renta;   // día 1 de cada mes
+  const AUTO=_autoMin();     // día 14 de cada mes — Dolphin Mini
+  const SVC_CELULAR=_PG().celular, SVC_INTERNET=_PG().internet, SVC_GAS=_PG().gas,
+        SVC_AGUA=_PG().luzAgua, SVC_LIMPIEZA=_PG().limpieza;
+  const SUB_GYM=_PG().gym, SUB_CLAUDE=_PG().claudeCode, SUB_ICLOUD=_PG().icloud;
+  const SERVICIOS = _PG().servicios;
+  const SUSCRIPCIONES = _PG().suscripciones;
   // Los mínimos de TC salen de las deudas reales, no de un número escrito a mano: si una
   // tarjeta queda en $0 (Banamex, 13 ago 2026) su mínimo desaparece solo del plan semanal,
   // y si Adán vuelve a usarla reaparece sin tocar código.
@@ -1293,7 +1299,7 @@ function renderGBM() {
   const TC_BBVA=(_tcBBVA&&_tcBBVA.balance>0)?(_tcBBVA.min||0):0;
   const TC_BANAMEX=(_tcBanamex&&_tcBanamex.balance>0)?(_tcBanamex.min||0):0;
   const TC_MINS=minimosTC();
-  const CETES_DIA15 = 1500; // ahorro recurrente fijo día 15
+  const CETES_DIA15 = _PG().cetesDia15; // ahorro recurrente fijo día 15
 
   // ── Mes seleccionado (tabs) ───────────────────────────────────────────────────
   const realNow = new Date();
@@ -2098,7 +2104,7 @@ function autoBalance(d, refDate) {
 // ─── INDICATORS ───────────────────────────────────────────────────────────────
 // Genera el HTML completo de indicadores a partir de cualquier fuente (S o snapshot)
 function renderIndicatorsHTML(src) {
-  const BASE_INC = 41000;
+  const BASE_INC = _PG().sueldo;
   const now2 = new Date();
   // Para la vista live, auto-calcular saldos de MSI y auto según tiempo transcurrido.
   // Para snapshots (tienen savedAt), usar datos tal como fueron guardados.
@@ -2124,7 +2130,7 @@ function renderIndicatorsHTML(src) {
   const _msiEst2=srcDebts.filter(d=>d.rate===0&&d.balance>0&&d.type==='other'&&d.start)
     .reduce((s,d)=>{const st=new Date(d.start),tm=d.total>0&&d.min>0?Math.round(d.total/d.min):0;
       const ed=new Date(st);ed.setMonth(ed.getMonth()+tm);return new Date()<ed?s+(d.min||0):s;},0);
-  const _fixedFloor2=11000+6700+(600+200+179+135+150)+(1500+380+50)+minimosTC()+1500+_msiEst2;
+  const _fixedFloor2=_PG().fijosTotal+_autoMin()+minimosTC()+_PG().cetesDia15+_msiEst2;
   const _fallback2=_fixedFloor2+Math.round(BASE_INC*0.15); // +15% variable (comida, transporte, etc.)
   const avgExp2 = src.avgExp !== undefined ? src.avgExp :
     (()=>{
@@ -2139,7 +2145,7 @@ function renderIndicatorsHTML(src) {
   const solvency2   = totalPasivos>0?totalActivos/totalPasivos:99;
   const d2i2        = totalPasivos/(BASE_INC*12);
   const emergM2     = avgExp2>0?liqActivos/avgExp2:0;
-  const efGoal2     = 10000;
+  const efGoal2     = _metaFondo();
   const efPct2      = Math.min(1,(src.emergencyFund||0)/efGoal2);
   const liqRatio2   = totalMinPay2>0?liqActivos/totalMinPay2:null;
   const inv2inc2    = finActivos/(BASE_INC*12);
@@ -2528,7 +2534,7 @@ function autoSaveCurrentMonthSnapshot() {
   const existing = S.indicatorHistory.find(s=>s.month===monthKey);
   // Si ya existe un snapshot de un mes ANTERIOR al actual, no tocarlo
   // (Solo sobrescribir si es el mes actual)
-  const BASE_INC=41000;
+  const BASE_INC=_PG().sueldo;
   const liqAct=(S.activos||[]).filter(a=>a.type==='liquido').reduce((s,a)=>s+a.value,0)+(S.emergencyFund||0);
   const finAct=S.investments.reduce((s,i)=>s+i.value,0);
   const fisAct=(S.activos||[]).filter(a=>a.type!=='liquido').reduce((s,a)=>s+a.value,0);
@@ -2547,7 +2553,7 @@ function autoSaveCurrentMonthSnapshot() {
   const _msiSnap=(S.debts||[]).filter(d=>d.rate===0&&d.balance>0&&d.type==='other'&&d.start)
     .reduce((s,d)=>{const st=new Date(d.start),tm=d.total>0&&d.min>0?Math.round(d.total/d.min):0;
       const ed=new Date(st);ed.setMonth(ed.getMonth()+tm);return now<ed?s+(d.min||0):s;},0);
-  const _fixedFloor=11000+6700+(600+200+179+135+150)+(1500+380+50)+minimosTC()+1500+_msiSnap;
+  const _fixedFloor=_PG().fijosTotal+_autoMin()+minimosTC()+_PG().cetesDia15+_msiSnap;
   const avgE=vE.length>0?vE.reduce((s,e)=>s+e,0)/vE.length:_fixedFloor+Math.round(BASE_INC*0.15);
   const savRate=Math.max(0,((BASE_INC-avgE)/BASE_INC)*100);
   const mae=S.goals.find(g=>g.id==='g001')||S.goals.find(g=>g.icon==='🎓');
@@ -2555,7 +2561,7 @@ function autoSaveCurrentMonthSnapshot() {
   const mPct=Math.min(100,(maeBase/(mae?.target||500000))*100);
   const d2a=totAct>0?(totPas/totAct)*100:100;
   const sol=totPas>0?totAct/totPas:99;
-  const efP=Math.min(1,(S.emergencyFund||0)/10000);
+  const efP=Math.min(1,(S.emergencyFund||0)/_metaFondo());
   const emM=avgE>0?liqAct/avgE:0;
   const sc={
     dti:dti<20?100:dti<30?80:dti<40?55:dti<50?30:5,
@@ -2755,19 +2761,22 @@ const ALIMENTACION_MODELO={
 function getMonthProjection(month) {
   const [yr, mn] = month.split('-').map(Number);
   const monthDate = new Date(yr, mn-1, 1);
-  const BASE_INC = 41000;
+  const BASE_INC = _PG().sueldo;
 
+  // Los importes salen del maestro. Escritos a mano aquí, el gym se quedó en $1,500 (Fitsi)
+  // meses después de cambiar a Total Pass ($650): esta lista decía una cosa y renderGBM() otra.
+  const _pg = _PG();
   const fixed = [
-    {desc:'Renta departamento',      amount:11000, cat:'Hogar/Renta'},
-    {desc:'CETES ahorro recurrente', amount:1500,  cat:'Inversiones'},
-    {desc:'Gym',                     amount:1500,  cat:'Salud'},
-    {desc:'Plan de datos celular',   amount:600,   cat:'Servicios'},
-    {desc:'Internet',                amount:200,   cat:'Servicios'},
-    {desc:'Gas',                     amount:179,   cat:'Servicios'},
-    {desc:'Agua y luz',              amount:135,   cat:'Servicios'},
-    {desc:'Artículos de limpieza',   amount:150,   cat:'Hogar/Renta'},
-    {desc:'Claude Code',             amount:380,   cat:'Suscripciones'},
-    {desc:'iCloud',                  amount:50,    cat:'Suscripciones'},
+    {desc:'Renta departamento',      amount:_pg.renta,      cat:'Hogar/Renta'},
+    {desc:'CETES ahorro recurrente', amount:_pg.cetesDia15, cat:'Inversiones'},
+    {desc:'Gym '+(_pg.gymNombre||''), amount:_pg.gym,       cat:'Salud'},
+    {desc:'Plan de datos celular',   amount:_pg.celular,    cat:'Servicios'},
+    {desc:'Internet',                amount:_pg.internet,   cat:'Servicios'},
+    {desc:'Gas',                     amount:_pg.gas,        cat:'Servicios'},
+    {desc:'Agua y luz',              amount:_pg.luzAgua,    cat:'Servicios'},
+    {desc:'Artículos de limpieza',   amount:_pg.limpieza,   cat:'Hogar/Renta'},
+    {desc:'Claude Code',             amount:_pg.claudeCode, cat:'Suscripciones'},
+    {desc:'iCloud',                  amount:_pg.icloud,     cat:'Suscripciones'},
   ];
 
   S.debts.forEach(d => {
@@ -3046,7 +3055,7 @@ function renderDashboard() {
   const totDebt=S.debts.reduce((s,d)=>s+d.balance,0);
 
   // Ingresos base fijos (siempre presentes cada mes)
-  const BASE_SALARY = 41000;
+  const BASE_SALARY = _PG().sueldo;
   const BASE_INC    = BASE_SALARY;
 
   // Extras variables ese mes (PTU, bonos, ingresos adicionales registrados incluyendo Didi)
@@ -3060,7 +3069,7 @@ function renderDashboard() {
   const sobrante = inc - exp;
 
   // ── Fondo de emergencia ──
-  const EF_TARGET = 10000;
+  const EF_TARGET = _metaFondo();
   const efBalance = S.emergencyFund || 0;
   const efPct     = Math.min(100, (efBalance / EF_TARGET) * 100);
   const efFalta   = Math.max(0, EF_TARGET - efBalance);
@@ -3201,7 +3210,7 @@ function renderInsights(inc, exp) {
     </div>
     <div class="card card-hi">
       <div class="card-title">💰 Salario mensual</div>
-      <div class="card-val">${fmt(41000)}</div>
+      <div class="card-val">${fmt(_PG().sueldo)}</div>
       <div class="card-sub">dos quincenas BBVA · base fija</div>
     </div>`;
 }
@@ -3268,9 +3277,9 @@ function renderSpecials(freeMonth, refDate=new Date()) {
   const autoSavedMonths=Math.max(0,autoMonths-autoExtraMonths);
 
   // ── Cálculo realista del sobrante mensual (igual que plan GBM) ──────────────
-  const _gbmQUINc=Math.round(41000/2);
-  const _gbmRENTA=11000,_gbmAUTO=6700;
-  const _gbmSVC=600+200+179+135+150,_gbmSUB=1500+380+50,_gbmTC=minimosTC(),_gbmCETES=1500;
+  const _gbmQUINc=Math.round(_PG().sueldo/2);
+  const _gbmRENTA=_PG().renta,_gbmAUTO=_autoMin();
+  const _gbmSVC=_PG().servicios,_gbmSUB=_PG().suscripciones,_gbmTC=minimosTC(),_gbmCETES=_PG().cetesDia15;
   const _gbmMSI=(S.debts||[]).filter(d=>d.rate===0&&d.balance>0&&d.type==='other'&&d.start)
     .reduce((s,d)=>{
       const st=new Date(d.start),tm=d.total>0&&d.min>0?Math.round(d.total/d.min):0;
@@ -3283,7 +3292,7 @@ function renderSpecials(freeMonth, refDate=new Date()) {
   });
   const _gbmVE=_gbmP3.map(m=>S.transactions.filter(t=>ym(t.date)===m&&t.type==='expense').reduce((s,t)=>s+t.amount,0)).filter(e=>e>0);
   const _gbmTF=_gbmRENTA+_gbmAUTO+_gbmSVC+_gbmSUB+_gbmTC+_gbmMSI+_gbmCETES;
-  const _gbmAvg=_gbmVE.length>0?_gbmVE.reduce((s,e)=>s+e,0)/_gbmVE.length:41000*0.75;
+  const _gbmAvg=_gbmVE.length>0?_gbmVE.reduce((s,e)=>s+e,0)/_gbmVE.length:_PG().sueldo*0.75;
   const _gbmVPW=Math.round(Math.max(0,_gbmAvg-_gbmTF)/4);
   const monthGBMCalc=
     Math.max(0,_gbmQUINc-_gbmRENTA-_gbmAUTO-_gbmVPW)+
@@ -3322,7 +3331,7 @@ function renderSpecials(freeMonth, refDate=new Date()) {
   const scE_sinRentaDate=new Date(2027,1,1);
   const scE_p1Months=Math.max(0,Math.round((scE_sinRentaDate-now)/2592000000));
   const scE_mo1=monthGBMCalc+scE_didi;          // ahora → ene 2027
-  const scE_mo2=monthGBMCalc+scE_didi+11000;    // feb 2027 en adelante
+  const scE_mo2=monthGBMCalc+scE_didi+_PG().renta;    // feb 2027 en adelante
   const scE_savedP1=Math.min(needed,scE_p1Months*scE_mo1);
   const scE_remainP2=Math.max(0,needed-scE_savedP1);
   const scE_p2Months=scE_remainP2>0?(scE_mo2>0?Math.ceil(scE_remainP2/scE_mo2):999):0;
@@ -3481,7 +3490,7 @@ function renderSpecials(freeMonth, refDate=new Date()) {
                 <div style="font-size:11px;color:var(--text2);margin-top:2px">
                   Salario GBM <span style="color:var(--text3)">${fmt(monthGBMCalc)}</span>
                   + Didi <span style="color:var(--success);font-weight:700">${fmt(scE_didi)}</span>
-                  + Sin renta <span style="color:var(--success);font-weight:700">+${fmt(11000)}</span>
+                  + Sin renta <span style="color:var(--success);font-weight:700">+${fmt(_PG().renta)}</span>
                 </div>
               </div>
               <div style="font-size:16px;font-weight:800;color:var(--success)">${fmt(scE_mo2)}<span style="font-size:10px;font-weight:600;color:var(--text3)">/mes</span></div>
@@ -4012,7 +4021,7 @@ function seedData() {
       {id:'s061',type:'expense',desc:'Pago mínimo TC Banamex',        amount:810,   date:'2026-01-16',cat:'Deudas',                notes:''}
     ],
     budgets: [
-      {id:'b001',cat:'Hogar/Renta',     limit:11000},
+      {id:'b001',cat:'Hogar/Renta',     limit:(window.CIFRAS&&CIFRAS.PROYECTO.renta)||11000},
       {id:'b002',cat:'Alimentación',    limit:3000},
       {id:'b003',cat:'Restaurantes',    limit:2000},
       {id:'b004',cat:'Servicios',       limit:1200},

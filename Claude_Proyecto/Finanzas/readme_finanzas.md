@@ -37,7 +37,35 @@ Variables globales adicionales: `editId`, `confCb`, `payDebtId`, `contribGoalId`
 - **expense**: Alimentación, Transporte, Hogar/Renta, Salud, Entretenimiento, Educación, Ropa, Servicios, Suscripciones, Restaurantes, Viajes, Deudas, Otros gastos
 - **income**: Salario, Freelance/Honorarios, Inversiones, Renta/Propiedades, Bonos, Regalos, Otros ingresos
 
-### Gastos fijos hardcodeados (usados en `renderGBM` y `getMonthProjection`)
+### Gastos fijos: ya no se escriben aquí
+
+Salen de `PROYECTO` en [`../Dashboard/datos-maestros.js`](../Dashboard/datos-maestros.js), vía los
+helpers `_PG()`, `_autoMin()` y `_metaFondo()` del principio del `<script>`. `_autoMin()` y
+`_metaFondo()` prefieren el dato **vivo** de `S` y solo caen al maestro si todavía no hay nada
+guardado.
+
+| Concepto | Monto | Cuándo |
+|---|---|---|
+| Salario BBVA | `{{sueldo}}` $41,000 | Quincenal |
+| Renta | `{{renta}}` $11,000 | Día 1 |
+| Crédito Dolphin Mini | `_autoMin()` $6,700 | Día 14 |
+| Servicios | `{{servicios}}` $1,264 | Celular, internet, gas, luz/agua, limpieza |
+| Suscripciones | `{{suscripciones}}` $1,080 | Gym Total Pass $650, Claude Code $380, iCloud $50 |
+| CETES | `{{cetesDia15}}` $1,500 | Día 15 |
+| Mínimos de TC | `minimosTC()` | Sale de `S.debts`, no de un número escrito |
+
+**Por qué se movieron (2026-08-25).** Estos importes estaban escritos a mano en **cinco sitios de
+este mismo archivo** —`renderGBM()`, dos cálculos de `_fixedFloor`, el bloque `_gbm*` y la lista
+`fixed` de la proyección— y habían divergido de verdad: al cambiar de gimnasio el 18-ago
+(Fitsi $1,500 → Total Pass $650) se actualizó **solo `renderGBM()`**. Los otros cuatro siguieron
+calculando con $1,500 durante una semana, así que el plan semanal y la proyección mensual daban
+cifras distintas para el mismo mes.
+
+Lo encontró una auditoría de "números crudos" tras un fallo parecido en el verificador. Ahora
+`verificar-sincronia.js` incluye ese control (el nº 5), que busca los valores del maestro escritos
+como número pelado —sin `$`— en el código.
+
+## Gastos fijos hardcodeados (usados en `renderGBM` y `getMonthProjection`)
 | Concepto             | Monto MXN | Semana / Fecha |
 |----------------------|-----------|----------------|
 | Salario BBVA         | $41,000   | Quincenal      |

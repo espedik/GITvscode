@@ -2712,6 +2712,13 @@ function fixAhorro20260817IfNeeded(){
    los renders posteriores ya salen con el número puesto.
    Recursiva y EN EL SITIO (no devuelve copia) para no romper las referencias que otras partes
    del código ya guardan a estos mismos objetos. */
+/* Constantes del proyecto y metas: del maestro, nunca a mano. `_metaFondo` prefiere el dato
+   vivo de Finanzas y solo cae al maestro si todavía no hay nada guardado. */
+function _PG(){ return (window.CIFRAS && CIFRAS.PROYECTO) || {}; }
+function _metaFondo(){
+  const g = ((D.fin && D.fin.goals) || []).find(x => x.id === 'ef-001');
+  return (g && +g.target) || (window.CIFRAS && CIFRAS.n('fondoMeta')) || 10000;
+}
 function cifrarLiterales(o){
   if(Array.isArray(o)){
     o.forEach((x,i)=>{ if(typeof x==='string') o[i]=CIFRAS.texto(x); else if(x&&typeof x==='object') cifrarLiterales(x); });
@@ -2872,7 +2879,7 @@ function detectarLogros(){
     const tcBbva=tcPorNombre(/bbva/i);
     if(tcBbva&&tcBbva.balance<=0) registrarLogro('bbva-liquidada','TC BBVA liquidada');
     if(tcBana&&tcBbva&&tcBana.balance<=0&&tcBbva.balance<=0) registrarLogro('deuda-cara-cero','Deuda cara en $0');
-    if((fin.emergencyFund||0)>=10000) registrarLogro('fondo-emergencia','Fondo de emergencia completo ({{fondoMeta}})');
+    if((fin.emergencyFund||0)>=_metaFondo()) registrarLogro('fondo-emergencia','Fondo de emergencia completo ({{fondoMeta}})');
     const auto=debts.find(d=>d.type==='car');
     if(auto&&auto.balance<=0) registrarLogro('byd-liquidado','Crédito del BYD Dolphin Mini liquidado');
   }
@@ -4272,7 +4279,7 @@ function pintarEdadPace(){
     // El subtítulo nombra solo las tarjetas que TODAVÍA deben: desde que Banamex quedó en $0
     // (13 ago 2026), decir "restante en Banamex + BBVA" sugería que las dos siguen vivas.
     {ico:'💳',t:'Deuda cara',      hay:hayDeuda||!!logro('banamex-liquidada'), val:money(deudaCara), sub:deudaCara<=0?'Liquidada 🎉':'restante en '+[bana&&bana.balance>0?'Banamex':null,bbva&&bbva.balance>0?'BBVA':null].filter(Boolean).join(' + '), falta:'Regístrala en Finanzas para medirla aquí'},
-    {ico:'🆘',t:'Fondo de emergencia', hay:ef>0, val:money(ef),        sub:`de ${money(10000)} · ${Math.min(100,Math.round(ef/10000*100))}%`, falta:'Aún en $0 — es el primer paso de Fase 0'},
+    {ico:'🆘',t:'Fondo de emergencia', hay:ef>0, val:money(ef),        sub:`de ${money(_metaFondo())} · ${Math.min(100,Math.round(ef/_metaFondo()*100))}%`, falta:'Aún en $0 — es el primer paso de Fase 0'},
     {ico:'🎓',t:'Fondo Maestría',  hay:fmMae.total>0, val:money(fmMae.total), sub:goalMae&&goalMae.target?`de ${money(goalMae.target)} · ${fmMae.comps.length} piezas`:`${fmMae.comps.length} piezas sumadas`, falta:'Créala en Finanzas → Metas'},
   ];
 
@@ -5031,7 +5038,7 @@ function renderCoach(){
   // Banamex mostraba "Sin datos en Finanzas" en cuanto la deuda dejaba de encontrarse —borrada,
   // renombrada, o `finanzasmx_v2` inexistente en ese navegador— y le decía a Adán que no había
   // logrado nada. Un logro registrado ya no se puede "desregistrar" por un dato que cambió.
-  const ef=D.fin.emergencyFund||0, efMeta=10000;
+  const ef=D.fin.emergencyFund||0, efMeta=_metaFondo();
   const bana=metaDebtInfo(d=>/banamex/i.test(d.name||'')&&(!d.type||d.type==='credit_card'));
   const bbva=metaDebtInfo(d=>/bbva/i.test(d.name||'')&&(!d.type||d.type==='credit_card'));
   const lgBana=logro('banamex-liquidada'), lgBbva=logro('bbva-liquidada'), lgEf=logro('fondo-emergencia');
@@ -5637,7 +5644,7 @@ function pasoInversionHoy(){
   const F = rawGet('finanzasmx_v2', {}) || {};
   const inv = F.investments || [];
   const ef = +F.emergencyFund || 0;
-  const metaEf = 10000;
+  const metaEf = _metaFondo();
   const totalInv = inv.reduce((s,i)=>s+(+i.value||+i.invested||0), 0);
   const cetes = inv.filter(i=>i.type==='cetes').reduce((s,i)=>s+(+i.value||+i.invested||0),0);
   const deudaCara = (F.debts||[]).filter(d=>d.rate>0 && d.balance>0).reduce((s,d)=>s+d.balance,0);
@@ -5710,7 +5717,7 @@ function renderGBMPanel(){
     '<div class="gbm-sec">💼 Tu portafolio hoy</div>'+
     asignacion+
     (totalInv?'<div class="gbm-row gbm-row-tot"><span>Total invertido</span><span class="gbm-mono">'+mon(totalInv)+'</span></div>':'')+
-    (cetes?'<div class="gbm-nota">CETES aporta '+mon(cetes)+'. Tu aporte recurrente es de '+mon(1500)+' el día 15.</div>':'')+
+    (cetes?'<div class="gbm-nota">CETES aporta '+mon(cetes)+'. Tu aporte recurrente es de '+mon(_PG().cetesDia15||1500)+' el día 15.</div>':'')+
 
     '<div class="gbm-sec">⏱️ La compra rápida, en 20 minutos</div>'+
     '<ol class="gbm-check">'+
@@ -6316,7 +6323,7 @@ function cerrarKpi(){ document.getElementById('kpiOverlay')?.classList.remove('o
 
 function kpiDetalle(id){
   const F=D.fin||{}, debts=F.debts||[], inv=F.investments||[];
-  const ef=+F.emergencyFund||0, metaEf=10000;
+  const ef=+F.emergencyFund||0, metaEf=_metaFondo();
   const g=kpiGastoMensual();
   const pat=patrimonioNeto();
   const totalInv=inv.reduce((a,i)=>a+(+i.value||+i.invested||0),0);
@@ -6375,7 +6382,7 @@ function kpiDetalle(id){
   // la unica fuente de esta cifra en todo el archivo.
   if(id==='maestria'){
     const goal=(F.goals||[]).find(x=>x.id==='g001'||/maestr/i.test(x.name||''));
-    const tgt=(goal&&+goal.target)||500000;
+    const tgt=(goal&&+goal.target)||(window.CIFRAS&&CIFRAS.n('maestriaMeta'))||500000;
     const fm=fondoMaestria(), bt=fm.btc;
     const cur=fm.total, guardado=goal?(+goal.current||0):0;
     const pct=tgt>0?cur/tgt*100:0, falta=Math.max(0,tgt-cur);
@@ -6626,7 +6633,7 @@ function metaDebtInfo(matcher){
 function renderMetasSlide(){
   // La meta del fondo sale de datos-maestros.js: este KPI se arma en JS y no pasa por
   // cifrarLiterales(), asi que se lee la variable directo en vez de escribir el numero.
-  const metaFondo = (window.CIFRAS && CIFRAS.n('fondoMeta')) || 10000;
+  const metaFondo = _metaFondo();
   // Solo la tarjeta, no cualquier deuda que mencione al banco (ver la nota en renderCoach()).
   const bana=metaDebtInfo(d=>/banamex/i.test(d.name||'')&&(!d.type||d.type==='credit_card'));
   const bbva=metaDebtInfo(d=>/bbva/i.test(d.name||'')&&(!d.type||d.type==='credit_card'));

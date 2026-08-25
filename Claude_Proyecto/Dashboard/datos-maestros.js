@@ -74,7 +74,11 @@ window.CIFRAS = (function () {
 
     // ── Gastos fijos ── (renta y gym salían en 3 apps)
     renta:         11000,     // día 1
-    gym:            1500,
+    // 2026-08-18 cambió de gimnasio: Fitsi ($1,500) → Total Pass ($650), que se cobra el día 17.
+    // Son $850/mes menos, $10,200 al año. Este valor llevaba desactualizado aquí mientras
+    // Finanzas ya usaba el nuevo en una parte de su código y el viejo en otras tres.
+    gym:             650,     // Total Pass, día 17
+    gymNombre:  'Total Pass',
     internet:        200,
     celular:         600,
     gas:             179,
@@ -82,8 +86,11 @@ window.CIFRAS = (function () {
     limpieza:        150,
     claudeCode:      380,     // $20 USD
     icloud:            50,
-    get fijosTotal() { return this.renta + this.gym + this.internet + this.celular +
-                              this.gas + this.luzAgua + this.limpieza + this.claudeCode + this.icloud; },
+    // Los tres grupos tal como los usa el plan semanal de Finanzas, para que no los sume a mano.
+    get servicios() { return this.celular + this.internet + this.gas + this.luzAgua + this.limpieza; },
+    get suscripciones() { return this.gym + this.claudeCode + this.icloud; },
+    get fijosTotal() { return this.renta + this.servicios + this.suscripciones; },
+    cetesDia15:     1500,     // aporte recurrente a CETES el día 15
 
     // ── Cosas suyas que se nombran en varias apps ──
     auto:        'BYD Dolphin Mini',
@@ -645,6 +652,10 @@ window.CIFRAS = (function () {
     ingresoTotal:  { v: () => PROYECTO.ingresoTotal },
     renta:         { v: () => PROYECTO.renta },
     gym:           { v: () => PROYECTO.gym },
+    gymNombre:     { v: () => PROYECTO.gymNombre, fmt: 'txt' },
+    servicios:     { v: () => PROYECTO.servicios },
+    suscripciones: { v: () => PROYECTO.suscripciones },
+    cetesDia15:    { v: () => PROYECTO.cetesDia15 },
     fijosTotal:    { v: () => PROYECTO.fijosTotal },
     empleador:     { v: () => PROYECTO.empleador,   fmt: 'txt' },
     nombre:        { v: () => PROYECTO.nombre,      fmt: 'txt' },

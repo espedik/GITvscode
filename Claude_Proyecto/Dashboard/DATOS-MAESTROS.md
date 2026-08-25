@@ -63,8 +63,11 @@ desde JS. En consola, `CIFRAS.tabla()` las lista con su valor actual.
 | `{{siVale}}` | $940 | Vale de despensa |
 | `{{ingresoTotal}}` | $53,140 | Derivada: sueldo + Didi + Si Vale |
 | `{{renta}}` | $11,000 | Día 1 |
-| `{{gym}}` | $1,500 | |
-| `{{fijosTotal}}` | $14,194 | Derivada: renta + gym + servicios + suscripciones |
+| `{{gym}}` `{{gymNombre}}` | $650 · Total Pass | Día 17. Era Fitsi a $1,500 hasta el 18-ago-2026 |
+| `{{servicios}}` | $1,264 | Celular + internet + gas + luz/agua + limpieza |
+| `{{suscripciones}}` | $1,080 | Gym + Claude Code + iCloud |
+| `{{cetesDia15}}` | $1,500 | Aporte recurrente a CETES el día 15 |
+| `{{fijosTotal}}` | $13,344 | Derivada: renta + servicios + suscripciones |
 
 ### Deudas · saldos vivos (`finanzasmx_v2`)
 
@@ -171,7 +174,14 @@ Qué revisa:
 - `GYM_RUTINA_DEFAULT` contra `ejercicio.html`, que sigue siendo un respaldo duplicado.
 - Que las fases y las prioridades del maestro aparezcan en el HTML de Coach.
 - Las cifras que ya tienen variable pero siguen escritas a mano.
+- **Los números del maestro escritos crudos en el código** (sin `$`), que era el punto ciego: así
+  se descubrió que el gimnasio tenía dos precios a la vez en Finanzas. Acepta dos patrones
+  legítimos: `dato || 500000` (fallback, solo se usa si no hay dato) y las asignaciones dentro de
+  una migración (`balance = 1708` es una foto histórica, no una copia).
 - Los `{{marcadores}}` que no existan en el catálogo.
+
+Los valores **no están escritos en el verificador**: los pide al maestro. Tenerlos a mano era el
+mismo fallo que persigue — con `$292,000` en su lista seguía vigilando el saldo viejo.
 
 Lleva una lista de **excepciones documentadas**: números que coinciden con una variable pero
 significan otra cosa (el precio de un servicio, el ahorro en un boleto de avión, la meta de la
