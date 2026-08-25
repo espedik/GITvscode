@@ -1,58 +1,101 @@
 /* ══════════════════════════════════════════════════════════════════════════════════════════
-   CIFRAS COMPARTIDAS — una sola fuente para los números que salen en más de una app
+   DATOS MAESTROS — todas las variables del proyecto, en un solo archivo
    ══════════════════════════════════════════════════════════════════════════════════════════
-   POR QUÉ EXISTE ESTE ARCHIVO (2026-08-24)
-   Adán: "esto no está en todos los indicadores, no quiero que vuelva a pasar, quiero que si
-   cambies uno, se cambien todos... debes hacer que sea como la misma variable en diferentes
-   aplicaciones".
+   Adán, 2026-08-24: "quiero que toda la info de todos mis proyectos esté en un archivo que
+   esté en esta carpeta [Dashboard], así cuando cambie algo en alguno, los demás cambiarán
+   automáticamente... esto para que gastar menos tokens y sea muy rápido los cambios".
 
-   El día que su crédito del auto bajó a $292,000 había que cambiarlo en: el seed de
-   Finanzas.html, una migración de Finanzas.html, el espejo de esa migración en dashboard.html,
-   y además en la PROSA de varias pantallas ("un crédito de $299,000", "La única deuda cara que
-   queda: $32,343"...). Coach_v2.html se quedó con los números viejos, que es exactamente el
-   fallo que esto viene a impedir.
+   QUÉ ES
+   El único sitio donde se escribe un dato sobre Adán o sobre su plan. Las apps no repiten
+   números: los leen de aquí. Cambias un dato una vez y las cuatro pantallas lo dicen igual.
 
-   CÓMO FUNCIONA
-   El saldo vivo de cada deuda YA tiene una fuente única: `finanzasmx_v2` en localStorage, que
-   escribe Finanzas.html y leen las demás apps. Lo que faltaba era que la prosa lo leyera
-   también. Ahora, en vez de escribir el número, se escribe un marcador:
+   Vive en `Dashboard/` porque el Dashboard es el centro del proyecto y ahí ya viven los otros
+   archivos de datos (`aleman-data.js`, `entrevistas-data.js`). Las demás apps lo cargan con una
+   ruta relativa: `<script src="../Dashboard/datos-maestros.js"></script>`.
+
+   EL MAPA ESTÁ EN `DATOS-MAESTROS.md`, en esta misma carpeta: qué variable existe, qué vale hoy
+   y quién la usa. Ese `.md` es el índice para leer rápido sin abrir 900 KB de HTML.
+
+   ── LAS DOS CLASES DE DATO ──────────────────────────────────────────────────────────────────
+   1. CONSTANTES (`PROYECTO`, aquí abajo) — hechos que no cambian solos: el sueldo, la renta, el
+      empleador, las fechas clave. Se editan AQUÍ, a mano, y ya.
+   2. SALDOS VIVOS (`finanzasmx_v2` en localStorage) — lo que Adán mueve desde Finanzas.html.
+      No se escriben aquí: se leen. `DEUDAS_SEED` es solo el punto de partida de un navegador
+      en blanco, y `MIGRACIONES` las correcciones puntuales cuando reporta un saldo nuevo.
+
+   ── CÓMO SE USA UN DATO EN LA PROSA ─────────────────────────────────────────────────────────
+   En vez del número va un marcador, y este archivo lo sustituye al cargar la página:
 
        <p>un crédito de {{autoSaldo}}</p>          →   un crédito de $292,000
+       <p>ganas {{sueldo}} en {{empleador}}</p>    →   ganas $41,000 en ALTEN
 
-   y este archivo lo sustituye al cargar la página. Cambias el saldo en Finanzas (o llega por
-   una migración) y todas las apps lo dicen igual, sin que nadie tenga que acordarse de nada.
-
-   CÓMO SE USA
-     <script src="../_comun/finanzas-cifras.js"></script>   ← antes del resto del JS
-
-     CIFRAS.aplicarDOM()        recorre el HTML ya escrito y sustituye los {{marcadores}}
-     CIFRAS.texto(str)          sustituye en un string suelto (para HTML que se arma en JS)
+     CIFRAS.aplicarDOM()        resuelve los {{marcadores}} del HTML ya pintado
+     CIFRAS.texto(str)          resuelve en un string suelto (para HTML que se arma en JS)
      CIFRAS.n('autoSaldo')      el número crudo, por si hay que calcular con él
      CIFRAS.v('autoSaldo')      el texto ya formateado ("$292,000")
      CIFRAS.refrescar()         relee localStorage (tras una migración o un cambio en vivo)
-     CIFRAS.tabla()             en la consola: todas las cifras de golpe, para comparar apps
+     CIFRAS.tabla()             en la consola: todas las variables de golpe
 
-   CÓMO AÑADIR UNA CIFRA NUEVA
-   Una línea en CLAVES, aquí abajo. Nada más: queda disponible en todas las apps a la vez.
+   El Dashboard además usa `cifrarLiterales(obj)`, porque su prosa no está en el HTML sino en
+   constantes JS (`PHASES`, `META_DETALLE`) que inyecta con innerHTML: ahí hay que sustituir en
+   el literal, o cada repintado volvería a traer el marcador.
 
-   QUÉ MÁS VIVE AQUÍ
-   · DEUDAS_SEED — la lista de deudas con la que arranca un navegador en blanco. Estaba dentro
-     de `seedData()` en Finanzas.html, que la resiembra cada vez que sube SEED_VER: era la otra
-     fuente de verdad, y la que podía pisar un saldo actualizado a mano.
-   · MIGRACIONES — las correcciones puntuales de saldo. Antes había que escribirlas dos veces,
-     en Finanzas.html y como espejo en dashboard.html, porque cualquiera de las dos puede ser la
-     primera app que se abra.
+   ── AÑADIR UNA VARIABLE ─────────────────────────────────────────────────────────────────────
+   Una línea en `PROYECTO` (si es constante) o en `CLAVES` (si sale de los datos vivos), y otra
+   en `DATOS-MAESTROS.md`. Queda disponible en las cuatro apps a la vez.
 
-   Lo que NO se escribe a mano en ningún sitio son los saldos vivos: esos se editan en Finanzas
-   o llegan por una migración, y las tres apps los leen de `finanzasmx_v2`. Si esa clave no
-   existe todavía, las cifras caen a DEUDAS_SEED; y lo que no esté ni ahí sale como "—" en vez
-   de como un número inventado.
+   Un marcador que no exista se deja A LA VISTA en pantalla en vez de borrarse: un {{tipoDeDedo}}
+   se detecta al instante; una frase mutilada, no.
    ══════════════════════════════════════════════════════════════════════════════════════════ */
 window.CIFRAS = (function () {
   'use strict';
   const KEY = 'finanzasmx_v2';
   const VACIO = '—';
   let fin = null;
+
+  /* ── CONSTANTES DEL PROYECTO ───────────────────────────────────────────────────────────────
+     Hechos sobre Adán y su plan que estaban escritos a mano en cada app. El número entre
+     paréntesis es en cuántas apps aparecía repetido cuando se centralizó (medido el 2026-08-24).
+     Estos SÍ se editan aquí: no salen de localStorage porque no cambian solos. */
+  const PROYECTO = {
+    // ── Quién es ── (ALTEN salía 78 veces repartidas en 5 apps)
+    nombre:      'Adán',
+    empleador:   'ALTEN',
+    puesto:      'Ingeniero de pruebas — automotriz (ADAS)',
+    ciudad:      'CDMX',
+
+    // ── Ingresos ── (el sueldo, 17 veces en 2 apps; Didi, 92 en 4)
+    sueldo:        41000,     // bruto mensual en ALTEN, quincenal a BBVA
+    sueldoQuinc:   20500,
+    didiMes:       11200,     // ~$400/día × 28 días, semanal
+    siVale:          940,     // vale de despensa
+    // Lo que de verdad entra al mes si Didi va como el promedio.
+    get ingresoTotal() { return this.sueldo + this.didiMes + this.siVale; },
+
+    // ── Gastos fijos ── (renta y gym salían en 3 apps)
+    renta:         11000,     // día 1
+    gym:            1500,
+    internet:        200,
+    celular:         600,
+    gas:             179,
+    luzAgua:         135,
+    limpieza:        150,
+    claudeCode:      380,     // $20 USD
+    icloud:            50,
+    get fijosTotal() { return this.renta + this.gym + this.internet + this.celular +
+                              this.gas + this.luzAgua + this.limpieza + this.claudeCode + this.icloud; },
+
+    // ── Cosas suyas que se nombran en varias apps ──
+    auto:        'BYD Dolphin Mini',
+    broker:      'GBM',                     // estrategia: empresas de EE. UU.
+    bancoSueldo: 'BBVA',
+
+    // ── Fechas y metas no financieras ──
+    entrevistaWayve: '2026-07-08',          // ver Entrevistas/ → sección Wayve
+    maestriaEscuela: 'Esslingen — Automotive Systems M.Eng.',
+    maestriaInicio:  '2028-10-01',
+    maestriaPausa:   '2027-07-18',          // pausada hasta aquí, decidido en Coach
+  };
 
   function leer() {
     try { const r = localStorage.getItem(KEY); fin = r ? JSON.parse(r) : null; }
@@ -208,6 +251,30 @@ window.CIFRAS = (function () {
     fondoMeta:     { v: () => { const g = meta('ef-001'); return g ? +g.target : null; } },
     maestria:      { v: () => { const g = meta('g001');   return g ? +g.current : null; } },
     maestriaMeta:  { v: () => { const g = meta('g001');   return g ? +g.target  : null; } },
+    // ── Constantes del proyecto, expuestas como marcadores ──
+    // Van por PROYECTO y no por localStorage: no cambian solas, se editan aquí arriba.
+    sueldo:        { v: () => PROYECTO.sueldo },
+    sueldoQuinc:   { v: () => PROYECTO.sueldoQuinc },
+    didiMes:       { v: () => PROYECTO.didiMes },
+    siVale:        { v: () => PROYECTO.siVale },
+    ingresoTotal:  { v: () => PROYECTO.ingresoTotal },
+    renta:         { v: () => PROYECTO.renta },
+    gym:           { v: () => PROYECTO.gym },
+    fijosTotal:    { v: () => PROYECTO.fijosTotal },
+    empleador:     { v: () => PROYECTO.empleador,   fmt: 'txt' },
+    nombre:        { v: () => PROYECTO.nombre,      fmt: 'txt' },
+    auto:          { v: () => PROYECTO.auto,        fmt: 'txt' },
+    broker:        { v: () => PROYECTO.broker,      fmt: 'txt' },
+    bancoSueldo:   { v: () => PROYECTO.bancoSueldo, fmt: 'txt' },
+    maestriaEscuela:{ v: () => PROYECTO.maestriaEscuela, fmt: 'txt' },
+    maestriaInicio:{ v: () => PROYECTO.maestriaInicio,   fmt: 'txt' },
+    // ── Derivadas que cruzan constantes con saldos vivos ──
+    // Lo que queda del sueldo tras los fijos y los mínimos de deuda: el margen real del mes.
+    margen:        { v: () => {
+      const min = deudas().filter(d => +d.balance > 0).reduce((a, d) => a + (+d.min || 0), 0);
+      return PROYECTO.ingresoTotal - PROYECTO.fijosTotal - min;
+    } },
+    minimosDeuda:  { v: () => deudas().filter(d => +d.balance > 0).reduce((a, d) => a + (+d.min || 0), 0) },
     cetes:         { v: () => {
       const i = (fin && Array.isArray(fin.investments) ? fin.investments : [])
         .find(x => x.type === 'cetes' || /cetes/i.test(x.name || ''));
@@ -219,7 +286,10 @@ window.CIFRAS = (function () {
   // Los saldos se escriben redondeados al peso, que es como aparecen en la prosa de las tres
   // apps ("$292,000", "$11,362"). Los centavos solo importan dentro de Finanzas.
   function fmt(num, tipo) {
-    if (num == null || isNaN(num)) return VACIO;
+    if (num == null) return VACIO;
+    if (tipo === 'txt') return String(num);        // antes que isNaN: un texto no es un número
+    if (isNaN(num)) return VACIO;
+    if (tipo === 'txt') return String(num);
     if (tipo === 'pct') return (Math.round(num * 100) / 100) + '%';
     if (tipo === 'num') return String(Math.round(num));
     return '$' + Math.round(num).toLocaleString('es-MX');
@@ -282,6 +352,7 @@ window.CIFRAS = (function () {
     n: n, v: v, texto: texto, aplicarDOM: aplicarDOM, refrescar: refrescar, tabla: tabla,
     claves: function () { return Object.keys(CLAVES); },
     DEUDAS_SEED: DEUDAS_SEED,
+    PROYECTO: PROYECTO,
     get datos() { return fin; }
   };
 })();

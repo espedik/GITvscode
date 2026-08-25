@@ -4057,13 +4057,13 @@ Tres textos hardcodeados seguían diciendo $32,343 y se actualizaron a $34,000: 
 
 Lo que **no** se reescribió son las **proyecciones** que colgaban de esa cifra — el *"$0 en mar 2027"* y los *"$4,645/mes"*. Se calcularon con $32,343 **al 10% anual**, una tasa que este mismo readme ya documenta como equivocada (la real ronda el 55.7%). Cambiarles el número de entrada y dejarles la fecha de salida las volvería falsamente precisas, así que quedan marcadas en pantalla como pendientes de rehacer. `Coach_v2.html`, que tiene la simulación mes a mes completa apoyada en los mismos supuestos, se dejó intacto por la misma razón.
 
-## Las cifras compartidas salen de `_comun/finanzas-cifras.js` (2026-08-24)
+## Las cifras compartidas salen de `Dashboard/datos-maestros.js` (2026-08-24)
 
 *"esto no está en todos los indicadores, no quiero que vuelva a pasar, quiero que si cambies uno, se cambien todos... al igual que la demás información, debes hacer que sea como la misma variable en diferentes aplicaciones, esto para que no hagas como retrabajo y sea más fácil cambiar las cosas para ti"*.
 
 El disparador fue concreto: al actualizar los saldos del 24-ago había que tocar doce sitios repartidos en tres apps, y **Coach_v2.html se quedó con los números viejos** — seguía diciendo "un crédito de $299,000" y "la TC BBVA ($32,343)" cuando el Dashboard ya decía $292,000 y $34,000.
 
-Ahora hay un módulo que cargan las tres apps con `<script src="../_comun/finanzas-cifras.js"></script>`. Concentra tres cosas que estaban copiadas:
+Ahora hay un módulo que cargan las tres apps con `<script src="../Dashboard/datos-maestros.js"></script>`. Concentra tres cosas que estaban copiadas:
 
 | Qué | Dónde estaba antes | Qué pasaba |
 |---|---|---|

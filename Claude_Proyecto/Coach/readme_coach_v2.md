@@ -1026,13 +1026,13 @@ Los tiempos estaban bien; lo que fallaba era el hueco. Un bloque fijo no tiene b
 - 142 tramos recorridos a 1500, 820 y 390px: ningún fallo, ninguna hora inválida, **0 desbordes**.
 - Sin errores de consola en Dashboard ni en Coach.
 
-## Las cifras compartidas salen de `_comun/finanzas-cifras.js` (2026-08-24)
+## Las cifras compartidas salen de `Dashboard/datos-maestros.js` (2026-08-24)
 
 *"esto no está en todos los indicadores, no quiero que vuelva a pasar, quiero que si cambies uno, se cambien todos... al igual que la demás información, debes hacer que sea como la misma variable en diferentes aplicaciones, esto para que no hagas como retrabajo y sea más fácil cambiar las cosas para ti"*.
 
 El disparador fue concreto: al actualizar los saldos del 24-ago había que tocar doce sitios repartidos en tres apps, y **Coach_v2.html se quedó con los números viejos** — seguía diciendo "un crédito de $299,000" y "la TC BBVA ($32,343)" cuando el Dashboard ya decía $292,000 y $34,000.
 
-Ahora hay un módulo que cargan las tres apps con `<script src="../_comun/finanzas-cifras.js"></script>`. Concentra tres cosas que estaban copiadas:
+Ahora hay un módulo que cargan las tres apps con `<script src="../Dashboard/datos-maestros.js"></script>`. Concentra tres cosas que estaban copiadas:
 
 | Qué | Dónde estaba antes | Qué pasaba |
 |---|---|---|

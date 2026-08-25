@@ -5,11 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mis Finanzas MX</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💰</text></svg>">
-<!-- Cifras compartidas. Finanzas es la FUENTE de estos números (los escribe en finanzasmx_v2),
-     así que aquí no hace falta para pintar nada: se carga para que cualquier texto nuevo de
-     esta app pueda usar los mismos {{marcadores}} que el Dashboard y el Coach, en vez de
-     empezar otra copia a mano. Ver ../_comun/finanzas-cifras.js -->
-<script src="../_comun/finanzas-cifras.js"></script>
+<!-- Variables maestras del proyecto. Finanzas es la FUENTE de los saldos (los escribe en
+     finanzasmx_v2), así que aquí no hace falta para pintar: se carga para que un texto nuevo de
+     esta app use los mismos {{marcadores}} que el Dashboard y el Coach, en vez de
+     empezar otra copia a mano. Mapa en ../Dashboard/DATOS-MAESTROS.md -->
+<script src="../Dashboard/datos-maestros.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <!-- La fuente se carga SIN bloquear el pintado (2026-08-23). Antes era un `@import` dentro
      del <style>: el navegador no lo descubría hasta parsear el CSS y, mientras Google no
@@ -3856,7 +3856,7 @@ function importData(input) {
 const SEED_VER = '23'; // incrementar cada vez que cambie el seed — v23: meta Maestría refleja la pausa de 1 año decidida en Coach (date 2028-10-01, pausadaHasta 2027-07-18)
 function seedData() {
   // El seed de deudas vive en el módulo común; si no cargó, hay que verlo, no adivinarlo.
-  if(!window.CIFRAS) console.error('[Finanzas] No cargó ../_comun/finanzas-cifras.js: el seed se sembrará SIN deudas. Revisa la ruta del <script src> en el <head>.');
+  if(!window.CIFRAS) console.error('[Finanzas] No cargó ../Dashboard/datos-maestros.js: el seed se sembrará SIN deudas. Revisa la ruta del <script src> en el <head>.');
   if (localStorage.getItem(KEY+'_v') === SEED_VER) return;
   // REGLA FIJA: `indicatorHistory` (historial mensual de Indicadores) nunca debe
   // perderse en un reseed. A diferencia del resto de este seed (transacciones, deudas,
@@ -4027,7 +4027,7 @@ function seedData() {
       {id:'b009',cat:'Entretenimiento', limit:2500},
       {id:'b010',cat:'Salud',           limit:1800}
     ],
-    // La lista de deudas ya no se escribe aquí: vive en ../_comun/finanzas-cifras.js, que esta
+    // La lista de deudas ya no se escribe aquí: vive en ../Dashboard/datos-maestros.js, que esta
     // app carga en el <head> y que también leen el Dashboard y el Coach. Estaba duplicada de
     // hecho —el seed aquí, la prosa allá— y cada subida de SEED_VER resembraba estos saldos,
     // así que un saldo corregido a mano se perdía en el siguiente reseed si nadie se acordaba
@@ -4762,7 +4762,7 @@ function init() {
     localStorage.setItem(KEY+'_ahorro20260817','1');
   }
   // La migración de saldos del 2026-08-24 ya NO vive aquí: se movió a
-  // ../_comun/finanzas-cifras.js, que esta app carga en el <head>. Antes cada corrección había
+  // ../Dashboard/datos-maestros.js, que esta app carga en el <head>. Antes cada corrección había
   // que escribirla dos veces —aquí y como espejo en dashboard.html—, porque cualquiera de las
   // dos puede ser la primera app que abra Adán. Ahora se escribe una vez, corre antes que este
   // init() y la ve también Coach_v2.html. Las migraciones de más arriba se quedan: ya corrieron

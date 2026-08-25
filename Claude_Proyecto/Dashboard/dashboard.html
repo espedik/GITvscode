@@ -12,9 +12,9 @@
      Aleman/_generar-datos-dashboard.js — ver "Alemán del día" en readme_dashboard.md. No es un
      resumen ni texto reescrito a mano: es el vocabulario/diálogos/ejercicios reales de cada
      lección, listo para pintarse con el estilo nativo del Dashboard. -->
-<!-- Cifras compartidas con Finanzas y Coach: los saldos de deuda que salen en la prosa del
-     Plan Maestro vienen de aquí, no escritos a mano. Ver ../_comun/finanzas-cifras.js -->
-<script src="../_comun/finanzas-cifras.js"></script>
+<!-- Variables maestras de TODO el proyecto: sueldo, renta, deudas, metas, fechas. Las cuatro
+     Plan Maestro vienen de aquí, no escritos a mano. El mapa está en DATOS-MAESTROS.md -->
+<script src="datos-maestros.js"></script>
 <script src="aleman-data.js"></script>
 <!-- Contenido real de los 229 temas de Entrevistas/ (ENTREVISTA_TEMAS/ENTREVISTA_CONTENT/
      ENTREVISTA_CSS), extraído automáticamente por Entrevistas/_generar-datos-dashboard.js — ver
@@ -2699,7 +2699,7 @@ function fixAhorro20260817IfNeeded(){
   rawSet(K,d);
   localStorage.setItem(K+'_ahorro20260817','1');
 }
-// La migración _deudas20260824 ya NO vive aquí: se movió a ../_comun/finanzas-cifras.js, que
+// La migración _deudas20260824 ya NO vive aquí: se movió a datos-maestros.js (esta misma carpeta), que
 // cargan las tres apps. Antes había que escribirla dos veces (aquí y en Finanzas.html) porque
 // cualquiera de las dos puede ser la primera que abra Adán; ahora se escribe una sola vez y
 // además llega a Coach_v2.html, que nunca tuvo migraciones. Las de más arriba se quedan donde
@@ -8039,8 +8039,8 @@ fixPagos20260813IfNeeded();
 fixMsiBBVA20260813IfNeeded();
   fixAhorro20260817IfNeeded();
 // Las cifras compartidas se releen DESPUÉS de los fix*IfNeeded() de arriba: el módulo leyó
-// localStorage al cargarse, antes que ellos. (Su propia migración, la de _comun, ya corrió
-// dentro del módulo; este refresco es por las que siguen viviendo en este archivo.)
+// localStorage al cargarse, antes que ellos. (Su propia migración, la de datos-maestros, ya
+// corrió dentro del módulo; este refresco es por las que siguen viviendo aquí.)
 if(window.CIFRAS){ CIFRAS.refrescar(); cifrarLiterales(PHASES); cifrarLiterales(META_DETALLE); }
 fixMiercolesNatacionIfNeeded();
 fixRutina20260812IfNeeded();

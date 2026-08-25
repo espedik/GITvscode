@@ -943,13 +943,13 @@ El aumento es de **$1,656.69 en un mes**, y no cuadra con el escenario que vení
 
 En cualquiera de los dos casos la conclusión operativa es la misma y ahora es medible: **esta tarjeta ya no está estancada, está creciendo**. Los textos del plan en el Dashboard que la citaban en $32,343 se actualizaron; las **proyecciones** que colgaban de esa cifra (el "BBVA en $0 en mar 2027", calculado además con la tasa vieja del 10%) quedaron marcadas como pendientes de rehacer, no reescritas a ojo. La simulación mes a mes de `Coach_v2.html` sigue con los números viejos por el mismo motivo: rehacerla es un trabajo aparte que necesita fijar primero cuál de las dos lecturas de arriba es la real.
 
-## Las cifras compartidas salen de `_comun/finanzas-cifras.js` (2026-08-24)
+## Las cifras compartidas salen de `Dashboard/datos-maestros.js` (2026-08-24)
 
 *"esto no está en todos los indicadores, no quiero que vuelva a pasar, quiero que si cambies uno, se cambien todos... al igual que la demás información, debes hacer que sea como la misma variable en diferentes aplicaciones, esto para que no hagas como retrabajo y sea más fácil cambiar las cosas para ti"*.
 
 El disparador fue concreto: al actualizar los saldos del 24-ago había que tocar doce sitios repartidos en tres apps, y **Coach_v2.html se quedó con los números viejos** — seguía diciendo "un crédito de $299,000" y "la TC BBVA ($32,343)" cuando el Dashboard ya decía $292,000 y $34,000.
 
-Ahora hay un módulo que cargan las tres apps con `<script src="../_comun/finanzas-cifras.js"></script>`. Concentra tres cosas que estaban copiadas:
+Ahora hay un módulo que cargan las tres apps con `<script src="../Dashboard/datos-maestros.js"></script>`. Concentra tres cosas que estaban copiadas:
 
 | Qué | Dónde estaba antes | Qué pasaba |
 |---|---|---|
