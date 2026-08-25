@@ -4102,3 +4102,38 @@ Se retiró `fixDeudas20260824IfNeeded()`, el espejo que se había escrito el mis
 Los tres textos del Plan Maestro que citaban el saldo (la tarea `s0-10`, la meta de Fase 1 en `PHASES` y el "Paso 3 · BBVA en $0" de la ruta de deuda cara) pasan a `{{tcBbva}}` / `{{tcBbvaMin}}`, y se resuelven con `cifrarLiterales(PHASES)` y `cifrarLiterales(META_DETALLE)` en el arranque.
 
 El orden importa: `CIFRAS.refrescar()` se llama **después** de los `fix*IfNeeded()` locales. El módulo leyó `localStorage` al cargarse, que fue antes de que esos fixes lo corrigieran; sin el refresco, la prosa mostraría el saldo previo a la migración durante toda la sesión.
+
+## `verificar-sincronia.js`, y los 7 textos que llevaban 6 días divergentes (2026-08-24)
+
+*"ok entonces ya no hay datos desincronizados?"*.
+
+La pregunta merecía medirla, no contestarla de memoria. Se comparó **evaluando los literales** de
+cada HTML —`RUTINA_TASKS`, `SK`, `GYM_RUTINA_DEFAULT`— en vez de leerlos a ojo. Resultado:
+
+- `SK` (radar) y `GYM_RUTINA_DEFAULT`: **sincronizados**.
+- `RUTINA_TASKS`: mismos 58 bloques y mismos ids en los dos archivos, pero **7 subtareas de la
+  rutina de cabello con el texto distinto**.
+
+El origen es preciso: el 2026-08-18, el commit `60ee419` tocó el Dashboard a las 00:48 y seis
+minutos después `0ef03b4` mejoró los mismos textos **solo en Coach** — *"Explica qué ES una
+mascarilla capilar, no solo cuándo usarla"*. Coach explicaba que la mascarilla viene en tarro y
+que la crema no se enjuaga; el Dashboard se quedó con la versión corta. Seis días divergentes sin
+que saltara nada.
+
+Se copiaron los 7 textos de Coach al Dashboard (Coach era la versión buena, por ser la posterior)
+y ahora `RUTINA_TASKS` coincide al 100%, descontando los `href` que difieren a propósito.
+
+### El script
+
+`Dashboard/verificar-sincronia.js` deja esa comparación hecha para siempre: `node
+Dashboard/verificar-sincronia.js` desde `Claude_Proyecto/`. Sale con código 1 si algo está
+desincronizado, así que sirve tal cual en un hook.
+
+Extrae cada literal balanceando corchetes y **saltando strings** —no con regex: los textos de la
+rutina llevan llaves y comillas dentro, y una regex se equivoca— y luego compara los objetos ya
+evaluados, campo a campo.
+
+Separa **problemas** (rompen la coherencia) de **avisos** (deuda pendiente). Hoy el único aviso
+son las 58 cifras que ya tienen variable en `datos-maestros.js` pero siguen escritas a mano:
+coinciden con el dato real, así que no están mal, pero cada una es un sitio más que tocar cuando
+ese dato cambie. Las 16+19 apariciones de `$10,000` (la meta del fondo) son el grueso.

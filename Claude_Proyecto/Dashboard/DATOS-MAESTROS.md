@@ -138,6 +138,30 @@ es el punto de entrada; esos son la historia larga de cada cambio.
 
 ---
 
+## Comprobar que todo sigue sincronizado
+
+```bash
+node Dashboard/verificar-sincronia.js      # desde Claude_Proyecto/
+```
+
+Compara **evaluando los literales** de cada HTML, no leyéndolos a ojo, y dice qué campo de qué
+entrada difiere. Sale con código 1 si algo está roto, así que vale tal cual para un hook.
+
+Qué revisa: `RUTINA_TASKS` (Dashboard ↔ Coach, campo a campo incluidas subtareas), `SK` el radar,
+`GYM_RUTINA_DEFAULT` contra `ejercicio.html`, las cifras que ya tienen variable pero siguen
+escritas a mano, y los `{{marcadores}}` que no existan en el catálogo.
+
+Ignora a propósito dos cosas: los `href` de `RUTINA_TASKS` (ancla interna en Coach, ruta relativa
+en Dashboard) y los campos `full`/`cat`/`desc` de `SK`, que solo usa el panel de Coach.
+
+**La primera vez que se corrió encontró 7 textos** de la rutina de cabello mejorados en Coach el
+2026-08-18 (commit `0ef03b4`, *"Explica qué ES una mascarilla capilar"*) que nunca se replicaron
+al Dashboard: llevaban 6 días divergentes sin que nadie lo notara. Ya están sincronizados.
+
+**Correr esto antes de dar por terminada una tarea** que toque cualquier estructura duplicada.
+
+---
+
 ## Lo que todavía está duplicado
 
 `dashboard.html` copia a mano 6 estructuras de otras apps. **Ya no hay razón técnica que lo
