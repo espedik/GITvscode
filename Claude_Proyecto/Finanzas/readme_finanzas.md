@@ -913,3 +913,78 @@ Dos cosas que salieron al desglosar el patrimonio en el Dashboard:
 1. **`activos` no entra en `patrimonioNeto()`.** Aquí hay 15 bienes registrados —BYD, PC, teléfonos, PS5, monitores, efectivo y cuenta— por unos **$540,600**, y la fórmula del Dashboard solo suma `investments + emergencyFund − debts`. Se decidió **no cambiar la fórmula** (la meta del millón se mide en dinero disponible, y el punto de partida histórico de −$308,830 se calculó así), pero el panel ahora **muestra los bienes aparte** y da la cifra con y sin ellos. El efectivo y la cuenta bancaria, que sí son `type:'liquido'`, se listan del lado del dinero.
 
 2. **No hay Bitcoin en `investments`.** Adán lo menciona como parte de su portafolio y el panel de inversión de los lunes lo trata como tal, pero en los datos solo están CETES y el depósito de renta. Mientras no se dé de alta, ni el patrimonio ni el reparto del portafolio pueden contarlo.
+## Saldos al 24-ago-2026: el auto baja, dos MSI caen y la TC BBVA sube
+
+*"Mi deuda de carro bajó, a 292,000 y ya se liquidaron los 2 pagos de la tarjeta de BBVA, solo queda el de los zapatos, pero mi deuda de TV de BBVA subió a 34,000"*.
+
+Tres movimientos, en el seed y en una migración `_deudas20260824` con bandera propia (misma técnica que `_pagos20260813` y `_ahorro20260817`: una sola pasada, y si después mueve un saldo a mano no se lo revierte). El Dashboard lleva el espejo `fixDeudas20260824IfNeeded()`, porque Adán suele abrir el Dashboard primero y la migración de aquí solo corre si abre Finanzas.
+
+| Deuda | Antes | Después |
+|---|---|---|
+| `d003` Crédito Automotriz | $299,000 | **$292,000** |
+| `d010` Merpago*Merca (MSI TC BBVA) | $597 | **$0** ✅ |
+| `d011` Mercado Pago (MSI TC BBVA) | $717 | **$0** ✅ |
+| `d001` Tarjeta BBVA | $32,343.31 | **$34,000** ⚠️ subió |
+
+Deuda total **$346,060.85 → $339,403.54**.
+
+**"El de los zapatos" es `d009` Zap Stylo**, el único de los tres MSI de la TC BBVA que sigue vivo. Los dos que cayeron son exactamente los que la tabla de la sección anterior proyectaba liquidar el **22 ago 2026** — la elección de `start: 2026-05-22` para ambos queda confirmada contra la realidad, no solo contra el saldo del corte.
+
+`d010` y `d011` van a **`balance: 0` y no se borran**, al revés que `d005`/`d006`: estos sí fueron deuda suya y les toca aparecer en "✅ Liquidadas".
+
+### La TC BBVA subiendo es el dato importante
+
+`total` se mueve junto con `balance` a $34,000 para conservar la invariante `total == balance` que esta tarjeta lleva desde el 22-ene-2024. Si `total` se quedara en 32,343.31, las barras de "pagado real" del Dashboard mostrarían una cifra **negativa**.
+
+El aumento es de **$1,656.69 en un mes**, y no cuadra con el escenario que veníamos asumiendo (pagar $1,500 y quedar en tablas). Dos lecturas posibles, y hay que confirmar cuál es contra el estado de cuenta:
+
+- **No se pagó el mínimo este mes.** Entonces el saldo sube justo por el interés: `1,656.69 ÷ 32,343.31 = 5.12% mensual ≈ 61% anual`, muy cerca del 55.7% estimado más comisiones. Es la hipótesis que mejor encaja.
+- **Sí se pagó y hubo consumo nuevo.** Para subir $1,656.69 después de abonar $1,500, el cargo del mes tendría que haber sido ~$3,157 — el 9.8% del saldo, demasiado para ser solo interés.
+
+En cualquiera de los dos casos la conclusión operativa es la misma y ahora es medible: **esta tarjeta ya no está estancada, está creciendo**. Los textos del plan en el Dashboard que la citaban en $32,343 se actualizaron; las **proyecciones** que colgaban de esa cifra (el "BBVA en $0 en mar 2027", calculado además con la tasa vieja del 10%) quedaron marcadas como pendientes de rehacer, no reescritas a ojo. La simulación mes a mes de `Coach_v2.html` sigue con los números viejos por el mismo motivo: rehacerla es un trabajo aparte que necesita fijar primero cuál de las dos lecturas de arriba es la real.
+
+## Las cifras compartidas salen de `_comun/finanzas-cifras.js` (2026-08-24)
+
+*"esto no está en todos los indicadores, no quiero que vuelva a pasar, quiero que si cambies uno, se cambien todos... al igual que la demás información, debes hacer que sea como la misma variable en diferentes aplicaciones, esto para que no hagas como retrabajo y sea más fácil cambiar las cosas para ti"*.
+
+El disparador fue concreto: al actualizar los saldos del 24-ago había que tocar doce sitios repartidos en tres apps, y **Coach_v2.html se quedó con los números viejos** — seguía diciendo "un crédito de $299,000" y "la TC BBVA ($32,343)" cuando el Dashboard ya decía $292,000 y $34,000.
+
+Ahora hay un módulo que cargan las tres apps con `<script src="../_comun/finanzas-cifras.js"></script>`. Concentra tres cosas que estaban copiadas:
+
+| Qué | Dónde estaba antes | Qué pasaba |
+|---|---|---|
+| **El seed de las deudas** | dentro de `seedData()` en `Finanzas.html` | Cada subida de `SEED_VER` (van 23) resiembra: un saldo corregido a mano se perdía en el siguiente reseed |
+| **Las migraciones de saldo** | escritas **dos veces**: `Finanzas.html → init()` y su espejo `fix*IfNeeded()` en `dashboard.html` | Cualquiera de las dos apps puede ser la primera que se abra, así que las dos tenían que saber migrar. Coach no sabía, y por eso podía enseñar saldos viejos |
+| **Las cifras de la prosa** | el número escrito a mano en cada frase de cada app | Es lo que falló: se actualizaban unas y otras no |
+
+### Cómo se escribe una cifra ahora
+
+En vez del número va un marcador, y el módulo lo resuelve al cargar la página:
+
+```html
+<p>un crédito de {{autoSaldo}}</p>     →     un crédito de $292,000
+```
+
+Dos mecanismos, porque las apps guardan su prosa en sitios distintos:
+- **`CIFRAS.aplicarDOM()`** recorre los nodos de texto del HTML ya pintado. Sirve para `Coach_v2.html` y `Finanzas.html`, que escriben su prosa en el markup. Solo toca nodos de texto —nunca etiquetas ni atributos— y es idempotente: un nodo ya sustituido no contiene `{{` y se salta solo, así que se puede volver a llamar después de cualquier render.
+- **`cifrarLiterales(obj)`** (en `dashboard.html`) sustituye dentro de las constantes JS. El Dashboard no escribe su prosa en el HTML sino en `PHASES`, `META_DETALLE`… que luego inyecta con `innerHTML`; ahí `aplicarDOM()` no basta, porque cada repintado volvería a traer el `{{marcador}}` desde el literal. Sustituyendo en el literal una sola vez al arrancar, todos los renders posteriores ya salen con el número puesto.
+
+Las claves disponibles (`autoSaldo`, `tcBbva`, `deudaCara`, `fondo`, `maestria`…) están en el catálogo `CLAVES` del módulo, y `CIFRAS.tabla()` las lista todas en la consola. **Añadir una cifra nueva es una línea, y queda disponible en las tres apps a la vez.** Hay también derivadas que antes se calculaban a mano y se quedaban congeladas, como `{{autoInteres}}` (lo que cuesta el auto en puro interés: `meses × pago − saldo`).
+
+Un marcador que no exista se deja **a la vista** en pantalla en vez de borrarse en silencio: un `{{tipoDeDedo}}` se detecta al instante; una frase mutilada, no.
+
+### Verificado
+
+Las tres apps abiertas con `file:///` (como las usa Adán), **cada una en un navegador limpio** para que cualquiera pueda ser la primera del día:
+
+- Partiendo de los saldos viejos sin migrar, las tres muestran $292,000 y $34,000 — incluido Coach, que antes ni se enteraba. Ninguna deja un `{{marcador}}` a la vista y ninguna lanza errores de JS.
+- **La prueba que importa**: se editó el saldo una sola vez en `finanzasmx_v2` (auto a $280,000, TC a $30,500) y las tres apps lo dijeron, sin rastro de las cifras anteriores y sin que ninguna migración pisara el cambio hecho a mano.
+- Sin scroll horizontal ni errores a **1600px y 390px** en las tres.
+
+### Qué cambió en `Finanzas.html`
+
+`seedData()` ya no lleva la lista de deudas: la lee de `CIFRAS.DEUDAS_SEED`. El `|| []` de respaldo no es cosmético — si el `<script src>` fallara, sembrar **sin** deudas es preferible a sembrar con una copia vieja escondida aquí, y un `console.error` lo dice en voz alta en vez de dejarlo pasar.
+
+La migración `_deudas20260824` salió de `init()` y vive en el módulo. Las migraciones anteriores (`_banamex9k`, `_pagos20260813`, `_msibbva20260813`, `_ahorro20260817`) **se quedan donde están**: ya corrieron y tienen su bandera puesta, así que son inertes — moverlas sería riesgo sin ganancia. Las nuevas van al archivo común.
+
+Esta app es la **fuente** de los números, así que no necesita los marcadores para pintar nada; carga el módulo para que cualquier texto nuevo pueda usarlos en vez de empezar otra copia a mano.

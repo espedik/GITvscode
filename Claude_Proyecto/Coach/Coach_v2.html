@@ -1087,6 +1087,10 @@
       document.documentElement.setAttribute('data-theme', theme);
     })();
   </script>
+<!-- Cifras compartidas: los saldos de deuda que salen en la prosa vienen de aquí, no
+     escritos a mano. Ver ../_comun/finanzas-cifras.js — cambias el dato en Finanzas y
+     esta página lo dice igual, sin tocarla. -->
+<script src="../_comun/finanzas-cifras.js"></script>
 </head>
 <body>
 
@@ -1296,9 +1300,9 @@
       <div class="hallazgo-item">
         <span class="hallazgo-num">03</span>
         <div>
-          <h4>El auto te va a costar $109,700 en puro interés</h4>
-          <p>Si solo pagas el mínimo de $6,700/mes durante los 61 meses que quedan, terminarás pagando $408,700 por
-            un crédito de $299,000. Cualquier abono extra a este crédito en los próximos meses vale más peso por
+          <h4>El auto te va a costar {{autoInteres}} en puro interés</h4>
+          <p>Si solo pagas el mínimo de {{autoPago}}/mes durante los {{autoMeses}} meses que quedan, terminarás pagando {{autoAPagar}} por
+            un crédito de {{autoSaldo}}. Cualquier abono extra a este crédito en los próximos meses vale más peso por
             peso que en cualquiera de tus otras deudas.</p>
         </div>
       </div>
@@ -1324,10 +1328,10 @@
       <div class="impuesto-row"><span class="imp-nombre">Merpago*Merca MSI ($597) — última cuota, se liquida</span><span class="imp-fecha">22 ago 2026</span></div>
       <div class="impuesto-row"><span class="imp-nombre">Mercado Pago MSI ($717) — última cuota, se liquida</span><span class="imp-fecha">22 ago 2026</span></div>
       <div class="impuesto-row"><span class="imp-nombre">Apple Watch MSI ($1,708) — quedan 2 cuotas de $854</span><span class="imp-fecha">18 sep 2026</span></div>
-      <div class="impuesto-row"><span class="imp-nombre">Zap Stylo MSI ($334) — quedan 2 cuotas de $167</span><span class="imp-fecha">22 sep 2026</span></div>
-      <div class="impuesto-row"><span class="imp-nombre">iPhone 15 MSI ($11,362) — se liquida</span><span class="imp-fecha">Jun 2028</span></div>
-      <div class="impuesto-row"><span class="imp-nombre">Tarjeta BBVA ($32,343 al 10%) — única deuda cara que queda, sin fecha fija</span><span class="imp-fecha text-red">Abierta</span></div>
-      <div class="impuesto-row"><span class="imp-nombre">Crédito automotriz ($299,000 al 12.99%) — 61 pagos de $6,700</span><span class="imp-fecha">Ago 2031</span></div>
+      <div class="impuesto-row"><span class="imp-nombre">Zap Stylo MSI ({{zapStylo}}) — cuotas de {{zapStyloCuota}}</span><span class="imp-fecha">22 sep 2026</span></div>
+      <div class="impuesto-row"><span class="imp-nombre">iPhone 15 MSI ({{iphone}}) — se liquida</span><span class="imp-fecha">Jun 2028</span></div>
+      <div class="impuesto-row"><span class="imp-nombre">Tarjeta BBVA ({{tcBbva}} al {{tcBbvaTasa}}) — única deuda cara que queda, sin fecha fija</span><span class="imp-fecha text-red">Abierta</span></div>
+      <div class="impuesto-row"><span class="imp-nombre">Crédito automotriz ({{autoSaldo}} al {{autoTasa}}) — {{autoMeses}} pagos de {{autoPago}}</span><span class="imp-fecha">Ago 2031</span></div>
       <hr class="divider">
       <p class="fs-13" style="line-height:1.7;">
         Tu carga de MSI cae en escalera: <strong>$2,829/mes hoy → $1,515 en septiembre → $494 en octubre</strong>
@@ -1348,7 +1352,7 @@
       <h3 class="fw-700 mb-12">Simulación mes a mes — cuándo te quedas sin deuda cara</h3>
       <p class="fs-13 text-muted mb-12">Rehecha el 13 ago 2026: el plan viejo asumía liquidar Banamex hasta <strong>ene 2027</strong> y lo hiciste <strong class="text-green">5 meses antes</strong>, pagando el saldo completo en vez del mínimo. Toda la cascada se recorre. Escenario optimista pero realista: asume que rediriges el 100% del flujo liberado sin fugas y que no vuelves a usar la tarjeta. Incluye el interés del 10% anual sobre el saldo de BBVA.</p>
       <div class="impuesto-row"><span class="imp-nombre text-green">✅ Banamex liquidada — saldo completo pagado, no el mínimo</span><span class="imp-fecha text-green">13 ago 2026</span></div>
-      <div class="impuesto-row"><span class="imp-nombre">BBVA arranca en $32,343 · recibe $1,500 (mínimo) + $810 (mínimo Banamex liberado) = $2,310/mes</span><span class="imp-fecha">Ago 2026</span></div>
+      <div class="impuesto-row"><span class="imp-nombre">BBVA arranca en {{tcBbva}} · recibe {{tcBbvaMin}} (mínimo) + {{banamexMin}} (mínimo Banamex liberado) = $2,310/mes</span><span class="imp-fecha">Ago 2026</span></div>
       <div class="impuesto-row"><span class="imp-nombre">Caen Merpago, Mercado Pago y Ticketmaster · BBVA sube a $3,624/mes</span><span class="imp-fecha">Sep 2026</span></div>
       <div class="impuesto-row"><span class="imp-nombre">Caen Apple Watch y Zap Stylo · BBVA sube a $4,645/mes (~$22,500 restantes)</span><span class="imp-fecha">Oct 2026</span></div>
       <div class="impuesto-row"><span class="imp-nombre">BBVA liquidada por completo (~6 meses a ese ritmo)</span><span class="imp-fecha text-green">Mar 2027</span></div>
@@ -2090,7 +2094,7 @@
             <summary><span>📅 Agosto 2026</span><span class="fase-month-badge" data-badge>—</span></summary>
             <div class="fase-month-body">
               <div class="check-item"><input type="checkbox" id="s0-9"><label for="s0-9"><strong>Prioridad 1 — Fondo de emergencia a $10,000.</strong> Antes que cualquier abono extra a deuda: es el colchón que evita que un imprevisto te regrese a la tarjeta. <span class="text-muted">(hoy en $0 · se alimenta con la venta de activos y lo de Didi)</span></label></div>
-              <div class="check-item"><input type="checkbox" id="s0-10"><label for="s0-10"><strong>Prioridad 2 — Liquidar la TC BBVA ($32,343).</strong> Única deuda cara que queda. En cuanto el fondo llegue a $10,000, todo excedente va aquí. <span class="text-muted">(proyección: $0 en mar 2027 — ver la simulación en Diagnóstico &amp; Plan)</span></label></div>
+              <div class="check-item"><input type="checkbox" id="s0-10"><label for="s0-10"><strong>Prioridad 2 — Liquidar la TC BBVA ({{tcBbva}}).</strong> Única deuda cara que queda. En cuanto el fondo llegue a $10,000, todo excedente va aquí. <span class="text-muted">(proyección: $0 en mar 2027 — ver la simulación en Diagnóstico &amp; Plan)</span></label></div>
               <div class="check-item"><input type="checkbox" id="s0-4"><label for="s0-4">Sube a Marketplace tus activos ociosos (PS5, control, monitores, iPad) — es la fuente más rápida para completar el fondo de emergencia de la Prioridad 1.</label></div>
               <div class="check-item"><input type="checkbox" id="s0-3"><label for="s0-3">Plantilla Finanzas.html, de principio a fin: versión limpia sin tus datos + post de venta + publicarla en 2-3 comunidades de GBM (<a href="#" class="inline-link" onclick="irANegocios('negocio1');return false;">Opción 1</a>).</label></div>
               <div class="check-item"><input type="checkbox" id="s0-2"><label for="s0-2">Revisar las fotos y el material del negocio de tu papá y ponerle atención real — primer paso concreto de la <a href="#" class="inline-link" onclick="irANegocios('negocio5');return false;">Opción 5</a>.</label></div>
@@ -2112,7 +2116,7 @@
       <div class="fase-item" id="fase1">
         <span class="fase-tag">Fase 1 · Oct 2026 – Mar 2027 (6 meses)</span><span class="fase-status" id="faseStatus1">—</span>
         <h4>Los $3,145/mes liberados entran en acción + primer ingreso real</h4>
-        <div class="fase-meta"><span>🎯</span><span>Primer contrato freelance o <strong>20+ ventas</strong> de la plantilla cobradas. <span class="text-green">La meta vieja de esta fase —Banamex liquidada— ya se cumplió el 13 ago 2026</span>, así que el objetivo financiero pasa a ser <strong>bajar BBVA de $32,343 a menos de $15,000</strong>.</span></div>
+        <div class="fase-meta"><span>🎯</span><span>Primer contrato freelance o <strong>20+ ventas</strong> de la plantilla cobradas. <span class="text-green">La meta vieja de esta fase —Banamex liquidada— ya se cumplió el 13 ago 2026</span>, así que el objetivo financiero pasa a ser <strong>bajar BBVA de {{tcBbva}} a menos de $15,000</strong>.</span></div>
         <details class="fase-collapse">
           <summary>Ver el desglose completo (6 tareas) — arranca en octubre, todavía no es tu mes</summary>
           <div class="fase-checklist">
@@ -2240,7 +2244,7 @@
       <h3 class="fw-700 mb-12">Próximos 14 días — esto empieza hoy, no "cuando tenga tiempo"</h3>
       <p class="fs-13 text-muted mb-12">Tu patrón es abandonar cuando no ves avance rápido. Estas <span id="pfCount">10</span> acciones son deliberadamente pequeñas y concretas para que en 2 semanas ya tengas evidencia de movimiento real. Las 2 primeras son <strong>las prioridades de Fase 0, en ese orden</strong>.</p>
       <div class="check-item"><input type="checkbox" id="pf11"><label for="pf11"><strong>Prioridad 1:</strong> llevar el fondo de emergencia a $10,000 — antes que cualquier abono extra a deuda</label></div>
-      <div class="check-item"><input type="checkbox" id="pf12"><label for="pf12"><strong>Prioridad 2:</strong> con el fondo completo, todo excedente a liquidar la TC BBVA ($32,343, única deuda cara restante)</label></div>
+      <div class="check-item"><input type="checkbox" id="pf12"><label for="pf12"><strong>Prioridad 2:</strong> con el fondo completo, todo excedente a liquidar la TC BBVA ({{tcBbva}}, única deuda cara restante)</label></div>
       <div class="check-item"><input type="checkbox" id="pf3"><label for="pf3">Hacer inventario de activos físicos ociosos (PS5, Control PS5, monitores extra, iPad) y publicarlos en Marketplace — es lo que financia la Prioridad 1</label></div>
       <div class="check-item"><input type="checkbox" id="pf4"><label for="pf4">Cancelar/evitar cualquier compra nueva a MSI esta quincena</label></div>
       <div class="check-item"><input type="checkbox" id="pf5"><label for="pf5">Revisar las fotos y el material del negocio de tu papá, y ponerle atención real — primer paso de la Opción 5</label></div>
@@ -4948,6 +4952,10 @@
     });
   })();
   updateFaseMonthBadges();
+  // Segunda pasada de las cifras compartidas: los inits de arriba repintan trozos del DOM, y
+  // un {{marcador}} que reaparezca ahí se quedaría a la vista. aplicarDOM() es idempotente
+  // (un nodo ya sustituido no contiene "{{" y se salta solo), así que repetirla no cuesta.
+  if (window.CIFRAS) CIFRAS.aplicarDOM();
 </script>
 
 </body>

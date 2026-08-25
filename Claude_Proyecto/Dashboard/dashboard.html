@@ -12,6 +12,9 @@
      Aleman/_generar-datos-dashboard.js — ver "Alemán del día" en readme_dashboard.md. No es un
      resumen ni texto reescrito a mano: es el vocabulario/diálogos/ejercicios reales de cada
      lección, listo para pintarse con el estilo nativo del Dashboard. -->
+<!-- Cifras compartidas con Finanzas y Coach: los saldos de deuda que salen en la prosa del
+     Plan Maestro vienen de aquí, no escritos a mano. Ver ../_comun/finanzas-cifras.js -->
+<script src="../_comun/finanzas-cifras.js"></script>
 <script src="aleman-data.js"></script>
 <!-- Contenido real de los 229 temas de Entrevistas/ (ENTREVISTA_TEMAS/ENTREVISTA_CONTENT/
      ENTREVISTA_CSS), extraído automáticamente por Entrevistas/_generar-datos-dashboard.js — ver
@@ -2696,6 +2699,27 @@ function fixAhorro20260817IfNeeded(){
   rawSet(K,d);
   localStorage.setItem(K+'_ahorro20260817','1');
 }
+// La migración _deudas20260824 ya NO vive aquí: se movió a ../_comun/finanzas-cifras.js, que
+// cargan las tres apps. Antes había que escribirla dos veces (aquí y en Finanzas.html) porque
+// cualquiera de las dos puede ser la primera que abra Adán; ahora se escribe una sola vez y
+// además llega a Coach_v2.html, que nunca tuvo migraciones. Las de más arriba se quedan donde
+// están: ya corrieron y tienen su bandera puesta, así que son inertes — moverlas sería riesgo
+// sin ganancia. Las NUEVAS van al archivo común.
+/* Pasa CIFRAS.texto() por TODOS los strings de una estructura, en el sitio. El Dashboard no
+   escribe su prosa en el HTML sino en constantes JS (PHASES, META_DETALLE…) que luego se
+   inyectan con innerHTML, así que CIFRAS.aplicarDOM() no basta: cada repintado volvería a traer
+   el {{marcador}} desde el literal. Sustituyendo en el literal una sola vez al arrancar, todos
+   los renders posteriores ya salen con el número puesto.
+   Recursiva y EN EL SITIO (no devuelve copia) para no romper las referencias que otras partes
+   del código ya guardan a estos mismos objetos. */
+function cifrarLiterales(o){
+  if(Array.isArray(o)){
+    o.forEach((x,i)=>{ if(typeof x==='string') o[i]=CIFRAS.texto(x); else if(x&&typeof x==='object') cifrarLiterales(x); });
+  } else if(o&&typeof o==='object'){
+    Object.keys(o).forEach(k=>{ const x=o[k]; if(typeof x==='string') o[k]=CIFRAS.texto(x); else if(x&&typeof x==='object') cifrarLiterales(x); });
+  }
+  return o;
+}
 function fixMiercolesNatacionIfNeeded(){
   if(localStorage.getItem('mirutina_v1_miercoles_natacion')) return;
   const gym=rawGet('mirutina_v1', null);
@@ -4366,7 +4390,7 @@ function diaDelAnio(){const n=new Date();const ini=new Date(n.getFullYear(),0,0)
 const PHASES=[
   {start:new Date(2026,7,1),end:new Date(2026,8,30),tag:"Fase 0",title:"Cerrar la fuga y arrancar ingreso, no solo pensar",meta:"✅ Banamex liquidada el 13 ago 2026 (era meta de Fase 1, para ene 2027). Quedan 2 objetivos financieros, en este orden: 1) fondo de emergencia a $10,000, 2) abonos extra a BBVA.",explica:"Fase 0 es el arranque del plan (1 ago – 30 sep 2026, ~9 semanas). Todavía no se trata de ganar mucho — se trata de cerrar la fuga de dinero y sentar las bases. El orden era 1) fondo de emergencia, 2) Banamex, 3) BBVA: el paso 2 ya está hecho desde el 13 ago 2026, así que la prioridad es el fondo de emergencia y, en cuanto llegue a $10,000, todo excedente a BBVA. En paralelo arrancas el negocio: dedicar atención real al negocio de tu papá y publicar tu primera plantilla en comunidades de GBM.",semanas:[
     {id:"s0-9",mes:"2026-08",txt:"Prioridad 1 — Fondo de emergencia a $10,000. Antes que cualquier abono extra a deuda: es el colchón que evita que un imprevisto te regrese a la tarjeta. (hoy en $0)"},
-    {id:"s0-10",mes:"2026-08",txt:"Prioridad 2 — Liquidar la TC BBVA ($32,343). Única deuda cara que queda. En cuanto el fondo llegue a $10,000, todo excedente va aquí. (proyección: $0 en mar 2027)"},
+    {id:"s0-10",mes:"2026-08",txt:"Prioridad 2 — Liquidar la TC BBVA ({{tcBbva}}). Única deuda cara que queda — y sigue SUBIENDO: el mínimo de {{tcBbvaMin}} no cubre el interés. En cuanto el fondo llegue a $10,000, todo excedente va aquí. (la proyección de “$0 en mar 2027” se hizo con $32,343 al 10% anual; con el saldo real y la tasa real de 55.7% hay que rehacerla)"},
     {id:"s0-4",mes:"2026-08",txt:"Sube a Marketplace tus activos ociosos (PS5, control, monitores, iPad) — es la fuente más rápida para completar el fondo de emergencia de la Prioridad 1."},
     {id:"s0-3",mes:"2026-08",txt:"Plantilla Finanzas.html, de principio a fin: versión limpia sin tus datos + post de venta + publicarla en 2-3 comunidades de GBM (Opción 1)."},
     {id:"s0-2",mes:"2026-08",txt:"Revisar las fotos y el material del negocio de tu papá y ponerle atención real — primer paso concreto de la Opción 5."},
@@ -4375,7 +4399,7 @@ const PHASES=[
     {id:"s0-1",mes:"2026-08",txt:"Corrige \"Deudas\" en Finanzas.html · cero MSI nuevo. (✅ 13 ago 2026: quedó en $8,200 = auto $6,700 + mínimo BBVA $1,500)"},
     {id:"s0-7",mes:"2026-09",txt:"Cada peso de ventas/activos va, en orden fijo: (1) fondo de emergencia a $10,000, (2) resto a BBVA — Banamex ya está en $0. Este mes cierra la fase."},
   ]},
-  {start:new Date(2026,9,1),end:new Date(2027,2,31),tag:"Fase 1",title:"Los $3,145/mes liberados entran en acción + primer ingreso real",meta:"Primer contrato freelance o 20+ ventas de la plantilla cobradas. La meta vieja —Banamex liquidada— ya se cumplió el 13 ago 2026, así que el objetivo financiero pasa a bajar BBVA de $32,343 a menos de $15,000.",explica:"Fase 1 (oct 2026 – mar 2027) arranca cuando los $2,335/mes de MSI de gadgets quedan libres, que sumados a los $810 del mínimo de Banamex ya liquidada dan $3,145/mes nuevos. Con Banamex en $0 desde agosto, ese dinero tiene un solo destino: fondo de emergencia a $10,000 y todo lo demás a BBVA, la única deuda cara que queda. En paralelo, buscas tu primer ingreso real fuera de ALTEN.",semanas:[
+  {start:new Date(2026,9,1),end:new Date(2027,2,31),tag:"Fase 1",title:"Los $3,145/mes liberados entran en acción + primer ingreso real",meta:"Primer contrato freelance o 20+ ventas de la plantilla cobradas. La meta vieja —Banamex liquidada— ya se cumplió el 13 ago 2026, así que el objetivo financiero pasa a bajar BBVA de {{tcBbva}} a menos de $15,000.",explica:"Fase 1 (oct 2026 – mar 2027) arranca cuando los $2,335/mes de MSI de gadgets quedan libres, que sumados a los $810 del mínimo de Banamex ya liquidada dan $3,145/mes nuevos. Con Banamex en $0 desde agosto, ese dinero tiene un solo destino: fondo de emergencia a $10,000 y todo lo demás a BBVA, la única deuda cara que queda. En paralelo, buscas tu primer ingreso real fuera de ALTEN.",semanas:[
     {id:"s1-1",mes:"2026-10",txt:"Oct 2026: los $2,335/mes liberados de MSI + los $810 del mínimo de Banamex van, en orden fijo: fondo de emergencia a $10,000 → 100% BBVA (única deuda cara restante) = $4,645/mes."},
     {id:"s1-2",cont:true,txt:"Prioridad: cerrar el primer contrato freelance (Opción 2) + 1 post de seguimiento mensual de la plantilla GBM (Opción 1)."},
     {id:"s1-3",mes:"2026-11",txt:"En paralelo: primer post de mentoría pagada (Opción 3) — bajo riesgo, casi sin preparación."},
@@ -6274,7 +6298,7 @@ const META_DETALLE={
   byd:{titulo:"Liquidar el BYD Dolphin Mini",frase:"El orden ya está definido: primero la deuda que sí te cobra intereses, después el coche.",pasos:[
       {t:"Paso 1 · Fondo de emergencia",d:"A $10,000 — antes de tocar el BYD, esto va primero."},
       {t:"✅ Paso 2 · Banamex en $0",d:"Hecho el 13 ago 2026: pagaste el saldo completo, no el mínimo, 5 meses antes de la meta."},
-      {t:"Paso 3 · BBVA en $0",d:"La única deuda cara que queda: $32,343. Proyectada a marzo de 2027 con los $4,645/mes que se liberan en octubre — hasta aquí el BYD se queda en pago mínimo."},
+      {t:"Paso 3 · BBVA en $0",d:"La única deuda cara que queda: {{tcBbva}}, y va al alza — el mínimo de {{tcBbvaMin}} se lo come el interés. La fecha de marzo 2027 salió de una proyección al 10% anual con $32,343; a la tasa real (55.7%) hay que rehacerla. Hasta ahí el BYD se queda en pago mínimo."},
       {t:"Se acelera de verdad",d:"En cuanto BBVA llegue a $0 (abr 2027), todo ese pago se redirige completo al BYD."},
       {t:"Pregunta por pagos extra",d:"A tu crédito del BYD, si permite pagos extraordinarios a capital sin penalización — resuélvelo antes de necesitarlo."},
       {t:"Ingresos extra a capital",d:"Cualquier ingreso extra de Didi o del negocio que no esté ya comprometido va como abono a capital del BYD."},
@@ -8014,6 +8038,10 @@ fixTasaTCIfNeeded(); fixBanamexIfNeeded();
 fixPagos20260813IfNeeded();
 fixMsiBBVA20260813IfNeeded();
   fixAhorro20260817IfNeeded();
+// Las cifras compartidas se releen DESPUÉS de los fix*IfNeeded() de arriba: el módulo leyó
+// localStorage al cargarse, antes que ellos. (Su propia migración, la de _comun, ya corrió
+// dentro del módulo; este refresco es por las que siguen viviendo en este archivo.)
+if(window.CIFRAS){ CIFRAS.refrescar(); cifrarLiterales(PHASES); cifrarLiterales(META_DETALLE); }
 fixMiercolesNatacionIfNeeded();
 fixRutina20260812IfNeeded();
 seedMetasLogradasIfNeeded();

@@ -4033,3 +4033,72 @@ Cinco combinaciones renderizadas con progreso de prueba sembrado en `habilidades
 | 390×844 (iPhone) | oscuro | 2 | 134px | 0 (ídem) |
 
 Los 91px de scroll en la laptop de 768px de alto son **menos** de lo que scrolleaba el diseño anterior (filas de 150px contra 128px). En ≤1024px la franja de instrumentos se parte en dos filas y el ecualizador baja completo debajo, donde tiene ancho para que 23 barras se lean; la rejilla suelta su scroll propio (`overflow:visible`) porque ahí el slide ya scrollea entero.
+
+## Saldos de deuda al 24-ago-2026 (`fixDeudas20260824IfNeeded`)
+
+Espejo de la migración `_deudas20260824` de `Finanzas.html`, por el mismo motivo que las cuatro anteriores: los datos viven en el `localStorage` de Finanzas (`finanzasmx_v2`), pero Adán abre el **Dashboard** primero, y la migración de allá solo corre si abre allá. **Bandera compartida** — la primera de las dos apps que arranque la aplica y la otra ya no la repite.
+
+| Deuda | Antes | Después |
+|---|---|---|
+| `d003` Crédito Automotriz | $299,000 | **$292,000** |
+| `d010` Merpago*Merca (MSI TC BBVA) | $597 | **$0** ✅ |
+| `d011` Mercado Pago (MSI TC BBVA) | $717 | **$0** ✅ |
+| `d001` Tarjeta BBVA | $32,343.31 | **$34,000** ⚠️ |
+
+Deuda total **$346,060.85 → $339,403.54**. De los tres MSI de la TC BBVA solo sigue vivo `d009` Zap Stylo — *"solo queda el de los zapatos"*.
+
+En `d001` se mueve también `total`, no solo `balance`: esta tarjeta mantiene `total == balance` desde 2024, y con `total` congelado en 32,343.31 la barra de deuda cara pintaría un "pagado real" **negativo**.
+
+Verificado ejecutando la función real contra el estado previo: los saldos quedan como la tabla, la bandera se pone, y una segunda pasada sobre un saldo modificado a mano **no lo revierte**.
+
+### Los textos del plan que citaban el saldo viejo
+
+Tres textos hardcodeados seguían diciendo $32,343 y se actualizaron a $34,000: la tarea `s0-10` del checklist de fase, la meta financiera de Fase 1 en `PHASES` y el "Paso 3 · BBVA en $0" de la ruta de deuda cara.
+
+Lo que **no** se reescribió son las **proyecciones** que colgaban de esa cifra — el *"$0 en mar 2027"* y los *"$4,645/mes"*. Se calcularon con $32,343 **al 10% anual**, una tasa que este mismo readme ya documenta como equivocada (la real ronda el 55.7%). Cambiarles el número de entrada y dejarles la fecha de salida las volvería falsamente precisas, así que quedan marcadas en pantalla como pendientes de rehacer. `Coach_v2.html`, que tiene la simulación mes a mes completa apoyada en los mismos supuestos, se dejó intacto por la misma razón.
+
+## Las cifras compartidas salen de `_comun/finanzas-cifras.js` (2026-08-24)
+
+*"esto no está en todos los indicadores, no quiero que vuelva a pasar, quiero que si cambies uno, se cambien todos... al igual que la demás información, debes hacer que sea como la misma variable en diferentes aplicaciones, esto para que no hagas como retrabajo y sea más fácil cambiar las cosas para ti"*.
+
+El disparador fue concreto: al actualizar los saldos del 24-ago había que tocar doce sitios repartidos en tres apps, y **Coach_v2.html se quedó con los números viejos** — seguía diciendo "un crédito de $299,000" y "la TC BBVA ($32,343)" cuando el Dashboard ya decía $292,000 y $34,000.
+
+Ahora hay un módulo que cargan las tres apps con `<script src="../_comun/finanzas-cifras.js"></script>`. Concentra tres cosas que estaban copiadas:
+
+| Qué | Dónde estaba antes | Qué pasaba |
+|---|---|---|
+| **El seed de las deudas** | dentro de `seedData()` en `Finanzas.html` | Cada subida de `SEED_VER` (van 23) resiembra: un saldo corregido a mano se perdía en el siguiente reseed |
+| **Las migraciones de saldo** | escritas **dos veces**: `Finanzas.html → init()` y su espejo `fix*IfNeeded()` en `dashboard.html` | Cualquiera de las dos apps puede ser la primera que se abra, así que las dos tenían que saber migrar. Coach no sabía, y por eso podía enseñar saldos viejos |
+| **Las cifras de la prosa** | el número escrito a mano en cada frase de cada app | Es lo que falló: se actualizaban unas y otras no |
+
+### Cómo se escribe una cifra ahora
+
+En vez del número va un marcador, y el módulo lo resuelve al cargar la página:
+
+```html
+<p>un crédito de {{autoSaldo}}</p>     →     un crédito de $292,000
+```
+
+Dos mecanismos, porque las apps guardan su prosa en sitios distintos:
+- **`CIFRAS.aplicarDOM()`** recorre los nodos de texto del HTML ya pintado. Sirve para `Coach_v2.html` y `Finanzas.html`, que escriben su prosa en el markup. Solo toca nodos de texto —nunca etiquetas ni atributos— y es idempotente: un nodo ya sustituido no contiene `{{` y se salta solo, así que se puede volver a llamar después de cualquier render.
+- **`cifrarLiterales(obj)`** (en `dashboard.html`) sustituye dentro de las constantes JS. El Dashboard no escribe su prosa en el HTML sino en `PHASES`, `META_DETALLE`… que luego inyecta con `innerHTML`; ahí `aplicarDOM()` no basta, porque cada repintado volvería a traer el `{{marcador}}` desde el literal. Sustituyendo en el literal una sola vez al arrancar, todos los renders posteriores ya salen con el número puesto.
+
+Las claves disponibles (`autoSaldo`, `tcBbva`, `deudaCara`, `fondo`, `maestria`…) están en el catálogo `CLAVES` del módulo, y `CIFRAS.tabla()` las lista todas en la consola. **Añadir una cifra nueva es una línea, y queda disponible en las tres apps a la vez.** Hay también derivadas que antes se calculaban a mano y se quedaban congeladas, como `{{autoInteres}}` (lo que cuesta el auto en puro interés: `meses × pago − saldo`).
+
+Un marcador que no exista se deja **a la vista** en pantalla en vez de borrarse en silencio: un `{{tipoDeDedo}}` se detecta al instante; una frase mutilada, no.
+
+### Verificado
+
+Las tres apps abiertas con `file:///` (como las usa Adán), **cada una en un navegador limpio** para que cualquiera pueda ser la primera del día:
+
+- Partiendo de los saldos viejos sin migrar, las tres muestran $292,000 y $34,000 — incluido Coach, que antes ni se enteraba. Ninguna deja un `{{marcador}}` a la vista y ninguna lanza errores de JS.
+- **La prueba que importa**: se editó el saldo una sola vez en `finanzasmx_v2` (auto a $280,000, TC a $30,500) y las tres apps lo dijeron, sin rastro de las cifras anteriores y sin que ninguna migración pisara el cambio hecho a mano.
+- Sin scroll horizontal ni errores a **1600px y 390px** en las tres.
+
+### Qué cambió en `dashboard.html`
+
+Se retiró `fixDeudas20260824IfNeeded()`, el espejo que se había escrito el mismo día: la migración vive ahora en el módulo común y llega a las tres apps. Los `fix*IfNeeded()` anteriores siguen aquí, inertes con su bandera puesta.
+
+Los tres textos del Plan Maestro que citaban el saldo (la tarea `s0-10`, la meta de Fase 1 en `PHASES` y el "Paso 3 · BBVA en $0" de la ruta de deuda cara) pasan a `{{tcBbva}}` / `{{tcBbvaMin}}`, y se resuelven con `cifrarLiterales(PHASES)` y `cifrarLiterales(META_DETALLE)` en el arranque.
+
+El orden importa: `CIFRAS.refrescar()` se llama **después** de los `fix*IfNeeded()` locales. El módulo leyó `localStorage` al cargarse, que fue antes de que esos fixes lo corrigieran; sin el refresco, la prosa mostraría el saldo previo a la migración durante toda la sesión.

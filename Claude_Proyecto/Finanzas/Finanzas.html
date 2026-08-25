@@ -5,6 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mis Finanzas MX</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💰</text></svg>">
+<!-- Cifras compartidas. Finanzas es la FUENTE de estos números (los escribe en finanzasmx_v2),
+     así que aquí no hace falta para pintar nada: se carga para que cualquier texto nuevo de
+     esta app pueda usar los mismos {{marcadores}} que el Dashboard y el Coach, en vez de
+     empezar otra copia a mano. Ver ../_comun/finanzas-cifras.js -->
+<script src="../_comun/finanzas-cifras.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <!-- La fuente se carga SIN bloquear el pintado (2026-08-23). Antes era un `@import` dentro
      del <style>: el navegador no lo descubría hasta parsear el CSS y, mientras Google no
@@ -3850,6 +3855,8 @@ function importData(input) {
 // ─── SEED DATA ───────────────────────────────────────────────────────────────
 const SEED_VER = '23'; // incrementar cada vez que cambie el seed — v23: meta Maestría refleja la pausa de 1 año decidida en Coach (date 2028-10-01, pausadaHasta 2027-07-18)
 function seedData() {
+  // El seed de deudas vive en el módulo común; si no cargó, hay que verlo, no adivinarlo.
+  if(!window.CIFRAS) console.error('[Finanzas] No cargó ../_comun/finanzas-cifras.js: el seed se sembrará SIN deudas. Revisa la ruta del <script src> en el <head>.');
   if (localStorage.getItem(KEY+'_v') === SEED_VER) return;
   // REGLA FIJA: `indicatorHistory` (historial mensual de Indicadores) nunca debe
   // perderse en un reseed. A diferencia del resto de este seed (transacciones, deudas,
@@ -4020,37 +4027,15 @@ function seedData() {
       {id:'b009',cat:'Entretenimiento', limit:2500},
       {id:'b010',cat:'Salud',           limit:1800}
     ],
-    debts: [
-      // rate 10 -> 55.7 (2026-08-19). El 10% anual daba $270/mes de intereses, y Adán reportó
-      // ~$1,500. Sus propios registros lo confirman sin necesidad de creerle a nadie: esta
-      // tarjeta lleva `total == balance` desde el 22-ene-2024 pagando $1,500 al mes — 31 meses,
-      // $46,500 pagados, saldo intacto. Si el saldo no baja, el interés mensual ES el pago:
-      // 1500 × 12 / 32,343.31 = 55.7% anual, que es una tasa normal de tarjeta en México.
-      // ⚠️ Confirmar contra el estado de cuenta (ahí viene la tasa y el CAT) y ajustar si difiere.
-      {id:'d001',name:'Tarjeta BBVA',                  type:'credit_card',total:32343.31,  balance:32343.31,  rate:55.7,  min:1500, day:11,start:'2024-01-22'},
-      // Liquidada el 13 ago 2026 — Adán pagó el saldo completo. Se conserva en la lista
-      // como registro (la tarjeta sigue existiendo), pero ya no exige mínimo ni interés.
-      // Misma corrección por coherencia; está liquidada (balance 0), así que su tasa ya no
-      // afecta a ningún interés vivo — solo al histórico. 55.7 es un supuesto tomado de la BBVA,
-      // no un dato medido de esta tarjeta.
-      {id:'d002',name:'Tarjeta Banamex',               type:'credit_card',total:14349.72,  balance:0,         rate:55.7,  min:810,  day:8, start:'2024-06-18', noInterest:0},
-      {id:'d003',name:'Crédito Automotriz',            type:'car',        total:315800,    balance:299000,    rate:12.99, min:6700, day:1, start:'2026-01-01', remainingMonths:61},
-      // Quedan 2 cuotas: 18 ago y 18 sep 2026 (confirmado por Adán el 13 ago 2026).
-      {id:'d004',name:'Apple Watch MSI (TC Banamex)',  type:'other',      total:10248,     balance:1708,      rate:0,     min:854,  day:18,start:'2025-09-16'},
-      // d005 (Vuelo Viva Aerobus) y d006 (Mercado Libre) se ELIMINARON el 13 ago 2026: Adán
-      // revisó su historial real de BBVA y esos dos MSI no existen — no aparecen en ningún
-      // movimiento. Se borran en vez de ponerlos en $0 porque nunca fueron deuda suya.
-      // Liquidados el 13 ago 2026 — se pagó la última de las 3 cuotas MSI.
-      {id:'d007',name:'Boletos Ticketmaster (MSI)',   type:'other',      total:3780,      balance:0,         rate:0,     min:1260, day:0, start:'2026-04-20'},
-      {id:'d008',name:'iPhone 15 MSI',               type:'other',      total:13337.46,  balance:11361.54,  rate:0,     min:493.98,day:0, start:'2026-03-20'},
-      // MSI reales de la TC BBVA, leídos del estado de cuenta con corte del 22 jul 2026
-      // (captura que mandó Adán el 13 ago 2026). El `start` de cada uno está puesto para que
-      // `autoBalance()` reproduzca exactamente las cuotas ya cobradas: 30.44 días por mes desde
-      // esa fecha dan el número de cargos que se ven en el estado de cuenta, ni uno más.
-      {id:'d009',name:'Zap Stylo (MSI TC BBVA)',      type:'other',      total:1002,      balance:334,       rate:0,     min:167,  day:22,start:'2026-03-22'},
-      {id:'d010',name:'Merpago*Merca (MSI TC BBVA)', type:'other',      total:1791,      balance:597,       rate:0,     min:597,  day:22,start:'2026-05-22'},
-      {id:'d011',name:'Mercado Pago (MSI TC BBVA)',  type:'other',      total:2151,      balance:717,       rate:0,     min:717,  day:22,start:'2026-05-22'}
-    ],
+    // La lista de deudas ya no se escribe aquí: vive en ../_comun/finanzas-cifras.js, que esta
+    // app carga en el <head> y que también leen el Dashboard y el Coach. Estaba duplicada de
+    // hecho —el seed aquí, la prosa allá— y cada subida de SEED_VER resembraba estos saldos,
+    // así que un saldo corregido a mano se perdía en el siguiente reseed si nadie se acordaba
+    // de tocar el seed también. Ahora hay un solo sitio.
+    // El `|| []` no es cosmético: si el <script src> fallara, sembrar sin deudas es preferible
+    // a sembrar con una copia vieja escondida aquí, y el aviso de abajo lo deja claro en la
+    // consola en vez de dejarlo pasar en silencio.
+    debts: (window.CIFRAS && window.CIFRAS.DEUDAS_SEED) || [],
     goals: [
       {id:'g001',name:'Maestría en Alemania', target:500000, current:53740, date:'2028-10-01', pausadaHasta:'2027-07-18',icon:'🎓'},
     ],
@@ -4776,6 +4761,12 @@ function init() {
     save();
     localStorage.setItem(KEY+'_ahorro20260817','1');
   }
+  // La migración de saldos del 2026-08-24 ya NO vive aquí: se movió a
+  // ../_comun/finanzas-cifras.js, que esta app carga en el <head>. Antes cada corrección había
+  // que escribirla dos veces —aquí y como espejo en dashboard.html—, porque cualquiera de las
+  // dos puede ser la primera app que abra Adán. Ahora se escribe una vez, corre antes que este
+  // init() y la ve también Coach_v2.html. Las migraciones de más arriba se quedan: ya corrieron
+  // y tienen bandera, son inertes. Las NUEVAS van al archivo común.
   // Asegurar que el fondo de emergencia exista en metas
   if(!S.goals.find(g=>g.id==='ef-001')) {
     S.goals.unshift({
