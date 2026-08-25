@@ -158,6 +158,49 @@ es el punto de entrada; esos son la historia larga de cada cambio.
 
 ---
 
+## Una variable nunca cambia sola
+
+Cambiar `gym` mueve también `suscripciones`, `fijosTotal` y `margen`. Los cálculos se ajustan
+solos porque son getters; **lo que se queda atrás son las tablas de los `.md`**, que llevan el
+número escrito. Por eso el mapa es explícito y comprobado.
+
+```bash
+node -e "require('./Dashboard/datos-maestros.js'); console.log(window.CIFRAS.impacto('gym'))"
+# → [ 'suscripciones', 'fijosTotal', 'margen' ]
+```
+
+| Si tocas… | se mueven |
+|---|---|
+| `sueldo`, `didiMes`, `siVale` | `ingresoTotal` → `margen` |
+| `celular`, `internet`, `gas`, `luzAgua`, `limpieza` | `servicios` → `fijosTotal` → `margen` |
+| `gym`, `claudeCode`, `icloud` | `suscripciones` → `fijosTotal` → `margen` |
+| `renta` | `fijosTotal` → `margen` |
+| el saldo o el mínimo de cualquier deuda | `deudaTotal`, `deudaCara`, `deudaMsi`, `minimosDeuda` → `margen` |
+| `autoSaldo`, `autoPago`, `autoMeses` | `autoAPagar`, `autoInteres` |
+
+Cada derivada declara su `dep: [...]` en `CLAVES`. **El grafo no se cree: se mide.** El control 6
+perturba cada constante, observa qué se movió de verdad y lo compara con lo declarado — así una
+dependencia que alguien olvide declarar al añadir una fórmula salta en el momento.
+
+`CIFRAS.impacto(clave)` da la lista; `CIFRAS.grafo()` el mapa completo (20 variables arrastran a
+otras hoy).
+
+**El hook lo dice solo.** Al terminar el turno, si `datos-maestros.js` cambió respecto al último
+commit, compara los valores de antes y ahora y separa lo que editaste de lo que se movió contigo:
+
+```
+CAMBIÓ UNA VARIABLE MAESTRA
+
+  editada:  gym  $650 → $800
+
+  se movieron con ella:
+    suscripciones  $1,080 → $1,230
+    fijosTotal  $13,344 → $13,494
+    margen  $30,081 → $29,931
+```
+
+---
+
 ## Comprobar que todo sigue sincronizado
 
 ```bash
@@ -178,6 +221,9 @@ Qué revisa:
   se descubrió que el gimnasio tenía dos precios a la vez en Finanzas. Acepta dos patrones
   legítimos: `dato || 500000` (fallback, solo se usa si no hay dato) y las asignaciones dentro de
   una migración (`balance = 1708` es una foto histórica, no una copia).
+- **Que el mapa de dependencias declarado coincida con el real**, midiéndolo por perturbación.
+- **Que los valores citados en los `.md`** coincidan con el maestro, con archivo y línea. Este es
+  el que faltaba: los getters se recalculan solos, las tablas de la documentación no.
 - Los `{{marcadores}}` que no existan en el catálogo.
 
 Los valores **no están escritos en el verificador**: los pide al maestro. Tenerlos a mano era el

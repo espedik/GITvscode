@@ -723,6 +723,7 @@ const KEY = 'finanzasmx_v2';
    caen al maestro si todavía no hay nada guardado. */
 const _PG = () => (window.CIFRAS && window.CIFRAS.PROYECTO) || {};
 const _autoMin = () => { const d=(S.debts||[]).find(x=>x.id==='d003'); return (d&&+d.min)||_PG().autoPago||0; };
+const _metaMaestria = () => { const g=(S.goals||[]).find(x=>x.id==='g001'); return (g&&+g.target)||(window.CIFRAS&&CIFRAS.n('maestriaMeta'))||500000; };
 const _metaFondo = () => { const g=(S.goals||[]).find(x=>x.id==='ef-001'); return (g&&+g.target)||10000; };
 let S = { transactions:[], budgets:[], debts:[], goals:[], investments:[], activos:[], btcHistory:[], currentBtcPrice:0, usdMxn:19.5, btcLastFetch:'', weeklyLeftover:0, sivaleBalance:0, sivaleLastMonth:'', emergencyFund:0, didiMonthly:0, gbmMonth:'', indicatorHistory:[] };
 let editId = null, confCb = null, payDebtId = null, contribGoalId = null;
@@ -3447,7 +3448,7 @@ function renderSpecials(freeMonth, refDate=new Date()) {
 
       <!-- Tabla de escenarios -->
       <div style="font-size:11px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.04em;margin-bottom:8px">
-        📊 Escenarios — ¿Cuándo llegas a {{maestriaMeta}}?
+        📊 Escenarios — ¿Cuándo llegas a ${fmt(_metaMaestria())}?
       </div>
       <div style="display:flex;flex-direction:column;gap:6px">
         ${scRow('📈','Tu plan GBM mensual (sobrante real calculado)',scA_mo,scA_months,scA_date,scA_diff)}

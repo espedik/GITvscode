@@ -33,6 +33,27 @@ encuentra un problema (`--hook`).
 Si el verificador marca algo, se arregla antes de cerrar la tarea. Si aparece una estructura
 duplicada nueva que él no cubre, **se añade el control al script** en la misma tarea.
 
+## Regla 4 — Una variable nunca cambia sola
+
+**Antes de dar por terminado un cambio de dato, mirar qué arrastró.** Bajar el gym de $1,500 a
+$650 movió también `suscripciones`, `fijosTotal` y `margen`. Los cálculos se ajustan solos —son
+getters— pero **las tablas de los `.md` llevan el número escrito** y se quedan atrás.
+
+```bash
+node -e "require('./Dashboard/datos-maestros.js'); console.log(window.CIFRAS.impacto('gym'))"
+```
+
+- Cada derivada declara su `dep: [...]` en `CLAVES`. **Añadir una fórmula sin declarar sus
+  dependencias es un error**, y el control 6 lo detecta: mide el grafo real perturbando cada base
+  y lo compara con lo declarado.
+- `CIFRAS.impacto(clave)` da lo que se mueve; `CIFRAS.grafo()` el mapa completo.
+- El **control 7** compara los valores citados en los `.md` contra el maestro y da archivo y línea.
+- El **hook** informa del impacto al terminar el turno: separa lo que editaste de lo que se movió
+  contigo.
+
+Adán, 2026-08-25: *"si se actualiza esa variable, va influir en otras variables, entonces debes
+mapear muy muy bien las variables que se relacionan unas con otras"*.
+
 ## Regla 3 — Los `.md` documentan el ESTADO ACTUAL, no la historia
 
 Los readmes de este proyecto son **referencia**, no diario. El historial ya vive en git

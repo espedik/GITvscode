@@ -618,9 +618,11 @@ window.CIFRAS = (function () {
     // Derivadas del auto: lo que acabas pagando si solo das el mínimo, y cuánto de eso es
     // interés. Se calculan, no se copian — antes estaban escritas a mano en Coach_v2 y se
     // quedaron congeladas en el saldo de hace dos meses.
-    autoAPagar:    { v: () => { const m = campo('d003','remainingMonths'), p = campo('d003','min');
+    autoAPagar:    { dep: ['autoMeses','autoPago'],
+                     v: () => { const m = campo('d003','remainingMonths'), p = campo('d003','min');
                                 return m != null && p != null ? m * p : null; } },
-    autoInteres:   { v: () => { const m = campo('d003','remainingMonths'), p = campo('d003','min'),
+    autoInteres:   { dep: ['autoMeses','autoPago','autoSaldo'],
+                     v: () => { const m = campo('d003','remainingMonths'), p = campo('d003','min'),
                                       s = campo('d003','balance');
                                 return m != null && p != null && s != null ? m * p - s : null; } },
     tcBbva:        { v: () => campo('d001', 'balance') },
@@ -633,11 +635,11 @@ window.CIFRAS = (function () {
     zapStylo:      { v: () => campo('d009', 'balance') },
     zapStyloCuota: { v: () => campo('d009', 'min') },
     // ── Totales ──
-    deudaTotal:    { v: () => sum(deudas()) },
+    deudaTotal:    { dep: ['*deudas'], v: () => sum(deudas()) },
     // "Deuda cara" = tarjetas de crédito con saldo vivo. Mismo criterio que la ruta de deuda
     // cara del Dashboard: los MSI a 0% no cuentan aunque tengan saldo.
-    deudaCara:     { v: () => sum(deudas().filter(d => d.type === 'credit_card' && +d.balance > 0)) },
-    deudaMsi:      { v: () => sum(deudas().filter(d => d.type === 'other' && +d.balance > 0)) },
+    deudaCara:     { dep: ['*deudas'], v: () => sum(deudas().filter(d => d.type === 'credit_card' && +d.balance > 0)) },
+    deudaMsi:      { dep: ['*deudas'], v: () => sum(deudas().filter(d => d.type === 'other' && +d.balance > 0)) },
     // ── Ahorro y metas ──
     fondo:         { v: () => (fin && fin.emergencyFund != null ? +fin.emergencyFund : null) },
     fondoMeta:     { v: () => { const g = meta('ef-001'); return g ? +g.target : null; } },
@@ -649,14 +651,14 @@ window.CIFRAS = (function () {
     sueldoQuinc:   { v: () => PROYECTO.sueldoQuinc },
     didiMes:       { v: () => PROYECTO.didiMes },
     siVale:        { v: () => PROYECTO.siVale },
-    ingresoTotal:  { v: () => PROYECTO.ingresoTotal },
+    ingresoTotal:  { dep: ['sueldo','didiMes','siVale'], v: () => PROYECTO.ingresoTotal },
     renta:         { v: () => PROYECTO.renta },
     gym:           { v: () => PROYECTO.gym },
     gymNombre:     { v: () => PROYECTO.gymNombre, fmt: 'txt' },
-    servicios:     { v: () => PROYECTO.servicios },
-    suscripciones: { v: () => PROYECTO.suscripciones },
+    servicios:     { dep: ['celular','internet','gas','luzAgua','limpieza'], v: () => PROYECTO.servicios },
+    suscripciones: { dep: ['gym','claudeCode','icloud'], v: () => PROYECTO.suscripciones },
     cetesDia15:    { v: () => PROYECTO.cetesDia15 },
-    fijosTotal:    { v: () => PROYECTO.fijosTotal },
+    fijosTotal:    { dep: ['renta','servicios','suscripciones'], v: () => PROYECTO.fijosTotal },
     empleador:     { v: () => PROYECTO.empleador,   fmt: 'txt' },
     nombre:        { v: () => PROYECTO.nombre,      fmt: 'txt' },
     auto:          { v: () => PROYECTO.auto,        fmt: 'txt' },
@@ -666,11 +668,12 @@ window.CIFRAS = (function () {
     maestriaInicio:{ v: () => PROYECTO.maestriaInicio,   fmt: 'txt' },
     // ── Derivadas que cruzan constantes con saldos vivos ──
     // Lo que queda del sueldo tras los fijos y los mínimos de deuda: el margen real del mes.
-    margen:        { v: () => {
+    margen:        { dep: ['ingresoTotal','fijosTotal','minimosDeuda'],
+                     v: () => {
       const min = deudas().filter(d => +d.balance > 0).reduce((a, d) => a + (+d.min || 0), 0);
       return PROYECTO.ingresoTotal - PROYECTO.fijosTotal - min;
     } },
-    minimosDeuda:  { v: () => deudas().filter(d => +d.balance > 0).reduce((a, d) => a + (+d.min || 0), 0) },
+    minimosDeuda:  { dep: ['*deudas'], v: () => deudas().filter(d => +d.balance > 0).reduce((a, d) => a + (+d.min || 0), 0) },
     cetes:         { v: () => {
       const i = (fin && Array.isArray(fin.investments) ? fin.investments : [])
         .find(x => x.type === 'cetes' || /cetes/i.test(x.name || ''));
@@ -678,6 +681,39 @@ window.CIFRAS = (function () {
     } },
   };
 
+
+  /* ── EL MAPA DE DEPENDENCIAS ───────────────────────────────────────────────────────────────
+     Adán, 2026-08-25: "si se actualiza esa variable, va influir en otras variables, entonces
+     debes mapear muy muy bien las variables que se relacionan unas con otras".
+
+     Es lo que faltaba. Cambiar `gym` de $1,500 a $650 movió también `suscripciones`,
+     `fijosTotal` y `margen` — los cálculos se ajustaron solos porque son getters, pero las
+     TABLAS de los .md se quedaron con los valores viejos hasta que alguien se acordó.
+
+     Cada derivada declara su `dep`. `*deudas` significa "cualquier cambio en la lista de
+     deudas" (un saldo, un mínimo, una que se liquida).
+
+     `CIFRAS.impacto('gym')` responde qué más hay que revisar antes de dar el cambio por
+     terminado. `verificar-sincronia.js` comprueba que lo declarado coincida con lo REAL,
+     midiéndolo por perturbación: cambia una base y mira qué se movió de verdad. Una
+     dependencia que se olvide declarar salta ahí, no meses después. */
+  function impacto(clave) {
+    const directos = Object.keys(CLAVES).filter(k => (CLAVES[k].dep || []).indexOf(clave) !== -1);
+    const todos = directos.slice();
+    directos.forEach(function (d) {
+      impacto(d).forEach(function (x) { if (todos.indexOf(x) === -1) todos.push(x); });
+    });
+    return todos;
+  }
+
+  /* Todo el grafo de una vez: { clave: [lo que se mueve si la tocas] }. Solo las que mueven algo. */
+  function grafo() {
+    const g = {};
+    const bases = Object.keys(PROYECTO).filter(k => typeof PROYECTO[k] === 'number')
+      .concat(Object.keys(CLAVES));
+    bases.forEach(function (k) { const i = impacto(k); if (i.length) g[k] = i; });
+    return g;
+  }
   // ── Formato ──
   // Los saldos se escriben redondeados al peso, que es como aparecen en la prosa de las tres
   // apps ("$292,000", "$11,362"). Los centavos solo importan dentro de Finanzas.
@@ -747,6 +783,9 @@ window.CIFRAS = (function () {
   return {
     n: n, v: v, texto: texto, aplicarDOM: aplicarDOM, refrescar: refrescar, tabla: tabla,
     claves: function () { return Object.keys(CLAVES); },
+    dep: function (k) { return (CLAVES[k] && CLAVES[k].dep) || []; },
+    impacto: impacto,
+    grafo: grafo,
     DEUDAS_SEED: DEUDAS_SEED,
     rutina: rutina,
     SK: SK,

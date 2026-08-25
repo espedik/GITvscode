@@ -228,7 +228,80 @@ const sinComentarios = s => s.replace(/\/\*[\s\S]*?\*\//g, '')
   else ok.push('Ningún número del maestro escrito crudo en el código');
 })();
 
-/* ── 6. Marcadores huérfanos ── */
+/* ── 6. El mapa de dependencias, comprobado contra la realidad ────────────────────────────────
+   Cada derivada del maestro declara su `dep`. Aquí NO se cree esa declaración: se mide.
+   Se cambia el valor de cada base, se mira qué claves se movieron de verdad y se compara con lo
+   declarado. Una dependencia que alguien olvide declarar al añadir una fórmula salta aquí, no
+   meses después cuando un cambio deje media documentación desfasada. */
+(function grafoReal() {
+  if (!global.window || !global.window.CIFRAS) return;
+  const C = global.window.CIFRAS, P = C.PROYECTO;
+  const claves = C.claves();
+  const base = {}; claves.forEach(k => base[k] = C.v(k));
+  const faltan = [], sobran = [];
+
+  /* Solo las CONSTANTES: un getter (servicios, fijosTotal…) no acepta asignación, así que
+     perturbarlo no movería nada y daría un falso "no se cumple". Sus dependencias se comprueban
+     igual, a través de las bases que sí se pueden tocar. */
+  const esConstante = k => {
+    const d = Object.getOwnPropertyDescriptor(P, k);
+    return d && !d.get && typeof d.value === 'number';
+  };
+  Object.keys(P).filter(esConstante).forEach(function (k) {
+    const orig = P[k];
+    P[k] = orig + 7;                                  // perturbar
+    const movidas = claves.filter(c => C.v(c) !== base[c] && c !== k);
+    P[k] = orig;                                      // restaurar
+    const declarado = C.impacto(k);
+    movidas.forEach(m => { if (declarado.indexOf(m) === -1) faltan.push(k + ' → ' + m); });
+    declarado.forEach(d => { if (movidas.indexOf(d) === -1) sobran.push(k + ' → ' + d); });
+  });
+
+  if (faltan.length)
+    problemas.push('Dependencias REALES que nadie declaró (cambiar la primera mueve la segunda):' +
+      '\n     ' + faltan.join('\n     ') +
+      '\n     Declararlas con `dep: [...]` en CLAVES, o el impacto de un cambio queda invisible.');
+  else if (sobran.length)
+    avisos.push('Dependencias declaradas que no se cumplen al medirlas: ' + sobran.join(', '));
+  else
+    ok.push('Mapa de dependencias — lo declarado coincide con lo medido (' +
+      Object.keys(C.grafo()).length + ' variables arrastran a otras)');
+})();
+
+/* ── 7. Los valores citados en la documentación ───────────────────────────────────────────────
+   ESTE es el que faltaba de verdad. Los cálculos se ajustan solos porque son getters, pero las
+   TABLAS de los .md llevan el número escrito: al bajar el gym de $1,500 a $650, `fijosTotal`
+   pasó de $14,194 a $13,344 en el código y los .md siguieron diciendo $14,194.
+   Se comprueba que cada `{{clave}} | $valor` de las tablas coincida con lo que da el maestro. */
+(function docsAlDia() {
+  if (!global.window || !global.window.CIFRAS) return;
+  const C = global.window.CIFRAS;
+  const DOCS = ['Dashboard/DATOS-MAESTROS.md', 'Dashboard/readme_dashboard.md',
+                'Coach/readme_coach_v2.md', 'Finanzas/readme_finanzas.md'];
+  const malas = [];
+  DOCS.forEach(function (rel) {
+    let txt; try { txt = leer(rel); } catch (e) { return; }
+    /* Línea a línea, y solo filas con UN marcador: si la fila junta varios
+       (`{{autoSaldo}}` `{{autoTotal}}` … | $293,000 · $315,800 · …) no hay forma fiable de saber
+       qué importe le toca a cada uno, y adivinar daría falsos positivos que acaban ignorándose. */
+    txt.split('\n').forEach(function (linea, i) {
+      const marcas = linea.match(/\{\{(\w+)\}\}/g) || [];
+      if (marcas.length !== 1) return;
+      const clave = marcas[0].slice(2, -2);
+      const real = C.v(clave);
+      if (real === '—' || real.charAt(0) !== '$') return;
+      const resto = linea.slice(linea.indexOf(marcas[0]) + marcas[0].length);
+      const imp = resto.match(/\$[\d,]+/);
+      if (!imp) return;
+      if (imp[0] !== real)
+        malas.push('     ' + rel + ':' + (i + 1) + ' · {{' + clave + '}} dice ' + imp[0] + ' y vale ' + real);
+    });
+  });
+  if (malas.length) problemas.push('Valores desfasados en la documentación:\n' + malas.join('\n'));
+  else ok.push('Los valores citados en los .md coinciden con el maestro');
+})();
+
+/* ── 8. Marcadores huérfanos ── */
 (function marcadores() {
   const conocidos = new Set();
   const cat = maestro.slice(maestro.indexOf('const CLAVES'), maestro.indexOf('// ── Formato'));
@@ -241,14 +314,71 @@ const sinComentarios = s => s.replace(/\/\*[\s\S]*?\*\//g, '')
   else ok.push('Todos los {{marcadores}} existen en el catálogo (' + conocidos.size + ' variables)');
 })();
 
+/* ── Impacto de lo que cambió en esta sesión ──────────────────────────────────────────────────
+   Si `datos-maestros.js` cambió respecto al último commit, se comparan los valores de entonces
+   con los de ahora y se dice qué se movió — incluido lo ARRASTRADO. Es la parte que Adán
+   señaló: al bajar el gym, `suscripciones`, `fijosTotal` y `margen` cambiaron con él, y sin
+   verlo escrito es fácil dar por terminado un cambio con media documentación desfasada. */
+function impactoDelCambio() {
+  if (!global.window || !global.window.CIFRAS) return null;
+  const { execSync } = require('child_process');
+  let antes;
+  try {
+    antes = execSync('git show HEAD:Claude_Proyecto/Dashboard/datos-maestros.js',
+      { cwd: path.resolve(RAIZ, '..'), encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] });
+  } catch (e) { return null; }                    // sin git, o archivo nuevo: no hay con qué comparar
+  if (antes === maestro) return null;             // no cambió
+
+  const ahora = global.window.CIFRAS;
+  const valoresAhora = {}; ahora.claves().forEach(k => valoresAhora[k] = ahora.v(k));
+
+  // Cargar la versión anterior en un contexto aparte
+  let viejo;
+  try {
+    const sandbox = { window: {}, localStorage: { getItem: () => null, setItem: () => {} } };
+    const fn = new Function('window', 'localStorage', antes + '; return window.CIFRAS;');
+    viejo = fn(sandbox.window, sandbox.localStorage);
+  } catch (e) { return null; }
+  if (!viejo) return null;
+
+  const movidas = [];
+  ahora.claves().forEach(function (k) {
+    let v; try { v = viejo.v(k); } catch (e) { v = null; }
+    if (v !== valoresAhora[k]) movidas.push({ k: k, de: v, a: valoresAhora[k] });
+  });
+  if (!movidas.length) return null;
+
+  /* Se separa lo que alguien EDITÓ de lo que se movió solo por depender de ello: es la
+     diferencia entre "cambié esto" y "esto cambió conmigo, revísalo". */
+  const nombres = movidas.map(m => m.k);
+  const arrastradas = new Set();
+  nombres.forEach(k => ahora.impacto(k).forEach(x => { if (nombres.indexOf(x) !== -1) arrastradas.add(x); }));
+  const editadas = movidas.filter(m => !arrastradas.has(m.k));
+  const derivadas = movidas.filter(m => arrastradas.has(m.k));
+
+  const L = ['CAMBIÓ UNA VARIABLE MAESTRA'];
+  L.push('');
+  editadas.forEach(m => L.push('  editada:  ' + m.k + '  ' + m.de + ' → ' + m.a));
+  if (derivadas.length) {
+    L.push('');
+    L.push('  se movieron con ella:');
+    derivadas.forEach(m => L.push('    ' + m.k + '  ' + m.de + ' → ' + m.a));
+  }
+  L.push('');
+  L.push('  Revisa que las tablas de los .md y cualquier texto que cite estas cifras estén al día.');
+  L.push('  (el control 7 comprueba los .md; los textos con {{marcador}} se resuelven solos)');
+  return L.join('\n');
+}
+
 // ── Salida ──
 if (process.argv.indexOf('--hook') !== -1) {
-  if (problemas.length) {
-    process.stdout.write(JSON.stringify({
-      systemMessage: 'DATOS DESINCRONIZADOS (' + problemas.length + ')\n\n' + problemas.join('\n\n') +
-        '\n\nDetalle: node Dashboard/verificar-sincronia.js'
-    }));
-  }
+  const partes = [];
+  if (problemas.length)
+    partes.push('DATOS DESINCRONIZADOS (' + problemas.length + ')\n\n' + problemas.join('\n\n') +
+      '\n\nDetalle: node Dashboard/verificar-sincronia.js');
+  const imp = impactoDelCambio();
+  if (imp) partes.push(imp);
+  if (partes.length) process.stdout.write(JSON.stringify({ systemMessage: partes.join('\n\n────────\n\n') }));
   process.exit(0);   // el hook informa, no bloquea
 }
 
@@ -258,5 +388,7 @@ if (ok.length) { console.log('\nOK'); ok.forEach(l => console.log('  ✔ ' + l))
 if (avisos.length) { console.log('\nAVISOS (no está roto, pero es deuda pendiente)'); avisos.forEach(l => console.log('  ! ' + l)); }
 if (problemas.length) { console.log('\nDESINCRONIZADO'); problemas.forEach(l => console.log('  ✘ ' + l)); }
 else console.log('\nNada desincronizado.');
+const _imp = impactoDelCambio();
+if (_imp) { console.log(''); console.log(_imp); }
 console.log('');
 process.exit(problemas.length ? 1 : 0);
