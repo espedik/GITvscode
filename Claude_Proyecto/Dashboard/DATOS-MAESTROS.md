@@ -77,9 +77,9 @@ desde JS. En consola, `CIFRAS.tabla()` las lista con su valor actual.
 | `{{tcBbva}}` `{{tcBbvaMin}}` `{{tcBbvaTasa}}` | $34,000 ⚠️ subiendo · $1,500 · 55.7% | `d001` |
 | `{{banamex}}` `{{banamexMin}}` | $0 ✅ liquidada · $810 | `d002` |
 | `{{iphone}}` | $11,362 | `d008` |
-| `{{appleWatch}}` | $1,708 | `d004` |
+| `{{appleWatch}}` `{{appleWatchCuota}}` | $854 · $854 — queda 1 cuota (18 sep) | `d004` |
 | `{{zapStylo}}` `{{zapStyloCuota}}` | $334 · $167 — "el de los zapatos" | `d009` |
-| `{{deudaTotal}}` `{{deudaCara}}` `{{deudaMsi}}` | $340,404 · $34,000 · $13,404 | derivadas |
+| `{{deudaTotal}}` `{{deudaCara}}` `{{deudaMsi}}` | $339,550 · $34,000 · $12,550 | derivadas |
 | `{{minimosDeuda}}` `{{margen}}` | suma de mínimos vivos · lo que sobra al mes | derivadas |
 
 **Derivadas del auto**, que antes se escribían a mano y se quedaban congeladas:

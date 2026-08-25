@@ -730,13 +730,13 @@ Detalle en [`../Dashboard/DATOS-MAESTROS.md`](../Dashboard/DATOS-MAESTROS.md).
 | `d001` | Tarjeta BBVA | **$34,000** ⚠️ | Subiendo: el mínimo de $1,500 no cubre el interés |
 | `d002` | Tarjeta Banamex | $0 ✅ | Liquidada el 13-ago-2026, saldo completo |
 | `d003` | Crédito Automotriz | $293,000 | 12.99%, $6,700/mes — ver nota abajo |
-| `d004` | Apple Watch MSI | $1,708 | Últimas cuotas |
+| `d004` | Apple Watch MSI | $854 | Queda 1 cuota, la del 18 sep 2026 |
 | `d007` | Boletos Ticketmaster | $0 ✅ | Liquidado |
 | `d008` | iPhone 15 MSI | $11,362 | |
 | `d009` | Zap Stylo (MSI BBVA) | $334 | "El de los zapatos" — el único MSI de BBVA vivo |
 | `d010`, `d011` | Merpago, Mercado Pago | $0 ✅ | Liquidados el 24-ago-2026 |
 
-Deuda total **$340,404**. Los valores vivos están en `finanzasmx_v2`; esta tabla es la foto para
+Deuda total **$339,550**. Los valores vivos están en `finanzasmx_v2`; esta tabla es la foto para
 orientarse rápido.
 
 ### El auto subió $1,000 el 25-ago-2026

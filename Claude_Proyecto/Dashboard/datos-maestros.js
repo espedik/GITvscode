@@ -140,8 +140,8 @@ window.CIFRAS = (function () {
     {id:'d002',name:'Tarjeta Banamex',               type:'credit_card',total:14349.72,  balance:0,         rate:55.7,  min:810,  day:8, start:'2024-06-18', noInterest:0},
     // Saldo reportado por Adán: $299,000 (24-ago) → $292,000 → $293,000 (25-ago-2026).
     {id:'d003',name:'Crédito Automotriz',            type:'car',        total:315800,    balance:293000,    rate:12.99, min:6700, day:1, start:'2026-01-01', remainingMonths:61},
-    // Quedan 2 cuotas: 18 ago y 18 sep 2026 (confirmado por Adán el 13 ago 2026).
-    {id:'d004',name:'Apple Watch MSI (TC Banamex)',  type:'other',      total:10248,     balance:1708,      rate:0,     min:854,  day:18,start:'2025-09-16'},
+    // Queda 1 cuota, la del 18 sep 2026: la penúltima se pagó (confirmado el 25-ago-2026).
+    {id:'d004',name:'Apple Watch MSI (TC Banamex)',  type:'other',      total:10248,     balance:854,      rate:0,     min:854,  day:18,start:'2025-09-16'},
     // d005 (Vuelo Viva Aerobus) y d006 (Mercado Libre) se ELIMINARON el 13 ago 2026: Adán
     // revisó su historial real de BBVA y esos dos MSI no existen — no aparecen en ningún
     // movimiento. Se borran en vez de ponerlos en $0 porque nunca fueron deuda suya.
@@ -579,6 +579,17 @@ window.CIFRAS = (function () {
         if (auto) auto.balance = 293000;
       }
     },
+    {
+      // 2026-08-25 · "el Apple Watch MSI, ya se pagó la penúltima mensualidad, entonces solo
+      // queda una". De $1,708 (2 cuotas de $854) a $854. El `min` no cambia: la última cuota
+      // sigue siendo de $854, así que `minimosDeuda` y `margen` no se mueven — solo bajan
+      // `deudaTotal` y `deudaMsi`.
+      flag: '_appleWatch20260825',
+      hacer: function (f) {
+        const aw = (f.debts || []).find(d => d.id === 'd004');
+        if (aw) aw.balance = 854;
+      }
+    },
   ];
 
   function migrar() {
@@ -632,6 +643,8 @@ window.CIFRAS = (function () {
     banamexMin:    { v: () => campo('d002', 'min') },
     iphone:        { v: () => campo('d008', 'balance') },
     appleWatch:    { v: () => campo('d004', 'balance') },
+    // El importe de la cuota, distinto del saldo aunque hoy coincidan: queda una sola.
+    appleWatchCuota: { v: () => campo('d004', 'min') },
     zapStylo:      { v: () => campo('d009', 'balance') },
     zapStyloCuota: { v: () => campo('d009', 'min') },
     // ── Totales ──
@@ -697,8 +710,17 @@ window.CIFRAS = (function () {
      terminado. `verificar-sincronia.js` comprueba que lo declarado coincida con lo REAL,
      midiéndolo por perturbación: cambia una base y mira qué se movió de verdad. Una
      dependencia que se olvide declarar salta ahí, no meses después. */
+  /* `*deudas` es un comodín: cualquier clave que salga de la lista de deudas mueve a las que
+     agregan esa lista. Sin esto, cambiar el saldo del Apple Watch mostraba `deudaTotal` como si
+     alguien la hubiera editado a mano, en vez de como lo que es: algo que se movió con él. */
+  const DE_DEUDAS = ['autoSaldo','autoTotal','autoPago','autoMeses','tcBbva','tcBbvaMin',
+                     'banamex','banamexMin','iphone','appleWatch','zapStylo','zapStyloCuota'];
   function impacto(clave) {
-    const directos = Object.keys(CLAVES).filter(k => (CLAVES[k].dep || []).indexOf(clave) !== -1);
+    const comodin = DE_DEUDAS.indexOf(clave) !== -1;
+    const directos = Object.keys(CLAVES).filter(function (k) {
+      const dep = CLAVES[k].dep || [];
+      return dep.indexOf(clave) !== -1 || (comodin && dep.indexOf('*deudas') !== -1);
+    });
     const todos = directos.slice();
     directos.forEach(function (d) {
       impacto(d).forEach(function (x) { if (todos.indexOf(x) === -1) todos.push(x); });
