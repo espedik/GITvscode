@@ -93,6 +93,42 @@
       </div>
     </div>
 
+    <!-- ── EL PRÄSENS IRREGULAR ── -->
+    <div class="content-full">
+      <div class="card card-gold">
+        <h3><span>🔀</span> Por qué la tabla trae la 3ª persona</h3>
+        <p>Muchos irregulares también cambian en <b>presente</b>, pero solo en <b>du</b> y <b>er/sie/es</b>. El resto de personas van normales. Por eso la columna Präsens lleva esa forma entre paréntesis.</p>
+        <table class="vocab-table">
+          <thead><tr><th>Cambio</th><th>Infinitiv</th><th>du</th><th>er/sie/es</th><th>Otros del grupo</th></tr></thead>
+          <tbody>
+            <tr><td><b>e → i</b></td><td class="vocab-de">sprechen</td><td class="vocab-de">du spr<b>i</b>chst</td><td class="vocab-de">er spr<b>i</b>cht</td><td>essen, geben, helfen, nehmen, treffen, werfen</td></tr>
+            <tr><td><b>e → ie</b></td><td class="vocab-de">sehen</td><td class="vocab-de">du s<b>ie</b>hst</td><td class="vocab-de">er s<b>ie</b>ht</td><td>lesen, empfehlen, stehlen, geschehen</td></tr>
+            <tr><td><b>a → ä</b></td><td class="vocab-de">fahren</td><td class="vocab-de">du f<b>ä</b>hrst</td><td class="vocab-de">er f<b>ä</b>hrt</td><td>schlafen, tragen, waschen, halten, fallen, laufen</td></tr>
+            <tr><td><b>au → äu</b></td><td class="vocab-de">laufen</td><td class="vocab-de">du l<b>äu</b>fst</td><td class="vocab-de">er l<b>äu</b>ft</td><td>saufen</td></tr>
+            <tr><td><b>o → ö</b></td><td class="vocab-de">stoßen</td><td class="vocab-de">du st<b>ö</b>ßt</td><td class="vocab-de">er st<b>ö</b>ßt</td><td>—</td></tr>
+          </tbody>
+        </table>
+        <div class="rule-box">
+          <strong>Los tres irregulares del todo</strong>, que no siguen ningún patrón y hay que saberse de memoria:
+          <span class="k10-de">sein → ich bin, du bist, er ist</span> ·
+          <span class="k10-de">haben → du hast, er hat</span> ·
+          <span class="k10-de">werden → du wirst, er wird</span>. Y <span class="k10-de">wissen → ich weiß, du weißt, er weiß</span>.
+        </div>
+        <div class="example">
+          <div class="example-de">Ich fahre nach Berlin, aber er <b>fährt</b> nach Hamburg.</div>
+          <div class="example-es">El cambio solo aparece en du y er/sie/es. En ich, wir, ihr, sie no pasa nada.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-full">
+      <div class="card" data-dashboard="no">
+        <h3><span>🔀</span> Practica: la 3ª persona del presente</h3>
+        <p>Escribe la forma de <b>er/sie/es</b>.</p>
+        <div id="ej-3p" class="k10-ejercicios"></div>
+      </div>
+    </div>
+
     <!-- ── LA TABLA ── -->
     <div class="content-full">
       <div class="card">
@@ -485,6 +521,24 @@ k10Dictado('dic-verbos', [
 
 // Cada verbo de la tabla se puede escuchar
 k10Altavoces('#tablaVerbos td.vocab-de');
+
+k10Escribir('ej-3p', [
+  {inf:'sprechen', pista:'e → i',   resp:['spricht','er spricht']},
+  {inf:'essen',    pista:'e → i',   resp:['isst','er isst']},
+  {inf:'geben',    pista:'e → i',   resp:['gibt','er gibt']},
+  {inf:'nehmen',   pista:'e → i',   resp:['nimmt','er nimmt']},
+  {inf:'helfen',   pista:'e → i',   resp:['hilft','er hilft']},
+  {inf:'sehen',    pista:'e → ie',  resp:['sieht','er sieht']},
+  {inf:'lesen',    pista:'e → ie',  resp:['liest','er liest']},
+  {inf:'fahren',   pista:'a → ä',   resp:['fährt','er fährt','faehrt']},
+  {inf:'schlafen', pista:'a → ä',   resp:['schläft','er schläft','schlaeft']},
+  {inf:'tragen',   pista:'a → ä',   resp:['trägt','er trägt','traegt']},
+  {inf:'laufen',   pista:'au → äu', resp:['läuft','er läuft','laeuft']},
+  {inf:'sein',     pista:'irregular total', resp:['ist','er ist']},
+  {inf:'haben',    pista:'irregular total', resp:['hat','er hat']},
+  {inf:'werden',   pista:'irregular total', resp:['wird','er wird']},
+  {inf:'wissen',   pista:'irregular total', resp:['weiß','er weiß','weiss']}
+]);
 </script>
 
 </body>

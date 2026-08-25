@@ -22,10 +22,25 @@ consume a través de `../Dashboard/aleman-data.js`.
 
 ## Kapitel 10 — el capítulo en curso
 
-Cinco lecciones que cubren el temario real de clase: la regla del Perfekt, la tabla de verbos,
-los ejercicios y el minitest, Berufe y «Mein Tag» (la tarea de video).
+Cinco lecciones que cubren el temario real de clase. **75 tarjetas de contenido y 332
+ejercicios**; `k10.css` y `k10-interactivo.js` son suyos y los comparten las cinco.
 
-`k10.css` y `k10-interactivo.js` son suyos y los comparten las cinco.
+| Lección | Qué cubre | Ejercicios |
+|---|---|---|
+| `k10-01` La regla | Fórmula, Partizip II, los 3 casos sin *ge-*, haben/sein, **Perfekt vs Präteritum**, **modales (doble infinitivo)**, **negación**, **subordinadas**, **marcadores de tiempo** | 72 |
+| `k10-02` Verbenliste | 207 verbos con las 4 columnas, patrones de vocal, **el Präsens irregular**, los que engañan | 70 |
+| `k10-03` Üben | 6 bloques y **dos minitests** | 77 |
+| `k10-04` Berufe | Artículo, femenino, tu área, **lugares y actividades**, **condiciones laborales**, **las 5 preguntas del oral**, plurales | 54 |
+| `k10-05` Mein Tag | Conectores, tu rutina en presente y Perfekt, guion del video, **frecuencia**, **la hora hablada**, **separables de rutina** | 59 |
+
+Los temas en negrita son los que suelen faltar en el material de clase y son pregunta segura:
+
+- **Perfekt vs Präteritum** — cuál se usa al hablar y cuál al escribir, y la excepción que hay que
+  saber: *sein*, *haben* y los modales se dicen en Präteritum aunque estés hablando.
+- **Modales en Perfekt** — el doble infinitivo (*Ich habe arbeiten müssen*), que no usa participio.
+- **La negación** — *nicht* va justo antes del participio; *kein* solo con sustantivo sin artículo.
+- **Subordinadas** — con *weil/dass/als* el auxiliar pasa a ser el **último**, detrás del participio.
+- **La hora hablada** — *halb acht* son las 7:30, no las 8:30. El error más caro del capítulo.
 
 ### La tabla de verbos (`k10-02`)
 
@@ -54,7 +69,7 @@ Verlos juntos cuesta menos que encontrárselos sueltos.
 
 ### Los ocho tipos de ejercicio
 
-`k10-interactivo.js` los expone todos. **233 ejercicios** repartidos en las cinco lecciones.
+`k10-interactivo.js` los expone todos. **332 ejercicios** repartidos en las cinco lecciones.
 
 | Función | Qué hace | Para qué sirve |
 |---|---|---|
@@ -81,7 +96,7 @@ Decisiones que cambian cómo se usan:
 ### Audio en alemán
 
 `k10Hablar(texto)` y `k10Altavoces(selector)` usan **SpeechSynthesis del navegador**: cero
-dependencias, cero red, y funciona desde `file://`. Hay **471 elementos con botón 🔊** — cada verbo
+dependencias, cero red, y funciona desde `file://`. Hay **487 elementos con botón 🔊** — cada verbo
 de la tabla, cada ejemplo, cada línea del diálogo y del día.
 
 **Las voces cargan de forma asíncrona.** `getVoices()` viene vacío en la primera llamada y Chrome

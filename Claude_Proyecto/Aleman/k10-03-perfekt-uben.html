@@ -111,6 +111,29 @@
       </div>
     </div>
 
+    <div class="content-full">
+      <div class="card card-red" data-dashboard="no">
+        <h3><span>🎓</span> Minitest 2 — todo el capítulo</h3>
+        <p>Doce preguntas sobre lo que no entra en el primero: Perfekt vs Präteritum, modales, negación, subordinadas, Berufe y la hora.</p>
+        <div id="test-2" class="k10-quiz"></div>
+      </div>
+    </div>
+
+    <div class="content-full">
+      <div class="card" data-dashboard="no">
+        <h3><span>🧩</span> Übung 5 — Ordena frases con subordinada</h3>
+        <p>El auxiliar va el <b>último</b> después de weil, dass o als. Sin comas.</p>
+        <div id="u5" class="k10-ordenar"></div>
+      </div>
+    </div>
+
+    <div class="content-full">
+      <div class="card" data-dashboard="no">
+        <h3><span>🎧</span> Übung 6 — Dictado del capítulo</h3>
+        <div id="u6-dic"></div>
+      </div>
+    </div>
+
   </div>
 </div>
 
@@ -218,6 +241,40 @@ k10Test('test-final', [
   {frase:'Wir haben uns im Park ___. (treffen)', ops:['getroffen','getreffen','gestroffen'], ok:0, por:'treffen: e → o, getroffen.'},
   {frase:'Ich habe meine Oma ___. (anrufen)', ops:['angerufen','angeruft','geanrufen'], ok:0, por:'separable + irregular: an + ge + rufen.'},
   {frase:'Das ___ letzte Woche passiert.', ops:['hat','ist'], ok:1, por:'passieren es uno de los tres sueltos → sein.'}
+]);
+
+k10Test('test-2', [
+  {frase:'Hablando: «No tuve tiempo». → Ich ___ keine Zeit.', ops:['habe … gehabt','hatte'], ok:1, por:'haben en pasado se dice hatte, incluso al hablar.'},
+  {frase:'Ich habe gestern ___ müssen. (arbeiten)', ops:['gearbeitet','arbeiten'], ok:1, por:'con modal se usa doble infinitivo, no participio.'},
+  {frase:'Ich habe den Film ___ gesehen.', ops:['nicht','kein'], ok:0, por:'«den Film» lleva artículo determinado → nicht, antes del participio.'},
+  {frase:'Ich habe ___ Kaffee getrunken.', ops:['nicht','keinen'], ok:1, por:'sustantivo sin artículo → kein, en acusativo: keinen.'},
+  {frase:'…, weil ich müde ___.', ops:['gewesen bin','bin gewesen'], ok:0, por:'en subordinada el auxiliar va el ÚLTIMO.'},
+  {frase:'Er sagt, dass er den Film ___.', ops:['hat gesehen','gesehen hat'], ok:1, por:'igual: dass manda el auxiliar al final.'},
+  {frase:'___ habe ich viel gelernt.', ops:['Gestern','Gestern ich'], ok:0, por:'tras el marcador va el auxiliar y luego el sujeto: Gestern habe ich.'},
+  {frase:'7:30 se dice ___.', ops:['halb sieben','halb acht'], ok:1, por:'el alemán cuenta la media que falta para las 8.'},
+  {frase:'Ich arbeite ___ ALTEN.', ops:['bei','in'], ok:0, por:'bei + nombre de empresa.'},
+  {frase:'Ich bin Ingenieur ___ Beruf.', ops:['von','aus'], ok:0, por:'la fórmula fija es «von Beruf».'},
+  {frase:'Ich arbeite ___ zwei Jahren dort.', ops:['seit','vor'], ok:0, por:'seit + periodo que continúa, con verbo en presente.'},
+  {frase:'Sie hat das Essen ___. (vorbereiten)', ops:['vorgebereitet','vorbereitet'], ok:1, por:'be- inseparable manda: sin ge-.'}
+]);
+
+k10Ordenar('u5', [
+  {frase:'Ich bin müde weil ich wenig geschlafen habe',        es:'Estoy cansado porque he dormido poco.'},
+  {frase:'Er sagt dass er den Bericht geschrieben hat',        es:'Dice que ha escrito el informe.'},
+  {frase:'Als ich klein war habe ich in Puebla gewohnt',       es:'Cuando era pequeño viví en Puebla.'},
+  {frase:'Ich weiß nicht ob er angekommen ist',                es:'No sé si ha llegado.'},
+  {frase:'Sie ist zu Hause geblieben weil sie krank gewesen ist', es:'Se quedó en casa porque estaba enferma.'}
+]);
+
+k10Dictado('u6-dic', [
+  {de:'Gestern habe ich viel gearbeitet.',        es:'Ayer trabajé mucho.'},
+  {de:'Ich konnte nicht kommen.',                 es:'No pude venir.'},
+  {de:'Wir sind ins Kino gegangen.',              es:'Fuimos al cine.'},
+  {de:'Ich habe das Buch nicht gelesen.',         es:'No he leído el libro.'},
+  {de:'Sie ist Ärztin von Beruf.',                es:'Ella es médica de profesión.'},
+  {de:'Ich arbeite von halb neun bis fünf Uhr.',  es:'Trabajo de 8:30 a 17:00.'},
+  {de:'Er hat das Essen vorbereitet.',            es:'Él preparó la comida.'},
+  {de:'Ich bin noch nie geflogen.',               es:'Nunca he volado.'}
 ]);
 </script>
 
