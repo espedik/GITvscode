@@ -120,3 +120,23 @@
   .k10-formula{flex-direction:column}
   .k10-plus{justify-content:center}
 }
+
+/* ── Tabla de verbos: filtros, 3ª persona y Präteritum ─────────────────────────────────────
+   La tabla sigue el formato de la que se memoriza en clase: Significado · Präsens (3ª pers.)
+   · Präteritum · Partizip II con auxiliar. */
+.k10-filtros{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:10px}
+.k10-filtro{padding:6px 13px;border:1px solid var(--border);border-radius:20px;background:#fff;
+  font:inherit;font-size:12.5px;font-weight:700;color:#666;cursor:pointer;transition:all .15s}
+.k10-filtro:hover{border-color:var(--black);color:var(--black)}
+.k10-filtro.on{background:var(--black);border-color:var(--black);color:#fff}
+.k10-filtro span{opacity:.6;font-weight:600;margin-left:3px}
+.k10-conteo{font-size:11.5px;font-weight:700;color:#8a8a8a;margin-bottom:8px}
+/* La 3ª persona, más discreta que el infinitivo: es un apunte, no la entrada principal */
+.k10-3p{color:var(--red);font-weight:600;font-size:12.5px}
+.k10-prat{font-family:var(--mono,ui-monospace,monospace);font-size:13.5px;color:#444;font-weight:600}
+.k10-tag-ambos{display:inline-block;padding:1px 7px;border-radius:5px;font-size:10.5px;font-weight:800;
+  background:linear-gradient(90deg,rgba(204,0,0,.10),rgba(212,160,0,.18));color:#8a5a00}
+/* Con 207 filas, la tabla necesita su propio scroll y encabezado fijo */
+.k10-verbos{display:block;max-height:620px;overflow-y:auto}
+.k10-verbos thead th{position:sticky;top:0;background:var(--surface);z-index:2;
+  box-shadow:0 1px 0 var(--border)}

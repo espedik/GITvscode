@@ -22,10 +22,35 @@ consume a través de `../Dashboard/aleman-data.js`.
 
 ## Kapitel 10 — el capítulo en curso
 
-Cinco lecciones que cubren el temario real de clase: la regla del Perfekt, el listado de verbos
-irregulares, los ejercicios y el minitest, Berufe y «Mein Tag» (la tarea de video).
+Cinco lecciones que cubren el temario real de clase: la regla del Perfekt, la tabla de verbos,
+los ejercicios y el minitest, Berufe y «Mein Tag» (la tarea de video).
 
 `k10.css` y `k10-interactivo.js` son suyos y los comparten las cinco.
+
+### La tabla de verbos (`k10-02`)
+
+**207 verbos** con las cuatro columnas de la tabla que se memoriza en clase:
+
+| Significado | Präsens | Präteritum | Partizip II |
+|---|---|---|---|
+| comer | essen *(isst)* | aß | **hat** gegessen |
+
+La 3ª persona del singular va entre paréntesis **solo cuando cambia** — es el mismo criterio de la
+hoja de Cenlex. El auxiliar va delante del participio, y `hat/ist` no es una duda: significa que el
+verbo cambia según el uso (*ich bin gefahren* / *ich habe das Auto gefahren*).
+
+Reparto: **139 irregulares · 9 mixtos · 59 regulares**, y 35 van con `sein`.
+
+Los datos viven en `../../scratchpad`-style listas dentro del generador que produjo el archivo; la
+tabla en sí es HTML estático. Para ampliarla, editar las filas directamente.
+
+Filtros combinables con el buscador: todos / irregulares / mixtos / regulares / con *sein* / los 15
+imprescindibles. El buscador encuentra por alemán, por español **y por Präteritum** (buscar `trank`
+lleva a *trinken*).
+
+Los **mixtos** están separados a propósito aunque también aparezcan entre los irregulares en otras
+listas: cambian la raíz como un irregular pero terminan en `-t` como un regular, y son solo nueve.
+Verlos juntos cuesta menos que encontrárselos sueltos.
 
 ### Los tres tipos de ejercicio
 
