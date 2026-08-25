@@ -1,9 +1,11 @@
 /* ══════════════════════════════════════════════════════════════════════════════════════════
    VERIFICAR SINCRONÍA — ¿dicen todas las apps lo mismo?
    ══════════════════════════════════════════════════════════════════════════════════════════
-   Uso:   node Dashboard/verificar-sincronia.js        (desde Claude_Proyecto/)
+   Uso:   node Dashboard/verificar-sincronia.js           (desde Claude_Proyecto/)
+          node Dashboard/verificar-sincronia.js --hook    (para el hook: JSON, y solo si hay algo roto)
 
-   Sale con código 1 si encuentra algo desincronizado, así que sirve tal cual en un hook.
+   Sin --hook imprime el informe y sale con código 1 si algo está desincronizado.
+   Con --hook no imprime nada cuando todo está bien y siempre sale con 0: informa, no bloquea.
 
    POR QUÉ EXISTE
    No todo se puede mover a `datos-maestros.js`: hay estructuras grandes (la rutina de 58
@@ -53,44 +55,30 @@ const coach = leer('Coach/Coach_v2.html');
 const ejer  = leer('CuidadoPersonal/ejercicio.html');
 const finz  = leer('Finanzas/Finanzas.html');
 
-/* ── 1. RUTINA_TASKS: Dashboard ↔ Coach ──────────────────────────────────────────────────────
-   `link`/`href` se ignoran a propósito: en Coach apuntan a un ancla interna (#aprendizaje) y en
-   el Dashboard a la ruta relativa (../Coach/Coach_v2.html#aprendizaje). Está documentado en el
-   README raíz; no es una divergencia, es la misma información adaptada al archivo. */
-(function rutina() {
-  const A = evaluar(literal(dash,  'const RUTINA_TASKS='));
-  const B = evaluar(literal(coach, 'const RUTINA_TASKS'));
-  if (!A || !B) { problemas.push('RUTINA_TASKS: no se pudo extraer de uno de los dos archivos'); return; }
-  const ma = new Map(A.map(t => [t.id, t])), mb = new Map(B.map(t => [t.id, t]));
-  const soloA = [...ma.keys()].filter(k => !mb.has(k));
-  const soloB = [...mb.keys()].filter(k => !ma.has(k));
-  if (soloA.length) problemas.push('RUTINA_TASKS: ids solo en Dashboard → ' + soloA.join(' '));
-  if (soloB.length) problemas.push('RUTINA_TASKS: ids solo en Coach → ' + soloB.join(' '));
+/* ── 1. RUTINA_TASKS: que NADIE la tenga incrustada ──────────────────────────────────────────
+   Desde el 2026-08-24 la rutina vive solo en datos-maestros.js y las apps la piden con
+   CIFRAS.rutina(base). Antes estaba copiada en los dos HTML y llegó a divergir 6 días.
+   Este control es la guardia de esa decisión: si alguien vuelve a pegar el literal en un HTML,
+   salta aquí en vez de descubrirse semanas después. */
+(function rutinaUnaSolaFuente() {
+  const maestro = leer('Dashboard/datos-maestros.js');
+  if (maestro.indexOf('const RUTINA_TASKS = [') < 0)
+    problemas.push('datos-maestros.js ya no declara RUTINA_TASKS — es la fuente única, tiene que estar ahí');
+  const R = evaluar(literal(maestro, 'const RUTINA_TASKS = ['));
+  if (!R) { problemas.push('RUTINA_TASKS del maestro no se pudo evaluar'); return; }
 
-  let difs = 0;
-  const detalle = [];
-  const comparar = (ida, xa, xb, ruta) => {
-    for (const c of new Set([...Object.keys(xa), ...Object.keys(xb)])) {
-      if (c === 'link' || c === 'href' || c === 'subtareas') continue;
-      const va = JSON.stringify(xa[c]), vb = JSON.stringify(xb[c]);
-      if (va !== vb) { difs++; detalle.push(['  ' + ruta + ' · campo "' + c + '"',
-        '     dash : ' + String(va).slice(0, 120), '     coach: ' + String(vb).slice(0, 120)].join('\n')); }
-    }
-  };
-  for (const [id, ta] of ma) {
-    const tb = mb.get(id); if (!tb) continue;
-    comparar(id, ta, tb, id);
-    const sa = new Map((ta.subtareas || []).map(x => [x.id, x]));
-    const sb = new Map((tb.subtareas || []).map(x => [x.id, x]));
-    for (const [sid, xa] of sa) {
-      const xb = sb.get(sid);
-      if (!xb) { difs++; detalle.push('  ' + id + ' > ' + sid + ' solo en Dashboard'); continue; }
-      comparar(sid, xa, xb, id + ' > ' + sid);
-    }
-    for (const sid of sb.keys()) if (!sa.has(sid)) { difs++; detalle.push('  ' + id + ' > ' + sid + ' solo en Coach'); }
+  let incrustada = [];
+  for (const [rel, src] of [['Dashboard/dashboard.html', dash], ['Coach/Coach_v2.html', coach]]) {
+    // La declaración legítima es una línea que llama a CIFRAS.rutina(); un literal `[` no lo es.
+    const i = src.indexOf('const RUTINA_TASKS');
+    if (i < 0) { problemas.push(rel + ': no declara RUTINA_TASKS'); continue; }
+    const linea = src.slice(i, src.indexOf('\n', i));
+    if (linea.indexOf('CIFRAS.rutina') < 0) incrustada.push(rel);
   }
-  if (difs) problemas.push('RUTINA_TASKS: ' + difs + ' diferencia(s) Dashboard ↔ Coach\n' + detalle.join('\n'));
-  else ok.push('RUTINA_TASKS — ' + A.length + ' bloques idénticos en Dashboard y Coach');
+  if (incrustada.length)
+    problemas.push('RUTINA_TASKS volvió a incrustarse en: ' + incrustada.join(', ') +
+      '\n     Debe pedirse con CIFRAS.rutina(base) — la fuente es Dashboard/datos-maestros.js');
+  else ok.push('RUTINA_TASKS — fuente única en datos-maestros.js (' + R.length + ' bloques), ninguna app la copia');
 })();
 
 /* ── 2. SK, el radar de habilidades ── */
@@ -164,6 +152,19 @@ const finz  = leer('Finanzas/Finanzas.html');
   if (huerfanos.size) problemas.push('Marcadores sin variable en el catálogo: ' + [...huerfanos].join(', '));
   else ok.push('Todos los {{marcadores}} existen en el catálogo (' + conocidos.size + ' variables)');
 })();
+
+/* ── Modo --hook ──────────────────────────────────────────────────────────────────────────────
+   Con `--hook` no imprime el informe: emite el JSON que Claude Code entiende, y SOLO cuando hay
+   algo roto. Un hook que habla cuando todo está bien se vuelve ruido y se acaba ignorando.
+   Los avisos (deuda pendiente) no interrumpen: solo los problemas. */
+if (process.argv.indexOf('--hook') !== -1) {
+  if (problemas.length) {
+    const msg = 'DATOS DESINCRONIZADOS (' + problemas.length + ')\n\n' + problemas.join('\n\n') +
+      '\n\nDetalle: node Dashboard/verificar-sincronia.js';
+    process.stdout.write(JSON.stringify({ systemMessage: msg }));
+  }
+  process.exit(0);   // 0 siempre: el hook informa, no bloquea la respuesta
+}
 
 // ── Informe ──
 console.log('\nVERIFICAR SINCRONÍA — ' + new Date().toISOString().slice(0, 10));

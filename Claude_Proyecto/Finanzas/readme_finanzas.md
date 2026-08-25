@@ -447,6 +447,14 @@ Lee el archivo seleccionado con `FileReader`. Si es JSON válido, pide confirmac
 ## Módulo: Seed Data
 
 ### `seedData()`
+**La lista de deudas ya no se escribe aquí**: sale de `CIFRAS.DEUDAS_SEED`, en
+`../Dashboard/datos-maestros.js`. Estaba duplicada de hecho —el seed aquí, la prosa en las otras
+apps— y cada subida de `SEED_VER` resembraba estos saldos, así que un saldo corregido a mano se
+perdía en el siguiente reseed si nadie se acordaba de tocar el seed también.
+
+Si el `<script src>` fallara, siembra **sin** deudas y avisa con un `console.error`: mejor eso que
+sembrar con una copia vieja escondida aquí.
+
 Solo se ejecuta si `localStorage['finanzasmx_v2_v'] !== SEED_VER` (actualmente `'23'`). Borra el estado anterior e inyecta datos de ejemplo con 6 meses de transacciones (ene-jun 2026) más los movimientos sueltos de agosto 2026, presupuestos, deudas reales, metas, inversiones, activos físicos e historial BTC. Incrementar `SEED_VER` para forzar re-seed.
 
 ---
@@ -649,342 +657,158 @@ Si `S.weeklyLeftover > 0`, ese monto manual reemplaza el estimado automático en
 
 ---
 
-## Modo oscuro/claro (2026-07-31)
+## Modo oscuro/claro
 
-Botón `.theme-toggle-btn` en el topbar, junto a "+ Nueva transacción". A diferencia de las otras 6 apps del ecosistema, **Finanzas ya era clara por defecto** (como Coach) — mismo patrón que Coach: `:root` sigue siendo el tema claro y se agregó `:root[data-theme="dark"]` como override, en vez de al revés. Persiste en la misma clave compartida `localStorage['coach-theme']` (ver `../README.md` para el detalle técnico completo de la convención `--ov` compartida entre las 7 apps).
+Toggle 🌙/☀️ en la barra superior, persistido en `coach-theme` — la misma clave que Coach y el
+Dashboard, así que el tema se siente uno solo al saltar entre apps. Se aplica como `data-theme` en
+`<html>` antes de pintar, para que no haya destello claro al cargar en oscuro.
 
-Detalles específicos de este archivo (el más grande y con más gráficas del proyecto):
-- Los bordes/hovers/divisores que ya usaban `rgba(0,0,0,.NN)` (dirección opuesta a las apps oscuras, que usan `rgba(255,255,255,.NN)`) se migraron al mismo truco `--ov`, con **7 excepciones dejadas deliberadamente en negro fijo**: los 3 `box-shadow` base (`--sh`/`--shm`/`--shl`), las sombras hardcoded de sidebar y topbar, el overlay de dimming de `.mo`/`.conf` (fondo de modales), y la tarjeta decorativa oscura de inversión GBM (`rgba(0,12,35,.95)`, un panel intencionalmente oscuro dentro de la página clara, no relacionado con el tema) — todos siguen viendo bien en ambos temas sin invertirse.
-- Nueva variable `--surface-solid` (`#ffffff` claro / `#17171f` oscuro) para `.card`/`.modal`/`.conf-box`/`.toast`/`select option`, que antes tenían `#ffffff` hardcoded.
-- **5 gráficas Chart.js** (`chBud`, `chGbmInv`, `chBal`, `chPat`, `chBtcPnl`) tenían colores de grid/ticks/leyenda hardcoded, algunos ya inconsistentes con el tema claro real desde antes (p.ej. grid `rgba(255,255,255,.08)` casi invisible sobre fondo blanco, o la línea "Invertido acumulado" del gráfico de BTC en blanco sobre blanco — bugs preexistentes, no introducidos ahora) — se corrigieron con el mismo helper `cssVar(n)` de las demás apps, y `toggleTheme()` vuelve a llamar al render de la sección activa para redibujar la gráfica visible al cambiar de tema.
-- Un puñado de estilos inline con grises hardcoded (tabs de mes futuro, botones de tabs de BTC) también se migraron a `var(--text3)`/`rgba(var(--ov),X)` por el mismo motivo — algunos, como el texto de meses futuros en blanco sobre blanco, eran ilegibles en el tema claro ya antes de este cambio.
+## Responsivo
 
-**Bug real que se quedó fuera de esta migración — `.sidebar`/`.topbar` seguían blancas en modo oscuro (2026-08-03)**: Adán reportó *"el modo oscuro en finanzas no esta completo"*. La migración de arriba corrigió correctamente el `box-shadow` de sidebar/topbar (listado como excepción intencional) pero pasó por alto que su `background:rgba(255,255,255,.97)` también estaba hardcoded — nunca se migró a una variable de tema, así que las dos barras de navegación se quedaban blancas y opacas encima de todo el contenido oscuro, el bug más visible de los dos (la franja lateral y superior blanca rodeando contenido negro). Fix: nueva variable RGB `--glass` (`255,255,255` claro / `23,23,31` oscuro — mismo valor que `--surface-solid` en cada tema, pero como tripleta para poder usarse dentro de `rgba(var(--glass),.97)` y conservar el efecto de vidrio esmerilado con `backdrop-filter:blur(20px)` en ambos temas). Verificado con Playwright: color de fondo computado de `.sidebar`/`.topbar` en modo oscuro pasó de `rgba(255,255,255,.97)` a `rgba(23,23,31,.97)`, modo claro sin cambios, y capturas de las 8 secciones en oscuro sin ninguna franja clara restante.
+Verificado a **1600px y 390px** (iPad y iPhone 15 Pro). En móvil el sidebar se colapsa tras el
+botón ☰ (`#menuBtn`, visible bajo 640px), las tablas scrollean dentro de su contenedor y los KPIs
+pasan a una columna. La página nunca scrollea en horizontal.
 
-## Responsivo — iPad / iPhone 15 Pro (2026-08-03)
+## Enlace al Dashboard
 
-El archivo ya traía infraestructura parcial de una sesión anterior (botón `#menuBtn`, `.sidebar.open`, listener de `resize` en `init()` — ver punto 8 de `init()` arriba, y los breakpoints `@media(max-width:900px)`/`@media(max-width:640px)` que ya colapsaban `.g4`/`.g3`/`.g2` a 2/1 columnas). Pero nunca se había probado con Playwright: las 8 pestañas (`dashboard`, `transactions`, `budgets`, `debts`, `goals`, `patrimonio`, `indicators`, `gbm`) desbordaban horizontalmente tanto en iPad (820×1180) como en iPhone 15 Pro (393×852) — overflow medido entre 3px (Dashboard en iPad) y 486px (Plan de Inversiones en iPhone). Se mantuvieron los mismos breakpoints existentes (900px/640px) en vez de introducir 800px/480px, porque ya cubrían bien ambos dispositivos objetivo una vez resueltas las causas reales del desborde — que no eran el ancho de los breakpoints, sino tres problemas puntuales:
+Botón redondo con 🚀 en `.topbar-actions`, con la clase `.theme-toggle-btn` que ya usan sus
+vecinos — hereda tema y estilos sin CSS nuevo. **No** es un bloque flotante: uno `position:fixed`
+se encimaba sobre "+ Nueva transacción" y no seguía el tema del archivo.
 
-**1. El topbar empujaba las 8 pestañas por igual.** `.topbar{display:flex;justify-content:space-between}` con `.topbar-actions` (fecha + botón "+ Nueva transacción" + toggle de tema, todo con `white-space:nowrap` heredado de `.btn`) nunca hacía wrap. Como `.topbar` es a la vez contenedor flex y flex-item de `.main{display:flex;flex-direction:column}`, su contenido sin envolver forzaba el ancho de `.main` — y con eso, el de toda la página — por encima del viewport en las 8 secciones por igual (root cause compartido, no algo específico de cada tab). Pista que confirmó el diagnóstico: el `.toast` de BTC (`position:fixed;right:24px`) aparecía en las mediciones de Playwright posicionado *cientos de px fuera* del viewport nominal — eso solo pasa porque, en emulación móvil, cuando algún elemento desborda el ancho declarado en el `<meta viewport>`, el layout viewport completo (y con él, el "viewport" contra el que se calcula `right:24px` de un elemento `fixed`) se agranda para acomodarlo. En cuanto se arregló el desborde real, el toast volvió solo a su posición correcta sin tocarlo — no era un problema en sí, era el síntoma más visible de otro.
-   Arreglo: `@media(max-width:640px){.topbar{flex-wrap:wrap;height:auto;min-height:58px;row-gap:8px;padding:10px 16px}.topbar-actions{flex-wrap:wrap;justify-content:flex-end}}` — el título pasa a su propia fila y fecha+botón+toggle a la siguiente, sin ocultar ni recortar ningún control. En `@media(max-width:900px)` (iPad) el desborde era de solo unos px, así que ahí bastó con reducir el padding del topbar (`0 24px`→`0 16px`) y el gap de `.topbar-actions` (`8px`→`6px`).
+---
 
-**2. Trampa "min-width:auto" aplicada a flexbox, no solo a grid.** `.main{flex:1}` (item del flex-row de `body`) no tenía `min-width:0`, así que aunque `.tw{overflow-x:auto}` (el wrapper de la tabla de Transacciones) esté correctamente configurado para hacer scroll interno, `.main` no se dejaba encoger por debajo del contenido de sus hijos y arrastraba a toda la página con él. Con `.main{min-width:0}` agregado, el mismo `.tw` que ya existía empezó a contener el overflow de la tabla como estaba pensado, sin tocar su CSS.
+## Las cifras compartidas y las migraciones
 
-**3. Trampa #2 (grids con `style="display:grid;grid-template-columns:..."` inline, generados por JS)** — un media query no puede pisar un inline style. `renderGBM()` (la pestaña "Plan de Inversiones", la más recargada de la app) construye 6 grids así: la ficha de métricas de cada posición (4 col), el desglose semanal Entradas/Gastos/A invertir (3 col), el resumen de servicios fijos (3 col), los 5 KPIs del portafolio, el layout principal `1fr 340px` (posiciones + panel lateral) con su panel derecho en `position:sticky;top:70px`, y la comparación Mejor/Peor (2 col). `renderIndicatorsHTML()` (pestaña "Indicadores") arma un grid de 4 col para el desglose del Crédito Automotriz. `renderBtcHistory()` (dentro de la pestaña "Patrimonio") arma un layout `1.4fr 1fr` para gráfica + resumen de BTC. Los 9 casos se resolvieron igual: se sacó `display:grid;grid-template-columns:...` del `style=""` inline y se reemplazó por una clase nueva (`.gbm-metrics-grid`, `.gbm-week-grid`, `.gbm-svc-grid`, `.gbm-port-kpis`, `.gbm-port-layout` + `.gbm-port-side` para el sticky, `.gbm-bw-grid`, `.ind-grid4`, `.btc-layout`) definida en `<style>` con el **mismo** `grid-template-columns` que tenía el inline (cero cambio visual en desktop), dejando el resto del `style=""` (gap, margin, align-items) donde estaba. Con la clase ya en la hoja de estilos, sí se le pudieron agregar breakpoints — en general 900px colapsa a 2 columnas (o apila el layout `1fr 340px` y quita el `sticky` del panel lateral, que a ese ancho ya no cabe), y 640px termina de bajar a 1 columna los grids de 3 (semanal, servicios) que a 393px de ancho quedaban demasiado angostos para montos en pesos.
+Esta app es la **fuente** de los saldos: los escribe en `finanzasmx_v2`, que leen el Dashboard y
+Coach. Pero el *seed* y las *migraciones* ya no viven aquí, sino en
+[`../Dashboard/datos-maestros.js`](../Dashboard/datos-maestros.js).
 
-**Trampa #1 (grid con hijos que no se encogen)**: no resultó ser la causa de ningún desborde real en este archivo (los `.g2`/`.g3`/`.g4` existentes ya se comportaban bien una vez resueltos los 3 puntos de arriba), pero se agregó de todas formas el mismo fix defensivo usado en Dashboard/Coach — un bloque `min-width:0` para los hijos de `.g2/.g3/.g4/.fr` y de las 9 clases nuevas, puesto al final de la hoja de estilos (después de `@media(max-width:640px)`) para ganar por orden de aparición si algún dato futuro con texto largo llegara a necesitarlo.
+Carga ese módulo en el `<head>`. No lo necesita para pintar nada —sus datos salen de `S`— pero así
+cualquier texto nuevo puede usar los mismos `{{marcadores}}` que las otras apps en vez de empezar
+otra copia a mano.
 
-**Verificación (Playwright, Chromium headless):** las 8 pestañas se recorrieron con `nav('<tab>')` en iPad (820×1180) e iPhone 15 Pro (393×852, `isMobile:true`, `hasTouch:true`) — `document.documentElement.scrollWidth - clientWidth = 0` en las 16 combinaciones, cero `console.error`/`pageerror`. En desktop (1500×1000) el mismo recorrido confirmó `overflow=0` y las 8 pantallas visualmente idénticas a antes del cambio (mismas 4/3/5/2 columnas y el panel lateral `340px` sticky del Plan de Inversiones, que solo se apila por debajo de 900px). Se corrieron además los 3 scripts de prueba funcional ya existentes en el repo (`test_finanzas.js`, `test_finanzas_cat.js`, `test_finanzas_migration.js`) — mismos resultados que antes de tocar el CSS (gráfica de categoría con/sin datos, migración de Banamex/NVIDIA con y sin datos previos en `localStorage`), cero errores de consola. También se extrajeron ambos bloques `<script>` con regex y se validaron con `new Function()` — sin errores de sintaxis.
+**Las correcciones de saldo nuevas van al módulo**, nunca duplicadas aquí. Las anteriores al
+2026-08-24 (`_banamex9k`, `_pagos20260813`, `_msibbva20260813`, `_ahorro20260817`) siguen en
+`init()`: ya corrieron, tienen su bandera y son inertes.
 
-No se modificó ninguna función, variable, estructura de dato ni clave de `localStorage` — todos los cambios fueron CSS nuevo (breakpoints + 9 clases de grid) y, en el HTML/JS, únicamente reemplazar `style="display:grid;grid-template-columns:..."` por `class="..."` en esos mismos 9 elementos (mismo resto de estilos inline, mismo markup alrededor).
+Detalle en [`../Dashboard/DATOS-MAESTROS.md`](../Dashboard/DATOS-MAESTROS.md).
+
+---
+
+## Estado de las deudas
+
+| id | Deuda | Saldo | Nota |
+|---|---|---|---|
+| `d001` | Tarjeta BBVA | **$34,000** ⚠️ | Subiendo: el mínimo de $1,500 no cubre el interés |
+| `d002` | Tarjeta Banamex | $0 ✅ | Liquidada el 13-ago-2026, saldo completo |
+| `d003` | Crédito Automotriz | $292,000 | 12.99%, $6,700/mes |
+| `d004` | Apple Watch MSI | $1,708 | Últimas cuotas |
+| `d007` | Boletos Ticketmaster | $0 ✅ | Liquidado |
+| `d008` | iPhone 15 MSI | $11,362 | |
+| `d009` | Zap Stylo (MSI BBVA) | $334 | "El de los zapatos" — el único MSI de BBVA vivo |
+| `d010`, `d011` | Merpago, Mercado Pago | $0 ✅ | Liquidados el 24-ago-2026 |
+
+Deuda total **$339,404**. Los valores vivos están en `finanzasmx_v2`; esta tabla es la foto para
+orientarse rápido.
+
+`d005` y `d006` **se borraron**, no se pusieron en $0: eran un vuelo y un MSI que nunca existieron
+en el historial real de BBVA. Dejarlos en $0 los mostraría para siempre en "✅ Liquidadas", que es
+una afirmación falsa distinta.
+
+---
+
+## La tasa de las tarjetas: 55.7%, y por qué
+
+`d001` tenía `rate:10`, que sobre $32,343 daba $270/mes de intereses. Lo real son ~$1,500.
+
+Lo confirman los registros de este mismo archivo: la deuda llevaba `total == balance == 32,343.31`
+desde el **22-ene-2024** pagando $1,500 al mes. **31 meses, $46,500 pagados, saldo intacto** — eso
+solo pasa si el interés se come el pago completo. Tasa implícita: `1500 × 12 ÷ 32,343.31 = 55.7%`.
+
+⚠️ **Sigue pendiente confirmarlo contra el estado de cuenta**, que trae la tasa y el CAT reales.
+
+Este dato alimenta el medidor "🔥 Intereses este mes", que ahora avisa de que **el pago mínimo no
+amortiza nada**.
+
+### Y ahora la tarjeta está subiendo
+
+El 24-ago-2026 el saldo pasó de $32,343.31 a **$34,000**: **+$1,656.69 en un mes**, que no cuadra
+con pagar $1,500 y quedar en tablas. Dos lecturas, y hay que confirmar cuál es:
+
+- **No se pagó el mínimo ese mes.** El aumento sería puro interés: `1,656.69 ÷ 32,343.31 = 5.12%
+  mensual ≈ 61% anual`, muy cerca del 55.7% estimado más comisiones. Es la que mejor encaja.
+- **Sí se pagó y hubo consumo nuevo.** Para subir eso tras abonar $1,500, el cargo del mes tendría
+  que haber sido ~$3,157: el 9.8% del saldo, demasiado para ser solo interés.
+
+La conclusión operativa es la misma en ambos casos: **esta tarjeta ya no está estancada, está
+creciendo**. Hasta resolverlo, la simulación mes a mes de Coach queda sin rehacer.
+
+En `d001` se mantiene la invariante `total == balance` que la tarjeta lleva desde 2024: con `total`
+congelado, las barras de "pagado real" saldrían **negativas**.
+
+---
+
+## Cómo se calculan los saldos MSI
+
+`autoBalance(d, refDate)` solo auto-calcula **MSI a 0%** (`type:'other'`, `rate:0`): son
+deterministas, `total − meses × cuota`. Las tarjetas y el crédito con interés se quedan manuales,
+porque dependen de pagos reales.
+
+Cuenta las cuotas con **`floor`, no `round`**: solo las YA cobradas. Con `round`, una cuota que aún
+no se cobra (cobra el 18 y hoy es 13) se daba por pagada y el saldo salía una cuota más bajo.
+
+El `start` de cada MSI **no es la fecha de compra literal**: es la que hace que `autoBalance`
+reproduzca exactamente las cuotas del estado de cuenta (30.44 días por mes). Esa misma fecha decide
+si la cuota entra en el plan semanal (`start + totalM`), así que al elegirla hay que verificar
+contra **los dos** cálculos, no solo contra el saldo.
+
+---
+
+## Huecos de datos conocidos
+
+No son fallos de la app: es información que no está registrada, y por eso no se puede mostrar.
+
+- **El fondo de la Maestría no está desglosado.** `g001` guarda `current: 53740` como una sola
+  cifra. No hay instrumentos ligados, ni historial de aportaciones, ni cuenta asociada — las únicas
+  entradas de `investments` son CETES y el depósito de renta, que **no** son ese fondo. Para verlo
+  desglosado habría que dar de alta en **Inversiones** dónde está guardado ese dinero.
+- **Los `activos` no cuentan en el patrimonio.** Hay 15 bienes registrados (BYD, PC, teléfonos,
+  PS5, monitores, efectivo, cuenta) por unos **$540,600**, y `patrimonioNeto()` solo suma
+  `investments + emergencyFund − debts`. **Se decidió no cambiar la fórmula**: la meta del millón se
+  mide en dinero disponible, y el punto de partida histórico de −$308,830 se calculó así. El panel
+  muestra los bienes aparte y da la cifra con y sin ellos.
+- **No hay Bitcoin en `investments`.** Adán lo menciona como parte de su portafolio y el panel de
+  inversión lo trata como tal, pero en los datos solo están CETES y el depósito de renta.
+
+---
+
+## Alimentación: dato medido contra patrón declarado
+
+El desglose de gastos **no inventa categorías**: muestra solo las que tienen movimientos reales.
+Restaurantes no aparece si no se gastó ahí.
+
+Alimentación se modela con su patrón real en vez de un promedio ciego, y el modal muestra juntos el
+**promedio medido** ($1,766.67) y el **patrón declarado** ($7,110). Esa brecha de $5,343 a la vista
+es el valor del cambio. **La regla de fondo no cambió**: el dato medido siempre le gana al
+declarado.
+
+---
 
 ## Referencias cruzadas
 
-- El **Dashboard** (`../Dashboard/dashboard.html`) lee `finanzasmx_v2` directamente (`D.fin`): usa `investments`, `emergencyFund`, `debts` (patrimonio neto, fondo de emergencia, deuda total del slide "💰 Finanzas") y `transactions` del mes actual (ingresos/gastos, score de finanzas del Vida Score). Si cambias la forma de `S.investments`/`S.debts`/`S.transactions`/`S.emergencyFund` aquí, revisa `patrimonioNeto()`, `hasFinData()`, `calcScores()` y `renderFinanzas()` en `Dashboard/dashboard.html`.
-- El enlace "🚀 Volver al Dashboard" del sidebar **se eliminó el 2026-08-18**, junto con su etiqueta de grupo "Navegación", que se quedaba sin ítems. Duplicaba a `#btnVolverDash`, el botón fijo arriba a la derecha que desde esa fecha llevan los 47 HTML del proyecto (ver `../Dashboard/readme_dashboard.md` → "Una sola vía de regreso"). El `nav-item` "📊 Dashboard" que sigue en el menú **no** sale de Finanzas: es la sección interna de esta app.
-- Mapa completo del proyecto: [`../README.md`](../README.md).
-- **Auditoría completa realizada el 2026-08-01** (la primera desde la creación de este documento): se verificaron contra el código real todos los cálculos financieros, se corrigió el sueldo base documentado ($43,000 → $41,000, el código nunca tuvo $43,000 — era el `.md` el que estaba mal), se corrigió la fórmula semanal de GBM (ya no reparte Didi por semana), se documentó el módulo de snapshots mensuales que no tenía entrada propia, y se restauró en el código la gráfica `ch-cat` (dona de gastos por categoría del mes) que el propio `.md` ya describía como existente pero había sido removida del HTML/JS — ver `renderDashCharts(mtx)` arriba, ya vuelve a estar en el Dashboard junto a la gráfica de balance. No se encontró ningún botón muerto, cálculo con división por cero sin manejar, ni referencia a función/ID inexistente en todo el archivo (4340 líneas).
-
-## Fix: el panel de la Maestría contradecía la pausa de aportaciones ya decidida (2026-08-05)
-
-Encontrado en una auditoría general del ecosistema pedida por Adán ("mejora todos los html, ve funciones o cosas que les falten") — no reportado por él directamente. `Coach/Coach_v2.html` documenta una decisión real tomada en julio 2026 ("Decisión tomada — Maestría en pausa 1 año", checklist `s0-6`: pausar aportaciones hasta el 18 jul 2027, nueva meta oct 2028, los $53,740 ya ahorrados quedan intactos) — pero esa decisión solo vivía como texto narrativo en Coach. `Finanzas.html` no la conocía: el panel "🎓 Maestría en Alemania — Proyecciones" seguía calculando `⚠️ faltan $X/mes` contra la meta vieja (oct 2027, hardcodeada en varios textos), como si Adán debiera seguir aportando activamente ahora mismo.
-
-- **`S.goals[0]` (`g001`, Maestría)** ganó dos campos: `date` corregido de `'2027-10-01'` a `'2028-10-01'` (la meta real tras la pausa) y `pausadaHasta:'2027-07-18'` (nuevo). `SEED_VER` subió de `'22'` a `'23'` para que el cambio se aplique la próxima vez que Adán abra la app — `seedData()` reemplaza `S` por completo si la versión guardada en `localStorage[KEY+'_v']` no coincide, mismo mecanismo que ya usaban las 22 versiones anteriores del seed (no es un merge parcial; es el patrón de "la fuente de verdad es el código", ya establecido en este archivo).
-- **`renderSpecials()`** ahora calcula `maestriaPausada` (`pausadaHasta` existe y no ha pasado) y `targetLabel` (mes/año de la meta, formateado dinámicamente en vez de repetir "oct 2027" a mano en 5 lugares distintos del HTML). Mientras `maestriaPausada` es verdadero, el bloque "Falta por ahorrar/mes" + "Tu sobrante real mensual" (con su alerta roja condicional) se reemplaza por un aviso neutro: "⏸️ Aportaciones pausadas hasta 18 jul 2027 — los $X ya ahorrados quedan intactos... Nueva meta: oct 2028".
-- **Trampa de zona horaria encontrada al construir `targetLabel`**: `new Date('2028-10-01').toLocaleDateString(...)` mostraba "sep 2028" en vez de "oct 2028" — `new Date('YYYY-MM-DD')` parsea a medianoche UTC, y en México (UTC-6) eso cae en el día/mes anterior al formatear en hora local. Mismo bug afectaba la fecha de `pausadaHasta` ("17 jul" en vez de "18 jul"). Fix: agregar `'T12:00:00'` al string antes de construir el `Date` (mediodía, ninguna zona horaria del mundo tiene offset ≥12h) — se aplicó en ambos lugares.
-
-Verificado con Playwright: `localStorage['finanzasmx_v2_v']` pasa a `'23'` en la primera carga; el panel muestra "Meta: $500,000.00 · oct 2028" y "⏸️ Aportaciones pausadas hasta 18 jul 2027" (fechas correctas, sin el corrimiento de un día/mes); cero errores de consola.
-
-## Fix de raíz: junio 2026 desaparecido del historial de Indicadores, para que no se repita nunca (2026-08-07)
-
-Adán reportó: *"en el html de finanzas no dejaste registrado en junio, debes de dejar ya para siempre todos los meses registrados, pon eso de regla en el html y mejoralo en ese sentido, que no se vuelva a repetir"*. Se encontraron y corrigieron **dos causas independientes**, no solo una — el gap pudo venir de cualquiera de las dos:
-
-- **Causa raíz probable — `seedData()` borraba `indicatorHistory` en cada reseed.** `SEED_VER` (línea ~3614, ya en `'23'` — sube cada vez que Claude actualiza el seed hardcodeado de este archivo) dispara `seedData()`, que hacía `localStorage.removeItem(KEY)` y reconstruía `S` desde cero con un objeto literal que **no incluía `indicatorHistory`** — cualquier mes que Adán ya tuviera registrado (como junio) se perdía por completo cada vez que una sesión futura tocaba este archivo y subía la versión del seed, sin relación alguna con si abrió o no la app ese mes. Fix: antes de `removeItem`, `seedData()` ahora rescata `indicatorHistory` del `S` guardado en `localStorage` (si existe) y lo reinyecta después de construir el nuevo `S`, justo antes de `save()`. El resto del seed (transacciones, deudas, metas) se sigue reemplazando igual que siempre — solo `indicatorHistory` se preserva, porque es el único campo que la app genera solo con el tiempo y que Claude no puede reconstruir después con precisión si se pierde.
-- **Causa secundaria — `autoSaveCurrentMonthSnapshot()` solo sabía guardar el mes en curso.** Si Adán no abría la app durante un mes calendario completo (con o sin el problema de arriba), ese mes nunca generaba snapshot — no había ningún mecanismo de relleno. Fix: nueva función `backfillMissingMonthSnapshots()`, llamada al final de `autoSaveCurrentMonthSnapshot()` (o sea, en cada carga de la app, no solo al ver Indicadores). Recorre el historial ordenado y, para cualquier hueco entre el snapshot más antiguo y el más reciente, inserta una copia del snapshot del **mes anterior más cercano** (carry-forward — nunca datos de un mes futuro, para no fabricar historia), marcada `backfilled:true` y `backfilledFrom:'YYYY-MM'` (si el mes base también era `backfilled`, propaga el mes original real, no el intermedio estimado, para que la etiqueta siempre apunte a la fuente real de los datos).
-- **UI honesta para los meses rellenados**: el tab de un mes `backfilled` usa 🕓 en vez de 🔒, y el banner superior cambia de "🔒 Datos históricos — Guardado el [fecha] · Solo lectura" a "🕓 Estimado — no se abrió la app ese mes — No hay registro real de [mes] — estos números son los de [mes de origen] (mes anterior más cercano), no una medición de [mes]" — nunca se presenta un mes rellenado como si fuera una medición real de ese mes.
-- Ambas reglas quedaron documentadas como comentario fijo en el código, justo arriba de `seedData()` y de `backfillMissingMonthSnapshots()`, explicando por qué existen y qué no se debe volver a hacer.
-- Verificado con `node --check` sobre el script inline extraído, y con Playwright en dos escenarios simulados en `localStorage` (reproduciendo el bug real sin necesidad del navegador de Adán): (1) historial con mayo y julio pero sin junio → tras recargar, junio aparece automáticamente marcado `backfilled:true, backfilledFrom:'2026-05'`, visible en el tab bar y con el banner de "Estimado" correcto; (2) historial completo de mayo/junio/julio + `localStorage[KEY+'_v']` desactualizado (simulando que sube `SEED_VER`) → tras recargar, `seedData()` corre su reseed normal pero los tres meses sobreviven intactos, más agosto (mes actual) añadido. Cero errores de consola en ambos casos.
-- **Nota importante**: este fix previene que el problema se repita hacia adelante y rellena honestamente cualquier hueco ya existente con datos estimados — pero si el snapshot real de junio ya se perdió por un reseed anterior a este fix (sin backup en ningún lado), esos números originales de junio no se pueden recuperar; lo que Adán va a ver es la estimación por carry-forward, correctamente etiquetada como tal, no el dato original.
-
-## "Gastos del Mes" ahora abre el desglose completo por apartado (2026-08-12)
-
-Pedido: *"en el recuadro de gastos del mes, cuando haga click muestrame todos los gastos que tengo, en ese de finanzas ya sabes que gasto al mes y los creditos que tengo y rentas y lo de comida y ponmelo con el costo y costo total y desglozado por apartados"*.
-
-La tarjeta mostraba solo el total y cuántos movimientos había, sin forma de ver qué lo componía. **No hizo falta inventar ni capturar datos nuevos**: `getMonthProjection()` ya devolvía todo el desglose, solo que nadie lo pintaba en esta pantalla.
-
-**Qué junta el modal**, de las 2 fuentes que la app ya tiene:
-- **Gastos fijos** (`proj.fixed`): renta, servicios (celular, internet, gas, agua/luz), gym, suscripciones, limpieza y CETES.
-- **Créditos**: los pagos mínimos de cada deuda salen solos de `S.debts` dentro de esa misma función, así que el desglose **se mantiene actualizado sin tocar nada** cuando una deuda se liquida o le cambia el mínimo.
-- **Comida y entretenimiento** (`proj.varItems`): el promedio real de los últimos 3 meses, no una cifra inventada.
-- **Movimientos reales** del mes, si los hay.
-
-**Decisiones de diseño:**
-- **Cada renglón lleva su origen etiquetado**: `FIJO` (se repite cada mes), `PROMEDIO` (estimado con su gasto real de los últimos 3 meses) o `REGISTRADO` (movimiento que él capturó). Sin esa distinción, un promedio se leería como un cargo confirmado — y ya vimos hoy, con la tarjeta de edad, lo que pasa cuando un número aparenta una precisión que no tiene.
-- **Orden fijo de apartados** (`ORDEN_APARTADOS`), no por monto. Si se ordenara por importe, el mismo apartado saltaría de lugar cada mes y habría que buscarlo de nuevo cada vez.
-- **Porcentaje del total por apartado**, que es lo que de verdad responde "¿en qué se me va el dinero?". Con sus cifras reales: Hogar/Renta 38%, Deudas 28%, Alimentación 14%.
-- **El dato medido le gana a la proyección**: si el mes ya tiene transacciones registradas, se muestran esas y el texto de arriba lo dice.
-- Modal de 900px en vez de los 500px del resto — aquí hay una tabla que leer, no un formulario de 3 campos.
-- La tarjeta ganó `.card-click` (cursor y borde de acento al pasar encima) y un "ver desglose →", porque las otras 3 tarjetas de KPI son solo de lectura y nada indicaría que esta sí abre algo.
-
-- Verificado con Node: sintaxis OK en los 2 bloques `<script>` reales; CSS 156/156 llaves; `<div>` 965/965; el modal, su cuerpo, la función y la tarjeta clicable existen. Simulado con sus gastos fijos reales más 3 créditos: **total $29,694**, agrupado en 8 apartados, 0 apartados sin ícono asignado.
-
-## Alimentación deja de ser un promedio ciego y pasa a modelarse con su patrón real (2026-08-12)
-
-Adán, al ver el desglose: *"alimentacion gasto como 110 por comida y como 2 veces en la calle, eso si compro, pero si yo cocino pues lo que gaste del super"*. Preguntada la frecuencia (cambiaba el resultado hasta 7×), confirmó **2 veces al día, todos los días**.
-
-**El problema que destapó**: `getMonthProjection()` calculaba Alimentación como el promedio de los últimos 3 meses de transacciones registradas. Si no hay transacciones capturadas en esa categoría —que es el caso—, el promedio da 0 y **la categoría ni siquiera aparecía**, así que el gasto del mes se veía mucho más bajo de lo real.
-
-**El modelo nuevo** (`ALIMENTACION_MODELO`) usa sus datos, no supuestos:
-- **Comer fuera**: $110 × 2 comidas × 30 días = **$6,600/mes**, tal como lo describió.
-- **Costo de cocinar**: NO inventado — es el `costoAprox` real de su propio recetario (`comida.html → RECETAS`), donde cada receta trae la suma de sus ingredientes con precios de su ticket de Walmart. Promedios reales: desayuno **$17**, cena **$38**.
-- **Hoy**: desayuna en casa (ya está en su rutina) y compra comida y cena → **$7,110/mes**.
-- **Si cocinara todo**, con sus mismas recetas → **$2,790/mes**.
-- **Diferencia: $4,320 al mes · $51,840 al año.**
-
-Ese comparativo se muestra dentro del desglose, con las 2 cifras lado a lado y enlace a su recetario. Es dinero que ya está saliendo y que puede ir a la deuda cara **sin ganar un peso más** — que es exactamente el objetivo de Fase 0.
-
-**Detalles de implementación:**
-- El modelo **solo entra como respaldo**: si el mes tiene transacciones reales de Alimentación, esas ganan. El dato medido siempre le gana al declarado.
-- Los ítems que vienen del patrón se marcan `estimadoPorPatron`, y la leyenda de PROMEDIO ahora dice "con tu gasto real de los últimos 3 meses **o con tu patrón declarado**", para no presentar una estimación como si fuera un cargo.
-- Se declara con getters (`mensualCalle`, `mensualCocinando`, `ahorroMensual`) en vez de constantes precalculadas: si cambia el precio de calle o la frecuencia, todo lo demás se recalcula solo.
-
-**Nota honesta sobre la ronda anterior**: al presentar el desglose recién construido se mostró una tabla con "Alimentación $4,200" y montos de créditos como si fueran sus cifras reales. **No lo eran** — eran valores inventados para probar que la agrupación funcionara. Los gastos fijos (renta, gym, servicios) sí salían del código; los de comida y deudas no. Se corrigió de inmediato al detectarlo, pero vale registrarlo: **al simular, hay que decir que es simulación** — presentar datos de prueba como reales es peor que no mostrar nada, sobre todo en la app con la que toma decisiones de dinero.
-
-- Verificado con Node: sintaxis OK en los 2 bloques `<script>` reales; CSS 156/156 llaves; `<div>` 977/977; y el modelo evaluado da los números de arriba ($6,600 calle · $7,110 hoy · $2,790 cocinando · $4,320 de diferencia).
+- [`../Dashboard/DATOS-MAESTROS.md`](../Dashboard/DATOS-MAESTROS.md) — índice del proyecto, catálogo de variables
+- [`../Dashboard/readme_dashboard.md`](../Dashboard/readme_dashboard.md) — quién consume estos datos
+- [`../Coach/readme_coach_v2.md`](../Coach/readme_coach_v2.md) — el Plan Maestro que se apoya en ellos
+- `../../CLAUDE.md` — las tres reglas del proyecto
 
 ---
 
-## TC Banamex liquidada y Ticketmaster pagado (2026-08-13)
+## Verificar un cambio
 
-Adán reportó dos cosas: **la Tarjeta Banamex quedó en $0** (pagó el saldo completo, no el mínimo) y **los Boletos Ticketmaster (MSI) ya están pagados**. Al preguntarle por el Apple Watch MSI —que se cobra a esa misma tarjeta— aclaró que **le quedan 2 cuotas: 18 ago y 18 sep 2026**, no las 3 que tenía registradas. También pidió que los pagos quedaran registrados como movimientos de agosto.
-
-### Cambios de dato
-
-| Registro | Antes | Ahora |
-|---|---|---|
-| `d002` Tarjeta Banamex | `balance: 9000`, `noInterest: 12238` | `balance: 0`, `noInterest: 0` |
-| `d007` Boletos Ticketmaster (MSI) | `balance: 1260` | `balance: 0` |
-| `d004` Apple Watch MSI | `balance: 2562`, `day: 16` | `balance: 1708` (2 × $854), `day: 18` |
-
-`total` se dejó intacto en los tres (sigue siendo el monto original, base del % pagado). Las dos deudas liquidadas **no se borran**: la tarjeta sigue existiendo y el MSI es historial.
-
-Dos transacciones nuevas en agosto 2026 (`s064`, `s065`): *Liquidación total TC Banamex* $9,000 (cat. Deudas) y *Boletos Ticketmaster (3/3)* $1,260 (cat. Entretenimiento, misma categoría que sus dos cuotas anteriores `s062`/`s063`).
-
-### Migración `_pagos20260813`
-
-Mismo patrón de bandera propia que `_banamex9k`, y por la misma razón amplificada: **el seed ya no cubre julio ni agosto**, así que bumpear `SEED_VER` borraría cualquier movimiento que Adán haya capturado a mano en esos dos meses. La migración corrige los tres saldos y hace *push* de las dos transacciones solo si sus `id` no existen ya (idempotente), y luego marca la bandera. El seed base también quedó actualizado, para que una instalación desde cero nazca correcta.
-
-### Los mínimos de TC dejaron de estar hardcodeados
-
-El bug de fondo: `renderGBM` tenía `const TC_BBVA=1500, TC_BANAMEX=810` a mano, y ese `810` se repetía en tres fórmulas más de "piso de gasto fijo" (`_fixedFloor2` en Indicadores, `_fixedFloor` en el snapshot mensual, `_gbmTC` en la Hoja de Ruta). Con la tarjeta en $0 el plan semanal habría seguido apartando $810 al mes que ya no se deben.
-
-Ahora los cuatro lugares llaman a `minimosTC()`, que suma los mínimos de las tarjetas **con saldo > 0**. Si Adán vuelve a usar la Banamex, el mínimo reaparece solo; no hay que tocar código. En el panel "💳 Tarjetas" del plan semanal se agregó `.filter(s=>s.a>0)` para que una tarjeta liquidada no salga listada en `$0`.
-
-Lo mismo con las sumas de mínimos que no filtraban por saldo y por eso seguían contando deudas muertas: KPI "Pagos Mínimos / Mes" en `renderDebts`, `totMin` del snapshot mensual de Indicadores (alimenta DTI y ratio de liquidez), y "Pagos mensuales" de la Hoja de Ruta. El resumen de pasivos de Patrimonio también filtra ahora `balance > 0`, para no listar renglones en `$0 · 0.0% del total`.
-
-### `autoBalance`: `Math.round` → `Math.floor`
-
-`autoBalance(d, refDate)` recalcula el saldo de un MSI como `total − meses_transcurridos × cuota`. Usaba `Math.round`, que **da por pagada una cuota que todavía no se cobra**: el Apple Watch cobra el día 18 y hoy es 13, así que redondeaba 10.8 meses a 11 y devolvía $854 en vez de los $1,708 reales que Adán acaba de confirmar.
-
-La prueba de que `floor` es la semántica correcta está en los propios datos: con `floor`, el iPhone 15 MSI cuadra **exacto** contra su saldo registrado ($11,361.54); con `round` no. Efecto colateral esperado en Indicadores y Patrimonio: el Vuelo Viva Aerobus pasa de $440 a $880 y Mercado Libre de $1,312 a $2,626 — ambos suben, es decir la lectura anterior subestimaba la deuda.
-
-### Cuotas restantes de MSI: del saldo, no del calendario
-
-En el panel de Suscripciones, `msiSubs` calculaba las cuotas que faltan contando bloques de 30 días desde la fecha de compra (`Math.round((now-st)/2592000000)`), lo cual se desfasa y quitaba una cuota de más. Ahora sale de `Math.ceil(balance / min)` —el saldo es el dato que se mantiene a mano contra el estado de cuenta— y la fecha de última cuota se arma como *mes actual + (restantes − 1)* en el `day` de cobro de la deuda.
-
-### Verificación (Node)
-
-- Sintaxis OK en los 2 bloques `<script>` reales.
-- Deudas activas: 6 · deuda total **$349,672.85** · mínimos vigentes **$11,301.98** · mínimos de TC **$1,500** (solo BBVA).
-- `autoBalance` con `floor`: Apple Watch **$1,708** ✅ (coincide con las 2 cuotas que reportó Adán), iPhone 15 **$11,361.54** ✅ (cuadra exacto con el saldo guardado).
-- Cuotas restantes: Apple Watch **2**, última **2026-09-18** ✅ — exactamente lo que dijo.
-- El reducer de "MSI que aún cobran este mes" sigue incluyendo al Apple Watch en agosto y septiembre y lo suelta en octubre, correcto.
-
-### Pendiente que se dejó a propósito
-
-- El presupuesto `b005` "Deudas" sigue en `$11,700`. Con la Banamex liquidada el compromiso mensual real de esa categoría baja a $8,200 (auto $6,700 + TC BBVA $1,500), pero bajar un presupuesto es decisión de Adán, no del código. Además agosto se verá muy por encima del límite por el pago único de $9,000, y eso es correcto: sí salió ese dinero.
-- Las etiquetas históricas del Apple Watch en las transacciones del seed (`(10/12)` en junio, `(9/12)` en mayo…) quedaron un mes adelantadas respecto a la serie real que implica "2 cuotas restantes en agosto". Son etiquetas de un registro ya pasado, no afectan ningún cálculo, y reescribirlas exigiría una migración frágil sobre datos históricos.
-
----
-
-## Los MSI de BBVA corregidos contra el estado de cuenta real (2026-08-13, segunda vuelta)
-
-Adán mandó la captura de sus movimientos de BBVA (corte del 22 jul 2026) y con eso corrigió dos cosas suyas que estaban mal en el seed:
-
-**Se eliminaron 2 deudas que no existen.** `d005` "Vuelo Viva Aerobus (TC BBVA)" ($1,320) y `d006` "Mercado Libre (MSI)" ($3,940) no aparecen en ningún movimiento de su historial — *"no sé qué pasó con esas 2, ya no me aparecen"*. Se **borran del array**, no se ponen en `balance: 0`: nunca fueron deuda suya, y dejarlas en $0 las mostraría para siempre en el bloque "✅ Liquidadas" como si las hubiera pagado, que es una afirmación falsa distinta.
-
-**Entraron los 3 MSI que sí salen en el estado de cuenta:**
-
-| id | Nombre | Cuota | Estado en el corte | Saldo | Última cuota |
-|---|---|---|---|---|---|
-| `d009` | Zap Stylo (MSI TC BBVA) | $167 | 04 de 06 | $334 | 22 sep 2026 |
-| `d010` | Merpago*Merca (MSI TC BBVA) | $597 | 02 de 03 | $597 | 22 ago 2026 |
-| `d011` | Mercado Pago (MSI TC BBVA) | $717 | 02 de 03 | $717 | 22 ago 2026 |
-
-Los nombres se dejaron **literales como aparecen en el estado de cuenta** (incluido el truncado `Merpago*Merca`) para que Adán los reconozca al conciliar. No se renombró el `d010` a "Mercado Libre" pese a que el prefijo `merpago*` lo sugiere: acababa de rechazar precisamente esa etiqueta.
-
-### Cómo se eligió el `start` de cada uno
-
-No es la fecha de compra literal, es **la fecha que hace que `autoBalance()` reproduzca exactamente las cuotas ya cobradas**. `autoBalance` cuenta `floor((hoy − start) / 30.44 días)` como cuotas pagadas, así que el `start` tiene que caer en la ventana que da ese número y no otro. Con `2026-03-22` (Zap Stylo) salen 4 cuotas cobradas y `1002 − 4×167 = $334`; con `2026-05-22` (los dos de Mercado Pago) salen 2 y `1791 − 2×597 = $597` / `2151 − 2×717 = $717`. Los tres cuadran al peso contra el saldo registrado.
-
-La misma fecha tiene que servir para el otro cálculo, el de "¿este MSI todavía cobra este mes?" (`start + totalM`), que decide si su cuota entra en el plan semanal. Con estas fechas: Merpago y Mercado Pago salen del plan después de agosto, Zap Stylo después de septiembre. Si se hubiera elegido un `start` unos días distinto, uno de los dos cálculos habría quedado corrido un mes — por eso las fechas se verificaron contra ambos, no solo contra el saldo.
-
-### Presupuesto de "Deudas": $11,700 → $8,200
-
-Petición explícita de Adán. $8,200 = crédito automotriz $6,700 + mínimo TC BBVA $1,500, que es exactamente lo que `loadRecurringForMonth()` genera en esa categoría ahora que Banamex está en $0. Los MSI **no** cuentan aquí: el generador de recurrentes los carga en `Suscripciones`, no en `Deudas`.
-
-### Migración `_msibbva20260813`
-
-Tercera con este patrón, y también **replicada en `Dashboard/dashboard.html`** (`fixMsiBBVA20260813IfNeeded()`, bandera compartida). Borra `d005`/`d006`, inserta los 3 nuevos solo si su `id` no existe ya, y baja `b005` a $8,200.
-
-### Efecto en el flujo mensual
-
-La carga de MSI cae en escalera: **$2,828.98 en agosto → $1,514.98 en septiembre → $493.98 de octubre en adelante** (solo el iPhone 15). Eso libera $2,335/mes para octubre, sumados a los $810/mes del mínimo de Banamex que ya no se pagan. Mínimos vigentes totales: **$11,028.98/mes**. Deuda activa total: **$346,060.85**.
-
-### Verificación (Node + Playwright)
-
-- Sintaxis OK en `Finanzas.html`, `Dashboard/dashboard.html` y `Coach/Coach_v2.html`.
-- `autoBalance` reproduce al peso los 3 saldos nuevos ($334 / $597 / $717) y sigue cuadrando el Apple Watch ($1,708) y el iPhone ($11,361.54).
-- Cuotas restantes y fecha de última cuota correctas en los 5 MSI activos.
-- MSI que cobran por mes: ago $2,828.98 · sep $1,514.98 · oct $493.98 · nov $493.98.
-- Sembrando `localStorage` con los datos viejos (d005/d006 presentes, presupuesto en $11,700) y abriendo **solo el Dashboard**: las 2 fantasma se borran, entran las 3 reales, el presupuesto baja a $8,200 y una transacción capturada a mano sobrevive.
-- Recorrido completo de las 8 secciones de Finanzas: cero errores de consola.
-
----
-
-## El desglose de gastos deja de inventar Restaurantes y Entretenimiento (2026-08-13)
-
-Adán señaló dos apartados del modal "Gastos del Mes" y pidió quitarlos: **Entretenimiento** ($3,346.67, de los cuales $2,086.67 eran un promedio estimado) y **Restaurantes** ($900, 100% promedio).
-
-**Se quitaron las estimaciones, no las transacciones reales.** Se le preguntó explícitamente antes de tocar nada, porque dentro de Entretenimiento convivían dos cosas distintas: el promedio inventado y los $1,260 del Ticketmaster que sí pagó ese mismo día. Confirmó: solo las estimaciones. El apartado Entretenimiento sigue existiendo con el Ticketmaster marcado como REGISTRADO; Restaurantes desaparece por completo porque no le quedaba nada real.
-
-El cambio es de una línea en `getMonthProjection()`:
-
-```js
-const varCats = ['Alimentación'];   // antes: ['Alimentación','Restaurantes','Entretenimiento']
+```bash
+node Dashboard/verificar-sincronia.js      # desde Claude_Proyecto/
 ```
 
-Esos promedios salían del historial ene–jun 2026 del seed y le estaban cargando **~$2,987/mes de gasto que hoy no tiene**. El costo total del mes bajó de ~$41,700 a **$38,749.65**. Si vuelve a registrar movimientos reales en esas categorías, siguen apareciendo — pero como REGISTRADO (transacción suya), no como estimación. La distinción importa: la app no debe afirmar que gastó algo que no gastó.
-
-### Los 2 escenarios de comida se movieron dentro de Alimentación
-
-Petición textual: *"y en alimentación dame los 2 escenarios ahí mismo"*. El bloque "Comer fuera vs. cocinar" existía desde el 2026-08-12 pero vivía **suelto al final del modal**, después de todos los apartados, así que no se leía como parte de Alimentación.
-
-Ahora se extrajo a `escenariosAlimentacionHTML(subtotalMes)` y se renderiza **dentro de la tarjeta del apartado Alimentación**, debajo de sus renglones. Recibe el subtotal que el desglose ya calculó para no recalcular nada, y agrega un renglón de contraste al pie: *"Arriba se cuentan $1,766.67 para este mes, que es lo medido. Los escenarios son tu patrón declarado — si la diferencia es grande, es señal de que falta registrar gasto de comida."*
-
-Ese contraste es el valor real del cambio: el promedio medido ($1,766.67) contra su patrón declarado ($7,110) ahora se ven juntos, y la brecha de $5,343 queda a la vista en vez de estar repartida entre dos zonas del modal. **No se tocó la regla de fondo** —el dato medido siempre le gana al declarado, ver la sección de Alimentación de 2026-08-12— solo dónde se muestra.
-
-Verificado con Playwright: Restaurantes ya no aparece, Entretenimiento conserva el Ticketmaster, `varItems` devuelve solo Alimentación, los 2 escenarios se renderizan dentro del apartado 🍽️, y el recorrido de las 8 secciones no lanza errores.
-
-## El enlace al Dashboard vive en la `.topbar-actions` (2026-08-18)
-
-*"hay botones dashboard que ni si quiera van acorde a la interfaz del html, osea sobre ponen a otros botones y eso esta mal, debe ser parte de la interfaz de todos"*.
-
-El bloque flotante `#btnVolverDash` (`position:fixed`, fondo oscuro propio, z-index 9999) que se había insertado esta mañana **se encimaba sobre el botón "+ Nueva transacción"** y no seguía el tema de este archivo. Se retiró junto con su `<style>`: ahora el enlace es un botón redondo con el 🚀 antes del de tema, con la clase `.theme-toggle-btn` que ya usan sus vecinos, así que hereda tema y estilos sin CSS nuevo.
-
-Detalle completo y medición en `../Dashboard/readme_dashboard.md` → "El botón de Dashboard deja de flotar".
-
-## La tasa de las tarjetas estaba en 10% anual (2026-08-19)
-
-*"intereses son como 1500 al mes de bbva, por que debo como 32,000"*.
-
-`d001` (Tarjeta BBVA) tenía **`rate:10`**, que sobre $32,343 da $270/mes de intereses. Lo real son ~$1,500.
-
-Lo confirman los propios registros de este archivo: la deuda lleva `total == balance == 32,343.31` desde el **22-ene-2024** con un pago de $1,500 mensual que aparece en las transacciones de cada mes. **31 meses, $46,500 pagados, saldo intacto** — eso solo pasa si el interés se come el pago completo. Tasa implícita: `1500 × 12 ÷ 32,343.31 = 55.7% anual`.
-
-Corregido a **55.7** en `d001` y en `d002` (Banamex, liquidada — ahí es un supuesto tomado de la BBVA, no un dato medido). **Pendiente confirmarlo contra el estado de cuenta**, que trae la tasa y el CAT reales; si difiere, se ajusta aquí y todo lo demás lo sigue solo.
-
-Como la semilla no alcanza a los navegadores que ya tienen datos guardados, el Dashboard lleva `fixTasaTCIfNeeded()`, que corrige el valor dentro de `finanzasmx_v2` solo si sigue en el 10 original (ver `../Dashboard/readme_dashboard.md`). Este dato alimenta el medidor "🔥 Intereses este mes" y su panel, que ahora avisa de que **el pago de $1,500 no amortiza nada**.
-
-## El fondo de la Maestría no está desglosado (2026-08-19)
-
-*"fondo de maestria no desglozaste las cantidades que conforman ese numero ni las barras de ellas, debes investigar en finanzas"*.
-
-Investigado aquí: la meta `g001` guarda **`current: 53740` como una sola cifra**. No hay instrumentos ligados a ella, ni historial de aportaciones, ni una cuenta asociada. Las únicas entradas de `investments` son CETES y un depósito de renta, que **no son ese fondo**.
-
-Es un hueco de datos real, no un fallo del Dashboard: **con lo que hay registrado es imposible decir de qué se compone**. Para poder verlo desglosado habría que dar de alta en **Finanzas → Inversiones** dónde está guardado ese dinero (qué instrumento, en qué institución y con qué saldo), y entonces el panel del Dashboard lo pintaría solo.
-
-Mientras tanto, el panel avisa de la limitación en vez de mostrar una barra única que aparente un desglose que no existe — ver `../Dashboard/readme_dashboard.md` → "Fondo Maestría".
-
-## Los `activos` no cuentan en el patrimonio, y Bitcoin no está registrado (2026-08-19)
-
-Dos cosas que salieron al desglosar el patrimonio en el Dashboard:
-
-1. **`activos` no entra en `patrimonioNeto()`.** Aquí hay 15 bienes registrados —BYD, PC, teléfonos, PS5, monitores, efectivo y cuenta— por unos **$540,600**, y la fórmula del Dashboard solo suma `investments + emergencyFund − debts`. Se decidió **no cambiar la fórmula** (la meta del millón se mide en dinero disponible, y el punto de partida histórico de −$308,830 se calculó así), pero el panel ahora **muestra los bienes aparte** y da la cifra con y sin ellos. El efectivo y la cuenta bancaria, que sí son `type:'liquido'`, se listan del lado del dinero.
-
-2. **No hay Bitcoin en `investments`.** Adán lo menciona como parte de su portafolio y el panel de inversión de los lunes lo trata como tal, pero en los datos solo están CETES y el depósito de renta. Mientras no se dé de alta, ni el patrimonio ni el reparto del portafolio pueden contarlo.
-## Saldos al 24-ago-2026: el auto baja, dos MSI caen y la TC BBVA sube
-
-*"Mi deuda de carro bajó, a 292,000 y ya se liquidaron los 2 pagos de la tarjeta de BBVA, solo queda el de los zapatos, pero mi deuda de TV de BBVA subió a 34,000"*.
-
-Tres movimientos, en el seed y en una migración `_deudas20260824` con bandera propia (misma técnica que `_pagos20260813` y `_ahorro20260817`: una sola pasada, y si después mueve un saldo a mano no se lo revierte). El Dashboard lleva el espejo `fixDeudas20260824IfNeeded()`, porque Adán suele abrir el Dashboard primero y la migración de aquí solo corre si abre Finanzas.
-
-| Deuda | Antes | Después |
-|---|---|---|
-| `d003` Crédito Automotriz | $299,000 | **$292,000** |
-| `d010` Merpago*Merca (MSI TC BBVA) | $597 | **$0** ✅ |
-| `d011` Mercado Pago (MSI TC BBVA) | $717 | **$0** ✅ |
-| `d001` Tarjeta BBVA | $32,343.31 | **$34,000** ⚠️ subió |
-
-Deuda total **$346,060.85 → $339,403.54**.
-
-**"El de los zapatos" es `d009` Zap Stylo**, el único de los tres MSI de la TC BBVA que sigue vivo. Los dos que cayeron son exactamente los que la tabla de la sección anterior proyectaba liquidar el **22 ago 2026** — la elección de `start: 2026-05-22` para ambos queda confirmada contra la realidad, no solo contra el saldo del corte.
-
-`d010` y `d011` van a **`balance: 0` y no se borran**, al revés que `d005`/`d006`: estos sí fueron deuda suya y les toca aparecer en "✅ Liquidadas".
-
-### La TC BBVA subiendo es el dato importante
-
-`total` se mueve junto con `balance` a $34,000 para conservar la invariante `total == balance` que esta tarjeta lleva desde el 22-ene-2024. Si `total` se quedara en 32,343.31, las barras de "pagado real" del Dashboard mostrarían una cifra **negativa**.
-
-El aumento es de **$1,656.69 en un mes**, y no cuadra con el escenario que veníamos asumiendo (pagar $1,500 y quedar en tablas). Dos lecturas posibles, y hay que confirmar cuál es contra el estado de cuenta:
-
-- **No se pagó el mínimo este mes.** Entonces el saldo sube justo por el interés: `1,656.69 ÷ 32,343.31 = 5.12% mensual ≈ 61% anual`, muy cerca del 55.7% estimado más comisiones. Es la hipótesis que mejor encaja.
-- **Sí se pagó y hubo consumo nuevo.** Para subir $1,656.69 después de abonar $1,500, el cargo del mes tendría que haber sido ~$3,157 — el 9.8% del saldo, demasiado para ser solo interés.
-
-En cualquiera de los dos casos la conclusión operativa es la misma y ahora es medible: **esta tarjeta ya no está estancada, está creciendo**. Los textos del plan en el Dashboard que la citaban en $32,343 se actualizaron; las **proyecciones** que colgaban de esa cifra (el "BBVA en $0 en mar 2027", calculado además con la tasa vieja del 10%) quedaron marcadas como pendientes de rehacer, no reescritas a ojo. La simulación mes a mes de `Coach_v2.html` sigue con los números viejos por el mismo motivo: rehacerla es un trabajo aparte que necesita fijar primero cuál de las dos lecturas de arriba es la real.
-
-## Las cifras compartidas salen de `Dashboard/datos-maestros.js` (2026-08-24)
-
-*"esto no está en todos los indicadores, no quiero que vuelva a pasar, quiero que si cambies uno, se cambien todos... al igual que la demás información, debes hacer que sea como la misma variable en diferentes aplicaciones, esto para que no hagas como retrabajo y sea más fácil cambiar las cosas para ti"*.
-
-El disparador fue concreto: al actualizar los saldos del 24-ago había que tocar doce sitios repartidos en tres apps, y **Coach_v2.html se quedó con los números viejos** — seguía diciendo "un crédito de $299,000" y "la TC BBVA ($32,343)" cuando el Dashboard ya decía $292,000 y $34,000.
-
-Ahora hay un módulo que cargan las tres apps con `<script src="../Dashboard/datos-maestros.js"></script>`. Concentra tres cosas que estaban copiadas:
-
-| Qué | Dónde estaba antes | Qué pasaba |
-|---|---|---|
-| **El seed de las deudas** | dentro de `seedData()` en `Finanzas.html` | Cada subida de `SEED_VER` (van 23) resiembra: un saldo corregido a mano se perdía en el siguiente reseed |
-| **Las migraciones de saldo** | escritas **dos veces**: `Finanzas.html → init()` y su espejo `fix*IfNeeded()` en `dashboard.html` | Cualquiera de las dos apps puede ser la primera que se abra, así que las dos tenían que saber migrar. Coach no sabía, y por eso podía enseñar saldos viejos |
-| **Las cifras de la prosa** | el número escrito a mano en cada frase de cada app | Es lo que falló: se actualizaban unas y otras no |
-
-### Cómo se escribe una cifra ahora
-
-En vez del número va un marcador, y el módulo lo resuelve al cargar la página:
-
-```html
-<p>un crédito de {{autoSaldo}}</p>     →     un crédito de $292,000
-```
-
-Dos mecanismos, porque las apps guardan su prosa en sitios distintos:
-- **`CIFRAS.aplicarDOM()`** recorre los nodos de texto del HTML ya pintado. Sirve para `Coach_v2.html` y `Finanzas.html`, que escriben su prosa en el markup. Solo toca nodos de texto —nunca etiquetas ni atributos— y es idempotente: un nodo ya sustituido no contiene `{{` y se salta solo, así que se puede volver a llamar después de cualquier render.
-- **`cifrarLiterales(obj)`** (en `dashboard.html`) sustituye dentro de las constantes JS. El Dashboard no escribe su prosa en el HTML sino en `PHASES`, `META_DETALLE`… que luego inyecta con `innerHTML`; ahí `aplicarDOM()` no basta, porque cada repintado volvería a traer el `{{marcador}}` desde el literal. Sustituyendo en el literal una sola vez al arrancar, todos los renders posteriores ya salen con el número puesto.
-
-Las claves disponibles (`autoSaldo`, `tcBbva`, `deudaCara`, `fondo`, `maestria`…) están en el catálogo `CLAVES` del módulo, y `CIFRAS.tabla()` las lista todas en la consola. **Añadir una cifra nueva es una línea, y queda disponible en las tres apps a la vez.** Hay también derivadas que antes se calculaban a mano y se quedaban congeladas, como `{{autoInteres}}` (lo que cuesta el auto en puro interés: `meses × pago − saldo`).
-
-Un marcador que no exista se deja **a la vista** en pantalla en vez de borrarse en silencio: un `{{tipoDeDedo}}` se detecta al instante; una frase mutilada, no.
-
-### Verificado
-
-Las tres apps abiertas con `file:///` (como las usa Adán), **cada una en un navegador limpio** para que cualquiera pueda ser la primera del día:
-
-- Partiendo de los saldos viejos sin migrar, las tres muestran $292,000 y $34,000 — incluido Coach, que antes ni se enteraba. Ninguna deja un `{{marcador}}` a la vista y ninguna lanza errores de JS.
-- **La prueba que importa**: se editó el saldo una sola vez en `finanzasmx_v2` (auto a $280,000, TC a $30,500) y las tres apps lo dijeron, sin rastro de las cifras anteriores y sin que ninguna migración pisara el cambio hecho a mano.
-- Sin scroll horizontal ni errores a **1600px y 390px** en las tres.
-
-### Qué cambió en `Finanzas.html`
-
-`seedData()` ya no lleva la lista de deudas: la lee de `CIFRAS.DEUDAS_SEED`. El `|| []` de respaldo no es cosmético — si el `<script src>` fallara, sembrar **sin** deudas es preferible a sembrar con una copia vieja escondida aquí, y un `console.error` lo dice en voz alta en vez de dejarlo pasar.
-
-La migración `_deudas20260824` salió de `init()` y vive en el módulo. Las migraciones anteriores (`_banamex9k`, `_pagos20260813`, `_msibbva20260813`, `_ahorro20260817`) **se quedan donde están**: ya corrieron y tienen su bandera puesta, así que son inertes — moverlas sería riesgo sin ganancia. Las nuevas van al archivo común.
-
-Esta app es la **fuente** de los números, así que no necesita los marcadores para pintar nada; carga el módulo para que cualquier texto nuevo pueda usarlos en vez de empezar otra copia a mano.
+Y en navegador a 1600px y 390px con `file:///`. Para probar migraciones hay que sembrar
+`finanzasmx_v2` **y** `finanzasmx_v2_v` con el `SEED_VER` actual: sin esa bandera, `seedData()`
+resiembra y lo que se mide es un reseed, no el uso normal.

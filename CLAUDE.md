@@ -1,11 +1,63 @@
 # Reglas de este proyecto
 
+## Regla 1 — Un dato se escribe UNA sola vez
+
+**Todo dato que aparezca en más de un sitio vive en `Claude_Proyecto/Dashboard/datos-maestros.js`.**
+Nunca se copia un número, una fecha o un nombre a mano en un HTML.
+
+Antes de escribir cualquier dato en una app, **leer primero
+`Claude_Proyecto/Dashboard/DATOS-MAESTROS.md`**: es el índice del proyecto en una página —
+catálogo de variables con su valor de hoy, quién carga qué, y el mapa de apps. Está hecho para
+abrirse entero en vez de rastrear 900 KB de HTML, y es lo que hace baratos los cambios.
+
+- En la prosa se escribe `{{autoSaldo}}`, `{{sueldo}}`, `{{empleador}}`… y el módulo lo sustituye.
+- Una variable nueva es **una línea** en `PROYECTO` o `CLAVES`, más su fila en el `.md`.
+- Las apps lo cargan con `<script src="../Dashboard/datos-maestros.js">` (el propio Dashboard, sin
+  prefijo). **`<script src>` funciona desde `file://`** — los scripts clásicos sí, los módulos ES no.
+- Las correcciones de saldo van a `MIGRACIONES`, en ese mismo archivo. **Nunca** duplicadas en cada app.
+
+Origen (2026-08-24): *"no quiero que vuelva a pasar, quiero que si cambies uno, se cambien todos…
+esto para que no hagas como retrabajo"*. Se detectó que Coach_v2.html llevaba 6 días mostrando
+saldos viejos porque los números estaban copiados en doce sitios.
+
+## Regla 2 — Verificar la sincronía antes de dar nada por terminado
+
+```bash
+node Dashboard/verificar-sincronia.js      # desde Claude_Proyecto/
+```
+
+Compara **evaluando los literales** de cada HTML, no leyéndolos a ojo. Sale con código 1 si algo
+está roto. Hay un hook `Stop` que lo corre solo al final de cada turno y avisa únicamente cuando
+encuentra un problema (`--hook`).
+
+Si el verificador marca algo, se arregla antes de cerrar la tarea. Si aparece una estructura
+duplicada nueva que él no cubre, **se añade el control al script** en la misma tarea.
+
+## Regla 3 — Los `.md` documentan el ESTADO ACTUAL, no la historia
+
+Los readmes de este proyecto son **referencia**, no diario. El historial ya vive en git
+(`git log -p`), y duplicarlo en el `.md` solo lo hace más caro de leer y más fácil de
+desincronizar. En 2026-08-25 se reescribieron por esto: 92% de las 184 secciones de
+`readme_dashboard.md` eran entradas fechadas de cambios ya reemplazados.
+
+- Organizar **por tema**, no por fecha. Nada de secciones "Ajuste del 2026-08-07".
+- Cada afirmación describe **cómo funciona hoy**. Si algo se reemplazó, se reescribe la sección; no
+  se añade otra abajo contando el cambio.
+- Se conserva el **por qué** de una decisión vigente y los **números medidos**. Se borra el relato
+  de cómo se llegó ahí.
+- Fecha solo cuando el dato la necesita para entenderse (un saldo, una entrevista, un plazo).
+- Al tocar un `.html`, actualizar la sección del `.md` que le corresponde — **editándola**, no
+  apilando una nueva.
+
+Adán, 2026-08-25: *"tampoco quiero que en los .md haya información innecesaria / duplicada /
+desincronizada. No me sirve historial acumulado sin sentido, quiero información valiosa"*.
+
 ## Al terminar una tarea, se sube a GitHub
 
 **Regla fija (2026-08-19, pedido explícito de Adán): terminar una tarea incluye subirla.** No se espera a que lo pida — una tarea sin commit no está terminada. El orden es siempre:
 
 1. **Verificar que funciona** antes de subir nada. Si el cambio es visual o de comportamiento, se comprueba en el navegador (Playwright está disponible vía `npx`, ver abajo), no solo leyendo el código.
-2. **Actualizar el `.md`** de cada `.html` tocado — cada app tiene el suyo (`readme_dashboard.md`, `readme_finanzas.md`, …) y la historia del cambio va ahí, con la frase textual de lo que se pidió.
+2. **Actualizar el `.md`** de cada `.html` tocado, siguiendo la Regla 3: se **edita la sección** que describe esa pieza para que refleje cómo funciona ahora. No se añade una entrada nueva contando el cambio — para eso está el mensaje del commit.
 3. **`git add` solo de lo que se tocó.** Nunca `git add -A` a ciegas: en el árbol pueden quedar respaldos, `.PREV.html` o archivos de prueba que no deben subirse.
 4. **Commit con mensaje descriptivo en español**, en el estilo que ya tiene el historial: una línea que diga qué cambió y por qué, no "cambios varios". Cuerpo con el detalle si hace falta.
 5. **`git push origin main`** y confirmar que el push salió bien.

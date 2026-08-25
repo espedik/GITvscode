@@ -92,6 +92,23 @@ desde JS. En consola, `CIFRAS.tabla()` las lista con su valor actual.
 | `{{maestriaEscuela}}` | Esslingen — Automotive Systems M.Eng. | constante |
 | `{{maestriaInicio}}` | 2028-10-01 (pausada hasta 2027-07-18) | constante |
 
+### La rutina diaria
+
+`RUTINA_TASKS` — **58 bloques** con sus subtareas: el horario completo de los 7 días. No es un
+marcador, se pide desde JS:
+
+```js
+CIFRAS.rutina('')                          // Coach: los href ya son anclas suyas
+CIFRAS.rutina('../Coach/Coach_v2.html')    // Dashboard: tiene que salir de su archivo
+```
+
+Devuelve **copia profunda** con los `href` resueltos, para que una app no pueda contaminar a la
+otra dentro de la misma página. `dias`: 0=domingo…6=sábado. Los bloques con `fijo:true` (ALTEN)
+salen en la línea de tiempo pero no llevan checkbox ni suman al progreso.
+
+Estaba copiada en `dashboard.html` y `Coach_v2.html`, 17.5 KB en cada uno. Era la estructura más
+grande y más tocada de las duplicadas, y llegó a divergir 6 días.
+
 ---
 
 ## Quién carga qué
@@ -147,30 +164,37 @@ node Dashboard/verificar-sincronia.js      # desde Claude_Proyecto/
 Compara **evaluando los literales** de cada HTML, no leyéndolos a ojo, y dice qué campo de qué
 entrada difiere. Sale con código 1 si algo está roto, así que vale tal cual para un hook.
 
-Qué revisa: `RUTINA_TASKS` (Dashboard ↔ Coach, campo a campo incluidas subtareas), `SK` el radar,
-`GYM_RUTINA_DEFAULT` contra `ejercicio.html`, las cifras que ya tienen variable pero siguen
-escritas a mano, y los `{{marcadores}}` que no existan en el catálogo.
+Qué revisa:
 
-Ignora a propósito dos cosas: los `href` de `RUTINA_TASKS` (ancla interna en Coach, ruta relativa
-en Dashboard) y los campos `full`/`cat`/`desc` de `SK`, que solo usa el panel de Coach.
+- Que **nadie haya vuelto a incrustar** `RUTINA_TASKS` en un HTML en vez de pedirla al maestro.
+- `SK` (el radar) y `GYM_RUTINA_DEFAULT` contra `ejercicio.html`, que siguen duplicadas.
+- Las cifras que ya tienen variable pero siguen escritas a mano — salen como **aviso**, no como
+  problema: coinciden hoy, pero cada una es un sitio que tocar cuando ese dato cambie.
+- Los `{{marcadores}}` que no existan en el catálogo.
+
+Ignora a propósito los campos `full`/`cat`/`desc` de `SK`, que solo usa el panel de Coach: no es
+divergencia, es que cada app usa lo que necesita.
+
+**Un hook `Stop` lo corre solo** al final de cada turno, con `--hook`: solo habla cuando encuentra
+un problema. Un verificador que saluda cuando todo está bien se vuelve ruido y se acaba ignorando.
 
 **La primera vez que se corrió encontró 7 textos** de la rutina de cabello mejorados en Coach el
 2026-08-18 (commit `0ef03b4`, *"Explica qué ES una mascarilla capilar"*) que nunca se replicaron
-al Dashboard: llevaban 6 días divergentes sin que nadie lo notara. Ya están sincronizados.
-
-**Correr esto antes de dar por terminada una tarea** que toque cualquier estructura duplicada.
+al Dashboard: 6 días divergentes sin que nadie lo notara.
 
 ---
 
 ## Lo que todavía está duplicado
 
-`dashboard.html` copia a mano 6 estructuras de otras apps. **Ya no hay razón técnica que lo
-impida** — `<script src="../ruta/archivo.js">` carga bien desde `file://`, está probado con este
-mismo archivo; solo falta el trabajo de moverlas:
+`RUTINA_TASKS` ya se movió aquí. **Siguen copiadas a mano** cinco estructuras:
 
-`RUTINA_TASKS` (71 tareas, ↔ Coach) · `PHASES` (↔ Coach) · `SK` (radar, ↔ Coach) ·
-`APRENDIZAJE` (↔ Coach) · `GYM_RUTINA_DEFAULT` (↔ ejercicio.html) ·
-`LISTA_COMPRAS` (↔ comida + cuidadopersonal + salud).
+| Estructura | Copias |
+|---|---|
+| `PHASES` (4 fases del Plan Maestro) | Dashboard ↔ Coach |
+| `SK` (12 valores del radar) | Dashboard ↔ Coach |
+| `APRENDIZAJE` (5 prioridades) | Dashboard ↔ Coach |
+| `GYM_RUTINA_DEFAULT` | Dashboard ↔ ejercicio.html |
+| `LISTA_COMPRAS` | Dashboard ↔ comida + cuidadopersonal + salud |
 
-Son las más sensibles a romperse por edición asimétrica. El siguiente candidato natural es
-`RUTINA_TASKS`, que es la más grande y la que más se toca.
+`verificar-sincronia.js` vigila `SK` y `GYM_RUTINA_DEFAULT`. **No hay impedimento técnico** para
+moverlas — el camino está probado con `RUTINA_TASKS`; solo falta el trabajo.
