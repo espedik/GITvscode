@@ -1,50 +1,87 @@
-# Alemán — A1 y A2
+# Aleman/ — referencia
 
-App de estudio de alemán de Adán, apoyo directo de dos cosas suyas: la **Maestría en Alemania** (meta de mediano plazo del Plan Maestro) y su red real de contactos en Bosch Stuttgart. Ya tiene el **Básico 5 de CENLEX Santo Tomás** acreditado — esta app cubre el A1 y A2 completos para sostener y ampliar eso por su cuenta.
+40 lecciones de alemán en HTML, sin backend ni build. Se abren con `file://` y el Dashboard las
+consume a través de `../Dashboard/aleman-data.js`.
 
-Creado el 2026-08-12, en la auditoría del ecosistema: era **la única app sin ninguna documentación** (39 archivos, 0 `.md`), lo cual va contra la regla del proyecto de que cada `.html` tenga su `.md` al día.
+> **Referencia, no diario.** El historial vive en `git log -p -- Claude_Proyecto/Aleman/`.
+> Ver `../../CLAUDE.md` → Regla 3.
 
-## Qué hay
+---
 
-| Archivo | Qué es |
+## Estructura
+
+| Grupo | Archivos | Qué es |
+|---|---|---|
+| **Kapitel 10** | `k10-01`…`k10-05` | Lo que Adán cursa en Cenlex Santo Tomás desde el 25-ago-2026 |
+| A1 | `a1-01`…`a1-15` | Base: saludos, números, artículos, hora, profesiones… |
+| A2 | `a2-01`…`a2-20` | Gramática y vocabulario temático |
+| Apoyo | `index.html`, `gramatica.html`, `vocabulario.html` | Índice y referencia transversal |
+| Compartido | `styles.css`, `flashcards.js`, `k10.css`, `k10-interactivo.js` | Estilos y motores |
+
+---
+
+## Kapitel 10 — el capítulo en curso
+
+Cinco lecciones que cubren el temario real de clase: la regla del Perfekt, el listado de verbos
+irregulares, los ejercicios y el minitest, Berufe y «Mein Tag» (la tarea de video).
+
+`k10.css` y `k10-interactivo.js` son suyos y los comparten las cinco.
+
+### Los tres tipos de ejercicio
+
+`k10-interactivo.js` expone tres funciones, y todas **se corrigen solas mientras escribes**, sin
+botón de comprobar. Con un botón se acaba respondiendo las diez a ciegas y revisando al final,
+que es justo como no se aprende.
+
+| Función | Qué hace |
 |---|---|
-| `index.html` | Portada y menú de las 35 lecciones, agrupadas en **Básico (A1)** y **Elemental (A2)** |
-| `a1-01` … `a1-15` | **15 lecciones A1**: saludos, números, colores, días, familia, artículos, pronombres, sein/haben, la hora, países, profesiones, comida, vivienda, transporte, pasatiempos |
-| `a2-01` … `a2-20` | **20 lecciones A2**: modales, Perfekt (haben y sein), Präteritum, verbos separables y reflexivos, Kasus, comparativo, conjunciones, preposiciones, adjetivos, infinitivo, y los temas de uso (vivienda, trabajo, salud, viajes, ocio, comida, compras, medios) |
-| `gramatica.html` | Referencia de gramática, transversal a las lecciones |
-| `vocabulario.html` | Vocabulario consolidado |
-| `principiantes.html` | Entrada para arrancar de cero |
-| `flashcards.js` | Widget de tarjetas interactivas que **usan las 36 páginas** — se inicializa con `initFlashcards(id, [...])` |
-| `_generar-datos-dashboard.js` | Herramienta de desarrollo (no corre en el navegador de Adán) |
+| `k10Escribir(id, items)` | Escribir el Partizip II. Verde al acertar, rojo al fallar, botón `?` que revela la respuesta y marca la fila como *ayudada* |
+| `k10Opciones(id, items)` | Elegir entre 2-4 opciones. **El porqué se muestra acierte o falle** — fallar sin saber por qué no enseña nada |
+| `k10Ordenar(id, items)` | Tocar palabras para armar la frase. Entrena lo que más se falla: dónde va cada pieza |
 
-Peso total: ~893 KB. Sin dependencias externas: se abre con doble clic, sin servidor.
+Detalles que importan:
 
-## La pieza no obvia: `_generar-datos-dashboard.js`
+- **La comparación es tolerante**: ignora mayúsculas y acepta `ue/ae/oe/ss` por `ü/ä/ö/ß`. Un
+  acierto real no debe marcarse como error por cómo está configurado el teclado.
+- **El rojo tarda en aparecer**: solo se marca error cuando ya se escribieron al menos 4 letras. A
+  mitad de palabra todavía no es un fallo, y pintarlo rojo desde la primera letra desanima.
+- El progreso se guarda en `localStorage['aleman_k10_v1']` y `k10Progreso()` lo devuelve sumado.
 
-El Dashboard tiene una pantalla **"🇩🇪 Alemán del día"** que muestra una lección real, distinta cada día. **No puede leerla en vivo**: Chrome bloquea tanto `iframe.contentDocument` como `fetch()` entre dos documentos `file://` distintos, así que desde `Dashboard/dashboard.html` no hay forma de acceder al contenido de `Aleman/*.html` en el navegador.
+---
 
-La solución es este generador: corre **una vez, offline, con Playwright**, abre cada lección como página propia (nunca como iframe, para no toparse con esa restricción), extrae su contenido real —tablas de vocabulario, diálogos, frases, ejercicios, reglas, conjugaciones y los widgets visuales de cada lección A1— y escribe `Dashboard/aleman-data.js`, que el Dashboard sí puede cargar con `<script src>`.
+## Cómo el Dashboard lee estas lecciones
 
-**El contenido del Dashboard no está escrito a mano: es texto extraído de estas lecciones.** Por eso:
+`_generar-datos-dashboard.js` abre cada lección con Playwright **como página propia** y vuelca su
+contenido real a `../Dashboard/aleman-data.js`.
 
-> **Si agregas, quitas o editas una lección, hay que volver a correr el generador** o el Dashboard seguirá mostrando la versión vieja:
-> ```
-> node Aleman/_generar-datos-dashboard.js
-> ```
-> Requiere Node + Playwright (`npm install playwright`). Playwright **no** es dependencia del proyecto — es herramienta de desarrollo, nada de esto corre en el navegador de Adán.
+```bash
+NODE_PATH="…/npm-cache/_npx/…/node_modules" node Aleman/_generar-datos-dashboard.js
+```
 
-El mismo patrón se usa en `Entrevistas/_generar-datos-dashboard.js`, con una diferencia: allá el contenido ya es HTML plano dentro de objetos JS, así que basta ejecutarlos en una sandbox de Node y no hace falta navegador.
+**Correrlo cada vez que se añada, quite o edite una lección.** No corre en el navegador de Adán:
+es una herramienta de desarrollo.
 
-## Estado y pendientes
+Existe porque el Dashboard **no puede** leer estas lecciones en vivo — Chrome bloquea tanto
+`iframe.contentDocument` como `fetch()` entre dos documentos `file://` distintos.
 
-- **Las 35 lecciones que el Dashboard referencia existen todas** (verificado en la auditoría del 2026-08-12: 35 archivos referenciados, 0 inexistentes).
-- **No guarda progreso**: no hay ninguna clave de `localStorage` en toda la carpeta. Las lecciones son material de consulta, no un curso con avance registrado. Si algún día se quiere marcar "lección vista" o llevar racha, hay que agregarlo — hoy no existe.
-- Por lo mismo, el Dashboard **no puede mostrar cuánto lleva avanzado** de las 35, solo la lección del día. Se propuso agregarlo el 2026-08-12 y Adán lo descartó ("ya están en otras páginas").
+### `data-dashboard="no"`
 
-## El enlace al Dashboard vive en la `<nav>` de cada página (2026-08-18)
+Una tarjeta con ese atributo queda fuera de la extracción. Se usa en las tarjetas de ejercicios:
+se generan por JS y, volcadas a texto, salen como una lista suelta de números y opciones sin
+sentido. El ejercicio se hace **en** la lección, donde es interactivo; el Dashboard muestra la
+teoría, las tablas y los ejemplos, que sí se leen de un vistazo.
 
-*"hay botones dashboard que ni si quiera van acorde a la interfaz del html, osea sobre ponen a otros botones y eso esta mal, debe ser parte de la interfaz de todos"*.
+Por eso `k10-03` —que es casi todo ejercicios— lleva además una tarjeta de resumen con los cuatro
+modelos resueltos: sin ella, su slide en el Dashboard salía vacío.
 
-El bloque flotante `#btnVolverDash` (`position:fixed`, fondo oscuro propio, z-index 9999) que se había insertado esta mañana **se encimaba sobre el enlace "← Índice" de las 35 lecciones y sobre "📖 Vocabulario" en los índices** y no seguía el tema de este archivo. Se retiró junto con su `<style>`: ahora el enlace es un `<a class="nav-back">🚀 Dashboard</a>` dentro de `nav.nav`, con la clase `.nav-back` que ya usan sus vecinos, así que hereda tema y estilos sin CSS nuevo.
+---
 
-Detalle completo y medición en `../Dashboard/readme_dashboard.md` → "El botón de Dashboard deja de flotar".
+## Añadir una lección
+
+1. Crear el HTML siguiendo la estructura de las existentes (`.topic-hero`, `.topic-content`,
+   `.card`, `.vocab-table`, `.rule-box`, `.example`).
+2. Añadirla a `FILES` en `_generar-datos-dashboard.js` y a `ALEMAN_TEMAS` en `dashboard.html`
+   (con `kapitel:N` si pertenece a un capítulo en curso).
+3. Añadir su tarjeta en `index.html`.
+4. Regenerar `aleman-data.js`.
+5. Comprobar en el navegador que el slide no sale vacío y que no hay scroll horizontal a 390px.

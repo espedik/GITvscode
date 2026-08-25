@@ -28,6 +28,9 @@ const ALEMAN_DIR = path.resolve(__dirname);
 const OUTPUT_FILE = path.resolve(__dirname, '../Dashboard/aleman-data.js');
 
 const FILES = [
+  // Kapitel 10 · Cenlex Santo Tomás — lo que Adán cursa ahora (2026-08-25)
+  'k10-01-perfekt-regel.html','k10-02-verben-liste.html','k10-03-perfekt-uben.html',
+  'k10-04-berufe.html','k10-05-mein-tag.html',
   'a1-01-saludos.html','a1-02-zahlen.html','a1-03-farben.html','a1-04-wochentage.html','a1-05-familie.html',
   'a1-06-artikel.html','a1-07-pronomen.html','a1-08-sein-haben.html','a1-09-uhrzeit.html','a1-10-laender.html',
   'a1-11-berufe.html','a1-12-essen.html','a1-13-wohnen.html','a1-14-verkehr.html','a1-15-hobbys.html',
@@ -77,7 +80,11 @@ const SCRAPE_FN = () => {
   // de más abajo (`extra`), que no necesita conocer el nombre de cada clase custom.
   const RECOGNIZED_SEL = '.vocab-table, .rule-box, .example, .tip-box, .phrase-grid, .dialog-box, .exercise, .conj-big';
 
-  const cards = [...document.querySelectorAll('.topic-content .card')].map(card => {
+  /* Las tarjetas con data-dashboard="no" quedan fuera: son los ejercicios interactivos, que se
+     generan por JS y al volcarlos como texto salen como una lista suelta de números y opciones
+     sueltas. El ejercicio se hace EN la lección, donde se corrige solo; el Dashboard muestra la
+     teoría, las tablas y los ejemplos, que sí se leen bien de un vistazo. */
+  const cards = [...document.querySelectorAll('.topic-content .card:not([data-dashboard="no"])')].map(card => {
     const h3 = card.querySelector('h3');
     const iconEl = h3 ? h3.querySelector('span') : null;
     const icon = txt(iconEl);

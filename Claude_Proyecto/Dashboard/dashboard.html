@@ -3870,6 +3870,15 @@ function toggleListaItem(id,cat,txt){
 //    duplicado visual — y funciona sin servidor porque `<script src="archivo.js">` sí carga bien
 //    vía file://, a diferencia de fetch()/XHR.
 const ALEMAN_TEMAS=[
+  // ── Kapitel 10 · Cenlex Santo Tomás (2026-08-25) ──────────────────────────────────────────
+  // Lo que Adán cursa ahora mismo. Llevan `kapitel:10`, y mientras `PROYECTO.kapitelAleman`
+  // valga 10 el slide muestra SOLO estas: "ya estoy estudiando de nuevo en Cenlex Santo Tomás
+  // y necesito estudiar, entonces necesito enfocarme en estos temas".
+  {file:'k10-01-perfekt-regel.html',nivel:'A2',ico:'🔑',de:'Die Regel: Perfekt',es:'La regla del Perfekt',kapitel:10,tags:['haben/sein','Partizip II','al final']},
+  {file:'k10-02-verben-liste.html',nivel:'A2',ico:'📋',de:'Unregelmäßige Verben',es:'Listado de verbos irregulares',kapitel:10,tags:['60 verbos','6 patrones','buscador']},
+  {file:'k10-03-perfekt-uben.html',nivel:'A2',ico:'✍️',de:'Perfekt üben',es:'Ejercicios y Minitest 1',kapitel:10,tags:['4 bloques','minitest','se corrige solo']},
+  {file:'k10-04-berufe.html',nivel:'A1',ico:'💼',de:'Berufe',es:'Profesiones y tu área',kapitel:10,tags:['sin artículo','-in','Testingenieur']},
+  {file:'k10-05-mein-tag.html',nivel:'A2',ico:'🕐',de:'Mein Tag',es:'Contar tu día (video)',kapitel:10,tags:['zuerst/dann','tu rutina real','guion']},
   {file:'a1-01-saludos.html',nivel:'A1',ico:'👋',de:'Begrüßungen',es:'Saludos y despedidas',tags:['Hallo','Tschüss','Guten Morgen']},
   {file:'a1-02-zahlen.html',nivel:'A1',ico:'🔢',de:'Zahlen 1–100',es:'Números del 1 al 100',tags:['eins','zehn','hundert']},
   {file:'a1-03-farben.html',nivel:'A1',ico:'🎨',de:'Farben & Formen',es:'Colores y formas',tags:['rot','blau','groß']},
@@ -3910,13 +3919,24 @@ const ALEMAN_TEMAS=[
 // lección →" queda fijo en esa posición por el resto de la sesión (hasta recargar la página) —
 // mismo criterio que "Recordar última pantalla" del resto del Dashboard: una vez que navega a
 // mano, no lo regresamos solos al valor automático.
+/* Mientras Adán curse un capítulo en Cenlex, el slide muestra SOLO ese capítulo: son los temas
+   que necesita para clase, y rotar entre las 35 lecciones le daba un tema al azar que casi nunca
+   era el suyo. El filtro sale de `PROYECTO.kapitelAleman` en datos-maestros.js — ponerlo en null
+   devuelve la rotación completa, sin tocar este archivo. */
+function alemanLista(){
+  const k=(window.CIFRAS&&CIFRAS.PROYECTO)?CIFRAS.PROYECTO.kapitelAleman:null;
+  if(k==null) return ALEMAN_TEMAS;
+  const solo=ALEMAN_TEMAS.filter(t=>t.kapitel===k);
+  return solo.length?solo:ALEMAN_TEMAS;   // si el capítulo no tuviera temas, no dejarlo vacío
+}
 let alemanIdx=null;
 function alemanTemaHoy(){
-  if(alemanIdx===null)alemanIdx=diaDelAnio()%ALEMAN_TEMAS.length;
-  return ALEMAN_TEMAS[alemanIdx];
+  const L=alemanLista();
+  if(alemanIdx===null)alemanIdx=diaDelAnio()%L.length;
+  return L[alemanIdx];
 }
 function alemanSiguiente(){
-  alemanIdx=((alemanIdx===null?diaDelAnio():alemanIdx)+1)%ALEMAN_TEMAS.length;
+  alemanIdx=((alemanIdx===null?diaDelAnio():alemanIdx)+1)%alemanLista().length;
   renderAleman();
   renderHeroAprender();   // la tarjeta de Mi Día lee el mismo índice: si no, quedaría desfasada
 }
@@ -3928,7 +3948,12 @@ function renderAleman(){
   const lvl=document.getElementById('alLevel');
   lvl.textContent='Nivel '+t.nivel;
   lvl.className='al-level '+t.nivel.toLowerCase();
-  document.getElementById('alCounter').textContent=`Tema ${idx} de ${ALEMAN_TEMAS.length} · cambia cada día`;
+  const _L=alemanLista();
+  const _k=(window.CIFRAS&&CIFRAS.PROYECTO)?CIFRAS.PROYECTO.kapitelAleman:null;
+  const _esc=(window.CIFRAS&&CIFRAS.PROYECTO)?CIFRAS.PROYECTO.escuelaAleman:'';
+  document.getElementById('alCounter').textContent = _k!=null
+    ? `Tema ${idx} de ${_L.length} · Kapitel ${_k} · ${_esc}`
+    : `Tema ${idx} de ${_L.length} · cambia cada día`;
   document.getElementById('alTags').innerHTML=t.tags.map(tag=>`<span class="td-tag">${tag}</span>`).join('');
   document.getElementById('alOpen').href='../Aleman/'+t.file;
   const data=(typeof ALEMAN_CONTENT!=='undefined')?ALEMAN_CONTENT[t.file]:null;

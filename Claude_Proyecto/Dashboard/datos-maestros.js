@@ -97,10 +97,19 @@ window.CIFRAS = (function () {
     broker:      'GBM',                     // estrategia: empresas de EE. UU.
     bancoSueldo: 'BBVA',
 
+    // ── Estudios de alemán ──
+    // Retomó clases presenciales el 25-ago-2026 y va por el Kapitel 10 (Perfekt + Berufe).
+    // El Dashboard filtra por `kapitelAleman`: mientras esté puesto, el slide de Alemán muestra
+    // SOLO ese capítulo en vez de rotar por las 35 lecciones. Ponerlo en null devuelve la
+    // rotación completa. Adán: "necesito enfocarme en estos temas".
+    escuelaAleman:   'Cenlex Santo Tomás',
+    kapitelAleman:   10,
+
     // ── Fechas y metas no financieras ──
     entrevistaWayve: '2026-07-08',          // ver Entrevistas/ → sección Wayve
     maestriaEscuela: 'Esslingen — Automotive Systems M.Eng.',
     maestriaInicio:  '2028-10-01',
+    inicioCenlex:    '2026-08-25',
     maestriaPausa:   '2027-07-18',          // pausada hasta aquí, decidido en Coach
   };
 
@@ -678,6 +687,8 @@ window.CIFRAS = (function () {
     broker:        { v: () => PROYECTO.broker,      fmt: 'txt' },
     bancoSueldo:   { v: () => PROYECTO.bancoSueldo, fmt: 'txt' },
     maestriaEscuela:{ v: () => PROYECTO.maestriaEscuela, fmt: 'txt' },
+    escuelaAleman: { v: () => PROYECTO.escuelaAleman, fmt: 'txt' },
+    kapitelAleman: { v: () => PROYECTO.kapitelAleman, fmt: 'num' },
     maestriaInicio:{ v: () => PROYECTO.maestriaInicio,   fmt: 'txt' },
     // ── Derivadas que cruzan constantes con saldos vivos ──
     // Lo que queda del sueldo tras los fijos y los mínimos de deuda: el margen real del mes.

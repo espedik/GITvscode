@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kapitel 10 · 03 — Perfekt üben & Minitest | Deutsch</title>
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="k10.css">
+</head>
+<body>
+
+<nav class="nav">
+  <a href="index.html" class="nav-logo">🇩🇪 Deutsch</a>
+  <div class="nav-links">
+    <a href="index.html" class="nav-back">← Índice</a>
+    <a href="../Dashboard/dashboard.html" class="nav-back" title="Volver al Dashboard">🚀</a>
+  </div>
+</nav>
+
+<div class="topic-hero">
+  <div class="container">
+    <div class="topic-hero-tag">Kapitel 10 · Cenlex · Tema 03</div>
+    <h1><em>Perfekt</em> üben &amp; Minitest</h1>
+    <p class="topic-hero-desc">Los ejercicios del capítulo, todos corregidos al instante: completar el auxiliar, escribir el participio, ordenar la frase y un minitest final. Aquí no se estudia la regla — se practica hasta que sale sin pensar.</p>
+    <div class="topic-hero-meta">
+      <span class="meta-pill">✍️ Práctica</span>
+      <span class="meta-pill">🎯 4 bloques + minitest</span>
+      <span class="meta-pill">⏱️ ~40 min</span>
+      <span class="meta-pill">✅ Se corrige solo</span>
+    </div>
+  </div>
+</div>
+
+<div class="topic-content">
+  <div class="container">
+
+    <!-- Resumen leíble: los ejercicios de abajo se generan por JS y no se pueden leer fuera de
+         la lección, así que esta tarjeta es la que ve el Dashboard. -->
+    <div class="content-full">
+      <div class="card card-gold">
+        <h3><span>🧭</span> Antes de empezar: los cuatro modelos resueltos</h3>
+        <p>Cada bloque de abajo entrena una cosa distinta. Estos son los cuatro casos resueltos, uno por bloque — si entiendes estos, los ejercicios salen solos.</p>
+        <table class="vocab-table">
+          <thead><tr><th>Bloque</th><th>Qué entrena</th><th>Modelo resuelto</th></tr></thead>
+          <tbody>
+            <tr><td><b>1 · haben o sein</b></td><td>Elegir el auxiliar</td><td class="vocab-de">Wir <b>sind</b> ins Kino gegangen.<br><span class="k10-mini">gehen es movimiento → sein</span></td></tr>
+            <tr><td><b>2 · Partizip II</b></td><td>Formar el participio</td><td class="vocab-de">arbeiten → <b>gearbeitet</b><br><span class="k10-mini">raíz en -t → se mete una -e-</span></td></tr>
+            <tr><td><b>3 · Orden</b></td><td>Colocar cada pieza</td><td class="vocab-de">Ich habe gestern einen Film <b>gesehen</b>.<br><span class="k10-mini">auxiliar en 2ª, participio al final</span></td></tr>
+            <tr><td><b>4 · Presente → Perfekt</b></td><td>Transformar la frase entera</td><td class="vocab-de">Er fährt nach Hause. → Er <b>ist</b> nach Hause <b>gefahren</b>.<br><span class="k10-mini">cambia el verbo Y aparece el auxiliar</span></td></tr>
+          </tbody>
+        </table>
+        <div class="rule-box">
+          <strong>Los ejercicios son interactivos y se corrigen solos mientras escribes.</strong> Ábrelos en la lección (botón «Ver lección original») — desde el Dashboard solo se ve este resumen, porque una lista de huecos vacíos no se puede leer.
+        </div>
+      </div>
+    </div>
+
+    <div class="content-full">
+      <div class="card" data-dashboard="no">
+        <h3><span>1️⃣</span> Übung 1 — ¿haben o sein?</h3>
+        <p>Completa el auxiliar. Cada respuesta explica el motivo.</p>
+        <div id="u1" class="k10-quiz"></div>
+      </div>
+    </div>
+
+    <div class="content-full">
+      <div class="card" data-dashboard="no">
+        <h3><span>2️⃣</span> Übung 2 — Escribe el Partizip II</h3>
+        <p>Mezcla de regulares, irregulares, separables y los que no llevan ge-.</p>
+        <div id="u2" class="k10-ejercicios"></div>
+      </div>
+    </div>
+
+    <div class="content-full">
+      <div class="card" data-dashboard="no">
+        <h3><span>3️⃣</span> Übung 3 — Ordena la frase</h3>
+        <p>Toca las palabras para colocarlas. Recuerda: auxiliar en 2ª posición, Partizip II al final.</p>
+        <div id="u3" class="k10-ordenar"></div>
+      </div>
+    </div>
+
+    <div class="content-full">
+      <div class="card card-gold" data-dashboard="no">
+        <h3><span>4️⃣</span> Übung 4 — Del presente al Perfekt</h3>
+        <p>Escribe la frase completa en Perfekt. Se acepta con o sin mayúscula y con ue/ae/oe.</p>
+        <div id="u4" class="k10-ejercicios"></div>
+      </div>
+    </div>
+
+    <div class="content-full mt32">
+      <div class="card card-red" data-dashboard="no">
+        <h3><span>🏁</span> Minitest 1 — Perfekt</h3>
+        <p>Diez preguntas mezcladas, como en clase. Sin pistas fáciles: si fallas, lee el porqué antes de seguir.</p>
+        <div id="minitest" class="k10-quiz"></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<footer class="footer">
+  <p>Kapitel 10 · 03 — Perfekt üben &amp; Minitest</p>
+  <div class="footer-flag"><span style="background:#000;width:20px;height:5px"></span><span style="background:var(--red);width:20px;height:5px"></span><span style="background:var(--gold);width:20px;height:5px"></span></div>
+</footer>
+
+<script src="k10-interactivo.js"></script>
+<script>
+k10Opciones('u1', [
+  {frase:'Ich ___ das Buch gelesen.',              ops:['habe','bin'],   ok:0, por:'lesen lleva objeto directo → haben.'},
+  {frase:'Wir ___ ins Kino gegangen.',             ops:['haben','sind'], ok:1, por:'gehen es movimiento de A a B → sein.'},
+  {frase:'Sie ___ eine E-Mail geschrieben.',       ops:['hat','ist'],    ok:0, por:'schreiben lleva objeto → haben.'},
+  {frase:'Der Zug ___ um 8 Uhr angekommen.',       ops:['hat','ist'],    ok:1, por:'ankommen es movimiento → sein.'},
+  {frase:'Ich ___ zwei Stunden geschlafen.',       ops:['habe','bin'],   ok:0, por:'schlafen NO es movimiento ni cambio de estado → haben. (einschlafen sí va con sein.)'},
+  {frase:'Er ___ sehr schnell eingeschlafen.',     ops:['hat','ist'],    ok:1, por:'einschlafen es cambio de estado → sein.'},
+  {frase:'Ihr ___ die Hausaufgaben gemacht.',      ops:['habt','seid'],  ok:0, por:'machen lleva objeto → haben.'},
+  {frase:'Ich ___ in Berlin gewesen.',             ops:['habe','bin'],   ok:1, por:'sein va consigo mismo: ich bin gewesen.'},
+  {frase:'Du ___ mir sehr geholfen.',              ops:['hast','bist'],  ok:0, por:'helfen va con haben (aunque su objeto sea dativo).'},
+  {frase:'Was ___ gestern passiert?',              ops:['hat','ist'],    ok:1, por:'passieren es uno de los tres sueltos → sein.'}
+]);
+
+k10Escribir('u2', [
+  {inf:'kaufen',      pista:'regular',                 resp:['gekauft']},
+  {inf:'warten',      pista:'raíz en -t',              resp:['gewartet']},
+  {inf:'öffnen',      pista:'consonante + n',          resp:['geöffnet','geoeffnet']},
+  {inf:'telefonieren',pista:'-ieren',                  resp:['telefoniert']},
+  {inf:'fotografieren',pista:'-ieren',                 resp:['fotografiert']},
+  {inf:'verkaufen',   pista:'prefijo ver-',            resp:['verkauft']},
+  {inf:'erzählen',    pista:'prefijo er-',             resp:['erzählt','erzaehlt']},
+  {inf:'anfangen',    pista:'separable + irregular',   resp:['angefangen']},
+  {inf:'mitkommen',   pista:'separable + irregular',   resp:['mitgekommen']},
+  {inf:'fernsehen',   pista:'separable + irregular',   resp:['ferngesehen']},
+  {inf:'sprechen',    pista:'e → o',                   resp:['gesprochen']},
+  {inf:'finden',      pista:'i → u',                   resp:['gefunden']},
+  {inf:'bleiben',     pista:'ei → ie, va con sein',    resp:['geblieben']},
+  {inf:'wissen',      pista:'mixto',                   resp:['gewusst']},
+  {inf:'bringen',     pista:'mixto, cambia mucho',     resp:['gebracht']}
+]);
+
+k10Ordenar('u3', [
+  {frase:'Ich habe gestern einen Film gesehen.',        es:'Ayer vi una película.'},
+  {frase:'Wir sind nach Berlin gefahren.',              es:'Fuimos a Berlín.'},
+  {frase:'Er hat mir ein Buch geschenkt.',              es:'Él me regaló un libro.'},
+  {frase:'Am Montag bin ich früh aufgestanden.',        es:'El lunes me levanté temprano.'},
+  {frase:'Hast du das Auto verkauft?',                  es:'¿Vendiste el coche?'},
+  {frase:'Sie haben in einem Restaurant gegessen.',     es:'Comieron en un restaurante.'}
+]);
+
+k10Escribir('u4', [
+  {inf:'Ich lerne Deutsch.',            pista:'→ Perfekt', resp:['Ich habe Deutsch gelernt.','Ich habe Deutsch gelernt']},
+  {inf:'Er fährt nach Hause.',          pista:'→ Perfekt', resp:['Er ist nach Hause gefahren.','Er ist nach Hause gefahren']},
+  {inf:'Wir trinken Kaffee.',           pista:'→ Perfekt', resp:['Wir haben Kaffee getrunken.','Wir haben Kaffee getrunken']},
+  {inf:'Sie steht um 7 Uhr auf.',       pista:'→ Perfekt', resp:['Sie ist um 7 Uhr aufgestanden.','Sie ist um 7 Uhr aufgestanden']},
+  {inf:'Ich besuche meine Familie.',    pista:'→ Perfekt', resp:['Ich habe meine Familie besucht.','Ich habe meine Familie besucht']},
+  {inf:'Der Film beginnt um 8 Uhr.',    pista:'→ Perfekt', resp:['Der Film hat um 8 Uhr begonnen.','Der Film hat um 8 Uhr begonnen']}
+]);
+
+k10Opciones('minitest', [
+  {frase:'Ich habe den Bus ___. (nehmen)',        ops:['genommen','genehmt','genehmen'], ok:0, por:'nehmen → genommen. Patrón e → o.'},
+  {frase:'Wir ___ im Park spazieren gegangen.',   ops:['haben','sind'], ok:1, por:'gehen (y spazieren gehen) es movimiento → sein.'},
+  {frase:'Sie hat viel ___. (arbeiten)',          ops:['gearbeitet','gearbeitt','arbeitet'], ok:0, por:'raíz en -t → se mete una -e-: gearbeitet.'},
+  {frase:'Er hat Medizin ___. (studieren)',       ops:['gestudiert','studiert'], ok:1, por:'los verbos en -ieren nunca llevan ge-.'},
+  {frase:'Ich ___ meine Schlüssel verloren.',     ops:['habe','bin'], ok:0, por:'verlieren lleva objeto directo → haben.'},
+  {frase:'Wann ___ du aufgestanden?',             ops:['hast','bist'], ok:1, por:'aufstehen es cambio de estado → sein.'},
+  {frase:'Wir haben unsere Freunde ___. (einladen)', ops:['eingeladet','eingeladen','geeinladen'], ok:1, por:'separable + irregular: ein + ge + laden → eingeladen.'},
+  {frase:'Das Konzert hat um 20 Uhr ___. (anfangen)', ops:['angefangen','anfangt','geanfangen'], ok:0, por:'separable: an + ge + fangen → angefangen.'},
+  {frase:'Ich ___ noch nie in Deutschland gewesen.', ops:['habe','bin'], ok:1, por:'sein va consigo mismo: ich bin gewesen.'},
+  {frase:'Was hast du am Wochenende ___? (machen)', ops:['gemacht','gemachen','machte'], ok:0, por:'machen es regular: ge + mach + t.'}
+]);
+</script>
+
+</body>
+</html>

@@ -65,12 +65,26 @@ flechas, los puntos del HUD lateral, o deslizando en táctil.
 | `theme-basicas` | **Habilidades Base** | Guías de vida práctica (trámites, impuestos, red, imagen…) |
 | `theme-skills` | **Habilidades** | Radar de 12 habilidades y prioridades de aprendizaje |
 | `theme-lista` | **Lista de Compras** | Catálogo por pasillos, cruzado con skincare, comida y suplementos |
-| `theme-aleman` | **Alemán del día** | Una lección distinta cada día, contenido nativo desde `aleman-data.js` |
+| `theme-aleman` | **Alemán del día** | La lección de alemán, contenido nativo desde `aleman-data.js`. Filtrado al capítulo que cursa — ver abajo |
 | `theme-entrevista` | **Entrevista del día** | Un tema técnico al día, desde `entrevistas-data.js` |
 
 Alemán y Entrevistas **no usan `<iframe>`**: su contenido se extrajo a los dos `.js` de esta
 carpeta y se pinta nativo dentro del slide. Ambos llevan botón "Siguiente →" para no esperar al
 día siguiente.
+
+### El slide de Alemán muestra solo el capítulo que se cursa
+
+`alemanLista()` filtra `ALEMAN_TEMAS` por `PROYECTO.kapitelAleman` (en `datos-maestros.js`).
+Mientras esté puesto en 10, el slide rota **solo entre las 5 lecciones del Kapitel 10** de Cenlex
+Santo Tomás en vez de entre las 40; el contador lo dice: *"Tema 3 de 5 · Kapitel 10 · Cenlex Santo
+Tomás"*. Poner esa clave en `null` devuelve la rotación completa **sin tocar este archivo**.
+
+Origen (2026-08-25): *"ya estoy estudiando de nuevo en Cenlex Santo Tomás y necesito estudiar,
+entonces necesito enfocarme en estos temas"*. Con 40 lecciones rotando, el tema del día casi nunca
+era el suyo.
+
+Las lecciones del capítulo llevan `kapitel:10` en su entrada de `ALEMAN_TEMAS`. Añadir un capítulo
+nuevo es marcar sus lecciones con ese campo y cambiar el número en el maestro.
 
 ---
 

@@ -95,6 +95,13 @@ desde JS. En consola, `CIFRAS.tabla()` las lista con su valor actual.
 | `{{maestriaEscuela}}` | Esslingen — Automotive Systems M.Eng. | constante |
 | `{{maestriaInicio}}` | 2028-10-01 (pausada hasta 2027-07-18) | constante |
 
+### Estudios de alemán · constantes
+
+| Marcador | Valor hoy | Para qué |
+|---|---|---|
+| `{{escuelaAleman}}` | Cenlex Santo Tomás | Clases presenciales desde el 25-ago-2026 |
+| `{{kapitelAleman}}` | 10 | **Filtra el slide de Alemán del Dashboard**: con un capítulo puesto muestra solo sus lecciones en vez de rotar por las 40. En `null` vuelve la rotación completa |
+
 ### La rutina diaria
 
 `RUTINA_TASKS` — **58 bloques** con sus subtareas: el horario completo de los 7 días. No es un
