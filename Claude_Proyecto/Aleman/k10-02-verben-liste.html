@@ -324,6 +324,22 @@
       </div>
     </div>
 
+    <div class="content-full">
+      <div class="card" data-dashboard="no">
+        <h3><span>🔗</span> Empareja: Präteritum → Infinitiv</h3>
+        <p>La dirección contraria a la habitual. En un texto te encuentras el Präteritum y tienes que reconocer de qué verbo viene.</p>
+        <div id="em-prat"></div>
+      </div>
+    </div>
+
+    <div class="content-full">
+      <div class="card card-gold" data-dashboard="no">
+        <h3><span>🎧</span> Dictado — escucha y escribe</h3>
+        <p>Necesita voz alemana en el sistema. Es el único ejercicio donde no ves la palabra antes de responder.</p>
+        <div id="dic-verbos"></div>
+      </div>
+    </div>
+
     <!-- ── LOS QUE ENGAÑAN ── -->
     <div class="content-full">
       <div class="card card-red">
@@ -449,6 +465,26 @@ k10Escribir('ej-partizip2', [
   {inf:'telefonieren', pista:'telefonear', resp:['telefoniert']},
   {inf:'warten', pista:'esperar', resp:['gewartet']},
 ]);
+
+k10Emparejar('em-prat', [
+  ['ging','gehen'], ['kam','kommen'], ['fuhr','fahren'], ['aß','essen'], ['trank','trinken'],
+  ['sah','sehen'], ['las','lesen'], ['sprach','sprechen'], ['nahm','nehmen'], ['war','sein'],
+  ['hatte','haben'], ['wurde','werden']
+], ['Präteritum', 'Infinitiv']);
+
+k10Dictado('dic-verbos', [
+  {de:'Ich bin gestern aufgestanden.', es:'Me levanté ayer.'},
+  {de:'Er hat Kaffee getrunken.',      es:'Él bebió café.'},
+  {de:'Wir sind nach Hause gefahren.', es:'Fuimos a casa.'},
+  {de:'Sie hat einen Brief geschrieben.', es:'Ella escribió una carta.'},
+  {de:'Was hast du gemacht?',          es:'¿Qué hiciste?'},
+  {de:'Ich habe viel gearbeitet.',     es:'Trabajé mucho.'},
+  {de:'Der Zug ist angekommen.',       es:'El tren llegó.'},
+  {de:'Ich bin zu Hause geblieben.',   es:'Me quedé en casa.'}
+]);
+
+// Cada verbo de la tabla se puede escuchar
+k10Altavoces('#tablaVerbos td.vocab-de');
 </script>
 
 </body>

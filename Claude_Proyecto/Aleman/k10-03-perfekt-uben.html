@@ -95,6 +95,22 @@
       </div>
     </div>
 
+    <div class="content-full">
+      <div class="card" data-dashboard="no">
+        <h3><span>📝</span> Lückentext — un fin de semana</h3>
+        <p>Completa el texto entero. Todos los huecos son auxiliares o participios.</p>
+        <div id="hueco-fds"></div>
+      </div>
+    </div>
+
+    <div class="content-full">
+      <div class="card card-red" data-dashboard="no">
+        <h3><span>🏁</span> Test cronometrado — 12 preguntas</h3>
+        <p>Modo examen: una a la vez, sin volver atrás y sin pistas. Al final, la nota, el tiempo y el repaso de lo que fallaste.</p>
+        <div id="test-final"></div>
+      </div>
+    </div>
+
   </div>
 </div>
 
@@ -165,6 +181,43 @@ k10Opciones('minitest', [
   {frase:'Das Konzert hat um 20 Uhr ___. (anfangen)', ops:['angefangen','anfangt','geanfangen'], ok:0, por:'separable: an + ge + fangen → angefangen.'},
   {frase:'Ich ___ noch nie in Deutschland gewesen.', ops:['habe','bin'], ok:1, por:'sein va consigo mismo: ich bin gewesen.'},
   {frase:'Was hast du am Wochenende ___? (machen)', ops:['gemacht','gemachen','machte'], ok:0, por:'machen es regular: ge + mach + t.'}
+]);
+
+k10Hueco('hueco-fds',
+  'Am Samstag ___ ich lange ___. Um zehn Uhr ___ ich ___ und ___ gefrühstückt. ' +
+  'Danach ___ ich einkaufen ___. Am Nachmittag ___ ich meine Familie ___ und wir ___ zusammen ___. ' +
+  'Am Sonntag ___ ich den ganzen Tag zu Hause ___ und ___ ein Buch ___.',
+  [
+    {resp:['habe'],        pista:'aux'},
+    {resp:['geschlafen'],  pista:'schlafen'},
+    {resp:['bin'],         pista:'aux'},
+    {resp:['aufgestanden'],pista:'aufstehen'},
+    {resp:['habe'],        pista:'aux'},
+    {resp:['bin'],         pista:'aux'},
+    {resp:['gegangen'],    pista:'gehen'},
+    {resp:['habe'],        pista:'aux'},
+    {resp:['besucht'],     pista:'besuchen'},
+    {resp:['haben'],       pista:'aux'},
+    {resp:['gegessen'],    pista:'essen'},
+    {resp:['bin'],         pista:'aux'},
+    {resp:['geblieben'],   pista:'bleiben'},
+    {resp:['habe'],        pista:'aux'},
+    {resp:['gelesen'],     pista:'lesen'}
+  ]);
+
+k10Test('test-final', [
+  {frase:'Ich ___ gestern ins Kino gegangen.', ops:['habe','bin'], ok:1, por:'gehen es movimiento → sein.'},
+  {frase:'Sie hat den Kuchen ___. (backen)', ops:['gebackt','gebacken'], ok:1, por:'backen es irregular: gebacken.'},
+  {frase:'Wir ___ das Auto verkauft.', ops:['haben','sind'], ok:0, por:'verkaufen lleva objeto directo → haben.'},
+  {frase:'Der Film hat um 20 Uhr ___. (anfangen)', ops:['angefangen','anfangen','geanfangt'], ok:0, por:'separable: an + ge + fangen.'},
+  {frase:'Ich habe das Wort ___. (vergessen)', ops:['vergesst','vergessen','gevergessen'], ok:1, por:'con prefijo ver-: sin ge-, e idéntico al infinitivo.'},
+  {frase:'Er ___ sehr schnell gelaufen.', ops:['hat','ist'], ok:1, por:'laufen es movimiento → sein.'},
+  {frase:'Was ___ ihr am Wochenende gemacht?', ops:['habt','seid'], ok:0, por:'machen lleva objeto → haben.'},
+  {frase:'Ich habe zwei Stunden ___. (warten)', ops:['gewartet','gewartt','gewarten'], ok:0, por:'raíz en -t → se mete una -e-.'},
+  {frase:'Sie ___ Ärztin geworden.', ops:['hat','ist'], ok:1, por:'werden es cambio de estado → sein.'},
+  {frase:'Wir haben uns im Park ___. (treffen)', ops:['getroffen','getreffen','gestroffen'], ok:0, por:'treffen: e → o, getroffen.'},
+  {frase:'Ich habe meine Oma ___. (anrufen)', ops:['angerufen','angeruft','geanrufen'], ok:0, por:'separable + irregular: an + ge + rufen.'},
+  {frase:'Das ___ letzte Woche passiert.', ops:['hat','ist'], ok:1, por:'passieren es uno de los tres sueltos → sein.'}
 ]);
 </script>
 

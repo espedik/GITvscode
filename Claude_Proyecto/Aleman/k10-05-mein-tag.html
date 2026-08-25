@@ -139,6 +139,22 @@
     </div>
 
     <div class="content-full">
+      <div class="card card-gold" data-dashboard="no">
+        <h3><span>📝</span> Lückentext — tu día completo</h3>
+        <p>Tu rutina real con huecos. Es prácticamente el guion del video.</p>
+        <div id="hueco-tag"></div>
+      </div>
+    </div>
+
+    <div class="content-full">
+      <div class="card" data-dashboard="no">
+        <h3><span>🎧</span> Dictado — frases de tu día</h3>
+        <p>Escucha y escribe. Si vas a grabar un video, primero hay que oírselo decir a alguien.</p>
+        <div id="dic-tag"></div>
+      </div>
+    </div>
+
+    <div class="content-full">
       <div class="card">
         <h3><span>🎴</span> Repasa con tarjetas</h3>
         <div id="fc-k10-05" class="flashcards"></div>
@@ -187,6 +203,41 @@ initFlashcards('fc-k10-05', [
   {art:'-', de:'Was hast du gestern gemacht?', es:'¿Qué hiciste ayer?', ex:'la pregunta del examen'},
   {art:'-', de:'Das war mein Tag.', es:'Ese fue mi día.', ex:'cómo cerrar el video'}
 ]);
+
+k10Hueco('hueco-tag',
+  'Gestern ___ ich um zwanzig vor sieben ___. Zuerst ___ ich an meiner App ___, dann ___ ich mich ___. ' +
+  'Danach ___ ich zur Arbeit ___ und ___ acht Stunden bei ALTEN ___. ' +
+  'Am Nachmittag ___ ich ins Fitnessstudio ___. Am Abend ___ ich ___ und ___ Deutsch ___.',
+  [
+    {resp:['bin'],          pista:'aux'},
+    {resp:['aufgestanden'], pista:'aufstehen'},
+    {resp:['habe'],         pista:'aux'},
+    {resp:['gearbeitet'],   pista:'arbeiten'},
+    {resp:['habe'],         pista:'aux'},
+    {resp:['geduscht'],     pista:'duschen'},
+    {resp:['bin'],          pista:'aux'},
+    {resp:['gefahren'],     pista:'fahren'},
+    {resp:['habe'],         pista:'aux'},
+    {resp:['gearbeitet'],   pista:'arbeiten'},
+    {resp:['bin'],          pista:'aux'},
+    {resp:['gegangen'],     pista:'gehen'},
+    {resp:['habe'],         pista:'aux'},
+    {resp:['gekocht'],      pista:'kochen'},
+    {resp:['habe'],         pista:'aux'},
+    {resp:['gelernt'],      pista:'lernen'}
+  ]);
+
+k10Dictado('dic-tag', [
+  {de:'Ich bin um zwanzig vor sieben aufgestanden.', es:'Me levanté a las 6:40.'},
+  {de:'Dann habe ich mich geduscht.',                es:'Luego me duché.'},
+  {de:'Danach bin ich zur Arbeit gefahren.',         es:'Después fui al trabajo.'},
+  {de:'Am Nachmittag bin ich ins Fitnessstudio gegangen.', es:'Por la tarde fui al gimnasio.'},
+  {de:'Am Abend habe ich für morgen gekocht.',       es:'Por la noche cociné para mañana.'},
+  {de:'Schließlich bin ich ins Bett gegangen.',      es:'Finalmente me fui a la cama.'}
+]);
+
+// Cada línea del día se puede escuchar: es la base del video
+k10Altavoces('.mt-de');
 </script>
 
 </body>

@@ -52,25 +52,46 @@ Los **mixtos** están separados a propósito aunque también aparezcan entre los
 listas: cambian la raíz como un irregular pero terminan en `-t` como un regular, y son solo nueve.
 Verlos juntos cuesta menos que encontrárselos sueltos.
 
-### Los tres tipos de ejercicio
+### Los ocho tipos de ejercicio
 
-`k10-interactivo.js` expone tres funciones, y todas **se corrigen solas mientras escribes**, sin
-botón de comprobar. Con un botón se acaba respondiendo las diez a ciegas y revisando al final,
-que es justo como no se aprende.
+`k10-interactivo.js` los expone todos. **233 ejercicios** repartidos en las cinco lecciones.
 
-| Función | Qué hace |
-|---|---|
-| `k10Escribir(id, items)` | Escribir el Partizip II. Verde al acertar, rojo al fallar, botón `?` que revela la respuesta y marca la fila como *ayudada* |
-| `k10Opciones(id, items)` | Elegir entre 2-4 opciones. **El porqué se muestra acierte o falle** — fallar sin saber por qué no enseña nada |
-| `k10Ordenar(id, items)` | Tocar palabras para armar la frase. Entrena lo que más se falla: dónde va cada pieza |
+| Función | Qué hace | Para qué sirve |
+|---|---|---|
+| `k10Escribir` | Escribir la respuesta, con botón `?` que la revela y marca la fila como *ayudada* | Producción: lo más exigente |
+| `k10Opciones` | Elegir entre 2-4, **con el porqué acierte o falle** | Entender la regla, no adivinar |
+| `k10Ordenar` | Tocar palabras para armar la frase | Dónde va cada pieza — lo que más se falla |
+| `k10Emparejar` | Unir dos columnas | Reconocer, que es el paso previo a producir |
+| `k10Hueco` | Lückentext: huecos dentro de un texto seguido | El formato de examen; obliga a leer contexto |
+| `k10Conjugar` | Rellenar las seis personas del Perfekt | Ver que el participio **no cambia** ni una vez |
+| `k10Test` | Modo examen: una a la vez, nota, tiempo y repaso de fallos | Medirse de verdad |
+| `k10Dictado` | Escuchar y escribir | Comprensión oral; sin ver la palabra antes |
 
-Detalles que importan:
+Decisiones que cambian cómo se usan:
 
+- **Se corrigen solos al escribir, sin botón de comprobar.** Con botón se acaba respondiendo las
+  diez a ciegas y revisando al final, que es justo como no se aprende. La excepción es `k10Test`,
+  que **no** explica el fallo hasta el final: ahí el objetivo es medirse, no aprender sobre la marcha.
 - **La comparación es tolerante**: ignora mayúsculas y acepta `ue/ae/oe/ss` por `ü/ä/ö/ß`. Un
   acierto real no debe marcarse como error por cómo está configurado el teclado.
-- **El rojo tarda en aparecer**: solo se marca error cuando ya se escribieron al menos 4 letras. A
-  mitad de palabra todavía no es un fallo, y pintarlo rojo desde la primera letra desanima.
-- El progreso se guarda en `localStorage['aleman_k10_v1']` y `k10Progreso()` lo devuelve sumado.
+- **El rojo tarda en aparecer**: solo se marca error tras 4 letras. A mitad de palabra todavía no es
+  un fallo, y pintarlo rojo desde la primera letra desanima.
+- El progreso se guarda en `localStorage['aleman_k10_v1']`; `k10Progreso()` lo devuelve sumado.
+
+### Audio en alemán
+
+`k10Hablar(texto)` y `k10Altavoces(selector)` usan **SpeechSynthesis del navegador**: cero
+dependencias, cero red, y funciona desde `file://`. Hay **471 elementos con botón 🔊** — cada verbo
+de la tabla, cada ejemplo, cada línea del diálogo y del día.
+
+**Las voces cargan de forma asíncrona.** `getVoices()` viene vacío en la primera llamada y Chrome
+avisa después con `voiceschanged`; decidir "no hay voz alemana" a la primera dejaba el dictado
+desactivado en equipos que sí la tienen. Por eso no se cachea un "no": quien depende de la voz se
+apunta a `alLlegarVoz()`, con un reintento a 1,2 s por si el evento no llega a dispararse.
+
+Sin voz alemana instalada: los botones 🔊 **no se ponen** —uno que no suena es peor que nada— y el
+dictado explica cómo instalarla (Windows: Configuración → Hora e idioma → Voz → Agregar voces →
+Deutsch).
 
 ---
 

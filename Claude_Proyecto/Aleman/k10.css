@@ -140,3 +140,97 @@
 .k10-verbos{display:block;max-height:620px;overflow-y:auto}
 .k10-verbos thead th{position:sticky;top:0;background:var(--surface);z-index:2;
   box-shadow:0 1px 0 var(--border)}
+
+/* ══ TIPOS DE EJERCICIO AÑADIDOS ══════════════════════════════════════════════════════════ */
+
+/* ── Audio: botón 🔊 ── */
+.k10-say{margin-left:6px;padding:0 4px;border:none;background:none;cursor:pointer;font-size:12px;
+  opacity:.35;transition:opacity .15s,transform .15s;line-height:1;vertical-align:middle}
+.k10-say:hover{opacity:1}
+.k10-say.sonando{opacity:1;transform:scale(1.25)}
+.k10-say.mudo{opacity:.15;cursor:not-allowed}
+
+/* ── Emparejar ── */
+.k10-em-cab{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:7px}
+.k10-em-cab span{font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:#8a8a8a}
+.k10-em{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.k10-em-col{display:flex;flex-direction:column;gap:6px}
+.k10-em-b{padding:9px 12px;border:1px solid var(--border);border-radius:9px;background:#fff;
+  font:inherit;font-size:13.5px;font-weight:600;cursor:pointer;text-align:left;transition:all .15s}
+.k10-em-b:hover{border-color:var(--black)}
+.k10-em-b.sel{border-color:var(--red);background:rgba(204,0,0,.07);box-shadow:0 0 0 3px rgba(204,0,0,.10)}
+.k10-em-b.ok{border-color:#1a9e5c;background:rgba(26,158,92,.10);color:#137a46;cursor:default;opacity:.75}
+.k10-em-b.nope{border-color:var(--red);background:rgba(204,0,0,.12);animation:k10shake .35s}
+@keyframes k10shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+
+/* ── Texto con huecos (Lückentext) ── */
+.k10-hueco-txt{font-size:15px;line-height:2.5;color:var(--black)}
+.k10-hueco-in{display:inline-block;padding:3px 8px;margin:0 2px;border:none;border-bottom:2px solid var(--red);
+  font:inherit;font-size:14.5px;font-weight:700;color:var(--red);background:rgba(204,0,0,.04);
+  border-radius:5px 5px 0 0;text-align:center}
+.k10-hueco-in:focus{outline:none;background:rgba(204,0,0,.09)}
+.k10-hueco-in.bien{border-bottom-color:#1a9e5c;color:#137a46;background:rgba(26,158,92,.09)}
+.k10-hueco-in.mal{border-bottom-color:var(--red);background:rgba(204,0,0,.14)}
+.k10-hueco-in::placeholder{color:#bbb;font-weight:400;font-size:12.5px}
+
+/* ── Conjugador ── */
+.k10-conj-sel{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:12px}
+.k10-conj-tab{padding:6px 14px;border:1px solid var(--border);border-radius:20px;background:#fff;
+  font:inherit;font-size:13px;font-weight:700;color:#666;cursor:pointer;transition:all .15s}
+.k10-conj-tab:hover{border-color:var(--black);color:var(--black)}
+.k10-conj-tab.on{background:var(--red);border-color:var(--red);color:#fff}
+.k10-conj{border:1px solid var(--border);border-radius:var(--r);padding:14px 16px;background:var(--surface)}
+.k10-conj-cab{font-size:14px;font-weight:700;margin-bottom:11px;padding-bottom:9px;border-bottom:1px solid var(--border)}
+.k10-conj-es{color:#888;font-weight:400;font-size:12.5px}
+.k10-conj-fila{display:flex;align-items:center;gap:9px;margin-bottom:7px}
+.k10-conj-pron{min-width:78px;font-size:13.5px;font-weight:700;color:#666}
+.k10-conj-in{width:88px;padding:6px 9px;border:1px solid var(--border);border-radius:7px;
+  font:inherit;font-size:14px;font-weight:700;text-align:center;background:#fff}
+.k10-conj-in:focus{outline:none;border-color:var(--red);box-shadow:0 0 0 3px rgba(204,0,0,.10)}
+.k10-conj-in.bien{border-color:#1a9e5c;background:rgba(26,158,92,.08);color:#137a46}
+.k10-conj-in.mal{border-color:var(--red);background:rgba(204,0,0,.06)}
+.k10-conj-part{font-size:14px;font-weight:700;color:var(--gold-dark)}
+.k10-conj-nota{margin-top:11px;padding-top:9px;border-top:1px solid var(--border);
+  font-size:12px;color:#777;font-style:italic}
+
+/* ── Test con puntuación ── */
+.k10-test-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.k10-test-n{font-size:11.5px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:#8a8a8a}
+.k10-test-marcador{font-size:14px;font-weight:800;color:#1a9e5c}
+.k10-test-bar{height:5px;border-radius:3px;background:rgba(0,0,0,.07);overflow:hidden;margin-bottom:16px}
+.k10-test-bar span{display:block;height:100%;background:linear-gradient(90deg,var(--gold),var(--red));transition:width .3s}
+.k10-test-q{font-size:17px;font-weight:600;color:var(--black);margin-bottom:16px;line-height:1.5}
+.k10-test-ops{display:flex;gap:9px;flex-wrap:wrap}
+.k10-test-fin{text-align:center;padding:22px 16px;border-radius:var(--r);margin-bottom:14px}
+.k10-test-fin.bien{background:rgba(26,158,92,.10)}
+.k10-test-fin.medio{background:rgba(212,160,0,.13)}
+.k10-test-fin.mal{background:rgba(204,0,0,.08)}
+.k10-test-nota{font-size:30px;font-weight:800;color:var(--black);margin-bottom:5px}
+.k10-test-msg{font-size:14.5px;font-weight:600;color:#555}
+.k10-test-t{font-size:12px;color:#888;margin-top:5px}
+.k10-test-rev{border:1px solid var(--border);border-radius:var(--r);padding:14px 16px;margin-bottom:14px;background:var(--surface)}
+.k10-test-f{padding:9px 0;border-bottom:1px solid var(--border)}
+.k10-test-f:last-child{border-bottom:none}
+.k10-test-fq{font-size:14px;font-weight:600;color:var(--black)}
+.k10-test-fp{font-size:12.5px;color:var(--red-dark);margin-top:3px}
+.k10-test-otra{padding:10px 22px;border:none;border-radius:9px;background:var(--black);color:#fff;
+  font:inherit;font-size:14px;font-weight:700;cursor:pointer}
+.k10-test-otra:hover{background:var(--red)}
+
+/* ── Dictado ── */
+.k10-dic{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:9px 12px;margin-bottom:7px;
+  border:1px solid var(--border);border-radius:var(--rs);background:var(--surface);transition:all .18s}
+.k10-dic.bien{border-color:#1a9e5c;background:rgba(26,158,92,.06)}
+.k10-dic.mal{border-color:var(--red);background:rgba(204,0,0,.05)}
+.k10-dic-play{width:34px;height:34px;flex-shrink:0;border-radius:50%;border:1px solid var(--border);
+  background:#fff;color:var(--red);font-size:13px;cursor:pointer;transition:all .15s}
+.k10-dic-play:hover{background:var(--red);color:#fff;border-color:var(--red)}
+.k10-dic-in{flex:1 1 240px;min-width:180px;padding:7px 10px;border:1px solid var(--border);
+  border-radius:7px;font:inherit;font-size:14px;background:#fff}
+.k10-dic-in:focus{outline:none;border-color:var(--red);box-shadow:0 0 0 3px rgba(204,0,0,.10)}
+.k10-dic-es{font-size:11.5px;color:#999;font-style:italic;flex:1 1 130px}
+
+@media(max-width:700px){
+  .k10-em,.k10-em-cab{grid-template-columns:1fr}
+  .k10-hueco-txt{line-height:2.8}
+}

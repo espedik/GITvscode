@@ -181,6 +181,22 @@
     </div>
 
     <div class="content-full">
+      <div class="card" data-dashboard="no">
+        <h3><span>🔗</span> Empareja: profesión → español</h3>
+        <p>Vocabulario de trabajo, incluido el de tu área.</p>
+        <div id="em-berufe"></div>
+      </div>
+    </div>
+
+    <div class="content-full">
+      <div class="card card-gold" data-dashboard="no">
+        <h3><span>📝</span> Lückentext — preséntate</h3>
+        <p>El texto que dirías en un examen oral sobre tu trabajo.</p>
+        <div id="hueco-beruf"></div>
+      </div>
+    </div>
+
+    <div class="content-full">
       <div class="card">
         <h3><span>🎴</span> Repasa con tarjetas</h3>
         <div id="fc-k10-04" class="flashcards"></div>
@@ -245,6 +261,31 @@ initFlashcards('fc-k10-04', [
   {art:'das', de:'Gehalt', es:'el sueldo', ex:'trabajo'},
   {art:'-', de:'Ich habe bei Bosch gearbeitet.', es:'Trabajé en Bosch.', ex:'Perfekt + profesión'}
 ]);
+
+k10Emparejar('em-berufe', [
+  ['der Ingenieur','ingeniero'], ['die Ärztin','médica'], ['der Lehrer','profesor'],
+  ['der Anwalt','abogado'], ['die Köchin','cocinera'], ['der Testingenieur','ingeniero de pruebas'],
+  ['die Qualitätssicherung','aseguramiento de calidad'], ['das Steuergerät','unidad de control'],
+  ['der Fehler','el error'], ['die Besprechung','la reunión'], ['das Gehalt','el sueldo'],
+  ['selbstständig','autónomo']
+], ['Deutsch', 'Español']);
+
+k10Hueco('hueco-beruf',
+  'Ich bin ___ von Beruf und arbeite ___ Testingenieur in der Automobilindustrie. ' +
+  'Ich ___ in Mexiko studiert. Früher ___ ich bei Bosch ___. ' +
+  'Heute ___ ich einen Fehler im Steuergerät ___.',
+  [
+    {resp:['Ingenieur','ingenieur'], pista:'profesión'},
+    {resp:['als'],                   pista:'como'},
+    {resp:['habe'],                  pista:'aux'},
+    {resp:['habe'],                  pista:'aux'},
+    {resp:['gearbeitet'],            pista:'arbeiten'},
+    {resp:['habe'],                  pista:'aux'},
+    {resp:['gefunden'],              pista:'finden'}
+  ]);
+
+k10Altavoces('.dialog-de');
+k10Altavoces('#tablaBerufe td.vocab-de');
 </script>
 
 </body>

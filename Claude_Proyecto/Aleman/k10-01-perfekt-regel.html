@@ -179,6 +179,30 @@
       </div>
     </div>
 
+    <div class="content-full">
+      <div class="card" data-dashboard="no">
+        <h3><span>🔗</span> Empareja: infinitivo → Partizip II</h3>
+        <p>Toca uno de cada columna. Reconocer es el paso previo a producir.</p>
+        <div id="em-part"></div>
+      </div>
+    </div>
+
+    <div class="content-full">
+      <div class="card card-gold" data-dashboard="no">
+        <h3><span>🧮</span> Conjuga el Perfekt completo</h3>
+        <p>Rellena el auxiliar de las seis personas. Vas a ver que el participio no cambia ni una vez.</p>
+        <div id="conj-perfekt"></div>
+      </div>
+    </div>
+
+    <div class="content-full">
+      <div class="card" data-dashboard="no">
+        <h3><span>📝</span> Lückentext — completa el texto</h3>
+        <p>El formato del examen: huecos dentro de un texto seguido, no frases sueltas.</p>
+        <div id="hueco-1"></div>
+      </div>
+    </div>
+
     <!-- ── ERRORES TÍPICOS ── -->
     <div class="content-full mt32">
       <div class="card card-red">
@@ -249,6 +273,41 @@ initFlashcards('fc-k10-01', [
   {art:'-', de:'Ich habe viel gearbeitet.', es:'Trabajé mucho.', ex:'raíz en -t → -et'},
   {art:'-', de:'Was ist passiert?', es:'¿Qué pasó?', ex:'passieren → sein'}
 ]);
+
+k10Emparejar('em-part', [
+  ['machen','gemacht'], ['trinken','getrunken'], ['essen','gegessen'], ['fahren','gefahren'],
+  ['aufstehen','aufgestanden'], ['studieren','studiert'], ['besuchen','besucht'], ['denken','gedacht'],
+  ['schreiben','geschrieben'], ['nehmen','genommen']
+], ['Infinitiv', 'Partizip II']);
+
+k10Conjugar('conj-perfekt', [
+  {inf:'machen',    aux:'haben', part:'gemacht',      es:'hacer'},
+  {inf:'gehen',     aux:'sein',  part:'gegangen',     es:'ir'},
+  {inf:'trinken',   aux:'haben', part:'getrunken',    es:'beber'},
+  {inf:'aufstehen', aux:'sein',  part:'aufgestanden', es:'levantarse'},
+  {inf:'sein',      aux:'sein',  part:'gewesen',      es:'ser / estar'}
+]);
+
+k10Hueco('hueco-1',
+  'Gestern ___ ich um sieben Uhr ___. Zuerst ___ ich gefrühstückt, dann ___ ich zur Arbeit ___. ' +
+  'Im Büro ___ ich acht Stunden ___. Am Abend ___ ich mit Freunden ins Kino ___ und wir ___ einen guten Film ___.',
+  [
+    {resp:['bin'],           pista:'aux'},
+    {resp:['aufgestanden'],  pista:'aufstehen'},
+    {resp:['habe'],          pista:'aux'},
+    {resp:['bin'],           pista:'aux'},
+    {resp:['gefahren'],      pista:'fahren'},
+    {resp:['habe'],          pista:'aux'},
+    {resp:['gearbeitet'],    pista:'arbeiten'},
+    {resp:['bin'],           pista:'aux'},
+    {resp:['gegangen'],      pista:'gehen'},
+    {resp:['haben'],         pista:'aux'},
+    {resp:['gesehen'],       pista:'sehen'}
+  ]);
+
+// Altavoz en los ejemplos y en las tablas: oírlo vale más que leerlo diez veces
+k10Altavoces('.example-de');
+k10Altavoces('.k10-de');
 </script>
 
 </body>
