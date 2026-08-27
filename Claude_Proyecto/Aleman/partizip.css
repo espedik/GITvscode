@@ -1,0 +1,107 @@
+/* ══════════════════════════════════════════════════════════════════════════════════════════
+   Partizip I y II — estilos de la lección dedicada
+   ══════════════════════════════════════════════════════════════════════════════════════════
+   Una sola decisión de diseño manda sobre todo lo demás: **cada participio tiene su color** y
+   ese color no se usa para nada más en la página. Azul = Partizip I. Naranja = Partizip II.
+
+   El motivo es que los dos se confunden precisamente porque se parecen al leerlos. Si el color
+   los separa antes de que el ojo lea la palabra, la distinción se fija sin esfuerzo: en la tabla
+   comparativa, en las cabeceras, en los ejemplos y en la lista de 205 verbos siempre son el
+   mismo azul y el mismo naranja.
+   ══════════════════════════════════════════════════════════════════════════════════════════ */
+
+:root{
+  --pz-i:#1668c7;         /* Partizip I  — azul: acción en curso */
+  --pz-i-bg:rgba(22,104,199,.08);
+  --pz-ii:#d97400;        /* Partizip II — naranja: acción terminada */
+  --pz-ii-bg:rgba(217,116,0,.10);
+}
+
+.pz-i{color:var(--pz-i);font-weight:600}
+.pz-ii{color:var(--pz-ii);font-weight:600}
+.pz-lead{font-size:17px;line-height:1.6;color:var(--black);margin-bottom:16px}
+
+/* ── El duelo: los dos ejemplos enfrentados ── */
+.pz-duelo{display:grid;grid-template-columns:1fr auto 1fr;gap:14px;align-items:stretch;margin:16px 0}
+.pz-lado{border-radius:var(--r);padding:18px 20px;border:1px solid var(--border);display:flex;
+  flex-direction:column;gap:5px}
+.pz-uno{background:var(--pz-i-bg);border-color:rgba(22,104,199,.3)}
+.pz-dos{background:var(--pz-ii-bg);border-color:rgba(217,116,0,.32)}
+.pz-badge{align-self:flex-start;font-size:10.5px;font-weight:800;letter-spacing:.08em;
+  text-transform:uppercase;padding:3px 10px;border-radius:20px;margin-bottom:4px}
+.pz-uno .pz-badge{background:var(--pz-i);color:#fff}
+.pz-dos .pz-badge{background:var(--pz-ii);color:#fff}
+.pz-frase{font-size:21px;font-weight:700;color:var(--black);line-height:1.3}
+.pz-uno .pz-frase b{color:var(--pz-i)}
+.pz-dos .pz-frase b{color:var(--pz-ii)}
+.pz-trad{font-size:14px;color:#555}
+.pz-nota{font-size:12.5px;color:#777;margin-top:6px;padding-top:8px;border-top:1px solid var(--border)}
+.pz-vs{display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:800;color:#c4c4c4}
+@media(max-width:760px){
+  .pz-duelo{grid-template-columns:1fr}
+  .pz-vs{padding:2px 0}
+}
+
+/* ── El constructor paso a paso ── */
+.pz-build{border-radius:var(--r);padding:16px 18px;margin:14px 0;border:1px solid var(--border)}
+.pz-build-i{background:var(--pz-i-bg);border-color:rgba(22,104,199,.25)}
+.pz-build-ii{background:var(--pz-ii-bg);border-color:rgba(217,116,0,.25)}
+.pz-build-t{font-size:15px;font-weight:700;color:var(--black);margin-bottom:13px;
+  display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.pz-chip{font-size:10.5px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;
+  padding:3px 10px;border-radius:20px;color:#fff;white-space:nowrap}
+.pz-chip-i{background:var(--pz-i)}
+.pz-chip-ii{background:var(--pz-ii)}
+
+.pz-pasos{display:flex;align-items:stretch;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.pz-paso{flex:1 1 130px;min-width:120px;background:#fff;border:1px solid var(--border);
+  border-radius:10px;padding:10px 12px;display:flex;flex-direction:column;gap:3px}
+.pz-paso-n{width:18px;height:18px;border-radius:50%;background:var(--black);color:#fff;
+  font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center}
+.pz-paso-w{font-size:17px;font-weight:700;color:var(--black);font-family:var(--mono,inherit)}
+.pz-paso-l{font-size:11px;color:#888;line-height:1.35}
+.pz-paso.pz-ok{border-color:#1a9e5c;box-shadow:0 0 0 2px rgba(26,158,92,.13)}
+.pz-paso.pz-ok .pz-paso-w{color:#137a46}
+.pz-add{background:rgba(212,160,0,.35);border-radius:3px;padding:0 3px}
+.pz-vow{background:rgba(204,0,0,.22);border-radius:3px;padding:0 3px}
+.pz-flecha{display:flex;align-items:center;font-size:17px;color:#bbb;font-weight:700}
+.pz-msg{font-size:13.5px;color:#555;line-height:1.6;margin:8px 0}
+.pz-ejs{display:flex;flex-wrap:wrap;gap:7px;margin-top:8px}
+.pz-ejs span{background:#fff;border:1px solid var(--border);border-radius:7px;padding:5px 11px;
+  font-size:13px;font-weight:600;color:var(--black)}
+.pz-exc{margin-top:12px}
+@media(max-width:700px){
+  .pz-pasos{flex-direction:column}
+  .pz-flecha{justify-content:center;transform:rotate(90deg)}
+}
+
+/* ── Tabla comparativa: cada columna con su color ── */
+.pz-comp thead .pz-th-i{color:var(--pz-i);border-bottom:2px solid var(--pz-i)}
+.pz-comp thead .pz-th-ii{color:var(--pz-ii);border-bottom:2px solid var(--pz-ii)}
+.pz-comp td:nth-child(2){background:var(--pz-i-bg)}
+.pz-comp td:nth-child(3){background:var(--pz-ii-bg)}
+.pz-warn{background:rgba(204,0,0,.06);border-left:4px solid var(--red)}
+
+/* ── Bloques de uso ── */
+.pz-uso{border-radius:var(--r);padding:15px 17px;margin:14px 0;border:1px solid var(--border)}
+.pz-uso-i{background:var(--pz-i-bg);border-color:rgba(22,104,199,.25)}
+.pz-uso-ii{background:var(--pz-ii-bg);border-color:rgba(217,116,0,.25)}
+.pz-uso-t{font-size:15px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.pz-uso-b{background:#fff;border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:9px}
+.pz-uso-b:last-child{margin-bottom:0}
+.pz-uso-n{font-size:13.5px;font-weight:800;color:var(--black);margin-bottom:8px;
+  display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.pz-uso-tag{font-size:10px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;
+  background:rgba(0,0,0,.06);color:#777;padding:2px 8px;border-radius:5px}
+
+/* ── La tabla de las tres formas ── */
+.pz-tabla thead .pz-th-i{color:var(--pz-i)}
+.pz-tabla thead .pz-th-ii{color:var(--pz-ii)}
+.pz-tabla td.p1-cel{color:var(--pz-i);font-weight:600}
+.p1-d{background:rgba(22,104,199,.22);border-radius:3px;padding:0 2px;font-weight:800}
+.pz-tabla tbody tr:hover{background:rgba(0,0,0,.02)}
+
+@media(max-width:820px){
+  .pz-frase{font-size:18px}
+  .pz-lead{font-size:15px}
+}

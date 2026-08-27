@@ -1,6 +1,6 @@
 # Aleman/ — referencia
 
-40 lecciones de alemán en HTML, sin backend ni build. Se abren con `file://` y el Dashboard las
+41 lecciones de alemán en HTML, sin backend ni build. Se abren con `file://` y el Dashboard las
 consume a través de `../Dashboard/aleman-data.js`.
 
 > **Referencia, no diario.** El historial vive en `git log -p -- Claude_Proyecto/Aleman/`.
@@ -12,18 +12,18 @@ consume a través de `../Dashboard/aleman-data.js`.
 
 | Grupo | Archivos | Qué es |
 |---|---|---|
-| **Kapitel 10** | `k10-01`…`k10-05` | Lo que Adán cursa en Cenlex Santo Tomás desde el 25-ago-2026 |
+| **Kapitel 10** | `k10-01`…`k10-06` | Lo que Adán cursa en Cenlex Santo Tomás desde el 25-ago-2026 |
 | A1 | `a1-01`…`a1-15` | Base: saludos, números, artículos, hora, profesiones… |
 | A2 | `a2-01`…`a2-20` | Gramática y vocabulario temático |
 | Apoyo | `index.html`, `gramatica.html`, `vocabulario.html` | Índice y referencia transversal |
-| Compartido | `styles.css`, `flashcards.js`, `k10.css`, `k10-interactivo.js` | Estilos y motores |
+| Compartido | `styles.css`, `flashcards.js`, `k10.css`, `partizip.css`, `k10-interactivo.js` | Estilos y motores |
 
 ---
 
 ## Kapitel 10 — el capítulo en curso
 
-Cinco lecciones que cubren el temario real de clase. **75 tarjetas de contenido y 332
-ejercicios**; `k10.css` y `k10-interactivo.js` son suyos y los comparten las cinco.
+Seis lecciones que cubren el temario real de clase. **83 tarjetas de contenido y 370
+ejercicios**; `k10.css` y `k10-interactivo.js` son suyos y los comparten las seis; `partizip.css` es solo de `k10-06`.
 
 | Lección | Qué cubre | Ejercicios |
 |---|---|---|
@@ -32,6 +32,33 @@ ejercicios**; `k10.css` y `k10-interactivo.js` son suyos y los comparten las cin
 | `k10-03` Üben | 6 bloques y **dos minitests** | 77 |
 | `k10-04` Berufe | Artículo, femenino, tu área, **lugares y actividades**, **condiciones laborales**, **las 5 preguntas del oral**, plurales | 54 |
 | `k10-05` Mein Tag | Conectores, tu rutina en presente y Perfekt, guion del video, **frecuencia**, **la hora hablada**, **separables de rutina** | 59 |
+| `k10-06` Partizip I & II | Los dos participios enfrentados, cómo se construye cada uno paso a paso, los 4 usos del II y los 2 del I, declinación, 205 verbos con sus tres formas | 38 |
+
+### `k10-06` — la lección de los participios
+
+Tiene `partizip.css` propio, y **una sola decisión de diseño manda sobre el resto: cada participio
+tiene su color**, y ese color no se usa para nada más en la página.
+
+**🔵 Azul = Partizip I · 🟠 Naranja = Partizip II.** Se confunden precisamente porque al leerlos se
+parecen; si el color los separa antes de que el ojo lea la palabra, la distinción se fija sola. El
+mismo par de colores manda en el duelo de apertura, en las cabeceras de la comparativa, en los
+bloques de uso y en las columnas de la tabla de 205 verbos.
+
+Piezas propias de esta lección:
+
+- **El duelo** (`.pz-duelo`) — *das **lesende** Kind* frente a *das **gelesene** Buch*, con la
+  traducción y el porqué debajo. La idea entera del tema cabe ahí: **el Partizip I es quien hace la
+  acción; el Partizip II, a quien se la hacen.**
+- **El constructor** (`.pz-pasos`) — cada participio armado paso a paso, con la letra añadida
+  resaltada en dorado y la vocal que cambia en rojo. Tres caminos: regular, irregular y el del
+  Partizip I, que es un solo paso.
+- **La tabla de tres formas** — infinitivo · Partizip I · Partizip II, con filtro por tipo y un
+  filtro extra 🟢 «Partizip I usual»: en muchos verbos el Partizip I existe gramaticalmente pero no
+  lo dice nadie, y marcar los 49 que sí se usan evita estudiar ruido.
+
+El aviso más importante de la lección está en rojo y aparte: **el Partizip I no es el gerundio**.
+«Estoy leyendo» no es *Ich bin lesend* — es simplemente `Ich lese`. Es el error que arrastran los
+hispanohablantes y los anglohablantes por igual.
 
 Los temas en negrita son los que suelen faltar en el material de clase y son pregunta segura:
 

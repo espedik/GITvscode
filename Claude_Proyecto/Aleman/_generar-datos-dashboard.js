@@ -30,7 +30,7 @@ const OUTPUT_FILE = path.resolve(__dirname, '../Dashboard/aleman-data.js');
 const FILES = [
   // Kapitel 10 · Cenlex Santo Tomás — lo que Adán cursa ahora (2026-08-25)
   'k10-01-perfekt-regel.html','k10-02-verben-liste.html','k10-03-perfekt-uben.html',
-  'k10-04-berufe.html','k10-05-mein-tag.html',
+  'k10-04-berufe.html','k10-05-mein-tag.html','k10-06-partizip.html',
   'a1-01-saludos.html','a1-02-zahlen.html','a1-03-farben.html','a1-04-wochentage.html','a1-05-familie.html',
   'a1-06-artikel.html','a1-07-pronomen.html','a1-08-sein-haben.html','a1-09-uhrzeit.html','a1-10-laender.html',
   'a1-11-berufe.html','a1-12-essen.html','a1-13-wohnen.html','a1-14-verkehr.html','a1-15-hobbys.html',
