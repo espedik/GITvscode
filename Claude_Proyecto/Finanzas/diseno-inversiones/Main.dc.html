@@ -1,0 +1,204 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600;700&display=swap">
+  <style>
+    body { margin: 0; background: #08080f; color: #f0f0f5;
+           font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; font-size: 14px; }
+    a { color: #00d4ff; text-decoration: none; } a:hover { color: #66e5ff; }
+    .num { font-family: 'Space Grotesk', 'Inter', sans-serif; font-variant-numeric: tabular-nums;
+           letter-spacing: -0.02em; }
+    .lbl { font-size: 9.5px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
+           color: #6a6e88; }
+  </style>
+</helmet>
+
+<div style="position: relative; width: 1280px; min-height: 960px; overflow: hidden; background: #08080f;">
+
+  <!-- atmósfera: rejilla técnica + dos radiales, como el body de la app -->
+  <div style="position: absolute; inset: 0; background-image: linear-gradient(rgba(0,212,255,.035) 1px, transparent 1px), linear-gradient(90deg, rgba(0,212,255,.035) 1px, transparent 1px); background-size: 64px 64px; mask-image: radial-gradient(ellipse 70% 60% at 30% 0%, #000 0%, transparent 75%);"></div>
+  <div style="position: absolute; inset: 0; background-image: radial-gradient(ellipse 70% 55% at 18% -5%, rgba(0,212,255,.10) 0%, transparent 62%), radial-gradient(ellipse 55% 45% at 88% 105%, rgba(176,110,255,.10) 0%, transparent 62%);"></div>
+
+  <div style="position: relative; display: flex; flex-direction: column; gap: 22px; padding: 34px 40px 40px;">
+
+    <!-- ── encabezado ────────────────────────────────────────────── -->
+    <div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 24px;">
+      <div style="display: flex; flex-direction: column; gap: 7px;">
+        <div style="display: flex; align-items: center; gap: 9px;">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#00d4ff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"></path><path d="M7 15l4-5 3 3 5-7"></path></svg>
+          <span class="lbl" style="color: #00d4ff;">Plan de inversión</span>
+        </div>
+        <div class="num" style="font-size: 33px; font-weight: 700; line-height: 1;">Agosto 2026</div>
+        <div style="font-size: 12px; color: #6a6e88;">Semana 4 de 4 &middot; 22 al 28 de agosto</div>
+      </div>
+
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <div style="display: flex; align-items: center; gap: 7px; padding: 7px 13px; border-radius: 999px; border: 1px solid rgba(0,232,122,.3); background: rgba(0,232,122,.09);">
+          <span style="width: 6px; height: 6px; border-radius: 50%; background: #00e87a; box-shadow: 0 0 8px #00e87a;"></span>
+          <span style="font-size: 11px; font-weight: 700; color: #00e87a; letter-spacing: .04em;">PLAN ACTIVO</span>
+        </div>
+        <div style="padding: 7px 13px; border-radius: 999px; border: 1px solid rgba(255,255,255,.1); font-size: 11px; color: #6a6e88;">
+          Picks del 23 jun 2026
+        </div>
+      </div>
+    </div>
+
+    <!-- ── LA cifra: qué haces esta semana ───────────────────────── -->
+    <div style="position: relative; border-radius: 18px; padding: 1px; background: linear-gradient(135deg, rgba(0,212,255,.55), rgba(176,110,255,.4) 45%, rgba(0,212,255,.08) 90%);">
+      <div style="border-radius: 17px; background: linear-gradient(160deg, #12121c 0%, #0c0c14 100%); padding: 28px 32px; display: grid; grid-template-columns: minmax(0, 1fr) 1px minmax(0, 1.15fr); gap: 32px; align-items: center;">
+
+        <div style="display: flex; flex-direction: column; gap: 14px;">
+          <div class="lbl">Esta semana inviertes</div>
+          <div style="display: flex; align-items: baseline; gap: 12px;">
+            <div class="num" style="font-size: 76px; font-weight: 700; line-height: .92; color: #00d4ff; text-shadow: 0 0 34px rgba(0,212,255,.4);">$4,840</div>
+            <div style="font-size: 15px; font-weight: 600; color: #6a6e88;">MXN</div>
+          </div>
+          <div style="font-size: 13.5px; color: #a8acc4; line-height: 1.55; max-width: 40ch;">
+            En acciones de Estados Unidos, desde GBM+. Es tu aportación semanal
+            &mdash; la misma cantidad cada semana, llueva o truene.
+          </div>
+
+          <div style="display: flex; gap: 8px; margin-top: 4px;">
+            <div style="display: flex; align-items: center; gap: 6px; padding: 6px 11px; border-radius: 8px; background: rgba(255,217,61,.08); border: 1px solid rgba(255,217,61,.22);">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#ffd93d" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"></circle><path d="M12 8v5"></path><path d="M12 16.5v.01"></path></svg>
+              <span style="font-size: 11.5px; color: #ffd93d; font-weight: 600;">Aún no registras el sobrante real de esta semana</span>
+            </div>
+          </div>
+        </div>
+
+        <div style="width: 1px; height: 100%; background: linear-gradient(180deg, transparent, rgba(255,255,255,.12) 30%, rgba(255,255,255,.12) 70%, transparent);"></div>
+
+        <!-- reparto entre las dos acciones -->
+        <div style="display: flex; flex-direction: column; gap: 14px;">
+          <div class="lbl">Cómo se reparte</div>
+
+          <div style="display: flex; flex-direction: column; gap: 11px;">
+
+            <div style="display: flex; flex-direction: column; gap: 7px;">
+              <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 12px;">
+                <div style="display: flex; align-items: baseline; gap: 9px;">
+                  <span class="num" style="font-size: 17px; font-weight: 700; color: #00e87a;">MSFT</span>
+                  <span style="font-size: 11.5px; color: #6a6e88;">Microsoft &middot; conservadora</span>
+                </div>
+                <div style="display: flex; align-items: baseline; gap: 8px;">
+                  <span class="num" style="font-size: 19px; font-weight: 700;">$3,388</span>
+                  <span class="num" style="font-size: 12px; color: #6a6e88;">70%</span>
+                </div>
+              </div>
+              <div style="display: flex; gap: 3px;">
+                <span style="height: 6px; flex: 7; border-radius: 3px; background: linear-gradient(90deg, #00e87a, rgba(0,232,122,.45)); box-shadow: 0 0 12px rgba(0,232,122,.35);"></span>
+                <span style="height: 6px; flex: 3; border-radius: 3px; background: rgba(255,255,255,.07);"></span>
+              </div>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 7px;">
+              <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 12px;">
+                <div style="display: flex; align-items: baseline; gap: 9px;">
+                  <span class="num" style="font-size: 17px; font-weight: 700; color: #b06eff;">NVDA</span>
+                  <span style="font-size: 11.5px; color: #6a6e88;">NVIDIA &middot; crecimiento</span>
+                </div>
+                <div style="display: flex; align-items: baseline; gap: 8px;">
+                  <span class="num" style="font-size: 19px; font-weight: 700;">$1,452</span>
+                  <span class="num" style="font-size: 12px; color: #6a6e88;">30%</span>
+                </div>
+              </div>
+              <div style="display: flex; gap: 3px;">
+                <span style="height: 6px; flex: 3; border-radius: 3px; background: linear-gradient(90deg, #b06eff, rgba(176,110,255,.45)); box-shadow: 0 0 12px rgba(176,110,255,.35);"></span>
+                <span style="height: 6px; flex: 7; border-radius: 3px; background: rgba(255,255,255,.07);"></span>
+              </div>
+            </div>
+
+          </div>
+
+          <div style="font-size: 11.5px; color: #6a6e88; line-height: 1.5; padding-top: 3px;">
+            70/30 es tu regla: el grueso en la empresa estable, una porción en la de mayor
+            crecimiento y mayor riesgo.
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ── de dónde sale ese dinero ──────────────────────────────── -->
+    <div style="border-radius: 16px; border: 1px solid rgba(255,255,255,.08); background: rgba(255,255,255,.022); padding: 24px 28px; display: flex; flex-direction: column; gap: 20px;">
+
+      <div style="display: flex; align-items: center; justify-content: space-between; gap: 16px;">
+        <div style="display: flex; align-items: center; gap: 9px;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#a8acc4" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h10"></path><path d="M4 12h16"></path><path d="M4 18h7"></path><path d="M17 3l3 3-3 3"></path></svg>
+          <span style="font-size: 13.5px; font-weight: 700;">De dónde salen esos $4,840</span>
+        </div>
+        <span style="font-size: 11.5px; color: #6a6e88;">Todas las cifras son de tu mes, no promedios</span>
+      </div>
+
+      <!-- la cadena -->
+      <div style="display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; align-items: stretch;">
+
+        <div style="display: flex; flex-direction: column; gap: 6px; padding: 15px 16px; border-radius: 12px; background: rgba(0,232,122,.07); border: 1px solid rgba(0,232,122,.2);">
+          <div class="lbl" style="color: #00e87a;">1 &middot; Entra</div>
+          <div class="num" style="font-size: 25px; font-weight: 700; color: #00e87a;">$53,140</div>
+          <div style="font-size: 11px; color: #6a6e88; line-height: 1.45;">Sueldo 41,000<br>Didi 11,200 &middot; Si Vale 940</div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 6px; padding: 15px 16px; border-radius: 12px; background: rgba(255,59,107,.055); border: 1px solid rgba(255,59,107,.16);">
+          <div class="lbl" style="color: #ff3b6b;">2 &middot; Se va en fijos</div>
+          <div class="num" style="font-size: 25px; font-weight: 700; color: #ff3b6b;">&minus;$13,344</div>
+          <div style="font-size: 11px; color: #6a6e88; line-height: 1.45;">Renta 11,000<br>Servicios 1,264 &middot; Subs 1,080</div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 6px; padding: 15px 16px; border-radius: 12px; background: rgba(255,59,107,.055); border: 1px solid rgba(255,59,107,.16);">
+          <div class="lbl" style="color: #ff3b6b;">3 &middot; Se va en deudas</div>
+          <div class="num" style="font-size: 25px; font-weight: 700; color: #ff3b6b;">&minus;$9,715</div>
+          <div style="font-size: 11px; color: #6a6e88; line-height: 1.45;">Auto 6,700<br>Tarjetas y MSI 3,015</div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 6px; padding: 15px 16px; border-radius: 12px; background: rgba(0,212,255,.07); border: 1px solid rgba(0,212,255,.24);">
+          <div class="lbl" style="color: #00d4ff;">4 &middot; Te queda</div>
+          <div class="num" style="font-size: 25px; font-weight: 700; color: #00d4ff;">$30,081</div>
+          <div style="font-size: 11px; color: #6a6e88; line-height: 1.45;">Libre cada mes<br>para repartir</div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 9px; padding: 15px 16px; border-radius: 12px; background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.09);">
+          <div class="lbl">5 &middot; Lo repartes</div>
+          <div style="display: flex; flex-direction: column; gap: 6px;">
+            <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 8px;">
+              <span style="font-size: 11.5px; color: #a8acc4;">Bolsa</span>
+              <span class="num" style="font-size: 15px; font-weight: 700; color: #00d4ff;">$19,359</span>
+            </div>
+            <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 8px;">
+              <span style="font-size: 11.5px; color: #a8acc4;">CETES</span>
+              <span class="num" style="font-size: 15px; font-weight: 700; color: #00e87a;">$1,500</span>
+            </div>
+            <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 8px;">
+              <span style="font-size: 11.5px; color: #6a6e88;">Sin asignar</span>
+              <span class="num" style="font-size: 15px; font-weight: 700; color: #6a6e88;">$9,222</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- el último paso, en una frase -->
+      <div style="display: flex; align-items: center; gap: 14px; padding: 15px 18px; border-radius: 12px; background: rgba(0,212,255,.05); border: 1px dashed rgba(0,212,255,.3);">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#00d4ff" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;"><path d="M12 3v18"></path><path d="M6 9l6-6 6 6"></path></svg>
+        <div style="font-size: 13.5px; color: #a8acc4; line-height: 1.5;">
+          Los <span class="num" style="color: #00d4ff; font-weight: 700;">$19,359</span> de bolsa
+          se reparten entre las <span style="color: #f0f0f5; font-weight: 600;">4 semanas</span> del mes
+          &rarr; <span class="num" style="color: #00d4ff; font-weight: 700;">$4,840</span> cada semana.
+          Los <span class="num" style="color: #6a6e88; font-weight: 700;">$9,222</span> sin asignar son tu colchón:
+          si un mes se te va en imprevistos, no tocas la inversión.
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

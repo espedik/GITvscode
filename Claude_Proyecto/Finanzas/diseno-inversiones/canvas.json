@@ -1,0 +1,85 @@
+{
+  "artboards": [
+    {
+      "file": "Main.dc.html",
+      "x": 0,
+      "y": 0,
+      "w": 1280,
+      "h": 960,
+      "title": "1 · Esta semana"
+    },
+    {
+      "file": "Semanas.dc.html",
+      "x": 1400,
+      "y": 0,
+      "w": 1280,
+      "h": 1060,
+      "title": "2 · Tu mes semana por semana",
+      "is_interactive": true
+    },
+    {
+      "file": "Portafolio.dc.html",
+      "x": 0,
+      "y": 1400,
+      "w": 1280,
+      "h": 910,
+      "title": "3 · Tu dinero invertido"
+    },
+    {
+      "file": "Acciones.dc.html",
+      "x": 1400,
+      "y": 1400,
+      "w": 1280,
+      "h": 890,
+      "title": "4 · Qué compras y por qué"
+    },
+    {
+      "file": "DireccionB.dc.html",
+      "x": 0,
+      "y": 2650,
+      "w": 1280,
+      "h": 720,
+      "title": "Alternativa · terminal densa"
+    }
+  ],
+  "annotations": [
+    {
+      "id": "nota-arranque",
+      "x": 0,
+      "y": -290,
+      "w": 700,
+      "text": "EL REDISEÑO — cuatro pantallas, en este orden\n\nHoy la sección son 20 tarjetas del mismo tamaño: nada manda y ninguna cifra dice de dónde viene. Aquí cada pantalla responde una sola pregunta, y toda cantidad trae su origen al lado.\n\nEmpieza por esta: una cifra dominante — lo que inviertes esta semana — y debajo la cadena completa que la produce."
+    },
+    {
+      "id": "nota-semanas",
+      "x": 1400,
+      "y": -290,
+      "w": 700,
+      "text": "LA ÚNICA PANTALLA CON CONTROLES VIVOS\n\nToca cualquiera de las cuatro semanas y el detalle de abajo cambia. Aquí la interacción es el contenido: entender por qué la semana 1 aprieta y la 3 sobra solo se ve comparándolas.\n\nHallazgo: tu segunda quincena cae el día 30, fuera del bloque de 4 semanas. Por eso el plan reparte el mes en partes iguales en vez de seguir el calendario."
+    },
+    {
+      "id": "nota-portafolio",
+      "x": 0,
+      "y": 1120,
+      "w": 700,
+      "text": "AQUÍ ESTÁ EL ARREGLO MÁS IMPORTANTE\n\nLa app te muestra +0.00% de rendimiento. Es engañoso por dos motivos: el 63% de ese «portafolio» es la garantía de tu departamento, que no puede rendir nada; y a los CETES nunca se les sumaron los intereses ya devengados (~$253).\n\nEsta pantalla separa el dinero que trabaja del que solo está retenido."
+    },
+    {
+      "id": "nota-acciones",
+      "x": 1400,
+      "y": 1120,
+      "w": 700,
+      "text": "LA PREGUNTA QUE NADIE RESPONDÍA: ¿QUÉ ME LLEVO?\n\nLa vista actual dice «70% MSFT» y ahí se queda. Esta traduce el porcentaje a algo que puedes ver: $199.88 USD, 0.43 de una acción esta semana, unas 20 acciones en doce meses.\n\nY marca que «+15% estimado» es una opinión de analistas, no una promesa."
+    },
+    {
+      "id": "nota-alternativa",
+      "x": 0,
+      "y": 2370,
+      "w": 700,
+      "text": "ALTERNATIVA — mismo contenido, otra densidad\n\nTodo en una pantalla sin scroll, tipo panel de operador. A favor: ves el mes entero de un vistazo y comparas sin navegar. En contra: exige que ya sepas leerlo — las cifras dejan de explicarse solas, que es justo lo que pediste arreglar.\n\nVale como vista secundaria («modo compacto»), no como la principal."
+    }
+  ],
+  "launch": {
+    "view": "canvas"
+  }
+}

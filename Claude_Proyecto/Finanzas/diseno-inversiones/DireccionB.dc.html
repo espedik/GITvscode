@@ -1,0 +1,156 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600;700&display=swap">
+  <style>
+    body { margin: 0; background: #08080f; color: #f0f0f5;
+           font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; font-size: 14px; }
+    a { color: #00d4ff; text-decoration: none; } a:hover { color: #66e5ff; }
+    .num { font-family: 'Space Grotesk', 'Inter', sans-serif; font-variant-numeric: tabular-nums;
+           letter-spacing: -0.02em; }
+    .lbl { font-size: 9px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
+           color: #6a6e88; }
+    .cel { padding: 12px 14px; border-radius: 10px; background: rgba(255,255,255,.028);
+           border: 1px solid rgba(255,255,255,.07); display: flex; flex-direction: column; gap: 5px; }
+    .fila { display: flex; align-items: baseline; justify-content: space-between; gap: 10px;
+            padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,.05); }
+  </style>
+</helmet>
+
+<div style="position: relative; width: 1280px; min-height: 720px; overflow: hidden; background: #08080f;">
+  <div style="position: absolute; inset: 0; background-image: repeating-linear-gradient(0deg, rgba(0,212,255,.022) 0px, rgba(0,212,255,.022) 1px, transparent 1px, transparent 3px);"></div>
+
+  <div style="position: relative; display: flex; flex-direction: column; gap: 14px; padding: 24px 28px 28px;">
+
+    <!-- barra superior tipo terminal -->
+    <div style="display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-bottom: 12px; border-bottom: 1px solid rgba(0,212,255,.2);">
+      <div style="display: flex; align-items: baseline; gap: 14px;">
+        <span class="num" style="font-size: 15px; font-weight: 700; color: #00d4ff;">INVERSIONES</span>
+        <span class="num" style="font-size: 12px; color: #6a6e88;">AGO 2026 &middot; SEM 4/4 &middot; D22&ndash;28</span>
+      </div>
+      <div style="display: flex; align-items: center; gap: 14px;">
+        <span class="num" style="font-size: 12px; color: #6a6e88;">USD/MXN 16.95</span>
+        <span style="display: flex; align-items: center; gap: 6px;">
+          <span style="width: 6px; height: 6px; border-radius: 50%; background: #00e87a;"></span>
+          <span class="num" style="font-size: 11px; color: #00e87a; letter-spacing: .06em;">ACTIVO</span>
+        </span>
+      </div>
+    </div>
+
+    <!-- franja de cifras -->
+    <div style="display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 8px;">
+      <div class="cel" style="background: rgba(0,212,255,.08); border-color: rgba(0,212,255,.3);">
+        <span class="lbl" style="color: #00d4ff;">Esta semana</span>
+        <span class="num" style="font-size: 25px; font-weight: 700; color: #00d4ff;">$4,840</span>
+        <span style="font-size: 10.5px; color: #6a6e88;">a bolsa</span>
+      </div>
+      <div class="cel">
+        <span class="lbl">Al mes</span>
+        <span class="num" style="font-size: 25px; font-weight: 700;">$19,359</span>
+        <span style="font-size: 10.5px; color: #6a6e88;">acciones USA</span>
+      </div>
+      <div class="cel">
+        <span class="lbl">CETES d15</span>
+        <span class="num" style="font-size: 25px; font-weight: 700; color: #00e87a;">$1,500</span>
+        <span style="font-size: 10.5px; color: #6a6e88;">fijo, 11%</span>
+      </div>
+      <div class="cel">
+        <span class="lbl">Trabajando</span>
+        <span class="num" style="font-size: 25px; font-weight: 700;">$49,958</span>
+        <span style="font-size: 10.5px; color: #6a6e88;">CETES + BTC</span>
+      </div>
+      <div class="cel">
+        <span class="lbl">Retenido</span>
+        <span class="num" style="font-size: 25px; font-weight: 700; color: #6a6e88;">$11,250</span>
+        <span style="font-size: 10.5px; color: #6a6e88;">garantía renta</span>
+      </div>
+      <div class="cel" style="background: rgba(255,59,107,.07); border-color: rgba(255,59,107,.2);">
+        <span class="lbl" style="color: #ff3b6b;">Resultado</span>
+        <span class="num" style="font-size: 25px; font-weight: 700; color: #ff3b6b;">&minus;$5,071</span>
+        <span style="font-size: 10.5px; color: #6a6e88;">&minus;9.2% global</span>
+      </div>
+    </div>
+
+    <!-- tres columnas densas -->
+    <div style="display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr) minmax(0, 1fr); gap: 12px;">
+
+      <div style="border-radius: 12px; border: 1px solid rgba(255,255,255,.08); padding: 16px 18px; display: flex; flex-direction: column; gap: 9px;">
+        <span class="lbl" style="color: #00d4ff;">De dónde sale</span>
+        <div class="fila"><span style="font-size: 12.5px; color: #a8acc4;">Ingresos del mes</span><span class="num" style="font-size: 14px; font-weight: 700; color: #00e87a;">$53,140</span></div>
+        <div class="fila"><span style="font-size: 12.5px; color: #a8acc4;">Gastos fijos</span><span class="num" style="font-size: 14px; font-weight: 700; color: #ff3b6b;">&minus;$13,344</span></div>
+        <div class="fila"><span style="font-size: 12.5px; color: #a8acc4;">Mínimos de deuda</span><span class="num" style="font-size: 14px; font-weight: 700; color: #ff3b6b;">&minus;$9,715</span></div>
+        <div class="fila" style="border-bottom: none; padding-top: 10px;"><span style="font-size: 12.5px; font-weight: 700; color: #00d4ff;">Queda libre</span><span class="num" style="font-size: 19px; font-weight: 700; color: #00d4ff;">$30,081</span></div>
+        <div style="display: flex; gap: 3px; height: 8px; margin-top: 4px;">
+          <span style="flex: 19359; border-radius: 4px; background: #00d4ff;"></span>
+          <span style="flex: 1500; border-radius: 4px; background: #00e87a;"></span>
+          <span style="flex: 9222; border-radius: 4px; background: rgba(255,255,255,.13);"></span>
+        </div>
+        <div style="display: flex; justify-content: space-between; gap: 8px;">
+          <span style="font-size: 10px; color: #00d4ff;">Bolsa 64%</span>
+          <span style="font-size: 10px; color: #00e87a;">CETES 5%</span>
+          <span style="font-size: 10px; color: #6a6e88;">Libre 31%</span>
+        </div>
+      </div>
+
+      <div style="border-radius: 12px; border: 1px solid rgba(255,255,255,.08); padding: 16px 18px; display: flex; flex-direction: column; gap: 9px;">
+        <span class="lbl" style="color: #00e87a;">Reparto de la semana</span>
+        <div class="fila"><span style="font-size: 12.5px; color: #00e87a; font-weight: 600;">MSFT &middot; 70%</span><span class="num" style="font-size: 14px; font-weight: 700;">$3,388</span></div>
+        <div style="font-size: 10.5px; color: #6a6e88; margin-top: -4px;">$199.88 USD &rarr; 0.43 acciones &middot; $470/acc</div>
+        <div class="fila" style="margin-top: 6px;"><span style="font-size: 12.5px; color: #b06eff; font-weight: 600;">NVDA &middot; 30%</span><span class="num" style="font-size: 14px; font-weight: 700;">$1,452</span></div>
+        <div style="font-size: 10.5px; color: #6a6e88; margin-top: -4px;">$85.66 USD &rarr; 0.63 acciones &middot; $135/acc</div>
+        <div class="fila" style="border-bottom: none; margin-top: 8px;"><span style="font-size: 12px; color: #6a6e88;">En 12 meses juntas</span><span class="num" style="font-size: 12.5px; color: #a8acc4;">~20 MSFT &middot; ~30 NVDA</span></div>
+      </div>
+
+      <div style="border-radius: 12px; border: 1px solid rgba(255,255,255,.08); padding: 16px 18px; display: flex; flex-direction: column; gap: 9px;">
+        <span class="lbl" style="color: #b06eff;">Posiciones</span>
+        <div class="fila"><span style="font-size: 12.5px; color: #a8acc4;">Bitcoin</span><span class="num" style="font-size: 14px; font-weight: 700; color: #ff3b6b;">$43,458</span></div>
+        <div style="font-size: 10.5px; color: #6a6e88; margin-top: -4px;">aportaste $48,782 &middot; &minus;10.9%</div>
+        <div class="fila" style="margin-top: 6px;"><span style="font-size: 12.5px; color: #a8acc4;">CETES</span><span class="num" style="font-size: 14px; font-weight: 700; color: #00e87a;">$6,500</span></div>
+        <div style="font-size: 10.5px; color: #6a6e88; margin-top: -4px;">+$253 devengados &middot; 129 días</div>
+        <div class="fila" style="margin-top: 6px;"><span style="font-size: 12.5px; color: #6a6e88;">Garantía renta</span><span class="num" style="font-size: 14px; font-weight: 700; color: #6a6e88;">$11,250</span></div>
+        <div style="font-size: 10.5px; color: #6a6e88; margin-top: -4px;">no rinde &middot; no disponible</div>
+        <div class="fila" style="border-bottom: none; margin-top: 8px;"><span style="font-size: 12px; color: #6a6e88;">Acciones USA</span><span class="num" style="font-size: 12.5px; color: #ffd93d;">sin registrar</span></div>
+      </div>
+
+    </div>
+
+    <!-- calendario compacto -->
+    <div style="border-radius: 12px; border: 1px solid rgba(255,255,255,.08); padding: 15px 18px; display: flex; flex-direction: column; gap: 10px;">
+      <div style="display: flex; align-items: baseline; justify-content: space-between;">
+        <span class="lbl">Calendario del mes</span>
+        <span style="font-size: 10.5px; color: #6a6e88;">verde entra &middot; rojo sale</span>
+      </div>
+      <div style="display: grid; grid-template-columns: repeat(31, minmax(0, 1fr)); gap: 2px;">
+        <span style="height: 26px; border-radius: 3px; background: #ff3b6b;" title="día 1 renta"></span>
+        <span style="height: 26px; border-radius: 3px; background: rgba(255,255,255,.05);"></span><span style="height: 26px; border-radius: 3px; background: rgba(255,255,255,.05);"></span><span style="height: 26px; border-radius: 3px; background: rgba(255,255,255,.05);"></span><span style="height: 26px; border-radius: 3px; background: rgba(255,255,255,.05);"></span><span style="height: 26px; border-radius: 3px; background: rgba(255,255,255,.05);"></span><span style="height: 26px; border-radius: 3px; background: rgba(255,255,255,.05);"></span><span style="height: 26px; border-radius: 3px; background: rgba(255,255,255,.05);"></span><span style="height: 26px; border-radius: 3px; background: rgba(255,255,255,.05);"></span><span style="height: 26px; border-radius: 3px; background: rgba(255,255,255,.05);"></span><span style="height: 26px; border-radius: 3px; background: rgba(255,255,255,.05);"></span><span style="height: 26px; border-radius: 3px; background: rgba(255,255,255,.05);"></span><span style="height: 26px; border-radius: 3px; background: rgba(255,255,255,.05);"></span>
+        <span style="height: 26px; border-radius: 3px; background: #ff3b6b;" title="día 14 auto"></span>
+        <span style="height: 26px; border-radius: 3px; background: #00e87a;" title="día 15 quincena"></span>
+        <span style="height: 26px; border-radius: 3px; background: rgba(255,255,255,.05);"></span>
+        <span style="height: 26px; border-radius: 3px; background: #ff3b6b; opacity: .55;" title="día 17 gym"></span>
+        <span style="height: 26px; border-radius: 3px; background: rgba(255,255,255,.05);"></span><span style="height: 26px; border-radius: 3px; background: rgba(255,255,255,.05);"></span><span style="height: 26px; border-radius: 3px; background: rgba(255,255,255,.05);"></span><span style="height: 26px; border-radius: 3px; background: rgba(255,255,255,.05);"></span>
+        <span style="height: 26px; border-radius: 3px; background: rgba(0,212,255,.35);"></span><span style="height: 26px; border-radius: 3px; background: rgba(0,212,255,.35);"></span><span style="height: 26px; border-radius: 3px; background: rgba(0,212,255,.35);"></span><span style="height: 26px; border-radius: 3px; background: rgba(0,212,255,.35);"></span><span style="height: 26px; border-radius: 3px; background: rgba(0,212,255,.35);"></span><span style="height: 26px; border-radius: 3px; background: rgba(0,212,255,.35);"></span><span style="height: 26px; border-radius: 3px; background: rgba(0,212,255,.35);"></span>
+        <span style="height: 26px; border-radius: 3px; background: rgba(255,255,255,.05);"></span>
+        <span style="height: 26px; border-radius: 3px; background: #00e87a;" title="día 30 quincena 2"></span>
+        <span style="height: 26px; border-radius: 3px; background: rgba(255,255,255,.05);"></span>
+      </div>
+      <div style="display: flex; gap: 20px;">
+        <span style="font-size: 10.5px; color: #6a6e88;">D1 renta $11,000</span>
+        <span style="font-size: 10.5px; color: #6a6e88;">D14 auto $6,700</span>
+        <span style="font-size: 10.5px; color: #6a6e88;">D15 quincena $20,500 &middot; CETES $1,500</span>
+        <span style="font-size: 10.5px; color: #6a6e88;">D17 gym $650</span>
+        <span style="font-size: 10.5px; color: #00d4ff;">D22&ndash;28 semana actual</span>
+        <span style="font-size: 10.5px; color: #6a6e88;">D30 quincena $20,500</span>
+      </div>
+    </div>
+
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

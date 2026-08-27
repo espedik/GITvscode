@@ -1,0 +1,270 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600;700&display=swap">
+  <style>
+    body { margin: 0; background: #08080f; color: #f0f0f5;
+           font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; font-size: 14px; }
+    a { color: #00d4ff; text-decoration: none; } a:hover { color: #66e5ff; }
+    .num { font-family: 'Space Grotesk', 'Inter', sans-serif; font-variant-numeric: tabular-nums;
+           letter-spacing: -0.02em; }
+    .lbl { font-size: 9.5px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
+           color: #6a6e88; }
+    .wk { cursor: pointer; transition: transform .16s ease, border-color .16s ease; }
+    .wk:hover { transform: translateY(-2px); }
+  </style>
+</helmet>
+
+<div style="position: relative; width: 1280px; min-height: 1060px; overflow: hidden; background: #08080f;">
+  <div style="position: absolute; inset: 0; background-image: linear-gradient(rgba(0,212,255,.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0,212,255,.03) 1px, transparent 1px); background-size: 64px 64px; mask-image: radial-gradient(ellipse 80% 55% at 50% 0%, #000 0%, transparent 78%);"></div>
+
+  <div style="position: relative; display: flex; flex-direction: column; gap: 22px; padding: 34px 40px 40px;">
+
+    <div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 24px;">
+      <div style="display: flex; flex-direction: column; gap: 7px;">
+        <div style="display: flex; align-items: center; gap: 9px;">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#00d4ff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18"></path><path d="M8 3v4"></path><path d="M16 3v4"></path></svg>
+          <span class="lbl" style="color: #00d4ff;">Tu mes, semana por semana</span>
+        </div>
+        <div class="num" style="font-size: 30px; font-weight: 700; line-height: 1.1;">Por qué unas semanas aprietan y otras no</div>
+      </div>
+      <div style="font-size: 12px; color: #6a6e88; text-align: right; line-height: 1.55; max-width: 34ch;">
+        Toca una semana para ver qué entra y qué sale en esos días.
+      </div>
+    </div>
+
+    <!-- ── línea de tiempo del mes ───────────────────────────────── -->
+    <div style="border-radius: 16px; border: 1px solid rgba(255,255,255,.08); background: rgba(255,255,255,.022); padding: 24px 28px 20px; display: flex; flex-direction: column; gap: 16px;">
+      <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 16px;">
+        <span style="font-size: 13.5px; font-weight: 700;">Los días que mueven tu dinero</span>
+        <span style="font-size: 11.5px; color: #6a6e88;">Agosto 2026</span>
+      </div>
+
+      <div style="position: relative; height: 108px;">
+        <!-- eje -->
+        <div style="position: absolute; left: 0; right: 0; top: 54px; height: 2px; background: linear-gradient(90deg, rgba(255,255,255,.05), rgba(255,255,255,.14) 15%, rgba(255,255,255,.14) 85%, rgba(255,255,255,.05));"></div>
+
+        <!-- eventos -->
+        <sc-for list="{{eventos}}" as="e" hint-placeholder-count="6">
+          <div style="position: absolute; top: 0; bottom: 0; left: 0; right: 0;">
+            <div style="position: absolute; left: {{e.left}}; top: 0; bottom: 0; width: 1px; background: {{e.linea}};"></div>
+            <div style="position: absolute; left: {{e.left}}; top: {{e.top}}; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 5px; white-space: nowrap;">
+              <span class="num" style="font-size: 13.5px; font-weight: 700; color: {{e.color}};">{{e.monto}}</span>
+              <span style="font-size: 10.5px; color: #6a6e88;">{{e.que}}</span>
+            </div>
+            <div style="position: absolute; left: {{e.left}}; top: 49px; transform: translateX(-50%); width: 12px; height: 12px; border-radius: 50%; background: {{e.color}}; border: 2px solid #08080f; box-shadow: 0 0 12px {{e.glow}};"></div>
+            <div style="position: absolute; left: {{e.left}}; top: 72px; transform: translateX(-50%); font-size: 10px; color: #6a6e88; white-space: nowrap;">día {{e.dia}}</div>
+          </div>
+        </sc-for>
+      </div>
+
+      <div style="display: flex; gap: 18px; padding-top: 4px;">
+        <span style="display: flex; align-items: center; gap: 6px;"><span style="width: 9px; height: 9px; border-radius: 50%; background: #00e87a;"></span><span style="font-size: 11px; color: #6a6e88;">Entra dinero</span></span>
+        <span style="display: flex; align-items: center; gap: 6px;"><span style="width: 9px; height: 9px; border-radius: 50%; background: #ff3b6b;"></span><span style="font-size: 11px; color: #6a6e88;">Sale dinero</span></span>
+        <span style="display: flex; align-items: center; gap: 6px;"><span style="width: 9px; height: 9px; border-radius: 50%; background: #00d4ff;"></span><span style="font-size: 11px; color: #6a6e88;">Se invierte</span></span>
+      </div>
+    </div>
+
+    <!-- ── las cuatro semanas ────────────────────────────────────── -->
+    <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px;">
+      <sc-for list="{{semanas}}" as="s" hint-placeholder-count="4">
+        <div class="wk" onClick="{{s.pick}}" style="border-radius: 14px; padding: 17px 18px; display: flex; flex-direction: column; gap: 11px; background: {{s.bg}}; border: 1px solid {{s.borde}};">
+          <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px;">
+            <span class="lbl" style="color: {{s.tinta}};">{{s.nombre}}</span>
+            <sc-if value="{{s.esActual}}" hint-placeholder-val="{{true}}">
+              <span style="font-size: 9px; font-weight: 700; letter-spacing: .08em; color: #08080f; background: #00d4ff; padding: 3px 7px; border-radius: 5px;">HOY</span>
+            </sc-if>
+          </div>
+          <div class="num" style="font-size: 24px; font-weight: 700; line-height: 1; color: {{s.tinta}};">{{s.balance}}</div>
+          <div style="font-size: 11px; color: #6a6e88;">días {{s.dias}}</div>
+          <div style="height: 5px; border-radius: 3px; background: rgba(255,255,255,.06); overflow: hidden;">
+            <div style="height: 100%; border-radius: 3px; width: {{s.barra}}; background: {{s.tinta}};"></div>
+          </div>
+          <div style="font-size: 11.5px; color: #a8acc4; line-height: 1.45;">{{s.resumen}}</div>
+        </div>
+      </sc-for>
+    </div>
+
+    <!-- ── detalle de la semana elegida ──────────────────────────── -->
+    <div style="border-radius: 18px; padding: 1px; background: linear-gradient(135deg, rgba(0,212,255,.4), rgba(176,110,255,.25) 55%, rgba(255,255,255,.05));">
+      <div style="border-radius: 17px; background: linear-gradient(160deg, #101018 0%, #0b0b12 100%); padding: 26px 30px; display: flex; flex-direction: column; gap: 20px;">
+
+        <div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 20px;">
+          <div style="display: flex; flex-direction: column; gap: 6px;">
+            <div class="lbl" style="color: #00d4ff;">Detalle</div>
+            <div class="num" style="font-size: 24px; font-weight: 700;">{{sel.titulo}}</div>
+            <div style="font-size: 12.5px; color: #a8acc4;">{{sel.subtitulo}}</div>
+          </div>
+          <div style="text-align: right; display: flex; flex-direction: column; gap: 5px;">
+            <div class="lbl">Te queda al final</div>
+            <div class="num" style="font-size: 34px; font-weight: 700; line-height: 1; color: {{sel.tinta}};">{{sel.balance}}</div>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px;">
+
+          <div style="border-radius: 13px; background: rgba(0,232,122,.055); border: 1px solid rgba(0,232,122,.16); padding: 17px 18px; display: flex; flex-direction: column; gap: 12px;">
+            <div style="display: flex; align-items: center; gap: 7px;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#00e87a" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5"></path><path d="M6 11l6-6 6 6"></path></svg>
+              <span class="lbl" style="color: #00e87a;">Entra</span>
+            </div>
+            <sc-for list="{{sel.entradas}}" as="r" hint-placeholder-count="2">
+              <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 10px;">
+                <span style="font-size: 12.5px; color: #a8acc4;">{{r.que}}</span>
+                <span class="num" style="font-size: 14px; font-weight: 700;">{{r.monto}}</span>
+              </div>
+            </sc-for>
+            <div style="height: 1px; background: rgba(0,232,122,.15);"></div>
+            <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 10px;">
+              <span style="font-size: 12px; font-weight: 600; color: #00e87a;">Total</span>
+              <span class="num" style="font-size: 17px; font-weight: 700; color: #00e87a;">{{sel.totalEntra}}</span>
+            </div>
+          </div>
+
+          <div style="border-radius: 13px; background: rgba(255,59,107,.05); border: 1px solid rgba(255,59,107,.15); padding: 17px 18px; display: flex; flex-direction: column; gap: 12px;">
+            <div style="display: flex; align-items: center; gap: 7px;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ff3b6b" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"></path><path d="M6 13l6 6 6-6"></path></svg>
+              <span class="lbl" style="color: #ff3b6b;">Sale</span>
+            </div>
+            <sc-for list="{{sel.salidas}}" as="r" hint-placeholder-count="3">
+              <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 10px;">
+                <span style="font-size: 12.5px; color: #a8acc4;">{{r.que}}</span>
+                <span class="num" style="font-size: 14px; font-weight: 700;">{{r.monto}}</span>
+              </div>
+            </sc-for>
+            <div style="height: 1px; background: rgba(255,59,107,.15);"></div>
+            <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 10px;">
+              <span style="font-size: 12px; font-weight: 600; color: #ff3b6b;">Total</span>
+              <span class="num" style="font-size: 17px; font-weight: 700; color: #ff3b6b;">{{sel.totalSale}}</span>
+            </div>
+          </div>
+
+          <div style="border-radius: 13px; background: rgba(0,212,255,.06); border: 1px solid rgba(0,212,255,.2); padding: 17px 18px; display: flex; flex-direction: column; gap: 12px;">
+            <div style="display: flex; align-items: center; gap: 7px;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#00d4ff" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"></path><path d="M7 15l4-5 3 3 5-7"></path></svg>
+              <span class="lbl" style="color: #00d4ff;">Inviertes en bolsa</span>
+            </div>
+            <div class="num" style="font-size: 30px; font-weight: 700; line-height: 1; color: #00d4ff;">$4,840</div>
+            <div style="font-size: 11.5px; color: #a8acc4; line-height: 1.5;">{{sel.notaInversion}}</div>
+            <div style="display: flex; flex-direction: column; gap: 6px; padding-top: 2px;">
+              <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 10px;">
+                <span style="font-size: 12px; color: #00e87a; font-weight: 600;">MSFT 70%</span>
+                <span class="num" style="font-size: 13.5px; font-weight: 700;">$3,388</span>
+              </div>
+              <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 10px;">
+                <span style="font-size: 12px; color: #b06eff; font-weight: 600;">NVDA 30%</span>
+                <span class="num" style="font-size: 13.5px; font-weight: 700;">$1,452</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <div style="display: flex; align-items: flex-start; gap: 12px; padding: 15px 18px; border-radius: 12px; background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.07);">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6a6e88" stroke-width="1.7" stroke-linecap="round" style="flex-shrink: 0; margin-top: 1px;"><circle cx="12" cy="12" r="9"></circle><path d="M12 11v5"></path><path d="M12 7.5v.01"></path></svg>
+          <div style="font-size: 12.5px; color: #a8acc4; line-height: 1.6;">{{sel.aviso}}</div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+</x-dc>
+
+<script data-dc-script>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { sem: 3 };
+  }
+
+  renderVals() {
+    const mx = n => (n < 0 ? '−$' : '$') + Math.abs(n).toLocaleString('es-MX');
+
+    // Los pagos y cobros programados salen de las constantes del proyecto:
+    // renta día 1, auto día 14, quincena y CETES día 15, servicios y tarjetas en
+    // la semana 3, Didi cobra semanal.
+    const DIDI = 2800;
+    const SEM = [
+      { nombre: 'Semana 1', dias: '1 al 7', resumen: 'Se va la renta el día 1.',
+        entradas: [{ que: 'Didi (semanal)', monto: mx(DIDI) }],
+        salidas:  [{ que: 'Renta', monto: mx(11000) }],
+        entra: DIDI, sale: 11000,
+        aviso: 'Es la semana más apretada del mes: la renta se lleva $11,000 y todavía no ha caído ninguna quincena. Si el saldo no alcanza, la inversión de esta semana es la primera que se pospone — no la última.' },
+      { nombre: 'Semana 2', dias: '8 al 14', resumen: 'Se paga el auto el día 14.',
+        entradas: [{ que: 'Didi (semanal)', monto: mx(DIDI) }],
+        salidas:  [{ que: 'Auto — BYD Dolphin Mini', monto: mx(6700) }],
+        entra: DIDI, sale: 6700,
+        aviso: 'La mensualidad del auto cae justo antes de la quincena. Son $6,700 contra $2,800 que entran: sales de la semana en negativo y lo compensas el día 15.' },
+      { nombre: 'Semana 3', dias: '15 al 21', resumen: 'Cae la quincena. Todo se paga aquí.',
+        entradas: [{ que: 'Quincena (día 15)', monto: mx(20500) }, { que: 'Didi (semanal)', monto: mx(DIDI) }, { que: 'Si Vale', monto: mx(940) }],
+        salidas:  [{ que: 'Tarjetas y MSI', monto: mx(3015) }, { que: 'Servicios', monto: mx(1264) }, { que: 'Suscripciones', monto: mx(1080) }, { que: 'CETES (día 15)', monto: mx(1500) }],
+        entra: 20500 + DIDI + 940, sale: 3015 + 1264 + 1080 + 1500,
+        aviso: 'La semana que sostiene el mes: entran $24,240 y se pagan casi todos los fijos. Lo que sobra aquí es lo que financia las dos semanas flacas de arriba.' },
+      { nombre: 'Semana 4', dias: '22 al 28', resumen: 'Sin pagos programados.',
+        entradas: [{ que: 'Didi (semanal)', monto: mx(DIDI) }],
+        salidas:  [],
+        entra: DIDI, sale: 0,
+        aviso: 'Semana libre: no hay ningún pago fijo. La segunda quincena entra el día 30, ya fuera de este bloque de cuatro semanas — por eso el plan reparte el total del mes en partes iguales en vez de seguir el calendario al pie de la letra.' },
+    ];
+
+    const ACTUAL = 3;                                   // semana 4, índice 3
+    const maxMov = Math.max(...SEM.map(s => Math.max(s.entra, s.sale)));
+
+    const semanas = SEM.map((s, i) => {
+      const bal = s.entra - s.sale;
+      const pos = bal >= 0;
+      const activa = i === this.state.sem;
+      return {
+        nombre: s.nombre,
+        dias: s.dias,
+        resumen: s.resumen,
+        balance: mx(bal),
+        esActual: i === ACTUAL,
+        tinta: pos ? '#00e87a' : '#ff3b6b',
+        bg: activa ? 'rgba(0,212,255,.07)' : 'rgba(255,255,255,.025)',
+        borde: activa ? 'rgba(0,212,255,.45)' : 'rgba(255,255,255,.08)',
+        barra: Math.round((Math.max(s.entra, s.sale) / maxMov) * 100) + '%',
+        pick: () => this.setState({ sem: i }),
+      };
+    });
+
+    const s = SEM[this.state.sem];
+    const bal = s.entra - s.sale;
+    const sel = {
+      titulo: s.nombre + ' · días ' + s.dias,
+      subtitulo: s.resumen,
+      balance: mx(bal),
+      tinta: bal >= 0 ? '#00e87a' : '#ff3b6b',
+      entradas: s.entradas,
+      salidas: s.salidas.length ? s.salidas : [{ que: 'Nada programado', monto: mx(0) }],
+      totalEntra: mx(s.entra),
+      totalSale: mx(s.sale),
+      notaInversion: 'Una cuarta parte de los $19,359 que este mes van a acciones.',
+      aviso: s.aviso,
+    };
+
+    // La línea de tiempo cubre los 31 días; el 4% de margen deja respirar los extremos.
+    const posDia = d => (4 + ((d - 1) / 30) * 92).toFixed(1) + '%';
+    const eventos = [
+      { dia: 1,  que: 'Renta',        monto: mx(-11000), color: '#ff3b6b', top: '0px',  linea: 'rgba(255,59,107,.18)', glow: 'rgba(255,59,107,.5)' },
+      { dia: 14, que: 'Auto',         monto: mx(-6700),  color: '#ff3b6b', top: '0px',  linea: 'rgba(255,59,107,.18)', glow: 'rgba(255,59,107,.5)' },
+      { dia: 15, que: 'Quincena',     monto: mx(20500),  color: '#00e87a', top: '86px', linea: 'rgba(0,232,122,.18)',  glow: 'rgba(0,232,122,.5)' },
+      { dia: 15, que: 'CETES',        monto: mx(-1500),  color: '#00d4ff', top: '0px',  linea: 'rgba(0,212,255,.18)',  glow: 'rgba(0,212,255,.5)' },
+      { dia: 17, que: 'Gimnasio',     monto: mx(-650),   color: '#ff3b6b', top: '86px', linea: 'rgba(255,59,107,.18)', glow: 'rgba(255,59,107,.5)' },
+      { dia: 30, que: 'Quincena 2',   monto: mx(20500),  color: '#00e87a', top: '0px',  linea: 'rgba(0,232,122,.18)',  glow: 'rgba(0,232,122,.5)' },
+    ].map(e => Object.assign({}, e, { left: posDia(e.dia) }));
+
+    return { semanas, sel, eventos };
+  }
+}
+</script>
+</body>
+</html>

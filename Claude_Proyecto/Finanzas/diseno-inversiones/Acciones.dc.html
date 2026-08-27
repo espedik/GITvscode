@@ -1,0 +1,197 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600;700&display=swap">
+  <style>
+    body { margin: 0; background: #08080f; color: #f0f0f5;
+           font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; font-size: 14px; }
+    a { color: #00d4ff; text-decoration: none; } a:hover { color: #66e5ff; }
+    .num { font-family: 'Space Grotesk', 'Inter', sans-serif; font-variant-numeric: tabular-nums;
+           letter-spacing: -0.02em; }
+    .lbl { font-size: 9.5px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
+           color: #6a6e88; }
+  </style>
+</helmet>
+
+<div style="position: relative; width: 1280px; min-height: 890px; overflow: hidden; background: #08080f;">
+  <div style="position: absolute; inset: 0; background-image: radial-gradient(ellipse 55% 45% at 22% -5%, rgba(0,232,122,.07) 0%, transparent 60%), radial-gradient(ellipse 55% 45% at 78% -5%, rgba(176,110,255,.08) 0%, transparent 60%);"></div>
+
+  <div style="position: relative; display: flex; flex-direction: column; gap: 22px; padding: 34px 40px 40px;">
+
+    <div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 24px;">
+      <div style="display: flex; flex-direction: column; gap: 7px;">
+        <div style="display: flex; align-items: center; gap: 9px;">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#00d4ff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"></circle><path d="M16.5 16.5L21 21"></path></svg>
+          <span class="lbl" style="color: #00d4ff;">Qué compras y por qué</span>
+        </div>
+        <div class="num" style="font-size: 30px; font-weight: 700; line-height: 1.1;">Dos empresas, una regla: 70 / 30</div>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 5px; text-align: right;">
+        <span style="font-size: 11.5px; color: #6a6e88;">Análisis del 23 jun 2026</span>
+        <span style="font-size: 11px; color: #6a6e88;">TradingView &middot; BofA &middot; Motley Fool &middot; Morningstar</span>
+      </div>
+    </div>
+
+    <!-- ── qué te llevas realmente con $4,840 ────────────────────── -->
+    <div style="border-radius: 16px; border: 1px solid rgba(0,212,255,.22); background: rgba(0,212,255,.045); padding: 22px 26px; display: flex; align-items: center; gap: 28px;">
+      <div style="display: flex; flex-direction: column; gap: 5px; flex-shrink: 0;">
+        <div class="lbl" style="color: #00d4ff;">Con los $4,840 de esta semana</div>
+        <div class="num" style="font-size: 27px; font-weight: 700; color: #00d4ff;">$285.55 USD</div>
+        <div style="font-size: 11px; color: #6a6e88;">al tipo de cambio de hoy, 16.95</div>
+      </div>
+      <div style="width: 1px; align-self: stretch; background: rgba(255,255,255,.1);"></div>
+      <div style="font-size: 13px; color: #a8acc4; line-height: 1.6;">
+        En GBM+ compras <span style="color: #f0f0f5; font-weight: 600;">fracciones de acción</span>, así que
+        no necesitas juntar el precio completo de una. Esta semana te llevas
+        <span class="num" style="color: #00e87a; font-weight: 700;">0.43</span> de una acción de Microsoft y
+        <span class="num" style="color: #b06eff; font-weight: 700;">0.63</span> de una de NVIDIA.
+        En doce meses, al ritmo actual, acumulas cerca de
+        <span class="num" style="color: #00e87a; font-weight: 700;">20</span> acciones de Microsoft y
+        <span class="num" style="color: #b06eff; font-weight: 700;">30</span> de NVIDIA.
+      </div>
+    </div>
+
+    <!-- ── las dos fichas ────────────────────────────────────────── -->
+    <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; align-items: start;">
+
+      <!-- MSFT -->
+      <div style="border-radius: 16px; padding: 1px; background: linear-gradient(160deg, rgba(0,232,122,.45), rgba(0,232,122,.08) 55%, rgba(255,255,255,.04));">
+        <div style="border-radius: 15px; background: linear-gradient(165deg, #0f1512 0%, #0b0b12 60%); padding: 24px 26px; display: flex; flex-direction: column; gap: 18px;">
+
+          <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 16px;">
+            <div style="display: flex; flex-direction: column; gap: 6px;">
+              <div style="display: flex; align-items: center; gap: 9px;">
+                <span class="num" style="font-size: 27px; font-weight: 700; color: #00e87a;">MSFT</span>
+                <span style="display: flex; align-items: center; gap: 5px; padding: 4px 9px; border-radius: 6px; background: rgba(0,232,122,.12); border: 1px solid rgba(0,232,122,.25);">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#00e87a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v6c0 4-3 7-7 9-4-2-7-5-7-9V6z"></path></svg>
+                  <span style="font-size: 10px; font-weight: 700; color: #00e87a; letter-spacing: .04em;">CONSERVADORA</span>
+                </span>
+              </div>
+              <span style="font-size: 14px; font-weight: 600;">Microsoft Corporation</span>
+              <span style="font-size: 11.5px; color: #6a6e88;">Cloud &middot; IA &middot; Software empresarial</span>
+            </div>
+            <div style="text-align: right;">
+              <div class="num" style="font-size: 21px; font-weight: 700;">$470</div>
+              <div style="font-size: 11px; color: #6a6e88;">USD por acción</div>
+            </div>
+          </div>
+
+          <!-- cuánto le toca -->
+          <div style="display: flex; flex-direction: column; gap: 9px; padding: 15px 17px; border-radius: 12px; background: rgba(0,232,122,.07);">
+            <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 12px;">
+              <span class="lbl" style="color: #00e87a;">Se lleva el 70%</span>
+              <span class="num" style="font-size: 22px; font-weight: 700; color: #00e87a;">$3,388</span>
+            </div>
+            <div style="display: flex; gap: 3px;">
+              <span style="height: 6px; flex: 7; border-radius: 3px; background: linear-gradient(90deg, #00e87a, rgba(0,232,122,.4));"></span>
+              <span style="height: 6px; flex: 3; border-radius: 3px; background: rgba(255,255,255,.07);"></span>
+            </div>
+            <div style="font-size: 11.5px; color: #a8acc4;">$199.88 USD &rarr; 0.43 acciones esta semana</div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px;">
+            <div style="padding: 12px 14px; border-radius: 10px; background: rgba(255,255,255,.03);">
+              <div class="lbl">Consenso de analistas</div>
+              <div style="font-size: 14px; font-weight: 700; margin-top: 4px; color: #00e87a;">Strong Buy</div>
+            </div>
+            <div style="padding: 12px 14px; border-radius: 10px; background: rgba(255,255,255,.03);">
+              <div class="lbl">Potencial a 12 meses</div>
+              <div class="num" style="font-size: 14px; font-weight: 700; margin-top: 4px; color: #00e87a;">+15% estimado</div>
+            </div>
+          </div>
+
+          <div style="font-size: 12.5px; color: #a8acc4; line-height: 1.65;">
+            Azure crece 33% al año y ya supera el 50% de margen operativo. Copilot está
+            integrado en todo Office a $365 por usuario al año, que es ingreso recurrente.
+            Lleva 20 años consecutivos subiendo el dividendo. Soporte técnico firme en $450.
+          </div>
+
+          <div style="display: flex; align-items: center; gap: 8px; padding: 11px 14px; border-radius: 10px; background: rgba(255,255,255,.025); border: 1px solid rgba(255,255,255,.07);">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6a6e88" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;"><path d="M12 9v4"></path><path d="M12 16.5v.01"></path><path d="M10.3 4.3L2.5 18a1.7 1.7 0 001.5 2.5h16a1.7 1.7 0 001.5-2.5L13.7 4.3a1.7 1.7 0 00-3 0z"></path></svg>
+            <span style="font-size: 11.5px; color: #6a6e88; line-height: 1.5;">Riesgo bajo. Crece despacio pero de forma predecible.</span>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- NVDA -->
+      <div style="border-radius: 16px; padding: 1px; background: linear-gradient(160deg, rgba(176,110,255,.45), rgba(176,110,255,.08) 55%, rgba(255,255,255,.04));">
+        <div style="border-radius: 15px; background: linear-gradient(165deg, #12101a 0%, #0b0b12 60%); padding: 24px 26px; display: flex; flex-direction: column; gap: 18px;">
+
+          <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 16px;">
+            <div style="display: flex; flex-direction: column; gap: 6px;">
+              <div style="display: flex; align-items: center; gap: 9px;">
+                <span class="num" style="font-size: 27px; font-weight: 700; color: #b06eff;">NVDA</span>
+                <span style="display: flex; align-items: center; gap: 5px; padding: 4px 9px; border-radius: 6px; background: rgba(176,110,255,.13); border: 1px solid rgba(176,110,255,.28);">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#b06eff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L4.5 13H11l-1 9 8.5-11H12z"></path></svg>
+                  <span style="font-size: 10px; font-weight: 700; color: #b06eff; letter-spacing: .04em;">CRECIMIENTO</span>
+                </span>
+              </div>
+              <span style="font-size: 14px; font-weight: 600;">NVIDIA Corporation</span>
+              <span style="font-size: 11.5px; color: #6a6e88;">Semiconductores &middot; hardware para IA</span>
+            </div>
+            <div style="text-align: right;">
+              <div class="num" style="font-size: 21px; font-weight: 700;">$135</div>
+              <div style="font-size: 11px; color: #6a6e88;">USD por acción</div>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 9px; padding: 15px 17px; border-radius: 12px; background: rgba(176,110,255,.08);">
+            <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 12px;">
+              <span class="lbl" style="color: #b06eff;">Se lleva el 30%</span>
+              <span class="num" style="font-size: 22px; font-weight: 700; color: #b06eff;">$1,452</span>
+            </div>
+            <div style="display: flex; gap: 3px;">
+              <span style="height: 6px; flex: 3; border-radius: 3px; background: linear-gradient(90deg, #b06eff, rgba(176,110,255,.4));"></span>
+              <span style="height: 6px; flex: 7; border-radius: 3px; background: rgba(255,255,255,.07);"></span>
+            </div>
+            <div style="font-size: 11.5px; color: #a8acc4;">$85.66 USD &rarr; 0.63 acciones esta semana</div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px;">
+            <div style="padding: 12px 14px; border-radius: 10px; background: rgba(255,255,255,.03);">
+              <div class="lbl">Consenso de analistas</div>
+              <div style="font-size: 14px; font-weight: 700; margin-top: 4px; color: #b06eff;">Strong Buy</div>
+            </div>
+            <div style="padding: 12px 14px; border-radius: 10px; background: rgba(255,255,255,.03);">
+              <div class="lbl">Potencial a 12 meses</div>
+              <div class="num" style="font-size: 14px; font-weight: 700; margin-top: 4px; color: #b06eff;">+18% estimado</div>
+            </div>
+          </div>
+
+          <div style="font-size: 12.5px; color: #a8acc4; line-height: 1.65;">
+            Monopolio de hecho en el hardware que mueve la IA: más del 80% de las GPU de
+            centros de datos. Ingresos creciendo 122% al año. Las Blackwell están agotadas
+            hasta 2026. Precio objetivo de BofA: $200.
+          </div>
+
+          <div style="display: flex; align-items: center; gap: 8px; padding: 11px 14px; border-radius: 10px; background: rgba(255,217,61,.05); border: 1px solid rgba(255,217,61,.18);">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ffd93d" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;"><path d="M12 9v4"></path><path d="M12 16.5v.01"></path><path d="M10.3 4.3L2.5 18a1.7 1.7 0 001.5 2.5h16a1.7 1.7 0 001.5-2.5L13.7 4.3a1.7 1.7 0 00-3 0z"></path></svg>
+            <span style="font-size: 11.5px; color: #ffd93d; line-height: 1.5;">Más volátil. Puede caer 30% en semanas — por eso solo va el 30%.</span>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+    <div style="display: flex; align-items: flex-start; gap: 12px; padding: 16px 20px; border-radius: 13px; background: rgba(255,255,255,.025); border: 1px solid rgba(255,255,255,.07);">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6a6e88" stroke-width="1.7" stroke-linecap="round" style="flex-shrink: 0; margin-top: 1px;"><circle cx="12" cy="12" r="9"></circle><path d="M12 11v5"></path><path d="M12 7.5v.01"></path></svg>
+      <div style="font-size: 12.5px; color: #6a6e88; line-height: 1.6;">
+        &ldquo;Potencial estimado&rdquo; es lo que los analistas creen que subirá el precio en un año.
+        Es una opinión, no una promesa: puede no cumplirse o salir al revés. El precio por acción
+        que ves aquí es del 23 de junio y ya cambió.
+      </div>
+    </div>
+
+  </div>
+</div>
+</x-dc>
+</body>
+</html>
