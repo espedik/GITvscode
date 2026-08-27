@@ -18,6 +18,8 @@ S = {
   currentBtcPrice: 0,       // precio actual BTC en USD
   usdMxn:         19.5,     // tasa de cambio USD/MXN
   btcLastFetch:   '',       // ISO timestamp del último fetch de BTC
+  btcPriceHist:   [],       // [[ts, precioMXN], …] caché del histórico diario de CoinGecko
+  btcHistFetch:   '',       // ISO timestamp del último fetch del histórico
   weeklyLeftover:  0,       // sobrante semanal manual para GBM+
   sivaleBalance:   0,       // saldo acumulado tarjeta Si Vale
   sivaleLastMonth: '',      // YYYY-MM del último mes agregado Si Vale
@@ -27,7 +29,7 @@ S = {
 }
 ```
 
-Variables globales adicionales: `editId`, `confCb`, `payDebtId`, `contribGoalId`, `btcEditId`, `activoEditId`, `curType` (expense|income), instancias de Chart (`chCat`, `chBal`, `chBud`, `chInv`, `chGbmInv`, `chBtcPnl`, `chPat`), `dashMonth`.
+Variables globales adicionales: `editId`, `confCb`, `payDebtId`, `contribGoalId`, `btcEditId`, `activoEditId`, `btcCur` (MXN|USD, moneda de la gráfica de BTC, persiste en `localStorage['btc_cur']`), `curType` (expense|income), instancias de Chart (`chCat`, `chBal`, `chBud`, `chInv`, `chGbmInv`, `chBtcPnl`, `chPat`), `dashMonth`.
 
 ---
 
@@ -89,7 +91,7 @@ como número pelado —sin `$`— en el código.
 - **Target**: $500,000 MXN para **01 oct 2027** (verificado 2026-07-29 contra el seed en código — el dato anterior de este documento, $300,000/dic 2027, estaba desactualizado)
 - **ID de meta**: `g001` (o `icon === '🎓'`)
 - **Componentes que cuentan**: Fondo de emergencia + CETES + Acciones/inversiones + BTC en MXN
-- Nota de contexto (ver `../Coach/readme_coach_v2.md` → Plan Maestro): en julio 2026 se decidió pausar nuevas aportaciones a esta meta por 1 año; confirmar contra el `date` real en `S.goals` antes de asumir que sigue vigente tal cual, ya que este tipo de decisión vive en Coach, no en el código de Finanzas.
+- Nota de contexto (ver `../Coach/readme_coach.md` → Plan Maestro): en julio 2026 se decidió pausar nuevas aportaciones a esta meta por 1 año; confirmar contra el `date` real en `S.goals` antes de asumir que sigue vigente tal cual, ya que este tipo de decisión vive en Coach, no en el código de Finanzas.
 
 ### WEEKLY_PICKS (actualizar cada lunes pidiendo a Claude)
 ```js
@@ -510,24 +512,89 @@ Filtra `S.activos`. Llama a `maybeRefreshIndicators()`.
 
 ## Módulo: Bitcoin (BTC)
 
+### La gráfica, reescrita el 2026-08-26
+
+Adán: *"esta gráfica no me gusta … quiero ver lo que he invertido y cuánto dinero es en el
+transcurso del tiempo pero en pesos mexicanos y muy puntual en el gráfico se vea cuando haga
+aportaciones"*. Lo que estaba mal no era el estilo:
+
+| Tenía | Por qué engañaba |
+|---|---|
+| Un punto por compra, eje X categórico | Los 10 meses de feb→dic medían lo mismo que los 6 de dic→jun. La curva dibujaba el **orden** de las compras, no el tiempo |
+| Todo el historial valuado al precio de HOY | La línea "valor" no fue nunca el valor del portafolio: reescribía el pasado, y subía suave aunque BTC se hubiera desplomado en medio |
+| Dólares | No es la moneda en la que Adán cobra, paga la renta ni decide |
+| Las aportaciones eran un punto más de la curva | No se distinguía "aporté dinero" de "subió el precio" — las dos cosas mueven la línea hacia arriba |
+
+Ahora: **un punto por día**, eje temporal lineal en milisegundos, pesos por defecto, y cada
+aportación con su línea vertical y su monto.
+
+### `btcSerie()`
+
+Construye la serie diaria desde la primera compra hasta hoy. Devuelve
+`{pts, compras, t0, tEnd, reales, dias}`; cada `pt` trae `{t, btc, aMxn, aUsd, vMxn, vUsd, pMxn, pUsd}`.
+
+**El precio de cada día** sale de interpolar linealmente entre anclas, de menos a más fiable
+(la última gana si caen el mismo día):
+
+1. el precio que Adán anotó en cada compra (`h.btcPrice`)
+2. el histórico diario real de CoinGecko (`S.btcPriceHist`), si lo trajo el botón 📈
+3. el precio de hoy (`S.currentBtcPrice`)
+
+Con el histórico cargado hay un ancla por día y la interpolación no interviene. Sin él la curva
+entre compras es una recta — una reconstrucción, no un dato — y **la leyenda lo dice**:
+`reales/dias` mide la cobertura y el pie del gráfico cambia de texto según el porcentaje. Una
+curva inventada y una real se dibujan igual de bonitas; solo una de las dos es información.
+
+### `btcFxDe(h)` — el tipo de cambio vive con la compra
+
+`h.fx` si existe, si no `S.usdMxn`. El campo es nuevo (input **Tipo de cambio USD/MXN ese día**
+en `mo-btc`, opcional). Sin él, "cuánto llevo metido en pesos" se recalculaba con el dólar de
+hoy y **el histórico entero se movía solo** cada vez que el peso se movía, aunque Adán no
+hubiera aportado un peso.
+
+La regla que se sigue en todo el módulo: **un valor de HOY** (lo que vale, el P&L) se convierte
+con `fxNow`; **lo APORTADO** se convierte con el fx de su día. Mezclarlos era el bug.
+
+### `btcAportPlugin`
+
+Plugin inline de Chart.js (no hay dependencia nueva: `chartjs-plugin-annotation` habría sido
+otro `<script>` de CDN). Dibuja por cada compra una vertical punteada naranja y una etiqueta con
+el monto. La etiqueta va en el `layout.padding.top` — **fuera** del área de trazado — porque
+dentro chocaba con el triángulo cuando la aportación caía cerca del techo. Si dos etiquetas
+quedan a menos de 64 px, la segunda no se dibuja: encimadas son ilegibles y la vertical sola ya
+marca el día.
+
+### `fetchBtcHistory()`
+
+`async`. Trae `coins/bitcoin/market_chart?vs_currency=mxn&days=365` y guarda en `S.btcPriceHist`
+**recortado al rango que la gráfica dibuja** (el historial completo son ~100 KB de localStorage
+que no se ven nunca). CoinGecko gratis entrega 365 días hacia atrás; lo anterior sigue
+interpolado. Si falla, toast y la curva se queda reconstruida — nunca se rompe la vista.
+
+### `setBtcCur(c)`
+
+Alterna MXN/USD, lo persiste en `localStorage['btc_cur']` y re-renderiza. El toggle gobierna la
+gráfica, la fila de tarjetas, los tabs por mes y sus paneles. La tabla histórica muestra
+**siempre las dos** monedas (USD arriba, MXN debajo): es el registro, no la vista.
+
 ### `renderBtcHistory()`
+
 Renderiza el panel completo de BTC en `btc-history` dentro del Plan de Inversiones.
 
-**KPIs calculados:**
-- `totalBtc` = suma de `btc` en todo el historial
-- `totalUsd` = suma de `usd` invertidos
-- `avgPrice` = `totalUsd / totalBtc` (precio promedio de compra)
-- `curVal` = `totalBtc × currentBtcPrice`
-- `pnl` = `curVal - totalUsd`
-- `pnlPct` = `pnl / totalUsd × 100`
+**KPIs en USD:** `totalBtc`, `totalUsd`, `avgPrice` (`totalUsd/totalBtc`), `curVal`, `pnl`, `pnlPct`.
+
+**KPIs en MXN:** `invMxn` (cada compra a su propio fx), `valMxn`, `pnlMxn`, `pnlMxnPct`.
 
 **Renderiza:**
-- Inputs inline de precio BTC y tasa USD/MXN
-- Botón "Actualizar precio" → llama a `fetchBtcPrice()`
-- KPIs de portafolio total
-- Tabs por mes con P&L de cada período
-- Gráfica de área acumulada (invertido vs. valor actual) → `btc-ch-pnl`
-- Tabla histórica por compra con botones editar/eliminar
+- Inputs inline de precio BTC y tasa USD/MXN + botón "Actualizar precio" (`fetchBtcPrice()`)
+- La gráfica `btc-ch-pnl` con su toggle de moneda y el botón 📈 **Precio real**
+- Fila de 6 tarjetas bajo la gráfica, en la moneda activa y con la otra como subtítulo
+- Tabs por mes con el P&L de cada período, en la moneda activa
+- Tabla histórica por compra en ambas monedas, con botones editar/eliminar
+
+**La banda de 5 tarjetas en dólares** que estaba arriba se oculta (`display:none`) cuando hay
+precio actual: repetía en dólares lo que la fila bajo la gráfica ya dice en pesos. Sigue en el
+código porque es la única vista cuando **no** hay precio actual y por tanto no hay gráfica.
 
 ### `switchBtcTab(key)`
 Muestra el pane del tab `key` ('resumen' o 'YYYY-MM') y oculta los demás. Actualiza estilos.
@@ -542,13 +609,15 @@ Actualiza `S.currentBtcPrice` manualmente (desde input). Refresca todas las vist
 Actualiza `S.usdMxn` manualmente (desde input). Refresca todas las vistas afectadas.
 
 ### `openBtcModal(id=null)`
-Abre `mo-btc`. Si `id` existe carga datos para edición.
+Abre `mo-btc`. Si `id` existe carga datos para edición. El campo de tipo de cambio se prellena
+con `S.usdMxn`.
 
 ### `calcBtc()`
 Calcula automáticamente `btc-received = btc-usd / btc-price-at` cuando el usuario edita los campos.
 
 ### `saveBtcPurchase()`
-Valida fecha, USD y precio BTC. Calcula `btc = usd / btcPrice` con 8 decimales. Guarda en `S.btcHistory`.
+Valida fecha, USD y precio BTC. Calcula `btc = usd / btcPrice` con 8 decimales. Guarda en
+`S.btcHistory` **con `fx`** (el del formulario, o `S.usdMxn` como respaldo).
 
 ### `delBtc(id)`
 Filtra `S.btcHistory` y llama a `renderBtcHistory()`.
@@ -835,7 +904,7 @@ declarado.
 
 - [`../Dashboard/DATOS-MAESTROS.md`](../Dashboard/DATOS-MAESTROS.md) — índice del proyecto, catálogo de variables
 - [`../Dashboard/readme_dashboard.md`](../Dashboard/readme_dashboard.md) — quién consume estos datos
-- [`../Coach/readme_coach_v2.md`](../Coach/readme_coach_v2.md) — el Plan Maestro que se apoya en ellos
+- [`../Coach/readme_coach.md`](../Coach/readme_coach.md) — el Plan Maestro que se apoya en ellos
 - `../../CLAUDE.md` — las tres reglas del proyecto
 
 ---

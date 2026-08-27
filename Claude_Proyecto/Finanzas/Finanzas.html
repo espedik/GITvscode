@@ -689,7 +689,10 @@ select option{background:var(--surface-solid);color:var(--text)}
       <div class="fg"><label>USD invertidos *</label><input type="number" id="btc-usd" placeholder="0.00" min="0" step="0.01" oninput="calcBtc()"></div>
     </div>
     <div class="fg"><label>Precio BTC al momento (USD) *</label><input type="number" id="btc-price-at" placeholder="ej. 97000" min="0" step="1" oninput="calcBtc()"></div>
-    <div class="fg"><label>BTC recibido (calculado automáticamente)</label><input type="number" id="btc-received" placeholder="0.00000000" step="0.00000001" readonly style="opacity:.7;cursor:default"></div>
+    <div class="fr">
+      <div class="fg"><label>BTC recibido (calculado automáticamente)</label><input type="number" id="btc-received" placeholder="0.00000000" step="0.00000001" readonly style="opacity:.7;cursor:default"></div>
+      <div class="fg"><label>Tipo de cambio USD/MXN ese día</label><input type="number" id="btc-fx" placeholder="19.50" min="0" step="0.01"><div class="ts tm" style="margin-top:4px">Lo que te costó en pesos de verdad. Vacío = se usa el de hoy.</div></div>
+    </div>
     <div class="fg"><label>Notas</label><input id="btc-notes" placeholder="Ej. DCA mensual, compra de emergencia..."></div>
     <div class="flex" style="justify-content:flex-end;gap:8px">
       <button class="btn btn-o" onclick="closeMo('mo-btc')">Cancelar</button>
@@ -725,9 +728,12 @@ const _PG = () => (window.CIFRAS && window.CIFRAS.PROYECTO) || {};
 const _autoMin = () => { const d=(S.debts||[]).find(x=>x.id==='d003'); return (d&&+d.min)||_PG().autoPago||0; };
 const _metaMaestria = () => { const g=(S.goals||[]).find(x=>x.id==='g001'); return (g&&+g.target)||(window.CIFRAS&&CIFRAS.n('maestriaMeta'))||500000; };
 const _metaFondo = () => { const g=(S.goals||[]).find(x=>x.id==='ef-001'); return (g&&+g.target)||10000; };
-let S = { transactions:[], budgets:[], debts:[], goals:[], investments:[], activos:[], btcHistory:[], currentBtcPrice:0, usdMxn:19.5, btcLastFetch:'', weeklyLeftover:0, sivaleBalance:0, sivaleLastMonth:'', emergencyFund:0, didiMonthly:0, gbmMonth:'', indicatorHistory:[] };
+let S = { transactions:[], budgets:[], debts:[], goals:[], investments:[], activos:[], btcHistory:[], btcPriceHist:[], currentBtcPrice:0, usdMxn:19.5, btcLastFetch:'', btcHistFetch:'', weeklyLeftover:0, sivaleBalance:0, sivaleLastMonth:'', emergencyFund:0, didiMonthly:0, gbmMonth:'', indicatorHistory:[] };
 let editId = null, confCb = null, payDebtId = null, contribGoalId = null;
 let btcEditId = null, activoEditId = null;
+// La gráfica de BTC se lee en pesos por defecto: es la moneda en la que Adán
+// cobra, paga la renta y decide. El dólar es solo la unidad en que se compra.
+let btcCur = (()=>{ try{ return localStorage.getItem('btc_cur')||'MXN'; }catch(e){ return 'MXN'; } })();
 let curType = 'expense';
 let chBal=null, chBud=null, chInv=null, chGbmInv=null, chBtcPnl=null, chCat=null;
 let dashMonth = '';
@@ -3220,7 +3226,7 @@ function renderSpecials(freeMonth, refDate=new Date()) {
   // ── Análisis Maestría ──
   const maestria=(S.goals||[]).find(g=>g.id==='g001')||(S.goals||[]).find(g=>g.icon==='🎓'||g.name.toLowerCase().includes('maestr')||g.name.toLowerCase().includes('alemania'));
   const targetDate=maestria?.date?new Date(maestria.date):new Date(2027,9,1);
-  // Coach_v2.html → #perfil documenta la decisión real (jul 2026): pausar aportaciones
+  // Coach.html → #perfil documenta la decisión real (jul 2026): pausar aportaciones
   // nuevas a esta meta por 1 año, sin tocar lo ya ahorrado. Mientras dure la pausa, no
   // tiene sentido mostrar "faltan $X/mes" como si debiera seguir aportando activamente.
   const maestriaPausada = !!(maestria?.pausadaHasta && new Date() < new Date(maestria.pausadaHasta));
@@ -4291,6 +4297,158 @@ function delActivo(id) {
 
 // ─── BTC HISTORY ──────────────────────────────────────────────────────────────
 
+// ─── BTC · la serie diaria del portafolio ─────────────────────────────
+// Por qué se reescribió (2026-08-26, pedido de Adán: "quiero ver lo que he
+// invertido y cuánto dinero es en el transcurso del tiempo pero en pesos
+// mexicanos y muy puntual en el gráfico se vea cuando haga aportaciones"):
+//
+//   · La gráfica vieja tenía UN punto por compra y el eje X los repartía
+//     equiespaciados. Los 10 meses entre febrero y diciembre se dibujaban del
+//     mismo ancho que los 6 de diciembre a junio: la curva no era el tiempo,
+//     era el orden de las compras.
+//   · Valuaba todo el historial al precio de HOY, así que la línea "valor" no
+//     decía lo que el portafolio valió nunca — reescribía el pasado. Subía
+//     suave y bonita aunque BTC se hubiera desplomado en medio.
+//   · Estaba en dólares, que no es la moneda en la que Adán decide nada.
+//
+// Ahora: un punto por día, eje temporal real, pesos, y cada aportación marcada
+// en su fecha exacta.
+//
+// El precio de cada día sale de interpolar entre las anclas que sí conocemos,
+// de menos a más fiable (la última gana si caen el mismo día):
+//   1. el precio que Adán anotó en cada compra
+//   2. el histórico diario real de CoinGecko, si lo trajo el botón 📈
+//   3. el precio de hoy
+// Con el histórico cargado hay un ancla por día y la interpolación no
+// interviene. Sin él, la curva entre compras es una recta: una reconstrucción,
+// no un dato — y la leyenda lo dice en vez de fingir precisión.
+const BTC_DAY = 86400000;
+const btcTs = d => { const [y,m,dd]=d.split('-').map(Number); return Date.UTC(y,m-1,dd); };
+
+// El tipo de cambio del día de la compra si quedó registrado; si no, el de hoy.
+// Sin este campo, "cuánto llevo metido en pesos" se recalculaba con el dólar de
+// hoy: el número se movía solo aunque Adán no hubiera aportado nada.
+const btcFxDe = h => (+h.fx>0 ? +h.fx : (S.usdMxn||19.5));
+
+function btcSerie() {
+  const hist = [...(S.btcHistory||[])].sort((a,b)=>a.date.localeCompare(b.date));
+  const curUsd = S.currentBtcPrice||0;
+  if(!hist.length || !(curUsd>0)) return null;
+  const fxNow = S.usdMxn||19.5;
+  const t0    = btcTs(hist[0].date);
+  const tEnd  = Math.max(btcTs(today()), btcTs(hist[hist.length-1].date));
+
+  const anc = new Map();                                    // ts -> {usd, mxn}
+  hist.forEach(h=>{ if(h.btcPrice>0) anc.set(btcTs(h.date), {usd:+h.btcPrice, mxn:h.btcPrice*btcFxDe(h)}); });
+  (S.btcPriceHist||[]).forEach(p=>{                         // el real pisa al anotado
+    const t = Math.floor(p[0]/BTC_DAY)*BTC_DAY, mxn = +p[1];
+    if(mxn>0 && t>=t0 && t<=tEnd) anc.set(t, {usd:mxn/fxNow, mxn});
+  });
+  anc.set(tEnd, {usd:curUsd, mxn:curUsd*fxNow});
+  const ks = [...anc.keys()].sort((a,b)=>a-b);
+
+  const precio = t => {
+    if(anc.has(t)) return anc.get(t);
+    if(t<=ks[0]) return anc.get(ks[0]);
+    if(t>=ks[ks.length-1]) return anc.get(ks[ks.length-1]);
+    let lo=0, hi=ks.length-1;
+    while(hi-lo>1){ const m=(lo+hi)>>1; if(ks[m]<=t) lo=m; else hi=m; }
+    const a=anc.get(ks[lo]), b=anc.get(ks[hi]), k=(t-ks[lo])/(ks[hi]-ks[lo]);
+    return {usd:a.usd+(b.usd-a.usd)*k, mxn:a.mxn+(b.mxn-a.mxn)*k};
+  };
+
+  const pts=[], compras=[];
+  let i=0, btc=0, aMxn=0, aUsd=0;
+  for(let t=t0; t<=tEnd; t+=BTC_DAY){
+    while(i<hist.length && btcTs(hist[i].date)<=t){
+      const h=hist[i];
+      btc+=h.btc||0; aUsd+=h.usd||0; aMxn+=(h.usd||0)*btcFxDe(h);
+      compras.push({t:btcTs(h.date), h, aMxn, aUsd, mxn:(h.usd||0)*btcFxDe(h), fx:btcFxDe(h)});
+      i++;
+    }
+    const p=precio(t);
+    pts.push({t, btc, aMxn, aUsd, vMxn:btc*p.mxn, vUsd:btc*p.usd, pMxn:p.mxn, pUsd:p.usd});
+  }
+  // Días de precio real dentro del tramo dibujado: es lo que decide si la
+  // leyenda puede decir "precio real" o tiene que admitir "reconstruido".
+  const reales = (S.btcPriceHist||[]).filter(p=>{
+    const t=Math.floor(p[0]/BTC_DAY)*BTC_DAY; return t>=t0 && t<=tEnd;
+  }).length;
+  return {pts, compras, t0, tEnd, reales, dias:pts.length};
+}
+
+// Las aportaciones tienen que verse COMO aportaciones: una línea vertical en su
+// día exacto y el monto encima, no un punto más de la curva. Chart.js 4 no trae
+// anotaciones y el plugin oficial es otro <script> de CDN — esto son 40 líneas
+// de canvas y no añade dependencia.
+const btcAportPlugin = {
+  id:'btcAport',
+  afterDatasetsDraw(ch, _args, o){
+    const marks=(o&&o.marks)||[]; if(!marks.length) return;
+    const ctx=ch.ctx, ca=ch.chartArea, x=ch.scales.x;
+    ctx.save();
+    let ultX=-1e9;
+    marks.forEach(m=>{
+      const px=x.getPixelForValue(m.t);
+      if(px<ca.left-1||px>ca.right+1) return;
+      ctx.beginPath();
+      ctx.setLineDash([3,5]); ctx.lineWidth=1; ctx.strokeStyle='rgba(247,147,26,.42)';
+      ctx.moveTo(px,ca.top); ctx.lineTo(px,ca.bottom); ctx.stroke();
+      ctx.setLineDash([]);
+      if(px-ultX < 64) return;            // etiquetas encimadas = ilegibles
+      ultX=px;
+      ctx.font='700 10px system-ui,-apple-system,sans-serif';
+      const w=ctx.measureText(m.label).width+12, h=16, ry=ca.top-21;
+      const lx=Math.max(ca.left, Math.min(px-w/2, ca.right-w));
+      ctx.beginPath();
+      if(ctx.roundRect) ctx.roundRect(lx,ry,w,h,5); else ctx.rect(lx,ry,w,h);
+      ctx.fillStyle='rgba(247,147,26,.15)'; ctx.fill();
+      ctx.strokeStyle='rgba(247,147,26,.45)'; ctx.lineWidth=1; ctx.stroke();
+      ctx.fillStyle='#f7931a'; ctx.textAlign='center'; ctx.textBaseline='middle';
+      ctx.fillText(m.label, lx+w/2, ry+h/2+.5);
+    });
+    ctx.restore();
+  }
+};
+
+function setBtcCur(c){
+  btcCur = (c==='USD') ? 'USD' : 'MXN';
+  try{ localStorage.setItem('btc_cur', btcCur); }catch(e){}
+  renderBtcHistory();
+}
+
+// Trae el precio diario REAL de BTC en pesos y lo deja en caché. Sin esto, el
+// tramo entre dos compras es una recta: honesta, pero plana — los desplomes y
+// rebotes que hubo en medio no existen en el dibujo. CoinGecko gratis entrega
+// 365 días hacia atrás; lo que quede fuera sigue interpolado y la leyenda lo
+// dice. Se guarda recortado al rango que la gráfica usa: el historial completo
+// son ~100 KB de localStorage que no se dibujan nunca.
+async function fetchBtcHistory(){
+  const btn=document.getElementById('btc-hist-btn');
+  if(btn){ btn.textContent='⏳ Cargando…'; btn.disabled=true; }
+  try{
+    const r=await fetch('https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=mxn&days=365',{cache:'no-store'});
+    if(!r.ok) throw new Error('HTTP '+r.status);
+    const j=await r.json();
+    const hist=[...(S.btcHistory||[])].sort((a,b)=>a.date.localeCompare(b.date));
+    const t0=hist.length?btcTs(hist[0].date):0;
+    const vistos=new Set(), out=[];
+    (j.prices||[]).forEach(p=>{
+      const t=Math.floor(p[0]/BTC_DAY)*BTC_DAY, mxn=+p[1];
+      if(!(mxn>0)||t<t0||vistos.has(t)) return;
+      vistos.add(t); out.push([t, Math.round(mxn)]);
+    });
+    if(!out.length) throw new Error('sin datos dentro del rango');
+    out.sort((a,b)=>a[0]-b[0]);
+    S.btcPriceHist=out; S.btcHistFetch=new Date().toISOString();
+    save(); renderBtcHistory();
+    toast('📈 '+out.length+' días de precio real cargados');
+  }catch(e){
+    toast('⚠️ No se pudo traer el histórico. La curva sigue reconstruida.');
+    if(btn){ btn.textContent='📈 Precio real'; btn.disabled=false; }
+  }
+}
+
 function renderBtcHistory() {
   const el = document.getElementById('btc-history');
   if(!el) return;
@@ -4312,6 +4470,17 @@ function renderBtcHistory() {
   const pnlPct    = pnl!==null&&totalUsd>0 ? (pnl/totalUsd)*100 : null;
   const hasCur    = curPrice>0;
 
+  // ── Las mismas cifras, en la moneda en la que Adán vive ──
+  // Cada compra se convierte con SU tipo de cambio (h.fx) si lo tiene; el total
+  // en pesos es entonces lo que salió de su cuenta, no una reconversión de hoy.
+  const fxNow     = S.usdMxn||19.5;
+  const invMxn    = history.reduce((s,h)=>s+(h.usd||0)*btcFxDe(h),0);
+  const valMxn    = totalBtc*curPrice*fxNow;
+  const pnlMxn    = valMxn-invMxn;
+  const pnlMxnPct = invMxn>0 ? (pnlMxn/invMxn)*100 : 0;
+  const MX        = btcCur==='MXN';
+  const fMX       = n => '$'+Math.round(n).toLocaleString('es-MX');
+
   const MN_S = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
   const byMonth = {};
   history.forEach(h=>{ const mk=h.date.slice(0,7); if(!byMonth[mk]) byMonth[mk]=[]; byMonth[mk].push(h); });
@@ -4325,11 +4494,12 @@ function renderBtcHistory() {
     return `<tr>
       <td style="white-space:nowrap">${fmtDate(h.date)}</td>
       <td style="white-space:nowrap">$${(h.btcPrice||0).toLocaleString('es-MX')} USD</td>
-      <td style="font-weight:700">${fUSD(h.usd)}</td>
+      <td style="font-weight:700">${fUSD(h.usd)}<div class="ts" style="color:var(--text3)">${fMX(h.usd*btcFxDe(h))} MXN</div></td>
       <td style="font-weight:700;color:#f7931a">${(h.btc||0).toFixed(6)} ₿</td>
       ${hasCur?`
-        <td style="font-weight:700;color:${colV(hp)}">${fUSD(hv)}</td>
+        <td style="font-weight:700;color:${colV(hp)}">${fUSD(hv)}<div class="ts" style="color:var(--text3)">${fMX(hv*fxNow)} MXN</div></td>
         <td><span style="font-weight:700;color:${colV(hp)}">${hp>=0?'+':''}${fUSD(hp)}</span>
+            <div class="ts" style="color:${colV(hp)}">${hp>=0?'+':''}${fMX(hv*fxNow-h.usd*btcFxDe(h))} MXN</div>
             <div class="ts" style="color:${colV(hpp)}">${hpp>=0?'+':''}${hpp.toFixed(2)}%</div></td>`:''}
       <td class="ts tm">${h.notes||''}</td>
       <td style="white-space:nowrap">
@@ -4357,7 +4527,9 @@ function renderBtcHistory() {
       </div>
     </div>
 
-    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px">
+    <!-- Con precio actual, estas cinco tarjetas repiten en dólares lo que la fila
+         bajo la gráfica ya dice en pesos: se ocultan y no se duplica la lectura. -->
+    <div style="display:${hasCur?'none':'flex'};gap:10px;flex-wrap:wrap;margin-bottom:16px">
       <div style="flex:1;min-width:110px;background:rgba(247,147,26,.1);border:1px solid rgba(247,147,26,.25);border-radius:10px;padding:12px;text-align:center">
         <div class="ts tm">Total BTC</div>
         <div style="font-size:19px;font-weight:800;color:#f7931a">${totalBtc.toFixed(6)}</div>
@@ -4389,16 +4561,11 @@ function renderBtcHistory() {
       </div>`}
     </div>
 
-    ${hasCur&&avgPrice>0?`<div class="flex aic gap8" style="margin-bottom:14px;flex-wrap:wrap">
-      <span class="ts tm">Precio actual vs. tu promedio de compra:</span>
-      <span class="chip ${curPrice>=avgPrice?'ch-up':'ch-dn'}">${curPrice>=avgPrice?'↑':'↓'} ${Math.abs((curPrice-avgPrice)/avgPrice*100).toFixed(2)}% ${curPrice>=avgPrice?'por encima de':'por debajo de'} tu promedio</span>
-    </div>`:''}
-
     ${hasCur?`
     <!-- TRACKING POR MES CON TABS -->
     <div style="border-top:1px solid rgba(255,255,255,.06);padding-top:18px;margin-bottom:18px">
       <div style="font-size:11px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px">
-        📊 Rendimiento por mes — precio actual $${Math.round(curPrice).toLocaleString('es-MX')} USD/BTC
+        📊 Tu Bitcoin en el tiempo — 1 ₿ = ${fMX(curPrice*fxNow)} MXN · $${Math.round(curPrice).toLocaleString('es-MX')} USD
       </div>
 
       <!-- TABS -->
@@ -4411,8 +4578,9 @@ function renderBtcHistory() {
         ${monthKeys.map(mk=>{
           const mh=byMonth[mk];
           const mU=mh.reduce((s,h)=>s+h.usd,0);
+          const mI=mh.reduce((s,h)=>s+h.usd*btcFxDe(h),0);
           const mV=mh.reduce((s,h)=>s+(h.btc||0),0)*curPrice;
-          const mP=mV-mU; const isP=mP>=0;
+          const mP=MX ? (mV*fxNow-mI) : (mV-mU); const isP=mP>=0;
           return `<button id="btc-tab-${mk}" onclick="switchBtcTab('${mk}')"
             style="display:flex;flex-direction:column;align-items:flex-start;padding:9px 16px;border-radius:8px;border:1px solid rgba(255,255,255,.08);cursor:pointer;font-family:inherit;background:transparent;color:rgba(255,255,255,.45);transition:all .2s">
             <span style="font-size:12px;font-weight:700">${mLabel(mk)}</span>
@@ -4423,29 +4591,43 @@ function renderBtcHistory() {
 
       <!-- PANE: Resumen total -->
       <div id="btc-pane-resumen">
-        <div class="btc-layout" style="gap:14px;align-items:start">
-          <div style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:16px">
-            <div style="font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px">Costo acumulado vs. Valor al precio actual</div>
-            <div style="position:relative;height:170px"><canvas id="btc-ch-pnl"></canvas></div>
-            <div style="display:flex;gap:14px;margin-top:10px">
-              <div style="display:flex;align-items:center;gap:5px"><div style="width:14px;height:2px;background:rgba(255,255,255,.35);border-radius:2px"></div><span style="font-size:10px;color:var(--text3)">Invertido</span></div>
-              <div style="display:flex;align-items:center;gap:5px"><div style="width:14px;height:3px;background:${pnl>=0?'#00e87a':'#ff3b6b'};border-radius:2px"></div><span style="font-size:10px;color:var(--text3)">Valor hoy</span></div>
+        <div style="background:rgba(var(--ov),.03);border:1px solid rgba(var(--ov),.07);border-radius:14px;padding:16px 16px 14px">
+          <div class="flex jb aic" style="flex-wrap:wrap;gap:10px;margin-bottom:14px">
+            <div>
+              <div style="font-size:13px;font-weight:800;color:var(--text)">Tu dinero en Bitcoin, día a día</div>
+              <div style="font-size:10px;color:var(--text3);margin-top:3px">
+                ${fmtDate(history[0].date)} → hoy · cada <span style="color:#f7931a;font-weight:700">▲</span> es una aportación tuya
+              </div>
+            </div>
+            <div class="flex aic gap8" style="flex-wrap:wrap">
+              <button id="btc-hist-btn" class="btn btn-s btn-sm" onclick="fetchBtcHistory()">📈 Precio real</button>
+              <div style="display:flex;gap:3px;padding:3px;background:rgba(var(--ov),.05);border:1px solid rgba(var(--ov),.07);border-radius:9px">
+                ${['MXN','USD'].map(c=>`<button onclick="setBtcCur('${c}')" style="padding:5px 14px;border-radius:6px;border:none;cursor:pointer;font-family:inherit;font-size:11px;font-weight:800;letter-spacing:.03em;transition:all .18s;background:${btcCur===c?'rgba(247,147,26,.16)':'transparent'};color:${btcCur===c?'#f7931a':'var(--text3)'}">${c}</button>`).join('')}
+              </div>
             </div>
           </div>
-          <div style="background:rgba(247,147,26,.07);border:1px solid rgba(247,147,26,.18);border-radius:12px;padding:16px">
-            <div style="font-size:10px;font-weight:700;color:#f7931a;text-transform:uppercase;letter-spacing:.04em;margin-bottom:10px">₿ Portafolio total</div>
-            ${[
-              {l:'BTC acumulado',        v:`${totalBtc.toFixed(6)} ₿`,                              c:'#f7931a'},
-              {l:'Total invertido',      v:fUSD(totalUsd),                                           c:'var(--text)'},
-              {l:'Precio prom. compra',  v:`$${Math.round(avgPrice).toLocaleString('es-MX')} USD`,  c:'var(--primary)'},
-              {l:'Valor hoy',            v:fUSD(curVal),                                             c:pnl>=0?'var(--success)':'var(--danger)'},
-              {l:'P&amp;L total',        v:(pnl>=0?'+':'')+fUSD(pnl),                               c:pnl>=0?'var(--success)':'var(--danger)'},
-              {l:'Rendimiento',          v:(pnlPct>=0?'+':'')+pnlPct.toFixed(2)+'%',                c:pnlPct>=0?'var(--success)':'var(--danger)'},
-            ].map(r=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.05)">
-              <span style="font-size:11px;color:var(--text3)">${r.l}</span>
-              <span style="font-size:12px;font-weight:800;color:${r.c}">${r.v}</span>
-            </div>`).join('')}
-          </div>
+          <div style="position:relative;height:300px"><canvas id="btc-ch-pnl"></canvas></div>
+          <div id="btc-ch-leyenda" style="margin-top:12px;padding-top:11px;border-top:1px solid rgba(var(--ov),.06)"></div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(132px,1fr));gap:9px;margin-top:12px">
+          ${[
+            {l:'Aportado en total', v:MX?fMX(invMxn):fUSD(totalUsd),      s:MX?fUSD(totalUsd)+' USD':fMX(invMxn)+' MXN', c:'var(--text)'},
+            {l:'Vale hoy',         v:MX?fMX(valMxn):fUSD(curVal),         s:MX?fUSD(curVal)+' USD':fMX(valMxn)+' MXN',   c:(MX?pnlMxn:pnl)>=0?'var(--success)':'var(--danger)'},
+            {l:(MX?pnlMxn:pnl)>=0?'Vas ganando':'Vas perdiendo',
+                                   v:((MX?pnlMxn:pnl)>=0?'+':'')+(MX?fMX(pnlMxn):fUSD(pnl)),
+                                   s:((MX?pnlMxnPct:pnlPct)>=0?'+':'')+(MX?pnlMxnPct:pnlPct).toFixed(2)+'%',
+                                   c:(MX?pnlMxn:pnl)>=0?'var(--success)':'var(--danger)', hi:true},
+            {l:'BTC acumulado',    v:totalBtc.toFixed(6)+' ₿',            s:history.length===1?'1 aportación':history.length+' aportaciones', c:'#f7931a'},
+            {l:'Tu precio promedio',v:MX?fMX(totalBtc>0?invMxn/totalBtc:0):('$'+Math.round(avgPrice).toLocaleString('es-MX')), s:'por ₿ comprado', c:'var(--primary)'},
+            {l:'BTC ahora',        v:MX?fMX(curPrice*fxNow):('$'+Math.round(curPrice).toLocaleString('es-MX')),
+                                   s:curPrice>=avgPrice?'↑ arriba de tu promedio':'↓ abajo de tu promedio',
+                                   c:curPrice>=avgPrice?'var(--success)':'var(--danger)'},
+          ].map(t=>`<div style="background:${t.hi?((MX?pnlMxn:pnl)>=0?'rgba(0,232,122,.09)':'rgba(255,59,107,.09)'):'rgba(var(--ov),.035)'};border:1px solid ${t.hi?((MX?pnlMxn:pnl)>=0?'rgba(0,232,122,.22)':'rgba(255,59,107,.22)'):'rgba(var(--ov),.06)'};border-radius:11px;padding:11px 12px">
+            <div style="font-size:9.5px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;font-weight:700">${t.l}</div>
+            <div style="font-size:17px;font-weight:800;color:${t.c};margin-top:5px;line-height:1.15">${t.v}</div>
+            <div style="font-size:10px;color:var(--text3);margin-top:3px">${t.s}</div>
+          </div>`).join('')}
         </div>
       </div>
 
@@ -4453,32 +4635,35 @@ function renderBtcHistory() {
       ${monthKeys.map(mk=>{
         const mh=byMonth[mk];
         const mU=mh.reduce((s,h)=>s+h.usd,0);
+        const mI=mh.reduce((s,h)=>s+h.usd*btcFxDe(h),0);
         const mB=mh.reduce((s,h)=>s+(h.btc||0),0);
-        const mV=mB*curPrice; const mP=mV-mU;
-        const mPct=mU>0?(mP/mU)*100:0; const isP=mP>=0;
+        const mV=mB*curPrice;
+        const mBase=MX?mI:mU, mVal=MX?mV*fxNow:mV, mP=mVal-mBase;
+        const mPct=mBase>0?(mP/mBase)*100:0; const isP=mP>=0;
         return `<div id="btc-pane-${mk}" style="display:none">
           <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px">
             <div style="flex:1;min-width:110px;background:rgba(255,255,255,.04);border-radius:10px;padding:12px;text-align:center">
-              <div style="font-size:10px;color:var(--text3);margin-bottom:4px">Invertido</div>
-              <div style="font-size:18px;font-weight:800">${fUSD(mU)}</div>
+              <div style="font-size:10px;color:var(--text3);margin-bottom:4px">Aportado</div>
+              <div style="font-size:18px;font-weight:800">${MX?fMX(mI):fUSD(mU)}</div>
             </div>
             <div style="flex:1;min-width:110px;background:rgba(247,147,26,.08);border:1px solid rgba(247,147,26,.15);border-radius:10px;padding:12px;text-align:center">
               <div style="font-size:10px;color:var(--text3);margin-bottom:4px">BTC comprado</div>
               <div style="font-size:18px;font-weight:800;color:#f7931a">${mB.toFixed(6)} ₿</div>
             </div>
             <div style="flex:1;min-width:110px;background:rgba(255,255,255,.04);border-radius:10px;padding:12px;text-align:center">
-              <div style="font-size:10px;color:var(--text3);margin-bottom:4px">Valor hoy</div>
-              <div style="font-size:18px;font-weight:800;color:${isP?'var(--success)':'var(--danger)'}">${fUSD(mV)}</div>
+              <div style="font-size:10px;color:var(--text3);margin-bottom:4px">Vale hoy</div>
+              <div style="font-size:18px;font-weight:800;color:${isP?'var(--success)':'var(--danger)'}">${MX?fMX(mVal):fUSD(mV)}</div>
             </div>
             <div style="flex:1;min-width:110px;background:${isP?'rgba(0,232,122,.08)':'rgba(255,59,107,.08)'};border:1px solid ${isP?'rgba(0,232,122,.2)':'rgba(255,59,107,.2)'};border-radius:10px;padding:12px;text-align:center">
               <div style="font-size:10px;color:var(--text3);margin-bottom:4px">P&amp;L</div>
-              <div style="font-size:18px;font-weight:800;color:${isP?'var(--success)':'var(--danger)'}">${isP?'+':''}${fUSD(mP)}</div>
+              <div style="font-size:18px;font-weight:800;color:${isP?'var(--success)':'var(--danger)'}">${isP?'+':''}${MX?fMX(mP):fUSD(mP)}</div>
               <div style="font-size:11px;font-weight:700;color:${isP?'var(--success)':'var(--danger)'};">${isP?'+':''}${mPct.toFixed(1)}%</div>
             </div>
           </div>
           ${mh.map(h=>{
-            const hV=h.btc*curPrice; const hP=hV-h.usd;
-            const hPct=h.usd>0?(hP/h.usd)*100:0;
+            const hV=h.btc*curPrice;
+            const hBase=MX?h.usd*btcFxDe(h):h.usd, hVal=MX?hV*fxNow:hV, hP=hVal-hBase;
+            const hPct=hBase>0?(hP/hBase)*100:0;
             const pd=h.btcPrice>0?((curPrice-h.btcPrice)/h.btcPrice)*100:0;
             const iP=hP>=0;
             return `<div style="background:${iP?'rgba(0,232,122,.05)':'rgba(255,59,107,.05)'};border:1px solid ${iP?'rgba(0,232,122,.15)':'rgba(255,59,107,.15)'};border-radius:10px;padding:14px;margin-bottom:8px">
@@ -4493,11 +4678,11 @@ function renderBtcHistory() {
                   ${h.notes?`<div style="font-size:10px;color:var(--text3);margin-top:3px;font-style:italic">${h.notes}</div>`:''}
                 </div>
                 <div style="text-align:right;flex-shrink:0;border-left:1px solid rgba(255,255,255,.07);padding-left:14px">
-                  <div style="font-size:10px;color:var(--text3)">Invertido</div>
-                  <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:8px">${fUSD(h.usd)}</div>
-                  <div style="font-size:10px;color:var(--text3)">Valor hoy</div>
-                  <div style="font-size:13px;font-weight:700;color:${iP?'var(--success)':'var(--danger)'};margin-bottom:8px">${fUSD(hV)}</div>
-                  <div style="font-size:22px;font-weight:900;color:${iP?'var(--success)':'var(--danger)'}">${iP?'+':''}${fUSD(hP)}</div>
+                  <div style="font-size:10px;color:var(--text3)">Aportaste</div>
+                  <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:8px">${MX?fMX(hBase):fUSD(h.usd)}</div>
+                  <div style="font-size:10px;color:var(--text3)">Vale hoy</div>
+                  <div style="font-size:13px;font-weight:700;color:${iP?'var(--success)':'var(--danger)'};margin-bottom:8px">${MX?fMX(hVal):fUSD(hV)}</div>
+                  <div style="font-size:22px;font-weight:900;color:${iP?'var(--success)':'var(--danger)'}">${iP?'+':''}${MX?fMX(hP):fUSD(hP)}</div>
                   <div style="font-size:12px;font-weight:700;color:${iP?'var(--success)':'var(--danger)'};">${iP?'+':''}${hPct.toFixed(1)}%</div>
                 </div>
               </div>
@@ -4510,96 +4695,146 @@ function renderBtcHistory() {
 
     <div class="tw"><table>
       <thead><tr>
-        <th>Fecha</th><th>Precio BTC</th><th>Invertido (USD)</th><th>BTC recibido</th>
+        <th>Fecha</th><th>Precio BTC</th><th>Aportado</th><th>BTC recibido</th>
         ${hasCur?'<th>Valor actual</th><th>P&amp;L</th>':''}
         <th>Notas</th><th></th>
       </tr></thead>
       <tbody>${rows}</tbody>
       <tfoot><tr style="background:rgba(247,147,26,.06)">
         <td style="font-weight:800;font-size:12px" colspan="2">TOTAL</td>
-        <td style="font-weight:800">${fUSD(totalUsd)}</td>
+        <td style="font-weight:800">${fUSD(totalUsd)}<div class="ts" style="color:var(--text3)">${fMX(invMxn)} MXN</div></td>
         <td style="font-weight:800;color:#f7931a">${totalBtc.toFixed(6)} ₿</td>
         ${hasCur?`
-          <td style="font-weight:800;color:${colV(pnl)}">${fUSD(curVal)}</td>
-          <td style="font-weight:800;color:${colV(pnl)}">${pnl>=0?'+':''}${fUSD(pnl)} (${pnlPct>=0?'+':''}${pnlPct.toFixed(2)}%)</td>`:''}
+          <td style="font-weight:800;color:${colV(pnl)}">${fUSD(curVal)}<div class="ts" style="color:var(--text3)">${fMX(valMxn)} MXN</div></td>
+          <td style="font-weight:800;color:${colV(pnl)}">${pnl>=0?'+':''}${fUSD(pnl)} (${pnlPct>=0?'+':''}${pnlPct.toFixed(2)}%)<div class="ts" style="color:${colV(pnlMxn)}">${pnlMxn>=0?'+':''}${fMX(pnlMxn)} MXN</div></td>`:''}
         <td colspan="2"></td>
       </tr></tfoot>
     </table></div>
     <div class="ts tm" style="margin-top:10px;line-height:1.7">
-      * Precios históricos de referencia según datos de mercado: Feb 2025 ~$102,007 · Dic 2025 ~$91,000 · Jun 21 2026 ~$63,875 USD/BTC.
-      Los valores del portafolio en MXN usan tasa de cambio aproximada al momento de cada compra.
+      * <b>Aportado en pesos</b>: cada compra se convierte con el tipo de cambio de SU día (el campo USD/MXN del formulario). Las compras que no lo tengan usan el de hoy, ${fxNow.toFixed(2)}.<br>
+      * <b>La curva de valor</b> reconstruye el precio de BTC entre las fechas que conoces — tus compras y el precio de hoy. Con 📈 <b>Precio real</b> se sustituye por el histórico diario de CoinGecko (últimos 365 días).<br>
+      * <b>No es el saldo de una cuenta</b>: es tu BTC valuado a precio de mercado. Solo se vuelve pesos si vendes.
     </div>
   </div>`;
 
   // ── Activar tab resumen por defecto ──
   if(hasCur) switchBtcTab('resumen');
 
-  // ── Gráfica acumulada P&L ──
+  // ── La gráfica: el dinero en el TIEMPO, no en el orden de las compras ──
+  // Tres decisiones que la anterior no tomaba:
+  //   1. eje X lineal en milisegundos → seis meses ocupan el doble que tres
+  //   2. la línea de lo aportado es un ESCALÓN (stepped): el capital no crece
+  //      solo, salta el día que Adán aporta y se queda plano hasta el siguiente
+  //   3. el área entre las dos líneas es la ganancia — verde arriba, roja abajo
   const ctxBtc = document.getElementById('btc-ch-pnl');
-  if(ctxBtc && hasCur && history.length > 0) {
+  const SER = btcSerie();
+  if(ctxBtc && SER && SER.pts.length){
     chBtcPnl = killChart(chBtcPnl);
-    let cumInv = 0, cumBtcAcc = 0;
-    const labels = [], dataInv = [], dataVal = [];
-    history.forEach(h => {
-      cumInv    += h.usd;
-      cumBtcAcc += h.btc||0;
-      labels.push(fmtDate(h.date));
-      dataInv.push(+cumInv.toFixed(2));
-      dataVal.push(+(cumBtcAcc * curPrice).toFixed(2));
-    });
-    const isProfit = dataVal[dataVal.length-1] >= dataInv[dataInv.length-1];
-    const lineColor = isProfit ? '#00e87a' : '#ff3b6b';
-    const fillColor = isProfit ? 'rgba(0,232,122,.12)' : 'rgba(255,59,107,.12)';
+    const mx  = btcCur==='MXN';
+    const sim = mx?'MXN':'USD';
+    const nf  = n => '$'+Math.round(n).toLocaleString('es-MX');
+    const yA  = p => mx?p.aMxn:p.aUsd;
+    const yV  = p => mx?p.vMxn:p.vUsd;
+    const ult = SER.pts.length-1;
+    const gana  = yV(SER.pts[ult]) >= yA(SER.pts[ult]);
+    const txtC  = cssVar('--text3');
+    const gridC = 'rgba('+cssVar('--ov')+',.06)';
+    const fondo = cssVar('--surface-solid') || '#171720';
+    const MN = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+    const fTs = t => { const d=new Date(t); return d.getUTCDate()+' '+MN[d.getUTCMonth()]+' '+d.getUTCFullYear(); };
+
+    // Chart.js sobre un eje lineal de milisegundos elige números redondos, no
+    // fechas: sin esto salen etiquetas a mitad de mes que no dicen nada.
+    const ticksMes = () => {
+      const out=[], d=new Date(SER.t0);
+      d.setUTCDate(1); d.setUTCHours(0,0,0,0);
+      if(d.getTime()<SER.t0) d.setUTCMonth(d.getUTCMonth()+1);
+      while(d.getTime()<=SER.tEnd){ out.push(d.getTime()); d.setUTCMonth(d.getUTCMonth()+1); }
+      const paso=Math.max(1,Math.ceil(out.length/7));
+      return out.filter((_,k)=>k%paso===0);
+    };
+
     chBtcPnl = new Chart(ctxBtc, {
-      type: 'line',
-      data: {
-        labels,
-        datasets: [
-          {
-            label: 'Invertido acumulado',
-            data: dataInv,
-            borderColor: 'rgba('+cssVar('--ov')+',.3)',
-            borderWidth: 1.5,
-            borderDash: [5,4],
-            pointRadius: 4,
-            pointBackgroundColor: 'rgba('+cssVar('--ov')+',.5)',
-            fill: false,
-            tension: 0.3
-          },
-          {
-            label: 'Valor actual acumulado',
-            data: dataVal,
-            borderColor: lineColor,
-            borderWidth: 2.5,
-            pointRadius: 5,
-            pointBackgroundColor: lineColor,
-            pointBorderColor: cssVar('--surface-solid'),
-            pointBorderWidth: 2,
-            fill: {target: 0, above: fillColor, below: 'rgba(255,59,107,.12)'},
-            tension: 0.3
-          }
-        ]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: { display: false },
-          tooltip: {
-            callbacks: {
-              label: ctx => ` ${ctx.dataset.label}: $${ctx.parsed.y.toLocaleString('es-MX',{minimumFractionDigits:2})} USD`
+      type:'line',
+      plugins:[btcAportPlugin],
+      data:{ datasets:[
+        { label:'Aportado', data:SER.pts.map(p=>({x:p.t,y:+yA(p).toFixed(2)})),
+          stepped:true, borderColor:'rgba('+cssVar('--ov')+',.6)', borderWidth:1.8,
+          borderDash:[5,4], pointRadius:0, pointHitRadius:0, fill:false, order:3 },
+        { label:'Valor', data:SER.pts.map(p=>({x:p.t,y:+yV(p).toFixed(2)})),
+          borderColor:'#f7931a', borderWidth:2.4, tension:.12,
+          pointRadius:c=>c.dataIndex===ult?4.5:0, pointHoverRadius:5,
+          pointBackgroundColor:'#f7931a', pointBorderColor:fondo, pointBorderWidth:2,
+          fill:{target:0, above:'rgba(0,232,122,.15)', below:'rgba(255,59,107,.15)'}, order:2 },
+        { label:'Aportaciones', data:SER.compras.map(c=>({x:c.t,y:+(mx?c.aMxn:c.aUsd).toFixed(2)})),
+          showLine:false, pointStyle:'triangle', pointRadius:7, pointHoverRadius:9,
+          pointBackgroundColor:'#f7931a', pointBorderColor:fondo, pointBorderWidth:1.5, order:1 }
+      ]},
+      options:{
+        responsive:true, maintainAspectRatio:false, parsing:false,
+        layout:{padding:{top:26}},   // el carril donde viven las etiquetas de aportación
+        interaction:{mode:'index', intersect:false},
+        plugins:{
+          legend:{display:false},
+          btcAport:{ marks:(()=>{
+            const porDia=new Map();   // varias compras el mismo día = un solo escalón
+            SER.compras.forEach(c=>porDia.set(c.t,(porDia.get(c.t)||0)+(mx?c.mxn:c.h.usd)));
+            return [...porDia].map(([t,v])=>({t, label:'+'+nf(v)}));
+          })() },
+          tooltip:{
+            filter:it=>it.datasetIndex===1, displayColors:false, padding:11,
+            titleFont:{size:12}, bodyFont:{size:11.5, family:'ui-monospace,SFMono-Regular,Menlo,monospace'},
+            callbacks:{
+              title:it=>fTs(SER.pts[it[0].dataIndex].t),
+              label:it=>{
+                const p=SER.pts[it.dataIndex]; if(!p) return '';
+                const a=yA(p), v=yV(p), d=v-a, pct=a>0?(d/a)*100:0;
+                const L=[
+                  'Aportado  '+nf(a)+' '+sim,
+                  'Vale      '+nf(v)+' '+sim,
+                  (d>=0?'Ganas     +':'Pierdes   ')+nf(d)+' '+sim+'  ('+(d>=0?'+':'')+pct.toFixed(1)+'%)',
+                  '₿ '+p.btc.toFixed(6)+'  ·  BTC a '+nf(mx?p.pMxn:p.pUsd)
+                ];
+                SER.compras.filter(c=>c.t===p.t).forEach(c=>
+                  L.push('▲ Aportaste '+nf(mx?c.mxn:c.h.usd)+(c.h.notes?' — '+c.h.notes:'')));
+                return L;
+              }
             }
           }
         },
-        scales: {
-          x: { grid: { display: false }, ticks: { color: cssVar('--text3'), font: { size: 10 } } },
-          y: {
-            grid: { color: 'rgba('+cssVar('--ov')+',.06)' },
-            ticks: { color: cssVar('--text3'), font: { size: 10 }, callback: v => '$'+(v/1000).toFixed(0)+'k' }
-          }
+        scales:{
+          x:{ type:'linear', min:SER.t0, max:SER.tEnd,
+              afterBuildTicks:a=>{ a.ticks=ticksMes().map(v=>({value:v})); },
+              ticks:{ color:txtC, font:{size:10}, maxRotation:0, autoSkip:false, padding:4,
+                      callback:v=>{ const d=new Date(v); return MN[d.getUTCMonth()]+" "+String(d.getUTCFullYear()).slice(2); } },
+              grid:{display:false}, border:{color:gridC} },
+          y:{ ticks:{ color:txtC, font:{size:10}, maxTicksLimit:6, padding:6,
+                      callback:v=>v>=1000?'$'+(v/1000).toFixed(v>=10000?0:1)+'k':'$'+Math.round(v) },
+              grid:{color:gridC, drawTicks:false}, border:{display:false} }
         }
       }
     });
+
+    // La leyenda dice de dónde sale cada línea Y de dónde sale el precio. Lo
+    // segundo importa: una curva reconstruida y una con precio real de mercado
+    // se dibujan igual de bonitas, y solo una de las dos es un dato.
+    const ley=document.getElementById('btc-ch-leyenda');
+    if(ley){
+      const cob = SER.dias>0 ? Math.round(SER.reales/SER.dias*100) : 0;
+      const fuente = SER.reales>0
+        ? (cob>=99 ? 'Precio real de mercado, día a día'
+                   : 'Precio real en '+cob+'% de los días · el resto, reconstruido entre tus compras')
+        : 'Curva reconstruida entre los precios de tus compras — pulsa 📈 <b style="color:var(--text2)">Precio real</b> para traer el histórico diario';
+      ley.innerHTML=`<div class="flex jb aic" style="flex-wrap:wrap;gap:12px">
+        <div class="flex aic" style="gap:16px;flex-wrap:wrap">
+          <span class="flex aic" style="gap:6px"><span style="width:16px;height:0;border-top:1.6px dashed rgba(var(--ov),.5)"></span><span style="font-size:10.5px;color:var(--text3)">Lo que has aportado</span></span>
+          <span class="flex aic" style="gap:6px"><span style="width:16px;height:2.4px;background:#f7931a;border-radius:2px"></span><span style="font-size:10.5px;color:var(--text3)">Lo que vale</span></span>
+          <span class="flex aic" style="gap:6px"><span style="color:#f7931a;font-size:11px">▲</span><span style="font-size:10.5px;color:var(--text3)">Aportación</span></span>
+          <span class="flex aic" style="gap:6px"><span style="width:16px;height:9px;border-radius:2px;background:${gana?'rgba(0,232,122,.28)':'rgba(255,59,107,.28)'}"></span><span style="font-size:10.5px;color:var(--text3)">${gana?'Ganancia':'Pérdida'}</span></span>
+        </div>
+        <span style="font-size:10px;color:var(--text3);opacity:.85">${fuente}</span>
+      </div>`;
+    }
   }
 }
 
@@ -4666,6 +4901,7 @@ function openBtcModal(id=null) {
   document.getElementById('btc-usd').value = h?.usd || '';
   document.getElementById('btc-price-at').value = h?.btcPrice || '';
   document.getElementById('btc-received').value = h?.btc || '';
+  document.getElementById('btc-fx').value = h?.fx || (S.usdMxn||'');
   document.getElementById('btc-notes').value = h?.notes || '';
   document.getElementById('mo-btc').classList.add('open');
 }
@@ -4683,7 +4919,11 @@ function saveBtcPurchase() {
   const notes    = document.getElementById('btc-notes').value.trim();
   if(!date||!usd||!btcPrice) return alert('Completa fecha, USD invertidos y precio BTC.');
   const btc  = parseFloat((usd/btcPrice).toFixed(8));
-  const data = {date,usd,btcPrice,btc,notes};
+  // El tipo de cambio se guarda CON la compra: es lo que esos dólares costaron
+  // en pesos ese día. Sin él, el total en pesos se recalcula con el dólar de hoy
+  // y el histórico entero se mueve cada vez que el peso se mueve.
+  const fx   = parseFloat(document.getElementById('btc-fx').value)||0;
+  const data = {date,usd,btcPrice,btc,notes,fx:fx>0?fx:(S.usdMxn||19.5)};
   if(!S.btcHistory) S.btcHistory=[];
   if(btcEditId){const i=S.btcHistory.findIndex(x=>x.id===btcEditId);if(i>=0)S.btcHistory[i]={...S.btcHistory[i],...data};}
   else S.btcHistory.push({id:uid(),...data});
@@ -4775,7 +5015,7 @@ function init() {
   // ../Dashboard/datos-maestros.js, que esta app carga en el <head>. Antes cada corrección había
   // que escribirla dos veces —aquí y como espejo en dashboard.html—, porque cualquiera de las
   // dos puede ser la primera app que abra Adán. Ahora se escribe una vez, corre antes que este
-  // init() y la ve también Coach_v2.html. Las migraciones de más arriba se quedan: ya corrieron
+  // init() y la ve también Coach.html. Las migraciones de más arriba se quedan: ya corrieron
   // y tienen bandera, son inertes. Las NUEVAS van al archivo común.
   // Asegurar que el fondo de emergencia exista en metas
   if(!S.goals.find(g=>g.id==='ef-001')) {
