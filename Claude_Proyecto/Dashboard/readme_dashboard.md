@@ -36,8 +36,8 @@ No hay backend. El Dashboard lee el `localStorage` que escriben las demás apps:
 | Clave | La escribe | Qué saca el Dashboard |
 |---|---|---|
 | `finanzasmx_v2` | `Finanzas.html` | Deudas, inversiones, patrimonio, fondo de emergencia |
-| `coach_rutina_v1` | `Coach_v2.html` | Progreso de la rutina del día |
-| `coach_checks_v1` | `Coach_v2.html` | Checklist de la fase del Plan Maestro |
+| `coach_rutina_v1` | `Coach.html` | Progreso de la rutina del día |
+| `coach_checks_v1` | `Coach.html` | Checklist de la fase del Plan Maestro |
 | `mirutina_v1` | `ejercicio.html` | Qué toca hoy en el gimnasio |
 | `misalud_v1` | `salud.html` / `comida.html` | Peso, medidas, alimentos |
 | `skincare_v1`, `comida_v1` | sus apps | Rutinas y recetas |
@@ -86,6 +86,16 @@ era el suyo.
 Las lecciones del capítulo llevan `kapitel:10` en su entrada de `ALEMAN_TEMAS`. Añadir un capítulo
 nuevo es marcar sus lecciones con ese campo y cambiar el número en el maestro.
 
+**Las cinco se ven a la vez.** `pintarLeccionesK10()` dibuja una fila con todas las lecciones del
+capítulo (`.al-lec`), con la activa resaltada, y `alemanIr(i)` salta a la que se toque. Antes solo
+existía "Siguiente lección →", que obliga a pasar por las otras cuatro para llegar a la que toca
+estudiar. Esa fila **solo se pinta con el filtro activo**: con las 40 lecciones sueltas no cabría, y
+el criterio fue justamente acotar.
+
+`renderHeroAprender()` (la tarjeta "Hoy aprendes" de Mi Día) cuenta sobre la **lista filtrada**, no
+sobre `ALEMAN_TEMAS`. Contaba sobre las 40 y decía "4 / 40" mientras el slide decía "Tema 4 de 5":
+es el mismo dato y tiene que contar igual.
+
 ---
 
 ## Mi Día, en detalle
@@ -127,7 +137,7 @@ arrastraría también el scroll del carrusel y saltaría la pantalla entera en c
 
 ### La rutina
 
-`RUTINA_TASKS` **no se declara aquí**: se pide con `CIFRAS.rutina('../Coach/Coach_v2.html')` a
+`RUTINA_TASKS` **no se declara aquí**: se pide con `CIFRAS.rutina('../Coach/Coach.html')` a
 `datos-maestros.js`. El argumento es el prefijo de los `href`, que en el maestro se guardan como
 anclas internas de Coach. Ver Regla 1 de `CLAUDE.md`.
 
@@ -149,7 +159,7 @@ pero no llevan checkbox ni suman al progreso.
 El Dashboard **no declara ninguna de sus estructuras grandes**: las lee de `datos-maestros.js`.
 
 ```js
-const RUTINA_TASKS  = CIFRAS.rutina('../Coach/Coach_v2.html');
+const RUTINA_TASKS  = CIFRAS.rutina('../Coach/Coach.html');
 const SK            = CIFRAS.SK;
 const PHASES        = CIFRAS.PHASES;
 const APRENDIZAJE   = CIFRAS.APRENDIZAJE;

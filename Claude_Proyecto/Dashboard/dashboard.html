@@ -931,7 +931,7 @@ a.rt2-sub-prod:hover{text-decoration:underline}
 .ds-ico{font-size:11px;margin-bottom:2px}
 .ds-lbl{font-size:11px;font-weight:800;color:var(--text)}
 .ds-txt{font-size:10.5px;color:var(--text2);margin:3px 0 5px;font-family:var(--mono)}
-/* Checklist semana a semana de "Qué hacer en esta fase" — comparte coach_checks_v1 con Coach_v2.html.
+/* Checklist semana a semana de "Qué hacer en esta fase" — comparte coach_checks_v1 con Coach.html.
    Pulido visual (2026-08-09, "se ve amontonado... no esta claro a que se refiere esa seccion"):
    cada tarea pasó de fila plana (solo separada por una línea) a su propia tarjeta — igual patrón
    que ya usan las subtareas de "Mi Día" (.rt2-sub-item), para que el ojo distinga cada tarea como
@@ -1322,6 +1322,20 @@ a.rt2-sub-prod:hover{text-decoration:underline}
    Clases: cada sección de una lección es un `.tile.al-card` (vocabulario, diálogos, frases,
    ejercicios, reglas, conjugaciones, y una rejilla genérica `.al-mini-grid` para los widgets
    visuales únicos de cada lección A1 — números, colores, días, familia, artículos, pronombres). */
+/* ─── Lecciones del capítulo en curso (Alemán) ───
+   Una fila con las 5 del Kapitel para tocar la que toca hoy, en vez de ir dando a "Siguiente".
+   Solo se pinta con el filtro de capítulo activo; con las 40 sueltas no cabría. */
+.al-lecciones{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 14px}
+.al-lec{flex:1 1 168px;min-width:150px;max-width:260px;display:flex;flex-direction:column;gap:2px;
+  padding:9px 12px;border-radius:12px;border:1px solid rgba(var(--ov),.10);background:rgba(var(--ov),.04);
+  cursor:pointer;text-align:left;font-family:inherit;color:inherit;transition:all .18s}
+.al-lec:hover{background:rgba(var(--ov),.09);border-color:rgba(var(--ov),.2)}
+.al-lec.on{background:rgba(0,232,122,.13);border-color:var(--g);box-shadow:0 0 16px rgba(0,232,122,.22)}
+.al-lec-i{font-size:15px;line-height:1}
+.al-lec-t{font-size:12.5px;font-weight:800;color:var(--text)}
+.al-lec.on .al-lec-t{color:var(--g)}
+.al-lec-s{font-size:10.5px;color:var(--text3);line-height:1.3}
+@media(max-width:700px){ .al-lec{flex:1 1 100%;max-width:none} }
 .al-content{margin-top:10px;flex:1;min-height:0;overflow-y:auto;padding-right:6px;display:flex;flex-direction:column;gap:14px}
 .al-card-h{display:flex;align-items:center;gap:9px;font-family:var(--font-title);font-size:clamp(15px,1.4vw,19px);font-weight:600;color:var(--text);margin-bottom:12px}
 .al-card-h span:first-child{font-size:1.15em}
@@ -2262,7 +2276,7 @@ a.rt2-sub-prod:hover{text-decoration:underline}
            de display:none — se quedaba invisible (opacity:0) un momento tras cada clic. -->
 
       <div class="reveal d6" style="margin-top:8px">
-        <a href="../Coach/Coach_v2.html#rutina" style="color:var(--cy);font-size:12px;font-weight:600;text-decoration:none">Ver/editar rutina completa en Coach →</a>
+        <a href="../Coach/Coach.html#rutina" style="color:var(--cy);font-size:12px;font-weight:600;text-decoration:none">Ver/editar rutina completa en Coach →</a>
       </div>
     </div>
   </section>
@@ -2364,6 +2378,10 @@ a.rt2-sub-prod:hover{text-decoration:underline}
         </div>
       </div>
       <div class="td-tags reveal d3" id="alTags"></div>
+      <!-- Las lecciones del capítulo, todas a la vista. Con el filtro de Kapitel puesto son 5 y
+           caben en una fila: se toca la que toca estudiar hoy en vez de ir dando a "Siguiente".
+           Sin filtro (40 temas) esta fila no se pinta — no cabrían. -->
+      <div class="al-lecciones reveal d3" id="alLecciones"></div>
       <div class="al-content reveal d4" id="alContent"></div>
     </div>
   </section>
@@ -2702,7 +2720,7 @@ function fixAhorro20260817IfNeeded(){
 // La migración _deudas20260824 ya NO vive aquí: se movió a datos-maestros.js (esta misma carpeta), que
 // cargan las tres apps. Antes había que escribirla dos veces (aquí y en Finanzas.html) porque
 // cualquiera de las dos puede ser la primera que abra Adán; ahora se escribe una sola vez y
-// además llega a Coach_v2.html, que nunca tuvo migraciones. Las de más arriba se quedan donde
+// además llega a Coach.html, que nunca tuvo migraciones. Las de más arriba se quedan donde
 // están: ya corrieron y tienen su bandera puesta, así que son inertes — moverlas sería riesgo
 // sin ganancia. Las NUEVAS van al archivo común.
 /* Pasa CIFRAS.texto() por TODOS los strings de una estructura, en el sitio. El Dashboard no
@@ -2887,8 +2905,8 @@ function detectarLogros(){
 
 // ── RUTINA DIARIA — vive en datos-maestros.js (fuente única, ver DATOS-MAESTROS.md).
 //    Se pide con la ruta a Coach porque los href del maestro son anclas internas suyas.
-const RUTINA_TASKS = window.CIFRAS ? CIFRAS.rutina('../Coach/Coach_v2.html') : [];
-// Categorías visuales — mismo mapa de colores/íconos que Coach_v2.html → #rutina (CAT_META)
+const RUTINA_TASKS = window.CIFRAS ? CIFRAS.rutina('../Coach/Coach.html') : [];
+// Categorías visuales — mismo mapa de colores/íconos que Coach.html → #rutina (CAT_META)
 const CAT_META={
   salud:    {ico:'💪',label:'Salud',    c:'#ff5c5c'},
   descanso: {ico:'🌙',label:'Descanso', c:'#9a9db3'},
@@ -2912,7 +2930,7 @@ function rtDur(fromHora,toHora){
   if(mins<=0) mins+=24*60;
   return mins>=60?(Math.floor(mins/60)+'h'+(mins%60?' '+(mins%60)+'m':'')):mins+'m';
 }
-// Igual que Coach_v2.html: una tarea agrupada (.subtareas) cuenta cada subtarea por separado
+// Igual que Coach.html: una tarea agrupada (.subtareas) cuenta cada subtarea por separado
 function leafItems(t){ return (t.subtareas&&t.subtareas.length) ? t.subtareas : [{id:t.id, txt:t.txt, link:t.link}]; }
 // Búsqueda en Mercado Libre para los pasos de skincare/cabello (2026-08-10, pedido explícito:
 // "cuando haga click en los productos, llevame a mercado libre"). `productoSearchTerm()` limpia
@@ -3940,6 +3958,30 @@ function alemanSiguiente(){
   renderAleman();
   renderHeroAprender();   // la tarjeta de Mi Día lee el mismo índice: si no, quedaría desfasada
 }
+/* Fila con todas las lecciones del capítulo en curso. Solo se pinta cuando hay filtro activo:
+   con las 40 lecciones sueltas sería una lista inútil, y el criterio de Adán fue justamente
+   acotar ("necesito ahorita solo aprender eso"). */
+function pintarLeccionesK10(actual){
+  const cont=document.getElementById("alLecciones"); if(!cont) return;
+  const k=(window.CIFRAS&&CIFRAS.PROYECTO)?CIFRAS.PROYECTO.kapitelAleman:null;
+  if(k==null){ cont.innerHTML=""; cont.style.display="none"; return; }
+  cont.style.display="";
+  const L=alemanLista();
+  cont.innerHTML=L.map((t,i)=>`
+    <button class="al-lec${t.file===actual.file?" on":""}" onclick="alemanIr(${i})"
+      title="${esc(t.es)}">
+      <span class="al-lec-i">${t.ico}</span>
+      <span class="al-lec-t">${esc(t.de)}</span>
+      <span class="al-lec-s">${esc(t.es)}</span>
+    </button>`).join("");
+}
+/* Ir directo a una lección del capítulo. Deja `alemanIdx` fijo, igual que "Siguiente lección":
+   una vez que Adán elige a mano, no se le devuelve solo al tema del día. */
+function alemanIr(i){
+  alemanIdx=i;
+  renderAleman();
+  renderHeroAprender();
+}
 function renderAleman(){
   const t=alemanTemaHoy();
   const idx=alemanIdx+1;
@@ -3956,6 +3998,7 @@ function renderAleman(){
     : `Tema ${idx} de ${_L.length} · cambia cada día`;
   document.getElementById('alTags').innerHTML=t.tags.map(tag=>`<span class="td-tag">${tag}</span>`).join('');
   document.getElementById('alOpen').href='../Aleman/'+t.file;
+  pintarLeccionesK10(t);
   const data=(typeof ALEMAN_CONTENT!=='undefined')?ALEMAN_CONTENT[t.file]:null;
   renderAlemanContent(data,t);
 }
@@ -4896,7 +4939,7 @@ function renderHeroFase(){
   el.innerHTML=`
     <div class="hp-title">
       <span>🎯 ${esc(f.tag)}</span>
-      <a href="../Coach/Coach_v2.html" class="hp-link">Plan Maestro →</a>
+      <a href="../Coach/Coach.html" class="hp-link">Plan Maestro →</a>
     </div>
     <div style="font-size:12.5px;font-weight:700;color:var(--text);line-height:1.3;margin-bottom:10px">${esc(f.title)}</div>
     <div class="hp-fase-bar" style="margin-bottom:5px">
@@ -4922,7 +4965,9 @@ function renderHeroAprender(){
   const el=document.getElementById('heroAprenderPanel'); if(!el) return;
   const a=(typeof alemanTemaHoy==='function')?alemanTemaHoy():null;
   const p=(typeof entrevistaTemaHoy==='function')?entrevistaTemaHoy():null;
-  const nAl=(typeof ALEMAN_TEMAS!=='undefined')?ALEMAN_TEMAS.length:0;
+  // Sobre la lista FILTRADA, no sobre las 40: si el slide dice "3 de 5", la tarjeta no puede
+  // decir "3 / 40". Es el mismo dato y tiene que contar igual.
+  const nAl=(typeof alemanLista==='function')?alemanLista().length:0;
   const nPy=(typeof ENTREVISTA_TEMAS!=='undefined')?ENTREVISTA_TEMAS.length:0;
   const bloque=(cfg)=>`
     <div class="hp-lec" style="background:${cfg.c}12;border:1px solid ${cfg.c}2e">
@@ -5139,7 +5184,7 @@ function renderCoach(){
 
   // Checklist por mes (2026-08-09) — Adán: "en el dashboard son muchas tareas y no me enfoco en
   // ninguna". Si la fase activa trae `mes` en sus items (hoy solo Fase 0 — Fase 1/2/3 no tienen
-  // fecha calendario real todavía, ver readme_coach_v2.md), se agrupa por mes con tabs y solo se
+  // fecha calendario real todavía, ver readme_coach.md), se agrupa por mes con tabs y solo se
   // pinta el mes elegido; si no trae `mes` (fases futuras sin desglosar aún), cae de vuelta al
   // comportamiento viejo (todo el checklist de la fase junto).
   const mesesFase=[...new Set(ph.semanas.map(s=>s.mes).filter(Boolean))].sort();
@@ -5161,7 +5206,7 @@ function renderCoach(){
   // ── El reparto en 3 columnas ──
   // Una tarea es PRIORIDAD si su texto empieza por "Prioridad N", que es como las escribe
   // PHASES[].semanas. Es el único marcador que existe hoy: añadir un campo nuevo obligaría a
-  // mantenerlo sincronizado a mano con Coach_v2.html, que lee los mismos objetos.
+  // mantenerlo sincronizado a mano con Coach.html, que lee los mismos objetos.
   const esPrio=s=>/^\s*Prioridad\s*\d/i.test(String(s.txt).replace(/<[^>]*>/g,''));
   const hechas=itemsMes.filter(s=>faseChecks[s.id]);
   const prios=itemsMes.filter(s=>!faseChecks[s.id]&&esPrio(s));
@@ -5238,7 +5283,7 @@ function renderCoach(){
 let coachMesSel=null;
 function verCoachMes(ym){ coachMesSel=ym; renderCoach(); }
 // Checklist semana a semana de "Qué hacer en esta fase" — comparte coach_checks_v1 con
-// Coach_v2.html (mismos ids sN-M), igual patrón de escritura cruzada que quickMarkDone().
+// Coach.html (mismos ids sN-M), igual patrón de escritura cruzada que quickMarkDone().
 function toggleFaseCheck(id){
   const checks=rawGet('coach_checks_v1',{});
   const cb=document.getElementById('dchk-'+id);
@@ -5260,7 +5305,7 @@ function skLevel(v){
   if(v>=40)return{l:'BÁSICO',c:'#f87171'};
   return{l:'PRINCIPIANTE',c:'#ef4444'};
 }
-// Plan de ataque de las 5 prioridades reales — mismo contenido que Coach_v2.html → #aprendizaje
+// Plan de ataque de las 5 prioridades reales — mismo contenido que Coach.html → #aprendizaje
 // (primer paso de la semana, hábito recomendado y recursos exactos). Copiado a mano, igual que
 // RUTINA_TASKS/PHASES/SK — si se edita #aprendizaje en Coach, replicar aquí.
 // Reescrito el 2026-08-07 (pedido explícito: "inversion tiene menos que IA entonces deberias
@@ -5273,7 +5318,7 @@ function skLevel(v){
 //    genérico), `semana24` (plan más allá de "esta semana") y `error` (el error común que la
 //    mayoría comete ahí) — antes solo había `primer` + 2 recursos, que se sentía como consejo
 //    de calendario, no retroalimentación real. `habito` ya existía pero nunca se mostraba en
-//    el Dashboard — ahora sí. Replicado en Coach_v2.html → #aprendizaje (mismo texto, ver esa
+//    el Dashboard — ahora sí. Replicado en Coach.html → #aprendizaje (mismo texto, ver esa
 //    sección) — sigue siendo la 6ª+7ª estructura duplicada del tipo de la tabla de arriba.
 // Aprendizaje — vive en datos-maestros.js (fuente única, ver DATOS-MAESTROS.md).
 const APRENDIZAJE = window.CIFRAS ? CIFRAS.APRENDIZAJE : {};
@@ -5765,7 +5810,7 @@ function renderGBMPanel(){
 //
 // Qué se guarda: solo dos cosas, cuál de las dos candidatas está en el foco y en qué paso va
 // cada una. Nada de "completado": marcar pasos como hechos sería un modelo nuevo que habría
-// que mantener sincronizado a mano con Coach_v2.html, igual que ya pasa con SK y APRENDIZAJE.
+// que mantener sincronizado a mano con Coach.html, igual que ya pasa con SK y APRENDIZAJE.
 const HABFOCO_KEY = 'dash_habfoco_v1';
 function habFocoLoad(){ const o = rawGet(HABFOCO_KEY, {}); return { skill: o.skill || '', paso: o.paso || {} }; }
 function habFocoSave(o){ rawSet(HABFOCO_KEY, o); }
@@ -5866,7 +5911,7 @@ function renderSkills(){
         : `Es el último de los ${pasos.length}`}</span>
       <span class="hf-acts">
         ${otra ? `<button class="hf-btn" onclick="habFocoSet('${otra.id}')">Cambiar a ${otra.name} ${otra.icon}</button>` : ''}
-        <a class="hf-btn" href="../Coach/Coach_v2.html?skill=${foco.id}#aprendizaje">✏️ Ajustar en Coach →</a>
+        <a class="hf-btn" href="../Coach/Coach.html?skill=${foco.id}#aprendizaje">✏️ Ajustar en Coach →</a>
       </span>
     </div>`;
 
@@ -5913,7 +5958,7 @@ function renderSkills(){
 function renderQuickApps(){
   const t=today();
   const apps=[
-    {ico:'🪙',n:'Coach',href:'../Coach/Coach_v2.html',stat:activePhase().tag},
+    {ico:'🪙',n:'Coach',href:'../Coach/Coach.html',stat:activePhase().tag},
     {ico:'💰',n:'Finanzas',href:'../Finanzas/Finanzas.html',stat:''},
     {ico:'🧴',n:'Skincare',href:'../CuidadoPersonal/cuidadopersonal.html?tab=skincare',stat:''},
     {ico:'🥦',n:'Salud',href:'../CuidadoPersonal/cuidadopersonal.html?tab=salud',
@@ -6798,7 +6843,7 @@ function renderMetasSlide(){
     <div class="tile">
       <div class="lbl" style="margin-bottom:8px">🏔️ Largo plazo & bucket list</div>
       ${imgListHtml(largoExtras,'sm','Largo plazo')}
-      <div class="sub" style="margin-top:8px"><a href="../Coach/Coach_v2.html#perfil" style="color:var(--cy);text-decoration:none">Ver detalle completo en Coach → Metas →</a></div>
+      <div class="sub" style="margin-top:8px"><a href="../Coach/Coach.html#perfil" style="color:var(--cy);text-decoration:none">Ver detalle completo en Coach → Metas →</a></div>
     </div>`;
 }
 
@@ -6829,7 +6874,7 @@ const HABILIDADES_BASE=[
   {id:'recuperar',ico:'🧘', t:'Saber recuperarte',                   img:'https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=2400&q=85&auto=format&fit=crop'},
   // 7 nuevas (2026-08-11, pedido explícito: "en coach hay una seccion de habilidades de valor,
   // añade todo eso en el dashboard, del mismo estilo en que estan ya y muy completa") — mismo
-  // catálogo de Coach_v2.html → #habilidades-valor ("🎩 Habilidades de un Hombre de Valor"), las
+  // catálogo de Coach.html → #habilidades-valor ("🎩 Habilidades de un Hombre de Valor"), las
   // 7 tarjetas de esa sección (sin duplicar la 8ª pieza de ahí, el checklist "Cuáles ya
   // dominas" hv1-hv7, que es un resumen de estas mismas 7 — no aporta una habilidad nueva).
   // Fotos nuevas verificadas con curl (HTTP 200) antes de usarlas, mismo criterio que las 8 de
