@@ -158,8 +158,8 @@ piezas con trabajos distintos**, porque una sola no podía con ambos:
 - **El riel** (`.cinta`, 11px de alto) es el **mapa**: proporción real del día y la línea verde de
   "ahora". Sin texto — a 45 minutos un tramo mide 40px y nunca cupo un nombre.
 - **Las fichas** (`.cinta-fic`) son **lo que se toca**: hora, nombre y duración, 60px de alto (por
-  encima del mínimo de 44px para el pulgar). Se deslizan con las flechas ‹ › y la activa se centra
-  sola al repintar.
+  encima del mínimo de 44px para el pulgar). Se deslizan con las flechas ‹ › y la del bloque en
+  curso se centra sola — ver abajo.
 
 **El ancho de cada ficha depende de la duración** (`anchoFicha`), con escala de **raíz cuadrada**:
 en el mismo carril conviven bloques de 10 min y de 5 h, y en proporción directa el largo mediría
@@ -180,8 +180,20 @@ tocar otra se perdía de vista cuál estaba pasando.
 
 Contraste invertido respecto a la versión vieja: **hecho = encendido, pendiente = apagado**.
 
-`centrarFichaActiva()` mueve `scrollLeft` a mano y **no** usa `scrollIntoView()`: esa función
-arrastraría también el scroll del carrusel y saltaría la pantalla entera en cada repintado.
+**La ficha en curso queda centrada, y vuelve al centro cada vez que entras a la pantalla.**
+`centrarFichaActiva()` centra `.sel` si tocaste alguna ficha y `.ahora` —la verde— si no, que es
+el caso normal. Salir de Mi Día limpia `cintaSel` igual que `diaSemanaSel`, así que al volver
+siempre encuentras centrado el bloque de ahora, no el que dejaste tocado.
+
+El centrado corre dos veces: al pintar la cinta y otra vez en el `requestAnimationFrame` de
+`showSlide(0)`. Hace falta el segundo pase porque `RENDERS[i]()` corre con el slide todavía
+inactivo y el carril puede medir 0 de ancho.
+
+Mueve `scrollLeft` a mano y **no** usa `scrollIntoView()`: esa función arrastraría también el
+scroll del carrusel y saltaría la pantalla entera en cada repintado. La cuenta va con
+`getBoundingClientRect()` y no con `offsetLeft` porque `.cinta-fic-scroll` no está posicionado —
+el `offsetParent` de una ficha acaba siendo el `<section>` del slide, y ese offset traía encima
+el padding del slide y de la tarjeta.
 
 ### La rutina
 

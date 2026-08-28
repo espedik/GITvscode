@@ -5215,15 +5215,26 @@ function durCorta(m){
   return r?h+' h '+r:h+' h';
 }
 
-// Deja la ficha activa centrada en su carril. A mano y no con scrollIntoView() a propósito: esa
-// función arrastraría también el scroll del slide, y "Mi Día" vive dentro de un carrusel a
-// pantalla completa — saltaría la pantalla entera cada vez que cambia el bloque activo.
+// Deja centrada en su carril la ficha que estás mirando: la que tocaste (`.sel`) si hay alguna, y
+// si no la del bloque de AHORA (`.ahora`, la verde), que es el caso normal.
+// A mano y no con scrollIntoView() a propósito: esa función arrastraría también el scroll del
+// slide, y "Mi Día" vive dentro de un carrusel a pantalla completa — saltaría la pantalla entera
+// cada vez que cambia el bloque activo.
+// Dos cosas que la tenían rota y por las que la cinta se quedaba pegada a la izquierda:
+//   · Buscaba solo `.sel`, y `.sel` y `.ahora` son EXCLUYENTES (ver el <button> de la ficha): en
+//     el caso normal —sin tocar ninguna— no existe ningún `.sel` y la función salía sin hacer nada.
+//   · La cuenta iba con offsetLeft, pero `.cinta-fic-scroll` no está posicionado: el offsetParent
+//     de una ficha acaba siendo el <section> del slide, así que offsetLeft traía encima el padding
+//     del slide y de la tarjeta y el centro caía corrido. Con getBoundingClientRect da igual
+//     quién esté posicionado.
 function centrarFichaActiva(wrap){
   const scr=wrap.querySelector('.cinta-fic-scroll'); if(!scr) return;
-  const s=scr.querySelector('.cinta-fic.sel'); if(!s) return;
+  const s=scr.querySelector('.cinta-fic.sel')||scr.querySelector('.cinta-fic.ahora'); if(!s) return;
+  const cr=scr.getBoundingClientRect(), sr=s.getBoundingClientRect();
+  if(!cr.width) return;              // el slide aún no tiene ancho; lo resuelve el 2º pase de showSlide
   const prev=scr.style.scrollBehavior;
   scr.style.scrollBehavior='auto';   // en un repintado se salta directo, sin animar el arrastre
-  scr.scrollLeft=Math.max(0, s.offsetLeft-(scr.clientWidth-s.offsetWidth)/2);
+  scr.scrollLeft=Math.max(0, scr.scrollLeft+(sr.left-cr.left)-(cr.width-sr.width)/2);
   scr.style.scrollBehavior=prev;
 }
 
@@ -6191,6 +6202,38 @@ function calRitmo(fase){
     corrido:corrido, largo:largo};
 }
 
+// El SEGUNDO objetivo financiero de la fase, en el orden que fija el propio Plan
+// Maestro: "1) fondo de emergencia, 2) abonos extra a BBVA". El ritmo del fondo ya
+// estaba; faltaba el de la tarjeta, que es la deuda que de verdad duele.
+//
+// El dato que manda aquí no es el plazo, es la comparación: a 55.7% anual el
+// interés mensual del saldo SUPERA al pago mínimo. Pagando el mínimo la deuda
+// sube, y la tarjeta no se liquida nunca — eso no se veía en ninguna pantalla.
+// Por eso el bloque enfrenta las dos cifras antes de proponer cualquier ritmo.
+function calRitmoTC(){
+  const tc=((D.fin&&D.fin.debts)||[]).find(d=>d.id==='d001');
+  if(!tc||!(tc.balance>0)) return null;
+  const iMes=(+tc.rate||0)/100/12;
+  const min=+tc.min||0;
+  const interes=tc.balance*iMes;
+  // Cuota fija que la liquida en 12 meses, con su interés dentro (amortización
+  // francesa). Dividir el saldo entre 12 daría un número optimista y falso.
+  const pmt=iMes>0?tc.balance*iMes/(1-Math.pow(1+iMes,-12)):tc.balance/12;
+  // Meses que tardaría pagando solo el mínimo. Si el mínimo no cubre el interés
+  // el logaritmo no existe: es que no se liquida nunca, y eso es lo que se dice.
+  const mesesMin=(min>interes&&iMes>0)?Math.ceil(-Math.log(1-tc.balance*iMes/min)/Math.log(1+iMes)):0;
+  return {
+    nombre:tc.name||'Tarjeta BBVA', saldo:tc.balance, tasa:+tc.rate||0, min:min,
+    interes:Math.round(interes),
+    crece:Math.round(interes-min),          // >0 → el mínimo no alcanza
+    pmt:Math.round(pmt),
+    porDia:Math.ceil(pmt*12/365),
+    diaSoloInteres:Math.ceil(interes*12/365),
+    mesesMin:mesesMin,
+    cubre:interes>0?Math.min(100,Math.round(min/interes*100)):100
+  };
+}
+
 function abrirCalendario(){
   const ov=document.getElementById('calOverlay');
   if(!ov) return;
@@ -6526,6 +6569,28 @@ function renderCalendario(){
         h+='<div class="cal-med" style="border-color:rgba(var(--g-rgb),.28);background:linear-gradient(140deg,rgba(var(--g-rgb),.1),transparent 75%)">'+
           '<div class="cal-med-k" style="color:var(--g)">Fondo de emergencia cerrado</div>'+
           '<div class="cal-med-s" style="margin-top:8px">Llegaste a '+money(r.meta)+'. Desde aquí todo excedente va a la deuda cara, sin excepciones.</div></div>';
+      }
+
+      // El objetivo 2 de la fase. Se pinta con el fondo abierto o cerrado: con el
+      // fondo abierto es lo que viene después, y con el fondo cerrado ya es EL
+      // objetivo. Lo que cambia es el encabezado, no la cuenta.
+      const t=calRitmoTC();
+      if(t){
+        const rojo=t.crece>0;                       // el mínimo no cubre el interés
+        const rgb=rojo?'var(--r-rgb)':'var(--o-rgb)', col=rojo?'var(--r)':'var(--o)';
+        h+='<div class="cal-med" style="border-color:rgba('+rgb+',.28);background:linear-gradient(140deg,rgba('+rgb+',.1),transparent 75%)">'+
+          '<div class="cal-med-h"><span class="cal-med-k" style="color:'+col+'">'+
+            (r.falta>0?'Después del fondo · ':'Ritmo requerido · ')+esc(t.nombre)+'</span>'+
+            '<span class="cal-med-d" style="color:'+col+'">'+money(t.saldo)+'</span></div>'+
+          '<div class="cal-ritmo-n"><b style="color:'+col+'">'+money(t.porDia)+'</b><span>/ día</span></div>'+
+          '<div class="cal-med-s">Ese ritmo la liquida en <b>12 meses</b> ('+money(t.pmt)+' al mes). '+
+            (rojo
+              ?'A <b>'+t.tasa+'%</b> anual el interés corre a <b>'+money(t.interes)+'</b> al mes y tu mínimo es <b>'+money(t.min)+'</b>: pagando solo el mínimo el saldo <b>sube '+money(t.crece)+' cada mes</b> y la tarjeta no se liquida nunca.'
+              :'Tu mínimo de <b>'+money(t.min)+'</b> sí cubre el interés de <b>'+money(t.interes)+'</b>, pero a ese ritmo tardarías <b>'+t.mesesMin+' meses</b>.')+
+            '</div>'+
+          '<div class="cal-barra"><i style="width:'+t.cubre+'%;background:linear-gradient(90deg,rgba('+rgb+',.45),'+col+')"></i></div>'+
+          '<div class="cal-barra-l"><span style="color:'+col+'">tu mínimo '+money(t.min)+' · cubre '+t.cubre+'%</span>'+
+            '<span>el interés corre a '+money(t.interes)+'/mes</span></div></div>';
       }
     }
 
@@ -8587,15 +8652,21 @@ function paintHudNav(){document.querySelectorAll('.hud-nav-btn').forEach((b,i)=>
 function showSlide(i){
   i=Math.min(Math.max(0,i),N-1);
   // Salir de "Mi Día" (slide 0) hacia cualquier otra pantalla resetea el día que se estaba
-  // explorando en la tira semanal — pedido explícito de Adán: si se va a otra parte del Dashboard
-  // y regresa, debe ver de nuevo la tarea activa de HOY, no quedarse trabado en un día viejo que
-  // dejó seleccionado sin darse cuenta.
-  if(cur===0&&i!==0) diaSemanaSel=null;
+  // explorando en la tira semanal Y la ficha que se estaba mirando en la cinta — pedido explícito
+  // de Adán: si se va a otra parte del Dashboard y regresa, debe ver de nuevo la tarea activa de
+  // HOY, no quedarse trabado en un día viejo ni en un bloque que dejó tocado sin darse cuenta.
+  // Es lo que hace que al volver quede centrada la ficha VERDE y no la última que tocó.
+  if(cur===0&&i!==0){ diaSemanaSel=null; cintaSel=null; }
   loadAll();
   RENDERS[i]();
   renderQuickApps();
   document.querySelectorAll('.slide').forEach(s=>s.classList.toggle('active',parseInt(s.dataset.i)===i));
   cur=i; paintDots(); paintHudNav();
+  // Volver a "Mi Día" re-centra la cinta en el bloque de ahora. Hace falta un segundo pase aquí
+  // —además del que ya hace pintarCintaDia()— porque RENDERS[i]() corre con el slide todavía
+  // inactivo: si estaba oculto, el carril puede medir 0 de ancho y el centro sale mal. Pedido de
+  // Adán: "hay veces que se mueve y no se regresa".
+  if(i===0) requestAnimationFrame(()=>{ const w=document.getElementById('cintaDia'); if(w) centrarFichaActiva(w); });
   const s=rawGet('dash-settings',null);
   if(s&&s.remember) saveSettings({lastSlide:i});
   if(document.getElementById('navMenuPanel').classList.contains('open')) renderNavMenu();
