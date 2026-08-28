@@ -178,7 +178,7 @@ window.CIFRAS = (function () {
     // no un dato medido de esta tarjeta.
     {id:'d002',name:'Tarjeta Banamex',               type:'credit_card',total:14349.72,  balance:0,         rate:55.7,  min:810,  day:8, start:'2024-06-18', noInterest:0},
     // Saldo reportado por Adán: $299,000 (24-ago) → $292,000 → $293,000 (25-ago-2026).
-    {id:'d003',name:'Crédito Automotriz',            type:'car',        total:315800,    balance:293000,    rate:12.99, min:6700, day:1, start:'2026-01-01', remainingMonths:61},
+    {id:'d003',name:'Crédito Automotriz',            type:'car',        total:315800,    balance:293000,    rate:12.99, min:6700, day:14, start:'2026-01-01', remainingMonths:61},
     // Queda 1 cuota, la del 18 sep 2026: la penúltima se pagó (confirmado el 25-ago-2026).
     {id:'d004',name:'Apple Watch MSI (TC Banamex)',  type:'other',      total:10248,     balance:854,      rate:0,     min:854,  day:18,start:'2025-09-16'},
     // d005 (Vuelo Viva Aerobus) y d006 (Mercado Libre) se ELIMINARON el 13 ago 2026: Adán
@@ -635,6 +635,19 @@ window.CIFRAS = (function () {
       hacer: function (f) {
         const aw = (f.debts || []).find(d => d.id === 'd004');
         if (aw) aw.balance = 854;
+      }
+    },
+    {
+      // 2026-08-28 · "credito automotriz no lo pago el los dias 1 primero". El seed tenía
+      // `day: 1` para d003, así que el calendario del Dashboard metía los $6,700 del auto
+      // en el globo del día 1, junto a la renta y la quincena. El día real es el 14 — es lo
+      // que dice DATOS-MAESTROS.md y lo que ya asumía el plan semanal de Finanzas, que
+      // coloca el auto en la semana 2. Solo se mueve `day`: el importe no cambia, así que
+      // ninguna derivada (`minimosDeuda`, `margen`) se entera.
+      flag: '_autoDia20260828',
+      hacer: function (f) {
+        const auto = (f.debts || []).find(d => d.id === 'd003');
+        if (auto) auto.day = 14;
       }
     },
   ];

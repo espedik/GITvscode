@@ -85,6 +85,23 @@ desde JS. En consola, `CIFRAS.tabla()` las lista con su valor actual.
 **Derivadas del auto**, que antes se escribían a mano y se quedaban congeladas:
 `{{autoAPagar}}` (meses × pago) y `{{autoInteres}}` (lo que cuesta en puro interés).
 
+**El día de pago vive en `day`**, dentro de cada entrada de `DEUDAS_SEED`. No tiene marcador
+porque no se escribe en prosa, pero **sí se dibuja**: el calendario del Dashboard arma con él el
+globo de "se mueve dinero" de cada día.
+
+| id | Deuda | `day` |
+|---|---|---|
+| `d003` | Crédito Automotriz | **14** |
+| `d001` | Tarjeta BBVA | 11 |
+| `d002` | Tarjeta Banamex | 8 |
+| `d004` | Apple Watch MSI | 18 |
+| `d009` `d010` `d011` | MSI de TC BBVA | 22 |
+
+El del auto estuvo en `1` hasta el 28-ago-2026 y el calendario metía sus $6,700 en el globo del
+día 1, junto a la renta. Adán: *"credito automotriz no lo pago el los dias 1 primero"*. Un `day`
+equivocado no mueve ninguna cifra — `minimosDeuda` y `margen` suman igual — así que no hay
+cálculo que lo delate: solo se ve en el calendario, mirando el día.
+
 ### Ahorro y metas
 
 | Marcador | Valor hoy | Origen |
