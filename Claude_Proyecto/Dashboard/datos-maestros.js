@@ -131,7 +131,10 @@ window.CIFRAS = (function () {
     cobros: [
       { dia:  1, txt: 'Renta',    get monto() { return PROYECTO.renta; } },
       { dia:  1, txt: 'Quincena', get monto() { return PROYECTO.sueldoQuinc; }, entra: true },
-      { dia: 14, txt: 'Quincena', get monto() { return PROYECTO.sueldoQuinc; }, entra: true },
+      // El 15, no el 14 (Adán, 2026-08-28). El plan semanal de Finanzas ya la trataba así
+      // — la mete en la semana 3 (días 15-21) y deja la semana 2 sin ingreso — pero aquí
+      // decía 14, así que el calendario y el plan se contradecían sin que nada lo notara.
+      { dia: 15, txt: 'Quincena', get monto() { return PROYECTO.sueldoQuinc; }, entra: true },
       { dia: 15, txt: 'CETES',    get monto() { return PROYECTO.cetesDia15; } },
       { dia: 17, txt: 'Gym',      get monto() { return PROYECTO.gym; } },
     ],
@@ -186,7 +189,11 @@ window.CIFRAS = (function () {
     // movimiento. Se borran en vez de ponerlos en $0 porque nunca fueron deuda suya.
     // Liquidados el 13 ago 2026 — se pagó la última de las 3 cuotas MSI.
     {id:'d007',name:'Boletos Ticketmaster (MSI)',   type:'other',      total:3780,      balance:0,         rate:0,     min:1260, day:0, start:'2026-04-20'},
-    {id:'d008',name:'iPhone 15 MSI',               type:'other',      total:13337.46,  balance:11361.54,  rate:0,     min:493.98,day:0, start:'2026-03-20'},
+    // No es un MSI de tarjeta aunque el nombre viejo lo dijera: es un crédito del propio
+    // AT&T, y se cobra el día 1 (Adán, 2026-08-28). `type:'other'` se mantiene porque esa
+    // categoría agrupa la deuda a 0% de interés, no solo los MSI de tarjeta — sigue contando
+    // en `deudaMsi` y fuera de `deudaCara`, que es lo correcto.
+    {id:'d008',name:'iPhone 15 (crédito AT&T)',    type:'other',      total:13337.46,  balance:11361.54,  rate:0,     min:493.98,day:1, start:'2026-03-20'},
     // MSI reales de la TC BBVA, leídos del estado de cuenta con corte del 22 jul 2026
     // (captura que mandó Adán el 13 ago 2026). El `start` de cada uno está puesto para que
     // `autoBalance()` reproduzca exactamente las cuotas ya cobradas: 30.44 días por mes desde
@@ -334,14 +341,14 @@ window.CIFRAS = (function () {
       {id:"s1-2",cont:true,txt:"Prioridad: cerrar el primer contrato freelance (Opción 2) + 1 post de seguimiento mensual de la plantilla GBM (Opción 1)."},
       {id:"s1-3",mes:"2026-11",txt:"En paralelo: primer post de mentoría pagada (Opción 3) — bajo riesgo, casi sin preparación."},
       {id:"s1-4",cont:true,txt:"Primer peso cobrado en Opción 1-3 → esas horas de Didi se mueven ahí (Opción 6), no antes."},
-      {id:"s1-5",cont:true,txt:"iPhone 15 MSI sigue corriendo ($494/mes) hasta jun 2028 — ya comprometido, no toca tu excedente nuevo."},
+      {id:"s1-5",cont:true,txt:"iPhone 15 (crédito AT&T) sigue corriendo ($494/mes) hasta jun 2028 — ya comprometido, no toca tu excedente nuevo."},
       {id:"s1-6",cont:true,txt:"Foco de habilidad (Radar): sube <strong>Copy</strong> (55→) escribiendo los posts, y <strong>Finanzas</strong> (20→) sosteniendo el presupuesto corregido. Solo estas dos."},
     ]},
     {start:new Date(2027,3,1),end:new Date(2028,11,31),tag:"Fase 2",title:"Doblar apuesta en lo que mostró tracción",meta:"BBVA liquidada, deuda cara en $0, ingreso extra estable de al menos $10,000–15,000/mes.",explica:"Fase 2 (abr 2027 – dic 2028) es la fase más larga. Con Banamex resuelta desde el 13 ago 2026 y BBVA proyectada a mar 2027, esta fase debería arrancar ya con la deuda cara en $0 — el excedente completo se va a doblar la apuesta en la opción de negocio que ya mostró tracción real, en vez de dispersarte entre varias.",semanas:[
       {id:"s2-1",mes:"2027-04",txt:"Elige la opción (1, 2 o 3) con ingreso recurrente real y concéntrate ahí — resiste saltar a \"algo mejor\"."},
       {id:"s2-2",mes:"2027-10",txt:"Con tracción sostenida, arranca la Opción 4 (CodeReview productizado) — único punto del plan que requiere capital, ya disponible tras liquidar BBVA."},
       {id:"s2-3",cont:true,txt:"Usa IA para construir tu propio sistema de ventas/argumentos — tu fuerza real, en vez de improvisar en vivo."},
-      {id:"s2-4",mes:"2028-06",txt:"Jun 2028: se libera el iPhone MSI ($494/mes) — súmalo a inversión, no a gasto nuevo."},
+      {id:"s2-4",mes:"2028-06",txt:"Jun 2028: se libera el iPhone de AT&T ($494/mes) — súmalo a inversión, no a gasto nuevo."},
       {id:"s2-5",cont:true,txt:"Foco de habilidad: sube <strong>Ventas</strong> (15→) y <strong>Marketing</strong> (20→) lo mínimo para vender la Opción 4 sin depender solo de referidos."},
     ]},
     {start:new Date(2029,0,1),end:new Date(2030,0,1),tag:"Fase 3",title:"Escalar, cerrar la brecha de $31,540/mes y reevaluar",meta:"Cerrar la distancia final a $1,000,000 líquido con el negocio como fuente principal de excedente.",explica:"Fase 3 (ene 2029 – ene 2030) es el cierre. Con la deuda cara ya en $0 desde la fase anterior, todo el excedente nuevo va directo a cerrar la brecha final hacia $1,000,000 de patrimonio líquido — la meta central de todo el Plan Maestro.",semanas:[
@@ -648,6 +655,18 @@ window.CIFRAS = (function () {
       hacer: function (f) {
         const auto = (f.debts || []).find(d => d.id === 'd003');
         if (auto) auto.day = 14;
+      }
+    },
+    {
+      // 2026-08-28 · "se paga el 1 de sep, pero no es ningun credito con tarjetas, es un
+      // credito de AT&T". d008 tenía `day: 0`, que para el calendario significa "sin día": una
+      // deuda viva de $494 al mes que no aparecía en ninguna fecha. Salió al añadir el control
+      // 9 del verificador, que ahora exige día de pago a toda deuda con saldo y mínimo.
+      // El nombre también mentía: decía "MSI" y no es de tarjeta.
+      flag: '_iphoneAtt20260828',
+      hacer: function (f) {
+        const ip = (f.debts || []).find(d => d.id === 'd008');
+        if (ip) { ip.day = 1; ip.name = 'iPhone 15 (crédito AT&T)'; }
       }
     },
   ];

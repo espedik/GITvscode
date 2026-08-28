@@ -314,6 +314,125 @@ const sinComentarios = s => s.replace(/\/\*[\s\S]*?\*\//g, '')
   else ok.push('Todos los {{marcadores}} existen en el catálogo (' + conocidos.size + ' variables)');
 })();
 
+/* ── 9. La FORMA de los datos, no solo sus importes ──────────────────────────────
+   Los ocho controles de arriba vigilan que los NÚMEROS coincidan entre sitios. Ninguno miraba
+   si el dato tiene sentido en sí mismo, y ese fue el hueco: el 2026-08-28 se descubrió que el
+   crédito automotriz tenía `day: 1` cuando se paga el 14. El calendario lo pintaba junto a la
+   renta y nada saltó — un `day` equivocado no mueve ninguna cifra, así que `minimosDeuda` y
+   `margen` seguían cuadrando y los .md seguían al día.
+
+   Lo que se comprueba aquí no se puede derivar de otro archivo: es coherencia interna.
+   El caso que más duele es el que abre la lista — una deuda viva a la que nadie le puso día
+   de pago simplemente NO existe para el calendario, sin aviso de ninguna clase. */
+(function formaDeLosDatos() {
+  if (!global.window || !global.window.CIFRAS) return;
+  const C = global.window.CIFRAS, P = C.PROYECTO, D = C.DEUDAS_SEED, CAL = C.CALENDARIO;
+  const malos = [];
+  const esFecha = s => typeof s === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(s) && !isNaN(new Date(s));
+
+  /* Día 1-28 y no 1-31: un pago fijado el 30 no existe en febrero, así que el calendario lo
+     perdería un mes de cada doce. Si alguna vez hay uno real, esto es lo que hay que discutir. */
+  const DIA_MAX = 28;
+
+  // a) Deudas vivas sin día de pago: invisibles en el calendario.
+  D.filter(d => +d.balance > 0 && +d.min > 0).forEach(function (d) {
+    if (!(d.day >= 1 && d.day <= DIA_MAX && d.day % 1 === 0))
+      malos.push('     ' + d.id + ' (' + d.name + ') tiene saldo vivo y mínimo de $' +
+        Math.round(d.min).toLocaleString('es-MX') + '/mes, pero day=' + d.day +
+        ' — nunca aparece en el calendario');
+  });
+
+  // b) Forma de cada registro de deuda.
+  const CAMPOS = {id:'string', name:'string', type:'string', total:'number',
+                  balance:'number', rate:'number', min:'number', day:'number'};
+  D.forEach(function (d) {
+    Object.keys(CAMPOS).forEach(function (k) {
+      if (typeof d[k] !== CAMPOS[k])
+        malos.push('     ' + d.id + '.' + k + ' es ' + typeof d[k] + ', se esperaba ' + CAMPOS[k]);
+    });
+    if (!esFecha(d.start)) malos.push('     ' + d.id + '.start no es una fecha YYYY-MM-DD: ' + d.start);
+    if (+d.balance > +d.total)
+      malos.push('     ' + d.id + ' debe más de lo que costó: balance ' + d.balance + ' > total ' + d.total);
+    ['balance','total','min','rate'].forEach(function (k) {
+      if (+d[k] < 0) malos.push('     ' + d.id + '.' + k + ' es negativo: ' + d[k]);
+    });
+  });
+
+  // c) Ids únicos: dos deudas con el mismo id y una de las dos deja de existir.
+  const vistos = {};
+  D.forEach(function (d) {
+    if (vistos[d.id]) malos.push('     id repetido en DEUDAS_SEED: ' + d.id);
+    vistos[d.id] = 1;
+  });
+
+  // d) Las sumas de PROYECTO. Son getters, así que no pueden desfasarse solas — pero sí si
+  //    alguien añade un servicio nuevo y se olvida de meterlo en el getter.
+  [['ingresoTotal', P.sueldo + P.didiMes + P.siVale],
+   ['servicios', P.celular + P.internet + P.gas + P.luzAgua + P.limpieza],
+   ['suscripciones', P.gym + P.claudeCode + P.icloud],
+   ['fijosTotal', P.renta + P.servicios + P.suscripciones]].forEach(function (par) {
+    if (Math.abs(P[par[0]] - par[1]) > 0.005)
+      malos.push('     PROYECTO.' + par[0] + ' da ' + P[par[0]] + ' y la suma de sus partes es ' + par[1]);
+  });
+
+  // e) Los cobros fijos del calendario.
+  (CAL && CAL.cobros || []).forEach(function (c) {
+    if (!(c.dia >= 1 && c.dia <= DIA_MAX)) malos.push('     cobro "' + c.txt + '" con día ' + c.dia + ' (fuera de 1-' + DIA_MAX + ')');
+    if (typeof c.monto !== 'number' || !isFinite(c.monto)) malos.push('     cobro "' + c.txt + '" sin monto numérico');
+  });
+  (CAL && CAL.hitos || []).forEach(function (h) {
+    if (!esFecha(h.fecha)) malos.push('     hito "' + h.txt + '" con fecha inválida: ' + h.fecha);
+  });
+
+  // f) Las fechas sueltas de PROYECTO.
+  ['entrevistaWayve','maestriaInicio','inicioCenlex','maestriaPausa'].forEach(function (k) {
+    if (!esFecha(P[k])) malos.push('     PROYECTO.' + k + ' no es una fecha YYYY-MM-DD: ' + P[k]);
+  });
+
+  // g) Las fases no se solapan ni dejan huecos.
+  (C.PHASES || []).forEach(function (f, i) {
+    if (f.end < f.start) malos.push('     ' + f.tag + ' termina antes de empezar');
+    if (i > 0) {
+      const hueco = Math.round((f.start - C.PHASES[i-1].end) / 86400000);
+      if (hueco < 1) malos.push('     ' + C.PHASES[i-1].tag + ' y ' + f.tag + ' se solapan');
+      if (hueco > 1) malos.push('     hueco de ' + hueco + ' días entre ' + C.PHASES[i-1].tag + ' y ' + f.tag);
+    }
+  });
+
+  if (malos.length) problemas.push('Datos del maestro mal formados:\n' + malos.join('\n'));
+  else ok.push('Forma de los datos — deudas, cobros, fechas y sumas del maestro son coherentes (' +
+    D.length + ' deudas, ' + ((CAL && CAL.cobros || []).length) + ' cobros fijos)');
+})();
+
+/* ── 10. La tabla de días de pago del .md contra el maestro ─────────────────────────
+   El control 7 compara los IMPORTES citados en los .md, y por eso no vio el día del auto: 14 no
+   es una cantidad de dinero. Esta tabla —`| `d003` | Crédito Automotriz | **14** |`— es la única
+   documentación del `day`, así que se comprueba fila a fila. Documentar un dato que nadie
+   verifica es exactamente cómo se desincronizó todo lo demás. */
+(function diasDocumentados() {
+  if (!global.window || !global.window.CIFRAS) return;
+  const C = global.window.CIFRAS;
+  let txt; try { txt = leer('Dashboard/DATOS-MAESTROS.md'); } catch (e) { return; }
+  const malas = [];
+  let filas = 0;
+  txt.split('\n').forEach(function (linea, i) {
+    // | `d003` | Crédito Automotriz | **14** |   ·   ids agrupados: | `d009` `d010` | … | 22 |
+    const m = linea.match(/^\s*\|((?:\s*`d\d{3}`)+)\s*\|[^|]*\|\s*\**(\d{1,2})\**\s*\|/);
+    if (!m) return;
+    const dia = +m[2];
+    (m[1].match(/d\d{3}/g) || []).forEach(function (id) {
+      const d = (C.DEUDAS_SEED || []).find(x => x.id === id);
+      filas++;
+      if (!d) malas.push('     DATOS-MAESTROS.md:' + (i+1) + ' cita ' + id + ', que no existe en DEUDAS_SEED');
+      else if (+d.day !== dia)
+        malas.push('     DATOS-MAESTROS.md:' + (i+1) + ' · ' + id + ' (' + d.name + ') documentado el día ' +
+          dia + ' y en el maestro es el ' + d.day);
+    });
+  });
+  if (malas.length) problemas.push('Días de pago desfasados entre el .md y el maestro:\n' + malas.join('\n'));
+  else if (filas) ok.push('Los días de pago del .md coinciden con el maestro (' + filas + ' comprobados)');
+})();
+
 /* ── Impacto de lo que cambió en esta sesión ──────────────────────────────────────────────────
    Si `datos-maestros.js` cambió respecto al último commit, se comparan los valores de entonces
    con los de ahora y se dice qué se movió — incluido lo ARRASTRADO. Es la parte que Adán

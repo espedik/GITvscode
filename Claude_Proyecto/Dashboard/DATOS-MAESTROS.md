@@ -91,16 +91,31 @@ globo de "se mueve dinero" de cada día.
 
 | id | Deuda | `day` |
 |---|---|---|
-| `d003` | Crédito Automotriz | **14** |
-| `d001` | Tarjeta BBVA | 11 |
+| `d008` | iPhone 15 · crédito AT&T | 1 |
 | `d002` | Tarjeta Banamex | 8 |
+| `d001` | Tarjeta BBVA | 11 |
+| `d003` | Crédito Automotriz | **14** |
 | `d004` | Apple Watch MSI | 18 |
 | `d009` `d010` `d011` | MSI de TC BBVA | 22 |
 
-El del auto estuvo en `1` hasta el 28-ago-2026 y el calendario metía sus $6,700 en el globo del
-día 1, junto a la renta. Adán: *"credito automotriz no lo pago el los dias 1 primero"*. Un `day`
-equivocado no mueve ninguna cifra — `minimosDeuda` y `margen` suman igual — así que no hay
-cálculo que lo delate: solo se ve en el calendario, mirando el día.
+**Un `day` equivocado no mueve ninguna cifra** — `minimosDeuda` y `margen` suman igual — así que
+ningún cálculo lo delata: solo se ve en el calendario, mirando el día. Dos casos, los dos el
+28-ago-2026:
+
+- El del auto estaba en `1` y el calendario metía sus $6,700 junto a la renta.
+  Adán: *"credito automotriz no lo pago el los dias 1 primero"*.
+- El del iPhone estaba en `0`, que para el calendario significa *sin día*: una deuda viva de
+  $494 al mes que **no aparecía en ninguna fecha**. Lo encontró el control 9 del verificador,
+  añadido a raíz del primero.
+
+Por eso el **control 9** exige día a toda deuda con saldo y mínimo, y el **control 10** compara
+esta tabla contra el maestro fila a fila. Documentar un dato que nadie verifica es justo como se
+desincronizó todo lo demás.
+
+⚠️ **`deudaMsi` no son solo los MSI de tarjeta.** El criterio real es `type === 'other'` con saldo
+vivo, o sea **deuda a 0% de interés**: ahí entra el crédito de AT&T del iPhone, que no es de
+ninguna tarjeta. Es lo correcto para el plan — no es deuda cara y no compite con la TC BBVA —
+pero el nombre de la variable se queda corto.
 
 ### Ahorro y metas
 
@@ -148,7 +163,7 @@ CIFRAS.CALENDARIO.hitos    // [{fecha, txt, sub}] — fechas duras que no salen 
 
 | | Qué trae | De dónde sale el número |
 |---|---|---|
-| `cobros` | Renta día 1, quincena días 1 y 14, CETES día 15, gym día 17 | El **monto** es un getter sobre `PROYECTO`: si sube la renta o vuelve a cambiar el gimnasio, el calendario se entera solo. El **día** vive aquí — hasta el 26-ago-2026 solo existía como comentario al lado de la cifra, o sea que ninguna app podía leerlo. |
+| `cobros` | Renta día 1, quincena días 1 y 15, CETES día 15, gym día 17 | El **monto** es un getter sobre `PROYECTO`: si sube la renta o vuelve a cambiar el gimnasio, el calendario se entera solo. El **día** vive aquí — hasta el 26-ago-2026 solo existía como comentario al lado de la cifra, o sea que ninguna app podía leerlo. |
 | `hitos` | Decisión Maestría (18 jul 2027) y arranque de la Maestría (1 oct 2028) | `PROYECTO.maestriaPausa` y `PROYECTO.maestriaInicio`. |
 
 **Regla al agregar: si una fecha se puede derivar de un dato que ya existe, NO va aquí.** Por eso
@@ -276,6 +291,17 @@ Qué revisa:
 - **Que los valores citados en los `.md`** coincidan con el maestro, con archivo y línea. Este es
   el que faltaba: los getters se recalculan solos, las tablas de la documentación no.
 - Los `{{marcadores}}` que no existan en el catálogo.
+- **La FORMA de los datos, no solo sus importes** (control 9). Los ocho anteriores vigilan que
+  los números coincidan entre sitios; ninguno miraba si el dato tiene sentido en sí mismo. Aquí
+  se exige día de pago a toda deuda con saldo y mínimo, tipos correctos en cada campo, fechas
+  reales, `balance <= total`, ids únicos, cobros dentro de 1-28, fases sin huecos ni solapes, y
+  que las sumas de `PROYECTO` cuadren con sus partes.
+- **La tabla de días de pago del `.md` contra el maestro** (control 10), fila a fila. El control 7
+  compara importes y por eso no veía un día: 14 no es una cantidad de dinero.
+
+Los dos últimos nacieron el 28-ago-2026, del `day` del auto. Un `day` equivocado no mueve ninguna
+cifra, así que ningún control anterior podía verlo. El 9 encontró de paso un segundo caso que
+llevaba meses: el iPhone, con `day: 0`, no aparecía en ninguna fecha del calendario.
 
 Los valores **no están escritos en el verificador**: los pide al maestro. Tenerlos a mano era el
 mismo fallo que persigue — con `$292,000` en su lista seguía vigilando el saldo viejo.
