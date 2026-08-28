@@ -547,7 +547,11 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 .cinta-fichas{display:flex;gap:8px;align-items:center}
 /* scrollbar oculta a propósito: las flechas ‹ › y el arrastre son la forma de moverse, y una
    barra de scroll nativa debajo de las fichas rompe la altura de la fila. */
-.cinta-fic-scroll{display:flex;gap:8px;overflow-x:auto;scroll-behavior:smooth;flex:1;min-width:0;
+/* `overscroll-behavior-x:contain` corta el encadenamiento: al llegar al final de la tira, el
+   gesto NO pasa al contenedor de atrás ni dispara el swipe-atrás de Safari. Sin `touch-action`
+   a propósito — fijándolo a pan-x el dedo dejaría de poder bajar la página desde la cinta. */
+.cinta-fic-scroll{display:flex;gap:8px;overflow-x:auto;overscroll-behavior-x:contain;
+  scroll-behavior:smooth;flex:1;min-width:0;
   padding:2px 0;scrollbar-width:none;-ms-overflow-style:none}
 .cinta-fic-scroll::-webkit-scrollbar{display:none}
 /* `--fw` la escribe el JS ficha por ficha (ver anchoFicha). Los 148px son solo el respaldo por si
@@ -8775,11 +8779,35 @@ document.addEventListener('keydown',e=>{
 // Swipe táctil (iPad/iPhone) — un dedo, izq/der cambia de pantalla, igual que las flechas del teclado.
 // Solo se dispara si el gesto es más horizontal que vertical, para no pelearse con el scroll
 // vertical normal del contenido de la pantalla (necesario en tablet/celular, ver @media arriba).
+//
+// 2026-08-28 · Adán, sobre la cinta de Mi Día: "cuando deslizo aquí en mi iPad, se mueve de
+// página y no quiero eso, quiero ver las otras tareas". El gesto nacía dentro de la tira de
+// fichas, burbujeaba hasta #slides y cambiaba de pantalla — así que en tablet no había forma
+// de llegar a los bloques que no cabían en la primera vista.
+//
+// La regla: si el dedo empieza dentro de algo que TIENE scroll horizontal propio, ese gesto es
+// suyo. Se resuelve mirando el DOM en el momento del toque, no con una lista de clases: hoy son
+// siete tiras (la cinta, las pestañas de meses y de la lista de compras, el vocabulario de
+// alemán, el índice de los .md, las tablas y los bloques de código) y la que se añada mañana
+// queda cubierta sin tocar esto.
 (function(){
   const slidesEl=document.getElementById('slides');
   let touchStartX=0, touchStartY=0, touching=false;
+
+  // Solo cuenta si de verdad hay algo que desplazar: un contenedor con overflow-x:auto cuyo
+  // contenido cabe entero no le quita el swipe a nadie.
+  function enTiraHorizontal(el){
+    for(let n=el; n && n!==slidesEl; n=n.parentElement){
+      if(n.nodeType!==1) continue;
+      const ox=getComputedStyle(n).overflowX;
+      if((ox==='auto'||ox==='scroll') && n.scrollWidth > n.clientWidth+1) return true;
+    }
+    return false;
+  }
+
   slidesEl.addEventListener('touchstart',e=>{
     if(e.touches.length!==1) return; // ignora pellizcar/zoom con 2 dedos
+    if(enTiraHorizontal(e.target)) { touching=false; return; }
     touching=true;
     touchStartX=e.touches[0].clientX;
     touchStartY=e.touches[0].clientY;

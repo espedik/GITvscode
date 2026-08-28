@@ -189,6 +189,28 @@ El centrado corre dos veces: al pintar la cinta y otra vez en el `requestAnimati
 `showSlide(0)`. Hace falta el segundo pase porque `RENDERS[i]()` corre con el slide todavía
 inactivo y el carril puede medir 0 de ancho.
 
+**En táctil, la tira se queda su propio gesto.** El swipe de cambio de pantalla vive en `#slides`
+y se dispara con cualquier arrastre horizontal de más de 50px, viniera de donde viniera: al
+deslizar las fichas en un iPad, el gesto burbujeaba y cambiaba de pantalla. Medido en iPad
+(820×1180) el carril enseña **616px de 3,126px de fichas**, así que sin deslizar no hay forma de
+llegar a la mayoría de los bloques del día.
+
+El `touchstart` de `#slides` ahora consulta el DOM en el momento del toque y se retira si el dedo
+empezó dentro de algo con scroll horizontal **real** (`overflow-x` auto/scroll y
+`scrollWidth > clientWidth`). Se resuelve mirando el árbol y no con una lista de clases: hoy hay
+siete tiras así — la cinta, las pestañas de meses y de la lista de compras, el vocabulario de
+alemán, el índice de los `.md`, las tablas y los bloques de código — y la que se añada mañana
+queda cubierta sin tocar nada.
+
+La tira lleva además `overscroll-behavior-x: contain`, que corta el encadenamiento: al llegar al
+final, el gesto no pasa al contenedor de atrás ni dispara el swipe-atrás de Safari. **No** lleva
+`touch-action`, a propósito — fijarlo a `pan-x` impediría bajar la página con el dedo sobre la
+cinta.
+
+Comprobado con gestos táctiles reales (`Input.dispatchTouchEvent`) en iPad y iPhone, contra la
+versión anterior: antes el mismo swipe cambiaba de pantalla, ahora las fichas avanzan 245px y la
+pantalla se queda. Deslizar **fuera** de la tira sigue cambiando de pantalla.
+
 Mueve `scrollLeft` a mano y **no** usa `scrollIntoView()`: esa función arrastraría también el
 scroll del carrusel y saltaría la pantalla entera en cada repintado. La cuenta va con
 `getBoundingClientRect()` y no con `offsetLeft` porque `.cinta-fic-scroll` no está posicionado —
