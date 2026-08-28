@@ -49,11 +49,11 @@ const problemas = [], avisos = [], ok = [];
 
 const maestro = leer('Dashboard/datos-maestros.js');
 const dash    = leer('Dashboard/dashboard.html');
-const coach   = leer('Coach/Coach_v2.html');
+const coach   = leer('Coach/Coach.html');
 const ejer    = leer('CuidadoPersonal/ejercicio.html');
 const finz    = leer('Finanzas/Finanzas.html');
 
-const APPS = [['Dashboard/dashboard.html', dash], ['Coach/Coach_v2.html', coach],
+const APPS = [['Dashboard/dashboard.html', dash], ['Coach/Coach.html', coach],
               ['Finanzas/Finanzas.html', finz]];
 
 const sinComentarios = s => s.replace(/\/\*[\s\S]*?\*\//g, '')
@@ -277,7 +277,7 @@ const sinComentarios = s => s.replace(/\/\*[\s\S]*?\*\//g, '')
   if (!global.window || !global.window.CIFRAS) return;
   const C = global.window.CIFRAS;
   const DOCS = ['Dashboard/DATOS-MAESTROS.md', 'Dashboard/readme_dashboard.md',
-                'Coach/readme_coach_v2.md', 'Finanzas/readme_finanzas.md'];
+                'Coach/readme_coach.md', 'Finanzas/readme_finanzas.md'];
   const malas = [];
   DOCS.forEach(function (rel) {
     let txt; try { txt = leer(rel); } catch (e) { return; }

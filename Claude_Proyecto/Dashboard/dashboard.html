@@ -38,6 +38,10 @@
   --bg:#05050a; --text:#f4f4f8; --text2:#9a9db3; --text3:#8589a8;
   --card:rgba(var(--ov),.06); --card-br:rgba(var(--ov),.13);
   --g:#00e87a; --o:#ff8a3d; --b:#3b82f6; --p:#b06eff; --p-l:rgba(176,110,255,.16); --w:#ffd93d; --r:#ff5c5c; --cy:#00e0c0;
+  /* Los mismos acentos como triple RGB. Hacen falta para componer rgba(...) con alfa
+     variable a partir de un color del tema — el calendario del año pinta con eso los
+     bordes y fondos de cada nivel de urgencia, y un hex no se puede meter en rgba(). */
+  --g-rgb:0,232,122; --o-rgb:255,138,61; --r-rgb:255,92,92; --cy-rgb:0,224,192; --w-rgb:255,217,61;
   --font:'Inter',-apple-system,sans-serif; --mono:'Space Grotesk',monospace; --font-title:'Fraunces',Georgia,serif;
   --ov:255,255,255; --bar:rgba(6,6,14,.65); --bar2:rgba(10,10,20,.55);
 }
@@ -45,6 +49,7 @@
   --bg:#f2f2f6; --text:#16161a; --text2:#5c5f70; --text3:#63667c;
   --card:rgba(255,255,255,.85); --card-br:rgba(var(--ov),.12);
   --g:#00a758; --o:#b8632c; --b:#2563eb; --p:#7f4fb8; --p-l:rgba(127,79,184,.14); --w:#a8790a; --r:#c81e3a; --cy:#047a6b;
+  --g-rgb:0,167,88; --o-rgb:184,99,44; --r-rgb:200,30,58; --cy-rgb:4,122,107; --w-rgb:168,121,10;
   --ov:0,0,0; --bar:rgba(255,255,255,.72); --bar2:rgba(255,255,255,.6);
 }
 :root[data-theme="light"] .slide::before,:root[data-theme="light"] .slide::after{opacity:.12}
@@ -1089,6 +1094,7 @@ a.rt2-sub-prod:hover{text-decoration:underline}
 @media(max-width:900px){.coach-cols{grid-template-columns:1fr}}
 
 /* Lista de Compras */
+.lc-tabs{display:flex;gap:6px;flex-wrap:wrap}
 .lc-tab{padding:7px 15px;border-radius:20px;border:1px solid rgba(var(--ov),.12);background:rgba(var(--ov),.05);color:var(--text2);font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;transition:all .2s;white-space:nowrap}
 .lc-tab:hover{background:rgba(var(--ov),.09)}
 .lc-tab.active{background:var(--ac1);color:#06170f;border-color:var(--ac1)}
@@ -1157,38 +1163,142 @@ a.rt2-sub-prod:hover{text-decoration:underline}
 .ev-btn:hover{background:rgba(var(--ov),.14);color:var(--text)}
 .ev-btn-ok{border-color:rgba(0,232,122,.45);color:var(--g)}
 .ev-btn-ok:hover{background:rgba(0,232,122,.16)}
-/* Columnas por ancho disponible, no 3 fijas (2026-08-19). Reportado por Adán: "sigue sin verse
-   bien la version de ipad de la lista de compras, no se ve ordenada se ve bien descuadrada".
-   Con 3 columnas fijas, en iPad horizontal cada una quedaba en 284px y el contenido del renglón
-   —nombre + precio + contador + subtotal— no cabía en una línea: los 30 renglones se partían en
-   dos. En iPad vertical era peor, porque unos se partían y otros no: alturas de 30, 36 y 56px
-   mezcladas en la misma cuadrícula, que es de donde venía el aspecto descuadrado.
-   El mínimo de 340px es el ancho medido en que un renglón entra en una sola línea. Escritorio
-   conserva sus 3 columnas (1140px útiles / 340 = 3), iPad baja a 2 y el celular a 1. */
-.lc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:2px 20px}
-.lc-item{display:flex;align-items:center;flex-wrap:wrap;gap:5px 8px;padding:4px 0;border-bottom:1px solid rgba(var(--ov),.05)}
-.lc-item input[type="checkbox"]{margin-top:3px;width:13px;height:13px;accent-color:var(--g);cursor:pointer;flex-shrink:0}
-.lc-item label{font-size:12px;color:var(--text2);line-height:1.4;cursor:pointer}
-.lc-item label.lc-item-txt{flex:1;min-width:0}
-.lc-item input:checked+label{color:var(--text3);text-decoration:line-through}
-/* Dos tiendas por producto (Amazon + Mercado Libre) — Adán quiere comparar en ambas, no una sola */
-.lc-item-shop{display:flex;gap:6px;margin-left:21px;flex-basis:100%}
-.lc-shop-link{font-size:10px;font-weight:700;color:var(--cy);text-decoration:none;padding:2px 7px;border-radius:10px;background:rgba(var(--ov),.05);white-space:nowrap}
-.lc-shop-link:hover{background:rgba(var(--ov),.1);text-decoration:underline}
-/* Precio real (ticket de Walmart) vs. estimado, junto a cada producto de "Comida" (2026-08-11) */
-.lc-price{display:inline-flex;align-items:center;gap:3px;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:800;font-family:var(--mono);white-space:nowrap;flex-shrink:0}
-.lc-price-real{background:rgba(0,232,122,.12);color:var(--g);border:1px solid rgba(0,232,122,.3)}
-.lc-price-est{background:rgba(255,138,61,.12);color:var(--o);border:1px solid rgba(255,138,61,.3)}
-/* 2026-08-12 — píldora neutra de "cantidad típica = importe": no es un precio de mercado (por eso
-   no va en verde ni naranja, que ya significan "real" vs "estimado"), es lo que ESA cantidad te
-   va a costar, y es el número que suma el total de la barra de arriba. */
-.lc-price-compra{background:rgba(var(--ov),.06);color:var(--text3);border:1px solid rgba(var(--ov),.12)}
-.lc-price-leyenda{display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:11px;color:var(--text3);margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid rgba(var(--ov),.08)}
-/* Contador por producto (2026-08-15) — pedido: "no me pongas el precio unitario, eso calculalo
-   tu, mejor dame la opcion que en cosas asi como fruta, tenga la opcion de añadir el mismo
-   producto, osea un contador y al final tu me das el precio a prox". Sustituye a la píldora del
-   precio por kg/pza, que se quitó de la UI: el número unitario sigue en LISTA_COMPRAS_PRECIOS y
-   se usa para calcular, pero ya no se muestra — lo que se ve es la cantidad y lo que costará. */
+/* ═══ LISTA DE COMPRAS — rediseño 2026-08-27 ══════════════════════════════════
+   Pedido de Adán: "mejora el diseño de dashboard de compras, quiero algo futurista y moderno
+   y algo que me ayude a precios, links, cantidades, suma, checklist, resuelve las proporciones
+   de vegetales, frutas y verduras". Tres decisiones explican todo lo que sigue:
+
+   1. EL RENGLÓN CABE EN UNA LÍNEA. Antes `.lc-item-shop` traía `flex-basis:100%`, así que los
+      links SIEMPRE bajaban a un segundo renglón y en la misma cuadrícula convivían alturas de
+      30, 36 y 56px — de ahí venía el "se ve descuadrado" de iPad que se intentó arreglar el
+      2026-08-19 subiendo la columna a 340px. Ahora el orden es
+      checkbox · nombre · píldora · precio unitario · contador · tiendas · subtotal,
+      todo inline, y la columna mínima sube a 430px porque ahora sí cabe todo en una línea.
+   2. EL CONTADOR CUENTA PIEZAS (2026-08-27, pedido: "las cantidades en comida, maneja mejor por
+      pieza, por que no siempre agarro el kg"). Ver `paso`/`base` en LISTA_COMPRAS_PRECIOS.
+   3. VERDURAS, FRUTAS Y ALMIDONES SON PASILLOS DISTINTOS y se miden contra una meta — el bloque
+      `.lc-prop`. Antes los 13 productos vivían en un solo pasillo "Frutas y Verduras" y no había
+      forma de ver que el canasto llevaba casi tanta fruta como verdura.
+
+   El aire "futurista" no es un degradado encima: es tipografía monoespaciada con cifras
+   tabulares, marco de esquinas tipo HUD, medidores segmentados y un barrido lento sobre la barra
+   de totales. Todo pintado con los tokens del tema (var(--g), var(--o), rgba(var(--ov),…)), así
+   que el tema claro sigue funcionando sin una sola regla extra. */
+
+/* ── Barra HUD de totales ─────────────────────────────────────────────────── */
+.lc-hud{position:relative;display:flex;align-items:stretch;flex-wrap:wrap;border-radius:18px;
+  border:1px solid var(--card-br);background:rgba(var(--ov),.05);overflow:hidden;margin-bottom:12px}
+/* Barrido lento: el único elemento animado del slide. Se apaga con prefers-reduced-motion. */
+.lc-hud::after{content:'';position:absolute;left:0;top:0;bottom:0;width:30%;pointer-events:none;
+  background:linear-gradient(90deg,transparent,rgba(var(--ov),.05),transparent);
+  animation:lcSweep 7s linear infinite}
+@keyframes lcSweep{0%{transform:translateX(-110%)}100%{transform:translateX(340%)}}
+@media(prefers-reduced-motion:reduce){.lc-hud::after{animation:none;opacity:0}}
+/* Esquinas de HUD, encima del radio del contenedor */
+.lc-hud i.lc-brk{position:absolute;width:14px;height:14px;border:1.5px solid var(--ac1);opacity:.5;pointer-events:none}
+.lc-hud i.lc-brk.tl{top:-1px;left:-1px;border-right:0;border-bottom:0;border-radius:10px 0 0 0}
+.lc-hud i.lc-brk.br{bottom:-1px;right:-1px;border-left:0;border-top:0;border-radius:0 0 10px 0}
+.lc-hud-cell{position:relative;padding:13px 18px;display:flex;flex-direction:column;gap:3px;justify-content:center}
+.lc-hud-cell+.lc-hud-cell{border-left:1px solid rgba(var(--ov),.09)}
+.lc-hud-cap{font-size:9px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--text3)}
+.lc-hud-big{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:30px;font-weight:700;
+  line-height:1;color:var(--g);text-shadow:0 0 22px rgba(var(--g-rgb),.3)}
+.lc-hud-mid{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:21px;font-weight:700;line-height:1.15;color:var(--text)}
+.lc-hud-note{font-size:10px;font-weight:600;color:var(--text3)}
+.lc-hud-grow{flex:1;min-width:230px;gap:7px}
+.lc-hud-bar{height:6px;border-radius:3px;background:rgba(var(--ov),.09);overflow:hidden}
+.lc-hud-bar i{display:block;height:100%;border-radius:3px;background:var(--ac1);box-shadow:0 0 12px var(--ac1);transition:width .3s ease}
+.lc-hud-row{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
+.lc-hud-n{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:11.5px;font-weight:800;color:var(--text2)}
+.lc-hud-chips{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.lc-chip{padding:2px 8px;border-radius:9px;font-size:9.5px;font-weight:800;font-family:var(--mono);white-space:nowrap;
+  background:rgba(var(--ov),.05);border:1px solid rgba(var(--ov),.1);color:var(--text3)}
+.lc-chip.ok{background:rgba(var(--cy-rgb),.1);border-color:rgba(var(--cy-rgb),.28);color:var(--cy)}
+.lc-chip.warn{background:rgba(var(--o-rgb),.1);border-color:rgba(var(--o-rgb),.28);color:var(--o)}
+.lc-chip.good{background:rgba(var(--g-rgb),.1);border-color:rgba(var(--g-rgb),.28);color:var(--g)}
+.lc-hud-act{padding:13px 16px;display:flex;align-items:center;margin-left:auto}
+.lc-hud-vacio{padding:14px 18px;font-size:12px;font-weight:600;color:var(--text3)}
+
+/* ── Proporciones: verduras · frutas · almidones · grasas ─────────────────── */
+.lc-prop{border-radius:18px;border:1px solid var(--card-br);background:rgba(var(--ov),.045);
+  padding:14px 18px 16px;margin-bottom:12px;display:flex;flex-direction:column;gap:11px}
+.lc-prop-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.lc-prop-t{font-size:11px;font-weight:800;letter-spacing:.13em;text-transform:uppercase;color:var(--text)}
+.lc-prop-sub{font-size:10.5px;font-weight:600;color:var(--text3)}
+.lc-prop-meta-lbl{font-family:var(--mono);font-size:10.5px;font-weight:800;color:var(--text3)}
+.lc-prop-bar{position:relative;height:22px;border-radius:8px;background:rgba(var(--ov),.06);border:1px solid rgba(var(--ov),.09)}
+.lc-prop-fill{position:absolute;inset:0;border-radius:8px;overflow:hidden;display:flex}
+.lc-prop-fill i{height:100%;transition:width .35s cubic-bezier(.22,.61,.36,1)}
+/* Marca de la meta: la línea vertical dice dónde DEBERÍA terminar cada tramo */
+.lc-prop-tick{position:absolute;top:-4px;bottom:-4px;width:1.5px;background:rgba(var(--ov),.45)}
+.lc-prop-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.lc-prop-cell{display:flex;flex-direction:column;gap:2px;padding-left:9px;border-left:2px solid}
+.lc-prop-nom{font-size:9.5px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--text2)}
+.lc-prop-line{display:flex;align-items:baseline;gap:7px;flex-wrap:wrap}
+.lc-prop-pct{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:15px;font-weight:800;line-height:1.1}
+.lc-prop-obj{font-family:var(--mono);font-size:9.5px;font-weight:700;color:var(--text3)}
+.lc-prop-g{font-family:var(--mono);font-size:10.5px;font-weight:700;color:var(--text2)}
+.lc-prop-d{font-family:var(--mono);font-size:10px;font-weight:800}
+.lc-prop-coach{display:flex;align-items:center;gap:9px;flex-wrap:wrap;padding-top:10px;
+  border-top:1px solid rgba(var(--ov),.08);font-size:11.5px;font-weight:600;color:var(--text2)}
+/* Sugerencia accionable: un clic mete la cantidad de una semana de ese producto */
+.lc-sug{display:inline-flex;align-items:center;gap:5px;padding:4px 9px;border-radius:9px;cursor:pointer;
+  font-family:inherit;font-size:10px;font-weight:700;border:1px dashed rgba(var(--g-rgb),.42);
+  background:rgba(var(--g-rgb),.07);color:var(--g);transition:background .15s,border-style .15s}
+.lc-sug:hover{background:rgba(var(--g-rgb),.16);border-style:solid}
+.lc-sug b{font-family:var(--mono);font-weight:800;opacity:.75}
+
+/* ── Pasillos ─────────────────────────────────────────────────────────────── */
+.lc-aisle{margin-top:14px}
+.lc-aisle:first-child{margin-top:0}
+.lc-aisle-title{display:flex;align-items:center;gap:9px;font-size:10.5px;font-weight:800;text-transform:uppercase;
+  letter-spacing:.08em;color:var(--text);margin-bottom:6px;padding-bottom:5px;border-bottom:1px solid rgba(var(--ov),.1)}
+/* La regla de color del pasillo es la MISMA que su tramo en la barra de proporciones: es lo que
+   ata la lista con el medidor sin tener que repetir la leyenda. */
+.lc-aisle-rule{width:3px;height:13px;border-radius:2px;flex-shrink:0;background:rgba(var(--ov),.22)}
+.lc-aisle-ct{font-family:var(--mono);font-size:9.5px;font-weight:800;color:var(--text3)}
+.lc-aisle-sub{margin-left:auto;font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:11px;font-weight:800;color:var(--text2)}
+
+/* ── Renglón ──────────────────────────────────────────────────────────────── */
+/* 430px es el ancho medido en que el renglón completo —con links— entra en una línea. Escritorio
+   da 2 columnas, iPad 2, celular 1. (Antes eran 340px SIN los links, que iban en otro renglón.) */
+.lc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(430px,1fr));gap:0 26px}
+.lc-item{display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid rgba(var(--ov),.05)}
+.lc-item:hover{background:rgba(var(--ov),.025)}
+/* `display:contents` en escritorio (todo en la misma línea flex) y contenedor real en celular,
+   donde este grupo baja a un segundo renglón — ver el @media de abajo. */
+.lc-item-meta{display:contents}
+.lc-item input[type="checkbox"]{appearance:none;-webkit-appearance:none;position:relative;flex-shrink:0;
+  width:17px;height:17px;margin:0;border-radius:5px;border:1.5px solid rgba(var(--ov),.22);
+  background:rgba(var(--ov),.04);cursor:pointer;transition:background .16s,border-color .16s,box-shadow .16s}
+.lc-item input[type="checkbox"]:hover{border-color:rgba(var(--ov),.45)}
+.lc-item input[type="checkbox"]:checked{background:var(--g);border-color:var(--g);box-shadow:0 0 12px rgba(var(--g-rgb),.45)}
+.lc-item input[type="checkbox"]:checked::after{content:'';position:absolute;left:5px;top:1.5px;width:4px;height:9px;
+  border:solid #04140b;border-width:0 2.2px 2.2px 0;transform:rotate(45deg)}
+:root[data-theme="light"] .lc-item input[type="checkbox"]:checked::after{border-color:#fff}
+.lc-item input[type="checkbox"]:focus-visible{outline:2px solid var(--ac1);outline-offset:2px}
+/* El nombre ya no se tacha al marcar: con el cuadro verde y el subtotal encendido el estado se
+   lee igual, y el tachado se reserva para "Ya lo tengo" de las otras categorías. */
+.lc-item label.lc-item-txt{flex:1;min-width:0;font-size:12px;font-weight:500;color:var(--text2);
+  line-height:1.35;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lc-item.on label.lc-item-txt{color:var(--text);font-weight:600}
+
+/* Píldora de cantidad: punto lleno = precio de tu ticket, punto hueco = estimado. Forma + color,
+   para que también se distinga en escala de grises. */
+.lc-price{display:inline-flex;align-items:center;gap:5px;padding:2px 8px;border-radius:9px;
+  font-size:9.5px;font-weight:800;font-family:var(--mono);white-space:nowrap;flex-shrink:0}
+.lc-price i{width:5px;height:5px;border-radius:1.5px;flex-shrink:0;display:block}
+.lc-price-real{background:rgba(var(--g-rgb),.1);color:var(--g);border:1px solid rgba(var(--g-rgb),.28)}
+.lc-price-real i{background:var(--g)}
+.lc-price-est{background:rgba(var(--o-rgb),.09);color:var(--o);border:1px solid rgba(var(--o-rgb),.26)}
+.lc-price-est i{border:1.5px solid var(--o)}
+.lc-price-nil{background:rgba(var(--ov),.04);color:var(--text3);border:1px dashed rgba(var(--ov),.16)}
+.lc-price-nil i{border:1.5px solid var(--text3)}
+/* Precio de UNA pieza/paquete. Vuelve a la UI el 2026-08-27 —se había quitado el 15-ago— porque
+   ahora sí es el número que se multiplica por el contador, no un $/kg que obligaba a hacer la
+   regla de tres de cabeza. */
+.lc-unit{width:58px;flex-shrink:0;text-align:right;font-family:var(--mono);font-variant-numeric:tabular-nums;
+  font-size:9.5px;font-weight:800;color:var(--text3);white-space:nowrap}
 .lc-qty{display:inline-flex;align-items:center;border-radius:7px;overflow:hidden;flex-shrink:0;
   border:1px solid rgba(var(--ov),.14);background:rgba(var(--ov),.05)}
 .lc-qty button{width:19px;height:19px;border:none;background:transparent;color:var(--text2);
@@ -1196,56 +1306,106 @@ a.rt2-sub-prod:hover{text-decoration:underline}
   display:flex;align-items:center;justify-content:center}
 .lc-qty button:hover{background:rgba(var(--ov),.14);color:var(--text)}
 .lc-qty button:disabled{opacity:.3;cursor:default;background:transparent}
-.lc-qty .lc-qty-n{min-width:19px;text-align:center;font-family:var(--mono);font-size:11px;
-  font-weight:800;color:var(--text)}
-/* Subtotal de ESE renglón = monto de la cantidad típica × el contador. Verde cuando lleva más
-   de 1, para que se note de un vistazo dónde se está yendo el ticket. */
-.lc-sub{font-family:var(--mono);font-size:11px;font-weight:800;color:var(--text3);flex-shrink:0}
-.lc-sub.mult{color:var(--g)}
+.lc-qty .lc-qty-n{min-width:20px;text-align:center;font-family:var(--mono);font-variant-numeric:tabular-nums;
+  font-size:11px;font-weight:800;color:var(--text3)}
+.lc-item.on .lc-qty-n{color:var(--text)}
+.lc-sub{width:46px;flex-shrink:0;text-align:right;font-family:var(--mono);font-variant-numeric:tabular-nums;
+  font-size:11px;font-weight:800;color:var(--text3);opacity:.5}
+.lc-item.on .lc-sub{opacity:1;color:var(--text2)}
+.lc-sub.mult{color:var(--g);opacity:1}
+/* Dos tiendas por producto, ahora también en Comida (Walmart + Amazon) */
+.lc-item-shop{display:flex;gap:4px;flex-shrink:0}
+.lc-shop-link{padding:2px 7px;border-radius:7px;background:rgba(var(--ov),.05);border:1px solid rgba(var(--ov),.09);
+  font-size:8.5px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--text3);
+  text-decoration:none;white-space:nowrap;transition:background .15s,color .15s,border-color .15s}
+.lc-shop-link:hover{background:rgba(var(--cy-rgb),.12);border-color:rgba(var(--cy-rgb),.3);color:var(--cy)}
+
+.lc-price-leyenda{display:flex;align-items:center;gap:14px;flex-wrap:wrap;font-size:10px;font-weight:600;
+  color:var(--text3);margin-bottom:12px;padding-bottom:9px;border-bottom:1px solid rgba(var(--ov),.08)}
+.lc-leg-dot{width:5px;height:5px;border-radius:1.5px;display:inline-block;vertical-align:middle;margin-right:5px}
+
 /* ─── "Ya lo tengo" (2026-08-19) ───
    Pedido explícito: "ademas quiero otro check para cosas que ya tengo". Son DOS preguntas
    distintas sobre el mismo producto — "¿lo llevo hoy?" (el checkbox de siempre) y "¿ya está en
    mi casa?" — así que son dos controles, no tres estados de uno. Lo que ya tienes no suma al
-   total ni cuenta como pendiente: desaparece del cálculo sin desaparecer de la lista, que es lo
-   que pasaría si simplemente lo borraras. Vive en su propia clave (`dash-lista-tengo`), así que
-   marcar/desmarcar la compra no lo pisa. */
-.lc-tengo-btn{font-size:9.5px;font-weight:800;letter-spacing:.02em;white-space:nowrap;flex-shrink:0;
-  padding:2px 8px;border-radius:10px;cursor:pointer;font-family:inherit;
+   total ni cuenta como pendiente: desaparece del cálculo sin desaparecer de la lista. Vive en su
+   propia clave (`dash-lista-tengo`), así que marcar/desmarcar la compra no lo pisa. */
+.lc-tengo-btn{font-size:9px;font-weight:800;letter-spacing:.02em;white-space:nowrap;flex-shrink:0;
+  padding:2px 8px;border-radius:9px;cursor:pointer;font-family:inherit;
   border:1px solid rgba(var(--ov),.14);background:rgba(var(--ov),.04);color:var(--text3);
   transition:background .15s,color .15s,border-color .15s}
 .lc-tengo-btn:hover{background:rgba(var(--ov),.12);color:var(--text2)}
-.lc-tengo-btn.on{background:rgba(0,232,122,.16);color:var(--g);border-color:rgba(0,232,122,.42)}
-.lc-tengo-btn.on:hover{background:rgba(0,232,122,.24)}
-/* El renglón entero se apaga, pero sin tachado: el tachado ya significa "marcado para llevar"
-   en esta lista, y usarlo para las dos cosas haría imposible distinguirlas de un vistazo. */
+.lc-tengo-btn.on{background:rgba(var(--g-rgb),.16);color:var(--g);border-color:rgba(var(--g-rgb),.42)}
+.lc-tengo-btn.on:hover{background:rgba(var(--g-rgb),.24)}
 .lc-item-tengo{opacity:.5}
-.lc-item-tengo label.lc-item-txt{cursor:default}
+.lc-item-tengo label.lc-item-txt{cursor:default;text-decoration:line-through}
 .lc-item-tengo input[type="checkbox"]{visibility:hidden}
-/* Barra de totales — las categorías sin precio de ticket (todo menos comida) muestran los dos
-   totales de plataforma, que es el dato que sí tienen: cuánto sale en Amazon y cuánto en M. Libre. */
-.lc-total-sub{font-size:10px;color:var(--text3);font-weight:700}
-.lc-total-tengo{font-size:10px;font-weight:800;color:var(--g);white-space:nowrap}
-.lc-total-falta{font-size:10px;font-weight:700;color:var(--o);white-space:nowrap;cursor:help}
-/* Subtotal por pasillo, alineado a la derecha del nombre del pasillo */
-.lc-aisle-sub{margin-left:auto;font-family:var(--mono);font-size:11px;font-weight:800;
-  color:var(--g);letter-spacing:0;text-transform:none}
-.lc-aisle-title{display:flex;align-items:baseline;gap:8px}
-/* Barra de totales: ticket de hoy + proyección mensual */
-.lc-total{display:inline-flex;align-items:baseline;gap:14px;flex-wrap:wrap}
-.lc-total-main b{color:var(--g)}
-.lc-total-main small{font-family:inherit;font-size:11px;font-weight:600;color:var(--text3)}
-.lc-total-mes{font-size:12px;color:var(--text3);cursor:default}
-.lc-total-mes b{color:var(--text2)}
-.lc-total-vacio{color:var(--text3);font-weight:600}
-/* Total marcado (solo Comida) + botón para vaciar el checklist de la categoría activa (2026-08-11) */
-.lc-toolbar{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:12px}
-.lc-total{font-size:12.5px;font-weight:800;color:var(--text);font-family:var(--mono);cursor:default}
-.lc-clear-btn{padding:6px 13px;border-radius:20px;border:1px solid rgba(255,92,92,.3);background:rgba(255,92,92,.08);color:var(--r);font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap;transition:background .2s}
-.lc-clear-btn:hover{background:rgba(255,92,92,.16)}
-.lc-aisle{margin-top:16px}
-.lc-aisle:first-child{margin-top:0}
-.lc-aisle-title{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:var(--ac1);margin-bottom:6px;padding-bottom:5px;border-bottom:1px solid rgba(var(--ov),.1)}
-@media(max-width:900px){.lc-grid{grid-template-columns:repeat(2,1fr)}}
+
+.lc-clear-btn{padding:6px 13px;border-radius:20px;border:1px solid rgba(var(--r-rgb),.3);
+  background:rgba(var(--r-rgb),.08);color:var(--r);font-size:11px;font-weight:700;cursor:pointer;
+  font-family:inherit;white-space:nowrap;transition:background .2s}
+.lc-clear-btn:hover{background:rgba(var(--r-rgb),.16)}
+
+/* ── Celular: todo más compacto (2026-08-27, pedido: "la version celular hazlo todo mas compacto")
+   El renglón pasa a DOS líneas cortas en vez de una larga que se partía sola: arriba checkbox +
+   nombre + subtotal (lo que buscas de un vistazo), abajo la píldora, el precio unitario, el
+   contador y las tiendas. Con `display:contents` en escritorio esto no cuesta ni un div extra.
+   Altura uniforme de ~44px contra las de 30/36/56 mezcladas de antes. */
+@media(max-width:900px){.lc-grid{grid-template-columns:repeat(auto-fill,minmax(400px,1fr))}}
+@media(max-width:760px){
+  .lc-hud{border-radius:14px;margin-bottom:9px}
+  .lc-hud-cell{padding:7px 12px;flex:1 1 42%;min-width:0}
+  .lc-hud-grow{gap:5px}
+  .lc-chip-ref{display:none}
+  .lc-hud-cell+.lc-hud-cell{border-left:0}
+  .lc-hud-big{font-size:21px}
+  .lc-hud-mid{font-size:16px}
+  .lc-hud-note{display:none}
+  .lc-hud-grow{flex:1 1 100%;border-top:1px solid rgba(var(--ov),.09)}
+  .lc-hud-act{flex:1 1 100%;justify-content:flex-end}
+
+  /* El título del slide y las 4 cifras de proporción son lo que empujaba la lista fuera de
+     pantalla. El título baja a 20px y cada cifra se queda solo con su nombre y su %: los gramos
+     y el desfase ya los dice la frase de abajo con todas sus letras, ahí sí eran duplicado. */
+  .theme-lista .slide-title{font-size:20px;margin-bottom:8px}
+  .lc-prop{padding:10px 12px 11px;border-radius:14px;gap:7px;margin-bottom:9px}
+  .lc-prop-sub{display:none}
+  .lc-prop-t{font-size:10px;letter-spacing:.1em}
+  .lc-prop-meta-lbl{font-size:9.5px}
+  .lc-prop-bar{height:18px}
+  .lc-prop-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+  .lc-prop-cell{padding-left:6px}
+  .lc-prop-nom{font-size:8.5px;letter-spacing:.05em}
+  .lc-prop-pct{font-size:13px}
+  .lc-prop-obj{display:none}
+  .lc-prop-cell .lc-prop-line+.lc-prop-line{display:none}
+  .lc-prop-coach{font-size:10.5px;gap:6px;padding-top:8px}
+  .lc-sug{font-size:9.5px;padding:4px 8px}
+  /* Dos sugerencias caben en un renglón; la tercera costaba 30px de alto por poco más. */
+  .lc-sug:nth-of-type(n+3){display:none}
+  /* De la leyenda se quedan los dos puntos de color, que es lo que no se adivina. */
+  .lc-price-leyenda span:nth-child(n+3){display:none}
+  .lc-hud-act{padding:0 12px 9px}
+  .lc-hud-act .lc-clear-btn{padding:5px 12px;font-size:10px}
+
+  .lc-grid{grid-template-columns:1fr;gap:0}
+  .lc-aisle{margin-top:11px}
+  .lc-aisle-title{font-size:9.5px;margin-bottom:4px;padding-bottom:4px}
+  .lc-item{flex-wrap:wrap;gap:1px 8px;padding:3px 0}
+  .lc-item input[type="checkbox"]{order:1}
+  .lc-item label.lc-item-txt{order:2;font-size:12.5px}
+  .lc-sub{order:3}
+  .lc-item-meta{order:4;display:flex;align-items:center;gap:6px;flex-basis:100%;padding-left:0}
+  .lc-price{font-size:9px;padding:2px 7px;flex-shrink:1;min-width:0;overflow:hidden}
+  .lc-unit{width:auto;font-size:9px}
+  .lc-item-shop{margin-left:auto;gap:3px}
+  .lc-shop-link{font-size:8px;padding:2px 5px}
+  .lc-tengo-btn{font-size:8.5px;padding:2px 6px}
+  .lc-price-leyenda{gap:9px;font-size:9.5px;margin-bottom:9px;padding-bottom:7px}
+  .lc-tabs{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;-ms-overflow-style:none}
+  .lc-tabs::-webkit-scrollbar{display:none}
+  .lc-tab{flex-shrink:0;padding:5px 11px;font-size:11px}
+}
 
 /* ─── ALEMÁN DEL DÍA — tema de idioma que rota una vez al día (2026-08-04) ─ */
 .theme-aleman .slide-inner,.theme-entrevista .slide-inner{justify-content:flex-start}
@@ -2040,70 +2200,245 @@ a.rt2-sub-prod:hover{text-decoration:underline}
 .dia-reloj:hover{background:rgba(var(--ov),.08)}
 .dia-reloj::after{content:'📅';font-size:11px;opacity:.5;margin-left:2px}
 
+/* ─── CALENDARIO DEL AÑO — rediseño "de presión" (2026-08-26) ─────────────────
+   Pedido de Adán: "dame un diseño que me aporte mucho más a la fecha de mis metas y
+   deadlines para meterme presión y acabarlas". El calendario anterior pintaba 12
+   cuadrículas neutras: sabías qué día era, pero no cuánto tiempo llevabas gastado ni
+   qué vence. Cuatro piezas cargan esa idea, y todas salen de datos que ya existían:
+
+     .cal-quema  · barra de combustión del año — 12 segmentos y la aguja de HOY.
+     .cal-hero   · cuenta regresiva del próximo hito CON TRABAJO SIN CERRAR detrás.
+                   No el más cercano a secas: un cargo automático no es una meta.
+     .cal-dia.ido· los días ya vividos se apagan y los meses cerrados llevan trama
+                   diagonal. El tiempo gastado tiene que verse gastado.
+     .cal-ritmo  · lo que falta del fondo entre los días que quedan de fase. Convierte
+                   una meta en cuota diaria, que es el único formato que se puede
+                   cumplir hoy.
+
+   Todo el color sale de las variables del tema (incluidos los --*-rgb que se agregaron
+   arriba para esto), así que la pieza funciona igual en claro y en oscuro. */
 .cal-overlay{position:fixed;inset:0;z-index:220;background:rgba(0,0,0,.72);backdrop-filter:blur(6px);
-  display:flex;align-items:center;justify-content:center;padding:4vh 4vw;opacity:0;pointer-events:none;
+  display:flex;align-items:center;justify-content:center;padding:3vh 3vw;opacity:0;pointer-events:none;
   transition:opacity .22s ease}
 .cal-overlay.open{opacity:1;pointer-events:auto}
-.cal-card{width:min(1180px,100%);max-height:92vh;overflow-y:auto;border-radius:20px;position:relative;
+.cal-card{width:min(1340px,100%);max-height:94vh;overflow-y:auto;border-radius:20px;position:relative;
   background:var(--card);border:1px solid rgba(var(--ov),.12);box-shadow:0 24px 70px rgba(0,0,0,.5);
   transform:translateY(18px);transition:transform .22s ease}
 .cal-overlay.open .cal-card{transform:translateY(0)}
-.cal-head{position:sticky;top:0;z-index:2;padding:16px 22px 13px;background:var(--card);
-  border-bottom:1px solid rgba(var(--ov),.08);display:flex;align-items:center;gap:14px;flex-wrap:wrap}
-.cal-head h2{font-size:clamp(16px,2vw,21px);font-weight:900;color:var(--text);margin:0}
-.cal-yearnav{display:flex;align-items:center;gap:6px;margin-left:auto}
-.cal-yearnav button{width:28px;height:28px;border-radius:8px;border:1px solid rgba(var(--ov),.12);
-  background:rgba(var(--ov),.05);color:var(--text);cursor:pointer;font-size:14px;font-family:inherit}
+/* Rejilla técnica de fondo: da profundidad sin competir con el contenido. */
+.cal-card::before{content:'';position:absolute;inset:0;pointer-events:none;z-index:0;border-radius:20px;
+  background-image:linear-gradient(rgba(var(--ov),.032) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(var(--ov),.032) 1px,transparent 1px);
+  background-size:56px 56px;
+  -webkit-mask-image:radial-gradient(900px 640px at 50% 0%,#000 8%,transparent 78%);
+  mask-image:radial-gradient(900px 640px at 50% 0%,#000 8%,transparent 78%)}
+.cal-head{position:sticky;top:0;z-index:3;padding:18px 24px 15px;background:var(--card);
+  backdrop-filter:blur(18px);border-bottom:1px solid rgba(var(--ov),.08);
+  display:flex;align-items:flex-end;gap:18px;flex-wrap:wrap}
+.cal-eyebrow{font-size:9.5px;font-weight:800;letter-spacing:.26em;text-transform:uppercase;
+  color:var(--text3);display:flex;align-items:center;gap:8px}
+.cal-year-big{font-family:var(--mono);font-size:clamp(30px,3.6vw,50px);font-weight:700;line-height:.95;
+  letter-spacing:-.035em;color:var(--text);margin-top:7px}
+.cal-restan{text-align:right;margin-left:auto}
+.cal-restan b{display:block;font-family:var(--mono);font-size:clamp(20px,2.2vw,28px);font-weight:700;
+  line-height:1;letter-spacing:-.02em;color:var(--cy)}
+.cal-restan .cal-eyebrow{margin-top:5px;justify-content:flex-end}
+.cal-sep{width:1px;height:40px;background:rgba(var(--ov),.1)}
+.cal-yearnav{display:flex;align-items:center;gap:7px}
+.cal-yearnav button{width:30px;height:30px;border-radius:9px;border:1px solid rgba(var(--ov),.12);
+  background:rgba(var(--ov),.05);color:var(--text);cursor:pointer;font-size:14px;font-family:inherit;
+  display:flex;align-items:center;justify-content:center}
 .cal-yearnav button:hover{background:rgba(var(--ov),.14)}
 .cal-yearnav button:disabled{opacity:.3;cursor:default}
-.cal-year{font-family:var(--mono);font-size:15px;font-weight:800;color:var(--text);min-width:52px;text-align:center}
+.cal-year{font-family:var(--mono);font-size:15px;font-weight:700;color:var(--text);min-width:46px;text-align:center}
 .cal-close{width:30px;height:30px;border-radius:50%;border:none;cursor:pointer;
   background:rgba(var(--ov),.1);color:var(--text);font-size:14px;line-height:1;flex-shrink:0}
 .cal-close:hover{background:rgba(var(--ov),.18)}
-.cal-body{padding:14px 22px 24px}
-/* Los 12 meses */
-.cal-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
-.cal-mes{border-radius:13px;padding:9px 10px 10px;cursor:pointer;border:1px solid rgba(var(--ov),.07);
-  background:rgba(var(--ov),.04);transition:border-color .16s,background .16s}
-.cal-mes:hover{background:rgba(var(--ov),.08)}
-.cal-mes.sel{border-color:var(--cy);background:rgba(var(--ov),.09)}
-.cal-mes-h{display:flex;align-items:baseline;gap:6px;margin-bottom:6px}
-.cal-mes-n{font-size:12.5px;font-weight:800;color:var(--text);text-transform:capitalize}
-.cal-mes-fase{font-size:8.5px;font-weight:900;letter-spacing:.04em;padding:1px 5px;border-radius:4px;margin-left:auto}
-.cal-dow,.cal-dias{display:grid;grid-template-columns:repeat(7,1fr);gap:1px}
-.cal-dow span{font-size:8px;font-weight:800;color:var(--text3);text-align:center;padding-bottom:2px}
-.cal-dia{aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:9.5px;
-  color:var(--text2);border-radius:4px;font-family:var(--mono)}
+.cal-body{padding:20px 24px 26px;position:relative;z-index:1}
+
+/* La barra de combustión del año */
+.cal-quema{display:flex;align-items:flex-start;gap:20px;margin:16px 0 24px}
+.cal-quema-rail{flex:1;position:relative;min-width:0}
+.cal-quema-segs{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:4px}
+.cal-seg{height:9px;border-radius:2px;background:rgba(var(--ov),.07);overflow:hidden}
+.cal-seg i{display:block;height:100%;border-radius:2px;background:rgba(var(--ov),.24)}
+.cal-seg.viva i{background:linear-gradient(90deg,var(--cy),var(--g))}
+.cal-seg-l{font-size:8.5px;font-weight:800;letter-spacing:.1em;text-align:center;margin-top:5px;
+  color:var(--text3);opacity:.65}
+.cal-seg-l.viva{color:var(--cy);opacity:1}
+.cal-aguja{position:absolute;top:-6px;height:21px;width:2px;background:var(--cy);border-radius:2px;
+  box-shadow:0 0 12px var(--cy)}
+.cal-aguja-l{position:absolute;top:-28px;transform:translateX(-50%);font-family:var(--mono);
+  font-size:8.5px;font-weight:700;letter-spacing:.16em;color:var(--bg);background:var(--cy);
+  padding:2px 8px;border-radius:20px;white-space:nowrap}
+.cal-pct{text-align:right;flex-shrink:0}
+.cal-pct b{font-family:var(--mono);font-size:16px;font-weight:700;color:var(--text)}
+.cal-pct .cal-eyebrow{font-size:8.5px;margin-top:3px;justify-content:flex-end}
+
+/* La cuenta regresiva dominante y las fichas de lo que vence */
+.cal-top{display:grid;grid-template-columns:236px minmax(0,1fr);gap:11px;margin-bottom:16px}
+.cal-hero{border-radius:16px;padding:13px 15px;border:1px solid;position:relative;overflow:hidden}
+.cal-hero-k{font-size:9px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;
+  display:flex;align-items:flex-start;gap:6px;line-height:1.4}
+.cal-hero-n{display:flex;align-items:baseline;gap:9px;margin-top:10px}
+.cal-hero-d{font-family:var(--mono);font-size:clamp(40px,4.2vw,54px);font-weight:700;line-height:.8;
+  letter-spacing:-.045em}
+.cal-hero-u{font-family:var(--mono);font-size:11.5px;font-weight:700;letter-spacing:.18em;display:block}
+.cal-hero-f{font-size:9.5px;color:var(--text3);margin-top:3px;letter-spacing:.04em}
+.cal-hero-t{font-size:12.5px;font-weight:700;color:var(--text);margin-top:11px;line-height:1.3}
+.cal-hero-s{font-size:10.5px;color:var(--text2);margin-top:4px;line-height:1.45}
+.cal-fichas{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;align-content:start}
+.cal-ficha{border-radius:13px;padding:10px 12px 11px;border:1px solid;position:relative;overflow:hidden}
+.cal-ficha-h{display:flex;align-items:baseline;gap:8px}
+.cal-ficha-k{font-size:8.5px;font-weight:900;letter-spacing:.14em;text-transform:uppercase}
+.cal-ficha-d{font-family:var(--mono);font-size:19px;font-weight:700;line-height:1;letter-spacing:-.02em;
+  margin-left:auto;white-space:nowrap}
+.cal-ficha-d small{font-size:10px;font-weight:700}
+.cal-ficha-t{font-size:11px;font-weight:700;color:var(--text);line-height:1.3;margin-top:6px}
+.cal-ficha-s{font-size:10px;color:var(--text3);line-height:1.35;margin-top:2px;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.cal-ficha-b{position:absolute;left:0;right:0;bottom:0;height:2px;background:rgba(var(--ov),.07)}
+.cal-ficha-b i{display:block;height:100%}
+
+/* Los 12 meses, con el panel del mes elegido a la derecha */
+.cal-cuerpo{display:grid;grid-template-columns:minmax(0,1fr) 356px;gap:22px;align-items:start}
+.cal-izq{min-width:0}
+.cal-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.cal-mes{border-radius:14px;padding:11px 12px 10px;cursor:pointer;border:1px solid rgba(var(--ov),.07);
+  background:rgba(var(--ov),.025);position:relative;overflow:hidden;
+  transition:border-color .18s,background .18s,transform .18s}
+.cal-mes:hover{background:rgba(var(--ov),.06);transform:translateY(-2px)}
+.cal-mes.ido{opacity:.42}
+.cal-mes.mini{align-self:start;padding-bottom:11px}
+.cal-mes.mini .cal-mes-pie{margin-top:7px;padding-top:7px;min-height:0}
+.cal-mes.ido::after{content:'';position:absolute;inset:0;pointer-events:none;
+  background:repeating-linear-gradient(135deg,rgba(var(--ov),.05) 0 1px,transparent 1px 7px)}
+.cal-mes.ahora{border-color:rgba(var(--cy-rgb),.5);background:rgba(var(--cy-rgb),.05);
+  box-shadow:0 0 0 1px rgba(var(--cy-rgb),.16),0 0 32px rgba(var(--cy-rgb),.12)}
+.cal-mes.sel{border-color:var(--text);background:rgba(var(--ov),.08);
+  box-shadow:0 0 0 1px rgba(var(--ov),.28),0 12px 34px rgba(0,0,0,.4)}
+.cal-mes-h{display:flex;align-items:center;gap:8px}
+.cal-mes-n{font-size:13px;font-weight:800;color:var(--text);text-transform:capitalize;letter-spacing:-.01em}
+.cal-mes.ido .cal-mes-n{color:var(--text3)}
+.cal-mes-fase{font-size:8px;font-weight:900;letter-spacing:.09em;padding:2px 6px;border-radius:5px;
+  margin-left:auto;text-transform:uppercase;white-space:nowrap}
+.cal-dow,.cal-dias{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
+.cal-dow{margin:8px 0 3px}
+.cal-dow span{font-size:8px;font-weight:800;letter-spacing:.06em;color:var(--text3);text-align:center;opacity:.65}
+.cal-dia{height:23px;display:flex;align-items:center;justify-content:center;font-family:var(--mono);
+  font-size:10px;font-weight:600;color:var(--text2);border-radius:6px;position:relative}
 .cal-dia.vacio{visibility:hidden}
-.cal-dia.hoy{background:var(--cy);color:#06170f;font-weight:900}
-.cal-dia.finde{color:var(--text3);opacity:.55}
-.cal-dia.conEvento{box-shadow:inset 0 -2px 0 var(--o)}
-/* Detalle del mes elegido */
-.cal-det{margin-top:16px;border-radius:14px;border:1px solid rgba(var(--ov),.08);
-  background:rgba(var(--ov),.03);padding:15px 17px}
-.cal-det-h{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-bottom:4px}
-.cal-det-mes{font-size:16px;font-weight:900;color:var(--text);text-transform:capitalize}
-.cal-det-badge{font-size:9.5px;font-weight:900;letter-spacing:.04em;padding:2px 8px;border-radius:20px}
-.cal-det-title{font-size:12px;color:var(--text2);margin-bottom:10px;line-height:1.4}
-.cal-sec{font-size:11px;font-weight:900;letter-spacing:.05em;text-transform:uppercase;color:var(--text3);
-  margin:13px 0 6px;display:flex;align-items:center;gap:6px}
-.cal-item{display:flex;align-items:flex-start;gap:8px;font-size:12px;color:var(--text2);
-  line-height:1.4;padding:5px 0;border-bottom:1px solid rgba(var(--ov),.05)}
-.cal-item:last-child{border-bottom:none}
-.cal-item.done{color:var(--text3);text-decoration:line-through}
-.cal-item-ico{flex-shrink:0;font-size:12px;width:16px;text-align:center}
-.cal-vacio{font-size:12px;color:var(--text3);font-style:italic;padding:6px 0}
-.cal-prog{display:flex;align-items:center;gap:9px;margin-top:10px;font-size:11px;color:var(--text3)}
-.cal-prog-bar{flex:1;height:5px;border-radius:5px;background:rgba(var(--ov),.1);overflow:hidden}
-.cal-prog-fill{height:100%;border-radius:5px;background:linear-gradient(90deg,var(--g),var(--cy))}
-@media(max-width:900px){.cal-grid{grid-template-columns:repeat(3,1fr)}}
-@media(max-width:640px){
+.cal-dia:hover{background:rgba(var(--ov),.13)}
+.cal-dia.ido{color:rgba(var(--ov),.17);font-weight:500}
+.cal-dia.finde{color:var(--text3);opacity:.6}
+.cal-dia.ido.finde{opacity:.45}
+.cal-dia.cobro::after{content:'';position:absolute;bottom:2px;left:50%;transform:translateX(-50%);
+  width:3px;height:3px;border-radius:50%;background:var(--text3)}
+.cal-dia.entra::after{background:var(--g)}
+.cal-dia.hito{color:var(--text);font-weight:800}
+.cal-dia.hoy{background:var(--cy);color:var(--bg);font-weight:800;
+  box-shadow:0 0 0 3px rgba(var(--cy-rgb),.16),0 0 20px rgba(var(--cy-rgb),.45)}
+.cal-mes-pie{display:flex;align-items:center;gap:6px;margin-top:9px;padding-top:8px;
+  border-top:1px solid rgba(var(--ov),.06);min-height:23px}
+.cal-mes-pie b{font-size:9.5px;font-weight:700;color:var(--text2)}
+.cal-mes-pie i{font-family:var(--mono);font-size:10.5px;font-weight:800;font-style:normal;margin-left:auto}
+.cal-mes-quema{position:absolute;left:0;right:0;bottom:0;height:2px;background:rgba(var(--ov),.06)}
+.cal-mes-quema i{display:block;height:100%;background:rgba(var(--ov),.26)}
+.cal-mes-quema.viva i{background:var(--cy);box-shadow:0 0 10px var(--cy)}
+
+/* El panel del mes elegido */
+.cal-det{border-radius:18px;border:1px solid rgba(var(--ov),.09);
+  background:linear-gradient(180deg,rgba(var(--ov),.05),rgba(var(--ov),.015));
+  padding:18px 18px 20px;backdrop-filter:blur(16px);position:sticky;top:92px}
+.cal-det-h{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.cal-det-mes{font-size:19px;font-weight:800;color:var(--text);text-transform:capitalize;letter-spacing:-.02em}
+.cal-det-badge{font-size:8px;font-weight:900;letter-spacing:.09em;padding:2px 6px;border-radius:5px;
+  text-transform:uppercase}
+.cal-det-title{font-size:11.5px;color:var(--text2);line-height:1.5;margin-top:8px}
+.cal-med{border-radius:12px;border:1px solid rgba(var(--ov),.07);background:rgba(var(--ov),.025);
+  padding:12px 13px;margin-top:12px}
+.cal-med-h{display:flex;align-items:baseline;gap:8px}
+.cal-med-k{font-size:9.5px;font-weight:800;letter-spacing:.2em;text-transform:uppercase}
+.cal-med-d{font-family:var(--mono);font-size:20px;font-weight:700;margin-left:auto;white-space:nowrap}
+.cal-med-s{font-size:11px;color:var(--text2);margin-top:7px;line-height:1.5}
+.cal-med-s b{color:var(--text);font-weight:700}
+.cal-barra{height:6px;border-radius:6px;background:rgba(var(--ov),.09);margin-top:13px;position:relative}
+.cal-barra i{display:block;height:100%;border-radius:6px}
+.cal-barra em{position:absolute;top:-3px;width:2px;height:12px;background:var(--text);border-radius:2px;
+  box-shadow:0 0 8px rgba(var(--ov),.6)}
+.cal-barra-l{display:flex;justify-content:space-between;gap:8px;margin-top:7px;font-size:9.5px;
+  font-weight:700;letter-spacing:.04em;color:var(--text3)}
+.cal-ritmo-n{display:flex;align-items:baseline;gap:7px;margin-top:10px}
+.cal-ritmo-n b{font-family:var(--mono);font-size:30px;font-weight:700;letter-spacing:-.02em;color:var(--cy)}
+.cal-ritmo-n span{font-size:12px;font-weight:700;color:var(--text2)}
+.cal-sec{font-size:9.5px;font-weight:900;letter-spacing:.2em;text-transform:uppercase;color:var(--text3);
+  display:flex;align-items:center;gap:8px;margin:18px 0 10px}
+.cal-sec::after{content:'';flex:1;height:1px;background:rgba(var(--ov),.08)}
+.cal-item{display:flex;gap:10px;padding:9px 11px;border-radius:10px;background:rgba(var(--ov),.03);
+  border:1px solid rgba(var(--ov),.05);border-left:2px solid var(--o);line-height:1.45;
+  font-size:11.5px;color:var(--text2);margin-bottom:7px}
+.cal-item b{color:var(--text);font-weight:700}
+.cal-item.rep{border-left-color:var(--b)}
+.cal-item.done{border-left-color:var(--g);background:transparent;color:var(--text3)}
+.cal-item.done>div{text-decoration:line-through;text-decoration-color:rgba(var(--ov),.25)}
+.cal-item.done b{color:var(--text3)}
+.cal-item-ico{flex-shrink:0;width:13px;height:13px;margin-top:2px}
+.cal-vacio{font-size:11.5px;color:var(--text3);line-height:1.5;padding:2px 0 6px}
+.cal-cobros{display:flex;flex-wrap:wrap;gap:6px}
+.cal-cobro{display:inline-flex;align-items:baseline;gap:6px;padding:5px 9px;border-radius:8px;
+  background:rgba(var(--ov),.03);border:1px solid rgba(var(--ov),.07)}
+.cal-cobro b{font-family:var(--mono);font-size:10.5px;font-weight:700;color:var(--text)}
+.cal-cobro span{font-size:10.5px;color:var(--text3)}
+.cal-cobro.entra b{color:var(--g)}
+/* El globo de "qué pasa este día". Va fijo y colgado del overlay para que no lo
+   recorte el scroll de la tarjeta ni el overflow:hidden de un mes. */
+.cal-tip{position:fixed;z-index:230;pointer-events:none;opacity:0;transition:opacity .12s ease;
+  width:264px;border-radius:12px;padding:11px 12px;background:rgba(10,10,18,.97);
+  backdrop-filter:blur(18px);border:1px solid rgba(var(--ov),.14);box-shadow:0 16px 44px rgba(0,0,0,.55)}
+:root[data-theme="light"] .cal-tip{background:rgba(255,255,255,.98);box-shadow:0 16px 44px rgba(0,0,0,.22)}
+.cal-tip.on{opacity:1}
+.cal-tip-h{display:flex;align-items:baseline;gap:8px}
+.cal-tip-f{font-size:11.5px;font-weight:800;color:var(--text);line-height:1.3}
+.cal-tip-d{font-family:var(--mono);font-size:9.5px;font-weight:800;margin-left:auto;white-space:nowrap;
+  padding:2px 7px;border-radius:20px}
+.cal-tip-k{font-size:8.5px;font-weight:900;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--text3);margin:11px 0 6px}
+.cal-tip-r{display:flex;align-items:flex-start;gap:7px;font-size:10.5px;color:var(--text2);
+  line-height:1.4;margin-bottom:5px}
+.cal-tip-r b{color:var(--text);font-weight:700}
+.cal-tip-r i{font-style:normal;margin-left:auto;padding-left:8px;font-family:var(--mono);
+  font-weight:700;white-space:nowrap}
+.cal-tip-v{font-size:10.5px;color:var(--text3);line-height:1.45;margin-top:9px}
+.cal-leyenda{display:flex;align-items:center;gap:20px;flex-wrap:wrap;margin-top:24px;padding-top:16px;
+  border-top:1px solid rgba(var(--ov),.07);font-size:10.5px;color:var(--text2)}
+.cal-leyenda>div{display:flex;align-items:center;gap:7px}
+.cal-lg{width:17px;height:17px;border-radius:5px;flex-shrink:0;background:rgba(var(--ov),.05);
+  display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:9px;font-weight:600}
+
+@media(max-width:1180px){
+  .cal-cuerpo{grid-template-columns:minmax(0,1fr)}
+  .cal-det{position:static}
+  .cal-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+}
+@media(max-width:980px){
+  .cal-top{grid-template-columns:minmax(0,1fr)}
+  .cal-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+@media(max-width:700px){
   .cal-overlay{padding:0}
   .cal-card{width:100%;height:100%;max-height:100%;border-radius:0}
-  .cal-head{padding:12px 14px 10px}
-  .cal-body{padding:12px 14px 28px}
-  .cal-grid{grid-template-columns:repeat(2,1fr);gap:8px}
-  .cal-det{padding:13px 14px}
+  .cal-card::before{border-radius:0}
+  .cal-head{padding:14px 52px 12px 15px;gap:10px 12px}
+  .cal-sep{display:none}
+  .cal-close{position:absolute;top:13px;right:13px}
+  .cal-yearnav{margin-left:auto}
+  .cal-body{padding:16px 15px 30px}
+  .cal-quema{gap:14px;margin-bottom:20px}
+  .cal-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  .cal-fichas{grid-template-columns:minmax(0,1fr)}
+  .cal-dia{height:20px;font-size:9px;border-radius:5px}
+  .cal-det{padding:15px 14px 16px}
+  .cal-leyenda{gap:12px 16px}
 }
 
 /* ─── PANEL DE INVERSIÓN DEL LUNES (2026-08-18) ─────────────────────────────
@@ -2355,7 +2690,7 @@ a.rt2-sub-prod:hover{text-decoration:underline}
       <div class="eyebrow reveal d1"><span class="dot"></span> Lista de Compras</div>
       <div class="reveal d2" style="display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:10px;margin-bottom:12px">
         <div class="slide-title" style="margin-bottom:0"><span class="ico">🛒</span> Todo lo que hay que comprar</div>
-        <div id="listaCatTabs" style="display:flex;gap:6px;flex-wrap:wrap"></div>
+        <div id="listaCatTabs" class="lc-tabs"></div>
       </div>
       <div class="tile reveal d3" id="listaCompraBody" style="max-height:70vh;overflow-y:auto"></div>
     </div>
@@ -2537,7 +2872,18 @@ a.rt2-sub-prod:hover{text-decoration:underline}
 <div class="cal-overlay" id="calOverlay" onclick="if(event.target===this) cerrarCalendario()">
   <div class="cal-card">
     <div class="cal-head">
-      <h2>📅 Tu año completo</h2>
+      <div>
+        <div class="cal-eyebrow">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--cy)" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="5" width="18" height="16" rx="3"></rect><path d="M8 3v4M16 3v4M3 10h18"></path></svg>
+          Plan Maestro · calendario de presión
+        </div>
+        <div class="cal-year-big" id="calYearBig">2026</div>
+      </div>
+      <div class="cal-restan">
+        <b id="calRestan">—</b>
+        <div class="cal-eyebrow" id="calRestanL">días restantes</div>
+      </div>
+      <div class="cal-sep"></div>
       <div class="cal-yearnav">
         <button id="calPrev" onclick="calCambiarAnio(-1)" aria-label="Año anterior">‹</button>
         <span class="cal-year" id="calYear">2026</span>
@@ -2546,8 +2892,15 @@ a.rt2-sub-prod:hover{text-decoration:underline}
       <button class="cal-close" onclick="cerrarCalendario()" aria-label="Cerrar">✕</button>
     </div>
     <div class="cal-body">
-      <div class="cal-grid" id="calGrid"></div>
-      <div class="cal-det" id="calDet"></div>
+      <div class="cal-quema" id="calQuema"></div>
+      <div class="cal-cuerpo">
+        <div class="cal-izq">
+          <div class="cal-top" id="calTop"></div>
+          <div class="cal-grid" id="calGrid"></div>
+        </div>
+        <div class="cal-det" id="calDet"></div>
+      </div>
+      <div class="cal-leyenda" id="calLeyenda"></div>
     </div>
   </div>
 </div>
@@ -3410,51 +3763,70 @@ const LISTA_COMPRAS = window.CIFRAS ? CIFRAS.LISTA_COMPRAS : {};
 //            referencia es por kg, por pieza suelta, o por la presentación cerrada).
 //   precio — número en MXN del precio de referencia según ese `tipo`.
 //   unidad — texto corto de a qué corresponde ese `precio` ('kg', 'pza', 'paquete 250 g', ...).
-//   compra — la cantidad típica de UNA compra tuya, escrita como la ves en el súper.
-//   monto  — lo que cuesta esa `compra` (es lo único que suma `lcTotalComida()`).
+//   paso   — QUÉ suma un "+1" del contador, escrito como lo pides en el súper ('1 pza ≈127 g').
+//   monto  — lo que cuesta UN `paso`. Es lo único que suma el ticket.
+//   g      — gramos de UN `paso`. Solo en frutas / verduras / almidones / grasas: es lo que mide
+//            la barra de proporciones. Ausente en el resto — una lata de atún no entra ahí.
+//   base   — cuántos `paso` te comes en UNA semana. Hace dos cosas: marcar la casilla mete esa
+//            cantidad de golpe (un clic = tu semana) y el "Al mes" sabe cuánto dura lo que
+//            llevas — dura = pasos / base, con piso de 1 semana.
 //   real   — true = precio de tu ticket de Walmart (10-ago-2026, 22:51h); false = investigado
 //            (Walmart MX / Profeco "Quién es Quién en los Precios", ago-2026), aproximado.
 //   nota   — cuando el producto del ticket no es exactamente el de la lista.
-//   sem    — (2026-08-15) SEMANAS que dura esa `compra` con su consumo real, estimado a partir
-//            del tamaño de presentación y de sus metas de salud.html (3115 kcal / 186 g de
-//            proteína al día — come mucho, así que las proteínas duran poco). Existe porque el
-//            total mezclaba cosas que no son comparables: marcar todo daba $1,206, pero ahí
-//            convivían un aceite de 500 ml que dura ~2 meses con un jitomate que dura 3 días.
-//            Ese número no era ni un ticket semanal ni un gasto mensual — no era nada. Con `sem`
-//            se puede separar lo que pagas HOY en caja de lo que te cuesta AL MES el hábito.
-// Para los `real:true` vendidos por peso, `compra`/`monto` son la cantidad y el importe EXACTOS
-// que Adán pagó ese día; para el resto, una porción razonable de una compra normal.
+//
+// 2026-08-27 — `compra` y `sem` se sustituyeron por `paso` / `g` / `base`. Pedido de Adán: "las
+// cantidades en comida, maneja mejor por pieza, por que no siempre agarro el kg". Antes el
+// contador multiplicaba la COMPRA TÍPICA COMPLETA (Jitomate: +1 = 380 g = 3 piezas = $6), así
+// que "llevo 2 jitomates" no se podía expresar: o llevabas 3 o llevabas 6. Ahora +1 = 1 pieza
+// ($2) y `base:3` dice que tu semana son 3 piezas.
+// De paso arregla el "Al mes", que con unidades por pieza contaba doble: la fórmula vieja
+// multiplicaba por la cantidad Y dividía por `sem`, y con `sem` por pieza (1/3 de semana) el
+// resultado se disparaba. Ahora la duración se DERIVA de lo que llevas (`pasos / base`), que es
+// lo que de verdad significa "me dura": 6 plátanos duran una semana, 12 duran dos, y el gasto
+// mensual es el mismo en los dos casos.
+// `monto` va redondeado al peso entero: 127 g de jitomate a $15/kg son $1.90 y se guardan como
+// $2. En un carrito de 30 productos la diferencia son unos pesos, y el precio real varía más que
+// eso entre sucursales y temporada.
+// Para los `real:true` vendidos por peso, el precio por kg es el EXACTO que Adán pagó ese día;
+// el corte por pieza sale de dividir la cantidad del ticket entre las piezas que traía.
 const LISTA_COMPRAS_PRECIOS={
-  'Aguacate':{tipo:'peso',precio:59,unidad:'kg',compra:'≈200 g (1 pza)',monto:12,real:true,sem:1},
-  'Cebolla':{tipo:'peso',precio:62,unidad:'kg',compra:'≈375 g (2 pza)',monto:23,real:true,sem:2},
-  'Champiñones':{tipo:'peso',precio:70,unidad:'kg',compra:'≈250 g',monto:18,real:false,sem:1},
-  'Chayote':{tipo:'peso',precio:22,unidad:'kg',compra:'≈600 g (2 pza)',monto:13,real:false,sem:1},
-  'Jitomate':{tipo:'peso',precio:15,unidad:'kg',compra:'≈380 g (3 pza)',monto:6,real:true,sem:1},
-  'Lechuga':{tipo:'pieza',precio:18,unidad:'pza',compra:'1 pza',monto:18,real:false,sem:1},
-  'Nopales cocidos':{tipo:'paquete',precio:20,unidad:'bolsa 400 g',compra:'1 bolsa',monto:20,real:false,sem:1},
-  'Papa':{tipo:'peso',precio:24,unidad:'kg',compra:'1 kg',monto:24,real:false,sem:2},
-  'Papaya':{tipo:'peso',precio:40,unidad:'kg',compra:'≈1.43 kg (1 pza)',monto:57,real:true,sem:1},
-  'Pepino':{tipo:'peso',precio:18,unidad:'kg',compra:'≈500 g (2 pza)',monto:9,real:false,sem:1},
-  'Pera':{tipo:'peso',precio:55,unidad:'kg',compra:'≈500 g (3 pza)',monto:28,real:false,sem:1},
-  'Pimiento morrón':{tipo:'peso',precio:50,unidad:'kg',compra:'≈300 g (2 pza)',monto:15,real:false,sem:1},
-  'Plátano':{tipo:'peso',precio:24,unidad:'kg',compra:'≈895 g (6 pza)',monto:21,real:true,sem:1},
-  'Filete de res magro':{tipo:'peso',precio:220,unidad:'kg',compra:'500 g',monto:110,real:false,sem:1},
-  'Filete de tilapia':{tipo:'peso',precio:130,unidad:'kg',compra:'500 g',monto:65,real:false,nota:'En tu ticket compraste Filete de Basa, no tilapia (pagaste $55, 1 pieza con descuento) — precio de tilapia investigado aparte.',sem:1},
-  'Jamón de pavo':{tipo:'paquete',precio:57,unidad:'paquete 250 g',compra:'1 paquete',monto:57,real:true,nota:'Ticket: "Jamón Virginia" — casi siempre es la variante de pavo en súper, pero la etiqueta no lo dice explícito.',sem:1},
-  'Pechuga de pollo':{tipo:'paquete',precio:66,unidad:'paquete ≈265 g',compra:'1 paquete',monto:66,real:true,nota:'Ticket: "Milanesa de Pechuga" — mismo corte, ya fileteado delgado. Se vende por paquete ya pesado, sale a ≈$249/kg.',sem:1},
-  'Clara de huevo':{tipo:'paquete',precio:45,unidad:'envase 946 ml',compra:'1 envase',monto:45,real:false,sem:2},
-  'Huevo':{tipo:'paquete',precio:29,unidad:'paquete 12 pza',compra:'1 paquete',monto:29,real:true,nota:'Ticket: Bachoco. También se vende suelto por pieza o por kg en mercado — el paquete de 12 sale más barato por huevo.',sem:1},
-  'Leche entera':{tipo:'paquete',precio:26,unidad:'L',compra:'1 L',monto:26,real:false,nota:'En tu ticket compraste Lala Deslactosada, no entera — precio de leche entera investigado aparte.',sem:1},
-  'Queso panela':{tipo:'paquete',precio:42,unidad:'paquete ≈400 g',compra:'1 paquete',monto:42,real:true,nota:'Precio con descuento en tu ticket. También se vende por peso en cremería, a ≈$120-140/kg.',sem:2},
-  'Yogurt griego natural':{tipo:'paquete',precio:38,unidad:'envase ≈900 g',compra:'1 envase',monto:38,real:false,nota:'En tu ticket compraste Yoplait ($12 c/u) — no es griego. Precio de yogurt griego investigado aparte.',sem:2},
-  'Aceite de oliva':{tipo:'paquete',precio:150,unidad:'botella 500 ml',compra:'1 botella',monto:150,real:false,sem:8},
-  'Arroz blanco cocido':{tipo:'peso',precio:28,unidad:'kg (crudo)',compra:'1 kg',monto:28,real:false,sem:4},
-  'Atún en agua':{tipo:'pieza',precio:20,unidad:'lata 140 g',compra:'1 lata',monto:20,real:true,nota:'Precio con descuento en tu ticket. En paquete de 4-6 latas sale más barato por lata.',sem:1},
-  'Frijoles negros':{tipo:'paquete',precio:24,unidad:'lata 560 g',compra:'1 lata',monto:24,real:false,sem:2},
-  'Granola de amaranto':{tipo:'paquete',precio:60,unidad:'bolsa 400 g',compra:'1 bolsa',monto:60,real:false,sem:3},
-  'Miel de abeja':{tipo:'paquete',precio:90,unidad:'frasco 500 g',compra:'1 frasco',monto:90,real:false,sem:8},
-  'Pan integral':{tipo:'paquete',precio:75,unidad:'paquete grande',compra:'1 paquete',monto:75,real:true,nota:'Ticket: "Pan Doble" (Bimbo Doble Fibra) — no dice "integral", pero es el pan de caja más cercano que compraste.',sem:2},
-  'Tortilla de maíz':{tipo:'peso',precio:17,unidad:'kg',compra:'1 kg',monto:17,real:false,sem:1},
+  // ── Verduras ──
+  'Cebolla':{tipo:'peso',precio:62,unidad:'kg',paso:'1 pza ≈190 g',g:190,monto:12,base:1,real:true},
+  'Champiñones':{tipo:'peso',precio:70,unidad:'kg',paso:'250 g',g:250,monto:18,base:1,real:false,nota:'No tiene pieza natural: el paso es la porción de 250 g que se pesa en bolsa.'},
+  'Chayote':{tipo:'peso',precio:22,unidad:'kg',paso:'1 pza ≈300 g',g:300,monto:7,base:2,real:false},
+  'Jitomate':{tipo:'peso',precio:15,unidad:'kg',paso:'1 pza ≈127 g',g:127,monto:2,base:3,real:true},
+  'Lechuga':{tipo:'pieza',precio:18,unidad:'pza',paso:'1 pza ≈500 g',g:500,monto:18,base:1,real:false,nota:'Se vende por pieza; los 500 g son una romana mediana, estimados.'},
+  'Nopales cocidos':{tipo:'paquete',precio:20,unidad:'bolsa 400 g',paso:'1 bolsa 400 g',g:400,monto:20,base:1,real:false},
+  'Pepino':{tipo:'peso',precio:18,unidad:'kg',paso:'1 pza ≈250 g',g:250,monto:5,base:2,real:false},
+  'Pimiento morrón':{tipo:'peso',precio:50,unidad:'kg',paso:'1 pza ≈150 g',g:150,monto:8,base:2,real:false},
+  // ── Frutas ──
+  'Papaya':{tipo:'peso',precio:40,unidad:'kg',paso:'1 pza ≈1.4 kg',g:1430,monto:57,base:1,real:true,nota:'La pieza de tu ticket pesó 1.43 kg. Si la compras en trozo, ajusta el contador a ojo.'},
+  'Pera':{tipo:'peso',precio:55,unidad:'kg',paso:'1 pza ≈167 g',g:167,monto:9,base:3,real:false},
+  'Plátano':{tipo:'peso',precio:24,unidad:'kg',paso:'1 pza ≈150 g',g:149,monto:4,base:6,real:true},
+  // ── Almidones y grasas ──
+  'Papa':{tipo:'peso',precio:24,unidad:'kg',paso:'1 pza ≈200 g',g:200,monto:5,base:2,real:false},
+  'Aguacate':{tipo:'peso',precio:59,unidad:'kg',paso:'1 pza ≈200 g',g:200,monto:12,base:1,real:true},
+  // ── Carnes y Pescados ──
+  'Filete de res magro':{tipo:'peso',precio:220,unidad:'kg',paso:'1 filete ≈250 g',monto:55,base:2,real:false},
+  'Filete de tilapia':{tipo:'peso',precio:130,unidad:'kg',paso:'1 filete ≈250 g',monto:33,base:2,real:false,nota:'En tu ticket compraste Filete de Basa, no tilapia (pagaste $55, 1 pieza con descuento) — precio de tilapia investigado aparte.'},
+  'Jamón de pavo':{tipo:'paquete',precio:57,unidad:'paquete 250 g',paso:'1 paquete 250 g',monto:57,base:1,real:true,nota:'Ticket: "Jamón Virginia" — casi siempre es la variante de pavo en súper, pero la etiqueta no lo dice explícito.'},
+  'Pechuga de pollo':{tipo:'paquete',precio:66,unidad:'paquete ≈265 g',paso:'1 paquete ≈265 g',monto:66,base:1,real:true,nota:'Ticket: "Milanesa de Pechuga" — mismo corte, ya fileteado delgado. Se vende por paquete ya pesado, sale a ≈$249/kg.'},
+  // ── Lácteos y Huevo ──
+  'Clara de huevo':{tipo:'paquete',precio:45,unidad:'envase 946 ml',paso:'1 envase 946 ml',monto:45,base:0.5,real:false},
+  'Huevo':{tipo:'paquete',precio:29,unidad:'paquete 12 pza',paso:'1 paquete 12 pza',monto:29,base:1,real:true,nota:'Ticket: Bachoco. También se vende suelto por pieza o por kg en mercado — el paquete de 12 sale más barato por huevo.'},
+  'Leche entera':{tipo:'paquete',precio:26,unidad:'L',paso:'1 L',monto:26,base:1,real:false,nota:'En tu ticket compraste Lala Deslactosada, no entera — precio de leche entera investigado aparte.'},
+  'Queso panela':{tipo:'paquete',precio:42,unidad:'paquete ≈400 g',paso:'1 paquete ≈400 g',monto:42,base:0.5,real:true,nota:'Precio con descuento en tu ticket. También se vende por peso en cremería, a ≈$120-140/kg.'},
+  'Yogurt griego natural':{tipo:'paquete',precio:38,unidad:'envase ≈900 g',paso:'1 envase ≈900 g',monto:38,base:0.5,real:false,nota:'En tu ticket compraste Yoplait ($12 c/u) — no es griego. Precio de yogurt griego investigado aparte.'},
+  // ── Abarrotes y Despensa ──
+  'Aceite de oliva':{tipo:'paquete',precio:150,unidad:'botella 500 ml',paso:'1 botella 500 ml',monto:150,base:0.125,real:false},
+  'Arroz blanco cocido':{tipo:'peso',precio:28,unidad:'kg (crudo)',paso:'1 kg crudo',monto:28,base:0.25,real:false},
+  'Atún en agua':{tipo:'pieza',precio:20,unidad:'lata 140 g',paso:'1 lata 140 g',monto:20,base:1,real:true,nota:'Precio con descuento en tu ticket. En paquete de 4-6 latas sale más barato por lata.'},
+  'Frijoles negros':{tipo:'paquete',precio:24,unidad:'lata 560 g',paso:'1 lata 560 g',monto:24,base:0.5,real:false},
+  'Granola de amaranto':{tipo:'paquete',precio:60,unidad:'bolsa 400 g',paso:'1 bolsa 400 g',monto:60,base:0.33,real:false},
+  'Miel de abeja':{tipo:'paquete',precio:90,unidad:'frasco 500 g',paso:'1 frasco 500 g',monto:90,base:0.125,real:false},
+  // ── Panadería y Tortillas ──
+  'Pan integral':{tipo:'paquete',precio:75,unidad:'paquete grande',paso:'1 paquete',monto:75,base:0.5,real:true,nota:'Ticket: "Pan Doble" (Bimbo Doble Fibra) — no dice "integral", pero es el pan de caja más cercano que compraste.'},
+  'Tortilla de maíz':{tipo:'peso',precio:17,unidad:'kg',paso:'½ kg',monto:9,base:2,real:false,nota:'Medio kilo es lo que se pide de una en la tortillería; $8.50 redondeado a $9.'},
 };
 // Ícono + etiqueta por forma de venta — el punto de la reestructura: que de un vistazo sepas si
 // ese producto lo eliges tú por peso (puedes llevar más o menos), viene en presentación cerrada,
@@ -3596,48 +3968,109 @@ function lcAmazonQuery(cat,txt){
 }
 function lcAmazonUrl(q){ return 'https://www.amazon.com.mx/s?k='+encodeURIComponent(q); }
 function lcMercadoLibreUrl(q){ return 'https://listado.mercadolibre.com.mx/'+encodeURIComponent(q.replace(/\s+/g,'-')); }
-// Píldora de precio junto al producto — verde "✓" = precio real de tu ticket de Walmart,
-// naranja "≈" = estimado (no está en ese ticket). Solo aplica a la categoría `comida`
-// (ver LISTA_COMPRAS_PRECIOS arriba); el resto de categorías no tienen precio asociado.
+// Walmart Súper: es donde Adán hace el súper (el ticket de referencia sale de ahí), así que
+// en Comida el par de links útil es Walmart + Amazon, no Amazon + Mercado Libre.
+function lcWalmartUrl(q){ return 'https://super.walmart.com.mx/search?q='+encodeURIComponent(q); }
+// ── Clasificación para la barra de proporciones (2026-08-27) ─────────────────
+// Pedido: "resuelve las proporciones de vegetales, frutas y verduras". El pasillo único
+// "Frutas y Verduras" escondía el problema: 13 productos juntos, sin forma de ver que el canasto
+// llevaba casi tanta fruta como verdura. Ahora son 3 pasillos en `LISTA_COMPRAS.comida` y 4
+// clases que se miden contra una meta.
+// La clase sale del PASILLO; `LC_ITEM_CLASE` es la excepción para lo que comparte pasillo pero no
+// función en el plato: el aguacate se compra junto a la papa, pero pesa como grasa, no como
+// almidón.
+const LC_PASILLO_CLASE={'Verduras':'verduras','Frutas':'frutas','Almidones y grasas':'almidones'};
+const LC_ITEM_CLASE={'Aguacate':'grasas'};
+function lcClase(pasillo,txt){ return LC_ITEM_CLASE[txt]||LC_PASILLO_CLASE[pasillo]||null; }
+// `meta` = % del peso del canasto que debería ser de esa clase. 55/30/10/5 es la regla de "más
+// verdura que fruta" del plato saludable, repartida sobre el peso en fresco de la semana. Es un
+// criterio de diseño, NO sale de las metas de salud.html — por eso el bloque lo dice en pantalla.
+// El color de cada clase es el mismo que la regla de su pasillo en la lista: así el medidor y la
+// lista se leen como una sola cosa sin repetir la leyenda.
+const LC_CLASE_META={
+  verduras :{nom:'Verduras' ,col:'var(--g)' ,rgb:'var(--g-rgb)' ,meta:55},
+  frutas   :{nom:'Frutas'   ,col:'var(--o)' ,rgb:'var(--o-rgb)' ,meta:30},
+  almidones:{nom:'Almidones',col:'var(--w)' ,rgb:'var(--w-rgb)' ,meta:10},
+  grasas   :{nom:'Grasas'   ,col:'var(--cy)',rgb:'var(--cy-rgb)',meta:5},
+};
+const LC_CLASES=['verduras','frutas','almidones','grasas'];
+const LC_SEM_MES=4.33; // semanas por mes (52/12), para proyectar el gasto recurrente
+
+function lcM(n){ return '$'+Math.round(n).toLocaleString('es-MX'); }
+function lcG(g){ return g>=1000 ? (g/1000).toFixed(1)+' kg' : Math.round(g)+' g'; }
+// Cuántos `paso` son UNA semana de ese producto, redondeado a algo que se pueda meter al carrito:
+// el aceite de oliva tiene base 0.125 (una botella dura dos meses) y aun así se lleva 1 botella.
+function lcBase(p){ return Math.max(1,Math.round((p&&p.base)||1)); }
+// Semanas que te dura lo que llevas. Piso de 1: comprar menos de tu consumo semanal no encarece
+// el hábito, solo te obliga a volver antes.
+function lcDura(p,q){ return Math.max(1,q/((p&&p.base)||1)); }
+
+// Píldora de cantidad junto al producto. En Comida dice QUÉ suma un "+1" (`paso`) y el punto
+// lleno/hueco distingue precio de ticket de precio estimado — forma además de color, para que
+// también se lea en escala de grises. En el resto de categorías son los dos precios de
+// plataforma, que es el dato que sí tienen.
 function lcPrecioHtml(cat,txt){
   if(cat==='comida'){
     const p=LISTA_COMPRAS_PRECIOS[txt];
-    if(!p) return '';
+    if(!p) return '<span class="lc-price lc-price-nil" title="Todavía sin precio registrado: no suma al ticket."><i></i>sin precio</span>';
     const cls=p.real?'lc-price-real':'lc-price-est';
-    const icono=p.real?'✓':'≈';
-    const tm=LC_TIPO_META[p.tipo]||{ico:'',label:''};
-    const base=p.nota?p.nota:`Se vende ${tm.label}.`;
-    // 2026-08-15: se quitó la píldora del precio unitario ("✓ $59/kg"). El dato sigue en
-    // LISTA_COMPRAS_PRECIOS y se usa para calcular, pero mostrarlo obligaba a Adán a hacer la
-    // multiplicación de cabeza — que es justo lo que pidió que hiciera la app. Queda la cantidad
-    // típica (sin el "= $12", que ahora lo dice el subtotal, ya multiplicado por el contador) y
-    // el origen del precio se conserva en el ✓/≈ y en el title.
-    const t=`${base} Precio ${p.real?'de tu ticket de Walmart':'estimado'}: $${p.precio}/${p.unidad}.`;
-    return `<span class="lc-price ${cls}" title="${t.replace(/"/g,'&quot;')}">${icono} ${tm.ico} ${p.compra}</span>`;
+    const tm=LC_TIPO_META[p.tipo]||{label:''};
+    const t=[
+      p.nota?p.nota:'Se vende '+tm.label+'.',
+      'Precio '+(p.real?'de tu ticket de Walmart':'estimado')+': $'+p.precio+'/'+p.unidad+'.',
+      'Cada + suma '+p.paso+' = '+lcM(p.monto)+'. Tu semana son '+lcBase(p)+' '+(lcBase(p)===1?'':'x ')+p.paso+'.'
+    ].join(' ');
+    return '<span class="lc-price '+cls+'" title="'+t.replace(/"/g,'&quot;')+'"><i></i>'+p.paso+'</span>';
   }
-  // Resto de categorías (2026-08-12): precio estimado por plataforma, siempre naranja "≈" porque
-  // ninguno es un precio en vivo — ver LISTA_COMPRAS_PRECIOS_OTROS.
   const o=cat==='libros'?LIBRO_PRECIO_TIPICO:LISTA_COMPRAS_PRECIOS_OTROS[txt];
   if(!o) return '';
   const t=cat==='libros'
     ? 'Precio típico de un libro de no ficción en pasta blanda — el link te lleva al precio real del momento.'
     : 'Precio de lista aproximado (ago-2026) del primer producto de la línea — el link te lleva al precio real del momento.';
-  return `<span class="lc-price lc-price-est" title="${t}">≈ $${o.amazon} Amazon</span>`+
-         `<span class="lc-price lc-price-est" title="${t}">≈ $${o.ml} M. Libre</span>`;
+  return '<span class="lc-price lc-price-est" title="'+t+'"><i></i>≈ $'+o.amazon+' Amazon</span>'+
+         '<span class="lc-price lc-price-est" title="'+t+'"><i></i>≈ $'+o.ml+' M. Libre</span>';
 }
-// ── Cantidades por producto (2026-08-15) ──────────────────────────────────────
-// `dash-lista-compras` guardaba `true` por producto marcado. Ahora guarda un NÚMERO (cuántas
-// veces lo llevas). Los `true` de listas ya guardadas se leen como 1, así que nadie pierde su
-// checklist al actualizar — por eso lcQty() normaliza en vez de asumir número.
+
+// ── Cantidades ───────────────────────────────────────────────────────────────
+// `dash-lista-compras` guarda un NÚMERO por producto: cuántos `paso` llevas. Los `true` de listas
+// guardadas antes del contador se leen como 1, así que nadie pierde su checklist al actualizar.
 function lcQty(id){
   const v=rawGet('dash-lista-compras',{})[id];
   if(v===true) return 1;
   return (typeof v==='number'&&v>0)?v:0;
 }
+function lcSetQty(id,n){
+  const c=rawGet('dash-lista-compras',{});
+  if(n>0) c[id]=n; else delete c[id];
+  rawSet('dash-lista-compras',c);
+}
 // El contador solo aparece donde se puede calcular un importe: productos de `comida` con entrada
 // en LISTA_COMPRAS_PRECIOS. En skincare/cabello/suplementos/libros no hay `monto` que multiplicar
 // —son compras de 1 pieza cada varios meses— así que ahí el checkbox se queda como estaba.
-// ── "Ya lo tengo" (2026-08-20) ────────────────────────────────────────────────
+function lcTieneQty(cat,txt){ return cat==='comida'&&!!LISTA_COMPRAS_PRECIOS[txt]; }
+// +1 / −1 por PIEZA (2026-08-27). Al llegar a 0 el producto queda desmarcado —el checkbox y el
+// contador son la misma cosa— y por eso se re-pinta el renglón completo en vez de solo el número.
+function lcCambiarQty(cat,txt,delta){
+  const id=lcItemId(cat,txt);
+  const n=Math.max(0,Math.min(99,lcQty(id)+delta));
+  lcSetQty(id,n);
+  const fila=document.getElementById(id+'-row');
+  if(fila) fila.outerHTML=lcItemHtml(cat,txt,LC_AMAZON_CATS.includes(cat));
+  renderListaCatTabs();
+  actualizarLcTotal();
+}
+// Mete de golpe la cantidad de UNA semana. Es lo que hace el checkbox en Comida y lo que hacen
+// los botones de sugerencia del bloque de proporciones.
+function lcLlevarSemana(cat,txt){
+  const id=lcItemId(cat,txt);
+  lcSetQty(id,lcBase(LISTA_COMPRAS_PRECIOS[txt]));
+  const fila=document.getElementById(id+'-row');
+  if(fila) fila.outerHTML=lcItemHtml(cat,txt,LC_AMAZON_CATS.includes(cat));
+  renderListaCatTabs();
+  actualizarLcTotal();
+}
+
+// ── "Ya lo tengo" ────────────────────────────────────────────────────────────
 // Son DOS preguntas distintas sobre el mismo producto —"¿lo llevo?" y "¿ya está en mi casa?"—,
 // así que son dos controles y dos claves. Lo que ya tienes no suma al total ni cuenta como
 // pendiente, pero sigue en la lista: borrarlo sería perder el catálogo.
@@ -3651,12 +4084,109 @@ function lcToggleTengo(cat,txt){
   rawSet('dash-lista-tengo',t);
   renderListaCompras();
 }
-// Total de una categoría que no es el súper: suma los precios de plataforma de lo marcado, y
-// dice cuántos de los marcados no tienen precio para que el número nunca aparente ser completo.
-function lcTotalCat(cat){
+
+// ── Cuentas de Comida ────────────────────────────────────────────────────────
+// Devuelve las cifras que de verdad significan algo:
+//   ticket  — lo que pagas HOY en caja por lo marcado.
+//   mensual — lo que cuesta AL MES sostenerlo. Cada producto se divide entre lo que le dura a ESA
+//             cantidad (`lcDura`), no entre un número fijo: 6 plátanos duran una semana y 12 duran
+//             dos, así que los dos carritos cuestan lo mismo al mes. Un aceite de $150 que dura 8
+//             semanas no son $150/mes, son ~$81.
+//   gr      — gramos POR SEMANA de cada clase, con el mismo prorrateo. Es lo que mide la barra de
+//             proporciones: lo que comes, no lo que metes al carrito de una vez.
+function lcTotalComida(){
+  let ticket=0,mensual=0,n=0,piezas=0;
+  const porPasillo={}, gr={verduras:0,frutas:0,almidones:0,grasas:0};
+  for(const [pasillo,items] of Object.entries(LISTA_COMPRAS.comida)){
+    let sub=0;
+    items.forEach(txt=>{
+      const q=lcQty(lcItemId('comida',txt));
+      if(!q) return;
+      const p=LISTA_COMPRAS_PRECIOS[txt];
+      if(!p||typeof p.monto!=='number') return;
+      const imp=p.monto*q, dura=lcDura(p,q);
+      ticket+=imp; sub+=imp; n++; piezas+=q;
+      mensual+=imp*(LC_SEM_MES/dura);
+      const cl=lcClase(pasillo,txt);
+      if(cl&&p.g) gr[cl]+=p.g*q/dura;
+    });
+    if(sub) porPasillo[pasillo]=sub;
+  }
+  const totG=LC_CLASES.reduce((s,k)=>s+gr[k],0);
+  return {total:ticket,ticket,mensual:Math.round(mensual),n,piezas,porPasillo,gr,totG};
+}
+// Los 4 tramos del medidor, ya con su meta, su desfase y la posición de la marca.
+function lcProporciones(t){
+  let acum=0;
+  return LC_CLASES.map(k=>{
+    const m=LC_CLASE_META[k], g=t.gr[k];
+    const pct=t.totG?g/t.totG*100:0;
+    const objG=t.totG*m.meta/100;
+    acum+=m.meta;
+    return {k,nom:m.nom,col:m.col,rgb:m.rgb,meta:m.meta,tick:acum,g,pct,delta:objG-g};
+  });
+}
+// Productos de esa clase que todavía NO llevas, del más pesado al más ligero: son los que cierran
+// un hueco con menos renglones. Cada uno viene con lo que aporta si te llevas tu semana.
+function lcCandidatos(clase){
+  const out=[];
+  for(const [pasillo,items] of Object.entries(LISTA_COMPRAS.comida))
+    items.forEach(txt=>{
+      if(lcClase(pasillo,txt)!==clase) return;
+      const p=LISTA_COMPRAS_PRECIOS[txt];
+      if(!p||!p.g) return;
+      if(lcQty(lcItemId('comida',txt))) return;
+      const b=lcBase(p);
+      out.push({txt,g:p.g*b,monto:p.monto*b,n:b});
+    });
+  return out.sort((a,b)=>b.g-a.g);
+}
+function lcTotalItems(cat){
   const data=LISTA_COMPRAS[cat];
   const items=Array.isArray(data)?data:Object.values(data).flat();
-  let amazon=0, ml=0, n=0, sinPrecio=0, tengo=0;
+  return items.filter(txt=>!(lcTengoCat(cat)&&lcTengo(lcItemId(cat,txt)))).length;
+}
+function lcPasilloCt(pasillo){
+  const items=LISTA_COMPRAS.comida[pasillo]||[];
+  const n=items.filter(txt=>lcQty(lcItemId('comida',txt))).length;
+  return n+'/'+items.length;
+}
+
+// ── Barra HUD ────────────────────────────────────────────────────────────────
+function lcHudComidaHtml(){
+  const t=lcTotalComida(), tot=lcTotalItems('comida');
+  const marco='<i class="lc-brk tl"></i><i class="lc-brk br"></i>';
+  if(!t.n) return '<div class="lc-hud" id="lcHud">'+marco+
+    '<div class="lc-hud-vacio">Marca lo que vas a llevar: aquí sale el ticket, lo que cuesta al mes y cómo queda la proporción del canasto. Marcar la casilla mete tu cantidad de una semana; con <b>− +</b> la ajustas pieza por pieza.</div></div>';
+  const pct=tot?Math.round(t.n/tot*100):0;
+  const fyv=(t.gr.verduras+t.gr.frutas)/7;
+  return '<div class="lc-hud" id="lcHud">'+marco+
+    '<div class="lc-hud-cell" title="Lo que pagas hoy en caja por lo marcado. Precios de tu ticket de Walmart del 10-ago-2026 (punto lleno) o investigados (punto hueco) — varían por sucursal y temporada.">'+
+      '<div class="lc-hud-cap">Ticket de hoy</div>'+
+      '<div class="lc-hud-big">'+lcM(t.ticket)+'</div>'+
+      '<div class="lc-hud-note">'+t.n+' de '+tot+' productos · '+t.piezas+' pieza'+(t.piezas===1?'':'s')+'</div>'+
+    '</div>'+
+    '<div class="lc-hud-cell" title="Lo que cuesta AL MES sostener este carrito. Cada producto se divide entre lo que le dura ESA cantidad: 6 plátanos duran una semana, 12 duran dos, y las dos compras cuestan lo mismo al mes. No es el ticket × 4.">'+
+      '<div class="lc-hud-cap">Costo al mes</div>'+
+      '<div class="lc-hud-mid">'+lcM(t.mensual)+'</div>'+
+      '<div class="lc-hud-note">prorrateado por lo que dura cada cosa</div>'+
+    '</div>'+
+    '<div class="lc-hud-cell lc-hud-grow">'+
+      '<div class="lc-hud-row"><span class="lc-hud-cap">Carrito</span><span class="lc-hud-n">'+t.n+'/'+tot+'</span></div>'+
+      '<div class="lc-hud-bar"><i style="width:'+pct+'%"></i></div>'+
+      '<div class="lc-hud-chips">'+
+        '<span class="lc-chip '+(fyv>=400?'ok':'warn')+'" title="Peso de fruta y verdura por día que sale de este carrito. La OMS recomienda un mínimo de 400 g diarios.">'+lcG(fyv)+' fruta+verdura/día</span>'+
+        '<span class="lc-chip lc-chip-ref">OMS: mínimo 400 g/día</span>'+
+      '</div>'+
+    '</div>'+
+    '<div class="lc-hud-act"><button class="lc-clear-btn" onclick="vaciarListaCat(\'comida\')">Vaciar carrito</button></div>'+
+  '</div>';
+}
+// Categorías que no son el súper: los dos totales de plataforma, que es el dato que sí tienen.
+function lcHudCatHtml(cat){
+  const data=LISTA_COMPRAS[cat];
+  const items=Array.isArray(data)?data:Object.values(data).flat();
+  let amazon=0,ml=0,n=0,sinPrecio=0,tengo=0;
   items.forEach(txt=>{
     const id=lcItemId(cat,txt);
     if(lcTengo(id)){ tengo++; return; }
@@ -3665,138 +4195,157 @@ function lcTotalCat(cat){
     const o=cat==='libros'?LIBRO_PRECIO_TIPICO:LISTA_COMPRAS_PRECIOS_OTROS[txt];
     if(o){ amazon+=o.amazon||0; ml+=o.ml||0; } else sinPrecio++;
   });
-  return {amazon,ml,n,sinPrecio,tengo,total:items.length};
+  const marco='<i class="lc-brk tl"></i><i class="lc-brk br"></i>';
+  const chips='<div class="lc-hud-chips">'+
+    (tengo?'<span class="lc-chip good">ya tienes '+tengo+'</span>':'')+
+    (sinPrecio?'<span class="lc-chip warn" title="Esos productos todavía no tienen precio registrado, así que no están sumados.">'+sinPrecio+' sin precio</span>':'')+
+    '</div>';
+  if(!n) return '<div class="lc-hud" id="lcHud">'+marco+
+    '<div class="lc-hud-vacio">Marca lo que vas a llevar y aquí se va sumando lo que cuesta en cada plataforma. <b>"Ya lo tengo"</b> lo saca del total y de los pendientes, sin borrarlo de la lista.</div>'+
+    (tengo||sinPrecio?'<div class="lc-hud-cell lc-hud-grow">'+chips+'</div>':'')+'</div>';
+  const total=lcTotalItems(cat);
+  const pct=total?Math.round(n/total*100):0;
+  return '<div class="lc-hud" id="lcHud">'+marco+
+    '<div class="lc-hud-cell" title="Suma de los precios estimados de lo que marcaste, en Amazon.">'+
+      '<div class="lc-hud-cap">Amazon</div>'+
+      '<div class="lc-hud-big">≈'+money(amazon)+'</div>'+
+      '<div class="lc-hud-note">'+n+' de '+total+' productos marcados</div>'+
+    '</div>'+
+    '<div class="lc-hud-cell" title="Los mismos productos en Mercado Libre.">'+
+      '<div class="lc-hud-cap">Mercado Libre</div>'+
+      '<div class="lc-hud-mid">≈'+money(ml)+'</div>'+
+      '<div class="lc-hud-note">precios de lista, no en vivo</div>'+
+    '</div>'+
+    '<div class="lc-hud-cell lc-hud-grow">'+
+      '<div class="lc-hud-row"><span class="lc-hud-cap">Marcados</span><span class="lc-hud-n">'+n+'/'+total+'</span></div>'+
+      '<div class="lc-hud-bar"><i style="width:'+pct+'%"></i></div>'+chips+
+    '</div>'+
+    '<div class="lc-hud-act"><button class="lc-clear-btn" onclick="vaciarListaCat(\''+cat+'\')">Vaciar marcados</button></div>'+
+  '</div>';
 }
-function lcTotalCatBarHtml(cat){
-  const t=lcTotalCat(cat);
-  const chips=(t.tengo?`<span class="lc-total-tengo">✓ ya tienes ${t.tengo}</span>`:'')+
-              (t.sinPrecio?`<span class="lc-total-falta" title="Esos productos todavía no tienen precio registrado, así que no están sumados arriba.">⚠ ${t.sinPrecio} sin precio</span>`:'');
-  if(!t.n) return `<span id="lcTotalBar" class="lc-total lc-total-vacio">🧮 Marca lo que vas a llevar y aquí sale el total ${chips}</span>`;
-  return `<span id="lcTotalBar" class="lc-total">
-    <span class="lc-total-main" title="Suma de los precios estimados de lo que marcaste">🧮 ≈${money(t.amazon)} <small>Amazon</small></span>
-    <span class="lc-total-mes" title="Los mismos productos en Mercado Libre">≈${money(t.ml)} <small>M. Libre</small></span>
-    <span class="lc-total-sub">${t.n} producto${t.n===1?'':'s'} marcado${t.n===1?'':'s'}</span>
-    ${chips}</span>`;
+
+// ── Bloque de proporciones ───────────────────────────────────────────────────
+function lcPropHtml(){
+  const t=lcTotalComida(), bs=lcProporciones(t);
+  const objTxt=LC_CLASES.map(k=>LC_CLASE_META[k].meta).join(' / ');
+  const tramos=bs.map(b=>'<i style="width:'+(t.totG?b.pct:0)+'%;background:'+b.col+'"></i>').join('');
+  const marcas=bs.slice(0,3).map(b=>'<div class="lc-prop-tick" style="left:'+b.tick+'%"></div>').join('');
+  const celdas=bs.map(b=>{
+    const falta=b.delta>60, sobra=b.delta<-60;
+    const dTxt=!t.totG?'':(falta?'faltan '+lcG(b.delta):(sobra?'sobran '+lcG(-b.delta):'en meta'));
+    const dCol=!t.totG?'var(--text3)':(falta?'var(--o)':(sobra?'var(--text3)':'var(--g)'));
+    return '<div class="lc-prop-cell" style="border-left-color:'+b.col+'">'+
+      '<div class="lc-prop-nom">'+b.nom+'</div>'+
+      '<div class="lc-prop-line"><span class="lc-prop-pct" style="color:'+b.col+'">'+(t.totG?Math.round(b.pct)+'%':'—')+'</span>'+
+        '<span class="lc-prop-obj">meta '+b.meta+'%</span></div>'+
+      '<div class="lc-prop-line"><span class="lc-prop-g">'+lcG(b.g)+'</span>'+
+        '<span class="lc-prop-d" style="color:'+dCol+'">'+dTxt+'</span></div>'+
+    '</div>';
+  }).join('');
+
+  let coach='', sug='';
+  if(!t.totG){
+    coach='Marca frutas y verduras y aquí verás cómo queda la proporción de tu semana.';
+  } else {
+    const hueco=bs.filter(b=>b.delta>60).sort((a,b)=>b.delta-a.delta)[0];
+    if(hueco){
+      let falta=hueco.delta;
+      const cands=lcCandidatos(hueco.k), picks=[];
+      for(const c of cands){
+        if(falta<=0||picks.length>=3) break;
+        picks.push(c); falta-=c.g;
+      }
+      coach='Tu canasto va corto de '+hueco.nom.toLowerCase()+': faltan '+lcG(hueco.delta)+' a la semana para llegar al '+hueco.meta+'%.';
+      if(picks.length) sug=picks.map(c=>'<button class="lc-sug" onclick="lcLlevarSemana(\'comida\',\''+c.txt.replace(/'/g,"\\'")+'\')" '+
+          'title="Mete tu cantidad de una semana: '+c.n+' × '+LISTA_COMPRAS_PRECIOS[c.txt].paso+'">+ '+c.txt+' <b>'+lcG(c.g)+' · '+lcM(c.monto)+'</b></button>').join('');
+      else coach+=' Sube la cantidad de las que ya llevas.';
+    } else {
+      coach='Proporción en meta: más verdura que fruta y el almidón contenido. Así se ve un canasto equilibrado.';
+    }
+  }
+
+  return '<div class="lc-prop" id="lcProp">'+
+    '<div class="lc-prop-head">'+
+      '<div class="lc-prop-head" style="gap:12px;flex:1">'+
+        '<span class="lc-prop-t">Proporción del canasto</span>'+
+        '<span class="lc-prop-sub">gramos por semana, ya prorrateados por lo que dura cada producto</span>'+
+      '</div>'+
+      '<span class="lc-prop-meta-lbl" title="Criterio de diseño, no una meta de salud.html: la regla de «más verdura que fruta» del plato saludable, repartida sobre el peso en fresco.">Meta · '+objTxt+'</span>'+
+    '</div>'+
+    '<div class="lc-prop-bar"><div class="lc-prop-fill">'+tramos+'</div>'+marcas+'</div>'+
+    '<div class="lc-prop-grid">'+celdas+'</div>'+
+    '<div class="lc-prop-coach">'+coach+sug+'</div>'+
+  '</div>';
 }
-function lcTieneQty(cat,txt){ return cat==='comida'&&!!LISTA_COMPRAS_PRECIOS[txt]; }
-function lcSetQty(id,n){
-  const c=rawGet('dash-lista-compras',{});
-  if(n>0) c[id]=n; else delete c[id];
-  rawSet('dash-lista-compras',c);
-}
-// +1 / −1. Al llegar a 0 el producto queda desmarcado (el checkbox y el contador son la misma
-// cosa: "cuántos llevo"), y por eso se re-pinta el renglón completo en vez de solo el número.
-function lcCambiarQty(cat,txt,delta){
-  const id=lcItemId(cat,txt);
-  const n=Math.max(0,Math.min(99,lcQty(id)+delta));
-  lcSetQty(id,n);
-  const fila=document.getElementById(id+'-row');
-  if(fila) fila.outerHTML=lcItemHtml(cat,txt,LC_AMAZON_CATS.includes(cat));
-  renderListaCatTabs();
-  actualizarLcTotal();
-}
+
+// ── Renglón ──────────────────────────────────────────────────────────────────
 function lcItemHtml(cat,txt,conLinkAmazon){
   const id=lcItemId(cat,txt);
   const n=lcQty(id);
-  const checked=n>0?'checked':'';
-  let shopHtml='';
-  if(conLinkAmazon){
-    const q=lcAmazonQuery(cat,txt);
-    shopHtml=`<span class="lc-item-shop">
-      <a href="${lcAmazonUrl(q)}" target="_blank" rel="noopener" class="lc-shop-link" title="Buscar en Amazon">Amazon ↗</a>
-      <a href="${lcMercadoLibreUrl(q)}" target="_blank" rel="noopener" class="lc-shop-link" title="Buscar en Mercado Libre">Mercado Libre ↗</a>
-    </span>`;
-  }
+  const p=cat==='comida'?LISTA_COMPRAS_PRECIOS[txt]:null;
+  const esc=txt.replace(/'/g,"\\'");
+  const q=lcAmazonQuery(cat,txt);
+  // Links en TODAS las categorías (2026-08-27). Comida no los tenía; ahí el par útil es el súper
+  // donde compras y Amazon, no Amazon y Mercado Libre.
+  const shopHtml=(cat==='comida')
+    ? '<span class="lc-item-shop">'+
+        '<a href="'+lcWalmartUrl(txt)+'" target="_blank" rel="noopener" class="lc-shop-link" title="Buscar en Walmart Súper">Walmart ↗</a>'+
+        '<a href="'+lcAmazonUrl(txt)+'" target="_blank" rel="noopener" class="lc-shop-link" title="Buscar en Amazon">Amazon ↗</a>'+
+      '</span>'
+    : (conLinkAmazon
+        ? '<span class="lc-item-shop">'+
+            '<a href="'+lcAmazonUrl(q)+'" target="_blank" rel="noopener" class="lc-shop-link" title="Buscar en Amazon">Amazon ↗</a>'+
+            '<a href="'+lcMercadoLibreUrl(q)+'" target="_blank" rel="noopener" class="lc-shop-link" title="Buscar en Mercado Libre">M. Libre ↗</a>'+
+          '</span>'
+        : '');
   let qtyHtml='';
   if(lcTieneQty(cat,txt)){
-    const p=LISTA_COMPRAS_PRECIOS[txt];
-    const sub=p.monto*Math.max(1,n);
-    qtyHtml=`<span class="lc-qty" title="Cuántos llevas de este producto">
-        <button onclick="lcCambiarQty('${cat}','${txt.replace(/'/g,"\\'")}',-1)" ${n?'':'disabled'} aria-label="Quitar uno">−</button>
-        <span class="lc-qty-n">${n}</span>
-        <button onclick="lcCambiarQty('${cat}','${txt.replace(/'/g,"\\'")}',1)" aria-label="Agregar uno">+</button>
-      </span>
-      <span class="lc-sub${n>1?' mult':''}" title="${n>1?`${n} × $${p.monto}`:'Lo que costará esta cantidad'}">${n?'$'+sub.toLocaleString('es-MX'):''}</span>`;
-    // La píldora "dura ~N sem" que iba aquí se quitó el 2026-08-19 a petición de Adán. El dato
-    // `sem` sigue vivo y no se toca: es lo que usa lcTotalComida() para prorratear cada producto
-    // y calcular el "Al mes" de la barra de totales — solo dejó de pintarse en cada renglón.
+    qtyHtml='<span class="lc-unit" title="Lo que cuesta cada '+p.paso+'">'+lcM(p.monto)+' c/u</span>'+
+      '<span class="lc-qty" title="Cuántos llevas. Cada + suma '+p.paso+'.">'+
+        '<button onclick="lcCambiarQty(\'comida\',\''+esc+'\',-1)" '+(n?'':'disabled')+' aria-label="Quitar uno">−</button>'+
+        '<span class="lc-qty-n">'+n+'</span>'+
+        '<button onclick="lcCambiarQty(\'comida\',\''+esc+'\',1)" aria-label="Agregar uno">+</button>'+
+      '</span>';
   }
+  const subHtml=lcTieneQty(cat,txt)
+    ? '<span class="lc-sub'+(n>1?' mult':'')+'" title="'+(n?n+' × '+lcM(p.monto):'Marca para llevar tu cantidad de una semana: '+lcBase(p)+' × '+p.paso)+'">'+(n?lcM(p.monto*n):'—')+'</span>'
+    : '';
   const tengo=lcTengoCat(cat)&&lcTengo(id);
   const tengoBtn=lcTengoCat(cat)
-    ? `<button class="lc-tengo-btn${tengo?' on':''}" onclick="lcToggleTengo('${cat}','${txt.replace(/'/g,"\\'")}')"
-        title="${tengo?'Marcado como que ya lo tienes — no suma al total':'Márcalo si ya lo tienes en casa: sale del total y de los pendientes'}">${tengo?'✓ Ya lo tengo':'Ya lo tengo'}</button>`
+    ? '<button class="lc-tengo-btn'+(tengo?' on':'')+'" onclick="lcToggleTengo(\''+cat+'\',\''+esc+'\')" '+
+      'title="'+(tengo?'Marcado como que ya lo tienes — no suma al total':'Márcalo si ya lo tienes en casa: sale del total y de los pendientes')+'">'+(tengo?'✓ Ya lo tengo':'Ya lo tengo')+'</button>'
     : '';
-  return `<div class="lc-item${tengo?' lc-item-tengo':''}" id="${id}-row">
-    <input type="checkbox" id="${id}" ${checked} ${tengo?'disabled':''} onchange="toggleListaItem('${id}','${cat}','${txt.replace(/'/g,"\\'")}')">
-    <label for="${id}" class="lc-item-txt">${txt}</label>
-    ${lcPrecioHtml(cat,txt)}
-    ${qtyHtml}
-    ${tengoBtn}
-    ${shopHtml}
-  </div>`;
+  return '<div class="lc-item'+(n?' on':'')+(tengo?' lc-item-tengo':'')+'" id="'+id+'-row">'+
+    '<input type="checkbox" id="'+id+'" '+(n?'checked':'')+' '+(tengo?'disabled':'')+' onchange="toggleListaItem(\''+id+'\',\''+cat+'\',\''+esc+'\')">'+
+    '<label for="'+id+'" class="lc-item-txt">'+txt+'</label>'+
+    '<span class="lc-item-meta">'+lcPrecioHtml(cat,txt)+qtyHtml+tengoBtn+shopHtml+'</span>'+
+    subHtml+
+  '</div>';
 }
-function lcRenderItems(cat,items,checks,conLinkAmazon){
+function lcRenderItems(cat,items,conLinkAmazon){
   return items.map(txt=>lcItemHtml(cat,txt,conLinkAmazon)).join('');
 }
-// Suma cuánto costará lo ya marcado en el checklist de "comida" — pedido explícito: "las
-// cosas que marque en el checklist debemos sumar la cantidad total de cuanto me costara".
-// Usa LISTA_COMPRAS_PRECIOS[txt].monto (compra típica), no `precio` (unitario/por kg) — ver
-// nota en esa constante. Solo tiene sentido en "comida", la única categoría con precio.
-// 2026-08-15: ahora multiplica por el contador de cada producto. `piezas` (suma de cantidades)
-// y `n` (productos distintos) son números distintos a propósito — 3 aguacates y 2 papayas son
-// 5 piezas de 2 productos, y en el súper las dos cifras dicen cosas distintas.
-const LC_SEM_MES=4.33; // semanas por mes (52/12), para proyectar el gasto recurrente
-// Devuelve las 2 cifras que de verdad significan algo, más el desglose por pasillo:
-//   ticket  — lo que pagas HOY en caja por lo marcado.
-//   mensual — lo que te cuesta AL MES sostener eso, cada producto prorrateado por lo que dura
-//             (`sem`). Un aceite de $150 que dura 8 semanas no son $150/mes, son ~$81.
-function lcTotalComida(checks){
-  let ticket=0,mensual=0,n=0,piezas=0;
-  const porPasillo={};
-  for(const [pasillo,items] of Object.entries(LISTA_COMPRAS.comida)){
-    let sub=0;
-    items.forEach(txt=>{
-      const q=lcQty(lcItemId('comida',txt));
-      if(!q) return;
-      const p=LISTA_COMPRAS_PRECIOS[txt];
-      if(!p||typeof p.monto!=='number') return;
-      const imp=p.monto*q;
-      ticket+=imp; sub+=imp; n++; piezas+=q;
-      mensual+=imp*(LC_SEM_MES/(p.sem||1));
-    });
-    if(sub) porPasillo[pasillo]=sub;
-  }
-  return {total:ticket,ticket,mensual:Math.round(mensual),n,piezas,porPasillo};
-}
-function lcTotalBarHtml(checks){
-  const {ticket,mensual,n,piezas}=lcTotalComida(checks);
-  if(!n) return `<span id="lcTotalBar" class="lc-total lc-total-vacio">🧮 Marca lo que vas a llevar y aquí sale el ticket</span>`;
-  const detalle=`${n} producto${n===1?'':'s'}${piezas>n?` · ${piezas} piezas`:''}`;
-  // Las 2 cifras juntas y etiquetadas: el ticket es lo que sacas de la cartera hoy, el mensual
-  // es lo que ese carrito implica si lo sostienes — que es el número que importa para el
-  // presupuesto, y el que antes no existía en ninguna parte.
-  return `<span id="lcTotalBar" class="lc-total">
-    <span class="lc-total-main" title="Lo que pagas hoy en caja por lo marcado. Precios de tu ticket de Walmart del 10-ago-2026 (✓) o investigados (≈) — varían por sucursal y temporada.">🧮 Ticket: <b>$${ticket.toLocaleString('es-MX')}</b> <small>${detalle}</small></span>
-    <span class="lc-total-mes" title="Lo que cuesta AL MES sostener este carrito, prorrateando cada producto por lo que dura: el aceite de oliva dura ~8 semanas, el jitomate ~1. No es el ticket × 4.">📅 Al mes: <b>$${mensual.toLocaleString('es-MX')}</b></span>
-  </span>`;
-}
-// Refresca solo el número del total (llamado desde toggleListaItem, sin re-pintar toda la
-// lista — mismo motivo que renderListaCatTabs ahí: no perder scroll/foco al marcar un check).
+
+// Refresca solo las cifras (llamado desde toggleListaItem y el contador, sin re-pintar toda la
+// lista: si no, se pierde el scroll y el foco al marcar un check).
 function actualizarLcTotal(){
-  const el=document.getElementById('lcTotalBar');
-  if(!el) return;
-  const checks=rawGet('dash-lista-compras',{});
-  el.outerHTML=lcTotalBarHtml(checks);
-  // Los subtotales por pasillo se refrescan aquí y no en el render completo: cambiar una
-  // cantidad solo repinta su renglón (para no perder scroll ni foco), así que el encabezado
-  // del pasillo se quedaría con la cifra vieja si no se actualiza aparte.
+  const hud=document.getElementById('lcHud');
+  if(hud) hud.outerHTML=(listaCatSel==='comida'?lcHudComidaHtml():lcHudCatHtml(listaCatSel));
+  const prop=document.getElementById('lcProp');
+  if(prop) prop.outerHTML=lcPropHtml();
   if(listaCatSel!=='comida') return;
-  const {porPasillo}=lcTotalComida(checks);
+  // Los subtotales y el "x/y" de cada pasillo se refrescan aquí y no en el render completo:
+  // cambiar una cantidad solo repinta su renglón, así que el encabezado se quedaría con la cifra
+  // vieja si no se actualiza aparte.
+  const {porPasillo}=lcTotalComida();
   Object.keys(LISTA_COMPRAS.comida).forEach(pasillo=>{
     const s=document.getElementById('lcsub-'+lcSlug(pasillo));
-    if(s) s.textContent=porPasillo[pasillo]?'$'+porPasillo[pasillo].toLocaleString('es-MX'):'';
+    if(s) s.textContent=porPasillo[pasillo]?lcM(porPasillo[pasillo]):'';
+    const c=document.getElementById('lcct-'+lcSlug(pasillo));
+    if(c) c.textContent=lcPasilloCt(pasillo);
   });
 }
+
 // Vacía los marcados de la categoría activa — pedido explícito: "un boton para borrar la
 // seleccion de productos cuando vaya al super de nuevo" (arrancar una lista nueva sin
 // desmarcar uno por uno). Pide confirmación porque borra progreso ya marcado, sin deshacer.
@@ -3807,57 +4356,67 @@ function vaciarListaCat(cat){
   const checks=rawGet('dash-lista-compras',{});
   const marcados=ids.filter(id=>checks[id]).length;
   if(!marcados) return;
-  if(!confirm(`¿Vaciar los ${marcados} producto${marcados===1?'':'s'} marcados de "${LISTA_CAT_META[cat].label}"? No se puede deshacer.`)) return;
+  if(!confirm('¿Vaciar los '+marcados+' producto'+(marcados===1?'':'s')+' marcados de "'+LISTA_CAT_META[cat].label+'"? No se puede deshacer.')) return;
   ids.forEach(id=>delete checks[id]);
   rawSet('dash-lista-compras',checks);
   renderListaCompras();
 }
+
 function renderListaCompras(){
   renderListaCatTabs();
-  const checks=rawGet('dash-lista-compras',{});
   const data=LISTA_COMPRAS[listaCatSel];
   const conLinkAmazon=LC_AMAZON_CATS.includes(listaCatSel);
   const esComida=listaCatSel==='comida';
-  const barra=`<div class="lc-toolbar">${esComida?lcTotalBarHtml(checks):lcTotalCatBarHtml(listaCatSel)}<button class="lc-clear-btn" onclick="vaciarListaCat('${listaCatSel}')">🗑️ Vaciar marcados</button></div>`;
-  // Leyenda por categoría (2026-08-12): comida explica real/estimado + las 3 formas de venta;
-  // el resto explica que los 2 precios son por plataforma y siempre aproximados.
+  const hud=esComida?lcHudComidaHtml():lcHudCatHtml(listaCatSel);
+  const prop=esComida?lcPropHtml():'';
   const leyenda=esComida
-    ? `<div class="lc-price-leyenda">
-         <span class="lc-price lc-price-real">✓</span> cantidad de tu ticket de Walmart &nbsp;·&nbsp;
-         <span class="lc-price lc-price-est">≈</span> estimada &nbsp;·&nbsp;
-         ⚖️ por peso · 🔢 por pieza · 📦 por paquete &nbsp;·&nbsp;
-         usa <b style="color:var(--text2)">− +</b> para llevar más de uno &nbsp;·&nbsp;
-         <b style="color:var(--text2)">"Al mes"</b> no es el ticket ×4: cada producto se prorratea por lo que dura
-       </div>`
-    : `<div class="lc-price-leyenda">
-         <span class="lc-price lc-price-est">≈ $</span> precio aproximado en cada plataforma &nbsp;·&nbsp;
-         marca lo que vas a llevar y <b style="color:var(--text2)">se va sumando arriba</b> &nbsp;·&nbsp;
-         <b style="color:var(--text2)">"Ya lo tengo"</b> lo saca del total y de los pendientes, sin borrarlo de la lista
-       </div>`;
+    ? '<div class="lc-price-leyenda">'+
+        '<span><i class="lc-leg-dot" style="background:var(--g)"></i>precio de tu ticket de Walmart</span>'+
+        '<span><i class="lc-leg-dot" style="border:1.5px solid var(--o)"></i>precio estimado</span>'+
+        '<span>la píldora dice qué suma cada <b style="color:var(--text2)">+</b>: una pieza, un paquete, medio kilo</span>'+
+        '<span>marcar la casilla mete tu cantidad de <b style="color:var(--text2)">una semana</b></span>'+
+        '<span>los gramos de lo que se vende por pieza son aproximados</span>'+
+      '</div>'
+    : '<div class="lc-price-leyenda">'+
+        '<span><i class="lc-leg-dot" style="border:1.5px solid var(--o)"></i>precio aproximado en cada plataforma</span>'+
+        '<span>marca lo que vas a llevar y <b style="color:var(--text2)">se va sumando arriba</b></span>'+
+        '<span><b style="color:var(--text2)">"Ya lo tengo"</b> lo saca del total y de los pendientes, sin borrarlo de la lista</span>'+
+      '</div>';
   const html=Array.isArray(data)
-    ? `<div>${lcRenderItems(listaCatSel,data,checks,conLinkAmazon)}</div>`
+    ? '<div class="lc-grid">'+lcRenderItems(listaCatSel,data,conLinkAmazon)+'</div>'
     : Object.entries(data).map(([pasillo,items])=>{
-        // Subtotal por pasillo (2026-08-15) — recorres el súper por pasillos, así que saber
-        // que Carnes ya va en $240 sirve mientras estás ahí parado, no al llegar a la caja.
-        const sub=esComida?(lcTotalComida(checks).porPasillo[pasillo]||0):0;
-        return `<div class="lc-aisle">
-        <div class="lc-aisle-title">${pasillo}<span class="lc-aisle-sub" id="lcsub-${lcSlug(pasillo)}">${sub?'$'+sub.toLocaleString('es-MX'):''}</span></div>
-        <div class="lc-grid">${lcRenderItems(listaCatSel,items,checks,conLinkAmazon)}</div>
-      </div>`;}).join('');
-  document.getElementById('listaCompraBody').innerHTML=barra+leyenda+html;
+        // Subtotal por pasillo — recorres el súper por pasillos, así que saber que Carnes ya va en
+        // $240 sirve mientras estás ahí parado, no al llegar a la caja.
+        const sub=esComida?(lcTotalComida().porPasillo[pasillo]||0):0;
+        const cl=esComida?lcClase(pasillo,''):null;
+        const col=cl?LC_CLASE_META[cl].col:'rgba(var(--ov),.22)';
+        const slug=lcSlug(pasillo);
+        return '<div class="lc-aisle">'+
+          '<div class="lc-aisle-title">'+
+            '<i class="lc-aisle-rule" style="background:'+col+'"></i>'+pasillo+
+            (esComida?'<span class="lc-aisle-ct" id="lcct-'+slug+'">'+lcPasilloCt(pasillo)+'</span>':'')+
+            '<span class="lc-aisle-sub" id="lcsub-'+slug+'">'+(sub?lcM(sub):'')+'</span>'+
+          '</div>'+
+          '<div class="lc-grid">'+lcRenderItems(listaCatSel,items,conLinkAmazon)+'</div>'+
+        '</div>';
+      }).join('');
+  document.getElementById('listaCompraBody').innerHTML=hud+prop+leyenda+html;
 }
 function verListaCat(cat){ listaCatSel=cat; renderListaCompras(); }
-// El checkbox pone la cantidad en 1 (o en 0 al desmarcar). En los productos con contador se
-// re-pinta el renglón para que el "− 0 +" y el subtotal queden en sync con la casilla; en el
-// resto sigue funcionando igual que antes, sin repintar nada.
+// El checkbox pone la cantidad de UNA SEMANA (`base`), no 1: en el súper no llevas un plátano,
+// llevas los de la semana, y ajustar de 1 en 1 desde cero era el trabajo que pidió quitarse.
+// Al desmarcar vuelve a 0. En los productos con contador se re-pinta el renglón para que el
+// "− n +" y el subtotal queden en sync con la casilla.
 function toggleListaItem(id,cat,txt){
   const cb=document.getElementById(id);
-  lcSetQty(id, cb&&cb.checked?1:0);
-  if(cat&&txt&&lcTieneQty(cat,txt)){
+  const marcado=!!(cb&&cb.checked);
+  if(cat==='comida'&&lcTieneQty(cat,txt)) lcSetQty(id, marcado?lcBase(LISTA_COMPRAS_PRECIOS[txt]):0);
+  else lcSetQty(id, marcado?1:0);
+  if(cat&&txt){
     const fila=document.getElementById(id+'-row');
     if(fila) fila.outerHTML=lcItemHtml(cat,txt,LC_AMAZON_CATS.includes(cat));
   }
-  renderListaCatTabs(); // refresca el "X/Y" de la pestaña sin re-pintar la lista completa (pierde el scroll/foco si no)
+  renderListaCatTabs(); // refresca el "X/Y" de la pestaña sin re-pintar la lista completa
   actualizarLcTotal();
 }
 
@@ -5504,26 +6063,133 @@ function abrirDidi(){
 function cerrarDidi(){document.getElementById('didiOverlay')?.classList.remove('open');}
 
 
-// ─── CALENDARIO DEL AÑO (2026-08-17) ─────────────────────────────────────────
-// Se abre tocando el reloj de Mi Día. Muestra los 12 meses con sus días y, al elegir
-// uno, qué toca ese mes según la fase del Plan Maestro que lo cubre.
+// ─── CALENDARIO DEL AÑO (2026-08-17 · rediseñado 2026-08-26) ─────────────────
+// Se abre tocando el reloj de Mi Día. Muestra los 12 meses del año y, al elegir uno,
+// qué toca ese mes según la fase del Plan Maestro que lo cubre.
 //
-// Nada aquí es contenido nuevo: el detalle sale de PHASES[].semanas filtrado por `mes`
-// (el mismo campo que ya usa el slide de Coach), de los eventos que Adán capturó en
-// dash-eventos-mes-v1, y del avance real marcado en coach_checks_v1. Si una fase no
-// tiene tareas con `mes` para ese mes concreto (Fases 1-3 no las etiquetan), se muestra
-// la meta de la fase, que es la información que sí aplica a todo ese tramo.
+// Rediseño del 2026-08-26 — Adán: "dame un diseño que me aporte mucho más a la fecha
+// de mis metas y deadlines para meterme presión y acabarlas". La versión anterior
+// pintaba 12 cuadrículas neutras y un "● pendientes": decía qué día era, no cuánto
+// tiempo llevaba gastado ni qué vencía. Lo que se agregó, y de dónde sale cada cosa:
+//
+//   · Barra de combustión del año — 12 segmentos y la aguja de HOY. Puro calendario.
+//   · Cuenta regresiva dominante — el próximo hito QUE TIENE TRABAJO SIN CERRAR
+//     detrás, no el más cercano a secas. Un cargo automático (la última cuota de un
+//     MSI) va a pasar solo: ponerlo de titular sería fabricar urgencia falsa. Por eso
+//     cada deadline lleva `pend`, y por eso se distingue HITO de COBRO.
+//   · Días ya vividos apagados y meses cerrados con trama diagonal.
+//   · Ritmo requerido — lo que falta del fondo de emergencia entre los días que
+//     quedan de fase. Es dinero real de Finanzas, no casillas marcadas: la misma
+//     regla que ya seguía pintarEdadPace().
+//
+// NADA de esto trae fechas escritas a mano aquí. Los cierres y arranques de fase
+// salen de PHASES; la última cuota de cada MSI vivo sale de `balance / min` sobre las
+// deudas de Finanzas; los días de cobro fijo y las dos fechas que no se pueden
+// derivar (Maestría) salen de CIFRAS.CALENDARIO. Si algo se puede calcular, se
+// calcula: es lo que evita que el calendario se quede congelado como se quedó la
+// vieja barra de metas.
 const CAL_MESES=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+const CAL_MESES_C=['ENE','FEB','MAR','ABR','MAY','JUN','JUL','AGO','SEP','OCT','NOV','DIC'];
 const CAL_DOW=['L','M','M','J','V','S','D'];
 const CAL_FASE_COLOR=['#00e87a','#00e0ff','#e0b020','#ff6bd6'];
+// Los dos umbrales de los que cuelga TODO el color de esta pantalla.
+const CAL_CRITICO=30, CAL_URGENTE=90;
 let calAnio=new Date().getFullYear(), calMesSel=new Date().getMonth();
+
+function calHoy(){ const d=new Date(); d.setHours(0,0,0,0); return d; }
+function calDias(f){ return Math.round((f-calHoy())/86400000); }
+function calMesKey(anio,mes){ return anio+'-'+String(mes+1).padStart(2,'0'); }
 
 // Devuelve el índice de la fase que cubre ese mes, o -1 si el mes cae fuera del plan.
 function calFaseDe(anio,mes){
   const ini=new Date(anio,mes,1), fin=new Date(anio,mes+1,0);
   return PHASES.findIndex(f=>f.start<=fin&&f.end>=ini);
 }
-function calMesKey(anio,mes){ return anio+'-'+String(mes+1).padStart(2,'0'); }
+
+// La escala de urgencia. `rgb` es el triple del acento (--r-rgb y compañía), que es lo
+// que permite componer bordes y fondos translúcidos a partir de un color del tema.
+function calUrgencia(n){
+  if(n<=CAL_CRITICO) return {k:'CRÍTICO',c:'var(--r)',rgb:'var(--r-rgb)'};
+  if(n<=CAL_URGENTE) return {k:'URGENTE',c:'var(--o)',rgb:'var(--o-rgb)'};
+  return {k:'EN RUTA',c:'var(--cy)',rgb:'var(--cy-rgb)'};
+}
+
+function calCobrosFijos(){ return (window.CIFRAS&&CIFRAS.CALENDARIO&&CIFRAS.CALENDARIO.cobros)||[]; }
+function calHitosFijos(){ return (window.CIFRAS&&CIFRAS.CALENDARIO&&CIFRAS.CALENDARIO.hitos)||[]; }
+
+// Íconos. Dibujados, no emoji: escalan y toman el color del tema.
+const CAL_ICO={
+  alerta:c=>'<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="'+c+'" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:1px"><path d="M10.3 3.9L1.8 18a2 2 0 001.7 3h17a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z"/><path d="M12 9v4M12 17h.01"/></svg>',
+  rombo:c=>'<svg class="cal-item-ico" viewBox="0 0 24 24" fill="none" stroke="'+c+'" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l9 9-9 9-9-9z"/></svg>',
+  check:c=>'<svg class="cal-item-ico" viewBox="0 0 24 24" fill="none" stroke="'+c+'" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>',
+  repite:c=>'<svg class="cal-item-ico" viewBox="0 0 24 24" fill="none" stroke="'+c+'" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 2l4 4-4 4"/><path d="M3 11V9a4 4 0 014-4h14"/><path d="M7 22l-4-4 4-4"/><path d="M21 13v2a4 4 0 01-4 4H3"/></svg>',
+  reloj:c=>'<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="'+c+'" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>'
+};
+
+// ── Los hitos con fecha dura del año ────────────────────────────────────────
+// `pend` = trabajo TUYO que sigue abierto detrás del hito. Es lo único que separa
+// una meta de un cargo que va a ocurrir con o sin ti, y de ahí sale el titular.
+function calDeadlines(anio){
+  const out=[], hoy=calHoy();
+  const checks=rawGet('coach_checks_v1',{})||{};
+  PHASES.forEach((f,i)=>{
+    if(f.end.getFullYear()===anio){
+      const total=(f.semanas||[]).length;
+      const abiertas=(f.semanas||[]).filter(s=>!checks[s.id]).length;
+      out.push({f:f.end,tipo:'HITO',t:'Cierra la '+f.tag,pend:abiertas,
+        sub:total?(abiertas?abiertas+' de '+total+' tareas sin cerrar':'las '+total+' tareas marcadas'):esc(f.meta)});
+    }
+    // El arranque de la Fase 0 no es un hito: es el día en que empezó el plan.
+    if(i>0&&f.start.getFullYear()===anio){
+      out.push({f:f.start,tipo:'HITO',t:'Arranca la '+f.tag,pend:0,sub:esc(f.title)});
+    }
+  });
+  // Última cuota de cada MSI vivo. `balance / min` da las que faltan y `day` el día
+  // del cargo; los MSI sin día registrado (day 0) no se inventan.
+  ((D.fin&&D.fin.debts)||[]).forEach(d=>{
+    if(!(d.balance>0)||!(d.min>0)||!(d.day>0)) return;
+    if(d.type==='credit_card'||d.type==='car') return;   // no tienen "última cuota"
+    const quedan=Math.round(d.balance/d.min);
+    if(quedan<1||quedan>36) return;
+    const salto=hoy.getDate()<=d.day?quedan-1:quedan;
+    const ult=new Date(hoy.getFullYear(),hoy.getMonth()+salto,d.day);
+    if(ult.getFullYear()!==anio) return;
+    out.push({f:ult,tipo:'COBRO',t:'Última cuota · '+esc(String(d.name).replace(/\s*\([^)]*\)\s*$/,'')),pend:0,
+      sub:money(d.min)+' · '+(quedan===1?'ya es la última':'quedan '+quedan+' cuotas')});
+  });
+  calHitosFijos().forEach(h=>{
+    const f=new Date(h.fecha+'T00:00:00');
+    if(f.getFullYear()===anio) out.push({f:f,tipo:'HITO',t:esc(h.txt),pend:0,sub:esc(h.sub||'')});
+  });
+  return out.sort((a,b)=>a.f-b.f);
+}
+
+// Los días del mes que llevan cargo o ingreso, para marcarlos en las 12 cuadrículas.
+function calCobrosDelMes(){
+  const m={};
+  const pon=(dia,o)=>{ if(dia>0) (m[dia]=m[dia]||[]).push(o); };
+  calCobrosFijos().forEach(c=>pon(c.dia,{txt:esc(c.txt),monto:c.monto,entra:!!c.entra}));
+  ((D.fin&&D.fin.debts)||[]).forEach(d=>{
+    if(d.balance>0&&d.min>0) pon(d.day,{txt:esc(d.name),monto:d.min,entra:false});
+  });
+  return m;
+}
+
+// El número que muerde: lo que falta del fondo entre los días que quedan de fase.
+// Solo se calcula con dinero real de Finanzas — si no hay dato, no se inventa un 0%.
+function calRitmo(fase){
+  if(!fase) return null;
+  const n=calDias(fase.end);
+  const meta=_metaFondo(), ef=(D.fin&&D.fin.emergencyFund)||0;
+  const falta=meta-ef;
+  const largo=Math.round((fase.end-fase.start)/86400000)+1;
+  const corrido=Math.min(largo,Math.max(0,Math.round((calHoy()-fase.start)/86400000)+1));
+  return {dias:n, falta:falta, meta:meta, ef:ef,
+    porDia:(n>0&&falta>0)?Math.ceil(falta/n):0,
+    pct:meta>0?Math.min(100,Math.round(ef/meta*100)):0,
+    esperado:Math.round(corrido/largo*100),
+    corrido:corrido, largo:largo};
+}
 
 function abrirCalendario(){
   const ov=document.getElementById('calOverlay');
@@ -5534,20 +6200,227 @@ function abrirCalendario(){
   ov.classList.add('open');
   clearInterval(timer);
 }
-function cerrarCalendario(){ document.getElementById('calOverlay')?.classList.remove('open'); }
-function calCambiarAnio(d){ calAnio+=d; calMesSel=0; renderCalendario(); }
+function cerrarCalendario(){ calOcultarTip(); document.getElementById('calOverlay')?.classList.remove('open'); }
+function calCambiarAnio(d){
+  calAnio+=d;
+  // Al cambiar de año se elige el mes que tenga algo vivo, no enero por reflejo.
+  const hoy=calHoy();
+  calMesSel=calAnio===hoy.getFullYear()?hoy.getMonth():0;
+  renderCalendario();
+}
 function calSeleccionar(m){ calMesSel=m; renderCalendario(); }
 
+// ─── EL GLOBO DE "QUÉ PASA ESTE DÍA" (2026-08-27) ────────────────────────────
+// Pedido de Adán: "cuando ponga el mouse arriba de los días, quiero que salga info de
+// qué pasa en ese día, o cuando toque ese día".
+//
+// No calcula nada nuevo: lee los dos índices que renderCalendario() ya dejó armados
+// —`calHitosDia` (los deadlines del año por día) y `calCobrosDia` (los cobros fijos,
+// que se repiten igual todos los meses)—. Por eso puede responder al instante sobre
+// cualquiera de los ~365 días sin volver a recorrer las fases ni las deudas.
+//
+// Un día sin nada TAMBIÉN abre globo, con la fecha y los días que faltan. En un
+// calendario que existe para meter presión, "cuánto falta para el 14 de octubre" es
+// justo lo que quieres poder preguntar señalando, y dejar días mudos haría dudar de
+// si la pieza funciona.
+//
+// Ratón y dedo entran por caminos distintos: `mouseover` para el primero, `click` en
+// fase de CAPTURA para el segundo. La captura importa — el click también burbujea al
+// mes, que llama a calSeleccionar() y repinta la cuadrícula; si esto corriera después,
+// la celda ya estaría fuera del DOM y getBoundingClientRect() daría ceros.
+let calHitosDia={}, calCobrosDia={}, calTipFijo=null, calTipCel=null;
+
+function calTipEl(){
+  let t=document.getElementById('calTip');
+  if(!t){
+    t=document.createElement('div');
+    t.id='calTip'; t.className='cal-tip';
+    document.getElementById('calOverlay').appendChild(t);
+  }
+  return t;
+}
+
+function calTipHTML(m,n){
+  const f=new Date(calAnio,m,n), dd=calDias(f);
+  const hitos=calHitosDia[m+'-'+n]||[], cobros=calCobrosDia[n]||[];
+  const u=dd>=0?calUrgencia(dd):{c:'var(--text3)',rgb:'var(--ov)'};
+  const cuenta=dd===0?'HOY':dd>0?(dd===1?'mañana':'faltan '+dd+' días')
+                             :(dd===-1?'ayer':'hace '+(-dd)+' días');
+  // es-MX devuelve "viernes, 18 de septiembre": fuera la coma y mayúscula solo al principio.
+  const fecha=f.toLocaleDateString('es-MX',{weekday:'long',day:'numeric',month:'long'}).replace(',','');
+  let h='<div class="cal-tip-h"><span class="cal-tip-f">'+
+    fecha.charAt(0).toUpperCase()+fecha.slice(1)+'</span>'+
+    '<span class="cal-tip-d" style="color:'+(dd===0?'var(--bg)':u.c)+
+      ';background:'+(dd===0?'var(--cy)':'rgba('+u.rgb+',.14)')+'">'+cuenta+'</span></div>';
+
+  if(hitos.length){
+    h+='<div class="cal-tip-k">'+(dd<0?'Venció ese día':'Vence ese día')+'</div>';
+    h+=hitos.map(x=>'<div class="cal-tip-r">'+CAL_ICO.rombo(dd>=0?u.c:'var(--text3)')+
+      '<div><b>'+x.t+'</b><br>'+x.sub+'</div></div>').join('');
+  }
+  if(cobros.length){
+    h+='<div class="cal-tip-k">Se mueve dinero</div>';
+    h+=cobros.map(c=>'<div class="cal-tip-r"><span>'+c.txt+'</span>'+
+      '<i style="color:'+(c.entra?'var(--g)':'var(--text2)')+'">'+(c.entra?'+':'−')+money(c.monto)+'</i></div>').join('');
+  }
+  if(!hitos.length&&!cobros.length){
+    h+='<div class="cal-tip-v">Ese día no vence nada ni se mueve dinero.</div>';
+  }
+  return h;
+}
+
+// El globo se coloca encima de la celda; si no cabe arriba, debajo. Nunca fuera de
+// la ventana: en un mes de la columna derecha se saldría por el borde.
+function calColocarTip(cel,t){
+  const r=cel.getBoundingClientRect(), b=t.getBoundingClientRect();
+  let y=r.top-b.height-9;
+  if(y<8) y=r.bottom+9;
+  let x=r.left+r.width/2-b.width/2;
+  x=Math.max(8,Math.min(x,window.innerWidth-b.width-8));
+  t.style.left=Math.round(x)+'px';
+  t.style.top=Math.round(y)+'px';
+}
+
+function calMostrarTip(cel,fijo){
+  const m=+cel.dataset.m, n=+cel.dataset.n;
+  if(!(n>0)) return;
+  const t=calTipEl();
+  t.innerHTML=calTipHTML(m,n);
+  t.classList.add('on');
+  calColocarTip(cel,t);
+  calTipCel=cel;
+  if(fijo) calTipFijo=m+'-'+n;
+  else if(calTipFijo&&calTipFijo!==m+'-'+n) calTipFijo=null;
+}
+
+function calOcultarTip(){
+  document.getElementById('calTip')?.classList.remove('on');
+  calTipFijo=null; calTipCel=null;
+}
+
+// Los oyentes van sobre #calGrid, que sobrevive a los repintados (solo se le cambia
+// el innerHTML), así que se enganchan UNA vez y valen para todas las celdas futuras.
+function calEngancharTip(){
+  const g=document.getElementById('calGrid');
+  if(!g||g.dataset.tip) return;
+  g.dataset.tip='1';
+
+  g.addEventListener('mouseover',e=>{
+    const c=e.target.closest('.cal-dia');
+    if(c&&c.dataset.n) calMostrarTip(c,false); else if(!calTipFijo) calOcultarTip();
+  });
+  g.addEventListener('mouseleave',()=>{ if(!calTipFijo) calOcultarTip(); });
+  // Captura: tiene que leer la posición de la celda ANTES de que el click llegue al
+  // mes y repinte la cuadrícula.
+  g.addEventListener('click',e=>{
+    const c=e.target.closest('.cal-dia');
+    if(!c||!c.dataset.n) return;
+    if(calTipFijo===c.dataset.m+'-'+c.dataset.n) calOcultarTip();   // segundo toque: cerrar
+    else calMostrarTip(c,true);
+  },true);
+
+  // Con el globo fijo en el sitio, cualquier scroll lo deja flotando en el aire.
+  document.querySelector('.cal-card')?.addEventListener('scroll',()=>{
+    const t=document.getElementById('calTip');
+    if(!t||!t.classList.contains('on')) return;
+    if(calTipCel&&calTipCel.isConnected) calColocarTip(calTipCel,t); else calOcultarTip();
+  },{passive:true});
+  document.getElementById('calOverlay')?.addEventListener('click',e=>{
+    if(!e.target.closest('.cal-dia')) calOcultarTip();
+  });
+}
+
 function renderCalendario(){
-  const hoy=new Date();
+  const hoy=calHoy();
   const eventos=rawGet(EVENTOS_KEY,{})||{};
+  const checks=rawGet('coach_checks_v1',{})||{};
+  const esAnioVivo=calAnio===hoy.getFullYear(), esPasado=calAnio<hoy.getFullYear();
   document.getElementById('calYear').textContent=calAnio;
+  document.getElementById('calYearBig').textContent=calAnio;
   // El plan va de 2026 a 2030 — fuera de ese rango no hay nada que mostrar.
   const min=PHASES[0].start.getFullYear(), max=PHASES[PHASES.length-1].end.getFullYear();
   document.getElementById('calPrev').disabled=calAnio<=min;
   document.getElementById('calNext').disabled=calAnio>=max;
 
+  // ── Cuánto año llevas gastado ──
+  const iniAnio=new Date(calAnio,0,1), finAnio=new Date(calAnio,11,31);
+  const totalAnio=Math.round((finAnio-iniAnio)/86400000)+1;
+  const idos=esAnioVivo?Math.round((hoy-iniAnio)/86400000)+1:(esPasado?totalAnio:0);
+  const pctAnio=Math.round(idos/totalAnio*100);
+  document.getElementById('calRestan').textContent=totalAnio-idos;
+  document.getElementById('calRestanL').textContent=
+    esAnioVivo?('días te quedan de '+calAnio):esPasado?'año cerrado':('días completos de '+calAnio);
+
+  // ── La barra de combustión ──
+  let q='<div class="cal-quema-rail"><div class="cal-quema-segs">';
+  for(let m=0;m<12;m++){
+    const tot=new Date(calAnio,m+1,0).getDate();
+    const viva=esAnioVivo&&m===hoy.getMonth();
+    const pct=esPasado?100:!esAnioVivo?0:m<hoy.getMonth()?100:viva?Math.round(hoy.getDate()/tot*100):0;
+    q+='<div><div class="cal-seg'+(viva?' viva':'')+'"><i style="width:'+pct+'%"></i></div>'+
+       '<div class="cal-seg-l'+(viva?' viva':'')+'">'+CAL_MESES_C[m][0]+'</div></div>';
+  }
+  q+='</div>';
+  if(esAnioVivo){
+    // La etiqueta se recorta en los extremos si va pegada al 0% o al 100%.
+    const x=Math.min(97,Math.max(3,pctAnio));
+    q+='<div class="cal-aguja" style="left:'+x+'%"></div>'+
+       '<div class="cal-aguja-l" style="left:'+x+'%">HOY · '+hoy.getDate()+' '+CAL_MESES_C[hoy.getMonth()]+'</div>';
+  }
+  q+='</div><div class="cal-pct"><b>'+pctAnio+'<span style="font-size:10px;color:var(--text3)">%</span></b>'+
+     '<div class="cal-eyebrow">del año consumido</div></div>';
+  document.getElementById('calQuema').innerHTML=q;
+
+  // ── La cuenta regresiva dominante y lo que vence ──
+  const deadlines=calDeadlines(calAnio);
+  const futuros=deadlines.filter(d=>calDias(d.f)>=0);
+  // El titular es el próximo hito CON TRABAJO SIN CERRAR. Si no hay ninguno, el más
+  // cercano a secas, y se dice que es un cobro para no vender urgencia que no existe.
+  const hero=futuros.find(d=>d.pend>0)||futuros[0]||null;
+  let t='';
+  if(hero){
+    const n=calDias(hero.f), u=calUrgencia(n);
+    t='<div class="cal-hero" style="border-color:rgba('+u.rgb+',.3);background:linear-gradient(160deg,rgba('+u.rgb+',.14),rgba('+u.rgb+',.02) 70%)">'+
+      '<div class="cal-hero-k" style="color:'+u.c+'">'+CAL_ICO.alerta(u.c)+
+        (hero.pend>0?'Lo próximo con trabajo sin cerrar':'Lo próximo que vence')+'</div>'+
+      '<div class="cal-hero-n"><span class="cal-hero-d" style="color:'+u.c+';text-shadow:0 0 46px rgba('+u.rgb+',.4)">'+n+'</span>'+
+        '<span><span class="cal-hero-u" style="color:'+u.c+'">'+(n===1?'DÍA':'DÍAS')+'</span>'+
+        '<div class="cal-hero-f">'+hero.f.toLocaleDateString('es-MX',FECHA_LARGA)+'</div></span></div>'+
+      '<div class="cal-hero-t">'+hero.t+'</div>'+
+      '<div class="cal-hero-s">'+hero.sub+'</div></div>';
+  }else{
+    t='<div class="cal-hero" style="border-color:rgba(var(--ov),.09);background:rgba(var(--ov),.03)">'+
+      '<div class="cal-hero-k" style="color:var(--text3)">'+CAL_ICO.reloj('var(--text3)')+'Sin fechas duras</div>'+
+      '<div class="cal-hero-s" style="margin-top:14px">'+
+      (esPasado?'Este año ya cerró. Lo que quedó abierto se arrastra al siguiente.'
+               :'Ningún hito del Plan Maestro vence en '+calAnio+'.')+'</div></div>';
+  }
+  // Las fichas: lo que viene, y si el año ya pasó, lo último que hubo.
+  const lista=(futuros.length?futuros:deadlines.slice(-4)).slice(0,4);
+  t+='<div class="cal-fichas">';
+  if(!lista.length){
+    t+='<div class="cal-ficha" style="border-color:rgba(var(--ov),.08);background:rgba(var(--ov),.02)">'+
+       '<div class="cal-ficha-s">Sin hitos registrados en '+calAnio+'.</div></div>';
+  }
+  lista.forEach(d=>{
+    const n=calDias(d.f), pas=n<0, u=pas?{c:'var(--text3)',rgb:'var(--ov)'}:calUrgencia(n);
+    t+='<div class="cal-ficha" style="border-color:rgba('+u.rgb+',.28);background:linear-gradient(150deg,rgba('+u.rgb+',.1),transparent 78%)">'+
+      '<div class="cal-ficha-h"><span class="cal-ficha-k" style="color:'+u.c+'">'+d.tipo+' · '+
+        String(d.f.getDate()).padStart(2,'0')+' '+CAL_MESES_C[d.f.getMonth()]+'</span>'+
+      '<span class="cal-ficha-d" style="color:'+u.c+'">'+(pas?'pasó':n+'<small>d</small>')+'</span></div>'+
+      '<div class="cal-ficha-t">'+d.t+'</div><div class="cal-ficha-s">'+d.sub+'</div>'+
+      '<div class="cal-ficha-b"><i style="width:'+(pas?100:Math.max(5,Math.round((1-Math.min(n,180)/180)*100)))+'%;background:'+u.c+'"></i></div></div>';
+  });
+  t+='</div>';
+  document.getElementById('calTop').innerHTML=t;
+
   // ── Los 12 meses ──
+  // Se guardan en variables de módulo porque el globo de cada día las vuelve a leer
+  // al pasar el ratón, mucho después de que este render terminó. Y un día puede tener
+  // más de un hito, así que van en lista y no de uno en uno como antes.
+  calHitosDia={};
+  deadlines.forEach(d=>{ const k=d.f.getMonth()+'-'+d.f.getDate(); (calHitosDia[k]=calHitosDia[k]||[]).push(d); });
+  calCobrosDia=calCobrosDelMes();
   let g='';
   for(let m=0;m<12;m++){
     const fi=calFaseDe(calAnio,m);
@@ -5557,76 +6430,169 @@ function renderCalendario(){
     const offset=(primero.getDay()+6)%7;
     const dias=new Date(calAnio,m+1,0).getDate();
     const key=calMesKey(calAnio,m);
-    const tieneEventos=(eventos[key]||[]).length>0;
+    const idoMes=esPasado||(esAnioVivo&&m<hoy.getMonth());
+    const ahora=esAnioVivo&&m===hoy.getMonth();
+    // Un mes ya quemado del año en curso no necesita su cuadrícula: el 14 de marzo no
+    // le sirve a nadie en agosto, y siete meses a tamaño completo empujaban el mes
+    // actual fuera de la pantalla. Se encoge a nombre, fase y lo que quedó sin cerrar,
+    // y sigue siendo clicable. En un año pasado se ven completos: ahí estás revisando.
+    const mini=idoMes&&esAnioVivo;
     let d='';
-    for(let i=0;i<offset;i++) d+='<div class="cal-dia vacio"></div>';
-    for(let n=1;n<=dias;n++){
+    for(let i=0;i<offset&&!mini;i++) d+='<div class="cal-dia vacio"></div>';
+    for(let n=1;n<=dias&&!mini;n++){
       const dow=(offset+n-1)%7;
-      const esHoy=calAnio===hoy.getFullYear()&&m===hoy.getMonth()&&n===hoy.getDate();
-      d+=`<div class="cal-dia${esHoy?' hoy':''}${dow>=5?' finde':''}">${n}</div>`;
+      const esHoy=ahora&&n===hoy.getDate();
+      const ido=idoMes||(ahora&&n<hoy.getDate())||(esPasado);
+      const h=calHitosDia[m+'-'+n];
+      const cob=calCobrosDia[n];
+      let cls='cal-dia', est='';
+      if(dow>=5) cls+=' finde';
+      if(ido&&!esHoy) cls+=' ido';
+      if(esHoy) cls+=' hoy';
+      else if(h){
+        const u=calUrgencia(calDias(h[0].f));
+        cls+=' hito';
+        est=' style="box-shadow:inset 0 0 0 1.6px '+u.c+',0 0 14px rgba('+u.rgb+',.3)"';
+      }else if(cob&&!ido){
+        cls+=' cobro'+(cob.every(x=>x.entra)?' entra':'');
+      }
+      d+='<div class="'+cls+'"'+est+' data-m="'+m+'" data-n="'+n+'">'+n+'</div>';
     }
-    g+=`<div class="cal-mes${m===calMesSel?' sel':''}" onclick="calSeleccionar(${m})">
-      <div class="cal-mes-h">
-        <span class="cal-mes-n">${CAL_MESES[m]}</span>
-        ${fi>=0?`<span class="cal-mes-fase" style="background:${color}22;color:${color}">${PHASES[fi].tag}</span>`:''}
-      </div>
-      <div class="cal-dow">${CAL_DOW.map(x=>`<span>${x}</span>`).join('')}</div>
-      <div class="cal-dias">${d}</div>
-      ${tieneEventos?'<div style="font-size:9px;color:var(--o);margin-top:4px">● pendientes</div>':''}
-    </div>`;
+    // El pie dice lo único que importa del mes: cuánto trabajo tuyo sigue abierto y
+    // cuánto falta para su próximo hito.
+    const abiertas=fi>=0?(PHASES[fi].semanas||[]).filter(s=>s.mes===key&&!checks[s.id]).length:0;
+    const pends=(eventos[key]||[]).filter(e=>!e.done).length;
+    const sinCerrar=abiertas+pends;
+    const delMes=deadlines.filter(x=>x.f.getMonth()===m&&calDias(x.f)>=0).map(x=>calDias(x.f)).sort((a,b)=>a-b);
+    const u=delMes.length?calUrgencia(delMes[0]):null;
+    const quema=esPasado?100:!esAnioVivo?0:idoMes?100:ahora?Math.round(hoy.getDate()/dias*100):0;
+    g+='<div class="cal-mes'+(idoMes?' ido':'')+(mini?' mini':'')+(ahora?' ahora':'')+(m===calMesSel?' sel':'')+'" onclick="calSeleccionar('+m+')">'+
+      '<div class="cal-mes-h"><span class="cal-mes-n">'+CAL_MESES[m]+'</span>'+
+        (fi>=0?'<span class="cal-mes-fase" style="background:'+color+'22;color:'+color+'">'+PHASES[fi].tag+'</span>':'')+'</div>'+
+      (mini?'':'<div class="cal-dow">'+CAL_DOW.map(x=>'<span>'+x+'</span>').join('')+'</div>'+
+      '<div class="cal-dias">'+d+'</div>')+
+      '<div class="cal-mes-pie"><b>'+(sinCerrar?sinCerrar+' sin cerrar':idoMes?'cerrado':fi>=0?'sostienes la fase':'fuera del plan')+'</b>'+
+        (delMes.length?'<i style="color:'+u.c+'">'+delMes[0]+'d</i>':'')+'</div>'+
+      '<div class="cal-mes-quema'+(ahora?' viva':'')+'"><i style="width:'+quema+'%"></i></div></div>';
   }
   document.getElementById('calGrid').innerHTML=g;
+  calEngancharTip();
 
-  // ── Detalle del mes elegido ──
+  // ── El panel del mes elegido ──
   const fi=calFaseDe(calAnio,calMesSel);
   const key=calMesKey(calAnio,calMesSel);
   let h='';
   if(fi<0){
-    h=`<div class="cal-det-h"><span class="cal-det-mes">${CAL_MESES[calMesSel]} ${calAnio}</span></div>
-       <div class="cal-vacio">Este mes queda fuera del Plan Maestro (${PHASES[0].start.getFullYear()}–${PHASES[PHASES.length-1].end.getFullYear()}).</div>`;
+    h='<div class="cal-det-h"><span class="cal-det-mes">'+CAL_MESES[calMesSel]+' '+calAnio+'</span></div>'+
+      '<div class="cal-det-title">Este mes queda fuera del Plan Maestro, que corre de '+
+      PHASES[0].start.toLocaleDateString('es-MX',{month:'long',year:'numeric'})+' a '+
+      PHASES[PHASES.length-1].end.toLocaleDateString('es-MX',{month:'long',year:'numeric'})+'.</div>';
   }else{
     const f=PHASES[fi], color=CAL_FASE_COLOR[fi];
-    const checks=rawGet('coach_checks_v1',{})||{};
+    const n=calDias(f.end), u=calUrgencia(n), cerrada=n<0;
+    const r=calRitmo(f);
+    h='<div class="cal-det-h"><span class="cal-det-mes">'+CAL_MESES[calMesSel]+' '+calAnio+'</span>'+
+      '<span class="cal-det-badge" style="background:'+color+'22;color:'+color+'">'+f.tag+'</span></div>'+
+      '<div class="cal-det-title">'+esc(f.title)+'. <b style="color:var(--text)">'+f.meta+'</b></div>';
+
+    // La cuenta regresiva de la fase que cubre este mes.
+    h+='<div class="cal-med" style="border-color:rgba('+(cerrada?'var(--ov)':u.rgb)+',.26);'+
+        'background:linear-gradient(150deg,rgba('+(cerrada?'var(--ov)':u.rgb)+',.09),transparent 80%)">'+
+      '<div class="cal-med-h"><span class="cal-med-k" style="color:'+(cerrada?'var(--text3)':u.c)+'">'+
+        (cerrada?'La '+f.tag+' ya cerró':'Cierra la '+f.tag+' · '+u.k)+'</span>'+
+      '<span class="cal-med-d" style="color:'+(cerrada?'var(--text3)':u.c)+'">'+(cerrada?'—':n+'d')+'</span></div>'+
+      '<div class="cal-med-s">'+(cerrada
+        ?'Terminó el '+f.end.toLocaleDateString('es-MX',FECHA_LARGA)+'.'
+        :'Vas en el día <b>'+r.corrido+'</b> de <b>'+r.largo+'</b> de esta fase. Lo que no cierres aquí se arrastra a la siguiente.')+'</div>'+
+      '<div class="cal-barra"><i style="width:'+Math.round(r.corrido/r.largo*100)+'%;background:linear-gradient(90deg,rgba('+(cerrada?'var(--ov)':u.rgb)+',.4),'+(cerrada?'var(--text3)':u.c)+')"></i></div>'+
+      '<div class="cal-barra-l"><span>'+f.start.toLocaleDateString('es-MX',{day:'numeric',month:'short',year:'numeric'})+'</span>'+
+        '<span>'+f.end.toLocaleDateString('es-MX',{day:'numeric',month:'short',year:'numeric'})+'</span></div></div>';
+
+    // El ritmo requerido solo tiene sentido para la fase que está corriendo AHORA:
+    // proyectar una cuota diaria sobre una fase que ya cerró o que no ha empezado
+    // sería un número bonito y falso.
+    const fiHoy=calFaseDe(hoy.getFullYear(),hoy.getMonth());
+    if(fi===fiHoy&&r&&r.dias>0){
+      if(r.falta>0){
+        h+='<div class="cal-med" style="border-color:rgba(var(--cy-rgb),.28);background:linear-gradient(140deg,rgba(var(--cy-rgb),.1),transparent 75%)">'+
+          '<div class="cal-med-k" style="color:var(--cy)">Ritmo requerido</div>'+
+          '<div class="cal-ritmo-n"><b>'+money(r.porDia)+'</b><span>/ día</span></div>'+
+          '<div class="cal-med-s">Faltan <b>'+money(r.falta)+'</b> para cerrar el fondo de emergencia y quedan <b>'+r.dias+' días</b> de fase.</div>'+
+          '<div class="cal-barra"><i style="width:'+r.pct+'%;background:linear-gradient(90deg,var(--g),var(--cy))"></i>'+
+            '<em style="left:'+r.esperado+'%"></em></div>'+
+          '<div class="cal-barra-l"><span style="color:var(--cy)">'+money(r.ef)+' · '+r.pct+'%</span>'+
+            '<span>ritmo esperado '+r.esperado+'%</span></div></div>';
+      }else{
+        h+='<div class="cal-med" style="border-color:rgba(var(--g-rgb),.28);background:linear-gradient(140deg,rgba(var(--g-rgb),.1),transparent 75%)">'+
+          '<div class="cal-med-k" style="color:var(--g)">Fondo de emergencia cerrado</div>'+
+          '<div class="cal-med-s" style="margin-top:8px">Llegaste a '+money(r.meta)+'. Desde aquí todo excedente va a la deuda cara, sin excepciones.</div></div>';
+      }
+    }
+
+    // Lo que toca este mes. Fase 0 etiqueta sus tareas con `mes`; las Fases 1-3 no,
+    // así que ahí manda lo continuo (`cont`), que corre durante todo el tramo.
     const tareas=(f.semanas||[]).filter(s=>s.mes===key);
-    // `cont:true` = aplica a TODO el tramo de la fase, no a un mes suelto (2026-08-17).
-    // Fase 2 dura 21 meses y Fase 3 dura 13: fabricar una tarea por mes habria sido
-    // relleno, asi que lo continuo se repite en cada mes de su fase y ninguno queda vacio.
+    const abiertas=tareas.filter(s=>!checks[s.id]);
+    const hechas=tareas.filter(s=>checks[s.id]);
+    if(abiertas.length){
+      h+='<div class="cal-sec">Sin cerrar · '+abiertas.length+'</div>';
+      h+=abiertas.map(x=>'<div class="cal-item">'+CAL_ICO.rombo('var(--o)')+'<div>'+x.txt+'</div></div>').join('');
+    }else if(tareas.length){
+      h+='<div class="cal-sec">Sin cerrar · 0</div>'+
+         '<div class="cal-vacio">Cerraste las '+tareas.length+' tareas de este mes.</div>';
+    }
+    if(hechas.length){
+      h+='<div class="cal-sec">Ya cerrado · '+hechas.length+'</div>';
+      h+=hechas.map(x=>'<div class="cal-item done">'+CAL_ICO.check('var(--g)')+'<div>'+x.txt+'</div></div>').join('');
+    }
     const generales=(f.semanas||[]).filter(s=>s.cont);
-    h=`<div class="cal-det-h">
-        <span class="cal-det-mes">${CAL_MESES[calMesSel]} ${calAnio}</span>
-        <span class="cal-det-badge" style="background:${color}22;color:${color}">${f.tag}</span>
-       </div>
-       <div class="cal-det-title">${esc(f.title)} · <b style="color:var(--text2)">${esc(f.meta)}</b></div>`;
-    // Tareas del mes exacto (Fase 0 las etiqueta con `mes`)
-    if(tareas.length){
-      const hechas=tareas.filter(t=>checks[t.id]).length;
-      h+=`<div class="cal-sec">🎯 Qué toca este mes (${hechas}/${tareas.length})</div>`;
-      h+=tareas.map(t=>`<div class="cal-item${checks[t.id]?' done':''}">
-        <span class="cal-item-ico">${checks[t.id]?'✅':'▫️'}</span><div>${t.txt}</div></div>`).join('');
-      h+=`<div class="cal-prog"><span>${Math.round(hechas/tareas.length*100)}%</span>
-        <div class="cal-prog-bar"><div class="cal-prog-fill" style="width:${hechas/tareas.length*100}%"></div></div>
-        <span>${hechas} de ${tareas.length}</span></div>`;
-    }else{
-      h+=`<div class="cal-sec">🎯 Qué toca este mes</div>
-          <div class="cal-vacio">Este mes no arranca nada nuevo — sostienes lo de abajo, que corre durante toda la ${f.tag}.</div>`;
-    }
     if(generales.length){
-      // Fases 1-3 no etiquetan mes: se muestra lo que aplica a toda la fase.
-      h+=`<div class="cal-sec">🔁 Durante toda la ${f.tag} (${f.start.toLocaleDateString('es-MX',{month:'short',year:'numeric'})} – ${f.end.toLocaleDateString('es-MX',{month:'short',year:'numeric'})})</div>`;
-      h+=generales.map(t=>`<div class="cal-item${checks[t.id]?' done':''}">
-        <span class="cal-item-ico">${checks[t.id]?'✅':'🔁'}</span><div>${t.txt}</div></div>`).join('');
+      h+='<div class="cal-sec">Durante toda la '+f.tag+'</div>';
+      h+=generales.map(x=>'<div class="cal-item'+(checks[x.id]?' done':' rep')+'">'+
+        (checks[x.id]?CAL_ICO.check('var(--g)'):CAL_ICO.repite('var(--b)'))+'<div>'+x.txt+'</div></div>').join('');
     }
-    // Pendientes que él mismo capturó en "Importante este mes"
-    const evs=eventos[key]||[];
-    h+=`<div class="cal-sec">📌 Tus pendientes de este mes</div>`;
-    h+=evs.length
-      ? evs.map(e=>`<div class="cal-item${e.done?' done':''}">
-          <span class="cal-item-ico">${e.done?'✅':(e.ico||'▫️')}</span><div>${esc(e.txt)}</div></div>`).join('')
-      : '<div class="cal-vacio">Sin pendientes capturados. Se agregan desde “Importante este mes”, en Mi Día.</div>';
+    if(!tareas.length&&!generales.length){
+      h+='<div class="cal-sec">Qué toca este mes</div>'+
+         '<div class="cal-vacio">Este mes no arranca nada nuevo — sostienes lo de la '+f.tag+'.</div>';
+    }
+  }
+
+  // Los pendientes que él mismo capturó en "Importante este mes".
+  const evs=eventos[key]||[];
+  const evAbiertos=evs.filter(e=>!e.done);
+  h+='<div class="cal-sec">Tus pendientes · '+evAbiertos.length+'</div>';
+  h+=evs.length
+    ? evs.map(e=>'<div class="cal-item'+(e.done?' done':'')+'">'+
+        '<span class="cal-item-ico" style="text-align:center;line-height:13px">'+(e.done?'':(e.ico||'·'))+'</span>'+
+        '<div>'+esc(e.txt)+'</div></div>').join('')
+    : '<div class="cal-vacio">Sin pendientes capturados. Se agregan desde “Importante este mes”, en Mi Día.</div>';
+
+  // Los cobros fijos del mes, para que el calendario también sirva para el dinero.
+  const cf=calCobrosDelMes();
+  const diasCobro=Object.keys(cf).map(Number).sort((a,b)=>a-b);
+  if(diasCobro.length){
+    h+='<div class="cal-sec">Cobros fijos del mes</div><div class="cal-cobros">';
+    diasCobro.forEach(dia=>{
+      cf[dia].forEach(c=>{
+        h+='<div class="cal-cobro'+(c.entra?' entra':'')+'"><b>'+String(dia).padStart(2,'0')+'</b>'+
+           '<span>'+(c.entra?'+':'')+c.txt+' '+money(c.monto)+'</span></div>';
+      });
+    });
+    h+='</div>';
   }
   document.getElementById('calDet').innerHTML=h;
-}
 
+  // ── La leyenda ──
+  document.getElementById('calLeyenda').innerHTML=
+    '<span class="cal-eyebrow">Cómo se lee</span>'+
+    '<div><span class="cal-lg" style="background:var(--cy)"></span>hoy</div>'+
+    '<div><span class="cal-lg" style="box-shadow:inset 0 0 0 1.6px var(--r)"></span>hito a '+CAL_CRITICO+' días o menos</div>'+
+    '<div><span class="cal-lg" style="box-shadow:inset 0 0 0 1.6px var(--o)"></span>hito a '+CAL_URGENTE+' días</div>'+
+    '<div><span class="cal-lg" style="box-shadow:inset 0 0 0 1.6px var(--cy)"></span>hito lejano</div>'+
+    '<div><span class="cal-lg" style="align-items:flex-end;padding-bottom:2px"><i style="width:3px;height:3px;border-radius:50%;background:var(--text3)"></i></span>cobro fijo</div>'+
+    '<div><span class="cal-lg" style="align-items:flex-end;padding-bottom:2px"><i style="width:3px;height:3px;border-radius:50%;background:var(--g)"></i></span>entra dinero</div>'+
+    '<div><span class="cal-lg" style="color:rgba(var(--ov),.17)">7</span>día ya gastado</div>';
+}
 
 // ─── PANEL DE INVERSIÓN DEL LUNES (2026-08-18) ───────────────────────────────
 // Se abre tocando el bloque "Bolsa GBM" en Mi Día. Solo existe los lunes, que es el

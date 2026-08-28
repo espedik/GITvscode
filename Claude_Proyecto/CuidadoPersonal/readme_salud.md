@@ -173,7 +173,7 @@ Encontrado en una auditoría general del ecosistema pedida por Adán ("mejora to
 
 ## Deep-link `?tab=` para enlazar directo a una pestaña (2026-08-07)
 
-Necesario para que las nuevas tareas de suplementos AM/PM de `RUTINA_TASKS` (Coach y Dashboard, ver `readme_coach_v2.md`/`readme_dashboard.md` misma fecha) pudieran enlazar directo a la pestaña Suplementos en vez de a la pantalla de inicio — mismo patrón que ya usaban `cuidadopersonal.html` (`?tab=cabello`) y `comida.html` (`?s=desayunos`/`?s=cenas`), que `salud.html` no tenía todavía.
+Necesario para que las nuevas tareas de suplementos AM/PM de `RUTINA_TASKS` (Coach y Dashboard, ver `readme_coach.md`/`readme_dashboard.md` misma fecha) pudieran enlazar directo a la pestaña Suplementos en vez de a la pantalla de inicio — mismo patrón que ya usaban `cuidadopersonal.html` (`?tab=cabello`) y `comida.html` (`?s=desayunos`/`?s=cenas`), que `salud.html` no tenía todavía.
 
 - `init()` ahora lee `new URLSearchParams(location.search).get('tab')` y, si el valor está en `SECS` (las 8 secciones válidas: dashboard, medidas, digestiva, examenes, postura, mental, suplementos, metas), llama `nav(tabInicial)` en vez de `renderDashboard()` por defecto.
 - Usado ahora mismo por `salud.html?tab=suplementos` desde las tareas de rutina; queda disponible para cualquier otro link futuro hacia una pestaña específica de esta app.

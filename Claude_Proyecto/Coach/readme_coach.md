@@ -1,4 +1,4 @@
-# Coach_v2.html — referencia
+# Coach.html — referencia
 
 Coach de vida y negocio: diagnóstico financiero, Plan Maestro hacia $1,000,000 líquido, rutina
 diaria, roadmap de aprendizaje y guía legal/fiscal personal y de empresa.
@@ -7,7 +7,7 @@ Una sola página, sin backend ni dependencias de gráficas — las barras de hab
 Chart.js. Único import externo: Google Fonts (Inter + Playfair Display).
 
 > **Esto es referencia, no diario.** Describe cómo funciona **hoy**. El historial vive en
-> `git log -p -- Claude_Proyecto/Coach/Coach_v2.html`. Ver `../../CLAUDE.md` → Regla 3.
+> `git log -p -- Claude_Proyecto/Coach/Coach.html`. Ver `../../CLAUDE.md` → Regla 3.
 
 **Antes de tocar datos, leer [`../Dashboard/DATOS-MAESTROS.md`](../Dashboard/DATOS-MAESTROS.md).**
 
@@ -74,7 +74,7 @@ const RUTINA_TASKS = window.CIFRAS ? CIFRAS.rutina('') : [];
 
 El argumento es el prefijo de los `href`: vacío porque en el maestro se guardan como anclas
 internas (`#aprendizaje`), que son de **este** archivo. El Dashboard pasa
-`'../Coach/Coach_v2.html'` para salir del suyo.
+`'../Coach/Coach.html'` para salir del suyo.
 
 Estaba copiado en los dos HTML (17.5 KB cada uno) y llegó a divergir 6 días sin que nadie lo
 notara. Para consultar o cambiar el horario, ir al maestro.

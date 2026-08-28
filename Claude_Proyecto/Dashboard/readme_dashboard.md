@@ -64,7 +64,7 @@ flechas, los puntos del HUD lateral, o deslizando en táctil.
 | `theme-metas` | **Mis Metas** | Corto/mediano plazo con fotos, largo plazo, patrimonio neto |
 | `theme-basicas` | **Habilidades Base** | Guías de vida práctica (trámites, impuestos, red, imagen…) |
 | `theme-skills` | **Habilidades** | Radar de 12 habilidades y prioridades de aprendizaje |
-| `theme-lista` | **Lista de Compras** | Catálogo por pasillos, cruzado con skincare, comida y suplementos |
+| `theme-lista` | **Lista de Compras** | 7 categorías. Comida con precios por pieza, ticket, costo al mes y proporción de verduras/frutas/almidones — ver abajo |
 | `theme-aleman` | **Alemán del día** | La lección de alemán, contenido nativo desde `aleman-data.js`. Filtrado al capítulo que cursa — ver abajo |
 | `theme-entrevista` | **Entrevista del día** | Un tema técnico al día, desde `entrevistas-data.js` |
 
@@ -97,6 +97,54 @@ sobre `ALEMAN_TEMAS`. Contaba sobre las 40 y decía "4 / 40" mientras el slide d
 es el mismo dato y tiene que contar igual.
 
 ---
+
+### La Lista de Compras
+
+Siete categorías (`LISTA_CAT_META`), una activa a la vez. **Comida** es la única con precios,
+contador y proporciones; el resto son checklists con dos precios de plataforma.
+
+**El contador cuenta piezas, no compras típicas.** Cada producto de `LISTA_COMPRAS_PRECIOS`
+declara un `paso` —lo que suma un `+`— con su `monto` y sus `g`: un jitomate son 127 g y $2, no
+"380 g = 3 piezas = $6". `base` dice cuántos `paso` son una semana de consumo, y es lo que mete el
+checkbox de un clic: marcar Plátano pone 6, no 1. De ahí salen las dos cifras del HUD:
+
+| Cifra | Cómo se calcula |
+|---|---|
+| **Ticket de hoy** | `Σ monto × cantidad` — lo que pagas en caja |
+| **Costo al mes** | `Σ importe × 4.33 / dura`, con `dura = max(1, cantidad / base)` |
+
+`dura` se deriva de lo que llevas, no es un número fijo del producto: 6 plátanos duran una semana
+y 12 duran dos, así que los dos carritos cuestan lo mismo al mes. Un aceite de $150 que dura ocho
+semanas no son $150/mes, son ~$81.
+
+**Las proporciones.** Los 13 productos frescos viven en tres pasillos —`Verduras`, `Frutas`,
+`Almidones y grasas`— y se clasifican en cuatro clases con `lcClase()`: la clase sale del pasillo,
+y `LC_ITEM_CLASE` es la excepción para el aguacate, que comparte pasillo con la papa pero cuenta
+como grasa. La barra compara el peso del canasto contra `LC_CLASE_META` (**55 / 30 / 10 / 5**, la
+regla de "más verdura que fruta" repartida sobre el peso en fresco). Los gramos son **por semana**:
+`g × cantidad / dura`, el mismo prorrateo que el costo mensual. Cuando una clase queda corta, la
+frase de abajo dice cuántos gramos faltan y ofrece los productos que cierran el hueco — un clic
+mete la semana de ese producto.
+
+Esa meta es un criterio de diseño del slide, **no sale de `salud.html`**; el bloque lo dice en
+pantalla junto a la cifra.
+
+**El renglón cabe en una línea** — checkbox · nombre · píldora · precio unitario · contador ·
+tiendas · subtotal — y por eso `.lc-grid` pide columnas de 430 px. La píldora lleva punto lleno si
+el precio salió del ticket de Walmart y hueco si es estimado: forma además de color, para que se
+distinga en escala de grises. Los links de tienda están en **todas** las categorías; en Comida el
+par es Walmart Súper + Amazon, en el resto Amazon + Mercado Libre.
+
+En celular (`≤760px`) el renglón pasa a dos líneas de 46 px de alto —nombre y subtotal arriba, el
+resto abajo—, las pestañas se deslizan en un solo renglón y las cuatro cifras de proporción se
+quedan solo con su nombre y su porcentaje: los gramos y el desfase ya los dice la frase de abajo.
+Medido a 390 px: 30 renglones de alto idéntico, 0 elementos desbordados, primer pasillo visible a
+544 px.
+
+**Dónde se guarda.** `dash-lista-compras` (producto → número de `paso`) y `dash-lista-tengo`
+("ya lo tengo", solo fuera de Comida). Los `true` de listas guardadas antes del contador se leen
+como 1.
+
 
 ## Mi Día, en detalle
 

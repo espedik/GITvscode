@@ -109,15 +109,42 @@ marcador, se pide desde JS:
 
 ```js
 CIFRAS.rutina('')                          // Coach: los href ya son anclas suyas
-CIFRAS.rutina('../Coach/Coach_v2.html')    // Dashboard: tiene que salir de su archivo
+CIFRAS.rutina('../Coach/Coach.html')    // Dashboard: tiene que salir de su archivo
 ```
 
 Devuelve **copia profunda** con los `href` resueltos, para que una app no pueda contaminar a la
 otra dentro de la misma página. `dias`: 0=domingo…6=sábado. Los bloques con `fijo:true` (ALTEN)
 salen en la línea de tiempo pero no llevan checkbox ni suman al progreso.
 
-Estaba copiada en `dashboard.html` y `Coach_v2.html`, 17.5 KB en cada uno. Era la estructura más
+Estaba copiada en `dashboard.html` y `Coach.html`, 17.5 KB en cada uno. Era la estructura más
 grande y más tocada de las duplicadas, y llegó a divergir 6 días.
+
+### El calendario · constantes
+
+`CALENDARIO` — lo que el calendario del Dashboard necesita y **no puede derivar solo**. Se pide
+desde JS, no es un marcador:
+
+```js
+CIFRAS.CALENDARIO.cobros   // [{dia, txt, monto, entra?}] — los días fijos del mes
+CIFRAS.CALENDARIO.hitos    // [{fecha, txt, sub}] — fechas duras que no salen de ningún otro dato
+```
+
+| | Qué trae | De dónde sale el número |
+|---|---|---|
+| `cobros` | Renta día 1, quincena días 1 y 14, CETES día 15, gym día 17 | El **monto** es un getter sobre `PROYECTO`: si sube la renta o vuelve a cambiar el gimnasio, el calendario se entera solo. El **día** vive aquí — hasta el 26-ago-2026 solo existía como comentario al lado de la cifra, o sea que ninguna app podía leerlo. |
+| `hitos` | Decisión Maestría (18 jul 2027) y arranque de la Maestría (1 oct 2028) | `PROYECTO.maestriaPausa` y `PROYECTO.maestriaInicio`. |
+
+**Regla al agregar: si una fecha se puede derivar de un dato que ya existe, NO va aquí.** Por eso
+esta lista es corta. El Dashboard calcula en vivo, y no están escritos en ningún lado:
+
+- los **cierres y arranques de fase** → de `PHASES[].start` / `.end`;
+- la **última cuota de cada MSI vivo** → de `balance / min` sobre las deudas de Finanzas, con el
+  día del cargo en `day` (los MSI con `day: 0`, como el iPhone, no se inventan: no salen);
+- el **trabajo sin cerrar detrás de cada hito** → de `PHASES[].semanas` contra `coach_checks_v1`;
+- el **ritmo requerido** ($/día para cerrar el fondo antes de que acabe la fase) → del fondo de
+  emergencia real de `finanzasmx_v2` contra `fondoMeta`.
+
+Es lo que evita que el calendario se congele como se congeló la vieja barra de metas.
 
 ---
 
@@ -126,7 +153,7 @@ grande y más tocada de las duplicadas, y llegó a divergir 6 días.
 | App | Cómo lo carga | Para qué |
 |---|---|---|
 | `Dashboard/dashboard.html` | `<script src="datos-maestros.js">` | Prosa del Plan Maestro (`cifrarLiterales`) |
-| `Coach/Coach_v2.html` | `<script src="../Dashboard/datos-maestros.js">` | Hallazgos, tabla de deudas, checklists (`aplicarDOM`) |
+| `Coach/Coach.html` | `<script src="../Dashboard/datos-maestros.js">` | Hallazgos, tabla de deudas, checklists (`aplicarDOM`) |
 | `Finanzas/Finanzas.html` | `<script src="../Dashboard/datos-maestros.js">` | **Es la fuente**: `seedData()` lee `CIFRAS.DEUDAS_SEED` |
 
 El Dashboard es donde vive el archivo porque es el centro del proyecto, y ahí ya estaban
@@ -153,7 +180,7 @@ Las migraciones anteriores a esa fecha (`_banamex9k`, `_pagos20260813`, `_msibbv
 | Carpeta | Archivo | Qué es | Su `localStorage` |
 |---|---|---|---|
 | `Dashboard/` | `dashboard.html` | Panel central, "Mi Día" en vivo, agrega todo | *(solo lee, salvo checks de Coach)* |
-| `Coach/` | `Coach_v2.html` | Plan Maestro, rutina, radar de habilidades | `coach_rutina_v1`, `coach_checks_v1`, `radarp_*` |
+| `Coach/` | `Coach.html` | Plan Maestro, rutina, radar de habilidades | `coach_rutina_v1`, `coach_checks_v1`, `radarp_*` |
 | `Finanzas/` | `Finanzas.html` | Finanzas reales, GBM, BTC, deudas | `finanzasmx_v2` |
 | `CuidadoPersonal/` | `cuidadopersonal.html` + `salud`/`ejercicio`/`comida` | Shell con 7 subtabs | `skincare_v1`, `misalud_v1`, `mirutina_v1`, `comida_v1` |
 | `Vestimenta/` | `vestimenta.html` | Guardarropa y compras | `vestimenta_v1` |
@@ -261,7 +288,7 @@ Ya no queda ninguna estructura copiada entre archivos. Las seis viven aquí:
 | `SK` | 12 habilidades del radar | `CIFRAS.SK` |
 | `PHASES` | 4 fases del Plan Maestro | `CIFRAS.PHASES` |
 | `APRENDIZAJE` | 6 prioridades de aprendizaje | `CIFRAS.APRENDIZAJE` |
-| `LISTA_COMPRAS` | Catálogo de compras por pasillos | `CIFRAS.LISTA_COMPRAS` |
+| `LISTA_COMPRAS` | Catálogo de compras por pasillos — 7 categorías; `comida` en 7 pasillos, con `Verduras` / `Frutas` / `Almidones y grasas` separados para medir la proporción del canasto | `CIFRAS.LISTA_COMPRAS` |
 
 `verificar-sincronia.js` vigila que **ninguna vuelva a incrustarse** en un HTML.
 

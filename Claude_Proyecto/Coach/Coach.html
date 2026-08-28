@@ -3558,6 +3558,9 @@
         farmacéutico antes de Ford, y tu red activa en Alemania) aparecieron dos ángulos que las primeras 6
         opciones no cubrían. La Opción 9 (automatizaciones con Claude + n8n) es la misma idea de la Opción 4
         —dirigir IA para construir producto— aplicada a un mercado más amplio que el software embebido.
+        Las Opciones 10 y 11 nacieron de ideas tuyas: llevar este mismo ecosistema a Kickstarter, y
+        convertir en servicio el laboratorio remoto que de todas formas necesitas construir para poder
+        trabajar sin estar sentado frente a la máquina.
       </p>
     </div>
 
@@ -3752,6 +3755,37 @@
 
       <h5>Riesgo principal</h5>
       <p>Además del todo-o-nada, hay uno que te toca de cerca: <strong>tus datos</strong>. Igual que con la Opción 1, este ecosistema tiene escritos tu sueldo, tus deudas exactas, tus saldos de GBM y hasta tu horario completo. Cualquier versión pública tiene que nacer de una copia limpia, con datos de ejemplo y un onboarding vacío — y eso es trabajo de verdad, no un buscar-y-reemplazar. Ese es el costo real de entrada, y conviene contarlo antes de prometer fechas a nadie.</p>
+    </div>
+
+
+    <!-- OPCIÓN 11 — 2026-08-25, pedido de Adán tras diagnosticar su propia laptop para trabajar
+         full remoto: "documenta esto en la sección de empresa y ponlo en posibles proyectos".
+         Se escribe como las demás. La diferencia importante es que aquí el entregable nace
+         siendo infraestructura propia y portafolio, y solo después se puede vender — por eso
+         el "primer paso" no es buscar cliente, es construir el rig para ti mismo. -->
+    <div class="negocio-card" id="negocio11">
+      <div class="negocio-rank">Infraestructura primero, negocio después — habilita las Opciones 2 y 8</div>
+      <h3>11. Laboratorio remoto: acceso y manipulación física de bancos de prueba automotrices</h3>
+      <div class="negocio-stats">
+        <div class="stat-badge"><span class="text-green">Bajo</span><span>Requiere ventas</span></div>
+        <div class="stat-badge"><span class="text-red">6+ meses</span><span>A primer ingreso</span></div>
+        <div class="stat-badge"><span style="color:#c2410c">Medio</span><span>Techo de escala</span></div>
+      </div>
+
+      <h5>Qué es</h5>
+      <p>Montar rigs que permitan operar hardware de pruebas <strong>sin estar físicamente frente a él</strong>: encender y apagar el equipo, ver la pantalla desde el arranque (antes de que el sistema operativo cargue), y manipular lo que no se puede tocar por software — conectar arneses, presionar botones de una ECU, cambiar cables. Es la unión de tres cosas que ya tocas: testing automotriz, automatización y electrónica. El primer cliente eres tú, y ese es justo el punto.</p>
+
+      <h5>Por qué encaja</h5>
+      <p>Es un dolor real y bien conocido del sector: los laboratorios HIL son caros, escasos y compartidos entre equipos, y desde que los equipos quedaron distribuidos, alguien siempre tiene que ir físicamente al lab a reiniciar algo. Tú ya viviste ese problema en Bosch y Continental, y es exactamente el tipo de nicho donde <strong>no compites con nadie por precio</strong> porque casi nadie junta las dos mitades: quien sabe de testing no sabe de electrónica, y quien sabe de electrónica no entiende un plan de pruebas. Además resuelve un bloqueo tuyo hoy: tu laptop no tiene puerto ethernet y no se puede encender por red, así que <strong>sin esto no hay trabajo remoto de verdad</strong> — es la infraestructura que sostiene la Opción 2 y la Opción 8.</p>
+
+      <h5>El puente con la Maestría y con Wayve</h5>
+      <p>La versión avanzada del rig usa un brazo robótico open source de bajo costo (SO-ARM101) que corre <strong>LeRobot</strong>, la plataforma de Hugging Face para aprendizaje por imitación y modelos visión-lenguaje-acción. Eso deja de ser un juguete y se vuelve portafolio: un brazo que entrenaste por demostración, con la política funcionando y el video de la ejecución, es la evidencia más difícil de fingir de que entiendes <em>robótica aprendida</em> y no solo robótica programada — que es literalmente el dominio de Wayve y de la conducción autónoma end-to-end. Vale por la entrevista aunque el negocio nunca despegue.</p>
+
+      <h5>Primer paso esta semana — cuesta cero</h5>
+      <p>No busques cliente. Construye la capa de software de tu propio acceso remoto, que no cuesta un peso: red privada con Tailscale, servidor SSH (ya viene en Windows), y Sunshine + Moonlight en vez de escritorio remoto — tu edición Home no lo incluye, y con tu tarjeta gráfica el streaming queda mejor de todos modos. Con eso solo ya trabajas remoto siempre que la máquina esté encendida. La parte física viene después y arranca en unos $150: un microcontrolador con wifi que se conecta por USB y finge ser un teclado, capaz de despertar la laptop desde suspensión.</p>
+
+      <h5>Riesgo principal</h5>
+      <p>Dos, y conviene nombrarlos. El primero es de enfoque: <strong>esto es divertido y por eso es peligroso</strong> — es hardware, se ve avanzar y da dopamina, exactamente el perfil de proyecto que te distrae de las Opciones 1-2 que sí producen ingreso pronto. Trátalo como infraestructura y portafolio, con presupuesto y tiempo acotados, no como la apuesta de primer ingreso. El segundo es de mercado: vender rigs es consultoría intensiva en hardware, con ciclos largos y poco escalable — el techo real está en <strong>venderlo como servicio dentro de un contrato de testing</strong> (Opciones 2 y 8), no como producto suelto.</p>
     </div>
 
     </div><!-- /negocio-grid -->
@@ -4344,7 +4378,7 @@
   })();
 
   // ─── PROGRESO REAL vs. punto de partida de Fase 0 (2026-08-02) ───────────
-  // Coach_v2.html no leía datos de Finanzas.html hasta ahora — Adán pidió explícitamente
+  // Coach.html no leía datos de Finanzas.html hasta ahora — Adán pidió explícitamente
   // "necesito tener esas stats" para poder comparar el avance real contra el día que arrancó
   // el plan (los 4 números congelados en .hero-kpis arriba) y decidir si conviene ajustar la
   // estrategia de las siguientes fases. Los valores "al iniciar" están hardcodeados a propósito

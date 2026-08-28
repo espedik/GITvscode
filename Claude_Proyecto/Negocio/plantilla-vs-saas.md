@@ -8,7 +8,7 @@ Adán preguntó qué stack necesitaría para replicar su ecosistema de apps pers
 
 Verificado en el código antes de escribir esto:
 - **`Finanzas.html` tiene sus datos reales repetidos en al menos 3 puntos**: `seedData()` (línea 3828, puebla deudas/transacciones/metas reales), y `BASE_SALARY=41000` aparece suelto en la línea 1248 *y* de nuevo en la línea 3020. "Limpiar" el archivo no es un solo find-and-replace — hay que tocar los 3 lugares o se filtra el sueldo real de Adán en la copia que se comparte.
-- **El plan de vender esto ya existe y está en curso**, no es una idea nueva: `Coach/Coach_v2.html` línea 1978, checklist `s0-3` de Fase 0 (1 ago–30 sep 2026): *"Plantilla Finanzas.html, de principio a fin: versión limpia sin tus datos + post de venta + publicarla en 2-3 comunidades de GBM (Opción 1)"*. Tiene checkpoint el 30 sep 2026 y meta de Fase 1 de "20+ ventas de la plantilla cobradas", con precio sugerido $99–299 MXN.
+- **El plan de vender esto ya existe y está en curso**, no es una idea nueva: `Coach/Coach.html` línea 1978, checklist `s0-3` de Fase 0 (1 ago–30 sep 2026): *"Plantilla Finanzas.html, de principio a fin: versión limpia sin tus datos + post de venta + publicarla en 2-3 comunidades de GBM (Opción 1)"*. Tiene checkpoint el 30 sep 2026 y meta de Fase 1 de "20+ ventas de la plantilla cobradas", con precio sugerido $99–299 MXN.
 - **Cero autenticación, cero multiusuario, cero backend en todo el proyecto** (confirmado por grep exhaustivo de login/auth/sesión en las 6 apps).
 - El modelo de datos ya está bien estructurado (`S.debts[]`, `S.transactions[]`, `RUTINA_TASKS[]`, `EVENTOS_MES{}`), lo cual es una ventaja real si algún día se migra a una base de datos.
 
@@ -41,7 +41,7 @@ Por 4 razones concretas:
 
 ## Primeros pasos concretos para arrancar con la Ruta A
 
-No hay que crear nada nuevo — el punto de entrada ya existe: `Coach/Coach_v2.html` → Fase 0 → checklist `id="s0-3"` (línea 1978), con checkpoint el 30 sep 2026.
+No hay que crear nada nuevo — el punto de entrada ya existe: `Coach/Coach.html` → Fase 0 → checklist `id="s0-3"` (línea 1978), con checkpoint el 30 sep 2026.
 
 1. Copiar `Finanzas/Finanzas.html` a un archivo aparte (ej. `Finanzas_plantilla.html`), **fuera** de `Claude_Proyecto/`, para nunca confundirla con la app real.
 2. Vaciar `seedData()` (línea 3828) reemplazando los arrays reales de deudas/transacciones/metas por 2–3 filas de ejemplo claramente etiquetadas, o arrays vacíos.
@@ -49,12 +49,12 @@ No hay que crear nada nuevo — el punto de entrada ya existe: `Coach/Coach_v2.h
 4. Grep final de verificación sobre la copia antes de compartirla: "41000", "32343", "BBVA", "Banamex" y cualquier nombre propio — la misma disciplina de grep que ya se usa para las migraciones de cifras, aplicada aquí como control de fuga de datos.
 5. Precio de lanzamiento bajo para validar volumen: $99–150 MXN, no los $299 del techo.
 6. Escribir el post de venta y publicarlo en 2–3 comunidades de GBM esta semana o la próxima.
-7. Marcar `s0-3` como hecho en `Coach_v2.html` en cuanto esté publicado.
+7. Marcar `s0-3` como hecho en `Coach.html` en cuanto esté publicado.
 8. No tocar la Ruta B todavía. Revisarla solo si ocurre uno de dos disparadores concretos: (a) se alcanza o se acerca la meta de Fase 1 de "20+ ventas cobradas", o (b) varios compradores piden espontáneamente sincronización entre dispositivos sin editar código — esa fricción específica justificaría el costo de B, no una intuición de que "sería mejor producto".
 
 ## Archivos involucrados
 
-- `Coach/Coach_v2.html` — checklist `s0-3`/`s0-4`, tarjeta "Opción 1" de negocio, checkpoint de Fase 0 y meta de Fase 1
+- `Coach/Coach.html` — checklist `s0-3`/`s0-4`, tarjeta "Opción 1" de negocio, checkpoint de Fase 0 y meta de Fase 1
 - `Finanzas/Finanzas.html` — archivo a clonar y limpiar; `seedData()` línea 3828, `BASE_SALARY` líneas 1248 y 3020
 - `Finanzas/readme_finanzas.md` — documentación gemela a actualizar en cuanto exista la copia-plantilla
 - `README.md` — mapa maestro de claves `localStorage`, referencia obligatoria si algún día se diseña el esquema de base de datos para la Ruta B

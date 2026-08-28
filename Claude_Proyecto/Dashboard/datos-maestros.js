@@ -113,6 +113,36 @@ window.CIFRAS = (function () {
     maestriaPausa:   '2027-07-18',          // pausada hasta aquí, decidido en Coach
   };
 
+  /* ── EL CALENDARIO ────────────────────────────────────────────────────────────────────────
+     Lo que el calendario del Dashboard necesita y NO puede derivar solo.
+
+     `cobros` — los días fijos del mes. Los MONTOS salen de PROYECTO con getters, así que si
+     sube la renta o vuelve a cambiar el gimnasio el calendario se entera sin tocar nada aquí.
+     El DÍA sí vive aquí: hasta el 2026-08-26 solo existía como comentario al lado de la cifra
+     ("renta, día 1"), o sea que ninguna app podía leerlo.
+
+     `hitos` — fechas duras que no se pueden sacar de ningún otro dato. Todo lo demás lo
+     calcula el Dashboard en vivo y por eso no está escrito aquí: los cierres y arranques de
+     fase salen de PHASES, y la última cuota de un MSI sale de `balance / min` sobre las
+     deudas vivas de Finanzas.
+
+     Regla al agregar: si una fecha se puede derivar de un dato que ya existe, NO va aquí. */
+  const CALENDARIO = {
+    cobros: [
+      { dia:  1, txt: 'Renta',    get monto() { return PROYECTO.renta; } },
+      { dia:  1, txt: 'Quincena', get monto() { return PROYECTO.sueldoQuinc; }, entra: true },
+      { dia: 14, txt: 'Quincena', get monto() { return PROYECTO.sueldoQuinc; }, entra: true },
+      { dia: 15, txt: 'CETES',    get monto() { return PROYECTO.cetesDia15; } },
+      { dia: 17, txt: 'Gym',      get monto() { return PROYECTO.gym; } },
+    ],
+    hitos: [
+      { fecha: PROYECTO.maestriaPausa,  txt: 'Decisión Maestría',
+        sub: 'Retomarla con datos reales del negocio, o posponerla otra vez — pero conscientemente.' },
+      { fecha: PROYECTO.maestriaInicio, txt: 'Arranca la Maestría',
+        sub: PROYECTO.maestriaEscuela },
+    ],
+  };
+
   function leer() {
     try { const r = localStorage.getItem(KEY); fin = r ? JSON.parse(r) : null; }
     catch (e) { fin = null; }
@@ -171,7 +201,7 @@ window.CIFRAS = (function () {
 
   /* ── LA RUTINA DIARIA ─────────────────────────────────────────────────────────────────────
      El horario completo: 58 bloques con sus subtareas. Estaba COPIADO en dashboard.html y en
-     Coach_v2.html, 17.5 KB en cada uno, y era la estructura más grande y más tocada de las que
+     Coach.html, 17.5 KB en cada uno, y era la estructura más grande y más tocada de las que
      había que mantener a mano en dos sitios. El 2026-08-24 se detectó que llevaban 6 días
      divergentes: 7 textos de la rutina de cabello mejorados solo en Coach.
 
@@ -180,7 +210,7 @@ window.CIFRAS = (function () {
 
      Los `href` se guardan en forma NEUTRA, como ancla interna (#aprendizaje). Cada app los
      resuelve al pedir la lista con `CIFRAS.rutina(base)`: Coach pasa "" porque las anclas son
-     suyas, y el Dashboard pasa "../Coach/Coach_v2.html" porque tiene que salir de su archivo.
+     suyas, y el Dashboard pasa "../Coach/Coach.html" porque tiene que salir de su archivo.
      Era la única diferencia legítima entre las dos copias; ahora es un parámetro. */
   const RUTINA_TASKS = [
     {id:"wd01",dias:[1,2,3,4,5],hora:"06:40",cat:"salud",txt:"Despertar sin snooze — celular fuera del cuarto"},
@@ -261,7 +291,7 @@ window.CIFRAS = (function () {
   }
   /* ── HABILIDADES (el radar) ────────────────────────────────────────────────────────────────
      Las 12 habilidades con su nivel (`val` 0-100) y su peso (`w`) en el promedio.
-     Estaba copiado en dashboard.html y Coach_v2.html. Se conserva la versión de Coach, que es
+     Estaba copiado en dashboard.html y Coach.html. Se conserva la versión de Coach, que es
      el superconjunto: `full`, `cat` y `desc` los usa su panel explicativo y el Dashboard no los
      pinta — no era divergencia, era que cada app usaba lo que necesitaba.
      Los overrides que Adán ajusta a mano viven en localStorage (`radarp_{id}`) y ganan sobre
@@ -282,7 +312,7 @@ window.CIFRAS = (function () {
     ];
   /* ── EL PLAN MAESTRO ───────────────────────────────────────────────────────────────────────
      Las 4 fases hacia $1,000,000 líquido: fechas ancla, título, meta, explicación y el
-     checklist de cada mes. Los ids `sN-M` de las tareas son el contrato con Coach_v2.html, que
+     checklist de cada mes. Los ids `sN-M` de las tareas son el contrato con Coach.html, que
      guarda su estado en `coach_checks_v1[id]` — si se renombra un id aquí, se pierde lo marcado.
      Coach tiene las mismas fases escritas como HTML en su sección #perfil. Ese texto NO se puede
      generar desde aquí sin rediseñar la sección, así que sigue a mano: `verificar-sincronia.js`
@@ -324,7 +354,7 @@ window.CIFRAS = (function () {
 
   /* ── APRENDIZAJE ───────────────────────────────────────────────────────────────────────────
      Las 5 prioridades (Datos, Ventas, Marketing, Finanzas, IA) con diagnóstico, primer paso,
-     hábito, el error típico y los recursos. Coach_v2.html tiene lo mismo como HTML en
+     hábito, el error típico y los recursos. Coach.html tiene lo mismo como HTML en
      #aprendizaje; igual que con PHASES, ese texto sigue a mano y el verificador lo compara. */
   const APRENDIZAJE = {
     datos:{
@@ -399,7 +429,15 @@ window.CIFRAS = (function () {
      sus catálogos se pueda derivar en vez de mantener a mano. */
   const LISTA_COMPRAS = {
     comida:{
-      'Frutas y Verduras':['Aguacate','Cebolla','Champiñones','Chayote','Jitomate','Lechuga','Nopales cocidos','Papa','Papaya','Pepino','Pera','Pimiento morrón','Plátano'],
+      // 2026-08-27 — el pasillo único "Frutas y Verduras" se partió en tres. Pedido de Adán:
+      // "resuelve las proporciones de vegetales, frutas y verduras". Con los 13 productos
+      // juntos no había forma de ver que el canasto llevaba casi tanta fruta como verdura;
+      // separados, el Dashboard mide cada grupo contra una meta de peso (LC_CLASE_META en
+      // dashboard.html). El aguacate se compra junto a la papa pero cuenta como GRASA, no como
+      // almidón: comparte pasillo, no función en el plato.
+      'Verduras':['Cebolla','Champiñones','Chayote','Jitomate','Lechuga','Nopales cocidos','Pepino','Pimiento morrón'],
+      'Frutas':['Papaya','Pera','Plátano'],
+      'Almidones y grasas':['Papa','Aguacate'],
       'Carnes y Pescados':['Filete de res magro','Filete de tilapia','Jamón de pavo','Pechuga de pollo'],
       'Lácteos y Huevo':['Clara de huevo','Huevo','Leche entera','Queso panela','Yogurt griego natural'],
       'Abarrotes y Despensa':['Aceite de oliva','Arroz blanco cocido','Atún en agua','Frijoles negros','Granola de amaranto','Miel de abeja'],
@@ -517,16 +555,16 @@ window.CIFRAS = (function () {
         'Crema de contorno de ojos con cafeína',
       ],
     },
-    // 45 libros únicos recomendados dentro de Coach_v2.html → #aprendizaje (5 cards de skill: Ventas,
+    // 45 libros únicos recomendados dentro de Coach.html → #aprendizaje (5 cards de skill: Ventas,
     // Copywriting, Marketing, Networking, Liderazgo, más las secciones de Datos/Finanzas/Software del
     // mismo bloque) y #perfil-rico, agrupados por el mismo tema bajo el que Coach los presenta —
     // deduplicados donde el mismo libro aparece recomendado en más de una sección (ej. "Never Split
     // the Difference" en Ventas y en Networking). 9ª estructura duplicada del tipo "Datos duplicados"
-    // del README: si Adán cambia/agrega una recomendación en Coach_v2.html → #aprendizaje o
+    // del README: si Adán cambia/agrega una recomendación en Coach.html → #aprendizaje o
     // #perfil-rico, replicar aquí a mano.
     // Categorías reordenadas el 2026-08-07 (pedido explícito: "ordenalos deacuerdo a las
     // debilidades de mis habilidades") — de más débil a más fuerte según el valor real de cada
-    // skill en `SK` (Coach_v2.html → Radar FIFA): Ventas 15, Marketing 20, Finanzas 20/Inversión
+    // skill en `SK` (Coach.html → Radar FIFA): Ventas 15, Marketing 20, Finanzas 20/Inversión
     // 25 (categoría combinada), Copy/Datos/Networking empatados en 55 (Copy primero por tener
     // mayor ponderación real, ×1.2 vs ×1.0), Programación 60, Liderazgo 80, Mentalidad 85 (su
     // habilidad más fuerte de las 12 — por eso esta categoría queda al final, no al principio).
@@ -552,7 +590,7 @@ window.CIFRAS = (function () {
      que hay que mantener a la par: la misma trampa que las cifras escritas a mano.
 
      Ahora viven aquí. Este archivo lo cargan las tres apps y se ejecuta antes que su JS, así que
-     la corrección llega abra lo que abra — incluido Coach_v2.html, que nunca tuvo migraciones y
+     la corrección llega abra lo que abra — incluido Coach.html, que nunca tuvo migraciones y
      por eso podía enseñar saldos viejos si era la primera pantalla del día.
 
      Cada migración lleva su bandera y corre UNA sola vez. Si después Adán mueve ese saldo a mano,
@@ -636,7 +674,7 @@ window.CIFRAS = (function () {
     autoTasa:      { v: () => campo('d003', 'rate'), fmt: 'pct' },
     autoMeses:     { v: () => campo('d003', 'remainingMonths'), fmt: 'num' },
     // Derivadas del auto: lo que acabas pagando si solo das el mínimo, y cuánto de eso es
-    // interés. Se calculan, no se copian — antes estaban escritas a mano en Coach_v2 y se
+    // interés. Se calculan, no se copian — antes estaban escritas a mano en Coach y se
     // quedaron congeladas en el saldo de hace dos meses.
     autoAPagar:    { dep: ['autoMeses','autoPago'],
                      v: () => { const m = campo('d003','remainingMonths'), p = campo('d003','min');
@@ -826,6 +864,7 @@ window.CIFRAS = (function () {
     APRENDIZAJE: APRENDIZAJE,
     LISTA_COMPRAS: LISTA_COMPRAS,
     PROYECTO: PROYECTO,
+    CALENDARIO: CALENDARIO,
     get datos() { return fin; }
   };
 })();

@@ -88,7 +88,7 @@ Tres funciones escriben aquí: `registrarReceta(id,tipo)` (botón en cada tarjet
 
 ## Deep-link `?s=` (2026-07-31)
 
-`init()` lee `?s=desayunos|cenas|super` de la URL y llama a `nav(s)` si es un valor válido de `SECS` — mismo patrón que el `?tab=` de `cuidadopersonal.html`. Se agregó para que `Coach/Coach_v2.html → #rutina` y `Dashboard/dashboard.html` puedan enlazar directo a la pestaña de Desayunos o Cenas desde una tarea de la rutina (p.ej. "🍽️ Cena" enlaza a `comida.html?s=cenas`) — ver [`../Coach/readme_coach_v2.md`](../Coach/readme_coach_v2.md) → "Tareas agrupadas". `SECS` ahora incluye también `rutina`/`registro`/`planSemana`, así que `?s=registro` o `?s=planSemana` también funcionan si se quiere enlazar directo a esas secciones en el futuro.
+`init()` lee `?s=desayunos|cenas|super` de la URL y llama a `nav(s)` si es un valor válido de `SECS` — mismo patrón que el `?tab=` de `cuidadopersonal.html`. Se agregó para que `Coach/Coach.html → #rutina` y `Dashboard/dashboard.html` puedan enlazar directo a la pestaña de Desayunos o Cenas desde una tarea de la rutina (p.ej. "🍽️ Cena" enlaza a `comida.html?s=cenas`) — ver [`../Coach/readme_coach.md`](../Coach/readme_coach.md) → "Tareas agrupadas". `SECS` ahora incluye también `rutina`/`registro`/`planSemana`, así que `?s=registro` o `?s=planSemana` también funcionan si se quiere enlazar directo a esas secciones en el futuro.
 
 ## Rediseño de interfaz (2026-07-31, ampliado 2026-08-02)
 

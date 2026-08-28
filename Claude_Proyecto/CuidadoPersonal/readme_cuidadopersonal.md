@@ -59,7 +59,7 @@ Reconstruido a fondo el 2026-07-29, y **simplificado a una sola pantalla ese mis
 
 `SKIN_DB`: objeto con 8 categorías (`limpiador`, `exfoliante`, `serumAM`, `hidratanteAM`, `spf`, `tratamientoPM`, `hidratantePM`, `semanal`), cada una con 2-4 productos reales (CeraVe, La Roche-Posay, The Ordinary, Isdin, Cetaphil, Neutrogena, Differin, Aztec Secret) etiquetados por `tipos` (a qué tipo de piel aplican), `presu` (a qué presupuesto) y `ayuda` (qué preocupaciones atienden). `skPick()` filtra por tipo+presupuesto y ordena por cuántas preocupaciones del perfil cubre cada producto — es texto plano dentro del `<script>`, no viene de ninguna API; si un producto deja de venderse o Adán quiere agregar uno que ya probó y le funciona, se edita directamente el array de la categoría correspondiente.
 
-**Seguimiento diario de "ya hice mi skincare hoy" vive en Coach, no aquí**: `Coach/Coach_v2.html → #rutina` (`RUTINA_TASKS`) ya incluye "🧴 Skincare AM" y "🧴 Skincare PM" como tareas del horario diario (ids `wd04`/`wd17` entre semana, `sa02`/`sa13` sábado, `do02`/`do10` domingo) — tenerlo también aquí era duplicado. Este módulo es puramente de **referencia** (qué producto usar y por qué), no de tracking de cumplimiento.
+**Seguimiento diario de "ya hice mi skincare hoy" vive en Coach, no aquí**: `Coach/Coach.html → #rutina` (`RUTINA_TASKS`) ya incluye "🧴 Skincare AM" y "🧴 Skincare PM" como tareas del horario diario (ids `wd04`/`wd17` entre semana, `sa02`/`sa13` sábado, `do02`/`do10` domingo) — tenerlo también aquí era duplicado. Este módulo es puramente de **referencia** (qué producto usar y por qué), no de tracking de cumplimiento.
 
 ## Módulo nativo: 💇 Cuidado del Cabello — `localStorage['cabello_v1']`
 
@@ -101,7 +101,7 @@ Pedido explícito: *"de crema limpiadora me compré el CeraVe verde, ese ponme e
 - **`SKIN_DB.hidratanteAM`** → solo `Eucerin Hyaluron-Filler + Epigenetic Día SPF15` (se quitaron CeraVe AM SPF30 y Neutrogena Hydro Boost). El SPF15 que trae este producto **no reemplaza** el paso de `SKIN_DB.spf` (protector solar SPF50 dedicado) — se dejó la nota explícita en `uso` para que no se confunda como protección solar suficiente por sí sola.
 - **`SKIN_DB.hidratantePM`** → solo `Eucerin Hyaluron-Filler + Epigenetic Noche` (se quitaron CeraVe PM y Cetaphil Crema).
 - **`HAIR_DB.champu`** → solo `Darrow Doctar (shampoo con alcatrão/coal tar)`, `ayuda:['caspa']` (se quitaron Vichy Dercos, Alpecin, Pantene Pro-V Anti-Caída y Head & Shoulders, que apuntaban a `caida`/`caspa`). **Esto es un cambio de enfoque, no solo de marca**: el champú pasó de tratar caída a tratar caspa — confirmado explícitamente con Adán antes de aplicarlo, ya que Vichy Dercos y Darrow Doctar no son equivalentes (atienden preocupaciones distintas). El tratamiento anticaída real sigue intacto y sin cambios: `HAIR_DB.tratamientoCaida` (Minoxidil 5%, diario, independiente del champú).
-- **También se actualizó `Coach/Coach_v2.html → RUTINA_TASKS`** (y su copia en `Dashboard/dashboard.html`, ver [`../Coach/readme_coach_v2.md`](../Coach/readme_coach_v2.md) → "Productos ya comprados"): el paso de champú de los días de lavado (Lun/Jue/Sáb) pasó de "Vichy Dercos" a "Darrow Doctar" — es la única de las 3 categorías que Adán pidió explícitamente reflejar también en la rutina diaria, no solo en la lista de compras/guía.
+- **También se actualizó `Coach/Coach.html → RUTINA_TASKS`** (y su copia en `Dashboard/dashboard.html`, ver [`../Coach/readme_coach.md`](../Coach/readme_coach.md) → "Productos ya comprados"): el paso de champú de los días de lavado (Lun/Jue/Sáb) pasó de "Vichy Dercos" a "Darrow Doctar" — es la única de las 3 categorías que Adán pidió explícitamente reflejar también en la rutina diaria, no solo en la lista de compras/guía.
 - **`LISTA_COMPRAS` del Dashboard** (estructura duplicada de este mismo catálogo, ver `../Dashboard/readme_dashboard.md` → "Datos duplicados") se actualizó a mano para las mismas 3 líneas — no hay sincronización automática entre `SKIN_DB`/`HAIR_DB` de este archivo y `LISTA_COMPRAS` de `dashboard.html`.
 
 Verificado con Playwright: la guía de Skincare muestra "CeraVe Limpiador Espumoso (Foaming Facial Cleanser, verde)" como paso 1 de la rutina de mañana y "Eucerin Hyaluron-Filler + Epigenetic Día/Noche SPF15" en los pasos de hidratante AM/PM; la guía de Cabello muestra "Darrow Doctar (shampoo con alcatrão/coal tar)" como único paso de champú con la píldora "Caspa"; cero errores de consola en ambas vistas.
@@ -285,7 +285,7 @@ Tres fuentes de resequedad simultáneas sobre un perfil que el propio proyecto y
 - **Lun y Jue** → Pilexil (tratamiento de caída) + acondicionador + leave-in en húmedo, con la regla explícita de cambiar a Darrow **solo** si ese día hay descamación activa.
 - **Sábado** → champú suave + **mascarilla**, marcada como *"el paso que más repara de toda tu semana; si te saltas uno, que no sea este"*. Cierra revisando puntas abiertas.
 
-Replicado en `Coach_v2.html` copiando las subtareas desde el Dashboard en vez de reescribirlas, para que no puedan divergir por un typo. Comprobado que las 71 tareas quedan equivalentes salvo los `href` de `k2`/`k5`, que deben diferir por diseño.
+Replicado en `Coach.html` copiando las subtareas desde el Dashboard en vez de reescribirlas, para que no puedan divergir por un typo. Comprobado que las 71 tareas quedan equivalentes salvo los `href` de `k2`/`k5`, que deben diferir por diseño.
 
 ### Sobre cortarse las puntas
 
@@ -411,7 +411,7 @@ Precios verificados en ago-2026. El nombre quedó como aparece en el estante mex
 
 ### Dónde estaba
 
-11 menciones en 3 archivos, todas cambiadas: **6 en `dashboard.html`** (4 subtareas de rutina, el renglón de la lista de compras y su clave de precios), **4 en `Coach_v2.html`** (su copia de `RUTINA_TASKS`) y **1 en `cuidadopersonal.html`** (`HAIR_DB`).
+11 menciones en 3 archivos, todas cambiadas: **6 en `dashboard.html`** (4 subtareas de rutina, el renglón de la lista de compras y su clave de precios), **4 en `Coach.html`** (su copia de `RUTINA_TASKS`) y **1 en `cuidadopersonal.html`** (`HAIR_DB`).
 
 La clave de `LISTA_COMPRAS_PRECIOS_OTROS` se cambió junto con el nombre: si se hubiera renombrado solo el producto, el renglón se habría quedado **sin precio** y habría dejado de sumar en el total de la categoría — el mismo tipo de desincronización silenciosa que ya se documentó con los nombres de cabello.
 
