@@ -19,8 +19,8 @@
      el primer instante. -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" media="print" onload="this.media='all'">
-<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"></noscript>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;700&display=swap" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;700&display=swap"></noscript>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -111,6 +111,60 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
    (renderGBM, renderDebts/renderIndicatorsHTML, renderBtcHistory) — mismas columnas que
    tenían como style="" inline, movidas a clase para poder tener breakpoints (ver RESPONSIVE). */
 .gbm-metrics-grid{display:grid;grid-template-columns:repeat(4,1fr)}
+
+/* ── Lenguaje visual del Plan de Inversiones ─────────────────────────
+   Cinco piezas que se repiten en el plan semanal y en la gráfica de BTC. Viven
+   como clases y no como style="" inline porque son EL sistema: si el acento
+   cambia, cambia en un sitio. Los colores salen todos del :root de arriba. */
+
+/* Cifras: Grotesk con numeros de ancho fijo, para que una columna de importes
+   quede alineada aunque cambien los digitos. */
+.fx-num{font-family:'Space Grotesk','Inter',sans-serif;font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+
+/* Etiqueta de seccion: pequena, espaciada, siempre en mayusculas. */
+.fx-lbl{font-size:9.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--text3)}
+
+/* Panel base. */
+.fx-panel{position:relative;border-radius:16px;border:1px solid rgba(var(--ov),.08);
+  background:rgba(var(--ov),.022)}
+
+/* Rejilla tecnica de fondo, enmascarada con un radial para que se desvanezca
+   antes de llegar al contenido. Es ::before para no meter un div vacio en cada
+   panel; pointer-events:none para que no coma clics. */
+.fx-grid{overflow:hidden}
+.fx-grid::before{content:'';position:absolute;inset:0;pointer-events:none;
+  background-image:linear-gradient(rgba(0,212,255,.04) 1px,transparent 1px),
+                   linear-gradient(90deg,rgba(0,212,255,.04) 1px,transparent 1px);
+  background-size:64px 64px;
+  -webkit-mask-image:radial-gradient(ellipse 80% 60% at 50% 0%,#000 0%,transparent 78%);
+          mask-image:radial-gradient(ellipse 80% 60% at 50% 0%,#000 0%,transparent 78%)}
+
+/* Borde de gradiente: un wrapper de 1px de padding con el degradado de fondo y
+   el hijo opaco encima. Es la unica forma de tener un borde degradado que
+   respete el border-radius en todos los navegadores. */
+.fx-edge{border-radius:18px;padding:1px;
+  background:linear-gradient(135deg,rgba(0,212,255,.5),rgba(176,110,255,.35) 50%,rgba(0,212,255,.06) 90%)}
+.fx-edge>*{border-radius:17px;background:var(--surface-solid)}
+
+/* Tarjeta de semana: es un <button> para que funcione con teclado. */
+.wk-card{cursor:pointer;border-radius:14px;padding:14px 15px;display:flex;flex-direction:column;
+  gap:8px;text-align:left;font-family:inherit;color:inherit;
+  background:rgba(var(--ov),.025);border:1px solid rgba(var(--ov),.08);
+  transition:transform .16s,border-color .16s,background .16s}
+.wk-card:hover{transform:translateY(-2px);border-color:rgba(0,212,255,.3)}
+.wk-card.on{background:rgba(0,212,255,.07);border-color:rgba(0,212,255,.45)}
+.gbm-wk4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr))}
+
+/* La línea de tiempo del mes reparte 31 días sobre el ancho disponible. En un
+   teléfono, el día 14 y el 17 caen a diez píxeles y las etiquetas se encabalgan
+   — medido a 390 px. Ahí la sustituye una lista con los mismos eventos, que se
+   generan del mismo array: no hay dos fuentes de verdad, solo dos formas. */
+.fx-tl{display:block}
+.fx-tl-lista{display:none}
+@media(max-width:760px){
+  .fx-tl{display:none}
+  .fx-tl-lista{display:flex;flex-direction:column;gap:2px}
+}
 .gbm-week-grid{display:grid;grid-template-columns:repeat(3,1fr)}
 .gbm-svc-grid{display:grid;grid-template-columns:repeat(3,1fr)}
 .gbm-port-kpis{display:grid;grid-template-columns:repeat(5,1fr)}
@@ -268,6 +322,7 @@ select option{background:var(--surface-solid);color:var(--text)}
      un media query normal no puede pisar un inline style, así que esas plantillas ahora
      imprimen una clase (ver readme_finanzas.md) que sí podemos redefinir aquí. */
   .gbm-metrics-grid{grid-template-columns:repeat(2,1fr)}
+  .gbm-wk4{grid-template-columns:repeat(2,minmax(0,1fr))}
   .gbm-port-kpis{grid-template-columns:repeat(2,1fr)}
   .gbm-port-layout{grid-template-columns:1fr}
   .gbm-port-side{position:static;top:auto}
@@ -282,6 +337,7 @@ select option{background:var(--surface-solid);color:var(--text)}
   .topbar{flex-wrap:wrap;height:auto;min-height:58px;row-gap:8px;padding:10px 16px}
   .topbar-actions{flex-wrap:wrap;justify-content:flex-end}
   .gbm-week-grid{grid-template-columns:1fr}
+  .gbm-wk4{grid-template-columns:repeat(2,minmax(0,1fr))}
   .gbm-svc-grid{grid-template-columns:1fr}
 }
 
@@ -295,7 +351,7 @@ select option{background:var(--surface-solid);color:var(--text)}
    sea 1fr. Bloque al final de la hoja para ganar por orden de aparición sobre
    cualquier regla previa con la misma especificidad. */
 .g2>*,.g3>*,.g4>*,.fr>*,
-.gbm-metrics-grid>*,.gbm-week-grid>*,.gbm-svc-grid>*,.gbm-port-kpis>*,
+.gbm-metrics-grid>*,.gbm-week-grid>*,.gbm-svc-grid>*,.gbm-wk4>*,.gbm-port-kpis>*,
 .gbm-port-layout>*,.gbm-bw-grid>*,.ind-grid4>*,.btc-layout>*{min-width:0}
 
 /* Tablas y bloques anchos en celular (2026-08-17) — una tabla que no cabe hacía zoom-out de
@@ -1556,201 +1612,265 @@ function renderGBM() {
       </div>
     </div>
 
-    <!-- PLAN SEMANAL CON TABS -->
-    <div class="sh" style="margin-bottom:0"><h2>🗓️ Plan por semana</h2></div>
+    <!-- ═══ PLAN SEMANAL ═════════════════════════════════════════════
+         Antes eran cuatro pestañas con emoji y un panel de servicios repetido en las
+         cuatro; el número que Adán necesita —cuánto va a la bolsa esta semana— salía
+         al mismo tamaño que todo lo demás. Ahora la sección responde UNA pregunta:
+         por qué unas semanas dan para invertir y otras no. La línea de tiempo lo
+         enseña antes de que haya que leer una cifra.
 
-    <!-- TABS -->
-    <div style="display:flex;gap:6px;margin-bottom:16px;padding:6px;background:rgba(255,255,255,.03);border-radius:12px;border:1px solid rgba(255,255,255,.07)">
-      ${[
-        {n:1,icon:'💰',label:'Semana 1',dias:'Días 1–7'},
-        {n:2,icon:'🚗',label:'Semana 2',dias:'Días 8–14'},
-        {n:3,icon:'💳',label:'Semana 3',dias:'Días 15–21'},
-        {n:4,icon:'📊',label:'Semana 4',dias:'Días 22–28'},
-      ].map(t=>t.n===cw?`
-      <button id="gbm-tab-${t.n}" onclick="switchGBMTab(${t.n})"
-        style="display:flex;flex-direction:column;align-items:center;gap:2px;padding:12px 10px;border:2px solid var(--primary);cursor:pointer;font-family:inherit;transition:all .2s;border-radius:9px;flex:1;
-          background:linear-gradient(135deg,rgba(0,212,255,.2),rgba(0,212,255,.08));
-          color:var(--primary);font-weight:700;
-          box-shadow:0 0 16px rgba(0,212,255,.25),inset 0 1px 0 rgba(255,255,255,.1)">
-        <span style="font-size:18px">${t.icon}</span>
-        <span style="font-size:12px;font-weight:800;letter-spacing:.01em">${t.label}</span>
-        <span style="font-size:10px;opacity:.8">${t.dias}</span>
-        <span style="font-size:9px;background:var(--primary);color:#000;padding:2px 8px;border-radius:20px;margin-top:3px;font-weight:800;letter-spacing:.04em">● ESTA SEMANA</span>
-      </button>`:`
-      <button id="gbm-tab-${t.n}" onclick="switchGBMTab(${t.n})"
-        style="display:flex;flex-direction:column;align-items:center;gap:2px;padding:12px 10px;border:1px solid rgba(255,255,255,.07);cursor:pointer;font-family:inherit;transition:all .2s;border-radius:9px;flex:1;
-          background:transparent;color:var(--text3);font-weight:500;opacity:.6">
-        <span style="font-size:16px">${t.icon}</span>
-        <span style="font-size:11px">${t.label}</span>
-        <span style="font-size:9px">${t.dias}</span>
-      </button>`).join('')}
-    </div>
+         Los importes NO se escriben aquí: salen de w1GBM…w4GBM, que es el modelo que
+         la app ya usaba — quincena en las semanas 1 y 3, cero en las otras dos.  -->
+    ${(()=>{
+      const mx0 = n => '$'+Math.round(Math.abs(n)).toLocaleString('es-MX');
+      const AUTO_N = _PG().auto || 'Auto';
 
-    <!-- CONTENIDO DE CADA TAB -->
-    ${[
-      {num:1, label:'Semana 1 — Días 1–7', icon:'💰', active:cw===1,
-        ins:[{l:'Quincena 1 (BBVA)',a:QUINC}],
-        outs:[
-          {l:'Renta departamento (día 1)',a:RENTA,g:'vivienda'},
-          {l:'Gastos variables est.',a:varPerWeek,g:'var'},
-        ],
-        gbm:w1GBM, nota:'La quincena llega a BBVA. Se paga renta y el sobrante va a GBM+.'},
-      {num:2, label:'Semana 2 — Días 8–14', icon:'🚗', active:cw===2,
-        ins:[],
-        outs:[
-          {l:'Dolphin Mini BYD (día 14)',a:AUTO,g:'auto'},
-        ],
-        gbm:w2GBM, nota:'El Dolphin Mini se paga del saldo BBVA reservado de la semana 1. Sin ingresos esta semana.'},
-      {num:3, label:'Semana 3 — Días 15–21', icon:'💳', active:cw===3,
-        ins:[{l:'Quincena 2 (BBVA)',a:QUINC}],
-        outs:[
-          {l:'CETES ahorro recurrente (día 15)',a:CETES_DIA15,g:'ahorro'},
-          {l:'Plan de datos celular',a:SVC_CELULAR,g:'svc'},
-          {l:'Internet',a:SVC_INTERNET,g:'svc'},
-          {l:'Gas',a:SVC_GAS,g:'svc'},
-          {l:'Agua y luz',a:SVC_AGUA,g:'svc'},
-          {l:'Artículos de limpieza',a:SVC_LIMPIEZA,g:'svc'},
-          {l:'Gym Total Pass (día 17)',a:SUB_GYM,g:'sub'},
-          {l:'Claude Code',a:SUB_CLAUDE,g:'sub'},
-          {l:'iCloud',a:SUB_ICLOUD,g:'sub'},
-          {l:'TC BBVA mínimo',a:TC_BBVA,g:'tc'},
-          {l:'TC Banamex mínimo',a:TC_BANAMEX,g:'tc'},
-          ...(msiActive>0?[{l:'Cuotas MSI activas',a:Math.round(msiActive),g:'tc'}]:[]),
-          {l:'Gastos variables est.',a:varPerWeek,g:'var'},
-        ],
-        gbm:w3GBM, nota:'Llega la segunda quincena. Se apartan CETES, se pagan todos los servicios y TCs. El sobrante va a GBM+.'},
-      {num:4, label:'Semana 4 — Días 22–28', icon:'📊', active:cw===4,
-        ins:[],
-        outs:[],
-        gbm:w4GBM, nota:'Semana libre. Sin pagos fijos ni ingresos programados.'},
-    ].map(w=>{
-      const investAmt = w.active && efectivoSemana>0 ? efectivoSemana : w.gbm;
-      const totIn  = w.ins.reduce((s,i)=>s+i.a,0);
-      const totOut = w.outs.filter(o=>o.a>0).reduce((s,o)=>s+o.a,0);
+      const SEM = [
+        { n:1, dias:'1 al 7',
+          ins:  [{l:'Quincena 1 · '+(_PG().bancoSueldo||'BBVA'), a:QUINC}],
+          outs: [{l:'Renta · día 1', a:RENTA},
+                 {l:'Gasto variable estimado', a:varPerWeek}],
+          gbm:w1GBM,
+          resumen:'Entra la quincena, se va la renta.',
+          aviso:'La renta se lleva más de la mitad de la quincena. Lo que queda después del gasto variable estimado es lo que puede ir a la bolsa — y por eso esta semana sí aporta, aunque sea la que más aprieta.' },
+        { n:2, dias:'8 al 14',
+          ins:  [],
+          outs: [{l:AUTO_N+' · día 14', a:AUTO}],
+          gbm:w2GBM,
+          resumen:'Se paga el auto. No entra quincena.',
+          aviso:'Semana sin ingreso de nómina: la mensualidad del auto sale del saldo que quedó reservado. El plan no aparta nada para la bolsa esta semana, y no es un error — es que no hay de dónde.' },
+        { n:3, dias:'15 al 21',
+          ins:  [{l:'Quincena 2 · '+(_PG().bancoSueldo||'BBVA'), a:QUINC}],
+          outs: [{l:'CETES · día 15', a:CETES_DIA15},
+                 {l:'Plan de datos celular', a:SVC_CELULAR},
+                 {l:'Internet', a:SVC_INTERNET},
+                 {l:'Gas', a:SVC_GAS},
+                 {l:'Agua y luz', a:SVC_AGUA},
+                 {l:'Artículos de limpieza', a:SVC_LIMPIEZA},
+                 {l:(_PG().gymNombre||'Gimnasio')+' · día 17', a:SUB_GYM},
+                 {l:'Claude Code', a:SUB_CLAUDE},
+                 {l:'iCloud', a:SUB_ICLOUD},
+                 {l:'TC BBVA · mínimo', a:TC_BBVA},
+                 {l:'TC Banamex · mínimo', a:TC_BANAMEX},
+                 ...(msiActive>0?[{l:'Cuotas MSI activas', a:Math.round(msiActive)}]:[]),
+                 {l:'Gasto variable estimado', a:varPerWeek}],
+          gbm:w3GBM,
+          resumen:'Entra la segunda quincena y se paga casi todo.',
+          aviso:'La semana que sostiene el mes: aquí caen los servicios, las suscripciones, los mínimos de tarjeta y el apartado de CETES. Aun así es la que más deja para la bolsa, porque el ingreso llega junto y los pagos son muchos pero pequeños.' },
+        { n:4, dias:'22 al 28',
+          ins:  [], outs:[], gbm:w4GBM,
+          resumen:'Sin pagos ni ingresos programados.',
+          aviso:'Semana en blanco en el calendario. El plan no aparta nada porque la nómina ya se repartió en las semanas 1 y 3 — si te sobra dinero de verdad, escríbelo arriba en “corrige el monto” y se reparte entre las dos acciones.' },
+      ];
+
+      // Los días que mueven el dinero, agrupados por fecha: dos eventos del mismo
+      // día comparten columna. Los grupos alternan arriba/abajo del eje porque el
+      // 14 y el 15 caen a 3% de distancia y las etiquetas se pisarían.
+      const diasMes = new Date(nowD.getFullYear(), nowD.getMonth()+1, 0).getDate();
+      const posD = d => (4 + ((d-1)/(diasMes-1))*92).toFixed(2)+'%';
+      const GRUPOS = [
+        {d:1,  ev:[{t:'Quincena 1', a:QUINC, c:'var(--success)'},
+                   {t:'Renta',      a:-RENTA, c:'var(--danger)'}]},
+        {d:14, ev:[{t:AUTO_N,       a:-AUTO, c:'var(--danger)'}]},
+        {d:15, ev:[{t:'Quincena 2', a:QUINC, c:'var(--success)'},
+                   {t:'CETES',      a:-CETES_DIA15, c:'var(--primary)'}]},
+        {d:17, ev:[{t:_PG().gymNombre||'Gimnasio', a:-SUB_GYM, c:'var(--danger)'}]},
+      ];
+
+      const semActiva = w => (isCurrentM && w.n===cw);
+
       return `
-      <div id="gbm-week-${w.num}" style="display:${w.active?'block':'none'};margin-bottom:20px">
-        <div class="card" style="border-left:4px solid ${w.active?'var(--primary)':'rgba(255,255,255,.12)'}">
+      <div class="fx-panel fx-grid" style="padding:24px 26px;margin-bottom:14px">
+        <div style="position:relative;display:flex;flex-direction:column;gap:18px">
 
-          <!-- Header de la semana -->
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:6px">
-            <div style="display:flex;align-items:center;gap:8px">
-              <span style="font-size:22px">${w.icon}</span>
-              <div>
-                <div style="font-size:15px;font-weight:700;color:var(--text)">${w.label}</div>
-                <div style="font-size:10px;color:var(--text3);margin-top:1px">${w.nota}</div>
+          <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:20px;flex-wrap:wrap">
+            <div style="display:flex;flex-direction:column;gap:6px">
+              <div style="display:flex;align-items:center;gap:8px">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="color:var(--primary)"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18"></path><path d="M8 3v4"></path><path d="M16 3v4"></path></svg>
+                <span class="fx-lbl" style="color:var(--primary)">Tu mes, semana por semana</span>
               </div>
+              <div class="fx-num" style="font-size:24px;font-weight:700;line-height:1.15;color:var(--text)">Por qué unas semanas aprietan y otras no</div>
             </div>
-            ${w.active?`<span style="font-size:10px;padding:3px 10px;border-radius:10px;background:var(--primary);color:#000;font-weight:700">← Esta semana</span>`:''}
+            <div style="font-size:11.5px;color:var(--text3);text-align:right;max-width:36ch;line-height:1.5">
+              Toca una semana para ver qué entra, qué sale y cuánto queda para la bolsa.
+            </div>
           </div>
 
-          <!-- 3 columnas: Entradas / Gastos / A invertir -->
-          <div class="gbm-week-grid" style="gap:10px">
-
-            <div style="background:rgba(0,232,122,.06);border-radius:10px;padding:12px">
-              <div style="font-size:10px;font-weight:700;color:var(--success);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">↑ Entradas</div>
-              ${w.ins.map(i=>`<div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:4px">
-                <span style="color:var(--text2)">${i.l}</span>
-                <span style="font-weight:700;color:var(--success)">${fmt(i.a)}</span>
-              </div>`).join('')}
-              <div style="border-top:1px solid rgba(0,232,122,.2);margin-top:8px;padding-top:6px;display:flex;justify-content:space-between;align-items:center">
-                <span style="font-size:10px;color:var(--text3)">Total entradas</span>
-                <span style="font-size:14px;font-weight:800;color:var(--success)">${fmt(totIn)}</span>
-              </div>
-            </div>
-
-            <div style="background:rgba(255,59,107,.06);border-radius:10px;padding:12px">
-              <div style="font-size:10px;font-weight:700;color:var(--danger);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">↓ Gastos</div>
-              ${w.outs.filter(o=>o.a>0).map(o=>`<div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:4px">
-                <span style="color:var(--text2)">${o.l}</span>
-                <span style="font-weight:700;color:var(--danger)">${fmt(o.a)}</span>
-              </div>`).join('')}
-              ${w.outs.filter(o=>o.a>0).length===0?`<div style="font-size:12px;color:var(--text3);padding:6px 0">Sin pagos esta semana 🎉</div>`:''}
-              <div style="border-top:1px solid rgba(255,59,107,.2);margin-top:8px;padding-top:6px;display:flex;justify-content:space-between;align-items:center">
-                <span style="font-size:10px;color:var(--text3)">Total gastos</span>
-                <span style="font-size:14px;font-weight:800;color:var(--danger)">${fmt(totOut)}</span>
-              </div>
-            </div>
-
-            <div style="background:rgba(176,110,255,.08);border-radius:10px;padding:12px">
-              <div style="font-size:10px;font-weight:700;color:var(--purple);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">📈 A invertir en bolsa</div>
-              ${P.acciones.map(a=>{
-                const amt=investAmt>0?Math.round(investAmt*a.pct/100):0;
-                return `<div style="margin-bottom:7px">
-                  <div style="display:flex;justify-content:space-between;align-items:center">
-                    <div style="display:flex;align-items:center;gap:4px">
-                      <span style="font-size:12px;font-weight:800;color:${a.tipoColor}">${a.ticker}</span>
-                      <span style="font-size:9px;color:var(--text3)">${a.pct}%</span>
-                      <a href="${a.tv}" target="_blank" style="font-size:9px;color:var(--primary);text-decoration:none;opacity:.8">TV↗</a>
-                    </div>
-                    <span style="font-size:13px;font-weight:800;color:${a.tipoColor}">${amt>0?fmt(amt):'—'}</span>
-                  </div>
-                  <div style="font-size:9px;color:${a.tipoColor};opacity:.7;margin-top:1px">${a.tipoLabel}</div>
-                </div>`;
-              }).join('')}
-              <div style="border-top:1px solid rgba(176,110,255,.2);margin-top:8px;padding-top:6px;display:flex;justify-content:space-between;align-items:center">
-                <span style="font-size:10px;color:var(--text3)">Total sobrante</span>
-                <span style="font-size:14px;font-weight:800;color:var(--purple)">${investAmt>0?fmt(investAmt):'Ingresa sobrante ↑'}</span>
-              </div>
-            </div>
-
+          <!-- LÍNEA DE TIEMPO DEL MES -->
+          <div class="fx-tl" style="position:relative;height:172px;margin-top:2px">
+            <div style="position:absolute;left:0;right:0;top:86px;height:2px;background:linear-gradient(90deg,rgba(var(--ov),.05),rgba(var(--ov),.16) 12%,rgba(var(--ov),.16) 88%,rgba(var(--ov),.05))"></div>
+            ${GRUPOS.map((g,gi)=>{
+              const arriba = gi%2===0;
+              return `
+              <div style="position:absolute;left:${posD(g.d)};top:0;bottom:0;width:0">
+                <div style="position:absolute;left:0;top:0;bottom:0;width:1px;transform:translateX(-50%);background:repeating-linear-gradient(180deg,rgba(var(--ov),.18) 0 3px,transparent 3px 8px)"></div>
+                <div style="position:absolute;left:0;top:87px;width:11px;height:11px;border-radius:50%;transform:translate(-50%,-50%);background:${g.ev[0].c};border:2px solid var(--surface-solid);box-shadow:0 0 10px ${g.ev[0].c}"></div>
+                <div style="position:absolute;left:0;top:${arriba?'6px':'106px'};transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:3px;white-space:nowrap">
+                  ${g.ev.map(e=>`<span class="fx-num" style="font-size:13px;font-weight:700;color:${e.c}">${e.a<0?'−':'+'}${mx0(e.a)}</span>
+                    <span style="font-size:10px;color:var(--text3);margin-top:-2px">${e.t}</span>`).join('')}
+                  <span style="font-size:9.5px;color:var(--text3);opacity:.7;margin-top:2px">día ${g.d}</span>
+                </div>
+              </div>`;
+            }).join('')}
+            <!-- franja de la semana en curso -->
+            ${isCurrentM?`<div style="position:absolute;left:${posD((cw-1)*7+1)};width:calc(${posD(Math.min(cw*7,diasMes))} - ${posD((cw-1)*7+1)});top:80px;height:14px;border-radius:7px;background:rgba(0,212,255,.16);border:1px solid rgba(0,212,255,.35)"></div>`:''}
           </div>
 
-          <!-- Panel resumen de servicios fijos del mes (referencia en todos los tabs) -->
-          <div style="margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,.06)">
-            <div style="font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:8px">
-              📋 Servicios fijos del mes (referencia — se pagan en Sem 3)
-            </div>
-            <div class="gbm-svc-grid" style="gap:6px">
-              <div style="background:rgba(255,255,255,.03);border-radius:8px;padding:8px 10px">
-                <div style="font-size:9px;font-weight:700;color:var(--text3);text-transform:uppercase;margin-bottom:5px">🔧 Servicios</div>
-                ${[
-                  {l:'Plan celular',a:SVC_CELULAR},
-                  {l:'Internet',a:SVC_INTERNET},
-                  {l:'Gas',a:SVC_GAS},
-                  {l:'Agua y luz',a:SVC_AGUA},
-                  {l:'Limpieza',a:SVC_LIMPIEZA},
-                ].map(s=>`<div style="display:flex;justify-content:space-between;font-size:10px;margin-bottom:2px">
-                  <span style="color:var(--text3)">${s.l}</span>
-                  <span style="color:var(--text2);font-weight:600">${fmt(s.a)}</span>
-                </div>`).join('')}
-                <div style="border-top:1px solid rgba(255,255,255,.06);margin-top:4px;padding-top:3px;display:flex;justify-content:space-between;font-size:10px;font-weight:700">
-                  <span style="color:var(--text3)">Total</span><span style="color:var(--text2)">${fmt(SERVICIOS)}</span>
+          <!-- La misma información en vertical, para pantallas estrechas -->
+          <div class="fx-tl-lista">
+            ${GRUPOS.map(g=>{
+              const enCurso = isCurrentM && g.d>=(cw-1)*7+1 && g.d<=cw*7;
+              return `<div style="display:flex;align-items:center;gap:12px;padding:9px 11px;border-radius:10px;background:${enCurso?'rgba(0,212,255,.07)':'rgba(var(--ov),.025)'};border:1px solid ${enCurso?'rgba(0,212,255,.3)':'transparent'}">
+                <span class="fx-num" style="font-size:11px;font-weight:700;color:var(--text3);min-width:44px">DÍA ${g.d}</span>
+                <div style="flex:1;display:flex;flex-direction:column;gap:3px">
+                  ${g.ev.map(e=>`<div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px">
+                    <span style="font-size:12px;color:var(--text2)">${e.t}</span>
+                    <span class="fx-num" style="font-size:13.5px;font-weight:700;color:${e.c}">${e.a<0?'−':'+'}${mx0(e.a)}</span>
+                  </div>`).join('')}
                 </div>
-              </div>
-              <div style="background:rgba(255,255,255,.03);border-radius:8px;padding:8px 10px">
-                <div style="font-size:9px;font-weight:700;color:var(--text3);text-transform:uppercase;margin-bottom:5px">📱 Suscripciones</div>
-                ${[
-                  {l:'Gym Total Pass',a:SUB_GYM},
-                  {l:'Claude Code',a:SUB_CLAUDE},
-                  {l:'iCloud',a:SUB_ICLOUD},
-                ].map(s=>`<div style="display:flex;justify-content:space-between;font-size:10px;margin-bottom:2px">
-                  <span style="color:var(--text3)">${s.l}</span>
-                  <span style="color:var(--text2);font-weight:600">${fmt(s.a)}</span>
-                </div>`).join('')}
-                <div style="border-top:1px solid rgba(255,255,255,.06);margin-top:4px;padding-top:3px;display:flex;justify-content:space-between;font-size:10px;font-weight:700">
-                  <span style="color:var(--text3)">Total</span><span style="color:var(--text2)">${fmt(SUSCRIPCIONES)}</span>
-                </div>
-              </div>
-              <div style="background:rgba(255,255,255,.03);border-radius:8px;padding:8px 10px">
-                <div style="font-size:9px;font-weight:700;color:var(--text3);text-transform:uppercase;margin-bottom:5px">💳 Tarjetas</div>
-                ${[
-                  {l:'TC BBVA',a:TC_BBVA},
-                  {l:'TC Banamex',a:TC_BANAMEX},
-                  ...(msiActive>0?[{l:'MSI activas',a:Math.round(msiActive)}]:[]),
-                ].filter(s=>s.a>0).map(s=>`<div style="display:flex;justify-content:space-between;font-size:10px;margin-bottom:2px">
-                  <span style="color:var(--text3)">${s.l}</span>
-                  <span style="color:var(--text2);font-weight:600">${fmt(s.a)}</span>
-                </div>`).join('')}
-                <div style="border-top:1px solid rgba(255,255,255,.06);margin-top:4px;padding-top:3px;display:flex;justify-content:space-between;font-size:10px;font-weight:700">
-                  <span style="color:var(--text3)">Total</span><span style="color:var(--text2)">${fmt(TC_MINS+Math.round(msiActive))}</span>
-                </div>
-              </div>
-            </div>
+              </div>`;
+            }).join('')}
+          </div>
+
+          <div style="display:flex;gap:18px;flex-wrap:wrap;padding-top:2px">
+            <span style="display:flex;align-items:center;gap:6px"><span style="width:9px;height:9px;border-radius:50%;background:var(--success)"></span><span style="font-size:11px;color:var(--text3)">Entra dinero</span></span>
+            <span style="display:flex;align-items:center;gap:6px"><span style="width:9px;height:9px;border-radius:50%;background:var(--danger)"></span><span style="font-size:11px;color:var(--text3)">Sale dinero</span></span>
+            <span style="display:flex;align-items:center;gap:6px"><span style="width:9px;height:9px;border-radius:50%;background:var(--primary)"></span><span style="font-size:11px;color:var(--text3)">Se aparta a CETES</span></span>
+            ${isCurrentM?`<span style="display:flex;align-items:center;gap:6px"><span style="width:16px;height:8px;border-radius:4px;background:rgba(0,212,255,.16);border:1px solid rgba(0,212,255,.35)"></span><span style="font-size:11px;color:var(--text3)">Semana en curso</span></span>`:''}
           </div>
 
         </div>
-      </div>`;
-    }).join('')}
+      </div>
+
+      <!-- LAS CUATRO SEMANAS -->
+      <div class="gbm-wk4" style="gap:10px;margin-bottom:14px">
+        ${SEM.map(w=>{
+          const act = semActiva(w);
+          const monto = act && efectivoSemana>0 ? efectivoSemana : w.gbm;
+          const pct = monthGBM>0 ? Math.round((w.gbm/monthGBM)*100) : 0;
+          return `<button type="button" id="gbm-tab-${w.n}" class="wk-card${w.n===cw?' on':''}" onclick="switchGBMTab(${w.n})">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
+              <span class="fx-lbl">Semana ${w.n}</span>
+              ${act?`<span style="font-size:9px;font-weight:800;letter-spacing:.06em;color:var(--bg);background:var(--primary);padding:3px 7px;border-radius:5px">HOY</span>`:''}
+            </div>
+            <div class="fx-num" style="font-size:23px;font-weight:700;line-height:1;color:${monto>0?'var(--primary)':'var(--text3)'}">${monto>0?mx0(monto):'—'}</div>
+            <div style="font-size:10.5px;color:var(--text3)">${monto>0?'a la bolsa':'nada esta semana'} · días ${w.dias}</div>
+            <div style="height:5px;border-radius:3px;background:rgba(var(--ov),.07);overflow:hidden">
+              <div style="height:100%;border-radius:3px;width:${pct}%;background:var(--primary)"></div>
+            </div>
+            <div style="font-size:11px;color:var(--text2);line-height:1.4">${w.resumen}</div>
+          </button>`;
+        }).join('')}
+      </div>
+
+      <!-- DETALLE DE LA SEMANA ELEGIDA -->
+      ${SEM.map(w=>{
+        const act = semActiva(w);
+        const monto = act && efectivoSemana>0 ? efectivoSemana : w.gbm;
+        const outs = w.outs.filter(o=>o.a>0);
+        const totIn = w.ins.reduce((s,i)=>s+i.a,0);
+        const totOut = outs.reduce((s,o)=>s+o.a,0);
+        return `
+        <div id="gbm-week-${w.n}" style="display:${w.n===cw?'block':'none'};margin-bottom:20px">
+          <div class="fx-edge">
+            <div style="padding:24px 26px;display:flex;flex-direction:column;gap:18px">
+
+              <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:20px;flex-wrap:wrap">
+                <div style="display:flex;flex-direction:column;gap:5px">
+                  <span class="fx-lbl" style="color:var(--primary)">Detalle</span>
+                  <div class="fx-num" style="font-size:22px;font-weight:700;color:var(--text)">Semana ${w.n} · días ${w.dias}</div>
+                  <div style="font-size:12px;color:var(--text2)">${w.resumen}</div>
+                </div>
+                <div style="text-align:right;display:flex;flex-direction:column;gap:4px">
+                  <span class="fx-lbl">Queda para la bolsa</span>
+                  <div class="fx-num" style="font-size:32px;font-weight:700;line-height:1;color:${monto>0?'var(--primary)':'var(--text3)'}">${monto>0?mx0(monto):'$0'}</div>
+                </div>
+              </div>
+
+              <div class="gbm-week-grid" style="gap:12px">
+
+                <div style="background:rgba(0,232,122,.055);border:1px solid rgba(0,232,122,.16);border-radius:13px;padding:15px 16px;display:flex;flex-direction:column;gap:9px">
+                  <div style="display:flex;align-items:center;gap:7px">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="color:var(--success)"><path d="M12 19V5"></path><path d="M6 11l6-6 6 6"></path></svg>
+                    <span class="fx-lbl" style="color:var(--success)">Entra</span>
+                  </div>
+                  ${w.ins.length?w.ins.map(i=>`<div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px">
+                    <span style="font-size:12px;color:var(--text2)">${i.l}</span>
+                    <span class="fx-num" style="font-size:13.5px;font-weight:700">${mx0(i.a)}</span>
+                  </div>`).join(''):`<div style="font-size:12px;color:var(--text3)">Sin nómina esta semana</div>`}
+                  <div style="height:1px;background:rgba(0,232,122,.15)"></div>
+                  <div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px">
+                    <span style="font-size:11.5px;font-weight:600;color:var(--success)">Total</span>
+                    <span class="fx-num" style="font-size:17px;font-weight:700;color:var(--success)">${mx0(totIn)}</span>
+                  </div>
+                </div>
+
+                <div style="background:rgba(255,59,107,.05);border:1px solid rgba(255,59,107,.15);border-radius:13px;padding:15px 16px;display:flex;flex-direction:column;gap:9px">
+                  <div style="display:flex;align-items:center;gap:7px">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="color:var(--danger)"><path d="M12 5v14"></path><path d="M6 13l6 6 6-6"></path></svg>
+                    <span class="fx-lbl" style="color:var(--danger)">Sale</span>
+                  </div>
+                  ${outs.length?outs.map(o=>`<div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px">
+                    <span style="font-size:12px;color:var(--text2)">${o.l}</span>
+                    <span class="fx-num" style="font-size:13.5px;font-weight:700">${mx0(o.a)}</span>
+                  </div>`).join(''):`<div style="font-size:12px;color:var(--text3)">Nada programado</div>`}
+                  <div style="height:1px;background:rgba(255,59,107,.15)"></div>
+                  <div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px">
+                    <span style="font-size:11.5px;font-weight:600;color:var(--danger)">Total</span>
+                    <span class="fx-num" style="font-size:17px;font-weight:700;color:var(--danger)">${mx0(totOut)}</span>
+                  </div>
+                </div>
+
+                <div style="background:rgba(0,212,255,.06);border:1px solid rgba(0,212,255,.2);border-radius:13px;padding:15px 16px;display:flex;flex-direction:column;gap:10px">
+                  <div style="display:flex;align-items:center;gap:7px">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="color:var(--primary)"><path d="M3 3v18h18"></path><path d="M7 15l4-5 3 3 5-7"></path></svg>
+                    <span class="fx-lbl" style="color:var(--primary)">Se invierte en bolsa</span>
+                  </div>
+                  ${monto>0?P.acciones.map(a=>{
+                    const amt=Math.round(monto*a.pct/100);
+                    return `<div style="display:flex;flex-direction:column;gap:5px">
+                      <div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px">
+                        <span style="display:flex;align-items:baseline;gap:7px">
+                          <span class="fx-num" style="font-size:14px;font-weight:700;color:${a.tipoColor}">${a.ticker}</span>
+                          <a href="${a.tv}" target="_blank" rel="noopener" style="font-size:9.5px;color:var(--primary);opacity:.75">TV↗</a>
+                        </span>
+                        <span class="fx-num" style="font-size:15px;font-weight:700">${mx0(amt)}</span>
+                      </div>
+                      <div style="display:flex;gap:3px">
+                        <span style="height:5px;flex:${a.pct};border-radius:3px;background:${a.tipoColor}"></span>
+                        <span style="height:5px;flex:${100-a.pct};border-radius:3px;background:rgba(var(--ov),.07)"></span>
+                      </div>
+                      <span style="font-size:10px;color:var(--text3)">${a.pct}% · ${a.tipoLabel.replace(/^[^\s]+\s/,'')}</span>
+                    </div>`;
+                  }).join(''):`<div style="font-size:12px;color:var(--text3);line-height:1.55">El plan no aparta nada esta semana. La nómina ya se repartió en las semanas 1 y 3.</div>`}
+                </div>
+
+              </div>
+
+              <div style="display:flex;align-items:flex-start;gap:11px;padding:14px 16px;border-radius:12px;background:rgba(var(--ov),.03);border:1px solid rgba(var(--ov),.07)">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" style="color:var(--text3);flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="9"></circle><path d="M12 11v5"></path><path d="M12 7.5v.01"></path></svg>
+                <div style="font-size:12.5px;color:var(--text2);line-height:1.6">${w.aviso}</div>
+              </div>
+
+            </div>
+          </div>
+        </div>`;
+      }).join('')}
+
+      <!-- LO QUE EL PLAN SEMANAL NO CUENTA — el hueco, dicho en voz alta -->
+      <div style="display:flex;align-items:flex-start;gap:12px;padding:16px 18px;border-radius:13px;background:rgba(255,217,61,.05);border:1px solid rgba(255,217,61,.2);margin-bottom:24px">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" style="color:var(--warning);flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="9"></circle><path d="M12 8v5"></path><path d="M12 16.5v.01"></path></svg>
+        <div style="font-size:12.5px;color:var(--text2);line-height:1.65">
+          <b style="color:var(--warning)">El plan semanal solo cuenta tu nómina.</b>
+          Los ${fmt(_PG().didiMes)} al mes de Didi no entran en el reparto, y la mensualidad del auto
+          (${fmt(AUTO)}) tampoco se descuenta de ninguna semana — aparece en el calendario, pero no
+          baja el estimado. En la práctica son <span class="fx-num" style="color:var(--text);font-weight:700">${mx0(_PG().didiMes-AUTO)}</span>
+          al mes que quedan fuera de esta cuenta: no están perdidos, simplemente no los reparte el plan.
+        </div>
+      </div>
+
+      `;
+    })()}
 
     <!-- DETALLE DE LAS 2 ACCIONES (análisis) -->
     <div class="sh" style="margin-bottom:12px"><h2>🔎 Por qué estas 2 acciones</h2></div>
@@ -2010,29 +2130,15 @@ function renderGBM() {
   renderBtcHistory();
 }
 
+// Antes reescribía el `style` de cada pestaña con cinco expresiones regulares
+// sobre cssText — cualquier retoque al estilo del botón rompía el resaltado sin
+// avisar, porque el regex dejaba de encontrar lo que buscaba. Ahora el estado
+// activo es una clase (.wk-card.on) y esto solo la mueve.
 function switchGBMTab(n) {
   for(let i=1;i<=4;i++){
     const tab=document.getElementById('gbm-tab-'+i);
     const pane=document.getElementById('gbm-week-'+i);
-    if(tab){
-      if(i===n){
-        tab.style.cssText=tab.style.cssText
-          .replace(/background:[^;]+/,'background:linear-gradient(135deg,rgba(0,212,255,.2),rgba(0,212,255,.08))')
-          .replace(/color:[^;]+/,'color:var(--primary)')
-          .replace(/border:[^;]+/,'border:2px solid var(--primary)')
-          .replace(/opacity:[^;]+/,'opacity:1')
-          .replace(/font-weight:[^;]+/,'font-weight:700');
-        tab.style.boxShadow='0 0 16px rgba(0,212,255,.25),inset 0 1px 0 rgba(255,255,255,.1)';
-        tab.style.opacity='1';
-      } else {
-        tab.style.background='transparent';
-        tab.style.color='var(--text3)';
-        tab.style.border='1px solid rgba(var(--ov),.07)';
-        tab.style.fontWeight='500';
-        tab.style.boxShadow='none';
-        tab.style.opacity='0.6';
-      }
-    }
+    if(tab) tab.classList.toggle('on', i===n);
     if(pane) pane.style.display=i===n?'block':'none';
   }
 }
@@ -4397,7 +4503,7 @@ const btcAportPlugin = {
       ctx.setLineDash([]);
       if(px-ultX < 64) return;            // etiquetas encimadas = ilegibles
       ultX=px;
-      ctx.font='700 10px system-ui,-apple-system,sans-serif';
+      ctx.font="700 10px 'Space Grotesk',system-ui,-apple-system,sans-serif";
       const w=ctx.measureText(m.label).width+12, h=16, ry=ca.top-21;
       const lx=Math.max(ca.left, Math.min(px-w/2, ca.right-w));
       ctx.beginPath();
@@ -4564,15 +4670,19 @@ function renderBtcHistory() {
     ${hasCur?`
     <!-- TRACKING POR MES CON TABS -->
     <div style="border-top:1px solid rgba(255,255,255,.06);padding-top:18px;margin-bottom:18px">
-      <div style="font-size:11px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px">
-        📊 Tu Bitcoin en el tiempo — 1 ₿ = ${fMX(curPrice*fxNow)} MXN · $${Math.round(curPrice).toLocaleString('es-MX')} USD
+      <div class="flex aic gap8" style="margin-bottom:12px;flex-wrap:wrap">
+        <span class="fx-lbl" style="color:#f7931a">Tu Bitcoin en el tiempo</span>
+        <span style="width:1px;height:12px;background:rgba(var(--ov),.15)"></span>
+        <span style="font-size:11.5px;color:var(--text3)">1 ₿ =</span>
+        <span class="fx-num" style="font-size:13px;font-weight:700;color:var(--text)">${fMX(curPrice*fxNow)} MXN</span>
+        <span style="font-size:11.5px;color:var(--text3)">· $${Math.round(curPrice).toLocaleString('es-MX')} USD</span>
       </div>
 
       <!-- TABS -->
       <div style="display:flex;gap:5px;margin-bottom:16px;padding:5px;background:rgba(255,255,255,.03);border-radius:12px;border:1px solid rgba(255,255,255,.07);flex-wrap:wrap">
         <button id="btc-tab-resumen" onclick="switchBtcTab('resumen')"
-          style="display:flex;flex-direction:column;align-items:flex-start;padding:9px 16px;border-radius:8px;border:1px solid rgba(247,147,26,.4);cursor:pointer;font-family:inherit;background:rgba(247,147,26,.12);color:#f7931a;transition:all .2s">
-          <span style="font-size:12px;font-weight:700">📊 Resumen</span>
+          style="display:flex;flex-direction:column;align-items:flex-start;gap:2px;padding:9px 16px;border-radius:8px;border:1px solid rgba(247,147,26,.4);cursor:pointer;font-family:inherit;background:rgba(247,147,26,.12);color:#f7931a;transition:all .2s">
+          <span class="fx-num" style="font-size:12px;font-weight:700">Todo</span>
           <span style="font-size:10px;opacity:.7">${monthKeys.length} compra${monthKeys.length!==1?'s':''}</span>
         </button>
         ${monthKeys.map(mk=>{
@@ -4582,32 +4692,38 @@ function renderBtcHistory() {
           const mV=mh.reduce((s,h)=>s+(h.btc||0),0)*curPrice;
           const mP=MX ? (mV*fxNow-mI) : (mV-mU); const isP=mP>=0;
           return `<button id="btc-tab-${mk}" onclick="switchBtcTab('${mk}')"
-            style="display:flex;flex-direction:column;align-items:flex-start;padding:9px 16px;border-radius:8px;border:1px solid rgba(255,255,255,.08);cursor:pointer;font-family:inherit;background:transparent;color:rgba(255,255,255,.45);transition:all .2s">
-            <span style="font-size:12px;font-weight:700">${mLabel(mk)}</span>
-            <span style="font-size:10px;font-weight:700;color:${isP?'var(--success)':'var(--danger)'}">${isP?'+':''}$${Math.round(mP).toLocaleString('es-MX')}</span>
+            style="display:flex;flex-direction:column;align-items:flex-start;gap:2px;padding:9px 16px;border-radius:8px;border:1px solid rgba(var(--ov),.08);cursor:pointer;font-family:inherit;background:transparent;color:var(--text3);transition:all .2s">
+            <span class="fx-num" style="font-size:12px;font-weight:700">${mLabel(mk)}</span>
+            <span class="fx-num" style="font-size:10px;font-weight:700;color:${isP?'var(--success)':'var(--danger)'}">${isP?'+':''}$${Math.round(mP).toLocaleString('es-MX')}</span>
           </button>`;
         }).join('')}
       </div>
 
       <!-- PANE: Resumen total -->
       <div id="btc-pane-resumen">
-        <div style="background:rgba(var(--ov),.03);border:1px solid rgba(var(--ov),.07);border-radius:14px;padding:16px 16px 14px">
+        <div class="fx-panel fx-grid" style="padding:20px 22px 16px">
+          <div style="position:relative">
           <div class="flex jb aic" style="flex-wrap:wrap;gap:10px;margin-bottom:14px">
-            <div>
-              <div style="font-size:13px;font-weight:800;color:var(--text)">Tu dinero en Bitcoin, día a día</div>
-              <div style="font-size:10px;color:var(--text3);margin-top:3px">
+            <div style="display:flex;flex-direction:column;gap:5px">
+              <div style="display:flex;align-items:center;gap:8px">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="color:#f7931a"><path d="M9 5v14"></path><path d="M13 5v14"></path><path d="M7 8h7a2.5 2.5 0 010 5H7"></path><path d="M7 13h8a2.5 2.5 0 010 5H7"></path></svg>
+                <span class="fx-lbl" style="color:#f7931a">Tu dinero en Bitcoin</span>
+              </div>
+              <div class="fx-num" style="font-size:20px;font-weight:700;color:var(--text);line-height:1.15">Día a día, desde tu primera compra</div>
+              <div style="font-size:10.5px;color:var(--text3)">
                 ${fmtDate(history[0].date)} → hoy · cada <span style="color:#f7931a;font-weight:700">▲</span> es una aportación tuya
               </div>
             </div>
             <div class="flex aic gap8" style="flex-wrap:wrap">
               <button id="btc-hist-btn" class="btn btn-s btn-sm" onclick="fetchBtcHistory()">📈 Precio real</button>
               <div style="display:flex;gap:3px;padding:3px;background:rgba(var(--ov),.05);border:1px solid rgba(var(--ov),.07);border-radius:9px">
-                ${['MXN','USD'].map(c=>`<button onclick="setBtcCur('${c}')" style="padding:5px 14px;border-radius:6px;border:none;cursor:pointer;font-family:inherit;font-size:11px;font-weight:800;letter-spacing:.03em;transition:all .18s;background:${btcCur===c?'rgba(247,147,26,.16)':'transparent'};color:${btcCur===c?'#f7931a':'var(--text3)'}">${c}</button>`).join('')}
+                ${['MXN','USD'].map(c=>`<button class="fx-num" onclick="setBtcCur('${c}')" style="padding:5px 14px;border-radius:6px;cursor:pointer;font-family:inherit;font-size:11px;font-weight:700;letter-spacing:.03em;transition:all .18s;background:${btcCur===c?'rgba(247,147,26,.16)':'transparent'};color:${btcCur===c?'#f7931a':'var(--text3)'};border:1px solid ${btcCur===c?'rgba(247,147,26,.4)':'transparent'}">${c}</button>`).join('')}
               </div>
             </div>
           </div>
           <div style="position:relative;height:300px"><canvas id="btc-ch-pnl"></canvas></div>
           <div id="btc-ch-leyenda" style="margin-top:12px;padding-top:11px;border-top:1px solid rgba(var(--ov),.06)"></div>
+          </div>
         </div>
 
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(132px,1fr));gap:9px;margin-top:12px">
@@ -4623,9 +4739,9 @@ function renderBtcHistory() {
             {l:'BTC ahora',        v:MX?fMX(curPrice*fxNow):('$'+Math.round(curPrice).toLocaleString('es-MX')),
                                    s:curPrice>=avgPrice?'↑ arriba de tu promedio':'↓ abajo de tu promedio',
                                    c:curPrice>=avgPrice?'var(--success)':'var(--danger)'},
-          ].map(t=>`<div style="background:${t.hi?((MX?pnlMxn:pnl)>=0?'rgba(0,232,122,.09)':'rgba(255,59,107,.09)'):'rgba(var(--ov),.035)'};border:1px solid ${t.hi?((MX?pnlMxn:pnl)>=0?'rgba(0,232,122,.22)':'rgba(255,59,107,.22)'):'rgba(var(--ov),.06)'};border-radius:11px;padding:11px 12px">
-            <div style="font-size:9.5px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;font-weight:700">${t.l}</div>
-            <div style="font-size:17px;font-weight:800;color:${t.c};margin-top:5px;line-height:1.15">${t.v}</div>
+          ].map(t=>`<div style="background:${t.hi?((MX?pnlMxn:pnl)>=0?'rgba(0,232,122,.09)':'rgba(255,59,107,.09)'):'rgba(var(--ov),.035)'};border:1px solid ${t.hi?((MX?pnlMxn:pnl)>=0?'rgba(0,232,122,.22)':'rgba(255,59,107,.22)'):'rgba(var(--ov),.06)'};border-radius:11px;padding:12px 13px">
+            <div class="fx-lbl">${t.l}</div>
+            <div class="fx-num" style="font-size:18px;font-weight:700;color:${t.c};margin-top:6px;line-height:1.15">${t.v}</div>
             <div style="font-size:10px;color:var(--text3);margin-top:3px">${t.s}</div>
           </div>`).join('')}
         </div>
@@ -4742,6 +4858,9 @@ function renderBtcHistory() {
     const fondo = cssVar('--surface-solid') || '#171720';
     const MN = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
     const fTs = t => { const d=new Date(t); return d.getUTCDate()+' '+MN[d.getUTCMonth()]+' '+d.getUTCFullYear(); };
+    // Las cifras del lienzo usan la misma tipografía que las del HTML: si el eje
+    // sale en Inter y la tarjeta de al lado en Grotesk, se lee como dos gráficas.
+    const FX_FONT = "'Space Grotesk','Inter',system-ui,sans-serif";
 
     // Chart.js sobre un eje lineal de milisegundos elige números redondos, no
     // fechas: sin esto salen etiquetas a mitad de mes que no dicen nada.
@@ -4783,7 +4902,10 @@ function renderBtcHistory() {
           })() },
           tooltip:{
             filter:it=>it.datasetIndex===1, displayColors:false, padding:11,
-            titleFont:{size:12}, bodyFont:{size:11.5, family:'ui-monospace,SFMono-Regular,Menlo,monospace'},
+            titleFont:{size:12, family:FX_FONT, weight:'700'},
+            bodyFont:{size:11.5, family:'ui-monospace,SFMono-Regular,Menlo,monospace'},
+            backgroundColor:cssVar('--surface-solid'), titleColor:cssVar('--text'),
+            bodyColor:cssVar('--text2'), borderColor:'rgba(247,147,26,.35)', borderWidth:1, cornerRadius:10,
             callbacks:{
               title:it=>fTs(SER.pts[it[0].dataIndex].t),
               label:it=>{
@@ -4805,10 +4927,10 @@ function renderBtcHistory() {
         scales:{
           x:{ type:'linear', min:SER.t0, max:SER.tEnd,
               afterBuildTicks:a=>{ a.ticks=ticksMes().map(v=>({value:v})); },
-              ticks:{ color:txtC, font:{size:10}, maxRotation:0, autoSkip:false, padding:4,
+              ticks:{ color:txtC, font:{size:10, family:FX_FONT, weight:'500'}, maxRotation:0, autoSkip:false, padding:4,
                       callback:v=>{ const d=new Date(v); return MN[d.getUTCMonth()]+" "+String(d.getUTCFullYear()).slice(2); } },
               grid:{display:false}, border:{color:gridC} },
-          y:{ ticks:{ color:txtC, font:{size:10}, maxTicksLimit:6, padding:6,
+          y:{ ticks:{ color:txtC, font:{size:10, family:FX_FONT, weight:'500'}, maxTicksLimit:6, padding:6,
                       callback:v=>v>=1000?'$'+(v/1000).toFixed(v>=10000?0:1)+'k':'$'+Math.round(v) },
               grid:{color:gridC, drawTicks:false}, border:{display:false} }
         }

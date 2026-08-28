@@ -111,6 +111,32 @@ const WEEKLY_PICKS = {
 
 ---
 
+## El lenguaje visual del Plan de Inversiones
+
+Cinco clases en el `<style>` de la cabecera, compartidas por el plan semanal y la gráfica de BTC.
+Viven como clases y no como `style=""` en cada elemento porque son **el sistema**: si el acento
+cambia, cambia en un sitio. Todos los colores salen del `:root`, así que el tema claro funciona
+sin reglas aparte.
+
+| Clase | Qué hace |
+|---|---|
+| `.fx-num` | Space Grotesk con `tabular-nums`: una columna de importes queda alineada aunque cambien los dígitos |
+| `.fx-lbl` | Etiqueta de sección: 9.5 px, `letter-spacing: .14em`, mayúsculas |
+| `.fx-panel` | Panel base con borde y fondo tenue |
+| `.fx-grid` | Rejilla técnica de 64 px como `::before`, enmascarada con un radial para que se desvanezca antes del contenido. Es `::before` para no meter un `<div>` vacío en cada panel |
+| `.fx-edge` | Borde de gradiente cyan→purple: un envoltorio de 1 px de padding con el degradado de fondo y el hijo opaco encima — la única forma de que un borde degradado respete el `border-radius` |
+| `.wk-card` | Tarjeta de semana. Es un `<button>`, así que funciona con teclado |
+
+**Inter sigue siendo el cuerpo.** Space Grotesk entra solo en cifras y titulares, donde el rasgo
+técnico se nota. La gráfica de BTC pasa la misma familia a Chart.js (`FX_FONT`) para sus ejes y
+el título del tooltip: con el eje en Inter y la tarjeta de al lado en Grotesk, se lee como dos
+gráficas distintas.
+
+Las cifras del canvas (las etiquetas de aportación que dibuja `btcAportPlugin`) también usan
+Grotesk, escrito a mano en `ctx.font` porque el canvas no hereda CSS.
+
+---
+
 ## Funciones utilitarias
 
 ### `fmt(n)`
@@ -303,8 +329,33 @@ Función central del módulo. **Fórmulas verificadas contra el código el 2026-
 - Bloque de CETES recurrente
 - Llama a `renderBtcHistory()` al final
 
+#### El plan semanal, tal como se ve
+
+Cuatro tarjetas clicables y el detalle de la elegida, encabezados por una **línea de tiempo del
+mes**. La pregunta que responde el bloque es *por qué unas semanas dan para invertir y otras no*,
+y la línea lo enseña antes de que haya que leer una cifra: la quincena entra los días 1 y 15,
+así que las semanas 2 y 4 se quedan a cero.
+
+Los eventos de la línea (`GRUPOS`) van **agrupados por día** — el 1 lleva quincena y renta a la
+vez — y los grupos alternan arriba y abajo del eje, porque el día 14 y el 15 caen a un 3% de
+distancia y las etiquetas se pisarían. Por debajo de **760 px** la línea horizontal se oculta
+(`.fx-tl`) y aparece una lista vertical (`.fx-tl-lista`) generada del **mismo array**: dos formas,
+un solo origen. Medido a 390 px, donde el día 14 y el 17 quedaban a diez píxeles.
+
+Ningún importe está escrito en el marcado: las tarjetas leen `w1GBM`…`w4GBM` y el detalle
+reconstruye entradas y salidas desde las mismas constantes que alimentan esas fórmulas.
+
+**El bloque dice en voz alta lo que el modelo no cuenta**: el plan semanal solo reparte la nómina.
+Los ingresos de Didi no entran, y la mensualidad del auto aparece en el calendario pero no se
+descuenta de ninguna semana. Son ~$4,500 al mes fuera de la cuenta, y ahora se lee en pantalla en
+vez de quedar como una diferencia inexplicable entre el estimado y el banco.
+
 ### `switchGBMTab(n)`
-Muestra el panel de la semana `n` (1-4) y oculta los demás. Actualiza estilos visuales de los tabs.
+Mueve la clase `.on` entre las cuatro tarjetas y muestra el panel de la semana `n`.
+
+Antes reescribía el atributo `style` de cada botón con cinco expresiones regulares sobre
+`cssText`. Cualquier retoque al estilo del botón rompía el resaltado sin avisar, porque el regex
+dejaba de encontrar lo que buscaba. El estado activo es ahora una clase y esto solo la mueve.
 
 ### `setWeeklyLeftover(val)`
 Guarda `S.weeklyLeftover = parseFloat(val) || 0`. Guarda y llama a `renderGBM()`.
