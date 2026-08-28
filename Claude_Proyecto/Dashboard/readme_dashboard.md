@@ -214,6 +214,53 @@ pero no llevan checkbox ni suman al progreso.
 
 ---
 
+## El calendario del Plan Maestro
+
+Se abre con `abrirCalendario()` y pinta el año por meses. El panel del mes elegido lleva hasta
+**tres medidores**, y el orden no es estético: es el que fija el propio Plan Maestro.
+
+| Medidor | Qué mide | Color |
+|---|---|---|
+| Cierre de la fase | Días que quedan del tramo | según urgencia |
+| Ritmo requerido | Lo que falta al día para cerrar el fondo de emergencia | cyan |
+| Ritmo de la tarjeta | Lo que falta al día para liquidar la TC BBVA | rojo, o naranja si el mínimo cubre el interés |
+
+Los dos últimos son los **dos objetivos financieros de la Fase 0**, tal como los enumera su propio
+texto: *"1) fondo de emergencia, 2) abonos extra a BBVA"*.
+
+### `calRitmo(fase)` — el fondo de emergencia
+
+Devuelve `porDia` (lo que falta dividido entre los días que restan), `pct` (avance real) y
+`esperado` (avance que tocaría por calendario). La barra dibuja el avance y una marca vertical en
+el esperado: si la barra no llega a la marca, va atrasado.
+
+Solo se pinta para la fase que corre **ahora**. Proyectar una cuota diaria sobre una fase cerrada
+o que no ha empezado sería un número bonito y falso.
+
+### `calRitmoTC()` — la tarjeta
+
+Lee la deuda `d001` de `finanzasmx_v2`; ningún importe está escrito en el código. Calcula:
+
+- `interes` = saldo × tasa ÷ 12. Con los datos de hoy, **$1,578 al mes**.
+- `crece` = interés − mínimo. Si sale positivo, **pagando el mínimo el saldo sube**. Hoy sale
+  **+$78**: el mínimo de $1,500 no cubre el interés de una tasa del 55.7%.
+- `pmt` = cuota fija que la liquida en 12 meses, por amortización francesa
+  (`P·i / (1 − (1+i)^⁻¹²)`). Dividir el saldo entre 12 daría un número optimista y falso: se
+  come el interés. Son **$3,759 al mes, $124 al día**.
+- `mesesMin` = lo que tardaría pagando solo el mínimo. Si el mínimo no cubre el interés el
+  logaritmo no existe — es que **no se liquida nunca**, y eso es lo que dice el bloque.
+
+**El dato que manda no es el plazo, es la comparación.** La barra no muestra avance de pago:
+enfrenta el mínimo (relleno) contra el interés mensual (ancho total). Hoy llega al 95% y se
+queda corta, que es exactamente el problema. El texto de la Prioridad 2 del Plan Maestro ya lo
+decía en prosa; faltaba verlo como cifra.
+
+El bloque desaparece solo si la tarjeta queda en $0, si no hay deudas o si no hay
+`finanzasmx_v2` — comprobado en los cuatro casos. Todas las cantidades pasan por `money()`, así
+que el modo privado las tapa; la **tasa no**, porque es una condición del producto y no su dinero.
+
+---
+
 ## Los datos no se declaran aquí
 
 El Dashboard **no declara ninguna de sus estructuras grandes**: las lee de `datos-maestros.js`.
