@@ -157,9 +157,17 @@ piezas con trabajos distintos**, porque una sola no podía con ambos:
 
 - **El riel** (`.cinta`, 11px de alto) es el **mapa**: proporción real del día y la línea verde de
   "ahora". Sin texto — a 45 minutos un tramo mide 40px y nunca cupo un nombre.
-- **Las fichas** (`.cinta-fic`) son **lo que se toca**: hora, nombre y duración, 60px de alto (por
-  encima del mínimo de 44px para el pulgar). Se deslizan con las flechas ‹ › y la del bloque en
-  curso se centra sola — ver abajo.
+- **Las fichas** (`.cinta-fic`) son **lo que se toca**: hora, nombre y duración, **78px de alto**
+  (muy por encima del mínimo de 44px para el pulgar). Se deslizan con las flechas ‹ › y la del
+  bloque en curso se centra sola — ver abajo.
+
+  Los 78px salen de querer **tres líneas de título**. Con los 60px que tenía — 16 de padding + 13
+  de la fila de hora + 3 de margen + 2×13.75 de texto = 59.5 — solo cabían dos, y se truncaban
+  **8 de los 13 bloques del día**: "Despertar (sin alarma agresiva)" se leía *"Despertar (sin
+  alarma…"*. Con tres bajan a 5, y los que siguen cortados son los de título muy largo, que no
+  cabrían ni con cuatro en una ficha de 104-148px de ancho. La tercera línea pide 73.25px; los
+  78 dejan aire para los emojis, que levantan un pelo la caja de línea. `.cinta-nav` va a la
+  misma altura para que la fila quede a ras.
 
 **El ancho de cada ficha depende de la duración** (`anchoFicha`), con escala de **raíz cuadrada**:
 en el mismo carril conviven bloques de 10 min y de 5 h, y en proporción directa el largo mediría

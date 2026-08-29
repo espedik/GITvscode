@@ -522,7 +522,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
    tramo de 45 min mide 40px — nunca cupo un nombre, y un tramo de 10 min quedaba en 11px, que no
    se puede tocar con el dedo.
      · El RIEL (.cinta) es el mapa: 11px de alto, proporción real del día, dónde estás. Sin texto.
-     · Las FICHAS (.cinta-fic) son lo que tocas: con hora y nombre legibles y 60px de alto — por
+     · Las FICHAS (.cinta-fic) son lo que tocas: con hora y nombre legibles y 78px de alto — por
        encima del mínimo de 44px para el pulgar. Se deslizan. El ANCHO de cada una lo calcula
        `anchoFicha(mins)` en el JS y viaja como --fw: un bloque de 4 h se ve ancho y uno de 20 min
        corto, para que la fila cuente la misma historia que el riel (2026-08-24, "todas las cajas
@@ -556,7 +556,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 .cinta-fic-scroll::-webkit-scrollbar{display:none}
 /* `--fw` la escribe el JS ficha por ficha (ver anchoFicha). Los 148px son solo el respaldo por si
    alguna se pinta sin la variable; la ALTURA sí sigue fija, la fila tiene que quedar a ras. */
-.cinta-fic{position:relative;width:var(--fw,148px);flex-shrink:0;height:60px;box-sizing:border-box;
+.cinta-fic{position:relative;width:var(--fw,148px);flex-shrink:0;height:78px;box-sizing:border-box;
   padding:8px 11px 8px 13px;border-radius:13px;background:rgba(var(--ov),.04);
   border:1px solid rgba(var(--ov),.09);overflow:hidden;cursor:pointer;text-align:left;
   font-family:inherit;color:inherit;transition:background .15s,border-color .15s}
@@ -567,8 +567,13 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
    fichas del día — en 60px de alto no caben dos líneas de título y una tercera flotando encima. */
 .cinta-fic-top{display:flex;align-items:baseline;justify-content:space-between;gap:6px}
 .cinta-fic-h{font-family:var(--mono);font-size:10.5px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+/* Tres líneas, no dos. Los 60px de alto que tenía la ficha daban exactamente para dos
+   (16 de padding + 13 de la fila de hora + 3 de margen + 2×13.75 = 59.5), y con eso se
+   truncaban 8 de los 13 bloques del día: "Despertar (sin alarma agresiva)" se leía
+   "Despertar (sin alarma…". La tercera línea pide 73.25px; 78 dejan aire para los emojis,
+   que levantan un pelo la caja de línea. */
 .cinta-fic-t{font-size:11px;font-weight:700;color:var(--text);line-height:1.25;margin-top:3px;
-  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
 .cinta-fic-d{font-family:var(--mono);font-size:8.5px;color:var(--text3);flex-shrink:0}
 /* Hecho = apagado, pendiente = encendido. Al revés de como estaba la cinta vieja, donde lo
    cumplido se rellenaba al 20% con hachura y terminaba pareciendo lo desactivado. */
@@ -599,7 +604,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 /* Y el tramo del riel que corre ahora, en el mismo verde: es lo que ata la ficha con su
    posición real dentro del día. */
 .cinta-seg.ahora{background:var(--g);box-shadow:0 0 10px rgba(0,232,122,.75)}
-.cinta-nav{width:30px;height:60px;flex-shrink:0;border-radius:11px;border:1px solid rgba(var(--ov),.1);
+.cinta-nav{width:30px;height:78px;flex-shrink:0;border-radius:11px;border:1px solid rgba(var(--ov),.1);
   background:rgba(var(--ov),.04);color:var(--text2);cursor:pointer;font-family:inherit;font-size:15px;
   display:flex;align-items:center;justify-content:center;padding:0;transition:background .15s}
 .cinta-nav:hover{background:rgba(var(--ov),.09);color:var(--text)}
