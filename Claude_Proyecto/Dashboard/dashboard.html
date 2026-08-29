@@ -2348,13 +2348,30 @@ a.rt2-sub-prod:hover{text-decoration:underline}
    todavía más completo… quiero día por día mucha información, al igual que semana
    por semana". Los gastos salen de `finanzasmx_v2.transactions` y los pagos fijos
    de `CIFRAS.CALENDARIO.cobros` + el `day` de cada deuda — nada escrito a mano. */
+/* `.slide-inner` centra su contenido en vertical. Aqui eso mueve la pantalla entera
+   cada vez que el tablero cambia de alto — medido: al pasar de agosto a septiembre el
+   calendario baja 46px y las flechas del mes se van con el, asi que no se puede saltar
+   varios meses seguidos sin volver a apuntar. Adán: "las flechas que estan aqui siempre
+   cambian de posicion dependiendo el nombre del mes, eso esta muy mal". Anclado arriba,
+   el tablero crece hacia abajo y nada de lo de encima se mueve. */
+/* `.slide` centra en vertical con align-items:center, asi que el inner mide lo que
+   mide su contenido: al cambiar de mes crecia o encogia y arrastraba todo con el.
+   Con stretch ocupa el alto entero y el tablero (flex:1) se queda con lo que sobra. */
+.slide.theme-coach{align-items:stretch;overflow:hidden}
+.slide.theme-coach .slide-inner{max-width:1400px;width:100%}
+.coach-tablero{max-width:100%}
+.slide.theme-coach .slide-inner{justify-content:flex-start}
 .coach-tablero{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr) minmax(0,1fr);
   gap:12px;align-items:stretch;flex:1;min-height:0}
 .ct-col{border-radius:15px;border:1px solid var(--card-br);background:var(--card);
   padding:15px 16px;display:flex;flex-direction:column;gap:11px;min-width:0;
-  min-height:0;overflow-y:auto}
+  min-height:0;overflow-y:auto;scrollbar-gutter:stable}
 .ct-dia{border-color:rgba(var(--cy-rgb),.32);background:rgba(var(--cy-rgb),.04)}
 .ct-h{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
+/* El titulo no se envuelve: "Septiembre 2026" no puede empujar a las flechas. */
+.ct-cal .ct-h{align-items:center;min-height:26px}
+.ct-cal .ct-tit{white-space:nowrap;flex-shrink:0}
+.ct-cal .ct-nav{flex-shrink:0}
 .ct-tit{font-family:var(--font-title);font-size:18px;font-weight:700;line-height:1.15}
 .ct-lbl{font-size:9px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:var(--text3)}
 .ct-num{font-family:var(--mono);font-variant-numeric:tabular-nums;letter-spacing:-.02em}
@@ -2402,7 +2419,9 @@ a.rt2-sub-prod:hover{text-decoration:underline}
 .ct-pulso i{display:block;width:100%;border-radius:3px 3px 0 0;min-height:3px}
 .ct-pulso-d{display:flex;gap:5px}
 .ct-pulso-d span{flex:1;font-family:var(--mono);font-size:9px;text-align:center}
-.ct-tar{display:flex;align-items:flex-start;gap:8px;font-size:11.5px;line-height:1.4}
+.ct-tar{display:flex;align-items:flex-start;gap:8px;font-size:11.5px;line-height:1.4;
+  min-width:0;overflow-wrap:anywhere}
+.ct-tar>span{min-width:0}
 .ct-tar input{margin-top:2px;flex-shrink:0;accent-color:var(--g);width:13px;height:13px;cursor:pointer}
 .ct-tar.toca{padding:9px 11px;border-radius:10px;background:rgba(var(--w-rgb),.06);
   border:1px solid rgba(var(--w-rgb),.22)}
@@ -2414,9 +2433,16 @@ a.rt2-sub-prod:hover{text-decoration:underline}
   background:rgba(var(--ov),.04);color:var(--text2);cursor:pointer;font-family:inherit;
   font-size:12px;display:flex;align-items:center;justify-content:center;padding:0}
 .ct-nav button:hover{background:rgba(var(--ov),.1);color:var(--text)}
+/* Por debajo de 1180px las columnas se apilan y el tablero deja de caber en la
+   pantalla: medido a 390px, 579px de tablero mas la banda de fase contra 754 de alto
+   util. El slide recorta lo que sobra (overflow:hidden), asi que ahi el scroll pasa al
+   inner y las columnas dejan de tener el suyo — dos scrolls anidados en un telefono no
+   se pueden usar. */
 @media(max-width:1180px){
-  .coach-tablero{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+  .coach-tablero{grid-template-columns:minmax(0,1fr) minmax(0,1fr);flex:none}
   .ct-sem{grid-column:1/-1}
+  .slide.theme-coach .slide-inner{overflow-y:auto}
+  .ct-col{overflow-y:visible;min-height:auto}
 }
 @media(max-width:760px){
   .coach-tablero{grid-template-columns:1fr}
@@ -5944,15 +5970,15 @@ function renderCoachTablero(){
   const MESN = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
   document.getElementById('ctCal').innerHTML =
     '<div class="ct-h">'+
-      '<div style="display:flex;align-items:baseline;gap:9px;min-width:0">'+
-        '<span class="ct-tit">'+MESN[M-1]+' '+Y+'</span>'+
-        '<span class="ct-nav"><button onclick="ctVerMes(-1)" title="Mes anterior">\u2039</button>'+
-        '<button onclick="ctVerMes(1)" title="Mes siguiente">\u203a</button></span>'+
-      '</div>'+
-      '<div style="display:flex;align-items:baseline;gap:7px">'+
-        '<span class="ct-lbl">'+(gastoMes>0?'gastaste':'sin registrar')+'</span>'+
-        (gastoMes>0?'<span class="ct-num'+(privado?' fin-hidden':'')+'" style="font-size:15px;font-weight:700;color:var(--r)">'+money(gastoMes)+'</span>':'')+
-      '</div>'+
+      '<span class="ct-tit">'+MESN[M-1]+' '+Y+'</span>'+
+      '<span style="flex:1;min-width:0;text-align:right;white-space:nowrap;overflow:hidden">'+
+        (gastoMes>0
+          ? '<span class="ct-lbl">gastaste </span>'+
+            '<span class="ct-num'+(privado?' fin-hidden':'')+'" style="font-size:15px;font-weight:700;color:var(--r)">'+money(gastoMes)+'</span>'
+          : '<span class="ct-lbl">sin registrar</span>')+
+      '</span>'+
+      '<span class="ct-nav"><button onclick="ctVerMes(-1)" title="Mes anterior">\u2039</button>'+
+      '<button onclick="ctVerMes(1)" title="Mes siguiente">\u203a</button></span>'+
     '</div>'+
     '<div class="ct-mes">'+['L','M','M','J','V','S','D'].map(x=>'<span class="ct-dow">'+x+'</span>').join('')+'</div>'+
     '<div class="ct-mes">'+celdas+'</div>'+
@@ -5963,19 +5989,16 @@ function renderCoachTablero(){
     '</div>';
 
   // ── Columna 2: el día ──
+  // Una sola pregunta: ¿cuánto te cuesta ESTE día y por qué? Antes eran tres bloques
+  // sueltos — entra/sale, el desglose y la comida en su propia franja — que no sumaban
+  // a nada. Ahora hay UN total arriba y su detalle debajo, y lo registrado va aparte
+  // porque es otra cosa: lo que pasó por la cuenta, no lo que cuesta vivir el día.
   const nSel = +ctSel.slice(8);
   const mvSel = MOV[ctSel]||[];
   const gSel = ctGasto(mvSel), iSel = ctIngr(mvSel);
   const porCat = {};
   mvSel.filter(t=>t.type==='expense').forEach(t=>{ porCat[t.cat] = (porCat[t.cat]||0) + (+t.amount||0); });
   const cats = Object.keys(porCat).sort((a,b)=>porCat[b]-porCat[a]);
-  // Acumulado del MES por categor\u00eda: es el respaldo del panel cuando el d\u00eda elegido
-  // no tiene movimientos, que en un mes reci\u00e9n empezado son casi todos.
-  const catMes = {};
-  Object.keys(MOV).forEach(function(k){
-    MOV[k].filter(t=>t.type==='expense').forEach(function(t){ catMes[t.cat]=(catMes[t.cat]||0)+(+t.amount||0); });
-  });
-  const catsMes = Object.keys(catMes).sort((a,b)=>catMes[b]-catMes[a]).slice(0,6);
   const pintaCats = (lista, tot, fuente) => lista.map(function(c){
     const col = CT_COLOR[c] || '#94a3b8';
     return '<div class="ct-cat"><div class="ct-cat-h">'+
@@ -5983,90 +6006,103 @@ function renderCoachTablero(){
       '<span class="ct-num'+(privado?' fin-hidden':'')+'" style="font-size:12px;font-weight:700">'+money(fuente[c])+'</span></div>'+
       '<div class="ct-cat-b"><i style="width:'+Math.round(fuente[c]/(tot||1)*100)+'%;background:'+col+'"></i></div></div>';
   }).join('');
+
   const agenda = ctAgenda(nSel);
+  const COM = ctComida();
+  // Lo que cuesta el día: los pagos fijos que caen hoy más lo que cuesta comer. No se
+  // suman los movimientos registrados — la renta ya está en la agenda y contaría dos veces.
+  const pagosDia = agenda.filter(a=>!a.entra).reduce((s,a)=>s+(+a.monto||0),0);
+  const entraDia = agenda.filter(a=>a.entra).reduce((s,a)=>s+(+a.monto||0),0);
+  const comeDia = COM ? Math.round(COM.dia) : 0;
+  const cuestaDia = pagosDia + comeDia;
+
   const DOWN = ['lunes','martes','mi\u00e9rcoles','jueves','viernes','s\u00e1bado','domingo'];
   const dowSel = DOWN[(new Date(Y,M-1,nSel).getDay()+6)%7];
   const dd = Math.round((new Date(Y,M-1,nSel) - new Date(hoy.getFullYear(),hoy.getMonth(),hoy.getDate()))/86400000);
   const cuenta = dd===0?'hoy':dd===1?'ma\u00f1ana':dd===-1?'ayer':dd>0?('en '+dd+' d\u00edas'):('hace '+(-dd)+' d\u00edas');
+
+  // Cada línea de "lo que pasa": comer entra como una más, que es lo que es.
+  let lineas = '';
+  if(COM) lineas +=
+    '<div style="display:flex;flex-direction:column;gap:5px;padding:9px 11px;border-radius:10px;background:rgba(239,68,68,.05);border:1px solid rgba(239,68,68,.14)">'+
+      '<div style="display:flex;align-items:baseline;justify-content:space-between;gap:8px">'+
+        '<span style="display:flex;align-items:center;gap:7px"><i style="width:7px;height:7px;border-radius:50%;background:#ef4444"></i>'+
+        '<span style="font-size:11.5px;font-weight:600">Comer</span></span>'+
+        '<span class="ct-num'+(privado?' fin-hidden':'')+'" style="font-size:13px;font-weight:700;color:#ef4444">'+money(comeDia)+'</span></div>'+
+      '<div style="display:flex;height:5px;border-radius:3px;overflow:hidden;gap:1px">'+
+        COM.pasillos.map(p=>'<i style="flex:'+Math.round(p.semana*10)+';background:'+p.color+'"></i>').join('')+'</div>'+
+      '<div style="display:flex;flex-wrap:wrap;gap:4px 10px">'+
+        COM.pasillos.slice(0,4).map(p=>'<span style="font-size:9.5px;color:var(--text3)">'+
+          esc(p.n.split(' ')[0])+' <b class="ct-num'+(privado?' fin-hidden':'')+'" style="color:var(--text2)">'+money(Math.round(p.semana/7))+'</b></span>').join('')+
+      '</div></div>';
+  agenda.forEach(function(a){
+    lineas += '<div class="ct-ev"><i style="background:'+(a.entra?'var(--g)':'var(--r)')+'"></i>'+
+      '<span style="min-width:0;display:flex;flex:1;align-items:baseline;justify-content:space-between;gap:8px">'+
+      '<span style="font-size:11.5px;font-weight:600">'+esc(a.t)+'</span>'+
+      '<span class="ct-num'+(privado?' fin-hidden':'')+'" style="font-size:12px;font-weight:700;color:'+(a.entra?'var(--g)':'var(--text2)')+'">'+
+      (a.entra?'+':'\u2212')+money(a.monto)+'</span></span></div>';
+  });
 
   document.getElementById('ctDia').innerHTML =
     '<div class="ct-h"><div style="display:flex;flex-direction:column;gap:2px;min-width:0">'+
       '<span class="ct-lbl" style="color:var(--cy)">El d\u00eda</span>'+
       '<span class="ct-tit">'+dowSel.charAt(0).toUpperCase()+dowSel.slice(1)+' '+nSel+'</span>'+
     '</div><span class="ct-num" style="font-size:9.5px;color:'+(dd===0?'var(--cy)':'var(--text3)')+';white-space:nowrap">'+cuenta+'</span></div>'+
-    '<div class="ct-par">'+
-      '<div class="ct-caja" style="background:rgba(var(--g-rgb),.07);border:1px solid rgba(var(--g-rgb),.18)">'+
-        '<span class="ct-lbl" style="color:var(--g)">Entra</span>'+
-        '<b class="'+(privado?'fin-hidden':'')+'" style="color:var(--g)">'+(iSel>0?money(iSel):'\u2014')+'</b></div>'+
-      '<div class="ct-caja" style="background:rgba(var(--r-rgb),.06);border:1px solid rgba(var(--r-rgb),.16)">'+
-        '<span class="ct-lbl" style="color:var(--r)">Sale</span>'+
-        '<b class="'+(privado?'fin-hidden':'')+'" style="color:var(--r)">'+(gSel>0?money(gSel):'\u2014')+'</b></div>'+
+
+    // EL número del día, y de qué se compone en una línea.
+    '<div style="padding:12px 14px;border-radius:12px;background:rgba(var(--r-rgb),.07);border:1px solid rgba(var(--r-rgb),.2)">'+
+      '<div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px">'+
+        '<span class="ct-lbl" style="color:var(--r)">Te cuesta este d\u00eda</span>'+
+        '<span class="ct-num'+(privado?' fin-hidden':'')+'" style="font-size:26px;font-weight:700;color:var(--r);line-height:1">'+money(cuestaDia)+'</span>'+
+      '</div>'+
+      '<div style="font-size:10px;color:var(--text3);margin-top:5px">'+
+        (pagosDia>0 ? money(pagosDia)+' de pagos fijos + '+money(comeDia)+' de comer' : money(comeDia)+' de comer \u00b7 no cae ning\u00fan pago fijo')+
+      '</div>'+
+      (entraDia>0
+        ? '<div style="display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin-top:8px;padding-top:8px;border-top:1px solid rgba(var(--ov),.09)">'+
+          '<span style="font-size:11px;color:var(--text2)">Entra ese d\u00eda</span>'+
+          '<span class="ct-num'+(privado?' fin-hidden':'')+'" style="font-size:16px;font-weight:700;color:var(--g)">+'+money(entraDia)+'</span></div>'
+        : '')+
     '</div>'+
-    (mvSel.length
-      ? '<div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px;padding:8px 11px;border-radius:10px;background:rgba(var(--ov),.04)">'+
-          '<span style="font-size:11px;color:var(--text2)">Te queda ese d\u00eda</span>'+
-          '<span class="ct-num'+(privado?' fin-hidden':'')+'" style="font-size:16px;font-weight:700;color:'+(iSel-gSel>=0?'var(--g)':'var(--r)')+'">'+
-          (iSel-gSel>=0?'+':'')+money(iSel-gSel)+'</span></div>'
-      : '')+
-    (cats.length
-      ? '<div style="display:flex;flex-direction:column;gap:7px">'+
-        '<div style="display:flex;align-items:baseline;justify-content:space-between"><span class="ct-lbl">En qu\u00e9 se fue</span>'+
-        '<span class="ct-num" style="font-size:9.5px;color:var(--text3)">'+mvSel.length+' movimiento'+(mvSel.length>1?'s':'')+'</span></div>'+
-        pintaCats(cats, gSel, porCat)+'</div>'
-      : (gastoMes>0
-          ? '<div style="display:flex;flex-direction:column;gap:7px">'+
-            '<div style="display:flex;align-items:baseline;justify-content:space-between">'+
-            '<span class="ct-lbl">En qu\u00e9 va el mes</span>'+
-            '<span class="ct-num" style="font-size:9.5px;color:var(--text3)">sin movimientos ese d\u00eda</span></div>'+
-            pintaCats(catsMes, gastoMes, catMes)+'</div>'
-          : '<div class="ct-vacio">Sin movimientos registrados ese d\u00eda.</div>'))+
-    (function(){
-      // El plato del d\u00eda: lo que comes cuesta todos los d\u00edas, tenga o no un cargo ese d\u00eda.
-      const C = ctComida();
-      if(!C) return '';
-      return '<div style="display:flex;flex-direction:column;gap:7px;padding-top:2px;border-top:1px solid rgba(var(--ov),.07)">'+
-        '<div style="display:flex;align-items:baseline;justify-content:space-between;gap:8px">'+
-          '<span class="ct-lbl" style="color:#ef4444">Comer ese d\u00eda te cuesta</span>'+
-          '<span class="ct-num'+(privado?' fin-hidden':'')+'" style="font-size:17px;font-weight:700;color:#ef4444">'+money(Math.round(C.dia))+'</span>'+
-        '</div>'+
-        '<div style="display:flex;height:7px;border-radius:4px;overflow:hidden;gap:1px">'+
-          C.pasillos.map(p=>'<i style="flex:'+Math.round(p.semana*10)+';background:'+p.color+'" title="'+esc(p.n)+'"></i>').join('')+
-        '</div>'+
-        '<div style="display:flex;flex-wrap:wrap;gap:8px 12px">'+
-          C.pasillos.slice(0,4).map(p=>'<span style="display:flex;align-items:center;gap:5px">'+
-            '<i style="width:7px;height:7px;border-radius:2px;background:'+p.color+'"></i>'+
-            '<span style="font-size:10px;color:var(--text2)">'+esc(p.n)+'</span>'+
-            '<span class="ct-num'+(privado?' fin-hidden':'')+'" style="font-size:10px;font-weight:700">'+money(Math.round(p.semana/7))+'</span></span>').join('')+
-        '</div>'+
-        '<span style="font-size:9.5px;color:var(--text3);line-height:1.45">Tu lista de la semana ('+money(Math.round(C.semana))+') entre 7. No es un cargo registrado: el s\u00faper aparece en el mes como un solo movimiento.</span>'+
-      '</div>';
-    })()+
+
     '<div style="display:flex;flex-direction:column;gap:6px">'+
-      '<span class="ct-lbl">Lo que pasa ese d\u00eda</span>'+
-      (agenda.length
-        ? agenda.map(a=>'<div class="ct-ev"><i style="background:'+(a.entra?'var(--g)':'var(--r)')+'"></i>'+
-            '<span style="min-width:0"><b style="font-size:11.5px;font-weight:600">'+esc(a.t)+'</b><br>'+
-            '<span class="'+(privado?'fin-hidden ':'')+'ct-num" style="font-size:10px;color:'+(a.entra?'var(--g)':'var(--text3)')+'">'+
-            (a.entra?'+':'\u2212')+money(a.monto)+'</span></span></div>').join('')
-        : '<div class="ct-vacio">Nada fijo cae este d\u00eda.</div>')+
-    '</div>';
+      '<span class="ct-lbl">Lo que pasa ese d\u00eda</span>'+ lineas +'</div>'+
+
+    // Lo registrado va aparte: es lo que paso por la cuenta, no lo que cuesta el dia.
+    (mvSel.length
+      ? '<div style="display:flex;flex-direction:column;gap:7px;padding-top:2px;border-top:1px solid rgba(var(--ov),.07)">'+
+        '<div style="display:flex;align-items:baseline;justify-content:space-between;gap:8px">'+
+          '<span class="ct-lbl">Lo que anotaste</span>'+
+          '<span class="ct-num'+(privado?' fin-hidden':'')+'" style="font-size:10px;color:var(--text3)">'+
+          (iSel>0?'+'+money(iSel)+' \u00b7 ':'')+'\u2212'+money(gSel)+'</span></div>'+
+        pintaCats(cats, gSel, porCat)+'</div>'
+      : '');
 
   // ── Columna 3: la semana ──
+  // Misma forma que el día: un total arriba y su composición debajo. El pulso pasa a
+  // ser eso — un pulso — y no el titular: siete barras no dicen "cuánto gasto a la
+  // semana", que es la pregunta.
   const sem = ctSemDe(nSel);
   const ini = (sem-1)*7+1, fin = Math.min(sem*7, nDias);
-  let gSem = 0, iSem = 0, maxSem = 1;
-  for(let d=ini; d<=fin; d++){ const g=ctGasto(MOV[kDe(d)]); if(g>maxSem) maxSem=g; }
+  let gSem = 0, iSem = 0, maxSem = 1, pagosSem = 0, entraSem = 0;
+  for(let d=ini; d<=fin; d++){
+    const g = ctGasto(MOV[kDe(d)]); if(g>maxSem) maxSem = g;
+    ctAgenda(d).forEach(function(a){ if(a.entra) entraSem += (+a.monto||0); else pagosSem += (+a.monto||0); });
+  }
   let pulso = '', etiq = '';
   for(let d=ini; d<=fin; d++){
     const g = ctGasto(MOV[kDe(d)]), inn = ctIngr(MOV[kDe(d)]);
     gSem += g; iSem += inn;
-    const alto = g>0 ? Math.max(8, Math.round(g/maxSem*34)) : 3;
+    const alto = g>0 ? Math.max(8, Math.round(g/maxSem*30)) : 3;
     const col = g>0 ? (g>maxSem*.55?'var(--r)':'var(--o)') : (inn>0?'var(--g)':'rgba(var(--ov),.13)');
     pulso += '<div><span class="ct-num'+(privado?' fin-hidden':'')+'" style="font-size:8.5px;font-weight:700;color:'+(g>0?'var(--text2)':'var(--g)')+'">'+
       (g>0?money(g).replace(/,\d{3}$/,'k'):(inn>0?'entra':''))+'</span>'+
       '<i style="height:'+alto+'px;background:'+col+'"></i></div>';
     etiq += '<span style="color:'+(d===nSel?'var(--cy)':'var(--text3)')+'">'+d+'</span>';
   }
+  const dias = fin - ini + 1;
+  const comeSem = COM ? Math.round(COM.dia * dias) : 0;
+  const cuestaSem = pagosSem + comeSem;
   const T = ctTareasSemana(ph, ctYM, sem);
 
   document.getElementById('ctSem').innerHTML =
@@ -6074,24 +6110,37 @@ function renderCoachTablero(){
       '<span class="ct-lbl" style="color:var(--p)">La semana</span>'+
       '<span class="ct-tit">Semana '+sem+' de '+MESN[M-1].toLowerCase()+'</span>'+
     '</div><span class="ct-num" style="font-size:9.5px;color:var(--text3);white-space:nowrap">'+ini+' al '+fin+'</span></div>'+
-    '<div style="display:flex;flex-direction:column;gap:5px">'+
-      '<span class="ct-lbl">Gasto de cada d\u00eda</span>'+
-      '<div class="ct-pulso">'+pulso+'</div><div class="ct-pulso-d">'+etiq+'</div>'+
+
+    // El n\u00famero de la semana, con la misma cuenta que el del d\u00eda.
+    '<div style="padding:12px 14px;border-radius:12px;background:rgba(var(--r-rgb),.07);border:1px solid rgba(var(--r-rgb),.2)">'+
+      '<div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px">'+
+        '<span class="ct-lbl" style="color:var(--r)">Te cuesta esta semana</span>'+
+        '<span class="ct-num'+(privado?' fin-hidden':'')+'" style="font-size:26px;font-weight:700;color:var(--r);line-height:1">'+money(cuestaSem)+'</span>'+
+      '</div>'+
+      '<div style="font-size:10px;color:var(--text3);margin-top:5px">'+
+        (pagosSem>0 ? money(pagosSem)+' de pagos fijos + '+money(comeSem)+' de comer ('+dias+' d\u00edas)'
+                    : money(comeSem)+' de comer \u00b7 ning\u00fan pago fijo cae esta semana')+
+      '</div>'+
+      (entraSem>0
+        ? '<div style="display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin-top:8px;padding-top:8px;border-top:1px solid rgba(var(--ov),.09)">'+
+          '<span style="font-size:11px;color:var(--text2)">Entra esta semana</span>'+
+          '<span class="ct-num'+(privado?' fin-hidden':'')+'" style="font-size:16px;font-weight:700;color:var(--g)">+'+money(entraSem)+'</span></div>'
+        : '')+
     '</div>'+
-    '<div class="ct-par">'+
-      '<div class="ct-caja" style="background:rgba(var(--ov),.04)"><span class="ct-lbl">Gasto</span>'+
-        '<b class="'+(privado?'fin-hidden':'')+'" style="color:var(--r);font-size:16px">'+(gSem>0?money(gSem):'\u2014')+'</b></div>'+
-      '<div class="ct-caja" style="background:rgba(var(--ov),.04)"><span class="ct-lbl">Ingreso</span>'+
-        '<b class="'+(privado?'fin-hidden':'')+'" style="color:var(--g);font-size:16px">'+(iSem>0?money(iSem):'\u2014')+'</b></div>'+
-    '</div>'+
-    (function(){
-      const C = ctComida();
-      if(!C) return '';
-      return '<div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px;padding:8px 11px;border-radius:10px;background:rgba(239,68,68,.06);border:1px solid rgba(239,68,68,.16)">'+
-        '<span style="font-size:11px;color:var(--text2)">Comer esta semana</span>'+
-        '<span class="ct-num'+(privado?' fin-hidden':'')+'" style="font-size:15px;font-weight:700;color:#ef4444">'+money(Math.round(C.semana))+'</span></div>';
-    })()+
-    '<div style="display:flex;flex-direction:column;gap:7px">'+
+
+    // Lo registrado, con el pulso como detalle y no como titular.
+    (gSem>0||iSem>0
+      ? '<div style="display:flex;flex-direction:column;gap:5px">'+
+        '<div style="display:flex;align-items:baseline;justify-content:space-between;gap:8px">'+
+          '<span class="ct-lbl">Lo que anotaste</span>'+
+          '<span class="ct-num'+(privado?' fin-hidden':'')+'" style="font-size:10px;color:var(--text3)">'+
+          (iSem>0?'+'+money(iSem)+' \u00b7 ':'')+'\u2212'+money(gSem)+'</span></div>'+
+        '<div class="ct-pulso">'+pulso+'</div><div class="ct-pulso-d">'+etiq+'</div></div>'
+      : '<div style="display:flex;flex-direction:column;gap:5px">'+
+        '<span class="ct-lbl">Sin movimientos anotados</span>'+
+        '<div class="ct-pulso">'+pulso+'</div><div class="ct-pulso-d">'+etiq+'</div></div>')+
+
+    '<div style="display:flex;flex-direction:column;gap:7px;padding-top:2px;border-top:1px solid rgba(var(--ov),.07)">'+
       '<span class="ct-lbl" style="color:var(--g)">\u2713 Ya hiciste \u00b7 '+T.hechas.length+'</span>'+
       (T.hechas.length
         ? T.hechas.slice(0,5).map(h=>'<span class="ct-tar" style="color:var(--text2);padding-left:3px">'+
@@ -6104,13 +6153,13 @@ function renderCoachTablero(){
     '<div style="display:flex;flex-direction:column;gap:7px">'+
       '<span class="ct-lbl" style="color:var(--w)">\u2191 Esta semana toca \u00b7 '+T.toca.length+'</span>'+
       (T.toca.length
-        ? T.toca.map(function(s){
-            const plano = String(s.txt).replace(/<[^>]*>/g,'');
+        ? T.toca.map(function(x){
+            const plano = String(x.txt).replace(/<[^>]*>/g,'');
             const m = plano.match(/^\s*Prioridad\s*(\d+)/i);
             const corte = plano.search(/[.:]\s+/);
             const tit = (corte>0&&corte<95) ? plano.slice(0,corte+1) : plano;
-            return '<label class="ct-tar toca" for="ctchk-'+s.id+'">'+
-              '<input type="checkbox" id="ctchk-'+s.id+'" onchange="toggleFaseCheck(\''+s.id+'\')">'+
+            return '<label class="ct-tar toca" for="ctchk-'+x.id+'">'+
+              '<input type="checkbox" id="ctchk-'+x.id+'" onchange="toggleFaseCheck(\''+x.id+'\')">'+
               (m?'<span class="ct-tar-chip">P'+m[1]+'</span>':'')+
               '<span>'+esc(tit.replace(/^\s*Prioridad\s*\d+\s*[\u2014\u2013-]\s*/i,''))+'</span></label>';
           }).join('')
@@ -6118,6 +6167,8 @@ function renderCoachTablero(){
       '<span style="font-size:9.5px;color:var(--text3);line-height:1.45">Reparto sugerido: lo que queda del mes, dividido entre las semanas que faltan. No son fechas reales.</span>'+
     '</div>';
 }
+
+function renderCoach(){}
 
 function renderCoach(){
   const ph=activePhase();

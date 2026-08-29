@@ -278,44 +278,61 @@ así que el peso se lee de un vistazo. Borde ámbar cuando ese día cae un pago 
 Las flechas ‹ › cambian de mes. **Al abrir un mes que no es el actual se elige el primer día con
 movimiento**, no el 1: un mes que se abre en un día vacío parece que no tiene datos.
 
-### El día
+### El día y la semana: una pregunta, un número
 
-Entra, sale, lo que queda, y el desglose por categoría real con su barra de proporción. Debajo,
-lo que está programado ese día.
+Adán, 2026-08-29: *"todos los datos los estas metiendo como en secciones diferentes, debes
+revisar como agruparlos… debo saber cuanto gasto al dia y a la semana y datos concretos, me
+estas arrojando datos sin sentido que no aportan nada"*. Tenía razón: había tres bloques sueltos
+— entra/sale, el desglose por categoría y la comida en su propia franja — que no sumaban a nada.
 
-**Un día sin movimientos enseña el acumulado del MES por categoría** en vez de una columna en
-blanco — en un mes recién empezado casi todos los días están vacíos. Misma pregunta, otra escala,
-y ya estaba calculado.
+Los dos paneles tienen ahora **la misma forma**: un total arriba y su composición debajo.
 
-#### Lo que cuesta comer, y por qué no sale de las transacciones
+```
+TE CUESTA ESTE DÍA          $11,609
+$11,494 de pagos fijos + $115 de comer
+Entra ese día                +$20,500
 
-Adán, 2026-08-29: *"debes añadir día a día los costos de comida… quiero la información más
-completa posible de mis gastos al día"*.
+LO QUE PASA ESE DÍA
+  Comer            $115     ← con su reparto por pasillo
+  Renta         −$11,000
+  Quincena      +$20,500
+  iPhone AT&T      −$494
 
-En `finanzasmx_v2` el súper es **un cargo suelto al mes** — "Supermercado $2,500" el día 5 — que
-no dice qué come ni cuánto cuesta un día cualquiera. El dato bueno ya existía en otro sitio:
-`LISTA_COMPRAS_PRECIOS` declara por producto lo que cuesta un `paso` (`monto`) y cuántos pasos se
-comen por semana (`base`). `ctComida()` los multiplica y agrupa por el pasillo que dice
-`CIFRAS.LISTA_COMPRAS.comida` — leído de las dos fuentes, no copiado.
+LO QUE ANOTASTE      +$41,940 · −$21,388
+  Hogar/Renta   $11,150
+  …
+```
 
-| | |
-|---|---|
-| La semana | **$805** |
-| El día | **$115** |
-| Al mes | **$3,487** |
+**Comer es una línea más de "lo que pasa ese día"**, no una sección aparte: es un gasto del día
+como la renta.
 
-Reparto por pasillo y día: Carnes y Pescados $43 · Lácteos y Huevo $17 · Verduras $16 · Frutas
-$15 · Abarrotes $13 · Panadería $8 · Almidones y grasas $3. Once de los treinta productos llevan
-el precio del ticket real de Walmart del 10-ago-2026; el resto es investigado.
+**Lo registrado va abajo y NO se suma al total.** Son dos cosas distintas: el total es lo que ese
+día te cuesta (pagos programados + comida), y lo anotado es lo que pasó por la cuenta. Sumarlos
+contaría la renta dos veces — está en la agenda y en las transacciones del día 1.
 
-El panel **lo separa de lo registrado** en vez de sumarlo: es un costo derivado, no un cargo. Por
-eso lleva su propia franja y la línea que lo explica. Contra los $2,500 de "Alimentación" más
-$1,500 de "Restaurantes" que aparecen al mes en Finanzas, los $3,487 de la lista cuadran de cerca.
+La semana repite la cuenta con sus días: pagos fijos que caen entre el lunes y el domingo más la
+comida de esos días. El pulso de barras baja a ser detalle de "lo que anotaste"; siete barras no
+responden "cuánto gasto a la semana", que es la pregunta.
 
-El color de cada pasillo va por **lo que es**, no por su posición en la lista: con el índice,
-Verduras salía en rojo y Carnes en verde.
+### Que las flechas del mes no se muevan
 
-### La semana
+Adán: *"las flechas que estan aqui siempre cambian de posicion dependiendo el nombre del mes, eso
+esta muy mal por que si quiero moverme rapido entre calendarios, no quiero que se mueva de
+posicion"*. Medía **46 px de salto** al pasar de agosto a septiembre. Cuatro causas encadenadas:
+
+1. Las flechas iban pegadas al nombre del mes → ahora están al final del encabezado, con el
+   importe entre medias en un `flex:1` alineado a la derecha.
+2. `.slide-inner` centra en vertical (`justify-content:center`) y el tablero cambia de alto según
+   el mes → `.slide.theme-coach .slide-inner{justify-content:flex-start}`.
+3. `.slide` centra en horizontal con `align-items:center`, así que el inner medía lo que su
+   contenido → `align-items:stretch` y `overflow:hidden`.
+4. Los textos largos de las tareas ensanchaban su columna y con ella el tablero (1,360 → 1,372 px)
+   → `overflow-wrap:anywhere` y `min-width:0` en `.ct-tar`.
+
+Quedan **2 px** de deriva subpíxel, medidos sobre 12 meses seguidos en claro y oscuro, a 1600,
+820 y 390 px. Es menos que el grosor de una letra y ya no depende del nombre del mes.
+
+### La semana### La semana
 
 El pulso de gasto de sus días, el total de gasto e ingreso, y las tareas partidas en dos:
 
