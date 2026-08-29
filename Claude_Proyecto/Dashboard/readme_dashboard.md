@@ -264,6 +264,7 @@ Ningún importe está escrito en el código del tablero:
 | Color de cada categoría | `CT_COLOR`, los mismos hex que `CCOLORS` de Finanzas.html |
 | Pagos programados de un día | `CIFRAS.CALENDARIO.cobros` + el `day` de cada deuda viva (`ctAgenda`) |
 | Tareas y fase | `PHASES`, con su estado en `coach_checks_v1` |
+| Costo de comer, por día | `LISTA_COMPRAS_PRECIOS` × `CIFRAS.LISTA_COMPRAS.comida` (`ctComida`) |
 
 `ctAgenda()` es la misma fuente que alimenta el globo del calendario anual, a propósito: dos
 pantallas que dicen qué se paga un día no pueden discrepar.
@@ -285,6 +286,34 @@ lo que está programado ese día.
 **Un día sin movimientos enseña el acumulado del MES por categoría** en vez de una columna en
 blanco — en un mes recién empezado casi todos los días están vacíos. Misma pregunta, otra escala,
 y ya estaba calculado.
+
+#### Lo que cuesta comer, y por qué no sale de las transacciones
+
+Adán, 2026-08-29: *"debes añadir día a día los costos de comida… quiero la información más
+completa posible de mis gastos al día"*.
+
+En `finanzasmx_v2` el súper es **un cargo suelto al mes** — "Supermercado $2,500" el día 5 — que
+no dice qué come ni cuánto cuesta un día cualquiera. El dato bueno ya existía en otro sitio:
+`LISTA_COMPRAS_PRECIOS` declara por producto lo que cuesta un `paso` (`monto`) y cuántos pasos se
+comen por semana (`base`). `ctComida()` los multiplica y agrupa por el pasillo que dice
+`CIFRAS.LISTA_COMPRAS.comida` — leído de las dos fuentes, no copiado.
+
+| | |
+|---|---|
+| La semana | **$805** |
+| El día | **$115** |
+| Al mes | **$3,487** |
+
+Reparto por pasillo y día: Carnes y Pescados $43 · Lácteos y Huevo $17 · Verduras $16 · Frutas
+$15 · Abarrotes $13 · Panadería $8 · Almidones y grasas $3. Once de los treinta productos llevan
+el precio del ticket real de Walmart del 10-ago-2026; el resto es investigado.
+
+El panel **lo separa de lo registrado** en vez de sumarlo: es un costo derivado, no un cargo. Por
+eso lleva su propia franja y la línea que lo explica. Contra los $2,500 de "Alimentación" más
+$1,500 de "Restaurantes" que aparecen al mes en Finanzas, los $3,487 de la lista cuadran de cerca.
+
+El color de cada pasillo va por **lo que es**, no por su posición en la lista: con el índice,
+Verduras salía en rojo y Carnes en verde.
 
 ### La semana
 

@@ -1271,9 +1271,14 @@ a.rt2-sub-prod:hover{text-decoration:underline}
 .lc-aisle-sub{margin-left:auto;font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:11px;font-weight:800;color:var(--text2)}
 
 /* ── Renglón ──────────────────────────────────────────────────────────────── */
-/* 430px es el ancho medido en que el renglón completo —con links— entra en una línea. Escritorio
-   da 2 columnas, iPad 2, celular 1. (Antes eran 340px SIN los links, que iban en otro renglón.) */
+/* 430px es el ancho medido en que el renglón completo entra en una línea. Escritorio da 2
+   columnas, iPad 2, celular 1. (Antes eran 340px SIN los links, que iban en otro renglón.) */
 .lc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(430px,1fr));gap:0 26px}
+/* Fuera de Comida, UNA sola columna (2026-08-29, pedido de Adán: "no se ve nada"). Ahí los
+   nombres son líneas enteras —"Exfoliante (BHA/AHA) — The Ordinary Ácido Salicílico 2% o..."— y
+   con tres columnas se comían en puntos suspensivos. Comida sí se queda en varias: ahí el
+   producto es una palabra ("Cebolla") y lo que importa es ver el canasto entero de un vistazo. */
+.lc-grid-1col{grid-template-columns:1fr}
 .lc-item{display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid rgba(var(--ov),.05)}
 .lc-item:hover{background:rgba(var(--ov),.025)}
 /* `display:contents` en escritorio (todo en la misma línea flex) y contenedor real en celular,
@@ -4415,7 +4420,7 @@ function lcItemHtml(cat,txt){
     : '';
   return '<div class="lc-item'+(n?' on':'')+(tengo?' lc-item-tengo':'')+'" id="'+id+'-row">'+
     '<input type="checkbox" id="'+id+'" '+(n?'checked':'')+' '+(tengo?'disabled':'')+' onchange="toggleListaItem(\''+id+'\',\''+cat+'\',\''+esc+'\')">'+
-    '<label for="'+id+'" class="lc-item-txt">'+txt+'</label>'+
+    '<label for="'+id+'" class="lc-item-txt" title="'+txt.replace(/"/g,'&quot;')+'">'+txt+'</label>'+
     '<span class="lc-item-meta">'+lcPrecioHtml(cat,txt)+qtyHtml+tengoBtn+'</span>'+
     subHtml+
   '</div>';
@@ -4479,8 +4484,9 @@ function renderListaCompras(){
         '<span>marca lo que vas a llevar y <b style="color:var(--text2)">se va sumando arriba</b></span>'+
         '<span><b style="color:var(--text2)">"Ya lo tengo"</b> lo saca del total y de los pendientes, sin borrarlo de la lista</span>'+
       '</div>';
+  const gridCls=esComida?'lc-grid':'lc-grid lc-grid-1col';
   const html=Array.isArray(data)
-    ? '<div class="lc-grid">'+lcRenderItems(listaCatSel,data)+'</div>'
+    ? '<div class="'+gridCls+'">'+lcRenderItems(listaCatSel,data)+'</div>'
     : Object.entries(data).map(([pasillo,items])=>{
         // Subtotal por pasillo — recorres el súper por pasillos, así que saber que Carnes ya va en
         // $240 sirve mientras estás ahí parado, no al llegar a la caja.
@@ -4494,7 +4500,7 @@ function renderListaCompras(){
             (esComida?'<span class="lc-aisle-ct" id="lcct-'+slug+'">'+lcPasilloCt(pasillo)+'</span>':'')+
             '<span class="lc-aisle-sub" id="lcsub-'+slug+'">'+(sub?lcM(sub):'')+'</span>'+
           '</div>'+
-          '<div class="lc-grid">'+lcRenderItems(listaCatSel,items)+'</div>'+
+          '<div class="'+gridCls+'">'+lcRenderItems(listaCatSel,items)+'</div>'+
         '</div>';
       }).join('');
   document.getElementById('listaCompraBody').innerHTML=hud+prop+leyenda+html;
@@ -5848,6 +5854,38 @@ function ctTareasSemana(ph, ym, sem){
   };
 }
 
+// Lo que cuesta comer, por d\u00eda. NO sale de las transacciones: ah\u00ed el s\u00faper entra como
+// un cargo suelto al mes ("Supermercado $2,500" el d\u00eda 5) y no dice qu\u00e9 comes ni cu\u00e1nto
+// cuesta un d\u00eda cualquiera. Sale de LISTA_COMPRAS_PRECIOS, donde cada producto ya declara
+// lo que cuesta un `paso` y cu\u00e1ntos pasos te comes por semana (`base`) \u2014 el mismo dato que
+// alimenta la pantalla de Lista de Compras, le\u00eddo, no copiado.
+//
+// Los pasillos vienen de CIFRAS.LISTA_COMPRAS.comida: el maestro dice qu\u00e9 producto va en
+// qu\u00e9 pasillo, y aqu\u00ed solo se suma. Si se a\u00f1ade un producto a la lista, esto se entera.
+function ctComida(){
+  if(typeof LISTA_COMPRAS_PRECIOS === 'undefined') return null;
+  const LP = LISTA_COMPRAS_PRECIOS;
+  const LC = (window.CIFRAS && CIFRAS.LISTA_COMPRAS && CIFRAS.LISTA_COMPRAS.comida) || null;
+  if(!LC) return null;
+  const COL = {
+    'Verduras':'#22c55e', 'Frutas':'#f59e0b', 'Almidones y grasas':'#eab308',
+    'Carnes y Pescados':'#ef4444', 'Lácteos y Huevo':'#06b6d4',
+    'Abarrotes y Despensa':'#8b5cf6', 'Panadería y Tortillas':'#ec4899'
+  };
+  const RESERVA = ['#94a3b8','#64748b','#a855f7','#14b8a6'];
+  let semana = 0;
+  const pasillos = [];
+  Object.keys(LC).forEach(function(pas, i){
+    const t = LC[pas].reduce(function(a, n){
+      const x = LP[n];
+      return a + (x ? (+x.monto||0) * (+x.base||0) : 0);
+    }, 0);
+    if(t > 0){ pasillos.push({n:pas, semana:t, color:COL[pas] || RESERVA[i % RESERVA.length]}); semana += t; }
+  });
+  pasillos.sort((a,b)=>b.semana-a.semana);
+  return { semana:semana, dia:semana/7, mes:semana*52/12, pasillos:pasillos };
+}
+
 function ctVerMes(delta){
   const [y, m] = ctYM.split('-').map(Number);
   const d = new Date(y, m - 1 + delta, 1);
@@ -5982,6 +6020,27 @@ function renderCoachTablero(){
             '<span class="ct-num" style="font-size:9.5px;color:var(--text3)">sin movimientos ese d\u00eda</span></div>'+
             pintaCats(catsMes, gastoMes, catMes)+'</div>'
           : '<div class="ct-vacio">Sin movimientos registrados ese d\u00eda.</div>'))+
+    (function(){
+      // El plato del d\u00eda: lo que comes cuesta todos los d\u00edas, tenga o no un cargo ese d\u00eda.
+      const C = ctComida();
+      if(!C) return '';
+      return '<div style="display:flex;flex-direction:column;gap:7px;padding-top:2px;border-top:1px solid rgba(var(--ov),.07)">'+
+        '<div style="display:flex;align-items:baseline;justify-content:space-between;gap:8px">'+
+          '<span class="ct-lbl" style="color:#ef4444">Comer ese d\u00eda te cuesta</span>'+
+          '<span class="ct-num'+(privado?' fin-hidden':'')+'" style="font-size:17px;font-weight:700;color:#ef4444">'+money(Math.round(C.dia))+'</span>'+
+        '</div>'+
+        '<div style="display:flex;height:7px;border-radius:4px;overflow:hidden;gap:1px">'+
+          C.pasillos.map(p=>'<i style="flex:'+Math.round(p.semana*10)+';background:'+p.color+'" title="'+esc(p.n)+'"></i>').join('')+
+        '</div>'+
+        '<div style="display:flex;flex-wrap:wrap;gap:8px 12px">'+
+          C.pasillos.slice(0,4).map(p=>'<span style="display:flex;align-items:center;gap:5px">'+
+            '<i style="width:7px;height:7px;border-radius:2px;background:'+p.color+'"></i>'+
+            '<span style="font-size:10px;color:var(--text2)">'+esc(p.n)+'</span>'+
+            '<span class="ct-num'+(privado?' fin-hidden':'')+'" style="font-size:10px;font-weight:700">'+money(Math.round(p.semana/7))+'</span></span>').join('')+
+        '</div>'+
+        '<span style="font-size:9.5px;color:var(--text3);line-height:1.45">Tu lista de la semana ('+money(Math.round(C.semana))+') entre 7. No es un cargo registrado: el s\u00faper aparece en el mes como un solo movimiento.</span>'+
+      '</div>';
+    })()+
     '<div style="display:flex;flex-direction:column;gap:6px">'+
       '<span class="ct-lbl">Lo que pasa ese d\u00eda</span>'+
       (agenda.length
@@ -6025,6 +6084,13 @@ function renderCoachTablero(){
       '<div class="ct-caja" style="background:rgba(var(--ov),.04)"><span class="ct-lbl">Ingreso</span>'+
         '<b class="'+(privado?'fin-hidden':'')+'" style="color:var(--g);font-size:16px">'+(iSem>0?money(iSem):'\u2014')+'</b></div>'+
     '</div>'+
+    (function(){
+      const C = ctComida();
+      if(!C) return '';
+      return '<div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px;padding:8px 11px;border-radius:10px;background:rgba(239,68,68,.06);border:1px solid rgba(239,68,68,.16)">'+
+        '<span style="font-size:11px;color:var(--text2)">Comer esta semana</span>'+
+        '<span class="ct-num'+(privado?' fin-hidden':'')+'" style="font-size:15px;font-weight:700;color:#ef4444">'+money(Math.round(C.semana))+'</span></div>';
+    })()+
     '<div style="display:flex;flex-direction:column;gap:7px">'+
       '<span class="ct-lbl" style="color:var(--g)">\u2713 Ya hiciste \u00b7 '+T.hechas.length+'</span>'+
       (T.hechas.length
