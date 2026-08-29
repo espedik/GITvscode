@@ -278,59 +278,32 @@ así que el peso se lee de un vistazo. Borde ámbar cuando ese día cae un pago 
 Las flechas ‹ › cambian de mes. **Al abrir un mes que no es el actual se elige el primer día con
 movimiento**, no el 1: un mes que se abre en un día vacío parece que no tiene datos.
 
-### El día y la semana: una pregunta, un número
+### El día: cuánto te queda, no cuánto te cuesta
 
-Adán, 2026-08-29: *"todos los datos los estas metiendo como en secciones diferentes, debes
-revisar como agruparlos… debo saber cuanto gasto al dia y a la semana y datos concretos, me
-estas arrojando datos sin sentido que no aportan nada"*. Tenía razón: había tres bloques sueltos
-— entra/sale, el desglose por categoría y la comida en su propia franja — que no sumaban a nada.
+Adán mandó dos veces la misma captura — la tarjeta de "Te queda ese día" con el desglose de
+barras — y la segunda fue clara: *"pero no pusiste este diseño por dia, no lo cambiaste"*. El
+panel decía **te cuesta**, que es justo la pregunta contraria.
 
-Los dos paneles tienen ahora **la misma forma**: un total arriba y su composición debajo.
+El número grande es ahora el **saldo de la quincena hasta ese día**: lo que entró con la nómina
+menos todo lo que ya salió — pagos fijos y comida — desde el 1 o desde el 15.
 
 ```
-TE CUESTA ESTE DÍA          $11,609
-$11,494 de pagos fijos + $115 de comer
-Entra ese día                +$20,500
+Te queda ese día                    +$10,106
 
-LO QUE PASA ESE DÍA
-  Comer            $115     ← con su reparto por pasillo
-  Renta         −$11,000
-  Quincena      +$20,500
-  iPhone AT&T      −$494
-
-LO QUE ANOTASTE      +$41,940 · −$21,388
-  Hogar/Renta   $11,150
-  …
+EN QUE SE FUE          desde el día 15 · −$10,394
+  Crédito Automotriz    $6,700  ██████████
+  CETES                 $1,500  ██
+  Apple Watch MSI         $854  █
+  Comer · 6 días          $690  █
+  Total Pass              $650  █
 ```
 
-**Comer es una línea más de "lo que pasa ese día"**, no una sección aparte: es un gasto del día
-como la renta.
+**El reinicio se ve en la cifra**: el día 14 cierra en $5,896 y el 15 salta a $12,185, porque
+entra la segunda nómina y el tramo empieza de cero. Comprobado día a día en los cuatro tamaños.
 
-**Lo registrado va abajo y NO se suma al total.** Son dos cosas distintas: el total es lo que ese
-día te cuesta (pagos programados + comida), y lo anotado es lo que pasó por la cuenta. Sumarlos
-contaría la renta dos veces — está en la agenda y en las transacciones del día 1.
-
-La semana repite la cuenta con sus días: pagos fijos que caen entre el lunes y el domingo más la
-comida de esos días. El pulso de barras baja a ser detalle de "lo que anotaste"; siete barras no
-responden "cuánto gasto a la semana", que es la pregunta.
-
-### Que las flechas del mes no se muevan
-
-Adán: *"las flechas que estan aqui siempre cambian de posicion dependiendo el nombre del mes, eso
-esta muy mal por que si quiero moverme rapido entre calendarios, no quiero que se mueva de
-posicion"*. Medía **46 px de salto** al pasar de agosto a septiembre. Cuatro causas encadenadas:
-
-1. Las flechas iban pegadas al nombre del mes → ahora están al final del encabezado, con el
-   importe entre medias en un `flex:1` alineado a la derecha.
-2. `.slide-inner` centra en vertical (`justify-content:center`) y el tablero cambia de alto según
-   el mes → `.slide.theme-coach .slide-inner{justify-content:flex-start}`.
-3. `.slide` centra en horizontal con `align-items:center`, así que el inner medía lo que su
-   contenido → `align-items:stretch` y `overflow:hidden`.
-4. Los textos largos de las tareas ensanchaban su columna y con ella el tablero (1,360 → 1,372 px)
-   → `overflow-wrap:anywhere` y `min-width:0` en `.ct-tar`.
-
-Quedan **2 px** de deriva subpíxel, medidos sobre 12 meses seguidos en claro y oscuro, a 1600,
-820 y 390 px. Es menos que el grosor de una letra y ya no depende del nombre del mes.
+Debajo, **lo que pasa ese día** — comer y los pagos que caen — y, si hay movimientos anotados en
+Finanzas, su desglose por categoría. Lo anotado va aparte y no se suma: es lo que pasó por la
+cuenta, no lo que consume el tramo.
 
 ### La quincena: el tramo que de verdad se administra
 
