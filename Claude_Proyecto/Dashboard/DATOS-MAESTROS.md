@@ -94,7 +94,7 @@ globo de "se mueve dinero" de cada día.
 | `d008` | iPhone 15 · crédito AT&T | 1 |
 | `d002` | Tarjeta Banamex | 8 |
 | `d001` | Tarjeta BBVA | 11 |
-| `d003` | Crédito Automotriz | **14** |
+| `d003` | Crédito Automotriz | **15** |
 | `d004` | Apple Watch MSI | 18 |
 | `d009` `d010` `d011` | MSI de TC BBVA | 22 |
 

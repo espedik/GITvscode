@@ -332,22 +332,57 @@ posicion"*. Medía **46 px de salto** al pasar de agosto a septiembre. Cuatro ca
 Quedan **2 px** de deriva subpíxel, medidos sobre 12 meses seguidos en claro y oscuro, a 1600,
 820 y 390 px. Es menos que el grosor de una letra y ya no depende del nombre del mes.
 
-### La semana### La semana
+### La quincena: el tramo que de verdad se administra
 
-El pulso de gasto de sus días, el total de gasto e ingreso, y las tareas partidas en dos:
+Adán, 2026-08-29: *"cada quincena me dan dinero entonces apartir de eso calcula mis gastos,
+cuanto me queda, dame indicativos… cada quincena debe reiniciarse lo que me sobra, es decir el
+dia 15 pues haces lo mismo y me das el resultado. Si sobra dinero yo veo como lo administro pero
+solo dame esos indicativos"*.
 
-- **Ya hiciste** — una tarea cuenta como hecha por dos caminos: su casilla en `coach_checks_v1`,
-  **o** un `✅` dentro de su propio texto, que es como PHASES marca lo ya cumplido. Sin el segundo,
-  un navegador donde Adán aún no había marcado la casilla le enseñaba como pendiente algo cerrado
-  hace dos semanas. Aquí van también los **logros** de `logrosLoad()`, que no se desmarcan porque
-  un saldo cambie.
-- **Esta semana toca** — con su casilla, que sigue escribiendo en `coach_checks_v1` (mismo id que
-  Coach.html).
+La tercera columna dejó de ser "la semana": el mes no se vive de corrido, se vive en **dos tramos
+que arrancan cuando entra la nómina** — el 1 y el 15 — y cada uno se reinicia.
 
-El reparto es **sobre las pendientes**, no sobre el total: se dividen entre las semanas que quedan
-del mes, así que cuanto menos queda, más carga por semana, y en la última toca todo lo que falte.
-Repartir las 9 entre las 4 semanas dejaba la semana en curso sin nada que hacer con cinco tareas
-pendientes esperando. No son fechas reales y la pantalla lo dice.
+`ctQuincena(q, nDias)` toma los pagos fijos de sus días y lo que cuesta comer esos días, y
+devuelve lo que sobra. Con los datos de hoy:
+
+| | Quincena 1 (1–14) | Quincena 2 (15–fin) |
+|---|---|---|
+| Entra | $20,500 | $20,500 |
+| Pagos fijos | −$12,994 | −$9,871 |
+| Comer | −$1,610 | −$1,955 |
+| **Sobra** | **$5,896** | **$8,674** |
+
+**Didi queda fuera a propósito.** Es ingreso variable, y contarlo daría un colchón de $11,200 que
+puede no llegar: el tramo tiene que aguantar solo con la nómina.
+
+#### Con cuánto cierras cada semana
+
+Debajo del total, el saldo con el que terminas cada semana de la quincena — que es el número que
+se administra. La quincena 2 de un mes de 31 días:
+
+```
+S3  15–21  +$20,500  −$10,509     $9,991
+S4  22–28              −$972      $9,019
+S5  29–31              −$345      $8,674   ← cierra igual que la quincena
+```
+
+**Cinco semanas cuando toca.** Adán: *"vi que algunos meses tienen 5 semanas, debes aun asi hacer
+los calculos"*. `ctSemDe` pasó de un corte fijo en cuatro a `Math.min(5, Math.ceil(n/7))`; con el
+anterior, los días 29 en adelante se caían de la cuenta y el cierre salía de más. Comprobado en
+meses de 28, 30 y 31 días: la quincena 2 lleva 2 o 3 semanas según el mes, y el saldo de la
+última siempre coincide con el cierre.
+
+#### El auto, el día 15
+
+Adán: *"el pago automotriz ponlo los dias 15 de cada mes"*. No es un detalle de un día: con
+`day: 14` los $6,700 caían en la **primera** quincena — la que solo tiene renta — y desbalanceaba
+las dos. Corregido en el maestro y en su migración (`_autoDia15_20260829`).
+
+#### Lo hecho contra lo que toca
+
+Las dos listas van **en paralelo, no una debajo de otra**: a la izquierda lo cerrado del mes, a la
+derecha lo que toca en la semana que estás viendo, con su casilla. Adán: *"detallarme todo lo de
+la semana y lo que ya hici contraelo"*.
 
 ### Medidas
 

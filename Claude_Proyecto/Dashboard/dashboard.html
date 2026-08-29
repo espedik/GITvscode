@@ -5847,7 +5847,53 @@ function ctAgenda(dia){
 
 // La semana de un día, con el mismo corte que usa el plan de Finanzas: 1-7, 8-14,
 // 15-21 y 22-fin. Así "semana 3" significa lo mismo en las dos apps.
-const ctSemDe = n => n<=7 ? 1 : n<=14 ? 2 : n<=21 ? 3 : 4;
+// Bloques de 7 d\u00edas desde el 1: 1-7, 8-14, 15-21, 22-28 y \u2014 en los meses largos \u2014
+// un quinto de 29 al final. Ad\u00e1n: "vi que algunos meses tienen 5 semanas, debes aun
+// asi hacer los calculos". Con el corte fijo en cuatro, esos d\u00edas se ca\u00edan de la cuenta.
+const ctSemDe = n => Math.min(5, Math.ceil(n/7));
+
+// EL MODELO: el mes son DOS QUINCENAS que arrancan cuando entra la n\u00f3mina, el 1 y el 15,
+// y cada una se reinicia. Ad\u00e1n: "cada quincena me dan dinero entonces apartir de eso
+// calcula mis gastos, cuanto me queda\u2026 cada quincena debe reiniciarse lo que me sobra,
+// es decir el dia 15 pues haces lo mismo y me das el resultado".
+//
+// De cada quincena salen los pagos fijos de sus d\u00edas y lo que cuesta comer esos d\u00edas. Lo
+// que quede es lo que hay para administrar \u2014 la pantalla no decide qu\u00e9 hacer con ello.
+// Didi NO entra: es ingreso variable, y contarlo dar\u00eda un colch\u00f3n que puede no llegar.
+function ctQuincena(q, nDias){
+  const ini = q===1 ? 1 : 15;
+  const fin = q===1 ? 14 : nDias;
+  const COM = ctComida();
+  const comeDia = COM ? COM.dia : 0;
+  let entra = 0, pagos = 0;
+  const movs = [];
+  for(let d=ini; d<=fin; d++){
+    ctAgenda(d).forEach(function(a){
+      if(a.entra) entra += (+a.monto||0); else pagos += (+a.monto||0);
+      movs.push({d:d, t:a.t, monto:+a.monto||0, entra:!!a.entra});
+    });
+  }
+  const dias = fin - ini + 1;
+  const come = Math.round(comeDia * dias);
+
+  // Lo que llevas encima al cerrar cada semana: el saldo va bajando dentro de la quincena.
+  const semanas = [];
+  for(let sm = ctSemDe(ini); sm <= ctSemDe(fin); sm++){
+    const si = Math.max(ini, (sm-1)*7+1), sf = Math.min(fin, sm*7);
+    if(sf < si) continue;
+    let e = 0, p = 0;
+    for(let d=si; d<=sf; d++) ctAgenda(d).forEach(function(a){
+      if(a.entra) e += (+a.monto||0); else p += (+a.monto||0);
+    });
+    const c = Math.round(comeDia * (sf - si + 1));
+    semanas.push({n:sm, ini:si, fin:sf, entra:e, pagos:p, come:c, mueve:e-p-c});
+  }
+  let acum = 0;
+  semanas.forEach(function(w){ acum += w.mueve; w.saldo = acum; });
+
+  return { q:q, ini:ini, fin:fin, dias:dias, entra:entra, pagos:pagos, come:come,
+           queda: entra - pagos - come, semanas:semanas, movs:movs };
+}
 
 // Las tareas de la fase que caen en una semana. PHASES no las reparte por semana — solo
 // por mes — así que el reparto es por ORDEN dentro del mes: la primera tarea a la primera
@@ -6078,95 +6124,98 @@ function renderCoachTablero(){
         pintaCats(cats, gSel, porCat)+'</div>'
       : '');
 
-  // ── Columna 3: la semana ──
-  // Misma forma que el día: un total arriba y su composición debajo. El pulso pasa a
-  // ser eso — un pulso — y no el titular: siete barras no dicen "cuánto gasto a la
-  // semana", que es la pregunta.
+  // ── Columna 3: la quincena ──
+  // El mes no se lee de corrido: se lee en dos tramos que arrancan cuando entra la
+  // n\u00f3mina. Arriba, lo que queda al cerrar la quincena; debajo, el saldo con el que
+  // terminas cada semana \u2014 que es lo que de verdad se puede administrar.
   const sem = ctSemDe(nSel);
-  const ini = (sem-1)*7+1, fin = Math.min(sem*7, nDias);
-  let gSem = 0, iSem = 0, maxSem = 1, pagosSem = 0, entraSem = 0;
-  for(let d=ini; d<=fin; d++){
-    const g = ctGasto(MOV[kDe(d)]); if(g>maxSem) maxSem = g;
-    ctAgenda(d).forEach(function(a){ if(a.entra) entraSem += (+a.monto||0); else pagosSem += (+a.monto||0); });
-  }
-  let pulso = '', etiq = '';
-  for(let d=ini; d<=fin; d++){
-    const g = ctGasto(MOV[kDe(d)]), inn = ctIngr(MOV[kDe(d)]);
-    gSem += g; iSem += inn;
-    const alto = g>0 ? Math.max(8, Math.round(g/maxSem*30)) : 3;
-    const col = g>0 ? (g>maxSem*.55?'var(--r)':'var(--o)') : (inn>0?'var(--g)':'rgba(var(--ov),.13)');
-    pulso += '<div><span class="ct-num'+(privado?' fin-hidden':'')+'" style="font-size:8.5px;font-weight:700;color:'+(g>0?'var(--text2)':'var(--g)')+'">'+
-      (g>0?money(g).replace(/,\d{3}$/,'k'):(inn>0?'entra':''))+'</span>'+
-      '<i style="height:'+alto+'px;background:'+col+'"></i></div>';
-    etiq += '<span style="color:'+(d===nSel?'var(--cy)':'var(--text3)')+'">'+d+'</span>';
-  }
-  const dias = fin - ini + 1;
-  const comeSem = COM ? Math.round(COM.dia * dias) : 0;
-  const cuestaSem = pagosSem + comeSem;
+  const qn = nSel <= 14 ? 1 : 2;
+  const Q = ctQuincena(qn, nDias);
   const T = ctTareasSemana(ph, ctYM, sem);
+  const esHoyM = (hoyK.slice(0,7) === ctYM);
+
+  // Lo que ya se movi\u00f3 de la quincena hasta el d\u00eda elegido: el resto es lo que falta.
+  let corrido = 0;
+  Q.semanas.forEach(function(w){ if(w.fin <= nSel) corrido = w.saldo; });
+
+  const filaSem = Q.semanas.map(function(w){
+    const act = w.n === sem;
+    const pasada = esHoyM && w.fin < +hoyK.slice(8);
+    return '<div style="display:grid;grid-template-columns:auto 1fr auto;gap:9px;align-items:baseline;'+
+      'padding:8px 10px;border-radius:9px;background:'+(act?'rgba(var(--cy-rgb),.1)':'rgba(var(--ov),.03)')+
+      ';border:1px solid '+(act?'rgba(var(--cy-rgb),.35)':'transparent')+'">'+
+      '<span class="ct-num" style="font-size:10px;font-weight:700;color:'+(act?'var(--cy)':'var(--text3)')+'">S'+w.n+'</span>'+
+      '<span style="font-size:10px;color:var(--text3)">'+w.ini+'\u2013'+w.fin+
+        (w.entra>0?' <span style="color:var(--g)">+'+money(w.entra)+'</span>':'')+
+        ' <span style="color:var(--text3)">\u2212'+money(w.pagos+w.come)+'</span></span>'+
+      '<span class="ct-num'+(privado?' fin-hidden':'')+'" style="font-size:13px;font-weight:700;color:'+
+        (w.saldo>=0?(act?'var(--cy)':'var(--text)'):'var(--r)')+'">'+money(w.saldo)+'</span>'+
+      '</div>';
+  }).join('');
 
   document.getElementById('ctSem').innerHTML =
     '<div class="ct-h"><div style="display:flex;flex-direction:column;gap:2px">'+
-      '<span class="ct-lbl" style="color:var(--p)">La semana</span>'+
-      '<span class="ct-tit">Semana '+sem+' de '+MESN[M-1].toLowerCase()+'</span>'+
-    '</div><span class="ct-num" style="font-size:9.5px;color:var(--text3);white-space:nowrap">'+ini+' al '+fin+'</span></div>'+
+      '<span class="ct-lbl" style="color:var(--p)">La quincena</span>'+
+      '<span class="ct-tit">Quincena '+qn+'</span>'+
+    '</div><span class="ct-num" style="font-size:9.5px;color:var(--text3);white-space:nowrap">d\u00edas '+Q.ini+' al '+Q.fin+'</span></div>'+
 
-    // El n\u00famero de la semana, con la misma cuenta que el del d\u00eda.
-    '<div style="padding:12px 14px;border-radius:12px;background:rgba(var(--r-rgb),.07);border:1px solid rgba(var(--r-rgb),.2)">'+
+    // El n\u00famero que manda: con cu\u00e1nto cierras la quincena.
+    '<div style="padding:12px 14px;border-radius:12px;background:rgba(var(--cy-rgb),.08);border:1px solid rgba(var(--cy-rgb),.28)">'+
       '<div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px">'+
-        '<span class="ct-lbl" style="color:var(--r)">Te cuesta esta semana</span>'+
-        '<span class="ct-num'+(privado?' fin-hidden':'')+'" style="font-size:26px;font-weight:700;color:var(--r);line-height:1">'+money(cuestaSem)+'</span>'+
+        '<span class="ct-lbl" style="color:var(--cy)">Te sobra al cerrarla</span>'+
+        '<span class="ct-num'+(privado?' fin-hidden':'')+'" style="font-size:26px;font-weight:700;color:'+
+          (Q.queda>=0?'var(--cy)':'var(--r)')+';line-height:1">'+money(Q.queda)+'</span>'+
       '</div>'+
-      '<div style="font-size:10px;color:var(--text3);margin-top:5px">'+
-        (pagosSem>0 ? money(pagosSem)+' de pagos fijos + '+money(comeSem)+' de comer ('+dias+' d\u00edas)'
-                    : money(comeSem)+' de comer \u00b7 ning\u00fan pago fijo cae esta semana')+
+      '<div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:10px;padding-top:9px;border-top:1px solid rgba(var(--ov),.09)">'+
+        '<div><div class="ct-lbl" style="color:var(--g)">Entra</div>'+
+          '<div class="ct-num'+(privado?' fin-hidden':'')+'" style="font-size:14px;font-weight:700;color:var(--g);margin-top:2px">'+money(Q.entra)+'</div></div>'+
+        '<div><div class="ct-lbl">Pagos fijos</div>'+
+          '<div class="ct-num'+(privado?' fin-hidden':'')+'" style="font-size:14px;font-weight:700;margin-top:2px">\u2212'+money(Q.pagos)+'</div></div>'+
+        '<div><div class="ct-lbl" style="color:#ef4444">Comer</div>'+
+          '<div class="ct-num'+(privado?' fin-hidden':'')+'" style="font-size:14px;font-weight:700;color:#ef4444;margin-top:2px">\u2212'+money(Q.come)+'</div></div>'+
       '</div>'+
-      (entraSem>0
-        ? '<div style="display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin-top:8px;padding-top:8px;border-top:1px solid rgba(var(--ov),.09)">'+
-          '<span style="font-size:11px;color:var(--text2)">Entra esta semana</span>'+
-          '<span class="ct-num'+(privado?' fin-hidden':'')+'" style="font-size:16px;font-weight:700;color:var(--g)">+'+money(entraSem)+'</span></div>'
-        : '')+
+      '<div style="font-size:9.5px;color:var(--text3);margin-top:8px;line-height:1.45">'+
+        Q.dias+' d\u00edas \u00b7 arranca el '+Q.ini+' con la n\u00f3mina y se reinicia. Didi queda fuera de la cuenta: es variable.'+
+      '</div>'+
     '</div>'+
 
-    // Lo registrado, con el pulso como detalle y no como titular.
-    (gSem>0||iSem>0
-      ? '<div style="display:flex;flex-direction:column;gap:5px">'+
-        '<div style="display:flex;align-items:baseline;justify-content:space-between;gap:8px">'+
-          '<span class="ct-lbl">Lo que anotaste</span>'+
-          '<span class="ct-num'+(privado?' fin-hidden':'')+'" style="font-size:10px;color:var(--text3)">'+
-          (iSem>0?'+'+money(iSem)+' \u00b7 ':'')+'\u2212'+money(gSem)+'</span></div>'+
-        '<div class="ct-pulso">'+pulso+'</div><div class="ct-pulso-d">'+etiq+'</div></div>'
-      : '<div style="display:flex;flex-direction:column;gap:5px">'+
-        '<span class="ct-lbl">Sin movimientos anotados</span>'+
-        '<div class="ct-pulso">'+pulso+'</div><div class="ct-pulso-d">'+etiq+'</div></div>')+
-
-    '<div style="display:flex;flex-direction:column;gap:7px;padding-top:2px;border-top:1px solid rgba(var(--ov),.07)">'+
-      '<span class="ct-lbl" style="color:var(--g)">\u2713 Ya hiciste \u00b7 '+T.hechas.length+'</span>'+
-      (T.hechas.length
-        ? T.hechas.slice(0,5).map(h=>'<span class="ct-tar" style="color:var(--text2);padding-left:3px">'+
-            '<span style="color:var(--g);flex-shrink:0">\u2713</span>'+
-            '<span>'+esc(String(h.txt).replace(/<[^>]*>/g,'').replace(/\u2705/g,'').split(/[.(]/)[0].trim())+
-            (h.fecha?' <span class="ct-num" style="color:var(--text3);font-size:9px">'+esc(h.fecha)+'</span>':'')+
-            '</span></span>').join('')
-        : '<div class="ct-vacio">Nada cerrado todav\u00eda este mes.</div>')+
+    // Con cuanto terminas cada semana.
+    '<div style="display:flex;flex-direction:column;gap:5px">'+
+      '<div style="display:flex;align-items:baseline;justify-content:space-between;gap:8px">'+
+        '<span class="ct-lbl">Con cu\u00e1nto cierras cada semana</span>'+
+        '<span class="ct-num" style="font-size:9.5px;color:var(--text3)">'+Q.semanas.length+' semanas</span></div>'+
+      filaSem+
     '</div>'+
-    '<div style="display:flex;flex-direction:column;gap:7px">'+
-      '<span class="ct-lbl" style="color:var(--w)">\u2191 Esta semana toca \u00b7 '+T.toca.length+'</span>'+
-      (T.toca.length
-        ? T.toca.map(function(x){
-            const plano = String(x.txt).replace(/<[^>]*>/g,'');
-            const m = plano.match(/^\s*Prioridad\s*(\d+)/i);
-            const corte = plano.search(/[.:]\s+/);
-            const tit = (corte>0&&corte<95) ? plano.slice(0,corte+1) : plano;
-            return '<label class="ct-tar toca" for="ctchk-'+x.id+'">'+
-              '<input type="checkbox" id="ctchk-'+x.id+'" onchange="toggleFaseCheck(\''+x.id+'\')">'+
-              (m?'<span class="ct-tar-chip">P'+m[1]+'</span>':'')+
-              '<span>'+esc(tit.replace(/^\s*Prioridad\s*\d+\s*[\u2014\u2013-]\s*/i,''))+'</span></label>';
-          }).join('')
-        : '<div class="ct-vacio">Nada asignado a esta semana.</div>')+
-      '<span style="font-size:9.5px;color:var(--text3);line-height:1.45">Reparto sugerido: lo que queda del mes, dividido entre las semanas que faltan. No son fechas reales.</span>'+
+
+    // Lo hecho contra lo que toca, uno al lado del otro.
+    '<div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;padding-top:2px;border-top:1px solid rgba(var(--ov),.07)">'+
+      '<div style="display:flex;flex-direction:column;gap:6px;min-width:0">'+
+        '<span class="ct-lbl" style="color:var(--g)">\u2713 Hecho \u00b7 '+T.hechas.length+'</span>'+
+        (T.hechas.length
+          ? T.hechas.slice(0,4).map(h=>'<span class="ct-tar" style="color:var(--text2)">'+
+              '<span style="color:var(--g);flex-shrink:0">\u2713</span>'+
+              '<span>'+esc(String(h.txt).replace(/<[^>]*>/g,'').replace(/\u2705/g,'').split(/[.(]/)[0].trim())+'</span></span>').join('')
+          : '<div class="ct-vacio">Nada cerrado.</div>')+
+      '</div>'+
+      '<div style="display:flex;flex-direction:column;gap:6px;min-width:0">'+
+        '<span class="ct-lbl" style="color:var(--w)">\u2191 Semana '+sem+' \u00b7 '+T.toca.length+'</span>'+
+        (T.toca.length
+          ? T.toca.slice(0,4).map(function(x){
+              const plano = String(x.txt).replace(/<[^>]*>/g,'');
+              const m = plano.match(/^\s*Prioridad\s*(\d+)/i);
+              const corte = plano.search(/[.:]\s+/);
+              const tit = (corte>0&&corte<95) ? plano.slice(0,corte+1) : plano;
+              return '<label class="ct-tar" for="ctchk-'+x.id+'">'+
+                '<input type="checkbox" id="ctchk-'+x.id+'" onchange="toggleFaseCheck(\''+x.id+'\')">'+
+                '<span>'+(m?'<b style="color:var(--w)">P'+m[1]+'</b> ':'')+
+                esc(tit.replace(/^\s*Prioridad\s*\d+\s*[\u2014\u2013-]\s*/i,''))+'</span></label>';
+            }).join('')
+          : '<div class="ct-vacio">Nada asignado.</div>')+
+      '</div>'+
     '</div>';
 }
+
+function renderCoach(){}
 
 function renderCoach(){}
 
