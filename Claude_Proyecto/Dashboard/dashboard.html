@@ -1177,11 +1177,13 @@ a.rt2-sub-prod:hover{text-decoration:underline}
    y algo que me ayude a precios, links, cantidades, suma, checklist, resuelve las proporciones
    de vegetales, frutas y verduras". Tres decisiones explican todo lo que sigue:
 
-   1. EL RENGLÓN CABE EN UNA LÍNEA. Antes `.lc-item-shop` traía `flex-basis:100%`, así que los
-      links SIEMPRE bajaban a un segundo renglón y en la misma cuadrícula convivían alturas de
-      30, 36 y 56px — de ahí venía el "se ve descuadrado" de iPad que se intentó arreglar el
-      2026-08-19 subiendo la columna a 340px. Ahora el orden es
-      checkbox · nombre · píldora · precio unitario · contador · tiendas · subtotal,
+   1. EL RENGLÓN CABE EN UNA LÍNEA. Antes los links vivían en un `.lc-item-shop` con
+      `flex-basis:100%` (clase ya retirada el 2026-08-29, cuando el link se mudó dentro de la
+      píldora de precio), así que SIEMPRE bajaban a un segundo renglón y en la misma
+      cuadrícula convivían alturas de 30, 36 y 56px — de ahí venía el "se ve descuadrado" de
+      iPad que se intentó arreglar el 2026-08-19 subiendo la columna a 340px. Ahora el orden es
+      checkbox · nombre · píldoras (fuera de Comida, cada precio es el link a su tienda) ·
+      precio unitario · contador · subtotal,
       todo inline, y la columna mínima sube a 430px porque ahora sí cabe todo en una línea.
    2. EL CONTADOR CUENTA PIEZAS (2026-08-27, pedido: "las cantidades en comida, maneja mejor por
       pieza, por que no siempre agarro el kg"). Ver `paso`/`base` en LISTA_COMPRAS_PRECIOS.
@@ -1322,12 +1324,12 @@ a.rt2-sub-prod:hover{text-decoration:underline}
   font-size:11px;font-weight:800;color:var(--text3);opacity:.5}
 .lc-item.on .lc-sub{opacity:1;color:var(--text2)}
 .lc-sub.mult{color:var(--g);opacity:1}
-/* Dos tiendas por producto, ahora también en Comida (Walmart + Amazon) */
-.lc-item-shop{display:flex;gap:4px;flex-shrink:0}
-.lc-shop-link{padding:2px 7px;border-radius:7px;background:rgba(var(--ov),.05);border:1px solid rgba(var(--ov),.09);
-  font-size:8.5px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--text3);
-  text-decoration:none;white-space:nowrap;transition:background .15s,color .15s,border-color .15s}
-.lc-shop-link:hover{background:rgba(var(--cy-rgb),.12);border-color:rgba(var(--cy-rgb),.3);color:var(--cy)}
+/* La píldora de precio ES el link a la tienda (2026-08-29): un elemento por tienda en vez de
+   precio + botón, que eran cuatro cosas por renglón y se comían el ancho del nombre. Comida no
+   lleva ninguno: ese súper se hace a pie. */
+.lc-price-link{text-decoration:none;cursor:pointer;transition:background .15s,border-color .15s,color .15s}
+.lc-price-link:hover{background:rgba(var(--cy-rgb),.14);border-color:rgba(var(--cy-rgb),.4);color:var(--cy)}
+.lc-price-link:hover i{border-color:var(--cy)}
 
 .lc-price-leyenda{display:flex;align-items:center;gap:14px;flex-wrap:wrap;font-size:10px;font-weight:600;
   color:var(--text3);margin-bottom:12px;padding-bottom:9px;border-bottom:1px solid rgba(var(--ov),.08)}
@@ -1407,8 +1409,6 @@ a.rt2-sub-prod:hover{text-decoration:underline}
   .lc-item-meta{order:4;display:flex;align-items:center;gap:6px;flex-basis:100%;padding-left:0}
   .lc-price{font-size:9px;padding:2px 7px;flex-shrink:1;min-width:0;overflow:hidden}
   .lc-unit{width:auto;font-size:9px}
-  .lc-item-shop{margin-left:auto;gap:3px}
-  .lc-shop-link{font-size:8px;padding:2px 5px}
   .lc-tengo-btn{font-size:8.5px;padding:2px 6px}
   .lc-price-leyenda{gap:9px;font-size:9.5px;margin-bottom:9px;padding-bottom:7px}
   .lc-tabs{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;-ms-overflow-style:none}
@@ -2332,6 +2332,91 @@ a.rt2-sub-prod:hover{text-decoration:underline}
 .cal-mes-fase{font-size:8px;font-weight:900;letter-spacing:.09em;padding:2px 6px;border-radius:5px;
   margin-left:auto;text-transform:uppercase;white-space:nowrap}
 .cal-dow,.cal-dias{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
+
+/* ══ EL TABLERO DE LA PÁGINA 2 ═════════════════════════════════════
+   Calendario del mes + el día + la semana, en tres columnas. Sustituye a las tres
+   listas de tareas (Ahora / Este mes / Hecho) que ocupaban la pantalla: las tareas
+   siguen aquí, pero repartidas por la SEMANA que les toca en vez de en un montón.
+
+   Adán, 2026-08-29: "quiero toda la parte del calendario en esa parte (página 2)…
+   al pasar me das información acerca de cuánto gasto cada día, pero debe estar
+   todavía más completo… quiero día por día mucha información, al igual que semana
+   por semana". Los gastos salen de `finanzasmx_v2.transactions` y los pagos fijos
+   de `CIFRAS.CALENDARIO.cobros` + el `day` de cada deuda — nada escrito a mano. */
+.coach-tablero{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr) minmax(0,1fr);
+  gap:12px;align-items:stretch;flex:1;min-height:0}
+.ct-col{border-radius:15px;border:1px solid var(--card-br);background:var(--card);
+  padding:15px 16px;display:flex;flex-direction:column;gap:11px;min-width:0;
+  min-height:0;overflow-y:auto}
+.ct-dia{border-color:rgba(var(--cy-rgb),.32);background:rgba(var(--cy-rgb),.04)}
+.ct-h{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
+.ct-tit{font-family:var(--font-title);font-size:18px;font-weight:700;line-height:1.15}
+.ct-lbl{font-size:9px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:var(--text3)}
+.ct-num{font-family:var(--mono);font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+
+/* El mes. Cada celda lleva su carga: el importe del día y una barra por lo que
+   entró y por lo que salió, para que el peso se vea sin tocar nada. */
+.ct-mes{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:3px}
+.ct-dow{font-family:var(--mono);font-size:9px;color:var(--text3);text-align:center}
+.ct-d{position:relative;height:48px;border-radius:8px;padding:4px 5px 3px;cursor:pointer;
+  display:flex;flex-direction:column;justify-content:space-between;text-align:left;
+  font-family:inherit;color:inherit;background:rgba(var(--ov),.03);
+  border:1px solid rgba(var(--ov),.06);transition:background .13s,border-color .13s}
+.ct-d:hover{background:rgba(var(--ov),.1)}
+.ct-d.vacio{visibility:hidden;cursor:default}
+.ct-d.finde{opacity:.72}
+.ct-d.fijo{border-color:rgba(var(--w-rgb),.3)}
+.ct-d.sel{background:rgba(var(--cy-rgb),.13);border-color:var(--cy);opacity:1}
+.ct-d.hoy .ct-dn{color:var(--cy)}
+.ct-dn{font-family:var(--mono);font-size:11px;font-weight:700}
+.ct-dm{font-family:var(--mono);font-size:7.5px}
+.ct-db{display:flex;gap:2px;align-items:flex-end;height:13px}
+.ct-db i{display:block;border-radius:1.5px}
+
+/* El día: entra / sale, el desglose por categoría real y lo que está programado. */
+.ct-par{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+.ct-caja{padding:9px 11px;border-radius:10px}
+.ct-caja b{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:18px;
+  font-weight:700;display:block;margin-top:2px;letter-spacing:-.02em}
+.ct-cat{display:flex;flex-direction:column;gap:3px}
+.ct-cat-h{display:flex;align-items:baseline;justify-content:space-between;gap:8px}
+.ct-cat-n{display:flex;align-items:center;gap:6px;min-width:0;font-size:11px}
+.ct-cat-n i{width:8px;height:8px;border-radius:2px;flex-shrink:0}
+.ct-cat-b{height:4px;border-radius:2px;background:rgba(var(--ov),.07);overflow:hidden}
+.ct-cat-b i{display:block;height:100%;border-radius:2px}
+.ct-ev{display:flex;align-items:flex-start;gap:8px;padding:7px 10px;border-radius:9px;
+  background:rgba(var(--ov),.035);border:1px solid rgba(var(--ov),.07)}
+.ct-ev i{width:6px;height:6px;border-radius:50%;flex-shrink:0;margin-top:4px}
+
+/* La semana: el pulso de gasto de cada día, y las tareas partidas en hechas y las
+   que tocan — con su checkbox, que es como se marcaban antes. */
+.ct-pulso{display:flex;align-items:flex-end;gap:5px;height:54px;padding-bottom:1px;
+  border-bottom:1px solid rgba(var(--ov),.1)}
+.ct-pulso>div{flex:1;display:flex;flex-direction:column;align-items:center;
+  justify-content:flex-end;gap:3px;height:100%}
+.ct-pulso i{display:block;width:100%;border-radius:3px 3px 0 0;min-height:3px}
+.ct-pulso-d{display:flex;gap:5px}
+.ct-pulso-d span{flex:1;font-family:var(--mono);font-size:9px;text-align:center}
+.ct-tar{display:flex;align-items:flex-start;gap:8px;font-size:11.5px;line-height:1.4}
+.ct-tar input{margin-top:2px;flex-shrink:0;accent-color:var(--g);width:13px;height:13px;cursor:pointer}
+.ct-tar.toca{padding:9px 11px;border-radius:10px;background:rgba(var(--w-rgb),.06);
+  border:1px solid rgba(var(--w-rgb),.22)}
+.ct-tar-chip{font-family:var(--mono);font-size:9px;font-weight:700;color:#05050a;
+  background:var(--w);padding:2px 5px;border-radius:4px;flex-shrink:0}
+.ct-vacio{font-size:11px;color:var(--text3);padding:6px 0}
+.ct-nav{display:flex;gap:4px}
+.ct-nav button{width:22px;height:22px;border-radius:7px;border:1px solid rgba(var(--ov),.12);
+  background:rgba(var(--ov),.04);color:var(--text2);cursor:pointer;font-family:inherit;
+  font-size:12px;display:flex;align-items:center;justify-content:center;padding:0}
+.ct-nav button:hover{background:rgba(var(--ov),.1);color:var(--text)}
+@media(max-width:1180px){
+  .coach-tablero{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+  .ct-sem{grid-column:1/-1}
+}
+@media(max-width:760px){
+  .coach-tablero{grid-template-columns:1fr}
+  .ct-sem{grid-column:auto}
+}
 .cal-dow{margin:8px 0 3px}
 .cal-dow span{font-size:8px;font-weight:800;letter-spacing:.06em;color:var(--text3);text-align:center;opacity:.65}
 .cal-dia{height:23px;display:flex;align-items:center;justify-content:center;font-family:var(--mono);
@@ -2640,10 +2725,10 @@ a.rt2-sub-prod:hover{text-decoration:underline}
            banda de fase: repetía lo que la ruta de deuda ya dice con números reales. -->
       <div class="coach-fase-band reveal d1" id="coachFaseBand"></div>
       <div class="coach-ruta-band reveal d2" id="coachRutaBand"></div>
-      <div class="coach-cols reveal d3">
-        <div class="coach-col coach-col-ahora" id="coachColAhora"></div>
-        <div class="coach-col" id="coachColMes"></div>
-        <div class="coach-col coach-col-hecho" id="coachColHecho"></div>
+      <div class="coach-tablero reveal d3">
+        <div class="ct-col ct-cal" id="ctCal"></div>
+        <div class="ct-col ct-dia" id="ctDia"></div>
+        <div class="ct-col ct-sem" id="ctSem"></div>
       </div>
     </div>
   </section>
@@ -3977,9 +4062,6 @@ function lcAmazonQuery(cat,txt){
 }
 function lcAmazonUrl(q){ return 'https://www.amazon.com.mx/s?k='+encodeURIComponent(q); }
 function lcMercadoLibreUrl(q){ return 'https://listado.mercadolibre.com.mx/'+encodeURIComponent(q.replace(/\s+/g,'-')); }
-// Walmart Súper: es donde Adán hace el súper (el ticket de referencia sale de ahí), así que
-// en Comida el par de links útil es Walmart + Amazon, no Amazon + Mercado Libre.
-function lcWalmartUrl(q){ return 'https://super.walmart.com.mx/search?q='+encodeURIComponent(q); }
 // ── Clasificación para la barra de proporciones (2026-08-27) ─────────────────
 // Pedido: "resuelve las proporciones de vegetales, frutas y verduras". El pasillo único
 // "Frutas y Verduras" escondía el problema: 13 productos juntos, sin forma de ver que el canasto
@@ -4031,13 +4113,32 @@ function lcPrecioHtml(cat,txt){
     ].join(' ');
     return '<span class="lc-price '+cls+'" title="'+t.replace(/"/g,'&quot;')+'"><i></i>'+p.paso+'</span>';
   }
+  // La píldora ES el link (2026-08-29, pedido de Adán: "sobreponlo en estos label ≈ $280 Amazon").
+  // Antes el precio y el botón de la tienda eran dos elementos por plataforma —cuatro por renglón—
+  // y entre todos dejaban al nombre del producto sin ancho. Ahora hay una píldora por tienda y
+  // cada una abre su búsqueda; los 39 productos sin precio de referencia la llevan igual, solo que
+  // con el nombre de la tienda en vez de la cifra — el link es lo que se necesita, el precio se ve
+  // al llegar.
   const o=cat==='libros'?LIBRO_PRECIO_TIPICO:LISTA_COMPRAS_PRECIOS_OTROS[txt];
-  if(!o) return '';
-  const t=cat==='libros'
-    ? 'Precio típico de un libro de no ficción en pasta blanda — el link te lleva al precio real del momento.'
-    : 'Precio de lista aproximado (ago-2026) del primer producto de la línea — el link te lleva al precio real del momento.';
-  return '<span class="lc-price lc-price-est" title="'+t+'"><i></i>≈ $'+o.amazon+' Amazon</span>'+
-         '<span class="lc-price lc-price-est" title="'+t+'"><i></i>≈ $'+o.ml+' M. Libre</span>';
+  const conLink=LC_AMAZON_CATS.includes(cat);
+  if(!o&&!conLink) return '';
+  const q=lcAmazonQuery(cat,txt);
+  const t=(cat==='libros'
+      ? 'Precio típico de un libro de no ficción en pasta blanda.'
+      : o ? 'Precio de lista aproximado (ago-2026) del primer producto de la línea.'
+          : 'Todavía sin precio de referencia.')
+    +(conLink?' Clic para abrir la búsqueda y ver el precio de hoy.':'');
+  return lcTiendaPill(conLink?lcAmazonUrl(q):'','Amazon',o&&o.amazon,t)+
+         lcTiendaPill(conLink?lcMercadoLibreUrl(q):'','M. Libre',o&&o.ml,t);
+}
+// Una píldora de tienda. Con `url` es un link — sin él, el mismo chip sin subrayado ni ↗.
+function lcTiendaPill(url,tienda,precio,tip){
+  const at=' class="lc-price '+(precio?'lc-price-est':'lc-price-nil')+(url?' lc-price-link':'')+
+    '" title="'+tip.replace(/"/g,'&quot;')+'"';
+  const dentro='<i></i>'+(precio?'≈ $'+precio+' ':'')+tienda+(url?' ↗':'');
+  return url
+    ? '<a href="'+url+'" target="_blank" rel="noopener"'+at+'>'+dentro+'</a>'
+    : '<span'+at+'>'+dentro+'</span>';
 }
 
 // ── Cantidades ───────────────────────────────────────────────────────────────
@@ -4064,7 +4165,7 @@ function lcCambiarQty(cat,txt,delta){
   const n=Math.max(0,Math.min(99,lcQty(id)+delta));
   lcSetQty(id,n);
   const fila=document.getElementById(id+'-row');
-  if(fila) fila.outerHTML=lcItemHtml(cat,txt,LC_AMAZON_CATS.includes(cat));
+  if(fila) fila.outerHTML=lcItemHtml(cat,txt);
   renderListaCatTabs();
   actualizarLcTotal();
 }
@@ -4074,7 +4175,7 @@ function lcLlevarSemana(cat,txt){
   const id=lcItemId(cat,txt);
   lcSetQty(id,lcBase(LISTA_COMPRAS_PRECIOS[txt]));
   const fila=document.getElementById(id+'-row');
-  if(fila) fila.outerHTML=lcItemHtml(cat,txt,LC_AMAZON_CATS.includes(cat));
+  if(fila) fila.outerHTML=lcItemHtml(cat,txt);
   renderListaCatTabs();
   actualizarLcTotal();
 }
@@ -4288,25 +4389,13 @@ function lcPropHtml(){
 }
 
 // ── Renglón ──────────────────────────────────────────────────────────────────
-function lcItemHtml(cat,txt,conLinkAmazon){
+function lcItemHtml(cat,txt){
   const id=lcItemId(cat,txt);
   const n=lcQty(id);
   const p=cat==='comida'?LISTA_COMPRAS_PRECIOS[txt]:null;
   const esc=txt.replace(/'/g,"\\'");
-  const q=lcAmazonQuery(cat,txt);
-  // Links en TODAS las categorías (2026-08-27). Comida no los tenía; ahí el par útil es el súper
-  // donde compras y Amazon, no Amazon y Mercado Libre.
-  const shopHtml=(cat==='comida')
-    ? '<span class="lc-item-shop">'+
-        '<a href="'+lcWalmartUrl(txt)+'" target="_blank" rel="noopener" class="lc-shop-link" title="Buscar en Walmart Súper">Walmart ↗</a>'+
-        '<a href="'+lcAmazonUrl(txt)+'" target="_blank" rel="noopener" class="lc-shop-link" title="Buscar en Amazon">Amazon ↗</a>'+
-      '</span>'
-    : (conLinkAmazon
-        ? '<span class="lc-item-shop">'+
-            '<a href="'+lcAmazonUrl(q)+'" target="_blank" rel="noopener" class="lc-shop-link" title="Buscar en Amazon">Amazon ↗</a>'+
-            '<a href="'+lcMercadoLibreUrl(q)+'" target="_blank" rel="noopener" class="lc-shop-link" title="Buscar en Mercado Libre">M. Libre ↗</a>'+
-          '</span>'
-        : '');
+  // Los links viven dentro de la píldora de precio (ver `lcTiendaPill`). Comida no lleva ninguno:
+  // ese súper se hace a pie, con el carrito en la mano.
   let qtyHtml='';
   if(lcTieneQty(cat,txt)){
     qtyHtml='<span class="lc-unit" title="Lo que cuesta cada '+p.paso+'">'+lcM(p.monto)+' c/u</span>'+
@@ -4327,12 +4416,12 @@ function lcItemHtml(cat,txt,conLinkAmazon){
   return '<div class="lc-item'+(n?' on':'')+(tengo?' lc-item-tengo':'')+'" id="'+id+'-row">'+
     '<input type="checkbox" id="'+id+'" '+(n?'checked':'')+' '+(tengo?'disabled':'')+' onchange="toggleListaItem(\''+id+'\',\''+cat+'\',\''+esc+'\')">'+
     '<label for="'+id+'" class="lc-item-txt">'+txt+'</label>'+
-    '<span class="lc-item-meta">'+lcPrecioHtml(cat,txt)+qtyHtml+tengoBtn+shopHtml+'</span>'+
+    '<span class="lc-item-meta">'+lcPrecioHtml(cat,txt)+qtyHtml+tengoBtn+'</span>'+
     subHtml+
   '</div>';
 }
-function lcRenderItems(cat,items,conLinkAmazon){
-  return items.map(txt=>lcItemHtml(cat,txt,conLinkAmazon)).join('');
+function lcRenderItems(cat,items){
+  return items.map(txt=>lcItemHtml(cat,txt)).join('');
 }
 
 // Refresca solo las cifras (llamado desde toggleListaItem y el contador, sin re-pintar toda la
@@ -4374,7 +4463,6 @@ function vaciarListaCat(cat){
 function renderListaCompras(){
   renderListaCatTabs();
   const data=LISTA_COMPRAS[listaCatSel];
-  const conLinkAmazon=LC_AMAZON_CATS.includes(listaCatSel);
   const esComida=listaCatSel==='comida';
   const hud=esComida?lcHudComidaHtml():lcHudCatHtml(listaCatSel);
   const prop=esComida?lcPropHtml():'';
@@ -4387,12 +4475,12 @@ function renderListaCompras(){
         '<span>los gramos de lo que se vende por pieza son aproximados</span>'+
       '</div>'
     : '<div class="lc-price-leyenda">'+
-        '<span><i class="lc-leg-dot" style="border:1.5px solid var(--o)"></i>precio aproximado en cada plataforma</span>'+
+        '<span><i class="lc-leg-dot" style="border:1.5px solid var(--o)"></i>precio aproximado en cada plataforma — el precio <b style="color:var(--text2)">es el link</b> a esa tienda</span>'+
         '<span>marca lo que vas a llevar y <b style="color:var(--text2)">se va sumando arriba</b></span>'+
         '<span><b style="color:var(--text2)">"Ya lo tengo"</b> lo saca del total y de los pendientes, sin borrarlo de la lista</span>'+
       '</div>';
   const html=Array.isArray(data)
-    ? '<div class="lc-grid">'+lcRenderItems(listaCatSel,data,conLinkAmazon)+'</div>'
+    ? '<div class="lc-grid">'+lcRenderItems(listaCatSel,data)+'</div>'
     : Object.entries(data).map(([pasillo,items])=>{
         // Subtotal por pasillo — recorres el súper por pasillos, así que saber que Carnes ya va en
         // $240 sirve mientras estás ahí parado, no al llegar a la caja.
@@ -4406,7 +4494,7 @@ function renderListaCompras(){
             (esComida?'<span class="lc-aisle-ct" id="lcct-'+slug+'">'+lcPasilloCt(pasillo)+'</span>':'')+
             '<span class="lc-aisle-sub" id="lcsub-'+slug+'">'+(sub?lcM(sub):'')+'</span>'+
           '</div>'+
-          '<div class="lc-grid">'+lcRenderItems(listaCatSel,items,conLinkAmazon)+'</div>'+
+          '<div class="lc-grid">'+lcRenderItems(listaCatSel,items)+'</div>'+
         '</div>';
       }).join('');
   document.getElementById('listaCompraBody').innerHTML=hud+prop+leyenda+html;
@@ -4423,7 +4511,7 @@ function toggleListaItem(id,cat,txt){
   else lcSetQty(id, marcado?1:0);
   if(cat&&txt){
     const fila=document.getElementById(id+'-row');
-    if(fila) fila.outerHTML=lcItemHtml(cat,txt,LC_AMAZON_CATS.includes(cat));
+    if(fila) fila.outerHTML=lcItemHtml(cat,txt);
   }
   renderListaCatTabs(); // refresca el "X/Y" de la pestaña sin re-pintar la lista completa
   actualizarLcTotal();
@@ -5675,6 +5763,296 @@ function renderHeroNutri(){
 function verNutriTab(tab){ nutriTabSel=tab; renderHeroNutri(); }
 function toggleRecetaCard(key){ nutriExpandido.has(key)?nutriExpandido.delete(key):nutriExpandido.add(key); renderHeroNutri(); }
 
+// ══ EL TABLERO DE LA PÁGINA 2 ══════════════════════════════════════════
+// Adán, 2026-08-29: "quiero toda la parte del calendario en esa parte (página 2)…
+// al pasar me das información acerca de cuánto gasto cada día, pero debe estar todavía
+// más completo… quiero día por día mucha información, al igual que semana por semana".
+//
+// Tres columnas: el mes, el día que toques y la semana a la que pertenece. Ningún
+// importe está escrito aquí — el gasto sale de `finanzasmx_v2.transactions`, los pagos
+// fijos de `CIFRAS.CALENDARIO.cobros` más el `day` de cada deuda, y las tareas de PHASES.
+let ctYM = null;      // mes que se está viendo, 'YYYY-MM'
+let ctSel = null;     // día elegido, 'YYYY-MM-DD'
+
+// Los colores de categoría son los de Finanzas.html (CCOLORS). Se repiten aquí porque
+// esa constante vive dentro de su <script> y no se exporta; si alguna vez se mueve a
+// datos-maestros, esto se borra y se lee de allí.
+const CT_COLOR = {
+  'Alimentación':'#ef4444','Transporte':'#f97316','Hogar/Renta':'#eab308','Salud':'#22c55e',
+  'Entretenimiento':'#06b6d4','Educación':'#3b82f6','Ropa':'#a855f7','Servicios':'#ec4899',
+  'Suscripciones':'#14b8a6','Restaurantes':'#f59e0b','Viajes':'#10b981','Deudas':'#64748b',
+  'Otros gastos':'#94a3b8','Salario':'#3b82f6','Freelance/Honorarios':'#8b5cf6',
+  'Inversiones':'#10b981','Renta/Propiedades':'#f59e0b','Bonos':'#22c55e','Regalos':'#ec4899',
+  'Otros ingresos':'#6b7280'
+};
+
+// Los movimientos del mes agrupados por día. Una sola pasada sobre las transacciones:
+// la pantalla la consultan la cuadrícula, el panel del día y el de la semana.
+function ctMovs(ym){
+  const out = {};
+  ((D.fin && D.fin.transactions) || []).forEach(function(t){
+    if(!t || !t.date || t.date.slice(0,7) !== ym) return;
+    (out[t.date] = out[t.date] || []).push(t);
+  });
+  return out;
+}
+const ctGasto = arr => (arr||[]).filter(t=>t.type==='expense').reduce((s,t)=>s+(+t.amount||0),0);
+const ctIngr  = arr => (arr||[]).filter(t=>t.type!=='expense').reduce((s,t)=>s+(+t.amount||0),0);
+
+// Lo que está PROGRAMADO ese día del mes, venga de donde venga. Es la misma fuente que
+// usa el globo del calendario anual, para que las dos pantallas no puedan discrepar.
+function ctAgenda(dia){
+  const out = [];
+  const CAL = (window.CIFRAS && CIFRAS.CALENDARIO) || null;
+  if(CAL) (CAL.cobros||[]).forEach(function(c){
+    if(c.dia === dia) out.push({t:c.txt, monto:c.monto, entra:!!c.entra});
+  });
+  ((D.fin && D.fin.debts) || []).forEach(function(d){
+    if(d.day === dia && +d.balance > 0 && +d.min > 0) out.push({t:d.name, monto:+d.min, entra:false});
+  });
+  return out;
+}
+
+// La semana de un día, con el mismo corte que usa el plan de Finanzas: 1-7, 8-14,
+// 15-21 y 22-fin. Así "semana 3" significa lo mismo en las dos apps.
+const ctSemDe = n => n<=7 ? 1 : n<=14 ? 2 : n<=21 ? 3 : 4;
+
+// Las tareas de la fase que caen en una semana. PHASES no las reparte por semana — solo
+// por mes — así que el reparto es por ORDEN dentro del mes: la primera tarea a la primera
+// semana, y así. No es una fecha real y por eso la pantalla lo dice ("reparto sugerido").
+//
+// Una tarea cuenta como hecha por DOS caminos, no solo por el checkbox: PHASES escribe un
+// ✅ dentro del texto cuando el objetivo ya se cumplió ("Liquidar la TC Banamex. (✅ 13 ago
+// 2026…)"). Sin mirar eso, un navegador donde Adán todavía no había marcado la casilla
+// le enseñaba como pendiente algo que cerró hace dos semanas.
+const ctHecha = (s, checks) => !!checks[s.id] || String(s.txt).indexOf('\u2705') >= 0;
+
+function ctTareasSemana(ph, ym, sem){
+  const checks = rawGet('coach_checks_v1', {});
+  const delMes = (ph.semanas||[]).filter(s => !s.mes || s.mes === ym);
+  // Se reparten las PENDIENTES entre las semanas que quedan del mes, no las 9 tareas
+  // entre las 4 semanas: repartir el total dejaba la semana en curso sin nada que hacer
+  // cuando sus dos tareas ya estaban cerradas, con cinco pendientes esperando en el mes.
+  // Cuanto menos queda del mes, mas carga toca por semana; en la ultima, todo lo que falte.
+  const pend = delMes.filter(x => !ctHecha(x, checks));
+  const trozo = pend.slice(0, Math.max(1, Math.ceil(pend.length / Math.max(1, 5 - sem))));
+  // La libreta de logros va con las hechas: es lo único que no se "desmarca" porque un
+  // saldo cambió, y Adán pidió verlo ("si no, sentiré que no logro nada").
+  const L = logrosLoad();
+  const logros = Object.keys(L)
+    .sort((a,b)=>String(L[a].fecha).localeCompare(String(L[b].fecha)))
+    .map(id => ({ txt: L[id].txt, fecha: fechaLogro(id) }));
+  return {
+    hechas: delMes.filter(s => ctHecha(s, checks)).map(s=>({txt:s.txt, fecha:''})).concat(logros),
+    toca:   trozo.filter(s => !ctHecha(s, checks)),
+  };
+}
+
+function ctVerMes(delta){
+  const [y, m] = ctYM.split('-').map(Number);
+  const d = new Date(y, m - 1 + delta, 1);
+  ctYM = d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0');
+  ctSel = null;                    // el día elegido no sobrevive al cambio de mes
+  renderCoachTablero();
+}
+function ctVerDia(k){ ctSel = k; renderCoachTablero(); }
+
+function renderCoachTablero(){
+  const ph = activePhase();
+  const hoy = new Date();
+  const hoyK = hoy.getFullYear()+'-'+String(hoy.getMonth()+1).padStart(2,'0')+'-'+String(hoy.getDate()).padStart(2,'0');
+  if(!ctYM) ctYM = hoyK.slice(0,7);
+  const [Y, M] = ctYM.split('-').map(Number);
+  const nDias = new Date(Y, M, 0).getDate();
+  // getDay() da 0=domingo; la cuadrícula empieza en lunes, como el calendario del año.
+  const primero = (new Date(Y, M-1, 1).getDay() + 6) % 7;
+
+  const MOV = ctMovs(ctYM);
+  const kDe = d => ctYM+'-'+String(d).padStart(2,'0');
+  if(!ctSel || ctSel.slice(0,7) !== ctYM){
+    // Al entrar, el día de hoy; si el mes no es el de hoy, el primero con movimiento,
+    // porque un mes que se abre en un día vacío parece que no tiene datos.
+    const conMov = Object.keys(MOV).sort();
+    ctSel = (hoyK.slice(0,7) === ctYM) ? hoyK : (conMov[0] || kDe(1));
+  }
+
+  const gastoMes = Object.keys(MOV).reduce((s,k)=>s+ctGasto(MOV[k]), 0);
+  const maxDia = Math.max(1, ...Object.keys(MOV).map(k=>ctGasto(MOV[k])));
+  const maxIn  = Math.max(1, ...Object.keys(MOV).map(k=>ctIngr(MOV[k])));
+
+  // ── Columna 1: el mes ──
+  let celdas = '';
+  for(let i=0;i<primero;i++) celdas += '<span class="ct-d vacio"></span>';
+  for(let d=1; d<=nDias; d++){
+    const k = kDe(d), mv = MOV[k]||[];
+    const g = ctGasto(mv), inn = ctIngr(mv);
+    const fijo = ctAgenda(d).length > 0;
+    const cls = ['ct-d'];
+    if(((primero+d-1)%7) >= 5) cls.push('finde');
+    if(fijo) cls.push('fijo');
+    if(k === ctSel) cls.push('sel');
+    if(k === hoyK) cls.push('hoy');
+    let barras = '';
+    if(inn>0) barras += '<i style="width:100%;height:'+Math.max(3,Math.round(inn/maxIn*12))+'px;background:var(--g)"></i>';
+    if(g>0)   barras += '<i style="width:100%;height:'+Math.max(3,Math.round(g/maxDia*12))+'px;background:'+(g>maxDia*.55?'var(--r)':'var(--o)')+'"></i>';
+    const monto = g>0 ? '-'+Math.round(g/1000)+'k' : (inn>0 ? '+'+Math.round(inn/1000)+'k' : '');
+    celdas += '<button type="button" class="'+cls.join(' ')+'" onclick="ctVerDia(\''+k+'\')">'+
+      '<span style="display:flex;align-items:flex-start;justify-content:space-between;gap:2px">'+
+        '<span class="ct-dn">'+d+'</span>'+
+        '<span class="ct-dm'+(privado?' fin-hidden':'')+'" style="color:'+(g>0?'var(--r)':'var(--g)')+'">'+monto+'</span>'+
+      '</span>'+
+      '<span class="ct-db">'+barras+'</span></button>';
+  }
+  const MESN = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+  document.getElementById('ctCal').innerHTML =
+    '<div class="ct-h">'+
+      '<div style="display:flex;align-items:baseline;gap:9px;min-width:0">'+
+        '<span class="ct-tit">'+MESN[M-1]+' '+Y+'</span>'+
+        '<span class="ct-nav"><button onclick="ctVerMes(-1)" title="Mes anterior">\u2039</button>'+
+        '<button onclick="ctVerMes(1)" title="Mes siguiente">\u203a</button></span>'+
+      '</div>'+
+      '<div style="display:flex;align-items:baseline;gap:7px">'+
+        '<span class="ct-lbl">'+(gastoMes>0?'gastaste':'sin registrar')+'</span>'+
+        (gastoMes>0?'<span class="ct-num'+(privado?' fin-hidden':'')+'" style="font-size:15px;font-weight:700;color:var(--r)">'+money(gastoMes)+'</span>':'')+
+      '</div>'+
+    '</div>'+
+    '<div class="ct-mes">'+['L','M','M','J','V','S','D'].map(x=>'<span class="ct-dow">'+x+'</span>').join('')+'</div>'+
+    '<div class="ct-mes">'+celdas+'</div>'+
+    '<div style="display:flex;flex-wrap:wrap;gap:9px;padding-top:2px">'+
+      [['var(--g)','entra dinero'],['var(--r)','gasto fuerte'],['var(--o)','gasto normal']]
+        .map(x=>'<span style="display:flex;align-items:center;gap:4px"><i style="width:7px;height:7px;border-radius:2px;background:'+x[0]+'"></i><span style="font-size:9.5px;color:var(--text3)">'+x[1]+'</span></span>').join('')+
+      '<span style="display:flex;align-items:center;gap:4px"><i style="width:7px;height:7px;border-radius:2px;border:1px solid rgba(var(--w-rgb),.6)"></i><span style="font-size:9.5px;color:var(--text3)">borde: hay pago fijo</span></span>'+
+    '</div>';
+
+  // ── Columna 2: el día ──
+  const nSel = +ctSel.slice(8);
+  const mvSel = MOV[ctSel]||[];
+  const gSel = ctGasto(mvSel), iSel = ctIngr(mvSel);
+  const porCat = {};
+  mvSel.filter(t=>t.type==='expense').forEach(t=>{ porCat[t.cat] = (porCat[t.cat]||0) + (+t.amount||0); });
+  const cats = Object.keys(porCat).sort((a,b)=>porCat[b]-porCat[a]);
+  // Acumulado del MES por categor\u00eda: es el respaldo del panel cuando el d\u00eda elegido
+  // no tiene movimientos, que en un mes reci\u00e9n empezado son casi todos.
+  const catMes = {};
+  Object.keys(MOV).forEach(function(k){
+    MOV[k].filter(t=>t.type==='expense').forEach(function(t){ catMes[t.cat]=(catMes[t.cat]||0)+(+t.amount||0); });
+  });
+  const catsMes = Object.keys(catMes).sort((a,b)=>catMes[b]-catMes[a]).slice(0,6);
+  const pintaCats = (lista, tot, fuente) => lista.map(function(c){
+    const col = CT_COLOR[c] || '#94a3b8';
+    return '<div class="ct-cat"><div class="ct-cat-h">'+
+      '<span class="ct-cat-n"><i style="background:'+col+'"></i>'+esc(c)+'</span>'+
+      '<span class="ct-num'+(privado?' fin-hidden':'')+'" style="font-size:12px;font-weight:700">'+money(fuente[c])+'</span></div>'+
+      '<div class="ct-cat-b"><i style="width:'+Math.round(fuente[c]/(tot||1)*100)+'%;background:'+col+'"></i></div></div>';
+  }).join('');
+  const agenda = ctAgenda(nSel);
+  const DOWN = ['lunes','martes','mi\u00e9rcoles','jueves','viernes','s\u00e1bado','domingo'];
+  const dowSel = DOWN[(new Date(Y,M-1,nSel).getDay()+6)%7];
+  const dd = Math.round((new Date(Y,M-1,nSel) - new Date(hoy.getFullYear(),hoy.getMonth(),hoy.getDate()))/86400000);
+  const cuenta = dd===0?'hoy':dd===1?'ma\u00f1ana':dd===-1?'ayer':dd>0?('en '+dd+' d\u00edas'):('hace '+(-dd)+' d\u00edas');
+
+  document.getElementById('ctDia').innerHTML =
+    '<div class="ct-h"><div style="display:flex;flex-direction:column;gap:2px;min-width:0">'+
+      '<span class="ct-lbl" style="color:var(--cy)">El d\u00eda</span>'+
+      '<span class="ct-tit">'+dowSel.charAt(0).toUpperCase()+dowSel.slice(1)+' '+nSel+'</span>'+
+    '</div><span class="ct-num" style="font-size:9.5px;color:'+(dd===0?'var(--cy)':'var(--text3)')+';white-space:nowrap">'+cuenta+'</span></div>'+
+    '<div class="ct-par">'+
+      '<div class="ct-caja" style="background:rgba(var(--g-rgb),.07);border:1px solid rgba(var(--g-rgb),.18)">'+
+        '<span class="ct-lbl" style="color:var(--g)">Entra</span>'+
+        '<b class="'+(privado?'fin-hidden':'')+'" style="color:var(--g)">'+(iSel>0?money(iSel):'\u2014')+'</b></div>'+
+      '<div class="ct-caja" style="background:rgba(var(--r-rgb),.06);border:1px solid rgba(var(--r-rgb),.16)">'+
+        '<span class="ct-lbl" style="color:var(--r)">Sale</span>'+
+        '<b class="'+(privado?'fin-hidden':'')+'" style="color:var(--r)">'+(gSel>0?money(gSel):'\u2014')+'</b></div>'+
+    '</div>'+
+    (mvSel.length
+      ? '<div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px;padding:8px 11px;border-radius:10px;background:rgba(var(--ov),.04)">'+
+          '<span style="font-size:11px;color:var(--text2)">Te queda ese d\u00eda</span>'+
+          '<span class="ct-num'+(privado?' fin-hidden':'')+'" style="font-size:16px;font-weight:700;color:'+(iSel-gSel>=0?'var(--g)':'var(--r)')+'">'+
+          (iSel-gSel>=0?'+':'')+money(iSel-gSel)+'</span></div>'
+      : '')+
+    (cats.length
+      ? '<div style="display:flex;flex-direction:column;gap:7px">'+
+        '<div style="display:flex;align-items:baseline;justify-content:space-between"><span class="ct-lbl">En qu\u00e9 se fue</span>'+
+        '<span class="ct-num" style="font-size:9.5px;color:var(--text3)">'+mvSel.length+' movimiento'+(mvSel.length>1?'s':'')+'</span></div>'+
+        pintaCats(cats, gSel, porCat)+'</div>'
+      : (gastoMes>0
+          ? '<div style="display:flex;flex-direction:column;gap:7px">'+
+            '<div style="display:flex;align-items:baseline;justify-content:space-between">'+
+            '<span class="ct-lbl">En qu\u00e9 va el mes</span>'+
+            '<span class="ct-num" style="font-size:9.5px;color:var(--text3)">sin movimientos ese d\u00eda</span></div>'+
+            pintaCats(catsMes, gastoMes, catMes)+'</div>'
+          : '<div class="ct-vacio">Sin movimientos registrados ese d\u00eda.</div>'))+
+    '<div style="display:flex;flex-direction:column;gap:6px">'+
+      '<span class="ct-lbl">Lo que pasa ese d\u00eda</span>'+
+      (agenda.length
+        ? agenda.map(a=>'<div class="ct-ev"><i style="background:'+(a.entra?'var(--g)':'var(--r)')+'"></i>'+
+            '<span style="min-width:0"><b style="font-size:11.5px;font-weight:600">'+esc(a.t)+'</b><br>'+
+            '<span class="'+(privado?'fin-hidden ':'')+'ct-num" style="font-size:10px;color:'+(a.entra?'var(--g)':'var(--text3)')+'">'+
+            (a.entra?'+':'\u2212')+money(a.monto)+'</span></span></div>').join('')
+        : '<div class="ct-vacio">Nada fijo cae este d\u00eda.</div>')+
+    '</div>';
+
+  // ── Columna 3: la semana ──
+  const sem = ctSemDe(nSel);
+  const ini = (sem-1)*7+1, fin = Math.min(sem*7, nDias);
+  let gSem = 0, iSem = 0, maxSem = 1;
+  for(let d=ini; d<=fin; d++){ const g=ctGasto(MOV[kDe(d)]); if(g>maxSem) maxSem=g; }
+  let pulso = '', etiq = '';
+  for(let d=ini; d<=fin; d++){
+    const g = ctGasto(MOV[kDe(d)]), inn = ctIngr(MOV[kDe(d)]);
+    gSem += g; iSem += inn;
+    const alto = g>0 ? Math.max(8, Math.round(g/maxSem*34)) : 3;
+    const col = g>0 ? (g>maxSem*.55?'var(--r)':'var(--o)') : (inn>0?'var(--g)':'rgba(var(--ov),.13)');
+    pulso += '<div><span class="ct-num'+(privado?' fin-hidden':'')+'" style="font-size:8.5px;font-weight:700;color:'+(g>0?'var(--text2)':'var(--g)')+'">'+
+      (g>0?money(g).replace(/,\d{3}$/,'k'):(inn>0?'entra':''))+'</span>'+
+      '<i style="height:'+alto+'px;background:'+col+'"></i></div>';
+    etiq += '<span style="color:'+(d===nSel?'var(--cy)':'var(--text3)')+'">'+d+'</span>';
+  }
+  const T = ctTareasSemana(ph, ctYM, sem);
+
+  document.getElementById('ctSem').innerHTML =
+    '<div class="ct-h"><div style="display:flex;flex-direction:column;gap:2px">'+
+      '<span class="ct-lbl" style="color:var(--p)">La semana</span>'+
+      '<span class="ct-tit">Semana '+sem+' de '+MESN[M-1].toLowerCase()+'</span>'+
+    '</div><span class="ct-num" style="font-size:9.5px;color:var(--text3);white-space:nowrap">'+ini+' al '+fin+'</span></div>'+
+    '<div style="display:flex;flex-direction:column;gap:5px">'+
+      '<span class="ct-lbl">Gasto de cada d\u00eda</span>'+
+      '<div class="ct-pulso">'+pulso+'</div><div class="ct-pulso-d">'+etiq+'</div>'+
+    '</div>'+
+    '<div class="ct-par">'+
+      '<div class="ct-caja" style="background:rgba(var(--ov),.04)"><span class="ct-lbl">Gasto</span>'+
+        '<b class="'+(privado?'fin-hidden':'')+'" style="color:var(--r);font-size:16px">'+(gSem>0?money(gSem):'\u2014')+'</b></div>'+
+      '<div class="ct-caja" style="background:rgba(var(--ov),.04)"><span class="ct-lbl">Ingreso</span>'+
+        '<b class="'+(privado?'fin-hidden':'')+'" style="color:var(--g);font-size:16px">'+(iSem>0?money(iSem):'\u2014')+'</b></div>'+
+    '</div>'+
+    '<div style="display:flex;flex-direction:column;gap:7px">'+
+      '<span class="ct-lbl" style="color:var(--g)">\u2713 Ya hiciste \u00b7 '+T.hechas.length+'</span>'+
+      (T.hechas.length
+        ? T.hechas.slice(0,5).map(h=>'<span class="ct-tar" style="color:var(--text2);padding-left:3px">'+
+            '<span style="color:var(--g);flex-shrink:0">\u2713</span>'+
+            '<span>'+esc(String(h.txt).replace(/<[^>]*>/g,'').replace(/\u2705/g,'').split(/[.(]/)[0].trim())+
+            (h.fecha?' <span class="ct-num" style="color:var(--text3);font-size:9px">'+esc(h.fecha)+'</span>':'')+
+            '</span></span>').join('')
+        : '<div class="ct-vacio">Nada cerrado todav\u00eda este mes.</div>')+
+    '</div>'+
+    '<div style="display:flex;flex-direction:column;gap:7px">'+
+      '<span class="ct-lbl" style="color:var(--w)">\u2191 Esta semana toca \u00b7 '+T.toca.length+'</span>'+
+      (T.toca.length
+        ? T.toca.map(function(s){
+            const plano = String(s.txt).replace(/<[^>]*>/g,'');
+            const m = plano.match(/^\s*Prioridad\s*(\d+)/i);
+            const corte = plano.search(/[.:]\s+/);
+            const tit = (corte>0&&corte<95) ? plano.slice(0,corte+1) : plano;
+            return '<label class="ct-tar toca" for="ctchk-'+s.id+'">'+
+              '<input type="checkbox" id="ctchk-'+s.id+'" onchange="toggleFaseCheck(\''+s.id+'\')">'+
+              (m?'<span class="ct-tar-chip">P'+m[1]+'</span>':'')+
+              '<span>'+esc(tit.replace(/^\s*Prioridad\s*\d+\s*[\u2014\u2013-]\s*/i,''))+'</span></label>';
+          }).join('')
+        : '<div class="ct-vacio">Nada asignado a esta semana.</div>')+
+      '<span style="font-size:9.5px;color:var(--text3);line-height:1.45">Reparto sugerido: lo que queda del mes, dividido entre las semanas que faltan. No son fechas reales.</span>'+
+    '</div>';
+}
+
 function renderCoach(){
   const ph=activePhase();
   // El párrafo de `explica` dejó de pintarse en la pantalla (2026-08-23): ocupaba cuatro líneas a
@@ -5760,113 +6138,15 @@ function renderCoach(){
   // El párrafo largo de la fase ya no ocupa media pantalla: vive aquí como tooltip.
   bandaFase.title=explicaTxt;
 
-  const faseChecks=rawGet('coach_checks_v1',{});
-
-  // Checklist por mes (2026-08-09) — Adán: "en el dashboard son muchas tareas y no me enfoco en
-  // ninguna". Si la fase activa trae `mes` en sus items (hoy solo Fase 0 — Fase 1/2/3 no tienen
-  // fecha calendario real todavía, ver readme_coach.md), se agrupa por mes con tabs y solo se
-  // pinta el mes elegido; si no trae `mes` (fases futuras sin desglosar aún), cae de vuelta al
-  // comportamiento viejo (todo el checklist de la fase junto).
-  const mesesFase=[...new Set(ph.semanas.map(s=>s.mes).filter(Boolean))].sort();
-  const curYM=mesKey(new Date());
-  let itemsMes=ph.semanas, mesActivo=null;
-  let tabsHtml='', pendientesHtml='';
-  if(mesesFase.length){
-    mesActivo=(coachMesSel&&mesesFase.includes(coachMesSel))?coachMesSel:(mesesFase.includes(curYM)?curYM:mesesFase[0]);
-    itemsMes=ph.semanas.filter(s=>s.mes===mesActivo);
-    tabsHtml=`<div class="coach-mes-tabs" style="margin:0 0 0 auto">${mesesFase.map(my=>{
-      const doneN=ph.semanas.filter(s=>s.mes===my&&faseChecks[s.id]).length;
-      const totalN=ph.semanas.filter(s=>s.mes===my).length;
-      return `<button class="mes-tab${my===mesActivo?' active':''}${doneN===totalN?' done':''}" onclick="verCoachMes('${my}')">${MES_LABEL_FULL[parseInt(my.slice(5),10)-1]}${my===curYM?' •':''} <span class="lc-tab-pct">${doneN}/${totalN}</span></button>`;
-    }).join('')}</div>`;
-    const pendientesPasados=ph.semanas.filter(s=>s.mes&&s.mes<curYM&&s.mes!==mesActivo&&!faseChecks[s.id]);
-    if(pendientesPasados.length) pendientesHtml=`<div class="coach-mes-pendientes">⚠️ ${pendientesPasados.length} pendiente${pendientesPasados.length>1?'s':''} de ${mesLabelFull(pendientesPasados[0].mes)} sin marcar — <a onclick="verCoachMes('${pendientesPasados[0].mes}')">revisar →</a></div>`;
-  }
-
-  // ── El reparto en 3 columnas ──
-  // Una tarea es PRIORIDAD si su texto empieza por "Prioridad N", que es como las escribe
-  // PHASES[].semanas. Es el único marcador que existe hoy: añadir un campo nuevo obligaría a
-  // mantenerlo sincronizado a mano con Coach.html, que lee los mismos objetos.
-  const esPrio=s=>/^\s*Prioridad\s*\d/i.test(String(s.txt).replace(/<[^>]*>/g,''));
-  const hechas=itemsMes.filter(s=>faseChecks[s.id]);
-  const prios=itemsMes.filter(s=>!faseChecks[s.id]&&esPrio(s));
-  const resto=itemsMes.filter(s=>!faseChecks[s.id]&&!esPrio(s));
-
-  // Cada item es un párrafo entero: la primera frase se sube a título y el resto queda de cuerpo.
-  // Si el texto trae HTML (negritas, enlaces) no se parte — cortar por el punto podría partir una
-  // etiqueta a la mitad y dejar el marcado roto.
-  const parte=s=>{
-    const plano=String(s.txt);
-    if(plano.indexOf('<')>=0) return {t:plano,d:''};
-    const c=plano.search(/[.:]\s+/);
-    return (c>0&&c<90) ? {t:plano.slice(0,c+1), d:plano.slice(c+1).trim()} : {t:plano, d:''};
-  };
-  // `quitarPrefijo` borra el "Prioridad 1 — " del título en las tarjetas que YA llevan el chip
-  // PRIORIDAD 1 encima: si no, la misma frase se lee dos veces seguidas en la misma tarjeta.
-  const cuerpo=(s,colorT,quitarPrefijo)=>{
-    const p=parte(s);
-    const t=quitarPrefijo?p.t.replace(/^\s*Prioridad\s*\d+\s*[—–-]\s*/i,''):p.t;
-    return `<span class="cc-row"><input type="checkbox" id="dchk-${s.id}" ${faseChecks[s.id]?'checked':''} onchange="toggleFaseCheck('${s.id}')">`+
-      `<span><span class="cc-t"${colorT?` style="color:${colorT}"`:''}>${t}</span>`+
-      `${p.d?`<span style="display:block">${p.d}</span>`:''}</span></span>`;
-  };
-  // El número del chip sale del TEXTO, no de la posición en la lista: si marcas la Prioridad 1,
-  // la 2 sigue siendo la 2 y no pasa a llamarse "PRIORIDAD 1" por quedarse sola.
-  const numPrio=s=>{
-    const m=String(s.txt).replace(/<[^>]*>/g,'').match(/^\s*Prioridad\s*(\d+)/i);
-    return m?m[1]:'';
-  };
-
-  document.getElementById('coachColAhora').innerHTML=
-    `<div class="cc-h"><span class="cc-dot" style="background:var(--w);box-shadow:0 0 8px var(--w)"></span>`+
-    `<span class="cc-lbl" style="color:var(--w)">Ahora — sin excepción</span>`+
-    `<span class="cc-n" style="color:var(--w)">${prios.length}</span></div>`+
-    (prios.length
-      ? `<div class="cc-list">${prios.map(s=>`<div class="cc-card prio">`+
-          `<span class="cc-chip" style="background:var(--w);color:#05050a">PRIORIDAD ${numPrio(s)}</span>`+
-          cuerpo(s,null,true)+`</div>`).join('')}</div>`
-      : `<div class="cc-vacio">Sin prioridades abiertas este mes.<br>Todo lo urgente ya está marcado.</div>`);
-
-  document.getElementById('coachColMes').innerHTML=
-    `<div class="cc-h"><span class="cc-dot" style="background:var(--o)"></span>`+
-    `<span class="cc-lbl" style="color:var(--o)">${mesActivo?mesLabelFull(mesActivo):'Esta fase'}</span>`+
-    `<span class="cc-n" style="color:var(--text3)">${resto.length}</span>${tabsHtml}</div>`+
-    pendientesHtml+
-    (resto.length
-      ? `<div class="cc-list">${resto.map(s=>`<div class="cc-card">${cuerpo(s)}</div>`).join('')}</div>`
-      : `<div class="cc-vacio">Nada más pendiente en ${mesActivo?mesLabelFull(mesActivo):'esta fase'}.</div>`);
-
-  // Columna "Hecho": las tareas marcadas del mes + la libreta de logros. Los logros van aquí
-  // porque son lo único que no se puede "desmarcar" solo porque un saldo cambió — pedido
-  // explícito de Adán ("si no, sentiré que no logro nada").
-  const L=logrosLoad();
-  const lids=Object.keys(L).sort((a,b)=>String(L[a].fecha).localeCompare(String(L[b].fecha)));
-  const totalHecho=hechas.length+lids.length;
-  document.getElementById('coachColHecho').innerHTML=
-    `<div class="cc-h"><span class="cc-dot" style="background:var(--g);box-shadow:0 0 8px var(--g)"></span>`+
-    `<span class="cc-lbl" style="color:var(--g)">Hecho — esto no se borra</span>`+
-    `<span class="cc-n" style="color:var(--g)">${totalHecho}</span></div>`+
-    (totalHecho
-      ? `<div class="cc-list">`+
-          hechas.map(s=>`<div class="cc-card done">${cuerpo(s,'var(--text2)')}</div>`).join('')+
-          lids.map(id=>`<div class="cc-card done"><div style="display:flex;align-items:center;gap:8px">`+
-            `<span style="color:var(--g)">✅</span>`+
-            `<span class="cc-t" style="margin:0;flex:1">${esc(L[id].txt)}</span>`+
-            `<span style="font-family:var(--mono);font-size:9px;color:var(--text3);flex-shrink:0">${esc(fechaLogro(id))}</span>`+
-          `</div></div>`).join('')+
-        `</div>`+
-        `<div class="cc-foot" style="border-top-color:rgba(0,232,122,.16);display:flex;align-items:baseline;gap:8px">`+
-          `<span class="crb-pct${privado?' fin-hidden':''}" style="font-size:22px">${rutaPct}%</span>`+
-          `<span>de la ruta hacia deuda cara en $0</span></div>`
-      : `<div class="cc-vacio">Todavía nada marcado.<br>En cuanto marques algo, se queda aquí.</div>`);
+  // El reparto de tareas ya no vive aquí: lo pinta el tablero, repartidas por la
+  // semana que les toca en vez de en tres listas del mismo peso.
+  renderCoachTablero();
 }
-let coachMesSel=null;
-function verCoachMes(ym){ coachMesSel=ym; renderCoach(); }
 // Checklist semana a semana de "Qué hacer en esta fase" — comparte coach_checks_v1 con
 // Coach.html (mismos ids sN-M), igual patrón de escritura cruzada que quickMarkDone().
 function toggleFaseCheck(id){
   const checks=rawGet('coach_checks_v1',{});
-  const cb=document.getElementById('dchk-'+id);
+  const cb=document.getElementById('ctchk-'+id)||document.getElementById('dchk-'+id);
   if(cb&&cb.checked) checks[id]=true; else delete checks[id];
   rawSet('coach_checks_v1',checks);
   // Sin esto, el contador "X/Y" de la pestaña del mes y el aviso de "N pendientes" se quedaban

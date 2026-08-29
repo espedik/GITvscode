@@ -1,0 +1,182 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap">
+  <style>
+    body { margin: 0; background: #05050a; color: #f4f4f8;
+           font-family: 'Inter', -apple-system, sans-serif; font-size: 14px; }
+    a { color: #00e0c0; text-decoration: none; } a:hover { color: #4df0da; }
+    .mono { font-family: 'Space Grotesk', monospace; font-variant-numeric: tabular-nums; letter-spacing: -.02em; }
+    .ser  { font-family: 'Fraunces', Georgia, serif; }
+    .eyebrow { font-size: 9.5px; font-weight: 800; letter-spacing: .18em; text-transform: uppercase; color: #8589a8; }
+  </style>
+</helmet>
+
+<div style="position: relative; width: 1500px; min-height: 880px; background: #05050a; overflow: hidden;">
+  <div style="position: absolute; inset: 0; background-image: radial-gradient(ellipse 55% 40% at 50% -8%, rgba(0,224,192,.06) 0%, transparent 62%);"></div>
+
+  <div style="position: relative; display: flex; flex-direction: column; gap: 15px; padding: 24px 26px 26px;">
+
+    <div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 20px;">
+      <div style="display: flex; flex-direction: column; gap: 5px;">
+        <span class="eyebrow" style="color: #00e0c0;">El año completo</span>
+        <span class="ser" style="font-size: 26px; font-weight: 700; line-height: 1.1;">2026, mes a mes</span>
+      </div>
+      <div style="display: flex; gap: 22px; align-items: baseline;">
+        <div style="text-align: right;">
+          <div class="eyebrow">Gastado en el año</div>
+          <div class="mono" style="font-size: 22px; font-weight: 700; color: #ff5c5c; margin-top: 2px;">$137,648</div>
+        </div>
+        <div style="text-align: right;">
+          <div class="eyebrow">Media mensual</div>
+          <div class="mono" style="font-size: 22px; font-weight: 700; margin-top: 2px;">$31,847</div>
+        </div>
+        <div style="text-align: right;">
+          <div class="eyebrow">Días de 2026</div>
+          <div class="mono" style="font-size: 22px; font-weight: 700; color: #00e0c0; margin-top: 2px;">124</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ LOS 12 MESES ═══════════════════════════════════════════════ -->
+    <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 11px;">
+      <sc-for list="{{meses}}" as="m" hint-placeholder-count="12">
+        <div style="border-radius: 13px; border: 1px solid {{m.borde}}; background: {{m.bg}}; padding: 13px 14px; display: flex; flex-direction: column; gap: 9px; opacity: {{m.op}};">
+
+          <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 8px;">
+            <span class="ser" style="font-size: 15px; font-weight: 700; color: {{m.tinta}};">{{m.nombre}}</span>
+            <span class="mono" style="font-size: 8.5px; font-weight: 700; color: {{m.faseTinta}}; background: {{m.faseBg}}; padding: 2px 6px; border-radius: 4px;">{{m.fase}}</span>
+          </div>
+
+          <!-- mini calendario: cada punto lleva lo que pasó ese día -->
+          <div style="display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 2px;">
+            <sc-for list="{{m.dias}}" as="d" hint-placeholder-count="35">
+              <div style="position: relative; height: 17px; border-radius: 4px; background: {{d.bg}}; border: 1px solid {{d.borde}}; display: flex; align-items: center; justify-content: center;">
+                <span class="mono" style="font-size: 8px; color: {{d.tinta}};">{{d.n}}</span>
+              </div>
+            </sc-for>
+          </div>
+
+          <!-- gasto contra ingreso, en una sola barra -->
+          <div style="display: flex; flex-direction: column; gap: 4px;">
+            <div style="height: 6px; border-radius: 3px; background: rgba(255,255,255,.07); overflow: hidden; display: flex;">
+              <div style="height: 100%; width: {{m.pctGasto}}; background: {{m.barraColor}};"></div>
+            </div>
+            <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 6px;">
+              <span class="mono" style="font-size: 11px; font-weight: 700; color: {{m.gastoTinta}};">{{m.gasto}}</span>
+              <span class="mono" style="font-size: 9px; color: #8589a8;">{{m.nota}}</span>
+            </div>
+          </div>
+
+        </div>
+      </sc-for>
+    </div>
+
+    <!-- ══ LEYENDA ════════════════════════════════════════════════════ -->
+    <div style="display: flex; align-items: center; gap: 20px; flex-wrap: wrap; padding: 12px 16px; border-radius: 12px; background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.08);">
+      <span class="eyebrow">Cómo leerlo</span>
+      <span style="display: flex; align-items: center; gap: 6px;">
+        <span style="width: 14px; height: 14px; border-radius: 4px; background: rgba(255,92,92,.28);"></span>
+        <span style="font-size: 11px; color: #9a9db3;">día con gasto fuerte</span>
+      </span>
+      <span style="display: flex; align-items: center; gap: 6px;">
+        <span style="width: 14px; height: 14px; border-radius: 4px; background: rgba(0,232,122,.26);"></span>
+        <span style="font-size: 11px; color: #9a9db3;">entra dinero</span>
+      </span>
+      <span style="display: flex; align-items: center; gap: 6px;">
+        <span style="width: 14px; height: 14px; border-radius: 4px; border: 1px solid rgba(255,217,61,.5); background: transparent;"></span>
+        <span style="font-size: 11px; color: #9a9db3;">pago fijo programado</span>
+      </span>
+      <span style="display: flex; align-items: center; gap: 6px;">
+        <span style="width: 14px; height: 14px; border-radius: 4px; border: 1.5px solid #00e0c0; background: rgba(0,224,192,.15);"></span>
+        <span style="font-size: 11px; color: #9a9db3;">hoy</span>
+      </span>
+      <span style="font-size: 11px; color: #8589a8; margin-left: auto;">
+        La barra de cada mes es el gasto sobre tus ingresos de ese mes · los meses en gris no tienen movimientos registrados
+      </span>
+    </div>
+
+  </div>
+</div>
+</x-dc>
+
+<script data-dc-script>
+class Component extends DCLogic {
+  renderVals() {
+    const mx = n => '$' + Math.round(n).toLocaleString('es-MX');
+
+    // Gasto real registrado en finanzasmx_v2, mes a mes. Julio y los meses
+    // futuros no tienen movimientos: se pintan apagados en vez de con un cero,
+    // que se leería como "no gastaste nada".
+    const MES = [
+      { n:'Enero',      dias:31, ini:3, gasto:0,        fase:null },
+      { n:'Febrero',    dias:28, ini:6, gasto:0,        fase:null },
+      { n:'Marzo',      dias:31, ini:6, gasto:31191.98, fase:null },
+      { n:'Abril',      dias:30, ini:2, gasto:31951.98, fase:null },
+      { n:'Mayo',       dias:31, ini:4, gasto:32751.98, fase:null },
+      { n:'Junio',      dias:30, ini:0, gasto:31491.98, fase:null },
+      { n:'Julio',      dias:31, ini:2, gasto:0,        fase:null },
+      { n:'Agosto',     dias:31, ini:5, gasto:10260,    fase:'FASE 0', hoy:29 },
+      { n:'Septiembre', dias:30, ini:1, gasto:0,        fase:'FASE 0' },
+      { n:'Octubre',    dias:31, ini:3, gasto:0,        fase:'FASE 1' },
+      { n:'Noviembre',  dias:30, ini:6, gasto:0,        fase:'FASE 1' },
+      { n:'Diciembre',  dias:31, ini:1, gasto:0,        fase:'FASE 1' },
+    ];
+
+    // Los días fijos salen de datos-maestros: cobros del mes y day de cada deuda.
+    const ENTRA = [1, 15];
+    const SALE  = [1, 11, 14, 15, 17, 18, 22];
+    const FUERTE = [1, 14];
+
+    const INGRESO_MES = 53140;
+
+    const meses = MES.map((m, idx) => {
+      const vivo = m.gasto > 0;
+      const dias = [];
+      for (let i = 0; i < m.ini; i++) dias.push({ n:'', bg:'transparent', borde:'transparent', tinta:'transparent' });
+      for (let d = 1; d <= m.dias; d++) {
+        const hoy = m.hoy === d;
+        const entra = vivo && ENTRA.indexOf(d) !== -1;
+        const fuerte = vivo && FUERTE.indexOf(d) !== -1;
+        const fijo = SALE.indexOf(d) !== -1;
+        dias.push({
+          n: String(d),
+          bg: hoy ? 'rgba(0,224,192,.15)'
+             : fuerte ? 'rgba(255,92,92,.28)'
+             : entra ? 'rgba(0,232,122,.26)'
+             : vivo && fijo ? 'rgba(255,255,255,.05)' : 'rgba(255,255,255,.02)',
+          borde: hoy ? '#00e0c0' : (fijo ? 'rgba(255,217,61,.32)' : 'transparent'),
+          tinta: hoy ? '#00e0c0' : (fuerte || entra ? '#f4f4f8' : '#8589a8'),
+        });
+      }
+      const pct = vivo ? Math.min(100, Math.round((m.gasto / INGRESO_MES) * 100)) : 0;
+      return {
+        nombre: m.n,
+        dias,
+        fase: m.fase || '—',
+        faseTinta: m.fase === 'FASE 0' ? '#05050a' : m.fase ? '#8589a8' : '#8589a8',
+        faseBg: m.fase === 'FASE 0' ? '#ff8a3d' : 'rgba(255,255,255,.06)',
+        gasto: vivo ? mx(m.gasto) : 'sin registrar',
+        gastoTinta: vivo ? '#ff5c5c' : '#8589a8',
+        nota: vivo ? pct + '% de tu ingreso' : '',
+        pctGasto: pct + '%',
+        barraColor: pct > 62 ? '#ff5c5c' : '#f59e0b',
+        borde: m.hoy ? 'rgba(0,224,192,.4)' : 'rgba(255,255,255,.1)',
+        bg: m.hoy ? 'rgba(0,224,192,.05)' : 'rgba(255,255,255,.03)',
+        tinta: vivo || m.hoy ? '#f4f4f8' : '#8589a8',
+        op: vivo || m.fase ? '1' : '.55',
+      };
+    });
+
+    return { meses };
+  }
+}
+</script>
+</body>
+</html>

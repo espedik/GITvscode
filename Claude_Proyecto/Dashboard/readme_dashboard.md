@@ -60,7 +60,7 @@ flechas, los puntos del HUD lateral, o deslizando en táctil.
 | Tema | Pantalla | Qué muestra |
 |---|---|---|
 | `theme-dia` | **Mi Día** | La principal. Tira de 7 días, cinta del día completo, bloque actual, KPIs |
-| `theme-coach` | **Plan Maestro** | Fase activa, ruta de deuda cara, tablero Ahora / Este mes / Hecho |
+| `theme-coach` | **Plan Maestro** | Fase activa, ruta de deuda cara y el tablero calendario / día / semana — ver abajo |
 | `theme-metas` | **Mis Metas** | Corto/mediano plazo con fotos, largo plazo, patrimonio neto |
 | `theme-basicas` | **Habilidades Base** | Guías de vida práctica (trámites, impuestos, red, imagen…) |
 | `theme-skills` | **Habilidades** | Radar de 12 habilidades y prioridades de aprendizaje |
@@ -241,6 +241,74 @@ pero no llevan checkbox ni suman al progreso.
   se la comía.
 - **KPIs de dinero**: salen de `finanzasmx_v2` en vivo, con los saldos ya migrados.
 - **"Importante este mes"**: eventos propios, editables desde el slide.
+
+---
+
+## El tablero del Plan Maestro
+
+La pantalla 2. Tres columnas bajo la banda de fase y la ruta de deuda: **el mes, el día que
+toques y la semana a la que pertenece**. Sustituyó a las tres listas de tareas (Ahora / Este mes
+/ Hecho), que pintaban las 9 tareas de la fase con el mismo peso y sin decir cuándo toca cada una.
+
+Adán, 2026-08-29: *"quiero toda la parte del calendario en esa parte (página 2)… al pasar me das
+información acerca de cuánto gasto cada día, pero debe estar todavía más completo… quiero día por
+día mucha información, al igual que semana por semana"*.
+
+### De dónde sale cada cosa
+
+Ningún importe está escrito en el código del tablero:
+
+| Dato | Fuente |
+|---|---|
+| Gasto e ingreso de cada día | `finanzasmx_v2.transactions`, agrupadas por fecha en `ctMovs(ym)` |
+| Color de cada categoría | `CT_COLOR`, los mismos hex que `CCOLORS` de Finanzas.html |
+| Pagos programados de un día | `CIFRAS.CALENDARIO.cobros` + el `day` de cada deuda viva (`ctAgenda`) |
+| Tareas y fase | `PHASES`, con su estado en `coach_checks_v1` |
+
+`ctAgenda()` es la misma fuente que alimenta el globo del calendario anual, a propósito: dos
+pantallas que dicen qué se paga un día no pueden discrepar.
+
+### El mes
+
+Cada celda lleva su carga sin tocarla: el importe redondeado a miles, una barra verde por lo que
+entró y otra roja o ámbar por lo que salió — la altura es proporcional al día más caro del mes,
+así que el peso se lee de un vistazo. Borde ámbar cuando ese día cae un pago fijo.
+
+Las flechas ‹ › cambian de mes. **Al abrir un mes que no es el actual se elige el primer día con
+movimiento**, no el 1: un mes que se abre en un día vacío parece que no tiene datos.
+
+### El día
+
+Entra, sale, lo que queda, y el desglose por categoría real con su barra de proporción. Debajo,
+lo que está programado ese día.
+
+**Un día sin movimientos enseña el acumulado del MES por categoría** en vez de una columna en
+blanco — en un mes recién empezado casi todos los días están vacíos. Misma pregunta, otra escala,
+y ya estaba calculado.
+
+### La semana
+
+El pulso de gasto de sus días, el total de gasto e ingreso, y las tareas partidas en dos:
+
+- **Ya hiciste** — una tarea cuenta como hecha por dos caminos: su casilla en `coach_checks_v1`,
+  **o** un `✅` dentro de su propio texto, que es como PHASES marca lo ya cumplido. Sin el segundo,
+  un navegador donde Adán aún no había marcado la casilla le enseñaba como pendiente algo cerrado
+  hace dos semanas. Aquí van también los **logros** de `logrosLoad()`, que no se desmarcan porque
+  un saldo cambie.
+- **Esta semana toca** — con su casilla, que sigue escribiendo en `coach_checks_v1` (mismo id que
+  Coach.html).
+
+El reparto es **sobre las pendientes**, no sobre el total: se dividen entre las semanas que quedan
+del mes, así que cuanto menos queda, más carga por semana, y en la última toca todo lo que falte.
+Repartir las 9 entre las 4 semanas dejaba la semana en curso sin nada que hacer con cinco tareas
+pendientes esperando. No son fechas reales y la pantalla lo dice.
+
+### Medidas
+
+A 1600×1000 el tablero ocupa los 748px que le deja la banda de fase, con las tres columnas
+parejas (`flex:1` sobre `.slide-inner`, que ya es flex column). Sin eso se quedaba en 437px y
+media pantalla iba en negro. Cada columna lleva su propio `overflow-y:auto`, para que un mes con
+muchas categorías no empuje el layout.
 
 ---
 

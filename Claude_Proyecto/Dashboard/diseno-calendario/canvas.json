@@ -1,0 +1,70 @@
+{
+  "artboards": [
+    {
+      "file": "Main.dc.html",
+      "x": 0,
+      "y": 0,
+      "w": 1500,
+      "h": 770,
+      "title": "1 · La pantalla",
+      "is_interactive": true
+    },
+    {
+      "file": "Fases.dc.html",
+      "x": 1620,
+      "y": 0,
+      "w": 1500,
+      "h": 540,
+      "title": "2 · Las fases, semana a semana"
+    },
+    {
+      "file": "Ano.dc.html",
+      "x": 0,
+      "y": 1180,
+      "w": 1500,
+      "h": 880,
+      "title": "3 · El año completo"
+    },
+    {
+      "file": "DireccionB.dc.html",
+      "x": 1620,
+      "y": 1180,
+      "w": 1500,
+      "h": 520,
+      "title": "Alternativa · agenda continua"
+    }
+  ],
+  "annotations": [
+    {
+      "id": "nota-principal",
+      "x": 0,
+      "y": -300,
+      "w": 760,
+      "text": "LA PANTALLA — calendario y fases juntos, como pediste\n\nToca cualquier día del calendario y las dos columnas de la derecha cambian con él: el desglose de ese día y la semana a la que pertenece. Es el único artboard con controles vivos, porque aquí la interacción ES el contenido.\n\nCada celda del mes ya dice lo suyo sin tocarla: la cifra del gasto, una barra verde si entró dinero, una roja o ámbar según el peso del gasto, y el borde amarillo cuando ese día cae un pago fijo."
+    },
+    {
+      "id": "nota-fases",
+      "x": 1620,
+      "y": -300,
+      "w": 760,
+      "text": "LAS FASES, PUESTAS EN SEMANAS\n\nPediste que fuera obvio qué toca cada semana y qué ya hiciste. Las 9 tareas de la Fase 0 dejan de ser una lista y se reparten por la semana que les corresponde: lo cerrado a la izquierda con su fecha, la semana en curso destacada, y lo que viene después en su sitio.\n\nLa semana en curso traduce el ritmo a una cifra accionable: $1,316 al fondo esta semana ($188/día × 7)."
+    },
+    {
+      "id": "nota-ano",
+      "x": 0,
+      "y": 900,
+      "w": 760,
+      "text": "EL AÑO — el calendario que ya te gusta, con más carga\n\nCada mes conserva su mini-cuadrícula, y ahora cada día pinta lo que pasó: rojo el gasto fuerte, verde lo que entró, borde amarillo el pago fijo. Debajo, la barra dice qué porcentaje de tu ingreso se fue ese mes.\n\nJulio y los meses futuros salen apagados en vez de con un cero: no tienen movimientos registrados, y un $0 se leería como «no gastaste nada»."
+    },
+    {
+      "id": "nota-alternativa",
+      "x": 1620,
+      "y": 900,
+      "w": 760,
+      "text": "ALTERNATIVA — el mes como lista\n\nCada día es una fila con su desglose entero a la vista, sin tocar nada. A favor: se lee de corrido y no esconde información detrás de un clic.\n\nEn contra: pierdes la forma del mes. En la cuadrícula se ve de un golpe que tus pagos se apelotonan en la primera quincena; en la lista, no. Sirve mejor como repaso semanal que como pantalla diaria."
+    }
+  ],
+  "launch": {
+    "view": "canvas"
+  }
+}

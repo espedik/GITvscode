@@ -1,0 +1,232 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap">
+  <style>
+    body { margin: 0; background: #05050a; color: #f4f4f8;
+           font-family: 'Inter', -apple-system, sans-serif; font-size: 14px; }
+    a { color: #00e0c0; text-decoration: none; } a:hover { color: #4df0da; }
+    .mono { font-family: 'Space Grotesk', monospace; font-variant-numeric: tabular-nums; letter-spacing: -.02em; }
+    .ser  { font-family: 'Fraunces', Georgia, serif; }
+    .eyebrow { font-size: 9.5px; font-weight: 800; letter-spacing: .18em; text-transform: uppercase; color: #8589a8; }
+  </style>
+</helmet>
+
+<div style="position: relative; width: 1500px; min-height: 540px; background: #05050a; overflow: hidden;">
+  <div style="position: absolute; inset: 0; background-image: radial-gradient(ellipse 55% 40% at 20% -5%, rgba(255,138,61,.07) 0%, transparent 60%);"></div>
+
+  <div style="position: relative; display: flex; flex-direction: column; gap: 15px; padding: 24px 26px 26px;">
+
+    <div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 20px;">
+      <div style="display: flex; flex-direction: column; gap: 5px;">
+        <span class="eyebrow" style="color: #ff8a3d;">Plan Maestro · las cuatro fases</span>
+        <span class="ser" style="font-size: 26px; font-weight: 700; line-height: 1.1;">Dónde vas, y qué toca esta semana</span>
+      </div>
+      <div style="display: flex; align-items: baseline; gap: 8px;">
+        <span class="mono" style="font-size: 30px; font-weight: 700; color: #ff8a3d;">31</span>
+        <span style="font-size: 12px; color: #8589a8;">días para cerrar la Fase 0</span>
+      </div>
+    </div>
+
+    <!-- ══ LÍNEA DE LAS 4 FASES ═══════════════════════════════════════ -->
+    <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px;">
+
+      <div style="border-radius: 14px; padding: 1px; background: linear-gradient(140deg, rgba(255,138,61,.6), rgba(255,255,255,.05) 70%);">
+        <div style="border-radius: 13px; background: #0b0a10; padding: 15px 16px; display: flex; flex-direction: column; gap: 10px; height: 100%;">
+          <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px;">
+            <span class="mono" style="font-size: 10px; font-weight: 700; color: #05050a; background: #ff8a3d; padding: 3px 8px; border-radius: 5px;">FASE 0</span>
+            <span class="mono" style="font-size: 9.5px; font-weight: 700; color: #ff8a3d;">EN CURSO</span>
+          </div>
+          <span style="font-size: 13px; font-weight: 700; line-height: 1.35;">Cerrar la fuga y arrancar ingreso</span>
+          <span class="mono" style="font-size: 10px; color: #8589a8;">1 ago → 30 sep 2026</span>
+          <div style="height: 5px; border-radius: 3px; background: rgba(255,255,255,.08); overflow: hidden;">
+            <div style="height: 100%; width: 48%; border-radius: 3px; background: linear-gradient(90deg, #ffd93d, #ff8a3d);"></div>
+          </div>
+          <div style="display: flex; align-items: baseline; justify-content: space-between;">
+            <span class="mono" style="font-size: 15px; font-weight: 700; color: #00e87a;">3<span style="font-size: 10px; color: #8589a8;">/9 hechas</span></span>
+            <span class="mono" style="font-size: 10px; color: #ff8a3d;">48% del tiempo</span>
+          </div>
+        </div>
+      </div>
+
+      <div style="border-radius: 14px; border: 1px solid rgba(255,255,255,.1); background: rgba(255,255,255,.03); padding: 15px 16px; display: flex; flex-direction: column; gap: 10px;">
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px;">
+          <span class="mono" style="font-size: 10px; font-weight: 700; color: #8589a8; background: rgba(255,255,255,.07); padding: 3px 8px; border-radius: 5px;">FASE 1</span>
+          <span class="mono" style="font-size: 9.5px; color: #8589a8;">en 32 días</span>
+        </div>
+        <span style="font-size: 13px; font-weight: 700; line-height: 1.35; color: #9a9db3;">Los $3,145/mes liberados entran en acción</span>
+        <span class="mono" style="font-size: 10px; color: #8589a8;">1 oct 2026 → 31 mar 2027</span>
+        <div style="height: 5px; border-radius: 3px; background: rgba(255,255,255,.06);"></div>
+        <div style="font-size: 10.5px; color: #8589a8; line-height: 1.45;">Meta: bajar BBVA de $34,000 a menos de $15,000 y cobrar el primer peso fuera de ALTEN.</div>
+      </div>
+
+      <div style="border-radius: 14px; border: 1px solid rgba(255,255,255,.08); background: rgba(255,255,255,.02); padding: 15px 16px; display: flex; flex-direction: column; gap: 10px;">
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px;">
+          <span class="mono" style="font-size: 10px; font-weight: 700; color: #8589a8; background: rgba(255,255,255,.06); padding: 3px 8px; border-radius: 5px;">FASE 2</span>
+          <span class="mono" style="font-size: 9.5px; color: #8589a8;">2027-2028</span>
+        </div>
+        <span style="font-size: 13px; font-weight: 700; line-height: 1.35; color: #8589a8;">Doblar apuesta en lo que mostró tracción</span>
+        <span class="mono" style="font-size: 10px; color: #8589a8;">1 abr 2027 → 31 dic 2028</span>
+        <div style="height: 5px; border-radius: 3px; background: rgba(255,255,255,.05);"></div>
+        <div style="font-size: 10.5px; color: #8589a8; line-height: 1.45;">Meta: deuda cara en $0 e ingreso extra estable de $10,000-15,000 al mes.</div>
+      </div>
+
+      <div style="border-radius: 14px; border: 1px solid rgba(255,255,255,.08); background: rgba(255,255,255,.02); padding: 15px 16px; display: flex; flex-direction: column; gap: 10px;">
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px;">
+          <span class="mono" style="font-size: 10px; font-weight: 700; color: #8589a8; background: rgba(255,255,255,.06); padding: 3px 8px; border-radius: 5px;">FASE 3</span>
+          <span class="mono" style="font-size: 9.5px; color: #8589a8;">2029</span>
+        </div>
+        <span style="font-size: 13px; font-weight: 700; line-height: 1.35; color: #8589a8;">Escalar y cerrar la brecha final</span>
+        <span class="mono" style="font-size: 10px; color: #8589a8;">1 ene 2029 → 1 ene 2030</span>
+        <div style="height: 5px; border-radius: 3px; background: rgba(255,255,255,.05);"></div>
+        <div style="font-size: 10.5px; color: #8589a8; line-height: 1.45;">Meta: $1,000,000 líquido, con el negocio como fuente principal del excedente.</div>
+      </div>
+
+    </div>
+
+    <!-- ══ LA FASE EN CURSO, SEMANA A SEMANA ══════════════════════════ -->
+    <div style="display: flex; align-items: baseline; gap: 12px; margin-top: 3px;">
+      <span class="eyebrow" style="color: #ffd93d;">Fase 0, semana a semana</span>
+      <span style="font-size: 11.5px; color: #8589a8;">Las 9 tareas repartidas en las semanas que quedan, no todas juntas en una lista.</span>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; align-items: start;">
+
+      <!-- semanas cerradas -->
+      <div style="border-radius: 13px; border: 1px solid rgba(0,232,122,.2); background: rgba(0,232,122,.05); padding: 14px 15px; display: flex; flex-direction: column; gap: 10px;">
+        <div style="display: flex; align-items: center; justify-content: space-between;">
+          <span class="mono" style="font-size: 10px; font-weight: 700; color: #00e87a;">1-17 AGO</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#00e87a" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"></path></svg>
+        </div>
+        <span class="mono" style="font-size: 22px; font-weight: 700; color: #00e87a;">3<span style="font-size: 11px; color: #8589a8;"> cerradas</span></span>
+        <div style="display: flex; flex-direction: column; gap: 7px;">
+          <div style="display: flex; align-items: flex-start; gap: 7px;">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#00e87a" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; margin-top: 3px; opacity: .8;"><path d="M5 13l4 4L19 7"></path></svg>
+            <div style="display: flex; flex-direction: column; gap: 1px;">
+              <span style="font-size: 11px; color: #9a9db3; line-height: 1.35;">TC Banamex liquidada</span>
+              <span class="mono" style="font-size: 9px; color: #00e87a;">13 ago · $9,000 completos</span>
+            </div>
+          </div>
+          <div style="display: flex; align-items: flex-start; gap: 7px;">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#00e87a" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; margin-top: 3px; opacity: .8;"><path d="M5 13l4 4L19 7"></path></svg>
+            <div style="display: flex; flex-direction: column; gap: 1px;">
+              <span style="font-size: 11px; color: #9a9db3; line-height: 1.35;">Deudas corregidas en Finanzas</span>
+              <span class="mono" style="font-size: 9px; color: #00e87a;">13 ago · cero MSI nuevo</span>
+            </div>
+          </div>
+          <div style="display: flex; align-items: flex-start; gap: 7px;">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#00e87a" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; margin-top: 3px; opacity: .8;"><path d="M5 13l4 4L19 7"></path></svg>
+            <div style="display: flex; flex-direction: column; gap: 1px;">
+              <span style="font-size: 11px; color: #9a9db3; line-height: 1.35;">Maestría en pausa 1 año</span>
+              <span class="mono" style="font-size: 9px; color: #00e87a;">los $53,740 intactos</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- LA SEMANA EN CURSO -->
+      <div style="border-radius: 13px; padding: 1px; background: linear-gradient(150deg, #00e0c0, rgba(0,224,192,.12) 75%);">
+        <div style="border-radius: 12px; background: #071010; padding: 14px 15px; display: flex; flex-direction: column; gap: 10px; height: 100%;">
+          <div style="display: flex; align-items: center; justify-content: space-between;">
+            <span class="mono" style="font-size: 10px; font-weight: 700; color: #05050a; background: #00e0c0; padding: 2px 7px; border-radius: 5px;">ESTA SEMANA</span>
+            <span class="mono" style="font-size: 9.5px; color: #00e0c0;">25-31 ago</span>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <div style="padding: 10px 12px; border-radius: 10px; background: rgba(0,224,192,.09); border: 1px solid rgba(0,224,192,.28);">
+              <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 8px;">
+                <span class="mono" style="font-size: 9px; font-weight: 700; color: #05050a; background: #00e0c0; padding: 2px 5px; border-radius: 4px;">P1</span>
+                <span class="mono" style="font-size: 15px; font-weight: 700; color: #00e0c0;">$1,316</span>
+              </div>
+              <div style="font-size: 11.5px; font-weight: 600; margin-top: 6px; line-height: 1.35;">Abonar al fondo esta semana</div>
+              <div style="font-size: 10px; color: #8589a8; margin-top: 3px; line-height: 1.4;">$188/día × 7. Es lo que te pone al día para cerrar los $10,000 el 30 sep.</div>
+            </div>
+            <div style="display: flex; align-items: flex-start; gap: 8px; padding: 9px 11px; border-radius: 10px; background: rgba(255,255,255,.04);">
+              <span class="mono" style="font-size: 9px; font-weight: 700; color: #ffd93d; border: 1px solid rgba(255,217,61,.4); padding: 2px 5px; border-radius: 4px; flex-shrink: 0;">MKT</span>
+              <div style="display: flex; flex-direction: column; gap: 2px;">
+                <span style="font-size: 11px; font-weight: 600; line-height: 1.35;">Publicar PS5 y monitores</span>
+                <span style="font-size: 9.5px; color: #8589a8; line-height: 1.4;">La vía más rápida al fondo</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- semanas que vienen -->
+      <div style="border-radius: 13px; border: 1px solid rgba(255,255,255,.1); background: rgba(255,255,255,.03); padding: 14px 15px; display: flex; flex-direction: column; gap: 10px;">
+        <div style="display: flex; align-items: center; justify-content: space-between;">
+          <span class="mono" style="font-size: 10px; font-weight: 700; color: #9a9db3;">1-7 SEP</span>
+          <span class="mono" style="font-size: 9px; color: #8589a8;">+1 sem</span>
+        </div>
+        <div style="display: flex; align-items: flex-start; gap: 8px; padding: 9px 11px; border-radius: 10px; background: rgba(255,92,92,.05); border: 1px solid rgba(255,92,92,.15);">
+          <span class="mono" style="font-size: 9px; font-weight: 700; color: #ff5c5c; border: 1px solid rgba(255,92,92,.4); padding: 2px 5px; border-radius: 4px; flex-shrink: 0;">D1</span>
+          <div style="display: flex; flex-direction: column; gap: 2px;">
+            <span style="font-size: 11px; font-weight: 600; line-height: 1.35;">Renta + iPhone AT&amp;T</span>
+            <span class="mono" style="font-size: 9.5px; color: #ff5c5c;">−$11,494 el día 1</span>
+          </div>
+        </div>
+        <div style="display: flex; align-items: flex-start; gap: 8px; padding: 9px 11px; border-radius: 10px; background: rgba(255,255,255,.04);">
+          <span class="mono" style="font-size: 9px; font-weight: 700; color: #ffd93d; border: 1px solid rgba(255,217,61,.4); padding: 2px 5px; border-radius: 4px; flex-shrink: 0;">GBM</span>
+          <div style="display: flex; flex-direction: column; gap: 2px;">
+            <span style="font-size: 11px; font-weight: 600; line-height: 1.35;">Plantilla Finanzas.html</span>
+            <span style="font-size: 9.5px; color: #8589a8; line-height: 1.4;">Versión limpia + post de venta</span>
+          </div>
+        </div>
+      </div>
+
+      <div style="border-radius: 13px; border: 1px solid rgba(255,255,255,.1); background: rgba(255,255,255,.03); padding: 14px 15px; display: flex; flex-direction: column; gap: 10px;">
+        <div style="display: flex; align-items: center; justify-content: space-between;">
+          <span class="mono" style="font-size: 10px; font-weight: 700; color: #9a9db3;">8-21 SEP</span>
+          <span class="mono" style="font-size: 9px; color: #8589a8;">+2 sem</span>
+        </div>
+        <div style="display: flex; align-items: flex-start; gap: 8px; padding: 9px 11px; border-radius: 10px; background: rgba(255,217,61,.05); border: 1px solid rgba(255,217,61,.16);">
+          <span class="mono" style="font-size: 9px; font-weight: 700; color: #ffd93d; border: 1px solid rgba(255,217,61,.4); padding: 2px 5px; border-radius: 4px; flex-shrink: 0;">D18</span>
+          <div style="display: flex; flex-direction: column; gap: 2px;">
+            <span style="font-size: 11px; font-weight: 600; line-height: 1.35;">Última cuota Apple Watch</span>
+            <span class="mono" style="font-size: 9.5px; color: #ffd93d;">$854 · y se acaba</span>
+          </div>
+        </div>
+        <div style="display: flex; align-items: flex-start; gap: 8px; padding: 9px 11px; border-radius: 10px; background: rgba(255,255,255,.04);">
+          <span class="mono" style="font-size: 9px; font-weight: 700; color: #b06eff; border: 1px solid rgba(176,110,255,.4); padding: 2px 5px; border-radius: 4px; flex-shrink: 0;">NEG</span>
+          <div style="display: flex; flex-direction: column; gap: 2px;">
+            <span style="font-size: 11px; font-weight: 600; line-height: 1.35;">Material del negocio de tu papá</span>
+            <span style="font-size: 9.5px; color: #8589a8; line-height: 1.4;">Primer paso de la Opción 5</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- el cierre -->
+      <div style="border-radius: 13px; border: 1px solid rgba(255,138,61,.3); background: rgba(255,138,61,.06); padding: 14px 15px; display: flex; flex-direction: column; gap: 10px;">
+        <div style="display: flex; align-items: center; justify-content: space-between;">
+          <span class="mono" style="font-size: 10px; font-weight: 700; color: #ff8a3d;">22-30 SEP</span>
+          <span class="mono" style="font-size: 9px; color: #ff8a3d;">cierre</span>
+        </div>
+        <span class="ser" style="font-size: 15px; font-weight: 700; line-height: 1.25;">Cierra la Fase 0</span>
+        <div style="font-size: 10.5px; color: #9a9db3; line-height: 1.5;">
+          Todo lo que no cierres aquí se arrastra a la Fase 1. El 1 de octubre entran los
+          <span class="mono" style="color: #00e87a; font-weight: 700;">$3,145/mes</span> liberados de MSI.
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 5px; padding-top: 2px;">
+          <div style="display: flex; align-items: baseline; justify-content: space-between;">
+            <span style="font-size: 10.5px; color: #8589a8;">Fondo debe estar en</span>
+            <span class="mono" style="font-size: 13px; font-weight: 700; color: #00e0c0;">$10,000</span>
+          </div>
+          <div style="display: flex; align-items: baseline; justify-content: space-between;">
+            <span style="font-size: 10.5px; color: #8589a8;">Hoy llevas</span>
+            <span class="mono" style="font-size: 13px; font-weight: 700;">$4,000</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

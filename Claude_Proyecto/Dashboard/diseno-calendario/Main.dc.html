@@ -1,0 +1,447 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap">
+  <style>
+    body { margin: 0; background: #05050a; color: #f4f4f8;
+           font-family: 'Inter', -apple-system, sans-serif; font-size: 14px; }
+    a { color: #00e0c0; text-decoration: none; } a:hover { color: #4df0da; }
+    .mono { font-family: 'Space Grotesk', monospace; font-variant-numeric: tabular-nums; letter-spacing: -.02em; }
+    .ser  { font-family: 'Fraunces', Georgia, serif; }
+    .eyebrow { font-size: 9.5px; font-weight: 800; letter-spacing: .18em; text-transform: uppercase; color: #8589a8; }
+    .dia { cursor: pointer; transition: background .13s, border-color .13s; }
+    .dia:hover { background: rgba(255,255,255,.09); }
+  </style>
+</helmet>
+
+<div style="position: relative; width: 1500px; min-height: 770px; background: #05050a; overflow: hidden;">
+  <div style="position: absolute; inset: 0; background-image: radial-gradient(ellipse 60% 45% at 15% -5%, rgba(0,224,192,.07) 0%, transparent 60%), radial-gradient(ellipse 50% 40% at 88% 105%, rgba(255,138,61,.06) 0%, transparent 60%);"></div>
+
+  <div style="position: relative; display: flex; flex-direction: column; gap: 13px; padding: 22px 26px 26px;">
+
+    <!-- ══ BANDA DE FASE ══════════════════════════════════════════════ -->
+    <div style="display: flex; align-items: center; gap: 22px; padding: 15px 20px; border-radius: 15px; border: 1px solid rgba(255,138,61,.26); background: linear-gradient(100deg, rgba(255,138,61,.10), rgba(255,255,255,.02) 55%);">
+      <div style="display: flex; align-items: center; gap: 13px; flex-shrink: 0;">
+        <span class="mono" style="font-size: 10px; font-weight: 700; letter-spacing: .08em; color: #05050a; background: #ff8a3d; padding: 4px 9px; border-radius: 6px;">FASE 0</span>
+        <span class="ser" style="font-size: 21px; font-weight: 700; letter-spacing: -.01em;">Cerrar la fuga y arrancar ingreso</span>
+      </div>
+
+      <div style="flex: 1; display: flex; flex-direction: column; gap: 5px; min-width: 0;">
+        <div style="height: 5px; border-radius: 3px; background: rgba(255,255,255,.09); position: relative; overflow: hidden;">
+          <div style="position: absolute; inset: 0 52% 0 0; border-radius: 3px; background: linear-gradient(90deg, #ffd93d, #ff8a3d);"></div>
+        </div>
+        <div style="display: flex; justify-content: space-between;">
+          <span class="mono" style="font-size: 9.5px; color: #8589a8;">1 ago</span>
+          <span class="mono" style="font-size: 9.5px; color: #ff8a3d; font-weight: 700;">día 29 de 61</span>
+          <span class="mono" style="font-size: 9.5px; color: #8589a8;">30 sep</span>
+        </div>
+      </div>
+
+      <!-- los dos ritmos, que es lo accionable de la fase -->
+      <div style="display: flex; gap: 9px; flex-shrink: 0;">
+        <div style="padding: 8px 13px; border-radius: 10px; border: 1px solid rgba(0,224,192,.3); background: rgba(0,224,192,.08); text-align: right;">
+          <div class="eyebrow" style="color: #00e0c0;">Fondo</div>
+          <div class="mono" style="font-size: 19px; font-weight: 700; color: #00e0c0; margin-top: 2px;">$188<span style="font-size: 10px; color: #8589a8;">/día</span></div>
+        </div>
+        <div style="padding: 8px 13px; border-radius: 10px; border: 1px solid rgba(255,92,92,.28); background: rgba(255,92,92,.07); text-align: right;">
+          <div class="eyebrow" style="color: #ff5c5c;">TC BBVA</div>
+          <div class="mono" style="font-size: 19px; font-weight: 700; color: #ff5c5c; margin-top: 2px;">$124<span style="font-size: 10px; color: #8589a8;">/día</span></div>
+        </div>
+        <div style="padding: 8px 13px; border-radius: 10px; border: 1px solid rgba(255,255,255,.1); background: rgba(255,255,255,.03); text-align: right;">
+          <div class="eyebrow">Quedan</div>
+          <div class="mono" style="font-size: 19px; font-weight: 700; margin-top: 2px;">31<span style="font-size: 10px; color: #8589a8;">días</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ EL TABLERO ═════════════════════════════════════════════════ -->
+    <div style="display: grid; grid-template-columns: minmax(0, 1.32fr) minmax(0, 1fr) minmax(0, 1fr); gap: 13px; align-items: start;">
+
+      <!-- ── COLUMNA 1 · EL MES ─────────────────────────────────────── -->
+      <div style="border-radius: 15px; border: 1px solid rgba(255,255,255,.13); background: rgba(255,255,255,.035); padding: 16px 17px; display: flex; flex-direction: column; gap: 13px;">
+
+        <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 12px;">
+          <div style="display: flex; align-items: baseline; gap: 10px;">
+            <span class="ser" style="font-size: 19px; font-weight: 700;">{{mes.nombre}}</span>
+            <span class="mono" style="font-size: 10px; color: #8589a8;">{{mes.fase}}</span>
+          </div>
+          <div style="display: flex; align-items: baseline; gap: 7px;">
+            <span class="eyebrow">gastaste</span>
+            <span class="mono" style="font-size: 16px; font-weight: 700; color: #ff5c5c;">{{mes.gasto}}</span>
+          </div>
+        </div>
+
+        <!-- cabecera L M M J V S D -->
+        <div style="display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 3px;">
+          <sc-for list="{{dow}}" as="d" hint-placeholder-count="7">
+            <span class="mono" style="font-size: 9px; color: #8589a8; text-align: center;">{{d}}</span>
+          </sc-for>
+        </div>
+
+        <!-- la cuadrícula: cada día lleva su carga -->
+        <div style="display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 3px;">
+          <sc-for list="{{dias}}" as="d" hint-placeholder-count="35">
+            <div class="dia" onClick="{{d.pick}}" style="position: relative; height: 52px; border-radius: 8px; padding: 5px 5px 4px; display: flex; flex-direction: column; justify-content: space-between; background: {{d.bg}}; border: 1px solid {{d.borde}}; opacity: {{d.op}};">
+              <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 2px;">
+                <span class="mono" style="font-size: 11.5px; font-weight: 700; color: {{d.tinta}};">{{d.n}}</span>
+                <span class="mono" style="font-size: 8px; color: {{d.tintaMonto}};">{{d.monto}}</span>
+              </div>
+              <div style="display: flex; gap: 2px; align-items: flex-end; height: 14px;">
+                <sc-for list="{{d.barras}}" as="b" hint-placeholder-count="2">
+                  <span style="width: {{b.w}}; height: {{b.h}}; border-radius: 1.5px; background: {{b.c}};"></span>
+                </sc-for>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+
+        <!-- leyenda: qué significa cada color de barra -->
+        <div style="display: flex; flex-wrap: wrap; gap: 9px; padding-top: 2px;">
+          <sc-for list="{{leyenda}}" as="l" hint-placeholder-count="5">
+            <span style="display: flex; align-items: center; gap: 4px;">
+              <span style="width: 7px; height: 7px; border-radius: 2px; background: {{l.c}};"></span>
+              <span style="font-size: 9.5px; color: #8589a8;">{{l.n}}</span>
+            </span>
+          </sc-for>
+        </div>
+      </div>
+
+      <!-- ── COLUMNA 2 · EL DÍA ─────────────────────────────────────── -->
+      <div style="border-radius: 15px; padding: 1px; background: linear-gradient(150deg, rgba(0,224,192,.45), rgba(255,255,255,.05) 65%);">
+        <div style="border-radius: 14px; background: #0a0a14; padding: 16px 17px; display: flex; flex-direction: column; gap: 13px;">
+
+          <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 10px;">
+            <div style="display: flex; flex-direction: column; gap: 3px;">
+              <span class="eyebrow" style="color: #00e0c0;">El día</span>
+              <span class="ser" style="font-size: 19px; font-weight: 700; line-height: 1.15;">{{dia.titulo}}</span>
+            </div>
+            <span class="mono" style="font-size: 9.5px; color: {{dia.cuentaTinta}}; background: {{dia.cuentaBg}}; padding: 3px 8px; border-radius: 6px; white-space: nowrap;">{{dia.cuenta}}</span>
+          </div>
+
+          <!-- entra / sale / queda -->
+          <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px;">
+            <div style="padding: 10px 12px; border-radius: 10px; background: rgba(0,232,122,.07); border: 1px solid rgba(0,232,122,.18);">
+              <div class="eyebrow" style="color: #00e87a;">Entra</div>
+              <div class="mono" style="font-size: 19px; font-weight: 700; color: #00e87a; margin-top: 3px;">{{dia.entra}}</div>
+            </div>
+            <div style="padding: 10px 12px; border-radius: 10px; background: rgba(255,92,92,.06); border: 1px solid rgba(255,92,92,.16);">
+              <div class="eyebrow" style="color: #ff5c5c;">Sale</div>
+              <div class="mono" style="font-size: 19px; font-weight: 700; color: #ff5c5c; margin-top: 3px;">{{dia.sale}}</div>
+            </div>
+          </div>
+
+          <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 10px; padding: 9px 12px; border-radius: 10px; background: rgba(255,255,255,.04);">
+            <span style="font-size: 11.5px; color: #9a9db3;">Te queda ese día</span>
+            <span class="mono" style="font-size: 17px; font-weight: 700; color: {{dia.saldoTinta}};">{{dia.saldo}}</span>
+          </div>
+
+          <!-- en qué se fue, por categoría real de Finanzas -->
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <div style="display: flex; align-items: baseline; justify-content: space-between;">
+              <span class="eyebrow">En qué se fue</span>
+              <span class="mono" style="font-size: 9.5px; color: #8589a8;">{{dia.nMovs}}</span>
+            </div>
+            <sc-for list="{{dia.cats}}" as="c" hint-placeholder-count="4">
+              <div style="display: flex; flex-direction: column; gap: 3px;">
+                <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 8px;">
+                  <span style="display: flex; align-items: center; gap: 6px; min-width: 0;">
+                    <span style="width: 8px; height: 8px; border-radius: 2px; background: {{c.color}}; flex-shrink: 0;"></span>
+                    <span style="font-size: 11.5px; color: #f4f4f8; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{c.n}}</span>
+                  </span>
+                  <span class="mono" style="font-size: 12.5px; font-weight: 700; flex-shrink: 0;">{{c.monto}}</span>
+                </div>
+                <div style="height: 4px; border-radius: 2px; background: rgba(255,255,255,.06); overflow: hidden;">
+                  <div style="height: 100%; width: {{c.pct}}; background: {{c.color}}; border-radius: 2px;"></div>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+
+          <div style="height: 1px; background: rgba(255,255,255,.07);"></div>
+
+          <!-- lo que toca hacer ese día -->
+          <div style="display: flex; flex-direction: column; gap: 7px;">
+            <span class="eyebrow">Lo que pasa ese día</span>
+            <sc-for list="{{dia.eventos}}" as="e" hint-placeholder-count="2">
+              <div style="display: flex; align-items: flex-start; gap: 8px; padding: 8px 10px; border-radius: 9px; background: {{e.bg}}; border: 1px solid {{e.borde}};">
+                <span style="width: 6px; height: 6px; border-radius: 50%; background: {{e.color}}; flex-shrink: 0; margin-top: 4px;"></span>
+                <div style="display: flex; flex-direction: column; gap: 1px; min-width: 0;">
+                  <span style="font-size: 11.5px; font-weight: 600; color: #f4f4f8;">{{e.t}}</span>
+                  <span style="font-size: 10px; color: #8589a8;">{{e.sub}}</span>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ── COLUMNA 3 · LA SEMANA ──────────────────────────────────── -->
+      <div style="border-radius: 15px; border: 1px solid rgba(255,255,255,.13); background: rgba(255,255,255,.035); padding: 16px 17px; display: flex; flex-direction: column; gap: 13px;">
+
+        <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 10px;">
+          <div style="display: flex; flex-direction: column; gap: 3px;">
+            <span class="eyebrow" style="color: #b06eff;">La semana</span>
+            <span class="ser" style="font-size: 19px; font-weight: 700; line-height: 1.15;">{{sem.titulo}}</span>
+          </div>
+          <span class="mono" style="font-size: 9.5px; color: #8589a8; white-space: nowrap;">{{sem.rango}}</span>
+        </div>
+
+        <!-- el pulso de la semana: gasto de cada día -->
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+          <span class="eyebrow">Gasto de cada día</span>
+          <div style="display: flex; align-items: flex-end; gap: 5px; height: 58px; padding-bottom: 1px; border-bottom: 1px solid rgba(255,255,255,.1);">
+            <sc-for list="{{sem.pulso}}" as="p" hint-placeholder-count="7">
+              <div style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 3px; height: 100%;">
+                <span class="mono" style="font-size: 8.5px; font-weight: 700; color: {{p.tinta}};">{{p.txt}}</span>
+                <div style="width: 100%; height: {{p.h}}; border-radius: 3px 3px 0 0; background: {{p.c}}; min-height: 3px;"></div>
+              </div>
+            </sc-for>
+          </div>
+          <div style="display: flex; gap: 5px;">
+            <sc-for list="{{sem.pulso}}" as="p" hint-placeholder-count="7">
+              <span class="mono" style="flex: 1; font-size: 9px; color: {{p.diaTinta}}; text-align: center;">{{p.d}}</span>
+            </sc-for>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px;">
+          <div style="padding: 9px 11px; border-radius: 10px; background: rgba(255,255,255,.04);">
+            <div class="eyebrow">Gasto</div>
+            <div class="mono" style="font-size: 17px; font-weight: 700; color: #ff5c5c; margin-top: 2px;">{{sem.gasto}}</div>
+          </div>
+          <div style="padding: 9px 11px; border-radius: 10px; background: rgba(255,255,255,.04);">
+            <div class="eyebrow">Ingreso</div>
+            <div class="mono" style="font-size: 17px; font-weight: 700; color: #00e87a; margin-top: 2px;">{{sem.ingreso}}</div>
+          </div>
+        </div>
+
+        <div style="height: 1px; background: rgba(255,255,255,.07);"></div>
+
+        <!-- QUÉ HICE / QUÉ SIGUE — lo que el brief pide que sea obvio -->
+        <div style="display: flex; flex-direction: column; gap: 9px;">
+          <div style="display: flex; align-items: center; gap: 7px;">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#00e87a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"></path></svg>
+            <span class="eyebrow" style="color: #00e87a;">Ya hiciste · {{sem.nHechas}}</span>
+          </div>
+          <sc-for list="{{sem.hechas}}" as="h" hint-placeholder-count="2">
+            <div style="display: flex; align-items: flex-start; gap: 8px; padding-left: 3px;">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#00e87a" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; margin-top: 3px; opacity: .75;"><path d="M5 13l4 4L19 7"></path></svg>
+              <span style="font-size: 11.5px; color: #9a9db3; line-height: 1.4;">{{h}}</span>
+            </div>
+          </sc-for>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 9px;">
+          <div style="display: flex; align-items: center; gap: 7px;">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#ffd93d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18"></path><path d="M5 10l7-7 7 7"></path></svg>
+            <span class="eyebrow" style="color: #ffd93d;">Esta semana toca · {{sem.nToca}}</span>
+          </div>
+          <sc-for list="{{sem.toca}}" as="t" hint-placeholder-count="2">
+            <div style="display: flex; align-items: flex-start; gap: 9px; padding: 9px 11px; border-radius: 10px; background: rgba(255,217,61,.06); border: 1px solid rgba(255,217,61,.2);">
+              <span class="mono" style="font-size: 9px; font-weight: 700; color: #05050a; background: #ffd93d; padding: 2px 5px; border-radius: 4px; flex-shrink: 0;">{{t.tag}}</span>
+              <div style="display: flex; flex-direction: column; gap: 2px; min-width: 0;">
+                <span style="font-size: 11.5px; font-weight: 600; color: #f4f4f8; line-height: 1.35;">{{t.t}}</span>
+                <span style="font-size: 10px; color: #8589a8; line-height: 1.4;">{{t.sub}}</span>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</div>
+</x-dc>
+
+<script data-dc-script>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { sel: '2026-06-01' };
+  }
+
+  renderVals() {
+    const mx  = n => '$' + Math.round(Math.abs(n)).toLocaleString('es-MX');
+    const mx0 = n => n === 0 ? '—' : mx(n);
+
+    // Colores de categoría: los mismos que Finanzas.html usa en CCOLORS.
+    const COL = {
+      'Hogar/Renta': '#eab308', 'Deudas': '#64748b', 'Servicios': '#ec4899',
+      'Suscripciones': '#14b8a6', 'Salud': '#22c55e', 'Alimentación': '#ef4444',
+      'Restaurantes': '#f59e0b', 'Entretenimiento': '#06b6d4', 'Transporte': '#f97316',
+      'Viajes': '#10b981', 'Salario': '#3b82f6', 'Bonos': '#22c55e',
+      'Freelance/Honorarios': '#8b5cf6',
+    };
+
+    // Movimientos reales de junio 2026, tal como están en finanzasmx_v2.
+    const MOV = {
+      '2026-06-01': [
+        { c:'Salario', a:41000, in:true, d:'Salario ALTEN' },
+        { c:'Salario', a:940, in:true, d:'Tarjeta Si Vale' },
+        { c:'Hogar/Renta', a:11000, d:'Renta departamento' },
+        { c:'Deudas', a:6700, d:'Crédito automotriz' },
+        { c:'Salud', a:1500, d:'Gym' },
+        { c:'Servicios', a:600, d:'Plan de datos celular' },
+        { c:'Suscripciones', a:493.98, d:'iPhone 15 (4/27)' },
+        { c:'Suscripciones', a:380, d:'Claude Code' },
+        { c:'Servicios', a:200, d:'Internet' },
+        { c:'Servicios', a:179, d:'Gas' },
+        { c:'Hogar/Renta', a:150, d:'Artículos de limpieza' },
+        { c:'Servicios', a:135, d:'Agua y luz' },
+        { c:'Suscripciones', a:50, d:'iCloud' },
+      ],
+      '2026-06-05': [{ c:'Alimentación', a:2500, d:'Supermercado' }],
+      '2026-06-12': [{ c:'Restaurantes', a:1500, d:'Restaurantes' }],
+      '2026-06-15': [{ c:'Entretenimiento', a:2500, d:'Salidas / entretenimiento' }],
+      '2026-06-16': [
+        { c:'Suscripciones', a:854, d:'Apple Watch (10/12)' },
+        { c:'Deudas', a:1500, d:'Mínimo TC BBVA' },
+        { c:'Deudas', a:810, d:'Mínimo TC Banamex' },
+        { c:'Viajes', a:440, d:'Vuelo Viva Aerobus (10/12)' },
+      ],
+      '2026-06-20': [{ c:'Bonos', a:5000, in:true, d:'PTU — Bosch' }],
+      '2026-06-28': [{ c:'Freelance/Honorarios', a:11200, in:true, d:'Didi — conductor' }],
+    };
+
+    // Lo que el calendario ya sabía: cobros fijos y días de pago de las deudas.
+    const AGENDA = {
+      1:  [{ t:'Renta', sub:'Sale el día 1 · $11,000', c:'#ff5c5c' },
+           { t:'Quincena 1', sub:'Entra a BBVA · $20,500', c:'#00e87a' },
+           { t:'iPhone · crédito AT&T', sub:'$494 · hasta jun 2028', c:'#ff5c5c' }],
+      14: [{ t:'Crédito automotriz', sub:'$6,700 · quedan 61 meses', c:'#ff5c5c' }],
+      15: [{ t:'Quincena 2', sub:'Entra a BBVA · $20,500', c:'#00e87a' },
+           { t:'CETES', sub:'Apartas $1,500 · ~11% anual', c:'#00e0c0' }],
+      11: [{ t:'Mínimo TC BBVA', sub:'$1,500 — no cubre el interés', c:'#ff5c5c' }],
+      17: [{ t:'Total Pass', sub:'$650 · gimnasio', c:'#ff5c5c' }],
+      18: [{ t:'Apple Watch — última cuota', sub:'$854 · se acaba aquí', c:'#ffd93d' }],
+      22: [{ t:'Zap Stylo', sub:'$167 · quedan 2 cuotas', c:'#ff5c5c' }],
+    };
+
+    const gastoDe = k => (MOV[k] || []).filter(m => !m.in).reduce((s, m) => s + m.a, 0);
+    const ingrDe  = k => (MOV[k] || []).filter(m =>  m.in).reduce((s, m) => s + m.a, 0);
+
+    // ── La cuadrícula del mes ──
+    // Junio 2026 empieza en lunes y tiene 30 días.
+    const maxGasto = Math.max(...Object.keys(MOV).map(gastoDe));
+    const dias = [];
+    for (let n = 1; n <= 30; n++) {
+      const k = '2026-06-' + String(n).padStart(2, '0');
+      const g = gastoDe(k), i = ingrDe(k);
+      const sel = this.state.sel === k;
+      const finde = ((n - 1) % 7) >= 5;
+      const barras = [];
+      if (i > 0) barras.push({ c:'#00e87a', w:'100%', h: Math.max(3, Math.round((i / 41940) * 13)) + 'px' });
+      if (g > 0) barras.push({ c: g > 6000 ? '#ff5c5c' : '#f59e0b', w:'100%', h: Math.max(3, Math.round((g / maxGasto) * 13)) + 'px' });
+      dias.push({
+        n: String(n),
+        monto: g > 0 ? '−' + Math.round(g / 1000) + 'k' : (i > 0 ? '+' + Math.round(i / 1000) + 'k' : ''),
+        tintaMonto: g > 0 ? '#ff5c5c' : '#00e87a',
+        tinta: sel ? '#00e0c0' : (finde ? '#8589a8' : '#f4f4f8'),
+        bg: sel ? 'rgba(0,224,192,.11)' : (g > 0 || i > 0 ? 'rgba(255,255,255,.05)' : 'transparent'),
+        borde: sel ? '#00e0c0' : (AGENDA[n] ? 'rgba(255,217,61,.28)' : 'rgba(255,255,255,.07)'),
+        op: finde && !sel ? '.72' : '1',
+        barras,
+        pick: () => this.setState({ sel: k }),
+      });
+    }
+
+    // ── El día elegido ──
+    const k = this.state.sel;
+    const n = +k.slice(8);
+    const movs = MOV[k] || [];
+    const g = gastoDe(k), i = ingrDe(k);
+    const porCat = {};
+    movs.filter(m => !m.in).forEach(m => { porCat[m.c] = (porCat[m.c] || 0) + m.a; });
+    const cats = Object.entries(porCat).sort((a, b) => b[1] - a[1]).map(([c, a]) => ({
+      n: c, monto: mx(a), color: COL[c] || '#94a3b8', pct: Math.round((a / (g || 1)) * 100) + '%',
+    }));
+    const DOW = ['lunes','martes','miércoles','jueves','viernes','sábado','domingo'];
+    const eventos = (AGENDA[n] || []).map(e => ({
+      t: e.t, sub: e.sub, color: e.c,
+      bg: e.c === '#00e87a' ? 'rgba(0,232,122,.06)' : e.c === '#00e0c0' ? 'rgba(0,224,192,.06)' : 'rgba(255,255,255,.035)',
+      borde: e.c === '#00e87a' ? 'rgba(0,232,122,.18)' : 'rgba(255,255,255,.08)',
+    }));
+    if (!eventos.length) eventos.push({ t:'Sin pagos programados', sub:'Nada fijo cae este día', color:'#8589a8', bg:'rgba(255,255,255,.03)', borde:'rgba(255,255,255,.07)' });
+
+    const dia = {
+      titulo: DOW[(n - 1) % 7].charAt(0).toUpperCase() + DOW[(n - 1) % 7].slice(1) + ' ' + n + ' de junio',
+      cuenta: movs.length ? movs.length + ' movimientos' : 'sin registrar',
+      cuentaTinta: movs.length ? '#00e0c0' : '#8589a8',
+      cuentaBg: movs.length ? 'rgba(0,224,192,.12)' : 'rgba(255,255,255,.05)',
+      entra: mx0(i), sale: mx0(g),
+      saldo: (i - g >= 0 ? '+' : '−') + mx(i - g),
+      saldoTinta: i - g >= 0 ? '#00e87a' : '#ff5c5c',
+      nMovs: g > 0 ? cats.length + ' categorías' : '',
+      cats, eventos,
+    };
+
+    // ── La semana que contiene ese día ──
+    const sm = n <= 7 ? 1 : n <= 14 ? 2 : n <= 21 ? 3 : 4;
+    const ini = (sm - 1) * 7 + 1, fin = Math.min(sm * 7, 30);
+    const pulso = [];
+    let gSem = 0, iSem = 0;
+    const maxSem = (() => { let m = 0; for (let d = ini; d <= fin; d++) m = Math.max(m, gastoDe('2026-06-' + String(d).padStart(2,'0'))); return m || 1; })();
+    for (let d = ini; d <= fin; d++) {
+      const kk = '2026-06-' + String(d).padStart(2, '0');
+      const gg = gastoDe(kk), ii = ingrDe(kk);
+      gSem += gg; iSem += ii;
+      const hoy = d === 1;   // el dia elegido, para que se distinga en la tira
+      pulso.push({
+        d: String(d),
+        h: gg > 0 ? Math.max(8, Math.round((gg / maxSem) * 34)) + 'px' : '3px',
+        c: gg > 0 ? (gg > 6000 ? '#ff5c5c' : '#f59e0b')
+           : (ii > 0 ? '#00e87a' : 'rgba(255,255,255,.13)'),
+        txt: gg > 0 ? '$' + Math.round(gg / 1000) + 'k' : (ii > 0 ? 'entra' : ''),
+        tinta: gg > 0 ? '#9a9db3' : '#00e87a',
+        diaTinta: d === n ? '#00e0c0' : '#8589a8',
+      });
+    }
+
+    // Las tareas de la Fase 0, repartidas por la semana que les toca.
+    const SEMANAS = {
+      1: { hechas: ['Liquidar la TC Banamex — pagaste los $9,000 completos', 'Corregir "Deudas" en Finanzas.html · cero MSI nuevo'],
+           toca: [{ tag:'P1', t:'Fondo de emergencia a $10,000', sub:'Antes de cualquier abono extra. Faltan $6,000 · $188/día' }] },
+      2: { hechas: ['Pausa aportaciones a la Maestría 1 año — los $53,740 quedan intactos'],
+           toca: [{ tag:'P1', t:'Fondo de emergencia a $10,000', sub:'Faltan $6,000 · $188/día para llegar al 30 sep' },
+                  { tag:'MKT', t:'Sube a Marketplace tus activos ociosos', sub:'PS5, control, monitores, iPad — la vía más rápida al fondo' }] },
+      3: { hechas: ['TC Banamex liquidada', 'Boletos Ticketmaster (MSI) pagados'],
+           toca: [{ tag:'P2', t:'Liquidar la TC BBVA ($34,000)', sub:'El mínimo no cubre el interés: sube $78 al mes' },
+                  { tag:'GBM', t:'Plantilla Finanzas.html, de principio a fin', sub:'Versión limpia + post de venta + 2-3 comunidades' }] },
+      4: { hechas: [],
+           toca: [{ tag:'NEG', t:'Revisar el material del negocio de tu papá', sub:'Primer paso concreto de la Opción 5' }] },
+    };
+    const S = SEMANAS[sm];
+
+    const sem = {
+      titulo: 'Semana ' + sm + ' de junio',
+      rango: ini + ' al ' + fin,
+      pulso, gasto: mx0(gSem), ingreso: mx0(iSem),
+      hechas: S.hechas.length ? S.hechas : ['Nada cerrado todavía en esta semana'],
+      nHechas: S.hechas.length,
+      toca: S.toca, nToca: S.toca.length,
+    };
+
+    return {
+      mes: { nombre: 'Junio 2026', fase: 'Fase 0 · antes del plan', gasto: mx(31492) },
+      dias, dia, sem,
+      dow: ['L','M','M','J','V','S','D'],
+      leyenda: [
+        { c:'#00e87a', n:'entra dinero' },
+        { c:'#ff5c5c', n:'gasto fuerte' },
+        { c:'#f59e0b', n:'gasto normal' },
+        { c:'rgba(255,217,61,.55)', n:'borde: hay pago fijo' },
+      ],
+    };
+  }
+}
+</script>
+</body>
+</html>
