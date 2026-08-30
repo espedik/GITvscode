@@ -377,8 +377,13 @@ movió por desglosarlos: es el mismo dinero, ahora dicho en tres líneas. No hay
 (el recetario solo cubre desayuno y cena), y por eso ese tiempo es el resto y no un promedio —
 si algún día se añaden, el reparto se afina solo.
 
-Cada tiempo lleva su color y se ve en las tres columnas: ámbar el desayuno, rojo la comida,
-naranja la cena.
+Cada tiempo lleva su color —ámbar el desayuno, rojo la comida, naranja la cena— y se ven
+separados **en el panel del día**, que es donde se decide qué comer.
+
+**Por semana van juntos.** Adán, el mismo día, viendo tres barras de comida en la columna de la
+semana: *"aqui por sema si juntame cuanto gasto en comida, cena y desayuno juntos y no
+separados"*. Ahí la pregunta es otra —cuánto pesa comer frente al crédito o la renta—, y tres
+líneas de $426, $263 y $116 la contestaban peor que una de `Comer · 7 días · $805`.
 
 ### El plan de datos de AT&T
 

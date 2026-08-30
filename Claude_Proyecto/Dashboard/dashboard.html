@@ -6355,11 +6355,10 @@ function renderCoachTablero(){
     if(wDia[a.t] === undefined) wDia[a.t] = d;   // si cayera dos veces, la primera manda
   });
   const wDias = W.fin - W.ini + 1;
-  const TIEMPOS_S = (ctComida()||{}).tiempos;
-  if(W.come > 0){
-    if(TIEMPOS_S) TIEMPOS_S.forEach(function(x){ wSale[x.n+'s · '+wDias+(wDias===1?' día':' días')] = x.m * wDias; });
-    else wSale['Comer · '+wDias+(wDias===1?' día':' días')] = W.come;
-  }
+  // Por semana la comida va JUNTA (Adán, 2026-08-30: "aqui por sema si juntame cuanto
+  // gasto en comida, cena y desayuno juntos y no separados"). Los tres tiempos siguen
+  // desglosados en el panel del día, que es donde se decide qué comer.
+  if(W.come > 0) wSale['Comer · '+wDias+(wDias===1?' día':' días')] = W.come;
   const wConc = Object.keys(wSale).sort((a,b)=>wSale[b]-wSale[a]);
   const wMax = wConc.length ? wSale[wConc[0]] : 1;
 
