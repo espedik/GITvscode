@@ -284,22 +284,40 @@ Adán mandó dos veces la misma captura — la tarjeta de "Te queda ese día" co
 barras — y la segunda fue clara: *"pero no pusiste este diseño por dia, no lo cambiaste"*. El
 panel decía **te cuesta**, que es justo la pregunta contraria.
 
-El número grande es ahora el **saldo de la quincena hasta ese día**: lo que entró con la nómina
-menos todo lo que ya salió — pagos fijos y comida — desde el 1 o desde el 15.
+El número grande es el **saldo de la quincena hasta ese día**: lo que entró con la nómina menos
+todo lo que ya salió — pagos fijos y comida — desde el 1 o desde el 15.
+
+#### Cómo se fue, día a día
+
+Debajo iba el acumulado por concepto. Adán, sobre esa misma tarjeta: *"aqui desglozamelo por
+dia"*. El acumulado contestaba *en qué* se fue, pero no *cuándo* — y el cuándo es lo que explica
+por qué el 8 te quedan $8,086 y no otra cifra.
+
+Ahora se guarda la **traza**: una fila por día desde que entró la nómina hasta el día que estás
+viendo, y la última cierra justo en el número grande.
 
 ```
-Te queda ese día                    +$10,106
-
-EN QUE SE FUE          desde el día 15 · −$10,394
-  Crédito Automotriz    $6,700  ██████████
-  CETES                 $1,500  ██
-  Apple Watch MSI         $854  █
-  Comer · 6 días          $690  █
-  Total Pass              $650  █
+CÓMO SE FUE, DÍA A DÍA        desde el día 1 · −$12,414
+  1  +$20,500  Renta, iPhone     −$11,609    $8,891
+     ████████████████████████████████████████████████
+  2  solo comer                     −$115    $8,776
+     ▌
+  …
+  8  solo comer                     −$115    $8,086   ← el día abierto
 ```
 
-**El reinicio se ve en la cifra**: el día 14 cierra en $5,896 y el 15 salta a $12,185, porque
-entra la segunda nómina y el tramo empieza de cero. Comprobado día a día en los cuatro tamaños.
+Cada fila lleva **dos lecturas a la vez**: la barra es *lo que salió ese día* (proporcional al día
+más caro del tramo, y del color del concepto que manda — amarillo renta, rojo comer), y el número
+de la derecha es *lo que quedaba al terminarlo*. Así el día de la renta se ve como el escalón que
+es, y los días de solo comer como la bajada lenta.
+
+Los días sin pagos fijos dicen **"solo comer"** en vez de quedarse en blanco: nunca hay un día que
+cueste $0. Cada fila es un botón — tocar el 3 abre el día 3 y mueve el calendario con él.
+
+**El reinicio se ve en la cifra**: el día 14 cierra en $5,896 y el 15 salta a $12,185 con una sola
+fila en la traza, porque entra la segunda nómina y el tramo empieza de cero. Comprobado en los
+seis días de control (1, 8, 14, 15, 20, 31) y en los cuatro tamaños: el número grande y la última
+fila coinciden siempre.
 
 Debajo, **lo que pasa ese día** — comer y los pagos que caen — y, si hay movimientos anotados en
 Finanzas, su desglose por categoría. Lo anotado va aparte y no se suma: es lo que pasó por la

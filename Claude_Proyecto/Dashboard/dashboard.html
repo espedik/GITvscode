@@ -6046,22 +6046,6 @@ function renderCoachTablero(){
   const COM = ctComida();
   const comeDia = COM ? Math.round(COM.dia) : 0;
 
-  // El tramo corre desde que entró la nómina: el 1 o el 15.
-  const qIni = nSel <= 14 ? 1 : 15;
-  let qEntra = 0;
-  const seFue = {};
-  const sumar = (k, v) => { seFue[k] = (seFue[k]||0) + v; };
-  for(let d=qIni; d<=nSel; d++){
-    ctAgenda(d).forEach(function(a){
-      if(a.entra) qEntra += (+a.monto||0); else sumar(a.t, +a.monto||0);
-    });
-  }
-  const diasCorridos = nSel - qIni + 1;
-  const comeAcum = comeDia * diasCorridos;
-  if(comeAcum > 0) sumar('Comer \u00b7 '+diasCorridos+(diasCorridos===1?' d\u00eda':' d\u00edas'), comeAcum);
-  const qSale = Object.keys(seFue).reduce((a,k)=>a+seFue[k], 0);
-  const queda = qEntra - qSale;
-
   // Color por lo que ES cada concepto, con los mismos hex que usa Finanzas.
   const colorDe = function(t){
     if(/comer/i.test(t)) return '#ef4444';
@@ -6073,8 +6057,27 @@ function renderCoachTablero(){
     if(/quincena|salario/i.test(t)) return '#3b82f6';
     return '#94a3b8';
   };
-  const conceptos = Object.keys(seFue).sort((a,b)=>seFue[b]-seFue[a]);
-  const maxConc = conceptos.length ? seFue[conceptos[0]] : 1;
+
+  // El tramo corre desde que entró la nómina: el 1 o el 15. Adán: "aqui desglozamelo
+  // por dia" — así que no se guarda el acumulado por concepto, se guarda la TRAZA:
+  // qué cayó cada día y con cuánto te quedaste al terminarlo. La última fila cierra
+  // justo en el número grande de arriba.
+  const qIni = nSel <= 14 ? 1 : 15;
+  let qEntra = 0, qSale = 0, corre = 0;
+  const traza = [];
+  for(let d=qIni; d<=nSel; d++){
+    const ag = ctAgenda(d);
+    const ent = ag.filter(a=>a.entra).reduce((x,a)=>x+(+a.monto||0), 0);
+    const pag = ag.filter(a=>!a.entra);
+    const sal = pag.reduce((x,a)=>x+(+a.monto||0), 0) + comeDia;
+    const may = pag.slice().sort((a,b)=>(+b.monto||0)-(+a.monto||0))[0];
+    qEntra += ent; qSale += sal; corre += ent - sal;
+    traza.push({ d:d, ent:ent, sale:sal, saldo:corre,
+                 txt: pag.map(a=>a.t.split(' ')[0]).join(', '),
+                 col: may ? colorDe(may.t) : '#ef4444' });
+  }
+  const queda = corre;
+  const maxSale = traza.reduce((m,t)=>Math.max(m, t.sale), 1);
 
   const DOWN = ['lunes','martes','mi\u00e9rcoles','jueves','viernes','s\u00e1bado','domingo'];
   const dowSel = DOWN[(new Date(Y,M-1,nSel).getDay()+6)%7];
@@ -6095,20 +6098,31 @@ function renderCoachTablero(){
         (queda>=0?'var(--g)':'var(--r)')+'">'+(queda>=0?'+':'\u2212')+money(queda)+'</span>'+
     '</div>'+
 
-    // En que se fue, desde que entro la nomina.
-    (conceptos.length
-      ? '<div style="display:flex;flex-direction:column;gap:8px">'+
-        '<div style="display:flex;align-items:baseline;justify-content:space-between;gap:8px">'+
-          '<span class="ct-lbl">En qu\u00e9 se fue</span>'+
-          '<span class="ct-num" style="font-size:9.5px;color:var(--text3)">desde el d\u00eda '+qIni+' \u00b7 \u2212'+money(qSale)+'</span></div>'+
-        conceptos.map(function(k){
-          const col = colorDe(k);
-          return '<div class="ct-cat"><div class="ct-cat-h">'+
-            '<span class="ct-cat-n"><i style="background:'+col+'"></i>'+esc(k)+'</span>'+
-            '<span class="ct-num'+(privado?' fin-hidden':'')+'" style="font-size:12.5px;font-weight:700">'+money(seFue[k])+'</span></div>'+
-            '<div class="ct-cat-b"><i style="width:'+Math.round(seFue[k]/maxConc*100)+'%;background:'+col+'"></i></div></div>';
-        }).join('')+'</div>'
-      : '<div class="ct-vacio">Todav\u00eda no ha salido nada de esta quincena.</div>')+
+    // Como se fue, dia por dia: barra = lo que salio ese dia, numero = lo que quedaba.
+    '<div style="display:flex;flex-direction:column;gap:3px">'+
+      '<div style="display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin-bottom:2px">'+
+        '<span class="ct-lbl">C\u00f3mo se fue, d\u00eda a d\u00eda</span>'+
+        '<span class="ct-num" style="font-size:9.5px;color:var(--text3)">desde el d\u00eda '+qIni+' \u00b7 \u2212'+money(qSale)+'</span></div>'+
+      traza.map(function(t){
+        const act = t.d === nSel;
+        const anc = Math.max(2, Math.round(t.sale/maxSale*100));
+        return '<button type="button" onclick="ctVerDia(\''+kDe(t.d)+'\')" style="display:flex;flex-direction:column;gap:4px;'+
+          'padding:5px 9px 6px;border-radius:8px;cursor:pointer;font-family:inherit;text-align:left;color:inherit;'+
+          'background:'+(act?'rgba(var(--cy-rgb),.1)':'transparent')+';'+
+          'border:1px solid '+(act?'rgba(var(--cy-rgb),.32)':'transparent')+'">'+
+          '<span style="display:grid;grid-template-columns:auto minmax(0,1fr) auto auto;gap:8px;align-items:baseline;width:100%">'+
+            '<span class="ct-num" style="font-size:11px;font-weight:700;color:'+(act?'var(--cy)':'var(--text3)')+'">'+t.d+'</span>'+
+            '<span style="font-size:10px;color:var(--text3);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+
+              (t.ent>0?'<b style="color:var(--g)">+'+money(t.ent)+'</b> ':'')+esc(t.txt||'solo comer')+'</span>'+
+            '<span class="ct-num'+(privado?' fin-hidden':'')+'" style="font-size:10.5px;color:var(--text3)">\u2212'+money(t.sale)+'</span>'+
+            '<span class="ct-num'+(privado?' fin-hidden':'')+'" style="font-size:12px;font-weight:700;min-width:50px;text-align:right;color:'+
+              (t.saldo>=0?(act?'var(--cy)':'var(--text)'):'var(--r)')+'">'+money(t.saldo)+'</span>'+
+          '</span>'+
+          '<span style="display:block;height:3px;border-radius:2px;background:rgba(var(--ov),.06)">'+
+            '<i style="display:block;height:100%;border-radius:2px;width:'+anc+'%;background:'+t.col+'"></i></span>'+
+          '</button>';
+      }).join('')+
+    '</div>'+
 
     // Lo que pasa ESE dia concreto, comer incluido.
     '<div style="display:flex;flex-direction:column;gap:6px;padding-top:2px;border-top:1px solid rgba(var(--ov),.07)">'+
