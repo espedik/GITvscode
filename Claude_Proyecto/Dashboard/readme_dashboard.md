@@ -338,6 +338,12 @@ mayor a menor, y de lo que toca esta semana con su casilla.
 
 El día a día de la semana desapareció: lo cubre el riel, y estaba dos veces.
 
+**Cada gasto lleva a su día.** Adán, 2026-08-30, señalando la lista: *"cuando haga click aqui, deberia llevarme al dia en que esta ese gasto"*. Ahora cada concepto que cae un día concreto es un botón que abre ese día — y arrastra con él el calendario y el riel, como cualquier otro salto.
+
+De paso lleva el día escrito al lado (`Crédito Automotriz · día 15`), que era un dato que no estaba en ninguna parte: se veía cuánto costaba cada cosa, no cuándo caía.
+
+Los tres tiempos de comida **no** son botones: caen los siete días de la semana, así que no hay un día al que ir. La diferencia se nota al pasar por encima — el resaltado solo aparece en los que llevan a algún sitio.
+
 ### El tablero ya no depende de que Finanzas se haya abierto
 
 Encontrado al medir este rediseño, y **anterior a él**: `ctAgenda` leía las deudas solo de

@@ -2423,6 +2423,12 @@ a.rt2-sub-prod:hover{text-decoration:underline}
 .ct-caja b{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:18px;
   font-weight:700;display:block;margin-top:2px;letter-spacing:-.02em}
 .ct-cat{display:flex;flex-direction:column;gap:3px}
+/* El concepto que cae un dia concreto lleva a ese dia. Los tiempos de comida no:
+   caen todos los dias de la semana y no hay un dia al que ir. */
+button.ct-cat{width:calc(100% + 12px);margin:0 -6px;padding:4px 6px;border:0;border-radius:8px;
+  background:transparent;font-family:inherit;color:inherit;text-align:left;cursor:pointer;
+  transition:background .15s}
+button.ct-cat:hover{background:rgba(var(--ov),.07)}
 .ct-cat-h{display:flex;align-items:baseline;justify-content:space-between;gap:8px}
 .ct-cat-n{display:flex;align-items:center;gap:6px;min-width:0;font-size:11px}
 .ct-cat-n i{width:8px;height:8px;border-radius:2px;flex-shrink:0}
@@ -6342,9 +6348,11 @@ function renderCoachTablero(){
   const W = Qz.semanas.filter(function(x){ return x.n === sem; })[0] || Qz.semanas[0];
   const TR = ctTareasSemana(ph, ctYM, sem);
 
-  const wSale = {};
+  const wSale = {}, wDia = {};
   for(let d=W.ini; d<=W.fin; d++) ctAgenda(d).forEach(function(a){
-    if(!a.entra) wSale[a.t] = (wSale[a.t]||0) + (+a.monto||0);
+    if(a.entra) return;
+    wSale[a.t] = (wSale[a.t]||0) + (+a.monto||0);
+    if(wDia[a.t] === undefined) wDia[a.t] = d;   // si cayera dos veces, la primera manda
   });
   const wDias = W.fin - W.ini + 1;
   const TIEMPOS_S = (ctComida()||{}).tiempos;
@@ -6384,10 +6392,15 @@ function renderCoachTablero(){
           '<span style="font-size:9.5px;color:var(--text3)">de mayor a menor</span></div>'+
         wConc.map(function(k){
           const col = ctColor(k);
-          return '<div class="ct-cat"><div class="ct-cat-h">'+
-            '<span class="ct-cat-n"><i style="background:'+col+'"></i>'+esc(k)+'</span>'+
+          const dia = wDia[k];
+          const cuerpo = '<div class="ct-cat-h">'+
+            '<span class="ct-cat-n"><i style="background:'+col+'"></i>'+esc(k)+
+              (dia!==undefined ? '<em style="font-style:normal;font-size:9.5px;color:var(--text3);margin-left:3px">día '+dia+'</em>' : '')+'</span>'+
             '<span class="ct-num'+(privado?' fin-hidden':'')+'" style="font-size:12px;font-weight:700">'+money(wSale[k])+'</span></div>'+
-            '<div class="ct-cat-b"><i style="width:'+Math.round(wSale[k]/wMax*100)+'%;background:'+col+'"></i></div></div>';
+            '<div class="ct-cat-b"><i style="width:'+Math.round(wSale[k]/wMax*100)+'%;background:'+col+'"></i></div>';
+          return dia!==undefined
+            ? '<button type="button" class="ct-cat" onclick="ctVerDia(\''+kDe(dia)+'\')" title="Ver el día '+dia+'">'+cuerpo+'</button>'
+            : '<div class="ct-cat">'+cuerpo+'</div>';
         }).join('')+'</div>'
       : '')+
 
