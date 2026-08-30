@@ -349,6 +349,47 @@ Ahora, si `D.fin.debts` viene vacío, se leen de `CIFRAS.DEUDAS_SEED`, que es la
 siembra Finanzas. Comprobado: con Finanzas abierto y sin abrir, los 8 pagos y las cinco cifras de
 control salen idénticos.
 
+### Los tres tiempos del día, por separado
+
+Adán, 2026-08-30: *"las comidas desglozamelas por desayuno, comida y cena, no las pongas junto"*.
+
+El problema era de dónde sacar el reparto sin inventarlo. La despensa (`LISTA_COMPRAS.comida`) da
+un total diario, no tres. Pero el recetario **ya tenía el costo real de cada plato**: `RECETAS_MINI`
+guarda un `costoAprox` por receta, sumado de sus ingredientes.
+
+Así que dos de los tres tiempos se miden y el tercero es el resto:
+
+| | De dónde sale | Vale |
+|---|---|---|
+| Desayuno | promedio de las 10 recetas de desayuno | $16.60 |
+| Cena | promedio de las 8 recetas de cena | $37.50 |
+| Comida | lo que queda de la despensa del día | $60.87 |
+| **Día** | **la despensa semanal entre 7** | **$114.97** |
+
+Los tres **suman exactamente** el gasto diario que ya usaba el tablero, así que ningún saldo se
+movió por desglosarlos: es el mismo dinero, ahora dicho en tres líneas. No hay recetas de comida
+(el recetario solo cubre desayuno y cena), y por eso ese tiempo es el resto y no un promedio —
+si algún día se añaden, el reparto se afina solo.
+
+Cada tiempo lleva su color y se ve en las tres columnas: ámbar el desayuno, rojo la comida,
+naranja la cena.
+
+### El plan de datos de AT&T
+
+Adán: *"los dias primero de cada mes tambien pago mi plan de datos de ATT and T, agregalo, me
+cuesta 650"*.
+
+**No era un gasto nuevo**: `PROYECTO.celular` ya existía con $600 y ya sumaba en `servicios` →
+`fijosTotal`. Darlo de alta aparte habría contado el mismo recibo dos veces. Lo que faltaba era
+el **día**, que no vivía en ningún lado — por eso nunca aparecía en el calendario ni descontaba
+del tramo.
+
+Corregido en su sitio: `celular: 650`, `celularPlan: 'Plan de datos AT&T'`, y su día 1 en
+`CALENDARIO.cobros` leyendo ese mismo valor. `servicios` pasó de $1,264 a $1,314 y `fijosTotal`
+de $13,344 a $13,394, y el verificador lo propagó a los `.md` que citaban las viejas. La primera
+quincena cierra ahora en $5,246 en vez de $5,896: los $650 estaban saliendo de la cuenta sin
+que el tablero lo supiera.
+
 ### El auto, el día 15
 
 Adán: *"el pago automotriz ponlo los dias 15 de cada mes"*. No es un detalle de un día: con

@@ -5991,7 +5991,25 @@ function ctComida(){
     if(t > 0){ pasillos.push({n:pas, semana:t, color:COL[pas] || RESERVA[i % RESERVA.length]}); semana += t; }
   });
   pasillos.sort((a,b)=>b.semana-a.semana);
-  return { semana:semana, dia:semana/7, mes:semana*52/12, pasillos:pasillos };
+
+  // Los tres tiempos del día, por separado (Adán, 2026-08-30: "las comidas desglozamelas
+  // por desayuno, comida y cena, no las pongas junto"). Desayuno y cena salen del costo
+  // REAL de las recetas — el promedio de RECETAS_MINI, que ya trae `costoAprox` por
+  // receta —; la comida es el resto de la despensa. Así los tres suman exactamente el
+  // gasto diario que ya usa todo el tablero, sin inventar un peso nuevo ni repartir a ojo.
+  let tiempos = null;
+  if(typeof RECETAS_MINI !== 'undefined'){
+    const prom = function(k){
+      const xs = (RECETAS_MINI[k]||[]).map(r=>+r.costoAprox||0).filter(x=>x>0);
+      return xs.length ? xs.reduce((a,b)=>a+b, 0)/xs.length : 0;
+    };
+    const des = prom('desayuno'), cen = prom('cena'), resto = semana/7 - des - cen;
+    if(des > 0 && cen > 0 && resto > 0)
+      tiempos = [{ n:'Desayuno', m:des, c:'#fbbf24' },
+                 { n:'Comida',   m:resto, c:'#ef4444' },
+                 { n:'Cena',     m:cen, c:'#f97316' }];
+  }
+  return { semana:semana, dia:semana/7, mes:semana*52/12, pasillos:pasillos, tiempos:tiempos };
 }
 
 function ctVerMes(delta){
@@ -6006,7 +6024,9 @@ function ctVerDia(k){ ctSel = k; renderCoachTablero(); }
 // El color dice QUE es cada cosa, con los mismos hex que usa Finanzas: un concepto
 // tiene el mismo color en el calendario, en el dia y en la semana.
 function ctColor(t){
-  if(/comer/i.test(t)) return '#ef4444';
+  if(/desayuno/i.test(t)) return '#fbbf24';
+  if(/cena/i.test(t)) return '#f97316';
+  if(/comer|comida/i.test(t)) return '#ef4444';
   if(/renta/i.test(t)) return '#eab308';
   if(/cetes/i.test(t)) return '#10b981';
   if(/gym|total pass/i.test(t)) return '#22c55e';
@@ -6195,7 +6215,8 @@ function renderCoachTablero(){
 
   const gastoMes = Object.keys(MOV).reduce((sm,k)=>sm+ctGasto(MOV[k]), 0);
   const LEY = [['#eab308','Renta'],['#64748b','Deuda o crédito'],['#14b8a6','Suscripción'],
-               ['#22c55e','Gym'],['#10b981','Ahorro'],['#ef4444','Solo comer']];
+               ['#22c55e','Gym'],['#10b981','Ahorro'],['#fbbf24','Desayuno'],
+               ['#ef4444','Comida'],['#f97316','Cena']];
 
   document.getElementById('ctCal').innerHTML =
     '<div class="ct-h">'+
@@ -6224,6 +6245,7 @@ function renderCoachTablero(){
   // como una resta de tres lineas; y al final los dias de antes, para el contexto.
   const mvSel = MOV[ctSel]||[];
   const gSel = ctGasto(mvSel), iSel = ctIngr(mvSel);
+  const TIEMPOS = (ctComida()||{}).tiempos;
   const H = T.hoy;
   const previos = T.serie.filter(p => p.d < nSel).slice(-3);
 
@@ -6235,12 +6257,17 @@ function renderCoachTablero(){
 
     '<div style="display:flex;flex-direction:column;gap:6px">'+
       '<span class="ct-lbl">Lo que pagas el '+nSel+'</span>'+
-      (comeDia>0
-        ? '<div class="ct-ev"><i style="background:#ef4444"></i>'+
-          '<span style="min-width:0;display:flex;flex:1;align-items:baseline;justify-content:space-between;gap:8px">'+
-          '<span style="font-size:11.5px;font-weight:600">Comer<span style="font-weight:400;color:var(--text3)"> · desayuno, comida y cena</span></span>'+
-          '<span class="ct-num'+(privado?' fin-hidden':'')+'" style="font-size:12px;font-weight:700;color:var(--text2)">−'+money(comeDia)+'</span></span></div>'
-        : '')+
+      (TIEMPOS
+        ? TIEMPOS.map(x=>'<div class="ct-ev"><i style="background:'+x.c+'"></i>'+
+            '<span style="min-width:0;display:flex;flex:1;align-items:baseline;justify-content:space-between;gap:8px">'+
+            '<span style="font-size:11.5px;font-weight:600">'+x.n+'</span>'+
+            '<span class="ct-num'+(privado?' fin-hidden':'')+'" style="font-size:12px;font-weight:700;color:var(--text2)">−'+money(x.m)+'</span></span></div>').join('')
+        : (comeDia>0
+            ? '<div class="ct-ev"><i style="background:#ef4444"></i>'+
+              '<span style="min-width:0;display:flex;flex:1;align-items:baseline;justify-content:space-between;gap:8px">'+
+              '<span style="font-size:11.5px;font-weight:600">Comer</span>'+
+              '<span class="ct-num'+(privado?' fin-hidden':'')+'" style="font-size:12px;font-weight:700;color:var(--text2)">−'+money(comeDia)+'</span></span></div>'
+            : ''))+
       H.pagos.map(a=>'<div class="ct-ev"><i style="background:'+ctColor(a.t)+'"></i>'+
         '<span style="min-width:0;display:flex;flex:1;align-items:baseline;justify-content:space-between;gap:8px">'+
         '<span style="font-size:11.5px;font-weight:600">'+esc(a.t)+'</span>'+
@@ -6320,7 +6347,11 @@ function renderCoachTablero(){
     if(!a.entra) wSale[a.t] = (wSale[a.t]||0) + (+a.monto||0);
   });
   const wDias = W.fin - W.ini + 1;
-  if(W.come > 0) wSale['Comer · '+wDias+(wDias===1?' día':' días')] = W.come;
+  const TIEMPOS_S = (ctComida()||{}).tiempos;
+  if(W.come > 0){
+    if(TIEMPOS_S) TIEMPOS_S.forEach(function(x){ wSale[x.n+'s · '+wDias+(wDias===1?' día':' días')] = x.m * wDias; });
+    else wSale['Comer · '+wDias+(wDias===1?' día':' días')] = W.come;
+  }
   const wConc = Object.keys(wSale).sort((a,b)=>wSale[b]-wSale[a]);
   const wMax = wConc.length ? wSale[wConc[0]] : 1;
 

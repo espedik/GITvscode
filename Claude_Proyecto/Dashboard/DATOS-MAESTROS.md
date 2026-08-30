@@ -64,10 +64,11 @@ desde JS. En consola, `CIFRAS.tabla()` las lista con su valor actual.
 | `{{ingresoTotal}}` | $53,140 | Derivada: sueldo + Didi + Si Vale |
 | `{{renta}}` | $11,000 | Día 1 |
 | `{{gym}}` `{{gymNombre}}` | $650 · Total Pass | Día 17. Era Fitsi a $1,500 hasta el 18-ago-2026 |
-| `{{servicios}}` | $1,264 | Celular + internet + gas + luz/agua + limpieza |
+| `{{celular}}` `{{celularPlan}}` | $650 · Plan de datos AT&T | Día 1. Subió de $600 el 30-ago-2026, cuando se supo su día |
+| `{{servicios}}` | $1,314 | Celular + internet + gas + luz/agua + limpieza |
 | `{{suscripciones}}` | $1,080 | Gym + Claude Code + iCloud |
 | `{{cetesDia15}}` | $1,500 | Aporte recurrente a CETES el día 15 |
-| `{{fijosTotal}}` | $13,344 | Derivada: renta + servicios + suscripciones |
+| `{{fijosTotal}}` | $13,394 | Derivada: renta + servicios + suscripciones |
 
 ### Deudas · saldos vivos (`finanzasmx_v2`)
 
@@ -163,7 +164,7 @@ CIFRAS.CALENDARIO.hitos    // [{fecha, txt, sub}] — fechas duras que no salen 
 
 | | Qué trae | De dónde sale el número |
 |---|---|---|
-| `cobros` | Renta día 1, quincena días 1 y 15, CETES día 15, gym día 17 | El **monto** es un getter sobre `PROYECTO`: si sube la renta o vuelve a cambiar el gimnasio, el calendario se entera solo. El **día** vive aquí — hasta el 26-ago-2026 solo existía como comentario al lado de la cifra, o sea que ninguna app podía leerlo. |
+| `cobros` | Renta día 1, plan AT&T día 1, quincena días 1 y 15, CETES día 15, gym día 17 | El **monto** es un getter sobre `PROYECTO`: si sube la renta o vuelve a cambiar el gimnasio, el calendario se entera solo. El **día** vive aquí — hasta el 26-ago-2026 solo existía como comentario al lado de la cifra, o sea que ninguna app podía leerlo. |
 | `hitos` | Decisión Maestría (18 jul 2027) y arranque de la Maestría (1 oct 2028) | `PROYECTO.maestriaPausa` y `PROYECTO.maestriaInicio`. |
 
 **Regla al agregar: si una fecha se puede derivar de un dato que ya existe, NO va aquí.** Por eso

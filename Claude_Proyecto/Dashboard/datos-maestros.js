@@ -80,7 +80,12 @@ window.CIFRAS = (function () {
     gym:             650,     // Total Pass, día 17
     gymNombre:  'Total Pass',
     internet:        200,
-    celular:         600,
+    // 2026-08-30: el plan de datos de AT&T, $650 y se paga el dia 1 (Adan). Es este
+    // mismo concepto, no uno nuevo: `celular` ya suma en servicios -> fijosTotal, asi
+    // que un cobro aparte lo habria contado dos veces. Lo que faltaba era el DIA, que
+    // hasta ahora no existia en ningun lado y por eso no salia en el calendario.
+    celular:         650,     // Plan de datos AT&T, dia 1
+    celularPlan: 'Plan de datos AT&T',
     gas:             179,
     luzAgua:         135,
     limpieza:        150,
@@ -130,6 +135,7 @@ window.CIFRAS = (function () {
   const CALENDARIO = {
     cobros: [
       { dia:  1, txt: 'Renta',    get monto() { return PROYECTO.renta; } },
+      { dia:  1, get txt() { return PROYECTO.celularPlan; }, get monto() { return PROYECTO.celular; } },
       { dia:  1, txt: 'Quincena', get monto() { return PROYECTO.sueldoQuinc; }, entra: true },
       // El 15, no el 14 (Adán, 2026-08-28). El plan semanal de Finanzas ya la trataba así
       // — la mete en la semana 3 (días 15-21) y deja la semana 2 sin ingreso — pero aquí
