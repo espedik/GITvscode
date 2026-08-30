@@ -407,6 +407,20 @@ Adán: *"el pago automotriz ponlo los dias 15 de cada mes"*. No es un detalle de
 `day: 14` los $6,700 caían en la semana que no recibe nómina y la hundían. Corregido en el maestro
 y en su migración (`_autoDia15_20260829`).
 
+### "Hoy aprendes" abre su sección
+
+Adán, 2026-08-30: *"aqui si hago click deberia mandarme al dashboard de esa seccion"*. Las dos
+tarjetas del panel —la lección de alemán y el tema de Python— son ahora botones que saltan a su
+slide.
+
+`irASlide(cls)` busca el slide **por su clase** (`theme-aleman`, `theme-entrevista`) y lee su
+`data-i`, en vez de llevar el número escrito a mano: si algún día se reordenan los slides, el
+salto sigue llegando a donde debe.
+
+La tarjeta ya leía su contenido de `alemanTemaHoy()` / `entrevistaTemaHoy()`, las mismas
+funciones que pintan los slides, así que al llegar se ve **esa misma lección** y no otra —
+comprobado: el título de la tarjeta aparece en el slide de destino.
+
 ### Medidas
 
 A 1600×1000 el tablero ocupa los 748px que le deja la banda de fase, con las tres columnas

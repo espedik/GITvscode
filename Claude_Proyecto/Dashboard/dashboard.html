@@ -164,78 +164,164 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 @media(max-width:1024px){#miDiaSecundarios{max-height:none!important;flex:none!important}}
 @media(max-width:900px){.g-metas{grid-template-columns:1fr}}
 
-/* ─── Tarjetas con foto — metas de corto/mediano/largo plazo (slide Mis Metas) Y
-   habilidades base (slide Habilidades Base) comparten la misma pieza visual
-   (.img-goal-*): foto grande con texto encima, clic abre el detalle in-page con un
-   checklist real, y una barra de progreso delgada debajo de la foto que se llena
-   sola con lo que marcas en ese checklist (2026-08-09, pedido explícito: "al hacer
-   click en las metas no me estas poniendo checklist, con eso se van a llenar las
-   barras de progreso" — antes la barra se fijaba a mano con un clic tipo seek-bar,
-   ver detailPct()/toggleMetaChecklist() más abajo en el JS). BYD y Maestría suman
-   una SEGUNDA fila de barra (.img-goal-pbar-row-money) con dinero real de Finanzas
-   (cuánto llevas pagado del BYD / cuánto llevas ahorrado de la maestría) — de solo
-   lectura, no se toca con clic, se calcula sola en cada renderMetasSlide().
-   #metasListas/#habilidadesGrid crecen para llenar todo el alto libre del slide
-   (flex:1 dentro de .slide-inner, que es flex-column) — las fotos usan toda la
-   pantalla disponible en vez de una altura fija. Cada .tile de adentro es
-   flex-column para que su grid de fotos también se estire, y las filas del grid
-   usan 1fr (no una altura fija por tarjeta) para repartirse ese alto por partes
-   iguales; una tarjeta con 2 filas de barra (BYD/Maestría) simplemente le resta
-   esos pocos px a su propia foto (flex:1;min-height:0 ya la deja comprimirse un
-   poco), sin afectar la altura de fila del grid ni arriesgar overflow. */
+/* ═══ PANTALLA 2 · MIS METAS — "panel de trayectoria" (2026-08-30) ═══════════════════════
+   Rediseño pedido por Adán: "la sección de corto, mediano y largo plazo, dame un diseño
+   futurista y moderno y con indicativos claros". Qué cambia respecto a la rejilla
+   `.img-goal-*` que había aquí:
+
+   · EL PORCENTAJE DEJA DE SER EL INDICADOR. Cada ficha enseña una MARCA POR PASO REAL del
+     checklist de esa meta —15 en el Hyrox, 8 en el BYD— y debajo "4 / 9 pasos". Un 33% no
+     dice si faltan dos pasos o diez; el dato ya vivía en META_DETALLE y no se estaba usando.
+     Es el mismo hallazgo que justificó el rediseño de Habilidades Base una semana antes.
+   · APARECE EL ESTADO, que era lo que de verdad no se veía: LOGRADA / EN MARCHA / SIN
+     EMPEZAR, cada uno con su color y su chip sobre la foto. Antes las dos metas ya logradas
+     (los 11K y el alemán) se dibujaban exactamente igual que las que no ha empezado.
+   · Franja de instrumentos (`#metasBay`) con el avance REAL del conjunto: pasos marcados
+     sobre pasos totales, no el promedio de los porcentajes — ese le daba el mismo peso a una
+     meta de 1 paso que a una de 15. Más el ecualizador de las 14 metas y los tres conteos.
+   · La barra de edad sale de DENTRO de la tarjeta de corto/mediano, donde partía la rejilla
+     en dos, y pasa a la franja como una regla de tiempo.
+   · Se va el `.tile` que envolvía cada columna: las fichas se apoyan directo en el slide y
+     ese padding vuelve a las fotos.
+   · Esquinas rectas de 3px con brackets de HUD, como en Habilidades Base: las dos pantallas
+     de fichas del Dashboard hablan el mismo idioma sin ser la misma pantalla.
+
+   Clases propias `.mg-*`. De la familia vieja solo sobreviven `.img-goal-pbar` y
+   `.img-goal-pbar-fill`, que las sigue usando el overlay de detalle (`pintarDetailOverlay`),
+   no esta rejilla. Los degradados oscuros sobre foto son literales a propósito: van encima
+   de una imagen, no de la superficie de la página, así que no siguen al tema. */
 #metasListas{flex:1;min-height:0}
-#metasListas>.tile{display:flex;flex-direction:column;min-height:0}
-/* grid-auto-rows en vez de grid-template-rows fijo (2026-08-11) — "corto y mediano plazo" subió
-   de 5 a 7 tarjetas (ver cortoMediano más abajo) y con `repeat(3,1fr)` fijo a 3 filas exactas la
-   4ª fila (item 7 solo) se quedaba sin sizing propio y desentonaba de alto contra las otras 3.
-   `minmax(_,1fr)` + `overflow-y:auto` es el mismo patrón que estrenó Habilidades Base
-   (mismo problema el mismo día, con las clases que esa pantalla ya no usa): cualquier número de tarjetas reparte el alto
-   disponible por igual, y si no alcanza, hace scroll interno en vez de aplastarlas. La otra
-   variante (`-sm`, largo plazo) ya redefine esta propiedad ella misma, así que este cambio no la
-   afecta.
-   El mínimo bajó de 150px a 64px, y horas después volvió a subir a 100px (mismo día, pedido
-   explícito: primero "acomoda el tamaño para que aparezcan todas y no use el scroll down... esto
-   de la imagen hazlo muchisimo mas pequeño"; después "quiero que esten mas grandes las fotos de
-   metas a mediano y corto plazo, entonces reduce de tamaño lo de mi edad y ademas reduce el
-   titulo de esa pag" — el espacio para agrandar las fotos salió de achicar los números de los
-   KPIs, la barra de edad y el título del slide (`.theme-metas .slide-title`, ver arriba), no de
-   reducir la calidad de la cuadrícula de fotos. El scroll interno sigue como respaldo si en una
-   pantalla muy angosta aun así no alcanza. */
-.img-goal-grid{flex:1;min-height:0;display:grid;grid-template-columns:repeat(2,1fr);grid-template-rows:none;grid-auto-rows:minmax(100px,1fr);overflow-y:auto;gap:6px;margin-top:2px;padding-right:2px}
-.img-goal-cell{display:flex;flex-direction:column;gap:2px;min-height:0}
-.img-goal-photo{position:relative;flex:1;min-height:0;border-radius:12px;overflow:hidden;background-size:cover;background-position:center;box-shadow:0 6px 18px rgba(0,0,0,.3);cursor:pointer;transition:transform .2s,box-shadow .2s}
-/* ─── El zoom del hover lo hace la IMAGEN, no la tarjeta (2026-08-19) ───
-   Antes era `transform:scale(1.02)` sobre `.img-goal-photo`, que es el contenedor: escalaba con
-   él TODO lo que lleva dentro — el gradiente `::after` y, sobre todo, el título `.img-goal-txt`,
-   que al re-renderizarse a un tamaño intermedio se ve borroso y desplazado. Por eso Adán lo notó
-   justo en el BYD y en la CT-GenAI: son los dos títulos más largos ("Liquidar el BYD Dolphin
-   Mini · $X restantes" lleva además dinero en vivo), y en un texto largo el corrimiento se ve;
-   en "Primer Hyrox" casi no. Medido además: la tarjeta escalada se salía ~4px de su celda por
-   cada lado, invadiendo el espacio de las vecinas.
-   Ahora la foto vive en un `::before` que hereda el `background-image` inline del padre y es ESE
-   pseudo-elemento el que escala. El contenedor no se mueve —así que no se sale de la celda ni
-   arrastra al texto— y `overflow:hidden`, que ya estaba, recorta el zoom dentro de la tarjeta. */
-.img-goal-photo::before{content:'';position:absolute;inset:0;background:inherit;
-  background-size:cover;background-position:center;transition:transform .25s ease}
-.img-goal-photo:hover::before{transform:scale(1.06)}
-.img-goal-photo:hover{box-shadow:0 10px 26px rgba(0,0,0,.4)}
-.img-goal-photo::after{content:'';position:absolute;inset:0;z-index:1;background:linear-gradient(to top,rgba(0,0,0,.78) 0%,rgba(0,0,0,.2) 60%,transparent 85%)}
-/* Una tarjeta suelta en la última fila llena el ancho — pensado para el grid de 2 columnas de
-   Mis Metas. El `:not(.img-goal-grid-4col)` que excluía a Habilidades Base se fue junto con esa
-   clase, cuando la pantalla pasó a sus propias `.hb-*` (2026-08-23); las 2 variantes que quedan
-   (la base y `-sm`) sí quieren este comportamiento. */
-.img-goal-grid>.img-goal-cell:last-child:nth-child(odd){grid-column:1/-1}
-.img-goal-txt{position:absolute;left:0;right:0;bottom:0;padding:4px 8px;z-index:2;display:flex;align-items:center;gap:5px;font-weight:800;font-size:clamp(9px,0.85vw,11px);color:#fff;text-shadow:0 1px 4px rgba(0,0,0,.6)}
-.img-goal-pbar-row{display:flex;align-items:center;gap:5px;padding:0 1px;flex-shrink:0}
-.img-goal-pbar-ico{font-size:7px;flex-shrink:0;line-height:1}
 .img-goal-pbar{flex:1;height:4px;border-radius:20px;background:rgba(var(--ov),.14);overflow:hidden}
 .img-goal-pbar-fill{height:100%;border-radius:20px;background:var(--g);transition:width .3s}
-.img-goal-pbar-row-money .img-goal-pbar-fill{background:var(--cy)}
-.img-goal-pbar-pct{font-family:var(--mono);font-size:9px;font-weight:700;color:var(--text3);flex-shrink:0;min-width:2.4em;text-align:right}
-/* Variante chica — largo plazo, columna angosta con más ítems (6 → 3 filas) */
-.img-goal-grid-sm{gap:7px;grid-template-rows:repeat(3,minmax(96px,1fr))}
-.img-goal-photo-sm{border-radius:12px}
-.img-goal-txt-sm{padding:4px 7px;gap:4px;font-size:clamp(8px,0.75vw,10px)}
+
+/* ─── Franja de instrumentos ─────────────────────────────────────────── */
+.mg-bay{flex-shrink:0;position:relative;display:flex;align-items:stretch;gap:clamp(11px,1.4vw,19px);
+  padding:9px clamp(12px,1.4vw,18px);margin-bottom:clamp(7px,1vh,11px);
+  background:rgba(var(--ov),.045);border:1px solid rgba(var(--ov),.11);border-radius:3px;
+  box-shadow:0 10px 34px rgba(0,0,0,.26),inset 0 1px 0 rgba(var(--ov),.05)}
+.mg-bay::before{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;
+  background:var(--ac1);box-shadow:0 0 14px var(--ac1)}
+.mg-k{font-family:var(--mono);font-size:8.5px;font-weight:700;letter-spacing:.19em;
+  color:var(--text3);white-space:nowrap}
+.mg-n{display:flex;flex-direction:column;justify-content:space-between;gap:4px;min-width:100px}
+.mg-v{display:flex;align-items:baseline;gap:2px;line-height:1}
+.mg-v b{font-family:var(--mono);font-size:clamp(21px,2.6vw,33px);font-weight:700;
+  letter-spacing:-.02em;color:var(--text)}
+.mg-v i{font-family:var(--mono);font-size:clamp(10px,1vw,14px);font-weight:700;
+  font-style:normal;color:var(--text2)}
+.mg-d{width:1px;background:rgba(var(--ov),.1);flex-shrink:0}
+.mg-eqw{flex:1;min-width:0;display:flex;flex-direction:column;justify-content:space-between;gap:4px}
+/* Una barra por meta, en el orden en que se leen. El piso de 16% existe para que una meta
+   sin empezar siga siendo un elemento visible y no un hueco en el ecualizador. */
+.mg-eq{display:flex;align-items:flex-end;justify-content:space-between;gap:3px;
+  height:clamp(20px,2.9vh,32px)}
+.mg-eq i{flex:1;max-width:22px;border-radius:2px 2px 0 0;background:var(--ac1);opacity:.6}
+.mg-eq i.ok{background:var(--g);opacity:1;box-shadow:0 0 9px var(--g)}
+.mg-eq i.zero{background:rgba(var(--ov),.32);opacity:.75}
+/* En claro el ámbar y el verde sobre fondo casi blanco se lavan al 60%: mismo override
+   puntual que ya usa el ecualizador de Habilidades Base. */
+:root[data-theme="light"] .mg-eq i{opacity:.85}
+.mg-s{display:flex;align-items:center;gap:clamp(10px,1.4vw,19px);flex-shrink:0}
+.mg-rd{display:flex;flex-direction:column;gap:3px}
+.mg-rv{font-family:var(--mono);font-size:clamp(14px,1.4vw,20px);font-weight:700;
+  line-height:1;color:var(--text3)}
+.mg-rv.ok{color:var(--g)}
+.mg-rv.on{color:var(--ac1)}
+.mg-rv small{font-size:.55em;color:var(--text3);font-weight:500}
+
+/* ─── La regla de edad ───────────────────────────────────────────────── */
+.mg-age{flex-shrink:0;display:flex;align-items:center;gap:clamp(8px,1vw,13px);cursor:pointer;
+  padding:6px clamp(11px,1.3vw,17px);margin-bottom:clamp(7px,1vh,11px);
+  border:1px solid rgba(var(--ov),.1);border-radius:3px;background:rgba(var(--ov),.03);
+  transition:border-color .2s,background .2s}
+.mg-age:hover{border-color:var(--ac2);background:rgba(var(--ov),.055)}
+.mg-age-k{font-family:var(--mono);font-size:8.5px;font-weight:700;letter-spacing:.16em;
+  color:var(--ac2);white-space:nowrap}
+.mg-age-tr{flex:1;min-width:40px;height:5px;border-radius:2px;position:relative;overflow:hidden;
+  background:rgba(var(--ov),.12)}
+.mg-age-fi{position:absolute;top:0;bottom:0;left:0;border-radius:2px;
+  background:linear-gradient(90deg,var(--ac2),var(--ac1))}
+.mg-age-n{font-family:var(--mono);font-size:9px;font-weight:700;color:var(--text3);white-space:nowrap}
+
+/* ─── Las dos columnas ───────────────────────────────────────────────── */
+.mg-col{display:flex;flex-direction:column;min-height:0;gap:7px}
+.mg-col-hd{display:flex;align-items:center;gap:8px;flex-shrink:0;padding-bottom:6px;
+  border-bottom:1px solid rgba(var(--ov),.1)}
+.mg-col-t{font-family:var(--mono);font-size:clamp(9px,.85vw,11px);font-weight:700;
+  letter-spacing:.17em;text-transform:uppercase;color:var(--text)}
+.mg-col-n{margin-left:auto;font-family:var(--mono);font-size:8.5px;font-weight:700;
+  letter-spacing:.12em;color:var(--text3);padding:3px 9px;border-radius:3px;white-space:nowrap;
+  border:1px solid rgba(var(--ov),.12);background:rgba(var(--ov),.03)}
+
+/* Mismo patrón de "estira si cabe, scrollea si no" que ya usaban las dos rejillas de fichas
+   del Dashboard: cualquier número de metas reparte el alto por igual y, si no alcanza, hace
+   scroll interno en vez de aplastarlas. */
+.mg-deck{flex:1;min-height:0;display:grid;grid-template-columns:repeat(2,1fr);
+  grid-auto-rows:minmax(102px,1fr);gap:clamp(7px,.7vw,10px);overflow-y:auto;padding-right:2px}
+.mg-deck-sm{grid-auto-rows:minmax(90px,1fr)}
+/* Una ficha suelta en la última fila llena el ancho, para no dejar un hueco. */
+.mg-deck>.mg-card:last-child:nth-child(odd){grid-column:1/-1}
+
+/* ─── La ficha ───────────────────────────────────────────────────────── */
+/* `--mgc` es EL indicativo: el color del estado tiñe el chip, las marcas de paso, el número
+   y el borde de la foto. Una sola variable por ficha en vez de cuatro colores repetidos. */
+.mg-card{--mgc:var(--text3);display:flex;flex-direction:column;gap:4px;min-height:0}
+.mg-card.on{--mgc:var(--ac1)}
+.mg-card.ok{--mgc:var(--g)}
+.mg-ph{position:relative;flex:1;min-height:0;overflow:hidden;border-radius:3px;cursor:pointer;
+  background-size:cover;background-position:center;border:1px solid rgba(var(--ov),.1);
+  box-shadow:0 6px 18px rgba(0,0,0,.4);transition:box-shadow .2s,border-color .2s}
+.mg-card.on .mg-ph,.mg-card.ok .mg-ph{border-color:var(--mgc);
+  box-shadow:0 6px 18px rgba(0,0,0,.4),0 0 18px -8px var(--mgc)}
+/* El zoom del hover lo hace un pseudo-elemento que hereda el background inline, nunca el
+   contenedor: así el título y el chip no se re-renderizan borrosos ni se salen de la celda
+   (el porqué largo está en el historial de `.img-goal-photo::before`, 2026-08-19). */
+.mg-ph::before{content:'';position:absolute;inset:0;background:inherit;background-size:cover;
+  background-position:center;transition:transform .25s ease}
+.mg-ph:hover::before{transform:scale(1.06)}
+.mg-ph:hover{box-shadow:0 10px 26px rgba(0,0,0,.5)}
+.mg-sc{position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:linear-gradient(to top,rgba(0,0,0,.9) 0%,rgba(0,0,0,.38) 56%,rgba(0,0,0,.03) 100%),
+    repeating-linear-gradient(to bottom,rgba(255,255,255,.045) 0 1px,transparent 1px 3px)}
+.mg-sc::before,.mg-sc::after{content:'';position:absolute;width:11px;height:11px;
+  border-color:rgba(255,255,255,.45);border-style:solid;border-width:0}
+.mg-sc::before{top:5px;left:5px;border-top-width:1.5px;border-left-width:1.5px}
+.mg-sc::after{bottom:5px;right:5px;border-bottom-width:1.5px;border-right-width:1.5px}
+.mg-tt{position:absolute;left:0;right:0;bottom:0;z-index:2;padding:5px 7px;pointer-events:none;
+  display:flex;align-items:flex-end;gap:5px;font-weight:800;color:#fff;line-height:1.15;
+  font-size:clamp(9px,.82vw,11px);text-shadow:0 1px 5px rgba(0,0,0,.75)}
+.mg-tt-sm{padding:4px 6px;font-size:clamp(8px,.72vw,10px)}
+.mg-chip{position:absolute;top:5px;right:5px;z-index:2;pointer-events:none;border-radius:2px;
+  font-family:var(--mono);font-size:7.5px;font-weight:700;letter-spacing:.13em;padding:2px 6px;
+  color:#05050c;background:var(--mgc)}
+/* Sin empezar no lleva color de estado: un chip gris sobre la foto necesita su propio
+   contraste, porque `--text3` sobre una imagen oscura no se lee. */
+.mg-card:not(.on):not(.ok) .mg-chip{color:rgba(255,255,255,.8);background:rgba(0,0,0,.5);
+  border:1px solid rgba(255,255,255,.28)}
+
+/* Una marca por paso real del checklist. Es el indicativo que sustituye a la barra. */
+.mg-rail{display:flex;align-items:center;gap:2px;height:6px;flex-shrink:0}
+.mg-rail i{flex:1;height:100%;border-radius:1px;background:rgba(var(--ov),.14)}
+.mg-rail i.d{background:var(--mgc);box-shadow:0 0 7px -1px var(--mgc)}
+.mg-foot{display:flex;align-items:baseline;gap:6px;flex-shrink:0;font-family:var(--mono);
+  font-size:8.5px;font-weight:700;letter-spacing:.04em;line-height:1}
+.mg-steps{color:var(--mgc)}
+.mg-steps i{font-style:normal;color:var(--text3);margin:0 2px}
+.mg-steps small{color:var(--text3);font-weight:500;letter-spacing:.1em;margin-left:3px}
+/* El dinero real de BYD y Maestría: barra continua y en el color secundario del slide, para
+   que no se confunda con las marcas de paso — son dos avances distintos de la misma meta. */
+.mg-money{display:flex;align-items:center;gap:6px;flex-shrink:0;margin-top:1px}
+.mg-mbar{flex:1;min-width:24px;height:4px;border-radius:2px;overflow:hidden;
+  background:rgba(var(--ov),.12)}
+.mg-mbar>span{display:block;height:100%;border-radius:2px;background:var(--ac2);
+  box-shadow:0 0 8px -2px var(--ac2)}
+.mg-mtxt{font-family:var(--mono);font-size:8.5px;font-weight:700;color:var(--ac2);white-space:nowrap}
+
+@media(max-width:900px){
+  .mg-bay{flex-wrap:wrap;gap:10px}
+  .mg-eqw{order:3;flex-basis:100%}
+  .mg-d{display:none}
+}
 /* ═══ PANTALLA 4 · HABILIDADES BASE — "consola táctica" (2026-08-23) ═══════════════════════
    Rediseño elegido por Adán entre 4 direcciones que se le mostraron renderizadas (consola
    táctica / vitrina cinemática / bento de cristal / núcleo orbital). Qué cambia respecto a la
@@ -800,6 +886,12 @@ a.rt2-sub-prod:hover{text-decoration:underline}
   font-size:10.5px;color:var(--text2);line-height:1.4}
 .hp-mini-n{font-family:var(--mono);font-size:9px;font-weight:700;flex-shrink:0;padding-top:2px}
 .hp-lec{padding:9px 11px;border-radius:11px;margin-bottom:8px}
+/* La tarjeta lleva a su slide (Adán, 2026-08-30: "aqui si hago click deberia mandarme
+   al dashboard de esa seccion"). Botón de verdad, para que responda al teclado. */
+button.hp-lec{display:block;width:100%;text-align:left;font-family:inherit;cursor:pointer;
+  transition:transform .15s,filter .15s}
+button.hp-lec:hover{transform:translateY(-1px);filter:brightness(1.25)}
+button.hp-lec:active{transform:translateY(0)}
 .hp-lec:last-child{margin-bottom:0}
 .hp-lec-top{display:flex;align-items:center;gap:7px;margin-bottom:5px}
 .hp-lec-tag{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
@@ -2806,6 +2898,7 @@ button.ct-cat:hover{background:rgba(var(--ov),.07)}
       <div class="eyebrow reveal d1"><span class="dot"></span> Mis Metas</div>
       <div class="slide-title reveal d2"><span class="ico">🎯</span> Corto, mediano y largo plazo</div>
       <div class="grid g4 reveal d3" id="metasProgreso" style="margin-bottom:18px"></div>
+      <div class="reveal d4" id="metasBay"></div>
       <div class="grid g-metas reveal d4" id="metasListas"></div>
     </div>
   </section>
@@ -5697,6 +5790,11 @@ function renderHeroFase(){
 //    alemanTemaHoy()/entrevistaTemaHoy() que pintan sus slides, así que si avanzas con
 //    "Siguiente lección →" allá, esta tarjeta muestra la misma (por eso se repinta desde
 //    alemanSiguiente()/entrevistaSiguiente()).
+function irASlide(cls){
+  const sl = document.querySelector('.slide.' + cls);
+  if(sl && typeof goTo === 'function') goTo(+sl.dataset.i);
+}
+
 function renderHeroAprender(){
   const el=document.getElementById('heroAprenderPanel'); if(!el) return;
   const a=(typeof alemanTemaHoy==='function')?alemanTemaHoy():null;
@@ -5706,7 +5804,8 @@ function renderHeroAprender(){
   const nAl=(typeof alemanLista==='function')?alemanLista().length:0;
   const nPy=(typeof ENTREVISTA_TEMAS!=='undefined')?ENTREVISTA_TEMAS.length:0;
   const bloque=(cfg)=>`
-    <div class="hp-lec" style="background:${cfg.c}12;border:1px solid ${cfg.c}2e">
+    <button type="button" class="hp-lec" onclick="irASlide('${cfg.slide}')"
+            title="Abrir la sección" style="background:${cfg.c}12;border:1px solid ${cfg.c}2e">
       <div class="hp-lec-top">
         <span style="font-size:12px">${cfg.ico}</span>
         <span class="hp-lec-tag" style="color:${cfg.c}">${esc(cfg.tag)}</span>
@@ -5714,11 +5813,11 @@ function renderHeroAprender(){
       </div>
       <div class="hp-lec-t">${esc(cfg.t)}</div>
       <div class="hp-lec-d">${esc(cfg.d)}</div>
-    </div>`;
+    </button>`;
   el.innerHTML=`
     <div class="hp-title"><span>🎓 Hoy aprendes</span></div>
-    ${a?bloque({c:'#00e87a',ico:'🇩🇪',tag:'Alemán · '+a.nivel,n:(alemanIdx+1)+' / '+nAl,t:a.de,d:a.es+' — '+(a.tags||[]).join(', ')}):''}
-    ${p?bloque({c:'#00e0c0',ico:p.icon||'🐍',tag:'Python · '+(p.mod||''),n:(entrevistaIdx+1)+' / '+nPy,t:p.title,d:p.hint||''})
+    ${a?bloque({c:'#00e87a',ico:'🇩🇪',slide:'theme-aleman',tag:'Alemán · '+a.nivel,n:(alemanIdx+1)+' / '+nAl,t:a.de,d:a.es+' — '+(a.tags||[]).join(', ')}):''}
+    ${p?bloque({c:'#00e0c0',ico:p.icon||'🐍',slide:'theme-entrevista',tag:'Python · '+(p.mod||''),n:(entrevistaIdx+1)+' / '+nPy,t:p.title,d:p.hint||''})
        :'<div class="hp-empty">El catálogo de Python no cargó — revisa entrevistas-data.js.</div>'}`;
 }
 
@@ -8464,9 +8563,16 @@ function renderMetasSlide(){
   // aquí con los mismos datos de Finanzas que ya usan los 4 medidores de arriba, no se toca con clic.
   const carroPct=carro.found&&carro.total>0?Math.max(0,Math.min(100,(1-carro.balance/carro.total)*100)):0;
   const maePct=maeTgt>0?Math.max(0,Math.min(100,fmMae.total/maeTgt*100)):0;
+  // `short` es nuevo (2026-08-30): la ficha enseña la CIFRA, no solo el porcentaje. "$22,800
+  // pagado" dice algo; "7%" obliga a recordar de qué es el 7%. El `lbl` largo se queda como
+  // title del elemento, para quien quiera el detalle completo.
   METAS_MONEYBAR={
-    byd:{pct:Math.round(carroPct),lbl:carro.found?`Pagado real: ${money(carro.total-carro.balance)} de ${money(carro.total)}`:'Pagado real: sin datos en Finanzas'},
-    maestria:{pct:Math.round(maePct),lbl:maeTgt>0?`Ahorrado: ${money(fmMae.total)} de ${money(maeTgt)}`:'Ahorrado: sin datos en Finanzas'}
+    byd:{pct:Math.round(carroPct),
+         lbl:carro.found?`Pagado real: ${money(carro.total-carro.balance)} de ${money(carro.total)}`:'Pagado real: sin datos en Finanzas',
+         short:carro.found?`${money(carro.total-carro.balance)} pagado`:'sin datos'},
+    maestria:{pct:Math.round(maePct),
+         lbl:maeTgt>0?`Ahorrado: ${money(fmMae.total)} de ${money(maeTgt)}`:'Ahorrado: sin datos en Finanzas',
+         short:maeTgt>0?`${money(fmMae.total)} ahorrado`:'sin datos'}
   };
 
   // Cupra↔Maestría intercambiados el 2026-08-09 (pedido explícito: "lo del cupra formentos
@@ -8499,25 +8605,50 @@ function renderMetasSlide(){
     {id:'spacex',ico:'🚀',t:'Lanzamiento de SpaceX',img:'https://images.unsplash.com/photo-1541185933-ef5d8ed016c2?w=800&q=80&auto=format&fit=crop'},
     {id:'cupra',ico:'🚙',t:'Cupra Formentor',img:'https://images.unsplash.com/photo-1655288808681-17caed2fc987?w=800&q=80&auto=format&fit=crop'}
   ];
-  // Corto/mediano y largo plazo: tarjeta con foto de fondo (motiva más que una fila de texto plano) — ver readme_dashboard.md para el origen de cada URL.
-  // sizeCls='' → tarjeta grande (corto/mediano, columna ancha, 5 ítems); sizeCls='sm' → tarjeta chica (largo plazo, columna angosta, 6 ítems) para que quepan en el mismo espacio ya asignado.
-  // Clic en la foto abre el detalle in-page (abrirMetaDetalle) con el checklist real de META_DETALLE — nunca navega a otro archivo.
-  // La barra ✅ de abajo YA NO se marca a mano — se calcula sola con detailPct() a partir de ese checklist. BYD y Maestría suman una 2ª barra 💰 con dinero real (i.money, ver arriba).
-  const imgListHtml=(arr,sizeCls,epigrafe)=>`<div class="img-goal-grid${sizeCls?' img-goal-grid-'+sizeCls:''}">${arr.map(i=>{
-    const pct=detailPct(META_DETALLE,'metas_checklist_v1',i.id);
-    const moneyRow=i.money?`<div class="img-goal-pbar-row img-goal-pbar-row-money" title="${i.money.lbl}">
-        <span class="img-goal-pbar-ico">💰</span>
-        <div class="img-goal-pbar img-goal-pbar-money"><div class="img-goal-pbar-fill" style="width:${i.money.pct}%"></div></div>
-        <span class="img-goal-pbar-pct">${i.money.pct}%</span>
+  // ── Los pasos reales de una meta ──────────────────────────────────────────
+  // `detailPct()` devuelve solo el porcentaje, y un 33% no dice si faltan dos pasos o diez.
+  // Esto devuelve las tres cifras y es lo que alimenta tanto las marcas de la ficha como el
+  // avance del conjunto en la franja de instrumentos.
+  const pasosMeta=id=>{
+    const info=META_DETALLE[id];
+    const total=(info&&info.pasos&&info.pasos.length)||0;
+    if(!total) return {hechos:0,total:0,pct:0};
+    const store=(rawGet('metas_checklist_v1',{})[id])||{};
+    const hechos=info.pasos.filter((_,k)=>store[k]).length;
+    return {hechos,total,pct:Math.round(hechos/total*100)};
+  };
+  const estadoMeta=p=>p.total&&p.hechos>=p.total?'ok':(p.hechos>0?'on':'');
+
+  // Corto/mediano y largo plazo: ficha con foto de fondo (motiva más que una fila de texto
+  // plano) — ver readme_dashboard.md para el origen de cada URL. Clic en la foto abre el
+  // detalle in-page (abrirMetaDetalle) con el checklist real de META_DETALLE; nunca navega
+  // a otro archivo.
+  // Lo que la ficha DICE, y es el rediseño del 2026-08-30: el chip de estado (LOGRADA /
+  // EN MARCHA / SIN EMPEZAR), una marca por paso real del checklist con el conteo debajo, y
+  // —solo en BYD y Maestría— una segunda barra con el dinero real de Finanzas y su cifra.
+  // `sm` es la variante angosta de la columna de largo plazo: mismo contenido, tipografía
+  // un punto menor.
+  const metaDeckHtml=(arr,sm,epigrafe)=>`<div class="mg-deck${sm?' mg-deck-sm':''}">${arr.map(i=>{
+    const p=pasosMeta(i.id), est=estadoMeta(p);
+    const chip=est==='ok'?'LOGRADA':(est==='on'?'EN MARCHA':'SIN EMPEZAR');
+    // Una meta sin pasos registrados (no debería pasar) dibuja una marca apagada en vez de
+    // un riel vacío, que se leería como un fallo de pintado.
+    const marcas=p.total
+      ? Array.from({length:p.total},(_,k)=>`<i class="${k<p.hechos?'d':''}"></i>`).join('')
+      : '<i></i>';
+    const money=i.money?`<div class="mg-money" title="${i.money.lbl}">
+        <div class="mg-mbar"><span style="width:${i.money.pct}%"></span></div>
+        <span class="mg-mtxt">${i.money.short}</span>
       </div>`:'';
-    return `<div class="img-goal-cell">
-      <div class="img-goal-photo${sizeCls?' img-goal-photo-'+sizeCls:''}" style="background-image:url('${i.img}')" onclick="abrirMetaDetalle('${i.id}','${i.img}','${epigrafe||''}')" role="button" tabindex="0"><div class="img-goal-txt${sizeCls?' img-goal-txt-'+sizeCls:''}">${i.ico} ${i.t}</div></div>
-      <div class="img-goal-pbar-row">
-        <span class="img-goal-pbar-ico">✅</span>
-        <div class="img-goal-pbar"><div class="img-goal-pbar-fill" style="width:${pct}%"></div></div>
-        <span class="img-goal-pbar-pct">${pct}%</span>
+    return `<div class="mg-card${est?' '+est:''}">
+      <div class="mg-ph" style="background-image:url('${i.img}')" onclick="abrirMetaDetalle('${i.id}','${i.img}','${epigrafe||''}')" role="button" tabindex="0" title="${i.t}">
+        <div class="mg-sc"></div>
+        <span class="mg-chip">${chip}</span>
+        <div class="mg-tt${sm?' mg-tt-sm':''}">${i.ico} ${i.t}</div>
       </div>
-      ${moneyRow}
+      <div class="mg-rail">${marcas}</div>
+      <div class="mg-foot"><span class="mg-steps">${p.hechos}<i>/</i>${p.total}<small>PASOS</small></span></div>
+      ${money}
     </div>`;
   }).join('')}</div>`;
 
@@ -8525,23 +8656,65 @@ function renderMetasSlide(){
   // de arriba), dentro de "Corto & mediano plazo" tal como se pidió. Clic abre el mismo overlay
   // de detalle que las tarjetas con foto, con la cronología real de qué debo lograr (ver
   // abrirEdadDetalle()/EDAD_DETALLE arriba).
+  // ── La franja de instrumentos ─────────────────────────────────────────────
+  // El avance del conjunto se mide en PASOS, no promediando porcentajes: promediar le daba
+  // el mismo peso a "Básico 5 de alemán" (1 paso) que al Hyrox (15), así que marcar la meta
+  // más chica movía la aguja tanto como quince sesiones de entrenamiento.
+  const todasMetas=[...cortoMediano,...largoExtras].map(m=>({...m,p:pasosMeta(m.id)}));
+  const pasosTot=todasMetas.reduce((a,x)=>a+x.p.total,0);
+  const pasosHec=todasMetas.reduce((a,x)=>a+x.p.hechos,0);
+  const nOk=todasMetas.filter(x=>estadoMeta(x.p)==='ok').length;
+  const nOn=todasMetas.filter(x=>estadoMeta(x.p)==='on').length;
+  const nOff=todasMetas.length-nOk-nOn;
+  // Piso del 16%: una meta sin empezar tiene que seguir siendo una barra visible en el
+  // ecualizador, no un hueco — si desaparece, el conjunto miente sobre cuántas metas hay.
+  const eq=todasMetas.map(x=>{
+    const e=estadoMeta(x.p);
+    return `<i class="${e==='ok'?'ok':(e?'':'zero')}" style="height:${Math.max(16,x.p.pct)}%" title="${x.t} — ${x.p.hechos}/${x.p.total} pasos"></i>`;
+  }).join('');
+
   const ei=edadInfo();
-  const edadBarHtml=`<div class="edad-bar" onclick="abrirEdadDetalle()" role="button" tabindex="0">
-    <div class="lbl" style="color:var(--cy)">🎂 ${ei.edad} → ${ei.edadSig} años · cumples el 1 de julio</div>
-    <div class="pbar"><div class="pfill" style="width:${ei.pct}%;background:var(--cy)"></div></div>
-    <div class="sub">${ei.pct}% de tu año ${ei.edad} recorrido · faltan ${ei.diasFaltan} días — clic para ver qué debes lograr antes</div>
-  </div>`;
+  document.getElementById('metasBay').innerHTML=`
+    <div class="mg-bay">
+      <div class="mg-n">
+        <span class="mg-k">AVANCE REAL</span>
+        <span class="mg-v"><b>${pasosHec}</b><i>/${pasosTot}</i></span>
+        <span class="mg-k">PASOS COMPLETADOS</span>
+      </div>
+      <div class="mg-d"></div>
+      <div class="mg-eqw">
+        <span class="mg-k">LAS ${todasMetas.length} METAS, UNA A UNA</span>
+        <div class="mg-eq">${eq}</div>
+      </div>
+      <div class="mg-d"></div>
+      <div class="mg-s">
+        <div class="mg-rd"><span class="mg-rv ok">${nOk}</span><span class="mg-k">LOGRADAS</span></div>
+        <div class="mg-rd"><span class="mg-rv on">${nOn}</span><span class="mg-k">EN MARCHA</span></div>
+        <div class="mg-rd"><span class="mg-rv">${nOff}</span><span class="mg-k">SIN EMPEZAR</span></div>
+      </div>
+    </div>
+    <div class="mg-age" onclick="abrirEdadDetalle()" role="button" tabindex="0"
+         title="Clic para ver qué debes lograr antes de cumplir ${ei.edadSig}">
+      <span class="mg-age-k">🎂 ${ei.edad} → ${ei.edadSig} AÑOS</span>
+      <div class="mg-age-tr"><div class="mg-age-fi" style="width:${ei.pct}%"></div></div>
+      <span class="mg-age-n">${ei.pct}% · faltan ${ei.diasFaltan} días</span>
+    </div>`;
 
   document.getElementById('metasListas').innerHTML=`
-    <div class="tile">
-      <div class="lbl" style="margin-bottom:8px">🚩 Corto & mediano plazo</div>
-      ${edadBarHtml}
-      ${imgListHtml(cortoMediano,'','Corto y mediano plazo')}
+    <div class="mg-col">
+      <div class="mg-col-hd">
+        <span class="mg-col-t">🚩 Corto &amp; mediano plazo</span>
+        <span class="mg-col-n">${cortoMediano.length} METAS</span>
+      </div>
+      ${metaDeckHtml(cortoMediano,false,'Corto y mediano plazo')}
     </div>
-    <div class="tile">
-      <div class="lbl" style="margin-bottom:8px">🏔️ Largo plazo & bucket list</div>
-      ${imgListHtml(largoExtras,'sm','Largo plazo')}
-      <div class="sub" style="margin-top:8px"><a href="../Coach/Coach.html#perfil" style="color:var(--cy);text-decoration:none">Ver detalle completo en Coach → Metas →</a></div>
+    <div class="mg-col">
+      <div class="mg-col-hd">
+        <span class="mg-col-t">🏔️ Largo plazo &amp; bucket list</span>
+        <span class="mg-col-n">${largoExtras.length} METAS</span>
+      </div>
+      ${metaDeckHtml(largoExtras,true,'Largo plazo')}
+      <div class="sub" style="margin-top:2px;flex-shrink:0"><a href="../Coach/Coach.html#perfil" style="color:var(--cy);text-decoration:none">Ver detalle completo en Coach → Metas →</a></div>
     </div>`;
 }
 
