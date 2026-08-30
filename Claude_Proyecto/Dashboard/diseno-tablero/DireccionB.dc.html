@@ -1,0 +1,301 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap">
+  <style>
+    body { margin: 0; background: #05050a; font-family: 'Inter', -apple-system, sans-serif; }
+    a { color: #00e0c0; } a:hover { color: #5df0dc; }
+    .mono { font-family: 'Space Grotesk', monospace; font-variant-numeric: tabular-nums; letter-spacing: -0.02em; }
+    .ttl { font-family: 'Fraunces', Georgia, serif; }
+    .lbl { font-size: 9px; font-weight: 800; letter-spacing: 0.18em; text-transform: uppercase; color: #8589a8; }
+  </style>
+</helmet>
+
+<div style="width: 1440px; height: 980px; background:
+     radial-gradient(1000px 520px at 50% -14%, rgba(0,224,192,0.08), transparent 62%), #05050a;
+     padding: 22px 26px 26px; box-sizing: border-box; display: flex; flex-direction: column; gap: 14px; position: relative; overflow: hidden">
+
+  <!-- cabecera: fase + mes -->
+  <div style="display: flex; align-items: center; justify-content: space-between; gap: 20px">
+    <div style="display: flex; align-items: center; gap: 11px">
+      <span class="mono" style="font-size: 10px; font-weight: 700; color: #05050a; background: #b06eff; padding: 3px 8px; border-radius: 6px">FASE 2</span>
+      <span class="ttl" style="font-size: 19px; font-weight: 700; color: #f4f4f8">Construir el colchón</span>
+      <span style="font-size: 11px; color: #8589a8">41% · quedan 94 días</span>
+    </div>
+    <div style="display: flex; align-items: center; gap: 10px">
+      <span class="lbl">Mes</span>
+      <div style="display: flex; align-items: center; gap: 8px; padding: 5px 8px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.04)">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#9a9db3" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"></path></svg>
+        <span class="mono" style="font-size: 12px; font-weight: 700; color: #f4f4f8; width: 92px; text-align: center">Agosto 2026</span>
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#9a9db3" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"></path></svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- cinta de dias: el calendario se vuelve una linea del tiempo -->
+  <div style="display: flex; flex-direction: column; gap: 8px; padding: 14px 16px; border-radius: 16px;
+       border: 1px solid rgba(255,255,255,0.11); background: rgba(255,255,255,0.035)">
+    <div style="display: flex; align-items: baseline; justify-content: space-between">
+      <span class="lbl">Quincena 2 · el saldo baja así</span>
+      <span style="font-size: 10px; color: #8589a8">toca un día para verlo</span>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(17, minmax(0, 1fr)); gap: 5px">
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 5px">
+        <span class="mono" style="font-size: 10px; font-weight: 700; color: #ffd93d">15</span>
+        <div style="width: 100%; height: 74px; border-radius: 8px; background: rgba(255,217,61,0.1); border: 1px solid rgba(255,217,61,0.3); display: flex; flex-direction: column; justify-content: flex-end; padding: 3px; box-sizing: border-box">
+          <div style="height: 62px; border-radius: 5px; background: linear-gradient(180deg, #64748b, rgba(100,116,139,0.35))"></div>
+        </div>
+        <span class="mono" style="font-size: 8.5px; color: #9a9db3">12.2k</span>
+      </div>
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 5px">
+        <span class="mono" style="font-size: 10px; color: #8589a8">16</span>
+        <div style="width: 100%; height: 74px; border-radius: 8px; background: rgba(255,255,255,0.03); display: flex; flex-direction: column; justify-content: flex-end; padding: 3px; box-sizing: border-box">
+          <div style="height: 6px; border-radius: 5px; background: rgba(255,92,92,0.55)"></div>
+        </div>
+        <span class="mono" style="font-size: 8.5px; color: #8589a8">12.1k</span>
+      </div>
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 5px">
+        <span class="mono" style="font-size: 10px; color: #8589a8">17</span>
+        <div style="width: 100%; height: 74px; border-radius: 8px; background: rgba(255,255,255,0.03); display: flex; flex-direction: column; justify-content: flex-end; padding: 3px; box-sizing: border-box">
+          <div style="height: 14px; border-radius: 5px; background: #22c55e"></div>
+        </div>
+        <span class="mono" style="font-size: 8.5px; color: #8589a8">11.3k</span>
+      </div>
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 5px">
+        <span class="mono" style="font-size: 10px; font-weight: 700; color: #00e0c0">18</span>
+        <div style="width: 100%; height: 74px; border-radius: 8px; background: rgba(0,224,192,0.14); border: 1.5px solid #00e0c0; box-shadow: 0 0 18px rgba(0,224,192,0.25); display: flex; flex-direction: column; justify-content: flex-end; padding: 3px; box-sizing: border-box">
+          <div style="height: 17px; border-radius: 5px; background: #14b8a6"></div>
+        </div>
+        <span class="mono" style="font-size: 8.5px; font-weight: 700; color: #00e0c0">10.3k</span>
+      </div>
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 5px">
+        <span class="mono" style="font-size: 10px; color: #8589a8">19</span>
+        <div style="width: 100%; height: 74px; border-radius: 8px; background: rgba(255,255,255,0.03); display: flex; flex-direction: column; justify-content: flex-end; padding: 3px; box-sizing: border-box">
+          <div style="height: 6px; border-radius: 5px; background: rgba(255,92,92,0.55)"></div>
+        </div>
+        <span class="mono" style="font-size: 8.5px; color: #8589a8">10.2k</span>
+      </div>
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 5px">
+        <span class="mono" style="font-size: 10px; color: #8589a8">20</span>
+        <div style="width: 100%; height: 74px; border-radius: 8px; background: rgba(255,255,255,0.03); display: flex; flex-direction: column; justify-content: flex-end; padding: 3px; box-sizing: border-box">
+          <div style="height: 6px; border-radius: 5px; background: rgba(255,92,92,0.55)"></div>
+        </div>
+        <span class="mono" style="font-size: 8.5px; color: #8589a8">10.1k</span>
+      </div>
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 5px">
+        <span class="mono" style="font-size: 10px; color: #8589a8">21</span>
+        <div style="width: 100%; height: 74px; border-radius: 8px; background: rgba(255,255,255,0.03); display: flex; flex-direction: column; justify-content: flex-end; padding: 3px; box-sizing: border-box">
+          <div style="height: 6px; border-radius: 5px; background: rgba(255,92,92,0.55)"></div>
+        </div>
+        <span class="mono" style="font-size: 8.5px; color: #8589a8">9.9k</span>
+      </div>
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 5px">
+        <span class="mono" style="font-size: 10px; color: #8589a8">22</span>
+        <div style="width: 100%; height: 74px; border-radius: 8px; background: rgba(255,255,255,0.03); display: flex; flex-direction: column; justify-content: flex-end; padding: 3px; box-sizing: border-box">
+          <div style="height: 6px; border-radius: 5px; background: rgba(255,92,92,0.55)"></div>
+        </div>
+        <span class="mono" style="font-size: 8.5px; color: #8589a8">9.9k</span>
+      </div>
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 5px">
+        <span class="mono" style="font-size: 10px; color: #8589a8">23</span>
+        <div style="width: 100%; height: 74px; border-radius: 8px; background: rgba(255,255,255,0.03); display: flex; flex-direction: column; justify-content: flex-end; padding: 3px; box-sizing: border-box">
+          <div style="height: 6px; border-radius: 5px; background: rgba(255,92,92,0.55)"></div>
+        </div>
+        <span class="mono" style="font-size: 8.5px; color: #8589a8">9.8k</span>
+      </div>
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 5px">
+        <span class="mono" style="font-size: 10px; color: #8589a8">24</span>
+        <div style="width: 100%; height: 74px; border-radius: 8px; background: rgba(255,255,255,0.03); display: flex; flex-direction: column; justify-content: flex-end; padding: 3px; box-sizing: border-box">
+          <div style="height: 6px; border-radius: 5px; background: rgba(255,92,92,0.55)"></div>
+        </div>
+        <span class="mono" style="font-size: 8.5px; color: #8589a8">9.7k</span>
+      </div>
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 5px">
+        <span class="mono" style="font-size: 10px; color: #8589a8">25</span>
+        <div style="width: 100%; height: 74px; border-radius: 8px; background: rgba(255,255,255,0.03); display: flex; flex-direction: column; justify-content: flex-end; padding: 3px; box-sizing: border-box">
+          <div style="height: 6px; border-radius: 5px; background: rgba(255,92,92,0.55)"></div>
+        </div>
+        <span class="mono" style="font-size: 8.5px; color: #8589a8">9.6k</span>
+      </div>
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 5px">
+        <span class="mono" style="font-size: 10px; color: #8589a8">26</span>
+        <div style="width: 100%; height: 74px; border-radius: 8px; background: rgba(255,255,255,0.03); display: flex; flex-direction: column; justify-content: flex-end; padding: 3px; box-sizing: border-box">
+          <div style="height: 6px; border-radius: 5px; background: rgba(255,92,92,0.55)"></div>
+        </div>
+        <span class="mono" style="font-size: 8.5px; color: #8589a8">9.5k</span>
+      </div>
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 5px">
+        <span class="mono" style="font-size: 10px; color: #8589a8">27</span>
+        <div style="width: 100%; height: 74px; border-radius: 8px; background: rgba(255,255,255,0.03); display: flex; flex-direction: column; justify-content: flex-end; padding: 3px; box-sizing: border-box">
+          <div style="height: 6px; border-radius: 5px; background: rgba(255,92,92,0.55)"></div>
+        </div>
+        <span class="mono" style="font-size: 8.5px; color: #8589a8">9.4k</span>
+      </div>
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 5px">
+        <span class="mono" style="font-size: 10px; color: #8589a8">28</span>
+        <div style="width: 100%; height: 74px; border-radius: 8px; background: rgba(255,255,255,0.03); display: flex; flex-direction: column; justify-content: flex-end; padding: 3px; box-sizing: border-box">
+          <div style="height: 6px; border-radius: 5px; background: rgba(255,92,92,0.55)"></div>
+        </div>
+        <span class="mono" style="font-size: 8.5px; color: #8589a8">9.0k</span>
+      </div>
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 5px">
+        <span class="mono" style="font-size: 10px; color: #8589a8">29</span>
+        <div style="width: 100%; height: 74px; border-radius: 8px; background: rgba(255,255,255,0.03); display: flex; flex-direction: column; justify-content: flex-end; padding: 3px; box-sizing: border-box">
+          <div style="height: 6px; border-radius: 5px; background: rgba(255,92,92,0.55)"></div>
+        </div>
+        <span class="mono" style="font-size: 8.5px; color: #8589a8">8.9k</span>
+      </div>
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 5px">
+        <span class="mono" style="font-size: 10px; color: #8589a8">30</span>
+        <div style="width: 100%; height: 74px; border-radius: 8px; background: rgba(255,255,255,0.03); display: flex; flex-direction: column; justify-content: flex-end; padding: 3px; box-sizing: border-box">
+          <div style="height: 6px; border-radius: 5px; background: rgba(255,92,92,0.55)"></div>
+        </div>
+        <span class="mono" style="font-size: 8.5px; color: #8589a8">8.8k</span>
+      </div>
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 5px">
+        <span class="mono" style="font-size: 10px; color: #8589a8">31</span>
+        <div style="width: 100%; height: 74px; border-radius: 8px; background: rgba(255,255,255,0.03); display: flex; flex-direction: column; justify-content: flex-end; padding: 3px; box-sizing: border-box">
+          <div style="height: 6px; border-radius: 5px; background: rgba(255,92,92,0.55)"></div>
+        </div>
+        <span class="mono" style="font-size: 8.5px; font-weight: 700; color: #9a9db3">8.7k</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- dos zonas grandes -->
+  <div style="display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: 14px; flex-grow: 1; min-height: 0">
+
+    <!-- HOY, a lo grande -->
+    <div style="border-radius: 18px; border: 1px solid rgba(0,224,192,0.3); background: linear-gradient(165deg, rgba(0,224,192,0.1), rgba(0,224,192,0.02));
+         padding: 22px 24px; display: flex; flex-direction: column; gap: 16px; min-width: 0">
+
+      <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 14px">
+        <div style="display: flex; flex-direction: column; gap: 4px">
+          <span class="lbl" style="color: #00e0c0">Martes 18 de agosto · hoy</span>
+          <span class="mono" style="font-size: 62px; font-weight: 700; line-height: 0.9; color: #00e0c0">$10,336</span>
+          <span style="font-size: 13px; color: #9a9db3; margin-top: 3px">es lo que te queda hasta el 31</span>
+        </div>
+        <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 6px; padding: 9px 13px; border-radius: 12px;
+             background: rgba(0,232,122,0.1); border: 1px solid rgba(0,232,122,0.3)">
+          <span style="display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; color: #00e87a">
+            <span style="width: 7px; height: 7px; border-radius: 50%; background: #00e87a; box-shadow: 0 0 9px #00e87a"></span>Vas holgado</span>
+          <span class="mono" style="font-size: 11px; color: #9a9db3">$795 por día</span>
+        </div>
+      </div>
+
+      <!-- la resta, explicita -->
+      <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px">
+        <div style="padding: 12px 14px; border-radius: 12px; background: rgba(255,255,255,0.045); display: flex; flex-direction: column; gap: 4px">
+          <span class="lbl" style="color: #00e87a">Entró el 15</span>
+          <span class="mono" style="font-size: 19px; font-weight: 700; color: #00e87a">+$20,500</span>
+          <span style="font-size: 10px; color: #8589a8">tu nómina</span>
+        </div>
+        <div style="padding: 12px 14px; border-radius: 12px; background: rgba(255,255,255,0.045); display: flex; flex-direction: column; gap: 4px">
+          <span class="lbl" style="color: #ff5c5c">Ya salió</span>
+          <span class="mono" style="font-size: 19px; font-weight: 700; color: #ff5c5c">−$10,164</span>
+          <span style="font-size: 10px; color: #8589a8">del 15 al 18</span>
+        </div>
+        <div style="padding: 12px 14px; border-radius: 12px; background: rgba(255,255,255,0.045); display: flex; flex-direction: column; gap: 4px">
+          <span class="lbl">Falta por salir</span>
+          <span class="mono" style="font-size: 19px; font-weight: 700; color: #f4f4f8">−$1,662</span>
+          <span style="font-size: 10px; color: #8589a8">del 19 al 31</span>
+        </div>
+      </div>
+
+      <!-- lo que pagas hoy -->
+      <div style="display: flex; flex-direction: column; gap: 8px; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.1)">
+        <span class="lbl">Lo que pagas hoy</span>
+        <div style="display: flex; align-items: center; gap: 11px; padding: 12px 14px; border-radius: 12px; background: rgba(255,255,255,0.05)">
+          <span style="width: 8px; height: 8px; border-radius: 50%; background: #14b8a6; flex-shrink: 0"></span>
+          <span style="font-size: 13.5px; font-weight: 600; color: #f4f4f8; flex-grow: 1">Apple Watch <span style="font-weight: 400; color: #8589a8">· mensualidad de la TC Banamex</span></span>
+          <span class="mono" style="font-size: 15px; font-weight: 700; color: #f4f4f8">−$854</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 11px; padding: 12px 14px; border-radius: 12px; background: rgba(255,255,255,0.05)">
+          <span style="width: 8px; height: 8px; border-radius: 50%; background: #ff5c5c; flex-shrink: 0"></span>
+          <span style="font-size: 13.5px; font-weight: 600; color: #f4f4f8; flex-grow: 1">Comer <span style="font-weight: 400; color: #8589a8">· desayuno, comida y cena</span></span>
+          <span class="mono" style="font-size: 15px; font-weight: 700; color: #f4f4f8">−$115</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- LA SEMANA -->
+    <div style="border-radius: 18px; border: 1px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.04);
+         padding: 20px 22px; display: flex; flex-direction: column; gap: 15px; min-width: 0">
+
+      <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 10px">
+        <div style="display: flex; flex-direction: column; gap: 3px">
+          <span class="lbl" style="color: #b06eff">Esta semana · del 15 al 21</span>
+          <span class="ttl" style="font-size: 20px; font-weight: 700; color: #f4f4f8">Cierras con $9,991</span>
+        </div>
+        <span class="mono" style="font-size: 10px; color: #8589a8; white-space: nowrap">3 de 5</span>
+      </div>
+
+      <div style="display: flex; gap: 9px">
+        <div style="flex-grow: 1; padding: 11px 13px; border-radius: 11px; background: rgba(0,232,122,0.08); border: 1px solid rgba(0,232,122,0.22)">
+          <div class="lbl" style="color: #00e87a">Entra</div>
+          <div class="mono" style="font-size: 17px; font-weight: 700; color: #00e87a; margin-top: 3px">+$20,500</div>
+        </div>
+        <div style="flex-grow: 1; padding: 11px 13px; border-radius: 11px; background: rgba(255,92,92,0.07); border: 1px solid rgba(255,92,92,0.2)">
+          <div class="lbl" style="color: #ff5c5c">Sale</div>
+          <div class="mono" style="font-size: 17px; font-weight: 700; color: #ff5c5c; margin-top: 3px">−$10,509</div>
+        </div>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 9px">
+        <span class="lbl">En qué se fue</span>
+        <div style="display: flex; align-items: center; gap: 9px">
+          <span class="mono" style="font-size: 11.5px; font-weight: 700; color: #f4f4f8; width: 54px; flex-shrink: 0; text-align: right">$6,700</span>
+          <div style="flex-grow: 1; height: 22px; border-radius: 6px; background: #64748b; display: flex; align-items: center; padding: 0 9px">
+            <span style="font-size: 11px; font-weight: 600; color: #f4f4f8">Crédito automotriz</span>
+          </div>
+        </div>
+        <div style="display: flex; align-items: center; gap: 9px">
+          <span class="mono" style="font-size: 11.5px; font-weight: 700; color: #f4f4f8; width: 54px; flex-shrink: 0; text-align: right">$1,500</span>
+          <div style="width: 24%; height: 22px; border-radius: 6px; background: #10b981; flex-shrink: 0"></div>
+          <span style="font-size: 11px; color: #9a9db3">CETES · ahorro</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 9px">
+          <span class="mono" style="font-size: 11.5px; font-weight: 700; color: #f4f4f8; width: 54px; flex-shrink: 0; text-align: right">$854</span>
+          <div style="width: 14%; height: 22px; border-radius: 6px; background: #14b8a6; flex-shrink: 0"></div>
+          <span style="font-size: 11px; color: #9a9db3">Apple Watch</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 9px">
+          <span class="mono" style="font-size: 11.5px; font-weight: 700; color: #f4f4f8; width: 54px; flex-shrink: 0; text-align: right">$805</span>
+          <div style="width: 13%; height: 22px; border-radius: 6px; background: #ff5c5c; flex-shrink: 0"></div>
+          <span style="font-size: 11px; color: #9a9db3">Comer · 7 días</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 9px">
+          <span class="mono" style="font-size: 11.5px; font-weight: 700; color: #f4f4f8; width: 54px; flex-shrink: 0; text-align: right">$650</span>
+          <div style="width: 11%; height: 22px; border-radius: 6px; background: #22c55e; flex-shrink: 0"></div>
+          <span style="font-size: 11px; color: #9a9db3">Gym</span>
+        </div>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 8px; padding-top: 14px; border-top: 1px solid rgba(255,255,255,0.09); margin-top: auto">
+        <div style="display: flex; align-items: baseline; justify-content: space-between">
+          <span class="lbl" style="color: #ffd93d">Te toca</span>
+          <span class="mono" style="font-size: 9.5px; color: #00e87a">4 hechas</span>
+        </div>
+        <div style="display: flex; align-items: flex-start; gap: 9px; padding: 10px 12px; border-radius: 11px;
+             background: rgba(255,217,61,0.06); border: 1px solid rgba(255,217,61,0.22)">
+          <span class="mono" style="font-size: 9px; font-weight: 700; color: #05050a; background: #ffd93d; padding: 2px 5px; border-radius: 4px; flex-shrink: 0">P1</span>
+          <span style="font-size: 12px; line-height: 1.4; color: #f4f4f8">Fondo de emergencia a $10,000</span>
+        </div>
+        <div style="display: flex; align-items: flex-start; gap: 9px; padding: 10px 12px; border-radius: 11px;
+             background: rgba(255,217,61,0.06); border: 1px solid rgba(255,217,61,0.22)">
+          <span class="mono" style="font-size: 9px; font-weight: 700; color: #05050a; background: #ffd93d; padding: 2px 5px; border-radius: 4px; flex-shrink: 0">P2</span>
+          <span style="font-size: 12px; line-height: 1.4; color: #f4f4f8">Liquidar la TC BBVA</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

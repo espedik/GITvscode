@@ -1,0 +1,12 @@
+{
+  "artboards": [
+    { "file": "Main.dc.html", "x": 0, "y": 0, "w": 1440, "h": 980, "title": "Tablero rediseñado" },
+    { "file": "Cambios.dc.html", "x": 1560, "y": 0, "w": 780, "h": 980, "title": "Qué se arregla" },
+    { "file": "DireccionB.dc.html", "x": 0, "y": 1120, "w": 1440, "h": 980, "title": "Dirección B — una sola línea del tiempo" }
+  ],
+  "annotations": [
+    { "id": "nota-riel", "x": 0, "y": -150, "w": 560, "text": "El riel de arriba es lo nuevo: una sola cifra manda y la línea muestra cómo cae el dinero desde que entró la nómina. Las tres columnas pasan a ser el detalle, no tres respuestas compitiendo." },
+    { "id": "nota-b", "x": 0, "y": 1000, "w": 560, "text": "Dirección B: el calendario del mes se convierte en una línea del tiempo de la quincena, y quedan dos paneles grandes en vez de tres columnas. Más aire y menos que leer, pero se pierde la vista del mes completo." }
+  ],
+  "launch": { "view": "focused", "file": "Main.dc.html" }
+}

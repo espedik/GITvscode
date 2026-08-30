@@ -278,130 +278,82 @@ así que el peso se lee de un vistazo. Borde ámbar cuando ese día cae un pago 
 Las flechas ‹ › cambian de mes. **Al abrir un mes que no es el actual se elige el primer día con
 movimiento**, no el 1: un mes que se abre en un día vacío parece que no tiene datos.
 
-### El día: cuánto te queda, no cuánto te cuesta
+### El riel: una sola cifra manda
 
-Adán mandó dos veces la misma captura — la tarjeta de "Te queda ese día" con el desglose de
-barras — y la segunda fue clara: *"pero no pusiste este diseño por dia, no lo cambiaste"*. El
-panel decía **te cuesta**, que es justo la pregunta contraria.
+Adán, 2026-08-30: *"me gusta, pero hay cosas no muy entendibles, hazlo entendible y
+agradablemente visual y futurista y moderno, pero mas entendible"*. Diseñado en canvas, aprobado
+tal cual y llevado al HTML.
 
-El número grande es el **saldo de la quincena hasta ese día**: lo que entró con la nómina menos
-todo lo que ya salió — pagos fijos y comida — desde el 1 o desde el 15.
-
-#### Cómo se fue, día a día
-
-Debajo iba el acumulado por concepto. Adán, sobre esa misma tarjeta: *"aqui desglozamelo por
-dia"*. El acumulado contestaba *en qué* se fue, pero no *cuándo* — y el cuándo es lo que explica
-por qué el 8 te quedan $8,086 y no otra cifra.
-
-Ahora se guarda la **traza**: una fila por día desde que entró la nómina hasta el día que estás
-viendo, y la última cierra justo en el número grande.
+El problema no eran los datos, era que **tres cifras grandes competían** — la del día, la de la
+semana y la del calendario — sin que ninguna dijera cuál mandaba. Ahora manda una sola, en una
+banda a lo ancho encima de las tres columnas:
 
 ```
-CÓMO SE FUE, DÍA A DÍA        desde el día 1 · −$12,414
-  1    +$20,500  Renta, iPhone y comer    −$11,609    $8,891
-       ████████████████████████████████████████████████
-  2–7  6 días de comer                       −$690    $8,201
-       ███
-  8    desayuno, comida y cena               −$115    $8,086   ← el día abierto
-       ▌
+MARTES 18 · HACE 11 DÍAS · TE QUEDA      CÓMO CAE EL DINERO…        CIERRAS EL 31 CON
+$10,336                                   ╲__                        $8,674
+● Vas holgado · te sobran $667/día            ╲______                Es lo que te sobra
+                                          15 16 17 18 … 31            de esta quincena
 ```
 
-Cada fila lleva **dos lecturas a la vez**: la barra es *lo que salió en ese tramo* (proporcional al
-más caro, y del color del concepto que manda — amarillo renta, rojo comer), y el número de la
-derecha es *lo que quedaba al terminarlo*. Así el día de la renta se ve como el escalón que es, y
-los días de solo comer como la bajada lenta.
+`ctTramo(nSel, nDias)` es el único cálculo: recorre la quincena desde que entra la nómina, arrastra
+el saldo día a día y devuelve la serie completa. De ahí salen el número grande, la línea, el cierre
+y la resta de la columna del día — **un solo cálculo, no cuatro que puedan discrepar**.
 
-#### Los días de solo comer van juntos
+**El estado en palabras** es lo que faltaba: los números estaban, pero no decían si vas bien.
+`Vas holgado` / `Vas justo` / `Te vas a pasar` sale de comparar lo que sobra al cerrar el tramo
+contra lo que cuesta comer una semana. Al lado, `$667/día`, que es ese sobrante repartido entre los
+días que quedan — lo que puedes gastar de más, no lo que tienes en la cuenta.
 
-Adán, viendo nueve filas idénticas de `solo comer −$115`: *"no desgloces todas las comidas, solo
-pon una que va al dia"*. Tenía razón — catorce filas iguales no dicen nada que no diga una.
+**La línea está escalada al rango del tramo, no al cero.** Con el tope puesto en la nómina
+($20,500) los saldos vivían todos en la mitad de arriba y la línea salía plana. Escalada entre su
+propio mínimo y máximo, se ve el escalón del día 15 y la bajada lenta del resto. Los 17 días son
+botones: tocar uno mueve el día y el calendario a la vez.
 
-Los días seguidos en que **no cae ningún pago fijo** se juntan en un tramo (`2–7 · 6 días de
-comer`), con la suma y el saldo al cerrarlo. Van sueltos el día que estás viendo y cualquiera con
-pago fijo, que son los que de verdad mueven el saldo. La quincena 1 completa pasó de 14 filas a 5,
-y el mes entero de 17 a 8, sin perder un peso: los totales y el cierre no cambian.
+### Elige el día
 
-**La comida nombra sus tres tiempos.** *"la cena no te olvides todos los dias y desayuno"*. El
-`$115` sale de la despensa semanal completa de `LISTA_COMPRAS.comida` dividida entre 7, así que
-las tres comidas ya estaban dentro — lo que faltaba era decirlo. El día suelto dice **"desayuno,
-comida y cena"** en vez de "solo comer", el día con pagos dice **"Renta, iPhone y comer"** para
-que se vea que ese monto también los trae, y la línea de *lo que pasa ese día* quedó como
-`Comer · desayuno, comida y cena`. Ningún día cuesta $0.
+La cuadrícula ya no mide lo anotado en Finanzas con una escala propia: **la barra es siempre dinero
+que sale y su color es siempre el concepto**, los mismos hex en las tres columnas. Alto y ancho van
+en proporción, así el día de la renta se ve como el escalón que es y uno de solo comer no ocupa lo
+mismo.
 
-**El reinicio se ve en la cifra**: el día 14 cierra en $5,896 y el 15 salta a $12,185 con una sola
-fila en la traza, porque entra la segunda nómina y el tramo empieza de cero. Comprobado en los
-seis días de control (1, 8, 14, 15, 20, 31) y en los cuatro tamaños: el número grande y la última
-fila coinciden siempre.
+Y lleva **leyenda**, que era lo que más despistaba: seis colores nombrados (renta, deuda o crédito,
+suscripción, gym, ahorro, solo comer) más el borde de "entra nómina". Lo anotado en Finanzas no se
+pierde: va al pie, en una línea.
 
-Debajo, **lo que pasa ese día** — comer y los pagos que caen — y, si hay movimientos anotados en
-Finanzas, su desglose por categoría. Lo anotado va aparte y no se suma: es lo que pasó por la
-cuenta, no lo que consume el tramo.
+### El día: qué pagas y de dónde sale el saldo
 
-### La semana: el tramo que se mira
+Tres bloques, en el orden en que se preguntan:
 
-Adán, 2026-08-29: *"no quiero datos por quincena, quiero por semana"*.
+1. **Lo que pagas el 18** — comer y los pagos que caen, con el total del día.
+2. **De dónde sale ese saldo** — la resta explícita: entró el 15 `+$20,500`, salió del 15 al 18
+   `−$10,164`, te queda `$10,336`, y falta por salir `$1,662` del 19 al 31. Esto sustituye al
+   `viene de $0`, que no quería decir nada.
+3. **Los días antes de este** — los tres anteriores con su saldo, tocables.
 
-La quincena sigue siendo la **mecánica** — el dinero entra el 1 y el 15, y el saldo se reinicia
-ahí — pero ya no es lo que se lee. La tercera columna abre en la semana del día elegido y
-responde tres cosas en ese orden: **con cuánto la cierras**, **en qué se te fue** y **qué cae
-cada día**.
+### La semana: el cierre como una resta
 
-`ctQuincena(q, nDias)` sigue siendo el motor — reparte pagos fijos y comida por día y arrastra el
-saldo — pero la vista toma de él una sola semana: `Q.semanas.filter(x => x.n === ctSemDe(nSel))`.
+El cierre dejó de ser una cifra suelta y se explica en tres líneas — *arrancaste con* $20,500,
+*se fue en la semana* −$10,509, *cierras el domingo con* $9,991 — seguidas de en qué se fue, de
+mayor a menor, y de lo que toca esta semana con su casilla.
 
-#### Con cuánto cierras
+El día a día de la semana desapareció: lo cubre el riel, y estaba dos veces.
 
-El número grande es el saldo al terminar la semana, y debajo van las tres piezas que lo explican:
-`entra`, `sale` y **`viene de`** (`W.saldo - W.mueve`), que es lo que traes de la semana anterior.
-Esa tercera es la que hace legible el reinicio — vale `$0` justo en las semanas que arrancan con
-nómina, y la línea de abajo lo dice con palabras: *"Arranca con la nómina del día 15: el saldo se
-reinicia aquí"* o *"Continúa el tramo que arrancó el día 15"*.
+### El tablero ya no depende de que Finanzas se haya abierto
 
-Las cinco semanas de un mes de 31 días, comprobadas en los cuatro tamaños:
+Encontrado al medir este rediseño, y **anterior a él**: `ctAgenda` leía las deudas solo de
+`D.fin.debts`, que llena Finanzas.html. En un navegador donde Finanzas nunca se hubiera abierto, el
+tablero veía **3 de los 8 pagos del mes** — faltaban el crédito automotriz, el iPhone y las
+tarjetas — y el saldo salía inflado en miles: el 15 marcaba $18,885 en vez de $12,185.
 
-```
-S1  1–7    +$20,500  −$12,299   $8,201   ← entra nómina, viene de $0
-S2  8–14              −$2,305    $5,896
-S3  15–21   +$20,500  −$10,509   $9,991   ← entra nómina, viene de $0
-S4  22–28              −$972      $9,019
-S5  29–31              −$345      $8,674
-```
+Ahora, si `D.fin.debts` viene vacío, se leen de `CIFRAS.DEUDAS_SEED`, que es la misma fuente que
+siembra Finanzas. Comprobado: con Finanzas abierto y sin abrir, los 8 pagos y las cinco cifras de
+control salen idénticos.
 
-**Cinco semanas cuando toca.** Adán: *"vi que algunos meses tienen 5 semanas, debes aun asi hacer
-los calculos"*. `ctSemDe` pasó de un corte fijo en cuatro a `Math.min(5, Math.ceil(n/7))`; con el
-anterior, los días 29 en adelante se caían de la cuenta y el cierre salía de más.
-
-**Didi queda fuera a propósito.** Es ingreso variable, y contarlo daría un colchón de $11,200 que
-puede no llegar: la semana tiene que aguantar solo con la nómina.
-
-#### En qué se fue esta semana
-
-Barras por concepto, ordenadas de mayor a menor y con la comida como una línea más — no en un
-bloque aparte. Los colores salen de `colorDeW()`, los mismos hex que usa Finanzas, para que un
-concepto tenga el mismo color en las dos pantallas. La semana 3:
-
-```
-Crédito Automotriz  $6,700   CETES  $1,500   Apple Watch MSI  $854
-Comer · 7 días        $805   Gym      $650
-```
-
-#### Día a día
-
-Una fila por día con lo que sale — comida incluida — y los conceptos que caen, o *"solo comer"* si
-no cae ninguno. Cada fila es un `<button>` que llama a `ctVerDia()`: tocar el 18 en la semana
-mueve el panel del día y el calendario a la vez. El día abierto queda resaltado en la lista.
-
-#### El auto, el día 15
+### El auto, el día 15
 
 Adán: *"el pago automotriz ponlo los dias 15 de cada mes"*. No es un detalle de un día: con
-`day: 14` los $6,700 caían en la semana 2 — la que no recibe nómina — y la hundían. Corregido en
-el maestro y en su migración (`_autoDia15_20260829`).
-
-#### Lo hecho contra lo que toca
-
-Las dos listas van **en paralelo, no una debajo de otra**: a la izquierda lo cerrado, a la derecha
-lo que toca en esa semana, con su casilla. Adán: *"detallarme todo lo de la semana y lo que ya
-hici contraelo"*.
+`day: 14` los $6,700 caían en la semana que no recibe nómina y la hundían. Corregido en el maestro
+y en su migración (`_autoDia15_20260829`).
 
 ### Medidas
 

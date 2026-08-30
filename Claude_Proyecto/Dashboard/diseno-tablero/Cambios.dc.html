@@ -1,0 +1,127 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap">
+  <style>
+    body { margin: 0; background: #05050a; font-family: 'Inter', -apple-system, sans-serif; }
+    a { color: #00e0c0; } a:hover { color: #5df0dc; }
+    .mono { font-family: 'Space Grotesk', monospace; font-variant-numeric: tabular-nums; letter-spacing: -0.02em; }
+    .ttl { font-family: 'Fraunces', Georgia, serif; }
+    .lbl { font-size: 9px; font-weight: 800; letter-spacing: 0.18em; text-transform: uppercase; color: #8589a8; }
+  </style>
+</helmet>
+
+<div style="width: 780px; height: 980px; background: #05050a; padding: 26px 28px; box-sizing: border-box;
+     display: flex; flex-direction: column; gap: 15px">
+
+  <div style="display: flex; flex-direction: column; gap: 5px">
+    <span class="lbl" style="color: #00e0c0">Lo que no se entendía</span>
+    <span class="ttl" style="font-size: 26px; font-weight: 700; color: #f4f4f8; line-height: 1.15">Seis arreglos concretos</span>
+  </div>
+
+  <!-- 1 -->
+  <div style="display: flex; gap: 13px; padding: 14px 16px; border-radius: 14px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1)">
+    <span class="mono" style="font-size: 15px; font-weight: 700; color: #00e0c0; flex-shrink: 0; width: 18px">1</span>
+    <div style="display: flex; flex-direction: column; gap: 7px; min-width: 0">
+      <span style="font-size: 13.5px; font-weight: 700; color: #f4f4f8">Había tres cifras grandes compitiendo</span>
+      <span style="font-size: 11.5px; color: #9a9db3; line-height: 1.5">$8,086 del día, $9,991 de la semana y el del calendario. Ninguna decía cuál mandaba, así que las tres se leían como iguales.</span>
+      <div style="display: flex; align-items: center; gap: 9px; margin-top: 2px">
+        <span style="font-size: 10.5px; color: #00e87a; font-weight: 700">Ahora</span>
+        <span style="font-size: 11.5px; color: #9a9db3">una sola cifra manda arriba, y las columnas la explican.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2 -->
+  <div style="display: flex; gap: 13px; padding: 14px 16px; border-radius: 14px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1)">
+    <span class="mono" style="font-size: 15px; font-weight: 700; color: #00e0c0; flex-shrink: 0; width: 18px">2</span>
+    <div style="display: flex; flex-direction: column; gap: 7px; min-width: 0">
+      <span style="font-size: 13.5px; font-weight: 700; color: #f4f4f8">"viene de $0" no quería decir nada</span>
+      <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap">
+        <span style="font-size: 11.5px; color: #ff5c5c; text-decoration: line-through; opacity: 0.75">viene de $0</span>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8589a8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
+        <span style="font-size: 11.5px; color: #f4f4f8; font-weight: 600">Entró el 15 · Ya salió · Falta por salir</span>
+      </div>
+      <span style="font-size: 11.5px; color: #9a9db3; line-height: 1.5">Tres casillas que son una resta, no una jerga. Se lee de izquierda a derecha y da el saldo.</span>
+    </div>
+  </div>
+
+  <!-- 3 -->
+  <div style="display: flex; gap: 13px; padding: 14px 16px; border-radius: 14px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1)">
+    <span class="mono" style="font-size: 15px; font-weight: 700; color: #00e0c0; flex-shrink: 0; width: 18px">3</span>
+    <div style="display: flex; flex-direction: column; gap: 7px; min-width: 0">
+      <span style="font-size: 13.5px; font-weight: 700; color: #f4f4f8">El calendario tenía barras de colores sin leyenda</span>
+      <span style="font-size: 11.5px; color: #9a9db3; line-height: 1.5">Amarillo, verde, gris, rojo — y ningún sitio que dijera qué era cada uno.</span>
+      <div style="display: flex; flex-wrap: wrap; gap: 6px 14px; margin-top: 3px">
+        <span style="display: flex; align-items: center; gap: 6px"><span style="width: 14px; height: 5px; border-radius: 2px; background: #ffd93d"></span><span style="font-size: 10.5px; color: #9a9db3">Renta</span></span>
+        <span style="display: flex; align-items: center; gap: 6px"><span style="width: 14px; height: 5px; border-radius: 2px; background: #64748b"></span><span style="font-size: 10.5px; color: #9a9db3">Deuda</span></span>
+        <span style="display: flex; align-items: center; gap: 6px"><span style="width: 14px; height: 5px; border-radius: 2px; background: #14b8a6"></span><span style="font-size: 10.5px; color: #9a9db3">Suscripción</span></span>
+        <span style="display: flex; align-items: center; gap: 6px"><span style="width: 14px; height: 5px; border-radius: 2px; background: rgba(255,92,92,0.55)"></span><span style="font-size: 10.5px; color: #9a9db3">Solo comer</span></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4 -->
+  <div style="display: flex; gap: 13px; padding: 14px 16px; border-radius: 14px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1)">
+    <span class="mono" style="font-size: 15px; font-weight: 700; color: #00e0c0; flex-shrink: 0; width: 18px">4</span>
+    <div style="display: flex; flex-direction: column; gap: 7px; min-width: 0">
+      <span style="font-size: 13.5px; font-weight: 700; color: #f4f4f8">Las barras medían cosas distintas en cada columna</span>
+      <span style="font-size: 11.5px; color: #9a9db3; line-height: 1.5">En el día eran gasto por jornada; en la semana, gasto por concepto. Misma forma, dos significados — eso es lo que más despista.</span>
+      <div style="display: flex; align-items: center; gap: 9px; margin-top: 2px">
+        <span style="font-size: 10.5px; color: #00e87a; font-weight: 700">Ahora</span>
+        <span style="font-size: 11.5px; color: #9a9db3">la barra siempre es dinero que sale, y el color siempre es el concepto.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5 -->
+  <div style="display: flex; gap: 13px; padding: 14px 16px; border-radius: 14px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1)">
+    <span class="mono" style="font-size: 15px; font-weight: 700; color: #00e0c0; flex-shrink: 0; width: 18px">5</span>
+    <div style="display: flex; flex-direction: column; gap: 7px; min-width: 0">
+      <span style="font-size: 13.5px; font-weight: 700; color: #f4f4f8">Los títulos no decían qué se contesta ahí</span>
+      <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap">
+        <span style="font-size: 11.5px; color: #ff5c5c; text-decoration: line-through; opacity: 0.75">El día · La semana</span>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8589a8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
+        <span style="font-size: 11.5px; color: #f4f4f8; font-weight: 600">Elige el día · Lo que pagas el 18 · Cierras con</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6 -->
+  <div style="display: flex; gap: 13px; padding: 14px 16px; border-radius: 14px;
+       background: rgba(0,232,122,0.06); border: 1px solid rgba(0,232,122,0.24)">
+    <span class="mono" style="font-size: 15px; font-weight: 700; color: #00e87a; flex-shrink: 0; width: 18px">6</span>
+    <div style="display: flex; flex-direction: column; gap: 7px; min-width: 0">
+      <span style="font-size: 13.5px; font-weight: 700; color: #f4f4f8">Faltaba la respuesta que de verdad buscas</span>
+      <span style="font-size: 11.5px; color: #9a9db3; line-height: 1.5">Los números estaban, pero no decían si vas bien. Ahora hay una lectura en palabras junto a la cifra:</span>
+      <div style="display: flex; flex-wrap: wrap; gap: 7px; margin-top: 3px">
+        <span style="display: flex; align-items: center; gap: 6px; padding: 5px 10px; border-radius: 20px; background: rgba(0,232,122,0.12); border: 1px solid rgba(0,232,122,0.3)">
+          <span style="width: 6px; height: 6px; border-radius: 50%; background: #00e87a"></span>
+          <span style="font-size: 11px; font-weight: 700; color: #00e87a">Vas holgado</span>
+        </span>
+        <span style="display: flex; align-items: center; gap: 6px; padding: 5px 10px; border-radius: 20px; background: rgba(255,217,61,0.1); border: 1px solid rgba(255,217,61,0.28)">
+          <span style="width: 6px; height: 6px; border-radius: 50%; background: #ffd93d"></span>
+          <span style="font-size: 11px; font-weight: 700; color: #ffd93d">Vas justo</span>
+        </span>
+        <span style="display: flex; align-items: center; gap: 6px; padding: 5px 10px; border-radius: 20px; background: rgba(255,92,92,0.1); border: 1px solid rgba(255,92,92,0.28)">
+          <span style="width: 6px; height: 6px; border-radius: 50%; background: #ff5c5c"></span>
+          <span style="font-size: 11px; font-weight: 700; color: #ff5c5c">Te vas a pasar</span>
+        </span>
+      </div>
+      <span style="font-size: 11px; color: #8589a8; line-height: 1.5; margin-top: 2px">Sale de dividir lo que queda entre los días que faltan del tramo, contra lo que gastas al día.</span>
+    </div>
+  </div>
+
+  <div style="margin-top: auto; padding: 13px 16px; border-radius: 13px; background: rgba(176,110,255,0.07); border: 1px solid rgba(176,110,255,0.22)">
+    <span style="font-size: 11.5px; color: #9a9db3; line-height: 1.55">Lo que <b style="color: #f4f4f8">no</b> cambia: los mismos datos, del mismo archivo maestro. Ni un número nuevo, ni un dato duplicado — solo mejor ordenados y mejor nombrados.</span>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>
