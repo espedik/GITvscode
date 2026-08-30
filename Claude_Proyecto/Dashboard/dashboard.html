@@ -6077,7 +6077,23 @@ function renderCoachTablero(){
                  col: may ? colorDe(may.t) : '#ef4444' });
   }
   const queda = corre;
-  const maxSale = traza.reduce((m,t)=>Math.max(m, t.sale), 1);
+
+  // Adán: "no desgloces todas las comidas, solo pon una que va al dia". Catorce filas
+  // idénticas de "solo comer" no dicen nada que no diga una: los días seguidos en que
+  // no cae ningún pago se juntan en un tramo. Van sueltos el día abierto y cualquiera
+  // con pago fijo, que son los que de verdad mueven el saldo.
+  const filas = [];
+  traza.forEach(function(t){
+    const suelto = t.ent > 0 || !!t.txt || t.d === nSel;
+    const prev = filas[filas.length-1];
+    if(!suelto && prev && !prev.suelto){
+      prev.fin = t.d; prev.dias++; prev.sale += t.sale; prev.saldo = t.saldo;
+    } else {
+      filas.push({ ini:t.d, fin:t.d, dias:1, ent:t.ent, sale:t.sale, saldo:t.saldo,
+                   txt:t.txt, col:t.col, suelto:suelto, act:t.d === nSel });
+    }
+  });
+  const maxSale = filas.reduce((m,f)=>Math.max(m, f.sale), 1);
 
   const DOWN = ['lunes','martes','mi\u00e9rcoles','jueves','viernes','s\u00e1bado','domingo'];
   const dowSel = DOWN[(new Date(Y,M-1,nSel).getDay()+6)%7];
@@ -6103,23 +6119,27 @@ function renderCoachTablero(){
       '<div style="display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin-bottom:2px">'+
         '<span class="ct-lbl">C\u00f3mo se fue, d\u00eda a d\u00eda</span>'+
         '<span class="ct-num" style="font-size:9.5px;color:var(--text3)">desde el d\u00eda '+qIni+' \u00b7 \u2212'+money(qSale)+'</span></div>'+
-      traza.map(function(t){
-        const act = t.d === nSel;
-        const anc = Math.max(2, Math.round(t.sale/maxSale*100));
-        return '<button type="button" onclick="ctVerDia(\''+kDe(t.d)+'\')" style="display:flex;flex-direction:column;gap:4px;'+
+      filas.map(function(f){
+        const anc = Math.max(2, Math.round(f.sale/maxSale*100));
+        // El monto del día siempre trae las tres comidas dentro; el texto lo dice.
+        const qn = f.dias > 1
+          ? esc(f.dias+' d\u00edas de comer')
+          : (f.txt ? esc(f.txt)+' y comer' : 'desayuno, comida y cena');
+        return '<button type="button" onclick="ctVerDia(\''+kDe(f.fin)+'\')" style="display:flex;flex-direction:column;gap:4px;'+
           'padding:5px 9px 6px;border-radius:8px;cursor:pointer;font-family:inherit;text-align:left;color:inherit;'+
-          'background:'+(act?'rgba(var(--cy-rgb),.1)':'transparent')+';'+
-          'border:1px solid '+(act?'rgba(var(--cy-rgb),.32)':'transparent')+'">'+
+          'background:'+(f.act?'rgba(var(--cy-rgb),.1)':'transparent')+';'+
+          'border:1px solid '+(f.act?'rgba(var(--cy-rgb),.32)':'transparent')+'">'+
           '<span style="display:grid;grid-template-columns:auto minmax(0,1fr) auto auto;gap:8px;align-items:baseline;width:100%">'+
-            '<span class="ct-num" style="font-size:11px;font-weight:700;color:'+(act?'var(--cy)':'var(--text3)')+'">'+t.d+'</span>'+
+            '<span class="ct-num" style="font-size:11px;font-weight:700;white-space:nowrap;color:'+(f.act?'var(--cy)':'var(--text3)')+'">'+
+              (f.dias>1 ? f.ini+'\u2013'+f.fin : f.ini)+'</span>'+
             '<span style="font-size:10px;color:var(--text3);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+
-              (t.ent>0?'<b style="color:var(--g)">+'+money(t.ent)+'</b> ':'')+esc(t.txt||'solo comer')+'</span>'+
-            '<span class="ct-num'+(privado?' fin-hidden':'')+'" style="font-size:10.5px;color:var(--text3)">\u2212'+money(t.sale)+'</span>'+
+              (f.ent>0?'<b style="color:var(--g)">+'+money(f.ent)+'</b> ':'')+qn+'</span>'+
+            '<span class="ct-num'+(privado?' fin-hidden':'')+'" style="font-size:10.5px;color:var(--text3)">\u2212'+money(f.sale)+'</span>'+
             '<span class="ct-num'+(privado?' fin-hidden':'')+'" style="font-size:12px;font-weight:700;min-width:50px;text-align:right;color:'+
-              (t.saldo>=0?(act?'var(--cy)':'var(--text)'):'var(--r)')+'">'+money(t.saldo)+'</span>'+
+              (f.saldo>=0?(f.act?'var(--cy)':'var(--text)'):'var(--r)')+'">'+money(f.saldo)+'</span>'+
           '</span>'+
           '<span style="display:block;height:3px;border-radius:2px;background:rgba(var(--ov),.06)">'+
-            '<i style="display:block;height:100%;border-radius:2px;width:'+anc+'%;background:'+t.col+'"></i></span>'+
+            '<i style="display:block;height:100%;border-radius:2px;width:'+anc+'%;background:'+f.col+'"></i></span>'+
           '</button>';
       }).join('')+
     '</div>'+
@@ -6130,7 +6150,8 @@ function renderCoachTablero(){
       (comeDia>0
         ? '<div class="ct-ev"><i style="background:#ef4444"></i>'+
           '<span style="min-width:0;display:flex;flex:1;align-items:baseline;justify-content:space-between;gap:8px">'+
-          '<span style="font-size:11.5px;font-weight:600">Comer</span>'+
+          '<span style="font-size:11.5px;font-weight:600">Comer'+
+            '<span style="font-weight:400;color:var(--text3)"> \u00b7 desayuno, comida y cena</span></span>'+
           '<span class="ct-num'+(privado?' fin-hidden':'')+'" style="font-size:12px;font-weight:700;color:var(--text2)">\u2212'+money(comeDia)+'</span></span></div>'
         : '')+
       (agenda.length
@@ -6208,7 +6229,7 @@ function renderCoachTablero(){
       'border:1px solid '+(act?'rgba(var(--cy-rgb),.35)':'transparent')+'">'+
       '<span class="ct-num" style="font-size:11px;font-weight:700;color:'+(act?'var(--cy)':'var(--text3)')+'">'+d+'</span>'+
       '<span style="font-size:10px;color:var(--text3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+
-        (ent>0?'<b style="color:var(--g)">+'+money(ent)+'</b> ':'')+esc(nombres||'solo comer')+'</span>'+
+        (ent>0?'<b style="color:var(--g)">+'+money(ent)+'</b> ':'')+esc(nombres ? nombres+' y comer' : 'desayuno, comida y cena')+'</span>'+
       '<span class="ct-num'+(privado?' fin-hidden':'')+'" style="font-size:11.5px;font-weight:700;color:var(--text2)">\u2212'+money(sale)+'</span>'+
       '</button>';
   }

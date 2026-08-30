@@ -298,21 +298,35 @@ viendo, y la última cierra justo en el número grande.
 
 ```
 CÓMO SE FUE, DÍA A DÍA        desde el día 1 · −$12,414
-  1  +$20,500  Renta, iPhone     −$11,609    $8,891
-     ████████████████████████████████████████████████
-  2  solo comer                     −$115    $8,776
-     ▌
-  …
-  8  solo comer                     −$115    $8,086   ← el día abierto
+  1    +$20,500  Renta, iPhone y comer    −$11,609    $8,891
+       ████████████████████████████████████████████████
+  2–7  6 días de comer                       −$690    $8,201
+       ███
+  8    desayuno, comida y cena               −$115    $8,086   ← el día abierto
+       ▌
 ```
 
-Cada fila lleva **dos lecturas a la vez**: la barra es *lo que salió ese día* (proporcional al día
-más caro del tramo, y del color del concepto que manda — amarillo renta, rojo comer), y el número
-de la derecha es *lo que quedaba al terminarlo*. Así el día de la renta se ve como el escalón que
-es, y los días de solo comer como la bajada lenta.
+Cada fila lleva **dos lecturas a la vez**: la barra es *lo que salió en ese tramo* (proporcional al
+más caro, y del color del concepto que manda — amarillo renta, rojo comer), y el número de la
+derecha es *lo que quedaba al terminarlo*. Así el día de la renta se ve como el escalón que es, y
+los días de solo comer como la bajada lenta.
 
-Los días sin pagos fijos dicen **"solo comer"** en vez de quedarse en blanco: nunca hay un día que
-cueste $0. Cada fila es un botón — tocar el 3 abre el día 3 y mueve el calendario con él.
+#### Los días de solo comer van juntos
+
+Adán, viendo nueve filas idénticas de `solo comer −$115`: *"no desgloces todas las comidas, solo
+pon una que va al dia"*. Tenía razón — catorce filas iguales no dicen nada que no diga una.
+
+Los días seguidos en que **no cae ningún pago fijo** se juntan en un tramo (`2–7 · 6 días de
+comer`), con la suma y el saldo al cerrarlo. Van sueltos el día que estás viendo y cualquiera con
+pago fijo, que son los que de verdad mueven el saldo. La quincena 1 completa pasó de 14 filas a 5,
+y el mes entero de 17 a 8, sin perder un peso: los totales y el cierre no cambian.
+
+**La comida nombra sus tres tiempos.** *"la cena no te olvides todos los dias y desayuno"*. El
+`$115` sale de la despensa semanal completa de `LISTA_COMPRAS.comida` dividida entre 7, así que
+las tres comidas ya estaban dentro — lo que faltaba era decirlo. El día suelto dice **"desayuno,
+comida y cena"** en vez de "solo comer", el día con pagos dice **"Renta, iPhone y comer"** para
+que se vea que ese monto también los trae, y la línea de *lo que pasa ese día* quedó como
+`Comer · desayuno, comida y cena`. Ningún día cuesta $0.
 
 **El reinicio se ve en la cifra**: el día 14 cierra en $5,896 y el 15 salta a $12,185 con una sola
 fila en la traza, porque entra la segunda nómina y el tramo empieza de cero. Comprobado en los
