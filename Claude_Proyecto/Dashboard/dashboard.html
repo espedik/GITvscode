@@ -6149,70 +6149,103 @@ function renderCoachTablero(){
         })()
       : '');
 
-  // ── Columna 3: la quincena ──
-  // El mes no se lee de corrido: se lee en dos tramos que arrancan cuando entra la
-  // n\u00f3mina. Arriba, lo que queda al cerrar la quincena; debajo, el saldo con el que
-  // terminas cada semana \u2014 que es lo que de verdad se puede administrar.
+  // ── Columna 3: la semana ──
+  // Adán: "no quiero datos por quincena, quiero por semana". La quincena sigue siendo la
+  // mecánica de fondo — el dinero entra el 1 y el 15 y el saldo se reinicia ahí — pero
+  // lo que se mira es la SEMANA: con cuánto la cierras, en qué se te fue y qué cae cada día.
   const sem = ctSemDe(nSel);
   const qn = nSel <= 14 ? 1 : 2;
   const Q = ctQuincena(qn, nDias);
+  const W = Q.semanas.filter(function(x){ return x.n === sem; })[0] || Q.semanas[0];
   const T = ctTareasSemana(ph, ctYM, sem);
-  const esHoyM = (hoyK.slice(0,7) === ctYM);
 
-  // Lo que ya se movi\u00f3 de la quincena hasta el d\u00eda elegido: el resto es lo que falta.
-  let corrido = 0;
-  Q.semanas.forEach(function(w){ if(w.fin <= nSel) corrido = w.saldo; });
+  // Lo que sale esta semana, por concepto, con la comida como una línea más.
+  const wSale = {};
+  for(let d=W.ini; d<=W.fin; d++) ctAgenda(d).forEach(function(a){
+    if(!a.entra) wSale[a.t] = (wSale[a.t]||0) + (+a.monto||0);
+  });
+  const wDias = W.fin - W.ini + 1;
+  if(W.come > 0) wSale['Comer \u00b7 '+wDias+(wDias===1?' d\u00eda':' d\u00edas')] = W.come;
+  const wConc = Object.keys(wSale).sort((a,b)=>wSale[b]-wSale[a]);
+  const wMax = wConc.length ? wSale[wConc[0]] : 1;
+  const colorDeW = function(t){
+    if(/comer/i.test(t)) return '#ef4444';
+    if(/renta/i.test(t)) return '#eab308';
+    if(/cetes/i.test(t)) return '#10b981';
+    if(/gym|total pass/i.test(t)) return '#22c55e';
+    if(/iphone|apple|icloud|claude/i.test(t)) return '#14b8a6';
+    if(/tarjeta|autom|msi|zap|merpago|mercado/i.test(t)) return '#64748b';
+    return '#94a3b8';
+  };
 
-  const filaSem = Q.semanas.map(function(w){
-    const act = w.n === sem;
-    const pasada = esHoyM && w.fin < +hoyK.slice(8);
-    return '<div style="display:grid;grid-template-columns:auto 1fr auto;gap:9px;align-items:baseline;'+
-      'padding:8px 10px;border-radius:9px;background:'+(act?'rgba(var(--cy-rgb),.1)':'rgba(var(--ov),.03)')+
-      ';border:1px solid '+(act?'rgba(var(--cy-rgb),.35)':'transparent')+'">'+
-      '<span class="ct-num" style="font-size:10px;font-weight:700;color:'+(act?'var(--cy)':'var(--text3)')+'">S'+w.n+'</span>'+
-      '<span style="font-size:10px;color:var(--text3)">'+w.ini+'\u2013'+w.fin+
-        (w.entra>0?' <span style="color:var(--g)">+'+money(w.entra)+'</span>':'')+
-        ' <span style="color:var(--text3)">\u2212'+money(w.pagos+w.come)+'</span></span>'+
-      '<span class="ct-num'+(privado?' fin-hidden':'')+'" style="font-size:13px;font-weight:700;color:'+
-        (w.saldo>=0?(act?'var(--cy)':'var(--text)'):'var(--r)')+'">'+money(w.saldo)+'</span>'+
-      '</div>';
-  }).join('');
+  // Día a día de la semana: lo que sale cada uno, comida incluida.
+  const COMD = COM ? Math.round(COM.dia) : 0;
+  let filaDias = '';
+  for(let d=W.ini; d<=W.fin; d++){
+    const ag = ctAgenda(d);
+    const sale = ag.filter(a=>!a.entra).reduce((x,a)=>x+(+a.monto||0), 0) + COMD;
+    const ent  = ag.filter(a=>a.entra).reduce((x,a)=>x+(+a.monto||0), 0);
+    const act = d === nSel;
+    const nombres = ag.filter(a=>!a.entra).map(a=>a.t.split(' ')[0]).join(', ');
+    filaDias += '<button type="button" onclick="ctVerDia(\''+kDe(d)+'\')" style="display:grid;'+
+      'grid-template-columns:auto 1fr auto;gap:9px;align-items:baseline;padding:6px 9px;border-radius:8px;'+
+      'cursor:pointer;font-family:inherit;text-align:left;color:inherit;'+
+      'background:'+(act?'rgba(var(--cy-rgb),.12)':'transparent')+';'+
+      'border:1px solid '+(act?'rgba(var(--cy-rgb),.35)':'transparent')+'">'+
+      '<span class="ct-num" style="font-size:11px;font-weight:700;color:'+(act?'var(--cy)':'var(--text3)')+'">'+d+'</span>'+
+      '<span style="font-size:10px;color:var(--text3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+
+        (ent>0?'<b style="color:var(--g)">+'+money(ent)+'</b> ':'')+esc(nombres||'solo comer')+'</span>'+
+      '<span class="ct-num'+(privado?' fin-hidden':'')+'" style="font-size:11.5px;font-weight:700;color:var(--text2)">\u2212'+money(sale)+'</span>'+
+      '</button>';
+  }
 
   document.getElementById('ctSem').innerHTML =
     '<div class="ct-h"><div style="display:flex;flex-direction:column;gap:2px">'+
-      '<span class="ct-lbl" style="color:var(--p)">La quincena</span>'+
-      '<span class="ct-tit">Quincena '+qn+'</span>'+
-    '</div><span class="ct-num" style="font-size:9.5px;color:var(--text3);white-space:nowrap">d\u00edas '+Q.ini+' al '+Q.fin+'</span></div>'+
+      '<span class="ct-lbl" style="color:var(--p)">La semana</span>'+
+      '<span class="ct-tit">Semana '+W.n+'</span>'+
+    '</div><span class="ct-num" style="font-size:9.5px;color:var(--text3);white-space:nowrap">d\u00edas '+W.ini+' al '+W.fin+'</span></div>'+
 
-    // El n\u00famero que manda: con cu\u00e1nto cierras la quincena.
-    '<div style="padding:12px 14px;border-radius:12px;background:rgba(var(--cy-rgb),.08);border:1px solid rgba(var(--cy-rgb),.28)">'+
+    // Con cuanto cierras ESTA semana.
+    '<div style="padding:13px 15px;border-radius:12px;background:rgba(var(--cy-rgb),.08);border:1px solid rgba(var(--cy-rgb),.28)">'+
       '<div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px">'+
-        '<span class="ct-lbl" style="color:var(--cy)">Te sobra al cerrarla</span>'+
-        '<span class="ct-num'+(privado?' fin-hidden':'')+'" style="font-size:26px;font-weight:700;color:'+
-          (Q.queda>=0?'var(--cy)':'var(--r)')+';line-height:1">'+money(Q.queda)+'</span>'+
+        '<span class="ct-lbl" style="color:var(--cy)">Cierras la semana con</span>'+
+        '<span class="ct-num'+(privado?' fin-hidden':'')+'" style="font-size:26px;font-weight:700;line-height:1;color:'+
+          (W.saldo>=0?'var(--cy)':'var(--r)')+'">'+money(W.saldo)+'</span>'+
       '</div>'+
-      '<div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:10px;padding-top:9px;border-top:1px solid rgba(var(--ov),.09)">'+
-        '<div><div class="ct-lbl" style="color:var(--g)">Entra</div>'+
-          '<div class="ct-num'+(privado?' fin-hidden':'')+'" style="font-size:14px;font-weight:700;color:var(--g);margin-top:2px">'+money(Q.entra)+'</div></div>'+
-        '<div><div class="ct-lbl">Pagos fijos</div>'+
-          '<div class="ct-num'+(privado?' fin-hidden':'')+'" style="font-size:14px;font-weight:700;margin-top:2px">\u2212'+money(Q.pagos)+'</div></div>'+
-        '<div><div class="ct-lbl" style="color:#ef4444">Comer</div>'+
-          '<div class="ct-num'+(privado?' fin-hidden':'')+'" style="font-size:14px;font-weight:700;color:#ef4444;margin-top:2px">\u2212'+money(Q.come)+'</div></div>'+
+      '<div style="display:flex;gap:16px;margin-top:9px;padding-top:9px;border-top:1px solid rgba(var(--ov),.09)">'+
+        (W.entra>0
+          ? '<span style="display:flex;align-items:baseline;gap:6px"><span class="ct-lbl" style="color:var(--g)">entra</span>'+
+            '<span class="ct-num'+(privado?' fin-hidden':'')+'" style="font-size:13px;font-weight:700;color:var(--g)">+'+money(W.entra)+'</span></span>'
+          : '<span class="ct-lbl">no entra n\u00f3mina</span>')+
+        '<span style="display:flex;align-items:baseline;gap:6px"><span class="ct-lbl">sale</span>'+
+          '<span class="ct-num'+(privado?' fin-hidden':'')+'" style="font-size:13px;font-weight:700">\u2212'+money(W.pagos+W.come)+'</span></span>'+
+        '<span style="display:flex;align-items:baseline;gap:6px;margin-left:auto"><span class="ct-lbl">viene de</span>'+
+          '<span class="ct-num'+(privado?' fin-hidden':'')+'" style="font-size:13px;font-weight:700;color:var(--text2)">'+money(W.saldo-W.mueve)+'</span></span>'+
       '</div>'+
-      '<div style="font-size:9.5px;color:var(--text3);margin-top:8px;line-height:1.45">'+
-        Q.dias+' d\u00edas \u00b7 arranca el '+Q.ini+' con la n\u00f3mina y se reinicia. Didi queda fuera de la cuenta: es variable.'+
+      '<div style="font-size:9.5px;color:var(--text3);margin-top:7px;line-height:1.45">'+
+        (W.entra>0 ? 'Arranca con la n\u00f3mina del d\u00eda '+W.ini+': el saldo se reinicia aqu\u00ed.'
+                   : 'Contin\u00faa el tramo que arranc\u00f3 el d\u00eda '+Q.ini+'.')+
       '</div>'+
     '</div>'+
 
-    // Con cuanto terminas cada semana.
-    '<div style="display:flex;flex-direction:column;gap:5px">'+
-      '<div style="display:flex;align-items:baseline;justify-content:space-between;gap:8px">'+
-        '<span class="ct-lbl">Con cu\u00e1nto cierras cada semana</span>'+
-        '<span class="ct-num" style="font-size:9.5px;color:var(--text3)">'+Q.semanas.length+' semanas</span></div>'+
-      filaSem+
-    '</div>'+
+    // En que se fue la semana.
+    (wConc.length
+      ? '<div style="display:flex;flex-direction:column;gap:7px">'+
+        '<span class="ct-lbl">En qu\u00e9 se fue esta semana</span>'+
+        wConc.map(function(k){
+          const col = colorDeW(k);
+          return '<div class="ct-cat"><div class="ct-cat-h">'+
+            '<span class="ct-cat-n"><i style="background:'+col+'"></i>'+esc(k)+'</span>'+
+            '<span class="ct-num'+(privado?' fin-hidden':'')+'" style="font-size:12px;font-weight:700">'+money(wSale[k])+'</span></div>'+
+            '<div class="ct-cat-b"><i style="width:'+Math.round(wSale[k]/wMax*100)+'%;background:'+col+'"></i></div></div>';
+        }).join('')+'</div>'
+      : '')+
 
-    // Lo hecho contra lo que toca, uno al lado del otro.
+    // Dia a dia, tocable.
+    '<div style="display:flex;flex-direction:column;gap:2px">'+
+      '<span class="ct-lbl" style="margin-bottom:3px">D\u00eda a d\u00eda</span>'+ filaDias +'</div>'+
+
+    // Lo hecho contra lo que toca.
     '<div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;padding-top:2px;border-top:1px solid rgba(var(--ov),.07)">'+
       '<div style="display:flex;flex-direction:column;gap:6px;min-width:0">'+
         '<span class="ct-lbl" style="color:var(--g)">\u2713 Hecho \u00b7 '+T.hechas.length+'</span>'+
@@ -6223,7 +6256,7 @@ function renderCoachTablero(){
           : '<div class="ct-vacio">Nada cerrado.</div>')+
       '</div>'+
       '<div style="display:flex;flex-direction:column;gap:6px;min-width:0">'+
-        '<span class="ct-lbl" style="color:var(--w)">\u2191 Semana '+sem+' \u00b7 '+T.toca.length+'</span>'+
+        '<span class="ct-lbl" style="color:var(--w)">\u2191 Toca \u00b7 '+T.toca.length+'</span>'+
         (T.toca.length
           ? T.toca.slice(0,4).map(function(x){
               const plano = String(x.txt).replace(/<[^>]*>/g,'');
@@ -6239,6 +6272,8 @@ function renderCoachTablero(){
       '</div>'+
     '</div>';
 }
+
+function renderCoach(){}
 
 function renderCoach(){}
 

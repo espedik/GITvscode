@@ -305,57 +305,71 @@ Debajo, **lo que pasa ese día** — comer y los pagos que caen — y, si hay mo
 Finanzas, su desglose por categoría. Lo anotado va aparte y no se suma: es lo que pasó por la
 cuenta, no lo que consume el tramo.
 
-### La quincena: el tramo que de verdad se administra
+### La semana: el tramo que se mira
 
-Adán, 2026-08-29: *"cada quincena me dan dinero entonces apartir de eso calcula mis gastos,
-cuanto me queda, dame indicativos… cada quincena debe reiniciarse lo que me sobra, es decir el
-dia 15 pues haces lo mismo y me das el resultado. Si sobra dinero yo veo como lo administro pero
-solo dame esos indicativos"*.
+Adán, 2026-08-29: *"no quiero datos por quincena, quiero por semana"*.
 
-La tercera columna dejó de ser "la semana": el mes no se vive de corrido, se vive en **dos tramos
-que arrancan cuando entra la nómina** — el 1 y el 15 — y cada uno se reinicia.
+La quincena sigue siendo la **mecánica** — el dinero entra el 1 y el 15, y el saldo se reinicia
+ahí — pero ya no es lo que se lee. La tercera columna abre en la semana del día elegido y
+responde tres cosas en ese orden: **con cuánto la cierras**, **en qué se te fue** y **qué cae
+cada día**.
 
-`ctQuincena(q, nDias)` toma los pagos fijos de sus días y lo que cuesta comer esos días, y
-devuelve lo que sobra. Con los datos de hoy:
+`ctQuincena(q, nDias)` sigue siendo el motor — reparte pagos fijos y comida por día y arrastra el
+saldo — pero la vista toma de él una sola semana: `Q.semanas.filter(x => x.n === ctSemDe(nSel))`.
 
-| | Quincena 1 (1–14) | Quincena 2 (15–fin) |
-|---|---|---|
-| Entra | $20,500 | $20,500 |
-| Pagos fijos | −$12,994 | −$9,871 |
-| Comer | −$1,610 | −$1,955 |
-| **Sobra** | **$5,896** | **$8,674** |
+#### Con cuánto cierras
 
-**Didi queda fuera a propósito.** Es ingreso variable, y contarlo daría un colchón de $11,200 que
-puede no llegar: el tramo tiene que aguantar solo con la nómina.
+El número grande es el saldo al terminar la semana, y debajo van las tres piezas que lo explican:
+`entra`, `sale` y **`viene de`** (`W.saldo - W.mueve`), que es lo que traes de la semana anterior.
+Esa tercera es la que hace legible el reinicio — vale `$0` justo en las semanas que arrancan con
+nómina, y la línea de abajo lo dice con palabras: *"Arranca con la nómina del día 15: el saldo se
+reinicia aquí"* o *"Continúa el tramo que arrancó el día 15"*.
 
-#### Con cuánto cierras cada semana
-
-Debajo del total, el saldo con el que terminas cada semana de la quincena — que es el número que
-se administra. La quincena 2 de un mes de 31 días:
+Las cinco semanas de un mes de 31 días, comprobadas en los cuatro tamaños:
 
 ```
-S3  15–21  +$20,500  −$10,509     $9,991
+S1  1–7    +$20,500  −$12,299   $8,201   ← entra nómina, viene de $0
+S2  8–14              −$2,305    $5,896
+S3  15–21   +$20,500  −$10,509   $9,991   ← entra nómina, viene de $0
 S4  22–28              −$972      $9,019
-S5  29–31              −$345      $8,674   ← cierra igual que la quincena
+S5  29–31              −$345      $8,674
 ```
 
 **Cinco semanas cuando toca.** Adán: *"vi que algunos meses tienen 5 semanas, debes aun asi hacer
 los calculos"*. `ctSemDe` pasó de un corte fijo en cuatro a `Math.min(5, Math.ceil(n/7))`; con el
-anterior, los días 29 en adelante se caían de la cuenta y el cierre salía de más. Comprobado en
-meses de 28, 30 y 31 días: la quincena 2 lleva 2 o 3 semanas según el mes, y el saldo de la
-última siempre coincide con el cierre.
+anterior, los días 29 en adelante se caían de la cuenta y el cierre salía de más.
+
+**Didi queda fuera a propósito.** Es ingreso variable, y contarlo daría un colchón de $11,200 que
+puede no llegar: la semana tiene que aguantar solo con la nómina.
+
+#### En qué se fue esta semana
+
+Barras por concepto, ordenadas de mayor a menor y con la comida como una línea más — no en un
+bloque aparte. Los colores salen de `colorDeW()`, los mismos hex que usa Finanzas, para que un
+concepto tenga el mismo color en las dos pantallas. La semana 3:
+
+```
+Crédito Automotriz  $6,700   CETES  $1,500   Apple Watch MSI  $854
+Comer · 7 días        $805   Gym      $650
+```
+
+#### Día a día
+
+Una fila por día con lo que sale — comida incluida — y los conceptos que caen, o *"solo comer"* si
+no cae ninguno. Cada fila es un `<button>` que llama a `ctVerDia()`: tocar el 18 en la semana
+mueve el panel del día y el calendario a la vez. El día abierto queda resaltado en la lista.
 
 #### El auto, el día 15
 
 Adán: *"el pago automotriz ponlo los dias 15 de cada mes"*. No es un detalle de un día: con
-`day: 14` los $6,700 caían en la **primera** quincena — la que solo tiene renta — y desbalanceaba
-las dos. Corregido en el maestro y en su migración (`_autoDia15_20260829`).
+`day: 14` los $6,700 caían en la semana 2 — la que no recibe nómina — y la hundían. Corregido en
+el maestro y en su migración (`_autoDia15_20260829`).
 
 #### Lo hecho contra lo que toca
 
-Las dos listas van **en paralelo, no una debajo de otra**: a la izquierda lo cerrado del mes, a la
-derecha lo que toca en la semana que estás viendo, con su casilla. Adán: *"detallarme todo lo de
-la semana y lo que ya hici contraelo"*.
+Las dos listas van **en paralelo, no una debajo de otra**: a la izquierda lo cerrado, a la derecha
+lo que toca en esa semana, con su casilla. Adán: *"detallarme todo lo de la semana y lo que ya
+hici contraelo"*.
 
 ### Medidas
 
