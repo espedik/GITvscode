@@ -62,7 +62,7 @@ flechas, los puntos del HUD lateral, o deslizando en táctil.
 | `theme-dia` | **Mi Día** | La principal. Tira de 7 días, cinta del día completo, bloque actual, KPIs |
 | `theme-coach` | **Plan Maestro** | Fase activa, ruta de deuda cara y el tablero calendario / día / semana — ver abajo |
 | `theme-metas` | **Mis Metas** | 8 KPIs financieros, franja de instrumentos y las 14 metas con estado — ver abajo |
-| `theme-basicas` | **Habilidades Base** | Guías de vida práctica (trámites, impuestos, red, imagen…) |
+| `theme-basicas` | **Habilidades Base** | 23 guías de vida práctica. **Única fuente** desde el 30-ago-2026: la sección equivalente de Coach se eliminó — ver abajo |
 | `theme-skills` | **Habilidades** | Radar de 12 habilidades y prioridades de aprendizaje |
 | `theme-lista` | **Lista de Compras** | 7 categorías. Comida con precios por pieza, ticket, costo al mes y proporción de verduras/frutas/almidones — ver abajo |
 | `theme-aleman` | **Alemán del día** | La lección de alemán, contenido nativo desde `aleman-data.js`. Filtrado al capítulo que cursa — ver abajo |
@@ -426,6 +426,28 @@ Los tres **suman exactamente** el gasto diario que ya usaba el tablero, así que
 movió en ninguno de los tres cambios: es el mismo dinero, dicho de otra forma. No hay recetas de
 comida —el recetario solo cubre desayuno y cena—, y por eso ese tiempo es el resto y no un
 promedio; si algún día se añaden, el reparto se afina solo.
+
+### Una tarea marcada se queda a la vista
+
+Adán, 2026-08-30: *"no quiero que se borren las cosas que hagan click en ya hecho"*.
+
+Pasaba porque el reparto de `ctTareasSemana` se hace **sobre las pendientes** —lo que quedaba del
+mes entre las semanas que faltan—, así que al marcar una salía del reparto y su sitio lo ocupaba
+la siguiente. Cerrar una tarea la hacía desaparecer, que es lo contrario de lo que uno espera al
+marcarla.
+
+Ahora `toggleFaseCheck` no guarda un `true` pelado sino **en qué semana se cerró**
+(`"2026-08#5"`), y la lista de la semana añade detrás las que llevan su marca: se quedan, con la
+casilla puesta, el texto tachado y en verde en vez de ámbar, para que las pendientes sigan
+mandando. Al desmarcarla vuelve a pendiente.
+
+Dos detalles que costaron una vuelta cada uno: el tope de filas tiene que ir **sobre las
+pendientes** y no sobre la lista entera —las cerradas van al final y el `slice` volvía a
+borrarlas de la vista—, y el tachado se aplica a `span:not(.ct-tar-chip)`, porque si no el chip
+`P1` se llevaba también el gris y quedaba ilegible sobre el verde.
+
+Un `true` de los de antes sigue contando como hecha; solo que, al no tener semana, no reaparece
+en la lista.
 
 ### El plan de datos de AT&T
 
