@@ -449,6 +449,26 @@ borrarlas de la vista—, y el tachado se aplica a `span:not(.ct-tar-chip)`, por
 Un `true` de los de antes sigue contando como hecha; solo que, al no tener semana, no reaparece
 en la lista.
 
+### Ver y revertir lo ya hecho
+
+Adán, 2026-08-30: *"necesito poder ver y revertir las tareas ya hechas"*. El contador `8 ya
+hechas` era solo un número; ahora es un botón que despliega la lista debajo.
+
+No todo lo hecho se puede deshacer, y la lista lo distingue:
+
+- **Con casilla** lo que se marcó desde aquí (`checks[id]`): desmarcar la devuelve a lo que toca.
+- **Con un ✓ y sin casilla** lo que trae un ✅ escrito en `PHASES` —ese dato vive en el maestro—
+  y los logros de la libreta, que no se desmarcan por diseño.
+
+`ctHechasAbierto` vive fuera del render para que el desplegable siga abierto cuando el panel se
+repinta al desmarcar algo.
+
+**El fallo que costó la vuelta:** una misma tarea puede tener dos casillas en pantalla —la de
+"te toca" y la del desplegable—, y `toggleFaseCheck` las buscaba por id, quedándose siempre con
+la primera. Al desmarcar abajo leía la de arriba, que seguía marcada, y volvía a guardarla: la
+tarea no se revertía nunca. Ahora la casilla manda su propio estado
+(`toggleFaseCheck(id, this.checked)`) y la búsqueda por id queda solo para quien no lo pasa.
+
 ### El plan de datos de AT&T
 
 Adán: *"los dias primero de cada mes tambien pago mi plan de datos de ATT and T, agregalo, me

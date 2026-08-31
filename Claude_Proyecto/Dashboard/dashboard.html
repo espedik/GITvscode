@@ -2565,6 +2565,10 @@ button.ct-cat:hover{background:rgba(var(--ov),.07)}
 .ct-tar-chip{font-family:var(--mono);font-size:9px;font-weight:700;color:#05050a;
   background:var(--w);padding:2px 5px;border-radius:4px;flex-shrink:0}
 .ct-vacio{font-size:11px;color:var(--text3);padding:6px 0}
+.ct-hechas-btn{display:flex;align-items:center;gap:4px;padding:2px 6px;margin:-2px -6px;border:0;
+  border-radius:6px;background:transparent;cursor:pointer;font-family:var(--mono);font-size:9.5px;
+  font-weight:700;color:var(--g);transition:background .15s}
+.ct-hechas-btn:hover{background:rgba(var(--g-rgb),.12)}
 .ct-nav{display:flex;gap:4px}
 .ct-nav button{width:22px;height:22px;border-radius:7px;border:1px solid rgba(var(--ov),.12);
   background:rgba(var(--ov),.04);color:var(--text2);cursor:pointer;font-family:inherit;
@@ -6082,7 +6086,12 @@ function ctTareasSemana(ph, ym, sem){
   const marca = ym + '#' + sem;
   const cerradasAqui = delMes.filter(x => checks[x.id] === marca);
   return {
-    hechas: delMes.filter(s => ctHecha(s, checks)).map(s=>({txt:s.txt, fecha:''})).concat(logros),
+    // `porCheck` dice si se puede revertir desde aquí: las que se marcaron con la casilla
+    // sí; las que traen un ✅ escrito en PHASES, no — ese dato vive en el maestro. Los
+    // logros tampoco: son una libreta aparte que no se desmarca.
+    hechas: delMes.filter(s => ctHecha(s, checks))
+              .map(s=>({id:s.id, txt:s.txt, fecha:'', porCheck: !!checks[s.id]}))
+              .concat(logros.map(l=>({id:'', txt:l.txt, fecha:l.fecha, porCheck:false}))),
     // El tope va sobre las PENDIENTES: las cerradas van detrás y, si se cortara la lista
     // entera, volverían a desaparecer al marcarlas — que es justo lo que se arregla aquí.
     toca:   trozo.filter(s => !ctHecha(s, checks)).slice(0, 3).map(s=>({id:s.id, txt:s.txt, hecha:false}))
@@ -6148,6 +6157,12 @@ function ctVerMes(delta){
   renderCoachTablero();
 }
 function ctVerDia(k){ ctSel = k; renderCoachTablero(); }
+
+// La lista de lo ya hecho se despliega bajo el contador (Adán, 2026-08-30: "necesito
+// poder ver y revertir las tareas ya hechas"). Vive en una variable de módulo para que
+// siga abierta cuando el panel se repinta al desmarcar una.
+let ctHechasAbierto = false;
+function ctToggleHechas(){ ctHechasAbierto = !ctHechasAbierto; renderCoachTablero(); }
 
 // El color dice QUE es cada cosa, con los mismos hex que usa Finanzas: un concepto
 // tiene el mismo color en el calendario, en el dia y en la semana.
@@ -6508,7 +6523,35 @@ function renderCoachTablero(){
     '<div style="display:flex;flex-direction:column;gap:8px;padding-top:11px;border-top:1px solid rgba(var(--ov),.09);margin-top:auto">'+
       '<div style="display:flex;align-items:baseline;justify-content:space-between;gap:8px">'+
         '<span class="ct-lbl" style="color:var(--w)">Te toca esta semana</span>'+
-        '<span class="ct-num" style="font-size:9.5px;color:var(--g)">'+TR.hechas.length+' ya hechas</span></div>'+
+        (TR.hechas.length
+          ? '<button type="button" onclick="ctToggleHechas()" class="ct-hechas-btn" '+
+            'title="Ver y desmarcar lo que ya hiciste">'+TR.hechas.length+' ya hechas'+
+            '<svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" '+
+            'stroke-linecap="round" stroke-linejoin="round" style="transform:rotate('+(ctHechasAbierto?'180':'0')+'deg);transition:transform .18s">'+
+            '<path d="M6 9l6 6 6-6"></path></svg></button>'
+          : '<span class="ct-num" style="font-size:9.5px;color:var(--text3)">nada cerrado aún</span>')+'</div>'+
+
+      (ctHechasAbierto && TR.hechas.length
+        ? '<div style="display:flex;flex-direction:column;gap:5px;padding:9px 11px;border-radius:10px;'+
+            'background:rgba(var(--g-rgb),.05);border:1px solid rgba(var(--g-rgb),.18)">'+
+          TR.hechas.map(function(x){
+            const plano = String(x.txt).replace(/<[^>]*>/g,'').replace(/\u2705/g,'').trim();
+            const corte = plano.search(/[.:]\s+/);
+            const tit = (corte>0&&corte<95) ? plano.slice(0,corte+1) : plano;
+            const txt = esc(tit.replace(/^\s*Prioridad\s*\d+\s*[—–-]\s*/i,''));
+            // Con casilla solo lo que se puede desmarcar desde aquí.
+            return x.porCheck
+              ? '<label class="ct-tar" for="hchk-'+x.id+'" style="cursor:pointer">'+
+                '<input type="checkbox" id="hchk-'+x.id+'" checked onchange="toggleFaseCheck(\''+x.id+'\', this.checked)">'+
+                '<span style="color:var(--text3);text-decoration:line-through">'+txt+'</span></label>'
+              : '<span class="ct-tar" style="color:var(--text3)">'+
+                '<span style="color:var(--g);flex-shrink:0">✓</span><span>'+txt+
+                (x.fecha?' <em style="font-style:normal;font-size:9.5px;opacity:.7">'+esc(x.fecha)+'</em>':'')+'</span></span>';
+          }).join('')+
+          '<span style="font-size:9.5px;color:var(--text3);line-height:1.45;padding-top:2px">'+
+            'Desmarca una para devolverla a lo que toca. Las que solo tienen ✓ vienen del plan o de tus logros.</span>'+
+          '</div>'
+        : '')+
       (TR.toca.length
         ? TR.toca.map(function(x){
             const plano = String(x.txt).replace(/<[^>]*>/g,'').replace(/\u2705/g,'');
@@ -6623,9 +6666,14 @@ function renderCoach(){
 }
 // Checklist semana a semana de "Qué hacer en esta fase" — comparte coach_checks_v1 con
 // Coach.html (mismos ids sN-M), igual patrón de escritura cruzada que quickMarkDone().
-function toggleFaseCheck(id){
+function toggleFaseCheck(id, estado){
   const checks=rawGet('coach_checks_v1',{});
-  const cb=document.getElementById('ctchk-'+id)||document.getElementById('dchk-'+id);
+  // `estado` lo manda la casilla que se tocó. Sin él se busca por id, pero eso falla
+  // cuando la misma tarea tiene dos casillas en pantalla (la de "te toca" y la del
+  // desplegable de hechas): siempre ganaba la primera y no se podía revertir.
+  const cb = (estado===undefined)
+    ? (document.getElementById('ctchk-'+id)||document.getElementById('dchk-'+id))
+    : {checked: !!estado};
   // Se guarda en qué semana se cerró, no un simple true: así la tarea no desaparece de
   // "Te toca esta semana" en cuanto la marcas (Adán, 2026-08-30: "no quiero que se
   // borren las cosas que hagan click en ya hecho"). Un `true` de antes sigue contando
