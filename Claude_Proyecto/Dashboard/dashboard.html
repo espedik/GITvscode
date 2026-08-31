@@ -2506,7 +2506,7 @@ button.hp-lec:active{transform:translateY(0)}
    entró y por lo que salió, para que el peso se vea sin tocar nada. */
 .ct-mes{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:3px}
 .ct-dow{font-family:var(--mono);font-size:9px;color:var(--text3);text-align:center}
-.ct-d{position:relative;height:48px;border-radius:8px;padding:4px 5px 3px;cursor:pointer;
+.ct-d{position:relative;height:38px;border-radius:7px;padding:4px 5px;cursor:pointer;
   display:flex;flex-direction:column;justify-content:space-between;text-align:left;
   font-family:inherit;color:inherit;background:rgba(var(--ov),.03);
   border:1px solid rgba(var(--ov),.06);transition:background .13s,border-color .13s}
@@ -2518,8 +2518,25 @@ button.hp-lec:active{transform:translateY(0)}
 .ct-d.hoy .ct-dn{color:var(--cy)}
 .ct-dn{font-family:var(--mono);font-size:11px;font-weight:700}
 .ct-dm{font-family:var(--mono);font-size:7.5px}
-.ct-db{display:flex;gap:2px;align-items:flex-end;height:13px}
-.ct-db i{display:block;border-radius:1.5px}
+/* La barra del día es VERTICAL y su alto dice cuánto sale: el mes se lee como un
+   ecualizador y los días de solo comer quedan en una rayita (diseño aprobado 2026-08-30). */
+.ct-db{display:flex;align-items:flex-end;justify-content:flex-end;flex:1;min-height:0}
+.ct-db i{display:block;width:7px;border-radius:2.5px}
+/* El mes entero, como espectro, debajo de la cuadrícula. */
+.ct-esp{display:flex;align-items:flex-end;gap:2px;height:44px;padding-bottom:1px;
+  border-bottom:1px solid rgba(var(--ov),.1)}
+.ct-esp button{flex:1;min-width:0;border:0;background:transparent;padding:0;cursor:pointer;
+  display:flex;align-items:flex-end;height:100%}
+.ct-esp button i{display:block;width:100%;border-radius:2px 2px 0 0;transition:filter .15s}
+.ct-esp button:hover i{filter:brightness(1.5)}
+.ct-hito{display:flex;align-items:center;gap:5px;padding:3px 8px;border-radius:20px;
+  background:rgba(var(--ov),.045);border:1px solid transparent;cursor:pointer;
+  font-family:inherit;color:inherit;transition:background .15s,border-color .15s}
+.ct-hito:hover{background:rgba(var(--ov),.09)}
+.ct-hito.act{border-color:var(--cy);background:rgba(var(--cy-rgb),.12)}
+.ct-hito i{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.ct-hito b{font-family:var(--mono);font-size:9px;font-weight:700;color:var(--text3)}
+.ct-hito span{font-size:10px;color:var(--text2);white-space:nowrap}
 
 /* El día: entra / sale, el desglose por categoría real y lo que está programado. */
 .ct-par{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
@@ -2580,6 +2597,9 @@ button.ct-cat:hover{background:rgba(var(--ov),.07)}
    inner y las columnas dejan de tener el suyo — dos scrolls anidados en un telefono no
    se pueden usar. */
 @media(max-width:1180px){
+  /* La celda se estrecha y el +20.5k ya no cabe: lo dicen igual el borde verde y su
+     chip en la lista de abajo. */
+  .ct-d .ct-dm{display:none}
   .coach-riel{flex-wrap:wrap}
   .cr-hero{width:100%;border-right:0;border-bottom:1px solid rgba(var(--cy-rgb),.2)}
   .cr-graf{min-width:200px}
@@ -6317,8 +6337,11 @@ function renderCoachTablero(){
     '</div>';
 
   // ── Columna 1: elige el día ──
-  // La barra de cada celda es SIEMPRE dinero que sale, y su color el concepto que manda.
-  // Antes media lo anotado en Finanzas con una escala distinta a la de las otras columnas.
+  // Cada celda lleva una barra VERTICAL cuyo alto es lo que sale ese día, y su color el
+  // concepto que manda. Los 23 días que solo cuestan comer quedan en una rayita, así los
+  // 8 que de verdad mueven el saldo saltan a la vista. Debajo, el mes como espectro y la
+  // lista de los pagos con su nombre (Adán, 2026-08-30: "solo abajo si ponme el nombre
+  // de las cosas").
   const comeDia = T.comeDia;
   const saleDe = {};
   let topeDia = 1;
@@ -6328,9 +6351,11 @@ function renderCoachTablero(){
     const may = pag.slice().sort((a,b)=>(+b.monto||0)-(+a.monto||0))[0];
     const sal = pag.reduce((x,a)=>x+(+a.monto||0), 0) + comeDia;
     saleDe[d] = { sale:sal, ent: ag.filter(a=>a.entra).reduce((x,a)=>x+(+a.monto||0),0),
-                  col: may ? ctColor(may.t) : '#ef4444' };
+                  col: may ? ctColor(may.t) : '#ef4444',
+                  nom: may ? may.t : '', nPagos: pag.length };
     if(sal > topeDia) topeDia = sal;
   }
+  const altoDe = v => Math.max(4, Math.round(v/topeDia*25));
 
   let celdas = '';
   for(let i=0;i<primero;i++) celdas += '<span class="ct-d vacio"></span>';
@@ -6341,24 +6366,26 @@ function renderCoachTablero(){
     if(x.ent > 0) cls.push('fijo');
     if(k === ctSel) cls.push('sel');
     if(k === hoyK) cls.push('hoy');
-    const alto = Math.max(3, Math.round(x.sale/topeDia*13));
-    const ancho = Math.max(26, Math.round(x.sale/topeDia*100));
     celdas += '<button type="button" class="'+cls.join(' ')+'" onclick="ctVerDia(\''+k+'\')" '+
-      'title="'+esc(x.ent>0 ? 'Entra la nómina · sale '+money(x.sale) : 'Sale '+money(x.sale))+'">'+
-      '<span style="display:flex;align-items:flex-start;justify-content:space-between;gap:2px">'+
+      'title="'+esc(x.nom ? x.nom+' · sale '+money(x.sale) : 'Solo comer · '+money(x.sale))+'">'+
+      '<span style="display:flex;align-items:baseline;justify-content:space-between;gap:2px">'+
         '<span class="ct-dn">'+d+'</span>'+
-        (x.ent>0
-          ? '<span class="ct-dm'+(privado?' fin-hidden':'')+'" style="color:var(--g)">+'+Math.round(x.ent/1000)+'k</span>'
-          : (x.sale > comeDia*3
-              ? '<span class="ct-dm'+(privado?' fin-hidden':'')+'" style="color:var(--text3)">−'+Math.round(x.sale/100)/10+'k</span>'
-              : ''))+
+        (x.ent>0 ? '<span class="ct-dm'+(privado?' fin-hidden':'')+'" style="color:var(--g);font-weight:700;'+
+                     'font-size:7px;overflow:hidden">+'+(Math.round(x.ent/100)/10)+'k</span>' : '')+
       '</span>'+
-      '<span class="ct-db"><i style="width:'+ancho+'%;height:'+alto+'px;background:'+x.col+'"></i></span></button>';
+      '<span class="ct-db"><i style="height:'+altoDe(x.sale)+'px;background:'+x.col+'"></i></span></button>';
   }
 
-  const gastoMes = Object.keys(MOV).reduce((sm,k)=>sm+ctGasto(MOV[k]), 0);
-  const LEY = [['#eab308','Renta'],['#64748b','Deuda o crédito'],['#14b8a6','Suscripción'],
-               ['#22c55e','Gym'],['#10b981','Ahorro'],['#ef4444','Solo comer']];
+  // Los pagos del mes, con su nombre. Es la leyenda: en vez de explicar los colores en
+  // abstracto, nombra lo que de verdad cae este mes y lleva a su día.
+  const hitos = [];
+  for(let d=1; d<=nDias; d++){
+    ctAgenda(d).forEach(function(a){
+      hitos.push({d:d, t:a.t, m:+a.monto||0, entra:!!a.entra,
+                  col: a.entra ? 'var(--g)' : ctColor(a.t)});
+    });
+  }
+
 
   document.getElementById('ctCal').innerHTML =
     '<div class="ct-h">'+
@@ -6371,15 +6398,35 @@ function renderCoachTablero(){
     '</div>'+
     '<div class="ct-mes">'+['L','M','M','J','V','S','D'].map(x=>'<span class="ct-dow">'+x+'</span>').join('')+'</div>'+
     '<div class="ct-mes">'+celdas+'</div>'+
-    '<div style="margin-top:auto;padding-top:10px;border-top:1px solid rgba(var(--ov),.08);display:flex;flex-direction:column;gap:7px">'+
-      '<span class="ct-lbl">Qué dice cada barra</span>'+
-      '<div class="ct-leyenda">'+
-        LEY.map(x=>'<span><i style="background:'+x[0]+'"></i>'+x[1]+'</span>').join('')+
-        '<span><i style="background:rgba(var(--ov),.14);border:1px solid rgba(var(--w-rgb),.55)"></i>Entra nómina</span>'+
+
+    '<div style="margin-top:auto;display:flex;flex-direction:column;gap:7px;padding-top:11px;'+
+      'border-top:1px solid rgba(var(--ov),.08)">'+
+      '<div style="display:flex;align-items:baseline;justify-content:space-between;gap:8px">'+
+        '<span class="ct-lbl">El mes de un vistazo</span>'+
+        '<span style="font-size:9.5px;color:var(--text3)">alto = lo que sale ese día</span></div>'+
+      '<div class="ct-esp">'+
+        Object.keys(saleDe).map(function(d){
+          const x = saleDe[d], act = kDe(+d) === ctSel;
+          return '<button type="button" onclick="ctVerDia(\''+kDe(+d)+'\')" title="Día '+d+' · '+
+            esc(x.nom||'solo comer')+' · '+money(x.sale)+'">'+
+            '<i style="height:'+Math.max(4, Math.round(x.sale/topeDia*42))+'px;background:'+
+            (act?'var(--cy)':x.col)+(act?';box-shadow:0 0 8px rgba(var(--cy-rgb),.6)':'')+'"></i></button>';
+        }).join('')+
       '</div>'+
-      '<span style="font-size:10px;color:var(--text3);line-height:1.45">El alto de la barra es cuánto sale ese día.'+
-        (gastoMes>0 ? ' Anotado en Finanzas este mes: <b class="ct-num'+(privado?' fin-hidden':'')+
-          '" style="color:var(--text2)">'+money(gastoMes)+'</b>.' : '')+'</span>'+
+      (hitos.length
+        ? '<div style="display:flex;flex-wrap:wrap;gap:5px">'+
+          hitos.map(function(h){
+            return '<button type="button" class="ct-hito'+(kDe(h.d)===ctSel?' act':'')+'" '+
+              'onclick="ctVerDia(\''+kDe(h.d)+'\')" title="Ver el día '+h.d+'">'+
+              '<i style="background:'+h.col+'"></i>'+
+              '<b'+(h.entra?' style="color:var(--g)"':'')+'>'+h.d+'</b>'+
+              '<span'+(h.entra?' style="color:var(--g)"':'')+'>'+esc(h.t.split(' (')[0])+'</span></button>';
+          }).join('')+
+          '</div>'
+        : '')+
+      '<span style="font-size:9.5px;color:var(--text3);line-height:1.45">'+
+        'Los días sin pago cuestan <b class="ct-num'+(privado?' fin-hidden':'')+'" style="color:var(--text2)">'+
+        money(comeDia)+'</b> de comer, como todos.</span>'+
     '</div>';
 
   // ── Columna 2: el día ──

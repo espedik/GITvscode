@@ -355,14 +355,30 @@ botones: tocar uno mueve el día y el calendario a la vez.
 
 ### Elige el día
 
-La cuadrícula ya no mide lo anotado en Finanzas con una escala propia: **la barra es siempre dinero
-que sale y su color es siempre el concepto**, los mismos hex en las tres columnas. Alto y ancho van
-en proporción, así el día de la renta se ve como el escalón que es y uno de solo comer no ocupa lo
-mismo.
+Adán, 2026-08-30: *"quiero que se vean indicativos de colores y mejor distribucion, si quieres
+hacerlo mas chico para que quepan mas cosas, hazlo"*. Diseñadas tres direcciones en canvas; eligió
+la del ecualizador.
 
-Y lleva **leyenda**, que era lo que más despistaba: seis colores nombrados (renta, deuda o crédito,
-suscripción, gym, ahorro, solo comer) más el borde de "entra nómina". Lo anotado en Finanzas no se
-pierde: va al pie, en una línea.
+El problema de fondo era que **23 de los 31 días llevaban la misma barra roja** —la de solo
+comer—, así que los 8 que de verdad mueven el saldo quedaban enterrados en el ruido.
+
+Ahora cada celda lleva una **barra vertical cuyo alto es lo que sale ese día** y cuyo color es el
+concepto que manda. Los días de solo comer quedan en una rayita de 4px y el 1 y el 15 se ven como
+los escalones que son. La celda baja de 48 a 38px, y con lo que se libera caben debajo dos cosas
+nuevas.
+
+**El mes de un vistazo:** las 31 barras seguidas, sin la rejilla del calendario, para leer el
+ritmo del gasto de corrido. Cada barra lleva a su día y el día abierto se pinta en cian.
+
+**Los nombres.** Adán: *"solo abajo si ponme el nombre de las cosas"*. En vez de una leyenda que
+explicaba colores en abstracto —y que además se cortaba—, va la lista de lo que de verdad cae ese
+mes, en orden de día: `1 Renta`, `1 Plan de datos AT&T`, `1 Quincena`, `11 Tarjeta BBVA`,
+`15 Crédito Automotriz`… Cada chip lleva su color, y tocarlo abre su día. La nómina va en verde,
+porque es lo único que sube el saldo.
+
+Dos cosas que costaron una vuelta: `Math.round(20500/1000)` pintaba **"+21k"** en la celda del día
+de nómina —un decimal lo arregla—, y ese texto no cabe por debajo de 1180px, así que ahí se
+oculta: el borde verde y el chip de abajo ya lo dicen.
 
 ### El día: qué pagas y de dónde sale el saldo
 

@@ -1,0 +1,168 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap">
+  <style>
+    body { margin: 0; background: #05050a; font-family: 'Inter', -apple-system, sans-serif; }
+    a { color: #00e0c0; } a:hover { color: #5df0dc; }
+    .mono { font-family: 'Space Grotesk', monospace; font-variant-numeric: tabular-nums; letter-spacing: -0.02em; }
+    .ttl { font-family: 'Fraunces', Georgia, serif; }
+    .lbl { font-size: 9px; font-weight: 800; letter-spacing: 0.18em; text-transform: uppercase; color: #8589a8; }
+    .cel { height: 38px; border-radius: 7px; padding: 4px 5px; box-sizing: border-box;
+           display: flex; align-items: flex-end; gap: 4px;
+           border: 1px solid rgba(255,255,255,0.05); background: rgba(255,255,255,0.014); }
+    .dn { font-family: 'Space Grotesk', monospace; font-size: 11px; font-weight: 700; color: #9a9db3;
+          line-height: 1; align-self: flex-start; }
+    .eq { width: 4px; border-radius: 2px; margin-left: auto; }
+    .fin { opacity: 0.52; }
+  </style>
+</helmet>
+
+<div style="width: 500px; height: 620px; background: #05050a; padding: 15px 16px; box-sizing: border-box;
+     border-radius: 16px; border: 1px solid rgba(255,255,255,0.13);
+     display: flex; flex-direction: column; gap: 11px; overflow: hidden">
+
+  <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px">
+    <div style="display: flex; flex-direction: column; gap: 2px; min-width: 0">
+      <span class="lbl">Elige el día</span>
+      <span class="ttl" style="font-size: 18px; font-weight: 700; color: #f4f4f8; white-space: nowrap">Agosto 2026</span>
+    </div>
+    <div style="display: flex; gap: 5px; flex-shrink: 0">
+      <div style="width: 24px; height: 24px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.13);
+           background: rgba(255,255,255,0.04); display: flex; align-items: center; justify-content: center">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#9a9db3" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"></path></svg>
+      </div>
+      <div style="width: 24px; height: 24px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.13);
+           background: rgba(255,255,255,0.04); display: flex; align-items: center; justify-content: center">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#9a9db3" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"></path></svg>
+      </div>
+    </div>
+  </div>
+
+  <div style="display: flex; flex-direction: column; gap: 4px">
+    <div style="display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px">
+      <span class="mono" style="font-size: 8.5px; color: #8589a8; text-align: center">L</span>
+      <span class="mono" style="font-size: 8.5px; color: #8589a8; text-align: center">M</span>
+      <span class="mono" style="font-size: 8.5px; color: #8589a8; text-align: center">M</span>
+      <span class="mono" style="font-size: 8.5px; color: #8589a8; text-align: center">J</span>
+      <span class="mono" style="font-size: 8.5px; color: #8589a8; text-align: center">V</span>
+      <span class="mono" style="font-size: 8.5px; color: #8589a8; text-align: center">S</span>
+      <span class="mono" style="font-size: 8.5px; color: #8589a8; text-align: center">D</span>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px">
+      <div></div><div></div><div></div><div></div><div></div>
+      <div class="cel fin" style="border-color: rgba(0,232,122,0.38); background: rgba(0,232,122,0.05)">
+        <span class="dn" style="color: #f4f4f8">1</span>
+        <span class="eq" style="height: 28px; background: linear-gradient(180deg, #eab308, #64748b)"></span>
+      </div>
+      <div class="cel fin"><span class="dn">2</span><span class="eq" style="height: 3px; background: rgba(239,68,68,0.5)"></span></div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px">
+      <div class="cel"><span class="dn">3</span><span class="eq" style="height: 3px; background: rgba(239,68,68,0.5)"></span></div>
+      <div class="cel"><span class="dn">4</span><span class="eq" style="height: 3px; background: rgba(239,68,68,0.5)"></span></div>
+      <div class="cel"><span class="dn">5</span><span class="eq" style="height: 3px; background: rgba(239,68,68,0.5)"></span></div>
+      <div class="cel"><span class="dn">6</span><span class="eq" style="height: 3px; background: rgba(239,68,68,0.5)"></span></div>
+      <div class="cel"><span class="dn">7</span><span class="eq" style="height: 3px; background: rgba(239,68,68,0.5)"></span></div>
+      <div class="cel fin"><span class="dn">8</span><span class="eq" style="height: 3px; background: rgba(239,68,68,0.5)"></span></div>
+      <div class="cel fin"><span class="dn">9</span><span class="eq" style="height: 3px; background: rgba(239,68,68,0.5)"></span></div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px">
+      <div class="cel"><span class="dn">10</span><span class="eq" style="height: 3px; background: rgba(239,68,68,0.5)"></span></div>
+      <div class="cel"><span class="dn">11</span><span class="eq" style="height: 8px; background: #64748b"></span></div>
+      <div class="cel"><span class="dn">12</span><span class="eq" style="height: 3px; background: rgba(239,68,68,0.5)"></span></div>
+      <div class="cel"><span class="dn">13</span><span class="eq" style="height: 3px; background: rgba(239,68,68,0.5)"></span></div>
+      <div class="cel"><span class="dn">14</span><span class="eq" style="height: 3px; background: rgba(239,68,68,0.5)"></span></div>
+      <div class="cel fin" style="border-color: rgba(0,232,122,0.38); background: rgba(0,232,122,0.05)">
+        <span class="dn" style="color: #f4f4f8">15</span>
+        <span class="eq" style="height: 21px; background: linear-gradient(180deg, #64748b, #10b981)"></span>
+      </div>
+      <div class="cel fin"><span class="dn">16</span><span class="eq" style="height: 3px; background: rgba(239,68,68,0.5)"></span></div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px">
+      <div class="cel"><span class="dn">17</span><span class="eq" style="height: 5px; background: #22c55e"></span></div>
+      <div class="cel"><span class="dn">18</span><span class="eq" style="height: 6px; background: #14b8a6"></span></div>
+      <div class="cel"><span class="dn">19</span><span class="eq" style="height: 3px; background: rgba(239,68,68,0.5)"></span></div>
+      <div class="cel"><span class="dn">20</span><span class="eq" style="height: 3px; background: rgba(239,68,68,0.5)"></span></div>
+      <div class="cel"><span class="dn">21</span><span class="eq" style="height: 3px; background: rgba(239,68,68,0.5)"></span></div>
+      <div class="cel fin"><span class="dn">22</span><span class="eq" style="height: 4px; background: #64748b"></span></div>
+      <div class="cel fin"><span class="dn">23</span><span class="eq" style="height: 3px; background: rgba(239,68,68,0.5)"></span></div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px">
+      <div class="cel"><span class="dn">24</span><span class="eq" style="height: 3px; background: rgba(239,68,68,0.5)"></span></div>
+      <div class="cel"><span class="dn">25</span><span class="eq" style="height: 3px; background: rgba(239,68,68,0.5)"></span></div>
+      <div class="cel"><span class="dn">26</span><span class="eq" style="height: 3px; background: rgba(239,68,68,0.5)"></span></div>
+      <div class="cel"><span class="dn">27</span><span class="eq" style="height: 3px; background: rgba(239,68,68,0.5)"></span></div>
+      <div class="cel"><span class="dn">28</span><span class="eq" style="height: 3px; background: rgba(239,68,68,0.5)"></span></div>
+      <div class="cel fin"><span class="dn">29</span><span class="eq" style="height: 3px; background: rgba(239,68,68,0.5)"></span></div>
+      <div class="cel" style="border: 1.5px solid #00e0c0; background: rgba(0,224,192,0.14); box-shadow: 0 0 15px rgba(0,224,192,0.2)">
+        <span class="dn" style="color: #00e0c0">30</span>
+        <span class="eq" style="height: 3px; background: rgba(239,68,68,0.7)"></span>
+      </div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px">
+      <div class="cel"><span class="dn">31</span><span class="eq" style="height: 3px; background: rgba(239,68,68,0.5)"></span></div>
+      <div></div><div></div><div></div><div></div><div></div><div></div>
+    </div>
+  </div>
+
+  <!-- el mes de un vistazo, como espectro -->
+  <div style="display: flex; flex-direction: column; gap: 7px; padding-top: 11px; border-top: 1px solid rgba(255,255,255,0.08)">
+    <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 8px">
+      <span class="lbl">El mes de un vistazo</span>
+      <span style="font-size: 9.5px; color: #8589a8">alto = lo que sale ese día</span>
+    </div>
+    <div style="display: flex; align-items: flex-end; gap: 2px; height: 46px; padding-bottom: 1px; border-bottom: 1px solid rgba(255,255,255,0.1)">
+      <span style="flex: 1; height: 100%; border-radius: 2px 2px 0 0; background: linear-gradient(180deg, #eab308, rgba(234,179,8,0.35))"></span>
+      <span style="flex: 1; height: 4px; border-radius: 2px 2px 0 0; background: rgba(239,68,68,0.5)"></span>
+      <span style="flex: 1; height: 4px; border-radius: 2px 2px 0 0; background: rgba(239,68,68,0.5)"></span>
+      <span style="flex: 1; height: 4px; border-radius: 2px 2px 0 0; background: rgba(239,68,68,0.5)"></span>
+      <span style="flex: 1; height: 4px; border-radius: 2px 2px 0 0; background: rgba(239,68,68,0.5)"></span>
+      <span style="flex: 1; height: 4px; border-radius: 2px 2px 0 0; background: rgba(239,68,68,0.5)"></span>
+      <span style="flex: 1; height: 4px; border-radius: 2px 2px 0 0; background: rgba(239,68,68,0.5)"></span>
+      <span style="flex: 1; height: 4px; border-radius: 2px 2px 0 0; background: rgba(239,68,68,0.5)"></span>
+      <span style="flex: 1; height: 4px; border-radius: 2px 2px 0 0; background: rgba(239,68,68,0.5)"></span>
+      <span style="flex: 1; height: 4px; border-radius: 2px 2px 0 0; background: rgba(239,68,68,0.5)"></span>
+      <span style="flex: 1; height: 11px; border-radius: 2px 2px 0 0; background: #64748b"></span>
+      <span style="flex: 1; height: 4px; border-radius: 2px 2px 0 0; background: rgba(239,68,68,0.5)"></span>
+      <span style="flex: 1; height: 4px; border-radius: 2px 2px 0 0; background: rgba(239,68,68,0.5)"></span>
+      <span style="flex: 1; height: 4px; border-radius: 2px 2px 0 0; background: rgba(239,68,68,0.5)"></span>
+      <span style="flex: 1; height: 32px; border-radius: 2px 2px 0 0; background: linear-gradient(180deg, #64748b, #10b981)"></span>
+      <span style="flex: 1; height: 4px; border-radius: 2px 2px 0 0; background: rgba(239,68,68,0.5)"></span>
+      <span style="flex: 1; height: 7px; border-radius: 2px 2px 0 0; background: #22c55e"></span>
+      <span style="flex: 1; height: 8px; border-radius: 2px 2px 0 0; background: #14b8a6"></span>
+      <span style="flex: 1; height: 4px; border-radius: 2px 2px 0 0; background: rgba(239,68,68,0.5)"></span>
+      <span style="flex: 1; height: 4px; border-radius: 2px 2px 0 0; background: rgba(239,68,68,0.5)"></span>
+      <span style="flex: 1; height: 4px; border-radius: 2px 2px 0 0; background: rgba(239,68,68,0.5)"></span>
+      <span style="flex: 1; height: 5px; border-radius: 2px 2px 0 0; background: #64748b"></span>
+      <span style="flex: 1; height: 4px; border-radius: 2px 2px 0 0; background: rgba(239,68,68,0.5)"></span>
+      <span style="flex: 1; height: 4px; border-radius: 2px 2px 0 0; background: rgba(239,68,68,0.5)"></span>
+      <span style="flex: 1; height: 4px; border-radius: 2px 2px 0 0; background: rgba(239,68,68,0.5)"></span>
+      <span style="flex: 1; height: 4px; border-radius: 2px 2px 0 0; background: rgba(239,68,68,0.5)"></span>
+      <span style="flex: 1; height: 4px; border-radius: 2px 2px 0 0; background: rgba(239,68,68,0.5)"></span>
+      <span style="flex: 1; height: 4px; border-radius: 2px 2px 0 0; background: rgba(239,68,68,0.5)"></span>
+      <span style="flex: 1; height: 4px; border-radius: 2px 2px 0 0; background: rgba(239,68,68,0.5)"></span>
+      <span style="flex: 1; height: 6px; border-radius: 2px 2px 0 0; background: #00e0c0; box-shadow: 0 0 8px rgba(0,224,192,0.5)"></span>
+      <span style="flex: 1; height: 4px; border-radius: 2px 2px 0 0; background: rgba(239,68,68,0.5)"></span>
+    </div>
+    <div style="display: flex; justify-content: space-between">
+      <span class="mono" style="font-size: 8px; color: #8589a8">1</span>
+      <span class="mono" style="font-size: 8px; color: #00e87a">15</span>
+      <span class="mono" style="font-size: 8px; color: #8589a8">31</span>
+    </div>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

@@ -1,0 +1,215 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap">
+  <style>
+    body { margin: 0; background: #05050a; font-family: 'Inter', -apple-system, sans-serif; }
+    a { color: #00e0c0; } a:hover { color: #5df0dc; }
+    .mono { font-family: 'Space Grotesk', monospace; font-variant-numeric: tabular-nums; letter-spacing: -0.02em; }
+    .ttl { font-family: 'Fraunces', Georgia, serif; }
+    .lbl { font-size: 9px; font-weight: 800; letter-spacing: 0.18em; text-transform: uppercase; color: #8589a8; }
+    .cel { position: relative; height: 40px; border-radius: 8px; padding: 4px 5px 3px; box-sizing: border-box;
+           display: flex; flex-direction: column; justify-content: space-between;
+           border: 1px solid rgba(255,255,255,0.055); background: rgba(255,255,255,0.016); }
+    .dn { font-family: 'Space Grotesk', monospace; font-size: 11px; font-weight: 700; color: #9a9db3; line-height: 1; }
+    .pts { display: flex; gap: 2.5px; align-items: center; }
+    .pts i { display: block; width: 5px; height: 5px; border-radius: 50%; }
+    .fin { opacity: 0.5; }
+  </style>
+</helmet>
+
+<div style="width: 500px; height: 620px; background: #05050a; padding: 15px 16px; box-sizing: border-box;
+     border-radius: 16px; border: 1px solid rgba(255,255,255,0.13);
+     display: flex; flex-direction: column; gap: 11px; position: relative; overflow: hidden">
+
+  <div style="position: absolute; inset: 0; pointer-events: none; opacity: 0.5;
+       background: radial-gradient(420px 220px at 50% -8%, rgba(0,224,192,0.05), transparent 70%)"></div>
+
+  <!-- cabecera -->
+  <div style="position: relative; display: flex; align-items: center; justify-content: space-between; gap: 10px">
+    <div style="display: flex; flex-direction: column; gap: 2px; min-width: 0">
+      <span class="lbl">Elige el día</span>
+      <span class="ttl" style="font-size: 18px; font-weight: 700; color: #f4f4f8; white-space: nowrap">Agosto 2026</span>
+    </div>
+    <div style="display: flex; gap: 5px; flex-shrink: 0">
+      <div style="width: 24px; height: 24px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.13);
+           background: rgba(255,255,255,0.04); display: flex; align-items: center; justify-content: center">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#9a9db3" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"></path></svg>
+      </div>
+      <div style="width: 24px; height: 24px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.13);
+           background: rgba(255,255,255,0.04); display: flex; align-items: center; justify-content: center">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#9a9db3" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"></path></svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- las dos quincenas, como resumen -->
+  <div style="position: relative; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 7px">
+    <div style="padding: 7px 10px; border-radius: 10px; background: rgba(0,224,192,0.05); border: 1px solid rgba(0,224,192,0.2)">
+      <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 6px">
+        <span class="lbl" style="color: #00e0c0">1 al 14</span>
+        <span class="mono" style="font-size: 13px; font-weight: 700; color: #00e0c0">$5,246</span>
+      </div>
+      <div class="mono" style="font-size: 8.5px; color: #8589a8; margin-top: 1px">te sobra al cerrar</div>
+    </div>
+    <div style="padding: 7px 10px; border-radius: 10px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.09)">
+      <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 6px">
+        <span class="lbl">15 al 31</span>
+        <span class="mono" style="font-size: 13px; font-weight: 700; color: #f4f4f8">$8,674</span>
+      </div>
+      <div class="mono" style="font-size: 8.5px; color: #8589a8; margin-top: 1px">te sobra al cerrar</div>
+    </div>
+  </div>
+
+  <!-- cuadrícula -->
+  <div style="position: relative; display: flex; flex-direction: column; gap: 4px">
+    <div style="display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px">
+      <span class="mono" style="font-size: 8.5px; color: #8589a8; text-align: center">L</span>
+      <span class="mono" style="font-size: 8.5px; color: #8589a8; text-align: center">M</span>
+      <span class="mono" style="font-size: 8.5px; color: #8589a8; text-align: center">M</span>
+      <span class="mono" style="font-size: 8.5px; color: #8589a8; text-align: center">J</span>
+      <span class="mono" style="font-size: 8.5px; color: #8589a8; text-align: center">V</span>
+      <span class="mono" style="font-size: 8.5px; color: #8589a8; text-align: center">S</span>
+      <span class="mono" style="font-size: 8.5px; color: #8589a8; text-align: center">D</span>
+    </div>
+
+    <!-- semana 1 -->
+    <div style="display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px">
+      <div></div><div></div><div></div><div></div><div></div>
+      <div class="cel fin" style="border-color: rgba(0,232,122,0.4); background: rgba(0,232,122,0.06)">
+        <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 2px">
+          <span class="dn" style="color: #f4f4f8">1</span>
+          <span class="mono" style="font-size: 7.5px; font-weight: 700; color: #00e87a">+20.5k</span>
+        </div>
+        <div class="pts"><i style="background: #eab308"></i><i style="background: #64748b"></i><i style="background: #14b8a6"></i></div>
+      </div>
+      <div class="cel fin"><span class="dn">2</span><div class="pts"></div></div>
+    </div>
+
+    <!-- semana 2 -->
+    <div style="display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px">
+      <div class="cel"><span class="dn">3</span><div class="pts"></div></div>
+      <div class="cel"><span class="dn">4</span><div class="pts"></div></div>
+      <div class="cel"><span class="dn">5</span><div class="pts"></div></div>
+      <div class="cel"><span class="dn">6</span><div class="pts"></div></div>
+      <div class="cel"><span class="dn">7</span><div class="pts"></div></div>
+      <div class="cel fin"><span class="dn">8</span><div class="pts"></div></div>
+      <div class="cel fin"><span class="dn">9</span><div class="pts"></div></div>
+    </div>
+
+    <!-- semana 3 -->
+    <div style="display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px">
+      <div class="cel"><span class="dn">10</span><div class="pts"></div></div>
+      <div class="cel">
+        <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 2px">
+          <span class="dn">11</span>
+          <span class="mono" style="font-size: 7.5px; color: #8589a8">1.6k</span>
+        </div>
+        <div class="pts"><i style="background: #64748b"></i></div>
+      </div>
+      <div class="cel"><span class="dn">12</span><div class="pts"></div></div>
+      <div class="cel"><span class="dn">13</span><div class="pts"></div></div>
+      <div class="cel"><span class="dn">14</span><div class="pts"></div></div>
+      <div class="cel fin" style="border-color: rgba(0,232,122,0.4); background: rgba(0,232,122,0.06)">
+        <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 2px">
+          <span class="dn" style="color: #f4f4f8">15</span>
+          <span class="mono" style="font-size: 7.5px; font-weight: 700; color: #00e87a">+20.5k</span>
+        </div>
+        <div class="pts"><i style="background: #64748b"></i><i style="background: #10b981"></i></div>
+      </div>
+      <div class="cel fin"><span class="dn">16</span><div class="pts"></div></div>
+    </div>
+
+    <!-- semana 4 -->
+    <div style="display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px">
+      <div class="cel">
+        <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 2px">
+          <span class="dn">17</span>
+          <span class="mono" style="font-size: 7.5px; color: #8589a8">765</span>
+        </div>
+        <div class="pts"><i style="background: #22c55e"></i></div>
+      </div>
+      <div class="cel">
+        <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 2px">
+          <span class="dn">18</span>
+          <span class="mono" style="font-size: 7.5px; color: #8589a8">969</span>
+        </div>
+        <div class="pts"><i style="background: #14b8a6"></i></div>
+      </div>
+      <div class="cel"><span class="dn">19</span><div class="pts"></div></div>
+      <div class="cel"><span class="dn">20</span><div class="pts"></div></div>
+      <div class="cel"><span class="dn">21</span><div class="pts"></div></div>
+      <div class="cel fin">
+        <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 2px">
+          <span class="dn">22</span>
+          <span class="mono" style="font-size: 7.5px; color: #8589a8">282</span>
+        </div>
+        <div class="pts"><i style="background: #64748b"></i></div>
+      </div>
+      <div class="cel fin"><span class="dn">23</span><div class="pts"></div></div>
+    </div>
+
+    <!-- semana 5 -->
+    <div style="display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px">
+      <div class="cel"><span class="dn">24</span><div class="pts"></div></div>
+      <div class="cel"><span class="dn">25</span><div class="pts"></div></div>
+      <div class="cel"><span class="dn">26</span><div class="pts"></div></div>
+      <div class="cel"><span class="dn">27</span><div class="pts"></div></div>
+      <div class="cel"><span class="dn">28</span><div class="pts"></div></div>
+      <div class="cel fin"><span class="dn">29</span><div class="pts"></div></div>
+      <!-- hoy + seleccionado -->
+      <div class="cel" style="border: 1.5px solid #00e0c0; background: rgba(0,224,192,0.14); box-shadow: 0 0 15px rgba(0,224,192,0.2)">
+        <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 2px">
+          <span class="dn" style="color: #00e0c0">30</span>
+          <span style="width: 4px; height: 4px; border-radius: 50%; background: #00e0c0; box-shadow: 0 0 6px #00e0c0"></span>
+        </div>
+        <div class="pts"></div>
+      </div>
+    </div>
+
+    <!-- semana 6 -->
+    <div style="display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px">
+      <div class="cel"><span class="dn">31</span><div class="pts"></div></div>
+      <div></div><div></div><div></div><div></div><div></div><div></div>
+    </div>
+  </div>
+
+  <!-- leyenda compacta, en chips -->
+  <div style="position: relative; margin-top: auto; display: flex; flex-direction: column; gap: 7px;
+       padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.08)">
+    <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 8px">
+      <span class="lbl">Un punto por pago</span>
+      <span style="font-size: 9.5px; color: #8589a8">los días sin punto solo cuestan comer</span>
+    </div>
+    <div style="display: flex; flex-wrap: wrap; gap: 5px">
+      <span style="display: flex; align-items: center; gap: 5px; padding: 3px 8px; border-radius: 20px; background: rgba(255,255,255,0.045)">
+        <i style="width: 6px; height: 6px; border-radius: 50%; background: #eab308"></i>
+        <span style="font-size: 10px; color: #9a9db3">Renta</span></span>
+      <span style="display: flex; align-items: center; gap: 5px; padding: 3px 8px; border-radius: 20px; background: rgba(255,255,255,0.045)">
+        <i style="width: 6px; height: 6px; border-radius: 50%; background: #64748b"></i>
+        <span style="font-size: 10px; color: #9a9db3">Deuda</span></span>
+      <span style="display: flex; align-items: center; gap: 5px; padding: 3px 8px; border-radius: 20px; background: rgba(255,255,255,0.045)">
+        <i style="width: 6px; height: 6px; border-radius: 50%; background: #14b8a6"></i>
+        <span style="font-size: 10px; color: #9a9db3">Suscripción</span></span>
+      <span style="display: flex; align-items: center; gap: 5px; padding: 3px 8px; border-radius: 20px; background: rgba(255,255,255,0.045)">
+        <i style="width: 6px; height: 6px; border-radius: 50%; background: #22c55e"></i>
+        <span style="font-size: 10px; color: #9a9db3">Gym</span></span>
+      <span style="display: flex; align-items: center; gap: 5px; padding: 3px 8px; border-radius: 20px; background: rgba(255,255,255,0.045)">
+        <i style="width: 6px; height: 6px; border-radius: 50%; background: #10b981"></i>
+        <span style="font-size: 10px; color: #9a9db3">Ahorro</span></span>
+      <span style="display: flex; align-items: center; gap: 5px; padding: 3px 8px; border-radius: 20px;
+            background: rgba(0,232,122,0.09); border: 1px solid rgba(0,232,122,0.3)">
+        <span class="mono" style="font-size: 9px; font-weight: 700; color: #00e87a">+20.5k</span>
+        <span style="font-size: 10px; color: #9a9db3">entra la nómina</span></span>
+    </div>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>
