@@ -61,7 +61,7 @@ flechas, los puntos del HUD lateral, o deslizando en táctil.
 |---|---|---|
 | `theme-dia` | **Mi Día** | La principal. Tira de 7 días, cinta del día completo, bloque actual, KPIs |
 | `theme-coach` | **Plan Maestro** | Fase activa, ruta de deuda cara y el tablero calendario / día / semana — ver abajo |
-| `theme-metas` | **Mis Metas** | Corto/mediano plazo con fotos, largo plazo, patrimonio neto |
+| `theme-metas` | **Mis Metas** | 8 KPIs financieros, franja de instrumentos y las 14 metas con estado — ver abajo |
 | `theme-basicas` | **Habilidades Base** | Guías de vida práctica (trámites, impuestos, red, imagen…) |
 | `theme-skills` | **Habilidades** | Radar de 12 habilidades y prioridades de aprendizaje |
 | `theme-lista` | **Lista de Compras** | 7 categorías. Comida con precios por pieza, ticket, costo al mes y proporción de verduras/frutas/almidones — ver abajo |
@@ -144,6 +144,50 @@ Medido a 390 px: 30 renglones de alto idéntico, 0 elementos desbordados, primer
 **Dónde se guarda.** `dash-lista-compras` (producto → número de `paso`) y `dash-lista-tengo`
 ("ya lo tengo", solo fuera de Comida). Los `true` de listas guardadas antes del contador se leen
 como 1.
+
+
+## Mis Metas — "panel de trayectoria"
+
+Rediseño del 2026-08-30 (*"la sección de corto, mediano y largo plazo, dame un diseño futurista y
+moderno y con indicativos claros"*). Clases `.mg-*`; de la familia anterior `.img-goal-*` solo
+sobreviven `.img-goal-pbar` y `-fill`, que las usa el overlay de detalle.
+
+**El porcentaje dejó de ser el indicador.** Cada ficha enseña **una marca por paso real** del
+checklist de esa meta —15 en el Hyrox, 8 en el BYD— y debajo el conteo (`4 / 9 PASOS`). Un 33% no
+dice si faltan dos pasos o diez, y el dato ya vivía en `META_DETALLE` sin usarse. Es el mismo
+hallazgo que justificó el rediseño de Habilidades Base una semana antes.
+
+**Apareció el estado**, que era lo que de verdad no se veía. Tres, cada uno con su color en una
+sola variable por ficha (`--mgc`), que tiñe chip, marcas, conteo y borde:
+
+| Estado | Clase | Color | Cuándo |
+|---|---|---|---|
+| LOGRADA | `.mg-card.ok` | `--g` verde | todos los pasos marcados |
+| EN MARCHA | `.mg-card.on` | `--ac1` ámbar | al menos uno |
+| SIN EMPEZAR | *(ninguna)* | `--text3` | ninguno |
+
+Antes, las dos metas ya logradas (los 11K y el alemán) se dibujaban **igual** que las que no ha
+empezado.
+
+**La franja de instrumentos** (`#metasBay`, contenedor nuevo en el HTML del slide) trae el avance
+del conjunto en **pasos**, no promediando porcentajes: promediar le daba el mismo peso a "Básico 5
+de alemán" (1 paso) que al Hyrox (15), así que marcar la meta más chica movía la aguja tanto como
+quince sesiones de entrenamiento. Más el ecualizador de las 14 metas —con piso del 20% para que
+una meta sin empezar siga siendo una barra visible y no un hueco— y los tres conteos.
+
+**La regla de edad vive dentro de la franja**, separada por un filete. Como caja aparte costaba
+38 px de margen y borde propios, y ese espacio era justo el que faltaba abajo para que las metas
+logradas no quedaran cortadas por el scroll.
+
+**Tres columnas en corto/mediano, dos en largo plazo.** Con dos, las 8 metas pedían 4 filas y la
+última —las dos ya logradas— caía fuera. A tres caben en tres filas y la ficha sigue siendo más
+ancha que las de largo plazo, que es lo que se pidió el 2026-08-11. Medido: 0 px de desborde a
+1600×950 y a 1920×1080; a 1366×768 la rejilla hace scroll interno, que es el respaldo de siempre.
+
+**El dinero real** de BYD y Maestría es una barra continua en `--ac2`, distinta de las marcas de
+paso a propósito —son dos avances distintos de la misma meta— y enseña **la cifra**
+(`$22,800 pagado`), no solo el porcentaje. `METAS_MONEYBAR[x].short` es ese texto; `.lbl` sigue
+siendo el largo, en el `title`.
 
 
 ## Mi Día, en detalle
@@ -355,15 +399,19 @@ Ahora, si `D.fin.debts` viene vacío, se leen de `CIFRAS.DEUDAS_SEED`, que es la
 siembra Finanzas. Comprobado: con Finanzas abierto y sin abrir, los 8 pagos y las cinco cifras de
 control salen idénticos.
 
-### Los tres tiempos del día, por separado
+### Lo que cuesta comer, y de dónde sale ese número
 
-Adán, 2026-08-30: *"las comidas desglozamelas por desayuno, comida y cena, no las pongas junto"*.
+Adán pidió primero el desglose —*"las comidas desglozamelas por desayuno, comida y cena, no las
+pongas junto"*— y, viéndolo en pantalla, lo deshizo en dos pasos: *"aqui por sema si juntame
+cuanto gasto en comida, cena y desayuno juntos"* y después *"mejor, comida, desayuno y cena
+ponmelo en uno junto"*. Tres filas idénticas cada día pesaban más de lo que aportaban.
 
-El problema era de dónde sacar el reparto sin inventarlo. La despensa (`LISTA_COMPRAS.comida`) da
-un total diario, no tres. Pero el recetario **ya tenía el costo real de cada plato**: `RECETAS_MINI`
-guarda un `costoAprox` por receta, sumado de sus ingredientes.
+**Ahora se muestra en una sola línea** —`Comer · desayuno, comida y cena · −$115`— en el día y en
+la semana. El desglose no se perdió: vive en el `title` de esa fila, así que aparece al pasar por
+encima sin ocupar sitio.
 
-Así que dos de los tres tiempos se miden y el tercero es el resto:
+El reparto se calcula igual, y sale de datos que ya existían y no de proporciones inventadas:
+`RECETAS_MINI` guarda el `costoAprox` real de cada plato.
 
 | | De dónde sale | Vale |
 |---|---|---|
@@ -373,17 +421,9 @@ Así que dos de los tres tiempos se miden y el tercero es el resto:
 | **Día** | **la despensa semanal entre 7** | **$114.97** |
 
 Los tres **suman exactamente** el gasto diario que ya usaba el tablero, así que ningún saldo se
-movió por desglosarlos: es el mismo dinero, ahora dicho en tres líneas. No hay recetas de comida
-(el recetario solo cubre desayuno y cena), y por eso ese tiempo es el resto y no un promedio —
-si algún día se añaden, el reparto se afina solo.
-
-Cada tiempo lleva su color —ámbar el desayuno, rojo la comida, naranja la cena— y se ven
-separados **en el panel del día**, que es donde se decide qué comer.
-
-**Por semana van juntos.** Adán, el mismo día, viendo tres barras de comida en la columna de la
-semana: *"aqui por sema si juntame cuanto gasto en comida, cena y desayuno juntos y no
-separados"*. Ahí la pregunta es otra —cuánto pesa comer frente al crédito o la renta—, y tres
-líneas de $426, $263 y $116 la contestaban peor que una de `Comer · 7 días · $805`.
+movió en ninguno de los tres cambios: es el mismo dinero, dicho de otra forma. No hay recetas de
+comida —el recetario solo cubre desayuno y cena—, y por eso ese tiempo es el resto y no un
+promedio; si algún día se añaden, el reparto se afina solo.
 
 ### El plan de datos de AT&T
 

@@ -195,10 +195,14 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 .img-goal-pbar-fill{height:100%;border-radius:20px;background:var(--g);transition:width .3s}
 
 /* ─── Franja de instrumentos ─────────────────────────────────────────── */
-.mg-bay{flex-shrink:0;position:relative;display:flex;align-items:stretch;gap:clamp(11px,1.4vw,19px);
+.mg-bay{flex-shrink:0;position:relative;display:flex;flex-direction:column;gap:8px;
   padding:9px clamp(12px,1.4vw,18px);margin-bottom:clamp(7px,1vh,11px);
   background:rgba(var(--ov),.045);border:1px solid rgba(var(--ov),.11);border-radius:3px;
   box-shadow:0 10px 34px rgba(0,0,0,.26),inset 0 1px 0 rgba(var(--ov),.05)}
+/* La regla de edad vive DENTRO de la franja, separada por un filete: como caja aparte
+   costaba 38px de margen y borde propios, y ese espacio es el que faltaba abajo para que
+   las metas ya logradas no quedaran cortadas por el scroll. */
+.mg-bay-row{display:flex;align-items:stretch;gap:clamp(11px,1.4vw,19px)}
 .mg-bay::before{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;
   background:var(--ac1);box-shadow:0 0 14px var(--ac1)}
 .mg-k{font-family:var(--mono);font-size:8.5px;font-weight:700;letter-spacing:.19em;
@@ -214,8 +218,8 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 /* Una barra por meta, en el orden en que se leen. El piso de 16% existe para que una meta
    sin empezar siga siendo un elemento visible y no un hueco en el ecualizador. */
 .mg-eq{display:flex;align-items:flex-end;justify-content:space-between;gap:3px;
-  height:clamp(20px,2.9vh,32px)}
-.mg-eq i{flex:1;max-width:22px;border-radius:2px 2px 0 0;background:var(--ac1);opacity:.6}
+  height:clamp(22px,3.2vh,34px)}
+.mg-eq i{flex:1;max-width:15px;border-radius:2px 2px 0 0;background:var(--ac1);opacity:.6}
 .mg-eq i.ok{background:var(--g);opacity:1;box-shadow:0 0 9px var(--g)}
 .mg-eq i.zero{background:rgba(var(--ov),.32);opacity:.75}
 /* En claro el ámbar y el verde sobre fondo casi blanco se lavan al 60%: mismo override
@@ -230,11 +234,10 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 .mg-rv small{font-size:.55em;color:var(--text3);font-weight:500}
 
 /* ─── La regla de edad ───────────────────────────────────────────────── */
-.mg-age{flex-shrink:0;display:flex;align-items:center;gap:clamp(8px,1vw,13px);cursor:pointer;
-  padding:6px clamp(11px,1.3vw,17px);margin-bottom:clamp(7px,1vh,11px);
-  border:1px solid rgba(var(--ov),.1);border-radius:3px;background:rgba(var(--ov),.03);
-  transition:border-color .2s,background .2s}
-.mg-age:hover{border-color:var(--ac2);background:rgba(var(--ov),.055)}
+.mg-age{display:flex;align-items:center;gap:clamp(8px,1vw,13px);cursor:pointer;
+  padding-top:8px;border-top:1px solid rgba(var(--ov),.1);
+  transition:opacity .2s}
+.mg-age:hover{opacity:.75}
 .mg-age-k{font-family:var(--mono);font-size:8.5px;font-weight:700;letter-spacing:.16em;
   color:var(--ac2);white-space:nowrap}
 .mg-age-tr{flex:1;min-width:40px;height:5px;border-radius:2px;position:relative;overflow:hidden;
@@ -256,11 +259,19 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 /* Mismo patrón de "estira si cabe, scrollea si no" que ya usaban las dos rejillas de fichas
    del Dashboard: cualquier número de metas reparte el alto por igual y, si no alcanza, hace
    scroll interno en vez de aplastarlas. */
-.mg-deck{flex:1;min-height:0;display:grid;grid-template-columns:repeat(2,1fr);
-  grid-auto-rows:minmax(102px,1fr);gap:clamp(7px,.7vw,10px);overflow-y:auto;padding-right:2px}
-.mg-deck-sm{grid-auto-rows:minmax(90px,1fr)}
-/* Una ficha suelta en la última fila llena el ancho, para no dejar un hueco. */
-.mg-deck>.mg-card:last-child:nth-child(odd){grid-column:1/-1}
+/* Tres columnas en corto/mediano y dos en largo plazo: con dos en la columna ancha, las 8
+   metas pedían 4 filas y la última —justo las dos YA LOGRADAS— quedaba fuera del scroll.
+   A tres caben las 8 en tres filas, y la ficha sigue siendo más ancha que las de largo
+   plazo, que es lo que se pidió el 2026-08-11 ("que esten mas grandes las fotos de metas a
+   mediano y corto plazo"). */
+.mg-deck{flex:1;min-height:0;display:grid;grid-template-columns:repeat(3,1fr);
+  grid-auto-rows:minmax(78px,1fr);gap:clamp(7px,.7vw,10px);overflow-y:auto;
+  /* El padding inferior no es decorativo: con filas `1fr` el redondeo deja 1px de desborde y
+     el conteo de pasos de la última fila quedaba pegado al borde del slide. */
+  padding:0 2px 4px 0}
+.mg-deck-sm{grid-template-columns:repeat(2,1fr);grid-auto-rows:minmax(76px,1fr)}
+/* Una ficha suelta en la última fila de largo plazo llena el ancho, para no dejar un hueco. */
+.mg-deck-sm>.mg-card:last-child:nth-child(odd){grid-column:1/-1}
 
 /* ─── La ficha ───────────────────────────────────────────────────────── */
 /* `--mgc` es EL indicativo: el color del estado tiñe el chip, las marcas de paso, el número
@@ -301,7 +312,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 
 /* Una marca por paso real del checklist. Es el indicativo que sustituye a la barra. */
 .mg-rail{display:flex;align-items:center;gap:2px;height:6px;flex-shrink:0}
-.mg-rail i{flex:1;height:100%;border-radius:1px;background:rgba(var(--ov),.14)}
+.mg-rail i{flex:1;height:100%;border-radius:1px;background:rgba(var(--ov),.2)}
 .mg-rail i.d{background:var(--mgc);box-shadow:0 0 7px -1px var(--mgc)}
 .mg-foot{display:flex;align-items:baseline;gap:6px;flex-shrink:0;font-family:var(--mono);
   font-size:8.5px;font-weight:700;letter-spacing:.04em;line-height:1}
@@ -318,9 +329,10 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 .mg-mtxt{font-family:var(--mono);font-size:8.5px;font-weight:700;color:var(--ac2);white-space:nowrap}
 
 @media(max-width:900px){
-  .mg-bay{flex-wrap:wrap;gap:10px}
+  .mg-bay-row{flex-wrap:wrap;gap:10px}
   .mg-eqw{order:3;flex-basis:100%}
   .mg-d{display:none}
+  .mg-deck{grid-template-columns:repeat(2,1fr)}
 }
 /* ═══ PANTALLA 4 · HABILIDADES BASE — "consola táctica" (2026-08-23) ═══════════════════════
    Rediseño elegido por Adán entre 4 direcciones que se le mostraron renderizadas (consola
@@ -2897,7 +2909,7 @@ button.ct-cat:hover{background:rgba(var(--ov),.07)}
     <div class="slide-inner">
       <div class="eyebrow reveal d1"><span class="dot"></span> Mis Metas</div>
       <div class="slide-title reveal d2"><span class="ico">🎯</span> Corto, mediano y largo plazo</div>
-      <div class="grid g4 reveal d3" id="metasProgreso" style="margin-bottom:18px"></div>
+      <div class="grid g4 reveal d3" id="metasProgreso" style="margin-bottom:12px"></div>
       <div class="reveal d4" id="metasBay"></div>
       <div class="grid g-metas reveal d4" id="metasListas"></div>
     </div>
@@ -6320,8 +6332,7 @@ function renderCoachTablero(){
 
   const gastoMes = Object.keys(MOV).reduce((sm,k)=>sm+ctGasto(MOV[k]), 0);
   const LEY = [['#eab308','Renta'],['#64748b','Deuda o crédito'],['#14b8a6','Suscripción'],
-               ['#22c55e','Gym'],['#10b981','Ahorro'],['#fbbf24','Desayuno'],
-               ['#ef4444','Comida'],['#f97316','Cena']];
+               ['#22c55e','Gym'],['#10b981','Ahorro'],['#ef4444','Solo comer']];
 
   document.getElementById('ctCal').innerHTML =
     '<div class="ct-h">'+
@@ -6362,17 +6373,13 @@ function renderCoachTablero(){
 
     '<div style="display:flex;flex-direction:column;gap:6px">'+
       '<span class="ct-lbl">Lo que pagas el '+nSel+'</span>'+
-      (TIEMPOS
-        ? TIEMPOS.map(x=>'<div class="ct-ev"><i style="background:'+x.c+'"></i>'+
-            '<span style="min-width:0;display:flex;flex:1;align-items:baseline;justify-content:space-between;gap:8px">'+
-            '<span style="font-size:11.5px;font-weight:600">'+x.n+'</span>'+
-            '<span class="ct-num'+(privado?' fin-hidden':'')+'" style="font-size:12px;font-weight:700;color:var(--text2)">−'+money(x.m)+'</span></span></div>').join('')
-        : (comeDia>0
-            ? '<div class="ct-ev"><i style="background:#ef4444"></i>'+
-              '<span style="min-width:0;display:flex;flex:1;align-items:baseline;justify-content:space-between;gap:8px">'+
-              '<span style="font-size:11.5px;font-weight:600">Comer</span>'+
-              '<span class="ct-num'+(privado?' fin-hidden':'')+'" style="font-size:12px;font-weight:700;color:var(--text2)">−'+money(comeDia)+'</span></span></div>'
-            : ''))+
+      (comeDia>0
+        ? '<div class="ct-ev"'+(TIEMPOS ? ' title="'+esc(TIEMPOS.map(x=>x.n+' '+money(x.m)).join(' · '))+'"' : '')+'>'+
+          '<i style="background:#ef4444"></i>'+
+          '<span style="min-width:0;display:flex;flex:1;align-items:baseline;justify-content:space-between;gap:8px">'+
+          '<span style="font-size:11.5px;font-weight:600">Comer<span style="font-weight:400;color:var(--text3)"> · desayuno, comida y cena</span></span>'+
+          '<span class="ct-num'+(privado?' fin-hidden':'')+'" style="font-size:12px;font-weight:700;color:var(--text2)">−'+money(comeDia)+'</span></span></div>'
+        : '')+
       H.pagos.map(a=>'<div class="ct-ev"><i style="background:'+ctColor(a.t)+'"></i>'+
         '<span style="min-width:0;display:flex;flex:1;align-items:baseline;justify-content:space-between;gap:8px">'+
         '<span style="font-size:11.5px;font-weight:600">'+esc(a.t)+'</span>'+
@@ -8670,12 +8677,13 @@ function renderMetasSlide(){
   // ecualizador, no un hueco — si desaparece, el conjunto miente sobre cuántas metas hay.
   const eq=todasMetas.map(x=>{
     const e=estadoMeta(x.p);
-    return `<i class="${e==='ok'?'ok':(e?'':'zero')}" style="height:${Math.max(16,x.p.pct)}%" title="${x.t} — ${x.p.hechos}/${x.p.total} pasos"></i>`;
+    return `<i class="${e==='ok'?'ok':(e?'':'zero')}" style="height:${Math.max(20,x.p.pct)}%" title="${x.t} — ${x.p.hechos}/${x.p.total} pasos"></i>`;
   }).join('');
 
   const ei=edadInfo();
   document.getElementById('metasBay').innerHTML=`
     <div class="mg-bay">
+      <div class="mg-bay-row">
       <div class="mg-n">
         <span class="mg-k">AVANCE REAL</span>
         <span class="mg-v"><b>${pasosHec}</b><i>/${pasosTot}</i></span>
@@ -8692,12 +8700,13 @@ function renderMetasSlide(){
         <div class="mg-rd"><span class="mg-rv on">${nOn}</span><span class="mg-k">EN MARCHA</span></div>
         <div class="mg-rd"><span class="mg-rv">${nOff}</span><span class="mg-k">SIN EMPEZAR</span></div>
       </div>
-    </div>
-    <div class="mg-age" onclick="abrirEdadDetalle()" role="button" tabindex="0"
-         title="Clic para ver qué debes lograr antes de cumplir ${ei.edadSig}">
-      <span class="mg-age-k">🎂 ${ei.edad} → ${ei.edadSig} AÑOS</span>
-      <div class="mg-age-tr"><div class="mg-age-fi" style="width:${ei.pct}%"></div></div>
-      <span class="mg-age-n">${ei.pct}% · faltan ${ei.diasFaltan} días</span>
+      </div>
+      <div class="mg-age" onclick="abrirEdadDetalle()" role="button" tabindex="0"
+           title="Clic para ver qué debes lograr antes de cumplir ${ei.edadSig}">
+        <span class="mg-age-k">🎂 ${ei.edad} → ${ei.edadSig} AÑOS</span>
+        <div class="mg-age-tr"><div class="mg-age-fi" style="width:${ei.pct}%"></div></div>
+        <span class="mg-age-n">${ei.pct}% · faltan ${ei.diasFaltan} días</span>
+      </div>
     </div>`;
 
   document.getElementById('metasListas').innerHTML=`
