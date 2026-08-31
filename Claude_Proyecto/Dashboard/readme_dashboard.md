@@ -372,7 +372,9 @@ Tres bloques, en el orden en que se preguntan:
 2. **De dónde sale ese saldo** — la resta explícita: entró el 15 `+$20,500`, salió del 15 al 18
    `−$10,164`, te queda `$10,336`, y falta por salir `$1,662` del 19 al 31. Esto sustituye al
    `viene de $0`, que no quería decir nada.
-3. **Los días antes de este** — los tres anteriores con su saldo, tocables.
+Hubo un tercer bloque, "Los días antes de este", con los tres días anteriores y su saldo.
+Adán lo quitó a los pocos minutos: *"quita esto, esto no me aporta nada"* — y tenía razón, el
+riel de arriba ya enseña esa misma trayectoria entera y con más contexto.
 
 ### La semana: el cierre como una resta
 
