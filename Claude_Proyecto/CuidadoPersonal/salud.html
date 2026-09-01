@@ -266,7 +266,8 @@ canvas{max-width:100%}
 .sd-pw-n{font-size:14px;font-weight:800;margin-top:3px;color:var(--text)}
 .sd-barra{height:26px;border-radius:9px;background:var(--surface-3);border:1px solid var(--border);position:relative;overflow:hidden;margin-bottom:8px}
 .sd-barra i{position:absolute;left:0;top:0;bottom:0;background:linear-gradient(90deg,var(--g),#06b6d4);border-radius:8px}
-.sd-barra span{position:absolute;top:0;bottom:0;left:12px;display:flex;align-items:center;font-size:9.5px;font-weight:800;color:var(--bg);letter-spacing:.04em}
+.sd-barra span{position:absolute;top:0;bottom:0;left:12px;display:flex;align-items:center;font-size:9.5px;font-weight:800;letter-spacing:.04em;color:var(--text)}
+.sd-barra.lleno span{color:var(--bg)}
 .sd-barra em{position:absolute;top:0;bottom:0;right:12px;display:flex;align-items:center;font-size:9.5px;font-weight:800;color:var(--text3);font-style:normal}
 .sd-hito{display:flex;justify-content:space-between;font-size:9.5px;color:var(--text3);font-weight:700}
 
@@ -785,6 +786,15 @@ function sdAbrir(id){
   else S.suplementos.abierto[id]=today();
   save(); sdRepintar();
 }
+// Marcar 6 botes de uno en uno para que el botiquín sirva era demasiado peaje. Con esto queda
+// en un clic; si alguno lo abriste antes, lo corriges tocando sus días.
+function sdAbrirTodos(){
+  const M=sdMaestro(); if(!M) return;
+  const faltan=M.lista.filter(p=>!S.suplementos.abierto[p.id]);
+  if(faltan.length){ faltan.forEach(p=>{S.suplementos.abierto[p.id]=today();}); }
+  else { M.lista.forEach(p=>{delete S.suplementos.abierto[p.id];}); }
+  save(); sdRepintar();
+}
 
 // El estado de un examen: nunca hecho, vencido, por vencer, al día o no aplica todavía.
 function sdEstadoExamen(e){
@@ -867,6 +877,7 @@ function sdChequeoHtml(){
     filas+aviso+
     '<div class="sd-mini">Toca el estado de cualquiera para marcar que te lo hiciste hoy. Los valores se capturan aparte, en el historial de abajo: <b>un an\u00e1lisis sin fecha no sirve</b>, porque el n\u00famero solo significa algo comparado con el anterior.</div></div>';
 }
+function sdMetaPeso(kg){ S.metas.pesoObj=+(+kg).toFixed(1); save(); sdRepintar(); }
 function sdMarcarExamen(id){
   if(S.chequeo[id]) delete S.chequeo[id]; else S.chequeo[id]=today();
   save(); sdRepintar();
@@ -887,9 +898,12 @@ function sdBotiquinHtml(){
       '<div class="sd-med-s">'+p.envase+' '+p.unidad+' \u00b7 '+sdEsc(p.dosis)+' \u00b7 dura ~'+dur+' d\u00edas</div></div>'+
       '<div class="sd-med-r">'+der+'<div class="sd-med-p">$'+M.costoMes(p)+'/mes</div></div></div>';
   }).join('');
+  const sinAbrir=M.lista.filter(p=>!S.suplementos.abierto[p.id]).length;
+  const btn=sinAbrir
+    ? '<button class="btn btn-o btn-sm" onclick="sdAbrirTodos()">Marcar los '+sinAbrir+' como abiertos hoy</button>'
+    : '<button class="btn btn-o btn-sm" onclick="sdAbrirTodos()">Quitar las fechas</button>';
   return '<div class="card"><div class="flex jb aic" style="margin-bottom:12px">'+
-    '<div class="card-title" style="margin:0">💊 Tu botiqu\u00edn</div>'+
-    '<span class="ts tm">se te acaba en\u2026</span></div>'+filas+
+    '<div class="card-title" style="margin:0">💊 Tu botiqu\u00edn</div>'+btn+'</div>'+filas+
     '<div class="sd-med-tot"><div class="sd-med-tot-l">Costo mensual de tus suplementos</div>'+
     '<div class="sd-med-tot-v">$'+M.costoMesTotal.toLocaleString('es-MX')+'</div></div>'+
     '<div class="sd-mini">Los d\u00edas salen de la dosis diaria contra el tama\u00f1o del envase, no de una estimaci\u00f3n. Toca los d\u00edas para decir que abriste uno; los precios se editan en <b>Dashboard/datos-maestros.js</b>.</div></div>';
@@ -906,14 +920,31 @@ function sdPesoHtml(){
   const obj=S.metas.pesoObj||0;
   const ini=ord[ord.length-1].peso;
   const imc=(S.perfil.altura?act.peso/Math.pow(S.perfil.altura/100,2):0);
+  // Tres casos distintos, y solo uno admite barra:
+  //   sin meta          → los tres saltos para ponerla
+  //   meta pero 1 pesaje → el inicio ES el peso de hoy, la barra marcaría 0% siempre
+  //   meta y 2+ pesajes  → barra de progreso de verdad
   let barra='';
-  if(obj&&obj!==ini){
+  if(obj && ord.length>=2 && obj!==ini){
     const pc=Math.max(4,Math.min(100,Math.round((act.peso-ini)/(obj-ini)*100)));
-    barra='<div class="sd-barra"><i style="width:'+pc+'%"></i><span>'+act.peso+' KG'+(imc?' \u00b7 IMC '+imc.toFixed(1):'')+'</span>'+
+    barra='<div class="sd-barra'+(pc>=45?' lleno':'')+'"><i style="width:'+pc+'%"></i><span>'+act.peso+' KG'+(imc?' \u00b7 IMC '+imc.toFixed(1):'')+'</span>'+
       '<em>meta '+obj+' kg</em></div><div class="sd-hito"><span>'+ini+' kg \u00b7 inicio</span><span>'+
       (Math.abs(obj-act.peso)).toFixed(1)+' kg para la meta</span></div>';
+  }else if(obj){
+    const falta=+(obj-act.peso).toFixed(1);
+    barra='<div class="sd-mini" style="border:none;margin:0;padding:0;font-size:12px;color:var(--text2)">'+
+      (falta>0?'Te faltan <b style="color:var(--g)">'+falta+' kg</b> para la meta de <b>'+obj+' kg</b>.'
+             :(falta<0?'Est\u00e1s <b style="color:var(--o)">'+Math.abs(falta)+' kg</b> por encima de la meta de <b>'+obj+' kg</b>.'
+                     :'<b style="color:var(--g)">Est\u00e1s en tu meta.</b>'))+
+      ' Con un solo pesaje no hay progreso que dibujar: la barra aparece con el segundo.'+
+      ' <a href="#" onclick="sdMetaPeso(0);return false" style="color:var(--text3)">cambiar meta</a></div>';
   }else{
-    barra='<div class="sd-mini" style="border:none;margin:0;padding:0">Sin objetivo de peso configurado: ponlo en <a href="#" onclick="nav(\'metas\');return false" style="color:var(--g)">Perfil y Metas</a> y aqu\u00ed aparece cu\u00e1nto te falta.</div>';
+    // Mi Comida ya dice que el objetivo es GANAR masa muscular, con super\u00e1vit cal\u00f3rico. Lo que
+    // falta es el n\u00famero, as\u00ed que se ofrecen tres saltos razonables desde el peso de hoy en vez
+    // de un enlace a otra pesta\u00f1a \u2014 que era un callej\u00f3n.
+    const sug=[2,5,8].map(k=>'<button class="btn btn-o btn-sm" onclick="sdMetaPeso('+(act.peso+k)+')">+'+k+' kg \u00b7 '+(act.peso+k)+'</button>').join(' ');
+    barra='<div class="sd-mini" style="border:none;margin:0;padding:0">Tu objetivo en Mi Comida es <b>ganar masa muscular</b>, pero aqu\u00ed falta el n\u00famero. P\u00f3nlo y esta tarjeta te dice cu\u00e1nto te falta:</div>'+
+      '<div class="flex gap8" style="margin-top:10px;flex-wrap:wrap">'+sug+'</div>';
   }
   return '<div class="card"><div class="flex jb aic" style="margin-bottom:12px">'+
     '<div class="card-title" style="margin:0">\u2696\ufe0f Peso y composici\u00f3n</div>'+
