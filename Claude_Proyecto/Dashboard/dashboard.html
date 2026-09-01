@@ -1685,11 +1685,44 @@ button.hp-lec:active{transform:translateY(0)}
    La columna izquierda muestra UN paso completo y legible sin tocar nada; la derecha ordena
    las 12 por retorno (peso × lo que falta para 100), que es lo que de verdad responde el
    título del slide. */
-.hab-cols{display:grid;grid-template-columns:minmax(0,1.75fr) minmax(0,1fr);gap:14px;align-items:stretch}
+/* El contenido pesa mas que la lista, asi que se lleva mas pantalla: de 1.75:1 a 2.35:1,
+   que a 1600px son ~945px de panel contra los 857 de antes (Adan, 2026-08-31: "el contenido
+   eso me interesa mas […] ademas abarca mas espacio de la pantalla"). */
+.hab-cols{display:grid;grid-template-columns:minmax(0,2.35fr) minmax(0,1fr);gap:14px;align-items:stretch}
 .hab-side{display:flex;flex-direction:column;gap:14px;min-height:0}
 
-.hab-foco{position:relative;overflow:hidden;padding:20px 24px;display:flex;flex-direction:column;gap:11px;justify-content:space-between}
-.hab-foco::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--g),transparent)}
+/* Dos zonas: la ruta de pasos a la izquierda y el paso abierto a la derecha. Antes los
+   pasos eran una rejilla de botones bajo el texto y el nombre de cada uno no cabia. */
+.hab-foco{position:relative;overflow:hidden;padding:0;display:grid;
+  grid-template-columns:264px minmax(0,1fr)}
+.hf-ruta{padding:19px 16px;display:flex;flex-direction:column;gap:10px;min-width:0;
+  border-right:1px solid rgba(var(--ov),.09);background:rgba(var(--ov),.018)}
+.hf-ruta-h{display:flex;align-items:baseline;justify-content:space-between;gap:8px}
+.hf-ruta-n{font-family:var(--mono);font-size:10px;font-weight:700;color:var(--g)}
+.hf-ruta-b{height:4px;border-radius:2px;background:rgba(var(--ov),.07);overflow:hidden}
+.hf-ruta-b i{display:block;height:100%;border-radius:2px;background:var(--g)}
+.hf-ruta-l{display:flex;flex-direction:column;gap:1px;min-height:0;overflow-y:auto;scrollbar-gutter:stable}
+/* Un paso de la ruta: numero fijo a la izquierda, nombre completo a la derecha. */
+.hf-p{display:grid;grid-template-columns:21px minmax(0,1fr);gap:9px;align-items:start;
+  padding:7px 9px;border-radius:9px;border:1px solid transparent;background:transparent;
+  cursor:pointer;font-family:inherit;text-align:left;color:inherit;transition:background .15s}
+.hf-p:hover{background:rgba(var(--ov),.06)}
+.hf-p.act{background:rgba(var(--g-rgb),.1);border-color:rgba(var(--g-rgb),.32)}
+.hf-p-n{font-family:var(--mono);font-size:10px;font-weight:700;color:var(--text3);padding-top:1px}
+.hf-p.act .hf-p-n{color:var(--g)}
+.hf-p-t{font-size:11px;line-height:1.35;color:var(--text2)}
+.hf-p.act .hf-p-t{color:var(--text);font-weight:600}
+.hf-ruta-pie{margin-top:auto;padding-top:10px;border-top:1px solid rgba(var(--ov),.08);
+  font-size:10px;color:var(--text3);line-height:1.45}
+/* La columna del contenido. */
+.hf-cuerpo{padding:20px 24px;display:flex;flex-direction:column;gap:13px;min-width:0}
+.hab-foco::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;z-index:1;
+  background:linear-gradient(90deg,transparent,var(--g),transparent)}
+/* El numero del paso, junto al titulo: dice donde estas sin leer nada. */
+.hf-h1w{display:flex;align-items:flex-start;gap:14px}
+.hf-h1n{flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:4px;padding-top:2px}
+.hf-h1n b{font-family:var(--mono);font-size:clamp(30px,3.4vw,44px);font-weight:700;color:var(--g);line-height:.85}
+.hf-h1n span{font-family:var(--mono);font-size:9px;color:var(--text3)}
 .hf-top{display:flex;align-items:center;gap:11px;flex-wrap:wrap}
 .hf-chip{font-size:9.5px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;padding:4px 10px;border-radius:20px;background:var(--g);color:#05050a}
 .hf-badge{width:26px;height:26px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
@@ -1717,7 +1750,7 @@ button.hp-lec:active{transform:translateY(0)}
 .hf-paso.act .hf-paso-n{color:var(--g)}
 .hf-paso-t{font-size:11px;font-weight:700;color:var(--text3);line-height:1.25}
 .hf-paso.act .hf-paso-t{color:var(--text)}
-.hf-pie{display:flex;align-items:center;gap:12px;padding-top:9px;border-top:1px solid rgba(var(--ov),.07)}
+.hf-pie{display:flex;align-items:center;gap:12px;padding-top:9px;border-top:1px solid rgba(var(--ov),.07);margin-top:auto}
 .hf-pie-t{font-size:11px;color:var(--text3)}
 .hf-pie-t b{color:var(--text2);font-weight:700}
 .hf-acts{margin-left:auto;display:flex;gap:8px;flex-shrink:0}
@@ -1738,8 +1771,12 @@ button.hp-lec:active{transform:translateY(0)}
 .hr-head{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:8px}
 .hr-t{font-size:9.5px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--text3)}
 .hr-sub{font-size:10px;color:var(--text3);opacity:.75;white-space:nowrap}
-.hr-rows{display:flex;flex-direction:column;justify-content:space-between;flex:1;gap:4px}
-.hr-row{display:flex;align-items:center;gap:8px}
+.hr-rows{display:flex;flex-direction:column;justify-content:space-between;flex:1;gap:1px}
+/* Dos renglones por habilidad: arriba el nombre y su nivel, abajo la barra. Antes era una
+   sola línea de 15px con cinco cosas apretadas y no se leía nada. */
+.hr-row{display:grid;grid-template-columns:15px 14px minmax(0,1fr);gap:7px;align-items:center;
+  padding:4px 7px;border-radius:8px}
+.hr-top{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin-bottom:3px}
 /* Ventas y Marketing siguen en la lista pero apagadas: están fuera del foco por decisión
    explícita del 2026-08-09 (PRIORIDAD_EXCLUIDAS) y encabezan el retorno — verlas apagadas
    explica por qué no son la habilidad de la semana, cosa que ocultarlas no haría. */
@@ -1748,12 +1785,24 @@ button.hp-lec:active{transform:translateY(0)}
 .hr-n{font-family:var(--mono);font-size:9.5px;font-weight:700;color:var(--text3);width:14px;flex-shrink:0}
 .hr-row.foco .hr-n{color:var(--g)}
 .hr-ico{font-size:11px;flex-shrink:0}
-.hr-name{font-size:11px;font-weight:700;color:var(--text2);width:74px;flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.hr-row.foco .hr-name{font-weight:800;color:var(--text)}
-.hr-bar{flex:1;height:4px;background:rgba(var(--ov),.08);border-radius:3px;overflow:hidden;min-width:0}
-.hr-fill{height:100%;border-radius:3px}
-.hr-v{font-family:var(--mono);font-size:9.5px;font-weight:800;color:var(--text2);width:54px;text-align:right;flex-shrink:0}
-.hr-v.pausa{font-family:var(--font);font-size:8px;font-weight:800;letter-spacing:.05em;color:var(--text3)}
+.hr-name{font-size:11.5px;font-weight:600;color:var(--text);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hr-row.foco .hr-name{font-weight:800}
+/* La barra es LO QUE SABES: llena = lo dominas. Antes media el retorno, asi que Ventas
+   (15/100) salia llena y Mentalidad (85/100) casi vacia — justo al reves de lo que es. */
+.hr-bar{position:relative;height:6px;background:rgba(var(--ov),.07);border-radius:4px;overflow:hidden}
+.hr-fill{position:absolute;left:0;top:0;bottom:0;border-radius:4px}
+/* La rayita del siguiente escalon: a donde llega la habilidad de la semana si la cierras. */
+.hr-meta{position:absolute;top:-2px;bottom:-2px;width:2px;background:rgba(var(--ov),.42);border-radius:1px}
+.hr-v{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:12px;font-weight:700;
+  color:var(--text);flex-shrink:0}
+.hr-tag{font-family:var(--mono);font-size:8px;font-weight:700;letter-spacing:.1em;color:var(--text3)}
+.hr-pie{display:flex;flex-wrap:wrap;gap:5px;margin-top:9px;padding-top:9px;
+  border-top:1px solid rgba(var(--ov),.08)}
+.hr-pie span{display:flex;align-items:center;gap:5px;padding:3px 8px;border-radius:20px;
+  background:rgba(var(--ov),.045);font-size:10px;color:var(--text2)}
+.hr-pie i{width:14px;height:5px;border-radius:2px;flex-shrink:0}
+.hr-nota{font-size:10px;color:var(--text3);line-height:1.45;margin-top:7px}
+.hr-nota b{color:var(--text);font-weight:700}
 
 /* PANTALLAS BAJAS — el alto del panel de foco lo manda el largo del texto del paso, y ese
    largo varía mucho: el paso 4 de Inversión ("Ver las comisiones antes que el rendimiento")
@@ -1793,13 +1842,19 @@ button.hp-lec:active{transform:translateY(0)}
   .hf-pie{flex-wrap:wrap}
   .hf-acts{margin-left:0;width:100%}
   .hf-btn{flex:1;justify-content:center}
-  /* Las 9 fichas apiladas cuestan ~360px en un teléfono y empujaban el slide a 1704px.
-     Aquí pasan a una tira de números: el nombre del paso abierto ya está en el título
-     grande, así que no se pierde nada, y el área de toque sube de 30px a 46px. */
-  .hf-pasos{grid-template-columns:repeat(auto-fit,minmax(44px,1fr));gap:7px}
-  .hf-paso{justify-content:center;min-height:46px;padding:8px 4px}
-  .hf-paso-n{font-size:14px}
-  .hf-paso-t{display:none}
+  /* La ruta de 264px no cabe al lado en un teléfono: se va arriba y pasa a una tira de
+     números en horizontal. El nombre del paso abierto sigue en el título grande, así que
+     no se pierde nada, y el área de toque sube de 30px a 46px. */
+  .hab-foco{grid-template-columns:1fr}
+  .hf-ruta{border-right:0;border-bottom:1px solid rgba(var(--ov),.09);padding:14px 16px}
+  .hf-ruta-l{flex-direction:row;gap:7px;overflow-x:auto;overflow-y:hidden;padding-bottom:2px}
+  .hf-p{grid-template-columns:1fr;justify-items:center;min-width:46px;min-height:46px;
+    padding:8px 4px;flex-shrink:0}
+  .hf-p-n{font-size:14px;padding-top:0}
+  .hf-p-t{display:none}
+  .hf-ruta-pie{display:none}
+  .hf-cuerpo{padding:16px 16px 18px}
+  .hf-h1n b{font-size:30px}
 }
 
 
@@ -7794,35 +7849,50 @@ function renderSkills(){
 
   // ── Columna izquierda: la habilidad de la semana, con el paso abierto y legible entero.
   document.getElementById('habFoco').innerHTML = `
-    <div class="hf-top">
-      <span class="hf-chip">Esta semana</span>
-      <div class="hf-badge" style="background:${l.c}22">${foco.icon}</div>
-      <span class="hf-name">${foco.name}</span>
-      <span class="hf-lvl" style="background:${l.c}22;color:${l.c}">${l.l}</span>
-      <span class="hf-val">${foco.val}/100 · ×${foco.w}</span>
-      <span class="hf-why">${esTop
-        ? 'Es la que <b>más rinde</b> de las que están activas'
-        : `Rinde <b>${skRetorno(foco)}</b> · la que más rinde es ${cand[0].name}`}</span>
-    </div>
-    <div class="hf-h1">${p.n}</div>
-    ${p.q ? `<div><div class="hf-lbl">Por qué esta</div><div class="hf-q">${p.q}</div></div>` : ''}
-    <div><div class="hf-lbl">Cómo desarrollarla</div><div class="hf-c">${p.c}</div></div>
-    ${p.r ? `<div class="hf-res"><div class="hf-lbl">Con qué</div><div class="hf-res-t">📚 ${p.r}</div></div>` : ''}
-    <div>
-      <div class="hf-lbl">Los ${pasos.length} pasos de ${foco.name} <span style="font-weight:600;text-transform:none;letter-spacing:0">· toca uno para verlo</span></div>
-      <div class="hf-pasos">${pasos.map((x, j) => `
-        <button class="hf-paso${j === i ? ' act' : ''}" onclick="habPasoSet(${j})" title="${j + 1}. ${habAttr(x.n)} — ${habAttr(x.q || x.c).slice(0, 170)}">
-          <span class="hf-paso-n">${j + 1}</span><span class="hf-paso-t">${x.n}</span>
+    <div class="hf-ruta">
+      <div class="hf-ruta-h">
+        <span class="hf-lbl">La ruta</span>
+        <span class="hf-ruta-n">${i + 1} / ${pasos.length}</span>
+      </div>
+      <div class="hf-ruta-b"><i style="width:${Math.round((i + 1) / pasos.length * 100)}%"></i></div>
+      <div class="hf-ruta-l">${pasos.map((x, j) => `
+        <button class="hf-p${j === i ? ' act' : ''}" onclick="habPasoSet(${j})" title="${j + 1}. ${habAttr(x.n)} — ${habAttr(x.q || x.c).slice(0, 170)}">
+          <span class="hf-p-n">${String(j + 1).padStart(2, '0')}</span>
+          <span class="hf-p-t">${x.n}</span>
         </button>`).join('')}</div>
+      <div class="hf-ruta-pie">Toca cualquiera para abrirlo. No hace falta ir en orden.</div>
     </div>
-    <div class="hf-pie">
-      <span class="hf-pie-t">${i + 1 < pasos.length
-        ? `Cuando la cierres sigue <b>${pasos[i + 1].n}</b>`
-        : `Es el último de los ${pasos.length}`}</span>
-      <span class="hf-acts">
-        ${otra ? `<button class="hf-btn" onclick="habFocoSet('${otra.id}')">Cambiar a ${otra.name} ${otra.icon}</button>` : ''}
-        <a class="hf-btn" href="../Coach/Coach.html?skill=${foco.id}#aprendizaje">✏️ Ajustar en Coach →</a>
-      </span>
+
+    <div class="hf-cuerpo">
+      <div class="hf-top">
+        <span class="hf-chip">Esta semana</span>
+        <div class="hf-badge" style="background:${l.c}22">${foco.icon}</div>
+        <span class="hf-name">${foco.name}</span>
+        <span class="hf-lvl" style="background:${l.c}22;color:${l.c}">${l.l}</span>
+        <span class="hf-val">${foco.val}/100 · pesa ×${foco.w}</span>
+        <span class="hf-why">${esTop
+          ? 'la que <b>más rinde</b> de las activas'
+          : `rinde <b>${skRetorno(foco)}</b> · la que más rinde es ${cand[0].name}`}</span>
+      </div>
+
+      <div class="hf-h1w">
+        <span class="hf-h1n"><b>${i + 1}</b><span>de ${pasos.length}</span></span>
+        <div class="hf-h1">${p.n}</div>
+      </div>
+
+      ${p.q ? `<div><div class="hf-lbl" style="color:var(--g)">Por qué este paso</div><div class="hf-q">${p.q}</div></div>` : ''}
+      <div><div class="hf-lbl" style="color:var(--cy)">Qué hacer</div><div class="hf-c">${p.c}</div></div>
+      ${p.r ? `<div class="hf-res"><div class="hf-lbl">Con qué</div><div class="hf-res-t">📚 ${p.r}</div></div>` : ''}
+
+      <div class="hf-pie">
+        <span class="hf-pie-t">${i + 1 < pasos.length
+          ? `Al cerrarlo sigue <b>${pasos[i + 1].n}</b>`
+          : `Es el último de los ${pasos.length}`}</span>
+        <span class="hf-acts">
+          ${otra ? `<button class="hf-btn" onclick="habFocoSet('${otra.id}')">Cambiar a ${otra.name} ${otra.icon}</button>` : ''}
+          <a class="hf-btn" href="../Coach/Coach.html?skill=${foco.id}#aprendizaje">✏️ Ajustar en Coach →</a>
+        </span>
+      </div>
     </div>`;
 
   // ── Nivel general. La frase promete una cifra concreta, así que se calcula con calcOVRcon()
@@ -7841,27 +7911,44 @@ function renderSkills(){
     <div class="pbar" style="height:6px;margin-top:9px"><div class="pfill" style="width:${ovr}%;background:${skLevel(ovr).c}"></div></div>
     <div class="ho-txt">Llevar ${foco.name} de <b>${foco.val} a ${meta}</b> lo sube a <i>${ovrF}</i>.${extra}</div>`;
 
-  // ── Las 12 ordenadas por retorno. Sustituye a #skillBars: mismo set completo, pero puestas
-  // en el orden que el título del slide promete. El valor crudo y el peso siguen a mano en el
-  // title de cada fila, para no llenar 490px con cuatro cifras por renglón.
+  // ── Las 12, ordenadas por retorno pero MEDIDAS por nivel. Son dos preguntas distintas y
+  // antes compartían el mismo trazo: la barra dibujaba el retorno, así que Ventas (15/100)
+  // salía llena y Mentalidad (85/100) casi vacía. Adán, 2026-08-31: "parece que las
+  // habilidades que tengo menos conocimiento, parece que tengo mucho […] inviértelo".
+  // Ahora la barra es el nivel y el orden es el retorno, con una frase al pie que lo dice.
   const orden = [...SK].sort((a, b) => skRetorno(b) - skRetorno(a));
-  const maxR = skRetorno(orden[0]) || 1;
+  const metaFoco = skSiguienteEscalon(foco.val);
   document.getElementById('habRank').innerHTML = `
-    <div class="hr-head"><span class="hr-t">Las ${SK.length}, por retorno</span><span class="hr-sub">peso × lo que falta</span></div>
+    <div class="hr-head"><span class="hr-t">Lo que sabes de cada una</span><span class="hr-sub">de arriba abajo, dónde rinde más una hora</span></div>
     <div class="hr-rows">${orden.map((s, j) => {
-      const lv = skLevel(s.val), r = skRetorno(s);
+      const lv = skLevel(s.val);
       const pausa = PRIORIDAD_EXCLUIDAS.includes(s.id), esFoco = s.id === foco.id;
-      const relleno = pausa
-        ? `repeating-linear-gradient(135deg,${lv.c} 0 4px,transparent 4px 8px)`
-        : lv.c;
-      return `<div class="hr-row${pausa ? ' pausa' : ''}${esFoco ? ' foco' : ''}" title="${s.name}: ${s.val}/100 · ${lv.l} · peso ×${s.w} · rinde ${r}${pausa ? ' · fuera del foco por decisión propia' : ''}">
+      return `<div class="hr-row${pausa ? ' pausa' : ''}${esFoco ? ' foco' : ''}" title="${s.name}: ${s.val}/100 · ${lv.l} · peso ×${s.w} · rinde ${skRetorno(s)}${pausa ? ' · fuera del foco por decisión propia' : ''}">
         <span class="hr-n">${String(j + 1).padStart(2, '0')}</span>
         <span class="hr-ico">${s.icon}</span>
-        <span class="hr-name">${s.name}</span>
-        <div class="hr-bar"><div class="hr-fill" style="width:${Math.round(r / maxR * 100)}%;background:${relleno}"></div></div>
-        <span class="hr-v${pausa ? ' pausa' : ''}">${pausa ? 'EN PAUSA' : r}</span>
+        <div style="min-width:0">
+          <div class="hr-top">
+            <span class="hr-name">${s.name}</span>
+            <span style="display:flex;align-items:baseline;gap:7px;flex-shrink:0">
+              ${pausa ? '<span class="hr-tag">EN PAUSA</span>' : ''}
+              ${esFoco ? '<span class="hr-tag" style="color:var(--g)">ESTA SEMANA</span>' : ''}
+              <span class="hr-v">${s.val}</span></span>
+          </div>
+          <div class="hr-bar">
+            <div class="hr-fill" style="width:${s.val}%;background:${lv.c}"></div>
+            ${esFoco ? `<i class="hr-meta" style="left:${metaFoco}%"></i>` : ''}
+          </div>
+        </div>
       </div>`;
-    }).join('')}</div>`;
+    }).join('')}</div>
+    <div class="hr-pie">
+      <span><i style="background:#ef4444"></i>Principiante</span>
+      <span><i style="background:#fb923c"></i>Medio</span>
+      <span><i style="background:#84cc16"></i>Avanzado</span>
+      <span><i style="width:2px;height:9px;background:rgba(var(--ov),.42)"></i>Meta de la semana</span>
+    </div>
+    <div class="hr-nota">La barra es <b>lo que ya sabes</b>. El orden es dónde una hora rinde más,
+      que no es lo mismo: ${orden[0].name} va primera porque pesa ×${orden[0].w} y está casi a cero.</div>`;
 }
 
 // ── BARRA SUPERIOR — acceso directo a los demás proyectos (persistente, no rota) ─

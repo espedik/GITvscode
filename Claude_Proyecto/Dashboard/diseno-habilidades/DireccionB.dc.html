@@ -1,0 +1,134 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap">
+  <style>
+    body { margin: 0; background: #05050a; font-family: 'Inter', -apple-system, sans-serif; }
+    a { color: #00e0c0; } a:hover { color: #5df0dc; }
+    .mono { font-family: 'Space Grotesk', monospace; font-variant-numeric: tabular-nums; letter-spacing: -0.02em; }
+    .lbl { font-size: 9px; font-weight: 800; letter-spacing: 0.16em; text-transform: uppercase; }
+    .row { display: grid; grid-template-columns: 16px minmax(0, 1fr) auto; gap: 8px; align-items: center;
+           padding: 5px 7px; border-radius: 7px; }
+    .row b { font-size: 11.5px; font-weight: 600; color: #f4f4f8; }
+    .pista { height: 5px; border-radius: 3px; background: rgba(255,255,255,0.06); overflow: hidden; margin-top: 3px; }
+    .pista i { display: block; height: 100%; border-radius: 3px; }
+  </style>
+</helmet>
+
+<div style="width: 500px; height: 660px; background: #05050a; border-radius: 16px;
+     border: 1px solid rgba(255,255,255,0.13); padding: 16px 18px; box-sizing: border-box;
+     display: flex; flex-direction: column; gap: 13px; overflow: hidden">
+
+  <div style="display: flex; flex-direction: column; gap: 6px; padding-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.09)">
+    <span class="lbl" style="color: #8589a8">Nivel general</span>
+    <div style="display: flex; align-items: baseline; gap: 9px">
+      <span class="mono" style="font-size: 38px; font-weight: 700; color: #f4f4f8; line-height: 1">46</span>
+      <span style="font-size: 11.5px; color: #8589a8">/100</span>
+    </div>
+  </div>
+
+  <!-- DONDE MÁS GANAS -->
+  <div style="display: flex; flex-direction: column; gap: 7px">
+    <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 8px">
+      <span class="lbl" style="color: #ef4444">Donde una hora rinde más</span>
+      <span style="font-size: 9.5px; color: #8589a8">te falta mucho y pesan mucho</span>
+    </div>
+
+    <div class="row" style="background: rgba(0,232,122,0.09); border: 1px solid rgba(0,232,122,0.3)">
+      <span style="font-size: 12px">📈</span>
+      <div><div style="display: flex; align-items: baseline; gap: 7px">
+        <b>Inversión</b>
+        <span class="mono" style="font-size: 8px; font-weight: 700; color: #00e87a; letter-spacing: 0.1em">ESTA SEMANA</span></div>
+        <div class="pista"><i style="width: 25%; background: #ef4444"></i></div></div>
+      <span class="mono" style="font-size: 13px; font-weight: 700; color: #f4f4f8">25</span>
+    </div>
+
+    <div class="row" style="background: rgba(255,255,255,0.03)">
+      <span style="font-size: 12px">💰</span>
+      <div><b>Finanzas</b><div class="pista"><i style="width: 20%; background: #ef4444"></i></div></div>
+      <span class="mono" style="font-size: 13px; font-weight: 700; color: #f4f4f8">20</span>
+    </div>
+
+    <div class="row" style="background: rgba(255,255,255,0.03)">
+      <span style="font-size: 12px">🤖</span>
+      <div><b>IA</b><div class="pista"><i style="width: 30%; background: #ef4444"></i></div></div>
+      <span class="mono" style="font-size: 13px; font-weight: 700; color: #f4f4f8">30</span>
+    </div>
+
+    <div style="display: flex; gap: 7px; margin-top: 1px">
+      <span style="display: flex; align-items: center; gap: 6px; padding: 4px 9px; border-radius: 7px;
+            background: rgba(255,255,255,0.025); opacity: 0.55; flex-grow: 1">
+        <span style="font-size: 11px">🤝</span>
+        <span style="font-size: 10.5px; color: #9a9db3; flex-grow: 1">Ventas</span>
+        <span class="mono" style="font-size: 10px; color: #8589a8">15</span></span>
+      <span style="display: flex; align-items: center; gap: 6px; padding: 4px 9px; border-radius: 7px;
+            background: rgba(255,255,255,0.025); opacity: 0.55; flex-grow: 1">
+        <span style="font-size: 11px">📣</span>
+        <span style="font-size: 10.5px; color: #9a9db3; flex-grow: 1">Marketing</span>
+        <span class="mono" style="font-size: 10px; color: #8589a8">20</span></span>
+    </div>
+    <span style="font-size: 9.5px; color: #8589a8; line-height: 1.4">Esas dos pesan aún más, pero están en pausa por decisión propia.</span>
+  </div>
+
+  <!-- LO QUE YA TIENES -->
+  <div style="display: flex; flex-direction: column; gap: 7px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.09)">
+    <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 8px">
+      <span class="lbl" style="color: #84cc16">Lo que ya tienes</span>
+      <span style="font-size: 9.5px; color: #8589a8">mantener, no entrenar</span>
+    </div>
+
+    <div class="row" style="background: rgba(255,255,255,0.03)">
+      <span style="font-size: 12px">🚀</span>
+      <div><b>Mentalidad</b><div class="pista"><i style="width: 85%; background: #84cc16"></i></div></div>
+      <span class="mono" style="font-size: 13px; font-weight: 700; color: #84cc16">85</span>
+    </div>
+    <div class="row" style="background: rgba(255,255,255,0.03)">
+      <span style="font-size: 12px">👑</span>
+      <div><b>Liderazgo</b><div class="pista"><i style="width: 80%; background: #84cc16"></i></div></div>
+      <span class="mono" style="font-size: 13px; font-weight: 700; color: #84cc16">80</span>
+    </div>
+    <div class="row" style="background: rgba(255,255,255,0.03)">
+      <span style="font-size: 12px">🌐</span>
+      <div><b>Inglés</b><div class="pista"><i style="width: 80%; background: #84cc16"></i></div></div>
+      <span class="mono" style="font-size: 13px; font-weight: 700; color: #84cc16">80</span>
+    </div>
+  </div>
+
+  <!-- EN MEDIO -->
+  <div style="display: flex; flex-direction: column; gap: 7px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.09)">
+    <span class="lbl" style="color: #fb923c">A medio camino</span>
+    <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px">
+      <span style="display: flex; align-items: center; gap: 7px; padding: 5px 9px; border-radius: 7px; background: rgba(255,255,255,0.03)">
+        <span style="font-size: 11px">💻</span>
+        <span style="font-size: 11px; color: #f4f4f8; flex-grow: 1">Código</span>
+        <span class="mono" style="font-size: 11.5px; font-weight: 700; color: #fb923c">60</span></span>
+      <span style="display: flex; align-items: center; gap: 7px; padding: 5px 9px; border-radius: 7px; background: rgba(255,255,255,0.03)">
+        <span style="font-size: 11px">✍️</span>
+        <span style="font-size: 11px; color: #f4f4f8; flex-grow: 1">Copy</span>
+        <span class="mono" style="font-size: 11.5px; font-weight: 700; color: #fb923c">55</span></span>
+      <span style="display: flex; align-items: center; gap: 7px; padding: 5px 9px; border-radius: 7px; background: rgba(255,255,255,0.03)">
+        <span style="font-size: 11px">🔗</span>
+        <span style="font-size: 11px; color: #f4f4f8; flex-grow: 1">Networking</span>
+        <span class="mono" style="font-size: 11.5px; font-weight: 700; color: #fb923c">55</span></span>
+      <span style="display: flex; align-items: center; gap: 7px; padding: 5px 9px; border-radius: 7px; background: rgba(255,255,255,0.03)">
+        <span style="font-size: 11px">📊</span>
+        <span style="font-size: 11px; color: #f4f4f8; flex-grow: 1">Datos</span>
+        <span class="mono" style="font-size: 11.5px; font-weight: 700; color: #fb923c">55</span></span>
+    </div>
+  </div>
+
+  <span style="margin-top: auto; font-size: 10px; color: #8589a8; line-height: 1.45; padding-top: 10px;
+        border-top: 1px solid rgba(255,255,255,0.09)">
+    Tres listas, tres decisiones: <b style="color: #f4f4f8">entrenar</b>, <b style="color: #f4f4f8">mantener</b>
+    o <b style="color: #f4f4f8">dejar madurar</b>. La barra siempre es lo que sabes.
+  </span>
+</div>
+</x-dc>
+</body>
+</html>

@@ -1,0 +1,210 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap">
+  <style>
+    body { margin: 0; background: #05050a; font-family: 'Inter', -apple-system, sans-serif; }
+    a { color: #00e0c0; } a:hover { color: #5df0dc; }
+    .mono { font-family: 'Space Grotesk', monospace; font-variant-numeric: tabular-nums; letter-spacing: -0.02em; }
+    .lbl { font-size: 9px; font-weight: 800; letter-spacing: 0.16em; text-transform: uppercase; color: #8589a8; }
+    /* Un medallón por habilidad: el anillo es lo que sabes, nada más. */
+    .med { display: flex; flex-direction: column; align-items: center; gap: 7px; padding: 11px 6px 10px;
+           border-radius: 11px; border: 1px solid rgba(255,255,255,0.07); background: rgba(255,255,255,0.02); }
+    .med .nm { font-size: 11px; font-weight: 600; color: #f4f4f8; text-align: center; line-height: 1.2; }
+    .anillo { position: relative; width: 62px; height: 62px; }
+    .anillo .cif { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+                   font-family: 'Space Grotesk', monospace; font-size: 17px; font-weight: 700; }
+  </style>
+</helmet>
+
+<div style="width: 1380px; height: 300px; background:
+     radial-gradient(700px 200px at 50% -20%, rgba(0,224,192,0.05), transparent 70%), #05050a;
+     border-radius: 16px; border: 1px solid rgba(255,255,255,0.13); padding: 15px 18px;
+     box-sizing: border-box; display: flex; flex-direction: column; gap: 12px; overflow: hidden">
+
+  <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 14px">
+    <div style="display: flex; align-items: baseline; gap: 12px">
+      <span class="lbl">Lo que sabes de cada una</span>
+      <span style="font-size: 10px; color: #8589a8">el anillo lleno es tu nivel · las tres primeras son donde más rinde una hora, de las activas</span>
+    </div>
+    <div style="display: flex; align-items: center; gap: 14px">
+      <span style="display: flex; align-items: center; gap: 6px"><i style="width: 9px; height: 9px; border-radius: 50%; background: #ef4444"></i><span style="font-size: 10px; color: #9a9db3">Principiante</span></span>
+      <span style="display: flex; align-items: center; gap: 6px"><i style="width: 9px; height: 9px; border-radius: 50%; background: #fb923c"></i><span style="font-size: 10px; color: #9a9db3">Medio</span></span>
+      <span style="display: flex; align-items: center; gap: 6px"><i style="width: 9px; height: 9px; border-radius: 50%; background: #84cc16"></i><span style="font-size: 10px; color: #9a9db3">Avanzado</span></span>
+    </div>
+  </div>
+
+  <div style="display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 9px">
+
+    <!-- Inversión · el foco -->
+    <div class="med" style="border-color: rgba(0,232,122,0.35); background: rgba(0,232,122,0.07)">
+      <div class="anillo">
+        <svg viewBox="0 0 68 68" style="width: 100%; height: 100%; transform: rotate(-90deg)">
+          <circle cx="34" cy="34" r="28" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="6"></circle>
+          <circle cx="34" cy="34" r="28" fill="none" stroke="#ef4444" stroke-width="6" stroke-linecap="round"
+                  stroke-dasharray="43.98 175.9"></circle>
+        </svg>
+        <span class="cif" style="color: #f4f4f8">25</span>
+      </div>
+      <span class="nm">Inversión</span>
+      <span class="mono" style="font-size: 8px; font-weight: 700; color: #00e87a; letter-spacing: 0.1em">ESTA SEMANA</span>
+    </div>
+
+    <!-- Finanzas -->
+    <div class="med">
+      <div class="anillo">
+        <svg viewBox="0 0 68 68" style="width: 100%; height: 100%; transform: rotate(-90deg)">
+          <circle cx="34" cy="34" r="28" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="6"></circle>
+          <circle cx="34" cy="34" r="28" fill="none" stroke="#ef4444" stroke-width="6" stroke-linecap="round"
+                  stroke-dasharray="35.19 175.9"></circle>
+        </svg>
+        <span class="cif" style="color: #f4f4f8">20</span>
+      </div>
+      <span class="nm">Finanzas</span>
+      <span class="mono" style="font-size: 8px; font-weight: 700; color: #8589a8; letter-spacing: 0.1em">2ª DE LAS ACTIVAS</span>
+    </div>
+
+    <!-- IA -->
+    <div class="med">
+      <div class="anillo">
+        <svg viewBox="0 0 68 68" style="width: 100%; height: 100%; transform: rotate(-90deg)">
+          <circle cx="34" cy="34" r="28" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="6"></circle>
+          <circle cx="34" cy="34" r="28" fill="none" stroke="#ef4444" stroke-width="6" stroke-linecap="round"
+                  stroke-dasharray="52.78 175.9"></circle>
+        </svg>
+        <span class="cif" style="color: #f4f4f8">30</span>
+      </div>
+      <span class="nm">IA</span>
+      <span class="mono" style="font-size: 8px; font-weight: 700; color: #8589a8; letter-spacing: 0.1em">3ª DE LAS ACTIVAS</span>
+    </div>
+
+    <!-- Código -->
+    <div class="med">
+      <div class="anillo">
+        <svg viewBox="0 0 68 68" style="width: 100%; height: 100%; transform: rotate(-90deg)">
+          <circle cx="34" cy="34" r="28" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="6"></circle>
+          <circle cx="34" cy="34" r="28" fill="none" stroke="#fb923c" stroke-width="6" stroke-linecap="round"
+                  stroke-dasharray="105.5 175.9"></circle>
+        </svg>
+        <span class="cif" style="color: #f4f4f8">60</span>
+      </div>
+      <span class="nm">Código</span>
+    </div>
+
+    <!-- Copy -->
+    <div class="med">
+      <div class="anillo">
+        <svg viewBox="0 0 68 68" style="width: 100%; height: 100%; transform: rotate(-90deg)">
+          <circle cx="34" cy="34" r="28" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="6"></circle>
+          <circle cx="34" cy="34" r="28" fill="none" stroke="#fb923c" stroke-width="6" stroke-linecap="round"
+                  stroke-dasharray="96.75 175.9"></circle>
+        </svg>
+        <span class="cif" style="color: #f4f4f8">55</span>
+      </div>
+      <span class="nm">Copy</span>
+    </div>
+
+    <!-- Networking -->
+    <div class="med">
+      <div class="anillo">
+        <svg viewBox="0 0 68 68" style="width: 100%; height: 100%; transform: rotate(-90deg)">
+          <circle cx="34" cy="34" r="28" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="6"></circle>
+          <circle cx="34" cy="34" r="28" fill="none" stroke="#fb923c" stroke-width="6" stroke-linecap="round"
+                  stroke-dasharray="96.75 175.9"></circle>
+        </svg>
+        <span class="cif" style="color: #f4f4f8">55</span>
+      </div>
+      <span class="nm">Networking</span>
+    </div>
+
+    <!-- Datos -->
+    <div class="med">
+      <div class="anillo">
+        <svg viewBox="0 0 68 68" style="width: 100%; height: 100%; transform: rotate(-90deg)">
+          <circle cx="34" cy="34" r="28" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="6"></circle>
+          <circle cx="34" cy="34" r="28" fill="none" stroke="#fb923c" stroke-width="6" stroke-linecap="round"
+                  stroke-dasharray="96.75 175.9"></circle>
+        </svg>
+        <span class="cif" style="color: #f4f4f8">55</span>
+      </div>
+      <span class="nm">Datos</span>
+    </div>
+
+    <!-- Inglés -->
+    <div class="med">
+      <div class="anillo">
+        <svg viewBox="0 0 68 68" style="width: 100%; height: 100%; transform: rotate(-90deg)">
+          <circle cx="34" cy="34" r="28" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="6"></circle>
+          <circle cx="34" cy="34" r="28" fill="none" stroke="#84cc16" stroke-width="6" stroke-linecap="round"
+                  stroke-dasharray="140.7 175.9"></circle>
+        </svg>
+        <span class="cif" style="color: #f4f4f8">80</span>
+      </div>
+      <span class="nm">Inglés</span>
+    </div>
+
+    <!-- Liderazgo -->
+    <div class="med">
+      <div class="anillo">
+        <svg viewBox="0 0 68 68" style="width: 100%; height: 100%; transform: rotate(-90deg)">
+          <circle cx="34" cy="34" r="28" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="6"></circle>
+          <circle cx="34" cy="34" r="28" fill="none" stroke="#84cc16" stroke-width="6" stroke-linecap="round"
+                  stroke-dasharray="140.7 175.9"></circle>
+        </svg>
+        <span class="cif" style="color: #f4f4f8">80</span>
+      </div>
+      <span class="nm">Liderazgo</span>
+    </div>
+
+    <!-- Mentalidad -->
+    <div class="med">
+      <div class="anillo">
+        <svg viewBox="0 0 68 68" style="width: 100%; height: 100%; transform: rotate(-90deg)">
+          <circle cx="34" cy="34" r="28" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="6"></circle>
+          <circle cx="34" cy="34" r="28" fill="none" stroke="#84cc16" stroke-width="6" stroke-linecap="round"
+                  stroke-dasharray="149.5 175.9"></circle>
+        </svg>
+        <span class="cif" style="color: #84cc16">85</span>
+      </div>
+      <span class="nm">Mentalidad</span>
+      <span class="mono" style="font-size: 8px; font-weight: 700; color: #8589a8; letter-spacing: 0.1em">TU MÁS ALTA</span>
+    </div>
+
+    <!-- Ventas · en pausa -->
+    <div class="med" style="opacity: 0.42">
+      <div class="anillo">
+        <svg viewBox="0 0 68 68" style="width: 100%; height: 100%; transform: rotate(-90deg)">
+          <circle cx="34" cy="34" r="28" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="6"></circle>
+          <circle cx="34" cy="34" r="28" fill="none" stroke="#ef4444" stroke-width="6" stroke-linecap="round"
+                  stroke-dasharray="26.39 175.9"></circle>
+        </svg>
+        <span class="cif" style="color: #9a9db3">15</span>
+      </div>
+      <span class="nm" style="color: #9a9db3">Ventas</span>
+      <span class="mono" style="font-size: 8px; font-weight: 700; color: #8589a8; letter-spacing: 0.1em">EN PAUSA</span>
+    </div>
+
+    <!-- Marketing · en pausa -->
+    <div class="med" style="opacity: 0.42">
+      <div class="anillo">
+        <svg viewBox="0 0 68 68" style="width: 100%; height: 100%; transform: rotate(-90deg)">
+          <circle cx="34" cy="34" r="28" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="6"></circle>
+          <circle cx="34" cy="34" r="28" fill="none" stroke="#ef4444" stroke-width="6" stroke-linecap="round"
+                  stroke-dasharray="35.19 175.9"></circle>
+        </svg>
+        <span class="cif" style="color: #9a9db3">20</span>
+      </div>
+      <span class="nm" style="color: #9a9db3">Marketing</span>
+      <span class="mono" style="font-size: 8px; font-weight: 700; color: #8589a8; letter-spacing: 0.1em">EN PAUSA</span>
+    </div>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

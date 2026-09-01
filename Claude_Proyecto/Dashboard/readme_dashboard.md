@@ -566,6 +566,48 @@ La tarjeta ya leía su contenido de `alemanTemaHoy()` / `entrevistaTemaHoy()`, l
 funciones que pintan los slides, así que al llegar se ve **esa misma lección** y no otra —
 comprobado: el título de la tarjeta aparece en el slide de destino.
 
+### En qué invertir tu tiempo
+
+Dos cosas se arreglaron el 2026-08-31, y la primera era un engaño de verdad.
+
+#### La barra medía el retorno y parecía medir el nivel
+
+Adán: *"los indicadores no son claros, por que parece que las habilidades que tengo menos
+conocimiento, parece que tengo mucho […] inviértelo"*.
+
+El ranking ordena por **retorno** (`peso × lo que falta`) y la barra dibujaba ese mismo retorno.
+Como el retorno crece cuando el nivel baja, salía al revés de lo que uno lee:
+
+| | Nivel | Barra que salía |
+|---|---|---|
+| Ventas | 15/100 | llena |
+| Mentalidad | 85/100 | casi vacía |
+
+Encima el **color** venía del nivel y el **largo** del retorno: dos escalas en el mismo trazo.
+
+Ahora la barra es el nivel y el orden sigue siendo el retorno — son dos preguntas distintas y cada
+una tiene su sitio. Al pie, una frase lo dice con nombre propio: *"el orden es dónde una hora rinde
+más, que no es lo mismo: Ventas va primera porque pesa ×1.5 y está casi a cero"*. La fila pasó de
+15px a 33px, con el nombre y el nivel arriba y la barra debajo, y hay leyenda de los tres niveles
+más la rayita de la meta de la semana.
+
+#### El contenido manda, y la ruta se ve entera
+
+Adán: *"el contenido eso me interesa más […] además abarca más espacio de la pantalla"*. Diseñado
+en canvas en tres direcciones; eligió la de la ruta al lado, con la ruta **a la izquierda**.
+
+El panel de foco pasó de `1.75:1` a `2.35:1` — de 857 a **952px** a 1600 — y por dentro se partió
+en dos: la ruta de pasos a la izquierda y el paso abierto a la derecha.
+
+Los 9 pasos eran una rejilla de botones bajo el texto donde el nombre no cabía; ahora son una lista
+vertical con el nombre completo, su barra de avance y el número de paso. El paso abierto gana un
+número grande junto al título, y el *por qué* y el *qué hacer* se separan por color (verde y cian) y
+por tamaño de letra, en vez de ir seguidos con la misma voz.
+
+**En un teléfono la ruta se apila arriba** y pasa a una tira de números con scroll horizontal: el
+nombre del paso abierto ya está en el título, y el área de toque sube de 30 a 46px. Los dos botones
+del pie suman 342px contra los 333 del panel, así que ahí van apilados.
+
 ### Medidas
 
 A 1600×1000 el tablero ocupa los 748px que le deja la banda de fase, con las tres columnas

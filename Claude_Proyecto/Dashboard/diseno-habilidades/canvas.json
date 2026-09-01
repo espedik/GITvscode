@@ -1,0 +1,13 @@
+{
+  "artboards": [
+    { "file": "Main.dc.html", "x": 0, "y": 0, "w": 500, "h": 660, "title": "Barra de nivel" },
+    { "file": "DireccionB.dc.html", "x": 620, "y": 0, "w": 500, "h": 660, "title": "Dirección B — tres listas" },
+    { "file": "DireccionC.dc.html", "x": 0, "y": 800, "w": 1380, "h": 300, "title": "Dirección C — franja ancha" }
+  ],
+  "annotations": [
+    { "id": "nota-problema", "x": 0, "y": -190, "w": 520, "text": "El fallo: hoy la barra mide el RETORNO (peso × lo que te falta), así que Ventas —tu nivel más bajo, 15/100— sale con la barra llena y Mentalidad —85/100, tu mejor habilidad— con la más corta. Parece justo lo contrario de lo que es." },
+    { "id": "nota-main", "x": 620, "y": -190, "w": 480, "text": "Barra de nivel: la barra pasa a medir lo que SABES y el orden sigue siendo dónde una hora rinde más. Filas de 26px en vez de 15, y una frase abajo que dice por qué Ventas va primera aunque su barra sea corta." },
+    { "id": "nota-c", "x": 0, "y": 1130, "w": 520, "text": "Dirección C: el bloque sale de la columna estrecha y ocupa el ancho completo bajo las dos tarjetas. Anillos de 62px, nombres legibles, cero apretujamiento — a cambio, el slide crece 300px de alto y hay que recolocar la franja de Didi." }
+  ],
+  "launch": { "view": "canvas" }
+}

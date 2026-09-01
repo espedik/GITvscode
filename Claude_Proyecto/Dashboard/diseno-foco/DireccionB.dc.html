@@ -1,0 +1,108 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap">
+  <style>
+    body { margin: 0; background: #05050a; font-family: 'Inter', -apple-system, sans-serif; }
+    a { color: #00e0c0; } a:hover { color: #5df0dc; }
+    .mono { font-family: 'Space Grotesk', monospace; font-variant-numeric: tabular-nums; letter-spacing: -0.02em; }
+    .ttl { font-family: 'Fraunces', Georgia, serif; }
+    .lbl { font-size: 9px; font-weight: 800; letter-spacing: 0.17em; text-transform: uppercase; color: #8589a8; }
+    /* El stepper: los 9 pasos como una cinta. El número es el ancla; el nombre, el destino. */
+    .st { display: flex; flex-direction: column; gap: 6px; padding: 8px 7px 9px; border-radius: 10px;
+          border: 1px solid transparent; min-width: 0; }
+    .st .n { font-family: 'Space Grotesk', monospace; font-size: 12px; font-weight: 700; color: #5a5d72; }
+    .st .t { font-size: 9.5px; line-height: 1.3; color: #6f7288; overflow: hidden;
+             display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+    .st .bar { height: 3px; border-radius: 2px; background: rgba(255,255,255,0.08); }
+  </style>
+</helmet>
+
+<div style="width: 960px; height: 640px; background:
+     radial-gradient(700px 260px at 50% -14%, rgba(0,232,122,0.06), transparent 66%), #05050a;
+     border-radius: 18px; border: 1px solid rgba(255,255,255,0.13); padding: 20px 24px;
+     box-sizing: border-box; display: flex; flex-direction: column; gap: 16px; overflow: hidden">
+
+  <!-- cabecera -->
+  <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap">
+    <span class="mono" style="font-size: 9px; font-weight: 700; color: #05050a; background: #00e87a;
+          padding: 3px 8px; border-radius: 6px; letter-spacing: 0.1em">ESTA SEMANA</span>
+    <span style="font-size: 13px; font-weight: 700; color: #f4f4f8">Inversión</span>
+    <span class="mono" style="font-size: 10px; color: #8589a8">25/100 · pesa ×1.2</span>
+    <span style="margin-left: auto; font-size: 10.5px; color: #8589a8">la que más rinde de las activas</span>
+  </div>
+
+  <!-- el stepper, a lo ancho -->
+  <div style="display: flex; flex-direction: column; gap: 8px">
+    <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 8px">
+      <span class="lbl">Los 9 pasos de inversión</span>
+      <span class="mono" style="font-size: 10px; color: #00e87a">vas por el 1</span>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(9, minmax(0, 1fr)); gap: 6px">
+      <div class="st" style="background: rgba(0,232,122,0.1); border-color: rgba(0,232,122,0.32)">
+        <span class="n" style="color: #00e87a">01</span>
+        <span class="t" style="color: #f4f4f8; font-weight: 600">Interés compuesto y horizonte</span>
+        <span class="bar" style="background: #00e87a"></span>
+      </div>
+      <div class="st"><span class="n">02</span><span class="t">Escribir tu asignación objetivo</span><span class="bar"></span></div>
+      <div class="st"><span class="n">03</span><span class="t">Conocer los instrumentos mexicanos</span><span class="bar"></span></div>
+      <div class="st"><span class="n">04</span><span class="t">Ver las comisiones antes que el rendimiento</span><span class="bar"></span></div>
+      <div class="st"><span class="n">05</span><span class="t">Aportar periódicamente y automatizarlo</span><span class="bar"></span></div>
+      <div class="st"><span class="n">06</span><span class="t">Rebalancear una vez al año</span><span class="bar"></span></div>
+      <div class="st"><span class="n">07</span><span class="t">Saber qué impuestos pagas</span><span class="bar"></span></div>
+      <div class="st"><span class="n">08</span><span class="t">Aguantar sin vender</span><span class="bar"></span></div>
+      <div class="st"><span class="n">09</span><span class="t">Saber cuándo NO invertir</span><span class="bar"></span></div>
+    </div>
+  </div>
+
+  <!-- el paso abierto -->
+  <h1 class="ttl" style="margin: 0; font-size: 38px; font-weight: 700; color: #f4f4f8; line-height: 1.05;
+      letter-spacing: -0.015em">Interés compuesto y horizonte</h1>
+
+  <!-- dos columnas de lectura -->
+  <div style="display: grid; grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr); gap: 26px; flex-grow: 1; min-height: 0">
+    <div style="display: flex; flex-direction: column; gap: 7px">
+      <span class="lbl" style="color: #00e87a">Por qué este paso</span>
+      <p style="margin: 0; font-size: 15px; line-height: 1.55; color: #cbd2e0; text-wrap: pretty">
+        Es el motor de todo. Y lo que lo mueve no es la tasa, es el <b style="color: #f4f4f8">tiempo</b>:
+        cada año que pospones cuesta más que cualquier punto extra de rendimiento.</p>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 7px; padding-left: 26px;
+         border-left: 1px solid rgba(255,255,255,0.09)">
+      <span class="lbl" style="color: #00e0c0">Qué hacer</span>
+      <p style="margin: 0; font-size: 13.5px; line-height: 1.6; color: #9a9db3; text-wrap: pretty">
+        Haz el cálculo una vez con tus números reales, no con ejemplos de libro: lo que puedes aportar al
+        mes, un rendimiento conservador (8-10% anual nominal en México) y los años hasta 2030. Repítelo
+        restando un año de aportaciones y compara — ver esa diferencia en pesos es lo que hace que ya no
+        te saltes un mes.</p>
+    </div>
+  </div>
+
+  <!-- recurso + acciones en una sola fila -->
+  <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap; padding-top: 14px;
+       border-top: 1px solid rgba(255,255,255,0.09)">
+    <span style="display: flex; align-items: center; gap: 9px; padding: 9px 14px; border-radius: 11px;
+          background: rgba(0,224,192,0.06); border: 1px solid rgba(0,224,192,0.22); flex-grow: 1; min-width: 0">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#00e0c0" stroke-width="1.7"
+           stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0">
+        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+      <span style="font-size: 12px; color: #f4f4f8; min-width: 0">The Little Book of Common Sense Investing
+        <span style="color: #8589a8">— Bogle</span></span>
+    </span>
+    <span style="display: flex; align-items: center; padding: 9px 14px; border-radius: 10px;
+          border: 1px solid rgba(255,255,255,0.14); background: rgba(255,255,255,0.045);
+          font-size: 12px; font-weight: 600; color: #f4f4f8">Cambiar a Finanzas</span>
+    <span style="display: flex; align-items: center; padding: 9px 14px; border-radius: 10px;
+          border: 1px solid rgba(0,232,122,0.35); background: rgba(0,232,122,0.12);
+          font-size: 12px; font-weight: 700; color: #00e87a">Ajustar en Coach</span>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

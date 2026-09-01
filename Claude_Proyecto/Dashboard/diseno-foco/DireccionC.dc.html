@@ -1,0 +1,108 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap">
+  <style>
+    body { margin: 0; background: #05050a; font-family: 'Inter', -apple-system, sans-serif; }
+    a { color: #00e0c0; } a:hover { color: #5df0dc; }
+    .mono { font-family: 'Space Grotesk', monospace; font-variant-numeric: tabular-nums; letter-spacing: -0.02em; }
+    .lbl { font-family: 'Space Grotesk', monospace; font-size: 9px; font-weight: 700;
+           letter-spacing: 0.2em; text-transform: uppercase; }
+    /* Los 9 pasos como segmentos de una barra de misión: llenos, actual, pendientes. */
+    .seg { height: 26px; border-radius: 4px; display: flex; align-items: center; justify-content: center;
+           font-family: 'Space Grotesk', monospace; font-size: 10px; font-weight: 700;
+           border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.03); color: #5a5d72; }
+  </style>
+</helmet>
+
+<div style="width: 960px; height: 640px; background: #05050a; border-radius: 18px;
+     border: 1px solid rgba(0,232,122,0.22); box-sizing: border-box; overflow: hidden;
+     display: flex; flex-direction: column; position: relative">
+
+  <!-- rejilla + halo -->
+  <div style="position: absolute; inset: 0; pointer-events: none;
+       background-image: linear-gradient(rgba(0,232,122,0.045) 1px, transparent 1px),
+                         linear-gradient(90deg, rgba(0,232,122,0.045) 1px, transparent 1px);
+       background-size: 34px 34px"></div>
+  <div style="position: absolute; top: -160px; left: -80px; width: 520px; height: 400px; pointer-events: none;
+       background: radial-gradient(closest-side, rgba(0,232,122,0.16), transparent)"></div>
+
+  <!-- barra de misión -->
+  <div style="position: relative; display: flex; align-items: center; gap: 14px; padding: 12px 22px;
+       border-bottom: 1px solid rgba(0,232,122,0.2); background: rgba(0,232,122,0.05)">
+    <span class="lbl" style="color: #00e87a">◈ Objetivo de la semana</span>
+    <span style="font-size: 13px; font-weight: 700; color: #f4f4f8">Inversión</span>
+    <span class="mono" style="font-size: 10px; color: #8589a8">NIVEL 25 · PESO ×1.2</span>
+    <span style="margin-left: auto; display: flex; align-items: center; gap: 8px">
+      <span class="mono" style="font-size: 10px; color: #8589a8">PASO</span>
+      <span class="mono" style="font-size: 15px; font-weight: 700; color: #00e87a">01</span>
+      <span class="mono" style="font-size: 10px; color: #5a5d72">/ 09</span>
+    </span>
+  </div>
+
+  <div style="position: relative; padding: 20px 22px; display: flex; flex-direction: column; gap: 17px; flex-grow: 1; min-height: 0">
+
+    <!-- segmentos -->
+    <div style="display: grid; grid-template-columns: repeat(9, minmax(0, 1fr)); gap: 5px">
+      <div class="seg" style="border-color: rgba(0,232,122,0.55); background: rgba(0,232,122,0.16);
+           color: #00e87a; box-shadow: 0 0 16px rgba(0,232,122,0.25)">01</div>
+      <div class="seg">02</div><div class="seg">03</div><div class="seg">04</div>
+      <div class="seg">05</div><div class="seg">06</div><div class="seg">07</div>
+      <div class="seg">08</div><div class="seg">09</div>
+    </div>
+
+    <!-- el paso -->
+    <div style="display: flex; flex-direction: column; gap: 4px">
+      <span class="lbl" style="color: #00e0c0">Paso 01 · en curso</span>
+      <h1 style="margin: 0; font-family: 'Space Grotesk', monospace; font-size: 40px; font-weight: 700;
+          color: #f4f4f8; line-height: 1.02; letter-spacing: -0.025em">Interés compuesto<br>y horizonte</h1>
+    </div>
+
+    <!-- dos bloques marcados con filete, tipo consola -->
+    <div style="display: flex; flex-direction: column; gap: 13px; flex-grow: 1; min-height: 0">
+      <div style="display: grid; grid-template-columns: 88px minmax(0, 1fr); gap: 15px; align-items: start">
+        <span class="lbl" style="color: #00e87a; padding-top: 4px; text-align: right">Por qué</span>
+        <p style="margin: 0; font-size: 15px; line-height: 1.55; color: #cbd2e0; padding-left: 15px;
+           border-left: 2px solid rgba(0,232,122,0.4); text-wrap: pretty">
+          Es el motor de todo. Y lo que lo mueve no es la tasa, es el <b style="color: #f4f4f8">tiempo</b>:
+          cada año que pospones cuesta más que cualquier punto extra de rendimiento.</p>
+      </div>
+      <div style="display: grid; grid-template-columns: 88px minmax(0, 1fr); gap: 15px; align-items: start">
+        <span class="lbl" style="color: #00e0c0; padding-top: 4px; text-align: right">Qué hacer</span>
+        <p style="margin: 0; font-size: 13.5px; line-height: 1.6; color: #9a9db3; padding-left: 15px;
+           border-left: 2px solid rgba(0,224,192,0.35); text-wrap: pretty">
+          Haz el cálculo una vez con tus números reales, no con ejemplos de libro: lo que puedes aportar al
+          mes, un rendimiento conservador (8-10% anual nominal en México) y los años hasta 2030. Repítelo
+          restando un año de aportaciones y compara — ver esa diferencia en pesos es lo que hace que ya no
+          te saltes un mes.</p>
+      </div>
+      <div style="display: grid; grid-template-columns: 88px minmax(0, 1fr); gap: 15px; align-items: start">
+        <span class="lbl" style="color: #8589a8; padding-top: 4px; text-align: right">Con qué</span>
+        <p style="margin: 0; font-size: 12.5px; line-height: 1.5; color: #9a9db3; padding-left: 15px;
+           border-left: 2px solid rgba(255,255,255,0.14)">
+          <b style="color: #f4f4f8; font-weight: 600">The Little Book of Common Sense Investing</b> — John C. Bogle,
+          corto y va directo al punto.</p>
+      </div>
+    </div>
+
+    <!-- pie -->
+    <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap; padding-top: 14px;
+         border-top: 1px solid rgba(255,255,255,0.09)">
+      <span class="mono" style="font-size: 10px; color: #5a5d72; letter-spacing: 0.06em">SIGUIENTE →</span>
+      <span style="font-size: 12px; color: #9a9db3; flex-grow: 1">Escribir tu asignación objetivo</span>
+      <span style="padding: 8px 14px; border-radius: 9px; border: 1px solid rgba(255,255,255,0.14);
+            background: rgba(255,255,255,0.045); font-size: 12px; font-weight: 600; color: #f4f4f8">Cambiar a Finanzas</span>
+      <span style="padding: 8px 14px; border-radius: 9px; border: 1px solid rgba(0,232,122,0.4);
+            background: rgba(0,232,122,0.14); font-size: 12px; font-weight: 700; color: #00e87a">Ajustar en Coach</span>
+    </div>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

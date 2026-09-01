@@ -1,0 +1,13 @@
+{
+  "artboards": [
+    { "file": "Main.dc.html", "x": 0, "y": 0, "w": 960, "h": 640, "title": "Ruta al lado" },
+    { "file": "DireccionB.dc.html", "x": 1080, "y": 0, "w": 960, "h": 640, "title": "Dirección B — cinta de 9 arriba" },
+    { "file": "DireccionC.dc.html", "x": 540, "y": 800, "w": 960, "h": 640, "title": "Dirección C — consola" }
+  ],
+  "annotations": [
+    { "id": "nota-main", "x": 0, "y": -170, "w": 500, "text": "Ruta al lado: el panel crece de 857 a 960px y los 9 pasos pasan de rejilla de botones a una ruta vertical a la derecha, con los nombres completos. El paso abierto manda con su número gigante y el título a 32px; el porqué y el qué hacer se separan por color y tamaño." },
+    { "id": "nota-b", "x": 1080, "y": -170, "w": 500, "text": "Dirección B: los 9 pasos son una cinta a lo ancho, arriba, con nombre bajo cada número — se ve la ruta entera de un golpe. El texto gana las dos columnas enteras, así que el título sube a 38px. A cambio, los nombres de los pasos se recortan a dos líneas." },
+    { "id": "nota-c", "x": 540, "y": 630, "w": 500, "text": "Dirección C: la más futurista. Barra de misión arriba, los 9 como segmentos, y el contenido en tres bloques etiquetados con filete de color, tipo consola. El título va en Space Grotesk en vez de la serif del resto del dashboard: es la que más se sale del vocabulario actual." }
+  ],
+  "launch": { "view": "canvas" }
+}
