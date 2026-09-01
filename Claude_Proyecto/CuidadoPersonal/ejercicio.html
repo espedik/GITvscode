@@ -281,7 +281,7 @@ tbody tr:hover td{background:rgba(255,107,53,.03)}
 .ej-set-c:hover{border-color:var(--g)}
 .ej-set.on .ej-set-c{background:var(--g);border-color:var(--g);color:var(--bg)}
 .ej-set-n{font-size:9.5px;font-weight:800;color:var(--text3);width:12px;flex:none}
-.ej-kg{margin-left:auto;width:74px;text-align:right;font-size:12px;font-weight:800;font-family:inherit;
+.ej-kg{margin-left:auto;width:112px;text-align:right;font-size:12px;font-weight:800;font-family:inherit;
   background:transparent;border:none;border-bottom:1px dotted var(--text3);color:var(--text);padding:1px 3px}
 .ej-kg::placeholder{color:var(--text3);font-weight:700;font-size:10px}
 .ej-kg:focus{outline:none;border-bottom-color:var(--g);color:var(--g)}
@@ -342,7 +342,7 @@ tbody tr:hover td{background:rgba(255,107,53,.03)}
   .ej-x-r{width:100%}
   .ej-set{padding:9px 11px}
   .ej-set-c{width:22px;height:22px}
-  .ej-kg{font-size:14px;width:88px}
+  .ej-kg{font-size:14px;width:104px}
   .ej-kpis{width:100%;margin-left:0}
   .ej-kpi{flex:1;min-width:0;padding:9px 10px}
 }
@@ -358,6 +358,17 @@ tbody tr:hover td{background:rgba(255,107,53,.03)}
   .ficha-grid{grid-template-columns:1fr}
   .ficha-img{width:100%;height:190px}
 }
+
+/* La primera vez todo vale cero y la pantalla parece no haber cambiado. Esta banda dice
+   cual es el gesto que enciende la racha, el volumen y la progresion. */
+.ej-arranque{display:flex;gap:12px;align-items:flex-start;padding:13px 15px;margin:0 0 14px;
+  border-radius:14px;background:linear-gradient(135deg,var(--p-l),rgba(var(--ov),.03));
+  border:1px solid rgba(176,110,255,.28)}
+.ej-arranque .ico{font-size:17px;line-height:1.2;flex:none}
+.ej-arranque b{color:var(--p)}
+.ej-arranque-t{font-size:12.5px;font-weight:800;margin-bottom:3px;color:var(--text)}
+.ej-arranque-d{font-size:11.5px;line-height:1.55;color:var(--text2)}
+.ej-kpi.vacio .ej-kpi-v{opacity:.45}
 </style>
 <script>
 (function () {
@@ -1158,7 +1169,7 @@ function ejEjercicioHtml(e,i,iso){
   const pasos=ejPasos(b);
 
   const filas=sets.map(function(x,k){
-    const ph=(k===0&&ult)?(ult.kg+' kg la vez pasada'):'anotar kg';
+    const ph=(k===0&&ult)?(ult.kg+' kg la vez pasada'):'anota los kg';
     return '<div class="ej-set'+(x.ok?' on':'')+'">'+
       '<div class="ej-set-c" onclick="ejToggleSet(\''+e.id+'\','+k+','+n+','+(e.descanso||0)+')" title="Marca la serie '+(k+1)+'">\u2713</div>'+
       '<div class="ej-set-n">'+(k+1)+'</div>'+
@@ -1254,9 +1265,9 @@ function renderMiRutina(){
     '<h2 class="ej-h1">'+ejEsc(rut?rut.nombre:'Sin asignar')+
       '<em>'+ejs.length+' ejercicio'+(ejs.length===1?'':'s')+(minutos?' \u00b7 ~'+Math.round(minutos)+' min':'')+'</em></h2></div>'+
     '<div class="ej-kpis">'+
-      '<div class="ej-kpi"><div class="ej-kpi-v" style="color:var(--g)">'+racha+'</div><div class="ej-kpi-k">Racha</div></div>'+
-      '<div class="ej-kpi"><div class="ej-kpi-v" style="color:var(--b)">'+hechosSem+'/6</div><div class="ej-kpi-k">Esta semana</div></div>'+
-      '<div class="ej-kpi"><div class="ej-kpi-v" style="color:var(--p)">'+(vol?(vol>=1000?(vol/1000).toFixed(1)+' t':vol+' kg'):'\u2014')+'</div><div class="ej-kpi-k">Volumen hoy</div></div>'+
+      '<div class="ej-kpi'+(racha?'':' vacio')+'"><div class="ej-kpi-v" style="color:var(--g)">'+racha+'</div><div class="ej-kpi-k">Racha</div></div>'+
+      '<div class="ej-kpi'+(hechosSem?'':' vacio')+'"><div class="ej-kpi-v" style="color:var(--b)">'+hechosSem+'/6</div><div class="ej-kpi-k">Esta semana</div></div>'+
+      '<div class="ej-kpi'+(vol?'':' vacio')+'"><div class="ej-kpi-v" style="color:var(--p)">'+(vol?(vol>=1000?(vol/1000).toFixed(1)+' t':vol+' kg'):'\u2014')+'</div><div class="ej-kpi-k">Volumen hoy</div></div>'+
     '</div></div>';
 
   // — la semana
@@ -1282,7 +1293,15 @@ function renderMiRutina(){
     (esHoy?'La sesi\u00f3n de hoy':'La sesi\u00f3n del '+DIAS_STR[dow].toLowerCase())+'</div>'+
     '<div class="ej-ses-x">'+(esHoy?'<b>'+hechos+' de '+ejs.length+'</b> hechos':
       '<a href="#" onclick="ejVerDia(null);return false" style="color:var(--g)">\u2190 volver a hoy</a>')+'</div></div>'+
-    (rut&&rut.foco?'<div class="ej-foco">'+rut.foco+'</div>':'')+cuerpo+'</div>';
+    (rut&&rut.foco?'<div class="ej-foco">'+rut.foco+'</div>':'')+
+    (ejVirgen()&&esHoy&&ejs.length?
+      '<div class="ej-arranque"><div class="ico">\u25c9</div><div>'+
+      '<div class="ej-arranque-t">Empieza aqu\u00ed: marca cada serie y anota los kg</div>'+
+      '<div class="ej-arranque-d">La casilla de la izquierda marca la serie hecha \u2014 al marcarla arranca solo el '+
+      'descanso. En el campo de al lado escribe <b>con cu\u00e1ntos kilos</b> la hiciste. Eso es todo: de ah\u00ed salen '+
+      'la racha, el volumen y <b>cu\u00e1nto subiste</b> respecto a la vez anterior. Sin ese n\u00famero la app no puede '+
+      'decirte si est\u00e1s progresando.</div></div></div>':'')+
+    cuerpo+'</div>';
 
   cont.innerHTML=cab+'<div class="ej-wk">'+dias+'</div>'+
     '<div class="ej-mid"><div class="ej-col">'+ses+'</div>'+
@@ -1297,6 +1316,12 @@ function renderMiRutina(){
   renderRutinaSemana();
 }
 
+// ¿Nunca ha marcado una sola serie? Entonces todo vale cero con razon, no por un fallo.
+function ejVirgen(){
+  const ss=S.sesiones||{};
+  return !Object.keys(ss).some(f=>Object.keys(ss[f]||{}).some(
+    id=>(ss[f][id]||[]).some(x=>x&&(x.ok||x.kg))));
+}
 function ejVerDia(d){ ejDiaVisto=d; renderMiRutina(); window.scrollTo({top:0,behavior:'smooth'}); }
 // La fecha de esta semana que corresponde a ese dia (0=domingo).
 function ejIsoDeDow(d){

@@ -384,3 +384,23 @@ máquina está ocupada—. Se abre desde la sesión y desde la biblioteca.
 - Verificado a 1600 px y 390 px con geometría real: 6 ejercicios con imagen, 20
   pasos, 6 errores, 21 series marcables, cronómetro corriendo, ficha con 4 pasos
   + error + 3 alternativas, y persistencia confirmada tras recargar.
+
+### En cero parecía que no había cambiado nada (mismo día)
+
+Adán, con el rediseño ya delante: *"por que no veo los cambios?"*. **Sí los veía.**
+El mockup que le enseñé tenía la sesión empezada —racha 3, 2/6, 4.2 t y los kg
+anotados— y su app arranca con los tres KPIs en 0 y "Aún no has anotado ningún
+peso". Es el mismo error de presentación que con `salud.html`: enseñar un mockup
+lleno contra una app vacía. La app estaba bien; la pantalla de arranque, no.
+
+- **Banda de arranque** — mientras `ejVirgen()` sea cierta (ni una serie marcada
+  ni un kg escrito en ninguna fecha), sobre el primer ejercicio aparece qué hacer
+  y por qué: la casilla marca la serie y dispara el descanso, el campo de al lado
+  guarda los kilos, y sin ese número no hay progresión que calcular. Desaparece
+  sola en cuanto marca la primera serie.
+- Los KPIs en cero llevan `.vacio` (opacidad 45%): un cero apagado se lee como
+  "todavía nada", un cero a plena intensidad se lee como un dato roto.
+- El campo de kg medía 74 px y **cortaba su propio marcador**: se leía "anotar k"
+  y, con historial, "85 kg la vez pasa". Pasó a 112 px (104 en móvil) y el texto
+  se acortó a "anota los kg". `input.scrollWidth` no detecta esto —un placeholder
+  truncado no ensancha el scroll—, sólo se ve mirando la captura.
