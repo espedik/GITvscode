@@ -516,3 +516,33 @@ Corregido: las dos tareas de fin de semana se movieron a las **09:00**, después
 ### Verificación
 
 Escritorio y celular: **1 sección** (antes 9), menú de 2 ítems, los 10 momentos en orden, 17 pasos numerados, la tabla semanal con el día de hoy resaltado, y el aviso de "hoy" correcto según la fecha real — probado en miércoles, que además avisa de lavar tras nadar. Sin `undefined`, sin desbordes y sin errores de consola.
+## Cabello: la tira de la semana pasa a ser navegable (2026-09-01)
+
+Adán: *"en cuidado de cabello, no me deja ver los demas dias, no me deja hacer
+click y mostrar la info"*. No era una regresión: **`.pe-d` nunca tuvo `onclick`**.
+La tira de "Tu semana de lavado" era un cuadro informativo, y `pePasosDelDia()` y
+`peHoyHtml()` leían `new Date().getDay()` fijo, así que la rutina detallada sólo
+existía para hoy. Si quería saber qué le toca el sábado, la celda le decía
+"CeraVe" y ahí se acababa.
+
+- **`peDiaVisto`** (null = hoy) con `peDow()`, `peEsHoy()` y `peVerDia(d)`. Las
+  dos funciones de render leen `peDow()` en vez de la fecha del sistema.
+- Cada celda lleva `onclick="peVerDia(dow)"`, `cursor:pointer` y un realce al
+  pasar por encima. El día que estás viendo se marca en azul (`.visto`); hoy
+  sigue en ámbar.
+- La tarjeta cambia de "Hoy, en orden" a "El sábado, en orden", con el enlace
+  **← volver a hoy** donde iba el contador de hechos.
+- **Los pasos de otro día no se marcan.** Van con `.solo-lectura`, sin `onclick`
+  y con el tic al 25 %, más una banda que lo explica: marcar el sábado el martes
+  guardaría el hecho en la fecha de hoy, que es justo lo que no quieres.
+- El minoxidil, el botiquín y los KPIs siguen siendo de hoy: son estado real, no
+  una consulta.
+
+Detalle que costó: las variables del azul se llaman `--pe-ag-bg` / `--pe-ag-br`,
+no `--pe-agua-bg`. Escritas mal, las reglas no fallan — simplemente no pintan
+nada, y el día seleccionado se veía igual que los demás.
+
+Comprobado haciendo clic en los 7 días: cada uno muestra su champú y sus pasos,
+el domingo y el miércoles salen "sin champú", el sábado trae CeraVe + mascarilla,
+volver a hoy recupera el marcado, y no hay errores de consola. A 390 px la tira se
+apila y sigue respondiendo al clic. Contraste: lo peor queda en 4,70:1.

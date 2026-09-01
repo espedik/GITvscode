@@ -850,6 +850,21 @@ tbody tr:hover td{background:rgba(var(--ov),.02)}
 :root[data-theme="dark"] .de-warn li{color:#e0a89e}
 :root[data-theme="dark"] .de-shop-ico{background:#163d2e}
 :root[data-theme="dark"] .de-disclaimer{background:#1a2420}
+
+/* La tira de la semana es navegable: cada dia abre su propia rutina. */
+.pe-d{cursor:pointer;transition:border-color .15s,background .15s,transform .12s}
+.pe-d:hover{border-color:var(--pe-am-br);transform:translateY(-1px)}
+.pe-d.visto{border-color:var(--pe-agua);background:var(--pe-ag-bg);
+  box-shadow:0 0 0 1px var(--pe-ag-br)}
+.pe-d.visto .pe-d-l{color:var(--pe-agua)}
+.pe-volver{color:var(--pe-agua);font-weight:700;text-decoration:none}
+.pe-volver:hover{text-decoration:underline}
+.pe-ojeada{font-size:10.5px;line-height:1.5;color:var(--pe-tx2);padding:9px 12px;margin-bottom:12px;
+  border-radius:11px;background:var(--pe-ag-bg);border:1px solid var(--pe-ag-br)}
+.pe-ojeada b{color:var(--pe-tx)}
+.pe-p.solo-lectura{cursor:default}
+.pe-p.solo-lectura:hover{border-color:var(--pe-line);background:var(--pe-panel2)}
+.pe-p.solo-lectura .pe-p-c{opacity:.25}
 </style>
 <script src="../Dashboard/datos-maestros.js"></script>
 <script>
@@ -1467,7 +1482,8 @@ const SK_CONCERN_META={
 };
 
 // ─── Fechas, estado y lo que se deriva de ellos ─────────────────────────────────────
-const PL_DIAS=['Dom','Lun','Mar','Mi\u00e9','Jue','Vie','S\u00e1b'];
+const PL_DIAS=['Dom','Lun','Mar','Mi\u00e9','Jue','Vie','S\u00e1b'];
+const PL_LARGO=['Domingo','Lunes','Martes','Mi\u00e9rcoles','Jueves','Viernes','S\u00e1bado'];
 const PL_MESES=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
 function plIso(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
 function plFecha(iso){const a=iso.split('-').map(Number);return new Date(a[0],a[1]-1,a[2]);}
@@ -2011,7 +2027,9 @@ function pePintarSemana(){
       : (x.mascarilla ? '+ mascarilla 5 min, <b>sin</b> acondicionador'
                       : (x.champu ? 'Solo cuero cabelludo, 2 min con las yemas'
                                   : 'Mojas y acondicionador de medios a puntas'));
-    return '<div class="pe-d'+(esHoy?' hoy':'')+'">'+
+    const visto=dow===peDow();
+    return '<div class="pe-d'+(esHoy?' hoy':'')+(visto&&!esHoy?' visto':'')+'"'+
+      ' onclick="peVerDia('+dow+')" title="Ver qu\u00e9 toca el '+PL_LARGO[dow].toLowerCase()+'">'+
       '<div class="pe-d-l">'+PL_DIAS[dow]+(esHoy?' \u00b7 hoy':'')+'</div>'+
       '<div class="pe-d-que">'+(x.champu&&!x.condicional?plEsc(peCorto(x.champu)):'Solo agua')+'</div>'+
       '<div class="pe-d-sub">'+sub+'</div>'+tag+
@@ -2031,9 +2049,20 @@ function peCorto(p){return p.n.split(' Champ')[0].split(' (')[0].split(' Antica'
 
 // ─── Hoy, en orden ───────────────────────────────────────────────────
 // Cada paso es {id, t}. Los que dependen del día se arman con lo que diga RUTINA_PELO.
+// Que dia de la semana se esta viendo. null = hoy, que es como arranca siempre.
+let peDiaVisto=null;
+function peDow(){ return peDiaVisto===null?new Date().getDay():peDiaVisto; }
+function peEsHoy(){ return peDiaVisto===null||peDiaVisto===new Date().getDay(); }
+function peVerDia(d){
+  peDiaVisto=(d===null||d===new Date().getDay())?null:d;
+  pePintar();
+  const el=document.getElementById('pe-mid');
+  if(el) el.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
 function pePasosDelDia(){
   const RP=peRP(); if(!RP) return [];
-  const dow=new Date().getDay(), x=RP.dia(dow);
+  const dow=peDow(), x=RP.dia(dow);
   const prod=id=>RP.productos.find(p=>p.id===id);
   const M=[];
 
@@ -2074,14 +2103,15 @@ function pePasosDelDia(){
 
 function peHoyHtml(){
   const RP=peRP(); if(!RP) return '';
-  const grupos=pePasosDelDia(), iso=plHoy();
-  const hor=plHorarios(), dow=new Date().getDay(), x=RP.dia(dow);
+  const grupos=pePasosDelDia(), iso=plHoy(), esHoy=peEsHoy();
+  const hor=plHorarios(), dow=peDow(), x=RP.dia(dow);
   let total=0, hechos=0;
   const cuerpo=grupos.map(function(g){
     const hh=g.m.desfase===null?hor.pm:plHHMM(plMin(hor.am)+g.m.desfase);
     const pasos=g.pasos.map(function(p,i){
-      total++; const on=pePaso(iso,p.id); if(on) hechos++;
-      return '<div class="pe-p'+(on?' on':'')+'" onclick="peTogglePaso(\''+p.id+'\')" title="Marca este paso como hecho">'+
+      total++; const on=esHoy&&pePaso(iso,p.id); if(on) hechos++;
+      return '<div class="pe-p'+(on?' on':'')+(esHoy?'':' solo-lectura')+'"'+
+        (esHoy?' onclick="peTogglePaso(\''+p.id+'\')" title="Marca este paso como hecho"':'')+'>'+
         '<div class="pe-p-n">'+(i+1)+'</div><div class="pe-p-t">'+p.t+'</div><div class="pe-p-c">\u2713</div></div>';
     }).join('');
     return '<div class="pe-mom"><div class="pe-mom-i '+g.m.clase+'">'+g.m.ico+'</div>'+
@@ -2090,9 +2120,15 @@ function peHoyHtml(){
   const chip=x.champu&&!x.condicional
     ? PL_DIAS[dow].toUpperCase()+' \u00b7 '+plEsc(peCorto(x.champu)).toUpperCase()
     : PL_DIAS[dow].toUpperCase()+' \u00b7 SIN CHAMP\u00da';
+  const titulo=esHoy?'Hoy, en orden':'El '+PL_LARGO[dow].toLowerCase()+', en orden';
+  const derecha=esHoy
+    ? hechos+' de '+total+' hechos'
+    : '<a href="#" onclick="peVerDia(null);return false" class="pe-volver">\u2190 volver a hoy</a>';
   return '<div class="pe-card"><div class="pe-card-h">'+
-    '<div class="pe-card-t"><span class="b"></span>Hoy, en orden<span class="pe-chip">'+chip+'</span></div>'+
-    '<div class="pe-card-x">'+hechos+' de '+total+' hechos</div></div>'+cuerpo+'</div>';
+    '<div class="pe-card-t"><span class="b"></span>'+titulo+'<span class="pe-chip">'+chip+'</span></div>'+
+    '<div class="pe-card-x">'+derecha+'</div></div>'+
+    (esHoy?'':'<div class="pe-ojeada">Est\u00e1s viendo <b>otro d\u00eda</b> para saber qu\u00e9 toca. '+
+      'Las casillas solo se marcan en el d\u00eda de hoy.</div>')+cuerpo+'</div>';
 }
 
 // ─── El minoxidil ──────────────────────────────────────────────────
