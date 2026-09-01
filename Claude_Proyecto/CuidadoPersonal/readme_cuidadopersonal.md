@@ -31,35 +31,72 @@ Verificado con Playwright: las 7 pestañas activan su vista correcta en desktop;
 
 ## Módulo nativo: 🧴 Skincare — `localStorage['skincare_v1']`
 
-Reconstruido a fondo el 2026-07-29, y **simplificado a una sola pantalla ese mismo día** a petición explícita de Adán ("en skincare lo que acabas de hacer debe ser lo único, borra productos, bitácora, dashboard y rutina"). Ya no tiene subnav ni subtabs internas — Skincare es **una sola vista**: perfil de piel + guía generada. Se eliminaron por completo el Dashboard interno, el checklist de Rutina AM/PM, el inventario de Productos y la Bitácora de piel que existían en la primera versión (esa iteración duró unas horas).
+**"Tu día de piel, de un vistazo".** Una sola pantalla, sin menú lateral y sin subtabs — al
+revés que Cabello y Dentista. Adán, 2026-09-01: *"no es nada bonito, no me da informacion que
+necesito, no es nada intuitivo y debe ser una interfaz futurista y visualmente atractiva y con
+informacion valiosa"*. Medido antes de tocar nada: la vista anterior partía 6 pasos de rutina en
+**9 secciones de una en una**, lo que dejaba el 85% de una pantalla de 1600px vacía y obligaba a
+9 clics para leer algo que cabe entero.
+
+### Los productos no viven aquí
+
+Vienen de **`CIFRAS.RUTINA_PIEL`** (`Dashboard/datos-maestros.js`), la misma fuente que la rutina
+diaria del Dashboard, y la hora de cada rutina sale de `CIFRAS.rutina()` — que cambia entre
+semana, sábado y domingo. Antes había aquí una base propia, `SKIN_DB`, que filtraba por tipo de
+piel y presupuesto, y **lo que recomendaba no era lo que Adán hace**: Isdin donde su rutina usa
+La Roche-Posay, un hidratante de día que no se pone, y el retinoide repartido en 3 noches
+alternado con un BHA que no usa. Se eliminó entera. El **control 11** del verificador impide que
+las dos listas vuelvan a separarse.
+
+El **perfil sigue existiendo**, pero ahora ajusta los consejos, los avisos y lo que puede esperar
+y cuándo — no la marca del bote.
 
 ```js
 {
-  perfil: { tipo:'grasa|seca|mixta|normal', preocupaciones:['acne'|'manchas'|'arrugas'|'sensibilidad', ...],
-            rasurado:'rastrillo|electrica|barba|no_aplica', presupuesto:'economico|medio|alto', notas:'' }
+  perfil: { tipo, preocupaciones:[], rasurado, presupuesto, notas },
+  retinoideDesde: '2026-06-01' | null,          // de aqui salen la semana y el peldano
+  hechos: { '2026-09-01': { am:['limpiador','niacinamida','spf'], pm:[...] } },
+  abierto: { spf:'2026-08-01', ... }            // cuando abrio cada bote
 }
 ```
 
-**Valores por defecto de `perfil`** (`skDefault()`): el perfil real de Adán tal como lo dio el 2026-07-29 — piel grasa, preocupaciones acné+manchas+arrugas, tiene barba, presupuesto medio. Así la guía sale útil desde la primera carga sin que tenga que llenar el formulario.
+### Qué hay en la pantalla
 
-**Rediseño visual del 2026-07-29 (mismo día, iteración posterior)**: Adán pidió una interfaz "visualmente mejor", más detalle de "para qué sirve" cada paso, y **colores pastel** — a diferencia del resto del shell (oscuro), `#view-skincare` tiene su propio tema claro pastel completamente aislado (variables `--sk-*` definidas dentro del selector `#view-skincare`, y todo override de `.card`/`.btn`/inputs escrito como `#view-skincare .card{...}` etc. para no filtrarse a Cabello, que tiene su propio tema aparte). Paleta: rosa, **teal** (`--sk-teal*`), menta, durazno y azul pastel sobre fondo blanco/crema con gradiente radial suave. **Nota: originalmente esta variable era lavanda/morada (`--sk-lav`) — Adán pidió explícitamente quitar el morado ese mismo día, así que se renombró a `--sk-teal` y se recolorearon todos sus usos (rotación semanal "retinoide", timeline, nota de pasos PM). Si en el futuro se agrega otro color a esta paleta, evitar tonos morados/lavanda de nuevo.**
+1. **Cabecera** con la fecha y 3 cifras: **racha de SPF** (días seguidos marcando el protector),
+   **semana del retinoide** y **costo al mes**. La del retinoide abre el perfil si aún no hay
+   fecha.
+2. **La línea del día** (`#pl-track`): los 6 pasos como nodos con su hora, y una barra de
+   **AHORA**. Los nodos se reparten a intervalos iguales, no por reloj — los 3 pasos de la
+   mañana caen en 3 minutos y por reloj se amontonarían en un pixel; la barra de AHORA sí va por
+   reloj, interpolada dentro del tramo que le toca. Se oculta bajo 920px: con 6 nodos en 390px
+   estorba más que informa.
+3. **Las dos rutinas, completas y lado a lado**, con su insignia de estado (`COMPLETA`, `2 DE 3`,
+   `A LAS 22:30`). Cada paso se marca con un clic y eso alimenta la racha y la semana. Entre la
+   doble limpieza y el adapaleno va el separador de **espera de 20 minutos**, que es el dato que
+   la guía vieja escondía dentro de un párrafo.
+4. **Tu botiquín**: cada producto con lo que dura, lo que cuesta al mes y **cuántos días le
+   quedan** — en rojo bajo 14. Un clic en los días marca que abrió uno hoy; otro clic lo quita.
+5. **La escalera del retinoide**: 2 noches → 3 → alternas → diario, con el peldaño actual
+   marcado. Sin fecha de inicio no se inventa ninguno: lo dice y ofrece ponerla.
+6. **Dónde vas**: los hitos con "ESTÁS AQUÍ" en el que toca por semana. Los hitos dependen de sus
+   preocupaciones — sin manchas no tiene sentido prometerle que se le van en la semana 12.
+7. **Tu semana**, **qué puede ir con qué** (matriz, no lista de viñetas) y **las reglas que sí
+   mueven la aguja**, numeradas.
 
-**Contenido de la vista** (`#view-skincare`, sin subnav, se renderiza completo con `skRenderGuia()` al cargar la página):
-1. **Hero** (`.sk-hero`): título, descripción de qué es y para qué sirve el módulo, botón "✏️ Editar mi perfil" (`skToggleForm()` muestra/oculta la tarjeta del formulario, oculta por defecto) y una fila de **chips-resumen** (`skResumenChips()`, en `#sk-resumen-chips`) con el tipo de piel, cada preocupación, rasurado y presupuesto en píldoras de color — para ver el perfil de un vistazo sin abrir el formulario.
-2. **Formulario de perfil** (`#sk-form-card`, oculto hasta pulsar "Editar"; `skPintarPerfilForm`/`skLeerPerfilForm`/`skSavePerfil`): tipo de piel, preocupaciones (checkboxes múltiples), rasurado, presupuesto, notas libres. Al guardar, actualiza `SK.perfil`, re-pinta los chips-resumen y vuelve a generar toda la guía — no hace falta recargar la página.
-3. **Guía generada** (`skRenderGuiaContent`, dentro de `#sk-guia-body`), en este orden:
-   - **🌅 Rutina de mañana** / **🌙 Rutina de noche** — cada paso es una tarjeta `.sk-step` con número circular de color (durazno=AM, lavanda=PM), nombre del producto, bloque **"Cómo aplicarlo"** explícito, bloque de **"Nota"** cuando aplica, y píldoras pequeñas de **"ayuda con"** (qué preocupaciones atiende ese producto — `SK_CONCERN_META`). Los productos se eligen con `skPick(categoria, perfil, n)` contra `SKIN_DB` y se registran en un array `usados` para la lista de compras.
-   - **🗓️ Rotación semanal de activos** — ya no es tabla, son 7 "day pills" (`skDayPill`) de lunes a domingo coloreadas por actividad (lavanda=retinoide, durazno=BHA, menta=descanso). Solo se muestra si el perfil tiene preocupaciones que ameriten un activo.
-   - **⏳ Qué esperar y cuándo** (`skTimeline`, nueva) — línea de tiempo vertical con hitos condicionales según preocupaciones: semana 1-2 (adaptación/purga), 3-4 (control de grasa), 6-8 (acné, si aplica), 8-12 (manchas, si aplica), 12+ (arrugas, si aplica).
-   - **🧖 Mascarilla semanal** — 1 tarjeta `.sk-step` igual que los pasos de rutina.
-   - **⚠️ Qué no mezclar** (`skWarnHtml`, nueva) — caja de advertencia color coral con la lista de combinaciones a evitar (retinoide+BHA mismo día, doble exfoliante, etc.), con un ítem extra si hay preocupación de manchas.
-   - **🛒 Tu lista de compras** (`skListaHtml`, nueva) — todos los productos recomendados en la guía, deduplicados por nombre, con su categoría — pensada para llevar directo a la farmacia o al carrito de Amazon/Sephora.
-   - **💡 Consejos** — igual que antes pero como lista de tarjetas con ícono en vez de `<ul>` plano.
-   - Aviso final de que no sustituye a un dermatólogo (`.sk-disclaimer`).
+### El tema es oscuro-primero
 
-`SKIN_DB`: objeto con 8 categorías (`limpiador`, `exfoliante`, `serumAM`, `hidratanteAM`, `spf`, `tratamientoPM`, `hidratantePM`, `semanal`), cada una con 2-4 productos reales (CeraVe, La Roche-Posay, The Ordinary, Isdin, Cetaphil, Neutrogena, Differin, Aztec Secret) etiquetados por `tipos` (a qué tipo de piel aplican), `presu` (a qué presupuesto) y `ayuda` (qué preocupaciones atienden). `skPick()` filtra por tipo+presupuesto y ordena por cuántas preocupaciones del perfil cubre cada producto — es texto plano dentro del `<script>`, no viene de ninguna API; si un producto deja de venderse o Adán quiere agregar uno que ya probó y le funciona, se edita directamente el array de la categoría correspondiente.
+Al revés que Cabello y Dentista: los tokens `--pl-*` base son los del modo oscuro y el claro los
+redefine bajo `[data-theme="light"]`. Antes era pastel-claro con un parche oscuro encima y el
+parche iba siempre un paso por detrás. Prefijo `pl-` (piel); las `.sk-*` se fueron con la vista
+antigua.
 
-**Seguimiento diario de "ya hice mi skincare hoy" vive en Coach, no aquí**: `Coach/Coach.html → #rutina` (`RUTINA_TASKS`) ya incluye "🧴 Skincare AM" y "🧴 Skincare PM" como tareas del horario diario (ids `wd04`/`wd17` entre semana, `sa02`/`sa13` sábado, `do02`/`do10` domingo) — tenerlo también aquí era duplicado. Este módulo es puramente de **referencia** (qué producto usar y por qué), no de tracking de cumplimiento.
+Contraste medido en los dos temas componiendo **toda** la pila de capas translúcidas (no solo la
+primera, que daba un fondo más oscuro que el real y falsos negativos): el peor caso queda en
+**4.93:1 en oscuro y 5.45:1 en claro**, sobre texto de 7.5-10px.
+
+**El seguimiento de "ya hice mi skincare hoy" ahora vive aquí también**, porque de él salen la
+racha y la escalera. `Coach/Coach.html → #rutina` sigue teniendo sus tareas de skincare AM/PM
+como parte del horario del día; son dos vistas del mismo hábito, con estado propio cada una.
 
 ## Módulo nativo: 💇 Cuidado del Cabello — `localStorage['cabello_v1']`
 

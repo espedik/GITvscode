@@ -449,6 +449,44 @@ const sinComentarios = s => s.replace(/\/\*[\s\S]*?\*\//g, '')
   else if (filas) ok.push('Los días de pago del .md coinciden con el maestro (' + filas + ' comprobados)');
 })();
 
+/* ── 11. La rutina de la piel: RUTINA_PIEL contra RUTINA_TASKS ──────────────────────
+   Hasta el 2026-09-01 los productos de la cara vivían escritos a mano en dos sitios y no
+   coincidían: `RUTINA_TASKS` aplicaba La Roche-Posay Anthelios y la guía de Skincare
+   recomendaba Isdin; `RUTINA_TASKS` ponía el Differin las 7 noches y la guía mandaba
+   alternarlo con un BHA que Adán no usa. Nadie lo vio porque ningún control miraba texto de
+   productos.
+
+   Ahora `RUTINA_PIEL` es la fuente y este control comprueba lo único que puede volver a
+   separarse: que cada producto de la rutina siga NOMBRADO en las tareas que la ejecutan. Si
+   alguien cambia de marca en un sitio y no en el otro, sale aquí. */
+(function pielCoherente() {
+  if (!global.window || !global.window.CIFRAS) return;
+  const C = global.window.CIFRAS;
+  const RP = C.RUTINA_PIEL;
+  if (!RP) { problemas.push('RUTINA_PIEL no existe en el maestro'); return; }
+
+  // Todo el texto de las tareas de la rutina, en una sola cadena.
+  const texto = JSON.stringify(C.rutina(''));
+  const malos = [];
+  RP.productos.forEach(function (p) {
+    if (p.opcional) return;               // la mascarilla no está en su semana, a propósito
+    if (texto.indexOf(p.n) === -1)
+      malos.push('     ' + p.cat + ': RUTINA_PIEL dice \'' + p.n + '\' y ese nombre no aparece ' +
+        'en ninguna subtarea de RUTINA_TASKS');
+  });
+
+  // Y que los pasos sigan formando dos rutinas completas.
+  const am = RP.pasos('am'), pm = RP.pasos('pm');
+  if (!am.length) malos.push('     RUTINA_PIEL no tiene ning\u00fan paso de ma\u00f1ana');
+  if (!pm.length) malos.push('     RUTINA_PIEL no tiene ning\u00fan paso de noche');
+  if (!RP.productos.some(function (p) { return p.id === 'spf'; }))
+    malos.push('     RUTINA_PIEL sin protector solar \u2014 es el paso que nunca se salta');
+
+  if (malos.length) problemas.push('La rutina de la piel no coincide con las tareas que la ejecutan:\n' + malos.join('\n'));
+  else ok.push('RUTINA_PIEL coincide con RUTINA_TASKS (' + RP.productos.filter(function (p) { return !p.opcional; }).length +
+    ' productos, AM ' + am.length + ' pasos / PM ' + pm.length + ', $' + RP.costoMesTotal + ' al mes)');
+})();
+
 /* ── Impacto de lo que cambió en esta sesión ──────────────────────────────────────────────────
    Si `datos-maestros.js` cambió respecto al último commit, se comparan los valores de entonces
    con los de ahora y se dice qué se movió — incluido lo ARRASTRADO. Es la parte que Adán

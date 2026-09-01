@@ -1,0 +1,174 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap">
+  <style>
+    body{margin:0;background:#0a0710;font-family:"Inter",-apple-system,sans-serif}
+    .sk{font-family:"Inter",-apple-system,BlinkMacSystemFont,sans-serif !important}
+    .sk .stat-v,.sk .kpi-v,.sk .med-d,.sk .med-tot-v,.sk .now-when .big,
+    .sk .now-w .b,.sk .prog-v,.sk .h1,.sk .node .hh{font-family:"Space Grotesk","Inter",sans-serif}
+  </style>
+</helmet>
+
+<div class="sk">
+<style>
+.sk{
+  --bg:#0a0710; --tx:#f4eef7; --tx2:#a79db2; --tx3:#6b6376;
+  --line:rgba(255,255,255,.09); --panel:rgba(255,255,255,.045);
+  --pink:#ff3d8f; --teal:#1fd6c4; --am:#ffb15c; --pm:#8b7dff; --ok:#2fe0a0; --warn:#ff7a6b;
+  width:390px; height:1075px; box-sizing:border-box; padding:16px 14px 20px;
+  background:
+    radial-gradient(ellipse 90% 30% at 10% -2%, rgba(255,61,143,.20) 0%, transparent 60%),
+    radial-gradient(ellipse 90% 28% at 95% 22%, rgba(139,125,255,.16) 0%, transparent 60%),
+    radial-gradient(ellipse 100% 25% at 50% 102%, rgba(31,214,196,.13) 0%, transparent 60%),
+    var(--bg);
+  color:var(--tx); font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  overflow:hidden; position:relative;
+}
+.sk *{box-sizing:border-box}
+.eyebrow{font-size:9.5px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--pink);display:flex;align-items:center;gap:6px}
+.eyebrow .dot{width:5px;height:5px;border-radius:50%;background:var(--pink);box-shadow:0 0 8px var(--pink)}
+.h1{font-size:21px;font-weight:800;letter-spacing:-.025em;margin:5px 0 12px}
+
+.kpis{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;margin-bottom:14px}
+.kpi{padding:9px 10px;border-radius:12px;border:1px solid var(--line);background:var(--panel)}
+.kpi-v{font-size:17px;font-weight:800;letter-spacing:-.025em;line-height:1}
+.kpi-k{font-size:8px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--tx3);margin-top:5px}
+.kpi.a .kpi-v{color:var(--ok)} .kpi.b .kpi-v{color:var(--pm)} .kpi.c .kpi-v{color:var(--am)}
+
+.now{border-radius:17px;border:1px solid rgba(139,125,255,.32);padding:14px 15px 13px;margin-bottom:12px;
+  background:linear-gradient(165deg,rgba(139,125,255,.14),rgba(255,255,255,.025) 55%);position:relative;overflow:hidden}
+.now::before{content:"";position:absolute;top:-50%;right:-20%;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(139,125,255,.22),transparent 70%)}
+.now-h{display:flex;align-items:center;gap:10px;position:relative;margin-bottom:12px}
+.now-i{width:32px;height:32px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:15px;background:rgba(139,125,255,.2);border:1px solid rgba(139,125,255,.4);flex-shrink:0}
+.now-l{font-size:8.5px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--pm)}
+.now-n{font-size:15px;font-weight:800;letter-spacing:-.015em;margin-top:2px}
+.now-w{margin-left:auto;text-align:right;flex-shrink:0}
+.now-w .b{font-size:17px;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.now-w .s{font-size:9px;color:var(--tx3);margin-top:1px}
+
+.p{display:flex;gap:10px;padding:10px 0;border-bottom:1px solid var(--line);align-items:flex-start;position:relative}
+.p:last-of-type{border-bottom:none;padding-bottom:0}
+.p-n{flex-shrink:0;width:24px;height:24px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;background:rgba(139,125,255,.17);border:1px solid rgba(139,125,255,.36);color:#c3b9ff}
+.p.ok .p-n{background:rgba(47,224,160,.16);border-color:rgba(47,224,160,.4);color:var(--ok)}
+.p-b{flex:1;min-width:0}
+.p-name{font-size:12.5px;font-weight:800;letter-spacing:-.01em;line-height:1.25}
+.p-cat{font-size:8.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--tx3);margin-top:3px}
+.p-t{font-size:11px;color:var(--tx2);line-height:1.45;margin-top:5px}
+.p-t b{color:var(--tx);font-weight:700}
+.p-tags{display:flex;gap:5px;margin-top:6px;flex-wrap:wrap}
+.tg{font-size:9px;font-weight:700;padding:2px 7px;border-radius:6px;border:1px solid var(--line);color:var(--tx3)}
+.tg.w{border-color:rgba(255,177,92,.36);background:rgba(255,177,92,.11);color:var(--am)}
+.tg.k{border-color:rgba(255,61,143,.36);background:rgba(255,61,143,.11);color:#ff9bc6}
+.p-c{flex-shrink:0;width:22px;height:22px;border-radius:7px;border:1.5px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--tx3);margin-top:1px}
+.p.ok .p-c{background:var(--ok);border-color:var(--ok);color:#04140d}
+.espera{display:flex;align-items:center;gap:6px;font-size:9px;font-weight:800;color:var(--am);padding:5px 0 5px 34px;letter-spacing:.04em}
+.espera i{flex:1;height:1px;background:repeating-linear-gradient(90deg,rgba(255,177,92,.45) 0 4px,transparent 4px 9px)}
+
+.otro{display:flex;align-items:center;gap:10px;padding:11px 13px;border-radius:14px;border:1px dashed var(--line);background:rgba(255,255,255,.022);margin-bottom:12px}
+.otro-i{width:26px;height:26px;border-radius:9px;background:rgba(255,177,92,.15);border:1px solid rgba(255,177,92,.32);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
+.otro-t{flex:1;font-size:10.5px;color:var(--tx2);line-height:1.4}
+.otro-t b{color:var(--tx);font-weight:700}
+.otro-c{font-size:9px;font-weight:800;color:var(--ok);flex-shrink:0}
+
+.card{border-radius:16px;border:1px solid var(--line);background:var(--panel);padding:13px 14px;margin-bottom:12px}
+.card-h{display:flex;align-items:center;justify-content:space-between;margin-bottom:11px}
+.card-t{font-size:10px;font-weight:800;letter-spacing:.11em;text-transform:uppercase;color:var(--tx2);display:flex;align-items:center;gap:6px}
+.card-t .b{width:3px;height:11px;border-radius:2px;background:linear-gradient(180deg,var(--pink),var(--teal))}
+.card-x{font-size:9.5px;color:var(--tx3);font-weight:700}
+
+.week{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.d{border-radius:9px;padding:7px 1px 7px;text-align:center;border:1px solid var(--line);background:rgba(255,255,255,.03)}
+.d-l{font-size:8.5px;font-weight:800;color:var(--tx3);text-transform:uppercase}
+.d-i{font-size:12px;margin:4px 0 2px;line-height:1}
+.d-a{font-size:7px;font-weight:800;color:var(--tx3)}
+.d.hoy{border-color:var(--pm);background:rgba(139,125,255,.2);box-shadow:0 0 0 1px rgba(139,125,255,.35)}
+.d.hoy .d-l,.d.hoy .d-a{color:#c3b9ff}
+.d.hecho{border-color:rgba(47,224,160,.3);background:rgba(47,224,160,.09)}
+.d.hecho .d-a{color:var(--ok)}
+
+.med{display:flex;align-items:center;gap:9px;padding:7px 0;border-bottom:1px solid var(--line)}
+.med:last-of-type{border-bottom:none}
+.med-b{width:5px;height:24px;border-radius:3px;flex-shrink:0}
+.med-n{font-size:10.5px;font-weight:700;line-height:1.2}
+.med-s{font-size:8.5px;color:var(--tx3);margin-top:2px}
+.med-r{margin-left:auto;text-align:right;flex-shrink:0}
+.med-d{font-size:10px;font-weight:800;font-variant-numeric:tabular-nums}
+.med-d.lo{color:var(--warn)}
+.med-p{font-size:8.5px;color:var(--tx3);margin-top:1px}
+.med-tot{display:flex;align-items:center;justify-content:space-between;margin-top:9px;padding-top:9px;border-top:1px solid var(--line)}
+.med-tot-l{font-size:9.5px;color:var(--tx2);font-weight:700}
+.med-tot-v{font-size:15px;font-weight:800;color:var(--teal);letter-spacing:-.02em}
+
+.secs{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.sec{padding:11px 12px;border-radius:13px;border:1px solid var(--line);background:rgba(255,255,255,.03);display:flex;align-items:center;gap:9px}
+.sec-i{width:26px;height:26px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:13px;background:rgba(255,255,255,.06);border:1px solid var(--line);flex-shrink:0}
+.sec-t{font-size:10.5px;font-weight:800;line-height:1.25}
+.sec-s{font-size:8.5px;color:var(--tx3);margin-top:2px}
+</style>
+
+<div class="eyebrow"><span class="dot"></span>Martes 1 de septiembre</div>
+<div class="h1">Mi piel</div>
+
+<div class="kpis">
+  <div class="kpi a"><div class="kpi-v">41</div><div class="kpi-k">Racha SPF</div></div>
+  <div class="kpi b"><div class="kpi-v">Sem 14</div><div class="kpi-k">Retinoide</div></div>
+  <div class="kpi c"><div class="kpi-v">$817</div><div class="kpi-k">Al mes</div></div>
+</div>
+
+<div class="now">
+  <div class="now-h">
+    <div class="now-i">&#127769;</div>
+    <div><div class="now-l">Ahora te toca</div><div class="now-n">Rutina de noche</div></div>
+    <div class="now-w"><div class="b">22:30</div><div class="s">en 50 min</div></div>
+  </div>
+  <div class="p"><div class="p-n">1</div><div class="p-b"><div class="p-name">CeraVe Limpiador Espumoso</div><div class="p-cat">Doble limpieza</div><div class="p-t">Hoy usaste SPF: <b>dos pasadas</b>, una para arrastrar el protector y otra para la piel.</div></div><div class="p-c"></div></div>
+  <div class="espera"><span>S&eacute;cate y espera</span><i></i><span>20 MIN</span></div>
+  <div class="p"><div class="p-n">2</div><div class="p-b"><div class="p-name">Differin Adapaleno 0.1%</div><div class="p-cat">Retinoide</div><div class="p-t">Un <b>ch&iacute;charo</b> para toda la cara, sobre piel <b>completamente seca</b>. Con la piel h&uacute;meda penetra de m&aacute;s y ah&iacute; empieza la irritaci&oacute;n.</div><div class="p-tags"><span class="tg w">Espera 20 min</span><span class="tg k">Tu activo principal</span></div></div><div class="p-c"></div></div>
+  <div class="p"><div class="p-n">3</div><div class="p-b"><div class="p-name">Eucerin Hyaluron-Filler Noche</div><div class="p-cat">Hidratante</div><div class="p-t">Encima del retinoide, sin esperar. Amortigua la irritaci&oacute;n mientras rellena l&iacute;neas.</div></div><div class="p-c"></div></div>
+</div>
+
+<div class="otro">
+  <div class="otro-i">&#9728;</div>
+  <div class="otro-t"><b>Rutina de d&iacute;a</b> &mdash; limpiador, niacinamida y Anthelios SPF50</div>
+  <div class="otro-c">&#10003; HECHA</div>
+</div>
+
+<div class="card">
+  <div class="card-h"><div class="card-t"><span class="b"></span>Tu semana</div><div class="card-x">5 de 7</div></div>
+  <div class="week">
+    <div class="d hecho"><div class="d-l">L</div><div class="d-i">&#127769;</div><div class="d-a">HECHO</div></div>
+    <div class="d hoy"><div class="d-l">M</div><div class="d-i">&#127769;</div><div class="d-a">HOY</div></div>
+    <div class="d"><div class="d-l">X</div><div class="d-i">&#127769;</div><div class="d-a">Retin.</div></div>
+    <div class="d"><div class="d-l">J</div><div class="d-i">&#127769;</div><div class="d-a">Retin.</div></div>
+    <div class="d"><div class="d-l">V</div><div class="d-i">&#127769;</div><div class="d-a">Retin.</div></div>
+    <div class="d"><div class="d-l">S</div><div class="d-i">&#129526;</div><div class="d-a">+Masc.</div></div>
+    <div class="d"><div class="d-l">D</div><div class="d-i">&#127769;</div><div class="d-a">Retin.</div></div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-h"><div class="card-t"><span class="b"></span>Tu botiqu&iacute;n</div><div class="card-x">se te acaba en&hellip;</div></div>
+  <div class="med"><div class="med-b" style="background:var(--am)"></div><div><div class="med-n">Anthelios SPF50</div><div class="med-s">50 ml &middot; 2 dedos al d&iacute;a</div></div><div class="med-r"><div class="med-d lo">9 d&iacute;as</div><div class="med-p">$370/mes</div></div></div>
+  <div class="med"><div class="med-b" style="background:var(--pm)"></div><div><div class="med-n">Eucerin Noche</div><div class="med-s">50 ml &middot; 1 vez al d&iacute;a</div></div><div class="med-r"><div class="med-d">38 d&iacute;as</div><div class="med-p">$233/mes</div></div></div>
+  <div class="med"><div class="med-b" style="background:var(--teal)"></div><div><div class="med-n">Niacinamida 10%</div><div class="med-s">30 ml &middot; 3 gotas AM</div></div><div class="med-r"><div class="med-d">52 d&iacute;as</div><div class="med-p">$77/mes</div></div></div>
+  <div class="med"><div class="med-b" style="background:var(--pink)"></div><div><div class="med-n">Differin Adapaleno</div><div class="med-s">45 g &middot; un ch&iacute;charo PM</div></div><div class="med-r"><div class="med-d">96 d&iacute;as</div><div class="med-p">$72/mes</div></div></div>
+  <div class="med-tot"><div class="med-tot-l">Costo mensual</div><div class="med-tot-v">$817</div></div>
+</div>
+
+<div class="secs">
+  <div class="sec"><div class="sec-i">&#9203;</div><div><div class="sec-t">D&oacute;nde vas</div><div class="sec-s">Semana 14 de 24</div></div></div>
+  <div class="sec"><div class="sec-i">&#9888;</div><div><div class="sec-t">Qu&eacute; no mezclar</div><div class="sec-s">Matriz de activos</div></div></div>
+  <div class="sec"><div class="sec-i">&#128161;</div><div><div class="sec-t">Las 5 reglas</div><div class="sec-s">Lo que s&iacute; importa</div></div></div>
+  <div class="sec"><div class="sec-i">&#128203;</div><div><div class="sec-t">Mi perfil</div><div class="sec-s">Piel grasa &middot; 4 focos</div></div></div>
+</div>
+</div>
+</x-dc>
+</body>
+</html>

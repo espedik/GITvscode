@@ -117,7 +117,6 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var
 /* El acento del ítem activo usa el color de cada área (rosa skincare, ámbar cabello, menta
    dentista), tomado de la variable que ya define cada vista — así el menú se siente parte de su
    sección y no un componente genérico pegado encima. */
-#view-skincare .guia-nav-item.active{background:var(--pk-l);color:var(--pk);border-color:rgba(255,107,214,.4)}
 #view-cabello  .guia-nav-item.active{background:var(--am-l);color:var(--am);border-color:rgba(224,160,32,.4)}
 #view-dentista .guia-nav-item.active{background:var(--mt-l);color:var(--mt);border-color:rgba(79,214,173,.4)}
 /* Cada sección de la guía se muestra solo cuando su ítem está elegido. */
@@ -125,7 +124,6 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var
 .guia-sec.active{display:block}
 /* El primer encabezado de cada sección ya no necesita el margen superior grande que lo separaba
    de la sección anterior: ahora es lo primero que se ve. */
-.guia-sec > .sk-section-h:first-child,
 .guia-sec > .ca-section-h:first-child,
 .guia-sec > .de-section-h:first-child{margin-top:4px}
 @media(max-width:900px){
@@ -248,101 +246,258 @@ tbody tr:hover td{background:rgba(var(--ov),.02)}
 .empty{text-align:center;padding:40px 24px;color:var(--text3)}
 .empty .ico{font-size:40px;margin-bottom:10px;opacity:.4}
 
-/* ══════════════════════════════════════════════════════════════════════
-   SKINCARE — tema pastel propio, aislado bajo #view-skincare para no
-   afectar Cabello/Salud/Ejercicio (que comparten .card, .btn, etc.)
-   ══════════════════════════════════════════════════════════════════════ */
+/* ═══════════════════════════════════════════════════════════════════
+   SKINCARE — tema propio bajo #view-skincare, para no tocar a Cabello / Salud / Ejercicio,
+   que comparten .card, .btn, etc.
+
+   Es OSCURO-PRIMERO, al revés que Cabello y Dentista: los tokens base son los del modo
+   oscuro y el claro los redefine bajo [data-theme="light"]. Antes era pastel-claro con un
+   parche oscuro encima, y el parche siempre iba un paso por detrás de las reglas nuevas.
+   Además el pastel era justo lo contrario de lo que Adán pidió el 2026-09-01
+   ("debe ser una interfaz futurista y visualmente atractiva").
+
+   Prefijo `pl-` (piel). Las viejas `.sk-*` desaparecieron con la vista antigua; lo único que
+   sobrevive con ese prefijo es el formulario de perfil, que reusa `.card` del shell.
+   ══════════════════════════════════════════════════════════════════ */
 #view-skincare{
-  --sk-bg1:#fff0f6;--sk-bg2:#f4eeff;--sk-bg3:#eafaf3;
-  --sk-card:#ffffff;--sk-card-br:#f1e3ea;
-  --sk-text:#4a3b4f;--sk-text2:#8d7c92;--sk-text3:#b7a9bb;
-  --sk-pink:#ff9fc9;--sk-pink-d:#c23f77;--sk-pink-l:#fff0f6;
-  --sk-teal:#5fc4bb;--sk-teal-d:#1b6e66;--sk-teal-l:#e0f6f3;
-  --sk-mint:#8fdcb2;--sk-mint-d:#2f8a5c;--sk-mint-l:#e8faf0;
-  --sk-peach:#ffc389;--sk-peach-d:#b8611a;--sk-peach-l:#fff3e6;
-  --sk-blue:#9dcdfb;--sk-blue-d:#25659e;--sk-blue-l:#eaf5ff;
-  --sk-coral:#ffaaa0;--sk-coral-d:#b8382c;--sk-coral-l:#fff1ef;
-  background:radial-gradient(ellipse 70% 50% at 15% 0%,var(--sk-bg1) 0%,transparent 60%),
-             radial-gradient(ellipse 60% 50% at 100% 20%,var(--sk-bg2) 0%,transparent 55%),
-             radial-gradient(ellipse 70% 60% at 50% 100%,var(--sk-bg3) 0%,transparent 60%),
-             #fffdfb;
-  color:var(--sk-text);
+  --pl-tx:#f4eef7; --pl-tx2:#a79db2; --pl-tx3:#8c8399;
+  --pl-line:rgba(255,255,255,.09); --pl-line2:rgba(255,255,255,.05);
+  --pl-panel:rgba(255,255,255,.045); --pl-panel2:rgba(255,255,255,.028);
+  --pl-pink:#ff3d8f; --pl-teal:#1fd6c4; --pl-am:#ffb15c; --pl-pm:#8b7dff;
+  --pl-ok:#2fe0a0; --pl-warn:#ff7a6b;
+  --pl-pmtx:#c3b9ff;                 /* violeta legible sobre fondo violeta translucido */
+  --pl-ink:#0a0710;                  /* texto sobre un acento SOLIDO */
+  --pl-am-bg:rgba(255,177,92,.13); --pl-am-br:rgba(255,177,92,.34);
+  --pl-pm-bg:rgba(139,125,255,.15); --pl-pm-br:rgba(139,125,255,.38);
+  --pl-ok-bg:rgba(47,224,160,.13);  --pl-ok-br:rgba(47,224,160,.34);
+  --pl-wa-bg:rgba(255,122,107,.14); --pl-wa-br:rgba(255,122,107,.34);
+  --pl-pk-bg:rgba(255,61,143,.13);  --pl-pk-br:rgba(255,61,143,.36);
+  background:
+    radial-gradient(ellipse 55% 40% at 18% -6%, rgba(255,177,92,.13) 0%, transparent 60%),
+    radial-gradient(ellipse 55% 40% at 84% -6%, rgba(139,125,255,.17) 0%, transparent 60%),
+    radial-gradient(ellipse 80% 38% at 50% 108%, rgba(31,214,196,.11) 0%, transparent 62%),
+    #07060d;
+  color:var(--pl-tx);
 }
-#view-skincare .card{background:var(--sk-card);border:1px solid var(--sk-card-br);box-shadow:0 6px 24px rgba(190,150,170,.14);color:var(--sk-text)}
-#view-skincare .card-title{color:var(--sk-text2)}
-#view-skincare .card-sub,#view-skincare .ts{color:var(--sk-text2)}
-#view-skincare .tm{color:var(--sk-text3)}
-#view-skincare label{color:var(--sk-text2)}
-#view-skincare input,#view-skincare select,#view-skincare textarea{background:#fbf7f9;border:1px solid var(--sk-card-br);color:var(--sk-text)}
-#view-skincare input:focus,#view-skincare select:focus,#view-skincare textarea:focus{border-color:var(--sk-pink);box-shadow:0 0 0 3px rgba(255,159,201,.18)}
-#view-skincare select option{background:#fff;color:var(--sk-text)}
-#view-skincare .btn-g{background:linear-gradient(135deg,var(--sk-pink),#ff7fb8);color:#5c1638;box-shadow:0 4px 16px rgba(255,159,201,.45)}
-#view-skincare .btn-g:hover{box-shadow:0 6px 22px rgba(255,159,201,.6)}
-#view-skincare .btn-o{background:#fbf7f9;color:var(--sk-text2);border:1px solid var(--sk-card-br)}
-#view-skincare .btn-o:hover{background:#f5edf1;color:var(--sk-text)}
+:root[data-theme="light"] #view-skincare{
+  --pl-tx:#231b2d; --pl-tx2:#5e5470; --pl-tx3:#5d5369;
+  --pl-line:rgba(35,20,50,.13); --pl-line2:rgba(35,20,50,.07);
+  --pl-panel:rgba(255,255,255,.88); --pl-panel2:rgba(255,255,255,.6);
+  --pl-pink:#b81460; --pl-teal:#0b7e73; --pl-am:#8a4a0e; --pl-pm:#5544cc;
+  --pl-ok:#0a6b45; --pl-warn:#b0331f;
+  --pl-pmtx:#4a3bbd;
+  --pl-ink:#ffffff;
+  --pl-am-bg:rgba(255,150,40,.14); --pl-am-br:rgba(180,100,25,.3);
+  --pl-pm-bg:rgba(90,70,220,.11);  --pl-pm-br:rgba(90,70,220,.3);
+  --pl-ok-bg:rgba(15,140,90,.11);  --pl-ok-br:rgba(15,140,90,.3);
+  --pl-wa-bg:rgba(200,60,45,.1);   --pl-wa-br:rgba(200,60,45,.28);
+  --pl-pk-bg:rgba(211,24,111,.09); --pl-pk-br:rgba(211,24,111,.28);
+  background:
+    radial-gradient(ellipse 55% 40% at 18% -6%, rgba(255,177,92,.20) 0%, transparent 60%),
+    radial-gradient(ellipse 55% 40% at 84% -6%, rgba(139,125,255,.18) 0%, transparent 60%),
+    radial-gradient(ellipse 80% 38% at 50% 108%, rgba(31,214,196,.16) 0%, transparent 62%),
+    #f8f5fc;
+  color:var(--pl-tx);
+}
 
-.sk-hero{padding:20px 22px;border-radius:20px;background:linear-gradient(135deg,var(--sk-pink-l),var(--sk-teal-l));border:1px solid #ffe0ee;margin-bottom:18px}
-.sk-hero-top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}
-.sk-eyebrow{font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--sk-pink-d)}
-.sk-title{font-size:24px;font-weight:800;margin:4px 0 8px;color:var(--sk-text)}
-.sk-desc{font-size:13px;color:var(--sk-text2);max-width:640px;line-height:1.6;margin:0}
-.sk-btn-edit{flex-shrink:0;background:#fff;border:1px solid #ffcfe4;color:var(--sk-pink-d);font-weight:700;font-size:12.5px;padding:9px 16px;border-radius:20px;cursor:pointer;font-family:inherit;transition:all .2s}
-.sk-btn-edit:hover{background:var(--sk-pink-l);transform:translateY(-1px)}
-.sk-chips-resumen{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
-.sk-pill{display:inline-flex;align-items:center;gap:5px;padding:6px 13px;border-radius:20px;font-size:12px;font-weight:700}
-.sk-pill.p-pink{background:#ffe0ee;color:var(--sk-pink-d)}
-.sk-pill.p-teal{background:#d7f0ec;color:var(--sk-teal-d)}
-.sk-pill.p-mint{background:#d7f5e4;color:var(--sk-mint-d)}
-.sk-pill.p-peach{background:#ffe8d1;color:var(--sk-peach-d)}
-.sk-pill.p-blue{background:#dbedff;color:var(--sk-blue-d)}
-.sk-pill.p-coral{background:#ffdfda;color:var(--sk-coral-d)}
-.sk-pill.small{padding:3px 9px;font-size:10.5px;font-weight:700}
+/* ── cabecera ──────────────────────────────────────────────── */
+.pl-top{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:16px}
+.pl-eyebrow{font-size:10px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--pl-pink);display:flex;align-items:center;gap:7px}
+.pl-eyebrow .dot{width:6px;height:6px;border-radius:50%;background:var(--pl-pink);box-shadow:0 0 10px var(--pl-pink);flex:none}
+.pl-h1{font-size:25px;font-weight:800;letter-spacing:-.025em;margin:5px 0 0;color:var(--pl-tx)}
+.pl-top-r{margin-left:auto;display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.pl-kpi{padding:9px 15px;border-radius:13px;border:1px solid var(--pl-line);background:var(--pl-panel);text-align:right;min-width:104px}
+.pl-kpi-v{font-size:19px;font-weight:800;letter-spacing:-.02em;line-height:1;font-variant-numeric:tabular-nums}
+.pl-kpi-k{font-size:9px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--pl-tx3);margin-top:4px}
+.pl-kpi.a .pl-kpi-v{color:var(--pl-ok)}
+.pl-kpi.b .pl-kpi-v{color:var(--pl-pm)}
+.pl-kpi.c .pl-kpi-v{color:var(--pl-am)}
+.pl-kpi.link{cursor:pointer;transition:border-color .15s,transform .15s}
+.pl-kpi.link:hover{border-color:var(--pl-pm-br);transform:translateY(-1px)}
+.pl-btn{background:var(--pl-panel);border:1px solid var(--pl-line);color:var(--pl-tx2);font-family:inherit;
+  font-size:12px;font-weight:700;padding:10px 15px;border-radius:12px;cursor:pointer;transition:all .15s;display:inline-flex;align-items:center;gap:7px}
+.pl-btn:hover{border-color:var(--pl-pk-br);color:var(--pl-tx)}
+.pl-btn.on{background:var(--pl-pk-bg);border-color:var(--pl-pk-br);color:var(--pl-pink)}
 
-.sk-section-h{display:flex;align-items:center;gap:9px;margin:26px 0 14px}
-.sk-section-h .ico{font-size:19px}
-.sk-section-h h3{font-size:15.5px;font-weight:800;color:var(--sk-text);margin:0}
-.sk-section-h .line{flex:1;height:1px;background:linear-gradient(90deg,var(--sk-card-br),transparent)}
+/* ── la pista del día ────────────────────────────────────────── */
+.pl-track{border-radius:20px;border:1px solid var(--pl-line);background:var(--pl-panel);padding:16px 24px 18px;margin-bottom:14px;overflow:hidden}
+.pl-track-h{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px;flex-wrap:wrap}
+.pl-track-t{font-size:10.5px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--pl-tx2)}
+.pl-track-x{font-size:11.5px;color:var(--pl-tx3);font-weight:700}
+.pl-track-x b{color:var(--pl-pm)}
+/* 96px, no 78: los 18 de arriba son la banda del chip de AHORA. Sin ella, el chip cae
+   encima de la hora de un nodo siempre que la hora actual queda cerca de un paso. */
+.pl-line{position:relative;height:96px}
+.pl-line .base{position:absolute;left:0;right:0;top:50px;height:3px;border-radius:3px;
+  background:linear-gradient(90deg,var(--pl-am) 0%,var(--pl-am-br) 24%,var(--pl-line) 42%,var(--pl-line) 60%,var(--pl-pm-br) 78%,var(--pl-pm) 100%);opacity:.85}
+.pl-node{position:absolute;top:18px;transform:translateX(-50%);text-align:center;width:106px}
+.pl-node .hh{font-size:11px;font-weight:800;font-variant-numeric:tabular-nums;color:var(--pl-tx2)}
+.pl-node .dot{width:15px;height:15px;border-radius:50%;margin:11px auto 0;border:2.5px solid #07060d;background:var(--pl-tx3)}
+:root[data-theme="light"] .pl-node .dot{border-color:#f8f5fc}
+.pl-node .nn{font-size:9.5px;color:var(--pl-tx3);font-weight:700;margin-top:8px;line-height:1.3}
+.pl-node.am .dot{background:var(--pl-am);box-shadow:0 0 0 4px var(--pl-am-bg)}
+.pl-node.pm .dot{background:var(--pl-pm);box-shadow:0 0 0 4px var(--pl-pm-bg)}
+.pl-node.hecho .dot{background:var(--pl-ok);box-shadow:0 0 0 4px var(--pl-ok-bg)}
+.pl-node.hecho .hh{color:var(--pl-ok)}
+.pl-node.sig .dot{box-shadow:0 0 0 5px var(--pl-pm-bg),0 0 20px var(--pl-pm)}
+.pl-node.sig .nn{color:var(--pl-pmtx);font-weight:800}
+.pl-ahora{position:absolute;top:2px;bottom:-4px;z-index:3;width:2px;background:linear-gradient(180deg,transparent,var(--pl-teal) 24%,var(--pl-teal) 76%,transparent);z-index:2}
+.pl-ahora span{position:absolute;top:-2px;left:50%;transform:translateX(-50%);font-size:8.5px;font-weight:800;letter-spacing:.08em;
+  color:var(--pl-ink);background:var(--pl-teal);padding:3px 8px;border-radius:5px;white-space:nowrap;font-variant-numeric:tabular-nums}
 
-.sk-step{background:var(--sk-card);border:1px solid var(--sk-card-br);border-radius:16px;padding:16px;margin-bottom:12px;box-shadow:0 4px 16px rgba(190,150,170,.1);display:flex;gap:14px}
-.sk-step-num{flex-shrink:0;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;color:#fff}
-.sk-step-body{flex:1;min-width:0}
-.sk-step-name{font-weight:800;font-size:14.5px;color:var(--sk-text);margin-bottom:6px}
-.sk-step-block{margin-top:8px}
-.sk-step-label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--sk-text3);margin-bottom:3px}
-.sk-step-text{font-size:12.5px;color:var(--sk-text2);line-height:1.55}
-.sk-step-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+/* ── las dos rutinas ─────────────────────────────────────────── */
+.pl-rutinas{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+.pl-ru{border-radius:18px;border:1px solid var(--pl-line);background:var(--pl-panel);padding:16px 18px 14px}
+.pl-ru.ahora{border-color:var(--pl-pm-br);box-shadow:0 0 0 1px var(--pl-pm-br),0 10px 30px rgba(139,125,255,.13)}
+.pl-ru-h{display:flex;align-items:center;gap:11px;margin-bottom:12px;flex-wrap:wrap}
+.pl-ru-i{width:34px;height:34px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:16px;flex:none}
+.pl-ru.am .pl-ru-i{background:var(--pl-am-bg);border:1px solid var(--pl-am-br)}
+.pl-ru.pm .pl-ru-i{background:var(--pl-pm-bg);border:1px solid var(--pl-pm-br)}
+.pl-ru-n{font-size:15.5px;font-weight:800;letter-spacing:-.015em}
+.pl-ru-s{font-size:10.5px;color:var(--pl-tx3);font-weight:700;margin-top:2px}
+.pl-ru-b{margin-left:auto;font-size:9.5px;font-weight:800;padding:5px 11px;border-radius:8px;letter-spacing:.05em;white-space:nowrap}
+.pl-ru-b.ok{background:var(--pl-ok-bg);color:var(--pl-ok);border:1px solid var(--pl-ok-br)}
+.pl-ru-b.wait{background:var(--pl-pm-bg);color:var(--pl-pmtx);border:1px solid var(--pl-pm-br)}
+.pl-ru-b.miss{background:var(--pl-wa-bg);color:var(--pl-warn);border:1px solid var(--pl-wa-br)}
 
-.sk-week{display:flex;gap:8px;flex-wrap:wrap}
-.sk-day{flex:1;min-width:74px;border-radius:14px;padding:12px 8px;text-align:center;border:1px solid var(--sk-card-br)}
-.sk-day-lbl{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px}
-.sk-day-act{font-size:11px;font-weight:700;line-height:1.3}
+.pl-p{display:flex;gap:11px;padding:10px 0;border-bottom:1px solid var(--pl-line2);align-items:flex-start;cursor:pointer}
+.pl-p:last-of-type{border-bottom:none;padding-bottom:2px}
+.pl-p:hover .pl-p-c{border-color:var(--pl-ok)}
+.pl-p-n{flex:none;width:24px;height:24px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;
+  background:var(--pl-panel2);border:1px solid var(--pl-line);color:var(--pl-tx2)}
+.pl-p.on .pl-p-n{background:var(--pl-ok-bg);border-color:var(--pl-ok-br);color:var(--pl-ok)}
+.pl-p-b{flex:1;min-width:0}
+.pl-p-name{font-size:12.5px;font-weight:800;letter-spacing:-.01em;color:var(--pl-tx)}
+.pl-p-name em{font-style:normal;font-size:9px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--pl-tx3);margin-left:7px}
+.pl-p-t{font-size:11.5px;color:var(--pl-tx2);line-height:1.5;margin-top:3px}
+.pl-p-t b{color:var(--pl-tx);font-weight:700}
+.pl-p-tags{display:flex;gap:5px;margin-top:6px;flex-wrap:wrap}
+.pl-tg{font-size:9.5px;font-weight:700;padding:2px 8px;border-radius:6px;border:1px solid var(--pl-line);color:var(--pl-tx3)}
+.pl-tg.w{border-color:var(--pl-am-br);background:var(--pl-am-bg);color:var(--pl-am)}
+.pl-tg.k{border-color:var(--pl-pk-br);background:var(--pl-pk-bg);color:var(--pl-pink)}
+.pl-p-c{flex:none;width:21px;height:21px;border-radius:7px;border:1.5px solid var(--pl-line);display:flex;align-items:center;justify-content:center;
+  font-size:11px;color:transparent;margin-top:2px;transition:all .15s}
+.pl-p.on .pl-p-c{background:var(--pl-ok);border-color:var(--pl-ok);color:var(--pl-ink)}
+.pl-espera{display:flex;align-items:center;gap:7px;font-size:9.5px;font-weight:800;color:var(--pl-am);padding:4px 0 4px 35px;letter-spacing:.03em}
+.pl-espera i{flex:1;height:1px;background:repeating-linear-gradient(90deg,var(--pl-am-br) 0 4px,transparent 4px 9px)}
 
-.sk-timeline{position:relative;padding-left:26px}
-.sk-tl-item{position:relative;padding-bottom:20px}
-.sk-tl-item:last-child{padding-bottom:0}
-.sk-tl-item::before{content:'';position:absolute;left:-26px;top:3px;width:11px;height:11px;border-radius:50%;background:var(--sk-teal);box-shadow:0 0 0 4px var(--sk-teal-l)}
-.sk-tl-item::after{content:'';position:absolute;left:-21px;top:16px;bottom:0;width:2px;background:var(--sk-card-br)}
-.sk-tl-item:last-child::after{display:none}
-.sk-tl-when{font-size:11px;font-weight:800;color:var(--sk-teal-d);text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px}
-.sk-tl-txt{font-size:13px;color:var(--sk-text);line-height:1.5}
+/* ── tarjetas de abajo ──────────────────────────────────────── */
+.pl-foot{display:grid;grid-template-columns:1.15fr 1fr 1fr;gap:14px;margin-bottom:14px}
+.pl-foot2{display:grid;grid-template-columns:1fr 1.05fr;gap:14px;align-items:start}
+.pl-col{display:flex;flex-direction:column;gap:14px;min-width:0}
+.pl-card{border-radius:18px;border:1px solid var(--pl-line);background:var(--pl-panel);padding:15px 16px}
+.pl-card-h{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
+.pl-card-t{font-size:10.5px;font-weight:800;letter-spacing:.11em;text-transform:uppercase;color:var(--pl-tx2);display:flex;align-items:center;gap:7px}
+.pl-card-t .b{width:3px;height:12px;border-radius:2px;background:linear-gradient(180deg,var(--pl-pink),var(--pl-teal));flex:none}
+.pl-card-x{font-size:10px;color:var(--pl-tx3);font-weight:700;white-space:nowrap}
 
-.sk-shop{display:flex;align-items:center;gap:12px;padding:11px 4px;border-bottom:1px solid var(--sk-card-br)}
-.sk-shop:last-child{border-bottom:none}
-.sk-shop-ico{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
-.sk-shop-name{font-weight:700;font-size:13px;color:var(--sk-text)}
-.sk-shop-cat{font-size:11px;color:var(--sk-text3)}
+.pl-med{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--pl-line2)}
+.pl-med:last-of-type{border-bottom:none}
+.pl-med.opc{opacity:.6}
+.pl-med-b{width:5px;height:27px;border-radius:3px;flex:none}
+.pl-med-n{font-size:11px;font-weight:700;line-height:1.25;color:var(--pl-tx)}
+.pl-med-s{font-size:9px;color:var(--pl-tx3);margin-top:2px}
+.pl-med-r{margin-left:auto;text-align:right;flex:none}
+.pl-med-d{font-size:10.5px;font-weight:800;font-variant-numeric:tabular-nums;color:var(--pl-tx2)}
+.pl-med-d.lo{color:var(--pl-warn)}
+.pl-med-d.set{color:var(--pl-tx3);font-weight:700;cursor:pointer;text-decoration:underline;text-decoration-style:dotted;text-underline-offset:3px}
+.pl-med-d.set:hover{color:var(--pl-teal)}
+.pl-med-p{font-size:9px;color:var(--pl-tx3);margin-top:1px;font-variant-numeric:tabular-nums}
+.pl-med-tot{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:10px;padding-top:10px;border-top:1px solid var(--pl-line)}
+.pl-med-tot-l{font-size:10px;color:var(--pl-tx2);font-weight:700}
+.pl-med-tot-v{font-size:16px;font-weight:800;color:var(--pl-teal);letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.pl-nota{font-size:9.5px;color:var(--pl-tx3);line-height:1.5;margin-top:9px;padding-top:9px;border-top:1px solid var(--pl-line2)}
+.pl-nota b{color:var(--pl-tx2)}
 
-.sk-tip{display:flex;gap:11px;align-items:flex-start;padding:11px 0;border-bottom:1px solid var(--sk-card-br)}
-.sk-tip:last-child{border-bottom:none}
-.sk-tip .ico{font-size:16px;flex-shrink:0;margin-top:1px}
-.sk-tip-txt{font-size:13px;color:var(--sk-text2);line-height:1.55}
+.pl-esc{display:flex;flex-direction:column;gap:6px}
+.pl-pel{display:flex;align-items:center;gap:10px;padding:7px 10px;border-radius:10px;border:1px solid var(--pl-line);background:var(--pl-panel2)}
+.pl-pel.pas{opacity:.55}
+.pl-pel.act{border-color:var(--pl-pm-br);background:var(--pl-pm-bg);box-shadow:0 0 0 1px var(--pl-pm-br)}
+.pl-pel-w{font-size:9px;font-weight:800;color:var(--pl-tx3);letter-spacing:.06em;width:56px;flex:none}
+.pl-pel.act .pl-pel-w{color:var(--pl-pmtx)}
+.pl-pel-n{font-size:11.5px;font-weight:800;color:var(--pl-tx)}
+.pl-pel-c{margin-left:auto;font-size:9px;font-weight:800;color:var(--pl-ok);flex:none}
+.pl-pel.act .pl-pel-c{color:var(--pl-teal)}
 
-.sk-warn{background:var(--sk-coral-l);border:1px solid #ffd4cd;border-radius:14px;padding:14px 16px}
-.sk-warn-title{font-weight:800;font-size:13px;color:var(--sk-coral-d);margin-bottom:8px;display:flex;align-items:center;gap:6px}
-.sk-warn ul{margin:0;padding-left:18px}
-.sk-warn li{font-size:12.5px;color:#8a4a41;line-height:1.7}
+.pl-tl-i{position:relative;padding:0 0 11px 18px}
+.pl-tl-i:last-child{padding-bottom:0}
+.pl-tl-i::before{content:'';position:absolute;left:0;top:3px;width:8px;height:8px;border-radius:50%;background:var(--pl-line);border:1px solid var(--pl-tx3)}
+.pl-tl-i::after{content:'';position:absolute;left:3.5px;top:13px;bottom:0;width:1px;background:var(--pl-line)}
+.pl-tl-i:last-child::after{display:none}
+.pl-tl-i.ok::before{background:var(--pl-ok);border-color:var(--pl-ok)}
+.pl-tl-i.aqui::before{background:var(--pl-teal);border-color:var(--pl-teal);box-shadow:0 0 0 3.5px var(--pl-ok-bg)}
+.pl-tl-w{font-size:9.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--pl-tx3)}
+.pl-tl-i.aqui .pl-tl-w{color:var(--pl-teal)}
+.pl-tl-t{font-size:11px;color:var(--pl-tx2);line-height:1.45;margin-top:2px}
+.pl-tl-i.aqui .pl-tl-t{color:var(--pl-tx)}
+.pl-aqui{font-size:8px;font-weight:800;padding:2px 6px;border-radius:4px;background:var(--pl-teal);color:var(--pl-ink);margin-left:5px;letter-spacing:.04em}
 
-.sk-disclaimer{margin-top:22px;padding:13px 16px;border-radius:14px;background:#faf7fb;border:1px dashed var(--sk-card-br);font-size:11.5px;color:var(--sk-text3);line-height:1.6}
+.pl-mx{width:100%;border-collapse:separate;border-spacing:3px}
+.pl-mx th{font-size:9px;font-weight:800;color:var(--pl-tx3);text-transform:uppercase;letter-spacing:.05em;padding:3px 2px;text-align:center}
+.pl-mx td{text-align:center;padding:7px 2px;border-radius:8px;font-size:12px;font-weight:800}
+.pl-mx td.l,.pl-mx th.l{text-align:left;font-size:10.5px;font-weight:700;color:var(--pl-tx2);background:none;padding-left:4px}
+.pl-mx td.si{background:var(--pl-ok-bg);color:var(--pl-ok)}
+.pl-mx td.no{background:var(--pl-wa-bg);color:var(--pl-warn)}
+.pl-mx td.oj{background:var(--pl-am-bg);color:var(--pl-am);font-size:10px}
+.pl-leg{display:flex;gap:12px;margin-top:9px;font-size:9.5px;color:var(--pl-tx3);font-weight:700;flex-wrap:wrap}
+.pl-leg span{display:inline-flex;align-items:center;gap:5px}
+.pl-leg i{width:8px;height:8px;border-radius:3px;display:inline-block}
+
+.pl-rule{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--pl-line2);align-items:flex-start}
+.pl-rule:last-child{border-bottom:none}
+.pl-rule-i{width:22px;height:22px;border-radius:7px;flex:none;display:flex;align-items:center;
+  justify-content:center;font-size:10.5px;font-weight:800;background:var(--pl-panel2);
+  border:1px solid var(--pl-line);color:var(--pl-tx3);font-variant-numeric:tabular-nums}
+.pl-rule-t{font-size:11px;color:var(--pl-tx2);line-height:1.5}
+.pl-rule-t b{color:var(--pl-tx);font-weight:700}
+
+.pl-week{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}
+.pl-d{border-radius:11px;padding:8px 2px 9px;text-align:center;border:1px solid var(--pl-line);background:var(--pl-panel2)}
+.pl-d-l{font-size:9.5px;font-weight:800;letter-spacing:.05em;color:var(--pl-tx3);text-transform:uppercase}
+.pl-d-i{font-size:13px;margin:5px 0 3px;line-height:1}
+.pl-d-a{font-size:8.5px;font-weight:800;color:var(--pl-tx3)}
+.pl-d.hoy{border-color:var(--pl-pm-br);background:var(--pl-pm-bg);box-shadow:0 0 0 1px var(--pl-pm-br)}
+.pl-d.hoy .pl-d-l,.pl-d.hoy .pl-d-a{color:var(--pl-pmtx)}
+.pl-d.full{border-color:var(--pl-ok-br);background:var(--pl-ok-bg)}
+.pl-d.full .pl-d-a{color:var(--pl-ok)}
+.pl-d.parc .pl-d-a{color:var(--pl-am)}
+
+.pl-disc{margin-top:14px;padding:12px 15px;border-radius:14px;background:var(--pl-panel2);border:1px dashed var(--pl-line);font-size:11px;color:var(--pl-tx3);line-height:1.6}
+
+/* El formulario de perfil reusa .card del shell; aquí solo se le pone la piel de esta vista. */
+#view-skincare .card{background:var(--pl-panel);border:1px solid var(--pl-line);color:var(--pl-tx);box-shadow:none;border-radius:18px}
+#view-skincare .card-title{color:var(--pl-tx2)}
+#view-skincare .card-sub,#view-skincare .ts{color:var(--pl-tx3)}
+#view-skincare label{color:var(--pl-tx2)}
+#view-skincare input,#view-skincare select,#view-skincare textarea{background:var(--pl-panel2);border:1px solid var(--pl-line);color:var(--pl-tx)}
+#view-skincare input:focus,#view-skincare select:focus,#view-skincare textarea:focus{border-color:var(--pl-pink);box-shadow:0 0 0 3px var(--pl-pk-bg)}
+#view-skincare select option{background:#17141d;color:#f4eef7}
+:root[data-theme="light"] #view-skincare select option{background:#fff;color:#231b2d}
+#view-skincare .btn-g{background:linear-gradient(135deg,var(--pl-pink),var(--pl-pm));color:#fff;box-shadow:0 4px 16px var(--pl-pk-bg)}
+#view-skincare .btn-o{background:var(--pl-panel2);color:var(--pl-tx2);border:1px solid var(--pl-line)}
+
+/* ── responsivo ─────────────────────────────────────────────── */
+@media(max-width:1120px){
+  .pl-foot{grid-template-columns:1fr 1fr}
+  .pl-foot .pl-card:first-child{grid-column:1 / -1}
+}
+@media(max-width:920px){
+  .pl-rutinas{grid-template-columns:1fr}
+  .pl-foot,.pl-foot2{grid-template-columns:1fr}
+  .pl-foot .pl-card:first-child{grid-column:auto}
+  /* La pista horizontal no cabe con 6-7 nodos: en pantalla estrecha estorba más que informa. */
+  .pl-track{display:none}
+}
+@media(max-width:620px){
+  .pl-h1{font-size:21px}
+  .pl-top-r{width:100%;margin-left:0}
+  .pl-kpi{flex:1;min-width:0;padding:9px 10px}
+  .pl-kpi-v{font-size:17px}
+  .pl-week{gap:3px}
+  .pl-d{padding:7px 1px}
+  .pl-d-a{font-size:7.5px}
+}
+
 
 /* ══════════════════════════════════════════════════════════════════════
    CABELLO — mismo patrón pastel que Skincare, paleta propia (ámbar/azul/
@@ -525,7 +680,7 @@ tbody tr:hover td{background:rgba(var(--ov),.02)}
 
 @media(max-width:900px){.g4{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:640px){.g4,.g3,.g2{grid-template-columns:1fr}.fr{grid-template-columns:1fr}
-  .sk-step,.ca-step,.de-step{flex-direction:column}.sk-hero-top,.ca-hero-top,.de-hero-top{flex-direction:column}
+  .ca-step,.de-step{flex-direction:column}.ca-hero-top,.de-hero-top{flex-direction:column}
   /* Topnav compacto — antes el .brand{width:100%} forzaba las 6 pestañas + Dashboard a envolver en
      4-5 filas propias (hasta 276px de alto en iPhone 15 Pro, ~32% del viewport), robándole altura
      al iframe de Salud/Ejercicio/Comida. Ahora las pestañas son una tira horizontal con scroll
@@ -538,41 +693,15 @@ tbody tr:hover td{background:rgba(var(--ov),.02)}
 }
 
 /* ══════════════════════════════════════════════════════════════════════
-   MODO OSCURO — Skincare y Cabello son pastel-claro únicamente por diseño;
-   esto redefine las variables --sk-x y --ca-x (cascadean solas a casi todas
-   las reglas de arriba) y reescribe aparte los pocos colores literales
-   (pills, hero border, inputs, warn/note boxes) que no usan variable.
-   Misma identidad de tono (rosa/teal/menta/durazno/azul/coral en Skincare;
-   ámbar/azul/verde/terracota/coral en Cabello), invertida a oscuro.
+   MODO OSCURO — Cabello y Dentista son pastel-claro por diseño; esto redefine
+   sus variables --ca-x y --de-x (cascadean solas a casi todas las reglas de
+   arriba) y reescribe aparte los pocos colores literales (pills, bordes de
+   hero, inputs, cajas de aviso) que no usan variable. Misma identidad de tono,
+   invertida a oscuro.
+   Skincare NO está aquí: desde el 2026-09-01 es oscuro-primero y define su
+   variante clara él mismo, arriba.
    ══════════════════════════════════════════════════════════════════════ */
-:root[data-theme="dark"] #view-skincare{
-  --sk-bg1:#2b1a22;--sk-bg2:#211f2e;--sk-bg3:#16261f;
-  --sk-card:#211c22;--sk-card-br:#3d2f38;
-  --sk-text:#f0e6ec;--sk-text2:#b8a8bd;--sk-text3:#7d6f82;
-  --sk-pink:#ff9fc9;--sk-pink-d:#ff9fc9;--sk-pink-l:#3d2030;
-  --sk-teal:#5fc4bb;--sk-teal-d:#6fd4cb;--sk-teal-l:#16332f;
-  --sk-mint:#8fdcb2;--sk-mint-d:#a0e8c2;--sk-mint-l:#163d2a;
-  --sk-peach:#ffc389;--sk-peach-d:#ffcf9e;--sk-peach-l:#3d2a16;
-  --sk-blue:#9dcdfb;--sk-blue-d:#a8d4ff;--sk-blue-l:#16283d;
-  --sk-coral:#ffaaa0;--sk-coral-d:#ff9d90;--sk-coral-l:#3d201c;
-  background:radial-gradient(ellipse 70% 50% at 15% 0%,var(--sk-bg1) 0%,transparent 60%),
-             radial-gradient(ellipse 60% 50% at 100% 20%,var(--sk-bg2) 0%,transparent 55%),
-             radial-gradient(ellipse 70% 60% at 50% 100%,var(--sk-bg3) 0%,transparent 60%),
-             #17141a;
-}
-:root[data-theme="dark"] #view-skincare input,:root[data-theme="dark"] #view-skincare select,:root[data-theme="dark"] #view-skincare textarea{background:#2b2530}
-:root[data-theme="dark"] #view-skincare select option{background:#211c22}
-:root[data-theme="dark"] .sk-hero{border-color:#4a2c3a}
-:root[data-theme="dark"] .sk-btn-edit{background:#2b2530;border-color:#4a3242}
-:root[data-theme="dark"] .sk-pill.p-pink{background:#4a2c3a}
-:root[data-theme="dark"] .sk-pill.p-teal{background:#1f3d38}
-:root[data-theme="dark"] .sk-pill.p-mint{background:#1f3d2c}
-:root[data-theme="dark"] .sk-pill.p-peach{background:#4a331f}
-:root[data-theme="dark"] .sk-pill.p-blue{background:#1f2f4a}
-:root[data-theme="dark"] .sk-pill.p-coral{background:#4a2b26}
-:root[data-theme="dark"] .sk-warn{border-color:#5c3730}
-:root[data-theme="dark"] .sk-warn li{color:#e0a89e}
-:root[data-theme="dark"] .sk-disclaimer{background:#211c22}
+
 
 :root[data-theme="dark"] #view-cabello{
   --ca-bg1:#2b2216;--ca-bg2:#16233d;--ca-bg3:#16331e;
@@ -623,6 +752,7 @@ tbody tr:hover td{background:rgba(var(--ov),.02)}
 :root[data-theme="dark"] .de-shop-ico{background:#163d2e}
 :root[data-theme="dark"] .de-disclaimer{background:#1a2420}
 </style>
+<script src="../Dashboard/datos-maestros.js"></script>
 <script>
 (function () {
   var saved = localStorage.getItem('coach-theme');
@@ -652,26 +782,26 @@ tbody tr:hover td{background:rgba(var(--ov),.02)}
   <button class="theme-toggle-btn" id="theme-toggle-btn" onclick="toggleTheme()" title="Cambiar tema claro/oscuro" aria-label="Cambiar tema claro/oscuro">🌙</button>
 </header>
 
-<!-- ══════════════ SKINCARE ══════════════ -->
+<!-- ══════════════ SKINCARE ══════════════
+     Sin menú lateral, al revés que Cabello y Dentista: la rutina de la cara son 6 pasos en
+     total y partírlos en 9 secciones de una en una dejaba el 85% de la pantalla vacía y
+     obligaba a 9 clics para leer algo que cabe entero. Todo se pinta desde JS a partir de
+     `CIFRAS.RUTINA_PIEL`, que es la misma fuente que usa la rutina diaria del Dashboard. -->
 <main class="view view-native active" id="view-skincare">
-  <div class="guia-shell">
-  <nav class="guia-nav" id="sk-nav"></nav>
-  <div class="guia-main">
-  <div class="sk-hero">
-    <div class="sk-hero-top">
-      <div>
-        <div class="sk-eyebrow">🧴 Cuidado de la piel</div>
-        <h2 class="sk-title">Mi Piel &amp; Guía</h2>
-        <p class="sk-desc">Tu plan de skincare hecho a tu medida: qué producto usar en cada paso, cómo aplicarlo y para qué sirve — con productos reales que puedes comprar en México. Cuando tu piel cambie, actualiza tu perfil y la guía se ajusta sola.</p>
-      </div>
-      <button class="sk-btn-edit" id="sk-btn-edit" onclick="skToggleForm()">✏️ Editar mi perfil</button>
+  <div class="pl-top">
+    <div>
+      <div class="pl-eyebrow"><span class="dot"></span><span id="pl-fecha">Cuidado de la piel</span></div>
+      <h2 class="pl-h1">Tu día de piel, de un vistazo</h2>
     </div>
-    <div class="sk-chips-resumen" id="sk-resumen-chips"></div>
+    <div class="pl-top-r">
+      <div id="pl-kpis" style="display:contents"></div>
+      <button class="pl-btn" id="pl-btn-perfil" onclick="skToggleForm()">⚙️ Mi perfil</button>
+    </div>
   </div>
 
-  <div class="card" id="sk-form-card" style="margin-bottom:18px;display:none">
+  <div class="card" id="sk-form-card" style="margin-bottom:14px;display:none">
     <div class="card-title">📋 Tu perfil de piel</div>
-    <div class="ts" style="display:block;margin-bottom:14px">Esto alimenta toda la guía de abajo.</div>
+    <div class="ts" style="display:block;margin-bottom:14px">Los productos no cambian — son los que ya usas y viven en tus datos maestros. Esto ajusta los <b>consejos</b>, los avisos y lo que puedes esperar y cuándo.</div>
     <div class="g2">
       <div class="fg"><label>Tipo de piel</label>
         <select id="sk-pf-tipo">
@@ -692,25 +822,34 @@ tbody tr:hover td{background:rgba(var(--ov),.02)}
     </div>
     <div class="fg"><label>Preocupaciones principales</label>
       <div class="flex gap8" style="flex-wrap:wrap">
-        <label class="flex aic gap6" style="text-transform:none;font-size:13px;color:var(--sk-text)"><input type="checkbox" id="sk-pf-acne" value="acne"> Acné, brotes, poros o puntos negros</label>
-        <label class="flex aic gap6" style="text-transform:none;font-size:13px;color:var(--sk-text)"><input type="checkbox" id="sk-pf-manchas" value="manchas"> Manchas oscuras / post-acné</label>
-        <label class="flex aic gap6" style="text-transform:none;font-size:13px;color:var(--sk-text)"><input type="checkbox" id="sk-pf-arrugas" value="arrugas"> Líneas finas / prevención</label>
-        <label class="flex aic gap6" style="text-transform:none;font-size:13px;color:var(--sk-text)"><input type="checkbox" id="sk-pf-sensibilidad" value="sensibilidad"> Resequedad / rojeces / sensibilidad</label>
+        <label class="flex aic gap6" style="text-transform:none;font-size:13px;color:var(--pl-tx)"><input type="checkbox" id="sk-pf-acne" value="acne"> Acné, brotes, poros o puntos negros</label>
+        <label class="flex aic gap6" style="text-transform:none;font-size:13px;color:var(--pl-tx)"><input type="checkbox" id="sk-pf-manchas" value="manchas"> Manchas oscuras / post-acné</label>
+        <label class="flex aic gap6" style="text-transform:none;font-size:13px;color:var(--pl-tx)"><input type="checkbox" id="sk-pf-arrugas" value="arrugas"> Líneas finas / prevención</label>
+        <label class="flex aic gap6" style="text-transform:none;font-size:13px;color:var(--pl-tx)"><input type="checkbox" id="sk-pf-sensibilidad" value="sensibilidad"> Resequedad / rojeces / sensibilidad</label>
       </div>
     </div>
-    <div class="fg"><label>Presupuesto preferido</label>
-      <select id="sk-pf-presupuesto">
-        <option value="economico">Económico (farmacia/súper)</option>
-        <option value="medio">Rango medio (CeraVe, La Roche-Posay, Isdin)</option>
-        <option value="alto">Sin restricción, prioriza calidad</option>
-      </select>
+    <div class="g2">
+      <div class="fg"><label>Presupuesto preferido</label>
+        <select id="sk-pf-presupuesto">
+          <option value="economico">Económico (farmacia/súper)</option>
+          <option value="medio">Rango medio (CeraVe, La Roche-Posay, Isdin)</option>
+          <option value="alto">Sin restricción, prioriza calidad</option>
+        </select>
+      </div>
+      <div class="fg"><label>Empezaste el retinoide el…</label>
+        <input type="date" id="sk-pf-retinoide">
+        <div class="ts" style="display:block;margin-top:5px;font-size:10.5px">De aquí sale en qué semana vas y si ya te toca subir la frecuencia. Si no lo recuerdas, déjalo vacío.</div>
+      </div>
     </div>
     <div class="fg"><label>Notas (reacciones, productos que ya probaste, lo que sea útil recordar)</label><textarea id="sk-pf-notas" rows="2" placeholder="Ej. me irrita el ácido glicólico, uso protector solar de tal marca y me gusta..."></textarea></div>
-    <button class="btn btn-g" onclick="skSavePerfil()">Guardar perfil y actualizar guía</button>
+    <button class="btn btn-g" onclick="skSavePerfil()">Guardar perfil</button>
   </div>
-  <div id="sk-guia-body"></div>
-  </div><!-- /.guia-main -->
-  </div><!-- /.guia-shell -->
+
+  <div class="pl-track" id="pl-track"></div>
+  <div class="pl-rutinas" id="pl-rutinas"></div>
+  <div class="pl-foot" id="pl-foot"></div>
+  <div class="pl-foot2" id="pl-foot2"></div>
+  <div class="pl-disc" id="pl-disc"></div>
 </main>
 
 <!-- ══════════════ CABELLO ══════════════ -->
@@ -1183,58 +1322,138 @@ function mainTab(tab){
   if(tab==='vestimenta'){const f=document.getElementById('frame-vestimenta');if(!f.getAttribute('src'))f.src='../Vestimenta/vestimenta.html';}
 }
 
-// ══════════════════════════════════════════════════════════════════════════
-// SKINCARE
-// ══════════════════════════════════════════════════════════════════════════
+// ═════════════════════════════════════════════════════════════════════════
+// SKINCARE — "Tu día de piel, de un vistazo"
+// ═════════════════════════════════════════════════════════════════════════
+// Los productos NO se eligen aquí: vienen de `CIFRAS.RUTINA_PIEL`, la misma fuente que
+// alimenta la rutina diaria del Dashboard. Hasta el 2026-09-01 había una base propia
+// (`SKIN_DB`) que filtraba por tipo de piel y presupuesto, y lo que salía de ahí NO era lo
+// que Adán hace: recomendaba Isdin donde su rutina usa La Roche-Posay, metía un hidratante
+// de día que él no se pone, y repartía el retinoide en 3 noches alternado con un BHA que no
+// usa en ninguna parte — su rutina real lleva adapaleno las 7 noches.
+//
+// El perfil sigue existiendo, pero ahora ajusta los CONSEJOS, los avisos y lo que puede
+// esperar y cuándo. La marca del bote ya no depende de él.
+//
+// Lo que se guarda de él en `skincare_v1`:
+//   perfil          — tipo de piel, preocupaciones, rasurado, presupuesto, notas
+//   retinoideDesde  — cuándo empezó el adapaleno; de ahí salen la semana y el peldaño
+//   hechos          — {'2026-09-01': {am:['limpiador',…], pm:[…]}} los pasos ya marcados
+//   abierto         — {idProducto: 'YYYY-MM-DD'} cuándo abrió cada bote
+// De `hechos` sale la racha de protector solar; de `abierto`, los días que le quedan de cada
+// producto. Nada de eso se inventa: sin datos, la vista lo dice y ofrece ponerlos.
 const SK_KEY='skincare_v1';
-function skDefault(){return{perfil:{tipo:'grasa',preocupaciones:['acne','manchas','arrugas'],rasurado:'barba',presupuesto:'medio',notas:''}};}
-function skLoad(){try{const r=localStorage.getItem(SK_KEY);if(!r)return skDefault();const p=JSON.parse(r);const d=skDefault();return{...d,...p,perfil:{...d.perfil,...(p.perfil||{})}};}catch(e){return skDefault();}}
+function skDefault(){return{
+  perfil:{tipo:'grasa',preocupaciones:['acne','manchas','arrugas'],rasurado:'barba',presupuesto:'medio',notas:''},
+  retinoideDesde:null, hechos:{}, abierto:{},
+};}
+function skLoad(){try{const r=localStorage.getItem(SK_KEY);if(!r)return skDefault();const p=JSON.parse(r);const d=skDefault();
+  return{...d,...p,perfil:{...d.perfil,...(p.perfil||{})},hechos:p.hechos||{},abierto:p.abierto||{}};}catch(e){return skDefault();}}
 let SK=skLoad();
 function skSave(){localStorage.setItem(SK_KEY,JSON.stringify(SK));}
 
-// ─── BASE DE PRODUCTOS REALES (disponibles en México: farmacias, Walmart, Amazon.mx, Sephora) ───
-const SKIN_DB={
-  limpiador:[
-    {n:'CeraVe Limpiador Espumoso (Foaming Facial Cleanser, verde)',tipos:['grasa','mixta','normal','seca','sensible'],presu:['economico','medio','alto'],ayuda:['acne','manchas','arrugas','sensibilidad'],uso:'Masajea sobre piel húmeda 30-60 seg, enjuaga con agua tibia (no caliente). 2 veces al día, mañana y noche — con ceramidas, no deja la piel jalada aunque hagas espuma.'},
-  ],
-  exfoliante:[
-    {n:'The Ordinary Ácido Salicílico 2% Solución',tipos:['grasa','mixta'],presu:['economico','medio','alto'],ayuda:['acne'],uso:'Aplica una capa fina sobre piel limpia y seca, 2-3 noches por semana (NO diario, NO la misma noche que el retinoide). Deja actuar, no enjuagues.'},
-    {n:'Neutrogena Rapid Clear (ácido salicílico)',tipos:['grasa','mixta'],presu:['economico','medio'],ayuda:['acne'],uso:'Alternativa de farmacia con el mismo ingrediente activo, mismo uso 2-3x/semana.'},
-    {n:'The Ordinary Ácido Láctico 5%',tipos:['seca','sensible','normal'],presu:['economico','medio'],ayuda:['manchas'],uso:'Exfoliante más suave (AHA), 2 noches por semana, mejor tolerado en piel seca/sensible.'},
-  ],
-  serumAM:[
-    {n:'The Ordinary Niacinamida 10% + Zinc 1%',tipos:['grasa','mixta','normal'],presu:['economico','medio','alto'],ayuda:['acne','manchas'],uso:'2-3 gotas por la mañana después de limpiar, antes del hidratante. Controla grasa, afina poros y ayuda a desvanecer marcas — compatible con todo lo demás.'},
-    {n:'La Roche-Posay Pure Vitamin C10',tipos:['grasa','mixta','normal','seca'],presu:['medio','alto'],ayuda:['manchas','arrugas'],uso:'Por la mañana antes del protector solar — potencia la protección contra el sol y ayuda a iluminar manchas.'},
-  ],
-  hidratanteAM:[
-    {n:'Eucerin Hyaluron-Filler + Epigenetic Día SPF15',tipos:['grasa','mixta','normal','seca','sensible'],presu:['medio','alto'],ayuda:['arrugas','manchas'],uso:'Por la mañana después del sérum — hidrata y rellena líneas de expresión con ácido hialurónico. Trae SPF15, ligero: igual necesitas el protector solar SPF50 aparte (ver abajo) como protección real del día.'},
-  ],
-  spf:[
-    {n:'Isdin Fusion Water Oil-Free SPF50',tipos:['grasa','mixta'],presu:['medio','alto'],ayuda:['manchas','arrugas'],uso:'2 dedos completos para cara+cuello, todos los días sin excepción (nublado incluido). Es el paso más importante de toda la rutina.'},
-    {n:'La Roche-Posay Anthelios Oil Free SPF50',tipos:['grasa','mixta'],presu:['medio','alto'],ayuda:['manchas','arrugas'],uso:'Equivalente al de Isdin, mismo uso — cualquiera de las dos es excelente.'},
-    {n:'Neutrogena Ultra Sheer SPF50',tipos:['grasa','mixta','normal'],presu:['economico','medio'],ayuda:['manchas','arrugas'],uso:'Opción de farmacia más económica, misma cantidad y frecuencia de uso.'},
-  ],
-  tratamientoPM:[
-    {n:'Differin Adapaleno 0.1% Gel',tipos:['grasa','mixta','normal'],presu:['economico','medio','alto'],ayuda:['acne','arrugas','manchas'],uso:'Del tamaño de un chícharo para toda la cara, sobre piel seca (espera 20-30 min después de lavarte). Empieza 2 noches/semana y sube gradual a diario según tolerancia. Es el activo de venta libre con más evidencia: trata acné, previene arrugas y ayuda con manchas — los 3 a la vez.'},
-    {n:'The Ordinary Retinol 0.2% en Escualano',tipos:['grasa','mixta','normal','seca'],presu:['economico','medio'],ayuda:['arrugas','manchas'],uso:'Punto de entrada más suave si el Adapaleno irrita mucho al inicio. Mismo esquema: 2 noches/semana subiendo gradual.'},
-  ],
-  hidratantePM:[
-    {n:'Eucerin Hyaluron-Filler + Epigenetic Noche',tipos:['grasa','mixta','normal','seca','sensible'],presu:['medio','alto'],ayuda:['arrugas','manchas'],uso:'Último paso de la noche — ayuda a amortiguar la irritación del retinoide/BHA mientras rellena líneas de expresión con ácido hialurónico mientras duermes.'},
-  ],
-  semanal:[
-    {n:'Aztec Secret Indian Healing Clay',tipos:['grasa','mixta'],presu:['economico','medio'],ayuda:['acne'],uso:'Mezcla con agua o vinagre de manzana hasta pasta, aplica 10-15 min, enjuaga. Solo 1 vez por semana — controla grasa y afina poros, pero reseca si abusas.'},
-    {n:'The Ordinary Salicylic Acid 2% Masque',tipos:['grasa','mixta'],presu:['economico','medio','alto'],ayuda:['acne'],uso:'Mascarilla lista para usar con BHA + arcilla, 10 min, 1 vez por semana.'},
-  ],
+// Las etiquetas de las 4 preocupaciones. Viven aquí y no en RUTINA_PIEL porque son de la
+// interfaz: el maestro guarda las claves (`acne`, `manchas`…), no cómo se escriben.
+const SK_CONCERN_META={
+  acne:{label:'Acné / poros'},
+  manchas:{label:'Manchas'},
+  arrugas:{label:'Arrugas'},
+  sensibilidad:{label:'Sensibilidad'},
 };
-function skPick(cat,perfil,n){
-  n=n||1;
-  let pool=SKIN_DB[cat].filter(p=>p.tipos.includes(perfil.tipo));
-  const porPresu=pool.filter(p=>p.presu.includes(perfil.presupuesto));
-  if(porPresu.length)pool=porPresu;
-  if(!pool.length)pool=SKIN_DB[cat];
-  pool=[...pool].sort((a,b)=>(b.ayuda.filter(x=>perfil.preocupaciones.includes(x)).length)-(a.ayuda.filter(x=>perfil.preocupaciones.includes(x)).length));
-  return pool.slice(0,n);
+
+// ─── Fechas, estado y lo que se deriva de ellos ─────────────────────────────────────
+const PL_DIAS=['Dom','Lun','Mar','Mi\u00e9','Jue','Vie','S\u00e1b'];
+const PL_MESES=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+function plIso(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+function plFecha(iso){const a=iso.split('-').map(Number);return new Date(a[0],a[1]-1,a[2]);}
+function plHoy(){return plIso(new Date());}
+function plDif(isoA,isoB){return Math.round((plFecha(isoA)-plFecha(isoB))/86400000);}
+function plMin(hhmm){const a=hhmm.split(':').map(Number);return a[0]*60+a[1];}
+function plHHMM(m){m=((m%1440)+1440)%1440;return String(Math.floor(m/60)).padStart(2,'0')+':'+String(m%60).padStart(2,'0');}
+function plAhoraMin(){const d=new Date();return d.getHours()*60+d.getMinutes();}
+
+// `RUTINA_PIEL`, o null si datos-maestros.js no cargó (por ejemplo al abrir el .html suelto,
+// fuera de la carpeta del proyecto). Toda la vista comprueba antes de pintar.
+function plRP(){return (window.CIFRAS&&window.CIFRAS.RUTINA_PIEL)||null;}
+
+function plHechos(iso){const h=SK.hechos[iso]||{};return{am:h.am||[],pm:h.pm||[]};}
+function plMarcado(iso,mom,id){return plHechos(iso)[mom].indexOf(id)!==-1;}
+function plToggle(mom,id){
+  const iso=plHoy(), h=plHechos(iso), i=h[mom].indexOf(id);
+  if(i===-1) h[mom].push(id); else h[mom].splice(i,1);
+  SK.hechos[iso]={am:h.am,pm:h.pm};
+  skSave(); plPintar();
 }
+
+// La hora de cada rutina NO se escribe aquí: sale de las tareas de RUTINA_TASKS que tocan
+// hoy, que es donde vive el horario real y cambia entre semana, sábado y domingo.
+function plHorarios(){
+  const def={am:'07:00',pm:'22:30'};
+  try{
+    const dia=new Date().getDay();
+    const hoy=window.CIFRAS.rutina('').filter(t=>(t.dias||[]).indexOf(dia)!==-1);
+    const am=hoy.find(t=>/Rutina de la ma/.test(t.txt));
+    const pm=hoy.find(t=>/Rutina de la noche/.test(t.txt));
+    return {am:(am&&am.hora)||def.am, pm:(pm&&pm.hora)||def.pm};
+  }catch(e){return def;}
+}
+
+// Los pasos con su hora de reloj, encadenando duración y esperas desde el arranque.
+function plAgenda(mom){
+  const RP=plRP(); if(!RP) return [];
+  let t=plMin(plHorarios()[mom]);
+  return RP.pasos(mom).map(function(p){
+    const r=Object.assign({},p,{mom:mom,hora:plHHMM(t),abs:t});
+    t+=p.min+p.esperaDespues;
+    return r;
+  });
+}
+
+// Racha de protector solar: días seguidos con el paso `spf` marcado. Si hoy aún no está
+// hecho no cuenta como roto — puede ser que todavía no sea la hora.
+function plRacha(){
+  const d=new Date();
+  if(!plMarcado(plIso(d),'am','spf')) d.setDate(d.getDate()-1);
+  let n=0;
+  while(plMarcado(plIso(d),'am','spf')){n++;d.setDate(d.getDate()-1);}
+  return n;
+}
+
+function plSemRetinoide(){
+  if(!SK.retinoideDesde) return null;
+  const dias=plDif(plHoy(),SK.retinoideDesde);
+  return dias<0?null:Math.floor(dias/7)+1;
+}
+// La escalera del adapaleno. Subir un peldaño antes de tiempo es lo que quema la piel y hace
+// abandonar en la semana 2; es el dato que la guía vieja explicaba pero no llevaba.
+const PL_ESCALERA=[
+  {w:'SEM 1-2',n:'2 noches por semana',hasta:2},
+  {w:'SEM 3-4',n:'3 noches por semana',hasta:4},
+  {w:'SEM 5-8',n:'Noches alternas',hasta:8},
+  {w:'SEM 9+', n:'Todas las noches',hasta:9999},
+];
+function plFase(){const s=plSemRetinoide();return s===null?-1:PL_ESCALERA.findIndex(f=>s<=f.hasta);}
+
+// Días que quedan de un bote: lo que dura con la dosis correcta, menos lo que lleva abierto.
+function plDias(p){
+  const RP=plRP(), ab=SK.abierto[p.id];
+  if(!RP||!ab) return null;
+  return RP.duracionDias(p)-plDif(plHoy(),ab);
+}
+// Un clic marca que lo abrió hoy; otro lo quita. Sin diálogos: es un dato de dos segundos.
+function plAbrir(id){
+  if(SK.abierto[id]) delete SK.abierto[id]; else SK.abierto[id]=plHoy();
+  skSave(); plPintar();
+}
+
+function plFalta(min){
+  if(min<60) return min+' MIN';
+  const h=Math.floor(min/60), m=min%60;
+  return h+' H'+(m?' '+m:'');
+}
+function plEsc(t){return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;');}
+
+// ─── Perfil ────────────────────────────────────────────────────────────────
 function skLeerPerfilForm(){
   return{
     tipo:document.getElementById('sk-pf-tipo').value,
@@ -1249,168 +1468,267 @@ function skPintarPerfilForm(){
   document.getElementById('sk-pf-tipo').value=p.tipo;
   document.getElementById('sk-pf-rasurado').value=p.rasurado;
   document.getElementById('sk-pf-presupuesto').value=p.presupuesto;
-  ['acne','manchas','arrugas','sensibilidad'].forEach(k=>{document.getElementById('sk-pf-'+k).checked=p.preocupaciones.includes(k);});
+  ['acne','manchas','arrugas','sensibilidad'].forEach(k=>{document.getElementById('sk-pf-'+k).checked=p.preocupaciones.indexOf(k)!==-1;});
   document.getElementById('sk-pf-notas').value=p.notas||'';
+  document.getElementById('sk-pf-retinoide').value=SK.retinoideDesde||'';
 }
 function skSavePerfil(){
   SK.perfil=skLeerPerfilForm();
-  skSave();
-  skResumenChips();
-  skRenderGuiaContent();
-  toast('Perfil guardado — guía actualizada');
+  SK.retinoideDesde=document.getElementById('sk-pf-retinoide').value||null;
+  skSave(); plPintar();
+  skToggleForm();
+  toast('Perfil guardado');
 }
 function skToggleForm(){
-  const card=document.getElementById('sk-form-card');
-  const btn=document.getElementById('sk-btn-edit');
-  const open=card.style.display!=='none';
-  card.style.display=open?'none':'block';
-  btn.textContent=open?'✏️ Editar mi perfil':'✕ Cerrar';
-  if(open) guiaMostrarPrimera('sk-guia-body','sk-nav'); else guiaSoloPerfil('sk-guia-body','sk-nav');
+  const card=document.getElementById('sk-form-card'), btn=document.getElementById('pl-btn-perfil');
+  const abierto=card.style.display!=='none';
+  card.style.display=abierto?'none':'block';
+  btn.classList.toggle('on',!abierto);
+  if(!abierto){skPintarPerfilForm();card.scrollIntoView({behavior:'smooth',block:'nearest'});}
 }
 
-const SK_CONCERN_META={
-  acne:{label:'Acné / poros',emoji:'✨',cls:'p-peach'},
-  manchas:{label:'Manchas',emoji:'🌸',cls:'p-pink'},
-  arrugas:{label:'Arrugas',emoji:'⏳',cls:'p-teal'},
-  sensibilidad:{label:'Sensibilidad',emoji:'🌿',cls:'p-mint'},
-};
-const SK_TIPO_LABEL={grasa:'Piel grasa',seca:'Piel seca',mixta:'Piel mixta',normal:'Piel normal'};
-const SK_RASURADO_LABEL={rastrillo:'Rasurado con rastrillo',electrica:'Rasuradora eléctrica',barba:'Con barba',no_aplica:'No se rasura'};
-const SK_PRESU_LABEL={economico:'Presupuesto económico',medio:'Presupuesto medio',alto:'Sin límite de presupuesto'};
-
-function skResumenChips(){
-  const p=SK.perfil;
-  const chips=[`<span class="sk-pill p-teal">💧 ${SK_TIPO_LABEL[p.tipo]||p.tipo}</span>`];
-  (p.preocupaciones||[]).forEach(k=>{const m=SK_CONCERN_META[k];if(m)chips.push(`<span class="sk-pill ${m.cls}">${m.emoji} ${m.label}</span>`);});
-  if(p.rasurado&&p.rasurado!=='no_aplica')chips.push(`<span class="sk-pill p-blue">🪒 ${SK_RASURADO_LABEL[p.rasurado]}</span>`);
-  chips.push(`<span class="sk-pill p-mint">💰 ${SK_PRESU_LABEL[p.presupuesto]||p.presupuesto}</span>`);
-  document.getElementById('sk-resumen-chips').innerHTML=chips.join('');
-}
-
-function skStepHtml(num,color,prod,nota){
-  if(!prod)return'';
-  const tags=(prod.ayuda||[]).map(k=>{const m=SK_CONCERN_META[k];return m?`<span class="sk-pill small ${m.cls}">${m.emoji} ${m.label}</span>`:'';}).join('');
-  return `<div class="sk-step">
-    <div class="sk-step-num" style="background:${color}">${num}</div>
-    <div class="sk-step-body">
-      <div class="sk-step-name">${prod.n}</div>
-      <div class="sk-step-block"><div class="sk-step-label">Cómo aplicarlo</div><div class="sk-step-text">${prod.uso}</div></div>
-      ${nota?`<div class="sk-step-block"><div class="sk-step-label">Nota</div><div class="sk-step-text" style="color:var(--sk-teal-d);font-weight:700">${nota}</div></div>`:''}
-      ${tags?`<div class="sk-step-tags">${tags}</div>`:''}
-    </div>
-  </div>`;
-}
-function skDayPill(lbl,tipo){
-  const map={
-    retinoide:{bg:'var(--sk-teal-l)',br:'#bfe8e2',txt:'var(--sk-teal-d)',ico:'🌙',n:'Retinoide'},
-    bha:{bg:'var(--sk-peach-l)',br:'#ffe0b8',txt:'var(--sk-peach-d)',ico:'✨',n:'BHA'},
-    descanso:{bg:'var(--sk-mint-l)',br:'#c8ecd8',txt:'var(--sk-mint-d)',ico:'🌿',n:'Descanso'},
-  };
-  const m=map[tipo];
-  return `<div class="sk-day" style="background:${m.bg};border-color:${m.br}"><div class="sk-day-lbl" style="color:${m.txt}">${lbl}</div><div class="sk-day-act" style="color:${m.txt}">${m.ico} ${m.n}</div></div>`;
-}
-function skTimeline(tieneAcne,tieneManchas,tieneArrugas){
-  const items=[
-    {when:'Semana 1-2',txt:(tieneAcne||tieneArrugas)?'Adaptación: es normal algo de tirantez o incluso un grano nuevo si recién empiezas el retinoide/BHA (la llamada "purga"). No lo abandones por esto.':'Tu piel se acostumbra a la rutina nueva — no debería pasar nada dramático si introduces los productos de a uno.'},
-    {when:'Semana 3-4',txt:'La grasa del día debería sentirse un poco más controlada, y la rutina AM/PM ya debería sentirse automática.'},
+// ─── Cabecera ────────────────────────────────────────────────────────────
+function plPintarCabecera(){
+  const RP=plRP(), d=new Date();
+  document.getElementById('pl-fecha').textContent=PL_DIAS[d.getDay()]+' '+d.getDate()+' de '+PL_MESES[d.getMonth()];
+  const racha=plRacha(), sem=plSemRetinoide();
+  const k=[
+    '<div class="pl-kpi a" title="D\u00edas seguidos marcando el protector solar. Es el paso que no se recupera: sin \u00e9l, el trabajo del retinoide contra las manchas se desperdicia."><div class="pl-kpi-v">'+racha+'</div><div class="pl-kpi-k">Racha SPF</div></div>',
+    '<div class="pl-kpi b link" onclick="skToggleForm()" title="'+(sem===null?'Pon en tu perfil desde cu\u00e1ndo lo usas y se lleva la cuenta sola':'Semanas desde que empezaste el adapaleno')+'"><div class="pl-kpi-v">'+(sem===null?'\u2014':'Sem '+sem)+'</div><div class="pl-kpi-k">Retinoide</div></div>',
   ];
-  if(tieneAcne)items.push({when:'Semana 6-8',txt:'Primeros resultados reales contra el acné activo: menos brotes nuevos, poros más despejados.'});
-  if(tieneManchas)items.push({when:'Semana 8-12',txt:'Las manchas oscuras empiezan a desvanecer — siempre que el protector solar no haya fallado ni un día.'});
-  if(tieneArrugas)items.push({when:'Semana 12+',txt:'Con el retinoide constante, la textura y las líneas finas se notan más lisas. Aquí es donde mucha gente se rinde sin necesidad — sigue.'});
-  return items.map(it=>`<div class="sk-tl-item"><div class="sk-tl-when">${it.when}</div><div class="sk-tl-txt">${it.txt}</div></div>`).join('');
+  if(RP) k.push('<div class="pl-kpi c" title="Lo que cuesta la rutina al mes con la dosis correcta de cada producto. Sale de RUTINA_PIEL, no est\u00e1 escrito a mano."><div class="pl-kpi-v">$'+RP.costoMesTotal+'</div><div class="pl-kpi-k">Al mes</div></div>');
+  document.getElementById('pl-kpis').innerHTML=k.join('');
 }
-function skListaHtml(usados){
-  const vistos=new Set();
-  const items=usados.filter(u=>{if(!u||vistos.has(u.p.n))return false;vistos.add(u.p.n);return true;});
-  return items.map(u=>`<div class="sk-shop"><div class="sk-shop-ico" style="background:var(--sk-pink-l)">🧴</div><div><div class="sk-shop-name">${u.p.n}</div><div class="sk-shop-cat">${u.catLabel}</div></div></div>`).join('')
-    ||'<div class="ts">Sin productos que mostrar todavía.</div>';
+
+// ─── La pista del día ──────────────────────────────────────────────────────
+// Los nodos se reparten a intervalos IGUALES, no por hora de reloj: los 3 pasos de la mañana
+// caen en 3 minutos y por reloj se amontonarían en un pixel. La barra de AHORA sí va por
+// reloj, interpolada dentro del tramo que le toca, para que siempre quede entre los dos
+// nodos correctos.
+function plPintarTrack(){
+  const el=document.getElementById('pl-track'), RP=plRP();
+  if(!RP){el.style.display='none';return;}
+  el.style.display='';
+  const nodos=plAgenda('am').concat(plAgenda('pm')), iso=plHoy(), ahora=plAhoraMin();
+  const pos=i=>6+i*(88/(nodos.length-1));
+  let sig=-1;
+  nodos.forEach(function(p,i){ if(sig===-1&&!plMarcado(iso,p.mom,p.id)) sig=i; });
+
+  let marca=98;
+  if(ahora<=nodos[0].abs) marca=2;
+  else for(let i=0;i<nodos.length-1;i++){
+    if(ahora>=nodos[i].abs&&ahora<nodos[i+1].abs){
+      marca=pos(i)+((ahora-nodos[i].abs)/(nodos[i+1].abs-nodos[i].abs))*(pos(i+1)-pos(i));
+      break;
+    }
+  }
+
+  const puntos=nodos.map(function(p,i){
+    const ok=plMarcado(iso,p.mom,p.id);
+    const cls='pl-node '+p.mom+(ok?' hecho':'')+(i===sig?' sig':'');
+    return '<div class="'+cls+'" style="left:'+pos(i)+'%"><div class="hh">'+p.hora+'</div><div class="dot"></div>'+
+           '<div class="nn">'+plEsc(p.cat)+'</div></div>';
+  }).join('');
+
+  const pend=nodos.filter(function(p){return !plMarcado(iso,p.mom,p.id);});
+  const resumen=pend.length
+    ? 'Siguiente: <b>'+plEsc(pend[0].cat.toLowerCase())+' de la '+(pend[0].mom==='am'?'ma\u00f1ana':'noche')+', '+
+      (pend[0].abs>ahora?'en '+plFalta(pend[0].abs-ahora).toLowerCase():'ya deber\u00eda estar hecho')+'</b>'
+    : '<b>El d\u00eda est\u00e1 completo.</b> Los 6 pasos marcados.';
+
+  el.innerHTML='<div class="pl-track-h"><div class="pl-track-t">La l\u00ednea del d\u00eda</div><div class="pl-track-x">'+resumen+'</div></div>'+
+    '<div class="pl-line"><div class="base"></div>'+puntos+
+    '<div class="pl-ahora" style="left:'+marca+'%"><span>AHORA '+plHHMM(ahora)+'</span></div></div>';
 }
-function skWarnHtml(tieneManchas){
-  const items=[
-    'Retinoide + ácido salicílico (BHA) la misma noche — irritan juntos, van en noches distintas (ver rotación semanal).',
-    'Dos exfoliantes distintos el mismo día (uno físico + uno químico) — sobre-exfoliación, piel en carne viva.',
-    'Retinoide/BHA + rasurado el mismo día si notas ardor — sepáralos hasta que tu piel se adapte.',
+
+// ─── Las dos rutinas, completas y una al lado de la otra ───────────────────────────
+function plRutinaHtml(mom){
+  const agenda=plAgenda(mom), iso=plHoy(), ahora=plAhoraMin();
+  if(!agenda.length) return '';
+  const hechos=agenda.filter(p=>plMarcado(iso,mom,p.id)).length, total=agenda.length;
+  const inicio=agenda[0].abs, activo=(ahora>=inicio-45&&hechos<total);
+  const min=agenda.reduce((a,p)=>a+p.min,0), espera=agenda.reduce((a,p)=>a+p.esperaDespues,0);
+
+  let badge;
+  if(hechos===total) badge='<div class="pl-ru-b ok">\u2713 COMPLETA</div>';
+  else if(hechos) badge='<div class="pl-ru-b wait">'+hechos+' DE '+total+'</div>';
+  else if(ahora<inicio) badge='<div class="pl-ru-b wait">'+(inicio-ahora>=180?'A LAS '+agenda[0].hora:'EN '+plFalta(inicio-ahora))+'</div>';
+  else badge='<div class="pl-ru-b miss">PENDIENTE</div>';
+
+  const pasos=agenda.map(function(p,i){
+    const ok=plMarcado(iso,mom,p.id);
+    const tags=[];
+    if(p.clave) tags.push('<span class="pl-tg k">'+(p.id==='spf'?'El paso que nunca se salta':'Tu activo principal')+'</span>');
+    (p.ayuda||[]).forEach(function(k){const m=SK_CONCERN_META[k];if(m)tags.push('<span class="pl-tg">'+m.label+'</span>');});
+    const fila='<div class="pl-p'+(ok?' on':'')+'" onclick="plToggle(\''+mom+'\',\''+p.id+'\')" title="Marca este paso como hecho">'+
+      '<div class="pl-p-n">'+(i+1)+'</div><div class="pl-p-b">'+
+      '<div class="pl-p-name">'+plEsc(p.n)+'<em>'+plEsc(p.cat)+'</em></div>'+
+      '<div class="pl-p-t">'+p.uso+'</div>'+
+      (tags.length?'<div class="pl-p-tags">'+tags.join('')+'</div>':'')+
+      '</div><div class="pl-p-c">\u2713</div></div>';
+    return fila+(p.esperaDespues
+      ? '<div class="pl-espera"><span>'+plEsc(p.esperaTxt)+'</span><i></i><span>'+p.esperaDespues+' MIN</span></div>'
+      : '');
+  }).join('');
+
+  return '<div class="pl-ru '+mom+(activo?' ahora':'')+'">'+
+    '<div class="pl-ru-h"><div class="pl-ru-i">'+(mom==='am'?'\u2600\ufe0f':'🌙')+'</div>'+
+    '<div><div class="pl-ru-n">Rutina de '+(mom==='am'?'d\u00eda':'noche')+'</div>'+
+    '<div class="pl-ru-s">'+plHorarios()[mom]+' \u00b7 '+total+' pasos \u00b7 '+min+' min'+(espera?' + '+espera+' de espera':'')+'</div></div>'+
+    badge+'</div>'+pasos+'</div>';
+}
+
+// ─── Botíquin, escalera y hacia dónde va ──────────────────────────────────────
+const PL_TONO={ok:'var(--pl-ok)',teal:'var(--pl-teal)',am:'var(--pl-am)',pm:'var(--pl-pm)',pink:'var(--pl-pink)',mint:'var(--pl-teal)'};
+
+function plBotiquinHtml(){
+  const RP=plRP();
+  if(!RP) return '<div class="pl-card"><div class="pl-nota" style="border:none;margin:0;padding:0">No se pudieron leer los datos maestros: abre esta app desde la carpeta del proyecto.</div></div>';
+  const filas=RP.productos.map(function(p){
+    const d=plDias(p), dur=RP.duracionDias(p);
+    const der=d===null
+      ? '<div class="pl-med-d set" onclick="plAbrir(\''+p.id+'\')" title="Marca hoy como el d\u00eda que lo abriste">marcar</div>'
+      : '<div class="pl-med-d'+(d<=14?' lo':'')+'" onclick="plAbrir(\''+p.id+'\')" title="Abriste uno el '+SK.abierto[p.id]+'. Clic para quitarlo.">'+
+        (d>0?d+' d\u00edas':'se acab\u00f3')+'</div>';
+    return '<div class="pl-med'+(p.opcional?' opc':'')+'">'+
+      '<div class="pl-med-b" style="background:'+(PL_TONO[p.tono]||'var(--pl-tx3)')+'"></div>'+
+      '<div><div class="pl-med-n">'+plEsc(p.n)+(p.opcional?' <span style="font-weight:600;color:var(--pl-tx3)">(opcional)</span>':'')+'</div>'+
+      '<div class="pl-med-s">'+p.contenido+' '+p.unidad+' \u00b7 dura ~'+dur+' d\u00edas</div></div>'+
+      '<div class="pl-med-r">'+der+'<div class="pl-med-p">$'+RP.costoMes(p)+'/mes</div></div></div>';
+  }).join('');
+  const spf=RP.productos.find(p=>p.id==='spf');
+  const pc=spf?Math.round(RP.costoMes(spf)/RP.costoMesTotal*100):0;
+  return '<div class="pl-card"><div class="pl-card-h"><div class="pl-card-t"><span class="b"></span>Tu botiqu\u00edn</div>'+
+    '<div class="pl-card-x">se te acaba en\u2026</div></div>'+filas+
+    '<div class="pl-med-tot"><div class="pl-med-tot-l">Costo mensual de tu rutina</div><div class="pl-med-tot-v">$'+RP.costoMesTotal+'</div></div>'+
+    '<div class="pl-nota">Los d\u00edas salen de la dosis correcta, no de la que se usa por costumbre: por eso el protector es <b>el '+pc+
+    '% del gasto</b> \u2014 dos dedos diarios vac\u00edan un bote de 50 ml en '+(spf?RP.duracionDias(spf):40)+' d\u00edas. '+
+    'Toca los d\u00edas para decir que abriste uno; los precios son de referencia y se editan en <b>datos-maestros.js</b>.</div></div>';
+}
+
+function plEscaleraHtml(){
+  const sem=plSemRetinoide(), fase=plFase();
+  const pel=PL_ESCALERA.map(function(f,i){
+    const cls=fase===-1?'':(i<fase?' pas':(i===fase?' act':''));
+    return '<div class="pl-pel'+cls+'"><div class="pl-pel-w">'+f.w+'</div><div class="pl-pel-n">'+f.n+'</div>'+
+      '<div class="pl-pel-c">'+(i<fase?'\u2713':(i===fase?'AQU\u00cd':''))+'</div></div>';
+  }).join('');
+  const nota=sem===null
+    ? 'No sabemos desde cu\u00e1ndo lo usas, as\u00ed que no se puede decir en qu\u00e9 pelda\u00f1o vas. <b>P\u00f3n la fecha en tu perfil</b> y esta tarjeta empieza a llevar la cuenta.'
+    : 'Subir de pelda\u00f1o antes de tiempo es lo que quema la piel y hace abandonar en la semana 2. <b>Si arde o se descama, baja uno y qu\u00e9date dos semanas ah\u00ed.</b>';
+  return '<div class="pl-card"><div class="pl-card-h"><div class="pl-card-t"><span class="b"></span>La escalera del retinoide</div>'+
+    '<div class="pl-card-x">'+(SK.retinoideDesde?'desde '+SK.retinoideDesde:'sin fecha')+'</div></div>'+
+    '<div class="pl-esc">'+pel+'</div><div class="pl-nota">'+nota+'</div></div>';
+}
+
+// Los hitos dependen de lo que él quiere arreglar: sin manchas, no tiene sentido prometerle
+// que se le van a ir en la semana 12.
+function plHitos(){
+  const c=SK.perfil.preocupaciones||[];
+  const h=[
+    {a:1,b:2,t:'La purga: tirantez y hasta alg\u00fan grano nuevo mientras la piel se adapta al retinoide. Aqu\u00ed abandona la mayor\u00eda, justo antes de que empiece a servir.'},
+    {a:3,b:5,t:'La grasa del d\u00eda se siente m\u00e1s controlada y la rutina ya sale sola, sin pensarla.'},
   ];
-  if(tieneManchas)items.push('Ningún tratamiento de manchas sirve sin protector solar constante — sin SPF diario, es esfuerzo desperdiciado.');
-  return items.map(t=>`<li>${t}</li>`).join('');
+  if(c.indexOf('acne')!==-1) h.push({a:6,b:8,t:'Primeros resultados reales contra el acn\u00e9 activo: menos brotes nuevos y poros m\u00e1s despejados.'});
+  if(c.indexOf('manchas')!==-1) h.push({a:9,b:14,t:'Las manchas oscuras empiezan a desvanecer \u2014 y solo si el protector solar no fall\u00f3 ni un d\u00eda.'});
+  if(c.indexOf('arrugas')!==-1) h.push({a:16,b:24,t:'Textura y l\u00edneas finas visiblemente m\u00e1s lisas. Es donde el retinoide paga de verdad, y donde mucha gente ya se rindi\u00f3.'});
+  return h;
+}
+function plDondeHtml(){
+  const sem=plSemRetinoide();
+  const items=plHitos().map(function(x){
+    const cls=sem===null?'':(sem>x.b?' ok':(sem>=x.a?' aqui':''));
+    const marca=(sem!==null&&sem>=x.a&&sem<=x.b)?' <span class="pl-aqui">EST\u00c1S AQU\u00cd</span>':'';
+    const est=(sem!==null&&sem>x.b)?' \u00b7 superada':'';
+    return '<div class="pl-tl-i'+cls+'"><div class="pl-tl-w">Semana '+x.a+'-'+x.b+est+marca+'</div>'+
+      '<div class="pl-tl-t">'+x.t+'</div></div>';
+  }).join('');
+  return '<div class="pl-card"><div class="pl-card-h"><div class="pl-card-t"><span class="b"></span>D\u00f3nde vas</div>'+
+    '<div class="pl-card-x">'+(sem===null?'sin fecha de inicio':'semana '+sem)+'</div></div>'+items+'</div>';
 }
 
-function skRenderGuiaContent(){
-  const perfil=SK.perfil;
-  const c=perfil.preocupaciones||[];
-  const tieneAcne=c.includes('acne'), tieneManchas=c.includes('manchas'), tieneArrugas=c.includes('arrugas');
-  const usados=[];
-  function pick1(cat,catLabel){const arr=skPick(cat,perfil,1);if(arr.length){usados.push({p:arr[0],catLabel});return arr[0];}return null;}
-
-  const am=[
-    skStepHtml(1,'var(--sk-peach)',pick1('limpiador','Limpiador'),null),
-    skStepHtml(2,'var(--sk-peach)',pick1('serumAM','Sérum'),null),
-    skStepHtml(3,'var(--sk-peach)',pick1('hidratanteAM','Hidratante'),null),
-    skStepHtml(4,'var(--sk-peach)',pick1('spf','Protector solar'),'Este paso nunca se salta, ni en días nublados.'),
-  ].join('');
-
-  const pmActivo=(tieneAcne&&!tieneArrugas&&!tieneManchas)?'exfoliante':'tratamientoPM';
-  const pmActivoLbl=pmActivo==='exfoliante'?'Exfoliante (BHA)':'Tratamiento (retinoide)';
-  const pm=[
-    skStepHtml(1,'var(--sk-teal)',pick1('limpiador','Limpiador'),null),
-    skStepHtml(2,'var(--sk-teal)',pick1(pmActivo,pmActivoLbl),'Alterna con el otro activo de tu rotación semanal — nunca los uses la misma noche.'),
-    skStepHtml(3,'var(--sk-teal)',pick1('hidratantePM','Hidratante'),null),
-  ].join('');
-
-  if(tieneAcne&&(tieneArrugas||tieneManchas)){pick1('tratamientoPM','Tratamiento (retinoide)');pick1('exfoliante','Exfoliante (BHA)');}
-
-  const dias=['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'];
-  let semanaHtml='';
-  if(tieneAcne&&(tieneArrugas||tieneManchas))semanaHtml=dias.map((d,i)=>skDayPill(d,[0,2,4].includes(i)?'retinoide':i===6?'descanso':'bha')).join('');
-  else if(tieneAcne)semanaHtml=dias.map((d,i)=>skDayPill(d,[1,3,5].includes(i)?'bha':'descanso')).join('');
-  else if(tieneArrugas||tieneManchas)semanaHtml=dias.map((d,i)=>skDayPill(d,[0,2,4].includes(i)?'retinoide':'descanso')).join('');
-
-  const semanalCat=perfil.tipo==='seca'?'hidratantePM':'semanal';
-  const semanalProd=pick1(semanalCat,'Mascarilla semanal');
-
-  const consejos=[
-    {ico:'🧪',t:'Introduce productos nuevos de uno en uno, esperando 1-2 semanas entre cada uno — así identificas qué te cae mal si algo pasa.'},
-    {ico:'🩹',t:'Haz una prueba en el antebrazo 24h antes de usar cualquier producto nuevo por primera vez en la cara.'},
-    {ico:'🚿',t:'No laves la cara más de 2 veces al día: lavar de más hace que la piel produzca más grasa por rebote.'},
-    tieneAcne?{ico:'⏳',t:'Es normal que el retinoide/BHA empeoren el acné las primeras 2-4 semanas ("purga") antes de mejorar — no lo confundas con una alergia y no lo abandones antes de las 6 semanas.'}:null,
-    {ico:'🙅',t:'No revientes ni exprimas granos — es la causa #1 de que un brote se convierta en mancha o cicatriz permanente.'},
-    {ico:'🛏️',t:'Cambia la funda de tu almohada 1-2 veces por semana.'},
-    perfil.rasurado==='barba'?{ico:'🧔',t:'Limpia bien la base/nacimiento de la barba — ahí se acumula grasa y células muertas que tapan los poros del cuello y las mejillas. Si usas aceite de barba, que sea ligero y no comedogénico.'}:null,
-    (perfil.rasurado==='rastrillo'||perfil.rasurado==='electrica')?{ico:'🪒',t:'Rasúrate siempre sobre piel limpia e hidratada (nunca en seco), con rastrillo afilado.'}:null,
-  ].filter(Boolean);
-
-  document.getElementById('sk-guia-body').innerHTML=`
-    <div class="sk-section-h"><span class="ico">🌅</span><h3>Rutina de mañana</h3><span class="line"></span></div>
-    ${am}
-
-    <div class="sk-section-h"><span class="ico">🌙</span><h3>Rutina de noche</h3><span class="line"></span></div>
-    ${pm}
-
-    ${semanaHtml?`<div class="sk-section-h"><span class="ico">🗓️</span><h3>Rotación semanal de activos</h3><span class="line"></span></div>
-    <div class="card" style="margin-bottom:8px"><div class="ts" style="display:block;margin-bottom:12px">No mezcles retinoide y BHA la misma noche — repártelos en la semana así:</div><div class="sk-week">${semanaHtml}</div></div>`:''}
-
-    <div class="sk-section-h"><span class="ico">⏳</span><h3>Qué esperar y cuándo</h3><span class="line"></span></div>
-    <div class="card"><div class="sk-timeline">${skTimeline(tieneAcne,tieneManchas,tieneArrugas)}</div></div>
-
-    ${semanalProd?`<div class="sk-section-h"><span class="ico">🧖</span><h3>Mascarilla semanal</h3><span class="line"></span></div>${skStepHtml('★','var(--sk-mint)',semanalProd,'Solo 1 vez por semana — no reemplaza los pasos diarios.')}`:''}
-
-    <div class="sk-section-h"><span class="ico">⚠️</span><h3>Qué no mezclar</h3><span class="line"></span></div>
-    <div class="sk-warn"><div class="sk-warn-title">⚠️ Evita combinar esto</div><ul>${skWarnHtml(tieneManchas)}</ul></div>
-
-    <div class="sk-section-h"><span class="ico">🛒</span><h3>Tu lista de compras</h3><span class="line"></span></div>
-    <div class="card">${skListaHtml(usados)}</div>
-
-    <div class="sk-section-h"><span class="ico">💡</span><h3>Consejos</h3><span class="line"></span></div>
-    <div class="card">${consejos.map(cn=>`<div class="sk-tip"><span class="ico">${cn.ico}</span><div class="sk-tip-txt">${cn.t}</div></div>`).join('')}</div>
-
-    <div class="sk-disclaimer">Esto es orientación general con productos reales de venta libre en México, no sustituye a un dermatólogo — si el acné es severo, quístico, o algo te irrita fuerte y no mejora, ve con uno.</div>`;
-  guiaEnSecciones('sk-guia-body','sk-nav','sk-section-h','sk-form-card');
+// ─── Semana, matriz de activos y las reglas ────────────────────────────────────
+function plSemanaHtml(){
+  const RP=plRP(); if(!RP) return '';
+  const nAM=RP.pasos('am').length, nPM=RP.pasos('pm').length, hoy=new Date();
+  // Lunes como primer día, que es como Adán lee su semana en el resto de las apps.
+  const lunes=new Date(hoy); lunes.setDate(hoy.getDate()-((hoy.getDay()+6)%7));
+  let completos=0;
+  const dias=[0,1,2,3,4,5,6].map(function(i){
+    const d=new Date(lunes); d.setDate(lunes.getDate()+i);
+    const iso=plIso(d), h=plHechos(iso), n=h.am.length+h.pm.length, tot=nAM+nPM;
+    const esHoy=iso===plHoy(), futuro=plFecha(iso)>plFecha(plHoy());
+    if(n===tot) completos++;
+    const cls='pl-d'+(esHoy?' hoy':'')+(n===tot?' full':(n?' parc':''));
+    const et=futuro&&!n?'\u2014':(n===tot?'COMPLETO':n+'/'+tot);
+    return '<div class="'+cls+'"><div class="pl-d-l">'+PL_DIAS[d.getDay()]+'</div>'+
+      '<div class="pl-d-i">'+(n===tot?'\u2713':(esHoy?'\u25cf':'\u00b7'))+'</div><div class="pl-d-a">'+et+'</div></div>';
+  }).join('');
+  return '<div class="pl-card"><div class="pl-card-h"><div class="pl-card-t"><span class="b"></span>Tu semana</div>'+
+    '<div class="pl-card-x">'+completos+' de 7 completos</div></div><div class="pl-week">'+dias+'</div>'+
+    '<div class="pl-nota">Tu rutina es la misma los 7 d\u00edas: el adapaleno va <b>todas las noches</b>, sin rotar con nada. '+
+    'La gu\u00eda vieja te mandaba alternarlo con un exfoliante que no usas.</div></div>';
 }
-function skRenderGuia(){
-  skPintarPerfilForm();
-  skResumenChips();
-  skRenderGuiaContent();
+
+function plMatrizHtml(){
+  const f=[
+    ['Niacinamida',   'si','si','si','si'],
+    ['Retinoide',     'si','si','no','oj:solo PM'],
+    ['BHA / exfoliante','si','no','si','si'],
+    ['Rasurado',      'si','oj:separa','oj:separa','si'],
+  ];
+  const filas=f.map(function(r){
+    const tds=r.slice(1).map(function(v){
+      const oj=v.indexOf('oj:')===0;
+      const cls=oj?'oj':v;
+      const txt=oj?v.slice(3):(v==='si'?'\u2713':'\u2717');
+      return '<td class="'+cls+'">'+txt+'</td>';
+    }).join('');
+    return '<tr><td class="l">'+r[0]+'</td>'+tds+'</tr>';
+  }).join('');
+  return '<div class="pl-card"><div class="pl-card-h"><div class="pl-card-t"><span class="b"></span>Qu\u00e9 puede ir con qu\u00e9</div></div>'+
+    '<table class="pl-mx"><tr><th class="l"></th><th>Niacin.</th><th>Retin.</th><th>BHA</th><th>SPF</th></tr>'+filas+'</table>'+
+    '<div class="pl-leg"><span><i style="background:var(--pl-ok)"></i>Sin problema</span>'+
+    '<span><i style="background:var(--pl-am)"></i>Con cuidado</span>'+
+    '<span><i style="background:var(--pl-warn)"></i>Nunca juntos</span></div>'+
+    '<div class="pl-nota">Tu rutina no lleva BHA, pero la fila est\u00e1 por si alguna vez lo a\u00f1ades: <b>nunca la misma noche que el adapaleno</b>.</div></div>';
 }
+
+function plReglasHtml(){
+  const p=SK.perfil, c=p.preocupaciones||[];
+  const r=[
+    {i:'\u2600\ufe0f',t:'<b>Dos dedos de protector solar</b>, cara y cuello. Casi todo el mundo se pone un tercio de lo que debe, y eso convierte un SPF50 en un SPF15.'},
+    {i:'\u26d4',t:'<b>No revientes granos.</b> Es la causa n\u00famero 1 de que un brote se vuelva mancha permanente \u2014 y t\u00fa ya est\u00e1s tratando manchas.'},
+    {i:'\u25cb',t:'<b>M\u00e1ximo 2 lavadas al d\u00eda.</b> Lavar de m\u00e1s hace que la piel grasa produzca m\u00e1s grasa por rebote.'},
+    {i:'\u25b3',t:'<b>Un producto nuevo cada vez</b>, con 1-2 semanas entre uno y otro. Si metes tres a la vez y algo irrita, no sabes cu\u00e1l fue.'},
+    {i:'\u25a1',t:'<b>Funda de almohada dos veces por semana.</b> Son siete horas de cara contra la misma tela, cada noche.'},
+  ];
+  if(p.rasurado==='barba') r.push({i:'\u25c7',t:'<b>Limpia la base de la barba.</b> Ah\u00ed se acumula la grasa que tapa los poros del cuello y las mejillas. Si usas aceite, que sea ligero y no comedog\u00e9nico.'});
+  if(p.rasurado==='rastrillo'||p.rasurado==='electrica') r.push({i:'\u25c7',t:'<b>Nunca te rasures en seco.</b> Piel limpia e hidratada, rastrillo afilado, y no el mismo rato que el retinoide si notas ardor.'});
+  if(c.indexOf('acne')!==-1) r.push({i:'\u25cf',t:'<b>Las primeras 2-4 semanas el retinoide empeora el acn\u00e9</b> antes de mejorarlo. No es alergia, es la purga: no lo abandones antes de las 6.'});
+  return '<div class="pl-card"><div class="pl-card-h"><div class="pl-card-t"><span class="b"></span>Las que s\u00ed mueven la aguja</div>'+
+    '<div class="pl-card-x">'+r.length+'</div></div>'+
+    r.map((x,i)=>'<div class="pl-rule"><div class="pl-rule-i">'+(i+1)+'</div><div class="pl-rule-t">'+x.t+'</div></div>').join('')+'</div>';
+}
+
+// ─── Pintar todo ────────────────────────────────────────────────────────
+function plPintar(){
+  if(!document.getElementById('pl-track')) return;
+  plPintarCabecera();
+  plPintarTrack();
+  document.getElementById('pl-rutinas').innerHTML=plRutinaHtml('am')+plRutinaHtml('pm');
+  document.getElementById('pl-foot').innerHTML=plBotiquinHtml()+plEscaleraHtml()+plDondeHtml();
+  document.getElementById('pl-foot2').innerHTML='<div class="pl-col">'+plSemanaHtml()+plMatrizHtml()+'</div>'+plReglasHtml();
+  document.getElementById('pl-disc').innerHTML='Orientaci\u00f3n general con productos de venta libre en M\u00e9xico, no sustituye a un derm\u00f3logo \u2014 si el acn\u00e9 es severo o qu\u00edstico, o algo te irrita fuerte y no mejora en dos semanas, ve con uno. Los productos y sus precios viven en <b>Dashboard/datos-maestros.js</b>, la misma fuente que tu rutina diaria.';
+}
+function skRenderGuia(){ skPintarPerfilForm(); plPintar(); }
+
+// La cabecera dice la hora y cu\u00e1nto falta; sin esto se queda congelada en la hora en que
+// se abri\u00f3 la app, que es como Ad\u00e1n la usa (pesta\u00f1a abierta todo el d\u00eda).
+setInterval(function(){
+  const v=document.getElementById('view-skincare');
+  if(v&&v.classList.contains('active')) plPintar();
+}, 60000);
 
 // ══════════════════════════════════════════════════════════════════════════
 // CUIDADO DEL CABELLO

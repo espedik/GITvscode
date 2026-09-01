@@ -1,0 +1,13 @@
+{
+  "artboards": [
+    { "file": "Main.dc.html",   "x": 0,    "y": 0, "w": 1440, "h": 1390, "title": "Opción A — Consola de rutina" },
+    { "file": "OpcionB.dc.html","x": 1560, "y": 0, "w": 1440, "h": 940, "title": "Opción B — La línea del día" },
+    { "file": "Movil.dc.html",  "x": 3120, "y": 0, "w": 390,  "h": 1075, "title": "Móvil — 390px" }
+  ],
+  "annotations": [
+    { "id": "nota-brief", "x": 0, "y": -190, "w": 620, "text": "Skincare hoy: 9 secciones, una a la vez, 85% de pantalla vacía. Nada te dice qué hacer AHORA, la lista de compras son solo nombres, y la guía contradice tu rutina real del Dashboard. Dos direcciones para arreglarlo." },
+    { "id": "nota-a", "x": 0, "y": 1430, "w": 500, "text": "A — Manda el momento. Panel grande con la rutina que toca ahora; la otra queda como una línea. Carril derecho fijo: semana, escalera del retinoide, botiquín con costo." },
+    { "id": "nota-b", "x": 1560, "y": 1430, "w": 500, "text": "B — Manda el día. Una pista horizontal con las 7 aplicaciones y una barra de AHORA; debajo, AM y PM completas lado a lado, sin clicks." }
+  ],
+  "launch": { "view": "canvas" }
+}

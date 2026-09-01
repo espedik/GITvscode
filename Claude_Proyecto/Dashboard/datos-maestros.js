@@ -245,8 +245,8 @@ window.CIFRAS = (function () {
   const RUTINA_TASKS = [
     {id:"wd01",dias:[1,2,3,4,5],hora:"06:40",cat:"salud",txt:"Despertar sin snooze — celular fuera del cuarto"},
     {id:"wd-app-am",dias:[1,2,3,4,5],hora:"06:43",cat:"aprender",txt:"💻 Construir esta aplicación — 10 min antes de arrancar el día"},
-    {id:"wd-am-lav",dias:[1,4],hora:"06:53",cat:"salud",txt:"🚿 Rutina de la mañana — ducha, cabello, piel y suplementos",producto:true,subtareas:[{id:"wd02a",sec:"Ducha y cabello",txt:"Champú: <b>Pilexil Anticaída 300 ml</b> — masajea el cuero cabelludo 2 min y enjuaga. NO lo frotes en el largo: su trabajo es la raíz."},{id:"wd02b",txt:"Acondicionador: <b>L'Oréal Elvive Reparación Total 5</b> — solo de medios a puntas, nunca en la raíz."},{id:"wd02c",txt:"Con el pelo AÚN HÚMEDO: <b>crema sin enjuague L'Oréal Elvive Total Repair 5</b> (se pone sobre el pelo húmedo y NO se enjuaga), cantidad de un chícharo, solo en la mitad de abajo."},{id:"wd02d",txt:"Deja secar al aire. Si tienes prisa y usas secadora, aire tibio y a 20 cm — nunca caliente ni pegado."},{id:"wd02e",txt:"⚠️ Si HOY hay caspa o descamación, usas <b>Darrow Doctar (alquitrán)</b> en lugar del Pilexil. Nunca los dos el mismo día."},{id:"wd03a",sec:"Piel y minoxidil",txt:"Limpiador suave: CeraVe Limpiador Espumoso (verde) — quita grasa y sudor de la noche sin resecar"},{id:"wd03b",txt:"Sérum de niacinamida 10%: The Ordinary Niacinamida 10% + Zinc 1% — controla grasa y afina los poros"},{id:"wd03c",txt:"Hidratante con protector solar SPF 50: La Roche-Posay Anthelios — hidrata y protege del sol, obligatorio de día"},{id:"wd04",txt:"<b>Minoxidil 5% en ESPUMA (Kirkland)</b> en cuero cabelludo seco — la espuma no lleva propilenglicol, que es lo que reseca el tallo en la versión líquida — estimula el folículo, dosis de la mañana"},{id:"wdSupAm1",sec:"Suplementos",txt:"Vitamina D3 — 2000-4000 UI, con algo de grasa en la comida",link:{href:"../CuidadoPersonal/salud.html?tab=suplementos",label:"💊 Ver Suplementos"}},{id:"wdSupAm2",txt:"Multivitamínico — 1 tableta"},{id:"wdSupAm3",txt:"Omega 3 — 1-2g EPA+DHA, con alimento"},{id:"wdSupAm4",txt:"Creatina monohidratada — 5g (todos los días, no solo si entrenas hoy)"}]},
-    {id:"wd-am-co",dias:[2,3,5],hora:"06:53",cat:"salud",txt:"🚿 Rutina de la mañana — ducha, cabello, piel y suplementos",producto:true,subtareas:[{id:"wd02ca",sec:"Ducha y cabello",txt:"Hoy <b>no lleva champú</b>: mojas, y aplicas <b>L'Oréal Elvive Reparación Total 5</b> solo de medios a puntas. Lavar a diario con champú es lo que termina de secar el pelo."},{id:"wd02cb",txt:"Con el pelo húmedo: <b>crema sin enjuague L'Oréal Elvive Total Repair 5</b> (se pone sobre el pelo húmedo y NO se enjuaga), un chícharo. Este paso va todos los días, no solo cuando te lavas."},{id:"wd02cc",txt:"Ya seco, si lo notas áspero: 2 gotas de <b>Moroccanoil Treatment Light</b> solo en las puntas."},{id:"wd03a",sec:"Piel y minoxidil",txt:"Limpiador suave: CeraVe Limpiador Espumoso (verde) — quita grasa y sudor de la noche sin resecar"},{id:"wd03b",txt:"Sérum de niacinamida 10%: The Ordinary Niacinamida 10% + Zinc 1% — controla grasa y afina los poros"},{id:"wd03c",txt:"Hidratante con protector solar SPF 50: La Roche-Posay Anthelios — hidrata y protege del sol, obligatorio de día"},{id:"wd04",txt:"<b>Minoxidil 5% en ESPUMA (Kirkland)</b> en cuero cabelludo seco — la espuma no lleva propilenglicol, que es lo que reseca el tallo en la versión líquida — estimula el folículo, dosis de la mañana"},{id:"wdSupAm1",sec:"Suplementos",txt:"Vitamina D3 — 2000-4000 UI, con algo de grasa en la comida",link:{href:"../CuidadoPersonal/salud.html?tab=suplementos",label:"💊 Ver Suplementos"}},{id:"wdSupAm2",txt:"Multivitamínico — 1 tableta"},{id:"wdSupAm3",txt:"Omega 3 — 1-2g EPA+DHA, con alimento"},{id:"wdSupAm4",txt:"Creatina monohidratada — 5g (todos los días, no solo si entrenas hoy)"}]},
+    {id:"wd-am-lav",dias:[1,4],hora:"06:53",cat:"salud",txt:"🚿 Rutina de la mañana — ducha, cabello, piel y suplementos",producto:true,subtareas:[{id:"wd02a",sec:"Ducha y cabello",txt:"Champú: <b>Pilexil Anticaída 300 ml</b> — masajea el cuero cabelludo 2 min y enjuaga. NO lo frotes en el largo: su trabajo es la raíz."},{id:"wd02b",txt:"Acondicionador: <b>L'Oréal Elvive Reparación Total 5</b> — solo de medios a puntas, nunca en la raíz."},{id:"wd02c",txt:"Con el pelo AÚN HÚMEDO: <b>crema sin enjuague L'Oréal Elvive Total Repair 5</b> (se pone sobre el pelo húmedo y NO se enjuaga), cantidad de un chícharo, solo en la mitad de abajo."},{id:"wd02d",txt:"Deja secar al aire. Si tienes prisa y usas secadora, aire tibio y a 20 cm — nunca caliente ni pegado."},{id:"wd02e",txt:"⚠️ Si HOY hay caspa o descamación, usas <b>Darrow Doctar (alquitrán)</b> en lugar del Pilexil. Nunca los dos el mismo día."},{id:"wd03a",sec:"Piel y minoxidil",txt:"Limpiador suave: CeraVe Limpiador Espumoso (verde) — quita grasa y sudor de la noche sin resecar"},{id:"wd03b",txt:"Sérum de niacinamida 10%: The Ordinary Niacinamida 10% + Zinc 1% — controla grasa y afina los poros"},{id:"wd03c",txt:"Protector solar: <b>La Roche-Posay Anthelios Oil Free SPF50</b> — <b>dos dedos completos</b> para cara y cuello. Con menos, un SPF50 protege como un SPF15"},{id:"wd04",txt:"<b>Minoxidil 5% en ESPUMA (Kirkland)</b> en cuero cabelludo seco — la espuma no lleva propilenglicol, que es lo que reseca el tallo en la versión líquida — estimula el folículo, dosis de la mañana"},{id:"wdSupAm1",sec:"Suplementos",txt:"Vitamina D3 — 2000-4000 UI, con algo de grasa en la comida",link:{href:"../CuidadoPersonal/salud.html?tab=suplementos",label:"💊 Ver Suplementos"}},{id:"wdSupAm2",txt:"Multivitamínico — 1 tableta"},{id:"wdSupAm3",txt:"Omega 3 — 1-2g EPA+DHA, con alimento"},{id:"wdSupAm4",txt:"Creatina monohidratada — 5g (todos los días, no solo si entrenas hoy)"}]},
+    {id:"wd-am-co",dias:[2,3,5],hora:"06:53",cat:"salud",txt:"🚿 Rutina de la mañana — ducha, cabello, piel y suplementos",producto:true,subtareas:[{id:"wd02ca",sec:"Ducha y cabello",txt:"Hoy <b>no lleva champú</b>: mojas, y aplicas <b>L'Oréal Elvive Reparación Total 5</b> solo de medios a puntas. Lavar a diario con champú es lo que termina de secar el pelo."},{id:"wd02cb",txt:"Con el pelo húmedo: <b>crema sin enjuague L'Oréal Elvive Total Repair 5</b> (se pone sobre el pelo húmedo y NO se enjuaga), un chícharo. Este paso va todos los días, no solo cuando te lavas."},{id:"wd02cc",txt:"Ya seco, si lo notas áspero: 2 gotas de <b>Moroccanoil Treatment Light</b> solo en las puntas."},{id:"wd03a",sec:"Piel y minoxidil",txt:"Limpiador suave: CeraVe Limpiador Espumoso (verde) — quita grasa y sudor de la noche sin resecar"},{id:"wd03b",txt:"Sérum de niacinamida 10%: The Ordinary Niacinamida 10% + Zinc 1% — controla grasa y afina los poros"},{id:"wd03c",txt:"Protector solar: <b>La Roche-Posay Anthelios Oil Free SPF50</b> — <b>dos dedos completos</b> para cara y cuello. Con menos, un SPF50 protege como un SPF15"},{id:"wd04",txt:"<b>Minoxidil 5% en ESPUMA (Kirkland)</b> en cuero cabelludo seco — la espuma no lleva propilenglicol, que es lo que reseca el tallo en la versión líquida — estimula el folículo, dosis de la mañana"},{id:"wdSupAm1",sec:"Suplementos",txt:"Vitamina D3 — 2000-4000 UI, con algo de grasa en la comida",link:{href:"../CuidadoPersonal/salud.html?tab=suplementos",label:"💊 Ver Suplementos"}},{id:"wdSupAm2",txt:"Multivitamínico — 1 tableta"},{id:"wdSupAm3",txt:"Omega 3 — 1-2g EPA+DHA, con alimento"},{id:"wdSupAm4",txt:"Creatina monohidratada — 5g (todos los días, no solo si entrenas hoy)"}]},
     {id:"sa-am",dias:[6],hora:"08:35",cat:"salud",txt:"🚿 Rutina de la mañana — ducha, cabello, piel y suplementos",producto:true,subtareas:[{id:"sa05a",sec:"Ducha y cabello",txt:"Champú: <b>CeraVe Champú Hidratante (sin sulfatos)</b>. Hoy es día de reparación, no de tratamiento."},{id:"sa05b",txt:"<b>Mascarilla L'Oréal Elvive Total Repair 5</b> — es un acondicionador concentrado, viene en TARRO (no en botella). Va de medios a puntas y se deja actuar <b>5-10 min</b> mientras terminas de bañarte. Es el paso que más repara de toda tu semana: si te saltas uno, que no sea este."},{id:"sa05c",txt:"Hoy <b>NO</b> uses acondicionador: la mascarilla ya hizo ese trabajo, y ponerle los dos apelmaza el cabello fino."},{id:"sa05d",txt:"Con el pelo húmedo: <b>crema sin enjuague L'Oréal Elvive Total Repair 5</b> — se pone y NO se enjuaga, se queda todo el día. Ya seco: 2 gotas de <b>Moroccanoil Treatment Light</b> en puntas."},{id:"sa05e",txt:"Revisa las puntas: si ves pelos abiertos en forma de Y, ya toca corte. Cada 8-12 semanas, 1-2 cm — solo puntas."},{id:"sa02",sec:"Piel y minoxidil",txt:"Skincare AM — limpiador + niacinamida + hidratante con SPF 50 (mismos productos que entre semana)"},{id:"sa02b",txt:"<b>Minoxidil 5% en ESPUMA (Kirkland)</b> en cuero cabelludo seco — la espuma no lleva propilenglicol, que es lo que reseca el tallo en la versión líquida — dosis de la mañana"},{id:"saSupAm1",sec:"Suplementos",txt:"Vitamina D3 — 2000-4000 UI, con algo de grasa en la comida",link:{href:"../CuidadoPersonal/salud.html?tab=suplementos",label:"💊 Ver Suplementos"}},{id:"saSupAm2",txt:"Multivitamínico — 1 tableta"},{id:"saSupAm3",txt:"Omega 3 — 1-2g EPA+DHA, con alimento"},{id:"saSupAm4",txt:"Creatina monohidratada — 5g (todos los días, no solo si entrenas hoy)"}]},
     {id:"do-am",dias:[0],hora:"08:35",cat:"salud",txt:"🚿 Rutina de la mañana — ducha, cabello, piel y suplementos",producto:true,subtareas:[{id:"do045a",sec:"Ducha y cabello",txt:"Hoy <b>no lleva champú</b>: <b>L'Oréal Elvive Reparación Total 5</b> de medios a puntas y enjuaga."},{id:"do045b",txt:"Con el pelo húmedo: <b>crema sin enjuague L'Oréal Elvive Total Repair 5</b> (se pone sobre el pelo húmedo y NO se enjuaga), un chícharo."},{id:"do045c",txt:"Antes de dormir, <b>funda de almohada de satín</b>. Pasas 7 horas frotando el pelo contra la almohada: el algodón lo rompe y le roba humedad, el satín no."},{id:"do02",sec:"Piel y minoxidil",txt:"Skincare AM — limpiador + niacinamida + hidratante con SPF 50 (mismos productos que entre semana)"},{id:"do02b",txt:"<b>Minoxidil 5% en ESPUMA (Kirkland)</b> en cuero cabelludo seco — la espuma no lleva propilenglicol, que es lo que reseca el tallo en la versión líquida — dosis de la mañana"},{id:"doSupAm1",sec:"Suplementos",txt:"Vitamina D3 — 2000-4000 UI, con algo de grasa en la comida",link:{href:"../CuidadoPersonal/salud.html?tab=suplementos",label:"💊 Ver Suplementos"}},{id:"doSupAm2",txt:"Multivitamínico — 1 tableta"},{id:"doSupAm3",txt:"Omega 3 — 1-2g EPA+DHA, con alimento"},{id:"doSupAm4",txt:"Creatina monohidratada — 5g (todos los días, no solo si entrenas hoy)"}]},
     {id:"wd05",dias:[1,2,3,4,5],hora:"07:33",cat:"descanso",txt:"Vestirte y alistarte"},
@@ -457,6 +457,93 @@ window.CIFRAS = (function () {
      estructuras distintas, así que no es una copia literal que se pueda leer en vivo.
      Vive aquí para que exista UN sitio donde editarlo, y para que el día que esas apps expongan
      sus catálogos se pueda derivar en vez de mantener a mano. */
+  // ── LA RUTINA DE LA PIEL ─────────────────────────────────────────────────
+  // Los 5 productos que Adán usa de verdad en la cara. Estaban escritos a mano en dos sitios que
+  // NO coincidían: `RUTINA_TASKS` decía La Roche-Posay Anthelios y la guía de Skincare
+  // recomendaba Isdin; `RUTINA_TASKS` aplica el Differin las 7 noches y la guía mandaba
+  // alternarlo con un BHA que él no usa en ninguna parte. Aquí hay una sola versión, y el
+  // control 12 de verificar-sincronia.js comprueba que cada nombre siga apareciendo en
+  // `RUTINA_TASKS`, que es donde se ejecuta la rutina.
+  //
+  // Un producto por necesidad, sin alternativas — la misma regla que ya tenía `cabello`
+  // (2026-08-18, "no me des alternativas, por que si no al final no comprare nada").
+  //
+  // `contenido` y `dosisDia` van en la MISMA unidad. De ahí salen SOLOS los días que dura un
+  // bote y el costo mensual: no se escriben a mano. Los `precio` son de REFERENCIA (farmacia y
+  // Amazon MX, septiembre 2026) y las dosis son las correctas, no las que se usan por costumbre
+  // — por eso el protector solar sale caro: dos dedos diarios vacían un bote de 50 ml en 40
+  // días. Poner menos es lo que convierte un SPF50 en un SPF15.
+  const RUTINA_PIEL = {
+    productos: [
+      { id:'limpiador', cat:'Limpiador', n:'CeraVe Limpiador Espumoso (verde)',
+        contenido:236, unidad:'ml', dosisDia:3, precio:260, tono:'ok',
+        ayuda:['acne','sensibilidad'],
+        am:{ orden:1, min:1, uso:'Masajea sobre piel húmeda 30-60 seg y enjuaga con agua tibia, nunca caliente. Quita la grasa y el sudor de la noche sin dejar la piel jalada.' },
+        pm:{ orden:1, min:2, etiqueta:'Doble limpieza', esperaDespues:20,
+             esperaTxt:'Sécate del todo y espera',
+             uso:'Hoy usaste protector solar, así que van <b>dos pasadas</b>: la primera arrastra el SPF, la segunda limpia la piel. Con una sola, el retinoide se aplica encima del bloqueador.' } },
+
+      { id:'niacinamida', cat:'Sérum', n:'The Ordinary Niacinamida 10% + Zinc 1%',
+        contenido:30, unidad:'ml', dosisDia:0.15, precio:230, tono:'teal',
+        ayuda:['acne','manchas'],
+        am:{ orden:2, min:1,
+             uso:'2-3 gotas sobre piel seca, antes del protector. Controla la grasa del día, afina poros y ayuda a desvanecer marcas — y es compatible con todo lo demás, incluido el retinoide.' } },
+
+      { id:'spf', cat:'Protector solar', n:'La Roche-Posay Anthelios Oil Free SPF50',
+        contenido:50, unidad:'ml', dosisDia:1.25, precio:520, tono:'am',
+        ayuda:['manchas','arrugas'], clave:true,
+        am:{ orden:3, min:2,
+             uso:'<b>Dos dedos completos</b> para cara y cuello. Casi todo el mundo se pone un tercio de lo que debe, y eso convierte un SPF50 en un SPF15 — es el error más caro de la rutina. Todos los días, nublado incluido.' } },
+
+      { id:'retinoide', cat:'Retinoide', n:'Differin Adapaleno 0.1% Gel',
+        contenido:45, unidad:'g', dosisDia:0.25, precio:430, tono:'pink',
+        ayuda:['acne','arrugas','manchas'], clave:true,
+        pm:{ orden:2, min:1,
+             uso:'Un <b>chícharo</b> para toda la cara, sobre piel <b>completamente seca</b>. Con la piel húmeda penetra de más y ahí empieza la irritación. Deja un dedo de margen alrededor del ojo: es la piel más delgada del cuerpo. Es el activo de mostrador con más evidencia — trata acné, previene arrugas y ayuda con manchas, los tres a la vez.' } },
+
+      { id:'hidratantePM', cat:'Hidratante', n:'Eucerin Hyaluron-Filler + Epigenetic Noche',
+        contenido:50, unidad:'ml', dosisDia:0.5, precio:700, tono:'pm',
+        ayuda:['arrugas','sensibilidad'],
+        pm:{ orden:3, min:1,
+             uso:'Encima del retinoide, sin esperar. Amortigua la irritación mientras rellena líneas de expresión con ácido hialurónico.' } },
+
+      // No está en `RUTINA_TASKS`: no forma parte de su semana, se compra y se usa si quiere.
+      { id:'mascarilla', cat:'Mascarilla', n:'Aztec Secret Indian Healing Clay',
+        contenido:454, unidad:'g', dosisDia:2.6, precio:290, tono:'mint',
+        ayuda:['acne'], opcional:true,
+        extra:{ uso:'Mezcla con agua hasta pasta, 10-15 min, 1 vez por semana. Controla grasa y afina poros, pero reseca si te pasas — y con el adapaleno cada noche, más de una vez por semana es sobra.' } },
+    ],
+
+    // Los pasos de una rutina, ya ordenados. `momento` es 'am' o 'pm'.
+    pasos: function (momento) {
+      return this.productos
+        .filter(function (p) { return p[momento]; })
+        .map(function (p) {
+          var d = p[momento];
+          return {
+            id: p.id, n: p.n, cat: d.etiqueta || p.cat, uso: d.uso, min: d.min,
+            orden: d.orden, ayuda: p.ayuda, clave: p.clave, tono: p.tono,
+            esperaDespues: d.esperaDespues || 0, esperaTxt: d.esperaTxt || '',
+          };
+        })
+        .sort(function (a, b) { return a.orden - b.orden; });
+    },
+
+    // Cuánto dura un bote con la dosis correcta, y lo que sale al mes. Derivados: si cambia el
+    // precio o el tamaño, el botíquin y el total se enteran solos.
+    duracionDias: function (p) { return Math.round(p.contenido / p.dosisDia); },
+    costoMes: function (p) { return Math.round(p.precio / (p.contenido / p.dosisDia) * 30); },
+    get costoMesTotal() {
+      var t = this;
+      return this.productos.filter(function (p) { return !p.opcional; })
+        .reduce(function (a, p) { return a + t.costoMes(p); }, 0);
+    },
+    get minutosAM() { return this.pasos('am').reduce(function (a, p) { return a + p.min; }, 0); },
+    get minutosPM() { return this.pasos('pm').reduce(function (a, p) { return a + p.min; }, 0); },
+    // Los minutos de espera entre pasos no son trabajo, pero sí alargan la rutina.
+    get esperaPM() { return this.pasos('pm').reduce(function (a, p) { return a + p.esperaDespues; }, 0); },
+  };
+
   const LISTA_COMPRAS = {
     comida:{
       // 2026-08-27 — el pasillo único "Frutas y Verduras" se partió en tres. Pedido de Adán:
@@ -473,16 +560,14 @@ window.CIFRAS = (function () {
       'Abarrotes y Despensa':['Aceite de oliva','Arroz blanco cocido','Atún en agua','Frijoles negros','Granola de amaranto','Miel de abeja'],
       'Panadería y Tortillas':['Pan integral','Tortilla de maíz'],
     },
-    skincare:[
-      'Limpiador — CeraVe Limpiador Espumoso (verde)',
-      'Exfoliante (BHA/AHA) — The Ordinary Ácido Salicílico 2% o Neutrogena Rapid Clear o The Ordinary Ácido Láctico 5%',
-      'Sérum AM — The Ordinary Niacinamida 10% + Zinc 1% o La Roche-Posay Pure Vitamin C10',
-      'Hidratante AM — Eucerin Hyaluron-Filler + Epigenetic Día SPF15',
-      'Protector solar — Isdin Fusion Water Oil-Free SPF50 o La Roche-Posay Anthelios Oil Free SPF50 o Neutrogena Ultra Sheer SPF50',
-      'Tratamiento PM (retinoide) — Differin Adapaleno 0.1% Gel o The Ordinary Retinol 0.2% en Escualano',
-      'Hidratante PM — Eucerin Hyaluron-Filler + Epigenetic Noche',
-      'Mascarilla semanal — Aztec Secret Indian Healing Clay o The Ordinary Salicylic Acid 2% Masque',
-    ],
+    // Sale de RUTINA_PIEL, no se escribe a mano: así la lista de la compra no puede nombrar
+    // una marca distinta a la que dice la rutina, que es justo lo que pasaba hasta el
+    // 2026-09-01 (aquí Isdin, en la rutina La Roche-Posay).
+    get skincare() {
+      return RUTINA_PIEL.productos.map(function (p) {
+        return p.cat + ' — ' + p.n + (p.opcional ? ' (opcional)' : '');
+      });
+    },
     // Reordenada el 2026-08-18 tras el reporte de Adán ("mi cabello luce muy seco y dañado").
     // El orden ES la recomendación: primero el champú suave que le faltaba y que debe ser su
     // base, luego los 2 medicados que ya tiene con su frecuencia real, y al final lo que repara.
@@ -934,6 +1019,7 @@ window.CIFRAS = (function () {
     PHASES: PHASES,
     APRENDIZAJE: APRENDIZAJE,
     LISTA_COMPRAS: LISTA_COMPRAS,
+    RUTINA_PIEL: RUTINA_PIEL,
     PROYECTO: PROYECTO,
     CALENDARIO: CALENDARIO,
     get datos() { return fin; }

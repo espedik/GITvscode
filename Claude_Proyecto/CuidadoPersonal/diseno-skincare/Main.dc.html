@@ -1,0 +1,324 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap">
+  <style>
+    body{margin:0;background:#0a0710;font-family:"Inter",-apple-system,sans-serif}
+    .sk{font-family:"Inter",-apple-system,BlinkMacSystemFont,sans-serif !important}
+    .sk .stat-v,.sk .kpi-v,.sk .med-d,.sk .med-tot-v,.sk .now-when .big,
+    .sk .now-w .b,.sk .prog-v,.sk .h1,.sk .node .hh{font-family:"Space Grotesk","Inter",sans-serif}
+  </style>
+</helmet>
+
+<div class="sk">
+<style>
+.sk{
+  --bg:#0a0710; --tx:#f4eef7; --tx2:#a79db2; --tx3:#6b6376;
+  --line:rgba(255,255,255,.085); --panel:rgba(255,255,255,.042);
+  --pink:#ff3d8f; --teal:#1fd6c4; --am:#ffb15c; --pm:#8b7dff;
+  --ok:#2fe0a0; --warn:#ff7a6b;
+  width:1440px; height:1390px; box-sizing:border-box; padding:26px 30px 30px;
+  background:
+    radial-gradient(ellipse 60% 45% at 8% -5%, rgba(255,61,143,.20) 0%, transparent 62%),
+    radial-gradient(ellipse 55% 45% at 96% 8%, rgba(31,214,196,.15) 0%, transparent 60%),
+    radial-gradient(ellipse 70% 40% at 50% 108%, rgba(139,125,255,.14) 0%, transparent 60%),
+    var(--bg);
+  color:var(--tx); font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  overflow:hidden; position:relative;
+}
+.sk *{box-sizing:border-box}
+.sk .grid-bg{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.022) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.022) 1px,transparent 1px);background-size:56px 56px;pointer-events:none}
+.sk .z{position:relative;z-index:1}
+
+.hud{display:flex;align-items:stretch;gap:14px;margin-bottom:16px}
+.hud-id{flex:1;min-width:0;padding:16px 20px;border-radius:18px;border:1px solid var(--line);
+  background:linear-gradient(135deg,rgba(255,61,143,.13),rgba(31,214,196,.07) 60%,transparent);
+  position:relative;overflow:hidden}
+.hud-id::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:linear-gradient(90deg,var(--pink),var(--teal),transparent)}
+.eyebrow{font-size:10px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--pink);display:flex;align-items:center;gap:7px}
+.eyebrow .dot{width:6px;height:6px;border-radius:50%;background:var(--pink);box-shadow:0 0 10px var(--pink)}
+.h1{font-size:27px;font-weight:800;letter-spacing:-.02em;margin:6px 0 5px}
+.sub{font-size:12.5px;color:var(--tx2);line-height:1.5;max-width:560px}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}
+.chip{font-size:11px;font-weight:700;padding:4px 11px;border-radius:20px;border:1px solid var(--line);background:rgba(255,255,255,.05);color:var(--tx2)}
+.chip.on{border-color:rgba(255,61,143,.4);background:rgba(255,61,143,.13);color:#ffa7cc}
+
+.hud-stats{display:grid;grid-template-columns:repeat(3,150px);gap:11px}
+.stat{padding:14px 15px;border-radius:16px;border:1px solid var(--line);background:var(--panel);display:flex;flex-direction:column;justify-content:space-between}
+.stat-k{font-size:9.5px;font-weight:800;letter-spacing:.11em;text-transform:uppercase;color:var(--tx3)}
+.stat-v{font-size:26px;font-weight:800;letter-spacing:-.03em;line-height:1;margin:9px 0 3px}
+.stat-n{font-size:10.5px;color:var(--tx2);line-height:1.35}
+.stat.a .stat-v{color:var(--ok)} .stat.b .stat-v{color:var(--pm)} .stat.c .stat-v{color:var(--am)}
+
+.body{display:grid;grid-template-columns:1fr 396px;gap:14px;margin-bottom:14px}
+
+.now{border-radius:20px;border:1px solid rgba(139,125,255,.28);padding:18px 20px 16px;display:flex;flex-direction:column;
+  background:linear-gradient(160deg,rgba(139,125,255,.11),rgba(255,255,255,.025) 45%);position:relative;overflow:hidden}
+.now::before{content:"";position:absolute;top:-40%;right:-8%;width:320px;height:320px;border-radius:50%;background:radial-gradient(circle,rgba(139,125,255,.20),transparent 68%)}
+.now-h{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:4px;position:relative}
+.now-t{display:flex;align-items:center;gap:10px}
+.now-ico{width:36px;height:36px;border-radius:12px;display:flex;align-items:center;justify-content:center;background:rgba(139,125,255,.18);border:1px solid rgba(139,125,255,.35);font-size:17px}
+.now-lbl{font-size:9.5px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--pm)}
+.now-n{font-size:19px;font-weight:800;letter-spacing:-.02em;margin-top:2px}
+.now-when{text-align:right}
+.now-when .big{font-size:22px;font-weight:800;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.now-when .sm{font-size:10.5px;color:var(--tx3);margin-top:1px}
+.now-bar{height:5px;border-radius:4px;background:rgba(255,255,255,.07);margin:14px 0 16px;overflow:hidden;position:relative}
+.now-bar i{position:absolute;inset:0 66% 0 0;background:linear-gradient(90deg,var(--pm),var(--teal));border-radius:4px}
+
+.steps{display:flex;flex-direction:column;gap:9px;position:relative}
+.step{display:flex;gap:13px;padding:13px 15px;border-radius:15px;border:1px solid var(--line);background:rgba(255,255,255,.035);align-items:flex-start;position:relative}
+.step.done{border-color:rgba(47,224,160,.3);background:rgba(47,224,160,.07)}
+.step-n{flex-shrink:0;width:30px;height:30px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;
+  background:rgba(139,125,255,.16);border:1px solid rgba(139,125,255,.35);color:#c3b9ff}
+.step.done .step-n{background:rgba(47,224,160,.16);border-color:rgba(47,224,160,.4);color:var(--ok)}
+.step-b{flex:1;min-width:0}
+.step-top{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap}
+.step-name{font-size:14px;font-weight:800;letter-spacing:-.01em}
+.step-cat{font-size:9.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--tx3)}
+.step-txt{font-size:12px;color:var(--tx2);line-height:1.5;margin-top:5px}
+.step-txt b{color:var(--tx);font-weight:700}
+.step-meta{display:flex;gap:7px;margin-top:8px;flex-wrap:wrap}
+.tag{font-size:10px;font-weight:700;padding:3px 9px;border-radius:7px;border:1px solid var(--line);color:var(--tx2);background:rgba(255,255,255,.04);display:inline-flex;align-items:center;gap:4px}
+.tag.wait{border-color:rgba(255,177,92,.35);background:rgba(255,177,92,.12);color:var(--am)}
+.tag.key{border-color:rgba(255,61,143,.35);background:rgba(255,61,143,.12);color:#ff9bc6}
+.step-chk{flex-shrink:0;width:24px;height:24px;border-radius:8px;border:1.5px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--tx3);margin-top:3px}
+.step.done .step-chk{border-color:var(--ok);background:var(--ok);color:#04140d}
+.gap{display:flex;align-items:center;gap:8px;padding:2px 0 2px 43px;font-size:10.5px;color:var(--am);font-weight:700}
+.gap i{flex:1;height:1px;background:repeating-linear-gradient(90deg,rgba(255,177,92,.5) 0 5px,transparent 5px 10px)}
+
+.other{margin-top:auto;padding:12px 15px;border-radius:14px;border:1px dashed var(--line);display:flex;align-items:center;gap:12px;background:rgba(255,255,255,.02)}
+.other-i{width:28px;height:28px;border-radius:9px;background:rgba(255,177,92,.14);border:1px solid rgba(255,177,92,.3);display:flex;align-items:center;justify-content:center;font-size:14px}
+.other-t{flex:1;font-size:12px;color:var(--tx2)}
+.other-t b{color:var(--tx);font-weight:700}
+.other-c{font-size:10.5px;font-weight:800;color:var(--ok);letter-spacing:.04em}
+
+.rail{display:flex;flex-direction:column;gap:12px}
+.card{border-radius:18px;border:1px solid var(--line);background:var(--panel);padding:15px 16px}
+.card-h{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.card-t{font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--tx2);display:flex;align-items:center;gap:7px}
+.card-t .b{width:3px;height:13px;border-radius:2px;background:linear-gradient(180deg,var(--pink),var(--teal))}
+.card-x{font-size:10.5px;color:var(--tx3);font-weight:700}
+
+.week{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}
+.d{border-radius:11px;padding:8px 3px 9px;text-align:center;border:1px solid var(--line);background:rgba(255,255,255,.03)}
+.d-l{font-size:9.5px;font-weight:800;letter-spacing:.06em;color:var(--tx3);text-transform:uppercase}
+.d-i{font-size:15px;margin:5px 0 3px;line-height:1}
+.d-a{font-size:8.5px;font-weight:800;color:var(--tx3);letter-spacing:.03em}
+.d.hoy{border-color:var(--pm);background:rgba(139,125,255,.18);box-shadow:0 0 0 1px rgba(139,125,255,.35),0 6px 18px rgba(139,125,255,.22)}
+.d.hoy .d-l{color:#c3b9ff} .d.hoy .d-a{color:#c3b9ff}
+.d.hecho{border-color:rgba(47,224,160,.28);background:rgba(47,224,160,.08)}
+.d.hecho .d-a{color:var(--ok)}
+.wk-note{font-size:10.5px;color:var(--tx3);line-height:1.45;margin-top:10px;padding-top:10px;border-top:1px solid var(--line)}
+
+.prog-top{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:9px}
+.prog-v{font-size:20px;font-weight:800;letter-spacing:-.02em}
+.prog-v span{font-size:11px;font-weight:700;color:var(--tx3);margin-left:5px}
+.prog-track{height:26px;border-radius:9px;background:rgba(255,255,255,.05);border:1px solid var(--line);display:flex;overflow:hidden;position:relative}
+.ph{flex:1;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;color:var(--tx3);border-right:1px solid rgba(255,255,255,.07);letter-spacing:.03em}
+.ph:last-child{border-right:none}
+.ph.pas{background:rgba(139,125,255,.16);color:#a99bff}
+.ph.act{background:linear-gradient(135deg,var(--pm),var(--teal));color:#0b0710}
+.prog-note{font-size:10.5px;color:var(--tx2);line-height:1.45;margin-top:10px}
+.prog-note b{color:var(--tx)}
+
+.med{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--line)}
+.med:last-of-type{border-bottom:none}
+.med-b{width:6px;height:30px;border-radius:3px;flex-shrink:0}
+.med-n{font-size:11.5px;font-weight:700;line-height:1.25}
+.med-s{font-size:9.5px;color:var(--tx3);margin-top:2px}
+.med-r{margin-left:auto;text-align:right;flex-shrink:0}
+.med-d{font-size:11px;font-weight:800;font-variant-numeric:tabular-nums}
+.med-d.lo{color:var(--warn)}
+.med-p{font-size:9.5px;color:var(--tx3);margin-top:1px}
+.med-tot{display:flex;align-items:center;justify-content:space-between;margin-top:11px;padding-top:11px;border-top:1px solid var(--line)}
+.med-tot-l{font-size:10.5px;color:var(--tx2);font-weight:700}
+.med-tot-v{font-size:17px;font-weight:800;color:var(--teal);letter-spacing:-.02em}
+
+.foot{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+.tl{position:relative;padding-left:20px}
+.tl-i{position:relative;padding-bottom:12px}
+.tl-i:last-child{padding-bottom:0}
+.tl-i::before{content:"";position:absolute;left:-20px;top:3px;width:9px;height:9px;border-radius:50%;background:rgba(255,255,255,.16)}
+.tl-i::after{content:"";position:absolute;left:-16px;top:14px;bottom:0;width:1px;background:var(--line)}
+.tl-i:last-child::after{display:none}
+.tl-i.aqui::before{background:var(--teal);box-shadow:0 0 0 4px rgba(31,214,196,.18)}
+.tl-i.ok::before{background:rgba(47,224,160,.55)}
+.tl-w{font-size:10px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:var(--tx3)}
+.tl-i.aqui .tl-w{color:var(--teal)}
+.tl-t{font-size:11.5px;color:var(--tx2);line-height:1.45;margin-top:2px}
+.tl-i.aqui .tl-t{color:var(--tx)}
+.aqui-tag{font-size:8.5px;font-weight:800;padding:2px 7px;border-radius:5px;background:var(--teal);color:#04140d;margin-left:6px;letter-spacing:.05em;vertical-align:1px}
+
+.mx{width:100%;border-collapse:separate;border-spacing:3px}
+.mx th{font-size:9px;font-weight:800;color:var(--tx3);text-transform:uppercase;letter-spacing:.05em;padding:3px 2px;text-align:center}
+.mx th.l{text-align:left;padding-left:4px}
+.mx td{text-align:center;padding:7px 2px;border-radius:8px;font-size:12px;font-weight:800}
+.mx td.l{text-align:left;font-size:10.5px;font-weight:700;color:var(--tx2);background:none;padding-left:4px}
+.mx td.si{background:rgba(47,224,160,.13);color:var(--ok)}
+.mx td.no{background:rgba(255,122,107,.15);color:var(--warn)}
+.mx td.oj{background:rgba(255,177,92,.14);color:var(--am);font-size:10px}
+.mx-leg{display:flex;gap:12px;margin-top:9px;font-size:9.5px;color:var(--tx3);font-weight:700}
+.mx-leg s{text-decoration:none;display:inline-flex;align-items:center;gap:4px}
+.mx-leg i{width:8px;height:8px;border-radius:3px;display:inline-block}
+
+.rule{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--line);align-items:flex-start}
+.rule:last-child{border-bottom:none}
+.rule-i{width:22px;height:22px;border-radius:7px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:11px;background:rgba(255,255,255,.05);border:1px solid var(--line)}
+.rule-t{font-size:11px;color:var(--tx2);line-height:1.45}
+.rule-t b{color:var(--tx);font-weight:700}
+</style>
+
+<div class="grid-bg"></div>
+<div class="z">
+
+  <div class="hud">
+    <div class="hud-id">
+      <div class="eyebrow"><span class="dot"></span>Cuidado de la piel &middot; Perfil activo</div>
+      <div class="h1">Mi piel, en tiempo real</div>
+      <div class="sub">Tu rutina no es una gu&iacute;a que leer: es lo que toca hacer ahora. Los productos son los mismos que ya usas en el Dashboard &mdash; uno por necesidad, sin alternativas.</div>
+      <div class="chips">
+        <span class="chip on">Piel grasa</span><span class="chip on">Acn&eacute; / poros</span>
+        <span class="chip on">Manchas</span><span class="chip on">Arrugas</span>
+        <span class="chip">Con barba</span><span class="chip">Presupuesto medio</span>
+      </div>
+    </div>
+    <div class="hud-stats">
+      <div class="stat a"><div class="stat-k">Racha de SPF</div><div><div class="stat-v">41</div><div class="stat-n">d&iacute;as seguidos sin saltarte el protector</div></div></div>
+      <div class="stat b"><div class="stat-k">Retinoide</div><div><div class="stat-v">Sem 14</div><div class="stat-n">ya toleras diario &mdash; no bajes el ritmo</div></div></div>
+      <div class="stat c"><div class="stat-k">Costo real</div><div><div class="stat-v">$817</div><div class="stat-n">al mes, con la dosis correcta</div></div></div>
+    </div>
+  </div>
+
+  <div class="body">
+    <div class="now">
+      <div class="now-h">
+        <div class="now-t">
+          <div class="now-ico">&#127769;</div>
+          <div><div class="now-lbl">Ahora te toca</div><div class="now-n">Rutina de noche &middot; 3 pasos &middot; 6 min</div></div>
+        </div>
+        <div class="now-when"><div class="big">21:40</div><div class="sm">Martes &middot; empieza en 50 min</div></div>
+      </div>
+      <div class="now-bar"><i></i></div>
+
+      <div class="steps">
+        <div class="step done">
+          <div class="step-n">1</div>
+          <div class="step-b">
+            <div class="step-top"><span class="step-name">CeraVe Limpiador Espumoso</span><span class="step-cat">Limpiador</span></div>
+            <div class="step-txt">Doble limpieza porque hoy usaste protector solar: una pasada para arrastrar el SPF, otra para la piel. Agua tibia, nunca caliente.</div>
+            <div class="step-meta"><span class="tag">1 min</span><span class="tag">Ma&ntilde;ana y noche</span></div>
+          </div>
+          <div class="step-chk">&#10003;</div>
+        </div>
+
+        <div class="gap"><span>S&eacute;cate bien y espera</span><i></i><span>20 min</span></div>
+
+        <div class="step">
+          <div class="step-n">2</div>
+          <div class="step-b">
+            <div class="step-top"><span class="step-name">Differin Adapaleno 0.1% Gel</span><span class="step-cat">Retinoide</span></div>
+            <div class="step-txt">Un <b>ch&iacute;charo para toda la cara</b>, sobre piel <b>completamente seca</b>. Aplicarlo con la piel h&uacute;meda es lo que dispara la irritaci&oacute;n. Deja un dedo de margen alrededor del ojo.</div>
+            <div class="step-meta"><span class="tag wait">Espera 20 min tras lavarte</span><span class="tag key">Tu activo principal</span><span class="tag">Acn&eacute; &middot; Arrugas &middot; Manchas</span></div>
+          </div>
+          <div class="step-chk"></div>
+        </div>
+
+        <div class="step">
+          <div class="step-n">3</div>
+          <div class="step-b">
+            <div class="step-top"><span class="step-name">Eucerin Hyaluron-Filler Noche</span><span class="step-cat">Hidratante</span></div>
+            <div class="step-txt">Encima del retinoide, sin esperar. Amortigua la irritaci&oacute;n mientras rellena l&iacute;neas con &aacute;cido hialur&oacute;nico.</div>
+            <div class="step-meta"><span class="tag">30 seg</span><span class="tag">&Uacute;ltimo paso del d&iacute;a</span></div>
+          </div>
+          <div class="step-chk"></div>
+        </div>
+      </div>
+
+      <div class="other">
+        <div class="other-i">&#9728;</div>
+        <div class="other-t"><b>Ma&ntilde;ana 06:53 &middot; Rutina de d&iacute;a</b> &mdash; limpiador, niacinamida y Anthelios SPF50. 3 pasos, 4 minutos.</div>
+        <div class="other-c">HOY &#10003; COMPLETA</div>
+      </div>
+    </div>
+
+    <div class="rail">
+      <div class="card">
+        <div class="card-h"><div class="card-t"><span class="b"></span>Tu semana</div><div class="card-x">5 de 7 noches</div></div>
+        <div class="week">
+          <div class="d hecho"><div class="d-l">Lun</div><div class="d-i">&#127769;</div><div class="d-a">HECHO</div></div>
+          <div class="d hoy"><div class="d-l">Mar</div><div class="d-i">&#127769;</div><div class="d-a">HOY</div></div>
+          <div class="d"><div class="d-l">Mi&eacute;</div><div class="d-i">&#127769;</div><div class="d-a">Retinoide</div></div>
+          <div class="d"><div class="d-l">Jue</div><div class="d-i">&#127769;</div><div class="d-a">Retinoide</div></div>
+          <div class="d"><div class="d-l">Vie</div><div class="d-i">&#127769;</div><div class="d-a">Retinoide</div></div>
+          <div class="d"><div class="d-l">S&aacute;b</div><div class="d-i">&#129526;</div><div class="d-a">+ Mascarilla</div></div>
+          <div class="d"><div class="d-l">Dom</div><div class="d-i">&#127769;</div><div class="d-a">Retinoide</div></div>
+        </div>
+        <div class="wk-note">Ya no rotas nada: llevas 14 semanas y toleras el adapaleno <b style="color:#f4eef7">todas las noches</b>, que es el objetivo. El s&aacute;bado se le suma la mascarilla de arcilla.</div>
+      </div>
+
+      <div class="card">
+        <div class="card-h"><div class="card-t"><span class="b"></span>Progresi&oacute;n del retinoide</div></div>
+        <div class="prog-top"><div class="prog-v">Diario<span>fase final</span></div><div class="card-x">desde 26 may 2026</div></div>
+        <div class="prog-track">
+          <div class="ph pas">2/sem</div><div class="ph pas">3/sem</div><div class="ph pas">alternos</div><div class="ph act">DIARIO</div>
+        </div>
+        <div class="prog-note">Esta escalera es lo que separa la piel que mejora de la que se irrita y abandona. <b>Nunca saltes un pelda&ntilde;o</b>: si arde o se descama, bajas uno y te quedas 2 semanas.</div>
+      </div>
+
+      <div class="card">
+        <div class="card-h"><div class="card-t"><span class="b"></span>Tu botiqu&iacute;n</div><div class="card-x">se te acaba en&hellip;</div></div>
+        <div class="med"><div class="med-b" style="background:var(--am)"></div><div><div class="med-n">La Roche-Posay Anthelios SPF50</div><div class="med-s">50 ml &middot; 2 dedos al d&iacute;a</div></div><div class="med-r"><div class="med-d lo">9 d&iacute;as</div><div class="med-p">$370/mes</div></div></div>
+        <div class="med"><div class="med-b" style="background:var(--pm)"></div><div><div class="med-n">Eucerin Hyaluron-Filler Noche</div><div class="med-s">50 ml &middot; 1 vez al d&iacute;a</div></div><div class="med-r"><div class="med-d">38 d&iacute;as</div><div class="med-p">$233/mes</div></div></div>
+        <div class="med"><div class="med-b" style="background:var(--teal)"></div><div><div class="med-n">The Ordinary Niacinamida 10%</div><div class="med-s">30 ml &middot; 3 gotas AM</div></div><div class="med-r"><div class="med-d">52 d&iacute;as</div><div class="med-p">$77/mes</div></div></div>
+        <div class="med"><div class="med-b" style="background:var(--pink)"></div><div><div class="med-n">Differin Adapaleno 0.1%</div><div class="med-s">45 g &middot; un ch&iacute;charo PM</div></div><div class="med-r"><div class="med-d">96 d&iacute;as</div><div class="med-p">$72/mes</div></div></div>
+        <div class="med"><div class="med-b" style="background:var(--ok)"></div><div><div class="med-n">CeraVe Limpiador Espumoso</div><div class="med-s">236 ml &middot; 2-3 usos al d&iacute;a</div></div><div class="med-r"><div class="med-d">61 d&iacute;as</div><div class="med-p">$65/mes</div></div></div>
+        <div class="med-tot"><div class="med-tot-l">Costo mensual de tu rutina</div><div class="med-tot-v">$817</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="foot">
+    <div class="card">
+      <div class="card-h"><div class="card-t"><span class="b"></span>D&oacute;nde vas</div><div class="card-x">semana 14</div></div>
+      <div class="tl">
+        <div class="tl-i ok"><div class="tl-w">Semana 1-2 &middot; superada</div><div class="tl-t">La purga: brotes nuevos y tirantez. Aqu&iacute; abandona la mayor&iacute;a.</div></div>
+        <div class="tl-i ok"><div class="tl-w">Semana 6-8 &middot; superada</div><div class="tl-t">Menos brotes nuevos, poros m&aacute;s despejados.</div></div>
+        <div class="tl-i aqui"><div class="tl-w">Semana 8-14 <span class="aqui-tag">EST&Aacute;S AQU&Iacute;</span></div><div class="tl-t">Las manchas oscuras empiezan a desvanecer &mdash; solo si el SPF no fall&oacute; ni un d&iacute;a. Tu racha de 41 d&iacute;as juega a favor.</div></div>
+        <div class="tl-i"><div class="tl-w">Semana 16-24</div><div class="tl-t">Textura y l&iacute;neas finas visiblemente m&aacute;s lisas. Es donde el retinoide paga de verdad.</div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-h"><div class="card-t"><span class="b"></span>Qu&eacute; puede ir con qu&eacute;</div></div>
+      <table class="mx">
+        <tr><th class="l"></th><th>Niacin.</th><th>Retinoide</th><th>BHA</th><th>SPF</th></tr>
+        <tr><td class="l">Niacinamida</td><td class="si">&#10003;</td><td class="si">&#10003;</td><td class="si">&#10003;</td><td class="si">&#10003;</td></tr>
+        <tr><td class="l">Retinoide</td><td class="si">&#10003;</td><td class="si">&#10003;</td><td class="no">&#10007;</td><td class="oj">solo PM</td></tr>
+        <tr><td class="l">BHA / exfoliante</td><td class="si">&#10003;</td><td class="no">&#10007;</td><td class="si">&#10003;</td><td class="si">&#10003;</td></tr>
+        <tr><td class="l">Rasurado</td><td class="si">&#10003;</td><td class="oj">separa</td><td class="oj">separa</td><td class="si">&#10003;</td></tr>
+      </table>
+      <div class="mx-leg"><s><i style="background:rgba(47,224,160,.55)"></i>Sin problema</s><s><i style="background:rgba(255,177,92,.6)"></i>Con cuidado</s><s><i style="background:rgba(255,122,107,.6)"></i>Nunca juntos</s></div>
+    </div>
+
+    <div class="card">
+      <div class="card-h"><div class="card-t"><span class="b"></span>Las 5 que s&iacute; mueven la aguja</div></div>
+      <div class="rule"><div class="rule-i">&#129348;</div><div class="rule-t"><b>Dos dedos de SPF</b>, cara y cuello. Casi todo el mundo se pone un tercio de lo que debe: eso convierte un SPF50 en un SPF15.</div></div>
+      <div class="rule"><div class="rule-i">&#128581;</div><div class="rule-t"><b>No revientes granos.</b> Es la causa n&uacute;mero 1 de que un brote se vuelva mancha permanente &mdash; y t&uacute; ya tratas manchas.</div></div>
+      <div class="rule"><div class="rule-i">&#128703;</div><div class="rule-t"><b>M&aacute;ximo 2 lavadas al d&iacute;a.</b> Lavar de m&aacute;s hace que la piel grasa produzca m&aacute;s grasa por rebote.</div></div>
+      <div class="rule"><div class="rule-i">&#129492;</div><div class="rule-t"><b>Limpia la base de la barba.</b> Ah&iacute; se acumula la grasa que tapa los poros del cuello.</div></div>
+      <div class="rule"><div class="rule-i">&#128716;</div><div class="rule-t"><b>Funda de almohada 2 veces por semana.</b> Siete horas de cara contra la misma tela.</div></div>
+    </div>
+  </div>
+
+</div>
+</div>
+</x-dc>
+</body>
+</html>

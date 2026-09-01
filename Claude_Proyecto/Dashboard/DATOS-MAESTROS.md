@@ -152,6 +152,41 @@ salen en la línea de tiempo pero no llevan checkbox ni suman al progreso.
 Estaba copiada en `dashboard.html` y `Coach.html`, 17.5 KB en cada uno. Era la estructura más
 grande y más tocada de las duplicadas, y llegó a divergir 6 días.
 
+### La rutina de la piel
+
+`RUTINA_PIEL` — los **5 productos** que Adán usa en la cara (más la mascarilla opcional), con
+lo que hace falta para saber cuánto dura un bote y cuánto cuesta al mes. Se pide desde JS:
+
+```js
+CIFRAS.RUTINA_PIEL.pasos('am')        // [{orden, n, cat, uso, min, esperaDespues, ...}]
+CIFRAS.RUTINA_PIEL.duracionDias(p)    // contenido / dosisDia
+CIFRAS.RUTINA_PIEL.costoMes(p)        // precio / duracion * 30
+CIFRAS.RUTINA_PIEL.costoMesTotal      // $806 hoy, sin contar la mascarilla
+```
+
+| Producto | Paso | Tamaño | Dura | Al mes |
+|---|---|---|---|---|
+| CeraVe Limpiador Espumoso (verde) | AM 1 y PM 1 | 236 ml | ~79 d | $99 |
+| The Ordinary Niacinamida 10% + Zinc 1% | AM 2 | 30 ml | ~200 d | $35 |
+| La Roche-Posay Anthelios Oil Free SPF50 | AM 3 | 50 ml | ~40 d | **$390** |
+| Differin Adapaleno 0.1% Gel | PM 2 | 45 g | ~180 d | $72 |
+| Eucerin Hyaluron-Filler + Epigenetic Noche | PM 3 | 50 ml | ~100 d | $210 |
+| Aztec Secret Indian Healing Clay | opcional | 454 g | ~175 d | $50 |
+
+**Los días y el costo NO se escriben**: salen de `contenido / dosisDia`. Por eso el protector se
+lleva casi la mitad del gasto — dos dedos diarios, que es la dosis correcta, vacían un bote de
+50 ml en 40 días. Los `precio` sí son constantes de referencia (farmacia y Amazon MX, sep 2026)
+y se editan aquí.
+
+`LISTA_COMPRAS.skincare` es un **getter sobre esta lista**, no una lista aparte: un producto por
+necesidad y sin alternativas, la misma regla que ya tenía `cabello`.
+
+**Nació el 2026-09-01 de una contradicción real**: los productos estaban escritos a mano en dos
+sitios que no coincidían. `RUTINA_TASKS` aplicaba La Roche-Posay y la guía de Skincare
+recomendaba Isdin; `RUTINA_TASKS` ponía el adapaleno las 7 noches y la guía mandaba alternarlo
+con un BHA que él no usa en ninguna parte. Ningún control miraba texto de productos, así que
+nadie lo vio. Ahora lo vigila el **control 11**.
+
 ### El calendario · constantes
 
 `CALENDARIO` — lo que el calendario del Dashboard necesita y **no puede derivar solo**. Se pide
@@ -188,6 +223,7 @@ Es lo que evita que el calendario se congele como se congeló la vieja barra de 
 | `Dashboard/dashboard.html` | `<script src="datos-maestros.js">` | Prosa del Plan Maestro (`cifrarLiterales`) |
 | `Coach/Coach.html` | `<script src="../Dashboard/datos-maestros.js">` | Hallazgos, tabla de deudas, checklists (`aplicarDOM`) |
 | `Finanzas/Finanzas.html` | `<script src="../Dashboard/datos-maestros.js">` | **Es la fuente**: `seedData()` lee `CIFRAS.DEUDAS_SEED` |
+| `CuidadoPersonal/cuidadopersonal.html` | `<script src="../Dashboard/datos-maestros.js">` | Skincare: `CIFRAS.RUTINA_PIEL` y la hora de la rutina desde `CIFRAS.rutina()` |
 
 El Dashboard es donde vive el archivo porque es el centro del proyecto, y ahí ya estaban
 `aleman-data.js` y `entrevistas-data.js`.
@@ -299,6 +335,11 @@ Qué revisa:
   que las sumas de `PROYECTO` cuadren con sus partes.
 - **La tabla de días de pago del `.md` contra el maestro** (control 10), fila a fila. El control 7
   compara importes y por eso no veía un día: 14 no es una cantidad de dinero.
+
+- **Que los productos de `RUTINA_PIEL` sigan nombrados en `RUTINA_TASKS`** (control 11). Los diez
+  anteriores miran números y estructura; ninguno miraba **texto de productos**, y por ahí se coló
+  que la guía de Skincare recomendara una marca de protector solar y la rutina diaria otra. Si
+  alguien cambia de producto en un sitio y no en el otro, sale aquí.
 
 Los dos últimos nacieron el 28-ago-2026, del `day` del auto. Un `day` equivocado no mueve ninguna
 cifra, así que ningún control anterior podía verlo. El 9 encontró de paso un segundo caso que
