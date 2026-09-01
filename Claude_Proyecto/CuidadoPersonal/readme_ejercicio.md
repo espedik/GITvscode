@@ -404,3 +404,34 @@ lleno contra una app vacía. La app estaba bien; la pantalla de arranque, no.
   y, con historial, "85 kg la vez pasa". Pasó a 112 px (104 en móvil) y el texto
   se acortó a "anota los kg". `input.scrollWidth` no detecta esto —un placeholder
   truncado no ensancha el scroll—, sólo se ve mirando la captura.
+
+### "Hazlo idéntico al diseño" — lo que separaba la app del mockup (mismo día)
+
+Adán, con las dos pestañas abiertas: *"pero hazlo identico con los mismos colores
+y barras que me habias dicho"*. Comparando `diseno-ejercicio/Main.dc.html` con la
+app, la barra del cronómetro y las sparklines **ya estaban** —no se veían porque
+sin historial no hay nada que dibujar—. Lo que faltaba de verdad:
+
+- **El ámbar.** El mockup usa `#ffb15c` para todo lo que es descanso: la etiqueta
+  del cronómetro, su fondo, su barra, los segundos de cada ejercicio y el KPI de
+  volumen. La app usaba el naranja `--p` (#ff6b35) en esos cinco sitios. Entran
+  `--am` / `--am-t` / `--am-l`; en tema claro bajan a `#c47a12` y `#7a4a00`
+  porque el ámbar del mockup —que es sólo oscuro— no aguanta 4.5:1 sobre blanco.
+- **El fondo.** Tres auroras radiales (verde arriba a la izquierda, azul arriba a
+  la derecha, violeta abajo) y una rejilla de 60 px, en un `::before` de
+  `#s-rutina`. En claro las auroras bajan a la mitad de opacidad. `inset` va a
+  `-20px 0`: con `-24px` a los lados el documento desbordaba a lo ancho.
+- **Space Grotesk** para los números —KPIs, título, series, progresión y
+  cronómetro—, añadida a la hoja de Inter que la página ya cargaba.
+- **La tarjeta de aviso** del carril derecho, la que dice que los abdominales no
+  queman la grasa del abdomen. Ese texto ya vivía en la banda de meta de arriba,
+  así que salió de ahí y ahora es `EJ_AVISO`, escrito una sola vez.
+- **"llevas ~21 min"** junto a "2 de 6 hechos": series marcadas × (su descanso +
+  40 s). Es una estimación derivada, no un cronómetro de sesión — no hay ningún
+  `t0` guardado y añadirlo habría metido una clave que no es un id de ejercicio
+  dentro de `S.sesiones`, que se recorre por id en cuatro sitios.
+- El halo verde del día de hoy, y `.ej-set-n` a `--text2`: sobre el verde de una
+  serie marcada, `--text3` daba 3.86:1. Eso sólo se ve **midiendo con la sesión
+  llena** — con la app vacía esa combinación no existe.
+- El marcador volvió a cortarse: "45 kg la vez pasada" no cabe en 112 px. Ahora
+  dice "antes 45 kg".

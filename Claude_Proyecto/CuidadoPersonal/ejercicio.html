@@ -12,8 +12,8 @@
      el primer instante. -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" media="print" onload="this.media='all'">
-<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"></noscript>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&display=swap" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&display=swap"></noscript>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -22,6 +22,7 @@
   --b:#3b82f6;--b-l:rgba(59,130,246,.1);
   --pu:#b06eff;--pu-l:rgba(176,110,255,.1);
   --w:#ffd93d;--w-l:rgba(255,217,61,.1);
+  --am:#ffb15c;--am-t:#ffb15c;--am-l:rgba(255,177,92,.11);
   --r:#ff3b6b;--r-l:rgba(255,59,107,.1);
   --bg:#060614;--border:rgba(var(--ov),.08);
   --text:#e8eaf6;--text2:#8892b0;--text3:#7a8699;
@@ -213,7 +214,8 @@ tbody tr:hover td{background:rgba(255,107,53,.03)}
 .ej-wk{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-bottom:15px}
 .ej-d{border-radius:13px;border:1px solid var(--border);background:var(--surface-2);padding:10px 11px;cursor:pointer;transition:border-color .15s}
 .ej-d:hover{border-color:rgba(0,232,122,.34)}
-.ej-d.hoy{border-color:var(--g);background:var(--g-l);box-shadow:0 0 0 1px rgba(0,232,122,.28)}
+.ej-d.hoy{border-color:var(--g);background:var(--g-l);
+  box-shadow:0 0 0 1px rgba(0,232,122,.32),0 8px 24px rgba(0,232,122,.12)}
 .ej-d.hecho{border-color:rgba(0,232,122,.22)}
 .ej-d-l{font-size:9.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--text3);display:flex;align-items:center;gap:5px}
 .ej-d.hoy .ej-d-l{color:var(--g)}
@@ -272,7 +274,7 @@ tbody tr:hover td{background:rgba(255,107,53,.03)}
 .ej-sr-h{display:flex;align-items:baseline;justify-content:space-between}
 .ej-sr-v{font-size:17px;font-weight:800;letter-spacing:-.02em;color:var(--text)}
 .ej-sr-v span{color:var(--text3);font-weight:700;font-size:12px}
-.ej-sr-d{font-size:9.5px;font-weight:800;color:var(--p);letter-spacing:.04em}
+.ej-sr-d{font-size:9.5px;font-weight:800;color:var(--am-t);letter-spacing:.04em}
 .ej-sets{display:flex;flex-direction:column;gap:5px}
 .ej-set{display:flex;align-items:center;gap:7px;padding:5px 8px;border-radius:9px;border:1px solid var(--border);background:var(--surface)}
 .ej-set.on{border-color:rgba(0,232,122,.36);background:var(--g-l)}
@@ -280,7 +282,7 @@ tbody tr:hover td{background:rgba(255,107,53,.03)}
   justify-content:center;font-size:9px;color:transparent;cursor:pointer;transition:all .15s}
 .ej-set-c:hover{border-color:var(--g)}
 .ej-set.on .ej-set-c{background:var(--g);border-color:var(--g);color:var(--bg)}
-.ej-set-n{font-size:9.5px;font-weight:800;color:var(--text3);width:12px;flex:none}
+.ej-set-n{font-size:9.5px;font-weight:800;color:var(--text2);width:12px;flex:none}
 .ej-kg{margin-left:auto;width:112px;text-align:right;font-size:12px;font-weight:800;font-family:inherit;
   background:transparent;border:none;border-bottom:1px dotted var(--text3);color:var(--text);padding:1px 3px}
 .ej-kg::placeholder{color:var(--text3);font-weight:700;font-size:10px}
@@ -289,13 +291,13 @@ tbody tr:hover td{background:rgba(255,107,53,.03)}
 .ej-kg-u{font-size:9px;color:var(--text3);font-weight:700;flex:none;width:14px}
 
 /* cronometro */
-.ej-cro{border-radius:18px;border:1px solid rgba(255,107,53,.3);padding:15px 17px;text-align:center;
-  background:linear-gradient(165deg,var(--p-l),rgba(var(--ov),.012) 55%)}
-.ej-cro-k{font-size:9px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--p)}
+.ej-cro{border-radius:18px;border:1px solid var(--am-l);padding:15px 17px;text-align:center;
+  background:linear-gradient(165deg,var(--am-l),rgba(var(--ov),.012) 55%)}
+.ej-cro-k{font-size:9px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--am-t)}
 .ej-cro-v{font-size:40px;font-weight:800;letter-spacing:-.04em;line-height:1;margin:8px 0 4px;color:var(--text)}
 .ej-cro-s{font-size:10px;color:var(--text2);font-weight:700}
 .ej-cro-bar{height:5px;border-radius:4px;background:var(--surface-3);overflow:hidden;position:relative;margin-top:11px}
-.ej-cro-bar i{position:absolute;left:0;top:0;bottom:0;background:linear-gradient(90deg,var(--p),var(--g));border-radius:4px;transition:width 1s linear}
+.ej-cro-bar i{position:absolute;left:0;top:0;bottom:0;background:linear-gradient(90deg,var(--am),var(--g));border-radius:4px;transition:width 1s linear}
 
 /* progresion */
 .ej-card{border-radius:18px;border:1px solid var(--border);background:var(--surface);padding:15px 17px}
@@ -369,6 +371,38 @@ tbody tr:hover td{background:rgba(255,107,53,.03)}
 .ej-arranque-t{font-size:12.5px;font-weight:800;margin-bottom:3px;color:var(--text)}
 .ej-arranque-d{font-size:11.5px;line-height:1.55;color:var(--text2)}
 .ej-kpi.vacio .ej-kpi-v{opacity:.45}
+
+/* ── Los remates del mockup ───────────────────────────────────────────────
+   El ambar del descanso, los numeros en Space Grotesk, la rejilla y las auroras
+   del fondo, y la tarjeta de lo que la rutina NO puede hacer. */
+:root[data-theme="light"]{--am:#c47a12;--am-t:#7a4a00;--am-l:rgba(196,122,18,.12)}
+
+.ej-kpi-v,.ej-h1,.ej-sr-v,.ej-pr-v,.ej-cro-v,.ej-d-n,.ej-otro-lr,.ej-x-s{
+  font-family:"Space Grotesk","Inter",-apple-system,sans-serif;font-variant-numeric:tabular-nums}
+
+/* la rejilla y las auroras, detras de todo el contenido de Mi Rutina */
+#s-rutina{position:relative}
+#s-rutina::before{content:'';position:absolute;inset:-20px 0;pointer-events:none;z-index:0;
+  background:
+    radial-gradient(ellipse 55% 26% at 10% -2%, var(--au-g) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 24% at 92% 0%, var(--au-b) 0%, transparent 60%),
+    radial-gradient(ellipse 80% 22% at 50% 101%, var(--au-p) 0%, transparent 62%),
+    linear-gradient(rgba(var(--ov),.02) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(var(--ov),.02) 1px,transparent 1px);
+  background-size:auto,auto,auto,60px 60px,60px 60px}
+#s-rutina>*{position:relative;z-index:1}
+:root{--au-g:rgba(0,232,122,.14);--au-b:rgba(59,130,246,.12);--au-p:rgba(176,110,255,.10)}
+:root[data-theme="light"]{--au-g:rgba(0,167,88,.09);--au-b:rgba(59,130,246,.07);--au-p:rgba(139,74,214,.06)}
+
+/* la tarjeta de aviso del carril derecho */
+.ej-aviso{border-radius:12px;border:1px solid rgba(255,84,112,.28);background:rgba(255,84,112,.08);padding:11px 13px}
+.ej-aviso-k{font-size:9px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--r)}
+.ej-aviso-t{font-size:10.5px;color:var(--text2);line-height:1.5;margin-top:5px}
+.ej-aviso-t b{color:var(--text)}
+.ej-aviso-t a{color:var(--r);font-weight:700}
+:root[data-theme="light"] .ej-aviso{border-color:rgba(176,24,64,.3);background:rgba(176,24,64,.07)}
+:root[data-theme="light"] .ej-aviso-k,
+:root[data-theme="light"] .ej-aviso-t a{color:#a8102f}
 </style>
 <script>
 (function () {
@@ -419,7 +453,7 @@ tbody tr:hover td{background:rgba(255,107,53,.03)}
     <section id="s-rutina" class="section active">
       <div class="card meta-banner" style="margin-bottom:16px">
         <div style="font-size:13px;font-weight:800;color:var(--p);margin-bottom:4px">🎯 Tu meta: masa en brazos y piernas, definir la zona media</div>
-        <div class="ts" style="color:var(--text2);line-height:1.6">Por eso brazos y piernas se entrenan <strong style="color:var(--text)">2 veces por semana</strong> cada uno (Lun/Jue y Mar/Vie) — el resto se mantiene 1x/semana para no perder desarrollo. Sobre el abdomen, honestidad primero: <strong style="color:var(--text)">no existe la reducción localizada de grasa</strong> — el core fuerte de esta rutina define músculo debajo, pero lo que realmente baja la grasa de la zona media es el déficit calórico sostenido (registra tus comidas en <a href="../CuidadoPersonal/cuidadopersonal.html?tab=salud" style="color:var(--p)">Cuidado de la Salud</a>) + el cardio de miércoles y sábado.</div>
+        <div class="ts" style="color:var(--text2);line-height:1.6">Por eso brazos y piernas se entrenan <strong style="color:var(--text)">2 veces por semana</strong> cada uno (Lun/Jue y Mar/Vie) — el resto se mantiene 1x/semana para no perder desarrollo.</div>
       </div>
 
       <div id="d-hoy"></div>
@@ -1169,7 +1203,7 @@ function ejEjercicioHtml(e,i,iso){
   const pasos=ejPasos(b);
 
   const filas=sets.map(function(x,k){
-    const ph=(k===0&&ult)?(ult.kg+' kg la vez pasada'):'anota los kg';
+    const ph=(k===0&&ult)?('antes '+ult.kg+' kg'):'anota los kg';
     return '<div class="ej-set'+(x.ok?' on':'')+'">'+
       '<div class="ej-set-c" onclick="ejToggleSet(\''+e.id+'\','+k+','+n+','+(e.descanso||0)+')" title="Marca la serie '+(k+1)+'">\u2713</div>'+
       '<div class="ej-set-n">'+(k+1)+'</div>'+
@@ -1233,6 +1267,11 @@ function ejDiasDesde(iso){
   return d===0?'hoy':(d===1?'ayer':'hace '+d+' d\u00edas');
 }
 
+// Lo que esta rutina no puede hacer. Vivia repetido en la banda de meta de arriba.
+const EJ_AVISO='Los abdominales <b>no queman la grasa del abdomen</b>. La reducci\u00f3n localizada '+
+  'no existe: el core te da fuerza y postura, pero la panza se va con el <b>d\u00e9ficit cal\u00f3rico</b> '+
+  'y el cardio de mi\u00e9rcoles y s\u00e1bado \u2014 eso se registra en '+
+  '<a href="../CuidadoPersonal/cuidadopersonal.html?tab=salud">Cuidado de la Salud</a>.';
 const EJ_SUBIR=[
   'Si completas <b>todas las series al tope de reps</b> con buena forma, la siguiente sesi\u00f3n sube.',
   'Sube <b>2.5 kg en aislamiento</b> y 5 kg en compuestos. M\u00e1s de eso y pierdes la t\u00e9cnica.',
@@ -1256,6 +1295,9 @@ function renderMiRutina(){
   const minutos=ejs.reduce((a,e)=>a+(e.series||1)*((e.descanso||60)+40)/60,0);
   const vol=esHoy?ejs.reduce(function(a,e,i){
     return a+sets[i].filter(x=>x.ok&&x.kg).reduce((b,x)=>b+x.kg*(e.reps||1),0); },0):0;
+  // Minutos de trabajo ya marcados: series hechas x (su descanso + 40 s de ejecucion).
+  const minHechos=esHoy?Math.round(ejs.reduce(function(a,e,i){
+    return a+sets[i].filter(x=>x.ok).length*((e.descanso||60)+40)/60; },0)):0;
   const racha=ejRacha();
   const hechosSem=ejSesionesSemana();
 
@@ -1267,7 +1309,7 @@ function renderMiRutina(){
     '<div class="ej-kpis">'+
       '<div class="ej-kpi'+(racha?'':' vacio')+'"><div class="ej-kpi-v" style="color:var(--g)">'+racha+'</div><div class="ej-kpi-k">Racha</div></div>'+
       '<div class="ej-kpi'+(hechosSem?'':' vacio')+'"><div class="ej-kpi-v" style="color:var(--b)">'+hechosSem+'/6</div><div class="ej-kpi-k">Esta semana</div></div>'+
-      '<div class="ej-kpi'+(vol?'':' vacio')+'"><div class="ej-kpi-v" style="color:var(--p)">'+(vol?(vol>=1000?(vol/1000).toFixed(1)+' t':vol+' kg'):'\u2014')+'</div><div class="ej-kpi-k">Volumen hoy</div></div>'+
+      '<div class="ej-kpi'+(vol?'':' vacio')+'"><div class="ej-kpi-v" style="color:var(--am-t)">'+(vol?(vol>=1000?(vol/1000).toFixed(1)+' t':vol+' kg'):'\u2014')+'</div><div class="ej-kpi-k">Volumen hoy</div></div>'+
     '</div></div>';
 
   // — la semana
@@ -1291,7 +1333,7 @@ function renderMiRutina(){
 
   const ses='<div class="ej-ses"><div class="ej-ses-h"><div class="ej-ses-t">'+
     (esHoy?'La sesi\u00f3n de hoy':'La sesi\u00f3n del '+DIAS_STR[dow].toLowerCase())+'</div>'+
-    '<div class="ej-ses-x">'+(esHoy?'<b>'+hechos+' de '+ejs.length+'</b> hechos':
+    '<div class="ej-ses-x">'+(esHoy?'<b>'+hechos+' de '+ejs.length+'</b> hechos'+(minHechos?' \u00b7 llevas ~'+minHechos+' min':''):
       '<a href="#" onclick="ejVerDia(null);return false" style="color:var(--g)">\u2190 volver a hoy</a>')+'</div></div>'+
     (rut&&rut.foco?'<div class="ej-foco">'+rut.foco+'</div>':'')+
     (ejVirgen()&&esHoy&&ejs.length?
@@ -1310,6 +1352,8 @@ function renderMiRutina(){
       ejProgresionHtml(esHoy?rut:null,iso)+
       '<div class="ej-card"><div class="ej-card-h"><div class="ej-card-t"><span class="b"></span>C\u00f3mo subir de peso</div></div>'+
         EJ_SUBIR.map((t,i)=>'<div class="ej-paso" style="margin-bottom:7px"><i>'+(i+1)+'</i><span>'+t+'</span></div>').join('')+'</div>'+
+      '<div class="ej-aviso"><div class="ej-aviso-k">\u26a0 Lo que esta rutina no puede hacer</div>'+
+        '<div class="ej-aviso-t">'+EJ_AVISO+'</div></div>'+
     '</div></div>';
 
   ejPintaCrono();
