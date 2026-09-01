@@ -23,9 +23,9 @@
   --pu:#b06eff;--pu-l:rgba(176,110,255,.1);
   --w:#ffd93d;--w-l:rgba(255,217,61,.1);
   --am:#ffb15c;--am-t:#ffb15c;--am-l:rgba(255,177,92,.11);
-  --r:#ff3b6b;--r-l:rgba(255,59,107,.1);
-  --bg:#060614;--border:rgba(var(--ov),.08);
-  --text:#e8eaf6;--text2:#8892b0;--text3:#7a8699;
+  --r:#ff5470;--r-l:rgba(255,84,112,.1);
+  --bg:#06080c;--border:rgba(var(--ov),.08);
+  --text:#eef2f7;--text2:#9aa6b4;--text3:#93a0ae;
   --surface:#161619;--surface-2:#18181c;--surface-3:#1b1b20;--ov:255,255,255;
   --sw:245px;--r14:14px;--rs:9px;--sh:0 4px 24px rgba(0,0,0,.5);
 }
@@ -201,9 +201,9 @@ tbody tr:hover td{background:rgba(255,107,53,.03)}
    sin reglas aparte. Los dibujos de Wikimedia son línea sobre transparente: van sobre una placa
    clara fija, con mix-blend-mode para que el trazo no se vea recuadrado. */
 .ej-top{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:14px}
-.ej-eyebrow{font-size:10px;font-weight:800;letter-spacing:.15em;text-transform:uppercase;color:var(--g);display:flex;align-items:center;gap:7px}
+.ej-eyebrow{font-size:10px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--g);display:flex;align-items:center;gap:7px}
 .ej-eyebrow .dot{width:6px;height:6px;border-radius:50%;background:var(--g);box-shadow:0 0 10px var(--g);flex:none}
-.ej-h1{font-size:25px;font-weight:800;letter-spacing:-.028em;margin:5px 0 0;color:var(--text)}
+.ej-h1{font-size:27px;font-weight:800;letter-spacing:-.028em;margin:5px 0 0;color:var(--text)}
 .ej-h1 em{font-style:normal;color:var(--text3);font-weight:700;font-size:14px;margin-left:10px}
 .ej-kpis{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap}
 .ej-kpi{padding:9px 14px;border-radius:13px;border:1px solid var(--border);background:var(--surface);text-align:right;min-width:96px}
@@ -403,6 +403,45 @@ tbody tr:hover td{background:rgba(255,107,53,.03)}
 :root[data-theme="light"] .ej-aviso{border-color:rgba(176,24,64,.3);background:rgba(176,24,64,.07)}
 :root[data-theme="light"] .ej-aviso-k,
 :root[data-theme="light"] .ej-aviso-t a{color:#a8102f}
+
+/* ── Igualado al mockup, medido elemento por elemento ─────────────────────────
+   El mockup no usa superficies opacas: cada tarjeta es un velo blanco al 4,5 %
+   sobre el fondo, y por eso se ven las auroras a traves. Con --surface gris
+   quedaban tapadas y la pantalla se veia plana. */
+:root{--panel:rgba(255,255,255,.045);--panel2:rgba(255,255,255,.028);--linea:rgba(255,255,255,.09)}
+:root[data-theme="light"]{--panel:rgba(255,255,255,.72);--panel2:rgba(255,255,255,.55);--linea:rgba(0,0,0,.09)}
+
+.ej-kpi,.ej-card{background:var(--panel);border-color:var(--linea)}
+.ej-d,.ej-foco,.ej-x,.ej-set{background:var(--panel2)}
+.ej-d,.ej-x,.ej-set{border-color:var(--linea)}
+.ej-foco{border-color:rgba(var(--ov),.055)}
+.ej-x.on{background:rgba(0,232,122,.055);border-color:rgba(0,232,122,.34)}
+.ej-d.hecho{background:rgba(0,232,122,.06);border-color:rgba(0,232,122,.24)}
+.ej-set.on{background:rgba(0,232,122,.09);border-color:rgba(0,232,122,.36)}
+.ej-cro-bar{background:var(--panel)}
+.ej-paso i{background:var(--panel);border-color:var(--linea)}
+
+/* medidas exactas del mockup */
+.ej-kpi{padding:9px 15px;min-width:104px}
+.ej-x-r{width:196px}
+.ej-set-c{width:17px;height:17px}
+.ej-tag{background:var(--panel2);border-color:var(--linea)}
+.ej-tag.mus{background:rgba(0,232,122,.13);border-color:rgba(0,232,122,.3)}
+.ej-d-t{filter:none}
+.ej-cro{border-color:rgba(255,177,92,.3)}
+.ej-err{background:rgba(255,84,112,.09);border-color:rgba(255,84,112,.26)}
+.ej-aviso{background:rgba(255,84,112,.08);border-color:rgba(255,84,112,.28)}
+
+/* en claro el velo blanco no se ve sobre fondo claro: se invierte a sombra */
+:root[data-theme="light"] .ej-kpi,
+:root[data-theme="light"] .ej-card{background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.05)}
+:root[data-theme="light"] .ej-d,
+:root[data-theme="light"] .ej-foco,
+:root[data-theme="light"] .ej-x,
+:root[data-theme="light"] .ej-set{background:rgba(255,255,255,.75)}
+:root[data-theme="light"] .ej-tag{background:rgba(0,0,0,.03);color:#5c5f70}
+:root[data-theme="light"] .ej-err{background:rgba(200,30,77,.08);border-color:rgba(200,30,77,.24)}
+:root[data-theme="light"] .ej-aviso{background:rgba(200,30,77,.07);border-color:rgba(200,30,77,.26)}
 </style>
 <script>
 (function () {
@@ -1322,7 +1361,7 @@ function renderMiRutina(){
     return '<div class="ej-d'+(d===dowHoy?' hoy':'')+(done?' hecho':'')+'" onclick="ejVerDia('+d+')" title="Ver el '+DIAS_STR[d]+'">'+
       '<div class="ej-d-l">'+DIAS_SHORT[d]+(d===dowHoy?' \u00b7 hoy':'')+(done?' <span class="ej-tic">\u2713</span>':'')+'</div>'+
       '<div class="ej-d-n">'+ejEsc((r.nombre||'Sin asignar').split('\u2014')[0].trim())+'</div>'+
-      '<div class="ej-d-t" style="background:'+col+'22;color:'+col+';border:1px solid '+col+'55">'+
+      '<div class="ej-d-t" style="background:'+col+'29;color:'+col+';border:1px solid '+col+'52">'+
         ejEsc(((r.nombre||'').split('\u2014')[1]||r.tipo||'').trim()||'\u2014')+'</div></div>';
   }).join('');
 

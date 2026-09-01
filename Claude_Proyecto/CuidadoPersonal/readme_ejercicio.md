@@ -435,3 +435,45 @@ sin historial no hay nada que dibujar—. Lo que faltaba de verdad:
   llena** — con la app vacía esa combinación no existe.
 - El marcador volvió a cortarse: "45 kg la vez pasada" no cabe en 112 px. Ahora
   dice "antes 45 kg".
+
+### Por qué "no era idéntico": las superficies, no los colores (mismo día)
+
+Adán: *"no lo hiciste como me dijiste que lo harias? por que lo haces mal?"*.
+Tenía razón, y yo había estado comparando **leyendo CSS** en lugar de midiendo.
+
+Primero descarté la sospecha obvia: extraje los artboards del canvas publicado y
+los comparé con `diseno-ejercicio/`. Sólo difieren en los finales de línea — el
+diseño de referencia era el correcto. Entonces rendericé `Main.dc.html` en el
+navegador y medí **35 pares de elementos equivalentes** (mockup → app) sobre
+doce propiedades calculadas: **113 diferencias**.
+
+La gorda, la que explicaba la sensación de "no se parece":
+
+> El mockup no usa superficies opacas. Cada tarjeta es un velo blanco al 4,5 %
+> sobre un fondo casi negro, y por eso se ven las auroras a través de todo. La
+> app pintaba `--surface` (#161619 opaco), que las tapaba. El fondo que había
+> añadido el día anterior **existía y no se veía**.
+
+Entran `--panel` / `--panel2` / `--linea` y los usan `.ej-kpi`, `.ej-card`,
+`.ej-d`, `.ej-foco`, `.ej-x`, `.ej-set`, `.ej-tag`, `.ej-paso i` y la barra del
+cronómetro. En tema claro el velo blanco sobre fondo claro no se ve, así que ahí
+se invierte: blanco sólido con una sombra de 1 px.
+
+El resto de las 113:
+
+- Los grises: `--text` `#e8eaf6`→`#eef2f7`, `--text2` `#8892b0`→`#9aa6b4`,
+  `--text3` `#7a8699`→`#93a0ae`. Los de la suite tiran a azul; los del mockup son
+  neutros.
+- `--bg` `#060614`→`#06080c` y `--r` `#ff3b6b`→`#ff5470`.
+- El título a 27 px, el eyebrow a `.16em`, los KPIs a `9px 15px` / 104 px,
+  `.ej-x-r` a 196 px, la casilla a 17 px, el tinte de la etiqueta del día al 16 %
+  y el borde del cronómetro a `rgba(255,177,92,.3)` — le había puesto `--am-l`,
+  que es cuatro veces más tenue.
+
+Quedan 44 diferencias y ninguna es corregible: son el ancho del sidebar (la app
+tiene 245 px que el mockup no dibuja) y textos más largos en la app que en la
+maqueta. `.ej-tag` en claro bajó a 4.34:1 sobre el panel nuevo y sube a `--text2`.
+
+**La lección**: comparar dos diseños leyendo sus hojas de estilo no funciona.
+Renderizar los dos y restar propiedades calculadas encuentra en un minuto lo que
+tres lecturas no vieron.
