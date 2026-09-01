@@ -86,13 +86,20 @@ window.CIFRAS = (function () {
     // hasta ahora no existia en ningun lado y por eso no salia en el calendario.
     celular:         650,     // Plan de datos AT&T, dia 1
     celularPlan: 'Plan de datos AT&T',
-    gas:             179,
-    luzAgua:         135,
-    limpieza:        150,
+    // 2026-08-30: el gas se paga CADA DOS MESES, no cada mes (Adán: "gas cada 2 meses el
+    // perimero del mes, el ultimo fue el 3 agosto"). `gas` es el importe del recibo; lo que
+    // pesa en un mes cualquiera es la mitad, y eso es lo que entra en `servicios`.
+    gas:             179,     // recibo bimestral, día 1 de los meses pares
+    gasCadaMeses:      2,
+    gasDesdeMes: '2026-08',   // el último recibo pagado; desde aquí se cuenta de dos en dos
+    get gasMensual() { return this.gas / this.gasCadaMeses; },
+    luzAgua:         135,     // día 1 (luz y agua caen el mismo día)
     claudeCode:      380,     // $20 USD
     icloud:            50,
     // Los tres grupos tal como los usa el plan semanal de Finanzas, para que no los sume a mano.
-    get servicios() { return this.celular + this.internet + this.gas + this.luzAgua + this.limpieza; },
+    // La limpieza salió el 2026-08-30: Adán, preguntado por su día, contestó "esa no la
+    // pago". Eran $150/mes que el presupuesto llevaba dando por gastados.
+    get servicios() { return this.celular + this.internet + this.gasMensual + this.luzAgua; },
     get suscripciones() { return this.gym + this.claudeCode + this.icloud; },
     get fijosTotal() { return this.renta + this.servicios + this.suscripciones; },
     cetesDia15:     1500,     // aporte recurrente a CETES el día 15
@@ -143,6 +150,16 @@ window.CIFRAS = (function () {
       { dia: 15, txt: 'Quincena', get monto() { return PROYECTO.sueldoQuinc; }, entra: true },
       { dia: 15, txt: 'CETES',    get monto() { return PROYECTO.cetesDia15; } },
       { dia: 17, txt: 'Gym',      get monto() { return PROYECTO.gym; } },
+      // 2026-08-30 — los seis fijos que el calendario no contemplaba. Sumaban $1,094 al mes
+      // saliendo de la cuenta sin que ninguna pantalla los descontara del tramo. Los días
+      // los dio Adán; la limpieza se cayó de la lista porque no la paga.
+      { dia:  1, txt: 'Luz y agua', get monto() { return PROYECTO.luzAgua; } },
+      { dia:  2, txt: 'Claude Code', get monto() { return PROYECTO.claudeCode; } },
+      { dia:  8, txt: 'Internet',   get monto() { return PROYECTO.internet; } },
+      { dia:  8, txt: 'iCloud',     get monto() { return PROYECTO.icloud; } },
+      // El gas no cae todos los meses: `cada` y `desde` lo dicen, y ctAgenda los respeta.
+      { dia:  1, txt: 'Gas', get monto() { return PROYECTO.gas; },
+        get cada() { return PROYECTO.gasCadaMeses; }, get desde() { return PROYECTO.gasDesdeMes; } },
     ],
     hitos: [
       { fecha: PROYECTO.maestriaPausa,  txt: 'Decisión Maestría',
@@ -765,7 +782,11 @@ window.CIFRAS = (function () {
     renta:         { v: () => PROYECTO.renta },
     gym:           { v: () => PROYECTO.gym },
     gymNombre:     { v: () => PROYECTO.gymNombre, fmt: 'txt' },
-    servicios:     { dep: ['celular','internet','gas','luzAgua','limpieza'], v: () => PROYECTO.servicios },
+    // `gasCadaMeses` divide al recibo antes de entrar en servicios, así que mueve el
+    // total igual que el importe. Sin declararlo, el impacto quedaba invisible.
+    gasMensual:    { dep: ['gas','gasCadaMeses'], v: () => PROYECTO.gasMensual },
+    gasCadaMeses:  { v: () => PROYECTO.gasCadaMeses },
+    servicios:     { dep: ['celular','internet','gas','gasCadaMeses','luzAgua'], v: () => PROYECTO.servicios },
     suscripciones: { dep: ['gym','claudeCode','icloud'], v: () => PROYECTO.suscripciones },
     cetesDia15:    { v: () => PROYECTO.cetesDia15 },
     fijosTotal:    { dep: ['renta','servicios','suscripciones'], v: () => PROYECTO.fijosTotal },

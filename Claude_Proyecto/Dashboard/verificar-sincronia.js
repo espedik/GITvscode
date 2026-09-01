@@ -365,10 +365,26 @@ const sinComentarios = s => s.replace(/\/\*[\s\S]*?\*\//g, '')
     vistos[d.id] = 1;
   });
 
+  // c-bis) Todo gasto fijo de PROYECTO tiene que caer algún día del calendario. Hasta el
+  //        2026-08-30 seis de ellos —internet, gas, luz/agua, Claude Code, iCloud y una
+  //        limpieza que ni siquiera se paga— sumaban $1,094 al mes que salían de la cuenta
+  //        sin que ninguna pantalla los descontara: el tablero daba saldos de más.
+  const FIJOS_CON_DIA = ['renta', 'celular', 'internet', 'gas', 'luzAgua', 'gym',
+                         'claudeCode', 'icloud', 'cetesDia15'];
+  const textoCobros = (C.CALENDARIO.cobros || []).map(function (c) { return String(c.txt).toLowerCase(); }).join(' | ');
+  const APODO = { celular: 'plan de datos', luzAgua: 'luz y agua', cetesDia15: 'cetes',
+                  claudeCode: 'claude code', icloud: 'icloud' };
+  FIJOS_CON_DIA.forEach(function (k) {
+    if (!(+P[k] > 0)) return;
+    const busca = APODO[k] || k.toLowerCase();
+    if (textoCobros.indexOf(busca) < 0)
+      malos.push('     PROYECTO.' + k + ' ($' + P[k] + ') no tiene día en CALENDARIO.cobros');
+  });
+
   // d) Las sumas de PROYECTO. Son getters, así que no pueden desfasarse solas — pero sí si
   //    alguien añade un servicio nuevo y se olvida de meterlo en el getter.
   [['ingresoTotal', P.sueldo + P.didiMes + P.siVale],
-   ['servicios', P.celular + P.internet + P.gas + P.luzAgua + P.limpieza],
+   ['servicios', P.celular + P.internet + P.gasMensual + P.luzAgua],
    ['suscripciones', P.gym + P.claudeCode + P.icloud],
    ['fijosTotal', P.renta + P.servicios + P.suscripciones]].forEach(function (par) {
     if (Math.abs(P[par[0]] - par[1]) > 0.005)

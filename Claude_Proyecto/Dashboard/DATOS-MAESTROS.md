@@ -65,10 +65,10 @@ desde JS. En consola, `CIFRAS.tabla()` las lista con su valor actual.
 | `{{renta}}` | $11,000 | Día 1 |
 | `{{gym}}` `{{gymNombre}}` | $650 · Total Pass | Día 17. Era Fitsi a $1,500 hasta el 18-ago-2026 |
 | `{{celular}}` `{{celularPlan}}` | $650 · Plan de datos AT&T | Día 1. Subió de $600 el 30-ago-2026, cuando se supo su día |
-| `{{servicios}}` | $1,314 | Celular + internet + gas + luz/agua + limpieza |
+| `{{servicios}}` | $1,075 | Plan AT&T + internet + gas (la mitad: es bimestral) + luz/agua |
 | `{{suscripciones}}` | $1,080 | Gym + Claude Code + iCloud |
 | `{{cetesDia15}}` | $1,500 | Aporte recurrente a CETES el día 15 |
-| `{{fijosTotal}}` | $13,394 | Derivada: renta + servicios + suscripciones |
+| `{{fijosTotal}}` | $13,155 | Derivada: renta + servicios + suscripciones |
 
 ### Deudas · saldos vivos (`finanzasmx_v2`)
 
@@ -239,7 +239,7 @@ node -e "require('./Dashboard/datos-maestros.js'); console.log(window.CIFRAS.imp
 | Si tocas… | se mueven |
 |---|---|
 | `sueldo`, `didiMes`, `siVale` | `ingresoTotal` → `margen` |
-| `celular`, `internet`, `gas`, `luzAgua`, `limpieza` | `servicios` → `fijosTotal` → `margen` |
+| `celular`, `internet`, `gas`, `gasCadaMeses`, `luzAgua` | `servicios` → `fijosTotal` → `margen` |
 | `gym`, `claudeCode`, `icloud` | `suscripciones` → `fijosTotal` → `margen` |
 | `renta` | `fijosTotal` → `margen` |
 | el saldo o el mínimo de cualquier deuda | `deudaTotal`, `deudaCara`, `deudaMsi`, `minimosDeuda` → `margen` |

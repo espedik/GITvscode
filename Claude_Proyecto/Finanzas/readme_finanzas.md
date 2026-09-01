@@ -51,7 +51,7 @@ guardado.
 | Salario BBVA | `{{sueldo}}` $41,000 | Quincenal |
 | Renta | `{{renta}}` $11,000 | Día 1 |
 | Crédito Dolphin Mini | `_autoMin()` $6,700 | Día 15 |
-| Servicios | `{{servicios}}` $1,314 | Plan AT&T $650 (día 1), internet, gas, luz/agua, limpieza |
+| Servicios | `{{servicios}}` $1,075 | Plan AT&T $650 (día 1), internet (8), gas (bimestral, día 1), luz y agua (1) |
 | Suscripciones | `{{suscripciones}}` $1,080 | Gym Total Pass $650, Claude Code $380, iCloud $50 |
 | CETES | `{{cetesDia15}}` $1,500 | Día 15 |
 | Mínimos de TC | `minimosTC()` | Sale de `S.debts`, no de un número escrito |

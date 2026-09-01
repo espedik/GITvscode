@@ -485,6 +485,51 @@ la primera. Al desmarcar abajo leía la de arriba, que seguía marcada, y volví
 tarea no se revertía nunca. Ahora la casilla manda su propio estado
 (`toggleFaseCheck(id, this.checked)`) y la búsqueda por id queda solo para quien no lo pasa.
 
+### Los seis fijos que el calendario no contemplaba
+
+Adán, viendo la pantalla de suscripciones de Finanzas: *"creo no contemplaste todo esto"*. Tenía
+razón, y era el fallo más caro de todos los de este día.
+
+`CALENDARIO.cobros` solo tenía renta, plan de datos, las dos quincenas, CETES y gym. Fuera se
+quedaban **seis gastos que sí estaban en el maestro** y que nadie descontaba del tramo:
+
+| | Al mes | Día |
+|---|---|---|
+| Claude Code | $380 | 2 |
+| Internet | $200 | 8 |
+| Luz y agua | $135 | 1 |
+| iCloud | $50 | 8 |
+| Gas | $179 **cada dos meses** | 1 |
+| ~~Limpieza~~ | ~~$150~~ | — |
+
+Eran **$1,094 al mes** saliendo de la cuenta sin que ninguna pantalla los viera: el tablero venía
+dando saldos de más todo este tiempo.
+
+**La limpieza no existe.** Preguntado por su día, Adán contestó *"esa no la pago"*. Eran $150/mes
+que el presupuesto llevaba dando por gastados; fuera del maestro.
+
+**El gas es bimestral.** *"gas cada 2 meses el perimero del mes, el ultimo fue el 3 agosto"*. Los
+cobros aceptan ahora `cada` y `desde`, y `ctAgenda` los respeta: el gas aparece en agosto y en
+octubre, y no en septiembre. En el presupuesto mensual entra por la mitad (`gasMensual`), porque
+un recibo cada dos meses no pesa lo mismo que uno cada mes.
+
+Entre las dos correcciones, `servicios` pasó de $1,314 a **$1,075** y `fijosTotal` de $13,394 a
+**$13,155**.
+
+#### Finanzas los pedía con cifras escritas a mano
+
+El mismo día apareció la causa de que Adán lo detectara: la lista `RECURRENTES` de Finanzas tenía
+los importes **escritos a mano**, así que se habían quedado viejos sin que nada lo notara — el gym
+seguía en $1,500 (es $650 desde que cambió a Total Pass el 18 de agosto) y el plan de datos en
+$600. Y le faltaban luz/agua y limpieza, así que el subtotal pedía $2,909 cuando eran $2,394.
+Ahora se leen de `PROYECTO`.
+
+#### El control que lo habría cazado
+
+`verificar-sincronia.js` gana un control: **todo gasto fijo de `PROYECTO` con importe tiene que
+caer algún día de `CALENDARIO.cobros`**. Si mañana se añade un servicio al maestro y se olvida su
+día, el verificador lo dice en vez de que el saldo salga alto y nadie se entere.
+
 ### El plan de datos de AT&T
 
 Adán: *"los dias primero de cada mes tambien pago mi plan de datos de ATT and T, agregalo, me

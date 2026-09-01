@@ -6009,11 +6009,20 @@ const ctIngr  = arr => (arr||[]).filter(t=>t.type!=='expense').reduce((s,t)=>s+(
 
 // Lo que está PROGRAMADO ese día del mes, venga de donde venga. Es la misma fuente que
 // usa el globo del calendario anual, para que las dos pantallas no puedan discrepar.
-function ctAgenda(dia){
+function ctAgenda(dia, ym){
   const out = [];
   const CAL = (window.CIFRAS && CIFRAS.CALENDARIO) || null;
+  // Un cobro puede no caer todos los meses: el gas es bimestral. `cada` dice cada
+  // cuantos meses y `desde` desde cual se cuenta; sin esos campos, cae siempre.
+  const mes = ym || ctYM || '';
   if(CAL) (CAL.cobros||[]).forEach(function(c){
-    if(c.dia === dia) out.push({t:c.txt, monto:c.monto, entra:!!c.entra});
+    if(c.dia !== dia) return;
+    if(c.cada > 1 && c.desde && mes){
+      const a0 = c.desde.split('-').map(Number), a1 = mes.split('-').map(Number);
+      const dif = (a1[0]-a0[0])*12 + (a1[1]-a0[1]);
+      if(dif % c.cada !== 0) return;
+    }
+    out.push({t:c.txt, monto:c.monto, entra:!!c.entra});
   });
   // Sin Finanzas abierto en este navegador, D.fin.debts viene vacio y el tablero se
   // quedaba con 3 de los 8 pagos del mes: faltaban el auto, el iPhone y las tarjetas,

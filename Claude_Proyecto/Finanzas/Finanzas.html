@@ -3804,14 +3804,21 @@ function renderDashCharts(mtx) {
 }
 
 function renderSubscriptions(refDate=new Date()) {
+  // Los importes SE LEEN del maestro. Estuvieron escritos a mano hasta el 2026-08-30 y se
+  // quedaron viejos sin que nada lo notara: el gym seguía en $1,500 (es $650 desde que
+  // cambió a Total Pass el 18-ago) y el plan de datos en $600 (es $650). Además faltaban
+  // luz/agua y limpieza, así que el subtotal pedía $2,909 cuando son $2,394.
+  const _pgR = _PG();
   const RECURRENTES = [
-    {name:'Claude Code',     amount:380,  icon:'🤖', tag:'Digital',   color:'var(--primary)'},
-    {name:'iCloud',          amount:50,   icon:'☁️',  tag:'Digital',   color:'var(--primary)'},
-    {name:'Gym / Fitness',   amount:1500, icon:'💪',  tag:'Membresía', color:'var(--purple)'},
-    {name:'Internet',        amount:200,  icon:'🌐',  tag:'Servicio',  color:'var(--success)'},
-    {name:'Plan de datos',   amount:600,  icon:'📱',  tag:'Servicio',  color:'var(--success)'},
-    {name:'Gas',             amount:179,  icon:'🔥',  tag:'Servicio',  color:'var(--warning)'},
-  ];
+    {name:'Gym / '+(_pgR.gymNombre||'Fitness'), amount:_pgR.gym,        icon:'💪', tag:'Membresía', color:'var(--purple)'},
+    {name:_pgR.celularPlan||'Plan de datos',    amount:_pgR.celular,    icon:'📱', tag:'Servicio',  color:'var(--success)'},
+    {name:'Claude Code',                        amount:_pgR.claudeCode, icon:'🤖', tag:'Digital',   color:'var(--primary)'},
+    {name:'Internet',                           amount:_pgR.internet,   icon:'🌐', tag:'Servicio',  color:'var(--success)'},
+    {name:'Gas',                                amount:_pgR.gas,        icon:'🔥', tag:'Servicio',  color:'var(--warning)'},
+    {name:'Limpieza',                           amount:_pgR.limpieza,   icon:'🧹', tag:'Servicio',  color:'var(--warning)'},
+    {name:'Luz y agua',                         amount:_pgR.luzAgua,    icon:'💡', tag:'Servicio',  color:'var(--warning)'},
+    {name:'iCloud',                             amount:_pgR.icloud,     icon:'☁️', tag:'Digital',   color:'var(--primary)'},
+  ].filter(r=>+r.amount > 0);
   RECURRENTES.sort((a,b)=>b.amount-a.amount);
   const totalRec = RECURRENTES.reduce((s,r)=>s+r.amount, 0);
 
