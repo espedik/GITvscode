@@ -151,14 +151,15 @@ como 1.
 Adán, 2026-09-01: *"un hombre siempre debe saber a donde ir a cenar, comer, citas interesantes"*.
 
 Es una **habilidad más** de Habilidades Base y la única atada a una ciudad, a propósito: un
-consejo genérico sobre citas no sirve de nada a las ocho de la noche en la Roma. Nueve pasos, de
-los cuales seis son listas de lugares:
+consejo genérico sobre citas no sirve de nada a las ocho de la noche en la Roma. Diez pasos, de
+los cuales siete son listas de lugares:
 
 | Paso | Lugares |
 |---|---|
 | Primera cita — café y salida fácil | 4 |
 | Comer bien de día | 4 |
-| Cenar sin quedar mal | 5 |
+| Cenar sin quedar mal | 4 |
+| Terrazas — cuando la vista es el plan | 6 |
 | Cuando la ocasión lo pide | 2 |
 | Copas — la segunda parte | 4 |
 | Citas que no son comer | 6 |
@@ -176,8 +177,12 @@ derecha para que se vea que lleva a algún lado.
 que ninguno. Sí está lo de *"hay que reservar con semanas"* en Pujol, Quintonil, Rosetta, Máximo,
 Contramar y la Casa Barragán, porque es justo lo que arruina la noche cuando no lo sabes.
 
-Comprobado en dark y light a 1600 y 390px: los 25 lugares aparecen, ninguno con el enlace roto,
-todos con `target="_blank"` y `rel="noopener"`.
+Las terrazas tienen paso propio: Terraza Cha Cha Chá estaba listada en "Cenar", que es lo que es
+pero no para lo que se va. Su aviso —**pedir mesa en la baranda** al reservar, y que de junio a
+septiembre llueve y te mandan adentro— vale para las seis.
+
+Comprobado en dark y light a 1600 y 390px: los 30 lugares aparecen en sus siete pasos, ninguno con
+el enlace roto ni repetido en dos pasos, todos con `target="_blank"` y `rel="noopener"`.
 
 ## Mis Metas — "panel de trayectoria"
 
