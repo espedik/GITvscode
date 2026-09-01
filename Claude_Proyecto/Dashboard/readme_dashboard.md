@@ -293,10 +293,19 @@ las ocho pantallas con icono de trazo y **su nombre al lado**, los controles de 
 su barra de avance, y la fila de sistema (menú, pantalla completa, ajustes, ayuda, tema). El
 activo se marca con fondo y color, sin taparse.
 
-**El lado izquierdo se lo queda el contenido.** El piso del padding izquierdo bajó de 120 a 42px
-—existía solo para esquivar el rail que ya no está— y el derecho subió a 230px, que es lo que
-ocupa el rail con su margen: sin eso tapaba la tercera columna del tablero. Comprobado slide por
-slide en los ocho: ninguno queda por debajo.
+**Vive plegado.** Adán, 2026-09-01: *"escóndelo y ya cuando haga click a esa sección, que
+aparezca todo"*. En reposo es una tira de **44px** con tres cosas: el tirador, el icono de la
+pantalla en la que estás y el play. Al tocarlo se abre a 198px con todo; al elegir pantalla se
+pliega solo, que es justo para lo que se abre. El estado se recuerda en `dash-rail-abierto`.
+
+**El hueco sigue al rail.** El padding derecho del slide es una variable (`--pad-rail`) que cambia
+con la clase `rail-on` del `body`: 76px plegado, 230px abierto. Así el contenido pasa de 1306 a
+**1400px** —su máximo— en cuanto el rail se cierra. El piso izquierdo bajó de 120 a 42px, porque
+existía solo para esquivar el rail que ya no está de ese lado. Comprobado slide por slide en los
+ocho: ninguno queda por debajo del rail, ni abierto ni cerrado.
+
+En pantallas estrechas no hay tirador: ahí el rail ya es la barra inferior y no hay nada que
+plegar.
 
 **En pantallas estrechas** el rail baja al centro-abajo como barra horizontal y la lista de
 pantallas se va con él —esa navegación ya vive en el menú ☰ y en la barra de Apps—, dejando los

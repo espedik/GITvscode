@@ -111,7 +111,9 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
      garantiza espacio libre sin importar el ancho, y en pantallas grandes el 6vw ya es mayor
      de todos modos, así que no se pierde espacio ahí. 2026-08-09, Adán: "las cosas se ven muy
      amontonadas". */
-  padding:5vh max(6vw,230px) 5vh max(4vw,42px);opacity:0;transform:scale(1.045);filter:blur(10px);
+  /* El hueco de la derecha depende de si el rail está abierto (198+32) o plegado (44+28):
+     con el rail cerrado el contenido se lleva casi toda la pantalla. */
+  padding:5vh var(--pad-rail,max(6vw,76px)) 5vh max(4vw,42px);opacity:0;transform:scale(1.045);filter:blur(10px);
   transition:opacity 1.3s cubic-bezier(.22,.61,.36,1), transform 1.8s cubic-bezier(.22,.61,.36,1), filter 1.3s ease;
   pointer-events:none; overflow:hidden;
 }
@@ -601,7 +603,33 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
   background:var(--bar2);border:1px solid rgba(var(--ov),.08);backdrop-filter:blur(14px);
   border-radius:18px;padding:14px 12px;opacity:.72;transition:opacity .3s}
 .hud-side:hover{opacity:1}
-.hud-side-right{right:16px;top:70px;bottom:16px;width:198px;box-sizing:border-box}
+body{--pad-rail:max(6vw,76px)}
+body.rail-on{--pad-rail:max(6vw,230px)}
+.hud-side-right{right:16px;top:70px;bottom:16px;width:198px;box-sizing:border-box;
+  transition:width .22s ease,padding .22s ease}
+/* PLEGADO por defecto: una tira de 44px que solo dice en qué pantalla estás y deja pausar.
+   Adán, 2026-09-01: "escóndelo y ya cuando haga click a esa sección, que aparezca todo". */
+.hud-side-right.mini{width:44px;padding:12px 6px;align-items:center}
+.hud-side-right.mini .hud-estado,
+.hud-side-right.mini .hud-progress,
+.hud-side-right.mini .hud-sistema,
+.hud-side-right.mini .hud-nav-t,
+.hud-side-right.mini .hud-slidenav{display:none}
+.hud-side-right.mini .hud-play{border-top:0;padding-top:0}
+/* Plegado solo se ve la pantalla ACTIVA, como marcador de posición. */
+.hud-side-right.mini .hud-nav-btn{display:none}
+.hud-side-right.mini .hud-nav-btn.on{display:flex;justify-content:center;padding:5px;
+  grid-template-columns:none;width:32px}
+.hud-side-right.mini .hud-pantallas{flex:none;overflow:visible;align-items:center}
+/* El tirador: el botón que abre y cierra, siempre arriba del todo. */
+.hud-tirador{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;
+  padding:5px 0;border:0;border-radius:8px;background:rgba(var(--ov),.05);color:var(--text3);
+  cursor:pointer;font-family:inherit;font-size:10px;transition:background .15s}
+.hud-tirador:hover{background:rgba(var(--ov),.11);color:var(--text2)}
+.hud-tirador svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:1.9;
+  stroke-linecap:round;stroke-linejoin:round;transition:transform .22s}
+.hud-side-right.mini .hud-tirador svg{transform:rotate(180deg)}
+.hud-side-right.mini .hud-tirador span{display:none}
 .hud-estado{display:flex;align-items:baseline;justify-content:space-between;gap:8px}
 .hud-pantallas{display:flex;flex-direction:column;gap:1px;flex:1;min-height:0;overflow-y:auto;
   scrollbar-gutter:stable}
@@ -2315,6 +2343,11 @@ button.hp-lec:active{transform:translateY(0)}
     width:auto;max-width:92vw;flex-direction:row;flex-wrap:wrap;align-items:center;
     justify-content:center;gap:9px;padding:8px 14px;border-radius:20px;opacity:1}
   .hud-pantallas{display:none}
+  /* Aqui el rail YA es una barra inferior: no hay nada que plegar. */
+  .hud-tirador{display:none}
+  .hud-side-right.mini{width:auto;padding:8px 14px}
+  .hud-side-right.mini .hud-sistema,
+  .hud-side-right.mini .hud-slidenav{display:flex}
   .hud-estado{flex-direction:row;align-items:baseline;gap:7px}
   .hud-play,.hud-sistema{flex-direction:row;align-items:center;gap:7px;padding-top:0;border-top:0}
   .hud-play{flex-direction:row}
@@ -3158,7 +3191,11 @@ button.ct-cat:hover{background:rgba(var(--ov),.07)}
      de círculos con emoji: la de la izquierda se comía 120px de contenido y su icono activo
      quedaba tapado por el degradado que lo marcaba. Ahora las pantallas viven aquí con su
      nombre al lado, y el slide se queda con todo el lado izquierdo. -->
-<div class="hud-side hud-side-right" id="hudRail">
+<div class="hud-side hud-side-right mini" id="hudRail">
+  <button class="hud-tirador" onclick="toggleRail()" title="Abrir o cerrar el panel"
+          aria-label="Abrir o cerrar el panel de control" id="railTirador">
+    <svg viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"></path></svg><span>Ocultar</span>
+  </button>
   <div class="hud-estado">
     <span class="hud-clock" id="hudClock">—</span>
     <span class="hud-sync" id="hudSync"></span>
@@ -9814,6 +9851,21 @@ function buildHudNav(){
 }
 function paintHudNav(){document.querySelectorAll('.hud-nav-btn').forEach((b,i)=>b.classList.toggle('on',i===cur));}
 
+// El rail vive plegado: una tira de 44px con la pantalla actual y el play. Se abre al tocar
+// el tirador, y se cierra solo al elegir pantalla — que es a lo que se abre.
+const RAIL_KEY='dash-rail-abierto';
+function pintaRail(abierto){
+  const r=document.getElementById('hudRail'); if(!r) return;
+  r.classList.toggle('mini', !abierto);
+  document.body.classList.toggle('rail-on', abierto);
+}
+function toggleRail(){
+  const abierto=document.getElementById('hudRail').classList.contains('mini');
+  pintaRail(abierto);
+  rawSet(RAIL_KEY, abierto);
+}
+function restauraRail(){ pintaRail(rawGet(RAIL_KEY, false)===true); }
+
 function showSlide(i){
   i=Math.min(Math.max(0,i),N-1);
   // Salir de "Mi Día" (slide 0) hacia cualquier otra pantalla resetea el día que se estaba
@@ -9827,6 +9879,8 @@ function showSlide(i){
   renderQuickApps();
   document.querySelectorAll('.slide').forEach(s=>s.classList.toggle('active',parseInt(s.dataset.i)===i));
   cur=i; paintDots(); paintHudNav();
+  // Elegir pantalla es justo para lo que se abre el rail: al llegar, se pliega solo.
+  if(!document.getElementById('hudRail').classList.contains('mini')) pintaRail(false);
   // Volver a "Mi Día" re-centra la cinta en el bloque de ahora. Hace falta un segundo pase aquí
   // —además del que ya hace pintarCintaDia()— porque RENDERS[i]() corre con el slide todavía
   // inactivo: si estaba oculto, el carril puede medir 0 de ancho y el centro sale mal. Pedido de
@@ -10032,6 +10086,7 @@ setInterval(tickClock,1000);
 // ── Init ─────────────────────────────────────────────────────────────────
 buildDots();
 buildHudNav();
+restauraRail();   // el rail arranca plegado salvo que se dejara abierto
 const _settings=loadSettings();
 fixTasaTCIfNeeded(); fixBanamexIfNeeded();
 fixPagos20260813IfNeeded();
