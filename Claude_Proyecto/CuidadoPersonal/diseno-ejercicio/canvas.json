@@ -1,0 +1,14 @@
+{
+  "artboards": [
+    { "file": "Main.dc.html",  "x": 0,    "y": 0,    "w": 1440, "h": 1420, "title": "Ejercicio — la sesión de hoy" },
+    { "file": "Ficha.dc.html", "x": 1560, "y": 0,    "w": 1040, "h": 1240, "title": "Ficha de un ejercicio" },
+    { "file": "Movil.dc.html", "x": 1560, "y": 1360, "w": 390,  "h": 1500, "title": "Móvil — la vista del gimnasio" }
+  ],
+  "annotations": [
+    { "id": "nota-brief", "x": 0, "y": -240, "w": 720, "text": "Hoy Mi Rutina son 7403px con los 7 días abiertos: para llegar al martes hay que pasar por el lunes. Y el campo `peso` existe en los datos pero está en 0 en los 45 ejercicios — no hay dónde anotarlo, así que no hay progresión." },
+    { "id": "nota-main", "x": 0, "y": 1450, "w": 560, "text": "El eje es la sesión de hoy. Cada ejercicio: imagen grande, la técnica en 3 pasos, el error que se ve siempre, y las series con su peso — eso último es lo que hace que la semana que viene sepas cuánto subir." },
+    { "id": "nota-ficha", "x": 1560, "y": 1270, "w": 460, "text": "«Bien explicado» = qué músculo trabaja y cuánto, los 4 pasos, los 3 errores típicos, cómo se siente si está bien hecho, y con qué sustituirlo si la máquina está ocupada." },
+    { "id": "nota-movil", "x": 2000, "y": 1400, "w": 400, "text": "En el gym usas el teléfono, no la laptop: un ejercicio a la vez, imagen grande, series como botones para el pulgar y el cronómetro de descanso arriba." }
+  ],
+  "launch": { "view": "canvas" }
+}

@@ -323,3 +323,64 @@ Cada tanda de estos cambios necesitó **bumpear la bandera** (`mirutina_v1_piern
 El bloque flotante `#btnVolverDash` (`position:fixed`, fondo oscuro propio, z-index 9999) que se había insertado esta mañana **se encimaba sobre el botón de tema en pantallas angostas** y no seguía el tema de este archivo. Se retiró junto con su `<style>`: ahora el enlace es un botón redondo con el 🚀 antes del de tema, con la clase `.theme-toggle-btn` que ya usan sus vecinos, así que hereda tema y estilos sin CSS nuevo.
 
 Detalle completo y medición en `../Dashboard/readme_dashboard.md` → "El botón de Dashboard deja de flotar".
+## Rediseño completo de "Mi Rutina": técnica explicada, series marcables y progresión de pesos (2026-09-01)
+
+Adán: *"diseñame el html de ejercicio, quiero muy claro, con ejercicios bien
+explicados y manten las imagenes que pusimos, quiero un diseño futurista"*.
+
+**El fallo de fondo no era el diseño, era que la app no servía para entrenar.**
+El campo `peso` existía en los 45 ejercicios de la rutina y valía **0 en todos**:
+había dónde guardar el peso pero ningún sitio donde escribirlo, así que la app
+nunca supo cuánto levanta ni si está progresando. Lo mismo con `descanso`: cada
+ejercicio traía sus segundos y no había cronómetro. Y las descripciones eran una
+línea (`cue`) que decía *qué* es el ejercicio, no *cómo* se hace.
+
+### Lo que se agregó a los datos
+
+- **28 ejercicios de su rutina** llevan ahora `pasos:[...]` (3 a 5 pasos de
+  técnica, en orden, sin jerga) y `error:'...'` (el fallo que se ve siempre en
+  ese movimiento). Los otros 34 de `EJ_DB` siguen con su `cue`, y `ejPasos()`
+  lo parte en frases como respaldo, así que ninguna ficha sale vacía.
+- **`S.sesiones`** — nueva estructura en `localStorage['mirutina_v1']`:
+  `{'2026-09-01': {e040: [{ok:true, kg:85}, {ok:true, kg:85}, …]}}`. Una entrada
+  por día y ejercicio, una posición por serie. De ahí salen la racha, el volumen
+  y el historial; no se calcula nada que no esté escrito ahí.
+- `load()` normaliza `sesiones`, `ejerciciosCustom` y `fitsiCalendario` por
+  separado: el merge superficial perdía las claves nuevas contra datos ya
+  guardados (el mismo bug que hizo invisible el rediseño de salud.html).
+
+### Lo que ve al abrir
+
+Antes los 7 días iban abiertos a la vez y eso daba 7.403 px de scroll. Ahora:
+
+1. **Cabecera con 3 KPIs** — racha, sesiones de esta semana y volumen levantado
+   (kg × reps × series de lo marcado), más una tira de los 7 días donde hoy va
+   resaltado y cualquier otro se abre con un clic.
+2. **La sesión de hoy** — cada ejercicio con su imagen de Wikimedia (las 54 que
+   ya estaban, intactas), los pasos numerados, el error típico en rojo, y una
+   fila por serie con **casilla y campo de kg**. Marcar una serie arranca el
+   cronómetro de descanso con los segundos que ese ejercicio ya traía.
+3. **Carril derecho** — cronómetro, progresión contra la última vez que hizo ese
+   mismo ejercicio, y la regla de cuándo subir de peso.
+4. **El resto de la semana**, plegado: seis líneas, una por día, que se abren
+   sólo si las toca.
+
+`verEjercicio(id)` abre la ficha completa —pasos, error, en qué día de su rutina
+aparece, historial de pesos y tres alternativas del mismo músculo por si la
+máquina está ocupada—. Se abre desde la sesión y desde la biblioteca.
+
+### Detalles que costaron
+
+- `ORDEN_DIAS` desapareció al cortar el bloque viejo de `renderMiRutina()`; sin
+  esa constante no pintaba ningún día.
+- El naranja de este archivo es `--p`, no `--o`, y el modal usa `.open`, no
+  `.show` — copiar de otro HTML de la suite no basta.
+- **Contraste**: `--text3` daba 2.35:1 en oscuro. Subió a `#7a8699` (oscuro) y
+  `#6f7286` (claro), se agregó `--g-txt:#046e3e` para el verde en tema claro, y
+  el texto del cronómetro y el resumen de la sesión pasaron a `--text2` porque
+  sobre el fondo naranja translúcido se quedaban en 4.32:1. Medido componiendo
+  **toda** la pila de capas translúcidas, no sólo la primera: el estimador de una
+  capa da falsos negativos.
+- Verificado a 1600 px y 390 px con geometría real: 6 ejercicios con imagen, 20
+  pasos, 6 errores, 21 series marcables, cronómetro corriendo, ficha con 4 pasos
+  + error + 3 alternativas, y persistencia confirmada tras recargar.

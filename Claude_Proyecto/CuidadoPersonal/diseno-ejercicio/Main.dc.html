@@ -1,0 +1,373 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap">
+  <style>
+    body{margin:0;background:#06080c;font-family:"Inter",-apple-system,sans-serif}
+    .ej{font-family:"Inter",-apple-system,BlinkMacSystemFont,sans-serif !important}
+    .ej .kpi-v,.ej .h1,.ej .sr-v,.ej .pr-v,.ej .cro-v,.ej .num{font-family:"Space Grotesk","Inter",sans-serif}
+  </style>
+</helmet>
+
+<div class="ej">
+<style>
+.ej{
+  --tx:#eef2f7; --tx2:#9aa6b4; --tx3:#93a0ae;
+  --line:rgba(255,255,255,.09); --line2:rgba(255,255,255,.055);
+  --panel:rgba(255,255,255,.045); --panel2:rgba(255,255,255,.028);
+  --g:#00e87a; --naranja:#ff6b35; --azul:#3b82f6; --violeta:#b06eff;
+  --am:#ffb15c; --warn:#ff5470; --teal:#1fd6c4; --gris:#7b8794;
+  --ink:#06080c;
+  width:1440px; height:1420px; box-sizing:border-box; padding:26px 30px 30px;
+  background:
+    radial-gradient(ellipse 55% 40% at 10% -6%, rgba(0,232,122,.14) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 38% at 92% -4%, rgba(59,130,246,.12) 0%, transparent 60%),
+    radial-gradient(ellipse 80% 38% at 50% 108%, rgba(176,110,255,.10) 0%, transparent 62%),
+    #06080c;
+  color:var(--tx); overflow:hidden; position:relative;
+}
+.ej *{box-sizing:border-box}
+.grid-bg{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.02) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.02) 1px,transparent 1px);background-size:60px 60px}
+.z{position:relative;z-index:1}
+
+/* cabecera */
+.top{display:flex;align-items:center;gap:16px;margin-bottom:15px}
+.eyebrow{font-size:10px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--g);display:flex;align-items:center;gap:7px}
+.eyebrow .dot{width:6px;height:6px;border-radius:50%;background:var(--g);box-shadow:0 0 10px var(--g)}
+.h1{font-size:27px;font-weight:800;letter-spacing:-.028em;margin-top:5px}
+.h1 em{font-style:normal;color:var(--tx3);font-weight:700;font-size:15px;margin-left:10px}
+.top-r{margin-left:auto;display:flex;align-items:center;gap:9px}
+.kpi{padding:9px 15px;border-radius:13px;border:1px solid var(--line);background:var(--panel);text-align:right;min-width:104px}
+.kpi-v{font-size:19px;font-weight:800;letter-spacing:-.02em;line-height:1;font-variant-numeric:tabular-nums}
+.kpi-k{font-size:9px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--tx3);margin-top:4px}
+.kpi.a .kpi-v{color:var(--g)} .kpi.b .kpi-v{color:var(--azul)} .kpi.c .kpi-v{color:var(--am)}
+
+/* la semana */
+.wk{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-bottom:15px}
+.d{border-radius:13px;border:1px solid var(--line);background:var(--panel2);padding:10px 11px}
+.d.hoy{border-color:var(--g);background:rgba(0,232,122,.11);box-shadow:0 0 0 1px rgba(0,232,122,.32),0 8px 24px rgba(0,232,122,.12)}
+.d.hecho{border-color:rgba(0,232,122,.24);background:rgba(0,232,122,.06)}
+.d-l{font-size:9.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--tx3);display:flex;align-items:center;gap:5px}
+.d.hoy .d-l{color:var(--g)}
+.d-n{font-size:12.5px;font-weight:800;margin-top:6px;line-height:1.25}
+.d-t{display:inline-block;font-size:8.5px;font-weight:800;padding:2px 7px;border-radius:5px;margin-top:7px;letter-spacing:.04em}
+.t-brazos{background:rgba(176,110,255,.16);color:var(--violeta);border:1px solid rgba(176,110,255,.32)}
+.t-piernas{background:rgba(0,232,122,.14);color:var(--g);border:1px solid rgba(0,232,122,.32)}
+.t-cardio{background:rgba(123,135,148,.16);color:#a8b3bf;border:1px solid rgba(123,135,148,.34)}
+.t-core{background:rgba(255,107,53,.14);color:var(--naranja);border:1px solid rgba(255,107,53,.32)}
+.t-empuje{background:rgba(59,130,246,.14);color:var(--azul);border:1px solid rgba(59,130,246,.32)}
+.t-desc{background:rgba(255,255,255,.05);color:var(--tx3);border:1px solid var(--line)}
+.tic{width:14px;height:14px;border-radius:50%;background:var(--g);color:var(--ink);display:inline-flex;align-items:center;justify-content:center;font-size:9px;font-weight:800}
+
+/* cuerpo */
+.mid{display:grid;grid-template-columns:1fr 330px;gap:14px;align-items:start}
+.col{display:flex;flex-direction:column;gap:14px;min-width:0}
+.card{border-radius:18px;border:1px solid var(--line);background:var(--panel);padding:15px 17px}
+.card-h{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
+.card-t{font-size:10.5px;font-weight:800;letter-spacing:.11em;text-transform:uppercase;color:var(--tx2);display:flex;align-items:center;gap:7px}
+.card-t .b{width:3px;height:12px;border-radius:2px;background:linear-gradient(180deg,var(--g),var(--azul));flex:none}
+.card-x{font-size:10px;color:var(--tx3);font-weight:700;white-space:nowrap}
+
+/* la sesion */
+.ses{border-radius:20px;border:1px solid rgba(0,232,122,.26);padding:16px 18px 17px;
+  background:linear-gradient(160deg,rgba(0,232,122,.07),rgba(255,255,255,.02) 48%)}
+.ses-h{display:flex;align-items:center;gap:12px;margin-bottom:13px;flex-wrap:wrap}
+.ses-t{font-size:10.5px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--tx2)}
+.ses-x{margin-left:auto;font-size:11.5px;color:var(--tx3);font-weight:700}
+.ses-x b{color:var(--g)}
+.foco{font-size:11px;color:var(--tx2);line-height:1.55;padding:10px 12px;border-radius:11px;
+  background:var(--panel2);border:1px solid var(--line2);margin-bottom:13px}
+.foco b{color:var(--tx)}
+
+.ex{display:flex;gap:14px;padding:13px;border-radius:15px;border:1px solid var(--line);background:var(--panel2);margin-bottom:9px}
+.ex:last-child{margin-bottom:0}
+.ex.on{border-color:rgba(0,232,122,.34);background:rgba(0,232,122,.055)}
+.ex-num{position:absolute;top:-7px;left:-7px;width:22px;height:22px;border-radius:50%;background:var(--g);color:var(--ink);
+  display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;border:2px solid #0d1116}
+.ex-img{position:relative;width:132px;height:104px;border-radius:11px;background:#f3f5f8;flex:none;
+  display:flex;align-items:center;justify-content:center;overflow:hidden;padding:5px}
+.ex-img img{max-width:100%;max-height:100%;object-fit:contain;mix-blend-mode:multiply}
+.ex-b{flex:1;min-width:0}
+.ex-top{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap;margin-bottom:5px}
+.ex-n{font-size:14.5px;font-weight:800;letter-spacing:-.015em}
+.tag{font-size:9px;font-weight:800;padding:2px 7px;border-radius:5px;letter-spacing:.03em;border:1px solid var(--line);color:var(--tx3);background:var(--panel2)}
+.tag.mus{background:rgba(0,232,122,.13);color:var(--g);border-color:rgba(0,232,122,.3)}
+.pasos{display:flex;flex-direction:column;gap:3px;margin:6px 0 7px}
+.paso{display:flex;gap:7px;font-size:11.5px;color:var(--tx2);line-height:1.45}
+.paso i{flex:none;width:15px;height:15px;border-radius:50%;background:var(--panel);border:1px solid var(--line);
+  display:flex;align-items:center;justify-content:center;font-size:8.5px;font-weight:800;color:var(--tx3);font-style:normal;margin-top:2px}
+.err{display:flex;gap:7px;font-size:10.5px;color:#ffb0bc;line-height:1.45;padding:7px 9px;border-radius:9px;
+  background:rgba(255,84,112,.09);border:1px solid rgba(255,84,112,.26)}
+.err b{color:#ff9aab}
+
+.ex-r{flex:none;width:196px;display:flex;flex-direction:column;gap:8px}
+.sr-h{display:flex;align-items:baseline;justify-content:space-between}
+.sr-v{font-size:17px;font-weight:800;letter-spacing:-.02em}
+.sr-v span{color:var(--tx3);font-weight:700;font-size:12px}
+.sr-d{font-size:9.5px;font-weight:800;color:var(--am);letter-spacing:.04em}
+.sets{display:flex;flex-direction:column;gap:5px}
+.set{display:flex;align-items:center;gap:7px;padding:5px 8px;border-radius:9px;border:1px solid var(--line);background:var(--panel)}
+.set.on{border-color:rgba(0,232,122,.36);background:rgba(0,232,122,.09)}
+.set-c{width:17px;height:17px;border-radius:5px;border:1.5px solid var(--line);flex:none;display:flex;align-items:center;justify-content:center;font-size:9px;color:transparent}
+.set.on .set-c{background:var(--g);border-color:var(--g);color:var(--ink)}
+.set-n{font-size:9.5px;font-weight:800;color:var(--tx3);width:12px;flex:none}
+.set-kg{margin-left:auto;font-size:11.5px;font-weight:800;font-variant-numeric:tabular-nums}
+.set-kg em{font-style:normal;font-size:9px;color:var(--tx3);font-weight:700;margin-left:2px}
+.set.on .set-kg{color:var(--g)}
+.set-kg.vacio{color:var(--tx3);font-weight:700;font-size:10px;border-bottom:1px dotted var(--tx3)}
+
+/* progresion */
+.pr{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--line2)}
+.pr:last-of-type{border-bottom:none}
+.pr-n{font-size:11px;font-weight:700;line-height:1.25;min-width:0}
+.pr-s{font-size:9px;color:var(--tx3);margin-top:2px}
+.pr-r{margin-left:auto;text-align:right;flex:none}
+.pr-v{font-size:12.5px;font-weight:800;font-variant-numeric:tabular-nums}
+.pr-v.sube{color:var(--g)} .pr-v.igual{color:var(--tx3)}
+.pr-d{font-size:9px;color:var(--tx3);margin-top:1px}
+.spark{display:flex;align-items:flex-end;gap:2px;height:22px;flex:none;width:56px}
+.spark i{flex:1;border-radius:2px 2px 0 0;background:rgba(0,232,122,.28)}
+.spark i:last-child{background:var(--g)}
+
+/* cronometro */
+.cro{border-radius:18px;border:1px solid rgba(255,177,92,.3);background:linear-gradient(165deg,rgba(255,177,92,.11),rgba(255,255,255,.02) 55%);padding:15px 17px;text-align:center}
+.cro-k{font-size:9px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--am)}
+.cro-v{font-size:40px;font-weight:800;letter-spacing:-.04em;line-height:1;margin:8px 0 4px;font-variant-numeric:tabular-nums}
+.cro-s{font-size:10px;color:var(--tx3);font-weight:700}
+.cro-bar{height:5px;border-radius:4px;background:var(--panel);overflow:hidden;position:relative;margin-top:11px}
+.cro-bar i{position:absolute;left:0;top:0;bottom:0;width:38%;background:linear-gradient(90deg,var(--am),var(--g));border-radius:4px}
+
+/* aviso */
+.nota{font-size:10px;color:var(--tx3);line-height:1.5;margin-top:10px;padding-top:10px;border-top:1px solid var(--line2)}
+.nota b{color:var(--tx2)}
+.aviso{border-radius:12px;border:1px solid rgba(255,84,112,.28);background:rgba(255,84,112,.08);padding:11px 13px}
+.aviso-k{font-size:9px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--warn)}
+.aviso-t{font-size:10.5px;color:var(--tx2);line-height:1.5;margin-top:5px}
+.aviso-t b{color:var(--tx)}
+</style>
+
+<div class="grid-bg"></div>
+<div class="z">
+
+  <div class="top">
+    <div>
+      <div class="eyebrow"><span class="dot"></span>Martes 1 de septiembre &middot; toca pierna</div>
+      <div class="h1">Piernas &mdash; completa<em>6 ejercicios &middot; ~55 min</em></div>
+    </div>
+    <div class="top-r">
+      <div class="kpi a"><div class="kpi-v">9</div><div class="kpi-k">Racha</div></div>
+      <div class="kpi b"><div class="kpi-v">2/6</div><div class="kpi-k">Esta semana</div></div>
+      <div class="kpi c"><div class="kpi-v">4.2 t</div><div class="kpi-k">Volumen hoy</div></div>
+    </div>
+  </div>
+
+  <div class="wk">
+    <div class="d hecho"><div class="d-l">Lun <span class="tic">&#10003;</span></div><div class="d-n">Brazos A</div><div class="d-t t-brazos">B&iacute;ceps + Tr&iacute;ceps</div></div>
+    <div class="d hoy"><div class="d-l">Mar &middot; hoy</div><div class="d-n">Piernas</div><div class="d-t t-piernas">Completa</div></div>
+    <div class="d"><div class="d-l">Mi&eacute;</div><div class="d-n">Nataci&oacute;n</div><div class="d-t t-cardio">Aprender a nadar</div></div>
+    <div class="d"><div class="d-l">Jue</div><div class="d-n">Brazos B</div><div class="d-t t-brazos">B&iacute;ceps + Tr&iacute;ceps</div></div>
+    <div class="d"><div class="d-l">Vie</div><div class="d-n">Abdomen</div><div class="d-t t-core">Core + cardio</div></div>
+    <div class="d"><div class="d-l">S&aacute;b</div><div class="d-n">Pecho</div><div class="d-t t-empuje">+ cardio y core</div></div>
+    <div class="d"><div class="d-l">Dom</div><div class="d-n">Descanso</div><div class="d-t t-desc">Caminata</div></div>
+  </div>
+
+  <div class="mid">
+
+    <div class="col">
+      <div class="ses">
+        <div class="ses-h">
+          <div class="ses-t">La sesi&oacute;n de hoy</div>
+          <div class="ses-x"><b>2 de 6</b> hechos &middot; llevas 21 min</div>
+        </div>
+        <div class="foco"><b>Tu &uacute;nico d&iacute;a de pierna</b>, as&iacute; que cubre todo: 3 de cu&aacute;driceps, 1 de femoral, 1 de gl&uacute;teo y 1 de pantorrilla. El <b>Hack Squat es el pesado</b> &mdash; va primero, con energ&iacute;a fresca.</div>
+
+        <div class="ex on" style="position:relative">
+          <div class="ex-img"><div class="ex-num">1</div><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c0/Hack_squat_machine_1.svg/960px-Hack_squat_machine_1.svg.png" alt="Hack Squat"></div>
+          <div class="ex-b">
+            <div class="ex-top"><span class="ex-n">Hack Squat</span><span class="tag mus">Piernas</span><span class="tag">M&aacute;quina</span><span class="tag">Compuesto</span></div>
+            <div class="pasos">
+              <div class="paso"><i>1</i><span>Espalda y hombros pegados al respaldo, pies un poco <b style="color:#eef2f7">adelantados</b> en la plataforma.</span></div>
+              <div class="paso"><i>2</i><span>Baja despacio hasta que la rodilla llegue a 90&deg;, sin despegar la espalda.</span></div>
+              <div class="paso"><i>3</i><span>Empuja con el medio del pie y sube <b style="color:#eef2f7">sin trabar la rodilla</b> arriba.</span></div>
+            </div>
+            <div class="err"><span>&#9888;</span><span><b>El error de siempre:</b> trabar la rodilla de golpe al llegar arriba. Deja una flexi&oacute;n m&iacute;nima y la tensi&oacute;n se queda en el cu&aacute;driceps, no en la articulaci&oacute;n.</span></div>
+          </div>
+          <div class="ex-r">
+            <div class="sr-h"><div class="sr-v">4 <span>&times; 10</span></div><div class="sr-d">120 s</div></div>
+            <div class="sets">
+              <div class="set on"><div class="set-c">&#10003;</div><div class="set-n">1</div><div class="set-kg">85<em>kg</em></div></div>
+              <div class="set on"><div class="set-c">&#10003;</div><div class="set-n">2</div><div class="set-kg">85<em>kg</em></div></div>
+              <div class="set on"><div class="set-c">&#10003;</div><div class="set-n">3</div><div class="set-kg">90<em>kg</em></div></div>
+              <div class="set"><div class="set-c">&#10003;</div><div class="set-n">4</div><div class="set-kg vacio">anotar kg</div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="ex on" style="position:relative">
+          <div class="ex-img"><div class="ex-num">2</div><img src="https://upload.wikimedia.org/wikipedia/commons/0/0c/Leg-press-1-1024x670.png" alt="Prensa de Piernas"></div>
+          <div class="ex-b">
+            <div class="ex-top"><span class="ex-n">Prensa de Piernas</span><span class="tag mus">Piernas</span><span class="tag">+ Gl&uacute;teos</span><span class="tag">Compuesto</span></div>
+            <div class="pasos">
+              <div class="paso"><i>1</i><span>Pies a lo ancho de los hombros, a media altura de la plataforma.</span></div>
+              <div class="paso"><i>2</i><span>Baja hasta que la rodilla forme <b style="color:#eef2f7">90&deg;</b>, sin m&aacute;s.</span></div>
+              <div class="paso"><i>3</i><span>Empuja sin dejar que la espalda baja se despegue del respaldo.</span></div>
+            </div>
+            <div class="err"><span>&#9888;</span><span><b>El error de siempre:</b> bajar tanto que la cadera se levanta del asiento. Ah&iacute; la lumbar se redondea y toda la carga se le va encima.</span></div>
+          </div>
+          <div class="ex-r">
+            <div class="sr-h"><div class="sr-v">4 <span>&times; 12</span></div><div class="sr-d">90 s</div></div>
+            <div class="sets">
+              <div class="set on"><div class="set-c">&#10003;</div><div class="set-n">1</div><div class="set-kg">130<em>kg</em></div></div>
+              <div class="set on"><div class="set-c">&#10003;</div><div class="set-n">2</div><div class="set-kg">130<em>kg</em></div></div>
+              <div class="set on"><div class="set-c">&#10003;</div><div class="set-n">3</div><div class="set-kg">130<em>kg</em></div></div>
+              <div class="set on"><div class="set-c">&#10003;</div><div class="set-n">4</div><div class="set-kg">130<em>kg</em></div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="ex" style="position:relative">
+          <div class="ex-img"><div class="ex-num">3</div><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Leg_extensions_1.svg/960px-Leg_extensions_1.svg.png" alt="Extensi&oacute;n de Cu&aacute;driceps"></div>
+          <div class="ex-b">
+            <div class="ex-top"><span class="ex-n">Extensi&oacute;n de Cu&aacute;driceps</span><span class="tag mus">Piernas</span><span class="tag">M&aacute;quina</span><span class="tag">Aislamiento</span></div>
+            <div class="pasos">
+              <div class="paso"><i>1</i><span>Espalda pegada al respaldo, el eje de la m&aacute;quina a la altura de la rodilla.</span></div>
+              <div class="paso"><i>2</i><span>Estira la pierna por completo y <b style="color:#eef2f7">aprieta 1 segundo arriba</b>.</span></div>
+              <div class="paso"><i>3</i><span>Baja despacio, sin dejar caer el peso de golpe.</span></div>
+            </div>
+            <div class="err"><span>&#9888;</span><span><b>El error de siempre:</b> soltar el peso en la bajada. La mitad del est&iacute;mulo est&aacute; ah&iacute; &mdash; baja contando dos segundos.</span></div>
+          </div>
+          <div class="ex-r">
+            <div class="sr-h"><div class="sr-v">3 <span>&times; 15</span></div><div class="sr-d">60 s</div></div>
+            <div class="sets">
+              <div class="set"><div class="set-c">&#10003;</div><div class="set-n">1</div><div class="set-kg vacio">45 kg la vez pasada</div></div>
+              <div class="set"><div class="set-c">&#10003;</div><div class="set-n">2</div><div class="set-kg vacio">anotar kg</div></div>
+              <div class="set"><div class="set-c">&#10003;</div><div class="set-n">3</div><div class="set-kg vacio">anotar kg</div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="ex" style="position:relative">
+          <div class="ex-img"><div class="ex-num">4</div><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/96/Lying_leg_curl_machine_1.svg/960px-Lying_leg_curl_machine_1.svg.png" alt="Curl de Femoral Tumbado"></div>
+          <div class="ex-b">
+            <div class="ex-top"><span class="ex-n">Curl de Femoral Tumbado</span><span class="tag mus">Femoral</span><span class="tag">M&aacute;quina</span><span class="tag">Aislamiento</span></div>
+            <div class="pasos">
+              <div class="paso"><i>1</i><span>Boca abajo, el rodillo justo encima del tal&oacute;n de Aquiles.</span></div>
+              <div class="paso"><i>2</i><span>Dobla la rodilla llevando el tal&oacute;n al gl&uacute;teo, <b style="color:#eef2f7">sin impulso</b>.</span></div>
+              <div class="paso"><i>3</i><span>Mant&eacute;n la cadera pegada al banco todo el recorrido.</span></div>
+            </div>
+            <div class="err"><span>&#9888;</span><span><b>El error de siempre:</b> levantar la cadera para ayudarse. Si se despega, el peso es demasiado.</span></div>
+          </div>
+          <div class="ex-r">
+            <div class="sr-h"><div class="sr-v">3 <span>&times; 12</span></div><div class="sr-d">60 s</div></div>
+            <div class="sets">
+              <div class="set"><div class="set-c">&#10003;</div><div class="set-n">1</div><div class="set-kg vacio">35 kg la vez pasada</div></div>
+              <div class="set"><div class="set-c">&#10003;</div><div class="set-n">2</div><div class="set-kg vacio">anotar kg</div></div>
+              <div class="set"><div class="set-c">&#10003;</div><div class="set-n">3</div><div class="set-kg vacio">anotar kg</div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="ex" style="position:relative">
+          <div class="ex-img"><div class="ex-num">5</div><img src="https://upload.wikimedia.org/wikipedia/commons/2/29/Thigh-abductor-1.gif" alt="Abducci&oacute;n de Cadera"></div>
+          <div class="ex-b">
+            <div class="ex-top"><span class="ex-n">Abducci&oacute;n de Cadera</span><span class="tag mus">Gl&uacute;teos</span><span class="tag">M&aacute;quina</span><span class="tag">Aislamiento</span></div>
+            <div class="pasos">
+              <div class="paso"><i>1</i><span>Sentado, espalda apoyada y las rodillas contra las almohadillas.</span></div>
+              <div class="paso"><i>2</i><span>Empuja las piernas hacia afuera hasta el tope c&oacute;modo.</span></div>
+              <div class="paso"><i>3</i><span>Controla el regreso <b style="color:#eef2f7">sin dejar que la m&aacute;quina te cierre</b>.</span></div>
+            </div>
+            <div class="err"><span>&#9888;</span><span><b>Para qu&eacute; sirve:</b> estabilidad de cadera. No es un ejercicio de peso &mdash; con carga alta solo te balanceas y no trabaja el gl&uacute;teo medio.</span></div>
+          </div>
+          <div class="ex-r">
+            <div class="sr-h"><div class="sr-v">3 <span>&times; 15</span></div><div class="sr-d">45 s</div></div>
+            <div class="sets">
+              <div class="set"><div class="set-c">&#10003;</div><div class="set-n">1</div><div class="set-kg vacio">anotar kg</div></div>
+              <div class="set"><div class="set-c">&#10003;</div><div class="set-n">2</div><div class="set-kg vacio">anotar kg</div></div>
+              <div class="set"><div class="set-c">&#10003;</div><div class="set-n">3</div><div class="set-kg vacio">anotar kg</div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="ex" style="position:relative">
+          <div class="ex-img"><div class="ex-num">6</div><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Standing_calf_raises_using_machine_2.svg/960px-Standing_calf_raises_using_machine_2.svg.png" alt="Elevaci&oacute;n de Pantorrilla"></div>
+          <div class="ex-b">
+            <div class="ex-top"><span class="ex-n">Elevaci&oacute;n de Pantorrilla</span><span class="tag mus">Pantorrilla</span><span class="tag">M&aacute;quina</span><span class="tag">Aislamiento</span></div>
+            <div class="pasos">
+              <div class="paso"><i>1</i><span>La punta del pie en el escal&oacute;n, el tal&oacute;n al aire.</span></div>
+              <div class="paso"><i>2</i><span>Sube hasta la punta y <b style="color:#eef2f7">aprieta 1 segundo</b>.</span></div>
+              <div class="paso"><i>3</i><span>Baja dejando que el tal&oacute;n caiga por debajo del escal&oacute;n.</span></div>
+            </div>
+            <div class="err"><span>&#9888;</span><span><b>El error de siempre:</b> rebotar. La pantorrilla es puro tend&oacute;n el&aacute;stico: si rebotas trabaja el tend&oacute;n, no el m&uacute;sculo.</span></div>
+          </div>
+          <div class="ex-r">
+            <div class="sr-h"><div class="sr-v">4 <span>&times; 20</span></div><div class="sr-d">45 s</div></div>
+            <div class="sets">
+              <div class="set"><div class="set-c">&#10003;</div><div class="set-n">1</div><div class="set-kg vacio">60 kg la vez pasada</div></div>
+              <div class="set"><div class="set-c">&#10003;</div><div class="set-n">2</div><div class="set-kg vacio">anotar kg</div></div>
+              <div class="set"><div class="set-c">&#10003;</div><div class="set-n">3</div><div class="set-kg vacio">anotar kg</div></div>
+              <div class="set"><div class="set-c">&#10003;</div><div class="set-n">4</div><div class="set-kg vacio">anotar kg</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col">
+      <div class="cro">
+        <div class="cro-k">Descanso &middot; Prensa de Piernas</div>
+        <div class="cro-v">1:12</div>
+        <div class="cro-s">de 90 s &middot; toca la serie 4 para reiniciar</div>
+        <div class="cro-bar"><i></i></div>
+      </div>
+
+      <div class="card">
+        <div class="card-h"><div class="card-t"><span class="b"></span>Tu progresi&oacute;n</div><div class="card-x">vs. martes pasado</div></div>
+        <div class="pr">
+          <div><div class="pr-n">Hack Squat</div><div class="pr-s">4&times;10 &middot; hace 7 d&iacute;as</div></div>
+          <div class="spark"><i style="height:45%"></i><i style="height:55%"></i><i style="height:62%"></i><i style="height:75%"></i><i style="height:88%"></i></div>
+          <div class="pr-r"><div class="pr-v sube">+5 kg</div><div class="pr-d">80 &rarr; 85</div></div>
+        </div>
+        <div class="pr">
+          <div><div class="pr-n">Prensa de Piernas</div><div class="pr-s">4&times;12 &middot; hace 7 d&iacute;as</div></div>
+          <div class="spark"><i style="height:52%"></i><i style="height:60%"></i><i style="height:70%"></i><i style="height:80%"></i><i style="height:92%"></i></div>
+          <div class="pr-r"><div class="pr-v sube">+10 kg</div><div class="pr-d">120 &rarr; 130</div></div>
+        </div>
+        <div class="pr">
+          <div><div class="pr-n">Extensi&oacute;n de Cu&aacute;driceps</div><div class="pr-s">3&times;15 &middot; hace 7 d&iacute;as</div></div>
+          <div class="spark"><i style="height:60%"></i><i style="height:60%"></i><i style="height:65%"></i><i style="height:65%"></i><i style="height:65%"></i></div>
+          <div class="pr-r"><div class="pr-v igual">=</div><div class="pr-d">45 kg</div></div>
+        </div>
+        <div class="pr">
+          <div><div class="pr-n">Curl de Femoral</div><div class="pr-s">3&times;12 &middot; hace 7 d&iacute;as</div></div>
+          <div class="spark"><i style="height:40%"></i><i style="height:48%"></i><i style="height:55%"></i><i style="height:62%"></i><i style="height:70%"></i></div>
+          <div class="pr-r"><div class="pr-v sube">+2.5 kg</div><div class="pr-d">32.5 &rarr; 35</div></div>
+        </div>
+        <div class="nota">El peso que anotas hoy es lo que ves aqu&iacute; la semana que viene. <b>Sin ese n&uacute;mero no hay progresi&oacute;n</b>: repetir el mismo peso tres martes seguidos es mantenerte, no crecer.</div>
+      </div>
+
+      <div class="card">
+        <div class="card-h"><div class="card-t"><span class="b"></span>C&oacute;mo subir de peso</div></div>
+        <div class="paso" style="margin-bottom:7px"><i>1</i><span>Si completas <b style="color:#eef2f7">todas las series al tope de reps</b> con buena forma, la siguiente sesi&oacute;n sube.</span></div>
+        <div class="paso" style="margin-bottom:7px"><i>2</i><span>Sube <b style="color:#eef2f7">2.5 kg en aislamiento</b> y 5 kg en compuestos. M&aacute;s de eso y pierdes la t&eacute;cnica.</span></div>
+        <div class="paso"><i>3</i><span>Si no llegas a las reps dos sesiones seguidas, <b style="color:#eef2f7">bajas</b> y vuelves a subir. No es retroceder.</span></div>
+      </div>
+
+      <div class="aviso">
+        <div class="aviso-k">&#9888; Lo que esta rutina no puede hacer</div>
+        <div class="aviso-t">Los abdominales <b>no queman la grasa del abdomen</b>. La reducci&oacute;n localizada no existe: el core te da fuerza y postura, pero la panza se va con el d&eacute;ficit cal&oacute;rico y el cardio &mdash; eso vive en <b>Mi Comida</b>.</div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+</div>
+</x-dc>
+</body>
+</html>

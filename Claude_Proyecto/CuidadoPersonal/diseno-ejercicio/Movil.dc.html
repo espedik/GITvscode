@@ -1,0 +1,204 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap">
+  <style>
+    body{margin:0;background:#06080c;font-family:"Inter",-apple-system,sans-serif}
+    .ej{font-family:"Inter",-apple-system,BlinkMacSystemFont,sans-serif !important}
+    .ej .h1,.ej .sr-v,.ej .cro-v,.ej .set-kg,.ej .kpi-v{font-family:"Space Grotesk","Inter",sans-serif}
+  </style>
+</helmet>
+
+<div class="ej">
+<style>
+.ej{
+  --tx:#eef2f7; --tx2:#9aa6b4; --tx3:#93a0ae;
+  --line:rgba(255,255,255,.09); --line2:rgba(255,255,255,.055);
+  --panel:rgba(255,255,255,.045); --panel2:rgba(255,255,255,.028);
+  --g:#00e87a; --azul:#3b82f6; --violeta:#b06eff; --am:#ffb15c; --warn:#ff5470; --gris:#7b8794;
+  --ink:#06080c;
+  width:390px; height:1500px; box-sizing:border-box; padding:14px 13px 18px;
+  background:
+    radial-gradient(ellipse 90% 24% at 12% -2%, rgba(0,232,122,.17) 0%, transparent 60%),
+    radial-gradient(ellipse 90% 22% at 92% 18%, rgba(59,130,246,.13) 0%, transparent 60%),
+    radial-gradient(ellipse 100% 20% at 50% 102%, rgba(176,110,255,.11) 0%, transparent 60%),
+    #06080c;
+  color:var(--tx); overflow:hidden; position:relative;
+}
+.ej *{box-sizing:border-box}
+.eyebrow{font-size:9px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--g);display:flex;align-items:center;gap:6px}
+.eyebrow .dot{width:5px;height:5px;border-radius:50%;background:var(--g);box-shadow:0 0 8px var(--g)}
+.h1{font-size:20px;font-weight:800;letter-spacing:-.028em;margin:4px 0 3px}
+.sub{font-size:10.5px;color:var(--tx3);font-weight:700;margin-bottom:11px}
+.sub b{color:var(--g)}
+
+.prog{display:flex;gap:4px;margin-bottom:13px}
+.pg{flex:1;height:5px;border-radius:3px;background:var(--panel2);border:1px solid var(--line)}
+.pg.on{background:var(--g);border-color:var(--g)}
+.pg.act{background:rgba(0,232,122,.4);border-color:var(--g);box-shadow:0 0 8px rgba(0,232,122,.5)}
+
+/* el ejercicio en curso */
+.now{border-radius:18px;border:1px solid rgba(0,232,122,.3);padding:0 0 14px;margin-bottom:12px;overflow:hidden;
+  background:linear-gradient(170deg,rgba(0,232,122,.09),rgba(255,255,255,.02) 45%)}
+.now-img{height:186px;background:#f3f5f8;display:flex;align-items:center;justify-content:center;padding:12px;position:relative}
+.now-img img{max-width:100%;max-height:100%;object-fit:contain;mix-blend-mode:multiply}
+.now-num{position:absolute;top:11px;left:11px;width:28px;height:28px;border-radius:50%;background:var(--ink);color:var(--g);
+  display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;border:2px solid var(--g)}
+.now-b{padding:13px 15px 0}
+.now-n{font-size:18px;font-weight:800;letter-spacing:-.022em;line-height:1.2}
+.tags{display:flex;gap:5px;margin-top:7px;flex-wrap:wrap}
+.tag{font-size:9px;font-weight:800;padding:2px 8px;border-radius:5px;letter-spacing:.03em;border:1px solid var(--line);color:var(--tx3)}
+.tag.mus{background:rgba(0,232,122,.13);color:var(--g);border-color:rgba(0,232,122,.3)}
+
+.sr{display:flex;align-items:center;gap:12px;margin:12px 0 11px;padding:10px 13px;border-radius:12px;
+  background:var(--panel2);border:1px solid var(--line)}
+.sr-v{font-size:22px;font-weight:800;letter-spacing:-.03em;line-height:1}
+.sr-v span{font-size:13px;color:var(--tx3);font-weight:700}
+.sr-k{font-size:8.5px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--tx3);margin-top:4px}
+.sr-d{margin-left:auto;text-align:right}
+.sr-d .v{font-size:16px;font-weight:800;color:var(--am);line-height:1}
+
+/* series, grandes para el dedo */
+.sets{display:flex;flex-direction:column;gap:6px}
+.set{display:flex;align-items:center;gap:10px;padding:11px 13px;border-radius:12px;border:1px solid var(--line);background:var(--panel)}
+.set.on{border-color:rgba(0,232,122,.4);background:rgba(0,232,122,.1)}
+.set-c{width:24px;height:24px;border-radius:7px;border:2px solid var(--line);flex:none;display:flex;align-items:center;justify-content:center;font-size:12px;color:transparent}
+.set.on .set-c{background:var(--g);border-color:var(--g);color:var(--ink)}
+.set-n{font-size:11px;font-weight:800;color:var(--tx3);flex:none}
+.set-kg{margin-left:auto;font-size:16px;font-weight:800;font-variant-numeric:tabular-nums}
+.set-kg em{font-style:normal;font-size:11px;color:var(--tx3);font-weight:700;margin-left:2px}
+.set.on .set-kg{color:var(--g)}
+.set-kg.vacio{color:var(--tx3);font-weight:700;font-size:12px;border-bottom:1px dotted var(--tx3);padding-bottom:1px}
+
+/* tecnica */
+.tec{margin:13px 15px 0;padding-top:12px;border-top:1px solid var(--line2)}
+.tec-k{font-size:9px;font-weight:800;letter-spacing:.11em;text-transform:uppercase;color:var(--tx2);margin-bottom:8px}
+.paso{display:flex;gap:8px;font-size:12px;color:var(--tx2);line-height:1.5;margin-bottom:5px}
+.paso i{flex:none;width:17px;height:17px;border-radius:50%;background:var(--panel);border:1px solid var(--line);
+  display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;color:var(--tx3);font-style:normal;margin-top:2px}
+.paso b{color:var(--tx)}
+.err{display:flex;gap:8px;font-size:11px;color:#ffb0bc;line-height:1.5;padding:9px 11px;border-radius:10px;margin-top:9px;
+  background:rgba(255,84,112,.09);border:1px solid rgba(255,84,112,.26)}
+.err b{color:#ff9aab}
+
+/* cronometro */
+.cro{border-radius:15px;border:1px solid rgba(255,177,92,.32);background:linear-gradient(165deg,rgba(255,177,92,.13),rgba(255,255,255,.02) 55%);
+  padding:13px 15px;margin-bottom:12px;display:flex;align-items:center;gap:14px}
+.cro-v{font-size:32px;font-weight:800;letter-spacing:-.04em;line-height:1;font-variant-numeric:tabular-nums}
+.cro-t{flex:1;min-width:0}
+.cro-k{font-size:8.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--am)}
+.cro-s{font-size:10px;color:var(--tx3);font-weight:700;margin-top:3px}
+.cro-bar{height:5px;border-radius:4px;background:var(--panel);overflow:hidden;position:relative;margin-top:7px}
+.cro-bar i{position:absolute;left:0;top:0;bottom:0;width:38%;background:linear-gradient(90deg,var(--am),var(--g));border-radius:4px}
+
+/* navegacion */
+.nav{display:flex;gap:8px;margin-bottom:12px}
+.nb{flex:1;padding:13px;border-radius:13px;border:1px solid var(--line);background:var(--panel);
+  font-size:12.5px;font-weight:800;text-align:center;color:var(--tx2)}
+.nb.pri{background:var(--g);border-color:var(--g);color:var(--ink)}
+
+/* resto de la sesion */
+.card{border-radius:15px;border:1px solid var(--line);background:var(--panel);padding:12px 13px}
+.card-t{font-size:10px;font-weight:800;letter-spacing:.11em;text-transform:uppercase;color:var(--tx2);display:flex;align-items:center;gap:6px;margin-bottom:10px}
+.card-t .b{width:3px;height:11px;border-radius:2px;background:linear-gradient(180deg,var(--g),var(--azul));flex:none}
+.card-t span:last-child:not(.b){margin-left:auto;font-size:9.5px;color:var(--tx3);letter-spacing:0;text-transform:none}
+.li{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--line2)}
+.li:last-child{border-bottom:none}
+.li-i{width:38px;height:32px;border-radius:8px;background:#f3f5f8;flex:none;display:flex;align-items:center;justify-content:center;padding:3px;overflow:hidden}
+.li-i img{max-width:100%;max-height:100%;object-fit:contain;mix-blend-mode:multiply}
+.li-n{font-size:11.5px;font-weight:700;line-height:1.25}
+.li-s{font-size:9px;color:var(--tx3);margin-top:2px}
+.li-r{margin-left:auto;font-size:10px;font-weight:800;flex:none}
+.li-r.ok{color:var(--g)} .li-r.pend{color:var(--tx3)}
+</style>
+
+<div class="eyebrow"><span class="dot"></span>Martes &middot; toca pierna</div>
+<div class="h1">Piernas &mdash; completa</div>
+<div class="sub"><b>2 de 6</b> hechos &middot; llevas 21 min &middot; quedan ~34</div>
+
+<div class="prog">
+  <i class="pg on"></i><i class="pg on"></i><i class="pg act"></i><i class="pg"></i><i class="pg"></i><i class="pg"></i>
+</div>
+
+<div class="cro">
+  <div class="cro-v">1:12</div>
+  <div class="cro-t">
+    <div class="cro-k">Descanso</div>
+    <div class="cro-s">de 90 s &middot; entre serie y serie</div>
+    <div class="cro-bar"><i></i></div>
+  </div>
+</div>
+
+<div class="now">
+  <div class="now-img">
+    <div class="now-num">3</div>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Leg_extensions_1.svg/960px-Leg_extensions_1.svg.png" alt="Extensi&oacute;n de Cu&aacute;driceps">
+  </div>
+  <div class="now-b">
+    <div class="now-n">Extensi&oacute;n de Cu&aacute;driceps</div>
+    <div class="tags"><span class="tag mus">Piernas</span><span class="tag">M&aacute;quina</span><span class="tag">Aislamiento</span></div>
+
+    <div class="sr">
+      <div><div class="sr-v">3 <span>&times; 15</span></div><div class="sr-k">Series &times; reps</div></div>
+      <div class="sr-d"><div class="v">60 s</div><div class="sr-k">Descanso</div></div>
+    </div>
+
+    <div class="sets">
+      <div class="set on"><div class="set-c">&#10003;</div><div class="set-n">Serie 1</div><div class="set-kg">45<em>kg</em></div></div>
+      <div class="set"><div class="set-c">&#10003;</div><div class="set-n">Serie 2</div><div class="set-kg vacio">anotar kg</div></div>
+      <div class="set"><div class="set-c">&#10003;</div><div class="set-n">Serie 3</div><div class="set-kg vacio">anotar kg</div></div>
+    </div>
+  </div>
+
+  <div class="tec">
+    <div class="tec-k">C&oacute;mo se hace</div>
+    <div class="paso"><i>1</i><span>Espalda pegada al respaldo, el eje de la m&aacute;quina a la altura de la rodilla.</span></div>
+    <div class="paso"><i>2</i><span>Estira la pierna por completo y <b>aprieta 1 segundo arriba</b>.</span></div>
+    <div class="paso"><i>3</i><span>Baja despacio, contando dos segundos.</span></div>
+    <div class="err"><span>&#9888;</span><span><b>El error de siempre:</b> soltar el peso en la bajada. La mitad del est&iacute;mulo est&aacute; ah&iacute;.</span></div>
+  </div>
+</div>
+
+<div class="nav">
+  <div class="nb">&larr; Anterior</div>
+  <div class="nb pri">Siguiente &rarr;</div>
+</div>
+
+<div class="card">
+  <div class="card-t"><span class="b"></span>El resto de hoy<span>4 pendientes</span></div>
+  <div class="li">
+    <div class="li-i"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c0/Hack_squat_machine_1.svg/960px-Hack_squat_machine_1.svg.png" alt=""></div>
+    <div><div class="li-n">Hack Squat</div><div class="li-s">4 &times; 10 &middot; 85-90 kg</div></div>
+    <div class="li-r ok">&#10003; hecho</div>
+  </div>
+  <div class="li">
+    <div class="li-i"><img src="https://upload.wikimedia.org/wikipedia/commons/0/0c/Leg-press-1-1024x670.png" alt=""></div>
+    <div><div class="li-n">Prensa de Piernas</div><div class="li-s">4 &times; 12 &middot; 130 kg</div></div>
+    <div class="li-r ok">&#10003; hecho</div>
+  </div>
+  <div class="li">
+    <div class="li-i"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/96/Lying_leg_curl_machine_1.svg/960px-Lying_leg_curl_machine_1.svg.png" alt=""></div>
+    <div><div class="li-n">Curl de Femoral Tumbado</div><div class="li-s">3 &times; 12 &middot; 35 kg la vez pasada</div></div>
+    <div class="li-r pend">4.&ordm;</div>
+  </div>
+  <div class="li">
+    <div class="li-i"><img src="https://upload.wikimedia.org/wikipedia/commons/2/29/Thigh-abductor-1.gif" alt=""></div>
+    <div><div class="li-n">Abducci&oacute;n de Cadera</div><div class="li-s">3 &times; 15 &middot; estabilidad</div></div>
+    <div class="li-r pend">5.&ordm;</div>
+  </div>
+  <div class="li">
+    <div class="li-i"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Standing_calf_raises_using_machine_2.svg/960px-Standing_calf_raises_using_machine_2.svg.png" alt=""></div>
+    <div><div class="li-n">Elevaci&oacute;n de Pantorrilla</div><div class="li-s">4 &times; 20 &middot; 60 kg la vez pasada</div></div>
+    <div class="li-r pend">6.&ordm;</div>
+  </div>
+</div>
+</div>
+</x-dc>
+</body>
+</html>

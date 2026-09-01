@@ -24,7 +24,7 @@
   --w:#ffd93d;--w-l:rgba(255,217,61,.1);
   --r:#ff3b6b;--r-l:rgba(255,59,107,.1);
   --bg:#060614;--border:rgba(var(--ov),.08);
-  --text:#e8eaf6;--text2:#8892b0;--text3:#4a5568;
+  --text:#e8eaf6;--text2:#8892b0;--text3:#7a8699;
   --surface:#161619;--surface-2:#18181c;--surface-3:#1b1b20;--ov:255,255,255;
   --sw:245px;--r14:14px;--rs:9px;--sh:0 4px 24px rgba(0,0,0,.5);
 }
@@ -36,7 +36,7 @@
   --w:#a8790a;--w-l:rgba(168,121,10,.12);
   --r:#c81e4d;--r-l:rgba(200,30,77,.12);
   --bg:#f4f4f7;--border:rgba(var(--ov),.1);
-  --text:#16161a;--text2:#5c5f70;--text3:#82859a;
+  --text:#16161a;--text2:#5c5f70;--text3:#6f7286;
   --surface:#ffffff;--surface-2:#ffffff;--surface-3:#ffffff;--ov:0,0,0;
   --sh:0 2px 14px rgba(0,0,0,.08);
 }
@@ -192,6 +192,172 @@ tbody tr:hover td{background:rgba(255,107,53,.03)}
   pre,code{max-width:100%;overflow-x:auto}
   img,video,canvas{max-width:100%;height:auto}
 }
+
+/* ─── LA SESIÓN DEL DÍA (prefijo ej-) ──────────────────────────────────────────
+   Mi Rutina eran 7.403px con los 7 días abiertos: para llegar al martes había que pasar por el
+   lunes entero. Ahora manda la sesión de hoy y los otros días quedan plegados abajo.
+   Reusa los tokens del tema (--g, --text, --surface, --border) para funcionar en claro y oscuro
+   sin reglas aparte. Los dibujos de Wikimedia son línea sobre transparente: van sobre una placa
+   clara fija, con mix-blend-mode para que el trazo no se vea recuadrado. */
+.ej-top{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:14px}
+.ej-eyebrow{font-size:10px;font-weight:800;letter-spacing:.15em;text-transform:uppercase;color:var(--g);display:flex;align-items:center;gap:7px}
+.ej-eyebrow .dot{width:6px;height:6px;border-radius:50%;background:var(--g);box-shadow:0 0 10px var(--g);flex:none}
+.ej-h1{font-size:25px;font-weight:800;letter-spacing:-.028em;margin:5px 0 0;color:var(--text)}
+.ej-h1 em{font-style:normal;color:var(--text3);font-weight:700;font-size:14px;margin-left:10px}
+.ej-kpis{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap}
+.ej-kpi{padding:9px 14px;border-radius:13px;border:1px solid var(--border);background:var(--surface);text-align:right;min-width:96px}
+.ej-kpi-v{font-size:19px;font-weight:800;letter-spacing:-.02em;line-height:1}
+.ej-kpi-k{font-size:9px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);margin-top:4px}
+
+/* la semana */
+.ej-wk{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-bottom:15px}
+.ej-d{border-radius:13px;border:1px solid var(--border);background:var(--surface-2);padding:10px 11px;cursor:pointer;transition:border-color .15s}
+.ej-d:hover{border-color:rgba(0,232,122,.34)}
+.ej-d.hoy{border-color:var(--g);background:var(--g-l);box-shadow:0 0 0 1px rgba(0,232,122,.28)}
+.ej-d.hecho{border-color:rgba(0,232,122,.22)}
+.ej-d-l{font-size:9.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--text3);display:flex;align-items:center;gap:5px}
+.ej-d.hoy .ej-d-l{color:var(--g)}
+.ej-d-n{font-size:12.5px;font-weight:800;margin-top:6px;line-height:1.25;color:var(--text)}
+.ej-d-t{display:inline-block;font-size:8.5px;font-weight:800;padding:2px 7px;border-radius:5px;margin-top:7px;letter-spacing:.04em}
+.ej-tic{width:14px;height:14px;border-radius:50%;background:var(--g);color:var(--bg);display:inline-flex;align-items:center;justify-content:center;font-size:9px;font-weight:800}
+
+/* dos columnas */
+.ej-mid{display:grid;grid-template-columns:1fr 330px;gap:14px;align-items:start;margin-bottom:16px}
+.ej-col{display:flex;flex-direction:column;gap:14px;min-width:0}
+
+/* la sesion */
+.ej-ses{border-radius:20px;border:1px solid rgba(0,232,122,.26);padding:16px 18px 17px;
+  background:linear-gradient(160deg,var(--g-l),rgba(var(--ov),.012) 48%)}
+.ej-ses-h{display:flex;align-items:center;gap:12px;margin-bottom:12px;flex-wrap:wrap}
+.ej-ses-t{font-size:10.5px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--text2)}
+.ej-ses-x{margin-left:auto;font-size:11.5px;color:var(--text2);font-weight:700}
+.ej-ses-x b{color:var(--g)}
+.ej-foco{font-size:11px;color:var(--text2);line-height:1.55;padding:10px 12px;border-radius:11px;
+  background:var(--surface-2);border:1px solid var(--border);margin-bottom:12px}
+.ej-foco b{color:var(--text)}
+
+.ej-x{display:flex;gap:14px;padding:13px;border-radius:15px;border:1px solid var(--border);background:var(--surface-2);margin-bottom:9px}
+.ej-x:last-child{margin-bottom:0}
+.ej-x.on{border-color:rgba(0,232,122,.32);background:var(--g-l)}
+.ej-x-img{position:relative;width:132px;height:104px;border-radius:11px;background:#f3f5f8;flex:none;
+  display:flex;align-items:center;justify-content:center;overflow:visible;padding:5px;cursor:pointer}
+.ej-x-img img{border-radius:8px}
+.ej-x-img img{max-width:100%;max-height:100%;object-fit:contain;mix-blend-mode:multiply}
+.ej-x-num{position:absolute;top:-6px;left:-6px;width:22px;height:22px;border-radius:50%;background:var(--g);color:var(--bg);
+  display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;border:2px solid var(--surface-2)}
+.ej-x-b{flex:1;min-width:0}
+.ej-x-top{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;margin-bottom:5px}
+.ej-x-n{font-size:14.5px;font-weight:800;letter-spacing:-.015em;color:var(--text);cursor:pointer}
+.ej-x-n:hover{color:var(--g)}
+.ej-tag{font-size:9px;font-weight:800;padding:2px 7px;border-radius:5px;letter-spacing:.03em;border:1px solid var(--border);color:var(--text3);background:var(--surface-3)}
+.ej-tag.mus{background:var(--g-l);color:var(--g);border-color:rgba(0,232,122,.3)}
+.ej-pasos{display:flex;flex-direction:column;gap:3px;margin:6px 0 7px}
+.ej-paso{display:flex;gap:7px;font-size:11.5px;color:var(--text2);line-height:1.45}
+.ej-paso i{flex:none;width:15px;height:15px;border-radius:50%;background:var(--surface-3);border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;font-size:8.5px;font-weight:800;color:var(--text3);font-style:normal;margin-top:2px}
+.ej-paso b{color:var(--text)}
+.ej-err{display:flex;gap:7px;font-size:10.5px;line-height:1.45;padding:7px 9px;border-radius:9px;
+  background:rgba(255,59,107,.09);border:1px solid rgba(255,59,107,.26);color:#ffb0bc}
+.ej-err b{color:#ff9aab}
+:root[data-theme="light"] .ej-err{color:#a02040;background:rgba(255,59,107,.07)}
+:root[data-theme="light"]{--g-txt:#046e3e}
+:root[data-theme="dark"]{--g-txt:var(--g)}
+:root[data-theme="light"] .ej-d.hoy .ej-d-l,
+:root[data-theme="light"] .ej-tag.mus,
+:root[data-theme="light"] .ej-ses-x b,
+:root[data-theme="light"] .ej-x-n:hover{color:var(--g-txt)}
+:root[data-theme="light"] .ej-err b{color:#8a1732}
+
+.ej-x-r{flex:none;width:200px;display:flex;flex-direction:column;gap:8px}
+.ej-sr-h{display:flex;align-items:baseline;justify-content:space-between}
+.ej-sr-v{font-size:17px;font-weight:800;letter-spacing:-.02em;color:var(--text)}
+.ej-sr-v span{color:var(--text3);font-weight:700;font-size:12px}
+.ej-sr-d{font-size:9.5px;font-weight:800;color:var(--p);letter-spacing:.04em}
+.ej-sets{display:flex;flex-direction:column;gap:5px}
+.ej-set{display:flex;align-items:center;gap:7px;padding:5px 8px;border-radius:9px;border:1px solid var(--border);background:var(--surface)}
+.ej-set.on{border-color:rgba(0,232,122,.36);background:var(--g-l)}
+.ej-set-c{width:18px;height:18px;border-radius:5px;border:1.5px solid var(--border);flex:none;display:flex;align-items:center;
+  justify-content:center;font-size:9px;color:transparent;cursor:pointer;transition:all .15s}
+.ej-set-c:hover{border-color:var(--g)}
+.ej-set.on .ej-set-c{background:var(--g);border-color:var(--g);color:var(--bg)}
+.ej-set-n{font-size:9.5px;font-weight:800;color:var(--text3);width:12px;flex:none}
+.ej-kg{margin-left:auto;width:74px;text-align:right;font-size:12px;font-weight:800;font-family:inherit;
+  background:transparent;border:none;border-bottom:1px dotted var(--text3);color:var(--text);padding:1px 3px}
+.ej-kg::placeholder{color:var(--text3);font-weight:700;font-size:10px}
+.ej-kg:focus{outline:none;border-bottom-color:var(--g);color:var(--g)}
+.ej-set.on .ej-kg{color:var(--g);border-bottom-color:transparent}
+.ej-kg-u{font-size:9px;color:var(--text3);font-weight:700;flex:none;width:14px}
+
+/* cronometro */
+.ej-cro{border-radius:18px;border:1px solid rgba(255,107,53,.3);padding:15px 17px;text-align:center;
+  background:linear-gradient(165deg,var(--p-l),rgba(var(--ov),.012) 55%)}
+.ej-cro-k{font-size:9px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--p)}
+.ej-cro-v{font-size:40px;font-weight:800;letter-spacing:-.04em;line-height:1;margin:8px 0 4px;color:var(--text)}
+.ej-cro-s{font-size:10px;color:var(--text2);font-weight:700}
+.ej-cro-bar{height:5px;border-radius:4px;background:var(--surface-3);overflow:hidden;position:relative;margin-top:11px}
+.ej-cro-bar i{position:absolute;left:0;top:0;bottom:0;background:linear-gradient(90deg,var(--p),var(--g));border-radius:4px;transition:width 1s linear}
+
+/* progresion */
+.ej-card{border-radius:18px;border:1px solid var(--border);background:var(--surface);padding:15px 17px}
+.ej-card-h{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
+.ej-card-t{font-size:10.5px;font-weight:800;letter-spacing:.11em;text-transform:uppercase;color:var(--text2);display:flex;align-items:center;gap:7px}
+.ej-card-t .b{width:3px;height:12px;border-radius:2px;background:linear-gradient(180deg,var(--g),var(--b));flex:none}
+.ej-card-x{font-size:10px;color:var(--text3);font-weight:700;white-space:nowrap}
+.ej-pr{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid rgba(var(--ov),.06)}
+.ej-pr:last-of-type{border-bottom:none}
+.ej-pr-n{font-size:11px;font-weight:700;line-height:1.25;color:var(--text)}
+.ej-pr-s{font-size:9px;color:var(--text3);margin-top:2px}
+.ej-pr-r{margin-left:auto;text-align:right;flex:none}
+.ej-pr-v{font-size:12.5px;font-weight:800}
+.ej-pr-v.sube{color:var(--g)} .ej-pr-v.igual{color:var(--text3)} .ej-pr-v.baja{color:var(--p)}
+.ej-pr-d{font-size:9px;color:var(--text3);margin-top:1px}
+.ej-spark{display:flex;align-items:flex-end;gap:2px;height:22px;flex:none;width:56px}
+.ej-spark i{flex:1;border-radius:2px 2px 0 0;background:rgba(0,232,122,.28);min-height:2px}
+.ej-spark i:last-child{background:var(--g)}
+.ej-nota{font-size:10px;color:var(--text3);line-height:1.5;margin-top:10px;padding-top:10px;border-top:1px solid rgba(var(--ov),.06)}
+.ej-nota b{color:var(--text2)}
+
+/* los otros dias, plegados */
+.ej-otro{border-radius:14px;border:1px solid var(--border);background:var(--surface-2);margin-bottom:8px;overflow:hidden}
+.ej-otro-h{display:flex;align-items:center;gap:11px;padding:11px 14px;cursor:pointer}
+.ej-otro-h:hover{background:var(--surface-3)}
+.ej-otro-d{font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--text3);width:58px;flex:none}
+.ej-otro-n{font-size:12.5px;font-weight:800;color:var(--text)}
+.ej-otro-c{margin-left:auto;font-size:10px;color:var(--text3);font-weight:700;flex:none}
+.ej-otro-b{padding:0 14px 12px;display:none}
+.ej-otro.abierto .ej-otro-b{display:block}
+.ej-otro-li{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid rgba(var(--ov),.06)}
+.ej-otro-li:last-child{border-bottom:none}
+.ej-otro-i{width:44px;height:36px;border-radius:8px;background:#f3f5f8;flex:none;display:flex;align-items:center;justify-content:center;padding:3px;overflow:hidden}
+.ej-otro-i img{max-width:100%;max-height:100%;object-fit:contain;mix-blend-mode:multiply}
+.ej-otro-ln{font-size:11.5px;font-weight:700;color:var(--text);line-height:1.25}
+.ej-otro-ls{font-size:9px;color:var(--text3);margin-top:2px}
+.ej-otro-lr{margin-left:auto;font-size:10.5px;font-weight:800;color:var(--text3);flex:none}
+
+@media(max-width:1100px){ .ej-mid{grid-template-columns:1fr} .ej-wk{grid-template-columns:repeat(4,1fr)} }
+@media(max-width:760px){
+  .ej-wk{grid-template-columns:repeat(2,1fr)}
+  .ej-x{flex-direction:column;gap:11px}
+  .ej-x-img{width:100%;height:172px}
+  .ej-x-r{width:100%}
+  .ej-set{padding:9px 11px}
+  .ej-set-c{width:22px;height:22px}
+  .ej-kg{font-size:14px;width:88px}
+  .ej-kpis{width:100%;margin-left:0}
+  .ej-kpi{flex:1;min-width:0;padding:9px 10px}
+}
+
+/* La ficha del ejercicio, en un modal ancho */
+.mo.ficha .modal{max-width:1000px;width:calc(100vw - 40px)}
+.ficha-hero{display:flex;gap:20px;margin-bottom:16px;flex-wrap:wrap}
+.ficha-img{width:280px;height:216px;border-radius:16px;background:#f3f5f8;flex:none;
+  display:flex;align-items:center;justify-content:center;padding:14px;overflow:hidden}
+.ficha-img img{max-width:100%;max-height:100%;object-fit:contain;mix-blend-mode:multiply}
+.ficha-grid{display:grid;grid-template-columns:1fr 330px;gap:14px;align-items:start}
+@media(max-width:860px){
+  .ficha-grid{grid-template-columns:1fr}
+  .ficha-img{width:100%;height:190px}
+}
 </style>
 <script>
 (function () {
@@ -245,9 +411,9 @@ tbody tr:hover td{background:rgba(255,107,53,.03)}
         <div class="ts" style="color:var(--text2);line-height:1.6">Por eso brazos y piernas se entrenan <strong style="color:var(--text)">2 veces por semana</strong> cada uno (Lun/Jue y Mar/Vie) — el resto se mantiene 1x/semana para no perder desarrollo. Sobre el abdomen, honestidad primero: <strong style="color:var(--text)">no existe la reducción localizada de grasa</strong> — el core fuerte de esta rutina define músculo debajo, pero lo que realmente baja la grasa de la zona media es el déficit calórico sostenido (registra tus comidas en <a href="../CuidadoPersonal/cuidadopersonal.html?tab=salud" style="color:var(--p)">Cuidado de la Salud</a>) + el cardio de miércoles y sábado.</div>
       </div>
 
-      <div id="d-semana" style="margin-bottom:16px"></div>
+      <div id="d-hoy"></div>
 
-      <div class="sh" style="margin-top:6px"><h2 style="font-size:15px" id="rutina-semana-title">🏋️ Ejercicios de la semana</h2></div>
+      <div class="sh" style="margin-top:6px"><h2 style="font-size:15px" id="rutina-semana-title">🗓️ El resto de la semana</h2></div>
       <div id="rutina-semana"></div>
     </section>
 
@@ -453,6 +619,16 @@ tbody tr:hover td{background:rgba(255,107,53,.03)}
 </main>
 
 <!-- MODAL CONFIGURAR DÍA RUTINA -->
+<!-- FICHA DE UN EJERCICIO — la técnica en pasos, el error típico, el historial y con qué
+     sustituirlo. Se abre desde la sesión del día y desde la biblioteca. -->
+<div class="mo ficha" id="mo-ficha">
+  <div class="modal">
+    <div class="modal-h"><div class="modal-title" id="ficha-title">Ejercicio</div>
+      <button class="modal-x" onclick="closeMo('mo-ficha')">✕</button></div>
+    <div id="ficha-body"></div>
+  </div>
+</div>
+
 <div class="mo" id="mo-rutina">
   <div class="modal" style="max-width:560px">
     <div class="modal-h"><div class="modal-title" id="mo-rutina-title">Configurar día</div><button class="modal-x" onclick="closeMo('mo-rutina')">✕</button></div>
@@ -546,19 +722,19 @@ const EJ_DB = [
   // PECHO
   {id:'e001',nombre:'Press de Banca',musculo:'Pecho',secundarios:['Tríceps','Hombros'],equipo:'Barra',tipo:'Compuesto',
     img:'https://upload.wikimedia.org/wikipedia/commons/a/a8/Bench-press-1.png',
-    cue:'Aprieta los hombros hacia atrás y abajo, pegados al banco, pies firmes en el piso. Baja la barra despacio hasta casi tocar el pecho y empújala derecho hacia arriba.'},
+    cue:'Aprieta los hombros hacia atrás y abajo, pegados al banco, pies firmes en el piso. Baja la barra despacio hasta casi tocar el pecho y empújala derecho hacia arriba.',pasos:['Acuéstate con los ojos bajo la barra, pies firmes en el piso.','Aprieta los omóplatos hacia atrás y abajo, pegados al banco.','Baja la barra despacio hasta casi tocar el pecho, codos a unos 45 grados.','Empuja derecho hacia arriba sin trabar el codo.'],error:'<b>Rebotar la barra en el pecho.</b> Quita justo la parte que más construye. Si necesitas el rebote para subirla, el peso es demasiado.'},
   {id:'e002',nombre:'Press Inclinado con Barra',musculo:'Pecho',secundarios:['Tríceps'],equipo:'Barra',tipo:'Compuesto',
     img:'https://upload.wikimedia.org/wikipedia/commons/8/86/Incline-bench-press-1.png',
-    cue:'Banco inclinado a 30-45°. Es como el press normal, pero la barra baja hacia la parte de arriba del pecho — entre más inclinado el banco, más trabaja esa parte.'},
+    cue:'Banco inclinado a 30-45°. Es como el press normal, pero la barra baja hacia la parte de arriba del pecho — entre más inclinado el banco, más trabaja esa parte.',pasos:['Banco entre 30 y 45 grados, no más: pasando de ahí trabaja el hombro, no el pecho.','Omóplatos apretados y pies firmes, igual que en el banca plano.','Baja la barra a la parte alta del pecho, cerca de las clavículas.','Empuja hacia arriba y un poco atrás, sobre la línea de los hombros.'],error:'<b>Inclinar el banco de más.</b> A 60 grados el ejercicio se convierte en press militar y el pecho superior deja de trabajar.'},
   {id:'e003',nombre:'Press con Mancuernas',musculo:'Pecho',secundarios:['Tríceps'],equipo:'Mancuernas',tipo:'Compuesto',
     img:'https://upload.wikimedia.org/wikipedia/commons/2/2e/Dumbbell-bench-press-1.png',
     cue:'Con mancuernas bajas más que con la barra — déjalas bajar un poco más allá de los hombros, siempre con control.'},
   {id:'e004',nombre:'Aperturas con Mancuerna',musculo:'Pecho',secundarios:[],equipo:'Mancuernas',tipo:'Aislamiento',
     img:'https://upload.wikimedia.org/wikipedia/commons/a/ae/Dumbbell-flys-1.png',
-    cue:'Codos un poco doblados y sin moverlos durante todo el ejercicio — es como abrazar un árbol grande, no un empuje. Debes sentir que se estira el pecho, no el hombro.'},
+    cue:'Codos un poco doblados y sin moverlos durante todo el ejercicio — es como abrazar un árbol grande, no un empuje. Debes sentir que se estira el pecho, no el hombro.',pasos:['Acostado, mancuernas arriba con los codos un poco doblados.','Abre en arco amplio hasta sentir el estirón en el pecho, no más.','Cierra por el mismo arco apretando el pecho, sin chocar las mancuernas.'],error:'<b>Doblar el codo para poder con más peso.</b> Eso lo convierte en un press. En aperturas el codo mantiene su ángulo todo el recorrido.'},
   {id:'e005',nombre:'Fondos (Dips)',musculo:'Pecho',secundarios:['Tríceps'],equipo:'Cuerpo',tipo:'Compuesto',
     img:'https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/Dipexercise.svg/960px-Dipexercise.svg.png',
-    cue:'Inclina el cuerpo hacia adelante para trabajar más el pecho (si te mantienes derecho, trabajas más el brazo de atrás). Baja hasta que el codo forme un ángulo de 90°, sin encoger los hombros.'},
+    cue:'Inclina el cuerpo hacia adelante para trabajar más el pecho (si te mantienes derecho, trabajas más el brazo de atrás). Baja hasta que el codo forme un ángulo de 90°, sin encoger los hombros.',pasos:['Sujétate en las barras con los brazos estirados y el cuerpo firme.','Inclina el torso un poco adelante: así entra el pecho; vertical trabaja el tríceps.','Baja hasta que el codo llegue a 90 grados.','Empuja hacia arriba sin encoger los hombros.'],error:'<b>Bajar de más buscando profundidad.</b> Pasando de 90 grados el hombro queda en una posición que no aguanta carga: es la lesión más común de este ejercicio.'},
   {id:'e006',nombre:'Flexiones',musculo:'Pecho',secundarios:['Tríceps','Hombros'],equipo:'Cuerpo',tipo:'Compuesto',
     img:'https://upload.wikimedia.org/wikipedia/commons/9/9e/Push-up-1.png',
     cue:'Cuerpo derecho de la cabeza a los talones (como una tabla), baja hasta que el pecho casi toque el piso. Los codos apuntan hacia atrás en diagonal, ni pegados al cuerpo ni abiertos como cruz.'},
@@ -613,13 +789,13 @@ const EJ_DB = [
     // ejercicio. Esta sí es explícitamente "Wide Grip Standing Biceps Curl With Barbell", de la
     // misma familia visual (Everkinetic, línea negra) que el resto de la biblioteca.
     img:'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Wide_grip_standing_biceps_curl_with_barbell_1.svg/960px-Wide_grip_standing_biceps_curl_with_barbell_1.svg.png',
-    cue:'Mantén los codos pegados a tu cuerpo durante todo el movimiento — si se mueven hacia adelante, estás usando impulso del cuerpo en vez del músculo.'},
+    cue:'Mantén los codos pegados a tu cuerpo durante todo el movimiento — si se mueven hacia adelante, estás usando impulso del cuerpo en vez del músculo.',pasos:['De pie, barra con agarre a lo ancho de los hombros, palmas al frente.','Codos pegados al costado y quietos: solo se mueve el antebrazo.','Sube apretando el bíceps arriba, baja contando dos segundos.'],error:'<b>Balancear el cuerpo para subir el peso.</b> Si tienes que empujar con la espalda, no es el bíceps quien levanta. Pégate a una pared para comprobarlo.'},
   {id:'e022',nombre:'Curl con Mancuerna',musculo:'Bíceps',secundarios:[],equipo:'Mancuernas',tipo:'Aislamiento',
     img:'https://upload.wikimedia.org/wikipedia/commons/6/66/Biceps-curl-2.png',
-    cue:'Gira la muñeca hacia arriba (palma viendo al techo) conforme subes, para apretar más el músculo arriba. Baja siempre despacio, en 2-3 segundos.'},
+    cue:'Gira la muñeca hacia arriba (palma viendo al techo) conforme subes, para apretar más el músculo arriba. Baja siempre despacio, en 2-3 segundos.',pasos:['De pie o sentado, una mancuerna en cada mano, palmas al frente.','Sube una a la vez con el codo pegado al costado.','Gira un poco la muñeca hacia afuera arriba y aprieta 1 segundo.'],error:'<b>Subir las dos a la vez con impulso.</b> Alternando controlas mejor y cada brazo hace su propio trabajo, sin que el fuerte tape al débil.'},
   {id:'e023',nombre:'Curl Martillo',musculo:'Bíceps',secundarios:['Antebrazo'],equipo:'Mancuernas',tipo:'Aislamiento',
     img:'https://upload.wikimedia.org/wikipedia/commons/thumb/0/06/Bicep_hammer_curl_with_dumbbell_1.svg/960px-Bicep_hammer_curl_with_dumbbell_1.svg.png',
-    cue:'Agarra con las palmas viéndose entre sí todo el tiempo (como sosteniendo un martillo) — esto trabaja el antebrazo y le da más grosor al brazo.'},
+    cue:'Agarra con las palmas viéndose entre sí todo el tiempo (como sosteniendo un martillo) — esto trabaja el antebrazo y le da más grosor al brazo.',pasos:['De pie, mancuernas con las palmas mirándose entre sí, como si tomaras un martillo.','Sube sin girar la muñeca, el pulgar siempre arriba.','Baja despacio hasta estirar del todo.'],error:'<b>Girar la muñeca a mitad del recorrido.</b> Eso lo vuelve un curl normal: el agarre neutro es justo lo que trabaja el braquial y engrosa el brazo.'},
   {id:'e024',nombre:'Curl en Polea',musculo:'Bíceps',secundarios:[],equipo:'Máquina',tipo:'Aislamiento',
     img:'https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/Overhead_curl_with_cable_1.svg/960px-Overhead_curl_with_cable_1.svg.png',
     cue:'De pie frente al cable, con los codos fijos a los costados, sube el agarre en arco hacia tus hombros sin balancear el cuerpo.'},
@@ -628,36 +804,36 @@ const EJ_DB = [
     cue:'Sentado, apoya el codo contra la parte de adentro de tu muslo. Sube la mancuerna en un arco completo sin despegar el codo de la pierna.'},
   {id:'e026',nombre:'Curl Scott (Predicador)',musculo:'Bíceps',secundarios:[],equipo:'Barra',tipo:'Aislamiento',
     img:'https://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/Preacher_curl_with_barbell_1.svg/960px-Preacher_curl_with_barbell_1.svg.png',
-    cue:'El banco inclinado fija tu codo y evita que uses impulso — así trabaja solo el bíceps. Si sientes un tirón feo, no estires el codo del todo abajo.'},
+    cue:'El banco inclinado fija tu codo y evita que uses impulso — así trabaja solo el bíceps. Si sientes un tirón feo, no estires el codo del todo abajo.',pasos:['Ajusta el banco para que la axila quede apoyada en la almohadilla.','Brazos estirados pero sin trabar el codo abajo.','Sube hasta que el antebrazo pase la vertical, aprieta y baja despacio.'],error:'<b>Despegar el codo del banco al final.</b> El banco Scott existe justo para impedir el impulso: si el codo se levanta, pierdes lo único que aporta.'},
   // TRÍCEPS
   {id:'e027',nombre:'Press Francés',musculo:'Tríceps',secundarios:[],equipo:'Barra',tipo:'Aislamiento',
     img:'https://upload.wikimedia.org/wikipedia/commons/3/3f/Lying-triceps-extension-2.gif',
     cue:'Codos apuntando al techo y sin moverse, baja la barra o mancuerna hacia tu frente doblando solo el codo — es de los mejores ejercicios para hacer crecer el brazo de atrás (tríceps).'},
   {id:'e028',nombre:'Extensión en Polea (Pushdown)',musculo:'Tríceps',secundarios:[],equipo:'Máquina',tipo:'Aislamiento',
     img:'https://upload.wikimedia.org/wikipedia/commons/thumb/1/13/Triceps_pushdown_with_cable_1.svg/960px-Triceps_pushdown_with_cable_1.svg.png',
-    cue:'Codos pegados a tus costados sin moverse, estira el brazo hasta el fondo y aprieta el músculo de atrás del brazo 1 segundo.'},
+    cue:'Codos pegados a tus costados sin moverse, estira el brazo hasta el fondo y aprieta el músculo de atrás del brazo 1 segundo.',pasos:['De pie frente a la polea alta, codos pegados al costado.','Empuja hacia abajo hasta estirar el brazo por completo.','Aprieta el tríceps 1 segundo abajo y sube controlando.'],error:'<b>Abrir los codos hacia afuera.</b> Entra el pecho y el hombro. Los codos van pegados al cuerpo y quietos todo el recorrido.'},
   {id:'e029',nombre:'Fondos en Banco',musculo:'Tríceps',secundarios:[],equipo:'Cuerpo',tipo:'Aislamiento',
     img:'https://upload.wikimedia.org/wikipedia/commons/d/d0/Bench-dips-1.png',
-    cue:'Manos en el borde del banco, baja hasta que el codo forme 90°, sin subir los hombros hacia las orejas. Si estiras las piernas, es más difícil.'},
+    cue:'Manos en el borde del banco, baja hasta que el codo forme 90°, sin subir los hombros hacia las orejas. Si estiras las piernas, es más difícil.',pasos:['Manos en el borde del banco a la altura de la cadera, dedos al frente.','Piernas estiradas al frente, talones en el suelo.','Baja doblando el codo hasta 90 grados, con la espalda cerca del banco.','Empuja hacia arriba sin trabar el codo.'],error:'<b>Alejar la cadera del banco.</b> El hombro queda tirado hacia adelante y se carga la articulación. Roza el banco con la espalda al bajar.'},
   {id:'e030',nombre:'Patada de Tríceps',musculo:'Tríceps',secundarios:[],equipo:'Mancuernas',tipo:'Aislamiento',
     img:'https://upload.wikimedia.org/wikipedia/commons/thumb/4/40/Triceps_kickback_with_dumbbell_1.svg/960px-Triceps_kickback_with_dumbbell_1.svg.png',
-    cue:'Inclina el cuerpo hacia adelante, mantén el codo fijo pegado a tu costado, y estira el brazo hacia atrás apretando el músculo de atrás del brazo, sin mover el hombro.'},
+    cue:'Inclina el cuerpo hacia adelante, mantén el codo fijo pegado a tu costado, y estira el brazo hacia atrás apretando el músculo de atrás del brazo, sin mover el hombro.',pasos:['Inclinado adelante con la espalda recta, brazo pegado al costado.','El codo queda alto y quieto: solo se mueve el antebrazo.','Estira el brazo hacia atrás y aprieta 1 segundo arriba.'],error:'<b>Mover el codo.</b> Si baja o sube, deja de ser tríceps. Es un ejercicio de poco peso y mucha precisión.'},
   {id:'e031',nombre:'Extensión sobre Cabeza',musculo:'Tríceps',secundarios:[],equipo:'Mancuernas',tipo:'Aislamiento',
     img:'https://upload.wikimedia.org/wikipedia/commons/c/ca/Seated-overhead-triceps-extension-1.gif',
-    cue:'Codos apuntando hacia arriba y fijos junto a tu cabeza, baja la mancuerna detrás de la nuca y estira el brazo sin abrir los codos hacia los lados.'},
+    cue:'Codos apuntando hacia arriba y fijos junto a tu cabeza, baja la mancuerna detrás de la nuca y estira el brazo sin abrir los codos hacia los lados.',pasos:['Mancuerna con las dos manos por encima de la cabeza, brazos estirados.','Codos apuntando al frente y pegados a la cabeza.','Baja detrás de la nuca doblando solo el codo, y sube estirando.'],error:'<b>Abrir los codos hacia los lados.</b> Se pierde la tensión en la cabeza larga del tríceps, que es justo la que da volumen al brazo.'},
   // PIERNAS
   {id:'e032',nombre:'Sentadilla con Barra',musculo:'Piernas',secundarios:['Glúteos'],equipo:'Barra',tipo:'Compuesto',
     img:'https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Squats.svg/960px-Squats.svg.png',
     cue:'Pecho arriba, las rodillas apuntando hacia donde apuntan tus pies. Baja hasta que el muslo quede más abajo que paralelo al piso, y empuja con los talones al subir.'},
   {id:'e033',nombre:'Prensa de Piernas',musculo:'Piernas',secundarios:['Glúteos'],equipo:'Máquina',tipo:'Compuesto',
     img:'https://upload.wikimedia.org/wikipedia/commons/0/0c/Leg-press-1-1024x670.png',
-    cue:'Pies a lo ancho de tus hombros sobre la plataforma. Baja hasta que la rodilla forme 90°, sin despegar la espalda baja del respaldo.'},
+    cue:'Pies a lo ancho de tus hombros sobre la plataforma. Baja hasta que la rodilla forme 90°, sin despegar la espalda baja del respaldo.',pasos:['Pies a lo ancho de los hombros, a media altura de la plataforma.','Espalda baja y glúteo pegados al respaldo.','Baja hasta que la rodilla forme 90 grados, sin más.','Empuja con el medio del pie sin trabar la rodilla arriba.'],error:'<b>Bajar tanto que la cadera se levanta del asiento.</b> Ahí la lumbar se redondea y se lleva toda la carga. Si la cadera se despega, ya bajaste de más.'},
   {id:'e034',nombre:'Extensión de Cuádriceps',musculo:'Piernas',secundarios:[],equipo:'Máquina',tipo:'Aislamiento',
     img:'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Leg_extensions_1.svg/960px-Leg_extensions_1.svg.png',
-    cue:'Estira la pierna por completo y aprieta el frente del muslo 1 segundo arriba. Baja despacio, sin dejar caer el peso de golpe.'},
+    cue:'Estira la pierna por completo y aprieta el frente del muslo 1 segundo arriba. Baja despacio, sin dejar caer el peso de golpe.',pasos:['Espalda pegada al respaldo, el eje de la máquina a la altura de la rodilla.','Estira la pierna por completo y aprieta el frente del muslo 1 segundo.','Baja contando dos segundos, sin dejar caer el peso.'],error:'<b>Soltar el peso en la bajada.</b> La mitad del estímulo está ahí. Si escuchas las placas chocar, vas demasiado rápido.'},
   {id:'e035',nombre:'Curl de Femoral Tumbado',musculo:'Piernas',secundarios:[],equipo:'Máquina',tipo:'Aislamiento',
     img:'https://upload.wikimedia.org/wikipedia/commons/thumb/9/96/Lying_leg_curl_machine_1.svg/960px-Lying_leg_curl_machine_1.svg.png',
-    cue:'Mantén la cadera pegada al banco todo el tiempo, dobla la rodilla llevando el talón hacia el glúteo, sin usar impulso.'},
+    cue:'Mantén la cadera pegada al banco todo el tiempo, dobla la rodilla llevando el talón hacia el glúteo, sin usar impulso.',pasos:['Boca abajo, el rodillo justo encima del talón de Aquiles.','Cadera pegada al banco todo el recorrido.','Dobla la rodilla llevando el talón al glúteo, sin impulso.'],error:'<b>Levantar la cadera para ayudarse.</b> Si se despega del banco, el peso es demasiado: baja y hazlo con la cadera clavada.'},
   {id:'e036',nombre:'Zancadas',musculo:'Piernas',secundarios:['Glúteos'],equipo:'Mancuernas',tipo:'Compuesto',
     img:'https://upload.wikimedia.org/wikipedia/commons/5/55/Lunges-1.png',
     cue:'Da un paso largo hacia adelante, baja hasta que las dos rodillas formen 90°, sin golpear la rodilla de atrás contra el piso. Mantén el cuerpo derecho.'},
@@ -668,10 +844,10 @@ const EJ_DB = [
     cue:'Rodillas casi estiradas (con una ligera doblada fija), empuja la cadera hacia atrás mientras mantienes la barra pegada a tus piernas — debes sentir el estiramiento en la parte de atrás del muslo, no en la espalda baja.'},
   {id:'e039',nombre:'Elevación de Pantorrilla',musculo:'Piernas',secundarios:[],equipo:'Máquina',tipo:'Aislamiento',
     img:'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Standing_calf_raises_using_machine_2.svg/960px-Standing_calf_raises_using_machine_2.svg.png',
-    cue:'Sube hasta la punta de los pies y aprieta 1 segundo arriba. Baja dejando que el talón caiga por debajo del escalón para estirar bien la pantorrilla.'},
+    cue:'Sube hasta la punta de los pies y aprieta 1 segundo arriba. Baja dejando que el talón caiga por debajo del escalón para estirar bien la pantorrilla.',pasos:['La punta del pie en el escalón, el talón al aire.','Sube hasta la punta y aprieta 1 segundo arriba.','Baja dejando que el talón caiga por debajo del escalón.'],error:'<b>Rebotar.</b> La pantorrilla es puro tendón elástico: si rebotas trabaja el tendón, no el músculo. Pausa arriba y pausa abajo.'},
   {id:'e040',nombre:'Hack Squat',musculo:'Piernas',secundarios:[],equipo:'Máquina',tipo:'Compuesto',
     img:'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c0/Hack_squat_machine_1.svg/960px-Hack_squat_machine_1.svg.png',
-    cue:'Espalda y hombros apoyados en el respaldo inclinado, pies un poco adelantados en la plataforma. Baja despacio y empuja sin trabar las rodillas de golpe al terminar.'},
+    cue:'Espalda y hombros apoyados en el respaldo inclinado, pies un poco adelantados en la plataforma. Baja despacio y empuja sin trabar las rodillas de golpe al terminar.',pasos:['Espalda y hombros pegados al respaldo, pies un poco adelantados en la plataforma.','Suelta los seguros y toma aire con el abdomen firme.','Baja despacio hasta que la rodilla llegue a 90 grados.','Empuja con el medio del pie y sube sin trabar la rodilla.'],error:'<b>Trabar la rodilla arriba.</b> Se siente como un descanso, y lo es: la tensión se va del cuádriceps a la articulación. Deja una flexión mínima.'},
   // GLÚTEOS
   {id:'e041',nombre:'Hip Thrust',musculo:'Glúteos',secundarios:['Piernas'],equipo:'Barra',tipo:'Compuesto',
     img:'https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/Glute-bridge.png/960px-Glute-bridge.png',
@@ -684,32 +860,32 @@ const EJ_DB = [
     cue:'De pie frente al cable, con el agarre en tu tobillo, patea la pierna hacia atrás apretando el glúteo, sin arquear la espalda baja.'},
   {id:'e044',nombre:'Abducción de Cadera',musculo:'Glúteos',secundarios:[],equipo:'Máquina',tipo:'Aislamiento',
     img:'https://upload.wikimedia.org/wikipedia/commons/2/29/Thigh-abductor-1.gif',
-    cue:'Empuja las piernas hacia afuera contra la resistencia de la máquina, y controla el regreso — este ejercicio ayuda a la estabilidad de tu cadera.'},
+    cue:'Empuja las piernas hacia afuera contra la resistencia de la máquina, y controla el regreso — este ejercicio ayuda a la estabilidad de tu cadera.',pasos:['Sentado, espalda apoyada y las rodillas contra las almohadillas.','Empuja las piernas hacia afuera hasta el tope cómodo.','Controla el regreso sin dejar que la máquina te cierre.'],error:'<b>Usar mucho peso.</b> No es un ejercicio de carga: con peso alto solo te balanceas y el glúteo medio deja de trabajar. Sirve para estabilidad de cadera.'},
   // CORE
   {id:'e045',nombre:'Plancha',musculo:'Core',secundarios:[],equipo:'Cuerpo',tipo:'Compuesto',
-    cue:'Cuerpo derecho de la cabeza a los talones (como una tabla), con el glúteo y el abdomen apretados — no dejes que la cadera se caiga. Sigue respirando normal, no aguantes el aire.'},
+    cue:'Cuerpo derecho de la cabeza a los talones (como una tabla), con el glúteo y el abdomen apretados — no dejes que la cadera se caiga. Sigue respirando normal, no aguantes el aire.',pasos:['Antebrazos en el suelo, codos debajo de los hombros.','Mete el ombligo y aprieta el glúteo: la cadera ni sube ni cae.','Cuerpo en línea recta de la cabeza al talón, mirando al suelo.'],error:'<b>Levantar la cadera.</b> Es la forma de descansar sin darte cuenta. Si no aguantas con la cadera baja, corta la serie: 20 segundos bien valen más que 60 mal.'},
   {id:'e046',nombre:'Crunch Abdominal',musculo:'Core',secundarios:[],equipo:'Cuerpo',tipo:'Aislamiento',
     img:'https://upload.wikimedia.org/wikipedia/commons/e/ef/Crunches-2.png',
-    cue:'Manos detrás de la cabeza sin jalarte el cuello, sube solo un poco los hombros del piso apretando el abdomen — es un movimiento corto pero controlado.'},
+    cue:'Manos detrás de la cabeza sin jalarte el cuello, sube solo un poco los hombros del piso apretando el abdomen — es un movimiento corto pero controlado.',pasos:['Boca arriba, rodillas dobladas y pies apoyados.','Manos en las sienes, sin jalar el cuello.','Sube solo los hombros del suelo enrollando la espalda alta.','Aprieta el abdomen arriba y baja despacio.'],error:'<b>Jalarse el cuello con las manos.</b> Al dia siguiente te duele el cuello y no el abdomen. Las manos solo tocan, no empujan.'},
   {id:'e047',nombre:'Elevación de Piernas',musculo:'Core',secundarios:[],equipo:'Cuerpo',tipo:'Aislamiento',
     img:'https://upload.wikimedia.org/wikipedia/commons/7/7a/Leg-raises-2.png',
-    cue:'Espalda baja pegada al piso (o al banco), sube las piernas estiradas hasta 90° sin impulso, y baja despacio sin tocar el piso entre repetición y repetición.'},
+    cue:'Espalda baja pegada al piso (o al banco), sube las piernas estiradas hasta 90° sin impulso, y baja despacio sin tocar el piso entre repetición y repetición.',pasos:['Boca arriba, manos bajo el glúteo para proteger la lumbar.','Piernas estiradas, sube hasta la vertical.','Baja despacio hasta casi tocar el suelo, sin apoyarlas.'],error:'<b>Despegar la lumbar del suelo al bajar.</b> Ahí la espalda se lleva el trabajo. Baja solo hasta donde puedas mantenerla pegada.'},
   {id:'e048',nombre:'Rueda Abdominal',musculo:'Core',secundarios:[],equipo:'Rueda',tipo:'Compuesto',
     img:'https://upload.wikimedia.org/wikipedia/commons/a/a6/Ab-rollout-1.png',
     cue:'De rodillas, rueda hacia adelante con el abdomen apretado y la espalda derecha — solo avanza hasta donde puedas regresar sin que se arquee tu espalda baja.'},
   {id:'e049',nombre:'Oblicuos con Cable',musculo:'Core',secundarios:[],equipo:'Máquina',tipo:'Aislamiento',
     cue:'De pie con el cable a un costado, gira tu cuerpo jalando el agarre en diagonal, manteniendo la cadera quieta — el giro debe salir del abdomen, no de los brazos.'},
   {id:'e050',nombre:'Dead Bug',musculo:'Core',secundarios:[],equipo:'Cuerpo',tipo:'Compuesto',
-    cue:'Espalda baja pegada al piso durante todo el ejercicio. Estira un brazo y la pierna contraria despacio, sin que se arquee tu espalda baja.'},
+    cue:'Espalda baja pegada al piso durante todo el ejercicio. Estira un brazo y la pierna contraria despacio, sin que se arquee tu espalda baja.',pasos:['Boca arriba, brazos y piernas arriba en ángulo de 90 grados.','Lumbar pegada al suelo todo el ejercicio: es la regla del ejercicio.','Estira brazo y pierna contrarios despacio y regresa.'],error:'<b>Ir rápido.</b> El Dead Bug no es de repeticiones, es de control: si la lumbar se despega al estirar, acorta el recorrido.'},
   // CARDIO
   {id:'e051',nombre:'Caminata en Cinta',musculo:'Cardio',secundarios:[],equipo:'Máquina',tipo:'Cardio',
-    cue:'Camina derecho, deja que los brazos se muevan natural. Si quieres más intensidad, sube la inclinación antes que la velocidad — así cuidas tus rodillas.'},
+    cue:'Camina derecho, deja que los brazos se muevan natural. Si quieres más intensidad, sube la inclinación antes que la velocidad — así cuidas tus rodillas.',pasos:['Inclinacion entre 3 y 6 por ciento, ritmo al que puedas hablar entrecortado.','Espalda recta, sin agarrarte de los pasamanos.','Pisada completa: talón primero y empuje con la punta.'],error:'<b>Agarrarte de los pasamanos.</b> Baja el gasto real entre un 20 y un 25 por ciento: caminas más rápido pero quemas menos.'},
   {id:'e052',nombre:'Correr',musculo:'Cardio',secundarios:[],equipo:'Cuerpo',tipo:'Cardio',
     cue:'Pisa con la mitad del pie (no con el talón), brazos relajados doblados a 90°, respira con ritmo — empieza con trotes cortos antes de correr distancias largas.'},
   {id:'e053',nombre:'Bicicleta Estática',musculo:'Cardio',secundarios:[],equipo:'Máquina',tipo:'Cardio',
     cue:'Ajusta el asiento para que tu rodilla quede un poco doblada en el punto más bajo del pedaleo, y mantén un ritmo constante.'},
   {id:'e054',nombre:'Elíptica',musculo:'Cardio',secundarios:[],equipo:'Máquina',tipo:'Cardio',
-    cue:'Mantén un ritmo constante, cuerpo derecho, sin colgarte de los brazos — es de bajo impacto, ideal para cardio largo sin desgastar tus rodillas.'},
+    cue:'Mantén un ritmo constante, cuerpo derecho, sin colgarte de los brazos — es de bajo impacto, ideal para cardio largo sin desgastar tus rodillas.',pasos:['Postura erguida, sin cargar el peso en los brazos.','Resistencia suficiente para que las piernas trabajen, no para pedalear al aire.','Ritmo constante: es cardio de bajo impacto, no un sprint.'],error:'<b>Poner resistencia cero y mover rápido.</b> Marca muchas calorias en la pantalla y quema pocas de verdad. Sube resistencia y baja el ritmo.'},
   {id:'e055',nombre:'Saltar la Cuerda',musculo:'Cardio',secundarios:[],equipo:'Cuerda',tipo:'Cardio',
     cue:'Codos pegados a tu cuerpo, gira la cuerda con las muñecas, no con los hombros, y salta lo mínimo necesario para despegar del piso.'},
   {id:'e056',nombre:'Battle Ropes',musculo:'Cardio',secundarios:['Hombros'],equipo:'Cuerda',tipo:'Cardio',
@@ -722,18 +898,18 @@ const EJ_DB = [
   // bloques reales de una sesión de aprendizaje, en el mismo orden en que se enseña, y coinciden
   // con las 4 fases de la habilidad "Saber nadar" del Dashboard (Habilidades Base).
   {id:'e058',nombre:'Flotación y respiración (natación)',musculo:'Cardio',secundarios:[],equipo:'Alberca',tipo:'Cardio',
-    cue:'En la parte donde haces pie: agárrate del borde, mete la cara y suelta burbujas por la nariz 10 veces seguidas. Luego flota de pecho (medusa) y de espalda, con la nariz y la boca fuera del agua. La clave es soltar el aire DEBAJO del agua y solo tomar aire arriba — casi todo el pánico en el agua viene de aguantar la respiración.'},
+    cue:'En la parte donde haces pie: agárrate del borde, mete la cara y suelta burbujas por la nariz 10 veces seguidas. Luego flota de pecho (medusa) y de espalda, con la nariz y la boca fuera del agua. La clave es soltar el aire DEBAJO del agua y solo tomar aire arriba — casi todo el pánico en el agua viene de aguantar la respiración.',pasos:['De pie en la parte baja, mete la cara al agua y suelta el aire por la nariz.','Sujeto al borde, estira el cuerpo boca abajo y deja que flote solo.','Repite hasta que meter la cara deje de costarte.'],error:'<b>Aguantar la respiración.</b> Es lo que te hunde y te cansa: el aire se suelta DENTRO del agua, despacio, y solo se toma fuera.'},
   {id:'e059',nombre:'Patada con tabla + respirar de lado (natación)',musculo:'Cardio',secundarios:['Piernas'],equipo:'Alberca',tipo:'Cardio',
-    cue:'Tabla estirada al frente, brazos rectos: patada de crol desde la CADERA (no desde la rodilla), piernas casi estiradas y tobillos sueltos, movimiento corto y rápido — si sacas mucho el pie y salpicas fuerte, estás pateando desde la rodilla. En la misma serie practica la respiración: GIRA la cabeza a un lado para tomar aire (una oreja se queda en el agua) y regrésala abajo soltando burbujas. Nunca levantes la cabeza al frente: hunde las piernas y es el error #1 al aprender.'},
+    cue:'Tabla estirada al frente, brazos rectos: patada de crol desde la CADERA (no desde la rodilla), piernas casi estiradas y tobillos sueltos, movimiento corto y rápido — si sacas mucho el pie y salpicas fuerte, estás pateando desde la rodilla. En la misma serie practica la respiración: GIRA la cabeza a un lado para tomar aire (una oreja se queda en el agua) y regrésala abajo soltando burbujas. Nunca levantes la cabeza al frente: hunde las piernas y es el error #1 al aprender.',pasos:['Tabla estirada al frente, brazos rectos y cara al agua.','Patada desde la cadera con la pierna casi recta, tobillo suelto.','Gira la cabeza de lado para tomar aire sin levantarla.'],error:'<b>Patear desde la rodilla.</b> Cansa el doble y no avanza. La patada sale de la cadera, como un látigo, y la rodilla apenas se dobla.'},
   // e060 quedó FUERA de la rutina el 2026-08-12 ("de natacion, solo dejame 4 ejercicios"): su
   // contenido se fusionó dentro de e059, que es donde se practica de verdad (con tabla). Se deja
   // en la biblioteca por si algún día quiere aislarlo como serie aparte.
   {id:'e060',nombre:'Respiración lateral con tabla (natación)',musculo:'Cardio',secundarios:[],equipo:'Alberca',tipo:'Cardio',
     cue:'Misma patada con tabla, pero ahora GIRA la cabeza a un lado para respirar en vez de levantarla al frente. Una oreja se queda en el agua, tomas aire por la boca y regresas la cara abajo soltando burbujas. Levantar la cabeza al frente hunde las piernas — es el error #1 al aprender.'},
   {id:'e061',nombre:'Brazada de crol (natación)',musculo:'Cardio',secundarios:['Espalda','Hombros'],equipo:'Alberca',tipo:'Cardio',
-    cue:'Empújate del borde en posición de flecha (brazos estirados, cabeza entre los brazos) y suma la brazada: la mano entra al agua frente al hombro, empuja el agua hacia atrás hasta el muslo, y regresa por fuera con el codo alto. Alterna brazos y respira de lado cada 2-3 brazadas.'},
+    cue:'Empújate del borde en posición de flecha (brazos estirados, cabeza entre los brazos) y suma la brazada: la mano entra al agua frente al hombro, empuja el agua hacia atrás hasta el muslo, y regresa por fuera con el codo alto. Alterna brazos y respira de lado cada 2-3 brazadas.',pasos:['Un brazo entra al agua estirado al frente, cerca de la línea del hombro.','Jala el agua hacia atrás doblando el codo, como si rodearas un barril.','Saca la mano junto al muslo y regresa por fuera, relajado.'],error:'<b>Entrar con la mano cruzando la línea del cuerpo.</b> Te hace zigzaguear y pierdes todo el avance del brazo anterior.'},
   {id:'e062',nombre:'Nado continuo (natación)',musculo:'Cardio',secundarios:['Espalda','Hombros'],equipo:'Alberca',tipo:'Cardio',
-    cue:'Todo junto y sin parar: patada + brazada + respiración lateral. Empieza con lo que aguantes (aunque sea media alberca), descansa en el borde, y repite. No busques velocidad — busca terminar el largo sin quedarte sin aire.'},
+    cue:'Todo junto y sin parar: patada + brazada + respiración lateral. Empieza con lo que aguantes (aunque sea media alberca), descansa en el borde, y repite. No busques velocidad — busca terminar el largo sin quedarte sin aire.',pasos:['Empieza con largos cortos y para en cada extremo.','Mantén un ritmo que puedas sostener, no el más rápido que puedas.','Suma un largo por sesión antes de intentar ir más rápido.'],error:'<b>Salir a toda velocidad el primer largo.</b> Te quedas sin aire en 25 metros y concluyes que no sabes nadar. La natación es técnica y ritmo, no fuerza.'},
 ];
 
 const MUSCULOS_ALL = ['Pecho','Espalda','Hombros','Bíceps','Tríceps','Piernas','Glúteos','Core','Cardio'];
@@ -766,6 +942,11 @@ let S = {
        ejercicios:[{id:'e001',series:4,reps:8,peso:0,descanso:120},{id:'e002',series:3,reps:10,peso:0,descanso:90},{id:'e004',series:3,reps:12,peso:0,descanso:60},{id:'e054',series:1,reps:25,unidad:'min',peso:0,descanso:0},{id:'e045',series:3,reps:45,unidad:'seg',peso:0,descanso:45}]},
     0:{nombre:'Descanso activo',tipo:'descanso',foco:'Recuperación — caminata ligera opcional, sin gimnasio. El músculo crece hoy, no en el gym.',ejercicios:[{id:'e051',series:1,reps:30,unidad:'min',peso:0,descanso:0}]},
   },
+  // Lo que de verdad levantaste, por día y por ejercicio:
+  //   { '2026-09-01': { e040: [{ok:true,kg:85},{ok:true,kg:85},...] } }
+  // El campo `peso` de la rutina existia desde siempre y estaba en 0 en los 45 ejercicios: había
+  // dónde guardarlo pero no dónde escribirlo, así que no había progresión. Esto es ese registro.
+  sesiones: {},
   ejerciciosCustom: [],
   // Calendario real de Fitsi capturado a mano por Adán (Fitsi no publica horario de clases en
   // su web) — un texto libre por día, ver sección Fitsi.
@@ -781,7 +962,14 @@ let rutinaDiaEditing=null, rutinaEjsSeleccionados=[];
 const today = () => new Date().toISOString().slice(0,10);
 const uid = () => Date.now().toString(36)+Math.random().toString(36).slice(2);
 const save = () => localStorage.setItem(KEY, JSON.stringify(S));
-const load = () => { try { const d=localStorage.getItem(KEY); if(d) S={...S,...JSON.parse(d)}; } catch(e){} };
+// El merge es SUPERFICIAL: si el navegador ya tenía un `mirutina_v1` guardado, cualquier clave
+// nueva del código desaparece contra él. Se normaliza después de leer, no se confía en el default.
+const load = () => {
+  try { const d=localStorage.getItem(KEY); if(d) S={...S,...JSON.parse(d)}; } catch(e){}
+  S.sesiones = S.sesiones || {};
+  S.ejerciciosCustom = S.ejerciciosCustom || [];
+  S.fitsiCalendario = S.fitsiCalendario || {1:'',2:'',3:'',4:'',5:'',6:'',0:''};
+};
 // El miércoles cambió de "Espalda + Hombros + Cardio" a "Natación" en el código (2026-08-07),
 // pero load() hace un merge superficial: si ya había un `rutina` guardado en este navegador
 // (de cualquier apertura anterior de esta página), reemplaza TODO el objeto por el guardado —
@@ -858,121 +1046,388 @@ function nav(s) {
 // "fusiona lo de dashboard y lo de mi rutina, esta nueva debe ser muy completa"). Los KPIs ya
 // no dependen de sesiones registradas (esa función se quitó junto con "Entrenar Hoy") — se
 // calculan directo del plan semanal, que siempre está disponible.
-function renderMiRutina() {
-  renderResumenSemana();
+// La semana empieza en lunes, que es como Adán la lee en el resto de las apps.
+const ORDEN_DIAS = [1,2,3,4,5,6,0];
+
+// ─── LA SESIÓN DEL DÍA ─────────────────────────────────────────────────
+// Manda el día de hoy. Antes eran los 7 días abiertos a la vez — 7.403px de scroll — y para
+// llegar al martes había que pasar por el lunes entero.
+//
+// Cada ejercicio trae ahora `pasos` (la técnica en orden) y `error` (el fallo que se ve siempre
+// y cómo se nota). Los que no los tengan caen al `cue` de toda la vida, partido en frases.
+const ejHoy = () => today();
+function ejBase(id){ return EJ_DB.find(x=>x.id===id) || (S.ejerciciosCustom||[]).find(x=>x.id===id) || null; }
+function ejSesion(iso){ return S.sesiones[iso] || {}; }
+function ejSets(iso,id,n){
+  const ses=ejSesion(iso), a=(ses[id]||[]).slice(0,n);
+  while(a.length<n) a.push({ok:false,kg:null});
+  return a;
+}
+function ejGuardaSets(id,a){
+  const iso=ejHoy();
+  if(!S.sesiones[iso]) S.sesiones[iso]={};
+  S.sesiones[iso][id]=a;
+  save();
+}
+function ejToggleSet(id,i,n,descanso){
+  const a=ejSets(ejHoy(),id,n);
+  a[i].ok=!a[i].ok;
+  // Al marcar una serie arranca el descanso de ESE ejercicio; al desmarcarla se corta.
+  if(a[i].ok) ejArrancaCrono(id,descanso); else ejParaCrono();
+  ejGuardaSets(id,a);
+  renderMiRutina();
+}
+function ejSetKg(id,i,n,val){
+  const a=ejSets(ejHoy(),id,n);
+  const kg=parseFloat(String(val).replace(',','.'));
+  a[i].kg=isFinite(kg)&&kg>0?kg:null;
+  ejGuardaSets(id,a);
+}
+
+// El peso de la última sesión en que se hizo ese ejercicio.
+function ejUltimo(id, antesDe){
+  const dias=Object.keys(S.sesiones).filter(d=>!antesDe||d<antesDe).sort().reverse();
+  for(const d of dias){
+    const sets=(S.sesiones[d]||{})[id]||[];
+    const kgs=sets.filter(x=>x&&x.kg).map(x=>x.kg);
+    if(kgs.length) return {fecha:d, kg:Math.max(...kgs), series:sets.filter(x=>x.ok).length};
+  }
+  return null;
+}
+// Los últimos N pesos, del más viejo al más nuevo, para la barrita.
+function ejHistorial(id,n){
+  return Object.keys(S.sesiones).sort()
+    .map(d=>{ const k=((S.sesiones[d]||{})[id]||[]).filter(x=>x&&x.kg).map(x=>x.kg);
+              return k.length?{fecha:d,kg:Math.max(...k)}:null; })
+    .filter(Boolean).slice(-n);
+}
+
+// ─── Cronómetro de descanso ─────────────────────────────────────────────
+// El dato `descanso` (120s, 90s, 60s…) estaba en la rutina desde el principio y nadie lo usaba.
+// No se guarda: es de esta sesión y de este navegador.
+let ejCrono = null;      // {id, fin, total}
+let ejCronoTick = null;
+function ejArrancaCrono(id,seg){
+  if(!seg) return;
+  ejCrono={id:id, fin:Date.now()+seg*1000, total:seg};
+  if(ejCronoTick) clearInterval(ejCronoTick);
+  ejCronoTick=setInterval(ejPintaCrono,1000);
+}
+function ejParaCrono(){
+  ejCrono=null;
+  if(ejCronoTick){ clearInterval(ejCronoTick); ejCronoTick=null; }
+  ejPintaCrono();
+}
+function ejRestan(){ return ejCrono?Math.max(0,Math.round((ejCrono.fin-Date.now())/1000)):0; }
+function ejMMSS(s){ return Math.floor(s/60)+':'+String(s%60).padStart(2,'0'); }
+function ejPintaCrono(){
+  const el=document.getElementById('ej-crono'); if(!el) return;
+  if(!ejCrono){
+    el.innerHTML='<div class="ej-cro-k">Descanso</div><div class="ej-cro-v">\u2014</div>'+
+      '<div class="ej-cro-s">Marca una serie y el descanso arranca solo</div>';
+    return;
+  }
+  const r=ejRestan(), b=ejBase(ejCrono.id);
+  const pc=Math.max(0,Math.min(100,Math.round(r/ejCrono.total*100)));
+  if(r===0){ if(ejCronoTick){clearInterval(ejCronoTick);ejCronoTick=null;} }
+  el.innerHTML='<div class="ej-cro-k">Descanso'+(b?' \u00b7 '+b.nombre:'')+'</div>'+
+    '<div class="ej-cro-v"'+(r===0?' style="color:var(--g)"':'')+'>'+(r===0?'\u00a1Vamos!':ejMMSS(r))+'</div>'+
+    '<div class="ej-cro-s">'+(r===0?'Se acab\u00f3 el descanso \u2014 siguiente serie':'de '+ejCrono.total+' s \u00b7 toca otra serie para reiniciar')+'</div>'+
+    '<div class="ej-cro-bar"><i style="width:'+pc+'%"></i></div>';
+}
+
+// ─── Piezas de la vista ──────────────────────────────────────────────
+function ejEsc(t){ return String(t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;'); }
+// Sin `pasos` propios, el `cue` se parte en frases: mejor tres l\u00edneas que un ladrillo.
+function ejPasos(b){
+  if(b.pasos && b.pasos.length) return b.pasos;
+  return String(b.cue||'').split(/(?<=\.)\s+/).filter(x=>x.trim()).slice(0,4);
+}
+function ejImg(b,cls){
+  return b && b.img
+    ? '<img src="'+b.img+'" alt="'+ejEsc(b.nombre)+'" loading="lazy">'
+    : '<span style="font-size:20px;opacity:.4">🏋\ufe0f</span>';
+}
+
+function ejEjercicioHtml(e,i,iso){
+  const b=ejBase(e.id); if(!b) return '';
+  const n=e.series||1, un=e.unidad||'reps';
+  const sets=ejSets(iso,e.id,n);
+  const hechas=sets.filter(x=>x.ok).length;
+  const ult=ejUltimo(e.id,iso);
+  const pasos=ejPasos(b);
+
+  const filas=sets.map(function(x,k){
+    const ph=(k===0&&ult)?(ult.kg+' kg la vez pasada'):'anotar kg';
+    return '<div class="ej-set'+(x.ok?' on':'')+'">'+
+      '<div class="ej-set-c" onclick="ejToggleSet(\''+e.id+'\','+k+','+n+','+(e.descanso||0)+')" title="Marca la serie '+(k+1)+'">\u2713</div>'+
+      '<div class="ej-set-n">'+(k+1)+'</div>'+
+      '<input class="ej-kg" type="number" inputmode="decimal" step="0.5" min="0" '+
+        'value="'+(x.kg!==null&&x.kg!==undefined?x.kg:'')+'" placeholder="'+ph+'" '+
+        'onchange="ejSetKg(\''+e.id+'\','+k+','+n+',this.value)" title="Peso de la serie '+(k+1)+'">'+
+      '<div class="ej-kg-u">kg</div></div>';
+  }).join('');
+
+  const tags=[b.musculo?'<span class="ej-tag mus">'+ejEsc(b.musculo)+'</span>':'']
+    .concat((b.secundarios||[]).slice(0,1).map(x=>'<span class="ej-tag">+ '+ejEsc(x)+'</span>'))
+    .concat([b.equipo?'<span class="ej-tag">'+ejEsc(b.equipo)+'</span>':'',
+             b.tipo?'<span class="ej-tag">'+ejEsc(b.tipo)+'</span>':'']).filter(Boolean).join('');
+
+  return '<div class="ej-x'+(hechas===n?' on':'')+'">'+
+    '<div class="ej-x-img" onclick="verEjercicio(\''+e.id+'\')" title="Ver la ficha completa">'+
+      '<div class="ej-x-num">'+(i+1)+'</div>'+ejImg(b)+'</div>'+
+    '<div class="ej-x-b">'+
+      '<div class="ej-x-top"><span class="ej-x-n" onclick="verEjercicio(\''+e.id+'\')">'+ejEsc(b.nombre)+'</span>'+tags+'</div>'+
+      '<div class="ej-pasos">'+pasos.map((p,k)=>'<div class="ej-paso"><i>'+(k+1)+'</i><span>'+p+'</span></div>').join('')+'</div>'+
+      (b.error?'<div class="ej-err"><span>\u26a0</span><span><b>El error de siempre:</b> '+b.error.replace(/^<b>|<\/b>/,'')+'</span></div>':'')+
+    '</div>'+
+    '<div class="ej-x-r">'+
+      '<div class="ej-sr-h"><div class="ej-sr-v">'+n+' <span>\u00d7 '+e.reps+(un!=='reps'?' '+un:'')+'</span></div>'+
+        (e.descanso?'<div class="ej-sr-d">'+e.descanso+' s</div>':'')+'</div>'+
+      '<div class="ej-sets">'+filas+'</div>'+
+    '</div></div>';
+}
+
+function ejProgresionHtml(rut,iso){
+  if(!rut||!rut.ejercicios) return '';
+  const filas=rut.ejercicios.map(function(e){
+    const b=ejBase(e.id); if(!b) return '';
+    const h=ejHistorial(e.id,5);
+    const hoy=h.length&&h[h.length-1].fecha===iso?h[h.length-1]:null;
+    const prev=ejUltimo(e.id,iso);
+    if(!h.length&&!prev) return '';
+    const act=hoy?hoy.kg:(prev?prev.kg:0);
+    const ant=hoy&&prev?prev.kg:(h.length>1?h[h.length-2].kg:null);
+    const dif=ant!==null?+(act-ant).toFixed(1):null;
+    const cls=dif===null?'igual':(dif>0?'sube':(dif<0?'baja':'igual'));
+    const txt=dif===null?'\u2014':(dif>0?'+'+dif+' kg':(dif<0?dif+' kg':'='));
+    const max=Math.max(...h.map(x=>x.kg),1);
+    const barras=h.map(x=>'<i style="height:'+Math.round(x.kg/max*100)+'%"></i>').join('');
+    return '<div class="ej-pr"><div style="min-width:0"><div class="ej-pr-n">'+ejEsc(b.nombre)+'</div>'+
+      '<div class="ej-pr-s">'+e.series+'\u00d7'+e.reps+(prev?' \u00b7 '+ejDiasDesde(prev.fecha):'')+'</div></div>'+
+      (h.length>1?'<div class="ej-spark">'+barras+'</div>':'')+
+      '<div class="ej-pr-r"><div class="ej-pr-v '+cls+'">'+txt+'</div>'+
+      '<div class="ej-pr-d">'+(ant!==null?ant+' \u2192 '+act:act+' kg')+'</div></div></div>';
+  }).filter(Boolean).join('');
+
+  if(!filas) return '<div class="ej-card"><div class="ej-card-h"><div class="ej-card-t"><span class="b"></span>Tu progresi\u00f3n</div></div>'+
+    '<div class="ej-nota" style="border:none;margin:0;padding:0">A\u00fan no has anotado ning\u00fan peso. <b>Anota el de hoy</b> y a partir de la pr\u00f3xima sesi\u00f3n esta tarjeta te dice cu\u00e1nto subiste \u2014 sin ese n\u00famero no hay progresi\u00f3n, y repetir el mismo peso tres semanas seguidas es mantenerte, no crecer.</div></div>';
+
+  return '<div class="ej-card"><div class="ej-card-h"><div class="ej-card-t"><span class="b"></span>Tu progresi\u00f3n</div>'+
+    '<div class="ej-card-x">vs. la vez pasada</div></div>'+filas+
+    '<div class="ej-nota">El peso que anotas hoy es lo que ves aqu\u00ed la pr\u00f3xima vez. <b>Repetir el mismo peso tres sesiones seguidas es mantenerte</b>, no crecer.</div></div>';
+}
+function ejDiasDesde(iso){
+  const d=Math.round((new Date(today())-new Date(iso))/86400000);
+  return d===0?'hoy':(d===1?'ayer':'hace '+d+' d\u00edas');
+}
+
+const EJ_SUBIR=[
+  'Si completas <b>todas las series al tope de reps</b> con buena forma, la siguiente sesi\u00f3n sube.',
+  'Sube <b>2.5 kg en aislamiento</b> y 5 kg en compuestos. M\u00e1s de eso y pierdes la t\u00e9cnica.',
+  'Si no llegas a las reps dos sesiones seguidas, <b>bajas</b> y vuelves a subir. No es retroceder.',
+];
+
+// ─── El render ──────────────────────────────────────────────────────
+let ejDiaVisto = null;   // null = hoy; n\u00famero = otro d\u00eda que se abri\u00f3 desde la tira
+
+function renderMiRutina(){
+  const cont=document.getElementById('d-hoy'); if(!cont) return;
+  const iso=ejHoy(), dowHoy=new Date().getDay();
+  const dow=ejDiaVisto===null?dowHoy:ejDiaVisto;
+  const rut=S.rutina[dow];
+  const esHoy=dow===dowHoy;
+  const ejs=(rut&&rut.ejercicios)||[];
+
+  // — cabecera
+  const sets=ejs.map(e=>ejSets(iso,e.id,e.series||1));
+  const hechos=esHoy?ejs.filter((e,i)=>sets[i].every(x=>x.ok)).length:0;
+  const minutos=ejs.reduce((a,e)=>a+(e.series||1)*((e.descanso||60)+40)/60,0);
+  const vol=esHoy?ejs.reduce(function(a,e,i){
+    return a+sets[i].filter(x=>x.ok&&x.kg).reduce((b,x)=>b+x.kg*(e.reps||1),0); },0):0;
+  const racha=ejRacha();
+  const hechosSem=ejSesionesSemana();
+
+  const cab='<div class="ej-top"><div>'+
+    '<div class="ej-eyebrow"><span class="dot"></span>'+DIAS_STR[dow]+(esHoy?' \u00b7 hoy':' \u00b7 otro d\u00eda')+
+      (rut&&rut.tipo&&TIPO_LABEL[rut.tipo]?' \u00b7 '+TIPO_LABEL[rut.tipo].replace(/^[^ ]+ /,''):'')+'</div>'+
+    '<h2 class="ej-h1">'+ejEsc(rut?rut.nombre:'Sin asignar')+
+      '<em>'+ejs.length+' ejercicio'+(ejs.length===1?'':'s')+(minutos?' \u00b7 ~'+Math.round(minutos)+' min':'')+'</em></h2></div>'+
+    '<div class="ej-kpis">'+
+      '<div class="ej-kpi"><div class="ej-kpi-v" style="color:var(--g)">'+racha+'</div><div class="ej-kpi-k">Racha</div></div>'+
+      '<div class="ej-kpi"><div class="ej-kpi-v" style="color:var(--b)">'+hechosSem+'/6</div><div class="ej-kpi-k">Esta semana</div></div>'+
+      '<div class="ej-kpi"><div class="ej-kpi-v" style="color:var(--p)">'+(vol?(vol>=1000?(vol/1000).toFixed(1)+' t':vol+' kg'):'\u2014')+'</div><div class="ej-kpi-k">Volumen hoy</div></div>'+
+    '</div></div>';
+
+  // — la semana
+  const dias=ORDEN_DIAS.map(function(d){
+    const r=S.rutina[d]||{};
+    const iso2=ejIsoDeDow(d);
+    const rEjs=(r.ejercicios||[]);
+    const done=rEjs.length&&rEjs.every(e=>ejSets(iso2,e.id,e.series||1).every(x=>x.ok));
+    const col=r.tipo?TIPO_COL[r.tipo]:'rgba(var(--ov),.25)';
+    return '<div class="ej-d'+(d===dowHoy?' hoy':'')+(done?' hecho':'')+'" onclick="ejVerDia('+d+')" title="Ver el '+DIAS_STR[d]+'">'+
+      '<div class="ej-d-l">'+DIAS_SHORT[d]+(d===dowHoy?' \u00b7 hoy':'')+(done?' <span class="ej-tic">\u2713</span>':'')+'</div>'+
+      '<div class="ej-d-n">'+ejEsc((r.nombre||'Sin asignar').split('\u2014')[0].trim())+'</div>'+
+      '<div class="ej-d-t" style="background:'+col+'22;color:'+col+';border:1px solid '+col+'55">'+
+        ejEsc(((r.nombre||'').split('\u2014')[1]||r.tipo||'').trim()||'\u2014')+'</div></div>';
+  }).join('');
+
+  // — la sesion
+  const cuerpo=ejs.length
+    ? ejs.map((e,i)=>ejEjercicioHtml(e,i,esHoy?iso:'__otro__')).join('')
+    : '<div class="ej-nota" style="border:none;margin:0;padding:0">Sin ejercicios asignados a este d\u00eda.</div>';
+
+  const ses='<div class="ej-ses"><div class="ej-ses-h"><div class="ej-ses-t">'+
+    (esHoy?'La sesi\u00f3n de hoy':'La sesi\u00f3n del '+DIAS_STR[dow].toLowerCase())+'</div>'+
+    '<div class="ej-ses-x">'+(esHoy?'<b>'+hechos+' de '+ejs.length+'</b> hechos':
+      '<a href="#" onclick="ejVerDia(null);return false" style="color:var(--g)">\u2190 volver a hoy</a>')+'</div></div>'+
+    (rut&&rut.foco?'<div class="ej-foco">'+rut.foco+'</div>':'')+cuerpo+'</div>';
+
+  cont.innerHTML=cab+'<div class="ej-wk">'+dias+'</div>'+
+    '<div class="ej-mid"><div class="ej-col">'+ses+'</div>'+
+    '<div class="ej-col">'+
+      '<div class="ej-cro" id="ej-crono"></div>'+
+      ejProgresionHtml(esHoy?rut:null,iso)+
+      '<div class="ej-card"><div class="ej-card-h"><div class="ej-card-t"><span class="b"></span>C\u00f3mo subir de peso</div></div>'+
+        EJ_SUBIR.map((t,i)=>'<div class="ej-paso" style="margin-bottom:7px"><i>'+(i+1)+'</i><span>'+t+'</span></div>').join('')+'</div>'+
+    '</div></div>';
+
+  ejPintaCrono();
   renderRutinaSemana();
 }
 
-function renderResumenSemana() {
-  const hoy = new Date();
-  const diaHoy = hoy.getDay();
-  const semana = Array.from({length:7},(_,i)=>{ const d=new Date(hoy); d.setDate(d.getDate()-diaHoy+i); return d.toISOString().slice(0,10); });
-
-  // Semana visual, tira horizontal — de un vistazo, qué toca cada día. Clic en un día filtra
-  // "Ejercicios de la semana" abajo para mostrar solo ese día (ver renderRutinaSemana()) —
-  // antes hacía scroll a ese día entre los 7 completos; ahora los esconde todos menos ese.
-  document.getElementById('d-semana').innerHTML=`
-    <div class="card">
-      <div class="card-title" style="margin-bottom:12px">🗓️ Esta semana — clic en un día para ver solo sus ejercicios</div>
-      <div class="week-strip">
-        ${semana.map(d=>{
-          const dW=new Date(d).getDay();
-          const rut=S.rutina[dW];
-          const [,m,day]=d.split('-');
-          const isHoy=d===today();
-          const col=rut?.tipo?TIPO_COL[rut.tipo]:'rgba(var(--ov),.25)';
-          const esDescanso=rut?.tipo==='descanso'||!rut;
-          const activo=rutinaDiaFiltro===dW;
-          return `<div class="ws-day ${isHoy?'today':''} ${activo?'sel':''}" onclick="verSoloDia(${dW})">
-            <div class="ws-dname">${DIAS_SHORT[dW]}${isHoy?' •':''}</div>
-            <div class="ws-ddate">${parseInt(day)}/${parseInt(m)}</div>
-            ${esDescanso?'<div class="ws-ico">😴</div>':`<div class="ws-dot" style="background:${col}"></div>`}
-            <div class="ws-lbl">${rut?.nombre||'Sin asignar'}</div>
-          </div>`;
-        }).join('')}
-      </div>
-    </div>`;
+function ejVerDia(d){ ejDiaVisto=d; renderMiRutina(); window.scrollTo({top:0,behavior:'smooth'}); }
+// La fecha de esta semana que corresponde a ese dia (0=domingo).
+function ejIsoDeDow(d){
+  const h=new Date(), f=new Date(h);
+  f.setDate(h.getDate()-h.getDay()+d);
+  return f.getFullYear()+'-'+String(f.getMonth()+1).padStart(2,'0')+'-'+String(f.getDate()).padStart(2,'0');
+}
+// Dias seguidos con la sesion completa, saltando los de descanso.
+function ejRacha(){
+  let c=0; const d=new Date();
+  for(let i=0;i<400;i++){
+    const dow=d.getDay(), r=S.rutina[dow]||{}, ejs=r.ejercicios||[];
+    const iso=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+    if(r.tipo==='descanso'||!ejs.length){ d.setDate(d.getDate()-1); continue; }
+    const done=ejs.every(e=>ejSets(iso,e.id,e.series||1).every(x=>x.ok));
+    if(!done){ if(i===0){ d.setDate(d.getDate()-1); continue; } break; }
+    c++; d.setDate(d.getDate()-1);
+  }
+  return c;
+}
+function ejSesionesSemana(){
+  return ORDEN_DIAS.filter(function(d){
+    const r=S.rutina[d]||{}, ejs=r.ejercicios||[];
+    if(r.tipo==='descanso'||!ejs.length) return false;
+    const iso=ejIsoDeDow(d);
+    return ejs.every(e=>ejSets(iso,e.id,e.series||1).every(x=>x.ok));
+  }).length;
 }
 
-// ─── MI RUTINA — 2026-08-07: clic en un día de la tira semanal muestra SOLO ese día (todos
-//    sus ejercicios) y esconde los demás — antes (2026-08-04) mostraba los 7 días completos
-//    uno debajo del otro y el clic solo hacía scroll hasta el día. Adán: "quita [los KPIs]...
-//    cada vez que dé clic... enséñame todos los ejercicios y esconde los demás".
-const ORDEN_DIAS = [1,2,3,4,5,6,0];
-let rutinaDiaFiltro = null; // null = los 7 días completos; número (0-6) = solo ese día
+// El resto de la semana, plegado. Antes los 7 días iban abiertos a la vez y ahí nacían los
+// 7.403px de scroll: hoy manda arriba y los otros 6 son una línea cada uno hasta que los abras.
+let ejAbiertos = {};
+function ejTogglePlegado(d){ ejAbiertos[d]=!ejAbiertos[d]; renderRutinaSemana(); }
 
-function verSoloDia(d) {
-  rutinaDiaFiltro = d;
-  nav('rutina');
-  renderMiRutina();
-}
-function verTodaLaSemana() {
-  rutinaDiaFiltro = null;
-  renderMiRutina();
-}
+function renderRutinaSemana(){
+  const cont=document.getElementById('rutina-semana'); if(!cont) return;
+  const dowHoy=new Date().getDay();
+  const visto=ejDiaVisto===null?dowHoy:ejDiaVisto;
+  const t=document.getElementById('rutina-semana-title');
+  if(t) t.textContent='🗓\ufe0f El resto de la semana';
 
-function renderRutinaSemana() {
-  const titleEl = document.getElementById('rutina-semana-title');
-  if (titleEl) titleEl.textContent = rutinaDiaFiltro!==null ? `🏋️ Ejercicios del ${DIAS_STR[rutinaDiaFiltro]}` : '🏋️ Ejercicios de la semana';
-  const dias = rutinaDiaFiltro!==null ? [rutinaDiaFiltro] : ORDEN_DIAS;
-  const volverBtn = rutinaDiaFiltro!==null ? `<button class="btn btn-o btn-sm" onclick="verTodaLaSemana()" style="margin-bottom:16px">← Ver los 7 días</button>` : '';
-  document.getElementById('rutina-semana').innerHTML = volverBtn + dias.map(d=>{
-    const rut = S.rutina[d]||{nombre:'Sin asignar',tipo:'',ejercicios:[]};
-    const isHoy = d===new Date().getDay();
-    const col = TIPO_COL[rut.tipo]||'rgba(var(--ov),.3)';
-
-    const musculosDia = {};
-    (rut.ejercicios||[]).forEach(e=>{ const ej=findEj(e.id); if(ej) musculosDia[ej.musculo]=(musculosDia[ej.musculo]||0)+1; });
-
-    return `<div id="rutina-dia-${d}" style="margin-bottom:24px;scroll-margin-top:80px">
-      <div class="card" style="margin-bottom:12px;border-color:${col}50;background:${col}0c">
-        <div class="flex jb aic" style="flex-wrap:wrap;gap:10px">
-          <div>
-            <div class="flex aic gap8">
-              <span style="font-size:19px;font-weight:900">${DIAS_STR[d]}${isHoy?' — HOY':''}</span>
-              ${rut.tipo?`<span style="font-size:10px;padding:3px 9px;border-radius:20px;background:${col}22;color:${col};font-weight:800;border:1px solid ${col}45">${TIPO_LABEL[rut.tipo]||rut.tipo}</span>`:''}
-            </div>
-            <div style="font-size:15px;font-weight:700;color:var(--text);margin-top:4px">${rut.nombre||'Sin asignar'}</div>
-            ${rut.foco?`<div class="ts tm" style="margin-top:4px;max-width:560px">${rut.foco}</div>`:''}
-            ${Object.keys(musculosDia).length?`<div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px">
-              ${Object.entries(musculosDia).map(([m,n])=>`<span style="font-size:10px;font-weight:700;padding:3px 10px;border-radius:20px;background:${(MUSCULO_COL[m]||'#64748b')}1e;color:${MUSCULO_COL[m]||'#64748b'};border:1px solid ${(MUSCULO_COL[m]||'#64748b')}40">${m} · ${n}</span>`).join('')}
-            </div>`:''}
-          </div>
-          <div class="flex gap8">
-            <button class="btn btn-o btn-sm" onclick="openRutinaModal(${d})">✏️ Editar</button>
-          </div>
-        </div>
-      </div>
-
-      ${!rut.ejercicios?.length ? `<div class="card empty"><div class="ico">😴</div><p>Día de descanso o sin ejercicios asignados.</p></div>` : `
-      <div style="display:flex;flex-direction:column;gap:0">
-        ${rut.ejercicios.map((e,i)=>{
-          const ej=findEj(e.id); if(!ej) return '';
-          const uni = UNI_LABEL[e.unidad]||'reps';
-          const eqCol = MUSCULO_COL[ej.musculo]||'#64748b';
-          return `<div class="exd-card">
-            ${ej.img?`<div class="exd-img"><img src="${ej.img}" alt="${ej.nombre}" loading="lazy"></div>`:''}
-            <div class="exd-body">
-              <div class="exd-head">
-                <span class="exd-num">${i+1}</span>
-                <span class="exd-name">${ej.nombre}</span>
-              </div>
-              <div class="exd-badges">
-                <span style="font-size:9px;padding:2px 7px;border-radius:4px;background:${eqCol}20;color:${eqCol};font-weight:700;border:1px solid ${eqCol}35">${ej.musculo}</span>
-                <span class="badge b-n" style="font-size:9px">${ej.equipo}</span>
-              </div>
-              <div class="exd-stats">
-                <span class="exd-stat" style="color:var(--p)">🔁 ${e.series} series</span>
-                <span class="exd-stat" style="color:var(--g)">${e.reps} ${uni}</span>
-                ${e.descanso?`<span class="exd-stat">⏱️ ${e.descanso}s descanso</span>`:''}
-              </div>
-              ${ej.cue?`<div class="exd-cue"><span>💡</span><span>${ej.cue}</span></div>`:''}
-            </div>
-          </div>`;
-        }).join('')}
-      </div>`}
-    </div>`;
+  cont.innerHTML=ORDEN_DIAS.filter(d=>d!==visto).map(function(d){
+    const r=S.rutina[d]||{nombre:'Sin asignar',tipo:'',ejercicios:[]};
+    const ejs=r.ejercicios||[];
+    const col=r.tipo?TIPO_COL[r.tipo]:'rgba(var(--ov),.25)';
+    const abierto=!!ejAbiertos[d];
+    const filas=ejs.map(function(e){
+      const b=ejBase(e.id); if(!b) return '';
+      const un=e.unidad||'reps';
+      const ult=ejUltimo(e.id,null);
+      return '<div class="ej-otro-li">'+
+        '<div class="ej-otro-i" onclick="verEjercicio(\''+e.id+'\')">'+ejImg(b)+'</div>'+
+        '<div style="min-width:0"><div class="ej-otro-ln">'+ejEsc(b.nombre)+'</div>'+
+        '<div class="ej-otro-ls">'+ejEsc(b.musculo||'')+(ult?' \u00b7 '+ult.kg+' kg la vez pasada':'')+'</div></div>'+
+        '<div class="ej-otro-lr">'+e.series+'\u00d7'+e.reps+(un!=='reps'?' '+un:'')+'</div></div>';
+    }).join('');
+    return '<div class="ej-otro'+(abierto?' abierto':'')+'">'+
+      '<div class="ej-otro-h" onclick="ejTogglePlegado('+d+')">'+
+        '<div class="ej-otro-d">'+DIAS_SHORT[d]+'</div>'+
+        '<div><div class="ej-otro-n">'+ejEsc(r.nombre)+'</div></div>'+
+        '<div class="ej-otro-c" style="color:'+col+'">'+ejs.length+' ejercicio'+(ejs.length===1?'':'s')+
+          ' &nbsp;'+(abierto?'\u25b4':'\u25be')+'</div></div>'+
+      '<div class="ej-otro-b">'+(filas||'<div class="ej-nota" style="border:none;margin:0;padding:0">Sin ejercicios.</div>')+
+        '<div style="margin-top:10px"><button class="btn btn-o btn-sm" onclick="ejVerDia('+d+')">Abrir esta sesi\u00f3n</button>'+
+        ' <button class="btn btn-o btn-sm" onclick="openRutinaModal('+d+')">Editar</button></div></div></div>';
   }).join('');
+}
+
+// ─── La ficha de un ejercicio ─────────────────────────────────────────
+// La técnica en pasos, los errores típicos, en qué día de su rutina aparece y su historial de
+// pesos. Se abre desde la sesión y desde la biblioteca.
+function verEjercicio(id){
+  const b=ejBase(id); if(!b) return;
+  const mo=document.getElementById('mo-ficha');
+  const cuerpo=document.getElementById('ficha-body');
+  if(!mo||!cuerpo) return;
+
+  // ¿en qué día de su rutina aparece?
+  const enDias=ORDEN_DIAS.filter(d=>((S.rutina[d]||{}).ejercicios||[]).some(e=>e.id===id));
+  const enHoy=enDias.length?(S.rutina[enDias[0]].ejercicios.find(e=>e.id===id)):null;
+  const hist=ejHistorial(id,6);
+  const pasos=ejPasos(b);
+
+  const tags=[b.musculo?'<span class="ej-tag mus">'+ejEsc(b.musculo)+'</span>':'']
+    .concat((b.secundarios||[]).map(x=>'<span class="ej-tag">'+ejEsc(x)+'</span>'))
+    .concat([b.equipo?'<span class="ej-tag">'+ejEsc(b.equipo)+'</span>':'',
+             b.tipo?'<span class="ej-tag">'+ejEsc(b.tipo)+'</span>':''])
+    .concat(enDias.map(d=>'<span class="ej-tag" style="background:var(--p-l);color:var(--p);border-color:rgba(176,110,255,.3)">Tu '+DIAS_STR[d].toLowerCase()+'</span>'))
+    .filter(Boolean).join('');
+
+  const alternativas=EJ_DB.filter(x=>x.id!==id&&x.musculo===b.musculo).slice(0,3);
+
+  cuerpo.innerHTML=
+    '<div class="ficha-hero">'+
+      '<div class="ficha-img">'+ejImg(b)+'</div>'+
+      '<div style="flex:1;min-width:0">'+
+        '<div class="ej-eyebrow"><span class="dot"></span>'+ejEsc(b.tipo||'')+(b.equipo?' \u00b7 '+ejEsc(b.equipo):'')+'</div>'+
+        '<h2 class="ej-h1" style="font-size:24px">'+ejEsc(b.nombre)+'</h2>'+
+        '<div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:10px">'+tags+'</div>'+
+        (enHoy?'<div class="ej-nota" style="margin-top:12px;border:none;padding:0">En tu rutina va a <b>'+
+          enHoy.series+' \u00d7 '+enHoy.reps+(enHoy.unidad?' '+enHoy.unidad:' reps')+'</b>'+
+          (enHoy.descanso?', con <b>'+enHoy.descanso+' s</b> de descanso entre series':'')+'.</div>':'')+
+      '</div></div>'+
+
+    '<div class="ficha-grid">'+
+      '<div class="ej-col">'+
+        '<div class="ej-card"><div class="ej-card-h"><div class="ej-card-t"><span class="b"></span>C\u00f3mo se hace</div>'+
+          '<div class="ej-card-x">'+pasos.length+' paso'+(pasos.length===1?'':'s')+'</div></div>'+
+          pasos.map((p,i)=>'<div class="ej-paso" style="padding:9px 0;border-bottom:1px solid rgba(var(--ov),.06)"><i>'+(i+1)+'</i><span>'+p+'</span></div>').join('')+
+        '</div>'+
+        (b.error?'<div class="ej-card"><div class="ej-card-h"><div class="ej-card-t"><span class="b"></span>El error que se ve siempre</div></div>'+
+          '<div class="ej-err"><span>\u26a0</span><span>'+b.error+'</span></div></div>':'')+
+      '</div>'+
+      '<div class="ej-col">'+
+        (hist.length?'<div class="ej-card"><div class="ej-card-h"><div class="ej-card-t"><span class="b"></span>Tu historial</div>'+
+          '<div class="ej-card-x">'+hist.length+' sesión'+(hist.length===1?'':'es')+'</div></div>'+
+          hist.slice().reverse().map(h=>'<div class="ej-pr"><div><div class="ej-pr-n">'+ejDiasDesde(h.fecha)+'</div>'+
+            '<div class="ej-pr-s">'+h.fecha+'</div></div><div class="ej-pr-r"><div class="ej-pr-v" style="color:var(--g)">'+h.kg+' kg</div></div></div>').join('')+
+          '</div>':'<div class="ej-card"><div class="ej-card-h"><div class="ej-card-t"><span class="b"></span>Tu historial</div></div>'+
+          '<div class="ej-nota" style="border:none;margin:0;padding:0">Todav\u00eda no has anotado ning\u00fan peso en este ejercicio.</div></div>')+
+        (alternativas.length?'<div class="ej-card"><div class="ej-card-h"><div class="ej-card-t"><span class="b"></span>Si est\u00e1 ocupada</div>'+
+          '<div class="ej-card-x">mismo m\u00fasculo</div></div>'+
+          alternativas.map(a=>'<div class="ej-otro-li" style="cursor:pointer" onclick="verEjercicio(\''+a.id+'\')">'+
+            '<div class="ej-otro-i">'+ejImg(a)+'</div><div style="min-width:0">'+
+            '<div class="ej-otro-ln">'+ejEsc(a.nombre)+'</div><div class="ej-otro-ls">'+ejEsc(a.equipo||'')+' \u00b7 '+ejEsc(a.tipo||'')+'</div></div></div>').join('')+
+          '<div class="ej-nota">Un gimnasio lleno no es excusa para saltarte el ejercicio del d\u00eda: <b>cambia de m\u00e1quina, no de plan</b>.</div></div>':'')+
+      '</div>'+
+    '</div>';
+
+  document.getElementById('ficha-title').textContent=b.nombre;
+  mo.classList.add('open');
 }
 
 function openRutinaModal(dia=null) {
@@ -1038,7 +1493,7 @@ function saveRutina() {
     tipo:document.getElementById('rut-tipo').value,
     ejercicios:[...rutinaEjsSeleccionados]
   };
-  save(); closeMo('mo-rutina'); renderRutinaSemana(); toast('✅ Rutina guardada');
+  save(); closeMo('mo-rutina'); renderMiRutina(); toast('✅ Rutina guardada');
 }
 
 // ─── BIBLIOTECA ──────────────────────────────────────────────────────────────
@@ -1077,7 +1532,7 @@ function renderBiblioteca() {
       <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:8px">
         ${ejs.map(e=>{
           const isCustom=!EJ_DB.find(x=>x.id===e.id);
-          return `<div class="card" style="padding:12px 14px;cursor:default">
+          return `<div class="card" style="padding:12px 14px;cursor:pointer" onclick="verEjercicio('${e.id}')" title="Abrir la ficha">
             ${e.img?`<div class="exd-img" style="width:100%;height:110px;margin-bottom:8px"><img src="${e.img}" alt="${e.nombre}" loading="lazy"></div>`:''}
             <div class="flex jb aic" style="margin-bottom:4px">
               <div style="font-size:13px;font-weight:700">${e.nombre}</div>
@@ -1151,7 +1606,7 @@ function init() {
   // en la semana completa sin importar qué día tenía seleccionado. Adán: "cuando doy click a ver
   // el ejercicio, no se me muestra el del día que estoy viendo".
   const diaParam=parseInt(new URLSearchParams(location.search).get('dia'),10);
-  if(!isNaN(diaParam)&&diaParam>=0&&diaParam<=6) verSoloDia(diaParam);
+  if(!isNaN(diaParam)&&diaParam>=0&&diaParam<=6) ejVerDia(diaParam);
   else renderMiRutina();
 }
 init();
