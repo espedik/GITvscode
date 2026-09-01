@@ -662,7 +662,23 @@ const uid = () => Date.now().toString(36)+Math.random().toString(36).slice(2);
 const fmt = n => new Intl.NumberFormat('es-MX').format(Math.round(n||0));
 const fmtD = d => { if(!d)return''; const[y,m,day]=d.split('-'); const mn=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic']; return `${parseInt(day)} ${mn[parseInt(m)-1]} ${y}`; };
 const save = () => localStorage.setItem(KEY, JSON.stringify(S));
-const load = () => { try { const d=localStorage.getItem(KEY); if(d) S={...S,...JSON.parse(d)}; } catch(e){} };
+// El merge es SUPERFICIAL: un `suplementos:{lista,tomado}` guardado antes de que existiera
+// `abierto` reemplazaba el objeto entero y borraba esa clave, y el botíquin reventaba con
+// "Cannot read properties of undefined". Cualquier sub-objeto nuevo tiene que normalizarse
+// aquí después de leer, no confiar en el valor por defecto.
+const load = () => {
+  try { const d=localStorage.getItem(KEY); if(d) S={...S,...JSON.parse(d)}; } catch(e){}
+  S.suplementos = { lista:[], tomado:{}, abierto:{}, ...(S.suplementos||{}) };
+  S.suplementos.lista   = S.suplementos.lista   || [];
+  S.suplementos.tomado  = S.suplementos.tomado  || {};
+  S.suplementos.abierto = S.suplementos.abierto || {};
+  S.postura  = { dolores:[], pausas:{}, ...(S.postura||{}) };
+  S.mental   = { registros:[], ...(S.mental||{}) };
+  S.metas    = { caloriasD:2000, proteina:150, carbs:200, grasa:65, agua:8, pesoObj:0, fechaObj:'', ...(S.metas||{}) };
+  S.chequeo  = S.chequeo || {};
+  S.medidas  = S.medidas || [];
+  S.agua     = S.agua || {};
+};
 const killChart = c => { if(c) c.destroy(); return null; };
 const cssVar = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
 function toggleTheme(){
