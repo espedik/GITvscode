@@ -1,0 +1,205 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap">
+  <style>
+    body{margin:0;background:#07100d;font-family:"Inter",-apple-system,sans-serif}
+    .sa{font-family:"Inter",-apple-system,BlinkMacSystemFont,sans-serif !important}
+    .sa .kpi-v,.sa .h1,.sa .med-d,.sa .med-tot-v,.sa .agua-n,.sa .pw-v,.sa .ex-v{font-family:"Space Grotesk","Inter",sans-serif}
+  </style>
+</helmet>
+
+<div class="sa">
+<style>
+.sa{
+  --tx:#eef5f1; --tx2:#9fb0a8; --tx3:#8fa199;
+  --line:rgba(255,255,255,.09); --line2:rgba(255,255,255,.05);
+  --panel:rgba(255,255,255,.045); --panel2:rgba(255,255,255,.028);
+  --ok:#2fe0a0; --am:#ff9f45; --pm:#8b7dff; --agua:#4cc4f0;
+  --warn:#ff7a6b; --teal:#1fd6c4; --gris:#8b96a0; --ink:#07100d;
+  width:390px; height:1830px; box-sizing:border-box; padding:16px 14px 20px;
+  background:
+    radial-gradient(ellipse 90% 26% at 12% -2%, rgba(47,224,160,.18) 0%, transparent 60%),
+    radial-gradient(ellipse 90% 24% at 92% 20%, rgba(76,196,240,.14) 0%, transparent 60%),
+    radial-gradient(ellipse 100% 22% at 50% 102%, rgba(139,125,255,.12) 0%, transparent 60%),
+    #07100d;
+  color:var(--tx); overflow:hidden; position:relative;
+}
+.sa *{box-sizing:border-box}
+.eyebrow{font-size:9.5px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--ok);display:flex;align-items:center;gap:6px}
+.eyebrow .dot{width:5px;height:5px;border-radius:50%;background:var(--ok);box-shadow:0 0 8px var(--ok)}
+.h1{font-size:21px;font-weight:800;letter-spacing:-.025em;margin:5px 0 12px}
+
+.kpis{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;margin-bottom:13px}
+.kpi{padding:9px 10px;border-radius:12px;border:1px solid var(--line);background:var(--panel)}
+.kpi-v{font-size:17px;font-weight:800;letter-spacing:-.025em;line-height:1;font-variant-numeric:tabular-nums}
+.kpi-k{font-size:8px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--tx3);margin-top:5px;line-height:1.3}
+.kpi.a .kpi-v{color:var(--ok)} .kpi.b .kpi-v{color:var(--am)} .kpi.c .kpi-v{color:var(--warn)}
+
+.card{border-radius:16px;border:1px solid var(--line);background:var(--panel);padding:13px 14px;margin-bottom:12px}
+.card.hoy{border-color:rgba(47,224,160,.28);background:linear-gradient(165deg,rgba(47,224,160,.09),rgba(255,255,255,.022) 55%)}
+.card-h{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:11px}
+.card-t{font-size:10px;font-weight:800;letter-spacing:.11em;text-transform:uppercase;color:var(--tx2);display:flex;align-items:center;gap:6px}
+.card-t .b{width:3px;height:11px;border-radius:2px;background:linear-gradient(180deg,var(--ok),var(--agua));flex:none}
+.card-x{font-size:9.5px;color:var(--tx3);font-weight:700;white-space:nowrap}
+
+.blq-h{display:flex;align-items:center;gap:8px;margin:12px 0 7px}
+.blq-h:first-of-type{margin-top:0}
+.blq-i{width:23px;height:23px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:11px;flex:none}
+.blq-i.am{background:rgba(255,159,69,.15);border:1px solid rgba(255,159,69,.34)}
+.blq-i.pm{background:rgba(139,125,255,.15);border:1px solid rgba(139,125,255,.36)}
+.blq-i.ag{background:rgba(76,196,240,.13);border:1px solid rgba(76,196,240,.32)}
+.blq-n{font-size:11.5px;font-weight:800}
+.blq-c{margin-left:auto;font-size:9px;font-weight:800;color:var(--tx3);font-variant-numeric:tabular-nums}
+
+.sup{display:flex;gap:9px;padding:7px 0;border-bottom:1px solid var(--line2);align-items:center}
+.sup:last-of-type{border-bottom:none}
+.sup-c{width:19px;height:19px;border-radius:6px;border:1.5px solid var(--line);flex:none;display:flex;align-items:center;justify-content:center;font-size:10px;color:transparent}
+.sup.on .sup-c{background:var(--ok);border-color:var(--ok);color:var(--ink)}
+.sup-n{font-size:11.5px;font-weight:700;line-height:1.2}
+.sup.on .sup-n{color:var(--tx2)}
+.sup-d{font-size:9px;color:var(--tx3);margin-top:2px}
+.sup-w{margin-left:auto;font-size:8.5px;font-weight:800;color:var(--am);flex:none;text-align:right;max-width:82px;line-height:1.3}
+.mini{font-size:9.5px;color:var(--tx3);line-height:1.5;margin-top:9px;padding-top:9px;border-top:1px solid var(--line2)}
+.mini b{color:var(--tx2)}
+
+.agua-n{font-size:22px;font-weight:800;letter-spacing:-.03em;font-variant-numeric:tabular-nums;line-height:1}
+.agua-n span{font-size:12px;color:var(--tx3);font-weight:700}
+.vasos{display:flex;gap:4px;margin:10px 0 0}
+.v{flex:1;height:22px;border-radius:3px 3px 6px 6px;border:1.5px solid var(--line);background:var(--panel2)}
+.v.on{background:linear-gradient(180deg,rgba(76,196,240,.35),var(--agua));border-color:var(--agua)}
+.pausa{display:flex;gap:4px;margin-top:10px}
+.pz{flex:1;height:7px;border-radius:3px;background:var(--panel2);border:1px solid var(--line)}
+.pz.on{background:var(--ok);border-color:var(--ok)}
+
+.ex{display:flex;align-items:flex-start;gap:9px;padding:8px 0;border-bottom:1px solid var(--line2)}
+.ex:last-of-type{border-bottom:none}
+.ex-p{width:8px;height:8px;border-radius:50%;flex:none;margin-top:4px}
+.ex-p.nunca{background:var(--warn);box-shadow:0 0 0 3px rgba(255,122,107,.16)}
+.ex-p.vence{background:var(--am);box-shadow:0 0 0 3px rgba(255,159,69,.16)}
+.ex-p.ok{background:var(--ok);box-shadow:0 0 0 3px rgba(47,224,160,.14)}
+.ex-n{font-size:11px;font-weight:800;line-height:1.25}
+.ex-t{font-size:9.5px;color:var(--tx3);line-height:1.45;margin-top:2px}
+.ex-t b{color:var(--tx2)}
+.ex-r{margin-left:auto;text-align:right;flex:none}
+.ex-v{font-size:10px;font-weight:800;font-variant-numeric:tabular-nums}
+.ex-v.nunca{color:var(--warn)} .ex-v.vence{color:var(--am)} .ex-v.ok{color:var(--ok)}
+.aviso{border-radius:11px;border:1px solid rgba(139,125,255,.32);background:rgba(139,125,255,.09);padding:10px 11px;margin-top:10px}
+.aviso-k{font-size:8.5px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--pm)}
+.aviso-t{font-size:10px;color:var(--tx2);line-height:1.5;margin-top:5px}
+.aviso-t b{color:var(--tx)}
+
+.pw{display:flex;align-items:flex-end;gap:14px;margin-bottom:11px}
+.pw-v{font-size:28px;font-weight:800;letter-spacing:-.035em;line-height:1}
+.pw-v span{font-size:13px;color:var(--tx3);font-weight:700}
+.pw-r{margin-left:auto;text-align:right}
+.pw-k{font-size:8.5px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--tx3)}
+.pw-n{font-size:13px;font-weight:800;margin-top:3px;font-variant-numeric:tabular-nums}
+.barra{height:24px;border-radius:9px;background:var(--panel2);border:1px solid var(--line);position:relative;overflow:hidden}
+.barra i{position:absolute;left:0;top:0;bottom:0;background:linear-gradient(90deg,var(--ok),var(--teal));border-radius:8px}
+.barra span{position:absolute;top:0;bottom:0;display:flex;align-items:center;font-size:9px;font-weight:800;color:var(--ink);left:11px}
+.barra em{position:absolute;top:0;bottom:0;right:11px;display:flex;align-items:center;font-size:9px;font-weight:800;color:var(--tx3);font-style:normal}
+
+.med{display:flex;align-items:center;gap:9px;padding:7px 0;border-bottom:1px solid var(--line2)}
+.med:last-of-type{border-bottom:none}
+.med-b{width:5px;height:24px;border-radius:3px;flex:none}
+.med-n{font-size:10.5px;font-weight:700;line-height:1.2}
+.med-s{font-size:8.5px;color:var(--tx3);margin-top:2px}
+.med-r{margin-left:auto;text-align:right;flex:none}
+.med-d{font-size:10px;font-weight:800;font-variant-numeric:tabular-nums;color:var(--tx2)}
+.med-d.lo{color:var(--warn)}
+.med-p{font-size:8.5px;color:var(--tx3);margin-top:1px}
+.med-tot{display:flex;align-items:center;justify-content:space-between;margin-top:9px;padding-top:9px;border-top:1px solid var(--line)}
+.med-tot-l{font-size:9.5px;color:var(--tx2);font-weight:700}
+.med-tot-v{font-size:15px;font-weight:800;color:var(--teal);letter-spacing:-.02em}
+
+.secs{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.sec{padding:11px 12px;border-radius:13px;border:1px solid var(--line);background:var(--panel2);display:flex;align-items:center;gap:9px}
+.sec-i{width:26px;height:26px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;background:rgba(255,255,255,.05);border:1px solid var(--line);color:var(--tx3);flex:none}
+.sec-t{font-size:10.5px;font-weight:800;line-height:1.25}
+.sec-s{font-size:8.5px;color:var(--tx3);margin-top:2px}
+</style>
+
+<div class="eyebrow"><span class="dot"></span>Martes 1 de septiembre</div>
+<div class="h1">Mi salud</div>
+
+<div class="kpis">
+  <div class="kpi a"><div class="kpi-v">12</div><div class="kpi-k">Racha supl.</div></div>
+  <div class="kpi b"><div class="kpi-v">77 kg</div><div class="kpi-k">IMC 24.3</div></div>
+  <div class="kpi c"><div class="kpi-v">6</div><div class="kpi-k">Ex&aacute;menes<br>pendientes</div></div>
+</div>
+
+<div class="card hoy">
+  <div class="card-h"><div class="card-t"><span class="b"></span>Hoy</div><div class="card-x">3 de 6 suplementos</div></div>
+
+  <div class="blq-h"><div class="blq-i am">&#9728;</div><div class="blq-n">Con el desayuno</div><div class="blq-c">3 DE 4</div></div>
+  <div class="sup on"><div class="sup-c">&#10003;</div><div><div class="sup-n">Vitamina D3</div><div class="sup-d">2000-4000 UI</div></div><div class="sup-w">con grasa</div></div>
+  <div class="sup on"><div class="sup-c">&#10003;</div><div><div class="sup-n">Multivitam&iacute;nico</div><div class="sup-d">1 tableta</div></div><div class="sup-w">con desayuno</div></div>
+  <div class="sup on"><div class="sup-c">&#10003;</div><div><div class="sup-n">Omega 3</div><div class="sup-d">1-2 g EPA+DHA</div></div><div class="sup-w">con alimento</div></div>
+  <div class="sup"><div class="sup-c">&#10003;</div><div><div class="sup-n">Creatina</div><div class="sup-d">5 g</div></div><div class="sup-w">tambi&eacute;n sin entrenar</div></div>
+
+  <div class="blq-h"><div class="blq-i pm">&#127769;</div><div class="blq-n">Antes de dormir</div><div class="blq-c">0 DE 2</div></div>
+  <div class="sup"><div class="sup-c">&#10003;</div><div><div class="sup-n">Magnesio (glicinato)</div><div class="sup-d">200-400 mg</div></div><div class="sup-w">30-60 min antes</div></div>
+  <div class="sup"><div class="sup-c">&#10003;</div><div><div class="sup-n">Prote&iacute;na Whey</div><div class="sup-d">25-30 g</div></div><div class="sup-w">faltan 44 g</div></div>
+  <div class="mini">Hoy llevas <b>142 g de 186</b> seg&uacute;n Mi Comida, as&iacute; que la whey de esta noche s&iacute; toca.</div>
+
+  <div class="blq-h"><div class="blq-i ag">&#128167;</div><div class="blq-n">Agua y pausas</div><div class="blq-c">HOY</div></div>
+  <div class="agua-n">6<span> / 10 vasos</span></div>
+  <div class="vasos">
+    <i class="v on"></i><i class="v on"></i><i class="v on"></i><i class="v on"></i><i class="v on"></i>
+    <i class="v on"></i><i class="v"></i><i class="v"></i><i class="v"></i><i class="v"></i>
+  </div>
+  <div class="pausa"><i class="pz on"></i><i class="pz on"></i><i class="pz on"></i><i class="pz"></i><i class="pz"></i><i class="pz"></i></div>
+  <div class="mini">Pausas de postura: <b>3 de 6</b>. Con creatina el agua importa m&aacute;s: los calambres del principio casi siempre son falta de agua, no del suplemento.</div>
+</div>
+
+<div class="card">
+  <div class="card-h"><div class="card-t"><span class="b"></span>Tu chequeo del a&ntilde;o</div><div class="card-x">6 de 9 pendientes</div></div>
+  <div class="ex"><div class="ex-p nunca"></div><div><div class="ex-n">Vitamina D (25-OH)</div><div class="ex-t"><b>Tomas D3 a diario sin saber tu nivel.</b> Define si 2000 UI te sobran o te faltan.</div></div><div class="ex-r"><div class="ex-v nunca">nunca</div></div></div>
+  <div class="ex"><div class="ex-p nunca"></div><div><div class="ex-n">Creatinina y funci&oacute;n renal</div><div class="ex-t"><b>Aviso:</b> la creatina sube la creatinina <b>sin da&ntilde;o renal</b>. Dilo antes de que te asusten.</div></div><div class="ex-r"><div class="ex-v nunca">nunca</div></div></div>
+  <div class="ex"><div class="ex-p nunca"></div><div><div class="ex-n">Perfil tiroideo (TSH)</div><div class="ex-t">Por la ca&iacute;da de cabello: el hipotiroidismo es una de las causas a descartar.</div></div><div class="ex-r"><div class="ex-v nunca">nunca</div></div></div>
+  <div class="ex"><div class="ex-p nunca"></div><div><div class="ex-n">Perfil lip&iacute;dico &middot; Glucosa + HbA1c &middot; Hep&aacute;tico</div><div class="ex-t">Los tres van en la misma extracci&oacute;n, <b>en ayuno de 9-12 h</b>.</div></div><div class="ex-r"><div class="ex-v nunca">nunca</div></div></div>
+  <div class="ex"><div class="ex-p vence"></div><div><div class="ex-n">Testosterona total y libre</div><div class="ex-t">En ayuno y <b>antes de las 10 am</b>, cuando est&aacute; m&aacute;s alta.</div></div><div class="ex-r"><div class="ex-v vence">vence</div></div></div>
+  <div class="ex"><div class="ex-p ok"></div><div><div class="ex-n">Biometr&iacute;a hem&aacute;tica</div><div class="ex-t">Al d&iacute;a.</div></div><div class="ex-r"><div class="ex-v ok">hace 4 m</div></div></div>
+  <div class="aviso">
+    <div class="aviso-k">&#9873; Conexi&oacute;n con Cabello</div>
+    <div class="aviso-t">Si arrancas el <b>dutasteride t&oacute;pico</b>, el PSA deja de ser opcional: ese f&aacute;rmaco <b>reduce su valor a la mitad</b>. Necesitas una medici&oacute;n ANTES de empezar.</div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-h"><div class="card-t"><span class="b"></span>Peso</div><div class="card-x">1 registro</div></div>
+  <div class="pw">
+    <div class="pw-v">77<span> kg</span></div>
+    <div class="pw-r"><div class="pw-k">Meta masa muscular</div><div class="pw-n">82 kg</div></div>
+  </div>
+  <div class="barra"><i style="width:62%"></i><span>IMC 24.3</span><em>+5 kg</em></div>
+  <div class="mini">Con un solo registro no hay curva que dibujar: la barra dice d&oacute;nde est&aacute;s entre el inicio y la meta. <b>Te toca pesarte</b> — mismo d&iacute;a, en ayuno.</div>
+</div>
+
+<div class="card">
+  <div class="card-h"><div class="card-t"><span class="b"></span>Tu botiqu&iacute;n</div><div class="card-x">se te acaba en&hellip;</div></div>
+  <div class="med"><div class="med-b" style="background:var(--am)"></div><div><div class="med-n">Creatina monohidratada</div><div class="med-s">300 g &middot; 5 g al d&iacute;a</div></div><div class="med-r"><div class="med-d lo">12 d&iacute;as</div><div class="med-p">$200/mes</div></div></div>
+  <div class="med"><div class="med-b" style="background:var(--pm)"></div><div><div class="med-n">Magnesio (glicinato)</div><div class="med-s">120 c&aacute;ps &middot; 2 de noche</div></div><div class="med-r"><div class="med-d">38 d&iacute;as</div><div class="med-p">$200/mes</div></div></div>
+  <div class="med"><div class="med-b" style="background:var(--agua)"></div><div><div class="med-n">Omega 3</div><div class="med-s">120 c&aacute;ps &middot; 2 al d&iacute;a</div></div><div class="med-r"><div class="med-d">41 d&iacute;as</div><div class="med-p">$225/mes</div></div></div>
+  <div class="med"><div class="med-b" style="background:var(--ok)"></div><div><div class="med-n">Prote&iacute;na Whey</div><div class="med-s">2 kg &middot; cuando faltan g</div></div><div class="med-r"><div class="med-d">74 d&iacute;as</div><div class="med-p">$336/mes</div></div></div>
+  <div class="med-tot"><div class="med-tot-l">Costo mensual</div><div class="med-tot-v">$1,133</div></div>
+  <div class="mini">Es m&aacute;s que tu gimnasio y tu plan de datos <b>juntos</b>.</div>
+</div>
+
+<div class="secs">
+  <div class="sec"><div class="sec-i">&#128522;</div><div><div class="sec-t">Bienestar</div><div class="sec-s">&Aacute;nimo y molestias</div></div></div>
+  <div class="sec"><div class="sec-i">&#128161;</div><div><div class="sec-t">Las 5 reglas</div><div class="sec-s">Lo que s&iacute; importa</div></div></div>
+  <div class="sec"><div class="sec-i">&#129355;</div><div><div class="sec-t">Digestiva</div><div class="sec-s">Guía y registro</div></div></div>
+  <div class="sec"><div class="sec-i">&#9881;</div><div><div class="sec-t">Perfil y metas</div><div class="sec-s">77 &rarr; 82 kg</div></div></div>
+</div>
+</div>
+</x-dc>
+</body>
+</html>

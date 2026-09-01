@@ -539,6 +539,53 @@ const sinComentarios = s => s.replace(/\/\*[\s\S]*?\*\//g, '')
     ' productos, $' + RP.costoMesTotal + ' al mes)');
 })();
 
+/* ── 13. Los suplementos: SUPLEMENTOS contra RUTINA_TASKS ────────────────────────
+   Los 6 estaban escritos a mano en tres sitios: las subtareas de `RUTINA_TASKS`, la lista de
+   `LISTA_COMPRAS.suplementos` y el catálogo de `salud.html`. Coincidían de casualidad.
+
+   Además del nombre comprueba **el momento**: los de la mañana tienen que aparecer en una
+   subtarea de la rutina de la mañana y los de la noche en una de la noche. Cambiar el magnesio
+   a la mañana en un sitio y no en el otro no mueve ninguna cifra, y de otro modo nadie lo veía. */
+(function suplementosCoherentes() {
+  if (!global.window || !global.window.CIFRAS) return;
+  const C = global.window.CIFRAS;
+  const SU = C.SUPLEMENTOS;
+  if (!SU) { problemas.push('SUPLEMENTOS no existe en el maestro'); return; }
+
+  const tareas = C.rutina('');
+  const malos = [];
+
+  // El texto de las subtareas de la sección "Suplementos", separado por momento del día.
+  const texto = { am: '', pm: '' };
+  tareas.forEach(function (t) {
+    const m = /Rutina de la ma/.test(t.txt || '') ? 'am'
+            : (/Rutina de la noche/.test(t.txt || '') ? 'pm' : null);
+    if (!m) return;
+    let dentro = false;
+    (t.subtareas || []).forEach(function (st) {
+      if (st.sec) dentro = /Suplementos/i.test(st.sec);
+      if (dentro) texto[m] += ' ' + (st.txt || '');
+    });
+  });
+
+  SU.lista.forEach(function (p) {
+    const corto = p.n.split(' (')[0].toLowerCase();
+    const donde = texto[p.momento].toLowerCase();
+    const otro = texto[p.momento === 'am' ? 'pm' : 'am'].toLowerCase();
+    if (donde.indexOf(corto) === -1) {
+      malos.push('     ' + p.n + ": SUPLEMENTOS lo pone en la " + (p.momento === 'am' ? 'mañana' : 'noche') +
+        (otro.indexOf(corto) !== -1 ? ', y RUTINA_TASKS lo tiene en el otro momento' : ', y no aparece en las subtareas de Suplementos de RUTINA_TASKS'));
+    }
+  });
+
+  if (SU.costoMesTotal <= 0) malos.push('     SUPLEMENTOS.costoMesTotal salió en 0 — falta precio o tamaño de envase');
+  if (!C.CHEQUEO || !C.CHEQUEO.examenes.length) malos.push('     CHEQUEO sin exámenes');
+
+  if (malos.length) problemas.push('Los suplementos no coinciden con la rutina que los ejecuta:\n' + malos.join('\n'));
+  else ok.push('SUPLEMENTOS coincide con RUTINA_TASKS (' + SU.delMomento('am').length + ' AM / ' +
+    SU.delMomento('pm').length + ' PM, $' + SU.costoMesTotal + ' al mes, ' + C.CHEQUEO.examenes.length + ' exámenes)');
+})();
+
 /* ── Impacto de lo que cambió en esta sesión ──────────────────────────────────────────────────
    Si `datos-maestros.js` cambió respecto al último commit, se comparan los valores de entonces
    con los de ahora y se dice qué se movió — incluido lo ARRASTRADO. Es la parte que Adán

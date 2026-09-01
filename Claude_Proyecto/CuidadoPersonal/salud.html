@@ -25,7 +25,7 @@
   --w:#ffd93d;--w-l:rgba(255,217,61,.1);
   --r:#ff3b6b;--r-l:rgba(255,59,107,.1);
   --bg:#060614;--surface:#161619;--surface-2:#18181c;--surface-3:#1b1b20;--border:rgba(var(--ov),.08);--ov:255,255,255;
-  --text:#e8eaf6;--text2:#8892b0;--text3:#4a5568;
+  --text:#e8eaf6;--text2:#8892b0;--text3:#7a8699;
   --sw:245px;--r14:14px;--rs:9px;
   --sh:0 4px 24px rgba(0,0,0,.5);
 }
@@ -37,7 +37,7 @@
   --w:#a8790a;--w-l:rgba(168,121,10,.12);
   --r:#c81e4d;--r-l:rgba(200,30,77,.12);
   --bg:#f4f4f7;--surface:#ffffff;--surface-2:#ffffff;--surface-3:#ffffff;--border:rgba(var(--ov),.1);--ov:0,0,0;
-  --text:#16161a;--text2:#5c5f70;--text3:#82859a;
+  --text:#16161a;--text2:#5c5f70;--text3:#6f7286;
   --sh:0 2px 14px rgba(0,0,0,.08);
 }
 body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);display:flex;min-height:100vh;font-size:14px}
@@ -196,7 +196,113 @@ canvas{max-width:100%}
   pre,code{max-width:100%;overflow-x:auto}
   img,video,canvas{max-width:100%;height:auto}
 }
+
+/* ─── Dashboard "Hoy y este año" (prefijo sd-) ────────────────────────────────────
+   Reusa los tokens del tema (--g, --b, --p, --o, --r, --surface, --border) para funcionar en
+   claro y oscuro sin reglas aparte. */
+.sd-hero{border:1px solid rgba(0,232,122,.24);border-radius:16px;padding:15px 18px 17px;margin-bottom:16px;
+  background:linear-gradient(160deg,rgba(0,232,122,.07),rgba(var(--ov),.015) 55%)}
+.sd-hero-h{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:13px;flex-wrap:wrap}
+.sd-hero-t{font-size:10.5px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--text2)}
+.sd-hero-x{font-size:11.5px;color:var(--text2);font-weight:700}
+.sd-hero-x b{color:var(--g)}
+.sd-grid{display:grid;grid-template-columns:1fr 1fr 300px;gap:12px}
+.sd-blq{border:1px solid var(--border);border-radius:14px;background:var(--surface-2);padding:13px 14px}
+.sd-blq-h{display:flex;align-items:center;gap:8px;margin-bottom:9px}
+.sd-blq-i{width:24px;height:24px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:12px;flex:none}
+.sd-blq-n{font-size:11.5px;font-weight:800;color:var(--text)}
+.sd-blq-c{margin-left:auto;font-size:9px;font-weight:800;color:var(--text3);letter-spacing:.04em}
+
+.sd-sup{display:flex;gap:9px;padding:7px 0;border-bottom:1px solid rgba(var(--ov),.06);align-items:center;cursor:pointer}
+.sd-sup:last-of-type{border-bottom:none}
+.sd-sup-c{width:19px;height:19px;border-radius:6px;border:1.5px solid var(--border);flex:none;display:flex;
+  align-items:center;justify-content:center;font-size:10px;color:transparent;transition:all .15s}
+.sd-sup:hover .sd-sup-c{border-color:var(--g)}
+.sd-sup.on .sd-sup-c{background:var(--g);border-color:var(--g);color:var(--bg)}
+.sd-sup-n{font-size:11.5px;font-weight:700;line-height:1.25;color:var(--text)}
+.sd-sup.on .sd-sup-n{color:var(--text2)}
+.sd-sup-d{font-size:9.5px;color:var(--text3);margin-top:2px}
+.sd-sup-w{margin-left:auto;font-size:9px;font-weight:800;color:var(--o);flex:none;text-align:right;max-width:98px;line-height:1.3}
+.sd-mini{font-size:9.5px;color:var(--text3);line-height:1.5;margin-top:9px;padding-top:9px;border-top:1px solid rgba(var(--ov),.06)}
+.sd-mini b{color:var(--text2)}
+
+.sd-agua{font-size:26px;font-weight:800;letter-spacing:-.03em;line-height:1;color:var(--text)}
+.sd-agua span{font-size:13px;color:var(--text3);font-weight:700}
+.sd-vasos{display:flex;gap:4px;flex-wrap:wrap;margin:11px 0 0}
+.sd-v{width:17px;height:23px;border-radius:3px 3px 6px 6px;border:1.5px solid var(--border);background:var(--surface-3);cursor:pointer}
+.sd-v.on{background:linear-gradient(180deg,rgba(6,182,212,.4),#06b6d4);border-color:#06b6d4}
+.sd-pausa{display:flex;gap:4px;margin-top:10px}
+.sd-pz{flex:1;height:7px;border-radius:3px;background:var(--surface-3);border:1px solid var(--border)}
+.sd-pz.on{background:var(--g);border-color:var(--g)}
+
+.sd-mid{display:grid;grid-template-columns:1fr 470px;gap:16px;align-items:start}
+.sd-col{display:flex;flex-direction:column;gap:16px;min-width:0}
+
+.sd-ex{display:flex;align-items:flex-start;gap:10px;padding:9px 0;border-bottom:1px solid rgba(var(--ov),.06)}
+.sd-ex:last-of-type{border-bottom:none}
+.sd-ex-p{width:9px;height:9px;border-radius:50%;flex:none;margin-top:4px}
+.sd-ex-p.nunca{background:var(--r);box-shadow:0 0 0 3px var(--r-l)}
+.sd-ex-p.vence{background:var(--o);box-shadow:0 0 0 3px var(--o-l)}
+.sd-ex-p.ok{background:var(--g);box-shadow:0 0 0 3px var(--g-l)}
+.sd-ex-p.na{background:rgba(var(--ov),.18)}
+.sd-ex-b{flex:1;min-width:0}
+.sd-ex-n{font-size:11.5px;font-weight:800;line-height:1.25;color:var(--text)}
+.sd-ex-t{font-size:10px;color:var(--text3);line-height:1.45;margin-top:2px}
+.sd-ex-t b{color:var(--text2)}
+.sd-ex-r{margin-left:auto;text-align:right;flex:none}
+.sd-ex-v{font-size:11px;font-weight:800}
+.sd-ex-v.nunca{color:var(--r)} .sd-ex-v.vence{color:var(--o)} .sd-ex-v.ok{color:var(--g)} .sd-ex-v.na{color:var(--text3)}
+.sd-ex-f{font-size:9px;color:var(--text3);margin-top:1px}
+.sd-aviso{border-radius:12px;border:1px solid rgba(176,110,255,.3);background:var(--p-l);padding:11px 13px;margin-top:12px}
+.sd-aviso-k{font-size:9px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--p)}
+.sd-aviso-t{font-size:10.5px;color:var(--text2);line-height:1.5;margin-top:5px}
+.sd-aviso-t b{color:var(--text)}
+
+.sd-pw{display:flex;align-items:flex-end;gap:16px;margin-bottom:12px;flex-wrap:wrap}
+.sd-pw-v{font-size:34px;font-weight:800;letter-spacing:-.035em;line-height:1;color:var(--text)}
+.sd-pw-v span{font-size:15px;color:var(--text3);font-weight:700}
+.sd-pw-r{margin-left:auto;text-align:right}
+.sd-pw-k{font-size:9px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--text3)}
+.sd-pw-n{font-size:14px;font-weight:800;margin-top:3px;color:var(--text)}
+.sd-barra{height:26px;border-radius:9px;background:var(--surface-3);border:1px solid var(--border);position:relative;overflow:hidden;margin-bottom:8px}
+.sd-barra i{position:absolute;left:0;top:0;bottom:0;background:linear-gradient(90deg,var(--g),#06b6d4);border-radius:8px}
+.sd-barra span{position:absolute;top:0;bottom:0;left:12px;display:flex;align-items:center;font-size:9.5px;font-weight:800;color:var(--bg);letter-spacing:.04em}
+.sd-barra em{position:absolute;top:0;bottom:0;right:12px;display:flex;align-items:center;font-size:9.5px;font-weight:800;color:var(--text3);font-style:normal}
+.sd-hito{display:flex;justify-content:space-between;font-size:9.5px;color:var(--text3);font-weight:700}
+
+.sd-med{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid rgba(var(--ov),.06)}
+.sd-med:last-of-type{border-bottom:none}
+.sd-med-b{width:5px;height:27px;border-radius:3px;flex:none}
+.sd-med-n{font-size:11px;font-weight:700;line-height:1.25;color:var(--text)}
+.sd-med-s{font-size:9px;color:var(--text3);margin-top:2px}
+.sd-med-r{margin-left:auto;text-align:right;flex:none}
+.sd-med-d{font-size:10.5px;font-weight:800;color:var(--text2)}
+.sd-med-d.lo{color:var(--r)}
+.sd-med-d.set{color:var(--text3);font-weight:700;cursor:pointer;text-decoration:underline;text-decoration-style:dotted;text-underline-offset:3px}
+.sd-med-d.set:hover{color:var(--g)}
+.sd-med-p{font-size:9px;color:var(--text3);margin-top:1px}
+.sd-med-tot{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:10px;padding-top:10px;border-top:1px solid var(--border)}
+.sd-med-tot-l{font-size:10px;color:var(--text2);font-weight:700}
+.sd-med-tot-v{font-size:16px;font-weight:800;color:var(--g);letter-spacing:-.02em}
+
+.sd-sem{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;margin-bottom:11px}
+.sd-sd{border-radius:10px;border:1px solid var(--border);background:var(--surface-2);padding:8px 2px;text-align:center}
+.sd-sd.hoy{border-color:var(--g);background:var(--g-l)}
+.sd-sd-l{font-size:9px;font-weight:800;color:var(--text3);text-transform:uppercase}
+.sd-sd-c{font-size:15px;margin:5px 0 3px;line-height:1}
+.sd-sd-v{font-size:8.5px;font-weight:800;color:var(--text2)}
+.sd-rule{display:flex;gap:10px;padding:9px 0;border-bottom:1px solid rgba(var(--ov),.06);align-items:flex-start}
+.sd-rule:last-child{border-bottom:none}
+.sd-rule-n{width:22px;height:22px;border-radius:7px;flex:none;display:flex;align-items:center;justify-content:center;
+  font-size:10.5px;font-weight:800;background:var(--surface-3);border:1px solid var(--border);color:var(--text3)}
+.sd-rule-n.al{background:var(--o-l);border-color:rgba(255,107,53,.3);color:var(--o)}
+.sd-rule-t{font-size:11px;color:var(--text2);line-height:1.5}
+.sd-rule-t b{color:var(--text);font-weight:700}
+
+@media(max-width:1100px){ .sd-grid{grid-template-columns:1fr}.sd-mid{grid-template-columns:1fr} }
+@media(max-width:640px){ .sd-vasos .sd-v{flex:1;width:auto} }
 </style>
+<script src="../Dashboard/datos-maestros.js"></script>
 <script>
 (function () {
   var saved = localStorage.getItem('coach-theme');
@@ -253,11 +359,10 @@ canvas{max-width:100%}
 
     <!-- DASHBOARD -->
     <section id="s-dashboard" class="section active">
-      <div id="d-nutri-banner"></div>
-      <div class="g4 mt16" id="d-kpis"></div>
-      <div class="g2 mt16">
-        <div id="d-medico"></div>
-        <div id="d-bienestar"></div>
+      <div id="d-hero"></div>
+      <div class="sd-mid">
+        <div class="sd-col" id="d-izq"></div>
+        <div class="sd-col" id="d-der"></div>
       </div>
     </section>
 
@@ -265,7 +370,8 @@ canvas{max-width:100%}
     <section id="s-medidas" class="section">
       <div class="sh"><h2>⚖️ Peso & Medidas</h2><button class="btn btn-g" onclick="openMedidaModal()">+ Registrar</button></div>
       <div class="g4" id="med-kpis" style="margin-bottom:18px"></div>
-      <div class="g2" style="margin-bottom:14px">
+      <div id="med-barra" style="margin-bottom:14px"></div>
+      <div class="g2" id="med-charts" style="margin-bottom:14px">
         <div class="card"><div class="card-title">📉 Evolución del peso</div><div class="chart-c"><canvas id="ch-peso"></canvas></div></div>
         <div class="card"><div class="card-title">📏 Composición corporal (cintura, brazo, muslo, % grasa)</div><div class="chart-c"><canvas id="ch-comp"></canvas></div></div>
       </div>
@@ -493,7 +599,10 @@ let S = {
   perfilMedico: { tipoSangre:'', alergias:'', medicamentos:'', condiciones:'', cirugias:'', antecedentesFamiliares:'', contactoEmergencia:'' },
   postura: { dolores: [], pausas: {} },
   mental: { registros: [] },
-  suplementos: { lista: [], tomado: {} }
+  suplementos: { lista: [], tomado: {}, abierto: {} },
+  // Cuándo se hizo cada examen del chequeo anual: {idExamen:'YYYY-MM-DD'}. Vive aparte de
+  // `examenes` (que guarda VALORES) porque aquí solo importa la fecha para saber si vence.
+  chequeo: {}
 };
 let editId=null, confCb=null;
 let chPeso=null, chExam=null, chComp=null, chMental=null;
@@ -564,7 +673,7 @@ function toggleTheme(){
   const btn=document.getElementById('theme-toggle-btn');
   if(btn) btn.textContent=next==='dark'?'☀️':'🌙';
   const activa=SECS.find(s=>document.getElementById('s-'+s)?.classList.contains('active'));
-  if(activa) RENDERS[activa]?.();
+  sdRepintar();
 }
 
 function toast(msg) {
@@ -604,97 +713,281 @@ function imcLabel(imc) {
 }
 
 // ─── DASHBOARD ───────────────────────────────────────────────────────────────
+// ─── DASHBOARD — "Tu salud, hoy y este año" ───────────────────────────────────
+// El eje es doble: HOY (suplementos, agua, pausas) y ESTE AÑO (exámenes, peso). Antes eran 4
+// tarjetas de cifra y dos paneles medio vacíos que ocupaban el 40% de una pantalla de 1600px y
+// decían "sin registrar" en casi todo.
+//
+// Los suplementos y los exámenes salen de `CIFRAS.SUPLEMENTOS` y `CIFRAS.CHEQUEO`, la misma
+// fuente que la rutina diaria del Dashboard del proyecto.
+function sdMaestro(){ return (window.CIFRAS && CIFRAS.SUPLEMENTOS) ? CIFRAS.SUPLEMENTOS : null; }
+function sdChequeo(){ return (window.CIFRAS && CIFRAS.CHEQUEO) ? CIFRAS.CHEQUEO : null; }
+// Repinta la sección que esté abierta. `activa` no es global — vive dentro de otra función —
+// así que cualquier acción que cambie datos desde una vista compartida tiene que pasar por aquí.
+function sdRepintar(){
+  const a=SECS.find(x=>document.getElementById('s-'+x)?.classList.contains('active'));
+  if(a) RENDERS[a]?.();
+}
+function sdEsc(t){ return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;'); }
+function sdIso(d){ return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+function sdFecha(iso){ const a=iso.split('-').map(Number); return new Date(a[0],a[1]-1,a[2]); }
+function sdDif(a,b){ return Math.round((sdFecha(a)-sdFecha(b))/86400000); }
+
+// Proteína de hoy: Mi Comida escribe el registro en `misalud_v1.alimentos`, así que se lee de
+// ahí. Si no hay nada registrado hoy, no se inventa un "te faltan X".
+function sdProteinaHoy(){
+  const hoy=today(), lista=S.alimentos||[];
+  const dia=lista.filter(a=>(a.fecha||'').slice(0,10)===hoy);
+  if(!dia.length) return null;
+  return Math.round(dia.reduce((n,a)=>n+(+a.prot||+a.proteina||0),0));
+}
+function sdMetaProteina(){
+  if(window.CIFRAS && CIFRAS.v) { const v=CIFRAS.v('proteinaMeta'); if(v) return +v; }
+  return S.metas.proteina||150;
+}
+
+// La racha cuenta los días en que se tomaron TODOS los suplementos de la lista.
+function sdRachaSupl(){
+  const n=S.suplementos.lista.length; if(!n) return 0;
+  const completo=d=>{ const m=S.suplementos.tomado[sdIso(d)]||{}; return Object.values(m).filter(Boolean).length>=n; };
+  const d=new Date();
+  if(!completo(d)) d.setDate(d.getDate()-1);
+  let c=0;
+  while(completo(d)){ c++; d.setDate(d.getDate()-1); }
+  return c;
+}
+
+// Días que quedan de un bote, con la dosis diaria contra el tamaño del envase.
+function sdDiasBote(p){
+  const M=sdMaestro(), ab=S.suplementos.abierto[p.id];
+  if(!M||!ab) return null;
+  const dur=M.duracionDias(p);
+  return dur===null?null:dur-sdDif(today(),ab);
+}
+function sdAbrir(id){
+  if(S.suplementos.abierto[id]) delete S.suplementos.abierto[id];
+  else S.suplementos.abierto[id]=today();
+  save(); sdRepintar();
+}
+
+// El estado de un examen: nunca hecho, vencido, por vencer, al día o no aplica todavía.
+function sdEstadoExamen(e){
+  if(e.desdeEdad && (S.perfil.edad||0) < e.desdeEdad) return {c:'na', v:'no aplica', f:'desde los '+e.desdeEdad};
+  const f=S.chequeo[e.id];
+  if(!f) return {c:'nunca', v:'nunca', f:'cada '+(e.mesesVigencia/12>=1?(e.mesesVigencia/12)+' a\u00f1o':e.mesesVigencia+' meses')};
+  const meses=Math.floor(sdDif(today(),f)/30);
+  const faltan=e.mesesVigencia-meses;
+  if(faltan<=0) return {c:'nunca', v:'vencido', f:fmtD(f)};
+  if(faltan<=2) return {c:'vence', v:'vence en '+faltan+' m', f:fmtD(f)};
+  return {c:'ok', v:'hace '+meses+' m', f:fmtD(f)};
+}
+
+// El bloque de un momento del día con sus suplementos.
+function sdBloqueHtml(momento){
+  const M=sdMaestro(); if(!M) return '';
+  const lista=S.suplementos.lista.filter(x=>x.momento===momento||(momento==='pm'&&x.momento==='post'));
+  if(!lista.length) return '';
+  const hechos=lista.filter(x=>tomadoHoy(x.id)).length;
+  const filas=lista.map(function(x){
+    const p=M.lista.find(y=>y.id===x.id)||{};
+    return '<div class="sd-sup'+(tomadoHoy(x.id)?' on':'')+'" onclick="toggleTomado(\''+x.id+'\')" title="Marca que lo tomaste">'+
+      '<div class="sd-sup-c">\u2713</div><div style="min-width:0"><div class="sd-sup-n">'+sdEsc(x.nombre)+'</div>'+
+      '<div class="sd-sup-d">'+sdEsc(x.dosis||p.dosis||'')+'</div></div>'+
+      '<div class="sd-sup-w">'+sdEsc(x.notas||p.cuando||'')+'</div></div>';
+  }).join('');
+  const ico=momento==='am'
+    ? '<div class="sd-blq-i" style="background:var(--w-l);border:1px solid rgba(255,217,61,.32)">\u2600\ufe0f</div>'
+    : '<div class="sd-blq-i" style="background:var(--p-l);border:1px solid rgba(176,110,255,.32)">🌙</div>';
+  let pie='';
+  if(momento==='am'){
+    pie='<div class="sd-mini">La creatina va <b>todos los d\u00edas</b>, entrenes o no: el efecto es por acumulaci\u00f3n, no por la dosis del d\u00eda.</div>';
+  }else{
+    const prot=sdProteinaHoy(), meta2=sdMetaProteina();
+    pie=prot===null
+      ? '<div class="sd-mini">La whey es solo para los d\u00edas en que la comida no llega a los <b>'+meta2+' g</b>. Registra lo que comiste en Mi Comida y aqu\u00ed te dir\u00e1 si hoy toca.</div>'
+      : (prot>=meta2
+        ? '<div class="sd-mini">Hoy llevas <b>'+prot+' g de '+meta2+'</b> seg\u00fan Mi Comida: <b style="color:var(--g)">ya llegaste</b>, la whey de esta noche no hace falta.</div>'
+        : '<div class="sd-mini">Hoy llevas <b>'+prot+' g de '+meta2+'</b> seg\u00fan Mi Comida: <b style="color:var(--o)">faltan '+(meta2-prot)+' g</b>, as\u00ed que la whey de esta noche s\u00ed toca.</div>');
+  }
+  return '<div class="sd-blq"><div class="sd-blq-h">'+ico+
+    '<div class="sd-blq-n">'+(momento==='am'?'Con el desayuno':'Antes de dormir')+'</div>'+
+    '<div class="sd-blq-c">'+hechos+' DE '+lista.length+'</div></div>'+filas+pie+'</div>';
+}
+
+function sdAguaHtml(){
+  const v=getVasosHoy(), meta=S.metas.agua||8, p=pausasHoy();
+  let vasos='';
+  for(let i=0;i<meta;i++) vasos+='<i class="sd-v'+(i<v?' on':'')+'" onclick="toggleVaso('+i+')" title="Vaso '+(i+1)+'"></i>';
+  let pz='';
+  for(let i=0;i<META_PAUSAS;i++) pz+='<i class="sd-pz'+(i<p?' on':'')+'"></i>';
+  return '<div class="sd-blq"><div class="sd-blq-h">'+
+    '<div class="sd-blq-i" style="background:rgba(6,182,212,.12);border:1px solid rgba(6,182,212,.32)">💧</div>'+
+    '<div class="sd-blq-n">Agua y pausas</div><div class="sd-blq-c">HOY</div></div>'+
+    '<div class="sd-agua">'+v+'<span> / '+meta+' vasos</span></div>'+
+    '<div class="sd-vasos">'+vasos+'</div>'+
+    '<div class="sd-pausa">'+pz+'</div>'+
+    '<div class="sd-mini">Pausas de postura: <b>'+p+' de '+META_PAUSAS+'</b>. Con creatina el agua importa m\u00e1s: retiene agua dentro del m\u00fasculo, y por eso los calambres del principio casi siempre son <b>falta de agua</b>, no del suplemento.</div></div>';
+}
+
+// El chequeo del año. Se usa en el Dashboard y en la pestaña de Exámenes.
+function sdChequeoHtml(){
+  const CH=sdChequeo(); if(!CH) return '';
+  let pend=0;
+  const filas=CH.examenes.map(function(e){
+    const st=sdEstadoExamen(e);
+    if(st.c==='nunca'||st.c==='vence') pend++;
+    return '<div class="sd-ex"><div class="sd-ex-p '+st.c+'"></div><div class="sd-ex-b">'+
+      '<div class="sd-ex-n">'+sdEsc(e.n)+(e.ayuno?' <span style="font-weight:700;color:var(--text3);font-size:9.5px">\u00b7 ayuno de '+e.ayuno+'</span>':'')+'</div>'+
+      '<div class="sd-ex-t">'+e.t+'</div></div>'+
+      '<div class="sd-ex-r"><div class="sd-ex-v '+st.c+'" onclick="sdMarcarExamen(\''+e.id+'\')" style="cursor:pointer" title="Clic para marcar que te lo hiciste hoy">'+st.v+'</div>'+
+      '<div class="sd-ex-f">'+st.f+'</div></div></div>';
+  }).join('');
+  const psa=CH.examenes.find(e=>e.aviso);
+  const aviso=psa?'<div class="sd-aviso"><div class="sd-aviso-k">\u2691 Conexi\u00f3n con tu pesta\u00f1a de Cabello</div>'+
+    '<div class="sd-aviso-t">'+psa.aviso+'</div></div>':'';
+  return '<div class="card"><div class="flex jb aic" style="margin-bottom:12px">'+
+    '<div class="card-title" style="margin:0">🩺 Tu chequeo del a\u00f1o</div>'+
+    '<span class="ts tm">'+pend+' pendientes de '+CH.examenes.length+'</span></div>'+
+    filas+aviso+
+    '<div class="sd-mini">Toca el estado de cualquiera para marcar que te lo hiciste hoy. Los valores se capturan aparte, en el historial de abajo: <b>un an\u00e1lisis sin fecha no sirve</b>, porque el n\u00famero solo significa algo comparado con el anterior.</div></div>';
+}
+function sdMarcarExamen(id){
+  if(S.chequeo[id]) delete S.chequeo[id]; else S.chequeo[id]=today();
+  save(); sdRepintar();
+}
+
+// El botiquín: lo que dura cada bote y lo que cuesta al mes.
+const SD_TONO={ok:'var(--g)',am:'var(--o)',agua:'#06b6d4',pm:'var(--p)',teal:'var(--b)',gris:'var(--text3)'};
+function sdBotiquinHtml(){
+  const M=sdMaestro(); if(!M) return '';
+  const filas=M.lista.map(function(p){
+    const dur=M.duracionDias(p), d=sdDiasBote(p);
+    const der=d===null
+      ? '<div class="sd-med-d set" onclick="sdAbrir(\''+p.id+'\')" title="Marca hoy como el d\u00eda que lo abriste">marcar</div>'
+      : '<div class="sd-med-d'+(d<=14?' lo':'')+'" onclick="sdAbrir(\''+p.id+'\')" title="Abriste uno el '+S.suplementos.abierto[p.id]+'. Clic para quitarlo.">'+
+        (d>0?d+' d\u00edas':'se acab\u00f3')+'</div>';
+    return '<div class="sd-med"><div class="sd-med-b" style="background:'+(SD_TONO[p.tono]||'var(--text3)')+'"></div>'+
+      '<div style="min-width:0"><div class="sd-med-n">'+sdEsc(p.n)+'</div>'+
+      '<div class="sd-med-s">'+p.envase+' '+p.unidad+' \u00b7 '+sdEsc(p.dosis)+' \u00b7 dura ~'+dur+' d\u00edas</div></div>'+
+      '<div class="sd-med-r">'+der+'<div class="sd-med-p">$'+M.costoMes(p)+'/mes</div></div></div>';
+  }).join('');
+  return '<div class="card"><div class="flex jb aic" style="margin-bottom:12px">'+
+    '<div class="card-title" style="margin:0">💊 Tu botiqu\u00edn</div>'+
+    '<span class="ts tm">se te acaba en\u2026</span></div>'+filas+
+    '<div class="sd-med-tot"><div class="sd-med-tot-l">Costo mensual de tus suplementos</div>'+
+    '<div class="sd-med-tot-v">$'+M.costoMesTotal.toLocaleString('es-MX')+'</div></div>'+
+    '<div class="sd-mini">Los d\u00edas salen de la dosis diaria contra el tama\u00f1o del envase, no de una estimaci\u00f3n. Toca los d\u00edas para decir que abriste uno; los precios se editan en <b>Dashboard/datos-maestros.js</b>.</div></div>';
+}
+
+// Peso: con menos de 3 registros no hay curva que dibujar, así que se muestra dónde está entre
+// el inicio y la meta. Una línea con un punto es peor que ninguna línea.
+function sdPesoHtml(){
+  const ord=[...S.medidas].sort((a,b)=>b.fecha.localeCompare(a.fecha));
+  const act=ord[0]||null, ant=ord[1]||null;
+  if(!act) return '<div class="card"><div class="card-title">\u2696\ufe0f Peso</div>'+
+    '<div class="empty" style="padding:16px"><div class="ico">\u2696\ufe0f</div><p>Registra tu primer pesaje.</p></div></div>';
+  const dif=ant?+(act.peso-ant.peso).toFixed(1):null;
+  const obj=S.metas.pesoObj||0;
+  const ini=ord[ord.length-1].peso;
+  const imc=(S.perfil.altura?act.peso/Math.pow(S.perfil.altura/100,2):0);
+  let barra='';
+  if(obj&&obj!==ini){
+    const pc=Math.max(4,Math.min(100,Math.round((act.peso-ini)/(obj-ini)*100)));
+    barra='<div class="sd-barra"><i style="width:'+pc+'%"></i><span>'+act.peso+' KG'+(imc?' \u00b7 IMC '+imc.toFixed(1):'')+'</span>'+
+      '<em>meta '+obj+' kg</em></div><div class="sd-hito"><span>'+ini+' kg \u00b7 inicio</span><span>'+
+      (Math.abs(obj-act.peso)).toFixed(1)+' kg para la meta</span></div>';
+  }else{
+    barra='<div class="sd-mini" style="border:none;margin:0;padding:0">Sin objetivo de peso configurado: ponlo en <a href="#" onclick="nav(\'metas\');return false" style="color:var(--g)">Perfil y Metas</a> y aqu\u00ed aparece cu\u00e1nto te falta.</div>';
+  }
+  return '<div class="card"><div class="flex jb aic" style="margin-bottom:12px">'+
+    '<div class="card-title" style="margin:0">\u2696\ufe0f Peso y composici\u00f3n</div>'+
+    '<span class="ts tm">'+S.medidas.length+' registro'+(S.medidas.length===1?'':'s')+'</span></div>'+
+    '<div class="sd-pw"><div class="sd-pw-v">'+act.peso+'<span> kg</span></div>'+
+    '<div style="font-size:11px;font-weight:800;color:'+(dif===null?'var(--text3)':(dif>0?'var(--g)':'var(--o)'))+';padding-bottom:4px">'+
+    (dif===null?'\u2014':(dif>0?'+':'')+dif+' kg')+'</div>'+
+    (obj?'<div class="sd-pw-r"><div class="sd-pw-k">Meta de peso</div><div class="sd-pw-n">'+obj+' kg</div></div>':'')+
+    '</div>'+barra+
+    (S.medidas.length<3?'<div class="sd-mini">Con <b>'+S.medidas.length+' registro'+(S.medidas.length===1?'':'s')+'</b> no hay curva que dibujar; aparece sola al tercer pesaje. <b>P\u00e9sate el mismo d\u00eda de la semana</b>, en ayuno y despu\u00e9s del ba\u00f1o: el peso oscila 1-2 kg dentro del mismo d\u00eda.</div>':'')+
+    '</div>';
+}
+
+const SD_DIAS=['Dom','Lun','Mar','Mi\u00e9','Jue','Vie','S\u00e1b'];
+const SD_CARA={1:'😞',2:'😕',3:'😐',4:'🙂',5:'😄'};
+function sdBienestarHtml(){
+  const hoy=new Date();
+  const lunes=new Date(hoy); lunes.setDate(hoy.getDate()-((hoy.getDay()+6)%7));
+  const reg=S.mental.registros||[];
+  const dias=[0,1,2,3,4,5,6].map(function(i){
+    const f=new Date(lunes); f.setDate(lunes.getDate()+i);
+    const iso=sdIso(f), r=reg.find(x=>x.fecha===iso), esHoy=iso===today();
+    return '<div class="sd-sd'+(esHoy?' hoy':'')+'"><div class="sd-sd-l">'+SD_DIAS[f.getDay()]+'</div>'+
+      '<div class="sd-sd-c">'+(r?(SD_CARA[r.animo]||'\u00b7'):'\u00b7')+'</div>'+
+      '<div class="sd-sd-v">'+(esHoy?'HOY':(r?(ANIMO_LABELS[r.animo]||'').split(' ')[1]||'':'\u2014'))+'</div></div>';
+  }).join('');
+  return '<div class="card"><div class="flex jb aic" style="margin-bottom:12px">'+
+    '<div class="card-title" style="margin:0">🧠 Bienestar de la semana</div>'+
+    '<button class="btn btn-o btn-sm" onclick="nav(\'mental\')">Ver todo</button></div>'+
+    '<div class="sd-sem">'+dias+'</div>'+
+    '<div class="sd-rule"><div class="sd-rule-n al">!</div><div class="sd-rule-t"><b>Duermes 5 h 40 entre semana.</b> Es el dato de tu propia rutina, y el que m\u00e1s pesa en todo lo dem\u00e1s: recuperaci\u00f3n, \u00e1nimo, testosterona y ca\u00edda de cabello. Ning\u00fan suplemento de esta lista compensa esa hora que falta.</div></div>'+
+    '<div class="sd-rule"><div class="sd-rule-n">\u00b7</div><div class="sd-rule-t"><b>28 h a la semana al volante</b> y jornada completa de pantalla. De ah\u00ed salen las '+META_PAUSAS+' pausas de postura del d\u00eda, no de una regla gen\u00e9rica.</div></div></div>';
+}
+
+const SD_REGLAS=[
+  '<b>Hazte la Vitamina D antes de seguir tomando D3.</b> Es el \u00fanico suplemento de tu lista cuyo efecto depende de un n\u00famero que no conoces: con nivel normal, 4000 UI diarias sobran.',
+  '<b>La creatina no necesita fase de carga.</b> 5 g al d\u00eda y ya; la carga solo adelanta el efecto una semana y suele caer mal al est\u00f3mago.',
+  '<b>P\u00e9sate el mismo d\u00eda, a la misma hora, en ayuno.</b> El peso oscila 1-2 kg dentro del mismo d\u00eda: comparar pesajes a horas distintas es medir agua, no progreso.',
+  '<b>Un an\u00e1lisis sin fecha no sirve.</b> El valor solo significa algo comparado con el anterior. Por eso esta pantalla guarda la fecha antes que el n\u00famero.',
+  '<b>El magnesio va de noche por una raz\u00f3n.</b> Mejora la calidad del sue\u00f1o y reduce calambres; tomarlo por la ma\u00f1ana desperdicia la mitad de para lo que lo compraste.',
+];
+function sdReglasHtml(){
+  return '<div class="card"><div class="flex jb aic" style="margin-bottom:12px">'+
+    '<div class="card-title" style="margin:0">💡 Lo que s\u00ed mueve la aguja</div>'+
+    '<span class="ts tm">'+SD_REGLAS.length+'</span></div>'+
+    SD_REGLAS.map((t,i)=>'<div class="sd-rule"><div class="sd-rule-n">'+(i+1)+'</div><div class="sd-rule-t">'+t+'</div></div>').join('')+'</div>';
+}
+
 function renderDashboard() {
-  const vasosHoy = getVasosHoy();
-  const vasosMeta = S.metas.agua||8;
-  const pHoy = pausasHoy();
-  const suppHoyMap = S.suplementos.tomado[today()]||{};
-  const suppTotal = S.suplementos.lista.length;
-  const suppHechos = Object.values(suppHoyMap).filter(Boolean).length;
-  const medidasOrd = [...S.medidas].sort((a,b)=>b.fecha.localeCompare(a.fecha));
-  const pesoActual = medidasOrd[0]||null, pesoAnterior = medidasOrd[1]||null;
-  const pesoDiff = pesoActual&&pesoAnterior?+(pesoActual.peso-pesoAnterior.peso).toFixed(1):null;
+  const M=sdMaestro();
+  const ord=[...S.medidas].sort((a,b)=>b.fecha.localeCompare(a.fecha));
+  const act=ord[0]||null;
+  const imc=(act&&S.perfil.altura)?(act.peso/Math.pow(S.perfil.altura/100,2)).toFixed(1):null;
+  const CH=sdChequeo();
+  const pend=CH?CH.examenes.filter(e=>{const c=sdEstadoExamen(e).c;return c==='nunca'||c==='vence';}).length:0;
+  const lista=S.suplementos.lista, hechos=lista.filter(x=>tomadoHoy(x.id)).length;
 
-  // Banner — la nutrición (registro diario, plan semanal, plan de masa muscular) vive en Mi Comida
-  document.getElementById('d-nutri-banner').innerHTML=`
-    <div class="card" style="border-color:rgba(255,217,61,.25);background:rgba(255,217,61,.05);display:flex;align-items:center;gap:14px;flex-wrap:wrap">
-      <span style="font-size:26px">🍳</span>
-      <div style="flex:1;min-width:240px">
-        <div style="font-size:13px;font-weight:800;color:var(--w)">Tu registro de comida, plan semanal y plan de masa muscular viven en Mi Comida</div>
-        <div class="ts tm" style="margin-top:2px">Aquí en Salud te quedas con lo que es de cuerpo y bienestar: peso, exámenes, postura, ánimo y suplementos.</div>
-      </div>
-      <a href="comida.html" class="btn btn-o btn-sm" style="text-decoration:none">Ir a Mi Comida →</a>
-    </div>`;
+  document.getElementById('d-hero').innerHTML=
+    '<div class="sh"><h2>🩺 Tu salud, hoy y este a\u00f1o</h2>'+
+    '<div class="flex gap8">'+
+      '<div class="card" style="padding:9px 14px;text-align:right"><div class="card-val" style="font-size:19px;color:var(--g)">'+sdRachaSupl()+'</div><div class="ts tm" style="font-size:9px;letter-spacing:.08em;text-transform:uppercase">Racha suplementos</div></div>'+
+      '<div class="card" style="padding:9px 14px;text-align:right"><div class="card-val" style="font-size:19px;color:var(--w)">'+(act?act.peso+' kg':'\u2014')+'</div><div class="ts tm" style="font-size:9px;letter-spacing:.08em;text-transform:uppercase">'+(imc?'IMC '+imc:'Peso')+'</div></div>'+
+      '<div class="card" style="padding:9px 14px;text-align:right"><div class="card-val" style="font-size:19px;color:'+(pend?'var(--r)':'var(--g)')+'">'+pend+'</div><div class="ts tm" style="font-size:9px;letter-spacing:.08em;text-transform:uppercase">Ex\u00e1menes pendientes</div></div>'+
+    '</div></div>'+
+    '<div class="sd-hero"><div class="sd-hero-h"><div class="sd-hero-t">Hoy</div>'+
+    '<div class="sd-hero-x">'+(M?'Los suplementos salen de tu rutina diaria: <b>'+M.delMomento('am').length+' por la ma\u00f1ana, '+M.delMomento('pm').length+' por la noche</b> \u2014 no hay que darlos de alta':'')+'</div></div>'+
+    '<div class="sd-grid">'+sdBloqueHtml('am')+sdBloqueHtml('pm')+sdAguaHtml()+'</div></div>';
 
-  // KPIs — solo lo que Salud sigue administrando de verdad
-  document.getElementById('d-kpis').innerHTML=`
-    <div class="card" style="border-left:4px solid var(--g)">
-      <div class="card-title" style="color:var(--g)">⚖️ Peso actual</div>
-      <div class="card-val" style="color:var(--g)">${pesoActual?pesoActual.peso+' kg':'—'}</div>
-      <div class="card-sub">${pesoDiff!==null?`${pesoDiff>0?'↑ +':'↓ '}${Math.abs(pesoDiff)} kg vs anterior`:(pesoActual?'Sin registro anterior':'Sin registros aún')}</div>
-    </div>
-    <div class="card" style="border-left:4px solid #06b6d4">
-      <div class="card-title" style="color:#06b6d4">💧 Agua hoy</div>
-      <div class="card-val" style="color:#06b6d4">${vasosHoy}/${vasosMeta}</div>
-      <div class="pbar"><div class="pfill" style="width:${Math.min(100,vasosHoy/vasosMeta*100)}%;background:#06b6d4"></div></div>
-    </div>
-    <div class="card" style="border-left:4px solid ${pHoy>=META_PAUSAS?'var(--g)':'var(--o)'}">
-      <div class="card-title" style="color:${pHoy>=META_PAUSAS?'var(--g)':'var(--o)'}">🧍 Pausas activas</div>
-      <div class="card-val" style="color:${pHoy>=META_PAUSAS?'var(--g)':'var(--o)'}">${pHoy}/${META_PAUSAS}</div>
-      <div class="card-sub">hoy · <a href="#" onclick="nav('postura');return false" style="color:inherit">ir a Postura</a></div>
-    </div>
-    <div class="card" style="border-left:4px solid var(--p)">
-      <div class="card-title" style="color:var(--p)">💊 Suplementos</div>
-      <div class="card-val" style="color:var(--p)">${suppTotal?`${suppHechos}/${suppTotal}`:'—'}</div>
-      <div class="card-sub">${suppTotal?'tomados hoy':'Sin lista configurada'}</div>
-    </div>`;
-
-  // Próxima cita médica (misma lógica que el resumen de Exámenes)
-  const proximas=S.chequeos.filter(c=>c.proxima&&c.proxima>=today()).sort((a,b)=>a.proxima.localeCompare(b.proxima));
-  document.getElementById('d-medico').innerHTML=`
-    <div class="card">
-      <div class="flex jb aic" style="margin-bottom:12px">
-        <div class="card-title" style="margin:0">🩺 Próxima cita médica</div>
-        <button class="btn btn-o btn-sm" onclick="nav('examenes')">Ver todo</button>
-      </div>
-      ${proximas.length?`
-      <div class="card-val" style="font-size:20px">${fmtD(proximas[0].proxima)}</div>
-      <div class="card-sub">${CHEQ_TIPOS[proximas[0].tipo]||proximas[0].tipo}</div>`:`
-      <div class="empty" style="padding:16px"><div class="ico">🩺</div><p>Sin citas agendadas.</p></div>`}
-    </div>`;
-
-  // Bienestar: ánimo de hoy + dolor/molestia reciente
-  const hoyAnimo=(S.mental.registros||[]).find(r=>r.fecha===today());
-  const doloresRecientes=[...(S.postura.dolores||[])].sort((a,b)=>b.fecha.localeCompare(a.fecha)).slice(0,10);
-  const dolorProm=doloresRecientes.length?(doloresRecientes.reduce((s,d)=>s+d.intensidad,0)/doloresRecientes.length).toFixed(1):null;
-  document.getElementById('d-bienestar').innerHTML=`
-    <div class="card">
-      <div class="flex jb aic" style="margin-bottom:12px">
-        <div class="card-title" style="margin:0">🧠 Bienestar</div>
-        <button class="btn btn-o btn-sm" onclick="nav('mental')">Ver todo</button>
-      </div>
-      <div class="flex jb" style="padding:8px 0;border-bottom:1px solid rgba(var(--ov),.06)">
-        <span class="ts tm">Ánimo de hoy</span>
-        <span class="ts fw7">${hoyAnimo?ANIMO_LABELS[hoyAnimo.animo]:'Sin registrar'}</span>
-      </div>
-      <div class="flex jb" style="padding:8px 0">
-        <span class="ts tm">Dolor/molestia (prom. reciente)</span>
-        <span class="ts fw7" style="${dolorProm&&dolorProm>=3?'color:var(--r)':''}">${dolorProm?dolorProm+'/5':'Sin registros'}</span>
-      </div>
-    </div>`;
+  document.getElementById('d-izq').innerHTML=sdChequeoHtml()+sdBienestarHtml();
+  document.getElementById('d-der').innerHTML=sdPesoHtml()+sdBotiquinHtml()+sdReglasHtml();
 }
 
 // ─── AGUA ────────────────────────────────────────────────────────────────────
 function toggleVaso(i) {
   const vasos = getVasosHoy();
   S.agua[today()] = i < vasos ? i : i + 1;
-  save(); renderDashboard();
+  save(); sdRepintar();
 }
-function resetAgua() { S.agua[today()]=0; save(); renderDashboard(); }
+function resetAgua() { S.agua[today()]=0; save(); sdRepintar(); }
 
 // ─── MEDIDAS ─────────────────────────────────────────────────────────────────
 function renderMedidas() {
   const list=[...S.medidas].sort((a,b)=>b.fecha.localeCompare(a.fecha));
+  // Una linea con uno o dos puntos es peor que ninguna linea: hasta el tercer pesaje se
+  // muestra donde esta entre el inicio y la meta, y las graficas se esconden.
+  const pocos=S.medidas.length<3;
+  const barra=document.getElementById('med-barra');
+  if(barra) barra.innerHTML=pocos?sdPesoHtml():'';
+  const charts=document.getElementById('med-charts');
+  if(charts) charts.style.display=pocos?'none':'';
   const ultima=list[0]||null;
   const anterior=list[1]||null;
   const altura=S.perfil.altura||0;
@@ -1199,7 +1492,9 @@ function renderExamenes() {
       </div>
     </div>
 
-    <div class="card" style="margin-bottom:18px">
+    ${sdChequeoHtml()}
+
+    <div class="card" style="margin-bottom:18px;margin-top:18px">
       <div class="card-title" style="margin-bottom:14px">📋 Cómo estás — último valor de cada marcador</div>
       ${markers.length?`<div class="tw"><table>
         <thead><tr><th>Categoría</th><th>Marcador</th><th>Valor</th><th>Rango de referencia</th><th>Estado</th><th>Fecha</th></tr></thead>
@@ -1731,21 +2026,29 @@ function delAnimo(id) { S.mental.registros=S.mental.registros.filter(r=>r.id!==i
 // ─── SUPLEMENTOS ─────────────────────────────────────────────────────────────
 const MOMENTO_LABELS = {am:'🌅 Mañana',pre:'🏋️ Pre-entreno',post:'💪 Post-entreno',pm:'🌙 Noche',cualquiera:'🕐 Cualquier hora'};
 
-const SUPP_CATALOG = [
-  {ico:'🥤',nombre:'Proteína Whey (suero de leche)',dosis:'25-30g (1 scoop) post-entreno o para completar tu meta diaria',momento:'post',para:'Completar tu meta de proteína (186g/día, ver Plan Masa Muscular en Mi Comida) cuando la comida no alcanza.',nota:'No reemplaza comida real — es un complemento para los días en que no llegas a tu meta solo con alimentos.'},
-  {ico:'⚡',nombre:'Creatina monohidratada',dosis:'5g al día, todos los días (no solo días de entreno)',momento:'cualquiera',para:'El suplemento con más evidencia científica para fuerza y ganancia de masa muscular.',nota:'No necesita fase de carga. Tómala siempre a la misma hora para no olvidarla — el efecto es acumulativo, no inmediato.'},
-  {ico:'☀️',nombre:'Vitamina D3',dosis:'2000-4000 UI al día, con una comida que tenga algo de grasa',momento:'am',para:'Soporte hormonal (incluida testosterona) y salud ósea — muy común tener deficiencia si te da poco sol.',nota:'Idealmente confirma tu nivel con el examen de Vitamina D en Exámenes Médicos antes de dosis altas y sostenidas.'},
-  {ico:'🐟',nombre:'Omega 3 (aceite de pescado)',dosis:'1-2g de EPA+DHA al día, con alimento',momento:'cualquiera',para:'Antiinflamatorio, apoya recuperación muscular y salud cardiovascular.',nota:'Si tienes reflujo, tómalo con una comida grande para evitar el "repique" de sabor a pescado.'},
-  {ico:'💊',nombre:'Multivitamínico',dosis:'1 tableta al día con desayuno',momento:'am',para:'Cubre huecos de micronutrientes en días donde la dieta no es perfecta.',nota:'No sustituye comer variado — es un seguro, no la base de la nutrición.'},
-  {ico:'🧂',nombre:'Magnesio (glicinato o citrato)',dosis:'200-400mg, 30-60 min antes de dormir',momento:'pm',para:'Mejora la calidad del sueño y reduce calambres — complementa lo de Postura y Salud Mental.',nota:'El glicinato de magnesio es el mejor tolerado digestivamente; evita el óxido de magnesio si tienes el estómago sensible.'}
-];
+// El catálogo sale de `CIFRAS.SUPLEMENTOS`, la misma fuente que la rutina diaria y que la
+// lista de la compra. Antes eran 6 fichas escritas a mano aquí, con la dosis repetida por
+// tercera vez en el proyecto y la meta de proteína escrita como "186g/día" en texto plano.
+const SUPP_ICO={d3:'☀️',multi:'💊',omega3:'🐟',creatina:'⚡',magnesio:'🧂',whey:'🥤'};
+function suppCatalog(){
+  const M=sdMaestro(); if(!M) return [];
+  return M.lista.map(function(p){
+    return {
+      id:p.id, ico:SUPP_ICO[p.id]||'💊', nombre:p.n, dosis:p.dosis + ' · ' + p.cuando,
+      momento:p.momento,
+      para:(window.CIFRAS&&CIFRAS.texto)?CIFRAS.texto(p.porQue):p.porQue,
+      nota:p.ojo,
+    };
+  });
+}
+
 
 function tomadoHoy(id) { return !!(S.suplementos.tomado[today()]||{})[id]; }
 function toggleTomado(id) {
   const t=today();
   if(!S.suplementos.tomado[t]) S.suplementos.tomado[t]={};
   S.suplementos.tomado[t][id]=!S.suplementos.tomado[t][id];
-  save(); renderSuplementos();
+  save(); sdRepintar();
 }
 
 function renderSuplementos() {
@@ -1769,7 +2072,7 @@ function renderSuplementos() {
       </div>
       <div class="card">
         <div class="card-title">📚 Catálogo de referencia</div>
-        <div class="card-val">${SUPP_CATALOG.length}</div>
+        <div class="card-val">${suppCatalog().length}</div>
         <div class="card-sub">relacionados a tu meta de masa muscular</div>
       </div>
     </div>
@@ -1791,9 +2094,11 @@ function renderSuplementos() {
       </table></div>`:`<div class="empty"><div class="ico">💊</div><p>Agrega un suplemento manualmente o desde el catálogo de abajo.</p></div>`}
     </div>
 
+    ${sdBotiquinHtml()}
+
     <div class="sh"><h2>📚 Catálogo — relevantes para tu meta de masa muscular</h2></div>
     <div class="g3">
-      ${SUPP_CATALOG.map((s,i)=>`
+      ${suppCatalog().map((s,i)=>`
       <div class="card" style="border-top:3px solid var(--b)">
         <div style="font-size:24px;margin-bottom:8px">${s.ico}</div>
         <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:6px">${s.nombre}</div>
@@ -1813,7 +2118,7 @@ function renderSuplementos() {
 }
 
 function addFromCatalog(i) {
-  const s=SUPP_CATALOG[i];
+  const s=suppCatalog()[i];
   if(S.suplementos.lista.some(x=>x.nombre===s.nombre)) { toast('Ya está en tu lista'); return; }
   S.suplementos.lista.push({id:uid(),nombre:s.nombre,dosis:s.dosis,momento:s.momento,notas:''});
   save(); renderSuplementos(); toast('✅ '+s.nombre+' agregado a tu lista');
@@ -1860,6 +2165,17 @@ function init() {
   // para el cálculo de calorías) — si nunca se registró un pesaje real, "Peso actual" se ve vacío
   // aunque el perfil ya tenga peso. Se sembra un primer registro con el peso real conocido para
   // que el Dashboard muestre algo desde ya; a partir de ahí, registrar pesajes reales lo reemplaza.
+  // Los 6 suplementos salen de los datos maestros — la misma fuente que la rutina diaria. Antes
+  // la lista arrancaba vacía y pedía darlos de alta a mano, datos que el proyecto ya tenía.
+  // Bandera de una sola vez: si Adán borra uno, no vuelve solo.
+  if(!S.seedSupl && window.CIFRAS && CIFRAS.SUPLEMENTOS){
+    const yaHay=new Set(S.suplementos.lista.map(x=>x.nombre));
+    CIFRAS.SUPLEMENTOS.lista.forEach(function(p){
+      if(yaHay.has(p.n)) return;
+      S.suplementos.lista.push({id:p.id,nombre:p.n,dosis:p.dosis,momento:p.momento,notas:p.cuando});
+    });
+    S.seedSupl=true; _needSave=true;
+  }
   if(!S.medidas.length){
     S.medidas.push({id:uid(),peso:S.perfil.peso||77,fecha:today(),cintura:0,cadera:0,pecho:0,brazo:0,muslo:0,grasa:0,notas:'Peso inicial (seed)'});
     _needSave=true;
@@ -1876,7 +2192,7 @@ function init() {
   };
   window.addEventListener('resize',check); check();
   const tabInicial=new URLSearchParams(location.search).get('tab');
-  if(tabInicial&&SECS.includes(tabInicial)) nav(tabInicial); else renderDashboard();
+  nav(tabInicial && SECS.includes(tabInicial) ? tabInicial : 'dashboard');
 }
 
 init();

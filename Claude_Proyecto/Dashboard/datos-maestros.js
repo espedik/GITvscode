@@ -116,6 +116,9 @@ window.CIFRAS = (function () {
     // rotación completa. Adán: "necesito enfocarme en estos temas".
     escuelaAleman:   'Cenlex Santo Tomás',
     kapitelAleman:   10,
+    // La meta diaria de proteína. Estaba escrita a mano en las 3 subtareas de la whey y en
+    // el catálogo de salud.html; ahora la citan como {{proteinaMeta}}.
+    proteinaMeta:    186,
 
     // ── Fechas y metas no financieras ──
     entrevistaWayve: '2026-07-08',          // ver Entrevistas/ → sección Wayve
@@ -261,9 +264,9 @@ window.CIFRAS = (function () {
     {id:"wd-didi2",dias:[1,2,3,4,5],hora:"19:30",cat:"admin",txt:"🚗 Didi — sesión corta de la noche (hasta ~20:00)"},
     {id:"wd11",dias:[1,2,3,4,5],hora:"20:00",cat:"profundo",txt:"🎯 Prioridad activa de Fase 0: negocio de tu papá o plantilla GBM — 1h15 de avance real (20:00–21:15)"},
     {id:"wd14",dias:[1,2,3,4,5],hora:"21:15",cat:"salud",txt:"🍽️ Cena + preparar la comida de mañana",subtareas:[{id:"wd14a",txt:"Cocina un solo platillo para cenar hoy y llevar de comida mañana a ALTEN — ahorra tiempo, sin carbohidratos refinados en la cena",link:{href:"../CuidadoPersonal/comida.html?s=cenas",label:"🍳 Ver cenas"}},{id:"wd14b",txt:"Deja todo empacado y listo junto a la puerta para salir rápido mañana",link:{href:"../CuidadoPersonal/comida.html?s=desayunos",label:"🍳 Ver desayunos"}}]},
-    {id:"wd-pm",dias:[1,2,3,4,5],hora:"22:30",cat:"salud",txt:"🌙 Rutina de la noche — piel, minoxidil y suplementos",producto:true,subtareas:[{id:"wd17a",sec:"Piel y minoxidil",txt:"Limpiador (doble limpieza si usaste protector solar): CeraVe Limpiador Espumoso (verde) — remueve el bloqueador y el sudor del día"},{id:"wd17b",txt:"Tratamiento con retinoide: Differin Adapaleno 0.1% Gel — controla brotes y mejora la textura"},{id:"wd17c",txt:"Hidratante nocturno: Eucerin Hyaluron-Filler + Epigenetic Noche — repara la piel mientras duermes"},{id:"wd18",txt:"<b>Minoxidil 5% en ESPUMA (Kirkland)</b> en cuero cabelludo seco — la espuma no lleva propilenglicol, que es lo que reseca el tallo en la versión líquida — dosis de la noche"},{id:"wdSupPm1",sec:"Suplementos",txt:"Magnesio (glicinato) — 200-400mg, 30-60 min antes de dormir",link:{href:"../CuidadoPersonal/salud.html?tab=suplementos",label:"💊 Ver Suplementos"}},{id:"wdSupPm2",txt:"Proteína Whey — 25-30g si hoy no llegaste a tu meta de proteína (186g/día)"}]},
-    {id:"sa-pm",dias:[6],hora:"22:20",cat:"salud",txt:"🌙 Rutina de la noche — piel, minoxidil y suplementos",producto:true,subtareas:[{id:"sa13",sec:"Piel y minoxidil",txt:"Skincare PM — limpiador + retinoide + hidratante nocturno"},{id:"sa13b",txt:"<b>Minoxidil 5% en ESPUMA (Kirkland)</b> en cuero cabelludo seco — la espuma no lleva propilenglicol, que es lo que reseca el tallo en la versión líquida — dosis de la noche"},{id:"saSupPm1",sec:"Suplementos",txt:"Magnesio (glicinato) — 200-400mg, 30-60 min antes de dormir",link:{href:"../CuidadoPersonal/salud.html?tab=suplementos",label:"💊 Ver Suplementos"}},{id:"saSupPm2",txt:"Proteína Whey — 25-30g si hoy no llegaste a tu meta de proteína (186g/día)"}]},
-    {id:"do-pm",dias:[0],hora:"22:05",cat:"salud",txt:"🌙 Rutina de la noche — piel, minoxidil y suplementos",producto:true,subtareas:[{id:"do10",sec:"Piel y minoxidil",txt:"Skincare PM — limpiador + retinoide + hidratante nocturno"},{id:"do10b",txt:"<b>Minoxidil 5% en ESPUMA (Kirkland)</b> en cuero cabelludo seco — la espuma no lleva propilenglicol, que es lo que reseca el tallo en la versión líquida — dosis de la noche"},{id:"doSupPm1",sec:"Suplementos",txt:"Magnesio (glicinato) — 200-400mg, 30-60 min antes de dormir",link:{href:"../CuidadoPersonal/salud.html?tab=suplementos",label:"💊 Ver Suplementos"}},{id:"doSupPm2",txt:"Proteína Whey — 25-30g si hoy no llegaste a tu meta de proteína (186g/día)"}]},
+    {id:"wd-pm",dias:[1,2,3,4,5],hora:"22:30",cat:"salud",txt:"🌙 Rutina de la noche — piel, minoxidil y suplementos",producto:true,subtareas:[{id:"wd17a",sec:"Piel y minoxidil",txt:"Limpiador (doble limpieza si usaste protector solar): CeraVe Limpiador Espumoso (verde) — remueve el bloqueador y el sudor del día"},{id:"wd17b",txt:"Tratamiento con retinoide: Differin Adapaleno 0.1% Gel — controla brotes y mejora la textura"},{id:"wd17c",txt:"Hidratante nocturno: Eucerin Hyaluron-Filler + Epigenetic Noche — repara la piel mientras duermes"},{id:"wd18",txt:"<b>Minoxidil 5% en ESPUMA (Kirkland)</b> en cuero cabelludo seco — la espuma no lleva propilenglicol, que es lo que reseca el tallo en la versión líquida — dosis de la noche"},{id:"wdSupPm1",sec:"Suplementos",txt:"Magnesio (glicinato) — 200-400mg, 30-60 min antes de dormir",link:{href:"../CuidadoPersonal/salud.html?tab=suplementos",label:"💊 Ver Suplementos"}},{id:"wdSupPm2",txt:"Proteína Whey — 25-30g si hoy no llegaste a tu meta de proteína ({{proteinaMeta}}g/día)"}]},
+    {id:"sa-pm",dias:[6],hora:"22:20",cat:"salud",txt:"🌙 Rutina de la noche — piel, minoxidil y suplementos",producto:true,subtareas:[{id:"sa13",sec:"Piel y minoxidil",txt:"Skincare PM — limpiador + retinoide + hidratante nocturno"},{id:"sa13b",txt:"<b>Minoxidil 5% en ESPUMA (Kirkland)</b> en cuero cabelludo seco — la espuma no lleva propilenglicol, que es lo que reseca el tallo en la versión líquida — dosis de la noche"},{id:"saSupPm1",sec:"Suplementos",txt:"Magnesio (glicinato) — 200-400mg, 30-60 min antes de dormir",link:{href:"../CuidadoPersonal/salud.html?tab=suplementos",label:"💊 Ver Suplementos"}},{id:"saSupPm2",txt:"Proteína Whey — 25-30g si hoy no llegaste a tu meta de proteína ({{proteinaMeta}}g/día)"}]},
+    {id:"do-pm",dias:[0],hora:"22:05",cat:"salud",txt:"🌙 Rutina de la noche — piel, minoxidil y suplementos",producto:true,subtareas:[{id:"do10",sec:"Piel y minoxidil",txt:"Skincare PM — limpiador + retinoide + hidratante nocturno"},{id:"do10b",txt:"<b>Minoxidil 5% en ESPUMA (Kirkland)</b> en cuero cabelludo seco — la espuma no lleva propilenglicol, que es lo que reseca el tallo en la versión líquida — dosis de la noche"},{id:"doSupPm1",sec:"Suplementos",txt:"Magnesio (glicinato) — 200-400mg, 30-60 min antes de dormir",link:{href:"../CuidadoPersonal/salud.html?tab=suplementos",label:"💊 Ver Suplementos"}},{id:"doSupPm2",txt:"Proteína Whey — 25-30g si hoy no llegaste a tu meta de proteína ({{proteinaMeta}}g/día)"}]},
     {id:"wd20",dias:[1,2,3,4,5],hora:"23:00",cat:"descanso",txt:"🧘 Meditación — respiración box (10 min)",subtareas:[{id:"wd20a",txt:"Inhala 4 segundos por la nariz"},{id:"wd20b",txt:"Sostén el aire 4 segundos"},{id:"wd20c",txt:"Exhala 4 segundos por la boca"},{id:"wd20d",txt:"Sostén sin aire 4 segundos — repite el ciclo (~10 veces en 10 min)"}]},
     {id:"wd20e",dias:[1,2,3,4,5],hora:"23:10",cat:"descanso",txt:"Tiempo libre / relajación (20 min, hasta las 23:30)"},
     {id:"wd-app-pm",dias:[1,2,3,4,5],hora:"23:30",cat:"aprender",txt:"💻 Construir esta aplicación — de 23:30 a 00:00, a veces hasta la 01:00"},
@@ -644,6 +647,98 @@ window.CIFRAS = (function () {
     },
   };
 
+  // ── LOS SUPLEMENTOS ──────────────────────────────────────────────────────
+  // Los 6 que Adán toma de verdad. Estaban escritos a mano en TRES sitios: las subtareas de
+  // `RUTINA_TASKS`, la lista de `LISTA_COMPRAS.suplementos` y el catálogo de `salud.html`.
+  // Coincidían de casualidad, y además salud.html arrancaba con "Mi lista: 0" y pedía darlos
+  // de alta a mano — datos que el proyecto ya tenía.
+  //
+  // `momento` es 'am' o 'pm'. `usosSemana` sale de `porDia * 7` salvo que se escriba: la whey
+  // solo se toma los días que la comida no llega a la meta de proteína.
+  // Duración y costo son DERIVADOS; los `precio` son de referencia (Amazon MX, sep 2026).
+  const SUPLEMENTOS = {
+    lista: [
+      { id:'d3', n:'Vitamina D3', dosis:'2000-4000 UI', momento:'am', cuando:'con algo de grasa',
+        envase:120, unidad:'cápsulas', porDia:1, precio:220, tono:'gris',
+        porQue:'Soporte hormonal — incluida la testosterona — y salud ósea. La deficiencia es muy común si te da poco sol, y tú pasas el día dentro.',
+        ojo:'Es el único de la lista cuyo efecto depende de un número que no conoces: <b>hazte el examen de Vitamina D</b> antes de sostener dosis altas.' },
+
+      { id:'multi', n:'Multivitamínico', dosis:'1 tableta', momento:'am', cuando:'con el desayuno',
+        envase:90, unidad:'tabletas', porDia:1, precio:350, tono:'teal',
+        porQue:'Cubre huecos de micronutrientes los días en que la dieta no es perfecta.',
+        ojo:'No sustituye comer variado — es un seguro, no la base de la nutrición.' },
+
+      { id:'omega3', n:'Omega 3 (aceite de pescado)', dosis:'1-2 g EPA+DHA', momento:'am', cuando:'con alimento',
+        envase:120, unidad:'cápsulas', porDia:2, precio:450, tono:'agua',
+        porQue:'Antiinflamatorio, apoya la recuperación muscular y la salud cardiovascular.',
+        ojo:'Si tienes reflujo, tómalo con una comida grande para evitar el "repique" de sabor a pescado.' },
+
+      { id:'creatina', n:'Creatina monohidratada', dosis:'5 g', momento:'am', cuando:'también sin entrenar',
+        envase:300, unidad:'g', porDia:5, precio:400, tono:'am', clave:true,
+        porQue:'El suplemento con más evidencia para fuerza y ganancia de masa muscular.',
+        ojo:'No necesita fase de carga, y va <b>todos los días</b>: el efecto es por acumulación. Sube la creatinina en sangre <b>sin daño renal</b> — avisa antes de un perfil renal.' },
+
+      { id:'magnesio', n:'Magnesio (glicinato o citrato)', dosis:'200-400 mg', momento:'pm', cuando:'30-60 min antes de dormir',
+        envase:120, unidad:'cápsulas', porDia:2, precio:400, tono:'pm',
+        porQue:'Mejora la calidad del sueño y reduce calambres — complementa lo de Postura y Salud Mental.',
+        ojo:'Va de noche por una razón: tomarlo por la mañana desperdicia la mitad de para lo que lo compraste. El glicinato es el mejor tolerado; evita el óxido si tienes estómago sensible.' },
+
+      { id:'whey', n:'Proteína Whey (suero de leche)', dosis:'25-30 g', momento:'pm', cuando:'solo si faltan gramos',
+        envase:2000, unidad:'g', porDia:30, usosSemana:4, precio:1300, tono:'ok',
+        porQue:'Completar tu meta de <b>{{proteinaMeta}} g de proteína al día</b> los días en que la comida no alcanza.',
+        ojo:'No reemplaza comida real — es para los días en que no llegas solo con alimentos.' },
+    ],
+
+    usosSemana: function (p) { return p.usosSemana != null ? p.usosSemana : 7; },
+    porSemana: function (p) { return this.usosSemana(p) * p.porDia; },
+    duracionDias: function (p) {
+      const x = this.porSemana(p);
+      return x ? Math.round(p.envase / (x / 7)) : null;
+    },
+    costoMes: function (p) {
+      const d = this.duracionDias(p);
+      return d ? Math.round(p.precio / d * 30) : 0;
+    },
+    get costoMesTotal() {
+      var t = this;
+      return this.lista.reduce(function (a, p) { return a + t.costoMes(p); }, 0);
+    },
+    delMomento: function (m) { return this.lista.filter(function (p) { return p.momento === m; }); },
+  };
+
+  // ── EL CHEQUEO DEL AÑO ──────────────────────────────────────────────────
+  // Qué análisis le tocan y por qué. Antes la pestaña de Exámenes era una tabla vacía que no
+  // proponía ninguno: guardaba resultados pero no decía cuáles pedir.
+  //
+  // Varios entran por algo que ya está en el proyecto: la vitamina D porque toma D3 a diario,
+  // la creatinina porque toma creatina, el tiroideo porque la caída de cabello lo pide
+  // descartar, y el PSA porque el dutasteride tópico de la lista de Cabello parte su valor a
+  // la mitad. `mesesVigencia` es cada cuánto se repite; `desdeEdad` lo desactiva hasta esa edad.
+  const CHEQUEO = {
+    examenes: [
+      { id:'lipidico', n:'Perfil lipídico', mesesVigencia:12, ayuno:'9-12 h',
+        t:'Colesterol total, HDL, LDL y trigliceridos. Es el que más cambia con la dieta, y el que más pronto avisa.' },
+      { id:'glucosa', n:'Glucosa en ayuno + HbA1c', mesesVigencia:12, ayuno:'8 h',
+        t:'La HbA1c es el promedio de <b>3 meses</b>: no la puedes "preparar" el día antes como la glucosa suelta.' },
+      { id:'vitd', n:'Vitamina D (25-OH)', mesesVigencia:12, prioritario:true,
+        t:'<b>Tomas D3 a diario sin saber tu nivel.</b> Es el que más falta te hace: define si 2000 UI te sobran o te faltan.' },
+      { id:'hepatico', n:'Perfil hepático (ALT / AST)', mesesVigencia:12, ayuno:'8 h',
+        t:'Con 6 suplementos diarios vale tener una línea base. No porque sean peligrosos, sino para poder comparar si algo cambia.' },
+      { id:'renal', n:'Creatinina y función renal', mesesVigencia:12, ayuno:'8 h',
+        t:'<b>Aviso:</b> la creatina sube la creatinina en sangre <b>sin daño renal</b>. Si sale alta, dilo antes de que te asusten: se repite midiendo cistatina C.' },
+      { id:'tiroides', n:'Perfil tiroideo (TSH)', mesesVigencia:12,
+        t:'Entra por la caída de cabello: el hipotiroidismo es una de las causas que tu propia pestaña de Cabello te dice que descartes.' },
+      { id:'biometria', n:'Biometría hemática', mesesVigencia:12,
+        t:'La base de cualquier chequeo: anemia, infección, plaquetas.' },
+      { id:'testo', n:'Testosterona total y libre', mesesVigencia:12, ayuno:'8 h',
+        t:'Se mide <b>antes de las 10 am</b>, cuando está más alta. A otra hora el resultado no significa lo mismo.' },
+      { id:'psa', n:'PSA', mesesVigencia:12, desdeEdad:45,
+        t:'A tu edad todavía no toca — salvo que empieces dutasteride.',
+        aviso:'Si arrancas el <b>dutasteride tópico</b> que tienes en la lista de Cabello, el PSA deja de ser opcional: ese fármaco <b>reduce su valor a la mitad</b>. Necesitas una medición ANTES de empezar, o el resultado de dentro de unos años no se podrá interpretar.' },
+    ],
+    get enAyuno() { return this.examenes.filter(function (e) { return e.ayuno; }); },
+  };
+
   const LISTA_COMPRAS = {
     comida:{
       // 2026-08-27 — el pasillo único "Frutas y Verduras" se partió en tres. Pedido de Adán:
@@ -689,7 +784,13 @@ window.CIFRAS = (function () {
         'Minoxidil ORAL 2.5-5 mg (\ud83e\ude7a receta + revisión de presión antes y durante)',
       ]);
     },
-    suplementos:['Proteína Whey (suero de leche)','Creatina monohidratada','Vitamina D3','Omega 3 (aceite de pescado)','Multivitamínico','Magnesio (glicinato o citrato)'],
+    // Sale de SUPLEMENTOS: el nombre y el tamaño del envase se escriben una sola vez.
+    get suplementos() {
+      return SUPLEMENTOS.lista.map(function (p) {
+        return p.n + ', ' + p.envase + ' ' + p.unidad + ' (' + p.dosis + ', ' +
+          (p.momento === 'am' ? 'mañana' : 'noche') + ')';
+      });
+    },
     // ── KIT DE HIGIENE (2026-08-15, pedido: "en alguna parte debes poner un kit de higiene super
     // completo, ya sea para viajes o persona, con imagenes y productos que comprar") ────────────
     // Agrupado por bolsa, no por tipo de producto: cuando armas la maleta lo que importa es qué
@@ -984,6 +1085,7 @@ window.CIFRAS = (function () {
     maestriaEscuela:{ v: () => PROYECTO.maestriaEscuela, fmt: 'txt' },
     escuelaAleman: { v: () => PROYECTO.escuelaAleman, fmt: 'txt' },
     kapitelAleman: { v: () => PROYECTO.kapitelAleman, fmt: 'num' },
+    proteinaMeta: { v: () => PROYECTO.proteinaMeta, fmt: 'num' },
     maestriaInicio:{ v: () => PROYECTO.maestriaInicio,   fmt: 'txt' },
     // ── Derivadas que cruzan constantes con saldos vivos ──
     // Lo que queda del sueldo tras los fijos y los mínimos de deuda: el margen real del mes.
@@ -1122,6 +1224,8 @@ window.CIFRAS = (function () {
     LISTA_COMPRAS: LISTA_COMPRAS,
     RUTINA_PIEL: RUTINA_PIEL,
     RUTINA_PELO: RUTINA_PELO,
+    SUPLEMENTOS: SUPLEMENTOS,
+    CHEQUEO: CHEQUEO,
     PROYECTO: PROYECTO,
     CALENDARIO: CALENDARIO,
     get datos() { return fin; }

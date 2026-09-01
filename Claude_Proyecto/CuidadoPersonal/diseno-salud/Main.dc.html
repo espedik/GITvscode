@@ -1,0 +1,302 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap">
+  <style>
+    body{margin:0;background:#07100d;font-family:"Inter",-apple-system,sans-serif}
+    .sa{font-family:"Inter",-apple-system,BlinkMacSystemFont,sans-serif !important}
+    .sa .kpi-v,.sa .h1,.sa .med-d,.sa .med-tot-v,.sa .big,.sa .ex-v,.sa .pw-v{font-family:"Space Grotesk","Inter",sans-serif}
+  </style>
+</helmet>
+
+<div class="sa">
+<style>
+.sa{
+  --tx:#eef5f1; --tx2:#9fb0a8; --tx3:#8fa199;
+  --line:rgba(255,255,255,.09); --line2:rgba(255,255,255,.05);
+  --panel:rgba(255,255,255,.045); --panel2:rgba(255,255,255,.028);
+  --ok:#2fe0a0; --am:#ff9f45; --pm:#8b7dff; --agua:#4cc4f0;
+  --warn:#ff7a6b; --teal:#1fd6c4; --gris:#8b96a0;
+  --ink:#07100d;
+  width:1440px; height:1450px; box-sizing:border-box; padding:26px 30px 30px;
+  background:
+    radial-gradient(ellipse 55% 40% at 12% -6%, rgba(47,224,160,.15) 0%, transparent 60%),
+    radial-gradient(ellipse 55% 40% at 90% -4%, rgba(76,196,240,.12) 0%, transparent 60%),
+    radial-gradient(ellipse 80% 38% at 50% 108%, rgba(139,125,255,.11) 0%, transparent 62%),
+    #07100d;
+  color:var(--tx); overflow:hidden; position:relative;
+}
+.sa *{box-sizing:border-box}
+.grid-bg{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.02) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.02) 1px,transparent 1px);background-size:58px 58px}
+.z{position:relative;z-index:1}
+
+.top{display:flex;align-items:center;gap:16px;margin-bottom:16px}
+.eyebrow{font-size:10px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--ok);display:flex;align-items:center;gap:7px}
+.eyebrow .dot{width:6px;height:6px;border-radius:50%;background:var(--ok);box-shadow:0 0 10px var(--ok)}
+.h1{font-size:26px;font-weight:800;letter-spacing:-.025em;margin-top:5px}
+.top-r{margin-left:auto;display:flex;align-items:center;gap:9px}
+.kpi{padding:9px 15px;border-radius:13px;border:1px solid var(--line);background:var(--panel);text-align:right;min-width:116px}
+.kpi-v{font-size:19px;font-weight:800;letter-spacing:-.02em;line-height:1;font-variant-numeric:tabular-nums}
+.kpi-k{font-size:9px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--tx3);margin-top:4px}
+.kpi.a .kpi-v{color:var(--ok)} .kpi.b .kpi-v{color:var(--am)} .kpi.c .kpi-v{color:var(--warn)}
+.btn{background:var(--panel);border:1px solid var(--line);color:var(--tx2);font-size:12px;font-weight:700;padding:10px 15px;border-radius:12px}
+
+/* ── HOY, protagonista ───────────────────────────────────── */
+.hoy{border-radius:20px;border:1px solid rgba(47,224,160,.26);padding:16px 20px 18px;margin-bottom:14px;
+  background:linear-gradient(160deg,rgba(47,224,160,.08),rgba(255,255,255,.022) 50%)}
+.hoy-h{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}
+.hoy-t{font-size:10.5px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--tx2)}
+.hoy-x{font-size:11.5px;color:var(--tx3);font-weight:700}
+.hoy-x b{color:var(--ok)}
+.hoy-grid{display:grid;grid-template-columns:1fr 1fr 300px;gap:12px}
+.blq{border-radius:15px;border:1px solid var(--line);background:var(--panel2);padding:13px 14px}
+.blq-h{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.blq-i{width:24px;height:24px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:11px;flex:none}
+.blq-i.am{background:rgba(255,159,69,.15);border:1px solid rgba(255,159,69,.34)}
+.blq-i.pm{background:rgba(139,125,255,.15);border:1px solid rgba(139,125,255,.36)}
+.blq-i.ag{background:rgba(76,196,240,.13);border:1px solid rgba(76,196,240,.32)}
+.blq-n{font-size:11.5px;font-weight:800}
+.blq-c{margin-left:auto;font-size:9px;font-weight:800;color:var(--tx3);font-variant-numeric:tabular-nums}
+
+.sup{display:flex;gap:9px;padding:7px 0;border-bottom:1px solid var(--line2);align-items:center}
+.sup:last-child{border-bottom:none}
+.sup-c{width:19px;height:19px;border-radius:6px;border:1.5px solid var(--line);flex:none;display:flex;align-items:center;justify-content:center;font-size:10px;color:transparent}
+.sup.on .sup-c{background:var(--ok);border-color:var(--ok);color:var(--ink)}
+.sup-n{font-size:11.5px;font-weight:700;line-height:1.25}
+.sup.on .sup-n{color:var(--tx2)}
+.sup-d{font-size:9.5px;color:var(--tx3);margin-top:2px}
+.sup-w{margin-left:auto;font-size:9px;font-weight:800;color:var(--am);flex:none;text-align:right;max-width:96px;line-height:1.3}
+
+.agua-n{font-size:26px;font-weight:800;letter-spacing:-.03em;font-variant-numeric:tabular-nums;line-height:1}
+.agua-n span{font-size:13px;color:var(--tx3);font-weight:700}
+.vasos{display:flex;gap:4px;flex-wrap:wrap;margin:11px 0 4px}
+.v{width:17px;height:23px;border-radius:3px 3px 6px 6px;border:1.5px solid var(--line);background:var(--panel2)}
+.v.on{background:linear-gradient(180deg,rgba(76,196,240,.35),var(--agua));border-color:var(--agua)}
+.mini{font-size:9.5px;color:var(--tx3);line-height:1.45;margin-top:9px;padding-top:9px;border-top:1px solid var(--line2)}
+.pausa{display:flex;gap:4px;margin:9px 0 0}
+.pz{flex:1;height:7px;border-radius:3px;background:var(--panel2);border:1px solid var(--line)}
+.pz.on{background:var(--ok);border-color:var(--ok)}
+
+/* ── cuerpo ──────────────────────────────────────────────── */
+.mid{display:grid;grid-template-columns:1fr 470px;gap:14px;margin-bottom:14px;align-items:start}
+.col{display:flex;flex-direction:column;gap:14px;min-width:0}
+.card{border-radius:18px;border:1px solid var(--line);background:var(--panel);padding:15px 17px}
+.card-h{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
+.card-t{font-size:10.5px;font-weight:800;letter-spacing:.11em;text-transform:uppercase;color:var(--tx2);display:flex;align-items:center;gap:7px}
+.card-t .b{width:3px;height:12px;border-radius:2px;background:linear-gradient(180deg,var(--ok),var(--agua));flex:none}
+.card-x{font-size:10px;color:var(--tx3);font-weight:700;white-space:nowrap}
+
+/* chequeo del año */
+.ex{display:flex;align-items:flex-start;gap:10px;padding:9px 0;border-bottom:1px solid var(--line2)}
+.ex:last-of-type{border-bottom:none}
+.ex-p{width:9px;height:9px;border-radius:50%;flex:none;margin-top:4px}
+.ex-p.nunca{background:var(--warn);box-shadow:0 0 0 3px rgba(255,122,107,.16)}
+.ex-p.vence{background:var(--am);box-shadow:0 0 0 3px rgba(255,159,69,.16)}
+.ex-p.ok{background:var(--ok);box-shadow:0 0 0 3px rgba(47,224,160,.14)}
+.ex-b{flex:1;min-width:0}
+.ex-n{font-size:11.5px;font-weight:800;line-height:1.25}
+.ex-t{font-size:10px;color:var(--tx3);line-height:1.45;margin-top:2px}
+.ex-t b{color:var(--tx2)}
+.ex-r{margin-left:auto;text-align:right;flex:none}
+.ex-v{font-size:11px;font-weight:800;font-variant-numeric:tabular-nums}
+.ex-v.nunca{color:var(--warn)} .ex-v.vence{color:var(--am)} .ex-v.ok{color:var(--ok)}
+.ex-f{font-size:9px;color:var(--tx3);margin-top:1px}
+.aviso{border-radius:12px;border:1px solid rgba(139,125,255,.32);background:rgba(139,125,255,.09);padding:11px 13px;margin-top:11px}
+.aviso-k{font-size:9px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--pm);display:flex;align-items:center;gap:6px}
+.aviso-t{font-size:10.5px;color:var(--tx2);line-height:1.5;margin-top:5px}
+.aviso-t b{color:var(--tx)}
+
+/* peso */
+.pw{display:flex;align-items:flex-end;gap:18px;margin-bottom:12px}
+.pw-v{font-size:34px;font-weight:800;letter-spacing:-.035em;line-height:1}
+.pw-u{font-size:15px;color:var(--tx3);font-weight:700}
+.pw-d{font-size:11px;font-weight:800;color:var(--ok);padding-bottom:4px}
+.pw-r{margin-left:auto;text-align:right}
+.pw-k{font-size:9px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--tx3)}
+.pw-n{font-size:14px;font-weight:800;margin-top:3px;font-variant-numeric:tabular-nums}
+.barra{height:26px;border-radius:9px;background:var(--panel2);border:1px solid var(--line);position:relative;overflow:hidden;margin-bottom:8px}
+.barra i{position:absolute;left:0;top:0;bottom:0;background:linear-gradient(90deg,var(--ok),var(--teal));border-radius:8px}
+.barra span{position:absolute;top:0;bottom:0;display:flex;align-items:center;font-size:9.5px;font-weight:800;color:var(--ink);left:12px;letter-spacing:.04em}
+.barra em{position:absolute;top:0;bottom:0;right:12px;display:flex;align-items:center;font-size:9.5px;font-weight:800;color:var(--tx3);font-style:normal}
+.hito{display:flex;justify-content:space-between;font-size:9.5px;color:var(--tx3);font-weight:700}
+
+/* botiquín */
+.med{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--line2)}
+.med:last-of-type{border-bottom:none}
+.med-b{width:5px;height:27px;border-radius:3px;flex:none}
+.med-n{font-size:11px;font-weight:700;line-height:1.25}
+.med-s{font-size:9px;color:var(--tx3);margin-top:2px}
+.med-r{margin-left:auto;text-align:right;flex:none}
+.med-d{font-size:10.5px;font-weight:800;font-variant-numeric:tabular-nums;color:var(--tx2)}
+.med-d.lo{color:var(--warn)}
+.med-p{font-size:9px;color:var(--tx3);margin-top:1px}
+.med-tot{display:flex;align-items:center;justify-content:space-between;margin-top:10px;padding-top:10px;border-top:1px solid var(--line)}
+.med-tot-l{font-size:10px;color:var(--tx2);font-weight:700}
+.med-tot-v{font-size:16px;font-weight:800;color:var(--teal);letter-spacing:-.02em}
+.nota{font-size:10px;color:var(--tx3);line-height:1.5;margin-top:10px;padding-top:10px;border-top:1px solid var(--line2)}
+.nota b{color:var(--tx2)}
+
+/* bienestar */
+.foot{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.sem{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;margin-bottom:11px}
+.sd{border-radius:10px;border:1px solid var(--line);background:var(--panel2);padding:8px 2px;text-align:center}
+.sd.hoy{border-color:var(--ok);background:rgba(47,224,160,.12)}
+.sd-l{font-size:9px;font-weight:800;color:var(--tx3);text-transform:uppercase}
+.sd-c{font-size:15px;margin:5px 0 3px;line-height:1}
+.sd-v{font-size:8.5px;font-weight:800;color:var(--tx3)}
+.leg{display:flex;gap:11px;font-size:9.5px;color:var(--tx3);font-weight:700;flex-wrap:wrap;margin-top:9px;padding-top:9px;border-top:1px solid var(--line2)}
+.leg span{display:inline-flex;align-items:center;gap:5px}
+.leg i{width:8px;height:8px;border-radius:50%;display:inline-block}
+
+.rule{display:flex;gap:10px;padding:9px 0;border-bottom:1px solid var(--line2);align-items:flex-start}
+.rule:last-child{border-bottom:none}
+.rule-n{width:22px;height:22px;border-radius:7px;flex:none;display:flex;align-items:center;justify-content:center;font-size:10.5px;font-weight:800;
+  background:var(--panel2);border:1px solid var(--line);color:var(--tx3)}
+.rule-n.al{background:rgba(255,159,69,.13);border-color:rgba(255,159,69,.32);color:var(--am)}
+.rule-t{font-size:11px;color:var(--tx2);line-height:1.5}
+.rule-t b{color:var(--tx);font-weight:700}
+</style>
+
+<div class="grid-bg"></div>
+<div class="z">
+
+  <div class="top">
+    <div>
+      <div class="eyebrow"><span class="dot"></span>Cuidado de la salud &middot; Martes 1 de septiembre</div>
+      <div class="h1">Tu salud, hoy y este a&ntilde;o</div>
+    </div>
+    <div class="top-r">
+      <div class="kpi a"><div class="kpi-v">12</div><div class="kpi-k">Racha suplementos</div></div>
+      <div class="kpi b"><div class="kpi-v">77 kg</div><div class="kpi-k">Peso &middot; IMC 24.3</div></div>
+      <div class="kpi c"><div class="kpi-v">6</div><div class="kpi-k">Ex&aacute;menes pendientes</div></div>
+      <div class="btn">&#9881; Perfil y metas</div>
+    </div>
+  </div>
+
+  <div class="hoy">
+    <div class="hoy-h">
+      <div class="hoy-t">Hoy</div>
+      <div class="hoy-x">Los suplementos salen de tu rutina diaria: <b>4 por la ma&ntilde;ana, 2 por la noche</b> &mdash; no hay que darlos de alta</div>
+    </div>
+    <div class="hoy-grid">
+
+      <div class="blq">
+        <div class="blq-h"><div class="blq-i am">&#9728;</div><div class="blq-n">Con el desayuno</div><div class="blq-c">3 DE 4</div></div>
+        <div class="sup on"><div class="sup-c">&#10003;</div><div><div class="sup-n">Vitamina D3</div><div class="sup-d">2000-4000 UI</div></div><div class="sup-w">con algo de grasa</div></div>
+        <div class="sup on"><div class="sup-c">&#10003;</div><div><div class="sup-n">Multivitam&iacute;nico</div><div class="sup-d">1 tableta</div></div><div class="sup-w">con desayuno</div></div>
+        <div class="sup on"><div class="sup-c">&#10003;</div><div><div class="sup-n">Omega 3</div><div class="sup-d">1-2 g EPA+DHA</div></div><div class="sup-w">con alimento</div></div>
+        <div class="sup"><div class="sup-c">&#10003;</div><div><div class="sup-n">Creatina monohidratada</div><div class="sup-d">5 g</div></div><div class="sup-w">tambi&eacute;n sin entrenar</div></div>
+        <div class="mini">La creatina va <b>todos los d&iacute;as</b>, entrenes o no: el efecto es por acumulaci&oacute;n, no por dosis del d&iacute;a.</div>
+      </div>
+
+      <div class="blq">
+        <div class="blq-h"><div class="blq-i pm">&#127769;</div><div class="blq-n">Antes de dormir</div><div class="blq-c">0 DE 2</div></div>
+        <div class="sup"><div class="sup-c">&#10003;</div><div><div class="sup-n">Magnesio (glicinato)</div><div class="sup-d">200-400 mg</div></div><div class="sup-w">30-60 min antes</div></div>
+        <div class="sup"><div class="sup-c">&#10003;</div><div><div class="sup-n">Prote&iacute;na Whey</div><div class="sup-d">25-30 g</div></div><div class="sup-w">solo si faltan g</div></div>
+        <div class="mini">Hoy llevas <b>142 g de 186</b> seg&uacute;n Mi Comida: <b style="color:#ff9f45">faltan 44 g</b>, as&iacute; que la whey de esta noche s&iacute; toca.</div>
+      </div>
+
+      <div class="blq">
+        <div class="blq-h"><div class="blq-i ag">&#128167;</div><div class="blq-n">Agua y pausas</div><div class="blq-c">HOY</div></div>
+        <div class="agua-n">6<span> / 10 vasos</span></div>
+        <div class="vasos">
+          <i class="v on"></i><i class="v on"></i><i class="v on"></i><i class="v on"></i><i class="v on"></i>
+          <i class="v on"></i><i class="v"></i><i class="v"></i><i class="v"></i><i class="v"></i>
+        </div>
+        <div class="pausa"><i class="pz on"></i><i class="pz on"></i><i class="pz on"></i><i class="pz"></i><i class="pz"></i><i class="pz"></i></div>
+        <div class="mini" style="margin-top:9px">Pausas de postura: <b>3 de 6</b> &mdash; llevas 2 h 40 sentado seguidas.</div>
+        <div class="mini" style="border:none;padding-top:0">Con creatina el requerimiento sube: retiene agua dentro del m&uacute;sculo, y por eso los calambres del principio casi siempre son <b>falta de agua</b>, no del suplemento.</div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="mid">
+
+    <div class="col">
+      <div class="card">
+        <div class="card-h"><div class="card-t"><span class="b"></span>Tu chequeo del a&ntilde;o</div><div class="card-x">6 pendientes de 9</div></div>
+
+        <div class="ex"><div class="ex-p nunca"></div><div class="ex-b"><div class="ex-n">Perfil lip&iacute;dico</div><div class="ex-t">Colesterol total, HDL, LDL y trigliceridos. <b>En ayuno de 9-12 h.</b> Es el que m&aacute;s cambia con la dieta, y el que m&aacute;s pronto avisa.</div></div><div class="ex-r"><div class="ex-v nunca">nunca</div><div class="ex-f">anual</div></div></div>
+        <div class="ex"><div class="ex-p nunca"></div><div class="ex-b"><div class="ex-n">Glucosa en ayuno + HbA1c</div><div class="ex-t">La HbA1c es el promedio de <b>3 meses</b>: no la puedes "preparar" el d&iacute;a antes como la glucosa suelta.</div></div><div class="ex-r"><div class="ex-v nunca">nunca</div><div class="ex-f">anual</div></div></div>
+        <div class="ex"><div class="ex-p nunca"></div><div class="ex-b"><div class="ex-n">Vitamina D (25-OH)</div><div class="ex-t"><b>Tomas D3 a diario sin saber tu nivel.</b> Es el único de la lista que ya deber&iacute;a estar hecho: define si 2000 UI te sobran o te faltan.</div></div><div class="ex-r"><div class="ex-v nunca">nunca</div><div class="ex-f">anual</div></div></div>
+        <div class="ex"><div class="ex-p nunca"></div><div class="ex-b"><div class="ex-n">Perfil hep&aacute;tico (ALT / AST)</div><div class="ex-t">Con 6 suplementos diarios vale tener una l&iacute;nea base. No porque sean peligrosos, sino para poder comparar si algo cambia.</div></div><div class="ex-r"><div class="ex-v nunca">nunca</div><div class="ex-f">anual</div></div></div>
+        <div class="ex"><div class="ex-p nunca"></div><div class="ex-b"><div class="ex-n">Creatinina y funci&oacute;n renal</div><div class="ex-t"><b>Aviso:</b> la creatina sube la creatinina en sangre <b>sin da&ntilde;o renal</b>. Si sale alta, dilo antes de que te asusten: se repite midiendo cistatina C.</div></div><div class="ex-r"><div class="ex-v nunca">nunca</div><div class="ex-f">anual</div></div></div>
+        <div class="ex"><div class="ex-p nunca"></div><div class="ex-b"><div class="ex-n">Perfil tiroideo (TSH)</div><div class="ex-t">Entra aqu&iacute; por la ca&iacute;da de cabello: el hipotiroidismo es una de las causas que tu propia pesta&ntilde;a de Cabello te dice que descartes.</div></div><div class="ex-r"><div class="ex-v nunca">nunca</div><div class="ex-f">anual</div></div></div>
+        <div class="ex"><div class="ex-p ok"></div><div class="ex-b"><div class="ex-n">Biometr&iacute;a hem&aacute;tica</div><div class="ex-t">La base de cualquier chequeo. Anemia, infecci&oacute;n, plaquetas.</div></div><div class="ex-r"><div class="ex-v ok">hace 4 m</div><div class="ex-f">14 may 2026</div></div></div>
+        <div class="ex"><div class="ex-p vence"></div><div class="ex-b"><div class="ex-n">Testosterona total y libre</div><div class="ex-t">Se mide <b>en ayuno y antes de las 10 am</b>, cuando est&aacute; m&aacute;s alta. A otra hora el resultado no significa lo mismo.</div></div><div class="ex-r"><div class="ex-v vence">vence en 1 m</div><div class="ex-f">2 oct 2025</div></div></div>
+        <div class="ex"><div class="ex-p ok"></div><div class="ex-b"><div class="ex-n">PSA</div><div class="ex-t">A tu edad todav&iacute;a no toca &mdash; salvo que empieces dutasteride.</div></div><div class="ex-r"><div class="ex-v ok">no aplica</div><div class="ex-f">desde los 45</div></div></div>
+
+        <div class="aviso">
+          <div class="aviso-k">&#9873; Conexi&oacute;n con tu pesta&ntilde;a de Cabello</div>
+          <div class="aviso-t">Si alguna vez arrancas el <b>dutasteride t&oacute;pico</b> que tienes en la lista de Cabello, el PSA deja de ser opcional: ese f&aacute;rmaco <b>reduce el valor del PSA a la mitad</b>. Necesitas una medici&oacute;n ANTES de empezar, o el resultado de dentro de unos a&ntilde;os no se podr&aacute; interpretar.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col">
+      <div class="card">
+        <div class="card-h"><div class="card-t"><span class="b"></span>Peso y composici&oacute;n</div><div class="card-x">1 registro</div></div>
+        <div class="pw">
+          <div><div class="pw-v">77<span class="pw-u"> kg</span></div></div>
+          <div class="pw-d">&mdash;</div>
+          <div class="pw-r"><div class="pw-k">Meta de masa muscular</div><div class="pw-n">82 kg</div></div>
+        </div>
+        <div class="barra"><i style="width:62%"></i><span>77 KG &middot; IMC 24.3</span><em>meta 82 kg</em></div>
+        <div class="hito"><span>72 kg &middot; inicio</span><span>+5 kg para la meta</span></div>
+        <div class="nota">Con <b>un solo registro</b> no hay gr&aacute;fica que dibujar: en lugar de una l&iacute;nea con un punto, la barra dice d&oacute;nde est&aacute;s entre el inicio y la meta. La curva aparece sola al tercer pesaje. <b>Te toca pesarte:</b> mismo d&iacute;a de la semana, en ayuno, despu&eacute;s del ba&ntilde;o.</div>
+      </div>
+
+      <div class="card">
+        <div class="card-h"><div class="card-t"><span class="b"></span>Tu botiqu&iacute;n</div><div class="card-x">se te acaba en&hellip;</div></div>
+        <div class="med"><div class="med-b" style="background:var(--ok)"></div><div><div class="med-n">Prote&iacute;na Whey</div><div class="med-s">2 kg &middot; 25-30 g cuando faltan</div></div><div class="med-r"><div class="med-d">74 d&iacute;as</div><div class="med-p">$336/mes</div></div></div>
+        <div class="med"><div class="med-b" style="background:var(--am)"></div><div><div class="med-n">Creatina monohidratada</div><div class="med-s">300 g &middot; 5 g todos los d&iacute;as</div></div><div class="med-r"><div class="med-d lo">12 d&iacute;as</div><div class="med-p">$200/mes</div></div></div>
+        <div class="med"><div class="med-b" style="background:var(--agua)"></div><div><div class="med-n">Omega 3</div><div class="med-s">120 c&aacute;psulas &middot; 2 al d&iacute;a</div></div><div class="med-r"><div class="med-d">41 d&iacute;as</div><div class="med-p">$225/mes</div></div></div>
+        <div class="med"><div class="med-b" style="background:var(--pm)"></div><div><div class="med-n">Magnesio (glicinato)</div><div class="med-s">120 c&aacute;psulas &middot; 2 antes de dormir</div></div><div class="med-r"><div class="med-d">38 d&iacute;as</div><div class="med-p">$200/mes</div></div></div>
+        <div class="med"><div class="med-b" style="background:var(--teal)"></div><div><div class="med-n">Multivitam&iacute;nico</div><div class="med-s">90 tabletas &middot; 1 al d&iacute;a</div></div><div class="med-r"><div class="med-d">63 d&iacute;as</div><div class="med-p">$117/mes</div></div></div>
+        <div class="med"><div class="med-b" style="background:var(--gris)"></div><div><div class="med-n">Vitamina D3</div><div class="med-s">120 c&aacute;psulas &middot; 1 al d&iacute;a</div></div><div class="med-r"><div class="med-d">96 d&iacute;as</div><div class="med-p">$55/mes</div></div></div>
+        <div class="med-tot"><div class="med-tot-l">Costo mensual de tus suplementos</div><div class="med-tot-v">$1,133</div></div>
+        <div class="nota">Es m&aacute;s que tu gimnasio y tu plan de datos <b>juntos</b>. Los d&iacute;as salen de la dosis diaria contra el tama&ntilde;o del bote, no de una estimaci&oacute;n: la creatina se te acaba en 12.</div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="foot">
+    <div class="card">
+      <div class="card-h"><div class="card-t"><span class="b"></span>Bienestar de la semana</div><div class="card-x">&aacute;nimo y molestias</div></div>
+      <div class="sem">
+        <div class="sd"><div class="sd-l">Lun</div><div class="sd-c">&#128578;</div><div class="sd-v">BIEN</div></div>
+        <div class="sd hoy"><div class="sd-l">Mar</div><div class="sd-c">&#128528;</div><div class="sd-v">HOY</div></div>
+        <div class="sd"><div class="sd-l">Mi&eacute;</div><div class="sd-c">&#183;</div><div class="sd-v">&mdash;</div></div>
+        <div class="sd"><div class="sd-l">Jue</div><div class="sd-c">&#183;</div><div class="sd-v">&mdash;</div></div>
+        <div class="sd"><div class="sd-l">Vie</div><div class="sd-c">&#183;</div><div class="sd-v">&mdash;</div></div>
+        <div class="sd"><div class="sd-l">S&aacute;b</div><div class="sd-c">&#183;</div><div class="sd-v">&mdash;</div></div>
+        <div class="sd"><div class="sd-l">Dom</div><div class="sd-c">&#183;</div><div class="sd-v">&mdash;</div></div>
+      </div>
+      <div class="rule"><div class="rule-n al">&#33;</div><div class="rule-t"><b>Duermes 5 h 40 entre semana.</b> Es el dato de tu propia rutina, y es el que m&aacute;s pesa en todo lo dem&aacute;s: recuperaci&oacute;n, &aacute;nimo, testosterona y ca&iacute;da de cabello. Ning&uacute;n suplemento de esta lista compensa esa hora que falta.</div></div>
+      <div class="rule"><div class="rule-n">&#183;</div><div class="rule-t"><b>28 h a la semana al volante</b> y jornada completa de pantalla. De ah&iacute; salen las 6 pausas de postura del d&iacute;a, no de una regla gen&eacute;rica.</div></div>
+      <div class="leg"><span><i style="background:#2fe0a0"></i>Bien</span><span><i style="background:#ff9f45"></i>Regular</span><span><i style="background:#ff7a6b"></i>Mal</span><span><i style="background:rgba(255,255,255,.16)"></i>Sin registrar</span></div>
+    </div>
+
+    <div class="card">
+      <div class="card-h"><div class="card-t"><span class="b"></span>Lo que s&iacute; mueve la aguja</div><div class="card-x">5</div></div>
+      <div class="rule"><div class="rule-n">1</div><div class="rule-t"><b>Hazte la Vitamina D antes de seguir tomando D3.</b> Es el &uacute;nico suplemento de tu lista cuyo efecto depende de un n&uacute;mero que no conoces: con nivel normal, 4000 UI diarias sobran.</div></div>
+      <div class="rule"><div class="rule-n">2</div><div class="rule-t"><b>La creatina no necesita fase de carga.</b> 5 g al d&iacute;a y ya; la carga solo adelanta el efecto una semana y suele caer mal al est&oacute;mago.</div></div>
+      <div class="rule"><div class="rule-n">3</div><div class="rule-t"><b>P&eacute;sate el mismo d&iacute;a, a la misma hora, en ayuno.</b> El peso oscila 1-2 kg dentro del mismo d&iacute;a: comparar pesajes a horas distintas es medir agua, no progreso.</div></div>
+      <div class="rule"><div class="rule-n">4</div><div class="rule-t"><b>Un an&aacute;lisis sin fecha no sirve.</b> El valor solo significa algo comparado con el anterior. Por eso esta pantalla guarda la fecha antes que el n&uacute;mero.</div></div>
+      <div class="rule"><div class="rule-n">5</div><div class="rule-t"><b>El magnesio va de noche por una raz&oacute;n.</b> Mejora la calidad del sue&ntilde;o y reduce calambres; tomarlo por la ma&ntilde;ana desperdicia la mitad de para lo que lo compraste.</div></div>
+    </div>
+  </div>
+
+</div>
+</div>
+</x-dc>
+</body>
+</html>

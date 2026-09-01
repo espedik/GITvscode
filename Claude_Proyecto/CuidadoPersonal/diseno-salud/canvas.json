@@ -1,0 +1,12 @@
+{
+  "artboards": [
+    { "file": "Main.dc.html",  "x": 0,    "y": 0, "w": 1440, "h": 1450, "title": "Salud — escritorio" },
+    { "file": "Movil.dc.html", "x": 1560, "y": 0, "w": 390,  "h": 1830, "title": "Salud — móvil 390px" }
+  ],
+  "annotations": [
+    { "id": "nota-brief", "x": 0, "y": -230, "w": 700, "text": "El eje aquí es doble: HOY (suplementos, agua, pausas) y ESTE AÑO (exámenes, peso). La app actual es un archivador vacío — 'Mi lista: 0 suplementos' cuando tu rutina diaria ya te hace tomar seis, con dosis." },
+    { "id": "nota-ex", "x": 1010, "y": 1490, "w": 430, "text": "Exámenes deja de ser una tabla vacía y pasa a ser una lista de lo que TE TOCA, con por qué y en qué condiciones. Incluye dos cosas que nadie te dice: la creatina sube la creatinina sin daño renal, y el dutasteride parte el PSA a la mitad." },
+    { "id": "nota-movil", "x": 1560, "y": 1870, "w": 390, "text": "En móvil los tres bloques de HOY se apilan dentro de una sola tarjeta, y el chequeo del año agrupa los tres análisis que van en la misma extracción." }
+  ],
+  "launch": { "view": "canvas" }
+}

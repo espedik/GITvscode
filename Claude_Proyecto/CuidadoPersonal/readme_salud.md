@@ -4,6 +4,60 @@
 
 **Ubicación actual**: vive en `CuidadoPersonal/salud.html` (movida aquí el 2026-07-29 desde `Salud/salud.html`, sin cambios de código — solo de carpeta). Se abre normalmente **incrustada** dentro de `CuidadoPersonal/cuidadopersonal.html` → subtab **🥗 Cuidado de la Salud**, vía `<iframe src="salud.html">`. También puede abrirse directo (`CuidadoPersonal/salud.html`) sin pasar por el shell — funciona igual, es 100% autocontenida.
 
+## Dashboard — "Tu salud, hoy y este año"
+
+**El eje es doble: HOY y ESTE AÑO.** Adán, 2026-09-01: *"ahora mejorame la de cuidado de la
+salud, hazme un diseño con mismas especificaciones"* — las de Skincare y Cabello.
+
+Antes eran cuatro tarjetas de cifra y dos paneles medio vacíos: el 40% de una pantalla de
+1600px, con "sin registrar" en casi todo. Y sobre todo, **la app pedía datos que el proyecto ya
+tenía**: Suplementos arrancaba con *"Mi lista: 0"* mientras `RUTINA_TASKS` le hace tomar seis
+todos los días con sus dosis.
+
+### Qué hay en la pantalla
+
+1. **Tres cifras**: racha de suplementos (días con TODOS tomados), peso con IMC, y exámenes
+   pendientes.
+2. **Hoy** (`.sd-hero`), lo primero: los suplementos partidos en **con el desayuno** / **antes de
+   dormir**, con la dosis y la condición al lado, marcables con un clic. Y el bloque de **agua y
+   pausas**, con los vasos clicables. El pie de la noche lee el registro de Mi Comida
+   (`misalud_v1.alimentos`) y dice si la whey toca hoy: *"llevas 142 g de 186, faltan 44"*. Sin
+   registro no se inventa nada.
+3. **Tu chequeo del año** (`sdChequeoHtml`, compartido con la pestaña de Exámenes): los 9
+   análisis con su estado — nunca / vence / al día / no aplica —, en qué condiciones se toman
+   (ayuno, antes de las 10 am) y **por qué le tocan a él**. Tocar el estado marca que se lo hizo
+   hoy; se guarda en `S.chequeo`, aparte de `S.examenes` (que guarda VALORES).
+4. **Peso y composición**: con menos de 3 registros no dibuja curva — una línea con un punto es
+   peor que ninguna — sino una barra entre el peso inicial y la meta. La misma barra sustituye a
+   las dos gráficas en la pestaña de Peso mientras haya menos de 3 pesajes.
+5. **Tu botiquín** (`sdBotiquinHtml`, compartido con Suplementos): lo que dura cada envase y
+   **cuántos días quedan** — en rojo bajo 14 —, más el **costo mensual: $1,130**.
+6. **Bienestar de la semana** y **las 5 reglas que sí mueven la aguja**.
+
+### Los datos vienen del maestro
+
+`salud.html` carga `../Dashboard/datos-maestros.js` y usa `CIFRAS.SUPLEMENTOS` y `CIFRAS.CHEQUEO`.
+
+- **La lista se siembra sola** en `init()`, con bandera `S.seedSupl` de una sola vez: si Adán
+  borra un suplemento, no vuelve. Mismo patrón que el pesaje inicial.
+- **El catálogo dejó de estar escrito a mano**: `suppCatalog()` lo arma desde el maestro, y el
+  texto de la whey resuelve `{{proteinaMeta}}` con `CIFRAS.texto()` en vez de llevar "186g/día"
+  escrito.
+- El **control 13** del verificador comprueba nombre **y momento** contra `RUTINA_TASKS`.
+
+### Dos detalles que costó encontrar
+
+**`activa` no era global.** Era una `const` local dentro de otra función, así que
+`RENDERS[activa]?.()` lanzaba `ReferenceError` desde cualquier `onclick`: los clics guardaban en
+`localStorage` pero la pantalla no se repintaba. Ahora todo pasa por `sdRepintar()`, que busca la
+sección con clase `.active`. De paso `init()` arranca con `nav('dashboard')` en vez de llamar al
+render directo, para que la sección quede marcada.
+
+**El terciario no se leía.** `--text3` daba **2.35:1 en oscuro** y 3.64:1 en claro, medido
+componiendo toda la pila de capas translúcidas. Con texto de 9-10px eso no se lee. Subido a
+`#7a8699` y `#6f7286`: **4.74:1 en los dos temas** en el peor caso. Afecta a las 8 secciones,
+para bien.
+
 ## Navegación (sidebar propio de este archivo)
 
 - **📊 Dashboard** — **rediseñado el 2026-08-02** (ver abajo): ya no muestra calorías/macros/comidas de hoy (eso vive en Comida). Ahora resume lo que Salud sí administra: peso actual (con tendencia vs. el registro anterior), vasos de agua, pausas activas de hoy, suplementos tomados hoy, próxima cita médica, y un mini-resumen de bienestar (ánimo de hoy + dolor/molestia reciente). Incluye un banner fijo arriba con link directo a `comida.html` para lo de nutrición.

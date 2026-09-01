@@ -133,6 +133,7 @@ pero el nombre de la variable se queda corto.
 | Marcador | Valor hoy | Para qué |
 |---|---|---|
 | `{{escuelaAleman}}` | Cenlex Santo Tomás | Clases presenciales desde el 25-ago-2026 |
+| `{{proteinaMeta}}` | 186 | Meta diaria de proteína. La citan la rutina (whey de la noche) y la ficha de whey de Salud |
 | `{{kapitelAleman}}` | 10 | **Filtra el slide de Alemán del Dashboard**: con un capítulo puesto muestra solo sus lecciones en vez de rotar por las 40. En `null` vuelve la rotación completa |
 
 ### La rutina diaria
@@ -217,6 +218,31 @@ lo tiene en cuenta al comparar días.
 `LISTA_COMPRAS.cabello` es un **getter sobre esta lista**, con los días incluidos, más los 2
 tratamientos de receta al final — que no son de mostrador y no forman parte de la rutina.
 
+### Los suplementos y el chequeo médico
+
+`SUPLEMENTOS` — los **6** que toma de verdad, con dosis, momento y tamaño de envase. Estaban
+escritos a mano en TRES sitios (las subtareas de `RUTINA_TASKS`, `LISTA_COMPRAS.suplementos` y
+el catálogo de `salud.html`) y coincidían de casualidad.
+
+| Suplemento | Momento | Dosis | Envase | Dura | Al mes |
+|---|---|---|---|---|---|
+| Vitamina D3 | AM | 2000-4000 UI | 120 cáps | ~120 d | $55 |
+| Multivitamínico | AM | 1 tableta | 90 tabs | ~90 d | $117 |
+| Omega 3 | AM | 1-2 g EPA+DHA | 120 cáps | ~60 d | $225 |
+| Creatina monohidratada | AM | 5 g | 300 g | ~60 d | $200 |
+| Magnesio (glicinato) | PM | 200-400 mg | 120 cáps | ~60 d | $200 |
+| Proteína Whey | PM | 25-30 g, 4 días/sem | 2000 g | ~117 d | $333 |
+
+**$1,130 al mes** — más que el gimnasio y el plan de datos juntos. `LISTA_COMPRAS.suplementos`
+es un getter sobre esta lista.
+
+`CHEQUEO` — los **9 análisis** que le tocan y por qué. Varios entran por algo que ya está en el
+proyecto: la vitamina D porque toma D3 a diario, la creatinina porque toma creatina (**la sube en
+sangre sin daño renal**), el tiroideo porque la caída de cabello lo pide descartar, y el PSA
+porque el **dutasteride tópico de la lista de Cabello reduce su valor a la mitad** — hace falta
+una medición antes de empezarlo. `desdeEdad` desactiva un examen hasta esa edad;
+`mesesVigencia` es cada cuánto se repite.
+
 ### El calendario · constantes
 
 `CALENDARIO` — lo que el calendario del Dashboard necesita y **no puede derivar solo**. Se pide
@@ -254,6 +280,7 @@ Es lo que evita que el calendario se congele como se congeló la vieja barra de 
 | `Coach/Coach.html` | `<script src="../Dashboard/datos-maestros.js">` | Hallazgos, tabla de deudas, checklists (`aplicarDOM`) |
 | `Finanzas/Finanzas.html` | `<script src="../Dashboard/datos-maestros.js">` | **Es la fuente**: `seedData()` lee `CIFRAS.DEUDAS_SEED` |
 | `CuidadoPersonal/cuidadopersonal.html` | `<script src="../Dashboard/datos-maestros.js">` | Skincare y Cabello: `CIFRAS.RUTINA_PIEL`, `CIFRAS.RUTINA_PELO` y las horas desde `CIFRAS.rutina()` |
+| `CuidadoPersonal/salud.html` | `<script src="../Dashboard/datos-maestros.js">` | `CIFRAS.SUPLEMENTOS` (siembra la lista y el botiquín) y `CIFRAS.CHEQUEO` |
 
 El Dashboard es donde vive el archivo porque es el centro del proyecto, y ahí ya estaban
 `aleman-data.js` y `entrevistas-data.js`.
@@ -376,6 +403,10 @@ Qué revisa:
   pueden separarse sin que cambie ninguna cifra. Compara sin distinguir mayúsculas — "crema sin
   enjuague X" y "Crema sin enjuague X" son el mismo producto — y busca por el nombre completo,
   porque "CeraVe" a secas también casa con el limpiador facial de Skincare.
+
+- **Lo mismo para `SUPLEMENTOS`, y además el MOMENTO** (control 13). Los de la mañana tienen que
+  aparecer en una subtarea de la rutina de la mañana y los de la noche en una de la noche: mover
+  el magnesio a la mañana en un sitio y no en el otro no mueve ninguna cifra.
 
 Los dos últimos nacieron el 28-ago-2026, del `day` del auto. Un `day` equivocado no mueve ninguna
 cifra, así que ningún control anterior podía verlo. El 9 encontró de paso un segundo caso que
