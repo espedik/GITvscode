@@ -477,3 +477,33 @@ maqueta. `.ej-tag` en claro bajó a 4.34:1 sobre el panel nuevo y sube a `--text
 **La lección**: comparar dos diseños leyendo sus hojas de estilo no funciona.
 Renderizar los dos y restar propiedades calculadas encuentra en un minuto lo que
 tres lecturas no vieron.
+
+### "Cómo se hace" pasa de 28 ejercicios a los 62, y de 3 pasos a 5 (2026-09-01)
+
+Adán: *"llena con mejor descripcion el como se hace"*. Dos huecos medidos:
+
+- **34 de los 62 ejercicios no tenían `pasos`.** Su ficha caía al respaldo —el
+  `cue` partido en frases—, que describe *qué* es el ejercicio, no *cómo* se hace.
+  Entre ellos había fundamentales: peso muerto, sentadilla con barra, dominadas,
+  press militar, hip thrust, la rueda abdominal y los cinco de natación.
+- **36 de los que sí tenían se quedaban en tres líneas** (~180 caracteres), casi
+  todos los de brazo, core y cardio.
+
+Ahora los 62 tienen técnica y error propio: **285 pasos, media de 4,6 por
+ejercicio, ninguno por debajo de cuatro.** Todos siguen el mismo orden, que es
+lo que los hace escaneables mientras entrena:
+
+1. cómo te montas (dónde te pones, cómo agarras, cómo ajustas la máquina);
+2. qué aprietas antes de moverte (abdomen, glúteo, omóplatos, mirada);
+3. la fase de trabajo, con el punto de parada explícito;
+4. la vuelta, con el tempo cuando importa ("baja contando dos segundos");
+5. el detalle que casi todos se saltan — el rango real, la respiración, o el
+   ajuste que decide si el ejercicio sirve ("aprieta un segundo arriba: sin esa
+   pausa la pantorrilla no trabaja").
+
+Los `cue` se quedan como están: son el texto de la tarjeta de la biblioteca y el
+respaldo si algún día se añade un ejercicio sin pasos.
+
+Comprobado abriendo **las 62 fichas** en el navegador: entre 4 y 5 pasos cada una,
+las 62 con su error, sin ninguna vacía y sin errores de consola. A 390 px ningún
+paso se corta ni desborda.
