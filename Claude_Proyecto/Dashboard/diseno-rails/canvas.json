@@ -1,0 +1,14 @@
+{
+  "artboards": [
+    { "file": "Main.dc.html", "x": 0, "y": 0, "w": 1100, "h": 720, "title": "Nombres a la vista" },
+    { "file": "DireccionB.dc.html", "x": 1220, "y": 0, "w": 1100, "h": 720, "title": "Dirección B — escalera y anillo" },
+    { "file": "DireccionC.dc.html", "x": 610, "y": 900, "w": 1100, "h": 720, "title": "Dirección C — un solo rail" }
+  ],
+  "annotations": [
+    { "id": "nota-problema", "x": 0, "y": -210, "w": 560, "text": "El fallo de hoy: los dos rails son ristras de círculos iguales con emoji dentro. A 13px la bandera de Alemán sale como \"DE\", el diente y el carrito no se distinguen, y el activo se pinta con un degradado que TAPA su propio icono. En el rail derecho, navegar y configurar pesan lo mismo: nueve botones idénticos en fila." },
+    { "id": "nota-main", "x": 1220, "y": -210, "w": 520, "text": "Nombres a la vista: iconos SVG y el nombre de cada pantalla al lado, así no hay que adivinar ni esperar el tooltip. El activo se marca con un filete lateral en vez de taparse. A la derecha, tres bloques separados: estado (reloj y sync), navegar (flechas, play y la regla de 8 pasos) y sistema (menú, pantalla completa, ajustes, ayuda, tema)." },
+    { "id": "nota-b", "x": 0, "y": 760, "w": 560, "text": "Dirección B: la izquierda es una escalera numerada con una barra de recorrido —se ve en cuál vas y cuánto falta— y la derecha se compacta en un anillo donde el arco es el tiempo hasta el próximo cambio de slide. Más HUD; a cambio, ocupa algo más de ancho a la izquierda." },
+    { "id": "nota-c", "x": 610, "y": 1660, "w": 560, "text": "Dirección C: los dos rails se funden en uno a la derecha y el lado izquierdo queda libre entero para el slide. Es la que más pantalla devuelve al contenido, pero el rail pasa a 202px de ancho fijo y siempre visible, en vez de dos columnas estrechas que se desvanecen." }
+  ],
+  "launch": { "view": "canvas" }
+}

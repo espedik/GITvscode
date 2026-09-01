@@ -102,14 +102,16 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 .slides{position:fixed;top:58px;left:0;right:0;bottom:0;overflow:hidden}
 .slide{
   position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
-  /* padding horizontal: max(6vw, 120px) — no solo 6vw. Las barras HUD fijas de los lados
+  /* padding: el lado izquierdo bajó a 4vw cuando el rail de ese lado desapareció
+     (2026-08-31); a la derecha se mantiene el piso, que es donde vive el rail.
+     Nota vieja, aún válida para el lado derecho: las barras HUD fijas de los lados
      (.hud-side-left/-right) tienen ancho FIJO en px (el reloj hace la derecha ~85px), así que
      un padding solo proporcional al viewport se queda corto en anchos de laptop comunes
      (1366px medido: el contenido invadía 19px por debajo del HUD derecho) — el piso fijo
      garantiza espacio libre sin importar el ancho, y en pantallas grandes el 6vw ya es mayor
      de todos modos, así que no se pierde espacio ahí. 2026-08-09, Adán: "las cosas se ven muy
      amontonadas". */
-  padding:5vh max(6vw,120px);opacity:0;transform:scale(1.045);filter:blur(10px);
+  padding:5vh max(6vw,230px) 5vh max(4vw,42px);opacity:0;transform:scale(1.045);filter:blur(10px);
   transition:opacity 1.3s cubic-bezier(.22,.61,.36,1), transform 1.8s cubic-bezier(.22,.61,.36,1), filter 1.3s ease;
   pointer-events:none; overflow:hidden;
 }
@@ -593,18 +595,46 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
    franja horizontal abajo, dividida en 2 mitades L/R; Adán pidió explícitamente que cada
    mitad fuera su propia barra vertical pegada al borde izquierdo/derecho de la pantalla,
    no una fila horizontal abajo) ────────────────────────────────────────────────────── */
-.hud-side{position:fixed;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;align-items:center;gap:10px;z-index:50;opacity:.55;transition:opacity .3s;background:var(--bar2);border:1px solid rgba(var(--ov),.08);backdrop-filter:blur(14px);border-radius:26px;padding:16px 10px}
+/* Un rail, a la derecha. Alto casi completo en vez de centrado: dentro caben las 8
+   pantallas con su nombre, y el lado izquierdo queda libre para el slide. */
+.hud-side{position:fixed;z-index:50;display:flex;flex-direction:column;gap:11px;
+  background:var(--bar2);border:1px solid rgba(var(--ov),.08);backdrop-filter:blur(14px);
+  border-radius:18px;padding:14px 12px;opacity:.72;transition:opacity .3s}
 .hud-side:hover{opacity:1}
-.hud-side-left{left:16px}
-.hud-side-right{right:16px}
-.hud-clock{font-family:var(--mono);font-size:12px;color:var(--text2);letter-spacing:.02em;text-align:center;line-height:1.4}
+.hud-side-right{right:16px;top:70px;bottom:16px;width:198px;box-sizing:border-box}
+.hud-estado{display:flex;align-items:baseline;justify-content:space-between;gap:8px}
+.hud-pantallas{display:flex;flex-direction:column;gap:1px;flex:1;min-height:0;overflow-y:auto;
+  scrollbar-gutter:stable}
+/* Una pantalla: icono + nombre. El activo NO se tapa con un degradado encima — se marca
+   con fondo y color, que era el fallo del rail viejo. */
+.hud-nav-btn{display:grid;grid-template-columns:28px minmax(0,1fr);gap:9px;align-items:center;
+  padding:5px 8px;border-radius:9px;border:1px solid transparent;background:transparent;
+  cursor:pointer;font-family:inherit;text-align:left;color:var(--text3);transition:background .15s}
+.hud-nav-btn:hover{background:rgba(var(--ov),.06);color:var(--text2)}
+.hud-nav-btn.on{background:rgba(var(--g-rgb),.11);border-color:rgba(var(--g-rgb),.32);color:var(--g)}
+.hud-nav-ico{display:flex;align-items:center;justify-content:center;width:28px;height:28px}
+.hud-nav-ico svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.7;
+  stroke-linecap:round;stroke-linejoin:round}
+.hud-nav-t{font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--text2)}
+.hud-nav-btn.on .hud-nav-t{color:var(--text);font-weight:600}
+.hud-play{display:flex;flex-direction:column;gap:7px;padding-top:10px;
+  border-top:1px solid rgba(var(--ov),.09)}
+.hud-play-row{display:flex;align-items:center;gap:7px}
+.hud-play-btn{flex:1;background:rgba(var(--g-rgb),.13);border-color:rgba(var(--g-rgb),.4);color:var(--g)}
+.hud-sistema{display:flex;align-items:center;justify-content:space-between;gap:5px;
+  padding-top:10px;border-top:1px solid rgba(var(--ov),.09)}
+.hud-clock{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:19px;
+  font-weight:700;color:var(--text);line-height:1;letter-spacing:-.02em}
 .dots{display:flex;flex-direction:column;gap:7px}
 .dot-btn{width:8px;height:8px;border-radius:50%;background:rgba(var(--ov),.22);border:none;cursor:pointer;transition:all .25s;padding:0}
 .dot-btn.on{height:22px;width:8px;background:linear-gradient(180deg,var(--g),var(--p));box-shadow:0 0 10px rgba(0,232,122,.5)}
-.hud-btn{width:30px;height:30px;border-radius:50%;border:1px solid rgba(var(--ov),.12);background:rgba(var(--ov),.04);color:var(--text);cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0}
-.hud-btn:hover{background:rgba(var(--ov),.12)}
-.hud-nav-btn.on{background:linear-gradient(180deg,var(--g),var(--p));border-color:transparent;box-shadow:0 0 10px rgba(0,232,122,.4)}
-.hud-sync{font-size:9px;color:var(--text3)}
+.hud-btn{width:30px;height:30px;border-radius:9px;border:1px solid rgba(var(--ov),.09);
+  background:rgba(var(--ov),.03);color:var(--text2);cursor:pointer;display:flex;
+  align-items:center;justify-content:center;transition:all .2s;flex-shrink:0}
+.hud-btn:hover{background:rgba(var(--ov),.1);color:var(--text)}
+.hud-btn svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.7;
+  stroke-linecap:round;stroke-linejoin:round}
+.hud-sync{font-family:var(--mono);font-size:8.5px;color:var(--text3);white-space:nowrap}
 
 /* ─── TIMELINE DE ACTIVIDADES (Mi Día) — detalle por bloque. Padding/tipografía reducidos el
    2026-08-08 al fusionarse con Hero: la línea de tiempo ya no es la única pieza de contenido del
@@ -2278,9 +2308,17 @@ button.hp-lec:active{transform:translateY(0)}
      el README) son un layout de escritorio — en táctil/angosto no caben pegadas a los bordes
      laterales sin robarle ancho al contenido, así que ambas bajan al centro-abajo, apiladas
      una encima de la otra, en fila horizontal (como el HUD original antes del rediseño). */
-  .hud-side{position:fixed;top:auto;left:50%;right:auto;transform:translateX(-50%);flex-direction:row;flex-wrap:wrap;justify-content:center;max-width:92vw;padding:8px 14px;border-radius:20px}
-  .hud-side-left{bottom:76px}
-  .hud-side-right{bottom:12px}
+  /* El rail es una COLUMNA de 198px pegada al borde derecho en escritorio; aquí no cabe
+     sin robarle ancho al contenido, así que baja al centro-abajo en fila. La lista de
+     pantallas se va con él: esa navegación ya vive en el menú ☰ y en la barra de Apps. */
+  .hud-side-right{top:auto;bottom:12px;left:50%;right:auto;transform:translateX(-50%);
+    width:auto;max-width:92vw;flex-direction:row;flex-wrap:wrap;align-items:center;
+    justify-content:center;gap:9px;padding:8px 14px;border-radius:20px;opacity:1}
+  .hud-pantallas{display:none}
+  .hud-estado{flex-direction:row;align-items:baseline;gap:7px}
+  .hud-play,.hud-sistema{flex-direction:row;align-items:center;gap:7px;padding-top:0;border-top:0}
+  .hud-play{flex-direction:row}
+  .hud-progress{display:none}
   .dots{flex-direction:row}
   .dot-btn.on{width:22px;height:8px;background:linear-gradient(90deg,var(--g),var(--p))}
   .hud-clock{text-align:left}
@@ -2338,7 +2376,6 @@ button.hp-lec:active{transform:translateY(0)}
      y fullscreen/atajos son de teclado, no de celular).
    · los botones suben de 30 a 40px: 30px es menor al mínimo táctil recomendado. */
 @media(max-width:820px){
-  .hud-side-left{display:none}
   .hud-side-right{
     top:auto;bottom:0;left:0;right:0;transform:none;
     max-width:none;                     /* la regla de ≤1024px lo dejaba en 92vw (359 de 390) */
@@ -2354,12 +2391,14 @@ button.hp-lec:active{transform:translateY(0)}
      En la barra inferior sí los queremos: cambiar de pantalla es justo lo que Adán reportó
      como incómodo, y con la barra abajo son los 2 botones que más se van a tocar. */
   .hud-side-right .hud-slidenav{display:flex}
-  .hud-side-right .hud-clock,
+  .hud-side-right .hud-estado,
   .hud-side-right .hud-progress,
   .hud-side-right #fsBtn,
   .hud-side-right button[onclick="toggleSettings()"],
   .hud-side-right button[onclick="toggleHelp()"]{display:none}
-  .hud-side-right .hud-btn{width:40px;height:40px;font-size:16px}
+  .hud-side-right .hud-btn{width:40px;height:40px}
+  .hud-side-right .hud-btn svg{width:19px;height:19px}
+  .hud-side-right .hud-play-btn{flex:none;width:40px}
   /* Los puntos de pantalla pasan a horizontal y se convierten en el indicador de
      posición de la barra — es lo único que dice "vas en la pantalla 4 de 10". */
   .hud-side-right .dots{flex-direction:row;gap:6px;align-items:center}
@@ -3115,19 +3154,39 @@ button.ct-cat:hover{background:rgba(var(--ov),.07)}
 
 </div>
 
-<div class="hud-side hud-side-left" id="hudNav"></div>
-<div class="hud-side hud-side-right">
-  <div class="hud-clock"><span id="hudClock">—</span><br><span class="hud-sync" id="hudSync"></span></div>
-  <div class="hud-progress"><div class="hud-progress-fill" id="hudProgressFill"></div></div>
-  <button class="hud-btn" onclick="toggleMenu()" title="Menú (M)" id="menuBtn">☰</button>
-  <button class="hud-btn hud-slidenav" onclick="prevSlide()" title="Anterior (←)">‹</button>
-  <div class="dots hud-slidenav" id="dots"></div>
-  <button class="hud-btn hud-slidenav" onclick="nextSlide()" title="Siguiente (→)">›</button>
-  <button class="hud-btn" id="playBtn" onclick="togglePlay()" title="Pausar/Reanudar (Espacio)">▶</button>
-  <button class="hud-btn" onclick="toggleFullscreen()" title="Pantalla completa (F)" id="fsBtn">⛶</button>
-  <button class="hud-btn" onclick="toggleSettings()" title="Ajustes">⚙️</button>
-  <button class="hud-btn" onclick="toggleHelp()" title="Atajos de teclado (?)">?</button>
-  <button class="hud-btn" id="theme-toggle-btn" onclick="toggleTheme()" title="Cambiar tema claro/oscuro" aria-label="Cambiar tema claro/oscuro">🌙</button>
+<!-- Un SOLO rail, a la derecha (diseño aprobado el 2026-08-31). Antes eran dos columnas
+     de círculos con emoji: la de la izquierda se comía 120px de contenido y su icono activo
+     quedaba tapado por el degradado que lo marcaba. Ahora las pantallas viven aquí con su
+     nombre al lado, y el slide se queda con todo el lado izquierdo. -->
+<div class="hud-side hud-side-right" id="hudRail">
+  <div class="hud-estado">
+    <span class="hud-clock" id="hudClock">—</span>
+    <span class="hud-sync" id="hudSync"></span>
+  </div>
+  <div class="hud-pantallas" id="hudNav"></div>
+  <div class="hud-play">
+    <div class="hud-play-row">
+      <button class="hud-btn hud-slidenav" onclick="prevSlide()" title="Anterior (←)" aria-label="Anterior">
+        <svg viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"></path></svg></button>
+      <button class="hud-btn hud-play-btn" id="playBtn" onclick="togglePlay()" title="Pausar/Reanudar (Espacio)" aria-label="Pausar o reanudar">
+        <svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z" fill="currentColor" stroke="none"></path></svg></button>
+      <button class="hud-btn hud-slidenav" onclick="nextSlide()" title="Siguiente (→)" aria-label="Siguiente">
+        <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"></path></svg></button>
+    </div>
+    <div class="hud-progress"><div class="hud-progress-fill" id="hudProgressFill"></div></div>
+  </div>
+  <div class="hud-sistema">
+    <button class="hud-btn" onclick="toggleMenu()" title="Menú (M)" id="menuBtn" aria-label="Menú">
+      <svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"></path></svg></button>
+    <button class="hud-btn" onclick="toggleFullscreen()" title="Pantalla completa (F)" id="fsBtn" aria-label="Pantalla completa">
+      <svg viewBox="0 0 24 24"><path d="M4 9V5.5A1.5 1.5 0 0 1 5.5 4H9M15 4h3.5A1.5 1.5 0 0 1 20 5.5V9M20 15v3.5a1.5 1.5 0 0 1-1.5 1.5H15M9 20H5.5A1.5 1.5 0 0 1 4 18.5V15"></path></svg></button>
+    <button class="hud-btn" onclick="toggleSettings()" title="Ajustes" aria-label="Ajustes">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.6 1.6 0 0 0 .3 1.8 2 2 0 1 1-2.7 2.7 1.6 1.6 0 0 0-1.8.3 1.6 1.6 0 0 0-1 1.5 2 2 0 1 1-4 0 1.6 1.6 0 0 0-1-1.5 1.6 1.6 0 0 0-1.8.3 2 2 0 1 1-2.7-2.7 1.6 1.6 0 0 0 .3-1.8 1.6 1.6 0 0 0-1.5-1 2 2 0 1 1 0-4 1.6 1.6 0 0 0 1.5-1 1.6 1.6 0 0 0-.3-1.8 2 2 0 1 1 2.7-2.7 1.6 1.6 0 0 0 1.8.3 1.6 1.6 0 0 0 1-1.5 2 2 0 1 1 4 0 1.6 1.6 0 0 0 1 1.5 1.6 1.6 0 0 0 1.8-.3 2 2 0 1 1 2.7 2.7 1.6 1.6 0 0 0-.3 1.8 1.6 1.6 0 0 0 1.5 1 2 2 0 1 1 0 4 1.6 1.6 0 0 0-1.5 1z"></path></svg></button>
+    <button class="hud-btn" onclick="toggleHelp()" title="Atajos de teclado (?)" aria-label="Atajos de teclado">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"></circle><path d="M9.6 9.3a2.5 2.5 0 0 1 4.9.7c0 1.7-2.5 2.5-2.5 2.5"></path><path d="M12 17h.01"></path></svg></button>
+    <button class="hud-btn" id="theme-toggle-btn" onclick="toggleTheme()" title="Cambiar tema claro/oscuro" aria-label="Cambiar tema claro/oscuro">
+      <svg viewBox="0 0 24 24"><path d="M20.5 14.3A8.5 8.5 0 0 1 9.7 3.5a8.5 8.5 0 1 0 10.8 10.8z"></path></svg></button>
+  </div>
 </div>
 
 <!-- ─── MENÚ DE NAVEGACIÓN ─── -->
@@ -9673,15 +9732,28 @@ function renderHabilidadesBase(){
 // esta solo las llama en secuencia.
 function renderDiaHero(){ renderDia(); renderHero(); }
 const RENDERS=[renderDiaHero,renderCoach,renderMetasSlide,renderHabilidadesBase,renderSkills,renderListaCompras,renderAleman,renderEntrevista];
+// `ico` sigue aquí porque el menú ☰ lo usa; el rail pinta HUD_ICO, que son trazos y no
+// emoji — a 16px la bandera de Alemán se veía como las letras "DE" y la hélice del ADN
+// como una mancha. `corto` es el nombre que cabe en los 198px del rail.
 const SLIDE_MENU_META=[
-  {ico:'🕐',n:'Mi Día · JARVIS'},
-  {ico:'🪙',n:'Coach · Plan Maestro'},
-  {ico:'🎯',n:'Mis Metas'},
-  {ico:'🧬',n:'Habilidades Base'},
-  {ico:'🧠',n:'Habilidades'},
-  {ico:'🛒',n:'Lista de Compras'},
-  {ico:'🇩🇪',n:'Alemán del día'},
-  {ico:'💻',n:'Entrevista del día'},
+  {ico:'🕐',n:'Mi Día · JARVIS',      corto:'Mi Día'},
+  {ico:'🪙',n:'Coach · Plan Maestro', corto:'Coach'},
+  {ico:'🎯',n:'Mis Metas',            corto:'Metas'},
+  {ico:'🧬',n:'Habilidades Base',     corto:'Habilidades base'},
+  {ico:'🧠',n:'Habilidades',          corto:'Habilidades'},
+  {ico:'🛒',n:'Lista de Compras',     corto:'Lista de compras'},
+  {ico:'🇩🇪',n:'Alemán del día',    corto:'Alemán'},
+  {ico:'💻',n:'Entrevista del día', corto:'Entrevistas'},
+];
+const HUD_ICO=[
+  '<circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path>',
+  '<circle cx="12" cy="12" r="8.5"></circle><path d="M12 7.5v9M9.8 9.8h4.4M9.8 14.2h4.4"></path>',
+  '<circle cx="12" cy="12" r="8.5"></circle><circle cx="12" cy="12" r="4"></circle>',
+  '<path d="M7 4c0 5 10 6 10 11M17 4c0 5-10 6-10 11M7 20h10M7 4h10"></path>',
+  '<circle cx="7" cy="8" r="2.4"></circle><circle cx="17" cy="7" r="2.4"></circle><circle cx="12" cy="17" r="2.4"></circle><path d="M8.9 9.6l2.2 5M15.3 8.9l-2.3 6"></path>',
+  '<path d="M3 5h2.2l2.3 10.5h9.6L19 8H6.2"></path><circle cx="9.5" cy="19" r="1.4"></circle><circle cx="16.5" cy="19" r="1.4"></circle>',
+  '<circle cx="12" cy="12" r="9"></circle><path d="M3 12h18"></path><path d="M12 3a15 15 0 0 1 0 18a15 15 0 0 1 0-18z"></path>',
+  '<rect x="2.5" y="4" width="19" height="16" rx="2"></rect><path d="M7.5 10l2.2 2.2-2.2 2.2M12 15h4.5"></path>'
 ];
 
 // ══════════════════════════════════════════════════════════════════════════
@@ -9723,7 +9795,11 @@ function toggleRemember(){
 }
 
 function buildDots(){
-  document.getElementById('dots').innerHTML=Array.from({length:N},(_,i)=>
+  // Los puntos vivían entre las flechas del rail viejo; el rail nuevo enseña el avance con
+  // la barra de progreso y la pantalla activa resaltada en su lista. Se conserva la función
+  // porque paintDots() la acompaña y el contenedor podría volver.
+  const c=document.getElementById('dots'); if(!c) return;
+  c.innerHTML=Array.from({length:N},(_,i)=>
     `<button class="dot-btn" onclick="goTo(${i})" aria-label="Pantalla ${i+1}"></button>`).join('');
 }
 function paintDots(){document.querySelectorAll('.dot-btn').forEach((d,i)=>d.classList.toggle('on',i===cur));}
@@ -9731,7 +9807,10 @@ function paintDots(){document.querySelectorAll('.dot-btn').forEach((d,i)=>d.clas
 // abrir el menú ☰. Mismos íconos/nombres que SLIDE_MENU_META, para no duplicar esa lista.
 function buildHudNav(){
   document.getElementById('hudNav').innerHTML=SLIDE_MENU_META.map((it,i)=>
-    `<button class="hud-btn hud-nav-btn" onclick="goTo(${i})" title="${it.n}" aria-label="${it.n}">${it.ico}</button>`).join('');
+    `<button class="hud-nav-btn" onclick="goTo(${i})" title="${it.n}" aria-label="${it.n}">
+      <span class="hud-nav-ico"><svg viewBox="0 0 24 24">${HUD_ICO[i]||''}</svg></span>
+      <span class="hud-nav-t">${it.corto}</span>
+    </button>`).join('');
 }
 function paintHudNav(){document.querySelectorAll('.hud-nav-btn').forEach((b,i)=>b.classList.toggle('on',i===cur));}
 

@@ -278,6 +278,30 @@ anclas internas de Coach. Ver Regla 1 de `CLAUDE.md`.
 Los bloques con `fijo:true` (ALTEN) salen en la línea de tiempo y cuentan para "ahora/siguiente",
 pero no llevan checkbox ni suman al progreso.
 
+### El rail de control
+
+Adán, 2026-08-31: *"estas partes también las quiero cambio de diseño futurista y entendible"*.
+Diseñado en canvas en tres direcciones; eligió la de un solo rail.
+
+Eran **dos columnas de círculos con emoji**, una a cada lado. Los mismos fallos de la barra de
+apps, repetidos: a 13px la bandera de Alemán salía como `DE` y la hélice del ADN como una
+mancha, y encima el slide activo se marcaba con un degradado verde-morado **encima del propio
+icono**, así que el que estabas viendo era el único que no se distinguía.
+
+Ahora hay **un rail, a la derecha**, con cuatro bloques separados por filete: el reloj y el sync,
+las ocho pantallas con icono de trazo y **su nombre al lado**, los controles de reproducción con
+su barra de avance, y la fila de sistema (menú, pantalla completa, ajustes, ayuda, tema). El
+activo se marca con fondo y color, sin taparse.
+
+**El lado izquierdo se lo queda el contenido.** El piso del padding izquierdo bajó de 120 a 42px
+—existía solo para esquivar el rail que ya no está— y el derecho subió a 230px, que es lo que
+ocupa el rail con su margen: sin eso tapaba la tercera columna del tablero. Comprobado slide por
+slide en los ocho: ninguno queda por debajo.
+
+**En pantallas estrechas** el rail baja al centro-abajo como barra horizontal y la lista de
+pantallas se va con él —esa navegación ya vive en el menú ☰ y en la barra de Apps—, dejando los
+cinco controles que se tocan de verdad a 40px cada uno.
+
 ### La barra de apps
 
 Adán, 2026-08-31: *"dame un mejor diseño futurista de la parte de arriba de las apps"*.

@@ -1,0 +1,105 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap">
+  <style>
+    body { margin: 0; background: #05050a; font-family: 'Inter', -apple-system, sans-serif; }
+    a { color: #00e0c0; } a:hover { color: #5df0dc; }
+    .mono { font-family: 'Space Grotesk', monospace; font-variant-numeric: tabular-nums; letter-spacing: -0.02em; }
+    .lbl { font-family: 'Space Grotesk', monospace; font-size: 8px; font-weight: 700;
+           letter-spacing: 0.18em; text-transform: uppercase; color: #6f7288; }
+    /* Escalón de la escalera: número + nombre. El recorrido se lee como una lista, no como
+       ocho perlas sueltas, y se ve cuánto falta. */
+    .esc { display: grid; grid-template-columns: 18px minmax(0, 1fr); gap: 9px; align-items: center;
+           padding: 6px 9px; border-radius: 9px; border: 1px solid transparent; }
+    .esc .n { font-family: 'Space Grotesk', monospace; font-size: 9.5px; font-weight: 700; color: #5a5d72; }
+    .esc .t { font-size: 11px; color: #8589a8; white-space: nowrap; }
+    .b { width: 32px; height: 32px; border-radius: 9px; display: flex; align-items: center;
+         justify-content: center; border: 1px solid rgba(255,255,255,0.07);
+         background: rgba(255,255,255,0.025); color: #8589a8; }
+    .b svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.7;
+             stroke-linecap: round; stroke-linejoin: round; }
+  </style>
+</helmet>
+
+<div style="width: 1100px; height: 720px; background:
+     radial-gradient(600px 320px at 50% 40%, rgba(0,224,192,0.04), transparent 65%), #05050a;
+     position: relative; overflow: hidden; border-radius: 14px; border: 1px solid rgba(255,255,255,0.1)">
+
+  <span style="position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+        font-size: 12px; color: #3a3d4e; letter-spacing: 0.2em">EL SLIDE VA AQUÍ</span>
+
+  <!-- ══ IZQUIERDA · la escalera de pantallas ══ -->
+  <div style="position: absolute; left: 16px; top: 50%; transform: translateY(-50%);
+       display: flex; gap: 11px; padding: 15px 13px; border-radius: 18px;
+       background: rgba(10,10,20,0.62); border: 1px solid rgba(255,255,255,0.08); backdrop-filter: blur(14px)">
+
+    <!-- la barra de recorrido, a la izquierda de todo -->
+    <div style="width: 3px; border-radius: 2px; background: rgba(255,255,255,0.09); position: relative; flex-shrink: 0">
+      <span style="position: absolute; top: 0; left: 0; width: 100%; height: 13%; border-radius: 2px;
+            background: #00e87a; box-shadow: 0 0 9px rgba(0,232,122,0.7)"></span>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 2px">
+      <span class="lbl" style="padding: 0 9px 4px">Recorrido · 1 de 8</span>
+      <div class="esc" style="background: rgba(0,232,122,0.11); border-color: rgba(0,232,122,0.32)">
+        <span class="n" style="color: #00e87a">01</span><span class="t" style="color: #f4f4f8; font-weight: 600">Mi Día</span>
+      </div>
+      <div class="esc"><span class="n">02</span><span class="t">Coach</span></div>
+      <div class="esc"><span class="n">03</span><span class="t">Metas</span></div>
+      <div class="esc"><span class="n">04</span><span class="t">Habilidades base</span></div>
+      <div class="esc"><span class="n">05</span><span class="t">Habilidades</span></div>
+      <div class="esc"><span class="n">06</span><span class="t">Lista de compras</span></div>
+      <div class="esc"><span class="n">07</span><span class="t">Alemán</span></div>
+      <div class="esc"><span class="n">08</span><span class="t">Entrevistas</span></div>
+    </div>
+  </div>
+
+  <!-- ══ DERECHA · un bloque compacto ══ -->
+  <div style="position: absolute; right: 16px; top: 50%; transform: translateY(-50%);
+       display: flex; flex-direction: column; align-items: center; gap: 11px; padding: 14px 11px;
+       border-radius: 18px; background: rgba(10,10,20,0.62); border: 1px solid rgba(255,255,255,0.08);
+       backdrop-filter: blur(14px)">
+
+    <!-- reloj como anillo: el arco es lo que falta para el próximo cambio de slide -->
+    <div style="position: relative; width: 58px; height: 58px">
+      <svg viewBox="0 0 64 64" style="width: 100%; height: 100%; transform: rotate(-90deg)">
+        <circle cx="32" cy="32" r="27" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="3"></circle>
+        <circle cx="32" cy="32" r="27" fill="none" stroke="#00e87a" stroke-width="3" stroke-linecap="round"
+                stroke-dasharray="52 170"></circle>
+      </svg>
+      <span style="position: absolute; inset: 0; display: flex; flex-direction: column;
+            align-items: center; justify-content: center; gap: 1px">
+        <span class="mono" style="font-size: 14px; font-weight: 700; color: #f4f4f8; line-height: 1">23:38</span>
+        <span class="mono" style="font-size: 7.5px; color: #6f7288">80 min</span>
+      </span>
+    </div>
+
+    <!-- navegación en cruz, compacta -->
+    <div style="display: flex; align-items: center; gap: 5px">
+      <span class="b" style="width: 26px; height: 26px"><svg viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"></path></svg></span>
+      <span class="b" style="background: rgba(0,232,122,0.13); border-color: rgba(0,232,122,0.4); color: #00e87a">
+        <svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z" fill="currentColor" stroke="none"></path></svg></span>
+      <span class="b" style="width: 26px; height: 26px"><svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"></path></svg></span>
+    </div>
+
+    <div style="width: 100%; height: 1px; background: rgba(255,255,255,0.09)"></div>
+
+    <div style="display: flex; flex-direction: column; gap: 6px">
+      <span class="b"><svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"></path></svg></span>
+      <span class="b"><svg viewBox="0 0 24 24"><path d="M4 9V5.5A1.5 1.5 0 0 1 5.5 4H9M15 4h3.5A1.5 1.5 0 0 1 20 5.5V9M20 15v3.5a1.5 1.5 0 0 1-1.5 1.5H15M9 20H5.5A1.5 1.5 0 0 1 4 18.5V15"></path></svg></span>
+      <span class="b"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.6 1.6 0 0 0 .3 1.8 2 2 0 1 1-2.7 2.7 1.6 1.6 0 0 0-1.8.3 1.6 1.6 0 0 0-1 1.5 2 2 0 1 1-4 0 1.6 1.6 0 0 0-1-1.5 1.6 1.6 0 0 0-1.8-.3 2 2 0 1 1-2.7-2.7 1.6 1.6 0 0 0 .3-1.8 1.6 1.6 0 0 0-1.5-1 2 2 0 1 1 0-4 1.6 1.6 0 0 0 1.5-1 1.6 1.6 0 0 0-.3-1.8 2 2 0 1 1 2.7-2.7 1.6 1.6 0 0 0 1.8.3 1.6 1.6 0 0 0 1-1.5 2 2 0 1 1 4 0 1.6 1.6 0 0 0 1 1.5 1.6 1.6 0 0 0 1.8-.3 2 2 0 1 1 2.7 2.7 1.6 1.6 0 0 0-.3 1.8 1.6 1.6 0 0 0 1.5 1 2 2 0 1 1 0 4 1.6 1.6 0 0 0-1.5 1z"></path></svg></span>
+      <span class="b"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"></circle><path d="M9.6 9.3a2.5 2.5 0 0 1 4.9.7c0 1.7-2.5 2.5-2.5 2.5"></path><path d="M12 17h.01"></path></svg></span>
+      <span class="b"><svg viewBox="0 0 24 24"><path d="M20.5 14.3A8.5 8.5 0 0 1 9.7 3.5a8.5 8.5 0 1 0 10.8 10.8z"></path></svg></span>
+    </div>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>
