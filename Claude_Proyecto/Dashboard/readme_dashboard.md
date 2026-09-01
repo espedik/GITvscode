@@ -288,7 +288,7 @@ apps, repetidos: a 13px la bandera de Alemán salía como `DE` y la hélice del 
 mancha, y encima el slide activo se marcaba con un degradado verde-morado **encima del propio
 icono**, así que el que estabas viendo era el único que no se distinguía.
 
-Ahora hay **un rail, a la derecha**, con cuatro bloques separados por filete: el reloj y el sync,
+Ahora hay **un rail, a la izquierda**, con cuatro bloques separados por filete: el reloj y el sync,
 las ocho pantallas con icono de trazo y **su nombre al lado**, los controles de reproducción con
 su barra de avance, y la fila de sistema (menú, pantalla completa, ajustes, ayuda, tema). El
 activo se marca con fondo y color, sin taparse.
@@ -302,11 +302,14 @@ abre. El estado se recuerda en `dash-rail-abierto`.
 
 Los ocho iconos de 38px caben incluso a 720px de alto, que es la ventana más baja medida.
 
-**El hueco sigue al rail.** El padding derecho del slide es una variable (`--pad-rail`) que cambia
+**El hueco sigue al rail.** El padding del lado del rail es una variable (`--pad-rail`) que cambia
 con la clase `rail-on` del `body`: 88px plegado, 230px abierto. Así el contenido pasa de 1306 a
-**1400px** —su máximo— en cuanto el rail se cierra. El piso izquierdo bajó de 120 a 42px, porque
-existía solo para esquivar el rail que ya no está de ese lado. Comprobado slide por slide en los
-ocho: ninguno queda por debajo del rail, ni abierto ni cerrado.
+**1400px** —su máximo— en cuanto el rail se cierra. El otro lado se queda en 42px, que es lo que
+pide el aire, no un obstáculo que esquivar.
+
+Comprobado slide por slide en los ocho, plegado y abierto, a 1600, 1366 y 1280×720: ninguno queda
+por debajo del rail. Ojo al medirlo — `getBoundingClientRect()` incluye el `scale` de la animación
+de entrada y da falsos solapes de ~20px; hay que mirar el borde de layout o esperar a que termine.
 
 En pantallas estrechas no hay tirador: ahí el rail ya es la barra inferior y no hay nada que
 plegar.

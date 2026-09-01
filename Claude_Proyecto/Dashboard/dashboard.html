@@ -113,7 +113,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
      amontonadas". */
   /* El hueco de la derecha depende de si el rail está abierto (198+32) o plegado (44+28):
      con el rail cerrado el contenido se lleva casi toda la pantalla. */
-  padding:5vh var(--pad-rail,max(6vw,76px)) 5vh max(4vw,42px);opacity:0;transform:scale(1.045);filter:blur(10px);
+  padding:5vh max(4vw,42px) 5vh var(--pad-rail,max(6vw,88px));opacity:0;transform:scale(1.045);filter:blur(10px);
   transition:opacity 1.3s cubic-bezier(.22,.61,.36,1), transform 1.8s cubic-bezier(.22,.61,.36,1), filter 1.3s ease;
   pointer-events:none; overflow:hidden;
 }
@@ -605,22 +605,22 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 .hud-side:hover{opacity:1}
 body{--pad-rail:max(6vw,88px)}
 body.rail-on{--pad-rail:max(6vw,230px)}
-.hud-side-right{right:16px;top:70px;bottom:16px;width:198px;box-sizing:border-box;
+.hud-rail{left:16px;top:70px;bottom:16px;width:198px;box-sizing:border-box;
   transition:width .22s ease,padding .22s ease}
 /* PLEGADO por defecto: una tira de 44px que solo dice en qué pantalla estás y deja pausar.
    Adán, 2026-09-01: "escóndelo y ya cuando haga click a esa sección, que aparezca todo". */
-.hud-side-right.mini{width:56px;padding:12px 8px;align-items:center}
-.hud-side-right.mini .hud-estado,
-.hud-side-right.mini .hud-progress,
-.hud-side-right.mini .hud-sistema,
-.hud-side-right.mini .hud-nav-t,
-.hud-side-right.mini .hud-slidenav{display:none}
-.hud-side-right.mini .hud-play{border-top:0;padding-top:0}
+.hud-rail.mini{width:56px;padding:12px 8px;align-items:center}
+.hud-rail.mini .hud-estado,
+.hud-rail.mini .hud-progress,
+.hud-rail.mini .hud-sistema,
+.hud-rail.mini .hud-nav-t,
+.hud-rail.mini .hud-slidenav{display:none}
+.hud-rail.mini .hud-play{border-top:0;padding-top:0}
 /* Plegado se ven las OCHO, solo que sin nombre: sigue sirviendo para saltar de pantalla
    sin abrir nada (Adán, 2026-09-01: "cuando esté así, muéstrame todos los iconos"). */
-.hud-side-right.mini .hud-nav-btn{display:flex;justify-content:center;padding:6px;
+.hud-rail.mini .hud-nav-btn{display:flex;justify-content:center;padding:6px;
   grid-template-columns:none;width:38px}
-.hud-side-right.mini .hud-pantallas{flex:none;overflow:visible;align-items:center;gap:2px}
+.hud-rail.mini .hud-pantallas{flex:none;overflow:visible;align-items:center;gap:2px}
 /* El tirador: el botón que abre y cierra, siempre arriba del todo. */
 .hud-tirador{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;
   padding:5px 0;border:0;border-radius:8px;background:rgba(var(--ov),.05);color:var(--text3);
@@ -628,8 +628,8 @@ body.rail-on{--pad-rail:max(6vw,230px)}
 .hud-tirador:hover{background:rgba(var(--ov),.11);color:var(--text2)}
 .hud-tirador svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:1.9;
   stroke-linecap:round;stroke-linejoin:round;transition:transform .22s}
-.hud-side-right.mini .hud-tirador svg{transform:rotate(180deg)}
-.hud-side-right.mini .hud-tirador span{display:none}
+.hud-rail.mini .hud-tirador svg{transform:rotate(180deg)}
+.hud-rail.mini .hud-tirador span{display:none}
 .hud-estado{display:flex;align-items:baseline;justify-content:space-between;gap:8px}
 .hud-pantallas{display:flex;flex-direction:column;gap:1px;flex:1;min-height:0;overflow-y:auto;
   scrollbar-gutter:stable}
@@ -2339,15 +2339,15 @@ button.hp-lec:active{transform:translateY(0)}
   /* El rail es una COLUMNA de 198px pegada al borde derecho en escritorio; aquí no cabe
      sin robarle ancho al contenido, así que baja al centro-abajo en fila. La lista de
      pantallas se va con él: esa navegación ya vive en el menú ☰ y en la barra de Apps. */
-  .hud-side-right{top:auto;bottom:12px;left:50%;right:auto;transform:translateX(-50%);
+  .hud-rail{top:auto;bottom:12px;left:50%;right:auto;transform:translateX(-50%);
     width:auto;max-width:92vw;flex-direction:row;flex-wrap:wrap;align-items:center;
     justify-content:center;gap:9px;padding:8px 14px;border-radius:20px;opacity:1}
   .hud-pantallas{display:none}
   /* Aqui el rail YA es una barra inferior: no hay nada que plegar. */
   .hud-tirador{display:none}
-  .hud-side-right.mini{width:auto;padding:8px 14px}
-  .hud-side-right.mini .hud-sistema,
-  .hud-side-right.mini .hud-slidenav{display:flex}
+  .hud-rail.mini{width:auto;padding:8px 14px}
+  .hud-rail.mini .hud-sistema,
+  .hud-rail.mini .hud-slidenav{display:flex}
   .hud-estado{flex-direction:row;align-items:baseline;gap:7px}
   .hud-play,.hud-sistema{flex-direction:row;align-items:center;gap:7px;padding-top:0;border-top:0}
   .hud-play{flex-direction:row}
@@ -2409,7 +2409,7 @@ button.hp-lec:active{transform:translateY(0)}
      y fullscreen/atajos son de teclado, no de celular).
    · los botones suben de 30 a 40px: 30px es menor al mínimo táctil recomendado. */
 @media(max-width:820px){
-  .hud-side-right{
+  .hud-rail{
     top:auto;bottom:0;left:0;right:0;transform:none;
     max-width:none;                     /* la regla de ≤1024px lo dejaba en 92vw (359 de 390) */
     flex-direction:row;flex-wrap:nowrap;justify-content:center;gap:12px;
@@ -2423,18 +2423,18 @@ button.hp-lec:active{transform:translateY(0)}
   /* ≤1024px oculta .hud-slidenav (‹ · puntos · ›) porque el HUD ahí es un bloque flotante.
      En la barra inferior sí los queremos: cambiar de pantalla es justo lo que Adán reportó
      como incómodo, y con la barra abajo son los 2 botones que más se van a tocar. */
-  .hud-side-right .hud-slidenav{display:flex}
-  .hud-side-right .hud-estado,
-  .hud-side-right .hud-progress,
-  .hud-side-right #fsBtn,
-  .hud-side-right button[onclick="toggleSettings()"],
-  .hud-side-right button[onclick="toggleHelp()"]{display:none}
-  .hud-side-right .hud-btn{width:40px;height:40px}
-  .hud-side-right .hud-btn svg{width:19px;height:19px}
-  .hud-side-right .hud-play-btn{flex:none;width:40px}
+  .hud-rail .hud-slidenav{display:flex}
+  .hud-rail .hud-estado,
+  .hud-rail .hud-progress,
+  .hud-rail #fsBtn,
+  .hud-rail button[onclick="toggleSettings()"],
+  .hud-rail button[onclick="toggleHelp()"]{display:none}
+  .hud-rail .hud-btn{width:40px;height:40px}
+  .hud-rail .hud-btn svg{width:19px;height:19px}
+  .hud-rail .hud-play-btn{flex:none;width:40px}
   /* Los puntos de pantalla pasan a horizontal y se convierten en el indicador de
      posición de la barra — es lo único que dice "vas en la pantalla 4 de 10". */
-  .hud-side-right .dots{flex-direction:row;gap:6px;align-items:center}
+  .hud-rail .dots{flex-direction:row;gap:6px;align-items:center}
   .dot-btn{width:7px;height:7px}
   .dot-btn.on{width:20px;height:7px;background:linear-gradient(90deg,var(--g),var(--p))}
   /* Hueco al final de cada pantalla para que la barra no tape la última línea */
@@ -3191,7 +3191,7 @@ button.ct-cat:hover{background:rgba(var(--ov),.07)}
      de círculos con emoji: la de la izquierda se comía 120px de contenido y su icono activo
      quedaba tapado por el degradado que lo marcaba. Ahora las pantallas viven aquí con su
      nombre al lado, y el slide se queda con todo el lado izquierdo. -->
-<div class="hud-side hud-side-right mini" id="hudRail">
+<div class="hud-side hud-rail mini" id="hudRail">
   <button class="hud-tirador" onclick="toggleRail()" title="Abrir o cerrar el panel"
           aria-label="Abrir o cerrar el panel de control" id="railTirador">
     <svg viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"></path></svg><span>Ocultar</span>
