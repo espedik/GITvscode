@@ -146,6 +146,39 @@ Medido a 390 px: 30 renglones de alto idéntico, 0 elementos desbordados, primer
 como 1.
 
 
+## Citas en CDMX
+
+Adán, 2026-09-01: *"un hombre siempre debe saber a donde ir a cenar, comer, citas interesantes"*.
+
+Es una **habilidad más** de Habilidades Base y la única atada a una ciudad, a propósito: un
+consejo genérico sobre citas no sirve de nada a las ocho de la noche en la Roma. Nueve pasos, de
+los cuales seis son listas de lugares:
+
+| Paso | Lugares |
+|---|---|
+| Primera cita — café y salida fácil | 4 |
+| Comer bien de día | 4 |
+| Cenar sin quedar mal | 5 |
+| Cuando la ocasión lo pide | 2 |
+| Copas — la segunda parte | 4 |
+| Citas que no son comer | 6 |
+
+Los otros tres no llevan lugares y son los que hacen que la lista sirva: **cómo elegir** según qué
+cita es, **la logística** (reservar, confirmar el mismo día, llegar antes, tener un plan B a cinco
+minutos) y el `✅ Ya lo dominas cuando…` de siempre.
+
+**Cada lugar enlaza a una BÚSQUEDA de Google Maps por nombre**, no a unas coordenadas ni a un
+`place_id`: así no hay que inventarse un identificador que no se puede verificar, y el enlace
+sigue llevando al sitio correcto si el local se muda. Toda la fila es el enlace, con el pin a la
+derecha para que se vea que lleva a algún lado.
+
+**Lo que no se escribió a propósito**: precios y horarios. Cambian solos y un dato viejo es peor
+que ninguno. Sí está lo de *"hay que reservar con semanas"* en Pujol, Quintonil, Rosetta, Máximo,
+Contramar y la Casa Barragán, porque es justo lo que arruina la noche cuando no lo sabes.
+
+Comprobado en dark y light a 1600 y 390px: los 25 lugares aparecen, ninguno con el enlace roto,
+todos con `target="_blank"` y `rel="noopener"`.
+
 ## Mis Metas — "panel de trayectoria"
 
 Rediseño del 2026-08-30 (*"la sección de corto, mediano y largo plazo, dame un diseño futurista y

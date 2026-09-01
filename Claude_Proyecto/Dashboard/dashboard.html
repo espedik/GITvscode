@@ -2212,6 +2212,23 @@ button.hp-lec:active{transform:translateY(0)}
 .md-tucaso-lbl{font-size:9.5px;font-weight:800;letter-spacing:.11em;text-transform:uppercase;color:var(--cy);margin-bottom:5px}
 .md-tucaso-txt{font-size:14px;line-height:1.65;color:var(--text2)}
 .md-paso-list{margin:16px 0 0;padding-left:20px;display:flex;flex-direction:column;gap:8px}
+/* Un lugar de la lista de citas: nombre, zona y para qué sirve, y toda la fila es el
+   enlace a Google Maps. El pin va a la derecha para que se vea que lleva a algún sitio. */
+.md-paso-list li:has(>.mapa){list-style:none;margin-left:-20px}
+.mapa{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 12px;padding:10px 13px;
+  border-radius:11px;background:rgba(var(--ov),.035);border:1px solid rgba(var(--ov),.07);
+  text-decoration:none;transition:background .15s,border-color .15s;position:relative}
+.mapa:hover{background:rgba(var(--ov),.075);border-color:rgba(var(--cy-rgb),.3)}
+.mapa b{font-size:14px;font-weight:700;color:var(--text)}
+.mapa em{font-family:var(--mono);font-style:normal;font-size:10px;font-weight:700;
+  letter-spacing:.08em;text-transform:uppercase;color:var(--cy);align-self:center;
+  padding-right:20px;white-space:nowrap}
+.mapa span{grid-column:1/-1;font-size:12.5px;line-height:1.5;color:var(--text3)}
+.mapa::after{content:'';position:absolute;top:13px;right:13px;width:11px;height:11px;
+  background:currentColor;color:var(--text3);
+  -webkit-mask:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'><path d='M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z'/><circle cx='12' cy='10' r='3'/></svg>") center/contain no-repeat;
+          mask:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'><path d='M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z'/><circle cx='12' cy='10' r='3'/></svg>") center/contain no-repeat}
+.mapa:hover::after{color:var(--cy)}
 .md-paso-list li{font-size:14px;line-height:1.65;color:var(--text2)}
 .md-paso-list li::marker{color:var(--cy)}
 .md-paso-img{display:block;width:auto;max-width:min(100%,520px);max-height:260px;object-fit:cover;border-radius:12px;margin:18px 0 0}
@@ -9092,6 +9109,10 @@ const HABILIDADES_BASE=[
   {id:'dinero',   ico:'💰', t:'Generar, administrar y hacer crecer dinero', img:'https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?w=2400&q=85&auto=format&fit=crop'},
   {id:'manejar',  ico:'🚗', t:'Manejar todo tipo de vehículos',      img:'https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?w=2400&q=85&auto=format&fit=crop'},
   {id:'recuperar',ico:'🧘', t:'Saber recuperarte',                   img:'https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=2400&q=85&auto=format&fit=crop'},
+  // 2026-09-01, pedido de Adán: "un hombre siempre debe saber a donde ir a cenar, comer,
+  // citas interesantes". Es la única de la lista atada a una ciudad, y a propósito: un
+  // consejo genérico sobre citas no sirve de nada a las 8 de la noche en la Roma.
+  {id:'citas',    ico:'🍷', t:'Saber a dónde llevar a alguien en CDMX',  img:'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=2400&q=85&auto=format&fit=crop'},
   // 7 nuevas (2026-08-11, pedido explícito: "en coach hay una seccion de habilidades de valor,
   // añade todo eso en el dashboard, del mismo estilo en que estan ya y muy completa") — mismo
   // catálogo de Coach.html → #habilidades-valor ("🎩 Habilidades de un Hombre de Valor") — esa
@@ -9126,6 +9147,56 @@ const HABILIDADES_BASE=[
   {id:'meditar', ico:'🧘', t:'Saber meditar', img:'https://upload.wikimedia.org/wikipedia/commons/thumb/b/be/Man-3224891.jpg/1920px-Man-3224891.jpg'}
 ];
 const HABILIDAD_DETALLE={
+  // ── Citas en CDMX (2026-09-01) ────────────────────────────────────────────────
+  // Los lugares son reales y conocidos; cada uno enlaza a una BÚSQUEDA de Google Maps por
+  // nombre, no a coordenadas: así el enlace sigue siendo correcto si el local se muda y no
+  // hace falta inventarse un place_id. Lo que NO se escribe aquí son precios ni horarios:
+  // cambian solos y un dato viejo es peor que ninguno. Lo de "hay que reservar" sí está,
+  // porque es lo que arruina la noche si no lo sabes.
+  citas:{titulo:'Saber a dónde llevar a alguien en CDMX',frase:'Improvisar el lugar es la forma más barata de arruinar una buena noche. Tener tres opciones listas cuesta una tarde y sirve durante años.',pasos:[
+      {t:'Primero: qué cita es',d:'El error de siempre es elegir el lugar por lo bueno que es, no por lo que la cita necesita. Una primera cita en un restaurante de mantel largo pone a los dos a actuar; una quinta cita en un café de banqueta dice que no te esforzaste. Tres preguntas antes de reservar nada:',list:['<b>¿Cuánto se conocen?</b> Menos confianza → más corto y con salida fácil. Un café se termina en 40 minutos sin que nadie quede mal; una cena de tres tiempos, no.','<b>¿Hay que hablar o hay que hacer algo?</b> Si la conversación aún cuesta, un plan con algo que mirar —museo, lucha, mercado— quita presión: el silencio deja de ser incómodo porque hay dónde poner los ojos.','<b>¿Qué tan ruidoso lo aguantas?</b> Un lugar bonito donde hay que gritar no es un lugar bonito. Si quieres conocer a alguien, el ruido es el enemigo, no la comida.']},
+
+      {t:'Primera cita — café y salida fácil',d:'Corto, de día o tarde temprano, y en un sitio donde nadie se sienta evaluado. Si va bien, se alarga o se camina a otro lado; si no, se acaba sin drama.',list:[
+        '<a class="mapa" href="https://www.google.com/maps/search/?api=1&amp;query=Panadería+Rosetta+Roma+Norte+CDMX" target="_blank" rel="noopener"><b>Panadería Rosetta</b><em>Roma Norte</em><span>La concha de rosas que sale en todas las listas. Hay cola, pero avanza rápido y el lugar es pequeño y bonito — perfecto para algo corto.</span></a>',
+        '<a class="mapa" href="https://www.google.com/maps/search/?api=1&amp;query=Café+Nin+Juárez+CDMX" target="_blank" rel="noopener"><b>Café Nin</b><em>Juárez</em><span>De la misma casa que Rosetta pero con mesas de verdad y desayunos. Cuando quieres sentarte a hablar sin prisa.</span></a>',
+        '<a class="mapa" href="https://www.google.com/maps/search/?api=1&amp;query=Blend+Station+Condesa+CDMX" target="_blank" rel="noopener"><b>Blend Station</b><em>Condesa</em><span>Informal, luminoso y con espacio. El sitio al que llevas a alguien que aún no sabes si te cae bien.</span></a>',
+        '<a class="mapa" href="https://www.google.com/maps/search/?api=1&amp;query=Cardinal+Casa+de+Café+Juárez+CDMX" target="_blank" rel="noopener"><b>Cardinal Casa de Café</b><em>Juárez</em><span>Café de especialidad tomado en serio. Si a la otra persona le gusta el café, aquí ganas puntos.</span></a>']},
+
+      {t:'Comer bien de día',d:'La comida es el horario más subestimado para una cita: hay luz, hay menos presión y los mejores lugares de mariscos de la ciudad solo abren a esa hora.',list:[
+        '<a class="mapa" href="https://www.google.com/maps/search/?api=1&amp;query=Contramar+Roma+Norte+CDMX" target="_blank" rel="noopener"><b>Contramar</b><em>Roma Norte</em><span>La institución. Tostada de atún y pescado a la talla, solo a la hora de la comida. Reserva con días — es el sitio más pedido de la ciudad.</span></a>',
+        '<a class="mapa" href="https://www.google.com/maps/search/?api=1&amp;query=Fonda+Fina+Roma+Norte+CDMX" target="_blank" rel="noopener"><b>Fonda Fina</b><em>Roma Norte</em><span>Mexicano contemporáneo, ambiente relajado y precio más amable que sus vecinos.</span></a>',
+        '<a class="mapa" href="https://www.google.com/maps/search/?api=1&amp;query=Mercado+de+San+Juan+Centro+CDMX" target="_blank" rel="noopener"><b>Mercado de San Juan</b><em>Centro</em><span>Para una cita distinta: se come de pie entre puestos, se prueban cosas raras y da conversación sola.</span></a>',
+        '<a class="mapa" href="https://www.google.com/maps/search/?api=1&amp;query=Merotoro+Condesa+CDMX" target="_blank" rel="noopener"><b>Merotoro</b><em>Condesa</em><span>Cocina de Baja California en la Ciudad de México. Producto muy bueno, sala tranquila.</span></a>']},
+
+      {t:'Cenar sin quedar mal',d:'Aquí es donde vale tener tres nombres memorizados. Todos estos aguantan una cita importante sin que parezca que te esforzaste demasiado:',list:[
+        '<a class="mapa" href="https://www.google.com/maps/search/?api=1&amp;query=Máximo+Bistrot+Roma+Norte+CDMX" target="_blank" rel="noopener"><b>Máximo Bistrot</b><em>Roma Norte</em><span>Bistró de producto, carta que cambia. De los que impresionan sin ser solemnes. Reserva.</span></a>',
+        '<a class="mapa" href="https://www.google.com/maps/search/?api=1&amp;query=Rosetta+Roma+Norte+CDMX" target="_blank" rel="noopener"><b>Rosetta</b><em>Roma Norte</em><span>Casona porfiriana con escalera llena de plantas. De los restaurantes más bonitos de la ciudad; reserva con semanas.</span></a>',
+        '<a class="mapa" href="https://www.google.com/maps/search/?api=1&amp;query=Lardo+Condesa+CDMX" target="_blank" rel="noopener"><b>Lardo</b><em>Condesa</em><span>Mediterráneo informal de la misma cocinera que Rosetta. Cuando quieres comer muy bien sin la formalidad.</span></a>',
+        '<a class="mapa" href="https://www.google.com/maps/search/?api=1&amp;query=Blanco+Colima+Roma+Norte+CDMX" target="_blank" rel="noopener"><b>Blanco Colima</b><em>Roma Norte</em><span>Casona restaurada preciosa, varios ambientes. Funciona igual para cenar que para tomar algo.</span></a>',
+        '<a class="mapa" href="https://www.google.com/maps/search/?api=1&amp;query=Terraza+Cha+Cha+Cha+Juarez+CDMX" target="_blank" rel="noopener"><b>Terraza Cha Cha Chá</b><em>Juárez</em><span>Terraza con vista al Ángel de la Independencia. La vista hace la mitad del trabajo.</span></a>']},
+
+      {t:'Cuando la ocasión lo pide',d:'Dos restaurantes que están entre los mejores del mundo, y están en tu ciudad. No son para una primera cita — son para un aniversario o para celebrar algo de verdad. <b>Se reservan con semanas o meses de antelación</b>, y esa es la parte que la gente descubre tarde.',list:[
+        '<a class="mapa" href="https://www.google.com/maps/search/?api=1&amp;query=Pujol+Polanco+CDMX" target="_blank" rel="noopener"><b>Pujol</b><em>Polanco</em><span>El de Enrique Olvera y su mole madre, con años de cocción. Está desde hace años entre los mejores del mundo. Se reserva con meses.</span></a>',
+        '<a class="mapa" href="https://www.google.com/maps/search/?api=1&amp;query=Quintonil+Polanco+CDMX" target="_blank" rel="noopener"><b>Quintonil</b><em>Polanco</em><span>De los primeros puestos de la lista mundial. Cocina mexicana de producto, sala pequeña. Reserva con mucha antelación.</span></a>']},
+
+      {t:'Copas — la segunda parte',d:'CDMX tiene coctelería de nivel mundial, y varios de estos bares aparecen año con año en las listas internacionales. Sirven para alargar una cena o para ser el plan entero.',list:[
+        '<a class="mapa" href="https://www.google.com/maps/search/?api=1&amp;query=Handshake+Speakeasy+Juárez+CDMX" target="_blank" rel="noopener"><b>Handshake Speakeasy</b><em>Juárez</em><span>Llegó al número uno de la lista mundial de bares. Coctelería seria, entrada discreta — hay que reservar.</span></a>',
+        '<a class="mapa" href="https://www.google.com/maps/search/?api=1&amp;query=Licorería+Limantour+Roma+Norte+CDMX" target="_blank" rel="noopener"><b>Licorería Limantour</b><em>Roma Norte</em><span>El bar que puso a CDMX en el mapa de la coctelería. Su Margarita Al Pastor es de las más copiadas del mundo.</span></a>',
+        '<a class="mapa" href="https://www.google.com/maps/search/?api=1&amp;query=Hanky+Panky+Cocktail+Bar+Juárez+CDMX" target="_blank" rel="noopener"><b>Hanky Panky Cocktail Bar</b><em>Juárez</em><span>Speakeasy de verdad: entrada escondida y dirección que te dan al reservar. Es la mitad de la experiencia.</span></a>',
+        '<a class="mapa" href="https://www.google.com/maps/search/?api=1&amp;query=Baltra+Bar+Condesa+CDMX" target="_blank" rel="noopener"><b>Baltra Bar</b><em>Condesa</em><span>Pequeño, de barra, sin ruido. Para hablar de verdad con un buen cóctel enfrente.</span></a>']},
+
+      {t:'Citas que no son comer',d:'Las que se recuerdan. Un museo, una lucha o una trajinera dan conversación sola — y salen mucho más baratas que una cena cara.',list:[
+        '<a class="mapa" href="https://www.google.com/maps/search/?api=1&amp;query=Museo+Jumex+Polanco+CDMX" target="_blank" rel="noopener"><b>Museo Jumex</b><em>Polanco</em><span>Arte contemporáneo en un edificio de David Chipperfield. Se recorre en una hora y deja tema para toda la tarde.</span></a>',
+        '<a class="mapa" href="https://www.google.com/maps/search/?api=1&amp;query=Museo+Nacional+de+Antropología+Chapultepec+CDMX" target="_blank" rel="noopener"><b>Museo Nacional de Antropología</b><em>Chapultepec</em><span>El imprescindible de la ciudad. Enorme — elijan dos salas y no intenten verlo entero.</span></a>',
+        '<a class="mapa" href="https://www.google.com/maps/search/?api=1&amp;query=Casa+Estudio+Luis+Barragán+Tacubaya+CDMX" target="_blank" rel="noopener"><b>Casa Estudio Luis Barragán</b><em>Tacubaya</em><span>Patrimonio de la Humanidad y una de las casas más bonitas que vas a pisar. Solo con reserva anticipada y en visita guiada.</span></a>',
+        '<a class="mapa" href="https://www.google.com/maps/search/?api=1&amp;query=Embarcadero+Nuevo+Nativitas+Xochimilco" target="_blank" rel="noopener"><b>Xochimilco</b><em>Xochimilco</em><span>Trajinera, comida a bordo y varias horas de conversación. Mejor entre semana o temprano: el fin de semana es fiesta.</span></a>',
+        '<a class="mapa" href="https://www.google.com/maps/search/?api=1&amp;query=Arena+México+Doctores+CDMX" target="_blank" rel="noopener"><b>Arena México</b><em>Doctores</em><span>Lucha libre los viernes. Ruidoso, divertidísimo y barátísimo comparado con una cena.</span></a>',
+        '<a class="mapa" href="https://www.google.com/maps/search/?api=1&amp;query=Cineteca+Nacional+Xoco+CDMX" target="_blank" rel="noopener"><b>Cineteca Nacional</b><em>Xoco</em><span>Cine que no llega a las salas comerciales, con librería y terraza para quedarse hablando después.</span></a>']},
+
+      {t:'La logística que nadie ve',d:'Lo que separa una noche cómoda de una noche torpe no es el lugar, es lo de alrededor:',list:['<b>Reserva, siempre.</b> Aunque el lugar acepte walk-ins. Llegar y que te digan "hora y media de espera" con alguien al lado es una forma cara de empezar.','<b>Confirma el mismo día.</b> Muchos restaurantes de CDMX liberan la mesa a los 15 minutos.','<b>Llega antes que la otra persona.</b> Diez minutos. Que nadie tenga que esperar solo en una banqueta.','<b>Ten un plan B a cinco minutos caminando.</b> Cierran sin avisar, se llenan, se va la luz. Un segundo nombre en el bolsillo resuelve la noche.','<b>Estaciona o pide coche desde antes.</b> En Roma, Condesa y Polanco el estacionamiento es el problema real; muchos lugares tienen valet, pregunta al reservar.','<b>Paga sin espectáculo.</b> Pide la cuenta discretamente o déjala resuelta antes. La discusión por la cuenta enfría cualquier noche.']},
+
+      {t:'✅ Ya lo dominas cuando…',d:'No cuando conoces muchos restaurantes, sino cuando se cumplen estas cuatro:',list:['<b>(1)</b> Puedes proponer un lugar concreto en menos de un minuto, sin buscar en el celular.','<b>(2)</b> Tienes tres nombres por categoría — café, cena, copas — y sabes cuál queda cerca de dónde están.','<b>(3)</b> Sabes cuáles hay que reservar con semanas y cuáles aguantan un mismo día.','<b>(4)</b> Has repetido un lugar porque funcionó, no porque no se te ocurrió otro.']},
+    ]},
   // ── 4 habilidades sociales (2026-08-23) ──────────────────────────────────────
   // Mismo formato que las 19 de arriba: fases con técnica concreta, avisos de "error
   // más común" donde el error de verdad descarrila, y un "✅ Ya lo dominas cuando…"
