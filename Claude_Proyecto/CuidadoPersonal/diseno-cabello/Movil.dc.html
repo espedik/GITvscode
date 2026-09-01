@@ -1,0 +1,212 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap">
+  <style>
+    body{margin:0;background:#0a0810;font-family:"Inter",-apple-system,sans-serif}
+    .ca{font-family:"Inter",-apple-system,BlinkMacSystemFont,sans-serif !important}
+    .ca .kpi-v,.ca .h1,.ca .med-d,.ca .med-tot-v,.ca .win-h,.ca .dose-v{font-family:"Space Grotesk","Inter",sans-serif}
+  </style>
+</helmet>
+
+<div class="ca">
+<style>
+.ca{
+  --tx:#f5eff2; --tx2:#aca0a6; --tx3:#8c8188;
+  --line:rgba(255,255,255,.09); --line2:rgba(255,255,255,.05);
+  --panel:rgba(255,255,255,.045); --panel2:rgba(255,255,255,.028);
+  --am:#ff9f45; --agua:#5aa9ff; --pm:#8b7dff; --ok:#2fe0a0; --warn:#ff7a6b; --teal:#1fd6c4;
+  --ink:#0a0810;
+  width:390px; height:1500px; box-sizing:border-box; padding:16px 14px 20px;
+  background:
+    radial-gradient(ellipse 90% 26% at 12% -2%, rgba(255,159,69,.20) 0%, transparent 60%),
+    radial-gradient(ellipse 90% 24% at 92% 20%, rgba(90,169,255,.15) 0%, transparent 60%),
+    radial-gradient(ellipse 100% 22% at 50% 102%, rgba(139,125,255,.13) 0%, transparent 60%),
+    #0a0810;
+  color:var(--tx); overflow:hidden; position:relative;
+}
+.ca *{box-sizing:border-box}
+.eyebrow{font-size:9.5px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--am);display:flex;align-items:center;gap:6px}
+.eyebrow .dot{width:5px;height:5px;border-radius:50%;background:var(--am);box-shadow:0 0 8px var(--am)}
+.h1{font-size:21px;font-weight:800;letter-spacing:-.025em;margin:5px 0 12px}
+
+.kpis{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;margin-bottom:13px}
+.kpi{padding:9px 10px;border-radius:12px;border:1px solid var(--line);background:var(--panel)}
+.kpi-v{font-size:17px;font-weight:800;letter-spacing:-.025em;line-height:1;font-variant-numeric:tabular-nums}
+.kpi-k{font-size:8px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--tx3);margin-top:5px}
+.kpi.a .kpi-v{color:var(--ok)} .kpi.b .kpi-v{color:var(--am)} .kpi.c .kpi-v{color:var(--teal)}
+
+/* la semana, compacta */
+.wk{border-radius:16px;border:1px solid rgba(255,159,69,.28);padding:13px 13px 12px;margin-bottom:12px;
+  background:linear-gradient(165deg,rgba(255,159,69,.10),rgba(255,255,255,.022) 55%)}
+.wk-h{display:flex;align-items:center;justify-content:space-between;margin-bottom:11px}
+.wk-t{font-size:10px;font-weight:800;letter-spacing:.11em;text-transform:uppercase;color:var(--tx2)}
+.wk-x{font-size:9.5px;color:var(--tx3);font-weight:700}
+.wk-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.d{border-radius:10px;border:1px solid var(--line);background:var(--panel2);padding:7px 2px 7px;text-align:center}
+.d.hoy{border-color:var(--am);background:rgba(255,159,69,.16);box-shadow:0 0 0 1px rgba(255,159,69,.32)}
+.d-l{font-size:9px;font-weight:800;color:var(--tx3);text-transform:uppercase}
+.d.hoy .d-l{color:var(--am)}
+.d-i{width:9px;height:9px;border-radius:50%;margin:6px auto 5px}
+.i-pil{background:var(--am)} .i-cer{background:var(--agua)} .i-agua{background:rgba(255,255,255,.16)}
+.d-dosis{display:flex;gap:2px;justify-content:center}
+.dot2{width:6px;height:6px;border-radius:50%;border:1px solid var(--line)}
+.dot2.on{background:var(--ok);border-color:var(--ok)}
+.wk-leg{display:flex;gap:10px;margin-top:10px;padding-top:9px;border-top:1px solid var(--line2);font-size:9px;color:var(--tx3);font-weight:700;flex-wrap:wrap}
+.wk-leg span{display:inline-flex;align-items:center;gap:4px}
+.wk-leg i{width:7px;height:7px;border-radius:50%;display:inline-block}
+
+/* hoy */
+.hoy-card{border-radius:16px;border:1px solid var(--line);background:var(--panel);padding:13px 14px;margin-bottom:12px}
+.card-h{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px}
+.card-t{font-size:10px;font-weight:800;letter-spacing:.11em;text-transform:uppercase;color:var(--tx2);display:flex;align-items:center;gap:6px}
+.card-t .b{width:3px;height:11px;border-radius:2px;background:linear-gradient(180deg,var(--am),var(--agua));flex:none}
+.card-x{font-size:9.5px;color:var(--tx3);font-weight:700;white-space:nowrap}
+.chip{display:inline-block;font-size:8.5px;font-weight:800;padding:2px 7px;border-radius:5px;background:rgba(255,159,69,.16);color:var(--am);border:1px solid rgba(255,159,69,.32)}
+
+.mom{display:flex;align-items:center;gap:8px;margin:12px 0 6px}
+.mom:first-of-type{margin-top:0}
+.mom-i{width:24px;height:24px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:11px;flex:none}
+.mom-i.ducha{background:rgba(90,169,255,.14);border:1px solid rgba(90,169,255,.32)}
+.mom-i.hum{background:rgba(31,214,196,.13);border:1px solid rgba(31,214,196,.3)}
+.mom-i.seco{background:rgba(255,159,69,.15);border:1px solid rgba(255,159,69,.34)}
+.mom-i.noche{background:rgba(139,125,255,.16);border:1px solid rgba(139,125,255,.36)}
+.mom-n{font-size:11.5px;font-weight:800}
+.mom-h{font-size:9.5px;font-weight:800;color:var(--tx3);margin-left:auto;font-variant-numeric:tabular-nums}
+
+.p{display:flex;gap:9px;padding:7px 0;border-bottom:1px solid var(--line2);align-items:flex-start}
+.p:last-child{border-bottom:none}
+.p-n{flex:none;width:20px;height:20px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:9.5px;font-weight:800;
+  background:var(--panel2);border:1px solid var(--line);color:var(--tx2)}
+.p.on .p-n{background:rgba(47,224,160,.16);border-color:rgba(47,224,160,.4);color:var(--ok)}
+.p-t{flex:1;font-size:11px;color:var(--tx2);line-height:1.45}
+.p-t b{color:var(--tx);font-weight:700}
+.p-t em{font-style:normal;color:var(--am);font-weight:700}
+.p-c{flex:none;width:19px;height:19px;border-radius:6px;border:1.5px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:10px;color:transparent}
+.p.on .p-c{background:var(--ok);border-color:var(--ok);color:var(--ink)}
+
+/* minoxidil */
+.mx{border-radius:16px;border:1px solid rgba(255,159,69,.3);background:linear-gradient(165deg,rgba(255,159,69,.12),rgba(255,255,255,.022) 55%);padding:13px 14px;margin-bottom:12px}
+.dose{display:flex;gap:7px;margin-bottom:11px}
+.dosis{flex:1;border-radius:11px;border:1px solid var(--line);background:var(--panel2);padding:9px 10px}
+.dosis.on{border-color:rgba(47,224,160,.38);background:rgba(47,224,160,.09)}
+.dosis-k{font-size:8px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--tx3)}
+.dose-v{font-size:14px;font-weight:800;margin-top:4px;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.dosis.on .dose-v{color:var(--ok)}
+.dosis-s{font-size:8.5px;color:var(--tx3);margin-top:2px}
+.win{border-radius:11px;border:1px solid rgba(90,169,255,.3);background:rgba(90,169,255,.09);padding:10px 11px}
+.win-k{font-size:8.5px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--agua)}
+.win-h{font-size:14px;font-weight:800;margin:4px 0 3px;font-variant-numeric:tabular-nums}
+.win-bar{height:5px;border-radius:4px;background:rgba(255,255,255,.07);overflow:hidden;position:relative;margin:7px 0 6px}
+.win-bar i{position:absolute;left:0;top:0;bottom:0;width:62%;background:linear-gradient(90deg,var(--agua),var(--teal));border-radius:4px}
+.win-t{font-size:10px;color:var(--tx2);line-height:1.45}
+.win-t b{color:var(--tx)}
+
+.med{display:flex;align-items:center;gap:9px;padding:7px 0;border-bottom:1px solid var(--line2)}
+.med:last-of-type{border-bottom:none}
+.med-b{width:5px;height:24px;border-radius:3px;flex:none}
+.med-n{font-size:10.5px;font-weight:700;line-height:1.2}
+.med-s{font-size:8.5px;color:var(--tx3);margin-top:2px}
+.med-r{margin-left:auto;text-align:right;flex:none}
+.med-d{font-size:10px;font-weight:800;font-variant-numeric:tabular-nums;color:var(--tx2)}
+.med-d.lo{color:var(--warn)}
+.med-p{font-size:8.5px;color:var(--tx3);margin-top:1px}
+.med-tot{display:flex;align-items:center;justify-content:space-between;margin-top:9px;padding-top:9px;border-top:1px solid var(--line)}
+.med-tot-l{font-size:9.5px;color:var(--tx2);font-weight:700}
+.med-tot-v{font-size:15px;font-weight:800;color:var(--teal);letter-spacing:-.02em}
+
+.secs{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.sec{padding:11px 12px;border-radius:13px;border:1px solid var(--line);background:var(--panel2);display:flex;align-items:center;gap:9px}
+.sec-i{width:26px;height:26px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;background:rgba(255,255,255,.05);border:1px solid var(--line);color:var(--tx3);flex:none}
+.sec-t{font-size:10.5px;font-weight:800;line-height:1.25}
+.sec-s{font-size:8.5px;color:var(--tx3);margin-top:2px}
+</style>
+
+<div class="eyebrow"><span class="dot"></span>Martes 1 de septiembre</div>
+<div class="h1">Mi cabello</div>
+
+<div class="kpis">
+  <div class="kpi a"><div class="kpi-v">23</div><div class="kpi-k">Racha minox</div></div>
+  <div class="kpi b"><div class="kpi-v">Mes 4</div><div class="kpi-k">Minoxidil</div></div>
+  <div class="kpi c"><div class="kpi-v">$571</div><div class="kpi-k">Al mes</div></div>
+</div>
+
+<div class="wk">
+  <div class="wk-h"><div class="wk-t">Tu semana</div><div class="wk-x">2 Pilexil &middot; 1 CeraVe</div></div>
+  <div class="wk-grid">
+    <div class="d"><div class="d-l">L</div><div class="d-i i-pil"></div><div class="d-dosis"><i class="dot2 on"></i><i class="dot2 on"></i></div></div>
+    <div class="d hoy"><div class="d-l">M</div><div class="d-i i-agua"></div><div class="d-dosis"><i class="dot2 on"></i><i class="dot2"></i></div></div>
+    <div class="d"><div class="d-l">X</div><div class="d-i i-cer"></div><div class="d-dosis"><i class="dot2"></i><i class="dot2"></i></div></div>
+    <div class="d"><div class="d-l">J</div><div class="d-i i-pil"></div><div class="d-dosis"><i class="dot2"></i><i class="dot2"></i></div></div>
+    <div class="d"><div class="d-l">V</div><div class="d-i i-agua"></div><div class="d-dosis"><i class="dot2"></i><i class="dot2"></i></div></div>
+    <div class="d"><div class="d-l">S</div><div class="d-i i-cer"></div><div class="d-dosis"><i class="dot2"></i><i class="dot2"></i></div></div>
+    <div class="d"><div class="d-l">D</div><div class="d-i i-agua"></div><div class="d-dosis"><i class="dot2"></i><i class="dot2"></i></div></div>
+  </div>
+  <div class="wk-leg">
+    <span><i style="background:#ff9f45"></i>Pilexil</span>
+    <span><i style="background:#5aa9ff"></i>CeraVe</span>
+    <span><i style="background:rgba(255,255,255,.16)"></i>Solo agua</span>
+    <span><i style="background:#2fe0a0"></i>Dosis de minoxidil</span>
+  </div>
+</div>
+
+<div class="hoy-card">
+  <div class="card-h"><div class="card-t"><span class="b"></span>Hoy, en orden</div><span class="chip">SIN CHAMP&Uacute;</span></div>
+
+  <div class="mom"><div class="mom-i ducha">&#128703;</div><div class="mom-n">En la ducha</div><div class="mom-h">06:53</div></div>
+  <div class="p on"><div class="p-n">1</div><div class="p-t"><b>Agua tibia</b>, nunca caliente.</div><div class="p-c">&#10003;</div></div>
+  <div class="p on"><div class="p-n">2</div><div class="p-t"><em>Hoy no lleva champ&uacute;.</em> Directo al acondicionador.</div><div class="p-c">&#10003;</div></div>
+  <div class="p on"><div class="p-n">3</div><div class="p-t"><b>Acondicionador Elvive</b>, solo de medios a puntas. Espera 1-2 min y enjuaga.</div><div class="p-c">&#10003;</div></div>
+
+  <div class="mom"><div class="mom-i hum">&#128167;</div><div class="mom-n">Con el pelo h&uacute;medo</div><div class="mom-h">07:05</div></div>
+  <div class="p on"><div class="p-n">1</div><div class="p-t"><b>Seca a toques</b>, sin frotar.</div><div class="p-c">&#10003;</div></div>
+  <div class="p"><div class="p-n">2</div><div class="p-t"><b>Crema sin enjuague</b>, un ch&iacute;charo, mitad de abajo. Todos los d&iacute;as.</div><div class="p-c"></div></div>
+  <div class="p"><div class="p-n">3</div><div class="p-t"><b>Peine de dientes anchos.</b> Nunca cepillo en mojado.</div><div class="p-c"></div></div>
+
+  <div class="mom"><div class="mom-i seco">&#127810;</div><div class="mom-n">Cuero YA seco &mdash; minoxidil</div><div class="mom-h">07:25</div></div>
+  <div class="p"><div class="p-n">1</div><div class="p-t"><b>Media tapa de espuma</b> directo al cuero, masaje 30 seg, manos lavadas.</div><div class="p-c"></div></div>
+
+  <div class="mom"><div class="mom-i noche">&#127769;</div><div class="mom-n">Antes de dormir</div><div class="mom-h">22:30</div></div>
+  <div class="p"><div class="p-n">1</div><div class="p-t"><b>Segunda dosis.</b> Si te ba&ntilde;as de noche, b&aacute;&ntilde;ate antes.</div><div class="p-c"></div></div>
+  <div class="p"><div class="p-n">2</div><div class="p-t"><b>Funda de sat&iacute;n.</b></div><div class="p-c"></div></div>
+</div>
+
+<div class="mx">
+  <div class="card-h"><div class="card-t"><span class="b"></span>El minoxidil</div><div class="card-x">2 al d&iacute;a</div></div>
+  <div class="dose">
+    <div class="dosis on"><div class="dosis-k">Ma&ntilde;ana</div><div class="dose-v">07:25 &#10003;</div><div class="dosis-s">hace 3 h 15</div></div>
+    <div class="dosis"><div class="dosis-k">Noche</div><div class="dose-v">22:30</div><div class="dosis-s">en 11 h 40</div></div>
+  </div>
+  <div class="win">
+    <div class="win-k">No te mojes la cabeza hasta&hellip;</div>
+    <div class="win-h">11:25</div>
+    <div class="win-bar"><i></i></div>
+    <div class="win-t">Necesita <b>4 horas</b> sobre el cuero seco. Mojarte antes lo arrastra y esa dosis no cuenta.</div>
+  </div>
+</div>
+
+<div class="hoy-card">
+  <div class="card-h"><div class="card-t"><span class="b"></span>Tu botiqu&iacute;n</div><div class="card-x">se te acaba en&hellip;</div></div>
+  <div class="med"><div class="med-b" style="background:var(--am)"></div><div><div class="med-n">Minoxidil espuma Kirkland</div><div class="med-s">60 g &middot; 2 dosis al d&iacute;a</div></div><div class="med-r"><div class="med-d lo">11 d&iacute;as</div><div class="med-p">$233/mes</div></div></div>
+  <div class="med"><div class="med-b" style="background:var(--ok)"></div><div><div class="med-n">Acondicionador Elvive</div><div class="med-s">680 ml &middot; todos los d&iacute;as</div></div><div class="med-r"><div class="med-d">31 d&iacute;as</div><div class="med-p">$78/mes</div></div></div>
+  <div class="med"><div class="med-b" style="background:var(--pm)"></div><div><div class="med-n">Crema sin enjuague</div><div class="med-s">200 ml &middot; todos los d&iacute;as</div></div><div class="med-r"><div class="med-d">44 d&iacute;as</div><div class="med-p">$50/mes</div></div></div>
+  <div class="med"><div class="med-b" style="background:var(--agua)"></div><div><div class="med-n">Pilexil Antica&iacute;da</div><div class="med-s">300 ml &middot; lunes y jueves</div></div><div class="med-r"><div class="med-d">54 d&iacute;as</div><div class="med-p">$105/mes</div></div></div>
+  <div class="med-tot"><div class="med-tot-l">Costo mensual</div><div class="med-tot-v">$571</div></div>
+</div>
+
+<div class="secs">
+  <div class="sec"><div class="sec-i">&#9203;</div><div><div class="sec-t">Qu&eacute; esperar</div><div class="sec-s">Mes 4 de 12</div></div></div>
+  <div class="sec"><div class="sec-i">&#9888;</div><div><div class="sec-t">Lo que lo arruina</div><div class="sec-s">5 errores</div></div></div>
+  <div class="sec"><div class="sec-i">&#9873;</div><div><div class="sec-t">Antes que nada</div><div class="sec-s">Ve al derm&oacute;logo</div></div></div>
+  <div class="sec"><div class="sec-i">&#9881;</div><div><div class="sec-t">Mi perfil</div><div class="sec-s">Lacio &middot; fino &middot; graso</div></div></div>
+</div>
+</div>
+</x-dc>
+</body>
+</html>

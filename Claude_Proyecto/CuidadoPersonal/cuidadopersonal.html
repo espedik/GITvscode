@@ -89,24 +89,6 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var
 .guia-main{flex:1;min-width:0}
 .guia-nav-label{font-size:9.5px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;
   color:var(--text3);padding:8px 10px 5px}
-/* ─── Guía de cabello por momentos (2026-08-19) ───
-   Sub-encabezados DENTRO de la única sección. No llevan la clase .ca-section-h a propósito: esa
-   es la que guiaEnSecciones() convierte en ítem de menú, y el punto era dejar un solo ítem. */
-.ca-momento{display:flex;align-items:center;gap:8px;margin:18px 0 8px;font-size:14px;font-weight:800;
-  color:var(--ca-text,inherit);letter-spacing:.01em}
-.ca-momento span{font-size:16px}
-.ca-pasos{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:9px}
-.ca-pasos li{font-size:13px;line-height:1.65}
-.ca-sub-nota{font-size:11.5px;line-height:1.55;opacity:.78;margin-top:5px}
-.ca-hoy{border-left:3px solid var(--ca-amber,#e0a020)}
-.ca-hoy-lbl{font-size:10px;font-weight:900;letter-spacing:.06em;text-transform:uppercase;opacity:.7}
-.ca-hoy-txt{font-size:14px;line-height:1.5;margin-top:4px}
-.ca-semana-tabla{display:flex;flex-direction:column;gap:2px}
-.ca-sem-fila{display:flex;align-items:center;gap:9px;padding:6px 8px;border-radius:8px;font-size:12.5px}
-.ca-sem-fila.hoy{background:var(--am-l,rgba(224,160,32,.12));font-weight:700}
-.ca-sem-ico{flex:none;width:18px;text-align:center}
-.ca-sem-dia{flex:none;width:80px;font-weight:700}
-.ca-sem-que{flex:1;min-width:0;opacity:.85}
 .guia-nav-item{display:flex;align-items:center;gap:9px;padding:9px 11px;border-radius:9px;
   border:1px solid transparent;background:transparent;color:var(--text2);font-weight:600;
   font-size:12.5px;cursor:pointer;text-align:left;font-family:inherit;width:100%;
@@ -117,14 +99,12 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var
 /* El acento del ítem activo usa el color de cada área (rosa skincare, ámbar cabello, menta
    dentista), tomado de la variable que ya define cada vista — así el menú se siente parte de su
    sección y no un componente genérico pegado encima. */
-#view-cabello  .guia-nav-item.active{background:var(--am-l);color:var(--am);border-color:rgba(224,160,32,.4)}
 #view-dentista .guia-nav-item.active{background:var(--mt-l);color:var(--mt);border-color:rgba(79,214,173,.4)}
 /* Cada sección de la guía se muestra solo cuando su ítem está elegido. */
 .guia-sec{display:none}
 .guia-sec.active{display:block}
 /* El primer encabezado de cada sección ya no necesita el margen superior grande que lo separaba
    de la sección anterior: ahora es lo primero que se ve. */
-.guia-sec > .ca-section-h:first-child,
 .guia-sec > .de-section-h:first-child{margin-top:4px}
 @media(max-width:900px){
   /* En pantallas angostas el menú pasa arriba como una tira horizontal con scroll propio: en
@@ -499,102 +479,243 @@ tbody tr:hover td{background:rgba(var(--ov),.02)}
 }
 
 
-/* ══════════════════════════════════════════════════════════════════════
-   CABELLO — mismo patrón pastel que Skincare, paleta propia (ámbar/azul/
-   verde/terracota — sin morado), aislado bajo #view-cabello.
-   ══════════════════════════════════════════════════════════════════════ */
+/* ═══════════════════════════════════════════════════════════════════
+   CABELLO — oscuro-primero, igual que Skincare, con paleta propia (ámbar / azul agua /
+   violeta noche). El claro se define bajo [data-theme="light"].
+
+   Prefijo `pe-` (pelo). Las `.ca-*` se fueron con la vista antigua; solo sobrevive el
+   formulario de perfil, que reusa `.card` del shell.
+   ══════════════════════════════════════════════════════════════════ */
 #view-cabello{
-  --ca-bg1:#fff6e6;--ca-bg2:#eaf5ff;--ca-bg3:#edf9ee;
-  --ca-card:#ffffff;--ca-card-br:#f0e6d6;
-  --ca-text:#4a3f30;--ca-text2:#8d8172;--ca-text3:#b7ab9c;
-  --ca-amber:#f0b84e;--ca-amber-d:#8a5a12;--ca-amber-l:#fdf1dc;
-  --ca-blue:#8fc4f5;--ca-blue-d:#255c8a;--ca-blue-l:#e8f3fe;
-  --ca-green:#9cd6ab;--ca-green-d:#2f7a45;--ca-green-l:#e9f8ec;
-  --ca-terra:#e3a179;--ca-terra-d:#a05a2e;--ca-terra-l:#fbeee2;
-  --ca-coral:#ffaaa0;--ca-coral-d:#b8382c;--ca-coral-l:#fff1ef;
-  background:radial-gradient(ellipse 70% 50% at 10% 0%,var(--ca-bg1) 0%,transparent 60%),
-             radial-gradient(ellipse 60% 50% at 100% 15%,var(--ca-bg2) 0%,transparent 55%),
-             radial-gradient(ellipse 70% 60% at 50% 100%,var(--ca-bg3) 0%,transparent 60%),
-             #fffdfa;
-  color:var(--ca-text);
+  --pe-tx:#f5eff2; --pe-tx2:#aca0a6; --pe-tx3:#9c9198;
+  --pe-line:rgba(255,255,255,.09); --pe-line2:rgba(255,255,255,.05);
+  --pe-panel:rgba(255,255,255,.045); --pe-panel2:rgba(255,255,255,.028);
+  --pe-am:#ff9f45; --pe-agua:#5aa9ff; --pe-pm:#8b7dff; --pe-ok:#2fe0a0;
+  --pe-warn:#ff7a6b; --pe-teal:#1fd6c4; --pe-oro:#e0b73a; --pe-gris:#9aa3ad;
+  --pe-ink:#0a0810;
+  --pe-am-bg:rgba(255,159,69,.14); --pe-am-br:rgba(255,159,69,.34);
+  --pe-ag-bg:rgba(90,169,255,.13);  --pe-ag-br:rgba(90,169,255,.32);
+  --pe-pm-bg:rgba(139,125,255,.15); --pe-pm-br:rgba(139,125,255,.36);
+  --pe-ok-bg:rgba(47,224,160,.13);  --pe-ok-br:rgba(47,224,160,.34);
+  --pe-wa-bg:rgba(255,122,107,.13); --pe-wa-br:rgba(255,122,107,.32);
+  background:
+    radial-gradient(ellipse 55% 40% at 14% -6%, rgba(255,159,69,.17) 0%, transparent 60%),
+    radial-gradient(ellipse 55% 40% at 88% -4%, rgba(90,169,255,.14) 0%, transparent 60%),
+    radial-gradient(ellipse 80% 38% at 50% 108%, rgba(139,125,255,.12) 0%, transparent 62%),
+    #0a0810;
+  color:var(--pe-tx);
 }
-#view-cabello .card{background:var(--ca-card);border:1px solid var(--ca-card-br);box-shadow:0 6px 24px rgba(190,160,120,.14);color:var(--ca-text)}
-#view-cabello .card-title{color:var(--ca-text2)}
-#view-cabello .card-sub,#view-cabello .ts{color:var(--ca-text2)}
-#view-cabello .tm{color:var(--ca-text3)}
-#view-cabello label{color:var(--ca-text2)}
-#view-cabello input,#view-cabello select,#view-cabello textarea{background:#fbf9f5;border:1px solid var(--ca-card-br);color:var(--ca-text)}
-#view-cabello input:focus,#view-cabello select:focus,#view-cabello textarea:focus{border-color:var(--ca-amber);box-shadow:0 0 0 3px rgba(240,184,78,.2)}
-#view-cabello select option{background:#fff;color:var(--ca-text)}
-#view-cabello .btn-g{background:linear-gradient(135deg,var(--ca-amber),#e0a020);color:#4a2f05;box-shadow:0 4px 16px rgba(240,184,78,.45)}
-#view-cabello .btn-g:hover{box-shadow:0 6px 22px rgba(240,184,78,.6)}
-#view-cabello .btn-o{background:#fbf9f5;color:var(--ca-text2);border:1px solid var(--ca-card-br)}
-#view-cabello .btn-o:hover{background:#f5efe4;color:var(--ca-text)}
+:root[data-theme="light"] #view-cabello{
+  --pe-tx:#2a2024; --pe-tx2:#63565c; --pe-tx3:#6d6167;
+  --pe-line:rgba(45,25,20,.13); --pe-line2:rgba(45,25,20,.07);
+  --pe-panel:rgba(255,255,255,.9); --pe-panel2:rgba(255,255,255,.62);
+  --pe-am:#8a4a0e; --pe-agua:#1b5fa8; --pe-pm:#5544cc; --pe-ok:#0a6b45;
+  --pe-warn:#b0331f; --pe-teal:#0b7e73; --pe-oro:#8a6b0c; --pe-gris:#5d666f;
+  --pe-ink:#ffffff;
+  --pe-am-bg:rgba(255,150,40,.15); --pe-am-br:rgba(180,100,25,.3);
+  --pe-ag-bg:rgba(30,110,200,.1);  --pe-ag-br:rgba(30,110,200,.28);
+  --pe-pm-bg:rgba(90,70,220,.1);   --pe-pm-br:rgba(90,70,220,.28);
+  --pe-ok-bg:rgba(15,140,90,.1);   --pe-ok-br:rgba(15,140,90,.28);
+  --pe-wa-bg:rgba(200,60,45,.1);   --pe-wa-br:rgba(200,60,45,.28);
+  background:
+    radial-gradient(ellipse 55% 40% at 14% -6%, rgba(255,159,69,.22) 0%, transparent 60%),
+    radial-gradient(ellipse 55% 40% at 88% -4%, rgba(90,169,255,.16) 0%, transparent 60%),
+    radial-gradient(ellipse 80% 38% at 50% 108%, rgba(139,125,255,.14) 0%, transparent 62%),
+    #fbf7f4;
+  color:var(--pe-tx);
+}
 
-.ca-hero{padding:20px 22px;border-radius:20px;background:linear-gradient(135deg,var(--ca-amber-l),var(--ca-blue-l));border:1px solid #ffe6bc;margin-bottom:18px}
-.ca-hero-top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}
-.ca-eyebrow{font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--ca-amber-d)}
-.ca-title{font-size:24px;font-weight:800;margin:4px 0 8px;color:var(--ca-text)}
-.ca-desc{font-size:13px;color:var(--ca-text2);max-width:640px;line-height:1.6;margin:0}
-.ca-btn-edit{flex-shrink:0;background:#fff;border:1px solid #f5dba4;color:var(--ca-amber-d);font-weight:700;font-size:12.5px;padding:9px 16px;border-radius:20px;cursor:pointer;font-family:inherit;transition:all .2s}
-.ca-btn-edit:hover{background:var(--ca-amber-l);transform:translateY(-1px)}
-.ca-chips-resumen{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
-.ca-pill{display:inline-flex;align-items:center;gap:5px;padding:6px 13px;border-radius:20px;font-size:12px;font-weight:700}
-.ca-pill.p-amber{background:var(--ca-amber-l);color:var(--ca-amber-d)}
-.ca-pill.p-blue{background:var(--ca-blue-l);color:var(--ca-blue-d)}
-.ca-pill.p-green{background:var(--ca-green-l);color:var(--ca-green-d)}
-.ca-pill.p-terra{background:var(--ca-terra-l);color:var(--ca-terra-d)}
-.ca-pill.small{padding:3px 9px;font-size:10.5px;font-weight:700}
+/* ── cabecera ──────────────────────────────────────────────── */
+.pe-top{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:16px}
+.pe-eyebrow{font-size:10px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--pe-am);display:flex;align-items:center;gap:7px}
+.pe-eyebrow .dot{width:6px;height:6px;border-radius:50%;background:var(--pe-am);box-shadow:0 0 10px var(--pe-am);flex:none}
+.pe-h1{font-size:25px;font-weight:800;letter-spacing:-.025em;margin:5px 0 0;color:var(--pe-tx)}
+.pe-top-r{margin-left:auto;display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.pe-kpi{padding:9px 15px;border-radius:13px;border:1px solid var(--pe-line);background:var(--pe-panel);text-align:right;min-width:104px}
+.pe-kpi-v{font-size:19px;font-weight:800;letter-spacing:-.02em;line-height:1;font-variant-numeric:tabular-nums}
+.pe-kpi-k{font-size:9px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--pe-tx3);margin-top:4px}
+.pe-kpi.a .pe-kpi-v{color:var(--pe-ok)}
+.pe-kpi.b .pe-kpi-v{color:var(--pe-am)}
+.pe-kpi.c .pe-kpi-v{color:var(--pe-teal)}
+.pe-kpi.link{cursor:pointer;transition:border-color .15s,transform .15s}
+.pe-kpi.link:hover{border-color:var(--pe-am-br);transform:translateY(-1px)}
+.pe-btn{background:var(--pe-panel);border:1px solid var(--pe-line);color:var(--pe-tx2);font-family:inherit;
+  font-size:12px;font-weight:700;padding:10px 15px;border-radius:12px;cursor:pointer;transition:all .15s}
+.pe-btn:hover{border-color:var(--pe-am-br);color:var(--pe-tx)}
+.pe-btn.on{background:var(--pe-am-bg);border-color:var(--pe-am-br);color:var(--pe-am)}
 
-.ca-section-h{display:flex;align-items:center;gap:9px;margin:26px 0 14px}
-.ca-section-h .ico{font-size:19px}
-.ca-section-h h3{font-size:15.5px;font-weight:800;color:var(--ca-text);margin:0}
-.ca-section-h .line{flex:1;height:1px;background:linear-gradient(90deg,var(--ca-card-br),transparent)}
+/* ── la semana, protagonista ──────────────────────────────────────── */
+.pe-wk{border-radius:20px;border:1px solid var(--pe-am-br);padding:16px 20px 18px;margin-bottom:14px;
+  background:linear-gradient(160deg,var(--pe-am-bg),var(--pe-panel2) 50%)}
+.pe-wk-h{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px;flex-wrap:wrap}
+.pe-wk-t{font-size:10.5px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--pe-tx2)}
+.pe-wk-x{font-size:11.5px;color:var(--pe-tx3);font-weight:700}
+.pe-wk-x b{color:var(--pe-am)}
+.pe-wk-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px}
+.pe-d{border-radius:14px;border:1px solid var(--pe-line);background:var(--pe-panel2);padding:11px 9px 10px;min-width:0}
+.pe-d.hoy{border-color:var(--pe-am);background:var(--pe-am-bg);box-shadow:0 0 0 1px var(--pe-am-br),0 8px 24px rgba(255,159,69,.14)}
+.pe-d-l{font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--pe-tx3)}
+.pe-d.hoy .pe-d-l{color:var(--pe-am)}
+.pe-d-que{font-size:12.5px;font-weight:800;margin-top:7px;line-height:1.25;color:var(--pe-tx)}
+.pe-d-sub{font-size:9.5px;color:var(--pe-tx3);margin-top:3px;line-height:1.35;min-height:26px}
+.pe-d-tag{display:inline-block;font-size:8.5px;font-weight:800;padding:2px 7px;border-radius:5px;margin-top:6px;letter-spacing:.04em}
+.pe-t-pil{background:var(--pe-am-bg);color:var(--pe-am);border:1px solid var(--pe-am-br)}
+.pe-t-cer{background:var(--pe-ag-bg);color:var(--pe-agua);border:1px solid var(--pe-ag-br)}
+.pe-t-agua{background:var(--pe-panel2);color:var(--pe-tx3);border:1px solid var(--pe-line)}
+.pe-d-dosis{display:flex;gap:4px;margin-top:9px;padding-top:8px;border-top:1px solid var(--pe-line2);align-items:center}
+.pe-dot{width:11px;height:11px;border-radius:50%;border:1.5px solid var(--pe-line);flex:none;cursor:pointer}
+.pe-dot.on{background:var(--pe-ok);border-color:var(--pe-ok)}
+.pe-d-dosis span{font-size:8px;font-weight:800;color:var(--pe-tx3);margin-left:auto;letter-spacing:.04em}
+.pe-wk-note{font-size:10.5px;color:var(--pe-tx3);line-height:1.5;margin-top:12px;padding-top:11px;border-top:1px solid var(--pe-line)}
+.pe-wk-note b{color:var(--pe-tx2)}
 
-.ca-step{background:var(--ca-card);border:1px solid var(--ca-card-br);border-radius:16px;padding:16px;margin-bottom:12px;box-shadow:0 4px 16px rgba(190,160,120,.1);display:flex;gap:14px}
-.ca-step-num{flex-shrink:0;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;color:#fff}
-.ca-step-body{flex:1;min-width:0}
-.ca-step-name{font-weight:800;font-size:14.5px;color:var(--ca-text);margin-bottom:6px}
-.ca-step-block{margin-top:8px}
-.ca-step-label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--ca-text3);margin-bottom:3px}
-.ca-step-text{font-size:12.5px;color:var(--ca-text2);line-height:1.55}
-.ca-step-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+/* ── dos columnas ─────────────────────────────────────────────── */
+.pe-mid{display:grid;grid-template-columns:1fr 430px;gap:14px;margin-bottom:14px;align-items:start}
+.pe-col{display:flex;flex-direction:column;gap:14px;min-width:0}
+.pe-card{border-radius:18px;border:1px solid var(--pe-line);background:var(--pe-panel);padding:15px 17px}
+.pe-card-h{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px;flex-wrap:wrap}
+.pe-card-t{font-size:10.5px;font-weight:800;letter-spacing:.11em;text-transform:uppercase;color:var(--pe-tx2);display:flex;align-items:center;gap:7px}
+.pe-card-t .b{width:3px;height:12px;border-radius:2px;background:linear-gradient(180deg,var(--pe-am),var(--pe-agua));flex:none}
+.pe-card-x{font-size:10px;color:var(--pe-tx3);font-weight:700;white-space:nowrap}
+.pe-chip{display:inline-block;font-size:9px;font-weight:800;padding:2px 8px;border-radius:5px;background:var(--pe-am-bg);color:var(--pe-am);border:1px solid var(--pe-am-br);margin-left:6px}
 
-.ca-week{display:flex;gap:8px;flex-wrap:wrap}
-.ca-day{flex:1;min-width:74px;border-radius:14px;padding:12px 8px;text-align:center;border:1px solid var(--ca-card-br)}
-.ca-day-lbl{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px}
-.ca-day-act{font-size:11px;font-weight:700;line-height:1.3}
+.pe-mom{display:flex;align-items:center;gap:9px;margin:14px 0 8px}
+.pe-mom:first-of-type{margin-top:0}
+.pe-mom-i{width:26px;height:26px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:12px;flex:none}
+.pe-mom-i.ducha{background:var(--pe-ag-bg);border:1px solid var(--pe-ag-br)}
+.pe-mom-i.humedo{background:var(--pe-ok-bg);border:1px solid var(--pe-ok-br)}
+.pe-mom-i.seco{background:var(--pe-am-bg);border:1px solid var(--pe-am-br)}
+.pe-mom-i.noche{background:var(--pe-pm-bg);border:1px solid var(--pe-pm-br)}
+.pe-mom-n{font-size:12.5px;font-weight:800;letter-spacing:-.01em;color:var(--pe-tx)}
+.pe-mom-h{font-size:10px;font-weight:800;color:var(--pe-tx3);margin-left:auto;font-variant-numeric:tabular-nums}
 
-.ca-timeline{position:relative;padding-left:26px}
-.ca-tl-item{position:relative;padding-bottom:20px}
-.ca-tl-item:last-child{padding-bottom:0}
-.ca-tl-item::before{content:'';position:absolute;left:-26px;top:3px;width:11px;height:11px;border-radius:50%;background:var(--ca-amber);box-shadow:0 0 0 4px var(--ca-amber-l)}
-.ca-tl-item::after{content:'';position:absolute;left:-21px;top:16px;bottom:0;width:2px;background:var(--ca-card-br)}
-.ca-tl-item:last-child::after{display:none}
-.ca-tl-when{font-size:11px;font-weight:800;color:var(--ca-amber-d);text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px}
-.ca-tl-txt{font-size:13px;color:var(--ca-text);line-height:1.5}
+.pe-p{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--pe-line2);align-items:flex-start;cursor:pointer}
+.pe-p:last-child{border-bottom:none}
+.pe-p:hover .pe-p-c{border-color:var(--pe-ok)}
+.pe-p-n{flex:none;width:21px;height:21px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;
+  background:var(--pe-panel2);border:1px solid var(--pe-line);color:var(--pe-tx2)}
+.pe-p.on .pe-p-n{background:var(--pe-ok-bg);border-color:var(--pe-ok-br);color:var(--pe-ok)}
+.pe-p-t{flex:1;font-size:11.5px;color:var(--pe-tx2);line-height:1.5;min-width:0}
+.pe-p-t b{color:var(--pe-tx);font-weight:700}
+.pe-p-t em{font-style:normal;color:var(--pe-am);font-weight:700}
+.pe-p-c{flex:none;width:20px;height:20px;border-radius:6px;border:1.5px solid var(--pe-line);display:flex;align-items:center;justify-content:center;
+  font-size:10px;color:transparent;margin-top:1px;transition:all .15s}
+.pe-p.on .pe-p-c{background:var(--pe-ok);border-color:var(--pe-ok);color:var(--pe-ink)}
 
-.ca-shop{display:flex;align-items:center;gap:12px;padding:11px 4px;border-bottom:1px solid var(--ca-card-br)}
-.ca-shop:last-child{border-bottom:none}
-.ca-shop-ico{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
-.ca-shop-name{font-weight:700;font-size:13px;color:var(--ca-text)}
-.ca-shop-cat{font-size:11px;color:var(--ca-text3)}
+/* ── el minoxidil ─────────────────────────────────────────────── */
+.pe-mx{border-radius:18px;border:1px solid var(--pe-am-br);padding:15px 17px;
+  background:linear-gradient(165deg,var(--pe-am-bg),var(--pe-panel2) 55%)}
+.pe-dose{display:flex;gap:9px;margin-bottom:14px}
+.pe-dosis{flex:1;border-radius:13px;border:1px solid var(--pe-line);background:var(--pe-panel2);padding:11px 12px;cursor:pointer;min-width:0}
+.pe-dosis:hover{border-color:var(--pe-ok-br)}
+.pe-dosis.on{border-color:var(--pe-ok-br);background:var(--pe-ok-bg)}
+.pe-dosis-k{font-size:9px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--pe-tx3)}
+.pe-dose-v{font-size:16px;font-weight:800;margin-top:5px;letter-spacing:-.02em;font-variant-numeric:tabular-nums;color:var(--pe-tx)}
+.pe-dosis.on .pe-dose-v{color:var(--pe-ok)}
+.pe-dosis-s{font-size:9.5px;color:var(--pe-tx3);margin-top:2px}
 
-.ca-tip{display:flex;gap:11px;align-items:flex-start;padding:11px 0;border-bottom:1px solid var(--ca-card-br)}
-.ca-tip:last-child{border-bottom:none}
-.ca-tip .ico{font-size:16px;flex-shrink:0;margin-top:1px}
-.ca-tip-txt{font-size:13px;color:var(--ca-text2);line-height:1.55}
+.pe-win{border-radius:12px;border:1px solid var(--pe-ag-br);background:var(--pe-ag-bg);padding:11px 13px;margin-bottom:13px}
+.pe-win-k{font-size:9px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--pe-agua)}
+.pe-win-h{font-size:15px;font-weight:800;margin:5px 0 4px;letter-spacing:-.02em;font-variant-numeric:tabular-nums;color:var(--pe-tx)}
+.pe-win-bar{height:6px;border-radius:4px;background:var(--pe-line);overflow:hidden;position:relative;margin:8px 0 7px}
+.pe-win-bar i{position:absolute;left:0;top:0;bottom:0;background:linear-gradient(90deg,var(--pe-agua),var(--pe-teal));border-radius:4px}
+.pe-win-t{font-size:10.5px;color:var(--pe-tx2);line-height:1.45}
+.pe-win-t b{color:var(--pe-tx)}
 
-.ca-warn{background:var(--ca-coral-l);border:1px solid #ffd4cd;border-radius:14px;padding:14px 16px}
-.ca-warn-title{font-weight:800;font-size:13px;color:var(--ca-coral-d);margin-bottom:8px;display:flex;align-items:center;gap:6px}
-.ca-warn ul{margin:0;padding-left:18px}
-.ca-warn li{font-size:12.5px;color:#8a4a41;line-height:1.7}
+.pe-fase{display:flex;flex-direction:column;gap:6px}
+.pe-f{display:flex;align-items:center;gap:10px;padding:7px 10px;border-radius:10px;border:1px solid var(--pe-line);background:var(--pe-panel2)}
+.pe-f.pas{opacity:.55}
+.pe-f.act{border-color:var(--pe-am-br);background:var(--pe-am-bg);box-shadow:0 0 0 1px var(--pe-am-br)}
+.pe-f-m{font-size:9px;font-weight:800;color:var(--pe-tx3);letter-spacing:.05em;width:54px;flex:none}
+.pe-f.act .pe-f-m{color:var(--pe-am)}
+.pe-f-n{font-size:11.5px;font-weight:800;color:var(--pe-tx)}
+.pe-f-c{margin-left:auto;font-size:9px;font-weight:800;color:var(--pe-ok);flex:none}
+.pe-f.act .pe-f-c{color:var(--pe-am)}
+.pe-nota{font-size:10px;color:var(--pe-tx3);line-height:1.5;margin-top:10px;padding-top:10px;border-top:1px solid var(--pe-line2)}
+.pe-nota b{color:var(--pe-tx2)}
 
-.ca-note{background:var(--ca-blue-l);border:1px solid #d3e9fb;border-radius:14px;padding:14px 16px;margin-bottom:18px}
-.ca-note-title{font-weight:800;font-size:13px;color:var(--ca-blue-d);margin-bottom:6px;display:flex;align-items:center;gap:6px}
-.ca-note-text{font-size:12.5px;color:#3d5a72;line-height:1.65}
+/* ── botiquín, errores y hitos ──────────────────────────────────────── */
+.pe-med{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--pe-line2)}
+.pe-med:last-of-type{border-bottom:none}
+.pe-med.opc{opacity:.62}
+.pe-med-b{width:5px;height:27px;border-radius:3px;flex:none}
+.pe-med-n{font-size:11px;font-weight:700;line-height:1.25;color:var(--pe-tx)}
+.pe-med-s{font-size:9px;color:var(--pe-tx3);margin-top:2px}
+.pe-med-r{margin-left:auto;text-align:right;flex:none}
+.pe-med-d{font-size:10.5px;font-weight:800;font-variant-numeric:tabular-nums;color:var(--pe-tx2)}
+.pe-med-d.lo{color:var(--pe-warn)}
+.pe-med-d.set{color:var(--pe-tx3);font-weight:700;cursor:pointer;text-decoration:underline;text-decoration-style:dotted;text-underline-offset:3px}
+.pe-med-d.set:hover{color:var(--pe-teal)}
+.pe-med-p{font-size:9px;color:var(--pe-tx3);margin-top:1px;font-variant-numeric:tabular-nums}
+.pe-med-tot{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:10px;padding-top:10px;border-top:1px solid var(--pe-line)}
+.pe-med-tot-l{font-size:10px;color:var(--pe-tx2);font-weight:700}
+.pe-med-tot-v{font-size:16px;font-weight:800;color:var(--pe-teal);letter-spacing:-.02em;font-variant-numeric:tabular-nums}
 
-.ca-disclaimer{margin-top:22px;padding:13px 16px;border-radius:14px;background:#faf8f4;border:1px dashed var(--ca-card-br);font-size:11.5px;color:var(--ca-text3);line-height:1.6}
+.pe-err{display:flex;gap:10px;padding:9px 0;border-bottom:1px solid var(--pe-line2);align-items:flex-start}
+.pe-err:last-child{border-bottom:none}
+.pe-err-n{width:22px;height:22px;border-radius:7px;flex:none;display:flex;align-items:center;justify-content:center;font-size:10.5px;font-weight:800;
+  background:var(--pe-wa-bg);border:1px solid var(--pe-wa-br);color:var(--pe-warn);font-variant-numeric:tabular-nums}
+.pe-err-n.info{background:var(--pe-ag-bg);border-color:var(--pe-ag-br);color:var(--pe-agua)}
+.pe-err-n.gris{background:var(--pe-panel2);border-color:var(--pe-line);color:var(--pe-tx3)}
+.pe-err-t{font-size:11px;color:var(--pe-tx2);line-height:1.5}
+.pe-err-t b{color:var(--pe-tx);font-weight:700}
+
+.pe-tl-i{position:relative;padding:0 0 11px 18px}
+.pe-tl-i:last-child{padding-bottom:0}
+.pe-tl-i::before{content:'';position:absolute;left:0;top:3px;width:8px;height:8px;border-radius:50%;background:var(--pe-line);border:1px solid var(--pe-tx3)}
+.pe-tl-i::after{content:'';position:absolute;left:3.5px;top:13px;bottom:0;width:1px;background:var(--pe-line)}
+.pe-tl-i:last-child::after{display:none}
+.pe-tl-i.ok::before{background:var(--pe-ok);border-color:var(--pe-ok)}
+.pe-tl-i.aqui::before{background:var(--pe-am);border-color:var(--pe-am);box-shadow:0 0 0 3.5px var(--pe-am-bg)}
+.pe-tl-w{font-size:9.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--pe-tx3)}
+.pe-tl-i.aqui .pe-tl-w{color:var(--pe-am)}
+.pe-tl-t{font-size:11px;color:var(--pe-tx2);line-height:1.45;margin-top:2px}
+.pe-tl-i.aqui .pe-tl-t{color:var(--pe-tx)}
+.pe-aqui{font-size:8px;font-weight:800;padding:2px 6px;border-radius:4px;background:var(--pe-am);color:var(--pe-ink);margin-left:5px;letter-spacing:.04em}
+
+.pe-foot{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.pe-disc{margin-top:14px;padding:12px 15px;border-radius:14px;background:var(--pe-panel2);border:1px dashed var(--pe-line);font-size:11px;color:var(--pe-tx3);line-height:1.6}
+
+/* El formulario de perfil reusa .card del shell. */
+#view-cabello .card{background:var(--pe-panel);border:1px solid var(--pe-line);color:var(--pe-tx);box-shadow:none;border-radius:18px}
+#view-cabello .card-title{color:var(--pe-tx2)}
+#view-cabello .card-sub,#view-cabello .ts{color:var(--pe-tx3)}
+#view-cabello label{color:var(--pe-tx2)}
+#view-cabello input,#view-cabello select,#view-cabello textarea{background:var(--pe-panel2);border:1px solid var(--pe-line);color:var(--pe-tx)}
+#view-cabello input:focus,#view-cabello select:focus,#view-cabello textarea:focus{border-color:var(--pe-am);box-shadow:0 0 0 3px var(--pe-am-bg)}
+#view-cabello select option{background:#1a1518;color:#f5eff2}
+:root[data-theme="light"] #view-cabello select option{background:#fff;color:#2a2024}
+#view-cabello .btn-g{background:linear-gradient(135deg,var(--pe-am),var(--pe-agua));color:#fff;box-shadow:0 4px 16px var(--pe-am-bg)}
+#view-cabello .btn-o{background:var(--pe-panel2);color:var(--pe-tx2);border:1px solid var(--pe-line)}
+
+/* ── responsivo ─────────────────────────────────────────────── */
+@media(max-width:1120px){
+  .pe-mid{grid-template-columns:1fr}
+}
+@media(max-width:920px){
+  .pe-foot{grid-template-columns:1fr}
+  /* Las 7 columnas de la semana no caben: pasan a tiras de una línea. */
+  .pe-wk-grid{grid-template-columns:1fr;gap:5px}
+  .pe-d{display:flex;align-items:center;gap:10px;padding:9px 12px}
+  .pe-d-l{width:64px;flex:none}
+  .pe-d-que{margin-top:0;font-size:12px;flex:none;width:86px}
+  .pe-d-sub{margin-top:0;min-height:0;flex:1;min-width:0}
+  .pe-d-tag{margin-top:0;flex:none}
+  .pe-d-dosis{margin-top:0;padding-top:0;border-top:none;flex:none;width:auto}
+  .pe-d-dosis span{display:none}
+}
+@media(max-width:620px){
+  .pe-h1{font-size:21px}
+  .pe-top-r{width:100%;margin-left:0}
+  .pe-kpi{flex:1;min-width:0;padding:9px 10px}
+  .pe-kpi-v{font-size:17px}
+  .pe-d-sub{display:none}
+  .pe-d-que{width:auto}
+  /* La etiqueta del sabado es larga y empujaba los puntos del minoxidil fuera del ancho. */
+  .pe-d-tag{flex:0 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .pe-dose{flex-direction:column}
+}
+
 
 /* ══════════════════════════════════════════════════════════════════════
    DENTISTA — mismo patrón pastel que Skincare/Cabello, paleta propia
@@ -680,7 +801,7 @@ tbody tr:hover td{background:rgba(var(--ov),.02)}
 
 @media(max-width:900px){.g4{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:640px){.g4,.g3,.g2{grid-template-columns:1fr}.fr{grid-template-columns:1fr}
-  .ca-step,.de-step{flex-direction:column}.ca-hero-top,.de-hero-top{flex-direction:column}
+  .de-step{flex-direction:column}.de-hero-top{flex-direction:column}
   /* Topnav compacto — antes el .brand{width:100%} forzaba las 6 pestañas + Dashboard a envolver en
      4-5 filas propias (hasta 276px de alto en iPhone 15 Pro, ~32% del viewport), robándole altura
      al iframe de Salud/Ejercicio/Comida. Ahora las pestañas son una tira horizontal con scroll
@@ -703,29 +824,7 @@ tbody tr:hover td{background:rgba(var(--ov),.02)}
    ══════════════════════════════════════════════════════════════════════ */
 
 
-:root[data-theme="dark"] #view-cabello{
-  --ca-bg1:#2b2216;--ca-bg2:#16233d;--ca-bg3:#16331e;
-  --ca-card:#221d1a;--ca-card-br:#3d3428;
-  --ca-text:#f0ebe2;--ca-text2:#b8ac9c;--ca-text3:#82766a;
-  --ca-amber:#f0b84e;--ca-amber-d:#f0b84e;--ca-amber-l:#3d2f16;
-  --ca-blue:#8fc4f5;--ca-blue-d:#a8d4f5;--ca-blue-l:#16283d;
-  --ca-green:#9cd6ab;--ca-green-d:#a8e0b8;--ca-green-l:#163d22;
-  --ca-terra:#e3a179;--ca-terra-d:#e3b592;--ca-terra-l:#3d2c1f;
-  --ca-coral:#ffaaa0;--ca-coral-d:#ff9d90;--ca-coral-l:#3d201c;
-  background:radial-gradient(ellipse 70% 50% at 10% 0%,var(--ca-bg1) 0%,transparent 60%),
-             radial-gradient(ellipse 60% 50% at 100% 15%,var(--ca-bg2) 0%,transparent 55%),
-             radial-gradient(ellipse 70% 60% at 50% 100%,var(--ca-bg3) 0%,transparent 60%),
-             #17151a;
-}
-:root[data-theme="dark"] #view-cabello input,:root[data-theme="dark"] #view-cabello select,:root[data-theme="dark"] #view-cabello textarea{background:#2b2620}
-:root[data-theme="dark"] #view-cabello select option{background:#221d1a}
-:root[data-theme="dark"] .ca-hero{border-color:#4a3d22}
-:root[data-theme="dark"] .ca-btn-edit{background:#221d1a;border-color:#4a3d28}
-:root[data-theme="dark"] .ca-warn{border-color:#5c3730}
-:root[data-theme="dark"] .ca-warn li{color:#e0a89e}
-:root[data-theme="dark"] .ca-note{border-color:#1f3550}
-:root[data-theme="dark"] .ca-note-text{color:#a8c8de}
-:root[data-theme="dark"] .ca-disclaimer{background:#221d1a}
+
 
 /* Dentista oscuro — misma idea que Skincare/Cabello arriba: redefine las variables --de-x, invertidas a oscuro */
 :root[data-theme="dark"] #view-dentista{
@@ -852,26 +951,25 @@ tbody tr:hover td{background:rgba(var(--ov),.02)}
   <div class="pl-disc" id="pl-disc"></div>
 </main>
 
-<!-- ══════════════ CABELLO ══════════════ -->
+<!-- ══════════════ CABELLO ══════════════
+     Sin menú lateral, como Skincare. El eje aquí NO es el día sino la SEMANA: qué champú
+     toca hoy es la pregunta que la vista anterior escondía dentro de un párrafo de la ducha.
+     Todo sale de `CIFRAS.RUTINA_PELO`, incluida la semana de lavado. -->
 <main class="view view-native" id="view-cabello">
-  <div class="guia-shell">
-  <nav class="guia-nav" id="ca-nav"></nav>
-  <div class="guia-main">
-  <div class="ca-hero">
-    <div class="ca-hero-top">
-      <div>
-        <div class="ca-eyebrow">💇 Cuidado del cabello</div>
-        <h2 class="ca-title">Mi Cabello &amp; Guía</h2>
-        <p class="ca-desc">Tu plan real para frenar la caída, recuperar hidratación y cuidar tu cabello — qué producto usar, cómo aplicarlo y por qué, con marcas que puedes comprar en México. Actualiza tu perfil cuando algo cambie y la guía se ajusta sola.</p>
-      </div>
-      <button class="ca-btn-edit" id="ca-btn-edit" onclick="caToggleForm()">✏️ Editar mi perfil</button>
+  <div class="pe-top">
+    <div>
+      <div class="pe-eyebrow"><span class="dot"></span><span id="pe-fecha">Cuidado del cabello</span></div>
+      <h2 class="pe-h1">Tu cabello, semana a semana</h2>
     </div>
-    <div class="ca-chips-resumen" id="ca-resumen-chips"></div>
+    <div class="pe-top-r">
+      <div id="pe-kpis" style="display:contents"></div>
+      <button class="pe-btn" id="pe-btn-perfil" onclick="caToggleForm()">⚙️ Mi perfil</button>
+    </div>
   </div>
 
-  <div class="card" id="ca-form-card" style="margin-bottom:18px;display:none">
+  <div class="card" id="ca-form-card" style="margin-bottom:14px;display:none">
     <div class="card-title">📋 Tu perfil de cabello</div>
-    <div class="ts" style="display:block;margin-bottom:14px">Esto alimenta toda la guía de abajo.</div>
+    <div class="ts" style="display:block;margin-bottom:14px">Los productos no cambian — son los que ya usas y viven en tus datos maestros. Esto ajusta los <b>avisos</b> y lo que puedes esperar y cuándo.</div>
     <div class="g2">
       <div class="fg"><label>Tipo de cabello</label>
         <select id="ca-pf-tipo">
@@ -897,36 +995,43 @@ tbody tr:hover td{background:rgba(var(--ov),.02)}
           <option value="normal">Normal</option>
         </select>
       </div>
-      <div class="fg"><label>Si marcaste caída como preocupación, ¿cuál describe mejor tu caso?</label>
-        <select id="ca-pf-caidapatron">
-          <option value="reciente">Notoria y reciente (semanas/meses)</option>
-          <option value="genetica">Gradual de años, con antecedentes familiares</option>
-          <option value="leve">Leve, quiero prevenir</option>
-          <option value="no_seguro">No estoy seguro</option>
+      <div class="fg"><label>¿Cómo es la caída?</label>
+        <select id="ca-pf-patron">
+          <option value="reciente">Notoria y reciente</option>
+          <option value="gradual">Gradual, desde hace años</option>
+          <option value="entradas">Solo entradas / coronilla</option>
+          <option value="no">No se me cae</option>
         </select>
       </div>
     </div>
     <div class="fg"><label>Preocupaciones principales</label>
       <div class="flex gap8" style="flex-wrap:wrap">
-        <label class="flex aic gap6" style="text-transform:none;font-size:13px;color:var(--ca-text)"><input type="checkbox" id="ca-pf-caida" value="caida"> Caída de cabello</label>
-        <label class="flex aic gap6" style="text-transform:none;font-size:13px;color:var(--ca-text)"><input type="checkbox" id="ca-pf-resequedad" value="resequedad"> Resequedad / falta de hidratación</label>
-        <label class="flex aic gap6" style="text-transform:none;font-size:13px;color:var(--ca-text)"><input type="checkbox" id="ca-pf-caspa" value="caspa"> Caspa</label>
-        <label class="flex aic gap6" style="text-transform:none;font-size:13px;color:var(--ca-text)"><input type="checkbox" id="ca-pf-frizz" value="frizz"> Frizz / encrespado</label>
+        <label class="flex aic gap6" style="text-transform:none;font-size:13px;color:var(--pe-tx)"><input type="checkbox" id="ca-pf-caida" value="caida"> Caída de cabello</label>
+        <label class="flex aic gap6" style="text-transform:none;font-size:13px;color:var(--pe-tx)"><input type="checkbox" id="ca-pf-resequedad" value="resequedad"> Resequedad / puntas abiertas</label>
+        <label class="flex aic gap6" style="text-transform:none;font-size:13px;color:var(--pe-tx)"><input type="checkbox" id="ca-pf-caspa" value="caspa"> Caspa o descamación</label>
       </div>
     </div>
-    <div class="fg"><label>Presupuesto preferido</label>
-      <select id="ca-pf-presupuesto">
-        <option value="economico">Económico (supermercado/farmacia)</option>
-        <option value="medio">Rango medio (L'Oréal Elvive, Pantene Pro-V, Vichy Dercos)</option>
-        <option value="alto">Sin restricción, prioriza calidad</option>
-      </select>
+    <div class="g2">
+      <div class="fg"><label>Presupuesto preferido</label>
+        <select id="ca-pf-presupuesto">
+          <option value="economico">Económico (farmacia/súper)</option>
+          <option value="medio">Rango medio</option>
+          <option value="alto">Sin restricción, prioriza calidad</option>
+        </select>
+      </div>
+      <div class="fg"><label>Empezaste el minoxidil el…</label>
+        <input type="date" id="ca-pf-minoxidil">
+        <div class="ts" style="display:block;margin-top:5px;font-size:10.5px">De aquí sale en qué mes vas y qué toca esperar. Si no lo recuerdas, déjalo vacío.</div>
+      </div>
     </div>
-    <div class="fg"><label>Notas (productos que ya probaste, reacciones, lo que sea útil recordar)</label><textarea id="ca-pf-notas" rows="2" placeholder="Ej. ya uso minoxidil desde hace 2 meses, se me irrita con..."></textarea></div>
-    <button class="btn btn-g" onclick="caSavePerfil()">Guardar perfil y actualizar guía</button>
+    <div class="fg"><label>Notas</label><textarea id="ca-pf-notas" rows="2" placeholder="Ej. el Pilexil me irrita, me sale caspa en invierno..."></textarea></div>
+    <button class="btn btn-g" onclick="caSavePerfil()">Guardar perfil</button>
   </div>
-  <div id="ca-guia-body"></div>
-  </div><!-- /.guia-main -->
-  </div><!-- /.guia-shell -->
+
+  <div class="pe-wk" id="pe-semana"></div>
+  <div class="pe-mid" id="pe-mid"></div>
+  <div class="pe-foot" id="pe-foot"></div>
+  <div class="pe-disc" id="pe-disc"></div>
 </main>
 
 <!-- ══════════════ SALUD (app completa embebida) ══════════════ -->
@@ -1730,100 +1835,109 @@ setInterval(function(){
   if(v&&v.classList.contains('active')) plPintar();
 }, 60000);
 
-// ══════════════════════════════════════════════════════════════════════════
-// CUIDADO DEL CABELLO
-// ══════════════════════════════════════════════════════════════════════════
+// ═════════════════════════════════════════════════════════════════════════
+// CUIDADO DEL CABELLO — "Tu cabello, semana a semana"
+// ═════════════════════════════════════════════════════════════════════════
+// Igual que Skincare, pero el eje cambia: la piel se organiza por DÍA y el pelo por SEMANA.
+// Qué champú toca hoy era la pregunta que la vista anterior escondía dentro de un párrafo de
+// la ducha, así que la semana va primero y de ella cuelga todo lo demás.
+//
+// Los productos y la semana de lavado vienen de `CIFRAS.RUTINA_PELO`. Antes había un
+// `HAIR_DB` propio con alternativas (Pantene, Kérastase, Elvive Aceite Extraordinario) pese a
+// la petición del 2026-08-18 de no darlas, y su "lista de compras" solo alcanzaba a 4 de los
+// 9 productos: los champús se pintaban por otra rama que nunca los registraba en `usados`.
+//
+// Lo que se guarda en `cabello_v1`:
+//   perfil          — tipo, grosor, cuero, preocupaciones, patrón de caída, presupuesto, notas
+//   minoxidilDesde  — cuándo empezó; de ahí salen el mes y la fase
+//   hechos          — {'2026-09-01': {pasos:['agua','acond'], minox:[0,1]}}
+//   abierto         — {idProducto: 'YYYY-MM-DD'} cuándo abrió cada bote
 const CA_KEY='cabello_v1';
-function caDefault(){return{perfil:{tipo:'lacio',grosor:'fino',cuero:'graso',preocupaciones:['caida','resequedad'],caidaPatron:'reciente',presupuesto:'medio',notas:''}};}
-function caLoad(){try{const r=localStorage.getItem(CA_KEY);if(!r)return caDefault();const p=JSON.parse(r);const d=caDefault();return{...d,...p,perfil:{...d.perfil,...(p.perfil||{})}};}catch(e){return caDefault();}}
+function caDefault(){return{
+  perfil:{tipo:'lacio',grosor:'fino',cuero:'graso',preocupaciones:['caida','resequedad'],caidaPatron:'reciente',presupuesto:'medio',notas:''},
+  minoxidilDesde:null, hechos:{}, abierto:{},
+};}
+function caLoad(){try{const r=localStorage.getItem(CA_KEY);if(!r)return caDefault();const p=JSON.parse(r);const d=caDefault();
+  return{...d,...p,perfil:{...d.perfil,...(p.perfil||{})},hechos:p.hechos||{},abierto:p.abierto||{}};}catch(e){return caDefault();}}
 let CA=caLoad();
 function caSave(){localStorage.setItem(CA_KEY,JSON.stringify(CA));}
 
-// ─── BASE DE PRODUCTOS REALES para cabello (disponibles en México) ───
-const HAIR_DB={
-  champu:[
-    {n:"CeraVe Champú Hidratante sin sulfatos",grosor:["fino","medio","grueso"],presu:["medio","alto"],ayuda:["resequedad"],uso:"ESTE es el que te falta y el que debería ser tu base. Los días que no toca tratamiento, lavas con este: limpia sin arrastrar los aceites naturales. Los champús medicados (coal tar, anticaída) son TRATAMIENTO, no mantenimiento — usarlos a diario es lo que deja el pelo como paja."},
-    {n:"Pilexil Champú Anticaída 300 ml",grosor:["fino","medio","grueso"],presu:["medio","alto"],ayuda:["caida"],uso:"El que ya usas. Va 2-3 veces por semana, NO a diario y NUNCA el mismo día que el Darrow Doctar. Masajea el cuero cabelludo 2 min y enjuaga. Su trabajo es el cuero cabelludo, así que el largo del pelo solo recibe lo que escurre — no lo frotes ahí."},
-    {n:'Darrow Doctar (shampoo con alcatrão/coal tar)',grosor:['fino','medio','grueso'],presu:['economico','medio','alto'],ayuda:['caspa'],uso:'Masajea el cuero cabelludo 2-3 min, deja actuar antes de enjuagar. 2-3 veces por semana, los días de lavado.'},
-  ],
-  acondicionador:[
-    {n:'L\'Oréal Elvive Reparación Total 5 (acondicionador)',grosor:['fino','medio'],presu:['economico','medio'],ayuda:['resequedad'],uso:'Aplica solo de medios a puntas, nunca en la raíz/cuero cabelludo — en cabello fino y graso, poner acondicionador en la raíz lo aplana y engrasa más rápido.'},
-    {n:'Pantene Pro-V Acondicionador Cabello Fino',grosor:['fino'],presu:['economico','medio'],ayuda:['resequedad'],uso:'Fórmula ligera pensada para no pesar cabello fino — mismo uso, solo puntas.'},
-    {n:'Kérastase Nutritive Acondicionador',grosor:['medio','grueso'],presu:['alto'],ayuda:['resequedad'],uso:'Opción premium si buscas más hidratación y el presupuesto no es problema.'},
-  ],
-  mascarilla:[
-    {n:"L'Oréal Elvive Total Repair 5 Mascarilla",grosor:['fino','medio','grueso'],presu:['economico','medio'],ayuda:['resequedad'],
-     uso:'QUÉ ES: un acondicionador mucho más concentrado. Piénsalo como tu rutina de la cara: el acondicionador es el hidratante que usas a diario, y la mascarilla es el tratamiento que te pones una vez por semana. CÓMO LA RECONOCES: el acondicionador viene en BOTELLA con tapa de chorro; la mascarilla viene en TARRO o pote, porque es espesa y se saca con los dedos. CÓMO SE USA: después del champú, en lugar del acondicionador, de medios a puntas (nunca en la raíz). La dejas 5-10 minutos mientras terminas de bañarte y enjuagas. NO uses las dos el mismo día: la mascarilla ya hace el trabajo del acondicionador, y en cabello fino ponerle las dos lo apelmaza.'},
-  ],
-  tratamientoCaida:[
-    // 2026-08-15, pedido de Adán: "usar minoxidil con dutasteride... minoxidil oral tambien".
-    // Los 2 nuevos van DESPUÉS del minoxidil tópico a propósito: no son alternativas de la misma
-    // categoría, son un escalón distinto. El tópico se compra sin receta; estos dos NO — el
-    // dutasteride es un inhibidor de 5-alfa-reductasa que en México requiere prescripción, y el
-    // minoxidil oral se usa fuera de indicación (su registro es como antihipertensivo). Poner
-    // la dosis sin poner esa condición sería lo irresponsable, así que va en el propio `uso`.
-    {n:'Minoxidil 5% en ESPUMA (Kirkland)',grosor:['fino','medio','grueso'],presu:['economico','medio','alto'],ayuda:['caida'],uso:'1ml (la tapa dosificadora) en cuero cabelludo seco, 2 veces al día (mañana y noche), constante — no lo apliques en cabello mojado ni justo después de lavar.'},
-    {n:'Minoxidil tópico + Dutasteride (fórmula magistral — REQUIERE RECETA)',grosor:['fino','medio','grueso'],presu:['medio','alto'],ayuda:['caida'],uso:'Combina el minoxidil que ya usas con dutasteride en la misma solución, preparada por farmacia magistral. El minoxidil hace crecer; el dutasteride ataca la CAUSA, bloqueando la DHT que miniaturiza el folículo — es más potente que el finasteride porque inhibe los 2 tipos de 5-alfa-reductasa, no solo uno. Aplicado en la piel la absorción sistémica es mucho menor que en pastilla, pero NO es cero. ⚠️ Necesitas dermatólogo: en México el dutasteride es de prescripción, no está aprobado por la FDA para alopecia (sí en Corea y Japón) y altera el valor del PSA, dato que importa si alguna vez te revisan la próstata — avísale al médico que lo usas. Efectos posibles: baja del deseo sexual o dificultad eréctil en un porcentaje pequeño de hombres.'},
-    {n:'Minoxidil ORAL en dosis baja (2.5-5 mg — REQUIERE RECETA Y SEGUIMIENTO)',grosor:['fino','medio','grueso'],presu:['economico','medio'],ayuda:['caida'],uso:'La pastilla. Se receta fuera de indicación (su registro original es como antihipertensivo) y funciona para quien no tolera el tópico o no logra ser constante con él — tomar una pastilla es más fácil de sostener que aplicarse la solución 2 veces al día, y la constancia es la mitad del resultado. ⚠️ Esta SÍ es sistémica: puede bajar la presión, causar retención de líquidos, hinchazón de tobillos, taquicardia y vello de más en cara y cuerpo (hipertricosis, el efecto más frecuente). Requiere que un médico revise tu presión antes y durante. No la empieces por tu cuenta ni la combines con el tópico sin que él lo indique.'},
-  ],
-  reparacion:[
-    {n:"Funda de almohada de satín",grosor:["fino","medio","grueso"],presu:["economico","medio"],ayuda:["resequedad"],uso:"Lo más barato con más efecto para un pelo ya dañado. El algodón tiene fricción y absorbe la humedad del cabello: pasas 6-7 horas cada noche frotándolo contra la almohada. El satín no absorbe y desliza. No repara nada por sí solo, pero deja de romper lo que ya está frágil."},
-    {n:"Protector térmico en spray",grosor:["fino","medio","grueso"],presu:["economico","medio"],ayuda:["resequedad"],uso:"Solo si usas secadora. Sobre el pelo húmedo, antes de secar. Si no usas calor, no lo necesitas — y si tu pelo está tan seco como dices, secar al aire un tiempo es la decisión más rentable de toda esta lista."},
-    {n:"Crema sin enjuague L'Oréal Elvive Total Repair 5",grosor:["fino"],presu:["economico","medio"],ayuda:["resequedad"],uso:"Distinto del aceite: el leave-in va sobre el pelo HÚMEDO recién lavado y sella la cutícula mientras se seca; el aceite va al final, sobre el pelo ya seco. Con cabello fino, una cantidad del tamaño de un chícharo basta — más lo apelmaza."},
-  ],
-  aceitePuntas:[
-    {n:'Moroccanoil Treatment Light',grosor:['fino'],presu:['medio','alto'],ayuda:['resequedad'],uso:'2-3 gotas en las palmas, aplica solo en puntas con el cabello húmedo o seco. La versión "Light" es clave para cabello fino — la original regular puede pesarlo/engrasarlo.'},
-    {n:"L'Oréal Elvive Aceite Extraordinario",grosor:['fino','medio','grueso'],presu:['economico','medio'],ayuda:['resequedad'],uso:'Alternativa más económica, mismo uso — 1-2 gotas es suficiente en cabello fino.'},
-  ],
-};
-function haPick(cat,perfil,n){
-  n=n||1;
-  let pool=HAIR_DB[cat].filter(p=>p.grosor.includes(perfil.grosor));
-  const porPresu=pool.filter(p=>p.presu.includes(perfil.presupuesto));
-  if(porPresu.length)pool=porPresu;
-  if(!pool.length)pool=HAIR_DB[cat];
-  pool=[...pool].sort((a,b)=>(b.ayuda.filter(x=>(perfil.preocupaciones||[]).includes(x)).length)-(a.ayuda.filter(x=>(perfil.preocupaciones||[]).includes(x)).length));
-  return pool.slice(0,n);
+// ─── Estado del día ─────────────────────────────────────────────────────
+function peRP(){return (window.CIFRAS&&window.CIFRAS.RUTINA_PELO)||null;}
+function peHechos(iso){const h=CA.hechos[iso]||{};return{pasos:h.pasos||[],minox:h.minox||[]};}
+function pePaso(iso,id){return peHechos(iso).pasos.indexOf(id)!==-1;}
+function peTogglePaso(id){
+  const iso=plHoy(), h=peHechos(iso), i=h.pasos.indexOf(id);
+  if(i===-1) h.pasos.push(id); else h.pasos.splice(i,1);
+  CA.hechos[iso]=h; caSave(); pePintar();
+}
+function peMinox(iso,n){return peHechos(iso).minox.indexOf(n)!==-1;}
+function peToggleMinox(n){
+  const iso=plHoy(), h=peHechos(iso), i=h.minox.indexOf(n);
+  if(i===-1) h.minox.push(n); else h.minox.splice(i,1);
+  CA.hechos[iso]=h; caSave(); pePintar();
 }
 
-const HAIR_CONCERN_META={
-  caida:{label:'Caída de cabello',emoji:'🍂',cls:'p-amber'},
-  resequedad:{label:'Resequedad',emoji:'💧',cls:'p-blue'},
-  caspa:{label:'Caspa',emoji:'❄️',cls:'p-green'},
-  frizz:{label:'Frizz / encrespado',emoji:'🌪️',cls:'p-terra'},
-};
-const HAIR_TIPO_LABEL={lacio:'Cabello lacio',ondulado:'Cabello ondulado',rizado:'Cabello rizado',afro:'Cabello afro'};
-const HAIR_GROSOR_LABEL={fino:'Cabello fino',medio:'Cabello medio',grueso:'Cabello grueso'};
-const HAIR_CUERO_LABEL={graso:'Cuero graso',seco:'Cuero seco',normal:'Cuero normal'};
-const HAIR_PRESU_LABEL={economico:'Presupuesto económico',medio:'Presupuesto medio',alto:'Sin límite de presupuesto'};
+// Racha: días seguidos con LAS DOS dosis. Una sola no cuenta — es justo el error que hace
+// concluir "no me funcionó".
+function peRacha(){
+  const RP=peRP(); if(!RP) return 0;
+  const n=(RP.productos.find(p=>p.id==='minoxidil')||{}).vecesDia||2;
+  const completo=d=>{const h=peHechos(plIso(d));return h.minox.length>=n;};
+  const d=new Date();
+  if(!completo(d)) d.setDate(d.getDate()-1);
+  let c=0;
+  while(completo(d)){c++;d.setDate(d.getDate()-1);}
+  return c;
+}
+function peMesMinox(){
+  if(!CA.minoxidilDesde) return null;
+  const dias=plDif(plHoy(),CA.minoxidilDesde);
+  return dias<0?null:Math.floor(dias/30)+1;
+}
+// La curva del minoxidil. El shedding del mes 2-4 es donde casi todos lo dejan creyendo que
+// empeoró, y es justo la señal de que el folículo está respondiendo.
+const PE_FASES=[
+  {m:'MES 0-2', n:'No se ve nada todav\u00eda', hasta:2,
+   t:'Nada visible. El fol\u00edculo tarda en responder; la constancia de estas semanas es la que paga despu\u00e9s.'},
+  {m:'MES 2-4', n:'Shedding: se cae m\u00e1s', hasta:4,
+   t:'Se cae m\u00e1s de lo normal y parece que empeora: es el pelo viejo saliendo para dejar sitio al nuevo. Aqu\u00ed abandona la mayor\u00eda.'},
+  {m:'MES 4-6', n:'Primeros pelos nuevos', hasta:6,
+   t:'Pelos nuevos, finos y cortos, sobre todo en las entradas. Se ven mejor con luz lateral que de frente.'},
+  {m:'MES 6-12', n:'Resultado real y m\u00e1ximo', hasta:9999,
+   t:'Densidad real y el m\u00e1ximo que vas a alcanzar. A partir de aqu\u00ed es mantenimiento: es un tratamiento, no una cura.'},
+];
+function peFase(){const m=peMesMinox();return m===null?-1:PE_FASES.findIndex(f=>m<=f.hasta);}
 
-function caResumenChips(){
-  const p=CA.perfil;
-  const chips=[
-    `<span class="ca-pill p-blue">💧 ${HAIR_TIPO_LABEL[p.tipo]||p.tipo}</span>`,
-    `<span class="ca-pill p-terra">🧵 ${HAIR_GROSOR_LABEL[p.grosor]||p.grosor}</span>`,
-    `<span class="ca-pill p-amber">🌀 ${HAIR_CUERO_LABEL[p.cuero]||p.cuero}</span>`,
-  ];
-  (p.preocupaciones||[]).forEach(k=>{const m=HAIR_CONCERN_META[k];if(m)chips.push(`<span class="ca-pill ${m.cls}">${m.emoji} ${m.label}</span>`);});
-  chips.push(`<span class="ca-pill p-green">💰 ${HAIR_PRESU_LABEL[p.presupuesto]||p.presupuesto}</span>`);
-  document.getElementById('ca-resumen-chips').innerHTML=chips.join('');
+function peDias(p){
+  const RP=peRP(), ab=CA.abierto[p.id];
+  if(!RP||!ab) return null;
+  const dur=RP.duracionDias(p);
+  return dur===null?null:dur-plDif(plHoy(),ab);
 }
-function caToggleForm(){
-  const card=document.getElementById('ca-form-card');
-  const btn=document.getElementById('ca-btn-edit');
-  const open=card.style.display!=='none';
-  card.style.display=open?'none':'block';
-  btn.textContent=open?'✏️ Editar mi perfil':'✕ Cerrar';
-  if(open) guiaMostrarPrimera('ca-guia-body','ca-nav'); else guiaSoloPerfil('ca-guia-body','ca-nav');
+function peAbrir(id){
+  if(CA.abierto[id]) delete CA.abierto[id]; else CA.abierto[id]=plHoy();
+  caSave(); pePintar();
 }
+
+// Las horas salen de RUTINA_TASKS, como en Skincare. El minoxidil de la mañana va DESPUÉS de
+// la ducha, con el cuero ya seco: +32 minutos sobre el arranque.
+const PE_MOMENTOS=[
+  {id:'ducha',  n:'En la ducha',                              ico:'🚿', clase:'ducha',  desfase:0},
+  {id:'humedo', n:'Al salir, con el pelo a\u00fan h\u00famedo', ico:'💧', clase:'humedo', desfase:12},
+  {id:'seco',   n:'Cuero cabelludo YA seco \u2014 minoxidil',  ico:'🍂', clase:'seco',   desfase:32},
+  {id:'noche',  n:'Antes de dormir',                          ico:'🌙', clase:'noche',  desfase:null},
+];
+
+// ─── Perfil ────────────────────────────────────────────────────────────
 function caLeerPerfilForm(){
   return{
     tipo:document.getElementById('ca-pf-tipo').value,
     grosor:document.getElementById('ca-pf-grosor').value,
     cuero:document.getElementById('ca-pf-cuero').value,
-    caidaPatron:document.getElementById('ca-pf-caidapatron').value,
+    caidaPatron:document.getElementById('ca-pf-patron').value,
     presupuesto:document.getElementById('ca-pf-presupuesto').value,
-    preocupaciones:['caida','resequedad','caspa','frizz'].filter(k=>document.getElementById('ca-pf-'+k).checked),
+    preocupaciones:['caida','resequedad','caspa'].filter(k=>document.getElementById('ca-pf-'+k).checked),
     notas:document.getElementById('ca-pf-notas').value.trim(),
   };
 }
@@ -1832,245 +1946,302 @@ function caPintarPerfilForm(){
   document.getElementById('ca-pf-tipo').value=p.tipo;
   document.getElementById('ca-pf-grosor').value=p.grosor;
   document.getElementById('ca-pf-cuero').value=p.cuero;
-  document.getElementById('ca-pf-caidapatron').value=p.caidaPatron;
+  document.getElementById('ca-pf-patron').value=p.caidaPatron;
   document.getElementById('ca-pf-presupuesto').value=p.presupuesto;
-  ['caida','resequedad','caspa','frizz'].forEach(k=>{document.getElementById('ca-pf-'+k).checked=(p.preocupaciones||[]).includes(k);});
+  ['caida','resequedad','caspa'].forEach(k=>{document.getElementById('ca-pf-'+k).checked=p.preocupaciones.indexOf(k)!==-1;});
   document.getElementById('ca-pf-notas').value=p.notas||'';
+  document.getElementById('ca-pf-minoxidil').value=CA.minoxidilDesde||'';
 }
 function caSavePerfil(){
   CA.perfil=caLeerPerfilForm();
-  caSave();
-  caResumenChips();
-  caRenderGuiaContent();
-  toast('Perfil guardado — guía actualizada');
+  CA.minoxidilDesde=document.getElementById('ca-pf-minoxidil').value||null;
+  caSave(); pePintar(); caToggleForm();
+  toast('Perfil guardado');
+}
+function caToggleForm(){
+  const card=document.getElementById('ca-form-card'), btn=document.getElementById('pe-btn-perfil');
+  const abierto=card.style.display!=='none';
+  card.style.display=abierto?'none':'block';
+  btn.classList.toggle('on',!abierto);
+  if(!abierto){caPintarPerfilForm();card.scrollIntoView({behavior:'smooth',block:'nearest'});}
 }
 
-// Los 3 champús a la vez, con su rol y frecuencia (2026-08-18). Antes se mostraba solo 1
-// (haPick con n=1) y eso escondía la recomendación que de verdad importa en su caso: no
-// acumular tratamientos. Reportó pelo seco y dañado usando Darrow Doctar (coal tar) y
-// Pilexil anticaída a la vez, más minoxidil 2x/día — 3 fuentes de resequedad al mismo tiempo.
-function caChampusHtml(){
-  const R = [
-    {c:"var(--ca-green)", t:"Los días normales", n:"Champú suave sin sulfatos", 
-     d:"Tu base. Limpia sin arrastrar los aceites naturales. Es el que faltaba en tu rutina y el que debería usarse la mayoría de las veces."},
-    {c:"var(--ca-blue)", t:"2-3 veces por semana", n:"Pilexil Anticaída", 
-     d:"Tratamiento para la caída. Va al cuero cabelludo, masaje de 2 min. No lo frotes en el largo del pelo: ahí no hace nada y sí reseca."},
-    {c:"var(--ca-amber)", t:"Solo si hay caspa activa", n:"Darrow Doctar (coal tar)", 
-     d:"Máximo 2 veces por semana y NUNCA el mismo día que el Pilexil. El alquitrán es un detergente potente: es medicamento para la descamación, no champú de diario. Si no tienes caspa esta semana, no lo uses."},
+// ─── Cabecera ───────────────────────────────────────────────────────
+function pePintarCabecera(){
+  const RP=peRP(), d=new Date();
+  document.getElementById('pe-fecha').textContent=PL_DIAS[d.getDay()]+' '+d.getDate()+' de '+PL_MESES[d.getMonth()];
+  const mes=peMesMinox();
+  const k=[
+    '<div class="pe-kpi a" title="D\u00edas seguidos con LAS DOS dosis de minoxidil. Una sola no cuenta: saltarse dosis es lo que hace concluir que no funciona."><div class="pe-kpi-v">'+peRacha()+'</div><div class="pe-kpi-k">Racha minox</div></div>',
+    '<div class="pe-kpi b link" onclick="caToggleForm()" title="'+(mes===null?'Pon en tu perfil desde cu\u00e1ndo lo usas y se lleva la cuenta sola':'Meses desde que empezaste el minoxidil')+'"><div class="pe-kpi-v">'+(mes===null?'\u2014':'Mes '+mes)+'</div><div class="pe-kpi-k">De minoxidil</div></div>',
   ];
-  return "<div class='ca-step'>" +
-    "<div class='ca-step-num' style='background:var(--ca-blue)'>1</div>" +
-    "<div class='ca-step-body'>" +
-      "<div class='ca-step-name'>Champú — alterna, no acumules</div>" +
-      "<div class='ca-step-block'><div class='ca-step-label'>Por qué</div><div class='ca-step-text'>" +
-        "Usar 2 champús de tratamiento a la vez es lo que deja el pelo seco y quebradizo. Cada uno tiene su día y su motivo:" +
-      "</div></div>" +
-      R.map(function(x){ return "<div class='ca-step-block' style='border-left:3px solid " + x.c + ";padding-left:9px'>" +
-        "<div class='ca-step-label' style='color:" + x.c + "'>" + x.t + "</div>" +
-        "<div class='ca-step-text'><b>" + x.n + "</b> — " + x.d + "</div></div>"; }).join("") +
-      "<div class='ca-step-block'><div class='ca-step-label'>Nota</div><div class='ca-step-text' style='color:var(--ca-amber-d);font-weight:700'>" +
-        "Si tu minoxidil es en SOLUCIÓN, su vehículo lleva propilenglicol, que reseca el tallo. La versión en ESPUMA no lo lleva y es el cambio más directo contra la resequedad, sin perder el tratamiento." +
-      "</div></div>" +
-    "</div></div>";
-}
-function caStepHtml(num,color,prod,nota){
-  if(!prod)return'';
-  const tags=(prod.ayuda||[]).map(k=>{const m=HAIR_CONCERN_META[k];return m?`<span class="ca-pill small ${m.cls}">${m.emoji} ${m.label}</span>`:'';}).join('');
-  return `<div class="ca-step">
-    <div class="ca-step-num" style="background:${color}">${num}</div>
-    <div class="ca-step-body">
-      <div class="ca-step-name">${prod.n}</div>
-      <div class="ca-step-block"><div class="ca-step-label">Cómo aplicarlo</div><div class="ca-step-text">${prod.uso}</div></div>
-      ${nota?`<div class="ca-step-block"><div class="ca-step-label">Nota</div><div class="ca-step-text" style="color:var(--ca-amber-d);font-weight:700">${nota}</div></div>`:''}
-      ${tags?`<div class="ca-step-tags">${tags}</div>`:''}
-    </div>
-  </div>`;
-}
-function caDayPill(lbl,tipo){
-  const map={
-    lavado:{bg:'var(--ca-blue-l)',br:'#d3e9fb',txt:'var(--ca-blue-d)',ico:'🚿',n:'Lavado'},
-    mascarilla:{bg:'var(--ca-green-l)',br:'#cdeed4',txt:'var(--ca-green-d)',ico:'🧖',n:'+ Mascarilla'},
-    descanso:{bg:'var(--ca-terra-l)',br:'#f3d9c4',txt:'var(--ca-terra-d)',ico:'🌙',n:'Descanso'},
-  };
-  const m=map[tipo];
-  return `<div class="ca-day" style="background:${m.bg};border-color:${m.br}"><div class="ca-day-lbl" style="color:${m.txt}">${lbl}</div><div class="ca-day-act" style="color:${m.txt}">${m.ico} ${m.n}</div></div>`;
-}
-function caWashDays(cuero,tieneResequedad){
-  if(cuero==='seco')return[1,4]; // Mar, Vie — 2x/semana
-  if(cuero==='graso'&&!tieneResequedad)return[0,2,4,6]; // Lun,Mié,Vie,Dom — 4x/semana
-  return[0,3,5]; // Lun,Jue,Sáb — 3x/semana (graso+resequedad, o normal)
-}
-function caTimeline(tieneCaida){
-  const items=[
-    {when:'Semana 1-2',txt:tieneCaida?'Empiezas el tratamiento anticaída — es normal notar algo más de caída de lo usual estas primeras semanas (fase de ajuste), no significa que esté empeorando.':'Tu cuero cabelludo y puntas se van adaptando a la rutina nueva.'},
-    {when:'Semana 3-4',txt:'El cuero cabelludo debería sentirse menos graso entre lavados, y las puntas menos resecas si sigues la mascarilla semanal.'},
-  ];
-  if(tieneCaida)items.push({when:'Semana 8-12',txt:'La caída excesiva debería empezar a estabilizarse — es apenas el punto donde el tratamiento anticaída empieza a mostrar efecto real.'});
-  if(tieneCaida)items.push({when:'Mes 4-6',txt:'Si el tratamiento funciona para tu caso, aquí es donde se nota más densidad/grosor. Si a los 6 meses no ves ningún cambio, es momento de ver a un especialista.'});
-  return items.map(it=>`<div class="ca-tl-item"><div class="ca-tl-when">${it.when}</div><div class="ca-tl-txt">${it.txt}</div></div>`).join('');
-}
-function caListaHtml(usados){
-  const vistos=new Set();
-  const items=usados.filter(u=>{if(!u||vistos.has(u.p.n))return false;vistos.add(u.p.n);return true;});
-  return items.map(u=>`<div class="ca-shop"><div class="ca-shop-ico" style="background:var(--ca-amber-l)">💇</div><div><div class="ca-shop-name">${u.p.n}</div><div class="ca-shop-cat">${u.catLabel}</div></div></div>`).join('')
-    ||'<div class="ts">Sin productos que mostrar todavía.</div>';
-}
-function caWarnHtml(tieneCaida){
-  const items=[
-    'Agua muy caliente al lavar — reseca más las puntas y no ayuda con la grasa del cuero cabelludo.',
-    'Acondicionador o mascarilla directo en la raíz si tu cuero es graso — lo apelmaza y engrasa más rápido.',
-    'Cepillar agresivo con el cabello mojado — es cuando más se rompe.',
-    'Cambiar de productos cada semana probando cosas distintas — dale a cada producto al menos 3-4 semanas antes de decidir si funciona.',
-  ];
-  if(tieneCaida)items.push('Abandonar el tratamiento anticaída antes de 3 meses por "no ver resultados" — es el error #1, ese es justo el tiempo mínimo que tarda en notarse.');
-  return items.map(t=>`<li>${t}</li>`).join('');
+  if(RP) k.push('<div class="pe-kpi c" title="Lo que cuesta la rutina al mes. Sale de RUTINA_PELO: precio entre lo que dura cada bote."><div class="pe-kpi-v">$'+RP.costoMesTotal+'</div><div class="pe-kpi-k">Al mes</div></div>');
+  document.getElementById('pe-kpis').innerHTML=k.join('');
 }
 
-function caRenderGuiaContent(){
-  const perfil=CA.perfil;
-  const c=perfil.preocupaciones||[];
-  const tieneCaida=c.includes('caida'), tieneResequedad=c.includes('resequedad');
-  const usados=[];
-  function pick1(cat,catLabel){const arr=haPick(cat,perfil,1);if(arr.length){usados.push({p:arr[0],catLabel});return arr[0];}return null;}
+// ─── La semana ─────────────────────────────────────────────────────
+function pePintarSemana(){
+  const el=document.getElementById('pe-semana'), RP=peRP();
+  if(!RP){el.innerHTML='<div class="pe-nota" style="border:none;margin:0;padding:0">No se pudieron leer los datos maestros: abre esta app desde la carpeta del proyecto.</div>';return;}
+  const hoy=new Date(), hoyIso=plHoy();
+  const lunes=new Date(hoy); lunes.setDate(hoy.getDate()-((hoy.getDay()+6)%7));
+  const nDosis=(RP.productos.find(p=>p.id==='minoxidil')||{}).vecesDia||2;
+  let conChampu=0;
 
-  const lavado=[
-    caChampusHtml(),
-    caStepHtml(2,'var(--ca-blue)',pick1('acondicionador','Acondicionador'),'Solo de medios a puntas — nunca en la raíz.'),
-  ].join('');
-
-  const tratCaida=tieneCaida?caStepHtml('💊','var(--ca-amber)',pick1('tratamientoCaida','Tratamiento anticaída'),'Todos los días, se lave o no el cabello ese día — la constancia es lo que hace efecto.'):'';
-  const puntas=tieneResequedad?caStepHtml('✨','var(--ca-green)',pick1('aceitePuntas','Aceite/sérum de puntas'),'Muy poca cantidad en cabello fino — 1-2 gotas es suficiente.'):'';
-
-  const dias=['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'];
-  const washIdx=caWashDays(perfil.cuero,tieneResequedad);
-  const maskDay=washIdx[washIdx.length-1];
-  const semanaHtml=dias.map((d,i)=>{
-    if(i===maskDay)return caDayPill(d,'mascarilla');
-    if(washIdx.includes(i))return caDayPill(d,'lavado');
-    return caDayPill(d,'descanso');
+  const celdas=[0,1,2,3,4,5,6].map(function(i){
+    const f=new Date(lunes); f.setDate(lunes.getDate()+i);
+    const dow=f.getDay(), iso=plIso(f), x=RP.dia(dow), esHoy=iso===hoyIso;
+    if(x.champu&&!x.condicional) conChampu++;
+    const h=peHechos(iso);
+    const puntos=[];
+    for(let n=0;n<nDosis;n++){
+      const on=h.minox.indexOf(n)!==-1;
+      puntos.push(esHoy
+        ? '<i class="pe-dot'+(on?' on':'')+'" onclick="peToggleMinox('+n+')" title="Dosis '+(n+1)+' de minoxidil"></i>'
+        : '<i class="pe-dot'+(on?' on':'')+'"></i>');
+    }
+    const et=esHoy?(h.minox.length+' DE '+nDosis):'MINOX';
+    const tag=x.champu
+      ? (x.condicional
+          ? '<div class="pe-d-tag pe-t-cer">+ '+plEsc(peCorto(x.champu))+' AL NADAR</div>'
+          : '<div class="pe-d-tag '+(x.champu.id==='pilexil'?'pe-t-pil':'pe-t-cer')+'">'+(x.mascarilla?'EL D\u00cdA QUE M\u00c1S REPARA':'CON CHAMP\u00da')+'</div>')
+      : '<div class="pe-d-tag pe-t-agua">SIN CHAMP\u00da</div>';
+    const sub=x.nota
+      ? '<b style="color:var(--pe-agua)">'+plEsc(x.nota.split('.')[0])+'.</b>'
+      : (x.mascarilla ? '+ mascarilla 5 min, <b>sin</b> acondicionador'
+                      : (x.champu ? 'Solo cuero cabelludo, 2 min con las yemas'
+                                  : 'Mojas y acondicionador de medios a puntas'));
+    return '<div class="pe-d'+(esHoy?' hoy':'')+'">'+
+      '<div class="pe-d-l">'+PL_DIAS[dow]+(esHoy?' \u00b7 hoy':'')+'</div>'+
+      '<div class="pe-d-que">'+(x.champu&&!x.condicional?plEsc(peCorto(x.champu)):'Solo agua')+'</div>'+
+      '<div class="pe-d-sub">'+sub+'</div>'+tag+
+      '<div class="pe-d-dosis">'+puntos.join('')+'<span>'+et+'</span></div></div>';
   }).join('');
 
-  const mascProd=pick1('mascarilla','Mascarilla hidratante (día de mascarilla)');
-  const notaMedica=(tieneCaida&&perfil.caidaPatron==='reciente')?`<div class="ca-note"><div class="ca-note-title">🩺 Antes que nada</div><div class="ca-note-text">Dijiste que la caída es notoria y reciente — vale la pena una visita a un dermatólogo o tricólogo para descartar causas puntuales (estrés, alguna deficiencia nutricional, tiroides, un "telógeno efluvio"). El tratamiento de abajo ayuda en general, pero no reemplaza saber la causa real.</div></div>`:'';
-
-  const consejos=[
-    {ico:'🌡️',t:'Lava con agua tibia, nunca caliente — el agua caliente reseca más las puntas y no ayuda con la grasa del cuero cabelludo.'},
-    {ico:'🪮',t:'En mojado, usa un peine de dientes anchos para desenredar — el cabello mojado se rompe mucho más fácil que seco.'},
-    {ico:'🔥',t:'Si usas secadora o plancha, aplica antes un protector de calor — el calor directo reseca y debilita el cabello con el tiempo.'},
-    tieneCaida?{ico:'⏳',t:'El tratamiento anticaída necesita mínimo 3-4 meses de uso constante para notar diferencia real — no lo dejes antes de tiempo por impaciencia.'}:null,
-    tieneCaida?{ico:'⚠️',t:'Si dejas de usar el tratamiento anticaída, el beneficio ganado se revierte con el tiempo — es mantenimiento, no una cura de una sola vez.'}:null,
-    {ico:'🧴',t:'No pongas acondicionador ni mascarilla en la raíz si tu cuero cabelludo es graso — solo aceleras que se vea grasoso otra vez.'},
-    {ico:'🛏️',t:'Una funda de almohada de seda o satín reduce la fricción que rompe/reseca el cabello mientras duermes.'},
-  ].filter(Boolean);
-
-  // ── UNA sola sección, ordenada por MOMENTO del día (2026-08-19) ──────────────
-  // Antes eran 9 secciones navegables (lavado, anticaída, después de lavar, calendario, qué
-  // esperar, mascarilla, qué evitar, compras, consejos). Cada una decía algo cierto, pero
-  // ninguna respondía la pregunta real: "¿me baño con champú y luego acondicionador y luego
-  // minoxidil?". La información estaba por CATEGORÍA DE PRODUCTO y hacía falta por ORDEN DE USO.
-  // Ahora es un solo hilo: la ducha, el pelo húmedo, el cuero seco, la noche, y el sábado.
-  const hoyDow=new Date().getDay();               // 0=domingo
-  const CHAMPU_DIA={1:'pilexil',4:'pilexil',6:'cerave',0:null,2:null,3:null,5:null};
-  const hoyChampu=CHAMPU_DIA[hoyDow];
-  const nomDia=['domingo','lunes','martes','miércoles','jueves','viernes','sábado'][hoyDow];
-  const hoyTxt=hoyChampu==='pilexil'
-    ? 'Hoy <b>sí lleva champú</b>: el <b>Pilexil Anticaída</b>, solo en el cuero cabelludo.'
-    : hoyChampu==='cerave'
-      ? 'Hoy <b>sí lleva champú</b>: el <b>CeraVe Hidratante sin sulfatos</b>, tu lavado suave de la semana.'
-      : 'Hoy <b>no lleva champú</b>. Mojas, acondicionador de medios a puntas, y ya.'
-      + (hoyDow===3?' <b>Ojo:</b> hoy nadas — al salir de la alberca sí lavas con CeraVe, el cloro no se queda.':'');
-
-  document.getElementById('ca-guia-body').innerHTML=`
-    ${notaMedica}
-    <div class="ca-section-h"><span class="ico">🚿</span><h3>Tu rutina, paso a paso</h3><span class="line"></span></div>
-
-    <div class="card ca-hoy">
-      <div class="ca-hoy-lbl">📌 Hoy es ${nomDia}</div>
-      <div class="ca-hoy-txt">${hoyTxt}</div>
-    </div>
-
-    <div class="ca-momento"><span>☀️</span> 1 · En la ducha de la mañana</div>
-    <div class="card">
-      <ol class="ca-pasos">
-        <li><b>Moja con agua tibia</b>, nunca caliente. El agua caliente reseca las puntas y no quita mejor la grasa.</li>
-        <li><b>¿Champú hoy?</b> Depende del día — <b>lunes y jueves: Pilexil Anticaída</b>. <b>Sábado: CeraVe Hidratante</b>. <b>Martes, miércoles, viernes y domingo: ninguno</b>, solo agua.
-            <div class="ca-sub-nota">Lavar a diario con champú es lo que termina de resecar un pelo que ya está seco. Los días sin champú no son días sucios: son días de descanso para el cuero cabelludo.</div></li>
-        <li><b>El champú va SOLO en el cuero cabelludo</b>, nunca en el largo. Masajea <b>2 minutos con las yemas</b> — no con las uñas — y enjuaga. Al enjuagar, lo que escurre ya limpia el resto del pelo.</li>
-        <li><b>Acondicionador ${'L\'Oréal Elvive Reparación Total 5'}</b>, todos los días, se laves o no. <b>Solo de medios a puntas</b>: en la raíz aplana el pelo y lo engrasa antes.</li>
-        <li><b>Espera 1-2 minutos</b> y enjuaga con agua fresca. Ese minuto es lo que hace que el acondicionador sirva de algo.</li>
-      </ol>
-      <div class="ca-warn" style="margin-top:10px"><div class="ca-warn-title">⚠️ La regla que más se rompe</div><ul>
-        <li><b>Nunca uses el Pilexil y el Darrow Doctar el mismo día.</b> El Darrow (alquitrán) es solo para cuando hay caspa activa, y ese día <b>sustituye</b> al Pilexil, no se suma.</li>
-      </ul></div>
-    </div>
-
-    <div class="ca-momento"><span>💧</span> 2 · Al salir, con el pelo AÚN húmedo</div>
-    <div class="card">
-      <ol class="ca-pasos">
-        <li><b>Seca a toques con la toalla</b>, sin frotar. El pelo mojado se rompe mucho más fácil que el seco.</li>
-        <li><b>Crema sin enjuague ${'L\'Oréal Elvive'}</b>, cantidad de un chícharo, <b>solo en la mitad de abajo</b>. Esto va <b>todos los días</b>, no solo los que te lavas.</li>
-        <li><b>Desenreda con peine de dientes anchos</b>, de puntas hacia arriba. Nunca cepillo en mojado.</li>
-        <li>Deja secar al aire. Si tienes prisa y usas secadora: <b>aire tibio, a 20 cm</b>, nunca caliente ni pegado.</li>
-      </ol>
-    </div>
-
-    <div class="ca-momento"><span>🍂</span> 3 · Con el cuero cabelludo YA SECO — minoxidil de la mañana</div>
-    <div class="card">
-      <div class="ca-note" style="margin-bottom:10px"><div class="ca-note-title">Esto es lo que casi todos hacen mal</div><div class="ca-note-text">
-        El minoxidil <b>no va sobre el pelo mojado</b> ni recién salido de la ducha. Va sobre <b>cuero cabelludo seco</b>, porque en húmedo se reparte irregular y se diluye. Y una vez puesto, <b>tienen que pasar unas 4 horas antes de volver a mojarte la cabeza</b> — por eso va <b>después</b> de bañarte y nunca antes.
-      </div></div>
-      <ol class="ca-pasos">
-        <li><b>Cabeza seca.</b> Si acabas de salir de la ducha, espera a que el cuero esté seco al tacto.</li>
-        <li><b>Media tapa de espuma</b> (Minoxidil 5% Kirkland) en la palma. La espuma se elige sobre el líquido porque no lleva propilenglicol, que es lo que reseca e irrita.</li>
-        <li><b>Repártela con los dedos directo en el cuero cabelludo</b> de la zona a tratar — no en el pelo. Masajea 30 segundos.</li>
-        <li><b>Lávate las manos</b> en cuanto termines.</li>
-        <li>Deja que seque solo. No peines ni pongas nada encima los primeros minutos.</li>
-      </ol>
-    </div>
-
-    <div class="ca-momento"><span>✨</span> 4 · Con el pelo ya seco (solo si lo notas áspero)</div>
-    <div class="card">
-      <div class="ca-step-text"><b>2 gotas de aceite Moroccanoil Treatment Light, solo en las puntas.</b> No es diario ni obligatorio: es para el día que el pelo se sienta rasposo. En raíz no va nunca, y de más engrasa.</div>
-    </div>
-
-    <div class="ca-momento"><span>🌙</span> 5 · Antes de dormir</div>
-    <div class="card">
-      <ol class="ca-pasos">
-        <li><b>Segunda dosis de minoxidil</b>, misma técnica: cuero seco, media tapa, masaje, manos lavadas. Son <b>2 dosis al día</b> — una sola no da el mismo resultado, y saltarse días es lo que hace que la gente concluya "no me funcionó".</li>
-        <li><b>Después de esta dosis ya no te mojes el pelo.</b> Si vas a bañarte de noche, báñate <b>antes</b> de aplicarlo.</li>
-        <li><b>Funda de almohada de satín.</b> Menos fricción durante 7 horas cada noche; es lo más barato que puedes hacer por tu pelo.</li>
-      </ol>
-    </div>
-
-    <div class="ca-momento"><span>🧖</span> 6 · Solo los sábados</div>
-    <div class="card">
-      <div class="ca-step-text"><b>Mascarilla ${'L\'Oréal Elvive Reparación Total 5'}, 5 minutos, de medios a puntas — ese día sustituye al acondicionador, no se usan los dos.</b> Es el día del CeraVe, así que el pelo queda limpio y la mascarilla entra mejor.</div>
-    </div>
-
-    <div class="ca-momento"><span>📅</span> Tu semana de un vistazo</div>
-    <div class="card"><div class="ca-semana-tabla">
-      ${[['Lunes','Pilexil','🧴'],['Martes','Solo agua + acondicionador','💧'],['Miércoles','Solo agua + acondicionador · <b>al nadar: CeraVe</b>','🏊'],['Jueves','Pilexil','🧴'],['Viernes','Solo agua + acondicionador','💧'],['Sábado','CeraVe + <b>mascarilla</b>','🧖'],['Domingo','Solo agua + acondicionador','💧']]
-        .map(([d,q,i],idx)=>`<div class="ca-sem-fila${idx===(hoyDow===0?6:hoyDow-1)?' hoy':''}"><span class="ca-sem-ico">${i}</span><span class="ca-sem-dia">${d}</span><span class="ca-sem-que">${q}</span></div>`).join('')}
-      <div class="ca-sub-nota" style="margin-top:8px">Y todos los días, sin excepción: acondicionador de medios a puntas, crema sin enjuague en húmedo, y <b>minoxidil mañana y noche</b>.</div>
-    </div></div>
-
-    <div class="ca-momento"><span>⚠️</span> Lo que no debes hacer</div>
-    <div class="ca-warn"><div class="ca-warn-title">Errores que arruinan el resultado</div><ul>${caWarnHtml(tieneCaida)}</ul></div>
-
-    <div class="ca-momento"><span>⏳</span> Qué esperar y cuándo</div>
-    <div class="card"><div class="ca-timeline">${caTimeline(tieneCaida)}</div></div>
-
-    <div class="ca-momento"><span>🛒</span> Lo que tienes que comprar</div>
-    <div class="card">${caListaHtml(usados)}</div>
-
-    <div class="ca-disclaimer">Esto es orientación general con productos reales de venta libre en México, no sustituye a un dermatólogo o tricólogo — si la caída es abrupta, en parches o con picazón fuerte, eso se revisa en consulta.</div>`;
-  guiaEnSecciones('ca-guia-body','ca-nav','ca-section-h','ca-form-card');
+  const pil=RP.productos.find(p=>p.id==='pilexil'), cer=RP.productos.find(p=>p.id==='cerave');
+  el.innerHTML='<div class="pe-wk-h"><div class="pe-wk-t">Tu semana de lavado</div>'+
+    '<div class="pe-wk-x">El pelo se organiza por semana, no por d\u00eda: <b>'+
+    (pil?pil.dias.length+' con '+peCorto(pil):'')+(cer?', '+cer.dias.filter(d=>(cer.diasCondicionales||[]).indexOf(d)===-1).length+' con '+peCorto(cer):'')+
+    ', '+(7-conChampu)+' solo agua</b></div></div>'+
+    '<div class="pe-wk-grid">'+celdas+'</div>'+
+    '<div class="pe-wk-note">Los d\u00edas sin champ\u00fa <b>no son d\u00edas sucios</b>: son descanso para el cuero cabelludo, y lavar a diario es lo que termina de resecar un pelo que ya est\u00e1 seco. Lo que s\u00ed va <b>los 7 d\u00edas</b>: acondicionador de medios a puntas, crema sin enjuague en h\u00famedo y las '+nDosis+' dosis de minoxidil.</div>';
 }
-function caRenderGuia(){
-  caPintarPerfilForm();
-  caResumenChips();
-  caRenderGuiaContent();
+// El nombre corto de un producto, para los sitios donde no cabe el completo.
+function peCorto(p){return p.n.split(' Champ')[0].split(' (')[0].split(' Antica')[0];}
+
+// ─── Hoy, en orden ───────────────────────────────────────────────────
+// Cada paso es {id, t}. Los que dependen del día se arman con lo que diga RUTINA_PELO.
+function pePasosDelDia(){
+  const RP=peRP(); if(!RP) return [];
+  const dow=new Date().getDay(), x=RP.dia(dow);
+  const prod=id=>RP.productos.find(p=>p.id===id);
+  const M=[];
+
+  const ducha=[{id:'agua',t:'<b>Moja con agua tibia</b>, nunca caliente: el agua caliente reseca las puntas y no quita mejor la grasa.'}];
+  if(x.champu&&!x.condicional){
+    ducha.push({id:'champu',t:'<b>'+plEsc(x.champu.n)+'</b> \u2014 '+x.champu.uso});
+  }else if(x.condicional){
+    ducha.push({id:'champu',t:'<em>Hoy no lleva champ\u00fa por la ma\u00f1ana.</em> '+plEsc(x.nota)+' Entonces s\u00ed usas el <b>'+plEsc(peCorto(x.champu))+'</b>.'});
+  }else{
+    ducha.push({id:'champu',t:'<em>Hoy no lleva champ\u00fa.</em> Directo al acondicionador.'});
+  }
+  const masc=prod('mascarilla'), aco=prod('acondicionador');
+  if(x.mascarilla&&masc) ducha.push({id:'mascarilla',t:'<b>'+plEsc(masc.n)+'</b> \u2014 '+masc.uso});
+  else if(x.acondicionador&&aco) ducha.push({id:'acond',t:'<b>'+plEsc(aco.n)+'</b> \u2014 '+aco.uso});
+  M.push({m:PE_MOMENTOS[0],pasos:ducha});
+
+  const cr=prod('sinEnjuague');
+  M.push({m:PE_MOMENTOS[1],pasos:[
+    {id:'toalla',t:'<b>Seca a toques con la toalla</b>, sin frotar. El pelo mojado se rompe mucho m\u00e1s f\u00e1cil que el seco.'},
+    cr?{id:'sinEnjuague',t:'<b>'+plEsc(cr.n)+'</b> \u2014 '+cr.uso}:null,
+    {id:'peine',t:'<b>Desenreda con peine de dientes anchos</b>, de puntas hacia arriba. Nunca cepillo en mojado.'},
+    {id:'secar',t:'Deja secar al aire. Si usas secadora: <b>aire tibio, a 20 cm</b>, nunca caliente ni pegado.'},
+  ].filter(Boolean)});
+
+  const mnx=prod('minoxidil'), ace=prod('aceite');
+  const seco=[mnx?{id:'minoxAM',t:mnx.uso}:null];
+  if(ace&&(CA.perfil.preocupaciones||[]).indexOf('resequedad')!==-1)
+    seco.push({id:'aceite',t:'<b>'+plEsc(ace.n)+'</b> \u2014 '+ace.uso});
+  M.push({m:PE_MOMENTOS[2],pasos:seco.filter(Boolean)});
+
+  const funda=prod('funda');
+  M.push({m:PE_MOMENTOS[3],pasos:[
+    {id:'minoxPM',t:'<b>Segunda dosis de minoxidil.</b> Misma t\u00e9cnica: cuero seco, media tapa, masaje, manos lavadas. <b>Despu\u00e9s de esta dosis ya no te mojes el pelo</b> \u2014 si vas a ba\u00f1arte de noche, b\u00e1\u00f1ate antes.'},
+    funda?{id:'funda',t:'<b>'+plEsc(funda.n)+'</b> \u2014 '+funda.uso}:null,
+  ].filter(Boolean)});
+  return M;
 }
+
+function peHoyHtml(){
+  const RP=peRP(); if(!RP) return '';
+  const grupos=pePasosDelDia(), iso=plHoy();
+  const hor=plHorarios(), dow=new Date().getDay(), x=RP.dia(dow);
+  let total=0, hechos=0;
+  const cuerpo=grupos.map(function(g){
+    const hh=g.m.desfase===null?hor.pm:plHHMM(plMin(hor.am)+g.m.desfase);
+    const pasos=g.pasos.map(function(p,i){
+      total++; const on=pePaso(iso,p.id); if(on) hechos++;
+      return '<div class="pe-p'+(on?' on':'')+'" onclick="peTogglePaso(\''+p.id+'\')" title="Marca este paso como hecho">'+
+        '<div class="pe-p-n">'+(i+1)+'</div><div class="pe-p-t">'+p.t+'</div><div class="pe-p-c">\u2713</div></div>';
+    }).join('');
+    return '<div class="pe-mom"><div class="pe-mom-i '+g.m.clase+'">'+g.m.ico+'</div>'+
+      '<div class="pe-mom-n">'+g.m.n+'</div><div class="pe-mom-h">'+hh+'</div></div>'+pasos;
+  }).join('');
+  const chip=x.champu&&!x.condicional
+    ? PL_DIAS[dow].toUpperCase()+' \u00b7 '+plEsc(peCorto(x.champu)).toUpperCase()
+    : PL_DIAS[dow].toUpperCase()+' \u00b7 SIN CHAMP\u00da';
+  return '<div class="pe-card"><div class="pe-card-h">'+
+    '<div class="pe-card-t"><span class="b"></span>Hoy, en orden<span class="pe-chip">'+chip+'</span></div>'+
+    '<div class="pe-card-x">'+hechos+' de '+total+' hechos</div></div>'+cuerpo+'</div>';
+}
+
+// ─── El minoxidil ──────────────────────────────────────────────────
+// La ventana de 4 horas es el dato que casi nadie conoce y el que decide si la dosis sirve.
+const PE_ESPERA_MIN=240;
+function peMinoxHtml(){
+  const RP=peRP(); if(!RP) return '';
+  const mnx=RP.productos.find(p=>p.id==='minoxidil'); if(!mnx) return '';
+  const n=mnx.vecesDia||2, iso=plHoy(), h=peHechos(iso), hor=plHorarios(), ahora=plAhoraMin();
+  const horas=[plMin(hor.am)+PE_MOMENTOS[2].desfase, plMin(hor.pm)];
+  const lbl=['Dosis de la ma\u00f1ana','Dosis de la noche'];
+
+  const cajas=[];
+  for(let i=0;i<n;i++){
+    const on=h.minox.indexOf(i)!==-1, t=horas[i]||horas[0];
+    const dif=t-ahora;
+    const sub=on?'marcada':(dif>0?'en '+plFalta(dif).toLowerCase():'ya deber\u00eda estar puesta');
+    cajas.push('<div class="pe-dosis'+(on?' on':'')+'" onclick="peToggleMinox('+i+')" title="Marca esta dosis">'+
+      '<div class="pe-dosis-k">'+lbl[i]+'</div><div class="pe-dose-v">'+plHHMM(t)+(on?' \u2713':'')+'</div>'+
+      '<div class="pe-dosis-s">'+sub+'</div></div>');
+  }
+
+  // Ventana: solo tiene sentido si la dosis de la mañana ya está marcada.
+  let win='';
+  if(h.minox.indexOf(0)!==-1){
+    const fin=horas[0]+PE_ESPERA_MIN, resto=fin-ahora;
+    const pc=Math.max(0,Math.min(100,Math.round((ahora-horas[0])/PE_ESPERA_MIN*100)));
+    win='<div class="pe-win"><div class="pe-win-k">'+(resto>0?'No te mojes la cabeza hasta\u2026':'Ya puedes mojarte la cabeza')+'</div>'+
+      '<div class="pe-win-h">'+plHHMM(fin)+(resto>0?'':' \u2713')+'</div>'+
+      '<div class="pe-win-bar"><i style="width:'+pc+'%"></i></div>'+
+      '<div class="pe-win-t">El minoxidil necesita <b>unas 4 horas</b> sobre el cuero seco para absorberse. Mojarte antes lo arrastra y esa dosis no cuenta \u2014 por eso va <b>despu\u00e9s</b> de la ducha y nunca antes.</div></div>';
+  }else{
+    win='<div class="pe-win"><div class="pe-win-k">La ventana de las 4 horas</div>'+
+      '<div class="pe-win-t" style="margin-top:6px">Marca la dosis de la ma\u00f1ana y aqu\u00ed aparece <b>a qu\u00e9 hora puedes volver a mojarte la cabeza</b>. El minoxidil necesita unas 4 horas sobre el cuero seco: mojarte antes lo arrastra y esa dosis no cuenta.</div></div>';
+  }
+
+  const fase=peFase();
+  const esc=PE_FASES.map(function(f,i){
+    const cls=fase===-1?'':(i<fase?' pas':(i===fase?' act':''));
+    return '<div class="pe-f'+cls+'"><div class="pe-f-m">'+f.m+'</div><div class="pe-f-n">'+f.n+'</div>'+
+      '<div class="pe-f-c">'+(i<fase?'\u2713':(i===fase?'AQU\u00cd':''))+'</div></div>';
+  }).join('');
+  const nota=peMesMinox()===null
+    ? 'No sabemos desde cu\u00e1ndo lo usas. <b>Pon la fecha en tu perfil</b> y esta tarjeta te dice en qu\u00e9 fase vas \u2014 que es lo que evita abandonarlo en el mes equivocado.'
+    : 'El <b>shedding del mes 2-4 es se\u00f1al de que funciona</b>, no de lo contrario: el fol\u00edculo empuja fuera el pelo viejo para sacar el nuevo. Ah\u00ed es donde casi todos lo dejan y concluyen "no me sirvi\u00f3".';
+
+  return '<div class="pe-mx"><div class="pe-card-h"><div class="pe-card-t"><span class="b"></span>El minoxidil</div>'+
+    '<div class="pe-card-x">'+n+' dosis al d\u00eda</div></div>'+
+    '<div class="pe-dose">'+cajas.join('')+'</div>'+win+
+    '<div class="pe-fase">'+esc+'</div><div class="pe-nota">'+nota+'</div></div>';
+}
+
+// ─── Botiquín ───────────────────────────────────────────────────────
+const PE_TONO={am:'var(--pe-am)',agua:'var(--pe-agua)',pm:'var(--pe-pm)',ok:'var(--pe-ok)',
+  oro:'var(--pe-oro)',gris:'var(--pe-gris)',warn:'var(--pe-warn)',teal:'var(--pe-teal)'};
+function peBotiquinHtml(){
+  const RP=peRP(); if(!RP) return '';
+  const D=['dom','lun','mar','mi\u00e9','jue','vie','s\u00e1b'];
+  const filas=RP.productos.map(function(p){
+    const dur=RP.duracionDias(p), d=peDias(p);
+    const cuando=p.soloSi?('solo si hay '+p.soloSi)
+      :(p.noConsumible?'una sola vez'
+      :(!p.dias.length?'cuando haga falta'
+      :(p.dias.length===7?'todos los d\u00edas'+(p.vecesDia>1?', '+p.vecesDia+' veces':'')
+      :p.dias.map(x=>D[x]).join(' y '))));
+    const der=dur===null
+      ? '<div class="pe-med-d" style="color:var(--pe-tx3)">\u2014</div>'
+      : (d===null
+        ? '<div class="pe-med-d set" onclick="peAbrir(\''+p.id+'\')" title="Marca hoy como el d\u00eda que lo abriste">marcar</div>'
+        : '<div class="pe-med-d'+(d<=14?' lo':'')+'" onclick="peAbrir(\''+p.id+'\')" title="Abriste uno el '+CA.abierto[p.id]+'. Clic para quitarlo.">'+
+          (d>0?d+' d\u00edas':'se acab\u00f3')+'</div>');
+    return '<div class="pe-med'+(p.soloSi||p.noConsumible?' opc':'')+'">'+
+      '<div class="pe-med-b" style="background:'+(PE_TONO[p.tono]||'var(--pe-tx3)')+'"></div>'+
+      '<div style="min-width:0"><div class="pe-med-n">'+plEsc(p.n)+'</div>'+
+      '<div class="pe-med-s">'+p.contenido+' '+p.unidad+' \u00b7 '+cuando+(dur?' \u00b7 dura ~'+dur+' d\u00edas':'')+'</div></div>'+
+      '<div class="pe-med-r">'+der+'<div class="pe-med-p">'+(RP.costoMes(p)?'$'+RP.costoMes(p)+'/mes':'\u2014')+'</div></div></div>';
+  }).join('');
+  const mnx=RP.productos.find(p=>p.id==='minoxidil');
+  const pc=mnx?Math.round(RP.costoMes(mnx)/RP.costoMesTotal*100):0;
+  return '<div class="pe-card"><div class="pe-card-h"><div class="pe-card-t"><span class="b"></span>Tu botiqu\u00edn</div>'+
+    '<div class="pe-card-x">se te acaba en\u2026</div></div>'+filas+
+    '<div class="pe-med-tot"><div class="pe-med-tot-l">Costo mensual de tu rutina</div><div class="pe-med-tot-v">$'+RP.costoMesTotal+'</div></div>'+
+    '<div class="pe-nota">Los d\u00edas salen de cu\u00e1ntas veces usas cada producto a la semana, no de una estimaci\u00f3n a ojo. <b>El minoxidil es el '+pc+
+    '% del gasto</b>, y es el \u00fanico que no puedes dejar de comprar sin perder lo ganado. Toca los d\u00edas para decir que abriste uno; los precios se editan en <b>datos-maestros.js</b>.</div></div>';
+}
+
+// ─── Errores, hitos y perfil ───────────────────────────────────────────
+function peErroresHtml(){
+  const RP=peRP(), p=CA.perfil, c=p.preocupaciones||[];
+  const e=[];
+  if(RP&&RP.productos.some(x=>x.id==='darrow')&&RP.productos.some(x=>x.id==='pilexil'))
+    e.push('<b>Pilexil y Darrow el mismo d\u00eda.</b> El Darrow (alquitr\u00e1n) es solo para cuando hay caspa activa, y ese d\u00eda <b>sustituye</b> al Pilexil \u2014 no se suma.');
+  e.push('<b>Minoxidil sobre el pelo mojado.</b> Se reparte irregular y se diluye. Cuero seco al tacto, siempre.');
+  e.push('<b>Una sola dosis al d\u00eda.</b> Son dos, y saltarse d\u00edas es lo que hace concluir "no me funcion\u00f3". Si lo dejas, lo ganado se revierte con el tiempo.');
+  if(p.cuero==='graso') e.push('<b>Acondicionador o mascarilla en la ra\u00edz.</b> Con cuero graso solo aplanas el pelo y aceleras que se vea grasoso otra vez.');
+  e.push('<b>Cepillo en mojado.</b> Peine de dientes anchos, de puntas hacia arriba: el pelo mojado se rompe mucho m\u00e1s f\u00e1cil.');
+  if(c.indexOf('resequedad')!==-1) e.push('<b>Secadora o plancha sin protector t\u00e9rmico.</b> El calor directo debilita el tallo con el tiempo, y el tuyo ya viene seco.');
+  return '<div class="pe-card"><div class="pe-card-h"><div class="pe-card-t"><span class="b"></span>Lo que arruina el resultado</div>'+
+    '<div class="pe-card-x">'+e.length+'</div></div>'+
+    e.map((t,i)=>'<div class="pe-err"><div class="pe-err-n">'+(i+1)+'</div><div class="pe-err-t">'+t+'</div></div>').join('')+'</div>';
+}
+
+function peEsperarHtml(){
+  const mes=peMesMinox();
+  const items=PE_FASES.map(function(f,i){
+    const desde=i===0?1:PE_FASES[i-1].hasta;
+    const hasta=f.hasta>100?12:f.hasta;
+    const cls=mes===null?'':(mes>hasta?' ok':(mes>desde?' aqui':''));
+    const marca=(mes!==null&&mes>desde&&mes<=hasta)?' <span class="pe-aqui">EST\u00c1S AQU\u00cd</span>':'';
+    const est=(mes!==null&&mes>hasta)?' \u00b7 superado':'';
+    return '<div class="pe-tl-i'+cls+'"><div class="pe-tl-w">'+f.m.replace('MES','Mes')+est+marca+'</div>'+
+      '<div class="pe-tl-t">'+f.t+'</div></div>';
+  }).join('');
+  return '<div class="pe-card"><div class="pe-card-h"><div class="pe-card-t"><span class="b"></span>Qu\u00e9 esperar y cu\u00e1ndo</div>'+
+    '<div class="pe-card-x">'+(mes===null?'sin fecha de inicio':'mes '+mes)+'</div></div>'+items+'</div>';
+}
+
+const CA_TIPO={lacio:'lacio',ondulado:'ondulado',rizado:'rizado',afro:'afro'};
+const CA_CUERO={graso:'cuero graso',seco:'cuero seco',normal:'cuero normal'};
+function pePerfilHtml(){
+  const p=CA.perfil, f=[];
+  if(p.caidaPatron==='reciente')
+    f.push({c:'info',t:'Dijiste que la ca\u00edda es <b>notoria y reciente</b>. Eso merece una visita al derm\u00f3logo o tric\u00f3logo para descartar causas puntuales \u2014 estr\u00e9s, alguna deficiencia, tiroides, un tel\u00f3geno efluvio. El minoxidil ayuda en general, pero no reemplaza saber la causa.'});
+  f.push({c:'gris',t:'<b>Cabello '+(CA_TIPO[p.tipo]||p.tipo)+', '+p.grosor+', '+(CA_CUERO[p.cuero]||p.cuero)+'.</b> Por eso el acondicionador nunca toca la ra\u00edz y el aceite va con cuentagotas: en pelo fino, de m\u00e1s lo apelmaza.'});
+  f.push({c:'gris',t:'Hay dos tratamientos m\u00e1s potentes (<b>dutasteride t\u00f3pico</b> y <b>minoxidil oral</b>) que <b>requieren receta</b>. Est\u00e1n en tu lista de compras, no en la rutina, a prop\u00f3sito.'});
+  if((p.preocupaciones||[]).indexOf('caspa')!==-1)
+    f.push({c:'gris',t:'Con caspa marcada en el perfil, el <b>Darrow Doctar</b> entra <b>en lugar del Pilexil</b> el d\u00eda que la notes, no adem\u00e1s.'});
+  return '<div class="pe-card"><div class="pe-card-h"><div class="pe-card-t"><span class="b"></span>Antes que nada</div>'+
+    '<div class="pe-card-x">tu perfil</div></div>'+
+    f.map(x=>'<div class="pe-err"><div class="pe-err-n '+x.c+'">'+(x.c==='info'?'\u2691':'\u25cf')+'</div><div class="pe-err-t">'+x.t+'</div></div>').join('')+'</div>';
+}
+
+// ─── Pintar todo ────────────────────────────────────────────────────────
+function pePintar(){
+  if(!document.getElementById('pe-semana')) return;
+  pePintarCabecera();
+  pePintarSemana();
+  document.getElementById('pe-mid').innerHTML=
+    '<div class="pe-col">'+peHoyHtml()+peErroresHtml()+'</div>'+
+    '<div class="pe-col">'+peMinoxHtml()+peBotiquinHtml()+'</div>';
+  document.getElementById('pe-foot').innerHTML=peEsperarHtml()+pePerfilHtml();
+  document.getElementById('pe-disc').innerHTML='Orientaci\u00f3n general con productos de venta libre en M\u00e9xico, no sustituye a un derm\u00f3logo o tric\u00f3logo \u2014 si la ca\u00edda es abrupta, en parches o con picaz\u00f3n fuerte, eso se revisa en consulta. Los productos, sus d\u00edas y sus precios viven en <b>Dashboard/datos-maestros.js</b>, la misma fuente que tu rutina diaria.';
+}
+function caRenderGuia(){ caPintarPerfilForm(); pePintar(); }
+
+setInterval(function(){
+  const v=document.getElementById('view-cabello');
+  if(v&&v.classList.contains('active')) pePintar();
+}, 60000);
 
 // ══════════════════════════════════════════════════════════════════════════
 // DENTISTA

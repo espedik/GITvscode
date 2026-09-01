@@ -1,0 +1,12 @@
+{
+  "artboards": [
+    { "file": "Main.dc.html",  "x": 0,    "y": 0, "w": 1440, "h": 1560, "title": "Cabello — escritorio" },
+    { "file": "Movil.dc.html", "x": 1560, "y": 0, "w": 390,  "h": 1500, "title": "Cabello — móvil 390px" }
+  ],
+  "annotations": [
+    { "id": "nota-brief", "x": 0, "y": -210, "w": 660, "text": "Mismo lenguaje que Skincare, pero el eje cambia: la piel se organiza por DÍA y el pelo por SEMANA — qué champú toca cada día es la pregunta que la vista actual esconde dentro de un párrafo. Por eso la semana es lo primero." },
+    { "id": "nota-minox", "x": 1010, "y": 1600, "w": 430, "text": "El minoxidil manda: 2 dosis al día, la ventana de 4 horas sin mojarse (que casi nadie conoce) y el mes en el que va — el shedding del mes 2-4 es donde la gente lo deja creyendo que empeoró." },
+    { "id": "nota-movil", "x": 1560, "y": 1540, "w": 390, "text": "En móvil la semana se reduce a 7 puntos de color + los dos puntos de minoxidil por día. El detalle del día vive en el panel de abajo." }
+  ],
+  "launch": { "view": "canvas" }
+}

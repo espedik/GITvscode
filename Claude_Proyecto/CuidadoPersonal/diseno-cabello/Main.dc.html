@@ -1,0 +1,336 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap">
+  <style>
+    body{margin:0;background:#0a0810;font-family:"Inter",-apple-system,sans-serif}
+    .ca{font-family:"Inter",-apple-system,BlinkMacSystemFont,sans-serif !important}
+    .ca .kpi-v,.ca .h1,.ca .med-d,.ca .med-tot-v,.ca .dose-v,.ca .win-h{font-family:"Space Grotesk","Inter",sans-serif}
+  </style>
+</helmet>
+
+<div class="ca">
+<style>
+.ca{
+  --tx:#f5eff2; --tx2:#aca0a6; --tx3:#8c8188;
+  --line:rgba(255,255,255,.09); --line2:rgba(255,255,255,.05);
+  --panel:rgba(255,255,255,.045); --panel2:rgba(255,255,255,.028);
+  --am:#ff9f45; --agua:#5aa9ff; --pm:#8b7dff; --ok:#2fe0a0; --warn:#ff7a6b; --teal:#1fd6c4;
+  --ink:#0a0810;
+  width:1440px; height:1560px; box-sizing:border-box; padding:26px 30px 30px;
+  background:
+    radial-gradient(ellipse 55% 40% at 14% -6%, rgba(255,159,69,.17) 0%, transparent 60%),
+    radial-gradient(ellipse 55% 40% at 88% -4%, rgba(90,169,255,.14) 0%, transparent 60%),
+    radial-gradient(ellipse 80% 38% at 50% 108%, rgba(139,125,255,.12) 0%, transparent 62%),
+    #0a0810;
+  color:var(--tx); overflow:hidden; position:relative;
+}
+.ca *{box-sizing:border-box}
+.grid-bg{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.02) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.02) 1px,transparent 1px);background-size:58px 58px}
+.z{position:relative;z-index:1}
+
+/* cabecera */
+.top{display:flex;align-items:center;gap:16px;margin-bottom:16px}
+.eyebrow{font-size:10px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--am);display:flex;align-items:center;gap:7px}
+.eyebrow .dot{width:6px;height:6px;border-radius:50%;background:var(--am);box-shadow:0 0 10px var(--am)}
+.h1{font-size:26px;font-weight:800;letter-spacing:-.025em;margin-top:5px}
+.top-r{margin-left:auto;display:flex;align-items:center;gap:9px}
+.kpi{padding:9px 15px;border-radius:13px;border:1px solid var(--line);background:var(--panel);text-align:right;min-width:112px}
+.kpi-v{font-size:19px;font-weight:800;letter-spacing:-.02em;line-height:1;font-variant-numeric:tabular-nums}
+.kpi-k{font-size:9px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--tx3);margin-top:4px}
+.kpi.a .kpi-v{color:var(--ok)} .kpi.b .kpi-v{color:var(--am)} .kpi.c .kpi-v{color:var(--teal)}
+.btn{background:var(--panel);border:1px solid var(--line);color:var(--tx2);font-size:12px;font-weight:700;padding:10px 15px;border-radius:12px}
+
+/* ── LA SEMANA, protagonista ─────────────────────────────── */
+.wk{border-radius:20px;border:1px solid rgba(255,159,69,.26);padding:16px 20px 18px;margin-bottom:14px;
+  background:linear-gradient(160deg,rgba(255,159,69,.09),rgba(255,255,255,.022) 50%)}
+.wk-h{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.wk-t{font-size:10.5px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--tx2)}
+.wk-x{font-size:11.5px;color:var(--tx3);font-weight:700}
+.wk-x b{color:var(--am)}
+.wk-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px}
+.d{border-radius:14px;border:1px solid var(--line);background:var(--panel2);padding:11px 9px 10px}
+.d.hoy{border-color:var(--am);background:rgba(255,159,69,.14);box-shadow:0 0 0 1px rgba(255,159,69,.35),0 8px 24px rgba(255,159,69,.14)}
+.d-l{font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--tx3)}
+.d.hoy .d-l{color:var(--am)}
+.d-que{font-size:12.5px;font-weight:800;margin-top:7px;line-height:1.25}
+.d-sub{font-size:9.5px;color:var(--tx3);margin-top:3px;line-height:1.35;min-height:26px}
+.d-tag{display:inline-block;font-size:8.5px;font-weight:800;padding:2px 7px;border-radius:5px;margin-top:6px;letter-spacing:.04em}
+.t-pil{background:rgba(255,159,69,.16);color:var(--am);border:1px solid rgba(255,159,69,.3)}
+.t-cer{background:rgba(90,169,255,.14);color:var(--agua);border:1px solid rgba(90,169,255,.3)}
+.t-agua{background:rgba(255,255,255,.05);color:var(--tx3);border:1px solid var(--line)}
+.d-dosis{display:flex;gap:4px;margin-top:9px;padding-top:8px;border-top:1px solid var(--line2);align-items:center}
+.dot2{width:11px;height:11px;border-radius:50%;border:1.5px solid var(--line)}
+.dot2.on{background:var(--ok);border-color:var(--ok)}
+.d-dosis span{font-size:8px;font-weight:800;color:var(--tx3);margin-left:auto;letter-spacing:.04em}
+.wk-note{font-size:10.5px;color:var(--tx3);line-height:1.5;margin-top:12px;padding-top:11px;border-top:1px solid var(--line)}
+.wk-note b{color:var(--tx2)}
+
+/* ── dos columnas ────────────────────────────────────────── */
+.mid{display:grid;grid-template-columns:1fr 430px;gap:14px;margin-bottom:14px;align-items:start}
+.col{display:flex;flex-direction:column;gap:14px;min-width:0}
+.card{border-radius:18px;border:1px solid var(--line);background:var(--panel);padding:15px 17px}
+.card-h{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
+.card-t{font-size:10.5px;font-weight:800;letter-spacing:.11em;text-transform:uppercase;color:var(--tx2);display:flex;align-items:center;gap:7px}
+.card-t .b{width:3px;height:12px;border-radius:2px;background:linear-gradient(180deg,var(--am),var(--agua));flex:none}
+.card-x{font-size:10px;color:var(--tx3);font-weight:700;white-space:nowrap}
+
+.mom{display:flex;align-items:center;gap:9px;margin:14px 0 8px}
+.mom:first-of-type{margin-top:0}
+.mom-i{width:26px;height:26px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:12px;flex:none}
+.mom-i.ducha{background:rgba(90,169,255,.14);border:1px solid rgba(90,169,255,.32)}
+.mom-i.hum{background:rgba(31,214,196,.13);border:1px solid rgba(31,214,196,.3)}
+.mom-i.seco{background:rgba(255,159,69,.15);border:1px solid rgba(255,159,69,.34)}
+.mom-i.noche{background:rgba(139,125,255,.16);border:1px solid rgba(139,125,255,.36)}
+.mom-n{font-size:12.5px;font-weight:800;letter-spacing:-.01em}
+.mom-h{font-size:10px;font-weight:800;color:var(--tx3);margin-left:auto;font-variant-numeric:tabular-nums}
+
+.p{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--line2);align-items:flex-start}
+.p:last-child{border-bottom:none}
+.p-n{flex:none;width:21px;height:21px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;
+  background:var(--panel2);border:1px solid var(--line);color:var(--tx2)}
+.p.on .p-n{background:rgba(47,224,160,.16);border-color:rgba(47,224,160,.4);color:var(--ok)}
+.p-t{flex:1;font-size:11.5px;color:var(--tx2);line-height:1.5}
+.p-t b{color:var(--tx);font-weight:700}
+.p-t em{font-style:normal;color:var(--am);font-weight:700}
+.p-c{flex:none;width:20px;height:20px;border-radius:6px;border:1.5px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:10px;color:transparent;margin-top:1px}
+.p.on .p-c{background:var(--ok);border-color:var(--ok);color:var(--ink)}
+.hoy-chip{display:inline-block;font-size:9px;font-weight:800;padding:2px 8px;border-radius:5px;background:rgba(255,159,69,.16);color:var(--am);border:1px solid rgba(255,159,69,.32);margin-left:6px}
+
+/* minoxidil */
+.mx{border-radius:18px;border:1px solid rgba(255,159,69,.3);background:linear-gradient(165deg,rgba(255,159,69,.11),rgba(255,255,255,.022) 55%);padding:15px 17px}
+.dose{display:flex;gap:9px;margin-bottom:14px}
+.dosis{flex:1;border-radius:13px;border:1px solid var(--line);background:var(--panel2);padding:11px 12px}
+.dosis.on{border-color:rgba(47,224,160,.38);background:rgba(47,224,160,.09)}
+.dosis-k{font-size:9px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--tx3)}
+.dose-v{font-size:16px;font-weight:800;margin-top:5px;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.dosis.on .dose-v{color:var(--ok)}
+.dosis-s{font-size:9.5px;color:var(--tx3);margin-top:2px}
+
+.win{border-radius:12px;border:1px solid rgba(90,169,255,.3);background:rgba(90,169,255,.09);padding:11px 13px;margin-bottom:13px}
+.win-k{font-size:9px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--agua)}
+.win-h{font-size:15px;font-weight:800;margin:5px 0 4px;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.win-bar{height:6px;border-radius:4px;background:rgba(255,255,255,.07);overflow:hidden;position:relative;margin:8px 0 7px}
+.win-bar i{position:absolute;left:0;top:0;bottom:0;width:62%;background:linear-gradient(90deg,var(--agua),var(--teal));border-radius:4px}
+.win-t{font-size:10.5px;color:var(--tx2);line-height:1.45}
+.win-t b{color:var(--tx)}
+
+.fase{display:flex;flex-direction:column;gap:6px}
+.f{display:flex;align-items:center;gap:10px;padding:7px 10px;border-radius:10px;border:1px solid var(--line);background:var(--panel2)}
+.f.pas{opacity:.5}
+.f.act{border-color:rgba(255,159,69,.4);background:rgba(255,159,69,.13);box-shadow:0 0 0 1px rgba(255,159,69,.28)}
+.f-m{font-size:9px;font-weight:800;color:var(--tx3);letter-spacing:.05em;width:52px;flex:none}
+.f.act .f-m{color:var(--am)}
+.f-n{font-size:11.5px;font-weight:800}
+.f-c{margin-left:auto;font-size:9px;font-weight:800;color:var(--ok)}
+.f.act .f-c{color:var(--am)}
+.nota{font-size:10px;color:var(--tx3);line-height:1.5;margin-top:10px;padding-top:10px;border-top:1px solid var(--line2)}
+.nota b{color:var(--tx2)}
+
+/* botiquin */
+.med{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--line2)}
+.med:last-of-type{border-bottom:none}
+.med-b{width:5px;height:27px;border-radius:3px;flex:none}
+.med-n{font-size:11px;font-weight:700;line-height:1.25}
+.med-s{font-size:9px;color:var(--tx3);margin-top:2px}
+.med-r{margin-left:auto;text-align:right;flex:none}
+.med-d{font-size:10.5px;font-weight:800;font-variant-numeric:tabular-nums;color:var(--tx2)}
+.med-d.lo{color:var(--warn)}
+.med-p{font-size:9px;color:var(--tx3);margin-top:1px}
+.med-tot{display:flex;align-items:center;justify-content:space-between;margin-top:10px;padding-top:10px;border-top:1px solid var(--line)}
+.med-tot-l{font-size:10px;color:var(--tx2);font-weight:700}
+.med-tot-v{font-size:16px;font-weight:800;color:var(--teal);letter-spacing:-.02em}
+
+/* errores y fila inferior */
+.foot{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.err{display:flex;gap:10px;padding:9px 0;border-bottom:1px solid var(--line2);align-items:flex-start}
+.err:last-child{border-bottom:none}
+.err-n{width:22px;height:22px;border-radius:7px;flex:none;display:flex;align-items:center;justify-content:center;font-size:10.5px;font-weight:800;
+  background:rgba(255,122,107,.13);border:1px solid rgba(255,122,107,.32);color:var(--warn)}
+.err-t{font-size:11px;color:var(--tx2);line-height:1.5}
+.err-t b{color:var(--tx);font-weight:700}
+
+.tl-i{position:relative;padding:0 0 11px 18px}
+.tl-i:last-child{padding-bottom:0}
+.tl-i::before{content:"";position:absolute;left:0;top:3px;width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.14);border:1px solid var(--tx3)}
+.tl-i::after{content:"";position:absolute;left:3.5px;top:13px;bottom:0;width:1px;background:var(--line)}
+.tl-i:last-child::after{display:none}
+.tl-i.ok::before{background:var(--ok);border-color:var(--ok)}
+.tl-i.aqui::before{background:var(--am);border-color:var(--am);box-shadow:0 0 0 3.5px rgba(255,159,69,.2)}
+.tl-w{font-size:9.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--tx3)}
+.tl-i.aqui .tl-w{color:var(--am)}
+.tl-t{font-size:11px;color:var(--tx2);line-height:1.45;margin-top:2px}
+.tl-i.aqui .tl-t{color:var(--tx)}
+.aqui-tag{font-size:8px;font-weight:800;padding:2px 6px;border-radius:4px;background:var(--am);color:var(--ink);margin-left:5px;letter-spacing:.04em}
+</style>
+
+<div class="grid-bg"></div>
+<div class="z">
+
+  <div class="top">
+    <div>
+      <div class="eyebrow"><span class="dot"></span>Cuidado del cabello &middot; Martes 1 de septiembre</div>
+      <div class="h1">Tu cabello, semana a semana</div>
+    </div>
+    <div class="top-r">
+      <div class="kpi a"><div class="kpi-v">23</div><div class="kpi-k">Racha minox</div></div>
+      <div class="kpi b"><div class="kpi-v">Mes 4</div><div class="kpi-k">De minoxidil</div></div>
+      <div class="kpi c"><div class="kpi-v">$571</div><div class="kpi-k">Al mes</div></div>
+      <div class="btn">&#9881; Mi perfil</div>
+    </div>
+  </div>
+
+  <div class="wk">
+    <div class="wk-h">
+      <div class="wk-t">Tu semana de lavado</div>
+      <div class="wk-x">El pelo se organiza por semana, no por d&iacute;a: <b>2 lavados con Pilexil, 1 con CeraVe, 4 solo agua</b></div>
+    </div>
+    <div class="wk-grid">
+      <div class="d">
+        <div class="d-l">Lun</div><div class="d-que">Pilexil</div>
+        <div class="d-sub">Antica&iacute;da, solo cuero cabelludo</div>
+        <div class="d-tag t-pil">CON CHAMP&Uacute;</div>
+        <div class="d-dosis"><i class="dot2 on"></i><i class="dot2 on"></i><span>MINOX</span></div>
+      </div>
+      <div class="d hoy">
+        <div class="d-l">Mar &middot; hoy</div><div class="d-que">Solo agua</div>
+        <div class="d-sub">Mojas y acondicionador de medios a puntas</div>
+        <div class="d-tag t-agua">SIN CHAMP&Uacute;</div>
+        <div class="d-dosis"><i class="dot2 on"></i><i class="dot2"></i><span>1 DE 2</span></div>
+      </div>
+      <div class="d">
+        <div class="d-l">Mi&eacute;</div><div class="d-que">Solo agua</div>
+        <div class="d-sub"><b style="color:#5aa9ff">Nadas:</b> al salir s&iacute; lavas con CeraVe</div>
+        <div class="d-tag t-cer">+ CERAVE AL NADAR</div>
+        <div class="d-dosis"><i class="dot2"></i><i class="dot2"></i><span>MINOX</span></div>
+      </div>
+      <div class="d">
+        <div class="d-l">Jue</div><div class="d-que">Pilexil</div>
+        <div class="d-sub">Antica&iacute;da, solo cuero cabelludo</div>
+        <div class="d-tag t-pil">CON CHAMP&Uacute;</div>
+        <div class="d-dosis"><i class="dot2"></i><i class="dot2"></i><span>MINOX</span></div>
+      </div>
+      <div class="d">
+        <div class="d-l">Vie</div><div class="d-que">Solo agua</div>
+        <div class="d-sub">Mojas y acondicionador de medios a puntas</div>
+        <div class="d-tag t-agua">SIN CHAMP&Uacute;</div>
+        <div class="d-dosis"><i class="dot2"></i><i class="dot2"></i><span>MINOX</span></div>
+      </div>
+      <div class="d">
+        <div class="d-l">S&aacute;b</div><div class="d-que">CeraVe</div>
+        <div class="d-sub">+ mascarilla 5 min, <b>sin</b> acondicionador</div>
+        <div class="d-tag t-cer">EL D&Iacute;A QUE M&Aacute;S REPARA</div>
+        <div class="d-dosis"><i class="dot2"></i><i class="dot2"></i><span>MINOX</span></div>
+      </div>
+      <div class="d">
+        <div class="d-l">Dom</div><div class="d-que">Solo agua</div>
+        <div class="d-sub">Mojas y acondicionador de medios a puntas</div>
+        <div class="d-tag t-agua">SIN CHAMP&Uacute;</div>
+        <div class="d-dosis"><i class="dot2"></i><i class="dot2"></i><span>MINOX</span></div>
+      </div>
+    </div>
+    <div class="wk-note">Los d&iacute;as sin champ&uacute; <b>no son d&iacute;as sucios</b>: son descanso para el cuero cabelludo, y lavar a diario es lo que termina de resecar un pelo que ya est&aacute; seco. Lo que s&iacute; va <b>los 7 d&iacute;as</b>: acondicionador de medios a puntas, crema sin enjuague en h&uacute;medo y las dos dosis de minoxidil.</div>
+  </div>
+
+  <div class="mid">
+
+    <div class="col">
+      <div class="card">
+        <div class="card-h"><div class="card-t"><span class="b"></span>Hoy, en orden<span class="hoy-chip">MARTES &middot; SIN CHAMP&Uacute;</span></div><div class="card-x">4 de 11 hechos</div></div>
+
+        <div class="mom"><div class="mom-i ducha">&#128703;</div><div class="mom-n">En la ducha</div><div class="mom-h">06:53</div></div>
+        <div class="p on"><div class="p-n">1</div><div class="p-t"><b>Moja con agua tibia</b>, nunca caliente: el agua caliente reseca las puntas y no quita mejor la grasa.</div><div class="p-c">&#10003;</div></div>
+        <div class="p on"><div class="p-n">2</div><div class="p-t"><em>Hoy no lleva champ&uacute;.</em> Directo al acondicionador.</div><div class="p-c">&#10003;</div></div>
+        <div class="p on"><div class="p-n">3</div><div class="p-t"><b>Acondicionador Elvive Reparaci&oacute;n Total 5</b>, <b>solo de medios a puntas</b> &mdash; en la ra&iacute;z aplana el pelo y lo engrasa antes. Espera 1-2 min y enjuaga con agua fresca.</div><div class="p-c">&#10003;</div></div>
+
+        <div class="mom"><div class="mom-i hum">&#128167;</div><div class="mom-n">Al salir, con el pelo a&uacute;n h&uacute;medo</div><div class="mom-h">07:05</div></div>
+        <div class="p on"><div class="p-n">1</div><div class="p-t"><b>Seca a toques</b>, sin frotar. El pelo mojado se rompe mucho m&aacute;s f&aacute;cil que el seco.</div><div class="p-c">&#10003;</div></div>
+        <div class="p"><div class="p-n">2</div><div class="p-t"><b>Crema sin enjuague Elvive</b>, un ch&iacute;charo, solo en la mitad de abajo. Va <b>todos los d&iacute;as</b>, no solo los que te lavas.</div><div class="p-c"></div></div>
+        <div class="p"><div class="p-n">3</div><div class="p-t"><b>Peine de dientes anchos</b>, de puntas hacia arriba. Nunca cepillo en mojado.</div><div class="p-c"></div></div>
+        <div class="p"><div class="p-n">4</div><div class="p-t">Deja secar al aire. Con secadora: <b>aire tibio, a 20 cm</b>.</div><div class="p-c"></div></div>
+
+        <div class="mom"><div class="mom-i seco">&#127810;</div><div class="mom-n">Cuero cabelludo YA seco &mdash; minoxidil</div><div class="mom-h">07:25</div></div>
+        <div class="p"><div class="p-n">1</div><div class="p-t"><b>Media tapa de espuma</b> (Kirkland 5%) directo en el cuero, no en el pelo. Masajea 30 seg y l&aacute;vate las manos.</div><div class="p-c"></div></div>
+
+        <div class="mom"><div class="mom-i noche">&#127769;</div><div class="mom-n">Antes de dormir</div><div class="mom-h">22:30</div></div>
+        <div class="p"><div class="p-n">1</div><div class="p-t"><b>Segunda dosis de minoxidil.</b> Misma t&eacute;cnica. Si te ba&ntilde;as de noche, b&aacute;&ntilde;ate <b>antes</b>.</div><div class="p-c"></div></div>
+        <div class="p"><div class="p-n">2</div><div class="p-t"><b>Funda de almohada de sat&iacute;n.</b> Siete horas de fricci&oacute;n cada noche; es lo m&aacute;s barato que puedes hacer por tu pelo.</div><div class="p-c"></div></div>
+      </div>
+
+      <div class="card">
+        <div class="card-h"><div class="card-t"><span class="b"></span>Lo que arruina el resultado</div><div class="card-x">5</div></div>
+        <div class="err"><div class="err-n">1</div><div class="err-t"><b>Pilexil y Darrow el mismo d&iacute;a.</b> El Darrow (alquitr&aacute;n) es solo para cuando hay caspa activa, y ese d&iacute;a <b>sustituye</b> al Pilexil &mdash; no se suma.</div></div>
+        <div class="err"><div class="err-n">2</div><div class="err-t"><b>Minoxidil sobre el pelo mojado.</b> Se reparte irregular y se diluye. Cuero seco al tacto, siempre.</div></div>
+        <div class="err"><div class="err-n">3</div><div class="err-t"><b>Una sola dosis al d&iacute;a.</b> Son dos, y saltarse d&iacute;as es lo que hace concluir "no me funcion&oacute;". Si lo dejas, lo ganado se revierte.</div></div>
+        <div class="err"><div class="err-n">4</div><div class="err-t"><b>Acondicionador en la ra&iacute;z</b> con cuero graso: aplana el pelo y lo engrasa antes.</div></div>
+        <div class="err"><div class="err-n">5</div><div class="err-t"><b>Cepillo en mojado.</b> Peine de dientes anchos, de puntas hacia arriba.</div></div>
+      </div>
+    </div>
+
+    <div class="col">
+      <div class="mx">
+        <div class="card-h"><div class="card-t"><span class="b"></span>El minoxidil</div><div class="card-x">2 dosis al d&iacute;a</div></div>
+        <div class="dose">
+          <div class="dosis on"><div class="dosis-k">Dosis de la ma&ntilde;ana</div><div class="dose-v">07:25 &#10003;</div><div class="dosis-s">puesta hace 3 h 15</div></div>
+          <div class="dosis"><div class="dosis-k">Dosis de la noche</div><div class="dose-v">22:30</div><div class="dosis-s">en 11 h 40</div></div>
+        </div>
+
+        <div class="win">
+          <div class="win-k">No te mojes la cabeza hasta&hellip;</div>
+          <div class="win-h">11:25</div>
+          <div class="win-bar"><i></i></div>
+          <div class="win-t">El minoxidil necesita <b>unas 4 horas</b> sobre el cuero seco para absorberse. Mojarte antes lo arrastra y esa dosis no cuenta &mdash; por eso va <b>despu&eacute;s</b> de la ducha y nunca antes.</div>
+        </div>
+
+        <div class="fase">
+          <div class="f pas"><div class="f-m">MES 0-2</div><div class="f-n">No se ve nada todav&iacute;a</div><div class="f-c">&#10003;</div></div>
+          <div class="f pas"><div class="f-m">MES 2-4</div><div class="f-n">Shedding: se cae m&aacute;s</div><div class="f-c">&#10003;</div></div>
+          <div class="f act"><div class="f-m">MES 4-6</div><div class="f-n">Primeros pelos nuevos</div><div class="f-c">AQU&Iacute;</div></div>
+          <div class="f"><div class="f-m">MES 6-12</div><div class="f-n">Resultado real y m&aacute;ximo</div><div class="f-c"></div></div>
+        </div>
+        <div class="nota">El <b>shedding del mes 2-4 es se&ntilde;al de que funciona</b>, no de lo contrario: el fol&iacute;culo empuja fuera el pelo viejo para sacar el nuevo. Ah&iacute; es donde casi todos lo dejan y concluyen "no me sirvi&oacute;".</div>
+      </div>
+
+      <div class="card">
+        <div class="card-h"><div class="card-t"><span class="b"></span>Tu botiqu&iacute;n</div><div class="card-x">se te acaba en&hellip;</div></div>
+        <div class="med"><div class="med-b" style="background:var(--am)"></div><div><div class="med-n">Minoxidil 5% espuma Kirkland</div><div class="med-s">60 g &middot; 2 dosis al d&iacute;a</div></div><div class="med-r"><div class="med-d lo">11 d&iacute;as</div><div class="med-p">$233/mes</div></div></div>
+        <div class="med"><div class="med-b" style="background:var(--agua)"></div><div><div class="med-n">Pilexil Antica&iacute;da</div><div class="med-s">300 ml &middot; lunes y jueves</div></div><div class="med-r"><div class="med-d">54 d&iacute;as</div><div class="med-p">$105/mes</div></div></div>
+        <div class="med"><div class="med-b" style="background:var(--teal)"></div><div><div class="med-n">CeraVe Champ&uacute; Hidratante</div><div class="med-s">355 ml &middot; s&aacute;bados y al nadar</div></div><div class="med-r"><div class="med-d">72 d&iacute;as</div><div class="med-p">$65/mes</div></div></div>
+        <div class="med"><div class="med-b" style="background:var(--ok)"></div><div><div class="med-n">Acondicionador Elvive Rep. Total 5</div><div class="med-s">680 ml &middot; todos los d&iacute;as</div></div><div class="med-r"><div class="med-d">31 d&iacute;as</div><div class="med-p">$78/mes</div></div></div>
+        <div class="med"><div class="med-b" style="background:var(--pm)"></div><div><div class="med-n">Crema sin enjuague Elvive</div><div class="med-s">200 ml &middot; todos los d&iacute;as</div></div><div class="med-r"><div class="med-d">44 d&iacute;as</div><div class="med-p">$50/mes</div></div></div>
+        <div class="med"><div class="med-b" style="background:#c9a227"></div><div><div class="med-n">Mascarilla Elvive Total Repair 5</div><div class="med-s">300 ml &middot; s&aacute;bados</div></div><div class="med-r"><div class="med-d">88 d&iacute;as</div><div class="med-p">$26/mes</div></div></div>
+        <div class="med"><div class="med-b" style="background:#7f8c9b"></div><div><div class="med-n">Moroccanoil Treatment Light</div><div class="med-s">100 ml &middot; solo si lo notas &aacute;spero</div></div><div class="med-r"><div class="med-d">190 d&iacute;as</div><div class="med-p">$14/mes</div></div></div>
+        <div class="med-tot"><div class="med-tot-l">Costo mensual de tu rutina</div><div class="med-tot-v">$571</div></div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="foot">
+    <div class="card">
+      <div class="card-h"><div class="card-t"><span class="b"></span>Qu&eacute; esperar y cu&aacute;ndo</div><div class="card-x">mes 4</div></div>
+      <div class="tl-i ok"><div class="tl-w">Mes 1-2 &middot; superado</div><div class="tl-t">Nada visible. El fol&iacute;culo tarda en responder; la constancia de estas semanas es la que paga despu&eacute;s.</div></div>
+      <div class="tl-i ok"><div class="tl-w">Mes 2-4 &middot; superado</div><div class="tl-t">El shedding. Se cae m&aacute;s de lo normal y parece que empeora: es el pelo viejo saliendo para dejar sitio.</div></div>
+      <div class="tl-i aqui"><div class="tl-w">Mes 4-6 <span class="aqui-tag">EST&Aacute;S AQU&Iacute;</span></div><div class="tl-t">Primeros pelos nuevos, finos y cortos, sobre todo en las entradas. Se ven mejor con luz lateral que de frente.</div></div>
+      <div class="tl-i"><div class="tl-w">Mes 6-12</div><div class="tl-t">Densidad real y el m&aacute;ximo que vas a alcanzar. A partir de ah&iacute; es mantenimiento: es un tratamiento, no una cura.</div></div>
+    </div>
+
+    <div class="card">
+      <div class="card-h"><div class="card-t"><span class="b"></span>Antes que nada</div><div class="card-x">tu perfil</div></div>
+      <div class="err"><div class="err-n" style="background:rgba(90,169,255,.13);border-color:rgba(90,169,255,.32);color:var(--agua)">&#9873;</div><div class="err-t">Dijiste que la ca&iacute;da es <b>notoria y reciente</b>. Eso merece una visita al derm&oacute;logo o tric&oacute;logo para descartar causas puntuales &mdash; estr&eacute;s, alguna deficiencia, tiroides, un tel&oacute;geno efluvio. El minoxidil ayuda en general, pero no reemplaza saber la causa.</div></div>
+      <div class="err"><div class="err-n" style="background:rgba(255,255,255,.05);border-color:var(--line);color:var(--tx3)">&#9679;</div><div class="err-t"><b>Cabello lacio, fino, cuero graso.</b> Por eso el acondicionador nunca toca la ra&iacute;z y el aceite va con cuentagotas: en pelo fino, de m&aacute;s lo apelmaza.</div></div>
+      <div class="err"><div class="err-n" style="background:rgba(255,255,255,.05);border-color:var(--line);color:var(--tx3)">&#9679;</div><div class="err-t">Hay dos tratamientos m&aacute;s potentes (<b>dutasteride t&oacute;pico</b> y <b>minoxidil oral</b>) que <b>requieren receta</b>. Est&aacute;n en tu perfil, no en la rutina, a prop&oacute;sito.</div></div>
+    </div>
+  </div>
+
+</div>
+</div>
+</x-dc>
+</body>
+</html>

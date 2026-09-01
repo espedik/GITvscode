@@ -100,48 +100,67 @@ como parte del horario del día; son dos vistas del mismo hábito, con estado pr
 
 ## Módulo nativo: 💇 Cuidado del Cabello — `localStorage['cabello_v1']`
 
-**Reconstruido por completo el 2026-07-29** (misma sesión que el rediseño de Skincare) para seguir el **mismo patrón de perfil + guía**, a petición explícita de Adán ("en cuidado del cabello quiero una interfaz similar"). Ya no existen las secciones viejas de Dashboard/Lavados & Tratamientos/Productos/Cortes & Notas (CRUD de registros) ni sus modales — **Cabello es ahora una sola vista**, igual que Skincare, con su propio tema pastel aislado bajo `#view-cabello` (ámbar, azul, verde y terracota — sin morado desde el diseño original).
+**"Tu cabello, semana a semana".** Mismo lenguaje que Skincare y sin menú lateral, pero **el eje
+cambia**: la piel se organiza por día y el pelo por semana. *¿Qué champú toca hoy?* era la
+pregunta que la vista anterior escondía dentro de un párrafo de la ducha, así que la semana va
+primero y de ella cuelga todo lo demás. Adán, 2026-09-01: *"quiero un diseño futurista,
+visualmente entendible y facil de comprender"*.
+
+### Los productos y la semana no viven aquí
+
+Vienen de **`CIFRAS.RUTINA_PELO`** (`Dashboard/datos-maestros.js`), y las horas de cada momento
+de `CIFRAS.rutina()`. Antes había un `HAIR_DB` propio que filtraba por grosor y presupuesto:
+
+- **Seguía ofreciendo alternativas** (Pantene, Kérastase, Elvive Aceite Extraordinario) pese a la
+  petición del 2026-08-18 — *"no me des alternativas, por que si no al final no comprare nada"*.
+  No salían porque Elvive ganaba el orden, pero bastaba tocar el perfil para que la lista de la
+  compra nombrara una marca y la rutina otra.
+- **Su lista de compras alcanzaba a 4 de los 9 productos.** Faltaban los tres champús, la crema
+  sin enjuague y la funda: los champús se pintaban por una rama (`caChampusHtml`) que nunca los
+  registraba en el array `usados` del que salía la lista.
+
+Ahora la lista de la compra es un getter sobre `RUTINA_PELO` y el **control 12** del verificador
+comprueba nombre **y día** contra `RUTINA_TASKS`.
 
 ```js
 {
-  perfil: { tipo:'lacio|ondulado|rizado|afro', grosor:'fino|medio|grueso', cuero:'graso|seco|normal',
-            preocupaciones:['caida'|'resequedad'|'caspa'|'frizz', ...],
-            caidaPatron:'reciente|genetica|leve|no_seguro', presupuesto:'economico|medio|alto', notas:'' }
+  perfil: { tipo, grosor, cuero, preocupaciones:[], caidaPatron, presupuesto, notas },
+  minoxidilDesde: '2026-05-01' | null,          // de aqui salen el mes y la fase
+  hechos: { '2026-09-01': { pasos:['agua','champu'], minox:[0,1] } },
+  abierto: { minoxidil:'2026-08-13', ... }
 }
 ```
 
-**Valores por defecto de `perfil`** (`caDefault()`): el perfil real de Adán tal como lo dio el 2026-07-29 — cabello lacio, fino, cuero cabelludo graso, preocupaciones caída+resequedad, caída notoria y reciente, presupuesto medio.
+### Qué hay en la pantalla
 
-**Contenido de la vista** (`#view-cabello`, sin subnav, se renderiza completo con `caRenderGuia()` al cargar la página) — mismo patrón que Skincare:
-1. **Hero** (`.ca-hero`) con **chips-resumen** (`caResumenChips()`, en `#ca-resumen-chips`) y botón "✏️ Editar mi perfil" (`caToggleForm()`).
-2. **Formulario de perfil** (`#ca-form-card`, oculto hasta pulsar "Editar"; `caPintarPerfilForm`/`caLeerPerfilForm`/`caSavePerfil`): tipo de cabello, grosor, cuero cabelludo, patrón de caída (solo relevante si "caída" está marcada), preocupaciones (checkboxes múltiples: caída, resequedad, caspa, frizz), presupuesto, notas.
-3. **Guía generada** (`caRenderGuiaContent`, dentro de `#ca-guia-body`), en este orden:
-   - **🩺 Nota médica condicional** (`.ca-note`, azul) — solo aparece si `preocupaciones` incluye `caida` **y** `caidaPatron==='reciente'`: recomienda ver a un dermatólogo/tricólogo para descartar causas puntuales (estrés, deficiencias, tiroides, telógeno efluvio) antes de asumir que el tratamiento cosmético basta.
-   - **🚿 Rutina de lavado** — champú (en cuero cabelludo) + acondicionador (solo puntas), tarjetas `.ca-step` igual que `.sk-step` de Skincare.
-   - **💊 Tratamiento anticaída diario** (solo si `caida` marcada) — Minoxidil 5%, aplicado 2x/día **todos los días**, independiente de si es día de lavado.
-   - **✨ Después de lavar** (solo si `resequedad` marcada) — aceite/sérum ligero en puntas.
-   - **🗓️ Calendario semanal** — 7 "day pills" (`caDayPill`) de lavado/mascarilla/descanso, calculadas por `caWashDays(cuero, tieneResequedad)`: cuero seco → 2x/semana, graso sin resequedad → 4x/semana, graso+resequedad (o normal) → 3x/semana. El último día de lavado de la semana se marca como día de mascarilla.
-   - **⏳ Qué esperar y cuándo** (`caTimeline`) — semana 1-2 (adaptación, posible shedding inicial si hay tratamiento anticaída), 3-4 (control de grasa/hidratación), 8-12 y mes 4-6 (resultados de caída, condicionales).
-   - **🧖 Mascarilla hidratante** — 1 tarjeta `.ca-step`, sustituye al acondicionador el día de mascarilla.
-   - **⚠️ Qué evitar** (`caWarnHtml`) — agua muy caliente, acondicionador/mascarilla en la raíz si el cuero es graso, cepillar en mojado, cambiar de producto cada semana, y (si hay caída) abandonar el tratamiento antes de 3 meses.
-   - **🛒 Tu lista de compras** (`caListaHtml`) — productos recomendados deduplicados.
-   - **💡 Consejos** — tarjetas con ícono.
-   - Aviso final de que no sustituye a un dermatólogo/tricólogo (`.ca-disclaimer`).
+1. **Cabecera** con 3 cifras: **racha de minoxidil** (días seguidos con **las dos** dosis — una
+   sola no cuenta, que es justo el error que hace concluir "no me funcionó"), **mes de
+   minoxidil** y **costo al mes**.
+2. **Tu semana de lavado** (`#pe-semana`), lo primero de la pantalla: 7 tarjetas con el champú de
+   cada día, hoy marcado, y debajo de cada una los puntos de minoxidil de ese día — los de hoy
+   se marcan con un clic. El miércoles sale como "solo agua **+ CeraVe al nadar**", que es lo que
+   de verdad pasa. Bajo 920px las 7 columnas pasan a 7 tiras de una línea.
+3. **Hoy, en orden**: los 4 momentos (ducha → pelo húmedo → cuero seco → antes de dormir) con
+   sus horas reales y los pasos del día concreto — el sábado dice mascarilla y ningún otro día
+   la menciona. Cada paso se marca con un clic.
+4. **El minoxidil**, la tarjeta que manda: las 2 dosis con su hora, la **ventana de 4 horas** (a
+   qué hora puede volver a mojarse la cabeza; antes lo decía un párrafo enterrado) y la escalera
+   de fases con el mes actual marcado.
+5. **Tu botiquín** con lo que dura cada bote y **cuántos días quedan** — en rojo bajo 14. Un
+   clic en los días marca que abrió uno hoy; otro lo quita.
+6. **Lo que arruina el resultado**, **qué esperar y cuándo** con "ESTÁS AQUÍ", y **antes que
+   nada** con lo que sale de su perfil — incluido el aviso de ir al dermólogo si la caída es
+   notoria y reciente.
 
-`HAIR_DB`: objeto con 5 categorías (`champu`, `acondicionador`, `mascarilla`, `tratamientoCaida`, `aceitePuntas`), productos reales (**Darrow Doctar**, TRESemmé, L'Oréal Elvive, Kérastase, Moroccanoil, **Minoxidil 5% — Kirkland Signature o genérico**) etiquetados por `grosor`, `presu` y `ayuda`. `haPick(cat, perfil, n)` es el equivalente de `skPick()` para cabello — mismo algoritmo de filtro+orden, filtrando por `grosor` en vez de `tipo` de piel.
+### El tema es oscuro-primero
 
-### Productos ya comprados — 3 categorías reducidas a una sola opción fija (2026-08-07)
+Igual que Skincare: tokens `--pe-*` base en oscuro y el claro redefinido bajo
+`[data-theme="light"]`. Prefijo `pe-` (pelo); las `.ca-*` se fueron con la vista antigua y solo
+sobrevive el formulario de perfil, que reusa `.card` del shell. Paleta propia: **ámbar** de
+identidad, **azul agua** para la ducha y el CeraVe, **violeta** para la noche.
 
-Pedido explícito: *"de crema limpiadora me compré el CeraVe verde, ese ponme en mi lista de compras porque es el que me gusta, también para la caspa me compré el Darrow Doctar, igual déjalo en lista de compras y en rutina porque ese me gusta, también EUCERIN Hyaluron Filler Epigenetic lo mismo, ya compré y me gusta usarlo, y ponlo en compras — o sea, para lo que es cada producto solo déjame esos y no me des más opciones"*. A diferencia del resto de `SKIN_DB`/`HAIR_DB` (que siguen ofreciendo 2-4 alternativas de marca por categoría, para cuando Adán todavía no decide qué comprar), estas 3 categorías dejaron de ser una recomendación algorítmica — son la decisión ya tomada, así que se redujeron a **un solo objeto por array**, sin alternativas:
-
-- **`SKIN_DB.limpiador`** → solo `CeraVe Limpiador Espumoso (Foaming Facial Cleanser, verde)` (se quitaron La Roche-Posay Effaclar, Cetaphil Gel y CeraVe Limpiador Hidratante). `tipos`/`ayuda` se ampliaron a "todos" para que `skPick()` lo elija siempre sin importar el perfil de piel guardado.
-- **`SKIN_DB.hidratanteAM`** → solo `Eucerin Hyaluron-Filler + Epigenetic Día SPF15` (se quitaron CeraVe AM SPF30 y Neutrogena Hydro Boost). El SPF15 que trae este producto **no reemplaza** el paso de `SKIN_DB.spf` (protector solar SPF50 dedicado) — se dejó la nota explícita en `uso` para que no se confunda como protección solar suficiente por sí sola.
-- **`SKIN_DB.hidratantePM`** → solo `Eucerin Hyaluron-Filler + Epigenetic Noche` (se quitaron CeraVe PM y Cetaphil Crema).
-- **`HAIR_DB.champu`** → solo `Darrow Doctar (shampoo con alcatrão/coal tar)`, `ayuda:['caspa']` (se quitaron Vichy Dercos, Alpecin, Pantene Pro-V Anti-Caída y Head & Shoulders, que apuntaban a `caida`/`caspa`). **Esto es un cambio de enfoque, no solo de marca**: el champú pasó de tratar caída a tratar caspa — confirmado explícitamente con Adán antes de aplicarlo, ya que Vichy Dercos y Darrow Doctar no son equivalentes (atienden preocupaciones distintas). El tratamiento anticaída real sigue intacto y sin cambios: `HAIR_DB.tratamientoCaida` (Minoxidil 5%, diario, independiente del champú).
-- **También se actualizó `Coach/Coach.html → RUTINA_TASKS`** (y su copia en `Dashboard/dashboard.html`, ver [`../Coach/readme_coach.md`](../Coach/readme_coach.md) → "Productos ya comprados"): el paso de champú de los días de lavado (Lun/Jue/Sáb) pasó de "Vichy Dercos" a "Darrow Doctar" — es la única de las 3 categorías que Adán pidió explícitamente reflejar también en la rutina diaria, no solo en la lista de compras/guía.
-- **`LISTA_COMPRAS` del Dashboard** (estructura duplicada de este mismo catálogo, ver `../Dashboard/readme_dashboard.md` → "Datos duplicados") se actualizó a mano para las mismas 3 líneas — no hay sincronización automática entre `SKIN_DB`/`HAIR_DB` de este archivo y `LISTA_COMPRAS` de `dashboard.html`.
-
-Verificado con Playwright: la guía de Skincare muestra "CeraVe Limpiador Espumoso (Foaming Facial Cleanser, verde)" como paso 1 de la rutina de mañana y "Eucerin Hyaluron-Filler + Epigenetic Día/Noche SPF15" en los pasos de hidratante AM/PM; la guía de Cabello muestra "Darrow Doctar (shampoo con alcatrão/coal tar)" como único paso de champú con la píldora "Caspa"; cero errores de consola en ambas vistas.
+Contraste medido en los dos temas componiendo toda la pila de capas translúcidas: el peor caso
+queda en **4.95:1 en oscuro y 4.90:1 en claro**, sobre texto de 8.5-10px.
 
 ## Módulo nativo: 🦷 Dentista — `localStorage['dentista_v1']` (nuevo 2026-07-31)
 

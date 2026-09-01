@@ -187,6 +187,36 @@ recomendaba Isdin; `RUTINA_TASKS` ponía el adapaleno las 7 noches y la guía ma
 con un BHA que él no usa en ninguna parte. Ningún control miraba texto de productos, así que
 nadie lo vio. Ahora lo vigila el **control 11**.
 
+### La rutina del cabello
+
+`RUTINA_PELO` — los **9 productos** del pelo y, sobre todo, **la semana de lavado**: qué champú
+toca cada día vive aquí y en ningún otro sitio. Se pide desde JS:
+
+```js
+CIFRAS.RUTINA_PELO.dia(2)             // martes -> {champu, condicional, nota, mascarilla, ...}
+CIFRAS.RUTINA_PELO.duracionDias(p)    // contenido / (usos por semana / 7)
+CIFRAS.RUTINA_PELO.costoMesTotal      // $687 hoy
+```
+
+| Producto | Cuándo | Tamaño | Dura | Al mes |
+|---|---|---|---|---|
+| Minoxidil 5% en ESPUMA (Kirkland) | todos los días, **2 veces** | 60 g | ~30 d | **$233** |
+| Pilexil Anticaída 300 ml | lunes y jueves | 300 ml | ~88 d | $153 |
+| CeraVe Champú Hidratante sin sulfatos | sábado, y miércoles al nadar | 355 ml | ~83 d | $108 |
+| Darrow Doctar (alquitrán) | solo si hay caspa activa | 200 ml | — | — |
+| L'Oréal Elvive Reparación Total 5 | todos menos sábado | 680 ml | ~53 d | $68 |
+| Mascarilla L'Oréal Elvive Total Repair 5 | sábado | 300 ml | ~105 d | $37 |
+| Crema sin enjuague L'Oréal Elvive Total Repair 5 | todos los días | 200 ml | ~67 d | $49 |
+| Moroccanoil Treatment Light | cuando lo note áspero | 100 ml | ~700 d | $39 |
+| Funda de almohada de satín | una sola vez | — | — | — |
+
+`dias` es **0=domingo…6=sábado**, y `diasCondicionales` marca los que dependen de algo: el
+CeraVe del miércoles no va en la ducha de la mañana sino al salir de la alberca. El control 12
+lo tiene en cuenta al comparar días.
+
+`LISTA_COMPRAS.cabello` es un **getter sobre esta lista**, con los días incluidos, más los 2
+tratamientos de receta al final — que no son de mostrador y no forman parte de la rutina.
+
 ### El calendario · constantes
 
 `CALENDARIO` — lo que el calendario del Dashboard necesita y **no puede derivar solo**. Se pide
@@ -223,7 +253,7 @@ Es lo que evita que el calendario se congele como se congeló la vieja barra de 
 | `Dashboard/dashboard.html` | `<script src="datos-maestros.js">` | Prosa del Plan Maestro (`cifrarLiterales`) |
 | `Coach/Coach.html` | `<script src="../Dashboard/datos-maestros.js">` | Hallazgos, tabla de deudas, checklists (`aplicarDOM`) |
 | `Finanzas/Finanzas.html` | `<script src="../Dashboard/datos-maestros.js">` | **Es la fuente**: `seedData()` lee `CIFRAS.DEUDAS_SEED` |
-| `CuidadoPersonal/cuidadopersonal.html` | `<script src="../Dashboard/datos-maestros.js">` | Skincare: `CIFRAS.RUTINA_PIEL` y la hora de la rutina desde `CIFRAS.rutina()` |
+| `CuidadoPersonal/cuidadopersonal.html` | `<script src="../Dashboard/datos-maestros.js">` | Skincare y Cabello: `CIFRAS.RUTINA_PIEL`, `CIFRAS.RUTINA_PELO` y las horas desde `CIFRAS.rutina()` |
 
 El Dashboard es donde vive el archivo porque es el centro del proyecto, y ahí ya estaban
 `aleman-data.js` y `entrevistas-data.js`.
@@ -340,6 +370,12 @@ Qué revisa:
   anteriores miran números y estructura; ninguno miraba **texto de productos**, y por ahí se coló
   que la guía de Skincare recomendara una marca de protector solar y la rutina diaria otra. Si
   alguien cambia de producto en un sitio y no en el otro, sale aquí.
+
+- **Lo mismo para `RUTINA_PELO`, y además el DÍA** (control 12). La semana de lavado vive en
+  `RUTINA_PELO.productos[].dias` y las tareas que la ejecutan están repartidas por día, así que
+  pueden separarse sin que cambie ninguna cifra. Compara sin distinguir mayúsculas — "crema sin
+  enjuague X" y "Crema sin enjuague X" son el mismo producto — y busca por el nombre completo,
+  porque "CeraVe" a secas también casa con el limpiador facial de Skincare.
 
 Los dos últimos nacieron el 28-ago-2026, del `day` del auto. Un `day` equivocado no mueve ninguna
 cifra, así que ningún control anterior podía verlo. El 9 encontró de paso un segundo caso que

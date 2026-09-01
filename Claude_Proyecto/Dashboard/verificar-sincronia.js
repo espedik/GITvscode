@@ -487,6 +487,58 @@ const sinComentarios = s => s.replace(/\/\*[\s\S]*?\*\//g, '')
     ' productos, AM ' + am.length + ' pasos / PM ' + pm.length + ', $' + RP.costoMesTotal + ' al mes)');
 })();
 
+/* ── 12. La rutina del cabello: RUTINA_PELO contra RUTINA_TASKS ────────────────────
+   Gemelo del 11, para el pelo. Además del nombre comprueba **el día**: la semana de lavado
+   vive en `RUTINA_PELO.productos[].dias` y las tareas de `RUTINA_TASKS` que la ejecutan están
+   repartidas por día de la semana, así que las dos pueden separarse sin que cambie ninguna
+   cifra. El Pilexil va lunes y jueves: si un día se mueve en un sitio y no en el otro, sale
+   aquí. */
+(function peloCoherente() {
+  if (!global.window || !global.window.CIFRAS) return;
+  const C = global.window.CIFRAS;
+  const RP = C.RUTINA_PELO;
+  if (!RP) { problemas.push('RUTINA_PELO no existe en el maestro'); return; }
+
+  const tareas = C.rutina('');
+  const todo = JSON.stringify(tareas);
+  const malos = [];
+
+  // Sin distinguir mayúsculas: "crema sin enjuague X" y "Crema sin enjuague X" son el mismo
+  // producto, y exigir la caja exacta solo genera ruido.
+  const bajo = todo.toLowerCase();
+  RP.productos.forEach(function (p) {
+    if (bajo.indexOf(p.n.toLowerCase()) === -1)
+      malos.push('     ' + p.cat + ": RUTINA_PELO dice '" + p.n + "' y ese nombre no aparece en RUTINA_TASKS");
+  });
+
+  // Los días de cada champú, contra las tareas de la MAÑANA que lo nombran. Los
+  // `diasCondicionales` quedan fuera: el CeraVe del miércoles no va en la ducha de la mañana
+  // sino al salir de la alberca, en otra tarea que corre de lunes a viernes.
+  RP.productos.filter(function (p) { return p.champu && p.dias.length; }).forEach(function (p) {
+    const corto = p.n.toLowerCase();
+    const dias = {};
+    tareas.forEach(function (t) {
+      if (!/Rutina de la ma/.test(t.txt || '')) return;
+      if (JSON.stringify(t.subtareas || []).toLowerCase().indexOf(corto) === -1) return;
+      (t.dias || []).forEach(function (d) { dias[d] = true; });
+    });
+    const enTareas = Object.keys(dias).map(Number).sort(function (a, b) { return a - b; });
+    const cond = p.diasCondicionales || [];
+    const esperado = p.dias.filter(function (d) { return cond.indexOf(d) === -1; })
+      .sort(function (a, b) { return a - b; });
+    if (enTareas.length && enTareas.join(',') !== esperado.join(','))
+      malos.push('     ' + p.n + ': RUTINA_PELO lo pone los días [' + esperado.join(',') +
+        '] y la rutina de la mañana lo nombra los [' + enTareas.join(',') + ']  (0=domingo)');
+  });
+
+  if (!RP.productos.some(function (p) { return p.id === 'minoxidil'; }))
+    malos.push('     RUTINA_PELO sin minoxidil \u2014 es el tratamiento, no un extra');
+
+  if (malos.length) problemas.push('La rutina del cabello no coincide con las tareas que la ejecutan:\n' + malos.join('\n'));
+  else ok.push('RUTINA_PELO coincide con RUTINA_TASKS (' + RP.productos.length +
+    ' productos, $' + RP.costoMesTotal + ' al mes)');
+})();
+
 /* ── Impacto de lo que cambió en esta sesión ──────────────────────────────────────────────────
    Si `datos-maestros.js` cambió respecto al último commit, se comparan los valores de entonces
    con los de ahora y se dice qué se movió — incluido lo ARRASTRADO. Es la parte que Adán
