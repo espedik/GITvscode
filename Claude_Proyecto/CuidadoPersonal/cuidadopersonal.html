@@ -2,7 +2,9 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
+<!-- Sin zoom en táctil, con el resto de gestos intactos. Safari ignora user-scalable, así que el bloqueo va por eventos. -->
+<script src="../Dashboard/sin-zoom.js"></script>
 <title>Cuidado Personal</title>
 <!-- La fuente se carga SIN bloquear el pintado (2026-08-23). Antes era un `@import` dentro
      del <style>: el navegador no lo descubría hasta parsear el CSS y, mientras Google no

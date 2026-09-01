@@ -2,7 +2,9 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
+<!-- Sin zoom en táctil, con el resto de gestos intactos. Safari ignora user-scalable, así que el bloqueo va por eventos. -->
+<script src="../Dashboard/sin-zoom.js"></script>
 <title>Mis Finanzas MX</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💰</text></svg>">
 <!-- Variables maestras del proyecto. Finanzas es la FUENTE de los saldos (los escribe en

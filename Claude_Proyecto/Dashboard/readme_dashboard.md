@@ -342,6 +342,34 @@ El botón de privacidad pasó de flotar suelto a la izquierda a anclarse a la de
 barra corre una línea de acento en degradado — lo único que la separa del slide cuando el de abajo
 también es oscuro.
 
+### Sin zoom en táctil — `sin-zoom.js`
+
+Adán, 2026-09-01: *"no me dejes hacer zoom en el ipad ni en mi celular, pero deja los demas
+gestos de touch"*.
+
+**El `<meta viewport>` no basta**: Safari ignora `user-scalable=no` y `maximum-scale` desde iOS 10
+—lo desactivaron a propósito por accesibilidad—, así que en el iPad, que es justo donde se pidió,
+el meta no hace nada. El bloqueo va por eventos, en un archivo que cargan las seis apps:
+
+| Qué apaga | Cómo |
+|---|---|
+| Pellizco en Safari (iPhone, iPad) | cancela `gesturestart/change/end` |
+| Pellizco en el resto | cancela `touchmove` **solo con 2+ dedos** |
+| Doble toque | CSS `touch-action:manipulation` |
+| Ctrl+rueda | cancela `wheel` con `ctrlKey` |
+
+El doble toque va por CSS y no cancelando `touchend` a mano, porque eso **rompería los clicks**:
+si se cancela el `touchend`, el navegador ya no sintetiza el click y ningún botón responde.
+
+**Lo que sigue vivo**, y por eso el bloqueo mira siempre cuántos dedos hay: scroll vertical,
+scroll horizontal de las tiras, swipe entre pantallas y taps usan UN dedo, así que ninguno pasa
+por el filtro. Comprobado con toques reales en el Dashboard: el swipe cambia de pantalla, el
+scroll baja 484px y el tap dispara su click.
+
+Vive en `Dashboard/sin-zoom.js` y se carga con `<script src="../Dashboard/sin-zoom.js">` —una
+sola copia para las seis apps, como `datos-maestros.js`—. El meta se cerró igual en las seis:
+no manda en Safari, pero sí en Android y en el escritorio.
+
 ### Otras piezas
 
 - **Tira de 7 días** arriba: 66px de alto, la foto del gimnasio como fondo de toda la tarjeta

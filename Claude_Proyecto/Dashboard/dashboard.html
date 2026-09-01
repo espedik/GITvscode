@@ -4,7 +4,9 @@
 <meta charset="UTF-8">
 <!-- viewport-fit=cover: sin él, `env(safe-area-inset-*)` vale 0 en iOS y la barra inferior
      se monta sobre el home indicator del iPhone (2026-08-19, reportado por Adán). -->
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1, user-scalable=no">
+<!-- Sin zoom en táctil, con el resto de gestos intactos. Safari ignora user-scalable, así que el bloqueo va por eventos. -->
+<script src="sin-zoom.js"></script>
 <title>JARVIS — Dashboard</title>
 <meta name="description" content="Salvapantallas de mando: rotación automática de pantallas con lo más importante y pendiente de Coach, Finanzas y el resto de mis proyectos.">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='46' fill='%2305050a' stroke='%2300e0c0' stroke-width='4'/%3E%3Ccircle cx='50' cy='50' r='14' fill='%2300e0c0'/%3E%3Ccircle cx='50' cy='50' r='30' fill='none' stroke='%2300e0c0' stroke-width='2' opacity='.5'/%3E%3C/svg%3E">
