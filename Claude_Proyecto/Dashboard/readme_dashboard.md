@@ -338,9 +338,14 @@ un separador fino entre ellos: ordena la fila sin escribir un solo rótulo. Y va
 contenedor de 1180px como máximo, porque en una pantalla de 2000px se repartían a lo ancho y
 quedaban a un palmo unas de otras; ahora ocupan 999px centrados.
 
-El botón de privacidad pasó de flotar suelto a la izquierda a anclarse a la derecha, y bajo la
-barra corre una línea de acento en degradado — lo único que la separa del slide cuando el de abajo
-también es oscuro.
+El botón de privacidad se ancló a la derecha, y bajo la barra corre una línea de acento en
+degradado — lo único que la separa del slide cuando el de abajo también es oscuro.
+
+**El botón de privacidad es una píldora más.** Adán: *"ocultar finanzas quiero el mismo estilo que
+los demás, es más hazlo solo un icono pero del mismo estilo"*. Perdió el texto y el emoji: ahora es
+el ojo en trazo, con el mismo icono de 17px, el mismo alto de 29px y el mismo radio de 9px que las
+demás —medido contra una píldora sin subtítulo, que es la forma base—. Con las cifras ocultas el
+ojo se tacha y el botón se pinta en rojo; lo que hace lo dice su `title`, que cambia con el estado.
 
 ### Sin zoom en táctil — `sin-zoom.js`
 

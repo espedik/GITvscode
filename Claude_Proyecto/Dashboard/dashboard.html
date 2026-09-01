@@ -85,12 +85,14 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 .qa-name{font-size:11px;font-weight:600;white-space:nowrap}
 .qa-pill:hover .qa-name{font-weight:700}
 .qa-stat{font-family:var(--mono);font-size:9px;color:var(--g);font-weight:700;white-space:nowrap}
-.priv-btn{position:absolute;right:16px;top:50%;transform:translateY(-50%);display:flex;
-  align-items:center;gap:6px;padding:5px 11px;border-radius:9px;background:rgba(var(--ov),.045);
-  border:1px solid rgba(var(--ov),.09);color:var(--text3);font-size:10.5px;font-weight:600;
-  font-family:inherit;cursor:pointer;transition:all .2s}
-.priv-btn:hover{background:rgba(var(--ov),.1);color:var(--text)}
-.priv-btn.on{background:rgba(255,92,92,.12);border-color:rgba(255,92,92,.35);color:var(--r)}
+/* Es una .qa-pill más: mismo trazo, mismo hover, mismo tamaño de icono. Solo cambia que
+   va anclada al borde y que no lleva texto — lo que hace lo dice su `title`. */
+.priv-btn{position:absolute;right:16px;top:50%;transform:translateY(-50%);
+  padding:5px 8px;border:1px solid transparent;cursor:pointer;font-family:inherit}
+.priv-btn .qa-ico{color:var(--text3)}
+.priv-btn:hover .qa-ico{color:var(--text2)}
+.priv-btn.on{background:rgba(var(--r-rgb),.1);border-color:rgba(var(--r-rgb),.28)}
+.priv-btn.on .qa-ico,.priv-btn.on:hover .qa-ico{color:var(--r)}
 .fin-hidden{filter:blur(7px);user-select:none}
 /* Botón para colapsar/expandir la barra superior en celular (2026-08-11) — oculto por defecto
    (solo aplica en escritorio); se vuelve visible dentro de @media(max-width:480px) más abajo,
@@ -8081,7 +8083,11 @@ const QA_ICO = {
   diente: '<path d="M12 5.5c-1.6-1.2-4.4-1.9-6-.5-1.4 1.2-1.2 4 0 7 .9 2.2.8 5.3 2 6.4 1 .9 1.7-.6 2-2.4.3-1.7.6-2.6 2-2.6s1.7.9 2 2.6c.3 1.8 1 3.3 2 2.4 1.2-1.1 1.1-4.2 2-6.4 1.2-3 1.4-5.8 0-7-1.6-1.4-4.4-.7-6 .5z"></path>',
   camisa: '<path d="M15.5 3 12 6 8.5 3 4 5v5h3v11h10V10h3V5z"></path>',
   globo:  '<circle cx="12" cy="12" r="9"></circle><path d="M3 12h18"></path><path d="M12 3a15 15 0 0 1 0 18a15 15 0 0 1 0-18z"></path>',
-  code:   '<rect x="2.5" y="4" width="19" height="16" rx="2"></rect><path d="M7.5 10l2.2 2.2-2.2 2.2M12 15h4.5"></path>'
+  code:   '<rect x="2.5" y="4" width="19" height="16" rx="2"></rect><path d="M7.5 10l2.2 2.2-2.2 2.2M12 15h4.5"></path>',
+  // El ojo del modo privado: mismo trazo y misma rejilla que los de las apps, para que
+  // el botón no se lea como una pieza de otra familia (Adán, 2026-09-01).
+  ojo:    '<path d="M2.2 12s3.6-7 9.8-7 9.8 7 9.8 7-3.6 7-9.8 7-9.8-7-9.8-7z"></path><circle cx="12" cy="12" r="3"></circle>',
+  ojoOff: '<path d="M9.9 5.2A9.5 9.5 0 0 1 12 5c6.2 0 9.8 7 9.8 7a17 17 0 0 1-2.4 3.3M6.5 6.6A17 17 0 0 0 2.2 12s3.6 7 9.8 7a9.5 9.5 0 0 0 4-.9"></path><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"></path><path d="M3 3l18 18"></path>'
 };
 const qaSvg = (k, c) => `<svg viewBox="0 0 24 24" stroke="${c}" aria-hidden="true">${QA_ICO[k]}</svg>`;
 
@@ -8110,7 +8116,11 @@ function renderQuickApps(){
   document.getElementById('qaBar').innerHTML=
     `<button class="qa-toggle-btn" onclick="toggleQaBar()" aria-label="Mostrar u ocultar accesos directos" title="Mostrar/ocultar accesos directos">🔗 Apps <span class="qa-toggle-chevron">▾</span></button>`+
     `<div class="qa-grupos">${grupos.map(g=>g.map(pill).join('')).join('<span class="qa-sep"></span>')}</div>`+
-    `<button class="priv-btn${privado?' on':''}" id="priv-btn" onclick="togglePrivado()">${privado?'🙈 Modo privado':'👁️ Ocultar finanzas'}</button>`;
+    `<button class="qa-pill priv-btn${privado?' on':''}" id="priv-btn" onclick="togglePrivado()"
+       title="${privado?'Las cifras están ocultas — tocar para mostrarlas':'Ocultar las cifras'}"
+       aria-label="${privado?'Mostrar las cifras':'Ocultar las cifras'}" aria-pressed="${privado}">
+       <span class="qa-ico">${qaSvg(privado?'ojoOff':'ojo','currentColor')}</span>
+     </button>`;
   syncSlidesTop();
 }
 // Colapsa/expande la barra superior — solo tiene efecto visual en celular (≤480px, ver CSS de
