@@ -294,12 +294,16 @@ su barra de avance, y la fila de sistema (menú, pantalla completa, ajustes, ayu
 activo se marca con fondo y color, sin taparse.
 
 **Vive plegado.** Adán, 2026-09-01: *"escóndelo y ya cuando haga click a esa sección, que
-aparezca todo"*. En reposo es una tira de **44px** con tres cosas: el tirador, el icono de la
-pantalla en la que estás y el play. Al tocarlo se abre a 198px con todo; al elegir pantalla se
-pliega solo, que es justo para lo que se abre. El estado se recuerda en `dash-rail-abierto`.
+aparezca todo"*. En reposo es una tira de **56px** con el tirador, las **ocho pantallas sin
+nombre** y el play: se sigue viendo en cuál estás y se salta a cualquier otra sin abrir nada
+—*"cuando esté así, muéstrame todos los iconos"*—. Al tocar el tirador se abre a 198px con los
+nombres, el reloj y los ajustes; al elegir pantalla se pliega solo, que es justo para lo que se
+abre. El estado se recuerda en `dash-rail-abierto`.
+
+Los ocho iconos de 38px caben incluso a 720px de alto, que es la ventana más baja medida.
 
 **El hueco sigue al rail.** El padding derecho del slide es una variable (`--pad-rail`) que cambia
-con la clase `rail-on` del `body`: 76px plegado, 230px abierto. Así el contenido pasa de 1306 a
+con la clase `rail-on` del `body`: 88px plegado, 230px abierto. Así el contenido pasa de 1306 a
 **1400px** —su máximo— en cuanto el rail se cierra. El piso izquierdo bajó de 120 a 42px, porque
 existía solo para esquivar el rail que ya no está de ese lado. Comprobado slide por slide en los
 ocho: ninguno queda por debajo del rail, ni abierto ni cerrado.

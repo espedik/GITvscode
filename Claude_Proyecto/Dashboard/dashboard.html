@@ -603,24 +603,24 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
   background:var(--bar2);border:1px solid rgba(var(--ov),.08);backdrop-filter:blur(14px);
   border-radius:18px;padding:14px 12px;opacity:.72;transition:opacity .3s}
 .hud-side:hover{opacity:1}
-body{--pad-rail:max(6vw,76px)}
+body{--pad-rail:max(6vw,88px)}
 body.rail-on{--pad-rail:max(6vw,230px)}
 .hud-side-right{right:16px;top:70px;bottom:16px;width:198px;box-sizing:border-box;
   transition:width .22s ease,padding .22s ease}
 /* PLEGADO por defecto: una tira de 44px que solo dice en qué pantalla estás y deja pausar.
    Adán, 2026-09-01: "escóndelo y ya cuando haga click a esa sección, que aparezca todo". */
-.hud-side-right.mini{width:44px;padding:12px 6px;align-items:center}
+.hud-side-right.mini{width:56px;padding:12px 8px;align-items:center}
 .hud-side-right.mini .hud-estado,
 .hud-side-right.mini .hud-progress,
 .hud-side-right.mini .hud-sistema,
 .hud-side-right.mini .hud-nav-t,
 .hud-side-right.mini .hud-slidenav{display:none}
 .hud-side-right.mini .hud-play{border-top:0;padding-top:0}
-/* Plegado solo se ve la pantalla ACTIVA, como marcador de posición. */
-.hud-side-right.mini .hud-nav-btn{display:none}
-.hud-side-right.mini .hud-nav-btn.on{display:flex;justify-content:center;padding:5px;
-  grid-template-columns:none;width:32px}
-.hud-side-right.mini .hud-pantallas{flex:none;overflow:visible;align-items:center}
+/* Plegado se ven las OCHO, solo que sin nombre: sigue sirviendo para saltar de pantalla
+   sin abrir nada (Adán, 2026-09-01: "cuando esté así, muéstrame todos los iconos"). */
+.hud-side-right.mini .hud-nav-btn{display:flex;justify-content:center;padding:6px;
+  grid-template-columns:none;width:38px}
+.hud-side-right.mini .hud-pantallas{flex:none;overflow:visible;align-items:center;gap:2px}
 /* El tirador: el botón que abre y cierra, siempre arriba del todo. */
 .hud-tirador{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;
   padding:5px 0;border:0;border-radius:8px;background:rgba(var(--ov),.05);color:var(--text3);
