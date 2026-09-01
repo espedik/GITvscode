@@ -278,6 +278,30 @@ anclas internas de Coach. Ver Regla 1 de `CLAUDE.md`.
 Los bloques con `fijo:true` (ALTEN) salen en la línea de tiempo y cuentan para "ahora/siguiente",
 pero no llevan checkbox ni suman al progreso.
 
+### La barra de apps
+
+Adán, 2026-08-31: *"dame un mejor diseño futurista de la parte de arriba de las apps"*.
+
+**Los emojis no servían de iconos.** La bandera de Alemán se pintaba como las letras `DE` en
+Windows —Chrome no trae emoji de banderas ahí—, y a 16px el diente y el frasco de skincare no se
+distinguían de una mancha. Ahora cada app lleva un **SVG de trazo** de 24×24, mismo grosor y mismas
+terminaciones, así que la fila se lee pareja y el hover los enciende con un halo del propio color.
+
+**Los colores están medidos contra los dos fondos.** El primer intento dejó el diente en `#f0f4ff`
+—invisible en tema claro, el mismo fallo que tenía el emoji— y otros tres por debajo de 1.9:1.
+Bajados a tonos medios (`#0891b2`, `#16a34a`, `#0d9488`, `#38bdf8`), el peor contraste es 5.43 en
+oscuro y 1.92 en claro.
+
+**Tres grupos, no diez botones sueltos.** Lo que administras (Coach, Finanzas), el cuerpo —las seis
+que son pestañas de la MISMA app de Cuidado Personal— y lo que estudias (Alemán, Entrevistas), con
+un separador fino entre ellos: ordena la fila sin escribir un solo rótulo. Y van dentro de un
+contenedor de 1180px como máximo, porque en una pantalla de 2000px se repartían a lo ancho y
+quedaban a un palmo unas de otras; ahora ocupan 999px centrados.
+
+El botón de privacidad pasó de flotar suelto a la izquierda a anclarse a la derecha, y bajo la
+barra corre una línea de acento en degradado — lo único que la separa del slide cuando el de abajo
+también es oscuro.
+
 ### Otras piezas
 
 - **Tira de 7 días** arriba: 66px de alto, la foto del gimnasio como fondo de toda la tarjeta

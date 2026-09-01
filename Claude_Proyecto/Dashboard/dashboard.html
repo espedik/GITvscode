@@ -58,17 +58,35 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 ::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:rgba(var(--ov),.14);border-radius:3px}
 
 /* ─── BARRA SUPERIOR — acceso directo a los demás proyectos ─ */
-.qa-bar{position:fixed;top:0;left:0;right:0;z-index:60;display:flex;align-items:center;justify-content:center;
-  gap:8px;flex-wrap:wrap;padding:10px 16px;background:var(--bar);backdrop-filter:blur(18px);
-  border-bottom:1px solid rgba(var(--ov),.07)}
-.qa-pill{display:flex;align-items:center;gap:8px;padding:6px 13px;border-radius:30px;background:rgba(var(--ov),.045);
-  border:1px solid rgba(var(--ov),.08);text-decoration:none;color:var(--text);transition:all .2s}
-.qa-pill:hover{background:rgba(var(--ov),.1);border-color:rgba(0,232,122,.4);transform:translateY(-1px)}
-.qa-ico{font-size:16px}
+.qa-bar{position:fixed;top:0;left:0;right:0;z-index:60;display:flex;align-items:center;
+  justify-content:center;gap:6px;flex-wrap:wrap;padding:9px 16px;background:var(--bar);
+  backdrop-filter:blur(18px);border-bottom:1px solid rgba(var(--ov),.07)}
+/* Una línea de acento bajo la barra: es lo único que la separa del fondo cuando el slide
+   de abajo es oscuro, y da el borde luminoso que pedía el rediseño del 2026-08-31. */
+.qa-bar::after{content:'';position:absolute;left:0;right:0;bottom:-1px;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(var(--g-rgb),.5),rgba(var(--cy-rgb),.35),transparent)}
+/* Las apps van AGRUPADAS y con ancho máximo. Antes se repartían por los 2000px de la
+   pantalla y quedaban a un palmo unas de otras. */
+.qa-grupos{display:flex;align-items:center;gap:4px;flex-wrap:wrap;justify-content:center;
+  max-width:1180px;margin:0 auto}
+.qa-sep{width:1px;height:20px;background:rgba(var(--ov),.12);margin:0 6px;flex-shrink:0}
+.qa-pill{display:flex;align-items:center;gap:7px;padding:5px 11px;border-radius:9px;
+  background:transparent;border:1px solid transparent;text-decoration:none;color:var(--text2);
+  transition:background .15s,border-color .15s,color .15s}
+.qa-pill:hover{background:rgba(var(--ov),.06);border-color:rgba(var(--ov),.1);color:var(--text)}
+/* El icono es SVG de trazo, no emoji: 🇩🇪 se pinta como las letras "DE" en Windows y el
+   diente y el frasco de skincare no se distinguían a 16px. Cada app conserva su color. */
+.qa-ico{display:flex;align-items:center;justify-content:center;width:17px;height:17px;flex-shrink:0}
+.qa-ico svg{width:100%;height:100%;stroke-width:1.7;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.qa-pill:hover .qa-ico{filter:drop-shadow(0 0 5px currentColor)}
 .qa-txt{display:flex;flex-direction:column;line-height:1.15}
-.qa-name{font-size:11px;font-weight:800}
-.qa-stat{font-size:9.5px;color:var(--g);font-weight:600}
-.priv-btn{position:absolute;left:16px;top:50%;transform:translateY(-50%);display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:30px;background:rgba(var(--ov),.045);border:1px solid rgba(var(--ov),.08);color:var(--text2);font-size:11px;font-weight:700;font-family:inherit;cursor:pointer;transition:all .2s}
+.qa-name{font-size:11px;font-weight:600;white-space:nowrap}
+.qa-pill:hover .qa-name{font-weight:700}
+.qa-stat{font-family:var(--mono);font-size:9px;color:var(--g);font-weight:700;white-space:nowrap}
+.priv-btn{position:absolute;right:16px;top:50%;transform:translateY(-50%);display:flex;
+  align-items:center;gap:6px;padding:5px 11px;border-radius:9px;background:rgba(var(--ov),.045);
+  border:1px solid rgba(var(--ov),.09);color:var(--text3);font-size:10.5px;font-weight:600;
+  font-family:inherit;cursor:pointer;transition:all .2s}
 .priv-btn:hover{background:rgba(var(--ov),.1);color:var(--text)}
 .priv-btn.on{background:rgba(255,92,92,.12);border-color:rgba(255,92,92,.35);color:var(--r)}
 .fin-hidden{filter:blur(7px);user-select:none}
@@ -7952,28 +7970,49 @@ function renderSkills(){
 }
 
 // ── BARRA SUPERIOR — acceso directo a los demás proyectos (persistente, no rota) ─
+// Iconos de trazo, uno por app. Reemplazan a los emoji: la bandera de Alemán se pintaba
+// como las letras "DE" en Windows, y el diente y el frasco no se distinguían a 16px. Son
+// paths de 24x24, mismo grosor y mismas terminaciones, para que la fila se lea pareja.
+const QA_ICO = {
+  coach:  '<circle cx="12" cy="12" r="9"></circle><circle cx="12" cy="12" r="4"></circle><circle cx="12" cy="12" r="1" fill="currentColor"></circle>',
+  dinero: '<rect x="2" y="6" width="20" height="12" rx="2"></rect><circle cx="12" cy="12" r="2.6"></circle><path d="M6 12h.01M18 12h.01"></path>',
+  gota:   '<path d="M12 3.2s5.5 5.6 5.5 9.4a5.5 5.5 0 0 1-11 0C6.5 8.8 12 3.2 12 3.2z"></path>',
+  hoja:   '<path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10z"></path><path d="M2 21c0-3 1.85-5.36 5.08-6"></path>',
+  pesa:   '<path d="M6.5 6.5v11M17.5 6.5v11M3 9.5v5M21 9.5v5M6.5 12h11"></path>',
+  olla:   '<path d="M4 11h16"></path><path d="M5 11v6a3 3 0 0 0 3 3h8a3 3 0 0 0 3-3v-6"></path><path d="M9 7c0-1.5 1-2 1.5-3M14 7c0-1.5 1-2 1.5-3"></path>',
+  diente: '<path d="M12 5.5c-1.6-1.2-4.4-1.9-6-.5-1.4 1.2-1.2 4 0 7 .9 2.2.8 5.3 2 6.4 1 .9 1.7-.6 2-2.4.3-1.7.6-2.6 2-2.6s1.7.9 2 2.6c.3 1.8 1 3.3 2 2.4 1.2-1.1 1.1-4.2 2-6.4 1.2-3 1.4-5.8 0-7-1.6-1.4-4.4-.7-6 .5z"></path>',
+  camisa: '<path d="M15.5 3 12 6 8.5 3 4 5v5h3v11h10V10h3V5z"></path>',
+  globo:  '<circle cx="12" cy="12" r="9"></circle><path d="M3 12h18"></path><path d="M12 3a15 15 0 0 1 0 18a15 15 0 0 1 0-18z"></path>',
+  code:   '<rect x="2.5" y="4" width="19" height="16" rx="2"></rect><path d="M7.5 10l2.2 2.2-2.2 2.2M12 15h4.5"></path>'
+};
+const qaSvg = (k, c) => `<svg viewBox="0 0 24 24" stroke="${c}" aria-hidden="true">${QA_ICO[k]}</svg>`;
+
 function renderQuickApps(){
   const t=today();
-  const apps=[
-    {ico:'🪙',n:'Coach',href:'../Coach/Coach.html',stat:activePhase().tag},
-    {ico:'💰',n:'Finanzas',href:'../Finanzas/Finanzas.html',stat:''},
-    {ico:'🧴',n:'Skincare',href:'../CuidadoPersonal/cuidadopersonal.html?tab=skincare',stat:''},
-    {ico:'🥦',n:'Salud',href:'../CuidadoPersonal/cuidadopersonal.html?tab=salud',
-     stat:(()=>{const c=(D.sal.alimentos||[]).filter(a=>a.fecha===t).reduce((s,a)=>s+(a.cal||0),0);return c?fmt(c)+' kcal':'';})()},
-    {ico:'🏋️',n:'Ejercicio',href:'../CuidadoPersonal/cuidadopersonal.html?tab=ejercicio',stat:''},
-    {ico:'🍳',n:'Comida',href:'../CuidadoPersonal/cuidadopersonal.html?tab=comida',stat:''},
-    {ico:'🦷',n:'Dentista',href:'../CuidadoPersonal/cuidadopersonal.html?tab=dentista',stat:''},
-    {ico:'👔',n:'Vestimenta',href:'../CuidadoPersonal/cuidadopersonal.html?tab=vestimenta',stat:''},
-    {ico:'🇩🇪',n:'Alemán',href:'../Aleman/index.html',stat:''},
-    {ico:'💻',n:'Entrevistas',href:'../Entrevistas/entrevistas.html',stat:''}
+  // Tres grupos: lo que administras, el cuerpo (son pestañas de la MISMA app) y lo que
+  // estudias. Un separador entre ellos ordena la fila sin escribir un solo rótulo.
+  const CP = '../CuidadoPersonal/cuidadopersonal.html?tab=';
+  const grupos=[
+    [{k:'coach', c:'#b06eff', n:'Coach',   href:'../Coach/Coach.html', stat:activePhase().tag},
+     {k:'dinero',c:'#10b981', n:'Finanzas',href:'../Finanzas/Finanzas.html', stat:''}],
+    [{k:'gota',  c:'#0891b2', n:'Skincare',  href:CP+'skincare',  stat:''},
+     {k:'hoja',  c:'#16a34a', n:'Salud',     href:CP+'salud',
+      stat:(()=>{const c=(D.sal.alimentos||[]).filter(a=>a.fecha===t).reduce((s,a)=>s+(a.cal||0),0);return c?fmt(c)+' kcal':'';})()},
+     {k:'pesa',  c:'#f59e0b', n:'Ejercicio', href:CP+'ejercicio', stat:''},
+     {k:'olla',  c:'#fb923c', n:'Comida',    href:CP+'comida',    stat:''},
+     {k:'diente',c:'#38bdf8', n:'Dentista',  href:CP+'dentista',  stat:''},
+     {k:'camisa',c:'#94a3b8', n:'Vestimenta',href:CP+'vestimenta',stat:''}],
+    [{k:'globo', c:'#f87171', n:'Alemán',    href:'../Aleman/index.html', stat:''},
+     {k:'code',  c:'#0d9488', n:'Entrevistas',href:'../Entrevistas/entrevistas.html', stat:''}]
   ];
+  const pill = a=>`<a href="${a.href}" class="qa-pill" title="${a.n}">
+    <span class="qa-ico" style="color:${a.c}">${qaSvg(a.k, a.c)}</span>
+    <span class="qa-txt"><span class="qa-name">${a.n}</span>${a.stat?`<span class="qa-stat">${a.stat}</span>`:''}</span>
+  </a>`;
   document.getElementById('qaBar').innerHTML=
     `<button class="qa-toggle-btn" onclick="toggleQaBar()" aria-label="Mostrar u ocultar accesos directos" title="Mostrar/ocultar accesos directos">🔗 Apps <span class="qa-toggle-chevron">▾</span></button>`+
-    `<button class="priv-btn${privado?' on':''}" id="priv-btn" onclick="togglePrivado()">${privado?'🙈 Modo privado':'👁️ Ocultar finanzas'}</button>`+
-    apps.map(a=>`<a href="${a.href}" class="qa-pill" title="${a.n}">
-    <span class="qa-ico">${a.ico}</span>
-    <span class="qa-txt"><span class="qa-name">${a.n}</span>${a.stat?`<span class="qa-stat${a.fin&&privado?' fin-hidden':''}">${a.stat}</span>`:''}</span>
-  </a>`).join('');
+    `<div class="qa-grupos">${grupos.map(g=>g.map(pill).join('')).join('<span class="qa-sep"></span>')}</div>`+
+    `<button class="priv-btn${privado?' on':''}" id="priv-btn" onclick="togglePrivado()">${privado?'🙈 Modo privado':'👁️ Ocultar finanzas'}</button>`;
   syncSlidesTop();
 }
 // Colapsa/expande la barra superior — solo tiene efecto visual en celular (≤480px, ver CSS de
