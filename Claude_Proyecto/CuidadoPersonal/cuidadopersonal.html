@@ -980,7 +980,9 @@ body::before{content:'';position:fixed;inset:0 0 auto 0;height:280px;pointer-eve
 <!-- El material comun de las 8 areas: velos de blanco con desenfoque.
      Va despues del <style> para ganar por orden. Ver vidrio.css. -->
 <link rel="stylesheet" href="vidrio.css">
+<link rel="stylesheet" href="../Dashboard/ficha.css">
 <script src="../Dashboard/datos-maestros.js"></script>
+<script src="../Dashboard/ficha.js"></script>
 <script src="cabecera.js"></script>
 <script>
 (function () {
@@ -1499,20 +1501,32 @@ function guiaSoloPerfil(bodyId,navId){
 // ~28h/semana al volante (UV de día, deslumbramiento de noche), jornada completa de pantalla en
 // ALTEN más 2 bloques diarios construyendo esta app, y 5h40-6h40 de sueño. Los 3 datos salen de
 // su rutina real, no de un promedio de población.
-const OJ_PRODUCTOS=[
-  {ico:'💧',n:'Lágrimas artificiales SIN conservadores (monodosis)',cat:'Ojo seco — el básico, úsalas sin miedo'},
-  {ico:'🧴',n:'Lágrimas en gel para la noche',cat:'Ojo seco — más espesas, para dormir'},
-  {ico:'♨️',n:'Compresa o antifaz térmico para ojos (de microondas)',cat:'Ojo seco — destapa las glándulas del párpado'},
-  {ico:'🧼',n:'Toallitas limpiadoras de párpados (higiene palpebral)',cat:'Ojo seco y blefaritis'},
-  {ico:'🕶️',n:'Lentes de sol polarizados con UV400',cat:'Al volante — de día'},
-  {ico:'🌙',n:'Antirreflejante para tus lentes graduados',cat:'Al volante — de noche'},
-  {ico:'💻',n:'Lentes con filtro de luz azul y antirreflejante',cat:'Pantalla — ALTEN y la app'},
-  {ico:'🖥️',n:'Soporte para elevar el monitor a la altura de los ojos',cat:'Pantalla — ergonomía'},
-  {ico:'💡',n:'Lámpara de escritorio de luz cálida regulable',cat:'Pantalla — para el bloque de las 23:30'},
-  {ico:'💊',n:'Suplemento de Luteína + Zeaxantina (10 mg / 2 mg)',cat:'Nutrición — protege la mácula'},
-  {ico:'👁️',n:'Gotas humectantes con ácido hialurónico',cat:'Alivio rápido a media jornada'},
-  {ico:'🫙',n:'Crema de contorno de ojos con cafeína',cat:'Ojeras vasculares — las tuyas'},
-];
+// El emoji y la frase corta SÍ son de esta guía: dicen para qué sirve cada cosa
+// EN TU CASO ("Pantalla — para el bloque de las 23:30"), que es más específico que
+// el grupo del maestro. El NOMBRE no: ese vive en `CUIDADO_OJOS` y antes estaba
+// escrito aquí también, así que cambiarlo en un sitio dejaba el otro mintiendo.
+const OJ_EXTRA={
+  lagrimas:       {ico:'💧',cat:'Ojo seco — el básico, úsalas sin miedo'},
+  gelNoche:       {ico:'🧴',cat:'Ojo seco — más espesas, para dormir'},
+  compresa:       {ico:'♨️',cat:'Ojo seco — destapa las glándulas del párpado'},
+  toallitas:      {ico:'🧼',cat:'Ojo seco y blefaritis'},
+  polarizados:    {ico:'🕶️',cat:'Al volante — de día'},
+  antirreflejante:{ico:'🌙',cat:'Al volante — de noche'},
+  luzAzul:        {ico:'💻',cat:'Pantalla — ALTEN y la app'},
+  soporte:        {ico:'🖥️',cat:'Pantalla — ergonomía'},
+  lampara:        {ico:'💡',cat:'Pantalla — para el bloque de las 23:30'},
+  luteina:        {ico:'💊',cat:'Nutrición — protege la mácula'},
+  hialuronico:    {ico:'👁️',cat:'Alivio rápido a media jornada'},
+  contorno:       {ico:'🫙',cat:'Ojeras vasculares — las tuyas'},
+};
+const OJ_PRODUCTOS=(function(){
+  const C=window.CIFRAS&&window.CIFRAS.CUIDADO_OJOS;
+  if(!C) return [];
+  return C.todos.map(function(p){
+    const e=OJ_EXTRA[p.id]||{};
+    return {id:p.id, n:p.n, ico:e.ico||'👁️', cat:e.cat||''};
+  });
+})();
 function ojRenderGuia(){
   const B=document.getElementById('oj-guia-body');
   if(!B) return;
@@ -2751,6 +2765,29 @@ const initialTab=new URLSearchParams(location.search).get('tab');
 if(['skincare','cabello','salud','ejercicio','comida','dentista','ojos','vestimenta'].includes(initialTab)) mainTab(initialTab);
 const themeBtn=document.getElementById('theme-toggle-btn');
 if(themeBtn) themeBtn.textContent=document.documentElement.getAttribute('data-theme')==='dark'?'☀️':'🌙';
+</script>
+
+<!-- La ficha de un producto. Es la MISMA que abre la lista de la compra del
+     dashboard: el molde vive en ../Dashboard/ficha.js y aquí solo se usa. -->
+<div class="pf-fondo" id="pfFondo" onclick="if(event.target===this) pfCerrar()"></div>
+<script>
+// El botón "Qué es" en las tres listas de productos de esta app. No se reescribe
+// ninguna: `pfEnlazar` recorre las tarjetas ya pintadas, busca cada nombre en el
+// maestro y le cuelga el botón. `pfEnlazarVivo` lo repite cuando la lista se
+// repinta — pasa al marcar un producto como abierto, por ejemplo.
+window.addEventListener('load',function(){
+  if(typeof pfEnlazarVivo!=='function') return;
+  pfEnlazarVivo(document.body,[
+    ['.pl-med','skincare','.pl-med-n','.pl-med-r'],   // botiquín de la cara
+    ['.pe-med','cabello', '.pe-med-n','.pe-med-r'],   // botiquín del pelo
+    ['#oj-guia-body .de-shop','ojos','.de-shop-name',null],   // la guía de ojos
+    // `.de-shop` lo usan DOS guías. La dental nombra productos del kit de higiene
+    // con otro nombre ("Hilo o seda dental" por "Hilo dental"), y eso lo resuelve
+    // `alias` en el maestro. Los que no tienen ficha — cera ortodóntica, guarda
+    // nocturna — se quedan sin botón: no hay nada que enseñar.
+    ['#de-guia-body .de-shop','higiene','.de-shop-name',null],
+  ]);
+});
 </script>
 </body>
 </html>

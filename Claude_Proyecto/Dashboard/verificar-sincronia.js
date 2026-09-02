@@ -918,6 +918,98 @@ function impactoDelCambio() {
             'apuntan a una ficha' : '') + ')');
 })();
 
+/* ── 17. Los productos que nombran las otras apps ────────────────────────
+   El botón "Qué es" no está escrito en el HTML de esas apps: `pfEnlazar` recorre sus
+   listas y se lo pone al que encuentra en el maestro. Eso es cómodo y tiene un riesgo:
+   al que NO encuentra, no le pone nada, y no falla — simplemente se queda sin ficha.
+
+   Las listas que se pintan desde el maestro no pueden desincronizarse. La que sí es la
+   de la **guía dental** de cuidadopersonal.html, escrita a mano, que llama a las cosas
+   por otro nombre ("Hilo o seda dental" por "Hilo dental"). Esos nombres se declaran en
+   el `alias` del producto, y aquí se comprueba que siguen resolviendo.
+
+   Los nombres de esa guía son CONDICIONALES según el perfil dental de Adán, así que se
+   sacan todos los literales del bloque y se exige que cada uno tenga ficha o esté
+   declarado como sin ella. */
+(function productosEnOtrasApps() {
+  if (!global.window || !global.window.CIFRAS) return;
+  const C = global.window.CIFRAS;
+  const K = C.KIT_HIGIENE;
+  if (!K) return;
+
+  // Lo que la guía dental ofrece y NO es un producto del kit: no tiene ficha ni debe
+  // tenerla, y por eso no se le exige. Declarado, para que añadir uno nuevo cante.
+  const SIN_FICHA = ['Cera ortodóntica', 'Limpiador de alineadores',
+                     'Guarda/placa nocturna (a la medida con tu dentista)'];
+  const norm = function (x) {
+    return String(x).toLowerCase().normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]/g, '');
+  };
+  const porNombre = function (t) {
+    const q = norm(t);
+    return K.todos.filter(function (p) {
+      return norm(p.n) === q || (p.alias || []).some(function (a) { return norm(a) === q; });
+    })[0] || null;
+  };
+
+  const malos = [];
+  let mirados = 0;
+  try {
+    const cp = fs.readFileSync(
+      path.join(__dirname, '..', 'CuidadoPersonal', 'cuidadopersonal.html'), 'utf8');
+    const ini = cp.indexOf('// Lista de compras');
+    const fin = cp.indexOf('de-shop-name', ini);
+    if (ini < 0 || fin < 0) {
+      avisos.push('No encontré la lista de compras de la guía dental para comprobarla');
+    } else {
+      const bloque = cp.slice(ini, fin);
+      // Cada entrada es `{ico:'..',n:<lo que sea>,cat:'..'}`. Solo interesa lo que hay
+      // entre `n:` y `,cat:`, porque `cat:` es la frase de la guía, no un producto.
+      // Y ese `n:` puede ser un ternario con dos nombres según el perfil dental, asi
+      // que se sacan todos los literales de ese tramo y se descartan los que son
+      // valores de comparación ('brackets', 'alineadores'): minusculas sin espacios.
+      const vistos = {};
+      let m;
+      const re = /n:(.*?),cat:/g;
+      while ((m = re.exec(bloque))) {
+        const lit = m[1].match(/'([^']+)'/g) || [];
+        lit.forEach(function (crudo) {
+          const t = crudo.slice(1, -1);
+          if (vistos[t] || !/[A-ZÁÉÍÓÚÑ ]/.test(t)) return;
+          vistos[t] = 1;
+          mirados++;
+          if (!porNombre(t) && SIN_FICHA.indexOf(t) === -1)
+            malos.push('  la guía dental ofrece "' + t + '" y no hay ningún producto del kit ' +
+                       'con ese nombre — se queda sin botón. Añádelo al `alias` del que ya ' +
+                       'existe, o déjalo declarado como sin ficha');
+        });
+      }
+    }
+  } catch (e) { avisos.push('No pude leer cuidadopersonal.html para comprobar sus productos'); }
+
+  // Y que las apps que cargan la ficha la carguen ENTERA: sin el css o sin el js,
+  // el botón no aparece o aparece sin estilo, y no hay error en consola.
+  [['CuidadoPersonal', 'cuidadopersonal.html'], ['CuidadoPersonal', 'salud.html'],
+   ['Coach', 'Coach.html']].forEach(function (a) {
+    try {
+      const h = fs.readFileSync(path.join(__dirname, '..', a[0], a[1]), 'utf8');
+      // La ETIQUETA, no la palabra: "ficha.js" también aparece en el comentario que
+      // explica de dónde sale el molde, y eso no carga nada.
+      if (!/<script src="[^"]*ficha\.js"><\/script>/.test(h))
+        malos.push('  ' + a[1] + ' no carga ficha.js');
+      else if (!/<link[^>]+href="[^"]*ficha\.css"/.test(h))
+        malos.push('  ' + a[1] + ' carga ficha.js pero no ficha.css');
+      else if (h.indexOf('id="pfFondo"') === -1) malos.push('  ' + a[1] + ' carga la ficha pero le falta el hueco `pfFondo`');
+    } catch (e) { avisos.push('No pude leer ' + a[1]); }
+  });
+
+  if (malos.length)
+    problemas.push('Productos nombrados fuera de la lista de la compra:\n' + malos.slice(0, 10).join('\n'));
+  else
+    ok.push('Las otras apps enlazan a la ficha (guía dental: ' + mirados +
+            ' productos comprobados; 3 apps cargan ficha.css + ficha.js)');
+})();
+
 // ── Salida ──
 if (process.argv.indexOf('--hook') !== -1) {
   const partes = [];

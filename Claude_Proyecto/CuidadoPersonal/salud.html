@@ -312,7 +312,9 @@ canvas{max-width:100%}
 <!-- El material comun de las 8 areas: velos de blanco con desenfoque.
      Va despues del <style> para ganar por orden. Ver vidrio.css. -->
 <link rel="stylesheet" href="vidrio.css">
+<link rel="stylesheet" href="../Dashboard/ficha.css">
 <script src="../Dashboard/datos-maestros.js"></script>
+<script src="../Dashboard/ficha.js"></script>
 <script src="cabecera.js"></script>
 <script>
 (function () {
@@ -2292,5 +2294,21 @@ init();
 <!-- Vista desde el shell (?embed=1): calla el carril y la cabecera propios,
      y habla con cuidadopersonal.html por postMessage. Sola, no cambia nada. -->
 <script src="embed.js"></script>
+
+<!-- La ficha de un suplemento. Es la MISMA que abre la lista de la compra del
+     dashboard: el molde vive en ../Dashboard/ficha.js y aquí solo se usa. -->
+<div class="pf-fondo" id="pfFondo" onclick="if(event.target===this) pfCerrar()"></div>
+<script>
+// El botón "Qué es" en la lista de suplementos. `pfEnlazar` busca cada nombre en
+// SUPLEMENTOS y le cuelga el botón al que encuentra; los que Adán haya añadido a
+// mano no están en el maestro y se quedan sin él, que es lo correcto: no hay
+// ficha que enseñar. Se reenlaza al repintar, que pasa al marcar uno como tomado.
+window.addEventListener('load',function(){
+  if(typeof pfEnlazarVivo!=='function') return;
+  pfEnlazarVivo(document.body,[
+    ['.sd-sup','suplementos','.sd-sup-n','.sd-sup-w'],
+  ]);
+});
+</script>
 </body>
 </html>

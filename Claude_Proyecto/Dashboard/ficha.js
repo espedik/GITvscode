@@ -250,6 +250,85 @@ function pfAbrir(cat,txt){
   o.classList.add('open');
   document.body.style.overflow='hidden';
 }
+// Abre la ficha por id, sin tener que reconstruir el texto del rengl\u00f3n.
+function pfAbrirId(cat,id){
+  const o=pfFuente(cat); if(!o) return;
+  const lista=o.productos||o.lista||o.todos||[];
+  const p=lista.filter(function(x){ return x.id===id; })[0];
+  if(!p||!p.ficha) return;
+  const f=document.getElementById('pfFondo'); if(!f) return;
+  f.innerHTML=pfHtml(cat,o.textoCompra?o.textoCompra(p):'',p);
+  f.classList.add('open');
+  document.body.style.overflow='hidden';
+}
+// Busca un producto por su NOMBRE, que es lo \u00fanico que suele haber escrito en
+// las otras apps. Tolera may\u00fasculas, tildes y par\u00e9ntesis de m\u00e1s: "L\u00e1grimas
+// artificiales SIN conservadores (monodosis)" y "...sin conservadores (monodosis)"
+// son el mismo producto escrito por dos personas distintas.
+function pfPorNombre(cat,nombre){
+  const o=pfFuente(cat); if(!o||!nombre) return null;
+  const lista=o.productos||o.lista||o.todos||[];
+  const norm=function(x){ return String(x).toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]/g,''); };
+  const q=norm(nombre);
+  if(!q) return null;
+  const nom=function(p){ return norm(p.n||p.t||''); };
+  // Los `alias` del maestro: el mismo producto se llama distinto seg\u00fan la app que
+  // lo nombre. La gu\u00eda dental dice "Hilo o seda dental" y el kit "Hilo dental".
+  const alias=function(p){ return (p.alias||[]).map(norm); };
+  return lista.filter(function(p){ return nom(p)===q || alias(p).indexOf(q)>=0; })[0] ||
+         lista.filter(function(p){ const a=nom(p);
+           return a.length>12 && (a.indexOf(q)===0 || q.indexOf(a)===0); })[0] ||
+         lista.filter(function(p){ return alias(p).some(function(a){
+           return a.length>12 && (a.indexOf(q)===0 || q.indexOf(a)===0); }); })[0] || null;
+}
+// Pone el bot\u00f3n en cada elemento de `sel` que nombre un producto con ficha.
+//   sel    los elementos que llevan un producto (una tarjeta, un rengl\u00f3n)
+//   cat    de qu\u00e9 categor\u00eda son
+//   nom    de d\u00f3nde sacar el nombre dentro del elemento (selector o funci\u00f3n)
+//   donde  d\u00f3nde colgar el bot\u00f3n (selector o funci\u00f3n); por defecto, el propio
+// Se puede llamar tantas veces como haga falta: no repite el bot\u00f3n si ya est\u00e1,
+// que es lo que permite volver a llamarla cada vez que la app repinta su lista.
+function pfEnlazar(sel,cat,nom,donde){
+  if(typeof pfFuente!=='function'||!pfFuente(cat)) return 0;
+  const ICO='<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/>'+
+            '<path d="M12 11v5M12 7.6v.1"/></svg>';
+  let n=0;
+  document.querySelectorAll(sel).forEach(function(el){
+    if(el.querySelector('.pf-enlace')) return;               // ya lo tiene
+    const fuenteNom = typeof nom==='function' ? nom(el)
+      : (nom ? (el.querySelector(nom)||{}).textContent : el.textContent);
+    const p=pfPorNombre(cat,(fuenteNom||'').trim());
+    if(!p||!p.ficha) return;
+    const caja = typeof donde==='function' ? donde(el)
+      : (donde ? el.querySelector(donde) : el);
+    if(!caja) return;
+    const b=document.createElement('button');
+    b.className='lc-info pf-enlace';
+    b.title='Qu\u00e9 es, para qu\u00e9 sirve y c\u00f3mo se usa';
+    b.innerHTML=ICO+'Qu\u00e9 es';
+    b.addEventListener('click',function(ev){ ev.stopPropagation(); pfAbrirId(cat,p.id); });
+    caja.appendChild(b);
+    n++;
+  });
+  return n;
+}
+// Las listas de estas apps se repintan al marcar cosas, as\u00ed que el bot\u00f3n hay que
+// volver a ponerlo. En vez de encontrar cada funci\u00f3n de render y llamarla desde
+// ah\u00ed \u2014 que obligar\u00eda a tocarlas todas \u2014 se observa el contenedor y se reenlaza
+// cuando cambia.
+function pfEnlazarVivo(raiz,tareas){
+  const pasar=function(){ tareas.forEach(function(t){ pfEnlazar(t[0],t[1],t[2],t[3]); }); };
+  pasar();
+  const cont=typeof raiz==='string'?document.querySelector(raiz):raiz;
+  if(!cont||typeof MutationObserver!=='function') return pasar;
+  let pendiente=null;
+  new MutationObserver(function(){
+    clearTimeout(pendiente);
+    pendiente=setTimeout(pasar,60);          // agrupa las r\u00e1fagas de un repintado
+  }).observe(cont,{childList:true,subtree:true});
+  return pasar;
+}
 function pfCerrar(){
   const o=document.getElementById('pfFondo'); if(!o) return;
   o.classList.remove('open'); o.innerHTML='';

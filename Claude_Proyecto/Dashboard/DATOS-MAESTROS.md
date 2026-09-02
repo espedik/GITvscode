@@ -205,6 +205,36 @@ Friends*) y la lista de la compra en español (*Cómo Ganar Amigos*). Son el mis
 libro y no puede haber dos fichas, así que el título alternativo se declara una vez
 en `alias`. Cinco libros lo tienen.
 
+**Cuatro apps la usan**, y ninguna copia el molde ni el texto:
+
+| App | Qué enlaza |
+|---|---|
+| `dashboard.html` | los 112 artículos de la lista de la compra |
+| `Coach.html` | las 58 menciones de libros |
+| `cuidadopersonal.html` | botiquín de la cara, del pelo, guía de ojos y guía dental |
+| `salud.html` | los suplementos |
+
+Las tres últimas no reescriben sus listas: **`pfEnlazar(selector, categoría, nombre,
+dónde)`** recorre lo ya pintado, busca cada nombre en el maestro y le cuelga el
+botón al que encuentra. **`pfEnlazarVivo`** lo repite cuando la lista se repinta —
+pasa al marcar un producto como abierto o un suplemento como tomado — observando
+el contenedor, para no tener que tocar cada función de render.
+
+Al que NO encuentra no le pone nada, y eso es cómodo y peligroso a la vez: no falla,
+simplemente se queda sin ficha. De ahí el **control 17**.
+
+Los **`alias`** hacen el trabajo de siempre: la guía dental dice «Hilo o seda dental»
+y el kit «Hilo dental»; Coach cita a Carnegie en inglés y la compra en español. Es
+el mismo producto y no puede haber dos fichas, así que el nombre alternativo se
+declara una vez. Diez productos lo tienen — cinco libros y cinco de higiene — y los
+nombres de la guía dental son **condicionales** según el perfil, así que se declaran
+todas las variantes.
+
+Y `OJ_PRODUCTOS`, en cuidadopersonal.html, **dejó de escribir los nombres a mano**:
+salen de `CUIDADO_OJOS`. El emoji y la frase corta sí se quedan ahí, porque dicen
+para qué sirve cada cosa *en su caso* («Pantalla — para el bloque de las 23:30»),
+que es más específico que el grupo del maestro.
+
 Como módulo compartido, `ficha.css` **no da por hechos los tokens de la app**:
 define los suyos con `var(--x, valor)`, que heredan del tema cuando existe y caen a
 un valor propio cuando no. Coach solo define 3 de los 13 que hacían falta, y sin
@@ -658,6 +688,8 @@ no repita en la ficha lo que el producto ya trae escrito, y que
 `deTextoCompra(textoCompra(p))` devuelva el mismo producto. Esa última es la que
 importa: si dejan de ser inversas, el botón «Qué es» no encuentra nada y al
 pulsarlo no pasa **nada** — sin error en consola, sin señal de ningún tipo.
+
+El **control 17** vigila lo que `pfEnlazar` no puede: que los nombres de la guía dental — la única lista escrita a mano que queda — sigan resolviendo a un producto del kit, y que las tres apps carguen `ficha.css`, `ficha.js` y el hueco `pfFondo`. Comprueba la **etiqueta** `<script src=...>`, no la palabra «ficha.js», que también aparece en un comentario y no carga nada.
 
 El **control 16** hace lo mismo con los 44 libros, aparte porque sus campos son otros, y añade lo que un producto no tiene: año y páginas plausibles, y que la portada sea de Open Library o haya con qué dibujar el libro. Probado rompiendo el maestro de cuatro formas, incluida la que ocurrió de verdad.
 

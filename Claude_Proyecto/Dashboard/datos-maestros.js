@@ -1414,7 +1414,8 @@ window.CIFRAS = (function () {
           } },
       ] },
       { n: 'Cuidado bucal', items: [
-        { id:'cepilloViaje', n:'Cepillo de dientes de viaje con tapa',
+        { id:'cepilloViaje', n:'Cepillo de dientes de viaje con tapa',
+          alias: ['Cepillo de cerdas suaves (o el\u00e9ctrico)', 'Cepillo de cerdas suaves'],
           foto:'https://upload.wikimedia.org/wikipedia/commons/thumb/3/33/Smiling_Travel_Set_%282143747248%29.jpg/960px-Smiling_Travel_Set_%282143747248%29.jpg',
           frasco:'cepillo', marca:{a:'#f2f4f6', b:'#12b886'},
           uso:'Dos minutos, cerdas suaves y en \u00e1ngulo hacia la enc\u00eda. Enju\u00e1galo y d\u00e9jalo secar ANTES de taparlo.',
@@ -1426,7 +1427,8 @@ window.CIFRAS = (function () {
             tarda:'C\u00e1mbialo cada 3 meses o en cuanto las cerdas se abran.',
             ojo:'No lo tapes mojado. Un capuch\u00f3n cerrado sobre un cepillo h\u00famedo es una incubadora; por eso muchos vienen con agujeros.'
           } },
-        { id:'pastaViaje', n:'Pasta dental tama\u00f1o viaje (\u226475 ml)',
+        { id:'pastaViaje', n:'Pasta dental tama\u00f1o viaje (\u226475 ml)',
+          alias: ['Pasta dental con fl\u00faor', 'Pasta dental para sensibilidad'],
           foto:'https://upload.wikimedia.org/wikipedia/commons/thumb/7/77/Zahnpastatube_%28fcm%29.jpg/960px-Zahnpastatube_%28fcm%29.jpg',
           frasco:'tubo', marca:{a:'#ffffff', b:'#1971c2'},
           uso:'Del tama\u00f1o de un ch\u00edcharo, no la tira entera del anuncio. Y al terminar, escupe pero no te enjuagues con agua.',
@@ -1438,7 +1440,8 @@ window.CIFRAS = (function () {
             tarda:'Es prevenci\u00f3n: no se nota, se mide en la revisi\u00f3n.',
             ojo:'Enjuagarte con agua despu\u00e9s se lleva el fl\u00faor que acabas de poner. Escupe y ya est\u00e1: es el cambio gratis que m\u00e1s rinde de todo el cuidado bucal.'
           } },
-        { id:'hilo', n:'Hilo dental',
+        { id:'hilo', n:'Hilo dental',
+          alias: ['Hilo o seda dental'],
           foto:'https://upload.wikimedia.org/wikipedia/commons/5/53/Dental_floss_%28whole%29.jpg',
           frasco:'caja', marca:{a:'#ffffff', b:'#0ca678'},
           uso:'Antes de cepillarte, no despu\u00e9s. Rodea el diente en forma de C y baja hasta la enc\u00eda: si s\u00f3lo metes y sacas, no limpias nada.',
@@ -1450,7 +1453,8 @@ window.CIFRAS = (function () {
             tarda:'Si sangra al principio, es que hay inflamaci\u00f3n. Deja de sangrar en 1-2 semanas de uso diario, y eso es la se\u00f1al de que va bien.',
             ojo:'Que sangre no es motivo para dejarlo \u2014 es el motivo por el que hay que hacerlo. Lo que s\u00ed hay que evitar es meterlo de golpe y cortar la enc\u00eda.'
           } },
-        { id:'enjuague', n:'Enjuague bucal tama\u00f1o viaje',
+        { id:'enjuague', n:'Enjuague bucal tama\u00f1o viaje',
+          alias: ['Enjuague con fl\u00faor', 'Enjuague antibacterial', 'Enjuague sin alcohol para sensibilidad'],
           foto:'https://upload.wikimedia.org/wikipedia/commons/thumb/5/56/Colgate_Alcohol_Free_Mouthwash.jpg/960px-Colgate_Alcohol_Free_Mouthwash.jpg',
           frasco:'botella', marca:{a:'#ffffff', b:'#5f3dc4'},
           uso:'En otro momento del cepillado, no justo despu\u00e9s. Y sin diluir, 30 segundos.',
@@ -1462,7 +1466,8 @@ window.CIFRAS = (function () {
             tarda:'El aliento, inmediato. La enc\u00eda, semanas.',
             ojo:'El\u00edgelo sin alcohol: el alcohol reseca la boca, y una boca seca da M\u00c1S caries y peor aliento, que es justo lo contrario de lo que buscas.'
           } },
-        { id:'interdental', n:'Cepillos interdentales o irrigador de viaje',
+        { id:'interdental', n:'Cepillos interdentales o irrigador de viaje',
+          alias: ['Cepillo interdental + hilo dental'],
           foto:'https://upload.wikimedia.org/wikipedia/commons/6/60/Interdental-brushes.JPG',
           frasco:'utensilio', marca:{a:'#cfd6de', b:'#495057'},
           uso:'Uno por hueco, del grosor que entre sin forzar. Si tienes que empujar, es demasiado grande.',
