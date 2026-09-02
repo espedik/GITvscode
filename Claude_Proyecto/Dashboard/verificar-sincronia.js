@@ -811,6 +811,91 @@ function impactoDelCambio() {
             ' con foto y ' + (total - conFoto) + ' dibujados, ida y vuelta con la lista)');
 })();
 
+/* ── 16. La biblioteca ───────────────────────────────────────────────
+   Los 44 libros van aparte del control 15 porque su ficha NO tiene los mismos campos:
+   de un libro no interesa el activo ni cómo se aplica, sino de qué trata y qué dice.
+
+   Lo que se vigila, además de que no falte texto:
+     1. Que `deTextoCompra(textoCompra(p))` siga siendo la vuelta, como en las otras
+        categorías: si dejan de ser inversas, el botón no encuentra el libro y al
+        pulsarlo no pasa nada, sin error en consola.
+     2. Que el año y las páginas sean plausibles. Esto no es una manía: los datos vienen
+        de Open Library y los dos libros de Hormozi llegaron con el año y las páginas de
+        "Roughing It" de Mark Twain — 1872 y 558 páginas — porque era lo que devolvía la
+        búsqueda. Se vio mirando la ficha, no leyendo el JSON.
+     3. Que la portada, si la hay, sea de Open Library, y que el que no la tenga traiga
+        con qué dibujarse. */
+(function biblioteca() {
+  if (!global.window || !global.window.CIFRAS) return;   // el control 4 ya avisó
+  const C = global.window.CIFRAS, B = C.BIBLIOTECA;
+  if (!B) { problemas.push('BIBLIOTECA no existe en el maestro'); return; }
+  const CAMPOS = { sobre: 60, resumen: 200, porQue: 40, idea: 30, cuando: 15 };
+  const malos = [];
+  let conPortada = 0;
+  const ids = {};
+
+  B.todos.forEach(function (l) {
+    const donde = 'libros.' + (l.id || '?');
+    if (ids[l.id]) malos.push('  ' + donde + ': id repetido');
+    ids[l.id] = 1;
+    if (!l.t || !l.a) { malos.push('  ' + donde + ': le falta título o autor'); return; }
+    if (!l.ficha) { malos.push('  ' + donde + ': sin `ficha`'); return; }
+    Object.keys(CAMPOS).forEach(function (k) {
+      const v = l.ficha[k];
+      if (!v || String(v).trim().length < CAMPOS[k])
+        malos.push('  ' + donde + '.ficha.' + k + ': falta o no llega a ' + CAMPOS[k] + ' caracteres');
+    });
+
+    // Datos duros plausibles. Aquí está el control que de verdad importa: los dos
+    // libros de Hormozi llegaron con el año y las páginas de "Roughing It" de Mark
+    // Twain porque era lo que devolvía la búsqueda, y 1872 es un año perfectamente
+    // plausible para un libro cualquiera. Lo que lo delata es el CONTEXTO: en esta
+    // lista todo es negocio, finanzas o software moderno, y el único anterior a 1900
+    // es Meditaciones. Cualquier otro con fecha antigua es un registro equivocado.
+    const hoy = new Date().getFullYear();
+    const ANTIGUOS = ['meditaciones'];   // los que SÍ pueden ser anteriores a 1900
+    if (!l.anio || l.anio < 100 || l.anio > hoy)
+      malos.push('  ' + donde + ': año "' + l.anio + '" no es plausible');
+    else if (l.anio < 1900 && ANTIGUOS.indexOf(l.id) === -1)
+      malos.push('  ' + donde + ': año ' + l.anio + ' — en esta lista solo ' +
+                 ANTIGUOS.join('/') + ' es anterior a 1900, así que este dato viene ' +
+                 'del registro equivocado de Open Library');
+    if (!l.pags || l.pags < 80 || l.pags > 1200)
+      malos.push('  ' + donde + ': ' + l.pags + ' páginas no es plausible');
+
+    if (l.portada) {
+      conPortada++;
+      if (!/^https:\/\/covers\.openlibrary\.org\//.test(l.portada))
+        malos.push('  ' + donde + ': la portada no es de Open Library');
+    } else if (!l.frasco || !l.marca) {
+      malos.push('  ' + donde + ': sin portada Y sin `frasco`/`marca` — su ficha abriría ' +
+                 'con el hueco de la imagen vacío');
+    }
+
+    const vuelta = B.deTextoCompra(B.textoCompra(l));
+    if (!vuelta || vuelta.id !== l.id)
+      malos.push('  ' + donde + ': `deTextoCompra(textoCompra(l))` no lo devuelve — ' +
+                 'el botón "Qué es" quedaría muerto');
+  });
+
+  // Y que la lista de la compra siga saliendo de aquí.
+  const enLista = C.LISTA_COMPRAS.libros;
+  const textos = Object.keys(enLista || {}).reduce(function (a, g) { return a.concat(enLista[g]); }, []);
+  if (textos.length !== B.todos.length)
+    malos.push('  la lista tiene ' + textos.length + ' libros y BIBLIOTECA ' + B.todos.length +
+               ': dejó de derivarse');
+  textos.forEach(function (t) {
+    if (!B.deTextoCompra(t)) malos.push('  "' + t + '" en la lista no corresponde a ningún libro');
+  });
+
+  if (malos.length)
+    problemas.push('La biblioteca est\u00e1 incompleta:\n' + malos.slice(0, 14).join('\n'));
+  else
+    ok.push('Biblioteca completa (' + B.todos.length + ' libros en ' + B.grupos.length +
+            ' grupos, ' + conPortada + ' con portada y ' + (B.todos.length - conPortada) +
+            ' dibujados, ida y vuelta con la lista)');
+})();
+
 // ── Salida ──
 if (process.argv.indexOf('--hook') !== -1) {
   const partes = [];

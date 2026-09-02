@@ -153,6 +153,43 @@ salen en la línea de tiempo pero no llevan checkbox ni suman al progreso.
 Estaba copiada en `dashboard.html` y `Coach.html`, 17.5 KB en cada uno. Era la estructura más
 grande y más tocada de las duplicadas, y llegó a divergir 6 días.
 
+### La biblioteca
+
+`BIBLIOTECA` — los **44 libros** en 9 grupos. Como el kit de higiene, hasta el
+2026-09-02 eran cadenas `"Título — Autor"` dentro de `LISTA_COMPRAS`, y ahora cada
+uno es un libro con su ficha:
+
+```js
+CIFRAS.BIBLIOTECA.todos              // los 44, sin agrupar
+CIFRAS.BIBLIOTECA.porGrupo           // lo que usa la lista de la compra
+CIFRAS.BIBLIOTECA.deTextoCompra(t)   // del renglón al libro
+```
+
+**La ficha de un libro NO lleva los mismos campos que la de un producto**, y por eso
+tiene su propio molde (`pfLibroHtml`) y su propio control. De una crema interesa el
+activo y cómo se aplica; de un libro, otra cosa:
+
+| Campo | Qué lleva |
+|---|---|
+| `sobre` | de qué trata y de dónde sale, en amplio |
+| `resumen` | qué dice: las ideas centrales, que es lo que se lee si no se lee el libro |
+| `porQue` | por qué está en la lista de Adán y no en otra |
+| `idea` | la que más rinde, en una frase |
+| `cuando` | en qué momento leerlo, y respecto a cuál de los otros |
+
+**Las portadas** salen de Open Library (`covers.openlibrary.org`): 43 de 44. La que
+falta — *$100M Offers*, autopublicado — se dibuja con la silueta `libro` en el color
+de su grupo. Se eligieron **mirándolas**: la búsqueda devolvió *Roughing It* de Mark
+Twain para los dos libros de Hormozi y un disco de música para *One Up On Wall
+Street*, y tres se tuvieron que pedir por ISBN de una edición concreta porque el
+registro genérico tenía la portada mal asociada.
+
+Ese mismo fallo dejó un rastro que no se veía en la portada: los dos de Hormozi se
+quedaron también con **el año y las páginas** de *Roughing It* — 1872 y 558 páginas —
+y eso solo se vio abriendo la ficha. El **control 16** lo vigila ahora comparando con
+el contexto: en esta lista todo es negocio, finanzas o software moderno, y el único
+anterior a 1900 es *Meditaciones*, que está declarado como excepción.
+
 ### El kit de higiene y el cuidado de los ojos
 
 `KIT_HIGIENE` (34 artículos en 7 grupos) y `CUIDADO_OJOS` (12 en 4). Hasta el
@@ -599,6 +636,8 @@ no repita en la ficha lo que el producto ya trae escrito, y que
 `deTextoCompra(textoCompra(p))` devuelva el mismo producto. Esa última es la que
 importa: si dejan de ser inversas, el botón «Qué es» no encuentra nada y al
 pulsarlo no pasa **nada** — sin error en consola, sin señal de ningún tipo.
+
+El **control 16** hace lo mismo con los 44 libros, aparte porque sus campos son otros, y añade lo que un producto no tiene: año y páginas plausibles, y que la portada sea de Open Library o haya con qué dibujar el libro. Probado rompiendo el maestro de cuatro formas, incluida la que ocurrió de verdad.
 
 El umbral de longitud va **por campo**: `que`, `hace`, `sirve` y `ojo` tienen que
 explicar algo y se les exigen 20 caracteres; `activo` y `tarda` pueden ser correctos

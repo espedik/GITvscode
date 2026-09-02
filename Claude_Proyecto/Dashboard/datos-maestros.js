@@ -1976,6 +1976,502 @@ window.CIFRAS = (function () {
     },
   };
 
+  // \u2500\u2500 BIBLIOTECA \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
+  // Los 44 libros, agrupados por para qu\u00e9 sirven. Hasta el 2026-09-02 esto eran cadenas
+  // \"T\u00edtulo \u2014 Autor\" dentro de `LISTA_COMPRAS`; ahora cada uno es un libro con su ficha y
+  // la lista de la compra sale de aqu\u00ed.
+  //
+  // La ficha de un libro NO lleva los mismos campos que la de un producto:
+  //   sobre    de qu\u00e9 trata y de d\u00f3nde sale, en amplio
+  //   resumen  qu\u00e9 dice: las ideas centrales, que es lo que se lee si no se lee el libro
+  //   porQue   por qu\u00e9 est\u00e1 en la lista de Ad\u00e1n y no en otra
+  //   idea     la que m\u00e1s rinde, en una frase
+  //   cuando   en qu\u00e9 momento leerlo, y respecto a cu\u00e1l de los otros
+  //
+  // `portada`, `anio` y `pags` vienen de Open Library. 43 de los 44 tienen portada; el que
+  // no (\u0024100M Offers, autopublicado) se dibuja con la silueta `libro`. Las portadas se
+  // comprobaron MIR\u00c1NDOLAS: Open Library devolv\u00eda \"Roughing It\" de Mark Twain para los dos
+  // de Hormozi y un disco de m\u00fasica para One Up On Wall Street.
+  const BIBLIOTECA = {
+    grupos: [
+      { n: 'Ventas', color: '#b02a37', items: [
+        { id: 'influence', t: 'Influence', a: 'Robert Cialdini',
+          anio: 1983, pags: 287,
+          portada: 'https://covers.openlibrary.org/b/id/431011-L.jpg',
+          ficha: {
+            sobre: 'Cialdini pas\u00f3 tres a\u00f1os infiltrado en escuelas de venta, agencias de captaci\u00f3n y organizaciones de recaudaci\u00f3n para averiguar qu\u00e9 hace que una persona diga que s\u00ed. El resultado no es un manual de trucos: es un libro de psicolog\u00eda social que explica los atajos mentales que todos usamos para decidir r\u00e1pido, y c\u00f3mo un profesional los activa a prop\u00f3sito.',
+            resumen: 'Seis principios, y el libro dedica un cap\u00edtulo a cada uno. <b>Reciprocidad</b>: recibir algo crea una deuda que incomoda hasta que se paga. <b>Compromiso y coherencia</b>: quien dice s\u00ed a algo peque\u00f1o dice s\u00ed a algo grande despu\u00e9s, porque necesita seguir pareci\u00e9ndose a s\u00ed mismo. <b>Prueba social</b>: cuando no sabemos qu\u00e9 hacer, miramos qu\u00e9 hacen los dem\u00e1s, y m\u00e1s cuanto m\u00e1s se nos parecen. <b>Simpat\u00eda</b>: compramos de quien nos cae bien, y nos cae bien quien se nos parece, quien nos halaga y quien colabora con nosotros. <b>Autoridad</b>: obedecemos t\u00edtulos y uniformes sin comprobar qu\u00e9 hay detr\u00e1s. <b>Escasez</b>: lo que puede acabarse vale m\u00e1s, y perderlo pesa m\u00e1s que ganarlo. Cada cap\u00edtulo cierra con c\u00f3mo defenderse de ese mismo principio cuando lo usan contigo.',
+            porQue: 'Es el cimiento de todo lo dem\u00e1s que hay en esta lista. Hormozi, Brunson y Voss construyen sobre estos seis principios; leerlos aqu\u00ed primero hace que los otros libros se entiendan en vez de memorizarse.',
+            idea: 'La escasez no motiva por lo que puedes ganar sino por lo que vas a perder: la gente se mueve m\u00e1s por evitar una p\u00e9rdida que por conseguir algo equivalente.',
+            cuando: 'El primero de la lista de Ventas. Todo lo dem\u00e1s se apoya en \u00e9l.'
+          } },
+        { id: 'offers100m', t: '$100M Offers', a: 'Alex Hormozi',
+          anio: 2021, pags: 178,
+          frasco: 'libro', marca: {a: '#f4f2ee', b: '#b02a37'},
+          ficha: {
+            sobre: 'Hormozi construy\u00f3 y vendi\u00f3 una cadena de gimnasios y luego una empresa de licencias; este libro es su m\u00e9todo para armar una oferta tan buena que el cliente se sienta tonto diciendo que no. No va de vender mejor: va de tener algo distinto que vender.',
+            resumen: 'Arranca con una idea inc\u00f3moda: si tienes que convencer mucho, el problema es la oferta, no tu t\u00e9cnica. Propone su <b>ecuaci\u00f3n de valor</b> \u2014 el valor sube con el resultado so\u00f1ado y la probabilidad de lograrlo, y baja con el tiempo que tarda y el esfuerzo que cuesta. Cuatro palancas, y las dos de abajo son las que casi nadie toca. Luego ense\u00f1a a construir la oferta por acumulaci\u00f3n: listar todos los problemas que impiden el resultado, convertir cada uno en una soluci\u00f3n, y empaquetarlas. Cierra con los amplificadores \u2014 escasez, urgencia, bonos y garant\u00edas \u2014 y con por qu\u00e9 una garant\u00eda potente sube las ventas m\u00e1s de lo que cuestan las devoluciones.',
+            porQue: 'Es el libro m\u00e1s pr\u00e1ctico de la lista para tu Fase 0: no necesitas audiencia ni presupuesto para aplicarlo, s\u00f3lo replantear qu\u00e9 vendes y c\u00f3mo lo empaquetas.',
+            idea: 'Cuando la oferta es lo bastante buena, la venta deja de ser persuasi\u00f3n y pasa a ser explicaci\u00f3n.',
+            cuando: 'Despu\u00e9s de Influence. Es el paso de la teor\u00eda a algo que puedes escribir en una tarde.'
+          } },
+        { id: 'spin', t: 'SPIN Selling', a: 'Neil Rackham',
+          anio: 1988, pags: 197,
+          portada: 'https://covers.openlibrary.org/b/id/55114-L.jpg',
+          ficha: {
+            sobre: 'Rackham analiz\u00f3 35.000 llamadas de venta reales en 20 pa\u00edses, el estudio m\u00e1s grande que se ha hecho sobre el tema. Su hallazgo desmont\u00f3 lo que se ense\u00f1aba: las t\u00e9cnicas de cierre agresivo funcionan en ventas peque\u00f1as y perjudican en las grandes.',
+            resumen: 'El m\u00e9todo est\u00e1 en las preguntas, y en el orden. <b>S</b>ituaci\u00f3n: datos del contexto \u2014 las m\u00ednimas, porque aburren al cliente y s\u00f3lo te sirven a ti. <b>P</b>roblema: qu\u00e9 le est\u00e1 fallando. <b>I</b>mplicaci\u00f3n: qu\u00e9 le cuesta ese problema en dinero, tiempo o riesgo; es la parte que casi nadie hace y la que de verdad mueve una venta grande, porque convierte un fastidio en algo urgente. <b>N</b>ecesidad de soluci\u00f3n: preguntas que hacen que el propio cliente diga en voz alta el valor de resolverlo. El libro demuestra con datos que los vendedores de \u00e9xito hacen muchas preguntas de implicaci\u00f3n y pocas de situaci\u00f3n, y que cerrar antes de tiempo baja la tasa de \u00e9xito.',
+            porQue: 'Es el contrapeso de los libros de venta r\u00e1pida. Si alg\u00fan d\u00eda vendes servicios o proyectos de software, este es el que aplica \u2014 ah\u00ed el ciclo es largo y presionar cierra la puerta.',
+            idea: 'En una venta grande no vendes tu soluci\u00f3n: haces que el cliente se d\u00e9 cuenta de lo que le cuesta no resolverlo.',
+            cuando: 'Cuando pases de vender algo barato a vender algo caro. Antes no le sacas partido.'
+          } },
+        { id: 'neverSplit', t: 'Never Split the Difference', a: 'Chris Voss',
+          anio: 2016, pags: 288,
+          portada: 'https://covers.openlibrary.org/b/id/8365942-L.jpg',
+          ficha: {
+            sobre: 'Voss fue el principal negociador de secuestros del FBI. El libro traslada lo que funciona cuando hay vidas en juego y no se puede repartir la diferencia \u2014 de ah\u00ed el t\u00edtulo \u2014 al terreno de un sueldo, un contrato o un precio.',
+            resumen: 'Su tesis es que negociar no es un intercambio racional sino emocional, y que la herramienta central es la <b>empat\u00eda t\u00e1ctica</b>: entender y nombrar en voz alta lo que siente el otro, sin necesidad de estar de acuerdo. De ah\u00ed salen sus t\u00e9cnicas: el <b>etiquetado</b> (\u00abparece que esto te preocupa\u00bb), el <b>espejo</b> \u2014 repetir las \u00faltimas tres palabras para que el otro siga hablando \u2014, y provocar un <b>\u00abtienes raz\u00f3n\u00bb</b> que no vale nada frente a un <b>\u00abas\u00ed es\u00bb</b> que s\u00ed. Insiste en buscar el \u00abno\u00bb en vez del \u00abs\u00ed\u00bb, porque el no da control y relaja. Y desmonta el reparto equitativo: quien parte la diferencia acaba con medio traje. Cierra con el <b>cisne negro</b>: en toda negociaci\u00f3n hay informaci\u00f3n que si supieras lo cambiar\u00eda todo.',
+            porQue: 'Es el m\u00e1s aplicable a tu d\u00eda a d\u00eda ahora mismo \u2014 un sueldo, un plazo, un proveedor \u2014 y no requiere ning\u00fan contexto de negocio para empezar a usarlo.',
+            idea: '\u00abAs\u00ed es\u00bb es el punto de inflexi\u00f3n de una negociaci\u00f3n; \u00abtienes raz\u00f3n\u00bb s\u00f3lo significa que el otro quiere que te calles.',
+            cuando: 'Cuando quieras algo que ya puedas aplicar esta semana.'
+          } },
+        { id: 'psychSelling', t: 'The Psychology of Selling', a: 'Brian Tracy',
+          anio: 1986, pags: 220,
+          portada: 'https://covers.openlibrary.org/b/id/13270498-L.jpg',
+          ficha: {
+            sobre: 'Tracy lleva d\u00e9cadas formando comerciales y este es su compendio: por qu\u00e9 compra la gente, qu\u00e9 frena una venta y c\u00f3mo se comporta quien vende bien. Es m\u00e1s cl\u00e1sico y m\u00e1s de motivaci\u00f3n que los otros, con muchas listas y repeticiones.',
+            resumen: 'Dedica la primera parte a la cabeza del vendedor \u2014 autoimagen, miedo al rechazo, el hecho de que el 20% superior hace el 80% de las ventas \u2014 y la segunda al proceso: prospecci\u00f3n, c\u00f3mo abrir, c\u00f3mo descubrir la necesidad real, c\u00f3mo presentar en t\u00e9rminos de beneficio y no de caracter\u00edstica, c\u00f3mo tratar objeciones y c\u00f3mo cerrar. Insiste mucho en que la gente compra por emoci\u00f3n y justifica por l\u00f3gica, y en que el precio casi nunca es la objeci\u00f3n real.',
+            porQue: 'Es el m\u00e1s flojo de los cinco de Ventas y est\u00e1 aqu\u00ed por completitud, no por urgencia. Si s\u00f3lo lees tres de este grupo, que sean Influence, $100M Offers y Never Split the Difference.',
+            idea: 'El miedo al rechazo es el mayor obst\u00e1culo en ventas, y se reduce entendiendo que el no es a la oferta, no a ti.',
+            cuando: 'El \u00faltimo del grupo, y s\u00f3lo si te sobra tiempo.'
+          } },
+      ] },
+      { n: 'Marketing', color: '#e8590c', items: [
+        { id: 'leads100m', t: '$100M Leads', a: 'Alex Hormozi',
+          anio: 2023, pags: 285,
+          portada: 'https://covers.openlibrary.org/b/isbn/9781737475767-L.jpg',
+          ficha: {
+            sobre: 'La continuaci\u00f3n de $100M Offers. Si aquel resolv\u00eda qu\u00e9 vender, este resuelve c\u00f3mo conseguir que alguien se entere: de d\u00f3nde salen los interesados y c\u00f3mo conseguir m\u00e1s sin gastar m\u00e1s.',
+            resumen: 'Ordena todas las formas de captar en cuatro y las llama <b>los cuatro core</b>: gente que ya te conoce a la que contactas uno a uno, gente que ya te conoce a la que publicas contenido, desconocidos a los que contactas en fr\u00edo, y desconocidos a los que llegas con anuncios. Cada una tiene su cap\u00edtulo con vol\u00famenes concretos \u2014 cu\u00e1ntos mensajes al d\u00eda, cu\u00e1ntas publicaciones \u2014 porque su argumento central es que casi todo el mundo falla por hacer demasiado poco, no por hacerlo mal. Luego a\u00f1ade lo que multiplica: clientes que traen clientes, empleados, agencias y afiliados. Termina con un plan de escalado por fases y con la idea de <b>lead magnet</b>: algo gratis y de valor real que da el primer paso.',
+            porQue: 'Es la mitad que falta de $100M Offers. Con una buena oferta y nadie que la vea no pasa nada, y ese es el punto exacto donde se atasca la mayor\u00eda en Fase 0.',
+            idea: 'El problema casi nunca es el m\u00e9todo de captaci\u00f3n: es el volumen. La mayor\u00eda abandona en el punto en el que apenas empezaba a funcionar.',
+            cuando: 'Justo despu\u00e9s de $100M Offers. Los dos son un solo libro partido en dos.'
+          } },
+        { id: 'hackingGrowth', t: 'Hacking Growth', a: 'Sean Ellis',
+          anio: 2017, pags: 314,
+          portada: 'https://covers.openlibrary.org/b/id/14377164-L.jpg',
+          ficha: {
+            sobre: 'Sean Ellis acu\u00f1\u00f3 el t\u00e9rmino growth hacking trabajando en Dropbox y LogMeIn. El libro cuenta el m\u00e9todo que usaron equipos como Facebook, Airbnb y Uber para crecer: no ideas sueltas, sino un proceso de experimentaci\u00f3n continuo.',
+            resumen: 'Primero exige dos cosas antes de intentar crecer: un producto que la gente quiera de verdad \u2014 lo mide con la pregunta de \u00ab\u00bfcu\u00e1nto te decepcionar\u00eda no poder usarlo?\u00bb, y el umbral es 40% \u2014 y un equipo con gente de producto, datos y marketing. Despu\u00e9s define el proceso: analizar los datos, generar ideas, priorizarlas con un criterio de impacto y esfuerzo, y probar r\u00e1pido en ciclos cortos. La segunda mitad recorre el embudo \u2014 captar, activar, retener, monetizar \u2014 con casos reales. Insiste en que la <b>retenci\u00f3n</b> es la m\u00e9trica que decide, porque crecer sobre un cubo agujereado no lleva a ninguna parte.',
+            porQue: 'Es el puente entre tu parte t\u00e9cnica y la comercial: el m\u00e9todo es de experimentaci\u00f3n, medici\u00f3n y iteraci\u00f3n, que es como ya piensas escribiendo software.',
+            idea: 'Antes de intentar crecer hay que comprobar que el producto le importa a alguien: crecer sin eso s\u00f3lo acelera el fracaso.',
+            cuando: 'Cuando ya tengas algo funcionando con usuarios de verdad. Antes es teor\u00eda.'
+          } },
+        { id: 'trafficSecrets', t: 'Traffic Secrets', a: 'Russell Brunson',
+          anio: 2020, pags: 305,
+          portada: 'https://covers.openlibrary.org/b/id/10297778-L.jpg',
+          ficha: {
+            sobre: 'Brunson, fundador de ClickFunnels, explica c\u00f3mo conseguir visitas y, sobre todo, c\u00f3mo no depender de ninguna plataforma para tenerlas. Es el tercero de su trilog\u00eda y el m\u00e1s \u00fatil de los tres.',
+            resumen: 'Empieza oblig\u00e1ndote a definir a qui\u00e9n le hablas \u2014 su <b>Dream 100</b>: identificar las cien cuentas, canales o comunidades donde ya est\u00e1 reunida tu gente, en vez de buscarla de cero. De ah\u00ed salen dos caminos: entrar comprando (anuncios) o entrar gan\u00e1ndotelo (colaboraciones, apariciones, contenido). Luego desarrolla la idea de que hay que llevar a esa gente a un sitio que sea tuyo \u2014 lista de correo, comunidad propia \u2014 porque el alcance prestado desaparece con cada cambio de algoritmo. Cierra con embudos concretos por tipo de negocio y con estrategias de contenido para varias plataformas a la vez.',
+            porQue: 'Complementa a Hormozi: aquel dice cu\u00e1nto hacer, este dice d\u00f3nde. La idea del Dream 100 es la que m\u00e1s rinde de las dos.',
+            idea: 'Tu audiencia ya est\u00e1 reunida en alg\u00fan sitio que no es tuyo. El trabajo no es crearla, es ir a buscarla ah\u00ed y llev\u00e1rtela a un canal propio.',
+            cuando: 'Con $100M Leads. Se solapan bastante, as\u00ed que lee el de Hormozi primero.'
+          } },
+        { id: 'jab', t: 'Jab, Jab, Jab, Right Hook', a: 'Gary Vaynerchuk',
+          anio: 2013, pags: 195,
+          portada: 'https://covers.openlibrary.org/b/id/11955993-L.jpg',
+          ficha: {
+            sobre: 'Vaynerchuk escribe contra la publicidad que s\u00f3lo pide. El t\u00edtulo es su tesis: muchos jabs \u2014 contenido que aporta y no pide nada \u2014 y de vez en cuando un gancho de derecha, que es cuando pides la venta.',
+            resumen: 'La primera mitad argumenta que cada red social tiene su propio idioma y que copiar y pegar el mismo mensaje en todas es la forma m\u00e1s r\u00e1pida de que no funcione en ninguna: hay que adaptar formato, tono y expectativa. La segunda mitad es un desfile de ejemplos reales de marcas, cada uno puntuado y comentado \u2014 por qu\u00e9 esta publicaci\u00f3n funcion\u00f3 y esta otra no. Es un libro visual y pr\u00e1ctico, y tambi\u00e9n el m\u00e1s envejecido de los cuatro de Marketing, porque las plataformas que analiza han cambiado.',
+            porQue: 'Su idea central sigue en pie aunque las redes hayan cambiado: dar mucho antes de pedir. Los ejemplos concretos ya no.',
+            idea: 'El derecho a pedir se gana aportando primero, muchas veces, sin pedir nada a cambio.',
+            cuando: 'El m\u00e1s prescindible del grupo. L\u00e9elo por la idea, hojea los ejemplos.'
+          } },
+      ] },
+      { n: 'Finanzas e Inversi\u00f3n', color: '#1d6f42', items: [
+        { id: 'intelligentInvestor', t: 'The Intelligent Investor', a: 'Benjamin Graham',
+          anio: 1949, pags: 352,
+          portada: 'https://covers.openlibrary.org/b/id/36434-L.jpg',
+          ficha: {
+            sobre: 'Graham fue el maestro de Warren Buffett y el padre de la inversi\u00f3n en valor. Escrito en 1949 y actualizado hasta su muerte, sigue siendo el libro que m\u00e1s recomienda Buffett, que llama al cap\u00edtulo 8 y al 20 los dos mejores textos jam\u00e1s escritos sobre inversi\u00f3n.',
+            resumen: 'Separa al <b>inversor</b> del <b>especulador</b>: el primero compra un trozo de un negocio, el segundo apuesta al precio. De ah\u00ed nacen sus dos ideas centrales. <b>Mr. Market</b>: imagina que el mercado es un socio man\u00edaco-depresivo que cada d\u00eda te ofrece comprarte o venderte tu parte a un precio distinto seg\u00fan su humor; no tienes obligaci\u00f3n de hacerle caso, y su locura es tu oportunidad. Y el <b>margen de seguridad</b>: comprar s\u00f3lo a un precio bastante por debajo de lo que el negocio vale, para que un error de c\u00e1lculo no te arruine. Distingue al inversor defensivo \u2014 que reparte entre acciones y bonos y no toca nada \u2014 del emprendedor, que s\u00ed analiza. La edici\u00f3n moderna trae comentarios de Jason Zweig con casos recientes.',
+            porQue: 'Es el ancla de tu estrategia de invertir en empresas de EE. UU. por GBM. Te vacuna contra lo que m\u00e1s dinero cuesta a un inversor peque\u00f1o: entrar y salir siguiendo el \u00e1nimo del mercado.',
+            idea: 'El mayor problema del inversor, y su peor enemigo, es \u00e9l mismo.',
+            cuando: 'El primero de Finanzas, y el m\u00e1s denso. Si se te atraganta, empieza por Bogle y vuelve.'
+          } },
+        { id: 'littleBook', t: 'The Little Book of Common Sense Investing', a: 'John Bogle',
+          anio: 2007, pags: 228,
+          portada: 'https://covers.openlibrary.org/b/id/1239500-L.jpg',
+          ficha: {
+            sobre: 'Bogle fund\u00f3 Vanguard e invent\u00f3 el fondo indexado para el peque\u00f1o inversor. Este libro es su argumento, contado en 200 p\u00e1ginas cortas: no intentes ganarle al mercado, c\u00f3mpralo entero y qu\u00e9date quieto.',
+            resumen: 'El razonamiento es aritm\u00e9tico antes que te\u00f3rico. Todos los inversores juntos SON el mercado, as\u00ed que en conjunto obtienen el rendimiento del mercado menos los costes; por lo tanto, en promedio, la gesti\u00f3n activa tiene que perder contra la indexada por la diferencia de comisiones. Ense\u00f1a lo que hace una comisi\u00f3n del 2% anual compuesta a treinta a\u00f1os \u2014 se lleva m\u00e1s de la mitad de lo que habr\u00edas acumulado \u2014 y muestra los datos de cu\u00e1ntos fondos activos baten al \u00edndice a largo plazo, que son muy pocos y adem\u00e1s cambian cada d\u00e9cada. Cierra con la parte psicol\u00f3gica: el enemigo no es el mercado sino la tentaci\u00f3n de moverse.',
+            porQue: 'Es el contrapeso exacto a la idea de escoger empresas una por una. L\u00e9elo aunque decidas no hacerle caso: te obliga a justificar por qu\u00e9 crees que puedes hacerlo mejor.',
+            idea: 'En inversi\u00f3n, no obtienes lo que pagas: obtienes exactamente lo que NO pagas.',
+            cuando: 'Es el m\u00e1s corto y el m\u00e1s f\u00e1cil de los diez. Puede ser tu primero.'
+          } },
+        { id: 'randomWalk', t: 'A Random Walk Down Wall Street', a: 'Burton Malkiel',
+          anio: 1973, pags: 440,
+          portada: 'https://covers.openlibrary.org/b/id/246978-L.jpg',
+          ficha: {
+            sobre: 'Malkiel lleva actualiz\u00e1ndolo desde 1973 y es el manual acad\u00e9mico m\u00e1s le\u00eddo de finanzas personales. Recorre la historia de las burbujas, explica las dos escuelas de an\u00e1lisis y termina con una gu\u00eda pr\u00e1ctica por edades.',
+            resumen: 'La primera parte es un recorrido por las man\u00edas especulativas, de los tulipanes holandeses a las puntocom y las criptomonedas: siempre la misma estructura, siempre gente convencida de que esta vez es distinto. La segunda explica el <b>an\u00e1lisis t\u00e9cnico</b> \u2014 leer gr\u00e1ficos \u2014 y el <b>fundamental</b> \u2014 leer el negocio \u2014 y por qu\u00e9 el primero no funciona y el segundo es m\u00e1s dif\u00edcil de lo que parece. La tercera presenta la teor\u00eda del mercado eficiente y sus grietas reconocidas. La cuarta es la parte pr\u00e1ctica: reparto de cartera seg\u00fan tu edad y tu tolerancia al riesgo, con recomendaciones concretas.',
+            porQue: 'Es el que mejor te ense\u00f1a a reconocer una burbuja mientras est\u00e1 pasando, que es exactamente el riesgo cuando alguien empieza a invertir en un mercado en subida.',
+            idea: 'Un mono con los ojos vendados lanzando dardos a la p\u00e1gina de cotizaciones formar\u00eda una cartera tan buena como la de los expertos. La exageraci\u00f3n es intencionada, los datos que la sostienen no.',
+            cuando: 'Despu\u00e9s de Bogle. Los dos dicen lo mismo, este con m\u00e1s historia y m\u00e1s matices.'
+          } },
+        { id: 'oneUp', t: 'One Up On Wall Street', a: 'Peter Lynch',
+          anio: 1989, pags: 318,
+          portada: 'https://covers.openlibrary.org/b/isbn/0743200403-L.jpg',
+          ficha: {
+            sobre: 'Lynch dirigi\u00f3 el fondo Magellan de Fidelity durante trece a\u00f1os con un rendimiento anual del 29%, probablemente el mejor registro sostenido de la historia. Aqu\u00ed explica c\u00f3mo eleg\u00eda, y su tesis es que un aficionado tiene ventajas reales sobre un profesional.',
+            resumen: 'Su idea m\u00e1s conocida: <b>invierte en lo que conoces</b>. T\u00fa ves antes que Wall Street qu\u00e9 producto est\u00e1 funcionando, porque lo usas o lo ves usar en tu trabajo. Pero avisa de que la idea es s\u00f3lo el punto de partida \u2014 despu\u00e9s hay que estudiar los n\u00fameros. Clasifica las empresas en seis tipos (lentas, s\u00f3lidas, c\u00edclicas, de crecimiento r\u00e1pido, en recuperaci\u00f3n y con activos ocultos) porque cada una se compra y se vende con criterios distintos. Ense\u00f1a qu\u00e9 mirar en un balance, explica el PEG \u2014 el PER dividido entre el crecimiento \u2014 y describe los <b>tenbaggers</b>, las que multiplican por diez. Advierte contra las \u00abdiworsificaciones\u00bb: empresas que compran otras que no tienen nada que ver.',
+            porQue: 'Es el manual pr\u00e1ctico de lo que t\u00fa quieres hacer: elegir empresas concretas. Lynch te dice c\u00f3mo, y tambi\u00e9n cu\u00e1nto trabajo cuesta hacerlo bien.',
+            idea: 'Nunca inviertas en una empresa cuyo negocio no puedas explicar con un dibujo en una servilleta.',
+            cuando: 'Cuando ya tengas claro el marco general \u2014 Graham y Bogle \u2014 y quieras pasar a escoger.'
+          } },
+        { id: 'psychMoney', t: 'Psicolog\u00eda del Dinero', a: 'Morgan Housel',
+          anio: 2020, pags: 289,
+          portada: 'https://covers.openlibrary.org/b/id/10389354-L.jpg',
+          ficha: {
+            sobre: 'Housel argumenta que rendir bien con el dinero tiene poco que ver con lo que sabes y mucho con c\u00f3mo te comportas. Son diecinueve historias cortas e independientes, cada una con una idea.',
+            resumen: 'Entre las que m\u00e1s pesan: nadie est\u00e1 loco \u2014 cada uno decide seg\u00fan lo que vivi\u00f3, y quien creci\u00f3 en una crisis invierte distinto que quien creci\u00f3 en una expansi\u00f3n. La suerte y el riesgo son hermanos y cuesta separarlos al juzgar un resultado. El inter\u00e9s compuesto explica la fortuna de Buffett mucho mejor que su habilidad: su ventaja no es el rendimiento, es haber empezado a los diez a\u00f1os. Ser rico y estar forrado son cosas distintas: la riqueza es el dinero que NO se ve, el que no gastaste. Y la libertad \u2014 poder decidir qu\u00e9 haces con tu d\u00eda \u2014 es el mayor dividendo que paga el dinero.',
+            porQue: 'Es el m\u00e1s aplicable a tu situaci\u00f3n actual, con un fondo de emergencia por delante. Trata de comportamiento y de constancia, que es tu variable de control ahora, no de t\u00e9cnica de inversi\u00f3n.',
+            idea: 'El inter\u00e9s compuesto no premia el rendimiento alto: premia el rendimiento decente sostenido durante much\u00edsimo tiempo sin interrumpirlo.',
+            cuando: 'Puede ser el primero de todos. Se lee en dos tardes y no exige nada previo.'
+          } },
+        { id: 'iWillTeach', t: 'I Will Teach You to Be Rich', a: 'Ramit Sethi',
+          anio: 2009, pags: 272,
+          portada: 'https://covers.openlibrary.org/b/id/6305971-L.jpg',
+          ficha: {
+            sobre: 'Sethi propone un plan de seis semanas para automatizar tus finanzas personales. Es el m\u00e1s operativo del grupo: menos filosof\u00eda y m\u00e1s \u00ababre esta cuenta y programa esta transferencia\u00bb.',
+            resumen: 'Semana a semana: optimizar tarjetas y cr\u00e9dito, abrir las cuentas correctas, arrancar la inversi\u00f3n, hacer un reparto consciente del gasto y automatizar los traspasos para que todo ocurra solo el d\u00eda de la n\u00f3mina. Su idea central es el <b>gasto consciente</b>: en vez de recortar en todo, gasta sin culpa en las dos o tres cosas que de verdad disfrutas y recorta con brutalidad en el resto. Y su argumento contra los consejos de caf\u00e9: preocuparse por cinco euros al d\u00eda distrae de las decisiones grandes \u2014 sueldo, vivienda, inversi\u00f3n \u2014 que mueven cien veces m\u00e1s dinero.',
+            porQue: 'Encaja con tu quincena de BBVA y tu semanal de Didi: la automatizaci\u00f3n es lo que evita que el fondo de emergencia dependa de acordarte.',
+            idea: 'C\u00e9ntrate en las pocas decisiones grandes en vez de en las cien peque\u00f1as: ah\u00ed est\u00e1 el dinero de verdad.',
+            cuando: 'Ahora mismo. Es el que m\u00e1s rinde estando en Fase 0.'
+          } },
+        { id: 'millionaireNextDoor', t: 'The Millionaire Next Door', a: 'Thomas Stanley',
+          anio: 1996, pags: 258,
+          portada: 'https://covers.openlibrary.org/b/id/797467-L.jpg',
+          ficha: {
+            sobre: 'Stanley y Danko entrevistaron durante veinte a\u00f1os a personas con patrimonio alto en Estados Unidos esperando encontrar un perfil de lujo. Encontraron lo contrario, y el libro es ese hallazgo documentado.',
+            resumen: 'El millonario t\u00edpico no vive en el barrio caro ni conduce coche nuevo: vive por debajo de sus posibilidades, en una casa modesta, y acumula porque gasta poco en relaci\u00f3n con lo que gana. Separan a los <b>PAW</b> \u2014 acumuladores prodigiosos \u2014 de los <b>UAW</b>, que ganan mucho y no tienen nada, con una f\u00f3rmula para calcular en cu\u00e1l est\u00e1s seg\u00fan tu edad e ingresos. Dedican cap\u00edtulos a por qu\u00e9 muchos profesionales de ingresos altos son pobres en patrimonio (el gasto sube con el sueldo) y a c\u00f3mo la ayuda econ\u00f3mica continuada a los hijos adultos suele reducir su capacidad de generar riqueza.',
+            porQue: 'Es el ant\u00eddoto contra confundir ingreso con riqueza. Con ingresos variables como los tuyos, la distinci\u00f3n importa m\u00e1s todav\u00eda.',
+            idea: 'La riqueza no es lo que ganas: es lo que no gastas. Un sueldo alto con gasto alto produce cero.',
+            cuando: 'Con Psicolog\u00eda del Dinero. Se refuerzan.'
+          } },
+        { id: 'tuDinero', t: 'Tu Dinero o Tu Vida', a: 'Vicki Robin',
+          anio: 1992, pags: 376,
+          portada: 'https://covers.openlibrary.org/b/id/6975229-L.jpg',
+          ficha: {
+            sobre: 'Robin y Dominguez plantean una relaci\u00f3n distinta con el dinero: verlo como energ\u00eda vital, porque lo cambias por horas de tu vida que no vuelven. Es el libro fundacional del movimiento de independencia financiera.',
+            resumen: 'Un programa de nueve pasos. Empieza calculando cu\u00e1nto has ganado en toda tu vida y qu\u00e9 patrimonio tienes hoy \u2014 la diferencia suele doler. Despu\u00e9s calcula tu <b>salario real por hora</b> restando del sueldo todo lo que el trabajo te cuesta: transporte, ropa, comidas fuera, el tiempo de desplazamiento, el gasto de desconectar el fin de semana. Con esa cifra, cada compra se eval\u00faa en horas de vida y no en dinero. Luego lleva un registro de todo lo que gastas y lo punt\u00faas por satisfacci\u00f3n real. El objetivo final es el <b>punto de cruce</b>: el d\u00eda en que los ingresos de tus inversiones superan tus gastos, que es cuando trabajar se vuelve opcional.',
+            porQue: 'El c\u00e1lculo del salario real por hora encaja con tu situaci\u00f3n: entre ALTEN y las horas de Didi, saber cu\u00e1nto vale de verdad tu hora cambia qu\u00e9 decisiones tomas.',
+            idea: 'El dinero es energ\u00eda vital: lo cambias por horas que no recuperas, as\u00ed que el precio real de algo se mide en horas de tu vida.',
+            cuando: 'Cuando quieras replantear el marco entero, no s\u00f3lo optimizar dentro del que tienes.'
+          } },
+        { id: 'padreRico', t: 'Padre Rico, Padre Pobre', a: 'Robert Kiyosaki',
+          anio: 1990, pags: 241,
+          portada: 'https://covers.openlibrary.org/b/id/8315603-L.jpg',
+          ficha: {
+            sobre: 'Kiyosaki contrapone dos figuras: su padre biol\u00f3gico, profesor con empleo estable, y el padre de su amigo, empresario. Es el libro de finanzas personales m\u00e1s vendido de la historia y tambi\u00e9n el m\u00e1s discutido.',
+            resumen: 'Su aportaci\u00f3n que s\u00ed vale: la distinci\u00f3n entre <b>activo</b> \u2014 lo que mete dinero en tu bolsillo \u2014 y <b>pasivo</b> \u2014 lo que lo saca \u2014 y la observaci\u00f3n de que mucha gente compra pasivos creyendo que son activos, empezando por la casa propia con hipoteca. De ah\u00ed sale la <b>carrera de la rata</b>: subes de sueldo, subes de nivel de vida, y sigues igual de atado. Tambi\u00e9n habla de alfabetizaci\u00f3n financiera y de que la escuela no la ense\u00f1a. Ahora lo criticable: las an\u00e9cdotas est\u00e1n probablemente adornadas, el \u00abpadre rico\u00bb nunca se ha identificado, y varios de sus consejos concretos \u2014 sobre deuda y bienes ra\u00edces \u2014 son imprudentes.',
+            porQue: 'Est\u00e1 en la lista por la distinci\u00f3n activo/pasivo, que es s\u00f3lida y ordena la cabeza. El resto conviene leerlo con distancia.',
+            idea: 'Los ricos compran activos; los dem\u00e1s compran pasivos creyendo que son activos.',
+            cuando: 'Pronto, es f\u00e1cil de leer, pero con Graham y Bogle tambi\u00e9n en la lista para equilibrarlo.'
+          } },
+        { id: 'fastlane', t: 'The Millionaire Fastlane', a: 'MJ DeMarco',
+          anio: 2011, pags: 332,
+          portada: 'https://covers.openlibrary.org/b/id/7892520-L.jpg',
+          ficha: {
+            sobre: 'DeMarco ataca directamente la idea de ahorrar cuarenta a\u00f1os para jubilarse rico, a la que llama el \u00abcarril lento\u00bb. Su alternativa es construir algo que crezca sin depender de tus horas.',
+            resumen: 'Divide a la gente en tres caminos: la acera (gastar todo, sin plan), el carril lento (trabajar y ahorrar cuarenta a\u00f1os) y el carril r\u00e1pido (crear un negocio que escale). Su cr\u00edtica al carril lento es que hace depender la riqueza de una variable que no controlas \u2014 el tiempo \u2014 y de un rendimiento que no puedes acelerar. Propone cinco filtros para saber si una idea sirve: necesidad real, barrera de entrada, control sobre tu negocio, escala y tiempo desacoplado de los ingresos. Insiste en que el dinero est\u00e1 en resolver problemas a mucha gente, y en que el n\u00famero de personas a las que llegas multiplicado por el impacto es lo que determina cu\u00e1nto ganas.',
+            porQue: 'Es el que mejor explica por qu\u00e9 el ingreso de Didi tiene techo: cambia horas por dinero, uno a uno, sin apalancamiento.',
+            idea: 'Si tus ingresos dependen de tu presencia, no tienes un negocio: tienes un empleo que adem\u00e1s administras t\u00fa.',
+            cuando: 'Cuando est\u00e9s decidiendo en qu\u00e9 invertir tu tiempo libre, no tu dinero.'
+          } },
+      ] },
+      { n: 'Copywriting', color: '#7048e8', items: [
+        { id: 'breakthrough', t: 'Breakthrough Advertising', a: 'Eugene Schwartz',
+          anio: 1966, pags: 236,
+          portada: 'https://covers.openlibrary.org/b/id/11942597-L.jpg',
+          ficha: {
+            sobre: 'Escrito en 1966 y descatalogado durante d\u00e9cadas, lleg\u00f3 a venderse de segunda mano por cientos de d\u00f3lares. Es el libro de copywriting m\u00e1s respetado que existe, y tambi\u00e9n el m\u00e1s dif\u00edcil: Schwartz no explica c\u00f3mo escribir bonito, explica c\u00f3mo funciona el deseo.',
+            resumen: 'Su idea fundacional: <b>el copy no crea deseo, lo canaliza</b>. La demanda de estar en forma o de ganar m\u00e1s ya existe en millones de personas; tu trabajo es dirigir ese deseo hacia tu producto. De ah\u00ed sale su aportaci\u00f3n m\u00e1s citada, los <b>cinco niveles de consciencia</b> del cliente: quien no sabe que tiene un problema, quien lo sabe, quien conoce que hay soluciones, quien conoce tu producto, y quien ya est\u00e1 convencido. Cada nivel exige un titular distinto, y escribirle a uno como si fuera otro es el error que hunde una campa\u00f1a. A\u00f1ade los <b>tres niveles de sofisticaci\u00f3n del mercado</b>: seg\u00fan cu\u00e1ntos competidores han hecho ya la misma promesa, tienes que prometer m\u00e1s, prometer distinto o cambiar el mecanismo.',
+            porQue: 'Es la base te\u00f3rica de todo lo dem\u00e1s que se escribe hoy sobre persuasi\u00f3n, incluido Hormozi. Es denso y viejo, y aun as\u00ed el que m\u00e1s rinde a largo plazo.',
+            idea: 'No puedes crear deseo en un mercado: s\u00f3lo puedes capturar el que ya existe y dirigirlo hacia tu oferta.',
+            cuando: 'No lo pongas de primero. Empieza por Sugarman o Cashvertising y vuelve a este cuando ya escribas.'
+          } },
+        { id: 'cashvertising', t: 'Ca$hvertising', a: 'Drew Eric Whitman',
+          anio: 2008, pags: 236,
+          portada: 'https://covers.openlibrary.org/b/id/8537250-L.jpg',
+          ficha: {
+            sobre: 'Whitman traduce la psicolog\u00eda del consumidor a t\u00e9cnicas concretas. Es el m\u00e1s directo del grupo: poca teor\u00eda, muchas herramientas numeradas y listas para usar.',
+            resumen: 'Arranca con los <b>ocho deseos vitales</b> \u2014 supervivencia, comida, ausencia de miedo, sexo, comodidad, superioridad, cuidado de los seres queridos y aprobaci\u00f3n social \u2014 y sostiene que toda venta que funciona toca alguno. Despu\u00e9s despliega diecisiete principios de psicolog\u00eda aplicada (miedo, transferencia de autoridad, comparaci\u00f3n, prueba) y m\u00e1s de cien t\u00e9cnicas de redacci\u00f3n: c\u00f3mo escribir titulares, qu\u00e9 palabras mueven, c\u00f3mo estructurar un anuncio, c\u00f3mo usar el espacio en blanco. Es un cat\u00e1logo, no un ensayo.',
+            porQue: 'Es el que puedes aplicar el mismo d\u00eda que lo lees, sin necesidad de entender la teor\u00eda de fondo. Bien acompa\u00f1ado de Schwartz, que s\u00ed la da.',
+            idea: 'La gente no compra el producto: compra lo que el producto hace por uno de sus ocho deseos b\u00e1sicos.',
+            cuando: 'El primero del grupo, por lo pr\u00e1ctico.'
+          } },
+        { id: 'adweek', t: 'The Adweek Copywriting Handbook', a: 'Joseph Sugarman',
+          anio: 2006, pags: 349,
+          portada: 'https://covers.openlibrary.org/b/id/299664-L.jpg',
+          ficha: {
+            sobre: 'Sugarman vendi\u00f3 millones de d\u00f3lares en productos por cat\u00e1logo y correo directo antes de internet, y este libro recoge lo que aprendi\u00f3 escribiendo esos anuncios. Es m\u00e1s artesanal y m\u00e1s ameno que los otros.',
+            resumen: 'Su idea central es el <b>tobog\u00e1n resbaladizo</b>: la \u00fanica funci\u00f3n del titular es que leas la primera frase; la de la primera frase, que leas la segunda; y as\u00ed hasta el final. Por eso defiende primeras frases muy cortas, casi absurdamente cortas, que no cuesten nada empezar. Desarrolla treinta y un elementos psicol\u00f3gicos de la venta, con la <b>semilla de curiosidad</b> entre ellos \u2014 insinuar algo que se resolver\u00e1 m\u00e1s adelante para que sigas leyendo. Y dedica cap\u00edtulos a la mec\u00e1nica: c\u00f3mo editar hasta dejarlo tenso, por qu\u00e9 el copy largo vende m\u00e1s que el corto cuando el producto lo requiere. Cierra analizando sus propios anuncios l\u00ednea a l\u00ednea.',
+            porQue: 'Es el que mejor ense\u00f1a el oficio de escribir, no s\u00f3lo la estrategia. Los ejemplos comentados valen tanto como la teor\u00eda.',
+            idea: 'Cada frase existe con un \u00fanico prop\u00f3sito: conseguir que se lea la siguiente.',
+            cuando: 'Despu\u00e9s de Cashvertising y antes de Schwartz.'
+          } },
+        { id: 'storybrand', t: 'Building a StoryBrand', a: 'Donald Miller',
+          anio: 2017, pags: 240,
+          portada: 'https://covers.openlibrary.org/b/id/8458703-L.jpg',
+          ficha: {
+            sobre: 'Miller aplica la estructura del relato cl\u00e1sico a c\u00f3mo una empresa se explica. Su diagn\u00f3stico es que casi todas las marcas hablan de s\u00ed mismas cuando deber\u00edan hablar del cliente.',
+            resumen: 'Su marco tiene siete piezas: hay un <b>personaje</b> \u2014 el cliente, no t\u00fa \u2014 que tiene un <b>problema</b>, se encuentra con un <b>gu\u00eda</b> \u2014 ah\u00ed est\u00e1s t\u00fa \u2014 que le da un <b>plan</b>, le <b>llama a la acci\u00f3n</b>, y as\u00ed evita un <b>fracaso</b> y consigue un <b>\u00e9xito</b>. La regla que lo ordena todo: el cliente es el h\u00e9roe y t\u00fa eres Yoda, no Luke. Insiste en que la confusi\u00f3n mata m\u00e1s ventas que la mala calidad: si alguien no entiende en cinco segundos qu\u00e9 ofreces y qu\u00e9 gana, se va. Y da guiones concretos para la web, el correo y la presentaci\u00f3n de una empresa.',
+            porQue: 'Es el m\u00e1s \u00fatil para presentar lo que hagas, incluido presentarte a ti mismo en una entrevista: el marco funciona igual para una web que para un curr\u00edculum.',
+            idea: 'El cliente es el h\u00e9roe de la historia; t\u00fa eres el gu\u00eda. Cuando te pones de h\u00e9roe, dejas de vender.',
+            cuando: 'Cuando tengas que escribir una web, una propuesta o presentarte. Es muy pr\u00e1ctico y muy corto.'
+          } },
+      ] },
+      { n: 'Datos', color: '#1971c2', items: [
+        { id: 'storytellingData', t: 'Storytelling with Data', a: 'Cole Nussbaumer Knaflic',
+          anio: 2015, pags: 288,
+          portada: 'https://covers.openlibrary.org/b/id/7932707-L.jpg',
+          ficha: {
+            sobre: 'Knaflic trabaj\u00f3 en el equipo de anal\u00edtica de Google y este es el libro de referencia para comunicar datos. No trata de qu\u00e9 gr\u00e1fico es m\u00e1s bonito sino de qu\u00e9 hace que alguien entienda y act\u00fae.',
+            resumen: 'Seis lecciones. Entender el contexto \u2014 a qui\u00e9n le hablas y qu\u00e9 quieres que haga \u2014 antes de abrir ninguna herramienta. Elegir la representaci\u00f3n adecuada, con criterios claros: por qu\u00e9 la tarta casi nunca sirve, por qu\u00e9 la barra horizontal casi siempre s\u00ed. Eliminar el <b>desorden</b>: cada l\u00ednea de rejilla, borde o efecto que no aporta carga cognitiva sin dar informaci\u00f3n. Dirigir la atenci\u00f3n con <b>atributos preatentivos</b> \u2014 el color, el grosor, el tama\u00f1o \u2014 para que el ojo vaya donde t\u00fa quieres antes de que el cerebro lea. Pensar como un dise\u00f1ador (jerarqu\u00eda, alineaci\u00f3n, espacio en blanco). Y contar una historia con principio, tensi\u00f3n y desenlace, en vez de soltar una tabla.',
+            porQue: 'Es directamente aplicable a tu trabajo en ALTEN y a cualquier informe que presentes. De los 44, es el de retorno m\u00e1s inmediato en tu empleo actual.',
+            idea: 'Un gr\u00e1fico no se hace poniendo cosas: se hace quitando todo lo que no ayuda a entender.',
+            cuando: 'Ya. Se aplica desde el primer cap\u00edtulo.'
+          } },
+        { id: 'pythonData', t: 'Python for Data Analysis', a: 'Wes McKinney',
+          anio: 2012, pags: 508,
+          portada: 'https://covers.openlibrary.org/b/id/7548132-L.jpg',
+          ficha: {
+            sobre: 'McKinney es el creador de pandas, la biblioteca con la que se manipulan datos en Python. Este es su manual oficial y el est\u00e1ndar de facto para aprender el ecosistema.',
+            resumen: 'Es un libro de referencia, no de lectura seguida. Cubre NumPy y los arrays, y sobre todo pandas: Series y DataFrames, c\u00f3mo cargar datos de CSV, Excel, JSON o bases de datos, c\u00f3mo limpiar lo que viene sucio \u2014 nulos, duplicados, tipos mal detectados \u2014, c\u00f3mo reestructurar tablas con pivot y melt, c\u00f3mo agrupar y agregar con groupby, c\u00f3mo trabajar con fechas y series temporales, y c\u00f3mo dibujar lo b\u00e1sico con matplotlib. Termina con casos de an\u00e1lisis reales de principio a fin.',
+            porQue: 'Es la herramienta, no la idea. Va con Storytelling with Data: uno te da los datos limpios y el otro te dice c\u00f3mo ense\u00f1arlos.',
+            idea: 'El 80% del trabajo con datos es limpiarlos y reestructurarlos; el an\u00e1lisis en s\u00ed es la parte corta.',
+            cuando: 'Como manual de consulta mientras haces algo real, nunca de cabo a rabo.'
+          } },
+      ] },
+      { n: 'Networking', color: '#c2255c', items: [
+        { id: 'neverEatAlone', t: 'Never Eat Alone', a: 'Keith Ferrazzi',
+          anio: 2005, pags: 326,
+          portada: 'https://covers.openlibrary.org/b/id/6802201-L.jpg',
+          ficha: {
+            sobre: 'Ferrazzi cuenta c\u00f3mo pas\u00f3 de una familia obrera a director de marketing de una gran consultora, y sostiene que la diferencia fue su forma de relacionarse. El t\u00edtulo es literal: no comas solo, cada comida es una oportunidad.',
+            resumen: 'Su premisa es que las relaciones no son un intercambio de favores sino un m\u00fasculo: cuanto m\u00e1s las usas, m\u00e1s fuertes se ponen. De ah\u00ed salen sus pr\u00e1cticas: dar antes de pedir y sin llevar la cuenta; ser <b>generoso con lo que sabes</b> en vez de guard\u00e1rtelo; hacer los deberes antes de conocer a alguien; el <b>ping constante</b> \u2014 mantener contacto ligero y frecuente con mucha gente, no llamar s\u00f3lo cuando necesitas algo; y construir una red diversa, porque las oportunidades suelen venir de contactos lejanos y no del c\u00edrculo \u00edntimo. Incluye t\u00e1cticas concretas para hablar con desconocidos, para eventos y para no quedarse atascado en la conversaci\u00f3n de siempre.',
+            porQue: 'Es el libro de networking m\u00e1s aplicable si vienes de perfil t\u00e9cnico: da un m\u00e9todo en vez de pedirte que seas extrovertido.',
+            idea: 'El error es acordarse de la red cuando hace falta. La red se construye cuando no hace falta nada.',
+            cuando: 'El primero del grupo.'
+          } },
+        { id: 'carnegie', t: 'C\u00f3mo Ganar Amigos e Influir sobre las Personas', a: 'Dale Carnegie',
+          anio: 1936, pags: 280,
+          portada: 'https://covers.openlibrary.org/b/isbn/0671027034-L.jpg',
+          ficha: {
+            sobre: 'Publicado en 1936 y con m\u00e1s de treinta millones de ejemplares vendidos, es el abuelo de todos los libros de relaciones. Suena antiguo en los ejemplos y sigue siendo exacto en el fondo.',
+            resumen: 'Son listas de principios con an\u00e9cdotas. Para tratar con la gente: no critiques ni te quejes, da aprecio sincero, y despierta en el otro un deseo. Para caer bien: inter\u00e9sate de verdad por los dem\u00e1s, sonr\u00ede, recuerda y usa su nombre, escucha, habla de lo que a ellos les interesa y hazles sentir importantes con sinceridad. Para convencer sin ofender: evita la discusi\u00f3n, nunca digas \u00abest\u00e1s equivocado\u00bb, admite tus errores r\u00e1pido, empieza de forma amistosa y consigue que digan s\u00ed desde el principio. Y para corregir sin humillar: empieza elogiando, se\u00f1ala los errores de forma indirecta, y habla de los propios antes.',
+            porQue: 'Es la base de todo el grupo y de buena parte del de Ventas. Los ejemplos de 1936 se perdonan porque la mec\u00e1nica humana no ha cambiado.',
+            idea: 'El nombre de una persona es, para ella, el sonido m\u00e1s dulce en cualquier idioma.',
+            cuando: 'Con Never Eat Alone. Este da el fundamento, aquel el m\u00e9todo moderno.'
+          } },
+        { id: 'giveAndTake', t: 'Give and Take', a: 'Adam Grant',
+          anio: 2013, pags: 314,
+          portada: 'https://covers.openlibrary.org/b/id/7391212-L.jpg',
+          ficha: {
+            sobre: 'Grant, profesor de Wharton, investiga con datos qu\u00e9 tipo de persona acaba llegando m\u00e1s lejos en su carrera. Su respuesta tiene un giro que sostiene el libro entero.',
+            resumen: 'Divide a la gente en tres estilos: <b>los que dan</b>, <b>los que toman</b> y <b>los que igualan</b> \u2014 que dan esperando reciprocidad. Al medir el \u00e9xito profesional, quienes dan aparecen en los dos extremos: son los que peor rendimiento tienen y tambi\u00e9n los mejores. La diferencia entre unos y otros no es cu\u00e1nto dan, sino si adem\u00e1s saben cuidar de sus propios intereses: quien da sin l\u00edmite se agota y lo explotan; quien da con criterio construye una red que le devuelve mucho m\u00e1s de lo que puso. Documenta que dar es m\u00e1s ventajoso cuanto m\u00e1s largo es el plazo y m\u00e1s conectada est\u00e1 la industria, porque la reputaci\u00f3n circula.',
+            porQue: 'Corrige el riesgo de Never Eat Alone: dar sin l\u00edmite no es la estrategia, dar con criterio s\u00ed.',
+            idea: 'Los que dan ocupan el peor y el mejor puesto de la escala; lo que los separa no es la generosidad sino saber protegerse.',
+            cuando: 'Despu\u00e9s de Never Eat Alone, como contrapeso.'
+          } },
+        { id: 'artGathering', t: 'The Art of Gathering', a: 'Priya Parker',
+          anio: 2018, pags: 320,
+          portada: 'https://covers.openlibrary.org/b/id/10286212-L.jpg',
+          ficha: {
+            sobre: 'Priya Parker es facilitadora profesional de reuniones y di\u00e1logos dif\u00edciles. El libro trata de por qu\u00e9 casi todas las reuniones \u2014 de trabajo, cenas, eventos \u2014 son mediocres, y de qu\u00e9 se puede hacer.',
+            resumen: 'Empieza exigiendo un <b>prop\u00f3sito espec\u00edfico y discutible</b>: \u00abhacer networking\u00bb no es un prop\u00f3sito, \u00abque estas ocho personas salgan con un contacto que les resuelva algo\u00bb s\u00ed. Defiende la exclusi\u00f3n generosa \u2014 invitar a todo el mundo diluye el sentido y no reunir a quien no encaja es un favor para todos. Habla de la responsabilidad del anfitri\u00f3n: no ser invisible, porque cuando el anfitri\u00f3n no dirige, manda el invitado m\u00e1s dominante. Propone dise\u00f1ar un principio temporal \u2014 reglas que s\u00f3lo valen durante la reuni\u00f3n \u2014 y cuidar el principio y el final, que es lo que la gente recuerda. Y argumenta a favor de las conversaciones con riesgo frente a la charla cort\u00e9s.',
+            porQue: 'Es el m\u00e1s original de la lista y el que menos se parece a los dem\u00e1s. Sirve para cualquier cosa que organices, de una cena a una reuni\u00f3n de equipo.',
+            idea: 'Si tu prop\u00f3sito no puede excluir a nadie, no es un prop\u00f3sito: es una excusa para juntar gente.',
+            cuando: 'Cuando te toque organizar algo. Fuera de ese momento rinde menos.'
+          } },
+        { id: 'likeSwitch', t: 'The Like Switch', a: 'Jack Schafer',
+          anio: 2015, pags: 145,
+          portada: 'https://covers.openlibrary.org/b/id/10299599-L.jpg',
+          ficha: {
+            sobre: 'Schafer fue agente del FBI dedicado a captar esp\u00edas, un trabajo que consiste en caerle bien a alguien hasta el punto de que traicione a su pa\u00eds. El libro traduce esa t\u00e9cnica a la vida normal.',
+            resumen: 'Su base es la <b>f\u00f3rmula de la amistad</b>: proximidad, frecuencia, duraci\u00f3n e intensidad; manipulando esas cuatro variables se construye cercan\u00eda casi con cualquiera. Ense\u00f1a las <b>se\u00f1ales de amistad</b> no verbales que emitimos sin darnos cuenta \u2014 cejas levantadas un instante, ladear la cabeza, sonrisa genuina \u2014 y c\u00f3mo usarlas conscientemente. Explica el <b>efecto dorado</b>: la gente se siente mejor contigo cuanto mejor se siente consigo misma en tu presencia, as\u00ed que el trabajo no es impresionar sino hacer que el otro brille. Y dedica una parte a leer lenguaje corporal y a detectar el enga\u00f1o, con la honestidad de decir que es mucho menos fiable de lo que se cree.',
+            porQue: 'Es el m\u00e1s t\u00e1ctico de los cinco, y el m\u00e1s f\u00e1cil de aplicar si las conversaciones con desconocidos te cuestan.',
+            idea: 'No gustas por lo que consigues que piensen de ti, sino por c\u00f3mo consigues que se sientan consigo mismos.',
+            cuando: 'El \u00faltimo del grupo. Es el m\u00e1s ligero de los cinco.'
+          } },
+      ] },
+      { n: 'Programaci\u00f3n', color: '#343a40', items: [
+        { id: 'cleanCode', t: 'Clean Code', a: 'Robert C. Martin',
+          anio: 2008, pags: 444,
+          portada: 'https://covers.openlibrary.org/b/id/8065615-L.jpg',
+          ficha: {
+            sobre: 'Robert C. Martin \u2014 \u00abUncle Bob\u00bb \u2014 escribe sobre el oficio de programar: no sobre qu\u00e9 lenguaje usar, sino sobre c\u00f3mo dejar el c\u00f3digo de forma que otro pueda leerlo dentro de dos a\u00f1os. Es de los libros m\u00e1s citados y tambi\u00e9n de los m\u00e1s discutidos del sector.',
+            resumen: 'Va bajando de escala. Los nombres primero: un nombre debe decir por qu\u00e9 existe algo, qu\u00e9 hace y c\u00f3mo se usa, y si necesita un comentario para entenderse es que est\u00e1 mal elegido. Las funciones: peque\u00f1as, que hagan una sola cosa, con pocos argumentos y sin efectos secundarios ocultos. Los comentarios: casi todos son un fracaso del c\u00f3digo para explicarse solo, y los peores son los que mienten porque nadie los actualiz\u00f3. Sigue con formato, objetos frente a estructuras de datos, manejo de errores con excepciones en vez de c\u00f3digos de retorno, y pruebas limpias \u2014 el c\u00f3digo de test merece el mismo cuidado que el de producci\u00f3n. Termina con cap\u00edtulos de refactorizaci\u00f3n paso a paso sobre c\u00f3digo real.',
+            porQue: 'Es lo que separa a un programador que entrega de uno al que llaman para mantener. Directamente aplicable en ALTEN.',
+            idea: 'El c\u00f3digo se lee muchas m\u00e1s veces de las que se escribe: escribirlo para el que lo lea es la \u00fanica optimizaci\u00f3n que siempre paga.',
+            cuando: 'El primero del grupo. Es el m\u00e1s accesible.'
+          } },
+        { id: 'ddia', t: 'Designing Data-Intensive Applications', a: 'Martin Kleppmann',
+          anio: 2017, pags: 618,
+          portada: 'https://covers.openlibrary.org/b/id/8434671-L.jpg',
+          ficha: {
+            sobre: 'Kleppmann explica c\u00f3mo funcionan por dentro los sistemas que mueven datos: bases de datos, colas, r\u00e9plicas, sistemas distribuidos. Es el libro de referencia para dise\u00f1ar sistemas serios, y el m\u00e1s exigente de los 44.',
+            resumen: 'Tres partes. La primera, los fundamentos de un sistema fiable, escalable y mantenible, con los modelos de datos (relacional, documental, grafo) y c\u00f3mo se almacenan e indexan de verdad \u2014 \u00e1rboles B frente a LSM. La segunda, los datos distribuidos: replicaci\u00f3n, particionado, transacciones y niveles de aislamiento, y por qu\u00e9 en un sistema distribuido casi todo lo que puede fallar falla. La tercera, sistemas derivados: procesamiento por lotes, streaming, y c\u00f3mo se construye lo que llega al usuario a partir de eventos. Es denso, con referencias acad\u00e9micas al final de cada cap\u00edtulo, y explicado con una claridad rara en este tema.',
+            porQue: 'Es el que m\u00e1s peso tiene en una entrevista t\u00e9cnica seria de las que est\u00e1s preparando. Tambi\u00e9n el que m\u00e1s tiempo pide.',
+            idea: 'En sistemas distribuidos no existe la respuesta correcta, s\u00f3lo intercambios: cada garant\u00eda que ganas la pagas en otra parte.',
+            cuando: 'El \u00faltimo del grupo, y con calma. No es un libro de un fin de semana.'
+          } },
+        { id: 'pragmatic', t: 'The Pragmatic Programmer', a: 'Hunt & Thomas',
+          anio: 1999, pags: 352,
+          portada: 'https://covers.openlibrary.org/b/id/10143650-L.jpg',
+          ficha: {
+            sobre: 'Hunt y Thomas escribieron en 1999 el libro que m\u00e1s ha influido en c\u00f3mo se entiende la carrera de programador. La edici\u00f3n del vig\u00e9simo aniversario est\u00e1 reescrita y es la que hay que leer.',
+            resumen: 'Son consejos numerados, cada uno con su nombre. <b>DRY</b> \u2014 no repitas el mismo conocimiento en dos sitios \u2014 es el m\u00e1s famoso y el m\u00e1s malentendido: va de conocimiento duplicado, no de l\u00edneas parecidas. La <b>teor\u00eda de las ventanas rotas</b>: un trozo de c\u00f3digo malo que se tolera invita a que todo lo dem\u00e1s se degrade. La <b>programaci\u00f3n por coincidencia</b>: hacer que funcione sin saber por qu\u00e9 es deuda que se cobra sola. Insisten en automatizar todo lo repetitivo, en dominar de verdad las herramientas \u2014 editor, shell, control de versiones \u2014, en programar de forma que el cambio sea barato, y en asumir la responsabilidad de la propia carrera aprendiendo un lenguaje nuevo cada a\u00f1o.',
+            porQue: 'Es el que habla de la carrera y no s\u00f3lo del c\u00f3digo. Encaja con tu momento: est\u00e1s decidiendo hacia d\u00f3nde crecer.',
+            idea: 'No arregles el c\u00f3digo malo con parches: la primera ventana rota que dejas sin reparar autoriza todas las dem\u00e1s.',
+            cuando: 'Con Clean Code, y este primero si tuvieras que elegir uno.'
+          } },
+        { id: 'philosophySoftware', t: 'A Philosophy of Software Design', a: 'John Ousterhout',
+          anio: 2018, pags: 193,
+          portada: 'https://covers.openlibrary.org/b/id/10352230-L.jpg',
+          ficha: {
+            sobre: 'Ousterhout, catedr\u00e1tico en Stanford, escribi\u00f3 este libro corto a partir de un curso donde los alumnos escriben c\u00f3digo y lo revisan varias veces. Su tema \u00fanico es la complejidad: qu\u00e9 la produce y c\u00f3mo reducirla.',
+            resumen: 'Define la complejidad por sus s\u00edntomas: <b>amplificaci\u00f3n del cambio</b> \u2014 tocar una cosa obliga a tocar muchas \u2014, <b>carga cognitiva</b> y <b>inc\u00f3gnitas desconocidas</b> \u2014 no saber qu\u00e9 hay que tocar. Su propuesta central son los <b>m\u00f3dulos profundos</b>: interfaz peque\u00f1a y sencilla que esconde mucha implementaci\u00f3n; lo contrario, los m\u00f3dulos superficiales, son los que multiplican el trabajo. De ah\u00ed sale su choque m\u00e1s comentado con Clean Code: sostiene que trocear en funciones diminutas puede aumentar la complejidad en vez de reducirla, porque llena el sistema de interfaces. Defiende los comentarios \u2014 dice que un buen comentario aporta informaci\u00f3n que el c\u00f3digo no puede expresar \u2014 y dise\u00f1ar dos veces antes de elegir.',
+            porQue: 'Es el contrapunto directo a Clean Code, y leer los dos juntos vale m\u00e1s que leer cualquiera por separado: te obliga a formar criterio en vez de seguir reglas.',
+            idea: 'Los m\u00f3dulos deben ser profundos: mucha funcionalidad detr\u00e1s de una interfaz peque\u00f1a. Una interfaz casi tan grande como lo que esconde no esconde nada.',
+            cuando: 'Justo despu\u00e9s de Clean Code, mientras lo tengas fresco.'
+          } },
+      ] },
+      { n: 'Liderazgo', color: '#8a6d1f', items: [
+        { id: 'extremeOwnership', t: 'Extreme Ownership', a: 'Jocko Willink',
+          anio: 2015, pags: 325,
+          portada: 'https://covers.openlibrary.org/b/id/12835042-L.jpg',
+          ficha: {
+            sobre: 'Willink y Babin dirigieron el equipo SEAL m\u00e1s condecorado de la guerra de Irak y hoy dan formaci\u00f3n a empresas. Cada cap\u00edtulo cuenta una operaci\u00f3n, extrae el principio y lo aplica a un caso de negocio.',
+            resumen: 'El principio que da t\u00edtulo: el l\u00edder es responsable de <b>todo</b> lo que pasa en su equipo, sin excepci\u00f3n \u2014 si alguien no entendi\u00f3, no lo explicaste bien; si alguien fall\u00f3, no lo entrenaste. No hay malos equipos, s\u00f3lo malos l\u00edderes. De ah\u00ed salen las <b>leyes del combate</b>: cubrirse y avanzar (las partes del equipo se apoyan en vez de competir), simplificar hasta que nadie pueda malinterpretar, priorizar y ejecutar una cosa cada vez, y el <b>mando descentralizado</b> \u2014 la gente decide sola si entiende la intenci\u00f3n. La segunda mitad va de mandar hacia arriba y de la <b>dicotom\u00eda del liderazgo</b>: ser agresivo pero no temerario, disciplinado pero no r\u00edgido.',
+            porQue: 'Es el m\u00e1s \u00fatil de los cinco antes de tener gente a cargo, porque el principio se aplica a ti solo: dejar de explicar los fallos con causas externas.',
+            idea: 'Si tu equipo no hizo lo que quer\u00edas, el problema es tu comunicaci\u00f3n, no su capacidad.',
+            cuando: 'El primero del grupo.'
+          } },
+        { id: 'goodToGreat', t: 'Good to Great', a: 'Jim Collins',
+          anio: 2001, pags: 300,
+          portada: 'https://covers.openlibrary.org/b/id/7431270-L.jpg',
+          ficha: {
+            sobre: 'Collins y su equipo analizaron durante cinco a\u00f1os 1.435 empresas para aislar las once que pasaron de resultados normales a excepcionales y los sostuvieron quince a\u00f1os. El libro es qu\u00e9 ten\u00edan en com\u00fan.',
+            resumen: 'El <b>l\u00edder de nivel 5</b>: humildad personal y voluntad profesional feroz, lo contrario del director carism\u00e1tico de portada. <b>Primero qui\u00e9n, despu\u00e9s qu\u00e9</b>: subir a la gente correcta al autob\u00fas antes de decidir a d\u00f3nde va. Enfrentar los <b>hechos brutales</b> sin perder la fe en el desenlace, lo que llama la paradoja de Stockdale. El <b>concepto del erizo</b>: la intersecci\u00f3n entre en qu\u00e9 puedes ser el mejor del mundo, qu\u00e9 te apasiona y qu\u00e9 mueve tu motor econ\u00f3mico. Cultura de disciplina, tecnolog\u00eda como acelerador y no como causa, y el <b>volante de inercia</b>: no hay un momento milagroso, sino empujones acumulados que un d\u00eda parecen un salto desde fuera.',
+            porQue: 'El concepto del erizo es directamente aplicable a la decisi\u00f3n que tienes delante sobre d\u00f3nde concentrar tu tiempo.',
+            idea: 'No hay un momento decisivo: hay muchos empujones en la misma direcci\u00f3n que desde fuera parecen un salto.',
+            cuando: 'Cuando est\u00e9s eligiendo en qu\u00e9 concentrarte.'
+          } },
+        { id: 'hardThing', t: 'The Hard Thing About Hard Things', a: 'Ben Horowitz',
+          anio: 2014, pags: 145,
+          portada: 'https://covers.openlibrary.org/b/id/7279515-L.jpg',
+          ficha: {
+            sobre: 'Horowitz fund\u00f3 Opsware, la vendi\u00f3 por 1.600 millones y hoy es socio de una gran firma de capital riesgo. Escribi\u00f3 este libro porque los de gesti\u00f3n cuentan c\u00f3mo hacer las cosas bien y nadie cuenta qu\u00e9 hacer cuando todo se rompe.',
+            resumen: 'Es medio memorias, medio manual. La parte narrativa cuenta c\u00f3mo estuvo a semanas de quebrar varias veces y qu\u00e9 decisiones tom\u00f3. La parte pr\u00e1ctica cubre lo que nadie ense\u00f1a: c\u00f3mo despedir a alguien y c\u00f3mo despedir a un amigo, c\u00f3mo degradar a un directivo leal, cu\u00e1ndo un fundador debe dejar de ser director general, c\u00f3mo se contrata a un ejecutivo, la diferencia entre <b>tiempos de paz</b> y <b>tiempos de guerra</b> y por qu\u00e9 exigen l\u00edderes distintos, y la <b>lucha</b> \u2014 su nombre para el periodo en que todo va mal y no sabes si saldr\u00e1s. Su consejo repetido: cuida a la gente, al producto y a los beneficios, en ese orden.',
+            porQue: 'Es el m\u00e1s honesto sobre el coste real de emprender, y el mejor ant\u00eddoto contra la versi\u00f3n de LinkedIn de montar algo.',
+            idea: 'No hay f\u00f3rmulas para los problemas dif\u00edciles: por eso son los dif\u00edciles. S\u00f3lo se puede seguir jugando un movimiento m\u00e1s.',
+            cuando: 'Cuando el proyecto ya est\u00e9 en marcha y duela.'
+          } },
+        { id: 'leadersEatLast', t: 'Leaders Eat Last', a: 'Simon Sinek',
+          anio: 1900, pags: 368,
+          portada: 'https://covers.openlibrary.org/b/id/8246311-L.jpg',
+          ficha: {
+            sobre: 'Sinek parte de una costumbre de los marines \u2014 los oficiales comen los \u00faltimos \u2014 para argumentar que el trabajo del l\u00edder es crear un entorno donde la gente se sienta segura. Combina biolog\u00eda, antropolog\u00eda y casos de empresa.',
+            resumen: 'Su marco es qu\u00edmico: endorfina y dopamina son las sustancias del logro individual, y oxitocina y serotonina las de la confianza y el v\u00ednculo. Una organizaci\u00f3n que s\u00f3lo premia lo individual funciona con las dos primeras, que adem\u00e1s crean adicci\u00f3n y aislamiento. Introduce el <b>c\u00edrculo de seguridad</b>: cuando la gente se siente protegida por su propio grupo dedica su energ\u00eda a los peligros de fuera, y cuando no, la dedica a protegerse de sus compa\u00f1eros. Critica la gesti\u00f3n por n\u00fameros trimestrales y el cortisol cr\u00f3nico de las plantillas con miedo, y sostiene que el liderazgo no es un rango sino la decisi\u00f3n de cuidar a los que tienes a la izquierda y a la derecha.',
+            porQue: 'Es el m\u00e1s blando de los cinco y el que mejor explica por qu\u00e9 un equipo con miedo rinde menos aunque tenga mejores individuos.',
+            idea: 'El liderazgo no es un rango: es la decisi\u00f3n de anteponer el bienestar de tu gente a tus propios intereses.',
+            cuando: 'Cuando ya tengas gente a tu cargo o est\u00e9 cerca.'
+          } },
+        { id: 'fiveDysfunctions', t: 'The Five Dysfunctions of a Team', a: 'Patrick Lencioni',
+          anio: 2007, anio: 2002, pags: 229,
+          portada: 'https://covers.openlibrary.org/b/id/549590-L.jpg',
+          ficha: {
+            sobre: 'Lencioni escribe una novela corta \u2014 una directora general reci\u00e9n llegada arregla un comit\u00e9 de direcci\u00f3n roto \u2014 y en el \u00faltimo tercio extrae el modelo. Se lee en una tarde.',
+            resumen: 'Cinco disfunciones apiladas, cada una causada por la anterior. En la base, la <b>ausencia de confianza</b>: nadie admite un error ni pide ayuda por miedo a parecer d\u00e9bil. Encima, el <b>miedo al conflicto</b>: sin confianza no hay debate real, s\u00f3lo armon\u00eda artificial. Despu\u00e9s la <b>falta de compromiso</b>: quien no pudo discutir no se compromete con lo decidido. Luego la <b>evasi\u00f3n de responsabilidades</b>: nadie exige a un compa\u00f1ero lo que no se comprometi\u00f3 a hacer. Y arriba, la <b>falta de atenci\u00f3n a los resultados</b>: cada uno cuida su parcela. Incluye ejercicios concretos para cada nivel y un cuestionario de diagn\u00f3stico.',
+            porQue: 'Es el m\u00e1s r\u00e1pido de leer y el que da un diagn\u00f3stico usable de cualquier equipo del que formes parte, aunque no lo dirijas.',
+            idea: 'Sin confianza no hay conflicto sano, y sin conflicto sano no hay compromiso: s\u00f3lo silencio en la sala y quejas en el pasillo.',
+            cuando: 'Cualquier momento. Es el m\u00e1s corto de los 44.'
+          } },
+      ] },
+      { n: 'H\u00e1bitos y Mentalidad', color: '#0b7285', items: [
+        { id: 'atomicHabits', t: 'Atomic Habits', a: 'James Clear',
+          anio: 2016, pags: 323,
+          portada: 'https://covers.openlibrary.org/b/id/12539702-L.jpg',
+          ficha: {
+            sobre: 'Clear sistematiza lo que se sabe sobre formaci\u00f3n de h\u00e1bitos en un m\u00e9todo operativo. Es el libro de h\u00e1bitos m\u00e1s vendido de la \u00faltima d\u00e9cada y el m\u00e1s pr\u00e1ctico de su categor\u00eda.',
+            resumen: 'Su tesis: los cambios grandes vienen de mejoras diminutas repetidas \u2014 un 1% diario compone a 37 veces en un a\u00f1o. Distingue objetivos de <b>sistemas</b>: los objetivos dan la direcci\u00f3n, los sistemas producen el resultado, y quien se queda en el objetivo s\u00f3lo es feliz al llegar. Propone construir el h\u00e1bito desde la <b>identidad</b>: no \u00abquiero correr\u00bb sino \u00absoy alguien que corre\u00bb. El m\u00e9todo son cuatro leyes, cada una con su inversa para romper h\u00e1bitos malos: hazlo <b>obvio</b> (dise\u00f1a el entorno, encadena h\u00e1bitos), <b>atractivo</b> (j\u00fantalo con algo que ya te gusta), <b>f\u00e1cil</b> (la regla de los dos minutos, reducir la fricci\u00f3n) y <b>satisfactorio</b> (refuerzo inmediato, no romper la cadena). A\u00f1ade que el entorno pesa m\u00e1s que la fuerza de voluntad.',
+            porQue: 'Es el que sostiene a todos los dem\u00e1s: cualquier cosa que aprendas en esta lista s\u00f3lo sirve si consigues hacerla de forma constante.',
+            idea: 'No subes al nivel de tus objetivos: bajas al nivel de tus sistemas.',
+            cuando: 'El primero de los 44 si s\u00f3lo vas a leer uno.'
+          } },
+        { id: 'mindset', t: 'Mindset: The New Psychology of Success', a: 'Carol Dweck',
+          anio: 2006, pags: 288,
+          portada: 'https://covers.openlibrary.org/b/id/746414-L.jpg',
+          ficha: {
+            sobre: 'Dweck, psic\u00f3loga de Stanford, lleva d\u00e9cadas investigando qu\u00e9 creemos sobre nuestra propia capacidad y c\u00f3mo eso cambia lo que conseguimos. El libro divulga treinta a\u00f1os de estudios.',
+            resumen: 'Dos creencias. La <b>mentalidad fija</b>: la inteligencia y el talento son lo que son, as\u00ed que cada tarea es un examen que puede demostrar que no vales, y por eso conviene evitar los retos y ocultar los errores. La <b>mentalidad de crecimiento</b>: las capacidades se desarrollan con esfuerzo y estrategia, as\u00ed que el reto es informaci\u00f3n y el error es parte del proceso. Recorre c\u00f3mo se manifiestan en el colegio, el deporte, los negocios y las relaciones. Un hallazgo con consecuencias: elogiar la inteligencia de un ni\u00f1o empeora su rendimiento posterior \u2014 se vuelve conservador para no perder la etiqueta \u2014 mientras que elogiar el proceso lo mejora. Y admite el matiz que a menudo se ignora: nadie tiene una mentalidad pura, y cada uno tiene \u00e1reas donde se vuelve fijo.',
+            porQue: 'Es el marco mental de todo lo dem\u00e1s. Aprender ventas, copywriting o sistemas distribuidos requiere ser malo en p\u00fablico durante un tiempo.',
+            idea: 'Elogiar el talento vuelve a la gente conservadora; elogiar el esfuerzo la vuelve capaz de arriesgarse.',
+            cuando: 'Con Atomic Habits. Uno da la creencia, el otro el m\u00e9todo.'
+          } },
+        { id: 'cantHurtMe', t: 'Can\'t Hurt Me', a: 'David Goggins',
+          anio: 2018, pags: 364,
+          portada: 'https://covers.openlibrary.org/b/id/8305903-L.jpg',
+          ficha: {
+            sobre: 'Goggins pas\u00f3 de pesar 130 kilos y fumigar cucarachas a ser SEAL, Ranger y ultramaratoniano. Es en parte autobiograf\u00eda brutal y en parte manual de resistencia mental, con cap\u00edtulos que terminan en retos concretos.',
+            resumen: 'Cuenta una infancia de maltrato y racismo, y c\u00f3mo decidi\u00f3 cambiar. De ah\u00ed saca sus conceptos: el <b>espejo de la responsabilidad</b> \u2014 escribir en el espejo lo que no quieres admitir sobre ti y mirarlo cada d\u00eda \u2014; la <b>regla del 40%</b>, seg\u00fan la cual cuando tu mente dice basta llevas usado m\u00e1s o menos el 40% de tu capacidad real; el <b>callo mental</b>, que se forma haciendo a prop\u00f3sito cosas que odias; el <b>banco de pruebas</b> \u2014 un archivo mental de las veces que superaste algo, para consultarlo cuando dudes \u2014; y buscar el <b>malestar</b> deliberadamente. El tono es agresivo y no es para todo el mundo; tambi\u00e9n conviene leerlo con cabeza, porque cuenta lesiones graves como logros.',
+            porQue: 'Es el m\u00e1s motivacional de los 44 y el que menos m\u00e9todo tiene. Sirve para arrancar, no para sostener \u2014 de sostener se ocupa Atomic Habits.',
+            idea: 'Cuando tu cabeza dice que no puedes m\u00e1s, todav\u00eda te queda alrededor del 60% del dep\u00f3sito.',
+            cuando: 'Cuando te falte impulso, no cuando te falte plan.'
+          } },
+        { id: 'obstacle', t: 'The Obstacle is the Way', a: 'Ryan Holiday',
+          anio: 2013, pags: 224,
+          portada: 'https://covers.openlibrary.org/b/id/14428233-L.jpg',
+          ficha: {
+            sobre: 'Holiday traduce el estoicismo a un manual de actuaci\u00f3n, apoy\u00e1ndose en Marco Aurelio, Epicteto y S\u00e9neca, y en ejemplos hist\u00f3ricos de gente que convirti\u00f3 un impedimento en el camino.',
+            resumen: 'Tres partes que son tres disciplinas estoicas. <b>Percepci\u00f3n</b>: casi nada es objetivamente bueno o malo hasta que lo juzgas, y controlar la interpretaci\u00f3n es lo \u00fanico que siempre est\u00e1 en tu mano. <b>Acci\u00f3n</b>: moverse con lo que hay, empezar por lo que s\u00ed puedes hacer, aceptar el fracaso como material de trabajo y la persistencia como m\u00e9todo. <b>Voluntad</b>: la parte interior, para lo que no se puede cambiar \u2014 aceptar, prepararse para lo peor de antemano y encontrar sentido. Cada cap\u00edtulo es corto y va acompa\u00f1ado de un caso hist\u00f3rico, de Rockefeller a Lincoln.',
+            porQue: 'Es la versi\u00f3n pr\u00e1ctica de Meditaciones y buena puerta de entrada al \u00faltimo libro de la lista.',
+            idea: 'El impedimento a la acci\u00f3n hace avanzar la acci\u00f3n: lo que se interpone en el camino se convierte en el camino.',
+            cuando: 'Antes de Meditaciones.'
+          } },
+        { id: 'meditaciones', t: 'Meditaciones', a: 'Marco Aurelio',
+          anio: 180, pags: 254,
+          portada: 'https://covers.openlibrary.org/b/id/211529-L.jpg',
+          ficha: {
+            sobre: 'Marco Aurelio fue emperador de Roma y escribi\u00f3 esto para s\u00ed mismo, sin intenci\u00f3n de publicarlo: son sus notas privadas para recordarse c\u00f3mo quer\u00eda comportarse. Han sobrevivido dieciocho siglos.',
+            resumen: 'No hay estructura ni argumento: son doce cuadernos de anotaciones sueltas que vuelven una y otra vez sobre los mismos temas. La <b>dicotom\u00eda del control</b>: separar lo que depende de ti \u2014 tus juicios y tus actos \u2014 de lo que no, y no gastar ni un gramo de energ\u00eda en lo segundo. La brevedad de la vida y la insignificancia de la fama, escritas por el hombre m\u00e1s poderoso del mundo conocido. El deber hacia los dem\u00e1s porque somos partes de un mismo cuerpo. La aceptaci\u00f3n de lo que ocurre. Y el trato con la gente dif\u00edcil: recordar cada ma\u00f1ana que te vas a cruzar con ingratos y soberbios, y que ninguno puede da\u00f1ar tu car\u00e1cter si t\u00fa no se lo permites.',
+            porQue: 'Es el cierre de la lista y el que menos caduca. Se lee suelto, unas p\u00e1ginas cuando hagan falta, no de principio a fin.',
+            idea: 'Tienes poder sobre tu mente, no sobre los acontecimientos. Date cuenta de esto y encontrar\u00e1s la fuerza.',
+            cuando: 'Despu\u00e9s de El obst\u00e1culo es el camino, y luego a ratos durante a\u00f1os.'
+          } },
+      ] },
+    ],
+
+    get todos() {
+      return this.grupos.reduce(function (a, g) { return a.concat(g.items); }, []);
+    },
+    // El rengl\u00f3n de la compra es \"T\u00edtulo \u2014 Autor\", escrito una sola vez y reversible.
+    textoCompra: function (p) { return p.t + ' \u2014 ' + p.a; },
+    deTextoCompra: function (txt) {
+      var t = this;
+      return this.todos.filter(function (p) { return t.textoCompra(p) === txt; })[0] || null;
+    },
+    get porGrupo() {
+      var t = this, out = {};
+      this.grupos.forEach(function (g) {
+        out[g.n] = g.items.map(function (p) { return t.textoCompra(p); });
+      });
+      return out;
+    },
+  };
+
   const LISTA_COMPRAS = {
     // Sale de RECETARIO: cada ingrediente declara su pasillo y aquí se agrupan.
     // Antes esta lista estaba escrita a mano y había que replicar a mano cada
@@ -2027,17 +2523,8 @@ window.CIFRAS = (function () {
     // 25 (categoría combinada), Copy/Datos/Networking empatados en 55 (Copy primero por tener
     // mayor ponderación real, ×1.2 vs ×1.0), Programación 60, Liderazgo 80, Mentalidad 85 (su
     // habilidad más fuerte de las 12 — por eso esta categoría queda al final, no al principio).
-    libros:{
-      'Ventas':['Influence — Robert Cialdini','$100M Offers — Alex Hormozi','SPIN Selling — Neil Rackham','Never Split the Difference — Chris Voss','The Psychology of Selling — Brian Tracy'],
-      'Marketing':['$100M Leads — Alex Hormozi','Hacking Growth — Sean Ellis','Traffic Secrets — Russell Brunson','Jab, Jab, Jab, Right Hook — Gary Vaynerchuk'],
-      'Finanzas e Inversión':['The Intelligent Investor — Benjamin Graham','The Little Book of Common Sense Investing — John Bogle','A Random Walk Down Wall Street — Burton Malkiel','One Up On Wall Street — Peter Lynch','Psicología del Dinero — Morgan Housel','I Will Teach You to Be Rich — Ramit Sethi','The Millionaire Next Door — Thomas Stanley','Tu Dinero o Tu Vida — Vicki Robin','Padre Rico, Padre Pobre — Robert Kiyosaki','The Millionaire Fastlane — MJ DeMarco'],
-      'Copywriting':['Breakthrough Advertising — Eugene Schwartz','Ca$hvertising — Drew Eric Whitman','The Adweek Copywriting Handbook — Joseph Sugarman','Building a StoryBrand — Donald Miller'],
-      'Datos':['Storytelling with Data — Cole Nussbaumer Knaflic','Python for Data Analysis — Wes McKinney'],
-      'Networking':['Never Eat Alone — Keith Ferrazzi','Cómo Ganar Amigos e Influir sobre las Personas — Dale Carnegie','Give and Take — Adam Grant','The Art of Gathering — Priya Parker','The Like Switch — Jack Schafer'],
-      'Programación':['Clean Code — Robert C. Martin','Designing Data-Intensive Applications — Martin Kleppmann','The Pragmatic Programmer — Hunt & Thomas','A Philosophy of Software Design — John Ousterhout'],
-      'Liderazgo':['Extreme Ownership — Jocko Willink','Good to Great — Jim Collins','The Hard Thing About Hard Things — Ben Horowitz','Leaders Eat Last — Simon Sinek','The Five Dysfunctions of a Team — Patrick Lencioni'],
-      'Hábitos y Mentalidad':['Atomic Habits — James Clear','Mindset: The New Psychology of Success — Carol Dweck',"Can't Hurt Me — David Goggins",'The Obstacle is the Way — Ryan Holiday','Meditaciones — Marco Aurelio'],
-    },
+    // Sale de BIBLIOTECA, no se escribe a mano.
+    get libros() { return BIBLIOTECA.porGrupo; },
   };
 
   /* ── MIGRACIONES COMPARTIDAS ────────────────────────────────────────────────────────────────
@@ -2368,6 +2855,7 @@ window.CIFRAS = (function () {
     RUTINA_PELO: RUTINA_PELO,
     KIT_HIGIENE: KIT_HIGIENE,
     CUIDADO_OJOS: CUIDADO_OJOS,
+    BIBLIOTECA: BIBLIOTECA,
     RECETARIO: RECETARIO,
     SUPLEMENTOS: SUPLEMENTOS,
     CHEQUEO: CHEQUEO,

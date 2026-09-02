@@ -2473,6 +2473,32 @@ button.hp-lec:active{transform:translateY(0)}
    tema claro se queda en 3.78:1. */
 .pf-ojo-card .pf-t{color:rgb(var(--pf-warn))}
 .pf-ojo-card .pf-t .b{background:var(--o)}
+/* Un libro se enseña de pie: la portada es 2:3, no un bote cuadrado, y el
+   fondo lleva el color de su tema en vez del gris de los envases. */
+.pf-libro .pf-hero{grid-template-columns:212px 1fr}
+.pf-libro .pf-foto{height:296px;
+  background:radial-gradient(120% 100% at 50% 20%,#fff 0%,#eef0f4 60%,#e2e5ec 100%)}
+.pf-libro .pf-foto::before{content:'';position:absolute;inset:0;
+  background:linear-gradient(160deg,rgba(var(--ov),0) 55%,var(--lomo,#888) 260%);
+  opacity:.13;pointer-events:none}
+.pf-libro .pf-foto img{max-height:246px;max-width:74%;
+  box-shadow:0 14px 34px rgba(16,20,32,.28);border-radius:3px}
+.pf-libro .pf-env{height:238px}
+.pf-libro .pf-ojo i{background:var(--lomo,rgb(var(--tono)));
+  box-shadow:0 0 10px var(--lomo,rgb(var(--tono)))}
+.pf-libro .pf-t .b{background:var(--lomo,rgb(var(--tono)))}
+.pf-libro .pf-tarda .pf-t .b{background:var(--cy)}
+.pf-libro .pf-act svg{stroke:var(--text3);stroke-width:1.6}
+/* El resumen es lo largo de la ficha: se le da aire para que se lea. */
+.pf-libro .pf-cuerpo{grid-template-columns:1fr 330px}
+.pf-libro .pf-p{font-size:12.5px;line-height:1.68}
+@media(max-width:860px){
+  .pf-libro .pf-hero{grid-template-columns:1fr}
+  .pf-libro .pf-foto{height:240px}
+  .pf-libro .pf-foto img{max-height:200px;max-width:44%}
+  .pf-libro .pf-env{height:190px}
+  .pf-libro .pf-cuerpo{grid-template-columns:1fr}
+}
 .pf-x{position:absolute;top:13px;right:13px;z-index:3;width:32px;height:32px;border-radius:10px;
   border:1px solid rgba(var(--ov),.16);background:rgba(var(--ov),.07);backdrop-filter:blur(10px);
   color:var(--text);font-size:15px;line-height:1;cursor:pointer;display:flex;align-items:center;
@@ -4765,6 +4791,7 @@ const PF_FORMAS={
   utensilio:'<path d="M44 154L74 62" fill="none" stroke="@A@" stroke-width="7" stroke-linecap="round"/><path d="M76 154L46 62" fill="none" stroke="@A@" stroke-width="7" stroke-linecap="round"/><path d="M44 154L74 62M76 154L46 62" fill="none" stroke="@S@" stroke-width="1" stroke-linecap="round"/><circle cx="46" cy="46" r="13" fill="none" stroke="@B@" stroke-width="6"/><circle cx="74" cy="46" r="13" fill="none" stroke="@B@" stroke-width="6"/><circle cx="60" cy="112" r="4.5" fill="@B@"/>',
   aparato:'<rect x="40" y="30" width="40" height="140" rx="12" fill="@A@"/><rect x="40" y="30" width="40" height="140" rx="12" fill="none" stroke="@S@" stroke-width="1.2"/><rect x="40" y="82" width="40" height="52" fill="@B@" opacity=".85"/><rect x="46" y="22" width="28" height="12" rx="3" fill="@B@"/><g stroke="@A@" stroke-width="2.2" stroke-linecap="round" opacity=".9"><path d="M49 24v-6M55 24v-6M61 24v-6M67 24v-6"/></g><circle cx="60" cy="150" r="7" fill="@B@" opacity=".55"/><circle cx="60" cy="150" r="7" fill="none" stroke="@S@" stroke-width="1"/>',
   pano:'<path d="M20 68h80a6 6 0 0 1 6 6v58a8 8 0 0 1-8 8H22a8 8 0 0 1-8-8V74a6 6 0 0 1 6-6z" fill="@A@"/><path d="M20 68h80a6 6 0 0 1 6 6v58a8 8 0 0 1-8 8H22a8 8 0 0 1-8-8V74a6 6 0 0 1 6-6z" fill="none" stroke="@S@" stroke-width="1.2"/><rect x="36" y="60" width="48" height="18" rx="8" fill="@B@"/><rect x="14" y="100" width="92" height="28" fill="@B@" opacity=".8"/><rect x="30" y="110" width="42" height="5" rx="2.5" fill="#fff" opacity=".55"/>',
+  libro:'<path d="M30 22h56a6 6 0 0 1 6 6v118a6 6 0 0 1-6 6H30z" fill="@A@"/><path d="M30 22h56a6 6 0 0 1 6 6v118a6 6 0 0 1-6 6H30z" fill="none" stroke="@S@" stroke-width="1.2"/><path d="M22 22h12v130H22a4 4 0 0 1-4-4V26a4 4 0 0 1 4-4z" fill="@B@"/><rect x="42" y="46" width="40" height="5" rx="2.5" fill="@B@" opacity=".85"/><rect x="42" y="58" width="30" height="4" rx="2" fill="@B@" opacity=".45"/><rect x="42" y="118" width="24" height="4" rx="2" fill="@B@" opacity=".35"/><g stroke="@S@" stroke-width=".8" opacity=".5"><path d="M92 34v112M89 30v120"/></g>',
   gafas:'<circle cx="32" cy="94" r="21" fill="@A@" opacity=".45"/><circle cx="88" cy="94" r="21" fill="@A@" opacity=".45"/><circle cx="32" cy="94" r="21" fill="none" stroke="@B@" stroke-width="5.5"/><circle cx="88" cy="94" r="21" fill="none" stroke="@B@" stroke-width="5.5"/><path d="M53 88q7-6 14 0" fill="none" stroke="@B@" stroke-width="5.5" stroke-linecap="round"/><path d="M12 86L4 74M108 86l8-12" fill="none" stroke="@B@" stroke-width="5.5" stroke-linecap="round"/>',
   gotas:'<path d="M36 82h48v66a14 14 0 0 1-14 14H50a14 14 0 0 1-14-14z" fill="@A@"/><path d="M36 82h48v66a14 14 0 0 1-14 14H50a14 14 0 0 1-14-14z" fill="none" stroke="@S@" stroke-width="1.2"/><rect x="36" y="100" width="48" height="40" fill="@B@" opacity=".85"/><rect x="44" y="110" width="32" height="4" rx="2" fill="#fff" opacity=".6"/><rect x="44" y="119" width="20" height="3" rx="1.5" fill="#fff" opacity=".4"/><rect x="47" y="66" width="26" height="17" rx="3" fill="@B@"/><path d="M53 66V48a7 7 0 0 1 14 0v18z" fill="@B@" opacity=".85"/><path d="M60 22c5 7 8 11 8 15a8 8 0 0 1-16 0c0-4 3-8 8-15z" fill="@B@" opacity=".5"/>',
 };
@@ -4783,6 +4810,7 @@ const PF_FUENTES={
   suplementos: function(){ return window.CIFRAS.SUPLEMENTOS; },
   higiene:     function(){ return window.CIFRAS.KIT_HIGIENE; },
   ojos:        function(){ return window.CIFRAS.CUIDADO_OJOS; },
+  libros:      function(){ return window.CIFRAS.BIBLIOTECA; },
 };
 function pfFuente(cat){
   const f=PF_FUENTES[cat]; if(!f||!window.CIFRAS) return null;
@@ -4870,8 +4898,12 @@ function pfSinFoto(img){
   const lista=o.productos||o.lista||o.todos||[];
   const p=lista.filter(function(x){ return x.id===img.dataset.pf; })[0];
   const caja=img.parentElement; if(!p||!caja) return;
-  caja.innerHTML=pfEnvaseSvg(p.frasco,p.marca.a,p.marca.b)+
-    '<span class="pf-orig">Envase dibujado</span>';
+  // Un libro sin portada se dibuja como libro, con el color de su tema.
+  const esLibro=img.dataset.pfCat==='libros';
+  const frasco=p.frasco||(esLibro?'libro':null); if(!frasco) return;
+  const m=p.marca||{a:'#f4f2ee',b:'#8a5a2b'};
+  caja.innerHTML=pfEnvaseSvg(frasco,m.a,m.b)+
+    '<span class="pf-orig">'+(esLibro?'Sin portada libre':'Envase dibujado')+'</span>';
 }
 // En skincare y cabello el nombre lleva marca y solo se aceptaron fotos del
 // producto EXACTO. En las otras tres el art\u00edculo es gen\u00e9rico ("Cortau\u00f1as de mano
@@ -4880,7 +4912,57 @@ function pfSinFoto(img){
 function pfOrigen(cat){
   return (cat==='skincare'||cat==='cabello') ? 'Foto del producto' : 'Foto de referencia';
 }
+// La ficha de un libro. Mismo molde que la de un producto \u2014 misma caja, mismo
+// hero, mismas tarjetas \u2014 con SUS campos: de un libro no interesa el "c\u00f3mo se
+// aplica" sino de qu\u00e9 trata y qu\u00e9 dice.
+function pfLibroHtml(cat,txt,p){
+  const f=p.ficha, o=pfFuente(cat);
+  const grupo=(o&&o.grupos||[]).filter(function(g){ return g.items.indexOf(p)>=0; })[0];
+  const media=p.portada
+    ? '<img src="'+p.portada+'" alt="'+p.t.replace(/"/g,'&quot;')+'" '+
+      'data-pf="'+p.id+'" data-pf-cat="'+cat+'" onerror="pfSinFoto(this)">'+
+      '<span class="pf-orig">Portada</span>'
+    : pfEnvaseSvg(p.frasco||'libro',(p.marca||{}).a||'#f4f2ee',(p.marca||{}).b||'#8a5a2b')+
+      '<span class="pf-orig">Sin portada libre</span>';
+  const pr=lcPrecioOtros(cat,txt);
+  const C=[];
+  if(p.anio) C.push([p.anio,'','Publicado']);
+  if(p.pags) C.push([p.pags,'p\u00e1gs','Extensi\u00f3n']);
+  if(pr&&pr.amazon) C.push(['$'+pr.amazon,'','Precio aprox.']);
+  const cifras=C.length?'<div class="pf-cifras">'+C.map(function(c){
+    return '<div class="pf-c"><div class="pf-c-v">'+c[0]+(c[1]?'<em>'+c[1]+'</em>':'')+'</div>'+
+      '<div class="pf-c-k">'+c[2]+'</div></div>';
+  }).join('')+'</div>':'';
+  return '<div class="pf pf-libro" style="--tono:var(--pf-teal)'+
+      (grupo&&grupo.color?';--lomo:'+grupo.color:'')+'">'+
+    '<button class="pf-x" onclick="pfCerrar()" aria-label="Cerrar">\u2715</button>'+
+    '<div class="pf-hero">'+
+      '<div class="pf-foto">'+media+'</div>'+
+      '<div class="pf-id">'+
+        '<div class="pf-ojo"><i></i>'+(grupo?grupo.n:'Libro').toUpperCase()+'</div>'+
+        '<h2 class="pf-h1">'+p.t+'</h2>'+
+        '<div class="pf-act"><svg viewBox="0 0 24 24">'+
+          '<circle cx="12" cy="8" r="3.6"/>'+
+          '<path d="M5.5 20a6.5 6.5 0 0 1 13 0"/></svg>'+
+          p.a+'</div>'+
+        cifras+
+      '</div>'+
+    '</div>'+
+    '<div class="pf-cuerpo">'+
+      '<div class="pf-col">'+
+        pfCard('De qu\u00e9 trata','<p class="pf-p destacado">'+f.sobre+'</p>')+
+        pfCard('Lo que dice','<p class="pf-p">'+f.resumen+'</p>')+
+      '</div>'+
+      '<div class="pf-col">'+
+        pfCard('Por qu\u00e9 est\u00e1 en tu lista','<p class="pf-p">'+f.porQue+'</p>')+
+        pfCard('La idea que m\u00e1s rinde','<p class="pf-p">'+f.idea+'</p>','pf-tarda')+
+        pfCard('Cu\u00e1ndo leerlo','<p class="pf-p">'+f.cuando+'</p>')+
+      '</div>'+
+    '</div>'+
+  '</div>';
+}
 function pfHtml(cat,txt,p){
+  if(cat==='libros') return pfLibroHtml(cat,txt,p);
   const f=p.ficha;
   const media=p.foto
     ? '<img src="'+p.foto+'" alt="'+p.n.replace(/"/g,'&quot;')+'" '+
