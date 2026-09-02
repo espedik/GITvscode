@@ -75,12 +75,12 @@ desde JS. En consola, `CIFRAS.tabla()` las lista con su valor actual.
 | Marcador | Valor hoy | id |
 |---|---|---|
 | `{{autoSaldo}}` `{{autoTotal}}` `{{autoPago}}` `{{autoTasa}}` `{{autoMeses}}` | $293,000 · $315,800 · $6,700 · 12.99% · 61 | `d003` |
-| `{{tcBbva}}` `{{tcBbvaMin}}` `{{tcBbvaTasa}}` | $32,100 ↓ primer abono real · $1,500 · 55.7% | `d001` |
+| `{{tcBbva}}` `{{tcBbvaMin}}` `{{tcBbvaTasa}}` | $34,000 ⚠️ subiendo · $1,500 · 55.7% | `d001` |
 | `{{banamex}}` `{{banamexMin}}` | $0 ✅ liquidada · $810 | `d002` |
 | `{{iphone}}` | $11,362 | `d008` |
 | `{{appleWatch}}` `{{appleWatchCuota}}` | $854 · $854 — queda 1 cuota (18 sep) | `d004` |
 | `{{zapStylo}}` `{{zapStyloCuota}}` | $334 · $167 — "el de los zapatos" | `d009` |
-| `{{deudaTotal}}` `{{deudaCara}}` `{{deudaMsi}}` | $337,650 · $32,100 · $12,550 | derivadas |
+| `{{deudaTotal}}` `{{deudaCara}}` `{{deudaMsi}}` | $339,550 · $34,000 · $12,550 | derivadas |
 | `{{minimosDeuda}}` `{{margen}}` | suma de mínimos vivos · lo que sobra al mes | derivadas |
 
 **Derivadas del auto**, que antes se escribían a mano y se quedaban congeladas:
@@ -196,7 +196,7 @@ toca cada día vive aquí y en ningún otro sitio. Se pide desde JS:
 ```js
 CIFRAS.RUTINA_PELO.dia(2)             // martes -> {champu, condicional, nota, mascarilla, ...}
 CIFRAS.RUTINA_PELO.duracionDias(p)    // contenido / (usos por semana / 7)
-CIFRAS.RUTINA_PELO.costoMesTotal      // $2,854 hoy — el NR-11 y el Avodart son $2,400 de eso
+CIFRAS.RUTINA_PELO.costoMesTotal      // $2,854 hoy — el NR-11 y el Avodart son $2,400
 ```
 
 | Producto | Cuándo | Tamaño | Dura | Al mes |
@@ -301,67 +301,6 @@ Las migraciones anteriores a esa fecha (`_banamex9k`, `_pagos20260813`, `_msibbv
 
 ---
 
-## El archivo histórico: qué debía y qué tenía cada mes
-
-> Adán, 2026-08-30: *"quiero que me guardes todas las estadísticas de agosto y así
-> consecutivamente… para tener un registro histórico de todas mis finanzas y deudas y poder
-> comparar cómo lo he hecho… haz todo lo necesario para que nunca se pierda info… y además que no
-> se duplique información"*.
-
-**No se construyó un almacén nuevo.** Ya existía y funciona: `S.indicatorHistory`, dentro de
-`finanzasmx_v2`. Finanzas lo escribe **al abrir la app**, sobrescribe solo el mes en curso, congela
-los pasados, rellena huecos (`backfillMissingMonthSnapshots()`) y se rescata a mano antes de cada
-reseed. Guarda copia profunda de deudas, inversiones, metas, activos, BTC, fondo y los nueve
-indicadores. Un segundo almacén con los mismos números habría sido justo la duplicación a evitar.
-
-Lo que se añadió es **poder leerlo desde fuera de Finanzas y que sobreviva al navegador**.
-
-### Las tres capas, en orden de mando
-
-| | Dónde vive | Cuándo manda |
-|---|---|---|
-| **La viva** | `finanzasmx_v2.indicatorHistory` | **Siempre** que el mes exista ahí |
-| **El respaldo** | `HISTORIA_BASE` en `datos-maestros.js` → git | Solo si el mes **falta** en la viva. Nunca la pisa |
-| **El piso del mes en curso** | `PROYECTO` + `DEUDAS_SEED` → git | Solo si nadie ha guardado el mes actual |
-
-La tercera capa es la que hace que un navegador recién estrenado no vea el histórico vacío: el mes
-que corre se **reconstruye** del maestro, que ya está en git. Por eso hoy `HISTORIA_BASE` está
-vacío y aun así agosto no depende de un `localStorage`.
-
-**No se duplica** porque el archivo es un **mapa por `YYYY-MM`**: dos entradas del mismo mes son
-imposibles por construcción, no por cuidado al escribir.
-
-### Cerrar un mes
-
-Al empezar el mes siguiente, ese mes ya no cambia — pero **vive solo en el navegador** hasta que se
-pasa a git. El módulo lo avisa por consola en cada carga, con la instrucción exacta:
-
-```js
-CIFRAS.historiaExport()   // devuelve el literal; se pega en HISTORIA_BASE
-```
-
-Es manual a propósito: es el único momento en que alguien mira los números antes de congelarlos
-para siempre. Los números que acaben en `HISTORIA_BASE` son **fotos históricas**, igual que las
-asignaciones dentro de una migración: tienen que quedarse con el valor de su mes.
-
-### Cómo se lee
-
-```js
-CIFRAS.historia()                      // el archivo entero, ya fusionado
-CIFRAS.historiaTabla()                 // una fila por mes, para la consola
-CIFRAS.comparar('2026-08','2026-09')   // qué se movió (sin argumentos, los dos últimos)
-```
-
-`comparar()` cruza las deudas **por id**, así que una deuda que nace o se liquida en medio no
-descuadra la resta. Cada mes trae `deudas` (total, cara, msi, mínimos y el detalle deuda a deuda),
-`ahorro`, `inversion`, `patrimonio`, `ingresos`, `gastoPromedio` e `indicadores`, más `fuente`:
-`app`, `rellenado` (lo puso el backfill) o `maestro` (reconstruido).
-
-Los totales de cada mes se **recalculan** de su propia copia de deudas en vez de leerse de un campo
-guardado: así un mes viejo sigue cuadrando aunque el criterio de "deuda cara" cambie después.
-
----
-
 ## Mapa de apps
 
 | Carpeta | Archivo | Qué es | Su `localStorage` |
@@ -453,10 +392,12 @@ Qué revisa:
   que las sumas de `PROYECTO` cuadren con sus partes.
 - **La tabla de días de pago del `.md` contra el maestro** (control 10), fila a fila. El control 7
   compara importes y por eso no veía un día: 14 no es una cantidad de dinero.
+
 - **Que los productos de `RUTINA_PIEL` sigan nombrados en `RUTINA_TASKS`** (control 11). Los diez
   anteriores miran números y estructura; ninguno miraba **texto de productos**, y por ahí se coló
   que la guía de Skincare recomendara una marca de protector solar y la rutina diaria otra. Si
   alguien cambia de producto en un sitio y no en el otro, sale aquí.
+
 - **Lo mismo para `RUTINA_PELO`, y además el DÍA** (control 12). La semana de lavado vive en
   `RUTINA_PELO.productos[].dias` y las tareas que la ejecutan están repartidas por día, así que
   pueden separarse sin que cambie ninguna cifra. Compara sin distinguir mayúsculas — "crema sin
