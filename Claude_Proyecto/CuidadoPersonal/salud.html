@@ -13,8 +13,8 @@
      el primer instante. -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" media="print" onload="this.media='all'">
-<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"></noscript>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&display=swap" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&display=swap"></noscript>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -307,6 +307,7 @@ canvas{max-width:100%}
      Va despues del <style> para ganar por orden. Ver vidrio.css. -->
 <link rel="stylesheet" href="vidrio.css">
 <script src="../Dashboard/datos-maestros.js"></script>
+<script src="cabecera.js"></script>
 <script>
 (function () {
   var saved = localStorage.getItem('coach-theme');
@@ -363,6 +364,7 @@ canvas{max-width:100%}
 
     <!-- DASHBOARD -->
     <section id="s-dashboard" class="section active">
+      <div id="cp-cab"></div>
       <div id="d-hero"></div>
       <div class="sd-mid">
         <div class="sd-col" id="d-izq"></div>
@@ -996,7 +998,41 @@ function sdReglasHtml(){
     SD_REGLAS.map((t,i)=>'<div class="sd-rule"><div class="sd-rule-n">'+(i+1)+'</div><div class="sd-rule-t">'+t+'</div></div>').join('')+'</div>';
 }
 
+// La cabecera del area. Todo sale de lo que el dashboard ya calcula: los
+// suplementos del maestro, los examenes de CHEQUEO y el ultimo pesaje.
+function cpCabSalud(){
+  if(typeof cpCabecera!=='function') return;
+  const SUP=(window.CIFRAS&&CIFRAS.SUPLEMENTOS)||null;
+  const CHK=(window.CIFRAS&&CIFRAS.CHEQUEO)||null;
+  const hoy=(typeof plHoy==='function')?plHoy():null;
+  const tomados=(function(){
+    try{ const h=(S.suplementos&&S.suplementos.hechos&&S.suplementos.hechos[hoy])||[];
+         return h.length; }catch(e){ return 0; }
+  })();
+  const nSup=SUP?SUP.lista.length:0;
+  const pend=(function(){
+    try{ return CHK.examenes.filter(function(e){
+           return !(S.examenes&&S.examenes[e.id]&&S.examenes[e.id].fecha); }).length; }
+    catch(e){ return CHK?CHK.examenes.length:0; }
+  })();
+  const peso=(function(){
+    try{ const p=(S.pesos||[]).slice(-1)[0]; return p?p.kg+' kg':'\u2014'; }catch(e){ return '\u2014'; }
+  })();
+  cpCabecera('#cp-cab',{
+    area:'salud',
+    ojo:(typeof cpHoyTexto==='function'?cpHoyTexto():'Hoy'),
+    titulo:'Tu salud, hoy y este a\u00f1o',
+    sub:'lo que tomas hoy y lo que te toca revisar',
+    kpis:[
+      {v:tomados+' / '+nSup, k:'Suplementos de hoy'},
+      {v:String(pend), k:'Ex\u00e1menes pendientes'},
+      {v:peso, k:'\u00daltimo peso'},
+    ],
+  });
+}
+
 function renderDashboard() {
+  cpCabSalud();
   const M=sdMaestro();
   const ord=[...S.medidas].sort((a,b)=>b.fecha.localeCompare(a.fecha));
   const act=ord[0]||null;

@@ -975,6 +975,7 @@ body::before{content:'';position:fixed;inset:0 0 auto 0;height:280px;pointer-eve
      Va despues del <style> para ganar por orden. Ver vidrio.css. -->
 <link rel="stylesheet" href="vidrio.css">
 <script src="../Dashboard/datos-maestros.js"></script>
+<script src="cabecera.js"></script>
 <script>
 (function () {
   var saved = localStorage.getItem('coach-theme');
@@ -1233,6 +1234,7 @@ body::before{content:'';position:fixed;inset:0 0 auto 0;height:280px;pointer-eve
     <button class="btn btn-g" onclick="deSavePerfil()">Guardar perfil y actualizar guía</button>
   </div>
 
+  <div id="cp-cab-de"></div>
   <div id="de-guia-body"></div>
   </div><!-- /.guia-main -->
   </div><!-- /.guia-shell -->
@@ -1257,6 +1259,7 @@ body::before{content:'';position:fixed;inset:0 0 auto 0;height:280px;pointer-eve
       </div>
     </div>
   </div>
+  <div id="cp-cab-oj"></div>
   <div id="oj-guia-body"></div>
   </div>
   </div>
@@ -1333,6 +1336,42 @@ const GUIA_AREA = {'de-nav':'dentista', 'oj-nav':'ojos'};
 // Lee los botones que guiaEnSecciones acaba de construir y los publica en la
 // barra del shell. Pulsar en la barra pulsa el boton original: una sola logica
 // de navegacion, la que ya estaba, sin duplicarla.
+
+// ── Las cabeceras de Dentista y Ojos ─────────────────────────────────
+// Eran las dos ultimas que abrian con contenido directo, sin titulo ni cifras.
+// Los numeros salen de su propio perfil, que es el que ya alimenta la guia.
+function cpCabDentista(){
+  if(typeof cpCabecera!=='function') return;
+  const p=(window.DE&&DE.perfil)||{};
+  const meses=p.ultimaLimpieza?Math.max(0,Math.round((Date.now()-new Date(p.ultimaLimpieza))/2592000000)):null;
+  cpCabecera('#cp-cab-de',{
+    area:'dentista',
+    ojo:'Salud bucal',
+    titulo:'Tu boca, sin adivinar',
+    sub:'la rutina y cuando toca revision',
+    kpis:[
+      {v:(meses===null?'—':meses+' meses'), k:'Desde la limpieza'},
+      {v:'2 / día', k:'Cepillados'},
+      {v:'6 meses', k:'Cada cuánto revisar'},
+    ],
+  });
+}
+
+function cpCabOjos(){
+  if(typeof cpCabecera!=='function') return;
+  cpCabecera('#cp-cab-oj',{
+    area:'ojos',
+    ojo:'Salud visual',
+    titulo:'Ojos y vista',
+    sub:'el órgano que más castigas',
+    kpis:[
+      {v:'10-12 h', k:'Pantalla al día'},
+      {v:'28 h', k:'Al volante por semana'},
+      {v:'20-20-20', k:'La regla que sí funciona'},
+    ],
+  });
+}
+
 function guiaAlSubnav(navId){
   const area = GUIA_AREA[navId]; if(!area) return;
   const nav = document.getElementById(navId); if(!nav) return;
@@ -1568,6 +1607,7 @@ function ojRenderGuia(){
 
   B.innerHTML=h;
   guiaEnSecciones('oj-guia-body','oj-nav','de-section-h',null);
+  cpCabOjos();
 }
 
 
@@ -2686,6 +2726,7 @@ function deRenderGuiaContent(){
 
   document.getElementById('de-guia-body').innerHTML=html;
   guiaEnSecciones('de-guia-body','de-nav','de-section-h','de-form-card');
+  cpCabDentista();
 }
 function deRenderGuia(){
   dePintarPerfilForm();

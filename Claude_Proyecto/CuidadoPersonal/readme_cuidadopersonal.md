@@ -696,3 +696,51 @@ Comprobado en las 8 áreas y los 2 temas: mismo `--bg`, `blur(14px)` en todas, s
 errores de consola, sin desbordes y contraste sin nada bajo el mínimo. Abiertas
 sueltas (sin `?embed=1`) las cuatro externas conservan su carril y su cabecera con
 el material nuevo.
+
+### La cabecera común: `cabecera.js`
+
+El material ya era el mismo, pero la **anatomía** no. Medido con
+`querySelectorAll` dentro de cada vista: Skincare, Cabello y Ejercicio abrían con
+eyebrow + título + KPIs; **Salud, Comida, Dentista, Ojos y Vestimenta abrían
+directamente con contenido** — 0 títulos y 0 KPIs.
+
+[`cabecera.js`](cabecera.js) tiene esa cabecera escrita una vez. Cada área la
+llama con sus datos:
+
+```js
+cpCabecera('#cp-cab', { area:'comida', ojo:'martes 1 de septiembre',
+  titulo:'Tu comida del día', sub:'10 desayunos · 8 cenas',
+  kpis:[{v:'186 g', k:'Meta de proteína'}, …] });
+```
+
+El `area` decide el acento; el resto lo pone quien llama. La hoja **no inventa
+datos ni los guarda**. Los KPIs de cada una son reales:
+
+| Área | Lo que enseña |
+|---|---|
+| Comida | meta de proteína (**del maestro**), meta de kcal, nº de recetas |
+| Salud | suplementos tomados hoy, exámenes pendientes, último peso |
+| Dentista | meses desde la limpieza, cepillados al día, cada cuánto revisar |
+| Ojos | horas de pantalla, horas al volante, la regla 20-20-20 |
+| Vestimenta | prendas marcadas, fases de compra, ocasiones cubiertas |
+
+De paso, `comida.html` tenía **`tProt=186` escrito a mano** cuando `proteinaMeta`
+ya vivía en el maestro. Ahora lo lee de ahí, y por eso el archivo carga
+`datos-maestros.js` (no lo hacía).
+
+**La tipografía también se unificó**: sólo Ejercicio usaba Space Grotesk en sus
+números; las otras siete los mostraban en Inter, y eso ya las hacía verse de otra
+familia aunque el material fuera idéntico. `vidrio.css` la aplica ahora a las
+clases de cifra que cada área **ya tenía** — no se inventan componentes.
+
+Dos trampas que costaron:
+
+- En Vestimenta la cabecera iba dentro de `#content-root`, y la app **vacía ese
+  nodo en cada navegación**: desaparecía al cambiar de sección. Va fuera, con su
+  propio padding, y `save()` la repinta para que el contador siga vivo.
+- Su estado es `{marcados:[…]}`, un array — no un mapa de casillas.
+
+Resultado medido en las 8: **todas con título y 3-4 KPIs**, todas con Space
+Grotesk, contraste sin nada bajo el mínimo en los dos temas, sin errores de
+consola, y las cuatro externas siguen abriéndose sueltas con su carril y su
+cabecera propios.

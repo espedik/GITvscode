@@ -89,3 +89,21 @@ input,select,textarea{
 
 /* Nada de esto debe tapar el vidrio con un fondo opaco heredado. */
 .view,.content,.main,.section{background:transparent}
+
+/* ── La tipografía de los números ──────────────────────────────────────────
+   Space Grotesk en todo lo que es una cifra grande. Ejercicio ya la usaba y era
+   la única: el resto de las áreas mostraban sus números en Inter, y eso ya las
+   hacía verse de otra familia aunque el material fuera el mismo.
+   Se listan las clases que cada área YA tiene — no se inventan componentes. */
+.card-val,
+.pe-kpi-v, .pe-dose-v, .pe-med-n, .pe-med-tot-v, .pe-err-n, .pe-f-n, .pe-cita-num,
+.pl-kpi-v, .pl-dose-v, .pl-med-n, .pl-med-tot-v, .pl-f-n,
+.sd-blq-n, .sd-ex-n, .sd-ex-v, .sd-med-n, .sd-med-tot-v, .sd-pw-n, .sd-pw-v, .sd-sup-n,
+.de-cita-num, .de-step-num,
+.ej-kpi-v, .ej-h1, .ej-sr-v, .ej-pr-v, .ej-cro-v,
+.cp-kpi-v, .cp-h1,
+.macro-v, .kcal-v, .rec-kcal{
+  font-family:'Space Grotesk','Inter',-apple-system,sans-serif;
+  font-variant-numeric:tabular-nums;
+  letter-spacing:-.02em;
+}

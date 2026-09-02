@@ -12,8 +12,8 @@
      el primer instante. -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" media="print" onload="this.media='all'">
-<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"></noscript>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&display=swap" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&display=swap"></noscript>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -213,6 +213,8 @@ canvas{max-width:100%}
 <!-- El material comun de las 8 areas: velos de blanco con desenfoque.
      Va despues del <style> para ganar por orden. Ver vidrio.css. -->
 <link rel="stylesheet" href="vidrio.css">
+<script src="../Dashboard/datos-maestros.js"></script>
+<script src="cabecera.js"></script>
 <script>
 (function () {
   var saved = localStorage.getItem('coach-theme');
@@ -260,6 +262,7 @@ canvas{max-width:100%}
   </div>
 
   <div class="content">
+    <div id="cp-cab"></div>
 
     <div class="ctx-banner">
       <span class="ico">🩺</span>
@@ -708,7 +711,8 @@ function registrarRutinaMeal(idx){
 
 function renderRutinaMuscular(){
   const sec=document.getElementById('s-rutina'); if(!sec) return;
-  const tCal=3115,tProt=186,tCarb=404,tGra=86;
+  const M=(window.CIFRAS&&CIFRAS.PROYECTO)||{};
+  const tCal=3115,tProt=M.proteinaMeta||186,tCarb=404,tGra=86;
   const meals=[
     {idx:0,ico:'🌅',name:'Desayuno',time:'7:00 – 8:00 am',cal:1055,prot:48,carbs:138,gra:37,col:'#ffd93d'},
     {idx:1,ico:'☀️',name:'Comida',time:'1:00 – 2:00 pm',cal:1220,prot:74,carbs:166,gra:30,col:'#ff8a3d'},
@@ -968,6 +972,25 @@ function savePickReceta(){
 // duplicados del ecosistema (ver readme_dashboard.md).
 
 // ─── Init ────────────────────────────────────────────────────────────────────
+// La cabecera del area. Los numeros son los mismos que ya usa la pantalla:
+// la meta de proteina viene del maestro y las recetas se cuentan de RECETAS.
+function cpCabComida(){
+  if(typeof cpCabecera!=='function') return;
+  const M=(window.CIFRAS&&CIFRAS.PROYECTO)||{};
+  const nDes=(RECETAS.desayuno||[]).length, nCen=(RECETAS.cena||[]).length;
+  cpCabecera('#cp-cab',{
+    area:'comida',
+    ojo:(typeof cpHoyTexto==='function'?cpHoyTexto():'Hoy'),
+    titulo:'Tu comida del d\u00eda',
+    sub:nDes+' desayunos \u00b7 '+nCen+' cenas, sin tus disparadores',
+    kpis:[
+      {v:(M.proteinaMeta||186)+' g', k:'Meta de prote\u00edna'},
+      {v:'3,115 kcal', k:'Meta del d\u00eda'},
+      {v:String(nDes+nCen), k:'Recetas tuyas'},
+    ],
+  });
+}
+
 function init(){
   load();
   document.getElementById('f-fecha-al').value=today();
@@ -981,6 +1004,7 @@ function init(){
   window.addEventListener('resize',check); check();
 }
 init();
+cpCabComida();
 </script>
 <!-- Vista desde el shell (?embed=1): calla el carril y la cabecera propios,
      y habla con cuidadopersonal.html por postMessage. Sola, no cambia nada. -->

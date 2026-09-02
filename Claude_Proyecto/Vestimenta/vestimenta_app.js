@@ -1,7 +1,9 @@
 // ─── APP: navegación, render y checklist de compra ────────────────────────────
 const KEY = 'vestimenta_v1';
 let S = { marcados: [] };
-const save = () => localStorage.setItem(KEY, JSON.stringify(S));
+const save = () => { localStorage.setItem(KEY, JSON.stringify(S));
+  // La cabecera lleva el contador de prendas: se repinta al marcar una.
+  if (typeof cpCabVest === 'function') cpCabVest(); };
 const load = () => { try { const d = localStorage.getItem(KEY); if (d) S = { ...S, ...JSON.parse(d) }; } catch(e){} };
 load();
 

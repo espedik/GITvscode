@@ -13,8 +13,8 @@
      el primer instante. -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" media="print" onload="this.media='all'">
-<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"></noscript>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&display=swap" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&display=swap"></noscript>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -139,10 +139,14 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var
   .sh h2{font-size:17px}
   .fase-grid{gap:10px}
 }
+.cp-cab-fuera{padding:24px 24px 0}
+@media(max-width:760px){.cp-cab-fuera{padding:16px 14px 0}}
 </style>
 <!-- El material comun de las 8 areas: velos de blanco con desenfoque.
      Va despues del <style> para ganar por orden. Ver vidrio.css. -->
 <link rel="stylesheet" href="../CuidadoPersonal/vidrio.css">
+<script src="../Dashboard/datos-maestros.js"></script>
+<script src="../CuidadoPersonal/cabecera.js"></script>
 <script>
 (function () {
   var saved = localStorage.getItem('coach-theme');
@@ -189,13 +193,47 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var
     <button class="theme-toggle-btn" id="theme-toggle-btn" onclick="toggleTheme()" title="Cambiar tema claro/oscuro" aria-label="Cambiar tema claro/oscuro">🌙</button>
   </div>
 
+  <!-- Fuera de #content-root: la app lo vacia en cada navegacion y se llevaria
+       la cabecera con el. El padding se lo da .cp-cab-fuera. -->
+  <div id="cp-cab" class="cp-cab-fuera"></div>
   <div class="content" id="content-root">
     <!-- El contenido de cada sección se inserta abajo -->
   </div>
 </main>
 
 <script src="vestimenta_data.js"></script>
+<script>
+// La cabecera del area. Las prendas marcadas salen del mismo localStorage que
+// usan las casillas de cada seccion; el total, de cuantas hay dibujadas.
+function cpCabVest(){
+  if(typeof cpCabecera!=='function') return;
+  var marcadas=0, total=0;
+  try{
+    var st=JSON.parse(localStorage.getItem('vestimenta_v1')||'{}');
+    marcadas=(st.marcados||[]).length;
+  }catch(e){}
+  // El total son las prendas dibujadas en la seccion abierta; en Inicio no hay
+  // ninguna, asi que ahi se ensena solo cuantas llevas marcadas.
+  total=document.querySelectorAll('.item-check').length;
+  cpCabecera('#cp-cab',{
+    area:'vestimenta',
+    ojo:'Tu guardarropa',
+    titulo:'Vestimenta, por fases',
+    sub:'versatilidad antes que cantidad',
+    kpis:[
+      {v:marcadas+(total?' / '+total:''), k:'Prendas que ya tienes'},
+      {v:'4', k:'Fases de compra'},
+      {v:'5', k:'Ocasiones cubiertas'},
+    ],
+  });
+}
+</script>
 <script src="vestimenta_app.js"></script>
+<script>
+// La app pinta su contenido al cargar; la cabecera se pone justo despues.
+if(document.readyState!=='loading') setTimeout(cpCabVest,80);
+else window.addEventListener('DOMContentLoaded',function(){setTimeout(cpCabVest,80);});
+</script>
 <!-- Vista desde el shell (?embed=1): calla el carril y la cabecera propios,
      y habla con cuidadopersonal.html por postMessage. Sola, no cambia nada. -->
 <script src="../CuidadoPersonal/embed.js"></script>
