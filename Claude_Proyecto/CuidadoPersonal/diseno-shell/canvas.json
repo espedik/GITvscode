@@ -1,0 +1,13 @@
+{
+  "artboards": [
+    { "file": "Main.dc.html", "x": 0, "y": 0, "w": 1440, "h": 900, "title": "Barra doble · escritorio" },
+    { "file": "Movil.dc.html", "x": 1560, "y": 0, "w": 390, "h": 844, "title": "Barra doble · móvil" },
+    { "file": "Diagnostico.dc.html", "x": 2070, "y": 0, "w": 900, "h": 900, "title": "Lo que se arregla" }
+  ],
+  "annotations": [
+    { "id": "brief", "x": 0, "y": -210, "w": 1440, "text": "Adán eligió la barra doble, en vidrio blanco translúcido.\n\nEl material son tres velos de blanco sobre el fondo — 7 % la barra de áreas, 3,5 % la de secciones, 5 % las tarjetas — con desenfoque de lo que pasa por debajo y una línea de luz en el borde superior. El contenido se desliza BAJO las barras: eso es lo que hace que se lea como cristal y no como una banda pintada encima.\n\nEl acento sigue siendo el color del área activa, que el shell ya tenía: naranja para Ejercicio, verde para Salud, ámbar para Cabello, rosa para Skincare." },
+    { "id": "nota-movil", "x": 1560, "y": -210, "w": 390, "text": "El punto débil de la barra doble era el móvil: las 8 áreas no caben en una fila.\n\nSolución: la barra se convierte en carrusel horizontal. Se desliza con el pulgar y ninguna área queda escondida tras un menú ☰. La activa siempre abre la tira." },
+    { "id": "nota-diag", "x": 2070, "y": -210, "w": 900, "text": "Medido en el navegador antes de dibujar: 120 px de cabecera en la mitad de las pestañas y 62 en la otra mitad, dos botones de tema a la vez, dos barras de scroll, y un carril de 245 px que aparece según de dónde venga el archivo.\n\nCon la barra doble el chrome queda en 102 px iguales para las ocho." }
+  ],
+  "launch": { "view": "canvas" }
+}

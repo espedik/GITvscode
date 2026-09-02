@@ -595,3 +595,60 @@ Comprobado en el navegador: 5 momentos en la rutina con la pastilla en el suyo,
 12 pasos (el aviso no cuenta), el minoxidil sigue con sus 2 dosis y su ventana de
 4 horas, el botiquín lista los dos, y en el carrito marcarlos suma $2,400.
 Verificador en verde: 10 productos, $2854 al mes.
+
+## El shell: barra doble de vidrio (2026-09-01)
+
+Adán: *"no me gusta la distribución ni el reparto que hicimos con las demás apps
+… unifícalo, futurista y limpio"*, y sobre la opción elegida: *"me gusta la opcion
+b, de un color como blanco pero traslucido"*.
+
+### Lo que estaba mal, medido
+
+Cuatro áreas viven en este archivo (skincare, cabello, dentista, ojos) y cuatro se
+cargan en un iframe (salud, ejercicio, comida, vestimenta). Las de fuera traían su
+propio carril de 245 px y su propia cabecera de 58 px, que se apilaban sobre las
+del shell:
+
+- **120 px de chrome** antes del contenido en la mitad de las pestañas y 62 en la
+  otra mitad. La página nunca empezaba en el mismo sitio.
+- Dos botones de tema y dos cohetes en pantalla a la vez.
+- Un carril de 245 px que aparecía y desaparecía según de dónde viniera el
+  archivo — no era una decisión de diseño.
+
+### Cómo queda
+
+**Barra 1** — las 8 áreas, con icono SVG (fuera los emoji) y el color que cada una
+ya tenía. **Barra 2** — las secciones de la app activa, que es donde vivía su
+carril. **102 px, iguales para las ocho.**
+
+El material son velos de blanco con `backdrop-filter`: 10 % la barra de áreas,
+5,5 % la de secciones. Detalle que lo hace funcionar: un velo blanco sobre negro
+plano sigue siendo negro, así que **las auroras de color cruzan justo detrás de
+las barras** (`body::before`, 280 px de alto) y eso es lo que se lee como cristal.
+
+### El canal: postMessage, no el DOM del iframe
+
+Abiertas con `file://`, Chrome trata cada archivo como un origen distinto. Se
+midió: **`iframe.contentDocument` es `null`** — el shell no puede leer ni escribir
+dentro. Por eso [`embed.js`](embed.js), cargado por las cuatro apps externas:
+
+- Con `?embed=1` la app oculta su `.sidebar` y su `.topbar`, y quita el
+  `margin-left` de `.main` (ahí estaba el hueco de 245 px, no en `.content`).
+- Publica sus secciones al shell (`{tipo:'listo', secciones:[{id,n}]}`), **leídas
+  de su propio carril**: si mañana se añade una sección aparece sola en la barra,
+  sin tocar ni este archivo ni el del shell.
+- Escucha `{tipo:'ir'}` para navegar y `{tipo:'tema'}` para el tema.
+- Sin `?embed=1` no hace nada: las apps siguen abriéndose solas igual que antes.
+
+### Dos fallos que salieron por el camino
+
+- **`?tab=ojos` no funcionaba.** `'ojos'` faltaba en la lista de pestañas válidas
+  del deep-link, así que caía en Skincare. Las 8 comprobadas una a una.
+- **El tema nunca llegaba a los iframes.** `toggleTheme()` lo empujaba con
+  `f.contentDocument`, que en `file://` es siempre null, y el `try/catch` se
+  tragaba el fallo en silencio. Ahora va por postMessage y se verificó que cruza.
+
+Comprobado a 1600 px y 390 px: las 8 áreas con 102 px de chrome, los 4 iframes sin
+carril ni cabecera propia, el clic en la barra de secciones navega dentro del
+iframe, sin errores de consola y sin desbordes. La barra de secciones lleva
+`nowrap`: sin él, en móvil se partía en dos líneas y la segunda quedaba cortada.

@@ -1,0 +1,118 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap">
+  <style>
+    body{margin:0;background:#06080c;font-family:"Inter",-apple-system,sans-serif}
+    a{color:#00e87a;text-decoration:none} a:hover{color:#5cffab}
+  </style>
+</helmet>
+
+<div class="dg">
+<style>
+.dg{
+  --tx:#eef2f7; --tx2:#9aa6b4; --tx3:#8b97a6;
+  --line:rgba(255,255,255,.09); --line2:rgba(255,255,255,.055);
+  --panel:rgba(255,255,255,.045); --panel2:rgba(255,255,255,.028);
+  --r:#ff5470; --g:#00e87a; --am:#e0a020;
+  width:900px; height:900px; box-sizing:border-box; padding:28px 30px;
+  background:#06080c; color:var(--tx); overflow:hidden;
+  display:flex; flex-direction:column; gap:16px;
+}
+.dg *{box-sizing:border-box}
+.eyebrow{font-size:10px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--r);
+  display:flex;align-items:center;gap:7px}
+.eyebrow i{width:6px;height:6px;border-radius:50%;background:var(--r);box-shadow:0 0 10px var(--r);display:block}
+.h1{font-size:25px;font-weight:800;letter-spacing:-.028em;margin-top:6px;
+  font-family:"Space Grotesk","Inter",sans-serif}
+.sub{font-size:12px;color:var(--tx2);line-height:1.6;margin-top:8px;max-width:640px}
+.sub b{color:var(--tx)}
+
+/* La maqueta de lo que pasa hoy en una pestaña de iframe */
+.demo{border-radius:14px;border:1px solid var(--line);overflow:hidden;background:var(--panel2)}
+.b1{height:34px;display:flex;align-items:center;gap:8px;padding:0 12px;background:rgba(255,84,112,.1);
+  border-bottom:1px solid rgba(255,84,112,.28)}
+.b2{height:32px;display:flex;align-items:center;gap:8px;padding:0 12px;background:rgba(255,84,112,.08);
+  border-bottom:1px solid rgba(255,84,112,.22)}
+.b-n{font-size:10.5px;font-weight:800}
+.b-t{font-size:9px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--r);margin-left:auto}
+.cuerpo{display:flex;height:180px}
+.sb{width:120px;flex:none;border-right:1px solid rgba(255,84,112,.22);background:rgba(255,84,112,.06);
+  padding:10px;display:flex;flex-direction:column;gap:6px}
+.sb-l{height:9px;border-radius:3px;background:rgba(255,255,255,.09)}
+.sb-l.on{background:rgba(255,84,112,.4)}
+.lz{flex:1;padding:12px;display:flex;flex-direction:column;gap:7px}
+.lz-l{height:9px;border-radius:3px;background:rgba(255,255,255,.06)}
+.marca{position:absolute}
+
+.tabla{border-radius:14px;border:1px solid var(--line);background:var(--panel);overflow:hidden}
+.tr{display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:10px;padding:9px 14px;
+  border-bottom:1px solid var(--line2);align-items:center}
+.tr:last-child{border-bottom:none}
+.tr.h{background:rgba(255,255,255,.02)}
+.th{font-size:8.5px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--tx3)}
+.td{font-size:11.5px;font-weight:600;color:var(--tx2)}
+.td.n{color:var(--tx);font-weight:800}
+.tag{display:inline-block;font-size:8.5px;font-weight:800;padding:2px 7px;border-radius:5px;letter-spacing:.04em}
+.tag.f{background:rgba(255,84,112,.14);color:var(--r);border:1px solid rgba(255,84,112,.3)}
+.tag.n2{background:rgba(0,232,122,.12);color:var(--g);border:1px solid rgba(0,232,122,.28)}
+
+.lista{display:flex;flex-direction:column;gap:8px}
+.li{display:flex;gap:10px;align-items:flex-start;font-size:11.5px;line-height:1.5;color:var(--tx2)}
+.li i{flex:none;width:17px;height:17px;border-radius:50%;background:rgba(255,84,112,.14);
+  border:1px solid rgba(255,84,112,.3);color:var(--r);display:flex;align-items:center;justify-content:center;
+  font-size:9px;font-weight:800;font-style:normal;margin-top:1px}
+.li b{color:var(--tx)}
+</style>
+
+<div>
+  <div class="eyebrow"><i></i>Lo que hay hoy</div>
+  <div class="h1">Ocho pestañas, dos maneras de vivir</div>
+  <div class="sub">Cuatro pantallas viven <b>dentro</b> del archivo y cuatro se cargan <b>como apps aparte</b>. Las de fuera traen su propio carril y su propia cabecera, así que se apilan sobre las del shell.</div>
+</div>
+
+<div class="demo">
+  <div class="b1"><span class="b-n">Cuidado Personal</span><span class="b-t">62 px · shell</span></div>
+  <div class="b2"><span class="b-n">Mi Rutina</span><span class="b-t">58 px · la app otra vez</span></div>
+  <div class="cuerpo">
+    <div class="sb">
+      <div class="sb-l on"></div><div class="sb-l"></div><div class="sb-l"></div><div class="sb-l"></div>
+      <div style="margin-top:auto;font-size:8px;font-weight:800;color:#ff5470;letter-spacing:.06em">245 PX</div>
+    </div>
+    <div class="lz">
+      <div class="lz-l" style="width:70%"></div><div class="lz-l"></div><div class="lz-l" style="width:88%"></div>
+      <div class="lz-l" style="width:55%"></div><div class="lz-l"></div>
+      <div style="margin-top:auto;font-size:9px;color:#8b97a6">…y el contenido empieza aquí</div>
+    </div>
+  </div>
+</div>
+
+<div class="tabla">
+  <div class="tr h"><div class="th">Pestaña</div><div class="th">Cómo vive</div><div class="th">Chrome que trae</div></div>
+  <div class="tr"><div class="td n">Skincare</div><div class="td"><span class="tag n2">DENTRO</span></div><div class="td">ninguno</div></div>
+  <div class="tr"><div class="td n">Cabello</div><div class="td"><span class="tag n2">DENTRO</span></div><div class="td">ninguno</div></div>
+  <div class="tr"><div class="td n">Dentista</div><div class="td"><span class="tag n2">DENTRO</span></div><div class="td">ninguno</div></div>
+  <div class="tr"><div class="td n">Ojos y Vista</div><div class="td"><span class="tag n2">DENTRO</span></div><div class="td">ninguno</div></div>
+  <div class="tr"><div class="td n">Salud</div><div class="td"><span class="tag f">APP APARTE</span></div><div class="td">carril 245 px + barra 58 px</div></div>
+  <div class="tr"><div class="td n">Ejercicio</div><div class="td"><span class="tag f">APP APARTE</span></div><div class="td">carril 245 px + barra 58 px</div></div>
+  <div class="tr"><div class="td n">Comida</div><div class="td"><span class="tag f">APP APARTE</span></div><div class="td">carril 245 px + barra 58 px</div></div>
+  <div class="tr"><div class="td n">Vestimenta</div><div class="td"><span class="tag f">APP APARTE</span></div><div class="td">su propio chrome</div></div>
+</div>
+
+<div class="lista">
+  <div class="li"><i>1</i><span><b>120 px de cabecera</b> antes del contenido en la mitad de las pestañas, y 62 px en la otra mitad. La página nunca empieza en el mismo sitio.</span></div>
+  <div class="li"><i>2</i><span><b>Dos botones de tema y dos cohetes</b> a la vez en pantalla: los del shell y los de la app de dentro.</span></div>
+  <div class="li"><i>3</i><span>Un <b>carril de 245 px</b> que aparece y desaparece según la pestaña — no es una decisión de diseño, es de dónde viene el archivo.</span></div>
+  <div class="li"><i>4</i><span><b>Dos barras de scroll</b>: la del shell y la del iframe, una dentro de la otra.</span></div>
+</div>
+
+</div>
+</x-dc>
+</body>
+</html>

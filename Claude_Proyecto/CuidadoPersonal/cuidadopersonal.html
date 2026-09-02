@@ -14,8 +14,8 @@
      el primer instante. -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" media="print" onload="this.media='all'">
-<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"></noscript>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&display=swap" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&display=swap"></noscript>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -873,6 +873,98 @@ tbody tr:hover td{background:rgba(var(--ov),.02)}
   background:var(--pe-wa-bg);border:1px solid var(--pe-wa-br)}
 .pe-aviso-med>span:first-child{color:var(--pe-warn);font-weight:800;flex:none}
 .pe-aviso-med b{color:var(--pe-tx)}
+
+/* ══ EL SHELL — barra doble de vidrio ══════════════════════════════
+   Antes: la barra del shell (62px) y, dentro del iframe, el carril de 245px y
+   la cabecera de 58px de cada app. 120px de chrome y dos botones de tema.
+   Ahora: barra 1 = las 8 áreas, barra 2 = las secciones de la app activa.
+   Las apps se callan su chrome con ?embed=1 (ver embed.js).
+
+   El material son velos de blanco con desenfoque de lo que pasa por debajo.
+   Un velo sobre negro plano sigue siendo negro: las auroras de color cruzan
+   justo detrás de las barras y ESO es lo que lo hace leerse como cristal. */
+:root{
+  --v1:rgba(255,255,255,.10); --v2:rgba(255,255,255,.05); --v3:rgba(255,255,255,.028);
+  --brv:rgba(255,255,255,.11); --brv2:rgba(255,255,255,.06); --luz:rgba(255,255,255,.16);
+}
+:root[data-theme="light"]{
+  --v1:rgba(255,255,255,.72); --v2:rgba(255,255,255,.6); --v3:rgba(0,0,0,.025);
+  --brv:rgba(0,0,0,.1); --brv2:rgba(0,0,0,.06); --luz:rgba(255,255,255,.9);
+}
+
+body{position:relative}
+/* Las auroras: lo que las barras filtran. */
+body::before{content:'';position:fixed;inset:0 0 auto 0;height:280px;pointer-events:none;z-index:0;
+  background:
+    radial-gradient(ellipse 38% 70% at 16% 0%, rgba(255,107,53,.34) 0%, transparent 68%),
+    radial-gradient(ellipse 34% 60% at 62% -8%, rgba(0,232,122,.24) 0%, transparent 68%),
+    radial-gradient(ellipse 30% 56% at 92% 2%, rgba(79,140,255,.2) 0%, transparent 68%)}
+:root[data-theme="light"] body::before{opacity:.5}
+
+.topnav{flex:none;display:flex;align-items:center;gap:14px;padding:0 20px;height:56px;
+  background:var(--v1);backdrop-filter:blur(22px) saturate(150%);
+  -webkit-backdrop-filter:blur(22px) saturate(150%);
+  border-bottom:1px solid var(--brv);position:relative;z-index:100;flex-wrap:nowrap;
+  box-shadow:0 1px 0 var(--luz) inset,0 10px 30px rgba(0,0,0,.26)}
+:root[data-theme="light"] .topnav{box-shadow:0 1px 0 var(--luz) inset,0 6px 20px rgba(0,0,0,.07)}
+.brand{display:flex;align-items:center;gap:10px;font-size:13px;font-weight:800;white-space:nowrap;
+  padding-right:16px;margin-right:4px;border-right:1px solid var(--brv2);height:32px;line-height:32px}
+.brand i{width:28px;height:28px;border-radius:9px;flex:none;display:flex;align-items:center;
+  justify-content:center;font-style:normal;
+  background:linear-gradient(140deg,rgba(255,107,53,.95),rgba(224,160,32,.8));
+  box-shadow:0 2px 10px rgba(255,107,53,.35)}
+.brand i svg{width:15px;height:15px;stroke:#06080c;fill:none;stroke-width:2.2;
+  stroke-linecap:round;stroke-linejoin:round}
+
+.tabs{display:flex;gap:3px;flex-wrap:nowrap;overflow-x:auto;flex:1;min-width:0;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab-btn{position:relative;display:flex;align-items:center;gap:7px;padding:8px 12px;border-radius:11px;
+  border:1px solid transparent;background:transparent;color:var(--text2);font-weight:650;
+  font-size:12px;cursor:pointer;transition:background .15s,color .15s;font-family:inherit;
+  white-space:nowrap;flex:none}
+.tab-btn svg{width:15px;height:15px;flex:none;stroke:currentColor;fill:none;stroke-width:1.7;
+  stroke-linecap:round;stroke-linejoin:round;opacity:.75}
+.tab-btn:hover{background:rgba(var(--ov),.06);color:var(--text)}
+.tab-btn.active{font-weight:800}
+.tab-btn.active svg{opacity:1}
+.tab-btn.active::after{content:'';position:absolute;left:12px;right:12px;bottom:-14px;height:2px;
+  border-radius:2px;background:currentColor;box-shadow:0 0 12px currentColor}
+
+/* BARRA 2 — las secciones de la app activa, donde vivia su carril */
+.subnav{flex:none;display:flex;align-items:center;flex-wrap:nowrap;gap:5px;padding:0 20px;height:46px;
+  background:rgba(var(--ov),.035);backdrop-filter:blur(18px) saturate(140%);
+  -webkit-backdrop-filter:blur(18px) saturate(140%);
+  border-bottom:1px solid var(--brv2);position:relative;z-index:99;overflow-x:auto;
+  scrollbar-width:none}
+.subnav::-webkit-scrollbar{display:none}
+/* Cuando la tira de areas no cabe, este velo avisa de que sigue por debajo de
+   los botones de la derecha, en vez de dejar un nombre cortado a medias. */
+.topnav::after{content:'';position:absolute;right:84px;top:1px;bottom:1px;width:34px;
+  pointer-events:none;z-index:1;background:linear-gradient(90deg,transparent,var(--bg))}
+@media(min-width:1180px){.topnav::after{display:none}}
+.subnav.vacia{display:none}
+.sn-t{font-size:14.5px;font-weight:800;letter-spacing:-.018em;margin-right:14px;flex:none;
+  font-family:'Space Grotesk','Inter',sans-serif;color:var(--text)}
+.sn-b{padding:6px 13px;border-radius:9px;font-size:11.5px;font-weight:700;color:var(--text2);
+  border:1px solid transparent;cursor:pointer;background:transparent;font-family:inherit;
+  white-space:nowrap;flex:none;transition:background .15s,color .15s}
+.sn-b:hover{background:rgba(var(--ov),.055);color:var(--text2)}
+.sn-b.on{background:var(--sn-l);border-color:var(--sn-br);color:var(--sn-c)}
+.sn-d{margin-left:auto;display:flex;gap:7px;align-items:center;flex:none;padding-left:14px}
+
+.theme-toggle-btn{width:31px;height:31px;border-radius:10px;border:1px solid var(--brv);
+  background:var(--v3);display:flex;align-items:center;justify-content:center;flex:none}
+
+/* El lienzo pasa por debajo de las barras: es lo que hace que se vean de vidrio */
+.view{position:relative;z-index:1}
+.view-frame iframe{background:transparent}
+@media(max-width:900px){
+  .topnav{padding:0 12px;gap:8px}
+  .brand span{display:none}
+  .brand{padding-right:10px;margin-right:0}
+  .subnav{padding:0 12px}
+  .sn-t{font-size:13px;margin-right:8px}
+}
 </style>
 <script src="../Dashboard/datos-maestros.js"></script>
 <script>
@@ -887,22 +979,25 @@ tbody tr:hover td{background:rgba(var(--ov),.02)}
 
 
 <header class="topnav">
-  <div class="brand">💆 Cuidado Personal</div>
+  <div class="brand"><i><svg viewBox="0 0 24 24"><path d="M12 21s-7-4.6-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 11c0 5.4-7 10-7 10z"></path></svg></i><span>Cuidado Personal</span></div>
   <nav class="tabs" id="mainTabs">
-    <button class="tab-btn active" data-tab="skincare" onclick="mainTab('skincare')">🧴 Skincare</button>
-    <button class="tab-btn" data-tab="cabello" onclick="mainTab('cabello')">💇 Cuidado del Cabello</button>
-    <button class="tab-btn" data-tab="salud" onclick="mainTab('salud')">🥗 Cuidado de la Salud</button>
-    <button class="tab-btn" data-tab="ejercicio" onclick="mainTab('ejercicio')">🏋️ Ejercicio</button>
-    <button class="tab-btn" data-tab="comida" onclick="mainTab('comida')">🍳 Comida</button>
-    <button class="tab-btn" data-tab="dentista" onclick="mainTab('dentista')">🦷 Dentista</button>
-    <button class="tab-btn" data-tab="ojos" onclick="mainTab('ojos')">👁️ Ojos y Vista</button>
-    <button class="tab-btn" data-tab="vestimenta" onclick="mainTab('vestimenta')">👔 Vestimenta</button>
+    <button class="tab-btn active" data-tab="skincare" onclick="mainTab('skincare')" title="Skincare"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"></circle><path d="M9 10h.01M15 10h.01M9.5 15a3.5 3.5 0 0 0 5 0"></path></svg>Skincare</button>
+    <button class="tab-btn" data-tab="cabello" onclick="mainTab('cabello')" title="Cabello"><svg viewBox="0 0 24 24"><path d="M6 20c0-6 2-14 6-14s6 8 6 14"></path><path d="M8 8c1.5-2 6.5-2 8 0"></path></svg>Cabello</button>
+    <button class="tab-btn" data-tab="salud" onclick="mainTab('salud')" title="Salud"><svg viewBox="0 0 24 24"><path d="M12 21s-7-4.6-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 11c0 5.4-7 10-7 10z"></path></svg>Salud</button>
+    <button class="tab-btn" data-tab="ejercicio" onclick="mainTab('ejercicio')" title="Ejercicio"><svg viewBox="0 0 24 24"><path d="M6 8v8M18 8v8M3 10v4M21 10v4M6 12h12"></path></svg>Ejercicio</button>
+    <button class="tab-btn" data-tab="comida" onclick="mainTab('comida')" title="Comida"><svg viewBox="0 0 24 24"><path d="M5 4v7a3 3 0 0 0 6 0V4M8 11v9M17 4c-1.5 2-2 4-2 6h4c0-2-.5-4-2-6zM17 10v10"></path></svg>Comida</button>
+    <button class="tab-btn" data-tab="dentista" onclick="mainTab('dentista')" title="Dentista"><svg viewBox="0 0 24 24"><path d="M12 5c-2-1.5-5-1.5-6.5.5S4 12 6 17s3 3 4 1.5 1-2.5 2-2.5 1 1 2 2.5 2 3.5 4-1.5 2-9.5.5-11.5S14 3.5 12 5z"></path></svg>Dentista</button>
+    <button class="tab-btn" data-tab="ojos" onclick="mainTab('ojos')" title="Ojos"><svg viewBox="0 0 24 24"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6-10-6-10-6z"></path><circle cx="12" cy="12" r="2.6"></circle></svg>Ojos</button>
+    <button class="tab-btn" data-tab="vestimenta" onclick="mainTab('vestimenta')" title="Vestimenta"><svg viewBox="0 0 24 24"><path d="M7 4l5 3 5-3 3 3-2.5 2.5V20H6.5V9.5L4 7z"></path></svg>Vestimenta</button>
     <!-- Aquí iba una pestaña "🚀 Dashboard" que salía de la fila de secciones reales; se quitó
          el 2026-08-18 porque #btnVolverDash ya hace lo mismo desde arriba a la derecha. -->
   </nav>
   <a href="../Dashboard/dashboard.html" class="theme-toggle-btn" id="btnVolverDash" title="Volver al Dashboard" aria-label="Volver al Dashboard" style="text-decoration:none">🚀</a>
   <button class="theme-toggle-btn" id="theme-toggle-btn" onclick="toggleTheme()" title="Cambiar tema claro/oscuro" aria-label="Cambiar tema claro/oscuro">🌙</button>
 </header>
+<!-- Las secciones de la app activa. Se llena desde su carril: en las nativas con
+     SUBNAV_NATIVAS, y en las de iframe con lo que la app manda por postMessage. -->
+<nav class="subnav vacia" id="subnav"></nav>
 
 <!-- ══════════════ SKINCARE ══════════════
      Sin menú lateral, al revés que Cabello y Dentista: la rutina de la cara son 6 pasos en
@@ -1200,14 +1295,10 @@ function toggleTheme(){
   localStorage.setItem('coach-theme',next);
   const btn=document.getElementById('theme-toggle-btn');
   if(btn) btn.textContent=next==='dark'?'☀️':'🌙';
-  // Empuja el tema a los iframes ya cargados (Salud/Ejercicio/Comida/Vestimenta) para que no queden desincronizados
-  ['frame-salud','frame-ejercicio','frame-comida','frame-vestimenta'].forEach(id=>{
-    try{
-      const f=document.getElementById(id);
-      const doc=f&&f.getAttribute('src')&&f.contentDocument;
-      if(doc) doc.documentElement.setAttribute('data-theme',next);
-    }catch(e){}
-  });
+  // El tema a los iframes. Antes esto usaba `f.contentDocument`, que abierto con
+  // file:// es SIEMPRE null — cada archivo es un origen distinto — y el try/catch
+  // se tragaba el fallo: el tema nunca llegaba. Ahora va por postMessage.
+  subnavTema(next);
 }
 
 // ══════════════════════════════════════════════════════════════════════════
@@ -1440,14 +1531,105 @@ function ojRenderGuia(){
   guiaEnSecciones('oj-guia-body','oj-nav','de-section-h',null);
 }
 
+
+// ══ LA BARRA DE SECCIONES ═════════════════════════════════════
+// Cuatro areas viven en este archivo y cuatro se cargan en un iframe. La barra
+// tiene que verse igual en las ocho, asi que cada tipo la llena a su manera:
+//   nativas  → SUBNAV_NATIVAS, escrito aqui porque su nav ya vive en este HTML
+//   iframe   → lo que la app manda al cargar (embed.js → {tipo:'listo'})
+// Abiertas con file://, el shell NO puede leer dentro del iframe — se midio:
+// contentDocument es null. postMessage es el unico canal que cruza.
+
+// El color de cada area, el mismo que ya usaba su pestana.
+const AREA_COLOR = {
+  skincare:['var(--pk)','var(--pk-l)','rgba(255,107,214,.32)'],
+  cabello:['var(--am)','var(--am-l)','rgba(224,160,32,.32)'],
+  salud:['var(--g)','var(--g-l)','rgba(0,232,122,.32)'],
+  ejercicio:['var(--o)','var(--o-l)','rgba(255,107,53,.32)'],
+  comida:['var(--w)','var(--w-l)','rgba(255,217,61,.32)'],
+  dentista:['var(--mt)','var(--mt-l)','rgba(79,214,173,.32)'],
+  ojos:['#4f8cff','rgba(79,140,255,.12)','rgba(79,140,255,.32)'],
+  vestimenta:['var(--ve)','var(--ve-l)','rgba(193,127,74,.32)'],
+};
+
+// Las nativas: su nav ya esta en este archivo, asi que aqui solo va el rotulo.
+// Skincare y Ojos no tienen secciones — caben enteras en una pantalla.
+const SUBNAV_NATIVAS = {
+  skincare:{titulo:'Tu día de piel', secciones:[]},
+  cabello:{titulo:'Tu cabello, semana a semana', secciones:[]},
+  dentista:{titulo:'Tu boca', secciones:[]},
+  ojos:{titulo:'Ojos y vista', secciones:[]},
+};
+
+const FRAMES = {salud:'frame-salud', ejercicio:'frame-ejercicio',
+                comida:'frame-comida', vestimenta:'frame-vestimenta'};
+let subnavEstado = {};   // por area: {titulo, secciones:[{id,n}], activa}
+
+function subnavPinta(tab){
+  const el = document.getElementById('subnav'); if(!el) return;
+  const e = subnavEstado[tab] || SUBNAV_NATIVAS[tab] || null;
+  const col = AREA_COLOR[tab] || ['var(--text)','rgba(var(--ov),.08)','rgba(var(--ov),.2)'];
+  el.style.setProperty('--sn-c', col[0]);
+  el.style.setProperty('--sn-l', col[1]);
+  el.style.setProperty('--sn-br', col[2]);
+
+  if(!e){ el.className='subnav vacia'; el.innerHTML=''; return; }
+  const secs = e.secciones || [];
+  // Sin titulo ni secciones no hay nada que ensenar: la barra se va entera en
+  // vez de dejar una franja vacia de 46px.
+  if(!e.titulo && !secs.length){ el.className='subnav vacia'; el.innerHTML=''; return; }
+  el.className='subnav';
+  el.innerHTML =
+    (e.titulo ? '<div class="sn-t">'+plEsc(e.titulo)+'</div>' : '') +
+    secs.map(x=>'<button class="sn-b'+(x.id===e.activa?' on':'')+'" '+
+      'onclick="subnavIr(\''+tab+'\',\''+x.id+'\')">'+plEsc(x.n)+'</button>').join('');
+}
+
+function subnavIr(tab, sec){
+  const e = subnavEstado[tab]; if(e) e.activa = sec;
+  const f = document.getElementById(FRAMES[tab]);
+  if(f && f.contentWindow) f.contentWindow.postMessage({fuente:'cp-shell',tipo:'ir',seccion:sec},'*');
+  subnavPinta(tab);
+}
+
+// Lo que las apps cuentan de si mismas.
+window.addEventListener('message', function(ev){
+  const d = ev.data;
+  if(!d || d.fuente !== 'cp') return;
+  // De que iframe viene: se compara la ventana, no la URL.
+  let tab = null;
+  for(const k in FRAMES){
+    const f = document.getElementById(FRAMES[k]);
+    if(f && f.contentWindow === ev.source){ tab = k; break; }
+  }
+  if(!tab) return;
+  if(d.tipo === 'listo'){
+    subnavEstado[tab] = {titulo:(d.titulo||'').split('—')[0].trim(),
+                         secciones:d.secciones||[], activa:d.activa};
+  }
+  if(d.tipo === 'seccion' && subnavEstado[tab]) subnavEstado[tab].activa = d.activa;
+  if(document.querySelector('.tab-btn.active') &&
+     document.querySelector('.tab-btn.active').dataset.tab === tab) subnavPinta(tab);
+});
+
+// El tema es del shell: cuando cambia, se lo dice a los iframes cargados.
+function subnavTema(tema){
+  for(const k in FRAMES){
+    const f = document.getElementById(FRAMES[k]);
+    if(f && f.getAttribute('src') && f.contentWindow)
+      f.contentWindow.postMessage({fuente:'cp-shell',tipo:'tema',tema:tema},'*');
+  }
+}
+
 function mainTab(tab){
   if(tab==='ojos'&&!document.getElementById('oj-guia-body').innerHTML) ojRenderGuia();
   document.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));
   document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id==='view-'+tab));
-  if(tab==='salud'){const f=document.getElementById('frame-salud');if(!f.getAttribute('src'))f.src='salud.html';}
-  if(tab==='ejercicio'){const f=document.getElementById('frame-ejercicio');if(!f.getAttribute('src'))f.src='ejercicio.html';}
-  if(tab==='comida'){const f=document.getElementById('frame-comida');if(!f.getAttribute('src'))f.src='comida.html';}
-  if(tab==='vestimenta'){const f=document.getElementById('frame-vestimenta');if(!f.getAttribute('src'))f.src='../Vestimenta/vestimenta.html';}
+  subnavPinta(tab);
+  if(tab==='salud'){const f=document.getElementById('frame-salud');if(!f.getAttribute('src'))f.src='salud.html?embed=1';}
+  if(tab==='ejercicio'){const f=document.getElementById('frame-ejercicio');if(!f.getAttribute('src'))f.src='ejercicio.html?embed=1';}
+  if(tab==='comida'){const f=document.getElementById('frame-comida');if(!f.getAttribute('src'))f.src='comida.html?embed=1';}
+  if(tab==='vestimenta'){const f=document.getElementById('frame-vestimenta');if(!f.getAttribute('src'))f.src='../Vestimenta/vestimenta.html?embed=1';}
 }
 
 // ═════════════════════════════════════════════════════════════════════════
@@ -2475,7 +2657,7 @@ caRenderGuia();
 deRenderGuia();
 
 const initialTab=new URLSearchParams(location.search).get('tab');
-if(['skincare','cabello','salud','ejercicio','comida','dentista','vestimenta'].includes(initialTab)) mainTab(initialTab);
+if(['skincare','cabello','salud','ejercicio','comida','dentista','ojos','vestimenta'].includes(initialTab)) mainTab(initialTab);
 const themeBtn=document.getElementById('theme-toggle-btn');
 if(themeBtn) themeBtn.textContent=document.documentElement.getAttribute('data-theme')==='dark'?'☀️':'🌙';
 </script>

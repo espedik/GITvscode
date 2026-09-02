@@ -1,0 +1,246 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap">
+  <style>
+    body{margin:0;background:#06080c;font-family:"Inter",-apple-system,sans-serif}
+    a{color:#00e87a;text-decoration:none} a:hover{color:#5cffab}
+  </style>
+</helmet>
+
+<div class="sh">
+<style>
+.sh{
+  --tx:#f2f5f9; --tx2:#a8b4c2; --tx3:#93a0af;
+  --g:#00e87a; --o:#ff6b35; --am:#e0a020; --pk:#ff6bd6; --w:#ffd93d;
+  --mt:#4fd6ad; --oj:#4f8cff; --ve:#c17f4a;
+
+  /* El material: velos de blanco sobre el fondo, no cajas grises opacas.
+     Tres pesos — barra, tarjeta y pieza — más el borde que las separa. */
+  --v1:rgba(255,255,255,.10);   /* las barras que flotan */
+  --v2:rgba(255,255,255,.05);   /* tarjeta */
+  --v3:rgba(255,255,255,.028);  /* pieza dentro de una tarjeta */
+  --br:rgba(255,255,255,.11);
+  --br2:rgba(255,255,255,.06);
+  --luz:rgba(255,255,255,.16);  /* la línea de luz del borde superior */
+
+  width:1440px; height:900px; box-sizing:border-box;
+  display:flex; flex-direction:column; position:relative; overflow:hidden;
+  color:var(--tx);
+  background:
+    radial-gradient(ellipse 38% 26% at 16% 0%, rgba(255,107,53,.42) 0%, transparent 66%),
+    radial-gradient(ellipse 34% 22% at 62% -2%, rgba(0,232,122,.30) 0%, transparent 66%),
+    radial-gradient(ellipse 30% 20% at 92% 1%, rgba(79,140,255,.26) 0%, transparent 66%),
+    radial-gradient(ellipse 60% 30% at 50% 102%, rgba(176,110,255,.12) 0%, transparent 64%),
+    #06080c;
+}
+.sh *{box-sizing:border-box}
+.rejilla{position:absolute;inset:0;pointer-events:none;z-index:0;
+  background-image:linear-gradient(rgba(255,255,255,.016) 1px,transparent 1px),
+                   linear-gradient(90deg,rgba(255,255,255,.016) 1px,transparent 1px);
+  background-size:58px 58px}
+
+/* ── BARRA 1 · las 8 áreas ────────────────────────────────────────────────
+   Vidrio: velo blanco + desenfoque de lo que pasa por debajo + una línea de
+   luz arriba. El contenido se desliza bajo ella, que es lo que hace que el
+   material se lea como vidrio y no como una banda pintada. */
+.n1{position:relative;z-index:3;height:56px;flex:none;display:flex;align-items:center;gap:4px;
+  padding:0 22px;background:var(--v1);backdrop-filter:blur(22px) saturate(150%);
+  -webkit-backdrop-filter:blur(22px) saturate(150%);
+  border-bottom:1px solid var(--br);box-shadow:0 1px 0 var(--luz) inset, 0 10px 30px rgba(0,0,0,.28)}
+.marca{display:flex;align-items:center;gap:10px;padding-right:18px;margin-right:10px;
+  border-right:1px solid var(--br2);height:32px}
+.marca-i{width:28px;height:28px;border-radius:9px;flex:none;display:flex;align-items:center;
+  justify-content:center;background:linear-gradient(140deg,rgba(255,107,53,.95),rgba(224,160,32,.8));
+  box-shadow:0 2px 10px rgba(255,107,53,.35)}
+.marca-n{font-size:13px;font-weight:800;letter-spacing:-.012em}
+
+.t{position:relative;display:flex;align-items:center;gap:7px;padding:8px 13px;border-radius:11px;
+  cursor:pointer;border:1px solid transparent}
+.t svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:1.7;
+  stroke-linecap:round;stroke-linejoin:round;color:var(--tx3)}
+.t span{font-size:12px;font-weight:650;color:var(--tx2);letter-spacing:-.005em}
+.t:hover{background:rgba(255,255,255,.06)}
+/* La activa toma el color de su área — el shell ya lo tenía y es lo que hace
+   que sepas dónde estás sin leer. */
+.t.on{background:rgba(255,107,53,.14);border-color:rgba(255,107,53,.34);
+  box-shadow:0 0 0 1px rgba(255,107,53,.14), 0 6px 18px rgba(255,107,53,.16)}
+.t.on span{color:var(--o);font-weight:800} .t.on svg{color:var(--o)}
+.t.on::after{content:'';position:absolute;left:13px;right:13px;bottom:-14px;height:2px;
+  border-radius:2px;background:var(--o);box-shadow:0 0 12px var(--o)}
+
+.n1-d{margin-left:auto;display:flex;gap:7px;align-items:center}
+.ico{width:31px;height:31px;border-radius:10px;border:1px solid var(--br);background:var(--v3);
+  display:flex;align-items:center;justify-content:center;cursor:pointer}
+.ico:hover{background:rgba(255,255,255,.08)}
+.ico svg{width:15px;height:15px;stroke:var(--tx2);fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+
+/* ── BARRA 2 · las secciones de la app activa. Donde vivía su carril. ────── */
+.n2{position:relative;z-index:2;height:46px;flex:none;display:flex;align-items:center;gap:5px;
+  padding:0 22px;background:rgba(255,255,255,.055);backdrop-filter:blur(18px) saturate(140%);
+  -webkit-backdrop-filter:blur(18px) saturate(140%);border-bottom:1px solid var(--br2)}
+.n2-t{font-size:14.5px;font-weight:800;letter-spacing:-.018em;margin-right:16px;
+  font-family:"Space Grotesk","Inter",sans-serif}
+.sb{padding:6px 13px;border-radius:9px;font-size:11.5px;font-weight:700;color:var(--tx3);
+  border:1px solid transparent;cursor:pointer}
+.sb:hover{background:rgba(255,255,255,.055);color:var(--tx2)}
+.sb.on{background:rgba(255,107,53,.13);border-color:rgba(255,107,53,.3);color:var(--o)}
+.n2-d{margin-left:auto;display:flex;gap:7px;align-items:center}
+.pill{font-size:9.5px;font-weight:800;letter-spacing:.05em;padding:5px 10px;border-radius:7px;
+  background:var(--v3);border:1px solid var(--br2);color:var(--tx3);
+  font-family:"Space Grotesk",sans-serif}
+.pill b{color:var(--tx2)}
+
+/* ── EL LIENZO ───────────────────────────────────────────────────────────── */
+.lz{position:relative;z-index:1;flex:1;min-height:0;padding:18px 22px;
+  display:flex;flex-direction:column;gap:13px;overflow:hidden}
+
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.kpi{border-radius:15px;border:1px solid var(--br);background:var(--v2);padding:13px 15px;
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  box-shadow:0 1px 0 rgba(255,255,255,.07) inset}
+.kpi-v{font-size:22px;font-weight:800;letter-spacing:-.025em;line-height:1;
+  font-family:"Space Grotesk",sans-serif;font-variant-numeric:tabular-nums}
+.kpi-v em{font-style:normal;font-size:12px;color:var(--tx3);font-weight:700;margin-left:3px}
+.kpi-k{font-size:8.5px;font-weight:800;letter-spacing:.11em;text-transform:uppercase;
+  color:var(--tx3);margin-top:6px}
+
+.fila{display:grid;grid-template-columns:1fr 336px;gap:13px;flex:1;min-height:0}
+.card{border-radius:17px;border:1px solid var(--br);background:var(--v2);padding:15px 17px;
+  display:flex;flex-direction:column;min-height:0;backdrop-filter:blur(14px);
+  -webkit-backdrop-filter:blur(14px);box-shadow:0 1px 0 rgba(255,255,255,.07) inset}
+.card-h{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
+.card-t{font-size:10px;font-weight:800;letter-spacing:.13em;text-transform:uppercase;color:var(--tx2);
+  display:flex;align-items:center;gap:8px}
+.card-t .b{width:3px;height:12px;border-radius:2px;flex:none;
+  background:linear-gradient(180deg,var(--o),var(--am))}
+.card-x{font-size:10px;color:var(--tx3);font-weight:700}
+
+.ejs{display:flex;flex-direction:column;gap:8px}
+.ej{display:flex;gap:12px;align-items:center;padding:10px 12px;border-radius:13px;
+  border:1px solid var(--br2);background:var(--v3)}
+.ej-i{width:56px;height:44px;border-radius:9px;background:rgba(255,255,255,.9);flex:none}
+.ej-n{font-size:12.5px;font-weight:800;letter-spacing:-.01em}
+.ej-s{font-size:10px;color:var(--tx3);margin-top:2px}
+.ej-r{margin-left:auto;font-size:12.5px;font-weight:800;color:var(--tx2);
+  font-family:"Space Grotesk",sans-serif;font-variant-numeric:tabular-nums}
+.ej.on{border-color:rgba(0,232,122,.34);background:rgba(0,232,122,.07)}
+.ej.on .ej-r{color:var(--g)}
+
+.lat{display:flex;flex-direction:column;gap:12px;min-width:0}
+.cro{border-radius:17px;border:1px solid rgba(224,160,32,.32);padding:15px;text-align:center;
+  background:linear-gradient(165deg,rgba(224,160,32,.15),rgba(255,255,255,.04) 58%);
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  box-shadow:0 1px 0 rgba(255,255,255,.1) inset}
+.cro-k{font-size:8.5px;font-weight:800;letter-spacing:.11em;text-transform:uppercase;color:var(--am)}
+.cro-v{font-size:36px;font-weight:800;letter-spacing:-.045em;margin:7px 0 3px;
+  font-family:"Space Grotesk",sans-serif;font-variant-numeric:tabular-nums}
+.cro-s{font-size:9.5px;color:var(--tx2);font-weight:700}
+.bar{height:5px;border-radius:4px;background:rgba(255,255,255,.09);overflow:hidden;
+  position:relative;margin-top:11px}
+.bar i{position:absolute;inset:0 62% 0 0;border-radius:4px;
+  background:linear-gradient(90deg,var(--am),var(--g));box-shadow:0 0 10px rgba(224,160,32,.4)}
+
+.pr{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--br2)}
+.pr:last-of-type{border-bottom:none}
+.pr-n{font-size:11px;font-weight:700}
+.pr-s{font-size:8.5px;color:var(--tx3);margin-top:1px}
+.spark{display:flex;align-items:flex-end;gap:2px;height:18px;width:48px;flex:none;margin-left:auto}
+.spark i{flex:1;border-radius:2px 2px 0 0;background:rgba(0,232,122,.3)}
+.spark i:last-child{background:var(--g)}
+.pr-v{font-size:11.5px;font-weight:800;color:var(--g);flex:none;width:52px;text-align:right;
+  font-family:"Space Grotesk",sans-serif;font-variant-numeric:tabular-nums}
+
+.nota{margin-top:auto;font-size:10px;line-height:1.55;color:var(--tx3);padding:11px 13px;
+  border-radius:12px;background:var(--v3);border:1px solid var(--br2)}
+.nota b{color:var(--tx2)}
+</style>
+
+<div class="rejilla"></div>
+
+<div class="n1">
+  <div class="marca">
+    <div class="marca-i"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="#06080c" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-4.6-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 11c0 5.4-7 10-7 10z"></path></svg></div>
+    <div class="marca-n">Cuidado Personal</div>
+  </div>
+  <div class="t"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"></circle><path d="M9 10h.01M15 10h.01M9.5 15a3.5 3.5 0 0 0 5 0"></path></svg><span>Skincare</span></div>
+  <div class="t"><svg viewBox="0 0 24 24"><path d="M6 20c0-6 2-14 6-14s6 8 6 14"></path><path d="M8 8c1.5-2 6.5-2 8 0"></path></svg><span>Cabello</span></div>
+  <div class="t"><svg viewBox="0 0 24 24"><path d="M12 21s-7-4.6-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 11c0 5.4-7 10-7 10z"></path></svg><span>Salud</span></div>
+  <div class="t on"><svg viewBox="0 0 24 24"><path d="M6 8v8M18 8v8M3 10v4M21 10v4M6 12h12"></path></svg><span>Ejercicio</span></div>
+  <div class="t"><svg viewBox="0 0 24 24"><path d="M5 4v7a3 3 0 0 0 6 0V4M8 11v9M17 4c-1.5 2-2 4-2 6h4c0-2-.5-4-2-6zM17 10v10"></path></svg><span>Comida</span></div>
+  <div class="t"><svg viewBox="0 0 24 24"><path d="M12 5c-2-1.5-5-1.5-6.5.5S4 12 6 17s3 3 4 1.5 1-2.5 2-2.5 1 1 2 2.5 2 3.5 4-1.5 2-9.5.5-11.5S14 3.5 12 5z"></path></svg><span>Dentista</span></div>
+  <div class="t"><svg viewBox="0 0 24 24"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6-10-6-10-6z"></path><circle cx="12" cy="12" r="2.6"></circle></svg><span>Ojos</span></div>
+  <div class="t"><svg viewBox="0 0 24 24"><path d="M7 4l5 3 5-3 3 3-2.5 2.5V20H6.5V9.5L4 7z"></path></svg><span>Vestimenta</span></div>
+  <div class="n1-d">
+    <div class="ico"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.5-3.5"></path></svg></div>
+    <div class="ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"></circle><path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6L7 7M17 17l1.4 1.4M18.4 5.6L17 7M7 17l-1.4 1.4"></path></svg></div>
+  </div>
+</div>
+
+<div class="n2">
+  <div class="n2-t">Piernas — completa</div>
+  <div class="sb on">Mi Rutina</div>
+  <div class="sb">Biblioteca</div>
+  <div class="sb">Fitsi</div>
+  <div class="sb">Deportes</div>
+  <div class="n2-d">
+    <span class="pill">MARTES · 6 EJERCICIOS · ~39 MIN</span>
+    <span class="pill"><b>2 de 6</b> HECHOS</span>
+  </div>
+</div>
+
+<div class="lz">
+  <div class="kpis">
+    <div class="kpi"><div class="kpi-v" style="color:#00e87a">0</div><div class="kpi-k">Racha</div></div>
+    <div class="kpi"><div class="kpi-v" style="color:#4f8cff">2/6</div><div class="kpi-k">Esta semana</div></div>
+    <div class="kpi"><div class="kpi-v" style="color:#e0a020">9.6<em>t</em></div><div class="kpi-k">Volumen hoy</div></div>
+    <div class="kpi"><div class="kpi-v" style="color:#ff6b35">21<em>min</em></div><div class="kpi-k">Llevas hoy</div></div>
+  </div>
+
+  <div class="fila">
+    <div class="card">
+      <div class="card-h">
+        <div class="card-t"><span class="b"></span>La sesión de hoy</div>
+        <div class="card-x">2 de 6 hechos · llevas ~21 min</div>
+      </div>
+      <div class="ejs">
+        <div class="ej on"><div class="ej-i"></div><div><div class="ej-n">Hack Squat</div><div class="ej-s">Piernas · Máquina · 4 pasos</div></div><div class="ej-r">4 × 10</div></div>
+        <div class="ej on"><div class="ej-i"></div><div><div class="ej-n">Prensa de Piernas</div><div class="ej-s">Piernas · Máquina · 5 pasos</div></div><div class="ej-r">4 × 12</div></div>
+        <div class="ej"><div class="ej-i"></div><div><div class="ej-n">Extensión de Cuádriceps</div><div class="ej-s">Piernas · Máquina · 5 pasos</div></div><div class="ej-r">3 × 15</div></div>
+        <div class="ej"><div class="ej-i"></div><div><div class="ej-n">Curl de Femoral Tumbado</div><div class="ej-s">Femoral · Máquina · 5 pasos</div></div><div class="ej-r">3 × 12</div></div>
+        <div class="ej"><div class="ej-i"></div><div><div class="ej-n">Abducción de Cadera</div><div class="ej-s">Glúteos · Máquina · 5 pasos</div></div><div class="ej-r">3 × 15</div></div>
+        <div class="ej"><div class="ej-i"></div><div><div class="ej-n">Elevación de Pantorrilla</div><div class="ej-s">Pantorrilla · Máquina · 5 pasos</div></div><div class="ej-r">4 × 20</div></div>
+      </div>
+      <div class="nota">Las dos barras son <b>vidrio</b>: velo blanco al 10 % y 5,5 %, con desenfoque de lo que pasa por debajo. El contenido se desliza bajo ellas — por eso el material se lee como cristal y no como una banda pintada.</div>
+    </div>
+
+    <div class="lat">
+      <div class="cro">
+        <div class="cro-k">Descanso · Prensa de Piernas</div>
+        <div class="cro-v">1:12</div>
+        <div class="cro-s">de 90 s · toca otra serie para reiniciar</div>
+        <div class="bar"><i></i></div>
+      </div>
+      <div class="card" style="flex:1">
+        <div class="card-h"><div class="card-t"><span class="b"></span>Tu progresión</div><div class="card-x">vs. la vez pasada</div></div>
+        <div class="pr"><div><div class="pr-n">Hack Squat</div><div class="pr-s">4×10 · hace 7 días</div></div><div class="spark"><i style="height:45%"></i><i style="height:55%"></i><i style="height:62%"></i><i style="height:75%"></i><i style="height:88%"></i></div><div class="pr-v">+5 kg</div></div>
+        <div class="pr"><div><div class="pr-n">Prensa de Piernas</div><div class="pr-s">4×12 · hace 7 días</div></div><div class="spark"><i style="height:52%"></i><i style="height:60%"></i><i style="height:70%"></i><i style="height:80%"></i><i style="height:92%"></i></div><div class="pr-v">+10 kg</div></div>
+        <div class="pr"><div><div class="pr-n">Curl de Femoral</div><div class="pr-s">3×12 · hace 7 días</div></div><div class="spark"><i style="height:40%"></i><i style="height:48%"></i><i style="height:55%"></i><i style="height:62%"></i><i style="height:70%"></i></div><div class="pr-v">+2.5 kg</div></div>
+        <div class="pr"><div><div class="pr-n">Extensión de Cuádriceps</div><div class="pr-s">3×15 · hace 7 días</div></div><div class="spark"><i style="height:60%"></i><i style="height:60%"></i><i style="height:65%"></i><i style="height:65%"></i><i style="height:65%"></i></div><div class="pr-v" style="color:#93a0af">=</div></div>
+        <div class="pr"><div><div class="pr-n">Abducción de Cadera</div><div class="pr-s">3×15 · hace 7 días</div></div><div class="spark"><i style="height:50%"></i><i style="height:58%"></i><i style="height:66%"></i><i style="height:66%"></i><i style="height:78%"></i></div><div class="pr-v">+2.5 kg</div></div>
+        <div class="nota" style="margin-top:auto">El peso que anotas hoy es lo que ves aquí la próxima vez.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
+</x-dc>
+</body>
+</html>
