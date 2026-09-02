@@ -931,3 +931,41 @@ Dos fallos que salieron al mover:
 Comprobado a 1400, 820 y 390 px, plegada y desplegada, en los dos temas: 5 px de
 separación, misma altura y mismo alto que el ojo, sin solapes ni desbordes, y el
 tema cambia de verdad.
+
+## Las 12 habilidades abren su ruta, y la barra baja a la mitad (2026-09-02)
+
+Adán: *"las barras hazlas la mitad del ancho que tienen, y además cuando haga
+click en cada habilidad, del lado izquierdo me mostrarás la ruta completa para
+aumentar esa habilidad, así como ya lo tienes para inversión"*.
+
+**La barra pasa de 0,84 a 0,42 del renglón** (medido). A ancho completo el trazo
+de color pesaba más que el nombre y el número, que es lo que de verdad se lee.
+
+**Cada fila abre su ruta a la izquierda.** La función ya existía —`habFocoSet()`—
+pero sólo la usaba el botón "Cambiar a…", y `habFocoActual()` se limitaba a las
+candidatas: las que no están en pausa y entran en el top de prioridad. Ahora
+**mirar una ruta y elegir el foco de la semana son cosas distintas**: se puede
+abrir cualquiera, aunque esté en pausa, y el chip de la cabecera lo dice —
+*"Esta semana"* si es la recomendada, *"Su ruta"* si sólo la estás consultando.
+La fila abierta se marca con una barra lateral.
+
+### Las 6 que no tenían ruta
+
+Y aquí estaba el problema de fondo: **`APRENDIZAJE` sólo tenía 6 de las 12**.
+Copy, Networking, Liderazgo, Código, Inglés y Mentalidad salían en la lista con
+su número, pero al tocarlas el panel no habría pintado nada — `habPasos()`
+devuelve `[]` y `renderSkills` hace `return`.
+
+Ahora las 12 tienen ruta, **75 pasos en total**. Cada una arranca del nivel que ya
+tiene, no de cero, y de lo que ya hace:
+
+| | Nivel | De qué va su ruta |
+|---|---|---|
+| Copy | 55 | escribe claro pero no pide nada; el correo frío de 5 líneas |
+| Networking | 55 | 20 nombres en una hoja y reactivar sin pedir |
+| Liderazgo | 80 | las tres conversaciones que evita; liderar sin el puesto |
+| Código | 60 | tests antes que features; un proyecto que se pueda enseñar |
+| Inglés | 80 | hablar bajo presión, con las 28 h al volante como bloque |
+| Mentalidad | 85 | el sueño como palanca; cortar la rumia con una acción |
+
+El control 3 del verificador pasó de comprobar 6 prioridades a **12**, solo.

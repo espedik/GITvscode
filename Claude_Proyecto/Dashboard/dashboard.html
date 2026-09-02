@@ -1882,7 +1882,18 @@ button.hp-lec:active{transform:translateY(0)}
 .hr-row.foco .hr-name{font-weight:800}
 /* La barra es LO QUE SABES: llena = lo dominas. Antes media el retorno, asi que Ventas
    (15/100) salia llena y Mentalidad (85/100) casi vacia — justo al reves de lo que es. */
-.hr-bar{position:relative;height:6px;background:rgba(var(--ov),.07);border-radius:4px;overflow:hidden}
+/* La barra ocupa la mitad del renglón (pedido de Adán, 2026-09-02): a ancho
+   completo el trazo de color pesaba más que el nombre y el número, que es lo
+   que de verdad se lee. `overflow:hidden` se cae porque la marca de la meta
+   puede quedar fuera del relleno. */
+.hr-bar{position:relative;height:6px;width:50%;background:rgba(var(--ov),.07);
+  border-radius:4px}
+.hr-fill,.hr-meta{border-radius:4px}
+/* Se puede abrir: cursor, realce al pasar y la que está abierta marcada. */
+.hr-row.abrible{cursor:pointer;border-radius:8px;transition:background .13s}
+.hr-row.abrible:hover{background:rgba(var(--ov),.05)}
+.hr-row.abierta{background:rgba(var(--ov),.06);box-shadow:inset 2px 0 0 var(--cy)}
+.hr-row.abierta .hr-name{color:var(--text)}
 .hr-fill{position:absolute;left:0;top:0;bottom:0;border-radius:4px}
 /* La rayita del siguiente escalon: a donde llega la habilidad de la semana si la cierras. */
 .hr-meta{position:absolute;top:-2px;bottom:-2px;width:2px;background:rgba(var(--ov),.42);border-radius:1px}
@@ -8000,11 +8011,20 @@ function habCandidatas(){
     .sort((a, b) => a.val - b.val).slice(0, PRIORIDAD_N)
     .sort((a, b) => skRetorno(b) - skRetorno(a));
 }
+// Mirar una ruta y elegir el foco de la semana son cosas distintas: se puede
+// abrir CUALQUIERA que tenga ruta, aunque esté en pausa o fuera del top de
+// prioridad. Si no hay nada guardado, se abre la que más rinde.
 function habFocoActual(){
-  const c = habCandidatas(); if(!c.length) return null;
   const st = habFocoLoad();
-  return c.find(s => s.id === st.skill) || c[0];
+  if(st.skill){
+    const s = SK.find(x => x.id === st.skill);
+    if(s && habPasos(s.id).length) return s;
+  }
+  const c = habCandidatas();
+  return c.length ? c[0] : null;
 }
+// La que el sistema recomienda esta semana, que no tiene por qué ser la abierta.
+function habRecomendada(){ const c = habCandidatas(); return c.length ? c[0] : null; }
 function habFocoSet(id){ const st = habFocoLoad(); st.skill = id; habFocoSave(st); renderSkills(); }
 function habPasoSet(i){
   const f = habFocoActual(); if(!f) return;
@@ -8042,7 +8062,7 @@ function renderSkills(){
 
     <div class="hf-cuerpo">
       <div class="hf-top">
-        <span class="hf-chip">Esta semana</span>
+        <span class="hf-chip">${(habRecomendada()||{}).id === foco.id ? 'Esta semana' : 'Su ruta'}</span>
         <div class="hf-badge" style="background:${l.c}22">${foco.icon}</div>
         <span class="hf-name">${foco.name}</span>
         <span class="hf-lvl" style="background:${l.c}22;color:${l.c}">${l.l}</span>
@@ -8095,12 +8115,16 @@ function renderSkills(){
   // Ahora la barra es el nivel y el orden es el retorno, con una frase al pie que lo dice.
   const orden = [...SK].sort((a, b) => skRetorno(b) - skRetorno(a));
   const metaFoco = skSiguienteEscalon(foco.val);
+  const abiertaId = foco.id;   // la que se está viendo a la izquierda
   document.getElementById('habRank').innerHTML = `
     <div class="hr-head"><span class="hr-t">Lo que sabes de cada una</span><span class="hr-sub">de arriba abajo, dónde rinde más una hora</span></div>
     <div class="hr-rows">${orden.map((s, j) => {
       const lv = skLevel(s.val);
       const pausa = PRIORIDAD_EXCLUIDAS.includes(s.id), esFoco = s.id === foco.id;
-      return `<div class="hr-row${pausa ? ' pausa' : ''}${esFoco ? ' foco' : ''}" title="${s.name}: ${s.val}/100 · ${lv.l} · peso ×${s.w} · rinde ${skRetorno(s)}${pausa ? ' · fuera del foco por decisión propia' : ''}">
+      const conRuta = habPasos(s.id).length > 0;
+      const abierta = abiertaId === s.id;
+      return `<div class="hr-row${pausa ? ' pausa' : ''}${esFoco ? ' foco' : ''}${conRuta ? ' abrible' : ''}${abierta ? ' abierta' : ''}"${
+        conRuta ? ` onclick="habFocoSet('${s.id}')"` : ''} title="${s.name}: ${s.val}/100 · ${lv.l} · peso ×${s.w} · rinde ${skRetorno(s)}${pausa ? ' · fuera del foco por decisión propia' : ''}">
         <span class="hr-n">${String(j + 1).padStart(2, '0')}</span>
         <span class="hr-ico">${s.icon}</span>
         <div style="min-width:0">
