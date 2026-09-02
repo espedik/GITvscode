@@ -865,6 +865,14 @@ tbody tr:hover td{background:rgba(var(--ov),.02)}
 .pe-p.solo-lectura{cursor:default}
 .pe-p.solo-lectura:hover{border-color:var(--pe-line);background:var(--pe-panel2)}
 .pe-p.solo-lectura .pe-p-c{opacity:.25}
+
+/* Lo unico de la rutina que no se aplica en el pelo: la pastilla. */
+.pe-mom-i.oral{background:var(--pe-wa-bg);border-color:var(--pe-wa-br)}
+.pe-aviso-med{display:flex;gap:8px;align-items:flex-start;font-size:10.5px;line-height:1.5;
+  color:var(--pe-tx2);padding:10px 12px;margin:2px 0 4px;border-radius:11px;
+  background:var(--pe-wa-bg);border:1px solid var(--pe-wa-br)}
+.pe-aviso-med>span:first-child{color:var(--pe-warn);font-weight:800;flex:none}
+.pe-aviso-med b{color:var(--pe-tx)}
 </style>
 <script src="../Dashboard/datos-maestros.js"></script>
 <script>
@@ -1943,6 +1951,7 @@ const PE_MOMENTOS=[
   {id:'humedo', n:'Al salir, con el pelo a\u00fan h\u00famedo', ico:'💧', clase:'humedo', desfase:12},
   {id:'seco',   n:'Cuero cabelludo YA seco \u2014 minoxidil',  ico:'🍂', clase:'seco',   desfase:32},
   {id:'noche',  n:'Antes de dormir',                          ico:'🌙', clase:'noche',  desfase:null},
+  {id:'oral',   n:'Por dentro — la pastilla',                ico:'🩹', clase:'oral',   desfase:40},
 ];
 
 // ─── Perfil ────────────────────────────────────────────────────────────
@@ -2093,6 +2102,14 @@ function pePasosDelDia(){
     seco.push({id:'aceite',t:'<b>'+plEsc(ace.n)+'</b> \u2014 '+ace.uso});
   M.push({m:PE_MOMENTOS[2],pasos:seco.filter(Boolean)});
 
+  // La pastilla va en su propio momento: es lo unico de esta rutina que no se
+  // aplica en el pelo, y mezclarla con el minoxidil confundia las dos cosas.
+  const avo=prod('avodart');
+  if(avo) M.push({m:PE_MOMENTOS[4],pasos:[
+    {id:'avodart',t:'<b>'+plEsc(avo.n)+'</b> — '+avo.uso},
+    {id:'avodartAviso',t:avo.aviso,aviso:true},
+  ]});
+
   const funda=prod('funda');
   M.push({m:PE_MOMENTOS[3],pasos:[
     {id:'minoxPM',t:'<b>Segunda dosis de minoxidil.</b> Misma t\u00e9cnica: cuero seco, media tapa, masaje, manos lavadas. <b>Despu\u00e9s de esta dosis ya no te mojes el pelo</b> \u2014 si vas a ba\u00f1arte de noche, b\u00e1\u00f1ate antes.'},
@@ -2110,6 +2127,8 @@ function peHoyHtml(){
     const hh=g.m.desfase===null?hor.pm:plHHMM(plMin(hor.am)+g.m.desfase);
     const pasos=g.pasos.map(function(p,i){
       total++; const on=esHoy&&pePaso(iso,p.id); if(on) hechos++;
+      if(p.aviso){ total--; if(on) hechos--;
+        return '<div class="pe-aviso-med"><span>\u26a0</span><span>'+p.t+'</span></div>'; }
       return '<div class="pe-p'+(on?' on':'')+(esHoy?'':' solo-lectura')+'"'+
         (esHoy?' onclick="peTogglePaso(\''+p.id+'\')" title="Marca este paso como hecho"':'')+'>'+
         '<div class="pe-p-n">'+(i+1)+'</div><div class="pe-p-t">'+p.t+'</div><div class="pe-p-c">\u2713</div></div>';

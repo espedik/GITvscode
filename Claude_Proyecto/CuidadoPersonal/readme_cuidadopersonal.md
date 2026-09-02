@@ -546,3 +546,52 @@ Comprobado haciendo clic en los 7 días: cada uno muestra su champú y sus pasos
 el domingo y el miércoles salen "sin champú", el sábado trae CeraVe + mascarilla,
 volver a hoy recupera el marcado, y no hay errores de consola. A 390 px la tira se
 apila y sigue respondiendo al clic. Contraste: lo peor queda en 4,70:1.
+
+## Cabello: entran el minoxidil NR-11 y el Avodart (2026-09-01)
+
+Adán: *"me compre el avodart dutasterida que cuesta 1500 y minoxidil NR-11
+Polaris Research 5% y costo 900, agregalo a mi rutina de cuidado de cabello y en
+carrito de compras"*. Los dos van a `RUTINA_PELO` en `datos-maestros.js`, y de ahí
+salen solos la rutina, el botiquín, la lista de compras y el costo mensual.
+
+**El NR-11 sustituye al Kirkland, no se suma.** No se aplican dos minoxidiles
+tópicos a la vez. Conserva el `id:'minoxidil'` porque `RUTINA_PELO.dia()`,
+`dosisMinoxidil` y toda la tarjeta de las 4 horas lo buscan por ese id. Y hubo que
+reescribir su texto: el anterior decía *"la espuma se elige sobre el líquido
+porque no lleva propilenglicol"*, y el NR-11 **es loción y sí lo lleva**. Ahora
+dice cómo aplicarlo con gotero y qué hacer si pica.
+
+**El Avodart es lo primero de esta rutina que no se aplica en el pelo**, así que
+tiene momento propio: `PE_MOMENTOS` gana **"Por dentro — la pastilla"**, entre el
+minoxidil y la noche. Mezclarlo con los pasos tópicos confundía las dos cosas.
+Lleva además un campo `aviso` que se pinta como banda de advertencia y no cuenta
+como paso marcable: es de receta, para la caída se usa fuera de indicación, y
+—esto es lo que importa— **parte el PSA a la mitad**.
+
+Por eso `CHEQUEO.psa` deja de ser una hipótesis. Estaba escrito como *"si arrancas
+el dutasteride tópico…"*, con `desdeEdad:45`. Ahora es `prioritario:true`, sin
+edad mínima, y explica las dos reglas con las que hay que leer ese análisis:
+decir siempre que toma dutasterida, y multiplicar el resultado por 2 para
+compararlo con los rangos normales. La escalera de compras pierde el *"Dutasteride
+tópico (fórmula magistral)"*: ya no es un pendiente.
+
+### El carrito: el precio se buscaba por el texto exacto del ítem
+
+`LISTA_COMPRAS_PRECIOS_OTROS` tiene como clave el ítem completo tal cual aparece
+en la lista. El propio comentario del archivo documenta lo que pasa: *"al
+renombrar los de cabello el 18-ago sus claves dejaron de coincidir y el precio se
+perdió en silencio"*. Con el NR-11 y el Avodart habría vuelto a pasar.
+
+`lcPrecioOtros(cat,txt)` prueba primero esa tabla y, si la clave no está, busca el
+producto en `RUTINA_PELO` / `RUTINA_PIEL` / `SUPLEMENTOS` y usa el precio que el
+maestro ya guarda. Efecto medido: **los 10 productos del cabello pasan a tener
+precio**; antes sólo 4, y con los nombres viejos. La píldora distingue los dos
+casos en el tooltip ("Lo que te costó, según tu rutina" vs. precio de lista).
+
+**El costo del cabello pasa de $687 a $2,854 al mes** — más que el gimnasio, la
+comida y el plan de datos juntos. $2,400 de esos son los dos productos nuevos.
+
+Comprobado en el navegador: 5 momentos en la rutina con la pastilla en el suyo,
+12 pasos (el aviso no cuenta), el minoxidil sigue con sus 2 dosis y su ventana de
+4 horas, el botiquín lista los dos, y en el carrito marcarlos suma $2,400.
+Verificador en verde: 10 productos, $2854 al mes.

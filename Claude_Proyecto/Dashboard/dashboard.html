@@ -4510,17 +4510,36 @@ function lcPrecioHtml(cat,txt){
   // cada una abre su búsqueda; los 39 productos sin precio de referencia la llevan igual, solo que
   // con el nombre de la tienda en vez de la cifra — el link es lo que se necesita, el precio se ve
   // al llegar.
-  const o=cat==='libros'?LIBRO_PRECIO_TIPICO:LISTA_COMPRAS_PRECIOS_OTROS[txt];
+  const o=lcPrecioOtros(cat,txt);
   const conLink=LC_AMAZON_CATS.includes(cat);
   if(!o&&!conLink) return '';
   const q=lcAmazonQuery(cat,txt);
   const t=(cat==='libros'
       ? 'Precio típico de un libro de no ficción en pasta blanda.'
-      : o ? 'Precio de lista aproximado (ago-2026) del primer producto de la línea.'
+      : o ? (o.delMaestro?'Lo que te costó, según tu rutina.':'Precio de lista aproximado (ago-2026) del primer producto de la línea.')
           : 'Todavía sin precio de referencia.')
     +(conLink?' Clic para abrir la búsqueda y ver el precio de hoy.':'');
   return lcTiendaPill(conLink?lcAmazonUrl(q):'','Amazon',o&&o.amazon,t)+
          lcTiendaPill(conLink?lcMercadoLibreUrl(q):'','M. Libre',o&&o.ml,t);
+}
+// Precio de un ítem que no es comida. Primero la tabla de tienda; si esa clave no está
+// — porque al producto se le cambió el nombre, que ya pasó el 18-ago y dejó 4 precios en
+// silencio — cae al precio que el maestro guarda para ese producto. Así el precio se
+// escribe UNA vez, en datos-maestros.js, y renombrar deja de romperlo.
+function lcPrecioOtros(cat,txt){
+  if(cat==='libros') return LIBRO_PRECIO_TIPICO;
+  const o=LISTA_COMPRAS_PRECIOS_OTROS[txt];
+  if(o) return o;
+  const C=window.CIFRAS; if(!C) return null;
+  const fuentes=[C.RUTINA_PELO&&C.RUTINA_PELO.productos,
+                 C.RUTINA_PIEL&&C.RUTINA_PIEL.productos,
+                 C.SUPLEMENTOS&&C.SUPLEMENTOS.lista];
+  for(let i=0;i<fuentes.length;i++){
+    const lista=fuentes[i]; if(!lista) continue;
+    const p=lista.find(function(x){ return x.n&&txt.indexOf(x.n+',')===0; });
+    if(p&&p.precio) return {amazon:p.precio,ml:p.precio,delMaestro:true};
+  }
+  return null;
 }
 // Una píldora de tienda. Con `url` es un link — sin él, el mismo chip sin subrayado ni ↗.
 function lcTiendaPill(url,tienda,precio,tip){
@@ -4693,7 +4712,7 @@ function lcHudCatHtml(cat){
     if(lcTengo(id)){ tengo++; return; }
     if(!lcQty(id)) return;
     n++;
-    const o=cat==='libros'?LIBRO_PRECIO_TIPICO:LISTA_COMPRAS_PRECIOS_OTROS[txt];
+    const o=lcPrecioOtros(cat,txt);
     if(o){ amazon+=o.amazon||0; ml+=o.ml||0; } else sinPrecio++;
   });
   const marco='<i class="lc-brk tl"></i><i class="lc-brk br"></i>';

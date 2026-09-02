@@ -190,13 +190,13 @@ nadie lo vio. Ahora lo vigila el **control 11**.
 
 ### La rutina del cabello
 
-`RUTINA_PELO` — los **9 productos** del pelo y, sobre todo, **la semana de lavado**: qué champú
+`RUTINA_PELO` — los **10 productos** del pelo y, sobre todo, **la semana de lavado**: qué champú
 toca cada día vive aquí y en ningún otro sitio. Se pide desde JS:
 
 ```js
 CIFRAS.RUTINA_PELO.dia(2)             // martes -> {champu, condicional, nota, mascarilla, ...}
 CIFRAS.RUTINA_PELO.duracionDias(p)    // contenido / (usos por semana / 7)
-CIFRAS.RUTINA_PELO.costoMesTotal      // $687 hoy
+CIFRAS.RUTINA_PELO.costoMesTotal      // $2,854 hoy — el NR-11 y el Avodart son $2,400
 ```
 
 | Producto | Cuándo | Tamaño | Dura | Al mes |
@@ -239,8 +239,8 @@ es un getter sobre esta lista.
 `CHEQUEO` — los **9 análisis** que le tocan y por qué. Varios entran por algo que ya está en el
 proyecto: la vitamina D porque toma D3 a diario, la creatinina porque toma creatina (**la sube en
 sangre sin daño renal**), el tiroideo porque la caída de cabello lo pide descartar, y el PSA
-porque el **dutasteride tópico de la lista de Cabello reduce su valor a la mitad** — hace falta
-una medición antes de empezarlo. `desdeEdad` desactiva un examen hasta esa edad;
+porque **toma dutasterida (Avodart) desde el 1-sep-2026 y eso parte su valor a la mitad** — dejó
+de ser opcional y de tener `desdeEdad`. `desdeEdad` desactiva un examen hasta esa edad;
 `mesesVigencia` es cada cuánto se repite.
 
 ### El calendario · constantes
