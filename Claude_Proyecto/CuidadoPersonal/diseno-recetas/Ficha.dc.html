@@ -1,0 +1,155 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap">
+  <style>
+    body{margin:0;background:#06080c;font-family:"Inter",-apple-system,sans-serif}
+    a{color:#ffd93d;text-decoration:none} a:hover{color:#ffe98a}
+  </style>
+</helmet>
+
+<div class="fi">
+<style>
+.fi{
+  --tx:#f2f5f9; --tx2:#a8b4c2; --tx3:#93a0af;
+  --w:#ffd93d; --g:#00e87a; --pu:#b06eff; --o:#ff6b35; --b:#4f8cff;
+  --v2:rgba(255,255,255,.05); --v3:rgba(255,255,255,.028);
+  --br:rgba(255,255,255,.11); --br2:rgba(255,255,255,.06); --luz:rgba(255,255,255,.16);
+  width:1000px; height:900px; box-sizing:border-box; position:relative; overflow:hidden;
+  color:var(--tx); display:flex; align-items:center; justify-content:center; padding:22px;
+  background:radial-gradient(ellipse 60% 40% at 50% 0%, rgba(255,217,61,.16) 0%, transparent 64%), #06080c;
+}
+.fi *{box-sizing:border-box}
+
+/* ── LA FICHA ────────────────────────────────────────────────────────────
+   Se abre al tocar una tarjeta. Todo lo que la tarjeta no enseña vive aquí:
+   ingredientes con cantidad, preparación paso a paso y el tip. */
+.mo{width:100%;max-width:940px;max-height:100%;border-radius:22px;overflow:hidden;
+  border:1px solid var(--br);background:rgba(13,16,22,.92);backdrop-filter:blur(24px) saturate(150%);
+  box-shadow:0 1px 0 var(--luz) inset, 0 30px 80px rgba(0,0,0,.6);
+  display:flex;flex-direction:column}
+
+/* La foto de portada, a sangre y con el nombre encima */
+.hero{position:relative;height:260px;flex:none;overflow:hidden;background:#0d1016}
+.hero img{width:100%;height:100%;object-fit:cover;display:block}
+.hero::after{content:'';position:absolute;inset:0;
+  background:linear-gradient(180deg,rgba(6,8,12,.15) 0%,rgba(6,8,12,.35) 46%,rgba(13,16,22,.96) 100%)}
+.hero-i{position:absolute;left:24px;right:24px;bottom:18px;z-index:1}
+.ojo{display:flex;align-items:center;gap:7px;font-size:9.5px;font-weight:800;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--w);text-shadow:0 1px 6px rgba(0,0,0,.7)}
+.ojo i{width:6px;height:6px;border-radius:50%;background:var(--w);box-shadow:0 0 10px var(--w);display:block}
+.h1{font-size:27px;font-weight:800;letter-spacing:-.028em;margin-top:8px;line-height:1.15;
+  font-family:"Space Grotesk","Inter",sans-serif;text-shadow:0 2px 12px rgba(0,0,0,.65)}
+.cerrar{position:absolute;top:16px;right:16px;z-index:2;width:34px;height:34px;border-radius:11px;
+  border:1px solid rgba(255,255,255,.24);background:rgba(6,8,12,.5);backdrop-filter:blur(8px);
+  display:flex;align-items:center;justify-content:center}
+.cerrar svg{width:15px;height:15px;stroke:#fff;fill:none;stroke-width:2.2;stroke-linecap:round}
+.marcar{position:absolute;top:16px;right:60px;z-index:2;height:34px;padding:0 13px;border-radius:11px;
+  border:1px solid var(--w);background:var(--w);color:#1a1400;font-size:11.5px;font-weight:800;
+  display:flex;align-items:center;gap:7px}
+.marcar svg{width:14px;height:14px;stroke:#1a1400;fill:none;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+
+/* Los macros, en una tira bajo la foto */
+.macros{display:flex;gap:9px;padding:15px 24px 0}
+.m{flex:1;border-radius:13px;border:1px solid var(--br);background:var(--v2);padding:11px 13px;
+  backdrop-filter:blur(14px);box-shadow:0 1px 0 var(--luz) inset}
+.m-v{font-size:19px;font-weight:800;line-height:1;font-family:"Space Grotesk",sans-serif;
+  font-variant-numeric:tabular-nums}
+.m-v em{font-style:normal;font-size:11px;color:var(--tx3);font-weight:700;margin-left:2px}
+.m-k{font-size:8.5px;font-weight:800;letter-spacing:.11em;text-transform:uppercase;color:var(--tx3);margin-top:5px}
+
+.cuerpo{flex:1;min-height:0;overflow:hidden;display:grid;grid-template-columns:300px 1fr;
+  gap:18px;padding:16px 24px 20px}
+.col{min-width:0;display:flex;flex-direction:column;gap:13px}
+.card{border-radius:15px;border:1px solid var(--br);background:var(--v2);padding:14px 16px;
+  backdrop-filter:blur(14px);box-shadow:0 1px 0 var(--luz) inset}
+.card-t{font-size:9.5px;font-weight:800;letter-spacing:.13em;text-transform:uppercase;color:var(--tx2);
+  display:flex;align-items:center;gap:8px;margin-bottom:11px}
+.card-t .b{width:3px;height:12px;border-radius:2px;background:var(--w);flex:none}
+.card-t span.x{margin-left:auto;font-size:9.5px;color:var(--tx3);letter-spacing:0;text-transform:none;font-weight:700}
+
+/* Ingredientes: nombre a la izquierda, cantidad a la derecha, con guía punteada */
+.ing{display:flex;align-items:baseline;gap:8px;padding:6px 0;font-size:12px}
+.ing + .ing{border-top:1px solid var(--br2)}
+.ing-n{font-weight:600;color:var(--tx)}
+.ing-p{flex:1;border-bottom:1px dotted rgba(255,255,255,.16);transform:translateY(-3px)}
+.ing-c{color:var(--tx3);font-weight:700;font-size:11px;font-family:"Space Grotesk",sans-serif}
+
+/* Pasos numerados */
+.paso{display:flex;gap:11px;padding:9px 0;font-size:12.5px;line-height:1.55;color:var(--tx2)}
+.paso + .paso{border-top:1px solid var(--br2)}
+.paso i{flex:none;width:20px;height:20px;border-radius:50%;background:rgba(255,217,61,.14);
+  border:1px solid rgba(255,217,61,.3);color:var(--w);display:flex;align-items:center;
+  justify-content:center;font-size:10px;font-weight:800;font-style:normal;margin-top:1px;
+  font-family:"Space Grotesk",sans-serif}
+.paso b{color:var(--tx)}
+
+.tip{display:flex;gap:10px;font-size:11.5px;line-height:1.55;color:var(--tx2);padding:12px 14px;
+  border-radius:13px;background:rgba(0,232,122,.08);border:1px solid rgba(0,232,122,.24)}
+.tip .ic{color:var(--g);font-weight:800;flex:none}
+.tip b{color:var(--tx)}
+
+.pie{display:flex;gap:9px;margin-top:auto}
+.bt{flex:1;height:38px;border-radius:11px;display:flex;align-items:center;justify-content:center;
+  gap:8px;font-size:12px;font-weight:800;border:1px solid var(--br);background:var(--v3);color:var(--tx2)}
+.bt.p{background:linear-gradient(135deg,var(--w),#ffb800);border-color:var(--w);color:#1a1400}
+.bt svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+</style>
+
+<div class="mo">
+  <div class="hero">
+    <img src="r-c5.jpg" alt="Salmón al horno con papa y ensalada">
+    <div class="marcar"><svg viewBox="0 0 24 24"><path d="M4 12.5l5.5 5.5L20 7"></path></svg>Voy a cocinarla</div>
+    <div class="cerrar"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"></path></svg></div>
+    <div class="hero-i">
+      <div class="ojo"><i></i>Cena · 25 min · 1 porción</div>
+      <div class="h1">Salmón al horno con papa y ensalada</div>
+    </div>
+  </div>
+
+  <div class="macros">
+    <div class="m"><div class="m-v" style="color:#ff8a5c">620<em>kcal</em></div><div class="m-k">Calorías</div></div>
+    <div class="m"><div class="m-v" style="color:#c99bff">46<em>g</em></div><div class="m-k">Proteína</div></div>
+    <div class="m"><div class="m-v" style="color:#4f8cff">40<em>g</em></div><div class="m-k">Carbohidratos</div></div>
+    <div class="m"><div class="m-v" style="color:#ffd93d">30<em>g</em></div><div class="m-k">Grasa</div></div>
+  </div>
+
+  <div class="cuerpo">
+    <div class="col">
+      <div class="card">
+        <div class="card-t"><span class="b"></span>Ingredientes<span class="x">5</span></div>
+        <div class="ing"><span class="ing-n">Salmón</span><span class="ing-p"></span><span class="ing-c">180 g</span></div>
+        <div class="ing"><span class="ing-n">Papa</span><span class="ing-p"></span><span class="ing-c">2 pza</span></div>
+        <div class="ing"><span class="ing-n">Lechuga</span><span class="ing-p"></span><span class="ing-c">2 tazas</span></div>
+        <div class="ing"><span class="ing-n">Jitomate</span><span class="ing-p"></span><span class="ing-c">1 pza</span></div>
+        <div class="ing"><span class="ing-n">Aceite de oliva</span><span class="ing-p"></span><span class="ing-c">1 cda</span></div>
+      </div>
+      <div class="tip"><span class="ic">◈</span><span>El omega 3 del salmón es el mismo que compras en cápsula. <b>Una vez por semana en el plato</b> ahorra suplemento.</span></div>
+      <div class="pie">
+        <div class="bt p"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"></path></svg>Registrar hoy</div>
+        <div class="bt"><svg viewBox="0 0 24 24"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14"></path></svg>A la compra</div>
+      </div>
+    </div>
+
+    <div class="col">
+      <div class="card" style="flex:1">
+        <div class="card-t"><span class="b"></span>Preparación<span class="x">4 pasos</span></div>
+        <div class="paso"><i>1</i><span>Hornea el salmón <b>15 min a 200 °C</b>, con la piel hacia abajo.</span></div>
+        <div class="paso"><i>2</i><span>Cuece las papas en cubos aparte.</span></div>
+        <div class="paso"><i>3</i><span>Arma la ensalada mientras se hornea.</span></div>
+        <div class="paso"><i>4</i><span>El salmón está listo cuando <b>se separa en láminas con el tenedor</b>, no antes.</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
+</x-dc>
+</body>
+</html>

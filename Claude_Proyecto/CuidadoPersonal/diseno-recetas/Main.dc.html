@@ -1,0 +1,292 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap">
+  <style>
+    body{margin:0;background:#06080c;font-family:"Inter",-apple-system,sans-serif}
+    a{color:#ffd93d;text-decoration:none} a:hover{color:#ffe98a}
+  </style>
+</helmet>
+
+<div class="rc">
+<style>
+.rc{
+  --tx:#f2f5f9; --tx2:#a8b4c2; --tx3:#93a0af;
+  --w:#ffd93d; --g:#00e87a; --pu:#b06eff; --b:#4f8cff; --o:#ff6b35;
+  --v1:rgba(255,255,255,.10); --v2:rgba(255,255,255,.05); --v3:rgba(255,255,255,.028);
+  --br:rgba(255,255,255,.11); --br2:rgba(255,255,255,.06); --luz:rgba(255,255,255,.16);
+  width:1440px; height:980px; box-sizing:border-box;
+  display:flex; flex-direction:column; position:relative; overflow:hidden; color:var(--tx);
+  background:
+    radial-gradient(ellipse 38% 24% at 16% 0%, rgba(255,217,61,.34) 0%, transparent 66%),
+    radial-gradient(ellipse 34% 20% at 62% -2%, rgba(255,107,53,.24) 0%, transparent 66%),
+    radial-gradient(ellipse 30% 18% at 92% 1%, rgba(0,232,122,.2) 0%, transparent 66%),
+    #06080c;
+}
+.rc *{box-sizing:border-box}
+
+/* Las dos barras del shell, que ya son de vidrio */
+.n1{position:relative;z-index:3;height:56px;flex:none;display:flex;align-items:center;gap:4px;
+  padding:0 22px;background:var(--v1);backdrop-filter:blur(22px) saturate(150%);
+  border-bottom:1px solid var(--br);box-shadow:0 1px 0 var(--luz) inset,0 10px 30px rgba(0,0,0,.28)}
+.marca{display:flex;align-items:center;gap:10px;padding-right:18px;margin-right:10px;
+  border-right:1px solid var(--br2);height:32px;font-size:13px;font-weight:800}
+.marca i{width:28px;height:28px;border-radius:9px;flex:none;display:flex;align-items:center;
+  justify-content:center;font-style:normal;
+  background:linear-gradient(140deg,rgba(255,107,53,.95),rgba(224,160,32,.8))}
+.marca i svg{width:15px;height:15px;stroke:#06080c;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.t{display:flex;align-items:center;gap:7px;padding:8px 12px;border-radius:11px;font-size:12px;
+  font-weight:650;color:var(--tx2);position:relative}
+.t svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;opacity:.75}
+.t.on{background:rgba(255,217,61,.14);border:1px solid rgba(255,217,61,.34);color:var(--w);font-weight:800}
+.t.on::after{content:'';position:absolute;left:12px;right:12px;bottom:-14px;height:2px;border-radius:2px;
+  background:var(--w);box-shadow:0 0 12px var(--w)}
+.n2{position:relative;z-index:2;height:46px;flex:none;display:flex;align-items:center;gap:5px;
+  padding:0 22px;background:rgba(255,255,255,.055);backdrop-filter:blur(18px);
+  border-bottom:1px solid var(--br2)}
+.n2-t{font-size:14.5px;font-weight:800;letter-spacing:-.018em;margin-right:14px;
+  font-family:"Space Grotesk","Inter",sans-serif}
+.sb{padding:6px 13px;border-radius:9px;font-size:11.5px;font-weight:700;color:var(--tx2)}
+.sb.on{background:rgba(255,217,61,.13);border:1px solid rgba(255,217,61,.3);color:var(--w)}
+
+.lz{position:relative;z-index:1;flex:1;min-height:0;padding:18px 22px;overflow:hidden;
+  display:flex;flex-direction:column;gap:14px}
+
+/* Cabecera */
+.cab{display:flex;align-items:flex-end;gap:18px}
+.ojo{display:flex;align-items:center;gap:7px;font-size:10px;font-weight:800;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--w)}
+.ojo i{width:6px;height:6px;border-radius:50%;background:var(--w);box-shadow:0 0 10px var(--w);display:block}
+.h1{font-size:26px;font-weight:800;letter-spacing:-.03em;margin-top:7px;
+  font-family:"Space Grotesk","Inter",sans-serif}
+.h1 em{font-style:normal;color:var(--tx3);font-weight:600;font-size:14px;margin-left:11px;
+  font-family:"Inter",sans-serif;letter-spacing:0}
+.kpis{margin-left:auto;display:flex;gap:9px}
+.kpi{padding:10px 15px;border-radius:13px;border:1px solid var(--br);background:var(--v2);
+  text-align:right;min-width:104px;backdrop-filter:blur(14px);box-shadow:0 1px 0 var(--luz) inset}
+.kpi-v{font-size:19px;font-weight:800;line-height:1;color:var(--w);
+  font-family:"Space Grotesk",sans-serif;font-variant-numeric:tabular-nums}
+.kpi-v em{font-style:normal;font-size:11px;color:var(--tx3);font-weight:700;margin-left:3px}
+.kpi-k{font-size:8.5px;font-weight:800;letter-spacing:.11em;text-transform:uppercase;color:var(--tx3);margin-top:5px}
+
+/* Barra de filtros */
+.barra{display:flex;gap:9px;align-items:center}
+.buscar{flex:1;position:relative}
+.buscar input{width:100%;padding:10px 13px 10px 34px;border-radius:11px;border:1px solid var(--br);
+  background:var(--v3);color:var(--tx);font-size:12.5px;font-family:inherit;backdrop-filter:blur(14px)}
+.buscar svg{position:absolute;left:11px;top:50%;transform:translateY(-50%);width:15px;height:15px;
+  stroke:var(--tx3);fill:none;stroke-width:1.8;stroke-linecap:round}
+.f{display:flex;gap:5px}
+.fb{padding:8px 13px;border-radius:10px;font-size:11.5px;font-weight:700;border:1px solid var(--br);
+  background:var(--v3);color:var(--tx2)}
+.fb.on{background:rgba(255,217,61,.15);border-color:rgba(255,217,61,.4);color:var(--w)}
+.fn{font-size:11px;color:var(--tx3);font-weight:700}
+
+/* ── EL PANEL: la foto manda ─────────────────────────────────────────────
+   Antes cada receta era un bloque de texto de 400 px de alto con ingredientes
+   y pasos desplegados: 24 así son un muro. Ahora la tarjeta es la foto y tres
+   datos; todo lo demás vive en la ficha, a un clic. */
+.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));grid-auto-rows:214px;
+  gap:14px;flex:1;min-height:0;align-content:start;overflow:hidden}
+.card{position:relative;border-radius:18px;overflow:hidden;border:1px solid var(--br);
+  background:var(--v2);display:flex;flex-direction:column;cursor:pointer;
+  box-shadow:0 1px 0 var(--luz) inset}
+.card.on{border-color:rgba(255,217,61,.5);box-shadow:0 0 0 1px rgba(255,217,61,.22),0 14px 34px rgba(255,217,61,.12)}
+.foto{position:relative;height:158px;flex:none;overflow:hidden;background:#0d1016}
+/* Mientras la foto carga (o si no hay), el hueco no se queda negro: lleva el
+   velo, una rejilla fina y el cubierto del area. */
+.foto.sinfoto{background:
+  linear-gradient(150deg,rgba(255,217,61,.09),rgba(255,255,255,.02) 60%),
+  linear-gradient(rgba(255,255,255,.022) 1px,transparent 1px) 0 0/22px 22px,
+  linear-gradient(90deg,rgba(255,255,255,.022) 1px,transparent 1px) 0 0/22px 22px,
+  #0d1016;
+  display:flex;align-items:center;justify-content:center}
+.foto.sinfoto svg{width:34px;height:34px;stroke:rgba(255,217,61,.3);fill:none;stroke-width:1.4;
+  stroke-linecap:round;stroke-linejoin:round}
+.foto img{width:100%;height:100%;object-fit:cover;display:block}
+/* El degradado deja leer el nombre sobre cualquier foto */
+.foto::after{content:'';position:absolute;inset:0;
+  background:linear-gradient(180deg,rgba(6,8,12,0) 34%,rgba(6,8,12,.86) 100%)}
+.foto-n{position:absolute;left:13px;right:13px;bottom:11px;z-index:1;font-size:13.5px;
+  font-weight:800;letter-spacing:-.015em;line-height:1.25;text-shadow:0 2px 8px rgba(0,0,0,.6)}
+.marca-b{position:absolute;top:11px;right:11px;z-index:2;width:30px;height:30px;border-radius:9px;
+  border:1px solid rgba(255,255,255,.28);background:rgba(6,8,12,.5);backdrop-filter:blur(8px);
+  display:flex;align-items:center;justify-content:center}
+.marca-b svg{width:15px;height:15px;stroke:#fff;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;opacity:.85}
+.card.on .marca-b{background:var(--w);border-color:var(--w)}
+.card.on .marca-b svg{stroke:#1a1400;opacity:1}
+.tiempo{position:absolute;top:11px;left:11px;z-index:2;font-size:9.5px;font-weight:800;
+  padding:5px 9px;border-radius:7px;background:rgba(6,8,12,.55);backdrop-filter:blur(8px);
+  border:1px solid rgba(255,255,255,.16);letter-spacing:.03em;
+  font-family:"Space Grotesk",sans-serif}
+.pie{padding:11px 13px 12px;display:flex;align-items:center;gap:7px}
+.chip{font-size:9.5px;font-weight:800;padding:4px 8px;border-radius:6px;
+  font-family:"Space Grotesk",sans-serif;font-variant-numeric:tabular-nums}
+.c-kcal{background:rgba(255,107,53,.14);color:#ff8a5c;border:1px solid rgba(255,107,53,.28)}
+.c-prot{background:rgba(176,110,255,.14);color:#c99bff;border:1px solid rgba(176,110,255,.28)}
+.ver{margin-left:auto;font-size:10px;font-weight:800;color:var(--tx3);display:flex;align-items:center;gap:4px}
+.ver svg{width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+</style>
+
+<div class="n1">
+  <div class="marca"><i><svg viewBox="0 0 24 24"><path d="M12 21s-7-4.6-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 11c0 5.4-7 10-7 10z"></path></svg></i>Cuidado Personal</div>
+  <div class="t"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"></circle></svg>Skincare</div>
+  <div class="t"><svg viewBox="0 0 24 24"><path d="M6 20c0-6 2-14 6-14s6 8 6 14"></path></svg>Cabello</div>
+  <div class="t"><svg viewBox="0 0 24 24"><path d="M12 21s-7-4.6-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 11c0 5.4-7 10-7 10z"></path></svg>Salud</div>
+  <div class="t"><svg viewBox="0 0 24 24"><path d="M6 8v8M18 8v8M3 10v4M21 10v4M6 12h12"></path></svg>Ejercicio</div>
+  <div class="t on"><svg viewBox="0 0 24 24"><path d="M5 4v7a3 3 0 0 0 6 0V4M8 11v9M17 4c-1.5 2-2 4-2 6h4c0-2-.5-4-2-6zM17 10v10"></path></svg>Comida</div>
+  <div class="t"><svg viewBox="0 0 24 24"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6-10-6-10-6z"></path></svg>Ojos</div>
+</div>
+
+<div class="n2">
+  <div class="n2-t">Mi Comida</div>
+  <div class="sb on">Desayunos</div>
+  <div class="sb">Cenas</div>
+  <div class="sb">Plan Masa Muscular</div>
+  <div class="sb">Registro Diario</div>
+</div>
+
+<div class="lz">
+  <div class="cab">
+    <div>
+      <div class="ojo"><i></i>Martes 1 de septiembre</div>
+      <div class="h1">Tu comida del día<em>12 desayunos · 12 cenas, sin tus disparadores</em></div>
+    </div>
+    <div class="kpis">
+      <div class="kpi"><div class="kpi-v">186<em>g</em></div><div class="kpi-k">Meta de proteína</div></div>
+      <div class="kpi"><div class="kpi-v">3,115<em>kcal</em></div><div class="kpi-k">Meta del día</div></div>
+      <div class="kpi"><div class="kpi-v">3</div><div class="kpi-k">Vas a cocinar</div></div>
+    </div>
+  </div>
+
+  <div class="barra">
+    <div class="buscar">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.5-3.5"></path></svg>
+      <input type="text" placeholder="Busca por nombre o ingrediente… (pollo, papa, nopal)">
+    </div>
+    <div class="f">
+      <div class="fb on">Todas</div>
+      <div class="fb">30 g+ de proteína</div>
+      <div class="fb">10 min o menos</div>
+      <div class="fb">Las que voy a cocinar</div>
+    </div>
+    <div class="fn">12 de 12</div>
+  </div>
+
+  <div class="grid">
+    <div class="card on">
+      <div class="foto"><img src="r-d1.jpg" alt="Molletes de frijol con queso panela">
+        <div class="tiempo">15 MIN</div>
+        <div class="marca-b"><svg viewBox="0 0 24 24"><path d="M4 12.5l5.5 5.5L20 7"></path></svg></div>
+        <div class="foto-n">Molletes de frijol con queso panela</div></div>
+      <div class="pie"><span class="chip c-kcal">420 kcal</span><span class="chip c-prot">24 g</span>
+        <span class="ver">ver<svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"></path></svg></span></div>
+    </div>
+
+    <div class="card">
+      <div class="foto"><img src="r-d8.jpg" alt="Chilaquiles de tortilla horneada con pollo">
+        <div class="tiempo">18 MIN</div>
+        <div class="marca-b"><svg viewBox="0 0 24 24"><path d="M4 12.5l5.5 5.5L20 7"></path></svg></div>
+        <div class="foto-n">Chilaquiles de tortilla horneada con pollo</div></div>
+      <div class="pie"><span class="chip c-kcal">560 kcal</span><span class="chip c-prot">44 g</span>
+        <span class="ver">ver<svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"></path></svg></span></div>
+    </div>
+
+    <div class="card on">
+      <div class="foto"><img src="r-c5.jpg" alt="Salmón al horno con papa y ensalada">
+        <div class="tiempo">25 MIN</div>
+        <div class="marca-b"><svg viewBox="0 0 24 24"><path d="M4 12.5l5.5 5.5L20 7"></path></svg></div>
+        <div class="foto-n">Salmón al horno con papa y ensalada</div></div>
+      <div class="pie"><span class="chip c-kcal">620 kcal</span><span class="chip c-prot">46 g</span>
+        <span class="ver">ver<svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"></path></svg></span></div>
+    </div>
+
+    <div class="card">
+      <div class="foto sinfoto"><svg viewBox="0 0 24 24"><path d="M5 4v7a3 3 0 0 0 6 0V4M8 11v9M17 4c-1.5 2-2 4-2 6h4c0-2-.5-4-2-6zM17 10v10"></path></svg>
+        <div class="tiempo">10 MIN</div>
+        <div class="marca-b"><svg viewBox="0 0 24 24"><path d="M4 12.5l5.5 5.5L20 7"></path></svg></div>
+        <div class="foto-n">Tacos de huevo con jamón de pavo</div></div>
+      <div class="pie"><span class="chip c-kcal">440 kcal</span><span class="chip c-prot">32 g</span>
+        <span class="ver">ver<svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"></path></svg></span></div>
+    </div>
+
+    <div class="card">
+      <div class="foto sinfoto"><svg viewBox="0 0 24 24"><path d="M5 4v7a3 3 0 0 0 6 0V4M8 11v9M17 4c-1.5 2-2 4-2 6h4c0-2-.5-4-2-6zM17 10v10"></path></svg>
+        <div class="tiempo">5 MIN</div>
+        <div class="marca-b"><svg viewBox="0 0 24 24"><path d="M4 12.5l5.5 5.5L20 7"></path></svg></div>
+        <div class="foto-n">Yogurt griego con granola y pera</div></div>
+      <div class="pie"><span class="chip c-kcal">400 kcal</span><span class="chip c-prot">22 g</span>
+        <span class="ver">ver<svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"></path></svg></span></div>
+    </div>
+
+    <div class="card on">
+      <div class="foto sinfoto"><svg viewBox="0 0 24 24"><path d="M5 4v7a3 3 0 0 0 6 0V4M8 11v9M17 4c-1.5 2-2 4-2 6h4c0-2-.5-4-2-6zM17 10v10"></path></svg>
+        <div class="tiempo">12 MIN</div>
+        <div class="marca-b"><svg viewBox="0 0 24 24"><path d="M4 12.5l5.5 5.5L20 7"></path></svg></div>
+        <div class="foto-n">Huevos revueltos con nopales</div></div>
+      <div class="pie"><span class="chip c-kcal">430 kcal</span><span class="chip c-prot">30 g</span>
+        <span class="ver">ver<svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"></path></svg></span></div>
+    </div>
+
+    <div class="card">
+      <div class="foto sinfoto"><svg viewBox="0 0 24 24"><path d="M5 4v7a3 3 0 0 0 6 0V4M8 11v9M17 4c-1.5 2-2 4-2 6h4c0-2-.5-4-2-6zM17 10v10"></path></svg>
+        <div class="tiempo">8 MIN</div>
+        <div class="marca-b"><svg viewBox="0 0 24 24"><path d="M4 12.5l5.5 5.5L20 7"></path></svg></div>
+        <div class="foto-n">Sándwich de pechuga con aguacate</div></div>
+      <div class="pie"><span class="chip c-kcal">520 kcal</span><span class="chip c-prot">38 g</span>
+        <span class="ver">ver<svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"></path></svg></span></div>
+    </div>
+
+    <div class="card">
+      <div class="foto sinfoto"><svg viewBox="0 0 24 24"><path d="M5 4v7a3 3 0 0 0 6 0V4M8 11v9M17 4c-1.5 2-2 4-2 6h4c0-2-.5-4-2-6zM17 10v10"></path></svg>
+        <div class="tiempo">12 MIN</div>
+        <div class="marca-b"><svg viewBox="0 0 24 24"><path d="M4 12.5l5.5 5.5L20 7"></path></svg></div>
+        <div class="foto-n">Omelette de claras con champiñones</div></div>
+      <div class="pie"><span class="chip c-kcal">340 kcal</span><span class="chip c-prot">34 g</span>
+        <span class="ver">ver<svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"></path></svg></span></div>
+    </div>
+    <div class="card">
+      <div class="foto sinfoto"><svg viewBox="0 0 24 24"><path d="M5 4v7a3 3 0 0 0 6 0V4M8 11v9M17 4c-1.5 2-2 4-2 6h4c0-2-.5-4-2-6zM17 10v10"></path></svg>
+        <div class="tiempo">5 MIN</div>
+        <div class="marca-b"><svg viewBox="0 0 24 24"><path d="M4 12.5l5.5 5.5L20 7"></path></svg></div>
+        <div class="foto-n">Requesón con papaya y miel</div></div>
+      <div class="pie"><span class="chip c-kcal">380 kcal</span><span class="chip c-prot">28 g</span>
+        <span class="ver">ver<svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"></path></svg></span></div>
+    </div>
+    <div class="card">
+      <div class="foto sinfoto"><svg viewBox="0 0 24 24"><path d="M5 4v7a3 3 0 0 0 6 0V4M8 11v9M17 4c-1.5 2-2 4-2 6h4c0-2-.5-4-2-6zM17 10v10"></path></svg>
+        <div class="tiempo">12 MIN</div>
+        <div class="marca-b"><svg viewBox="0 0 24 24"><path d="M4 12.5l5.5 5.5L20 7"></path></svg></div>
+        <div class="foto-n">Huevos al albañil</div></div>
+      <div class="pie"><span class="chip c-kcal">470 kcal</span><span class="chip c-prot">30 g</span>
+        <span class="ver">ver<svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"></path></svg></span></div>
+    </div>
+    <div class="card on">
+      <div class="foto sinfoto"><svg viewBox="0 0 24 24"><path d="M5 4v7a3 3 0 0 0 6 0V4M8 11v9M17 4c-1.5 2-2 4-2 6h4c0-2-.5-4-2-6zM17 10v10"></path></svg>
+        <div class="tiempo">8 MIN</div>
+        <div class="marca-b"><svg viewBox="0 0 24 24"><path d="M4 12.5l5.5 5.5L20 7"></path></svg></div>
+        <div class="foto-n">Avena de amaranto con plátano</div></div>
+      <div class="pie"><span class="chip c-kcal">520 kcal</span><span class="chip c-prot">22 g</span>
+        <span class="ver">ver<svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"></path></svg></span></div>
+    </div>
+    <div class="card">
+      <div class="foto sinfoto"><svg viewBox="0 0 24 24"><path d="M5 4v7a3 3 0 0 0 6 0V4M8 11v9M17 4c-1.5 2-2 4-2 6h4c0-2-.5-4-2-6zM17 10v10"></path></svg>
+        <div class="tiempo">14 MIN</div>
+        <div class="marca-b"><svg viewBox="0 0 24 24"><path d="M4 12.5l5.5 5.5L20 7"></path></svg></div>
+        <div class="foto-n">Quesadillas de champiñón con pollo</div></div>
+      <div class="pie"><span class="chip c-kcal">500 kcal</span><span class="chip c-prot">42 g</span>
+        <span class="ver">ver<svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"></path></svg></span></div>
+    </div>
+  </div>
+</div>
+
+</div>
+</x-dc>
+</body>
+</html>

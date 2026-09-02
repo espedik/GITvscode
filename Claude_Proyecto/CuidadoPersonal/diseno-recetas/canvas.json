@@ -1,0 +1,11 @@
+{
+  "artboards": [
+    { "file": "Main.dc.html", "x": 0, "y": 0, "w": 1440, "h": 980, "title": "El panel de recetas" },
+    { "file": "Ficha.dc.html", "x": 1560, "y": 0, "w": 1000, "h": 900, "title": "La ficha, al tocar una" }
+  ],
+  "annotations": [
+    { "id": "brief", "x": 0, "y": -230, "w": 1440, "text": "Adán: \"un panel con fotografías en super HD, y al hacer click que abra una ventana con toda esa información\".\n\nHoy cada receta es un bloque de texto de ~400 px con ingredientes y pasos desplegados: 24 así son un muro por el que hay que hacer scroll. Aquí la tarjeta es la FOTO más tres datos —tiempo, kcal y proteína—, y todo lo demás vive en la ficha, a un clic.\n\nLas fotos son reales, de Wikimedia Commons: 24 buscadas y verificadas cargando las 24 en un navegador. Tres van dentro de esta maqueta; las cinco tarjetas sin foto están así a propósito, para enseñar cómo se ve el respaldo mientras carga." },
+    { "id": "nota-ficha", "x": 1560, "y": -230, "w": 1000, "text": "LA FICHA — se abre al tocar una tarjeta.\n\nLa foto ocupa la portada a sangre, con el nombre encima y el degradado que lo hace legible sobre cualquier imagen. Debajo, los cuatro macros; a la izquierda los ingredientes con su cantidad y el tip; a la derecha la preparación paso a paso.\n\nDos acciones, las de siempre: registrar en el diario de hoy y marcar para cocinar, que es lo que mete sus ingredientes en la compra." }
+  ],
+  "launch": { "view": "canvas" }
+}
