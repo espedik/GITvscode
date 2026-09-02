@@ -2,6 +2,12 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
+<!-- Sin caché: estas apps se editan a diario y abiertas con file:// Chrome se queda
+     con la copia vieja hasta un Ctrl+F5. Ya costó varias veces creer que un cambio
+     no se había aplicado cuando en disco sí estaba. -->
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <!-- viewport-fit=cover: sin él, `env(safe-area-inset-*)` vale 0 en iOS y la barra inferior
      se monta sobre el home indicator del iPhone (2026-08-19, reportado por Adán). -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1, user-scalable=no">
