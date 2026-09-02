@@ -8057,7 +8057,8 @@ function calcOVRcon(id, valor){
 function habPasos(id){
   const a = APRENDIZAJE[id]; if(!a) return [];
   if(a.subs) return a.subs.map(x => ({ n: x.n, q: x.q, c: x.c, r: x.r }));
-  const r = (a.recursos || []).slice(0, 2).map(x => x.n).join(' · ');
+  // Los recursos de la habilidad, tal cual: `pfRecursosHtml` sabe pintarlos.
+  const r = (a.recursos || []).slice(0, 2);
   return [
     { n: 'Por qué está baja', c: a.diagnostico, r: r },
     { n: 'Esta semana',        c: a.primer,       r: r },
@@ -8144,7 +8145,10 @@ function renderSkills(){
 
       ${p.q ? `<div><div class="hf-lbl" style="color:var(--g)">Por qué este paso</div><div class="hf-q">${p.q}</div></div>` : ''}
       <div><div class="hf-lbl" style="color:var(--cy)">Qué hacer</div><div class="hf-c">${p.c}</div></div>
-      ${p.r ? `<div class="hf-res"><div class="hf-lbl">Con qué</div><div class="hf-res-t">📚 ${p.r}</div></div>` : ''}
+      ${p.r ? `<div class="hf-res"><div class="hf-lbl">Con qué</div>${
+        typeof pfRecursosHtml === 'function' ? pfRecursosHtml(p.r)
+          : `<div class="hf-res-t">${Array.isArray(p.r) ? p.r.map(x => x.n || x.id).join(' · ') : p.r}</div>`
+      }</div>` : ''}
 
       <div class="hf-pie">
         <span class="hf-pie-t">${i + 1 < pasos.length

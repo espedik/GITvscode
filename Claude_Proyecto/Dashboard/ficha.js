@@ -329,6 +329,54 @@ function pfEnlazarVivo(raiz,tareas){
   }).observe(cont,{childList:true,subtree:true});
   return pasar;
 }
+// Que es cada tipo de recurso y como se llega a el.
+//   libro     -> abre su ficha; el titulo sale de BIBLIOTECA, no se escribe aparte
+//   propio    -> algo suyo (su calendario, su cuaderno): no hay nada que enlazar
+//   los demas -> se abren en otra pestana
+const PF_RECURSO={
+  libro:   {e:'Libro',    ico:'\ud83d\udcda', c:'--pf-arrugas'},
+  yt:      {e:'YouTube',  ico:'\u25b6\ufe0f', c:'--pf-acne'},
+  podcast: {e:'Podcast',  ico:'\ud83c\udfa7', c:'--pf-pm'},
+  curso:   {e:'Curso',    ico:'\ud83c\udf93', c:'--pf-teal'},
+  web:     {e:'Web',      ico:'\ud83c\udf10', c:'--pf-agua'},
+  repo:    {e:'Repo',     ico:'\u2699\ufe0f', c:'--pf-gris'},
+  practica:{e:'Pr\u00e1ctica', ico:'\ud83c\udfaf', c:'--pf-ok'},
+  empleo:  {e:'Oferta',   ico:'\ud83d\udcbc', c:'--pf-manchas'},
+  propio:  {e:'Tuyo',     ico:'\u270b', c:'--pf-gris'},
+};
+// Un recurso, con su etiqueta de tipo y su acci\u00f3n. `x` es {t, id|n, url, nota}.
+function pfRecursoHtml(x){
+  if(!x) return '';
+  if(typeof x==='string') return '<div class="pf-rec"><span class="pf-rec-n">'+x+'</span></div>';
+  const d=PF_RECURSO[x.t]||PF_RECURSO.web;
+  let nombre=x.n||'', accion='';
+  if(x.t==='libro'){
+    const B=window.CIFRAS&&window.CIFRAS.BIBLIOTECA;
+    const l=B&&B.todos.filter(function(y){ return y.id===x.id; })[0];
+    if(l){
+      // El t\u00edtulo y el autor salen de la ficha: aqu\u00ed solo se guarda el id.
+      nombre='<b>'+l.t+'</b> \u2014 '+l.a;
+      accion='<button class="pf-rec-b" onclick="pfAbrirId(\'libros\',\''+l.id+'\')" '+
+        'title="De qu\u00e9 trata, qu\u00e9 dice y cu\u00e1ndo leerlo">'+
+        '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/>'+
+        '<path d="M12 11v5M12 7.6v.1"/></svg>Qu\u00e9 es</button>';
+    } else nombre='<b>'+(x.n||x.id||'?')+'</b>';
+  } else if(x.url){
+    accion='<a class="pf-rec-b pf-rec-link" href="'+x.url+'" target="_blank" rel="noopener" '+
+      'title="'+x.url.replace(/"/g,'&quot;')+'">Abrir \u2197</a>';
+    nombre='<b>'+nombre+'</b>';
+  } else nombre='<b>'+nombre+'</b>';
+  return '<div class="pf-rec" style="--c:var('+d.c+')">'+
+    '<span class="pf-rec-t">'+d.ico+' '+d.e+'</span>'+
+    '<span class="pf-rec-n">'+nombre+(x.nota?' <em>· '+x.nota+'</em>':'')+'</span>'+
+    accion+'</div>';
+}
+// La lista entera. Acepta lo viejo (una cadena) y lo nuevo (array de recursos).
+function pfRecursosHtml(r){
+  if(!r) return '';
+  const lista=Array.isArray(r)?r:[r];
+  return '<div class="pf-recs">'+lista.map(pfRecursoHtml).join('')+'</div>';
+}
 function pfCerrar(){
   const o=document.getElementById('pfFondo'); if(!o) return;
   o.classList.remove('open'); o.innerHTML='';

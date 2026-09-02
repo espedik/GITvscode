@@ -1092,6 +1092,9 @@
 .lc-info-coach{display:inline-flex;align-items:center;gap:5px;margin-left:8px;
   vertical-align:baseline;font-size:10px;padding:2px 8px;height:auto;line-height:1.5}
 .lc-info-coach svg{width:11px;height:11px}
+/* Los recursos de la ruta los pinta `pfRecursosHtml` (../Dashboard/ficha.js) y
+   cada uno trae su propia caja, así que el contenedor se queda sin la suya. */
+.subhab-r.subhab-r-vivo{background:none;border:none;padding:0;color:inherit}
 </style>
   <script>
     (function () {
@@ -4972,6 +4975,42 @@
   });
   if(sinFicha.length)
     console.warn('Libros sin ficha en BIBLIOTECA (' + sinFicha.length + '): ' + sinFicha.join(' | '));
+})();
+</script>
+
+<script>
+// Los recursos de las rutas de habilidad. En el HTML de esta página hay 16
+// escritos a mano, todos con un emoji de libro delante fuera lo que fueran: un
+// podcast, el portal del SAT o el propio calendario de Adán salían igual, y
+// ninguno llevaba a ningún sitio.
+//
+// Ahora salen de `APRENDIZAJE`: se busca cada paso por su NOMBRE — el que está
+// en el `subhab-t` de al lado — y se repinta con `pfRecursosHtml`, el mismo que
+// usa el dashboard. Por nombre y no por orden: hoy coinciden, pero añadir un
+// paso en medio desplazaría todos los demás sin que nada avisara.
+(function recursosDeLaRuta(){
+  const A = window.CIFRAS && window.CIFRAS.APRENDIZAJE;
+  if(!A || typeof pfRecursosHtml !== 'function') return;
+  // Índice: nombre del paso -> sus recursos.
+  const porNombre = {};
+  const norm = function(x){ return String(x).toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]/g,''); };
+  Object.keys(A).forEach(function(h){
+    (A[h].subs || []).forEach(function(p){ if(p.n && p.r) porNombre[norm(p.n)] = p.r; });
+  });
+  let puestos = 0, sinDato = [];
+  document.querySelectorAll('.subhab-r').forEach(function(el){
+    const caja = el.closest('.subhab') || el.parentElement.parentElement;
+    const t = caja && caja.querySelector('.subhab-t');
+    const r = t && porNombre[norm(t.textContent)];
+    if(!r){ sinDato.push(t ? t.textContent.trim() : '?'); return; }
+    el.innerHTML = pfRecursosHtml(r);
+    el.classList.add('subhab-r-vivo');
+    puestos++;
+  });
+  if(sinDato.length)
+    console.warn('Pasos cuyo recurso no está en APRENDIZAJE (' + sinDato.length + '): ' +
+                 sinDato.join(' | '));
 })();
 </script>
 </body>

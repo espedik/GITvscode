@@ -1010,6 +1010,74 @@ function impactoDelCambio() {
             ' productos comprobados; 3 apps cargan ficha.css + ficha.js)');
 })();
 
+/* ── 18. Los recursos de las rutas de habilidad ─────────────────────────
+   Hasta el 2026-09-02 el campo `r` de cada paso era una cadena suelta y el bloque
+   "Con qué" pintaba un emoji de libro delante, fuera lo que fuera: un podcast, el
+   portal del SAT o el propio calendario de Adán salían igual, y ninguno llevaba a
+   ninguna parte.
+
+   Ahora cada recurso dice de qué tipo es y cómo se llega:
+     {t:'libro', id:'...'}                    → abre su ficha
+     {t:'web'|'yt'|'podcast'|..., url:'...'}  → se abre en otra pestaña
+     {t:'propio', n:'...'}                    → algo suyo, no hay nada que enlazar
+
+   Lo que se vigila: que ningún libro apunte a un id inexistente, que todo lo que
+   no sea `propio` tenga URL, y que un libro NO vuelva a traer su título escrito —
+   ese sale de BIBLIOTECA y repetirlo aquí es el segundo sitio de siempre. */
+(function recursosDeHabilidad() {
+  if (!global.window || !global.window.CIFRAS) return;
+  const C = global.window.CIFRAS, A = C.APRENDIZAJE, B = C.BIBLIOTECA;
+  if (!A || !B) return;
+  const TIPOS = ['libro', 'yt', 'podcast', 'curso', 'web', 'repo', 'practica', 'empleo', 'propio'];
+  const malos = [];
+  let n = 0, libros = 0, conUrl = 0;
+
+  const mira = function (donde, r) {
+    if (!r) return;
+    if (!Array.isArray(r)) {
+      malos.push('  ' + donde + ': el recurso sigue siendo una cadena, no lleva tipo');
+      return;
+    }
+    r.forEach(function (x) {
+      n++;
+      if (TIPOS.indexOf(x.t) === -1) {
+        malos.push('  ' + donde + ': tipo "' + x.t + '" desconocido (se pintaría como web)');
+        return;
+      }
+      if (x.t === 'libro') {
+        libros++;
+        const l = B.todos.filter(function (y) { return y.id === x.id; })[0];
+        if (!l) malos.push('  ' + donde + ': el libro "' + x.id + '" no está en BIBLIOTECA — ' +
+                           'saldría sin ficha y sin título');
+        else if (x.n) malos.push('  ' + donde + ': el libro "' + x.id + '" trae su título escrito ' +
+                                 'además del id — el título sale de BIBLIOTECA, quítalo de aquí');
+      } else if (x.t === 'propio') {
+        if (!x.n) malos.push('  ' + donde + ': un recurso `propio` sin nombre');
+        if (x.url) malos.push('  ' + donde + ': "' + x.n + '" es `propio` y trae URL — ' +
+                              'si tiene enlace no es suyo, cambia el tipo');
+      } else {
+        if (!x.n) malos.push('  ' + donde + ': un recurso de tipo ' + x.t + ' sin nombre');
+        if (!x.url) malos.push('  ' + donde + ': "' + x.n + '" no tiene URL — dice qué es pero ' +
+                               'no lleva a ninguna parte');
+        else { conUrl++;
+          if (!/^https:\/\//.test(x.url))
+            malos.push('  ' + donde + ': "' + x.n + '" tiene una URL que no es https'); }
+      }
+    });
+  };
+
+  Object.keys(A).forEach(function (h) {
+    (A[h].subs || []).forEach(function (p, i) { mira('aprendizaje.' + h + '.paso' + (i + 1), p.r); });
+    mira('aprendizaje.' + h + '.recursos', A[h].recursos);
+  });
+
+  if (malos.length)
+    problemas.push('Los recursos de las rutas est\u00e1n incompletos:\n' + malos.slice(0, 12).join('\n'));
+  else
+    ok.push('Recursos de las rutas completos (' + n + ' en ' + Object.keys(A).length +
+            ' habilidades: ' + libros + ' libros con ficha y ' + conUrl + ' con enlace)');
+})();
+
 // ── Salida ──
 if (process.argv.indexOf('--hook') !== -1) {
   const partes = [];

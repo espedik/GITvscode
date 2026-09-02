@@ -153,6 +153,38 @@ salen en la línea de tiempo pero no llevan checkbox ni suman al progreso.
 Estaba copiada en `dashboard.html` y `Coach.html`, 17.5 KB en cada uno. Era la estructura más
 grande y más tocada de las duplicadas, y llegó a divergir 6 días.
 
+### Los recursos de las rutas de habilidad
+
+Cada paso de una ruta (`APRENDIZAJE[hab].subs[].r`) y cada habilidad
+(`APRENDIZAJE[hab].recursos`) traen **con qué** hacerlo. Hasta el 2026-09-02 eso era
+una cadena de texto y el bloque «Con qué» pintaba un emoji de libro delante, fuera
+lo que fuera: un podcast, el portal del SAT o el propio calendario de Adán salían
+igual, y ninguno llevaba a ninguna parte.
+
+Ahora cada recurso dice **qué es** y **cómo llegar**:
+
+| Tipo | Qué lleva | Qué hace el botón |
+|---|---|---|
+| `libro` | `id` de BIBLIOTECA | abre su ficha |
+| `yt` `podcast` `curso` `web` `repo` `practica` `empleo` | `n` + `url` | abre en otra pestaña |
+| `propio` | `n` | nada: es algo suyo — su calendario, su cuaderno — y no hay a dónde ir |
+
+Todos llevan `nota`, que es la frase de por qué ESE recurso para ESE paso.
+
+**El título de un libro no se escribe aquí**: se guarda su `id` y el título y el autor
+salen de BIBLIOTECA. Repetirlo es error declarado en el control 18. Por eso los **16
+libros** que las rutas recomendaban y no estaban en la biblioteca se añadieron con su
+ficha, y entraron también en la lista de la compra: 44 libros pasaron a **60**.
+
+Las **33 URLs se comprobaron cargando cada una**. Dos respondieron 403 a la
+comprobación automática — Wayve y Meta bloquean bots — y se verificaron abriéndolas
+en un navegador de verdad.
+
+El pintado es `pfRecursoHtml`, en `ficha.js`, y lo usan el dashboard y Coach. Coach
+tampoco reescribe sus 16 recursos: un script los busca en `APRENDIZAJE` **por el
+nombre del paso** — no por orden, que hoy coincide pero se desplazaría entero si
+alguien añade un paso en medio — y los repinta.
+
 ### La biblioteca
 
 `BIBLIOTECA` — los **44 libros** en 9 grupos. Como el kit de higiene, hasta el
@@ -688,6 +720,8 @@ no repita en la ficha lo que el producto ya trae escrito, y que
 `deTextoCompra(textoCompra(p))` devuelva el mismo producto. Esa última es la que
 importa: si dejan de ser inversas, el botón «Qué es» no encuentra nada y al
 pulsarlo no pasa **nada** — sin error en consola, sin señal de ningún tipo.
+
+El **control 18** vigila los 94 recursos de las rutas: que ningún libro apunte a un id que no existe, que todo lo que no sea `propio` tenga URL https, y que un libro no vuelva a traer su título escrito. Probado rompiéndolo de cuatro formas.
 
 El **control 17** vigila lo que `pfEnlazar` no puede: que los nombres de la guía dental — la única lista escrita a mano que queda — sigan resolviendo a un producto del kit, y que las tres apps carguen `ficha.css`, `ficha.js` y el hueco `pfFondo`. Comprueba la **etiqueta** `<script src=...>`, no la palabra «ficha.js», que también aparece en un comentario y no carga nada.
 

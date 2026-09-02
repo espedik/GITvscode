@@ -189,3 +189,30 @@
   .pf-h1{font-size:20px}
   .pf-cifras{flex-wrap:wrap}
 }
+
+/* ── Un recurso de una ruta de habilidad ─────────────────────────────────
+   Antes esto era una cadena con un emoji de libro delante, fuera lo que fuera.
+   Ahora cada uno dice de qué tipo es y lleva a alguna parte. */
+.pf-recs{display:flex;flex-direction:column;gap:6px}
+.pf-rec{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;
+  padding:7px 9px;border-radius:10px;border:1px solid var(--pf-cardbr);
+  background:rgba(var(--pf-ov),.025)}
+.pf-rec-t{flex:none;font-size:8.5px;font-weight:800;letter-spacing:.09em;
+  text-transform:uppercase;padding:3px 7px;border-radius:6px;
+  color:rgb(var(--c,var(--pf-cyrgb)));border:1px solid rgba(var(--c,var(--pf-cyrgb)),.32);
+  background:rgba(var(--c,var(--pf-cyrgb)),.09);white-space:nowrap}
+.pf-rec-n{flex:1;min-width:0;font-size:11.5px;line-height:1.5;color:var(--pf-txt2)}
+.pf-rec-n b{color:var(--pf-txt);font-weight:700}
+.pf-rec-n em{font-style:normal;color:var(--pf-txt3)}
+.pf-rec-b{flex:none;display:inline-flex;align-items:center;gap:5px;
+  font-size:10px;font-weight:800;letter-spacing:.03em;text-decoration:none;
+  color:var(--pf-cy);background:rgba(var(--pf-cyrgb),.09);
+  border:1px solid rgba(var(--pf-cyrgb),.28);border-radius:7px;
+  padding:4px 9px;cursor:pointer;font-family:inherit;white-space:nowrap}
+.pf-rec-b:hover{background:rgba(var(--pf-cyrgb),.18)}
+.pf-rec-b svg{width:11px;height:11px;stroke:currentColor;fill:none !important;
+  stroke-width:2.2;stroke-linecap:round}
+@media(max-width:560px){
+  .pf-rec{padding:8px 10px}
+  .pf-rec-n{flex-basis:100%}
+}
