@@ -170,3 +170,54 @@ Nuevo bloque `@media(min-width:641px) and (max-width:1100px)`: la barra baja a *
 | Recetas | **1 columna** | **2 columnas de 291 px** |
 
 Los otros tamaños no se movieron: iPhone 390 px sigue con la barra oculta y 1 columna, iPad horizontal y escritorio siguen con la barra de 245 px y 2 y 3 columnas respectivamente. 0 desbordes en los cuatro.
+## Rediseño: 24 recetas nuevas, buscador, y lo marcado va a la compra (2026-09-01)
+
+Adán: *"quiero diferentes recetas y recuerda que los ingredientes debemos
+tenerlos para ponerlos en la lista de compras"*.
+
+### El recetario se muda al maestro
+
+Era el problema de fondo. El recetario vivía aquí y `LISTA_COMPRAS.comida` en
+`datos-maestros.js`, escritos por separado — el comentario de este archivo lo
+admitía: *"si se agrega o quita una receta, hay que replicar el cambio allá a
+mano"*. Medido antes de tocar nada: coincidían (30 ingredientes, 0 diferencias),
+pero de casualidad, y se rompían al primer cambio. Y él iba a cambiar las recetas.
+
+Ahora `RECETARIO` vive en el maestro, cada ingrediente declara su pasillo, y
+`LISTA_COMPRAS.comida` es un getter sobre ellos. **Agregar una receta agrega sus
+ingredientes a la compra sin tocar nada más.** El control 14 del verificador lo
+vigila: recetas completas, ids únicos, y que la lista siga siendo la derivada.
+
+### 24 recetas, de 18
+
+12 desayunos y 12 cenas, respetando lo de siempre: fuera café, picante, cítricos
+en exceso, chocolate, frituras y cebolla/ajo **crudos** (cocidos sí — el ajo
+dorado de los camarones va), y fuera los 12 que no le gustan. Entran cuatro
+ingredientes nuevos: **camarón, salmón, requesón y nuez**, y con ellos platos que
+no tenía — empapelado, milanesa al horno, bowl de frijol y arroz, avena de
+amaranto.
+
+Cada receta lleva el mismo formato de antes (tiempo, macros, ingredientes con
+cantidad, pasos, tip). Los tips siguen siendo suyos: *"deja reposar la pechuga 3
+minutos antes de cortarla"*, *"el camarón se pasa en segundos: si queda en O, ya
+se pasó"*.
+
+### Encontrarlas, y decidir qué cocinar
+
+Con 24 hace falta buscar. La barra filtra por texto —nombre **o ingrediente**, así
+que "pollo" o "nopal" funcionan— y por lo que de verdad decide una cena: **30 g+
+de proteína** y **10 min o menos**.
+
+El ✓ de cada tarjeta marca *"voy a cocinar esta"*, y ahí está la conexión que
+pidió: arriba aparece **Lo que vas a cocinar** con los ingredientes de las
+marcadas **agrupados por pasillo** — el mismo orden en que se recorre el súper. Un
+`×2` significa que ese ingrediente sale en dos de las marcadas. El KPI de la
+cabecera cambia de "24 recetas tuyas" a "3 vas a cocinar" en cuanto marcas una.
+
+Lo marcado se guarda en `elegidas`, dentro del mismo `comida_v1` del registro.
+
+Comprobado: los 4 filtros y el buscador (12 → 3 con "pollo", 7 con 30 g+, 6 con
+10 min), marcar y desmarcar, el panel con 3 recetas → 12 ingredientes en 6
+pasillos, y el estado vacío que explica para qué sirve el ✓. Sin errores de
+consola, contraste limpio en los dos temas y sin desbordes a 390 px — la barra se
+apila y los filtros se deslizan.

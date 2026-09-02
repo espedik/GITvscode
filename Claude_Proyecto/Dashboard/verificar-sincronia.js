@@ -642,6 +642,62 @@ function impactoDelCambio() {
   return L.join('\n');
 }
 
+/* ── 14. El recetario y la lista de compras ────────────────────────────────────
+   RECETARIO es la fuente y LISTA_COMPRAS.comida se deriva de sus ingredientes.
+   Este control comprueba que la derivación sigue viva —que nadie volvió a
+   escribir la lista a mano— y que cada receta está completa: sin pasillo en un
+   ingrediente, ese producto desaparece de la compra sin avisar. */
+(function () {
+  if (!global.window || !global.window.CIFRAS) return;
+  const C = global.window.CIFRAS;
+  const R = C.RECETARIO;
+  if (!R) { problemas.push('RECETARIO no existe en el maestro'); return; }
+  const malos = [];
+
+  // a) toda receta con sus partes
+  R.todas.forEach(function (r) {
+    if (!r.id || !r.nombre) malos.push('     una receta sin id o sin nombre');
+    if (!(r.ingredientes || []).length) malos.push('     ' + r.nombre + ': sin ingredientes');
+    if (!(r.pasos || []).length) malos.push('     ' + r.nombre + ': sin pasos');
+    if (!r.macros || !r.macros.cal) malos.push('     ' + r.nombre + ': sin macros');
+    (r.ingredientes || []).forEach(function (i) {
+      if (!i.n) malos.push('     ' + r.nombre + ': un ingrediente sin nombre');
+      if (!i.p) malos.push('     ' + r.nombre + ' / ' + i.n + ': sin pasillo — no llegaría a la compra');
+      if (!i.c) malos.push('     ' + r.nombre + ' / ' + i.n + ': sin cantidad');
+    });
+  });
+
+  // b) ids únicos
+  const vistos = {};
+  R.todas.forEach(function (r) {
+    if (vistos[r.id]) malos.push('     id repetido: ' + r.id);
+    vistos[r.id] = 1;
+  });
+
+  // c) la lista de compras SIGUE siendo la derivada, no una copia a mano
+  const enLista = {};
+  Object.values(C.LISTA_COMPRAS.comida).forEach(function (arr) {
+    arr.forEach(function (x) { enLista[x] = 1; });
+  });
+  const enRecetas = {};
+  R.todas.forEach(function (r) {
+    (r.ingredientes || []).forEach(function (i) { if (i.n) enRecetas[i.n] = 1; });
+  });
+  Object.keys(enRecetas).forEach(function (x) {
+    if (!enLista[x]) malos.push('     ' + x + ': está en una receta y NO en la lista de compras');
+  });
+  Object.keys(enLista).forEach(function (x) {
+    if (!enRecetas[x]) malos.push('     ' + x + ': está en la lista y en NINGUNA receta');
+  });
+
+  if (malos.length)
+    problemas.push('El recetario y la lista de compras no cuadran:\n' + malos.slice(0, 12).join('\n'));
+  else
+    ok.push('RECETARIO alimenta la lista de compras (' + R.todas.length + ' recetas, ' +
+            Object.keys(enRecetas).length + ' ingredientes en ' +
+            Object.keys(C.LISTA_COMPRAS.comida).length + ' pasillos)');
+})();
+
 // ── Salida ──
 if (process.argv.indexOf('--hook') !== -1) {
   const partes = [];

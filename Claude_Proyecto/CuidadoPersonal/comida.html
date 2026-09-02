@@ -209,6 +209,78 @@ canvas{max-width:100%}
   pre,code{max-width:100%;overflow-x:auto}
   img,video,canvas{max-width:100%;height:auto}
 }
+
+/* ══ Encontrar una receta entre 24 ═════════════════════════════════
+   Con 18 ya costaba y ahora son 24. La barra filtra por texto (nombre o
+   ingrediente) y por lo que de verdad decide la cena: cuanta proteina trae y
+   cuanto tarda. */
+.rc-barra{display:flex;gap:9px;align-items:center;flex-wrap:wrap;margin-bottom:16px}
+.rc-buscar{flex:1;min-width:190px;position:relative}
+.rc-buscar input{width:100%;padding:10px 13px 10px 34px;border-radius:11px;
+  border:1px solid var(--border);background:var(--surface-3);color:var(--text);
+  font-size:12.5px;font-family:inherit;
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+.rc-buscar input:focus{outline:none;border-color:var(--w);box-shadow:0 0 0 3px rgba(255,217,61,.14)}
+.rc-buscar svg{position:absolute;left:11px;top:50%;transform:translateY(-50%);width:15px;height:15px;
+  stroke:var(--text3);fill:none;stroke-width:1.8;stroke-linecap:round;pointer-events:none}
+.rc-f{display:flex;gap:5px;flex-wrap:wrap}
+.rc-b{padding:8px 13px;border-radius:10px;font-size:11.5px;font-weight:700;
+  border:1px solid var(--border);background:var(--surface-3);color:var(--text2);
+  cursor:pointer;font-family:inherit;white-space:nowrap}
+.rc-b:hover{background:var(--surface);color:var(--text)}
+.rc-b.on{background:rgba(255,217,61,.15);border-color:rgba(255,217,61,.4);color:var(--w)}
+.rc-n{margin-left:auto;font-size:11px;color:var(--text3);font-weight:700;white-space:nowrap}
+/* A 390 px el buscador y los cuatro filtros no caben en una fila: el buscador
+   ocupa la suya y los filtros se deslizan debajo. */
+@media(max-width:620px){
+  .rc-buscar{flex:1 0 100%;min-width:0}
+  .rc-f{width:100%;overflow-x:auto;flex-wrap:nowrap;scrollbar-width:none}
+  .rc-f::-webkit-scrollbar{display:none}
+  .rc-b{flex:none}
+  .rc-n{margin-left:0}
+}
+
+/* La receta marcada para cocinar esta semana. Sus ingredientes son los que
+   importan en la compra, y por eso la tarjeta lo dice en su borde. */
+.receta-card{position:relative;transition:border-color .15s,transform .12s}
+.receta-card.elegida{border-color:rgba(255,217,61,.5);
+  box-shadow:0 0 0 1px rgba(255,217,61,.22),0 10px 30px rgba(255,217,61,.10)}
+.rc-marca{position:absolute;top:12px;right:12px;width:30px;height:30px;border-radius:9px;
+  border:1px solid var(--border);background:var(--surface-3);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;z-index:2}
+.rc-marca svg{width:15px;height:15px;stroke:var(--text3);fill:none;stroke-width:2;
+  stroke-linecap:round;stroke-linejoin:round}
+.rc-marca:hover{border-color:var(--w)}
+.rc-marca:hover svg{stroke:var(--w)}
+.receta-card.elegida .rc-marca{background:var(--w);border-color:var(--w)}
+.receta-card.elegida .rc-marca svg{stroke:#1a1400}
+.receta-card h3{padding-right:38px}
+.rc-vacio{padding:26px;text-align:center;font-size:12.5px;color:var(--text3);
+  border-radius:16px;border:1px dashed var(--border);background:var(--surface-3)}
+
+/* ══ Lo que vas a cocinar → lo que hay que comprar ═════════════════════
+   Marcar recetas sirve para esto: el panel junta sus ingredientes por pasillo,
+   que es el orden en que se recorre el super. */
+.cw{border-radius:17px;border:1px solid rgba(255,217,61,.3);padding:15px 17px;margin-bottom:16px;
+  background:linear-gradient(160deg,rgba(255,217,61,.1),rgba(var(--ov),.02) 58%);
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  box-shadow:0 1px 0 rgba(var(--ov),.07) inset}
+.cw-h{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.cw-t{font-size:10px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--w);
+  display:flex;align-items:center;gap:8px}
+.cw-t .b{width:3px;height:12px;border-radius:2px;background:var(--w);flex:none}
+.cw-x{font-size:11px;color:var(--text3);font-weight:700}
+.cw-x a{color:var(--w);font-weight:800;text-decoration:none}
+.cw-x a:hover{text-decoration:underline}
+.cw-g{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:11px}
+.cw-p{min-width:0}
+.cw-pn{font-size:9px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--text3);margin-bottom:6px}
+.cw-l{font-size:11.5px;color:var(--text2);line-height:1.7}
+.cw-l b{color:var(--text);font-weight:600}
+.cw-n{font-size:10.5px;color:var(--text3);line-height:1.5;margin-top:12px;padding-top:11px;
+  border-top:1px solid rgba(var(--ov),.07)}
+.cw-n b{color:var(--text2)}
 </style>
 <!-- El material comun de las 8 areas: velos de blanco con desenfoque.
      Va despues del <style> para ganar por orden. Ver vidrio.css. -->
@@ -273,11 +345,40 @@ canvas{max-width:100%}
 
     <!-- DESAYUNOS -->
     <section id="s-desayunos" class="section active">
+      <div id="rc-compra"></div>
+      <div class="rc-barra" data-tipo="desayuno">
+        <div class="rc-buscar">
+          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.5-3.5"></path></svg>
+          <input type="text" placeholder="Busca por nombre o ingrediente… (pollo, papa, huevo)"
+                 oninput="rcFiltra('desayuno')" id="rc-q-desayuno">
+        </div>
+        <div class="rc-f">
+          <button class="rc-b on" data-f="todo" onclick="rcSet('desayuno','todo')">Todas</button>
+          <button class="rc-b" data-f="prot" onclick="rcSet('desayuno','prot')">30 g+ de proteína</button>
+          <button class="rc-b" data-f="rapido" onclick="rcSet('desayuno','rapido')">10 min o menos</button>
+          <button class="rc-b" data-f="elegidas" onclick="rcSet('desayuno','elegidas')">Las que voy a cocinar</button>
+        </div>
+        <div class="rc-n" id="rc-n-desayuno"></div>
+      </div>
       <div class="recetas-grid" id="grid-desayunos"></div>
     </section>
 
     <!-- CENAS -->
     <section id="s-cenas" class="section">
+      <div class="rc-barra" data-tipo="cena">
+        <div class="rc-buscar">
+          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.5-3.5"></path></svg>
+          <input type="text" placeholder="Busca por nombre o ingrediente… (pollo, papa, huevo)"
+                 oninput="rcFiltra('cena')" id="rc-q-cena">
+        </div>
+        <div class="rc-f">
+          <button class="rc-b on" data-f="todo" onclick="rcSet('cena','todo')">Todas</button>
+          <button class="rc-b" data-f="prot" onclick="rcSet('cena','prot')">30 g+ de proteína</button>
+          <button class="rc-b" data-f="rapido" onclick="rcSet('cena','rapido')">10 min o menos</button>
+          <button class="rc-b" data-f="elegidas" onclick="rcSet('cena','elegidas')">Las que voy a cocinar</button>
+        </div>
+        <div class="rc-n" id="rc-n-cena"></div>
+      </div>
       <div class="recetas-grid" id="grid-cenas"></div>
     </section>
 
@@ -458,102 +559,10 @@ const ORDEN_CAT = ['🥚 Proteínas','🥛 Lácteos','🌾 Granos y carbohidrato
 // (ver su propio comentario ahí) — se replicaron los mismos 10 recortes + el cambio de d6 ahí
 // también, y se limpiaron los mismos 8 ingredientes huérfanos de `LISTA_COMPRAS.comida` (ver
 // readme_dashboard.md → "Recetario recortado..." para el detalle completo de esa sincronización).
-const RECETAS = {
-  desayuno: [
-    {id:'d1', nombre:'Molletes de frijol con queso panela', tiempo:'15 min',
-     ingredientes:[{n:'Pan integral',c:'2 rebanadas'},{n:'Frijoles negros',c:'1/2 taza'},{n:'Queso panela',c:'40 g'},{n:'Jitomate',c:'1/2 pza, picado'}],
-     pasos:['Unta los frijoles sobre el pan.','Cubre con el queso panela rallado o en láminas.','Gratina en sartén tapado 5 min hasta que el queso se derrita.','Sirve con el jitomate picado encima.'],
-     macros:{cal:420,prot:24,carbs:45,gra:14},
-     tip:'Frijoles enteros, no refritos con manteca — más ligeros antes de manejar a ALTEN.'},
-    {id:'d2', nombre:'Tacos de huevo con jamón de pavo y queso panela', tiempo:'10 min',
-     ingredientes:[{n:'Huevo',c:'3 pza'},{n:'Jamón de pavo',c:'60 g (2-3 rebanadas)'},{n:'Queso panela',c:'30 g'},{n:'Tortilla de maíz',c:'3 pza'}],
-     pasos:['Pica el jamón de pavo y sofríelo 1 minuto.','Agrega los huevos batidos y revuelve a fuego bajo.','En los últimos segundos agrega el queso en cubos para que se suavice.','Sirve en las tortillas calientes.'],
-     macros:{cal:440,prot:32,carbs:28,gra:22},
-     tip:'El jamón de pavo ya trae algo de sal — no le agregues más.'},
-    {id:'d3', nombre:'Yogurt griego con granola de amaranto, miel y pera', tiempo:'5 min',
-     ingredientes:[{n:'Yogurt griego natural',c:'200 g'},{n:'Granola de amaranto',c:'30 g'},{n:'Miel de abeja',c:'1 cda'},{n:'Pera',c:'1 pza'}],
-     pasos:['Sirve el yogurt en un tazón.','Agrega la granola de amaranto encima para que quede crujiente.','Corona con la pera picada y la miel.'],
-     macros:{cal:400,prot:22,carbs:55,gra:8},
-     tip:'El amaranto es un cereal mexicano de bajo índice glucémico, con más proteína que la avena.'},
-    {id:'d4', nombre:'Licuado de plátano, yogurt griego y miel', tiempo:'5 min',
-     ingredientes:[{n:'Plátano',c:'1 pza'},{n:'Yogurt griego natural',c:'150 g'},{n:'Miel de abeja',c:'1 cda'},{n:'Leche entera',c:'200 ml'}],
-     pasos:['Licúa todos los ingredientes 1 minuto hasta que quede cremoso.','Sirve frío.'],
-     macros:{cal:380,prot:20,carbs:55,gra:8},
-     tip:'Para llevar en tu traslado a ALTEN — la proteína del yogurt te rinde más que un licuado solo de fruta.'},
-    {id:'d6', nombre:'Omelette de claras con pimiento morrón y queso panela', tiempo:'12 min',
-     ingredientes:[{n:'Clara de huevo',c:'6 pza'},{n:'Pimiento morrón',c:'1/2 pza, sin semillas'},{n:'Queso panela',c:'30 g'},{n:'Aceite de oliva',c:'1 cdta'}],
-     pasos:['Sofríe el pimiento morrón en el aceite 3 min hasta que se suavice.','Agrega las claras batidas y cocina a fuego bajo.','Añade el queso en cubos y dobla el omelette a la mitad.'],
-     macros:{cal:340,prot:34,carbs:8,gra:16},
-     tip:'El pimiento morrón es dulce y no pica — buena opción de vegetal en la mañana sin arriesgar el reflujo.'},
-    {id:'d7', nombre:'Burrito de huevo, frijoles y queso panela', tiempo:'12 min',
-     ingredientes:[{n:'Huevo',c:'3 pza'},{n:'Frijoles negros',c:'1/2 taza'},{n:'Queso panela',c:'30 g'},{n:'Tortilla de maíz',c:'2 pza grandes'}],
-     pasos:['Cocina el huevo revuelto.','Calienta los frijoles.','Arma el burrito con huevo, frijoles y queso panela en la tortilla, enróllalo bien.'],
-     macros:{cal:460,prot:30,carbs:40,gra:20},
-     tip:'Envuélvelo en papel aluminio si te lo llevas de camino a ALTEN — se mantiene caliente más tiempo.'},
-    {id:'d9', nombre:'Papaya con yogurt griego, granola de amaranto y miel', tiempo:'5 min',
-     ingredientes:[{n:'Papaya',c:'1 taza, en cubos'},{n:'Yogurt griego natural',c:'150 g'},{n:'Granola de amaranto',c:'25 g'},{n:'Miel de abeja',c:'1 cdta'}],
-     pasos:['Sirve la papaya en un tazón.','Agrega el yogurt encima.','Corona con la granola y la miel.'],
-     macros:{cal:320,prot:16,carbs:48,gra:6},
-     tip:'La papaya ayuda a la digestión de forma natural — buena opción si sientes el estómago pesado esa mañana.'},
-    {id:'d10', nombre:'Quesadillas de claras con queso panela y nopales', tiempo:'12 min',
-     ingredientes:[{n:'Tortilla de maíz',c:'2 pza'},{n:'Clara de huevo',c:'4 pza'},{n:'Queso panela',c:'40 g'},{n:'Nopales cocidos',c:'1/2 taza'}],
-     pasos:['Cocina las claras revueltas en un sartén.','Rellena las tortillas con las claras, el queso y los nopales.','Dobla y calienta en comal hasta que el queso gratine.'],
-     macros:{cal:380,prot:30,carbs:30,gra:14},
-     tip:'Los nopales cocidos son alcalinos — buenos para el estómago, a diferencia de los crudos en salsa.'},
-    {id:'d12', nombre:'Huevos a la mexicana suaves con tortilla', tiempo:'10 min',
-     ingredientes:[{n:'Huevo',c:'3 pza'},{n:'Jitomate',c:'1/2 pza, picado, sin semillas'},{n:'Cebolla',c:'poca, cocida'},{n:'Tortilla de maíz',c:'2 pza'}],
-     pasos:['Sofríe la cebolla y el jitomate 2 min a fuego bajo.','Agrega los huevos batidos y revuelve hasta que cuajen.','Sirve con las tortillas calientes.'],
-     macros:{cal:380,prot:24,carbs:26,gra:18},
-     tip:'Sin chile y con el jitomate sin semillas — la versión clásica suele ser más ácida de lo que te conviene.'},
-    {id:'d14', nombre:'Sándwich de pan integral con huevo, jitomate y queso panela', tiempo:'10 min',
-     ingredientes:[{n:'Pan integral',c:'2 rebanadas'},{n:'Huevo',c:'2 pza'},{n:'Jitomate',c:'1/2 pza, rebanado'},{n:'Queso panela',c:'30 g'}],
-     pasos:['Cuece o fríe los huevos como más te gusten.','Arma el sándwich con el huevo, el jitomate y el queso panela entre el pan.'],
-     macros:{cal:420,prot:26,carbs:32,gra:20},
-     tip:'Tuesta ligeramente el pan para que no se humedezca con el jitomate.'},
-  ],
-  cena: [
-    {id:'c2', nombre:'Pechuga de pollo con arroz y champiñones salteados', tiempo:'20 min',
-     ingredientes:[{n:'Pechuga de pollo',c:'150 g'},{n:'Arroz blanco cocido',c:'1 taza'},{n:'Champiñones',c:'1 taza'},{n:'Aceite de oliva',c:'1 cdta'}],
-     pasos:['Sazona el pollo con poca sal y cocínalo a la plancha 5-6 min por lado.','Saltea los champiñones en el aceite 4 min.','Sirve todo junto con el arroz.'],
-     macros:{cal:480,prot:48,carbs:50,gra:8},
-     tip:'Cena base de la semana — fácil de repetir y de escalar en porción si entrenaste ese día.'},
-    {id:'c4', nombre:'Atún con arroz y ensalada de pepino', tiempo:'10 min',
-     ingredientes:[{n:'Atún en agua',c:'1 lata'},{n:'Arroz blanco cocido',c:'1 taza'},{n:'Pepino',c:'1 taza'},{n:'Aceite de oliva',c:'1 cdta'}],
-     pasos:['Escurre el atún y mézclalo con el arroz.','Sirve con el pepino en rebanadas y un toque de aceite de oliva.'],
-     macros:{cal:400,prot:34,carbs:48,gra:6},
-     tip:'La cena más rápida de armar — para los días de bloque profundo o poco tiempo.'},
-    {id:'c5', nombre:'Filete de res magro con puré de papa y chayote', tiempo:'25 min',
-     ingredientes:[{n:'Filete de res magro',c:'150 g'},{n:'Papa',c:'2 pza'},{n:'Chayote',c:'1 taza'},{n:'Leche entera',c:'50 ml'}],
-     pasos:['Cocina el filete a la plancha 4-5 min por lado.','Cuece y machaca la papa con la leche.','Cuece el chayote al vapor 10 min.','Sirve todo junto.'],
-     macros:{cal:490,prot:42,carbs:42,gra:14},
-     tip:'Elige corte magro (bola o aguayón) — menos grasa saturada que un corte marmoleado.'},
-    {id:'c6', nombre:'Tacos de pollo deshebrado con nopales', tiempo:'20 min',
-     ingredientes:[{n:'Pechuga de pollo',c:'150 g'},{n:'Tortilla de maíz',c:'4 pza'},{n:'Nopales cocidos',c:'1 taza'},{n:'Cebolla',c:'poca, cocida'}],
-     pasos:['Cuece el pollo y deshébralo.','Calienta las tortillas en comal.','Arma los tacos con el pollo y los nopales.'],
-     macros:{cal:420,prot:42,carbs:40,gra:8},
-     tip:'Cebolla siempre cocida, nunca cruda — y sin salsa picante en la noche.'},
-    {id:'c7', nombre:'Omelette de claras con champiñones y pimiento (cena ligera)', tiempo:'10 min',
-     ingredientes:[{n:'Clara de huevo',c:'6 pza'},{n:'Champiñones',c:'1/2 taza'},{n:'Pimiento morrón',c:'1/2 pza, sin semillas'},{n:'Aceite de oliva',c:'1 cdta'}],
-     pasos:['Sofríe los champiñones y el pimiento 3 minutos.','Agrega las claras y cocina a fuego bajo hasta que cuajen.'],
-     macros:{cal:210,prot:25,carbs:8,gra:7},
-     tip:'La cena más ligera de todas — el pimiento morrón es más dulce y menos ácido que el poblano.'},
-    {id:'c9', nombre:'Filete de pescado al horno con papa y pimiento', tiempo:'30 min',
-     ingredientes:[{n:'Filete de tilapia',c:'150 g'},{n:'Papa',c:'1 pza mediana'},{n:'Pimiento morrón',c:'1/2 pza'},{n:'Aceite de oliva',c:'1 cdta'}],
-     pasos:['Hornea la papa en rebanadas 25 min a 200°C.','Agrega el pescado y el pimiento en rebanadas, hornea 15 min más con el aceite.'],
-     macros:{cal:340,prot:32,carbs:30,gra:6},
-     tip:'El pimiento morrón asado se vuelve dulce y suave — mejor tolerado que crudo.'},
-    {id:'c11', nombre:'Tostadas de atún con lechuga, jitomate y aguacate', tiempo:'10 min',
-     ingredientes:[{n:'Atún en agua',c:'1 lata'},{n:'Tortilla de maíz',c:'3 pza, tostadas'},{n:'Lechuga',c:'1 taza'},{n:'Jitomate',c:'1/2 pza'},{n:'Aguacate',c:'1/4 pza'}],
-     pasos:['Escurre el atún.','Arma las tostadas con la lechuga, el atún, el jitomate y el aguacate encima.'],
-     macros:{cal:380,prot:32,carbs:34,gra:12},
-     tip:'La cena más rápida de armar — para los días de poco tiempo entre semana.'},
-    {id:'c12', nombre:'Pechuga rellena de queso panela con papas al horno', tiempo:'30 min',
-     ingredientes:[{n:'Pechuga de pollo',c:'180 g'},{n:'Queso panela',c:'40 g'},{n:'Papa',c:'2 pza'},{n:'Aceite de oliva',c:'1 cdta'}],
-     pasos:['Abre la pechuga en mariposa, rellénala con el queso panela y ciérrala con palillos.','Cocina a la plancha 5-6 min por lado.','Hornea las papas en rebanadas con el aceite 25 min a 200°C.'],
-     macros:{cal:510,prot:52,carbs:38,gra:16},
-     tip:'Buena opción para los días de Piernas — carbohidrato extra de las papas.'},
-  ]
-};
+// El recetario vive en datos-maestros.js, junto a la lista de compras que se
+// deriva de sus ingredientes. Antes estaba aquí y había que replicar a mano cada
+// cambio en LISTA_COMPRAS.comida — el comentario de más abajo lo admitía.
+const RECETAS = (window.CIFRAS && CIFRAS.RECETARIO) || {desayuno:[], cena:[]};
 
 // ─── Estado — lista del súper + plan semanal (localStorage) ────────────────
 const KEY='comida_v1';
@@ -616,8 +625,126 @@ function nav(s){
 }
 
 // ─── Render de recetas ──────────────────────────────────────────────────────
+
+// ══ Buscar, filtrar y elegir ═════════════════════════════════════
+// Con 24 recetas hace falta encontrarlas. Y marcar las de la semana sirve para
+// algo concreto: sus ingredientes son los que hay que comprar. Se guardan en
+// `elegidas` dentro del mismo comida_v1 que ya usa el registro.
+let rcFiltro = {desayuno:'todo', cena:'todo'};
+
+function rcElegidas(){
+  try{ return (S.elegidas)||[]; }catch(e){ return []; }
+}
+function rcEsElegida(id){ return rcElegidas().indexOf(id) !== -1; }
+function rcToggle(id){
+  if(!S.elegidas) S.elegidas = [];
+  const i = S.elegidas.indexOf(id);
+  if(i === -1) S.elegidas.push(id); else S.elegidas.splice(i, 1);
+  save();
+  renderRecetas();
+  rcPintaCompra();
+  if(typeof cpCabComida === 'function') cpCabComida();
+}
+
+
+// Los ingredientes de las recetas marcadas, agrupados por pasillo — el mismo
+// orden en que estan en la lista del Dashboard, que es el del super. Cada
+// ingrediente declara su pasillo en el maestro: aqui solo se juntan.
+function rcCompraHtml(){
+  const ids = rcElegidas();
+  if(!ids.length) return '';
+  const todas = (RECETAS.desayuno||[]).concat(RECETAS.cena||[]);
+  const elegidas = todas.filter(r => ids.indexOf(r.id) !== -1);
+  if(!elegidas.length) return '';
+
+  // pasillo -> ingrediente -> en cuantas recetas sale
+  const m = {};
+  elegidas.forEach(function(r){
+    r.ingredientes.forEach(function(i){
+      const p = i.p || 'Otros';
+      (m[p] = m[p] || {});
+      m[p][i.n] = (m[p][i.n] || 0) + 1;
+    });
+  });
+  const orden = ['Verduras','Frutas','Almidones y grasas','Carnes y Pescados',
+                 'L\u00e1cteos y Huevo','Abarrotes y Despensa','Panader\u00eda y Tortillas'];
+  const pasillos = orden.filter(p => m[p]).concat(Object.keys(m).filter(p => orden.indexOf(p) === -1));
+  let nIng = 0;
+  const cols = pasillos.map(function(p){
+    const items = Object.keys(m[p]).sort();
+    nIng += items.length;
+    return '<div class="cw-p"><div class="cw-pn">'+p+'</div><div class="cw-l">'+
+      items.map(function(n){
+        const veces = m[p][n];
+        return '<b>'+n+'</b>'+(veces>1?' <span style="opacity:.6">\u00d7'+veces+'</span>':'');
+      }).join('<br>')+'</div></div>';
+  }).join('');
+
+  return '<div class="cw"><div class="cw-h">'+
+    '<div class="cw-t"><span class="b"></span>Lo que vas a cocinar</div>'+
+    '<div class="cw-x">'+elegidas.length+' receta'+(elegidas.length===1?'':'s')+' \u00b7 '+
+      nIng+' ingredientes \u00b7 '+
+      '<a href="../Dashboard/dashboard.html">abrir la lista del s\u00faper \u2197</a></div></div>'+
+    '<div class="cw-g">'+cols+'</div>'+
+    '<div class="cw-n">Un <b>\u00d72</b> quiere decir que ese ingrediente sale en dos de las recetas que marcaste: '+
+    'compra para las dos. La lista completa del s\u00faper vive en el Dashboard y sale de estas mismas recetas.</div></div>';
+}
+
+function rcPintaCompra(){
+  const el = document.getElementById('rc-compra');
+  if(el) el.innerHTML = rcCompraHtml();
+}
+
+function rcSet(tipo, f){
+  rcFiltro[tipo] = f;
+  document.querySelectorAll('.rc-barra[data-tipo="'+tipo+'"] .rc-b')
+    .forEach(b => b.classList.toggle('on', b.dataset.f === f));
+  rcFiltra(tipo);
+}
+
+// Un filtro no esconde: reordena lo que se ve. Si nada casa, se dice por que.
+function rcFiltra(tipo){
+  const q = ((document.getElementById('rc-q-'+tipo)||{}).value||'').toLowerCase().trim();
+  const f = rcFiltro[tipo] || 'todo';
+  const grid = document.getElementById(tipo === 'desayuno' ? 'grid-desayunos' : 'grid-cenas');
+  if(!grid) return;
+  let n = 0;
+  [...grid.children].forEach(function(card){
+    const r = (RECETAS[tipo]||[]).find(x => x.id === card.dataset.id);
+    if(!r) return;
+    const texto = (r.nombre + ' ' + r.ingredientes.map(i => i.n).join(' ')).toLowerCase();
+    const min = parseInt(r.tiempo, 10) || 99;
+    let ok = (!q || texto.indexOf(q) !== -1);
+    if(ok && f === 'prot')     ok = r.macros.prot >= 30;
+    if(ok && f === 'rapido')   ok = min <= 10;
+    if(ok && f === 'elegidas') ok = rcEsElegida(r.id);
+    card.style.display = ok ? '' : 'none';
+    if(ok) n++;
+  });
+  const et = document.getElementById('rc-n-'+tipo);
+  if(et) et.textContent = n + ' de ' + (RECETAS[tipo]||[]).length;
+  let vac = grid.querySelector('.rc-vacio');
+  if(!n){
+    if(!vac){
+      vac = document.createElement('div');
+      vac.className = 'rc-vacio';
+      vac.style.gridColumn = '1 / -1';
+      grid.appendChild(vac);
+    }
+    vac.textContent = f === 'elegidas'
+      ? 'Todav\u00eda no has marcado ninguna. Toca el \u2713 de una receta y sus ingredientes entran en tu lista de compras.'
+      : 'Ninguna receta con eso. Prueba con un ingrediente: pollo, papa, huevo, nopal\u2026';
+    vac.style.display = '';
+  } else if(vac) vac.style.display = 'none';
+}
+
 function recetaCard(r,tipo){
-  return `<div class="receta-card t-${tipo}">
+  const el = rcEsElegida(r.id);
+  return `<div class="receta-card t-${tipo}${el?' elegida':''}" data-id="${r.id}">
+    <button class="rc-marca" onclick="rcToggle('${r.id}')"
+      title="${el?'Quitar de lo que vas a cocinar':'Voy a cocinar esta \u2014 sus ingredientes van a la compra'}"
+      aria-label="Marcar para cocinar">
+      <svg viewBox="0 0 24 24"><path d="M4 12.5l5.5 5.5L20 7"></path></svg></button>
     <h3>${r.nombre}</h3>
     <div class="receta-meta"><span>⏱️ ${r.tiempo}</span><span>🍽️ 1 porción</span></div>
     <div class="macro-row">
@@ -637,10 +764,13 @@ function recetaCard(r,tipo){
   </div>`;
 }
 function renderRecetas(){
+  // se repinta y se vuelve a aplicar el filtro que estuviera puesto
   document.getElementById('grid-desayunos').innerHTML=RECETAS.desayuno.map(r=>recetaCard(r,'desayuno')).join('');
   document.getElementById('grid-cenas').innerHTML=RECETAS.cena.map(r=>recetaCard(r,'cena')).join('');
   document.getElementById('cnt-desayunos').textContent=RECETAS.desayuno.length;
   document.getElementById('cnt-cenas').textContent=RECETAS.cena.length;
+  rcFiltra("desayuno"); rcFiltra("cena");
+  rcPintaCompra();
 }
 
 // ─── Registrar una receta directo en el Registro Diario (misalud_v1.alimentos,
@@ -966,10 +1096,9 @@ function savePickReceta(){
 // `comida_v1` — o sea que marcar un producto aquí no se veía allá y viceversa. La del Dashboard
 // es la que se queda porque hace más: precio por producto (real de ticket vs. estimado), forma de
 // venta (peso/pieza/paquete), total de lo marcado y botón para vaciar.
-// La lista se sigue derivando de los mismos ingredientes de RECETAS (aquí abajo), solo que ahora
-// esa derivación vive en el Dashboard → LISTA_COMPRAS.comida. Si se agrega o quita una receta en
-// este archivo, hay que replicar el cambio allá a mano — mismo criterio que el resto de datos
-// duplicados del ecosistema (ver readme_dashboard.md).
+// La lista se deriva de los ingredientes del recetario, y desde el 2026-09-01 esa derivación es
+// automática: RECETARIO vive en datos-maestros.js y LISTA_COMPRAS.comida es un getter sobre sus
+// ingredientes. Agregar una receta agrega sus ingredientes a la compra sin tocar nada más.
 
 // ─── Init ────────────────────────────────────────────────────────────────────
 // La cabecera del area. Los numeros son los mismos que ya usa la pantalla:
@@ -986,7 +1115,9 @@ function cpCabComida(){
     kpis:[
       {v:(M.proteinaMeta||186)+' g', k:'Meta de prote\u00edna'},
       {v:'3,115 kcal', k:'Meta del d\u00eda'},
-      {v:String(nDes+nCen), k:'Recetas tuyas'},
+      (typeof rcElegidas==='function'&&rcElegidas().length
+        ? {v:String(rcElegidas().length), k:'Vas a cocinar'}
+        : {v:String(nDes+nCen), k:'Recetas tuyas'}),
     ],
   });
 }

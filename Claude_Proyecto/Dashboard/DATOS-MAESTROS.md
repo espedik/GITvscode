@@ -458,3 +458,31 @@ No todo era una copia que se pudiera mover, y conviene saber por qué siguen nec
 - **`LISTA_COMPRAS`** se armó cruzando `RECETAS` de comida.html, `SKIN_DB`/`HAIR_DB` de
   cuidadopersonal.html y `SUPP_CATALOG` de salud.html: tres estructuras distintas, así que no se
   puede derivar en vivo. Vive aquí para tener un solo sitio donde editarlo.
+
+### El recetario
+
+`RECETARIO` — las **24 recetas** (12 desayunos, 12 cenas) con sus ingredientes,
+pasos, macros y el tip de cada una. Cada ingrediente declara `{n, c, p}`: nombre,
+cantidad y **pasillo del súper**.
+
+```js
+CIFRAS.RECETARIO.desayuno            // 12
+CIFRAS.RECETARIO.todas               // 24
+CIFRAS.RECETARIO.porPasillo          // {Verduras:[…], Frutas:[…], …}
+CIFRAS.LISTA_COMPRAS.comida          // === porPasillo
+```
+
+**`LISTA_COMPRAS.comida` se deriva de aquí.** Hasta el 2026-09-01 el recetario
+vivía en `comida.html` y la lista estaba escrita a mano en este archivo; el
+comentario de ese HTML lo admitía: *"si se agrega o quita una receta, hay que
+replicar el cambio allá a mano"*. Coincidían de casualidad (30 ingredientes, 0
+diferencias medidas) y se rompían al primer cambio. Ahora agregar una receta
+agrega sus ingredientes a la compra sin tocar nada más.
+
+Lo que no entra en una receta: café, picante, cítricos en exceso, chocolate,
+frituras y cebolla/ajo **crudos** (le disparan el reflujo; cocidos sí van), y los
+12 que no le gustan — calabaza, ejotes, hierbas de olor, brócoli, camote,
+espinaca, zanahoria, pavo molido, leche de avena, crema de cacahuate, caldo de
+pollo y avena en hojuelas. El **control 14** del verificador comprueba que cada
+receta esté completa (ingredientes con pasillo y cantidad, pasos, macros, ids
+únicos) y que la lista siga siendo la derivada y no una copia.
