@@ -899,3 +899,35 @@ modal.
 
 Comprobado a 1400 px saltando por 6 pantallas seguidas: el rail sigue abierto en
 todas; el tirador lo cierra; abierto sobrevive a la recarga y cerrado también.
+
+## El tema sube junto al ojo (2026-09-02)
+
+Adán: *"la parte de modo oscuro o modo claro, la quiero al lado del ojo de
+arriba, pero con diseño similar para que sea parecido"*.
+
+Estaba abajo, en la fila de controles del rail (☰ ⛶ ⚙ ? 🌙), donde hay que abrir
+el rail para llegar. Ahora vive en la barra de accesos, **a 5 px del ojo**, con la
+misma píldora `qa-pill` de 35 px, el mismo trazo de 24 px y el mismo color de
+icono — comprobado: `rgb(133,137,168)` en oscuro y `rgb(99,102,124)` en claro, el
+mismo valor en los dos botones.
+
+- El icono **enseña a dónde vas, no dónde estás**: sol en tema oscuro, luna en
+  claro. `luna` y `sol` entran en `QA_ICO`, junto a `ojo` y `ojoOff`.
+- El ojo dejó de posicionarse solo: los dos comparten el carril `.qa-acciones`,
+  y así se leen como un par.
+- **Ninguno de los dos se pliega.** Antes `.qa-collapsed` escondía el ojo, y como
+  el tema salió del rail se habría quedado inalcanzable en móvil. Los dos son
+  controles que se usan sin entrar a ninguna pantalla, así que se quedan visibles
+  sobre el botón de desplegar.
+
+Dos fallos que salieron al mover:
+
+- `toggleTheme()` hacía `btn.textContent = '☀️'` sobre un botón cuyo contenido es
+  un `<svg>`: **le borraba el icono** y dejaba un emoji suelto. Ahora repinta la
+  barra entera, que es quien dibuja el icono correcto.
+- La regla móvil `.priv-btn{position:static;order:-1}` sacaba del carril **sólo al
+  ojo**; con el tema al lado, los superponía 75 px. Se aplica al par.
+
+Comprobado a 1400, 820 y 390 px, plegada y desplegada, en los dos temas: 5 px de
+separación, misma altura y mismo alto que el ojo, sin solapes ni desbordes, y el
+tema cambia de verdad.

@@ -93,8 +93,15 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 .qa-stat{font-family:var(--mono);font-size:9px;color:var(--g);font-weight:700;white-space:nowrap}
 /* Es una .qa-pill más: mismo trazo, mismo hover, mismo tamaño de icono. Solo cambia que
    va anclada al borde y que no lleva texto — lo que hace lo dice su `title`. */
-.priv-btn{position:absolute;right:16px;top:50%;transform:translateY(-50%);
-  padding:5px 8px;border:1px solid transparent;cursor:pointer;font-family:inherit}
+/* El ojo y el tema van juntos a la derecha de la barra. Antes el ojo era el
+   único y se colocaba solo con `position:absolute`; ahora los dos comparten
+   este carril para que se lean como un par. */
+.qa-acciones{position:absolute;right:16px;top:50%;transform:translateY(-50%);
+  display:flex;align-items:center;gap:5px}
+.priv-btn,.tema-btn{padding:5px 8px;border:1px solid transparent;cursor:pointer;
+  font-family:inherit}
+.tema-btn .qa-ico{color:var(--text3)}
+.tema-btn:hover .qa-ico{color:var(--text2)}
 .priv-btn .qa-ico{color:var(--text3)}
 .priv-btn:hover .qa-ico{color:var(--text2)}
 .priv-btn.on{background:rgba(var(--r-rgb),.1);border-color:rgba(var(--r-rgb),.28)}
@@ -2358,7 +2365,9 @@ button.hp-lec:active{transform:translateY(0)}
      píldoras centrado ya no deja ese hueco libre y se le monta encima
      (visto en iPad, 820px). Se vuelve un elemento normal del flex, primero
      por `order`, así sigue siendo lo primero que se ve sin pisar nada. */
-  .priv-btn{position:static;transform:none;order:-1;margin:0 0 2px}
+  /* En móvil desplegado el par sale del carril absoluto. Antes esta regla era
+     sólo del ojo; con el tema al lado, aplicarla a uno solo los superponía 75 px. */
+  .qa-acciones{position:static;transform:none;order:-1;margin:0 0 2px}
   /* Las 2 barras verticales (nav izquierda + controles derecha, ver "Navegación rápida" en
      el README) son un layout de escritorio — en táctil/angosto no caben pegadas a los bordes
      laterales sin robarle ancho al contenido, así que ambas bajan al centro-abajo, apiladas
@@ -2406,7 +2415,12 @@ button.hp-lec:active{transform:translateY(0)}
      superior debe abarcar todo el rectangulo de arriba... el ancho que abarque todo lo largo de
      arriba" — la altura no cambia, sigue siendo la misma). */
   .qa-bar.qa-collapsed .qa-toggle-btn{width:100%;justify-content:center;border-radius:12px}
-  .qa-bar.qa-collapsed .qa-pill,.qa-bar.qa-collapsed .priv-btn{display:none}
+  .qa-bar.qa-collapsed .qa-pill{display:none}
+  /* El ojo y el tema NO se pliegan: son los dos controles que se usan sin entrar
+     a ninguna pantalla, y en móvil el rail tampoco los tiene. */
+  .qa-bar.qa-collapsed .qa-acciones{display:flex}
+  .qa-bar.qa-collapsed .qa-acciones .qa-pill{display:flex}
+  .qa-bar.qa-collapsed .qa-toggle-btn{padding-right:86px}
   /* "cambiar de slide" (‹, puntos, ›) se oculta en celular — pedido explícito: "abajo estan
      amontonados lo que hace de cambiar de slide y lo que te lleva directo a que pagina de
      dashboard quieres... ocultes la de cambiar slide". Cambiar de slide en celular ya se hace
@@ -3248,8 +3262,9 @@ button.ct-cat:hover{background:rgba(var(--ov),.07)}
       <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.6 1.6 0 0 0 .3 1.8 2 2 0 1 1-2.7 2.7 1.6 1.6 0 0 0-1.8.3 1.6 1.6 0 0 0-1 1.5 2 2 0 1 1-4 0 1.6 1.6 0 0 0-1-1.5 1.6 1.6 0 0 0-1.8.3 2 2 0 1 1-2.7-2.7 1.6 1.6 0 0 0 .3-1.8 1.6 1.6 0 0 0-1.5-1 2 2 0 1 1 0-4 1.6 1.6 0 0 0 1.5-1 1.6 1.6 0 0 0-.3-1.8 2 2 0 1 1 2.7-2.7 1.6 1.6 0 0 0 1.8.3 1.6 1.6 0 0 0 1-1.5 2 2 0 1 1 4 0 1.6 1.6 0 0 0 1 1.5 1.6 1.6 0 0 0 1.8-.3 2 2 0 1 1 2.7 2.7 1.6 1.6 0 0 0-.3 1.8 1.6 1.6 0 0 0 1.5 1 2 2 0 1 1 0 4 1.6 1.6 0 0 0-1.5 1z"></path></svg></button>
     <button class="hud-btn" onclick="toggleHelp()" title="Atajos de teclado (?)" aria-label="Atajos de teclado">
       <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"></circle><path d="M9.6 9.3a2.5 2.5 0 0 1 4.9.7c0 1.7-2.5 2.5-2.5 2.5"></path><path d="M12 17h.01"></path></svg></button>
-    <button class="hud-btn" id="theme-toggle-btn" onclick="toggleTheme()" title="Cambiar tema claro/oscuro" aria-label="Cambiar tema claro/oscuro">
-      <svg viewBox="0 0 24 24"><path d="M20.5 14.3A8.5 8.5 0 0 1 9.7 3.5a8.5 8.5 0 1 0 10.8 10.8z"></path></svg></button>
+    <!-- El tema se mudó arriba, junto al ojo (2026-09-02, pedido de Adán):
+         es donde se ve sin abrir el rail. Aquí dejaba de tener sentido tenerlo
+         dos veces. -->
   </div>
 </div>
 
@@ -3429,8 +3444,10 @@ function toggleTheme(){
   const next=html.getAttribute('data-theme')==='dark'?'light':'dark';
   html.setAttribute('data-theme',next);
   localStorage.setItem('coach-theme',next);
-  const btn=document.getElementById('theme-toggle-btn');
-  if(btn) btn.textContent=next==='dark'?'☀️':'🌙';
+  // El botón del tema vive arriba, junto al ojo: se repinta con la barra.
+  // Antes esto hacía `btn.textContent = '☀️'` sobre un botón cuyo contenido es un
+  // <svg>: le borraba el icono y dejaba un emoji suelto.
+  if(typeof renderQuickApps==='function') renderQuickApps();
   showSlide(cur);
 }
 const fmt=n=>new Intl.NumberFormat('es-MX').format(Math.round(n||0));
@@ -8128,9 +8145,14 @@ const QA_ICO = {
   code:   '<rect x="2.5" y="4" width="19" height="16" rx="2"></rect><path d="M7.5 10l2.2 2.2-2.2 2.2M12 15h4.5"></path>',
   // El ojo del modo privado: mismo trazo y misma rejilla que los de las apps, para que
   // el botón no se lea como una pieza de otra familia (Adán, 2026-09-01).
+  // La luna y el sol del tema. Mismo trazo que el resto: 24px, sin relleno.
+  luna:   '<path d="M20.5 14.3A8.5 8.5 0 0 1 9.7 3.5a8.5 8.5 0 1 0 10.8 10.8z"></path>',
+  sol:    '<circle cx="12" cy="12" r="4.2"></circle><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.2 5.2l1.6 1.6M17.2 17.2l1.6 1.6M18.8 5.2l-1.6 1.6M6.8 17.2l-1.6 1.6"></path>',
   ojo:    '<path d="M2.2 12s3.6-7 9.8-7 9.8 7 9.8 7-3.6 7-9.8 7-9.8-7-9.8-7z"></path><circle cx="12" cy="12" r="3"></circle>',
   ojoOff: '<path d="M9.9 5.2A9.5 9.5 0 0 1 12 5c6.2 0 9.8 7 9.8 7a17 17 0 0 1-2.4 3.3M6.5 6.6A17 17 0 0 0 2.2 12s3.6 7 9.8 7a9.5 9.5 0 0 0 4-.9"></path><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"></path><path d="M3 3l18 18"></path>'
 };
+// Con tema oscuro se enseña el sol (a dónde vas), no la luna (dónde estás).
+const qaOscuro = () => document.documentElement.getAttribute('data-theme') !== 'light';
 const qaSvg = (k, c) => `<svg viewBox="0 0 24 24" stroke="${c}" aria-hidden="true">${QA_ICO[k]}</svg>`;
 
 function renderQuickApps(){
@@ -8158,11 +8180,18 @@ function renderQuickApps(){
   document.getElementById('qaBar').innerHTML=
     `<button class="qa-toggle-btn" onclick="toggleQaBar()" aria-label="Mostrar u ocultar accesos directos" title="Mostrar/ocultar accesos directos">🔗 Apps <span class="qa-toggle-chevron">▾</span></button>`+
     `<div class="qa-grupos">${grupos.map(g=>g.map(pill).join('')).join('<span class="qa-sep"></span>')}</div>`+
+    `<div class="qa-acciones">`+
+    `<button class="qa-pill tema-btn" id="theme-toggle-top" onclick="toggleTheme()"
+       title="${qaOscuro()?'Cambiar a modo claro':'Cambiar a modo oscuro'}"
+       aria-label="Cambiar entre modo claro y oscuro">
+       <span class="qa-ico">${qaSvg(qaOscuro()?'sol':'luna','currentColor')}</span>
+     </button>`+
     `<button class="qa-pill priv-btn${privado?' on':''}" id="priv-btn" onclick="togglePrivado()"
        title="${privado?'Las cifras están ocultas — tocar para mostrarlas':'Ocultar las cifras'}"
        aria-label="${privado?'Mostrar las cifras':'Ocultar las cifras'}" aria-pressed="${privado}">
        <span class="qa-ico">${qaSvg(privado?'ojoOff':'ojo','currentColor')}</span>
-     </button>`;
+     </button>`+
+    `</div>`;
   syncSlidesTop();
 }
 // Colapsa/expande la barra superior — solo tiene efecto visual en celular (≤480px, ver CSS de
