@@ -9960,8 +9960,9 @@ function buildHudNav(){
 }
 function paintHudNav(){document.querySelectorAll('.hud-nav-btn').forEach((b,i)=>b.classList.toggle('on',i===cur));}
 
-// El rail vive plegado: una tira de 44px con la pantalla actual y el play. Se abre al tocar
-// el tirador, y se cierra solo al elegir pantalla — que es a lo que se abre.
+// El rail vive plegado: una tira de 44px con la pantalla actual y el play. Se abre y se cierra
+// con el tirador, y NADA MÁS lo cierra: elegir pantalla lo deja abierto. Su estado se guarda,
+// así que vuelve como lo dejaste en la siguiente visita.
 const RAIL_KEY='dash-rail-abierto';
 function pintaRail(abierto){
   const r=document.getElementById('hudRail'); if(!r) return;
@@ -9988,8 +9989,8 @@ function showSlide(i){
   renderQuickApps();
   document.querySelectorAll('.slide').forEach(s=>s.classList.toggle('active',parseInt(s.dataset.i)===i));
   cur=i; paintDots(); paintHudNav();
-  // Elegir pantalla es justo para lo que se abre el rail: al llegar, se pliega solo.
-  if(!document.getElementById('hudRail').classList.contains('mini')) pintaRail(false);
+  // El rail se queda como lo dejaste. Antes se plegaba solo al elegir pantalla y había que
+  // reabrirlo para el siguiente salto — pedido de Adán: solo lo cierra el botón Ocultar.
   // Volver a "Mi Día" re-centra la cinta en el bloque de ahora. Hace falta un segundo pase aquí
   // —además del que ya hace pintarCintaDia()— porque RENDERS[i]() corre con el slide todavía
   // inactivo: si estaba oculto, el carril puede medir 0 de ancho y el centro sale mal. Pedido de

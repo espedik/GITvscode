@@ -876,3 +876,26 @@ como se usa, y los datos se siembran con `page.addInitScript`.
 
 Para medir "Mi Día" hay que tener en cuenta que **cambia de alto según la hora** (el bloque actual
 y los que quedan), así que dos medidas a horas distintas no son comparables.
+
+## El rail deja de plegarse solo al elegir pantalla (2026-09-01)
+
+Adán: *"aqui si vuelvo a dar click, no quiero que se esconga ese menu de nuevo"*.
+
+`showSlide()` terminaba con `if(!...contains('mini')) pintaRail(false)`, con el
+comentario *"elegir pantalla es justo para lo que se abre el rail: al llegar, se
+pliega solo"*. La idea era razonable para un salto suelto, pero convierte el menú
+en algo de un solo uso: para ir de Metas a Lista de compras hay que reabrirlo cada
+vez. Fuera esa línea — **sólo el tirador lo cierra**, y `RAIL_KEY` ya guardaba el
+estado, así que ahora vuelve como lo dejaste.
+
+Dónde se ve: el rail es vertical **a partir de ~1100 px** (198 px de ancho, con
+los nombres al lado del icono). Por debajo se dibuja como barra inferior con los
+controles de play y el ☰, sin nombres — por eso el mismo panel se ve tan distinto
+en el móvil.
+
+No se tocó el menú ☰ (`navMenuList`): ése es un overlay modal y sus ítems llaman a
+`goTo(i);toggleMenu()` a propósito — cerrarse al elegir es lo que se espera de un
+modal.
+
+Comprobado a 1400 px saltando por 6 pantallas seguidas: el rail sigue abierto en
+todas; el tirador lo cierra; abierto sobrevive a la recarga y cerrado también.
