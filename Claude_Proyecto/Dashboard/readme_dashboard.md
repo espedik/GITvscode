@@ -938,8 +938,11 @@ Adán: *"las barras hazlas la mitad del ancho que tienen, y además cuando haga
 click en cada habilidad, del lado izquierdo me mostrarás la ruta completa para
 aumentar esa habilidad, así como ya lo tienes para inversión"*.
 
-**La barra pasa de 0,84 a 0,42 del renglón** (medido). A ancho completo el trazo
-de color pesaba más que el nombre y el número, que es lo que de verdad se lee.
+**La barra pasa de 6 px a 3 px de grosor**, y sigue midiendo el renglón entero.
+El largo **es** el dato —es el nivel—, así que reducirlo quitaba información; lo
+que sobraba era el trazo, que pesaba más que el nombre y el número. Primero se
+recortó el largo por leer *"ancho"* como la dimensión horizontal, y Adán lo
+corrigió: *"las redujiste de largo y no de ancho"*.
 
 **Cada fila abre su ruta a la izquierda.** La función ya existía —`habFocoSet()`—
 pero sólo la usaba el botón "Cambiar a…", y `habFocoActual()` se limitaba a las

@@ -1882,13 +1882,14 @@ button.hp-lec:active{transform:translateY(0)}
 .hr-row.foco .hr-name{font-weight:800}
 /* La barra es LO QUE SABES: llena = lo dominas. Antes media el retorno, asi que Ventas
    (15/100) salia llena y Mentalidad (85/100) casi vacia — justo al reves de lo que es. */
-/* La barra ocupa la mitad del renglón (pedido de Adán, 2026-09-02): a ancho
-   completo el trazo de color pesaba más que el nombre y el número, que es lo
-   que de verdad se lee. `overflow:hidden` se cae porque la marca de la meta
-   puede quedar fuera del relleno. */
-.hr-bar{position:relative;height:6px;width:50%;background:rgba(var(--ov),.07);
-  border-radius:4px}
-.hr-fill,.hr-meta{border-radius:4px}
+/* La barra a la MITAD DE GROSOR, no de largo (Adán, 2026-09-02: "las redujiste
+   de largo y no de ancho"). Sigue midiendo el renglón entero —el largo ES el
+   dato, es el nivel— pero con la mitad de trazo pesa menos que el nombre y el
+   número, que es lo que de verdad se lee. `overflow:hidden` se cae porque la
+   marca de la meta puede quedar fuera del relleno. */
+.hr-bar{position:relative;height:3px;background:rgba(var(--ov),.07);
+  border-radius:3px}
+.hr-fill,.hr-meta{border-radius:3px}
 /* Se puede abrir: cursor, realce al pasar y la que está abierta marcada. */
 .hr-row.abrible{cursor:pointer;border-radius:8px;transition:background .13s}
 .hr-row.abrible:hover{background:rgba(var(--ov),.05)}
