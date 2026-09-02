@@ -257,6 +257,21 @@ silueta, que para eso está — y el dibujo es además el **respaldo** de las 45
 vienen de internet y las apps se abren con `file://`, así que sin red el `onerror`
 cae al envase en vez de dejar un hueco.
 
+Las de Wikimedia se guardan apuntando a `upload.wikimedia.org` y **sin query**. La
+API las devuelve con host `thumb.wikimedia.org` y parámetros `utm_` pegados detrás;
+ese host no es fiable y dejó 31 fotos rotas en el dashboard. No se vio al montar las
+hojas de contacto — ahí a veces redirige — sino midiendo con una espera corta.
+
+**El renglón en celular** se rehizo el 2026-09-02: el botón «Qué es» caía a **1 píxel**
+por debajo del cuadro de marcar y alineado con él, así que parecían el mismo control, y
+el nombre se cortaba a media palabra. Ahora el nombre se envuelve, la barra de botones
+se alinea con el NOMBRE (32px) y hay 9px de aire. Los cuatro botones se reparten en dos
+filas **a propósito**: con los nombres de tienda completos no caben en una sola ni en un
+iPhone SE — medido, sobran 86px — y dejándolos partirse solos «Ya lo tengo» caía a una
+segunda línea sin relación con nada. Arriba lo que haces con el producto, abajo dónde
+comprarlo. El renglón pasa de 47px a 150px: caben 5 productos en pantalla en vez de 14
+ilegibles.
+
 Hay **19 siluetas** (`bomba`, `gotero`, `tubo`, `tarro`, `bote`, `botella`, `tela`,
 `pastillas`, `caja`, `polvo`, `sobre`, `bolsa`, `barra`, `cepillo`, `utensilio`,
 `aparato`, `pano`, `gafas`, `gotas`) y viven en `PF_FORMAS`, dentro de

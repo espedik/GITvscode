@@ -1604,14 +1604,47 @@ button.hp-lec:active{transform:translateY(0)}
   .lc-grid{grid-template-columns:1fr;gap:0}
   .lc-aisle{margin-top:11px}
   .lc-aisle-title{font-size:9.5px;margin-bottom:4px;padding-bottom:4px}
-  .lc-item{flex-wrap:wrap;gap:1px 8px;padding:3px 0}
-  .lc-item input[type="checkbox"]{order:1}
-  .lc-item label.lc-item-txt{order:2;font-size:12.5px}
+  /* EL RENGLÓN EN CELULAR (rehecho el 2026-09-02, pedido de Adán: "el botón Qué es y
+     el checklist están muy cerca"). Lo que había: `gap:1px` vertical y la barra de
+     botones con `padding-left:0`, o sea el botón a UN píxel del cuadro de marcar y
+     alineado con él — parecían el mismo control. Y el nombre con `nowrap`, cortado a
+     media palabra justo antes de lo único que importa ("...aptas pa…" por "aptas para
+     equipaje de mano").
+
+     Ahora: el nombre se envuelve, la barra se alinea con el NOMBRE (32px = 22 del
+     cuadro + 10 del hueco) y hay 9px de aire entre las dos. Los botones se reparten
+     en dos filas A PROPÓSITO — con los nombres de tienda completos los cuatro no caben
+     en una sola ni en un iPhone SE (medido: sobran 86px), y dejarlos partirse solos
+     mandaba "Ya lo tengo" a una segunda línea sin relación con nada. Arriba lo que
+     haces con el producto, abajo dónde comprarlo. */
+  .lc-item{flex-wrap:wrap;align-items:flex-start;gap:9px 10px;padding:12px 0 13px}
   .lc-sub{order:3}
-  .lc-item-meta{order:4;display:flex;align-items:center;gap:6px;flex-basis:100%;padding-left:0}
-  .lc-price{font-size:9px;padding:2px 7px;flex-shrink:1;min-width:0;overflow:hidden}
-  .lc-unit{width:auto;font-size:9px}
-  .lc-tengo-btn{font-size:8.5px;padding:2px 6px}
+  .lc-item input[type="checkbox"]{order:1;width:22px;height:22px;margin-top:1px}
+  .lc-item input[type="checkbox"]:checked::after{left:7px;top:3px;width:5px;height:11px}
+  .lc-item label.lc-item-txt{order:2;font-size:13.5px;font-weight:600;color:var(--text);
+    white-space:normal;overflow:visible;text-overflow:clip;padding-top:2px;line-height:1.38}
+  .lc-item.on label.lc-item-txt{color:var(--text2)}
+  .lc-item-meta{order:3;display:flex;align-items:center;flex-wrap:wrap;gap:7px;
+    flex-basis:100%;padding-left:32px}
+  /* Las píldoras de tienda son la segunda fila: mismo hueco, un peso menos. */
+  .lc-price{font-size:10.5px;padding:0 10px;height:30px;flex-shrink:0;min-width:0}
+  .lc-info{font-size:11px;padding:0 13px;height:32px}
+  .lc-info svg{width:13px;height:13px}
+  .lc-tengo-btn{font-size:10.5px;padding:0 12px;height:32px;display:inline-flex;
+    align-items:center}
+  .lc-unit,.lc-sub{font-size:10.5px}
+  .lc-qty{height:32px}
+  /* El reparto en dos filas se hace con `order`, sin tocar el HTML: el orden del
+     DOM es info → precios → cantidad → "ya lo tengo", y aquí sube "ya lo tengo"
+     junto a "Qué es" y baja los precios. El `::after` de en medio es el salto. */
+  .lc-item-meta > .lc-info{order:1}
+  .lc-item-meta > .lc-tengo-btn{order:2}
+  .lc-item-meta > .lc-price,.lc-item-meta > .lc-qty,
+  .lc-item-meta > .lc-unit,.lc-item-meta > .lc-sub{order:4}
+  /* Solo donde hay botón "Qué es" — en comida no lo hay y una fila basta. Si el
+     navegador no entiende `:has()`, se queda en una fila: el comportamiento de
+     antes, que no rompe nada. */
+  .lc-item-meta:has(> .lc-info)::after{content:'';order:3;flex-basis:100%;height:0}
   .lc-price-leyenda{gap:9px;font-size:9.5px;margin-bottom:9px;padding-bottom:7px}
   .lc-tabs{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;-ms-overflow-style:none}
   .lc-tabs::-webkit-scrollbar{display:none}
