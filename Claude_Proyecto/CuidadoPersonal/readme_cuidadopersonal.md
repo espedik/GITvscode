@@ -652,3 +652,47 @@ Comprobado a 1600 px y 390 px: las 8 áreas con 102 px de chrome, los 4 iframes 
 carril ni cabecera propia, el clic en la barra de secciones navega dentro del
 iframe, sin errores de consola y sin desbordes. La barra de secciones lleva
 `nowrap`: sin él, en móvil se partía en dos líneas y la segunda quedaba cortada.
+
+### El material, escrito una sola vez: `vidrio.css`
+
+Adán: *"algunos difieren y quiero algo similar, y además te dije el color blanco
+transparente y futurista"*. El shell ya era de vidrio; el contenido no. Medido:
+Skincare y Cabello usaban velos (`--pl-panel` / `--pe-panel` al 4,5 %) y las otras
+seis seguían con superficies opacas `#161619`. Y había **tres negros distintos**:
+`#060614`, `#06080c` y `#0a0908`.
+
+[`vidrio.css`](vidrio.css) no reescribe componentes: **redefine las variables de
+superficie que las ocho ya usaban** (`--surface`, `--surface-2`, `--surface-3`,
+`--border`) y les añade el desenfoque. Una `.card` no cambia de código y cambia de
+material. Va después del `<style>` de cada app, para ganar por orden.
+
+- Un solo negro, `#06080c`, y tres pesos de velo: 5 %, 4,5 % y 2,8 %.
+- `backdrop-filter` en `.card`, `.tile` y los `*-card` de cada área, con una línea
+  de luz de 1 px en el borde superior.
+- Auroras de fondo en `body::before`, **apagadas con `html.embebida`**: dentro del
+  shell las pinta él, y dos juegos superpuestos se veían sucios.
+- En tema claro el velo blanco sobre fondo claro no se ve, así que ahí se vuelve
+  casi sólido (90 %) y lo que separa la tarjeta es la sombra de 1 px.
+- Cada área conserva su acento: rosa Skincare, ámbar Cabello, verde Salud, naranja
+  Ejercicio, amarillo Comida, menta Dentista, azul Ojos, tierra Vestimenta.
+
+### Dentista y Ojos tenían su propio carril
+
+Eran las dos últimas que no encajaban: `guiaEnSecciones()` les construía un menú
+lateral de 216 px dentro del shell, así que tenían carril donde las otras seis no.
+
+`guiaAlSubnav()` lee los botones que esa función acaba de construir y los publica
+en la barra del shell; pulsar en la barra **pulsa el botón original**, así que la
+lógica de navegación sigue siendo una sola, la que ya estaba. El carril se queda
+en el DOM (es quien sabe mostrar cada sección) pero con `display:none`. Los
+nombres se cortan en el guion: *"Ojo seco — el problema de las 10 h de pantalla"*
+no cabe en una píldora, *"Ojo seco"* sí.
+
+Resultado: **las ocho áreas con barra de secciones y sin carril lateral.**
+Skincare y Cabello siguen sin secciones a propósito — caben enteras en una
+pantalla.
+
+Comprobado en las 8 áreas y los 2 temas: mismo `--bg`, `blur(14px)` en todas, sin
+errores de consola, sin desbordes y contraste sin nada bajo el mínimo. Abiertas
+sueltas (sin `?embed=1`) las cuatro externas conservan su carril y su cabecera con
+el material nuevo.

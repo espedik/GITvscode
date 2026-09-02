@@ -1,0 +1,91 @@
+/* ════════════════════════════════════════════════════════════════════════════
+   vidrio.css — el material de Cuidado Personal, escrito una sola vez
+
+   Adán: "te dije el color blanco transparente y futurista, mejora el diseño en
+   general". El shell ya era de vidrio; el contenido de cada área no. Skincare y
+   Cabello usaban velos (--pl-panel / --pe-panel al 4,5 %) y las otras seis
+   seguían con superficies opacas (#161619), así que las ocho no se parecían.
+
+   Esta hoja NO reescribe componentes: redefine las VARIABLES de superficie que
+   todas ya usan (--surface, --surface-2, --surface-3, --border) y les pone el
+   desenfoque. Una `.card` no cambia de código y cambia de material.
+
+   Va después del <style> de cada app para ganar por orden, y cada una conserva
+   su color de acento: rosa Skincare, ámbar Cabello, verde Salud, naranja
+   Ejercicio, amarillo Comida, menta Dentista, azul Ojos, tierra Vestimenta.
+   ════════════════════════════════════════════════════════════════════════════ */
+
+:root{
+  /* Un solo negro para las ocho. Antes eran tres: #060614, #06080c y #0a0908. */
+  --bg:#06080c;
+
+  /* Tres pesos de velo. Los mismos que ya usaban Skincare y Cabello. */
+  --surface:rgba(255,255,255,.05);
+  --surface-2:rgba(255,255,255,.045);
+  --surface-3:rgba(255,255,255,.028);
+  --border:rgba(255,255,255,.11);
+
+  --vi-luz:rgba(255,255,255,.07);      /* la línea de luz del borde superior */
+  --vi-blur:blur(14px) saturate(130%);
+}
+
+:root[data-theme="light"]{
+  --bg:#eef0f4;
+  /* En claro el velo blanco sobre fondo claro no se ve: se vuelve sólido con
+     una sombra de 1 px, que es lo que separa una tarjeta del fondo. */
+  --surface:rgba(255,255,255,.9);
+  --surface-2:rgba(255,255,255,.82);
+  --surface-3:rgba(255,255,255,.6);
+  --border:rgba(0,0,0,.1);
+  --vi-luz:rgba(255,255,255,.9);
+}
+
+/* ── Las auroras que el vidrio filtra ──────────────────────────────────────
+   Un velo blanco sobre negro plano sigue siendo negro: hace falta color detrás.
+   Dentro del shell las pinta él, así que aquí se apagan (html.embebida). */
+html:not(.embebida) body::before{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:
+    radial-gradient(ellipse 40% 30% at 12% -2%, var(--vi-a1,rgba(255,107,53,.20)) 0%, transparent 64%),
+    radial-gradient(ellipse 36% 26% at 88% 2%, var(--vi-a2,rgba(0,232,122,.15)) 0%, transparent 64%),
+    radial-gradient(ellipse 60% 26% at 50% 102%, var(--vi-a3,rgba(176,110,255,.10)) 0%, transparent 66%);
+}
+:root[data-theme="light"] body::before{opacity:.45}
+html:not(.embebida) body > *{position:relative;z-index:1}
+
+/* ── El material ───────────────────────────────────────────────────────────
+   Todo lo que ya se pintaba con una superficie pasa a vidrio. Se listan las
+   piezas comunes a las ocho; los componentes propios de cada área heredan
+   por sus variables. */
+.card,
+.tile,
+.panel,
+.sd-card, .ej-card, .pl-card, .pe-card, .de-card, .oj-card{
+  backdrop-filter:var(--vi-blur);
+  -webkit-backdrop-filter:var(--vi-blur);
+  box-shadow:0 1px 0 var(--vi-luz) inset;
+}
+
+/* El carril y la cabecera de cada app, cuando se abre sola: mismo vidrio que
+   las barras del shell, para que abrirla suelta no se sienta otra app. */
+html:not(.embebida) .sidebar,
+html:not(.embebida) .topbar{
+  background:rgba(255,255,255,.07);
+  backdrop-filter:blur(22px) saturate(150%);
+  -webkit-backdrop-filter:blur(22px) saturate(150%);
+  border-color:var(--border);
+  box-shadow:0 1px 0 rgba(255,255,255,.14) inset;
+}
+:root[data-theme="light"] html:not(.embebida) .sidebar,
+:root[data-theme="light"] html:not(.embebida) .topbar{
+  background:rgba(255,255,255,.78);
+}
+
+/* Los campos y los botones sueltos, al mismo material. */
+input,select,textarea{
+  background:var(--surface-3)!important;
+  border-color:var(--border)!important;
+}
+
+/* Nada de esto debe tapar el vidrio con un fondo opaco heredado. */
+.view,.content,.main,.section{background:transparent}

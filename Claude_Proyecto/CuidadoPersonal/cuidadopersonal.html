@@ -965,7 +965,15 @@ body::before{content:'';position:fixed;inset:0 0 auto 0;height:280px;pointer-eve
   .subnav{padding:0 12px}
   .sn-t{font-size:13px;margin-right:8px}
 }
+
+/* El carril de las guias (Dentista y Ojos) sube a la barra de secciones del
+   shell. Se deja en el DOM porque es quien tiene la logica de mostrar cada
+   sección — la barra pulsa sus botones — pero deja de ocupar 216px. */
+.guia-nav{display:none}
 </style>
+<!-- El material comun de las 8 areas: velos de blanco con desenfoque.
+     Va despues del <style> para ganar por orden. Ver vidrio.css. -->
+<link rel="stylesheet" href="vidrio.css">
 <script src="../Dashboard/datos-maestros.js"></script>
 <script>
 (function () {
@@ -1319,6 +1327,33 @@ function toggleTheme(){
 //
 // `guiaEnSecciones` se llama al final de cada render de guía, así que también corre cuando Adán
 // guarda un perfil nuevo y la guía se vuelve a generar.
+// De que area es cada guia, para saber en que pestana pintar su menu.
+const GUIA_AREA = {'de-nav':'dentista', 'oj-nav':'ojos'};
+
+// Lee los botones que guiaEnSecciones acaba de construir y los publica en la
+// barra del shell. Pulsar en la barra pulsa el boton original: una sola logica
+// de navegacion, la que ya estaba, sin duplicarla.
+function guiaAlSubnav(navId){
+  const area = GUIA_AREA[navId]; if(!area) return;
+  const nav = document.getElementById(navId); if(!nav) return;
+  const btns = [...nav.querySelectorAll('.guia-nav-item')];
+  if(!btns.length) return;
+  const base = SUBNAV_NATIVAS[area] || {};
+  subnavEstado[area] = {
+    titulo: base.titulo || '',
+    secciones: btns.map(function(b,i){
+      // "Ojo seco — el problema de las 10 h de pantalla" no cabe en una pildora:
+      // se queda con lo que va antes del guion, que es el nombre de la seccion.
+      var t = (b.querySelector('.txt')||b).textContent.trim().split('—')[0].trim();
+      return {id:'g'+i, n:t};
+    }),
+    activa: 'g' + Math.max(0, btns.findIndex(function(b){ return b.classList.contains('active'); })),
+    botones: btns,
+  };
+  const act = document.querySelector('.tab-btn.active');
+  if(act && act.dataset.tab === area) subnavPinta(area);
+}
+
 function guiaEnSecciones(bodyId, navId, claseHeader, formCardId){
   const body=document.getElementById(bodyId), nav=document.getElementById(navId);
   if(!body||!nav) return;
@@ -1376,6 +1411,10 @@ function guiaEnSecciones(bodyId, navId, claseHeader, formCardId){
     },false);
   }
   nav.appendChild(lbl);
+  // El carril de 216px se queda como respaldo (lo oculta el CSS): la barra del
+  // shell es la que se ve, y se alimenta de estos mismos botones. Asi Dentista
+  // y Ojos se comportan igual que Salud, Ejercicio, Comida y Vestimenta.
+  setTimeout(function(){ guiaAlSubnav(navId); }, 0);
   secciones.forEach((sec,i)=>addItem(sec.ico,sec.titulo,()=>mostrarSec(i),i===0));
 }
 
@@ -1587,6 +1626,11 @@ function subnavPinta(tab){
 
 function subnavIr(tab, sec){
   const e = subnavEstado[tab]; if(e) e.activa = sec;
+  // Nativa con guia: se pulsa su boton original, que ya sabe que mostrar.
+  if(e && e.botones){
+    const i = parseInt(String(sec).slice(1), 10);
+    if(e.botones[i]) e.botones[i].click();
+  }
   const f = document.getElementById(FRAMES[tab]);
   if(f && f.contentWindow) f.contentWindow.postMessage({fuente:'cp-shell',tipo:'ir',seccion:sec},'*');
   subnavPinta(tab);
