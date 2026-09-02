@@ -1,0 +1,191 @@
+/* La ficha de producto y de libro. Vive aparte porque la usan varias apps:
+   el dashboard, en la lista de la compra, y Coach, donde los libros salen
+   nombrados 58 veces. Copiar el molde en cada una era justo la duplicación
+   que este proyecto persigue.
+
+   Necesita `datos-maestros.js` cargado antes: todo el contenido sale de ahí. */
+/* Los tokens que la ficha necesita. `var(--x, y)` hereda el del tema de la app
+   cuando existe — el dashboard los tiene todos — y cae a `y` cuando no, que es
+   lo que pasa en Coach. Sin esto el botón salía gris y el icono relleno. */
+:root{
+  --pf-txt:   var(--text,  #16161a);
+  --pf-txt2:  var(--text2, #5c5f70);
+  --pf-txt3:  var(--text3, #63667c);
+  --pf-card:  var(--card,  rgba(255,255,255,.85));
+  --pf-cardbr:var(--card-br, rgba(0,0,0,.12));
+  --pf-cy:    var(--cy,    #047a6b);
+  --pf-cyrgb: var(--cy-rgb, 4,122,107);
+  --pf-o:     var(--o,     #b8632c);
+  --pf-orgb:  var(--o-rgb, 184,99,44);
+  --pf-r:     var(--r,     #c81e3a);
+  --pf-rrgb:  var(--r-rgb, 200,30,58);
+  --pf-ov:    var(--ov,    0,0,0);
+  --pf-mono:  var(--mono,  'Space Grotesk', ui-monospace, monospace);
+}
+/* En oscuro la app manda; si no tiene tema propio — Coach — esto lo cubre. */
+:root[data-theme="dark"]{
+  --pf-txt:   var(--text,  #f4f4f8);
+  --pf-txt2:  var(--text2, #9a9db3);
+  --pf-txt3:  var(--text3, #8589a8);
+  --pf-card:  var(--card,  rgba(255,255,255,.06));
+  --pf-cardbr:var(--card-br, rgba(255,255,255,.13));
+  --pf-cy:    var(--cy,    #00e0c0);
+  --pf-cyrgb: var(--cy-rgb, 0,224,192);
+  --pf-o:     var(--o,     #ff8a3d);
+  --pf-orgb:  var(--o-rgb, 255,138,61);
+  --pf-r:     var(--r,     #ff5c5c);
+  --pf-rrgb:  var(--r-rgb, 255,92,92);
+  --pf-ov:    var(--ov,    255,255,255);
+}
+
+/* Un color por concepto, en triple RGB para poder componer alfas encima. El tema
+   claro los oscurece: cableados en hex, "MANCHAS" en amarillo sobre el fondo
+   blanco de la ficha no se leía. */
+:root{
+  --pf-acne:255,122,182; --pf-manchas:255,217,61; --pf-arrugas:176,110,255;
+  --pf-sensibilidad:0,224,192; --pf-ok:0,232,122; --pf-teal:0,224,192;
+  --pf-am:255,217,61; --pf-pink:255,122,182; --pf-pm:176,110,255; --pf-mint:94,233,181;
+  /* Los tonos que usan cabello y suplementos. */
+  --pf-warn:255,138,61; --pf-oro:255,196,61; --pf-gris:154,157,179; --pf-agua:56,189,248;
+}
+:root[data-theme="light"]{
+  --pf-acne:194,24,91; --pf-manchas:133,96,8; --pf-arrugas:127,79,184;
+  --pf-sensibilidad:4,110,96; --pf-ok:0,110,58; --pf-teal:4,110,96;
+  --pf-am:133,96,8; --pf-pink:194,24,91; --pf-pm:127,79,184; --pf-mint:10,102,71;
+  --pf-warn:140,70,18; --pf-oro:138,100,6; --pf-gris:90,94,112; --pf-agua:12,102,160;
+}
+/* Ficha de un producto de skincare. Se abre desde el botón "Qué es" de cada
+   renglón de la lista de la compra. El texto lo pone `RUTINA_PIEL` en
+   datos-maestros.js — aquí solo está el molde, y el color del producto entra
+   por `--tono`, que la propia ficha se pone. */
+.pf-fondo{position:fixed;inset:0;z-index:230;background:rgba(0,0,0,.74);backdrop-filter:blur(7px);
+  display:none;align-items:center;justify-content:center;padding:4vh 3vw}
+.pf-fondo.open{display:flex}
+.pf{position:relative;width:min(1000px,94vw);max-height:92vh;display:flex;flex-direction:column;
+  overflow:hidden;border:1px solid rgba(var(--pf-ov),.14);border-radius:20px;
+  box-shadow:0 30px 90px rgba(0,0,0,.55)}
+:root[data-theme="light"] .pf{background:rgba(255,255,255,.97)}
+:root:not([data-theme="light"]) .pf{background:rgba(12,12,22,.97)}
+/* Hero: el envase sobre fondo claro — todos son botes blancos y sobre el fondo
+   oscuro de la app se perderían — y la identidad al lado. */
+.pf-hero{flex:none;display:grid;grid-template-columns:224px 1fr;
+  border-bottom:1px solid rgba(var(--pf-ov),.12)}
+.pf-foto{position:relative;height:224px;display:flex;align-items:center;justify-content:center;
+  background:radial-gradient(120% 100% at 50% 22%,#fff 0%,#eceef3 58%,#dfe3ea 100%);
+  border-right:1px solid rgba(var(--pf-ov),.12)}
+.pf-env{height:174px;width:auto;display:block;filter:drop-shadow(0 12px 22px rgba(12,16,26,.22))}
+.pf-foto img{max-height:184px;max-width:82%;object-fit:contain;display:block;
+  filter:drop-shadow(0 12px 22px rgba(12,16,26,.2))}
+/* Dice si lo que se ve es la foto del producto o un dibujo: no se finge una foto. */
+.pf-orig{position:absolute;left:11px;bottom:10px;font-size:8px;font-weight:800;letter-spacing:.1em;
+  text-transform:uppercase;color:#4c515e;background:#fff;
+  border:1px solid rgba(0,0,0,.1);border-radius:6px;padding:3px 7px}
+.pf-id{padding:22px 24px;display:flex;flex-direction:column;justify-content:center;gap:10px;
+  min-width:0}
+.pf-ojo{display:flex;align-items:center;gap:7px;font-size:9.5px;font-weight:800;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--pf-txt3)}
+.pf-ojo i{width:6px;height:6px;border-radius:50%;display:block;flex:none;
+  background:rgb(var(--tono));box-shadow:0 0 10px rgba(var(--tono),.7)}
+.pf-h1{font-size:23px;font-weight:800;letter-spacing:-.028em;line-height:1.15;color:var(--pf-txt);
+  padding-right:44px}
+.pf-act{font-size:12px;color:var(--pf-txt2);display:flex;align-items:center;gap:7px}
+.pf-act svg{width:13px;height:13px;stroke:var(--pf-cy);fill:none;stroke-width:2;flex:none}
+.pf-chips{display:flex;gap:6px;flex-wrap:wrap}
+.pf-chip{font-size:9.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;
+  padding:4px 9px;border-radius:7px;border:1px solid;
+  color:rgb(var(--c));border-color:rgba(var(--c),.36);background:rgba(var(--c),.1)}
+.pf-cifras{display:flex;gap:8px;margin-top:2px}
+/* Higiene y ojos suelen tener una sola cifra (el precio): estirada a todo el
+   ancho parecía un error de maquetación. */
+.pf-cifras .pf-c:only-child{flex:0 0 auto;min-width:150px}
+.pf-c{flex:1;border:1px solid var(--pf-cardbr);background:var(--pf-card);border-radius:11px;
+  padding:8px 11px}
+.pf-c-v{font-family:var(--pf-mono);font-size:17px;font-weight:700;line-height:1.1;color:var(--pf-txt)}
+.pf-c-v em{font-style:normal;font-size:10px;color:var(--pf-txt3);margin-left:2px}
+.pf-c-k{font-size:8px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--pf-txt3);margin-top:3px}
+/* Cuerpo: lo que ES a la izquierda, lo que se HACE con él a la derecha. */
+.pf-cuerpo{flex:1;min-height:0;overflow-y:auto;display:grid;grid-template-columns:1fr 320px;
+  gap:13px;padding:15px 17px 17px;align-content:start}
+.pf-col{display:flex;flex-direction:column;gap:11px;min-width:0}
+.pf-card{border:1px solid var(--pf-cardbr);background:var(--pf-card);border-radius:14px;padding:13px 15px}
+.pf-t{display:flex;align-items:center;gap:8px;font-size:9.5px;font-weight:800;letter-spacing:.13em;
+  text-transform:uppercase;color:var(--pf-txt3);margin-bottom:8px}
+.pf-t .b{width:3px;height:12px;border-radius:2px;flex:none;background:rgb(var(--tono))}
+.pf-p{font-size:12.5px;line-height:1.62;color:var(--pf-txt2);margin:0}
+.pf-p.destacado{color:var(--pf-txt);font-size:13px}
+.pf-p b,.pf-paso-u b{color:var(--pf-txt);font-weight:700}
+.pf-paso{display:flex;gap:11px;padding:10px 0}
+.pf-paso+.pf-paso{border-top:1px solid rgba(var(--pf-ov),.07)}
+.pf-mom{flex:none;width:34px;height:34px;border-radius:10px;display:flex;align-items:center;
+  justify-content:center;font-size:8.5px;font-weight:800;letter-spacing:.04em;border:1px solid;
+  color:rgb(var(--c));border-color:rgba(var(--c),.34);background:rgba(var(--c),.1)}
+.pf-paso-c{min-width:0}
+.pf-paso-h{display:flex;align-items:baseline;gap:7px;margin-bottom:3px}
+.pf-paso-n{font-size:11px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;
+  color:rgb(var(--c))}
+.pf-paso-m{font-family:var(--pf-mono);font-size:10px;color:var(--pf-txt3)}
+.pf-paso-u{font-size:12px;line-height:1.6;color:var(--pf-txt2)}
+/* Las dos tarjetas que no llevan el color del producto sino el suyo. */
+.pf-tarda{border-color:rgba(var(--pf-cyrgb),.26);background:rgba(var(--pf-cyrgb),.06)}
+.pf-tarda .pf-t .b{background:var(--pf-cy)}
+.pf-ojo-card{border-color:rgba(var(--pf-orgb),.3);background:rgba(var(--pf-orgb),.07)}
+/* `aviso` solo lo tiene el Avodart: es medicamento de receta y eso no puede
+   quedar al mismo nivel visual que un consejo de uso. */
+.pf-aviso{border-color:rgba(var(--pf-rrgb),.32);background:rgba(var(--pf-rrgb),.08)}
+.pf-aviso .pf-t{color:var(--pf-r)}
+.pf-aviso .pf-t .b{background:var(--pf-r)}
+/* Su propio token y no `--o`: sobre el fondo naranja de la tarjeta, `--o` en
+   tema claro se queda en 3.78:1. */
+.pf-ojo-card .pf-t{color:rgb(var(--pf-warn))}
+.pf-ojo-card .pf-t .b{background:var(--pf-o)}
+/* Un libro se enseña de pie: la portada es 2:3, no un bote cuadrado, y el
+   fondo lleva el color de su tema en vez del gris de los envases. */
+.pf-libro .pf-hero{grid-template-columns:212px 1fr}
+.pf-libro .pf-foto{height:296px;
+  background:radial-gradient(120% 100% at 50% 20%,#fff 0%,#eef0f4 60%,#e2e5ec 100%)}
+.pf-libro .pf-foto::before{content:'';position:absolute;inset:0;
+  background:linear-gradient(160deg,rgba(var(--pf-ov),0) 55%,var(--lomo,#888) 260%);
+  opacity:.13;pointer-events:none}
+.pf-libro .pf-foto img{max-height:246px;max-width:74%;
+  box-shadow:0 14px 34px rgba(16,20,32,.28);border-radius:3px}
+.pf-libro .pf-env{height:238px}
+.pf-libro .pf-ojo i{background:var(--lomo,rgb(var(--tono)));
+  box-shadow:0 0 10px var(--lomo,rgb(var(--tono)))}
+.pf-libro .pf-t .b{background:var(--lomo,rgb(var(--tono)))}
+.pf-libro .pf-tarda .pf-t .b{background:var(--pf-cy)}
+.pf-libro .pf-act svg{stroke:var(--pf-txt3);stroke-width:1.6}
+/* El resumen es lo largo de la ficha: se le da aire para que se lea. */
+.pf-libro .pf-cuerpo{grid-template-columns:1fr 330px}
+.pf-libro .pf-p{font-size:12.5px;line-height:1.68}
+@media(max-width:860px){
+  .pf-libro .pf-hero{grid-template-columns:1fr}
+  .pf-libro .pf-foto{height:240px}
+  .pf-libro .pf-foto img{max-height:200px;max-width:44%}
+  .pf-libro .pf-env{height:190px}
+  .pf-libro .pf-cuerpo{grid-template-columns:1fr}
+}
+
+.pf-x{position:absolute;top:13px;right:13px;z-index:3;width:32px;height:32px;border-radius:10px;
+  border:1px solid rgba(var(--pf-ov),.16);background:rgba(var(--pf-ov),.07);backdrop-filter:blur(10px);
+  color:var(--pf-txt);font-size:15px;line-height:1;cursor:pointer;display:flex;align-items:center;
+  justify-content:center}
+.pf-x:hover{background:rgba(var(--pf-ov),.16)}
+/* El botón que la abre, en el renglón de la lista. Color propio para no
+   confundirse con el precio ni con "ya lo tengo". */
+.lc-info{display:flex;align-items:center;gap:5px;font-size:10px;font-weight:800;
+  letter-spacing:.03em;color:var(--pf-cy);background:rgba(var(--pf-cyrgb),.09);
+  border:1px solid rgba(var(--pf-cyrgb),.28);border-radius:7px;padding:4px 9px;cursor:pointer;
+  font-family:inherit;white-space:nowrap}
+.lc-info:hover{background:rgba(var(--pf-cyrgb),.18)}
+.lc-info svg{width:11px;height:11px;stroke:currentColor;fill:none !important;stroke-width:2.2;
+  stroke-linecap:round}
+@media(max-width:860px){
+  .pf-hero{grid-template-columns:1fr}
+  .pf-foto{height:176px;border-right:none;border-bottom:1px solid rgba(var(--pf-ov),.12)}
+  .pf-env{height:138px}
+  .pf-foto img{max-height:146px}
+  .pf-cuerpo{grid-template-columns:1fr}
+  .pf-h1{font-size:20px}
+  .pf-cifras{flex-wrap:wrap}
+}

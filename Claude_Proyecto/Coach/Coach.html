@@ -1087,7 +1087,12 @@
     .salud-grid > *, .vida-ideal-grid > *, .perfil-grid > *, .negocio-grid > * {
       min-width: 0 !important;
     }
-  </style>
+  /* El botón de la ficha, dentro del texto de un recurso: en línea con él y no
+   como una acción aparte, porque aquí la lista es de lectura. */
+.lc-info-coach{display:inline-flex;align-items:center;gap:5px;margin-left:8px;
+  vertical-align:baseline;font-size:10px;padding:2px 8px;height:auto;line-height:1.5}
+.lc-info-coach svg{width:11px;height:11px}
+</style>
   <script>
     (function () {
       var saved = localStorage.getItem('coach-theme');
@@ -1098,7 +1103,9 @@
 <!-- Variables maestras del proyecto: los saldos y datos que salen en la prosa vienen de ahí,
      no escritos a mano. Mapa en ../Dashboard/DATOS-MAESTROS.md — cambias el dato una vez y
      esta página lo dice igual, sin tocarla. -->
+<link rel="stylesheet" href="../Dashboard/ficha.css">
 <script src="../Dashboard/datos-maestros.js"></script>
+<script src="../Dashboard/ficha.js"></script>
 </head>
 <body>
 
@@ -4927,5 +4934,45 @@
   if (window.CIFRAS) CIFRAS.aplicarDOM();
 </script>
 
+
+<!-- La ficha de un libro. Es la MISMA que abre la lista de la compra del
+     dashboard: el molde vive en ../Dashboard/ficha.js y aquí solo se usa. -->
+<div class="pf-fondo" id="pfFondo" onclick="if(event.target===this) pfCerrar()"></div>
+<script>
+// Los recursos de tipo Libro de esta página están escritos a mano en el HTML, uno
+// por uno, y son 58. En vez de tocarlos todos, aquí se recorren al cargar: se
+// busca cada título en BIBLIOTECA — `porTitulo` resuelve los alias, porque Coach
+// nombra a Carnegie en inglés y la lista de la compra en español — y al que
+// existe se le pone el botón.
+//
+// La descripción corta también pasa a salir de la ficha. Antes estaba escrita
+// aquí además de en el maestro, que es el mismo dato en dos sitios: el día que se
+// corrigiera uno, el otro se quedaba mintiendo sin que nada avisara.
+(function libroConFicha(){
+  const B = window.CIFRAS && window.CIFRAS.BIBLIOTECA;
+  if(!B || typeof pfAbrir !== 'function') return;
+  const ICO = '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/>' +
+              '<path d="M12 11v5M12 7.6v.1"/></svg>';
+  let puestos = 0, sinFicha = [];
+  document.querySelectorAll('.recurso-item').forEach(function(it){
+    if(!it.querySelector('.r-libro')) return;
+    const st = it.querySelector('strong'); if(!st) return;
+    const libro = B.porTitulo(st.textContent.trim());
+    if(!libro){ sinFicha.push(st.textContent.trim()); return; }
+    const caja = st.parentElement; if(!caja) return;
+    // El texto tras el " \u00b7 " es la descripci\u00f3n corta: la pone la ficha.
+    const html = caja.innerHTML;
+    const corte = html.indexOf(' \u00b7 ');
+    const cabeza = corte > 0 ? html.slice(0, corte) : html;
+    caja.innerHTML = cabeza + ' \u00b7 ' + libro.ficha.idea +
+      '<button class="lc-info lc-info-coach" ' +
+      'onclick="pfAbrir(\'libros\', ' + JSON.stringify(B.textoCompra(libro)).replace(/"/g,'&quot;') + ')" ' +
+      'title="De qu\u00e9 trata, qu\u00e9 dice y cu\u00e1ndo leerlo">' + ICO + 'Qu\u00e9 es</button>';
+    puestos++;
+  });
+  if(sinFicha.length)
+    console.warn('Libros sin ficha en BIBLIOTECA (' + sinFicha.length + '): ' + sinFicha.join(' | '));
+})();
+</script>
 </body>
 </html>

@@ -831,7 +831,7 @@ function impactoDelCambio() {
   if (!B) { problemas.push('BIBLIOTECA no existe en el maestro'); return; }
   const CAMPOS = { sobre: 60, resumen: 200, porQue: 40, idea: 30, cuando: 15 };
   const malos = [];
-  let conPortada = 0;
+  let conPortada = 0, enCoach = 0;
   const ids = {};
 
   B.todos.forEach(function (l) {
@@ -888,12 +888,34 @@ function impactoDelCambio() {
     if (!B.deTextoCompra(t)) malos.push('  "' + t + '" en la lista no corresponde a ningún libro');
   });
 
+  // Y los libros que nombra Coach, que son 58 menciones de 43 t\u00edtulos. Su script
+  // los busca con `porTitulo` y le pone el bot\u00f3n al que encuentra; al que no,
+  // nada \u2014 se queda sin ficha y sin que se note, porque el aviso va a la consola.
+  // El t\u00edtulo puede estar en otro idioma que en la lista de la compra: para eso
+  // est\u00e1 `alias`, y esto comprueba que sigue cubriendo todos los casos.
+  try {
+    const coach = fs.readFileSync(path.join(__dirname, '..', 'Coach', 'Coach.html'), 'utf8');
+    const re = /<span class="recurso-tipo r-libro">Libro<\/span><div><strong>(.*?)<\/strong>/g;
+    const sin = [];
+    let m, n = 0;
+    while ((m = re.exec(coach))) {
+      n++;
+      if (!B.porTitulo(m[1].trim())) sin.push(m[1].trim());
+    }
+    if (sin.length)
+      malos.push('  Coach nombra ' + sin.length + ' libro(s) que no est\u00e1n en BIBLIOTECA, ' +
+                 'as\u00ed que se quedan sin ficha: ' + [...new Set(sin)].slice(0, 4).join(' / ') +
+                 ' \u2014 a\u00f1\u00e1delos, o pon el t\u00edtulo en el `alias` del que ya existe');
+    else if (n) enCoach = n;
+  } catch (e) { avisos.push('No pude leer Coach.html para comprobar sus libros'); }
+
   if (malos.length)
     problemas.push('La biblioteca est\u00e1 incompleta:\n' + malos.slice(0, 14).join('\n'));
   else
     ok.push('Biblioteca completa (' + B.todos.length + ' libros en ' + B.grupos.length +
             ' grupos, ' + conPortada + ' con portada y ' + (B.todos.length - conPortada) +
-            ' dibujados, ida y vuelta con la lista)');
+            ' dibujados' + (enCoach ? ', y las ' + enCoach + ' menciones de Coach ' +
+            'apuntan a una ficha' : '') + ')');
 })();
 
 // ── Salida ──

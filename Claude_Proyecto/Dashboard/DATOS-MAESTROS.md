@@ -190,6 +190,28 @@ y eso solo se vio abriendo la ficha. El **control 16** lo vigila ahora comparand
 el contexto: en esta lista todo es negocio, finanzas o software moderno, y el único
 anterior a 1900 es *Meditaciones*, que está declarado como excepción.
 
+**La ficha vive en dos archivos aparte** — `Dashboard/ficha.css` y
+`Dashboard/ficha.js` — porque la usan dos apps: el dashboard, en la lista de la
+compra, y **Coach**, donde los libros salen nombrados **58 veces**. Copiar el molde
+en cada una era la duplicación de siempre.
+
+Coach no reescribe sus 58 recursos: un script los recorre al cargar, busca cada
+título con `BIBLIOTECA.porTitulo()` y le pone el botón al que encuentra. La
+descripción corta que antes estaba escrita en el HTML de Coach ahora sale de
+`ficha.idea`, así que ese texto vive en un solo sitio.
+
+`porTitulo` resuelve los **alias**: Coach nombra a Carnegie en inglés (*How to Win
+Friends*) y la lista de la compra en español (*Cómo Ganar Amigos*). Son el mismo
+libro y no puede haber dos fichas, así que el título alternativo se declara una vez
+en `alias`. Cinco libros lo tienen.
+
+Como módulo compartido, `ficha.css` **no da por hechos los tokens de la app**:
+define los suyos con `var(--x, valor)`, que heredan del tema cuando existe y caen a
+un valor propio cuando no. Coach solo define 3 de los 13 que hacían falta, y sin
+esto el botón salía gris y con el icono relleno. Lo mismo con el precio: `ficha.js`
+lo pide con `typeof lcPrecioOtros === 'function'`, porque esa función solo existe
+en el dashboard.
+
 ### El kit de higiene y el cuidado de los ojos
 
 `KIT_HIGIENE` (34 artículos en 7 grupos) y `CUIDADO_OJOS` (12 en 4). Hasta el

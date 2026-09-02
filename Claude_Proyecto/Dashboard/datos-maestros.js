@@ -2129,7 +2129,8 @@ window.CIFRAS = (function () {
             idea: 'Nunca inviertas en una empresa cuyo negocio no puedas explicar con un dibujo en una servilleta.',
             cuando: 'Cuando ya tengas claro el marco general \u2014 Graham y Bogle \u2014 y quieras pasar a escoger.'
           } },
-        { id: 'psychMoney', t: 'Psicolog\u00eda del Dinero', a: 'Morgan Housel',
+        { id: 'psychMoney', t: 'Psicolog\u00eda del Dinero', a: 'Morgan Housel',
+          alias: ['The Psychology of Money'],
           anio: 2020, pags: 289,
           portada: 'https://covers.openlibrary.org/b/id/10389354-L.jpg',
           ficha: {
@@ -2159,7 +2160,8 @@ window.CIFRAS = (function () {
             idea: 'La riqueza no es lo que ganas: es lo que no gastas. Un sueldo alto con gasto alto produce cero.',
             cuando: 'Con Psicolog\u00eda del Dinero. Se refuerzan.'
           } },
-        { id: 'tuDinero', t: 'Tu Dinero o Tu Vida', a: 'Vicki Robin',
+        { id: 'tuDinero', t: 'Tu Dinero o Tu Vida', a: 'Vicki Robin',
+          alias: ['Your Money or Your Life'],
           anio: 1992, pags: 376,
           portada: 'https://covers.openlibrary.org/b/id/6975229-L.jpg',
           ficha: {
@@ -2169,7 +2171,8 @@ window.CIFRAS = (function () {
             idea: 'El dinero es energ\u00eda vital: lo cambias por horas que no recuperas, as\u00ed que el precio real de algo se mide en horas de tu vida.',
             cuando: 'Cuando quieras replantear el marco entero, no s\u00f3lo optimizar dentro del que tienes.'
           } },
-        { id: 'padreRico', t: 'Padre Rico, Padre Pobre', a: 'Robert Kiyosaki',
+        { id: 'padreRico', t: 'Padre Rico, Padre Pobre', a: 'Robert Kiyosaki',
+          alias: ['Rich Dad Poor Dad', 'Rich Dad, Poor Dad'],
           anio: 1990, pags: 241,
           portada: 'https://covers.openlibrary.org/b/id/8315603-L.jpg',
           ficha: {
@@ -2265,7 +2268,8 @@ window.CIFRAS = (function () {
             idea: 'El error es acordarse de la red cuando hace falta. La red se construye cuando no hace falta nada.',
             cuando: 'El primero del grupo.'
           } },
-        { id: 'carnegie', t: 'C\u00f3mo Ganar Amigos e Influir sobre las Personas', a: 'Dale Carnegie',
+        { id: 'carnegie', t: 'C\u00f3mo Ganar Amigos e Influir sobre las Personas', a: 'Dale Carnegie',
+          alias: ['How to Win Friends and Influence People'],
           anio: 1936, pags: 280,
           portada: 'https://covers.openlibrary.org/b/isbn/0671027034-L.jpg',
           ficha: {
@@ -2441,7 +2445,8 @@ window.CIFRAS = (function () {
             idea: 'El impedimento a la acci\u00f3n hace avanzar la acci\u00f3n: lo que se interpone en el camino se convierte en el camino.',
             cuando: 'Antes de Meditaciones.'
           } },
-        { id: 'meditaciones', t: 'Meditaciones', a: 'Marco Aurelio',
+        { id: 'meditaciones', t: 'Meditaciones', a: 'Marco Aurelio',
+          alias: ['Meditations'],
           anio: 180, pags: 254,
           portada: 'https://covers.openlibrary.org/b/id/211529-L.jpg',
           ficha: {
@@ -2462,6 +2467,18 @@ window.CIFRAS = (function () {
     deTextoCompra: function (txt) {
       var t = this;
       return this.todos.filter(function (p) { return t.textoCompra(p) === txt; })[0] || null;
+    },
+    // Encuentra un libro aunque se le llame de otra forma. Coach lo nombra en inglés
+    // y la lista de la compra en español, y no puede haber dos fichas del mismo libro:
+    // los títulos alternativos se declaran en `alias` y esto los resuelve.
+    porTitulo: function (txt) {
+      if (!txt) return null;
+      var n = function (x) { return String(x).toLowerCase().replace(/[^a-z0-9]/g, ''); };
+      var q = n(txt);
+      return this.todos.filter(function (l) {
+        if (n(l.t) === q) return true;
+        return (l.alias || []).some(function (a) { return n(a) === q; });
+      })[0] || this.deTextoCompra(txt);
     },
     get porGrupo() {
       var t = this, out = {};
