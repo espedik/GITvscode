@@ -44,14 +44,18 @@
    Un velo blanco sobre negro plano sigue siendo negro: hace falta color detrás.
    Dentro del shell las pinta él, así que aquí se apagan (html.embebida). */
 html:not(.embebida) body::before{
-  content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:-1;
   background:
     radial-gradient(ellipse 40% 30% at 12% -2%, var(--vi-a1,rgba(255,107,53,.20)) 0%, transparent 64%),
     radial-gradient(ellipse 36% 26% at 88% 2%, var(--vi-a2,rgba(0,232,122,.15)) 0%, transparent 64%),
     radial-gradient(ellipse 60% 26% at 50% 102%, var(--vi-a3,rgba(176,110,255,.10)) 0%, transparent 66%);
 }
 :root[data-theme="light"] body::before{opacity:.45}
-html:not(.embebida) body > *{position:relative;z-index:1}
+/* La aurora se va detrás con z-index negativo, en vez de forzar position:relative
+   en todos los hijos del body: esa regla pisaba el `position:fixed` de cualquier
+   ventana modal y la ficha de una receta quedaba metida en el flujo, comprimiendo
+   la página a una columna. */
+html:not(.embebida) body::before{z-index:-1}
 
 /* ── El material ───────────────────────────────────────────────────────────
    Todo lo que ya se pintaba con una superficie pasa a vidrio. Se listan las

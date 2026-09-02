@@ -221,3 +221,40 @@ Comprobado: los 4 filtros y el buscador (12 → 3 con "pollo", 7 con 30 g+, 6 co
 pasillos, y el estado vacío que explica para qué sirve el ✓. Sin errores de
 consola, contraste limpio en los dos temas y sin desbordes a 390 px — la barra se
 apila y los filtros se deslizan.
+
+### El panel con fotos, y la ficha al tocar una (2026-09-01)
+
+Adán: *"un panel con fotografías en super HD y ya cuando haga click abras una
+ventana con toda esa información"*.
+
+**La tarjeta pasa a ser la foto.** Antes cada receta era un bloque de ~400 px con
+ingredientes y pasos desplegados: 24 así son un muro de scroll. Ahora la tarjeta
+mide **214 px** y enseña sólo lo que decide si la haces hoy — la foto, el tiempo,
+las kcal y la proteína. Caben 4 por fila dentro del shell, 1 en móvil.
+
+**Las 24 fotos** salen de Wikimedia Commons y viven en el maestro, junto a su
+receta. Se buscaron por plato, se descartaron a mano cuatro que no eran comida
+(una era un señor con sombrero) y se verificaron **cargando las 24 en un
+navegador**: comprobarlas en serie con `fetch` da 429 por límite de tasa, así que
+ese método no dice nada. Cada `<img>` lleva `onerror`: si una no llega, la tarjeta
+cae al respaldo —cubierto sobre rejilla— en vez de dejar un hueco roto.
+
+**La ficha** se abre al tocar la tarjeta: foto de portada a sangre con el nombre
+encima, los 4 macros, ingredientes con su cantidad, preparación paso a paso y el
+tip. Cierra con la ✕, tocando fuera o con Escape. Sus dos botones:
+
+- **Registrar hoy** — anota la receta en el diario (`misalud_v1`), comprobado:
+  620 kcal del salmón llegan al registro.
+- **A la compra** — marca la receta y lleva a la Lista del Súper del Dashboard.
+  Antes de esto el botón llamaba a `nav('compras')`, **que no existe en esta app**:
+  no habría hecho nada.
+
+Un fallo que costó encontrar: la ficha se abría *dentro* del flujo y comprimía la
+página a una columna. `vidrio.css` tenía `body > * {position:relative}` para que
+el contenido quedara sobre las auroras, y esa regla **pisaba el `position:fixed`
+de cualquier ventana modal**. Ahora la aurora se va detrás con `z-index:-1` y no
+toca el `position` de nadie — el arreglo vale para toda la suite, no sólo aquí.
+
+Comprobado a 1500 px, 390 px y en los dos temas: 24 tarjetas, la ficha fija que
+cabe en pantalla, los filtros y el panel de "lo que vas a cocinar" intactos,
+contraste sin nada bajo el mínimo y sin errores de consola.

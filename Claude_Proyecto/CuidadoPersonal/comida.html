@@ -287,6 +287,154 @@ canvas{max-width:100%}
 .cw-n{font-size:10.5px;color:var(--text3);line-height:1.5;margin-top:12px;padding-top:11px;
   border-top:1px solid rgba(var(--ov),.07)}
 .cw-n b{color:var(--text2)}
+
+/* ══ EL PANEL DE RECETAS ═══════════════════════════════════════
+   Adán: "un panel con fotografías en super HD, y al hacer click que abra una
+   ventana con toda esa información".
+
+   Antes cada receta era un bloque de ~400px con ingredientes y pasos desplegados:
+   24 así son un muro de scroll. Ahora la tarjeta es la FOTO más tres datos
+   —tiempo, kcal y proteína— y el resto vive en la ficha, a un clic.
+
+   Las fotos son de Wikimedia Commons y viven en el maestro, junto a su receta. */
+.recetas-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(268px,1fr));
+  grid-auto-rows:214px;gap:14px;align-content:start}
+
+.receta-card{position:relative;border-radius:18px;overflow:hidden;border:1px solid var(--border);
+  background:var(--surface-2);display:flex;flex-direction:column;cursor:pointer;padding:0;
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  box-shadow:0 1px 0 rgba(var(--ov),.07) inset;
+  transition:transform .14s,border-color .15s,box-shadow .15s}
+.receta-card:hover{transform:translateY(-2px);border-color:rgba(255,217,61,.34)}
+.receta-card.elegida{border-color:rgba(255,217,61,.5);
+  box-shadow:0 0 0 1px rgba(255,217,61,.22),0 14px 34px rgba(255,217,61,.12)}
+
+.rc-foto{position:relative;height:158px;flex:none;overflow:hidden;background:#0d1016}
+.rc-foto img{width:100%;height:100%;object-fit:cover;display:block;
+  transition:transform .5s cubic-bezier(.2,.7,.3,1)}
+.receta-card:hover .rc-foto img{transform:scale(1.045)}
+/* El degradado es lo que deja leer el nombre sobre cualquier foto */
+.rc-foto::after{content:'';position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(180deg,rgba(6,8,12,0) 34%,rgba(6,8,12,.86) 100%)}
+/* Mientras carga (o si falla), el hueco lleva el lenguaje de la app, no un negro */
+.rc-foto.sinfoto{display:flex;align-items:center;justify-content:center;background:
+  linear-gradient(150deg,rgba(255,217,61,.09),rgba(var(--ov),.02) 60%),
+  linear-gradient(rgba(var(--ov),.022) 1px,transparent 1px) 0 0/22px 22px,
+  linear-gradient(90deg,rgba(var(--ov),.022) 1px,transparent 1px) 0 0/22px 22px,
+  #0d1016}
+.rc-foto.sinfoto svg{width:34px;height:34px;stroke:rgba(255,217,61,.3);fill:none;
+  stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round}
+.rc-nom{position:absolute;left:13px;right:13px;bottom:11px;z-index:1;font-size:13.5px;
+  font-weight:800;letter-spacing:-.015em;line-height:1.25;color:#f2f5f9;
+  text-shadow:0 2px 8px rgba(0,0,0,.65)}
+.rc-min{position:absolute;top:11px;left:11px;z-index:2;font-size:9.5px;font-weight:800;
+  padding:5px 9px;border-radius:7px;background:rgba(6,8,12,.55);color:#f2f5f9;
+  backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.16);letter-spacing:.03em;
+  font-family:'Space Grotesk',sans-serif}
+.rc-marca{position:absolute;top:11px;right:11px;z-index:2;width:30px;height:30px;border-radius:9px;
+  border:1px solid rgba(255,255,255,.28);background:rgba(6,8,12,.5);backdrop-filter:blur(8px);
+  display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0}
+.rc-marca svg{width:15px;height:15px;stroke:#fff;fill:none;stroke-width:2.2;
+  stroke-linecap:round;stroke-linejoin:round;opacity:.85}
+.rc-marca:hover{border-color:var(--w)}
+.receta-card.elegida .rc-marca{background:var(--w);border-color:var(--w)}
+.receta-card.elegida .rc-marca svg{stroke:#1a1400;opacity:1}
+.rc-pie{padding:11px 13px 12px;display:flex;align-items:center;gap:7px}
+.rc-chip{font-size:9.5px;font-weight:800;padding:4px 8px;border-radius:6px;
+  font-family:'Space Grotesk',sans-serif;font-variant-numeric:tabular-nums}
+.rc-kcal{background:rgba(255,107,53,.14);color:#ff8a5c;border:1px solid rgba(255,107,53,.28)}
+.rc-prot{background:rgba(176,110,255,.14);color:#c99bff;border:1px solid rgba(176,110,255,.28)}
+.rc-ver{margin-left:auto;font-size:10px;font-weight:800;color:var(--text3);
+  display:flex;align-items:center;gap:4px}
+.rc-ver svg{width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2;
+  stroke-linecap:round;stroke-linejoin:round}
+
+/* ══ LA FICHA ═════════════════════════════════════════════ */
+.rf-fondo{position:fixed;inset:0;z-index:400;background:rgba(6,8,12,.72);
+  backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+  display:none;align-items:center;justify-content:center;padding:22px}
+.rf-fondo.open{display:flex}
+.rf{width:100%;max-width:940px;max-height:100%;border-radius:22px;overflow:hidden;
+  border:1px solid var(--border);background:rgba(13,16,22,.94);
+  backdrop-filter:blur(24px) saturate(150%);-webkit-backdrop-filter:blur(24px) saturate(150%);
+  box-shadow:0 1px 0 rgba(var(--ov),.16) inset,0 30px 80px rgba(0,0,0,.6);
+  display:flex;flex-direction:column}
+:root[data-theme="light"] .rf{background:rgba(255,255,255,.97)}
+.rf-hero{position:relative;height:250px;flex:none;overflow:hidden;background:#0d1016}
+.rf-hero img{width:100%;height:100%;object-fit:cover;display:block}
+.rf-hero::after{content:'';position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(180deg,rgba(6,8,12,.15) 0%,rgba(6,8,12,.35) 46%,rgba(13,16,22,.96) 100%)}
+:root[data-theme="light"] .rf-hero::after{
+  background:linear-gradient(180deg,rgba(0,0,0,.1) 0%,rgba(0,0,0,.3) 46%,rgba(255,255,255,.96) 100%)}
+.rf-hi{position:absolute;left:24px;right:24px;bottom:18px;z-index:1}
+.rf-ojo{display:flex;align-items:center;gap:7px;font-size:9.5px;font-weight:800;
+  letter-spacing:.16em;text-transform:uppercase;color:var(--w);text-shadow:0 1px 6px rgba(0,0,0,.7)}
+.rf-ojo i{width:6px;height:6px;border-radius:50%;background:var(--w);box-shadow:0 0 10px var(--w);display:block}
+.rf-h1{font-size:26px;font-weight:800;letter-spacing:-.028em;margin-top:8px;line-height:1.15;
+  color:var(--text);font-family:'Space Grotesk','Inter',sans-serif;text-shadow:0 2px 12px rgba(0,0,0,.5)}
+:root[data-theme="light"] .rf-h1,:root[data-theme="light"] .rf-ojo{text-shadow:none}
+.rf-x{position:absolute;top:16px;right:16px;z-index:2;width:34px;height:34px;border-radius:11px;
+  border:1px solid rgba(255,255,255,.24);background:rgba(6,8,12,.5);backdrop-filter:blur(8px);
+  display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0}
+.rf-x svg{width:15px;height:15px;stroke:#fff;fill:none;stroke-width:2.2;stroke-linecap:round}
+.rf-mk{position:absolute;top:16px;right:60px;z-index:2;height:34px;padding:0 13px;border-radius:11px;
+  border:1px solid var(--border);background:rgba(6,8,12,.5);backdrop-filter:blur(8px);color:#f2f5f9;
+  font-size:11.5px;font-weight:800;display:flex;align-items:center;gap:7px;cursor:pointer;
+  font-family:inherit}
+.rf-mk svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2.4;
+  stroke-linecap:round;stroke-linejoin:round}
+.rf-mk.on{background:var(--w);border-color:var(--w);color:#1a1400}
+.rf-macros{display:flex;gap:9px;padding:15px 24px 0}
+.rf-m{flex:1;border-radius:13px;border:1px solid var(--border);background:var(--surface-2);
+  padding:11px 13px;backdrop-filter:blur(14px)}
+.rf-m-v{font-size:19px;font-weight:800;line-height:1;font-family:'Space Grotesk',sans-serif;
+  font-variant-numeric:tabular-nums}
+.rf-m-v em{font-style:normal;font-size:11px;color:var(--text3);font-weight:700;margin-left:2px}
+.rf-m-k{font-size:8.5px;font-weight:800;letter-spacing:.11em;text-transform:uppercase;
+  color:var(--text3);margin-top:5px}
+.rf-cuerpo{flex:1;min-height:0;overflow-y:auto;display:grid;grid-template-columns:300px 1fr;
+  gap:18px;padding:16px 24px 20px}
+.rf-col{min-width:0;display:flex;flex-direction:column;gap:13px}
+.rf-card{border-radius:15px;border:1px solid var(--border);background:var(--surface-2);
+  padding:14px 16px;backdrop-filter:blur(14px)}
+.rf-t{font-size:9.5px;font-weight:800;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--text2);display:flex;align-items:center;gap:8px;margin-bottom:11px}
+.rf-t .b{width:3px;height:12px;border-radius:2px;background:var(--w);flex:none}
+.rf-t .x{margin-left:auto;font-size:9.5px;color:var(--text3);letter-spacing:0;
+  text-transform:none;font-weight:700}
+.rf-ing{display:flex;align-items:baseline;gap:8px;padding:6px 0;font-size:12px}
+.rf-ing+.rf-ing{border-top:1px solid rgba(var(--ov),.06)}
+.rf-ing-n{font-weight:600;color:var(--text)}
+.rf-ing-p{flex:1;border-bottom:1px dotted rgba(var(--ov),.18);transform:translateY(-3px)}
+.rf-ing-c{color:var(--text3);font-weight:700;font-size:11px;font-family:'Space Grotesk',sans-serif}
+.rf-paso{display:flex;gap:11px;padding:9px 0;font-size:12.5px;line-height:1.55;color:var(--text2)}
+.rf-paso+.rf-paso{border-top:1px solid rgba(var(--ov),.06)}
+.rf-paso i{flex:none;width:20px;height:20px;border-radius:50%;background:rgba(255,217,61,.14);
+  border:1px solid rgba(255,217,61,.3);color:var(--w);display:flex;align-items:center;
+  justify-content:center;font-size:10px;font-weight:800;font-style:normal;margin-top:1px;
+  font-family:'Space Grotesk',sans-serif}
+.rf-paso b{color:var(--text)}
+.rf-tip{display:flex;gap:10px;font-size:11.5px;line-height:1.55;color:var(--text2);
+  padding:12px 14px;border-radius:13px;background:var(--g-l);border:1px solid rgba(0,232,122,.24)}
+.rf-tip .ic{color:var(--g);font-weight:800;flex:none}
+.rf-tip b{color:var(--text)}
+.rf-pie{display:flex;gap:9px;margin-top:auto}
+.rf-bt{flex:1;height:38px;border-radius:11px;display:flex;align-items:center;justify-content:center;
+  gap:8px;font-size:12px;font-weight:800;border:1px solid var(--border);background:var(--surface-3);
+  color:var(--text2);cursor:pointer;font-family:inherit}
+.rf-bt.p{background:linear-gradient(135deg,var(--w),#ffb800);border-color:var(--w);color:#1a1400}
+.rf-bt svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2.2;
+  stroke-linecap:round;stroke-linejoin:round}
+
+@media(max-width:760px){
+  .rf-fondo{padding:0}
+  .rf{max-width:none;border-radius:0;height:100%;max-height:100%}
+  .rf-hero{height:190px}
+  .rf-h1{font-size:20px}
+  .rf-macros{padding:12px 16px 0;flex-wrap:wrap}
+  .rf-m{min-width:calc(50% - 5px)}
+  .rf-cuerpo{grid-template-columns:1fr;padding:12px 16px 18px}
+}
 </style>
 <!-- El material comun de las 8 areas: velos de blanco con desenfoque.
      Va despues del <style> para ganar por orden. Ver vidrio.css. -->
@@ -744,31 +892,120 @@ function rcFiltra(tipo){
   } else if(vac) vac.style.display = 'none';
 }
 
+// ══ LA TARJETA ════════════════════════════════════════════
+// La foto y tres datos: tiempo, kcal y proteína. Los ingredientes, los pasos y
+// el tip se fueron a la ficha — con 24 recetas, desplegarlo todo era un muro.
+const RC_CUBIERTO = '<svg viewBox="0 0 24 24"><path d="M5 4v7a3 3 0 0 0 6 0V4M8 11v9' +
+  'M17 4c-1.5 2-2 4-2 6h4c0-2-.5-4-2-6zM17 10v10"></path></svg>';
+const RC_CHECK = '<svg viewBox="0 0 24 24"><path d="M4 12.5l5.5 5.5L20 7"></path></svg>';
+const RC_FLECHA = '<svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"></path></svg>';
+
+function rcEsc(t){ return String(t==null?'':t).replace(/&/g,'&amp;').replace(/</g,'&lt;')
+  .replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
 function recetaCard(r,tipo){
-  const el = rcEsElegida(r.id);
-  return `<div class="receta-card t-${tipo}${el?' elegida':''}" data-id="${r.id}">
-    <button class="rc-marca" onclick="rcToggle('${r.id}')"
-      title="${el?'Quitar de lo que vas a cocinar':'Voy a cocinar esta \u2014 sus ingredientes van a la compra'}"
-      aria-label="Marcar para cocinar">
-      <svg viewBox="0 0 24 24"><path d="M4 12.5l5.5 5.5L20 7"></path></svg></button>
-    <h3>${r.nombre}</h3>
-    <div class="receta-meta"><span>⏱️ ${r.tiempo}</span><span>🍽️ 1 porción</span></div>
-    <div class="macro-row">
-      <span class="macro-chip cal">🔥 ${r.macros.cal} kcal</span>
-      <span class="macro-chip prot">💜 ${r.macros.prot}g prot</span>
-      <span class="macro-chip carb">💙 ${r.macros.carbs}g carbs</span>
-      <span class="macro-chip gra">💛 ${r.macros.gra}g grasa</span>
-    </div>
-    <div class="receta-sub">Ingredientes</div>
-    <ul class="ing-list">${r.ingredientes.map(i=>`<li><span>${i.n}</span><span>${i.c}</span></li>`).join('')}</ul>
-    <div class="receta-sub">Preparación</div>
-    <ol class="pasos-list">${r.pasos.map(p=>`<li>${p}</li>`).join('')}</ol>
-    <div class="tip-box"><span class="ico">💡</span><span>${r.tip}</span></div>
-    <div class="receta-actions">
-      <button class="btn btn-w btn-sm" onclick="registrarReceta('${r.id}','${tipo}')">➕ Registrar en mi diario de hoy</button>
-    </div>
-  </div>`;
+  const el = rcEsc(r.nombre);
+  // onerror: si la foto no llega, la tarjeta se queda con el respaldo en vez de
+  // un hueco roto. Las 24 estan verificadas, pero la red no siempre esta.
+  const foto = r.foto
+    ? '<div class="rc-foto"><img src="'+rcEsc(r.foto)+'" alt="'+el+'" loading="lazy"' +
+      ' onerror="this.parentNode.classList.add(\'sinfoto\');this.remove()">'
+    : '<div class="rc-foto sinfoto">'+RC_CUBIERTO;
+  return '<div class="receta-card t-'+tipo+(rcEscogida(r.id)?' elegida':'')+'" data-id="'+r.id+'"' +
+    ' onclick="rcFicha(\''+r.id+'\')" title="Ver la receta completa">'+
+    foto+
+      '<div class="rc-min">'+rcEsc(r.tiempo).toUpperCase()+'</div>'+
+      '<button class="rc-marca" onclick="event.stopPropagation();rcToggle(\''+r.id+'\')"' +
+        ' title="Voy a cocinar esta \u2014 sus ingredientes van a la compra"' +
+        ' aria-label="Marcar para cocinar">'+RC_CHECK+'</button>'+
+      '<div class="rc-nom">'+el+'</div>'+
+    '</div>'+
+    '<div class="rc-pie"><span class="rc-chip rc-kcal">'+r.macros.cal+' kcal</span>'+
+      '<span class="rc-chip rc-prot">'+r.macros.prot+' g</span>'+
+      '<span class="rc-ver">ver'+RC_FLECHA+'</span></div>'+
+  '</div>';
 }
+// Alias: el nombre corto se lee mejor dentro de la plantilla de la tarjeta.
+function rcEscogida(id){ return rcEsElegida(id); }
+
+// ══ LA FICHA ══════════════════════════════════════════════
+function rcReceta(id){
+  return (RECETAS.desayuno||[]).concat(RECETAS.cena||[]).find(function(x){ return x.id===id; });
+}
+function rcTipoDe(id){ return (RECETAS.desayuno||[]).some(function(x){return x.id===id;})?'desayuno':'cena'; }
+
+function rcFicha(id){
+  const r = rcReceta(id); if(!r) return;
+  const tipo = rcTipoDe(id), el = rcEsElegida(id);
+  const fondo = document.getElementById('rc-ficha');
+  const caja = document.getElementById('rc-ficha-caja');
+  if(!fondo||!caja) return;
+
+  const hero = r.foto
+    ? '<img src="'+rcEsc(r.foto)+'" alt="'+rcEsc(r.nombre)+'"' +
+      ' onerror="this.parentNode.classList.add(\'sinfoto\');this.remove()">'
+    : RC_CUBIERTO;
+
+  caja.innerHTML =
+    '<div class="rf-hero'+(r.foto?'':' sinfoto')+'">'+hero+
+      '<button class="rf-mk'+(el?' on':'')+'" onclick="rcToggle(\''+id+'\');rcFicha(\''+id+'\')">'+
+        RC_CHECK+(el?'La vas a cocinar':'Voy a cocinarla')+'</button>'+
+      '<button class="rf-x" onclick="rcCerrarFicha()" aria-label="Cerrar">'+
+        '<svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"></path></svg></button>'+
+      '<div class="rf-hi"><div class="rf-ojo"><i></i>'+
+        (tipo==='desayuno'?'Desayuno':'Cena')+' \u00b7 '+rcEsc(r.tiempo)+' \u00b7 1 porci\u00f3n</div>'+
+        '<div class="rf-h1">'+rcEsc(r.nombre)+'</div></div></div>'+
+
+    '<div class="rf-macros">'+
+      '<div class="rf-m"><div class="rf-m-v" style="color:#ff8a5c">'+r.macros.cal+'<em>kcal</em></div><div class="rf-m-k">Calor\u00edas</div></div>'+
+      '<div class="rf-m"><div class="rf-m-v" style="color:#c99bff">'+r.macros.prot+'<em>g</em></div><div class="rf-m-k">Prote\u00edna</div></div>'+
+      '<div class="rf-m"><div class="rf-m-v" style="color:#4f8cff">'+r.macros.carbs+'<em>g</em></div><div class="rf-m-k">Carbohidratos</div></div>'+
+      '<div class="rf-m"><div class="rf-m-v" style="color:#ffd93d">'+r.macros.gra+'<em>g</em></div><div class="rf-m-k">Grasa</div></div>'+
+    '</div>'+
+
+    '<div class="rf-cuerpo"><div class="rf-col">'+
+      '<div class="rf-card"><div class="rf-t"><span class="b"></span>Ingredientes'+
+        '<span class="x">'+r.ingredientes.length+'</span></div>'+
+        r.ingredientes.map(function(i){
+          return '<div class="rf-ing"><span class="rf-ing-n">'+rcEsc(i.n)+'</span>'+
+                 '<span class="rf-ing-p"></span><span class="rf-ing-c">'+rcEsc(i.c)+'</span></div>';
+        }).join('')+'</div>'+
+      '<div class="rf-tip"><span class="ic">\u25c8</span><span>'+r.tip+'</span></div>'+
+      '<div class="rf-pie">'+
+        '<button class="rf-bt p" onclick="registrarReceta(\''+id+'\',\''+tipo+'\');rcCerrarFicha()">'+
+          '<svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"></path></svg>Registrar hoy</button>'+
+        // nav('compras') no existe aqui: la lista vive en el Dashboard. El boton
+        // marca la receta —que es lo que mete sus ingredientes— y lleva alli.
+        '<button class="rf-bt" onclick="rcAlaCompra(\''+id+'\')">'+
+          '<svg viewBox="0 0 24 24"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14"></path></svg>A la compra</button>'+
+      '</div></div>'+
+      '<div class="rf-col"><div class="rf-card" style="flex:1">'+
+        '<div class="rf-t"><span class="b"></span>Preparaci\u00f3n<span class="x">'+
+          r.pasos.length+' paso'+(r.pasos.length===1?'':'s')+'</span></div>'+
+        r.pasos.map(function(p,k){
+          return '<div class="rf-paso"><i>'+(k+1)+'</i><span>'+p+'</span></div>';
+        }).join('')+'</div></div>'+
+    '</div>';
+
+  fondo.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+// Marcar y salir a la lista: el camino corto de "esta la hago" a "esto compro".
+function rcAlaCompra(id){
+  if(!rcEsElegida(id)) rcToggle(id);
+  rcCerrarFicha();
+  location.href = '../Dashboard/dashboard.html';
+}
+
+function rcCerrarFicha(){
+  const f = document.getElementById('rc-ficha');
+  if(f) f.classList.remove('open');
+  document.body.style.overflow = '';
+}
+// Cerrar tocando fuera o con Escape, como cualquier ventana.
+document.addEventListener('keydown', function(e){ if(e.key==='Escape') rcCerrarFicha(); });
+
 function renderRecetas(){
   // se repinta y se vuelve a aplicar el filtro que estuviera puesto
   document.getElementById('grid-desayunos').innerHTML=RECETAS.desayuno.map(r=>recetaCard(r,'desayuno')).join('');
@@ -1146,5 +1383,9 @@ cpCabComida();
 <!-- Vista desde el shell (?embed=1): calla el carril y la cabecera propios,
      y habla con cuidadopersonal.html por postMessage. Sola, no cambia nada. -->
 <script src="embed.js"></script>
+<!-- La ficha de una receta. Se llena al tocar una tarjeta (rcFicha). -->
+<div class="rf-fondo" id="rc-ficha" onclick="if(event.target===this) rcCerrarFicha()">
+  <div class="rf" id="rc-ficha-caja"></div>
+</div>
 </body>
 </html>
