@@ -153,6 +153,28 @@ salen en la línea de tiempo pero no llevan checkbox ni suman al progreso.
 Estaba copiada en `dashboard.html` y `Coach.html`, 17.5 KB en cada uno. Era la estructura más
 grande y más tocada de las duplicadas, y llegó a divergir 6 días.
 
+### El kit de higiene y el cuidado de los ojos
+
+`KIT_HIGIENE` (34 artículos en 7 grupos) y `CUIDADO_OJOS` (12 en 4). Hasta el
+2026-09-02 esto eran **cadenas de texto sueltas** dentro de `LISTA_COMPRAS`: no
+había ningún objeto detrás, así que no había dónde colgar una ficha. Ahora cada
+artículo es un producto y las dos listas de la compra salen de aquí:
+
+```js
+CIFRAS.KIT_HIGIENE.todos            // los 34, sin agrupar
+CIFRAS.KIT_HIGIENE.porGrupo         // {grupo: [texto, ...]} — lo que usa la compra
+CIFRAS.CUIDADO_OJOS.deTextoCompra(t)  // del renglón al producto
+```
+
+Los dos van agrupados **por la situación, no por el tipo de producto**: en higiene
+por bolsa (cuando armas la maleta lo que importa es qué meter en el neceser), y en
+ojos por la causa («al volante», «pantalla»). En las fichas de ojos el nombre del
+grupo hace de rótulo, porque el grupo ES la explicación.
+
+El **precio no se escribe aquí**: vive en `LISTA_COMPRAS_PRECIOS_OTROS`, en el
+dashboard, indexado por el texto del renglón. La ficha lo lee de ahí con
+`lcPrecioOtros()`.
+
 ### La rutina de la piel
 
 `RUTINA_PIEL` — los **5 productos** que Adán usa en la cara (más la mascarilla opcional), con
@@ -176,9 +198,11 @@ CIFRAS.RUTINA_PIEL.deTextoCompra(txt) // y de vuelta: del renglón al producto
 | Eucerin Hyaluron-Filler + Epigenetic Noche | PM 3 | 50 ml | ~100 d | $210 |
 | Aztec Secret Indian Healing Clay | opcional | 454 g | ~175 d | $50 |
 
-**Cada producto trae una `ficha`** (2026-09-02). Hasta esa fecha la rutina sabía
-decir *cómo* se aplica cada cosa — eso vive en `am.uso`/`pm.uso` y sigue ahí — pero
-no *qué es* ni *por qué sirve*. Ese hueco es la ficha:
+**Cada producto trae una `ficha`** (2026-09-02). Hasta esa fecha las rutinas sabían
+decir *cómo* se usa cada cosa — eso vive en `am.uso`/`pm.uso`/`uso` y sigue ahí —
+pero no *qué es* ni *por qué sirve*. Ese hueco es la ficha, y la tienen los **68
+artículos de las cinco categorías**: skincare, cabello, suplementos, kit de higiene
+y cuidado de los ojos.
 
 | Campo | Qué lleva |
 |---|---|
@@ -190,11 +214,24 @@ no *qué es* ni *por qué sirve*. Ese hueco es la ficha:
 | `ojo` | el error que arruina el producto |
 
 El botón **«Qué es»** de cada renglón de la lista de la compra abre esa ficha, y el
-dashboard **no guarda ni una línea de ese texto**: lo arma todo leyendo el maestro,
-incluido el «cómo se aplica», que toma de `am.uso`/`pm.uso`/`extra.uso` sin
-copiarlo. Se entra por el texto del renglón — lo único que la lista conoce — y
-`deTextoCompra` lo deshace, que es el inverso exacto de `textoCompra`, con el que
-el getter `LISTA_COMPRAS.skincare` lo armó.
+dashboard **no guarda ni una línea de ese texto**: lo arma todo leyendo el maestro.
+Se entra por el texto del renglón — lo único que la lista conoce — y
+`deTextoCompra` lo deshace, que es el inverso exacto de `textoCompra`, con el que el
+getter de esa categoría lo armó. Las cinco fuentes exponen ese mismo par, así que el
+dashboard solo tiene que saber a quién preguntar:
+
+| Categoría | Fuente | De dónde sale el «cómo se usa» |
+|---|---|---|
+| skincare | `RUTINA_PIEL` | `am.uso` / `pm.uso` / `extra.uso` — son dos rutinas |
+| cabello | `RUTINA_PELO` | `uso`, con los días de `diasTexto(p)` |
+| suplementos | `SUPLEMENTOS` | no hay `uso`: se arma con `dosis`, `cuando` y `momento` |
+| higiene | `KIT_HIGIENE` | `uso` |
+| ojos | `CUIDADO_OJOS` | `uso` |
+
+Dos campos de la ficha pueden **no estar en la ficha**: los suplementos ya tenían
+escritos `porQue` y `ojo` desde antes, y la ficha los lee de ahí. Escribirlos otra
+vez sería crear el segundo sitio de siempre — el control 15 lo marca como error.
+Lo mismo con el `aviso` del Avodart, que sale en su propia tarjeta.
 
 **Las imágenes.** Solo dos de los seis — el CeraVe y el Aztec Secret — tienen foto
 del producto EXACTO con licencia libre; van en `foto`, desde Open Beauty Facts. De
@@ -205,6 +242,13 @@ dashboard dibuja la silueta del bote con los dos colores de la marca. La etiquet
 de la esquina dice siempre cuál de las dos cosas se está viendo. El dibujo es
 también el respaldo de las dos fotos: vienen de internet y las apps se abren con
 `file://`, así que sin red el `onerror` cae al envase en vez de dejar un hueco.
+
+Hay **19 siluetas** (`bomba`, `gotero`, `tubo`, `tarro`, `bote`, `botella`, `tela`,
+`pastillas`, `caja`, `polvo`, `sobre`, `bolsa`, `barra`, `cepillo`, `utensilio`,
+`aparato`, `pano`, `gafas`, `gotas`) y viven en `PF_FORMAS`, dentro de
+`dashboard.html`. Cada producto elige la suya con `frasco` — se llamaba `envase`
+hasta el 2026-09-02, pero en `SUPLEMENTOS` ese nombre ya significaba *cuántas
+cápsulas trae el bote*, y un nombre no puede querer decir dos cosas.
 
 **Los días y el costo NO se escriben**: salen de `contenido / dosisDia`. Por eso el protector se
 lleva casi la mitad del gasto — dos dedos diarios, que es la dosis correcta, vacían un bote de
@@ -519,9 +563,16 @@ pollo y avena en hojuelas. El **control 14** del verificador comprueba que cada
 receta esté completa (ingredientes con pasillo y cantidad, pasos, macros, ids
 únicos) y que la lista siga siendo la derivada y no una copia.
 
-El **control 15** hace lo propio con la ficha de skincare: que ningún producto se
-quede sin `ficha` o con un campo vacío, que traiga con qué dibujarse cuando no hay
-foto, que tenga algún momento del que sacar el «cómo se aplica», y que
+El **control 15** hace lo propio con las fichas de las **cinco categorías** (68
+artículos): que ninguno se quede sin `ficha` o con un campo corto, que traiga con
+qué dibujarse cuando no hay foto, que tenga de dónde sacar el «cómo se usa», que
+no repita en la ficha lo que el producto ya trae escrito, y que
 `deTextoCompra(textoCompra(p))` devuelva el mismo producto. Esa última es la que
 importa: si dejan de ser inversas, el botón «Qué es» no encuentra nada y al
 pulsarlo no pasa **nada** — sin error en consola, sin señal de ningún tipo.
+
+El umbral de longitud va **por campo**: `que`, `hace`, `sirve` y `ojo` tienen que
+explicar algo y se les exigen 20 caracteres; `activo` y `tarda` pueden ser correctos
+y muy cortos («Inmediato.», «1-2 horas.») y se quedan en 6. La única excepción
+declarada es el renglón del minoxidil ORAL en cabello: no es un producto de
+mostrador, no tiene ficha y no debe tener botón.

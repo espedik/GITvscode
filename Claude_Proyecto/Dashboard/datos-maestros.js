@@ -660,7 +660,7 @@ window.CIFRAS = (function () {
   //   sirve   para qué le sirve a Adán en concreto
   //   tarda   cuándo se nota, para no abandonarlo antes de tiempo
   //   ojo     el error que arruina el producto
-  //   envase  forma del frasco, para dibujarlo (bomba/gotero/tubo/tarro/bote)
+  //   frasco  forma del envase, para dibujarlo (bomba/gotero/tubo/tarro/bote...)
   //   marca   los dos colores del envase real
   //   foto    SOLO si existe foto del producto EXACTO con licencia libre. Cuatro de
   //           los seis no la tienen en ninguna base abierta: esos se dibujan.
@@ -669,7 +669,7 @@ window.CIFRAS = (function () {
       { id:'limpiador', cat:'Limpiador', n:'CeraVe Limpiador Espumoso (verde)',
         contenido:236, unidad:'ml', dosisDia:3, precio:260, tono:'ok',
         ayuda:['acne','sensibilidad'],
-        envase:'bomba', marca:{a:'#f2f4f6', b:'#00a94f'},
+        frasco:'bomba', marca:{a:'#f2f4f6', b:'#00a94f'},
         foto:'https://images.openbeautyfacts.org/images/products/360/600/053/7194/front_en.4.full.jpg',
         ficha:{
           activo:'Ceramidas + \u00e1cido hialur\u00f3nico, con tensioactivos suaves',
@@ -687,7 +687,7 @@ window.CIFRAS = (function () {
       { id:'niacinamida', cat:'Sérum', n:'The Ordinary Niacinamida 10% + Zinc 1%',
         contenido:30, unidad:'ml', dosisDia:0.15, precio:230, tono:'teal',
         ayuda:['acne','manchas'],
-        envase:'gotero', marca:{a:'#e9e4d8', b:'#1c1c1c'},
+        frasco:'gotero', marca:{a:'#e9e4d8', b:'#1c1c1c'},
         ficha:{
           activo:'Niacinamida (vitamina B3) al 10% + zinc PCA al 1%',
           que:'Un s\u00e9rum acuoso, de los m\u00e1s baratos que existen con evidencia real detr\u00e1s.',
@@ -702,7 +702,7 @@ window.CIFRAS = (function () {
       { id:'spf', cat:'Protector solar', n:'La Roche-Posay Anthelios Oil Free SPF50',
         contenido:50, unidad:'ml', dosisDia:1.25, precio:520, tono:'am',
         ayuda:['manchas','arrugas'], clave:true,
-        envase:'tubo', marca:{a:'#ffffff', b:'#0f5fa6'},
+        frasco:'tubo', marca:{a:'#ffffff', b:'#0f5fa6'},
         ficha:{
           activo:'Filtros UVA/UVB de amplio espectro, base oil free',
           que:'El protector solar diario, en textura fluida y sin aceites \u2014 la que no deja la cara grasosa ni tapa el poro.',
@@ -717,7 +717,7 @@ window.CIFRAS = (function () {
       { id:'retinoide', cat:'Retinoide', n:'Differin Adapaleno 0.1% Gel',
         contenido:45, unidad:'g', dosisDia:0.25, precio:430, tono:'pink',
         ayuda:['acne','arrugas','manchas'], clave:true,
-        envase:'tubo', marca:{a:'#ffffff', b:'#00a3c4'},
+        frasco:'tubo', marca:{a:'#ffffff', b:'#00a3c4'},
         ficha:{
           activo:'Adapaleno al 0.1%, un retinoide de tercera generaci\u00f3n',
           que:'Un gel de receta que en M\u00e9xico se vende sin ella. Es el retinoide m\u00e1s potente que puedes comprar en mostrador.',
@@ -732,7 +732,7 @@ window.CIFRAS = (function () {
       { id:'hidratantePM', cat:'Hidratante', n:'Eucerin Hyaluron-Filler + Epigenetic Noche',
         contenido:50, unidad:'ml', dosisDia:0.5, precio:700, tono:'pm',
         ayuda:['arrugas','sensibilidad'],
-        envase:'tarro', marca:{a:'#f6f7f9', b:'#12305e'},
+        frasco:'tarro', marca:{a:'#f6f7f9', b:'#12305e'},
         ficha:{
           activo:'\u00c1cido hialur\u00f3nico de dos tama\u00f1os de mol\u00e9cula',
           que:'La crema de noche. El hialur\u00f3nico corto entra a las capas de abajo y el largo se queda arriba reteniendo agua.',
@@ -748,7 +748,7 @@ window.CIFRAS = (function () {
       { id:'mascarilla', cat:'Mascarilla', n:'Aztec Secret Indian Healing Clay',
         contenido:454, unidad:'g', dosisDia:2.6, precio:290, tono:'mint',
         ayuda:['acne'], opcional:true,
-        envase:'bote', marca:{a:'#e8e2d4', b:'#c0392b'},
+        frasco:'bote', marca:{a:'#e8e2d4', b:'#c0392b'},
         foto:'https://images.openbeautyfacts.org/images/products/000/000/000/1277/front_en.10.full.jpg',
         ficha:{
           activo:'Arcilla bentonita de calcio, 100% y sin nada m\u00e1s',
@@ -817,55 +817,165 @@ window.CIFRAS = (function () {
   const RUTINA_PELO = {
     productos: [
       { id:'minoxidil', cat:'Tratamiento anticaída', n:'Minoxidil 5% NR-11 (Polaris Research)',
+        frasco:'gotero', marca:{a:'#f2f4f6', b:'#1a3a6b'},
+        ficha:{
+          activo:'Minoxidil al 5%, en loci\u00f3n',
+          que:'El tratamiento t\u00f3pico de la ca\u00edda. La NR-11 de Polaris es una f\u00f3rmula concentrada, m\u00e1s fuerte que la Kirkland de farmacia que usabas antes.',
+          hace:'Ensancha los vasos que riegan el fol\u00edculo y alarga la fase en la que el pelo crece. No mata la causa \u2014eso lo hace la dutasterida\u2014 pero sostiene con vida fol\u00edculos que iban camino de cerrarse.',
+          sirve:'Es la mitad de fuera de tu tratamiento: la dutasterida ataca la hormona por dentro y el minoxidil mantiene despierto al fol\u00edculo por arriba. Juntos hacen bastante m\u00e1s que cualquiera solo.',
+          tarda:'Las primeras 6-8 semanas se cae M\u00c1S pelo. Es el shedding y es buena se\u00f1al: los fol\u00edculos est\u00e1n soltando el pelo viejo para arrancar uno nuevo. Resultados reales a los 4-6 meses, y el m\u00e1ximo al a\u00f1o.',
+          ojo:'El d\u00eda que lo dejes, en 3-4 meses vuelves al punto de partida. No es un tratamiento con final: mientras lo quieras conservar, va todos los d\u00edas.'
+        },
         contenido:60, unidad:'ml', porUso:1, vecesDia:2, dias:[0,1,2,3,4,5,6], precio:900,
         tono:'am', clave:true, momento:'seco',
         uso:'<b>1 ml con el gotero</b>, repartido con los dedos <b>directo en el cuero cabelludo</b> seco — no en el pelo. Masajea 30 segundos y lávate las manos. Es <b>loción, no espuma</b>: sí lleva propilenglicol, así que si te pica o te reseca, baja a una dosis al día antes de abandonarlo.' },
 
       { id:'avodart', cat:'Tratamiento por dentro', n:'Avodart (dutasterida 0,5 mg)',
+        frasco:'caja', marca:{a:'#f7f8fa', b:'#b02a37'},
+        ficha:{
+          activo:'Dutasterida 0,5 mg, un inhibidor de la 5-alfa-reductasa',
+          que:'Una c\u00e1psula diaria. Es el escal\u00f3n m\u00e1s fuerte del tratamiento por dentro: bloquea las dos enzimas que fabrican DHT, mientras que la finasterida s\u00f3lo bloquea una.',
+          hace:'Corta la producci\u00f3n de DHT hasta en un 90%. La DHT es la hormona que va encogiendo el fol\u00edculo generaci\u00f3n tras generaci\u00f3n hasta que ya no produce pelo visible. Sin ella, el proceso se frena.',
+          sirve:'Es lo \u00fanico de tu rutina que ataca la CAUSA. El minoxidil, el Pilexil y todo lo dem\u00e1s sostienen lo que hay; esto detiene lo que lo est\u00e1 destruyendo.',
+          tarda:'Frena la ca\u00edda en 3-4 meses. La recuperaci\u00f3n visible, entre 6 y 12. Un a\u00f1o antes de juzgarlo.',
+          ojo:'Es un tratamiento de a\u00f1os, no de meses. Dejarlo un trimestre y retomar no reanuda donde ibas: lo que el fol\u00edculo pierde en la pausa no se recupera despu\u00e9s. Lo m\u00e9dico \u2014receta, PSA, efectos\u2014 est\u00e1 abajo, en Antes de empezar.'
+        },
         contenido:30, unidad:'cáps', porUso:1, vecesDia:1, dias:[0,1,2,3,4,5,6], precio:1500,
         tono:'warn', clave:true, momento:'oral', receta:true,
         uso:'<b>Una cápsula al día</b>, con o sin comida, siempre a la misma hora. Actúa <b>por dentro</b> bloqueando la DHT, que es la hormona que encoge el folículo: no sustituye al minoxidil \u2014 uno frena la caída y el otro empuja el crecimiento. Tarda <b>3 a 6 meses</b> en verse, igual que el minoxidil.',
         aviso:'Es <b>medicamento de receta</b> y para la caída se usa fuera de indicación. Dos cosas que tienes que saber: <b>parte tu PSA a la mitad</b> \u2014 mídelo y dile a quien lo interprete que la tomas \u2014 y si aparecen efectos sexuales o bulto/dolor en el pecho, es motivo de consulta, no de aguantarse. Llévala con un médico, no en solitario.' },
 
       { id:'pilexil', cat:'Champú anticaída', n:'Pilexil Anticaída 300 ml',
+        frasco:'botella', marca:{a:'#f4f6f8', b:'#e8590c'},
+        ficha:{
+          activo:'Complejo antica\u00edda con amino\u00e1cidos azufrados y vitaminas del grupo B',
+          que:'Un champ\u00fa de tratamiento, no de mantenimiento. Por eso son s\u00f3lo dos d\u00edas a la semana y no todos.',
+          hace:'Limpia el cuero cabelludo de sebo y c\u00e9lulas muertas \u2014lo que tapa el fol\u00edculo\u2014 y deja actuar sus activos los minutos que lo tienes puesto. Es apoyo, no el motor del tratamiento.',
+          sirve:'Prepara el terreno para el minoxidil: sobre un cuero cabelludo sucio o con exceso de grasa, la loci\u00f3n penetra peor.',
+          tarda:'El cuero cabelludo se siente distinto en 2-3 semanas. En la ca\u00edda, su aporte es modesto y se mide en meses.',
+          ojo:'No sustituye al minoxidil ni a la dutasterida. Un champ\u00fa est\u00e1 en contacto con la piel dos minutos: por bueno que sea, no puede hacer el trabajo de un tratamiento que se queda puesto.'
+        },
         contenido:300, unidad:'ml', porUso:12, dias:[1,4], precio:450, tono:'am', champu:true,
         uso:'Solo en el <b>cuero cabelludo</b>, nunca en el largo. Masajea <b>2 minutos con las yemas</b> — no con las uñas — y enjuaga: lo que escurre ya limpia el resto del pelo.' },
 
       { id:'cerave', cat:'Champú suave', n:'CeraVe Champú Hidratante sin sulfatos',
+        frasco:'botella', marca:{a:'#f2f4f6', b:'#0d6ebf'},
+        ficha:{
+          activo:'Tensioactivos suaves, sin sulfatos, con ceramidas',
+          que:'Tu champ\u00fa de todos los d\u00edas. Los otros dos \u2014Pilexil y Darrow\u2014 son tratamiento y van s\u00f3lo sus d\u00edas.',
+          hace:'Limpia sin sulfatos, que son los detergentes agresivos que dejan el cuero cabelludo tirante y disparan el rebote de grasa. Menos irritaci\u00f3n abajo es mejor terreno para el fol\u00edculo.',
+          sirve:'Es lo que usas los d\u00edas que no tocan medicados. Sin \u00e9l acabar\u00edas lav\u00e1ndote con champ\u00fa de tratamiento a diario, que reseca, o no lav\u00e1ndote, que tapa el poro.',
+          tarda:'Desde el primer lavado: el cuero cabelludo deja de picar y de engrasarse tan r\u00e1pido.',
+          ojo:'Es limpieza, no tratamiento. No aporta nada contra la ca\u00edda y no pretende hacerlo.'
+        },
         contenido:355, unidad:'ml', porUso:15, dias:[3,6], diasCondicionales:[3], precio:300,
         tono:'agua', champu:true,
         uso:'Tu lavado suave: limpia sin arrastrar los aceites naturales. Los champús medicados son TRATAMIENTO, no mantenimiento.',
         notaDia:{ 3:'Solo después de nadar. El cloro se queda en el pelo y lo reseca durante horas — ese lavado no es opcional.' } },
 
       { id:'darrow', cat:'Champú medicado', n:'Darrow Doctar (alquitrán)',
+        frasco:'botella', marca:{a:'#f4f6f8', b:'#5a3e2b'},
+        ficha:{
+          activo:'Alquitr\u00e1n de hulla (coaltar)',
+          que:'Un champ\u00fa medicado de verdad, de los de farmacia. Es para cuando hay descamaci\u00f3n o placas, no para uso continuo.',
+          hace:'El alquitr\u00e1n frena la velocidad a la que se reproducen las c\u00e9lulas de la piel del cuero cabelludo. Esa reproducci\u00f3n acelerada es exactamente lo que produce la caspa gruesa y las placas.',
+          sirve:'Para los brotes de descamaci\u00f3n. Un cuero cabelludo inflamado y descamado empeora la ca\u00edda, as\u00ed que apagarlo protege tambi\u00e9n el tratamiento.',
+          tarda:'La descamaci\u00f3n cede en 1-2 semanas de uso.',
+          ojo:'Ese d\u00eda sustituye al Pilexil, nunca se suman: dos champ\u00fas medicados seguidos resecan el cuero cabelludo y consiguen justo lo contrario. Y ti\u00f1e las toallas claras.'
+        },
         contenido:200, unidad:'ml', porUso:12, dias:[], usosSemana:0, precio:350, tono:'warn',
         champu:true, soloSi:'caspa activa',
         uso:'Masajea el cuero 2-3 minutos y deja actuar antes de enjuagar. <b>Sustituye</b> al Pilexil ese día, nunca se suma.' },
 
       { id:'acondicionador', cat:'Acondicionador', n:"L'Oréal Elvive Reparación Total 5",
+        frasco:'botella', marca:{a:'#f4f6f8', b:'#8b1a3a'},
+        ficha:{
+          activo:'Ceramidas y siliconas de aclarado',
+          que:'El acondicionador de diario, para el largo del pelo. No tiene nada que ver con la ca\u00edda: esto es cosm\u00e9tica del tallo.',
+          hace:'Cierra la cut\u00edcula, que son las escamas que recubren el pelo y que el lavado levanta. Cerradas, el pelo refleja la luz y no se engancha consigo mismo.',
+          sirve:'Para que el pelo que conservas se vea y se sienta mejor. El tratamiento se ocupa de que haya pelo; esto, de que el que hay luzca.',
+          tarda:'Desde el primer uso: se nota al peinar.',
+          ojo:'Nunca en la ra\u00edz. Tu pelo es fino y graso: en la ra\u00edz aplana el volumen y adelanta el momento en que se ve sucio.'
+        },
         contenido:680, unidad:'ml', porUso:15, dias:[0,1,2,3,4,5], precio:120, tono:'ok',
         momento:'ducha',
         uso:'<b>Solo de medios a puntas</b>, nunca en la raíz: en cabello fino y graso, la raíz se aplana y se engrasa antes. Espera 1-2 minutos y enjuaga con agua fresca — ese minuto es lo que hace que sirva de algo.' },
 
       { id:'mascarilla', cat:'Mascarilla', n:"Mascarilla L'Oréal Elvive Total Repair 5",
+        frasco:'tarro', marca:{a:'#f6f7f9', b:'#8b1a3a'},
+        ficha:{
+          activo:'Ceramidas en concentraci\u00f3n alta, base m\u00e1s densa que el acondicionador',
+          que:'El acondicionador en versi\u00f3n concentrada. Viene en tarro, no en botella, porque la textura es mucho m\u00e1s espesa.',
+          hace:'Lo mismo que el acondicionador pero con m\u00e1s carga y m\u00e1s tiempo de contacto, as\u00ed que llega m\u00e1s adentro del tallo en vez de quedarse s\u00f3lo en la superficie.',
+          sirve:'Para el d\u00eda de la semana en que el pelo lo necesita m\u00e1s: despu\u00e9s del champ\u00fa medicado, o cuando lo notas seco de puntas.',
+          tarda:'Ese mismo d\u00eda, y el efecto dura 2-3 lavados.',
+          ojo:'Sustituye al acondicionador ese d\u00eda, no se pone encima. Los dos juntos apelmazan el cabello fino y lo dejan sin cuerpo.'
+        },
         contenido:300, unidad:'ml', porUso:20, dias:[6], precio:130, tono:'oro', momento:'ducha',
         uso:'De medios a puntas, <b>5 minutos</b> mientras terminas de bañarte. Ese día <b>sustituye al acondicionador</b>: ponerle los dos apelmaza el cabello fino. Viene en TARRO, no en botella — es un acondicionador mucho más concentrado.' },
 
       { id:'sinEnjuague', cat:'Crema sin enjuague', n:"Crema sin enjuague L'Oréal Elvive Total Repair 5",
+        frasco:'tubo', marca:{a:'#ffffff', b:'#8b1a3a'},
+        ficha:{
+          activo:'Agentes acondicionadores que no se aclaran',
+          que:'Una crema ligera que se queda puesta. Es el \u00fanico producto del largo que va TODOS los d\u00edas, tambi\u00e9n los que no te lavas.',
+          hace:'Deja una pel\u00edcula fina que reduce la fricci\u00f3n durante todo el d\u00eda: al peinar, al pasar la mano, contra el cuello de la camisa. Menos fricci\u00f3n es menos pelo partido.',
+          sirve:'Protege el pelo que ya tienes de romperse por el camino. En una cabeza que adem\u00e1s est\u00e1 perdiendo densidad, cada pelo que se parte cuenta doble.',
+          tarda:'El tacto cambia el mismo d\u00eda. Menos puntas abiertas, en unas semanas.',
+          ojo:'Un ch\u00edcharo, y s\u00f3lo en la mitad de abajo. En la ra\u00edz engrasa y aplana, y como no se enjuaga el error se queda ah\u00ed todo el d\u00eda.'
+        },
         contenido:200, unidad:'ml', porUso:3, dias:[0,1,2,3,4,5,6], precio:110, tono:'pm',
         momento:'humedo',
         uso:'Cantidad de un chícharo sobre el pelo húmedo, <b>solo en la mitad de abajo</b>, y NO se enjuaga. Va <b>todos los días</b>, no solo los que te lavas.' },
 
       { id:'aceite', cat:'Aceite de puntas', n:'Moroccanoil Treatment Light',
+        frasco:'gotero', marca:{a:'#f5f0e3', b:'#0e4f4f'},
+        ficha:{
+          activo:'Aceite de arg\u00e1n con siliconas ligeras',
+          que:'Un aceite de acabado, para las puntas. La versi\u00f3n Light es la que corresponde a cabello fino; la normal pesar\u00eda demasiado.',
+          hace:'Sella la punta del pelo, que es la parte m\u00e1s vieja y m\u00e1s da\u00f1ada: por ah\u00ed se abre y se rompe. El aceite tapa esa apertura y devuelve brillo.',
+          sirve:'Para el d\u00eda que lo notes rasposo o encrespado. Es un extra de acabado, no forma parte del tratamiento.',
+          tarda:'Inmediato, y s\u00f3lo mientras est\u00e9 puesto. No cambia el pelo, cambia c\u00f3mo se ve hoy.',
+          ojo:'Dos gotas y s\u00f3lo en puntas. Es el producto m\u00e1s f\u00e1cil de pasarse: con tres el pelo fino queda grasoso todo el d\u00eda y no se arregla sin lavarlo.'
+        },
         contenido:100, unidad:'ml', porUso:0.5, dias:[], usosSemana:2, precio:900, tono:'gris',
         momento:'seco',
         uso:'<b>2 gotas solo en las puntas</b>, con el pelo ya seco. No es diario: es para el día que lo notes rasposo. En raíz no va nunca y de más engrasa.' },
 
       { id:'funda', cat:'Funda de almohada', n:'Funda de almohada de satín',
+        frasco:'tela', marca:{a:'#eef1f6', b:'#7a5ea8'},
+        ficha:{
+          activo:'Sat\u00edn \u2014 la clave es el tejido, no la fibra',
+          que:'Una funda de almohada de sat\u00edn en vez de algod\u00f3n. Es lo m\u00e1s barato de toda tu rutina y de lo poco que trabaja mientras duermes.',
+          hace:'El algod\u00f3n tiene una superficie rugosa que agarra el pelo y absorbe la humedad; el sat\u00edn es liso y no lo hace. Siete horas de cabeza girando sobre algod\u00f3n son siete horas de fricci\u00f3n sobre pelo que ya est\u00e1 fr\u00e1gil.',
+          sirve:'Menos pelo partido por la ma\u00f1ana y menos encrespado. Tambi\u00e9n le hace bien a la cara: el algod\u00f3n marca l\u00edneas de almohada y absorbe la crema de noche.',
+          tarda:'Se nota en un par de semanas, sobre todo en c\u00f3mo amanece el pelo.',
+          ojo:'L\u00e1vala cada semana como cualquier funda. El sat\u00edn es liso, no antibacteriano, y ah\u00ed duerme una cara con retinoide.'
+        },
         contenido:1, unidad:'pza', porUso:0, dias:[], usosSemana:0, precio:250, tono:'gris',
         momento:'noche', noConsumible:true,
         uso:'Menos fricción durante las 7 horas que pasas con la cara contra la almohada. Es lo más barato que puedes hacer por tu pelo.' },
     ],
+
+    // El renglón tal como sale en la lista de la compra. Se escribe aquí una sola vez
+    // para que `deTextoCompra` pueda deshacerlo y el dashboard sepa qué producto abrir.
+    diasTexto: function (p) {
+      const D = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'];
+      if (p.soloSi) return 'solo si hay ' + p.soloSi + ', nunca junto al Pilexil';
+      if (p.noConsumible) return null;
+      if (!p.dias.length) return 'cuando lo notes áspero, solo puntas';
+      if (p.dias.length === 7) return 'todos los días' + (p.vecesDia > 1 ? ', ' + p.vecesDia + ' veces' : '');
+      const n = p.dias.map(function (d) { return D[d]; });
+      return n.slice(0, -1).join(', ') + (n.length > 1 ? ' y ' : '') + n[n.length - 1];
+    },
+    textoCompra: function (p) {
+      const c = this.diasTexto(p);
+      return p.n + ', ' + p.contenido + ' ' + p.unidad + (c ? ' (' + c + ')' : '');
+    },
+    deTextoCompra: function (txt) {
+      var t = this;
+      return this.productos.filter(function (p) { return t.textoCompra(p) === txt; })[0] || null;
+    },
 
     // Cuántas veces se usa a la semana. De aquí sale todo lo demás.
     usosSemana: function (p) {
@@ -919,35 +1029,87 @@ window.CIFRAS = (function () {
   const SUPLEMENTOS = {
     lista: [
       { id:'d3', n:'Vitamina D3', dosis:'2000-4000 UI', momento:'am', cuando:'con algo de grasa',
+        frasco:'pastillas', marca:{a:'#ffffff', b:'#e8a317'},
+        ficha:{
+          activo:'Colecalciferol (vitamina D3), la misma forma que fabrica la piel con el sol',
+          que:'Una c\u00e1psula peque\u00f1a de aceite. No es una vitamina cualquiera: el cuerpo la trata como una hormona.',
+          hace:'Regula la absorci\u00f3n de calcio y participa en la producci\u00f3n de testosterona. Tu piel la fabrica con luz solar directa, pero entre la oficina y el coche puedes pasar semanas sin exposici\u00f3n real.',
+          tarda:'Los niveles en sangre suben en 6-8 semanas. Lo que sientas antes de eso es sugesti\u00f3n.'
+        },
         envase:120, unidad:'cápsulas', porDia:1, precio:220, tono:'gris',
         porQue:'Soporte hormonal — incluida la testosterona — y salud ósea. La deficiencia es muy común si te da poco sol, y tú pasas el día dentro.',
         ojo:'Es el único de la lista cuyo efecto depende de un número que no conoces: <b>hazte el examen de Vitamina D</b> antes de sostener dosis altas.' },
 
       { id:'multi', n:'Multivitamínico', dosis:'1 tableta', momento:'am', cuando:'con el desayuno',
+        frasco:'pastillas', marca:{a:'#ffffff', b:'#2b8a3e'},
+        ficha:{
+          activo:'Mezcla de vitaminas y minerales en dosis cercanas a la recomendada diaria',
+          que:'Una tableta grande al d\u00eda. Es un seguro barato, no un tratamiento.',
+          hace:'Cubre el m\u00ednimo de una docena de micronutrientes. No te sube por encima de lo normal: te evita quedarte por debajo el d\u00eda que comiste mal.',
+          tarda:'No se siente nada, y as\u00ed debe ser. Su trabajo es que no pase nada.'
+        },
         envase:90, unidad:'tabletas', porDia:1, precio:350, tono:'teal',
         porQue:'Cubre huecos de micronutrientes los días en que la dieta no es perfecta.',
         ojo:'No sustituye comer variado — es un seguro, no la base de la nutrición.' },
 
       { id:'omega3', n:'Omega 3 (aceite de pescado)', dosis:'1-2 g EPA+DHA', momento:'am', cuando:'con alimento',
+        frasco:'pastillas', marca:{a:'#ffffff', b:'#1864ab'},
+        ficha:{
+          activo:'EPA y DHA, los dos \u00e1cidos grasos que el cuerpo no fabrica',
+          que:'C\u00e1psulas de aceite de pescado. Lo que importa no son los miligramos del bote sino cu\u00e1nto EPA+DHA trae por c\u00e1psula \u2014 muchos venden 1000 mg de aceite con 300 de activo.',
+          hace:'Se incorpora a la membrana de tus c\u00e9lulas y baja la producci\u00f3n de mol\u00e9culas inflamatorias. Menos inflamaci\u00f3n de fondo significa mejor recuperaci\u00f3n entre entrenamientos.',
+          tarda:'6-12 semanas para que cambie la composici\u00f3n de las membranas. No es de efecto inmediato.'
+        },
         envase:120, unidad:'cápsulas', porDia:2, precio:450, tono:'agua',
         porQue:'Antiinflamatorio, apoya la recuperación muscular y la salud cardiovascular.',
         ojo:'Si tienes reflujo, tómalo con una comida grande para evitar el "repique" de sabor a pescado.' },
 
       { id:'creatina', n:'Creatina monohidratada', dosis:'5 g', momento:'am', cuando:'también sin entrenar',
+        frasco:'polvo', marca:{a:'#f2f4f6', b:'#e8590c'},
+        ficha:{
+          activo:'Creatina monohidratada \u2014 la forma barata, y la \u00fanica con evidencia s\u00f3lida',
+          que:'Un polvo sin sabor que se disuelve en agua. Es el suplemento deportivo m\u00e1s estudiado que existe.',
+          hace:'Rellena el dep\u00f3sito de fosfocreatina del m\u00fasculo, que es el combustible de los primeros segundos de esfuerzo m\u00e1ximo. Con el dep\u00f3sito lleno sacas una o dos repeticiones m\u00e1s por serie, y esas repeticiones extra son las que construyen m\u00fasculo con el tiempo.',
+          tarda:'El m\u00fasculo se satura en 3-4 semanas tom\u00e1ndola a diario. El primer par de kilos que subas es agua dentro del m\u00fasculo, no grasa.'
+        },
         envase:300, unidad:'g', porDia:5, precio:400, tono:'am', clave:true,
         porQue:'El suplemento con más evidencia para fuerza y ganancia de masa muscular.',
         ojo:'No necesita fase de carga, y va <b>todos los días</b>: el efecto es por acumulación. Sube la creatinina en sangre <b>sin daño renal</b> — avisa antes de un perfil renal.' },
 
       { id:'magnesio', n:'Magnesio (glicinato o citrato)', dosis:'200-400 mg', momento:'pm', cuando:'30-60 min antes de dormir',
+        frasco:'pastillas', marca:{a:'#ffffff', b:'#5f3dc4'},
+        ficha:{
+          activo:'Magnesio quelado \u2014 glicinato o citrato, nunca \u00f3xido',
+          que:'C\u00e1psulas para la noche. La forma importa m\u00e1s que la dosis: el \u00f3xido es barato porque casi no se absorbe.',
+          hace:'Interviene en cientos de reacciones, y entre ellas relaja la musculatura y ayuda a bajar el sistema nervioso a modo de reposo. Por eso va de noche y no por la ma\u00f1ana.',
+          tarda:'El sue\u00f1o suele mejorar en la primera semana. Los calambres tardan algo m\u00e1s.'
+        },
         envase:120, unidad:'cápsulas', porDia:2, precio:400, tono:'pm',
         porQue:'Mejora la calidad del sueño y reduce calambres — complementa lo de Postura y Salud Mental.',
         ojo:'Va de noche por una razón: tomarlo por la mañana desperdicia la mitad de para lo que lo compraste. El glicinato es el mejor tolerado; evita el óxido si tienes estómago sensible.' },
 
       { id:'whey', n:'Proteína Whey (suero de leche)', dosis:'25-30 g', momento:'pm', cuando:'solo si faltan gramos',
+        frasco:'polvo', marca:{a:'#f2f4f6', b:'#c92a2a'},
+        ficha:{
+          activo:'Prote\u00edna de suero de leche, rica en leucina',
+          que:'Un bote de polvo. No es un producto especial: es comida, en formato c\u00f3modo y con un perfil de amino\u00e1cidos muy bueno.',
+          hace:'Aporta los amino\u00e1cidos con los que se reconstruye el m\u00fasculo despu\u00e9s de entrenar. Se absorbe r\u00e1pido, que es lo \u00fanico que la diferencia de un filete.',
+          tarda:'No hay efecto que sentir. Sirve si te falta prote\u00edna en el d\u00eda; si ya llegas con comida, no aporta nada.'
+        },
         envase:2000, unidad:'g', porDia:30, usosSemana:4, precio:1300, tono:'ok',
         porQue:'Completar tu meta de <b>{{proteinaMeta}} g de proteína al día</b> los días en que la comida no alcanza.',
         ojo:'No reemplaza comida real — es para los días en que no llegas solo con alimentos.' },
     ],
+
+    // El renglón de la lista de la compra, escrito una sola vez y reversible.
+    textoCompra: function (p) {
+      return p.n + ', ' + p.envase + ' ' + p.unidad + ' (' + p.dosis + ', ' +
+        (p.momento === 'am' ? 'mañana' : 'noche') + ')';
+    },
+    deTextoCompra: function (txt) {
+      var t = this;
+      return this.lista.filter(function (p) { return t.textoCompra(p) === txt; })[0] || null;
+    },
 
     usosSemana: function (p) { return p.usosSemana != null ? p.usosSemana : 7; },
     porSemana: function (p) { return this.usosSemana(p) * p.porDia; },
@@ -1181,6 +1343,596 @@ window.CIFRAS = (function () {
     },
   };
 
+  // \u2500\u2500 KIT DE HIGIENE \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
+  // Agrupado por bolsa, no por tipo de producto: cuando armas la maleta lo que importa
+  // es qu\u00e9 meter en el neceser, no si algo es \"cuidado bucal\" o \"cuidado corporal\". Lo
+  // que ya vive en Skincare y Cabello NO se duplica aqu\u00ed \u2014 esta lista es lo que hay que
+  // COMPRAR APARTE en tama\u00f1o de viaje o lo que solo existe en el neceser.
+  //
+  // Hasta el 2026-09-02 esto eran cadenas sueltas dentro de `LISTA_COMPRAS`: no hab\u00eda
+  // ning\u00fan objeto detr\u00e1s, as\u00ed que no hab\u00eda d\u00f3nde colgar una ficha. Ahora cada art\u00edculo
+  // es un producto y la lista de la compra sale de aqu\u00ed. El `precio` NO se escribe:
+  // vive en `LISTA_COMPRAS_PRECIOS_OTROS`, indexado por el texto del rengl\u00f3n.
+  const KIT_HIGIENE = {
+    grupos: [
+      { n: 'Bolsa base \u2014 el neceser en s\u00ed', items: [
+        { id:'neceser', n:'Neceser con gancho para colgar (impermeable por dentro)',
+          frasco:'bolsa', marca:{a:'#e9ecf1', b:'#2c3e50'},
+          uso:'Cu\u00e9lgalo del gancho nada m\u00e1s llegar y no lo vuelvas a abrir sobre la cama. Todo lo l\u00edquido, en la mitad impermeable.',
+          ficha:{
+            activo:'Forro impermeable y gancho giratorio',
+            que:'La bolsa donde vive todo lo dem\u00e1s. Las dos caracter\u00edsticas que importan son el gancho y el forro; el resto es decoraci\u00f3n.',
+            hace:'El gancho te da una repisa donde no la hay: los ba\u00f1os de hotel tienen un lavabo del tama\u00f1o de un plato. El forro impermeable convierte un gel reventado en un incordio en vez de en una maleta perdida.',
+            sirve:'Es lo que hace que el kit sea un kit y no doce cosas sueltas por la maleta. Tambi\u00e9n es lo que hace que armar el equipaje deje de ser una decisi\u00f3n y pase a ser coger una bolsa.',
+            tarda:'Desde el primer viaje.',
+            ojo:'C\u00f3mpralo del tama\u00f1o de lo que llevas, no del que te gustar\u00eda llevar. Un neceser grande se llena de cosas que no usas y acaba pesando m\u00e1s que la ropa.'
+          } },
+        { id:'botellas', n:'Botellas de viaje rellenables 100 ml (set de 4, aptas para equipaje de mano)',
+          frasco:'botella', marca:{a:'#eef1f6', b:'#1c7ed6'},
+          uso:'Rell\u00e9nalas la noche antes, no en el aeropuerto. Etiqu\u00e9talas: a los tres viajes ya no sabes cu\u00e1l es el champ\u00fa y cu\u00e1l el gel.',
+          ficha:{
+            activo:'100 ml exactos \u2014 el l\u00edmite de cabina',
+            que:'Cuatro botes peque\u00f1os rellenables. Son los que convierten tus productos de casa en productos de viaje sin comprarlos otra vez.',
+            hace:'Cien mililitros es el m\u00e1ximo que deja pasar el control de un aeropuerto, y se mide por la capacidad impresa en el bote, no por lo que lleve dentro. Un bote de 200 ml medio vac\u00edo te lo quitan igual.',
+            sirve:'Te ahorran comprar versiones de viaje de todo. Tu champ\u00fa, tu acondicionador y tu gel viajan contigo en vez de usar lo que haya en el hotel.',
+            tarda:'Inmediato.',
+            ojo:'El minoxidil NO va aqu\u00ed. Se degrada fuera de su envase original, y eso s\u00ed arruina el tratamiento.'
+          } },
+        { id:'bolsaLiquidos', n:'Bolsa de pl\u00e1stico con cierre para l\u00edquidos (regla de aeropuerto: 1 L transparente)',
+          frasco:'bolsa', marca:{a:'#f0f3f7', b:'#868e96'},
+          uso:'Todos los l\u00edquidos dentro, y la bolsa a mano en la mochila \u2014no en el fondo. En el control la sacas sin desarmar nada.',
+          ficha:{
+            activo:'Un litro, transparente y con cierre herm\u00e9tico',
+            que:'Una bolsa de pl\u00e1stico. Cuesta lo que nada y es lo que decide si pasas el control en treinta segundos o en diez minutos.',
+            hace:'La norma es la misma en casi todos los aeropuertos: los l\u00edquidos van en una sola bolsa transparente de un litro que se ense\u00f1a aparte. Sin ella, te vac\u00edan el neceser en la bandeja.',
+            sirve:'Para no perder el vuelo por el control, y para no acabar tirando el gel que acabas de comprar.',
+            tarda:'El primer control.',
+            ojo:'UNA bolsa por persona, y tiene que cerrar. Si va tan llena que no cierra, no cuenta y te hacen sacar cosas all\u00ed mismo.'
+          } },
+        { id:'toallaMicro', n:'Toalla de microfibra de secado r\u00e1pido',
+          frasco:'tela', marca:{a:'#eef1f6', b:'#0ca678'},
+          uso:'S\u00e9cate a toques, no frotando. Al terminar, ti\u00e9ndela: doblada y h\u00fameda dentro del neceser huele mal en un d\u00eda.',
+          ficha:{
+            activo:'Microfibra \u2014 absorbe varias veces su peso y se seca en un par de horas',
+            que:'Una toalla que ocupa como una camiseta doblada. No sustituye a la de casa: sustituye a la que no cabe en la maleta.',
+            hace:'La fibra es mucho m\u00e1s fina que la del algod\u00f3n, as\u00ed que tiene mucha m\u00e1s superficie por gramo: absorbe m\u00e1s y, sobre todo, se seca sola antes de que le d\u00e9 tiempo a oler.',
+            sirve:'Para el gimnasio, la alberca de Fitsi y cualquier viaje. Una toalla de algod\u00f3n mojada en la maleta arruina el resto de la ropa.',
+            tarda:'Desde el primer uso.',
+            ojo:'Nada de suavizante al lavarla: tapona la fibra y deja de absorber. Es el error que las convierte en un trapo que resbala sobre la piel.'
+          } },
+      ] },
+      { n: 'Cuidado bucal', items: [
+        { id:'cepilloViaje', n:'Cepillo de dientes de viaje con tapa',
+          frasco:'cepillo', marca:{a:'#f2f4f6', b:'#12b886'},
+          uso:'Dos minutos, cerdas suaves y en \u00e1ngulo hacia la enc\u00eda. Enju\u00e1galo y d\u00e9jalo secar ANTES de taparlo.',
+          ficha:{
+            activo:'Cerdas suaves \u2014 nunca medias ni duras',
+            que:'Un cepillo plegable o con capuch\u00f3n. Lo de la tapa es por transporte, no por higiene.',
+            hace:'Las cerdas suaves limpian igual que las duras: la placa es blanda y no hace falta fuerza. Las duras lo que hacen es retirarte la enc\u00eda y desgastar el esmalte del cuello del diente, y eso no vuelve.',
+            sirve:'Para no acabar usando el cepillo de cortes\u00eda del hotel, que suele ser de cerda dura.',
+            tarda:'C\u00e1mbialo cada 3 meses o en cuanto las cerdas se abran.',
+            ojo:'No lo tapes mojado. Un capuch\u00f3n cerrado sobre un cepillo h\u00famedo es una incubadora; por eso muchos vienen con agujeros.'
+          } },
+        { id:'pastaViaje', n:'Pasta dental tama\u00f1o viaje (\u226475 ml)',
+          frasco:'tubo', marca:{a:'#ffffff', b:'#1971c2'},
+          uso:'Del tama\u00f1o de un ch\u00edcharo, no la tira entera del anuncio. Y al terminar, escupe pero no te enjuagues con agua.',
+          ficha:{
+            activo:'Fl\u00faor, 1450 ppm \u2014 el n\u00famero que hay que mirar en la caja',
+            que:'Un tubo peque\u00f1o. Lo \u00fanico que decide si una pasta sirve es que lleve fl\u00faor en cantidad suficiente; lo dem\u00e1s es sabor y marketing.',
+            hace:'El fl\u00faor se incorpora al esmalte y lo vuelve m\u00e1s resistente al \u00e1cido de las bacterias. Es de las medidas de salud p\u00fablica con m\u00e1s evidencia que existen.',
+            sirve:'Para que la parte de tu rutina que m\u00e1s se repite \u2014dos veces al d\u00eda, todos los d\u00edas\u2014 siga funcionando tambi\u00e9n fuera de casa.',
+            tarda:'Es prevenci\u00f3n: no se nota, se mide en la revisi\u00f3n.',
+            ojo:'Enjuagarte con agua despu\u00e9s se lleva el fl\u00faor que acabas de poner. Escupe y ya est\u00e1: es el cambio gratis que m\u00e1s rinde de todo el cuidado bucal.'
+          } },
+        { id:'hilo', n:'Hilo dental',
+          frasco:'caja', marca:{a:'#ffffff', b:'#0ca678'},
+          uso:'Antes de cepillarte, no despu\u00e9s. Rodea el diente en forma de C y baja hasta la enc\u00eda: si s\u00f3lo metes y sacas, no limpias nada.',
+          ficha:{
+            activo:'El hilo \u2014 encerado si tienes los dientes juntos',
+            que:'Un carrete de hilo. Es lo m\u00e1s aburrido de la lista y probablemente lo que m\u00e1s te ahorra en dentista.',
+            hace:'El cepillo llega a tres de las cinco caras del diente. Las dos que quedan son justo donde empieza la caries entre dientes y donde se acumula la placa que inflama la enc\u00eda.',
+            sirve:'Es la diferencia entre limpiarte el 60% de la boca y limpi\u00e1rtela entera. Con tu tema de reflujo, adem\u00e1s, la salud de la enc\u00eda importa a\u00fan m\u00e1s.',
+            tarda:'Si sangra al principio, es que hay inflamaci\u00f3n. Deja de sangrar en 1-2 semanas de uso diario, y eso es la se\u00f1al de que va bien.',
+            ojo:'Que sangre no es motivo para dejarlo \u2014 es el motivo por el que hay que hacerlo. Lo que s\u00ed hay que evitar es meterlo de golpe y cortar la enc\u00eda.'
+          } },
+        { id:'enjuague', n:'Enjuague bucal tama\u00f1o viaje',
+          frasco:'botella', marca:{a:'#ffffff', b:'#5f3dc4'},
+          uso:'En otro momento del cepillado, no justo despu\u00e9s. Y sin diluir, 30 segundos.',
+          ficha:{
+            activo:'Fl\u00faor y agentes antis\u00e9pticos, mejor sin alcohol',
+            que:'Un complemento, nunca un sustituto. Enjuagarse no quita placa: la placa se quita por rozamiento.',
+            hace:'Reparte fl\u00faor por toda la boca y baja la carga bacteriana. Ayuda con el aliento y con la enc\u00eda, pero no despega nada.',
+            sirve:'Como refuerzo entre cepillados, sobre todo en viaje, cuando comes fuera y a deshoras.',
+            tarda:'El aliento, inmediato. La enc\u00eda, semanas.',
+            ojo:'El\u00edgelo sin alcohol: el alcohol reseca la boca, y una boca seca da M\u00c1S caries y peor aliento, que es justo lo contrario de lo que buscas.'
+          } },
+        { id:'interdental', n:'Cepillos interdentales o irrigador de viaje',
+          frasco:'utensilio', marca:{a:'#cfd6de', b:'#495057'},
+          uso:'Uno por hueco, del grosor que entre sin forzar. Si tienes que empujar, es demasiado grande.',
+          ficha:{
+            activo:'El calibre \u2014 el grosor correcto para cada hueco',
+            que:'Cepillitos diminutos para los espacios entre dientes. Donde caben, limpian mejor que el hilo.',
+            hace:'Barren la superficie entre dientes con cerdas de verdad, en vez de rasparla con un hilo. En huecos amplios el hilo pasa sin tocar los lados.',
+            sirve:'Para los huecos donde el hilo se queda corto, y en general para hacer m\u00e1s r\u00e1pido y m\u00e1s c\u00f3modo lo que casi nadie sostiene.',
+            tarda:'La enc\u00eda deja de sangrar en 1-2 semanas.',
+            ojo:'Forzar uno grueso separa los dientes y lastima la enc\u00eda. Pide en la farmacia que te digan el calibre, o compra un surtido y qu\u00e9date con el que entra solo.'
+          } },
+      ] },
+      { n: 'Afeitado y barba', items: [
+        { id:'rastrillo', n:'Rastrillo + cartuchos de repuesto',
+          frasco:'utensilio', marca:{a:'#dfe4ea', b:'#1c7ed6'},
+          uso:'Siempre a favor del pelo, nunca a contrapelo, y sin apretar: el peso de la m\u00e1quina basta. Enjuaga la hoja cada dos pasadas.',
+          ficha:{
+            activo:'La hoja \u2014 y que est\u00e9 nueva, que es lo que de verdad importa',
+            que:'La m\u00e1quina y sus repuestos. El repuesto es la parte que hay que recordar comprar: casi todo el mundo alarga el cartucho el triple de lo que deber\u00eda.',
+            hace:'Una hoja afilada corta el pelo de una pasada. Una gastada lo arranca y tira, y eso es lo que produce la irritaci\u00f3n, los granitos y el pelo enterrado.',
+            sirve:'Es el paso donde m\u00e1s f\u00e1cil te haces da\u00f1o en la cara, y donde el resultado depende casi por completo de una cosa que cuesta poco: cambiar el cartucho.',
+            tarda:'Cada afeitado.',
+            ojo:'Cambia el cartucho cada 5-7 afeitados. Si tienes que pasar dos veces por el mismo sitio, ya lo cambiaste tarde.'
+          } },
+        { id:'gelAfeitar', n:'Gel o espuma de afeitar tama\u00f1o viaje',
+          frasco:'botella', marca:{a:'#f2f4f6', b:'#0d6ebf'},
+          uso:'Sobre la piel ya mojada con agua tibia, y d\u00e9jalo un minuto antes de pasar la m\u00e1quina. Ese minuto es la mitad del trabajo.',
+          ficha:{
+            activo:'Lubricantes y emolientes con agua',
+            que:'Lo que va entre la hoja y tu cara. El gel transparente deja ver por d\u00f3nde vas; la espuma lo tapa todo.',
+            hace:'Hidrata el pelo, que as\u00ed se ablanda y se corta con menos fuerza, y deja una capa resbaladiza para que la hoja se deslice en vez de arrastrar la piel.',
+            sirve:'Es lo que separa un afeitado limpio de una cara irritada. Afeitarse con jab\u00f3n de manos \u2014que es lo que hay en un hotel\u2014 reseca y raspa.',
+            tarda:'El mismo d\u00eda.',
+            ojo:'Nunca en seco ni con agua fr\u00eda. El agua tibia y el minuto de espera son gratis y son lo que evita el ardor de despu\u00e9s.'
+          } },
+        { id:'balsamo', n:'B\u00e1lsamo after-shave sin alcohol',
+          frasco:'tubo', marca:{a:'#ffffff', b:'#0ca678'},
+          uso:'Justo despu\u00e9s de secarte, con la cara todav\u00eda algo h\u00fameda. Si te afeitas por la ma\u00f1ana, va antes del protector solar.',
+          ficha:{
+            activo:'Calmantes como alanto\u00edna o pantenol, sin alcohol',
+            que:'Lo que se pone despu\u00e9s. El de toda la vida llevaba alcohol y ard\u00eda; ese ardor no es que est\u00e9 funcionando, es que te est\u00e1 resecando.',
+            hace:'Afeitarse retira una capa de piel adem\u00e1s del pelo. El b\u00e1lsamo repone agua y l\u00edpidos sobre esa piel reci\u00e9n raspada y baja la inflamaci\u00f3n.',
+            sirve:'Encaja con tu rutina de skincare: es la misma l\u00f3gica de reparar la barrera, aplicada al d\u00eda que te afeitas.',
+            tarda:'Alivio inmediato; menos irritaci\u00f3n acumulada en un par de semanas.',
+            ojo:'Sin alcohol, y esto no es cosm\u00e9tico: sobre piel reci\u00e9n afeitada el alcohol irrita, reseca y empeora el pelo enterrado.'
+          } },
+        { id:'recortadora', n:'Recortadora de barba con bater\u00eda (y su cable)',
+          frasco:'aparato', marca:{a:'#eef1f5', b:'#343a40'},
+          uso:'Con la barba SECA y peinada. Empieza por un peine m\u00e1s largo del que crees y baja si hace falta: no hay vuelta atr\u00e1s.',
+          ficha:{
+            activo:'Los peines gu\u00eda, que son los que fijan el largo',
+            que:'La m\u00e1quina de mantener la barba. El cable es parte de la compra: es lo que todo el mundo se deja en casa.',
+            hace:'Corta todo a la misma altura, que es lo que da la sensaci\u00f3n de barba cuidada. El contorno lo haces con la m\u00e1quina sin peine, y eso es lo que se ve de lejos.',
+            sirve:'Es lo que mantiene la barba en algo deliberado en vez de en lo que haya crecido. Cuenta tambi\u00e9n para las entrevistas.',
+            tarda:'Cada 3-4 d\u00edas.',
+            ojo:'Nunca sobre barba mojada: el pelo h\u00famedo se estira y cortas m\u00e1s de lo que crees. Y aceita las cuchillas de vez en cuando o empiezan a tirar.'
+          } },
+        { id:'tijerasNariz', n:'Tijeras peque\u00f1as para nariz y cejas',
+          frasco:'utensilio', marca:{a:'#cfd6de', b:'#495057'},
+          uso:'Con punta redondeada, a contraluz y sobre seco. En la nariz s\u00f3lo lo que asoma, nunca hacia dentro.',
+          ficha:{
+            activo:'La punta redondeada \u2014 el detalle que evita el pinchazo',
+            que:'Unas tijeras diminutas. Es el detalle que nadie mira en s\u00ed mismo y todo el mundo nota en los dem\u00e1s.',
+            hace:'Cortan lo que sobresale sin arrancar. Arrancar el pelo de la nariz deja el fol\u00edculo abierto justo donde m\u00e1s bacterias hay, y de ah\u00ed salen las foliculitis dolorosas.',
+            sirve:'Para el arreglo de dos minutos antes de una reuni\u00f3n o una entrevista. Rinde much\u00edsimo para lo que cuesta.',
+            tarda:'Cada 1-2 semanas.',
+            ojo:'Nada de pinzas ni de depiladoras dentro de la nariz. Ese pelo filtra el aire y arrancarlo abre la puerta a una infecci\u00f3n en una zona que drena hacia sitios delicados.'
+          } },
+      ] },
+      { n: 'Cuerpo y ducha', items: [
+        { id:'gelBano', n:'Gel de ba\u00f1o tama\u00f1o viaje',
+          frasco:'botella', marca:{a:'#f2f4f6', b:'#0ca678'},
+          uso:'En las zonas que lo necesitan \u2014axilas, ingles, pies\u2014 y agua en el resto. Agua tibia, no caliente.',
+          ficha:{
+            activo:'Tensioactivos suaves, con pH cercano al de la piel (5,5)',
+            que:'El gel de la ducha. En viaje, uno peque\u00f1o tuyo; el del hotel suele ser jab\u00f3n agresivo y perfumado.',
+            hace:'Un pH cercano al de la piel limpia sin romper el manto \u00e1cido, que es la defensa natural contra bacterias y hongos. El jab\u00f3n cl\u00e1sico tiene pH 9-10 y se lo lleva por delante.',
+            sirve:'Es la misma l\u00f3gica del CeraVe de la cara, aplicada al cuerpo: limpiar sin desmontar la barrera.',
+            tarda:'La piel deja de tirar desde el primer d\u00eda.',
+            ojo:'Agua caliente y gel a diario por todo el cuerpo reseca las piernas y la espalda. No hace falta enjabonar entero cada d\u00eda.'
+          } },
+        { id:'desodorante', n:'Desodorante en barra (no aerosol \u2014 el aerosol da problemas en avi\u00f3n)',
+          frasco:'barra', marca:{a:'#f4f6f8', b:'#1c7ed6'},
+          uso:'Sobre piel limpia y SECA. El mejor momento es por la noche, no por la ma\u00f1ana.',
+          ficha:{
+            activo:'Sales de aluminio si es antitranspirante; antibacteriano si es s\u00f3lo desodorante',
+            que:'Una barra, no un aerosol. Los aerosoles van presurizados y dan problemas en cabina; adem\u00e1s la barra dura mucho m\u00e1s.',
+            hace:'El antitranspirante forma un tap\u00f3n temporal en el conducto del sudor. El desodorante no reduce el sudor: mata a las bacterias que lo descomponen, que son las que huelen.',
+            sirve:'Con tu jornada m\u00e1s las horas de coche, es de lo que m\u00e1s se agradece. La barra adem\u00e1s no se derrama en la maleta.',
+            tarda:'El antitranspirante llega a su m\u00e1ximo tras 3-4 noches seguidas de uso.',
+            ojo:'Por la noche funciona mejor: de madrugada sudas poco y el producto entra en el conducto en vez de escurrirse. Y sobre piel reci\u00e9n afeitada arde.'
+          } },
+        { id:'esponja', n:'Esponja o guante exfoliante',
+          frasco:'pano', marca:{a:'#f4f7fa', b:'#f08c00'},
+          uso:'Dos veces por semana como mucho, con movimientos suaves. Despu\u00e9s de la ducha, cu\u00e9lgalo a secar fuera de la mampara.',
+          ficha:{
+            activo:'La textura \u2014 nada qu\u00edmico',
+            que:'Un guante o esponja de trama \u00e1spera. Es exfoliaci\u00f3n mec\u00e1nica: raspa, no disuelve.',
+            hace:'Retira las c\u00e9lulas muertas de la superficie, que en la espalda y los brazos se acumulan y tapan el poro. Ayuda adem\u00e1s con el pelo enterrado en la zona de la barba y el cuello.',
+            sirve:'Para la espalda y los hombros, donde la piel es m\u00e1s gruesa y donde t\u00fa no llegas bien con las manos.',
+            tarda:'La textura de la piel cambia en 2-3 semanas.',
+            ojo:'Todos los d\u00edas es demasiado: rompes la barrera y consigues m\u00e1s granitos, no menos. Y una esponja que vive h\u00fameda en la ducha cr\u00eda hongos \u2014 c\u00e1mbiala cada 4-6 semanas.'
+          } },
+        { id:'chanclas', n:'Chanclas de ducha (hotel, gym, alberca de Fitsi)',
+          frasco:'utensilio', marca:{a:'#dfe4ea', b:'#1971c2'},
+          uso:'Puestas desde el vestuario hasta el agua, sin pisar descalzo en medio. S\u00e9calas despu\u00e9s.',
+          ficha:{
+            activo:'Una suela de goma entre tu pie y el suelo',
+            que:'Unas chanclas de pl\u00e1stico. Es prevenci\u00f3n pura, y de la m\u00e1s rentable de la lista.',
+            hace:'El hongo del pie de atleta vive en suelos h\u00famedos y compartidos: vestuarios, duchas de gimnasio, bordes de alberca. Se contagia por contacto directo con el suelo, y ya est\u00e1.',
+            sirve:'Vas a la alberca de Fitsi. Es exactamente el sitio donde se contagia, y curar un pie de atleta lleva semanas de crema.',
+            tarda:'Desde el primer d\u00eda que las usas.',
+            ojo:'No sirven de nada en la mochila. La \u00fanica forma en que fallan es que no te las pongas por pereza en el trayecto corto del vestuario.'
+          } },
+        { id:'talco', n:'Talco o polvo antifricci\u00f3n para pies',
+          frasco:'bote', marca:{a:'#ffffff', b:'#12b886'},
+          uso:'En el pie bien seco antes del calcet\u00edn, insistiendo entre los dedos. Tambi\u00e9n un poco dentro del zapato.',
+          ficha:{
+            activo:'Almid\u00f3n de ma\u00edz o talco, a veces con antif\u00fangico',
+            que:'Polvo para mantener el pie seco. No es perfume: es control de humedad.',
+            hace:'Absorbe el sudor y baja la fricci\u00f3n. El hongo necesita humedad para crecer, as\u00ed que un pie seco es un pie donde no prospera; y menos fricci\u00f3n es menos ampollas.',
+            sirve:'Zapato cerrado toda la jornada m\u00e1s las horas de coche es humedad constante. Es la pareja de las chanclas: unas evitan el contagio, esto evita que arraigue.',
+            tarda:'Desde el primer d\u00eda.',
+            ojo:'Entre los dedos es donde importa y es donde nadie lo pone. Ah\u00ed es donde empieza siempre el pie de atleta.'
+          } },
+      ] },
+      { n: 'Manos, u\u00f1as y pies', items: [
+        { id:'cortaunas', n:'Cortau\u00f1as de mano y de pie',
+          frasco:'utensilio', marca:{a:'#cfd6de', b:'#495057'},
+          uso:'Despu\u00e9s de la ducha, con la u\u00f1a blanda. En el pie, corte RECTO; en la mano puedes seguir la curva del dedo.',
+          ficha:{
+            activo:'Acero \u2014 y dos tama\u00f1os, porque la u\u00f1a del pie es mucho m\u00e1s gruesa',
+            que:'Dos corta\u00fa\u00f1as, no uno. El peque\u00f1o no puede con la u\u00f1a del pie y acaba desgarr\u00e1ndola en vez de cortarla.',
+            hace:'Un corte limpio deja el borde entero. Un corte a tirones deja una esquirla que se engancha en el calcet\u00edn y termina clav\u00e1ndose.',
+            sirve:'Es de lo que menos se piensa y m\u00e1s molesta cuando falla. Una u\u00f1a encarnada te deja cojeando una semana.',
+            tarda:'Cada 2-3 semanas.',
+            ojo:'En el pie NUNCA redondees las esquinas. Redondear es exactamente lo que hace que la u\u00f1a crezca hacia dentro de la piel.'
+          } },
+        { id:'lima', n:'Lima de u\u00f1as',
+          frasco:'utensilio', marca:{a:'#e9ecf1', b:'#f08c00'},
+          uso:'Siempre en UNA direcci\u00f3n, no en vaiv\u00e9n. Despu\u00e9s de cortar, para rematar el borde.',
+          ficha:{
+            activo:'El grano \u2014 de cart\u00f3n o cristal, mejor que las de metal',
+            que:'Una lima. Es el remate de dos segundos que evita el enganch\u00f3n.',
+            hace:'Alisa el borde que dej\u00f3 el corta\u00fa\u00f1as. Ese borde microsc\u00f3picamente astillado es el que se engancha en la tela y arranca la u\u00f1a en diagonal.',
+            sirve:'Para no destrozar la u\u00f1a con lo que se enganche, y para dejar las manos presentables \u2014 que en una entrevista se ven.',
+            tarda:'Al momento.',
+            ojo:'Limar en vaiv\u00e9n calienta y deshilacha la u\u00f1a por capas. Una direcci\u00f3n, siempre la misma.'
+          } },
+        { id:'cuticula', n:'Alicate de cut\u00edcula o empujador',
+          frasco:'utensilio', marca:{a:'#dfe4ea', b:'#7048e8'},
+          uso:'Sobre la cut\u00edcula ablandada tras la ducha, EMPUJA. Cortar s\u00f3lo el padrastro que ya est\u00e1 levantado, nada m\u00e1s.',
+          ficha:{
+            activo:'La punta roma del empujador',
+            que:'Un empujador y, como mucho, un alicate peque\u00f1o. La versi\u00f3n segura de esto es empujar, no cortar.',
+            hace:'La cut\u00edcula es un sello vivo entre la u\u00f1a y la piel: sella la entrada a la matriz donde la u\u00f1a se fabrica. Empujarla la ordena; cortarla abre el sello.',
+            sirve:'Para las manos, que se ven al dar la mano y en una entrevista. Un padrastro arrancado duele varios d\u00edas.',
+            tarda:'Cada 1-2 semanas.',
+            ojo:'No cortes la cut\u00edcula sana. Es lo que m\u00e1s infecciones de dedo produce y es completamente evitable: se empuja y ya.'
+          } },
+        { id:'cremaManos', n:'Crema para manos y pies',
+          frasco:'tubo', marca:{a:'#ffffff', b:'#e8590c'},
+          uso:'En las manos, despu\u00e9s de cada lavado. En los pies, por la noche, en el tal\u00f3n y la planta \u2014 nunca entre los dedos.',
+          ficha:{
+            activo:'Urea al 10-20% para el pie; emolientes m\u00e1s ligeros para la mano',
+            que:'Dos usos con un mismo tubo, aunque lo ideal son dos productos: el pie pide urea y la mano no la necesita.',
+            hace:'La urea hace dos cosas a la vez: retiene agua en la piel y ablanda la queratina endurecida del tal\u00f3n. Por eso funciona donde una crema normal resbala.',
+            sirve:'Las manos se lavan y se secan diez veces al d\u00eda; el tal\u00f3n se agrieta con el zapato cerrado. Una grieta en el tal\u00f3n es una puerta de entrada abierta.',
+            tarda:'Las manos, al momento. El tal\u00f3n agrietado, 2-3 semanas de uso diario.',
+            ojo:'Entre los dedos del pie NO. Ah\u00ed lo que hace falta es sequedad \u2014 es lo contrario de lo que pide el tal\u00f3n, y en el mismo pie.'
+          } },
+      ] },
+      { n: 'Botiqu\u00edn m\u00ednimo', items: [
+        { id:'curitas', n:'Curitas surtidas + gasas est\u00e9riles',
+          frasco:'caja', marca:{a:'#f7f8fa', b:'#c92a2a'},
+          uso:'Lava la herida con agua y jab\u00f3n, s\u00e9cala, y cubre. Cambia la curita cuando se moje.',
+          ficha:{
+            activo:'Adhesivo y ap\u00f3sito est\u00e9ril',
+            que:'Una caja de curitas de varios tama\u00f1os y unas gasas. Es el punto de partida de cualquier botiqu\u00edn.',
+            hace:'Cubrir una herida limpia la mantiene h\u00fameda y protegida, y as\u00ed cierra m\u00e1s r\u00e1pido y con menos cicatriz que al aire. Lo de \u00abdejar que respire\u00bb es un mito.',
+            sirve:'Para cortes de afeitado, rozaduras del zapato nuevo y lo que pase en el gimnasio.',
+            tarda:'Un corte peque\u00f1o cierra en 3-5 d\u00edas.',
+            ojo:'Si se moja, se cambia. Una curita empapada mantiene la herida en remojo y favorece justo la infecci\u00f3n que ven\u00edas a evitar.'
+          } },
+        { id:'alcoholGel', n:'Alcohol en gel y toallitas antibacteriales',
+          frasco:'botella', marca:{a:'#f2f4f6', b:'#1971c2'},
+          uso:'Una nuez, frotando 20 segundos hasta que sequen las manos solas. Sobre mano visiblemente sucia no sirve: ah\u00ed hay que lavar con agua y jab\u00f3n.',
+          ficha:{
+            activo:'Alcohol al 70% \u2014 ni menos ni, curiosamente, m\u00e1s',
+            que:'Gel de manos y toallitas. El n\u00famero que importa es el 70%: por debajo del 60 no mata lo suficiente.',
+            hace:'El alcohol rompe la envoltura de virus y bacterias. Al 70% funciona mejor que al 96 porque necesita algo de agua para penetrar; el m\u00e1s concentrado seca la superficie del germen sin llegar dentro.',
+            sirve:'Para el avi\u00f3n, el volante y el gimnasio, donde tocas superficies compartidas y no hay lavabo cerca.',
+            tarda:'Inmediato.',
+            ojo:'No sustituye al agua y jab\u00f3n cuando la mano est\u00e1 sucia de verdad \u2014 el gel no arrastra nada, s\u00f3lo desinfecta lo que toca.'
+          } },
+        { id:'analgesico', n:'Analg\u00e9sico (paracetamol o ibuprofeno)',
+          frasco:'caja', marca:{a:'#ffffff', b:'#1c7ed6'},
+          uso:'La dosis de la caja, con comida si es ibuprofeno. Nunca los dos a la vez sin que te lo indiquen.',
+          ficha:{
+            activo:'Paracetamol o ibuprofeno \u2014 no son intercambiables',
+            que:'Una caja de cada, o de uno. La elecci\u00f3n importa en tu caso concreto.',
+            hace:'El paracetamol act\u00faa en el sistema nervioso central sobre el dolor y la fiebre. El ibuprofeno adem\u00e1s desinflama, pero lo hace bloqueando unas enzimas que tambi\u00e9n protegen la mucosa del est\u00f3mago.',
+            sirve:'Dolor de cabeza, muscular o de muelas cuando est\u00e1s fuera y no hay farmacia cerca.',
+            tarda:'30-60 minutos.',
+            ojo:'Con tu gastritis, el ibuprofeno es el que puede darte problemas. Para dolor sin inflamaci\u00f3n, el paracetamol es la opci\u00f3n segura \u2014 y cons\u00faltalo con tu m\u00e9dico antes de tomar antiinflamatorios con frecuencia.'
+          } },
+        { id:'antidiarreico', n:'Antidiarreico y suero oral en sobre',
+          frasco:'sobre', marca:{a:'#f5f2ea', b:'#0ca678'},
+          uso:'El suero siempre; el antidiarreico s\u00f3lo si tienes que viajar o trabajar y no hay fiebre ni sangre. El sobre se disuelve en el agua que diga el envase, ni m\u00e1s ni menos.',
+          ficha:{
+            activo:'Sales de rehidrataci\u00f3n oral, en la proporci\u00f3n exacta de glucosa y sodio',
+            que:'Dos cosas distintas: una repone lo que pierdes, la otra corta el s\u00edntoma. La importante es la primera.',
+            hace:'El suero oral usa un truco de fisiolog\u00eda: el intestino absorbe sodio y glucosa juntos, y el agua va detr\u00e1s. Por eso rehidrata cuando el agua sola no lo consigue.',
+            sirve:'Para una intoxicaci\u00f3n de viaje. Lo que te manda al hospital no es la diarrea: es la deshidrataci\u00f3n.',
+            tarda:'La rehidrataci\u00f3n se nota en horas.',
+            ojo:'Con fiebre alta o sangre, nada de antidiarreico: encerrar dentro lo que el cuerpo intenta expulsar empeora una infecci\u00f3n. Ah\u00ed toca m\u00e9dico.'
+          } },
+        { id:'antihistaminico', n:'Antihistam\u00ednico (alergias)',
+          frasco:'caja', marca:{a:'#ffffff', b:'#5f3dc4'},
+          uso:'Una al d\u00eda. Elige uno de segunda generaci\u00f3n \u2014loratadina, cetirizina\u2014 si vas a conducir.',
+          ficha:{
+            activo:'Antihistam\u00ednico H1, mejor de segunda generaci\u00f3n',
+            que:'Una caja de pastillas para reacciones al\u00e9rgicas. La generaci\u00f3n importa mucho m\u00e1s de lo que parece.',
+            hace:'Bloquea la histamina, que es lo que tus c\u00e9lulas liberan en una reacci\u00f3n al\u00e9rgica y lo que produce el picor, los estornudos y las ronchas. Los de primera generaci\u00f3n cruzan al cerebro y por eso dan sue\u00f1o.',
+            sirve:'Para una reacci\u00f3n inesperada estando fuera: comida, picadura, polvo de un hotel.',
+            tarda:'1-2 horas.',
+            ojo:'Los de primera generaci\u00f3n \u2014difenhidramina, clorfenamina\u2014 dan un sue\u00f1o que no se siente venir. Con 28 horas de coche a la semana, esa es una interacci\u00f3n seria: no los tomes antes de conducir.'
+          } },
+        { id:'spfViaje', n:'Protector solar SPF 50 tama\u00f1o viaje',
+          frasco:'tubo', marca:{a:'#ffffff', b:'#0f5fa6'},
+          uso:'Dos dedos para cara y cuello, y repite cada 2 horas si est\u00e1s al aire libre.',
+          ficha:{
+            activo:'Filtros UVA/UVB de amplio espectro',
+            que:'El mismo protector que ya usas, en formato peque\u00f1o. No es un producto nuevo: es tu SPF de siempre en un tama\u00f1o que pasa el control.',
+            hace:'Lo mismo que tu Anthelios de diario: intercepta la radiaci\u00f3n antes de que da\u00f1e la c\u00e9lula.',
+            sirve:'En viaje sueles estar m\u00e1s horas fuera que un d\u00eda normal, justo cuando es m\u00e1s f\u00e1cil salt\u00e1rselo. Va en el botiqu\u00edn para que no dependa de que te acuerdes.',
+            tarda:'No se ve a corto plazo. Se ve a los 10 a\u00f1os.',
+            ojo:'Es el paso que m\u00e1s se salta la gente en vacaciones, que es cuando m\u00e1s radiaci\u00f3n recibe. Que viva en el neceser y no en casa.'
+          } },
+        { id:'repelente', n:'Repelente de insectos (si el viaje es a zona tropical)',
+          frasco:'botella', marca:{a:'#f2f4f6', b:'#2b8a3e'},
+          uso:'Sobre la piel expuesta, DESPU\u00c9S del protector solar y esperando unos minutos. Nunca debajo.',
+          ficha:{
+            activo:'DEET al 20-30%, o icaridina al 20%',
+            que:'Un repelente de verdad, con concentraci\u00f3n suficiente. El porcentaje no aumenta la potencia: aumenta las horas que dura.',
+            hace:'No mata al mosquito: le confunde los receptores con los que te localiza por el olor y el CO2 que exhalas. Deja de encontrarte.',
+            sirve:'En zona tropical el mosquito transmite dengue y otras cosas que arruinan bastante m\u00e1s que un viaje.',
+            tarda:'Inmediato; el DEET al 30% dura unas 6 horas.',
+            ojo:'Va SIEMPRE encima del protector solar y nunca debajo. Al rev\u00e9s, el repelente aumenta la absorci\u00f3n del filtro y reduce su protecci\u00f3n.'
+          } },
+      ] },
+      { n: 'Los que ya tienes \u2014 solo c\u00e1mbialos a tama\u00f1o viaje', items: [
+        { id:'champuViaje', n:'Champ\u00fa y acondicionador en envase de 100 ml (los tuyos, rellenados)',
+          frasco:'botella', marca:{a:'#f2f4f6', b:'#0d6ebf'},
+          uso:'Rellena los tuyos la noche antes. Etiqu\u00e9talos, que los dos son botes blancos iguales.',
+          ficha:{
+            activo:'Los mismos que usas en casa',
+            que:'No es una compra: es rellenar los botes de viaje con tu CeraVe y tu Elvive.',
+            hace:'Mantiene tu rutina igual fuera de casa. El champ\u00fa del hotel suele llevar sulfatos, y en dos d\u00edas de viaje te deshace lo que llevas meses cuidando.',
+            sirve:'Para no volver de cada viaje con el cuero cabelludo irritado y el pelo \u00e1spero.',
+            tarda:'Se nota en el primer viaje de m\u00e1s de dos d\u00edas.',
+            ojo:'El Pilexil y el Darrow son tratamiento y llevan su d\u00eda en la semana: si el viaje cae en lunes o jueves, \u00e9se es el que hay que llevar, no s\u00f3lo el suave.'
+          } },
+        { id:'skincareViaje', n:'Skincare AM/PM en botellas peque\u00f1as (limpiador, s\u00e9rum, hidratante con SPF, retinoide)',
+          frasco:'bomba', marca:{a:'#f2f4f6', b:'#00a94f'},
+          uso:'Los cuatro pasos completos. Si algo se cae de la maleta por espacio, que no sea el protector solar.',
+          ficha:{
+            activo:'Los mismos activos de tu rutina de casa',
+            que:'Tu rutina entera, en peque\u00f1o. Cuatro botes de 100 ml, no cuatro productos nuevos.',
+            hace:'Sostiene la continuidad, que en skincare es todo. El retinoide tarda 12 semanas en dar resultados: dos semanas de pausa en un viaje se notan de verdad.',
+            sirve:'Para que un viaje de trabajo no le cueste un mes a la rutina.',
+            tarda:'El da\u00f1o de dejarlo se ve a las 2-3 semanas de haberlo dejado.',
+            ojo:'El retinoide en un frasco transparente al sol de la maleta se degrada. Que vaya en un bote opaco o en el suyo original.'
+          } },
+        { id:'minoxidilViaje', n:'Minoxidil en su envase original (no lo pases a otro frasco \u2014 se degrada)',
+          frasco:'gotero', marca:{a:'#f2f4f6', b:'#1a3a6b'},
+          uso:'En su bote, dentro de la bolsa de l\u00edquidos. Sigue siendo dos veces al d\u00eda, tambi\u00e9n en viaje.',
+          ficha:{
+            activo:'Minoxidil 5%',
+            que:'La excepci\u00f3n de todo este kit: es lo \u00fanico que NO se pasa a un bote de viaje.',
+            hace:'El minoxidil va disuelto en propilenglicol y alcohol, y esa mezcla se evapora y se oxida con la luz y el aire. En un frasco que no es el suyo, la concentraci\u00f3n deja de ser la que dice la etiqueta.',
+            sirve:'Es la mitad de tu tratamiento contra la ca\u00edda. Salt\u00e1rtelo una semana de viaje no arruina nada, pero hacerlo cada mes s\u00ed.',
+            tarda:'Dejarlo del todo revierte lo ganado en 3-4 meses.',
+            ojo:'Es el \u00fanico de la lista que no se trasvasa. Si el bote es de m\u00e1s de 100 ml, tiene que ir en la maleta facturada.'
+          } },
+        { id:'pastillero', n:'Suplementos en pastillero por d\u00edas',
+          frasco:'caja', marca:{a:'#f7f8fa', b:'#7048e8'},
+          uso:'C\u00e1rgalo el domingo para toda la semana. Con dos compartimentos por d\u00eda, ma\u00f1ana y noche, porque el magnesio va de noche.',
+          ficha:{
+            activo:'Los compartimentos por d\u00eda \u2014 que es lo que evita la duda',
+            que:'Una caja con divisiones. Resuelve un problema que no es de salud sino de memoria.',
+            hace:'Te dice de un vistazo si ya tomaste lo de hoy. Sin \u00e9l, la duda de \u00ab\u00bfme lo tom\u00e9?\u00bb acaba siempre en salt\u00e1rselo o en repetir.',
+            sirve:'Llevas seis suplementos en dos momentos distintos del d\u00eda. Fuera de casa, sin la rutina que los ancla, es donde se pierden.',
+            tarda:'Desde la primera semana.',
+            ojo:'Que tenga DOS compartimentos por d\u00eda. Con uno solo acabas tomando el magnesio por la ma\u00f1ana, que es tirar la mitad de para lo que lo compras.'
+          } },
+      ] },
+    ],
+
+    // Todos en fila, sin grupos. Es como se recorren para buscar uno.
+    get todos() {
+      return this.grupos.reduce(function (a, g) { return a.concat(g.items); }, []);
+    },
+    // El rengl\u00f3n de la lista de la compra ES el nombre, pero se pasa por aqu\u00ed
+    // igual que en las dem\u00e1s categor\u00edas para que el camino de vuelta exista.
+    textoCompra: function (p) { return p.n; },
+    deTextoCompra: function (txt) {
+      return this.todos.filter(function (p) { return p.n === txt; })[0] || null;
+    },
+    // La forma que espera la lista de la compra: {grupo: [texto, ...]}.
+    get porGrupo() {
+      var t = this, out = {};
+      this.grupos.forEach(function (g) {
+        out[g.n] = g.items.map(function (p) { return t.textoCompra(p); });
+      });
+      return out;
+    },
+  };
+
+  // \u2500\u2500 CUIDADO DE LOS OJOS \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
+  // Agrupado por la CAUSA, no por el tipo de producto: 10-12 h de pantalla, 28 h de
+  // volante. As\u00ed se ve para qu\u00e9 sirve cada cosa en vez de tener una lista de gotas.
+  // Misma historia que el kit de higiene: eran cadenas y ahora son productos con ficha.
+  const CUIDADO_OJOS = {
+    grupos: [
+      { n: 'Ojo seco \u2014 el problema n\u00famero uno con 10-12h de pantalla', items: [
+        { id:'lagrimas', n:'L\u00e1grimas artificiales sin conservadores (monodosis)',
+          frasco:'gotas', marca:{a:'#ffffff', b:'#1098ad'},
+          uso:'Una gota en cada ojo, sin tocar el ojo con la punta. T\u00edralas despu\u00e9s de usar la monodosis, aunque quede l\u00edquido. Cada 3-4 horas de pantalla, sin esperar a que molesten.',
+          ficha:{
+            activo:'Hipromelosa o carboximetilcelulosa, sin cloruro de benzalconio',
+            que:'Las gotas de todos los d\u00edas. \u00abSin conservadores\u00bb no es una etiqueta de lujo: es la diferencia entre poder usarlas 6 veces al d\u00eda y no poder.',
+            hace:'Reponen la pel\u00edcula de l\u00e1grima que la pantalla te hace evaporar. Delante de un monitor parpadeas un tercio de lo normal, y la l\u00e1grima que deb\u00eda renovarse cada pocos segundos se queda ah\u00ed sec\u00e1ndose.',
+            sirve:'Es lo primero contra el ojo seco, que con 10-12 horas de pantalla al d\u00eda es tu problema ocular n\u00famero uno. Tambi\u00e9n es lo que evita que llegues al volante con los ojos ya irritados.',
+            tarda:'Alivio inmediato. La mejora de fondo, si las usas con constancia, en 2-3 semanas.',
+            ojo:'Si el frasco es multidosis, lleva conservador, y usado muchas veces al d\u00eda ese conservador irrita m\u00e1s de lo que la gota alivia. Por eso van en monodosis.'
+          } },
+        { id:'gelNoche', n:'L\u00e1grimas en gel para la noche',
+          frasco:'tubo', marca:{a:'#ffffff', b:'#0b7285'},
+          uso:'Una tira peque\u00f1a dentro del p\u00e1rpado inferior justo antes de dormir. Va a nublar la vista unos minutos: por eso es lo \u00faltimo que haces del d\u00eda.',
+          ficha:{
+            activo:'Carb\u00f3mero en gel, de mucha m\u00e1s viscosidad que una gota',
+            que:'La versi\u00f3n espesa de las l\u00e1grimas, para las horas en que no puedes ponerte nada.',
+            hace:'Se queda sobre el ojo toda la noche en vez de escurrirse en minutos. Mucha gente duerme con los p\u00e1rpados ligeramente entreabiertos y amanece con el ojo reseco de ocho horas.',
+            sirve:'Para levantarte sin ese ardor de los primeros minutos. Un ojo que amanece seco llega peor a la jornada de pantalla.',
+            tarda:'La primera ma\u00f1ana ya se nota.',
+            ojo:'Nunca de d\u00eda. Nubla la vista lo suficiente como para que no sea seguro conducir ni trabajar con ella puesta.'
+          } },
+        { id:'compresa', n:'Compresa o antifaz t\u00e9rmico para ojos de microondas',
+          frasco:'pano', marca:{a:'#f4f7fa', b:'#5f3dc4'},
+          uso:'20-30 segundos al microondas, comprueba que no queme, y 10 minutos sobre los ojos cerrados. Por la noche, 4-5 veces por semana.',
+          ficha:{
+            activo:'Calor h\u00famedo sostenido a unos 40 \u00b0C',
+            que:'Un antifaz relleno que se calienta. Parece un capricho y es el tratamiento con m\u00e1s respaldo para el ojo seco.',
+            hace:'En el borde del p\u00e1rpado tienes unas gl\u00e1ndulas que segregan la parte grasa de la l\u00e1grima, la que impide que se evapore. Con los a\u00f1os y las pantallas esa grasa se espesa y tapona la salida. El calor la vuelve l\u00edquida y deja que salga otra vez.',
+            sirve:'Ataca la causa del ojo seco en vez de compensarla. Las gotas reponen lo que se evapora; esto hace que se evapore menos.',
+            tarda:'6-8 semanas de uso constante. Es lento y por eso casi nadie lo sostiene.',
+            ojo:'Diez minutos de verdad, no dos. Por debajo de ese tiempo la grasa no llega a fundirse y la sesi\u00f3n no sirve de nada.'
+          } },
+        { id:'toallitas', n:'Toallitas limpiadoras de p\u00e1rpados',
+          frasco:'pano', marca:{a:'#f4f7fa', b:'#0ca678'},
+          uso:'Justo despu\u00e9s de la compresa, con los ojos cerrados, pasa la toallita por el borde del p\u00e1rpado \u2014la l\u00ednea de las pesta\u00f1as\u2014 en horizontal. Una por ojo.',
+          ficha:{
+            activo:'Limpiador suave con pH del ojo, a veces con \u00e1cido hipocloroso',
+            que:'Toallitas para el borde del p\u00e1rpado, no para la cara. Es la mitad que falta del tratamiento de la compresa.',
+            hace:'Arrastran los restos y las bacterias que se acumulan en la salida de esas gl\u00e1ndulas. El calor las destapa por dentro; esto limpia la boca por fuera.',
+            sirve:'Sin esto, la compresa funde la grasa y se vuelve a atascar en la misma costra. Van juntas o no vale la pena.',
+            tarda:'Con la compresa, 6-8 semanas.',
+            ojo:'Movimiento horizontal a lo largo del p\u00e1rpado, nunca frotando el ojo. Frotar el ojo es de las peores cosas que puedes hacerle a una c\u00f3rnea.'
+          } },
+        { id:'hialuronico', n:'Gotas humectantes con \u00e1cido hialur\u00f3nico',
+          frasco:'gotas', marca:{a:'#ffffff', b:'#1971c2'},
+          uso:'Una gota cuando notes el ojo especialmente cansado o antes de un tramo largo al volante. No sustituyen a las l\u00e1grimas de diario.',
+          ficha:{
+            activo:'\u00c1cido hialur\u00f3nico al 0,15-0,3%',
+            que:'Unas l\u00e1grimas de gama alta. El hialur\u00f3nico es el mismo que llevan tus cremas, aqu\u00ed en concentraci\u00f3n oft\u00e1lmica.',
+            hace:'Retiene agua sobre la superficie del ojo y aguanta bastante m\u00e1s que una l\u00e1grima normal antes de escurrirse, sin llegar a nublar la vista como el gel de noche.',
+            sirve:'Para los tramos largos: una jornada entera de monitor, o las horas de carretera en las que no vas a poder estar ech\u00e1ndote gotas.',
+            tarda:'Inmediato, y el alivio dura m\u00e1s que con las l\u00e1grimas simples.',
+            ojo:'Son caras para usarlas seis veces al d\u00eda. Gu\u00e1rdalas para cuando las necesites y deja el trabajo de rutina a las monodosis.'
+          } },
+      ] },
+      { n: 'Al volante \u2014 28h a la semana de exposici\u00f3n', items: [
+        { id:'polarizados', n:'Lentes de sol polarizados con UV400',
+          frasco:'gafas', marca:{a:'#dfe4ea', b:'#212529'},
+          uso:'Al volante, siempre que haya sol, y tambi\u00e9n en d\u00eda nublado: el UV atraviesa las nubes.',
+          ficha:{
+            activo:'Filtro polarizado + protecci\u00f3n UV400',
+            que:'Dos cosas distintas en un mismo lente, y hay que exigir las dos. El polarizado quita reflejos; el UV400 protege. Un lente oscuro sin UV400 es peor que no llevar nada.',
+            hace:'El polarizado bloquea la luz que rebota horizontalmente \u2014el destello del cap\u00f3, del asfalto mojado, del parabrisas de delante\u2014 y deja pasar el resto. El UV400 frena la radiaci\u00f3n que con los a\u00f1os va formando cataratas.',
+            sirve:'Pasas 28 horas a la semana conduciendo. Es tu mayor exposici\u00f3n a radiaci\u00f3n y a deslumbramiento, y las dos cosas cansan la vista y se acumulan durante d\u00e9cadas.',
+            tarda:'El descanso visual es inmediato. La protecci\u00f3n se cobra en 20 a\u00f1os.',
+            ojo:'Un lente oscuro SIN UV400 hace da\u00f1o: la oscuridad te dilata la pupila y deja entrar m\u00e1s radiaci\u00f3n de la que entrar\u00eda a ojo descubierto. Si no dice UV400, no sirve.'
+          } },
+        { id:'antirreflejante', n:'Antirreflejante para lentes graduados (se pide en la \u00f3ptica)',
+          frasco:'gafas', marca:{a:'#e9ecf1', b:'#495057'},
+          uso:'No se compra aparte: se pide al encargar los lentes. L\u00edmpialos s\u00f3lo con pa\u00f1o de microfibra y l\u00edquido de \u00f3ptica.',
+          ficha:{
+            activo:'Capa antirreflejo por evaporaci\u00f3n al vac\u00edo',
+            que:'Un tratamiento sobre el cristal, no un accesorio. Se pide al hacer los lentes y encarece poco.',
+            hace:'Sin \u00e9l, parte de la luz rebota en las dos caras del cristal y vuelve a tu ojo como un halo. De noche eso es exactamente el resplandor alrededor de los faros que te obliga a entrecerrar los ojos.',
+            sirve:'Para la conducci\u00f3n nocturna y para las horas de monitor. Es la mejora m\u00e1s barata que puedes hacerle a unos lentes que ya vas a comprar.',
+            tarda:'Desde el primer d\u00eda que los pones.',
+            ojo:'Se raya con facilidad y una vez rayado no se arregla. Nada de limpiarlos con la camiseta: pide el pa\u00f1o y el l\u00edquido cuando los recojas.'
+          } },
+      ] },
+      { n: 'Pantalla \u2014 ALTEN y los 2 bloques de la app', items: [
+        { id:'luzAzul', n:'Lentes con filtro de luz azul y antirreflejante',
+          frasco:'gafas', marca:{a:'#e3e8ef', b:'#364fc7'},
+          uso:'Durante la jornada de monitor y en los bloques de la app por la noche.',
+          ficha:{
+            activo:'Filtro parcial del azul-violeta, m\u00e1s antirreflejante',
+            que:'Unos lentes de pantalla. Conviene decirlo claro: la evidencia de que el filtro azul reduzca la fatiga visual es floja; la del antirreflejante que los acompa\u00f1a es s\u00f3lida.',
+            hace:'Recorta parte del azul de longitud corta. Lo que s\u00ed est\u00e1 bien documentado es su efecto sobre el sue\u00f1o: el azul de la noche retrasa la melatonina, y esa es la parte que te interesa por los bloques nocturnos.',
+            sirve:'Por las horas de monitor de ALTEN m\u00e1s los dos bloques de la app por la noche. C\u00f3mpralos por el antirreflejante y por el sue\u00f1o, no esperando que se te quite el cansancio de ojos.',
+            tarda:'En el sue\u00f1o, un par de semanas. En la fatiga, no esperes gran cosa.',
+            ojo:'La fatiga de pantalla viene sobre todo de no parpadear y de no mirar lejos. Ning\u00fan lente arregla eso: para eso est\u00e1 la regla 20-20-20 y las l\u00e1grimas.'
+          } },
+        { id:'soporte', n:'Soporte para elevar el monitor a la altura de los ojos',
+          frasco:'aparato', marca:{a:'#eef1f5', b:'#343a40'},
+          uso:'El borde superior de la pantalla a la altura de tus ojos, y a un brazo de distancia. Aj\u00fastalo sentado como te sientas de verdad, no erguido para la ocasi\u00f3n.',
+          ficha:{
+            activo:'Altura \u2014 nada m\u00e1s, y es lo que importa',
+            que:'Una base o un brazo para subir el monitor. De lo m\u00e1s barato de la lista y de lo que m\u00e1s cambia el d\u00eda.',
+            hace:'Con la pantalla baja, miras hacia abajo con el p\u00e1rpado m\u00e1s abierto de lo necesario y el ojo se seca m\u00e1s r\u00e1pido. Y el cuello va hacia delante, que es de donde salen las contracturas.',
+            sirve:'Ataca a la vez el ojo seco y tu tema de postura. Es de las pocas compras que sirven para dos cosas de tu lista a la vez.',
+            tarda:'El cuello lo agradece en d\u00edas. El ojo, en un par de semanas.',
+            ojo:'Si subes el monitor y no subes la silla o el escritorio, mueves el problema a los hombros. Ajusta los dos.'
+          } },
+        { id:'lampara', n:'L\u00e1mpara de escritorio de luz c\u00e1lida regulable',
+          frasco:'aparato', marca:{a:'#f2f4f6', b:'#e8a317'},
+          uso:'Encendida siempre que uses la pantalla a oscuras. Por la noche, al m\u00ednimo y en tono c\u00e1lido.',
+          ficha:{
+            activo:'Temperatura de color regulable, de 2700 K a 4000 K',
+            que:'Una l\u00e1mpara de escritorio que se pueda bajar de intensidad y de temperatura. Lo regulable es el requisito, no un extra.',
+            hace:'Reduce el contraste entre una pantalla brillante y un cuarto oscuro. Ese salto obliga a la pupila a estar ajust\u00e1ndose todo el rato, y ese trabajo continuo es buena parte de lo que llamas vista cansada.',
+            sirve:'Para los bloques de la app por la noche, que es cuando el cuarto est\u00e1 oscuro y la pantalla al m\u00e1ximo. Es la peor combinaci\u00f3n posible y la que m\u00e1s haces.',
+            tarda:'Se nota la misma noche.',
+            ojo:'Que no te d\u00e9 directa a los ojos ni rebote en la pantalla. Va a un lado y ligeramente por detr\u00e1s del plano del monitor.'
+          } },
+      ] },
+      { n: 'Nutrici\u00f3n y contorno', items: [
+        { id:'luteina', n:'Suplemento de Lute\u00edna + Zeaxantina 10 mg / 2 mg',
+          frasco:'pastillas', marca:{a:'#ffffff', b:'#f08c00'},
+          uso:'Una c\u00e1psula al d\u00eda con una comida que lleve grasa: son carotenoides y sin grasa se absorben mal.',
+          ficha:{
+            activo:'Lute\u00edna 10 mg y zeaxantina 2 mg, las dosis del estudio AREDS2',
+            que:'Dos pigmentos que tu retina concentra en la m\u00e1cula, la zona del centro de la visi\u00f3n. El cuerpo no los fabrica: s\u00f3lo llegan por la dieta.',
+            hace:'Se depositan en la m\u00e1cula y filtran la luz azul justo antes de que llegue a las c\u00e9lulas fotorreceptoras, adem\u00e1s de actuar como antioxidantes ah\u00ed dentro. Es un filtro de luz azul, pero por dentro del ojo.',
+            sirve:'Es prevenci\u00f3n a largo plazo de la degeneraci\u00f3n macular. Con tus horas de pantalla y de carretera, la exposici\u00f3n acumulada no es peque\u00f1a.',
+            tarda:'El pigmento de la m\u00e1cula sube en 3-6 meses. No hay nada que notar: se mide, no se siente.',
+            ojo:'No arregla el ojo seco ni la vista cansada de hoy. Es una inversi\u00f3n a 20 a\u00f1os, y comprarlo esperando alivio inmediato lleva a abandonarlo en un mes.'
+          } },
+        { id:'contorno', n:'Crema de contorno de ojos con cafe\u00edna',
+          frasco:'tubo', marca:{a:'#ffffff', b:'#7048e8'},
+          uso:'Del tama\u00f1o de un grano de arroz para los dos ojos, con el dedo anular, dando toquecitos sobre el hueso \u2014nunca sobre el p\u00e1rpado. Por la ma\u00f1ana.',
+          ficha:{
+            activo:'Cafe\u00edna al 3-5%, normalmente con p\u00e9ptidos',
+            que:'Una crema ligera para la piel de alrededor del ojo, que es la m\u00e1s fina del cuerpo. Es cosm\u00e9tica, no oftalmolog\u00eda.',
+            hace:'La cafe\u00edna contrae los vasos de esa zona, y con eso baja la hinchaz\u00f3n de la ma\u00f1ana y aclara algo el tono oscuro cuando ese tono viene de la sangre acumulada, que es lo habitual.',
+            sirve:'Para la ojera de dormir poco y para la hinchaz\u00f3n al despertar. Es lo \u00fanico de esta lista que se ocupa de c\u00f3mo se ve la zona, no de c\u00f3mo funciona el ojo.',
+            tarda:'La hinchaz\u00f3n, en 15 minutos. El tono, semanas \u2014 y s\u00f3lo si la causa es vascular.',
+            ojo:'Si tu ojera es por surco o por sombra de la propia anatom\u00eda, ninguna crema la va a quitar. Y ojo con acercarte al p\u00e1rpado: si el producto migra al ojo, arde.'
+          } },
+      ] },
+    ],
+
+    // Todos en fila, sin grupos. Es como se recorren para buscar uno.
+    get todos() {
+      return this.grupos.reduce(function (a, g) { return a.concat(g.items); }, []);
+    },
+    // El rengl\u00f3n de la lista de la compra ES el nombre, pero se pasa por aqu\u00ed
+    // igual que en las dem\u00e1s categor\u00edas para que el camino de vuelta exista.
+    textoCompra: function (p) { return p.n; },
+    deTextoCompra: function (txt) {
+      return this.todos.filter(function (p) { return p.n === txt; })[0] || null;
+    },
+    // La forma que espera la lista de la compra: {grupo: [texto, ...]}.
+    get porGrupo() {
+      var t = this, out = {};
+      this.grupos.forEach(function (g) {
+        out[g.n] = g.items.map(function (p) { return t.textoCompra(p); });
+      });
+      return out;
+    },
+  };
+
   const LISTA_COMPRAS = {
     // Sale de RECETARIO: cada ingrediente declara su pasillo y aquí se agrupan.
     // Antes esta lista estaba escrita a mano y había que replicar a mano cada
@@ -1197,28 +1949,14 @@ window.CIFRAS = (function () {
     // y otra en la rutina, que es lo que pasó con skincare. Los 2 de receta van al final
     // porque NO son de mostrador y no forman parte de la rutina diaria.
     get cabello() {
-      const D = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'];
-      const cuando = function (p) {
-        if (p.soloSi) return 'solo si hay ' + p.soloSi + ', nunca junto al Pilexil';
-        if (p.noConsumible) return null;
-        if (!p.dias.length) return 'cuando lo notes áspero, solo puntas';
-        if (p.dias.length === 7) return 'todos los días' + (p.vecesDia > 1 ? ', ' + p.vecesDia + ' veces' : '');
-        const n = p.dias.map(function (d) { return D[d]; });
-        return n.slice(0, -1).join(', ') + (n.length > 1 ? ' y ' : '') + n[n.length - 1];
-      };
-      return RUTINA_PELO.productos.map(function (p) {
-        const c = cuando(p);
-        return p.n + ', ' + p.contenido + ' ' + p.unidad + (c ? ' (' + c + ')' : '');
-      }).concat([
+      return RUTINA_PELO.productos.map(function (p) { return RUTINA_PELO.textoCompra(p); })
+        .concat([
         'Minoxidil ORAL 2.5-5 mg (\ud83e\ude7a receta + revisión de presión antes y durante) — el escalón que queda si en 6 meses el tópico + la dutasterida no bastan',
       ]);
     },
     // Sale de SUPLEMENTOS: el nombre y el tamaño del envase se escriben una sola vez.
     get suplementos() {
-      return SUPLEMENTOS.lista.map(function (p) {
-        return p.n + ', ' + p.envase + ' ' + p.unidad + ' (' + p.dosis + ', ' +
-          (p.momento === 'am' ? 'mañana' : 'noche') + ')';
-      });
+      return SUPLEMENTOS.lista.map(function (p) { return SUPLEMENTOS.textoCompra(p); });
     },
     // ── KIT DE HIGIENE (2026-08-15, pedido: "en alguna parte debes poner un kit de higiene super
     // completo, ya sea para viajes o persona, con imagenes y productos que comprar") ────────────
@@ -1226,81 +1964,13 @@ window.CIFRAS = (function () {
     // meter en el neceser, no si algo es "cuidado bucal" o "cuidado corporal". Lo que ya vive en
     // Skincare y Cabello NO se duplica aquí — esta lista es lo que hay que COMPRAR APARTE en
     // tamaño de viaje o lo que solo existe en el neceser (cortauñas, rastrillo, botiquín).
-    higiene:{
-      'Bolsa base — el neceser en sí':[
-        'Neceser con gancho para colgar (impermeable por dentro)',
-        'Botellas de viaje rellenables 100 ml (set de 4, aptas para equipaje de mano)',
-        'Bolsa de plástico con cierre para líquidos (regla de aeropuerto: 1 L transparente)',
-        'Toalla de microfibra de secado rápido',
-      ],
-      'Cuidado bucal':[
-        'Cepillo de dientes de viaje con tapa',
-        'Pasta dental tamaño viaje (≤75 ml)',
-        'Hilo dental',
-        'Enjuague bucal tamaño viaje',
-        'Cepillos interdentales o irrigador de viaje',
-      ],
-      'Afeitado y barba':[
-        'Rastrillo + cartuchos de repuesto',
-        'Gel o espuma de afeitar tamaño viaje',
-        'Bálsamo after-shave sin alcohol',
-        'Recortadora de barba con batería (y su cable)',
-        'Tijeras pequeñas para nariz y cejas',
-      ],
-      'Cuerpo y ducha':[
-        'Gel de baño tamaño viaje',
-        'Desodorante en barra (no aerosol — el aerosol da problemas en avión)',
-        'Esponja o guante exfoliante',
-        'Chanclas de ducha (hotel, gym, alberca de Fitsi)',
-        'Talco o polvo antifricción para pies',
-      ],
-      'Manos, uñas y pies':[
-        'Cortauñas de mano y de pie',
-        'Lima de uñas',
-        'Alicate de cutícula o empujador',
-        'Crema para manos y pies',
-      ],
-      'Botiquín mínimo':[
-        'Curitas surtidas + gasas estériles',
-        'Alcohol en gel y toallitas antibacteriales',
-        'Analgésico (paracetamol o ibuprofeno)',
-        'Antidiarreico y suero oral en sobre',
-        'Antihistamínico (alergias)',
-        'Protector solar SPF 50 tamaño viaje',
-        'Repelente de insectos (si el viaje es a zona tropical)',
-      ],
-      'Los que ya tienes — solo cámbialos a tamaño viaje':[
-        'Champú y acondicionador en envase de 100 ml (los tuyos, rellenados)',
-        'Skincare AM/PM en botellas pequeñas (limpiador, sérum, hidratante con SPF, retinoide)',
-        'Minoxidil en su envase original (no lo pases a otro frasco — se degrada)',
-        'Suplementos en pastillero por días',
-      ],
-    },
+    // Sale de KIT_HIGIENE, no se escribe a mano.
+    get higiene() { return KIT_HIGIENE.porGrupo; },
     // Espejo de OJ_PRODUCTOS en CuidadoPersonal/cuidadopersonal.html -> pestana "Ojos y Vista"
     // (2026-08-15). Agrupado por para-que-sirve y no por tipo de producto, igual que el kit de
     // higiene: en la tienda lo que decides es "necesito algo para el ojo seco", no "necesito un gel".
-    ojos:{
-      'Ojo seco — el problema número uno con 10-12h de pantalla':[
-        'Lágrimas artificiales sin conservadores (monodosis)',
-        'Lágrimas en gel para la noche',
-        'Compresa o antifaz térmico para ojos de microondas',
-        'Toallitas limpiadoras de párpados',
-        'Gotas humectantes con ácido hialurónico',
-      ],
-      'Al volante — 28h a la semana de exposición':[
-        'Lentes de sol polarizados con UV400',
-        'Antirreflejante para lentes graduados (se pide en la óptica)',
-      ],
-      'Pantalla — ALTEN y los 2 bloques de la app':[
-        'Lentes con filtro de luz azul y antirreflejante',
-        'Soporte para elevar el monitor a la altura de los ojos',
-        'Lámpara de escritorio de luz cálida regulable',
-      ],
-      'Nutrición y contorno':[
-        'Suplemento de Luteína + Zeaxantina 10 mg / 2 mg',
-        'Crema de contorno de ojos con cafeína',
-      ],
-    },
+    // Sale de CUIDADO_OJOS, no se escribe a mano.
+    get ojos() { return CUIDADO_OJOS.porGrupo; },
     // 45 libros únicos recomendados dentro de Coach.html → #aprendizaje (5 cards de skill: Ventas,
     // Copywriting, Marketing, Networking, Liderazgo, más las secciones de Datos/Finanzas/Software del
     // mismo bloque) y #perfil-rico, agrupados por el mismo tema bajo el que Coach los presenta —
@@ -1653,6 +2323,8 @@ window.CIFRAS = (function () {
     LISTA_COMPRAS: LISTA_COMPRAS,
     RUTINA_PIEL: RUTINA_PIEL,
     RUTINA_PELO: RUTINA_PELO,
+    KIT_HIGIENE: KIT_HIGIENE,
+    CUIDADO_OJOS: CUIDADO_OJOS,
     RECETARIO: RECETARIO,
     SUPLEMENTOS: SUPLEMENTOS,
     CHEQUEO: CHEQUEO,
