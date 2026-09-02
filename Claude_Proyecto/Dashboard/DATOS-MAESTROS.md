@@ -481,8 +481,8 @@ agrega sus ingredientes a la compra sin tocar nada más.
 
 Lo que no entra en una receta: café, picante, cítricos en exceso, chocolate,
 frituras y cebolla/ajo **crudos** (le disparan el reflujo; cocidos sí van), y los
-12 que no le gustan — calabaza, ejotes, hierbas de olor, brócoli, camote,
-espinaca, zanahoria, pavo molido, leche de avena, crema de cacahuate, caldo de
+que no le gustan — calabaza, ejotes, hierbas de olor, camote,
+espinaca, pavo molido, leche de avena, crema de cacahuate, caldo de
 pollo y avena en hojuelas. El **control 14** del verificador comprueba que cada
 receta esté completa (ingredientes con pasillo y cantidad, pasos, macros, ids
 únicos) y que la lista siga siendo la derivada y no una copia.
