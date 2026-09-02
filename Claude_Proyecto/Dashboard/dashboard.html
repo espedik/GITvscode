@@ -2339,6 +2339,117 @@ button.hp-lec:active{transform:translateY(0)}
 .ej-img-title{font-family:var(--font-title);font-size:17px;font-weight:700;color:var(--text);margin-bottom:12px;padding-right:26px}
 .ej-img-body img{width:100%;max-height:44vh;object-fit:contain;background:#fff;border-radius:12px;padding:12px;display:block}
 .ej-img-body-empty{font-size:12px;color:var(--text3);padding:22px 8px;line-height:1.5}
+/* Un color por concepto, en triple RGB para poder componer alfas encima. El tema
+   claro los oscurece: cableados en hex, "MANCHAS" en amarillo sobre el fondo
+   blanco de la ficha no se leía. */
+:root{
+  --pf-acne:255,122,182; --pf-manchas:255,217,61; --pf-arrugas:176,110,255;
+  --pf-sensibilidad:0,224,192; --pf-ok:0,232,122; --pf-teal:0,224,192;
+  --pf-am:255,217,61; --pf-pink:255,122,182; --pf-pm:176,110,255; --pf-mint:94,233,181;
+}
+:root[data-theme="light"]{
+  --pf-acne:194,24,91; --pf-manchas:133,96,8; --pf-arrugas:127,79,184;
+  --pf-sensibilidad:4,110,96; --pf-ok:0,167,88; --pf-teal:4,110,96;
+  --pf-am:133,96,8; --pf-pink:194,24,91; --pf-pm:127,79,184; --pf-mint:14,143,99;
+}
+/* Ficha de un producto de skincare. Se abre desde el botón "Qué es" de cada
+   renglón de la lista de la compra. El texto lo pone `RUTINA_PIEL` en
+   datos-maestros.js — aquí solo está el molde, y el color del producto entra
+   por `--tono`, que la propia ficha se pone. */
+.pf-fondo{position:fixed;inset:0;z-index:230;background:rgba(0,0,0,.74);backdrop-filter:blur(7px);
+  display:none;align-items:center;justify-content:center;padding:4vh 3vw}
+.pf-fondo.open{display:flex}
+.pf{position:relative;width:min(1000px,94vw);max-height:92vh;display:flex;flex-direction:column;
+  overflow:hidden;border:1px solid rgba(var(--ov),.14);border-radius:20px;
+  box-shadow:0 30px 90px rgba(0,0,0,.55)}
+:root[data-theme="light"] .pf{background:rgba(255,255,255,.97)}
+:root:not([data-theme="light"]) .pf{background:rgba(12,12,22,.97)}
+/* Hero: el envase sobre fondo claro — todos son botes blancos y sobre el fondo
+   oscuro de la app se perderían — y la identidad al lado. */
+.pf-hero{flex:none;display:grid;grid-template-columns:224px 1fr;
+  border-bottom:1px solid rgba(var(--ov),.12)}
+.pf-foto{position:relative;height:224px;display:flex;align-items:center;justify-content:center;
+  background:radial-gradient(120% 100% at 50% 22%,#fff 0%,#eceef3 58%,#dfe3ea 100%);
+  border-right:1px solid rgba(var(--ov),.12)}
+.pf-env{height:174px;width:auto;display:block;filter:drop-shadow(0 12px 22px rgba(12,16,26,.22))}
+.pf-foto img{max-height:184px;max-width:82%;object-fit:contain;display:block;
+  filter:drop-shadow(0 12px 22px rgba(12,16,26,.2))}
+/* Dice si lo que se ve es la foto del producto o un dibujo: no se finge una foto. */
+.pf-orig{position:absolute;left:11px;bottom:10px;font-size:8px;font-weight:800;letter-spacing:.1em;
+  text-transform:uppercase;color:#4c515e;background:#fff;
+  border:1px solid rgba(0,0,0,.1);border-radius:6px;padding:3px 7px}
+.pf-id{padding:22px 24px;display:flex;flex-direction:column;justify-content:center;gap:10px;
+  min-width:0}
+.pf-ojo{display:flex;align-items:center;gap:7px;font-size:9.5px;font-weight:800;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--text3)}
+.pf-ojo i{width:6px;height:6px;border-radius:50%;display:block;flex:none;
+  background:rgb(var(--tono));box-shadow:0 0 10px rgba(var(--tono),.7)}
+.pf-h1{font-size:23px;font-weight:800;letter-spacing:-.028em;line-height:1.15;color:var(--text);
+  padding-right:44px}
+.pf-act{font-size:12px;color:var(--text2);display:flex;align-items:center;gap:7px}
+.pf-act svg{width:13px;height:13px;stroke:var(--cy);fill:none;stroke-width:2;flex:none}
+.pf-chips{display:flex;gap:6px;flex-wrap:wrap}
+.pf-chip{font-size:9.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;
+  padding:4px 9px;border-radius:7px;border:1px solid;
+  color:rgb(var(--c));border-color:rgba(var(--c),.36);background:rgba(var(--c),.1)}
+.pf-cifras{display:flex;gap:8px;margin-top:2px}
+.pf-c{flex:1;border:1px solid var(--card-br);background:var(--card);border-radius:11px;
+  padding:8px 11px}
+.pf-c-v{font-family:var(--mono);font-size:17px;font-weight:700;line-height:1.1;color:var(--text)}
+.pf-c-v em{font-style:normal;font-size:10px;color:var(--text3);margin-left:2px}
+.pf-c-k{font-size:8px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--text3);margin-top:3px}
+/* Cuerpo: lo que ES a la izquierda, lo que se HACE con él a la derecha. */
+.pf-cuerpo{flex:1;min-height:0;overflow-y:auto;display:grid;grid-template-columns:1fr 320px;
+  gap:13px;padding:15px 17px 17px;align-content:start}
+.pf-col{display:flex;flex-direction:column;gap:11px;min-width:0}
+.pf-card{border:1px solid var(--card-br);background:var(--card);border-radius:14px;padding:13px 15px}
+.pf-t{display:flex;align-items:center;gap:8px;font-size:9.5px;font-weight:800;letter-spacing:.13em;
+  text-transform:uppercase;color:var(--text3);margin-bottom:8px}
+.pf-t .b{width:3px;height:12px;border-radius:2px;flex:none;background:rgb(var(--tono))}
+.pf-p{font-size:12.5px;line-height:1.62;color:var(--text2);margin:0}
+.pf-p.destacado{color:var(--text);font-size:13px}
+.pf-p b,.pf-paso-u b{color:var(--text);font-weight:700}
+.pf-paso{display:flex;gap:11px;padding:10px 0}
+.pf-paso+.pf-paso{border-top:1px solid rgba(var(--ov),.07)}
+.pf-mom{flex:none;width:34px;height:34px;border-radius:10px;display:flex;align-items:center;
+  justify-content:center;font-size:8.5px;font-weight:800;letter-spacing:.04em;border:1px solid;
+  color:rgb(var(--c));border-color:rgba(var(--c),.34);background:rgba(var(--c),.1)}
+.pf-paso-c{min-width:0}
+.pf-paso-h{display:flex;align-items:baseline;gap:7px;margin-bottom:3px}
+.pf-paso-n{font-size:11px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;
+  color:rgb(var(--c))}
+.pf-paso-m{font-family:var(--mono);font-size:10px;color:var(--text3)}
+.pf-paso-u{font-size:12px;line-height:1.6;color:var(--text2)}
+/* Las dos tarjetas que no llevan el color del producto sino el suyo. */
+.pf-tarda{border-color:rgba(var(--cy-rgb),.26);background:rgba(var(--cy-rgb),.06)}
+.pf-tarda .pf-t .b{background:var(--cy)}
+.pf-ojo-card{border-color:rgba(var(--o-rgb),.3);background:rgba(var(--o-rgb),.07)}
+.pf-ojo-card .pf-t{color:var(--o)}
+.pf-ojo-card .pf-t .b{background:var(--o)}
+.pf-x{position:absolute;top:13px;right:13px;z-index:3;width:32px;height:32px;border-radius:10px;
+  border:1px solid rgba(var(--ov),.16);background:rgba(var(--ov),.07);backdrop-filter:blur(10px);
+  color:var(--text);font-size:15px;line-height:1;cursor:pointer;display:flex;align-items:center;
+  justify-content:center}
+.pf-x:hover{background:rgba(var(--ov),.16)}
+/* El botón que la abre, en el renglón de la lista. Color propio para no
+   confundirse con el precio ni con "ya lo tengo". */
+.lc-info{display:flex;align-items:center;gap:5px;font-size:10px;font-weight:800;
+  letter-spacing:.03em;color:var(--cy);background:rgba(var(--cy-rgb),.09);
+  border:1px solid rgba(var(--cy-rgb),.28);border-radius:7px;padding:4px 9px;cursor:pointer;
+  font-family:inherit;white-space:nowrap}
+.lc-info:hover{background:rgba(var(--cy-rgb),.18)}
+.lc-info svg{width:11px;height:11px;stroke:currentColor;fill:none;stroke-width:2.2;
+  stroke-linecap:round}
+@media(max-width:860px){
+  .pf-hero{grid-template-columns:1fr}
+  .pf-foto{height:176px;border-right:none;border-bottom:1px solid rgba(var(--ov),.12)}
+  .pf-env{height:138px}
+  .pf-foto img{max-height:146px}
+  .pf-cuerpo{grid-template-columns:1fr}
+  .pf-h1{font-size:20px}
+  .pf-cifras{flex-wrap:wrap}
+}
 .ej-img-cue{font-size:11.5px;color:var(--text2);line-height:1.5;margin-top:12px;text-align:left}
 /* Nombre clicable dentro de la tarjeta "🏋️ Hoy toca" — mismo hp-ex-name de siempre, solo gana
    señal visual de que se puede tocar (antes era texto plano). */
@@ -3436,6 +3547,9 @@ button.ct-cat:hover{background:rgba(var(--ov),.07)}
 </div>
 
 <!-- ─── IMAGEN DE EJERCICIO (2026-08-11) — clic en el nombre dentro de "🏋️ Hoy toca" ─── -->
+<!-- La ficha de un producto de skincare. Se llena al abrirla (`pfAbrir`) y se
+     vacía al cerrarla: no hay dos copias del mismo dato en el DOM. -->
+<div class="pf-fondo" id="pfFondo" onclick="if(event.target===this) pfCerrar()"></div>
 <div class="ej-img-overlay" id="ejImgOverlay" onclick="if(event.target===this) cerrarImagenEjercicio()">
   <div class="ej-img-card">
     <button class="ej-img-close" onclick="cerrarImagenEjercicio()" aria-label="Cerrar">✕</button>
@@ -4576,6 +4690,125 @@ function lcPrecioOtros(cat,txt){
   }
   return null;
 }
+// Ficha de un producto de skincare -----------------------------------------
+// Todo el contenido sale de `RUTINA_PIEL` en datos-maestros.js. Aquí solo está
+// el molde: si cambia un precio, un producto o una explicación, cambia allá.
+// Ningún color va cableado — se nombran tokens `--pf-*` y el tema claro los
+// oscurece solo.
+//
+// Cuatro de los seis productos no tienen foto con licencia libre en ninguna base
+// abierta — Open Beauty Facts solo guarda OTROS productos de esas marcas —, así
+// que se dibuja la silueta real de su envase con los colores de la marca, y la
+// etiqueta de abajo dice si es foto o dibujo. Es vectorial, o sea nítido a
+// cualquier tamaño, y no depende de la red: las apps se abren con file://.
+const PF_FORMAS={
+  bomba:'<rect x="30" y="50" width="60" height="120" rx="9" fill="@A@"/><rect x="30" y="50" width="60" height="120" rx="9" fill="none" stroke="@S@" stroke-width="1.2"/><path d="M30 98h60v54a9 9 0 0 1-9 9H39a9 9 0 0 1-9-9z" fill="@B@" opacity=".92"/><rect x="48" y="38" width="24" height="13" rx="3" fill="@B@"/><rect x="53" y="16" width="9" height="23" rx="4" fill="@B@"/><path d="M57.5 20h12a7 7 0 0 1 7 7v4" fill="none" stroke="@B@" stroke-width="7" stroke-linecap="round"/>',
+  gotero:'<rect x="38" y="74" width="44" height="92" rx="4" fill="@A@"/><rect x="38" y="74" width="44" height="92" rx="4" fill="none" stroke="@S@" stroke-width="1.2"/><rect x="43" y="90" width="34" height="62" rx="2" fill="#fff" opacity=".9"/><rect x="46" y="98" width="28" height="3" rx="1.5" fill="@B@" opacity=".55"/><rect x="46" y="105" width="20" height="2.4" rx="1.2" fill="@B@" opacity=".3"/><path d="M50 74V64h20v10z" fill="@A@"/><path d="M50 74V64h20v10" fill="none" stroke="@S@" stroke-width="1.2"/><rect x="48" y="20" width="24" height="45" rx="5" fill="@B@"/><rect x="48" y="20" width="24" height="8" rx="4" fill="#fff" opacity=".2"/>',
+  tubo:'<rect x="48" y="16" width="24" height="30" rx="4" fill="@B@"/><rect x="48" y="16" width="24" height="7" rx="3.5" fill="#fff" opacity=".28"/><path d="M50 46c0 8-14 12-14 26v80h48V72c0-14-14-18-14-26z" fill="@A@"/><path d="M50 46c0 8-14 12-14 26v80h48V72c0-14-14-18-14-26z" fill="none" stroke="@S@" stroke-width="1.2"/><rect x="36" y="104" width="48" height="48" fill="@B@" opacity=".88"/><rect x="33" y="150" width="54" height="14" rx="3" fill="@B@"/><rect x="33" y="150" width="54" height="14" rx="3" fill="none" stroke="@S@" stroke-width="1"/>',
+  tarro:'<path d="M30 90h60v52a14 14 0 0 1-14 14H44a14 14 0 0 1-14-14z" fill="@A@"/><path d="M30 90h60v52a14 14 0 0 1-14 14H44a14 14 0 0 1-14-14z" fill="none" stroke="@S@" stroke-width="1.2"/><rect x="38" y="106" width="44" height="4" rx="2" fill="@B@" opacity=".5"/><rect x="38" y="115" width="30" height="3" rx="1.5" fill="@B@" opacity=".28"/><rect x="25" y="56" width="70" height="35" rx="7" fill="@B@"/><rect x="25" y="56" width="70" height="8" rx="4" fill="#fff" opacity=".22"/><rect x="25" y="84" width="70" height="7" fill="#000" opacity=".12"/>',
+  bote:'<rect x="26" y="62" width="68" height="108" rx="7" fill="@A@"/><rect x="26" y="62" width="68" height="108" rx="7" fill="none" stroke="@S@" stroke-width="1.2"/><rect x="26" y="88" width="68" height="56" fill="@B@" opacity=".9"/><rect x="22" y="34" width="76" height="29" rx="6" fill="@B@"/><rect x="22" y="34" width="76" height="6" rx="3" fill="#fff" opacity=".22"/>',
+};
+function pfEnvaseSvg(envase,a,b){
+  const f=PF_FORMAS[envase]; if(!f) return '';
+  return '<svg class="pf-env" viewBox="0 0 120 180" aria-hidden="true">'+
+    '<ellipse cx="60" cy="172" rx="33" ry="4.5" fill="rgba(0,0,0,.12)"/>'+
+    f.split('@A@').join(a).split('@B@').join(b).split('@S@').join('rgba(0,0,0,.17)')+'</svg>';
+}
+const PF_AYUDA={acne:'Acn\u00e9',manchas:'Manchas',arrugas:'Arrugas',sensibilidad:'Sensibilidad'};
+// Los pasos salen de `am.uso`/`pm.uso`/`extra.uso`: el "cómo se aplica" ya estaba
+// escrito para la rutina, y aquí se lee — no se copia.
+function pfPasosHtml(p){
+  return [['am','AM','am'],['pm','PM','pm'],['extra','EXTRA','mint']].map(function(m){
+    const d=p[m[0]]; if(!d) return '';
+    return '<div class="pf-paso" style="--c:var(--pf-'+m[2]+')">'+
+      '<span class="pf-mom">'+m[1]+'</span>'+
+      '<div class="pf-paso-c"><div class="pf-paso-h">'+
+        '<span class="pf-paso-n">'+(d.etiqueta||p.cat)+'</span>'+
+        (d.min?'<span class="pf-paso-m">'+d.min+' min</span>':'')+'</div>'+
+      '<div class="pf-paso-u">'+d.uso+'</div></div></div>';
+  }).join('');
+}
+function pfCard(titulo,dentro,extra){
+  return '<div class="pf-card'+(extra?' '+extra:'')+'">'+
+    '<div class="pf-t"><span class="b"></span>'+titulo+'</div>'+dentro+'</div>';
+}
+// Las dos fotos vienen de internet. Si no llegan — sin red, o el servidor
+// caido — se dibuja el envase en su lugar: mas vale una silueta que un hueco.
+function pfSinFoto(img){
+  const C=window.CIFRAS; if(!C||!C.RUTINA_PIEL) return;
+  const p=C.RUTINA_PIEL.productos.filter(function(x){ return x.id===img.dataset.pf; })[0];
+  const caja=img.parentElement; if(!p||!caja) return;
+  caja.innerHTML=pfEnvaseSvg(p.envase,p.marca.a,p.marca.b)+
+    '<span class="pf-orig">Envase dibujado</span>';
+}
+function pfHtml(p){
+  const R=window.CIFRAS.RUTINA_PIEL, f=p.ficha;
+  const media=p.foto
+    ? '<img src="'+p.foto+'" alt="'+p.n.replace(/"/g,'&quot;')+'" '+
+        'data-pf="'+p.id+'" onerror="pfSinFoto(this)">'+
+      '<span class="pf-orig">Foto del producto</span>'
+    : pfEnvaseSvg(p.envase,p.marca.a,p.marca.b)+'<span class="pf-orig">Envase dibujado</span>';
+  const chips=(p.ayuda||[]).map(function(k){
+    return PF_AYUDA[k]
+      ? '<span class="pf-chip" style="--c:var(--pf-'+k+')">'+PF_AYUDA[k]+'</span>' : '';
+  }).join('');
+  const marca=p.clave?' \u00b7 CLAVE':(p.opcional?' \u00b7 OPCIONAL':'');
+  return '<div class="pf" style="--tono:var(--pf-'+p.tono+')">'+
+    '<button class="pf-x" onclick="pfCerrar()" aria-label="Cerrar">\u2715</button>'+
+    '<div class="pf-hero">'+
+      '<div class="pf-foto">'+media+'</div>'+
+      '<div class="pf-id">'+
+        '<div class="pf-ojo"><i></i>'+p.cat.toUpperCase()+marca+'</div>'+
+        '<h2 class="pf-h1">'+p.n+'</h2>'+
+        '<div class="pf-act"><svg viewBox="0 0 24 24"><path d="M12 2v20M2 12h20"/></svg>'+
+          f.activo+'</div>'+
+        '<div class="pf-chips">'+chips+'</div>'+
+        '<div class="pf-cifras">'+
+          '<div class="pf-c"><div class="pf-c-v">$'+R.costoMes(p)+'<em>/mes</em></div>'+
+            '<div class="pf-c-k">Lo que cuesta</div></div>'+
+          '<div class="pf-c"><div class="pf-c-v">'+R.duracionDias(p)+'<em>d\u00edas</em></div>'+
+            '<div class="pf-c-k">Dura un bote</div></div>'+
+          '<div class="pf-c"><div class="pf-c-v">'+p.contenido+'<em>'+p.unidad+'</em></div>'+
+            '<div class="pf-c-k">Contenido</div></div>'+
+        '</div>'+
+      '</div>'+
+    '</div>'+
+    '<div class="pf-cuerpo">'+
+      '<div class="pf-col">'+
+        pfCard('Qu\u00e9 es','<p class="pf-p destacado">'+f.que+'</p>')+
+        pfCard('Qu\u00e9 le hace a tu piel','<p class="pf-p">'+f.hace+'</p>')+
+        pfCard('Para qu\u00e9 te sirve a ti','<p class="pf-p">'+f.sirve+'</p>')+
+      '</div>'+
+      '<div class="pf-col">'+
+        pfCard('C\u00f3mo se aplica',pfPasosHtml(p))+
+        pfCard('Cu\u00e1ndo se nota','<p class="pf-p">'+f.tarda+'</p>','pf-tarda')+
+        pfCard('Ojo con esto','<p class="pf-p">'+f.ojo+'</p>','pf-ojo-card')+
+      '</div>'+
+    '</div>'+
+  '</div>';
+}
+// Se entra por el texto del renglón, que es lo único que la lista conoce.
+// `deTextoCompra` lo deshace en el maestro, que es donde se armó.
+function pfAbrir(txt){
+  const C=window.CIFRAS; if(!C||!C.RUTINA_PIEL) return;
+  const p=C.RUTINA_PIEL.deTextoCompra(txt); if(!p||!p.ficha) return;
+  const o=document.getElementById('pfFondo'); if(!o) return;
+  o.innerHTML=pfHtml(p);
+  o.classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function pfCerrar(){
+  const o=document.getElementById('pfFondo'); if(!o) return;
+  o.classList.remove('open'); o.innerHTML='';
+  document.body.style.overflow='';
+}
+document.addEventListener('keydown',function(e){
+  if(e.key==='Escape'){
+    const o=document.getElementById('pfFondo');
+    if(o&&o.classList.contains('open')) pfCerrar();
+  }
+});
+
 // Una píldora de tienda. Con `url` es un link — sin él, el mismo chip sin subrayado ni ↗.
 function lcTiendaPill(url,tienda,precio,tip){
   const at=' class="lc-price '+(precio?'lc-price-est':'lc-price-nil')+(url?' lc-price-link':'')+
@@ -4853,6 +5086,17 @@ function lcItemHtml(cat,txt){
   const subHtml=lcTieneQty(cat,txt)
     ? '<span class="lc-sub'+(n>1?' mult':'')+'" title="'+(n?n+' × '+lcM(p.monto):'Marca para llevar tu cantidad de una semana: '+lcBase(p)+' × '+p.paso)+'">'+(n?lcM(p.monto*n):'—')+'</span>'
     : '';
+  // Skincare es la única categoría con ficha: es donde saber qué hace el
+  // producto cambia lo que compras. Se comprueba `ficha` y no la categoría a
+  // secas, así el botón sale solo donde hay algo que leer.
+  const prodPiel=cat==='skincare'&&window.CIFRAS&&window.CIFRAS.RUTINA_PIEL
+    ? window.CIFRAS.RUTINA_PIEL.deTextoCompra(txt) : null;
+  const infoBtn=prodPiel&&prodPiel.ficha
+    ? '<button class="lc-info" onclick="pfAbrir(\''+esc+'\')" '+
+      'title="Qu\u00e9 es, para qu\u00e9 sirve y c\u00f3mo se aplica">'+
+      '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/>'+
+      '<path d="M12 11v5M12 7.6v.1"/></svg>Qu\u00e9 es</button>'
+    : '';
   const tengo=lcTengoCat(cat)&&lcTengo(id);
   const tengoBtn=lcTengoCat(cat)
     ? '<button class="lc-tengo-btn'+(tengo?' on':'')+'" onclick="lcToggleTengo(\''+cat+'\',\''+esc+'\')" '+
@@ -4861,7 +5105,7 @@ function lcItemHtml(cat,txt){
   return '<div class="lc-item'+(n?' on':'')+(tengo?' lc-item-tengo':'')+'" id="'+id+'-row">'+
     '<input type="checkbox" id="'+id+'" '+(n?'checked':'')+' '+(tengo?'disabled':'')+' onchange="toggleListaItem(\''+id+'\',\''+cat+'\',\''+esc+'\')">'+
     '<label for="'+id+'" class="lc-item-txt" title="'+txt.replace(/"/g,'&quot;')+'">'+txt+'</label>'+
-    '<span class="lc-item-meta">'+lcPrecioHtml(cat,txt)+qtyHtml+tengoBtn+'</span>'+
+    '<span class="lc-item-meta">'+infoBtn+lcPrecioHtml(cat,txt)+qtyHtml+tengoBtn+'</span>'+
     subHtml+
   '</div>';
 }

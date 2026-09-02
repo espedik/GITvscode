@@ -163,6 +163,8 @@ CIFRAS.RUTINA_PIEL.pasos('am')        // [{orden, n, cat, uso, min, esperaDespue
 CIFRAS.RUTINA_PIEL.duracionDias(p)    // contenido / dosisDia
 CIFRAS.RUTINA_PIEL.costoMes(p)        // precio / duracion * 30
 CIFRAS.RUTINA_PIEL.costoMesTotal      // $806 hoy, sin contar la mascarilla
+CIFRAS.RUTINA_PIEL.textoCompra(p)     // el renglón tal cual sale en la compra
+CIFRAS.RUTINA_PIEL.deTextoCompra(txt) // y de vuelta: del renglón al producto
 ```
 
 | Producto | Paso | Tamaño | Dura | Al mes |
@@ -173,6 +175,36 @@ CIFRAS.RUTINA_PIEL.costoMesTotal      // $806 hoy, sin contar la mascarilla
 | Differin Adapaleno 0.1% Gel | PM 2 | 45 g | ~180 d | $72 |
 | Eucerin Hyaluron-Filler + Epigenetic Noche | PM 3 | 50 ml | ~100 d | $210 |
 | Aztec Secret Indian Healing Clay | opcional | 454 g | ~175 d | $50 |
+
+**Cada producto trae una `ficha`** (2026-09-02). Hasta esa fecha la rutina sabía
+decir *cómo* se aplica cada cosa — eso vive en `am.uso`/`pm.uso` y sigue ahí — pero
+no *qué es* ni *por qué sirve*. Ese hueco es la ficha:
+
+| Campo | Qué lleva |
+|---|---|
+| `activo` | el ingrediente que hace el trabajo |
+| `que` | qué es el producto, en una línea |
+| `hace` | qué le pasa a la piel, sin jerga |
+| `sirve` | para qué le sirve a Adán en concreto |
+| `tarda` | cuándo se nota, para no abandonarlo antes de tiempo |
+| `ojo` | el error que arruina el producto |
+
+El botón **«Qué es»** de cada renglón de la lista de la compra abre esa ficha, y el
+dashboard **no guarda ni una línea de ese texto**: lo arma todo leyendo el maestro,
+incluido el «cómo se aplica», que toma de `am.uso`/`pm.uso`/`extra.uso` sin
+copiarlo. Se entra por el texto del renglón — lo único que la lista conoce — y
+`deTextoCompra` lo deshace, que es el inverso exacto de `textoCompra`, con el que
+el getter `LISTA_COMPRAS.skincare` lo armó.
+
+**Las imágenes.** Solo dos de los seis — el CeraVe y el Aztec Secret — tienen foto
+del producto EXACTO con licencia libre; van en `foto`, desde Open Beauty Facts. De
+los otros cuatro esa base solo guarda *otros* productos de la misma marca (la crema
+de **día** de Eucerin, un limpiador de Differin, un sérum de cafeína), que sería
+enseñar un producto por otro. Esos llevan `envase` y `marca` en su lugar y el
+dashboard dibuja la silueta del bote con los dos colores de la marca. La etiqueta
+de la esquina dice siempre cuál de las dos cosas se está viendo. El dibujo es
+también el respaldo de las dos fotos: vienen de internet y las apps se abren con
+`file://`, así que sin red el `onerror` cae al envase en vez de dejar un hueco.
 
 **Los días y el costo NO se escriben**: salen de `contenido / dosisDia`. Por eso el protector se
 lleva casi la mitad del gasto — dos dedos diarios, que es la dosis correcta, vacían un bote de
@@ -486,3 +518,10 @@ espinaca, pavo molido, leche de avena, crema de cacahuate, caldo de
 pollo y avena en hojuelas. El **control 14** del verificador comprueba que cada
 receta esté completa (ingredientes con pasillo y cantidad, pasos, macros, ids
 únicos) y que la lista siga siendo la derivada y no una copia.
+
+El **control 15** hace lo propio con la ficha de skincare: que ningún producto se
+quede sin `ficha` o con un campo vacío, que traiga con qué dibujarse cuando no hay
+foto, que tenga algún momento del que sacar el «cómo se aplica», y que
+`deTextoCompra(textoCompra(p))` devuelva el mismo producto. Esa última es la que
+importa: si dejan de ser inversas, el botón «Qué es» no encuentra nada y al
+pulsarlo no pasa **nada** — sin error en consola, sin señal de ningún tipo.

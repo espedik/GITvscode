@@ -650,11 +650,35 @@ window.CIFRAS = (function () {
   // Amazon MX, septiembre 2026) y las dosis son las correctas, no las que se usan por costumbre
   // — por eso el protector solar sale caro: dos dedos diarios vacían un bote de 50 ml en 40
   // días. Poner menos es lo que convierte un SPF50 en un SPF15.
+  // Cada producto trae una `ficha`: lo que es y lo que hace. Hasta el 2026-09-02
+  // eso no estaba escrito en ninguna parte — la rutina solo decía CÓMO aplicarlo,
+  // nunca QUÉ era ni POR QUÉ servía. El "cómo se aplica" sigue viviendo en
+  // `am.uso`/`pm.uso`/`extra.uso` y la ficha lo lee de ahí, no lo repite.
+  //   activo  el ingrediente que hace el trabajo
+  //   que     qué es el producto, en una línea
+  //   hace    qué le pasa a la piel, sin jerga
+  //   sirve   para qué le sirve a Adán en concreto
+  //   tarda   cuándo se nota, para no abandonarlo antes de tiempo
+  //   ojo     el error que arruina el producto
+  //   envase  forma del frasco, para dibujarlo (bomba/gotero/tubo/tarro/bote)
+  //   marca   los dos colores del envase real
+  //   foto    SOLO si existe foto del producto EXACTO con licencia libre. Cuatro de
+  //           los seis no la tienen en ninguna base abierta: esos se dibujan.
   const RUTINA_PIEL = {
     productos: [
       { id:'limpiador', cat:'Limpiador', n:'CeraVe Limpiador Espumoso (verde)',
         contenido:236, unidad:'ml', dosisDia:3, precio:260, tono:'ok',
         ayuda:['acne','sensibilidad'],
+        envase:'bomba', marca:{a:'#f2f4f6', b:'#00a94f'},
+        foto:'https://images.openbeautyfacts.org/images/products/360/600/053/7194/front_en.4.full.jpg',
+        ficha:{
+          activo:'Ceramidas + \u00e1cido hialur\u00f3nico, con tensioactivos suaves',
+          que:'El gel limpiador de diario. La versi\u00f3n verde es la de piel grasa; la azul es para piel seca y no es la tuya.',
+          hace:'Arrastra grasa, sudor y protector solar sin quitarle a la piel su propia barrera. Las ceramidas son el cemento que mantiene unidas las c\u00e9lulas de la superficie: casi todos los jabones se lo llevan, y \u00e9ste lo repone mientras limpia.',
+          sirve:'Es el primer paso de las dos rutinas. Todo lo dem\u00e1s \u2014 s\u00e9rum, retinoide, hidratante \u2014 entra mejor en una piel limpia, y ninguno funciona sobre una capa de protector solar del d\u00eda anterior.',
+          tarda:'Desde el primer d\u00eda: la diferencia es que la cara no queda jalada al secarse.',
+          ojo:'Agua tibia, nunca caliente. El agua caliente disuelve los l\u00edpidos que este limpiador acaba de reponer.'
+        },
         am:{ orden:1, min:1, uso:'Masajea sobre piel húmeda 30-60 seg y enjuaga con agua tibia, nunca caliente. Quita la grasa y el sudor de la noche sin dejar la piel jalada.' },
         pm:{ orden:1, min:2, etiqueta:'Doble limpieza', esperaDespues:20,
              esperaTxt:'Sécate del todo y espera',
@@ -663,24 +687,60 @@ window.CIFRAS = (function () {
       { id:'niacinamida', cat:'Sérum', n:'The Ordinary Niacinamida 10% + Zinc 1%',
         contenido:30, unidad:'ml', dosisDia:0.15, precio:230, tono:'teal',
         ayuda:['acne','manchas'],
+        envase:'gotero', marca:{a:'#e9e4d8', b:'#1c1c1c'},
+        ficha:{
+          activo:'Niacinamida (vitamina B3) al 10% + zinc PCA al 1%',
+          que:'Un s\u00e9rum acuoso, de los m\u00e1s baratos que existen con evidencia real detr\u00e1s.',
+          hace:'La niacinamida le baja el ritmo a las gl\u00e1ndulas que producen grasa y frena el paso del pigmento a la superficie de la piel. El zinc acompa\u00f1a calmando. El resultado es menos brillo a media tarde, poro menos abierto y marcas viejas que se van aclarando.',
+          sirve:'Es tu producto para las marcas que deja el acn\u00e9 \u2014 esas manchas caf\u00e9s que quedan despu\u00e9s, no el grano. Y le quita a la cara el brillo del mediod\u00eda, que en piel grasa se nota a las pocas horas del protector.',
+          tarda:'El brillo, en 2 semanas. Las manchas, entre 8 y 12 semanas.',
+          ojo:'Es de los pocos activos que se lleva bien con todo, retinoide incluido. No hace falta separarlo de nada ni dejar d\u00edas de por medio.'
+        },
         am:{ orden:2, min:1,
              uso:'2-3 gotas sobre piel seca, antes del protector. Controla la grasa del día, afina poros y ayuda a desvanecer marcas — y es compatible con todo lo demás, incluido el retinoide.' } },
 
       { id:'spf', cat:'Protector solar', n:'La Roche-Posay Anthelios Oil Free SPF50',
         contenido:50, unidad:'ml', dosisDia:1.25, precio:520, tono:'am',
         ayuda:['manchas','arrugas'], clave:true,
+        envase:'tubo', marca:{a:'#ffffff', b:'#0f5fa6'},
+        ficha:{
+          activo:'Filtros UVA/UVB de amplio espectro, base oil free',
+          que:'El protector solar diario, en textura fluida y sin aceites \u2014 la que no deja la cara grasosa ni tapa el poro.',
+          hace:'Intercepta la radiaci\u00f3n antes de que llegue a da\u00f1ar las c\u00e9lulas. El UVB es el que quema; el UVA atraviesa nubes y ventanas y es el que envejece la piel y oscurece las manchas.',
+          sirve:'Es el \u00fanico producto de la lista que <b>previene</b> en vez de reparar. Sin \u00e9l, la niacinamida est\u00e1 aclarando manchas que el sol vuelve a oscurecer cada ma\u00f1ana, y el retinoide trabaja sobre una piel a la que se le sigue haciendo da\u00f1o.',
+          tarda:'No se ve nada a corto plazo. Se ve a los 10 a\u00f1os, comparando con quien no lo us\u00f3.',
+          ojo:'Es el producto m\u00e1s caro por mes de todos, y es el que m\u00e1s se justifica. Si el presupuesto aprieta, se recorta cualquier otro antes que \u00e9ste.'
+        },
         am:{ orden:3, min:2,
              uso:'<b>Dos dedos completos</b> para cara y cuello. Casi todo el mundo se pone un tercio de lo que debe, y eso convierte un SPF50 en un SPF15 — es el error más caro de la rutina. Todos los días, nublado incluido.' } },
 
       { id:'retinoide', cat:'Retinoide', n:'Differin Adapaleno 0.1% Gel',
         contenido:45, unidad:'g', dosisDia:0.25, precio:430, tono:'pink',
         ayuda:['acne','arrugas','manchas'], clave:true,
+        envase:'tubo', marca:{a:'#ffffff', b:'#00a3c4'},
+        ficha:{
+          activo:'Adapaleno al 0.1%, un retinoide de tercera generaci\u00f3n',
+          que:'Un gel de receta que en M\u00e9xico se vende sin ella. Es el retinoide m\u00e1s potente que puedes comprar en mostrador.',
+          hace:'Acelera la renovaci\u00f3n de la piel y evita que las c\u00e9lulas muertas se queden pegadas tapando el poro \u2014 que es como empieza un grano, antes de que se vea. Al mismo tiempo estimula col\u00e1geno, que es lo que sostiene la piel por debajo.',
+          sirve:'Es el \u00fanico de la lista que ataca las tres cosas a la vez: acn\u00e9, arrugas y manchas. Si tuvieras que quedarte con un solo activo, es \u00e9ste.',
+          tarda:'Las primeras 4 semanas la piel empeora \u2014 se llama purga y es normal, est\u00e1 sacando lo que ya estaba abajo. La mejora se ve entre la semana 8 y la 12. Casi todo el mundo lo abandona en la semana 3, justo antes de que empiece a servir.',
+          ojo:'Piel completamente seca y un ch\u00edcharo para toda la cara. M\u00e1s cantidad no acelera nada: solo irrita, y una piel irritada obliga a suspenderlo.'
+        },
         pm:{ orden:2, min:1,
              uso:'Un <b>chícharo</b> para toda la cara, sobre piel <b>completamente seca</b>. Con la piel húmeda penetra de más y ahí empieza la irritación. Deja un dedo de margen alrededor del ojo: es la piel más delgada del cuerpo. Es el activo de mostrador con más evidencia — trata acné, previene arrugas y ayuda con manchas, los tres a la vez.' } },
 
       { id:'hidratantePM', cat:'Hidratante', n:'Eucerin Hyaluron-Filler + Epigenetic Noche',
         contenido:50, unidad:'ml', dosisDia:0.5, precio:700, tono:'pm',
         ayuda:['arrugas','sensibilidad'],
+        envase:'tarro', marca:{a:'#f6f7f9', b:'#12305e'},
+        ficha:{
+          activo:'\u00c1cido hialur\u00f3nico de dos tama\u00f1os de mol\u00e9cula',
+          que:'La crema de noche. El hialur\u00f3nico corto entra a las capas de abajo y el largo se queda arriba reteniendo agua.',
+          hace:'Rellena de agua las l\u00edneas de expresi\u00f3n desde dentro, y encima del retinoide hace de amortiguador: la irritaci\u00f3n del adapaleno viene en buena parte de que reseca, y esta capa lo compensa.',
+          sirve:'Es lo que hace que puedas usar el retinoide todas las noches sin que la cara termine descamada. Sin ella, el adapaleno se vuelve intolerable a las dos semanas.',
+          tarda:'La piel se siente distinta a la ma\u00f1ana siguiente. Las l\u00edneas finas, unas 4 semanas.',
+          ojo:'Va encima del retinoide y sin esperar. No lo diluye ni le quita efecto \u2014 eso es un mito.'
+        },
         pm:{ orden:3, min:1,
              uso:'Encima del retinoide, sin esperar. Amortigua la irritación mientras rellena líneas de expresión con ácido hialurónico.' } },
 
@@ -688,6 +748,16 @@ window.CIFRAS = (function () {
       { id:'mascarilla', cat:'Mascarilla', n:'Aztec Secret Indian Healing Clay',
         contenido:454, unidad:'g', dosisDia:2.6, precio:290, tono:'mint',
         ayuda:['acne'], opcional:true,
+        envase:'bote', marca:{a:'#e8e2d4', b:'#c0392b'},
+        foto:'https://images.openbeautyfacts.org/images/products/000/000/000/1277/front_en.10.full.jpg',
+        ficha:{
+          activo:'Arcilla bentonita de calcio, 100% y sin nada m\u00e1s',
+          que:'Un bote de polvo que t\u00fa mezclas. Medio kilo dura a\u00f1os, y por eso sale a unos pocos pesos por uso.',
+          hace:'La bentonita tiene carga el\u00e9ctrica: al humedecerse atrae y se lleva la grasa y la suciedad del poro. Al secarse tensa \u2014 esa sensaci\u00f3n de que la cara late es normal.',
+          sirve:'Para la zona T cuando la notes cargada. Es un extra, no forma parte de tu semana: el trabajo de fondo lo hacen el retinoide y la niacinamida.',
+          tarda:'Se ve al enjuagar, el mismo d\u00eda. No deja nada a largo plazo.',
+          ojo:'Una vez por semana como mucho. Con adapaleno cada noche, dos veces reseca de m\u00e1s y te obliga a parar el retinoide, que es el que de verdad importa.'
+        },
         extra:{ uso:'Mezcla con agua hasta pasta, 10-15 min, 1 vez por semana. Controla grasa y afina poros, pero reseca si te pasas — y con el adapaleno cada noche, más de una vez por semana es sobra.' } },
     ],
 
@@ -704,6 +774,16 @@ window.CIFRAS = (function () {
           };
         })
         .sort(function (a, b) { return a.orden - b.orden; });
+    },
+
+    // El renglón tal como sale en la lista de la compra. Se escribe aquí una sola vez
+    // para que `deTextoCompra` pueda deshacerlo y el dashboard sepa qué producto abrir.
+    textoCompra: function (p) {
+      return p.cat + ' — ' + p.n + (p.opcional ? ' (opcional)' : '');
+    },
+    deTextoCompra: function (txt) {
+      var t = this;
+      return this.productos.filter(function (p) { return t.textoCompra(p) === txt; })[0] || null;
     },
 
     // Cuánto dura un bote con la dosis correcta, y lo que sale al mes. Derivados: si cambia el
@@ -1111,9 +1191,7 @@ window.CIFRAS = (function () {
     // una marca distinta a la que dice la rutina, que es justo lo que pasaba hasta el
     // 2026-09-01 (aquí Isdin, en la rutina La Roche-Posay).
     get skincare() {
-      return RUTINA_PIEL.productos.map(function (p) {
-        return p.cat + ' — ' + p.n + (p.opcional ? ' (opcional)' : '');
-      });
+      return RUTINA_PIEL.productos.map(function (p) { return RUTINA_PIEL.textoCompra(p); });
     },
     // Sale de RUTINA_PELO, incluidos los días: así no puede decir aquí una marca (o un día)
     // y otra en la rutina, que es lo que pasó con skincare. Los 2 de receta van al final

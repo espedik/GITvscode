@@ -698,6 +698,74 @@ function impactoDelCambio() {
             Object.keys(C.LISTA_COMPRAS.comida).length + ' pasillos)');
 })();
 
+/* ── 15. La ficha de cada producto de skincare ─────────────────────────
+   El botón "Qué es" de la lista de la compra abre una ficha que se arma entera desde
+   `RUTINA_PIEL`: el dashboard no guarda ni una línea de ese texto. Eso deja dos formas
+   de romperla en silencio, y las dos se comprueban aquí:
+
+     1. Un producto nuevo sin `ficha` — o con un campo vacío — sale en la lista con su
+        botón y abre una ficha a medias, sin que nada avise.
+     2. El renglón de la compra se arma con `textoCompra` y se deshace con
+        `deTextoCompra`. Si alguna vez dejan de ser inversas (alguien vuelve a escribir el
+        texto a mano en el getter, por ejemplo) el botón deja de encontrar el producto y
+        no hace nada al pulsarlo: ningún error en consola, solo un botón muerto.
+
+   También comprueba que cada producto trae con qué pintarse — `envase` conocido y los
+   dos colores —, porque cuatro de los seis no tienen foto y se dibujan. */
+(function fichaSkincare() {
+  if (!global.window || !global.window.CIFRAS) return;   // el control 4 ya avisó
+  const C = global.window.CIFRAS;
+  const RP = C.RUTINA_PIEL;
+  if (!RP) return;                                       // el control 11 ya avisó
+  const CAMPOS = ['activo', 'que', 'hace', 'sirve', 'tarda', 'ojo'];
+  const ENVASES = ['bomba', 'gotero', 'tubo', 'tarro', 'bote'];
+  const malos = [];
+  let conFoto = 0;
+
+  RP.productos.forEach(function (p) {
+    const f = p.ficha;
+    if (!f) { malos.push('  ' + p.id + ': sin `ficha` — su botón abriría una ficha vacía'); return; }
+    CAMPOS.forEach(function (k) {
+      if (!f[k] || String(f[k]).trim().length < 20)
+        malos.push('  ' + p.id + '.ficha.' + k + ': falta o es demasiado corto');
+    });
+    // Con qué se dibuja cuando no hay foto.
+    if (ENVASES.indexOf(p.envase) === -1)
+      malos.push('  ' + p.id + ': envase "' + p.envase + '" no está entre ' + ENVASES.join('/'));
+    if (!p.marca || !/^#[0-9a-f]{6}$/i.test(p.marca.a || '') || !/^#[0-9a-f]{6}$/i.test(p.marca.b || ''))
+      malos.push('  ' + p.id + ': `marca` necesita dos colores en hex');
+    if (p.foto) conFoto++;
+
+    // El "cómo se aplica" lo lee la ficha de la rutina: si un producto no tiene
+    // ningún momento, esa tarjeta sale vacía.
+    if (!p.am && !p.pm && !p.extra)
+      malos.push('  ' + p.id + ': sin am/pm/extra — "Cómo se aplica" saldría en blanco');
+
+    // Ida y vuelta: el renglón de la compra tiene que devolver este mismo producto.
+    const vuelta = RP.deTextoCompra(RP.textoCompra(p));
+    if (!vuelta || vuelta.id !== p.id)
+      malos.push('  ' + p.id + ': `deTextoCompra(textoCompra(p))` no devuelve el producto — ' +
+                 'el botón "Qué es" quedaría muerto');
+  });
+
+  // La lista de la compra tiene que seguir saliendo de la rutina, no de una copia.
+  const enLista = C.LISTA_COMPRAS.skincare;
+  if (enLista.length !== RP.productos.length)
+    malos.push('  la lista de la compra tiene ' + enLista.length + ' productos y la rutina ' +
+               RP.productos.length + ': dejó de derivarse');
+  enLista.forEach(function (txt) {
+    if (!RP.deTextoCompra(txt))
+      malos.push('  "' + txt + '" en la lista no corresponde a ningún producto de la rutina');
+  });
+
+  if (malos.length)
+    problemas.push('La ficha de skincare está incompleta:\n' + malos.slice(0, 14).join('\n'));
+  else
+    ok.push('Ficha de skincare completa (' + RP.productos.length + ' productos, ' +
+            conFoto + ' con foto y ' + (RP.productos.length - conFoto) + ' dibujados, ' +
+            'ida y vuelta con la lista de la compra)');
+})();
+
 // ── Salida ──
 if (process.argv.indexOf('--hook') !== -1) {
   const partes = [];
