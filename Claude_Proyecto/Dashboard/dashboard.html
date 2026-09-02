@@ -2396,6 +2396,9 @@ button.hp-lec:active{transform:translateY(0)}
   padding:4px 9px;border-radius:7px;border:1px solid;
   color:rgb(var(--c));border-color:rgba(var(--c),.36);background:rgba(var(--c),.1)}
 .pf-cifras{display:flex;gap:8px;margin-top:2px}
+/* Higiene y ojos suelen tener una sola cifra (el precio): estirada a todo el
+   ancho parecía un error de maquetación. */
+.pf-cifras .pf-c:only-child{flex:0 0 auto;min-width:150px}
 .pf-c{flex:1;border:1px solid var(--card-br);background:var(--card);border-radius:11px;
   padding:8px 11px}
 .pf-c-v{font-family:var(--mono);font-size:17px;font-weight:700;line-height:1.1;color:var(--text)}
@@ -4837,12 +4840,19 @@ function pfSinFoto(img){
   caja.innerHTML=pfEnvaseSvg(p.frasco,p.marca.a,p.marca.b)+
     '<span class="pf-orig">Envase dibujado</span>';
 }
+// En skincare y cabello el nombre lleva marca y solo se aceptaron fotos del
+// producto EXACTO. En las otras tres el art\u00edculo es gen\u00e9rico ("Cortau\u00f1as de mano
+// y de pie"), y la foto ense\u00f1a ese tipo de cosa, no el bote que va a comprar: decir
+// "foto del producto" ah\u00ed ser\u00eda mentir.
+function pfOrigen(cat){
+  return (cat==='skincare'||cat==='cabello') ? 'Foto del producto' : 'Foto de referencia';
+}
 function pfHtml(cat,txt,p){
   const f=p.ficha;
   const media=p.foto
     ? '<img src="'+p.foto+'" alt="'+p.n.replace(/"/g,'&quot;')+'" '+
         'data-pf="'+p.id+'" data-pf-cat="'+cat+'" onerror="pfSinFoto(this)">'+
-      '<span class="pf-orig">Foto del producto</span>'
+      '<span class="pf-orig">'+pfOrigen(cat)+'</span>'
     : pfEnvaseSvg(p.frasco,p.marca.a,p.marca.b)+'<span class="pf-orig">Envase dibujado</span>';
   const chips=(p.ayuda||[]).map(function(k){
     return PF_AYUDA[k]

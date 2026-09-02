@@ -715,6 +715,7 @@ window.CIFRAS = (function () {
              uso:'<b>Dos dedos completos</b> para cara y cuello. Casi todo el mundo se pone un tercio de lo que debe, y eso convierte un SPF50 en un SPF15 — es el error más caro de la rutina. Todos los días, nublado incluido.' } },
 
       { id:'retinoide', cat:'Retinoide', n:'Differin Adapaleno 0.1% Gel',
+        foto:'https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d4/Adapalene_Gel_%28Differin%29_in_China.jpg/960px-Adapalene_Gel_%28Differin%29_in_China.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail',
         contenido:45, unidad:'g', dosisDia:0.25, precio:430, tono:'pink',
         ayuda:['acne','arrugas','manchas'], clave:true,
         frasco:'tubo', marca:{a:'#ffffff', b:'#00a3c4'},
@@ -846,6 +847,7 @@ window.CIFRAS = (function () {
         aviso:'Es <b>medicamento de receta</b> y para la caída se usa fuera de indicación. Dos cosas que tienes que saber: <b>parte tu PSA a la mitad</b> \u2014 mídelo y dile a quien lo interprete que la tomas \u2014 y si aparecen efectos sexuales o bulto/dolor en el pecho, es motivo de consulta, no de aguantarse. Llévala con un médico, no en solitario.' },
 
       { id:'pilexil', cat:'Champú anticaída', n:'Pilexil Anticaída 300 ml',
+        foto:'https://images.openbeautyfacts.org/images/products/847/000/174/8768/front_es.6.full.jpg',
         frasco:'botella', marca:{a:'#f4f6f8', b:'#e8590c'},
         ficha:{
           activo:'Complejo antica\u00edda con amino\u00e1cidos azufrados y vitaminas del grupo B',
@@ -859,6 +861,7 @@ window.CIFRAS = (function () {
         uso:'Solo en el <b>cuero cabelludo</b>, nunca en el largo. Masajea <b>2 minutos con las yemas</b> — no con las uñas — y enjuaga: lo que escurre ya limpia el resto del pelo.' },
 
       { id:'cerave', cat:'Champú suave', n:'CeraVe Champú Hidratante sin sulfatos',
+        foto:'https://images.openbeautyfacts.org/images/products/360/600/060/7019/front_en.3.full.jpg',
         frasco:'botella', marca:{a:'#f2f4f6', b:'#0d6ebf'},
         ficha:{
           activo:'Tensioactivos suaves, sin sulfatos, con ceramidas',
@@ -915,6 +918,7 @@ window.CIFRAS = (function () {
         uso:'De medios a puntas, <b>5 minutos</b> mientras terminas de bañarte. Ese día <b>sustituye al acondicionador</b>: ponerle los dos apelmaza el cabello fino. Viene en TARRO, no en botella — es un acondicionador mucho más concentrado.' },
 
       { id:'sinEnjuague', cat:'Crema sin enjuague', n:"Crema sin enjuague L'Oréal Elvive Total Repair 5",
+        foto:'https://images.openbeautyfacts.org/images/products/007/124/936/4840/front_en.3.full.jpg',
         frasco:'tubo', marca:{a:'#ffffff', b:'#8b1a3a'},
         ficha:{
           activo:'Agentes acondicionadores que no se aclaran',
@@ -1029,6 +1033,7 @@ window.CIFRAS = (function () {
   const SUPLEMENTOS = {
     lista: [
       { id:'d3', n:'Vitamina D3', dosis:'2000-4000 UI', momento:'am', cuando:'con algo de grasa',
+        foto:'https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b1/Softgels.jpg/960px-Softgels.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail',
         frasco:'pastillas', marca:{a:'#ffffff', b:'#e8a317'},
         ficha:{
           activo:'Colecalciferol (vitamina D3), la misma forma que fabrica la piel con el sol',
@@ -1041,6 +1046,7 @@ window.CIFRAS = (function () {
         ojo:'Es el único de la lista cuyo efecto depende de un número que no conoces: <b>hazte el examen de Vitamina D</b> antes de sostener dosis altas.' },
 
       { id:'multi', n:'Multivitamínico', dosis:'1 tableta', momento:'am', cuando:'con el desayuno',
+        foto:'https://thumb.wikimedia.org/wikipedia/commons/thumb/6/66/B_vitamin_supplement_tablets.jpg/960px-B_vitamin_supplement_tablets.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail',
         frasco:'pastillas', marca:{a:'#ffffff', b:'#2b8a3e'},
         ficha:{
           activo:'Mezcla de vitaminas y minerales en dosis cercanas a la recomendada diaria',
@@ -1053,6 +1059,7 @@ window.CIFRAS = (function () {
         ojo:'No sustituye comer variado — es un seguro, no la base de la nutrición.' },
 
       { id:'omega3', n:'Omega 3 (aceite de pescado)', dosis:'1-2 g EPA+DHA', momento:'am', cuando:'con alimento',
+        foto:'https://thumb.wikimedia.org/wikipedia/commons/thumb/4/44/Bao_bi_dau_ca.jpg/960px-Bao_bi_dau_ca.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail',
         frasco:'pastillas', marca:{a:'#ffffff', b:'#1864ab'},
         ficha:{
           activo:'EPA y DHA, los dos \u00e1cidos grasos que el cuerpo no fabrica',
@@ -1065,6 +1072,7 @@ window.CIFRAS = (function () {
         ojo:'Si tienes reflujo, tómalo con una comida grande para evitar el "repique" de sabor a pescado.' },
 
       { id:'creatina', n:'Creatina monohidratada', dosis:'5 g', momento:'am', cuando:'también sin entrenar',
+        foto:'https://thumb.wikimedia.org/wikipedia/commons/thumb/5/58/Creatine_monohydrate_powder.jpg/960px-Creatine_monohydrate_powder.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail',
         frasco:'polvo', marca:{a:'#f2f4f6', b:'#e8590c'},
         ficha:{
           activo:'Creatina monohidratada \u2014 la forma barata, y la \u00fanica con evidencia s\u00f3lida',
@@ -1089,6 +1097,7 @@ window.CIFRAS = (function () {
         ojo:'Va de noche por una razón: tomarlo por la mañana desperdicia la mitad de para lo que lo compraste. El glicinato es el mejor tolerado; evita el óxido si tienes estómago sensible.' },
 
       { id:'whey', n:'Proteína Whey (suero de leche)', dosis:'25-30 g', momento:'pm', cuando:'solo si faltan gramos',
+        foto:'https://thumb.wikimedia.org/wikipedia/commons/thumb/2/20/Orgain_organic_protein_powder.jpg/960px-Orgain_organic_protein_powder.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail',
         frasco:'polvo', marca:{a:'#f2f4f6', b:'#c92a2a'},
         ficha:{
           activo:'Prote\u00edna de suero de leche, rica en leucina',
@@ -1357,6 +1366,7 @@ window.CIFRAS = (function () {
     grupos: [
       { n: 'Bolsa base \u2014 el neceser en s\u00ed', items: [
         { id:'neceser', n:'Neceser con gancho para colgar (impermeable por dentro)',
+          foto:'https://upload.wikimedia.org/wikipedia/commons/b/be/Kulturbeutel1.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled',
           frasco:'bolsa', marca:{a:'#e9ecf1', b:'#2c3e50'},
           uso:'Cu\u00e9lgalo del gancho nada m\u00e1s llegar y no lo vuelvas a abrir sobre la cama. Todo lo l\u00edquido, en la mitad impermeable.',
           ficha:{
@@ -1379,6 +1389,7 @@ window.CIFRAS = (function () {
             ojo:'El minoxidil NO va aqu\u00ed. Se degrada fuera de su envase original, y eso s\u00ed arruina el tratamiento.'
           } },
         { id:'bolsaLiquidos', n:'Bolsa de pl\u00e1stico con cierre para l\u00edquidos (regla de aeropuerto: 1 L transparente)',
+          foto:'https://thumb.wikimedia.org/wikipedia/commons/thumb/8/83/Druckverschlussbeutel.jpg/960px-Druckverschlussbeutel.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail',
           frasco:'bolsa', marca:{a:'#f0f3f7', b:'#868e96'},
           uso:'Todos los l\u00edquidos dentro, y la bolsa a mano en la mochila \u2014no en el fondo. En el control la sacas sin desarmar nada.',
           ficha:{
@@ -1390,6 +1401,7 @@ window.CIFRAS = (function () {
             ojo:'UNA bolsa por persona, y tiene que cerrar. Si va tan llena que no cierra, no cuenta y te hacen sacar cosas all\u00ed mismo.'
           } },
         { id:'toallaMicro', n:'Toalla de microfibra de secado r\u00e1pido',
+          foto:'https://thumb.wikimedia.org/wikipedia/commons/thumb/2/22/Mikrofaser-Handtuch_f%C3%BCr_Unterwegs.JPG/960px-Mikrofaser-Handtuch_f%C3%BCr_Unterwegs.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail',
           frasco:'tela', marca:{a:'#eef1f6', b:'#0ca678'},
           uso:'S\u00e9cate a toques, no frotando. Al terminar, ti\u00e9ndela: doblada y h\u00fameda dentro del neceser huele mal en un d\u00eda.',
           ficha:{
@@ -1403,6 +1415,7 @@ window.CIFRAS = (function () {
       ] },
       { n: 'Cuidado bucal', items: [
         { id:'cepilloViaje', n:'Cepillo de dientes de viaje con tapa',
+          foto:'https://thumb.wikimedia.org/wikipedia/commons/thumb/3/33/Smiling_Travel_Set_%282143747248%29.jpg/960px-Smiling_Travel_Set_%282143747248%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail',
           frasco:'cepillo', marca:{a:'#f2f4f6', b:'#12b886'},
           uso:'Dos minutos, cerdas suaves y en \u00e1ngulo hacia la enc\u00eda. Enju\u00e1galo y d\u00e9jalo secar ANTES de taparlo.',
           ficha:{
@@ -1414,6 +1427,7 @@ window.CIFRAS = (function () {
             ojo:'No lo tapes mojado. Un capuch\u00f3n cerrado sobre un cepillo h\u00famedo es una incubadora; por eso muchos vienen con agujeros.'
           } },
         { id:'pastaViaje', n:'Pasta dental tama\u00f1o viaje (\u226475 ml)',
+          foto:'https://thumb.wikimedia.org/wikipedia/commons/thumb/7/77/Zahnpastatube_%28fcm%29.jpg/960px-Zahnpastatube_%28fcm%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail',
           frasco:'tubo', marca:{a:'#ffffff', b:'#1971c2'},
           uso:'Del tama\u00f1o de un ch\u00edcharo, no la tira entera del anuncio. Y al terminar, escupe pero no te enjuagues con agua.',
           ficha:{
@@ -1425,6 +1439,7 @@ window.CIFRAS = (function () {
             ojo:'Enjuagarte con agua despu\u00e9s se lleva el fl\u00faor que acabas de poner. Escupe y ya est\u00e1: es el cambio gratis que m\u00e1s rinde de todo el cuidado bucal.'
           } },
         { id:'hilo', n:'Hilo dental',
+          foto:'https://upload.wikimedia.org/wikipedia/commons/5/53/Dental_floss_%28whole%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled',
           frasco:'caja', marca:{a:'#ffffff', b:'#0ca678'},
           uso:'Antes de cepillarte, no despu\u00e9s. Rodea el diente en forma de C y baja hasta la enc\u00eda: si s\u00f3lo metes y sacas, no limpias nada.',
           ficha:{
@@ -1436,6 +1451,7 @@ window.CIFRAS = (function () {
             ojo:'Que sangre no es motivo para dejarlo \u2014 es el motivo por el que hay que hacerlo. Lo que s\u00ed hay que evitar es meterlo de golpe y cortar la enc\u00eda.'
           } },
         { id:'enjuague', n:'Enjuague bucal tama\u00f1o viaje',
+          foto:'https://thumb.wikimedia.org/wikipedia/commons/thumb/5/56/Colgate_Alcohol_Free_Mouthwash.jpg/960px-Colgate_Alcohol_Free_Mouthwash.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail',
           frasco:'botella', marca:{a:'#ffffff', b:'#5f3dc4'},
           uso:'En otro momento del cepillado, no justo despu\u00e9s. Y sin diluir, 30 segundos.',
           ficha:{
@@ -1447,6 +1463,7 @@ window.CIFRAS = (function () {
             ojo:'El\u00edgelo sin alcohol: el alcohol reseca la boca, y una boca seca da M\u00c1S caries y peor aliento, que es justo lo contrario de lo que buscas.'
           } },
         { id:'interdental', n:'Cepillos interdentales o irrigador de viaje',
+          foto:'https://upload.wikimedia.org/wikipedia/commons/6/60/Interdental-brushes.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled',
           frasco:'utensilio', marca:{a:'#cfd6de', b:'#495057'},
           uso:'Uno por hueco, del grosor que entre sin forzar. Si tienes que empujar, es demasiado grande.',
           ficha:{
@@ -1460,6 +1477,7 @@ window.CIFRAS = (function () {
       ] },
       { n: 'Afeitado y barba', items: [
         { id:'rastrillo', n:'Rastrillo + cartuchos de repuesto',
+          foto:'https://upload.wikimedia.org/wikipedia/commons/9/9b/Quattro_Titanium_Energy.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled',
           frasco:'utensilio', marca:{a:'#dfe4ea', b:'#1c7ed6'},
           uso:'Siempre a favor del pelo, nunca a contrapelo, y sin apretar: el peso de la m\u00e1quina basta. Enjuaga la hoja cada dos pasadas.',
           ficha:{
@@ -1471,6 +1489,7 @@ window.CIFRAS = (function () {
             ojo:'Cambia el cartucho cada 5-7 afeitados. Si tienes que pasar dos veces por el mismo sitio, ya lo cambiaste tarde.'
           } },
         { id:'gelAfeitar', n:'Gel o espuma de afeitar tama\u00f1o viaje',
+          foto:'https://thumb.wikimedia.org/wikipedia/commons/thumb/5/5a/Nivea_men_shaving_gel.jpg/960px-Nivea_men_shaving_gel.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail',
           frasco:'botella', marca:{a:'#f2f4f6', b:'#0d6ebf'},
           uso:'Sobre la piel ya mojada con agua tibia, y d\u00e9jalo un minuto antes de pasar la m\u00e1quina. Ese minuto es la mitad del trabajo.',
           ficha:{
@@ -1482,6 +1501,7 @@ window.CIFRAS = (function () {
             ojo:'Nunca en seco ni con agua fr\u00eda. El agua tibia y el minuto de espera son gratis y son lo que evita el ardor de despu\u00e9s.'
           } },
         { id:'balsamo', n:'B\u00e1lsamo after-shave sin alcohol',
+          foto:'https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e2/Pitralon_Polar_1.jpg/960px-Pitralon_Polar_1.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail',
           frasco:'tubo', marca:{a:'#ffffff', b:'#0ca678'},
           uso:'Justo despu\u00e9s de secarte, con la cara todav\u00eda algo h\u00fameda. Si te afeitas por la ma\u00f1ana, va antes del protector solar.',
           ficha:{
@@ -1493,6 +1513,7 @@ window.CIFRAS = (function () {
             ojo:'Sin alcohol, y esto no es cosm\u00e9tico: sobre piel reci\u00e9n afeitada el alcohol irrita, reseca y empeora el pelo enterrado.'
           } },
         { id:'recortadora', n:'Recortadora de barba con bater\u00eda (y su cable)',
+          foto:'https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b3/Bartschneider.jpg/960px-Bartschneider.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail',
           frasco:'aparato', marca:{a:'#eef1f5', b:'#343a40'},
           uso:'Con la barba SECA y peinada. Empieza por un peine m\u00e1s largo del que crees y baja si hace falta: no hay vuelta atr\u00e1s.',
           ficha:{
@@ -1504,6 +1525,7 @@ window.CIFRAS = (function () {
             ojo:'Nunca sobre barba mojada: el pelo h\u00famedo se estira y cortas m\u00e1s de lo que crees. Y aceita las cuchillas de vez en cuando o empiezan a tirar.'
           } },
         { id:'tijerasNariz', n:'Tijeras peque\u00f1as para nariz y cejas',
+          foto:'https://thumb.wikimedia.org/wikipedia/commons/thumb/8/8e/Nose_hair_Cut_Scissors.jpg/960px-Nose_hair_Cut_Scissors.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail',
           frasco:'utensilio', marca:{a:'#cfd6de', b:'#495057'},
           uso:'Con punta redondeada, a contraluz y sobre seco. En la nariz s\u00f3lo lo que asoma, nunca hacia dentro.',
           ficha:{
@@ -1517,6 +1539,7 @@ window.CIFRAS = (function () {
       ] },
       { n: 'Cuerpo y ducha', items: [
         { id:'gelBano', n:'Gel de ba\u00f1o tama\u00f1o viaje',
+          foto:'https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3e/Care_bamboo_green_tea_shower_gel_%282019%29_01.jpg/960px-Care_bamboo_green_tea_shower_gel_%282019%29_01.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail',
           frasco:'botella', marca:{a:'#f2f4f6', b:'#0ca678'},
           uso:'En las zonas que lo necesitan \u2014axilas, ingles, pies\u2014 y agua en el resto. Agua tibia, no caliente.',
           ficha:{
@@ -1528,6 +1551,7 @@ window.CIFRAS = (function () {
             ojo:'Agua caliente y gel a diario por todo el cuerpo reseca las piernas y la espalda. No hace falta enjabonar entero cada d\u00eda.'
           } },
         { id:'desodorante', n:'Desodorante en barra (no aerosol \u2014 el aerosol da problemas en avi\u00f3n)',
+          foto:'https://upload.wikimedia.org/wikipedia/commons/4/41/Stick_deodorant_%28blur%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled',
           frasco:'barra', marca:{a:'#f4f6f8', b:'#1c7ed6'},
           uso:'Sobre piel limpia y SECA. El mejor momento es por la noche, no por la ma\u00f1ana.',
           ficha:{
@@ -1539,6 +1563,7 @@ window.CIFRAS = (function () {
             ojo:'Por la noche funciona mejor: de madrugada sudas poco y el producto entra en el conducto en vez de escurrirse. Y sobre piel reci\u00e9n afeitada arde.'
           } },
         { id:'esponja', n:'Esponja o guante exfoliante',
+          foto:'https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3a/Gant_de_toilette_Kiss.jpg/960px-Gant_de_toilette_Kiss.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail',
           frasco:'pano', marca:{a:'#f4f7fa', b:'#f08c00'},
           uso:'Dos veces por semana como mucho, con movimientos suaves. Despu\u00e9s de la ducha, cu\u00e9lgalo a secar fuera de la mampara.',
           ficha:{
@@ -1550,6 +1575,7 @@ window.CIFRAS = (function () {
             ojo:'Todos los d\u00edas es demasiado: rompes la barrera y consigues m\u00e1s granitos, no menos. Y una esponja que vive h\u00fameda en la ducha cr\u00eda hongos \u2014 c\u00e1mbiala cada 4-6 semanas.'
           } },
         { id:'chanclas', n:'Chanclas de ducha (hotel, gym, alberca de Fitsi)',
+          foto:'https://upload.wikimedia.org/wikipedia/commons/f/f3/Green_flip_flops_on_red_background.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled',
           frasco:'utensilio', marca:{a:'#dfe4ea', b:'#1971c2'},
           uso:'Puestas desde el vestuario hasta el agua, sin pisar descalzo en medio. S\u00e9calas despu\u00e9s.',
           ficha:{
@@ -1561,6 +1587,7 @@ window.CIFRAS = (function () {
             ojo:'No sirven de nada en la mochila. La \u00fanica forma en que fallan es que no te las pongas por pereza en el trayecto corto del vestuario.'
           } },
         { id:'talco', n:'Talco o polvo antifricci\u00f3n para pies',
+          foto:'https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c6/Johnsons_Baby_Powder_1%2C5_OZS_talc%2C_pic1.JPG/960px-Johnsons_Baby_Powder_1%2C5_OZS_talc%2C_pic1.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail',
           frasco:'bote', marca:{a:'#ffffff', b:'#12b886'},
           uso:'En el pie bien seco antes del calcet\u00edn, insistiendo entre los dedos. Tambi\u00e9n un poco dentro del zapato.',
           ficha:{
@@ -1574,6 +1601,7 @@ window.CIFRAS = (function () {
       ] },
       { n: 'Manos, u\u00f1as y pies', items: [
         { id:'cortaunas', n:'Cortau\u00f1as de mano y de pie',
+          foto:'https://thumb.wikimedia.org/wikipedia/commons/thumb/4/4d/Nail-clippers-variety.jpg/960px-Nail-clippers-variety.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail',
           frasco:'utensilio', marca:{a:'#cfd6de', b:'#495057'},
           uso:'Despu\u00e9s de la ducha, con la u\u00f1a blanda. En el pie, corte RECTO; en la mano puedes seguir la curva del dedo.',
           ficha:{
@@ -1585,6 +1613,7 @@ window.CIFRAS = (function () {
             ojo:'En el pie NUNCA redondees las esquinas. Redondear es exactamente lo que hace que la u\u00f1a crezca hacia dentro de la piel.'
           } },
         { id:'lima', n:'Lima de u\u00f1as',
+          foto:'https://upload.wikimedia.org/wikipedia/commons/7/72/Glass_nail_file.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled',
           frasco:'utensilio', marca:{a:'#e9ecf1', b:'#f08c00'},
           uso:'Siempre en UNA direcci\u00f3n, no en vaiv\u00e9n. Despu\u00e9s de cortar, para rematar el borde.',
           ficha:{
@@ -1607,6 +1636,7 @@ window.CIFRAS = (function () {
             ojo:'No cortes la cut\u00edcula sana. Es lo que m\u00e1s infecciones de dedo produce y es completamente evitable: se empuja y ya.'
           } },
         { id:'cremaManos', n:'Crema para manos y pies',
+          foto:'https://thumb.wikimedia.org/wikipedia/commons/thumb/3/37/Eucerin_hand_cream.jpg/960px-Eucerin_hand_cream.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail',
           frasco:'tubo', marca:{a:'#ffffff', b:'#e8590c'},
           uso:'En las manos, despu\u00e9s de cada lavado. En los pies, por la noche, en el tal\u00f3n y la planta \u2014 nunca entre los dedos.',
           ficha:{
@@ -1620,6 +1650,7 @@ window.CIFRAS = (function () {
       ] },
       { n: 'Botiqu\u00edn m\u00ednimo', items: [
         { id:'curitas', n:'Curitas surtidas + gasas est\u00e9riles',
+          foto:'https://thumb.wikimedia.org/wikipedia/commons/thumb/6/69/Sparadrap_2.jpg/960px-Sparadrap_2.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail',
           frasco:'caja', marca:{a:'#f7f8fa', b:'#c92a2a'},
           uso:'Lava la herida con agua y jab\u00f3n, s\u00e9cala, y cubre. Cambia la curita cuando se moje.',
           ficha:{
@@ -1642,6 +1673,7 @@ window.CIFRAS = (function () {
             ojo:'No sustituye al agua y jab\u00f3n cuando la mano est\u00e1 sucia de verdad \u2014 el gel no arrastra nada, s\u00f3lo desinfecta lo que toca.'
           } },
         { id:'analgesico', n:'Analg\u00e9sico (paracetamol o ibuprofeno)',
+          foto:'https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a5/Medication_Paracetamol.JPG/960px-Medication_Paracetamol.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail',
           frasco:'caja', marca:{a:'#ffffff', b:'#1c7ed6'},
           uso:'La dosis de la caja, con comida si es ibuprofeno. Nunca los dos a la vez sin que te lo indiquen.',
           ficha:{
@@ -1653,6 +1685,7 @@ window.CIFRAS = (function () {
             ojo:'Con tu gastritis, el ibuprofeno es el que puede darte problemas. Para dolor sin inflamaci\u00f3n, el paracetamol es la opci\u00f3n segura \u2014 y cons\u00faltalo con tu m\u00e9dico antes de tomar antiinflamatorios con frecuencia.'
           } },
         { id:'antidiarreico', n:'Antidiarreico y suero oral en sobre',
+          foto:'https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c8/Oral_rehydration_salts_%28ORS%29_-_Packet.jpg/960px-Oral_rehydration_salts_%28ORS%29_-_Packet.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail',
           frasco:'sobre', marca:{a:'#f5f2ea', b:'#0ca678'},
           uso:'El suero siempre; el antidiarreico s\u00f3lo si tienes que viajar o trabajar y no hay fiebre ni sangre. El sobre se disuelve en el agua que diga el envase, ni m\u00e1s ni menos.',
           ficha:{
@@ -1664,6 +1697,7 @@ window.CIFRAS = (function () {
             ojo:'Con fiebre alta o sangre, nada de antidiarreico: encerrar dentro lo que el cuerpo intenta expulsar empeora una infecci\u00f3n. Ah\u00ed toca m\u00e9dico.'
           } },
         { id:'antihistaminico', n:'Antihistam\u00ednico (alergias)',
+          foto:'https://thumb.wikimedia.org/wikipedia/commons/thumb/1/1d/Zyrtec-D_blister_pack.png/960px-Zyrtec-D_blister_pack.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail',
           frasco:'caja', marca:{a:'#ffffff', b:'#5f3dc4'},
           uso:'Una al d\u00eda. Elige uno de segunda generaci\u00f3n \u2014loratadina, cetirizina\u2014 si vas a conducir.',
           ficha:{
@@ -1675,6 +1709,7 @@ window.CIFRAS = (function () {
             ojo:'Los de primera generaci\u00f3n \u2014difenhidramina, clorfenamina\u2014 dan un sue\u00f1o que no se siente venir. Con 28 horas de coche a la semana, esa es una interacci\u00f3n seria: no los tomes antes de conducir.'
           } },
         { id:'spfViaje', n:'Protector solar SPF 50 tama\u00f1o viaje',
+          foto:'https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d0/Sunbum_sunscreen_spf_30.jpg/960px-Sunbum_sunscreen_spf_30.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail',
           frasco:'tubo', marca:{a:'#ffffff', b:'#0f5fa6'},
           uso:'Dos dedos para cara y cuello, y repite cada 2 horas si est\u00e1s al aire libre.',
           ficha:{
@@ -1686,6 +1721,7 @@ window.CIFRAS = (function () {
             ojo:'Es el paso que m\u00e1s se salta la gente en vacaciones, que es cuando m\u00e1s radiaci\u00f3n recibe. Que viva en el neceser y no en casa.'
           } },
         { id:'repelente', n:'Repelente de insectos (si el viaje es a zona tropical)',
+          foto:'https://upload.wikimedia.org/wikipedia/commons/b/bd/SKEETER.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled',
           frasco:'botella', marca:{a:'#f2f4f6', b:'#2b8a3e'},
           uso:'Sobre la piel expuesta, DESPU\u00c9S del protector solar y esperando unos minutos. Nunca debajo.',
           ficha:{
@@ -1699,6 +1735,7 @@ window.CIFRAS = (function () {
       ] },
       { n: 'Los que ya tienes \u2014 solo c\u00e1mbialos a tama\u00f1o viaje', items: [
         { id:'champuViaje', n:'Champ\u00fa y acondicionador en envase de 100 ml (los tuyos, rellenados)',
+          foto:'https://thumb.wikimedia.org/wikipedia/commons/thumb/f/fd/Care_seven_herbs_shampoo_%282019%29_03.jpg/960px-Care_seven_herbs_shampoo_%282019%29_03.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail',
           frasco:'botella', marca:{a:'#f2f4f6', b:'#0d6ebf'},
           uso:'Rellena los tuyos la noche antes. Etiqu\u00e9talos, que los dos son botes blancos iguales.',
           ficha:{
@@ -1732,6 +1769,7 @@ window.CIFRAS = (function () {
             ojo:'Es el \u00fanico de la lista que no se trasvasa. Si el bote es de m\u00e1s de 100 ml, tiene que ir en la maleta facturada.'
           } },
         { id:'pastillero', n:'Suplementos en pastillero por d\u00edas',
+          foto:'https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f9/Pill_box_with_pills.JPG/960px-Pill_box_with_pills.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail',
           frasco:'caja', marca:{a:'#f7f8fa', b:'#7048e8'},
           uso:'C\u00e1rgalo el domingo para toda la semana. Con dos compartimentos por d\u00eda, ma\u00f1ana y noche, porque el magnesio va de noche.',
           ficha:{
@@ -1817,6 +1855,7 @@ window.CIFRAS = (function () {
             ojo:'Movimiento horizontal a lo largo del p\u00e1rpado, nunca frotando el ojo. Frotar el ojo es de las peores cosas que puedes hacerle a una c\u00f3rnea.'
           } },
         { id:'hialuronico', n:'Gotas humectantes con \u00e1cido hialur\u00f3nico',
+          foto:'https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c8/Visine.JPG/960px-Visine.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail',
           frasco:'gotas', marca:{a:'#ffffff', b:'#1971c2'},
           uso:'Una gota cuando notes el ojo especialmente cansado o antes de un tramo largo al volante. No sustituyen a las l\u00e1grimas de diario.',
           ficha:{
@@ -1841,6 +1880,7 @@ window.CIFRAS = (function () {
             ojo:'Un lente oscuro SIN UV400 hace da\u00f1o: la oscuridad te dilata la pupila y deja entrar m\u00e1s radiaci\u00f3n de la que entrar\u00eda a ojo descubierto. Si no dice UV400, no sirve.'
           } },
         { id:'antirreflejante', n:'Antirreflejante para lentes graduados (se pide en la \u00f3ptica)',
+          foto:'https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f2/Anti-reflective_coating_comparison.jpg/960px-Anti-reflective_coating_comparison.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail',
           frasco:'gafas', marca:{a:'#e9ecf1', b:'#495057'},
           uso:'No se compra aparte: se pide al encargar los lentes. L\u00edmpialos s\u00f3lo con pa\u00f1o de microfibra y l\u00edquido de \u00f3ptica.',
           ficha:{
@@ -1854,6 +1894,7 @@ window.CIFRAS = (function () {
       ] },
       { n: 'Pantalla \u2014 ALTEN y los 2 bloques de la app', items: [
         { id:'luzAzul', n:'Lentes con filtro de luz azul y antirreflejante',
+          foto:'https://thumb.wikimedia.org/wikipedia/commons/thumb/1/11/Reading-Glasses.jpg/960px-Reading-Glasses.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail',
           frasco:'gafas', marca:{a:'#e3e8ef', b:'#364fc7'},
           uso:'Durante la jornada de monitor y en los bloques de la app por la noche.',
           ficha:{
@@ -1876,6 +1917,7 @@ window.CIFRAS = (function () {
             ojo:'Si subes el monitor y no subes la silla o el escritorio, mueves el problema a los hombros. Ajusta los dos.'
           } },
         { id:'lampara', n:'L\u00e1mpara de escritorio de luz c\u00e1lida regulable',
+          foto:'https://upload.wikimedia.org/wikipedia/commons/3/38/Led_desk_lmap_1.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled',
           frasco:'aparato', marca:{a:'#f2f4f6', b:'#e8a317'},
           uso:'Encendida siempre que uses la pantalla a oscuras. Por la noche, al m\u00ednimo y en tono c\u00e1lido.',
           ficha:{
@@ -1889,6 +1931,7 @@ window.CIFRAS = (function () {
       ] },
       { n: 'Nutrici\u00f3n y contorno', items: [
         { id:'luteina', n:'Suplemento de Lute\u00edna + Zeaxantina 10 mg / 2 mg',
+          foto:'https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b0/Omega_3_capsules_in_white_bottle_%2852715127894%29.jpg/960px-Omega_3_capsules_in_white_bottle_%2852715127894%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail',
           frasco:'pastillas', marca:{a:'#ffffff', b:'#f08c00'},
           uso:'Una c\u00e1psula al d\u00eda con una comida que lleve grasa: son carotenoides y sin grasa se absorben mal.',
           ficha:{

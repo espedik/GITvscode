@@ -233,15 +233,29 @@ escritos `porQue` y `ojo` desde antes, y la ficha los lee de ahí. Escribirlos o
 vez sería crear el segundo sitio de siempre — el control 15 lo marca como error.
 Lo mismo con el `aviso` del Avodart, que sale en su propia tarjeta.
 
-**Las imágenes.** Solo dos de los seis — el CeraVe y el Aztec Secret — tienen foto
-del producto EXACTO con licencia libre; van en `foto`, desde Open Beauty Facts. De
-los otros cuatro esa base solo guarda *otros* productos de la misma marca (la crema
-de **día** de Eucerin, un limpiador de Differin, un sérum de cafeína), que sería
-enseñar un producto por otro. Esos llevan `envase` y `marca` en su lugar y el
-dashboard dibuja la silueta del bote con los dos colores de la marca. La etiqueta
-de la esquina dice siempre cuál de las dos cosas se está viendo. El dibujo es
-también el respaldo de las dos fotos: vienen de internet y las apps se abren con
-`file://`, así que sin red el `onerror` cae al envase en vez de dejar un hueco.
+**Las imágenes: 45 con foto y 23 dibujadas.** Las fotos van en `foto` y salen de
+tres bases con licencia libre — Wikimedia Commons, Open Beauty Facts y Open Food
+Facts — buscando con términos en inglés por producto. **Se eligieron mirándolas**,
+en hojas de contacto, no por el nombre del resultado: buscar «Differin» devolvía un
+limpiador de esa marca, «hair mask» devolvía fotografías de arqueología y «minoxidil»
+devolvía un modelo 3D de la molécula. De 67 productos con candidatas, sobrevivieron
+45 a la criba.
+
+El criterio depende de cómo esté escrito el artículo, y de ahí sale lo que dice la
+etiqueta de la esquina:
+
+| | Nombre del artículo | Qué foto vale | Etiqueta |
+|---|---|---|---|
+| skincare, cabello | lleva **marca** («CeraVe Limpiador Espumoso») | solo el producto exacto | «Foto del producto» |
+| higiene, ojos, suplementos | ya es **genérico** («Cortauñas de mano y de pie») | esa cosa, de cualquier marca | «Foto de referencia» |
+| cualquiera, sin foto | — | ninguna servía | «Envase dibujado» |
+
+Por eso skincare y cabello son los que peor salen (6 fotos de 16): sus nombres
+llevan marca y casi ninguna marca comercial tiene foto libre. Higiene, en cambio,
+tiene 29 de 34, porque un cortauñas es un cortauñas. Los 23 restantes siguen con su
+silueta, que para eso está — y el dibujo es además el **respaldo** de las 45 fotos:
+vienen de internet y las apps se abren con `file://`, así que sin red el `onerror`
+cae al envase en vez de dejar un hueco.
 
 Hay **19 siluetas** (`bomba`, `gotero`, `tubo`, `tarro`, `bote`, `botella`, `tela`,
 `pastillas`, `caja`, `polvo`, `sobre`, `bolsa`, `barra`, `cepillo`, `utensilio`,
