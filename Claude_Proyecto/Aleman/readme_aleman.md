@@ -40,7 +40,7 @@ y los tres los carga también la pantalla de Alemán del Dashboard:
 
 | Archivo | Qué es | Cuándo se toca |
 |---|---|---|
-| `vocab-datos.js` | Las 479 palabras, las 21 secciones y el Partizip | Al añadir o corregir vocabulario |
+| `vocab-datos.js` | Las 479 palabras en 21 secciones y **100 subsecciones**, más el Partizip | Al añadir o corregir vocabulario |
 | `vocab.css` | El diseño: la tarjeta, la rejilla, la tira de secciones, el Partizip | Al cambiar cómo se ve |
 | `vocab.js` | El motor: filtrar, agrupar y pintar | Al cambiar cómo se comporta |
 
@@ -48,14 +48,53 @@ y los tres los carga también la pantalla de Alemán del Dashboard:
 la barra de género de 4px a 12px en `vocab.css`, sin tocar ningún HTML, la sube en las dos.
 Los controles 19 y 20 de `../Dashboard/verificar-sincronia.js` vigilan que siga siendo así.
 
-Para añadir vocabulario se toca `vocab-datos.js`:
+### Subsecciones y qué lleva cada palabra
+
+Las 21 secciones se reparten en **100 subsecciones** — Comida tiene *Frutas y verduras*,
+*Carnes y pescado*, *Bebidas*… — porque el objetivo es pasar de 479 palabras a varios
+miles y una lista de 300 no se navega. En la app se ven como un **árbol** a la izquierda;
+en el Dashboard, como una **segunda tira** bajo la sección abierta (ahí el slide es
+apaisado y una barra lateral le quitaría el ancho a las palabras).
+
+Una palabra solo necesita `de`, `es` y `cat`. Lo demás se pinta **si está**, así que una
+preposición no arrastra los huecos de un verbo:
 
 ```js
-// Una palabra
-{art:'der', de:'Apfel', es:'la manzana', ex:'Der Apfel ist rot.', cat:'comida'},
-// Una sección
-comida: {label:'Comida', icon:'🍽️'},
+// Un sustantivo
+{art:'der', de:'Apfel', es:'la manzana', ex:'Der Apfel ist rot.',
+ cat:'comida', sub:'frutas', niv:'A1', tipo:'sust',
+ pl:'Äpfel', gen:'-s', esEx:'La manzana es roja.'},
+
+// Un verbo con régimen
+{art:'-', de:'warten', es:'esperar', ex:'Ich warte auf den Bus.',
+ cat:'verbos', sub:'dar', niv:'A1', tipo:'verbo',
+ conj:'wartet · wartete · gewartet', aux:'hat',
+ reg:'warten auf + Akk.', esEx:'Espero el autobús.'},
+
+// Una sección con sus subsecciones
+comida: {label:'Comida', icon:'🍽️', subs:{
+  frutas: 'Frutas y verduras',
+  carnes: 'Carnes y pescado',
+}},
 ```
+
+| Campo | Qué es |
+|---|---|
+| `sub` | La subsección. Tiene que existir en `cats[cat].subs` |
+| `niv` | A1 / A2 / B1. Alimenta el filtro de nivel |
+| `tipo` | `sust` · `verbo` · `adj` · `adv` · `num` · `frase` |
+| `pl`, `gen` | Plural y genitivo de un sustantivo |
+| `conj`, `aux` | Presente 3ª · Präteritum · Partizip II, y si va con `hat` o `ist` |
+| `reg` | El régimen: qué preposición pide y en qué caso. Va en turquesa |
+| `comp` | Comparativo y superlativo de un adjetivo |
+| `tag` | Lo que se sale de lo normal: *irregular*, *separable*, *incontable*, *solo plural* |
+| `uso` | Cuándo se dice, o el fallo típico |
+| `esEx` | La traducción del ejemplo. Las 479 la tienen |
+
+**Las palabras van ordenadas por subsección** dentro de su sección, en el orden en que
+están declaradas. El agrupado detecta cambios consecutivos, así que una palabra suelta
+al final repetiría su encabezado a mitad de página; el motor reordena por si acaso, pero
+el archivo se lee mejor si se añade cada palabra junto a las suyas.
 
 `art` es `der`/`die`/`das`/`pl.` o `-` cuando no lleva artículo, y de ahí sale el color de la
 barra izquierda de la tarjeta: el género se ve antes de leer la palabra. Las únicas dos
@@ -71,8 +110,13 @@ tamaños no se tocan desde fuera — eso es lo que hace que sea un solo diseño.
 
 Dos tokens que parecen uno: `--v-acento` se usa de **fondo**, con letras blancas encima, y
 `--v-acento-tx` es el mismo color usado como **texto**. Confundirlos dejó la cabecera de las
-tablas en 3.8:1. Lo mismo con la píldora del artículo: su color se mezcla con el del texto
-(`color-mix`), porque el verde de `das` sin mezclar da 1.88:1 sobre su propio fondo.
+tablas en 3.8:1.
+
+**Los colores que dependen del tema se DERIVAN del color del texto**, no llevan un valor
+fijo: `color-mix(in srgb, <color> 55%, var(--v-txt))` se oscurece en el tema claro y se
+aclara en el oscuro, así que un solo valor sirve para las dos pantallas y nadie tiene que
+acordarse de redefinirlo. Con valores fijos, la píldora de `das` daba 1.88:1 sobre su
+propio fondo y la línea técnica del Dashboard en modo oscuro, 1.08:1.
 
 **Por qué tarjetas y no una tabla.** La tabla mostraba **9 palabras** de 479 a 1600px y en el
 teléfono escondía tres de sus cinco columnas para caber. La rejilla muestra 25 y no esconde

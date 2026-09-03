@@ -94,6 +94,10 @@ pantalla principal del vocabulario es `Aleman/vocabulario.html`: ahí se trabaja
 refleja. Adán (2026-09-03): *"quiero un solo diseño, no lo quiero duplicado, entonces el
 principal es el html de aleman"*.
 
+**Las subsecciones aquí son una segunda tira**, no un árbol lateral como en la app: el
+slide es apaisado y bajo, y una barra a la izquierda le quitaría a las palabras el ancho
+que necesitan. La tarjeta — que es el 90% del diseño — es exactamente la misma.
+
 Lo único propio de esta pantalla son los **tokens** `--v-*`, en `.al-fondo`: tiene modo
 oscuro y el fondo es translúcido sobre las manchas animadas del slide, así que los colores
 no pueden ser los de la app de Alemán. La estructura sí es la misma. El slide lleva las dos

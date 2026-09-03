@@ -1778,7 +1778,8 @@ button.hp-lec:active{transform:translateY(0)}
 .al-busca input::placeholder{color:var(--text3)}
 .al-busca input:focus{border-color:rgba(var(--ov),.4);background:rgba(var(--ov),.09)}
 .al-q-n{font-size:11px;color:var(--text3);font-family:var(--mono);white-space:nowrap}
-.al-tabs{margin:12px 0 14px}
+.al-tabs{margin:12px 0 10px}
+.al-subs{margin:0 0 14px}
 .al-content{flex:1;min-height:0;overflow-y:auto;padding-right:4px}
 .al-content .v-grid{padding-bottom:14px}
 @media(max-width:760px){
@@ -3226,6 +3227,10 @@ button.ct-cat:hover{background:rgba(var(--ov),.07)}
            caben en una fila: se toca la que toca estudiar hoy en vez de ir dando a "Siguiente".
            Sin filtro (40 temas) esta fila no se pinta — no cabrían. -->
       <div class="al-tabs v-secs reveal d3" id="alTabs"></div>
+      <!-- Las subsecciones de la sección abierta. Aquí no cabe el árbol lateral que
+           usa la app de Alemán — el slide es apaisado y bajo —, así que sale una
+           segunda tira. La tarjeta es exactamente la misma. -->
+      <div class="al-subs v-subs reveal d3" id="alSubs" hidden></div>
       <div class="al-content reveal d4" id="alContent"></div>
     </div>
   </section>
@@ -5025,12 +5030,30 @@ function alVocab(){ return (typeof ALEMAN_VOCAB !== 'undefined') ? ALEMAN_VOCAB 
 let alSec = (function(){
   try { return localStorage.getItem('al_sec_v1') || 'saludos'; } catch(e){ return 'saludos'; }
 })();
+let alSub = (function(){
+  try { return localStorage.getItem('al_sub_v1') || null; } catch(e){ return null; }
+})();
 
 function alSet(c){
   alSec = c;
-  try { localStorage.setItem('al_sec_v1', c); } catch(e){}
+  alSub = null;   // al cambiar de sección, la subsección de la anterior no vale
+  alGuarda();
   const q = document.getElementById('alQ'); if(q) q.value = '';
   alPinta();
+}
+
+function alSetSub(s){
+  alSub = s;
+  alGuarda();
+  alPinta();
+}
+
+function alGuarda(){
+  try {
+    localStorage.setItem('al_sec_v1', alSec);
+    if(alSub) localStorage.setItem('al_sub_v1', alSub);
+    else localStorage.removeItem('al_sub_v1');
+  } catch(e){}
 }
 
 function alPinta(){
@@ -5048,6 +5071,7 @@ function alPinta(){
   const sub = document.getElementById('alEs');
   const cnt = document.getElementById('alCounter');
   const qn = document.getElementById('alQN');
+  const tiraSubs = document.getElementById('alSubs');
 
   // Las secciones. Aquí no hay botón "todas": la pantalla enseña una sección a la vez y
   // la búsqueda es la que cruza todas.
@@ -5061,6 +5085,14 @@ function alPinta(){
 
   // El tema de gramática. El contenedor con scroll es `#alContent`, no la página, y el
   // motor necesita saberlo para el salto y para el índice que sigue la lectura.
+  // La tira de subsecciones sale de la sección abierta; buscando o en gramática, no.
+  if(tiraSubs){
+    const subs = (!q && alSec !== AL_GRAM) ? V.subsDe(alSec) : [];
+    tiraSubs.hidden = !subs.length;
+    tiraSubs.innerHTML = subs.length
+      ? vocSubsHtml(subs, alSub, { fn: 'alSetSub' }) : '';
+  }
+
   if(!q && alSec === AL_GRAM){
     if(sub) sub.textContent = V.partizip.titulo;
     if(cnt) cnt.textContent = V.partizip.secciones.length + ' bloques';
@@ -5073,14 +5105,18 @@ function alPinta(){
     return;
   }
 
-  const lista = vocFiltrar(V.voc, q, q ? null : alSec);
+  const lista = q
+    ? vocFiltrar(V.voc, { q: q })
+    : vocFiltrar(V.voc, { cat: alSec, sub: alSub });
+  const etiquetaSub = alSub ? (((V.cats[alSec]||{}).subs || {})[alSub] || '') : '';
   if(sub) sub.textContent = q ? ('Buscando \u201c' + q + '\u201d')
-    : ((V.cats[alSec]||{}).label || '') + ' \u00b7 ' + lista.length + ' palabras';
+    : ((V.cats[alSec]||{}).label || '') + (etiquetaSub ? ' \u203a ' + etiquetaSub : '') +
+      ' \u00b7 ' + lista.length + ' palabras';
   if(cnt) cnt.textContent = V.voc.length + ' en total';
   if(qn) qn.textContent = q ? (lista.length + ' resultado' + (lista.length===1?'':'s')) : '';
 
   cont.innerHTML = vocPalabrasHtml(lista, {
-    q: q, cats: V.cats, agrupar: !!q,
+    q: q, cats: V.cats, agrupar: !!q || !alSub, porSub: !q && !alSub,
     vacio: 'Ninguna palabra con <b>' + q + '</b>. Se busca en alem\u00e1n, en espa\u00f1ol y ' +
            'en los ejemplos.',
   });

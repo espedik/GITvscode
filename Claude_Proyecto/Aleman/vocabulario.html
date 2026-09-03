@@ -10,10 +10,17 @@
 <link rel="stylesheet" href="vocab.css">
 <style>
 /* ── VOCAB PAGE ── */
-.voc-hero{padding:40px 32px 32px;border-bottom:1px solid var(--border);background:linear-gradient(180deg,rgba(204,0,0,.04) 0%,transparent 100%)}
-.voc-hero h1{font-family:'Playfair Display',serif;font-size:clamp(26px,4vw,44px);font-weight:900;color:var(--black);margin-bottom:6px}
+/* El hero se comiía 550px antes de la primera palabra. Con un diccionario que va a
+   crecer, eso es media pantalla de presentación cada vez que se abre. El título y el
+   buscador comparten fila, y el párrafo se lee una vez y sobra. */
+.voc-hero{padding:20px 32px 18px;border-bottom:1px solid var(--border);
+  background:linear-gradient(180deg,rgba(204,0,0,.04) 0%,transparent 100%);
+  display:flex;align-items:flex-end;gap:28px;flex-wrap:wrap}
+.voc-hero-t{flex:none}
+.voc-hero-b{flex:1;min-width:280px;padding-bottom:4px}
+.voc-hero h1{font-family:'Playfair Display',serif;font-size:clamp(24px,2.4vw,32px);font-weight:900;color:var(--black);line-height:1.1}
 .voc-hero h1 em{font-style:normal;color:var(--red)}
-.voc-hero p{color:var(--text2);font-size:15px;max-width:520px}
+.voc-hero p{display:none}   /* se lee una vez; el sitio lo necesitan las palabras */
 
 /* ── STATS BAR ── */
 .stats-bar{display:flex;gap:20px;flex-wrap:wrap;padding:16px 32px;background:var(--surface);border-bottom:1px solid var(--border)}
@@ -71,9 +78,32 @@
   --v-pz-fondo:var(--surface);
   --v-idx-top:80px;      /* el nav de la app es pegajoso y mide 60 */
 }
-.voc-grid-wrap{padding:24px 32px 60px}
+/* Dos columnas: el árbol y las palabras. El árbol se queda pegado al hacer scroll,
+   porque con 21 secciones desplegadas es más largo que la ventana. */
+.voc-cols{display:grid;grid-template-columns:268px minmax(0,1fr);align-items:start;
+  min-height:520px}
+.voc-arbol-col{position:sticky;top:60px;align-self:start;max-height:calc(100vh - 60px);
+  padding:18px 0;background:var(--surface2);border-right:1px solid var(--border);
+  overflow:hidden;display:flex;flex-direction:column}
+.voc-arbol-col .v-arbol{flex:1;min-height:0}
+.voc-pal-col{padding:22px 32px 60px;display:flex;flex-direction:column;gap:16px}
+.voc-cab{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;
+  flex-wrap:wrap}
+.voc-cab h2{font-family:'Playfair Display',serif;font-size:27px;font-weight:900;
+  line-height:1.15;margin-top:3px}
 .pz-wrap{padding:26px 32px 60px}
 mark{background:rgba(204,0,0,.15);color:var(--red);border-radius:3px;padding:0 2px}
+/* El botón que abre el árbol en el móvil. En escritorio no existe. */
+.voc-movil-sel{display:none;align-items:center;gap:10px;width:calc(100% - 32px);
+  margin:0 16px;height:46px;padding:0 14px;background:var(--surface);
+  border:1.5px solid var(--border);border-radius:12px;box-shadow:var(--shadow);
+  font-family:inherit;text-align:left;cursor:pointer}
+.voc-movil-sel .ico{font-size:17px}
+.voc-movil-sel .txt{flex:1;display:flex;flex-direction:column;min-width:0}
+.voc-movil-sel .lbl{font-size:9.5px;font-weight:800;color:#6e6e6e;text-transform:uppercase;
+  letter-spacing:.09em;line-height:1.3}
+.voc-movil-sel .nom{font-size:14px;font-weight:800;line-height:1.25;overflow:hidden;
+  text-overflow:ellipsis;white-space:nowrap}
 
 /* ── FRASES POR SITUACIÓN ── */
 .situ-wrap{padding:28px 32px 60px}
@@ -124,7 +154,34 @@ mark{background:rgba(204,0,0,.15);color:var(--red);border-radius:3px;padding:0 2
   .controls{padding:14px 16px;top:60px}
   /* La rejilla, la tarjeta y la tira de secciones en móvil los resuelve `vocab.css`.
      Aquí solo quedan los márgenes de esta página. */
-  .voc-grid-wrap{padding:18px 16px 40px}
+  /* Las cifras en una tira que se desliza, en vez de dos filas envueltas. */
+  .stats-bar{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;gap:16px}
+  .stats-bar::-webkit-scrollbar{display:none}
+  .stat-item{flex:none}
+  /* Las cuatro pestañas, también en una tira. */
+  .voc-tabs{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;padding:10px 16px 0}
+  .voc-tabs::-webkit-scrollbar{display:none}
+  .voc-tab{flex:none;padding:8px 13px;font-size:12px}
+  /* Los filtros de nivel y género, en su tira: apilados ocupaban dos filas. */
+  .voc-cab{gap:10px;flex-direction:column;align-items:stretch;flex-wrap:nowrap}
+  .voc-cab h2{font-size:22px}
+  .voc-cab > div{min-width:0}
+  .v-filtros{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;min-width:0;
+    padding-bottom:2px}
+  .v-filtros::-webkit-scrollbar{display:none}
+  .v-filtro,.v-filtros-t,.v-sep{flex:none}
+
+  /* En el teléfono el árbol no cabe: pasa a un selector que despliega la lista,
+     y las subsecciones a una tira que se desliza. */
+  /* minmax(0,1fr) y no 1fr: el min-width implícito de una pista es `auto`, así que
+     con 1fr la columna crecía hasta el contenido más ancho — 502px en una pantalla
+     de 390 — y la página se salía por el lado. */
+  .voc-cols{grid-template-columns:minmax(0,1fr)}
+  .voc-arbol-col{position:static;max-height:none;border-right:none;
+    border-bottom:1px solid var(--border);padding:12px 0}
+  .voc-arbol-col.plegado .v-arbol{display:none}
+  .voc-pal-col{padding:16px 16px 40px}
+  .voc-movil-sel{display:flex}
   .pz-wrap{padding:20px 16px 40px}
   .situ-wrap{padding:20px 16px 40px}
   .filter-row{align-items:flex-start}
@@ -156,12 +213,19 @@ mark{background:rgba(204,0,0,.15);color:var(--red);border-radius:3px;padding:0 2
   </div>
 </nav>
 
-<!-- HERO -->
+<!-- HERO. Compacto a propósito: lo que hace falta arriba es el buscador, que con
+     miles de palabras es la vía rápida. -->
 <div class="voc-hero">
-  <div class="container">
-    <div style="font-size:12px;font-weight:700;color:var(--red);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px">Diccionario básico</div>
-    <h1>Vocabulario <em>Alemán</em> — Español</h1>
-    <p>Más de 480 palabras esenciales organizadas por categoría, frases listas para usar en situaciones reales, y un modo de tarjetas (slides) para repasar jugando. Activa el modo estudio para ocultar la traducción y ponerte a prueba.</p>
+  <div class="voc-hero-t">
+    <div style="font-size:11px;font-weight:800;color:var(--red);text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px">Diccionario</div>
+    <h1>Vocabulario <em>Alemán</em></h1>
+  </div>
+  <div class="voc-hero-b">
+    <div class="search-wrap">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="search" placeholder="Buscar en alemán, en español o en los ejemplos…" oninput="filterVoc()" autocomplete="off">
+      <button class="search-clear" id="clear-btn" onclick="clearSearch()">✕</button>
+    </div>
   </div>
 </div>
 
@@ -185,28 +249,38 @@ mark{background:rgba(204,0,0,.15);color:var(--red);border-radius:3px;padding:0 2
 <div class="voc-panel v-vocab active" id="panel-dict">
   <!-- CONTROLS -->
   <div class="controls">
-    <div class="search-wrap">
-      <span class="search-icon">🔍</span>
-      <input type="text" id="search" placeholder="Buscar en alemán, en español o en los ejemplos…" oninput="filterVoc()" autocomplete="off">
-      <button class="search-clear" id="clear-btn" onclick="clearSearch()">✕</button>
-    </div>
-    <div class="filter-row">
-      <span class="filter-label">Categoría:</span>
-      <div class="cats v-secs" id="cat-filters"></div>
-    </div>
     <div class="mode-row">
       <button class="mode-btn" id="mode-btn" onclick="toggleMode()">👁️ Modo estudio — ocultar traducción</button>
       <span class="results-count" id="results-label"></span>
     </div>
   </div>
 
-  <!-- LAS PALABRAS. Una tarjeta por palabra; el género es la barra de color de la
-       izquierda, así que se ve sin leer nada. -->
-  <div class="voc-grid-wrap">
-    <div id="voc-grid"></div>
-    <div class="voc-empty" id="voc-empty" style="display:none">
-      <div class="ico">🔎</div>
-      <p>Sin resultados para tu búsqueda.</p>
+  <!-- Dos niveles: el árbol de secciones y subsecciones a la izquierda, las palabras
+       a la derecha. Con 21 secciones y sus subsecciones, una tira de chips ocuparía
+       130px antes de la primera palabra y solo enseñaría la rama abierta. -->
+  <div class="voc-cols">
+    <div class="voc-arbol-col plegado" id="arbol-col">
+      <button type="button" class="voc-movil-sel" onclick="toggleArbol()">
+        <span class="ico" id="movil-ico">📖</span>
+        <span class="txt"><span class="lbl">Sección</span><span class="nom" id="movil-nom">Vocabulario</span></span>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6e6e6e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"></path></svg>
+      </button>
+      <nav class="v-arbol" id="arbol"></nav>
+    </div>
+
+    <div class="voc-pal-col">
+      <div class="voc-cab">
+        <div>
+          <div class="v-migas" id="migas"></div>
+          <h2 id="titulo-sub">Vocabulario</h2>
+        </div>
+        <div class="v-filtros" id="filtros"></div>
+      </div>
+      <div id="voc-grid"></div>
+      <div class="voc-empty" id="voc-empty" style="display:none">
+        <div class="ico">🔎</div>
+        <p>Sin resultados para tu búsqueda.</p>
+      </div>
     </div>
   </div>
 </div>
@@ -363,9 +437,20 @@ mark{background:rgba(204,0,0,.15);color:var(--red);border-radius:3px;padding:0 2
 const VOC = ALEMAN_VOCAB.voc;
 const CATS = ALEMAN_VOCAB.cats;
 
-let activeCat = 'all';
+// Dónde se está y qué se filtra. Se recuerda entre visitas: con miles de palabras,
+// volver mañana al sitio donde lo dejaste importa más que en una lista de 479.
+const VOC_ESTADO = 'voc_estado_v1';
+let F = (function(){
+  const d = { cat:'saludos', sub:null, niv:'all', art:'all' };
+  try { return Object.assign(d, JSON.parse(localStorage.getItem(VOC_ESTADO) || '{}')); }
+  catch(e){ return d; }
+})();
 let studyMode = false;
 let activeCatFc = 'all';
+
+function guarda(){
+  try { localStorage.setItem(VOC_ESTADO, JSON.stringify(F)); } catch(e){}
+}
 
 // ── PESTAÑAS ─────────────────────────────────────────────────────────
 function setTab(tab) {
@@ -383,8 +468,6 @@ function init() {
   document.getElementById('situ-count').textContent =
     document.querySelectorAll('#panel-situ .phrase-item').length;
 
-  pintaSecciones();
-
   // Las flashcards tienen su propia tira, con los botones de siempre de esta app.
   const cffc = document.getElementById('cat-filters-fc');
   cffc.innerHTML = `<button class="cat-btn all active" onclick="setCatFc('all')">Todas</button>`;
@@ -395,35 +478,85 @@ function init() {
   render();
 }
 
-function pintaSecciones() {
-  document.getElementById('cat-filters').innerHTML = vocSeccionesHtml(CATS, activeCat, {
-    fn: 'setCat',
-    todas: `Todas (${VOC.length})`,
-    cuenta: k => VOC.filter(w => w.cat === k).length,
-  });
+// ── NAVEGAR ────────────────────────────────────────────────────────
+// Tocar una sección la abre y enseña TODAS sus palabras; tocar una subsección acota.
+// Volver a tocar la sección abierta la cierra, que es lo que se espera de un árbol.
+function setCat(cat) {
+  F.cat = (F.cat === cat && !F.sub) ? null : cat;
+  F.sub = null;
+  guarda();
+  render();
 }
 
-function setCat(cat) {
-  activeCat = cat;
-  pintaSecciones();
-  vocVerSeccion('cat-filters');
+function setSub(sub) {
+  F.sub = (F.sub === sub) ? null : sub;
+  guarda();
   render();
+  // En el móvil el árbol tapa la pantalla: al elegir, se cierra.
+  if (innerWidth <= 640) document.getElementById('arbol-col').classList.add('plegado');
+}
+
+function vocFiltro(clave, valor) {
+  F[clave] = valor;
+  guarda();
+  render();
+}
+
+function toggleArbol() {
+  document.getElementById('arbol-col').classList.toggle('plegado');
 }
 
 // ── LO QUE SE VE ──────────────────────────────────────────────────
 function render() {
   const q = (document.getElementById('search').value || '').trim();
-  const data = vocFiltrar(VOC, q, activeCat);
+  // Buscando se mira en TODO: si escribe algo espera verlo, esté donde esté.
+  const data = q
+    ? vocFiltrar(VOC, { q, niv: F.niv, art: F.art })
+    : vocFiltrar(VOC, F);
 
   document.getElementById('visible-count').textContent = data.length;
   document.getElementById('results-label').textContent =
     `${data.length} resultado${data.length !== 1 ? 's' : ''}`;
   document.getElementById('voc-empty').style.display = 'none';
 
-  // Dentro de UNA sección no hace falta encabezado: ya lo dice el botón encendido.
+  // El árbol
+  document.getElementById('arbol').innerHTML = vocArbolHtml(CATS, F.cat, F.sub, {
+    fnSec: 'setCat', fnSub: 'setSub',
+    cuenta: k => ALEMAN_VOCAB.cuantas(k),
+    subs: k => ALEMAN_VOCAB.subsDe(k),
+  });
+  document.getElementById('filtros').innerHTML = vocFiltrosHtml(F, { fn: 'vocFiltro' });
+
+  // Dónde estoy
+  const c = CATS[F.cat];
+  const subLabel = (c && F.sub) ? ((c.subs || {})[F.sub] || F.sub) : null;
+  const migas = document.getElementById('migas');
+  const titulo = document.getElementById('titulo-sub');
+  if (q) {
+    migas.innerHTML = '<span>Buscando en las ' + VOC.length + ' palabras</span>';
+    titulo.textContent = '\u201c' + q + '\u201d';
+  } else if (c) {
+    migas.innerHTML = vocMigasHtml(c, subLabel);
+    titulo.textContent = subLabel || c.label;
+  } else {
+    migas.innerHTML = '<span>Todas las secciones</span>';
+    titulo.textContent = 'Vocabulario';
+  }
+
+  // El selector del móvil dice lo mismo que las migas
+  document.getElementById('movil-ico').textContent = c ? c.icon : '\ud83d\udcd6';
+  document.getElementById('movil-nom').textContent =
+    c ? (subLabel ? c.label + ' \u203a ' + subLabel : c.label) : 'Todas las secciones';
+
+  // Las palabras. Dentro de una sección se agrupa por subsección; buscando o sin
+  // sección abierta, por sección.
   document.getElementById('voc-grid').innerHTML = vocPalabrasHtml(data, {
-    q, cats: CATS, agrupar: activeCat === 'all', estudio: studyMode,
-    vacio: `Ninguna palabra con <b>${q}</b>. Se busca en alem\u00e1n, en espa\u00f1ol y en los ejemplos.`,
+    q, cats: CATS, estudio: studyMode,
+    agrupar: !!q || !F.cat || !F.sub,
+    porSub: !q && !!F.cat && !F.sub,
+    vacio: q
+      ? `Ninguna palabra con <b>${q}</b>. Se busca en alem\u00e1n, en espa\u00f1ol y en los ejemplos.`
+      : 'Esta subsecci\u00f3n todav\u00eda no tiene palabras.',
   });
 }
 

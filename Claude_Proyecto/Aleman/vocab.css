@@ -56,6 +56,20 @@
   --v-pl:#f97316;
   --v-sin:#b9b4ad;
   --v-gram:#7c3aed;      /* la pestaña de gramática, que no es una sección de palabras */
+  /* La línea técnica de la tarjeta: plural, conjugación, comparativo. Se distingue
+     por la fuente y el fondo, no por el color, para no competir con la palabra.
+     Todo esto se DERIVA del color del texto en vez de llevar un valor fijo: así
+     se oscurece en el tema claro y se aclara en el oscuro sin que nadie tenga que
+     acordarse de redefinirlo. Con valores fijos, la línea técnica del Dashboard
+     en modo oscuro quedaba en 1.08:1 — texto claro sobre fondo claro. */
+  --v-tec-bg:color-mix(in srgb,var(--v-txt) 8%,transparent);
+  --v-tec-tx:var(--v-txt2);
+  --v-reg-base:#0d9488;  /* el régimen: qué preposición pide el verbo */
+  --v-reg:color-mix(in srgb,var(--v-reg-base) 62%,var(--v-txt));
+  --v-reg-bg:color-mix(in srgb,var(--v-reg-base) 10%,transparent);
+  --v-aviso2-base:#d4a000;  /* las etiquetas de «ojo con esto» */
+  --v-aviso2:color-mix(in srgb,var(--v-aviso2-base) 55%,var(--v-txt));
+  --v-aviso2-bg:color-mix(in srgb,var(--v-aviso2-base) 12%,transparent);
 }
 
 /* ── LA TIRA DE SECCIONES ──────────────────────────────────────────── */
@@ -76,6 +90,26 @@
   color:var(--v-gram-tx,var(--v-gram));
   background:color-mix(in srgb,var(--v-gram) 8%,transparent)}
 .v-sec.gram.on{background:var(--v-gram);border-color:var(--v-gram);color:#fff}
+
+/* La tira de SUBsecciones. Cuelga de la sección abierta, así que va sobre un fondo
+   teñido con el acento: se ve de dónde sale sin necesidad de una línea que lo diga. */
+.v-subs{display:flex;flex-wrap:wrap;gap:6px;align-items:center;padding:9px 12px;
+  border-radius:12px;background:rgba(var(--v-acento-rgb),.05);
+  border:1px solid rgba(var(--v-acento-rgb),.16)}
+.v-sub{padding:5px 11px;border-radius:8px;border:1px solid var(--v-borde);
+  background:var(--v-card);font:600 11.5px inherit;font-family:inherit;
+  color:var(--v-txt2);cursor:pointer;white-space:nowrap;
+  transition:background .14s,color .14s,border-color .14s}
+.v-sub:hover{border-color:rgba(var(--v-acento-rgb),.3);color:var(--v-acento-tx)}
+.v-sub b{font-family:var(--v-mono);font-size:10px;font-weight:700;color:var(--v-txt3)}
+.v-sub.on{background:var(--v-txt);border-color:var(--v-txt);color:var(--v-card);
+  font-weight:800}
+.v-sub.on b{color:var(--v-card);opacity:.75}
+@media(max-width:760px){
+  .v-subs{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;padding:8px 10px}
+  .v-subs::-webkit-scrollbar{display:none}
+  .v-sub{flex:none}
+}
 
 /* ── LAS PALABRAS ──────────────────────────────────────────────────
    Eran una tabla de cinco columnas: a 1600px cabían NUEVE palabras de las 479, y en el
@@ -99,16 +133,102 @@
 .v-w-de{font-family:var(--v-font-titulo);font-size:var(--v-de-size);font-weight:900;
   color:var(--v-txt);line-height:1.2}
 .v-w-es{font-size:13.5px;color:var(--v-txt2);margin-top:3px;line-height:1.45}
+
+/* El nivel, discreto y arriba a la derecha. Con miles de palabras, poder quedarse
+   solo en A1 es lo que hace la lista abarcable. */
+.v-w-niv{margin-left:auto;flex:none;font-size:9.5px;font-weight:800;letter-spacing:.06em;
+  color:var(--v-txt3)}
+
+/* La línea técnica y las etiquetas. Una palabra normal no lleva etiqueta, así que
+   cuando aparece una significa «mira esto». */
+.v-w-tec{display:flex;flex-wrap:wrap;gap:5px;margin-top:9px}
+.v-w-dato{font-family:var(--v-mono);font-size:11px;color:var(--v-tec-tx);
+  background:var(--v-tec-bg);padding:2px 8px;border-radius:5px;line-height:1.5}
+.v-w-dato b{color:var(--v-txt);font-weight:700}
+.v-w-reg{font-family:var(--v-mono);font-size:11px;font-weight:700;color:var(--v-reg);
+  background:var(--v-reg-bg);border:1px solid color-mix(in srgb,var(--v-reg) 35%,transparent);
+  padding:1px 8px;border-radius:5px;line-height:1.5}
+.v-w-tag{font-size:11px;font-weight:700;color:var(--v-aviso2);background:var(--v-aviso2-bg);
+  border:1px solid color-mix(in srgb,var(--v-aviso2) 35%,transparent);
+  padding:1px 8px;border-radius:5px;line-height:1.5}
+.v-w-tag.dif{color:var(--v-acento-tx);background:rgba(var(--v-acento-rgb),.08);
+  border-color:rgba(var(--v-acento-rgb),.24)}
 /* El ejemplo se va al pie: las tarjetas de una fila ya medían igual, pero la línea
    divisoria caía a distinta altura según lo larga que fuera la traducción. */
-.v-w-ex{font-size:12px;color:var(--v-txt3);font-style:italic;line-height:1.5;
-  margin-top:auto;padding-top:9px;border-top:1px solid var(--v-borde)}
-.v-w-ex-sep{margin-top:9px}
+/* El ejemplo, con su traducción debajo: en alemán solo había que adivinarlo. */
+.v-w-ex{font-size:12.5px;color:var(--v-txt);font-style:italic;line-height:1.5;
+  margin-top:auto;padding-top:10px;border-top:1px solid var(--v-borde)}
+.v-w-ex-es{font-size:11.5px;color:var(--v-txt3);font-style:normal;margin-top:1px;
+  line-height:1.45}
+.v-w-ex-sep{margin-top:10px}
+/* Cuándo se dice, o el fallo típico. Va al pie y en pequeño: es el extra. */
+.v-w-uso{margin-top:8px;font-size:11px;color:var(--v-txt3);line-height:1.5}
+.v-w-uso b{color:var(--v-acento-tx)}
 /* Modo estudio: la traducción tapada hasta que se toca. */
 .v-tapa{display:inline-block;min-width:82px;background:rgba(128,128,128,.22);color:transparent;
   border-radius:5px;padding:1px 8px;cursor:pointer;user-select:none;transition:all .2s}
 .v-tapa:hover{background:rgba(var(--v-acento-rgb),.16);color:var(--v-acento)}
 .v-tapa.abierta{background:transparent;color:var(--v-txt2);cursor:default;padding-left:0}
+
+/* ── EL ÁRBOL DE SECCIONES ─────────────────────────────────────────
+   Con 21 secciones y sus subsecciones, la tira de chips no da: ya ocupaba dos filas
+   ella sola, y con las subsecciones serían 130px de chips antes de la primera palabra
+   sin enseñar más que la rama abierta. El árbol enseña el mapa entero, marca dónde
+   estás, y no le quita alto a las palabras: le quita ancho, que es lo que sobra. */
+.v-arbol{display:flex;flex-direction:column;gap:1px;overflow-y:auto}
+.v-arbol-t{display:flex;align-items:baseline;justify-content:space-between;
+  padding:0 18px 10px}
+.v-arbol-t span{font-size:10px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--v-txt3)}
+.v-arbol-sec{display:flex;align-items:center;gap:9px;width:100%;text-align:left;
+  padding:7px 18px;font:600 13px/1.5 inherit;color:var(--v-txt2);background:none;
+  border:0;cursor:pointer;font-family:inherit;transition:color .14s,background .14s}
+.v-arbol-sec:hover{background:rgba(var(--v-acento-rgb),.05);color:var(--v-acento-tx)}
+.v-arbol-sec.abierta{font-weight:800;color:var(--v-txt)}
+.v-arbol-ico{flex:none;width:20px;font-size:15px;line-height:1}
+.v-arbol-nom{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.v-arbol-n{flex:none;font-size:11px;font-weight:700;color:var(--v-txt3)}
+.v-arbol-fl{flex:none;width:13px;height:13px;transition:transform .18s}
+.v-arbol-sec.abierta .v-arbol-fl{transform:rotate(180deg)}
+
+/* Las subsecciones cuelgan de una guía vertical: el nivel se ve sin leer. */
+.v-arbol-subs{display:flex;flex-direction:column;gap:1px;margin:2px 0 6px 38px;
+  padding-left:11px;border-left:1.5px solid var(--v-borde)}
+.v-arbol-sub{display:flex;align-items:center;gap:8px;width:100%;text-align:left;
+  padding:5px 12px;margin-left:-12px;border-radius:0 8px 8px 0;
+  font:400 12.5px/1.45 inherit;color:var(--v-txt2);background:none;border:0;
+  border-left:2px solid transparent;cursor:pointer;font-family:inherit;
+  transition:color .14s,background .14s,border-color .14s}
+.v-arbol-sub:hover{background:rgba(var(--v-acento-rgb),.05);color:var(--v-acento-tx)}
+.v-arbol-sub.on{background:rgba(var(--v-acento-rgb),.09);border-left-color:var(--v-acento);
+  color:var(--v-acento-tx);font-weight:800}
+.v-arbol-sub .v-arbol-nom{white-space:normal}
+
+/* Las migas: dónde estoy, en una línea. */
+.v-migas{display:flex;align-items:center;gap:7px;font-size:12px;font-weight:700;
+  color:var(--v-txt3);flex-wrap:wrap}
+.v-migas b{color:var(--v-acento-tx);font-weight:800}
+.v-migas svg{flex:none;opacity:.6}
+
+/* Los filtros que de verdad se usan al estudiar: por nivel y por género. */
+.v-filtros{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.v-filtros-t{font-size:10.5px;font-weight:700;color:var(--v-txt3);text-transform:uppercase;
+  letter-spacing:.07em}
+.v-filtro{padding:4px 11px;border-radius:20px;font:700 11.5px inherit;font-family:inherit;
+  border:1.5px solid var(--v-borde);background:var(--v-card);color:var(--v-txt2);
+  cursor:pointer;transition:background .14s,border-color .14s,color .14s}
+.v-filtro:hover{border-color:rgba(var(--v-acento-rgb),.3)}
+.v-filtro.on{background:var(--v-txt);border-color:var(--v-txt);color:var(--v-card)}
+.v-filtro.der{border-color:color-mix(in srgb,var(--v-der) 40%,transparent);
+  color:color-mix(in srgb,var(--v-der) 62%,var(--v-txt))}
+.v-filtro.die{border-color:color-mix(in srgb,var(--v-die) 40%,transparent);
+  color:color-mix(in srgb,var(--v-die) 62%,var(--v-txt))}
+.v-filtro.das{border-color:color-mix(in srgb,var(--v-das) 40%,transparent);
+  color:color-mix(in srgb,var(--v-das) 62%,var(--v-txt))}
+.v-filtro.der.on{background:var(--v-der);border-color:var(--v-der);color:#fff}
+.v-filtro.die.on{background:var(--v-die);border-color:var(--v-die);color:#fff}
+.v-filtro.das.on{background:var(--v-das);border-color:var(--v-das);color:#fff}
+.v-sep{width:1px;height:18px;background:var(--v-borde)}
 
 /* Viendo TODAS las palabras, la sección va en un encabezado que abarca la rejilla
    entera y no en un chip por tarjeta: repetir "Saludos" veinticuatro veces no dice

@@ -10,7 +10,9 @@
 //
 // LO QUE EXPORTA
 //   vocSeccionesHtml(cats, activa, op)  la tira de secciones
-//   vocFiltrar(voc, q, cat)             las palabras que tocan
+//   vocArbolHtml(cats, abierta, sub, op)  el árbol de secciones y subsecciones
+//   vocFiltrosHtml(f, op)               los filtros de nivel y género
+//   vocFiltrar(voc, f)                  las palabras que tocan
 //   vocPalabrasHtml(lista, op)          la rejilla, con encabezados si procede
 //   vocPartizipHtml(partizip)           el tema, con su índice
 //   vocVerSeccion(tira)                 trae la sección abierta a la vista (móvil)
@@ -85,14 +87,119 @@ function vocVerSeccion(tira){
 // La búsqueda manda sobre la sección: si escribe algo espera verlo aunque esté en otra
 // parte. Mira en alemán, en español y en los ejemplos — buscar "essen" y que no salga
 // *Ich habe schon gegessen* es raro cuando el ejemplo está ahí.
-function vocFiltrar(voc, q, cat){
-  const qq = vocNorm((q || '').trim());
+//
+// `f` es {q, cat, sub, niv, art}: la búsqueda, dónde se está y los filtros. Acepta
+// también la forma vieja (voc, q, cat) porque el Dashboard la usaba así.
+function vocFiltrar(voc, f, cat){
+  if(typeof f === 'string' || f == null) f = { q: f || '', cat: cat };
+  const qq = vocNorm((f.q || '').trim());
   return voc.filter(function(w){
-    const catOk = !cat || cat === 'all' || w.cat === cat;
-    const qOk = !qq || vocNorm(w.de).indexOf(qq) >= 0 || vocNorm(w.es).indexOf(qq) >= 0
-                    || vocNorm(w.ex || '').indexOf(qq) >= 0;
-    return catOk && qOk;
+    if(f.cat && f.cat !== 'all' && w.cat !== f.cat) return false;
+    if(f.sub && w.sub !== f.sub) return false;
+    if(f.niv && f.niv !== 'all' && w.niv !== f.niv) return false;
+    // El género incluye el plural sin singular: pl. es un género más a la hora de filtrar.
+    if(f.art && f.art !== 'all' && (w.art || '-').split('/')[0].trim() !== f.art) return false;
+    if(!qq) return true;
+    return vocNorm(w.de).indexOf(qq) >= 0 || vocNorm(w.es).indexOf(qq) >= 0
+        || vocNorm(w.ex || '').indexOf(qq) >= 0;
   });
+}
+
+// ── EL ÁRBOL ─────────────────────────────────────────────────────
+// Las 21 secciones; la abierta despliega sus subsecciones. Se pinta entero siempre —
+// son 21 filas, no hay nada que ahorrar — y el CSS decide si se ve.
+// op.fnSec / op.fnSub  las funciones que reciben el clic
+// op.cuenta(cat)       cuántas palabras tiene la sección
+// op.subs(cat)         [{id, label, n}] de esa sección
+// op.gram              {id, texto} de la pestaña de gramática, si la hay
+function vocArbolHtml(cats, abierta, sub, op){
+  op = op || {};
+  const fnSec = op.fnSec || 'vocSet';
+  const fnSub = op.fnSub || 'vocSetSub';
+  const FLECHA = '<svg class="v-arbol-fl" viewBox="0 0 24 24" fill="none" stroke="currentColor"'
+    + ' stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
+    + '<path d="M6 9l6 6 6-6"></path></svg>';
+
+  let h = '<div class="v-arbol-t"><span>Secciones</span><span>' +
+          Object.keys(cats).length + '</span></div>';
+
+  h += Object.keys(cats).map(function(k){
+    const c = cats[k];
+    const ab = (k === abierta);
+    const n = op.cuenta ? op.cuenta(k) : null;
+    let fila = '<button type="button" class="v-arbol-sec' + (ab ? ' abierta' : '') +
+      '" onclick="' + fnSec + '(\'' + k + '\')">' +
+      '<span class="v-arbol-ico">' + c.icon + '</span>' +
+      '<span class="v-arbol-nom">' + vocEsc(c.label) + '</span>' +
+      (n == null ? '' : '<span class="v-arbol-n">' + n + '</span>') +
+      FLECHA + '</button>';
+    if(ab && op.subs){
+      const subs = op.subs(k) || [];
+      if(subs.length){
+        fila += '<div class="v-arbol-subs">' + subs.map(function(x){
+          return '<button type="button" class="v-arbol-sub' + (x.id === sub ? ' on' : '') +
+            '" onclick="' + fnSub + '(\'' + x.id + '\')">' +
+            '<span class="v-arbol-nom">' + vocEsc(x.label) + '</span>' +
+            '<span class="v-arbol-n">' + x.n + '</span></button>';
+        }).join('') + '</div>';
+      }
+    }
+    return fila;
+  }).join('');
+
+  if(op.gram){
+    h += '<button type="button" class="v-arbol-sec' + (abierta === op.gram.id ? ' abierta' : '') +
+      '" onclick="' + fnSec + '(\'' + op.gram.id + '\')" style="margin-top:10px;' +
+      'padding-top:14px;border-top:1px solid var(--v-borde);color:var(--v-gram)">' +
+      '<span class="v-arbol-ico">\ud83e\udde9</span>' +
+      '<span class="v-arbol-nom">' + vocEsc(op.gram.texto) + '</span></button>';
+  }
+  return h;
+}
+
+// ── LOS FILTROS ────────────────────────────────────────────────
+// Nivel y género, que son los dos cortes que se hacen de verdad al estudiar.
+function vocFiltrosHtml(f, op){
+  op = op || {};
+  const fn = op.fn || 'vocFiltro';
+  const b = function(clave, val, txt, cls){
+    const act = (f[clave] || 'all') === val;
+    return '<button type="button" class="v-filtro' + (cls ? ' ' + cls : '') +
+      (act ? ' on' : '') + '" onclick="' + fn + '(\'' + clave + '\',\'' + val + '\')">' +
+      txt + '</button>';
+  };
+  return '<span class="v-filtros-t">Nivel</span>' +
+    b('niv','all','Todos') + b('niv','A1','A1') + b('niv','A2','A2') + b('niv','B1','B1') +
+    '<span class="v-sep"></span>' +
+    b('art','all','Todo') + b('art','der','der','der') + b('art','die','die','die') +
+    b('art','das','das','das');
+}
+
+// La tira de SUBsecciones, para las pantallas donde el árbol no cabe (el slide del
+// Dashboard es apaisado y bajo: una barra lateral le quitaría el ancho a las palabras).
+// Sale de la sección abierta y lleva su color, para que se vea de dónde cuelga.
+function vocSubsHtml(subs, activa, op){
+  op = op || {};
+  const fn = op.fn || 'vocSetSub';
+  if(!subs || !subs.length) return '';
+  return '<button type="button" class="v-sub' + (activa ? '' : ' on') +
+    '" onclick="' + fn + '(null)">Todas <b>' +
+    subs.reduce(function(a, x){ return a + x.n; }, 0) + '</b></button>' +
+    subs.map(function(x){
+      return '<button type="button" class="v-sub' + (x.id === activa ? ' on' : '') +
+        '" onclick="' + fn + '(\'' + x.id + '\')">' + vocEsc(x.label) +
+        ' <b>' + x.n + '</b></button>';
+    }).join('');
+}
+
+// Las migas: dónde estoy, en una línea.
+function vocMigasHtml(cat, sub){
+  const FL = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"'
+    + ' stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
+    + '<path d="M9 6l6 6-6 6"></path></svg>';
+  let h = '<span>' + (cat.icon || '') + '</span><span>' + vocEsc(cat.label) + '</span>';
+  if(sub) h += FL + '<b>' + vocEsc(sub) + '</b>';
+  return h;
 }
 
 function vocPalabraHtml(w, op){
@@ -108,11 +215,29 @@ function vocPalabraHtml(w, op){
     ? '<span class="v-tapa" onclick="this.classList.add(\'abierta\')" ' +
       'title="Toca para revelar">' + vocEsc(w.es) + '</span>'
     : vocResaltar(w.es, q);
+  // La línea técnica. Cada tipo de palabra enseña lo suyo y lo que no tiene no se
+  // pinta, así que una preposición no arrastra huecos de verbo.
+  const datos = [];
+  if(w.pl && w.pl !== '-') datos.push('Pl. <b>' + vocEsc(w.pl) + '</b>');
+  else if(w.pl === '-' && w.tipo === 'sust' && !w.tag) datos.push('Pl. <b>\u2014</b>');
+  if(w.gen && w.gen !== '-') datos.push('Gen. <b>' + vocEsc(w.gen) + '</b>');
+  if(w.conj) datos.push(vocEsc(w.conj).replace(/\u00b7/g, '\u00b7'));
+  if(w.aux) datos.push('<b>' + vocEsc(w.aux) + '</b>');
+  if(w.comp) datos.push(vocEsc(w.comp));
+
+  let tec = datos.map(function(d){ return '<span class="v-w-dato">' + d + '</span>'; }).join('');
+  if(w.reg) tec += '<span class="v-w-reg">' + vocEsc(w.reg) + '</span>';
+  if(w.tag) tec += '<span class="v-w-tag' +
+    (/irregular|separable|mixto/.test(w.tag) ? ' dif' : '') + '">' + vocEsc(w.tag) + '</span>';
+
   return '<article class="v-w" style="--c:' + color + '">' +
-    '<div class="v-w-top">' + pil + '<span class="v-w-de">' + vocResaltar(w.de, q) +
-      '</span></div>' +
+    '<div class="v-w-top">' + pil + '<span class="v-w-de">' + vocResaltar(w.de, q) + '</span>' +
+      (w.niv ? '<span class="v-w-niv">' + vocEsc(w.niv) + '</span>' : '') + '</div>' +
     '<div class="v-w-es">' + es + '</div>' +
-    (w.ex ? '<div class="v-w-ex v-w-ex-sep">' + vocResaltar(w.ex, q) + '</div>' : '') +
+    (tec ? '<div class="v-w-tec">' + tec + '</div>' : '') +
+    (w.ex ? '<div class="v-w-ex v-w-ex-sep">' + vocResaltar(w.ex, q) +
+       (w.esEx ? '<div class="v-w-ex-es">' + vocEsc(w.esEx) + '</div>' : '') + '</div>' : '') +
+    (w.uso ? '<div class="v-w-uso">' + vocEsc(w.uso) + '</div>' : '') +
   '</article>';
 }
 
@@ -128,14 +253,40 @@ function vocPalabrasHtml(lista, op){
   }
   const cats = op.cats || {};
   let seccion = null;
+
+  // El agrupado detecta cambios CONSECUTIVOS, así que depende del orden: una palabra
+  // suelta al final de la lista repetiría su encabezado a mitad de página. Se ordena
+  // por el orden en que las subsecciones están declaradas, que es el del árbol.
+  if(op.agrupar){
+    const pos = function(w){
+      const c = cats[w.cat] || {};
+      const ids = Object.keys(c.subs || {});
+      const i = ids.indexOf(w.sub);
+      return i < 0 ? 999 : i;
+    };
+    const orden = Object.keys(cats);
+    lista = lista.slice().sort(function(a, b){
+      const ca = orden.indexOf(a.cat), cb = orden.indexOf(b.cat);
+      return ca !== cb ? ca - cb : pos(a) - pos(b);
+    });
+  }
+
   return '<div class="v-grid">' + lista.map(function(w){
     let cab = '';
-    if(op.agrupar && w.cat !== seccion){
-      seccion = w.cat;
+    // Dentro de una sección se agrupa por SUBsección; viendo varias, por sección.
+    const clave = op.porSub ? (w.cat + '/' + w.sub) : w.cat;
+    if(op.agrupar && clave !== seccion){
+      seccion = clave;
       const c = cats[w.cat] || {label:w.cat, icon:'\u2022'};
-      const n = lista.filter(function(x){ return x.cat === w.cat; }).length;
-      cab = '<div class="v-h"><span class="v-h-ico">' + c.icon + '</span>' +
-            '<span class="v-h-t">' + vocEsc(c.label) + '</span>' +
+      const n = lista.filter(function(x){
+        return op.porSub ? (x.cat === w.cat && x.sub === w.sub) : x.cat === w.cat;
+      }).length;
+      const titulo = op.porSub
+        ? (((c.subs || {})[w.sub]) || w.sub || 'Sin agrupar')
+        : c.label;
+      cab = '<div class="v-h">' + (op.porSub ? '' :
+              '<span class="v-h-ico">' + c.icon + '</span>') +
+            '<span class="v-h-t">' + vocEsc(titulo) + '</span>' +
             '<span class="v-h-n">' + n + ' palabra' + (n !== 1 ? 's' : '') + '</span></div>';
     }
     return cab + vocPalabraHtml(w, op);
