@@ -1089,9 +1089,9 @@ function impactoDelCambio() {
   const malos = [];
   let V;
   try {
-    V = require('./aleman-vocab.js');
+    V = require('../Aleman/vocab-datos.js');
   } catch (e) {
-    problemas.push('No se puede leer Dashboard/aleman-vocab.js: ' + e.message);
+    problemas.push('No se puede leer Aleman/vocab-datos.js: ' + e.message);
     return;
   }
 
@@ -1126,20 +1126,22 @@ function impactoDelCambio() {
   if ((V.partizip.secciones || []).length !== 9)
     malos.push('  Partizip trae ' + (V.partizip.secciones || []).length + ' bloques; eran 9');
 
-  // Y las dos pantallas lo cargan en vez de copiarlo.
-  [['Aleman', 'vocabulario.html'], ['Dashboard', 'dashboard.html']].forEach(function (a) {
+  // Y las dos pantallas lo cargan en vez de copiarlo. El archivo vive en Aleman/
+  // desde el 2026-09-03: es donde Adán trabaja el vocabulario.
+  [['Aleman', 'vocabulario.html', 'vocab-datos.js'],
+   ['Dashboard', 'dashboard.html', '../Aleman/vocab-datos.js']].forEach(function (a) {
     const rel = a[0] + '/' + a[1];
     let h;
     try { h = leer(rel); } catch (e) { malos.push('  no se puede leer ' + rel); return; }
     // La ETIQUETA, no el nombre: los dos archivos nombran aleman-vocab.js en un
     // comentario, así que buscar el texto dejaba pasar un <script> borrado.
-    if (!/<script src="[^"]*aleman-vocab\.js"><\/script>/.test(h))
-      malos.push('  ' + rel + ' no carga aleman-vocab.js con un <script src>');
+    if (h.indexOf('<script src="' + a[2] + '"></script>') === -1)
+      malos.push('  ' + rel + ' no carga ' + a[2] + ' con un <script src>');
     // Una copia propia se reconoce por varias palabras con su `cat` escritas a mano.
     const copia = (h.match(/\{\s*art:/g) || []).length;
     if (copia > 3)
       malos.push('  ' + rel + ' vuelve a llevar ' + copia + ' palabras escritas dentro; ' +
-                 'tienen que estar solo en Dashboard/aleman-vocab.js');
+                 'tienen que estar solo en Aleman/vocab-datos.js');
   });
 
   if (malos.length)
@@ -1148,6 +1150,72 @@ function impactoDelCambio() {
     ok.push('Vocabulario de alemán en un solo sitio (' + V.voc.length + ' palabras en ' +
             cats.length + ' secciones y ' + V.partizip.secciones.length +
             ' bloques de Partizip, cargado por las 2 pantallas)');
+})();
+
+// ── 20. El diseño del vocabulario, en un solo sitio ────────────────────────
+// El control 19 cuida las PALABRAS; este cuida el DISEÑO. Hasta el 2026-09-03 cada
+// pantalla tenía su copia — 6.900 caracteres de CSS y unas nueve funciones por lado —
+// y un retoque en una no llegaba a la otra. Adán: *"quiero un solo diseño, no lo quiero
+// duplicado, entonces el principal es el html de aleman"*.
+//
+// Ahora está en `Aleman/vocab.css` + `Aleman/vocab.js`, que cargan las dos. Lo que este
+// control vigila es que sigan cargándolo y que ninguna se ponga a reescribirlo por su
+// cuenta: la señal de que eso ha pasado es una regla `.v-*` o una función `voc*` escrita
+// dentro de un HTML.
+(function () {
+  const malos = [];
+  const CSS = 'Aleman/vocab.css', JS = 'Aleman/vocab.js';
+  let css, js;
+  try { css = leer(CSS); js = leer(JS); }
+  catch (e) { problemas.push('No se puede leer el motor del vocabulario: ' + e.message); return; }
+
+  // Las clases y funciones que el motor define, para buscarlas donde no deben estar.
+  // `.v-vocab` queda fuera a propósito: no es una regla del diseño sino el contenedor
+  // donde cada app declara SUS tokens, que es justo el punto de extensión previsto.
+  const clases = (css.match(/^\.v-[a-z0-9-]+/gm) || [])
+    .map(function (c) { return c.slice(1); })
+    .filter(function (c, i, a) { return c !== 'v-vocab' && a.indexOf(c) === i; });
+  const funcs = (js.match(/^function (voc[A-Za-z]+)/gm) || [])
+    .map(function (f) { return f.replace('function ', ''); });
+
+  if (clases.length < 15) malos.push('  vocab.css define solo ' + clases.length + ' clases; eran más de 15');
+  if (funcs.length < 8) malos.push('  vocab.js define solo ' + funcs.length + ' funciones; eran más de 8');
+
+  [['Aleman', 'vocabulario.html', 'vocab.css', 'vocab.js'],
+   ['Dashboard', 'dashboard.html', '../Aleman/vocab.css', '../Aleman/vocab.js']].forEach(function (a) {
+    const rel = a[0] + '/' + a[1];
+    let h;
+    try { h = leer(rel); } catch (e) { malos.push('  no se puede leer ' + rel); return; }
+
+    // Que lo carguen. Se busca la ETIQUETA y no el nombre: los dos archivos nombran
+    // vocab.css en un comentario, y buscar el texto dejaba pasar un <link> borrado.
+    if (h.indexOf('<link rel="stylesheet" href="' + a[2] + '">') === -1)
+      malos.push('  ' + rel + ' no carga ' + a[2] + ' con un <link>');
+    if (h.indexOf('<script src="' + a[3] + '"></script>') === -1)
+      malos.push('  ' + rel + ' no carga ' + a[3] + ' con un <script src>');
+
+    // Y que no lo reescriban. Solo se mira dentro del <style> y de los <script> en
+    // línea: un `.v-w` citado en un comentario no es una copia.
+    const estilos = (h.match(/<style[^>]*>[\s\S]*?<\/style>/g) || []).join('\n');
+    const repes = clases.filter(function (c) {
+      return new RegExp('^\\.' + c + '\\s*\\{', 'm').test(estilos);
+    });
+    if (repes.length)
+      malos.push('  ' + rel + ' vuelve a definir ' + repes.length + ' clase(s) del motor (' +
+                 repes.slice(0, 4).join(', ') + '): tienen que estar solo en ' + CSS);
+
+    const refun = funcs.filter(function (f) {
+      return new RegExp('function\\s+' + f + '\\s*\\(').test(h);
+    });
+    if (refun.length)
+      malos.push('  ' + rel + ' vuelve a definir ' + refun.join(', ') + ': solo en ' + JS);
+  });
+
+  if (malos.length)
+    problemas.push('El diseño del vocabulario se está duplicando:\n' + malos.slice(0, 10).join('\n'));
+  else
+    ok.push('Diseño del vocabulario en un solo sitio (' + clases.length + ' clases en vocab.css y ' +
+            funcs.length + ' funciones en vocab.js, cargados por las 2 pantallas)');
 })();
 
 // ── Salida ──

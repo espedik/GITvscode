@@ -2,9 +2,8 @@
 
 41 lecciones de alemán en HTML, sin backend ni build. Se abren con `file://` y el Dashboard las
 consumió a través de `../Dashboard/aleman-data.js` hasta el 2026-09-02. Desde entonces la
-pantalla de Alemán del Dashboard es vocabulario y Partizip, y lo que comparte con esta app es
-`../Dashboard/aleman-vocab.js`: las 479 palabras que `vocabulario.html` tenía dentro y ahora
-cargan las dos.
+pantalla de Alemán del Dashboard es vocabulario y Partizip, **y lo carga de aquí**: los
+datos, el diseño y el motor viven en esta carpeta y esa pantalla los refleja.
 
 > **Referencia, no diario.** El historial vive en `git log -p -- Claude_Proyecto/Aleman/`.
 > Ver `../../CLAUDE.md` → Regla 3.
@@ -20,6 +19,7 @@ cargan las dos.
 | A2 | `a2-01`…`a2-20` | Gramática y vocabulario temático |
 | Apoyo | `index.html`, `gramatica.html`, `vocabulario.html` | Índice y referencia transversal |
 | Compartido | `styles.css`, `flashcards.js`, `k10.css`, `partizip.css`, `k10-interactivo.js` | Estilos y motores |
+| **Vocabulario** | `vocab-datos.js`, `vocab.css`, `vocab.js` | Los datos, el diseño y el motor. Los carga también el Dashboard — ver abajo |
 
 ---
 
@@ -35,9 +35,20 @@ Alemán del Dashboard lo refleja. Cuatro pestañas:
 | 🎴 Tarjetas | Repaso con `flashcards.js` |
 | 🧩 Partizip I y II | El tema de gramática, en 9 bloques |
 
-**Los datos no están aquí.** Las palabras y el Partizip viven en
-`../Dashboard/aleman-vocab.js` — el mismo archivo que carga el Dashboard, para que corregir
-una palabra no deje al otro mintiendo. Para añadir vocabulario se toca ESE archivo:
+**Nada de esto está dentro del HTML.** El vocabulario son tres archivos de esta carpeta,
+y los tres los carga también la pantalla de Alemán del Dashboard:
+
+| Archivo | Qué es | Cuándo se toca |
+|---|---|---|
+| `vocab-datos.js` | Las 479 palabras, las 21 secciones y el Partizip | Al añadir o corregir vocabulario |
+| `vocab.css` | El diseño: la tarjeta, la rejilla, la tira de secciones, el Partizip | Al cambiar cómo se ve |
+| `vocab.js` | El motor: filtrar, agrupar y pintar | Al cambiar cómo se comporta |
+
+**Un cambio en cualquiera de los tres llega a las dos pantallas.** Está comprobado: subir
+la barra de género de 4px a 12px en `vocab.css`, sin tocar ningún HTML, la sube en las dos.
+Los controles 19 y 20 de `../Dashboard/verificar-sincronia.js` vigilan que siga siendo así.
+
+Para añadir vocabulario se toca `vocab-datos.js`:
 
 ```js
 // Una palabra
@@ -50,6 +61,18 @@ comida: {label:'Comida', icon:'🍽️'},
 barra izquierda de la tarjeta: el género se ve antes de leer la palabra. Las únicas dos
 reglas son que `cat` exista en `cats` y que ninguna sección quede vacía; el control 19 de
 `../Dashboard/verificar-sincronia.js` las comprueba, junto con que los emoji sean emoji.
+
+### Cómo se ajusta el aspecto en cada pantalla
+
+`vocab.css` trae **tokens `--v-*`** con valor por defecto (el de esta app). La pantalla que
+lo carga redefine solo lo que cambia, en el contenedor del vocabulario: aquí `.v-vocab`, y
+en el Dashboard `.al-fondo`, que tiene modo oscuro y fondo translúcido. La estructura y los
+tamaños no se tocan desde fuera — eso es lo que hace que sea un solo diseño.
+
+Dos tokens que parecen uno: `--v-acento` se usa de **fondo**, con letras blancas encima, y
+`--v-acento-tx` es el mismo color usado como **texto**. Confundirlos dejó la cabecera de las
+tablas en 3.8:1. Lo mismo con la píldora del artículo: su color se mezcla con el del texto
+(`color-mix`), porque el verde de `das` sin mezclar da 1.88:1 sobre su propio fondo.
 
 **Por qué tarjetas y no una tabla.** La tabla mostraba **9 palabras** de 479 a 1600px y en el
 teléfono escondía tres de sus cinco columnas para caber. La rejilla muestra 25 y no esconde

@@ -1,0 +1,193 @@
+/* ═════════════════════════════════════════════════════════════════════════════
+   EL VOCABULARIO DE ALEMÁN — el diseño, escrito una sola vez
+   ════════════════════════════════════════════════════════════════════════════
+
+   Lo cargan DOS pantallas: `Aleman/vocabulario.html`, que es donde Adán trabaja el
+   vocabulario, y la pantalla de Alemán del Dashboard, que lo refleja. Antes cada una
+   tenía su copia — 6.900 caracteres de CSS por lado — y un retoque en una no llegaba
+   a la otra. Petición del 2026-09-02: *"quiero un solo diseño, no lo quiero duplicado,
+   entonces el principal es el html de aleman"*.
+
+   CÓMO SE USA: la app que lo carga define los tokens `--v-*` en el contenedor donde
+   viva el vocabulario. Todos tienen valor por defecto (el de la app de Alemán), así
+   que solo hace falta redefinir lo que cambie. La estructura, los tamaños y el
+   comportamiento NO se tocan desde fuera: eso es lo que significa un solo diseño.
+
+   El mismo patrón que `Dashboard/ficha.css`, que ya comparten cuatro apps. */
+
+.v-vocab{
+  /* Superficie */
+  --v-card:#ffffff;
+  --v-card-2:#eeece8;
+  --v-borde:rgba(0,0,0,.09);
+  --v-radio:14px;
+  --v-sombra:0 2px 12px rgba(0,0,0,.07);
+  --v-sombra-alta:0 4px 24px rgba(0,0,0,.10);
+  /* Texto */
+  --v-txt:#1a1a1a;
+  --v-txt2:#555;
+  --v-txt3:#6e6e6e;   /* #999 sobre blanco da 2.85:1 y el ejemplo no se leía */
+  --v-font-titulo:'Playfair Display',Georgia,serif;
+  --v-mono:ui-monospace,'SF Mono',Menlo,monospace;
+  --v-de-size:19px;
+  /* Acento de la app. Son DOS: `--v-acento` se usa de fondo, con letras blancas
+     encima, y ahí un rojo vivo da 5.7:1 de sobra. `--v-acento-tx` es el mismo rojo
+     usado como TEXTO sobre el fondo de la página, y ahí el vivo se queda en 4.4 —
+     por eso es más oscuro. Confundirlos fue el fallo. */
+  --v-acento:#CC0000;
+  --v-acento-rgb:204,0,0;
+  --v-acento-tx:#a30000;
+  /* Énfasis del Partizip. Son tokens y no valores fijos porque el amarillo de la
+     bandera sobre fondo claro da 1.49:1 — medido, no supuesto. */
+  --v-oro:#8a6a00;
+  --v-mal:#b91c1c;
+  --v-pz-borde:rgba(0,0,0,.09);
+  --v-pz-fondo:#ffffff;
+  --v-aviso-br:rgba(212,160,0,.32);
+  --v-aviso-bg:rgba(212,160,0,.07);
+  --v-aviso-tx:#7a5c00;
+  --v-truco-br:rgba(13,148,136,.3);
+  --v-truco-bg:rgba(13,148,136,.06);
+  --v-truco-tx:#0f766e;
+  /* El género. Se lee antes que la palabra: es la barra de la izquierda. */
+  --v-der:#3b82f6;
+  --v-die:#ec4899;
+  --v-das:#10b981;
+  --v-pl:#f97316;
+  --v-sin:#b9b4ad;
+  --v-gram:#7c3aed;      /* la pestaña de gramática, que no es una sección de palabras */
+}
+
+/* ── LA TIRA DE SECCIONES ──────────────────────────────────────────── */
+.v-secs{display:flex;gap:6px;flex-wrap:wrap}
+.v-sec{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:20px;
+  border:1.5px solid var(--v-borde);background:var(--v-card);font:700 12px inherit;
+  color:var(--v-txt2);cursor:pointer;white-space:nowrap;font-family:inherit;
+  transition:background .16s,border-color .16s,color .16s}
+.v-sec:hover{border-color:rgba(var(--v-acento-rgb),.28);color:var(--v-acento)}
+.v-sec b{font-family:var(--v-mono);font-size:10.5px;font-weight:700;color:var(--v-txt2)}
+.v-sec.on{background:var(--v-acento);border-color:var(--v-acento);color:#fff}
+.v-sec.on b{color:#fff}   /* al 80% se quedaba en 3.56:1 sobre el rojo */
+.v-sec.todas.on{background:var(--v-txt);border-color:var(--v-txt)}
+/* La pestaña de gramática no es una sección de palabras y no se pinta como tal. El
+   morado va en un token porque el de la app (#7c3aed) sobre el fondo oscuro del
+   Dashboard se queda en 3.4:1. */
+.v-sec.gram{border-color:color-mix(in srgb,var(--v-gram) 45%,transparent);
+  color:var(--v-gram-tx,var(--v-gram));
+  background:color-mix(in srgb,var(--v-gram) 8%,transparent)}
+.v-sec.gram.on{background:var(--v-gram);border-color:var(--v-gram);color:#fff}
+
+/* ── LAS PALABRAS ──────────────────────────────────────────────────
+   Eran una tabla de cinco columnas: a 1600px cabían NUEVE palabras de las 479, y en el
+   teléfono se escondían tres columnas para que entrara. La rejilla muestra 25. */
+.v-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+.v-w{position:relative;display:flex;flex-direction:column;background:var(--v-card);
+  border:1px solid var(--v-borde);border-radius:var(--v-radio);
+  padding:14px 16px 15px 18px;box-shadow:var(--v-sombra);
+  transition:box-shadow .18s,transform .18s,border-color .18s}
+.v-w:hover{box-shadow:var(--v-sombra-alta);transform:translateY(-1px)}
+.v-w::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--c);
+  border-radius:var(--v-radio) 0 0 var(--v-radio)}
+.v-w-top{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+/* La píldora del artículo. El color del género SIN mezclar da 1.88:1 en `das`: es un
+   verde claro sobre un fondo de ese mismo verde. Mezclado con el color del texto se
+   oscurece en el tema claro y se aclara en el oscuro — un solo valor vale para los
+   dos, y el matiz sigue diciendo qué género es. */
+.v-w-art{flex:none;font-size:10.5px;font-weight:800;letter-spacing:.03em;padding:2px 7px;
+  border-radius:5px;background:color-mix(in srgb,var(--c) 13%,transparent);
+  color:color-mix(in srgb,var(--c) 55%,var(--v-txt))}
+.v-w-de{font-family:var(--v-font-titulo);font-size:var(--v-de-size);font-weight:900;
+  color:var(--v-txt);line-height:1.2}
+.v-w-es{font-size:13.5px;color:var(--v-txt2);margin-top:3px;line-height:1.45}
+/* El ejemplo se va al pie: las tarjetas de una fila ya medían igual, pero la línea
+   divisoria caía a distinta altura según lo larga que fuera la traducción. */
+.v-w-ex{font-size:12px;color:var(--v-txt3);font-style:italic;line-height:1.5;
+  margin-top:auto;padding-top:9px;border-top:1px solid var(--v-borde)}
+.v-w-ex-sep{margin-top:9px}
+/* Modo estudio: la traducción tapada hasta que se toca. */
+.v-tapa{display:inline-block;min-width:82px;background:rgba(128,128,128,.22);color:transparent;
+  border-radius:5px;padding:1px 8px;cursor:pointer;user-select:none;transition:all .2s}
+.v-tapa:hover{background:rgba(var(--v-acento-rgb),.16);color:var(--v-acento)}
+.v-tapa.abierta{background:transparent;color:var(--v-txt2);cursor:default;padding-left:0}
+
+/* Viendo TODAS las palabras, la sección va en un encabezado que abarca la rejilla
+   entera y no en un chip por tarjeta: repetir "Saludos" veinticuatro veces no dice
+   nada, y con una palabra larga el chip bajaba de línea y descuadraba la fila. */
+.v-h{grid-column:1/-1;display:flex;align-items:center;gap:10px;
+  margin:22px 0 2px;padding-bottom:9px;
+  border-bottom:2px solid rgba(var(--v-acento-rgb),.16)}
+.v-h:first-child{margin-top:0}
+.v-h-ico{font-size:19px;line-height:1}
+.v-h-t{font-family:var(--v-font-titulo);font-size:20px;font-weight:900;color:var(--v-txt)}
+.v-h-n{margin-left:auto;font-size:11px;font-weight:700;color:var(--v-txt3);
+  letter-spacing:.04em;text-transform:uppercase}
+.v-vacio{padding:40px 4px;font-size:13px;color:var(--v-txt3);line-height:1.6}
+
+/* ── PARTIZIP I Y II ────────────────────────────────────────────
+   Cada bloque puede traer tabla, lista de tres columnas, comparativa, aviso o truco. */
+.v-pz-wrap{padding-bottom:20px}
+.v-pz-col{display:flex;flex-direction:column;gap:16px;max-width:860px}
+.v-pz-sub{font-size:14px;color:var(--v-txt2);line-height:1.6;margin:0 0 20px;max-width:760px}
+.v-pz{background:var(--v-pz-fondo);border:1px solid var(--v-pz-borde);
+  border-radius:var(--v-radio);padding:20px 22px;box-shadow:var(--v-sombra);
+  scroll-margin-top:76px}
+.v-pz-h{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.v-pz-ico{font-size:19px}
+.v-pz-h h3{font-family:var(--v-font-titulo);font-size:19px;font-weight:900;color:var(--v-txt)}
+.v-pz-c{font-size:14px;color:var(--v-txt2);line-height:1.7}
+.v-pz-c b{color:var(--v-txt);font-weight:700}
+.v-pz-c i,.v-tabla i{font-style:normal;font-family:var(--v-mono);font-size:13px;
+  color:var(--v-oro);font-weight:600}
+.v-pz-c s,.v-tabla s{color:var(--v-mal);text-decoration-color:currentColor}
+.v-pz-mini{font-size:11.5px;color:var(--v-txt3)}
+.v-pz-aviso,.v-pz-truco{margin-top:14px;padding:11px 14px;border-radius:10px;
+  font-size:13px;line-height:1.6}
+.v-pz-aviso{border:1px solid var(--v-aviso-br);background:var(--v-aviso-bg);color:var(--v-aviso-tx)}
+.v-pz-truco{border:1px solid var(--v-truco-br);background:var(--v-truco-bg);color:var(--v-truco-tx)}
+.v-tabla{overflow-x:auto;margin-top:14px}
+.v-tabla table{border-collapse:collapse;width:100%;min-width:460px}
+.v-tabla th{font-size:10px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;
+  color:var(--v-acento-tx);text-align:left;padding:0 12px 8px;
+  border-bottom:2px solid rgba(var(--v-acento-rgb),.18)}
+.v-tabla td{padding:10px 12px;border-bottom:1px solid var(--v-borde);font-size:13.5px;
+  color:var(--v-txt2);vertical-align:top;line-height:1.55}
+.v-tabla td b{color:var(--v-txt)}
+.v-lst{display:flex;flex-direction:column;gap:10px;margin-top:14px}
+.v-li{display:grid;grid-template-columns:210px 1fr;gap:14px;padding:11px 13px;
+  border-radius:10px;background:var(--v-card-2);border:1px solid var(--v-borde)}
+.v-li-t{font-size:13px;font-weight:700;color:var(--v-txt)}
+.v-li-d{font-size:12px;color:var(--v-txt2);margin-top:2px;line-height:1.45}
+.v-li-e{font-size:13px;color:var(--v-txt2);font-family:var(--v-mono);line-height:1.55}
+
+/* El índice del tema. Solo cuando sobra ancho: el texto se lee mejor en 860px y en un
+   monitor quedaba medio lienzo vacío al lado. */
+.v-pz-idx{display:none}
+@media(min-width:1180px){
+  .v-pz-wrap{display:grid;grid-template-columns:minmax(0,1fr) 250px;column-gap:36px;
+    align-items:start;max-width:1280px}
+  .v-pz-sub{grid-column:1/-1}
+  .v-pz-idx{display:block;position:sticky;top:var(--v-idx-top,80px)}
+  .v-pz-idx-t{font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--v-txt3);padding:0 12px 10px}
+  .v-pz-idx button{display:flex;align-items:flex-start;gap:9px;width:100%;text-align:left;
+    padding:8px 12px;border-radius:9px;font:600 12.5px/1.4 inherit;color:var(--v-txt2);
+    background:none;border:0;border-left:2px solid transparent;cursor:pointer;
+    font-family:inherit;transition:background .16s,color .16s,border-color .16s}
+  .v-pz-idx button:hover{background:rgba(var(--v-acento-rgb),.06);color:var(--v-acento-tx)}
+  .v-pz-idx button.on{background:rgba(var(--v-acento-rgb),.1);color:var(--v-acento-tx);
+    border-left-color:var(--v-acento);font-weight:800}
+  .v-pz-idx button span{flex:none;font-size:14px}
+}
+
+@media(max-width:760px){
+  .v-grid{grid-template-columns:1fr}
+  .v-li{grid-template-columns:1fr;gap:6px}
+  .v-pz{padding:16px 17px}
+  /* Las 22 secciones apiladas ocupaban SIETE filas y dejaban la primera palabra fuera
+     de la pantalla. Aquí son una tira que se desliza, y la elegida se trae al centro
+     sola (ver `vocVerSeccion` en vocab.js). */
+  .v-secs{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;
+    scroll-snap-type:x proximity;padding-bottom:2px}
+  .v-secs::-webkit-scrollbar{display:none}
+  .v-sec{flex:none;scroll-snap-align:center}
+}

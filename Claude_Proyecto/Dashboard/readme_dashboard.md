@@ -20,7 +20,7 @@ en una página.
 | `datos-maestros.js` | **Fuente única** de las variables del proyecto. Lo cargan también Coach y Finanzas |
 | `DATOS-MAESTROS.md` | Índice del proyecto: catálogo de variables, mapa de apps, cómo se corrige un saldo |
 | `verificar-sincronia.js` | Comprueba que nada se haya vuelto a duplicar. Lo corre un hook al final de cada turno |
-| `aleman-vocab.js` | Las 479 palabras de alemán en 21 secciones y el tema de Partizip. Lo carga también `Aleman/vocabulario.html` |
+| — | El vocabulario de alemán ya no vive aquí: los datos, el diseño y el motor están en `Aleman/` (`vocab-datos.js`, `vocab.css`, `vocab.js`) y esta pantalla los carga — ver abajo |
 | `aleman-data.js` | Las 40 lecciones de alemán extraídas de `Aleman/`. **En reposo** desde el 2026-09-02: ninguna pantalla lo carga (ver abajo) |
 | `entrevistas-data.js` | Temas extraídos de `Entrevistas/` para su slide |
 | `readme_dashboard.md` | Este archivo |
@@ -66,7 +66,7 @@ flechas, los puntos del HUD lateral, o deslizando en táctil.
 | `theme-basicas` | **Habilidades Base** | 23 guías de vida práctica. **Única fuente** desde el 30-ago-2026: la sección equivalente de Coach se eliminó — ver abajo |
 | `theme-skills` | **Habilidades** | Radar de 12 habilidades y prioridades de aprendizaje |
 | `theme-lista` | **Lista de Compras** | 7 categorías. Comida con precios por pieza, ticket, costo al mes y proporción de verduras/frutas/almidones — ver abajo |
-| `theme-aleman` | **Alemán** | Vocabulario por secciones y el tema de Partizip I y II, desde `aleman-vocab.js` — ver abajo |
+| `theme-aleman` | **Alemán** | Vocabulario por secciones y el tema de Partizip I y II, desde `Aleman/vocab-datos.js` — ver abajo |
 | `theme-entrevista` | **Entrevista del día** | Un tema técnico al día, desde `entrevistas-data.js` |
 
 Entrevistas **no usa `<iframe>`**: su contenido se extrajo a `entrevistas-data.js` y se pinta
@@ -88,10 +88,20 @@ pongas uno de vocabulario super extenso y acomodalo por secciones y quiero el te
   a la derecha un índice que sigue la lectura (`alIdxSigue()`); ahí antes solo había hueco.
 - La sección abierta se guarda en `localStorage` (`al_sec_v1`).
 
-**Los datos no viven aquí.** Están en `aleman-vocab.js`, que carga también
-`Aleman/vocabulario.html`. Nacieron dentro de esa app; al necesitarlos las dos pantallas se
-sacaron a un archivo común en vez de copiarlos. El control 19 de `verificar-sincronia.js` vigila
-que no vuelvan a duplicarse.
+**Nada de esto vive aquí.** Los datos, el diseño y el motor están en `Aleman/`
+(`vocab-datos.js`, `vocab.css`, `vocab.js`) y esta pantalla los carga con un `../`. La
+pantalla principal del vocabulario es `Aleman/vocabulario.html`: ahí se trabaja y esta lo
+refleja. Adán (2026-09-03): *"quiero un solo diseño, no lo quiero duplicado, entonces el
+principal es el html de aleman"*.
+
+Lo único propio de esta pantalla son los **tokens** `--v-*`, en `.al-fondo`: tiene modo
+oscuro y el fondo es translúcido sobre las manchas animadas del slide, así que los colores
+no pueden ser los de la app de Alemán. La estructura sí es la misma. El slide lleva las dos
+clases, `v-vocab al-fondo`: la primera trae los valores por defecto del motor y la segunda
+los cambia — sin la primera, cada token nuevo del motor saldría sin valor aquí.
+
+Los controles 19 y 20 de `verificar-sincronia.js` vigilan que ni los datos ni el diseño
+vuelvan a duplicarse.
 
 **En móvil las secciones son una tira que se desliza.** Apiladas ocupaban siete filas a 390px y
 dejaban la primera palabra fuera de la pantalla. La sección abierta se trae al centro sola —

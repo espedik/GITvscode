@@ -27,7 +27,11 @@
 <link rel="stylesheet" href="ficha.css">
 <script src="datos-maestros.js"></script>
 <script src="ficha.js"></script>
-<script src="aleman-vocab.js"></script>
+<!-- El vocabulario: los datos, el diseño y el motor. Los tres viven en Aleman/,
+     que es donde Adán trabaja el vocabulario; esta pantalla lo refleja. -->
+<link rel="stylesheet" href="../Aleman/vocab.css">
+<script src="../Aleman/vocab-datos.js"></script>
+<script src="../Aleman/vocab.js"></script>
 <!-- Contenido real de los 229 temas de Entrevistas/ (ENTREVISTA_TEMAS/ENTREVISTA_CONTENT/
      ENTREVISTA_CSS), extraído automáticamente por Entrevistas/_generar-datos-dashboard.js — ver
      "Entrevista del día" en readme_dashboard.md. Es el HTML real de cada tema (ya escrito a mano
@@ -1720,16 +1724,53 @@ button.hp-lec:active{transform:translateY(0)}
    se fue con él. `aleman-data.js` y su generador siguen en el repo, en reposo: Adán dijo "de
    momento", y volver a poner las lecciones es cargar el archivo otra vez. */
 /* ─── Alemán ─ vocabulario y Partizip ────────────────────────────────────
-   Antes esta pantalla era la lección del día. Ahora son 479 palabras en 21 secciones
-   más el tema de Partizip, y todo el espacio se va en que las palabras se lean:
-   el artículo con su color, la traducción debajo y el ejemplo separado por una línea.
+   El diseño está en `../Aleman/vocab.css` y lo comparte con `Aleman/vocabulario.html`,
+   que es la pantalla principal del vocabulario. Aquí solo van los tokens: esta pantalla
+   tiene modo oscuro y el fondo es translúcido sobre las manchas animadas del slide, así
+   que los colores no pueden ser los de la app de Alemán — la estructura sí, y es la misma.
 
-   Los dos colores de énfasis son tokens y no valores fijos porque el amarillo de la
-   bandera (#ffce00) sobre el tema claro da 1.49:1 — con él los ejemplos en alemán eran
-   invisibles de día. Medido, no supuesto. */
-.al-fondo{--al-oro:#8a6a00;--al-mal:#c02626}
-:root[data-theme="dark"] .al-fondo{--al-oro:#ffce00;--al-mal:#ff8a8a}
+   La serif también cambia: la app usa Playfair y el Dashboard, Fraunces. Meter una cuarta
+   fuente aquí por igualar no compensa; la jerarquía y los tamaños son idénticos. */
+.al-fondo{
+  --v-card:var(--card);
+  --v-card-2:rgba(var(--ov),.04);
+  --v-borde:var(--card-br);
+  --v-radio:13px;
+  --v-sombra:none;
+  --v-sombra-alta:0 6px 20px rgba(0,0,0,.18);
+  --v-txt:var(--text);
+  --v-txt2:var(--text2);
+  --v-txt3:var(--text3);
+  --v-font-titulo:var(--font-title);
+  --v-mono:var(--mono);
+  --v-de-size:17px;
+  --v-acento:#dd0000;
+  --v-acento-rgb:221,0,0;
+  --v-acento-tx:#a80000;   /* el rojo vivo como texto se queda en 3.8:1 */
+  /* El amarillo de la bandera sobre el tema claro da 1.49:1: los ejemplos en alemán
+     eran invisibles de día. Medido, no supuesto. */
+  --v-oro:#7a5d00;
+  --v-mal:#c02626;
+  /* El naranja de aviso del Dashboard se queda en 3.39:1 sobre el fondo claro
+     del slide, así que aquí lleva uno propio. */
+  --v-aviso-tx:#8a4b00;
+  --v-truco-tx:#0b5c55;
+  --v-pz-fondo:rgba(176,110,255,.045);
+  --v-pz-borde:rgba(176,110,255,.24);
+  --v-aviso-br:rgba(var(--o-rgb),.3);
+  --v-aviso-bg:rgba(var(--o-rgb),.08);
+  --v-truco-br:rgba(var(--cy-rgb),.26);
+  --v-truco-bg:rgba(var(--cy-rgb),.07);
+  --v-sin:var(--text3);
+  --v-idx-top:0px;       /* aquí el que se desplaza es el contenedor, no la página */
+}
+:root[data-theme="dark"] .al-fondo{--v-oro:#ffce00;--v-mal:#ff8a8a;--v-gram-tx:#c4a2ff;
+  --v-acento-tx:#ff6b6b;   /* sobre el fondo oscuro, el rojo vivo da 3.8:1 */
+  --v-aviso-tx:var(--o);--v-truco-tx:var(--cy)}
+.al-fondo mark{background:rgba(255,206,0,.25);color:inherit;border-radius:3px;padding:0 2px}
 
+/* Lo que sí es de esta pantalla: el buscador de la cabecera y el alto del contenido,
+   que aquí vive dentro de un slide con su propio scroll. */
 .al-busca{display:flex;align-items:center;gap:10px;flex:1;min-width:190px}
 .al-busca input{flex:1;min-width:0;height:34px;padding:0 13px;border-radius:11px;
   border:1px solid rgba(var(--ov),.14);background:rgba(var(--ov),.05);color:var(--text);
@@ -1737,103 +1778,14 @@ button.hp-lec:active{transform:translateY(0)}
 .al-busca input::placeholder{color:var(--text3)}
 .al-busca input:focus{border-color:rgba(var(--ov),.4);background:rgba(var(--ov),.09)}
 .al-q-n{font-size:11px;color:var(--text3);font-family:var(--mono);white-space:nowrap}
-
-/* Las 21 secciones más Partizip. En pantalla ancha envuelven en dos filas; en el
-   móvil se convierten en una tira que se desliza — apiladas ocupaban siete filas y
-   dejaban la primera palabra fuera de la pantalla. */
-.al-tabs{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0 14px}
-.al-tab{display:inline-flex;align-items:center;gap:6px;font:700 11px var(--font);
-  padding:6px 11px;border-radius:9px;border:1px solid rgba(var(--ov),.11);
-  background:rgba(var(--ov),.04);color:var(--text2);cursor:pointer;white-space:nowrap;
-  transition:background .14s,border-color .14s,color .14s}
-.al-tab:hover{background:rgba(var(--ov),.08);color:var(--text)}
-.al-tab b{font-family:var(--mono);font-size:10px;color:var(--text3);font-weight:700}
-.al-tab.on{background:rgba(255,206,0,.14);border-color:rgba(255,206,0,.5);color:var(--al-oro)}
-.al-tab.on b{color:var(--al-oro)}
-.al-tab.gram{border-color:rgba(176,110,255,.34);color:var(--p);background:rgba(176,110,255,.09)}
-.al-tab.gram.on{background:rgba(176,110,255,.2);border-color:rgba(176,110,255,.6)}
-
-/* Una palabra. El borde de la izquierda es el género: se ve antes de leer nada. */
+.al-tabs{margin:12px 0 14px}
 .al-content{flex:1;min-height:0;overflow-y:auto;padding-right:4px}
-.al-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(228px,1fr));gap:9px;
-  padding-bottom:14px}
-.al-w{position:relative;border:1px solid var(--card-br);background:var(--card);
-  border-radius:13px;padding:11px 13px 12px;overflow:hidden}
-.al-w::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--c)}
-.al-w-top{display:flex;align-items:baseline;gap:7px}
-.al-art{flex:none;font-family:var(--mono);font-size:10px;font-weight:700;padding:2px 6px;
-  border-radius:5px;color:var(--c);background:color-mix(in srgb,var(--c) 15%,transparent)}
-.al-de{font-size:15px;font-weight:700;letter-spacing:-.01em;color:var(--text)}
-.al-es{font-size:12px;color:var(--text2);margin-top:2px}
-.al-ex{font-size:11px;color:var(--text3);font-style:italic;margin-top:6px;padding-top:6px;
-  border-top:1px solid rgba(var(--ov),.07);line-height:1.5}
-.al-vacio{padding:26px 4px;font-size:12.5px;color:var(--text3);line-height:1.6}
-
-/* Partizip. Cada bloque es una tarjeta con su icono, y dentro puede haber tabla,
-   lista de tres columnas, comparativa, aviso naranja o truco turquesa. */
-.al-pz-wrap{padding-bottom:14px}
-.al-pz-col{display:flex;flex-direction:column;gap:12px;max-width:1000px}
-.al-pz-sub{font-size:12.5px;color:var(--text2);line-height:1.6;margin:0 0 12px;max-width:1000px}
-.al-pz{border:1px solid rgba(176,110,255,.24);background:rgba(176,110,255,.045);
-  border-radius:16px;padding:15px 17px;scroll-margin-top:6px}
-.al-pz-h{display:flex;align-items:center;gap:9px;margin-bottom:5px}
-.al-pz-ico{font-size:15px}
-.al-pz-h h3{font-size:15px;font-weight:800;letter-spacing:-.015em;color:var(--text)}
-.al-pz-c{font-size:12.5px;color:var(--text2);line-height:1.65}
-.al-pz-c b{color:var(--text);font-weight:700}
-.al-pz-c i,.al-tabla i{font-style:normal;font-family:var(--mono);font-size:12px;color:var(--al-oro)}
-.al-pz-c s,.al-tabla s{color:var(--al-mal);text-decoration-color:currentColor}
-.pz-mini{font-size:10.5px;color:var(--text3)}
-.al-pz-aviso,.al-pz-truco{margin-top:10px;padding:9px 12px;border-radius:10px;
-  font-size:11.5px;line-height:1.55}
-.al-pz-aviso{border:1px solid rgba(var(--o-rgb),.3);background:rgba(var(--o-rgb),.08);color:var(--o)}
-.al-pz-truco{border:1px solid rgba(var(--cy-rgb),.26);background:rgba(var(--cy-rgb),.07);color:var(--cy)}
-.al-tabla{overflow-x:auto;margin-top:10px}
-.al-tabla table{border-collapse:collapse;width:100%;min-width:440px}
-.al-tabla th{font-size:9px;font-weight:800;letter-spacing:.11em;text-transform:uppercase;
-  color:var(--text3);text-align:left;padding:0 10px 7px;border-bottom:1px solid var(--card-br)}
-.al-tabla td{padding:8px 10px;border-bottom:1px solid rgba(var(--ov),.06);font-size:12px;
-  color:var(--text2);vertical-align:top;line-height:1.5}
-.al-tabla td b{color:var(--text)}
-.al-lst{display:flex;flex-direction:column;gap:8px;margin-top:10px}
-.al-li{display:grid;grid-template-columns:190px 1fr;gap:11px;padding:9px 11px;border-radius:10px;
-  border:1px solid var(--card-br);background:rgba(var(--ov),.025)}
-.al-li-t{font-size:11.5px;font-weight:700;color:var(--text)}
-.al-li-d{font-size:11px;color:var(--text3);margin-top:2px;line-height:1.45}
-.al-li-e{font-size:12px;color:var(--text2);font-family:var(--mono);line-height:1.5}
-
-/* El índice del tema. Solo aparece cuando sobra ancho: el texto se lee mejor a 1000px,
-   así que en una pantalla de 1600 quedaba medio lienzo vacío al lado. Ahí va. */
-.al-pz-idx{display:none}
-@media(min-width:1200px){
-  .al-pz-wrap{display:grid;grid-template-columns:minmax(0,1fr) 236px;column-gap:30px;
-    align-items:start;max-width:1330px}
-  .al-pz-sub{grid-column:1/-1}
-  .al-pz-idx{display:block;position:sticky;top:0}
-  .al-pz-idx-t{font-size:9px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;
-    color:var(--text3);padding:0 10px 8px}
-  .al-pz-idx button{display:flex;align-items:flex-start;gap:8px;width:100%;text-align:left;
-    padding:7px 10px;border-radius:9px;font:400 11.5px/1.35 var(--font);color:var(--text3);
-    background:none;border:0;border-left:2px solid transparent;cursor:pointer;
-    transition:color .14s,background .14s,border-color .14s}
-  .al-pz-idx button:hover{background:rgba(var(--ov),.05);color:var(--text2)}
-  .al-pz-idx button.on{color:var(--text);background:rgba(176,110,255,.08);
-    border-left-color:rgba(176,110,255,.75);font-weight:700}
-  .al-pz-idx button span{flex:none;font-size:12px}
-}
+.al-content .v-grid{padding-bottom:14px}
 @media(max-width:760px){
-  .al-grid{grid-template-columns:1fr}
-  .al-li{grid-template-columns:1fr;gap:5px}
-  .al-pz{padding:13px 14px}
   .al-busca{width:100%}
-  /* La tira que se desliza. `scroll-snap` para que cada sección quede encajada y no
-     a medias, y la activa se trae sola a la vista al pintar (ver `alPinta`). */
-  .al-tabs{flex-wrap:nowrap;overflow-x:auto;scroll-snap-type:x proximity;
-    scrollbar-width:none;padding-bottom:2px;margin:10px 0 12px}
-  .al-tabs::-webkit-scrollbar{display:none}
-  .al-tab{flex:none;scroll-snap-align:center;font-size:11px;padding:7px 11px}
+  .al-tabs{margin:10px 0 12px}
 }
-}
+
 .hab-cols{display:grid;grid-template-columns:minmax(0,2.35fr) minmax(0,1fr);gap:14px;align-items:stretch}
 .hab-side{display:flex;flex-direction:column;gap:14px;min-height:0}
 
@@ -3245,7 +3197,9 @@ button.ct-cat:hover{background:rgba(var(--ov),.07)}
   </section>
 
   <!-- 6 · ALEMÁN DEL DÍA -->
-  <section class="slide theme-aleman al-fondo" data-i="6">
+  <!-- `v-vocab` trae los valores por defecto del motor y `al-fondo` los cambia por los
+     de esta pantalla. Sin la primera, cada token nuevo del motor sale sin valor aquí. -->
+  <section class="slide theme-aleman v-vocab al-fondo" data-i="6">
     <div class="slide-inner">
       <div class="eyebrow reveal d1"><span class="dot"></span> 🇩🇪 Alemán</div>
       <div class="td-top reveal d2">
@@ -3271,7 +3225,7 @@ button.ct-cat:hover{background:rgba(var(--ov),.07)}
       <!-- Las lecciones del capítulo, todas a la vista. Con el filtro de Kapitel puesto son 5 y
            caben en una fila: se toca la que toca estudiar hoy en vez de ir dando a "Siguiente".
            Sin filtro (40 temas) esta fila no se pinta — no cabrían. -->
-      <div class="al-tabs reveal d3" id="alTabs"></div>
+      <div class="al-tabs v-secs reveal d3" id="alTabs"></div>
       <div class="al-content reveal d4" id="alContent"></div>
     </div>
   </section>
@@ -5063,143 +5017,20 @@ function toggleListaItem(id,cat,txt){
 // `aleman-vocab.js`, que carga también `Aleman/vocabulario.html` — vivían dentro de esa
 // app y ahora los usan las dos, así que se sacaron a un archivo común en vez de copiarlos.
 // Las 40 lecciones siguen enteras en `Aleman/`, a un clic desde el botón de la cabecera.
-const AL_COLOR = { der:'#38bdf8', die:'#f472b6', das:'#4ade80' };
-const AL_GRAM = '__partizip';       // la pestaña de gramática, que no es una sección de palabras
+const AL_GRAM = '__partizip';   // la pestaña de gramática, que no es una sección de palabras
 
 function alVocab(){ return (typeof ALEMAN_VOCAB !== 'undefined') ? ALEMAN_VOCAB : null; }
-function alEsc(t){ return String(t==null?'':t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
 // La sección abierta se recuerda: al volver mañana sigue donde la dejó.
 let alSec = (function(){
   try { return localStorage.getItem('al_sec_v1') || 'saludos'; } catch(e){ return 'saludos'; }
 })();
+
 function alSet(c){
   alSec = c;
   try { localStorage.setItem('al_sec_v1', c); } catch(e){}
   const q = document.getElementById('alQ'); if(q) q.value = '';
   alPinta();
-}
-
-// Lo que se está viendo: la búsqueda manda sobre la sección, porque si Adán escribe
-// algo espera verlo aunque esté en otra sección.
-function alFiltradas(){
-  const V = alVocab(); if(!V) return [];
-  const q = ((document.getElementById('alQ')||{}).value || '').trim().toLowerCase();
-  if(!q) return V.de(alSec);
-  const n = function(x){ return String(x).toLowerCase()
-    .normalize('NFD').replace(/[\u0300-\u036f]/g,''); };
-  const qq = n(q);
-  return V.voc.filter(function(v){
-    return n(v.de).indexOf(qq) >= 0 || n(v.es).indexOf(qq) >= 0 || n(v.ex).indexOf(qq) >= 0;
-  });
-}
-
-function alTabsHtml(){
-  const V = alVocab(); if(!V) return '';
-  const q = ((document.getElementById('alQ')||{}).value || '').trim();
-  return Object.keys(V.cats).map(function(k){
-    const c = V.cats[k];
-    return '<button class="al-tab' + (!q && alSec===k ? ' on' : '') + '" onclick="alSet(\''+k+'\')">' +
-      c.icon + ' ' + alEsc(c.label) + ' <b>' + V.cuantas(k) + '</b></button>';
-  }).join('') +
-  '<button class="al-tab gram' + (alSec===AL_GRAM ? ' on' : '') + '" onclick="alSet(\''+AL_GRAM+'\')">' +
-    '\ud83e\udde9 ' + alEsc(V.partizip.titulo) + '</button>';
-}
-
-function alPalabraHtml(v){
-  const c = AL_COLOR[v.art] || 'var(--text3)';
-  return '<div class="al-w" style="--c:' + c + '">' +
-    '<div class="al-w-top">' +
-      (v.art && v.art !== '-' ? '<span class="al-art">' + alEsc(v.art) + '</span>' : '') +
-      '<span class="al-de">' + alEsc(v.de) + '</span></div>' +
-    '<div class="al-es">' + alEsc(v.es) + '</div>' +
-    (v.ex ? '<div class="al-ex">' + alEsc(v.ex) + '</div>' : '') +
-  '</div>';
-}
-
-// Partizip. Cada sección puede traer tabla, lista, comparativa, aviso o truco;
-// se pinta lo que tenga y nada más.
-function alPartizipHtml(){
-  const V = alVocab(); if(!V) return '';
-  const P = V.partizip;
-  // El índice solo se ve por encima de 1200px (lo decide el CSS), pero se pinta
-  // siempre: así no hay dos caminos distintos según el ancho de la ventana.
-  const idx = '<nav class="al-pz-idx"><div class="al-pz-idx-t">El tema, por partes</div>' +
-    P.secciones.map(function(x, n){
-      return '<button type="button" onclick="alIrA(\'' + x.id + '\')">' +
-        '<span>' + x.ico + '</span>' + alEsc(x.t) + '</button>';
-    }).join('') + '</nav>';
-  return '<div class="al-pz-wrap"><p class="al-pz-sub">' + P.sub + '</p>' +
-    '<div class="al-pz-col">' +
-    P.secciones.map(function(x){
-      let h = '<div class="al-pz" id="pz-' + x.id + '">' +
-        '<div class="al-pz-h"><span class="al-pz-ico">' + x.ico + '</span><h3>' + x.t + '</h3></div>' +
-        '<div class="al-pz-c">' + x.cuerpo + '</div>';
-      if(x.tabla){
-        h += '<div class="al-tabla"><table><thead><tr>' +
-          x.tabla.cols.map(function(c){ return '<th>' + c + '</th>'; }).join('') +
-          '</tr></thead><tbody>' +
-          x.tabla.filas.map(function(f){
-            return '<tr>' + f.map(function(y){ return '<td>' + y + '</td>'; }).join('') + '</tr>';
-          }).join('') + '</tbody></table></div>';
-      }
-      if(x.lista){
-        h += '<div class="al-lst">' + x.lista.map(function(it){
-          return '<div class="al-li"><div><div class="al-li-t">' + it[0] + '</div>' +
-            '<div class="al-li-d">' + it[1] + '</div></div>' +
-            '<div class="al-li-e">' + it[2] + '</div></div>';
-        }).join('') + '</div>';
-      }
-      if(x.comparativa){
-        h += '<div class="al-tabla"><table><thead><tr><th>En espa\u00f1ol</th>' +
-          '<th>Lo que NO se dice</th><th>Lo que s\u00ed se dice</th></tr></thead><tbody>' +
-          x.comparativa.map(function(f){
-            return '<tr>' + f.map(function(y){ return '<td>' + y + '</td>'; }).join('') + '</tr>';
-          }).join('') + '</tbody></table></div>';
-      }
-      if(x.aviso) h += '<div class="al-pz-aviso">' + x.aviso + '</div>';
-      if(x.truco) h += '<div class="al-pz-truco">' + x.truco + '</div>';
-      return h + '</div>';
-    }).join('') + '</div>' + idx + '</div>';
-}
-
-// Saltar a un bloque del tema desde el índice. El que tiene scroll es `#alContent`,
-// no la página. Se mide con rectángulos y no con `offsetTop`: ese es relativo al
-// ancestro posicionado, que aquí no es el contenedor, y el salto se quedaba corto.
-function alIrA(id){
-  const cont = document.getElementById('alContent');
-  const el = document.getElementById('pz-' + id);
-  if(!cont || !el) return;
-  const dif = el.getBoundingClientRect().top - cont.getBoundingClientRect().top;
-  cont.scrollTo({ top: cont.scrollTop + dif - 6, behavior:'smooth' });
-  alIdxActivo(id);
-}
-function alIdxActivo(id){
-  document.querySelectorAll('.al-pz-idx button').forEach(function(b){
-    b.classList.toggle('on', b.getAttribute('onclick').indexOf("'" + id + "'") >= 0);
-  });
-}
-
-// Mientras se lee, el índice marca el bloque que se está mirando: el último cuyo
-// borde superior ya cruzó una franja pegada al borde de arriba. La franja es fija y
-// estrecha a propósito — con un corte a media altura, recién abierto el tema y sin
-// haber tocado nada, ya se marcaba el segundo bloque.
-function alIdxSigue(){
-  const cont = document.getElementById('alContent');
-  if(!cont || !cont.querySelector('.al-pz-idx')) return;
-  const corte = cont.getBoundingClientRect().top + 60;
-  const bloques = cont.querySelectorAll('.al-pz');
-  let visto = null;
-  bloques.forEach(function(b){
-    if(b.getBoundingClientRect().top <= corte) visto = b.id.replace(/^pz-/, '');
-  });
-  // Arriba del todo no hay ninguno cruzado todavía, y el que se lee es el primero.
-  if(!visto && bloques.length) visto = bloques[0].id.replace(/^pz-/, '');
-  // Y abajo del todo el último nunca llega a cruzar la franja, así que el índice se
-  // quedaba señalando el penúltimo con el final del tema ya en pantalla.
-  if(bloques.length && cont.scrollTop + cont.clientHeight >= cont.scrollHeight - 4)
-    visto = bloques[bloques.length - 1].id.replace(/^pz-/, '');
-  if(visto) alIdxActivo(visto);
 }
 
 function alPinta(){
@@ -5208,56 +5039,60 @@ function alPinta(){
   const tabs = document.getElementById('alTabs');
   if(!cont) return;
   if(!V){
-    cont.innerHTML = '<div class="al-vacio">No se pudo leer <b>aleman-vocab.js</b>. ' +
+    cont.innerHTML = '<div class="v-vacio">No se pudo leer <b>../Aleman/vocab-datos.js</b>. ' +
       'Abre el dashboard desde la carpeta del proyecto.</div>';
     return;
   }
-  if(tabs) tabs.innerHTML = alTabsHtml();
 
   const q = ((document.getElementById('alQ')||{}).value || '').trim();
   const sub = document.getElementById('alEs');
   const cnt = document.getElementById('alCounter');
+  const qn = document.getElementById('alQN');
 
+  // Las secciones. Aquí no hay botón "todas": la pantalla enseña una sección a la vez y
+  // la búsqueda es la que cruza todas.
+  if(tabs){
+    tabs.innerHTML = vocSeccionesHtml(V.cats, q ? null : alSec, {
+      fn: 'alSet',
+      cuenta: function(k){ return V.cuantas(k); },
+      gram: { id: AL_GRAM, t: null, texto: '\ud83e\udde9 ' + V.partizip.titulo },
+    });
+  }
+
+  // El tema de gramática. El contenedor con scroll es `#alContent`, no la página, y el
+  // motor necesita saberlo para el salto y para el índice que sigue la lectura.
   if(!q && alSec === AL_GRAM){
     if(sub) sub.textContent = V.partizip.titulo;
     if(cnt) cnt.textContent = V.partizip.secciones.length + ' bloques';
-    cont.innerHTML = alPartizipHtml();
-    const qn = document.getElementById('alQN'); if(qn) qn.textContent = '';
-    cont.onscroll = alIdxSigue;
-    alIdxSigue();
-    alVerTab();
+    if(qn) qn.textContent = '';
+    cont.innerHTML = vocPartizipHtml(V.partizip);
+    vocIdxCont(cont);
+    cont.onscroll = vocIdxSigue;
+    vocIdxSigue();
+    vocVerSeccion(tabs);
     return;
   }
 
-  const lista = alFiltradas();
+  const lista = vocFiltrar(V.voc, q, q ? null : alSec);
   if(sub) sub.textContent = q ? ('Buscando \u201c' + q + '\u201d')
     : ((V.cats[alSec]||{}).label || '') + ' \u00b7 ' + lista.length + ' palabras';
   if(cnt) cnt.textContent = V.voc.length + ' en total';
-  const qn = document.getElementById('alQN');
   if(qn) qn.textContent = q ? (lista.length + ' resultado' + (lista.length===1?'':'s')) : '';
 
-  cont.innerHTML = lista.length
-    ? '<div class="al-grid">' + lista.map(alPalabraHtml).join('') + '</div>'
-    : '<div class="al-vacio">Ninguna palabra con <b>' + alEsc(q) + '</b>. ' +
-      'Se busca en alem\u00e1n, en espa\u00f1ol y en los ejemplos.</div>';
+  cont.innerHTML = vocPalabrasHtml(lista, {
+    q: q, cats: V.cats, agrupar: !!q,
+    vacio: 'Ninguna palabra con <b>' + q + '</b>. Se busca en alem\u00e1n, en espa\u00f1ol y ' +
+           'en los ejemplos.',
+  });
+  vocIdxCont(null);
   cont.onscroll = null;
   cont.scrollTop = 0;
-  alVerTab();
+  vocVerSeccion(tabs);
 }
 
-// En el móvil las 22 secciones son una tira que se desliza, así que la abierta
-// puede quedar fuera de vista. Se trae al centro moviendo el scroll de la tira y
-// nada más: `scrollIntoView` no se queda ahí — sube al ancestro con scroll más
-// cercano, que aquí es el carrusel de pantallas, y dejaba el dashboard entero
-// corrido 120px a la izquierda en el escritorio, donde la tira ni se desliza.
-function alVerTab(){
-  const c = document.getElementById('alTabs');
-  const t = c && c.querySelector('.al-tab.on');
-  if(!t || c.scrollWidth <= c.clientWidth) return;
-  // Con rectángulos y no con `offsetLeft`: ese es relativo al ancestro posicionado,
-  // que aquí no es la tira, y el scroll se pasaba hasta saturarse.
-  const cr = c.getBoundingClientRect(), tr = t.getBoundingClientRect();
-  c.scrollLeft += (tr.left - cr.left) - (cr.width - tr.width) / 2;
+// La palabra del día, para el resumen de Mi Día: la misma todo el día y distinta cada día.
+function alemanPalabraHoy(){
+  const V = alVocab(); return V ? V.delDia(diaDelAnio()) : null;
 }
 
 // Lo que llama el motor de pantallas cuando toca la de Alemán. `RENDERS` la nombra por

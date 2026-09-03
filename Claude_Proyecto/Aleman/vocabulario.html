@@ -5,6 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Vocabulario Alemán–Español | Deutsch</title>
 <link rel="stylesheet" href="styles.css">
+<!-- El diseño del vocabulario, escrito una vez: lo carga también la pantalla de
+     Alemán del Dashboard. Aquí abajo solo se le pasan los tokens de esta app. -->
+<link rel="stylesheet" href="vocab.css">
 <style>
 /* ── VOCAB PAGE ── */
 .voc-hero{padding:40px 32px 32px;border-bottom:1px solid var(--border);background:linear-gradient(180deg,rgba(204,0,0,.04) 0%,transparent 100%)}
@@ -35,7 +38,8 @@
 .search-clear.visible{display:block}
 
 .filter-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-.filter-label{font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;white-space:nowrap}
+/* `--text3` es #999 y da 2.41:1 sobre el fondo de la barra. */
+.filter-label{font-size:11px;font-weight:700;color:#6e6e6e;text-transform:uppercase;letter-spacing:.07em;white-space:nowrap}
 .cats{display:flex;gap:6px;flex-wrap:wrap;flex:1}
 .cat-btn{padding:5px 12px;border-radius:20px;border:1.5px solid var(--border);background:var(--surface);font-size:12px;font-weight:600;color:var(--text2);cursor:pointer;transition:all .2s;font-family:inherit;white-space:nowrap}
 .cat-btn:hover{border-color:rgba(204,0,0,.25);color:var(--red)}
@@ -45,116 +49,31 @@
 .mode-row{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
 .mode-btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:8px;border:1.5px solid var(--border);background:var(--surface);font-size:12px;font-weight:700;color:var(--text2);cursor:pointer;font-family:inherit;transition:all .2s}
 .mode-btn.active{background:#1a1a1a;border-color:#1a1a1a;color:#fff}
-.results-count{font-size:12px;color:var(--text3)}
+.results-count{font-size:12px;color:#6e6e6e}
 
-/* ── LAS PALABRAS ──────────────────────────────────────────────────
-   Eran una tabla de cinco columnas: a 1600px cabían NUEVE palabras de las 479, y en el
-   teléfono la mitad de las columnas se ocultaban para que entrara. La rejilla muestra 25
-   sin desplazar y no esconde nada. Es el mismo diseño que la pantalla de Alemán del
-   Dashboard, con la paleta de esta app.
-
-   El género se lee antes que la palabra: la barra de la izquierda es azul en *der*, rosa
-   en *die*, verde en *das* y naranja en plural. */
-.voc-grid-wrap{padding:24px 32px 60px}
-.voc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
-.vw{position:relative;display:flex;flex-direction:column;background:var(--surface);
-  border:1px solid var(--border);border-radius:var(--r);padding:14px 16px 15px 18px;
-  box-shadow:var(--shadow);transition:box-shadow .18s,transform .18s,border-color .18s}
-.vw:hover{box-shadow:var(--shadow-md);transform:translateY(-1px);border-color:rgba(0,0,0,.14)}
-.vw::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--c);
-  border-radius:var(--r) 0 0 var(--r)}
-.vw-top{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
-.vw-art{flex:none;font-size:10.5px;font-weight:800;letter-spacing:.03em;padding:2px 7px;
-  border-radius:5px;color:var(--c);background:color-mix(in srgb,var(--c) 13%,transparent)}
-.vw-de{font-family:'Playfair Display',serif;font-size:19px;font-weight:900;color:var(--black);
-  line-height:1.2}
-.vw-es{font-size:13.5px;color:var(--text2);margin-top:3px;line-height:1.45}
-/* El ejemplo se va al pie de la tarjeta. Las de una misma fila ya medían igual, pero
-   la línea divisoria caía a distinta altura en cada una según lo larga que fuera la
-   traducción, y la fila se veía desordenada. */
-.vw-ex{font-size:12px;color:var(--text3);font-style:italic;line-height:1.5;
-  margin-top:auto;padding-top:9px;border-top:1px solid var(--border)}
-.vw-ex-sep{margin-top:9px}
-/* Viendo TODAS las palabras, la sección va en un encabezado que abarca la rejilla
-   entera, no en un chip dentro de cada tarjeta: repetir "Saludos" veinticuatro veces
-   no dice nada, y con una palabra larga el chip se iba a una segunda línea y
-   descuadraba la fila. Este encabezado es también donde entrarán las subsecciones. */
-.voc-h{grid-column:1/-1;display:flex;align-items:center;gap:10px;
-  margin:22px 0 2px;padding-bottom:9px;border-bottom:2px solid rgba(204,0,0,.13)}
-.voc-h:first-child{margin-top:0}
-.voc-h-ico{font-size:19px;line-height:1}
-.voc-h-t{font-family:'Playfair Display',serif;font-size:20px;font-weight:900;
-  color:var(--black)}
-.voc-h-n{margin-left:auto;font-size:11px;font-weight:700;color:var(--text3);
-  letter-spacing:.04em;text-transform:uppercase}
-
-/* Modo estudio: el español tapado hasta que se toca. La tarjeta deja sitio al botón
-   aunque no haya texto visible, para que la rejilla no baile al revelar. */
-.vw-tapa{display:inline-block;min-width:82px;background:rgba(0,0,0,.09);color:transparent;
-  border-radius:5px;padding:1px 8px;cursor:pointer;user-select:none;transition:all .2s}
-.vw-tapa:hover{background:rgba(204,0,0,.13);color:var(--red)}
-.vw-tapa.abierta{background:transparent;color:var(--text2);cursor:default;padding-left:0}
-
-/* ── PARTIZIP I Y II ───────────────────────────────────────────────
-   Los 9 bloques del tema, con su tabla, su comparativa o su aviso. Salen del mismo
-   `ALEMAN_VOCAB.partizip` que pinta el Dashboard: el texto está escrito una vez. */
-.pz-wrap{padding:26px 32px 60px}
-.pz-sub{font-size:14px;color:var(--text2);line-height:1.6;margin-bottom:20px;max-width:760px}
-.pz-col{display:flex;flex-direction:column;gap:16px;max-width:860px}
-.pz{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);
-  padding:20px 22px;box-shadow:var(--shadow);scroll-margin-top:76px}
-.pz-h{display:flex;align-items:center;gap:10px;margin-bottom:8px}
-.pz-h span{font-size:19px}
-.pz-h h3{font-family:'Playfair Display',serif;font-size:19px;font-weight:900;color:var(--black)}
-.pz-c{font-size:14px;color:var(--text2);line-height:1.7}
-.pz-c b{color:var(--black);font-weight:700}
-.pz-c i,.pz-tabla i{font-style:normal;font-family:ui-monospace,'SF Mono',Menlo,monospace;
-  font-size:13px;color:var(--red);font-weight:600}
-.pz-c s,.pz-tabla s{color:#b91c1c;text-decoration-color:rgba(185,28,28,.5)}
-.pz-mini{font-size:11.5px;color:var(--text3)}
-.pz-aviso,.pz-truco{margin-top:14px;padding:11px 14px;border-radius:10px;font-size:13px;
-  line-height:1.6}
-.pz-aviso{border:1px solid rgba(212,160,0,.32);background:rgba(212,160,0,.07);color:#7a5c00}
-.pz-truco{border:1px solid rgba(13,148,136,.3);background:rgba(13,148,136,.06);color:#0f766e}
-.pz-tabla{overflow-x:auto;margin-top:14px}
-.pz-tabla table{border-collapse:collapse;width:100%;min-width:460px}
-.pz-tabla th{font-size:10px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;
-  color:var(--red);text-align:left;padding:0 12px 8px;
-  border-bottom:2px solid rgba(204,0,0,.15)}
-.pz-tabla td{padding:10px 12px;border-bottom:1px solid var(--border);font-size:13.5px;
-  color:var(--text2);vertical-align:top;line-height:1.55}
-.pz-tabla td b{color:var(--black)}
-.pz-lst{display:flex;flex-direction:column;gap:10px;margin-top:14px}
-.pz-li{display:grid;grid-template-columns:210px 1fr;gap:14px;padding:11px 13px;
-  border-radius:10px;background:var(--surface2);border:1px solid var(--border)}
-.pz-li-t{font-size:13px;font-weight:700;color:var(--black)}
-.pz-li-d{font-size:12px;color:var(--text3);margin-top:2px;line-height:1.45}
-.pz-li-e{font-size:13px;color:var(--text2);font-family:ui-monospace,'SF Mono',Menlo,monospace;
-  line-height:1.55}
-
-/* El índice del tema. Solo cuando sobra ancho: el texto se lee mejor en 860px y en un
-   monitor quedaba medio lienzo vacío al lado. */
-.pz-idx{display:none}
-@media(min-width:1180px){
-  .pz-wrap{display:grid;grid-template-columns:minmax(0,1fr) 250px;column-gap:36px;
-    align-items:start;max-width:1280px;margin:0 auto}
-  .pz-sub{grid-column:1/-1}
-  .pz-idx{display:block;position:sticky;top:80px}
-  .pz-idx-t{font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
-    color:var(--text3);padding:0 12px 10px}
-  .pz-idx button{display:flex;align-items:flex-start;gap:9px;width:100%;text-align:left;
-    padding:8px 12px;border-radius:9px;font:600 12.5px/1.4 inherit;color:var(--text2);
-    background:none;border:0;border-left:2px solid transparent;cursor:pointer;
-    transition:all .16s}
-  .pz-idx button:hover{background:rgba(204,0,0,.05);color:var(--red)}
-  .pz-idx button.on{background:rgba(204,0,0,.08);color:var(--red);
-    border-left-color:var(--red);font-weight:800}
-  .pz-idx button span{flex:none;font-size:14px}
+/* ── EL VOCABULARIO ──────────────────────────────────────────────────
+   El diseño está en `vocab.css` y lo comparte con el Dashboard. Lo de aquí son los
+   tokens de ESTA app — casi todos coinciden con los valores por defecto de `vocab.css`,
+   que se escribieron mirando esta pantalla, así que solo hace falta lo que se sale. */
+.v-vocab{
+  --v-card:var(--surface);
+  --v-card-2:var(--surface2);
+  --v-borde:var(--border);
+  --v-radio:var(--r);
+  --v-sombra:var(--shadow);
+  --v-sombra-alta:var(--shadow-md);
+  --v-txt:var(--black);
+  --v-txt2:var(--text2);
+  /* `--text3` de la app es #999 y sobre blanco da 2.85:1: el ejemplo de cada
+     tarjeta no se leía. Aquí se deja el de `vocab.css`, que sí cumple. */
+  --v-acento:var(--red);
+  --v-acento-tx:#a30000;
+  --v-pz-fondo:var(--surface);
+  --v-idx-top:80px;      /* el nav de la app es pegajoso y mide 60 */
 }
-
-/* ── EMPTY ── */
-.voc-empty{text-align:center;padding:60px 20px;color:var(--text3)}
-.voc-empty .ico{font-size:40px;margin-bottom:12px;opacity:.4}
+.voc-grid-wrap{padding:24px 32px 60px}
+.pz-wrap{padding:26px 32px 60px}
+mark{background:rgba(204,0,0,.15);color:var(--red);border-radius:3px;padding:0 2px}
 
 /* ── FRASES POR SITUACIÓN ── */
 .situ-wrap{padding:28px 32px 60px}
@@ -203,18 +122,11 @@
   .stat-item strong{font-size:16px}
   .voc-tabs{padding:14px 16px 0}
   .controls{padding:14px 16px;top:60px}
+  /* La rejilla, la tarjeta y la tira de secciones en móvil los resuelve `vocab.css`.
+     Aquí solo quedan los márgenes de esta página. */
   .voc-grid-wrap{padding:18px 16px 40px}
-  .voc-grid{grid-template-columns:1fr}
   .pz-wrap{padding:20px 16px 40px}
-  .pz{padding:16px 17px}
-  .pz-li{grid-template-columns:1fr;gap:6px}
   .situ-wrap{padding:20px 16px 40px}
-  /* Las 22 secciones apiladas ocupaban siete filas y dejaban la primera palabra
-     fuera de la pantalla. Aquí son una tira que se desliza. */
-  .cats{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;
-    scroll-snap-type:x proximity;padding-bottom:2px}
-  .cats::-webkit-scrollbar{display:none}
-  .cat-btn{flex:none;scroll-snap-align:center}
   .filter-row{align-items:flex-start}
 }
 
@@ -270,7 +182,7 @@
 </div>
 
 <!-- ═══════════ PANEL: DICCIONARIO ═══════════ -->
-<div class="voc-panel active" id="panel-dict">
+<div class="voc-panel v-vocab active" id="panel-dict">
   <!-- CONTROLS -->
   <div class="controls">
     <div class="search-wrap">
@@ -280,7 +192,7 @@
     </div>
     <div class="filter-row">
       <span class="filter-label">Categoría:</span>
-      <div class="cats" id="cat-filters"></div>
+      <div class="cats v-secs" id="cat-filters"></div>
     </div>
     <div class="mode-row">
       <button class="mode-btn" id="mode-btn" onclick="toggleMode()">👁️ Modo estudio — ocultar traducción</button>
@@ -291,7 +203,7 @@
   <!-- LAS PALABRAS. Una tarjeta por palabra; el género es la barra de color de la
        izquierda, así que se ve sin leer nada. -->
   <div class="voc-grid-wrap">
-    <div class="voc-grid" id="voc-grid"></div>
+    <div id="voc-grid"></div>
     <div class="voc-empty" id="voc-empty" style="display:none">
       <div class="ico">🔎</div>
       <p>Sin resultados para tu búsqueda.</p>
@@ -302,7 +214,7 @@
 <!-- ═══════════ PANEL: PARTIZIP I Y II ═══════════ -->
 <!-- El texto sale de `ALEMAN_VOCAB.partizip`, el mismo archivo que trae las palabras y
      el mismo que pinta el Dashboard: está escrito una sola vez. -->
-<div class="voc-panel" id="panel-pz">
+<div class="voc-panel v-vocab" id="panel-pz">
   <div class="pz-wrap" id="pz-wrap"></div>
 </div>
 
@@ -442,29 +354,20 @@
   </div>
 </footer>
 
-<script src="../Dashboard/aleman-vocab.js"></script>
+<script src="vocab-datos.js"></script>
+<script src="vocab.js"></script>
 <script src="flashcards.js"></script>
 <script>
-// ── DATOS ─────────────────────────────────────────────────
-// Las 479 palabras y las 21 categorías vivían aquí dentro. Desde el 2026-09-02 la
-// pantalla de Alemán del dashboard pinta el mismo vocabulario, así que se movieron a
-// `Dashboard/aleman-vocab.js`, que cargan las dos: tenerlas copiadas en dos archivos
-// era garantizar que corregir una palabra en un sitio dejara el otro mintiendo.
-// Para añadir o cambiar una palabra, se toca ESE archivo y aquí no hace falta nada.
+// El vocabulario lo pinta `vocab.js`, que comparte con el Dashboard. Aquí queda lo que
+// solo es de esta página: las pestañas, el modo estudio, las flashcards y los contadores.
 const VOC = ALEMAN_VOCAB.voc;
 const CATS = ALEMAN_VOCAB.cats;
-
-const ART_CLASS = {der:'art-der',die:'art-die',das:'art-das','pl.':'art-pl','-':'art-none'};
-// El mismo color que la clase de arriba, pero como valor: la tarjeta lo necesita en
-// `--c` para pintar con él la barra del borde y el fondo de la píldora a la vez.
-const ART_COLOR = {der:'#3b82f6', die:'#ec4899', das:'#10b981', 'pl.':'#f97316'};
-const COLOR_SIN_ART = '#b9b4ad';
 
 let activeCat = 'all';
 let studyMode = false;
 let activeCatFc = 'all';
 
-// ── TABS ─────────────────────────────────────────────────────────────────
+// ── PESTAÑAS ─────────────────────────────────────────────────────────
 function setTab(tab) {
   document.querySelectorAll('.voc-tab').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
   document.querySelectorAll('.voc-panel').forEach(p => p.classList.remove('active'));
@@ -473,22 +376,16 @@ function setTab(tab) {
   if (tab === 'pz') renderPartizip();
 }
 
-// ── INIT ─────────────────────────────────────────────────────────────────
+// ── ARRANQUE ───────────────────────────────────────────────────────
 function init() {
-  // Stats
   document.getElementById('total-count').textContent = VOC.length;
   document.getElementById('cat-count').textContent = Object.keys(CATS).length;
-  document.getElementById('situ-count').textContent = document.querySelectorAll('#panel-situ .phrase-item').length;
+  document.getElementById('situ-count').textContent =
+    document.querySelectorAll('#panel-situ .phrase-item').length;
 
-  // Category buttons (dictionary tab)
-  const cf = document.getElementById('cat-filters');
-  cf.innerHTML = `<button class="cat-btn all active" onclick="setCat('all')">Todas (${VOC.length})</button>`;
-  Object.entries(CATS).forEach(([k,v]) => {
-    const count = VOC.filter(w=>w.cat===k).length;
-    cf.innerHTML += `<button class="cat-btn" onclick="setCat('${k}')">${v.icon} ${v.label} (${count})</button>`;
-  });
+  pintaSecciones();
 
-  // Category buttons (flashcards tab)
+  // Las flashcards tienen su propia tira, con los botones de siempre de esta app.
   const cffc = document.getElementById('cat-filters-fc');
   cffc.innerHTML = `<button class="cat-btn all active" onclick="setCatFc('all')">Todas</button>`;
   Object.entries(CATS).forEach(([k,v]) => {
@@ -498,45 +395,36 @@ function init() {
   render();
 }
 
+function pintaSecciones() {
+  document.getElementById('cat-filters').innerHTML = vocSeccionesHtml(CATS, activeCat, {
+    fn: 'setCat',
+    todas: `Todas (${VOC.length})`,
+    cuenta: k => VOC.filter(w => w.cat === k).length,
+  });
+}
+
 function setCat(cat) {
   activeCat = cat;
-  document.querySelectorAll('#cat-filters .cat-btn').forEach(b => b.classList.remove('active'));
-  const btns = document.querySelectorAll('#cat-filters .cat-btn');
-  if(cat === 'all') btns[0].classList.add('active');
-  else {
-    const idx = Object.keys(CATS).indexOf(cat);
-    if(btns[idx+1]) btns[idx+1].classList.add('active');
-  }
-  verSeccionElegida();
+  pintaSecciones();
+  vocVerSeccion('cat-filters');
   render();
 }
 
-// En el teléfono las 22 secciones son una tira que se desliza y la elegida puede
-// quedar fuera de vista. Se trae al centro moviendo el scroll de la tira y nada más:
-// `scrollIntoView` sube al ancestro con scroll más cercano y arrastra la página.
-function verSeccionElegida() {
-  const c = document.getElementById('cat-filters');
-  const b = c && c.querySelector('.cat-btn.active');
-  if(!b || c.scrollWidth <= c.clientWidth) return;
-  const cr = c.getBoundingClientRect(), br = b.getBoundingClientRect();
-  c.scrollLeft += (br.left - cr.left) - (cr.width - br.width) / 2;
-}
+// ── LO QUE SE VE ──────────────────────────────────────────────────
+function render() {
+  const q = (document.getElementById('search').value || '').trim();
+  const data = vocFiltrar(VOC, q, activeCat);
 
-function setCatFc(cat) {
-  activeCatFc = cat;
-  document.querySelectorAll('#cat-filters-fc .cat-btn').forEach(b => b.classList.remove('active'));
-  const btns = document.querySelectorAll('#cat-filters-fc .cat-btn');
-  if(cat === 'all') btns[0].classList.add('active');
-  else {
-    const idx = Object.keys(CATS).indexOf(cat);
-    if(btns[idx+1]) btns[idx+1].classList.add('active');
-  }
-  renderFlashcards();
-}
+  document.getElementById('visible-count').textContent = data.length;
+  document.getElementById('results-label').textContent =
+    `${data.length} resultado${data.length !== 1 ? 's' : ''}`;
+  document.getElementById('voc-empty').style.display = 'none';
 
-function renderFlashcards() {
-  const data = activeCatFc === 'all' ? VOC : VOC.filter(w => w.cat === activeCatFc);
-  initFlashcards('fc-voc', data);
+  // Dentro de UNA sección no hace falta encabezado: ya lo dice el botón encendido.
+  document.getElementById('voc-grid').innerHTML = vocPalabrasHtml(data, {
+    q, cats: CATS, agrupar: activeCat === 'all', estudio: studyMode,
+    vacio: `Ninguna palabra con <b>${q}</b>. Se busca en alem\u00e1n, en espa\u00f1ol y en los ejemplos.`,
+  });
 }
 
 function filterVoc() {
@@ -551,164 +439,44 @@ function clearSearch() {
   render();
 }
 
+// ── MODO ESTUDIO ─────────────────────────────────────────────────
 function toggleMode() {
   studyMode = !studyMode;
   const btn = document.getElementById('mode-btn');
   btn.classList.toggle('active', studyMode);
-  btn.textContent = studyMode ? '👁️ Modo estudio: ON — toca la traducción para revelarla' : '👁️ Modo estudio — ocultar traducción';
+  btn.textContent = studyMode
+    ? '\ud83d\udc41\ufe0f Modo estudio: ON \u2014 toca la traducci\u00f3n para revelarla'
+    : '\ud83d\udc41\ufe0f Modo estudio \u2014 ocultar traducci\u00f3n';
   render();
 }
 
-// Revelar una traducción tapada. Es una clase y no estilos en línea para que la
-// tarjeta pueda recuperar su aspecto sola al volver a pintarse.
-function revelar(el) {
-  if(!studyMode) return;
-  el.classList.add('abierta');
-}
-
-// La búsqueda mira también en los EJEMPLOS, no solo en las dos traducciones: buscar
-// "essen" y que no salga *Ich habe schon gegessen* es raro cuando el ejemplo está ahí.
-// Se compara sin acentos, para que "Bucher" encuentre "Bücher".
-function sinTildes(t){
-  return String(t).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
-}
-
-function render() {
-  const q = (document.getElementById('search').value||'').trim();
-  const qq = sinTildes(q);
-  const grid = document.getElementById('voc-grid');
-  const empty = document.getElementById('voc-empty');
-
-  const data = VOC.filter(w => {
-    const catOk = activeCat === 'all' || w.cat === activeCat;
-    const qOk = !qq || sinTildes(w.de).includes(qq) || sinTildes(w.es).includes(qq)
-                    || sinTildes(w.ex||'').includes(qq);
-    return catOk && qOk;
-  });
-
-  document.getElementById('visible-count').textContent = data.length;
-  document.getElementById('results-label').textContent =
-    `${data.length} resultado${data.length!==1?'s':''}`;
-
-  if(!data.length) {
-    grid.innerHTML = '';
-    empty.style.display = '';
-    return;
-  }
-  empty.style.display = 'none';
-
-  // Dentro de UNA sección no hace falta encabezado: ya lo dice el botón encendido y el
-  // subtítulo. Viendo todas, o buscando, sí — si no, 479 tarjetas seguidas no dicen
-  // dónde empieza cada tema.
-  const agrupar = activeCat === 'all';
-  let seccionEnCurso = null;
-
-  grid.innerHTML = data.map(w => {
-    let cab = '';
-    if (agrupar && w.cat !== seccionEnCurso) {
-      seccionEnCurso = w.cat;
-      const c = CATS[w.cat] || {label:w.cat, icon:'•'};
-      const n = data.filter(x => x.cat === w.cat).length;
-      cab = `<div class="voc-h"><span class="voc-h-ico">${c.icon}</span>` +
-            `<span class="voc-h-t">${esc(c.label)}</span>` +
-            `<span class="voc-h-n">${n} palabra${n!==1?'s':''}</span></div>`;
-    }
-
-    const artKey = (w.art||'-').split('/')[0].trim().toLowerCase();
-    const color = ART_COLOR[artKey] || COLOR_SIN_ART;
-    const art = w.art && w.art !== '-'
-      ? `<span class="vw-art">${esc(w.art)}</span>` : '';
-    const es = studyMode
-      ? `<span class="vw-tapa" onclick="revelar(this)" title="Toca para revelar">${esc(w.es)}</span>`
-      : highlight(w.es, q);
-
-    return cab + `<article class="vw" style="--c:${color}">
-      <div class="vw-top">${art}<span class="vw-de">${highlight(w.de, q)}</span></div>
-      <div class="vw-es">${es}</div>
-      ${w.ex ? `<div class="vw-ex vw-ex-sep">${highlight(w.ex, q)}</div>` : ''}
-    </article>`;
-  }).join('');
-}
-
-function esc(t){
-  return String(t==null?'':t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-}
-
-// ── PARTIZIP ───────────────────────────────────────────────────────
-// Cada bloque puede traer tabla, lista de tres columnas, comparativa, aviso o truco;
-// se pinta lo que tenga. El texto viene de ALEMAN_VOCAB, igual que las palabras.
+// ── PARTIZIP ────────────────────────────────────────────────────────
+// Aquí el que se desplaza es la página, no un contenedor, así que el motor no necesita
+// que se le diga cuál es (ver `vocIdxCont` en vocab.js).
 let pzPintado = false;
-function renderPartizip(){
-  if(pzPintado) return;
-  const P = (typeof ALEMAN_VOCAB !== 'undefined') ? ALEMAN_VOCAB.partizip : null;
-  const wrap = document.getElementById('pz-wrap');
-  if(!P || !wrap) return;
-
-  const idx = '<nav class="pz-idx"><div class="pz-idx-t">El tema, por partes</div>' +
-    P.secciones.map(x => `<button type="button" onclick="pzIrA('${x.id}')">` +
-      `<span>${x.ico}</span>${esc(x.t)}</button>`).join('') + '</nav>';
-
-  wrap.innerHTML = `<p class="pz-sub">${P.sub}</p><div class="pz-col">` +
-    P.secciones.map(x => {
-      let h = `<section class="pz" id="pz-${x.id}">
-        <div class="pz-h"><span>${x.ico}</span><h3>${x.t}</h3></div>
-        <div class="pz-c">${x.cuerpo}</div>`;
-      if(x.tabla){
-        h += '<div class="pz-tabla"><table><thead><tr>' +
-          x.tabla.cols.map(c => `<th>${c}</th>`).join('') + '</tr></thead><tbody>' +
-          x.tabla.filas.map(f => '<tr>' + f.map(y => `<td>${y}</td>`).join('') + '</tr>').join('') +
-          '</tbody></table></div>';
-      }
-      if(x.lista){
-        h += '<div class="pz-lst">' + x.lista.map(it =>
-          `<div class="pz-li"><div><div class="pz-li-t">${it[0]}</div>` +
-          `<div class="pz-li-d">${it[1]}</div></div><div class="pz-li-e">${it[2]}</div></div>`
-        ).join('') + '</div>';
-      }
-      if(x.comparativa){
-        h += '<div class="pz-tabla"><table><thead><tr><th>En español</th>' +
-          '<th>Lo que NO se dice</th><th>Lo que sí se dice</th></tr></thead><tbody>' +
-          x.comparativa.map(f => '<tr>' + f.map(y => `<td>${y}</td>`).join('') + '</tr>').join('') +
-          '</tbody></table></div>';
-      }
-      if(x.aviso) h += `<div class="pz-aviso">${x.aviso}</div>`;
-      if(x.truco) h += `<div class="pz-truco">${x.truco}</div>`;
-      return h + '</section>';
-    }).join('') + '</div>' + idx;
-
+function renderPartizip() {
+  if (pzPintado) return;
+  document.getElementById('pz-wrap').innerHTML = vocPartizipHtml(ALEMAN_VOCAB.partizip);
   pzPintado = true;
-  pzIdxSigue();
-  addEventListener('scroll', pzIdxSigue, {passive:true});
+  vocIdxSigue();
+  addEventListener('scroll', vocIdxSigue, { passive: true });
 }
 
-// Aquí el que se desplaza es la PÁGINA (en el Dashboard era un contenedor), así que
-// basta con `scrollIntoView`. El hueco del nav pegajoso lo pone `scroll-margin-top`.
-function pzIrA(id){
-  const el = document.getElementById('pz-' + id);
-  if(el) el.scrollIntoView({behavior:'smooth', block:'start'});
-  pzIdxActivo(id);
-}
-function pzIdxActivo(id){
-  document.querySelectorAll('.pz-idx button').forEach(b =>
-    b.classList.toggle('on', b.getAttribute('onclick').indexOf("'" + id + "'") >= 0));
-}
-// El índice marca el último bloque que ya cruzó la franja de arriba; arriba del todo,
-// el primero, y al final del documento, el último (que nunca llega a cruzarla).
-function pzIdxSigue(){
-  const bloques = document.querySelectorAll('.pz');
-  if(!bloques.length) return;
-  let visto = null;
-  bloques.forEach(b => { if(b.getBoundingClientRect().top <= 120) visto = b.id.slice(3); });
-  if(!visto) visto = bloques[0].id.slice(3);
-  if(scrollY + innerHeight >= document.body.scrollHeight - 4)
-    visto = bloques[bloques.length - 1].id.slice(3);
-  pzIdxActivo(visto);
+// ── FLASHCARDS ──────────────────────────────────────────────────
+function setCatFc(cat) {
+  activeCatFc = cat;
+  const btns = document.querySelectorAll('#cat-filters-fc .cat-btn');
+  btns.forEach(b => b.classList.remove('active'));
+  if (cat === 'all') btns[0].classList.add('active');
+  else {
+    const idx = Object.keys(CATS).indexOf(cat);
+    if (btns[idx + 1]) btns[idx + 1].classList.add('active');
+  }
+  renderFlashcards();
 }
 
-function highlight(text, q) {
-  if(!q) return text;
-  const re = new RegExp(`(${q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')})`, 'gi');
-  return text.replace(re, '<mark style="background:rgba(204,0,0,.15);color:var(--red);border-radius:3px;padding:0 2px">$1</mark>');
+function renderFlashcards() {
+  initFlashcards('fc-voc', activeCatFc === 'all' ? VOC : VOC.filter(w => w.cat === activeCatFc));
 }
 
 init();
