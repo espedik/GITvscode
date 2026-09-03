@@ -23,6 +23,42 @@ cargan las dos.
 
 ---
 
+## `vocabulario.html` — donde se trabaja el vocabulario
+
+Es la pantalla principal del vocabulario: **aquí se añade y se corrige**, y la pantalla de
+Alemán del Dashboard lo refleja. Cuatro pestañas:
+
+| Pestaña | Qué es |
+|---|---|
+| 📖 Diccionario | Las 479 palabras en tarjetas, agrupadas por sección |
+| 🗨️ Frases por situación | 60 frases listas para usar, escritas en este archivo |
+| 🎴 Tarjetas | Repaso con `flashcards.js` |
+| 🧩 Partizip I y II | El tema de gramática, en 9 bloques |
+
+**Los datos no están aquí.** Las palabras y el Partizip viven en
+`../Dashboard/aleman-vocab.js` — el mismo archivo que carga el Dashboard, para que corregir
+una palabra no deje al otro mintiendo. Para añadir vocabulario se toca ESE archivo:
+
+```js
+// Una palabra
+{art:'der', de:'Apfel', es:'la manzana', ex:'Der Apfel ist rot.', cat:'comida'},
+// Una sección
+comida: {label:'Comida', icon:'🍽️'},
+```
+
+`art` es `der`/`die`/`das`/`pl.` o `-` cuando no lleva artículo, y de ahí sale el color de la
+barra izquierda de la tarjeta: el género se ve antes de leer la palabra. Las únicas dos
+reglas son que `cat` exista en `cats` y que ninguna sección quede vacía; el control 19 de
+`../Dashboard/verificar-sincronia.js` las comprueba, junto con que los emoji sean emoji.
+
+**Por qué tarjetas y no una tabla.** La tabla mostraba **9 palabras** de 479 a 1600px y en el
+teléfono escondía tres de sus cinco columnas para caber. La rejilla muestra 25 y no esconde
+nada. En móvil las 21 secciones no se apilan en siete filas: son una tira que se desliza, y
+la elegida se trae al centro sola.
+
+**Modo estudio** tapa la traducción de todas las tarjetas y se revela una a una al tocarlas.
+
+---
 ## Kapitel 10 — el capítulo en curso
 
 Seis lecciones que cubren el temario real de clase. **83 tarjetas de contenido y 370

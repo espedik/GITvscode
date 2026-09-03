@@ -206,7 +206,14 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var
 .section-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--text3);margin-bottom:16px;padding-bottom:8px;border-bottom:1px solid var(--border)}
 
 @media(max-width:640px){
-  .nav{padding:0 16px}
+  /* El nav mide 60px fijos y los enlaces envolvían a dos filas: se salían por
+     abajo y tapaban el arranque de la página. Con la tira deslizándose caben
+     los cinco en una fila y nada desborda. */
+  .nav{padding:0 16px;gap:10px}
+  .nav-links{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;
+    -webkit-overflow-scrolling:touch;padding:4px 0}
+  .nav-links::-webkit-scrollbar{display:none}
+  .nav-link,.nav-back{flex:none}
   .hero{padding:50px 16px 40px}
   .container{padding:0 16px}
   .topic-hero{padding:30px 16px 24px}

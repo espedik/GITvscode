@@ -5254,7 +5254,10 @@ function alVerTab(){
   const c = document.getElementById('alTabs');
   const t = c && c.querySelector('.al-tab.on');
   if(!t || c.scrollWidth <= c.clientWidth) return;
-  c.scrollLeft = Math.max(0, t.offsetLeft - (c.clientWidth - t.offsetWidth) / 2);
+  // Con rectángulos y no con `offsetLeft`: ese es relativo al ancestro posicionado,
+  // que aquí no es la tira, y el scroll se pasaba hasta saturarse.
+  const cr = c.getBoundingClientRect(), tr = t.getBoundingClientRect();
+  c.scrollLeft += (tr.left - cr.left) - (cr.width - tr.width) / 2;
 }
 
 // Lo que llama el motor de pantallas cuando toca la de Alemán. `RENDERS` la nombra por
