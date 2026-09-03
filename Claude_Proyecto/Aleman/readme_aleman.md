@@ -30,7 +30,7 @@ Alemán del Dashboard lo refleja. Cuatro pestañas:
 
 | Pestaña | Qué es |
 |---|---|
-| 📖 Diccionario | Las 479 palabras en tarjetas, agrupadas por sección |
+| 📖 Diccionario | Las 538 palabras en tarjetas, agrupadas por subsección |
 | 🗨️ Frases por situación | 60 frases listas para usar, escritas en este archivo |
 | 🎴 Tarjetas | Repaso con `flashcards.js` |
 | 🧩 Partizip I y II | El tema de gramática, en 9 bloques |
@@ -40,7 +40,7 @@ y los tres los carga también la pantalla de Alemán del Dashboard:
 
 | Archivo | Qué es | Cuándo se toca |
 |---|---|---|
-| `vocab-datos.js` | Las 479 palabras en 21 secciones y **100 subsecciones**, más el Partizip | Al añadir o corregir vocabulario |
+| `vocab-datos.js` | Las 538 palabras en 22 secciones y **108 subsecciones**, más el Partizip | Al añadir o corregir vocabulario |
 | `vocab.css` | El diseño: la tarjeta, la rejilla, la tira de secciones, el Partizip | Al cambiar cómo se ve |
 | `vocab.js` | El motor: filtrar, agrupar y pintar | Al cambiar cómo se comporta |
 
@@ -50,9 +50,9 @@ Los controles 19 y 20 de `../Dashboard/verificar-sincronia.js` vigilan que siga 
 
 ### Subsecciones y qué lleva cada palabra
 
-Las 21 secciones se reparten en **100 subsecciones** — Comida tiene *Frutas y verduras*,
-*Carnes y pescado*, *Bebidas*… — porque el objetivo es pasar de 479 palabras a varios
-miles y una lista de 300 no se navega. En la app se ven como un **árbol** a la izquierda;
+Las 22 secciones se reparten en **108 subsecciones** — Comida tiene *Frutas y verduras*,
+*Carnes y pescado*, *Bebidas*…; Hobbies tiene *Deporte*, *Música*, *Salir*… — porque el
+objetivo es pasar de 538 palabras a varios miles y una lista de 300 no se navega. En la app se ven como un **árbol** a la izquierda;
 en el Dashboard, como una **segunda tira** bajo la sección abierta (ahí el slide es
 apaisado y una barra lateral le quitaría el ancho a las palabras).
 
@@ -89,7 +89,11 @@ comida: {label:'Comida', icon:'🍽️', subs:{
 | `comp` | Comparativo y superlativo de un adjetivo |
 | `tag` | Lo que se sale de lo normal: *irregular*, *separable*, *incontable*, *solo plural* |
 | `uso` | Cuándo se dice, o el fallo típico |
-| `esEx` | La traducción del ejemplo. Las 479 la tienen |
+| `esEx` | La traducción del ejemplo. Las 538 la tienen |
+
+**Añadir una sección entera** es lo mismo con una entrada más en `cats`: su etiqueta, su
+emoji y sus `subs`. Así entró **Hobbies** (59 palabras en 8 subsecciones: tiempo libre,
+deporte, música, arte, juegos, aire libre, en casa y salir).
 
 **Las palabras van ordenadas por subsección** dentro de su sección, en el orden en que
 están declaradas. El agrupado detecta cambios consecutivos, así que una palabra suelta
@@ -118,9 +122,9 @@ aclara en el oscuro, así que un solo valor sirve para las dos pantallas y nadie
 acordarse de redefinirlo. Con valores fijos, la píldora de `das` daba 1.88:1 sobre su
 propio fondo y la línea técnica del Dashboard en modo oscuro, 1.08:1.
 
-**Por qué tarjetas y no una tabla.** La tabla mostraba **9 palabras** de 479 a 1600px y en el
+**Por qué tarjetas y no una tabla.** La tabla mostraba **9 palabras** de 538 a 1600px y en el
 teléfono escondía tres de sus cinco columnas para caber. La rejilla muestra 25 y no esconde
-nada. En móvil las 21 secciones no se apilan en siete filas: son una tira que se desliza, y
+nada. En móvil las 22 secciones no se apilan en siete filas: son una tira que se desliza, y
 la elegida se trae al centro sola.
 
 **Modo estudio** tapa la traducción de todas las tarjetas y se revela una a una al tocarlas.

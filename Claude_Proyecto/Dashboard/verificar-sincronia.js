@@ -1095,11 +1095,31 @@ function impactoDelCambio() {
     return;
   }
 
-  if (!V.voc || V.voc.length < 400)
-    malos.push('  aleman-vocab.js trae ' + ((V.voc || []).length) + ' palabras; eran 479');
+  // Se comprueba un MÍNIMO, no un número exacto: el vocabulario está hecho para
+  // crecer, y clavar la cifra solo consigue que el control falle cada vez que Adán
+  // añade una palabra. Lo que hay que cazar es que MENGÜE por accidente.
+  if (!V.voc || V.voc.length < 500)
+    malos.push('  vocab-datos.js trae ' + ((V.voc || []).length) + ' palabras; había 538');
   const cats = Object.keys(V.cats || {});
-  if (cats.length !== 21)
-    malos.push('  aleman-vocab.js trae ' + cats.length + ' secciones; eran 21');
+  if (cats.length < 22)
+    malos.push('  vocab-datos.js trae ' + cats.length + ' secciones; había 22');
+
+  // Cada sección tiene subsecciones, ninguna está vacía, y cada palabra pertenece
+  // a una que existe. Es lo que sostiene el árbol de navegación.
+  let nSubs = 0;
+  cats.forEach(function (c) {
+    const subs = Object.keys((V.cats[c] || {}).subs || {});
+    nSubs += subs.length;
+    if (!subs.length) malos.push('  la sección "' + c + '" no tiene subsecciones');
+    subs.forEach(function (sid) {
+      if (!V.cuantas(c, sid)) malos.push('  la subsección "' + c + '/' + sid + '" está vacía');
+    });
+  });
+  V.voc.forEach(function (v) {
+    if (!v.sub) { malos.push('  la palabra "' + v.de + '" no tiene subsección'); return; }
+    if (!((V.cats[v.cat] || {}).subs || {})[v.sub])
+      malos.push('  "' + v.de + '" dice ser de la subsección "' + v.sub + '", que no existe en ' + v.cat);
+  });
 
   // Cada palabra en su sección, y ninguna sección vacía.
   V.voc.forEach(function (v, i) {
@@ -1123,8 +1143,8 @@ function impactoDelCambio() {
       malos.push('  el icono "' + ic + '" no es un emoji: el escape se cortó a los 4 dígitos');
   });
 
-  if ((V.partizip.secciones || []).length !== 9)
-    malos.push('  Partizip trae ' + (V.partizip.secciones || []).length + ' bloques; eran 9');
+  if ((V.partizip.secciones || []).length < 9)
+    malos.push('  Partizip trae ' + (V.partizip.secciones || []).length + ' bloques; había 9');
 
   // Y las dos pantallas lo cargan en vez de copiarlo. El archivo vive en Aleman/
   // desde el 2026-09-03: es donde Adán trabaja el vocabulario.
@@ -1148,8 +1168,8 @@ function impactoDelCambio() {
     problemas.push('El vocabulario de alemán no cuadra:\n' + malos.slice(0, 12).join('\n'));
   else
     ok.push('Vocabulario de alemán en un solo sitio (' + V.voc.length + ' palabras en ' +
-            cats.length + ' secciones y ' + V.partizip.secciones.length +
-            ' bloques de Partizip, cargado por las 2 pantallas)');
+            cats.length + ' secciones y ' + nSubs + ' subsecciones, más ' +
+            V.partizip.secciones.length + ' bloques de Partizip, en las 2 pantallas)');
 })();
 
 // ── 20. El diseño del vocabulario, en un solo sitio ────────────────────────

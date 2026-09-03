@@ -3,8 +3,8 @@
 // Las dos cargan este archivo: copiarlo en las dos era garantizar que corregir una
 // palabra en un sitio dejara el otro mintiendo.
 //
-//   cats  las 21 secciones, con su etiqueta, su emoji y sus SUBsecciones
-//   voc   las 479 palabras
+//   cats  las 22 secciones, con su etiqueta, su emoji y sus SUBsecciones
+//   voc   las 538 palabras
 //   partizip  el tema de gramática, por bloques
 //
 // UNA PALABRA. Solo `de`, `es` y `cat` son obligatorios; el resto se pinta si está:
@@ -139,6 +139,19 @@ const ALEMAN_VOCAB = {
         vida: 'Plantas y animales',
         cielo: 'El cielo',
         medioambiente: 'Medio ambiente',
+      },
+    },
+    hobbies: {
+      label: 'Hobbies', icon: '\ud83c\udfb2',
+      subs: {
+        tiempo: 'Tiempo libre',
+        deporte: 'Deporte',
+        musica: 'M\u00fasica',
+        arte: 'Arte y manualidades',
+        juegos: 'Juegos',
+        aire: 'Al aire libre',
+        casa: 'En casa',
+        salir: 'Salir',
       },
     },
     verbos: {
@@ -617,6 +630,75 @@ const ALEMAN_VOCAB = {
     {art:'der', de:'Mond', es:'la luna', ex:'Der Mond ist heute voll.', cat:'naturaleza', sub:'cielo', niv:'A1', tipo:'sust', pl:'Monde', gen:'-es', esEx:'Hoy hay luna llena.'},
     //    Medio ambiente
     {art:'die', de:'Umwelt', es:'el medio ambiente', ex:'Wir m\u00fcssen die Umwelt sch\u00fctzen.', cat:'naturaleza', sub:'medioambiente', niv:'B1', tipo:'sust', pl:'-', tag:'incontable', esEx:'Tenemos que proteger el medio ambiente.'},
+
+    // ── HOBBIES ─────────────────────────────────
+    //    Tiempo libre
+    {art:'das', de:'Hobby', es:'el pasatiempo / hobby', ex:'Mein Hobby ist Fotografieren.', cat:'hobbies', sub:'tiempo', niv:'A1', tipo:'sust', pl:'Hobbys', gen:'-s', esEx:'Mi pasatiempo es la fotograf\u00eda.'},
+    {art:'die', de:'Freizeit', es:'el tiempo libre', ex:'In meiner Freizeit lese ich viel.', cat:'hobbies', sub:'tiempo', niv:'A1', tipo:'sust', pl:'-', tag:'incontable', esEx:'En mi tiempo libre leo mucho.'},
+    {art:'-', de:'gern / lieber / am liebsten', es:'con gusto / preferir / lo que m\u00e1s', ex:'Ich schwimme gern, aber lieber laufe ich.', cat:'hobbies', sub:'tiempo', niv:'A1', tipo:'adv', tag:'irregular', uso:'no es un verbo: acompa\u00f1a al verbo para decir que algo gusta', esEx:'Me gusta nadar, pero prefiero correr.'},
+    {art:'-', de:'Spa\u00df machen', es:'ser divertido', ex:'Klettern macht mir viel Spa\u00df.', cat:'hobbies', sub:'tiempo', niv:'A2', tipo:'frase', uso:'el sujeto es la actividad, no la persona: \u00abme hace gracia\u00bb', esEx:'Escalar me divierte mucho.'},
+    {art:'-', de:'sich interessieren', es:'interesarse', ex:'Ich interessiere mich f\u00fcr Musik.', cat:'hobbies', sub:'tiempo', niv:'A2', tipo:'verbo', conj:'interessiert sich \u00b7 interessierte sich \u00b7 sich interessiert', aux:'hat', reg:'sich interessieren f\u00fcr + Akk.', tag:'reflexivo \u00b7 sin ge-', esEx:'Me intereso por la m\u00fasica.'},
+    //    Deporte
+    {art:'der', de:'Sport', es:'el deporte', ex:'Ich mache jeden Tag Sport.', cat:'hobbies', sub:'deporte', niv:'A1', tipo:'sust', pl:'-', gen:'-es', tag:'incontable', uso:'\u00abhacer deporte\u00bb es Sport machen, no Sport tun', esEx:'Hago deporte todos los d\u00edas.'},
+    {art:'das', de:'Fitnessstudio', es:'el gimnasio', ex:'Ich gehe dreimal pro Woche ins Fitnessstudio.', cat:'hobbies', sub:'deporte', niv:'A1', tipo:'sust', pl:'Fitnessstudios', gen:'-s', esEx:'Voy al gimnasio tres veces por semana.'},
+    {art:'-', de:'schwimmen', es:'nadar', ex:'Im Sommer schwimme ich im See.', cat:'hobbies', sub:'deporte', niv:'A1', tipo:'verbo', conj:'schwimmt \u00b7 schwamm \u00b7 geschwommen', aux:'ist', tag:'irregular', uso:'con sein cuando hay recorrido, con haben si es la actividad', esEx:'En verano nado en el lago.'},
+    {art:'-', de:'laufen', es:'correr', ex:'Ich laufe jeden Morgen im Park.', cat:'hobbies', sub:'deporte', niv:'A1', tipo:'verbo', conj:'l\u00e4uft \u00b7 lief \u00b7 gelaufen', aux:'ist', tag:'irregular', esEx:'Corro cada ma\u00f1ana en el parque.'},
+    {art:'-', de:'trainieren', es:'entrenar', ex:'Ich trainiere f\u00fcr den Marathon.', cat:'hobbies', sub:'deporte', niv:'A2', tipo:'verbo', conj:'trainiert \u00b7 trainierte \u00b7 trainiert', aux:'hat', reg:'trainieren f\u00fcr + Akk.', tag:'sin ge-', esEx:'Entreno para el marat\u00f3n.'},
+    {art:'der', de:'Fu\u00dfball', es:'el f\u00fatbol', ex:'Am Wochenende spiele ich Fu\u00dfball.', cat:'hobbies', sub:'deporte', niv:'A1', tipo:'sust', pl:'Fu\u00dfb\u00e4lle', gen:'-s', uso:'el deporte va sin art\u00edculo: Fu\u00dfball spielen', esEx:'El fin de semana juego f\u00fatbol.'},
+    {art:'die', de:'Mannschaft', es:'el equipo', ex:'Unsere Mannschaft hat gewonnen.', cat:'hobbies', sub:'deporte', niv:'A2', tipo:'sust', pl:'Mannschaften', gen:'-', esEx:'Nuestro equipo gan\u00f3.'},
+    {art:'das', de:'Spiel', es:'el partido / el juego', ex:'Das Spiel beginnt um 20 Uhr.', cat:'hobbies', sub:'deporte', niv:'A1', tipo:'sust', pl:'Spiele', gen:'-s', esEx:'El partido empieza a las 20:00.'},
+    {art:'-', de:'gewinnen / verlieren', es:'ganar / perder', ex:'Wir haben 3:1 gewonnen.', cat:'hobbies', sub:'deporte', niv:'A2', tipo:'verbo', conj:'gewinnt \u00b7 gewann \u00b7 gewonnen', aux:'hat', tag:'irregular', esEx:'Ganamos 3 a 1.'},
+    {art:'der', de:'Verein', es:'el club / la asociaci\u00f3n', ex:'Ich bin in einem Sportverein.', cat:'hobbies', sub:'deporte', niv:'A2', tipo:'sust', pl:'Vereine', gen:'-s', uso:'muy alem\u00e1n: hay un Verein para casi todo', esEx:'Estoy en un club deportivo.'},
+    {art:'-', de:'Rad fahren', es:'andar en bicicleta', ex:'Am Sonntag fahren wir Rad.', cat:'hobbies', sub:'deporte', niv:'A1', tipo:'verbo', conj:'f\u00e4hrt Rad \u00b7 fuhr Rad \u00b7 Rad gefahren', aux:'ist', tag:'separable \u00b7 irregular', esEx:'El domingo andamos en bicicleta.'},
+    {art:'-', de:'wandern', es:'hacer senderismo', ex:'Wir wandern gern in den Bergen.', cat:'hobbies', sub:'deporte', niv:'A2', tipo:'verbo', conj:'wandert \u00b7 wanderte \u00b7 gewandert', aux:'ist', uso:'no es \u00abcaminar\u00bb: es caminar por el campo, y es un deporte nacional', esEx:'Nos gusta hacer senderismo en las monta\u00f1as.'},
+    {art:'-', de:'klettern', es:'escalar', ex:'Ich klettere in der Halle.', cat:'hobbies', sub:'deporte', niv:'A2', tipo:'verbo', conj:'klettert \u00b7 kletterte \u00b7 geklettert', aux:'ist', esEx:'Escalo en el roc\u00f3dromo.'},
+    //    Música
+    {art:'die', de:'Musik', es:'la m\u00fasica', ex:'Ich h\u00f6re gern klassische Musik.', cat:'hobbies', sub:'musica', niv:'A1', tipo:'sust', pl:'-', tag:'incontable', esEx:'Me gusta escuchar m\u00fasica cl\u00e1sica.'},
+    {art:'das', de:'Lied', es:'la canci\u00f3n', ex:'Dieses Lied gef\u00e4llt mir sehr.', cat:'hobbies', sub:'musica', niv:'A1', tipo:'sust', pl:'Lieder', gen:'-es', esEx:'Esta canci\u00f3n me gusta mucho.'},
+    {art:'-', de:'singen', es:'cantar', ex:'Sie singt in einem Chor.', cat:'hobbies', sub:'musica', niv:'A1', tipo:'verbo', conj:'singt \u00b7 sang \u00b7 gesungen', aux:'hat', tag:'irregular', esEx:'Ella canta en un coro.'},
+    {art:'das', de:'Instrument', es:'el instrumento', ex:'Spielst du ein Instrument?', cat:'hobbies', sub:'musica', niv:'A2', tipo:'sust', pl:'Instrumente', gen:'-s', esEx:'\u00bfTocas alg\u00fan instrumento?'},
+    {art:'die', de:'Gitarre', es:'la guitarra', ex:'Ich lerne Gitarre spielen.', cat:'hobbies', sub:'musica', niv:'A1', tipo:'sust', pl:'Gitarren', gen:'-', uso:'el instrumento lleva art\u00edculo: Gitarre spielen, pero die Gitarre', esEx:'Estoy aprendiendo a tocar la guitarra.'},
+    {art:'das', de:'Klavier', es:'el piano', ex:'Er spielt seit zehn Jahren Klavier.', cat:'hobbies', sub:'musica', niv:'A2', tipo:'sust', pl:'Klaviere', gen:'-s', esEx:'Toca el piano desde hace diez a\u00f1os.'},
+    {art:'das', de:'Konzert', es:'el concierto', ex:'Wir gehen morgen ins Konzert.', cat:'hobbies', sub:'musica', niv:'A1', tipo:'sust', pl:'Konzerte', gen:'-es', esEx:'Ma\u00f1ana vamos al concierto.'},
+    {art:'die', de:'Band', es:'la banda / el grupo', ex:'Meine Lieblingsband kommt aus Berlin.', cat:'hobbies', sub:'musica', niv:'A2', tipo:'sust', pl:'Bands', gen:'-', esEx:'Mi banda favorita es de Berl\u00edn.'},
+    //    Arte y manualidades
+    {art:'die', de:'Kunst', es:'el arte', ex:'Ich interessiere mich f\u00fcr moderne Kunst.', cat:'hobbies', sub:'arte', niv:'A2', tipo:'sust', pl:'K\u00fcnste', gen:'-', esEx:'Me interesa el arte moderno.'},
+    {art:'-', de:'malen', es:'pintar', ex:'Am Wochenende male ich gern.', cat:'hobbies', sub:'arte', niv:'A1', tipo:'verbo', conj:'malt \u00b7 malte \u00b7 gemalt', aux:'hat', uso:'malen es pintar un cuadro; streichen, pintar una pared', esEx:'Los fines de semana me gusta pintar.'},
+    {art:'-', de:'zeichnen', es:'dibujar', ex:'Sie zeichnet sehr gut.', cat:'hobbies', sub:'arte', niv:'A2', tipo:'verbo', conj:'zeichnet \u00b7 zeichnete \u00b7 gezeichnet', aux:'hat', esEx:'Ella dibuja muy bien.'},
+    {art:'das', de:'Bild', es:'el cuadro / la imagen', ex:'Dieses Bild hat mein Sohn gemalt.', cat:'hobbies', sub:'arte', niv:'A1', tipo:'sust', pl:'Bilder', gen:'-es', esEx:'Este cuadro lo pint\u00f3 mi hijo.'},
+    {art:'-', de:'fotografieren', es:'fotografiar', ex:'Ich fotografiere gern die Natur.', cat:'hobbies', sub:'arte', niv:'A2', tipo:'verbo', conj:'fotografiert \u00b7 fotografierte \u00b7 fotografiert', aux:'hat', tag:'sin ge-', esEx:'Me gusta fotografiar la naturaleza.'},
+    {art:'die', de:'Kamera', es:'la c\u00e1mara', ex:'Meine Kamera ist ziemlich alt.', cat:'hobbies', sub:'arte', niv:'A2', tipo:'sust', pl:'Kameras', gen:'-', esEx:'Mi c\u00e1mara es bastante vieja.'},
+    {art:'-', de:'basteln', es:'hacer manualidades', ex:'Die Kinder basteln gern.', cat:'hobbies', sub:'arte', niv:'A2', tipo:'verbo', conj:'bastelt \u00b7 bastelte \u00b7 gebastelt', aux:'hat', uso:'no hay palabra exacta en espa\u00f1ol: es construir cosas a mano', esEx:'A los ni\u00f1os les gusta hacer manualidades.'},
+    //    Juegos
+    {art:'das', de:'Brettspiel', es:'el juego de mesa', ex:'Wir spielen abends oft Brettspiele.', cat:'hobbies', sub:'juegos', niv:'A2', tipo:'sust', pl:'Brettspiele', gen:'-s', esEx:'Por las noches jugamos juegos de mesa a menudo.'},
+    {art:'das', de:'Videospiel', es:'el videojuego', ex:'Mein Bruder spielt gern Videospiele.', cat:'hobbies', sub:'juegos', niv:'A2', tipo:'sust', pl:'Videospiele', gen:'-s', esEx:'A mi hermano le gusta jugar videojuegos.'},
+    {art:'das', de:'Schach', es:'el ajedrez', ex:'Mein Opa hat mir Schach beigebracht.', cat:'hobbies', sub:'juegos', niv:'A2', tipo:'sust', pl:'-', gen:'-s', tag:'incontable', esEx:'Mi abuelo me ense\u00f1\u00f3 a jugar ajedrez.'},
+    {art:'pl.', de:'Karten', es:'las cartas (naipes)', ex:'Spielen wir Karten?', cat:'hobbies', sub:'juegos', niv:'A1', tipo:'sust', tag:'solo plural', uso:'Karten spielen, sin art\u00edculo', esEx:'\u00bfJugamos a las cartas?'},
+    {art:'das', de:'Puzzle', es:'el rompecabezas', ex:'Das Puzzle hat tausend Teile.', cat:'hobbies', sub:'juegos', niv:'A2', tipo:'sust', pl:'Puzzles', gen:'-s', esEx:'El rompecabezas tiene mil piezas.'},
+    //    Al aire libre
+    {art:'der', de:'Spaziergang', es:'el paseo', ex:'Machen wir einen Spaziergang?', cat:'hobbies', sub:'aire', niv:'A1', tipo:'sust', pl:'Spazierg\u00e4nge', gen:'-s', uso:'se \u00abhace\u00bb un paseo: einen Spaziergang machen', esEx:'\u00bfDamos un paseo?'},
+    {art:'der', de:'Ausflug', es:'la excursi\u00f3n', ex:'Am Sonntag machen wir einen Ausflug.', cat:'hobbies', sub:'aire', niv:'A2', tipo:'sust', pl:'Ausfl\u00fcge', gen:'-s', esEx:'El domingo hacemos una excursi\u00f3n.'},
+    {art:'-', de:'grillen', es:'hacer parrillada', ex:'Im Sommer grillen wir im Garten.', cat:'hobbies', sub:'aire', niv:'A2', tipo:'verbo', conj:'grillt \u00b7 grillte \u00b7 gegrillt', aux:'hat', esEx:'En verano hacemos parrillada en el jard\u00edn.'},
+    {art:'-', de:'zelten / campen', es:'acampar', ex:'Wir zelten am See.', cat:'hobbies', sub:'aire', niv:'A2', tipo:'verbo', conj:'zeltet \u00b7 zeltete \u00b7 gezeltet', aux:'hat', esEx:'Acampamos junto al lago.'},
+    {art:'-', de:'angeln', es:'pescar', ex:'Mein Vater angelt jeden Samstag.', cat:'hobbies', sub:'aire', niv:'B1', tipo:'verbo', conj:'angelt \u00b7 angelte \u00b7 geangelt', aux:'hat', esEx:'Mi padre pesca todos los s\u00e1bados.'},
+    {art:'der', de:'Garten', es:'la jardiner\u00eda / el huerto', ex:'Die Arbeit im Garten entspannt mich.', cat:'hobbies', sub:'aire', niv:'A2', tipo:'sust', pl:'G\u00e4rten', gen:'-s', uso:'el mismo Garten de Casa; aqu\u00ed como afici\u00f3n', esEx:'Los ni\u00f1os juegan en el jard\u00edn.'},
+    //    En casa
+    {art:'-', de:'kochen', es:'cocinar', ex:'Ich koche gern f\u00fcr meine Familie.', cat:'hobbies', sub:'casa', niv:'A1', tipo:'verbo', conj:'kocht \u00b7 kochte \u00b7 gekocht', aux:'hat', esEx:'Me gusta cocinar para mi familia.'},
+    {art:'-', de:'backen', es:'hornear', ex:'Meine Oma backt jeden Sonntag Kuchen.', cat:'hobbies', sub:'casa', niv:'A2', tipo:'verbo', conj:'backt \u00b7 backte \u00b7 gebacken', aux:'hat', tag:'irregular', uso:'kochen es con fuego; backen, en el horno', esEx:'Mi abuela hornea pastel cada domingo.'},
+    {art:'-', de:'fernsehen', es:'ver la tele', ex:'Abends sehe ich eine Stunde fern.', cat:'hobbies', sub:'casa', niv:'A1', tipo:'verbo', conj:'sieht fern \u00b7 sah fern \u00b7 ferngesehen', aux:'hat', tag:'separable \u00b7 irregular', uso:'la part\u00edcula se va al final: ich sehe fern', esEx:'Por las noches veo una hora de tele.'},
+    {art:'der', de:'Film', es:'la pel\u00edcula', ex:'Der Film war richtig gut.', cat:'hobbies', sub:'casa', niv:'A1', tipo:'sust', pl:'Filme', gen:'-es', esEx:'La pel\u00edcula estuvo muy buena.'},
+    {art:'die', de:'Serie', es:'la serie', ex:'Ich schaue gerade eine deutsche Serie.', cat:'hobbies', sub:'casa', niv:'A2', tipo:'sust', pl:'Serien', gen:'-', esEx:'Estoy viendo una serie alemana.'},
+    {art:'-', de:'sich entspannen', es:'relajarse', ex:'Am Wochenende entspanne ich mich.', cat:'hobbies', sub:'casa', niv:'A2', tipo:'verbo', conj:'entspannt sich \u00b7 entspannte sich \u00b7 sich entspannt', aux:'hat', tag:'reflexivo \u00b7 sin ge-', esEx:'El fin de semana me relajo.'},
+    //    Salir
+    {art:'das', de:'Kino', es:'el cine', ex:'Gehen wir heute ins Kino?', cat:'hobbies', sub:'salir', niv:'A1', tipo:'sust', pl:'Kinos', gen:'-s', uso:'ins Kino gehen: al cine, con Akkusativ', esEx:'\u00bfVamos hoy al cine?'},
+    {art:'das', de:'Theater', es:'el teatro', ex:'Das Theater ist neben dem Museum.', cat:'hobbies', sub:'salir', niv:'A2', tipo:'sust', pl:'Theater', gen:'-s', esEx:'El teatro est\u00e1 junto al museo.'},
+    {art:'das', de:'Museum', es:'el museo', ex:'Am Sonntag ist das Museum kostenlos.', cat:'hobbies', sub:'salir', niv:'A1', tipo:'sust', pl:'Museen', gen:'-s', tag:'plural latino', esEx:'El domingo el museo es gratis.'},
+    {art:'das', de:'Restaurant', es:'el restaurante', ex:'Wir essen heute im Restaurant.', cat:'hobbies', sub:'salir', niv:'A1', tipo:'sust', pl:'Restaurants', gen:'-s', esEx:'Hoy comemos en el restaurante.'},
+    {art:'die', de:'Kneipe', es:'el bar (de barrio)', ex:'Nach der Arbeit gehen wir in die Kneipe.', cat:'hobbies', sub:'salir', niv:'A2', tipo:'sust', pl:'Kneipen', gen:'-', uso:'Kneipe es el bar de toda la vida; Bar suena m\u00e1s moderno', esEx:'Despu\u00e9s del trabajo vamos al bar.'},
+    {art:'die', de:'Party', es:'la fiesta', ex:'Am Samstag ist eine Party bei Anna.', cat:'hobbies', sub:'salir', niv:'A1', tipo:'sust', pl:'Partys', gen:'-', esEx:'El s\u00e1bado hay una fiesta en casa de Anna.'},
+    {art:'-', de:'feiern', es:'celebrar / festejar', ex:'Wir feiern heute meinen Geburtstag.', cat:'hobbies', sub:'salir', niv:'A1', tipo:'verbo', conj:'feiert \u00b7 feierte \u00b7 gefeiert', aux:'hat', esEx:'Hoy celebramos mi cumplea\u00f1os.'},
+    {art:'-', de:'tanzen', es:'bailar', ex:'Sie tanzt sehr gut Salsa.', cat:'hobbies', sub:'salir', niv:'A1', tipo:'verbo', conj:'tanzt \u00b7 tanzte \u00b7 getanzt', aux:'hat', esEx:'Ella baila salsa muy bien.'},
+    {art:'-', de:'ausgehen', es:'salir (de noche)', ex:'Freitags gehen wir oft aus.', cat:'hobbies', sub:'salir', niv:'A2', tipo:'verbo', conj:'geht aus \u00b7 ging aus \u00b7 ausgegangen', aux:'ist', tag:'separable \u00b7 irregular', esEx:'Los viernes salimos a menudo.'},
 
     // ── VERBOS ─────────────────────────────────
     //    Los imprescindibles
