@@ -1,7 +1,10 @@
 # Aleman/ — referencia
 
 41 lecciones de alemán en HTML, sin backend ni build. Se abren con `file://` y el Dashboard las
-consume a través de `../Dashboard/aleman-data.js`.
+consumió a través de `../Dashboard/aleman-data.js` hasta el 2026-09-02. Desde entonces la
+pantalla de Alemán del Dashboard es vocabulario y Partizip, y lo que comparte con esta app es
+`../Dashboard/aleman-vocab.js`: las 479 palabras que `vocabulario.html` tenía dentro y ahora
+cargan las dos.
 
 > **Referencia, no diario.** El historial vive en `git log -p -- Claude_Proyecto/Aleman/`.
 > Ver `../../CLAUDE.md` → Regla 3.

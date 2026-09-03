@@ -1078,6 +1078,78 @@ function impactoDelCambio() {
             ' habilidades: ' + libros + ' libros con ficha y ' + conUrl + ' con enlace)');
 })();
 
+// ── 19. El vocabulario de alemán, en un solo sitio ───────────────────────────
+// Las 479 palabras las pintan DOS pantallas: `Aleman/vocabulario.html`, que es donde
+// nacieron, y la de Alemán del dashboard. Hasta el 2026-09-02 cada una tuvo su propia
+// copia. Ahora las dos cargan `Dashboard/aleman-vocab.js` y este control está para que
+// no vuelvan a separarse — y para cazar los emoji partidos, que fue un fallo real: el
+// generador escapó 1F44B como \\u1f44 + 'b' y las 21 secciones sacaron un carácter
+// griego por icono.
+(function () {
+  const malos = [];
+  let V;
+  try {
+    V = require('./aleman-vocab.js');
+  } catch (e) {
+    problemas.push('No se puede leer Dashboard/aleman-vocab.js: ' + e.message);
+    return;
+  }
+
+  if (!V.voc || V.voc.length < 400)
+    malos.push('  aleman-vocab.js trae ' + ((V.voc || []).length) + ' palabras; eran 479');
+  const cats = Object.keys(V.cats || {});
+  if (cats.length !== 21)
+    malos.push('  aleman-vocab.js trae ' + cats.length + ' secciones; eran 21');
+
+  // Cada palabra en su sección, y ninguna sección vacía.
+  V.voc.forEach(function (v, i) {
+    if (cats.indexOf(v.cat) === -1)
+      malos.push('  la palabra "' + v.de + '" (nº ' + i + ') dice ser de "' + v.cat + '", que no existe');
+    if (!v.de || !v.es) malos.push('  la palabra nº ' + i + ' está sin alemán o sin español');
+  });
+  cats.forEach(function (c) {
+    if (V.de(c).length === 0) malos.push('  la sección "' + c + '" no tiene ni una palabra');
+  });
+
+  // Emoji partidos. Se comprueba en positivo — el icono TIENE que ser un pictograma —
+  // y no listando los caracteres raros que salen al romperse: la primera versión de este
+  // control buscaba griego y cirílico (0370-04FF) y no cazaba ni uno, porque un escape
+  // cortado a cuatro dígitos aterriza en 1F00-1FFF, que es Greek Extended.
+  const iconos = cats.map(function (c) { return V.cats[c].icon; })
+    .concat((V.partizip.secciones || []).map(function (x) { return x.ico; }));
+  iconos.forEach(function (ic) {
+    if (!ic) { malos.push('  hay una sección sin icono'); return; }
+    if (!/\p{Extended_Pictographic}/u.test(ic) || /[\uD800-\uDBFF](?![\uDC00-\uDFFF])/.test(ic))
+      malos.push('  el icono "' + ic + '" no es un emoji: el escape se cortó a los 4 dígitos');
+  });
+
+  if ((V.partizip.secciones || []).length !== 9)
+    malos.push('  Partizip trae ' + (V.partizip.secciones || []).length + ' bloques; eran 9');
+
+  // Y las dos pantallas lo cargan en vez de copiarlo.
+  [['Aleman', 'vocabulario.html'], ['Dashboard', 'dashboard.html']].forEach(function (a) {
+    const rel = a[0] + '/' + a[1];
+    let h;
+    try { h = leer(rel); } catch (e) { malos.push('  no se puede leer ' + rel); return; }
+    // La ETIQUETA, no el nombre: los dos archivos nombran aleman-vocab.js en un
+    // comentario, así que buscar el texto dejaba pasar un <script> borrado.
+    if (!/<script src="[^"]*aleman-vocab\.js"><\/script>/.test(h))
+      malos.push('  ' + rel + ' no carga aleman-vocab.js con un <script src>');
+    // Una copia propia se reconoce por varias palabras con su `cat` escritas a mano.
+    const copia = (h.match(/\{\s*art:/g) || []).length;
+    if (copia > 3)
+      malos.push('  ' + rel + ' vuelve a llevar ' + copia + ' palabras escritas dentro; ' +
+                 'tienen que estar solo en Dashboard/aleman-vocab.js');
+  });
+
+  if (malos.length)
+    problemas.push('El vocabulario de alemán no cuadra:\n' + malos.slice(0, 12).join('\n'));
+  else
+    ok.push('Vocabulario de alemán en un solo sitio (' + V.voc.length + ' palabras en ' +
+            cats.length + ' secciones y ' + V.partizip.secciones.length +
+            ' bloques de Partizip, cargado por las 2 pantallas)');
+})();
+
 // ── Salida ──
 if (process.argv.indexOf('--hook') !== -1) {
   const partes = [];

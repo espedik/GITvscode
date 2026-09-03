@@ -134,7 +134,7 @@ pero el nombre de la variable se queda corto.
 |---|---|---|
 | `{{escuelaAleman}}` | Cenlex Santo Tomás | Clases presenciales desde el 25-ago-2026 |
 | `{{proteinaMeta}}` | 186 | Meta diaria de proteína. La citan la rutina (whey de la noche) y la ficha de whey de Salud |
-| `{{kapitelAleman}}` | 10 | **Filtra el slide de Alemán del Dashboard**: con un capítulo puesto muestra solo sus lecciones en vez de rotar por las 40. En `null` vuelve la rotación completa |
+| `{{kapitelAleman}}` | 10 | El capítulo que cursa en Cenlex. Filtró el slide de Alemán del Dashboard hasta el 2026-09-02; desde que esa pantalla es vocabulario y Partizip, ya no filtra nada — queda como dato del proyecto |
 
 ### La rutina diaria
 
@@ -509,7 +509,9 @@ Es lo que evita que el calendario se congele como se congeló la vieja barra de 
 | `CuidadoPersonal/salud.html` | `<script src="../Dashboard/datos-maestros.js">` | `CIFRAS.SUPLEMENTOS` (siembra la lista y el botiquín) y `CIFRAS.CHEQUEO` |
 
 El Dashboard es donde vive el archivo porque es el centro del proyecto, y ahí ya estaban
-`aleman-data.js` y `entrevistas-data.js`.
+`aleman-vocab.js` (vocabulario y Partizip, compartido con `Aleman/vocabulario.html`),
+`entrevistas-data.js`, y `aleman-data.js`, que guarda las 40 lecciones y ahora mismo no
+lo carga ninguna pantalla.
 
 ---
 
@@ -536,7 +538,7 @@ Las migraciones anteriores a esa fecha (`_banamex9k`, `_pagos20260813`, `_msibbv
 | `Finanzas/` | `Finanzas.html` | Finanzas reales, GBM, BTC, deudas | `finanzasmx_v2` |
 | `CuidadoPersonal/` | `cuidadopersonal.html` + `salud`/`ejercicio`/`comida` | Shell con 7 subtabs | `skincare_v1`, `misalud_v1`, `mirutina_v1`, `comida_v1` |
 | `Vestimenta/` | `vestimenta.html` | Guardarropa y compras | `vestimenta_v1` |
-| `Aleman/` | 35+ páginas | Estudio A1/A2, sin datos | — |
+| `Aleman/` | 35+ páginas | Estudio A1/A2. `vocabulario.html` carga `Dashboard/aleman-vocab.js` | 479 palabras + Partizip |
 | `Entrevistas/` | `index.html` + `js/data-*.js` | Prep. técnica automotriz, 229 temas | `theme` |
 
 Detalle por app en su propio `.md` (`readme_dashboard.md`, `readme_finanzas.md`, …). Este índice

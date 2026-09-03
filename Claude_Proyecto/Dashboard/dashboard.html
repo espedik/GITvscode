@@ -16,7 +16,9 @@
 <title>JARVIS — Dashboard</title>
 <meta name="description" content="Salvapantallas de mando: rotación automática de pantallas con lo más importante y pendiente de Coach, Finanzas y el resto de mis proyectos.">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='46' fill='%2305050a' stroke='%2300e0c0' stroke-width='4'/%3E%3Ccircle cx='50' cy='50' r='14' fill='%2300e0c0'/%3E%3Ccircle cx='50' cy='50' r='30' fill='none' stroke='%2300e0c0' stroke-width='2' opacity='.5'/%3E%3C/svg%3E">
-<!-- Contenido real de las 35 lecciones de Aleman/ (ALEMAN_CONTENT), extraído automáticamente por
+<!-- El vocabulario de alemán (479 palabras en 21 secciones) y el tema de Partizip I y II,
+     en `aleman-vocab.js`, que carga también Aleman/vocabulario.html. Las 40 lecciones ya no
+     se muestran aquí — siguen enteras en Aleman/. Lo de abajo quedó de cuando sí estaban:
      Aleman/_generar-datos-dashboard.js — ver "Alemán del día" en readme_dashboard.md. No es un
      resumen ni texto reescrito a mano: es el vocabulario/diálogos/ejercicios reales de cada
      lección, listo para pintarse con el estilo nativo del Dashboard. -->
@@ -25,7 +27,7 @@
 <link rel="stylesheet" href="ficha.css">
 <script src="datos-maestros.js"></script>
 <script src="ficha.js"></script>
-<script src="aleman-data.js"></script>
+<script src="aleman-vocab.js"></script>
 <!-- Contenido real de los 229 temas de Entrevistas/ (ENTREVISTA_TEMAS/ENTREVISTA_CONTENT/
      ENTREVISTA_CSS), extraído automáticamente por Entrevistas/_generar-datos-dashboard.js — ver
      "Entrevista del día" en readme_dashboard.md. Es el HTML real de cada tema (ya escrito a mano
@@ -1671,9 +1673,6 @@ button.hp-lec:active{transform:translateY(0)}
 /* El contador deja de ser un bloque aparte y se va a la izquierda de la fila, empujando los
    botones a la derecha — así la fila se llena en vez de quedar todo amontonado en una esquina. */
 .td-right .td-counter{margin-right:auto}
-.al-level{display:inline-flex;align-items:center;gap:6px;padding:5px 13px;border-radius:20px;font-size:11px;font-weight:800;letter-spacing:.04em;white-space:nowrap}
-.al-level.a1{background:rgba(61,220,151,.14);color:#3ddc97;border:1px solid rgba(61,220,151,.32)}
-.al-level.a2{background:rgba(0,184,217,.14);color:#00b8d9;border:1px solid rgba(0,184,217,.32)}
 .td-badge{display:inline-flex;align-items:center;gap:6px;padding:5px 13px;border-radius:20px;font-size:11px;font-weight:800;letter-spacing:.04em;white-space:nowrap;background:rgba(var(--ov),.08);color:var(--ac1);border:1px solid rgba(var(--ov),.14)}
 .td-counter{font-size:11px;color:var(--text3);font-family:var(--mono);white-space:nowrap}
 .td-open{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:20px;background:var(--ac1);color:#06170f;text-decoration:none;font-weight:800;font-size:12px;white-space:nowrap;transition:transform .2s}
@@ -1714,108 +1713,127 @@ button.hp-lec:active{transform:translateY(0)}
 .en-scroll-hint .arrow{display:inline-block;animation:enHintBounce 1.4s ease-in-out infinite}
 @keyframes enHintBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(3px)}}
 
-/* ─── ALEMÁN DEL DÍA — contenido real, nativo, sin iframe (2026-08-07, versión final) ─────────
-   Adán, tras ver la versión con iframe integrado: "la sección de alemán no me gustó, revisa bien
-   el proyecto Alemán, ya tienes diferentes html... con esa misma información puedes jalarla para
-   el dashboard y así ya no repliques contenido, utiliza ese y ya en el dashboard se vea muy bien".
-   El obstáculo real seguía siendo el mismo (Chrome bloquea leer el DOM de un iframe file:// desde
-   otro documento file://, ver intento anterior más abajo en el JS) — la solución no fue intentarlo
-   en el navegador de Adán, sino ANTES: `Aleman/_generar-datos-dashboard.js` abre cada una de las
-   35 lecciones como página propia con Playwright (sin iframe, sin restricción de origen) y extrae
-   su contenido real a `Dashboard/aleman-data.js`, que este archivo carga con un <script src=""> —
-   eso sí funciona sin servidor. El resultado: cero HTML/CSS de Aleman/ encimado, cero contenido
-   escrito a mano, solo los datos reales ya extraídos, pintados con el estilo propio del Dashboard.
-   Clases: cada sección de una lección es un `.tile.al-card` (vocabulario, diálogos, frases,
-   ejercicios, reglas, conjugaciones, y una rejilla genérica `.al-mini-grid` para los widgets
-   visuales únicos de cada lección A1 — números, colores, días, familia, artículos, pronombres). */
-/* ─── Lecciones del capítulo en curso (Alemán) ───
-   Una fila con las 5 del Kapitel para tocar la que toca hoy, en vez de ir dando a "Siguiente".
-   Solo se pinta con el filtro de capítulo activo; con las 40 sueltas no cabría. */
-.al-lecciones{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 14px}
-.al-lec{flex:1 1 168px;min-width:150px;max-width:260px;display:flex;flex-direction:column;gap:2px;
-  padding:9px 12px;border-radius:12px;border:1px solid rgba(var(--ov),.10);background:rgba(var(--ov),.04);
-  cursor:pointer;text-align:left;font-family:inherit;color:inherit;transition:all .18s}
-.al-lec:hover{background:rgba(var(--ov),.09);border-color:rgba(var(--ov),.2)}
-.al-lec.on{background:rgba(0,232,122,.13);border-color:var(--g);box-shadow:0 0 16px rgba(0,232,122,.22)}
-.al-lec-i{font-size:15px;line-height:1}
-.al-lec-t{font-size:12.5px;font-weight:800;color:var(--text)}
-.al-lec.on .al-lec-t{color:var(--g)}
-.al-lec-s{font-size:10.5px;color:var(--text3);line-height:1.3}
-@media(max-width:700px){ .al-lec{flex:1 1 100%;max-width:none} }
-.al-content{margin-top:10px;flex:1;min-height:0;overflow-y:auto;padding-right:6px;display:flex;flex-direction:column;gap:14px}
-.al-card-h{display:flex;align-items:center;gap:9px;font-family:var(--font-title);font-size:clamp(15px,1.4vw,19px);font-weight:600;color:var(--text);margin-bottom:12px}
-.al-card-h span:first-child{font-size:1.15em}
-.al-intro{font-size:12.5px;color:var(--text3);line-height:1.55;margin:-4px 0 14px}
-.al-vocab-wrap{overflow-x:auto;margin-bottom:12px}
-.al-vocab-wrap:last-child,.al-card>:last-child{margin-bottom:0}
-.al-vocab{width:100%;border-collapse:collapse;font-size:13px}
-.al-vocab th{text-align:left;padding:7px 10px;font-size:10px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--cy);border-bottom:1px solid rgba(var(--ov),.14);white-space:nowrap}
-.al-vocab td{padding:8px 10px;border-bottom:1px solid rgba(var(--ov),.06);vertical-align:top}
-.al-vocab tr:last-child td{border-bottom:none}
-.al-vocab tr:hover td{background:rgba(var(--ov),.03)}
-.al-vocab-de{font-weight:800;color:var(--text);white-space:nowrap}
-.al-vocab-es{color:var(--text2)}
-.al-rule{background:rgba(var(--ov),.04);border:1px dashed rgba(var(--ov),.16);border-radius:10px;padding:13px 16px;margin-bottom:12px;font-family:var(--mono);font-size:12.5px;line-height:1.75;color:var(--text2)}
-.al-rule strong{color:var(--cy)}
-.al-rule em{color:var(--text3);font-size:.92em}
-.al-examples{margin-bottom:12px}
-.al-example{border-left:3px solid var(--w);background:rgba(var(--ov),.03);border-radius:0 10px 10px 0;padding:9px 14px;margin-bottom:8px}
-.al-example:last-child{margin-bottom:0}
-.al-example-de{font-size:13.5px;font-weight:700;color:var(--text)}
-.al-example-es{font-size:11.5px;color:var(--text2);margin-top:2px}
-.al-tip{margin-bottom:12px;background:rgba(0,232,122,.08);border:1px solid rgba(0,232,122,.22);border-radius:10px;padding:10px 14px;font-size:12px;color:var(--text2);line-height:1.5}
-.al-phrase-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:9px;margin-bottom:12px}
-.al-phrase-item{background:rgba(var(--ov),.04);border:1px solid rgba(var(--ov),.08);border-radius:11px;padding:10px 13px;display:flex;flex-direction:column;gap:2px}
-.al-phrase-sit{font-size:9.5px;font-weight:800;color:var(--w);text-transform:uppercase;letter-spacing:.06em}
-.al-phrase-de{font-size:13.5px;font-weight:700;color:var(--text)}
-.al-phrase-es{font-size:11.5px;color:var(--text2)}
-.al-dialog-title{font-size:10px;font-weight:800;color:var(--ac1);text-transform:uppercase;letter-spacing:.06em;margin-bottom:7px}
-.al-dialog-box{background:rgba(var(--ov),.04);border:1px solid rgba(var(--ov),.08);border-radius:13px;padding:13px 15px;margin-bottom:12px}
-.al-dialog-line{display:flex;gap:10px;margin-bottom:9px;align-items:flex-start}
-.al-dialog-line:last-child{margin-bottom:0}
-.al-dialog-speaker{font-size:10.5px;font-weight:800;color:var(--cy);text-transform:uppercase;min-width:20px;margin-top:2px;flex-shrink:0}
-.al-dialog-de{font-size:13px;font-weight:600;color:var(--text)}
-.al-dialog-es{font-size:11px;color:var(--text3);margin-top:1px}
-.al-exercise{background:rgba(var(--ov),.04);border:1px solid rgba(var(--ov),.08);border-left:3px solid var(--o);border-radius:10px;padding:12px 14px;margin-bottom:10px}
-.al-exercise:last-child{margin-bottom:0}
-.al-exercise-num{font-size:10px;font-weight:800;color:var(--o);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
-.al-exercise-q{font-size:13px;color:var(--text);line-height:1.5}
-.al-exercise-hint{font-size:11px;color:var(--text3);font-style:italic;margin-top:6px}
-.al-placeholder{margin-top:8px;min-height:50px;border:1.5px dashed rgba(var(--ov),.14);border-radius:9px;display:flex;align-items:center;justify-content:center;color:var(--text3);font-size:11.5px;font-style:italic;text-align:center;padding:8px}
-/* Conjugación (.conj-big en el original) — tabla pronombre/forma/ejemplo */
-.al-conj{background:rgba(var(--ov),.04);border:1px solid rgba(var(--ov),.08);border-radius:12px;padding:14px 16px;margin-bottom:12px}
-.al-conj-h{font-size:10.5px;font-weight:800;color:var(--ac1);text-transform:uppercase;letter-spacing:.07em;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid rgba(var(--ov),.08)}
-.al-conj-row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:6px 0;border-bottom:1px solid rgba(var(--ov),.06)}
-.al-conj-row:last-child{border-bottom:none}
-.al-conj-pron{font-size:12.5px;color:var(--text2);min-width:70px}
-.al-conj-form{font-size:16px;font-weight:800;color:var(--cy)}
-.al-conj-ex{font-size:11px;color:var(--text3);font-style:italic;text-align:right}
-/* Contenido "extra" genérico (num-grid, color-grid, art-big, pron-big, family-tree, clock...) —
-   se desconoce el diseño original exacto de cada widget, así que se pinta con un formato propio
-   consistente: cada "item" es una mini tarjeta con su primera línea como titular y el resto como
-   detalle — sigue siendo el vocabulario/dato real, solo que con un layout genérico. */
-.al-mini-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px;margin-bottom:12px}
-.al-mini-card{background:rgba(var(--ov),.04);border:1px solid rgba(var(--ov),.08);border-radius:10px;padding:9px 10px;text-align:center}
-.al-mini-h{font-size:14px;font-weight:800;color:var(--cy)}
-.al-mini-l{font-size:10.5px;color:var(--text2);margin-top:2px;line-height:1.4}
-.al-extra-text{font-size:12.5px;color:var(--text2);line-height:1.6;background:rgba(var(--ov),.04);border:1px solid rgba(var(--ov),.08);border-radius:10px;padding:10px 14px;margin-bottom:12px}
-.al-extra-text div+div{margin-top:3px}
-.al-loading{color:var(--text3);font-size:13px;padding:20px 4px}
-@media(max-width:640px){.al-phrase-grid,.al-mini-grid{grid-template-columns:1fr 1fr}}
+/* La pantalla de Alemán fue durante un mes "la lección del día": el contenido real de las
+   40 lecciones de `Aleman/`, extraído con Playwright a `Dashboard/aleman-data.js` (327 KB) y
+   pintado aquí nativo, sin iframe. El 2026-09-02 Adán pidió quitarlo y dejar solo
+   vocabulario y Partizip, así que ese CSS (`.al-card`, `.al-mini-grid`, la insignia de nivel)
+   se fue con él. `aleman-data.js` y su generador siguen en el repo, en reposo: Adán dijo "de
+   momento", y volver a poner las lecciones es cargar el archivo otra vez. */
+/* ─── Alemán ─ vocabulario y Partizip ────────────────────────────────────
+   Antes esta pantalla era la lección del día. Ahora son 479 palabras en 21 secciones
+   más el tema de Partizip, y todo el espacio se va en que las palabras se lean:
+   el artículo con su color, la traducción debajo y el ejemplo separado por una línea.
 
-/* ─── HABILIDADES — "Foco": una sola habilidad grande + ranking por retorno (2026-08-23) ─
-   Adán eligió esta de tres opciones dibujadas ("realiza la opcion b"). Sustituye a las 12
-   barras iguales de #skillBars y a las 2 tarjetas de #skillPriority. Lo que motivó el cambio,
-   medido en Chrome sobre la página real: las 16 sub-habilidades salían las 16 cerradas, así
-   que de reojo —que es como se lee este slide— solo se veían títulos, nunca el cómo ni el
-   recurso; y la tarjeta de Finanzas dejaba 90px de hueco muerto porque tiene 7 pasos contra
-   los 9 de Inversión y el grid las igualaba a 418px.
-   La columna izquierda muestra UN paso completo y legible sin tocar nada; la derecha ordena
-   las 12 por retorno (peso × lo que falta para 100), que es lo que de verdad responde el
-   título del slide. */
-/* El contenido pesa mas que la lista, asi que se lleva mas pantalla: de 1.75:1 a 2.35:1,
-   que a 1600px son ~945px de panel contra los 857 de antes (Adan, 2026-08-31: "el contenido
-   eso me interesa mas […] ademas abarca mas espacio de la pantalla"). */
+   Los dos colores de énfasis son tokens y no valores fijos porque el amarillo de la
+   bandera (#ffce00) sobre el tema claro da 1.49:1 — con él los ejemplos en alemán eran
+   invisibles de día. Medido, no supuesto. */
+.al-fondo{--al-oro:#8a6a00;--al-mal:#c02626}
+:root[data-theme="dark"] .al-fondo{--al-oro:#ffce00;--al-mal:#ff8a8a}
+
+.al-busca{display:flex;align-items:center;gap:10px;flex:1;min-width:190px}
+.al-busca input{flex:1;min-width:0;height:34px;padding:0 13px;border-radius:11px;
+  border:1px solid rgba(var(--ov),.14);background:rgba(var(--ov),.05);color:var(--text);
+  font:13px var(--font);outline:none;transition:border-color .15s,background .15s}
+.al-busca input::placeholder{color:var(--text3)}
+.al-busca input:focus{border-color:rgba(var(--ov),.4);background:rgba(var(--ov),.09)}
+.al-q-n{font-size:11px;color:var(--text3);font-family:var(--mono);white-space:nowrap}
+
+/* Las 21 secciones más Partizip. En pantalla ancha envuelven en dos filas; en el
+   móvil se convierten en una tira que se desliza — apiladas ocupaban siete filas y
+   dejaban la primera palabra fuera de la pantalla. */
+.al-tabs{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0 14px}
+.al-tab{display:inline-flex;align-items:center;gap:6px;font:700 11px var(--font);
+  padding:6px 11px;border-radius:9px;border:1px solid rgba(var(--ov),.11);
+  background:rgba(var(--ov),.04);color:var(--text2);cursor:pointer;white-space:nowrap;
+  transition:background .14s,border-color .14s,color .14s}
+.al-tab:hover{background:rgba(var(--ov),.08);color:var(--text)}
+.al-tab b{font-family:var(--mono);font-size:10px;color:var(--text3);font-weight:700}
+.al-tab.on{background:rgba(255,206,0,.14);border-color:rgba(255,206,0,.5);color:var(--al-oro)}
+.al-tab.on b{color:var(--al-oro)}
+.al-tab.gram{border-color:rgba(176,110,255,.34);color:var(--p);background:rgba(176,110,255,.09)}
+.al-tab.gram.on{background:rgba(176,110,255,.2);border-color:rgba(176,110,255,.6)}
+
+/* Una palabra. El borde de la izquierda es el género: se ve antes de leer nada. */
+.al-content{flex:1;min-height:0;overflow-y:auto;padding-right:4px}
+.al-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(228px,1fr));gap:9px;
+  padding-bottom:14px}
+.al-w{position:relative;border:1px solid var(--card-br);background:var(--card);
+  border-radius:13px;padding:11px 13px 12px;overflow:hidden}
+.al-w::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--c)}
+.al-w-top{display:flex;align-items:baseline;gap:7px}
+.al-art{flex:none;font-family:var(--mono);font-size:10px;font-weight:700;padding:2px 6px;
+  border-radius:5px;color:var(--c);background:color-mix(in srgb,var(--c) 15%,transparent)}
+.al-de{font-size:15px;font-weight:700;letter-spacing:-.01em;color:var(--text)}
+.al-es{font-size:12px;color:var(--text2);margin-top:2px}
+.al-ex{font-size:11px;color:var(--text3);font-style:italic;margin-top:6px;padding-top:6px;
+  border-top:1px solid rgba(var(--ov),.07);line-height:1.5}
+.al-vacio{padding:26px 4px;font-size:12.5px;color:var(--text3);line-height:1.6}
+
+/* Partizip. Cada bloque es una tarjeta con su icono, y dentro puede haber tabla,
+   lista de tres columnas, comparativa, aviso naranja o truco turquesa. */
+.al-pz-wrap{padding-bottom:14px}
+.al-pz-col{display:flex;flex-direction:column;gap:12px;max-width:1000px}
+.al-pz-sub{font-size:12.5px;color:var(--text2);line-height:1.6;margin:0 0 12px;max-width:1000px}
+.al-pz{border:1px solid rgba(176,110,255,.24);background:rgba(176,110,255,.045);
+  border-radius:16px;padding:15px 17px;scroll-margin-top:6px}
+.al-pz-h{display:flex;align-items:center;gap:9px;margin-bottom:5px}
+.al-pz-ico{font-size:15px}
+.al-pz-h h3{font-size:15px;font-weight:800;letter-spacing:-.015em;color:var(--text)}
+.al-pz-c{font-size:12.5px;color:var(--text2);line-height:1.65}
+.al-pz-c b{color:var(--text);font-weight:700}
+.al-pz-c i,.al-tabla i{font-style:normal;font-family:var(--mono);font-size:12px;color:var(--al-oro)}
+.al-pz-c s,.al-tabla s{color:var(--al-mal);text-decoration-color:currentColor}
+.pz-mini{font-size:10.5px;color:var(--text3)}
+.al-pz-aviso,.al-pz-truco{margin-top:10px;padding:9px 12px;border-radius:10px;
+  font-size:11.5px;line-height:1.55}
+.al-pz-aviso{border:1px solid rgba(var(--o-rgb),.3);background:rgba(var(--o-rgb),.08);color:var(--o)}
+.al-pz-truco{border:1px solid rgba(var(--cy-rgb),.26);background:rgba(var(--cy-rgb),.07);color:var(--cy)}
+.al-tabla{overflow-x:auto;margin-top:10px}
+.al-tabla table{border-collapse:collapse;width:100%;min-width:440px}
+.al-tabla th{font-size:9px;font-weight:800;letter-spacing:.11em;text-transform:uppercase;
+  color:var(--text3);text-align:left;padding:0 10px 7px;border-bottom:1px solid var(--card-br)}
+.al-tabla td{padding:8px 10px;border-bottom:1px solid rgba(var(--ov),.06);font-size:12px;
+  color:var(--text2);vertical-align:top;line-height:1.5}
+.al-tabla td b{color:var(--text)}
+.al-lst{display:flex;flex-direction:column;gap:8px;margin-top:10px}
+.al-li{display:grid;grid-template-columns:190px 1fr;gap:11px;padding:9px 11px;border-radius:10px;
+  border:1px solid var(--card-br);background:rgba(var(--ov),.025)}
+.al-li-t{font-size:11.5px;font-weight:700;color:var(--text)}
+.al-li-d{font-size:11px;color:var(--text3);margin-top:2px;line-height:1.45}
+.al-li-e{font-size:12px;color:var(--text2);font-family:var(--mono);line-height:1.5}
+
+/* El índice del tema. Solo aparece cuando sobra ancho: el texto se lee mejor a 1000px,
+   así que en una pantalla de 1600 quedaba medio lienzo vacío al lado. Ahí va. */
+.al-pz-idx{display:none}
+@media(min-width:1200px){
+  .al-pz-wrap{display:grid;grid-template-columns:minmax(0,1fr) 236px;column-gap:30px;
+    align-items:start;max-width:1330px}
+  .al-pz-sub{grid-column:1/-1}
+  .al-pz-idx{display:block;position:sticky;top:0}
+  .al-pz-idx-t{font-size:9px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--text3);padding:0 10px 8px}
+  .al-pz-idx button{display:flex;align-items:flex-start;gap:8px;width:100%;text-align:left;
+    padding:7px 10px;border-radius:9px;font:400 11.5px/1.35 var(--font);color:var(--text3);
+    background:none;border:0;border-left:2px solid transparent;cursor:pointer;
+    transition:color .14s,background .14s,border-color .14s}
+  .al-pz-idx button:hover{background:rgba(var(--ov),.05);color:var(--text2)}
+  .al-pz-idx button.on{color:var(--text);background:rgba(176,110,255,.08);
+    border-left-color:rgba(176,110,255,.75);font-weight:700}
+  .al-pz-idx button span{flex:none;font-size:12px}
+}
+@media(max-width:760px){
+  .al-grid{grid-template-columns:1fr}
+  .al-li{grid-template-columns:1fr;gap:5px}
+  .al-pz{padding:13px 14px}
+  .al-busca{width:100%}
+  /* La tira que se desliza. `scroll-snap` para que cada sección quede encajada y no
+     a medias, y la activa se trae sola a la vista al pintar (ver `alPinta`). */
+  .al-tabs{flex-wrap:nowrap;overflow-x:auto;scroll-snap-type:x proximity;
+    scrollbar-width:none;padding-bottom:2px;margin:10px 0 12px}
+  .al-tabs::-webkit-scrollbar{display:none}
+  .al-tab{flex:none;scroll-snap-align:center;font-size:11px;padding:7px 11px}
+}
+}
 .hab-cols{display:grid;grid-template-columns:minmax(0,2.35fr) minmax(0,1fr);gap:14px;align-items:stretch}
 .hab-side{display:flex;flex-direction:column;gap:14px;min-height:0}
 
@@ -3227,26 +3245,33 @@ button.ct-cat:hover{background:rgba(var(--ov),.07)}
   </section>
 
   <!-- 6 · ALEMÁN DEL DÍA -->
-  <section class="slide theme-aleman" data-i="6">
+  <section class="slide theme-aleman al-fondo" data-i="6">
     <div class="slide-inner">
-      <div class="eyebrow reveal d1"><span class="dot"></span> 🇩🇪 Alemán del día</div>
+      <div class="eyebrow reveal d1"><span class="dot"></span> 🇩🇪 Alemán</div>
       <div class="td-top reveal d2">
         <div>
-          <div class="td-title" id="alDe">Deutsch</div>
+          <div class="td-title" id="alDe">Vocabulario</div>
           <div class="td-sub" id="alEs"></div>
         </div>
         <div class="td-right">
-          <span class="al-level" id="alLevel"></span>
           <span class="td-counter" id="alCounter"></span>
-          <button class="td-next" onclick="alemanSiguiente()" title="Ir a la siguiente lección, sin esperar a mañana">Siguiente lección →</button>
-          <a class="td-open" id="alOpen" href="#" target="_blank" rel="noopener">↗ Ver lección original</a>
+          <!-- El buscador va en esta fila y no en la suya: entre el contador y el botón
+               quedaba un hueco de media pantalla. Busca en alemán, en español y en los
+               ejemplos, y manda sobre la sección abierta. -->
+          <div class="al-busca">
+            <input id="alQ" type="search" placeholder="Buscar en alemán o en español…"
+                   oninput="alPinta()" autocomplete="off">
+            <span class="al-q-n" id="alQN"></span>
+          </div>
+          <a class="td-open" href="../Aleman/index.html" target="_blank" rel="noopener">↗ Abrir la app de Alemán</a>
         </div>
       </div>
-      <div class="td-tags reveal d3" id="alTags"></div>
+      <!-- Las 21 secciones más Partizip. La elegida se guarda en localStorage: al volver
+           al día siguiente sigue donde lo dejó. -->
       <!-- Las lecciones del capítulo, todas a la vista. Con el filtro de Kapitel puesto son 5 y
            caben en una fila: se toca la que toca estudiar hoy en vez de ir dando a "Siguiente".
            Sin filtro (40 temas) esta fila no se pinta — no cabrían. -->
-      <div class="al-lecciones reveal d3" id="alLecciones"></div>
+      <div class="al-tabs reveal d3" id="alTabs"></div>
       <div class="al-content reveal d4" id="alContent"></div>
     </div>
   </section>
@@ -5027,225 +5052,223 @@ function toggleListaItem(id,cat,txt){
   actualizarLcTotal();
 }
 
-// ── Alemán del día (2026-08-04, contenido nativo definitivo desde 2026-08-07) — un tema
-//    distinto cada día, tomado de las 35 lecciones completas que ya existen en ../Aleman/ (15 A1
-//    + 20 A2: 12 gramática + 8 vocabulario). Metadata (título/subtítulo/tags) copiada
-//    literalmente de Aleman/index.html — 8ª estructura duplicada del mismo tipo que las de la
-//    tabla "Datos duplicados" del README: si se agrega, quita o renombra un tema allá, hay que
-//    replicarlo aquí. El CONTENIDO real de cada lección (vocabulario, diálogos, frases,
-//    ejercicios, reglas, conjugaciones) ya no se duplica a mano ni se embebe por iframe — vive en
-//    `ALEMAN_CONTENT` (cargado desde `aleman-data.js`, ver <script src> en <head>), generado por
-//    `Aleman/_generar-datos-dashboard.js`.
+// ─── ALEMÁN ──────────────────────────────────────────────────────
+// Esta pantalla mostraba "la lección del día" de 40 temas, con su contenido real extraído
+// a `aleman-data.js` (327 KB) por un script de Playwright. El 2026-09-02 Adán pidió
+// quitarlo: *"de momento quiero que me quites las lecciones en dashboard y solo me pongas
+// uno de vocabulario super extenso y acomodalo por secciones y quiero el tema de partizip
+// 1 y 2, lo demas quitalo"*.
 //
-//    Dos intentos previos, documentados aquí porque explican por qué se llegó a esta solución:
-//    1) Leer el DOM de la lección en vivo desde un iframe oculto (`contentDocument`), dentro del
-//       propio navegador de Adán — falló: Chrome bloquea el acceso entre dos documentos `file://`
-//       distintos, y `fetch()` a un archivo local también falla ("Failed to fetch"). Confirmado
-//       con Playwright. El mismo problema afecta silenciosamente a "Entrevista del día" (`win.eval`
-//       más abajo), que se degrada sin romper nada visible en vez de fallar por completo.
-//    2) Mostrar el iframe real, pero mejor integrado visualmente (sin encabezado duplicado, con
-//       un resplandor ambiental) — funcionaba, pero a Adán no le gustó el resultado: *"la sección
-//       de alemán no me gustó... con esa misma información puedes jalarla para el dashboard y así
-//       ya no repliques contenido, utiliza ese"*.
-//    Solución final: la extracción NO ocurre en el navegador de Adán (ahí es donde chocaba con la
-//    política de origen de Chrome) sino ANTES, de mi lado, con Playwright abriendo cada lección
-//    como página propia (sin iframe, incluir origen normal) y volcando su contenido real a un
-//    archivo de datos estático. Cero contenido inventado o retipeado a mano, cero iframe, cero
-//    duplicado visual — y funciona sin servidor porque `<script src="archivo.js">` sí carga bien
-//    vía file://, a diferencia de fetch()/XHR.
-const ALEMAN_TEMAS=[
-  // ── Kapitel 10 · Cenlex Santo Tomás (2026-08-25) ──────────────────────────────────────────
-  // Lo que Adán cursa ahora mismo. Llevan `kapitel:10`, y mientras `PROYECTO.kapitelAleman`
-  // valga 10 el slide muestra SOLO estas: "ya estoy estudiando de nuevo en Cenlex Santo Tomás
-  // y necesito estudiar, entonces necesito enfocarme en estos temas".
-  {file:'k10-01-perfekt-regel.html',nivel:'A2',ico:'🔑',de:'Die Regel: Perfekt',es:'La regla del Perfekt',kapitel:10,tags:['haben/sein','Partizip II','al final']},
-  {file:'k10-06-partizip.html',nivel:'A2',ico:'🔵',de:'Partizip I & II',es:'Los dos participios, a fondo',kapitel:10,tags:['lesend vs gelesen','205 verbos','declinación']},
-  {file:'k10-02-verben-liste.html',nivel:'A2',ico:'📋',de:'Verbenliste',es:'Tabla a memorizar — 207 verbos',kapitel:10,tags:['Präsens · Präteritum · Partizip','irregulares y regulares','filtros']},
-  {file:'k10-03-perfekt-uben.html',nivel:'A2',ico:'✍️',de:'Perfekt üben',es:'Ejercicios y Minitest 1',kapitel:10,tags:['4 bloques','minitest','se corrige solo']},
-  {file:'k10-04-berufe.html',nivel:'A1',ico:'💼',de:'Berufe',es:'Profesiones y tu área',kapitel:10,tags:['sin artículo','-in','Testingenieur']},
-  {file:'k10-05-mein-tag.html',nivel:'A2',ico:'🕐',de:'Mein Tag',es:'Contar tu día (video)',kapitel:10,tags:['zuerst/dann','tu rutina real','guion']},
-  {file:'a1-01-saludos.html',nivel:'A1',ico:'👋',de:'Begrüßungen',es:'Saludos y despedidas',tags:['Hallo','Tschüss','Guten Morgen']},
-  {file:'a1-02-zahlen.html',nivel:'A1',ico:'🔢',de:'Zahlen 1–100',es:'Números del 1 al 100',tags:['eins','zehn','hundert']},
-  {file:'a1-03-farben.html',nivel:'A1',ico:'🎨',de:'Farben & Formen',es:'Colores y formas',tags:['rot','blau','groß']},
-  {file:'a1-04-wochentage.html',nivel:'A1',ico:'📅',de:'Wochentage & Monate',es:'Días de la semana y meses',tags:['Montag','Januar','heute']},
-  {file:'a1-05-familie.html',nivel:'A1',ico:'👨‍👩‍👧',de:'Familie',es:'La familia',tags:['Mutter','Vater','Bruder']},
-  {file:'a1-06-artikel.html',nivel:'A1',ico:'🔤',de:'Artikel: der, die, das',es:'Los artículos alemanes',tags:['der Mann','die Frau','das Kind']},
-  {file:'a1-07-pronomen.html',nivel:'A1',ico:'👤',de:'Personalpronomen',es:'Pronombres personales',tags:['ich','du','er/sie/es']},
-  {file:'a1-08-sein-haben.html',nivel:'A1',ico:'⚙️',de:'Verben: sein & haben',es:'Los verbos ser/estar y tener',tags:['ich bin','du hast','er ist']},
-  {file:'a1-09-uhrzeit.html',nivel:'A1',ico:'🕐',de:'Uhrzeit',es:'Decir la hora',tags:['Wie spät ist es?','halb','Uhr']},
-  {file:'a1-10-laender.html',nivel:'A1',ico:'🌍',de:'Länder & Nationalitäten',es:'Países y nacionalidades',tags:['Deutschland','Mexiko','ich komme aus']},
-  {file:'a1-11-berufe.html',nivel:'A1',ico:'💼',de:'Berufe',es:'Profesiones',tags:['Arzt','Lehrer','Ingenieur']},
-  {file:'a1-12-essen.html',nivel:'A1',ico:'🍎',de:'Essen & Trinken',es:'Comida y bebida básica',tags:['Brot','Wasser','Bier']},
-  {file:'a1-13-wohnen.html',nivel:'A1',ico:'🏠',de:'Wohnen — Grundlagen',es:'Vivienda básica',tags:['Haus','Zimmer','Küche']},
-  {file:'a1-14-verkehr.html',nivel:'A1',ico:'🚇',de:'Verkehr & Richtungen',es:'Transporte y direcciones',tags:['links','rechts','U-Bahn']},
-  {file:'a1-15-hobbys.html',nivel:'A1',ico:'🎮',de:'Hobbys & Freizeit',es:'Pasatiempos básicos',tags:['lesen','spielen','Sport']},
-  {file:'a2-01-modalverben.html',nivel:'A2',ico:'⚙️',de:'Modalverben',es:'Verbos modales',tags:['können','müssen','wollen']},
-  {file:'a2-02-perfekt-haben.html',nivel:'A2',ico:'✅',de:'Perfekt mit haben',es:'Pasado con haben',tags:['ich habe gemacht','Partizip II']},
-  {file:'a2-03-perfekt-sein.html',nivel:'A2',ico:'🚶',de:'Perfekt mit sein',es:'Pasado con sein',tags:['ich bin gegangen','Bewegung']},
-  {file:'a2-04-prateritum.html',nivel:'A2',ico:'📜',de:'Präteritum',es:'Pasado simple (escrito)',tags:['war','hatte','konnte']},
-  {file:'a2-05-verbos-separables.html',nivel:'A2',ico:'✂️',de:'Trennbare Verben',es:'Verbos separables',tags:['aufstehen','anrufen','mitkommen']},
-  {file:'a2-06-verbos-reflexivos.html',nivel:'A2',ico:'🔄',de:'Reflexive Verben',es:'Verbos reflexivos',tags:['sich freuen','sich waschen']},
-  {file:'a2-07-kasus.html',nivel:'A2',ico:'📊',de:'Kasus: Nom., Akk., Dat.',es:'Casos gramaticales',tags:['der/den/dem','Subjekt','Objekt']},
-  {file:'a2-08-komparativ.html',nivel:'A2',ico:'📈',de:'Komparativ & Superlativ',es:'Comparativo y superlativo',tags:['größer','am größten','als']},
-  {file:'a2-09-konjunktionen.html',nivel:'A2',ico:'🔗',de:'Konjunktionen',es:'Conjunciones y conectores',tags:['weil','dass','wenn','obwohl']},
-  {file:'a2-10-preposiciones.html',nivel:'A2',ico:'📍',de:'Präpositionen',es:'Preposiciones + casos',tags:['in/an/auf','Wechselpräp.']},
-  {file:'a2-11-adjetivos.html',nivel:'A2',ico:'🎨',de:'Adjektivdeklination',es:'Declinación de adjetivos',tags:['ein großer Mann','Endungen']},
-  {file:'a2-12-infinitiv.html',nivel:'A2',ico:'∞',de:'Infinitiv mit zu',es:'Infinitivo con zu',tags:['Es ist schön, zu...','versuchen zu']},
-  {file:'a2-13-wohnen.html',nivel:'A2',ico:'🏠',de:'Wohnen & Haushalt',es:'Vivienda y hogar',tags:['Miete','Kühlschrank','Nachbar']},
-  {file:'a2-14-arbeit.html',nivel:'A2',ico:'💼',de:'Arbeit & Beruf',es:'Trabajo y carrera',tags:['Gehalt','Kollege','Bewerbung']},
-  {file:'a2-15-gesundheit.html',nivel:'A2',ico:'🏥',de:'Gesundheit & Körper',es:'Salud y cuerpo humano',tags:['Schmerzen','Arzt','Apotheke']},
-  {file:'a2-16-reisen.html',nivel:'A2',ico:'✈️',de:'Reisen & Tourismus',es:'Viajes y turismo',tags:['Flug','Hotel','Ausflug']},
-  {file:'a2-17-freizeit.html',nivel:'A2',ico:'🎯',de:'Freizeit & Hobbys',es:'Tiempo libre y aficiones',tags:['Kino','Sport','Musik']},
-  {file:'a2-18-essen.html',nivel:'A2',ico:'🍽️',de:'Essen, Trinken & Kochen',es:'Gastronomía y cocina',tags:['Rezept','Restaurant','bestellen']},
-  {file:'a2-19-einkaufen.html',nivel:'A2',ico:'🛒',de:'Einkaufen & Preise',es:'Compras y precios',tags:['Supermarkt','Rabatt','bezahlen']},
-  {file:'a2-20-medien.html',nivel:'A2',ico:'📱',de:'Medien & Technologie',es:'Medios y tecnología',tags:['Internet','Handy','Nachrichten']},
-];
-// `alemanIdx` en null usa el tema del día (diaDelAnio()%N); en cuanto Adán pide "Siguiente
-// lección →" queda fijo en esa posición por el resto de la sesión (hasta recargar la página) —
-// mismo criterio que "Recordar última pantalla" del resto del Dashboard: una vez que navega a
-// mano, no lo regresamos solos al valor automático.
-/* Mientras Adán curse un capítulo en Cenlex, el slide muestra SOLO ese capítulo: son los temas
-   que necesita para clase, y rotar entre las 35 lecciones le daba un tema al azar que casi nunca
-   era el suyo. El filtro sale de `PROYECTO.kapitelAleman` en datos-maestros.js — ponerlo en null
-   devuelve la rotación completa, sin tocar este archivo. */
-function alemanLista(){
-  const k=(window.CIFRAS&&CIFRAS.PROYECTO)?CIFRAS.PROYECTO.kapitelAleman:null;
-  if(k==null) return ALEMAN_TEMAS;
-  const solo=ALEMAN_TEMAS.filter(t=>t.kapitel===k);
-  return solo.length?solo:ALEMAN_TEMAS;   // si el capítulo no tuviera temas, no dejarlo vacío
-}
-let alemanIdx=null;
-function alemanTemaHoy(){
-  const L=alemanLista();
-  if(alemanIdx===null)alemanIdx=diaDelAnio()%L.length;
-  return L[alemanIdx];
-}
-function alemanSiguiente(){
-  alemanIdx=((alemanIdx===null?diaDelAnio():alemanIdx)+1)%alemanLista().length;
-  renderAleman();
-  renderHeroAprender();   // la tarjeta de Mi Día lee el mismo índice: si no, quedaría desfasada
-}
-/* Fila con todas las lecciones del capítulo en curso. Solo se pinta cuando hay filtro activo:
-   con las 40 lecciones sueltas sería una lista inútil, y el criterio de Adán fue justamente
-   acotar ("necesito ahorita solo aprender eso"). */
-function pintarLeccionesK10(actual){
-  const cont=document.getElementById("alLecciones"); if(!cont) return;
-  const k=(window.CIFRAS&&CIFRAS.PROYECTO)?CIFRAS.PROYECTO.kapitelAleman:null;
-  if(k==null){ cont.innerHTML=""; cont.style.display="none"; return; }
-  cont.style.display="";
-  const L=alemanLista();
-  cont.innerHTML=L.map((t,i)=>`
-    <button class="al-lec${t.file===actual.file?" on":""}" onclick="alemanIr(${i})"
-      title="${esc(t.es)}">
-      <span class="al-lec-i">${t.ico}</span>
-      <span class="al-lec-t">${esc(t.de)}</span>
-      <span class="al-lec-s">${esc(t.es)}</span>
-    </button>`).join("");
-}
-/* Ir directo a una lección del capítulo. Deja `alemanIdx` fijo, igual que "Siguiente lección":
-   una vez que Adán elige a mano, no se le devuelve solo al tema del día. */
-function alemanIr(i){
-  alemanIdx=i;
-  renderAleman();
-  renderHeroAprender();
-}
-function renderAleman(){
-  const t=alemanTemaHoy();
-  const idx=alemanIdx+1;
-  document.getElementById('alDe').textContent=`${t.ico} ${t.de}`;
-  document.getElementById('alEs').textContent=t.es;
-  const lvl=document.getElementById('alLevel');
-  lvl.textContent='Nivel '+t.nivel;
-  lvl.className='al-level '+t.nivel.toLowerCase();
-  const _L=alemanLista();
-  const _k=(window.CIFRAS&&CIFRAS.PROYECTO)?CIFRAS.PROYECTO.kapitelAleman:null;
-  const _esc=(window.CIFRAS&&CIFRAS.PROYECTO)?CIFRAS.PROYECTO.escuelaAleman:'';
-  document.getElementById('alCounter').textContent = _k!=null
-    ? `Tema ${idx} de ${_L.length} · Kapitel ${_k} · ${_esc}`
-    : `Tema ${idx} de ${_L.length} · cambia cada día`;
-  document.getElementById('alTags').innerHTML=t.tags.map(tag=>`<span class="td-tag">${tag}</span>`).join('');
-  document.getElementById('alOpen').href='../Aleman/'+t.file;
-  pintarLeccionesK10(t);
-  const data=(typeof ALEMAN_CONTENT!=='undefined')?ALEMAN_CONTENT[t.file]:null;
-  renderAlemanContent(data,t);
-}
-// Pinta con las clases .al-* (CSS arriba) el contenido real ya extraído en ALEMAN_CONTENT —
-// mismo esquema que produce Aleman/_generar-datos-dashboard.js (hero.desc + cards[]).
-function renderAlemanContent(data,t){
-  const el=document.getElementById('alContent');
-  if(!data){ el.innerHTML=`<div class="al-loading">No se encontró el contenido de esta lección. <a href="../Aleman/${t.file}" target="_blank" style="color:var(--cy)">Abrirla directamente →</a></div>`; return; }
-  el.innerHTML=(data.hero.desc?`<div class="al-intro" style="margin-top:0">${data.hero.desc}</div>`:'')+
-    data.cards.map(c=>`
-    <div class="tile al-card">
-      <div class="al-card-h">${c.icon?`<span>${c.icon}</span>`:''}<span>${c.titulo}</span></div>
-      ${c.intro?`<div class="al-intro">${c.intro}</div>`:''}
-      ${c.vocabTables.map(vt=>`
-        <div class="al-vocab-wrap"><table class="al-vocab">
-          <thead><tr>${vt.headers.map(h=>`<th>${h}</th>`).join('')}</tr></thead>
-          <tbody>${vt.rows.map(r=>`<tr>${r.map((cell,i)=>`<td class="${i===0?'al-vocab-de':'al-vocab-es'}">${cell}</td>`).join('')}</tr>`).join('')}</tbody>
-        </table></div>`).join('')}
-      ${c.rule?`<div class="al-rule">${c.rule}</div>`:''}
-      ${c.examples.length?`<div class="al-examples">${c.examples.map(e=>`<div class="al-example"><div class="al-example-de">${e.de}</div><div class="al-example-es">${e.es}</div></div>`).join('')}</div>`:''}
-      ${c.tip?`<div class="al-tip">${c.tip}</div>`:''}
-      ${c.phrases.length?`<div class="al-phrase-grid">${c.phrases.map(p=>`<div class="al-phrase-item"><span class="al-phrase-sit">${p.sit}</span><span class="al-phrase-de">${p.de}</span><span class="al-phrase-es">${p.es}</span></div>`).join('')}</div>`:''}
-      ${c.dialogs.map(d=>`${d.titulo?`<div class="al-dialog-title">${d.titulo}</div>`:''}
-        <div class="al-dialog-box">${d.lineas.map(l=>`<div class="al-dialog-line"><span class="al-dialog-speaker">${l.speaker}</span><span><span class="al-dialog-de">${l.de}</span><span class="al-dialog-es">${l.es}</span></span></div>`).join('')}</div>`).join('')}
-      ${(c.conjugations||[]).map(cj=>`
-        <div class="al-conj">
-          <div class="al-conj-h">${cj.header}</div>
-          ${cj.rows.map(r=>`<div class="al-conj-row"><span class="al-conj-pron">${r.pron}</span><span class="al-conj-form">${r.form}</span><span class="al-conj-ex">${r.ex}</span></div>`).join('')}
-        </div>`).join('')}
-      ${(c.extra||[]).map(ex=>ex.type==='grid'?
-        `<div class="al-mini-grid">${ex.items.map(lines=>`<div class="al-mini-card"><div class="al-mini-h">${lines[0]||''}</div>${lines.slice(1).map(l=>`<div class="al-mini-l">${l}</div>`).join('')}</div>`).join('')}</div>`
-        : `<div class="al-extra-text">${ex.lines.map(l=>`<div>${l}</div>`).join('')}</div>`).join('')}
-      ${c.exercises.map(ex=>`
-        <div class="al-exercise">
-          <div class="al-exercise-num">${ex.num}</div>
-          <div class="al-exercise-q">${ex.q}</div>
-          ${ex.hint?`<div class="al-exercise-hint">💡 ${ex.hint}</div>`:''}
-          ${ex.placeholder?`<div class="al-placeholder">${ex.placeholder}</div>`:''}
-        </div>`).join('')}
-    </div>`).join('');
+// Ahora: las 479 palabras en 21 secciones y el tema de Partizip I y II. Los datos salen de
+// `aleman-vocab.js`, que carga también `Aleman/vocabulario.html` — vivían dentro de esa
+// app y ahora los usan las dos, así que se sacaron a un archivo común en vez de copiarlos.
+// Las 40 lecciones siguen enteras en `Aleman/`, a un clic desde el botón de la cabecera.
+const AL_COLOR = { der:'#38bdf8', die:'#f472b6', das:'#4ade80' };
+const AL_GRAM = '__partizip';       // la pestaña de gramática, que no es una sección de palabras
+
+function alVocab(){ return (typeof ALEMAN_VOCAB !== 'undefined') ? ALEMAN_VOCAB : null; }
+function alEsc(t){ return String(t==null?'':t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+// La sección abierta se recuerda: al volver mañana sigue donde la dejó.
+let alSec = (function(){
+  try { return localStorage.getItem('al_sec_v1') || 'saludos'; } catch(e){ return 'saludos'; }
+})();
+function alSet(c){
+  alSec = c;
+  try { localStorage.setItem('al_sec_v1', c); } catch(e){}
+  const q = document.getElementById('alQ'); if(q) q.value = '';
+  alPinta();
 }
 
-// ── Entrevista técnica del día (2026-08-04) — un tema distinto cada día, de los 229 que ya
-//    existen en ../Entrevistas/entrevistas.html (automotive SW, protocolos, Python, Git,
-//    DevOps, ISTQB, IA, Claude Code, prep. Wayve, etc.). A diferencia de Alemán, aquí NO se
-//    duplica ninguna metadata: todos los temas viven en un único objeto `T` (ver
-//    Entrevistas/js/core.js) dentro del propio iframe, así que se lee en vivo vía
-//    `frame.contentWindow.T` una vez que el iframe carga, y se navega con la función `go(id)`
-//    que la app ya expone — nada que sincronizar a mano si se agregan/quitan temas allá.
-// Etiqueta legible por módulo de Python — el id crudo ('pyfund') no le dice nada a nadie. Se
-// omite a propósito el prefijo "Python —" que sí usa la app de Entrevistas en su menú: aquí la
-// pantalla completa ya es de Python, repetirlo en cada badge sería ruido.
-const PY_MOD_LABEL={pyfund:'Fundamentos',poo:'POO',testing:'Testing',pycheat:'Cheat Sheet'};
-
-// ── Python del día (2026-08-07, versión nativa sin iframe) — mismo tratamiento que
-//    "Alemán del día": un tema distinto cada día, extraído por Entrevistas/_generar-datos-dashboard.js
-//    a `entrevistas-data.js` (ENTREVISTA_TEMAS/ENTREVISTA_CONTENT/ENTREVISTA_CSS, cargado por
-//    <script src> en el <head>). Antes se leía en vivo desde un <iframe> vía `win.eval('T')` —
-//    Adán: "la sección de alemán no me gustó [con iframe]... lo mismo que hiciste ahí, hazlo con
-//    entrevistas" — así que se reemplazó por el mismo patrón: contenido real pre-extraído,
-//    pintado nativo dentro del Dashboard, sin iframe ni duplicar HTML a mano.
-//
-//    2026-08-12 — dejó de ser "Entrevista del día" (los 229 temas de todos los módulos) para ser
-//    SOLO Python: "quiero que solo me muestres la seccion de python... nadamas, no me muestres
-//    mas secciones". El filtro NO vive aquí sino en el generador (MODULOS_DASHBOARD), así que
-//    este archivo simplemente recibe 41 temas en vez de 229 y toda la lógica de abajo —rotación
-//    diaria por `diaDelAnio()`, botón de siguiente, contador— sigue igual sin tocarse. Ventaja
-//    de filtrar en origen: el archivo de datos bajó de 2.5 MB a ~930 KB, porque el HTML de los
-//    188 temas descartados ya ni se copia. Para volver a incluir otro módulo, se agrega su id en
-//    el generador y se corre de nuevo — no hay nada que cambiar en el Dashboard.
-let entrevistaCssInjected=false;
-function injectEntrevistaCss(){
-  if(entrevistaCssInjected||typeof ENTREVISTA_CSS==='undefined')return;
-  const style=document.createElement('style');
-  style.id='enStyle';
-  style.textContent=ENTREVISTA_CSS;
-  document.head.appendChild(style);
-  entrevistaCssInjected=true;
+// Lo que se está viendo: la búsqueda manda sobre la sección, porque si Adán escribe
+// algo espera verlo aunque esté en otra sección.
+function alFiltradas(){
+  const V = alVocab(); if(!V) return [];
+  const q = ((document.getElementById('alQ')||{}).value || '').trim().toLowerCase();
+  if(!q) return V.de(alSec);
+  const n = function(x){ return String(x).toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g,''); };
+  const qq = n(q);
+  return V.voc.filter(function(v){
+    return n(v.de).indexOf(qq) >= 0 || n(v.es).indexOf(qq) >= 0 || n(v.ex).indexOf(qq) >= 0;
+  });
 }
-// Mismo criterio que `alemanIdx`: null = tema del día; tras "Siguiente tema →" queda fijo en la sesión.
+
+function alTabsHtml(){
+  const V = alVocab(); if(!V) return '';
+  const q = ((document.getElementById('alQ')||{}).value || '').trim();
+  return Object.keys(V.cats).map(function(k){
+    const c = V.cats[k];
+    return '<button class="al-tab' + (!q && alSec===k ? ' on' : '') + '" onclick="alSet(\''+k+'\')">' +
+      c.icon + ' ' + alEsc(c.label) + ' <b>' + V.cuantas(k) + '</b></button>';
+  }).join('') +
+  '<button class="al-tab gram' + (alSec===AL_GRAM ? ' on' : '') + '" onclick="alSet(\''+AL_GRAM+'\')">' +
+    '\ud83e\udde9 ' + alEsc(V.partizip.titulo) + '</button>';
+}
+
+function alPalabraHtml(v){
+  const c = AL_COLOR[v.art] || 'var(--text3)';
+  return '<div class="al-w" style="--c:' + c + '">' +
+    '<div class="al-w-top">' +
+      (v.art && v.art !== '-' ? '<span class="al-art">' + alEsc(v.art) + '</span>' : '') +
+      '<span class="al-de">' + alEsc(v.de) + '</span></div>' +
+    '<div class="al-es">' + alEsc(v.es) + '</div>' +
+    (v.ex ? '<div class="al-ex">' + alEsc(v.ex) + '</div>' : '') +
+  '</div>';
+}
+
+// Partizip. Cada sección puede traer tabla, lista, comparativa, aviso o truco;
+// se pinta lo que tenga y nada más.
+function alPartizipHtml(){
+  const V = alVocab(); if(!V) return '';
+  const P = V.partizip;
+  // El índice solo se ve por encima de 1200px (lo decide el CSS), pero se pinta
+  // siempre: así no hay dos caminos distintos según el ancho de la ventana.
+  const idx = '<nav class="al-pz-idx"><div class="al-pz-idx-t">El tema, por partes</div>' +
+    P.secciones.map(function(x, n){
+      return '<button type="button" onclick="alIrA(\'' + x.id + '\')">' +
+        '<span>' + x.ico + '</span>' + alEsc(x.t) + '</button>';
+    }).join('') + '</nav>';
+  return '<div class="al-pz-wrap"><p class="al-pz-sub">' + P.sub + '</p>' +
+    '<div class="al-pz-col">' +
+    P.secciones.map(function(x){
+      let h = '<div class="al-pz" id="pz-' + x.id + '">' +
+        '<div class="al-pz-h"><span class="al-pz-ico">' + x.ico + '</span><h3>' + x.t + '</h3></div>' +
+        '<div class="al-pz-c">' + x.cuerpo + '</div>';
+      if(x.tabla){
+        h += '<div class="al-tabla"><table><thead><tr>' +
+          x.tabla.cols.map(function(c){ return '<th>' + c + '</th>'; }).join('') +
+          '</tr></thead><tbody>' +
+          x.tabla.filas.map(function(f){
+            return '<tr>' + f.map(function(y){ return '<td>' + y + '</td>'; }).join('') + '</tr>';
+          }).join('') + '</tbody></table></div>';
+      }
+      if(x.lista){
+        h += '<div class="al-lst">' + x.lista.map(function(it){
+          return '<div class="al-li"><div><div class="al-li-t">' + it[0] + '</div>' +
+            '<div class="al-li-d">' + it[1] + '</div></div>' +
+            '<div class="al-li-e">' + it[2] + '</div></div>';
+        }).join('') + '</div>';
+      }
+      if(x.comparativa){
+        h += '<div class="al-tabla"><table><thead><tr><th>En espa\u00f1ol</th>' +
+          '<th>Lo que NO se dice</th><th>Lo que s\u00ed se dice</th></tr></thead><tbody>' +
+          x.comparativa.map(function(f){
+            return '<tr>' + f.map(function(y){ return '<td>' + y + '</td>'; }).join('') + '</tr>';
+          }).join('') + '</tbody></table></div>';
+      }
+      if(x.aviso) h += '<div class="al-pz-aviso">' + x.aviso + '</div>';
+      if(x.truco) h += '<div class="al-pz-truco">' + x.truco + '</div>';
+      return h + '</div>';
+    }).join('') + '</div>' + idx + '</div>';
+}
+
+// Saltar a un bloque del tema desde el índice. El que tiene scroll es `#alContent`,
+// no la página. Se mide con rectángulos y no con `offsetTop`: ese es relativo al
+// ancestro posicionado, que aquí no es el contenedor, y el salto se quedaba corto.
+function alIrA(id){
+  const cont = document.getElementById('alContent');
+  const el = document.getElementById('pz-' + id);
+  if(!cont || !el) return;
+  const dif = el.getBoundingClientRect().top - cont.getBoundingClientRect().top;
+  cont.scrollTo({ top: cont.scrollTop + dif - 6, behavior:'smooth' });
+  alIdxActivo(id);
+}
+function alIdxActivo(id){
+  document.querySelectorAll('.al-pz-idx button').forEach(function(b){
+    b.classList.toggle('on', b.getAttribute('onclick').indexOf("'" + id + "'") >= 0);
+  });
+}
+
+// Mientras se lee, el índice marca el bloque que se está mirando: el último cuyo
+// borde superior ya cruzó una franja pegada al borde de arriba. La franja es fija y
+// estrecha a propósito — con un corte a media altura, recién abierto el tema y sin
+// haber tocado nada, ya se marcaba el segundo bloque.
+function alIdxSigue(){
+  const cont = document.getElementById('alContent');
+  if(!cont || !cont.querySelector('.al-pz-idx')) return;
+  const corte = cont.getBoundingClientRect().top + 60;
+  const bloques = cont.querySelectorAll('.al-pz');
+  let visto = null;
+  bloques.forEach(function(b){
+    if(b.getBoundingClientRect().top <= corte) visto = b.id.replace(/^pz-/, '');
+  });
+  // Arriba del todo no hay ninguno cruzado todavía, y el que se lee es el primero.
+  if(!visto && bloques.length) visto = bloques[0].id.replace(/^pz-/, '');
+  // Y abajo del todo el último nunca llega a cruzar la franja, así que el índice se
+  // quedaba señalando el penúltimo con el final del tema ya en pantalla.
+  if(bloques.length && cont.scrollTop + cont.clientHeight >= cont.scrollHeight - 4)
+    visto = bloques[bloques.length - 1].id.replace(/^pz-/, '');
+  if(visto) alIdxActivo(visto);
+}
+
+function alPinta(){
+  const V = alVocab();
+  const cont = document.getElementById('alContent');
+  const tabs = document.getElementById('alTabs');
+  if(!cont) return;
+  if(!V){
+    cont.innerHTML = '<div class="al-vacio">No se pudo leer <b>aleman-vocab.js</b>. ' +
+      'Abre el dashboard desde la carpeta del proyecto.</div>';
+    return;
+  }
+  if(tabs) tabs.innerHTML = alTabsHtml();
+
+  const q = ((document.getElementById('alQ')||{}).value || '').trim();
+  const sub = document.getElementById('alEs');
+  const cnt = document.getElementById('alCounter');
+
+  if(!q && alSec === AL_GRAM){
+    if(sub) sub.textContent = V.partizip.titulo;
+    if(cnt) cnt.textContent = V.partizip.secciones.length + ' bloques';
+    cont.innerHTML = alPartizipHtml();
+    const qn = document.getElementById('alQN'); if(qn) qn.textContent = '';
+    cont.onscroll = alIdxSigue;
+    alIdxSigue();
+    alVerTab();
+    return;
+  }
+
+  const lista = alFiltradas();
+  if(sub) sub.textContent = q ? ('Buscando \u201c' + q + '\u201d')
+    : ((V.cats[alSec]||{}).label || '') + ' \u00b7 ' + lista.length + ' palabras';
+  if(cnt) cnt.textContent = V.voc.length + ' en total';
+  const qn = document.getElementById('alQN');
+  if(qn) qn.textContent = q ? (lista.length + ' resultado' + (lista.length===1?'':'s')) : '';
+
+  cont.innerHTML = lista.length
+    ? '<div class="al-grid">' + lista.map(alPalabraHtml).join('') + '</div>'
+    : '<div class="al-vacio">Ninguna palabra con <b>' + alEsc(q) + '</b>. ' +
+      'Se busca en alem\u00e1n, en espa\u00f1ol y en los ejemplos.</div>';
+  cont.onscroll = null;
+  cont.scrollTop = 0;
+  alVerTab();
+}
+
+// En el móvil las 22 secciones son una tira que se desliza, así que la abierta
+// puede quedar fuera de vista. Se trae al centro moviendo el scroll de la tira y
+// nada más: `scrollIntoView` no se queda ahí — sube al ancestro con scroll más
+// cercano, que aquí es el carrusel de pantallas, y dejaba el dashboard entero
+// corrido 120px a la izquierda en el escritorio, donde la tira ni se desliza.
+function alVerTab(){
+  const c = document.getElementById('alTabs');
+  const t = c && c.querySelector('.al-tab.on');
+  if(!t || c.scrollWidth <= c.clientWidth) return;
+  c.scrollLeft = Math.max(0, t.offsetLeft - (c.clientWidth - t.offsetWidth) / 2);
+}
+
+// Lo que llama el motor de pantallas cuando toca la de Alemán. `RENDERS` la nombra por
+// referencia y se evalúa al cargar: si no existe, el array revienta y el dashboard entero
+// se queda sin poder cambiar de pantalla.
+function renderAleman(){ alPinta(); }
+
+// La palabra del día, para el resumen de Mi Día: la misma todo el día y distinta cada día.
+function alemanPalabraHoy(){
+  const V = alVocab(); return V ? V.delDia(diaDelAnio()) : null;
+}
+
+// null = tema del día; tras "Siguiente tema →" queda fijo en la sesión. Alemán tenía el mismo
+// `alemanIdx` cuando era una lección al día; ahora es una pantalla de consulta y no avanza.
 let entrevistaIdx=null;
 function entrevistaTemaHoy(){
   if(typeof ENTREVISTA_TEMAS==='undefined'||!ENTREVISTA_TEMAS.length)return null;
@@ -5256,7 +5279,7 @@ function entrevistaSiguiente(){
   if(typeof ENTREVISTA_TEMAS==='undefined'||!ENTREVISTA_TEMAS.length)return;
   entrevistaIdx=((entrevistaIdx===null?diaDelAnio():entrevistaIdx)+1)%ENTREVISTA_TEMAS.length;
   renderEntrevista();
-  renderHeroAprender();   // misma razón que en alemanSiguiente()
+  renderHeroAprender();   // el resumen de Mi Día también nombra el tema en curso
 }
 let enScrollListenerAttached=false;
 function renderEntrevista(){
@@ -6136,9 +6159,9 @@ function renderHeroFase(){
 }
 
 // ── 🎓 Hoy aprendes — la lección de alemán y el tema de Python del día. Llama a las MISMAS
-//    alemanTemaHoy()/entrevistaTemaHoy() que pintan sus slides, así que si avanzas con
+//    alemanPalabraHoy()/entrevistaTemaHoy() que pintan sus slides, así que si avanzas con
 //    "Siguiente lección →" allá, esta tarjeta muestra la misma (por eso se repinta desde
-//    alemanSiguiente()/entrevistaSiguiente()).
+//    entrevistaSiguiente()). Alemán ya no tiene "siguiente": es una pantalla de consulta.
 function irASlide(cls){
   const sl = document.querySelector('.slide.' + cls);
   if(sl && typeof goTo === 'function') goTo(+sl.dataset.i);
@@ -6146,11 +6169,9 @@ function irASlide(cls){
 
 function renderHeroAprender(){
   const el=document.getElementById('heroAprenderPanel'); if(!el) return;
-  const a=(typeof alemanTemaHoy==='function')?alemanTemaHoy():null;
+  // Antes era la lección del día; desde que la pantalla es de vocabulario, la palabra.
+  const a=(typeof alemanPalabraHoy==='function')?alemanPalabraHoy():null;
   const p=(typeof entrevistaTemaHoy==='function')?entrevistaTemaHoy():null;
-  // Sobre la lista FILTRADA, no sobre las 40: si el slide dice "3 de 5", la tarjeta no puede
-  // decir "3 / 40". Es el mismo dato y tiene que contar igual.
-  const nAl=(typeof alemanLista==='function')?alemanLista().length:0;
   const nPy=(typeof ENTREVISTA_TEMAS!=='undefined')?ENTREVISTA_TEMAS.length:0;
   const bloque=(cfg)=>`
     <button type="button" class="hp-lec" onclick="irASlide('${cfg.slide}')"
@@ -6165,7 +6186,7 @@ function renderHeroAprender(){
     </button>`;
   el.innerHTML=`
     <div class="hp-title"><span>🎓 Hoy aprendes</span></div>
-    ${a?bloque({c:'#00e87a',ico:'🇩🇪',slide:'theme-aleman',tag:'Alemán · '+a.nivel,n:(alemanIdx+1)+' / '+nAl,t:a.de,d:a.es+' — '+(a.tags||[]).join(', ')}):''}
+    ${a?bloque({c:'#00e87a',ico:'🇩🇪',slide:'theme-aleman',tag:'Alemán · '+((ALEMAN_VOCAB.cats[a.cat]||{}).label||''),n:'palabra del día',t:(a.art&&a.art!=='-'?a.art+' ':'')+a.de,d:a.es+' — '+a.ex}):''}
     ${p?bloque({c:'#00e0c0',ico:p.icon||'🐍',slide:'theme-entrevista',tag:'Python · '+(p.mod||''),n:(entrevistaIdx+1)+' / '+nPy,t:p.title,d:p.hint||''})
        :'<div class="hp-empty">El catálogo de Python no cargó — revisa entrevistas-data.js.</div>'}`;
 }
@@ -10167,7 +10188,8 @@ function renderNavMenu(){
     'Corto, mediano y largo plazo',
     'OVR '+calcOVR(),
     'Comida, skincare, cabello y suplementos',
-    (()=>{const t=alemanTemaHoy();return `${t.nivel} · ${t.de}`;})(),
+    (()=>{const v=alemanPalabraHoy();
+      return v?`${(v.art&&v.art!=='-'?v.art+' ':'')}${v.de} · ${v.es}`:'Vocabulario';})(),
     (()=>{const t=entrevistaTemaHoy();return t?t.title:'229 temas técnicos';})(),
   ];
   document.getElementById('navMenuList').innerHTML=SLIDE_MENU_META.map((it,i)=>`

@@ -20,7 +20,8 @@ en una página.
 | `datos-maestros.js` | **Fuente única** de las variables del proyecto. Lo cargan también Coach y Finanzas |
 | `DATOS-MAESTROS.md` | Índice del proyecto: catálogo de variables, mapa de apps, cómo se corrige un saldo |
 | `verificar-sincronia.js` | Comprueba que nada se haya vuelto a duplicar. Lo corre un hook al final de cada turno |
-| `aleman-data.js` | Lecciones de alemán extraídas de `Aleman/` para el slide correspondiente |
+| `aleman-vocab.js` | Las 479 palabras de alemán en 21 secciones y el tema de Partizip. Lo carga también `Aleman/vocabulario.html` |
+| `aleman-data.js` | Las 40 lecciones de alemán extraídas de `Aleman/`. **En reposo** desde el 2026-09-02: ninguna pantalla lo carga (ver abajo) |
 | `entrevistas-data.js` | Temas extraídos de `Entrevistas/` para su slide |
 | `readme_dashboard.md` | Este archivo |
 
@@ -65,37 +66,46 @@ flechas, los puntos del HUD lateral, o deslizando en táctil.
 | `theme-basicas` | **Habilidades Base** | 23 guías de vida práctica. **Única fuente** desde el 30-ago-2026: la sección equivalente de Coach se eliminó — ver abajo |
 | `theme-skills` | **Habilidades** | Radar de 12 habilidades y prioridades de aprendizaje |
 | `theme-lista` | **Lista de Compras** | 7 categorías. Comida con precios por pieza, ticket, costo al mes y proporción de verduras/frutas/almidones — ver abajo |
-| `theme-aleman` | **Alemán del día** | La lección de alemán, contenido nativo desde `aleman-data.js`. Filtrado al capítulo que cursa — ver abajo |
+| `theme-aleman` | **Alemán** | Vocabulario por secciones y el tema de Partizip I y II, desde `aleman-vocab.js` — ver abajo |
 | `theme-entrevista` | **Entrevista del día** | Un tema técnico al día, desde `entrevistas-data.js` |
 
-Alemán y Entrevistas **no usan `<iframe>`**: su contenido se extrajo a los dos `.js` de esta
-carpeta y se pinta nativo dentro del slide. Ambos llevan botón "Siguiente →" para no esperar al
-día siguiente.
+Entrevistas **no usa `<iframe>`**: su contenido se extrajo a `entrevistas-data.js` y se pinta
+nativo dentro del slide, con botón "Siguiente →" para no esperar al día siguiente. Alemán
+hacía lo mismo hasta el 2026-09-02; ahora es una pantalla de consulta y no avanza sola.
 
-### El slide de Alemán muestra solo el capítulo que se cursa
+### La pantalla de Alemán: vocabulario y Partizip
 
-`alemanLista()` filtra `ALEMAN_TEMAS` por `PROYECTO.kapitelAleman` (en `datos-maestros.js`).
-Mientras esté puesto en 10, el slide rota **solo entre las 5 lecciones del Kapitel 10** de Cenlex
-Santo Tomás en vez de entre las 40; el contador lo dice: *"Tema 3 de 5 · Kapitel 10 · Cenlex Santo
-Tomás"*. Poner esa clave en `null` devuelve la rotación completa **sin tocar este archivo**.
+Petición del 2026-09-02: *"de momento quiero que me quites las lecciones en dashboard y solo me
+pongas uno de vocabulario super extenso y acomodalo por secciones y quiero el tema de partizip 1 y
+2, lo demas quitalo"*. Lo que hay ahora:
 
-Origen (2026-08-25): *"ya estoy estudiando de nuevo en Cenlex Santo Tomás y necesito estudiar,
-entonces necesito enfocarme en estos temas"*. Con 40 lecciones rotando, el tema del día casi nunca
-era el suyo.
+- **479 palabras en 21 secciones**, cada una con artículo, traducción y un ejemplo. El artículo se
+  ve antes de leerlo: la barra de la izquierda de cada tarjeta es azul en *der*, rosa en *die* y
+  verde en *das*.
+- **Un buscador** que mira en alemán, en español y en los ejemplos, y que manda sobre la sección
+  abierta — si escribe algo espera verlo aunque esté en otra parte.
+- **Partizip I y II** en 9 bloques, con tablas, comparativas y avisos. Por encima de 1200px sale
+  a la derecha un índice que sigue la lectura (`alIdxSigue()`); ahí antes solo había hueco.
+- La sección abierta se guarda en `localStorage` (`al_sec_v1`).
 
-Las lecciones del capítulo llevan `kapitel:10` en su entrada de `ALEMAN_TEMAS`. Añadir un capítulo
-nuevo es marcar sus lecciones con ese campo y cambiar el número en el maestro.
+**Los datos no viven aquí.** Están en `aleman-vocab.js`, que carga también
+`Aleman/vocabulario.html`. Nacieron dentro de esa app; al necesitarlos las dos pantallas se
+sacaron a un archivo común en vez de copiarlos. El control 19 de `verificar-sincronia.js` vigila
+que no vuelvan a duplicarse.
 
-**Las cinco se ven a la vez.** `pintarLeccionesK10()` dibuja una fila con todas las lecciones del
-capítulo (`.al-lec`), con la activa resaltada, y `alemanIr(i)` salta a la que se toque. Antes solo
-existía "Siguiente lección →", que obliga a pasar por las otras cuatro para llegar a la que toca
-estudiar. Esa fila **solo se pinta con el filtro activo**: con las 40 lecciones sueltas no cabría, y
-el criterio fue justamente acotar.
+**En móvil las secciones son una tira que se desliza.** Apiladas ocupaban siete filas a 390px y
+dejaban la primera palabra fuera de la pantalla. La sección abierta se trae al centro sola —
+moviendo `scrollLeft` de la tira, nunca con `scrollIntoView`, que sube al ancestro con scroll más
+cercano (aquí, el carrusel de pantallas) y dejaba el dashboard entero corrido a la izquierda.
 
-`renderHeroAprender()` (la tarjeta "Hoy aprendes" de Mi Día) cuenta sobre la **lista filtrada**, no
-sobre `ALEMAN_TEMAS`. Contaba sobre las 40 y decía "4 / 40" mientras el slide decía "Tema 4 de 5":
-es el mismo dato y tiene que contar igual.
+**Los dos colores de énfasis son tokens** (`--al-oro`, `--al-mal`) y no el amarillo y el rojo de
+la bandera: `#ffce00` sobre el tema claro da 1.49:1 y los ejemplos en alemán eran invisibles de
+día.
 
+**Las 40 lecciones siguen enteras en `Aleman/`**, a un clic desde el botón de la cabecera.
+`aleman-data.js` (327 KB, extraído con Playwright por `Aleman/_generar-datos-dashboard.js`) y el
+filtro por `kapitelAleman` que mostraba solo el Kapitel en curso se quedan en el repo pero sin
+cargarse: Adán dijo *"de momento"*, y volver a ponerlas es cargar el archivo otra vez.
 ---
 
 ### La Lista de Compras
