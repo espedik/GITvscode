@@ -3,8 +3,8 @@
 // Las dos cargan este archivo: copiarlo en las dos era garantizar que corregir una
 // palabra en un sitio dejara el otro mintiendo.
 //
-//   cats  las 30 secciones, con su etiqueta, su emoji y sus SUBsecciones
-//   voc   las 1303 palabras
+//   cats  las 37 secciones, con su etiqueta, su emoji y sus SUBsecciones
+//   voc   las 1516 palabras
 //   partizip  el tema de gramática, por bloques
 //
 // UNA PALABRA. Solo `de`, `es` y `cat` son obligatorios; el resto se pinta si está:
@@ -32,6 +32,26 @@ const ALEMAN_VOCAB = {
         cortesia: 'Cortes\u00eda',
         presentar: 'Presentarse y preguntar',
         desear: 'Buenos deseos',
+      },
+    },
+    gente: {
+      label: 'Conocer gente', icon: '\ud83e\udd1d',
+      subs: {
+        romper: 'Romper el hielo',
+        temas: 'De qu\u00e9 se habla',
+        quedar: 'Quedar',
+        invitar: 'Invitar y ser invitado',
+        cerrar: 'Mantener el contacto',
+      },
+    },
+    opinar: {
+      label: 'Opinar y discutir', icon: '\ud83d\udcac',
+      subs: {
+        opinion: 'Dar tu opini\u00f3n',
+        acuerdo: 'Estar de acuerdo',
+        desacuerdo: 'No estar de acuerdo',
+        matizar: 'Matizar',
+        ganar: 'Cerrar la conversaci\u00f3n',
       },
     },
     frases: {
@@ -133,6 +153,16 @@ const ALEMAN_VOCAB = {
         cerrar: 'Cerrar el pedido',
       },
     },
+    restaurante: {
+      label: 'En el restaurante', icon: '\ud83c\udf74',
+      subs: {
+        llegar: 'Llegar y sentarse',
+        pedir: 'Pedir',
+        durante: 'Durante la comida',
+        problemas: 'Cuando algo falla',
+        pagar: 'Pagar y despedirse',
+      },
+    },
     super: {
       label: 'En el s\u00faper', icon: '\ud83e\uddfe',
       subs: {
@@ -153,6 +183,16 @@ const ALEMAN_VOCAB = {
         reclamar: 'Cuando algo falla',
       },
     },
+    servicios: {
+      label: 'Servicios', icon: '\u2702\ufe0f',
+      subs: {
+        peluqueria: 'En la peluquer\u00eda',
+        lavanderia: 'Lavander\u00eda y tintorer\u00eda',
+        correos: 'En correos',
+        reparar: 'Que te arreglen algo',
+        citas: 'Concertar el servicio',
+      },
+    },
     casa: {
       label: 'Casa', icon: '\ud83c\udfe0',
       subs: {
@@ -162,6 +202,16 @@ const ALEMAN_VOCAB = {
         estructura: 'Puertas, paredes y suelos',
         electrodomesticos: 'Electrodom\u00e9sticos',
         alquiler: 'Alquiler y vecinos',
+      },
+    },
+    piso: {
+      label: 'Buscar piso', icon: '\ud83d\udd11',
+      subs: {
+        anuncio: 'Leer el anuncio',
+        visita: 'La visita',
+        solicitud: 'Conseguirlo',
+        mudanza: 'La mudanza',
+        vecindad: 'Vivir en comunidad',
       },
     },
     ciudad: {
@@ -174,6 +224,17 @@ const ALEMAN_VOCAB = {
         orientarse: 'Orientarse',
       },
     },
+    coche: {
+      label: 'Coche y conducir', icon: '\ud83d\ude97',
+      subs: {
+        permiso: 'Permiso y papeles',
+        conducir: 'Conducir',
+        gasolinera: 'Gasolinera',
+        aparcar: 'Aparcar',
+        taller: 'Taller y aver\u00edas',
+        multas: 'Multas y control',
+      },
+    },
     trabajo: {
       label: 'Trabajo', icon: '\ud83d\udcbc',
       subs: {
@@ -182,6 +243,17 @@ const ALEMAN_VOCAB = {
         buscar: 'Buscar empleo',
         estudios: 'Formaci\u00f3n',
         condiciones: 'Jornada, sueldo y contrato',
+      },
+    },
+    oficina: {
+      label: 'Hablar en el trabajo', icon: '\ud83d\udde3\ufe0f',
+      subs: {
+        llegar: 'Llegar y saludar',
+        reunion: 'En una reuni\u00f3n',
+        pedir: 'Pedir y ofrecer ayuda',
+        plazos: 'Plazos y avances',
+        entrevista: 'En la entrevista',
+        ausente: 'Faltar y avisar',
       },
     },
     naturaleza: {
@@ -372,6 +444,74 @@ const ALEMAN_VOCAB = {
     {art:'-', de:'Gute Reise!', es:'\u00a1Buen viaje!', ex:'Gute Reise und melde dich!', cat:'saludos', sub:'desear', niv:'A1', tipo:'frase', esEx:'\u00a1Buen viaje y avisa cuando llegues!'},
     {art:'-', de:'Viel Erfolg!', es:'\u00a1Mucho \u00e9xito!', ex:'Viel Erfolg bei der Pr\u00fcfung!', cat:'saludos', sub:'desear', niv:'A2', tipo:'frase', uso:'para ex\u00e1menes se dice esto o \u00abViel Gl\u00fcck\u00bb, no \u00abViel Spa\u00df\u00bb', esEx:'\u00a1Mucho \u00e9xito en el examen!'},
     {art:'-', de:'Sch\u00f6nes Wochenende!', es:'\u00a1Buen fin de semana!', ex:'Bis Montag, sch\u00f6nes Wochenende!', cat:'saludos', sub:'desear', niv:'A1', tipo:'frase', esEx:'\u00a1Hasta el lunes, buen fin de semana!'},
+
+    // ── CONOCER GENTE ─────────────────────────────────
+    //    Romper el hielo
+    {art:'-', de:'Darf ich mich vorstellen?', es:'\u00bfMe permite presentarme?', ex:'Darf ich mich vorstellen? Ich bin Ad\u00e1n.', cat:'gente', sub:'romper', niv:'A2', tipo:'frase', esEx:'\u00bfMe permite presentarme? Soy Ad\u00e1n.'},
+    {art:'-', de:'Wir kennen uns noch nicht', es:'Todav\u00eda no nos conocemos', ex:'Wir kennen uns noch nicht, oder?', cat:'gente', sub:'romper', niv:'A2', tipo:'frase', esEx:'Todav\u00eda no nos conocemos, \u00bfverdad?'},
+    {art:'-', de:'Woher kennst du\u2026?', es:'\u00bfDe qu\u00e9 conoces a\u2026?', ex:'Woher kennst du Anna?', cat:'gente', sub:'romper', niv:'A2', tipo:'frase', uso:'la pregunta cl\u00e1sica en una fiesta', esEx:'\u00bfDe qu\u00e9 conoces a Anna?'},
+    {art:'-', de:'Wollen wir uns duzen?', es:'\u00bfNos tuteamos?', ex:'Wollen wir uns duzen? \u2014 Gern, ich bin Thomas.', cat:'gente', sub:'romper', niv:'B1', tipo:'frase', uso:'lo propone el mayor o el de m\u00e1s rango; hasta entonces, Sie', esEx:'\u00bfNos tuteamos? \u2014 Claro, soy Thomas.'},
+    {art:'-', de:'Ich bin neu hier', es:'Soy nuevo aqu\u00ed', ex:'Ich bin neu hier in der Stadt.', cat:'gente', sub:'romper', niv:'A1', tipo:'frase', esEx:'Soy nuevo en la ciudad.'},
+    {art:'-', de:'Was machst du so?', es:'\u00bfA qu\u00e9 te dedicas?', ex:'Und was machst du so?', cat:'gente', sub:'romper', niv:'A2', tipo:'frase', esEx:'\u00bfY t\u00fa a qu\u00e9 te dedicas?'},
+    //    De qué se habla
+    {art:'das', de:'Wetter als Thema', es:'el clima como tema', ex:'Sch\u00f6nes Wetter heute, oder?', cat:'gente', sub:'temas', niv:'A1', tipo:'frase', uso:'el tema seguro por excelencia, aqu\u00ed tambi\u00e9n', esEx:'Bonito d\u00eda hoy, \u00bfno?'},
+    {art:'-', de:'Wo kommst du urspr\u00fcnglich her?', es:'\u00bfDe d\u00f3nde eres originalmente?', ex:'Wo kommst du urspr\u00fcnglich her? \u2014 Aus Mexiko.', cat:'gente', sub:'temas', niv:'A2', tipo:'frase', esEx:'\u00bfDe d\u00f3nde eres originalmente? \u2014 De M\u00e9xico.'},
+    {art:'-', de:'Wie gef\u00e4llt es dir hier?', es:'\u00bfQu\u00e9 tal te va aqu\u00ed?', ex:'Und wie gef\u00e4llt es dir hier in Deutschland?', cat:'gente', sub:'temas', niv:'A2', tipo:'frase', esEx:'\u00bfY qu\u00e9 tal te va aqu\u00ed en Alemania?'},
+    {art:'-', de:'Was machst du in deiner Freizeit?', es:'\u00bfQu\u00e9 haces en tu tiempo libre?', ex:'Was machst du denn in deiner Freizeit?', cat:'gente', sub:'temas', niv:'A2', tipo:'frase', esEx:'\u00bfY qu\u00e9 haces en tu tiempo libre?'},
+    {art:'-', de:'\u00dcber Geld spricht man nicht', es:'De dinero no se habla', ex:'\u00dcber Gehalt spricht man hier nicht so offen.', cat:'gente', sub:'temas', niv:'B1', tipo:'frase', uso:'preguntar el sueldo se considera de mala educaci\u00f3n', esEx:'Del sueldo aqu\u00ed no se habla tan abiertamente.'},
+    {art:'-', de:'Das ist Privatsache', es:'Eso es asunto privado', ex:'Das ist eher Privatsache.', cat:'gente', sub:'temas', niv:'B1', tipo:'frase', esEx:'Eso es m\u00e1s bien algo privado.'},
+    //    Quedar
+    {art:'-', de:'Hast du Lust, etwas zu trinken?', es:'\u00bfTe apetece tomar algo?', ex:'Hast du Lust, mal etwas trinken zu gehen?', cat:'gente', sub:'quedar', niv:'A2', tipo:'frase', esEx:'\u00bfTe apetece que vayamos a tomar algo?'},
+    {art:'-', de:'Wann passt es dir?', es:'\u00bfCu\u00e1ndo te viene bien?', ex:'Wann w\u00fcrde es dir passen?', cat:'gente', sub:'quedar', niv:'A2', tipo:'frase', esEx:'\u00bfCu\u00e1ndo te vendr\u00eda bien?'},
+    {art:'-', de:'Ich kann leider nicht', es:'No puedo, lo siento', ex:'Am Freitag kann ich leider nicht.', cat:'gente', sub:'quedar', niv:'A1', tipo:'frase', esEx:'El viernes no puedo, lo siento.'},
+    {art:'-', de:'Vielleicht ein anderes Mal', es:'Quiz\u00e1 en otra ocasi\u00f3n', ex:'Diesmal nicht, aber vielleicht ein anderes Mal.', cat:'gente', sub:'quedar', niv:'A2', tipo:'frase', esEx:'Esta vez no, pero quiz\u00e1 en otra ocasi\u00f3n.'},
+    {art:'-', de:'Wir treffen uns um acht', es:'Quedamos a las ocho', ex:'Wir treffen uns um acht vor dem Kino.', cat:'gente', sub:'quedar', niv:'A1', tipo:'frase', uso:'a las ocho significa a las ocho, no a las ocho y cuarto', esEx:'Quedamos a las ocho delante del cine.'},
+    {art:'-', de:'Ich bin unterwegs', es:'Voy de camino', ex:'Ich bin schon unterwegs, zehn Minuten.', cat:'gente', sub:'quedar', niv:'A2', tipo:'frase', esEx:'Ya voy de camino, diez minutos.'},
+    //    Invitar y ser invitado
+    {art:'-', de:'Ich lade dich ein', es:'Te invito', ex:'Heute lade ich dich ein.', cat:'gente', sub:'invitar', niv:'A2', tipo:'frase', uso:'invitar aqu\u00ed significa pagar t\u00fa; si no, cada uno lo suyo', esEx:'Hoy te invito.'},
+    {art:'-', de:'Soll ich etwas mitbringen?', es:'\u00bfLlevo algo?', ex:'Soll ich etwas mitbringen? \u2014 Nur gute Laune!', cat:'gente', sub:'invitar', niv:'A2', tipo:'frase', uso:'se pregunta siempre, y se lleva algo aunque digan que no', esEx:'\u00bfLlevo algo? \u2014 \u00a1Solo buen humor!'},
+    {art:'-', de:'Danke f\u00fcr die Einladung', es:'Gracias por la invitaci\u00f3n', ex:'Vielen Dank f\u00fcr die Einladung!', cat:'gente', sub:'invitar', niv:'A2', tipo:'frase', esEx:'\u00a1Muchas gracias por la invitaci\u00f3n!'},
+    {art:'-', de:'F\u00fchl dich wie zu Hause', es:'Est\u00e1s en tu casa', ex:'Komm rein, f\u00fchl dich wie zu Hause.', cat:'gente', sub:'invitar', niv:'B1', tipo:'frase', esEx:'Pasa, est\u00e1s en tu casa.'},
+    {art:'-', de:'Schuhe ausziehen?', es:'\u00bfMe quito los zapatos?', ex:'Soll ich die Schuhe ausziehen? \u2014 Ja, bitte.', cat:'gente', sub:'invitar', niv:'A2', tipo:'frase', uso:'en casi todas las casas alemanas se entra sin zapatos', esEx:'\u00bfMe quito los zapatos? \u2014 S\u00ed, por favor.'},
+    {art:'-', de:'Ich muss dann mal los', es:'Me tengo que ir', ex:'So, ich muss dann mal los.', cat:'gente', sub:'invitar', niv:'B1', tipo:'frase', esEx:'Bueno, me tengo que ir yendo.'},
+    //    Mantener el contacto
+    {art:'-', de:'Wollen wir Nummern tauschen?', es:'\u00bfIntercambiamos n\u00fameros?', ex:'Wollen wir Nummern tauschen?', cat:'gente', sub:'cerrar', niv:'A2', tipo:'frase', esEx:'\u00bfIntercambiamos n\u00fameros?'},
+    {art:'-', de:'Melde dich mal!', es:'\u00a1Escr\u00edbeme!', ex:'War sch\u00f6n! Melde dich mal.', cat:'gente', sub:'cerrar', niv:'A2', tipo:'frase', esEx:'\u00a1Estuvo bien! Escr\u00edbeme.'},
+    {art:'-', de:'Bis zum n\u00e4chsten Mal', es:'Hasta la pr\u00f3xima', ex:'Bis zum n\u00e4chsten Mal!', cat:'gente', sub:'cerrar', niv:'A1', tipo:'frase', esEx:'\u00a1Hasta la pr\u00f3xima!'},
+    {art:'-', de:'Es war sch\u00f6n, dich kennenzulernen', es:'Fue un gusto conocerte', ex:'Es war wirklich sch\u00f6n, dich kennenzulernen.', cat:'gente', sub:'cerrar', niv:'A2', tipo:'frase', esEx:'Fue un verdadero gusto conocerte.'},
+    {art:'-', de:'Wir bleiben in Kontakt', es:'Seguimos en contacto', ex:'Wir bleiben auf jeden Fall in Kontakt.', cat:'gente', sub:'cerrar', niv:'A2', tipo:'frase', esEx:'Seguimos en contacto sin falta.'},
+
+    // ── OPINAR Y DISCUTIR ─────────────────────────────────
+    //    Dar tu opinión
+    {art:'-', de:'Ich finde, dass\u2026', es:'Yo creo que\u2026', ex:'Ich finde, dass das eine gute Idee ist.', cat:'opinar', sub:'opinion', niv:'A2', tipo:'frase', tag:'verbo al final', esEx:'Creo que es una buena idea.'},
+    {art:'-', de:'Meiner Meinung nach\u2026', es:'En mi opini\u00f3n\u2026', ex:'Meiner Meinung nach ist das zu teuer.', cat:'opinar', sub:'opinion', niv:'B1', tipo:'frase', uso:'detr\u00e1s va el verbo, no el sujeto', esEx:'En mi opini\u00f3n eso es muy caro.'},
+    {art:'-', de:'Ich glaube / Ich denke', es:'Creo / Pienso', ex:'Ich glaube, das funktioniert nicht.', cat:'opinar', sub:'opinion', niv:'A1', tipo:'frase', esEx:'Creo que eso no funciona.'},
+    {art:'-', de:'Ehrlich gesagt\u2026', es:'Sinceramente\u2026', ex:'Ehrlich gesagt gef\u00e4llt mir das nicht.', cat:'opinar', sub:'opinion', niv:'B1', tipo:'frase', esEx:'Sinceramente, eso no me gusta.'},
+    {art:'-', de:'F\u00fcr mich ist es wichtig, dass\u2026', es:'Para m\u00ed es importante que\u2026', ex:'F\u00fcr mich ist wichtig, dass wir p\u00fcnktlich sind.', cat:'opinar', sub:'opinion', niv:'B1', tipo:'frase', tag:'verbo al final', esEx:'Para m\u00ed es importante que seamos puntuales.'},
+    //    Estar de acuerdo
+    {art:'-', de:'Da hast du recht', es:'Tienes raz\u00f3n', ex:'Da hast du v\u00f6llig recht.', cat:'opinar', sub:'acuerdo', niv:'A2', tipo:'frase', uso:'recht haben va sin art\u00edculo y en min\u00fascula', esEx:'Tienes toda la raz\u00f3n.'},
+    {art:'-', de:'Genau / Stimmt', es:'Exacto / Cierto', ex:'Genau, das denke ich auch.', cat:'opinar', sub:'acuerdo', niv:'A1', tipo:'frase', esEx:'Exacto, yo tambi\u00e9n lo creo.'},
+    {art:'-', de:'Das sehe ich auch so', es:'Yo lo veo igual', ex:'Das sehe ich genauso.', cat:'opinar', sub:'acuerdo', niv:'B1', tipo:'frase', esEx:'Lo veo exactamente igual.'},
+    {art:'-', de:'Da bin ich ganz deiner Meinung', es:'Estoy totalmente de acuerdo', ex:'Da bin ich ganz deiner Meinung.', cat:'opinar', sub:'acuerdo', niv:'B1', tipo:'frase', esEx:'Estoy totalmente de acuerdo contigo.'},
+    {art:'-', de:'Gute Idee!', es:'\u00a1Buena idea!', ex:'Gute Idee, machen wir das so.', cat:'opinar', sub:'acuerdo', niv:'A1', tipo:'frase', esEx:'Buena idea, hag\u00e1moslo as\u00ed.'},
+    //    No estar de acuerdo
+    {art:'-', de:'Das sehe ich anders', es:'Yo lo veo distinto', ex:'Ehrlich gesagt sehe ich das anders.', cat:'opinar', sub:'desacuerdo', niv:'B1', tipo:'frase', uso:'la discrepancia directa es normal y no se toma a mal', esEx:'Sinceramente, yo lo veo distinto.'},
+    {art:'-', de:'Da bin ich nicht sicher', es:'No estoy seguro', ex:'Da bin ich mir nicht so sicher.', cat:'opinar', sub:'desacuerdo', niv:'A2', tipo:'frase', esEx:'De eso no estoy tan seguro.'},
+    {art:'-', de:'Das stimmt nicht ganz', es:'Eso no es del todo cierto', ex:'Das stimmt nicht ganz, glaube ich.', cat:'opinar', sub:'desacuerdo', niv:'B1', tipo:'frase', esEx:'Creo que eso no es del todo cierto.'},
+    {art:'-', de:'Ich bin dagegen', es:'Estoy en contra', ex:'Ich bin eher dagegen.', cat:'opinar', sub:'desacuerdo', niv:'B1', tipo:'frase', esEx:'M\u00e1s bien estoy en contra.'},
+    {art:'-', de:'Das kann ich nicht nachvollziehen', es:'No lo puedo entender', ex:'Das kann ich ehrlich nicht nachvollziehen.', cat:'opinar', sub:'desacuerdo', niv:'B1', tipo:'frase', esEx:'Sinceramente, eso no lo entiendo.'},
+    //    Matizar
+    {art:'-', de:'einerseits\u2026 andererseits', es:'por un lado\u2026 por otro', ex:'Einerseits ist es teuer, andererseits sehr gut.', cat:'opinar', sub:'matizar', niv:'B1', tipo:'frase', esEx:'Por un lado es caro, por otro muy bueno.'},
+    {art:'-', de:'Das kommt darauf an', es:'Depende', ex:'Das kommt ganz darauf an.', cat:'opinar', sub:'matizar', niv:'B1', tipo:'frase', esEx:'Eso depende del todo.'},
+    {art:'-', de:'Im Prinzip ja, aber\u2026', es:'En principio s\u00ed, pero\u2026', ex:'Im Prinzip ja, aber es gibt ein Problem.', cat:'opinar', sub:'matizar', niv:'B1', tipo:'frase', esEx:'En principio s\u00ed, pero hay un problema.'},
+    {art:'-', de:'Ich verstehe, was du meinst', es:'Entiendo lo que dices', ex:'Ich verstehe, was du meinst, trotzdem\u2026', cat:'opinar', sub:'matizar', niv:'B1', tipo:'frase', esEx:'Entiendo lo que dices, aun as\u00ed\u2026'},
+    {art:'-', de:'vielleicht / eventuell', es:'quiz\u00e1 / eventualmente', ex:'Vielleicht sollten wir noch warten.', cat:'opinar', sub:'matizar', niv:'A2', tipo:'adv', esEx:'Quiz\u00e1 deber\u00edamos esperar todav\u00eda.'},
+    //    Cerrar la conversación
+    {art:'-', de:'Lass uns das sp\u00e4ter besprechen', es:'Habl\u00e9moslo despu\u00e9s', ex:'Lass uns das sp\u00e4ter in Ruhe besprechen.', cat:'opinar', sub:'ganar', niv:'B1', tipo:'frase', esEx:'Habl\u00e9moslo despu\u00e9s con calma.'},
+    {art:'-', de:'Einigen wir uns auf\u2026', es:'Pong\u00e1monos de acuerdo en\u2026', ex:'Einigen wir uns auf Freitag?', cat:'opinar', sub:'ganar', niv:'B1', tipo:'frase', esEx:'\u00bfNos ponemos de acuerdo en el viernes?'},
+    {art:'-', de:'Passt f\u00fcr mich', es:'Por m\u00ed bien', ex:'Passt f\u00fcr mich, machen wir so.', cat:'opinar', sub:'ganar', niv:'A2', tipo:'frase', esEx:'Por m\u00ed bien, hag\u00e1moslo as\u00ed.'},
+    {art:'-', de:'Dann machen wir es so', es:'Entonces lo hacemos as\u00ed', ex:'Gut, dann machen wir es so.', cat:'opinar', sub:'ganar', niv:'A2', tipo:'frase', esEx:'Bien, entonces lo hacemos as\u00ed.'},
+    {art:'-', de:'Danke f\u00fcr das Gespr\u00e4ch', es:'Gracias por la conversaci\u00f3n', ex:'Danke f\u00fcr das offene Gespr\u00e4ch.', cat:'opinar', sub:'ganar', niv:'B1', tipo:'frase', esEx:'Gracias por la conversaci\u00f3n franca.'},
 
     // ── ARMAR FRASES ─────────────────────────────────
     //    Poder, deber, querer
@@ -919,6 +1059,46 @@ const ALEMAN_VOCAB = {
     {art:'-', de:'Zahlen Sie bar oder mit Karte?', es:'\u00bfPaga en efectivo o con tarjeta?', ex:'Zahlen Sie bar oder mit Karte? \u2014 Bar, bitte.', cat:'mostrador', sub:'cerrar', niv:'A1', tipo:'frase', esEx:'\u00bfPaga en efectivo o con tarjeta? \u2014 En efectivo.'},
     {art:'-', de:'Das macht\u2026', es:'Son\u2026 (el total)', ex:'Das macht sieben Euro achtzig.', cat:'mostrador', sub:'cerrar', niv:'A1', tipo:'frase', uso:'as\u00ed te dicen el total en cualquier mostrador', esEx:'Son siete euros con ochenta.'},
 
+    // ── EN EL RESTAURANTE ─────────────────────────────────
+    //    Llegar y sentarse
+    {art:'-', de:'Einen Tisch f\u00fcr zwei, bitte', es:'Una mesa para dos, por favor', ex:'Guten Abend, einen Tisch f\u00fcr zwei, bitte.', cat:'restaurante', sub:'llegar', niv:'A1', tipo:'frase', esEx:'Buenas noches, una mesa para dos, por favor.'},
+    {art:'-', de:'Haben Sie reserviert?', es:'\u00bfTiene reserva?', ex:'Haben Sie reserviert? \u2014 Ja, auf den Namen Mart\u00ednez.', cat:'restaurante', sub:'llegar', niv:'A2', tipo:'frase', esEx:'\u00bfTiene reserva? \u2014 S\u00ed, a nombre de Mart\u00ednez.'},
+    {art:'-', de:'Ist hier noch frei?', es:'\u00bfEst\u00e1 libre aqu\u00ed?', ex:'Entschuldigung, ist hier noch frei?', cat:'restaurante', sub:'llegar', niv:'A2', tipo:'frase', uso:'en cervecer\u00edas y mesas largas es normal compartir mesa', esEx:'Disculpe, \u00bfest\u00e1 libre aqu\u00ed?'},
+    {art:'-', de:'drinnen oder drau\u00dfen', es:'dentro o fuera', ex:'M\u00f6chten Sie drinnen oder drau\u00dfen sitzen?', cat:'restaurante', sub:'llegar', niv:'A2', tipo:'frase', esEx:'\u00bfPrefiere sentarse dentro o fuera?'},
+    {art:'-', de:'Wo ist die Toilette?', es:'\u00bfD\u00f3nde est\u00e1 el ba\u00f1o?', ex:'Entschuldigung, wo ist die Toilette?', cat:'restaurante', sub:'llegar', niv:'A1', tipo:'frase', esEx:'Disculpe, \u00bfd\u00f3nde est\u00e1 el ba\u00f1o?'},
+    {art:'-', de:'Wir kommen zu dritt', es:'Somos tres', ex:'Wir kommen zu dritt, geht das?', cat:'restaurante', sub:'llegar', niv:'A2', tipo:'frase', uso:'zu zweit, zu dritt, zu viert: as\u00ed se dice cu\u00e1ntos son', esEx:'Somos tres, \u00bfes posible?'},
+    //    Pedir
+    {art:'-', de:'Was k\u00f6nnen Sie empfehlen?', es:'\u00bfQu\u00e9 me recomienda?', ex:'Was k\u00f6nnen Sie empfehlen?', cat:'restaurante', sub:'pedir', niv:'A2', tipo:'frase', esEx:'\u00bfQu\u00e9 me recomienda?'},
+    {art:'das', de:'Tagesgericht / das Men\u00fc', es:'el plato del d\u00eda / el men\u00fa', ex:'Was ist heute das Tagesgericht?', cat:'restaurante', sub:'pedir', niv:'A2', tipo:'sust', pl:'Tagesgerichte', gen:'-es', uso:'Men\u00fc no es la carta: es el plato completo del d\u00eda', esEx:'\u00bfCu\u00e1l es el plato del d\u00eda?'},
+    {art:'-', de:'Ich nehme\u2026 / F\u00fcr mich\u2026', es:'Yo tomo\u2026 / Para m\u00ed\u2026', ex:'F\u00fcr mich das Schnitzel, bitte.', cat:'restaurante', sub:'pedir', niv:'A1', tipo:'frase', esEx:'Para m\u00ed el escalope, por favor.'},
+    {art:'-', de:'Als Vorspeise / als Hauptgericht', es:'De entrada / de plato fuerte', ex:'Als Vorspeise die Suppe, bitte.', cat:'restaurante', sub:'pedir', niv:'A2', tipo:'frase', esEx:'De entrada la sopa, por favor.'},
+    {art:'-', de:'Was ist da drin?', es:'\u00bfQu\u00e9 lleva?', ex:'Was ist da drin? Ich bin allergisch gegen N\u00fcsse.', cat:'restaurante', sub:'pedir', niv:'A2', tipo:'frase', esEx:'\u00bfQu\u00e9 lleva? Soy al\u00e9rgico a los frutos secos.'},
+    {art:'-', de:'Haben Sie etwas Vegetarisches?', es:'\u00bfTienen algo vegetariano?', ex:'Haben Sie auch etwas Vegetarisches?', cat:'restaurante', sub:'pedir', niv:'A2', tipo:'frase', esEx:'\u00bfTienen tambi\u00e9n algo vegetariano?'},
+    {art:'-', de:'Und zu trinken?', es:'\u00bfY para beber?', ex:'Und zu trinken? \u2014 Ein gro\u00dfes Wasser, bitte.', cat:'restaurante', sub:'pedir', niv:'A1', tipo:'frase', uso:'el agua nunca es gratis y hay que pedirla', esEx:'\u00bfY para beber? \u2014 Un agua grande, por favor.'},
+    {art:'-', de:'mit oder ohne Kohlens\u00e4ure', es:'con o sin gas', ex:'Mit oder ohne Kohlens\u00e4ure? \u2014 Ohne, bitte.', cat:'restaurante', sub:'pedir', niv:'A2', tipo:'frase', uso:'si no lo dices, el agua viene con gas', esEx:'\u00bfCon o sin gas? \u2014 Sin, por favor.'},
+    {art:'-', de:'Das war\'s f\u00fcrs Erste', es:'Eso es todo por ahora', ex:'Das war\'s f\u00fcrs Erste, danke.', cat:'restaurante', sub:'pedir', niv:'A2', tipo:'frase', esEx:'Eso es todo por ahora, gracias.'},
+    //    Durante la comida
+    {art:'-', de:'Guten Appetit! / Mahlzeit!', es:'\u00a1Buen provecho!', ex:'Guten Appetit! \u2014 Danke, gleichfalls.', cat:'restaurante', sub:'durante', niv:'A1', tipo:'frase', uso:'\u00abMahlzeit\u00bb se usa mucho al mediod\u00eda en el trabajo', esEx:'\u00a1Buen provecho! \u2014 Gracias, igualmente.'},
+    {art:'-', de:'Schmeckt es Ihnen?', es:'\u00bfEst\u00e1 a su gusto?', ex:'Schmeckt es Ihnen? \u2014 Ja, sehr gut!', cat:'restaurante', sub:'durante', niv:'A2', tipo:'frase', esEx:'\u00bfEst\u00e1 a su gusto? \u2014 \u00a1S\u00ed, muy bueno!'},
+    {art:'-', de:'K\u00f6nnten wir noch\u2026?', es:'\u00bfNos podr\u00eda traer\u2026?', ex:'K\u00f6nnten wir noch etwas Brot haben?', cat:'restaurante', sub:'durante', niv:'A2', tipo:'frase', esEx:'\u00bfNos podr\u00eda traer un poco m\u00e1s de pan?'},
+    {art:'-', de:'Noch ein Bier, bitte', es:'Otra cerveza, por favor', ex:'Noch ein Bier, bitte!', cat:'restaurante', sub:'durante', niv:'A1', tipo:'frase', uso:'\u00abnoch ein\u00bb es \u00abuno m\u00e1s\u00bb, no \u00abotro distinto\u00bb', esEx:'\u00a1Otra cerveza, por favor!'},
+    {art:'-', de:'Prost! / Zum Wohl!', es:'\u00a1Salud!', ex:'Prost! Auf euch!', cat:'restaurante', sub:'durante', niv:'A1', tipo:'frase', uso:'hay que mirar a los ojos al brindar; si no, da mala suerte', esEx:'\u00a1Salud! \u00a1Por ustedes!'},
+    {art:'-', de:'Ich bin satt', es:'Estoy lleno', ex:'Danke, ich bin satt.', cat:'restaurante', sub:'durante', niv:'A1', tipo:'frase', esEx:'Gracias, estoy lleno.'},
+    {art:'-', de:'K\u00f6nnen Sie das einpacken?', es:'\u00bfMe lo puede envolver?', ex:'K\u00f6nnen Sie mir den Rest einpacken?', cat:'restaurante', sub:'durante', niv:'A2', tipo:'frase', uso:'llevarse las sobras es menos com\u00fan que en M\u00e9xico, pero se puede pedir', esEx:'\u00bfMe puede envolver lo que sobra?'},
+    //    Cuando algo falla
+    {art:'-', de:'Das habe ich nicht bestellt', es:'Esto no lo ped\u00ed', ex:'Entschuldigung, das habe ich nicht bestellt.', cat:'restaurante', sub:'problemas', niv:'A2', tipo:'frase', esEx:'Disculpe, esto no lo ped\u00ed.'},
+    {art:'-', de:'Das Essen ist kalt', es:'La comida est\u00e1 fr\u00eda', ex:'Tut mir leid, aber das Essen ist kalt.', cat:'restaurante', sub:'problemas', niv:'A2', tipo:'frase', esEx:'Lo siento, pero la comida est\u00e1 fr\u00eda.'},
+    {art:'-', de:'Wir warten schon lange', es:'Llevamos mucho esperando', ex:'Entschuldigung, wir warten schon ziemlich lange.', cat:'restaurante', sub:'problemas', niv:'A2', tipo:'frase', esEx:'Disculpe, llevamos bastante rato esperando.'},
+    {art:'-', de:'Da stimmt etwas nicht', es:'Aqu\u00ed hay algo mal', ex:'Auf der Rechnung stimmt etwas nicht.', cat:'restaurante', sub:'problemas', niv:'A2', tipo:'frase', esEx:'En la cuenta hay algo que no cuadra.'},
+    {art:'-', de:'K\u00f6nnten Sie das zur\u00fccknehmen?', es:'\u00bfSe lo podr\u00eda llevar?', ex:'K\u00f6nnten Sie das bitte zur\u00fccknehmen?', cat:'restaurante', sub:'problemas', niv:'B1', tipo:'frase', esEx:'\u00bfPodr\u00eda llev\u00e1rselo, por favor?'},
+    //    Pagar y despedirse
+    {art:'-', de:'Zahlen, bitte!', es:'\u00a1La cuenta, por favor!', ex:'Zahlen, bitte! \u2014 Zusammen oder getrennt?', cat:'restaurante', sub:'pagar', niv:'A1', tipo:'frase', uso:'la cuenta se pide; no la traen sola como en otros pa\u00edses', esEx:'\u00a1La cuenta, por favor! \u2014 \u00bfJunto o por separado?'},
+    {art:'-', de:'Zusammen oder getrennt?', es:'\u00bfJunto o por separado?', ex:'Zusammen oder getrennt? \u2014 Getrennt, bitte.', cat:'restaurante', sub:'pagar', niv:'A1', tipo:'frase', uso:'en Alemania es normal pagar cada uno lo suyo', esEx:'\u00bfJunto o por separado? \u2014 Por separado, por favor.'},
+    {art:'-', de:'Stimmt so', es:'Qu\u00e9dese con el cambio', ex:'Das macht 18,40. \u2014 Machen Sie 20, stimmt so.', cat:'restaurante', sub:'pagar', niv:'A2', tipo:'frase', uso:'as\u00ed se deja propina: se dice al entregar el dinero', esEx:'Son 18,40. \u2014 C\u00f3brese 20, qu\u00e9dese con el cambio.'},
+    {art:'-', de:'Machen Sie\u2026', es:'C\u00f3brese\u2026', ex:'Machen Sie 25 Euro.', cat:'restaurante', sub:'pagar', niv:'A2', tipo:'frase', uso:'se dice el total redondeado hacia arriba: eso es la propina', esEx:'C\u00f3brese 25 euros.'},
+    {art:'-', de:'Es hat sehr gut geschmeckt', es:'Estuvo muy rico', ex:'Danke, es hat sehr gut geschmeckt.', cat:'restaurante', sub:'pagar', niv:'A2', tipo:'frase', esEx:'Gracias, estuvo muy rico.'},
+    {art:'-', de:'Kann ich mit Karte zahlen?', es:'\u00bfPuedo pagar con tarjeta?', ex:'Kann ich mit Karte zahlen? \u2014 Nur Bargeld, leider.', cat:'restaurante', sub:'pagar', niv:'A1', tipo:'frase', uso:'muchos restaurantes siguen siendo solo efectivo: pregunta antes', esEx:'\u00bfPuedo pagar con tarjeta? \u2014 Solo efectivo, lo siento.'},
+
     // ── EN EL SÚPER ─────────────────────────────────
     //    Encontrar las cosas
     {art:'-', de:'Wo finde ich\u2026?', es:'\u00bfD\u00f3nde encuentro\u2026?', ex:'Entschuldigung, wo finde ich Reis?', cat:'super', sub:'encontrar', niv:'A1', tipo:'frase', esEx:'Disculpe, \u00bfd\u00f3nde encuentro el arroz?'},
@@ -991,6 +1171,40 @@ const ALEMAN_VOCAB = {
     {art:'die', de:'Reklamation', es:'la reclamaci\u00f3n', ex:'Die Reklamation dauert etwa eine Woche.', cat:'tienda', sub:'reclamar', niv:'B1', tipo:'sust', pl:'Reklamationen', gen:'-', esEx:'La reclamaci\u00f3n tarda una semana m\u00e1s o menos.'},
     {art:'-', de:'Kann ich mit dem Chef sprechen?', es:'\u00bfPuedo hablar con el encargado?', ex:'Kann ich bitte mit dem Chef sprechen?', cat:'tienda', sub:'reclamar', niv:'A2', tipo:'frase', esEx:'\u00bfPuedo hablar con el encargado, por favor?'},
 
+    // ── SERVICIOS ─────────────────────────────────
+    //    En la peluquería
+    {art:'-', de:'Ich h\u00e4tte gern einen Haarschnitt', es:'Quisiera un corte de pelo', ex:'Ich h\u00e4tte gern einen Haarschnitt.', cat:'servicios', sub:'peluqueria', niv:'A2', tipo:'frase', esEx:'Quisiera un corte de pelo.'},
+    {art:'-', de:'Nur die Spitzen, bitte', es:'Solo las puntas, por favor', ex:'Nur die Spitzen schneiden, bitte.', cat:'servicios', sub:'peluqueria', niv:'B1', tipo:'frase', esEx:'Solo cortar las puntas, por favor.'},
+    {art:'-', de:'kurz / k\u00fcrzer / nicht zu kurz', es:'corto / m\u00e1s corto / no muy corto', ex:'An den Seiten k\u00fcrzer, oben nicht zu kurz.', cat:'servicios', sub:'peluqueria', niv:'A2', tipo:'frase', uso:'\u00aban den Seiten\u00bb a los lados, \u00aboben\u00bb arriba, \u00abhinten\u00bb detr\u00e1s', esEx:'A los lados m\u00e1s corto, arriba no muy corto.'},
+    {art:'-', de:'waschen, schneiden, f\u00f6hnen', es:'lavar, cortar, secar', ex:'Waschen, schneiden, f\u00f6hnen \u2014 was kostet das?', cat:'servicios', sub:'peluqueria', niv:'B1', tipo:'frase', uso:'es el paquete est\u00e1ndar y as\u00ed aparece en la lista de precios', esEx:'Lavar, cortar y secar, \u00bfcu\u00e1nto cuesta?'},
+    {art:'der', de:'Bart / der Pony', es:'la barba / el flequillo', ex:'K\u00f6nnen Sie den Bart auch trimmen?', cat:'servicios', sub:'peluqueria', niv:'B1', tipo:'sust', pl:'B\u00e4rte', gen:'-es', esEx:'\u00bfMe puede recortar tambi\u00e9n la barba?'},
+    {art:'-', de:'So ist es gut, danke', es:'As\u00ed est\u00e1 bien, gracias', ex:'So ist es gut, danke sch\u00f6n.', cat:'servicios', sub:'peluqueria', niv:'A1', tipo:'frase', esEx:'As\u00ed est\u00e1 bien, muchas gracias.'},
+    //    Lavandería y tintorería
+    {art:'die', de:'Reinigung', es:'la tintorer\u00eda', ex:'Ich bringe den Anzug in die Reinigung.', cat:'servicios', sub:'lavanderia', niv:'B1', tipo:'sust', pl:'Reinigungen', gen:'-', esEx:'Llevo el traje a la tintorer\u00eda.'},
+    {art:'der', de:'Waschsalon', es:'la lavander\u00eda de autoservicio', ex:'Gibt es hier einen Waschsalon?', cat:'servicios', sub:'lavanderia', niv:'B1', tipo:'sust', pl:'Waschsalons', gen:'-s', esEx:'\u00bfHay una lavander\u00eda por aqu\u00ed?'},
+    {art:'der', de:'Fleck', es:'la mancha', ex:'K\u00f6nnen Sie diesen Fleck entfernen?', cat:'servicios', sub:'lavanderia', niv:'B1', tipo:'sust', pl:'Flecken', gen:'-s', esEx:'\u00bfPuede quitar esta mancha?'},
+    {art:'-', de:'Wann ist es fertig?', es:'\u00bfCu\u00e1ndo estar\u00e1 listo?', ex:'Wann ist es fertig? \u2014 Am Donnerstag.', cat:'servicios', sub:'lavanderia', niv:'A2', tipo:'frase', esEx:'\u00bfCu\u00e1ndo estar\u00e1 listo? \u2014 El jueves.'},
+    {art:'-', de:'b\u00fcgeln', es:'planchar', ex:'Muss das geb\u00fcgelt werden?', cat:'servicios', sub:'lavanderia', niv:'A2', tipo:'verbo', conj:'b\u00fcgelt \u00b7 b\u00fcgelte \u00b7 geb\u00fcgelt', aux:'hat', esEx:'\u00bfHay que plancharlo?'},
+    //    En correos
+    {art:'das', de:'Paket / das P\u00e4ckchen', es:'el paquete', ex:'Ich m\u00f6chte ein Paket nach Mexiko schicken.', cat:'servicios', sub:'correos', niv:'A2', tipo:'sust', pl:'Pakete', gen:'-es', uso:'P\u00e4ckchen es el peque\u00f1o y barato; Paket, el grande con seguimiento', esEx:'Quisiera enviar un paquete a M\u00e9xico.'},
+    {art:'die', de:'Briefmarke', es:'el timbre / sello', ex:'Zwei Briefmarken f\u00fcr Europa, bitte.', cat:'servicios', sub:'correos', niv:'A2', tipo:'sust', pl:'Briefmarken', gen:'-', esEx:'Dos sellos para Europa, por favor.'},
+    {art:'-', de:'per Einschreiben', es:'por correo certificado', ex:'Bitte per Einschreiben schicken.', cat:'servicios', sub:'correos', niv:'B1', tipo:'frase', uso:'para tr\u00e1mites oficiales casi siempre te lo exigen', esEx:'Enviar por correo certificado, por favor.'},
+    {art:'die', de:'Sendungsnummer', es:'el n\u00famero de seguimiento', ex:'Haben Sie eine Sendungsnummer?', cat:'servicios', sub:'correos', niv:'B1', tipo:'sust', pl:'Sendungsnummern', gen:'-', esEx:'\u00bfTiene un n\u00famero de seguimiento?'},
+    {art:'die', de:'Packstation / die Filiale', es:'el punto de recogida / la sucursal', ex:'Das Paket liegt in der Filiale.', cat:'servicios', sub:'correos', niv:'B1', tipo:'sust', pl:'Filialen', gen:'-', esEx:'El paquete est\u00e1 en la sucursal.'},
+    {art:'-', de:'Wie lange dauert das?', es:'\u00bfCu\u00e1nto tarda?', ex:'Wie lange dauert es nach Mexiko?', cat:'servicios', sub:'correos', niv:'A1', tipo:'frase', esEx:'\u00bfCu\u00e1nto tarda a M\u00e9xico?'},
+    //    Que te arreglen algo
+    {art:'-', de:'K\u00f6nnen Sie das reparieren?', es:'\u00bfPuede repararlo?', ex:'K\u00f6nnen Sie das noch reparieren?', cat:'servicios', sub:'reparar', niv:'A2', tipo:'frase', esEx:'\u00bfTodav\u00eda se puede reparar?'},
+    {art:'-', de:'Was kostet die Reparatur?', es:'\u00bfCu\u00e1nto cuesta la reparaci\u00f3n?', ex:'Was w\u00fcrde die Reparatur ungef\u00e4hr kosten?', cat:'servicios', sub:'reparar', niv:'A2', tipo:'frase', esEx:'\u00bfCu\u00e1nto costar\u00eda m\u00e1s o menos la reparaci\u00f3n?'},
+    {art:'der', de:'Kostenvoranschlag', es:'el presupuesto', ex:'Machen Sie mir bitte einen Kostenvoranschlag.', cat:'servicios', sub:'reparar', niv:'B1', tipo:'sust', pl:'Kostenvoranschl\u00e4ge', gen:'-s', uso:'p\u00eddelo siempre por escrito antes de que empiecen', esEx:'H\u00e1game un presupuesto, por favor.'},
+    {art:'-', de:'Es lohnt sich nicht', es:'No merece la pena', ex:'Die Reparatur lohnt sich nicht mehr.', cat:'servicios', sub:'reparar', niv:'B1', tipo:'frase', esEx:'La reparaci\u00f3n ya no merece la pena.'},
+    {art:'-', de:'Es geht nicht mehr', es:'Ya no funciona', ex:'Meine Waschmaschine geht nicht mehr.', cat:'servicios', sub:'reparar', niv:'A2', tipo:'frase', esEx:'Mi lavadora ya no funciona.'},
+    //    Concertar el servicio
+    {art:'-', de:'Wann haben Sie ge\u00f6ffnet?', es:'\u00bfCu\u00e1l es su horario?', ex:'Wann haben Sie samstags ge\u00f6ffnet?', cat:'servicios', sub:'citas', niv:'A1', tipo:'frase', esEx:'\u00bfQu\u00e9 horario tienen los s\u00e1bados?'},
+    {art:'-', de:'Muss ich einen Termin machen?', es:'\u00bfHace falta cita?', ex:'Muss ich vorher einen Termin machen?', cat:'servicios', sub:'citas', niv:'A2', tipo:'frase', uso:'en Alemania casi todo va con cita, incluso la peluquer\u00eda', esEx:'\u00bfHay que pedir cita antes?'},
+    {art:'-', de:'Geht es auch ohne Termin?', es:'\u00bfSe puede sin cita?', ex:'Geht es auch ohne Termin?', cat:'servicios', sub:'citas', niv:'A2', tipo:'frase', esEx:'\u00bfSe puede tambi\u00e9n sin cita?'},
+    {art:'-', de:'Passt Ihnen Dienstag?', es:'\u00bfLe viene bien el martes?', ex:'Passt Ihnen Dienstag um zehn?', cat:'servicios', sub:'citas', niv:'A2', tipo:'frase', esEx:'\u00bfLe viene bien el martes a las diez?'},
+    {art:'-', de:'Ich komme sp\u00e4ter vorbei', es:'Paso m\u00e1s tarde', ex:'Ich komme heute Nachmittag vorbei.', cat:'servicios', sub:'citas', niv:'A2', tipo:'frase', esEx:'Paso esta tarde.'},
+
     // ── CASA ─────────────────────────────────
     //    La vivienda
     {art:'die', de:'Wohnung', es:'el apartamento', ex:'Ich suche eine Wohnung in M\u00fcnchen.', cat:'casa', sub:'vivienda', niv:'A1', tipo:'sust', pl:'Wohnungen', gen:'-', esEx:'Busco un apartamento en M\u00fanich.'},
@@ -1054,6 +1268,40 @@ const ALEMAN_VOCAB = {
     {art:'der', de:'Mietvertrag', es:'el contrato de alquiler', ex:'Ich habe den Mietvertrag unterschrieben.', cat:'casa', sub:'alquiler', niv:'B1', tipo:'sust', pl:'Mietvertr\u00e4ge', gen:'-s', esEx:'Firm\u00e9 el contrato de alquiler.'},
     {art:'der', de:'Hausmeister', es:'el conserje', ex:'Der Hausmeister repariert das.', cat:'casa', sub:'alquiler', niv:'B1', tipo:'sust', pl:'Hausmeister', gen:'-s', esEx:'El conserje lo repara.'},
     {art:'die', de:'Hausordnung', es:'el reglamento del edificio', ex:'Nach 22 Uhr ist Ruhezeit \u2014 steht in der Hausordnung.', cat:'casa', sub:'alquiler', niv:'B1', tipo:'sust', pl:'Hausordnungen', gen:'-', uso:'la Ruhezeit se respeta en serio: nada de ruido despu\u00e9s de las 22', esEx:'Despu\u00e9s de las 22 hay silencio: lo dice el reglamento.'},
+
+    // ── BUSCAR PISO ─────────────────────────────────
+    //    Leer el anuncio
+    {art:'die', de:'Wohnungsanzeige', es:'el anuncio de piso', ex:'Ich habe die Anzeige online gesehen.', cat:'piso', sub:'anuncio', niv:'B1', tipo:'sust', pl:'Wohnungsanzeigen', gen:'-', esEx:'Vi el anuncio en internet.'},
+    {art:'die', de:'Kaltmiete / die Warmmiete', es:'el alquiler sin / con gastos', ex:'800 kalt, 1.000 warm.', cat:'piso', sub:'anuncio', niv:'B1', tipo:'sust', pl:'Kaltmieten', gen:'-', uso:'el precio que ves suele ser \u00abkalt\u00bb: los gastos van aparte', esEx:'800 sin gastos, 1.000 con gastos.'},
+    {art:'das', de:'Zimmer / die Quadratmeter', es:'las habitaciones / los metros cuadrados', ex:'2 Zimmer, 55 Quadratmeter.', cat:'piso', sub:'anuncio', niv:'B1', tipo:'sust', pl:'Quadratmeter', gen:'-s', uso:'\u00ab2 Zimmer\u00bb incluye la sala; la cocina y el ba\u00f1o no cuentan', esEx:'2 habitaciones, 55 metros cuadrados.'},
+    {art:'-', de:'m\u00f6bliert / unm\u00f6bliert', es:'amueblado / sin amueblar', ex:'Die Wohnung ist unm\u00f6bliert.', cat:'piso', sub:'anuncio', niv:'B1', tipo:'adj', uso:'\u00abunm\u00f6bliert\u00bb aqu\u00ed suele significar sin cocina tampoco', esEx:'El piso est\u00e1 sin amueblar.'},
+    {art:'-', de:'ab sofort / zum 1. Mai', es:'disponible ya / a partir del 1 de mayo', ex:'Frei ab sofort.', cat:'piso', sub:'anuncio', niv:'B1', tipo:'frase', esEx:'Libre desde ya.'},
+    {art:'die', de:'Besichtigung', es:'la visita al piso', ex:'Die Besichtigung ist am Samstag um 11.', cat:'piso', sub:'anuncio', niv:'B1', tipo:'sust', pl:'Besichtigungen', gen:'-', uso:'suelen ser colectivas, con veinte personas a la vez', esEx:'La visita es el s\u00e1bado a las 11.'},
+    //    La visita
+    {art:'-', de:'Ich interessiere mich f\u00fcr die Wohnung', es:'Me interesa el piso', ex:'Guten Tag, ich interessiere mich f\u00fcr die Wohnung.', cat:'piso', sub:'visita', niv:'B1', tipo:'frase', esEx:'Buenos d\u00edas, me interesa el piso.'},
+    {art:'-', de:'Ist die Wohnung noch frei?', es:'\u00bfSigue disponible?', ex:'Ist die Wohnung noch frei?', cat:'piso', sub:'visita', niv:'B1', tipo:'frase', esEx:'\u00bfEl piso sigue disponible?'},
+    {art:'-', de:'Wie hoch sind die Nebenkosten?', es:'\u00bfA cu\u00e1nto ascienden los gastos?', ex:'Wie hoch sind die Nebenkosten genau?', cat:'piso', sub:'visita', niv:'B1', tipo:'frase', esEx:'\u00bfDe cu\u00e1nto son exactamente los gastos?'},
+    {art:'-', de:'Ist eine K\u00fcche vorhanden?', es:'\u00bfTiene cocina?', ex:'Ist eine Einbauk\u00fcche vorhanden?', cat:'piso', sub:'visita', niv:'B1', tipo:'frase', uso:'en Alemania es normal que el piso venga SIN cocina', esEx:'\u00bfTrae cocina integrada?'},
+    {art:'-', de:'Sind Haustiere erlaubt?', es:'\u00bfSe permiten mascotas?', ex:'Sind Haustiere erlaubt?', cat:'piso', sub:'visita', niv:'B1', tipo:'frase', esEx:'\u00bfSe permiten mascotas?'},
+    {art:'-', de:'Wann kann ich einziehen?', es:'\u00bfCu\u00e1ndo puedo mudarme?', ex:'Ab wann k\u00f6nnte ich einziehen?', cat:'piso', sub:'visita', niv:'B1', tipo:'frase', esEx:'\u00bfA partir de cu\u00e1ndo podr\u00eda mudarme?'},
+    //    Conseguirlo
+    {art:'die', de:'Selbstauskunft', es:'el formulario del inquilino', ex:'Bitte f\u00fcllen Sie die Selbstauskunft aus.', cat:'piso', sub:'solicitud', niv:'B1', tipo:'sust', pl:'Selbstausk\u00fcnfte', gen:'-', uso:'pide sueldo, trabajo y situaci\u00f3n familiar: es normal aqu\u00ed', esEx:'Rellene el formulario del inquilino, por favor.'},
+    {art:'die', de:'SCHUFA-Auskunft', es:'el informe de solvencia', ex:'Ohne SCHUFA bekommt man kaum eine Wohnung.', cat:'piso', sub:'solicitud', niv:'B1', tipo:'sust', pl:'SCHUFA-Ausk\u00fcnfte', gen:'-', uso:'es el historial crediticio; te lo piden casi siempre', esEx:'Sin SCHUFA es muy dif\u00edcil conseguir piso.'},
+    {art:'die', de:'Gehaltsnachweise', es:'los comprobantes de sueldo', ex:'Bringen Sie die letzten drei Gehaltsnachweise mit.', cat:'piso', sub:'solicitud', niv:'B1', tipo:'sust', tag:'solo plural', esEx:'Traiga las \u00faltimas tres n\u00f3minas.'},
+    {art:'die', de:'Zusage / die Absage', es:'la aceptaci\u00f3n / el rechazo', ex:'Ich habe eine Zusage f\u00fcr die Wohnung!', cat:'piso', sub:'solicitud', niv:'B1', tipo:'sust', pl:'Zusagen', gen:'-', esEx:'\u00a1Me dieron el piso!'},
+    {art:'die', de:'\u00dcbergabe', es:'la entrega de llaves', ex:'Die \u00dcbergabe ist am 30. mit Protokoll.', cat:'piso', sub:'solicitud', niv:'B1', tipo:'sust', pl:'\u00dcbergaben', gen:'-', uso:'se firma un acta con el estado del piso: fotograf\u00edalo todo', esEx:'La entrega es el d\u00eda 30, con acta.'},
+    //    La mudanza
+    {art:'-', de:'umziehen', es:'mudarse', ex:'Wir ziehen n\u00e4chsten Monat um.', cat:'piso', sub:'mudanza', niv:'A2', tipo:'verbo', conj:'zieht um \u00b7 zog um \u00b7 umgezogen', aux:'ist', tag:'separable \u00b7 irregular', esEx:'Nos mudamos el mes que viene.'},
+    {art:'-', de:'einziehen / ausziehen', es:'entrar a vivir / irse', ex:'Ich ziehe am ersten ein.', cat:'piso', sub:'mudanza', niv:'B1', tipo:'verbo', conj:'zieht ein \u00b7 zog ein \u00b7 eingezogen', aux:'ist', tag:'separable \u00b7 irregular', esEx:'Entro a vivir el d\u00eda uno.'},
+    {art:'der', de:'Umzugskarton', es:'la caja de mudanza', ex:'Wir brauchen noch zwanzig Umzugskartons.', cat:'piso', sub:'mudanza', niv:'B1', tipo:'sust', pl:'Umzugskartons', gen:'-s', esEx:'Necesitamos veinte cajas m\u00e1s.'},
+    {art:'-', de:'renovieren / streichen', es:'reformar / pintar', ex:'Beim Auszug muss man oft streichen.', cat:'piso', sub:'mudanza', niv:'B1', tipo:'verbo', conj:'streicht \u00b7 strich \u00b7 gestrichen', aux:'hat', tag:'irregular', uso:'muchos contratos obligan a dejar las paredes pintadas de blanco', esEx:'Al irse suele haber que pintar.'},
+    {art:'die', de:'K\u00fcndigungsfrist', es:'el plazo de preaviso', ex:'Die K\u00fcndigungsfrist betr\u00e4gt drei Monate.', cat:'piso', sub:'mudanza', niv:'B1', tipo:'sust', pl:'K\u00fcndigungsfristen', gen:'-', uso:'tres meses es lo normal: avisa con tiempo', esEx:'El plazo de preaviso es de tres meses.'},
+    //    Vivir en comunidad
+    {art:'die', de:'Ruhezeit', es:'el horario de silencio', ex:'Ab 22 Uhr ist Ruhezeit.', cat:'piso', sub:'vecindad', niv:'B1', tipo:'sust', pl:'Ruhezeiten', gen:'-', uso:'22\u20137 entre semana y todo el domingo: se respeta en serio', esEx:'A partir de las 22 hay que guardar silencio.'},
+    {art:'die', de:'M\u00fclltrennung', es:'la separaci\u00f3n de basura', ex:'Die M\u00fclltrennung ist hier sehr streng.', cat:'piso', sub:'vecindad', niv:'B1', tipo:'sust', pl:'-', uso:'papel, envases, vidrio, org\u00e1nico y resto: cinco contenedores', esEx:'Aqu\u00ed la separaci\u00f3n de basura es muy estricta.'},
+    {art:'die', de:'Kehrwoche', es:'el turno de limpieza', ex:'Diese Woche haben wir Kehrwoche.', cat:'piso', sub:'vecindad', niv:'B1', tipo:'sust', pl:'Kehrwochen', gen:'-', uso:'t\u00edpico del sur: te toca limpiar la escalera com\u00fan por turnos', esEx:'Esta semana nos toca la limpieza.'},
+    {art:'-', de:'K\u00f6nnten Sie bitte leiser sein?', es:'\u00bfPodr\u00eda bajar el ruido?', ex:'Entschuldigung, k\u00f6nnten Sie bitte etwas leiser sein?', cat:'piso', sub:'vecindad', niv:'B1', tipo:'frase', esEx:'Disculpe, \u00bfpodr\u00eda hacer un poco menos de ruido?'},
+    {art:'-', de:'sich vorstellen (beim Nachbarn)', es:'presentarse al vecino', ex:'Ich wollte mich kurz vorstellen, ich bin der neue Nachbar.', cat:'piso', sub:'vecindad', niv:'A2', tipo:'frase', uso:'presentarse al mudarse se ve muy bien', esEx:'Quer\u00eda presentarme, soy el vecino nuevo.'},
 
     // ── CIUDAD ─────────────────────────────────
     //    Lugares de la ciudad
@@ -1122,6 +1370,47 @@ const ALEMAN_VOCAB = {
     {art:'die', de:'Richtung', es:'la direcci\u00f3n (sentido)', ex:'In welche Richtung muss ich?', cat:'ciudad', sub:'orientarse', niv:'A2', tipo:'sust', pl:'Richtungen', gen:'-', uso:'Richtung es el sentido; Adresse, la direcci\u00f3n postal', esEx:'\u00bfEn qu\u00e9 direcci\u00f3n tengo que ir?'},
     {art:'die', de:'Adresse', es:'la direcci\u00f3n (postal)', ex:'Wie ist deine Adresse?', cat:'ciudad', sub:'orientarse', niv:'A1', tipo:'sust', pl:'Adressen', gen:'-', esEx:'\u00bfCu\u00e1l es tu direcci\u00f3n?'},
 
+    // ── COCHE Y CONDUCIR ─────────────────────────────────
+    //    Permiso y papeles
+    {art:'der', de:'F\u00fchrerschein', es:'la licencia de conducir', ex:'Mein F\u00fchrerschein ist aus Mexiko.', cat:'coche', sub:'permiso', niv:'A2', tipo:'sust', pl:'F\u00fchrerscheine', gen:'-s', uso:'el mexicano vale seis meses; luego hay que canjearlo o repetirlo', esEx:'Mi licencia es de M\u00e9xico.'},
+    {art:'-', de:'umschreiben lassen', es:'canjear (el permiso)', ex:'Ich muss meinen F\u00fchrerschein umschreiben lassen.', cat:'coche', sub:'permiso', niv:'B1', tipo:'frase', esEx:'Tengo que canjear mi licencia.'},
+    {art:'der', de:'Fahrzeugschein', es:'el permiso de circulaci\u00f3n', ex:'Der Fahrzeugschein liegt im Handschuhfach.', cat:'coche', sub:'permiso', niv:'B1', tipo:'sust', pl:'Fahrzeugscheine', gen:'-s', esEx:'El permiso de circulaci\u00f3n est\u00e1 en la guantera.'},
+    {art:'die', de:'Kfz-Versicherung', es:'el seguro del coche', ex:'Ohne Kfz-Versicherung darf man nicht fahren.', cat:'coche', sub:'permiso', niv:'B1', tipo:'sust', pl:'Kfz-Versicherungen', gen:'-', esEx:'Sin seguro del coche no se puede conducir.'},
+    {art:'der', de:'T\u00dcV', es:'la inspecci\u00f3n t\u00e9cnica', ex:'Der T\u00dcV ist n\u00e4chsten Monat f\u00e4llig.', cat:'coche', sub:'permiso', niv:'B1', tipo:'sust', pl:'-', gen:'-s', uso:'cada dos a\u00f1os; sin T\u00dcV el coche no puede circular', esEx:'La inspecci\u00f3n toca el mes que viene.'},
+    //    Conducir
+    {art:'-', de:'Auto fahren', es:'conducir', ex:'Ich fahre gern Auto.', cat:'coche', sub:'conducir', niv:'A1', tipo:'frase', uso:'\u00abfahren\u00bb a secas ya es ir en veh\u00edculo; conducir es Auto fahren', esEx:'Me gusta conducir.'},
+    {art:'-', de:'anschnallen', es:'abrocharse el cintur\u00f3n', ex:'Bitte anschnallen!', cat:'coche', sub:'conducir', niv:'A2', tipo:'verbo', conj:'schnallt an \u00b7 schnallte an \u00b7 angeschnallt', aux:'hat', tag:'separable', esEx:'\u00a1Abr\u00f3chense el cintur\u00f3n!'},
+    {art:'-', de:'bremsen / beschleunigen', es:'frenar / acelerar', ex:'Brems bitte, da ist eine Ampel.', cat:'coche', sub:'conducir', niv:'B1', tipo:'verbo', conj:'bremst \u00b7 bremste \u00b7 gebremst', aux:'hat', esEx:'Frena, hay un sem\u00e1foro.'},
+    {art:'-', de:'\u00fcberholen', es:'rebasar / adelantar', ex:'Auf der Autobahn wird links \u00fcberholt.', cat:'coche', sub:'conducir', niv:'B1', tipo:'verbo', conj:'\u00fcberholt \u00b7 \u00fcberholte \u00b7 \u00fcberholt', aux:'hat', tag:'sin ge-', uso:'solo por la izquierda; rebasar por la derecha es multa', esEx:'En la autopista se rebasa por la izquierda.'},
+    {art:'das', de:'Tempolimit', es:'el l\u00edmite de velocidad', ex:'Hier gibt es kein Tempolimit.', cat:'coche', sub:'conducir', niv:'B1', tipo:'sust', pl:'Tempolimits', gen:'-s', esEx:'Aqu\u00ed no hay l\u00edmite de velocidad.'},
+    {art:'die', de:'Vorfahrt', es:'la preferencia de paso', ex:'Rechts hat Vorfahrt.', cat:'coche', sub:'conducir', niv:'B1', tipo:'sust', pl:'-', uso:'\u00abrechts vor links\u00bb es la regla por defecto sin se\u00f1ales', esEx:'El de la derecha tiene preferencia.'},
+    //    Gasolinera
+    {art:'die', de:'Tankstelle', es:'la gasolinera', ex:'Die n\u00e4chste Tankstelle ist 5 km entfernt.', cat:'coche', sub:'gasolinera', niv:'A2', tipo:'sust', pl:'Tankstellen', gen:'-', esEx:'La siguiente gasolinera est\u00e1 a 5 km.'},
+    {art:'-', de:'tanken', es:'cargar gasolina', ex:'Ich muss noch tanken.', cat:'coche', sub:'gasolinera', niv:'A2', tipo:'verbo', conj:'tankt \u00b7 tankte \u00b7 getankt', aux:'hat', uso:'primero cargas y luego pagas dentro, en la caja', esEx:'Todav\u00eda tengo que cargar gasolina.'},
+    {art:'das', de:'Benzin / der Diesel', es:'la gasolina / el di\u00e9sel', ex:'Super oder Diesel? \u2014 Super, bitte.', cat:'coche', sub:'gasolinera', niv:'A2', tipo:'sust', pl:'-', gen:'-s', tag:'incontable', esEx:'\u00bfS\u00faper o di\u00e9sel? \u2014 S\u00faper, por favor.'},
+    {art:'die', de:'Zapfs\u00e4ule', es:'el surtidor', ex:'S\u00e4ule vier, bitte.', cat:'coche', sub:'gasolinera', niv:'B1', tipo:'sust', pl:'Zapfs\u00e4ulen', gen:'-', uso:'en la caja se dice el n\u00famero del surtidor', esEx:'Surtidor cuatro, por favor.'},
+    {art:'-', de:'volltanken', es:'llenar el tanque', ex:'Einmal volltanken, bitte.', cat:'coche', sub:'gasolinera', niv:'B1', tipo:'verbo', conj:'tankt voll \u00b7 tankte voll \u00b7 vollgetankt', aux:'hat', tag:'separable', esEx:'Ll\u00e9nelo, por favor.'},
+    {art:'die', de:'Luft / das Wasser pr\u00fcfen', es:'revisar el aire / el agua', ex:'Ich pr\u00fcfe kurz die Luft in den Reifen.', cat:'coche', sub:'gasolinera', niv:'B1', tipo:'frase', esEx:'Reviso r\u00e1pido el aire de los neum\u00e1ticos.'},
+    //    Aparcar
+    {art:'-', de:'parken', es:'estacionar', ex:'Hier darf man nicht parken.', cat:'coche', sub:'aparcar', niv:'A1', tipo:'verbo', conj:'parkt \u00b7 parkte \u00b7 geparkt', aux:'hat', esEx:'Aqu\u00ed no se puede estacionar.'},
+    {art:'das', de:'Parkhaus / die Tiefgarage', es:'el estacionamiento cubierto', ex:'Im Parkhaus ist noch Platz.', cat:'coche', sub:'aparcar', niv:'A2', tipo:'sust', pl:'Parkh\u00e4user', gen:'-es', esEx:'En el estacionamiento todav\u00eda hay lugar.'},
+    {art:'die', de:'Parkuhr / der Parkschein', es:'el parqu\u00edmetro / el ticket', ex:'Vergiss den Parkschein nicht!', cat:'coche', sub:'aparcar', niv:'B1', tipo:'sust', pl:'Parkscheine', gen:'-s', uso:'se pone visible en el parabrisas o es multa', esEx:'\u00a1No olvides el ticket de estacionamiento!'},
+    {art:'die', de:'Parkscheibe', es:'el disco horario', ex:'Stell die Parkscheibe auf halb drei.', cat:'coche', sub:'aparcar', niv:'B1', tipo:'sust', pl:'Parkscheiben', gen:'-', uso:'disco azul de cart\u00f3n: se marca la hora de llegada', esEx:'Pon el disco en las dos y media.'},
+    {art:'das', de:'Halteverbot', es:'la prohibici\u00f3n de parar', ex:'Hier ist absolutes Halteverbot.', cat:'coche', sub:'aparcar', niv:'B1', tipo:'sust', pl:'Halteverbote', gen:'-es', esEx:'Aqu\u00ed est\u00e1 totalmente prohibido parar.'},
+    //    Taller y averías
+    {art:'die', de:'Werkstatt', es:'el taller', ex:'Das Auto ist in der Werkstatt.', cat:'coche', sub:'taller', niv:'A2', tipo:'sust', pl:'Werkst\u00e4tten', gen:'-', esEx:'El coche est\u00e1 en el taller.'},
+    {art:'die', de:'Panne', es:'la aver\u00eda', ex:'Wir hatten eine Panne auf der Autobahn.', cat:'coche', sub:'taller', niv:'B1', tipo:'sust', pl:'Pannen', gen:'-', esEx:'Tuvimos una aver\u00eda en la autopista.'},
+    {art:'der', de:'Reifen', es:'el neum\u00e1tico', ex:'Der Reifen ist platt.', cat:'coche', sub:'taller', niv:'A2', tipo:'sust', pl:'Reifen', gen:'-s', uso:'\u00abplatt\u00bb es pinchado; los Winterreifen son obligatorios en invierno', esEx:'El neum\u00e1tico est\u00e1 pinchado.'},
+    {art:'der', de:'Motor / die Batterie', es:'el motor / la bater\u00eda', ex:'Die Batterie ist leer.', cat:'coche', sub:'taller', niv:'A2', tipo:'sust', pl:'Motoren', gen:'-s', esEx:'La bater\u00eda est\u00e1 descargada.'},
+    {art:'-', de:'abschleppen', es:'remolcar', ex:'Das Auto wurde abgeschleppt.', cat:'coche', sub:'taller', niv:'B1', tipo:'verbo', conj:'schleppt ab \u00b7 schleppte ab \u00b7 abgeschleppt', aux:'hat', uso:'tambi\u00e9n es lo que hacen si aparcas mal', esEx:'Se llevaron el coche con la gr\u00faa.'},
+    {art:'-', de:'Das Auto springt nicht an', es:'El coche no arranca', ex:'Mein Auto springt nicht an.', cat:'coche', sub:'taller', niv:'B1', tipo:'frase', esEx:'Mi coche no arranca.'},
+    //    Multas y control
+    {art:'das', de:'Bu\u00dfgeld / der Strafzettel', es:'la multa', ex:'Ich habe einen Strafzettel bekommen.', cat:'coche', sub:'multas', niv:'B1', tipo:'sust', pl:'Bu\u00dfgelder', gen:'-es', esEx:'Me pusieron una multa.'},
+    {art:'der', de:'Blitzer', es:'el radar', ex:'Auf der Stra\u00dfe steht ein Blitzer.', cat:'coche', sub:'multas', niv:'B1', tipo:'sust', pl:'Blitzer', gen:'-s', uso:'te llega la multa por correo con foto incluida', esEx:'En esa calle hay un radar.'},
+    {art:'die', de:'Verkehrskontrolle', es:'el control de tr\u00e1fico', ex:'Wir sind in eine Verkehrskontrolle gekommen.', cat:'coche', sub:'multas', niv:'B1', tipo:'sust', pl:'Verkehrskontrollen', gen:'-', esEx:'Nos toc\u00f3 un control de tr\u00e1fico.'},
+    {art:'-', de:'Ihre Papiere, bitte', es:'Sus papeles, por favor', ex:'F\u00fchrerschein und Fahrzeugschein, bitte.', cat:'coche', sub:'multas', niv:'B1', tipo:'frase', esEx:'Licencia y permiso de circulaci\u00f3n, por favor.'},
+    {art:'die', de:'Umweltplakette', es:'la etiqueta ambiental', ex:'Ohne gr\u00fcne Plakette darf man nicht in die Stadt.', cat:'coche', sub:'multas', niv:'B1', tipo:'sust', pl:'Umweltplaketten', gen:'-', uso:'la verde es la que deja entrar a casi todos los centros urbanos', esEx:'Sin etiqueta verde no se puede entrar al centro.'},
+
     // ── TRABAJO ─────────────────────────────────
     //    El puesto y la empresa
     {art:'die', de:'Arbeit', es:'el trabajo', ex:'Ich muss zur Arbeit.', cat:'trabajo', sub:'puesto', niv:'A1', tipo:'sust', pl:'Arbeiten', gen:'-', esEx:'Tengo que ir al trabajo.'},
@@ -1174,6 +1463,53 @@ const ALEMAN_VOCAB = {
     {art:'-', de:'verdienen', es:'ganar (dinero)', ex:'Wie viel verdienst du?', cat:'trabajo', sub:'condiciones', niv:'A2', tipo:'verbo', conj:'verdient \u00b7 verdiente \u00b7 verdient', aux:'hat', tag:'sin ge-', uso:'verdienen es ganar sueldo; gewinnen, ganar un partido', esEx:'\u00bfCu\u00e1nto ganas?'},
     {art:'die', de:'Steuer', es:'el impuesto', ex:'In Deutschland sind die Steuern hoch.', cat:'trabajo', sub:'condiciones', niv:'B1', tipo:'sust', pl:'Steuern', gen:'-', esEx:'En Alemania los impuestos son altos.'},
     {art:'die', de:'Krankenversicherung', es:'el seguro m\u00e9dico', ex:'Die Krankenversicherung ist in Deutschland Pflicht.', cat:'trabajo', sub:'condiciones', niv:'B1', tipo:'sust', pl:'Krankenversicherungen', gen:'-', uso:'es obligatoria por ley', esEx:'El seguro m\u00e9dico es obligatorio en Alemania.'},
+
+    // ── HABLAR EN EL TRABAJO ─────────────────────────────────
+    //    Llegar y saludar
+    {art:'-', de:'Guten Morgen zusammen', es:'Buenos d\u00edas a todos', ex:'Guten Morgen zusammen!', cat:'oficina', sub:'llegar', niv:'A2', tipo:'frase', uso:'\u00abzusammen\u00bb es el \u00aba todos\u00bb de la oficina', esEx:'\u00a1Buenos d\u00edas a todos!'},
+    {art:'-', de:'Mahlzeit!', es:'\u00a1Buen provecho! (mediod\u00eda)', ex:'Mahlzeit! \u2014 Mahlzeit!', cat:'oficina', sub:'llegar', niv:'B1', tipo:'frase', uso:'en muchas empresas se dice a cualquiera al cruzarse a mediod\u00eda', esEx:'\u00a1Buen provecho! \u2014 \u00a1Igualmente!'},
+    {art:'-', de:'Wie war dein Wochenende?', es:'\u00bfQu\u00e9 tal el fin de semana?', ex:'Wie war dein Wochenende? \u2014 Ganz gut, danke.', cat:'oficina', sub:'llegar', niv:'A2', tipo:'frase', esEx:'\u00bfQu\u00e9 tal el fin de semana? \u2014 Bastante bien, gracias.'},
+    {art:'-', de:'Ich mache mal Pause', es:'Voy a hacer una pausa', ex:'Ich mache kurz Pause, bin gleich zur\u00fcck.', cat:'oficina', sub:'llegar', niv:'A2', tipo:'frase', esEx:'Hago una pausa corta, ahora vuelvo.'},
+    {art:'-', de:'Feierabend machen', es:'terminar la jornada', ex:'Ich mache jetzt Feierabend, bis morgen!', cat:'oficina', sub:'llegar', niv:'A2', tipo:'frase', uso:'se dice al irse; nadie espera que sigas conectado despu\u00e9s', esEx:'Termino por hoy, \u00a1hasta ma\u00f1ana!'},
+    {art:'-', de:'Sch\u00f6nen Feierabend!', es:'\u00a1Buena tarde! (al salir)', ex:'Bis morgen, sch\u00f6nen Feierabend!', cat:'oficina', sub:'llegar', niv:'A2', tipo:'frase', esEx:'Hasta ma\u00f1ana, \u00a1que disfrutes la tarde!'},
+    //    En una reunión
+    {art:'-', de:'Fangen wir an', es:'Empecemos', ex:'Gut, fangen wir an.', cat:'oficina', sub:'reunion', niv:'A2', tipo:'frase', esEx:'Bien, empecemos.'},
+    {art:'-', de:'Darf ich kurz etwas sagen?', es:'\u00bfPuedo decir algo?', ex:'Darf ich dazu kurz etwas sagen?', cat:'oficina', sub:'reunion', niv:'B1', tipo:'frase', uso:'la forma educada de pedir turno sin interrumpir de golpe', esEx:'\u00bfPuedo decir algo al respecto?'},
+    {art:'-', de:'Ich sehe das anders', es:'Yo lo veo distinto', ex:'Ich sehe das ehrlich gesagt etwas anders.', cat:'oficina', sub:'reunion', niv:'B1', tipo:'frase', uso:'la discrepancia directa es normal y no se toma como ataque', esEx:'Sinceramente, yo lo veo un poco distinto.'},
+    {art:'-', de:'K\u00f6nnen wir das festhalten?', es:'\u00bfLo dejamos anotado?', ex:'K\u00f6nnen wir das im Protokoll festhalten?', cat:'oficina', sub:'reunion', niv:'B1', tipo:'frase', esEx:'\u00bfLo dejamos anotado en el acta?'},
+    {art:'das', de:'Protokoll', es:'el acta', ex:'Wer schreibt heute das Protokoll?', cat:'oficina', sub:'reunion', niv:'B1', tipo:'sust', pl:'Protokolle', gen:'-s', esEx:'\u00bfQui\u00e9n escribe hoy el acta?'},
+    {art:'-', de:'Wir kommen darauf zur\u00fcck', es:'Volvemos a eso', ex:'Gute Frage, wir kommen sp\u00e4ter darauf zur\u00fcck.', cat:'oficina', sub:'reunion', niv:'B1', tipo:'frase', esEx:'Buena pregunta, volvemos a eso despu\u00e9s.'},
+    {art:'-', de:'Das war\'s von meiner Seite', es:'Eso es todo por mi parte', ex:'Das war\'s von meiner Seite, danke.', cat:'oficina', sub:'reunion', niv:'B1', tipo:'frase', esEx:'Eso es todo por mi parte, gracias.'},
+    //    Pedir y ofrecer ayuda
+    {art:'-', de:'K\u00f6nntest du mir kurz helfen?', es:'\u00bfMe echas una mano?', ex:'K\u00f6nntest du mir kurz bei etwas helfen?', cat:'oficina', sub:'pedir', niv:'A2', tipo:'frase', esEx:'\u00bfMe echas una mano con algo?'},
+    {art:'-', de:'Hast du kurz Zeit?', es:'\u00bfTienes un momento?', ex:'Hast du kurz Zeit f\u00fcr eine Frage?', cat:'oficina', sub:'pedir', niv:'A2', tipo:'frase', esEx:'\u00bfTienes un momento para una pregunta?'},
+    {art:'-', de:'Ich komme hier nicht weiter', es:'Estoy atascado', ex:'Ich komme hier leider nicht weiter.', cat:'oficina', sub:'pedir', niv:'B1', tipo:'frase', uso:'pedir ayuda pronto se ve bien, no mal', esEx:'Aqu\u00ed me qued\u00e9 atascado.'},
+    {art:'-', de:'Kann ich dir helfen?', es:'\u00bfTe ayudo?', ex:'Kann ich dir irgendwie helfen?', cat:'oficina', sub:'pedir', niv:'A1', tipo:'frase', esEx:'\u00bfTe ayudo en algo?'},
+    {art:'-', de:'Ich k\u00fcmmere mich darum', es:'Yo me encargo', ex:'Kein Problem, ich k\u00fcmmere mich darum.', cat:'oficina', sub:'pedir', niv:'B1', tipo:'frase', esEx:'Sin problema, yo me encargo.'},
+    {art:'-', de:'Das ist nicht mein Bereich', es:'Eso no es mi \u00e1rea', ex:'Das ist leider nicht mein Bereich, frag mal Anna.', cat:'oficina', sub:'pedir', niv:'B1', tipo:'frase', esEx:'Eso no es mi \u00e1rea, preg\u00fantale a Anna.'},
+    //    Plazos y avances
+    {art:'-', de:'Bis wann brauchst du das?', es:'\u00bfPara cu\u00e1ndo lo necesitas?', ex:'Bis wann brauchst du das genau?', cat:'oficina', sub:'plazos', niv:'A2', tipo:'frase', esEx:'\u00bfPara cu\u00e1ndo exactamente lo necesitas?'},
+    {art:'-', de:'Das schaffe ich bis Freitag', es:'Lo tengo para el viernes', ex:'Das schaffe ich bis Freitag.', cat:'oficina', sub:'plazos', niv:'B1', tipo:'frase', esEx:'Lo tengo listo para el viernes.'},
+    {art:'-', de:'Das wird knapp', es:'Va a ir justo', ex:'Bis morgen? Das wird knapp.', cat:'oficina', sub:'plazos', niv:'B1', tipo:'frase', esEx:'\u00bfPara ma\u00f1ana? Va a ir justo.'},
+    {art:'-', de:'Ich brauche mehr Zeit', es:'Necesito m\u00e1s tiempo', ex:'Ich brauche noch zwei Tage mehr.', cat:'oficina', sub:'plazos', niv:'A2', tipo:'frase', uso:'avisar con antelaci\u00f3n es lo esperado; llegar tarde sin avisar, no', esEx:'Necesito dos d\u00edas m\u00e1s.'},
+    {art:'der', de:'Stand der Dinge', es:'el estado de las cosas', ex:'Wie ist der Stand der Dinge beim Projekt?', cat:'oficina', sub:'plazos', niv:'B1', tipo:'frase', esEx:'\u00bfC\u00f3mo va el proyecto?'},
+    {art:'-', de:'Ich melde mich', es:'Te aviso', ex:'Ich melde mich, sobald ich es wei\u00df.', cat:'oficina', sub:'plazos', niv:'A2', tipo:'frase', esEx:'Te aviso en cuanto lo sepa.'},
+    {art:'-', de:'Bescheid sagen / geben', es:'avisar', ex:'Sag mir bitte Bescheid, wenn es fertig ist.', cat:'oficina', sub:'plazos', niv:'A2', tipo:'frase', uso:'se usa todo el d\u00eda en cualquier oficina alemana', esEx:'Av\u00edsame cuando est\u00e9 listo.'},
+    //    En la entrevista
+    {art:'-', de:'Erz\u00e4hlen Sie etwas \u00fcber sich', es:'H\u00e1bleme de usted', ex:'Erz\u00e4hlen Sie uns kurz etwas \u00fcber sich.', cat:'oficina', sub:'entrevista', niv:'B1', tipo:'frase', uso:'la primera pregunta de casi toda entrevista', esEx:'Cu\u00e9ntenos brevemente sobre usted.'},
+    {art:'die', de:'St\u00e4rken und Schw\u00e4chen', es:'las fortalezas y debilidades', ex:'Was sind Ihre St\u00e4rken und Schw\u00e4chen?', cat:'oficina', sub:'entrevista', niv:'B1', tipo:'sust', tag:'solo plural', esEx:'\u00bfCu\u00e1les son sus fortalezas y debilidades?'},
+    {art:'-', de:'Ich habe Erfahrung in\u2026', es:'Tengo experiencia en\u2026', ex:'Ich habe f\u00fcnf Jahre Erfahrung in der Softwareentwicklung.', cat:'oficina', sub:'entrevista', niv:'B1', tipo:'frase', esEx:'Tengo cinco a\u00f1os de experiencia en desarrollo de software.'},
+    {art:'-', de:'Warum m\u00f6chten Sie zu uns?', es:'\u00bfPor qu\u00e9 quiere venir con nosotros?', ex:'Warum m\u00f6chten Sie gerade zu uns?', cat:'oficina', sub:'entrevista', niv:'B1', tipo:'frase', esEx:'\u00bfPor qu\u00e9 quiere venir precisamente con nosotros?'},
+    {art:'die', de:'Gehaltsvorstellung', es:'la expectativa salarial', ex:'Wie sind Ihre Gehaltsvorstellungen?', cat:'oficina', sub:'entrevista', niv:'B1', tipo:'sust', pl:'Gehaltsvorstellungen', gen:'-', uso:'lo preguntan siempre, y se responde con una cifra bruta anual', esEx:'\u00bfCu\u00e1l es su expectativa salarial?'},
+    {art:'-', de:'Haben Sie noch Fragen?', es:'\u00bfTiene alguna pregunta?', ex:'Haben Sie noch Fragen an uns?', cat:'oficina', sub:'entrevista', niv:'B1', tipo:'frase', uso:'decir \u00abno\u00bb se ve mal: lleva siempre dos o tres preparadas', esEx:'\u00bfTiene alguna pregunta para nosotros?'},
+    {art:'-', de:'Wann kann ich anfangen?', es:'\u00bfCu\u00e1ndo puedo empezar?', ex:'Ab wann k\u00f6nnte ich anfangen?', cat:'oficina', sub:'entrevista', niv:'B1', tipo:'frase', esEx:'\u00bfA partir de cu\u00e1ndo podr\u00eda empezar?'},
+    //    Faltar y avisar
+    {art:'-', de:'Ich bin krank', es:'Estoy enfermo', ex:'Ich bin krank und komme heute nicht.', cat:'oficina', sub:'ausente', niv:'A1', tipo:'frase', uso:'se avisa por tel\u00e9fono antes de que empiece la jornada', esEx:'Estoy enfermo y hoy no voy.'},
+    {art:'-', de:'Ich melde mich krank', es:'Me doy de baja', ex:'Ich muss mich f\u00fcr heute krankmelden.', cat:'oficina', sub:'ausente', niv:'B1', tipo:'frase', esEx:'Tengo que darme de baja por hoy.'},
+    {art:'-', de:'Ich habe Urlaub', es:'Estoy de vacaciones', ex:'N\u00e4chste Woche habe ich Urlaub.', cat:'oficina', sub:'ausente', niv:'A1', tipo:'frase', esEx:'La semana que viene estoy de vacaciones.'},
+    {art:'-', de:'Urlaub beantragen', es:'solicitar vacaciones', ex:'Ich m\u00f6chte f\u00fcr Juli Urlaub beantragen.', cat:'oficina', sub:'ausente', niv:'B1', tipo:'frase', esEx:'Quisiera solicitar vacaciones para julio.'},
+    {art:'die', de:'Vertretung', es:'la sustituci\u00f3n', ex:'Wer macht die Vertretung, wenn ich weg bin?', cat:'oficina', sub:'ausente', niv:'B1', tipo:'sust', pl:'Vertretungen', gen:'-', esEx:'\u00bfQui\u00e9n me sustituye mientras no estoy?'},
+    {art:'-', de:'Ich bin ab Montag wieder da', es:'Vuelvo el lunes', ex:'Ich bin ab Montag wieder da.', cat:'oficina', sub:'ausente', niv:'A2', tipo:'frase', esEx:'Vuelvo a partir del lunes.'},
 
     // ── NATURALEZA ─────────────────────────────────
     //    El clima

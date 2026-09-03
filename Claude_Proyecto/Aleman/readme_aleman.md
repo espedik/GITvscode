@@ -30,7 +30,7 @@ Alemán del Dashboard lo refleja. Cuatro pestañas:
 
 | Pestaña | Qué es |
 |---|---|
-| 📖 Diccionario | Las 1.303 palabras en tarjetas, agrupadas por subsección |
+| 📖 Diccionario | Las 1.516 palabras en tarjetas, agrupadas por subsección |
 | 🗨️ Frases por situación | 60 frases listas para usar, escritas en este archivo |
 | 🎴 Tarjetas | Repaso con `flashcards.js` |
 | 🧩 Partizip I y II | El tema de gramática, en 9 bloques |
@@ -40,7 +40,7 @@ y los tres los carga también la pantalla de Alemán del Dashboard:
 
 | Archivo | Qué es | Cuándo se toca |
 |---|---|---|
-| `vocab-datos.js` | Las 1.303 palabras en 30 secciones y **151 subsecciones**, más el Partizip | Al añadir o corregir vocabulario |
+| `vocab-datos.js` | Las 1.516 palabras en 37 secciones y **188 subsecciones**, más el Partizip | Al añadir o corregir vocabulario |
 | `vocab.css` | El diseño: la tarjeta, la rejilla, la tira de secciones, el Partizip | Al cambiar cómo se ve |
 | `vocab.js` | El motor: filtrar, agrupar y pintar | Al cambiar cómo se comporta |
 
@@ -50,7 +50,7 @@ Los controles 19 y 20 de `../Dashboard/verificar-sincronia.js` vigilan que siga 
 
 ### Subsecciones y qué lleva cada palabra
 
-Las 30 secciones se reparten en **151 subsecciones** — Comida tiene *Frutas y verduras*,
+Las 37 secciones se reparten en **188 subsecciones** — Comida tiene *Frutas y verduras*,
 *Carnes y pescado*, *Bebidas*…; Hobbies tiene *Deporte*, *Música*, *Salir*… — porque el
 objetivo es llegar a varios miles de palabras y una lista de 300 no se navega. Ninguna
 subsección baja de 5 palabras ni pasa de 19: por debajo se ve vacía en el árbol y por
@@ -96,15 +96,15 @@ comida: {label:'Comida', icon:'🍽️', subs:{
 | `comp` | Comparativo y superlativo de un adjetivo |
 | `tag` | Lo que se sale de lo normal: *irregular*, *separable*, *incontable*, *solo plural* |
 | `uso` | Cuándo se dice, o el fallo típico |
-| `esEx` | La traducción del ejemplo. Las 1.303 la tienen |
+| `esEx` | La traducción del ejemplo. Las 1.516 la tienen |
 
 **Añadir una sección entera** es lo mismo con una entrada más en `cats`: su etiqueta, su
 emoji y sus `subs`. Así entraron Hobbies, Armar frases y las siete de vida cotidiana.
 
 ### Las secciones que no son temáticas
 
-Nueve de las treinta no agrupan *cosas* sino **lo que se dice**, porque saber cómo se llama
-el jamón no sirve de nada si no sabes pedir doscientos gramos. Salieron de un problema
+Trece de las treinta y siete no agrupan *cosas* sino **lo que se dice**, porque saber cómo se
+llama el jamón no sirve de nada si no sabes pedir doscientos gramos. Salieron de un problema
 concreto de Adán: *"cuando estaba en alemania me costaba pedir cosas del supermercado,
 carniceria, centros comerciales"*.
 
@@ -118,6 +118,13 @@ carniceria, centros comerciales"*.
 | 💶 **Dinero y banco** | La cuenta, transferencias, impuestos, cuando algo va mal |
 | 📋 **Trámites** | Anmeldung, extranjería, formularios, conseguir cita |
 | ☎️ **Teléfono y correos** | Llamar, dejar recado, el correo formal, **salir del apuro** |
+| 🍴 **En el restaurante** | Sentarse, pedir, *Zusammen oder getrennt?*, *Stimmt so* |
+| ✂️ **Servicios** | Peluquería, tintorería, correos, que te arreglen algo |
+| 🚗 **Coche y conducir** | Permiso, gasolinera, aparcar, taller, multas, TÜV |
+| 🗣️ **Hablar en el trabajo** | Reuniones, pedir ayuda, plazos, la entrevista, faltar |
+| 🔑 **Buscar piso** | El anuncio, la visita, la SCHUFA, la mudanza, los vecinos |
+| 🤝 **Conocer gente** | Romper el hielo, de qué se habla, quedar, invitar |
+| 💬 **Opinar y discutir** | Dar tu opinión, acuerdo, desacuerdo, matizar |
 
 La subsección *Salir del apuro* es la que más se va a usar: *¿puede hablar más despacio?*,
 *¿cómo se dice… en alemán?*, *¿me lo puede escribir?*, *¿lo entendí bien?*.
@@ -154,7 +161,7 @@ aclara en el oscuro, así que un solo valor sirve para las dos pantallas y nadie
 acordarse de redefinirlo. Con valores fijos, la píldora de `das` daba 1.88:1 sobre su
 propio fondo y la línea técnica del Dashboard en modo oscuro, 1.08:1.
 
-**Por qué tarjetas y no una tabla.** La tabla mostraba **9 palabras** de 1.303 a 1600px y en el
+**Por qué tarjetas y no una tabla.** La tabla mostraba **9 palabras** de 1.516 a 1600px y en el
 teléfono escondía tres de sus cinco columnas para caber. La rejilla muestra 25 y no esconde
 nada. En móvil las 23 secciones no se apilan en siete filas: son una tira que se desliza, y
 la elegida se trae al centro sola.
