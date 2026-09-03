@@ -79,7 +79,7 @@ Petición del 2026-09-02: *"de momento quiero que me quites las lecciones en das
 pongas uno de vocabulario super extenso y acomodalo por secciones y quiero el tema de partizip 1 y
 2, lo demas quitalo"*. Lo que hay ahora:
 
-- **1.071 palabras en 23 secciones y 114 subsecciones**, con artículo, traducción, ejemplo
+- **1.303 palabras en 30 secciones y 151 subsecciones**, con artículo, traducción, ejemplo
   traducido y la morfología que le toque a cada tipo de palabra. El artículo se
   ve antes de leerlo: la barra de la izquierda de cada tarjeta es azul en *der*, rosa en *die* y
   verde en *das*.
