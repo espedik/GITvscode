@@ -3,8 +3,8 @@
 // Las dos cargan este archivo: copiarlo en las dos era garantizar que corregir una
 // palabra en un sitio dejara el otro mintiendo.
 //
-//   cats  las 22 secciones, con su etiqueta, su emoji y sus SUBsecciones
-//   voc   las 538 palabras
+//   cats  las 23 secciones, con su etiqueta, su emoji y sus SUBsecciones
+//   voc   las 603 palabras
 //   partizip  el tema de gramática, por bloques
 //
 // UNA PALABRA. Solo `de`, `es` y `cat` son obligatorios; el resto se pinta si está:
@@ -32,6 +32,17 @@ const ALEMAN_VOCAB = {
         cortesia: 'Cortes\u00eda',
         presentar: 'Presentarse y preguntar',
         desear: 'Buenos deseos',
+      },
+    },
+    frases: {
+      label: 'Armar frases', icon: '\ud83e\uddf1',
+      subs: {
+        modales: 'Poder, deber, querer',
+        preguntar: 'Preguntar',
+        unir: 'Unir ideas',
+        personas: 'Yo, t\u00fa, \u00e9l',
+        sitio: 'D\u00f3nde y cu\u00e1ndo',
+        negar: 'Negar y matizar',
       },
     },
     numeros: {
@@ -276,6 +287,79 @@ const ALEMAN_VOCAB = {
     {art:'-', de:'Herzlichen Gl\u00fcckwunsch!', es:'\u00a1Felicidades!', ex:'Herzlichen Gl\u00fcckwunsch zur neuen Arbeit!', cat:'saludos', sub:'desear', niv:'A1', tipo:'frase', esEx:'\u00a1Felicidades por el nuevo trabajo!'},
     {art:'-', de:'Prost! / Zum Wohl!', es:'\u00a1Salud!', ex:'Prost! Auf unsere Freundschaft!', cat:'saludos', sub:'desear', niv:'A1', tipo:'frase', uso:'al brindar', esEx:'\u00a1Salud! \u00a1Por nuestra amistad!'},
     {art:'-', de:'Guten Appetit!', es:'\u00a1Buen provecho!', ex:'Guten Appetit! Lass es dir schmecken.', cat:'saludos', sub:'desear', niv:'A1', tipo:'frase', uso:'al sentarse a la mesa', esEx:'\u00a1Buen provecho! Que lo disfrutes.'},
+
+    // ── ARMAR FRASES ─────────────────────────────────
+    //    Poder, deber, querer
+    {art:'-', de:'k\u00f6nnen', es:'poder / saber hacer', ex:'Ich kann gut schwimmen.', cat:'frases', sub:'modales', niv:'A1', tipo:'verbo', conj:'kann \u00b7 konnte \u00b7 gekonnt', aux:'hat', tag:'modal \u00b7 irregular', uso:'el otro verbo se va al FINAL y en infinitivo: ich kann \u2026 schwimmen', esEx:'S\u00e9 nadar bien.'},
+    {art:'-', de:'m\u00fcssen', es:'tener que', ex:'Ich muss morgen fr\u00fch aufstehen.', cat:'frases', sub:'modales', niv:'A1', tipo:'verbo', conj:'muss \u00b7 musste \u00b7 gemusst', aux:'hat', tag:'modal \u00b7 irregular', uso:'\u00abno tener que\u00bb es nicht m\u00fcssen; nicht d\u00fcrfen es \u00abno estar permitido\u00bb', esEx:'Ma\u00f1ana tengo que levantarme temprano.'},
+    {art:'-', de:'wollen', es:'querer', ex:'Ich will Deutsch lernen.', cat:'frases', sub:'modales', niv:'A1', tipo:'verbo', conj:'will \u00b7 wollte \u00b7 gewollt', aux:'hat', tag:'modal \u00b7 irregular', uso:'suena directo; para pedir algo se usa m\u00f6chten', esEx:'Quiero aprender alem\u00e1n.'},
+    {art:'-', de:'d\u00fcrfen', es:'tener permiso', ex:'Darf ich hier rauchen?', cat:'frases', sub:'modales', niv:'A1', tipo:'verbo', conj:'darf \u00b7 durfte \u00b7 gedurft', aux:'hat', tag:'modal \u00b7 irregular', uso:'es el permiso, no la capacidad: eso es k\u00f6nnen', esEx:'\u00bfPuedo fumar aqu\u00ed?'},
+    {art:'-', de:'sollen', es:'deber / se supone que', ex:'Was soll ich machen?', cat:'frases', sub:'modales', niv:'A2', tipo:'verbo', conj:'soll \u00b7 sollte \u00b7 gesollt', aux:'hat', tag:'modal', uso:'es lo que otro espera de ti; m\u00fcssen es la obligaci\u00f3n', esEx:'\u00bfQu\u00e9 debo hacer?'},
+    {art:'-', de:'Ich h\u00e4tte gern', es:'quisiera', ex:'Ich h\u00e4tte gern einen Kaffee, bitte.', cat:'frases', sub:'modales', niv:'A1', tipo:'frase', uso:'la forma m\u00e1s educada de pedir algo en una tienda o un bar', esEx:'Quisiera un caf\u00e9, por favor.'},
+    //    Preguntar
+    {art:'-', de:'wer', es:'qui\u00e9n', ex:'Wer ist das?', cat:'frases', sub:'preguntar', niv:'A1', tipo:'adv', uso:'wer = qui\u00e9n; wo = d\u00f3nde. Es al rev\u00e9s que en ingl\u00e9s', esEx:'\u00bfQui\u00e9n es ese?'},
+    {art:'-', de:'was', es:'qu\u00e9', ex:'Was machst du beruflich?', cat:'frases', sub:'preguntar', niv:'A1', tipo:'adv', esEx:'\u00bfA qu\u00e9 te dedicas?'},
+    {art:'-', de:'wo', es:'d\u00f3nde', ex:'Wo wohnst du?', cat:'frases', sub:'preguntar', niv:'A1', tipo:'adv', esEx:'\u00bfD\u00f3nde vives?'},
+    {art:'-', de:'wohin', es:'a d\u00f3nde', ex:'Wohin gehst du?', cat:'frases', sub:'preguntar', niv:'A1', tipo:'adv', uso:'wo es estar; wohin, ir hacia; woher, venir de', esEx:'\u00bfA d\u00f3nde vas?'},
+    {art:'-', de:'woher', es:'de d\u00f3nde', ex:'Woher kommst du?', cat:'frases', sub:'preguntar', niv:'A1', tipo:'adv', esEx:'\u00bfDe d\u00f3nde eres?'},
+    {art:'-', de:'wann', es:'cu\u00e1ndo', ex:'Wann beginnt der Kurs?', cat:'frases', sub:'preguntar', niv:'A1', tipo:'adv', esEx:'\u00bfCu\u00e1ndo empieza el curso?'},
+    {art:'-', de:'warum', es:'por qu\u00e9', ex:'Warum lernst du Deutsch?', cat:'frases', sub:'preguntar', niv:'A1', tipo:'adv', uso:'se responde con weil, y weil manda el verbo al final', esEx:'\u00bfPor qu\u00e9 aprendes alem\u00e1n?'},
+    {art:'-', de:'wie', es:'c\u00f3mo', ex:'Wie sagt man das auf Deutsch?', cat:'frases', sub:'preguntar', niv:'A1', tipo:'adv', esEx:'\u00bfC\u00f3mo se dice eso en alem\u00e1n?'},
+    {art:'-', de:'wie viel / wie viele', es:'cu\u00e1nto / cu\u00e1ntos', ex:'Wie viel kostet das?', cat:'frases', sub:'preguntar', niv:'A1', tipo:'adv', uso:'wie viel para lo incontable, wie viele para lo que se cuenta', esEx:'\u00bfCu\u00e1nto cuesta eso?'},
+    {art:'-', de:'welcher / welche / welches', es:'cu\u00e1l / qu\u00e9', ex:'Welche Farbe magst du?', cat:'frases', sub:'preguntar', niv:'A2', tipo:'adv', tag:'se declina', uso:'cambia seg\u00fan el g\u00e9nero y el caso, como der/die/das', esEx:'\u00bfQu\u00e9 color te gusta?'},
+    {art:'-', de:'wie lange', es:'cu\u00e1nto tiempo', ex:'Wie lange wohnst du schon hier?', cat:'frases', sub:'preguntar', niv:'A2', tipo:'adv', esEx:'\u00bfCu\u00e1nto tiempo llevas viviendo aqu\u00ed?'},
+    //    Unir ideas
+    {art:'-', de:'und', es:'y', ex:'Ich lerne Deutsch und Englisch.', cat:'frases', sub:'unir', niv:'A1', tipo:'adv', uso:'no cambia el orden de la frase', esEx:'Estudio alem\u00e1n e ingl\u00e9s.'},
+    {art:'-', de:'oder', es:'o', ex:'Kaffee oder Tee?', cat:'frases', sub:'unir', niv:'A1', tipo:'adv', esEx:'\u00bfCaf\u00e9 o t\u00e9?'},
+    {art:'-', de:'aber', es:'pero', ex:'Deutsch ist schwer, aber ich mag es.', cat:'frases', sub:'unir', niv:'A1', tipo:'adv', uso:'no cambia el orden', esEx:'El alem\u00e1n es dif\u00edcil, pero me gusta.'},
+    {art:'-', de:'denn', es:'porque / pues', ex:'Ich bleibe zu Hause, denn ich bin m\u00fcde.', cat:'frases', sub:'unir', niv:'A2', tipo:'adv', uso:'mismo sentido que weil pero NO manda el verbo al final', esEx:'Me quedo en casa porque estoy cansado.'},
+    {art:'-', de:'weil', es:'porque', ex:'Ich lerne Deutsch, weil ich in Deutschland arbeiten will.', cat:'frases', sub:'unir', niv:'A1', tipo:'adv', tag:'verbo al final', uso:'es el conector que m\u00e1s se equivoca: manda el verbo conjugado al final', esEx:'Aprendo alem\u00e1n porque quiero trabajar en Alemania.'},
+    {art:'-', de:'dass', es:'que', ex:'Ich glaube, dass er recht hat.', cat:'frases', sub:'unir', niv:'A2', tipo:'adv', tag:'verbo al final', uso:'con dos eses; das con una es el art\u00edculo', esEx:'Creo que \u00e9l tiene raz\u00f3n.'},
+    {art:'-', de:'wenn', es:'si / cuando', ex:'Wenn es regnet, bleibe ich zu Hause.', cat:'frases', sub:'unir', niv:'A2', tipo:'adv', tag:'verbo al final', uso:'wenn es condici\u00f3n o rutina; als, un momento \u00fanico del pasado', esEx:'Si llueve, me quedo en casa.'},
+    {art:'-', de:'deshalb / darum', es:'por eso', ex:'Es regnet, deshalb bleibe ich zu Hause.', cat:'frases', sub:'unir', niv:'A2', tipo:'adv', tag:'el verbo va justo despu\u00e9s', uso:'detr\u00e1s de deshalb viene el verbo, no el sujeto', esEx:'Llueve, por eso me quedo en casa.'},
+    {art:'-', de:'trotzdem', es:'aun as\u00ed', ex:'Es regnet. Trotzdem gehe ich laufen.', cat:'frases', sub:'unir', niv:'A2', tipo:'adv', tag:'el verbo va justo despu\u00e9s', esEx:'Llueve. Aun as\u00ed salgo a correr.'},
+    {art:'-', de:'obwohl', es:'aunque', ex:'Obwohl es regnet, gehe ich laufen.', cat:'frases', sub:'unir', niv:'B1', tipo:'adv', tag:'verbo al final', esEx:'Aunque llueve, salgo a correr.'},
+    {art:'-', de:'sondern', es:'sino', ex:'Ich komme nicht aus Spanien, sondern aus Mexiko.', cat:'frases', sub:'unir', niv:'A2', tipo:'adv', uso:'solo despu\u00e9s de una negaci\u00f3n; si no, es aber', esEx:'No soy de Espa\u00f1a, sino de M\u00e9xico.'},
+    {art:'-', de:'also', es:'as\u00ed que / entonces', ex:'Der Zug f\u00e4llt aus, also nehme ich den Bus.', cat:'frases', sub:'unir', niv:'A2', tipo:'adv', uso:'no es \u00abalso\u00bb del ingl\u00e9s: eso es auch', esEx:'El tren se cancel\u00f3, as\u00ed que tomo el autob\u00fas.'},
+    //    Yo, tú, él
+    {art:'-', de:'ich / du / er / sie / es', es:'yo / t\u00fa / \u00e9l / ella / ello', ex:'Ich bin Ad\u00e1n und sie ist Ana.', cat:'frases', sub:'personas', niv:'A1', tipo:'adv', uso:'el sujeto nunca se omite en alem\u00e1n, a diferencia del espa\u00f1ol', esEx:'Yo soy Ad\u00e1n y ella es Ana.'},
+    {art:'-', de:'wir / ihr / sie / Sie', es:'nosotros / ustedes / ellos / usted', ex:'Wir wohnen hier. Woher kommen Sie?', cat:'frases', sub:'personas', niv:'A1', tipo:'adv', uso:'Sie con may\u00fascula es \u00abusted\u00bb, a cualquier hora del texto', esEx:'Nosotros vivimos aqu\u00ed. \u00bfDe d\u00f3nde es usted?'},
+    {art:'-', de:'mich / dich / ihn / sie / uns / euch', es:'me / te / lo / la / nos / os', ex:'Kannst du mich h\u00f6ren?', cat:'frases', sub:'personas', niv:'A1', tipo:'adv', tag:'Akkusativ', uso:'el objeto directo: quien recibe la acci\u00f3n', esEx:'\u00bfPuedes o\u00edrme?'},
+    {art:'-', de:'mir / dir / ihm / ihr / uns / euch', es:'me / te / le / nos / os', ex:'Kannst du mir helfen?', cat:'frases', sub:'personas', niv:'A1', tipo:'adv', tag:'Dativ', uso:'el objeto indirecto. helfen, danken y gefallen siempre lo piden', esEx:'\u00bfPuedes ayudarme?'},
+    {art:'-', de:'mein / dein / sein / ihr / unser', es:'mi / tu / su / nuestro', ex:'Das ist mein Buch und das ist dein Heft.', cat:'frases', sub:'personas', niv:'A1', tipo:'adv', tag:'se declina', uso:'toma la terminaci\u00f3n del sustantivo: mein Buch, meine Tasche', esEx:'Este es mi libro y ese es tu cuaderno.'},
+    {art:'-', de:'dieser / diese / dieses', es:'este / esta / esto', ex:'Dieser Kurs ist sehr gut.', cat:'frases', sub:'personas', niv:'A2', tipo:'adv', tag:'se declina', esEx:'Este curso es muy bueno.'},
+    {art:'-', de:'man', es:'se (impersonal)', ex:'In Deutschland isst man viel Brot.', cat:'frases', sub:'personas', niv:'A2', tipo:'adv', uso:'no es \u00abhombre\u00bb: es el \u00abse\u00bb impersonal, y va con verbo en 3\u00aa', esEx:'En Alemania se come mucho pan.'},
+    {art:'-', de:'jeder / alle', es:'cada uno / todos', ex:'Jeder Tag ist anders. Alle sind da.', cat:'frases', sub:'personas', niv:'A2', tipo:'adv', uso:'jeder va en singular; alle, en plural', esEx:'Cada d\u00eda es distinto. Est\u00e1n todos.'},
+    {art:'-', de:'jemand / niemand', es:'alguien / nadie', ex:'Ist jemand zu Hause? \u2014 Nein, niemand.', cat:'frases', sub:'personas', niv:'A2', tipo:'adv', esEx:'\u00bfHay alguien en casa? \u2014 No, nadie.'},
+    //    Dónde y cuándo
+    {art:'-', de:'in / an / auf', es:'en / junto a / sobre', ex:'Ich bin in der K\u00fcche. Das Bild h\u00e4ngt an der Wand.', cat:'frases', sub:'sitio', niv:'A1', tipo:'adv', tag:'Wechselpr\u00e4position', uso:'con Dativ si es d\u00f3nde est\u00e1s; con Akkusativ si es hacia d\u00f3nde vas', esEx:'Estoy en la cocina. El cuadro cuelga en la pared.'},
+    {art:'-', de:'\u00fcber / unter / vor / hinter', es:'encima / debajo / delante / detr\u00e1s', ex:'Die Lampe h\u00e4ngt \u00fcber dem Tisch.', cat:'frases', sub:'sitio', niv:'A1', tipo:'adv', tag:'Wechselpr\u00e4position', esEx:'La l\u00e1mpara cuelga encima de la mesa.'},
+    {art:'-', de:'neben / zwischen', es:'al lado de / entre', ex:'Die Bank ist neben der Post.', cat:'frases', sub:'sitio', niv:'A1', tipo:'adv', tag:'Wechselpr\u00e4position', esEx:'El banco est\u00e1 al lado del correo.'},
+    {art:'-', de:'mit / ohne', es:'con / sin', ex:'Ich fahre mit dem Bus, ohne meinen Bruder.', cat:'frases', sub:'sitio', niv:'A1', tipo:'adv', tag:'mit + Dat. \u00b7 ohne + Akk.', uso:'mit para el medio de transporte: mit dem Zug', esEx:'Voy en autob\u00fas, sin mi hermano.'},
+    {art:'-', de:'f\u00fcr / gegen', es:'para / contra', ex:'Das Geschenk ist f\u00fcr dich.', cat:'frases', sub:'sitio', niv:'A1', tipo:'adv', tag:'Akkusativ', esEx:'El regalo es para ti.'},
+    {art:'-', de:'von / zu', es:'de / a', ex:'Ich komme von der Arbeit und gehe zum Arzt.', cat:'frases', sub:'sitio', niv:'A1', tipo:'adv', tag:'Dativ', uso:'zu se contrae: zu dem = zum, zu der = zur', esEx:'Vengo del trabajo y voy al m\u00e9dico.'},
+    {art:'-', de:'nach / aus', es:'hacia / de (origen)', ex:'Ich fahre nach Berlin. Ich komme aus Mexiko.', cat:'frases', sub:'sitio', niv:'A1', tipo:'adv', tag:'Dativ', uso:'nach para ciudades y pa\u00edses sin art\u00edculo; in die para los que lo llevan', esEx:'Voy a Berl\u00edn. Soy de M\u00e9xico.'},
+    {art:'-', de:'bei', es:'en casa de / en (empresa)', ex:'Ich arbeite bei Bosch und wohne bei meinen Eltern.', cat:'frases', sub:'sitio', niv:'A1', tipo:'adv', tag:'Dativ', esEx:'Trabajo en Bosch y vivo con mis padres.'},
+    {art:'-', de:'seit / ab', es:'desde / a partir de', ex:'Ich lerne seit zwei Jahren Deutsch.', cat:'frases', sub:'sitio', niv:'A2', tipo:'adv', tag:'Dativ', uso:'seit es pasado que sigue; ab, futuro', esEx:'Llevo dos a\u00f1os aprendiendo alem\u00e1n.'},
+    {art:'-', de:'bis', es:'hasta', ex:'Ich arbeite bis 18 Uhr.', cat:'frases', sub:'sitio', niv:'A1', tipo:'adv', tag:'Akkusativ', esEx:'Trabajo hasta las 18:00.'},
+    {art:'-', de:'um', es:'a (la hora) / alrededor de', ex:'Der Kurs beginnt um 9 Uhr.', cat:'frases', sub:'sitio', niv:'A1', tipo:'adv', tag:'Akkusativ', uso:'la hora siempre con um: um acht Uhr', esEx:'El curso empieza a las 9.'},
+    {art:'-', de:'durch', es:'por / a trav\u00e9s de', ex:'Wir gehen durch den Park.', cat:'frases', sub:'sitio', niv:'A2', tipo:'adv', tag:'Akkusativ', esEx:'Caminamos por el parque.'},
+    {art:'-', de:'w\u00e4hrend', es:'durante', ex:'W\u00e4hrend der Arbeit trinke ich viel Kaffee.', cat:'frases', sub:'sitio', niv:'B1', tipo:'adv', tag:'Genitiv', esEx:'Durante el trabajo tomo mucho caf\u00e9.'},
+    //    Negar y matizar
+    {art:'-', de:'nicht', es:'no', ex:'Ich verstehe das nicht.', cat:'frases', sub:'negar', niv:'A1', tipo:'adv', uso:'niega el verbo o un adjetivo, y suele ir al final', esEx:'No entiendo eso.'},
+    {art:'-', de:'kein / keine', es:'ning\u00fan / ninguna', ex:'Ich habe keine Zeit.', cat:'frases', sub:'negar', niv:'A1', tipo:'adv', tag:'se declina', uso:'para negar un sustantivo. Con nicht ser\u00eda un error: no es \u00abnicht Zeit\u00bb', esEx:'No tengo tiempo.'},
+    {art:'-', de:'nichts', es:'nada', ex:'Ich habe nichts gesagt.', cat:'frases', sub:'negar', niv:'A1', tipo:'adv', esEx:'No dije nada.'},
+    {art:'-', de:'doch', es:'s\u00ed (al contrario)', ex:'Du kommst nicht mit? \u2014 Doch!', cat:'frases', sub:'negar', niv:'A2', tipo:'adv', uso:'no existe en espa\u00f1ol: es el \u00abs\u00ed\u00bb que contradice una negaci\u00f3n', esEx:'\u00bfNo vienes? \u2014 \u00a1Que s\u00ed!'},
+    {art:'-', de:'sehr', es:'muy', ex:'Das ist sehr gut.', cat:'frases', sub:'negar', niv:'A1', tipo:'adv', esEx:'Eso est\u00e1 muy bien.'},
+    {art:'-', de:'zu', es:'demasiado', ex:'Der Kaffee ist zu hei\u00df.', cat:'frases', sub:'negar', niv:'A1', tipo:'adv', uso:'el mismo zu de \u00aba\u00bb, pero delante de un adjetivo es \u00abdemasiado\u00bb', esEx:'El caf\u00e9 est\u00e1 demasiado caliente.'},
+    {art:'-', de:'ein bisschen / etwas', es:'un poco / algo', ex:'Ich spreche ein bisschen Deutsch.', cat:'frases', sub:'negar', niv:'A1', tipo:'adv', esEx:'Hablo un poco de alem\u00e1n.'},
+    {art:'-', de:'viel / wenig', es:'mucho / poco', ex:'Ich habe viel Arbeit und wenig Zeit.', cat:'frases', sub:'negar', niv:'A1', tipo:'adv', uso:'para lo incontable; con lo que se cuenta, viele y wenige', esEx:'Tengo mucho trabajo y poco tiempo.'},
+    {art:'-', de:'auch', es:'tambi\u00e9n', ex:'Ich komme auch mit.', cat:'frases', sub:'negar', niv:'A1', tipo:'adv', esEx:'Yo tambi\u00e9n voy.'},
+    {art:'-', de:'nur', es:'solo', ex:'Ich habe nur zehn Euro.', cat:'frases', sub:'negar', niv:'A1', tipo:'adv', esEx:'Solo tengo diez euros.'},
+    {art:'-', de:'sogar', es:'incluso', ex:'Er spricht sogar Japanisch.', cat:'frases', sub:'negar', niv:'B1', tipo:'adv', esEx:'Incluso habla japon\u00e9s.'},
+    {art:'-', de:'vielleicht', es:'quiz\u00e1', ex:'Vielleicht komme ich sp\u00e4ter.', cat:'frases', sub:'negar', niv:'A2', tipo:'adv', esEx:'Quiz\u00e1 venga m\u00e1s tarde.'},
+    {art:'-', de:'nat\u00fcrlich / klar', es:'claro / por supuesto', ex:'Kannst du mir helfen? \u2014 Nat\u00fcrlich!', cat:'frases', sub:'negar', niv:'A2', tipo:'adv', esEx:'\u00bfPuedes ayudarme? \u2014 \u00a1Claro!'},
+    {art:'-', de:'eigentlich', es:'en realidad', ex:'Eigentlich wollte ich fr\u00fcher kommen.', cat:'frases', sub:'negar', niv:'B1', tipo:'adv', uso:'suaviza lo que viene detr\u00e1s; los alemanes la usan constantemente', esEx:'En realidad quer\u00eda venir antes.'},
 
     // ── NÚMEROS ─────────────────────────────────
     //    Del 0 al 12
