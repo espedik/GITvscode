@@ -85,9 +85,14 @@ pongas uno de vocabulario super extenso y acomodalo por secciones y quiero el te
   verde en *das*.
 - **Un buscador** que mira en alemán, en español y en los ejemplos, y que manda sobre la sección
   abierta — si escribe algo espera verlo aunque esté en otra parte.
+- **Un filtro de nivel** (A1 / A2 / B1) en la cabecera. Con 1.516 palabras, poder quedarse
+  solo en A1 es lo que hace la lista abarcable; hasta el 2026-09-03 eso solo estaba en la
+  app de Alemán.
 - **Partizip I y II** en 9 bloques, con tablas, comparativas y avisos. Por encima de 1200px sale
   a la derecha un índice que sigue la lectura (`alIdxSigue()`); ahí antes solo había hueco.
-- La sección abierta se guarda en `localStorage` (`al_sec_v1`).
+- Dónde se quedó se guarda en `localStorage`: la sección (`al_sec_v1`), su subsección
+  (`al_sub_v1`), la familia que tenía abierta en el índice (`al_fam_v1`) y el nivel
+  filtrado (`al_niv_v1`).
 
 **Nada de esto vive aquí.** Los datos, el diseño y el motor están en `Aleman/`
 (`vocab-datos.js`, `vocab.css`, `vocab.js`) y esta pantalla los carga con un `../`. La
@@ -95,9 +100,20 @@ pantalla principal del vocabulario es `Aleman/vocabulario.html`: ahí se trabaja
 refleja. Adán (2026-09-03): *"quiero un solo diseño, no lo quiero duplicado, entonces el
 principal es el html de aleman"*.
 
-**Las subsecciones aquí son una segunda tira**, no un árbol lateral como en la app: el
-slide es apaisado y bajo, y una barra a la izquierda le quitaría a las palabras el ancho
-que necesitan. La tarjeta — que es el 90% del diseño — es exactamente la misma.
+**El índice es lateral, el mismo árbol que la app.** Hasta el 2026-09-03 aquí había dos
+tiras de chips, y con 37 secciones ocupaban 190px de alto en cuatro filas más 48 de
+subsecciones: a 1.600px dejaban ver 10 palabras de las 13 de una subsección, y a 1.460px
+cuatro. El árbol se lleva 238px de ANCHO — que es lo que sobra en una pantalla apaisada, no
+lo que falta — y deja 663px para las palabras: doce de trece. Medido antes y después con la
+misma subsección.
+
+Dentro, **dos zonas que no se parecen**: la gramática arriba en su caja morada, separada
+por una línea, y el vocabulario debajo repartido en **siete familias** que se abren
+(familia › sección › subsección). Partizip I y II era un chip más de la tira, entre
+«Colores» y «Escuela»; no es una sección de palabras y ya no se pinta como tal. Elección de
+Adán entre tres maquetas: *"me gusta la opcion c"*.
+
+La tarjeta — que es el 90% del diseño — no ha cambiado.
 
 Lo único propio de esta pantalla son los **tokens** `--v-*`, en `.al-fondo`: tiene modo
 oscuro y el fondo es translúcido sobre las manchas animadas del slide, así que los colores
@@ -106,12 +122,18 @@ clases, `v-vocab al-fondo`: la primera trae los valores por defecto del motor y 
 los cambia — sin la primera, cada token nuevo del motor saldría sin valor aquí.
 
 Los controles 19 y 20 de `verificar-sincronia.js` vigilan que ni los datos ni el diseño
-vuelvan a duplicarse.
+vuelvan a duplicarse, y el 21 que las siete familias sigan cubriendo las 37 secciones.
 
-**En móvil las secciones son una tira que se desliza.** Apiladas ocupaban siete filas a 390px y
-dejaban la primera palabra fuera de la pantalla. La sección abierta se trae al centro sola —
-moviendo `scrollLeft` de la tira, nunca con `scrollIntoView`, que sube al ancestro con scroll más
-cercano (aquí, el carrusel de pantallas) y dejaba el dashboard entero corrido a la izquierda.
+**`--v-txt-inv` existe por un fallo que solo se veía aquí.** Los botones que se rellenan con
+`--v-txt` (el filtro de nivel activo, la subsección elegida) pintaban las letras con
+`--v-card`. En la app de Alemán eso es `#ffffff` sólido y funciona; aquí `--v-card` es
+blanco al 6%, así que en tema oscuro quedaba texto blanco-al-6% sobre relleno casi blanco:
+**1.01:1**. Ahora usan `--v-txt-inv`, que es «lo que se lee encima de `--v-txt`» y aquí vale
+`var(--bg)`.
+
+**En móvil el índice se apila encima, no se encoge.** A 390px no hay 238px de ancho que
+ceder, así que por debajo de 900px la rejilla pasa a una columna y el árbol se queda arriba
+con su propio scroll y un tope de `26vh` — a `32vh` dejaba dos tarjetas a la vista.
 
 **Los dos colores de énfasis son tokens** (`--al-oro`, `--al-mal`) y no el amarillo y el rojo de
 la bandera: `#ffce00` sobre el tema claro da 1.49:1 y los ejemplos en alemán eran invisibles de

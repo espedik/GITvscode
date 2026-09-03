@@ -512,7 +512,9 @@ El Dashboard es donde vive el archivo porque es el centro del proyecto, y ahí y
 `entrevistas-data.js`, y `aleman-data.js`, que guarda las 40 lecciones y ahora mismo no
 lo carga ninguna pantalla. El vocabulario de alemán vive en `Aleman/vocab-datos.js`,
 junto con su diseño (`vocab.css`) y su motor (`vocab.js`), porque la pantalla principal
-del vocabulario es la de esa app y el Dashboard solo la refleja.
+del vocabulario es la de esa app y el Dashboard solo la refleja. Ahí viven también las
+**siete familias** en las que se agrupan las 37 secciones, que es lo que pinta el índice
+lateral de las dos pantallas.
 
 ---
 
@@ -539,7 +541,7 @@ Las migraciones anteriores a esa fecha (`_banamex9k`, `_pagos20260813`, `_msibbv
 | `Finanzas/` | `Finanzas.html` | Finanzas reales, GBM, BTC, deudas | `finanzasmx_v2` |
 | `CuidadoPersonal/` | `cuidadopersonal.html` + `salud`/`ejercicio`/`comida` | Shell con 7 subtabs | `skincare_v1`, `misalud_v1`, `mirutina_v1`, `comida_v1` |
 | `Vestimenta/` | `vestimenta.html` | Guardarropa y compras | `vestimenta_v1` |
-| `Aleman/` | 35+ páginas | Estudio A1/A2. Aloja el vocabulario entero (`vocab-datos.js` + `vocab.css` + `vocab.js`), que el Dashboard carga | 1.516 palabras en 37 secciones + Partizip |
+| `Aleman/` | 35+ páginas | Estudio A1/A2. Aloja el vocabulario entero (`vocab-datos.js` + `vocab.css` + `vocab.js`), que el Dashboard carga | 1.516 palabras en 37 secciones agrupadas en 7 familias + Partizip |
 | `Entrevistas/` | `index.html` + `js/data-*.js` | Prep. técnica automotriz, 229 temas | `theme` |
 
 Detalle por app en su propio `.md` (`readme_dashboard.md`, `readme_finanzas.md`, …). Este índice

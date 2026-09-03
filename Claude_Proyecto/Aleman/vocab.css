@@ -27,6 +27,10 @@
   --v-txt:#1a1a1a;
   --v-txt2:#555;
   --v-txt3:#6e6e6e;   /* #999 sobre blanco da 2.85:1 y el ejemplo no se leía */
+  /* Lo que se lee ENCIMA de --v-txt, para los botones que se rellenan con él. No vale
+     --v-card: en el Dashboard es blanco al 6%, y en tema oscuro daba letras invisibles
+     sobre el relleno claro — 1.01:1, medido. */
+  --v-txt-inv:#ffffff;
   --v-font-titulo:'Playfair Display',Georgia,serif;
   --v-mono:ui-monospace,'SF Mono',Menlo,monospace;
   --v-de-size:19px;
@@ -82,7 +86,7 @@
 .v-sec b{font-family:var(--v-mono);font-size:10.5px;font-weight:700;color:var(--v-txt2)}
 .v-sec.on{background:var(--v-acento);border-color:var(--v-acento);color:#fff}
 .v-sec.on b{color:#fff}   /* al 80% se quedaba en 3.56:1 sobre el rojo */
-.v-sec.todas.on{background:var(--v-txt);border-color:var(--v-txt)}
+.v-sec.todas.on{background:var(--v-txt);border-color:var(--v-txt);color:var(--v-txt-inv)}
 /* La pestaña de gramática no es una sección de palabras y no se pinta como tal. El
    morado va en un token porque el de la app (#7c3aed) sobre el fondo oscuro del
    Dashboard se queda en 3.4:1. */
@@ -102,9 +106,9 @@
   transition:background .14s,color .14s,border-color .14s}
 .v-sub:hover{border-color:rgba(var(--v-acento-rgb),.3);color:var(--v-acento-tx)}
 .v-sub b{font-family:var(--v-mono);font-size:10px;font-weight:700;color:var(--v-txt3)}
-.v-sub.on{background:var(--v-txt);border-color:var(--v-txt);color:var(--v-card);
+.v-sub.on{background:var(--v-txt);border-color:var(--v-txt);color:var(--v-txt-inv);
   font-weight:800}
-.v-sub.on b{color:var(--v-card);opacity:.75}
+.v-sub.on b{color:var(--v-txt-inv);opacity:.75}
 @media(max-width:760px){
   .v-subs{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;padding:8px 10px}
   .v-subs::-webkit-scrollbar{display:none}
@@ -175,7 +179,9 @@
    ella sola, y con las subsecciones serían 130px de chips antes de la primera palabra
    sin enseñar más que la rama abierta. El árbol enseña el mapa entero, marca dónde
    estás, y no le quita alto a las palabras: le quita ancho, que es lo que sobra. */
-.v-arbol{display:flex;flex-direction:column;gap:1px;overflow-y:auto}
+/* El scroll vive en `.v-arbol-lista`, no aqui: las zonas de arriba (la gramatica y su
+   linea) se quedan fijas y solo rueda la lista de familias. */
+.v-arbol{display:flex;flex-direction:column;gap:1px;min-height:0}
 .v-arbol-t{display:flex;align-items:baseline;justify-content:space-between;
   padding:0 18px 10px}
 .v-arbol-t span{font-size:10px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;
@@ -204,11 +210,79 @@
   color:var(--v-acento-tx);font-weight:800}
 .v-arbol-sub .v-arbol-nom{white-space:normal}
 
+/* ── LAS ZONAS DEL ARBOL ────────────────────────────────────────
+   El indice tiene DOS cosas que no son lo mismo: la gramatica, que se lee, y el
+   vocabulario, que se barre. Antes «Partizip I y II» era un chip mas de la tira, entre
+   «Colores» y «Escuela». Ahora va arriba, en su caja, separada por una linea: no
+   comparten ni fondo ni color ni forma. Peticion del 2026-09-03. */
+.v-arbol-zona{display:flex;align-items:baseline;justify-content:space-between;
+  font-size:10px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--v-txt3);padding:0 12px 8px}
+.v-arbol-zona em{font-style:normal;font-family:var(--v-mono);font-size:10.5px}
+
+.v-arbol-gram{display:flex;align-items:center;gap:10px;width:100%;text-align:left;
+  flex:none;padding:10px 12px;border-radius:12px;cursor:pointer;font-family:inherit;
+  background:color-mix(in srgb,var(--v-gram) 8%,transparent);
+  border:1px solid color-mix(in srgb,var(--v-gram) 24%,transparent);
+  transition:background .18s,border-color .18s}
+.v-arbol-gram:hover{background:color-mix(in srgb,var(--v-gram) 14%,transparent)}
+.v-arbol-gram-i{flex:none;font-size:18px;line-height:1}
+.v-arbol-gram-tx{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px}
+/* El morado sin mezclar da 3.4:1 sobre el fondo claro del slide. Mezclado con el color
+   del texto se oscurece de dia y se aclara de noche, y un solo valor vale para los dos. */
+.v-arbol-gram-tx b{font-size:13px;font-weight:800;line-height:1.25;
+  color:color-mix(in srgb,var(--v-gram) 68%,var(--v-txt))}
+.v-arbol-gram-tx i{font-family:var(--v-mono);font-size:10px;font-weight:700;
+  font-style:normal;color:color-mix(in srgb,var(--v-gram) 78%,var(--v-txt))}
+.v-arbol-gram .v-arbol-fl2{flex:none;width:13px;height:13px;opacity:.6;
+  color:color-mix(in srgb,var(--v-gram) 68%,var(--v-txt))}
+/* Dentro de la gramatica la caja se enciende del todo: es el «estas aqui». */
+.v-arbol-gram.on{background:var(--v-gram);border-color:var(--v-gram)}
+.v-arbol-gram.on .v-arbol-gram-tx b{color:#fff}
+.v-arbol-gram.on .v-arbol-gram-tx i{color:rgba(255,255,255,.92)}
+.v-arbol-gram.on .v-arbol-fl2{color:#fff;opacity:.9}
+
+.v-arbol-corte{flex:none;height:1px;background:var(--v-borde);margin:14px 6px 13px}
+.v-arbol-lista{flex:1;min-height:0;overflow-y:auto;display:flex;flex-direction:column;
+  gap:1px;padding-right:2px}
+
+/* ── NIVEL 1 · LA FAMILIA ───────────────────────────────────────
+   Con 37 secciones la lista plana son 37 lineas seguidas y encontrar «Buscar piso» es
+   recorrerlas todas. Agrupadas en siete familias el indice cabe entero sin scroll. */
+.v-arbol-fam{display:flex;align-items:center;gap:9px;width:100%;text-align:left;
+  padding:7px 11px;border:0;border-radius:9px;background:none;cursor:pointer;
+  font:600 12.5px/1.4 inherit;font-family:inherit;color:var(--v-txt2);
+  transition:background .14s,color .14s}
+.v-arbol-fam:hover{background:rgba(var(--v-acento-rgb),.05);color:var(--v-acento-tx)}
+.v-arbol-fam.abierta{font-weight:800;color:var(--v-txt)}
+.v-arbol-fam .v-arbol-ico{width:19px;font-size:14px}
+.v-arbol-fam .v-arbol-n{font-family:var(--v-mono);font-size:10px}
+.v-arbol-fam.abierta .v-arbol-fl{transform:rotate(180deg)}
+
+/* ── NIVEL 2 · LA SECCION, colgada de su familia ────────────────
+   Mismo boton que el de la lista plana, un escalon mas adentro y mas compacto: tres
+   niveles en 238px de ancho solo caben si cada uno pesa menos que el de arriba. */
+.v-arbol-fsecs{display:flex;flex-direction:column;gap:1px;margin:2px 0 5px 24px;
+  padding-left:10px;border-left:1.5px solid var(--v-borde)}
+.v-arbol-fsecs .v-arbol-sec{padding:5px 10px;margin-left:-10px;font-size:12px;
+  border-left:2px solid transparent;border-radius:0 8px 8px 0}
+.v-arbol-fsecs .v-arbol-sec .v-arbol-ico{width:17px;font-size:13px}
+.v-arbol-fsecs .v-arbol-sec .v-arbol-n{font-family:var(--v-mono);font-size:10px}
+.v-arbol-fsecs .v-arbol-sec.abierta{border-left-color:var(--v-acento)}
+/* NIVEL 3 · la guia de las subsecciones va tenida de acento: es la rama viva. */
+.v-arbol-fsecs .v-arbol-subs{margin:2px 0 4px 25px;padding-left:9px;
+  border-left:1.5px solid rgba(var(--v-acento-rgb),.22)}
+.v-arbol-fsecs .v-arbol-sub{padding:4px 9px;margin-left:-9px;font-size:11.5px;
+  border-radius:0 7px 7px 0}
+
 /* Las migas: dónde estoy, en una línea. */
 .v-migas{display:flex;align-items:center;gap:7px;font-size:12px;font-weight:700;
   color:var(--v-txt3);flex-wrap:wrap}
 .v-migas b{color:var(--v-acento-tx);font-weight:800}
 .v-migas svg{flex:none;opacity:.6}
+/* Cuantas palabras hay delante, al final de la linea de migas. */
+.v-migas-n{margin-left:auto;font-family:var(--v-mono);font-size:11px;font-weight:700;
+  font-style:normal;color:var(--v-txt3)}
 
 /* Los filtros que de verdad se usan al estudiar: por nivel y por género. */
 .v-filtros{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
@@ -218,7 +292,7 @@
   border:1.5px solid var(--v-borde);background:var(--v-card);color:var(--v-txt2);
   cursor:pointer;transition:background .14s,border-color .14s,color .14s}
 .v-filtro:hover{border-color:rgba(var(--v-acento-rgb),.3)}
-.v-filtro.on{background:var(--v-txt);border-color:var(--v-txt);color:var(--v-card)}
+.v-filtro.on{background:var(--v-txt);border-color:var(--v-txt);color:var(--v-txt-inv)}
 .v-filtro.der{border-color:color-mix(in srgb,var(--v-der) 40%,transparent);
   color:color-mix(in srgb,var(--v-der) 62%,var(--v-txt))}
 .v-filtro.die{border-color:color-mix(in srgb,var(--v-die) 40%,transparent);

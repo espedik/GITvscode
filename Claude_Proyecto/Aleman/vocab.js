@@ -105,34 +105,45 @@ function vocFiltrar(voc, f, cat){
   });
 }
 
-// ── EL ÁRBOL ─────────────────────────────────────────────────────
-// Las 21 secciones; la abierta despliega sus subsecciones. Se pinta entero siempre —
-// son 21 filas, no hay nada que ahorrar — y el CSS decide si se ve.
-// op.fnSec / op.fnSub  las funciones que reciben el clic
-// op.cuenta(cat)       cuántas palabras tiene la sección
-// op.subs(cat)         [{id, label, n}] de esa sección
-// op.gram              {id, texto} de la pestaña de gramática, si la hay
+// ── EL ARBOL ───────────────────────────────────────────────────
+// Tres niveles: familia > seccion > subseccion. Con 37 secciones, una lista plana son
+// 37 lineas seguidas y encontrar «Buscar piso» es recorrerlas todas; agrupadas es mirar
+// dentro de «Casa y ciudad». Las familias viven en vocab-datos.js, no aqui.
+//
+// Y la GRAMATICA va arriba, en su propia zona, separada por una linea: no es una seccion
+// de palabras y no se pinta como tal. Antes era un chip mas, entre «Colores» y «Escuela».
+//
+// op.fnSec / op.fnSub / op.fnFam   las funciones que reciben el clic
+// op.cuenta(cat)                   cuantas palabras tiene la seccion
+// op.cuentaFam(fam)                cuantas tiene la familia entera
+// op.subs(cat)                     [{id, label, n}] de esa seccion
+// op.familias                      ALEMAN_VOCAB.familias; sin esto pinta la lista plana
+// op.famAbierta                    cual desplegar; si no, la que contenga la abierta
+// op.total                         el numero que va junto a «Vocabulario»
+// op.gram                          {id, texto, n} de la gramatica, si la hay
 function vocArbolHtml(cats, abierta, sub, op){
   op = op || {};
   const fnSec = op.fnSec || 'vocSet';
   const fnSub = op.fnSub || 'vocSetSub';
+  const fnFam = op.fnFam || 'vocSetFam';
   const FLECHA = '<svg class="v-arbol-fl" viewBox="0 0 24 24" fill="none" stroke="currentColor"'
     + ' stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
     + '<path d="M6 9l6 6 6-6"></path></svg>';
+  const DERECHA = '<svg class="v-arbol-fl2" viewBox="0 0 24 24" fill="none" stroke="currentColor"'
+    + ' stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
+    + '<path d="M9 6l6 6-6 6"></path></svg>';
 
-  let h = '<div class="v-arbol-t"><span>Secciones</span><span>' +
-          Object.keys(cats).length + '</span></div>';
-
-  h += Object.keys(cats).map(function(k){
+  // Una seccion, con sus subsecciones colgando si esta abierta.
+  const seccion = function(k){
     const c = cats[k];
+    if(!c) return '';
     const ab = (k === abierta);
     const n = op.cuenta ? op.cuenta(k) : null;
     let fila = '<button type="button" class="v-arbol-sec' + (ab ? ' abierta' : '') +
       '" onclick="' + fnSec + '(\'' + k + '\')">' +
       '<span class="v-arbol-ico">' + c.icon + '</span>' +
       '<span class="v-arbol-nom">' + vocEsc(c.label) + '</span>' +
-      (n == null ? '' : '<span class="v-arbol-n">' + n + '</span>') +
-      FLECHA + '</button>';
+      (n == null ? '' : '<span class="v-arbol-n">' + n + '</span>') + '</button>';
     if(ab && op.subs){
       const subs = op.subs(k) || [];
       if(subs.length){
@@ -145,18 +156,56 @@ function vocArbolHtml(cats, abierta, sub, op){
       }
     }
     return fila;
-  }).join('');
+  };
 
+  let h = '';
+
+  // ZONA 1 · la gramatica, en su caja.
   if(op.gram){
-    h += '<button type="button" class="v-arbol-sec' + (abierta === op.gram.id ? ' abierta' : '') +
-      '" onclick="' + fnSec + '(\'' + op.gram.id + '\')" style="margin-top:10px;' +
-      'padding-top:14px;border-top:1px solid var(--v-borde);color:var(--v-gram)">' +
-      '<span class="v-arbol-ico">\ud83e\udde9</span>' +
-      '<span class="v-arbol-nom">' + vocEsc(op.gram.texto) + '</span></button>';
+    const gAb = (abierta === op.gram.id);
+    h += '<div class="v-arbol-zona">Gram\u00e1tica</div>' +
+      '<button type="button" class="v-arbol-gram' + (gAb ? ' on' : '') +
+      '" onclick="' + fnSec + '(\'' + op.gram.id + '\')">' +
+      '<span class="v-arbol-gram-i">\u2696\ufe0f</span>' +
+      '<span class="v-arbol-gram-tx"><b>' + vocEsc(op.gram.texto) + '</b>' +
+      (op.gram.n ? '<i>' + op.gram.n + '</i>' : '') + '</span>' + DERECHA + '</button>' +
+      '<div class="v-arbol-corte"></div>';
   }
-  return h;
-}
 
+  // ZONA 2 · el vocabulario.
+  const fams = op.familias || null;
+  const total = op.total != null ? op.total : Object.keys(cats).length;
+  h += '<div class="v-arbol-zona">Vocabulario <em>' + total + '</em></div>';
+  h += '<div class="v-arbol-lista">';
+
+  if(fams){
+    // Que familia esta abierta: la que la pantalla diga, o la que contenga la seccion
+    // abierta — asi al buscar una palabra el arbol se abre solo por donde toca.
+    let famAb = op.famAbierta;
+    if(famAb == null){
+      for(let i = 0; i < fams.length; i++){
+        if(fams[i].cats.indexOf(abierta) >= 0){ famAb = fams[i].id; break; }
+      }
+    }
+    h += fams.map(function(f){
+      const ab = (f.id === famAb);
+      const n = op.cuentaFam ? op.cuentaFam(f) : null;
+      let fila = '<button type="button" class="v-arbol-fam' + (ab ? ' abierta' : '') +
+        '" onclick="' + fnFam + '(\'' + f.id + '\')">' +
+        '<span class="v-arbol-ico">' + f.icon + '</span>' +
+        '<span class="v-arbol-nom">' + vocEsc(f.label) + '</span>' +
+        (n == null ? '' : '<span class="v-arbol-n">' + n + '</span>') + FLECHA + '</button>';
+      if(ab){
+        fila += '<div class="v-arbol-fsecs">' + f.cats.map(seccion).join('') + '</div>';
+      }
+      return fila;
+    }).join('');
+  } else {
+    h += Object.keys(cats).map(seccion).join('');
+  }
+
+  return h + '</div>';
+}
 // ── LOS FILTROS ────────────────────────────────────────────────
 // Nivel y género, que son los dos cortes que se hacen de verdad al estudiar.
 function vocFiltrosHtml(f, op){
@@ -168,8 +217,12 @@ function vocFiltrosHtml(f, op){
       (act ? ' on' : '') + '" onclick="' + fn + '(\'' + clave + '\',\'' + val + '\')">' +
       txt + '</button>';
   };
-  return '<span class="v-filtros-t">Nivel</span>' +
-    b('niv','all','Todos') + b('niv','A1','A1') + b('niv','A2','A2') + b('niv','B1','B1') +
+  const nivel = b('niv','all','Todos') + b('niv','A1','A1') + b('niv','A2','A2') +
+    b('niv','B1','B1');
+  // En el Dashboard el nivel va en la cabecera y el genero no cabe: es el corte que se
+  // hace de verdad al estudiar (poder quedarse en A1 es lo que hace abarcables 1.516).
+  if(op.soloNivel) return nivel;
+  return '<span class="v-filtros-t">Nivel</span>' + nivel +
     '<span class="v-sep"></span>' +
     b('art','all','Todo') + b('art','der','der','der') + b('art','die','die','die') +
     b('art','das','das','das');
@@ -192,13 +245,18 @@ function vocSubsHtml(subs, activa, op){
     }).join('');
 }
 
-// Las migas: dónde estoy, en una línea.
-function vocMigasHtml(cat, sub){
+// Las migas: dónde estoy, en una línea. Con el árbol de tres niveles empiezan por la
+// familia, que es por donde has entrado; op.n cierra con cuántas palabras hay delante.
+function vocMigasHtml(cat, sub, op){
+  op = op || {};
   const FL = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"'
     + ' stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
     + '<path d="M9 6l6 6-6 6"></path></svg>';
-  let h = '<span>' + (cat.icon || '') + '</span><span>' + vocEsc(cat.label) + '</span>';
+  let h = '';
+  if(op.fam) h += '<span>' + vocEsc(op.fam) + '</span>' + FL;
+  h += '<span>' + (cat.icon || '') + '</span><span>' + vocEsc(cat.label) + '</span>';
   if(sub) h += FL + '<b>' + vocEsc(sub) + '</b>';
+  if(op.n != null) h += '<em class="v-migas-n">' + op.n + '</em>';
   return h;
 }
 

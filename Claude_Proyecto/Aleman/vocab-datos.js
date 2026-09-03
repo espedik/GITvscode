@@ -400,6 +400,29 @@ const ALEMAN_VOCAB = {
     },
   },
 
+  // Las 37 secciones, agrupadas en siete FAMILIAS. Sin esto el indice lateral son
+  // 37 lineas seguidas y encontrar \u00abBuscar piso\u00bb es recorrerlas todas; con
+  // familias es mirar dentro de \u00abCasa y ciudad\u00bb. Peticion del 2026-09-03.
+  //
+  // Cada seccion vive en UNA familia y solo una, y entre todas cubren las 37: eso lo
+  // comprueba el control 21 de verificar-sincronia.js, porque una seccion que se caiga
+  // de aqui desaparece del indice sin que nadie se entere.
+  familias: [
+    { id: 'basico', icon: '\ud83e\uddf1', label: 'Lo b\u00e1sico',
+      cats: ['saludos', 'numeros', 'colores', 'tiempo', 'adverbios', 'frases'] },
+    { id: 'personas', icon: '\ud83d\udc65', label: 'Personas',
+      cats: ['familia', 'cuerpo', 'salud', 'emociones', 'gente', 'opinar'] },
+    { id: 'comer', icon: '\ud83d\uded2', label: 'Comer y comprar',
+      cats: ['comida', 'mostrador', 'restaurante', 'super', 'tienda', 'compras', 'ropa'] },
+    { id: 'casa', icon: '\ud83c\udfe0', label: 'Casa y ciudad',
+      cats: ['casa', 'piso', 'ciudad', 'coche', 'naturaleza', 'animales'] },
+    { id: 'trabajo', icon: '\ud83d\udcbc', label: 'Trabajo y papeles',
+      cats: ['trabajo', 'oficina', 'dinero', 'tramites', 'telefono', 'escuela', 'servicios', 'tecnologia'] },
+    { id: 'libre', icon: '\ud83c\udfb2', label: 'Tiempo libre',
+      cats: ['hobbies', 'viaje'] },
+    { id: 'trans', icon: '\u2699\ufe0f', label: 'Verbos y adjetivos',
+      cats: ['verbos', 'adjetivos'] },
+  ],
   voc: [
 
     // ── SALUDOS ─────────────────────────────────

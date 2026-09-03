@@ -1762,6 +1762,7 @@ button.hp-lec:active{transform:translateY(0)}
   --v-truco-br:rgba(var(--cy-rgb),.26);
   --v-truco-bg:rgba(var(--cy-rgb),.07);
   --v-sin:var(--text3);
+  --v-txt-inv:var(--bg);   /* el relleno de los botones es --v-txt: encima se lee el fondo */
   --v-idx-top:0px;       /* aquí el que se desplaza es el contenedor, no la página */
 }
 :root[data-theme="dark"] .al-fondo{--v-oro:#ffce00;--v-mal:#ff8a8a;--v-gram-tx:#c4a2ff;
@@ -1778,9 +1779,23 @@ button.hp-lec:active{transform:translateY(0)}
 .al-busca input::placeholder{color:var(--text3)}
 .al-busca input:focus{border-color:rgba(var(--ov),.4);background:rgba(var(--ov),.09)}
 .al-q-n{font-size:11px;color:var(--text3);font-family:var(--mono);white-space:nowrap}
-.al-tabs{margin:12px 0 10px}
-.al-subs{margin:0 0 14px}
+/* El cuerpo del slide: indice a la izquierda, palabras a la derecha. 238px es lo que
+   necesitan los tres niveles del arbol (familia > seccion > subseccion) sin que
+   «Hablar en el trabajo» se corte, y deja 1.096px para la rejilla: cuatro columnas
+   de 260px, las mismas que antes. */
+.al-cuerpo{flex:1;min-height:0;display:grid;grid-template-columns:238px minmax(0,1fr);
+  gap:20px;margin-top:14px}
+.al-arbol{min-height:0}
+.al-panel{min-width:0;min-height:0;display:flex;flex-direction:column}
+.al-migas{flex:none;margin-bottom:11px}
 .al-content{flex:1;min-height:0;overflow-y:auto;padding-right:4px}
+/* En el telefono no hay ancho que ceder: el indice se pone encima, con su propio alto,
+   y las palabras debajo. Apilado, no encogido. */
+@media(max-width:900px){
+  .al-cuerpo{grid-template-columns:minmax(0,1fr);grid-template-rows:auto minmax(0,1fr);
+    gap:12px}
+  .al-arbol{max-height:32vh}
+}
 .al-content .v-grid{padding-bottom:14px}
 @media(max-width:760px){
   .al-busca{width:100%}
@@ -3209,7 +3224,6 @@ button.ct-cat:hover{background:rgba(var(--ov),.07)}
           <div class="td-sub" id="alEs"></div>
         </div>
         <div class="td-right">
-          <span class="td-counter" id="alCounter"></span>
           <!-- El buscador va en esta fila y no en la suya: entre el contador y el botón
                quedaba un hueco de media pantalla. Busca en alemán, en español y en los
                ejemplos, y manda sobre la sección abierta. -->
@@ -3218,20 +3232,27 @@ button.ct-cat:hover{background:rgba(var(--ov),.07)}
                    oninput="alPinta()" autocomplete="off">
             <span class="al-q-n" id="alQN"></span>
           </div>
+          <!-- El nivel. Con 1.516 palabras, poder quedarse solo en A1 es lo que hace la
+               lista abarcable; hasta ahora eso solo estaba en la app de Alemán. -->
+          <div class="al-niv v-filtros" id="alNiv"></div>
           <a class="td-open" href="../Aleman/index.html" target="_blank" rel="noopener">↗ Abrir la app de Alemán</a>
         </div>
       </div>
-      <!-- Las 21 secciones más Partizip. La elegida se guarda en localStorage: al volver
-           al día siguiente sigue donde lo dejó. -->
-      <!-- Las lecciones del capítulo, todas a la vista. Con el filtro de Kapitel puesto son 5 y
-           caben en una fila: se toca la que toca estudiar hoy en vez de ir dando a "Siguiente".
-           Sin filtro (40 temas) esta fila no se pinta — no cabrían. -->
-      <div class="al-tabs v-secs reveal d3" id="alTabs"></div>
-      <!-- Las subsecciones de la sección abierta. Aquí no cabe el árbol lateral que
-           usa la app de Alemán — el slide es apaisado y bajo —, así que sale una
-           segunda tira. La tarjeta es exactamente la misma. -->
-      <div class="al-subs v-subs reveal d3" id="alSubs" hidden></div>
-      <div class="al-content reveal d4" id="alContent"></div>
+      <!-- ÍNDICE LATERAL + PANEL. Antes eran dos tiras de chips: con 37 secciones
+           ocupaban 190px de alto en cuatro filas más 48 de subsecciones, y dejaban ver
+           CUATRO palabras de 37. El índice se lleva 238px de ANCHO, que es lo que sobra en
+           una pantalla apaisada, y deja ver doce. Elección de Adán del 2026-09-03.
+
+           Dentro, dos zonas que no se parecen: la gramática arriba en su caja morada y el
+           vocabulario debajo, agrupado en siete familias. El árbol entero lo pinta
+           `vocArbolHtml`, el mismo que usa la app de Alemán. -->
+      <div class="al-cuerpo reveal d3">
+        <div class="al-arbol v-arbol" id="alArbol"></div>
+        <div class="al-panel">
+          <div class="al-migas v-migas" id="alMigas"></div>
+          <div class="al-content" id="alContent"></div>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -5026,13 +5047,17 @@ const AL_GRAM = '__partizip';   // la pestaña de gramática, que no es una secc
 
 function alVocab(){ return (typeof ALEMAN_VOCAB !== 'undefined') ? ALEMAN_VOCAB : null; }
 
-// La sección abierta se recuerda: al volver mañana sigue donde la dejó.
-let alSec = (function(){
-  try { return localStorage.getItem('al_sec_v1') || 'saludos'; } catch(e){ return 'saludos'; }
-})();
-let alSub = (function(){
-  try { return localStorage.getItem('al_sub_v1') || null; } catch(e){ return null; }
-})();
+// Dónde se quedó: la sección, su subsección, la familia que tenía abierta en el índice
+// y el nivel filtrado. Al volver mañana sigue igual.
+// Se lee el valor CRUDO, no `|| defecto`: la familia vacía ('' = ninguna abierta) es un
+// valor legítimo, y con `||` se convertía en el defecto y volvía a abrirse sola.
+function alLee(k, d){
+  try { const v = localStorage.getItem(k); return v === null ? d : v; } catch(e){ return d; }
+}
+let alSec = alLee('al_sec_v1', 'saludos');
+let alSub = alLee('al_sub_v1', null);
+let alFam = alLee('al_fam_v1', null);   // null = la que contenga la sección abierta
+let alNivel = alLee('al_niv_v1', 'all');
 
 function alSet(c){
   alSec = c;
@@ -5048,18 +5073,35 @@ function alSetSub(s){
   alPinta();
 }
 
+// La familia se pliega si ya estaba abierta. '' es «ninguna», y el motor lo distingue de
+// `null`, que significa «abre la que tenga la sección de ahora».
+function alSetFam(f){
+  alFam = (alFam === f) ? '' : f;
+  alGuarda();
+  alPinta();
+}
+
+function alFiltro(clave, val){
+  if(clave === 'niv') alNivel = val;
+  alGuarda();
+  alPinta();
+}
+
 function alGuarda(){
   try {
     localStorage.setItem('al_sec_v1', alSec);
+    localStorage.setItem('al_niv_v1', alNivel);
     if(alSub) localStorage.setItem('al_sub_v1', alSub);
     else localStorage.removeItem('al_sub_v1');
+    if(alFam != null) localStorage.setItem('al_fam_v1', alFam);
+    else localStorage.removeItem('al_fam_v1');
   } catch(e){}
 }
 
 function alPinta(){
   const V = alVocab();
   const cont = document.getElementById('alContent');
-  const tabs = document.getElementById('alTabs');
+  const arbol = document.getElementById('alArbol');
   if(!cont) return;
   if(!V){
     cont.innerHTML = '<div class="v-vacio">No se pudo leer <b>../Aleman/vocab-datos.js</b>. ' +
@@ -5069,61 +5111,84 @@ function alPinta(){
 
   const q = ((document.getElementById('alQ')||{}).value || '').trim();
   const sub = document.getElementById('alEs');
-  const cnt = document.getElementById('alCounter');
   const qn = document.getElementById('alQN');
-  const tiraSubs = document.getElementById('alSubs');
+  const niv = document.getElementById('alNiv');
+  const migas = document.getElementById('alMigas');
+  const enGram = !q && alSec === AL_GRAM;
 
-  // Las secciones. Aquí no hay botón "todas": la pantalla enseña una sección a la vez y
-  // la búsqueda es la que cruza todas.
-  if(tabs){
-    tabs.innerHTML = vocSeccionesHtml(V.cats, q ? null : alSec, {
-      fn: 'alSet',
+  // EL ÍNDICE, entero: la gramática arriba en su zona y las 37 secciones repartidas en
+  // siete familias. Lo pinta el motor de la app de Alemán — aquí solo se le dice qué
+  // funciones reciben el clic y cómo se cuentan las palabras.
+  if(arbol){
+    arbol.innerHTML = vocArbolHtml(V.cats, q ? null : alSec, alSub, {
+      fnSec: 'alSet', fnSub: 'alSetSub', fnFam: 'alSetFam',
+      familias: V.familias,
+      famAbierta: alFam,
+      total: V.voc.length,
       cuenta: function(k){ return V.cuantas(k); },
-      gram: { id: AL_GRAM, t: null, texto: '\ud83e\udde9 ' + V.partizip.titulo },
+      cuentaFam: function(f){
+        return f.cats.reduce(function(a, k){ return a + V.cuantas(k); }, 0);
+      },
+      subs: function(k){ return V.subsDe(k); },
+      gram: { id: AL_GRAM, texto: V.partizip.titulo,
+              n: V.partizip.secciones.length + ' temas' },
     });
   }
 
-  // El tema de gramática. El contenedor con scroll es `#alContent`, no la página, y el
-  // motor necesita saberlo para el salto y para el índice que sigue la lectura.
-  // La tira de subsecciones sale de la sección abierta; buscando o en gramática, no.
-  if(tiraSubs){
-    const subs = (!q && alSec !== AL_GRAM) ? V.subsDe(alSec) : [];
-    tiraSubs.hidden = !subs.length;
-    tiraSubs.innerHTML = subs.length
-      ? vocSubsHtml(subs, alSub, { fn: 'alSetSub' }) : '';
+  // El nivel no pinta nada en la gramática: ahí no hay palabras que filtrar.
+  if(niv){
+    niv.hidden = enGram;
+    niv.innerHTML = enGram ? ''
+      : vocFiltrosHtml({ niv: alNivel }, { fn: 'alFiltro', soloNivel: true });
   }
 
-  if(!q && alSec === AL_GRAM){
-    if(sub) sub.textContent = V.partizip.titulo;
-    if(cnt) cnt.textContent = V.partizip.secciones.length + ' bloques';
+  // El subtítulo dice QUÉ HAY; dónde estoy lo dicen las migas, que es otra pregunta.
+  if(sub){
+    sub.textContent = V.voc.length.toLocaleString('es-ES') + ' palabras · ' +
+      Object.keys(V.cats).length + ' secciones en ' + V.familias.length + ' familias · ' +
+      Object.keys(V.cats).reduce(function(a, k){
+        return a + Object.keys(V.cats[k].subs || {}).length; }, 0) + ' subsecciones';
+  }
+
+  if(enGram){
     if(qn) qn.textContent = '';
+    if(migas){
+      migas.innerHTML = vocMigasHtml({ icon: '⚖️', label: V.partizip.titulo }, null,
+        { fam: 'Gramática', n: V.partizip.secciones.length + ' temas' });
+    }
+    // El contenedor con scroll es `#alContent`, no la página, y el motor necesita saberlo
+    // para el salto y para el índice que sigue la lectura.
     cont.innerHTML = vocPartizipHtml(V.partizip);
     vocIdxCont(cont);
     cont.onscroll = vocIdxSigue;
     vocIdxSigue();
-    vocVerSeccion(tabs);
     return;
   }
 
   const lista = q
-    ? vocFiltrar(V.voc, { q: q })
-    : vocFiltrar(V.voc, { cat: alSec, sub: alSub });
-  const etiquetaSub = alSub ? (((V.cats[alSec]||{}).subs || {})[alSub] || '') : '';
-  if(sub) sub.textContent = q ? ('Buscando \u201c' + q + '\u201d')
-    : ((V.cats[alSec]||{}).label || '') + (etiquetaSub ? ' \u203a ' + etiquetaSub : '') +
-      ' \u00b7 ' + lista.length + ' palabras';
-  if(cnt) cnt.textContent = V.voc.length + ' en total';
+    ? vocFiltrar(V.voc, { q: q, niv: alNivel })
+    : vocFiltrar(V.voc, { cat: alSec, sub: alSub, niv: alNivel });
+  const cat = V.cats[alSec] || { label: '', icon: '' };
+  const etiquetaSub = alSub ? ((cat.subs || {})[alSub] || '') : '';
+  const fam = (V.familias.filter(function(x){
+    return x.cats.indexOf(alSec) >= 0; })[0] || {}).label;
+  const cuantas = lista.length + ' palabra' + (lista.length === 1 ? '' : 's');
+
+  if(migas){
+    migas.innerHTML = q
+      ? vocMigasHtml({ icon: '🔍', label: 'Buscando «' + q + '»' }, null, { n: cuantas })
+      : vocMigasHtml(cat, etiquetaSub || null, { fam: fam, n: cuantas });
+  }
   if(qn) qn.textContent = q ? (lista.length + ' resultado' + (lista.length===1?'':'s')) : '';
 
   cont.innerHTML = vocPalabrasHtml(lista, {
     q: q, cats: V.cats, agrupar: !!q || !alSub, porSub: !q && !alSub,
-    vacio: 'Ninguna palabra con <b>' + q + '</b>. Se busca en alem\u00e1n, en espa\u00f1ol y ' +
+    vacio: 'Ninguna palabra con <b>' + q + '</b>. Se busca en alemán, en español y ' +
            'en los ejemplos.',
   });
   vocIdxCont(null);
   cont.onscroll = null;
   cont.scrollTop = 0;
-  vocVerSeccion(tabs);
 }
 
 // La palabra del día, para el resumen de Mi Día: la misma todo el día y distinta cada día.

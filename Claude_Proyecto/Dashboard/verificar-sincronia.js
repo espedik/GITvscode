@@ -1238,6 +1238,57 @@ function impactoDelCambio() {
             funcs.length + ' funciones en vocab.js, cargados por las 2 pantallas)');
 })();
 
+// ── 21. Las familias cubren las 37 secciones, y cada una una sola vez ────────
+// El índice de las dos pantallas se pinta desde `familias`, no desde `cats`: una sección
+// que no esté en ninguna familia sigue teniendo sus palabras y su subsección, pero ya no
+// hay forma de llegar a ella. No falla, no avisa — desaparece.
+(function () {
+  const ruta = path.join(RAIZ, 'Aleman', 'vocab-datos.js');
+  if (!fs.existsSync(ruta)) return;
+  let V;
+  try { V = require(ruta); } catch (e) { return; }
+  if (!V || !V.cats) return;
+
+  if (!Array.isArray(V.familias)) {
+    problemas.push('`Aleman/vocab-datos.js` no trae `familias`, y el índice de las dos ' +
+      'pantallas se pinta desde ahí: sin ellas no se ve ninguna sección.');
+    return;
+  }
+
+  const secciones = Object.keys(V.cats);
+  const vistas = new Map();
+  const malos = [];
+
+  V.familias.forEach(function (f) {
+    if (!f.id || !f.label || !f.icon)
+      malos.push('la familia ' + JSON.stringify(f.id || '?') + ' no tiene id, label o icon');
+    if (!Array.isArray(f.cats) || !f.cats.length)
+      malos.push('la familia "' + f.id + '" no tiene secciones');
+    (f.cats || []).forEach(function (k) {
+      if (!V.cats[k]) malos.push('la familia "' + f.id + '" nombra "' + k + '", que no existe en cats');
+      if (vistas.has(k)) malos.push('"' + k + '" está en dos familias: ' + vistas.get(k) + ' y ' + f.id);
+      vistas.set(k, f.id);
+    });
+  });
+
+  const huerfanas = secciones.filter(function (k) { return !vistas.has(k); });
+  if (huerfanas.length)
+    malos.push('sin familia, así que no salen en el índice: ' + huerfanas.join(', '));
+
+  const enFamilias = V.familias.reduce(function (a, f) {
+    return a + (f.cats || []).reduce(function (b, k) {
+      return b + V.voc.filter(function (w) { return w.cat === k; }).length; }, 0);
+  }, 0);
+  if (enFamilias !== V.voc.length)
+    malos.push('las familias suman ' + enFamilias + ' palabras y el vocabulario tiene ' + V.voc.length);
+
+  if (malos.length)
+    problemas.push('Las familias del vocabulario no cuadran:\n  - ' + malos.slice(0, 10).join('\n  - '));
+  else
+    ok.push('Familias del vocabulario: ' + V.familias.length + ' cubren las ' + secciones.length +
+            ' secciones y las ' + V.voc.length + ' palabras, sin repetir ninguna');
+})();
+
 // ── Salida ──
 if (process.argv.indexOf('--hook') !== -1) {
   const partes = [];

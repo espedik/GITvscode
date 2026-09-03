@@ -41,7 +41,7 @@ y los tres los carga también la pantalla de Alemán del Dashboard:
 | Archivo | Qué es | Cuándo se toca |
 |---|---|---|
 | `vocab-datos.js` | Las 1.516 palabras en 37 secciones y **188 subsecciones**, más el Partizip | Al añadir o corregir vocabulario |
-| `vocab.css` | El diseño: la tarjeta, la rejilla, la tira de secciones, el Partizip | Al cambiar cómo se ve |
+| `vocab.css` | El diseño: la tarjeta, la rejilla, el árbol de secciones, el Partizip | Al cambiar cómo se ve |
 | `vocab.js` | El motor: filtrar, agrupar y pintar | Al cambiar cómo se comporta |
 
 **Un cambio en cualquiera de los tres llega a las dos pantallas.** Está comprobado: subir
@@ -59,9 +59,34 @@ encima deja de ser un grupo y vuelve a ser una lista.
 **Armar frases** va la segunda, justo después de Saludos, y no es una sección temática como
 las demás: son los modales, las interrogativas, los conectores, los pronombres, las
 preposiciones y la negación. Es lo que sostiene una oración, se consulta constantemente, y
-por eso está arriba del árbol en vez de junto a Verbos. En la app se ven como un **árbol** a la izquierda;
-en el Dashboard, como una **segunda tira** bajo la sección abierta (ahí el slide es
-apaisado y una barra lateral le quitaría el ancho a las palabras).
+por eso está arriba del árbol en vez de junto a Verbos.
+
+### Las siete familias
+
+Las 37 secciones se agrupan en **siete familias**, y el árbol tiene tres niveles: familia ›
+sección › subsección. Antes eran 37 líneas seguidas y encontrar «Buscar piso» era
+recorrerlas todas; ahora es mirar dentro de «Casa y ciudad». Petición de Adán del
+2026-09-03, después de elegir entre tres maquetas.
+
+| Familia | Secciones | Palabras |
+|---|---|---|
+| 🧱 Lo básico | Saludos, Números, Colores, Tiempo, Adverbios, Armar frases | 265 |
+| 👥 Personas | Familia, Cuerpo, Salud, Emociones, Conocer gente, Opinar y discutir | 203 |
+| 🛒 Comer y comprar | Comida, En el mostrador, En el restaurante, En el súper, En la tienda, Compras, Ropa | 275 |
+| 🏠 Casa y ciudad | Casa, Buscar piso, Ciudad, Coche y conducir, Naturaleza, Animales | 251 |
+| 💼 Trabajo y papeles | Trabajo, Hablar en el trabajo, Dinero y banco, Trámites, Teléfono y correos, Escuela, Servicios, Tecnología | 258 |
+| 🎲 Tiempo libre | Hobbies, Viajes | 111 |
+| ⚙️ Verbos y adjetivos | Verbos, Adjetivos | 153 |
+
+Viven en `vocab-datos.js`, junto a las secciones, y **las dos pantallas pintan el mismo
+árbol**: el Dashboard dejó de usar tiras de chips el 2026-09-03. El control 21 de
+`../Dashboard/verificar-sincronia.js` comprueba que cada sección esté en una familia y solo
+una, y que entre todas cubran las 1.516 palabras — una sección que se caiga del reparto no
+da error, simplemente desaparece del índice de las dos pantallas.
+
+**La gramática no es una sección de palabras y ya no se pinta como tal.** Partizip I y II
+era un chip más de la tira, entre «Colores» y «Escuela»; ahora va en su propia zona arriba
+del árbol, en su caja morada, separada por una línea.
 
 Una palabra solo necesita `de`, `es` y `cat`. Lo demás se pinta **si está**, así que una
 preposición no arrastra los huecos de un verbo:

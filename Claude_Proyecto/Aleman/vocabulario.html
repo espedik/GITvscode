@@ -441,7 +441,7 @@ const CATS = ALEMAN_VOCAB.cats;
 // volver mañana al sitio donde lo dejaste importa más que en una lista de 479.
 const VOC_ESTADO = 'voc_estado_v1';
 let F = (function(){
-  const d = { cat:'saludos', sub:null, niv:'all', art:'all' };
+  const d = { cat:'saludos', sub:null, fam:null, niv:'all', art:'all' };
   try { return Object.assign(d, JSON.parse(localStorage.getItem(VOC_ESTADO) || '{}')); }
   catch(e){ return d; }
 })();
@@ -488,6 +488,14 @@ function setCat(cat) {
   render();
 }
 
+// Plegar y desplegar una familia. null significa «la que tenga la sección abierta»;
+// '' significa «ninguna», y por eso se distinguen.
+function setFam(fam) {
+  F.fam = (F.fam === fam) ? '' : fam;
+  guarda();
+  render();
+}
+
 function setSub(sub) {
   F.sub = (F.sub === sub) ? null : sub;
   guarda();
@@ -521,8 +529,12 @@ function render() {
 
   // El árbol
   document.getElementById('arbol').innerHTML = vocArbolHtml(CATS, F.cat, F.sub, {
-    fnSec: 'setCat', fnSub: 'setSub',
+    fnSec: 'setCat', fnSub: 'setSub', fnFam: 'setFam',
+    familias: ALEMAN_VOCAB.familias,
+    famAbierta: F.fam,
+    total: VOC.length,
     cuenta: k => ALEMAN_VOCAB.cuantas(k),
+    cuentaFam: f => f.cats.reduce((a, k) => a + ALEMAN_VOCAB.cuantas(k), 0),
     subs: k => ALEMAN_VOCAB.subsDe(k),
   });
   document.getElementById('filtros').innerHTML = vocFiltrosHtml(F, { fn: 'vocFiltro' });
