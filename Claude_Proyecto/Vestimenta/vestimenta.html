@@ -232,7 +232,12 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var
   </div>
 </main>
 
-<script src="vestimenta_data.js"></script>
+<!-- Sin caché, también para los .js. Los <meta> de arriba solo cubren el documento:
+     con file:// Chrome se queda con el script viejo y se ve el CSS nuevo con la lógica
+     vieja — que es exactamente "no se aplicó el cambio" sin que nada falle. `document.write`
+     va en el mismo punto del documento, así que el orden de carga no cambia. -->
+<script>window.__v = Date.now();</script>
+<script>document.write('<scr' + 'ipt src="vestimenta_data.js?v=' + window.__v + '"><\/scr' + 'ipt>');</script>
 <script>
 // La cabecera del area. Las prendas marcadas salen del mismo localStorage que
 // usan las casillas de cada seccion; el total, de cuantas hay dibujadas.
@@ -259,7 +264,7 @@ function cpCabVest(){
   });
 }
 </script>
-<script src="vestimenta_app.js"></script>
+<script>document.write('<scr' + 'ipt src="vestimenta_app.js?v=' + window.__v + '"><\/scr' + 'ipt>');</script>
 <script>
 // La app pinta su contenido al cargar; la cabecera se pone justo despues.
 if(document.readyState!=='loading') setTimeout(cpCabVest,80);
