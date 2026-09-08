@@ -135,6 +135,41 @@ gráficas distintas.
 Las cifras del canvas (las etiquetas de aportación que dibuja `btcAportPlugin`) también usan
 Grotesk, escrito a mano en `ctx.font` porque el canvas no hereda CSS.
 
+### El instrumento: las clases `.btcx-*`
+
+La gráfica de BTC es la única pieza de la app que mira un precio vivo, así que tiene una segunda
+capa de lenguaje visual encima de las `.fx-*`: se lee como un instrumento y no como una tarjeta
+más. El acento es un **verde de fósforo** que comparte el RGB de `--success` — es el mismo
+sistema, no un color nuevo; el cian entra solo en el borde y como retícula del cursor.
+
+La paleta vive en `:root` y cada tema la redefine, porque un verde neón legible sobre negro se
+pierde sobre blanco:
+
+| Variable | Claro | Oscuro | Para qué |
+|---|---|---|---|
+| `--btc-rgb` | `0,232,122` | igual | el RGB suelto de todos los `rgba(…)` y de los plugins |
+| `--btc` | `#009c55` | `#00e87a` | el acento legible: texto, iconos, bordes activos |
+| `--btc-hi` | `#00c46a` | `#7dffc4` | el extremo encendido de la rampa (hoy, triángulos, BTC acumulado) |
+| `--btc-lo` | `#00603a` | `#0b8f57` | el extremo apagado (el pasado de la curva) |
+| `--btc-glow` | `.3` | `.62` | cuánto brilla el halo. Sobre blanco un halo fuerte se vuelve niebla |
+
+El resto de la app **no** cambia: en el dónut de Patrimonio y en el desglose de inversiones BTC
+sigue siendo `#f7931a`, porque ahí es un color categórico que lo separa de las demás partidas.
+
+| Clase | Qué hace |
+|---|---|
+| `.btcx-scope` | Envuelve el bloque entero y define `--bx` (el ámbar de BTC) para los hijos |
+| `.btcx` / `.btcx-in` | Marco: envoltorio de 1 px con borde degradado verde→cian y el panel opaco encima. `.btcx-in::before` son las líneas de barrido (3 px, 1.6%) — no una rejilla, porque dentro del plano ya hay una retícula propia y dos rejillas superpuestas se leen como ruido; `.btcx-in::after` son las cuatro esquinas de mira — ocho gradientes en **un** pseudo-elemento, en vez de cuatro `<span>` vacíos en el DOM |
+| `.btcx-sweep` | Barrido de luz al montar, **una** vez. Un panel que parpadea cada seis segundos deja de leerse a los dos minutos |
+| `.btcx-rail` | Cinta de cabecera con el precio de 1 ₿; `.btcx-live` es el punto que late |
+| `.btcx-tabs` / `.btcx-tab` | Tabs de mes. El estado activo es la clase `.on` (halo + barra de luz), no estilos escritos desde JS |
+| `.btcx-seg` | Selector MXN/USD, mismo patrón `.on` |
+| `.btcx-kpi(s)` | Las seis lecturas. El filete superior toma el color de su cifra con `--kc`, así la fila se escanea por color antes que por texto |
+| `.btcx-ley` / `.btcx-key` / `.btcx-src` | Leyenda y nota de procedencia. `.btcx-src` es `inline-block` a propósito: lleva un `<b>` dentro y en flex ese `<b>` se volvía una columna con su propio hueco |
+
+Hay un bloque `@media(prefers-reduced-motion:reduce)` que apaga el barrido, el latido y el
+levantamiento de las lecturas.
+
 ---
 
 ## Funciones utilitarias
@@ -394,6 +429,12 @@ Módulo completo (~450 líneas, función `renderIndicators()` en adelante) que *
 - Vista histórica: banner de solo lectura con fecha de guardado y comparación de score "entonces vs. hoy" (↑/↓ puntos) contra el mes actual.
 - Útil para responder "¿mi salud financiera mejoró este trimestre?" con datos reales en vez de memoria — vale la pena que Adán sepa que existe, ya que no hay ningún botón que lo anuncie explícitamente, simplemente aparecen tabs nuevas conforme pasan los meses.
 
+**Desde el 2026-08-30 esta estructura es también el archivo histórico del proyecto entero.** El
+maestro la lee y la expone a las tres apps (`CIFRAS.historia()`, `historiaTabla()`, `comparar()`),
+y le añade un respaldo en git para que no dependa de un solo `localStorage`. La mecánica completa
+está en `Dashboard/DATOS-MAESTROS.md`, sección *El archivo histórico*. Aquí sigue viviendo el dato:
+no se copió a ningún sitio.
+
 ### `renderIndicators()`
 Calcula y renderiza 9 indicadores financieros en la sección `ind-body`.
 
@@ -521,7 +562,18 @@ Quita clase `open` del diálogo y resetea `confCb = null`.
 Crea un Blob JSON con `S`, genera un enlace de descarga con nombre `finanzas_YYYY-MM-DD.json` y hace clic automático.
 
 ### `importData(input)`
-Lee el archivo seleccionado con `FileReader`. Si es JSON válido, pide confirmación y reemplaza todo `S`. Resetea el input al terminar.
+Lee el archivo seleccionado con `FileReader`. Si es JSON válido, pide confirmación y reemplaza todo
+`S`. Resetea el input al terminar.
+
+**Con una excepción: `indicatorHistory` se FUSIONA, no se reemplaza** (2026-08-30). Todo lo demás
+en un import es el estado de hoy y tiene sentido pisarlo; el histórico mensual es lo único que no
+se puede reconstruir después. Restaurar un respaldo de hace tres meses borraba los tres meses que
+el navegador sí tenía. Ahora se cruzan **por `month`** —así no se duplica ninguno— y de cada mes
+repetido gana la foto con `savedAt` más reciente. El resultado es siempre la unión: un import no
+puede quitar meses.
+
+Junto con el rescate de `indicatorHistory` en `seedData()`, son las dos vías por las que se podía
+perder historial y ya no.
 
 ---
 
@@ -609,11 +661,44 @@ con `fxNow`; **lo APORTADO** se convierte con el fx de su día. Mezclarlos era e
 ### `btcAportPlugin`
 
 Plugin inline de Chart.js (no hay dependencia nueva: `chartjs-plugin-annotation` habría sido
-otro `<script>` de CDN). Dibuja por cada compra una vertical punteada naranja y una etiqueta con
-el monto. La etiqueta va en el `layout.padding.top` — **fuera** del área de trazado — porque
+otro `<script>` de CDN). Dibuja por cada compra una vertical punteada ámbar **que se apaga hacia
+abajo** (así marca el día sin partir la curva en dos) y una etiqueta con el monto, con dos
+esquinas cortadas — la misma geometría que las miras del marco — y un tallo que la cose a su
+vertical. La etiqueta va en el `layout.padding.top` — **fuera** del área de trazado — porque
 dentro chocaba con el triángulo cuando la aportación caía cerca del techo. Si dos etiquetas
 quedan a menos de 64 px, la segunda no se dibuja: encimadas son ilegibles y la vertical sola ya
 marca el día.
+
+### `btcGlowPlugin`, `btcCrossPlugin`, `btcNowPlugin`
+
+Tres plugins inline más, del mismo tamaño y por la misma razón: son diez líneas de canvas cada
+uno y evitan un `<script>` de CDN.
+
+- **`btcGridPlugin`** — la retícula del plano: horizontales punteadas en cada marca del eje Y,
+  verticales más tenues en las del X, marco interior, ejes izquierdo e inferior marcados y las
+  cuatro marcas de esquina. La dibuja el módulo porque **Chart.js 4 no deja puntear las líneas de
+  rejilla**, y una rejilla gris continua al lado de un panel de fósforo verde se lee como de otra
+  aplicación. Va en `beforeDatasetsDraw`: el Filler ya pintó el área, así que la retícula se ve a
+  través de ella y las curvas quedan encima. Ambas escalas llevan `grid:{display:false}`.
+- **`btcGlowPlugin`** — el halo de la curva sale de `ctx.shadowBlur` del propio lienzo; Chart.js
+  no tiene "glow" y un segundo dataset desenfocado debajo costaría el doble de trazado. Entra
+  solo en los datasets 1 y 2 (línea y triángulos): el relleno de área lo pinta el plugin Filler
+  en `beforeDatasetsDraw`, **antes**, así que no se emborrona.
+- **`btcCrossPlugin`** — la retícula del cursor. Va en **cian y continua** a propósito: las
+  verticales ámbar punteadas ya significan "aquí aportaste", y "dónde estoy mirando" no puede
+  parecer lo mismo.
+- **`btcNowPlugin`** — el punto de hoy como faro (dos aros que se apagan hacia fuera). El
+  `layout.padding.right` existe por él: sin ese carril, el aro se recortaba contra el borde.
+
+El canvas no hereda CSS, así que los plugins pintan con dos variables de módulo — `btcAcc` (el
+RGB del verde) y `btcGlow` (la intensidad del halo) — que `renderBtcHistory()` **relee del tema en
+cada render**: sin eso, cambiar de claro a oscuro dejaba la gráfica con el verde del tema
+anterior.
+
+Los degradados (área de ganancia/pérdida y la curva, que va de `--btc-lo` en el pasado a
+`--btc-hi` hoy) se crean con `createLinearGradient` sobre el contexto del canvas justo antes de
+armar la configuración: el `chartArea` todavía no existe en ese momento, así que se usan el alto
+y el ancho reales del contenedor.
 
 ### `fetchBtcHistory()`
 
@@ -638,8 +723,8 @@ Renderiza el panel completo de BTC en `btc-history` dentro del Plan de Inversion
 
 **Renderiza:**
 - Inputs inline de precio BTC y tasa USD/MXN + botón "Actualizar precio" (`fetchBtcPrice()`)
-- La gráfica `btc-ch-pnl` con su toggle de moneda y el botón 📈 **Precio real**
-- Fila de 6 tarjetas bajo la gráfica, en la moneda activa y con la otra como subtítulo
+- La gráfica `btc-ch-pnl` en su panel `.btcx`, con su toggle de moneda y el botón 📈 **Precio real**
+- Fila de 6 lecturas (`.btcx-kpi`) bajo la gráfica, en la moneda activa y con la otra como subtítulo
 - Tabs por mes con el P&L de cada período, en la moneda activa
 - Tabla histórica por compra en ambas monedas, con botones editar/eliminar
 
@@ -648,7 +733,9 @@ precio actual: repetía en dólares lo que la fila bajo la gráfica ya dice en p
 código porque es la única vista cuando **no** hay precio actual y por tanto no hay gráfica.
 
 ### `switchBtcTab(key)`
-Muestra el pane del tab `key` ('resumen' o 'YYYY-MM') y oculta los demás. Actualiza estilos.
+Muestra el pane del tab `key` ('resumen' o 'YYYY-MM') y oculta los demás. El estado activo es
+solo `classList.toggle('on')`: el halo y la barra de luz viven en `.btcx-tab.on`, no en
+propiedades escritas a mano desde aquí.
 
 ### `fetchBtcPrice()`
 `async`. Llama a `https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd,mxn`. Actualiza `S.currentBtcPrice`, `S.usdMxn` y `S.btcLastFetch`. Refresca BTC history, dashboard, indicadores y patrimonio. Maneja errores con toast.
@@ -787,7 +874,7 @@ Semana 2 (días 8-14):
 
 Semana 3 (días 15-21):
   IN:  Quincena 2 ($20,500)
-  OUT: CETES ($1,500) + Servicios ($1,264) + Suscripciones ($1,930)
+  OUT: CETES ($1,500) + Servicios ($1,314) + Suscripciones ($1,930)
        + TC mínimos ($2,310) + MSI activas + gastos variables
   → GBM: sobrante → MSFT 70% / NVDA 30%
 
@@ -843,12 +930,32 @@ Detalle en [`../Dashboard/DATOS-MAESTROS.md`](../Dashboard/DATOS-MAESTROS.md).
 
 ---
 
+## La gráfica de balance (`ch-bal`)
+
+Adán, 2026-09-07: *"también el html de finanzas la gráfica está mal, debería estar como la
+que hiciste hace rato"* —por la del Dashboard, bajo el calendario—.
+
+Sumaba `transactions` a secas, así que **los meses sin registrar salían en cero**: la línea de
+ingresos se desplomaba a $0 en julio, agosto y septiembre aunque la nómina hubiera entrado los
+tres meses. Ahora los seis puntos salen de **`CIFRAS.balanceMeses`**, la misma función que usa
+el Dashboard —ver *El balance mensual, compartido* en
+[`../Dashboard/DATOS-MAESTROS.md`](../Dashboard/DATOS-MAESTROS.md)—, de modo que las dos
+pantallas no pueden discrepar: se comprobó abriendo las dos en la misma sesión y comparando
+los seis meses uno a uno.
+
+Se le pasan `S.transactions` y `S.debts`, que aquí están más frescos que `localStorage` porque
+esta app los acaba de tocar. Y queda un respaldo: si el maestro no cargara, cae al cálculo de
+siempre en vez de dejar la tarjeta vacía. El resto —Chart.js, los colores, la tensión .4— no
+se tocó.
+
+---
+
 ## Estado de las deudas
 
 | id | Deuda | Saldo | Nota |
 |---|---|---|---|
-| `d001` | Tarjeta BBVA | **$34,000** ⚠️ | Subiendo: el mínimo de $1,500 no cubre el interés |
-| `d002` | Tarjeta Banamex | $0 ✅ | Liquidada el 13-ago-2026, saldo completo |
+| `d001` | Tarjeta BBVA | **$37,000** ⚠️ | Dato de Adán el 7-sep-2026: +$3,000 sobre el 24-ago. Zanja el pendiente de abajo |
+| `d002` | Tarjeta Banamex | **$7,000** ⚠️ | Se liquidó el 13-ago-2026, volvió a usarse el 1-sep ($5,985) y sigue subiendo |
 | `d003` | Crédito Automotriz | $293,000 | 12.99%, $6,700/mes — ver nota abajo |
 | `d004` | Apple Watch MSI | $854 | Queda 1 cuota, la del 18 sep 2026 |
 | `d007` | Boletos Ticketmaster | $0 ✅ | Liquidado |
@@ -856,8 +963,8 @@ Detalle en [`../Dashboard/DATOS-MAESTROS.md`](../Dashboard/DATOS-MAESTROS.md).
 | `d009` | Zap Stylo (MSI BBVA) | $334 | "El de los zapatos" — el único MSI de BBVA vivo |
 | `d010`, `d011` | Merpago, Mercado Pago | $0 ✅ | Liquidados el 24-ago-2026 |
 
-Deuda total **$339,550**. Los valores vivos están en `finanzasmx_v2`; esta tabla es la foto para
-orientarse rápido.
+Deuda total **$349,550** según el maestro, de la que **$44,000 es deuda cara** (las dos tarjetas al 55.7%).
+Los valores vivos están en `finanzasmx_v2`; esta tabla es la foto para orientarse rápido.
 
 ### El auto subió $1,000 el 25-ago-2026
 
@@ -900,8 +1007,19 @@ con pagar $1,500 y quedar en tablas. Dos lecturas, y hay que confirmar cuál es:
 La conclusión operativa es la misma en ambos casos: **esta tarjeta ya no está estancada, está
 creciendo**. Hasta resolverlo, la simulación mes a mes de Coach queda sin rehacer.
 
-En `d001` se mantiene la invariante `total == balance` que la tarjeta lleva desde 2024: con `total`
-congelado, las barras de "pagado real" saldrían **negativas**.
+### Y el 30-ago-2026 bajó por primera vez
+
+Adán reporta **$32,100**: −$1,900 en seis días. Es la **primera bajada desde enero de 2024**, y por
+eso cambia una regla del modelo:
+
+- Hasta ahora `d001` mantenía la invariante `total == balance`, porque el saldo nunca bajaba: con
+  `total` congelado, las barras de "pagado real" habrían salido **negativas**.
+- Ahora `total` se queda en **$34,000** —el pico— y `balance` baja a $32,100. La diferencia, $1,900,
+  es abono real y es exactamente lo que esas barras deben enseñar. La invariante se rompe a
+  propósito: describía una tarjeta que crecía sola, y dejó de serlo.
+
+$1,900 en un mes con un mínimo de $1,500 significa que se abonó por encima del mínimo, o que hubo
+un pago extra. Sigue pendiente el mismo contraste contra el estado de cuenta.
 
 ---
 
@@ -951,6 +1069,88 @@ declarado.
 
 ---
 
+
+---
+
+## Las seis compras del 1-sep-2026
+
+Adán las reportó el 3-sep, todas del mismo día:
+
+| id | Qué | Importe | Categoría | Cómo se pagó |
+|---|---|---|---|---|
+| `s066` | Tenis Tommy Hilfiger | $1,500 | Ropa | contado |
+| `s067` | Despensa del mes | $1,800 | Alimentación | contado |
+| `s068` | Plancha (Amazon) | $1,902 | Hogar/Renta | **TC Banamex** |
+| `s069` | Avodart (dutasterida 0,5 mg) | $1,560 | Salud | **TC Banamex** |
+| `s070` | Minoxidil 5% NR-11 (Polaris Research) | $900 | Salud | **TC Banamex** |
+| `s071` | Mouse | $1,623 | Otros gastos | **TC Banamex** |
+
+**$9,285 en un día**, de los que **$5,985 fueron a crédito**. Los dos tratamientos llevan el
+nombre exacto del catálogo de `RUTINA_PELO` — "NR 11" es el minoxidil tópico y "dutasteride en
+cápsulas" es el Avodart — para que el gasto y la ficha del producto se puedan cruzar.
+
+
+---
+
+## Cómo se anota un gasto pagado con tarjeta
+
+**Convención: si el gasto se pagó con una tarjeta de crédito, la tarjeta se escribe en las notas**
+(`TC Banamex`, `TC BBVA`). No es cosmético — el tablero del Dashboard lee esa nota para decidir si
+el gasto **sale de tu caja ese día** o solo **sube el saldo de la tarjeta**:
+
+| Cómo se anota | Qué hace el tablero |
+|---|---|
+| `notes: 'Compra única — de contado'` | resta del día, como cualquier pago |
+| `notes: 'TC Banamex — 30 cápsulas'` | **no** resta ese día; sale en "Cargaste a la tarjeta el N", y lo cobra el mínimo del día 8 |
+| `cat: 'Deudas'` + `notes` con la tarjeta | sí resta: es un **pago a** la tarjeta, no una compra con ella |
+
+Sin la nota, una compra a crédito se contaría dos veces: el día que se hizo y otra vez en el
+mínimo de la tarjeta. Con ella, el saldo del día es el dinero que de verdad te queda.
+
+Las seis del 1-sep-2026 son el ejemplo: dos de contado ($1,500 + $1,800) y cuatro a Banamex
+($5,985, que es exactamente lo que subió `d002`).
+
+### Lo que se movió solo
+
+La Banamex llevaba en $0 desde el 13-ago y **vuelve a ser deuda cara**:
+
+| Derivada | Antes | Ahora |
+|---|---|---|
+| `deudaCara` | $34,000 | **$39,985** |
+| `deudaTotal` | $339,550 | **$345,535** |
+| `minimosDeuda` | $9,715 | **$10,525** |
+| `margen` | $30,271 | **$29,461** |
+
+Los $810 del mínimo de Banamex llevaban tres semanas fuera de `minimosDeuda` —solo cuentan las
+deudas con saldo vivo— y vuelven a entrar: **el margen baja $810 al mes sin que nadie haya
+tocado un gasto fijo**. Eso es lo que de verdad cuesta la compra a crédito, además del interés.
+
+### Dónde vive
+
+En `CIFRAS.GASTOS_20260901`, en `Dashboard/datos-maestros.js`, **una sola vez**: de ahí las
+siembra el seed de `Finanzas.html` (para un navegador en blanco) y de ahí las aplica la
+migración `_gastos20260901` (para el navegador que ya tiene datos, que es el caso de Adán).
+La migración añade por id y solo si falta, así que ninguna de las dos vías duplica nada.
+
+`SEED_VER` **no se subió**: hacerlo habría borrado los movimientos capturados a mano.
+
+### El precio del Avodart pasó de $1,500 a $1,560
+
+Es el mismo producto de `RUTINA_PELO`, y su `precio` era una referencia de $1,500 tomada de
+cuando lo compró la primera vez. Ahora es lo que pagó de verdad. Sube con él el costo mensual
+del pelo: **$2,805 → $2,865**, porque ese bote dura exactamente un mes.
+
+### El pendiente de `d001`, cerrado el 7-sep-2026
+
+Aquí quedó anotado que la tabla de arriba decía **$32,100** para la TC BBVA —por el abono de
+$1,900 del 30-ago-2026— mientras el maestro seguía dando $34,000, porque ese abono nunca llegó
+al código: no había migración que lo aplicara. El saldo bueno vivía solo en este `.md`.
+
+Lo zanja el dato del **7-sep-2026**: Adán reporta **$37,000**, que es un saldo posterior a los
+dos y los deja obsoletos a la vez. `_tarjetas20260907` lo aplica al `balance` y al `total` —esa
+tarjeta mantiene `total == balance` desde 2024—, así que ya no hay dos cifras compitiendo. Queda
+la lección: **un saldo que solo se escribe en un `.md` no existe**; si no lleva migración, las
+apps siguen con el viejo.
 ## Referencias cruzadas
 
 - [`../Dashboard/DATOS-MAESTROS.md`](../Dashboard/DATOS-MAESTROS.md) — índice del proyecto, catálogo de variables

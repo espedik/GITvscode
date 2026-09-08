@@ -28,16 +28,27 @@
 
     :root {
       /* ─── Tema claro — mismo lenguaje visual que Aleman/styles.css ─── */
-      --bg:      #f5f4f0;
+      /* 2026-08-30: el fondo crema tiraba a cálido y peleaba con el cian. Mismo papel,
+         un punto más frío. */
+      --bg:      #f2f6f8;
       --surface: #ffffff;
-      --surface-2: #eeece8;
+      --surface-2: #e7edf1;
       --border:  rgba(0,0,0,.09);
       --text:    #1a1a1a;
       --muted:   #555555;
       --muted-2: #999999;
-      --accent:  #b08800;
-      --accent-bright: #d4a000;
-      --accent-soft: rgba(212,160,0,.10);
+      /* 2026-08-30 · Adán: "ese color se ve muy aburrido o seco, quiero algo que me motive
+         a verlo o leer". El oro se va; entra CIAN + VERDE ÁCIDO, elegido entre tres paletas.
+         Sobre blanco el cian de pantalla (#00d4ff) se lava, así que el tema claro usa su
+         versión legible — el mismo criterio que ya se aplicó al verde de la gráfica de BTC. */
+      --accent:  #0284a8;
+      --accent-bright: #0aa5cc;
+      --accent-soft: rgba(2,132,168,.10);
+      /* La segunda voz. Tiene un trabajo, no es decoración: el cian manda en la ESTRUCTURA
+         (títulos, chrome, navegación) y la lima en las CIFRAS, para que un número no se lea
+         como un encabezado. */
+      --acc2:    #4d7c0f;
+      --acc2-rgb: 77,124,15;
       --red:     #CC0000;
       --red-soft: rgba(204,0,0,.07);
       --green:   #1a7a4c;
@@ -58,16 +69,19 @@
 
     /* ─── Tema oscuro ─────────────────────────────────── */
     :root[data-theme="dark"] {
-      --bg:      #121212;
-      --surface: #1c1c1e;
-      --surface-2: #262628;
+      /* El negro se queda, con una gota de azul: sobre un gris neutro el cian se apaga. */
+      --bg:      #0b0f13;
+      --surface: #131a20;
+      --surface-2: #1a232a;
       --border:  rgba(255,255,255,.10);
       --text:    #f0efec;
       --muted:   #a8a8a8;
       --muted-2: #7a7a7a;
-      --accent:  #e0b020;
-      --accent-bright: #f0c840;
-      --accent-soft: rgba(224,176,32,.16);
+      --accent:  #00d4ff;
+      --accent-bright: #7df9ff;
+      --accent-soft: rgba(0,212,255,.14);
+      --acc2:    #adff2f;
+      --acc2-rgb: 173,255,47;
       --red:     #ff6b6b;
       --red-soft: rgba(255,107,107,.12);
       --green:   #34d399;
@@ -334,7 +348,7 @@
       letter-spacing: .08em;
       color: var(--accent);
       background: var(--accent-soft);
-      border: 1px solid rgba(212,160,0,.28);
+      border: 1px solid rgba(var(--acc-rgb),.28);
       padding: 6px 12px;
       border-radius: 20px;
     }
@@ -351,7 +365,7 @@
     }
     .card:hover, .riesgo-box:hover, .moat-box:hover, .negocio-card:hover {
       box-shadow: var(--shadow-md);
-      border-color: rgba(212,160,0,.35);
+      border-color: rgba(var(--acc-rgb),.35);
       transform: translateY(-2px);
     }
 
@@ -422,8 +436,8 @@
     .btn:hover { background: var(--surface-2); box-shadow: var(--shadow-md); transform: translateY(-1px); }
     .btn-dark  { background: #1a1a1a; color: #fff; border-color: #1a1a1a; }
     .btn-dark:hover { background: #2f2f2f; }
-    .btn-gold  { background: linear-gradient(135deg, var(--accent-bright), var(--accent)); color: #fff; border-color: var(--accent); box-shadow: 0 4px 14px rgba(212,160,0,.3); }
-    .btn-gold:hover { filter: brightness(1.08); box-shadow: 0 6px 20px rgba(212,160,0,.4); transform: translateY(-1px); }
+    .btn-gold  { background: linear-gradient(135deg, var(--accent-bright), var(--accent)); color: #fff; border-color: var(--accent); box-shadow: 0 4px 14px rgba(var(--acc-rgb),.3); }
+    .btn-gold:hover { filter: brightness(1.08); box-shadow: 0 6px 20px rgba(var(--acc-rgb),.4); transform: translateY(-1px); }
     .btn-row   { display: flex; gap: 10px; margin-top: 14px; flex-wrap: wrap; }
 
     /* ─── SUBTABS ─────────────────────────────────────── */
@@ -527,7 +541,7 @@
       position: absolute; inset: 0;
       background:
         radial-gradient(ellipse 60% 70% at 8% 0%, rgba(204,0,0,.05) 0%, transparent 65%),
-        radial-gradient(ellipse 45% 55% at 100% 100%, rgba(212,160,0,.08) 0%, transparent 60%);
+        radial-gradient(ellipse 45% 55% at 100% 100%, rgba(var(--acc-rgb),.08) 0%, transparent 60%);
       pointer-events: none;
     }
     .perfil-hero::after {
@@ -611,7 +625,7 @@
     .fase-meta { display: flex; align-items: center; gap: 8px; background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 9px 13px; font-size: 12px; margin-bottom: 13px; }
     .fase-meta strong { color: var(--accent); }
 
-    .fase-checkpoint { display: flex; gap: 10px; align-items: flex-start; background: rgba(212,160,0,.08); border: 1px solid rgba(212,160,0,.25); border-radius: var(--radius-sm); padding: 11px 13px; margin-top: 13px; font-size: 12px; line-height: 1.65; }
+    .fase-checkpoint { display: flex; gap: 10px; align-items: flex-start; background: rgba(var(--acc-rgb),.08); border: 1px solid rgba(var(--acc-rgb),.25); border-radius: var(--radius-sm); padding: 11px 13px; margin-top: 13px; font-size: 12px; line-height: 1.65; }
     .fase-checkpoint .fc-icon { flex-shrink: 0; }
 
     /* ─── FASE — desglose mes a mes (2026-08-09) ───────────────────────────
@@ -673,12 +687,12 @@
     .moat-box h3 { color: var(--green); font-size: 15px; margin-bottom: 9px; }
     .moat-box p  { font-size: 12.5px; color: var(--text); line-height: 1.65; }
 
-    .context-banner { background: var(--accent-soft); border: 1px solid rgba(212,160,0,.28); border-radius: var(--radius); padding: 14px 18px; margin-bottom: 20px; }
+    .context-banner { background: var(--accent-soft); border: 1px solid rgba(var(--acc-rgb),.28); border-radius: var(--radius); padding: 14px 18px; margin-bottom: 20px; }
     .context-banner p { font-size: 12.5px; color: var(--text); line-height: 1.65; }
 
     /* ─── POSIBLES NEGOCIOS ───────────────────────────── */
     .negocio-card { border: 1px solid var(--border); border-radius: var(--radius); padding: 20px 22px; margin-bottom: 16px; background: var(--surface); }
-    .negocio-card.pick { border-color: var(--accent); background: linear-gradient(135deg, rgba(212,160,0,.05), var(--surface)); }
+    .negocio-card.pick { border-color: var(--accent); background: linear-gradient(135deg, rgba(var(--acc-rgb),.05), var(--surface)); }
     .negocio-rank { display: block; font-size: 10.5px; font-weight: 700; letter-spacing: .6px; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
     .negocio-card.pick .negocio-rank { color: var(--accent); }
     .negocio-card h3 { font-size: 16.5px; font-weight: 800; margin-bottom: 11px; }
@@ -755,7 +769,7 @@
       transition: background .15s, border-color .15s, color .15s;
     }
     .skill-tab-btn:hover { color: var(--text); border-color: var(--muted-2); }
-    .skill-tab-btn.active { background: var(--accent-soft); color: var(--accent); border-color: rgba(212,160,0,.4); }
+    .skill-tab-btn.active { background: var(--accent-soft); color: var(--accent); border-color: rgba(var(--acc-rgb),.4); }
     .skill-detail-panel { display: none; }
     .skill-detail-panel.active { display: block; }
 
@@ -766,7 +780,7 @@
     .rm-badge { font-family: var(--mono); font-size: 10px; font-weight: 800; padding: 3px 7px; border-radius: 5px; min-width: 44px; text-align: center; flex-shrink: 0; }
     .rm-0  { background: var(--red-soft); color: var(--red); }
     .rm-30 { background: rgba(229,140,20,.12); color: #e08c14; }
-    .rm-50 { background: rgba(212,160,0,.14); color: var(--accent); }
+    .rm-50 { background: rgba(var(--acc-rgb),.14); color: var(--accent); }
     .rm-70 { background: var(--green-soft); color: var(--green); }
     .rm-85 { background: var(--green-soft); color: var(--green); }
 
@@ -920,7 +934,7 @@
     .rt-card-head { display: flex; align-items: center; gap: 8px; margin-bottom: 5px; }
     .rt-cat-tag { font-size: 9px; font-weight: 800; text-transform: uppercase; letter-spacing: .05em; padding: 2px 8px; border-radius: 8px; background: var(--surface); border: 1px solid var(--border); }
     .rt-dur { font-size: 10px; color: var(--muted-2); margin-left: auto; white-space: nowrap; }
-    .rt-card.rt-fijo { display: flex; align-items: center; gap: 12px; background: var(--accent-soft); border: 1px solid rgba(212,160,0,.3); }
+    .rt-card.rt-fijo { display: flex; align-items: center; gap: 12px; background: var(--accent-soft); border: 1px solid rgba(var(--acc-rgb),.3); }
     .rt-fijo-ico { font-size: 22px; flex-shrink: 0; }
     .rt-fijo-title { font-weight: 800; font-size: 13px; }
     .rt-fijo-dur { font-size: 10.5px; color: var(--muted); margin-top: 2px; }
@@ -1087,6 +1101,307 @@
     .salud-grid > *, .vida-ideal-grid > *, .perfil-grid > *, .negocio-grid > * {
       min-width: 0 !important;
     }
+
+    /* ═══ CONSOLA — el sistema visual de Coach (2026-08-30) ═══════════════════════════════
+       Adán: "quiero del mismo estilo el html de coach, lo quiero futurista, que me aporte
+       valor, que sea entendible y con las secciones bien distribuidas".
+
+       "Del mismo estilo" es el lenguaje que estrenaron Habilidades Base y Mis Metas en el
+       Dashboard: esquinas rectas de 3 px con brackets de HUD, etiquetas en monoespaciada con
+       mucho tracking, cifras tabulares y un filete de acento que enciende lo activo. Aquí se
+       aplica sobre las piezas COMPARTIDAS —`.card`, `.section-title`, `.check-item`,
+       `.sb-link`, `.stat-badge`, `.modo-btn`— así que las once secciones cambian a la vez sin
+       tocar una línea de su contenido.
+
+       Va como bloque AL FINAL del <style>, después de las reglas que redefine, en vez de
+       editarlas una por una: es un archivo de 477 KB, y así el rediseño entero se lee —y se
+       revierte— de una pieza.
+
+       LO QUE APORTA VALOR y no existía: cada sección enseña cuántos de sus pasos llevas
+       marcados (`.cc-bay`, armada en JS desde `coach_checks_v1`) y el sidebar lo repite al
+       lado de cada enlace. Había 171 casillas repartidas en once secciones y ni una sola
+       señal de avance — marcar una no cambiaba nada visible fuera de su propia línea.
+
+       LO QUE ARREGLA LA DISTRIBUCIÓN: `main` pasa de 1080 a 1280 px (en un monitor de 1600 se
+       desperdiciaban 400), y las secciones con muchos bloques reciben un índice pegajoso
+       construido de sus propios <h3>, para que `#perfil` —166 KB, 10,700 px de alto— deje de
+       ser un muro por el que solo se puede bajar a ciegas.
+
+       El oro sigue siendo el color de Coach: es su identidad y lo que lo separa de las
+       pantallas del Dashboard. El cian entra solo como segunda voz, igual que allá. */
+    :root { --acc-rgb: 2,132,168; --hud: 3px; }
+    :root[data-theme="dark"] { --acc-rgb: 0,212,255; }
+
+    /* ─── Barra de modo ─────────────────────────────────────────────────── */
+    .modo-switch { background: var(--bg); border-bottom: 1px solid rgba(var(--acc-rgb),.18);
+      box-shadow: 0 1px 0 rgba(var(--acc-rgb),.06), 0 10px 30px -22px rgba(0,0,0,.9); }
+    .modo-btn { border-radius: var(--hud); font-family: var(--mono); font-size: 11.5px;
+      font-weight: 700; letter-spacing: .1em; text-transform: uppercase; padding: 9px 18px;
+      background: transparent; transition: all .18s; }
+    .modo-btn:hover { border-color: rgba(var(--acc-rgb),.4); background: rgba(var(--acc-rgb),.06); }
+    .modo-btn.active { background: rgba(var(--acc-rgb),.14); color: var(--accent-bright);
+      border-color: rgba(var(--acc-rgb),.5); box-shadow: 0 0 22px -8px rgba(var(--acc-rgb),1); }
+
+    /* ─── Sidebar: el enlace activo se enciende por un riel, no por un relleno ── */
+    .sidebar { border-right: 1px solid rgba(var(--acc-rgb),.12); }
+    .sb-link, .sb-header-link, .sb-sublink { position: relative; border-radius: var(--hud);
+      display: flex; align-items: center; gap: 8px; transition: color .16s, background .16s; }
+    .sb-link.active, .sb-header-link.active, .sb-sublink.active {
+      background: rgba(var(--acc-rgb),.10); color: var(--accent-bright); }
+    .sb-link.active::before, .sb-header-link.active::before, .sb-sublink.active::before {
+      content: ''; position: absolute; left: 0; top: 4px; bottom: 4px; width: 2px;
+      border-radius: 2px; background: var(--accent-bright);
+      box-shadow: 0 0 10px var(--accent-bright); }
+    /* El contador de avance por sección. `margin-left:auto` lo empuja al borde y
+       `flex-shrink:0` evita que el nombre largo de una sección se lo coma. */
+    .cc-cnt { margin-left: auto; flex-shrink: 0; font-family: var(--mono); font-size: 9.5px;
+      font-weight: 700; letter-spacing: .06em; color: var(--muted-2); padding: 2px 6px;
+      border-radius: 2px; background: rgba(var(--acc-rgb),.07);
+      border: 1px solid rgba(var(--acc-rgb),.16); }
+    .cc-cnt.full { color: var(--green); background: var(--green-soft);
+      border-color: rgba(52,211,153,.3); }
+
+    /* ─── Más ancho: 1080 px dejaban 400 muertos en un monitor de 1600 ─── */
+    main { max-width: 1280px; }
+
+    /* ─── Cabecera de sección: pasa a leerse como el encabezado de un instrumento ── */
+    h2.section-title { font-family: var(--font); font-size: 22px; letter-spacing: -.2px;
+      margin-bottom: 18px; }
+    h2.section-title::before { border-radius: var(--hud); font-size: 10px; letter-spacing: .16em;
+      padding: 5px 10px; background: rgba(var(--acc-rgb),.12);
+      border: 1px solid rgba(var(--acc-rgb),.32); color: var(--accent-bright); }
+    h2.section-title::after { background: linear-gradient(90deg,
+      rgba(var(--acc-rgb),.35), rgba(var(--acc-rgb),.04) 60%, transparent); height: 1px; }
+
+    /* ─── La franja de avance de la sección ─────────────────────────────── */
+    .cc-bay { position: relative; display: flex; align-items: center; gap: 18px; flex-wrap: wrap;
+      padding: 11px 18px; margin-bottom: 20px; border-radius: var(--hud);
+      background: rgba(var(--acc-rgb),.045); border: 1px solid rgba(var(--acc-rgb),.16);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.03); }
+    .cc-bay::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 2px;
+      background: var(--accent-bright); box-shadow: 0 0 12px var(--accent-bright); }
+    .cc-k { font-family: var(--mono); font-size: 8.5px; font-weight: 700; letter-spacing: .19em;
+      color: var(--muted-2); white-space: nowrap; text-transform: uppercase; }
+    .cc-n { display: flex; flex-direction: column; gap: 3px; flex-shrink: 0; }
+    .cc-v { display: flex; align-items: baseline; gap: 2px; line-height: 1; font-family: var(--mono); }
+    .cc-v b { font-size: 26px; font-weight: 700; letter-spacing: -.02em; color: var(--text); }
+    .cc-v i { font-size: 13px; font-weight: 700; font-style: normal; color: var(--muted); }
+    /* Una marca por casilla real de la sección, no una barra: dice cuántos pasos faltan y no
+       solo un porcentaje. Es la misma decisión que en Mis Metas del Dashboard. */
+    .cc-rail { flex: 1; min-width: 120px; display: flex; align-items: center; gap: 2px; height: 8px; }
+    .cc-rail i { flex: 1; height: 100%; border-radius: 1px; background: rgba(var(--acc-rgb),.16); }
+    .cc-rail i.d { background: var(--accent-bright); box-shadow: 0 0 7px -1px var(--accent-bright); }
+    .cc-pct { font-family: var(--mono); font-size: 15px; font-weight: 700; color: var(--acc2);
+      flex-shrink: 0; }
+    .cc-bay.full { border-color: rgba(52,211,153,.35); background: var(--green-soft); }
+    .cc-bay.full::before { background: var(--green); box-shadow: 0 0 12px var(--green); }
+    .cc-bay.full .cc-rail i.d { background: var(--green); box-shadow: 0 0 7px -1px var(--green); }
+    .cc-bay.full .cc-pct { color: var(--green); }
+
+    /* ─── El índice de una sección larga ────────────────────────────────── */
+    /* `#perfil` mide 10,700 px. Sin esto solo se puede recorrer a ciegas hacia abajo. Se
+       genera de los <h3> visibles (se rehace al cambiar de pestaña) y es pegajoso, así que
+       sigue disponible en cualquier punto del scroll. */
+    .cc-idx { position: sticky; top: 64px; z-index: 40; display: flex; gap: 6px;
+      overflow-x: auto; padding: 8px 0 10px; margin-bottom: 16px;
+      background: var(--bg); border-bottom: 1px solid rgba(var(--acc-rgb),.12);
+      scrollbar-width: none; }
+    .cc-idx::-webkit-scrollbar { display: none; }
+    .cc-idx a { flex-shrink: 0; font-family: var(--mono); font-size: 10px; font-weight: 700;
+      letter-spacing: .09em; text-transform: uppercase; text-decoration: none;
+      color: var(--muted); padding: 5px 11px; border-radius: var(--hud);
+      border: 1px solid rgba(var(--acc-rgb),.14); background: rgba(var(--acc-rgb),.04);
+      transition: all .16s; }
+    .cc-idx a:hover { color: var(--acc2); border-color: rgba(var(--acc2-rgb),.5);
+      background: rgba(var(--acc2-rgb),.1); }
+
+    /* ─── Tarjetas: esquinas rectas y un filete de acento que se enciende ── */
+    .card, .riesgo-box, .moat-box, .negocio-card { border-radius: var(--hud); }
+    .card { position: relative; overflow: hidden; padding: 22px 24px; }
+    .card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(var(--acc-rgb),.5), transparent);
+      opacity: .5; transition: opacity .25s; }
+    .card:hover::before { opacity: 1; }
+    .card:hover, .riesgo-box:hover, .moat-box:hover, .negocio-card:hover {
+      border-color: rgba(var(--acc-rgb),.4); transform: translateY(-2px); }
+    /* Brackets de mira en las esquinas, como en las fichas del Dashboard. Solo en las
+       tarjetas que abren un bloque con título propio, para que no se vuelvan ruido. */
+    .card > h3:first-child::before { content: ''; position: absolute; top: 8px; left: 8px;
+      width: 10px; height: 10px; border-top: 1.5px solid rgba(var(--acc-rgb),.5);
+      border-left: 1.5px solid rgba(var(--acc-rgb),.5); pointer-events: none; }
+    .card > h3 { font-family: var(--mono); font-size: 12.5px; font-weight: 700;
+      letter-spacing: .13em; text-transform: uppercase; color: var(--accent-bright); }
+
+    /* ─── Casillas: el estado se ve antes de leer la línea ──────────────── */
+    .check-item { align-items: flex-start; gap: 11px; padding: 9px 0;
+      border-bottom: 1px solid rgba(var(--acc-rgb),.07); transition: opacity .18s; }
+    .check-item:last-child { border-bottom: none; }
+    .check-item input[type="checkbox"] { appearance: none; -webkit-appearance: none;
+      width: 15px; height: 15px; margin-top: 2px; border-radius: 2px; position: relative;
+      border: 1.5px solid rgba(var(--acc-rgb),.45); background: transparent;
+      cursor: pointer; flex-shrink: 0; transition: all .16s; }
+    .check-item input[type="checkbox"]:hover { border-color: var(--accent-bright);
+      box-shadow: 0 0 10px -3px var(--accent-bright); }
+    .check-item input[type="checkbox"]:checked { background: var(--green);
+      border-color: var(--green); box-shadow: 0 0 12px -4px var(--green); }
+    .check-item input[type="checkbox"]:checked::after { content: ''; position: absolute;
+      left: 4px; top: 1px; width: 4px; height: 8px; border: solid #04140c;
+      border-width: 0 2px 2px 0; transform: rotate(45deg); }
+    .check-item input:checked + label { text-decoration: none; opacity: .5; }
+
+    /* ─── Cifras: tabulares y con su filete, como los KPIs del Dashboard ── */
+    .stat-badge { position: relative; border-radius: var(--hud); overflow: hidden; }
+    /* El filete de una cifra va en lima y el de una tarjeta en cian: es la regla que separa
+       "esto es un dato" de "esto es un bloque". */
+    .stat-badge::before { content: ''; position: absolute; top: 0; left: 12%; right: 12%;
+      height: 1px; background: linear-gradient(90deg, transparent,
+      rgba(var(--acc2-rgb),.55), transparent); }
+    .stat-badge span:first-child { font-family: var(--mono); font-variant-numeric: tabular-nums;
+      letter-spacing: -.02em; }
+    .stat-badge span:last-child { font-family: var(--mono); font-size: 9px; letter-spacing: .16em; }
+    .hz-val, .rm-level { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+    .hz-lbl { font-family: var(--mono); font-size: 9px; letter-spacing: .15em; text-transform: uppercase; }
+
+    /* ─── Pestañas de sección ───────────────────────────────────────────── */
+    .subtab-btn { font-family: var(--mono); font-size: 11px; font-weight: 700;
+      letter-spacing: .11em; text-transform: uppercase; border-radius: var(--hud); }
+
+    /* El logo iba de rojo a acento: con el oro pasaba por naranja y funcionaba, con el cian
+       salta de rojo a hielo y se ve como un error de degradado. Cian -> lima es la misma
+       pareja que gobierna el resto de la pantalla. */
+    /* `background-image` y NO el atajo `background`: el atajo resetea `background-clip` a su
+       valor inicial y el degradado dejaba de recortarse contra el texto — el logo se pintaba
+       como una barra sólida de lado a lado. */
+    .sidebar-logo { background-image: linear-gradient(90deg, var(--accent), var(--acc2)); }
+
+    /* `.btn-gold` (el nombre se queda: lo usan varias secciones) llevaba texto blanco sobre
+       oro. Sobre el cian brillante el blanco desaparece — el texto pasa a ser el fondo. */
+    .btn-gold { color: #04141a; }
+    :root[data-theme="light"] .btn-gold { color: #ffffff; }
+
+    @media (max-width: 900px) {
+      .cc-bay { gap: 12px; padding: 10px 14px; }
+      .cc-rail { order: 3; flex-basis: 100%; }
+      .cc-idx { top: 0; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .card:hover, .riesgo-box:hover, .moat-box:hover, .negocio-card:hover { transform: none; }
+    }
+
+    /* ─── Más Ideas de Negocio: fichas con números (2026-08-30) ──────────────
+       Adán: "complementa más las ideas y dame números de cómo empezar a invertir y hacer las
+       cosas, diseño futurista, entendible y muy visual".
+
+       Eran 20 tarjetas con un párrafo cualitativo cada una y CERO cifras: no se podía comparar
+       una contra otra ni saber cuál cabe en el dinero que hay. Ahora cada idea trae cuatro
+       medidores comparables —inversión, al primer peso, recuperación, horas/semana—, el
+       desglose de en qué se va el capital y la advertencia que de verdad cambia la decisión.
+       Se pintan desde `IDEAS_NEGOCIO` en JS: 20 fichas escritas a mano en HTML no se pueden
+       filtrar ni reordenar, y esta pantalla vive de comparar. */
+    .bi-bay { position: relative; display: grid; gap: 14px; padding: 14px 18px; margin-bottom: 16px;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); border-radius: var(--hud);
+      background: rgba(var(--acc-rgb),.05); border: 1px solid rgba(var(--acc-rgb),.18); }
+    .bi-bay::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 2px;
+      background: var(--accent-bright); box-shadow: 0 0 12px var(--accent-bright); }
+    .bi-m { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+    .bi-m b { font-family: var(--mono); font-size: 21px; font-weight: 700; line-height: 1;
+      color: var(--text); letter-spacing: -.02em; }
+    .bi-m b.ok { color: var(--green); } .bi-m b.no { color: var(--red); } .bi-m b.hi { color: var(--acc2); }
+    .bi-m span { font-family: var(--mono); font-size: 8.5px; font-weight: 700; letter-spacing: .17em;
+      text-transform: uppercase; color: var(--muted-2); }
+    .bi-veredicto { grid-column: 1/-1; font-size: 12.5px; line-height: 1.6; color: var(--muted);
+      border-top: 1px solid rgba(var(--acc-rgb),.14); padding-top: 11px; }
+    .bi-veredicto b { color: var(--text); }
+
+    .bi-filtros { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
+    .bi-f { font-family: var(--mono); font-size: 10px; font-weight: 700; letter-spacing: .1em;
+      text-transform: uppercase; padding: 6px 12px; border-radius: var(--hud); cursor: pointer;
+      color: var(--muted); background: rgba(var(--acc-rgb),.04);
+      border: 1px solid rgba(var(--acc-rgb),.14); transition: all .16s; }
+    .bi-f:hover { color: var(--text); border-color: rgba(var(--acc-rgb),.4); }
+    .bi-f.on { color: var(--accent-bright); background: rgba(var(--acc-rgb),.14);
+      border-color: rgba(var(--acc-rgb),.5); box-shadow: 0 0 16px -6px var(--accent-bright); }
+    .bi-f i { font-style: normal; opacity: .55; margin-left: 5px; }
+
+    .bi-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(330px, 1fr)); gap: 12px; }
+    .bi-card { position: relative; overflow: hidden; display: flex; flex-direction: column; gap: 10px;
+      padding: 16px 18px 17px; border-radius: var(--hud);
+      background: var(--surface); border: 1px solid var(--border);
+      transition: border-color .2s, transform .2s, box-shadow .2s; }
+    .bi-card:hover { border-color: rgba(var(--acc-rgb),.42); transform: translateY(-2px);
+      box-shadow: var(--shadow-md); }
+    /* El filete superior dice el ENCAJE, no la categoría: es lo primero que hay que ver de una
+       idea, y así se distingue sin leer una etiqueta. */
+    .bi-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+      background: var(--bic, rgba(var(--ov),.18)); }
+    .bi-card.alto  { --bic: var(--green); }
+    .bi-card.medio { --bic: var(--accent-bright); }
+    .bi-card.bajo  { --bic: rgba(var(--ov),.22); }
+    .bi-hd { display: flex; align-items: flex-start; gap: 9px; }
+    .bi-ico { font-size: 19px; line-height: 1.1; flex-shrink: 0; }
+    .bi-t { font-size: 14px; font-weight: 800; line-height: 1.25; color: var(--text); }
+    .bi-enc { flex-shrink: 0; margin-left: auto; font-family: var(--mono); font-size: 7.5px;
+      font-weight: 700; letter-spacing: .13em; padding: 3px 7px; border-radius: 2px;
+      color: #05050c; background: var(--bic); }
+    .bi-card.bajo .bi-enc { color: var(--muted); background: rgba(var(--ov),.1);
+      border: 1px solid rgba(var(--ov),.16); }
+    .bi-d { font-size: 12.5px; line-height: 1.6; color: var(--muted); }
+
+    /* Los cuatro medidores comparables. Es lo que convierte la lista en algo que se puede
+       ordenar mentalmente: todas las fichas responden las mismas cuatro preguntas. */
+    .bi-nums { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px;
+      background: rgba(var(--acc-rgb),.14); border: 1px solid rgba(var(--acc-rgb),.14);
+      border-radius: var(--hud); overflow: hidden; }
+    .bi-n { background: var(--surface); padding: 8px 10px; display: flex; flex-direction: column; gap: 2px; }
+    .bi-n b { font-family: var(--mono); font-size: 13px; font-weight: 700; color: var(--text);
+      line-height: 1.15; }
+    .bi-n b.cero { color: var(--green); }
+    .bi-n span { font-family: var(--mono); font-size: 7.5px; font-weight: 700; letter-spacing: .15em;
+      text-transform: uppercase; color: var(--muted-2); }
+    .bi-tik { font-size: 12px; color: var(--acc2); font-family: var(--mono); font-weight: 700; }
+
+    .bi-arr { font-size: 12px; color: var(--muted); }
+    .bi-arr > b { display: block; font-family: var(--mono); font-size: 8.5px; letter-spacing: .16em;
+      text-transform: uppercase; color: var(--muted-2); margin-bottom: 5px; }
+    .bi-arr ul { margin: 0; padding-left: 16px; }
+    .bi-arr li { margin-bottom: 3px; line-height: 1.5; }
+    .bi-nota { font-size: 12px; line-height: 1.55; color: var(--muted);
+      border-left: 2px solid var(--bic); padding-left: 10px; }
+
+    @media (max-width: 700px) {
+      .bi-grid { grid-template-columns: 1fr; }
+      .bi-bay { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    /* ─── Posibles Negocios: los mismos números que Más Ideas (2026-08-30) ───
+       Adán: "haz lo mismo para posibles negocios". Con una diferencia importante: aquí la
+       prosa SÍ vale —cada opción trae "qué es", "por qué encaja", "primer paso esta semana" y
+       "riesgo principal", escritos contra su perfil real— así que no se reescribió nada. Los
+       números y los filtros se INYECTAN sobre las 11 tarjetas que ya existen, y los ids
+       `negocio1..11` se respetan porque otras secciones enlazan a ellos con irANegocios().
+       Los tres `.stat-badge` cualitativos que ya tenían ("Bajo · Requiere ventas") se quedan:
+       dicen otra cosa que las cifras, y perderlos sería perder el ranking. */
+    .pn-nums { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; margin: 12px 0 4px;
+      background: rgba(var(--acc-rgb),.16); border: 1px solid rgba(var(--acc-rgb),.16);
+      border-radius: var(--hud); overflow: hidden; }
+    .pn-n { background: var(--surface); padding: 9px 11px; display: flex; flex-direction: column; gap: 2px; }
+    .pn-n b { font-family: var(--mono); font-size: 13.5px; font-weight: 700; line-height: 1.15;
+      color: var(--text); }
+    .pn-n b.cero { color: var(--green); } .pn-n b.nd { color: var(--muted-2); }
+    .pn-n span { font-family: var(--mono); font-size: 7.5px; font-weight: 700; letter-spacing: .15em;
+      text-transform: uppercase; color: var(--muted-2); }
+    .pn-tik { font-family: var(--mono); font-size: 12.5px; font-weight: 700; color: var(--acc2);
+      margin-bottom: 10px; line-height: 1.5; }
+    /* Cuánto tarda ESTA opción en cerrar la Fase 0. Es la cifra que convierte una lista de
+       ideas en una decisión: no "cuánto deja", sino "cuándo me saca de la deuda cara". */
+    .pn-fase { display: flex; align-items: center; gap: 9px; margin-bottom: 12px; padding: 8px 12px;
+      border-radius: var(--hud); background: rgba(var(--acc2-rgb),.07);
+      border: 1px solid rgba(var(--acc2-rgb),.22); font-size: 12.5px; color: var(--muted); }
+    .pn-fase b { font-family: var(--mono); font-size: 15px; color: var(--acc2); flex-shrink: 0; }
+    .pn-fase.nd { background: rgba(var(--ov),.03); border-color: rgba(var(--ov),.1); }
+    .pn-fase.nd b { color: var(--muted-2); }
+
+    .negocio-card.oculta { display: none; }
   /* El botón de la ficha, dentro del texto de un recurso: en línea con él y no
    como una acción aparte, porque aquí la lista es de lectura. */
 .lc-info-coach{display:inline-flex;align-items:center;gap:5px;margin-left:8px;
@@ -1164,7 +1479,6 @@
   <div class="sb-group">
     <div class="sb-group-label">Referencia</div>
     <a class="sb-link" href="#legal-personal" data-sec="legal-personal" onclick="irASeccion('legal-personal',null,this);return false;">⚖️ Legal & Personal</a>
-    <a class="sb-link" href="#habilidades-valor" data-sec="habilidades-valor" onclick="irASeccion('habilidades-valor',null,this);return false;">🎩 Habilidades de Valor</a>
   </div>
 
   <!-- El enlace "🚀 Dashboard" al pie del sidebar se quitó el 2026-08-18: repetía lo que ya
@@ -1297,6 +1611,7 @@
             Ya no aplica: al liquidar Banamex tus mínimos vigentes bajaron a <strong class="text-green">$11,028.98/mes</strong>
             y la categoría "Deudas" quedó corregida en $8,200, que <strong>cuadra exacto</strong> con el crédito del auto
             ({{autoPago}}) más el mínimo de BBVA ({{tcBbvaMin}}).</p>
+          <p style="margin-top:8px;"><span class="text-red">Y desde el 1 sep 2026 vuelve a subir</span>: Banamex tiene otra vez saldo ({{banamex}}) y su mínimo de {{banamexMin}} regresa al cálculo. Los mínimos vivos van hoy en <strong>{{minimosDeuda}}</strong>, y "Deudas" en $8,200 ya no los cubre.</p>
           <p style="margin-top:8px;">Pero la fuga no desapareció, se movió: los MSI no se contabilizan en "Deudas" sino
             en <strong>"Suscripciones"</strong>, y ahí van <strong class="text-red">$3,259/mes</strong> ($2,829 de MSI +
             $430 de Claude Code e iCloud) contra un presupuesto de solo $2,000. <strong>Hueco real hoy: $1,259/mes.</strong>
@@ -1340,7 +1655,7 @@
     <!-- CALENDARIO DE DEUDA -->
     <div class="card mb-16" style="margin-bottom:16px;">
       <h3 class="fw-700 mb-12">Calendario real de tu deuda — cuándo se libera cada peso</h3>
-      <p class="fs-13 text-muted mb-12">Actualizado el 13 ago 2026 contra tu estado de cuenta real de BBVA (corte del 22 jul). Dos MSI que aquí figuraban —Vuelo Viva Aerobus y Mercado Libre— <strong>no existen</strong> en tu historial y se eliminaron; en su lugar entraron los 3 que sí aparecen. Buena noticia: <strong class="text-green">4 de tus 5 MSI se liquidan en los próximos 2 meses</strong>, y la Banamex ya está en $0.</p>
+      <p class="fs-13 text-muted mb-12">Actualizado el 13 ago 2026 contra tu estado de cuenta real de BBVA (corte del 22 jul). Dos MSI que aquí figuraban —Vuelo Viva Aerobus y Mercado Libre— <strong>no existen</strong> en tu historial y se eliminaron; en su lugar entraron los 3 que sí aparecen. Buena noticia: <strong class="text-green">4 de tus 5 MSI se liquidan en los próximos 2 meses</strong>. La Banamex se liquidó ese mismo 13 ago, pero <strong class="text-red">volvió a tener saldo el 1 sep 2026</strong>: {{banamex}} en cuatro compras de un solo día —plancha, dutasterida, minoxidil y mouse—, así que su mínimo de {{banamexMin}} vuelve a pesar en el mes.</p>
       <div class="impuesto-row"><span class="imp-nombre text-green">✅ Tarjeta Banamex ($9,000) — LIQUIDADA, saldo en $0</span><span class="imp-fecha text-green">13 ago 2026</span></div>
       <div class="impuesto-row"><span class="imp-nombre text-green">✅ Ticketmaster MSI ($1,260) — LIQUIDADO, última cuota pagada</span><span class="imp-fecha text-green">13 ago 2026</span></div>
       <div class="impuesto-row"><span class="imp-nombre">Merpago*Merca MSI ($597) — última cuota, se liquida</span><span class="imp-fecha">22 ago 2026</span></div>
@@ -1348,18 +1663,20 @@
       <div class="impuesto-row"><span class="imp-nombre">Apple Watch MSI ({{appleWatch}}) — última cuota de {{appleWatchCuota}}</span><span class="imp-fecha">18 sep 2026</span></div>
       <div class="impuesto-row"><span class="imp-nombre">Zap Stylo MSI ({{zapStylo}}) — cuotas de {{zapStyloCuota}}</span><span class="imp-fecha">22 sep 2026</span></div>
       <div class="impuesto-row"><span class="imp-nombre">iPhone 15 · crédito AT&T ({{iphone}}) — se liquida</span><span class="imp-fecha">Jun 2028</span></div>
-      <div class="impuesto-row"><span class="imp-nombre">Tarjeta BBVA ({{tcBbva}} al {{tcBbvaTasa}}) — única deuda cara que queda, sin fecha fija</span><span class="imp-fecha text-red">Abierta</span></div>
+      <div class="impuesto-row"><span class="imp-nombre">Tarjeta BBVA ({{tcBbva}} al {{tcBbvaTasa}}) — la más cara de las dos que tienes vivas, sin fecha fija</span><span class="imp-fecha text-red">Abierta</span></div>
       <div class="impuesto-row"><span class="imp-nombre">Crédito automotriz ({{autoSaldo}} al {{autoTasa}}) — {{autoMeses}} pagos de {{autoPago}}</span><span class="imp-fecha">Ago 2031</span></div>
       <hr class="divider">
       <p class="fs-13" style="line-height:1.7;">
         Tu carga de MSI cae en escalera: <strong>$2,829/mes hoy → $1,515 en septiembre → $494 en octubre</strong>
         (solo el iPhone). Eso libera <strong class="text-green">$2,335/mes</strong> para octubre, y ya tienes libres
-        los <strong class="text-green">{{banamexMin}}/mes</strong> del mínimo de Banamex desde este mes — <strong class="text-green">$3,145/mes</strong>
-        en total contra como arrancaste Fase 0.
+        los <strong class="text-green">{{banamexMin}}/mes</strong> del mínimo de Banamex — <strong class="text-green">$3,145/mes</strong>
+        en total contra como arrancaste Fase 0. <span class="text-red">Ese segundo tramo se perdió el 1 sep 2026</span>:
+        la Banamex volvió a tener saldo ({{banamex}}) y su mínimo dejó de estar libre, así que de los $3,145
+        quedan los $2,335 de MSI.
       </p>
       <p class="fs-13" style="line-height:1.7;">
         Ese dinero tiene un solo destino y ya no hay que decidirlo: primero completar el fondo de emergencia
-        a {{fondoMeta}}, y todo lo demás <strong>100% a BBVA</strong> — es la única deuda cara que te queda. Si no lo
+        a {{fondoMeta}}, y todo lo demás <strong>100% a BBVA</strong> — es la más cara de las dos tarjetas vivas. Si no lo
         rediriges de inmediato, se te va a ir en gastos hormiga sin que lo notes; es justo tu patrón de fuga, y
         acabas de demostrar que no es inevitable.
       </p>
@@ -2124,7 +2441,7 @@
           <details class="fase-month" data-month="2026-09">
             <summary><span>📅 Septiembre 2026</span><span class="fase-month-badge" data-badge>—</span></summary>
             <div class="fase-month-body">
-              <div class="check-item"><input type="checkbox" id="s0-7"><label for="s0-7">Cada peso de ventas/activos va, en orden fijo: <strong>(1)</strong> fondo de emergencia a {{fondoMeta}}, <strong>(2)</strong> resto a BBVA — Banamex ya está en $0. Este mes cierra la fase.</label></div>
+              <div class="check-item"><input type="checkbox" id="s0-7"><label for="s0-7">Cada peso de ventas/activos va, en orden fijo: <strong>(1)</strong> fondo de emergencia a {{fondoMeta}}, <strong>(2)</strong> resto a BBVA. <span class="text-red">Banamex dejó de estar en $0 el 1 sep 2026</span> ({{banamex}}): si no se corta ahí, la Fase 0 cierra con dos tarjetas vivas en vez de una.</label></div>
             </div>
           </details>
         </div>
@@ -2141,7 +2458,7 @@
             <details class="fase-month" data-month="2026-10">
               <summary><span>📅 Octubre 2026</span><span class="fase-month-badge" data-badge>—</span></summary>
               <div class="fase-month-body">
-                <div class="check-item"><input type="checkbox" id="s1-1"><label for="s1-1">Oct 2026: los $2,335/mes liberados de MSI + los {{banamexMin}} del mínimo de Banamex van, en orden fijo: fondo de emergencia a {{fondoMeta}} → 100% <strong>BBVA</strong> (única deuda cara restante) = $4,645/mes.</label></div>
+                <div class="check-item"><input type="checkbox" id="s1-1"><label for="s1-1">Oct 2026: los $2,335/mes que liberan los MSI van, en orden fijo: fondo de emergencia a {{fondoMeta}} → 100% a la deuda cara. <span class="text-red">Ya no son $4,645</span>: el mínimo de Banamex dejó de estar libre el 1 sep 2026, cuando la tarjeta volvió a tener saldo.</label></div>
               </div>
             </details>
             <details class="fase-month" data-month="2026-11">
@@ -2262,14 +2579,14 @@
       <h3 class="fw-700 mb-12">Próximos 14 días — esto empieza hoy, no "cuando tenga tiempo"</h3>
       <p class="fs-13 text-muted mb-12">Tu patrón es abandonar cuando no ves avance rápido. Estas <span id="pfCount">10</span> acciones son deliberadamente pequeñas y concretas para que en 2 semanas ya tengas evidencia de movimiento real. Las 2 primeras son <strong>las prioridades de Fase 0, en ese orden</strong>.</p>
       <div class="check-item"><input type="checkbox" id="pf11"><label for="pf11"><strong>Prioridad 1:</strong> llevar el fondo de emergencia a {{fondoMeta}} — antes que cualquier abono extra a deuda</label></div>
-      <div class="check-item"><input type="checkbox" id="pf12"><label for="pf12"><strong>Prioridad 2:</strong> con el fondo completo, todo excedente a liquidar la TC BBVA ({{tcBbva}}, única deuda cara restante)</label></div>
+      <div class="check-item"><input type="checkbox" id="pf12"><label for="pf12"><strong>Prioridad 2:</strong> con el fondo completo, todo excedente a liquidar la TC BBVA ({{tcBbva}}, la más cara) y después la Banamex ({{banamex}})</label></div>
       <div class="check-item"><input type="checkbox" id="pf3"><label for="pf3">Hacer inventario de activos físicos ociosos (PS5, Control PS5, monitores extra, iPad) y publicarlos en Marketplace — es lo que financia la Prioridad 1</label></div>
       <div class="check-item"><input type="checkbox" id="pf4"><label for="pf4">Cancelar/evitar cualquier compra nueva a MSI esta quincena</label></div>
       <div class="check-item"><input type="checkbox" id="pf5"><label for="pf5">Revisar las fotos y el material del negocio de tu papá, y ponerle atención real — primer paso de la Opción 5</label></div>
       <div class="check-item"><input type="checkbox" id="pf6"><label for="pf6">Plantilla Finanzas.html completa: versión limpia sin tus datos + post de venta + publicarla en 2-3 comunidades de GBM (Opción 1)</label></div>
       <div class="check-item"><input type="checkbox" id="pf1"><label for="pf1">Corregir la categoría "Deudas" del presupuesto en Finanzas.html <span class="text-muted">(✅ 13 ago 2026: quedó en $8,200 reales)</span></label></div>
       <div class="check-item"><input type="checkbox" id="pf8"><label for="pf8">Pausar nuevas aportaciones a "Maestría en Alemania" por 1 año exacto (hasta 18 jul 2027) — sin tocar los {{maestria}} ya ahorrados</label></div>
-      <div class="check-item"><input type="checkbox" id="pf9"><label for="pf9">Todo abono extra va a <strong>BBVA</strong> — con Banamex en $0 desde el 13 ago 2026, ya no hay decisión que tomar, es la única deuda cara que queda</label></div>
+      <div class="check-item"><input type="checkbox" id="pf9"><label for="pf9">Todo abono extra va a <strong>BBVA</strong> — es la deuda cara cuya tasa muerde. <span class="text-red">Pero desde el 1 sep 2026 Banamex ya no está en $0</span> ({{banamex}}): vuelve a haber una segunda tarjeta corriendo interés, y liquidarla es barato comparado con dejarla crecer</label></div>
       <div class="check-item"><input type="checkbox" id="pf10"><label for="pf10">Revisar este apartado completo una vez por semana en tu Revisión Semanal — no dejar que se vuelva un documento que escribiste una vez y ya</label></div>
     </div>
 
@@ -2296,7 +2613,7 @@
           <div class="check-item"><input type="checkbox" id="mtc1"><label for="mtc1">Ir a un torneo de ajedrez</label></div>
           <div class="check-item"><input type="checkbox" id="mtc2"><label for="mtc2">Correr tu primer Hyrox</label></div>
           <div class="check-item"><input type="checkbox" id="mtc3"><label for="mtc3">Liquidar la deuda de Banamex <span class="text-green">(✅ 13 ago 2026 — pagaste los $9,000 completos, 5 meses antes de la meta de ene 2027)</span></label></div>
-          <div class="check-item"><input type="checkbox" id="mtc6"><label for="mtc6">Cancelar la tarjeta Banamex ahora que está en $0 <span class="text-muted">(era la segunda mitad de la meta anterior — sigue pendiente)</span></label></div>
+          <div class="check-item"><input type="checkbox" id="mtc6"><label for="mtc6">Cancelar la tarjeta Banamex <span class="text-muted">(era la segunda mitad de la meta anterior — sigue pendiente, y desde el 1 sep 2026 hay que liquidar antes los {{banamex}} que volvió a deber)</span></label></div>
           <div class="check-item"><input type="checkbox" id="mtc4"><label for="mtc4">Liquidar la TC de BBVA <span class="text-muted">(meta recorrida a mar 2027 al liquidar Banamex antes — ya en tu Plan Maestro)</span></label></div>
           <div class="check-item"><input type="checkbox" id="mtc5"><label for="mtc5">Fondo de emergencia completo a {{fondoMeta}} <span class="text-muted">(meta: sep 2026, Fase 0)</span></label></div>
         </div>
@@ -2386,7 +2703,7 @@
         <div class="card">
           <h4 class="fw-700 mb-12">🎯 Experiencias — tu bucket list, tachada</h4>
           <p class="fs-13 mb-8" style="line-height:1.7;">Jugaste tu torneo de ajedrez. Tu alemán pasó de A2 a conversación real, e Inglés de B2 a C1 — el multiplicador de todo lo demás. La decisión de la Maestría en Alemania (retomada oct 2028 con datos reales del negocio, o pospuesta a propósito) ya se tomó con información, no por miedo.</p>
-          <div style="display:flex;flex-wrap:wrap;gap:6px;"><span style="display:inline-block;padding:3px 9px;border-radius:20px;font-size:10px;font-weight:700;background:rgba(212,160,0,.12);color:var(--accent);">🏆 Torneo de ajedrez</span> <span style="display:inline-block;padding:3px 9px;border-radius:20px;font-size:10px;font-weight:700;background:rgba(212,160,0,.12);color:var(--accent);">🇩🇪 Alemán conversacional</span> <span style="display:inline-block;padding:3px 9px;border-radius:20px;font-size:10px;font-weight:700;background:rgba(212,160,0,.12);color:var(--accent);">🌐 Inglés C1</span> <span style="display:inline-block;padding:3px 9px;border-radius:20px;font-size:10px;font-weight:700;background:rgba(212,160,0,.12);color:var(--accent);">🏋️ Hyrox internacional en camino</span></div>
+          <div style="display:flex;flex-wrap:wrap;gap:6px;"><span style="display:inline-block;padding:3px 9px;border-radius:20px;font-size:10px;font-weight:700;background:rgba(var(--acc-rgb),.12);color:var(--accent);">🏆 Torneo de ajedrez</span> <span style="display:inline-block;padding:3px 9px;border-radius:20px;font-size:10px;font-weight:700;background:rgba(var(--acc-rgb),.12);color:var(--accent);">🇩🇪 Alemán conversacional</span> <span style="display:inline-block;padding:3px 9px;border-radius:20px;font-size:10px;font-weight:700;background:rgba(var(--acc-rgb),.12);color:var(--accent);">🌐 Inglés C1</span> <span style="display:inline-block;padding:3px 9px;border-radius:20px;font-size:10px;font-weight:700;background:rgba(var(--acc-rgb),.12);color:var(--accent);">🏋️ Hyrox internacional en camino</span></div>
         </div>
 
       </div>
@@ -2608,7 +2925,7 @@
     <div id="rutina-mi-rutina">
 
       <div class="context-banner">
-        <p><strong>Tu contexto ahora mismo:</strong> estás en <strong>Fase 0</strong> del <a href="#perfil" class="inline-link">Plan Maestro</a> (1 ago – 30 sep 2026). Con Banamex ya liquidada desde el 13 ago, las 3 cosas que definen si esta fase se cumple son, en orden: <strong>1)</strong> el fondo de emergencia a {{fondoMeta}}, <strong>2)</strong> los abonos extra a BBVA una vez completo, y <strong>3)</strong> la plantilla Finanzas.html publicada en comunidades de GBM + atención real al negocio de tu papá.
+        <p><strong>Tu contexto ahora mismo:</strong> estás en <strong>Fase 0</strong> del <a href="#perfil" class="inline-link">Plan Maestro</a> (1 ago – 30 sep 2026). Con Banamex liquidada el 13 ago y <span class="text-red">vuelta a usar el 1 sep</span> ({{banamex}}), las 3 cosas que definen si esta fase se cumple son, en orden: <strong>1)</strong> el fondo de emergencia a {{fondoMeta}}, <strong>2)</strong> los abonos extra a BBVA una vez completo, y <strong>3)</strong> la plantilla Finanzas.html publicada en comunidades de GBM + atención real al negocio de tu papá.
           Horario real confirmado: te levantas <strong>6:40</strong> y arrancas el día con <strong>20 min construyendo este mismo ecosistema</strong>, te bañas a las <strong>7:03</strong>, sales <strong>7:40</strong> ya manejando <strong>Didi con direccionamiento</strong> rumbo a ALTEN (~50 min con el desvío del pasajero), entras <strong>8:30</strong>, comes en tu descanso de las <strong>13:00</strong>, y sales a las <strong>17:00</strong> — la ventana de la mañana solo alcanza para el bloque de la aplicación más higiene/skincare, así que el ejercicio y el bloque de habilidad se movieron a después del trabajo, donde sí hay tiempo. Al salir de ALTEN (<strong>17:00</strong>) manejas Didi ~40 min con un pasajero rumbo a Buenavista, y de ahí entras directo al gym a las <strong>17:40</strong>. Por la noche retomas Didi en una sesión corta hasta ~<strong>20:00</strong>, y de ahí tienes <strong>1h15 seguidas</strong> para tu prioridad activa de Fase 0 (no antes, para no cortar el impulso de manejar), y después preparas la cena y la comida de mañana en una sola sesión. <strong>Dos de tus tres bloques diarios de Didi son trayectos que ya manejabas</strong> —a ALTEN y al gym—, así que casi todo ese ingreso no te cuesta tiempo nuevo. A las <strong>23:30</strong> vuelves a la aplicación hasta las <strong>00:00</strong>, a veces hasta la <strong>01:00</strong> — eso te deja entre <strong>5h40 y 6h40 de sueño</strong>, por debajo de las 7h que la rutina asumía antes. <strong>Skincare y el tratamiento anticaída (minoxidil) están en la rutina al despertar y antes de dormir, todos los días</strong> — el lavado de cabello (Lun/Jue/Sáb) se hace en la ducha de la mañana. El ejercicio y el bloque de habilidad cambian cada día de la semana (tomados de tus 5 prioridades en <a href="#aprendizaje" class="inline-link">Aprendizaje</a>), y el fin de semana tiene su propio horario, sin ALTEN. Usa las pestañas de abajo para ver cualquier día — solo el día de hoy guarda tu avance.
           <em style="color:var(--muted-2)">Los 40 min de Didi a Buenavista y la sesión de la noche son estimados — ajusta las horas si tu tráfico o tus viajes reales varían.</em>
         </p>
@@ -3037,7 +3354,7 @@
       <p class="fs-13 mb-4" style="line-height:1.7;"><strong style="color:var(--accent);">Círculo chico, de alta confianza — no una red social grande.</strong> Prefiere 5-10 relaciones profundas (socios, mentores, pares que también están construyendo algo) sobre cientos de conocidos superficiales. La calidad del círculo predice el resultado más que el tamaño.</p>
       <p class="fs-13 mb-4" style="line-height:1.7;"><strong style="color:var(--accent);">Se rodea de gente en el mismo juego o un paso adelante.</strong> Grupos tipo "mastermind" (pares que se retan y comparten información real de negocio) y al menos un mentor mayor que ya pasó por donde él va — no para copiar exacto, sino para no repetir los mismos errores caros.</p>
       <p class="fs-13 mb-4" style="line-height:1.7;"><strong style="color:var(--accent);">Es selectivo con quién le quita tiempo y energía.</strong> Se aleja, sin drama, de relaciones que solo consumen (quejas, chismes, gente que nunca ejecuta nada) y protege su tiempo con la misma disciplina que su dinero — el tiempo es el único recurso que no se puede recuperar.</p>
-      <p class="fs-13" style="line-height:1.7;"><strong style="color:var(--accent);">Da valor antes de pedirlo, dentro de su círculo.</strong> Conecta gente entre sí, comparte información útil sin esperar algo a cambio inmediato — exactamente el patrón de <a href="#habilidades-valor" class="inline-link">🤝 Hacer networking de verdad</a> de arriba, solo que sostenido durante años.</p>
+      <p class="fs-13" style="line-height:1.7;"><strong style="color:var(--accent);">Da valor antes de pedirlo, dentro de su círculo.</strong> Conecta gente entre sí, comparte información útil sin esperar algo a cambio inmediato — exactamente el patrón de <a href="../Dashboard/dashboard.html#habilidades" class="inline-link">🤝 Hacer networking de verdad</a> (Dashboard → Habilidades Base), solo que sostenido durante años.</p>
     </div>
 
     <div class="card" style="margin-bottom:16px;">
@@ -3060,7 +3377,7 @@
     <div class="card">
       <h3 class="fw-700 mb-12">🪞 Comparación honesta contra tu situación actual</h3>
       <p class="fs-13 mb-8" style="line-height:1.7;"><strong style="color:var(--green);">Ya tienes:</strong> disciplina de rutina real (ver tu <a href="#rutina" class="inline-link">Rutina</a> completa), horizonte largo definido (Plan Maestro a 2030, no un "hazte rico rápido"), y el primer ingrediente del camino real — ya identificaste que necesitas ser dueño de algo (tus <a href="#" class="inline-link" onclick="cambiarModo('empresa');return false;">Posibles Negocios</a>), no solo vivir del sueldo.</p>
-      <p class="fs-13 mb-8" style="line-height:1.7;"><strong style="color:var(--red);">Todavía te falta:</strong> el patrón de gasto (tu diagnóstico ya documentó fugas en MSI de gadgets/consumo — justo el "pasivo que aparenta" que este perfil evita), y una red de pares construyendo negocio real (hoy tu red es casi toda de colegas empleados, no de otros dueños de negocio — ver <a href="#habilidades-valor" class="inline-link">🤝 Hacer networking de verdad</a> para empezar a cambiar esto).</p>
+      <p class="fs-13 mb-8" style="line-height:1.7;"><strong style="color:var(--red);">Todavía te falta:</strong> el patrón de gasto (tu diagnóstico ya documentó fugas en MSI de gadgets/consumo — justo el "pasivo que aparenta" que este perfil evita), y una red de pares construyendo negocio real (hoy tu red es casi toda de colegas empleados, no de otros dueños de negocio — ver <a href="../Dashboard/dashboard.html#habilidades" class="inline-link">🤝 Hacer networking de verdad</a> para empezar a cambiar esto).</p>
       <hr class="divider">
       <h4 style="color:var(--accent); margin-bottom:8px; font-size:12px;">📚 Recursos</h4>
       <div class="recurso-item"><span class="recurso-tipo r-libro">Libro</span><div><strong>The Millionaire Next Door</strong> — Thomas Stanley & William Danko · la fuente de este perfil, investigación real sobre miles de millonarios (ya en tus recursos de Finanzas).</div></div>
@@ -3226,297 +3543,6 @@
     </div>
   </section>
 
-  <section id="habilidades-valor">
-    <h2 class="section-title" data-num="08">🎩 Habilidades de un Hombre de Valor</h2>
-    <p class="fs-13 text-muted mb-12">Cultura general práctica: cosas que no enseñan en la escuela ni en el trabajo, pero que separan a alguien que sabe desenvolverse en cualquier situación de alguien que no. No son habilidades de negocio — son las que hacen que te muevas con seguridad en una cena formal, un campamento, una cata de vino o una emergencia real.</p>
-
-
-    <!-- ══ 4 habilidades sociales (2026-08-20) ══════════════════════════════════════
-         Pedido de Adán: networking, persuasión, cómo relacionarse y cómo sacar lo mejor de
-         alguien, "bien detallado y con imagenes en hd, para que me ponga a estudiarlo".
-         Todo el contenido sale de libros reales y cada tarjeta cierra citando cuáles; los
-         ejemplos están aterrizados a lo suyo (vender la plantilla en GBM, el negocio de su
-         papá, las entrevistas de remoto). Las fotos son Unsplash a 1920px, comprobadas. -->
-    <div class="card" style="margin-bottom:16px;overflow:hidden">
-      <div class="hv-hero" style="background-image:url('https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=1920&q=85&auto=format&fit=crop')">
-        <div class="hv-hero-txt"><h3>🤝 Hacer networking de verdad</h3><p>La red no se construye cuando la necesitas — se construye antes.</p></div>
-      </div>
-      <h5>La idea que lo cambia todo</h5>
-      <p class="fs-13 mb-8" style="line-height:1.75;">Keith Ferrazzi lo resume en una frase en <strong>Never Eat Alone</strong>: <em>"no hagas networking cuando necesites algo — para entonces ya es tarde"</em>. La red no se construye el día que buscas trabajo o cliente; se construye antes, cuando no necesitas nada. Por eso el networking hecho bien <strong>se siente raro al principio</strong>: estás invirtiendo en algo que no da resultado inmediato.</p>
-      <p class="fs-13 mb-12" style="line-height:1.75;">Y no es coleccionar contactos. Mil personas que te vieron una vez valen menos que <strong>veinte que te deben un favor de verdad</strong>.</p>
-
-      <h5 class="mt-8">Dar antes de pedir — y el matiz que casi todos se saltan</h5>
-      <p class="fs-13 mb-4" style="line-height:1.75;">Adam Grant, en <strong>Give and Take</strong>, estudió a miles de profesionales y encontró algo incómodo: los que <em>dan</em> ocupan <strong>tanto la cima como el fondo</strong> del ranking de éxito. La diferencia entre unos y otros no es cuánto dan, sino <strong>cómo</strong>:</p>
-      <div class="recurso-item"><span class="recurso-tipo r-tool">Fondo</span><div>El que da sin criterio: dice que sí a todo, se queda sin tiempo y sin energía, y nadie le devuelve nada porque su ayuda no era memorable.</div></div>
-      <div class="recurso-item"><span class="recurso-tipo r-tool">Cima</span><div>El que da <strong>lo que a él le cuesta poco y al otro le vale mucho</strong>: una presentación, un dato que ya tiene, cinco minutos de su especialidad. Es específico, es útil, y se acuerda de él.</div></div>
-      <p class="fs-13 mt-8 mb-12" style="line-height:1.75;">Tú tienes tres cosas que a mucha gente le valen y a ti te cuestan poco: <strong>sabes automatizar pruebas</strong>, <strong>sabes construir herramientas con IA</strong> —lo haces todos los días con esta app— y <strong>entiendes de finanzas personales mejor que el 90%</strong>. Eso es tu moneda.</p>
-
-      <h5 class="mt-8">El sistema, en cuatro pasos concretos</h5>
-      <div class="hv-p"><div class="hv-p-n">1</div><div class="hv-p-b"><span class="hv-p-t">La lista de 20.</span> Escribe 20 personas que quieres en tu red dentro de un año. No 200. Por cada una anota qué hace, por qué te interesa y —esto es lo importante— <strong>qué podrías darle tú</strong>. Si no se te ocurre nada que darle, todavía no es tu contacto.</div></div>
-      <div class="hv-p"><div class="hv-p-n">2</div><div class="hv-p-b"><span class="hv-p-t">La regla de las 48 horas.</span> A todo el que conoces, le escribes en menos de dos días. Después de 48 horas ya no se acuerda de tu cara y el mensaje se vuelve incómodo. Lleva tres cosas y nada más: dónde se conocieron, algo específico que él dijo, y <strong>algo que le mandas sin que lo pida</strong>.</div></div>
-      <div class="hv-p"><div class="hv-p-n">3</div><div class="hv-p-b"><span class="hv-p-t">El ping trimestral.</span> Cada 3 meses, un mensaje a los de tu lista <strong>sin pedir nada</strong>: un artículo que le sirve, una felicitación por algo real, una presentación con alguien. Ferrazzi lo llama mantener el fuego encendido; sin esto el contacto se enfría y volver a escribir se siente como pedir.</div></div>
-      <div class="hv-p"><div class="hv-p-n">4</div><div class="hv-p-b"><span class="hv-p-t">Pide tarde, pide claro.</span> Cuando por fin pidas, que sea <strong>concreto y fácil de conceder</strong>. "¿Me puedes ayudar a conseguir trabajo?" es imposible de responder. "¿Conoces a alguien en el equipo de QA de X a quien le pueda escribir?" se responde en treinta segundos.</div></div>
-      <div class="riesgo-box"><p class="fs-13" style="line-height:1.7;margin:0"><strong>Guion que funciona (paso 2):</strong> <em>"Rodrigo, mucho gusto ayer en el meetup de GBM. Me quedé pensando en lo que dijiste de que llevas tus inversiones en tres hojas de Excel distintas. Te dejo la plantilla que armé para lo mío, por si te sirve — sin compromiso, la hice para mí. Cualquier duda, aquí ando."</em></p></div>
-
-      <h5 class="mt-8">Cómo entrar a una conversación cuando no conoces a nadie</h5>
-      <p class="fs-13 mb-4" style="line-height:1.7;">No busques al grupo grande y cerrado: busca <strong>al que está solo</strong> o al grupo de tres con un hueco abierto. Entra por el hueco, escucha treinta segundos antes de hablar, y arranca preguntando por lo que ya está pasando: <em>"¿ustedes de dónde vienen?"</em>, <em>"¿alcanzaron a ver la primera charla?"</em>.</p>
-      <p class="fs-13 mb-12" style="line-height:1.7;">Y para salir sin quedar mal —que es lo que más traba a la gente—: <em>"Oye, me dio mucho gusto. Voy a saludar a alguien allá, pero te escribo por LinkedIn para seguir con esto"</em>. Salir bien te permite entrar a la siguiente conversación.</p>
-
-      <h5 class="mt-8">Los tres errores que matan una red</h5>
-      <div class="recurso-item"><span class="recurso-tipo r-tool">1</span><div><strong>Pedir en el primer contacto.</strong> Es la señal más rápida de que no te interesa la persona, te interesa lo que tiene.</div></div>
-      <div class="recurso-item"><span class="recurso-tipo r-tool">2</span><div><strong>Aparecer solo cuando necesitas.</strong> Si tu último mensaje fue hace dos años y el nuevo es una petición, ya sabe exactamente qué eres para él.</div></div>
-      <div class="recurso-item"><span class="recurso-tipo r-tool">3</span><div><strong>Hablar de ti todo el rato.</strong> La gente recuerda cómo la hiciste sentir, no tu currículum. Ver la tarjeta de abajo, "cómo relacionarte".</div></div>
-
-      <h5 class="mt-8">Dónde practicarlo — y con qué palabras</h5>
-      <p class="fs-13 mb-12" style="line-height:1.75;">Lo de arriba es el método; esto es el terreno. Estaba en una sección aparte de Coach que decía lo mismo que esta tarjeta en cuatro de sus ocho bloques, así que lo único que no se repetía se mudó aquí: <strong>dónde encontrar gente</strong>, <strong>qué escribirle</strong> y <strong>cada cuánto</strong>.</p>
-<h5 class="mt-8">📍 El mapa: dónde conocer gente de alto valor en CDMX</h5>
-      <p class="fs-13 text-muted mb-12">"Gente de alto valor" no significa solo dinero — significa gente con criterio, ambición y acceso a oportunidades que hoy no tienes. El patrón común de todos los lugares de abajo: son espacios donde la gente <strong>ya está invirtiendo tiempo o dinero en mejorar</strong>, lo cual filtra solo a perfiles ambiciosos.</p>
-
-      <h5>🎓 Educación premium (tu mejor entrada, y ya tienes el pretexto perfecto)</h5>
-      <p class="fs-13 mb-4" style="line-height:1.7;">Ya estudias alemán (A2, meta Maestría) — cambia clases 100% online por un grupo <strong>presencial en el Goethe-Institut CDMX</strong> (Condesa). Ahí conives 2-3h/semana con perfiles que están invirtiendo tiempo/dinero real en su desarrollo — típicamente profesionistas, empresarios o gente con planes de moverse a Alemania como tú, exactamente tu público de la Opción 8.</p>
-      <p class="fs-13 mb-8" style="line-height:1.7;">Diplomados y cursos abiertos de <strong>EGADE Business School</strong> (Tec de Monterrey) o <strong>IPADE</strong> — muchos eventos, conferencias de invitados y "clases muestra" son abiertos al público o de bajo costo, sin necesidad de estar inscrito en el programa completo. Es donde está la futura clase empresarial de México, literal.</p>
-
-      <h5 class="mt-8">🏓 Deporte y bienestar (acceso fácil, filtro natural de perfil profesionista)</h5>
-      <p class="fs-13 mb-4" style="line-height:1.7;"><strong>Pádel</strong> — el deporte de más rápido crecimiento entre profesionistas de 25-45 años en CDMX (Polanco, Condesa, Santa Fe, Nápoles); canchas por hora, fácil de entrar sin membresía cara, y 90 min de juego generan más rapport que 2 horas de evento formal.</p>
-      <p class="fs-13 mb-4" style="line-height:1.7;"><strong>Ajedrez</strong> — ya está en tu <a href="#perfil" class="inline-link">bucket list</a> (torneo de ajedrez). Los clubes y torneos de ajedrez en CDMX (Club de Ajedrez de la Ciudadela, torneos de fin de semana) atraen un perfil marcadamente intelectual/profesional — mata dos pájaros: cumples tu meta y conoces gente distinta a tu círculo actual.</p>
-      <p class="fs-13" style="line-height:1.7;"><strong>Golf</strong> — no necesitas membresía de club: las clases grupales en un driving range (ej. Club de Golf Chapultepec ofrece clases sin ser socio) ya te ponen en contacto con el mismo perfil a una fracción del costo.</p>
-
-      <h5 class="mt-8">💼 Comunidades de negocio e inversión</h5>
-      <p class="fs-13 mb-4" style="line-height:1.7;">Ya usas <strong>GBM</strong> para vender tu plantilla — participa activamente en sus comunidades (Telegram/Discord/eventos presenciales) no solo como vendedor, comenta y ayuda a otros primero.</p>
-      <p class="fs-13 mb-4" style="line-height:1.7;">Eventos de <strong>Endeavor México</strong>, <strong>South Summit México</strong> y meetups de fintech/startups en CDMX — muchos son gratis o de bajo costo y reúnen fundadores, inversionistas ángel y gente construyendo negocio real, no solo asistiendo.</p>
-      <p class="fs-13" style="line-height:1.7;"><strong>CAMEXA (Cámara México-Alemana de Comercio e Industria)</strong> — organiza eventos de networking binacional real; conecta directo con tu meta de la Maestría y tu red ya activa en Alemania (Opción 8).</p>
-
-      <h5 class="mt-8">🎗️ Voluntariado y causas (acceso de bajo costo a gente de alto nivel)</h5>
-      <p class="fs-13" style="line-height:1.7;">Consejos y comités de ONGs suelen tener directivos/empresarios donando tiempo, no dinero — ofrecer tus habilidades técnicas (automatizar un proceso, construir un dashboard) a una causa que te importe te sienta en la misma mesa que gente que normalmente no conocerías en frío.</p>
-
-      <h5 class="mt-8">💻 Digital, hecho bien (no conexiones en frío genéricas)</h5>
-      <p class="fs-13" style="line-height:1.7;">Comenta con sustancia el contenido de líderes de tu industria (incluidos tus contactos reales de Bosch Alemania) antes de pedirles algo — construye reconocimiento pasivo. Únete a grupos de alumni de Bosch/exempleados en LinkedIn, ahí la confianza ya existe de fábrica.</p>
-
-      <h5 class="mt-8">🌟 Tu red ya validada (el punto de partida más rápido de todos)</h5>
-      <p class="fs-13" style="line-height:1.7;">Antes de buscar gente nueva: reactiva contacto con tus líderes de Bosch en Stuttgart y los mexicanos expatriados ahí — un mensaje simple de "poniéndome al día, ¿cómo va todo?" sin pedir nada la primera vez. Es la red de más alto valor que ya tienes y la que menos estás usando activamente.</p>
-    </div>
-
-    <div class="card" style="margin-bottom:16px;">
-
-<h5 class="mt-8">✉️ Cómo dar el primer paso — plantillas</h5>
-      <p class="fs-13 text-muted mb-12">Mismo principio que las plantillas de <a href="#" class="inline-link" onclick="cambiarModo('empresa');return false;">Posibles Negocios</a>: el bloqueo no es no saber qué decir, es no tener nada escrito para arrancar.</p>
-      <h5>Reactivar un contacto que no ves hace tiempo</h5>
-      <p class="fs-13" style="line-height:1.6;background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 14px;font-style:italic;">"Hola [nombre], me acordé de ti porque [razón específica y real — vi algo, alguien te mencionó, aniversario de cuando trabajaron juntos]. ¿Cómo va todo por Stuttgart/[ciudad]? Cuéntame qué has estado haciendo."</p>
-      <h5 class="mt-8">Después de conocer a alguien en un evento/clase</h5>
-      <p class="fs-13" style="line-height:1.6;background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 14px;font-style:italic;">"Un gusto haber platicado hoy sobre [tema específico]. Te dejo mi contacto por si algún día quieres seguir la conversación — y si conoces a alguien metido en [tema de interés de esa persona], me encantaría que me presentaras."</p>
-      <h5 class="mt-8">Pedir un café/llamada de 20 min sin sonar a venta</h5>
-      <p class="fs-13" style="line-height:1.6;background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 14px;font-style:italic;">"Oye, me encantaría invitarte un café/una llamada de 20 min, sin agenda de nada en específico — solo para conocer más de tu trabajo en [área] y contarte en qué ando yo. ¿Tienes algo de tiempo la próxima semana?"</p>
-    </div>
-
-    <div class="card">
-
-<h5 class="mt-8">🔁 Tu hábito semanal de networking</h5>
-      <p class="fs-13 mb-12" style="line-height:1.7;">Igual que <a href="#rutina" class="inline-link">Rutina</a> ya trackea tus 5 mensajes diarios de ventas, el networking necesita su propio ritmo fijo, no solo "cuando se dé":</p>
-      <div class="check-item"><input type="checkbox" id="nw1"><label for="nw1"><strong>1 actividad nueva al mes</strong> — una clase de alemán presencial, un torneo de ajedrez, un evento de GBM/CAMEXA/Endeavor</label></div>
-      <div class="check-item"><input type="checkbox" id="nw2"><label for="nw2"><strong>2 cafés o llamadas de 20 min al mes</strong> — con alguien de tu red actual (Ford/Continental/Bosch/Stuttgart) que no veas hace tiempo</label></div>
-      <div class="check-item"><input type="checkbox" id="nw3"><label for="nw3"><strong>1 seguimiento de valor a la semana</strong> — mandar un artículo, una intro o un comentario genuino a alguien de tu red, sin pedir nada</label></div>
-      <div class="check-item"><input type="checkbox" id="nw4"><label for="nw4"><strong>0 eventos sin seguimiento posterior</strong> — si no mandas el mensaje de seguimiento en las 24-48h siguientes, el evento no sirvió de nada</label></div>
-      <hr class="divider">
-
-      <hr class="divider">
-      <h4 style="color:var(--accent); margin-bottom:8px; font-size:12px;">📚 Para estudiarlo a fondo</h4>
-      <div class="recurso-item"><span class="recurso-tipo r-libro">Libro</span><div><strong>Never Eat Alone</strong> — Keith Ferrazzi · el manual del networking generoso; de aquí salen la regla de las 48 h y el ping.</div></div>
-      <div class="recurso-item"><span class="recurso-tipo r-libro">Libro</span><div><strong>Give and Take</strong> — Adam Grant · la investigación de por qué dar funciona, y por qué dar mal arruina tu carrera.</div></div>
-      <div class="recurso-item"><span class="recurso-tipo r-libro">Libro</span><div><strong>Superconnector</strong> — Scott Gerber y Ryan Paugh · el argumento de por qué coleccionar contactos ya no sirve para nada.</div></div>
-    </div>
-    <div class="card" style="margin-bottom:16px;overflow:hidden">
-      <div class="hv-hero" style="background-image:url('https://images.unsplash.com/photo-1552664730-d307ca884978?w=1920&q=85&auto=format&fit=crop')">
-        <div class="hv-hero-txt"><h3>🎯 Persuadir con ética — los 7 principios de Cialdini</h3><p>Los atajos por los que pasa casi todo el "sí" humano.</p></div>
-      </div>
-      <p class="fs-13 mb-12" style="line-height:1.75;">Robert Cialdini pasó tres años infiltrado en agencias de ventas, telemarketing y recaudación para escribir <strong>Influence</strong>. Encontró que casi todo el "sí" humano pasa por <strong>siete atajos mentales</strong>. No son trucos: son mecanismos que el cerebro usa para no tener que analizar cada decisión desde cero. Conocerlos sirve para dos cosas — <strong>que te digan que sí más veces, y darte cuenta cuando te los están aplicando a ti</strong>.</p>
-
-      <h5>Los 7 principios, con su mecanismo y tu ejemplo</h5>
-
-      <div class="hv-p"><div class="hv-p-n">1</div><div class="hv-p-b"><span class="hv-p-t">Reciprocidad.</span> Recibir algo genera una deuda incómoda hasta que la pagas. Por eso funcionan las muestras gratis. <em>Lo que casi nadie sabe</em>: lo que dispara la reciprocidad no es el valor de lo que das, sino que sea <strong>inesperado y personalizado</strong>.<span class="hv-caso"><b>Tu caso:</b> regalar la versión gratis de tu plantilla en la comunidad de GBM, sin pedir nada, antes de vender la completa.</span></div></div>
-      <div class="hv-p"><div class="hv-p-n">2</div><div class="hv-p-b"><span class="hv-p-t">Compromiso y coherencia.</span> Una vez que alguien dice algo en voz alta, defiende esa postura para no contradecirse. Un compromiso <strong>público, escrito y voluntario</strong> es mucho más fuerte que uno mental.<span class="hv-caso"><b>Tu caso:</b> en vez de "¿te interesa la plantilla?", pregunta "¿te gustaría llevar tus finanzas más ordenadas este año?". Quien contesta que sí ya se comprometió con la idea; la herramienta viene después.</span></div></div>
-      <div class="hv-p"><div class="hv-p-n">3</div><div class="hv-p-b"><span class="hv-p-t">Prueba social.</span> Ante la duda, hacemos lo que hacen los demás — y pesa mucho más si esos demás <strong>se nos parecen</strong>. La prueba social de un desconocido famoso convence menos que la de alguien en tu misma situación.<span class="hv-caso"><b>Tu caso:</b> "la usan 40 personas de esta comunidad" convence más que cualquier adjetivo que le pongas tú.</span></div></div>
-      <div class="hv-p"><div class="hv-p-n">4</div><div class="hv-p-b"><span class="hv-p-t">Autoridad.</span> Obedecemos a quien percibimos como experto. Y la autoridad se transmite con <strong>señales</strong>: credenciales, precisión en los datos, o admitir un defecto pequeño antes de dar el argumento fuerte ("no es bonita, pero no falla") — esto último dispara la credibilidad de todo lo demás.<span class="hv-caso"><b>Tu caso:</b> tu ISTQB, tus años en ADAS y la CT-GenAI que estás por presentar. No es presumir: es dar el dato que permite confiar en ti.</span></div></div>
-      <div class="hv-p"><div class="hv-p-n">5</div><div class="hv-p-b"><span class="hv-p-t">Simpatía.</span> Decimos que sí a quien nos cae bien, y nos cae bien quien <strong>se nos parece, nos elogia con sinceridad y colabora con nosotros</strong> hacia un objetivo común. Es el principio más subestimado y el más fácil de trabajar.<span class="hv-caso"><b>Tu caso:</b> las similitudes reales primero — que también manejas Didi, que también empezaste de cero con las finanzas.</span></div></div>
-      <div class="hv-p"><div class="hv-p-n">6</div><div class="hv-p-b"><span class="hv-p-t">Escasez.</span> Valoramos más lo que se puede acabar, y <strong>duele más perder que ilusiona ganar</strong>. Por eso "te quedan 2 días" mueve más que "aprovecha".<span class="hv-caso"><b>Tu caso:</b> úsalo <strong>solo cuando sea verdad</strong>. Una escasez inventada que se descubre destruye los otros seis principios de golpe.</span></div></div>
-      <div class="hv-p"><div class="hv-p-n">7</div><div class="hv-p-b"><span class="hv-p-t">Unidad.</span> El más potente, y el que Cialdini añadió tres décadas después del libro original. No es parecerse: es <strong>ser del mismo grupo</strong> — la familia, el barrio, la escuela, la profesión. El "nosotros" real vence a todo lo anterior.<span class="hv-caso"><b>Tu caso:</b> "los que trabajamos en automotriz sabemos que…" no es una frase de venta, es una declaración de pertenencia.</span></div></div>
-
-      <h5 class="mt-8">Antes de hablar: el momento importa tanto como el mensaje</h5>
-      <p class="fs-13 mb-12" style="line-height:1.75;">En <strong>Pre-Suasion</strong>, Cialdini demuestra algo raro: <strong>lo que ocurre justo antes de tu petición cambia la respuesta</strong>. Preguntar "¿te consideras una persona aventurera?" antes de ofrecer algo nuevo sube la aceptación de forma medible. No es magia — es que dirigiste la atención a la parte de su identidad que tu propuesta necesita. La aplicación honesta: <strong>abre por el terreno donde tu propuesta ya tiene sentido</strong>, no por la propuesta.</p>
-
-      <h5 class="mt-8">Negociar: las cuatro herramientas de Chris Voss</h5>
-      <p class="fs-13 mb-4" style="line-height:1.7;">Voss fue negociador jefe de secuestros del FBI y escribió <strong>Never Split the Difference</strong> contra la idea de "partir la diferencia". Sus herramientas se aprenden en una tarde y se notan de inmediato:</p>
-      <div class="recurso-item"><span class="recurso-tipo r-tool">Etiquetar</span><div><strong>"Parece que te preocupa el precio."</strong> Poner nombre a la emoción del otro la desactiva. Se dice sin "yo": no <em>"creo que te preocupa"</em>, sino <em>"parece que…"</em> — así no lo obligas a defenderse de ti.</div></div>
-      <div class="recurso-item"><span class="recurso-tipo r-tool">Espejear</span><div>Repetir <strong>las últimas 3 palabras</strong> de lo que dijo, con entonación de pregunta. Suena tonto y funciona: la persona amplía sola, y en lo que amplía está la información que necesitas.</div></div>
-      <div class="recurso-item"><span class="recurso-tipo r-tool">Calibrar</span><div>Preguntas de <strong>"cómo" y "qué"</strong>, nunca de "por qué" (el "por qué" acusa). <em>"¿Cómo se supone que haga eso?"</em> convierte tu negativa en el problema del otro, sin pelear.</div></div>
-      <div class="recurso-item"><span class="recurso-tipo r-tool">Buscar el "no"</span><div>El "sí" fácil compromete a nadie. <em>"¿Sería una locura si…?"</em> deja al otro decir que no —que es donde se siente seguro— y desde ahí empieza la conversación real.</div></div>
-
-      <div class="riesgo-box mt-8"><p class="fs-13" style="line-height:1.75;margin:0"><strong>⚠️ Influencia no es manipulación, y la diferencia es exacta.</strong> Cialdini insiste en una regla: <strong>solo puedes señalar lo que ya es verdad</strong>. Si tu producto de verdad lo usan 40 personas, decirlo es informar. Si inventas el número, es fraude — y además es mal negocio: los siete principios funcionan porque hay confianza, y una mentira descubierta la elimina para siempre.</p></div>
-
-      <hr class="divider">
-      <h4 style="color:var(--accent); margin-bottom:8px; font-size:12px;">📚 Para estudiarlo a fondo</h4>
-      <div class="recurso-item"><span class="recurso-tipo r-libro">Libro</span><div><strong>Influence: The Psychology of Persuasion</strong> — Robert Cialdini · el libro base. Si solo lees uno de persuasión, es este.</div></div>
-      <div class="recurso-item"><span class="recurso-tipo r-libro">Libro</span><div><strong>Pre-Suasion</strong> — Robert Cialdini · la secuela: cómo el instante previo cambia la respuesta.</div></div>
-      <div class="recurso-item"><span class="recurso-tipo r-libro">Libro</span><div><strong>Never Split the Difference</strong> — Chris Voss · negociación aplicada; el más práctico de los tres.</div></div>
-    </div>
-    <div class="card" style="margin-bottom:16px;overflow:hidden">
-      <div class="hv-hero" style="background-image:url('https://images.unsplash.com/photo-1543269865-cbf427effbad?w=1920&q=85&auto=format&fit=crop')">
-        <div class="hv-hero-txt"><h3>💬 Cómo relacionarte con las personas</h3><p>El otro está más interesado en sí mismo que en ti. Quien lo entiende deja de pelear por atención.</p></div>
-      </div>
-      <p class="fs-13 mb-12" style="line-height:1.75;">Dale Carnegie publicó <strong>Cómo ganar amigos e influir sobre las personas</strong> en 1936 y sigue vendiendo porque no envejeció: describe cómo funciona la gente, no una moda. La tesis del libro cabe en una línea — <strong>el otro está infinitamente más interesado en sí mismo que en ti</strong>, y quien entiende eso deja de pelear por atención.</p>
-
-      <h5>Las tres reglas que sostienen todo lo demás</h5>
-      <div class="recurso-item"><span class="recurso-tipo r-tool">1</span><div><strong>No critiques, no condenes, no te quejes.</strong> La crítica pone al otro a la defensiva y lo obliga a justificarse. Nadie cambió nunca de opinión sintiéndose atacado.</div></div>
-      <div class="recurso-item"><span class="recurso-tipo r-tool">2</span><div><strong>Reconoce lo bueno, con honestidad.</strong> No es adular: es <strong>decir en voz alta algo que de verdad viste</strong>. La diferencia entre el elogio y la adulación es que el primero es específico.</div></div>
-      <div class="recurso-item"><span class="recurso-tipo r-tool">3</span><div><strong>Despierta en el otro un deseo vehemente.</strong> Nadie hace algo por tus razones; lo hace por las suyas. Antes de pedir, contesta: <em>¿qué gana él?</em></div></div>
-
-      <h5 class="mt-8">Seis formas de agradar — y por qué cada una funciona</h5>
-      <div class="hv-p"><div class="hv-p-n">1</div><div class="hv-p-b"><span class="hv-p-t">Interésate de verdad por el otro.</span> Carnegie lo dice sin rodeos: harás más amigos en dos meses interesándote por la gente que en dos años intentando que se interesen por ti.</div></div>
-      <div class="hv-p"><div class="hv-p-n">2</div><div class="hv-p-b"><span class="hv-p-t">Sonríe.</span> Suena trivial hasta que ves lo que hace: la sonrisa dice "no soy una amenaza" antes de que abras la boca, y es lo primero que el otro procesa.</div></div>
-      <div class="hv-p"><div class="hv-p-n">3</div><div class="hv-p-b"><span class="hv-p-t">Usa su nombre.</span> <em>"El nombre de una persona es, para ella, el sonido más dulce en cualquier idioma"</em>. Repítelo al conocerla, úsalo una vez a mitad de la conversación y otra al despedirte — y lo recordarás de verdad.</div></div>
-      <div class="hv-p"><div class="hv-p-n">4</div><div class="hv-p-b"><span class="hv-p-t">Escucha. En serio.</span> No es callarte mientras piensas tu respuesta: es <strong>preguntar por lo último que dijo</strong>. La señal de que escuchaste es tu siguiente pregunta, no tu cara.</div></div>
-      <div class="hv-p"><div class="hv-p-n">5</div><div class="hv-p-b"><span class="hv-p-t">Habla de lo que a él le interesa.</span> Roosevelt estudiaba la noche anterior el tema favorito de quien lo visitaba. No era simpatía: era trabajo.</div></div>
-      <div class="hv-p"><div class="hv-p-n">6</div><div class="hv-p-b"><span class="hv-p-t">Haz que se sienta importante — con sinceridad.</span> Todo el libro cabe aquí. Y el "con sinceridad" no es un adorno: es la única forma de que funcione más de una vez.</div></div>
-
-      <h5 class="mt-8">Cuando hay desacuerdo</h5>
-      <div class="hv-p"><div class="hv-p-n">1</div><div class="hv-p-b"><span class="hv-p-t">La única forma de ganar una discusión es evitarla.</span> Aunque ganes, el otro se queda con su opinión y ahora además te tiene ganas.</div></div>
-      <div class="hv-p"><div class="hv-p-n">2</div><div class="hv-p-b"><span class="hv-p-t">Nunca digas "estás equivocado".</span> Cambia a <em>"puede que me equivoque, déjame ver si entendí bien…"</em> y repite su postura mejor de lo que él la dijo. Eso desarma cualquier defensa.</div></div>
-      <div class="hv-p"><div class="hv-p-n">3</div><div class="hv-p-b"><span class="hv-p-t">Si te equivocaste, admítelo rápido y con energía.</span> Quitarte tú mismo la razón deja al otro sin nada que atacar, y sube tu credibilidad en vez de bajarla.</div></div>
-      <div class="hv-p"><div class="hv-p-n">4</div><div class="hv-p-b"><span class="hv-p-t">Deja que la idea sea suya.</span> La gente defiende con uñas lo que cree que se le ocurrió. Pregunta hasta que llegue solo a donde querías.</div></div>
-
-      <h5 class="mt-8">Las conversaciones difíciles</h5>
-      <p class="fs-13 mb-4" style="line-height:1.75;">Para lo que Carnegie no cubre —el momento en que hay algo real en juego y las emociones se disparan— está <strong>Crucial Conversations</strong>. Su aporte central es el concepto de <strong>seguridad psicológica</strong>: la gente no se cierra por el tema, se cierra cuando siente que la están atacando o que va a perder algo. Si notas que se cerró, <strong>no sigas con el tema: repara la seguridad primero</strong> ("no busco echarte la culpa, busco que esto no se repita") y luego vuelve.</p>
-      <p class="fs-13 mb-12" style="line-height:1.75;">Y una fórmula que sirve siempre: <strong>hechos → tu historia → pregunta</strong>. <em>"Llegaron tres reportes tarde esta semana (hecho). Empecé a pensar que quizá el plazo no era realista (mi interpretación, no una acusación). ¿Cómo lo ves tú?"</em></p>
-
-      <hr class="divider">
-      <h4 style="color:var(--accent); margin-bottom:8px; font-size:12px;">📚 Para estudiarlo a fondo</h4>
-      <div class="recurso-item"><span class="recurso-tipo r-libro">Libro</span><div><strong>Cómo ganar amigos e influir sobre las personas</strong> — Dale Carnegie · empieza por aquí. Se lee en una semana y se practica toda la vida.</div></div>
-      <div class="recurso-item"><span class="recurso-tipo r-libro">Libro</span><div><strong>Crucial Conversations</strong> — Patterson, Grenny, McMillan y Switzler · para cuando hay algo en juego y las emociones suben.</div></div>
-      <div class="recurso-item"><span class="recurso-tipo r-libro">Libro</span><div><strong>How to Talk to Anyone</strong> — Leil Lowndes · 92 tácticas concretas; el más práctico si lo tuyo es arrancar conversaciones.</div></div>
-    </div>
-    <div class="card" style="margin-bottom:16px;overflow:hidden">
-      <div class="hv-hero" style="background-image:url('https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=1920&q=85&auto=format&fit=crop')">
-        <div class="hv-hero-txt"><h3>🌱 Sacarle lo mejor a una persona</h3><p>La gente rinde a la altura de lo que esperas de ella — y tus expectativas se filtran aunque no las digas.</p></div>
-      </div>
-      <p class="fs-13 mb-12" style="line-height:1.75;">Esta es la habilidad que separa a alguien que trabaja bien de alguien a quien <strong>la gente quiere tener cerca</strong>. Y no va de motivar con discursos: va de crear las condiciones donde el otro rinde por encima de lo que él mismo creía.</p>
-
-      <h5>El experimento que lo demuestra</h5>
-      <p class="fs-13 mb-12" style="line-height:1.75;">En 1965, Rosenthal y Jacobson aplicaron en una primaria un test llamado <em>"Harvard Test of Inflected Acquisition"</em> y les dijeron a los maestros qué niños iban a destacar ese año. El test <strong>no existía</strong> y ese 20% de alumnos estaba <strong>elegido al azar</strong>. Al final del curso, esos niños habían mejorado significativamente más que el resto. Lo único distinto fue <strong>lo que el maestro esperaba de ellos</strong>: les daba más tiempo para responder, más pistas, más atención. Se llama <strong>efecto Pigmalión</strong> —lo publicaron en 1968 como <em>Pygmalion in the Classroom</em>—, y la conclusión práctica es dura: <strong>la gente tiende a rendir a la altura de lo que tú esperas de ella</strong>, y tus expectativas se filtran aunque no las digas.</p>
-
-      <h5 class="mt-8">Multiplicadores y disminuidores</h5>
-      <p class="fs-13 mb-4" style="line-height:1.75;">Liz Wiseman estudió en <strong>Multipliers</strong> a más de 150 líderes y encontró dos tipos. Los <em>disminuidores</em> obtienen cerca de la mitad de la capacidad de su gente; los <em>multiplicadores</em>, casi el doble. Lo revelador es que <strong>casi ningún disminuidor sabe que lo es</strong> — muchos son gente brillante y bienintencionada:</p>
-      <div class="recurso-item"><span class="recurso-tipo r-tool">Disminuye</span><div>Es el más listo del cuarto y lo demuestra. Da la respuesta. Rescata al equipo cuando se atora. Resultado: dejan de pensar, porque para qué.</div></div>
-      <div class="recurso-item"><span class="recurso-tipo r-tool">Multiplica</span><div>Hace la pregunta difícil y <strong>aguanta el silencio</strong>. Deja que se equivoquen en lo reversible. Da el problema entero, no la tarea partida. Resultado: crecen.</div></div>
-      <p class="fs-13 mt-8 mb-12" style="line-height:1.75;"><strong>La prueba más rápida para saber cuál eres:</strong> en tu última junta, ¿qué porcentaje del tiempo hablaste tú? Si pasa del 30%, estás disminuyendo sin darte cuenta.</p>
-
-      <h5 class="mt-8">Franqueza radical: el feedback que sí sirve</h5>
-      <p class="fs-13 mb-4" style="line-height:1.75;">Kim Scott, en <strong>Radical Candor</strong>, cruza dos ejes —<strong>preocuparte personalmente</strong> por el otro y <strong>desafiarlo directamente</strong>— y salen cuatro cuadrantes. Solo uno funciona, y los otros tres describen a casi todo el mundo:</p>
-      <div class="recurso-item"><span class="recurso-tipo r-tool">✅ Franqueza radical</span><div>Te importa la persona <strong>y</strong> le dices la verdad. "Te lo digo porque quiero que te vaya bien: la presentación no se entendió."</div></div>
-      <div class="recurso-item"><span class="recurso-tipo r-tool">Empatía ruinosa</span><div>Te importa pero te callas por no incomodar. Es el error más común de la gente buena — y el que más daño hace a largo plazo, porque el otro nunca se entera.</div></div>
-      <div class="recurso-item"><span class="recurso-tipo r-tool">Agresividad odiosa</span><div>Dices la verdad sin que te importe la persona. Funciona una vez y quema la relación.</div></div>
-      <div class="recurso-item"><span class="recurso-tipo r-tool">Insinceridad manipuladora</span><div>Ni te importa ni dices la verdad. Es la política de pasillo.</div></div>
-      <p class="fs-13 mt-8 mb-12" style="line-height:1.75;"><strong>El orden importa:</strong> primero se gana el derecho —demostrando que te importa— y después se desafía. Al revés solo es agresividad. Y el elogio se da <strong>en público y con el mismo detalle</strong> que la crítica: "buen trabajo" no enseña nada; "la forma en que reordenaste el reporte hizo que se entendiera a la primera" sí.</p>
-
-      <h5 class="mt-8">Qué mueve de verdad a la gente</h5>
-      <p class="fs-13 mb-4" style="line-height:1.75;">Daniel Pink resume en <strong>Drive</strong> décadas de investigación con una conclusión incómoda para cualquier jefe: pasado el punto en que el dinero deja de ser una preocupación, <strong>los premios y castigos empeoran el desempeño</strong> en tareas que requieren pensar. Lo que sí funciona son tres cosas:</p>
-      <div class="recurso-item"><span class="recurso-tipo r-tool">Autonomía</span><div>Decidir cómo, cuándo y con quién hacerlo. Da el resultado esperado, no el método.</div></div>
-      <div class="recurso-item"><span class="recurso-tipo r-tool">Maestría</span><div>Sentir que se progresa en algo difícil. La gente no se quema por trabajar mucho, se quema por no avanzar.</div></div>
-      <div class="recurso-item"><span class="recurso-tipo r-tool">Propósito</span><div>Saber para qué sirve lo que hace, y a quién. Es lo primero que se pierde y lo último que se explica.</div></div>
-
-      <h5 class="mt-8">Cuatro preguntas que abren a cualquiera</h5>
-      <p class="fs-13 mb-4" style="line-height:1.7;">Guárdalas: sirven con tu papá, con un compañero de trabajo y en una entrevista.</p>
-      <div class="recurso-item"><span class="recurso-tipo r-tool">1</span><div><strong>"¿Qué parte de esto es la que más disfrutas?"</strong> — te dice dónde está su energía, que es donde va a rendir.</div></div>
-      <div class="recurso-item"><span class="recurso-tipo r-tool">2</span><div><strong>"Si pudieras cambiar una cosa de cómo lo hacemos, ¿cuál sería?"</strong> — la gente casi siempre sabe qué está mal y casi nunca se lo preguntan.</div></div>
-      <div class="recurso-item"><span class="recurso-tipo r-tool">3</span><div><strong>"¿Qué necesitas de mí para que esto salga?"</strong> — convierte tu ayuda en algo concreto en vez de un "avísame si necesitas algo" que nadie usa.</div></div>
-      <div class="recurso-item"><span class="recurso-tipo r-tool">4</span><div><strong>"¿Dónde te ves haciendo esto dentro de dos años?"</strong> — y luego <strong>recuérdalo</strong>. Preguntar y olvidar es peor que no preguntar.</div></div>
-
-      <div class="riesgo-box mt-8"><p class="fs-13" style="line-height:1.75;margin:0"><strong>Lo aplicable hoy mismo:</strong> el negocio de tu papá es exactamente este ejercicio. No llegues con la solución hecha —eso sería disminuir—. Llega con las cuatro preguntas, escucha sin corregir, y deja que las mejoras salgan de él. Lo que se le ocurra a él lo va a sostener; lo que le impongas tú lo va a abandonar en dos semanas.</p></div>
-
-      <hr class="divider">
-      <h4 style="color:var(--accent); margin-bottom:8px; font-size:12px;">📚 Para estudiarlo a fondo</h4>
-      <div class="recurso-item"><span class="recurso-tipo r-libro">Libro</span><div><strong>Multipliers</strong> — Liz Wiseman · por qué la gente rinde el doble con unos y la mitad con otros.</div></div>
-      <div class="recurso-item"><span class="recurso-tipo r-libro">Libro</span><div><strong>Radical Candor</strong> — Kim Scott · cómo decir la verdad sin romper la relación.</div></div>
-      <div class="recurso-item"><span class="recurso-tipo r-libro">Libro</span><div><strong>Drive</strong> — Daniel Pink · autonomía, maestría y propósito, con la investigación detrás.</div></div>
-      <div class="recurso-item"><span class="recurso-tipo r-libro">Libro</span><div><strong>The 7 Habits of Highly Effective People</strong> — Stephen Covey · el hábito 5, "busca primero entender", es la base de todo lo de arriba.</div></div>
-    </div>
-    <div class="card" style="margin-bottom:16px;">
-      <h3 class="fw-700 mb-12">🍽️ Modales y etiqueta esencial</h3>
-      <p class="fs-13 mb-4" style="line-height:1.7;"><strong style="color:var(--accent);">En la mesa.</strong> Los cubiertos se usan de afuera hacia adentro conforme avanzan los tiempos; el que se queda quieto es siempre el de la izquierda. La servilleta va sobre las piernas apenas te sientas, nunca en el cuello. No hables con la boca llena, no apoyes los codos en la mesa mientras comes (sí puedes al conversar entre platillos), y espera a que todos tengan su plato antes de empezar. Si brindas, mira a los ojos de la persona a la que brindas — no al vaso.</p>
-      <p class="fs-13 mb-4" style="line-height:1.7;"><strong style="color:var(--accent);">Al presentarte.</strong> Apretón de manos firme (ni de "pescado muerto" ni de aplastar), 2-3 segundos, contacto visual, y ponte de pie si estás sentado cuando alguien llega a saludarte — es la señal de respeto más simple que existe y casi nadie la hace ya.</p>
-      <p class="fs-13" style="line-height:1.7;"><strong style="color:var(--accent);">Puntualidad y vestimenta.</strong> Llegar 5 minutos antes es puntual; llegar a la hora exacta ya es tarde socialmente. Para saber qué ponerte según la ocasión (formal, casual de negocios, boda, etc.) ya tienes la guía completa en <a href="../Vestimenta/vestimenta.html" class="inline-link" target="_blank">Vestimenta</a> — úsala antes de cualquier evento donde no estés seguro.</p>
-    </div>
-
-    <div class="card" style="margin-bottom:16px;">
-      <h3 class="fw-700 mb-12">🔥 Cómo hacer una fogata correctamente</h3>
-      <p class="fs-13 mb-4" style="line-height:1.7;"><strong style="color:var(--accent);">3 materiales, en este orden.</strong> Yesca (algo que prenda con una sola chispa: pasto seco, corteza de árbol, papel), leña delgada (del grosor de un lápiz, para que el fuego crezca) y leña gruesa (la que realmente sostiene la fogata). El error más común es poner leña gruesa directo sobre la yesca — el fuego se apaga porque no tiene con qué crecer antes de necesitar más oxígeno del que un tronco grueso permite.</p>
-      <p class="fs-13 mb-4" style="line-height:1.7;"><strong style="color:var(--accent);">3 formas de armarla:</strong></p>
-      <div class="recurso-item"><span class="recurso-tipo r-tool">Tipi</span><div>Ramas delgadas paradas en cono sobre la yesca, como una tienda de campaña. Arde rápido y da mucha luz — ideal para encender rápido o para señales, pero se consume pronto.</div></div>
-      <div class="recurso-item"><span class="recurso-tipo r-tool">Cabaña</span><div>Dos troncos paralelos con la yesca en medio, y encima otros dos cruzados perpendiculares, apilando en capas como un Jenga. Arde más lento y parejo — la mejor para cocinar, porque genera brasas estables.</div></div>
-      <div class="recurso-item"><span class="recurso-tipo r-tool">Estrella</span><div>Troncos gruesos acomodados como los rayos de una rueda, con las puntas encendidas en el centro — vas empujando los troncos hacia adentro conforme se consumen. La que más dura con menos leña, ideal para una noche larga.</div></div>
-      <div class="riesgo-box" style="margin-top:14px;">
-        <h3>⚠️ Seguridad — no negociable</h3>
-        <p>Nunca la hagas bajo ramas bajas o cerca de pasto seco; ten siempre agua o tierra a la mano; nunca la dejes sola ni un minuto encendida; y para apagarla de verdad: agua, remueve las cenizas, agua otra vez, y toca con el dorso de la mano cerca (sin tocar) para confirmar que ya no hay calor. Una fogata "apagada" que sigue caliente por dentro es la causa #1 de incendios forestales por descuido.</p>
-      </div>
-    </div>
-
-    <div class="card" style="margin-bottom:16px;">
-      <h3 class="fw-700 mb-12">🍷 El proceso y la cultura del vino</h3>
-      <p class="fs-13 mb-4" style="line-height:1.7;"><strong style="color:var(--accent);">Cómo se hace.</strong> Se cosecha la uva, se prensa para extraer el jugo (mosto), y las levaduras fermentan sus azúcares en alcohol durante 1-4 semanas. El tinto fermenta con la piel de la uva (de ahí su color y taninos); el blanco fermenta sin ella, incluso si la uva es tinta por dentro. Después viene la crianza — en barrica de roble (le da notas a vainilla/tostado) o en acero inoxidable (conserva la fruta fresca) — y el embotellado.</p>
-      <p class="fs-13 mb-4" style="line-height:1.7;"><strong style="color:var(--accent);">Cómo catarlo (los 3 pasos, en orden):</strong> <strong>Vista</strong> — inclina la copa sobre un fondo blanco, mira el color y qué tan denso escurre en la copa ("las piernas", más lento = más alcohol/azúcar. <strong>Nariz</strong> — gira la copa para airearlo y huele dos veces: la primera detecta la fruta, la segunda (tras girar de nuevo) detecta notas más complejas (madera, especias). <strong>Boca</strong> — un trago pequeño, pásalo por toda la lengua antes de tragar, y nota si es más ácido, tánico (esa sequedad en la encía) o afrutado.</p>
-      <p class="fs-13 mb-4" style="line-height:1.7;"><strong style="color:var(--accent);">Temperatura y servicio.</strong> Tinto: 16-18°C (fresco, no temperatura ambiente de casa). Blanco y rosado: 8-10°C. Espumoso: 6-8°C. Al abrir con sacacorchos: corta la cápsula debajo del reborde del cuello, enrosca el sacacorchos derecho sin llegar hasta el fondo (para no perforar el corcho de lado a lado), y saca con palanca firme y constante, no de un jalón.</p>
-      <p class="fs-13" style="line-height:1.7;"><strong style="color:var(--accent);">Maridaje simple, sin complicarte:</strong> tinto con carnes rojas y quesos curados, blanco con pescado/mariscos/pollo, rosado con comida picante o para el calor, espumoso para empezar cualquier comida o para celebrar. Y si en un restaurante no sabes qué pedir: di tu presupuesto y qué vas a comer, y deja que el sommelier o el mesero recomiende — es literalmente su trabajo, no hay nada inseguro en preguntar.</p>
-    </div>
-
-    <div class="card" style="margin-bottom:16px;">
-      <h3 class="fw-700 mb-12">🥃 Licores y coctelería básica</h3>
-      <p class="fs-13 mb-4" style="line-height:1.7;"><strong style="color:var(--accent);">Whisky vs. tequila vs. mezcal, la diferencia real.</strong> El whisky se destila de granos fermentados (cebada, maíz o centeno) y siempre reposa en barrica de roble, mínimo 2-3 años. El tequila se destila del agave azul (solo en la región de Jalisco y alrededores); el mezcal se destila de cualquier tipo de agave y se cuece en horno de tierra con leña, por eso su sabor ahumado característico — es la categoría más amplia, el tequila es técnicamente un tipo de mezcal.</p>
-      <p class="fs-13 mb-4" style="line-height:1.7;"><strong style="color:var(--accent);">5 cocteles clásicos que vale la pena saber preparar:</strong></p>
-      <div class="recurso-item"><span class="recurso-tipo r-tool">Old Fashioned</span><div>Whisky, azúcar, angostura y una twist de naranja sobre hielo grande — el coctel "de caballero" por excelencia, casi no lleva nada que lo diluya.</div></div>
-      <div class="recurso-item"><span class="recurso-tipo r-tool">Negroni</span><div>Partes iguales de gin, vermut rojo y Campari — amargo, directo, sin trucos. El que más impresiona por lo simple que es de pedir bien.</div></div>
-      <div class="recurso-item"><span class="recurso-tipo r-tool">Margarita</span><div>Tequila, triple sec y limón en partes 2:1:1, con sal en el borde — el que nunca falla en México.</div></div>
-      <div class="recurso-item"><span class="recurso-tipo r-tool">Whisky Sour</span><div>Whisky, limón, jarabe simple y clara de huevo (opcional, da espuma) — equilibrio perfecto entre fuerte y fresco.</div></div>
-      <div class="recurso-item"><span class="recurso-tipo r-tool">Mojito</span><div>Ron blanco, hierbabuena machacada, limón, azúcar y soda — el que mejor cae en clima caliente.</div></div>
-      <p class="fs-13 mt-8" style="color:var(--muted);">Regla de oro para tomar cualquier licor fuerte "derecho": nunca de un trago, siempre a sorbos pequeños dejándolo respirar en la boca — así se aprecia, no se sufre.</p>
-    </div>
-
-    <div class="card" style="margin-bottom:16px;">
-      <h3 class="fw-700 mb-12">🪢 4 nudos que de verdad sirven</h3>
-      <div class="recurso-item"><span class="recurso-tipo r-tool">As de guía</span><div>Forma un aro fijo que no se cierra ni se afloja bajo tensión — el nudo de rescate por excelencia, para asegurar algo (o a alguien) sin riesgo de que se ahorque.</div></div>
-      <div class="recurso-item"><span class="recurso-tipo r-tool">Ocho</span><div>El más simple de todos, se usa como tope al final de una cuerda para que no se salga de una polea o argolla — el primero que cualquiera debería aprender.</div></div>
-      <div class="recurso-item"><span class="recurso-tipo r-tool">Nudo llano (rizo)</span><div>Une dos cuerdas del mismo grosor de forma rápida y segura — ideal para amarrar un paquete o unir dos cabos para que alcancen más longitud.</div></div>
-      <div class="recurso-item"><span class="recurso-tipo r-tool">Ballestrinque</span><div>Fija una cuerda a un poste o tubo de forma instantánea y se puede ajustar de tensión sin desamarrar — el que más se usa para tender una lona o amarrar algo al remolque del auto.</div></div>
-    </div>
-
-    <div class="card" style="margin-bottom:16px;">
-      <h3 class="fw-700 mb-12">🔧 Mecánica básica de auto — lo mínimo indispensable</h3>
-      <p class="fs-13 mb-4" style="line-height:1.7;"><strong style="color:var(--accent);">Cambiar una llanta ponchada:</strong> pon las intermitentes y el freno de mano, afloja (sin quitar) los birlos antes de levantar el auto con el gato, levanta hasta que la llanta no toque el piso, ahora sí quita los birlos y la llanta, monta la de refacción, y aprieta los birlos en cruz (nunca en círculo) para que la llanta quede pareja — primero a mano, y ya con el auto en el piso otra vez, con la cruceta a tope.</p>
-      <p class="fs-13 mb-4" style="line-height:1.7;"><strong style="color:var(--accent);">Pasar corriente:</strong> con ambos autos apagados, conecta rojo-positivo a positivo del auto muerto, luego rojo-positivo al positivo del auto que da corriente, luego negro-negativo al negativo del auto que da corriente, y el último cable negro a metal sin pintura del motor del auto muerto (no a su negativo directo — evita chispas cerca de la batería). Enciende el auto que da corriente, espera 2-3 min, intenta encender el otro.</p>
-      <p class="fs-13" style="line-height:1.7;"><strong style="color:var(--accent);">Revisar el nivel de aceite:</strong> auto en frío y en plano, saca la varilla, límpiala, vuelve a meterla hasta el fondo, sácala de nuevo y lee entre las marcas mín/máx. Y si el auto se sobrecalienta (aguja al rojo): apágalo de inmediato, nunca abras el radiador caliente (el vapor a presión quema), espera a que baje la temperatura antes de revisar nivel de refrigerante.</p>
-    </div>
-
-    <div class="card" style="margin-bottom:16px;">
-      <h3 class="fw-700 mb-12">🩹 Primeros auxilios que todo hombre debería saber</h3>
-      <div class="recurso-item"><span class="recurso-tipo r-tool">Atragantamiento (Heimlich)</span><div>Párate detrás de la persona, haz un puño arriba del ombligo, cúbrelo con la otra mano, y da compresiones firmes hacia adentro y arriba hasta que expulse el objeto.</div></div>
-      <div class="recurso-item"><span class="recurso-tipo r-tool">RCP básico (adulto)</span><div>30 compresiones fuertes en el centro del pecho (5-6 cm de profundidad, ritmo de ~100-120 por minuto — el ritmo de "Stayin' Alive") por 2 respiraciones, y repetir sin parar hasta que llegue ayuda.</div></div>
-      <div class="recurso-item"><span class="recurso-tipo r-tool">Cortada</span><div>Presión directa y firme con tela limpia hasta que pare el sangrado, eleva la extremidad, y limpia con agua (no alcohol directo en la herida abierta) antes de cubrir.</div></div>
-      <div class="recurso-item"><span class="recurso-tipo r-tool">Quemadura</span><div>Agua fría corriendo (no hielo directo) por 10-15 min, nunca truenes una ampolla, y nunca pongas pasta de dientes ni mantequilla — mito peligroso, retiene el calor.</div></div>
-      <div class="riesgo-box" style="margin-top:14px;">
-        <h3>⚠️ Cuándo esto no basta</h3>
-        <p>Primeros auxilios ganan tiempo, no reemplazan atención médica real: llama a emergencias (911) siempre que haya pérdida de conciencia, sangrado que no para con presión directa, quemadura grande o en cara/manos/genitales, o cualquier duda real sobre la gravedad. Ante la duda, siempre llama.</p>
-      </div>
-    </div>
-
-    <div class="card">
-      <h3 class="fw-700 mb-12">✅ Cuáles ya dominas</h3>
-      <p class="fs-13 mb-12" style="line-height:1.7;">No se trata de saberlas todas de memoria hoy — se trata de identificar cuáles te faltan y practicarlas antes de necesitarlas de verdad.</p>
-      <div class="check-item"><input type="checkbox" id="hv1"><label for="hv1"><strong>Modales de mesa y presentación</strong> — apretón de manos firme, cubiertos en orden, puntualidad</label></div>
-      <div class="check-item"><input type="checkbox" id="hv2"><label for="hv2"><strong>Hacer y apagar una fogata de forma segura</strong> — al menos un tipo de armado, de memoria</label></div>
-      <div class="check-item"><input type="checkbox" id="hv3"><label for="hv3"><strong>Catar y servir vino</strong> — abrir la botella, temperatura correcta, pedir con seguridad en un restaurante</label></div>
-      <div class="check-item"><input type="checkbox" id="hv4"><label for="hv4"><strong>Preparar al menos 2 de los 5 cocteles clásicos</strong></label></div>
-      <div class="check-item"><input type="checkbox" id="hv5"><label for="hv5"><strong>Los 4 nudos esenciales</strong> — sin tener que buscar el diagrama cada vez</label></div>
-      <div class="check-item"><input type="checkbox" id="hv6"><label for="hv6"><strong>Cambiar una llanta y pasar corriente</strong> — sin ayuda ni manual</label></div>
-      <div class="check-item"><input type="checkbox" id="hv7"><label for="hv7"><strong>RCP y Heimlich</strong> — practicado alguna vez, aunque sea en un curso</label></div>
-    </div>
-  </section>
 
 
 </main>
@@ -3888,101 +3914,16 @@
   <!-- fin posibles-negocios -->
 
   <section id="mas-ideas">
-    <h2 class="section-title" data-num="02">💼 Más Ideas de Negocio — Convencionales y No Convencionales</h2>
-    <p class="fs-13 text-muted mb-12">A diferencia de <a href="#posibles-negocios" class="inline-link">Posibles Negocios</a> (9 opciones rankeadas contra tu perfil real), esto es un banco de ideas más amplio para explorar — sin evaluar contra tus habilidades específicas. Sirve como lista de referencia si en algún momento quieres algo con menos dependencia de tu tiempo experto y más de capital/operación.</p>
+    <h2 class="section-title" data-num="02">💼 Más Ideas de Negocio — con números para decidir</h2>
+    <p class="fs-13 text-muted mb-12">A diferencia de <a href="#posibles-negocios" class="inline-link">Posibles Negocios</a> (las 9 opciones rankeadas contra tu perfil real), esto es el banco amplio: <strong>20 modelos con lo que cuesta arrancar cada uno</strong>, en qué se va ese dinero y en cuánto se recupera. Sirve para descartar rápido y para ver cuáles caben en el dinero que de verdad tienes.</p>
 
     <div class="riesgo-box mb-16" style="margin-bottom:16px;">
-      <h3>⚠️ Un límite claro</h3>
-      <p>"No convencional" aquí significa creativo, poco obvio o fuera del molde típico de oficina — <strong>no</strong> significa ilegal. No vas a encontrar en esta lista nada de evasión fiscal, esquemas piramidales, reventa de productos robados/pirata, ni cualquier práctica que dependa de romper la ley. Un negocio construido sobre eso no es un atajo — es una deuda con la cárcel o con Hacienda esperando a cobrarse, justo lo opuesto a la estabilidad que busca tu Plan Maestro.</p>
+      <h3>⚠️ Dos límites, y los dos importan</h3>
+      <p><strong>Uno.</strong> "No convencional" aquí significa creativo o fuera del molde de oficina — <strong>no</strong> significa ilegal. No hay nada de evasión fiscal, esquemas piramidales ni reventa de pirata. Un negocio construido sobre eso no es un atajo: es una deuda con la cárcel o con Hacienda esperando a cobrarse, justo lo opuesto a la estabilidad que busca tu Plan Maestro.</p>
+      <p style="margin-top:10px;"><strong>Dos.</strong> Las cifras de cada ficha son <strong>rangos de orden de magnitud</strong> del mercado mexicano, no cotizaciones. Están para comparar y descartar, que es el 90% del trabajo. El número fino sale de pedir precio el día que elijas una — y ese día, anótalo aquí.</p>
     </div>
 
-    <h3 class="fw-700 mb-12" style="margin-top:22px;">🏪 Convencionales — modelos probados, demanda constante</h3>
-    <div class="grid-3" style="margin-bottom:22px;">
-      <div class="card">
-        <h4 class="fw-700 mb-4">🪑 Renta de sillas, mesas y mantelería</h4>
-        <p class="fs-13" style="color:var(--muted);">Bodas, XV años, posadas — temporada alta todo el año en México. Capital inicial bajo (empiezas con 50-100 piezas y reinviertes), margen alto porque el mismo inventario se renta decenas de veces. Se le suma fácil: lonas, inflables, vajilla, iluminación.</p>
-      </div>
-      <div class="card">
-        <h4 class="fw-700 mb-4">🎪 Renta de inflables y equipo para fiestas infantiles</h4>
-        <p class="fs-13" style="color:var(--muted);">Mismo modelo que sillas/mesas, ticket promedio más alto por evento. Fines de semana concentran la demanda — compatible con tu jornada de ALTEN entre semana.</p>
-      </div>
-      <div class="card">
-        <h4 class="fw-700 mb-4">🚗 Lavado de autos a domicilio</h4>
-        <p class="fs-13" style="color:var(--muted);">Capital mínimo (cubeta, productos, agua a presión portátil), demanda constante en zonas residenciales/oficinas de CDMX. Escalable contratando 1-2 personas cuando ya tienes clientela fija.</p>
-      </div>
-      <div class="card">
-        <h4 class="fw-700 mb-4">🧹 Servicios de limpieza para oficinas/Airbnbs</h4>
-        <p class="fs-13" style="color:var(--muted);">Demanda recurrente y predecible (contratos mensuales, no eventos únicos). El boom de Airbnb en CDMX generó una necesidad constante de limpieza rápida entre huéspedes.</p>
-      </div>
-      <div class="card">
-        <h4 class="fw-700 mb-4">📦 Servicio de mudanzas pequeñas/fletes</h4>
-        <p class="fs-13" style="color:var(--muted);">Con una camioneta (propia o rentada por día) y 1 ayudante, cubre mudanzas de depa/oficina chica — nicho más barato y rápido que las mudancerías grandes.</p>
-      </div>
-      <div class="card">
-        <h4 class="fw-700 mb-4">🌱 Mantenimiento de jardines/áreas verdes</h4>
-        <p class="fs-13" style="color:var(--muted);">Contratos recurrentes con residencias o corporativos, baja competencia calificada, capital de entrada mínimo (herramienta básica).</p>
-      </div>
-      <div class="card">
-        <h4 class="fw-700 mb-4">🍽️ Puesto/food truck de comida especializada</h4>
-        <p class="fs-13" style="color:var(--muted);">Requiere más tiempo operativo que las demás de esta lista — mejor opción si algún día dejas ALTEN, no en paralelo. Margen alto si el producto es bueno y el punto de venta es constante.</p>
-      </div>
-      <div class="card">
-        <h4 class="fw-700 mb-4">🏢 Renta de mobiliario de oficina/coworking chico</h4>
-        <p class="fs-13" style="color:var(--muted);">Empresas chicas y startups prefieren rentar escritorios/sillas ergonómicas a comprar cuando no saben si van a crecer o achicarse — contrato recurrente, no evento único.</p>
-      </div>
-      <div class="card">
-        <h4 class="fw-700 mb-4">🥾 Franquicia de bajo costo</h4>
-        <p class="fs-13" style="color:var(--muted);">Café, lavandería automática, tienda de conveniencia — capital más alto que las demás opciones de esta lista, pero con modelo de operación ya probado y soporte de la marca. Solo si ya tienes el capital de la Opción 4 sin comprometer tu fondo de emergencia.</p>
-      </div>
-    </div>
-
-    <h3 class="fw-700 mb-12">🧩 No convencionales — creativos, poco obvios, 100% legales</h3>
-    <div class="grid-3">
-      <div class="card">
-        <h4 class="fw-700 mb-4">📦 Retail arbitrage / reventa</h4>
-        <p class="fs-13" style="color:var(--muted);">Comprar liquidaciones o mayoreo (Costco, Sam's, outlets) y revender por pieza en Mercado Libre/Facebook Marketplace con margen. Tu perfil analítico ayuda mucho a encontrar qué categorías sí dejan margen real.</p>
-      </div>
-      <div class="card">
-        <h4 class="fw-700 mb-4">🌏 Importación de nicho vía Alibaba</h4>
-        <p class="fs-13" style="color:var(--muted);">Un producto específico y poco competido (no genérico) importado por volumen y vendido en Mercado Libre/Amazon México — tu experiencia técnica ayuda a evaluar calidad/especificaciones antes de importar.</p>
-      </div>
-      <div class="card">
-        <h4 class="fw-700 mb-4">🅿️ Monetizar cochera/terreno como estacionamiento</h4>
-        <p class="fs-13" style="color:var(--muted);">Apps como Yaparkin conectan espacios libres (cochera, terreno baldío) con gente que busca estacionamiento por hora/mes en zonas de alta demanda — ingreso pasivo de un activo que ya tienes ocioso.</p>
-      </div>
-      <div class="card">
-        <h4 class="fw-700 mb-4">🏠 Airbnb de cuarto o depa</h4>
-        <p class="fs-13" style="color:var(--muted);">Si algún día tienes un cuarto libre o un segundo espacio, renta por noche supera por mucho la renta mensual tradicional — requiere gestión activa (limpieza, check-in) o tercerizarla.</p>
-      </div>
-      <div class="card">
-        <h4 class="fw-700 mb-4">🏭 Renta de mini-bodega / self-storage</h4>
-        <p class="fs-13" style="color:var(--muted);">Negocio de bienes raíces "aburrido" pero con demanda creciente en ciudades grandes — gente con depas chicos necesita dónde guardar cosas. Capital de entrada más alto, ingreso muy pasivo una vez operando.</p>
-      </div>
-      <div class="card">
-        <h4 class="fw-700 mb-4">🎰 Máquinas expendedoras inteligentes</h4>
-        <p class="fs-13" style="color:var(--muted);">Colocadas en oficinas/gimnasios/coworkings con pago digital — negocio de bajo mantenimiento una vez colocadas, tu perfil técnico ayuda si decides instrumentarlas con telemetría de inventario.</p>
-      </div>
-      <div class="card">
-        <h4 class="fw-700 mb-4">♻️ Compra-venta de artículos de segunda mano</h4>
-        <p class="fs-13" style="color:var(--muted);">Electrónicos, herramienta, bicicletas — comprar barato de quien necesita liquidez rápida y revender a precio justo de mercado (legal, distinto de comprar mercancía de dudosa procedencia — siempre pide comprobante/factura de origen).</p>
-      </div>
-      <div class="card">
-        <h4 class="fw-700 mb-4">🗑️ Servicio de "junk removal" (deshacerse de cosas)</h4>
-        <p class="fs-13" style="color:var(--muted);">Retirar muebles/escombro/cosas viejas de casas y oficinas — la gente paga bien por no tener que lidiar con la logística, y parte de lo retirado se puede revender aparte.</p>
-      </div>
-      <div class="card">
-        <h4 class="fw-700 mb-4">📸 Foto/dron para bodas y eventos</h4>
-        <p class="fs-13" style="color:var(--muted);">Tomas aéreas siguen siendo diferenciador en bodas/eventos grandes en México — inversión en equipo se paga rápido si el trabajo es bueno, y combina con tu lado técnico (edición, estabilización).</p>
-      </div>
-      <div class="card">
-        <h4 class="fw-700 mb-4">👔 Renta de trajes/vestidos de gala</h4>
-        <p class="fs-13" style="color:var(--muted);">Mismo modelo que sillas/mesas pero para ropa de ocasión especial — inventario que se renta muchas veces, temporada de graduaciones/bodas/XV años.</p>
-      </div>
-      <div class="card">
-        <h4 class="fw-700 mb-4">📊 Automatización/datos como servicio para PyMEs</h4>
-        <p class="fs-13" style="color:var(--muted);">Scraping legal de datos públicos, dashboards, automatizaciones con n8n para negocios chicos que no tienen equipo técnico propio — aprovecha directo tu perfil de testing/automatización sin depender de la industria automotriz.</p>
-      </div>
-    </div>
+    <div id="bi-cont"></div>
   </section>
 
   <section id="crear-empresa">
@@ -4935,6 +4876,554 @@
   // un {{marcador}} que reaparezca ahí se quedaría a la vista. aplicarDOM() es idempotente
   // (un nodo ya sustituido no contiene "{{" y se salta solo), así que repetirla no cuesta.
   if (window.CIFRAS) CIFRAS.aplicarDOM();
+  /* ══ CONSOLA — los instrumentos de cada sección (2026-08-30) ═══════════════════════════
+     Adán: "que me aporte valor, que sea entendible y con las secciones bien distribuidas".
+
+     El archivo tenía 171 casillas repartidas en once secciones y NINGUNA señal de avance:
+     marcar una no cambiaba nada fuera de su propia línea, así que no había forma de saber si
+     una sección estaba a medias o intacta sin recorrerla entera. Los datos ya estaban en
+     `coach_checks_v1`; lo que faltaba era leerlos.
+
+     Dos piezas, las dos generadas —no escritas a mano en el HTML— para que sigan funcionando
+     cuando se añada una casilla o un bloque nuevo:
+
+       · LA FRANJA (`.cc-bay`), bajo el título de cada sección con casillas: cuántos pasos
+         llevas de cuántos, una marca por casilla real y el porcentaje. Se repite en el
+         sidebar, al lado del enlace, para poder comparar secciones sin entrar a cada una.
+       · EL ÍNDICE (`.cc-idx`), en las secciones con 6+ bloques: sus propios <h3> como anclas
+         pegajosas. `#perfil` mide 10,700 px y hasta ahora solo se podía recorrer a ciegas.
+
+     Se recalcula al marcar cualquier casilla y al cambiar de pestaña. */
+
+  /* ══ MÁS IDEAS DE NEGOCIO — el catálogo con números (2026-08-30) ═══════════════════════
+     Adán: "complementa más las ideas y dame números de cómo empezar a invertir y hacer las
+     cosas". Antes eran 20 párrafos cualitativos sin una sola cifra, así que no había forma de
+     comparar dos ideas ni de saber cuál cabe en el dinero que hay.
+
+     LAS CIFRAS SON RANGOS DE ORDEN DE MAGNITUD del mercado mexicano, no cotizaciones. Están
+     para poder DESCARTAR y comparar, que es el 90% del trabajo; el número fino sale de pedir
+     precio el día que una idea se elija. Lo dice la propia pantalla, arriba, en vez de fingir
+     una precisión que no tienen.
+
+     LO QUE SÍ ES DATO DURO es la franja de capital: sale de `finanzasmx_v2` a través del
+     maestro, y contesta la pregunta que ninguna lista de ideas contesta — cuánto puedes
+     invertir HOY sin romper tu propia Fase 0 (fondo de emergencia primero, después la TC BBVA
+     al 55.7%). Con la deuda cara viva, la respuesta honesta es "casi nada", y por eso las tres
+     ideas de arranque en cero salen marcadas.
+
+     Se pinta desde el literal en vez de escribirse en el HTML porque esta pantalla vive de
+     comparar: 20 fichas a mano no se pueden filtrar ni reordenar. */
+  const IDEAS_NEGOCIO = [
+  {id:"sillas",ico:"🪑",cat:"conv",enc:"medio",t:"Renta de sillas, mesas y mantelería",
+   d:"Bodas, XV años y posadas — temporada alta casi todo el año en México. El mismo inventario se renta decenas de veces, y por eso el margen sube con cada evento en vez de bajar.",
+   inv:[15000, 40000],tik:"$1,000–1,500 por evento (50 sillas + 5 mesas)",sem:[2, 4],rec:"12–24 meses · unos 25–40 eventos",hrs:[6, 10],
+   arr:["100 sillas plegables · $120–180 c/u", "8–10 mesas redondas · $600–900 c/u", "Mantelería para ese número · $6,000–10,000", "Un flete o remolque para entregar (se puede rentar por evento al principio)"],
+   nota:"El cuello de botella no es el inventario, es el transporte. Arranca rentando el flete por evento y solo compra remolque cuando tengas 3 eventos al mes."},
+  {id:"inflables",ico:"🎪",cat:"conv",enc:"medio",t:"Renta de inflables para fiestas infantiles",
+   d:"Mismo modelo que sillas y mesas pero con ticket mucho más alto por evento, y la demanda se concentra en sábado y domingo — compatible con tu jornada de ALTEN.",
+   inv:[25000, 60000],tik:"$1,200–2,500 por día de renta",sem:[3, 6],rec:"10–18 meses · unos 20–30 rentas",hrs:[8, 12],
+   arr:["1 inflable grande · $18,000–35,000", "Blower/soplador de repuesto · $2,500–4,000", "Lona de piso y anclas · $1,500", "Seguro de responsabilidad civil · $3,000–6,000 al año"],
+   nota:"El seguro NO es opcional: un accidente con un niño sin cobertura te borra el negocio y más. Va en el capital de arranque, no \"después\"."},
+  {id:"lavado",ico:"🚗",cat:"conv",enc:"medio",t:"Lavado de autos a domicilio",
+   d:"Capital de entrada de los más bajos de la lista y demanda constante en zonas de oficinas y residenciales de CDMX. Escala contratando gente cuando ya tienes cartera fija.",
+   inv:[8000, 15000],tik:"$250–500 por auto · $700–1,200 si incluye interiores",sem:[1, 2],rec:"2–4 meses · unos 25–40 autos",hrs:[10, 15],
+   arr:["Hidrolavadora portátil con tanque · $4,000–7,000", "Aspiradora en seco/húmedo · $1,500–2,500", "Kit de productos y microfibras · $1,500–2,500", "Volanteo o pauta local · $1,000–2,000"],
+   nota:"La versión que sí escala no es lavar tú: es cerrar contrato con un corporativo o un edificio y que alguien más lave. Ahí el ticket pasa a ser mensual."},
+  {id:"limpieza",ico:"🧹",cat:"conv",enc:"medio",t:"Limpieza de oficinas y Airbnbs",
+   d:"Ingreso recurrente y predecible: son contratos mensuales, no eventos sueltos. El volumen de Airbnb en CDMX creó una necesidad constante de limpieza rápida entre huéspedes.",
+   inv:[5000, 12000],tik:"$350–700 por limpieza · $6,000–15,000 por contrato mensual",sem:[2, 3],rec:"1–3 meses",hrs:[4, 8],
+   arr:["Kit de limpieza profesional · $3,000–5,000", "Aspiradora · $1,500–3,000", "Uniformes y credenciales · $1,000", "Alta en las plataformas de anfitriones de tu zona"],
+   nota:"Es de las pocas de esta lista donde tú puedes NO operar desde el primer mes: contratas por servicio y te quedas con la relación con el cliente."},
+  {id:"fletes",ico:"📦",cat:"conv",enc:"bajo",t:"Mudanzas pequeñas y fletes",
+   d:"Con camioneta y un ayudante cubres mudanzas de depa u oficina chica: el nicho más rápido y barato que las mudanceras grandes no quiere.",
+   inv:[0, 15000],tik:"$1,200–3,000 por mudanza chica",sem:[1, 3],rec:"3–6 meses en modo renta",hrs:[8, 16],
+   arr:["Camioneta rentada por día · $900–1,500 (así arrancas en cero)", "Diablito, cinchos y cobijas de mudanza · $3,000–5,000", "Seguro de carga · desde $2,000 al año"],
+   nota:"Comprar la camioneta ($120,000–200,000 usada) te sacaría del plan: hoy tienes una deuda de auto de {{autoSaldo}}. Si esta idea prende, prende rentando."},
+  {id:"jardines",ico:"🌱",cat:"conv",enc:"bajo",t:"Mantenimiento de jardines y áreas verdes",
+   d:"Contratos recurrentes con residencias y corporativos, competencia poco calificada y herramienta básica como única barrera de entrada.",
+   inv:[8000, 20000],tik:"$1,500–4,000 mensuales por contrato",sem:[2, 4],rec:"3–5 meses · unos 4–6 contratos",hrs:[8, 12],
+   arr:["Desbrozadora · $4,000–8,000", "Podadora · $3,000–6,000", "Herramienta de mano y equipo de protección · $2,000", "Traslado del equipo (remolque chico o servicio)"],
+   nota:"Se cobra por contrato mensual, no por visita. Un contrato de $2,500 al mes vale más que diez podas sueltas de $600."},
+  {id:"foodtruck",ico:"🍽️",cat:"conv",enc:"bajo",t:"Puesto o food truck de comida especializada",
+   d:"Margen alto si el producto es bueno y el punto es constante, pero es el modelo más intensivo en tiempo operativo de toda la lista.",
+   inv:[150000, 400000],tik:"$3,000–8,000 de venta por día",sem:[8, 16],rec:"12–24 meses",hrs:[40, 60],
+   arr:["Camión o remolque equipado · $120,000–300,000", "Permisos, verificación sanitaria y punto · $15,000–40,000", "Inventario inicial y consumibles · $15,000–30,000"],
+   nota:"⚠️ Incompatible con ALTEN. 40+ horas a la semana no es un negocio en paralelo, es cambiar de trabajo. Solo tiene sentido si algún día sales."},
+  {id:"mobiliario",ico:"🏢",cat:"conv",enc:"medio",t:"Renta de mobiliario de oficina",
+   d:"Las empresas chicas y las startups prefieren rentar escritorios y sillas ergonómicas antes que comprarlas cuando no saben si van a crecer o a encoger. Contrato recurrente, no evento.",
+   inv:[40000, 100000],tik:"$400–900 mensuales por puesto (escritorio + silla)",sem:[4, 8],rec:"12–20 meses",hrs:[3, 5],
+   arr:["20–30 sillas ergonómicas · $1,200–2,500 c/u", "15–20 escritorios · $900–1,800 c/u", "Bodega chica o espacio propio para lo que no está rentado"],
+   nota:"De las de esta lista, la que menos horas te pide una vez colocada. El trabajo está al inicio: conseguir los primeros tres contratos."},
+  {id:"franquicia",ico:"🥾",cat:"nocon",enc:"bajo",t:"Franquicia de bajo costo",
+   d:"Compras un modelo ya probado, con marca y proveedores resueltos. Pagas por saltarte la curva de aprendizaje.",
+   inv:[80000, 350000],tik:"Depende del giro · normalmente $20,000–60,000 de utilidad mensual",sem:[12, 24],rec:"18–36 meses",hrs:[10, 40],
+   arr:["Cuota de franquicia · $50,000–200,000", "Adecuación del local e inventario inicial", "Regalías mensuales sobre venta · típicamente 4–8%"],
+   nota:"Las regalías se pagan sobre VENTA, no sobre utilidad: un mes malo también las paga. Pide los estados de los franquiciatarios actuales antes de firmar, no las proyecciones del franquiciante."},
+  {id:"arbitraje",ico:"📦",cat:"nocon",enc:"medio",t:"Retail arbitrage y reventa",
+   d:"Compras barato donde sobra y vendes donde falta. El capital no se gasta: rota. Y la rotación es la métrica real, no el margen por pieza.",
+   inv:[5000, 20000],tik:"20–40% de margen por ciclo",sem:[1, 2],rec:"El capital rota cada 2–6 semanas",hrs:[6, 10],
+   arr:["Capital rotativo inicial · $5,000–20,000", "Cuenta de vendedor (Mercado Libre, Amazon) y comisión · 12–18% por venta", "Empaque y envíos"],
+   nota:"La trampa es medir el margen y no la rotación. $3,000 que rotan 12 veces al año dejan más que $15,000 parados en producto que no sale."},
+  {id:"importar",ico:"🌏",cat:"nocon",enc:"medio",t:"Importación de nicho vía Alibaba",
+   d:"Traes un producto que aquí no está o está caro. Margen alto, pero el dinero se queda inmovilizado mientras el contenedor cruza.",
+   inv:[15000, 50000],tik:"40–120% de margen sobre el costo puesto en México",sem:[8, 16],rec:"2–4 ciclos de importación",hrs:[5, 8],
+   arr:["Primer pedido de prueba · $10,000–25,000", "Flete, aduana y agente aduanal · 20–40% del valor del pedido", "Registro de importador (padrón) y RFC con actividad"],
+   nota:"El primer pedido es para APRENDER el proceso, no para ganar. Pide muestra pagada antes del pedido grande: es el error que más caro sale."},
+  {id:"cochera",ico:"🅿️",cat:"nocon",enc:"alto",t:"Monetizar cochera o terreno como estacionamiento",
+   d:"Si ya tienes el espacio, el capital de arranque es prácticamente cero y el ingreso es mensual desde el primer mes. La mejor relación esfuerzo/retorno de toda la lista.",
+   inv:[0, 5000],tik:"$1,500–3,500 mensuales por cajón",sem:[1, 3],rec:"Inmediata · no hay inversión que recuperar",hrs:[1, 2],
+   arr:["Señalización y numeración de cajones · $500–1,500", "Contrato simple por escrito · plantilla gratuita", "Seguro de responsabilidad civil (recomendado) · $2,000–4,000 al año"],
+   nota:"✅ Es la única de la lista que puedes arrancar SIN romper tu Fase 0, porque no compite por el dinero del fondo de emergencia ni del abono a la TC BBVA."},
+  {id:"airbnb",ico:"🏠",cat:"nocon",enc:"medio",t:"Airbnb de cuarto o departamento",
+   d:"Ingreso mensual muy por encima de una renta tradicional, a cambio de operación constante: limpieza, mensajes y reposición entre huéspedes.",
+   inv:[15000, 60000],tik:"$8,000–20,000 mensuales brutos",sem:[3, 6],rec:"4–8 meses",hrs:[4, 8],
+   arr:["Mobiliario y blancos · $12,000–40,000", "Fotos profesionales · $2,500–5,000 (es lo que más mueve la ocupación)", "Caja de llaves, wifi y consumibles · $3,000"],
+   nota:"Revisa primero el reglamento de tu edificio y las reglas de la alcaldía: en varias zonas de CDMX ya hay tope de noches al año. Un negocio que arranca ilegal no es un negocio."},
+  {id:"bodega",ico:"🏭",cat:"nocon",enc:"bajo",t:"Mini-bodega y self-storage",
+   d:"Rentas metros cuadrados por mes. Ingreso muy estable, pero exige inmueble propio o un subarriendo con números que cuadren.",
+   inv:[20000, 60000],tik:"$800–2,000 mensuales por módulo",sem:[6, 12],rec:"10–20 meses en modo subarriendo",hrs:[2, 4],
+   arr:["Subarriendo de una nave o local · $8,000–20,000 al mes", "División en módulos y candados · $15,000–40,000", "Cámaras y control de acceso · $8,000–15,000"],
+   nota:"Solo funciona si la ocupación pasa del 60%. Antes de firmar el arrendamiento, cuenta cuántos módulos necesitas rentados para cubrir la renta: ese es el número que decide."},
+  {id:"vending",ico:"🎰",cat:"nocon",enc:"medio",t:"Máquinas expendedoras inteligentes",
+   d:"Ingreso pasivo real una vez colocadas. Todo el trabajo está en conseguir el punto: la máquina es lo fácil, el lugar es lo difícil.",
+   inv:[25000, 60000],tik:"$1,500–4,000 netos por máquina al mes",sem:[4, 8],rec:"12–24 meses por máquina",hrs:[3, 5],
+   arr:["Máquina con lector de tarjeta · $20,000–45,000", "Inventario inicial · $3,000–6,000", "Comisión al dueño del punto · 10–20% de la venta"],
+   nota:"El punto lo es todo: la misma máquina factura $1,200 en un pasillo muerto y $6,000 en un gimnasio o una escuela. Negocia el punto ANTES de comprar la máquina."},
+  {id:"segundamano",ico:"♻️",cat:"nocon",enc:"alto",t:"Compra-venta de artículos de segunda mano",
+   d:"La versión con menos capital de todas, y la que te enseña a vender sin arriesgar dinero: empiezas vendiendo lo que ya tienes en casa.",
+   inv:[0, 15000],tik:"50–150% de margen por pieza",sem:[1, 1],rec:"Inmediata si arrancas con lo tuyo",hrs:[5, 10],
+   arr:["Lo que ya no usas en casa · $0", "Después, capital rotativo · $3,000–15,000", "Báscula, empaque y cuenta de vendedor"],
+   nota:"✅ Arranca en cero y se cruza con tu Fase 0: tu propio plan ya dice \"sube a Marketplace tus activos ociosos\" para completar el fondo de emergencia. Es la misma acción, y aquí además aprendes el músculo de vender."},
+  {id:"junk",ico:"🗑️",cat:"nocon",enc:"bajo",t:"Retiro de muebles y escombro (junk removal)",
+   d:"Te pagan por llevarte lo que estorba, y parte de lo retirado se revende aparte. Doble ingreso por el mismo viaje.",
+   inv:[10000, 25000],tik:"$800–2,500 por servicio",sem:[2, 4],rec:"3–6 meses",hrs:[8, 14],
+   arr:["Camioneta rentada por servicio · $900–1,500", "Herramienta de desarme y equipo de protección · $3,000–5,000", "Costo del tiradero autorizado · $300–800 por viaje"],
+   nota:"El tiradero tiene que ser autorizado y con comprobante: tirar escombro donde no se debe es multa municipal y, si es reincidente, delito ambiental."},
+  {id:"dron",ico:"📸",cat:"nocon",enc:"medio",t:"Foto y dron para bodas y eventos",
+   d:"Las tomas aéreas siguen siendo diferenciador en bodas grandes, y se cruza directo con tu lado técnico: edición, estabilización, flujo de trabajo.",
+   inv:[35000, 80000],tik:"$6,000–18,000 por boda",sem:[4, 8],rec:"4–8 eventos",hrs:[10, 16],
+   arr:["Dron con cámara · $25,000–45,000", "Cámara y lente · $15,000–35,000 (se puede rentar los primeros trabajos)", "Tarjetas, baterías y respaldo · $5,000"],
+   nota:"⚠️ Volar dron con fines comerciales en México exige registro ante la AFAC y seguro de responsabilidad civil. Compruébalo antes de comprar equipo, no después."},
+  {id:"trajes",ico:"👔",cat:"nocon",enc:"bajo",t:"Renta de trajes y vestidos de gala",
+   d:"El modelo de las sillas aplicado a ropa de ocasión: inventario que se renta muchas veces, con temporada de graduaciones, bodas y XV años.",
+   inv:[40000, 90000],tik:"$800–2,000 por renta",sem:[4, 8],rec:"12–18 meses · unas 50–70 rentas",hrs:[5, 8],
+   arr:["20–30 trajes en tallas comunes · $1,500–3,000 c/u", "Ajustes y sastre de planta o por pieza", "Tintorería por cada renta · $150–300"],
+   nota:"La talla es el negocio: el 70% de la demanda está en cuatro tallas. Comprar surtido \"para cubrir a todos\" es la forma más rápida de dejar dinero colgado en un perchero."},
+  {id:"automatiza",ico:"📊",cat:"nocon",enc:"alto",t:"Automatización y datos como servicio para PyMEs",
+   d:"Dashboards, scraping legal de datos públicos y automatizaciones con n8n para negocios chicos sin equipo técnico. Es tu perfil de testing y automatización aplicado fuera de la industria automotriz.",
+   inv:[0, 8000],tik:"$8,000–35,000 por proyecto · $2,000–8,000 mensuales de mantenimiento",sem:[3, 6],rec:"Con el primer proyecto",hrs:[8, 12],
+   arr:["Dominio y hosting · $1,500 al año", "n8n en un VPS · $200–400 al mes (o autohospedado)", "Dos casos de ejemplo hechos gratis para tener qué enseñar"],
+   nota:"✅ El mejor encaje de la lista: capital casi cero, usa lo que ya sabes hacer, y el mantenimiento mensual convierte un proyecto suelto en ingreso recurrente. Es la misma vena que la Opción 9 de Posibles Negocios."},
+  ];
+
+
+  /* ══ POSIBLES NEGOCIOS — números sobre las 11 opciones (2026-08-30) ════════════════════
+     Mismo tratamiento que Más Ideas, con una diferencia deliberada: aquí NO se reescribió el
+     contenido. Cada opción ya traía "qué es", "por qué encaja", "primer paso esta semana" y
+     "riesgo principal" escritos contra su perfil real — eso vale más que cualquier rediseño.
+     Lo que faltaba eran las cifras, y se inyectan sobre las tarjetas que ya existen.
+
+     Los precios NO son inventados donde él ya los decidió: $350-450/h de freelance,
+     $8,000-15,000 por proyecto cerrado, $99-149 la plantilla y $300-400/h de mentoría salen
+     del bloque "¿Cuánto cobrar?" de esta misma sección. Repetirlos con otro número habría
+     creado dos verdades en la misma pantalla.
+
+     `mes` es el ingreso mensual realista SI la opción funciona, y es lo que alimenta el
+     cálculo de "cierra tu Fase 0 en N meses" contra lo que de verdad debe. La Opción 5
+     (aeroespacial) va con `null` a propósito: no hay datos, y fingir un rango habría sido
+     peor que decir qué hay que preguntar. */
+  const NEGOCIO_NUMS = {
+    negocio1: {inv:[0,2000], tik:'$99–149 de lanzamiento · $199–299 después (precio ya decidido abajo)',
+               sem:[1,3], mes:[2000,9000], hrs:[4,6],
+               eq:'Punto de equilibrio: la primera venta. No hay costo por unidad.'},
+    negocio2: {inv:[0,3000], tik:'$350–450 MXN/h · $8,000–15,000 por proyecto cerrado (tu tarifa)',
+               sem:[4,8], mes:[3500,9000], hrs:[8,12],
+               eq:'10–20 horas facturables al mes. El techo lo pone tu tiempo, no el mercado.'},
+    negocio3: {inv:[0,0], tik:'$300–400 MXN/h tras las 3 sesiones gratis (tu tarifa)',
+               sem:[2,4], mes:[1200,3200], hrs:[3,5],
+               eq:'4–8 sesiones al mes. Capital cero: solo tu tiempo y tu experiencia.'},
+    negocio4: {inv:[3000,15000], tik:'$299–999 mensuales por equipo (suscripción)',
+               sem:[12,24], mes:[3000,10000], hrs:[10,15],
+               eq:'Con 10 equipos pagando ya cubre su propio costo de operación.'},
+    negocio5: {inv:null, tik:'Por definir — no hay datos todavía',
+               sem:null, mes:null, hrs:[2,4],
+               eq:'Antes de cualquier número: qué factura hoy, qué margen deja, qué certificaciones tiene y qué haría falta para entrar. Sin esas cuatro respuestas no hay ficha que llenar.'},
+    negocio6: {inv:[0,0], tik:'No genera ingreso nuevo: libera horas ya ocupadas',
+               sem:[0,0], mes:null, hrs:[0,0],
+               eq:'Es una corrección, no un negocio. El número está abajo, calculado con tus propias cifras.'},
+    negocio7: {inv:[5000,20000], tik:'$40,000–150,000 por proyecto',
+               sem:[16,28], mes:[8000,25000], hrs:[8,14],
+               eq:'Un solo proyecto al año ya paga la prueba de concepto. El riesgo es el ciclo de venta largo.'},
+    negocio8: {inv:[0,5000], tik:'€45–80/h ≈ $900–1,600 MXN/h',
+               sem:[8,16], mes:[7000,20000], hrs:[6,10],
+               eq:'La tarifa en euros es el argumento entero: 5 horas allá valen 15 aquí.'},
+    negocio9: {inv:[0,8000], tik:'$8,000–35,000 por proyecto · $2,000–8,000 mensuales de mantenimiento',
+               sem:[8,16], mes:[6000,18000], hrs:[8,12],
+               eq:'El mantenimiento es lo que convierte un proyecto suelto en ingreso recurrente.'},
+    negocio10:{inv:[25000,80000], tik:'Meta de campaña · todo o nada',
+               sem:[12,24], mes:null, hrs:[15,25],
+               eq:'⚠️ Kickstarter es todo o nada: si no llega a la meta no cobras, y el video y la pauta ya se gastaron.'},
+    negocio11:{inv:[30000,120000], tik:'$15,000–40,000 mensuales por cliente',
+               sem:[24,52], mes:[15000,40000], hrs:[10,20],
+               eq:'Es infraestructura antes que negocio: habilita las Opciones 2 y 8 aunque nunca se venda sola.'},
+  };
+
+  (function posiblesNegocios(){
+    'use strict';
+    const grid = document.querySelector('#posibles-negocios .negocio-grid');
+    if (!grid) return;
+    const mx = n => '$' + Math.round(n).toLocaleString('es-MX');
+    const rango = a => !a ? '—' : (a[0] === 0 && a[1] === 0 ? '$0'
+                    : a[0] === 0 ? 'desde $0' : mx(a[0]) + '–' + mx(a[1]).replace('$', ''));
+    const C = window.CIFRAS;
+    const n = k => (C && typeof C.n === 'function') ? C.n(k) : null;
+
+    // Lo que hay que cubrir para cerrar la Fase 0: el hueco del fondo más la deuda cara.
+    const fondo = n('fondo'), meta = n('fondoMeta'), cara = n('deudaCara');
+    const objetivo = (meta != null && fondo != null && cara != null)
+      ? Math.max(0, meta - fondo) + cara : null;
+
+    function meses(m){
+      if (!objetivo || !m) return null;
+      const prom = (m[0] + m[1]) / 2;
+      return prom > 0 ? Math.ceil(objetivo / prom) : null;
+    }
+
+    /* La Opción 6 no genera ingreso: convierte horas. Su número se calcula con las cifras
+       reales de Adán —lo que deja Didi al mes contra su propia tarifa de freelance— en vez de
+       repetir un argumento cualitativo que ya estaba en la prosa. */
+    function didiVsFreelance(){
+      const didi = n('didiMes');
+      if (!didi) return null;
+      const HORAS_DIDI = 60;          // ~15 h/semana entre los turnos de la rutina
+      const porHora = didi / HORAS_DIDI;
+      const tarifa = 400;             // el punto medio de su propia tarifa, $350–450/h
+      return { didi: didi, porHora: porHora, tarifa: tarifa,
+               equivalente: tarifa * HORAS_DIDI, horas: HORAS_DIDI };
+    }
+
+    Object.keys(NEGOCIO_NUMS).forEach(function (id) {
+      const card = document.getElementById(id);
+      if (!card || card.querySelector('.pn-nums')) return;
+      const x = NEGOCIO_NUMS[id];
+      const ms = meses(x.mes);
+
+      let fase;
+      if (id === 'negocio6') {
+        const c = didiVsFreelance();
+        fase = c
+          ? '<div class="pn-fase"><b>' + mx(c.equivalente - c.didi) + '</b><span>de diferencia al mes: esas mismas <b>' +
+            c.horas + ' horas</b> de DiDi (' + mx(c.porHora) + '/h) valdrían ' + mx(c.equivalente) +
+            ' a tu tarifa de freelance de ' + mx(c.tarifa) + '/h. No es dejar de ganar: es cambiar el precio de tu hora.</span></div>'
+          : '';
+      } else if (ms) {
+        fase = '<div class="pn-fase"><b>' + ms + ' meses</b><span>en cerrar tu Fase 0 (' + mx(objetivo) +
+               ' entre fondo y TC BBVA) si esta opción funciona a su ingreso medio</span></div>';
+      } else {
+        fase = '<div class="pn-fase nd"><b>—</b><span>' + x.eq + '</span></div>';
+      }
+
+      const html =
+        '<div class="pn-nums">' +
+          '<div class="pn-n"><b class="' + (!x.inv ? 'nd' : (x.inv[0] === 0 ? 'cero' : '')) + '">' +
+            rango(x.inv) + '</b><span>Inversión</span></div>' +
+          '<div class="pn-n"><b class="' + (!x.sem ? 'nd' : '') + '">' +
+            (x.sem ? (x.sem[1] === 0 ? 'ya' : x.sem[0] + '–' + x.sem[1] + ' sem') : '—') +
+            '</b><span>Al primer peso</span></div>' +
+          '<div class="pn-n"><b class="' + (!x.mes ? 'nd' : '') + '">' +
+            (x.mes ? mx(x.mes[0]) + '–' + mx(x.mes[1]).replace('$', '') : '—') +
+            '</b><span>Al mes si funciona</span></div>' +
+          '<div class="pn-n"><b>' + x.hrs[0] + '–' + x.hrs[1] + ' h</b><span>Por semana</span></div>' +
+        '</div>' +
+        '<div class="pn-tik">💵 ' + x.tik + '</div>' + fase +
+        (ms || id === 'negocio6' ? '<p class="fs-13" style="color:var(--muted);margin-bottom:12px">' + x.eq + '</p>' : '');
+
+      // Va justo después de los tres badges cualitativos, antes de "Qué es": primero las
+      // cifras para descartar, después la prosa para decidir.
+      const ancla = card.querySelector('.grid-3') || card.querySelector('h3');
+      ancla.insertAdjacentHTML('afterend', html);
+    });
+
+    /* Filtros. Ocultan tarjetas en vez de repintarlas: la prosa y los ids tienen que quedarse
+       donde están, porque otras secciones enlazan a ellos. */
+    const FIL = [
+      { id:'todas',  t:'Las 11',              f:() => true },
+      { id:'ya',     t:'Arranca en $0',       f:x => x.inv && x.inv[0] === 0 },
+      { id:'rapida', t:'Primer peso < 2 meses', f:x => x.sem && x.sem[1] > 0 && x.sem[1] <= 8 },
+      { id:'poco',   t:'Menos de 8 h/sem',    f:x => x.hrs[1] <= 8 && x.hrs[1] > 0 },
+      { id:'grande', t:'Más de $10k al mes',  f:x => x.mes && x.mes[1] >= 10000 },
+    ];
+    let activo = 'todas';
+    const barra = document.createElement('div');
+    barra.className = 'bi-filtros';
+    grid.parentNode.insertBefore(barra, grid);
+
+    function pintarFiltros(){
+      const f = FIL.find(x => x.id === activo) || FIL[0];
+      barra.innerHTML = FIL.map(x => '<button class="bi-f' + (x.id === activo ? ' on' : '') +
+        '" data-f="' + x.id + '">' + x.t + '<i>' +
+        Object.keys(NEGOCIO_NUMS).filter(k => x.f(NEGOCIO_NUMS[k])).length + '</i></button>').join('');
+      Object.keys(NEGOCIO_NUMS).forEach(function (k) {
+        const c = document.getElementById(k);
+        if (c) c.classList.toggle('oculta', !f.f(NEGOCIO_NUMS[k]));
+      });
+    }
+    barra.addEventListener('click', function (e) {
+      const b = e.target.closest('.bi-f');
+      if (!b) return;
+      activo = b.dataset.f;
+      pintarFiltros();
+    });
+    // Un enlace desde otra sección apunta a una tarjeta concreta: si un filtro la tuviera
+    // oculta, el salto caería en el vacío y no pasaría nada visible. `irANegocios()` NO cambia
+    // el hash —hace scrollIntoView a mano— así que escuchar `hashchange` no bastaba: hay que
+    // envolver la función y quitar el filtro ANTES de que intente desplazarse.
+    (function(){
+      const orig = window.irANegocios;
+      if (typeof orig !== 'function') return;
+      window.irANegocios = function(){ activo = 'todas'; pintarFiltros(); return orig.apply(this, arguments); };
+    })();
+    window.addEventListener('hashchange', function(){ activo = 'todas'; pintarFiltros(); });
+    pintarFiltros();
+  })();
+
+    (function ideasNegocio(){
+    'use strict';
+    const cont = document.getElementById('bi-cont');
+    if (!cont) return;
+    const mx = n => '$' + Math.round(n).toLocaleString('es-MX');
+    const rango = a => a[0] === 0 && a[1] === 0 ? '$0'
+                     : a[0] === 0 ? 'desde $0' : mx(a[0]) + '–' + mx(a[1]).replace('$', '');
+    const ENC = { alto: 'ENCAJE ALTO', medio: 'ENCAJE MEDIO', bajo: 'ENCAJE BAJO' };
+
+    /* La franja de capital. Todo sale del maestro; si Finanzas todavía no tiene datos en este
+       navegador, se dice —no se inventa un cero que parecería un saldo real. */
+    function capital(){
+      const C = window.CIFRAS;
+      const n = k => (C && typeof C.n === 'function') ? C.n(k) : null;
+      const v = k => { const x = n(k); return x == null ? '—' : mx(x); };
+      const fondo = n('fondo'), meta = n('fondoMeta'), cara = n('deudaCara'), margen = n('margen');
+      const faltaFondo = (fondo != null && meta != null) ? Math.max(0, meta - fondo) : null;
+      let ver;
+      if (cara == null || margen == null) {
+        ver = 'Abre <b>Finanzas</b> una vez para que esta franja lea tus saldos reales.';
+      } else if (cara > 0 || (faltaFondo != null && faltaFondo > 0)) {
+        // El plazo se calcula con el margen ÍNTEGRO, y se dice así: es el suelo optimista, no
+        // una previsión. Con la mitad del margen es el doble de meses, y eso ya lo hace el lector.
+        const meses = margen > 0 ? Math.ceil(((faltaFondo || 0) + cara) / margen) : null;
+        ver = 'Tu Fase 0 dice: <b>fondo de emergencia primero, después la TC BBVA</b> (' + mx(cara) +
+              ' al 55.7% anual). Abonar ahí es un <b>rendimiento del 55.7% garantizado y sin ' +
+              'riesgo</b>; casi ninguna idea de esta lista lo iguala, y las que en papel lo superan ' +
+              'no descuentan la probabilidad de que no funcionen. Así que <b>el capital disponible ' +
+              'para un negocio hoy es $0</b>' +
+              (meses ? ' — <b>' + meses + ' meses</b> si le dedicaras el margen completo, el doble si le dedicas la mitad' : '') +
+              '. Las ideas marcadas <b>ARRANQUE EN $0</b> son las únicas que puedes empezar ya, ' +
+              'porque no compiten por ese dinero.';
+      } else {
+        ver = 'Fondo cubierto y sin deuda cara: <b>ya puedes destinar capital</b>. Una regla ' +
+              'prudente es no arriesgar más de <b>3 meses de margen</b> (' + mx(margen * 3) +
+              ') en una primera idea.';
+      }
+      return '<div class="bi-bay">' +
+        '<div class="bi-m"><b>' + v('margen') + '</b><span>Margen mensual</span></div>' +
+        '<div class="bi-m"><b class="' + (faltaFondo === 0 ? 'ok' : 'no') + '">' + v('fondo') +
+          '</b><span>Fondo · meta ' + v('fondoMeta') + '</span></div>' +
+        '<div class="bi-m"><b class="' + (cara > 0 ? 'no' : 'ok') + '">' + v('deudaCara') +
+          '</b><span>Deuda cara</span></div>' +
+        '<div class="bi-m"><b class="hi">' + IDEAS_NEGOCIO.filter(i => i.inv[0] === 0).length +
+          '</b><span>Ideas de arranque en $0</span></div>' +
+        '<div class="bi-veredicto">' + ver + '</div></div>';
+    }
+
+    const FILTROS = [
+      { id: 'todas',  t: 'Todas',              f: () => true },
+      { id: 'cero',   t: 'Arranque en $0',     f: i => i.inv[0] === 0 },
+      { id: 'barata', t: 'Menos de $20k',      f: i => i.inv[1] <= 20000 },
+      { id: 'encaja', t: 'Encajan contigo',    f: i => i.enc === 'alto' },
+      { id: 'poco',   t: 'Menos de 8 h/sem',   f: i => i.hrs[1] <= 8 },
+      { id: 'conv',   t: 'Convencionales',     f: i => i.cat === 'conv' },
+      { id: 'nocon',  t: 'No convencionales',  f: i => i.cat === 'nocon' },
+    ];
+    let activo = 'todas';
+
+    function ficha(i){
+      return '<article class="bi-card ' + i.enc + '">' +
+        '<div class="bi-hd"><span class="bi-ico">' + i.ico + '</span>' +
+          '<span class="bi-t">' + i.t + '</span>' +
+          '<span class="bi-enc">' + ENC[i.enc] + '</span></div>' +
+        '<p class="bi-d">' + i.d + '</p>' +
+        '<div class="bi-nums">' +
+          '<div class="bi-n"><b class="' + (i.inv[0] === 0 ? 'cero' : '') + '">' + rango(i.inv) +
+            '</b><span>Inversión inicial</span></div>' +
+          '<div class="bi-n"><b>' + i.sem[0] + '–' + i.sem[1] + ' sem</b><span>Al primer peso</span></div>' +
+          '<div class="bi-n"><b>' + i.hrs[0] + '–' + i.hrs[1] + ' h</b><span>Por semana</span></div>' +
+          '<div class="bi-n"><b>' + i.rec.split('·')[0].trim() + '</b><span>Recuperas en</span></div>' +
+        '</div>' +
+        '<div class="bi-tik">💵 ' + i.tik + '</div>' +
+        '<div class="bi-arr"><b>Con qué arrancas</b><ul>' +
+          i.arr.map(x => '<li>' + x + '</li>').join('') + '</ul></div>' +
+        '<p class="bi-nota">' + i.nota + '</p>' +
+      '</article>';
+    }
+
+    function pintar(){
+      const f = FILTROS.find(x => x.id === activo) || FILTROS[0];
+      const lista = IDEAS_NEGOCIO.filter(f.f);
+      cont.innerHTML = capital() +
+        '<div class="bi-filtros">' + FILTROS.map(x =>
+          '<button class="bi-f' + (x.id === activo ? ' on' : '') + '" data-f="' + x.id + '">' +
+          x.t + '<i>' + IDEAS_NEGOCIO.filter(x.f).length + '</i></button>').join('') + '</div>' +
+        '<div class="bi-grid">' + lista.map(ficha).join('') + '</div>';
+      // Las cifras del maestro que van dentro de las notas ({{autoSaldo}}) se resuelven aquí:
+      // este bloque se pinta después de la pasada global de CIFRAS.aplicarDOM().
+      if (window.CIFRAS) CIFRAS.aplicarDOM(cont);
+    }
+
+    cont.addEventListener('click', function (e) {
+      const b = e.target.closest('.bi-f');
+      if (!b) return;
+      activo = b.dataset.f;
+      pintar();
+    });
+
+    pintar();
+  })();
+
+  (function consolaCoach(){
+    'use strict';
+    const secs = () => document.querySelectorAll('main > section[id]');
+
+    // Solo lo que el usuario puede ver: en `#perfil` las cuatro pestañas viven en el DOM a la
+    // vez, y contar las cuatro daría un avance que no corresponde a lo que tiene delante.
+    const visible = el => !!(el.offsetParent || el.getClientRects().length);
+
+    function avance(sec){
+      const ins = sec.querySelectorAll('.check-item input[type="checkbox"]');
+      let hechos = 0;
+      ins.forEach(i => { if (i.checked) hechos++; });
+      return { hechos: hechos, total: ins.length };
+    }
+
+    /* La franja. Se crea una vez y después solo se le actualizan los números: recrearla en
+       cada clic perdería el foco del teclado y haría parpadear el bloque. */
+    function franja(sec){
+      const a = avance(sec);
+      let bay = sec.querySelector(':scope > .cc-bay');
+      if (!a.total) { if (bay) bay.remove(); return a; }
+      if (!bay) {
+        const tit = sec.querySelector(':scope > h2.section-title');
+        if (!tit) return a;
+        bay = document.createElement('div');
+        bay.className = 'cc-bay';
+        bay.innerHTML = '<div class="cc-n"><span class="cc-k">Avance de esta sección</span>' +
+          '<span class="cc-v"><b></b><i></i></span></div>' +
+          '<div class="cc-rail"></div><div class="cc-pct"></div>';
+        tit.insertAdjacentElement('afterend', bay);
+      }
+      const pct = Math.round(a.hechos / a.total * 100);
+      bay.classList.toggle('full', a.hechos === a.total);
+      bay.querySelector('.cc-v b').textContent = a.hechos;
+      bay.querySelector('.cc-v i').textContent = '/' + a.total;
+      bay.querySelector('.cc-pct').textContent = pct + '%';
+      const rail = bay.querySelector('.cc-rail');
+      // Con más de 60 marcas cada una baja de 2 px y el riel se lee como una barra lisa: a
+      // partir de ahí una sola barra continua dice lo mismo sin fingir precisión.
+      const marcas = a.total <= 60 ? a.total : 1;
+      const llenas = a.total <= 60 ? a.hechos : (pct >= 50 ? 1 : 0);
+      let html = '';
+      for (let k = 0; k < marcas; k++) html += '<i class="' + (k < llenas ? 'd' : '') + '"></i>';
+      if (rail.dataset.n !== String(marcas) + ':' + llenas) {
+        rail.innerHTML = html; rail.dataset.n = String(marcas) + ':' + llenas;
+      }
+      return a;
+    }
+
+    /* El contador del sidebar. Un enlace puede apuntar a una pestaña (`data-tab`) y varios a
+       la misma sección: el contador va en el que NO lleva pestaña, o en el primero, para no
+       repetir la misma cifra cuatro veces bajo "Mi Perfil Real". */
+    function sidebar(mapa){
+      document.querySelectorAll('[data-sec]').forEach(a => {
+        const prev = a.querySelector('.cc-cnt');
+        if (prev) prev.remove();
+      });
+      Object.keys(mapa).forEach(id => {
+        const a = mapa[id];
+        if (!a.total) return;
+        const enlaces = document.querySelectorAll('[data-sec="' + id + '"]');
+        if (!enlaces.length) return;
+        let destino = enlaces[0];
+        enlaces.forEach(e => { if (!e.dataset.tab) destino = e; });
+        const s = document.createElement('span');
+        s.className = 'cc-cnt' + (a.hechos === a.total ? ' full' : '');
+        s.textContent = a.hechos + '/' + a.total;
+        s.title = a.hechos + ' de ' + a.total + ' pasos marcados en esta sección';
+        destino.appendChild(s);
+      });
+    }
+
+    /* El índice. Se arma de los <h3> VISIBLES, así que en `#perfil` lista los de la pestaña
+       abierta y no los de las otras tres. Los <h3> sin id reciben uno estable a partir de su
+       posición, para poder anclarlos sin tocar el HTML. */
+    function indice(sec){
+      let idx = sec.querySelector(':scope > .cc-idx');
+      const h3 = Array.from(sec.querySelectorAll('h3')).filter(h => {
+        const t = (h.textContent || '').trim();
+        return t.length > 2 && t.length < 70 && visible(h);
+      });
+      if (h3.length < 6) { if (idx) idx.remove(); return; }
+      if (!idx) {
+        idx = document.createElement('nav');
+        idx.className = 'cc-idx';
+        idx.setAttribute('aria-label', 'Índice de la sección');
+        // Detrás de las pestañas cuando las hay: el índice lista los bloques de la pestaña
+        // ABIERTA, así que ponerlo encima del selector de pestañas invertía la jerarquía —
+        // primero se elige la pestaña, después se navega dentro de ella.
+        const ref = sec.querySelector(':scope > .subtab-nav')
+                 || sec.querySelector(':scope > .cc-bay')
+                 || sec.querySelector(':scope > h2.section-title');
+        if (!ref) return;
+        ref.insertAdjacentElement('afterend', idx);
+      }
+      idx.innerHTML = h3.map(function (h, k) {
+        if (!h.id) h.id = sec.id + '-h' + k;
+        h.style.scrollMarginTop = '116px';
+        const t = (h.textContent || '').trim().replace(/\s+/g, ' ');
+        return '<a href="#' + h.id + '" title="' + t.replace(/"/g, '') + '">' +
+               (t.length > 26 ? t.slice(0, 24) + '…' : t) + '</a>';
+      }).join('');
+    }
+
+    let pendiente = null;
+    function pintar(){
+      const mapa = {};
+      secs().forEach(function (sec) {
+        mapa[sec.id] = franja(sec);
+        // El índice solo se rearma en la sección visible: en las ocultas, `visible()` diría
+        // que no hay ningún <h3> y lo borraría para tener que rehacerlo al volver.
+        if (visible(sec)) indice(sec);
+      });
+      sidebar(mapa);
+    }
+    // Un solo repintado por ráfaga de clics: marcar cinco casillas seguidas no debe recorrer
+    // el DOM cinco veces en un archivo de este tamaño.
+    function repintar(){ clearTimeout(pendiente); pendiente = setTimeout(pintar, 60); }
+
+    document.addEventListener('change', function (e) {
+      if (e.target && e.target.matches('.check-item input[type="checkbox"]')) repintar();
+    });
+    // Cambiar de sección, de pestaña o de modo cambia QUÉ está visible, y con ello el índice.
+    // Se envuelven las tres funciones en vez de escuchar el clic: `irANegocios()` y varios
+    // enlaces internos saltan de sección sin pasar por el sidebar, y con un listener de clic
+    // esas rutas se quedaban sin índice.
+    ['irASeccion', 'showSubtab', 'cambiarModo'].forEach(function (fn) {
+      const orig = window[fn];
+      if (typeof orig !== 'function') return;
+      window[fn] = function () { const r = orig.apply(this, arguments); repintar(); return r; };
+    });
+
+    pintar();
+  })();
+
 </script>
 
 

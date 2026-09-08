@@ -29,10 +29,12 @@ todos los días con sus dosis.
    hoy; se guarda en `S.chequeo`, aparte de `S.examenes` (que guarda VALORES).
 4. **Peso y composición**: con menos de 3 registros no dibuja curva — una línea con un punto es
    peor que ninguna — sino una barra entre el peso inicial y la meta. La misma barra sustituye a
-   las dos gráficas en la pestaña de Peso mientras haya menos de 3 pesajes.
+   las dos gráficas en la pestaña de Peso mientras haya menos de 3 pesajes. Desde el 2026-09-02
+   los pesajes y la meta vienen de `CIFRAS.PESO` — ver "El peso vive en los datos maestros".
 5. **Tu botiquín** (`sdBotiquinHtml`, compartido con Suplementos): lo que dura cada envase y
    **cuántos días quedan** — en rojo bajo 14 —, más el **costo mensual: $1,130**.
-6. **Bienestar de la semana** y **las 5 reglas que sí mueven la aguja**.
+6. **Las 5 reglas que sí mueven la aguja**. (Hasta el 2026-09-02 también estaba aquí la tarjeta
+   **Bienestar de la semana** — ver "Fuera la tarjeta de Bienestar de la semana" al final.)
 
 ### Los datos vienen del maestro
 
@@ -214,7 +216,7 @@ Verificado sección por sección (`SECS` = dashboard, medidas, digestiva, examen
 
 - Incrustada vía `<iframe>` en [`readme_cuidadopersonal.md`](readme_cuidadopersonal.md) (subtab "Cuidado de la Salud"). El shell no puede tocar el DOM/JS de este archivo (iframe cross-document), pero **sí comparte `localStorage`** porque ambos se sirven desde `file://` (ver la nota de origen compartido en `readme_cuidadopersonal.md`).
 - El **Dashboard** (`../Dashboard/dashboard.html`) lee `misalud_v1` directamente (`D.sal`): `renderHero()` usa `alimentos` (calorías de hoy en el panel de nutrición) y `medidas`/`agua`/`metas`; `renderQuickApps()` usa `alimentos` para el dato de calorías de hoy en la píldora de acceso rápido. **Desde el 2026-08-02, `alimentos` ya no lo escribe este archivo — lo escribe `comida.html`** (mismo formato exacto, ver [`readme_comida.md`](readme_comida.md)); el Dashboard no tuvo que cambiar nada porque solo le importa la clave `misalud_v1`, no quién la escribe. Si cambias la forma de `S.alimentos`/`S.medidas`/`S.metas`, revisa `renderHero()`/`renderQuickApps()` en `Dashboard/dashboard.html` **y** `renderRegistro()`/`registrarReceta()`/`registrarRutinaMeal()` en `comida.html`. **`S.examenes`/`S.chequeos`/`S.perfilMedico`/`S.postura`/`S.mental`/`S.suplementos` no los lee el Dashboard todavía** — si en el futuro se quiere una alerta ahí, hay que agregarla a mano en `loadAll()` y en la función de slide correspondiente.
-- **`comida.html` escribe en la clave de este archivo** (`misalud_v1.alimentos`), no solo en la propia (`comida_v1`) — mismo patrón ya establecido desde el 2026-07-30, ahora con más superficie (antes solo `registrarReceta()`, ahora también el CRUD completo del Registro Diario y `registrarRutinaMeal()`). Ver [`readme_comida.md`](readme_comida.md) → "Registro Diario".
+- **`comida.html` escribe en la clave de este archivo** (`misalud_v1.alimentos`), no solo en la propia (`comida_v1`) — mismo patrón ya establecido desde el 2026-07-30. El CRUD completo del Registro Diario amplió esa superficie el 2026-08-02 y volvió a reducirla el **2026-09-02**, cuando esa sección se quitó de Comida: hoy escriben solo `registrarReceta()` y `registrarRutinaMeal()`. Ver [`readme_comida.md`](readme_comida.md) → "Fuera el Registro Diario y el Plan Semanal".
 - Mapa completo del proyecto: [`../README.md`](../README.md).
 
 ## Cómo usarlo
@@ -240,3 +242,65 @@ Necesario para que las nuevas tareas de suplementos AM/PM de `RUTINA_TASKS` (Coa
 El bloque flotante `#btnVolverDash` (`position:fixed`, fondo oscuro propio, z-index 9999) que se había insertado esta mañana **se encimaba sobre el botón "+ Pesarme hoy"** y no seguía el tema de este archivo. Se retiró junto con su `<style>`: ahora el enlace es un botón redondo con el 🚀 antes del de tema, con la clase `.theme-toggle-btn` que ya usan sus vecinos, así que hereda tema y estilos sin CSS nuevo.
 
 Detalle completo y medición en `../Dashboard/readme_dashboard.md` → "El botón de Dashboard deja de flotar".
+
+## Fuera la tarjeta de Bienestar de la semana (2026-09-02)
+
+Petición directa de Adán: *"elimina esta parte de salud, solo esa parte"*, señalando la tarjeta 🧠 **Bienestar de la semana** del Dashboard — la tira de lunes a domingo con la carita del ánimo de cada día, su botón "Ver todo" y los dos avisos de abajo (las 5 h 40 de sueño entre semana y las 28 h al volante).
+
+Se borró `sdBienestarHtml()` con sus constantes `SD_DIAS`/`SD_CARA`, el CSS que solo ella usaba (`.sd-sem`, `.sd-sd`/`.sd-sd-l`/`.sd-sd-c`/`.sd-sd-v` y el modificador naranja `.sd-rule-n.al` del aviso de sueño) y su llamada en `renderDashboard()`, que ahora deja la columna izquierda con solo el chequeo del año: `d-izq.innerHTML = sdChequeoHtml()`. Se conserva `.sd-rule*` — lo sigue usando "💡 Lo que sí mueve la aguja", en la columna derecha.
+
+**El dato no se toca.** `S.mental.registros` es de la pestaña 🧠 **Salud Mental** (`nav('mental')`), que sigue igual: registra el ánimo del día, lo lista y lo grafica. Lo que desapareció es su **resumen** en el Dashboard, no la función de registrarlo. Los dos avisos que iban al pie de esa tarjeta eran texto fijo, no calculado: el de sueño sigue documentado en [`readme_cuidadopersonal.md`](readme_cuidadopersonal.md) y [`../Coach/readme_coach.md`](../Coach/readme_coach.md), y las 6 pausas de postura del día las sigue explicando la propia pestaña de 🧍 Postura.
+
+**Verificado** (Chromium headless, `file://`): `cuidadopersonal.html?tab=salud` pinta el dashboard completo sin la tarjeta, con las dos columnas equilibradas y **cero mensajes de consola**; el `<script>` principal pasa `node --check`.
+
+## El peso vive en los datos maestros (2026-09-02)
+
+Adán, sobre la tarjeta de Peso y composición: *"en esa seccion es subir a 80 kg pero el peso es
+para masa muscular y bajar panza, tal vez en esta seccion puedes hacer registros de mi peso, no te
+los dare cada mes, te los dare cada que me acuerde y anotamos la fecha, ademas no quiero que esos
+registros se pierdan, entonces los anotas en variables maestras"*.
+
+**El problema real**: los pesajes vivían en `misalud_v1.medidas`, o sea **en un navegador**.
+Limpiar los datos del sitio, cambiar de equipo o abrir desde el celular y el histórico se perdía
+entero — y el único registro que había era un *seed* de arranque, no un pesaje de verdad.
+
+Ahora el histórico es [`PESO`](../Dashboard/datos-maestros.js) en los datos maestros, versionado
+en el repositorio:
+
+```js
+const PESO = {
+  alturaCm: 178,
+  metaKg:   80,                                  // "es subir a 80 kg"
+  objetivo: 'Ganar masa muscular y bajar panza',
+  registros: [ { fecha:'2026-09-02', kg:75, nota:'…' } ],   // cintura/brazo/muslo/grasa opcionales
+  // ultimo, actualKg, inicioKg, faltanKg, imc, cinturaUltima — todos derivados
+};
+```
+
+**Cómo se conectan las dos verdades.** `init()` siembra `PESO.registros` en `S.medidas` en **cada
+carga**, no una sola vez con bandera como los suplementos: así un navegador nuevo, o uno al que le
+limpiaron los datos, recupera la lista completa. La dirección es siempre maestro → app. Un pesaje
+anotado a mano desde "+ Pesarme hoy" se conserva, pero si cae en la misma fecha que uno del maestro,
+gana el del maestro. Los sembrados llevan `maestro:true` e id determinista `'maestro-FECHA'`, y en
+la tabla de Peso & Medidas salen con **🔒 en vez del bote de basura**: borrarlos desde la app no
+serviría de nada porque vuelven al recargar. `S.metas.pesoObj` y `S.perfil.altura` también se
+reescriben desde el maestro, y el campo "Peso objetivo" de Perfil & Metas ahora lo dice.
+
+**Lo que cambió en pantalla**
+
+- La tarjeta abre con el objetivo real — *ganar masa muscular y bajar panza* — y explica por qué
+  la cintura importa tanto como el kilo: **son dos cosas que mueven la báscula en direcciones
+  opuestas**, y un +1 kg puede ser músculo o panza. Si hay cintura anotada, muestra la última con
+  su fecha; si no, lo dice.
+- Al pie, de dónde salen los pesajes y qué hacer para agregar uno: decírselo a Claude.
+- El KPI **"Último peso"** de la cabecera volvió a funcionar. Leía `S.pesos`, una clave que este
+  archivo nunca ha tenido (los pesajes son `S.medidas[].peso`), así que mostraba siempre un guion.
+- El enlace *"cambiar meta"* — que ponía `pesoObj` en 0 y el maestro revertía a la carga siguiente —
+  se sustituyó por la línea que dice dónde se cambia de verdad.
+
+**Verificado** (Chromium headless, `file://`, arrancando con `localStorage` vacío — que es justo el
+caso que antes perdía todo): el pesaje aparece solo, la tarjeta muestra 75 kg contra la meta de 80 y
+"te faltan 5 kg", el IMC sale 23.7 y la tabla lo lista con candado. Con **3 registros de prueba**
+(luego revertidos) aparecen las dos gráficas — evolución del peso y cintura —, la barra
+inicio → meta y el "↑ +0.7 kg vs anterior". Cero mensajes de consola en las tres pantallas, y
+`dashboard.html` sigue cargando limpio.

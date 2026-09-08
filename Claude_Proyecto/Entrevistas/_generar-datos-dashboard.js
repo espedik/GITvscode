@@ -367,6 +367,45 @@ const CSS_INTRO = `.en-content .py-intro{
 const ENTREVISTA_CSS = [CSS_VARS_LIGHT, CSS_VARS_DARK, CSS_INTRO, scopedRules.join('\n'), embeddedCss].join('\n\n');
 
 // ══════════════════════════════════════════════════════════════════════════
+// 4b) PY_MOD_LABEL — cómo se llama cada módulo en el menú de la app
+// ══════════════════════════════════════════════════════════════════════════
+// El Dashboard pinta un badge con el módulo del tema del día. Mostraba el id crudo ("PYFUND",
+// "POO") hasta que se cambió por la etiqueta legible del menú de Entrevistas... pero el mapa
+// `PY_MOD_LABEL` nunca se escribió en ningún sitio, así que `renderEntrevista()` reventaba con
+// un ReferenceError y el panel del Dashboard se quedaba en "Cargando…" para siempre.
+//
+// Se extrae de `entrevistas.html`, que es donde vive el nombre de verdad, en vez de copiarlo a
+// mano: si el menú renombra un módulo, el badge se entera al regenerar. Dos formas de módulo:
+//   · `<div class="module" data-mod="poo">` … `<span class="m-label">Python — POO</span>`
+//   · un `module-link` sin data-mod, con `onclick="go('py-cheatsheet')"` — ahí el módulo sale
+//     del propio tema (`T['py-cheatsheet'].mod`).
+// El prefijo "Python — " se quita: la pantalla entera del Dashboard ya es de Python.
+const HTML_APP = fs.readFileSync(path.join(DIR, 'entrevistas.html'), 'utf8');
+const PY_MOD_LABEL = {};
+const limpiaLabel = s => s.replace(/^Python\s*[—–-]\s*/i, '').trim();
+
+// Se recorre BLOQUE a bloque (`<div class="module…`) en vez de con una regex sobre el archivo
+// entero: los subitems también llevan `onclick="go(...)"`, y una búsqueda global se llevaba por
+// delante el `m-label` del Cheat Sheet al casar con el `go()` del ítem anterior.
+// El corte es en la apertura de un MÓDULO, no en cualquier `class="module…"`: partir por
+// el prefijo suelto también cortaba en `module-header`, y el `data-mod` quedaba en un
+// trozo y su `m-label` en el siguiente.
+HTML_APP.split(/<div class="module(?:"| module-link")/).slice(1).forEach(function (bloque) {
+  const lab = bloque.match(/<span class="m-label">([^<]+)<\/span>/);
+  if (!lab) return;
+  const dm = bloque.match(/data-mod="([^"]+)"/);
+  const go = bloque.match(/onclick="go\('([^']+)'\)"/);
+  const mod = dm ? dm[1] : (go && T[go[1]] ? T[go[1]].mod : null);
+  if (mod && MODULOS_DASHBOARD.includes(mod) && !PY_MOD_LABEL[mod]) PY_MOD_LABEL[mod] = limpiaLabel(lab[1]);
+});
+
+// Un módulo sin etiqueta dejaría el badge vacío: se avisa y se cae al id en mayúsculas, que es
+// lo que el Dashboard ya hace como respaldo.
+const sinLabel = MODULOS_DASHBOARD.filter(m => !PY_MOD_LABEL[m]);
+if (sinLabel.length) console.warn('⚠️  Sin m-label en entrevistas.html:', sinLabel.join(', '));
+console.log('Etiquetas de módulo:', JSON.stringify(PY_MOD_LABEL));
+
+// ══════════════════════════════════════════════════════════════════════════
 // 5) Escribir el archivo generado
 // ══════════════════════════════════════════════════════════════════════════
 const header = '// Generado automáticamente por Entrevistas/_generar-datos-dashboard.js a partir de\n' +
@@ -375,7 +414,8 @@ const header = '// Generado automáticamente por Entrevistas/_generar-datos-dash
 const out = header +
   'const ENTREVISTA_TEMAS = ' + JSON.stringify(ENTREVISTA_TEMAS) + ';\n' +
   'const ENTREVISTA_CONTENT = ' + JSON.stringify(ENTREVISTA_CONTENT) + ';\n' +
-  'const ENTREVISTA_CSS = ' + JSON.stringify(ENTREVISTA_CSS) + ';\n';
+  'const ENTREVISTA_CSS = ' + JSON.stringify(ENTREVISTA_CSS) + ';\n' +
+  'const PY_MOD_LABEL = ' + JSON.stringify(PY_MOD_LABEL) + ';\n';
 fs.writeFileSync(OUTPUT_FILE, out);
 console.log('Escrito', OUTPUT_FILE, '—', fs.statSync(OUTPUT_FILE).size, 'bytes,', ENTREVISTA_TEMAS.length, 'temas,', scopedRules.length, 'reglas CSS portadas +', innerBlocksCountSafe(), 'del <style> embebido.');
 // Cuenta lo que DE VERDAD se embebió, no lo que traía el tema origen: antes leía siempre de

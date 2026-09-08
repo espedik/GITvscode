@@ -60,6 +60,29 @@ const sinComentarios = s => s.replace(/\/\*[\s\S]*?\*\//g, '')
   .replace(/<!--[\s\S]*?-->/g, '')
   .split('\n').filter(l => !l.trim().startsWith('//')).join('\n');
 
+/* ── Cómo NOMBRA la prosa a cada deuda ──────────────────────────────────────
+   Los ids (`d002`) solo viven en el código; los textos dicen "Banamex" o "el BYD". Este mapa es
+   el puente, y lo usan dos cosas: el control 22 (afirmaciones contra el saldo vivo) y el aviso
+   de "cambió una variable maestra", que con él puede decir EN QUÉ ARCHIVOS se habla de la deuda
+   que se acaba de mover, en vez de un genérico "revisa los textos".
+   Al añadir una deuda al maestro, añade aquí sus alias: sin ellos, nadie vigila lo que se diga
+   de ella. Un alias de más solo hace mirar una frase extra; uno de menos deja un punto ciego. */
+const ALIAS_DEUDA = {
+  d001: ['BBVA'],
+  d002: ['Banamex'],
+  d003: ['BYD', 'automotriz'],
+  d004: ['Apple Watch'],
+  d008: ['iPhone'],
+  d009: ['Zap Stylo'],
+};
+/* De la variable del catálogo a la deuda que describe — para el aviso del cambio. */
+const CLAVE_DEUDA = { tcBbva: 'd001', tcBbvaMin: 'd001', banamex: 'd002', banamexMin: 'd002',
+                      autoSaldo: 'd003', autoPago: 'd003', appleWatch: 'd004',
+                      iphone: 'd008', zapStylo: 'd009' };
+/* Los .md también afirman cosas sobre las deudas, así que entran en el control 22. */
+const DOCS_DEUDA = ['Dashboard/DATOS-MAESTROS.md', 'Dashboard/readme_dashboard.md',
+                    'Coach/readme_coach.md', 'Finanzas/readme_finanzas.md'];
+
 /* ── 1. Fuente única: nadie puede volver a incrustar lo que ya vive en el maestro ─────────────
    La declaración legítima en una app es una línea que lee `CIFRAS.…`; un literal `[` o `{` no. */
 (function fuenteUnica() {
@@ -635,6 +658,36 @@ function impactoDelCambio() {
     L.push('');
     L.push('  se movieron con ella:');
     derivadas.forEach(m => L.push('    ' + m.k + '  ' + m.de + ' → ' + m.a));
+  }
+  L.push('');
+  /* Y, sobre todo, DÓNDE hay que mirar. Este aviso decía "revisa los textos que citen estas
+     cifras" y el 2026-09-01 eso no bastó: se revisó Coach —siete frases— y no el Dashboard, que
+     tenía otras tres y, peor, una LÓGICA colgando del mismo dato (el paso "Banamex" de la ruta
+     de deuda, que se daba por cumplido desde la libreta de logros). Un consejo genérico es fácil
+     de dar por hecho; una lista de archivos con cuántas veces sale la deuda en cada uno, no. */
+  const deudasTocadas = [];
+  nombres.forEach(function (k) {
+    const id = CLAVE_DEUDA[k];
+    if (id && deudasTocadas.indexOf(id) === -1) deudasTocadas.push(id);
+  });
+  if (deudasTocadas.length) {
+    const fuentes = APPS.concat(DOCS_DEUDA.map(function (rel) {
+      try { return [rel, leer(rel)]; } catch (e) { return null; }
+    }).filter(Boolean));
+    L.push('');
+    L.push('  Dónde se habla de esa deuda — revísalos TODOS, no solo el primero:');
+    deudasTocadas.forEach(function (id) {
+      (ALIAS_DEUDA[id] || []).forEach(function (alias) {
+        const filas = [];
+        fuentes.forEach(function (par) {
+          const n = (par[1].match(new RegExp(alias, 'gi')) || []).length;
+          if (n) filas.push(par[0] + ' (' + n + ')');
+        });
+        if (filas.length) L.push('    "' + alias + '" → ' + filas.join(', '));
+      });
+    });
+    L.push('    El control 22 comprueba solo la prosa. La LÓGICA que dé un hito por cumplido');
+    L.push('    (libreta de logros, barras al 100%, pasos "done") hay que mirarla a mano.');
   }
   L.push('');
   L.push('  Revisa que las tablas de los .md y cualquier texto que cite estas cifras estén al día.');
@@ -1287,6 +1340,141 @@ function impactoDelCambio() {
   else
     ok.push('Familias del vocabulario: ' + V.familias.length + ' cubren las ' + secciones.length +
             ' secciones y las ' + V.voc.length + ' palabras, sin repetir ninguna');
+})();
+
+/* ── 22. Lo que las apps AFIRMAN sobre una deuda, contra su saldo vivo ────────────────────────
+   El control 4 vigila las CIFRAS escritas a mano y el 7 las tablas de los .md. Ninguno miraba
+   las AFIRMACIONES: "Banamex ya está en $0", "la única deuda cara que queda", "✅ liquidada".
+   No llevan número, así que ningún control las tocaba, y envejecen igual de mal que una cifra.
+
+   El 2026-09-01 la TC Banamex —liquidada el 13 ago— volvió a tener saldo con cuatro compras.
+   Las cifras se movieron solas, porque son getters, pero SIETE frases de Coach y TRES del
+   Dashboard siguieron diciendo que estaba en $0. Y una no era prosa sino LÓGICA: el paso
+   "Banamex" de la ruta de deuda daba el hito por cumplido leyendo la libreta de logros
+   (`!!lgBana || ...`), y habría enseñado "Liquidada" para siempre, con la barra al 100% y el
+   paso activo saltando a BBVA como si solo quedara una tarjeta cara.
+
+   La regla que impone: **ninguna app puede afirmar EN PRESENTE que una deuda está saldada
+   mientras el maestro le vea saldo vivo.** Contarlo en pasado sí vale —es historia, y los
+   logros no se borran— y por eso una fecha, un "era", un "hasta" o un "volvió" en la misma
+   frase la dejan pasar: eso ya es relato, no una afirmación sobre hoy.
+
+   Solo mira TEXTO QUE ALGUIEN LEE, y por eso son dos pasadas: el HTML sin sus <script> (prosa
+   de la página) y, dentro del código, únicamente las cadenas largas con varias palabras — la
+   prosa que vive en literales, como los pasos de las metas o los avisos del mes. Un id como
+   'banamex-liquidada' no pasa ese filtro, que es lo que hacía inservible la primera versión:
+   25 hallazgos, todos código.
+
+   Si salta y la frase es cierta, la forma de callarlo NO es una excepción: es fecharla. */
+(function afirmacionesDeuda() {
+  if (!global.window || !global.window.CIFRAS) return;
+  const C = global.window.CIFRAS;
+  const vivas = (C.DEUDAS_SEED || []).filter(d => +d.balance > 0 && ALIAS_DEUDA[d.id]);
+  if (!vivas.length) { ok.push('Ninguna deuda con saldo vivo que comprobar'); return; }
+
+  /* Los patrones se arman con `new RegExp` y clases explícitas ([0-9] en vez de una `d`
+     escapada) para no llenar de barras un fichero que ya usa `BS` por el mismo motivo. */
+  const B = BS + 'b', NL = BS + 'n';
+  const SALDADA = new RegExp('(liquidad[ao]s?|saldad[ao]s?|en [$] ?0' + B + '|a [$] ?0' + B +
+    '|ya no debes|sin saldo|ya cayó|en cero)', 'i');
+  const MES = '(ene|feb|mar|abr|may|jun|jul|ago|sep|oct|nov|dic)';
+  const HISTORIA = new RegExp('(([0-9]{1,2} )?' + MES + '[a-zé.]* 20[0-9][0-9]' +
+    '|20[0-9][0-9]-[0-9][0-9]-[0-9][0-9]|hecho el|la liquidaste|se liquidó|liquidada el' +
+    '|quedó|quedaron|era |fue |fueron |hasta |antes |volvió|vuelve|otra vez|reabr|dejó de' +
+    '|daba[n]? por|decía[n]?|se corrigió|se corrigieron|se borraron|nunca existieron|al arrancar' +
+    '|(mostrar|ser|habr|estar|quedar|podr|deber|tendr)ían?)', 'i');
+  /* Y una meta tampoco es una afirmación sobre hoy: "en cuanto BBVA llegue a $0" describe
+     adónde vas, no dónde estás. Sin esto el control marcaría medio Plan Maestro. */
+  const FUTURO = new RegExp('(en cuanto|cuando |hasta que|llegue|llegar|meta |objetivo|proyec' +
+    '|se adelanta|una vez |ni una sola vez|apunta a|liquidar |bajar |no negocies|ninguno|nada de' +
+    '|antes de|estará|quedará|será|falta[rn]?|pendiente)', 'i');
+  const ESPACIOS = new RegExp('[' + BS + 's]+', 'g');
+  const SCRIPTS = new RegExp('<script[^]*?</script>', 'gi');
+  // Cadenas largas de varias palabras: la prosa que vive dentro del código.
+  const TEXTOS = new RegExp("'[^'" + NL + "]{45,}'|" + '"[^"' + NL + ']{45,}"', 'g');
+  // Marcas de que lo capturado sigue siendo código, no una frase.
+  const CODIGO = new RegExp('(=>|[$]{|function |const |[.]test[(]|document[.]|localStorage)');
+  const VENTANA = 130;   // la misma frase, no el párrafo entero
+
+  /* Cada fuente se parte en trozos de prosa. Para un .md, el archivo entero. */
+  function prosaDe(rel, src) {
+    /* En un .md la unidad es la LÍNEA. Con una ventana de caracteres, una tabla de deudas
+       mezcla la fila de la que está liquidada con la de al lado, y el control acusa a la
+       equivocada. Una fila es una frase completa; no hace falta más contexto. */
+    if (/[.]md$/.test(rel)) return src.split(String.fromCharCode(10));
+    const limpio = sinComentarios(src);
+    const trozos = [limpio.replace(SCRIPTS, ' ').replace(/<[^>]*>/g, ' ')];
+    (limpio.match(TEXTOS) || []).forEach(function (s) {
+      /* Solo prosa suelta. Un literal que trae HTML dentro es una plantilla, y su texto ya
+         se lee entero —con lo que tiene al lado— en la pasada de arriba; volver a mirarlo aquí
+         duplica el hallazgo y encima recortado por la mitad. */
+      if (s.indexOf('<') === -1 && s.split(' ').length >= 6) trozos.push(s);
+    });
+    return trozos;
+  }
+
+  const fuentes = APPS.concat(DOCS_DEUDA.map(function (rel) {
+    try { return [rel, leer(rel)]; } catch (e) { return null; }
+  }).filter(Boolean));
+
+  const malas = [], vistos = new Set();
+  fuentes.forEach(function (par) {
+    const rel = par[0];
+    prosaDe(rel, par[1]).forEach(function (txt) {
+      vivas.forEach(function (d) {
+        /* Los alias son palabras llanas a propósito (ver ALIAS_DEUDA): entran en un RegExp sin
+           escaparlas, y de paso nadie puede meter ahí un patrón que haga de comodín. */
+        ALIAS_DEUDA[d.id].forEach(function (alias) {
+          const re = new RegExp(alias, 'gi');
+          let m;
+          while ((m = re.exec(txt)) !== null) {
+            const frase = txt.slice(Math.max(0, m.index - VENTANA), m.index + alias.length + VENTANA)
+                             .replace(ESPACIOS, ' ').trim();
+            if (!SALDADA.test(frase) || HISTORIA.test(frase) || FUTURO.test(frase) || CODIGO.test(frase)) continue;
+            const clave = rel + ' · ' + frase.slice(0, 60);
+            if (vistos.has(clave)) continue;
+            vistos.add(clave);
+            malas.push('     ' + rel + ' · ' + d.name + ' debe $' +
+              Math.round(d.balance).toLocaleString('en-US') + ', y ahí dice: …' +
+              frase.slice(0, 150) + '…');
+          }
+        });
+      });
+    });
+  });
+
+  /* La otra afirmación que envejece sola no habla de UNA deuda sino de cuántas quedan: "la
+     única deuda cara que queda". Es cierta con una tarjeta viva y falsa con dos, así que se
+     comprueba contra la cuenta, no contra un saldo. */
+  const tarjetasVivas = (C.DEUDAS_SEED || []).filter(d => d.type === 'credit_card' && +d.balance > 0);
+  if (tarjetasVivas.length > 1) {
+    const UNICA = new RegExp('(única|unica|sola) deuda cara', 'i');
+    fuentes.forEach(function (par) {
+      prosaDe(par[0], par[1]).forEach(function (txt) {
+        let m; const re = new RegExp('(única|unica|sola) deuda cara', 'gi');
+        while ((m = re.exec(txt)) !== null) {
+          const frase = txt.slice(Math.max(0, m.index - VENTANA), m.index + VENTANA)
+                           .replace(ESPACIOS, ' ').trim();
+          if (HISTORIA.test(frase) || CODIGO.test(frase)) continue;
+          const clave = par[0] + ' · unica · ' + frase.slice(0, 60);
+          if (vistos.has(clave)) continue;
+          vistos.add(clave);
+          malas.push('     ' + par[0] + ' · dice "deuda cara única" y hay ' + tarjetasVivas.length +
+            ' tarjetas con saldo (' + tarjetasVivas.map(d => d.name.replace('Tarjeta ', '')).join(' y ') +
+            '): …' + frase.slice(0, 130) + '…');
+        }
+      });
+    });
+  }
+
+  if (malas.length)
+    problemas.push('Afirmaciones que el saldo vivo desmiente (' + malas.length + '):\n' +
+      malas.slice(0, 8).join('\n') +
+      (malas.length > 8 ? '\n     … y ' + (malas.length - 8) + ' más' : '') +
+      '\n     Féchalas ("liquidada el 13 ago 2026") o corrígelas. No se silencian con excepciones.');
+  else
+    ok.push('Ninguna app afirma en presente que una deuda con saldo vivo esté saldada (' +
+      vivas.length + ' deudas vigiladas en ' + fuentes.length + ' archivos)');
 })();
 
 // ── Salida ──

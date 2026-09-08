@@ -2288,7 +2288,47 @@ const ALEMAN_VOCAB = {
           ['Se usa para','describir (adjetivo/adverbio)','Perfekt, pasiva y adjetivo'],
         ]},
       },
+      /* La tabla entera de verbos. `verbos:true` en vez de una `tabla` escrita a mano:
+         las 210 filas se generan de `voc` —ver ALEMAN_VOCAB.verbos() más abajo—, así que
+         corregir un verbo en su ficha lo corrige aquí. Va la última porque es material de
+         consulta, no de lectura seguida. */
+      { id:'tablaVerbos', ico:'\ud83d\udcd1', t:'Todos los verbos, uno por uno',
+        cuerpo:'Los verbos del vocabulario con su <b>Präteritum</b>, su <b>Partizip II</b> y su <b>Partizip I</b>. No es una lista aparte: sale de las mismas fichas que ves al buscar una palabra, así que si una se corrige, aquí cambia sola.',
+        verbos:true,
+        truco:'Los <b>fuertes</b> son los que hay que memorizar: su Partizip II acaba en <b>-en</b> y no sale de ninguna regla. Los débiles acaban en <b>-t</b> y se arman solos con ge- + raíz + t. La columna <b>aux.</b> dice con qué se monta el Perfekt: <i>hat</i> o <i>ist</i>.',
+      },
     ],
+  },
+
+  /* Los verbos con sus formas, para la tabla del tema de Partizip. NO es una lista
+     aparte: sale de `voc`, de los verbos que ya traen `conj` (presente 3ª · Präteritum ·
+     Partizip II) y `aux`. Escribirla a mano habría sido una segunda copia condenada a
+     envejecer en cuanto se corrija un verbo en su ficha.
+
+     El Partizip I se DERIVA: infinitivo + d, sin excepciones —lo dice la propia sección
+     «Partizip I, la forma fácil»—. En los reflexivos sale del verbo, no del `sich`:
+     sich freuen → freuend.
+
+     Fuerte o débil se decide por el Partizip II, que es la definición y no una etiqueta
+     que alguien pudo olvidar poner: si acaba en -en es fuerte (stark), si acaba en -t es
+     débil (schwach). */
+  verbos: function () {
+    return this.voc
+      .filter(function (w) { return w.tipo === 'verbo' && w.conj; })
+      .map(function (w) {
+        var p = w.conj.split('·').map(function (s) { return s.trim(); });
+        var inf = String(w.de).replace(/^sich\s+/, '');
+        // Una veintena de fichas traen DOS verbos ('abfahren / losfahren'): la -d va en
+        // cada uno, no solo al final, o sale 'abfahren / losfahrend'.
+        var p1 = inf.split(' / ').map(function (x) { return x.trim() + 'd'; }).join(' / ');
+        return {
+          de: w.de, inf: inf, es: w.es, niv: w.niv || '',
+          pres: p[0] || '', prat: p[1] || '', p2: p[2] || '',
+          p1: p1, aux: w.aux || '', tag: w.tag || '',
+          fuerte: /en$/.test(p[2] || ''),
+        };
+      })
+      .sort(function (a, b) { return a.inf.localeCompare(b.inf, 'de'); });
   },
 
   // ── Consultas ─────────────────────────────────────────────

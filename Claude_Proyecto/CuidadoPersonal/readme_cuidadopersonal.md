@@ -62,26 +62,32 @@ y cuándo — no la marca del bote.
 
 ### Qué hay en la pantalla
 
+Desde el 2026-09-07 es **la misma pantalla que Cabello**, pieza por pieza — ver *Skincare y
+Cabello pasan a la misma pantalla* abajo.
+
 1. **Cabecera** con la fecha y 3 cifras: **racha de SPF** (días seguidos marcando el protector),
    **semana del retinoide** y **costo al mes**. La del retinoide abre el perfil si aún no hay
    fecha.
-2. **La línea del día** (`#pl-track`): los 6 pasos como nodos con su hora, y una barra de
-   **AHORA**. Los nodos se reparten a intervalos iguales, no por reloj — los 3 pasos de la
-   mañana caen en 3 minutos y por reloj se amontonarían en un pixel; la barra de AHORA sí va por
-   reloj, interpolada dentro del tramo que le toca. Se oculta bajo 920px: con 6 nodos en 390px
-   estorba más que informa.
+2. **Tu semana de piel** (`#pl-semana`), lo primero de la pantalla: 7 tarjetas, una por día, con
+   el activo de la noche, los pasos que lleva y la etiqueta del de la mañana. Debajo de cada una,
+   dos puntos — la rutina de día y la de noche — que en el día de hoy se marcan de un clic y dan
+   la rutina entera por hecha. Tocar un día muestra su rutina. Lo que enseña es justo que **no
+   hay rotación**: la piel lleva lo mismo los 7 días, al revés que el pelo. Bajo 920px las 7
+   columnas pasan a 7 tiras de una línea.
 3. **Las dos rutinas, completas y lado a lado**, con su insignia de estado (`COMPLETA`, `2 DE 3`,
    `A LAS 22:30`). Cada paso se marca con un clic y eso alimenta la racha y la semana. Entre la
    doble limpieza y el adapaleno va el separador de **espera de 20 minutos**, que es el dato que
-   la guía vieja escondía dentro de un párrafo.
+   la guía vieja escondía dentro de un párrafo. Al mirar otro día se pintan en gris y no se
+   marcan: las casillas son siempre de hoy.
 4. **Tu botiquín**: cada producto con lo que dura, lo que cuesta al mes y **cuántos días le
    quedan** — en rojo bajo 14. Un clic en los días marca que abrió uno hoy; otro clic lo quita.
-5. **La escalera del retinoide**: 2 noches → 3 → alternas → diario, con el peldaño actual
-   marcado. Sin fecha de inicio no se inventa ninguno: lo dice y ofrece ponerla.
-6. **Dónde vas**: los hitos con "ESTÁS AQUÍ" en el que toca por semana. Los hitos dependen de sus
-   preocupaciones — sin manchas no tiene sentido prometerle que se le van en la semana 12.
-7. **Tu semana**, **qué puede ir con qué** (matriz, no lista de viñetas) y **las reglas que sí
-   mueven la aguja**, numeradas.
+5. **Las reglas que sí mueven la aguja**, numeradas, y **qué puede ir con qué** (matriz, no lista
+   de viñetas).
+
+El cuerpo es **una sola retícula de dos columnas**: rutina de día + botiquín a la izquierda,
+rutina de noche + reglas + matriz a la derecha. No son dos filas (rutinas arriba, tarjetas
+abajo) porque en Cabello la rutina de noche tiene 2 pasos y la de día 9, y en una fila propia
+dejaba media pantalla en blanco.
 
 ### El tema es oscuro-primero
 
@@ -95,7 +101,7 @@ primera, que daba un fondo más oscuro que el real y falsos negativos): el peor 
 **4.93:1 en oscuro y 5.45:1 en claro**, sobre texto de 7.5-10px.
 
 **El seguimiento de "ya hice mi skincare hoy" ahora vive aquí también**, porque de él salen la
-racha y la escalera. `Coach/Coach.html → #rutina` sigue teniendo sus tareas de skincare AM/PM
+racha y la semana. `Coach/Coach.html → #rutina` sigue teniendo sus tareas de skincare AM/PM
 como parte del horario del día; son dos vistas del mismo hábito, con estado propio cada una.
 
 ## Módulo nativo: 💇 Cuidado del Cabello — `localStorage['cabello_v1']`
@@ -133,24 +139,34 @@ comprueba nombre **y día** contra `RUTINA_TASKS`.
 
 ### Qué hay en la pantalla
 
+Desde el 2026-09-07 es **la misma pantalla que Skincare**, pieza por pieza — ver *Skincare y
+Cabello pasan a la misma pantalla* abajo.
+
 1. **Cabecera** con 3 cifras: **racha de minoxidil** (días seguidos con **las dos** dosis — una
    sola no cuenta, que es justo el error que hace concluir "no me funcionó"), **mes de
    minoxidil** y **costo al mes**.
 2. **Tu semana de lavado** (`#pe-semana`), lo primero de la pantalla: 7 tarjetas con el champú de
    cada día, hoy marcado, y debajo de cada una los puntos de minoxidil de ese día — los de hoy
    se marcan con un clic. El miércoles sale como "solo agua **+ CeraVe al nadar**", que es lo que
-   de verdad pasa. Bajo 920px las 7 columnas pasan a 7 tiras de una línea.
-3. **Hoy, en orden**: los 4 momentos (ducha → pelo húmedo → cuero seco → antes de dormir) con
-   sus horas reales y los pasos del día concreto — el sábado dice mascarilla y ningún otro día
-   la menciona. Cada paso se marca con un clic.
-4. **El minoxidil**, la tarjeta que manda: las 2 dosis con su hora, la **ventana de 4 horas** (a
-   qué hora puede volver a mojarse la cabeza; antes lo decía un párrafo enterrado) y la escalera
-   de fases con el mes actual marcado.
-5. **Tu botiquín** con lo que dura cada bote y **cuántos días quedan** — en rojo bajo 14. Un
+   de verdad pasa. Tocar un día muestra su rutina. Bajo 920px las 7 columnas pasan a 7 tiras de
+   una línea.
+3. **Las dos rutinas, completas y lado a lado** (`#pe-rutinas`), con su insignia de estado. La de
+   día agrupa los 4 momentos de la mañana (ducha → pelo húmedo → cuero seco → la pastilla) con
+   sus horas reales; la de noche, la segunda dosis y la funda. Debajo del minoxidil de la mañana
+   va el separador de **espera de 4 horas** — mojarse antes arrastra la dosis y no cuenta.
+   Al mirar otro día se pintan en gris y no se marcan: las casillas son siempre de hoy.
+4. **Tu botiquín** con lo que dura cada bote y **cuántos días quedan** — en rojo bajo 14. Un
    clic en los días marca que abrió uno hoy; otro lo quita.
-6. **Lo que arruina el resultado**, **qué esperar y cuándo** con "ESTÁS AQUÍ", y **antes que
-   nada** con lo que sale de su perfil — incluido el aviso de ir al dermólogo si la caída es
-   notoria y reciente.
+5. **Lo que arruina el resultado**, numerado, y **qué puede ir con qué** (matriz): ahí viven la
+   regla de las 4 horas, los dos champús medicados que nunca van el mismo día y la mascarilla
+   que sustituye al acondicionador en vez de sumarse.
+
+Las dos dosis de minoxidil **se guardan en un solo sitio** (`hechos[iso].minox`): marcar el paso
+de la rutina, el punto de la tira o cualquiera de los dos es la misma acción, y de ahí sale la
+racha. El resto de pasos van en `hechos[iso].pasos`.
+
+El cuerpo es **una sola retícula de dos columnas**: rutina de día + botiquín a la izquierda,
+rutina de noche + errores + matriz a la derecha.
 
 ### El tema es oscuro-primero
 
@@ -368,7 +384,6 @@ Antes había `X o Y`, `Solución/Espuma`, `Kirkland Signature o genérico`, y va
 | Champú caspa (rescate) | **Darrow Doctar alcatrão** |
 | Acondicionador | **TRESemmé Keratin Smooth** |
 | Mascarilla | **L'Oréal Elvive Total Repair 5** |
-| Sin enjuague | **L'Oréal Elvive Total Repair 5 crema** |
 | Aceite de puntas | **Moroccanoil Treatment Light** |
 | Minoxidil | **5% en ESPUMA, Kirkland** |
 | Almohada | **Funda de satín** |
@@ -386,7 +401,7 @@ También se quitó el protector térmico de la lista: dependía de un "si usas s
 | **Mié** | Sin champú en la mañana, pero **lavado obligatorio después de nadar** |
 | **Sáb** | CeraVe + mascarilla — el día de reparación |
 
-Y **todos los días**, sin excepción: crema sin enjuague sobre el pelo húmedo. Antes ese paso decía "(opcional)" y aparecía solo algunos días.
+Y **todos los días**, sin excepción: acondicionador de medios a puntas y las 2 dosis de minoxidil. (Hasta el 2026-09-02 también la crema sin enjuague, que se había subido de "(opcional)" a diaria en este mismo rescate; Adán dejó de usarla — ver "Fuera la crema sin enjuague" al final.)
 
 ### El hallazgo del miércoles
 
@@ -489,7 +504,7 @@ El diagnóstico es de estructura, no de contenido: **la información estaba orga
 |---|---|---|
 | 📌 | Hoy es *(día)* | si **hoy** toca champú y cuál — calculado con la fecha real |
 | ☀️ 1 | En la ducha de la mañana | agua tibia → ¿champú hoy? → 2 min de masaje → acondicionador solo medios a puntas → esperar 1-2 min |
-| 💧 2 | Al salir, con el pelo aún húmedo | toalla a toques, crema sin enjuague, peine de dientes anchos |
+| 💧 2 | Al salir, con el pelo aún húmedo | toalla a toques, peine de dientes anchos, secado al aire |
 | 🍂 3 | Con el cuero **ya seco** — minoxidil AM | media tapa de espuma, cuero seco, masaje, manos lavadas |
 | ✨ 4 | Con el pelo seco | 2 gotas de aceite en puntas, solo si está áspero |
 | 🌙 5 | Antes de dormir | segunda dosis de minoxidil, y después ya no mojarse |
@@ -590,6 +605,12 @@ casos en el tooltip ("Lo que te costó, según tu rutina" vs. precio de lista).
 
 **El costo del cabello pasa de $687 a $2,854 al mes** — más que el gimnasio, la
 comida y el plan de datos juntos. $2,400 de esos son los dos productos nuevos.
+
+> **Actualizado el 3-sep-2026**: el `precio` del Avodart pasó de $1,500 a **$1,560**, que es lo
+> que Adán pagó de verdad al reponerlo el 1-sep (queda como gasto `s069` en Finanzas, junto con
+> el minoxidil NR-11 a $900, que sí acertó). El costo del cabello sube con él a **$2,865 al mes**
+> y los dos tratamientos suman **$2,460**. Las cifras de más abajo son la foto del día en que
+> entraron y se dejan como estaban.
 
 Comprobado en el navegador: 5 momentos en la rutina con la pastilla en el suyo,
 12 pasos (el aviso no cuenta), el minoxidil sigue con sus 2 dosis y su ventana de
@@ -744,3 +765,105 @@ Resultado medido en las 8: **todas con título y 3-4 KPIs**, todas con Space
 Grotesk, contraste sin nada bajo el mínimo en los dos temas, sin errores de
 consola, y las cuatro externas siguen abriéndose sueltas con su carril y su
 cabecera propios.
+
+## Fuera la crema sin enjuague (2026-09-02)
+
+*"de lista de compras quita: Crema sin enjuague L'Oréal Elvive Total Repair 5, 200 ml (todos los días)"*. Preguntado si seguía usándola o solo quería dejar de comprarla: **"fuera de todo: ya no la uso"**.
+
+Como `LISTA_COMPRAS.cabello` es un **getter sobre `RUTINA_PELO.productos`**, no había dos sitios que tocar: quitar el producto `sinEnjuague` del maestro la sacó de la compra, de la rutina y del costo mensual de una vez. Lo que sí hubo que perseguir a mano fueron los **textos** que la nombraban, porque son prosa, no datos derivados:
+
+| Dónde | Qué se hizo |
+|---|---|
+| `RUTINA_PELO.productos` | Fuera el producto (de 10 a **9**). El costo del pelo baja de **$2,854 a $2,805 al mes**. |
+| `RUTINA_TASKS` | 5 subtareas la mencionaban: `wd02c`, `wd02cb` y `do045b` eran solo suyas y se borraron; `sa05d` y `wd09c` la compartían con otro producto y se reescribieron sin ella. |
+| `cuidadopersonal.html` → Cabello | `pePasosDelDia()` la pintaba en el momento 💧 "con el pelo aún húmedo" — era su **único** producto. El paso se queda con toalla, peine y secado al aire, que es técnica y protege más que cualquier crema. También la nombraba la nota de "Tu semana de lavado" ("lo que sí va los 7 días…"). |
+| `dashboard.html` | Su precio de referencia (`amazon:95 / ml:73`) quedó sin producto y se borró. |
+
+**Verificado**: `node Dashboard/verificar-sincronia.js` pasa limpio y ya cuenta 9 productos y $2,805; la pestaña de Cabello y el Dashboard cargan sin un solo mensaje de consola; y no queda ninguna mención a la crema en código vivo (solo los comentarios que explican la baja).
+
+## El minoxidil oral no se buscaba, y no se compra en Amazon (2026-09-02)
+
+*"lo de minoxidil oral no se busca bien en amazon, es por eso que no tienes precio de eso, arreglalo"*. Eran **dos** problemas encadenados.
+
+**1. La búsqueda estaba rota.** `lcAmazonQuery()` del Dashboard asume el formato `"Categoría — Marca Producto"` y se queda con lo de **después** del guión. Ese ítem estaba al revés — nombre delante, nota detrás —, así que el link abría Amazon buscando literalmente *"el escalón que queda si en 6 meses el tópico + la dutasterida no bastan"*. Ahora la función distingue por la mayúscula: **un nombre comercial empieza en mayúscula o en número; una nota en prosa, en minúscula** — si detrás hay prosa, el producto es lo de delante. Con la dosis movida a paréntesis (las aclaraciones se quitan antes de buscar), la query queda en **"Minoxidil oral"**. Auditados los **128 ítems** de las 6 categorías con la función vieja contra la nueva: **cambia 1**, justo ese; las otras 127 salen idénticas.
+
+**2. Por eso no había precio, pero no era culpa de la búsqueda.** El minoxidil oral es **medicamento de prescripción**: no se vende en Amazon ni en Mercado Libre, y lo que devuelven esas búsquedas es minoxidil tópico, que no es lo mismo. Por eso nunca hubo precio de lista que ponerle. Ahora el 🩺 del texto marca el ítem como de receta (`LC_RECETA`) y, en vez de dos píldoras que no llevan a nada, sale **una sola: "🩺 Con receta"**, que abre la búsqueda en Farmacias del Ahorro y explica en el tooltip que el precio se lo dan en el mostrador, con la receta. Es el mismo criterio que ya usaba el archivo para los productos sin precio de referencia: *el link es lo que se necesita, el precio se ve al llegar*.
+
+## Skincare y Cabello pasan a la misma pantalla (2026-09-07)
+
+Las dos vistas nativas habían crecido por separado y cada una acertaba en la mitad. Adán las
+comparó pieza por pieza y dijo cuál se quedaba:
+
+| Le gusta | De dónde venía | Qué se hizo |
+|---|---|---|
+| La tira de 7 días con lo que usa cada día | Cabello | Se copió a Skincare |
+| Rutina de día y rutina de noche, lado a lado | Skincare | Se copió a Cabello |
+| Tu botiquín | Las dos | Se queda |
+
+| No le gusta | Dónde estaba |
+|---|---|
+| La línea del día | Skincare |
+| La escalera del retinoide | Skincare |
+| Dónde vas | Skincare |
+| Tu semana (los 7 cuadritos de progreso) | Skincare |
+| Hoy, en orden | Cabello |
+| El minoxidil (la tarjeta) | Cabello |
+| Qué esperar y cuándo | Cabello |
+| Antes que nada | Cabello |
+
+Las dos quedan con el mismo esqueleto: **cabecera → la semana → las dos rutinas → botiquín ·
+reglas · matriz → aviso legal**. Mismos tamaños, mismos radios, mismo ritmo; lo único que las
+distingue es la paleta (rosa en piel, ámbar en pelo), que es lo que hace saber en qué pestaña
+estás sin leer el título.
+
+### Lo que se conservó de las tarjetas que se fueron
+
+Ninguna se borró entera: de cada una se rescató el dato que cambia lo que hace, y se puso donde
+se usa en vez de en una tarjeta aparte.
+
+- **La ventana de 4 horas del minoxidil** era una tarjeta con barra de progreso. Ahora es la
+  banda de espera **debajo del paso**, igual que los 20 minutos de la doble limpieza en piel, y
+  la regla completa está en la fila "mojarte el pelo" de la matriz nueva.
+- **El shedding del mes 2-4** («se cae más pelo, es señal de que funciona») era el corazón de
+  *Qué esperar y cuándo*. Ahora es el error nº 5 de *Lo que arruina el resultado*: abandonarlo
+  ahí es la forma más común de tirar seis meses de tratamiento.
+- **El aviso de la caída notoria y reciente** («eso merece dermatólogo, el minoxidil no
+  reemplaza saber la causa») era *Antes que nada*. Ahora abre la misma lista, con marca de aviso
+  en vez de número.
+- **Los tratamientos de receta** (dutasterida tópica, minoxidil oral) estaban en *Antes que
+  nada*; ahora están en el aviso legal del pie, donde ya vivía el resto de lo médico.
+- **La escalera del retinoide** y **Dónde vas** se fueron sin residuo: la purga de las primeras
+  semanas ya estaba escrita como regla en *Las que sí mueven la aguja*, y el resto era una
+  promesa de calendario que no cambia ningún gesto del día.
+
+### La tira de piel dice algo distinto a la del pelo
+
+En el pelo la tira informa porque **cambia**: lunes Pilexil, sábado CeraVe y mascarilla, cuatro
+días solo agua. En la piel no cambia ni un día — adapaleno las 7 noches, protector las 7
+mañanas — y esa es exactamente la información: la guía vieja mandaba alternar el retinoide con
+un exfoliante que él no usa. Para que las 7 columnas no se lean como una sola repetida, el
+contador de cada día muestra lo que lleva hecho (`2 DE 2`, `0 DE 2`, `—` si aún no llegó).
+
+### Una retícula, no dos filas
+
+Primer intento: las rutinas en una fila y las tarjetas en otra. La rutina de noche del pelo
+tiene 2 pasos y la de día 9, así que la mitad derecha de la pantalla quedaba en blanco de arriba
+abajo. Ahora el cuerpo es **un solo grid de dos columnas** (`.pl-rutinas` / `.pe-rutinas`, con
+`.pl-col` / `.pe-col` dentro) y cada tarjeta empieza donde acaba la de arriba en su columna:
+rutina de día + botiquín a la izquierda, rutina de noche + reglas/errores + matriz a la derecha.
+
+### Qué puede ir con qué, también en el pelo
+
+La matriz de compatibilidades existía solo en piel. La del pelo se añadió para que las dos
+pantallas cierren igual, y no es relleno: en el pelo lo que choca no son ingredientes sino
+**horarios** (mojarse dentro de las 4 h del minoxidil) y **sustituciones** (Darrow en lugar de
+Pilexil, mascarilla en lugar de acondicionador), que son los tres errores que ya estaban
+escritos en prosa y que en una tabla se ven de un vistazo.
+
+### Verificación
+
+`node --check` sobre los tres `<script>`, 21 comprobaciones con Playwright en las dos vistas
+(tiras de 7 días, dos rutinas, dos columnas, marcar un paso, marcar la rutina entera desde la
+tira, ida y vuelta entre el paso de minoxidil y su punto en la tira, racha, ver otro día y
+volver), capturas en los dos temas y a 430px, y `node Dashboard/verificar-sincronia.js`.
+Sin errores de consola.

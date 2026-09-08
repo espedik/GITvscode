@@ -199,13 +199,18 @@ window.CIFRAS = (function () {
     // anual, el pago no alcanza a cubrir el interés y la tarjeta crece sola. `total` sube con el
     // saldo para conservar la invariante `total == balance` que esta tarjeta lleva desde 2024;
     // si `total` se quedara en 32,343.31, el "pagado real" de las barras saldría en negativo.
-    {id:'d001',name:'Tarjeta BBVA',                  type:'credit_card',total:34000,     balance:34000,     rate:55.7,  min:1500, day:11,start:'2024-01-22'},
-    // Liquidada el 13 ago 2026 — Adán pagó el saldo completo. Se conserva en la lista
-    // como registro (la tarjeta sigue existiendo), pero ya no exige mínimo ni interés.
-    // Misma corrección por coherencia; está liquidada (balance 0), así que su tasa ya no
-    // afecta a ningún interés vivo — solo al histórico. 55.7 es un supuesto tomado de la BBVA,
-    // no un dato medido de esta tarjeta.
-    {id:'d002',name:'Tarjeta Banamex',               type:'credit_card',total:14349.72,  balance:0,         rate:55.7,  min:810,  day:8, start:'2024-06-18', noInterest:0},
+    {id:'d001',name:'Tarjeta BBVA',                  type:'credit_card',total:37000,     balance:37000,     rate:55.7,  min:1500, day:11,start:'2024-01-22'},
+    // Liquidada el 13 ago 2026 — Adán pagó el saldo completo. 55.7 es un supuesto tomado de
+    // la BBVA, no un dato medido de esta tarjeta.
+    // 2026-09-01: VUELVE A TENER SALDO, y con él vuelve a ser deuda cara. Cuatro compras de ese
+    // día se cargaron aquí —plancha de Amazon $1,902, dutasterida $1,560, minoxidil NR-11 $900
+    // y mouse $1,623— que suman $5,985. Su mínimo de $810 llevaba desde el 13 ago fuera de
+    // `minimosDeuda` (solo cuentan las deudas con saldo vivo) y vuelve a entrar, así que
+    // `margen` baja esos $810 sin que nadie toque un gasto fijo.
+    // `total` se queda en 14349.72, el pico de 2024: es mayor que el saldo nuevo, así que el
+    // "pagado real" de las barras sigue saliendo positivo y no hay que romper la invariante
+    // `total == balance` como hubo que hacer con la BBVA.
+    {id:'d002',name:'Tarjeta Banamex',               type:'credit_card',total:14349.72,  balance:7000,       rate:55.7,  min:810,  day:8, start:'2024-06-18', noInterest:0},
     // Saldo reportado por Adán: $299,000 (24-ago) → $292,000 → $293,000 (25-ago-2026).
     {id:'d003',name:'Crédito Automotriz',            type:'car',        total:315800,    balance:293000,    rate:12.99, min:6700, day:15, start:'2026-01-01', remainingMonths:61},
     // Queda 1 cuota, la del 18 sep 2026: la penúltima se pagó (confirmado el 25-ago-2026).
@@ -248,10 +253,10 @@ window.CIFRAS = (function () {
   const RUTINA_TASKS = [
     {id:"wd01",dias:[1,2,3,4,5],hora:"06:40",cat:"salud",txt:"Despertar sin snooze — celular fuera del cuarto"},
     {id:"wd-app-am",dias:[1,2,3,4,5],hora:"06:43",cat:"aprender",txt:"💻 Construir esta aplicación — 10 min antes de arrancar el día"},
-    {id:"wd-am-lav",dias:[1,4],hora:"06:53",cat:"salud",txt:"🚿 Rutina de la mañana — ducha, cabello, piel y suplementos",producto:true,subtareas:[{id:"wd02a",sec:"Ducha y cabello",txt:"Champú: <b>Pilexil Anticaída 300 ml</b> — masajea el cuero cabelludo 2 min y enjuaga. NO lo frotes en el largo: su trabajo es la raíz."},{id:"wd02b",txt:"Acondicionador: <b>L'Oréal Elvive Reparación Total 5</b> — solo de medios a puntas, nunca en la raíz."},{id:"wd02c",txt:"Con el pelo AÚN HÚMEDO: <b>crema sin enjuague L'Oréal Elvive Total Repair 5</b> (se pone sobre el pelo húmedo y NO se enjuaga), cantidad de un chícharo, solo en la mitad de abajo."},{id:"wd02d",txt:"Deja secar al aire. Si tienes prisa y usas secadora, aire tibio y a 20 cm — nunca caliente ni pegado."},{id:"wd02e",txt:"⚠️ Si HOY hay caspa o descamación, usas <b>Darrow Doctar (alquitrán)</b> en lugar del Pilexil. Nunca los dos el mismo día."},{id:"wd03a",sec:"Piel y minoxidil",txt:"Limpiador suave: CeraVe Limpiador Espumoso (verde) — quita grasa y sudor de la noche sin resecar"},{id:"wd03b",txt:"Sérum de niacinamida 10%: The Ordinary Niacinamida 10% + Zinc 1% — controla grasa y afina los poros"},{id:"wd03c",txt:"Protector solar: <b>La Roche-Posay Anthelios Oil Free SPF50</b> — <b>dos dedos completos</b> para cara y cuello. Con menos, un SPF50 protege como un SPF15"},{id:"wd04",txt:"<b>Minoxidil 5% NR-11 (Polaris Research)</b> 1 ml con el gotero en cuero cabelludo seco — es loción, no espuma: si te pica o reseca, baja a una dosis al día — estimula el folículo, dosis de la mañana"},{id:"wd04av",txt:"<b>Avodart (dutasterida 0,5 mg)</b> — una cápsula con el desayuno, siempre a la misma hora. Actúa por dentro bloqueando la DHT: no sustituye al minoxidil, se suman"},{id:"wdSupAm1",sec:"Suplementos",txt:"Vitamina D3 — 2000-4000 UI, con algo de grasa en la comida",link:{href:"../CuidadoPersonal/salud.html?tab=suplementos",label:"💊 Ver Suplementos"}},{id:"wdSupAm2",txt:"Multivitamínico — 1 tableta"},{id:"wdSupAm3",txt:"Omega 3 — 1-2g EPA+DHA, con alimento"},{id:"wdSupAm4",txt:"Creatina monohidratada — 5g (todos los días, no solo si entrenas hoy)"}]},
-    {id:"wd-am-co",dias:[2,3,5],hora:"06:53",cat:"salud",txt:"🚿 Rutina de la mañana — ducha, cabello, piel y suplementos",producto:true,subtareas:[{id:"wd02ca",sec:"Ducha y cabello",txt:"Hoy <b>no lleva champú</b>: mojas, y aplicas <b>L'Oréal Elvive Reparación Total 5</b> solo de medios a puntas. Lavar a diario con champú es lo que termina de secar el pelo."},{id:"wd02cb",txt:"Con el pelo húmedo: <b>crema sin enjuague L'Oréal Elvive Total Repair 5</b> (se pone sobre el pelo húmedo y NO se enjuaga), un chícharo. Este paso va todos los días, no solo cuando te lavas."},{id:"wd02cc",txt:"Ya seco, si lo notas áspero: 2 gotas de <b>Moroccanoil Treatment Light</b> solo en las puntas."},{id:"wd03a",sec:"Piel y minoxidil",txt:"Limpiador suave: CeraVe Limpiador Espumoso (verde) — quita grasa y sudor de la noche sin resecar"},{id:"wd03b",txt:"Sérum de niacinamida 10%: The Ordinary Niacinamida 10% + Zinc 1% — controla grasa y afina los poros"},{id:"wd03c",txt:"Protector solar: <b>La Roche-Posay Anthelios Oil Free SPF50</b> — <b>dos dedos completos</b> para cara y cuello. Con menos, un SPF50 protege como un SPF15"},{id:"wd04",txt:"<b>Minoxidil 5% NR-11 (Polaris Research)</b> 1 ml con el gotero en cuero cabelludo seco — es loción, no espuma: si te pica o reseca, baja a una dosis al día — estimula el folículo, dosis de la mañana"},{id:"wd04av",txt:"<b>Avodart (dutasterida 0,5 mg)</b> — una cápsula con el desayuno, siempre a la misma hora. Actúa por dentro bloqueando la DHT: no sustituye al minoxidil, se suman"},{id:"wdSupAm1",sec:"Suplementos",txt:"Vitamina D3 — 2000-4000 UI, con algo de grasa en la comida",link:{href:"../CuidadoPersonal/salud.html?tab=suplementos",label:"💊 Ver Suplementos"}},{id:"wdSupAm2",txt:"Multivitamínico — 1 tableta"},{id:"wdSupAm3",txt:"Omega 3 — 1-2g EPA+DHA, con alimento"},{id:"wdSupAm4",txt:"Creatina monohidratada — 5g (todos los días, no solo si entrenas hoy)"}]},
-    {id:"sa-am",dias:[6],hora:"08:35",cat:"salud",txt:"🚿 Rutina de la mañana — ducha, cabello, piel y suplementos",producto:true,subtareas:[{id:"sa05a",sec:"Ducha y cabello",txt:"Champú: <b>CeraVe Champú Hidratante sin sulfatos</b>. Hoy es día de reparación, no de tratamiento."},{id:"sa05b",txt:"<b>Mascarilla L'Oréal Elvive Total Repair 5</b> — es un acondicionador concentrado, viene en TARRO (no en botella). Va de medios a puntas y se deja actuar <b>5-10 min</b> mientras terminas de bañarte. Es el paso que más repara de toda tu semana: si te saltas uno, que no sea este."},{id:"sa05c",txt:"Hoy <b>NO</b> uses acondicionador: la mascarilla ya hizo ese trabajo, y ponerle los dos apelmaza el cabello fino."},{id:"sa05d",txt:"Con el pelo húmedo: <b>crema sin enjuague L'Oréal Elvive Total Repair 5</b> — se pone y NO se enjuaga, se queda todo el día. Ya seco: 2 gotas de <b>Moroccanoil Treatment Light</b> en puntas."},{id:"sa05e",txt:"Revisa las puntas: si ves pelos abiertos en forma de Y, ya toca corte. Cada 8-12 semanas, 1-2 cm — solo puntas."},{id:"sa02",sec:"Piel y minoxidil",txt:"Skincare AM — limpiador + niacinamida + hidratante con SPF 50 (mismos productos que entre semana)"},{id:"sa02b",txt:"<b>Minoxidil 5% NR-11 (Polaris Research)</b> 1 ml con el gotero en cuero cabelludo seco — es loción, no espuma: si te pica o reseca, baja a una dosis al día — dosis de la mañana"},{id:"sa02bav",txt:"<b>Avodart (dutasterida 0,5 mg)</b> — una cápsula con el desayuno, siempre a la misma hora. Actúa por dentro bloqueando la DHT: no sustituye al minoxidil, se suman"},{id:"saSupAm1",sec:"Suplementos",txt:"Vitamina D3 — 2000-4000 UI, con algo de grasa en la comida",link:{href:"../CuidadoPersonal/salud.html?tab=suplementos",label:"💊 Ver Suplementos"}},{id:"saSupAm2",txt:"Multivitamínico — 1 tableta"},{id:"saSupAm3",txt:"Omega 3 — 1-2g EPA+DHA, con alimento"},{id:"saSupAm4",txt:"Creatina monohidratada — 5g (todos los días, no solo si entrenas hoy)"}]},
-    {id:"do-am",dias:[0],hora:"08:35",cat:"salud",txt:"🚿 Rutina de la mañana — ducha, cabello, piel y suplementos",producto:true,subtareas:[{id:"do045a",sec:"Ducha y cabello",txt:"Hoy <b>no lleva champú</b>: <b>L'Oréal Elvive Reparación Total 5</b> de medios a puntas y enjuaga."},{id:"do045b",txt:"Con el pelo húmedo: <b>crema sin enjuague L'Oréal Elvive Total Repair 5</b> (se pone sobre el pelo húmedo y NO se enjuaga), un chícharo."},{id:"do045c",txt:"Antes de dormir, <b>funda de almohada de satín</b>. Pasas 7 horas frotando el pelo contra la almohada: el algodón lo rompe y le roba humedad, el satín no."},{id:"do02",sec:"Piel y minoxidil",txt:"Skincare AM — limpiador + niacinamida + hidratante con SPF 50 (mismos productos que entre semana)"},{id:"do02b",txt:"<b>Minoxidil 5% NR-11 (Polaris Research)</b> 1 ml con el gotero en cuero cabelludo seco — es loción, no espuma: si te pica o reseca, baja a una dosis al día — dosis de la mañana"},{id:"do02bav",txt:"<b>Avodart (dutasterida 0,5 mg)</b> — una cápsula con el desayuno, siempre a la misma hora. Actúa por dentro bloqueando la DHT: no sustituye al minoxidil, se suman"},{id:"doSupAm1",sec:"Suplementos",txt:"Vitamina D3 — 2000-4000 UI, con algo de grasa en la comida",link:{href:"../CuidadoPersonal/salud.html?tab=suplementos",label:"💊 Ver Suplementos"}},{id:"doSupAm2",txt:"Multivitamínico — 1 tableta"},{id:"doSupAm3",txt:"Omega 3 — 1-2g EPA+DHA, con alimento"},{id:"doSupAm4",txt:"Creatina monohidratada — 5g (todos los días, no solo si entrenas hoy)"}]},
+    {id:"wd-am-lav",dias:[1,4],hora:"06:53",cat:"salud",txt:"🚿 Rutina de la mañana — ducha, cabello, piel y suplementos",producto:true,subtareas:[{id:"wd02a",sec:"Ducha y cabello",txt:"Champú: <b>Pilexil Anticaída 300 ml</b> — masajea el cuero cabelludo 2 min y enjuaga. NO lo frotes en el largo: su trabajo es la raíz."},{id:"wd02b",txt:"Acondicionador: <b>L'Oréal Elvive Reparación Total 5</b> — solo de medios a puntas, nunca en la raíz."},{id:"wd02d",txt:"Deja secar al aire. Si tienes prisa y usas secadora, aire tibio y a 20 cm — nunca caliente ni pegado."},{id:"wd02e",txt:"⚠️ Si HOY hay caspa o descamación, usas <b>Darrow Doctar (alquitrán)</b> en lugar del Pilexil. Nunca los dos el mismo día."},{id:"wd03a",sec:"Piel y minoxidil",txt:"Limpiador suave: CeraVe Limpiador Espumoso (verde) — quita grasa y sudor de la noche sin resecar"},{id:"wd03b",txt:"Sérum de niacinamida 10%: The Ordinary Niacinamida 10% + Zinc 1% — controla grasa y afina los poros"},{id:"wd03c",txt:"Protector solar: <b>La Roche-Posay Anthelios Oil Free SPF50</b> — <b>dos dedos completos</b> para cara y cuello. Con menos, un SPF50 protege como un SPF15"},{id:"wd04",txt:"<b>Minoxidil 5% NR-11 (Polaris Research)</b> 1 ml con el gotero en cuero cabelludo seco — es loción, no espuma: si te pica o reseca, baja a una dosis al día — estimula el folículo, dosis de la mañana"},{id:"wd04av",txt:"<b>Avodart (dutasterida 0,5 mg)</b> — una cápsula con el desayuno, siempre a la misma hora. Actúa por dentro bloqueando la DHT: no sustituye al minoxidil, se suman"},{id:"wdSupAm1",sec:"Suplementos",txt:"Vitamina D3 — 2000-4000 UI, con algo de grasa en la comida",link:{href:"../CuidadoPersonal/salud.html?tab=suplementos",label:"💊 Ver Suplementos"}},{id:"wdSupAm2",txt:"Multivitamínico — 1 tableta"},{id:"wdSupAm3",txt:"Omega 3 — 1-2g EPA+DHA, con alimento"},{id:"wdSupAm4",txt:"Creatina monohidratada — 5g (todos los días, no solo si entrenas hoy)"}]},
+    {id:"wd-am-co",dias:[2,3,5],hora:"06:53",cat:"salud",txt:"🚿 Rutina de la mañana — ducha, cabello, piel y suplementos",producto:true,subtareas:[{id:"wd02ca",sec:"Ducha y cabello",txt:"Hoy <b>no lleva champú</b>: mojas, y aplicas <b>L'Oréal Elvive Reparación Total 5</b> solo de medios a puntas. Lavar a diario con champú es lo que termina de secar el pelo."},{id:"wd02cc",txt:"Ya seco, si lo notas áspero: 2 gotas de <b>Moroccanoil Treatment Light</b> solo en las puntas."},{id:"wd03a",sec:"Piel y minoxidil",txt:"Limpiador suave: CeraVe Limpiador Espumoso (verde) — quita grasa y sudor de la noche sin resecar"},{id:"wd03b",txt:"Sérum de niacinamida 10%: The Ordinary Niacinamida 10% + Zinc 1% — controla grasa y afina los poros"},{id:"wd03c",txt:"Protector solar: <b>La Roche-Posay Anthelios Oil Free SPF50</b> — <b>dos dedos completos</b> para cara y cuello. Con menos, un SPF50 protege como un SPF15"},{id:"wd04",txt:"<b>Minoxidil 5% NR-11 (Polaris Research)</b> 1 ml con el gotero en cuero cabelludo seco — es loción, no espuma: si te pica o reseca, baja a una dosis al día — estimula el folículo, dosis de la mañana"},{id:"wd04av",txt:"<b>Avodart (dutasterida 0,5 mg)</b> — una cápsula con el desayuno, siempre a la misma hora. Actúa por dentro bloqueando la DHT: no sustituye al minoxidil, se suman"},{id:"wdSupAm1",sec:"Suplementos",txt:"Vitamina D3 — 2000-4000 UI, con algo de grasa en la comida",link:{href:"../CuidadoPersonal/salud.html?tab=suplementos",label:"💊 Ver Suplementos"}},{id:"wdSupAm2",txt:"Multivitamínico — 1 tableta"},{id:"wdSupAm3",txt:"Omega 3 — 1-2g EPA+DHA, con alimento"},{id:"wdSupAm4",txt:"Creatina monohidratada — 5g (todos los días, no solo si entrenas hoy)"}]},
+    {id:"sa-am",dias:[6],hora:"08:35",cat:"salud",txt:"🚿 Rutina de la mañana — ducha, cabello, piel y suplementos",producto:true,subtareas:[{id:"sa05a",sec:"Ducha y cabello",txt:"Champú: <b>CeraVe Champú Hidratante sin sulfatos</b>. Hoy es día de reparación, no de tratamiento."},{id:"sa05b",txt:"<b>Mascarilla L'Oréal Elvive Total Repair 5</b> — es un acondicionador concentrado, viene en TARRO (no en botella). Va de medios a puntas y se deja actuar <b>5-10 min</b> mientras terminas de bañarte. Es el paso que más repara de toda tu semana: si te saltas uno, que no sea este."},{id:"sa05c",txt:"Hoy <b>NO</b> uses acondicionador: la mascarilla ya hizo ese trabajo, y ponerle los dos apelmaza el cabello fino."},{id:"sa05d",txt:"Ya seco: 2 gotas de <b>Moroccanoil Treatment Light</b> en puntas."},{id:"sa05e",txt:"Revisa las puntas: si ves pelos abiertos en forma de Y, ya toca corte. Cada 8-12 semanas, 1-2 cm — solo puntas."},{id:"sa02",sec:"Piel y minoxidil",txt:"Skincare AM — limpiador + niacinamida + hidratante con SPF 50 (mismos productos que entre semana)"},{id:"sa02b",txt:"<b>Minoxidil 5% NR-11 (Polaris Research)</b> 1 ml con el gotero en cuero cabelludo seco — es loción, no espuma: si te pica o reseca, baja a una dosis al día — dosis de la mañana"},{id:"sa02bav",txt:"<b>Avodart (dutasterida 0,5 mg)</b> — una cápsula con el desayuno, siempre a la misma hora. Actúa por dentro bloqueando la DHT: no sustituye al minoxidil, se suman"},{id:"saSupAm1",sec:"Suplementos",txt:"Vitamina D3 — 2000-4000 UI, con algo de grasa en la comida",link:{href:"../CuidadoPersonal/salud.html?tab=suplementos",label:"💊 Ver Suplementos"}},{id:"saSupAm2",txt:"Multivitamínico — 1 tableta"},{id:"saSupAm3",txt:"Omega 3 — 1-2g EPA+DHA, con alimento"},{id:"saSupAm4",txt:"Creatina monohidratada — 5g (todos los días, no solo si entrenas hoy)"}]},
+    {id:"do-am",dias:[0],hora:"08:35",cat:"salud",txt:"🚿 Rutina de la mañana — ducha, cabello, piel y suplementos",producto:true,subtareas:[{id:"do045a",sec:"Ducha y cabello",txt:"Hoy <b>no lleva champú</b>: <b>L'Oréal Elvive Reparación Total 5</b> de medios a puntas y enjuaga."},{id:"do045c",txt:"Antes de dormir, <b>funda de almohada de satín</b>. Pasas 7 horas frotando el pelo contra la almohada: el algodón lo rompe y le roba humedad, el satín no."},{id:"do02",sec:"Piel y minoxidil",txt:"Skincare AM — limpiador + niacinamida + hidratante con SPF 50 (mismos productos que entre semana)"},{id:"do02b",txt:"<b>Minoxidil 5% NR-11 (Polaris Research)</b> 1 ml con el gotero en cuero cabelludo seco — es loción, no espuma: si te pica o reseca, baja a una dosis al día — dosis de la mañana"},{id:"do02bav",txt:"<b>Avodart (dutasterida 0,5 mg)</b> — una cápsula con el desayuno, siempre a la misma hora. Actúa por dentro bloqueando la DHT: no sustituye al minoxidil, se suman"},{id:"doSupAm1",sec:"Suplementos",txt:"Vitamina D3 — 2000-4000 UI, con algo de grasa en la comida",link:{href:"../CuidadoPersonal/salud.html?tab=suplementos",label:"💊 Ver Suplementos"}},{id:"doSupAm2",txt:"Multivitamínico — 1 tableta"},{id:"doSupAm3",txt:"Omega 3 — 1-2g EPA+DHA, con alimento"},{id:"doSupAm4",txt:"Creatina monohidratada — 5g (todos los días, no solo si entrenas hoy)"}]},
     {id:"wd05",dias:[1,2,3,4,5],hora:"07:33",cat:"descanso",txt:"Vestirte y alistarte"},
     {id:"wd06",dias:[1,2,3,4,5],hora:"07:40",cat:"admin",txt:"🚗 Didi con direccionamiento — camino a ALTEN (~50 min: el traslado normal + el desvío del pasajero)"},
     {id:"wd07",dias:[1,2,3,4,5],hora:"08:30",dur:270,cat:"trabajo",txt:"🏢 ALTEN — jornada laboral (HIL/SIL Ford) — entras 08:30, sales 16:40",fijo:true},
@@ -260,7 +265,7 @@ window.CIFRAS = (function () {
     {id:"wd-cenlex",dias:[1,2,3,4,5],hora:"16:40",dur:20,cat:"admin",txt:"🚗 Manejar al CENLEX Santo Tomás (~20 min)"},
     {id:"wd-aleman",dias:[1,2,3,4,5],hora:"17:00",dur:60,cat:"aprender",txt:"🇩🇪 Clase de alemán — CENLEX Santo Tomás (17:00 a 18:00)"},
     {id:"wd-al-gym",dias:[1,2,3,4,5],hora:"18:00",dur:15,cat:"admin",txt:"🚗 Del CENLEX al gimnasio (~15 min)"},
-    {id:"wd09",dias:[1,2,3,4,5],hora:"19:05",cat:"salud",txt:"Ducha rápida post-ejercicio",subtareas:[{id:"wd09a",txt:"Ducha rápida para quitar el sudor del entrenamiento."},{id:"wd09b",txt:"🏊 <b>SOLO MIÉRCOLES, después de nadar:</b> lava el cabello con <b>CeraVe Champú Hidratante sin sulfatos</b>. El cloro se queda en el pelo y lo reseca durante horas — este lavado no es opcional."},{id:"wd09c",txt:"🏊 Miércoles: después del champú, <b>L'Oréal Elvive Reparación Total 5</b> de medios a puntas y <b>crema sin enjuague L'Oréal Elvive Total Repair 5</b> (se pone sobre el pelo húmedo y NO se enjuaga) con el pelo húmedo."},{id:"wd09d",txt:"🏊 Truco para el miércoles: <b>moja el pelo con agua limpia ANTES de meterte a la alberca</b>. El pelo mojado absorbe menos cloro, igual que una esponja llena."}]},
+    {id:"wd09",dias:[1,2,3,4,5],hora:"19:05",cat:"salud",txt:"Ducha rápida post-ejercicio",subtareas:[{id:"wd09a",txt:"Ducha rápida para quitar el sudor del entrenamiento."},{id:"wd09b",txt:"🏊 <b>SOLO MIÉRCOLES, después de nadar:</b> lava el cabello con <b>CeraVe Champú Hidratante sin sulfatos</b>. El cloro se queda en el pelo y lo reseca durante horas — este lavado no es opcional."},{id:"wd09c",txt:"🏊 Miércoles: después del champú, <b>L'Oréal Elvive Reparación Total 5</b> solo de medios a puntas."},{id:"wd09d",txt:"🏊 Truco para el miércoles: <b>moja el pelo con agua limpia ANTES de meterte a la alberca</b>. El pelo mojado absorbe menos cloro, igual que una esponja llena."}]},
     {id:"wd-didi2",dias:[1,2,3,4,5],hora:"19:30",cat:"admin",txt:"🚗 Didi — sesión corta de la noche (hasta ~20:00)"},
     {id:"wd11",dias:[1,2,3,4,5],hora:"20:00",cat:"profundo",txt:"🎯 Prioridad activa de Fase 0: negocio de tu papá o plantilla GBM — 1h15 de avance real (20:00–21:15)"},
     {id:"wd14",dias:[1,2,3,4,5],hora:"21:15",cat:"salud",txt:"🍽️ Cena + preparar la comida de mañana",subtareas:[{id:"wd14a",txt:"Cocina un solo platillo para cenar hoy y llevar de comida mañana a ALTEN — ahorra tiempo, sin carbohidratos refinados en la cena",link:{href:"../CuidadoPersonal/comida.html?s=cenas",label:"🍳 Ver cenas"}},{id:"wd14b",txt:"Deja todo empacado y listo junto a la puerta para salir rápido mañana",link:{href:"../CuidadoPersonal/comida.html?s=desayunos",label:"🍳 Ver desayunos"}}]},
@@ -797,6 +802,9 @@ window.CIFRAS = (function () {
   //
   // Duración y costo son DERIVADOS de `contenido`, `porUso` y los días de uso. Los `precio`
   // son de referencia (farmacia y Amazon MX, septiembre 2026) y se editan aquí.
+  // El precio del Avodart pasó de 1500 a 1560 el 1-sep-2026: ya no es una referencia, es lo que
+  // Adán pagó de verdad esa vez (queda como gasto en Finanzas, transacción s069). Sube con él
+  // el `costoMesTotal` del pelo, porque ese bote dura exactamente un mes.
   const RUTINA_PELO = {
     productos: [
       { id:'minoxidil', cat:'Tratamiento anticaída', n:'Minoxidil 5% NR-11 (Polaris Research)',
@@ -823,7 +831,7 @@ window.CIFRAS = (function () {
           tarda:'Frena la ca\u00edda en 3-4 meses. La recuperaci\u00f3n visible, entre 6 y 12. Un a\u00f1o antes de juzgarlo.',
           ojo:'Es un tratamiento de a\u00f1os, no de meses. Dejarlo un trimestre y retomar no reanuda donde ibas: lo que el fol\u00edculo pierde en la pausa no se recupera despu\u00e9s. Lo m\u00e9dico \u2014receta, PSA, efectos\u2014 est\u00e1 abajo, en Antes de empezar.'
         },
-        contenido:30, unidad:'cáps', porUso:1, vecesDia:1, dias:[0,1,2,3,4,5,6], precio:1500,
+        contenido:30, unidad:'cáps', porUso:1, vecesDia:1, dias:[0,1,2,3,4,5,6], precio:1560,
         tono:'warn', clave:true, momento:'oral', receta:true,
         uso:'<b>Una cápsula al día</b>, con o sin comida, siempre a la misma hora. Actúa <b>por dentro</b> bloqueando la DHT, que es la hormona que encoge el folículo: no sustituye al minoxidil \u2014 uno frena la caída y el otro empuja el crecimiento. Tarda <b>3 a 6 meses</b> en verse, igual que el minoxidil.',
         aviso:'Es <b>medicamento de receta</b> y para la caída se usa fuera de indicación. Dos cosas que tienes que saber: <b>parte tu PSA a la mitad</b> \u2014 mídelo y dile a quien lo interprete que la tomas \u2014 y si aparecen efectos sexuales o bulto/dolor en el pecho, es motivo de consulta, no de aguantarse. Llévala con un médico, no en solitario.' },
@@ -899,20 +907,14 @@ window.CIFRAS = (function () {
         contenido:300, unidad:'ml', porUso:20, dias:[6], precio:130, tono:'oro', momento:'ducha',
         uso:'De medios a puntas, <b>5 minutos</b> mientras terminas de bañarte. Ese día <b>sustituye al acondicionador</b>: ponerle los dos apelmaza el cabello fino. Viene en TARRO, no en botella — es un acondicionador mucho más concentrado.' },
 
-      { id:'sinEnjuague', cat:'Crema sin enjuague', n:"Crema sin enjuague L'Oréal Elvive Total Repair 5",
-        foto:'https://images.openbeautyfacts.org/images/products/007/124/936/4840/front_en.3.full.jpg',
-        frasco:'tubo', marca:{a:'#ffffff', b:'#8b1a3a'},
-        ficha:{
-          activo:'Agentes acondicionadores que no se aclaran',
-          que:'Una crema ligera que se queda puesta. Es el \u00fanico producto del largo que va TODOS los d\u00edas, tambi\u00e9n los que no te lavas.',
-          hace:'Deja una pel\u00edcula fina que reduce la fricci\u00f3n durante todo el d\u00eda: al peinar, al pasar la mano, contra el cuello de la camisa. Menos fricci\u00f3n es menos pelo partido.',
-          sirve:'Protege el pelo que ya tienes de romperse por el camino. En una cabeza que adem\u00e1s est\u00e1 perdiendo densidad, cada pelo que se parte cuenta doble.',
-          tarda:'El tacto cambia el mismo d\u00eda. Menos puntas abiertas, en unas semanas.',
-          ojo:'Un ch\u00edcharo, y s\u00f3lo en la mitad de abajo. En la ra\u00edz engrasa y aplana, y como no se enjuaga el error se queda ah\u00ed todo el d\u00eda.'
-        },
-        contenido:200, unidad:'ml', porUso:3, dias:[0,1,2,3,4,5,6], precio:110, tono:'pm',
-        momento:'humedo',
-        uso:'Cantidad de un chícharo sobre el pelo húmedo, <b>solo en la mitad de abajo</b>, y NO se enjuaga. Va <b>todos los días</b>, no solo los que te lavas.' },
+      // 2026-09-02: fuera la crema sin enjuague (L'Oréal Elvive Total Repair 5, 200 ml, id
+      // 'sinEnjuague'). Adán: "de lista de compras quita: Crema sin enjuague L'Oréal Elvive
+      // Total Repair 5, 200 ml (todos los días)" y, preguntado si la seguía usando, "fuera de
+      // todo: ya no la uso". De la compra salió por derivación — `LISTA_COMPRAS.cabello` es un
+      // getter sobre esta lista — y con ella se fueron sus 5 menciones en RUTINA_TASKS (wd02c,
+      // wd02cb y do045b, que eran solo suyas; sa05d y wd09c, que compartía con otro producto).
+      // Era el único con momento:'humedo', así que ese paso de la rutina de Cuidado Personal
+      // queda con toalla, peine y secado — el render ya filtraba nulos, no hubo que tocarlo.
 
       { id:'aceite', cat:'Aceite de puntas', n:'Moroccanoil Treatment Light',
         frasco:'gotero', marca:{a:'#f5f0e3', b:'#0e4f4f'},
@@ -2659,7 +2661,16 @@ window.CIFRAS = (function () {
     get cabello() {
       return RUTINA_PELO.productos.map(function (p) { return RUTINA_PELO.textoCompra(p); })
         .concat([
-        'Minoxidil ORAL 2.5-5 mg (\ud83e\ude7a receta + revisión de presión antes y durante) — el escalón que queda si en 6 meses el tópico + la dutasterida no bastan',
+        // 2026-09-02: este ítem tenía el formato invertido del resto — el nombre DELANTE del
+        // guión y la nota detrás — y `lcAmazonQuery()` del Dashboard, que se queda con lo de
+        // después del ' — ' porque ahí suele ir el producto, acababa buscando en Amazon
+        // "el escalón que queda si en 6 meses el tópico + la dutasterida no bastan". Adán:
+        // "lo de minoxidil oral no se busca bien en amazon, es por eso que no tienes precio de
+        // eso". Con la dosis entre paréntesis (las aclaraciones se quitan antes de buscar) la
+        // búsqueda queda en "Minoxidil oral", y el \ud83e\ude7a hace que el Dashboard lo pinte como
+        // de receta — que es la otra mitad del problema: **no se vende en Amazon ni en Mercado
+        // Libre**, es de farmacia con receta, y por eso nunca hubo precio de lista que ponerle.
+        'Minoxidil oral (2.5-5 mg) — \ud83e\ude7a solo con receta y con revisión de presión antes y durante; es el escalón que queda si en 6 meses el tópico + la dutasterida no bastan',
       ]);
     },
     // Sale de SUPLEMENTOS: el nombre y el tamaño del envase se escriben una sola vez.
@@ -2789,6 +2800,69 @@ window.CIFRAS = (function () {
         if (auto) auto.day = 15;
       }
     },
+    {
+      // 2026-09-01 · seis compras en un solo día, reportadas el 3-sep. Cuatro se cargaron a la
+      // TC Banamex —plancha de Amazon, dutasterida, minoxidil NR-11 y mouse— y suman $5,985:
+      // la tarjeta llevaba en $0 desde el 13 ago 2026 y vuelve a tener saldo. Las otras dos
+      // —tenis Tommy $1,500 y despensa $1,800— fueron de contado y solo entran como gasto.
+      //
+      // Lo que se mueve sin que nadie lo escriba: `deudaCara` sube de $34,000 a $39,985 —Banamex
+      // vuelve a ser tarjeta con saldo—, `deudaTotal` de $339,550 a $345,535, y el mínimo de
+      // $810 vuelve a `minimosDeuda`, que baja `margen` en esa misma cantidad.
+      //
+      // Las transacciones se añaden por id y solo si faltan: esta migración y el seed de
+      // Finanzas.html siembran las mismas seis, y un navegador que ya las tenga no las duplica.
+      flag: '_gastos20260901',
+      hacer: function (f) {
+        const bx = (f.debts || []).find(d => d.id === 'd002');
+        if (bx) bx.balance = 5985;
+        if (!Array.isArray(f.transactions)) f.transactions = [];
+        GASTOS_20260901.forEach(function (t) {
+          if (!f.transactions.some(x => x.id === t.id)) f.transactions.push(Object.assign({}, t));
+        });
+      }
+    },
+    {
+      // 2026-09-07 · "ya debo 7,000 a mi tc banamex y a la de bbva 37,000". La BBVA sube
+      // $3,000 sobre el dato del 24-ago y la Banamex $1,015 sobre las cuatro compras del
+      // 1-sep ($5,985). En d001 se mueve también `total`: esa tarjeta mantiene
+      // `total == balance` desde 2024 y, con `total` congelado, el "pagado real" de las
+      // barras de Finanzas saldría negativo.
+      //
+      // Lo que se mueve sin que nadie lo escriba: `deudaCara` de $39,985 a $44,000 y
+      // `deudaTotal` de $345,535 a $349,550. Los mínimos no se tocan ($1,500 y $810), así
+      // que `minimosDeuda` y `margen` se quedan donde estaban.
+      flag: '_tarjetas20260907',
+      hacer: function (f) {
+        const tc = (f.debts || []).find(d => d.id === 'd001');
+        if (tc) { tc.balance = 37000; tc.total = 37000; }
+        const bx = (f.debts || []).find(d => d.id === 'd002');
+        if (bx) bx.balance = 7000;
+        /* Y se sellan las correcciones de AGOSTO que tocan estas mismas tarjetas. Viven en
+           `dashboard.html` como espejos (`fixPagos20260813IfNeeded` y compañía) y corren
+           DESPUÉS que este archivo: a un navegador al que le falte una de sus banderas, esa
+           foto de agosto le devolvería la Banamex a $0 y pisaría el dato de hoy —salió al
+           probar esta migración con Playwright—. Es la misma defensa que ya aplica el seed de
+           Finanzas.html: ninguna corrección histórica puede pisar un dato más nuevo que ella.
+           Al añadir una migración de saldo, revisa si hay espejos viejos que sellar. */
+        ['_banamex9k', '_pagos20260813', '_msibbva20260813'].forEach(function (fl) {
+          try { localStorage.setItem(KEY + fl, '1'); } catch (e) {}
+        });
+      }
+    },
+  ];
+
+  /* Las seis compras del 1-sep-2026, en un solo sitio: las usa la migración de arriba para el
+     navegador que ya tiene datos, y Finanzas.html las repite en su seed para el que arranca en
+     blanco. Los dos tratamientos llevan el nombre exacto del catálogo de RUTINA_PELO, para que
+     el gasto y la ficha del producto se puedan cruzar. */
+  const GASTOS_20260901 = [
+    {id:'s066',type:'expense',desc:'Tenis Tommy Hilfiger',                  amount:1500, date:'2026-09-01',cat:'Ropa',        notes:'Compra única — de contado'},
+    {id:'s067',type:'expense',desc:'Despensa del mes',                      amount:1800, date:'2026-09-01',cat:'Alimentación',notes:'Compra única — de contado'},
+    {id:'s068',type:'expense',desc:'Plancha (Amazon)',                      amount:1902, date:'2026-09-01',cat:'Hogar/Renta', notes:'TC Banamex'},
+    {id:'s069',type:'expense',desc:'Avodart (dutasterida 0,5 mg)',          amount:1560, date:'2026-09-01',cat:'Salud',       notes:'TC Banamex — 30 cápsulas, un mes de tratamiento'},
+    {id:'s070',type:'expense',desc:'Minoxidil 5% NR-11 (Polaris Research)', amount:900,  date:'2026-09-01',cat:'Salud',       notes:'TC Banamex — 60 ml, un mes de tratamiento'},
+    {id:'s071',type:'expense',desc:'Mouse',                                 amount:1623, date:'2026-09-01',cat:'Otros gastos',notes:'TC Banamex'}
   ];
 
   function migrar() {
@@ -3008,13 +3082,222 @@ window.CIFRAS = (function () {
     else aplicarDOM();
   }
 
+  /* ── EL BALANCE MENSUAL, PARA LAS DOS APPS ──────────────────────────────────────────────────
+     Adán, 2026-09-07: *"también el html de finanzas la gráfica está mal, debería estar como la
+     que hiciste hace rato"*. El Dashboard ya armaba cada mes en dos capas; Finanzas seguía
+     sumando `transactions` a secas y por eso pintaba meses en cero. En vez de copiar la lógica
+     —que es justo lo que este archivo existe para evitar— vive aquí y las dos la llaman.
+
+     CADA MES SE ARMA EN DOS CAPAS:
+
+     1. Lo PREVISTO — lo que ya se sabe y no cambia de mes a mes: las dos quincenas, la renta,
+        el crédito del auto, los servicios, los mínimos de las tarjetas (de `CALENDARIO.cobros`
+        y del `day`/`min` de cada deuda), más los tres que van por TOTAL MENSUAL y no tienen
+        día: Didi, el vale y lo que cuesta comer.
+     2. Lo REGISTRADO — las transacciones que la agenda no conoce. `yaContado` evita el doble
+        conteo: si la renta está anotada a mano, no se suma otra vez.
+
+     Un cero que en realidad es "no lo anoté" miente más que una previsión bien etiquetada, y
+     de ahí la capa 1. Cada concepto sale marcado con `prev`, para que la pantalla pueda pintar
+     distinto lo previsto y lo anotado. */
+
+  const CT_VACIAS = ['del','los','las','por','con','una','uno','para','que','sus','este','esta','mes','pago'];
+
+  function palabras(s) {
+    return String(s || '').toLowerCase().split(/[^a-záéíóúüñ0-9]+/)
+      .filter(function (w) { return w.length >= 3 && CT_VACIAS.indexOf(w) === -1; });
+  }
+  function norm(s) {
+    return String(s || '').toLowerCase().split(/[^a-záéíóúüñ0-9]+/).filter(Boolean).sort().join(' ');
+  }
+
+  /* ¿Este movimiento ya está en la agenda del mes? Se mira por nombre y, si comparten una
+     sola palabra, además por importe. Es lo que evita contar la renta dos veces cuando
+     además está anotada a mano. */
+  function yaContado(t, agenda) {
+    if (t.notes === '[recurrente]') return true;
+    const imp = Math.round(+t.amount || 0), pt = palabras(t.desc), nt = norm(t.desc);
+    return (agenda || []).some(function (f) {
+      if (norm(f.t) === nt) return true;
+      const pf = palabras(f.t);
+      const comunes = pt.filter(function (w) { return pf.indexOf(w) !== -1; }).length;
+      if (comunes >= 2) return true;
+      return comunes >= 1 && Math.abs(Math.round(+f.monto || 0) - imp) <= 1;
+    });
+  }
+
+  /* ¿Este ingreso es la nómina? Adán, 2026-09-07: "mi sueldo solo son 20,500 cada quincena, no
+     lo cuentes más veces, porque no gano el doble".
+
+     LA NÓMINA APORTA `sueldo` AL MES Y PUNTO —las dos quincenas del calendario—. Un movimiento
+     de nómina anotado es ESE MISMO dinero, no dinero de más, así que no se suma encima.
+
+     `yaContado` no bastaba: compara palabras contra "Quincena", así que cazaba "Quincena ALTEN"
+     pero se le escapaban "Sueldo", "Nómina" o "Depósito" —y cada uno sumó $20,500 de más—. Aquí
+     manda la CATEGORÍA, que es lo que Finanzas guarda siempre, con las palabras como red por si
+     estuviera mal categorizado. `palabras` no quita acentos, de ahí nómina con tilde y sin ella.
+
+     El precio: un bono extraordinario anotado como 'Salario' tampoco se sumaría. Va en otra
+     categoría —Bonos, u Otros ingresos— y entonces sí entra. */
+  const NOMINA_PAL = ['quincena', 'sueldo', 'nomina', 'nómina', 'salario', 'alten'];
+  function esNomina(t) {
+    if (t.cat === 'Salario') return true;
+    const pd = palabras(t.desc);
+    return NOMINA_PAL.some(function (w) { return pd.indexOf(w) !== -1; });
+  }
+
+  /* Lo que está PROGRAMADO un día concreto, venga de donde venga: los cobros del calendario y
+     el mínimo de cada deuda que se paga ese día. */
+  function agendaDia(dia, ym, debts) {
+    const out = [];
+    const mes = ym || '';
+    (CALENDARIO.cobros || []).forEach(function (c) {
+      if (c.dia !== dia) return;
+      // Un cobro puede no caer todos los meses: el gas es bimestral. `cada` dice cada cuántos
+      // meses y `desde` desde cuál se cuenta; sin esos campos, cae siempre.
+      if (c.cada > 1 && c.desde && mes) {
+        const a0 = c.desde.split('-').map(Number), a1 = mes.split('-').map(Number);
+        if (((a1[0] - a0[0]) * 12 + (a1[1] - a0[1])) % c.cada !== 0) return;
+      }
+      out.push({ t: c.txt, monto: c.monto, entra: !!c.entra });
+    });
+    const DEU = (debts && debts.length) ? debts : deudas();
+    DEU.forEach(function (d) {
+      if (d.day === dia && +d.balance > 0 && +d.min > 0) out.push({ t: d.name, monto: +d.min, entra: false });
+    });
+    return out;
+  }
+
+  /* Lo que cuesta comer al mes. Se DERIVA de la lista de compras, que con sus precios vive en
+     `dashboard.html` (153 KB que no tiene sentido cargar en las tres apps). El Dashboard lo
+     calcula y lo deja aquí; Finanzas lo lee de aquí. Es una caché de un dato que se calcula en
+     un solo sitio, no una segunda copia del dato. Si Adán nunca abrió el Dashboard en este
+     navegador, vale 0 y la comida sencillamente no entra —mejor faltar que inventar—. */
+  const COME_KEY = KEY + '_comeDia';
+  function guardarComeDia(v) {
+    if (!(+v > 0)) return;
+    // Con decimales: redondear aquí hacía que el mismo mes diera $2,737 en una app y
+    // $2,746 en la otra, que es justo lo que este archivo existe para evitar.
+    try { localStorage.setItem(COME_KEY, String(+v)); } catch (e) {}
+  }
+  function comeDia() {
+    try { return +localStorage.getItem(COME_KEY) || 0; } catch (e) { return 0; }
+  }
+
+  /* La serie de los últimos `n` meses hasta `hastaYM` (incluido). `opts.tx` y `opts.debts`
+     permiten pasar los datos ya en memoria —Finanzas los tiene más frescos que localStorage—. */
+  function balanceMeses(hastaYM, n, opts) {
+    const O = opts || {};
+    const TX = O.tx || (fin && Array.isArray(fin.transactions) ? fin.transactions : []);
+    const DEU = (O.debts && O.debts.length) ? O.debts : deudas();
+    const MC = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+    const cuantos = Math.max(1, n || 6);
+    const base = /^\d{4}-\d{2}$/.test(hastaYM || '')
+      ? new Date(+hastaYM.slice(0, 4), +hastaYM.slice(5, 7) - 1, 1)
+      : new Date();
+    const come = comeDia();
+    const out = [];
+
+    for (let i = cuantos - 1; i >= 0; i--) {
+      const d = new Date(base.getFullYear(), base.getMonth() - i, 1);
+      const k = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0');
+      const nDias = new Date(d.getFullYear(), d.getMonth() + 1, 0).getDate();
+
+      let inc = 0, exp = 0, nTx = 0;
+      const cosas = {};
+      /* Una entrada por CONCEPTO: seis despensas del mismo mes son una línea con un 6×.
+         `prev` distingue lo previsto de lo anotado, y solo cae a false: si un concepto tiene
+         las dos cosas, manda el hecho real. */
+      const anota = function (desc, v, tipo, cat, prev) {
+        const o = cosas[desc] = cosas[desc] || { inc: 0, exp: 0, veces: { inc: 0, exp: 0 }, cat: cat, prev: prev };
+        o[tipo] += v; o.veces[tipo]++;
+        if (!prev) { o.prev = false; o.cat = cat; }
+      };
+
+      // ── Capa 1a: lo previsto con día fijo ──
+      const fijos = [], entradas = [];
+      for (let dd = 1; dd <= nDias; dd++) {
+        agendaDia(dd, k, DEU).forEach(function (a) {
+          const v = +a.monto || 0;
+          if (!v) return;
+          (a.entra ? entradas : fijos).push(a);
+          if (a.entra) { inc += v; anota(a.t, v, 'inc', '__entra', true); }
+          else { exp += v; anota(a.t, v, 'exp', a.t, true); }
+        });
+      }
+
+      /* ── Capa 1b: LOS TRES QUE VAN POR TOTAL MENSUAL ──
+         Ni Didi, ni el vale, ni comer tienen día: uno se cobra por semana, otro llega solo y el
+         tercero es todos los días. Van como un concepto cada uno, que es como se leen ("comer me
+         cuesta $2,746 al mes", no treinta líneas de $92).
+
+         Y NO los caza `yaContado`, que compara importes: un cobro de Didi de $2,800 no se parece
+         a los $11,200 del mes, así que se habrían contado los dos. Cada uno lleva su lista de
+         palabras y su categoría; si el mes tiene algo anotado que caiga ahí, MANDA LO ANOTADO y
+         la previsión no se pone. Un dato real siempre gana a una estimación. */
+      const MENSUALES = [
+        { t: 'Didi', tipo: 'inc', cat: '__entra', monto: PROYECTO.didiMes,
+          pal: ['didi', 'uber', 'viajes'], txCat: 'Freelance/Honorarios' },
+        { t: 'Vale de despensa', tipo: 'inc', cat: '__entra', monto: PROYECTO.siVale,
+          pal: ['vale', 'sivale'] },
+        { t: 'Comer', tipo: 'exp', cat: 'comida', monto: come * nDias,
+          pal: ['comer', 'comida', 'despensa', 'super', 'supermercado', 'mandado', 'alimentacion'] }
+      ].filter(function (x) { return +x.monto > 0; });
+
+      const delMes = TX.filter(function (t) {
+        return t && t.date && String(t.date).slice(0, 7) === k;
+      });
+      MENSUALES.forEach(function (x) {
+        const tipoTX = x.tipo === 'inc' ? 'income' : 'expense';
+        const cubierto = delMes.some(function (t) {
+          if (t.type !== tipoTX) return false;
+          if (x.txCat && t.cat === x.txCat) return true;
+          const pd = palabras(t.desc);
+          return x.pal.some(function (w) { return pd.indexOf(w) !== -1; });
+        });
+        if (cubierto) return;
+        if (x.tipo === 'inc') inc += x.monto; else exp += x.monto;
+        anota(x.t, x.monto, x.tipo, x.cat, true);
+        cosas[x.t].veces[x.tipo] = 1;   // es un total del mes, no un movimiento suelto
+      });
+
+      // ── Capa 2: lo registrado que la agenda no conoce ──
+      delMes.forEach(function (t) {
+        nTx++;
+        const v = +t.amount || 0;
+        if (!v) return;
+        const desc = String(t.desc || '').trim() || t.cat || 'Sin concepto';
+        if (t.type === 'income') {
+          if (esNomina(t) || yaContado(t, entradas)) return;   // la nómina ya está puesta, fija
+          inc += v; anota(desc, v, 'inc', t.cat || '', false);
+        } else if (t.type === 'expense') {
+          if (yaContado(t, fijos)) return;
+          exp += v; anota(desc, v, 'exp', t.cat || '', false);
+        }
+      });
+
+      out.push({
+        ym: k, lbl: MC[d.getMonth()] + ' ' + String(d.getFullYear()).slice(2),
+        inc: inc, exp: exp, bal: inc - exp, n: nTx, cosas: cosas
+      });
+    }
+    return out;
+  }
+
   return {
     n: n, v: v, texto: texto, aplicarDOM: aplicarDOM, refrescar: refrescar, tabla: tabla,
+    // El balance mensual y sus piezas, para que Dashboard y Finanzas pinten LO MISMO.
+    balanceMeses: balanceMeses, agendaDia: agendaDia,
+    palabras: palabras, norm: norm, yaContado: yaContado, esNomina: esNomina,
+    comeDia: comeDia, guardarComeDia: guardarComeDia,
     claves: function () { return Object.keys(CLAVES); },
     dep: function (k) { return (CLAVES[k] && CLAVES[k].dep) || []; },
     impacto: impacto,
     grafo: grafo,
     DEUDAS_SEED: DEUDAS_SEED,
+    GASTOS_20260901: GASTOS_20260901,
+    // Para que `seedData()` pueda marcarlas como aplicadas: un seed nuevo ya las incluye.
+    MIGRACIONES_FLAGS: MIGRACIONES.map(function (m) { return m.flag; }),
     rutina: rutina,
     SK: SK,
     PHASES: PHASES,

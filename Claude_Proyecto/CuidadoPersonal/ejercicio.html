@@ -325,15 +325,7 @@ tbody tr:hover td{background:rgba(255,107,53,.03)}
 .ej-nota{font-size:10px;color:var(--text3);line-height:1.5;margin-top:10px;padding-top:10px;border-top:1px solid rgba(var(--ov),.06)}
 .ej-nota b{color:var(--text2)}
 
-/* los otros dias, plegados */
-.ej-otro{border-radius:14px;border:1px solid var(--border);background:var(--surface-2);margin-bottom:8px;overflow:hidden}
-.ej-otro-h{display:flex;align-items:center;gap:11px;padding:11px 14px;cursor:pointer}
-.ej-otro-h:hover{background:var(--surface-3)}
-.ej-otro-d{font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--text3);width:58px;flex:none}
-.ej-otro-n{font-size:12.5px;font-weight:800;color:var(--text)}
-.ej-otro-c{margin-left:auto;font-size:10px;color:var(--text3);font-weight:700;flex:none}
-.ej-otro-b{padding:0 14px 12px;display:none}
-.ej-otro.abierto .ej-otro-b{display:block}
+/* lineas de ejercicio (ficha, alternativas) */
 .ej-otro-li{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid rgba(var(--ov),.06)}
 .ej-otro-li:last-child{border-bottom:none}
 .ej-otro-i{width:44px;height:36px;border-radius:8px;background:#f3f5f8;flex:none;display:flex;align-items:center;justify-content:center;padding:3px;overflow:hidden}
@@ -472,8 +464,6 @@ tbody tr:hover td{background:rgba(255,107,53,.03)}
     <div class="nav-label">Principal</div>
     <div class="nav-item active" onclick="nav('rutina')"><span class="ico">🏋️</span>Mi Rutina</div>
     <div class="nav-item" onclick="nav('biblioteca')"><span class="ico">📚</span>Biblioteca</div>
-    <div class="nav-label">Mi Gimnasio</div>
-    <div class="nav-item" onclick="nav('fitsi')"><span class="ico">🏢</span>Fitsi</div>
     <div class="nav-label">Explorar</div>
     <div class="nav-item" onclick="nav('deportes')"><span class="ico">🧭</span>Deportes</div>
   </nav>
@@ -506,8 +496,6 @@ tbody tr:hover td{background:rgba(255,107,53,.03)}
 
       <div id="d-hoy"></div>
 
-      <div class="sh" style="margin-top:6px"><h2 style="font-size:15px" id="rutina-semana-title">🗓️ El resto de la semana</h2></div>
-      <div id="rutina-semana"></div>
     </section>
 
     <!-- BIBLIOTECA -->
@@ -532,46 +520,6 @@ tbody tr:hover td{background:rgba(255,107,53,.03)}
         </div>
       </div>
       <div id="bib-body"></div>
-    </section>
-
-    <!-- FITSI — tu gimnasio real en Buenavista -->
-    <section id="s-fitsi" class="section">
-      <div class="sh"><h2>🏢 Fitsi Buenavista — tu gimnasio</h2></div>
-
-      <div class="card meta-banner" style="margin-bottom:16px">
-        <div style="font-size:13px;font-weight:800;color:var(--p);margin-bottom:4px">📍 Eje 1 Nte. 259, Buenavista, Cuauhtémoc, CDMX · ☎️ 55 6535 8823</div>
-        <div class="ts" style="color:var(--text2);line-height:1.6">Lun-Vie 5:00 am – 12:00 am · Sáb-Dom 7:00 am – 8:00 pm · Días festivos 7:00 am – 3:00 pm. Datos verificados en <a href="https://fitsi.com.mx/clubes/buenavista" target="_blank" style="color:var(--p)">fitsi.com.mx/clubes/buenavista</a> — Fitsi no publica en su web el horario exacto (día/hora) de cada clase grupal, solo la lista de clases que ofrece. Usa la tabla de abajo para capturar tú mismo el horario real que veas en su app o en el pizarrón del club — queda guardado aquí para consultarlo después.</div>
-      </div>
-
-      <div class="g2" style="margin-bottom:16px">
-        <div class="card">
-          <div class="card-title" style="margin-bottom:10px">🧘 Clases grupales que ofrece (45-50 min c/u)</div>
-          <div id="fitsi-clases-list" class="flex gap6" style="flex-wrap:wrap"></div>
-        </div>
-        <div class="card">
-          <div class="card-title" style="margin-bottom:10px">🏊 Instalaciones</div>
-          <div id="fitsi-instalaciones-list" class="flex gap6" style="flex-wrap:wrap"></div>
-        </div>
-      </div>
-
-      <div class="card" style="margin-bottom:16px">
-        <div class="card-title" style="margin-bottom:10px">💳 Membresías (referencia, confirmar precio vigente en el club)</div>
-        <div class="tw"><table>
-          <thead><tr><th>Plan</th><th>Desde</th></tr></thead>
-          <tbody>
-            <tr><td>Shape Up</td><td>$799/mes</td></tr>
-            <tr><td>Dorada</td><td>$1,099/mes</td></tr>
-            <tr><td>Dorada Plus</td><td>$1,399/mes</td></tr>
-            <tr><td>Third Age (adulto mayor)</td><td>Consultar</td></tr>
-          </tbody>
-        </table></div>
-      </div>
-
-      <div class="card">
-        <div class="sh" style="margin-bottom:6px"><h2 style="font-size:14px">📅 Tu calendario real de clases — captúralo tú</h2></div>
-        <div class="ts tm" style="margin-bottom:12px">Anota qué clase te interesa tomar cada día y a qué hora, según lo que veas en el club o en su app. Se guarda solo, en este mismo navegador.</div>
-        <div id="fitsi-calendario"></div>
-      </div>
     </section>
 
     <!-- DEPORTES PARA EXPLORAR -->
@@ -1040,10 +988,7 @@ let S = {
   // El campo `peso` de la rutina existia desde siempre y estaba en 0 en los 45 ejercicios: había
   // dónde guardarlo pero no dónde escribirlo, así que no había progresión. Esto es ese registro.
   sesiones: {},
-  ejerciciosCustom: [],
-  // Calendario real de Fitsi capturado a mano por Adán (Fitsi no publica horario de clases en
-  // su web) — un texto libre por día, ver sección Fitsi.
-  fitsiCalendario: {1:'',2:'',3:'',4:'',5:'',6:'',0:''}
+  ejerciciosCustom: []
 };
 // Foto de los 3 días que cambiaron el 2026-08-12, tomada del default de arriba ANTES de que
 // load() lo sobrescriba con lo que hubiera guardado en localStorage — es lo que usa
@@ -1061,7 +1006,6 @@ const load = () => {
   try { const d=localStorage.getItem(KEY); if(d) S={...S,...JSON.parse(d)}; } catch(e){}
   S.sesiones = S.sesiones || {};
   S.ejerciciosCustom = S.ejerciciosCustom || [];
-  S.fitsiCalendario = S.fitsiCalendario || {1:'',2:'',3:'',4:'',5:'',6:'',0:''};
 };
 // El miércoles cambió de "Espalda + Hombros + Cardio" a "Natación" en el código (2026-08-07),
 // pero load() hace un merge superficial: si ya había un `rutina` guardado en este navegador
@@ -1123,9 +1067,9 @@ function askDel(cb) { document.getElementById('conf').classList.add('open'); con
 document.addEventListener('keydown',e=>{ if(e.key==='Escape') document.querySelectorAll('.mo.open').forEach(m=>m.classList.remove('open')); });
 
 // ─── NAVIGATION ──────────────────────────────────────────────────────────────
-const SECS=['rutina','biblioteca','fitsi','deportes'];
-const STITLE={rutina:'🏋️ Mi Rutina',biblioteca:'📚 Biblioteca de Ejercicios',fitsi:'🏢 Fitsi Buenavista',deportes:'🧭 Deportes para Explorar'};
-const RENDERS={rutina:renderMiRutina,biblioteca:renderBiblioteca,fitsi:renderFitsi};
+const SECS=['rutina','biblioteca','deportes'];
+const STITLE={rutina:'🏋️ Mi Rutina',biblioteca:'📚 Biblioteca de Ejercicios',deportes:'🧭 Deportes para Explorar'};
+const RENDERS={rutina:renderMiRutina,biblioteca:renderBiblioteca};
 
 function nav(s) {
   SECS.forEach(x=>document.getElementById('s-'+x).classList.toggle('active',x===s));
@@ -1405,7 +1349,6 @@ function renderMiRutina(){
     '</div></div>';
 
   ejPintaCrono();
-  renderRutinaSemana();
 }
 
 // ¿Nunca ha marcado una sola serie? Entonces todo vale cero con razon, no por un fallo.
@@ -1441,45 +1384,6 @@ function ejSesionesSemana(){
     const iso=ejIsoDeDow(d);
     return ejs.every(e=>ejSets(iso,e.id,e.series||1).every(x=>x.ok));
   }).length;
-}
-
-// El resto de la semana, plegado. Antes los 7 días iban abiertos a la vez y ahí nacían los
-// 7.403px de scroll: hoy manda arriba y los otros 6 son una línea cada uno hasta que los abras.
-let ejAbiertos = {};
-function ejTogglePlegado(d){ ejAbiertos[d]=!ejAbiertos[d]; renderRutinaSemana(); }
-
-function renderRutinaSemana(){
-  const cont=document.getElementById('rutina-semana'); if(!cont) return;
-  const dowHoy=new Date().getDay();
-  const visto=ejDiaVisto===null?dowHoy:ejDiaVisto;
-  const t=document.getElementById('rutina-semana-title');
-  if(t) t.textContent='🗓\ufe0f El resto de la semana';
-
-  cont.innerHTML=ORDEN_DIAS.filter(d=>d!==visto).map(function(d){
-    const r=S.rutina[d]||{nombre:'Sin asignar',tipo:'',ejercicios:[]};
-    const ejs=r.ejercicios||[];
-    const col=r.tipo?TIPO_COL[r.tipo]:'rgba(var(--ov),.25)';
-    const abierto=!!ejAbiertos[d];
-    const filas=ejs.map(function(e){
-      const b=ejBase(e.id); if(!b) return '';
-      const un=e.unidad||'reps';
-      const ult=ejUltimo(e.id,null);
-      return '<div class="ej-otro-li">'+
-        '<div class="ej-otro-i" onclick="verEjercicio(\''+e.id+'\')">'+ejImg(b)+'</div>'+
-        '<div style="min-width:0"><div class="ej-otro-ln">'+ejEsc(b.nombre)+'</div>'+
-        '<div class="ej-otro-ls">'+ejEsc(b.musculo||'')+(ult?' \u00b7 '+ult.kg+' kg la vez pasada':'')+'</div></div>'+
-        '<div class="ej-otro-lr">'+e.series+'\u00d7'+e.reps+(un!=='reps'?' '+un:'')+'</div></div>';
-    }).join('');
-    return '<div class="ej-otro'+(abierto?' abierto':'')+'">'+
-      '<div class="ej-otro-h" onclick="ejTogglePlegado('+d+')">'+
-        '<div class="ej-otro-d">'+DIAS_SHORT[d]+'</div>'+
-        '<div><div class="ej-otro-n">'+ejEsc(r.nombre)+'</div></div>'+
-        '<div class="ej-otro-c" style="color:'+col+'">'+ejs.length+' ejercicio'+(ejs.length===1?'':'s')+
-          ' &nbsp;'+(abierto?'\u25b4':'\u25be')+'</div></div>'+
-      '<div class="ej-otro-b">'+(filas||'<div class="ej-nota" style="border:none;margin:0;padding:0">Sin ejercicios.</div>')+
-        '<div style="margin-top:10px"><button class="btn btn-o btn-sm" onclick="ejVerDia('+d+')">Abrir esta sesi\u00f3n</button>'+
-        ' <button class="btn btn-o btn-sm" onclick="openRutinaModal('+d+')">Editar</button></div></div></div>';
-  }).join('');
 }
 
 // ─── La ficha de un ejercicio ─────────────────────────────────────────
@@ -1679,28 +1583,6 @@ function saveEjCustom() {
   save(); closeMo('mo-ej-custom'); renderBiblioteca(); toast('✅ Ejercicio guardado');
 }
 function delEjCustom(id) { S.ejerciciosCustom=S.ejerciciosCustom.filter(e=>e.id!==id); save(); renderBiblioteca(); toast('🗑️ Eliminado'); }
-
-// ─── FITSI — tu gimnasio real en Buenavista (nuevo, 2026-08-02) ───────────────
-// Datos verificados en fitsi.com.mx/clubes/buenavista (2026-08-02) — Fitsi no publica un
-// calendario semanal con día/hora exacta por clase, solo la lista de clases que ofrece y las
-// instalaciones. Por eso "fitsiCalendario" es un campo de texto libre por día que Adán llena
-// él mismo con lo que vea en la app de Fitsi o en el pizarrón del club — no se inventa horario.
-const FITSI_CLASES = ['Fit Step','Zumba Fitness','Pilates','Cycling','Strong','Barre','Yoga','Aquafit','Body Pump','Salsa en Línea','Power Jump'];
-const FITSI_INSTALACIONES = ['Alberca Semiolímpica','Vapor','Vestidores de Lujo','Área de Cardiovascular','Área de Peso Integrado','Área de Peso Libre','Indoor Cycling','Salón Fuerza','Salón Mente','Cross Training'];
-
-function renderFitsi() {
-  document.getElementById('fitsi-clases-list').innerHTML = FITSI_CLASES.map(c=>
-    `<span class="badge b-p">${c}</span>`).join('');
-  document.getElementById('fitsi-instalaciones-list').innerHTML = FITSI_INSTALACIONES.map(i=>
-    `<span class="badge b-n">${i}</span>`).join('');
-
-  document.getElementById('fitsi-calendario').innerHTML = ORDEN_DIAS.map(d=>`
-    <div class="flex gap8 aic" style="padding:6px 0;border-bottom:1px solid rgba(var(--ov),.05)">
-      <span style="width:70px;font-size:11px;font-weight:700;color:var(--text2);flex-shrink:0">${DIAS_STR[d]}</span>
-      <input type="text" value="${(S.fitsiCalendario?.[d]||'').replace(/"/g,'&quot;')}" placeholder="Ej. Cycling 7:00 am"
-        oninput="S.fitsiCalendario[${d}]=this.value;save()" style="flex:1">
-    </div>`).join('');
-}
 
 // ─── EXPORT ──────────────────────────────────────────────────────────────────
 function exportData(){ const b=new Blob([JSON.stringify(S,null,2)],{type:'application/json'}); const a=Object.assign(document.createElement('a'),{href:URL.createObjectURL(b),download:`rutina_${today()}.json`}); a.click(); URL.revokeObjectURL(a.href); toast('⬇️ Datos exportados'); }

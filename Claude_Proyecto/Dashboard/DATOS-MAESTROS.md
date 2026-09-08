@@ -27,6 +27,48 @@ En la prosa se escribe un marcador y el módulo lo sustituye al cargar la págin
 
 ---
 
+## El balance mensual, compartido
+
+`datos-maestros.js` no solo guarda datos: también **la lógica que dos apps tienen que
+compartir**. La primera es `CIFRAS.balanceMeses(hastaYM, n, opts)`, que arma la serie de los
+últimos `n` meses para la gráfica de balance del **Dashboard** (bajo el calendario) y la de
+**Finanzas** (`ch-bal`). Estuvo unas horas duplicada en las dos, hasta que se vio que daban
+cifras distintas del mismo mes.
+
+Cada mes se arma en **dos capas**:
+
+1. **Lo previsto** — lo que ya se sabe y no cambia: las dos quincenas, la renta, el crédito
+   del auto, los servicios y los mínimos de las tarjetas (de `CALENDARIO.cobros` y del
+   `day`/`min` de cada deuda), más los tres que van por **total mensual** y no tienen día:
+   Didi, el vale y lo que cuesta comer.
+2. **Lo registrado** — las transacciones que la agenda no conoce. `yaContado` evita el doble
+   conteo.
+
+Un cero que en realidad es «no lo anoté» miente más que una previsión bien etiquetada; por eso
+existe la capa 1, y por eso cada concepto sale marcado con `prev` para que la pantalla pueda
+pintar distinto lo previsto y lo anotado.
+
+Dos reglas que costaron una vuelta cada una:
+
+- **La nómina aporta `sueldo` al mes y punto.** Un movimiento de nómina anotado es *ese mismo*
+  dinero. Lo decide `esNomina()` por **categoría** (`Salario`), con palabras como red: antes
+  `yaContado` cazaba `Quincena ALTEN` pero se le escapaban `Sueldo` o `Nómina`, y cada uno
+  sumaba $20,500 de más.
+- **Los tres mensuales llevan su propia comprobación**, porque `yaContado` compara importes y
+  un cobro de Didi de $2,800 no se parece a los $11,200 del mes. Si el mes trae algo anotado
+  que caiga en sus palabras o su categoría, **manda lo anotado**.
+
+Lo que cuesta comer se **deriva de la lista de compras**, cuyos precios viven en
+`dashboard.html` (153 KB que no tiene sentido cargar en las tres apps). El Dashboard lo
+calcula y lo deja con `CIFRAS.guardarComeDia()`; Finanzas lo lee con `CIFRAS.comeDia()`. Es
+una **caché de un dato que se calcula en un solo sitio**, no una segunda copia. Si nunca se
+abrió el Dashboard en ese navegador vale 0 y la comida no entra —mejor faltar que inventar—.
+
+Junto a ella viajan sus piezas, para que nadie las reimplemente: `agendaDia`, `palabras`,
+`norm`, `yaContado`, `esNomina`.
+
+---
+
 ## Las dos clases de dato
 
 | | **Constantes** | **Saldos vivos** |
@@ -75,16 +117,31 @@ desde JS. En consola, `CIFRAS.tabla()` las lista con su valor actual.
 | Marcador | Valor hoy | id |
 |---|---|---|
 | `{{autoSaldo}}` `{{autoTotal}}` `{{autoPago}}` `{{autoTasa}}` `{{autoMeses}}` | $293,000 · $315,800 · $6,700 · 12.99% · 61 | `d003` |
-| `{{tcBbva}}` `{{tcBbvaMin}}` `{{tcBbvaTasa}}` | $34,000 ⚠️ subiendo · $1,500 · 55.7% | `d001` |
-| `{{banamex}}` `{{banamexMin}}` | $0 ✅ liquidada · $810 | `d002` |
+| `{{tcBbva}}` `{{tcBbvaMin}}` `{{tcBbvaTasa}}` | $37,000 ⚠️ subiendo · $1,500 · 55.7% | `d001` |
+| `{{banamex}}` `{{banamexMin}}` | $7,000 ⚠️ subiendo · $810 | `d002` |
 | `{{iphone}}` | $11,362 | `d008` |
 | `{{appleWatch}}` `{{appleWatchCuota}}` | $854 · $854 — queda 1 cuota (18 sep) | `d004` |
 | `{{zapStylo}}` `{{zapStyloCuota}}` | $334 · $167 — "el de los zapatos" | `d009` |
-| `{{deudaTotal}}` `{{deudaCara}}` `{{deudaMsi}}` | $339,550 · $34,000 · $12,550 | derivadas |
+| `{{deudaTotal}}` `{{deudaCara}}` `{{deudaMsi}}` | $349,550 · $44,000 · $12,550 | derivadas |
 | `{{minimosDeuda}}` `{{margen}}` | suma de mínimos vivos · lo que sobra al mes | derivadas |
 
 **Derivadas del auto**, que antes se escribían a mano y se quedaban congeladas:
 `{{autoAPagar}}` (meses × pago) y `{{autoInteres}}` (lo que cuesta en puro interés).
+
+**Las dos tarjetas subieron otra vez el 7-sep-2026.** Adán: *"ya debo 7,000 a mi tc banamex
+y a la de bbva 37,000"*. La BBVA sube **$3,000** sobre el dato del 24-ago y la Banamex
+**$1,015** sobre las cuatro compras del 1-sep. Con eso `deudaCara` pasa de $39,985 a
+**$44,000** —más que antes de liquidar la Banamex en agosto— y `deudaTotal` de $345,535 a
+**$349,550**. Los mínimos no se mueven ($1,500 y $810), así que `minimosDeuda` y `margen`
+se quedan donde estaban: lo que crece es el saldo, no la cuota. Ver `_tarjetas20260907` en
+`MIGRACIONES`.
+**La Banamex volvió a tener saldo el 1-sep-2026.** Llevaba en $0 desde el 13 ago, cuando Adán
+pagó los $9,000 completos. Ese día se le cargaron cuatro compras —plancha de Amazon $1,902,
+dutasterida $1,560, minoxidil NR-11 $900 y mouse $1,623— que suman **$5,985**. No es solo un
+número que sube: la tarjeta vuelve a ser **deuda cara** (`deudaCara` pasa de $34,000 a $39,985)
+y su mínimo de $810 vuelve a `minimosDeuda`, así que **`margen` baja $810** sin que nadie haya
+tocado un gasto fijo. Toda la prosa de Coach que daba por hecho "Banamex en $0" y "BBVA es la
+única deuda cara que queda" se corrigió el mismo día — ver `_gastos20260901` en `MIGRACIONES`.
 
 **El día de pago vive en `day`**, dentro de cada entrada de `DEUDAS_SEED`. No tiene marcador
 porque no se escribe en prosa, pero **sí se dibuja**: el calendario del Dashboard arma con él el
@@ -422,7 +479,7 @@ toca cada día vive aquí y en ningún otro sitio. Se pide desde JS:
 ```js
 CIFRAS.RUTINA_PELO.dia(2)             // martes -> {champu, condicional, nota, mascarilla, ...}
 CIFRAS.RUTINA_PELO.duracionDias(p)    // contenido / (usos por semana / 7)
-CIFRAS.RUTINA_PELO.costoMesTotal      // $2,854 hoy — el NR-11 y el Avodart son $2,400
+CIFRAS.RUTINA_PELO.costoMesTotal      // $2,865 hoy — el NR-11 y el Avodart son $2,460
 ```
 
 | Producto | Cuándo | Tamaño | Dura | Al mes |
@@ -433,7 +490,6 @@ CIFRAS.RUTINA_PELO.costoMesTotal      // $2,854 hoy — el NR-11 y el Avodart so
 | Darrow Doctar (alquitrán) | solo si hay caspa activa | 200 ml | — | — |
 | L'Oréal Elvive Reparación Total 5 | todos menos sábado | 680 ml | ~53 d | $68 |
 | Mascarilla L'Oréal Elvive Total Repair 5 | sábado | 300 ml | ~105 d | $37 |
-| Crema sin enjuague L'Oréal Elvive Total Repair 5 | todos los días | 200 ml | ~67 d | $49 |
 | Moroccanoil Treatment Light | cuando lo note áspero | 100 ml | ~700 d | $39 |
 | Funda de almohada de satín | una sola vez | — | — | — |
 
@@ -573,6 +629,38 @@ Cada derivada declara su `dep: [...]` en `CLAVES`. **El grafo no se cree: se mid
 perturba cada constante, observa qué se movió de verdad y lo compara con lo declarado — así una
 dependencia que alguien olvide declarar al añadir una fórmula salta en el momento.
 
+### Y una AFIRMACIÓN tampoco cambia sola (regla del 2026-09-03)
+
+Las cifras se ajustan solas porque son getters. **Las frases no.** Y una frase envejecida miente
+igual que un número viejo:
+
+> Lo que decían hasta el 3-sep-2026: *"Banamex ya está en $0"*, *"la única deuda cara que queda"*, *"✅ liquidada"*.
+
+El 1-sep-2026 la TC Banamex, liquidada el 13 ago, volvió a tener saldo. `deudaCara` y `margen` se
+movieron solos; **once frases** siguieron diciendo que estaba en $0 — siete en Coach, tres en el
+Dashboard y una en el `.md`. Y la peor no era una frase: en `dashboard.html` el paso "Banamex" de
+la *ruta a deuda cara* se daba por cumplido leyendo la libreta de logros (`!!lgBana || …`), así
+que habría enseñado **"✅ Liquidada 🎉" para siempre**, con la barra al 100% y el paso activo
+saltando a BBVA como si solo quedara una tarjeta cara.
+
+**La regla, y quién la vigila:**
+
+| | |
+|---|---|
+| **Ninguna app puede afirmar en presente que una deuda está saldada mientras el maestro le vea saldo vivo.** | **control 22** del verificador |
+| Contarlo en pasado sí vale — los logros de Adán no se borran. Se hace **fechando la frase** ("liquidada el 13 ago 2026"), nunca con una excepción en el código. | el control deja pasar toda frase con fecha, "era", "hasta", "volvió" o un condicional |
+| Un logro registrado **no puede tapar el presente**: si el saldo vuelve, el paso se reabre y lo dice con su fecha al lado. | a mano — ver `renderCoach()` en `dashboard.html` |
+| Al añadir una deuda al maestro, añade cómo la nombra la prosa en **`ALIAS_DEUDA`** (`verificar-sincronia.js`). Sin alias, nadie vigila lo que se diga de ella. | — |
+
+Y cuando un saldo se mueve, el aviso de **«cambió una variable maestra»** ya no dice "revisa los
+textos": **lista los archivos** que nombran esa deuda y cuántas veces sale en cada uno. Ese aviso
+genérico es justo lo que hizo que el 1-sep se revisara Coach y no el Dashboard.
+
+```
+Dónde se habla de esa deuda — revísalos TODOS, no solo el primero:
+  "Banamex" → dashboard.html (60), Coach.html (40), Finanzas.html (32), …
+```
+
 `CIFRAS.impacto(clave)` da la lista; `CIFRAS.grafo()` el mapa completo (20 variables arrastran a
 otras hoy).
 
@@ -631,8 +719,7 @@ Qué revisa:
 
 - **Lo mismo para `RUTINA_PELO`, y además el DÍA** (control 12). La semana de lavado vive en
   `RUTINA_PELO.productos[].dias` y las tareas que la ejecutan están repartidas por día, así que
-  pueden separarse sin que cambie ninguna cifra. Compara sin distinguir mayúsculas — "crema sin
-  enjuague X" y "Crema sin enjuague X" son el mismo producto — y busca por el nombre completo,
+  pueden separarse sin que cambie ninguna cifra. Compara sin distinguir mayúsculas — "mascarilla X" y "Mascarilla X" son el mismo producto — y busca por el nombre completo,
   porque "CeraVe" a secas también casa con el limpiador facial de Skincare.
 
 - **Lo mismo para `SUPLEMENTOS`, y además el MOMENTO** (control 13). Los de la mañana tienen que
@@ -662,11 +749,12 @@ al Dashboard: 6 días divergentes sin que nadie lo notara.
 
 ## Lo que todavía está duplicado
 
-Ya no queda ninguna estructura copiada entre archivos. Las seis viven aquí:
+Ya no queda ninguna estructura copiada entre archivos. Las siete viven aquí:
 
 | Estructura | Qué es | Cómo se lee |
 |---|---|---|
 | `DEUDAS_SEED` | Punto de partida de las deudas | `CIFRAS.DEUDAS_SEED` |
+| `GASTOS_20260901` | Las seis compras del 1-sep-2026 — las siembra Finanzas.html y las aplica la migración `_gastos20260901` | `CIFRAS.GASTOS_20260901` |
 | `RUTINA_TASKS` | 58 bloques del horario | `CIFRAS.rutina(base)` |
 | `SK` | 12 habilidades del radar | `CIFRAS.SK` |
 | `PHASES` | 4 fases del Plan Maestro | `CIFRAS.PHASES` |

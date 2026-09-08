@@ -120,27 +120,17 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var
   padding:10px 18px;border-radius:var(--rs);font-size:13px;font-weight:600;box-shadow:var(--sh);z-index:500;opacity:0;transform:translateY(8px);transition:all .3s;pointer-events:none}
 .toast.show{opacity:1;transform:translateY(0)}
 
-/* ─── Grids genéricos, KPIs, formularios, modal, tabla, confirm — antes esta app
-      no tenía nada de esto (solo recetario+súper); se agregan para Registro Diario,
-      Plan Semanal y Plan Masa Muscular. Mismo lenguaje visual que salud.html/ejercicio.html ── */
+/* ─── Grids genéricos, KPIs, tabla — antes esta app no tenía nada de esto (solo
+      recetario+súper); se agregaron para el Plan Masa Muscular. Mismo lenguaje visual
+      que salud.html/ejercicio.html.
+      2026-09-02: las reglas de badge, barras de progreso, modal, formulario, confirm y
+      "vacío" se fueron con el Registro Diario y el Plan Semanal — no quedaba un solo
+      elemento en el HTML que las usara. ── */
 .g4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
 .g3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
 .g2{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
 .card-val{font-size:26px;font-weight:800;color:var(--text);letter-spacing:-.5px}
 .card-sub{font-size:11px;color:var(--text3);margin-top:3px}
-.badge{display:inline-block;padding:3px 9px;border-radius:20px;font-size:10px;font-weight:700}
-.b-n{background:rgba(var(--ov),.07);color:var(--text2)}
-.pbar{height:6px;background:rgba(var(--ov),.08);border-radius:20px;overflow:hidden;margin-top:7px}
-.pfill{height:100%;border-radius:20px;transition:width .6s cubic-bezier(.4,0,.2,1)}
-.mo{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:200;align-items:center;justify-content:center;padding:16px}
-.mo.open{display:flex}
-.modal{background:var(--surface-3);border:1px solid rgba(var(--ov),.09);border-radius:var(--r14);box-shadow:var(--sh);width:100%;max-width:480px;max-height:92vh;overflow-y:auto;padding:22px}
-.modal-h{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
-.modal-title{font-size:17px;font-weight:700}
-.modal-x{background:none;border:none;font-size:18px;cursor:pointer;color:var(--text2);padding:3px}
-.modal-x:hover{color:var(--r)}
-.fg{margin-bottom:14px}
-.fr{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 label{display:block;font-size:10px;font-weight:700;color:var(--text2);margin-bottom:5px;text-transform:uppercase;letter-spacing:.07em}
 input,select,textarea{width:100%;padding:9px 12px;border:1px solid rgba(var(--ov),.1);border-radius:var(--rs);font-size:13px;color:var(--text);background:rgba(var(--ov),.05);outline:none;transition:all .2s;font-family:inherit}
 input:focus,select:focus{border-color:var(--w);box-shadow:0 0 0 3px rgba(255,217,61,.12)}
@@ -153,29 +143,8 @@ th{text-align:left;padding:9px 12px;font-size:10px;font-weight:700;color:var(--w
 td{padding:11px 12px;border-bottom:1px solid rgba(var(--ov),.05);font-size:13px}
 tr:last-child td{border-bottom:none}
 tbody tr:hover td{background:rgba(255,217,61,.02)}
-.conf{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:300;display:none;align-items:center;justify-content:center}
-.conf.open{display:flex}
-.conf-box{background:var(--surface-3);border:1px solid rgba(var(--ov),.1);border-radius:var(--r14);padding:22px;max-width:340px;width:90%}
-.conf-box h3{font-size:15px;font-weight:700;margin-bottom:7px}
-.conf-box p{color:var(--text2);font-size:13px;margin-bottom:18px}
-.empty{text-align:center;padding:40px 24px;color:var(--text3)}
-.empty .ico{font-size:40px;margin-bottom:10px;opacity:.4}
 .flex{display:flex}.aic{align-items:center}.jb{justify-content:space-between}
 .fw7{font-weight:700}.ts{font-size:11px}.tm{color:var(--text3)}.gap8{gap:8px}.mt16{margin-top:16px}
-
-/* ─── Plan Semanal — grid de 7 días ── */
-.psem-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:10px}
-.psem-day{background:rgba(var(--ov),.03);border:1px solid rgba(var(--ov),.07);border-radius:var(--r14);padding:12px;display:flex;flex-direction:column;gap:8px}
-.psem-day.today{border-color:var(--w);background:rgba(255,217,61,.05)}
-.psem-dname{font-size:11px;font-weight:800;color:var(--text2);text-transform:uppercase;letter-spacing:.06em}
-.psem-day.today .psem-dname{color:var(--w)}
-.psem-ddate{font-size:10px;color:var(--text3);margin-top:-4px}
-.psem-slot{background:rgba(var(--ov),.03);border:1px dashed rgba(var(--ov),.12);border-radius:9px;padding:8px 9px;cursor:pointer;transition:all .2s;min-height:52px}
-.psem-slot:hover{border-color:var(--w);background:rgba(255,217,61,.06)}
-.psem-slot.filled{border-style:solid;border-color:rgba(255,217,61,.3);background:rgba(255,217,61,.05)}
-.psem-slot-lbl{font-size:8.5px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px}
-.psem-slot-name{font-size:11px;color:var(--text);line-height:1.3}
-.psem-slot-empty{font-size:11px;color:var(--text3)}
 
 /* ─── Plan Masa Muscular — mismo lenguaje visual que las recetas ── */
 .pm-hero{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;text-align:center}
@@ -197,13 +166,13 @@ tbody tr:hover td{background:rgba(255,217,61,.02)}
   .sb-logo h1{font-size:15px}
   .nav-item{font-size:12.5px}
 }
-@media(max-width:900px){.g4{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:repeat(2,1fr)}.psem-grid{grid-template-columns:repeat(4,1fr)}.pm-hero{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:640px){.sidebar{transform:translateX(-100%)}.sidebar.open{transform:translateX(0)}.main{margin-left:0}.recetas-grid{grid-template-columns:1fr}.g4,.g3,.g2{grid-template-columns:1fr}.fr{grid-template-columns:1fr}.psem-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:900px){.g4{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:repeat(2,1fr)}.pm-hero{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:640px){.sidebar{transform:translateX(-100%)}.sidebar.open{transform:translateX(0)}.main{margin-left:0}.recetas-grid{grid-template-columns:1fr}.g4,.g3,.g2{grid-template-columns:1fr}.fr{grid-template-columns:1fr}}
 
 /* Responsivo iPad/iPhone (2026-08-03): los hijos de grid tienen min-width:auto implícito
    y no se encogen aunque la columna sea 1fr, lo que puede desbordar el viewport (mismo
    patrón resuelto en salud.html). Forzamos min-width:0 en los hijos directos de cada grid. */
-.g4>*,.g3>*,.g2>*,.fr>*,.recetas-grid>*,.psem-grid>*,.pm-hero>*{min-width:0}
+.g4>*,.g3>*,.g2>*,.fr>*,.recetas-grid>*,.pm-hero>*{min-width:0}
 canvas{max-width:100%}
 
 /* Tablas y bloques anchos en celular (2026-08-17) — una tabla que no cabe hacía zoom-out de
@@ -462,9 +431,10 @@ canvas{max-width:100%}
     <div class="nav-item active" onclick="nav('desayunos')"><span class="ico">🌅</span>Desayunos<span class="count" id="cnt-desayunos"></span></div>
     <div class="nav-item" onclick="nav('cenas')"><span class="ico">🌙</span>Cenas<span class="count" id="cnt-cenas"></span></div>
     <div class="nav-item" onclick="nav('rutina')"><span class="ico">🥩</span>Plan Masa Muscular</div>
-    <div class="nav-label">Mi semana</div>
-    <div class="nav-item" onclick="nav('registro')"><span class="ico">📔</span>Registro Diario</div>
-    <div class="nav-item" onclick="nav('planSemana')"><span class="ico">📅</span>Plan Semanal</div>
+    <!-- "📔 Registro Diario" y "📅 Plan Semanal" (con su rótulo "Mi semana") se quitaron
+         del menú el 2026-09-02 a petición de Adán. El shell (cuidadopersonal.html) arma sus
+         subpestañas leyendo justo estos .nav-item vía embed.js, así que desaparecen solas de
+         la barra de "Comida" sin tocar el shell. -->
     <div class="nav-label">Compras</div>
     <!-- "🛒 Lista del Súper" se quitó del menú el 2026-08-12: ahora vive solo en el Dashboard. -->
     <a class="nav-item" href="../Dashboard/dashboard.html" style="text-decoration:none;color:inherit"><span class="ico">🛒</span>Lista del Súper<span class="count" style="font-size:9px;opacity:.6">↗</span></a>
@@ -539,42 +509,12 @@ canvas{max-width:100%}
     <!-- PLAN MASA MUSCULAR -->
     <section id="s-rutina" class="section"></section>
 
-    <!-- REGISTRO DIARIO -->
-    <section id="s-registro" class="section">
-      <div id="reg-resumen"></div>
-      <div class="card mt16" style="margin-bottom:14px;padding:14px">
-        <div class="flex gap8" style="flex-wrap:wrap;align-items:center">
-          <input type="date" id="f-fecha-al" onchange="renderRegistro()" style="width:auto">
-          <select id="f-comida-al" onchange="renderRegistro()" style="width:auto;min-width:140px">
-            <option value="">Todas las comidas</option>
-            <option value="desayuno">🌅 Desayuno</option>
-            <option value="almuerzo">☀️ Almuerzo</option>
-            <option value="cena">🌙 Cena</option>
-            <option value="snack">🍎 Snack</option>
-          </select>
-          <button class="btn btn-o btn-sm" onclick="clearFiltrosAl()">✕ Limpiar</button>
-          <button class="btn btn-w btn-sm" style="margin-left:auto" onclick="openAlimentoModal()">+ Agregar alimento</button>
-        </div>
-      </div>
-      <div class="card"><div class="tw"><table>
-        <thead><tr><th>Comida</th><th>Alimento</th><th>Cantidad</th><th>Cal</th><th>Prot.</th><th>Carbs</th><th>Grasa</th><th></th></tr></thead>
-        <tbody id="al-body"></tbody>
-      </table></div>
-      <div id="al-empty" class="empty" style="display:none"><div class="ico">📔</div><p>Sin registros. Agrega tu primer alimento del día.</p></div>
-      </div>
-    </section>
-
-    <!-- PLAN SEMANAL -->
-    <section id="s-planSemana" class="section">
-      <div class="sh"><h2>📅 Plan Semanal</h2></div>
-      <div class="card" style="margin-bottom:16px;padding:14px">
-        <p style="font-size:12.5px;color:var(--text2);line-height:1.6">
-          Planea <b style="color:var(--text)">hacia adelante</b> qué vas a cocinar cada día — elige una receta por desayuno y cena.
-          Cuando llegue el día, ábrela desde <b style="color:var(--w)">Desayunos</b>/<b style="color:var(--w)">Cenas</b> y regístrala en tu diario con un clic.
-        </p>
-      </div>
-      <div id="plan-semana-body"></div>
-    </section>
+    <!-- Aquí vivían las secciones "📔 Registro Diario" (s-registro) y "📅 Plan Semanal"
+         (s-planSemana); se borraron el 2026-09-02. El registro escribía en misalud_v1.alimentos,
+         y esa clave sigue viva: los botones "Registrar" de las recetas y del Plan Masa Muscular
+         siguen guardando ahí, y el Dashboard la lee para las calorías del día. Lo que se fue es
+         la vista/CRUD manual aquí, no el dato. El plan semanal guardaba en comida_v1.planSemana;
+         lo ya guardado no se borra, simplemente ya nadie lo lee. -->
 
     <!-- La sección "Lista del Súper" se eliminó el 2026-08-12 — ahora vive solo en el Dashboard
          (pestaña 🛒 Lista de Compras), que además trae precio por producto y total de lo marcado.
@@ -583,68 +523,11 @@ canvas{max-width:100%}
   </div>
 </main>
 
-<!-- MODAL ALIMENTO (registro diario — escribe directo en misalud_v1.alimentos) -->
-<div class="mo" id="mo-al">
-  <div class="modal">
-    <div class="modal-h"><div class="modal-title" id="mo-al-title">Registrar alimento</div><button class="modal-x" onclick="closeMo('mo-al')">✕</button></div>
-    <div class="fg"><label>Comida</label>
-      <select id="al-comida">
-        <option value="desayuno">🌅 Desayuno</option>
-        <option value="almuerzo">☀️ Almuerzo</option>
-        <option value="cena">🌙 Cena</option>
-        <option value="snack">🍎 Snack</option>
-      </select>
-    </div>
-    <div class="fg"><label>Alimento *</label><input id="al-nombre" placeholder="Ej. Avena con fruta, Pollo a la plancha..."></div>
-    <div class="fr">
-      <div class="fg"><label>Cantidad</label><input type="number" id="al-cantidad" placeholder="100" min="0"></div>
-      <div class="fg"><label>Unidad</label>
-        <select id="al-unidad"><option value="g">g</option><option value="ml">ml</option><option value="pza">pieza(s)</option><option value="taza">taza(s)</option><option value="cdta">cdta</option><option value="cda">cda</option></select>
-      </div>
-    </div>
-    <div class="fr">
-      <div class="fg"><label>🔥 Calorías *</label><input type="number" id="al-cal" placeholder="0" min="0"></div>
-      <div class="fg"><label>💜 Proteína (g)</label><input type="number" id="al-prot" placeholder="0" min="0" step="0.1"></div>
-    </div>
-    <div class="fr">
-      <div class="fg"><label>💙 Carbohidratos (g)</label><input type="number" id="al-carbs" placeholder="0" min="0" step="0.1"></div>
-      <div class="fg"><label>💛 Grasa (g)</label><input type="number" id="al-gra" placeholder="0" min="0" step="0.1"></div>
-    </div>
-    <div class="fg"><label>Fecha</label><input type="date" id="al-fecha"></div>
-    <div class="fg"><label>Notas</label><input id="al-notas" placeholder="Observaciones opcionales..."></div>
-    <div class="flex" style="justify-content:flex-end;gap:8px">
-      <button class="btn btn-o" onclick="closeMo('mo-al')">Cancelar</button>
-      <button class="btn btn-w" onclick="saveAlimento()">Guardar</button>
-    </div>
-  </div>
-</div>
-
-<!-- MODAL ELEGIR RECETA (Plan Semanal) -->
-<div class="mo" id="mo-pick">
-  <div class="modal" style="max-width:380px">
-    <div class="modal-h"><div class="modal-title" id="mo-pick-title">Elegir receta</div><button class="modal-x" onclick="closeMo('mo-pick')">✕</button></div>
-    <div class="fg"><label>Receta</label><select id="pick-receta"></select></div>
-    <div class="flex" style="justify-content:flex-end;gap:8px">
-      <button class="btn btn-o" onclick="closeMo('mo-pick')">Cancelar</button>
-      <button class="btn btn-w" onclick="savePickReceta()">Asignar</button>
-    </div>
-  </div>
-</div>
-
-<!-- CONFIRM -->
-<div class="conf" id="conf">
-  <div class="conf-box">
-    <h3 id="conf-title">¿Eliminar registro?</h3>
-    <p id="conf-msg">Esta acción no se puede deshacer.</p>
-    <div class="flex" style="justify-content:flex-end;gap:8px">
-      <button class="btn btn-o" onclick="closeConf()">Cancelar</button>
-      <button class="btn" style="background:var(--r);color:#fff" onclick="doConf()">Eliminar</button>
-    </div>
-  </div>
-</div>
+<!-- Los dos modales (mo-al = alimento del Registro Diario, mo-pick = elegir receta del
+     Plan Semanal) y el diálogo de confirmación se borraron el 2026-09-02 con sus secciones.
+     La ficha de una receta no usa nada de esto: tiene su propia ventana (.rf-fondo, más abajo). -->
 
 <div class="toast" id="toast"></div>
-
 <script>
 // ─── Categorías de ingredientes ──────────────────────────────────────────────
 // Servían para agrupar por pasillo la lista del súper que vivía en este archivo. Esa sección se
@@ -718,35 +601,31 @@ const ORDEN_CAT = ['🥚 Proteínas','🥛 Lácteos','🌾 Granos y carbohidrato
 // cambio en LISTA_COMPRAS.comida — el comentario de más abajo lo admitía.
 const RECETAS = (window.CIFRAS && CIFRAS.RECETARIO) || {desayuno:[], cena:[]};
 
-// ─── Estado — lista del súper + plan semanal (localStorage) ────────────────
+// ─── Estado — recetas elegidas de la semana (localStorage) ─────────────────
 const KEY='comida_v1';
-// `comprado` (el checklist del súper) se retiró del estado el 2026-08-12 junto con la sección.
-// Si un navegador ya tenía datos guardados ahí, siguen en `comida_v1.comprado` sin estorbar —
-// no se borran a propósito, por si algún día quisiera recuperarlos; simplemente ya nadie los lee.
-let S={planSemana:{}};
+// `comprado` (el checklist del súper) se retiró del estado el 2026-08-12 junto con la sección,
+// y `planSemana` el 2026-09-02 junto con el Plan Semanal. Si un navegador ya tenía datos ahí,
+// siguen en `comida_v1` sin estorbar — no se borran a propósito, simplemente ya nadie los lee.
+// Lo único que se guarda hoy es `elegidas`: las recetas que Adán marcó para cocinar.
+let S={};
 const save=()=>localStorage.setItem(KEY,JSON.stringify(S));
 const load=()=>{try{const d=localStorage.getItem(KEY);if(d)S={...S,...JSON.parse(d)};}catch(e){}};
 
 const today=()=>new Date().toISOString().slice(0,10);
 const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2);
 const fmt=n=>new Intl.NumberFormat('es-MX').format(Math.round(n||0));
-const fmtD=d=>{if(!d)return'';const[y,m,day]=d.split('-');const mn=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];return `${parseInt(day)} ${mn[parseInt(m)-1]} ${y}`;};
-let editId=null, confCb=null;
 
 function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500);}
-function closeMo(id){document.getElementById(id).classList.remove('open');editId=null;}
-function closeConf(){document.getElementById('conf').classList.remove('open');confCb=null;}
-function doConf(){if(confCb)confCb();closeConf();}
-function askDel(cb){document.getElementById('conf').classList.add('open');confCb=cb;}
-document.addEventListener('keydown',e=>{if(e.key==='Escape')document.querySelectorAll('.mo.open').forEach(m=>m.classList.remove('open'));});
-document.addEventListener('DOMContentLoaded',()=>{
-  document.querySelectorAll('.mo').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('open');}));
-  document.getElementById('conf')?.addEventListener('click',e=>{if(e.target===document.getElementById('conf'))closeConf();});
-});
+// closeMo/closeConf/doConf/askDel, el Escape de los modales y sus listeners se borraron el
+// 2026-09-02: sin Registro Diario ni Plan Semanal ya no queda un solo .mo ni el diálogo #conf en
+// el HTML. La ficha de receta cierra con rcCerrarFicha(), que tiene su propio Escape más abajo.
+// fmtD() (fecha bonita "2 Sep 2026") se fue con ellos: solo la usaban esas dos secciones.
 
-// ─── misalud_v1 crudo — Comida es dueña de comida_v1, pero el Registro Diario
-//     lee/escribe directo la clave de Salud (mismo formato exacto), igual patrón
-//     que ya usaba registrarReceta() más abajo, generalizado para CRUD completo. ──
+// ─── misalud_v1 crudo — Comida es dueña de comida_v1, pero registrar una comida
+//     escribe directo en la clave de Salud (mismo formato exacto). Lo usan
+//     registrarReceta() y registrarRutinaMeal(); el Dashboard lee esa clave para
+//     las calorías del día. El CRUD manual que también la tocaba (Registro Diario)
+//     se borró el 2026-09-02, pero el dato y quienes lo escriben siguen aquí. ──
 function readSalud(){
   let sal={alimentos:[],metas:{caloriasD:2000,proteina:150,carbs:200,grasa:65}};
   try{const d=localStorage.getItem('misalud_v1');if(d)sal={...sal,...JSON.parse(d)};}catch(e){}
@@ -765,17 +644,17 @@ function toggleTheme(){
 }
 
 // ─── Navegación ─────────────────────────────────────────────────────────────
-// 'super' salió de las 2 listas el 2026-08-12 (la sección se movió al Dashboard). Ojo: al quitarlo
-// de SECS también deja de ser un destino válido de `?s=`, así que un enlace viejo del tipo
-// `comida.html?s=super` ya no abre nada raro — simplemente se ignora y carga la vista por defecto.
-const SECS=['desayunos','cenas','rutina','registro','planSemana'];
-const STITLE={desayunos:'🌅 Desayunos',cenas:'🌙 Cenas',rutina:'🥩 Plan Masa Muscular',registro:'📔 Registro Diario',planSemana:'📅 Plan Semanal'};
-const RENDERS={registro:renderRegistro,planSemana:renderPlanSemana};
+// 'super' salió de las listas el 2026-08-12 (la sección se movió al Dashboard) y 'registro'/
+// 'planSemana' el 2026-09-02. Ojo: al quitarlos de SECS dejan de ser destinos válidos de `?s=`,
+// así que un enlace viejo del tipo `comida.html?s=registro` ya no abre nada raro — simplemente
+// se ignora y carga la vista por defecto. Ya no queda ninguna sección con render diferido
+// (RENDERS tenía justo esas dos), así que nav() solo cambia de vista.
+const SECS=['desayunos','cenas','rutina'];
+const STITLE={desayunos:'🌅 Desayunos',cenas:'🌙 Cenas',rutina:'🥩 Plan Masa Muscular'};
 function nav(s){
   SECS.forEach(x=>document.getElementById('s-'+x).classList.toggle('active',x===s));
   document.querySelectorAll('.nav-item').forEach(el=>el.classList.toggle('active',el.getAttribute('onclick')?.includes(`'${s}'`)));
   document.getElementById('topTitle').textContent=STITLE[s];
-  RENDERS[s]?.();
 }
 
 // ─── Render de recetas ──────────────────────────────────────────────────────
@@ -1016,9 +895,9 @@ function renderRecetas(){
   rcPintaCompra();
 }
 
-// ─── Registrar una receta directo en el Registro Diario (misalud_v1.alimentos,
-//     mismo formato que usaba salud.html). Es un registro de referencia: si
-//     comiste algo distinto a la receta exacta, edítalo o bórralo ahí mismo. ──
+// ─── Registrar una receta directo en el diario de comida (misalud_v1.alimentos,
+//     mismo formato que usaba salud.html). Es un registro de referencia; lo que se
+//     guarda aquí es lo que el Dashboard cuenta como calorías/proteína del día. ──
 function registrarReceta(id,tipo){
   const r=RECETAS[tipo].find(x=>x.id===id); if(!r) return;
   const sal=readSalud();
@@ -1034,8 +913,7 @@ function registrarReceta(id,tipo){
     notas:'Registrado desde Mi Comida'
   });
   writeSalud(sal);
-  toast('✅ Agregado a tu Registro Diario de hoy');
-  if(document.getElementById('s-registro').classList.contains('active')) renderRegistro();
+  toast('✅ Registrado en tu día — lo ves en el Dashboard');
 }
 
 // ─── Plan Masa Muscular — movido desde salud.html (2026-08-02): es contenido de
@@ -1078,8 +956,7 @@ function registrarRutinaMeal(idx){
       fecha:today(),notas:'Plan Masa Muscular'});
   });
   writeSalud(sal);
-  toast('✅ '+NAMES[idx]+' registrado en el diario ('+PLAN_ITEMS[idx].length+' alimentos)');
-  if(document.getElementById('s-registro').classList.contains('active')) renderRegistro();
+  toast('✅ '+NAMES[idx]+' registrado en tu día ('+PLAN_ITEMS[idx].length+' alimentos)');
 }
 
 function renderRutinaMuscular(){
@@ -1158,179 +1035,17 @@ function renderRutinaMuscular(){
   `;
 }
 
-// ─── Registro Diario — movido desde salud.html (2026-08-02). Lee/escribe directo
-//     misalud_v1.alimentos (readSalud/writeSalud arriba) — Comida es ahora dueña
-//     de la experiencia de registrar comida, aunque el dato siga viviendo en la
-//     clave de Salud (Dashboard.html y el resto del ecosistema ya la leen de ahí). ──
-const COMIDAS_LBL={desayuno:'🌅 Desayuno',almuerzo:'☀️ Almuerzo',cena:'🌙 Cena',snack:'🍎 Snack'};
-function sumCal(l){return l.reduce((s,a)=>s+(a.cal||0),0);}
-function sumProt(l){return l.reduce((s,a)=>s+(a.prot||0),0);}
-function sumCarbs(l){return l.reduce((s,a)=>s+(a.carbs||0),0);}
-function sumGra(l){return l.reduce((s,a)=>s+(a.gra||0),0);}
-
-function clearFiltrosAl(){
-  document.getElementById('f-fecha-al').value=today();
-  document.getElementById('f-comida-al').value='';
-  renderRegistro();
-}
-
-function renderRegistro(){
-  const sal=readSalud();
-  const fechaEl=document.getElementById('f-fecha-al');
-  if(fechaEl&&!fechaEl.value) fechaEl.value=today();
-  const fecha=fechaEl?.value||today();
-  const comidaF=document.getElementById('f-comida-al')?.value||'';
-
-  // Resumen del día seleccionado vs metas de Salud (misalud_v1.metas)
-  const delDia=sal.alimentos.filter(a=>a.fecha===fecha);
-  const m=sal.metas||{};
-  const cal=sumCal(delDia), calMeta=m.caloriasD||2000;
-  const prot=sumProt(delDia), protMeta=m.proteina||150;
-  const carbs=sumCarbs(delDia), carbMeta=m.carbs||200;
-  const gra=sumGra(delDia), graMeta=m.grasa||65;
-  const bar=(v,meta,col,lbl)=>{
-    const pct=meta>0?Math.min(100,(v/meta)*100):0;
-    return `<div style="margin-bottom:10px">
-      <div class="flex jb" style="margin-bottom:4px"><span style="font-size:11px;font-weight:600;color:${col}">${lbl}</span>
-        <span style="font-size:11px;color:var(--text2)">${fmt(v)} <span style="color:var(--text3)">/ ${fmt(meta)}</span></span></div>
-      <div class="pbar"><div class="pfill" style="width:${pct}%;background:${col}"></div></div>
-    </div>`;
-  };
-  document.getElementById('reg-resumen').innerHTML=`
-    <div class="g4">
-      <div class="card" style="border-left:4px solid var(--o)">
-        <div class="card-title" style="color:var(--o)">🔥 Calorías · ${fecha===today()?'hoy':fmtD(fecha)}</div>
-        <div class="card-val" style="color:var(--o)">${fmt(cal)}</div>
-        <div class="card-sub">meta: ${fmt(calMeta)} kcal</div>
-      </div>
-      <div class="card" style="grid-column:span 3">
-        ${bar(prot,protMeta,'var(--p)','💜 Proteína (g)')}
-        ${bar(carbs,carbMeta,'var(--b)','💙 Carbohidratos (g)')}
-        ${bar(gra,graMeta,'var(--w)','💛 Grasa (g)')}
-      </div>
-    </div>`;
-
-  // Tabla filtrada
-  let list=delDia;
-  if(comidaF) list=list.filter(a=>a.comida===comidaF);
-  list=[...list].sort((a,b)=>(a.comida||'').localeCompare(b.comida||''));
-  const tbody=document.getElementById('al-body');
-  const empty=document.getElementById('al-empty');
-  if(!list.length){ tbody.innerHTML=''; empty.style.display=''; return; }
-  empty.style.display='none';
-  tbody.innerHTML=list.map(a=>`<tr>
-    <td><span class="badge b-n">${COMIDAS_LBL[a.comida]||a.comida}</span></td>
-    <td style="font-weight:600">${a.nombre}${a.notas?`<div class="ts tm">${a.notas}</div>`:''}</td>
-    <td class="ts tm">${a.cantidad||''} ${a.unidad||''}</td>
-    <td style="font-weight:700;color:var(--o)">${fmt(a.cal)}</td>
-    <td style="color:var(--p)">${a.prot?fmt(a.prot)+'g':'—'}</td>
-    <td style="color:var(--b)">${a.carbs?fmt(a.carbs)+'g':'—'}</td>
-    <td style="color:var(--w)">${a.gra?fmt(a.gra)+'g':'—'}</td>
-    <td>
-      <button class="btn btn-o btn-sm" onclick="openAlimentoModal('${a.id}')">✏️</button>
-      <button class="btn btn-o btn-sm" onclick="askDel(()=>delAlimento('${a.id}'))">🗑️</button>
-    </td>
-  </tr>`).join('');
-}
-
-function openAlimentoModal(id=null){
-  editId=id;
-  const sal=readSalud();
-  const a=id?sal.alimentos.find(x=>x.id===id):null;
-  document.getElementById('mo-al-title').textContent=id?'Editar alimento':'Registrar alimento';
-  document.getElementById('al-comida').value=a?.comida||'desayuno';
-  document.getElementById('al-nombre').value=a?.nombre||'';
-  document.getElementById('al-cantidad').value=a?.cantidad||'';
-  document.getElementById('al-unidad').value=a?.unidad||'g';
-  document.getElementById('al-cal').value=a?.cal||'';
-  document.getElementById('al-prot').value=a?.prot||'';
-  document.getElementById('al-carbs').value=a?.carbs||'';
-  document.getElementById('al-gra').value=a?.gra||'';
-  document.getElementById('al-fecha').value=a?.fecha||document.getElementById('f-fecha-al')?.value||today();
-  document.getElementById('al-notas').value=a?.notas||'';
-  document.getElementById('mo-al').classList.add('open');
-  setTimeout(()=>document.getElementById('al-nombre').focus(),100);
-}
-
-function saveAlimento(){
-  const nombre=document.getElementById('al-nombre').value.trim();
-  const cal=parseFloat(document.getElementById('al-cal').value)||0;
-  if(!nombre||!cal) return alert('Ingresa el nombre y las calorías.');
-  const data={
-    nombre, comida:document.getElementById('al-comida').value,
-    cantidad:document.getElementById('al-cantidad').value,
-    unidad:document.getElementById('al-unidad').value,
-    cal, prot:parseFloat(document.getElementById('al-prot').value)||0,
-    carbs:parseFloat(document.getElementById('al-carbs').value)||0,
-    gra:parseFloat(document.getElementById('al-gra').value)||0,
-    fecha:document.getElementById('al-fecha').value||today(),
-    notas:document.getElementById('al-notas').value.trim()
-  };
-  const sal=readSalud();
-  if(editId){const i=sal.alimentos.findIndex(x=>x.id===editId);if(i>=0)sal.alimentos[i]={...sal.alimentos[i],...data};}
-  else sal.alimentos.push({id:uid(),...data});
-  writeSalud(sal);
-  closeMo('mo-al'); renderRegistro(); toast('✅ Alimento guardado');
-}
-
-function delAlimento(id){
-  const sal=readSalud();
-  sal.alimentos=sal.alimentos.filter(a=>a.id!==id);
-  writeSalud(sal);
-  renderRegistro(); toast('🗑️ Eliminado');
-}
-
-// ─── Plan Semanal — planificador HACIA ADELANTE (nuevo, 2026-08-02). Distinto del
-//     viejo "Plan Semanal" de salud.html (que era retrospectivo, mostraba lo ya
-//     comido): aquí eliges qué receta piensas cocinar cada día, antes de cocinarla.
-//     Se guarda en comida_v1.planSemana = {'YYYY-MM-DD': {desayuno:id, cena:id}}. ──
-let pickCtx=null; // {fecha, slot}
-function diasSemana(){
-  const hoy=new Date();
-  return Array.from({length:7},(_,i)=>{const d=new Date(hoy);d.setDate(d.getDate()-hoy.getDay()+i);return d.toISOString().slice(0,10);});
-}
-function renderPlanSemana(){
-  const MN=['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
-  const hoyStr=today();
-  const dias=diasSemana();
-  document.getElementById('plan-semana-body').innerHTML=`<div class="psem-grid">
-    ${dias.map(d=>{
-      const esHoy=d===hoyStr;
-      const [,mo,day]=d.split('-');
-      const asign=S.planSemana[d]||{};
-      const slot=(tipo,ico)=>{
-        const rid=asign[tipo];
-        const r=rid?RECETAS[tipo].find(x=>x.id===rid):null;
-        return `<div class="psem-slot ${r?'filled':''}" onclick="openPickReceta('${d}','${tipo}')">
-          <div class="psem-slot-lbl">${ico} ${tipo==='desayuno'?'Desayuno':'Cena'}</div>
-          ${r?`<div class="psem-slot-name">${r.nombre}</div>`:'<div class="psem-slot-empty">+ elegir</div>'}
-        </div>`;
-      };
-      return `<div class="psem-day ${esHoy?'today':''}">
-        <div class="psem-dname">${MN[new Date(d).getDay()]}${esHoy?' •':''}</div>
-        <div class="psem-ddate">${parseInt(day)}/${parseInt(mo)}</div>
-        ${slot('desayuno','🌅')}
-        ${slot('cena','🌙')}
-      </div>`;
-    }).join('')}
-  </div>`;
-}
-function openPickReceta(fecha,slot){
-  pickCtx={fecha,slot};
-  const sel=document.getElementById('pick-receta');
-  const actual=(S.planSemana[fecha]||{})[slot]||'';
-  sel.innerHTML='<option value="">— Sin elegir —</option>'+RECETAS[slot].map(r=>`<option value="${r.id}" ${r.id===actual?'selected':''}>${r.nombre}</option>`).join('');
-  document.getElementById('mo-pick-title').textContent=(slot==='desayuno'?'🌅 Desayuno':'🌙 Cena')+' · '+fmtD(fecha);
-  document.getElementById('mo-pick').classList.add('open');
-}
-function savePickReceta(){
-  if(!pickCtx) return;
-  const val=document.getElementById('pick-receta').value;
-  S.planSemana[pickCtx.fecha]=S.planSemana[pickCtx.fecha]||{};
-  if(val) S.planSemana[pickCtx.fecha][pickCtx.slot]=val;
-  else delete S.planSemana[pickCtx.fecha][pickCtx.slot];
-  save(); closeMo('mo-pick'); renderPlanSemana();
-}
+// Aquí vivían el **Registro Diario** (COMIDAS_LBL, sumCal/sumProt/sumCarbs/sumGra,
+// clearFiltrosAl, renderRegistro, openAlimentoModal, saveAlimento, delAlimento) y el
+// **Plan Semanal** (diasSemana, renderPlanSemana, openPickReceta, savePickReceta). Se
+// borraron el 2026-09-02 a petición de Adán: "de comida, quita la seccion de plan semanal
+// y registro diario".
+//
+// Qué NO se fue con ellos: `misalud_v1.alimentos` sigue siendo la bitácora real de comida
+// del proyecto y esta app la sigue alimentando desde los botones "Registrar" (una receta o
+// una comida del Plan Masa Muscular) — readSalud/writeSalud arriba. Lo que ya no existe aquí
+// es la vista de tabla ni el alta/edición/borrado manual de un alimento; el Dashboard sigue
+// leyendo esa clave para las calorías y la proteína del día.
 
 // La "Lista del Súper" vivía aquí (listaSuperUnica/renderSuper/toggleShop/resetShop) y se borró
 // el 2026-08-12 a petición de Adán: "solo quiero la lista de compras en mi dashboard, borra los
@@ -1367,7 +1082,6 @@ function cpCabComida(){
 
 function init(){
   load();
-  document.getElementById('f-fecha-al').value=today();
   renderRecetas();
   renderRutinaMuscular();
   const themeBtn=document.getElementById('theme-toggle-btn');

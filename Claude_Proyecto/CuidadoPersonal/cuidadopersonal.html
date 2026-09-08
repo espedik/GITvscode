@@ -305,34 +305,45 @@ tbody tr:hover td{background:rgba(var(--ov),.02)}
 .pl-btn:hover{border-color:var(--pl-pk-br);color:var(--pl-tx)}
 .pl-btn.on{background:var(--pl-pk-bg);border-color:var(--pl-pk-br);color:var(--pl-pink)}
 
-/* ── la pista del día ────────────────────────────────────────── */
-.pl-track{border-radius:20px;border:1px solid var(--pl-line);background:var(--pl-panel);padding:16px 24px 18px;margin-bottom:14px;overflow:hidden}
-.pl-track-h{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px;flex-wrap:wrap}
-.pl-track-t{font-size:10.5px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--pl-tx2)}
-.pl-track-x{font-size:11.5px;color:var(--pl-tx3);font-weight:700}
-.pl-track-x b{color:var(--pl-pm)}
-/* 96px, no 78: los 18 de arriba son la banda del chip de AHORA. Sin ella, el chip cae
-   encima de la hora de un nodo siempre que la hora actual queda cerca de un paso. */
-.pl-line{position:relative;height:96px}
-.pl-line .base{position:absolute;left:0;right:0;top:50px;height:3px;border-radius:3px;
-  background:linear-gradient(90deg,var(--pl-am) 0%,var(--pl-am-br) 24%,var(--pl-line) 42%,var(--pl-line) 60%,var(--pl-pm-br) 78%,var(--pl-pm) 100%);opacity:.85}
-.pl-node{position:absolute;top:18px;transform:translateX(-50%);text-align:center;width:106px}
-.pl-node .hh{font-size:11px;font-weight:800;font-variant-numeric:tabular-nums;color:var(--pl-tx2)}
-.pl-node .dot{width:15px;height:15px;border-radius:50%;margin:11px auto 0;border:2.5px solid #07060d;background:var(--pl-tx3)}
-:root[data-theme="light"] .pl-node .dot{border-color:#f8f5fc}
-.pl-node .nn{font-size:9.5px;color:var(--pl-tx3);font-weight:700;margin-top:8px;line-height:1.3}
-.pl-node.am .dot{background:var(--pl-am);box-shadow:0 0 0 4px var(--pl-am-bg)}
-.pl-node.pm .dot{background:var(--pl-pm);box-shadow:0 0 0 4px var(--pl-pm-bg)}
-.pl-node.hecho .dot{background:var(--pl-ok);box-shadow:0 0 0 4px var(--pl-ok-bg)}
-.pl-node.hecho .hh{color:var(--pl-ok)}
-.pl-node.sig .dot{box-shadow:0 0 0 5px var(--pl-pm-bg),0 0 20px var(--pl-pm)}
-.pl-node.sig .nn{color:var(--pl-pmtx);font-weight:800}
-.pl-ahora{position:absolute;top:2px;bottom:-4px;z-index:3;width:2px;background:linear-gradient(180deg,transparent,var(--pl-teal) 24%,var(--pl-teal) 76%,transparent);z-index:2}
-.pl-ahora span{position:absolute;top:-2px;left:50%;transform:translateX(-50%);font-size:8.5px;font-weight:800;letter-spacing:.08em;
-  color:var(--pl-ink);background:var(--pl-teal);padding:3px 8px;border-radius:5px;white-space:nowrap;font-variant-numeric:tabular-nums}
+/* ── la semana, protagonista ──────────────────────────────────── */
+/* La misma pieza que abre Cabello, con la paleta de piel. Sustituye a la "línea del día"
+   (2026-09-07): la pista horizontal amontonaba los 3 pasos de la mañana en un pixel y no
+   decía nada que la rutina de abajo no dijera mejor. La tira de 7 días sí dice algo — que
+   en piel NO hay rotación — y es navegable, igual que la del pelo. */
+.pl-wk{border-radius:20px;border:1px solid var(--pl-pk-br);padding:16px 20px 18px;margin-bottom:14px;
+  background:linear-gradient(160deg,var(--pl-pk-bg),var(--pl-panel2) 50%)}
+.pl-wk-h{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px;flex-wrap:wrap}
+.pl-wk-t{font-size:10.5px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--pl-tx2)}
+.pl-wk-x{font-size:11.5px;color:var(--pl-tx3);font-weight:700}
+.pl-wk-x b{color:var(--pl-pink)}
+.pl-wk-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px}
+.pl-d{border-radius:14px;border:1px solid var(--pl-line);background:var(--pl-panel2);padding:11px 9px 10px;min-width:0;
+  cursor:pointer;transition:border-color .15s,background .15s,transform .12s}
+.pl-d:hover{border-color:var(--pl-pk-br);transform:translateY(-1px)}
+.pl-d.hoy{border-color:var(--pl-pink);background:var(--pl-pk-bg);box-shadow:0 0 0 1px var(--pl-pk-br),0 8px 24px rgba(255,61,143,.14)}
+.pl-d.visto{border-color:var(--pl-pm);background:var(--pl-pm-bg);box-shadow:0 0 0 1px var(--pl-pm-br)}
+.pl-d-l{font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--pl-tx3)}
+.pl-d.hoy .pl-d-l{color:var(--pl-pink)}
+.pl-d.visto .pl-d-l{color:var(--pl-pmtx)}
+.pl-d-que{font-size:12.5px;font-weight:800;margin-top:7px;line-height:1.25;color:var(--pl-tx)}
+.pl-d-sub{font-size:9.5px;color:var(--pl-tx3);margin-top:3px;line-height:1.35;min-height:26px}
+.pl-d-tag{display:inline-block;font-size:8.5px;font-weight:800;padding:2px 7px;border-radius:5px;margin-top:6px;letter-spacing:.04em}
+.pl-t-am{background:var(--pl-am-bg);color:var(--pl-am);border:1px solid var(--pl-am-br)}
+.pl-t-pm{background:var(--pl-pm-bg);color:var(--pl-pmtx);border:1px solid var(--pl-pm-br)}
+.pl-d-dosis{display:flex;gap:4px;margin-top:9px;padding-top:8px;border-top:1px solid var(--pl-line2);align-items:center}
+.pl-dot{width:11px;height:11px;border-radius:50%;border:1.5px solid var(--pl-line);flex:none;cursor:pointer}
+.pl-dot.am.on{background:var(--pl-am);border-color:var(--pl-am)}
+.pl-dot.pm.on{background:var(--pl-pm);border-color:var(--pl-pm)}
+.pl-d-dosis span{font-size:8px;font-weight:800;color:var(--pl-tx3);margin-left:auto;letter-spacing:.04em}
+.pl-wk-note{font-size:10.5px;color:var(--pl-tx3);line-height:1.5;margin-top:12px;padding-top:11px;border-top:1px solid var(--pl-line)}
+.pl-wk-note b{color:var(--pl-tx2)}
 
 /* ── las dos rutinas ─────────────────────────────────────────── */
-.pl-rutinas{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+/* El cuerpo entero, en dos columnas: rutina de día + botiquín a la izquierda, rutina de
+   noche + lo que hay que saber a la derecha. Cada tarjeta empieza donde acaba la de
+   arriba: con las rutinas en una fila propia, la de noche del pelo (2 pasos) dejaba
+   media pantalla en blanco al lado de la del día (9). */
+.pl-rutinas{display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:start}
 .pl-ru{border-radius:18px;border:1px solid var(--pl-line);background:var(--pl-panel);padding:16px 18px 14px}
 .pl-ru.ahora{border-color:var(--pl-pm-br);box-shadow:0 0 0 1px var(--pl-pm-br),0 10px 30px rgba(139,125,255,.13)}
 .pl-ru-h{display:flex;align-items:center;gap:11px;margin-bottom:12px;flex-wrap:wrap}
@@ -366,10 +377,17 @@ tbody tr:hover td{background:rgba(var(--ov),.02)}
 .pl-p.on .pl-p-c{background:var(--pl-ok);border-color:var(--pl-ok);color:var(--pl-ink)}
 .pl-espera{display:flex;align-items:center;gap:7px;font-size:9.5px;font-weight:800;color:var(--pl-am);padding:4px 0 4px 35px;letter-spacing:.03em}
 .pl-espera i{flex:1;height:1px;background:repeating-linear-gradient(90deg,var(--pl-am-br) 0 4px,transparent 4px 9px)}
+/* Ver otro dia: la rutina se pinta igual pero no se marca. */
+.pl-volver{color:var(--pl-pm);font-weight:700;text-decoration:none}
+.pl-volver:hover{text-decoration:underline}
+.pl-ojeada{font-size:10.5px;line-height:1.5;color:var(--pl-tx2);padding:9px 12px;margin-bottom:12px;
+  border-radius:11px;background:var(--pl-pm-bg);border:1px solid var(--pl-pm-br)}
+.pl-ojeada b{color:var(--pl-tx)}
+.pl-p.solo-lectura{cursor:default}
+.pl-p.solo-lectura:hover .pl-p-c{border-color:var(--pl-line)}
+.pl-p.solo-lectura .pl-p-c{opacity:.25}
 
 /* ── tarjetas de abajo ──────────────────────────────────────── */
-.pl-foot{display:grid;grid-template-columns:1.15fr 1fr 1fr;gap:14px;margin-bottom:14px}
-.pl-foot2{display:grid;grid-template-columns:1fr 1.05fr;gap:14px;align-items:start}
 .pl-col{display:flex;flex-direction:column;gap:14px;min-width:0}
 .pl-card{border-radius:18px;border:1px solid var(--pl-line);background:var(--pl-panel);padding:15px 16px}
 .pl-card-h{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
@@ -395,29 +413,6 @@ tbody tr:hover td{background:rgba(var(--ov),.02)}
 .pl-nota{font-size:9.5px;color:var(--pl-tx3);line-height:1.5;margin-top:9px;padding-top:9px;border-top:1px solid var(--pl-line2)}
 .pl-nota b{color:var(--pl-tx2)}
 
-.pl-esc{display:flex;flex-direction:column;gap:6px}
-.pl-pel{display:flex;align-items:center;gap:10px;padding:7px 10px;border-radius:10px;border:1px solid var(--pl-line);background:var(--pl-panel2)}
-.pl-pel.pas{opacity:.55}
-.pl-pel.act{border-color:var(--pl-pm-br);background:var(--pl-pm-bg);box-shadow:0 0 0 1px var(--pl-pm-br)}
-.pl-pel-w{font-size:9px;font-weight:800;color:var(--pl-tx3);letter-spacing:.06em;width:56px;flex:none}
-.pl-pel.act .pl-pel-w{color:var(--pl-pmtx)}
-.pl-pel-n{font-size:11.5px;font-weight:800;color:var(--pl-tx)}
-.pl-pel-c{margin-left:auto;font-size:9px;font-weight:800;color:var(--pl-ok);flex:none}
-.pl-pel.act .pl-pel-c{color:var(--pl-teal)}
-
-.pl-tl-i{position:relative;padding:0 0 11px 18px}
-.pl-tl-i:last-child{padding-bottom:0}
-.pl-tl-i::before{content:'';position:absolute;left:0;top:3px;width:8px;height:8px;border-radius:50%;background:var(--pl-line);border:1px solid var(--pl-tx3)}
-.pl-tl-i::after{content:'';position:absolute;left:3.5px;top:13px;bottom:0;width:1px;background:var(--pl-line)}
-.pl-tl-i:last-child::after{display:none}
-.pl-tl-i.ok::before{background:var(--pl-ok);border-color:var(--pl-ok)}
-.pl-tl-i.aqui::before{background:var(--pl-teal);border-color:var(--pl-teal);box-shadow:0 0 0 3.5px var(--pl-ok-bg)}
-.pl-tl-w{font-size:9.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--pl-tx3)}
-.pl-tl-i.aqui .pl-tl-w{color:var(--pl-teal)}
-.pl-tl-t{font-size:11px;color:var(--pl-tx2);line-height:1.45;margin-top:2px}
-.pl-tl-i.aqui .pl-tl-t{color:var(--pl-tx)}
-.pl-aqui{font-size:8px;font-weight:800;padding:2px 6px;border-radius:4px;background:var(--pl-teal);color:var(--pl-ink);margin-left:5px;letter-spacing:.04em}
-
 .pl-mx{width:100%;border-collapse:separate;border-spacing:3px}
 .pl-mx th{font-size:9px;font-weight:800;color:var(--pl-tx3);text-transform:uppercase;letter-spacing:.05em;padding:3px 2px;text-align:center}
 .pl-mx td{text-align:center;padding:7px 2px;border-radius:8px;font-size:12px;font-weight:800}
@@ -437,17 +432,6 @@ tbody tr:hover td{background:rgba(var(--ov),.02)}
 .pl-rule-t{font-size:11px;color:var(--pl-tx2);line-height:1.5}
 .pl-rule-t b{color:var(--pl-tx);font-weight:700}
 
-.pl-week{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}
-.pl-d{border-radius:11px;padding:8px 2px 9px;text-align:center;border:1px solid var(--pl-line);background:var(--pl-panel2)}
-.pl-d-l{font-size:9.5px;font-weight:800;letter-spacing:.05em;color:var(--pl-tx3);text-transform:uppercase}
-.pl-d-i{font-size:13px;margin:5px 0 3px;line-height:1}
-.pl-d-a{font-size:8.5px;font-weight:800;color:var(--pl-tx3)}
-.pl-d.hoy{border-color:var(--pl-pm-br);background:var(--pl-pm-bg);box-shadow:0 0 0 1px var(--pl-pm-br)}
-.pl-d.hoy .pl-d-l,.pl-d.hoy .pl-d-a{color:var(--pl-pmtx)}
-.pl-d.full{border-color:var(--pl-ok-br);background:var(--pl-ok-bg)}
-.pl-d.full .pl-d-a{color:var(--pl-ok)}
-.pl-d.parc .pl-d-a{color:var(--pl-am)}
-
 .pl-disc{margin-top:14px;padding:12px 15px;border-radius:14px;background:var(--pl-panel2);border:1px dashed var(--pl-line);font-size:11px;color:var(--pl-tx3);line-height:1.6}
 
 /* El formulario de perfil reusa .card del shell; aquí solo se le pone la piel de esta vista. */
@@ -463,27 +447,27 @@ tbody tr:hover td{background:rgba(var(--ov),.02)}
 #view-skincare .btn-o{background:var(--pl-panel2);color:var(--pl-tx2);border:1px solid var(--pl-line)}
 
 /* ── responsivo ─────────────────────────────────────────────── */
-@media(max-width:1120px){
-  .pl-foot{grid-template-columns:1fr 1fr}
-  .pl-foot .pl-card:first-child{grid-column:1 / -1}
-}
 @media(max-width:920px){
   .pl-rutinas{grid-template-columns:1fr}
-  .pl-foot,.pl-foot2{grid-template-columns:1fr}
-  .pl-foot .pl-card:first-child{grid-column:auto}
-  /* La pista horizontal no cabe con 6-7 nodos: en pantalla estrecha estorba más que informa. */
-  .pl-track{display:none}
+  /* Las 7 columnas de la semana no caben: pasan a tiras de una línea. */
+  .pl-wk-grid{grid-template-columns:1fr;gap:5px}
+  .pl-d{display:flex;align-items:center;gap:10px;padding:9px 12px}
+  .pl-d-l{width:64px;flex:none}
+  .pl-d-que{margin-top:0;font-size:12px;flex:none;width:96px}
+  .pl-d-sub{margin-top:0;min-height:0;flex:1;min-width:0}
+  .pl-d-tag{margin-top:0;flex:none}
+  .pl-d-dosis{margin-top:0;padding-top:0;border-top:none;flex:none;width:auto}
+  .pl-d-dosis span{display:none}
 }
 @media(max-width:620px){
   .pl-h1{font-size:21px}
   .pl-top-r{width:100%;margin-left:0}
   .pl-kpi{flex:1;min-width:0;padding:9px 10px}
   .pl-kpi-v{font-size:17px}
-  .pl-week{gap:3px}
-  .pl-d{padding:7px 1px}
-  .pl-d-a{font-size:7.5px}
+  .pl-d-sub{display:none}
+  .pl-d-que{width:auto}
+  .pl-d-tag{flex:0 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 }
-
 
 /* ═══════════════════════════════════════════════════════════════════
    CABELLO — oscuro-primero, igual que Skincare, con paleta propia (ámbar / azul agua /
@@ -576,15 +560,12 @@ tbody tr:hover td{background:rgba(var(--ov),.02)}
 .pe-wk-note b{color:var(--pe-tx2)}
 
 /* ── dos columnas ─────────────────────────────────────────────── */
-.pe-mid{display:grid;grid-template-columns:1fr 430px;gap:14px;margin-bottom:14px;align-items:start}
 .pe-col{display:flex;flex-direction:column;gap:14px;min-width:0}
 .pe-card{border-radius:18px;border:1px solid var(--pe-line);background:var(--pe-panel);padding:15px 17px}
 .pe-card-h{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px;flex-wrap:wrap}
 .pe-card-t{font-size:10.5px;font-weight:800;letter-spacing:.11em;text-transform:uppercase;color:var(--pe-tx2);display:flex;align-items:center;gap:7px}
 .pe-card-t .b{width:3px;height:12px;border-radius:2px;background:linear-gradient(180deg,var(--pe-am),var(--pe-agua));flex:none}
 .pe-card-x{font-size:10px;color:var(--pe-tx3);font-weight:700;white-space:nowrap}
-.pe-chip{display:inline-block;font-size:9px;font-weight:800;padding:2px 8px;border-radius:5px;background:var(--pe-am-bg);color:var(--pe-am);border:1px solid var(--pe-am-br);margin-left:6px}
-
 .pe-mom{display:flex;align-items:center;gap:9px;margin:14px 0 8px}
 .pe-mom:first-of-type{margin-top:0}
 .pe-mom-i{width:26px;height:26px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:12px;flex:none}
@@ -595,48 +576,46 @@ tbody tr:hover td{background:rgba(var(--ov),.02)}
 .pe-mom-n{font-size:12.5px;font-weight:800;letter-spacing:-.01em;color:var(--pe-tx)}
 .pe-mom-h{font-size:10px;font-weight:800;color:var(--pe-tx3);margin-left:auto;font-variant-numeric:tabular-nums}
 
-.pe-p{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--pe-line2);align-items:flex-start;cursor:pointer}
-.pe-p:last-child{border-bottom:none}
+.pe-p{display:flex;gap:11px;padding:10px 0;border-bottom:1px solid var(--pe-line2);align-items:flex-start;cursor:pointer}
+.pe-p:last-of-type{border-bottom:none;padding-bottom:2px}
 .pe-p:hover .pe-p-c{border-color:var(--pe-ok)}
-.pe-p-n{flex:none;width:21px;height:21px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;
+.pe-p-n{flex:none;width:24px;height:24px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;
   background:var(--pe-panel2);border:1px solid var(--pe-line);color:var(--pe-tx2)}
 .pe-p.on .pe-p-n{background:var(--pe-ok-bg);border-color:var(--pe-ok-br);color:var(--pe-ok)}
-.pe-p-t{flex:1;font-size:11.5px;color:var(--pe-tx2);line-height:1.5;min-width:0}
+.pe-p-b{flex:1;min-width:0}
+.pe-p-name{font-size:12.5px;font-weight:800;letter-spacing:-.01em;color:var(--pe-tx)}
+.pe-p-name em{font-style:normal;font-size:9px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--pe-tx3);margin-left:7px}
+.pe-p-t{font-size:11.5px;color:var(--pe-tx2);line-height:1.5;margin-top:3px}
 .pe-p-t b{color:var(--pe-tx);font-weight:700}
 .pe-p-t em{font-style:normal;color:var(--pe-am);font-weight:700}
-.pe-p-c{flex:none;width:20px;height:20px;border-radius:6px;border:1.5px solid var(--pe-line);display:flex;align-items:center;justify-content:center;
-  font-size:10px;color:transparent;margin-top:1px;transition:all .15s}
+.pe-p-tags{display:flex;gap:5px;margin-top:6px;flex-wrap:wrap}
+.pe-tg{font-size:9.5px;font-weight:700;padding:2px 8px;border-radius:6px;border:1px solid var(--pe-line);color:var(--pe-tx3)}
+.pe-tg.k{border-color:var(--pe-am-br);background:var(--pe-am-bg);color:var(--pe-am)}
+.pe-p-c{flex:none;width:21px;height:21px;border-radius:7px;border:1.5px solid var(--pe-line);display:flex;align-items:center;justify-content:center;
+  font-size:11px;color:transparent;margin-top:2px;transition:all .15s}
 .pe-p.on .pe-p-c{background:var(--pe-ok);border-color:var(--pe-ok);color:var(--pe-ink)}
 
-/* ── el minoxidil ─────────────────────────────────────────────── */
-.pe-mx{border-radius:18px;border:1px solid var(--pe-am-br);padding:15px 17px;
-  background:linear-gradient(165deg,var(--pe-am-bg),var(--pe-panel2) 55%)}
-.pe-dose{display:flex;gap:9px;margin-bottom:14px}
-.pe-dosis{flex:1;border-radius:13px;border:1px solid var(--pe-line);background:var(--pe-panel2);padding:11px 12px;cursor:pointer;min-width:0}
-.pe-dosis:hover{border-color:var(--pe-ok-br)}
-.pe-dosis.on{border-color:var(--pe-ok-br);background:var(--pe-ok-bg)}
-.pe-dosis-k{font-size:9px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--pe-tx3)}
-.pe-dose-v{font-size:16px;font-weight:800;margin-top:5px;letter-spacing:-.02em;font-variant-numeric:tabular-nums;color:var(--pe-tx)}
-.pe-dosis.on .pe-dose-v{color:var(--pe-ok)}
-.pe-dosis-s{font-size:9.5px;color:var(--pe-tx3);margin-top:2px}
+/* ── las dos rutinas ─────────────────────────────────────────── */
+/* Misma pieza que en Skincare (2026-09-07). Antes esto era "Hoy, en orden": una lista
+   larga de 5 momentos encadenados, más una tarjeta aparte para el minoxidil que repetía
+   sus dos dosis y su ventana de 4 horas. Ahora el pelo se lee como la piel — día y noche,
+   una tarjeta cada una — y la ventana de las 4 h vive donde importa: entre dos pasos. */
+.pe-rutinas{display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:start}
+.pe-ru{border-radius:18px;border:1px solid var(--pe-line);background:var(--pe-panel);padding:16px 18px 14px}
+.pe-ru.ahora{border-color:var(--pe-am-br);box-shadow:0 0 0 1px var(--pe-am-br),0 10px 30px rgba(255,159,69,.13)}
+.pe-ru-h{display:flex;align-items:center;gap:11px;margin-bottom:12px;flex-wrap:wrap}
+.pe-ru-i{width:34px;height:34px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:16px;flex:none}
+.pe-ru.am .pe-ru-i{background:var(--pe-am-bg);border:1px solid var(--pe-am-br)}
+.pe-ru.pm .pe-ru-i{background:var(--pe-pm-bg);border:1px solid var(--pe-pm-br)}
+.pe-ru-n{font-size:15.5px;font-weight:800;letter-spacing:-.015em}
+.pe-ru-s{font-size:10.5px;color:var(--pe-tx3);font-weight:700;margin-top:2px}
+.pe-ru-b{margin-left:auto;font-size:9.5px;font-weight:800;padding:5px 11px;border-radius:8px;letter-spacing:.05em;white-space:nowrap}
+.pe-ru-b.ok{background:var(--pe-ok-bg);color:var(--pe-ok);border:1px solid var(--pe-ok-br)}
+.pe-ru-b.wait{background:var(--pe-am-bg);color:var(--pe-am);border:1px solid var(--pe-am-br)}
+.pe-ru-b.miss{background:var(--pe-wa-bg);color:var(--pe-warn);border:1px solid var(--pe-wa-br)}
+.pe-espera{display:flex;align-items:center;gap:7px;font-size:9.5px;font-weight:800;color:var(--pe-agua);padding:4px 0 4px 35px;letter-spacing:.03em}
+.pe-espera i{flex:1;height:1px;background:repeating-linear-gradient(90deg,var(--pe-ag-br) 0 4px,transparent 4px 9px)}
 
-.pe-win{border-radius:12px;border:1px solid var(--pe-ag-br);background:var(--pe-ag-bg);padding:11px 13px;margin-bottom:13px}
-.pe-win-k{font-size:9px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--pe-agua)}
-.pe-win-h{font-size:15px;font-weight:800;margin:5px 0 4px;letter-spacing:-.02em;font-variant-numeric:tabular-nums;color:var(--pe-tx)}
-.pe-win-bar{height:6px;border-radius:4px;background:var(--pe-line);overflow:hidden;position:relative;margin:8px 0 7px}
-.pe-win-bar i{position:absolute;left:0;top:0;bottom:0;background:linear-gradient(90deg,var(--pe-agua),var(--pe-teal));border-radius:4px}
-.pe-win-t{font-size:10.5px;color:var(--pe-tx2);line-height:1.45}
-.pe-win-t b{color:var(--pe-tx)}
-
-.pe-fase{display:flex;flex-direction:column;gap:6px}
-.pe-f{display:flex;align-items:center;gap:10px;padding:7px 10px;border-radius:10px;border:1px solid var(--pe-line);background:var(--pe-panel2)}
-.pe-f.pas{opacity:.55}
-.pe-f.act{border-color:var(--pe-am-br);background:var(--pe-am-bg);box-shadow:0 0 0 1px var(--pe-am-br)}
-.pe-f-m{font-size:9px;font-weight:800;color:var(--pe-tx3);letter-spacing:.05em;width:54px;flex:none}
-.pe-f.act .pe-f-m{color:var(--pe-am)}
-.pe-f-n{font-size:11.5px;font-weight:800;color:var(--pe-tx)}
-.pe-f-c{margin-left:auto;font-size:9px;font-weight:800;color:var(--pe-ok);flex:none}
-.pe-f.act .pe-f-c{color:var(--pe-am)}
 .pe-nota{font-size:10px;color:var(--pe-tx3);line-height:1.5;margin-top:10px;padding-top:10px;border-top:1px solid var(--pe-line2)}
 .pe-nota b{color:var(--pe-tx2)}
 
@@ -666,20 +645,17 @@ tbody tr:hover td{background:rgba(var(--ov),.02)}
 .pe-err-t{font-size:11px;color:var(--pe-tx2);line-height:1.5}
 .pe-err-t b{color:var(--pe-tx);font-weight:700}
 
-.pe-tl-i{position:relative;padding:0 0 11px 18px}
-.pe-tl-i:last-child{padding-bottom:0}
-.pe-tl-i::before{content:'';position:absolute;left:0;top:3px;width:8px;height:8px;border-radius:50%;background:var(--pe-line);border:1px solid var(--pe-tx3)}
-.pe-tl-i::after{content:'';position:absolute;left:3.5px;top:13px;bottom:0;width:1px;background:var(--pe-line)}
-.pe-tl-i:last-child::after{display:none}
-.pe-tl-i.ok::before{background:var(--pe-ok);border-color:var(--pe-ok)}
-.pe-tl-i.aqui::before{background:var(--pe-am);border-color:var(--pe-am);box-shadow:0 0 0 3.5px var(--pe-am-bg)}
-.pe-tl-w{font-size:9.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--pe-tx3)}
-.pe-tl-i.aqui .pe-tl-w{color:var(--pe-am)}
-.pe-tl-t{font-size:11px;color:var(--pe-tx2);line-height:1.45;margin-top:2px}
-.pe-tl-i.aqui .pe-tl-t{color:var(--pe-tx)}
-.pe-aqui{font-size:8px;font-weight:800;padding:2px 6px;border-radius:4px;background:var(--pe-am);color:var(--pe-ink);margin-left:5px;letter-spacing:.04em}
-
-.pe-foot{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+/* La matriz de compatibilidades, gemela de la de Skincare. */
+.pe-mx{width:100%;border-collapse:separate;border-spacing:3px}
+.pe-mx th{font-size:9px;font-weight:800;color:var(--pe-tx3);text-transform:uppercase;letter-spacing:.05em;padding:3px 2px;text-align:center}
+.pe-mx td{text-align:center;padding:7px 2px;border-radius:8px;font-size:12px;font-weight:800}
+.pe-mx td.l,.pe-mx th.l{text-align:left;font-size:10.5px;font-weight:700;color:var(--pe-tx2);background:none;padding-left:4px}
+.pe-mx td.si{background:var(--pe-ok-bg);color:var(--pe-ok)}
+.pe-mx td.no{background:var(--pe-wa-bg);color:var(--pe-warn)}
+.pe-mx td.oj{background:var(--pe-am-bg);color:var(--pe-am);font-size:10px}
+.pe-leg{display:flex;gap:12px;margin-top:9px;font-size:9.5px;color:var(--pe-tx3);font-weight:700;flex-wrap:wrap}
+.pe-leg span{display:inline-flex;align-items:center;gap:5px}
+.pe-leg i{width:8px;height:8px;border-radius:3px;display:inline-block}
 .pe-disc{margin-top:14px;padding:12px 15px;border-radius:14px;background:var(--pe-panel2);border:1px dashed var(--pe-line);font-size:11px;color:var(--pe-tx3);line-height:1.6}
 
 /* El formulario de perfil reusa .card del shell. */
@@ -695,16 +671,13 @@ tbody tr:hover td{background:rgba(var(--ov),.02)}
 #view-cabello .btn-o{background:var(--pe-panel2);color:var(--pe-tx2);border:1px solid var(--pe-line)}
 
 /* ── responsivo ─────────────────────────────────────────────── */
-@media(max-width:1120px){
-  .pe-mid{grid-template-columns:1fr}
-}
 @media(max-width:920px){
-  .pe-foot{grid-template-columns:1fr}
+  .pe-rutinas{grid-template-columns:1fr}
   /* Las 7 columnas de la semana no caben: pasan a tiras de una línea. */
   .pe-wk-grid{grid-template-columns:1fr;gap:5px}
   .pe-d{display:flex;align-items:center;gap:10px;padding:9px 12px}
   .pe-d-l{width:64px;flex:none}
-  .pe-d-que{margin-top:0;font-size:12px;flex:none;width:86px}
+  .pe-d-que{margin-top:0;font-size:12px;flex:none;width:96px}
   .pe-d-sub{margin-top:0;min-height:0;flex:1;min-width:0}
   .pe-d-tag{margin-top:0;flex:none}
   .pe-d-dosis{margin-top:0;padding-top:0;border-top:none;flex:none;width:auto}
@@ -719,9 +692,7 @@ tbody tr:hover td{background:rgba(var(--ov),.02)}
   .pe-d-que{width:auto}
   /* La etiqueta del sabado es larga y empujaba los puntos del minoxidil fuera del ancho. */
   .pe-d-tag{flex:0 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-  .pe-dose{flex-direction:column}
 }
-
 
 /* ══════════════════════════════════════════════════════════════════════
    DENTISTA — mismo patrón pastel que Skincare/Cabello, paleta propia
@@ -1079,10 +1050,8 @@ body::before{content:'';position:fixed;inset:0 0 auto 0;height:280px;pointer-eve
     <button class="btn btn-g" onclick="skSavePerfil()">Guardar perfil</button>
   </div>
 
-  <div class="pl-track" id="pl-track"></div>
+  <div class="pl-wk" id="pl-semana"></div>
   <div class="pl-rutinas" id="pl-rutinas"></div>
-  <div class="pl-foot" id="pl-foot"></div>
-  <div class="pl-foot2" id="pl-foot2"></div>
   <div class="pl-disc" id="pl-disc"></div>
 </main>
 
@@ -1164,8 +1133,7 @@ body::before{content:'';position:fixed;inset:0 0 auto 0;height:280px;pointer-eve
   </div>
 
   <div class="pe-wk" id="pe-semana"></div>
-  <div class="pe-mid" id="pe-mid"></div>
-  <div class="pe-foot" id="pe-foot"></div>
+  <div class="pe-rutinas" id="pe-rutinas"></div>
   <div class="pe-disc" id="pe-disc"></div>
 </main>
 
@@ -1839,16 +1807,6 @@ function plSemRetinoide(){
   const dias=plDif(plHoy(),SK.retinoideDesde);
   return dias<0?null:Math.floor(dias/7)+1;
 }
-// La escalera del adapaleno. Subir un peldaño antes de tiempo es lo que quema la piel y hace
-// abandonar en la semana 2; es el dato que la guía vieja explicaba pero no llevaba.
-const PL_ESCALERA=[
-  {w:'SEM 1-2',n:'2 noches por semana',hasta:2},
-  {w:'SEM 3-4',n:'3 noches por semana',hasta:4},
-  {w:'SEM 5-8',n:'Noches alternas',hasta:8},
-  {w:'SEM 9+', n:'Todas las noches',hasta:9999},
-];
-function plFase(){const s=plSemRetinoide();return s===null?-1:PL_ESCALERA.findIndex(f=>s<=f.hasta);}
-
 // Días que quedan de un bote: lo que dura con la dosis correcta, menos lo que lleva abierto.
 function plDias(p){
   const RP=plRP(), ab=SK.abierto[p.id];
@@ -1915,67 +1873,107 @@ function plPintarCabecera(){
   document.getElementById('pl-kpis').innerHTML=k.join('');
 }
 
-// ─── La pista del día ──────────────────────────────────────────────────────
-// Los nodos se reparten a intervalos IGUALES, no por hora de reloj: los 3 pasos de la mañana
-// caen en 3 minutos y por reloj se amontonarían en un pixel. La barra de AHORA sí va por
-// reloj, interpolada dentro del tramo que le toca, para que siempre quede entre los dos
-// nodos correctos.
-function plPintarTrack(){
-  const el=document.getElementById('pl-track'), RP=plRP();
-  if(!RP){el.style.display='none';return;}
-  el.style.display='';
-  const nodos=plAgenda('am').concat(plAgenda('pm')), iso=plHoy(), ahora=plAhoraMin();
-  const pos=i=>6+i*(88/(nodos.length-1));
-  let sig=-1;
-  nodos.forEach(function(p,i){ if(sig===-1&&!plMarcado(iso,p.mom,p.id)) sig=i; });
+// ─── La semana de piel ─────────────────────────────────────────────────────
+// Sustituye a "la línea del día" (2026-09-07). La pista horizontal repartía los 6 pasos a
+// intervalos iguales y, con tres de ellos dentro de la misma franja de 3 minutos, no decía
+// nada que la rutina de abajo no dijera mejor. La tira de 7 días sí dice algo: en la piel
+// NO hay rotación — el retinoide va las 7 noches y el protector las 7 mañanas. Es la misma
+// pieza que abre Cabello y, como aquella, es navegable: tocar un día enseña su rutina.
+let plDiaVisto=null;
+function plDow(){ return plDiaVisto===null?new Date().getDay():plDiaVisto; }
+function plEsHoy(){ return plDiaVisto===null||plDiaVisto===new Date().getDay(); }
+function plVerDia(d){
+  plDiaVisto=(d===null||d===new Date().getDay())?null:d;
+  plPintar();
+  const el=document.getElementById('pl-rutinas');
+  if(el) el.scrollIntoView({behavior:'smooth',block:'start'});
+}
 
-  let marca=98;
-  if(ahora<=nodos[0].abs) marca=2;
-  else for(let i=0;i<nodos.length-1;i++){
-    if(ahora>=nodos[i].abs&&ahora<nodos[i+1].abs){
-      marca=pos(i)+((ahora-nodos[i].abs)/(nodos[i+1].abs-nodos[i].abs))*(pos(i+1)-pos(i));
-      break;
-    }
-  }
+// Una rutina entera está hecha cuando lo están todos sus pasos.
+function plCompleta(iso,mom){
+  const RP=plRP(); if(!RP) return false;
+  const h=plHechos(iso)[mom], ids=RP.pasos(mom).map(function(p){return p.id;});
+  return ids.length>0 && ids.every(function(id){return h.indexOf(id)!==-1;});
+}
+// Marcar de golpe una rutina entera desde la tira. Es el gesto de la noche, cuando ya la
+// hiciste y no vas a ir paso por paso — el equivalente a tocar las dosis de minoxidil.
+function plToggleRutina(mom){
+  const RP=plRP(); if(!RP) return;
+  const iso=plHoy(), h=plHechos(iso), ids=RP.pasos(mom).map(function(p){return p.id;});
+  h[mom]=plCompleta(iso,mom)?[]:ids;
+  SK.hechos[iso]={am:h.am,pm:h.pm};
+  skSave(); plPintar();
+}
 
-  const puntos=nodos.map(function(p,i){
-    const ok=plMarcado(iso,p.mom,p.id);
-    const cls='pl-node '+p.mom+(ok?' hecho':'')+(i===sig?' sig':'');
-    return '<div class="'+cls+'" style="left:'+pos(i)+'%"><div class="hh">'+p.hora+'</div><div class="dot"></div>'+
-           '<div class="nn">'+plEsc(p.cat)+'</div></div>';
+function plPintarSemana(){
+  const el=document.getElementById('pl-semana'), RP=plRP();
+  if(!RP){el.innerHTML='<div class="pl-wk-note" style="border:none;margin:0;padding:0">No se pudieron leer los datos maestros: abre esta app desde la carpeta del proyecto.</div>';return;}
+  const hoy=new Date(), hoyIso=plHoy();
+  const lunes=new Date(hoy); lunes.setDate(hoy.getDate()-((hoy.getDay()+6)%7));
+  const am=RP.pasos('am'), pm=RP.pasos('pm');
+  const claveAM=am.filter(function(p){return p.clave;})[0]||am[0];
+  const clavePM=pm.filter(function(p){return p.clave;})[0]||pm[0];
+  const subPM=pm.map(function(p){return p.cat.toLowerCase();}).join(' · ');
+
+  const celdas=[0,1,2,3,4,5,6].map(function(i){
+    const f=new Date(lunes); f.setDate(lunes.getDate()+i);
+    const dow=f.getDay(), iso=plIso(f), esHoy=iso===hoyIso, visto=dow===plDow();
+    const okAM=plCompleta(iso,'am'), okPM=plCompleta(iso,'pm');
+    const punto=function(mom,on){
+      return esHoy
+        ? '<i class="pl-dot '+mom+(on?' on':'')+'" onclick="event.stopPropagation();plToggleRutina(\''+mom+'\')" title="Da por hecha la rutina de '+(mom==='am'?'d\u00eda':'noche')+' entera"></i>'
+        : '<i class="pl-dot '+mom+(on?' on':'')+'"></i>';
+    };
+    return '<div class="pl-d'+(esHoy?' hoy':'')+(visto&&!esHoy?' visto':'')+'"'+
+      ' onclick="plVerDia('+dow+')" title="Ver la rutina del '+PL_LARGO[dow].toLowerCase()+'">'+
+      '<div class="pl-d-l">'+PL_DIAS[dow]+(esHoy?' \u00b7 hoy':'')+'</div>'+
+      '<div class="pl-d-que">'+plEsc(clavePM.cat)+'</div>'+
+      '<div class="pl-d-sub">'+plEsc(subPM)+'</div>'+
+      '<div class="pl-d-tag pl-t-am">CON '+plEsc(claveAM.id).toUpperCase()+'</div>'+
+      '<div class="pl-d-dosis">'+punto('am',okAM)+punto('pm',okPM)+
+      '<span>'+((esHoy||okAM||okPM||plFecha(iso)<plFecha(hoyIso))
+        ?((okAM?1:0)+(okPM?1:0))+' DE 2':'\u2014')+'</span></div></div>';
   }).join('');
 
-  const pend=nodos.filter(function(p){return !plMarcado(iso,p.mom,p.id);});
-  const resumen=pend.length
-    ? 'Siguiente: <b>'+plEsc(pend[0].cat.toLowerCase())+' de la '+(pend[0].mom==='am'?'ma\u00f1ana':'noche')+', '+
-      (pend[0].abs>ahora?'en '+plFalta(pend[0].abs-ahora).toLowerCase():'ya deber\u00eda estar hecho')+'</b>'
-    : '<b>El d\u00eda est\u00e1 completo.</b> Los 6 pasos marcados.';
+  el.innerHTML='<div class="pl-wk-h"><div class="pl-wk-t">Tu semana de piel</div>'+
+    '<div class="pl-wk-x">La piel no rota como el pelo: <b>7 noches con '+plEsc(clavePM.cat.toLowerCase())+
+    ', 7 ma\u00f1anas con '+plEsc(claveAM.cat.toLowerCase())+'</b></div></div>'+
+    '<div class="pl-wk-grid">'+celdas+'</div>'+
+    '<div class="pl-wk-note">Tu rutina es <b>la misma los 7 d\u00edas</b>: el adapaleno va todas las noches, sin alternar con nada '+
+    '\u2014 la gu\u00eda vieja te mandaba rotarlo con un exfoliante que no usas. Los dos puntos de cada d\u00eda son las dos rutinas: '+
+    't\u00f3calos para darlas por hechas de una vez, o m\u00e1rcalas paso a paso aqu\u00ed abajo.</div>';
+}
 
-  el.innerHTML='<div class="pl-track-h"><div class="pl-track-t">La l\u00ednea del d\u00eda</div><div class="pl-track-x">'+resumen+'</div></div>'+
-    '<div class="pl-line"><div class="base"></div>'+puntos+
-    '<div class="pl-ahora" style="left:'+marca+'%"><span>AHORA '+plHHMM(ahora)+'</span></div></div>';
+// La banda que avisa de que estás mirando otro día. Idéntica a la de Cabello.
+function plOjeadaHtml(){
+  if(plEsHoy()) return '';
+  return '<div class="pl-ojeada" style="grid-column:1/-1">Est\u00e1s viendo el <b>'+PL_LARGO[plDow()].toLowerCase()+
+    '</b>. Tu rutina de piel es la misma los 7 d\u00edas, as\u00ed que ver\u00e1s lo mismo que hoy \u2014 y las casillas solo se marcan en el d\u00eda de hoy. '+
+    '<a href="#" onclick="plVerDia(null);return false" class="pl-volver">\u2190 volver a hoy</a></div>';
 }
 
 // ─── Las dos rutinas, completas y una al lado de la otra ───────────────────────────
 function plRutinaHtml(mom){
-  const agenda=plAgenda(mom), iso=plHoy(), ahora=plAhoraMin();
+  const agenda=plAgenda(mom), iso=plHoy(), ahora=plAhoraMin(), esHoy=plEsHoy();
   if(!agenda.length) return '';
-  const hechos=agenda.filter(p=>plMarcado(iso,mom,p.id)).length, total=agenda.length;
-  const inicio=agenda[0].abs, activo=(ahora>=inicio-45&&hechos<total);
-  const min=agenda.reduce((a,p)=>a+p.min,0), espera=agenda.reduce((a,p)=>a+p.esperaDespues,0);
+  const hechos=esHoy?agenda.filter(function(p){return plMarcado(iso,mom,p.id);}).length:0, total=agenda.length;
+  const inicio=agenda[0].abs, activo=esHoy&&(ahora>=inicio-45&&hechos<total);
+  const min=agenda.reduce(function(a,p){return a+p.min;},0), espera=agenda.reduce(function(a,p){return a+p.esperaDespues;},0);
 
   let badge;
-  if(hechos===total) badge='<div class="pl-ru-b ok">\u2713 COMPLETA</div>';
+  if(!esHoy) badge='<div class="pl-ru-b wait">'+PL_DIAS[plDow()].toUpperCase()+'</div>';
+  else if(hechos===total) badge='<div class="pl-ru-b ok">\u2713 COMPLETA</div>';
   else if(hechos) badge='<div class="pl-ru-b wait">'+hechos+' DE '+total+'</div>';
   else if(ahora<inicio) badge='<div class="pl-ru-b wait">'+(inicio-ahora>=180?'A LAS '+agenda[0].hora:'EN '+plFalta(inicio-ahora))+'</div>';
   else badge='<div class="pl-ru-b miss">PENDIENTE</div>';
 
   const pasos=agenda.map(function(p,i){
-    const ok=plMarcado(iso,mom,p.id);
+    const ok=esHoy&&plMarcado(iso,mom,p.id);
     const tags=[];
     if(p.clave) tags.push('<span class="pl-tg k">'+(p.id==='spf'?'El paso que nunca se salta':'Tu activo principal')+'</span>');
     (p.ayuda||[]).forEach(function(k){const m=SK_CONCERN_META[k];if(m)tags.push('<span class="pl-tg">'+m.label+'</span>');});
-    const fila='<div class="pl-p'+(ok?' on':'')+'" onclick="plToggle(\''+mom+'\',\''+p.id+'\')" title="Marca este paso como hecho">'+
+    const fila='<div class="pl-p'+(ok?' on':'')+(esHoy?'':' solo-lectura')+'"'+
+      (esHoy?' onclick="plToggle(\''+mom+'\',\''+p.id+'\')" title="Marca este paso como hecho"':'')+'>'+
       '<div class="pl-p-n">'+(i+1)+'</div><div class="pl-p-b">'+
       '<div class="pl-p-name">'+plEsc(p.n)+'<em>'+plEsc(p.cat)+'</em></div>'+
       '<div class="pl-p-t">'+p.uso+'</div>'+
@@ -1987,13 +1985,13 @@ function plRutinaHtml(mom){
   }).join('');
 
   return '<div class="pl-ru '+mom+(activo?' ahora':'')+'">'+
-    '<div class="pl-ru-h"><div class="pl-ru-i">'+(mom==='am'?'\u2600\ufe0f':'🌙')+'</div>'+
+    '<div class="pl-ru-h"><div class="pl-ru-i">'+(mom==='am'?'\u2600\ufe0f':'\ud83c\udf19')+'</div>'+
     '<div><div class="pl-ru-n">Rutina de '+(mom==='am'?'d\u00eda':'noche')+'</div>'+
     '<div class="pl-ru-s">'+plHorarios()[mom]+' \u00b7 '+total+' pasos \u00b7 '+min+' min'+(espera?' + '+espera+' de espera':'')+'</div></div>'+
     badge+'</div>'+pasos+'</div>';
 }
 
-// ─── Botíquin, escalera y hacia dónde va ──────────────────────────────────────
+// ─── El botiquín, la matriz y las reglas ──────────────────────────────────────
 const PL_TONO={ok:'var(--pl-ok)',teal:'var(--pl-teal)',am:'var(--pl-am)',pm:'var(--pl-pm)',pink:'var(--pl-pink)',mint:'var(--pl-teal)'};
 
 function plBotiquinHtml(){
@@ -2019,70 +2017,6 @@ function plBotiquinHtml(){
     '<div class="pl-nota">Los d\u00edas salen de la dosis correcta, no de la que se usa por costumbre: por eso el protector es <b>el '+pc+
     '% del gasto</b> \u2014 dos dedos diarios vac\u00edan un bote de 50 ml en '+(spf?RP.duracionDias(spf):40)+' d\u00edas. '+
     'Toca los d\u00edas para decir que abriste uno; los precios son de referencia y se editan en <b>datos-maestros.js</b>.</div></div>';
-}
-
-function plEscaleraHtml(){
-  const sem=plSemRetinoide(), fase=plFase();
-  const pel=PL_ESCALERA.map(function(f,i){
-    const cls=fase===-1?'':(i<fase?' pas':(i===fase?' act':''));
-    return '<div class="pl-pel'+cls+'"><div class="pl-pel-w">'+f.w+'</div><div class="pl-pel-n">'+f.n+'</div>'+
-      '<div class="pl-pel-c">'+(i<fase?'\u2713':(i===fase?'AQU\u00cd':''))+'</div></div>';
-  }).join('');
-  const nota=sem===null
-    ? 'No sabemos desde cu\u00e1ndo lo usas, as\u00ed que no se puede decir en qu\u00e9 pelda\u00f1o vas. <b>P\u00f3n la fecha en tu perfil</b> y esta tarjeta empieza a llevar la cuenta.'
-    : 'Subir de pelda\u00f1o antes de tiempo es lo que quema la piel y hace abandonar en la semana 2. <b>Si arde o se descama, baja uno y qu\u00e9date dos semanas ah\u00ed.</b>';
-  return '<div class="pl-card"><div class="pl-card-h"><div class="pl-card-t"><span class="b"></span>La escalera del retinoide</div>'+
-    '<div class="pl-card-x">'+(SK.retinoideDesde?'desde '+SK.retinoideDesde:'sin fecha')+'</div></div>'+
-    '<div class="pl-esc">'+pel+'</div><div class="pl-nota">'+nota+'</div></div>';
-}
-
-// Los hitos dependen de lo que él quiere arreglar: sin manchas, no tiene sentido prometerle
-// que se le van a ir en la semana 12.
-function plHitos(){
-  const c=SK.perfil.preocupaciones||[];
-  const h=[
-    {a:1,b:2,t:'La purga: tirantez y hasta alg\u00fan grano nuevo mientras la piel se adapta al retinoide. Aqu\u00ed abandona la mayor\u00eda, justo antes de que empiece a servir.'},
-    {a:3,b:5,t:'La grasa del d\u00eda se siente m\u00e1s controlada y la rutina ya sale sola, sin pensarla.'},
-  ];
-  if(c.indexOf('acne')!==-1) h.push({a:6,b:8,t:'Primeros resultados reales contra el acn\u00e9 activo: menos brotes nuevos y poros m\u00e1s despejados.'});
-  if(c.indexOf('manchas')!==-1) h.push({a:9,b:14,t:'Las manchas oscuras empiezan a desvanecer \u2014 y solo si el protector solar no fall\u00f3 ni un d\u00eda.'});
-  if(c.indexOf('arrugas')!==-1) h.push({a:16,b:24,t:'Textura y l\u00edneas finas visiblemente m\u00e1s lisas. Es donde el retinoide paga de verdad, y donde mucha gente ya se rindi\u00f3.'});
-  return h;
-}
-function plDondeHtml(){
-  const sem=plSemRetinoide();
-  const items=plHitos().map(function(x){
-    const cls=sem===null?'':(sem>x.b?' ok':(sem>=x.a?' aqui':''));
-    const marca=(sem!==null&&sem>=x.a&&sem<=x.b)?' <span class="pl-aqui">EST\u00c1S AQU\u00cd</span>':'';
-    const est=(sem!==null&&sem>x.b)?' \u00b7 superada':'';
-    return '<div class="pl-tl-i'+cls+'"><div class="pl-tl-w">Semana '+x.a+'-'+x.b+est+marca+'</div>'+
-      '<div class="pl-tl-t">'+x.t+'</div></div>';
-  }).join('');
-  return '<div class="pl-card"><div class="pl-card-h"><div class="pl-card-t"><span class="b"></span>D\u00f3nde vas</div>'+
-    '<div class="pl-card-x">'+(sem===null?'sin fecha de inicio':'semana '+sem)+'</div></div>'+items+'</div>';
-}
-
-// ─── Semana, matriz de activos y las reglas ────────────────────────────────────
-function plSemanaHtml(){
-  const RP=plRP(); if(!RP) return '';
-  const nAM=RP.pasos('am').length, nPM=RP.pasos('pm').length, hoy=new Date();
-  // Lunes como primer día, que es como Adán lee su semana en el resto de las apps.
-  const lunes=new Date(hoy); lunes.setDate(hoy.getDate()-((hoy.getDay()+6)%7));
-  let completos=0;
-  const dias=[0,1,2,3,4,5,6].map(function(i){
-    const d=new Date(lunes); d.setDate(lunes.getDate()+i);
-    const iso=plIso(d), h=plHechos(iso), n=h.am.length+h.pm.length, tot=nAM+nPM;
-    const esHoy=iso===plHoy(), futuro=plFecha(iso)>plFecha(plHoy());
-    if(n===tot) completos++;
-    const cls='pl-d'+(esHoy?' hoy':'')+(n===tot?' full':(n?' parc':''));
-    const et=futuro&&!n?'\u2014':(n===tot?'COMPLETO':n+'/'+tot);
-    return '<div class="'+cls+'"><div class="pl-d-l">'+PL_DIAS[d.getDay()]+'</div>'+
-      '<div class="pl-d-i">'+(n===tot?'\u2713':(esHoy?'\u25cf':'\u00b7'))+'</div><div class="pl-d-a">'+et+'</div></div>';
-  }).join('');
-  return '<div class="pl-card"><div class="pl-card-h"><div class="pl-card-t"><span class="b"></span>Tu semana</div>'+
-    '<div class="pl-card-x">'+completos+' de 7 completos</div></div><div class="pl-week">'+dias+'</div>'+
-    '<div class="pl-nota">Tu rutina es la misma los 7 d\u00edas: el adapaleno va <b>todas las noches</b>, sin rotar con nada. '+
-    'La gu\u00eda vieja te mandaba alternarlo con un exfoliante que no usas.</div></div>';
 }
 
 function plMatrizHtml(){
@@ -2127,13 +2061,15 @@ function plReglasHtml(){
 }
 
 // ─── Pintar todo ────────────────────────────────────────────────────────
+// Las cuatro piezas, en el mismo orden que en Cabello: cabecera, la semana, las dos
+// rutinas: día + botiquín en una columna, noche + lo que hay que saber en la otra.
 function plPintar(){
-  if(!document.getElementById('pl-track')) return;
+  if(!document.getElementById('pl-semana')) return;
   plPintarCabecera();
-  plPintarTrack();
-  document.getElementById('pl-rutinas').innerHTML=plRutinaHtml('am')+plRutinaHtml('pm');
-  document.getElementById('pl-foot').innerHTML=plBotiquinHtml()+plEscaleraHtml()+plDondeHtml();
-  document.getElementById('pl-foot2').innerHTML='<div class="pl-col">'+plSemanaHtml()+plMatrizHtml()+'</div>'+plReglasHtml();
+  plPintarSemana();
+  document.getElementById('pl-rutinas').innerHTML=plOjeadaHtml()+
+    '<div class="pl-col">'+plRutinaHtml('am')+plBotiquinHtml()+'</div>'+
+    '<div class="pl-col">'+plRutinaHtml('pm')+plReglasHtml()+plMatrizHtml()+'</div>';
   document.getElementById('pl-disc').innerHTML='Orientaci\u00f3n general con productos de venta libre en M\u00e9xico, no sustituye a un derm\u00f3logo \u2014 si el acn\u00e9 es severo o qu\u00edstico, o algo te irrita fuerte y no mejora en dos semanas, ve con uno. Los productos y sus precios viven en <b>Dashboard/datos-maestros.js</b>, la misma fuente que tu rutina diaria.';
 }
 function skRenderGuia(){ skPintarPerfilForm(); plPintar(); }
@@ -2205,20 +2141,6 @@ function peMesMinox(){
   const dias=plDif(plHoy(),CA.minoxidilDesde);
   return dias<0?null:Math.floor(dias/30)+1;
 }
-// La curva del minoxidil. El shedding del mes 2-4 es donde casi todos lo dejan creyendo que
-// empeoró, y es justo la señal de que el folículo está respondiendo.
-const PE_FASES=[
-  {m:'MES 0-2', n:'No se ve nada todav\u00eda', hasta:2,
-   t:'Nada visible. El fol\u00edculo tarda en responder; la constancia de estas semanas es la que paga despu\u00e9s.'},
-  {m:'MES 2-4', n:'Shedding: se cae m\u00e1s', hasta:4,
-   t:'Se cae m\u00e1s de lo normal y parece que empeora: es el pelo viejo saliendo para dejar sitio al nuevo. Aqu\u00ed abandona la mayor\u00eda.'},
-  {m:'MES 4-6', n:'Primeros pelos nuevos', hasta:6,
-   t:'Pelos nuevos, finos y cortos, sobre todo en las entradas. Se ven mejor con luz lateral que de frente.'},
-  {m:'MES 6-12', n:'Resultado real y m\u00e1ximo', hasta:9999,
-   t:'Densidad real y el m\u00e1ximo que vas a alcanzar. A partir de aqu\u00ed es mantenimiento: es un tratamiento, no una cura.'},
-];
-function peFase(){const m=peMesMinox();return m===null?-1:PE_FASES.findIndex(f=>m<=f.hasta);}
-
 function peDias(p){
   const RP=peRP(), ab=CA.abierto[p.id];
   if(!RP||!ab) return null;
@@ -2231,14 +2153,23 @@ function peAbrir(id){
 }
 
 // Las horas salen de RUTINA_TASKS, como en Skincare. El minoxidil de la mañana va DESPUÉS de
-// la ducha, con el cuero ya seco: +32 minutos sobre el arranque.
+// la ducha, con el cuero ya seco: +32 minutos sobre el arranque. `mom` reparte los momentos
+// entre las dos tarjetas de rutina, igual que `am`/`pm` en la piel.
 const PE_MOMENTOS=[
-  {id:'ducha',  n:'En la ducha',                              ico:'🚿', clase:'ducha',  desfase:0},
-  {id:'humedo', n:'Al salir, con el pelo a\u00fan h\u00famedo', ico:'💧', clase:'humedo', desfase:12},
-  {id:'seco',   n:'Cuero cabelludo YA seco \u2014 minoxidil',  ico:'🍂', clase:'seco',   desfase:32},
-  {id:'noche',  n:'Antes de dormir',                          ico:'🌙', clase:'noche',  desfase:null},
-  {id:'oral',   n:'Por dentro — la pastilla',                ico:'🩹', clase:'oral',   desfase:40},
+  {id:'ducha',  n:'En la ducha',                              ico:'🚿', clase:'ducha',  mom:'am', desfase:0},
+  {id:'humedo', n:'Al salir, con el pelo a\u00fan h\u00famedo', ico:'💧', clase:'humedo', mom:'am', desfase:12},
+  {id:'seco',   n:'Cuero cabelludo YA seco',                  ico:'🍂', clase:'seco',   mom:'am', desfase:32},
+  {id:'oral',   n:'Por dentro \u2014 la pastilla',            ico:'🩹', clase:'oral',   mom:'am', desfase:40},
+  {id:'noche',  n:'Antes de dormir',                          ico:'🌙', clase:'noche',  mom:'pm', desfase:null},
 ];
+function peMomento(id){return PE_MOMENTOS.filter(function(m){return m.id===id;})[0];}
+// Las etiquetas de las preocupaciones, gemelas de SK_CONCERN_META: son de la interfaz, no
+// del maestro.
+const CA_CONCERN_META={
+  caida:{label:'Ca\u00edda'},
+  resequedad:{label:'Resequedad'},
+  caspa:{label:'Caspa'},
+};
 
 // ─── Perfil ────────────────────────────────────────────────────────────
 function caLeerPerfilForm(){
@@ -2311,7 +2242,8 @@ function pePintarSemana(){
         ? '<i class="pe-dot'+(on?' on':'')+'" onclick="peToggleMinox('+n+')" title="Dosis '+(n+1)+' de minoxidil"></i>'
         : '<i class="pe-dot'+(on?' on':'')+'"></i>');
     }
-    const et=esHoy?(h.minox.length+' DE '+nDosis):'MINOX';
+    // Mismo criterio que la tira de piel: el numero solo dice algo si el dia ya paso.
+    const et=(esHoy||h.minox.length||plFecha(iso)<plFecha(hoyIso))?(h.minox.length+' DE '+nDosis):'—';
     const tag=x.champu
       ? (x.condicional
           ? '<div class="pe-d-tag pe-t-cer">+ '+plEsc(peCorto(x.champu))+' AL NADAR</div>'
@@ -2337,13 +2269,19 @@ function pePintarSemana(){
     (pil?pil.dias.length+' con '+peCorto(pil):'')+(cer?', '+cer.dias.filter(d=>(cer.diasCondicionales||[]).indexOf(d)===-1).length+' con '+peCorto(cer):'')+
     ', '+(7-conChampu)+' solo agua</b></div></div>'+
     '<div class="pe-wk-grid">'+celdas+'</div>'+
-    '<div class="pe-wk-note">Los d\u00edas sin champ\u00fa <b>no son d\u00edas sucios</b>: son descanso para el cuero cabelludo, y lavar a diario es lo que termina de resecar un pelo que ya est\u00e1 seco. Lo que s\u00ed va <b>los 7 d\u00edas</b>: acondicionador de medios a puntas, crema sin enjuague en h\u00famedo y las '+nDosis+' dosis de minoxidil.</div>';
+    '<div class="pe-wk-note">Los d\u00edas sin champ\u00fa <b>no son d\u00edas sucios</b>: son descanso para el cuero cabelludo, y lavar a diario es lo que termina de resecar un pelo que ya est\u00e1 seco. Lo que s\u00ed va <b>los 7 d\u00edas</b>: acondicionador de medios a puntas y las '+nDosis+' dosis de minoxidil.</div>';
 }
 // El nombre corto de un producto, para los sitios donde no cabe el completo.
 function peCorto(p){return p.n.split(' Champ')[0].split(' (')[0].split(' Antica')[0];}
 
-// ─── Hoy, en orden ───────────────────────────────────────────────────
-// Cada paso es {id, t}. Los que dependen del día se arman con lo que diga RUTINA_PELO.
+// ─── Las dos rutinas, día y noche ────────────────────────────────────────
+// Hasta el 2026-09-07 esto era "Hoy, en orden": una sola lista con los cinco momentos
+// encadenados de arriba abajo, y el minoxidil repetido aparte en su propia tarjeta con sus
+// dos dosis y su ventana de 4 horas. Ahora el pelo se lee como la piel — una tarjeta de día
+// y otra de noche, una al lado de la otra — y cada dosis de minoxidil es un paso más de la
+// rutina que le toca: marcarla ahí es lo mismo que marcarla en la tira de la semana, porque
+// se guardan en el mismo sitio. La ventana de las 4 horas ya no es una tarjeta: es la banda
+// de espera que va justo debajo del paso, que es donde se necesita leerla.
 // Que dia de la semana se esta viendo. null = hoy, que es como arranca siempre.
 let peDiaVisto=null;
 function peDow(){ return peDiaVisto===null?new Date().getDay():peDiaVisto; }
@@ -2351,139 +2289,140 @@ function peEsHoy(){ return peDiaVisto===null||peDiaVisto===new Date().getDay(); 
 function peVerDia(d){
   peDiaVisto=(d===null||d===new Date().getDay())?null:d;
   pePintar();
-  const el=document.getElementById('pe-mid');
+  const el=document.getElementById('pe-rutinas');
   if(el) el.scrollIntoView({behavior:'smooth',block:'start'});
 }
+// Un paso puede ser una dosis de minoxidil (se guarda en `minox`, que es lo que cuentan la
+// racha y la tira de la semana) o un paso normal (se guarda en `pasos`). Una sola fuente
+// para cada cosa: nada se marca dos veces en dos sitios distintos.
+function peHecho(iso,p){ return p.dosis!=null ? peMinox(iso,p.dosis) : pePaso(iso,p.id); }
+function peClic(p){ return p.dosis!=null ? 'peToggleMinox('+p.dosis+')' : 'peTogglePaso(\''+p.id+'\')'; }
+
+// La espera del minoxidil: 4 horas sobre el cuero seco. Es el dato que decide si la dosis
+// sirve, y el que casi nadie conoce.
+const PE_ESPERA_MIN=240;
 
 function pePasosDelDia(){
-  const RP=peRP(); if(!RP) return [];
+  const RP=peRP(); if(!RP) return {am:[],pm:[]};
   const dow=peDow(), x=RP.dia(dow);
-  const prod=id=>RP.productos.find(p=>p.id===id);
-  const M=[];
+  const prod=function(id){return RP.productos.filter(function(p){return p.id===id;})[0];};
+  const G=[];
 
-  const ducha=[{id:'agua',t:'<b>Moja con agua tibia</b>, nunca caliente: el agua caliente reseca las puntas y no quita mejor la grasa.'}];
+  const ducha=[{id:'agua',n:'Agua tibia',cat:'Enjuague',
+    t:'<b>Moja con agua tibia</b>, nunca caliente: el agua caliente reseca las puntas y no quita mejor la grasa.'}];
   if(x.champu&&!x.condicional){
-    ducha.push({id:'champu',t:'<b>'+plEsc(x.champu.n)+'</b> \u2014 '+x.champu.uso});
+    ducha.push({id:'champu',n:x.champu.n,cat:x.champu.cat,t:x.champu.uso,
+      ayuda:x.champu.id==='darrow'?['caspa']:(x.champu.id==='pilexil'?['caida']:[])});
   }else if(x.condicional){
-    ducha.push({id:'champu',t:'<em>Hoy no lleva champ\u00fa por la ma\u00f1ana.</em> '+plEsc(x.nota)+' Entonces s\u00ed usas el <b>'+plEsc(peCorto(x.champu))+'</b>.'});
+    ducha.push({id:'champu',n:peCorto(x.champu)+', solo si nadaste',cat:'Condicional',
+      t:'<em>Hoy no lleva champú por la mañana.</em> '+plEsc(x.nota)+' Entonces sí usas el <b>'+plEsc(peCorto(x.champu))+'</b>.'});
   }else{
-    ducha.push({id:'champu',t:'<em>Hoy no lleva champ\u00fa.</em> Directo al acondicionador.'});
+    ducha.push({id:'champu',n:'Hoy sin champú',cat:'Descanso',
+      t:'<em>Directo al acondicionador.</em> Los días sin champú no son días sucios: son descanso para el cuero cabelludo, y lavar a diario es lo que termina de resecar un pelo que ya está seco.'});
   }
   const masc=prod('mascarilla'), aco=prod('acondicionador');
-  if(x.mascarilla&&masc) ducha.push({id:'mascarilla',t:'<b>'+plEsc(masc.n)+'</b> \u2014 '+masc.uso});
-  else if(x.acondicionador&&aco) ducha.push({id:'acond',t:'<b>'+plEsc(aco.n)+'</b> \u2014 '+aco.uso});
-  M.push({m:PE_MOMENTOS[0],pasos:ducha});
+  if(x.mascarilla&&masc) ducha.push({id:'mascarilla',n:masc.n,cat:masc.cat,t:masc.uso,ayuda:['resequedad']});
+  else if(x.acondicionador&&aco) ducha.push({id:'acond',n:aco.n,cat:aco.cat,t:aco.uso,ayuda:['resequedad']});
+  G.push({m:peMomento('ducha'),pasos:ducha});
 
-  const cr=prod('sinEnjuague');
-  M.push({m:PE_MOMENTOS[1],pasos:[
-    {id:'toalla',t:'<b>Seca a toques con la toalla</b>, sin frotar. El pelo mojado se rompe mucho m\u00e1s f\u00e1cil que el seco.'},
-    cr?{id:'sinEnjuague',t:'<b>'+plEsc(cr.n)+'</b> \u2014 '+cr.uso}:null,
-    {id:'peine',t:'<b>Desenreda con peine de dientes anchos</b>, de puntas hacia arriba. Nunca cepillo en mojado.'},
-    {id:'secar',t:'Deja secar al aire. Si usas secadora: <b>aire tibio, a 20 cm</b>, nunca caliente ni pegado.'},
-  ].filter(Boolean)});
+  // Aquí iba la crema sin enjuague (prod('sinEnjuague')). Salió del maestro el 2026-09-02
+  // — Adán dejó de usarla — y con ella el único producto de este momento: lo que queda es
+  // técnica de secado, que es justo lo que más protege el pelo mojado.
+  G.push({m:peMomento('humedo'),pasos:[
+    {id:'toalla',n:'Secado a toques',cat:'Técnica',
+     t:'<b>Seca a toques con la toalla</b>, sin frotar. El pelo mojado se rompe mucho más fácil que el seco.'},
+    {id:'peine',n:'Peine de dientes anchos',cat:'Técnica',
+     t:'<b>Desenreda de puntas hacia arriba</b>, nunca cepillo en mojado.'},
+    {id:'secar',n:'Al aire, o aire tibio',cat:'Técnica',
+     t:'Deja secar al aire. Si usas secadora: <b>aire tibio, a 20 cm</b>, nunca caliente ni pegado.'},
+  ]});
 
   const mnx=prod('minoxidil'), ace=prod('aceite');
-  const seco=[mnx?{id:'minoxAM',t:mnx.uso}:null];
+  const seco=[];
+  if(mnx) seco.push({id:'minoxAM',dosis:0,n:mnx.n,cat:'Dosis 1 de '+mnx.vecesDia,t:mnx.uso,
+    clave:'La mitad de fuera del tratamiento',ayuda:['caida'],
+    espera:PE_ESPERA_MIN,esperaTxt:'No te mojes la cabeza durante'});
   if(ace&&(CA.perfil.preocupaciones||[]).indexOf('resequedad')!==-1)
-    seco.push({id:'aceite',t:'<b>'+plEsc(ace.n)+'</b> \u2014 '+ace.uso});
-  M.push({m:PE_MOMENTOS[2],pasos:seco.filter(Boolean)});
+    seco.push({id:'aceite',n:ace.n,cat:ace.cat,t:ace.uso,ayuda:['resequedad']});
+  if(seco.length) G.push({m:peMomento('seco'),pasos:seco});
 
   // La pastilla va en su propio momento: es lo unico de esta rutina que no se
   // aplica en el pelo, y mezclarla con el minoxidil confundia las dos cosas.
   const avo=prod('avodart');
-  if(avo) M.push({m:PE_MOMENTOS[4],pasos:[
-    {id:'avodart',t:'<b>'+plEsc(avo.n)+'</b> — '+avo.uso},
+  if(avo) G.push({m:peMomento('oral'),pasos:[
+    {id:'avodart',n:avo.n,cat:avo.cat,t:avo.uso,clave:'Lo único que ataca la causa',ayuda:['caida']},
     {id:'avodartAviso',t:avo.aviso,aviso:true},
   ]});
 
   const funda=prod('funda');
-  M.push({m:PE_MOMENTOS[3],pasos:[
-    {id:'minoxPM',t:'<b>Segunda dosis de minoxidil.</b> Misma t\u00e9cnica: cuero seco, media tapa, masaje, manos lavadas. <b>Despu\u00e9s de esta dosis ya no te mojes el pelo</b> \u2014 si vas a ba\u00f1arte de noche, b\u00e1\u00f1ate antes.'},
-    funda?{id:'funda',t:'<b>'+plEsc(funda.n)+'</b> \u2014 '+funda.uso}:null,
-  ].filter(Boolean)});
-  return M;
+  const noche=[];
+  if(mnx) noche.push({id:'minoxPM',dosis:1,n:mnx.n,cat:'Dosis 2 de '+mnx.vecesDia,
+    t:'<b>Segunda dosis.</b> Misma técnica: cuero seco, 1 ml con el gotero, masaje de 30 segundos y manos lavadas. <b>Después de esta dosis ya no te mojes el pelo</b> — si vas a bañarte de noche, báñate antes.',
+    clave:'Son dos dosis, no una',ayuda:['caida']});
+  if(funda) noche.push({id:'funda',n:funda.n,cat:funda.cat,t:funda.uso,ayuda:['resequedad']});
+  if(noche.length) G.push({m:peMomento('noche'),pasos:noche});
+
+  return {
+    am:G.filter(function(g){return g.m.mom==='am';}),
+    pm:G.filter(function(g){return g.m.mom==='pm';}),
+  };
 }
 
-function peHoyHtml(){
+function peRutinaHtml(mom){
   const RP=peRP(); if(!RP) return '';
-  const grupos=pePasosDelDia(), iso=plHoy(), esHoy=peEsHoy();
-  const hor=plHorarios(), dow=peDow(), x=RP.dia(dow);
-  let total=0, hechos=0;
+  const grupos=pePasosDelDia()[mom]; if(!grupos.length) return '';
+  const iso=plHoy(), esHoy=peEsHoy(), hor=plHorarios(), ahora=plAhoraMin();
+  const inicio=plMin(hor[mom]);
+  let total=0, hechos=0, espera=0, num=0;
+
   const cuerpo=grupos.map(function(g){
-    const hh=g.m.desfase===null?hor.pm:plHHMM(plMin(hor.am)+g.m.desfase);
-    const pasos=g.pasos.map(function(p,i){
-      total++; const on=esHoy&&pePaso(iso,p.id); if(on) hechos++;
-      if(p.aviso){ total--; if(on) hechos--;
-        return '<div class="pe-aviso-med"><span>\u26a0</span><span>'+p.t+'</span></div>'; }
-      return '<div class="pe-p'+(on?' on':'')+(esHoy?'':' solo-lectura')+'"'+
-        (esHoy?' onclick="peTogglePaso(\''+p.id+'\')" title="Marca este paso como hecho"':'')+'>'+
-        '<div class="pe-p-n">'+(i+1)+'</div><div class="pe-p-t">'+p.t+'</div><div class="pe-p-c">\u2713</div></div>';
+    const hh=g.m.desfase===null?hor[mom]:plHHMM(plMin(hor.am)+g.m.desfase);
+    const pasos=g.pasos.map(function(p){
+      if(p.aviso) return '<div class="pe-aviso-med"><span>⚠</span><span>'+p.t+'</span></div>';
+      total++; num++;
+      const ok=esHoy&&peHecho(iso,p); if(ok) hechos++;
+      const tags=[];
+      if(p.clave) tags.push('<span class="pe-tg k">'+plEsc(p.clave)+'</span>');
+      (p.ayuda||[]).forEach(function(k){const m=CA_CONCERN_META[k];if(m)tags.push('<span class="pe-tg">'+m.label+'</span>');});
+      const fila='<div class="pe-p'+(ok?' on':'')+(esHoy?'':' solo-lectura')+'"'+
+        (esHoy?' onclick="'+peClic(p)+'" title="Marca este paso como hecho"':'')+'>'+
+        '<div class="pe-p-n">'+num+'</div><div class="pe-p-b">'+
+        '<div class="pe-p-name">'+plEsc(p.n)+'<em>'+plEsc(p.cat)+'</em></div>'+
+        '<div class="pe-p-t">'+p.t+'</div>'+
+        (tags.length?'<div class="pe-p-tags">'+tags.join('')+'</div>':'')+
+        '</div><div class="pe-p-c">✓</div></div>';
+      if(p.espera) espera+=p.espera;
+      return fila+(p.espera
+        ? '<div class="pe-espera"><span>'+plEsc(p.esperaTxt)+'</span><i></i><span>'+plFalta(p.espera)+'</span></div>'
+        : '');
     }).join('');
     return '<div class="pe-mom"><div class="pe-mom-i '+g.m.clase+'">'+g.m.ico+'</div>'+
       '<div class="pe-mom-n">'+g.m.n+'</div><div class="pe-mom-h">'+hh+'</div></div>'+pasos;
   }).join('');
-  const chip=x.champu&&!x.condicional
-    ? PL_DIAS[dow].toUpperCase()+' \u00b7 '+plEsc(peCorto(x.champu)).toUpperCase()
-    : PL_DIAS[dow].toUpperCase()+' \u00b7 SIN CHAMP\u00da';
-  const titulo=esHoy?'Hoy, en orden':'El '+PL_LARGO[dow].toLowerCase()+', en orden';
-  const derecha=esHoy
-    ? hechos+' de '+total+' hechos'
-    : '<a href="#" onclick="peVerDia(null);return false" class="pe-volver">\u2190 volver a hoy</a>';
-  return '<div class="pe-card"><div class="pe-card-h">'+
-    '<div class="pe-card-t"><span class="b"></span>'+titulo+'<span class="pe-chip">'+chip+'</span></div>'+
-    '<div class="pe-card-x">'+derecha+'</div></div>'+
-    (esHoy?'':'<div class="pe-ojeada">Est\u00e1s viendo <b>otro d\u00eda</b> para saber qu\u00e9 toca. '+
-      'Las casillas solo se marcan en el d\u00eda de hoy.</div>')+cuerpo+'</div>';
+
+  let badge;
+  if(!esHoy) badge='<div class="pe-ru-b wait">'+PL_DIAS[peDow()].toUpperCase()+'</div>';
+  else if(hechos===total) badge='<div class="pe-ru-b ok">✓ COMPLETA</div>';
+  else if(hechos) badge='<div class="pe-ru-b wait">'+hechos+' DE '+total+'</div>';
+  else if(ahora<inicio) badge='<div class="pe-ru-b wait">'+(inicio-ahora>=180?'A LAS '+hor[mom]:'EN '+plFalta(inicio-ahora))+'</div>';
+  else badge='<div class="pe-ru-b miss">PENDIENTE</div>';
+  const activo=esHoy&&(ahora>=inicio-45&&hechos<total);
+
+  return '<div class="pe-ru '+mom+(activo?' ahora':'')+'">'+
+    '<div class="pe-ru-h"><div class="pe-ru-i">'+(mom==='am'?'☀️':'🌙')+'</div>'+
+    '<div><div class="pe-ru-n">Rutina de '+(mom==='am'?'día':'noche')+'</div>'+
+    '<div class="pe-ru-s">'+hor[mom]+' · '+total+' pasos'+(espera?' + '+plFalta(espera).toLowerCase()+' de espera':'')+'</div></div>'+
+    badge+'</div>'+cuerpo+'</div>';
 }
 
-// ─── El minoxidil ──────────────────────────────────────────────────
-// La ventana de 4 horas es el dato que casi nadie conoce y el que decide si la dosis sirve.
-const PE_ESPERA_MIN=240;
-function peMinoxHtml(){
-  const RP=peRP(); if(!RP) return '';
-  const mnx=RP.productos.find(p=>p.id==='minoxidil'); if(!mnx) return '';
-  const n=mnx.vecesDia||2, iso=plHoy(), h=peHechos(iso), hor=plHorarios(), ahora=plAhoraMin();
-  const horas=[plMin(hor.am)+PE_MOMENTOS[2].desfase, plMin(hor.pm)];
-  const lbl=['Dosis de la ma\u00f1ana','Dosis de la noche'];
-
-  const cajas=[];
-  for(let i=0;i<n;i++){
-    const on=h.minox.indexOf(i)!==-1, t=horas[i]||horas[0];
-    const dif=t-ahora;
-    const sub=on?'marcada':(dif>0?'en '+plFalta(dif).toLowerCase():'ya deber\u00eda estar puesta');
-    cajas.push('<div class="pe-dosis'+(on?' on':'')+'" onclick="peToggleMinox('+i+')" title="Marca esta dosis">'+
-      '<div class="pe-dosis-k">'+lbl[i]+'</div><div class="pe-dose-v">'+plHHMM(t)+(on?' \u2713':'')+'</div>'+
-      '<div class="pe-dosis-s">'+sub+'</div></div>');
-  }
-
-  // Ventana: solo tiene sentido si la dosis de la mañana ya está marcada.
-  let win='';
-  if(h.minox.indexOf(0)!==-1){
-    const fin=horas[0]+PE_ESPERA_MIN, resto=fin-ahora;
-    const pc=Math.max(0,Math.min(100,Math.round((ahora-horas[0])/PE_ESPERA_MIN*100)));
-    win='<div class="pe-win"><div class="pe-win-k">'+(resto>0?'No te mojes la cabeza hasta\u2026':'Ya puedes mojarte la cabeza')+'</div>'+
-      '<div class="pe-win-h">'+plHHMM(fin)+(resto>0?'':' \u2713')+'</div>'+
-      '<div class="pe-win-bar"><i style="width:'+pc+'%"></i></div>'+
-      '<div class="pe-win-t">El minoxidil necesita <b>unas 4 horas</b> sobre el cuero seco para absorberse. Mojarte antes lo arrastra y esa dosis no cuenta \u2014 por eso va <b>despu\u00e9s</b> de la ducha y nunca antes.</div></div>';
-  }else{
-    win='<div class="pe-win"><div class="pe-win-k">La ventana de las 4 horas</div>'+
-      '<div class="pe-win-t" style="margin-top:6px">Marca la dosis de la ma\u00f1ana y aqu\u00ed aparece <b>a qu\u00e9 hora puedes volver a mojarte la cabeza</b>. El minoxidil necesita unas 4 horas sobre el cuero seco: mojarte antes lo arrastra y esa dosis no cuenta.</div></div>';
-  }
-
-  const fase=peFase();
-  const esc=PE_FASES.map(function(f,i){
-    const cls=fase===-1?'':(i<fase?' pas':(i===fase?' act':''));
-    return '<div class="pe-f'+cls+'"><div class="pe-f-m">'+f.m+'</div><div class="pe-f-n">'+f.n+'</div>'+
-      '<div class="pe-f-c">'+(i<fase?'\u2713':(i===fase?'AQU\u00cd':''))+'</div></div>';
-  }).join('');
-  const nota=peMesMinox()===null
-    ? 'No sabemos desde cu\u00e1ndo lo usas. <b>Pon la fecha en tu perfil</b> y esta tarjeta te dice en qu\u00e9 fase vas \u2014 que es lo que evita abandonarlo en el mes equivocado.'
-    : 'El <b>shedding del mes 2-4 es se\u00f1al de que funciona</b>, no de lo contrario: el fol\u00edculo empuja fuera el pelo viejo para sacar el nuevo. Ah\u00ed es donde casi todos lo dejan y concluyen "no me sirvi\u00f3".';
-
-  return '<div class="pe-mx"><div class="pe-card-h"><div class="pe-card-t"><span class="b"></span>El minoxidil</div>'+
-    '<div class="pe-card-x">'+n+' dosis al d\u00eda</div></div>'+
-    '<div class="pe-dose">'+cajas.join('')+'</div>'+win+
-    '<div class="pe-fase">'+esc+'</div><div class="pe-nota">'+nota+'</div></div>';
+// La banda que avisa de que estás mirando otro día. Idéntica a la de Skincare.
+function peOjeadaHtml(){
+  if(peEsHoy()) return '';
+  const RP=peRP(), x=RP?RP.dia(peDow()):null;
+  const que=x&&x.champu&&!x.condicional?'toca <b>'+plEsc(peCorto(x.champu))+'</b>':'no toca champú';
+  return '<div class="pe-ojeada" style="grid-column:1/-1">Estás viendo el <b>'+PL_LARGO[peDow()].toLowerCase()+
+    '</b>, el día que '+que+'. Las casillas solo se marcan en el día de hoy. '+
+    '<a href="#" onclick="peVerDia(null);return false" class="pe-volver">← volver a hoy</a></div>';
 }
 
 // ─── Botiquín ───────────────────────────────────────────────────────
@@ -2520,62 +2459,68 @@ function peBotiquinHtml(){
     '% del gasto</b>, y es el \u00fanico que no puedes dejar de comprar sin perder lo ganado. Toca los d\u00edas para decir que abriste uno; los precios se editan en <b>datos-maestros.js</b>.</div></div>';
 }
 
-// ─── Errores, hitos y perfil ───────────────────────────────────────────
+// ─── Lo que arruina el resultado y qué puede ir con qué ───────────────────────────
+// El gemelo de "Las que sí mueven la aguja" de Skincare. Aquí acabaron dos cosas que
+// vivían en tarjetas propias y que él no quería: el aviso de la caída reciente (estaba en
+// "Antes que nada") y el shedding del mes 2-4 (estaba en "Qué esperar y cuándo"). Son los
+// dos datos de aquellas tarjetas que cambian lo que hace, así que se quedan; el resto de
+// aquel texto era relleno.
 function peErroresHtml(){
   const RP=peRP(), p=CA.perfil, c=p.preocupaciones||[];
   const e=[];
-  if(RP&&RP.productos.some(x=>x.id==='darrow')&&RP.productos.some(x=>x.id==='pilexil'))
-    e.push('<b>Pilexil y Darrow el mismo d\u00eda.</b> El Darrow (alquitr\u00e1n) es solo para cuando hay caspa activa, y ese d\u00eda <b>sustituye</b> al Pilexil \u2014 no se suma.');
-  e.push('<b>Minoxidil sobre el pelo mojado.</b> Se reparte irregular y se diluye. Cuero seco al tacto, siempre.');
-  e.push('<b>Una sola dosis al d\u00eda.</b> Son dos, y saltarse d\u00edas es lo que hace concluir "no me funcion\u00f3". Si lo dejas, lo ganado se revierte con el tiempo.');
-  if(p.cuero==='graso') e.push('<b>Acondicionador o mascarilla en la ra\u00edz.</b> Con cuero graso solo aplanas el pelo y aceleras que se vea grasoso otra vez.');
-  e.push('<b>Cepillo en mojado.</b> Peine de dientes anchos, de puntas hacia arriba: el pelo mojado se rompe mucho m\u00e1s f\u00e1cil.');
-  if(c.indexOf('resequedad')!==-1) e.push('<b>Secadora o plancha sin protector t\u00e9rmico.</b> El calor directo debilita el tallo con el tiempo, y el tuyo ya viene seco.');
+  if(p.caidaPatron==='reciente')
+    e.push({c:'info',t:'<b>Tratar una caída notoria y reciente por tu cuenta.</b> Eso merece dermatólogo o tricólogo para descartar causas puntuales — estrés, alguna deficiencia, tiroides, un telógeno efluvio. El minoxidil ayuda en general, pero no reemplaza saber la causa.'});
+  if(RP&&RP.productos.some(function(x){return x.id==='darrow';})&&RP.productos.some(function(x){return x.id==='pilexil';}))
+    e.push({t:'<b>Pilexil y Darrow el mismo día.</b> El Darrow (alquitrán) es solo para cuando hay caspa activa, y ese día <b>sustituye</b> al Pilexil — no se suma.'});
+  e.push({t:'<b>Minoxidil sobre el pelo mojado.</b> Se reparte irregular y se diluye. Cuero seco al tacto, siempre.'});
+  e.push({t:'<b>Una sola dosis al día.</b> Son dos, y saltarse días es lo que hace concluir "no me funcionó". Si lo dejas, lo ganado se revierte en 3-4 meses.'});
+  e.push({t:'<b>Abandonarlo en el mes 2-4 porque se cae más pelo.</b> Eso es el <b>shedding</b>: el folículo empuja fuera el pelo viejo para sacar el nuevo. Es la señal de que está funcionando, y es justo donde casi todos lo dejan.'});
+  if(p.cuero==='graso') e.push({t:'<b>Acondicionador o mascarilla en la raíz.</b> Con cuero graso solo aplanas el pelo y aceleras que se vea grasoso otra vez.'});
+  e.push({t:'<b>Cepillo en mojado.</b> Peine de dientes anchos, de puntas hacia arriba: el pelo mojado se rompe mucho más fácil.'});
+  if(c.indexOf('resequedad')!==-1) e.push({t:'<b>Secadora o plancha sin protector térmico.</b> El calor directo debilita el tallo con el tiempo, y el tuyo ya viene seco.'});
   return '<div class="pe-card"><div class="pe-card-h"><div class="pe-card-t"><span class="b"></span>Lo que arruina el resultado</div>'+
     '<div class="pe-card-x">'+e.length+'</div></div>'+
-    e.map((t,i)=>'<div class="pe-err"><div class="pe-err-n">'+(i+1)+'</div><div class="pe-err-t">'+t+'</div></div>').join('')+'</div>';
+    e.map(function(x,i){return '<div class="pe-err"><div class="pe-err-n'+(x.c?' '+x.c:'')+'">'+(x.c==='info'?'⚑':(i+1))+'</div><div class="pe-err-t">'+x.t+'</div></div>';}).join('')+'</div>';
 }
 
-function peEsperarHtml(){
-  const mes=peMesMinox();
-  const items=PE_FASES.map(function(f,i){
-    const desde=i===0?1:PE_FASES[i-1].hasta;
-    const hasta=f.hasta>100?12:f.hasta;
-    const cls=mes===null?'':(mes>hasta?' ok':(mes>desde?' aqui':''));
-    const marca=(mes!==null&&mes>desde&&mes<=hasta)?' <span class="pe-aqui">EST\u00c1S AQU\u00cd</span>':'';
-    const est=(mes!==null&&mes>hasta)?' \u00b7 superado':'';
-    return '<div class="pe-tl-i'+cls+'"><div class="pe-tl-w">'+f.m.replace('MES','Mes')+est+marca+'</div>'+
-      '<div class="pe-tl-t">'+f.t+'</div></div>';
+// La gemela de la matriz de activos de Skincare. Aquí no choca ningún ingrediente: lo que
+// choca es el HORARIO — mojarte dentro de las 4 h del minoxidil — y los dos champús
+// medicados el mismo día. Es donde acabó la ventana de las 4 horas que tenía tarjeta propia.
+function peMatrizHtml(){
+  const f=[
+    ['Champú suave',    'si','oj:otro día','oj:otro día','si'],
+    ['Mascarilla',      'si','si','si','no'],
+    ['Aceite de puntas','si','si','si','si'],
+    ['Mojarte el pelo', 'no','si','si','si'],
+  ];
+  const filas=f.map(function(r){
+    const tds=r.slice(1).map(function(v){
+      const oj=v.indexOf('oj:')===0;
+      const cls=oj?'oj':v;
+      const txt=oj?v.slice(3):(v==='si'?'✓':'✗');
+      return '<td class="'+cls+'">'+txt+'</td>';
+    }).join('');
+    return '<tr><td class="l">'+r[0]+'</td>'+tds+'</tr>';
   }).join('');
-  return '<div class="pe-card"><div class="pe-card-h"><div class="pe-card-t"><span class="b"></span>Qu\u00e9 esperar y cu\u00e1ndo</div>'+
-    '<div class="pe-card-x">'+(mes===null?'sin fecha de inicio':'mes '+mes)+'</div></div>'+items+'</div>';
-}
-
-const CA_TIPO={lacio:'lacio',ondulado:'ondulado',rizado:'rizado',afro:'afro'};
-const CA_CUERO={graso:'cuero graso',seco:'cuero seco',normal:'cuero normal'};
-function pePerfilHtml(){
-  const p=CA.perfil, f=[];
-  if(p.caidaPatron==='reciente')
-    f.push({c:'info',t:'Dijiste que la ca\u00edda es <b>notoria y reciente</b>. Eso merece una visita al derm\u00f3logo o tric\u00f3logo para descartar causas puntuales \u2014 estr\u00e9s, alguna deficiencia, tiroides, un tel\u00f3geno efluvio. El minoxidil ayuda en general, pero no reemplaza saber la causa.'});
-  f.push({c:'gris',t:'<b>Cabello '+(CA_TIPO[p.tipo]||p.tipo)+', '+p.grosor+', '+(CA_CUERO[p.cuero]||p.cuero)+'.</b> Por eso el acondicionador nunca toca la ra\u00edz y el aceite va con cuentagotas: en pelo fino, de m\u00e1s lo apelmaza.'});
-  f.push({c:'gris',t:'Hay dos tratamientos m\u00e1s potentes (<b>dutasteride t\u00f3pico</b> y <b>minoxidil oral</b>) que <b>requieren receta</b>. Est\u00e1n en tu lista de compras, no en la rutina, a prop\u00f3sito.'});
-  if((p.preocupaciones||[]).indexOf('caspa')!==-1)
-    f.push({c:'gris',t:'Con caspa marcada en el perfil, el <b>Darrow Doctar</b> entra <b>en lugar del Pilexil</b> el d\u00eda que la notes, no adem\u00e1s.'});
-  return '<div class="pe-card"><div class="pe-card-h"><div class="pe-card-t"><span class="b"></span>Antes que nada</div>'+
-    '<div class="pe-card-x">tu perfil</div></div>'+
-    f.map(x=>'<div class="pe-err"><div class="pe-err-n '+x.c+'">'+(x.c==='info'?'\u2691':'\u25cf')+'</div><div class="pe-err-t">'+x.t+'</div></div>').join('')+'</div>';
+  return '<div class="pe-card"><div class="pe-card-h"><div class="pe-card-t"><span class="b"></span>Qué puede ir con qué</div></div>'+
+    '<table class="pe-mx"><tr><th class="l"></th><th>Minox.</th><th>Pilexil</th><th>Darrow</th><th>Acond.</th></tr>'+filas+'</table>'+
+    '<div class="pe-leg"><span><i style="background:var(--pe-ok)"></i>Sin problema</span>'+
+    '<span><i style="background:var(--pe-am)"></i>Con cuidado</span>'+
+    '<span><i style="background:var(--pe-warn)"></i>Nunca juntos</span></div>'+
+    '<div class="pe-nota">La única incompatibilidad de horario de tu rutina son las <b>4 horas después del minoxidil</b>: mojarte antes lo arrastra y esa dosis no cuenta — por eso va después de la ducha y nunca antes. La mascarilla <b>sustituye</b> al acondicionador el día que toca, no se pone encima.</div></div>';
 }
 
 // ─── Pintar todo ────────────────────────────────────────────────────────
+// Las cuatro piezas, en el mismo orden que en Skincare: cabecera, la semana, las dos
+// rutinas: día + botiquín en una columna, noche + lo que hay que saber en la otra.
 function pePintar(){
   if(!document.getElementById('pe-semana')) return;
   pePintarCabecera();
   pePintarSemana();
-  document.getElementById('pe-mid').innerHTML=
-    '<div class="pe-col">'+peHoyHtml()+peErroresHtml()+'</div>'+
-    '<div class="pe-col">'+peMinoxHtml()+peBotiquinHtml()+'</div>';
-  document.getElementById('pe-foot').innerHTML=peEsperarHtml()+pePerfilHtml();
-  document.getElementById('pe-disc').innerHTML='Orientaci\u00f3n general con productos de venta libre en M\u00e9xico, no sustituye a un derm\u00f3logo o tric\u00f3logo \u2014 si la ca\u00edda es abrupta, en parches o con picaz\u00f3n fuerte, eso se revisa en consulta. Los productos, sus d\u00edas y sus precios viven en <b>Dashboard/datos-maestros.js</b>, la misma fuente que tu rutina diaria.';
+  document.getElementById('pe-rutinas').innerHTML=peOjeadaHtml()+
+    '<div class="pe-col">'+peRutinaHtml('am')+peBotiquinHtml()+'</div>'+
+    '<div class="pe-col">'+peRutinaHtml('pm')+peErroresHtml()+peMatrizHtml()+'</div>';
+  document.getElementById('pe-disc').innerHTML='Orientación general con productos de venta libre en México, no sustituye a un dermatólogo o tricólogo — si la caída es abrupta, en parches o con picazón fuerte, eso se revisa en consulta. El <b>dutasteride tópico</b> y el <b>minoxidil oral</b> son de receta: están en tu lista de compras, no en la rutina, a propósito. Los productos, sus días y sus precios viven en <b>Dashboard/datos-maestros.js</b>, la misma fuente que tu rutina diaria.';
 }
 function caRenderGuia(){ caPintarPerfilForm(); pePintar(); }
 

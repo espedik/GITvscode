@@ -292,17 +292,13 @@ canvas{max-width:100%}
 .sd-med-tot-l{font-size:10px;color:var(--text2);font-weight:700}
 .sd-med-tot-v{font-size:16px;font-weight:800;color:var(--g);letter-spacing:-.02em}
 
-.sd-sem{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;margin-bottom:11px}
-.sd-sd{border-radius:10px;border:1px solid var(--border);background:var(--surface-2);padding:8px 2px;text-align:center}
-.sd-sd.hoy{border-color:var(--g);background:var(--g-l)}
-.sd-sd-l{font-size:9px;font-weight:800;color:var(--text3);text-transform:uppercase}
-.sd-sd-c{font-size:15px;margin:5px 0 3px;line-height:1}
-.sd-sd-v{font-size:8.5px;font-weight:800;color:var(--text2)}
+/* La tira de 7 días con la carita de cada uno (.sd-sem/.sd-sd*) vivía aquí y se borró el
+   2026-09-02 con la tarjeta "Bienestar de la semana" del dashboard. La pestaña de Bienestar
+   mental (nav 'mental') no la usaba: ahí el historial es una tabla. */
 .sd-rule{display:flex;gap:10px;padding:9px 0;border-bottom:1px solid rgba(var(--ov),.06);align-items:flex-start}
 .sd-rule:last-child{border-bottom:none}
 .sd-rule-n{width:22px;height:22px;border-radius:7px;flex:none;display:flex;align-items:center;justify-content:center;
   font-size:10.5px;font-weight:800;background:var(--surface-3);border:1px solid var(--border);color:var(--text3)}
-.sd-rule-n.al{background:var(--o-l);border-color:rgba(255,107,53,.3);color:var(--o)}
 .sd-rule-t{font-size:11px;color:var(--text2);line-height:1.5}
 .sd-rule-t b{color:var(--text);font-weight:700}
 
@@ -950,7 +946,7 @@ function sdPesoHtml(){
              :(falta<0?'Est\u00e1s <b style="color:var(--o)">'+Math.abs(falta)+' kg</b> por encima de la meta de <b>'+obj+' kg</b>.'
                      :'<b style="color:var(--g)">Est\u00e1s en tu meta.</b>'))+
       ' Con un solo pesaje no hay progreso que dibujar: la barra aparece con el segundo.'+
-      ' <a href="#" onclick="sdMetaPeso(0);return false" style="color:var(--text3)">cambiar meta</a></div>';
+      ' <span class="tm">La meta la fija <b>Dashboard/datos-maestros.js</b> (<code>PESO.metaKg</code>).</span></div>';
   }else{
     // Mi Comida ya dice que el objetivo es GANAR masa muscular, con super\u00e1vit cal\u00f3rico. Lo que
     // falta es el n\u00famero, as\u00ed que se ofrecen tres saltos razonables desde el peso de hoy en vez
@@ -959,38 +955,34 @@ function sdPesoHtml(){
     barra='<div class="sd-mini" style="border:none;margin:0;padding:0">Tu objetivo en Mi Comida es <b>ganar masa muscular</b>, pero aqu\u00ed falta el n\u00famero. P\u00f3nlo y esta tarjeta te dice cu\u00e1nto te falta:</div>'+
       '<div class="flex gap8" style="margin-top:10px;flex-wrap:wrap">'+sug+'</div>';
   }
+  // El objetivo sale del maestro: no es "subir de peso" a secas, son dos cosas a la vez y por
+  // eso la cintura va al lado del kilo — la báscula sola no distingue músculo de panza.
+  const MP=(window.CIFRAS&&CIFRAS.PESO)||null;
+  const cint=MP?MP.cinturaUltima:null;
+  const nMaestro=S.medidas.filter(m=>m.maestro).length;
+  const objetivo=MP?'<div class="sd-mini" style="border:none;margin:0 0 10px;padding:0;font-size:11.5px">Tu objetivo: <b style="color:var(--text)">'+MP.objetivo+'</b>. Los dos van en direcciones contrarias en la b\u00e1scula, as\u00ed que lo que dice si vas bien es <b>subir de peso con la cintura igual o menor</b>'+(cint?': \u00faltima cintura <b style="color:var(--o)">'+cint.cintura+' cm</b> ('+fmtD(cint.fecha)+')':' \u2014 a\u00fan sin ninguna cintura anotada')+'.</div>':'';
+  const nota=nMaestro?'<div class="sd-mini">'+(nMaestro===1?'Tu pesaje est\u00e1 guardado':'Tus '+nMaestro+' pesajes est\u00e1n guardados')+' en <b>Dashboard/datos-maestros.js</b> (<code>PESO.registros</code>), no solo en este navegador: aunque limpies los datos del sitio, vuelven solos. Dile a Claude tu peso cuando te peses y lo anota ah\u00ed con la fecha.</div>':'';
   return '<div class="card"><div class="flex jb aic" style="margin-bottom:12px">'+
     '<div class="card-title" style="margin:0">\u2696\ufe0f Peso y composici\u00f3n</div>'+
     '<span class="ts tm">'+S.medidas.length+' registro'+(S.medidas.length===1?'':'s')+'</span></div>'+
+    objetivo+
     '<div class="sd-pw"><div class="sd-pw-v">'+act.peso+'<span> kg</span></div>'+
     '<div style="font-size:11px;font-weight:800;color:'+(dif===null?'var(--text3)':(dif>0?'var(--g)':'var(--o)'))+';padding-bottom:4px">'+
     (dif===null?'\u2014':(dif>0?'+':'')+dif+' kg')+'</div>'+
     (obj?'<div class="sd-pw-r"><div class="sd-pw-k">Meta de peso</div><div class="sd-pw-n">'+obj+' kg</div></div>':'')+
     '</div>'+barra+
     (S.medidas.length<3?'<div class="sd-mini">Con <b>'+S.medidas.length+' registro'+(S.medidas.length===1?'':'s')+'</b> no hay curva que dibujar; aparece sola al tercer pesaje. <b>P\u00e9sate el mismo d\u00eda de la semana</b>, en ayuno y despu\u00e9s del ba\u00f1o: el peso oscila 1-2 kg dentro del mismo d\u00eda.</div>':'')+
+    nota+
     '</div>';
 }
 
-const SD_DIAS=['Dom','Lun','Mar','Mi\u00e9','Jue','Vie','S\u00e1b'];
-const SD_CARA={1:'😞',2:'😕',3:'😐',4:'🙂',5:'😄'};
-function sdBienestarHtml(){
-  const hoy=new Date();
-  const lunes=new Date(hoy); lunes.setDate(hoy.getDate()-((hoy.getDay()+6)%7));
-  const reg=S.mental.registros||[];
-  const dias=[0,1,2,3,4,5,6].map(function(i){
-    const f=new Date(lunes); f.setDate(lunes.getDate()+i);
-    const iso=sdIso(f), r=reg.find(x=>x.fecha===iso), esHoy=iso===today();
-    return '<div class="sd-sd'+(esHoy?' hoy':'')+'"><div class="sd-sd-l">'+SD_DIAS[f.getDay()]+'</div>'+
-      '<div class="sd-sd-c">'+(r?(SD_CARA[r.animo]||'\u00b7'):'\u00b7')+'</div>'+
-      '<div class="sd-sd-v">'+(esHoy?'HOY':(r?(ANIMO_LABELS[r.animo]||'').split(' ')[1]||'':'\u2014'))+'</div></div>';
-  }).join('');
-  return '<div class="card"><div class="flex jb aic" style="margin-bottom:12px">'+
-    '<div class="card-title" style="margin:0">🧠 Bienestar de la semana</div>'+
-    '<button class="btn btn-o btn-sm" onclick="nav(\'mental\')">Ver todo</button></div>'+
-    '<div class="sd-sem">'+dias+'</div>'+
-    '<div class="sd-rule"><div class="sd-rule-n al">!</div><div class="sd-rule-t"><b>Duermes 5 h 40 entre semana.</b> Es el dato de tu propia rutina, y el que m\u00e1s pesa en todo lo dem\u00e1s: recuperaci\u00f3n, \u00e1nimo, testosterona y ca\u00edda de cabello. Ning\u00fan suplemento de esta lista compensa esa hora que falta.</div></div>'+
-    '<div class="sd-rule"><div class="sd-rule-n">\u00b7</div><div class="sd-rule-t"><b>28 h a la semana al volante</b> y jornada completa de pantalla. De ah\u00ed salen las '+META_PAUSAS+' pausas de postura del d\u00eda, no de una regla gen\u00e9rica.</div></div></div>';
-}
+// Aquí vivía sdBienestarHtml() — la tarjeta "🧠 Bienestar de la semana" del dashboard: una
+// tira de lunes a domingo con la carita del ánimo de cada día (leída de S.mental.registros), un
+// botón "Ver todo" a la pestaña de Bienestar mental, y dos avisos fijos sobre las 5 h 40 de
+// sueño y las 28 h al volante. Se borró el 2026-09-02 a petición de Adán, junto con sus
+// constantes SD_DIAS y SD_CARA. El dato NO se toca: S.mental.registros sigue siendo de la
+// pestaña de Bienestar mental (nav 'mental'), que guarda, lista y grafica el ánimo igual que
+// antes — lo que se fue es su resumen en el dashboard.
 
 const SD_REGLAS=[
   '<b>Hazte la Vitamina D antes de seguir tomando D3.</b> Es el \u00fanico suplemento de tu lista cuyo efecto depende de un n\u00famero que no conoces: con nivel normal, 4000 UI diarias sobran.',
@@ -1023,8 +1015,16 @@ function cpCabSalud(){
            return !(S.examenes&&S.examenes[e.id]&&S.examenes[e.id].fecha); }).length; }
     catch(e){ return CHK?CHK.examenes.length:0; }
   })();
+  // Leía `S.pesos`, una clave que este archivo nunca ha tenido — los pesajes viven en
+  // `S.medidas[].peso` —, así que el KPI mostraba siempre un guion. Desde el 2026-09-02 el
+  // último pesaje sale del maestro (CIFRAS.PESO), con S.medidas de respaldo.
   const peso=(function(){
-    try{ const p=(S.pesos||[]).slice(-1)[0]; return p?p.kg+' kg':'\u2014'; }catch(e){ return '\u2014'; }
+    try{
+      const MP=(window.CIFRAS&&CIFRAS.PESO)||null;
+      if(MP&&MP.actualKg!=null) return MP.actualKg+' kg';
+      const p=[...S.medidas].sort((a,b)=>a.fecha.localeCompare(b.fecha)).slice(-1)[0];
+      return p?p.peso+' kg':'\u2014';
+    }catch(e){ return '\u2014'; }
   })();
   cpCabecera('#cp-cab',{
     area:'salud',
@@ -1060,7 +1060,7 @@ function renderDashboard() {
     '<div class="sd-hero-x">'+(M?'Los suplementos salen de tu rutina diaria: <b>'+M.delMomento('am').length+' por la ma\u00f1ana, '+M.delMomento('pm').length+' por la noche</b> \u2014 no hay que darlos de alta':'')+'</div></div>'+
     '<div class="sd-grid">'+sdBloqueHtml('am')+sdBloqueHtml('pm')+sdAguaHtml()+'</div></div>';
 
-  document.getElementById('d-izq').innerHTML=sdChequeoHtml()+sdBienestarHtml();
+  document.getElementById('d-izq').innerHTML=sdChequeoHtml();
   document.getElementById('d-der').innerHTML=sdPesoHtml()+sdBotiquinHtml()+sdReglasHtml();
 }
 
@@ -1135,7 +1135,9 @@ function renderMedidas() {
       <td>${i?`<span style="color:${ii.c};font-weight:700">${i}</span> <span class="ts tm">${ii.l}</span>`:'—'}</td>
       <td>
         <button class="btn btn-o btn-sm btn-ico" onclick="openMedidaModal('${m.id}')">✏️</button>
-        <button class="btn btn-o btn-sm btn-ico" onclick="askDel(()=>delMedida('${m.id}'))">🗑️</button>
+        ${m.maestro
+          ? `<span class="btn btn-o btn-sm btn-ico" style="opacity:.45;cursor:default" title="Este pesaje vive en Dashboard/datos-maestros.js (PESO.registros). Borrarlo aquí no sirve de nada: vuelve al recargar. Se quita editándolo allá.">🔒</span>`
+          : `<button class="btn btn-o btn-sm btn-ico" onclick="askDel(()=>delMedida('${m.id}'))">🗑️</button>`}
       </td>
     </tr>`;
   }).join('');
@@ -1282,7 +1284,8 @@ function renderMetas() {
           </div>
           <div class="fr">
             <div class="fg" style="margin:0"><label>⚖️ Peso objetivo (kg)</label>
-              <input type="number" value="${m.pesoObj||''}" placeholder="65" step="0.1" onchange="updateMeta('pesoObj',parseFloat(this.value)||0)"></div>
+              <input type="number" value="${m.pesoObj||''}" placeholder="65" step="0.1" onchange="updateMeta('pesoObj',parseFloat(this.value)||0)">
+              <div class="ts tm" style="margin-top:4px">Lo fija <b>Dashboard/datos-maestros.js</b> (<code>PESO.metaKg</code>): lo que cambies aquí vuelve a ${(window.CIFRAS&&CIFRAS.PESO)?CIFRAS.PESO.metaKg+' kg':'su valor'} al recargar.</div></div>
             <div class="fg" style="margin:0"><label>📅 Fecha objetivo</label>
               <input type="date" value="${m.fechaObj||''}" onchange="updateMeta('fechaObj',this.value)"></div>
           </div>
@@ -2269,6 +2272,42 @@ function init() {
       S.suplementos.lista.push({id:p.id,nombre:p.n,dosis:p.dosis,momento:p.momento,notas:p.cuando});
     });
     S.seedSupl=true; _needSave=true;
+  }
+  // El histórico de pesajes vive en el maestro (CIFRAS.PESO.registros), no aquí — pedido de
+  // Adán el 2026-09-02: "no quiero que esos registros se pierdan, entonces los anotas en
+  // variables maestras". Antes se sembraba UN registro con el peso del perfil y todo lo demás
+  // dependía de este localStorage: limpiar datos del sitio borraba el histórico entero.
+  //
+  // La siembra corre en CADA carga, no una sola vez con bandera: así un navegador nuevo (o uno
+  // al que le limpiaron los datos) recupera la lista completa. Va en un solo sentido — maestro
+  // → app. Un pesaje anotado a mano desde aquí se conserva, pero si cae en la misma fecha que
+  // uno del maestro, gana el del maestro. Los sembrados llevan `maestro:true` e id determinista
+  // ('maestro-FECHA'), que es como la tabla sabe que ese renglón no se borra desde la app.
+  if(window.CIFRAS && CIFRAS.PESO){
+    const MP=CIFRAS.PESO;
+    if(MP.alturaCm && S.perfil.altura!==MP.alturaCm){ S.perfil.altura=MP.alturaCm; _needSave=true; }
+    // La meta de peso también la fija el maestro: es un dato del proyecto, no una preferencia
+    // del navegador. Por eso el campo de Metas la muestra pero avisa quién manda.
+    if(MP.metaKg && S.metas.pesoObj!==MP.metaKg){ S.metas.pesoObj=MP.metaKg; _needSave=true; }
+    (MP.registros||[]).forEach(function(r){
+      const id='maestro-'+r.fecha;
+      const dato={id:id, fecha:r.fecha, peso:r.kg, maestro:true,
+        cintura:r.cintura||0, cadera:r.cadera||0, pecho:r.pecho||0,
+        brazo:r.brazo||0, muslo:r.muslo||0, grasa:r.grasa||0,
+        notas:r.nota||'Pesaje del hist\u00f3rico maestro'};
+      const i=S.medidas.findIndex(m=>m.id===id);
+      if(i>=0){
+        // Ya estaba: solo se reescribe si el maestro cambió (una corrección de kg, por ejemplo).
+        if(S.medidas[i].peso!==dato.peso || (S.medidas[i].cintura||0)!==dato.cintura ||
+           (S.medidas[i].grasa||0)!==dato.grasa || (S.medidas[i].brazo||0)!==dato.brazo ||
+           (S.medidas[i].muslo||0)!==dato.muslo){ S.medidas[i]={...S.medidas[i], ...dato}; _needSave=true; }
+        return;
+      }
+      // Un pesaje a mano de esa misma fecha (o el viejo seed de arranque) cede el lugar.
+      const j=S.medidas.findIndex(m=>m.fecha===r.fecha);
+      if(j>=0) S.medidas[j]=dato; else S.medidas.push(dato);
+      _needSave=true;
+    });
   }
   if(!S.medidas.length){
     S.medidas.push({id:uid(),peso:S.perfil.peso||77,fecha:today(),cintura:0,cadera:0,pecho:0,brazo:0,muslo:0,grasa:0,notas:'Peso inicial (seed)'});
