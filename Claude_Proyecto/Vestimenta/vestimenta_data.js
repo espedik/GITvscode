@@ -124,68 +124,102 @@ const ACCESORIOS = [
     tip:'Formato "cardholder" (solo tarjetas + unos billetes doblados) si ya usas poco el efectivo — es lo que menos abulta.'},
 ];
 
-// Combos por ocasión — reutilizan piezas de BASICOS/CHAQUETAS/ZAPATOS/ACCESORIOS por id cuando aplica.
+// Combos por ocasión. Cada pieza es {n, ids}: `ids` apunta a los productos reales de
+// BASICOS/CHAQUETAS/ZAPATOS/ACCESORIOS, y de ahí salen la foto, el precio mínimo y si ya la
+// tienes marcada. Varios ids = alternativas ("chamarra de cuero O bomber"): basta tener una.
+// `ids:[]` es una prenda que NO está en el catálogo — pasa en Ejercicio y en las bodas, y la
+// vista lo dice en vez de fingir que la cubre.
+//
+// 2026-09-08: fuera el campo `img` de cada combo. Eran fotos de banco que no correspondían:
+// `outfit-business-casual.jpg` salía en DOS de los tres combos de Trabajo, y la del "viernes
+// casual" (`pantalon-vestir-oficina.jpg`) enseñaba un traje completo cuando el texto dice
+// jeans, polo y mocasines. Ahora el combo se dibuja con las fotos de sus propias piezas, que
+// sí son las prendas de las que habla. Los archivos siguen en images/, sin usar.
 const OCASIONES = {
   trabajo: {
     titulo:'💼 Trabajo', icoBadge:'ALTEN · oficina',
     intro:'Business casual, no traje completo todos los días — confirma el código real de tu equipo antes de invertir fuerte, pero estos 3 combos cubren el rango completo de "seguro" a "arreglado".',
     combos:[
-      {img:'images/trabajo/outfit-business-casual.jpg', nombre:'El uniforme seguro de oficina',
+      {nombre:'El uniforme seguro de oficina',
         desc:'La combinación que nunca falla para un día normal en ALTEN — profesional sin verte forzado.',
-        piezas:['Camisa de vestir blanca','Chino caqui','Zapato derby café','Cinturón de piel'], total:'$2,850-4,200 (si compras todo nuevo)'},
-      {img:'images/trabajo/pantalon-vestir-oficina.jpg', nombre:'Viernes casual',
+        piezas:[{n:'Camisa de vestir blanca',ids:['b5']},{n:'Chino caqui',ids:['b4']},
+                {n:'Zapato derby café',ids:['z3']},{n:'Cinturón de piel',ids:['b8']}],
+        total:'$2,850-4,200 (si compras todo nuevo)'},
+      {nombre:'Viernes casual',
         desc:'Para cuando el ambiente se relaja al final de la semana — igual de cómodo que un fin de semana, un poco más arreglado.',
-        piezas:['Jeans azul (oscuro, sin roturas)','Polo piqué','Mocasines'], total:'$2,300-3,600'},
-      {img:'images/trabajo/outfit-business-casual.jpg', nombre:'Con blazer, para una junta importante',
+        piezas:[{n:'Jeans azul (oscuro, sin roturas)',ids:['b3']},{n:'Polo piqué',ids:['b7']},
+                {n:'Mocasines',ids:['z6']}],
+        total:'$2,300-3,600'},
+      {nombre:'Con blazer, para una junta importante',
         desc:'Cuando necesitas verte un nivel arriba — presentación, entrevista interna, junta con cliente.',
-        piezas:['Chino caqui','Camisa de vestir blanca','Blazer casual azul marino','Zapato derby','Reloj análogo'], total:'$4,450-6,900 (sumando blazer y reloj)'},
+        piezas:[{n:'Chino caqui',ids:['b4']},{n:'Camisa de vestir blanca',ids:['b5']},
+                {n:'Blazer casual',ids:['c6']},{n:'Zapato derby',ids:['z3']},
+                {n:'Reloj análogo',ids:['a1']}],
+        total:'$4,450-6,900 (sumando blazer y reloj)'},
     ]},
   casual: {
     titulo:'🙂 Casual', icoBadge:'Día a día',
     intro:'El default de cuando no hay ocasión especial — la mayoría de tus días fuera del trabajo.',
     combos:[
-      {img:'images/casual/outfit-casual-diario.jpg', nombre:'El default de fin de semana',
+      {nombre:'El default de fin de semana',
         desc:'Playera + jean + chamarra + sneaker — el combo que resuelve el 80% de los días sin pensarlo.',
-        piezas:['Playera blanca o negra','Jeans azul clásico','Chamarra de mezclilla','Sneakers blancos'], total:'$2,400-3,700'},
-      {img:'images/casual/outfit-casual-fin-semana.jpg', nombre:'Casual arreglado',
+        piezas:[{n:'Playera blanca o negra',ids:['b1','b2']},{n:'Jeans azul clásico',ids:['b3']},
+                {n:'Chamarra de mezclilla',ids:['c1']},{n:'Sneakers blancos',ids:['z1']}],
+        total:'$2,400-3,700'},
+      {nombre:'Casual arreglado',
         desc:'Para comer fuera o una junta informal de negocio (freelance, mentoría) sin verte de oficina ni de flojera.',
-        piezas:['Polo piqué','Pantalón chino','Mocasines','Lentes de sol'], total:'$3,100-4,800 (sumando lentes)'},
+        piezas:[{n:'Polo piqué',ids:['b7']},{n:'Pantalón chino',ids:['b4']},
+                {n:'Mocasines',ids:['z6']},{n:'Lentes de sol',ids:['a2']}],
+        total:'$3,100-4,800 (sumando lentes)'},
     ]},
   ejercicio: {
     titulo:'🏋️ Ejercicio', icoBadge:'Gym y Hyrox',
     intro:'Tu split de Brazos/Piernas trackeado en Mi Rutina no exige ropa especial, pero si te metes en serio a Hyrox sí importa el tenis correcto.',
     combos:[
-      {img:'images/ejercicio/outfit-gym-entrenamiento.jpg', nombre:'Entrenamiento de fuerza (tu split actual)',
+      {nombre:'Entrenamiento de fuerza (tu split actual)',
         desc:'Lo único que realmente cambia el resultado aquí es el tenis — con suela plana tienes más estabilidad en sentadilla y peso muerto que con un tenis de running.',
-        piezas:['Playera técnica dry-fit','Shorts o joggers deportivos','Tenis de entrenamiento cruzado'], total:'$2,800-4,200 (el tenis es la mayor parte del costo)'},
-      {img:'images/ejercicio/outfit-gym-entrenamiento.jpg', nombre:'Si Hyrox va en serio',
+        piezas:[{n:'Playera técnica dry-fit',ids:[]},{n:'Shorts o joggers deportivos',ids:[]},
+                {n:'Tenis de entrenamiento cruzado',ids:['z5']}],
+        total:'$2,800-4,200 (el tenis es la mayor parte del costo)'},
+      {nombre:'Si Hyrox va en serio',
         desc:'Mismo combo, pero prioriza el tenis de cross-training sobre cualquier otra pieza — es literalmente la diferencia entre entrenar bien o entrenar lesionándote la estabilidad.',
-        piezas:['Playera técnica dry-fit','Guantes o straps para sled push (opcional)','Tenis de entrenamiento cruzado'], total:'$3,000-4,000'},
+        piezas:[{n:'Playera técnica dry-fit',ids:[]},{n:'Guantes o straps para sled push (opcional)',ids:[]},
+                {n:'Tenis de entrenamiento cruzado',ids:['z5']}],
+        total:'$3,000-4,000'},
     ]},
   bodas: {
     titulo:'💍 Bodas', icoBadge:'Invitado',
     intro:'Dos rutas según el tipo de boda — y dado que hoy priorizas liquidar deuda antes que gastar en ropa de un solo uso, renta antes de comprar si es una boda ocasional.',
     combos:[
-      {img:'images/bodas/traje-formal-boda.jpg', nombre:'Boda formal de noche',
+      {nombre:'Boda formal de noche',
         desc:'Traje completo azul marino o gris — la opción segura para una boda de etiqueta o salón por la noche.',
-        piezas:['Traje completo (azul marino o gris)','Camisa de vestir blanca','Corbata','Zapato oxford negro (o derby)','Reloj análogo'], total:'Renta $800-1,500 · compra $2,900-5,000'},
-      {img:'images/bodas/corbata-formal.jpg', nombre:'Boda de día / jardín (muy común en México)',
+        piezas:[{n:'Traje completo (azul marino o gris)',ids:[]},{n:'Camisa de vestir blanca',ids:['b5']},
+                {n:'Corbata',ids:['a4']},{n:'Zapato oxford negro (o derby)',ids:['z3']},
+                {n:'Reloj análogo',ids:['a1']}],
+        total:'Renta $800-1,500 · compra $2,900-5,000'},
+      {nombre:'Boda de día / jardín (muy común en México)',
         desc:'Mucho más barata que un traje completo y perfectamente aceptada en bodas mexicanas de día o al aire libre.',
-        piezas:['Guayabera o camisa de lino','Pantalón de vestir claro','Mocasín o derby café (sin corbata)'], total:'$1,800-3,000'},
+        piezas:[{n:'Guayabera o camisa de lino',ids:[]},{n:'Pantalón de vestir claro',ids:[]},
+                {n:'Mocasín o derby café (sin corbata)',ids:['z6','z3']}],
+        total:'$1,800-3,000'},
     ]},
   fiestas: {
     titulo:'🎉 Fiestas', icoBadge:'Salir de noche',
     intro:'El look clásico de "salir de noche" — y la buena noticia es que si ya compraste lo de Básicos/Chaquetas/Zapatos, no necesitas comprar nada nuevo para esto.',
     combos:[
-      {img:'images/fiestas/outfit-noche-fiesta.jpg', nombre:'Salir de noche',
+      {nombre:'Salir de noche',
         desc:'Reutiliza piezas que ya están en tu lista de básicos y chaquetas — esta es la ocasión con menor costo incremental de todas.',
-        piezas:['Playera negra o camisa estampada','Jeans azul oscuro','Chamarra de cuero (o bomber)','Sneakers blancos o botines Chelsea'], total:'$0 extra si ya tienes lo de arriba'},
-      {img:'images/fiestas/camisa-estampada-casual.jpg', nombre:'Con camisa estampada',
+        piezas:[{n:'Playera negra',ids:['b2']},{n:'Jeans azul oscuro',ids:['b3']},
+                {n:'Chamarra de cuero (o bomber)',ids:['c3','c2']},
+                {n:'Sneakers blancos o botines Chelsea',ids:['z1','z2']}],
+        total:'$0 extra si ya tienes lo de arriba'},
+      {nombre:'Con camisa estampada',
         desc:'Variante más relajada — cambia la playera negra por una camisa con estampado sutil, sin fajar.',
-        piezas:['Camisa estampada','Jeans azul oscuro','Sneakers blancos'], total:'$700-1,200 (solo la camisa, si no la tienes)'},
+        piezas:[{n:'Camisa estampada',ids:[]},{n:'Jeans azul oscuro',ids:['b3']},
+                {n:'Sneakers blancos',ids:['z1']}],
+        total:'$700-1,200 (solo la camisa, si no la tienes)'},
     ]},
 };
-
 // Plan de compra por fases — mismo lenguaje de "Fases" que ya usas en tu Plan Maestro (Coach).
 const FASES = [
   {n:'Fase 1', t:'Lo esencial ya', items:['Playera blanca','Playera negra','Jeans azul clásico','Sneakers blancos','Chamarra de mezclilla'], costo:'$2,500-3,500'},

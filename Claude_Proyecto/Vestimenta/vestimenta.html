@@ -101,26 +101,47 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var
 .item-card.checked{border-color:rgba(0,167,88,.4)}
 .item-card.checked .item-img{opacity:.75}
 
-/* Combos por ocasión */
-.combo-card{border-radius:var(--r14);border:1px solid rgba(var(--ov),.07);background:var(--surface-2);overflow:hidden;box-shadow:var(--sh);margin-bottom:18px;display:flex}
-.combo-img{width:280px;flex-shrink:0;overflow:hidden;background:rgba(var(--ov),.04)}
-.combo-img img{width:100%;height:100%;object-fit:cover;display:block}
-.combo-body{padding:18px 20px;flex:1}
-.combo-body h3{font-size:15px;font-weight:800;margin-bottom:3px}
-.combo-body .occ-badge{font-size:10px}
-.combo-desc{font-size:12.5px;color:var(--text2);line-height:1.6;margin:8px 0 12px}
-.piece-list{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:10px}
-.piece{font-size:11.5px;background:rgba(var(--ov),.05);border:1px solid rgba(var(--ov),.08);padding:5px 10px;border-radius:20px;color:var(--text2)}
-.piece a{color:var(--p);text-decoration:none;font-weight:700}
-.combo-total{font-size:12px;font-weight:700;color:var(--text)}
-.combo-total b{color:var(--p)}
-@media(max-width:760px){.combo-card{flex-direction:column}.combo-img{width:100%;height:200px}}
+/* Combos por ocasión — el combo se dibuja con las fotos de sus propias piezas, así
+   que no hay foto de outfit: la tarjeta es cabecera + tira de piezas + pie. */
+.combo-card{border-radius:var(--r14);border:1px solid rgba(var(--ov),.07);background:var(--surface-2);box-shadow:var(--sh);margin-bottom:16px;padding:18px 20px;display:flex;flex-direction:column;gap:14px}
+.combo-card.listo{border-color:rgba(0,167,88,.35)}
+.combo-h{display:flex;align-items:flex-start;gap:14px;flex-wrap:wrap}
+.combo-h>div:first-child{flex:1;min-width:0}
+.combo-h h3{font-size:15px;font-weight:800;letter-spacing:-.015em}
+.combo-desc{font-size:12.5px;color:var(--text2);line-height:1.6;margin-top:5px;max-width:640px}
+.combo-est{flex:none;font-size:9.5px;font-weight:800;letter-spacing:.05em;padding:5px 11px;border-radius:7px;white-space:nowrap}
+.combo-est.falta{color:var(--p);background:var(--p-l);border:1px solid rgba(193,127,74,.42)}
+.combo-est.ok{color:var(--g);background:var(--g-l);border:1px solid rgba(0,167,88,.25)}
+.combo-est.lejos{color:var(--text3);background:rgba(var(--ov),.05);border:1px solid rgba(var(--ov),.08)}
+
+.pz-list{display:flex;gap:12px;flex-wrap:wrap}
+.pz{width:126px;display:flex;flex-direction:column;gap:7px}
+.pz-img{position:relative;height:94px;border-radius:10px;overflow:hidden;background:rgba(var(--ov),.04);border:1px solid rgba(var(--ov),.07)}
+.pz-img img{width:100%;height:100%;object-fit:cover;display:block}
+.pz.tengo .pz-img{border-color:rgba(0,167,88,.35)}
+.pz.tengo .pz-img img{opacity:.6}
+.pz-ok{position:absolute;top:6px;right:6px;width:19px;height:19px;border-radius:50%;background:var(--g);color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800}
+/* Una prenda que ninguna de las cuatro categorías cubre: no se finge que la tienes. */
+.pz.sin .pz-img{border-style:dashed;display:flex;align-items:center;justify-content:center;padding:0 8px}
+.pz.sin .pz-img span{font-size:9.5px;color:var(--text3);text-align:center;line-height:1.3;letter-spacing:.04em;text-transform:uppercase;font-weight:700}
+.pz-n{font-size:11px;font-weight:700;line-height:1.3;color:var(--text);min-height:29px}
+.pz-p{font-size:10px;font-weight:800;letter-spacing:.03em;color:var(--p);font-variant-numeric:tabular-nums}
+.pz.tengo .pz-p{color:var(--g)}
+.pz.sin .pz-p{color:var(--text3);font-weight:600;letter-spacing:0}
+
+.combo-f{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;padding-top:12px;border-top:1px solid rgba(var(--ov),.06)}
+.combo-f-t{font-size:11.5px;color:var(--text3);line-height:1.6}
+.combo-f-t b{color:var(--text2);font-weight:700}
+.combo-f-r{text-align:right;flex:none}
+.combo-f-v{font-size:16px;font-weight:800;color:var(--p);line-height:1.1;font-variant-numeric:tabular-nums}
+.combo-card.listo .combo-f-v{color:var(--g)}
+.combo-f-k{font-size:9px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--text3);margin-top:3px}
 @media(max-width:900px){.fase-grid{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:640px){.sidebar{transform:translateX(-100%)}.sidebar.open{transform:translateX(0)}.main{margin-left:0}.fase-grid{grid-template-columns:1fr}}
 
 /* ─── Responsivo — iPad / iPhone 15 Pro (2026-08-03) ───────────────────────
    Los breakpoints 760/900/640 de arriba ya existían y funcionan (grid de
-   fases, combo-card apilado, sidebar off-canvas). Lo que faltaba:
+   fases, sidebar off-canvas). Lo que faltaba:
    1) el botón ☰ (#menuBtn) para abrir el sidebar en móvil tenía
       style="display:none" puesto INLINE en el HTML — un media query normal
       no le gana a un inline style, hace falta !important.
@@ -132,7 +153,7 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var
 @media(max-width:800px){
   .content{padding:18px}
   .sh h2{font-size:18px}
-  .combo-body{padding:16px 18px}
+  .combo-card{padding:16px 18px}
 }
 @media(max-width:640px){
   #menuBtn{display:flex !important}
@@ -144,6 +165,10 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var
   .item-body{padding:13px}
   .sh h2{font-size:17px}
   .fase-grid{gap:10px}
+  .combo-card{padding:14px 15px;gap:12px}
+  .pz-list{gap:9px}
+  .pz{width:calc((100% - 18px) / 3)}
+  .pz-img{height:76px}
 }
 .cp-cab-fuera{padding:24px 24px 0}
 @media(max-width:760px){.cp-cab-fuera{padding:16px 14px 0}}

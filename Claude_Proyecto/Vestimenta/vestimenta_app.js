@@ -48,14 +48,82 @@ function itemCard(it) {
   </div>`;
 }
 
+// ─── Combos por ocasión ───────────────────────────────────────────────────────
+// Un combo se dibuja con las fotos de SUS PROPIAS piezas, no con una foto de outfit:
+// las que había eran de banco y no correspondían (la misma imagen en dos combos de
+// Trabajo, y un traje completo ilustrando "jeans, polo y mocasines").
+// Cada pieza dice si ya la tienes marcada y, si no, desde cuánto sale; de ahí salen
+// también el estado del combo y lo que falta para cerrarlo.
+const CATALOGO = {};
+[BASICOS, CHAQUETAS, ZAPATOS, ACCESORIOS].forEach(a => a.forEach(it => { CATALOGO[it.id] = it; }));
+
+// El precio más bajo de todas sus tiendas. Los rangos vienen como texto ('$599-799',
+// '$199-299 c/u', 'variable'), así que se leen los números y se toma el menor; una
+// tienda sin cifra (el 'variable' de Innovasport) simplemente no aporta ninguna.
+function precioMin(it) {
+  const n = (it.compra || []).flatMap(c => (String(c.p).match(/\d[\d,]*/g) || [])
+    .map(x => parseInt(x.replace(/,/g, ''), 10)));
+  return n.length ? Math.min(...n) : null;
+}
+const pesos = n => '$' + n.toLocaleString('es-MX');
+
+// Una pieza resuelta: los productos que la cubren, si ya tienes alguno y su precio.
+// Varios ids son alternativas ("cuero o bomber"): basta tener una, y el precio es el
+// de la más barata. Sin ids, la prenda no está en el catálogo y la vista lo dice.
+function piezaEstado(p) {
+  const its = (p.ids || []).map(id => CATALOGO[id]).filter(Boolean);
+  const mios = its.filter(it => S.marcados.includes(it.id));
+  const precios = its.map(precioMin).filter(x => x !== null);
+  return { its, tengo: mios.length > 0, precio: precios.length ? Math.min(...precios) : null,
+           foto: (mios[0] || its[0] || {}).img };
+}
+
+function piezaCard(p) {
+  const e = piezaEstado(p);
+  if (!e.its.length) {
+    return `<div class="pz sin">
+      <div class="pz-img"><span>fuera del catálogo</span></div>
+      <div class="pz-n">${p.n}</div>
+      <div class="pz-p">no está en tus listas</div>
+    </div>`;
+  }
+  return `<div class="pz${e.tengo ? ' tengo' : ''}">
+    <div class="pz-img"><img src="${e.foto}" alt="${p.n}" loading="lazy">${e.tengo ? '<span class="pz-ok">✓</span>' : ''}</div>
+    <div class="pz-n">${p.n}</div>
+    <div class="pz-p">${e.tengo ? 'YA LA TIENES' : (e.precio !== null ? 'desde ' + pesos(e.precio) : '—')}</div>
+  </div>`;
+}
+
 function comboCard(c) {
-  return `<div class="combo-card">
-    <div class="combo-img"><img src="${c.img}" alt="${c.nombre}" loading="lazy"></div>
-    <div class="combo-body">
-      <h3>${c.nombre}</h3>
-      <div class="combo-desc">${c.desc}</div>
-      <div class="piece-list">${c.piezas.map(p=>`<span class="piece">${p}</span>`).join('')}</div>
-      <div class="combo-total">Costo aprox.: <b>${c.total}</b></div>
+  const est = c.piezas.map(piezaEstado);
+  const faltan = est.filter(e => !e.tengo);
+  const sinCatalogo = faltan.filter(e => !e.its.length).length;
+  const cuesta = faltan.reduce((a, e) => a + (e.precio || 0), 0);
+
+  let chip, pie, valor, clave;
+  if (!faltan.length) {
+    chip = '<div class="combo-est ok">✓ YA LO PUEDES ARMAR</div>';
+    pie = 'Todas sus piezas están marcadas en tu clóset.';
+    valor = '$0'; clave = 'te falta comprar';
+  } else {
+    const lejos = faltan.length > 3 || sinCatalogo === faltan.length;
+    chip = `<div class="combo-est ${lejos ? 'lejos' : 'falta'}">TE FALTA${faltan.length > 1 ? 'N' : ''} ${faltan.length}</div>`;
+    pie = sinCatalogo
+      ? `${sinCatalogo} de las que faltan no ${sinCatalogo > 1 ? 'están' : 'está'} en Básicos, Chaquetas, Zapatos ni Accesorios: eso hay que comprarlo fuera de esta guía.`
+      : 'Todas las que faltan están en tus listas — márcalas ahí cuando las compres.';
+    valor = cuesta ? 'desde ' + pesos(cuesta) : '—';
+    clave = sinCatalogo ? 'lo que sí está en tus listas' : 'para completarlo';
+  }
+
+  return `<div class="combo-card${faltan.length ? '' : ' listo'}">
+    <div class="combo-h">
+      <div><h3>${c.nombre}</h3><div class="combo-desc">${c.desc}</div></div>
+      ${chip}
+    </div>
+    <div class="pz-list">${c.piezas.map(piezaCard).join('')}</div>
+    <div class="combo-f">
+      <div class="combo-f-t">${pie}<br>Costo aprox. de todo nuevo: <b>${c.total}</b></div>
+      <div class="combo-f-r"><div class="combo-f-v">${valor}</div><div class="combo-f-k">${clave}</div></div>
     </div>
   </div>`;
 }
