@@ -1,0 +1,232 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&family=Fraunces:opsz,wght@9..144,600;9..144,800;9..144,900&display=swap">
+  <style>
+    body { margin: 0; background: #f2f2f6; font-family: 'Inter', -apple-system, sans-serif; }
+    a { color: #a80000; } a:hover { color: #dd0000; }
+    .mono { font-family: 'Space Grotesk', monospace; font-variant-numeric: tabular-nums; letter-spacing: -0.02em; }
+    .ttl { font-family: 'Fraunces', Georgia, serif; }
+    .lbl { font-size: 9.5px; font-weight: 800; letter-spacing: 0.16em; text-transform: uppercase; color: #63667c; }
+    /* LA FICHA. La novedad es la cinta de arriba: dice el género en LETRA, no solo en
+       color, y de paso clasifica la palabra. Una tarjeta sin cinta no dice nada hasta
+       que la lees; con ella, se barre la rejilla y se sabe qué es cada cosa. */
+    .fic { background: rgba(255,255,255,0.85); border: 1px solid rgba(0,0,0,0.12);
+           border-radius: 13px; overflow: hidden; display: flex; flex-direction: column; }
+    .cinta { display: flex; align-items: center; gap: 7px; padding: 5px 12px; }
+    .cinta .gen { font-size: 10.5px; font-weight: 800; letter-spacing: 0.09em; }
+    .cinta .tipo { font-size: 10px; font-weight: 600; opacity: 0.72; }
+    .cinta .niv { margin-left: auto; font-family: 'Space Grotesk', monospace;
+                  font-size: 9.5px; font-weight: 700; opacity: 0.78; }
+    .cpo { padding: 11px 14px 13px; display: flex; flex-direction: column; }
+    .de { font-family: 'Fraunces', Georgia, serif; font-size: 21px; font-weight: 900;
+          color: #16161a; line-height: 1.15; }
+    .pl { font-family: 'Space Grotesk', monospace; font-size: 10.5px; font-weight: 600;
+          color: #63667c; margin-top: 3px; }
+    .es { font-size: 14px; font-weight: 500; color: #5c5f70; margin-top: 6px; line-height: 1.4; }
+    /* El ejemplo, en su propia superficie. Antes era texto tras una raya y en cursiva
+       gris se leía como continuación de la traducción. */
+    .ej { margin-top: 10px; padding: 8px 10px; border-radius: 8px; background: rgba(0,0,0,0.035);
+          font-size: 12.5px; font-style: italic; color: #16161a; line-height: 1.45; }
+    .ej i { display: block; font-style: normal; font-size: 11.5px; color: #63667c;
+            margin-top: 3px; line-height: 1.4; }
+    .uso { position: relative; margin-top: 9px; padding-left: 12px; font-size: 11px;
+           color: #63667c; line-height: 1.45; }
+    .uso::before { content: ''; position: absolute; left: 1px; top: 6px; width: 5px; height: 5px;
+                   border-radius: 50%; background: rgba(168,0,0,0.42); }
+    .chip { padding: 4px 11px; border-radius: 20px; font-size: 11.5px; font-weight: 700;
+            border: 1.5px solid rgba(0,0,0,0.12); background: rgba(255,255,255,0.85); color: #5c5f70; }
+  </style>
+</helmet>
+
+<div style="width: 1180px; height: 760px; box-sizing: border-box; position: relative; overflow: hidden;
+     background:
+       radial-gradient(760px 480px at 6% -8%, rgba(221,0,0,0.14), transparent 62%),
+       radial-gradient(700px 560px at 104% 108%, rgba(255,206,0,0.20), transparent 62%), #f2f2f6;
+     padding: 26px 30px; display: flex; flex-direction: column; gap: 13px">
+
+  <!-- ── cabecera ─────────────────────────────────────────────── -->
+  <div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 24px">
+    <div>
+      <div class="lbl" style="display: flex; align-items: center; gap: 9px; color: #5c5f70">
+        <span style="width: 7px; height: 7px; border-radius: 50%; background: #dd0000"></span>
+        de Alemán
+      </div>
+      <div class="ttl" style="font-size: 30px; font-weight: 900; color: #16161a; margin-top: 5px;
+           line-height: 1.05">Vocabulario</div>
+    </div>
+    <div style="display: flex; align-items: center; gap: 9px">
+      <div style="width: 300px; height: 32px; border-radius: 10px; border: 1px solid rgba(0,0,0,0.14);
+           background: rgba(0,0,0,0.04); display: flex; align-items: center; padding: 0 12px;
+           font-size: 12.5px; color: #63667c">Buscar en alemán o en español…</div>
+      <div style="display: flex; gap: 6px">
+        <span class="chip" style="background: #16161a; border-color: #16161a; color: #f2f2f6">Todos</span>
+        <span class="chip">A1</span>
+        <span class="chip">A2</span>
+        <span class="chip">B1</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── la barra: volver al índice, dónde estoy, cuántas hay ──── -->
+  <div style="display: flex; align-items: center; gap: 12px">
+    <div style="display: inline-flex; align-items: center; gap: 7px; height: 30px; padding: 0 12px;
+         border-radius: 9px; border: 1px solid rgba(0,0,0,0.14); background: rgba(0,0,0,0.04);
+         font-size: 11.5px; font-weight: 700; color: #5c5f70">
+      <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor"
+           stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M9 6l6 6-6 6"></path></svg>
+      Índice
+    </div>
+    <div style="display: flex; align-items: center; gap: 7px; font-size: 12.5px; font-weight: 700;
+         color: #63667c">
+      <span>Casa y ciudad</span>
+      <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor"
+           stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M9 6l6 6-6 6"></path></svg>
+      <span>🏠</span><span style="color: #16161a; font-weight: 800">Casa</span>
+      <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor"
+           stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M9 6l6 6-6 6"></path></svg>
+      <b style="color: #a80000; font-weight: 800">La vivienda</b>
+    </div>
+    <div class="mono" style="margin-left: auto; font-size: 11px; font-weight: 700; color: #63667c">
+      9 palabras</div>
+  </div>
+
+  <!-- ── la tira de subsecciones, que es lo que queda del índice ── -->
+  <div style="display: flex; gap: 6px; align-self: flex-start; padding: 8px 11px; border-radius: 12px;
+       background: rgba(221,0,0,0.05); border: 1px solid rgba(221,0,0,0.16)">
+    <span class="chip" style="background: #16161a; border-color: #16161a; color: #f2f2f6;
+          border-radius: 8px; font-size: 11.5px">Todas <b class="mono" style="font-size: 10px">251</b></span>
+    <span class="chip" style="border-radius: 8px; font-size: 11.5px; background: rgba(255,255,255,0.85);
+          border-width: 1px; color: #16161a; font-weight: 800">La vivienda <b class="mono"
+          style="font-size: 10px; color: #63667c">9</b></span>
+    <span class="chip" style="border-radius: 8px; font-size: 11.5px; border-width: 1px">Las estancias
+          <b class="mono" style="font-size: 10px; color: #63667c">14</b></span>
+    <span class="chip" style="border-radius: 8px; font-size: 11.5px; border-width: 1px">Muebles y objetos
+          <b class="mono" style="font-size: 10px; color: #63667c">22</b></span>
+    <span class="chip" style="border-radius: 8px; font-size: 11.5px; border-width: 1px">Alquiler y vecinos
+          <b class="mono" style="font-size: 10px; color: #63667c">18</b></span>
+  </div>
+
+  <!-- ── las palabras ─────────────────────────────────────────── -->
+  <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px;
+       align-items: start">
+
+    <div class="fic">
+      <div class="cinta" style="background: #fce0ee; color: #8c3260">
+        <span class="gen">DIE</span><span class="tipo">· sustantivo</span><span class="niv">A1</span>
+      </div>
+      <div class="cpo">
+        <div class="de">Wohnung</div>
+        <div class="pl">Pl. Wohnungen</div>
+        <div class="es">el apartamento</div>
+        <div class="ej">Ich suche eine Wohnung in München.
+          <i>Busco un apartamento en Múnich.</i></div>
+      </div>
+    </div>
+
+    <div class="fic">
+      <div class="cinta" style="background: #d6f3ea; color: #137053">
+        <span class="gen">DAS</span><span class="tipo">· sustantivo</span><span class="niv">A1</span>
+      </div>
+      <div class="cpo">
+        <div class="de">Haus</div>
+        <div class="pl">Pl. Häuser</div>
+        <div class="es">la casa</div>
+        <div class="ej">Wir wohnen in einem großen Haus.
+          <i>Vivimos en una casa grande.</i></div>
+      </div>
+    </div>
+
+    <div class="fic">
+      <div class="cinta" style="background: #e2ecfe; color: #2a5193">
+        <span class="gen">DER</span><span class="tipo">· sustantivo</span><span class="niv">A1</span>
+      </div>
+      <div class="cpo">
+        <div class="de">Garten</div>
+        <div class="pl">Pl. Gärten</div>
+        <div class="es">el jardín</div>
+        <div class="ej">Die Kinder spielen im Garten.
+          <i>Los niños juegan en el jardín.</i></div>
+      </div>
+    </div>
+
+    <div class="fic">
+      <div class="cinta" style="background: #e2ecfe; color: #2a5193">
+        <span class="gen">DER</span><span class="tipo">· sustantivo</span><span class="niv">A2</span>
+      </div>
+      <div class="cpo">
+        <div class="de">Balkon</div>
+        <div class="pl">Pl. Balkone</div>
+        <div class="es">el balcón</div>
+        <div class="ej">Wir frühstücken auf dem Balkon.
+          <i>Desayunamos en el balcón.</i></div>
+      </div>
+    </div>
+
+    <div class="fic">
+      <div class="cinta" style="background: #e2ecfe; color: #2a5193">
+        <span class="gen">DER</span><span class="tipo">· sustantivo</span><span class="niv">A2</span>
+      </div>
+      <div class="cpo">
+        <div class="de">Keller</div>
+        <div class="pl">Pl. Keller — igual en plural</div>
+        <div class="es">el sótano</div>
+        <div class="ej">Das Fahrrad steht im Keller.
+          <i>La bicicleta está en el sótano.</i></div>
+      </div>
+    </div>
+
+    <div class="fic">
+      <div class="cinta" style="background: #e5e5e9; color: #404250">
+        <span class="gen">VERBO</span><span class="tipo">· separable</span><span class="niv">A2</span>
+      </div>
+      <div class="cpo">
+        <div class="de">umziehen</div>
+        <div class="pl">zieht um · zog um · umgezogen</div>
+        <div class="es">mudarse</div>
+        <div class="ej">Nächsten Monat ziehe ich um.
+          <i>El mes que viene me mudo.</i></div>
+      </div>
+    </div>
+
+    <div class="fic">
+      <div class="cinta" style="background: #e5e5e9; color: #404250">
+        <span class="gen">VERBO</span><span class="tipo">· separable</span><span class="niv">A1</span>
+      </div>
+      <div class="cpo">
+        <div class="de">aufräumen</div>
+        <div class="pl">räumt auf · räumte auf · aufgeräumt</div>
+        <div class="es">ordenar / recoger</div>
+        <div class="ej">Räum bitte dein Zimmer auf!
+          <i>¡Recoge tu cuarto, por favor!</i></div>
+      </div>
+    </div>
+
+    <div class="fic">
+      <div class="cinta" style="background: #fce0ee; color: #8c3260">
+        <span class="gen">DIE</span><span class="tipo">· sustantivo</span><span class="niv">B1</span>
+      </div>
+      <div class="cpo">
+        <div class="de">Wohngemeinschaft / die WG</div>
+        <div class="pl">Pl. Wohngemeinschaften</div>
+        <div class="es">el piso compartido</div>
+        <div class="ej">Ich wohne in einer WG mit drei Leuten.
+          <i>Vivo en un piso compartido con tres personas.</i></div>
+        <div class="uso">WG es como vive medio estudiante en Alemania</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

@@ -126,6 +126,35 @@ comida: {label:'Comida', icon:'🍽️', subs:{
 **Añadir una sección entera** es lo mismo con una entrada más en `cats`: su etiqueta, su
 emoji y sus `subs`. Así entraron Hobbies, Armar frases y las siete de vida cotidiana.
 
+### La tabla de verbos del tema de Partizip
+
+Adán, 2026-09-07: *"en alemán, ponme una tabla en la sección de partizip, ponme una tabla de
+todos los verbos, una tabla completa de verbos en pasado alemán, el 1 y 2"*.
+
+Es la décima sección del tema y **no se escribió a mano**: los 210 verbos ya estaban en `voc`
+con su `conj` (presente 3ª · Präteritum · Partizip II) y su `aux`. Una tabla escrita aparte
+habría sido una segunda copia condenada a envejecer en cuanto se corrigiera un verbo en su
+ficha. La genera `ALEMAN_VOCAB.verbos()`, y en los datos la sección solo lleva `verbos:true` —
+un tipo más junto a `tabla`, `lista` y `comparativa`—.
+
+Dos cosas se **derivan** en vez de guardarse:
+
+- **El Partizip I** es infinitivo + `d`, sin excepciones. En los reflexivos sale del verbo y no
+  del `sich` (*sich freuen* → `freuend`), y en las 30 fichas que traen dos verbos la `-d` va en
+  cada uno: `abfahren / losfahren` → `abfahrend / losfahrend`, no `abfahren / losfahrend`.
+- **Fuerte o débil** se decide por la terminación del Partizip II —`-en` fuerte, `-t` débil—,
+  que es la definición, y no por el `tag`, que alguien pudo olvidar poner. Salen 72 fuertes de
+  210. La marca lleva **la palabra** «fuerte» y no solo color, para que se lea impresa en
+  blanco y negro y con cualquier daltonismo.
+
+La tabla se enseña **entera**, sin corte ni scroll propio; el encabezado va `sticky` porque si
+no hay que subir doscientas filas para recordar cuál columna es cuál.
+
+**Dos datos del vocabulario que salieron a la luz al ordenarlos** (no se tocaron, son datos de
+Adán): `anprobieren` está **dos veces** —«probarse» y «probarse (ropa)»—, y
+`annullieren / ausfallen` lleva la conjugación de *ausfallen* (`fiel aus · ausgefallen`) para
+las dos, cuando *annullieren* es débil y hace `annullierte · annulliert`.
+
 ### Las secciones que no son temáticas
 
 Trece de las treinta y siete no agrupan *cosas* sino **lo que se dice**, porque saber cómo se
@@ -191,7 +220,56 @@ teléfono escondía tres de sus cinco columnas para caber. La rejilla muestra 25
 nada. En móvil las 23 secciones no se apilan en siete filas: son una tira que se desliza, y
 la elegida se trae al centro sola.
 
-**Modo estudio** tapa la traducción de todas las tarjetas y se revela una a una al tocarlas.
+**La anatomía de la ficha.** Tres decisiones que solo se ven con nueve tarjetas juntas:
+
+- **El ejemplo tiene superficie propia**, con la guía izquierda del color del género. Antes
+  era texto tras una raya, y en cursiva gris se leía como una continuación de la
+  traducción. La nota de uso lleva viñeta por lo mismo: dos bloques grises seguidos y sin
+  marca se leían como uno solo.
+- **La rejilla va con `align-items:start`.** Todas las tarjetas de una fila medían lo que
+  la más alta, así que una palabra con ejemplo largo dejaba a sus tres vecinas con medio
+  cuerpo en blanco. Es lo que permitió soltar el `margin-top:auto` del ejemplo, que existía
+  solo para que la raya cayera a la misma altura en las cuatro.
+- **El nivel ya no se cae de línea.** Con `flex-wrap:wrap`, «Tschüss / Auf Wiedersehen»
+  mandaba el `A1` a un segundo renglón y abría un hueco entre la palabra y su traducción.
+  Sin wrap cede la palabra, que se parte, y el nivel se queda arriba a la derecha.
+
+### Las dos vistas de las mismas palabras
+
+`vocPalabrasHtml(lista, op)` pinta las palabras de **dos maneras**, según `op.modo`. El
+agrupado, el orden y el «no hay ninguna» son los mismos para las dos: lo único que cambia
+es quién pinta cada palabra y cómo se apilan.
+
+| `op.modo` | Qué pinta | Para qué |
+| --- | --- | --- |
+| *(nada)* | `v-grid` de fichas `.v-w` | **Buscar.** Alemán y español a la vez, veinte de un vistazo |
+| `estudio` | `v-est-lista` de renglones `.v-est` | **Recordar.** Cinco por pantalla, el español tapado |
+
+**El renglón de estudio invierte la jerarquía.** El ejemplo EN ALEMÁN es el texto
+principal —15px, no 12,5 en cursiva al pie— y todo lo que está en español nace tapado.
+El género va en un bloque a la izquierda **con su palabra escrita** (`DIE`, `DAS`, `DER`,
+y `VERBO`/`ADJ`/`FRASE` cuando no hay artículo): en color se distingue, pero cuál era
+cuál hay que saberlo. Las tres columnas son fijas y no elásticas — el género y la palabra
+tienen que empezar en la misma x en los cinco renglones, que es lo que deja barrer esa
+columna sin leer nada más.
+
+Al tocar la fila del español se destapan **las dos tapas a la vez**, la traducción y la
+del ejemplo: son la misma pregunta, y con una tapa por clic eran dieciocho clics para una
+subsección de nueve palabras. La pantalla pone su función en `op.fnVer` si quiere enterarse
+(el Dashboard lo usa para el marcador de «3 de 9 vistas»); si no, `vocVer` destapa y ya.
+
+Elección de Adán del 2026-09-07 entre tres maquetas: *"diseño c"*.
+
+**`vocDatos(w)` existe por esto.** El plural, el genitivo, la conjugación, el auxiliar y el
+comparativo se sacan **una vez** y cada vista los formatea a su manera: la ficha en cajitas
+`.v-w-dato` y el renglón en una línea de mono. Estaban dentro de `vocPalabraHtml`, y copiar
+esas seis reglas en la segunda vista era garantizar que una palabra sin plural saliera
+distinta en cada una.
+
+**Ojo, no es lo mismo que el interruptor de esta app.** El botón «Modo estudio — ocultar
+traducción» de `vocabulario.html` (`op.estudio`) tapa la traducción DENTRO de la ficha, que
+sigue maquetada para leerse. La vista de estudio es otra maqueta entera. Por ahora la usa
+solo el Dashboard; traerla aquí es pasarle `modo` a `vocPalabrasHtml`.
 
 ---
 ## Kapitel 10 — el capítulo en curso

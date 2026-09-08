@@ -1,0 +1,18 @@
+{
+  "pages": [
+    { "id": "page-1", "name": "Como quedó" },
+    { "id": "page-2", "name": "Las descartadas" }
+  ],
+  "artboards": [
+    { "file": "Main.dc.html", "x": 0, "y": 0, "w": 1180, "h": 760, "page": "page-1", "title": "Modo estudio — lo que está puesto" },
+    { "file": "DireccionA.dc.html", "x": 0, "y": 0, "w": 1180, "h": 760, "page": "page-2", "title": "Dirección A — ficha con el género al frente" },
+    { "file": "DireccionB.dc.html", "x": 1300, "y": 0, "w": 1180, "h": 760, "page": "page-2", "title": "Dirección B — diccionario en dos columnas" }
+  ],
+  "annotations": [
+    { "id": "nota-main", "x": 0, "y": -250, "w": 620, "page": "page-1", "text": "LA DIRECCIÓN C, YA PUESTA EN EL DASHBOARD. El interruptor «Modo estudio» de la cabecera cambia la rejilla de fichas por estos renglones.\n\nEl renglón invierte la jerarquía: el ejemplo EN ALEMÁN es el texto principal a 15px y todo el español nace tapado. El género va en un bloque con su palabra escrita —DIE, DAS, DER, y VERBO / ADJ / FRASE cuando no hay artículo— porque en color se distingue, pero cuál era cuál hay que saberlo. Al tocar la fila del español se destapan las dos tapas a la vez: son la misma pregunta.\n\nLas tres columnas son fijas, no elásticas: el género y la palabra empiezan en la misma x en los cinco renglones, que es lo que deja barrer esa columna sin leer nada más. Tope de 1.150px porque con el índice plegado el panel da 1.400 y la tercera columna se estiraba vacía hasta el borde." },
+    { "id": "nota-contexto", "x": 660, "y": -250, "w": 500, "page": "page-1", "text": "Palabras reales de «Casa › La vivienda» y los colores exactos del dashboard: fondo #f2f2f6 con las manchas de #dd0000 y #ffce00, Fraunces para las palabras, Inter para el resto.\n\nLo medido: cinco palabras por pantalla en vez de veinte. Por eso convive con la vista de fichas en vez de sustituirla — el interruptor está a un clic." },
+    { "id": "nota-a", "x": 0, "y": -190, "w": 560, "page": "page-2", "text": "DIRECCIÓN A — ficha con el género al frente. Una cinta arriba de cada tarjeta que dice el género en letra y clasifica la palabra. Descartada, pero la idea del género escrito sí se quedó: es el bloque de la izquierda del renglón de estudio." },
+    { "id": "nota-b", "x": 1300, "y": -190, "w": 560, "page": "page-2", "text": "DIRECCIÓN B — diccionario en dos columnas. Sin cajas: filete, género como bloque guía y dos columnas con medianil. Caben 18 palabras completas donde en fichas caben 8. Descartada, pero sigue siendo la respuesta si algún día hace falta barrer una sección de 275 palabras entera." }
+  ],
+  "launch": { "view": "canvas", "page": "page-1" }
+}

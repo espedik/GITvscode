@@ -118,25 +118,31 @@
 /* ── LAS PALABRAS ──────────────────────────────────────────────────
    Eran una tabla de cinco columnas: a 1600px cabían NUEVE palabras de las 479, y en el
    teléfono se escondían tres columnas para que entrara. La rejilla muestra 25. */
-.v-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+/* `align-items:start` es lo que quita los huecos: en una rejilla, todas las tarjetas
+   de una fila median lo que la mas alta, y una palabra con ejemplo largo dejaba a sus
+   tres vecinas con medio cuerpo en blanco. Cada una mide ahora lo suyo. Es lo que
+   permitio soltar el `margin-top:auto` del ejemplo. */
+.v-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(252px,1fr));gap:12px;
+  align-items:start}
 .v-w{position:relative;display:flex;flex-direction:column;background:var(--v-card);
   border:1px solid var(--v-borde);border-radius:var(--v-radio);
-  padding:14px 16px 15px 18px;box-shadow:var(--v-sombra);
+  padding:13px 15px 14px 17px;box-shadow:var(--v-sombra);
   transition:box-shadow .18s,transform .18s,border-color .18s}
 .v-w:hover{box-shadow:var(--v-sombra-alta);transform:translateY(-1px)}
-.v-w::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--c);
+.v-w::before{content:'';position:absolute;left:0;top:0;bottom:0;width:5px;background:var(--c);
   border-radius:var(--v-radio) 0 0 var(--v-radio)}
-.v-w-top{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.v-w-top{display:flex;align-items:baseline;gap:8px;flex-wrap:nowrap}
 /* La píldora del artículo. El color del género SIN mezclar da 1.88:1 en `das`: es un
    verde claro sobre un fondo de ese mismo verde. Mezclado con el color del texto se
    oscurece en el tema claro y se aclara en el oscuro — un solo valor vale para los
    dos, y el matiz sigue diciendo qué género es. */
-.v-w-art{flex:none;font-size:10.5px;font-weight:800;letter-spacing:.03em;padding:2px 7px;
-  border-radius:5px;background:color-mix(in srgb,var(--c) 13%,transparent);
+.v-w-art{flex:none;font-size:11px;font-weight:800;letter-spacing:.03em;padding:2.5px 8px;
+  border-radius:6px;background:color-mix(in srgb,var(--c) 17%,transparent);
   color:color-mix(in srgb,var(--c) 55%,var(--v-txt))}
-.v-w-de{font-family:var(--v-font-titulo);font-size:var(--v-de-size);font-weight:900;
+.v-w-de{flex:1 1 auto;min-width:0;overflow-wrap:break-word;
+  font-family:var(--v-font-titulo);font-size:var(--v-de-size);font-weight:900;
   color:var(--v-txt);line-height:1.2}
-.v-w-es{font-size:13.5px;color:var(--v-txt2);margin-top:3px;line-height:1.45}
+.v-w-es{font-size:14px;font-weight:500;color:var(--v-txt2);margin-top:4px;line-height:1.45}
 
 /* El nivel, discreto y arriba a la derecha. Con miles de palabras, poder quedarse
    solo en A1 es lo que hace la lista abarcable. */
@@ -157,22 +163,90 @@
   padding:1px 8px;border-radius:5px;line-height:1.5}
 .v-w-tag.dif{color:var(--v-acento-tx);background:rgba(var(--v-acento-rgb),.08);
   border-color:rgba(var(--v-acento-rgb),.24)}
-/* El ejemplo se va al pie: las tarjetas de una fila ya medían igual, pero la línea
-   divisoria caía a distinta altura según lo larga que fuera la traducción. */
-/* El ejemplo, con su traducción debajo: en alemán solo había que adivinarlo. */
+/* El ejemplo, con su traducción debajo: en alemán solo había que adivinarlo.
+   Deja de ser «texto tras una raya» y pasa a ser un bloque con superficie propia: la
+   raya sola no separaba nada — el ejemplo en cursiva y su traducción en gris se leían
+   como una continuación de la palabra. La guía de la izquierda va del color del
+   género (`--c`, que hereda de la tarjeta): el mismo hilo que la barra del borde. */
 .v-w-ex{font-size:12.5px;color:var(--v-txt);font-style:italic;line-height:1.5;
-  margin-top:auto;padding-top:10px;border-top:1px solid var(--v-borde)}
-.v-w-ex-es{font-size:11.5px;color:var(--v-txt3);font-style:normal;margin-top:1px;
+  padding:9px 11px;border-radius:9px;
+  background:color-mix(in srgb,var(--v-txt) 4.5%,transparent);
+  border-left:2px solid color-mix(in srgb,var(--c) 42%,transparent)}
+.v-w-ex-es{font-size:11.5px;color:var(--v-txt3);font-style:normal;margin-top:3px;
   line-height:1.45}
-.v-w-ex-sep{margin-top:10px}
-/* Cuándo se dice, o el fallo típico. Va al pie y en pequeño: es el extra. */
-.v-w-uso{margin-top:8px;font-size:11px;color:var(--v-txt3);line-height:1.5}
+.v-w-ex-sep{margin-top:11px}
+/* Cuándo se dice, o el fallo típico. Va al pie y en pequeño: es el extra. La viñeta
+   lo separa del ejemplo sin gastar otra raya — dos bloques grises seguidos y sin
+   marca se leían como uno solo. */
+.v-w-uso{position:relative;margin-top:9px;padding-left:12px;font-size:11px;
+  color:var(--v-txt3);line-height:1.5}
+.v-w-uso::before{content:'';position:absolute;left:1px;top:6px;width:5px;height:5px;
+  border-radius:50%;background:color-mix(in srgb,var(--v-acento-tx) 42%,transparent)}
 .v-w-uso b{color:var(--v-acento-tx)}
 /* Modo estudio: la traducción tapada hasta que se toca. */
 .v-tapa{display:inline-block;min-width:82px;background:rgba(128,128,128,.22);color:transparent;
   border-radius:5px;padding:1px 8px;cursor:pointer;user-select:none;transition:all .2s}
 .v-tapa:hover{background:rgba(var(--v-acento-rgb),.16);color:var(--v-acento)}
 .v-tapa.abierta{background:transparent;color:var(--v-txt2);cursor:default;padding-left:0}
+
+/* ── EL RENGLÓN DE ESTUDIO ──────────────────────────────────────────
+   La segunda vista de las mismas palabras. La ficha se maqueta para LEER: alemán y
+   español juntos, veinte de un vistazo. Este renglón se maqueta para RECORDAR, y por
+   eso invierte la jerarquía — el ejemplo en alemán es el texto principal a 15px y todo
+   el español nace tapado. Cinco palabras por pantalla en vez de veinte: es el precio.
+
+   Tres columnas fijas y no una rejilla elástica: el bloque del género y la palabra
+   tienen que empezar en la MISMA x en los cinco renglones, que es lo que deja barrer la
+   columna de «DIE / DAS / DER» sin leer nada más. Elección de Adán del 2026-09-07. */
+/* Con el índice plegado el panel da 1.400px y la tercera columna se estiraba hasta el
+   borde: el ejemplo acababa a media fila y el resto era tarjeta vacía. 1.150px es el
+   ancho al que se dibujó la maqueta y donde la línea del ejemplo sigue siendo una
+   línea. En la app de Alemán el panel no llega a tanto, así que allí no hace nada. */
+.v-est-lista{display:flex;flex-direction:column;gap:10px;max-width:1150px}
+.v-est{display:grid;grid-template-columns:62px 236px minmax(0,1fr);column-gap:20px;
+  align-items:start;background:var(--v-card);border:1px solid var(--v-borde);
+  border-radius:var(--v-radio);padding:15px 20px;box-shadow:var(--v-sombra)}
+.v-est-cab{min-width:0}
+/* El género en LETRA, no solo en color: 'der' azul y 'die' rosa se distinguen mirando,
+   pero cuál era cuál hay que saberlo. Se mezclan con el color del texto por lo mismo
+   que la píldora de la ficha — el verde de `das` sin mezclar da 1.88:1 sobre su propio
+   fondo, y así un solo valor vale para el tema claro y el oscuro. */
+.v-est-g{font-family:var(--v-mono);font-size:10px;font-weight:700;letter-spacing:.06em;
+  text-align:center;padding:4px 2px;border-radius:6px;
+  background:color-mix(in srgb,var(--c) 17%,transparent);
+  color:color-mix(in srgb,var(--c) 55%,var(--v-txt))}
+.v-est-n{display:block;margin-top:7px;font-family:var(--v-mono);font-size:9.5px;
+  font-weight:700;color:var(--v-txt3);text-align:center}
+.v-est-pal{min-width:0}
+.v-est-de{font-family:var(--v-font-titulo);font-size:25px;font-weight:900;
+  color:var(--v-txt);line-height:1.1;overflow-wrap:break-word}
+.v-est-tec{font-family:var(--v-mono);font-size:10.5px;font-weight:600;color:var(--v-txt3);
+  margin-top:5px;line-height:1.5}
+.v-est-ojo{color:var(--v-aviso2)}
+.v-est-cpo{min-width:0}
+.v-est-ej{font-size:15px;font-style:italic;color:var(--v-txt);line-height:1.45}
+/* La fila del español. Entera es el botón: se destapan la traducción y la del ejemplo
+   de una vez, porque son la misma pregunta. */
+.v-est-es{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-top:8px;
+  cursor:pointer}
+.v-est-es.vista{cursor:default}
+.v-est-lbl{flex:none;font-size:9px;font-weight:800;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--v-txt3)}
+.v-est-es .v-tapa{font-size:14px;font-weight:500}
+.v-est-es .v-tapa.chico{font-size:12px;font-weight:400}
+.v-est-es .v-tapa.abierta{color:var(--v-txt2)}
+.v-est-es .v-tapa.chico.abierta{color:var(--v-txt3)}
+.v-est-uso{position:relative;margin-top:8px;padding-left:12px;font-size:11px;
+  color:var(--v-txt3);line-height:1.45}
+.v-est-uso::before{content:'';position:absolute;left:1px;top:6px;width:5px;height:5px;
+  border-radius:50%;background:color-mix(in srgb,var(--v-acento-tx) 42%,transparent)}
+/* Estrechos: la columna de la palabra y la del ejemplo no caben una al lado de otra, así
+   que el ejemplo se pasa debajo a lo ancho y el bloque del género se estrecha. */
+@media(max-width:1000px){
+  .v-est{grid-template-columns:54px minmax(0,1fr);row-gap:10px;padding:13px 15px}
+  .v-est-cpo{grid-column:1/-1}
+  .v-est-de{font-size:22px}
+}
 
 /* ── EL ÁRBOL DE SECCIONES ─────────────────────────────────────────
    Con 21 secciones y sus subsecciones, la tira de chips no da: ya ocupaba dos filas
@@ -275,9 +349,12 @@
 .v-arbol-fsecs .v-arbol-sub{padding:4px 9px;margin-left:-9px;font-size:11.5px;
   border-radius:0 7px 7px 0}
 
-/* Las migas: dónde estoy, en una línea. */
-.v-migas{display:flex;align-items:center;gap:7px;font-size:12px;font-weight:700;
+/* Las migas: dónde estoy, en una línea. Los tres escalones no pesan igual — la
+   familia es de dónde vengo y la sección es dónde estoy — y en gris del mismo tono
+   se leían como una sola tira. */
+.v-migas{display:flex;align-items:center;gap:7px;font-size:12.5px;font-weight:700;
   color:var(--v-txt3);flex-wrap:wrap}
+.v-migas .v-migas-cat{color:var(--v-txt);font-weight:800}
 .v-migas b{color:var(--v-acento-tx);font-weight:800}
 .v-migas svg{flex:none;opacity:.6}
 /* Cuantas palabras hay delante, al final de la linea de migas. */
@@ -346,6 +423,23 @@
 .v-tabla td{padding:10px 12px;border-bottom:1px solid var(--v-borde);font-size:13.5px;
   color:var(--v-txt2);vertical-align:top;line-height:1.55}
 .v-tabla td b{color:var(--v-txt)}
+/* La tabla de los 210 verbos. Se enseña ENTERA —no se corta ni se mete en un scroll
+   propio—, y por eso el encabezado va pegajoso: sin eso hay que subir doscientas filas
+   para recordar cuál columna es cuál. Las filas se aprietan un poco: a 13.5px y 10px de
+   padding la tabla medía ocho pantallas. */
+.v-vb table{min-width:620px}
+.v-vb thead th{position:sticky;top:0;z-index:2;background:var(--v-card);padding-top:8px}
+.v-vb td{padding:6px 12px;font-size:12.5px;vertical-align:baseline}
+.v-vb-de{font-family:var(--v-mono);font-size:12px}
+.v-vb-es{color:var(--v-txt3)}
+.v-vb-aux{font-family:var(--v-mono);font-size:11px;color:var(--v-txt3)}
+/* La marca de «fuerte» no es solo color: lleva su palabra, que es lo que se lee en
+   blanco y negro y con cualquier daltonismo. */
+.v-vb-f{margin-left:7px;padding:1px 6px;border-radius:20px;font-size:9px;font-weight:800;
+  letter-spacing:.06em;text-transform:uppercase;vertical-align:1px;
+  color:var(--v-acento-tx);background:rgba(var(--v-acento-rgb),.13)}
+.v-vb-pie{margin-top:9px;font-size:11px;color:var(--v-txt3);font-family:var(--v-mono)}
+
 .v-lst{display:flex;flex-direction:column;gap:10px;margin-top:14px}
 .v-li{display:grid;grid-template-columns:210px 1fr;gap:14px;padding:11px 13px;
   border-radius:10px;background:var(--v-card-2);border:1px solid var(--v-borde)}

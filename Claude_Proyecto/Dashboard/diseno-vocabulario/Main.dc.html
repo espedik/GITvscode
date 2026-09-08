@@ -1,0 +1,235 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&family=Fraunces:opsz,wght@9..144,600;9..144,800;9..144,900&display=swap">
+  <style>
+    body { margin: 0; background: #f2f2f6; font-family: 'Inter', -apple-system, sans-serif; }
+    a { color: #a80000; } a:hover { color: #dd0000; }
+    .mono { font-family: 'Space Grotesk', monospace; font-variant-numeric: tabular-nums; letter-spacing: -0.02em; }
+    .ttl { font-family: 'Fraunces', Georgia, serif; }
+    .lbl { font-size: 9.5px; font-weight: 800; letter-spacing: 0.16em; text-transform: uppercase; color: #63667c; }
+    /* EL RENGLÓN DE ESTUDIO. Una palabra ocupa toda la anchura y se lee de izquierda a
+       derecha: género, palabra, y el ejemplo EN ALEMÁN como el texto principal. Todo lo
+       que está en español va tapado — es lo que hay que recordar, no lo que hay que leer. */
+    .est { display: grid; grid-template-columns: 62px 236px minmax(0, 1fr); column-gap: 20px;
+           align-items: start; background: rgba(255,255,255,0.85); border: 1px solid rgba(0,0,0,0.12);
+           border-radius: 13px; padding: 15px 20px; }
+    .gen { font-family: 'Space Grotesk', monospace; font-size: 10px; font-weight: 700;
+           letter-spacing: 0.06em; text-align: center; padding: 4px 0; border-radius: 6px; }
+    .niv { display: block; margin-top: 7px; font-family: 'Space Grotesk', monospace; font-size: 9.5px;
+           font-weight: 700; color: #63667c; text-align: center; }
+    .de { font-family: 'Fraunces', Georgia, serif; font-size: 25px; font-weight: 900; color: #16161a;
+          line-height: 1.1; }
+    .tec { font-family: 'Space Grotesk', monospace; font-size: 10.5px; font-weight: 600; color: #63667c;
+           margin-top: 5px; line-height: 1.5; }
+    /* El régimen y la etiqueta van en su propio renglón y en el amarillo de aviso: en la
+       misma tira que el plural se perdían. */
+    .ojo { color: #8a6a00; }
+    .ejd { font-size: 15px; font-style: italic; color: #16161a; line-height: 1.45; }
+    /* La tapa: el español, oculto hasta que se toca. Ya existe en la app como «modo
+       estudio»; aquí es el estado por defecto y el resto del renglón se ordena a su
+       alrededor en vez de convivir con él. */
+    .tapa { display: inline-block; border-radius: 6px; background: rgba(0,0,0,0.10);
+            color: transparent; padding: 1px 10px; user-select: none; }
+    .abierta { background: transparent; color: #5c5f70; padding-left: 0; }
+    .chip { padding: 4px 11px; border-radius: 20px; font-size: 11.5px; font-weight: 700;
+            border: 1.5px solid rgba(0,0,0,0.12); background: rgba(255,255,255,0.85); color: #5c5f70; }
+  </style>
+</helmet>
+
+<div style="width: 1180px; height: 760px; box-sizing: border-box; position: relative; overflow: hidden;
+     background:
+       radial-gradient(760px 480px at 6% -8%, rgba(221,0,0,0.14), transparent 62%),
+       radial-gradient(700px 560px at 104% 108%, rgba(255,206,0,0.20), transparent 62%), #f2f2f6;
+     padding: 26px 30px; display: flex; flex-direction: column; gap: 13px">
+
+  <!-- ── cabecera ─────────────────────────────────────────────── -->
+  <div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 24px">
+    <div>
+      <div class="lbl" style="display: flex; align-items: center; gap: 9px; color: #5c5f70">
+        <span style="width: 7px; height: 7px; border-radius: 50%; background: #dd0000"></span>
+        de Alemán
+      </div>
+      <div class="ttl" style="font-size: 30px; font-weight: 900; color: #16161a; margin-top: 5px;
+           line-height: 1.05">Vocabulario</div>
+    </div>
+    <div style="display: flex; align-items: center; gap: 9px">
+      <div style="display: inline-flex; align-items: center; gap: 8px; height: 32px; padding: 0 14px;
+           border-radius: 20px; background: #dd0000; color: #ffffff; font-size: 11.5px; font-weight: 800">
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor"
+             stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"></path>
+          <circle cx="12" cy="12" r="3"></circle><path d="M3 3l18 18"></path></svg>
+        Modo estudio
+      </div>
+      <div style="display: flex; gap: 6px">
+        <span class="chip" style="background: #16161a; border-color: #16161a; color: #f2f2f6">Todos</span>
+        <span class="chip">A1</span>
+        <span class="chip">A2</span>
+        <span class="chip">B1</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── la barra ─────────────────────────────────────────────── -->
+  <div style="display: flex; align-items: center; gap: 12px">
+    <div style="display: inline-flex; align-items: center; gap: 7px; height: 30px; padding: 0 12px;
+         border-radius: 9px; border: 1px solid rgba(0,0,0,0.14); background: rgba(0,0,0,0.04);
+         font-size: 11.5px; font-weight: 700; color: #5c5f70">
+      <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor"
+           stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M9 6l6 6-6 6"></path></svg>
+      Índice
+    </div>
+    <div style="display: flex; align-items: center; gap: 7px; font-size: 12.5px; font-weight: 700;
+         color: #63667c">
+      <span>Casa y ciudad</span>
+      <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor"
+           stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M9 6l6 6-6 6"></path></svg>
+      <span>🏠</span><span style="color: #16161a; font-weight: 800">Casa</span>
+      <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor"
+           stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M9 6l6 6-6 6"></path></svg>
+      <b style="color: #a80000; font-weight: 800">La vivienda</b>
+    </div>
+    <!-- Cuántas llevas destapadas: la única cifra que importa estudiando. -->
+    <div style="margin-left: auto; display: flex; align-items: center; gap: 10px">
+      <div style="width: 130px; height: 5px; border-radius: 3px; background: rgba(0,0,0,0.09);
+           overflow: hidden">
+        <div style="width: 11%; height: 100%; background: #dd0000"></div>
+      </div>
+      <span class="mono" style="font-size: 11px; font-weight: 700; color: #63667c">1 de 9 vistas</span>
+    </div>
+  </div>
+
+  <!-- ── la tira de subsecciones ───────────────────────────────── -->
+  <div style="display: flex; gap: 6px; align-self: flex-start; padding: 8px 11px;
+       border-radius: 12px; background: rgba(221,0,0,0.05); border: 1px solid rgba(221,0,0,0.16)">
+    <span class="chip" style="background: #16161a; border-color: #16161a; color: #f2f2f6;
+          border-radius: 8px">Todas <b class="mono" style="font-size: 10px">56</b></span>
+    <span class="chip" style="border-radius: 8px; border-width: 1px; color: #16161a;
+          font-weight: 800">La vivienda <b class="mono" style="font-size: 10px; color: #63667c">9</b></span>
+    <span class="chip" style="border-radius: 8px; border-width: 1px">Las estancias
+          <b class="mono" style="font-size: 10px; color: #63667c">9</b></span>
+    <span class="chip" style="border-radius: 8px; border-width: 1px">Muebles y objetos
+          <b class="mono" style="font-size: 10px; color: #63667c">11</b></span>
+    <span class="chip" style="border-radius: 8px; border-width: 1px">Electrodomésticos
+          <b class="mono" style="font-size: 10px; color: #63667c">7</b></span>
+
+  <!-- ── los renglones ────────────────────────────────────────── -->
+  <div style="display: flex; flex-direction: column; gap: 10px; max-width: 1150px">
+
+    <div class="est">
+      <div>
+        <div class="gen" style="background: #fce0ee; color: #8c3260">DIE</div>
+        <span class="niv">A1</span>
+      </div>
+      <div>
+        <div class="de">Wohnung</div>
+        <div class="tec">Pl. Wohnungen</div>
+      </div>
+      <div>
+        <div class="ejd">Ich suche eine Wohnung in München.</div>
+        <div style="margin-top: 8px; display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap">
+          <span class="lbl" style="font-size: 9px">Español</span>
+          <span class="tapa" style="font-size: 14px; font-weight: 500">el apartamento</span>
+          <span class="tapa" style="font-size: 12px">Busco un apartamento en Múnich.</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="est">
+      <div>
+        <div class="gen" style="background: #d6f3ea; color: #137053">DAS</div>
+        <span class="niv">A1</span>
+      </div>
+      <div>
+        <div class="de">Haus</div>
+        <div class="tec">Pl. Häuser · Gen. -es</div>
+      </div>
+      <div>
+        <div class="ejd">Wir wohnen in einem großen Haus.</div>
+        <div style="margin-top: 8px; display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap">
+          <span class="lbl" style="font-size: 9px">Español</span>
+          <span class="tapa abierta" style="font-size: 14px; font-weight: 500">la casa</span>
+          <span class="tapa abierta" style="font-size: 12px; color: #83869a">Vivimos en una casa grande.</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="est">
+      <div>
+        <div class="gen" style="background: #e2ecfe; color: #2a5193">DER</div>
+        <span class="niv">A1</span>
+      </div>
+      <div>
+        <div class="de">Garten</div>
+        <div class="tec">Pl. Gärten · Gen. -s</div>
+      </div>
+      <div>
+        <div class="ejd">Die Kinder spielen im Garten.</div>
+        <div style="margin-top: 8px; display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap">
+          <span class="lbl" style="font-size: 9px">Español</span>
+          <span class="tapa" style="font-size: 14px; font-weight: 500">el jardín</span>
+          <span class="tapa" style="font-size: 12px">Los niños juegan en el jardín.</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="est">
+      <div>
+        <div class="gen" style="background: #e5e5e9; color: #404250">VERBO</div>
+        <span class="niv">A2</span>
+      </div>
+      <div>
+        <div class="de">umziehen</div>
+        <div class="tec">zieht um · zog um · umgezogen · ist</div>
+        <div class="tec ojo">separable · irregular</div>
+      </div>
+      <div>
+        <div class="ejd">Nächsten Monat ziehe ich um.</div>
+        <div style="margin-top: 8px; display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap">
+          <span class="lbl" style="font-size: 9px">Español</span>
+          <span class="tapa" style="font-size: 14px; font-weight: 500">mudarse</span>
+          <span class="tapa" style="font-size: 12px">El mes que viene me mudo.</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="est">
+      <div>
+        <div class="gen" style="background: #fce0ee; color: #8c3260">DIE</div>
+        <span class="niv">B1</span>
+      </div>
+      <div>
+        <div class="de">Wohngemeinschaft</div>
+        <div class="tec">Pl. Wohngemeinschaften</div>
+      </div>
+      <div>
+        <div class="ejd">Ich wohne in einer WG mit drei Leuten.</div>
+        <div style="margin-top: 8px; display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap">
+          <span class="lbl" style="font-size: 9px">Español</span>
+          <span class="tapa" style="font-size: 14px; font-weight: 500">el piso compartido</span>
+          <span class="tapa" style="font-size: 12px">Vivo en un piso compartido con tres personas.</span>
+        </div>
+        <div style="position: relative; margin-top: 8px; padding-left: 12px; font-size: 11px;
+             color: #63667c; line-height: 1.45">
+          <span style="position: absolute; left: 1px; top: 6px; width: 5px; height: 5px;
+                border-radius: 50%; background: rgba(168,0,0,0.42)"></span>
+          WG es como vive medio estudiante en Alemania
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

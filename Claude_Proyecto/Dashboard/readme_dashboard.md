@@ -63,7 +63,7 @@ flechas, los puntos del HUD lateral, o deslizando en táctil.
 | `theme-dia` | **Mi Día** | La principal. Tira de 7 días, cinta del día completo, bloque actual, KPIs |
 | `theme-coach` | **Plan Maestro** | Fase activa, ruta de deuda cara y el tablero calendario / día / semana — ver abajo |
 | `theme-metas` | **Mis Metas** | 8 KPIs financieros, franja de instrumentos y las 14 metas con estado — ver abajo |
-| `theme-basicas` | **Habilidades Base** | 23 guías de vida práctica. **Única fuente** desde el 30-ago-2026: la sección equivalente de Coach se eliminó — ver abajo |
+| `theme-basicas` | **Habilidades Base** | 23 guías de vida práctica, cada una con **su video verificado**. **Única fuente** desde el 30-ago-2026: la sección equivalente de Coach se eliminó — ver abajo |
 | `theme-skills` | **Habilidades** | Radar de 12 habilidades y prioridades de aprendizaje |
 | `theme-lista` | **Lista de Compras** | 7 categorías. Comida con precios por pieza, ticket, costo al mes y proporción de verduras/frutas/almidones — ver abajo |
 | `theme-aleman` | **Alemán** | Vocabulario por secciones y el tema de Partizip I y II, desde `Aleman/vocab-datos.js` — ver abajo |
@@ -113,7 +113,34 @@ por una línea, y el vocabulario debajo repartido en **siete familias** que se a
 «Colores» y «Escuela»; no es una sección de palabras y ya no se pinta como tal. Elección de
 Adán entre tres maquetas: *"me gusta la opcion c"*.
 
-La tarjeta — que es el 90% del diseño — no ha cambiado.
+**El índice se pliega solo al elegir sección.** Elegir es lo último que se
+hace en el índice: a partir de ahí lo que se mira son las palabras, y esos 238px rinden
+más como una quinta columna de tarjetas. Al plegarse, las subsecciones se mudan a una
+tira encima de la rejilla — `vocSubsHtml`, el mismo motor, escrito justo para las
+pantallas donde el árbol no cabe — así que moverse dentro de la sección no obliga a
+abrirlo otra vez. Vuelve con el botón «Índice» de la barra de migas, y el estado se
+guarda (`al_plg_v1`) igual que la sección, la familia y el nivel.
+
+**Las palabras se ven de dos maneras.** El interruptor «Modo estudio» de la
+cabecera cambia la rejilla de fichas por los renglones de estudio: el ejemplo en alemán
+como texto principal y todo el español tapado hasta que lo tocas. La maqueta y el motor
+están en `Aleman/` —lo cuenta `readme_aleman.md`—; lo propio de esta pantalla es el
+interruptor (`alSetVista`, guardado en `al_vista_v1`) y el marcador de «3 de 9 vistas» de
+la barra de migas.
+
+El marcador **se cuenta del DOM**, no de un contador aparte: cualquier repintado —cambiar
+de sección, filtrar por nivel, buscar— vuelve a taparlas todas, y un número guardado
+mentiría desde el primer cambio. En la gramática no se pinta ninguno de los dos: ahí no
+hay español que tapar.
+
+La tira se pinta **siempre** y es el CSS quien decide si se ve
+(`.al-cuerpo:not(.plegado) .al-subs{display:none}`): así abrir y cerrar el índice no
+repinta las 275 tarjetas de «Comer y comprar» ni pierde el scroll donde ibas. En el
+teléfono el índice está arriba, no al lado, así que allí plegar cierra una FILA
+(`grid-template-rows:0 minmax(0,1fr)`), no una columna.
+
+La ficha y el renglón de estudio se dibujan en `Aleman/vocab.css` y los cuenta
+`Aleman/readme_aleman.md`: aquí solo llegan.
 
 Lo único propio de esta pantalla son los **tokens** `--v-*`, en `.al-fondo`: tiene modo
 oscuro y el fondo es translúcido sobre las manchas animadas del slide, así que los colores
@@ -143,6 +170,7 @@ día.
 `aleman-data.js` (327 KB, extraído con Playwright por `Aleman/_generar-datos-dashboard.js`) y el
 filtro por `kapitelAleman` que mostraba solo el Kapitel en curso se quedan en el repo pero sin
 cargarse: Adán dijo *"de momento"*, y volver a ponerlas es cargar el archivo otra vez.
+
 ---
 
 ### La Lista de Compras
@@ -224,12 +252,65 @@ derecha para que se vea que lleva a algún lado.
 que ninguno. Sí está lo de *"hay que reservar con semanas"* en Pujol, Quintonil, Rosetta, Máximo,
 Contramar y la Casa Barragán, porque es justo lo que arruina la noche cuando no lo sabes.
 
-Las terrazas tienen paso propio: Terraza Cha Cha Chá estaba listada en "Cenar", que es lo que es
-pero no para lo que se va. Su aviso —**pedir mesa en la baranda** al reservar, y que de junio a
-septiembre llueve y te mandan adentro— vale para las seis.
+Las terrazas tienen paso propio desde el principio del día siguiente: Terraza Cha Cha Chá estaba
+listada en "Cenar", que es lo que es pero no para lo que se va. Su aviso —**pedir mesa en la
+baranda** al reservar, y que de junio a septiembre llueve y te mandan adentro— vale para las seis.
 
 Comprobado en dark y light a 1600 y 390px: los 30 lugares aparecen en sus siete pasos, ninguno con
 el enlace roto ni repetido en dos pasos, todos con `target="_blank"` y `rel="noopener"`.
+
+## Un video por habilidad
+
+Adán, 2026-08-30: *"dame videos que abarquen cada habilidad […] para que lo escuche y aprenda
+varias cosas […] pero además asegúrate que sea de buena calidad"*.
+
+**48 enlaces sueltos + los 42 episodios de la serie de vino**, para 23 habilidades. Viven en
+`HABILIDAD_DETALLE[id].videos` como `{u, t, d}` y se pintan en la columna del temario, bajo la
+frase. Todas menos vino llevan **dos o más**, y el segundo nunca repite al primero: aporta el
+ángulo que al primero le falta (la herramienta antes que la receta, la maniobra aislada del curso,
+el audiolibro frente a la conferencia, la fuente original frente a la explicación).
+
+La `d` de cada uno dice **por qué está ahí**, no de qué trata. "La maniobra que salva vidas,
+aislada del curso completo para repasarla" es una razón para abrirlo; "video sobre RCP" no.
+
+**Van FUERA de `pasos` a propósito.** Como un paso más habrían cambiado el denominador de los 23
+checklists —`0/12` pasa a `0/13`— y con ellos el avance ya guardado en `habilidades_checklist_v1`.
+Comprobado después del cambio: siguen siendo **324 pasos** en total, los mismos de antes.
+
+### Qué se verificó y qué no
+
+Cada enlace se **buscó y se comprobó uno a uno**: se pidió la página de YouTube y se confirmó que
+responde y que el título es el que la ficha dice. Eso descarta enlaces muertos, que es el fallo
+que importa.
+
+**Lo que no se pudo comprobar desde aquí es la duración, las vistas ni la producción**, así que
+ninguna ficha las promete. El criterio de "calidad" fue otro, y es el que está escrito en la nota
+de cada video: se prefirió **formato largo sobre clip** (masterclass, conferencia, curso completo,
+audiolibro), **fuente identificable** sobre canal anónimo (OBS Business School, Talks at Google,
+Ramón Nogueras, Giacomo Bocchio, escuelas de gastronomía) y **coincidencia exacta con el contenido
+de la ficha** — el de nudos trae los mismos cuatro nudos; el de fogata, los mismos tres armados.
+
+Dos audiolibros de Carnegie se descartaron pese a salir primeros en la búsqueda: la página no
+devolvía título al comprobarla, y un enlace que no se puede verificar no se publica.
+
+### Vino lleva la serie entera, no un episodio
+
+Adán, 2026-08-30: *"en vino ponme todos los episodios, solo me diste el 1"*. El video de vino no
+era un video: era el episodio 1 de un curso en pódcast de más de 52 entregas.
+
+`videos[0].serie` trae `{canal, nota, eps:[{n, u, t}]}` con **42 episodios verificados**, y el
+renderizador los pinta como una **rejilla de números plegable** — 42 enlaces sueltos habrían
+ahogado la columna del temario. El título de cada episodio vive en su `title`, así que la rejilla
+se escanea de un vistazo y aun así se sabe qué es cada número.
+
+**Los huecos se declaran en pantalla**, no se esconden: los episodios 26, 28, 29 y del 42 al 49 no
+se pudieron verificar uno a uno, y la nota lo dice y manda al canal, que es el único enlace que
+está completo siempre y no envejece cuando salga el episodio 53.
+
+Es el patrón para cualquier otra habilidad cuyo recurso sea una serie: un video de entrada, el
+índice plegado y el canal como respaldo.
+
+---
 
 ## Mis Metas — "panel de trayectoria"
 
@@ -468,6 +549,30 @@ no manda en Safari, pero sí en Android y en el escritorio.
 - **KPIs de dinero**: salen de `finanzasmx_v2` en vivo, con los saldos ya migrados.
 - **"Importante este mes"**: eventos propios, editables desde el slide.
 
+### Añadir un pendiente desde el código
+
+Desde que Adán puede crear y borrar pendientes, **manda `localStorage`** (`dash-eventos-mes-v1`)
+y `EVENTOS_MES` solo siembra la primera vez. Consecuencia: **añadir una línea a `EVENTOS_MES` no
+le llega** a un navegador que ya tiene la clave, y bumpear la bandera de siembra le borraría todo
+lo que haya escrito él.
+
+Lo resuelve `EVENTOS_NUEVOS` + `eventosSembrarNuevos()`, con el patrón de las migraciones de
+Finanzas: **cada lote lleva su bandera y corre una sola vez**. Un pendiente añadido así y luego
+borrado **no vuelve** en la siguiente carga —la bandera ya está puesta—, que es justo lo que se
+prometió cuando pidió poder borrar. Y se compara **por texto** además de por bandera: dos
+«Agendar la visa de tu papá» seguidos serían peor que ninguno.
+
+Los items nuevos van en los DOS sitios: en `EVENTOS_MES` para el navegador que arranque de cero,
+y en `EVENTOS_NUEVOS` para el que ya tiene datos. **Para añadir otro lote**: una entrada más con
+bandera nueva.
+
+Probado con Playwright en los tres casos: navegador limpio, navegador con pendientes propios
+—se añaden sin tocar los suyos—, y clave que ya contenía ese mismo texto —no duplica—; más
+borrar uno y recargar dos veces, para ver que no resucita.
+
+El 2026-09-07 se sembró el primer lote (`_sep20260907`): agendar la visa del papá y revisar
+FAMEX 2027.
+
 ---
 
 ## El tablero del Plan Maestro
@@ -521,6 +626,34 @@ $10,336                                   ╲__                        $8,674
                                           15 16 17 18 … 31            de esta quincena
 ```
 
+**La cabecera bajó de alto el 2026-09-07, en dos pasadas.** Adán: *"esta parte hazla más
+pequeña a lo alto"* y, al verlo, *"ahora todo esto, hazlo todavía más pequeño a lo alto"*. Las
+tres bandas juntas —fase, ruta de deuda y riel, con sus márgenes— pasaron de **241px a 191** a
+1600×1000, y de 253 a 205 a 1366×768. El riel solo, de **125 a 77**.
+
+| | antes | ahora |
+|---|---|---|
+| Banda de fase | 61 | 46 |
+| Ruta de deuda | 65 | 52 |
+| Riel | 125 | 77 |
+| **Cabecera entera** | **241** | **191** |
+| Tablero de abajo | 547 | 631 |
+
+Lo que se recortó es **aire** —paddings, márgenes entre bandas, interlineados— y el tamaño de
+las cifras que no son *la* cifra; ninguna banda perdió un dato. Dos medidas guiaron dónde
+cortar, porque a ojo se habría cortado donde no toca:
+
+- **El alto del riel no lo ponía la gráfica**, sino `.cr-hero`: 123 de sus 125px. Estrechar el
+  dibujo habría sido quitar el dato en vez del aire, así que el recorte salió de la cifra
+  grande (`clamp(30px,3.4vw,46px)` → `clamp(20px,1.95vw,26px)`) y de los paddings.
+- **`.cr-estado` envuelve a dos líneas** en un hero de 250-330px —«● Vas holgado · te sobran
+  $570/día hasta el 14» no cabe en una— y ahí se iban 30 de esos 85px. No se le quita el wrap,
+  que sacaría el texto fuera: se le aprieta el interlineado a 1.25 y bajan un punto sus dos
+  textos.
+
+En la banda de la ruta, el padding inferior de cada paso es el hueco donde vive su barrita
+(`.crb-b`, `position:absolute; bottom`): por eso se aprieta ese padding y no el texto.
+
 `ctTramo(nSel, nDias)` es el único cálculo: recorre la quincena desde que entra la nómina, arrastra
 el saldo día a día y devuelve la serie completa. De ahí salen el número grande, la línea, el cierre
 y la resta de la columna del día — **un solo cálculo, no cuatro que puedan discrepar**.
@@ -535,6 +668,21 @@ días que quedan — lo que puedes gastar de más, no lo que tienes en la cuenta
 propio mínimo y máximo, se ve el escalón del día 15 y la bajada lenta del resto. Los 17 días son
 botones: tocar uno mueve el día y el calendario a la vez.
 
+### La pantalla se reinicia al entrar
+
+Adán, 2026-09-07: *"cada que salga y entre, debe irse al mes en el que estamos, es decir como
+reiniciar la pantalla"*. Entrar al slide 1 pone en cero **todo** lo que se pueda haber dejado
+tocado: el mes que estabas hojeando (`ctYM`), el día elegido (`ctSel`), el desglose de la
+gráfica y su mes (`ctBalVer`, `ctBalMes`) y la lista de tareas hechas desplegada
+(`ctHechasAbierto`). Con `ctYM` y `ctSel` en `null` basta: `renderCoachTablero()` los recalcula
+a hoy.
+
+Va en `showSlide()`, **antes** de `RENDERS[i]()`, para que el primer pintado ya salga en el mes
+correcto. Es el mismo trato que recibe "Mi Día" justo encima —que resetea `diaSemanaSel` y
+`cintaSel`—, con una diferencia: aquello se limpia al SALIR y esto al ENTRAR, que además deja la
+pantalla limpia si el estado se ensució por otra vía. Probado hojeando dos meses atrás, tocando
+un día, abriendo un desglose y desplegando las hechas: al volver, septiembre y día de hoy.
+
 ### Elige el día
 
 Adán, 2026-08-30: *"quiero que se vean indicativos de colores y mejor distribucion, si quieres
@@ -546,21 +694,133 @@ comer—, así que los 8 que de verdad mueven el saldo quedaban enterrados en el
 
 Ahora cada celda lleva una **barra vertical cuyo alto es lo que sale ese día** y cuyo color es el
 concepto que manda. Los días de solo comer quedan en una rayita de 4px y el 1 y el 15 se ven como
-los escalones que son. La celda baja de 48 a 38px, y con lo que se libera caben debajo dos cosas
-nuevas.
+los escalones que son. La celda baja de 48 a 38px.
 
-**El mes de un vistazo:** las 31 barras seguidas, sin la rejilla del calendario, para leer el
-ritmo del gasto de corrido. Cada barra lleva a su día y el día abierto se pinta en cian.
+Debajo vivieron un tiempo **el mes de un vistazo** (las 31 barras seguidas, sin rejilla, para
+leer el ritmo del gasto de corrido) y **la lista de nombres** de lo que caía ese mes
+(`1 Renta`, `11 Tarjeta BBVA`, `15 Crédito Automotriz`…). Los dos salieron el **2026-09-07**,
+a petición de Adán: *"quita esto del mes de un vistazo y en todo ese espacio en blanco pon una
+gráfica de mis finanzas"*. Repetían lo que la propia cuadrícula y la columna del día ya dicen, y
+entre la última fila del mes y el pie de la columna sobraba media pantalla en blanco.
 
-**Los nombres.** Adán: *"solo abajo si ponme el nombre de las cosas"*. En vez de una leyenda que
-explicaba colores en abstracto —y que además se cortaba—, va la lista de lo que de verdad cae ese
-mes, en orden de día: `1 Renta`, `1 Plan de datos AT&T`, `1 Quincena`, `11 Tarjeta BBVA`,
-`15 Crédito Automotriz`… Cada chip lleva su color, y tocarlo abre su día. La nómina va en verde,
-porque es lo único que sube el saldo.
+### Balance de los últimos 6 meses
 
-Dos cosas que costaron una vuelta: `Math.round(20500/1000)` pintaba **"+21k"** en la celda del día
-de nómina —un decimal lo arregla—, y ese texto no cabe por debajo de 1180px, así que ahí se
-oculta: el borde verde y el chip de abajo ya lo dicen.
+Lo que ocupa ese hueco. Es **la misma gráfica que la tarjeta "Balance últimos 6 meses" de
+Finanzas.html** —que es lo que Adán pidió copiar—, dibujada aquí en SVG porque el Dashboard no
+carga Chart.js: balance en azul sólido con relleno hasta la línea del cero, ingresos en verde y
+gastos en rojo punteados, y la misma curva de tensión .4 que dibuja Chart.js —`ctCurva()` reparte
+las manijas de cada punto por distancia a sus vecinos, que es lo que evita que la curva se pase
+de largo en los picos—.
+
+**El cálculo ya no vive aquí.** Estuvo en `dashboard.html` unas horas, hasta que Adán pidió
+que la gráfica de Finanzas fuera igual: dos copias de la misma lógica es justo lo que este
+proyecto no permite. Ahora es **`CIFRAS.balanceMeses`**, en `datos-maestros.js`, y con él se
+mudaron sus piezas (`agendaDia`, `palabras`, `norm`, `yaContado`, `esNomina`); aquí quedan
+alias para no tocar las llamadas que ya existían. El detalle está en *El balance mensual,
+compartido* de [`DATOS-MAESTROS.md`](DATOS-MAESTROS.md). Lo de abajo cuenta **por qué** se
+arma así, que es lo que no se deduce del código.
+
+**Cada mes se arma en dos capas.** La primera versión se alimentó solo de `transactions`, como
+la gráfica de Finanzas, con el argumento de que dos apps no pueden dar cifras distintas del
+mismo mes. Duró una tarde: los meses sin registrar salían planos en cero. Adán, 2026-09-07:
+*"recuerda mis pagos de cada quincena, eso no cambia... también recuerda que debo mi depa,
+carro, comida, etc, entonces pon esa información, también hay meses en donde no hay nada
+registrado y debes hacerlo"*. Y tenía razón: **un cero que en realidad es "no lo anoté" miente
+más que una previsión bien etiquetada.**
+
+1. **Lo previsto** — lo que el proyecto ya sabe y no cambia de mes a mes: las dos quincenas, la
+   renta, el crédito del auto, los servicios, los mínimos de las tarjetas (de `ctAgenda`, la
+   misma fuente que el tablero de quincenas), más los tres que van por **total mensual** y no
+   tienen día: Didi, el vale y lo que cuesta comer.
+2. **Lo registrado** — las transacciones de Finanzas que la agenda no conoce. `ctYaContado`
+   evita el doble conteo: si la renta está anotada a mano, no se suma otra vez.
+
+En la lista, **punto hueco = previsto, punto relleno = anotado**. Sin esa distinción una renta
+que nadie ha registrado se leería como un hecho.
+
+**Los tres mensuales llevan su propia comprobación**, porque `ctYaContado` compara importes y un
+cobro de Didi de $2,800 no se parece a los $11,200 del mes —se habrían contado los dos—. Cada
+uno tiene su lista de palabras (`didi`, `vale`, `comer`/`despensa`/`super`…): si el mes trae
+algo anotado que caiga ahí, **manda lo anotado** y la previsión no se pone. Un dato real siempre
+gana a una estimación. Por eso `ctQuincena` puede seguir dejando a Didi fuera —allí la pregunta
+es cuánto puedes gastar esta quincena, y un ingreso variable es un colchón que puede no llegar—
+mientras aquí sí entra: la pregunta es cuánto entró ese mes, y sin él la línea verde decía
+$41,000 cuando entran $53,140.
+
+**La nómina va fija a $41,000 al mes.** Adán, 2026-09-07: *"duplicaste en algunos casos mis
+ingresos, mi sueldo solo son 20,500 cada quincena, no lo cuentes más veces, porque no gano el
+doble"*. Las dos quincenas del calendario ya ponen esos $41,000; un movimiento de nómina anotado
+en Finanzas es **ese mismo dinero**, no dinero de más. `ctYaContado` no bastaba: compara palabras
+contra "Quincena", así que cazaba `Quincena ALTEN` pero se le escapaban `Sueldo`, `Nómina ALTEN` o
+`Depósito` —y cada uno sumaba $20,500 de más—. Ahora lo decide `ctEsNomina()`: manda la
+**categoría** (`Salario`), que es lo que Finanzas guarda siempre, con una lista de palabras como
+red por si estuviera mal categorizado (`ctPalabras` no quita acentos, de ahí que la lista lleve
+`nómina` con tilde y sin ella). Didi se comprueba igual, por categoría `Freelance/Honorarios`
+además de por palabras: era el mismo agujero.
+
+El precio: un bono extraordinario anotado como `Salario` tampoco se sumaría. Va en `Bonos` u
+`Otros ingresos` y entonces sí entra —probado con `Venta de la bici`, que suma bien—.
+
+Queda **el mismo agujero abierto en los gastos**, sin cerrar porque nadie lo ha pedido y taparlo
+tiene coste: si la renta se anota como `Depa`, `ctYaContado` no la reconoce contra el `Renta` del
+calendario y se contarían las dos. La red por importe exacto lo arreglaría, pero se tragaría un
+gasto legítimo que coincida al peso con un fijo del mes.
+
+Un aviso honesto que queda: los mínimos de deuda de un mes viejo se calculan con los saldos de
+**hoy**. Para el pasado remoto es una aproximación —la misma que ya hace el calendario—.
+
+Lo que sí añade, como cifra en el encabezado y no como cuarta línea, es **lo que se debe hoy a
+las tarjetas**: eso es un saldo, y meterlo en el mismo par de ejes que un flujo mensual
+inventaría una relación que no existe. Se lee con `.length ?` y no con `||`, porque un array
+**vacío es truthy** y con `||` un navegador que aún no ha abierto Finanzas se quedaba sin cifra.
+
+La ventana **sigue al mes que se está viendo**, así que las flechas ‹ › mueven también la
+gráfica, y tocar un mes salta a él (`ctIrMes`). La escala va en múltiplos de 10k y siempre
+incluye el cero, porque sin él un balance negativo se leería como uno positivo pequeño. Si algún
+mes no tiene movimientos registrados el pie lo dice, en vez de dibujar un cero que parece un dato.
+
+**Las etiquetas de la leyenda son botones.** Adán, 2026-09-07: *"cuando haga click en los label
+de balance, ingresos o gastos, debes desplegarme la información completa"*. Cada una abre debajo
+el desglose de su serie —y de paso resuelve la vista en números de la gráfica: ningún dato queda
+dependiendo de distinguir un color—:
+
+- **Balance** no enseña una cifra sola sino la **resta**, que es lo que se pregunta al tocarlo:
+  mes, entró, salió, quedó —y el mes que cierra en rojo se ve en rojo—.
+- **Ingresos** y **Gastos** dan el importe de cada mes con su barra y cuánto pesa en el semestre, y
+  debajo **en qué se fue** (o de dónde vino) **cosa por cosa, de UN mes**. Primero se sumaban los
+  seis —Adán, 2026-09-07: *"solo muéstrame esos datos de un mes en específico, porque me juntaste
+  todos y no es muy entendible"*—, y tenía razón: la renta de medio año quedaba junto a una compra
+  suelta y no se leía nada. **El mes se elige tocando su fila** de la tabla de arriba, que se
+  enciende en cian; por defecto es el último de la ventana, el que se está viendo en el
+  calendario, y si al navegar se sale de la ventana vuelve a ese en vez de quedarse en blanco.
+  El mes elegido sobrevive al cambio de serie: de Gastos a Ingresos sigues en agosto.
+
+  Dentro del mes se agrupa por el `desc` del movimiento, así que dos despensas del mismo mes son
+  **una** línea con un `2×` al lado; las veces se cuentan **por tipo**, porque un concepto puede
+  llevar movimientos de los dos signos. Se enseñan las 12 mayores y el resto se suma en una línea
+  (`y 3 cosas más`, con los nombres en su `title`), para que la cola de compras chicas no tape el
+  bulto. El punto conserva el color de su categoría —los de `CT_COLOR`, que son los de Finanzas—,
+  que es lo que deja leer el bloque también por categoría de un vistazo. Un movimiento sin `desc`
+  cae en el nombre de su categoría: mejor "Servicios" que una fila en blanco.
+
+Cada fila de la tabla lleva **su propia rejilla con las mismas columnas**: así la fila entera
+puede ser un botón —y encenderse al pasar por encima— sin perder la alineación. En **Balance**
+no son botones ni hay lista debajo: ahí la tabla ya *es* el desglose.
+
+Los tres traen total y media mensual en el encabezado. Se cierra tocando la misma etiqueta otra
+vez o la ×. `ctBalVer` vive fuera de la función, como `ctHechasAbierto`, para que el desglose
+siga abierto al repintarse el tablero: si no, cambiar de mes lo cerraba solo. Y como se abre por
+debajo de la gráfica en una columna que ya tiene scroll propio, al abrirlo se hace
+`scrollIntoView({block:'nearest'})` —sin eso quedaba fuera de vista y parecía que el clic no
+había hecho nada—.
+Montaje: el mismo reparto que `.cr-svgw` del riel —el SVG se estira con
+`preserveAspectRatio="none"` y todo lo que no debe deformarse (etiquetas, puntos, zonas de hover)
+va en HTML por encima—. Los puntos son `<i>` colocados en %, no `<circle>`: dentro del SVG
+estirado saldrían elipses.
+
+Una cosa que costó una vuelta en su día: `Math.round(20500/1000)` pintaba **"+21k"** en la celda
+del día de nómina —un decimal lo arregla—, y ese texto no cabe por debajo de 1180px, así que
+ahí se oculta: el borde verde ya lo dice.
 
 ### El día: qué pagas y de dónde sale el saldo
 
@@ -844,6 +1104,31 @@ El bloque desaparece solo si la tarjeta queda en $0, si no hay deudas o si no ha
 `finanzasmx_v2` — comprobado en los cuatro casos. Todas las cantidades pasan por `money()`, así
 que el modo privado las tapa; la **tasa no**, porque es una condición del producto y no su dinero.
 
+### El calendario en un teléfono (2026-08-31)
+
+Adán: *"la segunda página del calendario no se ve nada bien en mi celular"*. Eran tres fallos, y
+el de fondo era conceptual.
+
+**La rejilla contaba columnas en vez de medir lo que necesita un mes.** Había un número fijo de
+columnas por breakpoint (4 · 3 · 2), y eso falla justo en medio: medido a 390 px cada mes quedaba
+en **174 px con celdas de 19×20**, y a 768 px en celdas de **25×23**. Ni se leen ni se pueden
+tocar — el mínimo tocable son 44 px.
+
+Ahora la rejilla es `repeat(auto-fill, minmax(290px, 1fr))`: **290 px es lo que necesita un mes
+para que sus siete columnas sean legibles**, y de ahí salen solas 3 columnas en un monitor, 2 en
+una tablet y 1 en un teléfono, sin un breakpoint por cada caso. Los tres overrides de columnas se
+borraron. Medido después: 45×40 a 390 px, 51×40 a 430, 42×23 a 768, 37×23 de 1024 en adelante.
+
+**La cabecera pegajosa dejaba ver el contenido por debajo.** `--card` es `rgba(var(--ov),.06)` —
+un 6% de blanco. Funciona cuando la tarjeta flota sobre el fondo borroso del overlay, pero a
+pantalla completa (≤700 px la tarjeta ocupa todo) esa cabecera transparente dejaba pasar lo que
+scrolleaba debajo y se leían dos textos encimados. A ≤560 px el fondo pasa a `--bg`, que es opaco.
+
+**Los meses cerrados se aplanan** a una fila con el nombre y su estado en la misma línea: no
+dibujan rejilla (`.mini`), así que en una columna solo aportaban scroll. Y `abrirCalendario()`
+**desplaza al mes de hoy** cuando hay una sola columna — en pantallas anchas no, porque ahí los 12
+meses se ven de golpe y desplazar sería quitarle al calendario justo lo que lo hace un calendario.
+
 ---
 
 ## Los datos no se declaran aquí
@@ -949,6 +1234,221 @@ todas; el tirador lo cierra; abierto sobrevive a la recarga y cerrado también.
 
 ## El tema sube junto al ojo (2026-09-02)
 
+
+## Un logro no puede tapar el presente (2026-09-03)
+
+## Entrevistas no abría: dos funciones que nunca existieron (2026-09-03)
+
+## El renglón de la rutina: nombre y "Qué es", nada más (2026-09-03)
+
+Adán, sobre las rutinas de mañana y noche: *"no tienen el botón de qué es (igual que en compras
+hazlo) y quita la descripción que tienes ahí y además el nombre no es nada claro, solo pon el
+nombre simple, no pongas el link para comprar el producto"*.
+
+Antes cada paso era una frase larga con el nombre enterrado en medio:
+
+```
+Limpiador (doble limpieza si usaste protector solar): CeraVe Limpiador Espumoso (verde) 🛒
+  — remueve el bloqueador y el sudor del día
+```
+
+Ahora:
+
+```
+CeraVe Limpiador Espumoso (verde)   [ⓘ Qué es]
+```
+
+El botón es **el mismo de la lista de la compra** (`.lc-info` de `ficha.css`, abriendo con
+`pfAbrirId`), no una copia con otro estilo: si cambia allí, cambia aquí. Y el "cómo se aplica",
+"para qué sirve" y "cuánto dura" no se pierden — están en la ficha, que es donde se leen enteros
+y no de reojo mientras te lavas la cara.
+
+**El enlace a Mercado Libre se fue**, y con él `productoSearchTerm()` y `mercadoLibreUrl()`. Ese
+renglón es para HACER la rutina; comprar tiene su propia pantalla, con precios y cantidades.
+
+### Cómo sabe qué producto es
+
+`rtProducto(txt)` no adivina dónde empieza el nombre dentro de la frase. Los **controles 11, 12 y
+13** del verificador garantizan que el `n` de cada producto de `RUTINA_PIEL`, `RUTINA_PELO` y
+`SUPLEMENTOS` aparece **literal** en la subtarea que lo ejecuta, así que basta con buscar cuál de
+esos nombres está contenido en el texto. Si hay varios, gana el más largo — "Minoxidil 5% NR-11
+(Polaris Research)" no puede perder contra un "Minoxidil" suelto.
+
+Con un segundo intento por aproximación, porque los suplementos se nombran más corto en la rutina
+que en el catálogo: "Omega 3" contra "Omega 3 (aceite de pescado)", "Magnesio (glicinato)" contra
+"Magnesio (glicinato o citrato)". Ahí entra `pfPorNombre()`, que ya sabe casar esos dos —normaliza
+y acepta que uno sea prefijo del otro— con los candidatos razonables: lo de antes del guion largo,
+lo de después de los dos puntos y el primer `<b>`, que en el maestro suele envolver justo el
+nombre. **Se muestra el nombre del maestro**, que es el mismo que verá en la ficha y en la compra.
+
+Las subtareas que NO nombran un producto ("Deja secar al aire…", "Revisa las puntas…") se quedan
+como estaban: son la rutina, no un artículo.
+
+Comprobado en navegador: 4 de 6 pasos de la noche y 12 de 13 de la mañana con su botón, el que
+falta es justo el que no es producto, y el botón abre la ficha de verdad.
+
+### De paso: los {{marcadores}} de la rutina
+
+`RUTINA_TASKS` no pasaba por `cifrarLiterales()`, así que la Proteína Whey decía en pantalla
+*"tu meta de proteína ({{proteinaMeta}}g/día)"*, con las llaves y todo. Ahora sí — 186 g/día.
+Es el mismo tratamiento que ya tenían `PHASES` y `META_DETALLE`: sustituir una vez en el literal,
+no en cada repintado.
+
+
+Adán: *"no puedo abrir entrevistas del dashboard"*. El panel se quedaba en **"Cargando…"** para
+siempre. No era una regresión — estaba igual en el último commit, y no saltaba en consola porque
+el error moría dentro del render sin romper el resto de la página.
+
+`renderEntrevista()` llamaba a **dos cosas que no estaban definidas en ningún archivo**:
+
+| Qué llamaba | Dónde | Efecto |
+|---|---|---|
+| `injectEntrevistaCss()` | primera línea del render | `ReferenceError` antes de pintar nada |
+| `PY_MOD_LABEL[t.mod]` | el badge del módulo | reventaba justo después del título |
+
+**`injectEntrevistaCss()`** ahora existe: mete `ENTREVISTA_CSS` —las 104 reglas de
+`Entrevistas/styles.css` que el generador extrae y prefija con `.en-content`— en un `<style>`, una
+sola vez. Medido: 14.983 caracteres, 15 elementos del tema con estilo propio.
+
+**`PY_MOD_LABEL`** no se escribió a mano: lo emite ahora
+`Entrevistas/_generar-datos-dashboard.js`, leyendo los `m-label` del menú de `entrevistas.html`.
+Si el menú renombra un módulo, el badge se entera al regenerar:
+
+```
+{"pyfund":"Fundamentos","poo":"POO","testing":"Testing","pycheat":"Cheat Sheet — Todos los métodos"}
+```
+
+Dos trampas al extraerlo, las dos por cortar mal el HTML:
+- una regex global sobre el archivo entero se llevaba el `m-label` del Cheat Sheet al casar con
+  el `onclick="go(...)"` del ítem anterior — los subitems también tienen `go()`;
+- partir por `<div class="module` cortaba también en `module-header`, y el `data-mod` quedaba en
+  un trozo y su `m-label` en el siguiente. El corte bueno es `class="module"` o
+  `class="module module-link"`.
+
+El módulo del Cheat Sheet no tiene `data-mod` (es un `module-link`), así que sale del propio tema:
+`T['py-cheatsheet'].mod`.
+
+### La lección: una llamada a algo inexistente no avisa
+
+Lo que hace este fallo difícil de ver es que **no rompe la página**: el resto del Dashboard sigue
+funcionando y solo un panel se queda en blanco. `pyModLabel()` ahora tiene respaldo —si
+`entrevistas-data.js` es anterior al generador nuevo, cae al id en mayúsculas en vez de reventar—
+y la tarjeta de Mi Día usa la misma función, así que ya no enseña "Python · pyfund".
+
+Comprobado en navegador: badge, contador "Tema 1 de 41", tags, contenido real, CSS aplicado y el
+botón "Siguiente tema →" cambiando de tema sin recargar.
+
+
+## El tablero suma lo que ya gastaste, no solo lo programado (2026-09-03)
+
+Adán, viendo el panel del martes 1: *"aquí no se vieron reflejadas las cosas que te dije que pagué
+de contado"*. Tenía razón, y no era un detalle de presentación: **el saldo estaba mal**.
+
+`ctAgenda(d)` sabe lo que está **programado** —renta, plan de datos, quincena, los mínimos de las
+deudas— y de ahí salían las tres columnas. Las transacciones reales de Finanzas se pintaban en un
+bloque aparte, debajo del "Te queda", **fuera de la resta**. O sea: decoración.
+
+El 1-sep-2026 eso significaba enseñar **"Te queda $8,129"** un día en el que habían salido $9,285
+en compras. La cifra real era **−$1,156**.
+
+| | Antes | Ahora |
+|---|---|---|
+| total del día | −$12,371 | **−$15,671** |
+| te queda | $8,129 | **$4,829** |
+| cargado a la tarjeta | — | **$5,985**, aparte y sin restar |
+
+Ahora `ctTramo`, `ctQuincena` y la columna de la semana suman los gastos registrados que la
+agenda no conoce. Se pintan con **borde punteado**: un cobro programado va a caer, uno punteado
+ya cayó — restan igual, pero no son lo mismo.
+
+### Y una compra a crédito no es una salida de caja
+
+Primera versión de esto: las seis compras restaban del día y el saldo daba −$1,156. Adán:
+*"esto fue con la de Banamex, recuerda, no debería estar ahí"*. Tenía razón, y era un error de
+fondo, no de presentación: **una compra a crédito no sale del bolsillo ese día**. Sube el saldo
+de la tarjeta —eso ya vive en `d002`— y se paga después, con el mínimo que la agenda YA cobra el
+día 8. Restarla el día de la compra y contar el mínimo el 8 es contar lo mismo dos veces.
+
+De las seis del 1-sep, **dos fueron de contado** (tenis $1,500 y despensa $1,800) y esas sí
+restan. Las otras cuatro salen en su propio bloque, **debajo del total**, con el importe en gris
+y el pie "No sale hoy: sube el saldo de Banamex (mínimo $810 el 8)".
+
+Se reconocen por la **nota** de la transacción: si nombra una tarjeta de crédito del maestro, la
+compra fue a crédito. Es una convención — al registrar un gasto con tarjeta hay que escribirla en
+las notas, y queda documentado en `readme_finanzas.md`.
+
+⚠️ **La excepción es la categoría `Deudas`**: ahí la nota también nombra la tarjeta, pero eso es
+un PAGO a la tarjeta y sí sale del bolsillo. Sin esa salvedad, la liquidación de los $9,000 del
+13-ago-2026 habría dejado de restar — comprobado que sigue restando.
+
+### Lo difícil no era sumar, era no contar dos veces
+
+La renta está en la agenda **y** suele estar anotada como transacción. `ctYaContado()` descarta lo
+que ya está contado por cuatro caminos, todos salidos de mirar junio, que es el mes con más
+apuntes a mano:
+
+| Regla | Caso real |
+|---|---|
+| `notes: '[recurrente]'` | los fijos que genera Finanzas |
+| mismo nombre, en cualquier orden | "Agua y luz" es "Luz y agua"; el internet se anota el 1 y se cobra el 8 |
+| dos palabras en común, aunque cambie el importe | "Plan de datos celular" $600 es el "Plan de datos AT&T" $650 de antes del 30-ago |
+| una palabra en común **y** el importe clavado | "Gas" $179 |
+
+Lo que no encaja en ninguna —"Artículos de limpieza", "Tenis Tommy Hilfiger"— es gasto de verdad
+que la agenda no puede conocer, y es justo el que faltaba. Comprobado en junio (que pasó de
+duplicar cuatro conceptos a duplicar cero), agosto y septiembre.
+
+### Y un seed nuevo ya no se pisa con migraciones viejas
+
+Salió en la misma prueba, con un perfil en blanco: `seedData()` sembraba la TC Banamex en $5,985
+—su saldo real desde el 1-sep— y acto seguido `_pagos20260813`, que es de agosto, la devolvía a
+**$0**. Una corrección histórica pisando un dato más nuevo que ella.
+
+Ahora `seedData()` marca como aplicadas todas las banderas de migración al terminar, las suyas y
+las del maestro (`CIFRAS.MIGRACIONES_FLAGS`): **un seed recién sembrado ya nace con el efecto de
+todas**, así que ninguna puede volver a corregirlo.
+
+
+La libreta de logros (`dash-logros-v1`) existe porque Adán lo pidió: *"debes tener los registros
+siempre porque si no sentiré que no logro nada"*. Un hito conseguido se graba con su fecha y no se
+borra aunque el dato de origen desaparezca. Eso está bien y sigue igual.
+
+Lo que estaba mal era **cómo lo leía la ruta de deuda** de `renderCoach()`:
+
+```js
+const banaDone = !!lgBana || (bana.found && bana.balance <= 0);   // ← el logro GANA siempre
+```
+
+El 1-sep-2026 la TC Banamex —liquidada el 13 ago— volvió a tener saldo con cuatro compras
+($5,985). Con ese `||`, el paso "Banamex" habría enseñado **"✅ Liquidada 🎉 · 13 ago 2026"** para
+siempre: barra al 100%, `rutaPct` inflado, y `_iActivo` saltando a BBVA como si solo quedara una
+tarjeta cara. El dato vivo decía una cosa y la pantalla otra.
+
+Ahora **un saldo vivo reabre el paso**, y el logro se cuenta al lado en vez de sustituir al saldo:
+
+```js
+const banaDone = (bana.found && bana.balance <= 0) || (!!lgBana && !bana.found);
+// y si vuelve a deber:  "$5,985 otra vez · la liquidaste el 13 ago 2026"
+```
+
+El caso que el `||` sí resolvía **se conserva** en la segunda mitad: si la deuda no se encuentra
+—borrada, renombrada, o sin `finanzasmx_v2` en ese navegador— manda el logro y el paso sigue
+cumplido. Eso era el arreglo del 13-ago-2026 y no se ha tocado.
+
+Comprobado en el navegador con los dos casos sembrados por `addInitScript`:
+
+| Estado | Qué enseña |
+|---|---|
+| Banamex $5,985 + logro | `[—] Banamex :: $5,985 otra vez · la liquidaste el 13 ago 2026` |
+| Banamex borrada + logro | `[DONE] Banamex :: Liquidada 🎉 · 13 ago 2026` |
+
+**La regla general vive en [`DATOS-MAESTROS.md`](DATOS-MAESTROS.md#y-una-afirmación-tampoco-cambia-sola-regla-del-2026-09-03)**: ninguna app afirma en presente lo que el saldo vivo
+desmiente. El **control 22** del verificador lo comprueba en la prosa; esto, que es lógica, hay
+que mirarlo a mano — y por eso el aviso de "cambió una variable maestra" ahora lo recuerda.
+
+En el mismo cambio se corrigieron tres textos del Dashboard que daban la Banamex por liquidada:
+el aviso de septiembre en `EVENTOS_MES`, el paso 2 de la meta del BYD y la regla del Cupra.
+
 Adán: *"la parte de modo oscuro o modo claro, la quiero al lado del ojo de
 arriba, pero con diseño similar para que sea parecido"*.
 
@@ -978,44 +1478,3 @@ Dos fallos que salieron al mover:
 Comprobado a 1400, 820 y 390 px, plegada y desplegada, en los dos temas: 5 px de
 separación, misma altura y mismo alto que el ojo, sin solapes ni desbordes, y el
 tema cambia de verdad.
-
-## Las 12 habilidades abren su ruta, y la barra baja a la mitad (2026-09-02)
-
-Adán: *"las barras hazlas la mitad del ancho que tienen, y además cuando haga
-click en cada habilidad, del lado izquierdo me mostrarás la ruta completa para
-aumentar esa habilidad, así como ya lo tienes para inversión"*.
-
-**La barra pasa de 6 px a 3 px de grosor**, y sigue midiendo el renglón entero.
-El largo **es** el dato —es el nivel—, así que reducirlo quitaba información; lo
-que sobraba era el trazo, que pesaba más que el nombre y el número. Primero se
-recortó el largo por leer *"ancho"* como la dimensión horizontal, y Adán lo
-corrigió: *"las redujiste de largo y no de ancho"*.
-
-**Cada fila abre su ruta a la izquierda.** La función ya existía —`habFocoSet()`—
-pero sólo la usaba el botón "Cambiar a…", y `habFocoActual()` se limitaba a las
-candidatas: las que no están en pausa y entran en el top de prioridad. Ahora
-**mirar una ruta y elegir el foco de la semana son cosas distintas**: se puede
-abrir cualquiera, aunque esté en pausa, y el chip de la cabecera lo dice —
-*"Esta semana"* si es la recomendada, *"Su ruta"* si sólo la estás consultando.
-La fila abierta se marca con una barra lateral.
-
-### Las 6 que no tenían ruta
-
-Y aquí estaba el problema de fondo: **`APRENDIZAJE` sólo tenía 6 de las 12**.
-Copy, Networking, Liderazgo, Código, Inglés y Mentalidad salían en la lista con
-su número, pero al tocarlas el panel no habría pintado nada — `habPasos()`
-devuelve `[]` y `renderSkills` hace `return`.
-
-Ahora las 12 tienen ruta, **75 pasos en total**. Cada una arranca del nivel que ya
-tiene, no de cero, y de lo que ya hace:
-
-| | Nivel | De qué va su ruta |
-|---|---|---|
-| Copy | 55 | escribe claro pero no pide nada; el correo frío de 5 líneas |
-| Networking | 55 | 20 nombres en una hoja y reactivar sin pedir |
-| Liderazgo | 80 | las tres conversaciones que evita; liderar sin el puesto |
-| Código | 60 | tests antes que features; un proyecto que se pueda enseñar |
-| Inglés | 80 | hablar bajo presión, con las 28 h al volante como bloque |
-| Mentalidad | 85 | el sueño como palanca; cortar la rumia con una acción |
-
-El control 3 del verificador pasó de comprobar 6 prioridades a **12**, solo.

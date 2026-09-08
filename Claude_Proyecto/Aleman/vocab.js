@@ -13,7 +13,8 @@
 //   vocArbolHtml(cats, abierta, sub, op)  el árbol de secciones y subsecciones
 //   vocFiltrosHtml(f, op)               los filtros de nivel y género
 //   vocFiltrar(voc, f)                  las palabras que tocan
-//   vocPalabrasHtml(lista, op)          la rejilla, con encabezados si procede
+//   vocPalabrasHtml(lista, op)          las palabras: rejilla de fichas o renglones
+//                                       de estudio, según `op.modo`
 //   vocPartizipHtml(partizip)           el tema, con su índice
 //   vocVerSeccion(tira)                 trae la sección abierta a la vista (móvil)
 //   vocIrA(id, cont) / vocIdxSigue(cont)  el índice del Partizip
@@ -23,6 +24,44 @@
 
 const VOC_COLOR = { der:'var(--v-der)', die:'var(--v-die)', das:'var(--v-das)',
                     'pl.':'var(--v-pl)' };
+
+// Los datos técnicos de una palabra — plural, genitivo, conjugación, auxiliar,
+// comparativo — sacados UNA vez. Cada vista los formatea a su manera: la ficha en
+// cajitas y el renglón de estudio en una línea de mono. Estaban dentro de
+// `vocPalabraHtml`, y copiar esas seis reglas en la segunda vista era garantizar que
+// una palabra sin plural saliera distinta en cada una.
+function vocDatos(w){
+  const d = [];
+  if(w.pl && w.pl !== '-') d.push({ k:'Pl.', v:w.pl });
+  else if(w.pl === '-' && w.tipo === 'sust' && !w.tag) d.push({ k:'Pl.', v:'\u2014' });
+  if(w.gen && w.gen !== '-') d.push({ k:'Gen.', v:w.gen });
+  if(w.conj) d.push({ k:'', v:w.conj });
+  if(w.aux) d.push({ k:'', v:w.aux, fuerte:true });
+  if(w.comp) d.push({ k:'', v:w.comp });
+  return d;
+}
+
+// La etiqueta del bloque de la izquierda en el modo estudio: el género si lo tiene y,
+// si no, qué clase de palabra es. Un bloque que dijera «—» en los verbos gastaría el
+// mismo sitio sin decir nada.
+const VOC_TIPOS = { sust:'SUST', verbo:'VERBO', adj:'ADJ', adv:'ADV', num:'N\u00daM',
+                    frase:'FRASE' };
+function vocEtiqueta(w){
+  const art = (w.art || '-').split('/')[0].trim().toLowerCase();
+  if(art && art !== '-') return art.replace('.', '').toUpperCase();
+  return VOC_TIPOS[w.tipo] || '';
+}
+
+// Destapar el español de un renglón. Se destapan las DOS tapas de una vez — la
+// traducción y la del ejemplo — porque son la misma pregunta; con una tapa por clic
+// eran dieciocho clics para leer una subsección de nueve palabras. La pantalla puede
+// poner la suya en `op.fnVer` para llevar la cuenta (`alVer` en el Dashboard).
+function vocVer(el){
+  if(!el || el.classList.contains('vista')) return;
+  const tapas = el.querySelectorAll('.v-tapa');
+  for(let i = 0; i < tapas.length; i++) tapas[i].classList.add('abierta');
+  el.classList.add('vista');
+}
 
 function vocEsc(t){
   return String(t == null ? '' : t)
@@ -254,7 +293,8 @@ function vocMigasHtml(cat, sub, op){
     + '<path d="M9 6l6 6-6 6"></path></svg>';
   let h = '';
   if(op.fam) h += '<span>' + vocEsc(op.fam) + '</span>' + FL;
-  h += '<span>' + (cat.icon || '') + '</span><span>' + vocEsc(cat.label) + '</span>';
+  h += '<span>' + (cat.icon || '') + '</span>' +
+       '<span class="v-migas-cat">' + vocEsc(cat.label) + '</span>';
   if(sub) h += FL + '<b>' + vocEsc(sub) + '</b>';
   if(op.n != null) h += '<em class="v-migas-n">' + op.n + '</em>';
   return h;
@@ -275,15 +315,10 @@ function vocPalabraHtml(w, op){
     : vocResaltar(w.es, q);
   // La línea técnica. Cada tipo de palabra enseña lo suyo y lo que no tiene no se
   // pinta, así que una preposición no arrastra huecos de verbo.
-  const datos = [];
-  if(w.pl && w.pl !== '-') datos.push('Pl. <b>' + vocEsc(w.pl) + '</b>');
-  else if(w.pl === '-' && w.tipo === 'sust' && !w.tag) datos.push('Pl. <b>\u2014</b>');
-  if(w.gen && w.gen !== '-') datos.push('Gen. <b>' + vocEsc(w.gen) + '</b>');
-  if(w.conj) datos.push(vocEsc(w.conj).replace(/\u00b7/g, '\u00b7'));
-  if(w.aux) datos.push('<b>' + vocEsc(w.aux) + '</b>');
-  if(w.comp) datos.push(vocEsc(w.comp));
-
-  let tec = datos.map(function(d){ return '<span class="v-w-dato">' + d + '</span>'; }).join('');
+  let tec = vocDatos(w).map(function(d){
+    const v = (d.fuerte || d.k) ? '<b>' + vocEsc(d.v) + '</b>' : vocEsc(d.v);
+    return '<span class="v-w-dato">' + (d.k ? d.k + ' ' : '') + v + '</span>';
+  }).join('');
   if(w.reg) tec += '<span class="v-w-reg">' + vocEsc(w.reg) + '</span>';
   if(w.tag) tec += '<span class="v-w-tag' +
     (/irregular|separable|mixto/.test(w.tag) ? ' dif' : '') + '">' + vocEsc(w.tag) + '</span>';
@@ -299,9 +334,60 @@ function vocPalabraHtml(w, op){
   '</article>';
 }
 
+// ── EL RENGLÓN DE ESTUDIO ──────────────────────────────────────────
+// La otra vista de las mismas palabras. La ficha sirve para BUSCAR: enseña el alemán y
+// el español a la vez y se barren veinte de un vistazo. Esta sirve para RECORDAR, y por
+// eso se ordena al revés: el ejemplo EN ALEMÁN es el texto principal — a 15px, no a
+// 12,5 en cursiva al pie — y todo lo que está en español nace tapado. Caben cinco
+// palabras por pantalla en vez de veinte, que es justo el intercambio.
+//
+// El «modo estudio» ya existía en la app de Alemán como un interruptor que tapaba la
+// traducción dentro de la ficha; el problema es que la ficha seguía maquetada para
+// leerse, con la tapa metida donde iba el texto. Elección de Adán del 2026-09-07 entre
+// tres maquetas: *"diseño c"*.
+function vocEstudioFilaHtml(w, op){
+  op = op || {};
+  const q = op.q || '';
+  const fnVer = op.fnVer || 'vocVer';
+  const art = (w.art || '-').split('/')[0].trim().toLowerCase();
+  const color = VOC_COLOR[art] || 'var(--v-sin)';
+
+  const tec = vocDatos(w).map(function(d){
+    return (d.k ? d.k + ' ' : '') + vocEsc(d.v);
+  }).join(' \u00b7 ');
+  // El régimen y la etiqueta van en su propia línea: son el «ojo con esto», y en la
+  // misma tira que el plural se perdían.
+  const extra = [w.reg, w.tag].filter(Boolean).map(vocEsc).join(' \u00b7 ');
+
+  return '<article class="v-est" style="--c:' + color + '">' +
+    '<div class="v-est-cab">' +
+      '<div class="v-est-g">' + vocEtiqueta(w) + '</div>' +
+      (w.niv ? '<span class="v-est-n">' + vocEsc(w.niv) + '</span>' : '') +
+    '</div>' +
+    '<div class="v-est-pal">' +
+      '<div class="v-est-de">' + vocResaltar(w.de, q) + '</div>' +
+      (tec ? '<div class="v-est-tec">' + tec + '</div>' : '') +
+      (extra ? '<div class="v-est-tec v-est-ojo">' + extra + '</div>' : '') +
+    '</div>' +
+    '<div class="v-est-cpo">' +
+      (w.ex ? '<div class="v-est-ej">' + vocResaltar(w.ex, q) + '</div>' : '') +
+      '<div class="v-est-es" onclick="' + fnVer + '(this)" ' +
+        'title="Toca para ver el espa\u00f1ol">' +
+        '<span class="v-est-lbl">Espa\u00f1ol</span>' +
+        '<span class="v-tapa">' + vocResaltar(w.es, q) + '</span>' +
+        (w.esEx ? '<span class="v-tapa chico">' + vocEsc(w.esEx) + '</span>' : '') +
+      '</div>' +
+      (w.uso ? '<div class="v-est-uso">' + vocEsc(w.uso) + '</div>' : '') +
+    '</div>' +
+  '</article>';
+}
+
 // op.agrupar  pinta un encabezado al cambiar de sección (para la vista "todas")
 // op.cats     las secciones, para sacar el nombre y el icono del encabezado
 // op.vacio    qué decir cuando no hay ninguna
+// op.modo     'estudio' para los renglones; cualquier otra cosa, la rejilla de fichas.
+//             El agrupado, el orden y el «no hay ninguna» son los mismos para las dos:
+//             lo único que cambia es quién pinta cada palabra y cómo se apilan.
 function vocPalabrasHtml(lista, op){
   op = op || {};
   if(!lista.length){
@@ -329,7 +415,10 @@ function vocPalabrasHtml(lista, op){
     });
   }
 
-  return '<div class="v-grid">' + lista.map(function(w){
+  const estudio = op.modo === 'estudio';
+  const pinta = estudio ? vocEstudioFilaHtml : vocPalabraHtml;
+
+  return '<div class="' + (estudio ? 'v-est-lista' : 'v-grid') + '">' + lista.map(function(w){
     let cab = '';
     // Dentro de una sección se agrupa por SUBsección; viendo varias, por sección.
     const clave = op.porSub ? (w.cat + '/' + w.sub) : w.cat;
@@ -347,7 +436,7 @@ function vocPalabrasHtml(lista, op){
             '<span class="v-h-t">' + vocEsc(titulo) + '</span>' +
             '<span class="v-h-n">' + n + ' palabra' + (n !== 1 ? 's' : '') + '</span></div>';
     }
-    return cab + vocPalabraHtml(w, op);
+    return cab + pinta(w, op);
   }).join('') + '</div>';
 }
 
@@ -375,6 +464,28 @@ function vocPartizipHtml(P){
           x.tabla.filas.map(function(f){
             return '<tr>' + f.map(function(y){ return '<td>' + y + '</td>'; }).join('') + '</tr>';
           }).join('') + '</tbody></table></div>';
+      }
+      /* La tabla de verbos se GENERA: 210 filas no se escriben a mano en los datos.
+         `ALEMAN_VOCAB.verbos()` las devuelve ordenadas y con el Partizip I ya derivado.
+         Si el archivo de datos fuera viejo y no tuviera la función, la sección
+         sencillamente no pinta tabla en vez de romper el tema entero. */
+      if(x.verbos && typeof ALEMAN_VOCAB !== 'undefined' && ALEMAN_VOCAB.verbos){
+        const VS = ALEMAN_VOCAB.verbos();
+        h += '<div class="v-tabla v-vb"><table><thead><tr>' +
+          '<th>Infinitivo</th><th>Español</th><th>Präteritum</th>' +
+          '<th>Partizip II</th><th>Partizip I</th><th>aux.</th></tr></thead><tbody>' +
+          VS.map(function(v){
+            return '<tr>' +
+              '<td><b>' + vocEsc(v.de) + '</b>' +
+                (v.fuerte ? '<span class="v-vb-f">fuerte</span>' : '') + '</td>' +
+              '<td class="v-vb-es">' + vocEsc(v.es) + '</td>' +
+              '<td class="v-vb-de">' + vocEsc(v.prat) + '</td>' +
+              '<td class="v-vb-de"><b>' + vocEsc(v.p2) + '</b></td>' +
+              '<td class="v-vb-de">' + vocEsc(v.p1) + '</td>' +
+              '<td class="v-vb-aux">' + vocEsc(v.aux) + '</td></tr>';
+          }).join('') + '</tbody></table>' +
+          '<div class="v-vb-pie">' + VS.length + ' verbos · ' +
+            VS.filter(function(v){ return v.fuerte; }).length + ' fuertes</div></div>';
       }
       if(x.lista){
         h += '<div class="v-lst">' + x.lista.map(function(it){

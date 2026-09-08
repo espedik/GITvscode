@@ -1,0 +1,254 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&family=Fraunces:opsz,wght@9..144,600;9..144,800;9..144,900&display=swap">
+  <style>
+    body { margin: 0; background: #f2f2f6; font-family: 'Inter', -apple-system, sans-serif; }
+    a { color: #a80000; } a:hover { color: #dd0000; }
+    .mono { font-family: 'Space Grotesk', monospace; font-variant-numeric: tabular-nums; letter-spacing: -0.02em; }
+    .ttl { font-family: 'Fraunces', Georgia, serif; }
+    .lbl { font-size: 9.5px; font-weight: 800; letter-spacing: 0.16em; text-transform: uppercase; color: #63667c; }
+    /* LA ENTRADA DE DICCIONARIO. Sin caja: una rejilla de tres columnas y un filete
+       abajo. El género es un bloque de color con su palabra a la izquierda, que hace
+       de renglón guía — se barre la columna leyendo solo eso. */
+    .ent { display: grid; grid-template-columns: 34px minmax(0, 1fr) auto; column-gap: 10px;
+           padding: 7px 0 8px; border-bottom: 1px solid rgba(0,0,0,0.08); align-items: start; }
+    .gen { grid-row: 1 / 3; font-family: 'Space Grotesk', monospace; font-size: 9px; font-weight: 700;
+           letter-spacing: 0.05em; text-align: center; padding: 3px 0; border-radius: 5px; margin-top: 2px; }
+    .de { font-family: 'Fraunces', Georgia, serif; font-size: 15px; font-weight: 800; color: #16161a;
+          line-height: 1.2; }
+    .de span { font-size: 13px; font-weight: 500; color: #5c5f70; font-family: 'Inter', sans-serif; }
+    .niv { font-family: 'Space Grotesk', monospace; font-size: 9px; font-weight: 700; color: #63667c;
+           padding-top: 3px; }
+    .ej { grid-column: 2 / 4; font-size: 11.5px; font-style: italic; color: #5c5f70; line-height: 1.4;
+          margin-top: 2px; }
+    .ej span { font-style: normal; color: #83869a; }
+    .chip { padding: 4px 11px; border-radius: 20px; font-size: 11.5px; font-weight: 700;
+            border: 1.5px solid rgba(0,0,0,0.12); background: rgba(255,255,255,0.85); color: #5c5f70; }
+    .subt { font-family: 'Fraunces', Georgia, serif; font-size: 15px; font-weight: 900; color: #16161a;
+            padding-bottom: 6px; margin-bottom: 4px; border-bottom: 2px solid rgba(221,0,0,0.18);
+            display: flex; align-items: baseline; justify-content: space-between; }
+    .subt em { font-family: 'Inter', sans-serif; font-style: normal; font-size: 9.5px; font-weight: 700;
+               letter-spacing: 0.08em; text-transform: uppercase; color: #63667c; }
+  </style>
+</helmet>
+
+<div style="width: 1180px; height: 760px; box-sizing: border-box; position: relative; overflow: hidden;
+     background:
+       radial-gradient(760px 480px at 6% -8%, rgba(221,0,0,0.14), transparent 62%),
+       radial-gradient(700px 560px at 104% 108%, rgba(255,206,0,0.20), transparent 62%), #f2f2f6;
+     padding: 26px 30px; display: flex; flex-direction: column; gap: 13px">
+
+  <!-- ── cabecera ─────────────────────────────────────────────── -->
+  <div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 24px">
+    <div>
+      <div class="lbl" style="display: flex; align-items: center; gap: 9px; color: #5c5f70">
+        <span style="width: 7px; height: 7px; border-radius: 50%; background: #dd0000"></span>
+        de Alemán
+      </div>
+      <div class="ttl" style="font-size: 30px; font-weight: 900; color: #16161a; margin-top: 5px;
+           line-height: 1.05">Vocabulario</div>
+    </div>
+    <div style="display: flex; align-items: center; gap: 9px">
+      <div style="width: 300px; height: 32px; border-radius: 10px; border: 1px solid rgba(0,0,0,0.14);
+           background: rgba(0,0,0,0.04); display: flex; align-items: center; padding: 0 12px;
+           font-size: 12.5px; color: #63667c">Buscar en alemán o en español…</div>
+      <div style="display: flex; gap: 6px">
+        <span class="chip" style="background: #16161a; border-color: #16161a; color: #f2f2f6">Todos</span>
+        <span class="chip">A1</span>
+        <span class="chip">A2</span>
+        <span class="chip">B1</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── la barra ─────────────────────────────────────────────── -->
+  <div style="display: flex; align-items: center; gap: 12px">
+    <div style="display: inline-flex; align-items: center; gap: 7px; height: 30px; padding: 0 12px;
+         border-radius: 9px; border: 1px solid rgba(0,0,0,0.14); background: rgba(0,0,0,0.04);
+         font-size: 11.5px; font-weight: 700; color: #5c5f70">
+      <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor"
+           stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M9 6l6 6-6 6"></path></svg>
+      Índice
+    </div>
+    <div style="display: flex; align-items: center; gap: 7px; font-size: 12.5px; font-weight: 700;
+         color: #63667c">
+      <span>Casa y ciudad</span>
+      <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor"
+           stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M9 6l6 6-6 6"></path></svg>
+      <span>🏠</span><span style="color: #16161a; font-weight: 800">Casa</span>
+    </div>
+    <div class="mono" style="margin-left: auto; font-size: 11px; font-weight: 700; color: #63667c">
+      251 palabras · 18 a la vista</div>
+  </div>
+
+  <!-- ── dos columnas de entradas, con su medianil ──────────────── -->
+  <div style="flex: 1; min-height: 0; display: grid; grid-template-columns: 1fr 1px 1fr;
+       column-gap: 30px; align-items: start">
+
+    <div>
+      <div class="subt">La vivienda <em>9 palabras</em></div>
+
+      <div class="ent">
+        <div class="gen" style="background: #fce0ee; color: #8c3260">DIE</div>
+        <div class="de">Wohnung <span>· el apartamento</span></div>
+        <div class="niv">A1</div>
+        <div class="ej">Ich suche eine Wohnung in München.
+          <span>— Busco un apartamento en Múnich.</span></div>
+      </div>
+
+      <div class="ent">
+        <div class="gen" style="background: #d6f3ea; color: #137053">DAS</div>
+        <div class="de">Haus <span>· la casa</span></div>
+        <div class="niv">A1</div>
+        <div class="ej">Wir wohnen in einem großen Haus.
+          <span>— Vivimos en una casa grande.</span></div>
+      </div>
+
+      <div class="ent">
+        <div class="gen" style="background: #e2ecfe; color: #2a5193">DER</div>
+        <div class="de">Garten <span>· el jardín</span></div>
+        <div class="niv">A1</div>
+        <div class="ej">Die Kinder spielen im Garten.
+          <span>— Los niños juegan en el jardín.</span></div>
+      </div>
+
+      <div class="ent">
+        <div class="gen" style="background: #e2ecfe; color: #2a5193">DER</div>
+        <div class="de">Balkon <span>· el balcón</span></div>
+        <div class="niv">A2</div>
+        <div class="ej">Wir frühstücken auf dem Balkon.
+          <span>— Desayunamos en el balcón.</span></div>
+      </div>
+
+      <div class="ent">
+        <div class="gen" style="background: #e2ecfe; color: #2a5193">DER</div>
+        <div class="de">Keller <span>· el sótano</span></div>
+        <div class="niv">A2</div>
+        <div class="ej">Das Fahrrad steht im Keller.
+          <span>— La bicicleta está en el sótano.</span></div>
+      </div>
+
+      <div class="ent">
+        <div class="gen" style="background: #e5e5e9; color: #404250">VB</div>
+        <div class="de">umziehen <span>· mudarse</span></div>
+        <div class="niv">A2</div>
+        <div class="ej">Nächsten Monat ziehe ich um.
+          <span>— El mes que viene me mudo.</span></div>
+      </div>
+
+      <div class="ent">
+        <div class="gen" style="background: #e5e5e9; color: #404250">VB</div>
+        <div class="de">aufräumen <span>· ordenar / recoger</span></div>
+        <div class="niv">A1</div>
+        <div class="ej">Räum bitte dein Zimmer auf!
+          <span>— ¡Recoge tu cuarto, por favor!</span></div>
+      </div>
+
+      <div class="ent">
+        <div class="gen" style="background: #e5e5e9; color: #404250">VB</div>
+        <div class="de">putzen <span>· limpiar</span></div>
+        <div class="niv">A1</div>
+        <div class="ej">Am Samstag putze ich die Wohnung.
+          <span>— El sábado limpio el departamento.</span></div>
+      </div>
+
+      <div class="ent" style="border-bottom: none">
+        <div class="gen" style="background: #fce0ee; color: #8c3260">DIE</div>
+        <div class="de">Wohngemeinschaft / die WG <span>· el piso compartido</span></div>
+        <div class="niv">B1</div>
+        <div class="ej">Ich wohne in einer WG mit drei Leuten.
+          <span>— Vivo en un piso compartido con tres personas.</span></div>
+      </div>
+    </div>
+
+    <div style="align-self: stretch; background: rgba(0,0,0,0.08)"></div>
+
+    <div>
+      <div class="subt">Las estancias <em>14 palabras</em></div>
+
+      <div class="ent">
+        <div class="gen" style="background: #d6f3ea; color: #137053">DAS</div>
+        <div class="de">Zimmer <span>· la habitación / cuarto</span></div>
+        <div class="niv">A1</div>
+        <div class="ej">Mein Zimmer ist klein aber gemütlich.
+          <span>— Mi cuarto es pequeño pero acogedor.</span></div>
+      </div>
+
+      <div class="ent">
+        <div class="gen" style="background: #fce0ee; color: #8c3260">DIE</div>
+        <div class="de">Küche <span>· la cocina</span></div>
+        <div class="niv">A1</div>
+        <div class="ej">Ich koche jeden Abend in der Küche.
+          <span>— Cocino cada noche en la cocina.</span></div>
+      </div>
+
+      <div class="ent">
+        <div class="gen" style="background: #d6f3ea; color: #137053">DAS</div>
+        <div class="de">Badezimmer <span>· el baño</span></div>
+        <div class="niv">A1</div>
+        <div class="ej">Das Badezimmer ist im ersten Stock.
+          <span>— El baño está en el primer piso.</span></div>
+      </div>
+
+      <div class="ent">
+        <div class="gen" style="background: #d6f3ea; color: #137053">DAS</div>
+        <div class="de">Wohnzimmer <span>· la sala</span></div>
+        <div class="niv">A1</div>
+        <div class="ej">Wir sitzen im Wohnzimmer.
+          <span>— Estamos sentados en la sala.</span></div>
+      </div>
+
+      <div class="ent">
+        <div class="gen" style="background: #d6f3ea; color: #137053">DAS</div>
+        <div class="de">Schlafzimmer <span>· el dormitorio</span></div>
+        <div class="niv">A1</div>
+        <div class="ej">Mein Schlafzimmer ist ruhig.
+          <span>— Mi dormitorio es tranquilo.</span></div>
+      </div>
+
+      <div class="ent">
+        <div class="gen" style="background: #e2ecfe; color: #2a5193">DER</div>
+        <div class="de">Flur <span>· el pasillo / recibidor</span></div>
+        <div class="niv">A2</div>
+        <div class="ej">Die Schuhe stehen im Flur.
+          <span>— Los zapatos están en el recibidor.</span></div>
+      </div>
+
+      <div class="ent">
+        <div class="gen" style="background: #fce0ee; color: #8c3260">DIE</div>
+        <div class="de">Toilette / das WC <span>· el baño (retrete)</span></div>
+        <div class="niv">A1</div>
+        <div class="ej">Wo ist die Toilette, bitte?
+          <span>— ¿Dónde está el baño, por favor?</span></div>
+      </div>
+
+      <div class="ent">
+        <div class="gen" style="background: #fce0ee; color: #8c3260">DIE</div>
+        <div class="de">Seife / das Shampoo <span>· el jabón / el champú</span></div>
+        <div class="niv">A1</div>
+        <div class="ej">Die Seife ist alle.
+          <span>— Se acabó el jabón.</span></div>
+      </div>
+
+      <div class="ent" style="border-bottom: none">
+        <div class="gen" style="background: #fce0ee; color: #8c3260">DIE</div>
+        <div class="de">Dusche / die Badewanne <span>· la regadera / la bañera</span></div>
+        <div class="niv">A2</div>
+        <div class="ej">Die Dusche ist kaputt.
+          <span>— La regadera está descompuesta.</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>
