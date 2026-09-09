@@ -131,6 +131,23 @@ la barra de migas.
 El marcador **se cuenta del DOM**, no de un contador aparte: cualquier repintado —cambiar
 de sección, filtrar por nivel, buscar— vuelve a taparlas todas, y un número guardado
 mentiría desde el primer cambio. En la gramática no se pinta ninguno de los dos: ahí no
+
+**La pantalla no puede quedarse muda.** Tres claves de `localStorage` deciden qué se ve
+—`al_sec_v1`, `al_sub_v1` y `al_niv_v1`— y las tres podían dejarla en cero sin decir por
+qué:
+
+- **El estado envejece.** `al_sec_v1` y `al_sub_v1` guardan identificadores, y el
+  vocabulario se reescribe: una subsección renombrada en `vocab-datos.js` deja la clave
+  apuntando a un id que ya no existe, `vocFiltrar` no encuentra nada y —como se vuelve a
+  guardar— la pantalla salía en cero **cada vez que se abría**. `alPinta` los sanea antes
+  de filtrar: sección desconocida vuelve a «Saludos», subsección que no es de esa sección
+  pasa a `null`.
+- **El filtro de nivel también se guarda**, y ese sí es un cero legítimo: quedarse en A1 es
+  lo que hace abarcables 1.516 palabras, pero en una sección sin B1 no queda nada. Ahí el
+  mensaje nombra la sección y el nivel —«En **Saludos** no hay palabras de nivel **B1**»— y
+  trae el botón **Ver todos los niveles**, porque el filtro vive en la cabecera, lejos del
+  hueco. Antes salía el texto de la búsqueda con la búsqueda vacía: «Ninguna palabra con .».
+
 hay español que tapar.
 
 La tira se pinta **siempre** y es el CSS quien decide si se ve

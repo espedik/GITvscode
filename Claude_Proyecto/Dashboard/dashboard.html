@@ -5518,6 +5518,20 @@ function alPinta(){
     return;
   }
 
+  // EL ESTADO GUARDADO ENVEJECE. `al_sec_v1` y `al_sub_v1` guardan identificadores, y
+  // el vocabulario se reescribe: una subsección renombrada en `vocab-datos.js` deja
+  // apuntando a un id que ya no existe, `vocFiltrar` no encuentra nada y la pantalla
+  // sale en cero. Y como se vuelve a guardar, seguía en cero cada vez que se abría.
+  if(alSec !== AL_GRAM && !V.cats[alSec]){
+    alSec = V.cats['saludos'] ? 'saludos' : Object.keys(V.cats)[0];
+    alSub = null;
+    alGuarda();
+  }
+  if(alSub && !((V.cats[alSec] || {}).subs || {})[alSub]){
+    alSub = null;
+    alGuarda();
+  }
+
   const q = ((document.getElementById('alQ')||{}).value || '').trim();
   const sub = document.getElementById('alEs');
   const qn = document.getElementById('alQN');
@@ -5602,11 +5616,27 @@ function alPinta(){
     tiraSubs.innerHTML = q ? '' : vocSubsHtml(V.subsDe(alSec), alSub, { fn: 'alSetSub' });
   }
 
+  // EL «NO HAY NADA» TIENE QUE DECIR POR QUÉ. Sin buscar, la única razón posible es el
+  // filtro de nivel, que también se guarda: quedaba «Ninguna palabra con .» —el texto
+  // de la búsqueda, con la búsqueda vacía— y ni una pista de que bastaba con quitar el
+  // B1. El botón está dentro del mensaje porque el filtro vive en la cabecera, lejos.
+  let mensajeVacio;
+  if(q){
+    mensajeVacio = 'Ninguna palabra con <b>' + vocEsc(q) + '</b>. Se busca en alem\u00e1n, ' +
+      'en espa\u00f1ol y en los ejemplos.';
+  } else if(alNivel !== 'all'){
+    mensajeVacio = 'En <b>' + vocEsc(etiquetaSub || cat.label) + '</b> no hay palabras de ' +
+      'nivel <b>' + vocEsc(alNivel) + '</b>.<br>' +
+      '<button type="button" class="v-filtro" style="margin-top:13px" ' +
+      'onclick="alFiltro(\'niv\',\'all\')">Ver todos los niveles</button>';
+  } else {
+    mensajeVacio = 'Esta subsecci\u00f3n todav\u00eda no tiene palabras.';
+  }
+
   cont.innerHTML = vocPalabrasHtml(lista, {
     q: q, cats: V.cats, agrupar: !!q || !alSub, porSub: !q && !alSub,
     modo: alVista, fnVer: 'alVer',
-    vacio: 'Ninguna palabra con <b>' + q + '</b>. Se busca en alemán, en español y ' +
-           'en los ejemplos.',
+    vacio: mensajeVacio,
   });
   vocIdxCont(null);
   cont.onscroll = null;
