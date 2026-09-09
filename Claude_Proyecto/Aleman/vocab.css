@@ -139,7 +139,11 @@
 .v-w-art{flex:none;font-size:11px;font-weight:800;letter-spacing:.03em;padding:2.5px 8px;
   border-radius:6px;background:color-mix(in srgb,var(--c) 17%,transparent);
   color:color-mix(in srgb,var(--c) 55%,var(--v-txt))}
-.v-w-de{flex:1 1 auto;min-width:0;overflow-wrap:break-word;
+/* `hyphens` necesita saber el idioma, y por eso la palabra alemana lleva `lang="de"`
+   en el HTML: sin eso, con cinco columnas «Wohngemeinschaft» se partía en seco
+   («Wohngemeinschaf / t»). Con el idioma puesto, el navegador la divide por sílabas y
+   pone el guion. `overflow-wrap` se queda de red para lo que no sepa dividir. */
+.v-w-de{flex:1 1 auto;min-width:0;overflow-wrap:break-word;hyphens:auto;
   font-family:var(--v-font-titulo);font-size:var(--v-de-size);font-weight:900;
   color:var(--v-txt);line-height:1.2}
 .v-w-es{font-size:14px;font-weight:500;color:var(--v-txt2);margin-top:4px;line-height:1.45}
@@ -219,7 +223,7 @@
   font-weight:700;color:var(--v-txt3);text-align:center}
 .v-est-pal{min-width:0}
 .v-est-de{font-family:var(--v-font-titulo);font-size:25px;font-weight:900;
-  color:var(--v-txt);line-height:1.1;overflow-wrap:break-word}
+  color:var(--v-txt);line-height:1.1;overflow-wrap:break-word;hyphens:auto}
 .v-est-tec{font-family:var(--v-mono);font-size:10.5px;font-weight:600;color:var(--v-txt3);
   margin-top:5px;line-height:1.5}
 .v-est-ojo{color:var(--v-aviso2)}

@@ -324,7 +324,8 @@ function vocPalabraHtml(w, op){
     (/irregular|separable|mixto/.test(w.tag) ? ' dif' : '') + '">' + vocEsc(w.tag) + '</span>';
 
   return '<article class="v-w" style="--c:' + color + '">' +
-    '<div class="v-w-top">' + pil + '<span class="v-w-de">' + vocResaltar(w.de, q) + '</span>' +
+    '<div class="v-w-top">' + pil + '<span class="v-w-de" lang="de">' +
+      vocResaltar(w.de, q) + '</span>' +
       (w.niv ? '<span class="v-w-niv">' + vocEsc(w.niv) + '</span>' : '') + '</div>' +
     '<div class="v-w-es">' + es + '</div>' +
     (tec ? '<div class="v-w-tec">' + tec + '</div>' : '') +
@@ -365,7 +366,7 @@ function vocEstudioFilaHtml(w, op){
       (w.niv ? '<span class="v-est-n">' + vocEsc(w.niv) + '</span>' : '') +
     '</div>' +
     '<div class="v-est-pal">' +
-      '<div class="v-est-de">' + vocResaltar(w.de, q) + '</div>' +
+      '<div class="v-est-de" lang="de">' + vocResaltar(w.de, q) + '</div>' +
       (tec ? '<div class="v-est-tec">' + tec + '</div>' : '') +
       (extra ? '<div class="v-est-tec v-est-ojo">' + extra + '</div>' : '') +
     '</div>' +

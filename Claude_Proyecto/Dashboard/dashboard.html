@@ -1831,7 +1831,11 @@ button.hp-lec:active{transform:translateY(0)}
    de 260px, las mismas que antes. */
 .al-cuerpo{flex:1;min-height:0;display:grid;grid-template-columns:238px minmax(0,1fr);
   gap:20px;margin-top:14px}
-.al-arbol{min-height:0;overflow:hidden;transition:opacity .2s}
+/* La columna de la izquierda tiene DOS caras: el árbol entero y, plegada, el carril
+   de iconos. Se pintan las dos siempre y el CSS enseña una — el mismo trato que la
+   tira de subsecciones, y por lo mismo: plegar no repinta nada. */
+.al-lado{min-height:0;display:flex;flex-direction:column;overflow:hidden}
+.al-arbol{flex:1;min-height:0}
 /* EL ÍNDICE SE PLIEGA AL ELEGIR. Con 1.516 palabras, lo que se mira después de
    elegir la sección son las palabras: el índice ya hizo su trabajo y se lleva 238px
    de los 1.354 que hay. Al plegarse, la rejilla pasa de cuatro columnas a cinco y las
@@ -1842,8 +1846,30 @@ button.hp-lec:active{transform:translateY(0)}
    no, el cambio es instantáneo y se ve igual de bien. Petición de Adán del 2026-09-07. */
 .al-cuerpo{transition:grid-template-columns .3s cubic-bezier(.4,0,.2,1),
   gap .3s cubic-bezier(.4,0,.2,1)}
-.al-cuerpo.plegado{grid-template-columns:0 minmax(0,1fr);gap:0}
-.al-cuerpo.plegado .al-arbol{opacity:0;pointer-events:none}
+.al-cuerpo.plegado{grid-template-columns:52px minmax(0,1fr);gap:14px}
+.al-cuerpo.plegado .al-arbol{display:none}
+.al-cuerpo:not(.plegado) .al-carril{display:none}
+/* EL CARRIL — el menú en pequeño. A ancho cero el índice no se plegaba: desaparecía,
+   y el único camino de vuelta era un botón en la barra de arriba, que es donde nadie
+   busca un menú lateral. Con 52px quedan la gramática y las siete familias reducidas
+   a su icono, con el sitio donde estás marcado, y tocar una abre el índice por ahí.
+   Se pagan 52 de los 238 que se ganaban: la rejilla sigue dando cinco columnas. */
+.al-carril{flex:1;min-height:0;display:flex;flex-direction:column;align-items:center;
+  gap:4px;padding:1px 0;overflow-y:auto;scrollbar-width:none}
+.al-carril::-webkit-scrollbar{display:none}
+.al-carril button{flex:none;width:38px;height:38px;display:flex;align-items:center;
+  justify-content:center;font-size:17px;line-height:1;border:1px solid transparent;
+  border-radius:11px;background:transparent;cursor:pointer;font-family:inherit;
+  color:var(--text2);transition:background .15s,border-color .15s}
+.al-carril button:hover{background:rgba(var(--ov),.07);border-color:rgba(var(--ov),.13)}
+.al-carril button.on{background:rgba(var(--v-acento-rgb),.12);
+  border-color:rgba(var(--v-acento-rgb),.34)}
+.al-carril .al-carril-ab svg{width:16px;height:16px}
+/* La gramática no es una familia de palabras y tampoco se marca como tal. */
+.al-carril .al-carril-gr.on{background:color-mix(in srgb,var(--v-gram) 17%,transparent);
+  border-color:color-mix(in srgb,var(--v-gram) 36%,transparent)}
+.al-carril hr{flex:none;width:22px;height:1px;border:0;margin:3px 0;
+  background:rgba(var(--ov),.13)}
 .al-panel{min-width:0;min-height:0;display:flex;flex-direction:column}
 /* LA BARRA DEL PANEL: el botón del índice y las migas, en una línea. Las migas solas
    decían dónde estabas; ahora además son el sitio por donde se vuelve. */
@@ -1893,8 +1919,12 @@ button.hp-lec:active{transform:translateY(0)}
 @media(max-width:900px){
   .al-cuerpo{grid-template-columns:minmax(0,1fr);grid-template-rows:auto minmax(0,1fr);
     gap:12px}
-  .al-arbol{max-height:26vh}
-  .al-cuerpo.plegado{grid-template-columns:minmax(0,1fr);grid-template-rows:0 minmax(0,1fr)}
+  .al-lado{max-height:26vh}
+  .al-carril{flex-direction:row;align-items:center;justify-content:flex-start;
+    overflow-x:auto;overflow-y:hidden;padding:0}
+  .al-carril hr{width:1px;height:22px;margin:0 3px}
+  .al-cuerpo.plegado{grid-template-columns:minmax(0,1fr);
+    grid-template-rows:auto minmax(0,1fr);gap:10px}
 }
 .al-content .v-grid{padding-bottom:14px}
 @media(max-width:760px){
@@ -3463,7 +3493,10 @@ button.ct-cat:hover{background:rgba(var(--ov),.07)}
            vocabulario debajo, agrupado en siete familias. El árbol entero lo pinta
            `vocArbolHtml`, el mismo que usa la app de Alemán. -->
       <div class="al-cuerpo reveal d3">
-        <div class="al-arbol v-arbol" id="alArbol"></div>
+        <div class="al-lado">
+          <nav class="al-carril" id="alCarril" aria-label="Secciones, plegado"></nav>
+          <div class="al-arbol v-arbol" id="alArbol"></div>
+        </div>
         <div class="al-panel">
           <div class="al-barra">
             <button type="button" class="al-idx" id="alIdxB" onclick="alPliega()"
@@ -5430,6 +5463,43 @@ function alSetFam(f){
 
 // Abrir y cerrar el índice. No repinta: la tira de subsecciones se pinta siempre y es
 // el CSS quien decide si se ve, así que plegar no pierde el scroll de las palabras.
+// Qué familia contiene una sección. El árbol lo calcula por dentro; el carril lo
+// necesita fuera para marcar dónde estás.
+function alFamDe(V, sec){
+  const f = V.familias.filter(function(x){ return x.cats.indexOf(sec) >= 0; })[0];
+  return f ? f.id : null;
+}
+
+// EL CARRIL: los mismos destinos que el árbol —la gramática y las siete familias—
+// reducidos a su icono. Marca dónde estás, y tocar uno abre el índice por ahí: es el
+// camino de vuelta, puesto donde el menú estaba y no en la barra de arriba.
+function alCarrilHtml(V){
+  const fam = alFamDe(V, alSec);
+  let h = '<button type="button" class="al-carril-ab" onclick="alPliega()" ' +
+    'title="Abrir el \u00edndice" aria-label="Abrir el \u00edndice">' +
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" ' +
+    'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+    '<path d="M4 6h16M4 12h16M4 18h16"></path></svg></button><hr>';
+  h += '<button type="button" class="al-carril-gr' + (alSec === AL_GRAM ? ' on' : '') +
+    '" onclick="alSet(\'' + AL_GRAM + '\')" title="' + vocEsc(V.partizip.titulo) +
+    '">\u2696\ufe0f</button><hr>';
+  h += V.familias.map(function(f){
+    return '<button type="button" class="' + (f.id === fam ? 'on' : '') +
+      '" onclick="alVeFam(\'' + f.id + '\')" title="' + vocEsc(f.label) + '">' +
+      f.icon + '</button>';
+  }).join('');
+  return h;
+}
+
+// Tocar una familia del carril abre el índice por ella: el carril dice dónde estás,
+// pero para elegir hace falta el árbol.
+function alVeFam(id){
+  alFam = id;
+  alPlegado = false;
+  alGuarda();
+  alPinta();
+}
+
 function alPliega(){
   alPlegado = !alPlegado;
   alGuarda();
@@ -5546,6 +5616,11 @@ function alPinta(){
   // EL ÍNDICE, entero: la gramática arriba en su zona y las 37 secciones repartidas en
   // siete familias. Lo pinta el motor de la app de Alemán — aquí solo se le dice qué
   // funciones reciben el clic y cómo se cuentan las palabras.
+  // El carril se pinta SIEMPRE, esté plegado o no: así plegar y desplegar es cambiar
+  // una clase y no repintar 1.516 palabras.
+  const carril = document.getElementById('alCarril');
+  if(carril) carril.innerHTML = alCarrilHtml(V);
+
   if(arbol){
     arbol.innerHTML = vocArbolHtml(V.cats, q ? null : alSec, alSub, {
       fnSec: 'alSet', fnSub: 'alSetSub', fnFam: 'alSetFam',

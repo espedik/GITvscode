@@ -113,13 +113,27 @@ por una línea, y el vocabulario debajo repartido en **siete familias** que se a
 «Colores» y «Escuela»; no es una sección de palabras y ya no se pinta como tal. Elección de
 Adán entre tres maquetas: *"me gusta la opcion c"*.
 
-**El índice se pliega solo al elegir sección.** Elegir es lo último que se
-hace en el índice: a partir de ahí lo que se mira son las palabras, y esos 238px rinden
-más como una quinta columna de tarjetas. Al plegarse, las subsecciones se mudan a una
-tira encima de la rejilla — `vocSubsHtml`, el mismo motor, escrito justo para las
-pantallas donde el árbol no cabe — así que moverse dentro de la sección no obliga a
-abrirlo otra vez. Vuelve con el botón «Índice» de la barra de migas, y el estado se
-guarda (`al_plg_v1`) igual que la sección, la familia y el nivel.
+**El índice se pliega solo al elegir sección, pero no desaparece.** Elegir es lo último
+que se hace en el índice: a partir de ahí lo que se mira son las palabras, y esos 238px
+rinden más como una quinta columna de tarjetas.
+
+Plegado **no es ancho cero**: quedan 52px con el **carril** de iconos —la gramática y las
+siete familias, con la familia donde estás marcada—, y tocar uno abre el índice por ahí.
+A ancho cero el menú lateral no se plegaba, se esfumaba, y el único camino de vuelta era
+un botón en la barra de arriba; un menú lateral se busca donde el menú estaba. Se pagan
+52 de los 238 ganados y la rejilla sigue dando **cinco columnas** (panel de 1.334px
+medidos a 1.680, contra 1.142 con el índice abierto).
+
+Las subsecciones, además, se mudan a una tira encima de la rejilla —`vocSubsHtml`, el
+mismo motor, escrito justo para las pantallas donde el árbol no cabe—, así que moverse
+dentro de la sección no obliga a abrir nada. El estado se guarda en `al_plg_v1`, igual
+que la sección, la familia y el nivel.
+
+El árbol, el carril y la tira de subsecciones **se pintan siempre**, y es el CSS
+quien decide cuál se ve (`.al-cuerpo:not(.plegado) .al-subs{display:none}` y sus dos
+gemelas): plegar y desplegar es cambiar una clase, no repintar 1.516 palabras. En el
+teléfono el índice va arriba, así que allí el carril es una tira horizontal y plegar
+encoge una FILA.
 
 **Las palabras se ven de dos maneras.** El interruptor «Modo estudio» de la
 cabecera cambia la rejilla de fichas por los renglones de estudio: el ejemplo en alemán
@@ -130,7 +144,8 @@ la barra de migas.
 
 El marcador **se cuenta del DOM**, no de un contador aparte: cualquier repintado —cambiar
 de sección, filtrar por nivel, buscar— vuelve a taparlas todas, y un número guardado
-mentiría desde el primer cambio. En la gramática no se pinta ninguno de los dos: ahí no
+mentiría desde el primer cambio. En la gramática no se pinta ninguno de los dos:
+ahí no hay español que tapar.
 
 **La pantalla no puede quedarse muda.** Tres claves de `localStorage` deciden qué se ve
 —`al_sec_v1`, `al_sub_v1` y `al_niv_v1`— y las tres podían dejarla en cero sin decir por
@@ -147,14 +162,6 @@ qué:
   mensaje nombra la sección y el nivel —«En **Saludos** no hay palabras de nivel **B1**»— y
   trae el botón **Ver todos los niveles**, porque el filtro vive en la cabecera, lejos del
   hueco. Antes salía el texto de la búsqueda con la búsqueda vacía: «Ninguna palabra con .».
-
-hay español que tapar.
-
-La tira se pinta **siempre** y es el CSS quien decide si se ve
-(`.al-cuerpo:not(.plegado) .al-subs{display:none}`): así abrir y cerrar el índice no
-repinta las 275 tarjetas de «Comer y comprar» ni pierde el scroll donde ibas. En el
-teléfono el índice está arriba, no al lado, así que allí plegar cierra una FILA
-(`grid-template-rows:0 minmax(0,1fr)`), no una columna.
 
 La ficha y el renglón de estudio se dibujan en `Aleman/vocab.css` y los cuenta
 `Aleman/readme_aleman.md`: aquí solo llegan.
