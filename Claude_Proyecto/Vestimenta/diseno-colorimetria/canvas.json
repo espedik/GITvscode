@@ -1,0 +1,18 @@
+{
+  "pages": [
+    { "id": "page-1", "name": "Como quedó" },
+    { "id": "page-2", "name": "Las descartadas" }
+  ],
+  "artboards": [
+    { "file": "Main.dc.html", "x": 0, "y": 0, "w": 1240, "h": 1040, "page": "page-1", "title": "La matriz — lo que está puesto" },
+    { "file": "DireccionA.dc.html", "x": 0, "y": 0, "w": 1240, "h": 1240, "page": "page-2", "title": "Dirección A — el tablero, elige pantalón", "is_interactive": true },
+    { "file": "DireccionC.dc.html", "x": 1360, "y": 0, "w": 1240, "h": 940, "page": "page-2", "title": "Dirección C — tres outfits armados" }
+  ],
+  "annotations": [
+    { "id": "nota-main", "x": 0, "y": -260, "w": 620, "page": "page-1", "text": "LA DIRECCIÓN B, YA PUESTA EN LA APP como sección «Colorimetría», entre Accesorios y Trabajo.\n\n96 celdas: 6 pantalones × 16 playeras. Las playeras van en filas y los pantalones en columnas porque al revés no cabe — 16 columnas no entran ni en escritorio. El veredicto es un punto y no una palabra: son 96 celdas, y leer 96 etiquetas no es leer. La forma lo dice además del color (círculo, aro, raya), así que se distingue en blanco y negro.\n\nLo que se perdía de esta dirección era el porqué de cada celda. En la app no se pierde: las 96 razones están escritas en los datos y salen al pasar el cursor por el punto. En el teléfono no hay `title`, y por eso el subtítulo dice «en escritorio» en vez de prometerlo." },
+    { "id": "nota-corr", "x": 660, "y": -260, "w": 540, "page": "page-1", "text": "Corregido respecto a lo que te enseñé: había escrito que el chino gris era «la fila más verde de todas». Es falso — los seis pantalones aceptan exactamente ocho playeras cada uno. La nota de abajo dice ahora lo que sale de contar las 96 celdas.\n\nMedido en la app a 1600px y a 390px, tema claro y oscuro: las once secciones sin desbordamiento horizontal y sin errores de consola." },
+    { "id": "nota-a", "x": 0, "y": -190, "w": 560, "page": "page-2", "text": "DIRECCIÓN A — el tablero: elegías pantalón y veías las 16 playeras clasificadas con su razón. Descartada, pero su contenido no se perdió: las 96 razones que se escribieron aquí son las que hoy salen en el `title` de cada punto de la matriz." },
+    { "id": "nota-c", "x": 1360, "y": -190, "w": 560, "page": "page-2", "text": "DIRECCIÓN C — tres outfits ya armados, dibujados como torres de bloques. Descartada. Sigue siendo la respuesta a «qué me pongo» si algún día quieres eso además de la tabla." }
+  ],
+  "launch": { "view": "canvas", "page": "page-1" }
+}

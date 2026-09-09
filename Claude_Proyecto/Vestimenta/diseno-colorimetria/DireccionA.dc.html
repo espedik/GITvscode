@@ -1,0 +1,408 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&display=swap">
+  <style>
+    body { margin: 0; background: #0a0908; font-family: 'Inter', -apple-system, sans-serif;
+           font-size: 14px; color: #f0ece6; }
+    a { color: #c17f4a; } a:hover { color: #d99a68; }
+    .mono { font-family: 'Space Grotesk', monospace; letter-spacing: -0.01em; }
+    /* La app: sidebar de 245px, tarjetas de radio 14, superficie #1a1815. */
+    .nav { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: 9px;
+           color: #a89e91; font-weight: 500; font-size: 13px; }
+    .nav.on { background: rgba(193,127,74,0.12); color: #c17f4a; font-weight: 600; }
+    .nav i { width: 16px; height: 16px; display: block; flex: none; }
+    /* EL PANTALÓN: fichas de la tira de arriba. La muestra de color manda; el nombre
+       va debajo, pequeño, porque el color es lo que se compara. */
+    .pant { display: flex; flex-direction: column; gap: 7px; padding: 8px; border-radius: 11px;
+            border: 1px solid rgba(255,255,255,0.07); background: #1a1815; cursor: pointer;
+            min-width: 0; }
+    .pant .sw { height: 42px; border-radius: 7px; border: 1px solid rgba(255,255,255,0.09); }
+    .pant .nm { font-size: 11px; font-weight: 600; color: #a89e91; line-height: 1.25;
+                text-align: center; }
+    .pant.on { border-color: #c17f4a; background: rgba(193,127,74,0.12); }
+    .pant.on .nm { color: #f0ece6; }
+    /* LA PLAYERA: la muestra grande arriba y el porqué debajo. Esto sustituye a la foto —
+       lo que hay que juzgar es el color, no la prenda. */
+    .pl { display: flex; flex-direction: column; border-radius: 11px; overflow: hidden;
+          border: 1px solid rgba(255,255,255,0.07); background: #1a1815; }
+    .pl .sw { height: 54px; border-bottom: 1px solid rgba(255,255,255,0.09); }
+    .pl .bd { padding: 9px 11px 11px; display: flex; flex-direction: column; gap: 4px; }
+    .pl .nm { font-size: 12.5px; font-weight: 700; color: #f0ece6; }
+    .pl .rz { font-size: 11px; line-height: 1.45; color: #a89e91; }
+    /* Las tres bandas. El color del filete es el veredicto: no hace falta leerlo. */
+    .banda { display: flex; align-items: center; gap: 10px; }
+    .banda .t { font-size: 12px; font-weight: 800; letter-spacing: 0.09em;
+                text-transform: uppercase; }
+    .banda .l { flex: 1; height: 1px; }
+    .banda .n { font-family: 'Space Grotesk', monospace; font-size: 11px; font-weight: 700;
+                color: #6b6156; }
+  </style>
+</helmet>
+
+<div style="width: 1240px; height: 1240px; box-sizing: border-box; display: grid;
+     grid-template-columns: 245px minmax(0, 1fr); background: #0a0908; overflow: hidden">
+
+  <!-- ── el sidebar de la app, tal cual ────────────────────────── -->
+  <div style="border-right: 1px solid rgba(255,255,255,0.08); background: #151311;
+       padding: 18px 14px; display: flex; flex-direction: column; gap: 3px">
+    <div style="display: flex; align-items: center; gap: 9px; padding: 0 6px 16px">
+      <div style="width: 26px; height: 26px; border-radius: 7px; background: #c17f4a;
+           display: flex; align-items: center; justify-content: center">
+        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="#0a0908"
+             stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M16 3l4 3-2 4-2-1v12H8V9L6 10 4 6l4-3 4 2 4-2z"></path></svg>
+      </div>
+      <div style="font-size: 13.5px; font-weight: 800; letter-spacing: -0.01em">Vestimenta</div>
+    </div>
+
+    <div class="nav"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+      stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8"></path>
+      <path d="M5 10v10h14V10"></path></svg></i>Inicio</div>
+    <div class="nav"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+      stroke-linecap="round" stroke-linejoin="round"><path d="M16 3l4 3-2 4-2-1v12H8V9L6 10 4 6l4-3"></path></svg></i>Básicos</div>
+    <div class="nav"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+      stroke-linecap="round" stroke-linejoin="round"><path d="M6 3l6 4 6-4 3 4-3 3v10H6V10L3 7z"></path></svg></i>Chaquetas</div>
+    <div class="nav"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+      stroke-linecap="round" stroke-linejoin="round"><path d="M3 17h18v3H3z"></path>
+      <path d="M3 17l2-8h5l4 4h5l2 4"></path></svg></i>Zapatos</div>
+    <div class="nav"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+      stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="6"></circle>
+      <path d="M12 9v3l2 1"></path></svg></i>Accesorios</div>
+
+    <div class="nav on"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+      stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle>
+      <path d="M12 3a9 9 0 0 1 0 18"></path><circle cx="9" cy="10" r="1.2"></circle>
+      <circle cx="15" cy="14" r="1.2"></circle></svg></i>Colorimetría</div>
+
+    <div style="height: 1px; background: rgba(255,255,255,0.08); margin: 11px 6px"></div>
+    <div class="nav"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+      stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="13" rx="2"></rect>
+      <path d="M9 7V5h6v2"></path></svg></i>Trabajo</div>
+    <div class="nav"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+      stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle>
+      <path d="M9 14s1 1.5 3 1.5S15 14 15 14"></path></svg></i>Casual</div>
+    <div class="nav"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+      stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6M20 9v6M7 7v10M17 7v10M7 12h10"></path></svg></i>Ejercicio</div>
+  </div>
+
+  <!-- ── el contenido ──────────────────────────────────────────── -->
+  <div style="padding: 22px 26px; display: flex; flex-direction: column; gap: 15px;
+       min-width: 0; overflow: hidden">
+
+    <div>
+      <div style="font-size: 10px; font-weight: 800; letter-spacing: 0.16em;
+           text-transform: uppercase; color: #6b6156">Cómo combinar</div>
+      <h2 style="font-size: 20px; font-weight: 800; margin: 5px 0 0">Colorimetría</h2>
+      <div style="font-size: 12.5px; color: #a89e91; margin-top: 4px; line-height: 1.5">
+        Elige el pantalón y mira qué playera va encima. Sin fotos: lo que decide una
+        combinación es el color, y el color se juzga viéndolo, no leyéndolo.
+      </div>
+    </div>
+
+    <!-- la tira de pantalones -->
+    <div>
+      <div style="font-size: 10px; font-weight: 800; letter-spacing: 0.13em;
+           text-transform: uppercase; color: #6b6156; margin-bottom: 8px">Tu pantalón</div>
+      <div style="display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 9px">
+        <sc-for list="{{pantalones}}" as="p" hint-placeholder-count="6">
+          <div class="pant {{p.cls}}" onClick="{{p.pick}}">
+            <div class="sw" style="background: {{p.hex}}"></div>
+            <div class="nm">{{p.nombre}}</div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+
+    <!-- la lectura del pantalón elegido -->
+    <div style="display: flex; align-items: center; gap: 14px; padding: 12px 15px;
+         border-radius: 11px; background: #1a1815; border: 1px solid rgba(255,255,255,0.07)">
+      <div style="width: 46px; height: 46px; border-radius: 9px; flex: none;
+           border: 1px solid rgba(255,255,255,0.11); background: {{elegido.hex}}"></div>
+      <div style="min-width: 0; display: flex; flex-direction: column; gap: 3px">
+        <div style="font-size: 14px; font-weight: 800">{{elegido.nombre}}</div>
+        <div style="font-size: 12px; color: #a89e91; line-height: 1.45">{{elegido.lectura}}</div>
+      </div>
+      <div class="mono" style="margin-left: auto; flex: none; font-size: 11px; font-weight: 700;
+           color: #6b6156; text-align: right; line-height: 1.6">
+        {{elegido.hex}}<br>16 playeras
+      </div>
+    </div>
+
+    <!-- VA SIEMPRE -->
+    <div class="banda">
+      <span class="t" style="color: #4ea87a">Va siempre</span>
+      <span class="l" style="background: rgba(78,168,122,0.3)"></span>
+      <span class="n">{{elegido.nSi}}</span>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px">
+      <sc-for list="{{elegido.si}}" as="t" hint-placeholder-count="8">
+        <div class="pl">
+          <div class="sw" style="background: {{t.hex}}"></div>
+          <div class="bd">
+            <div class="nm">{{t.nombre}}</div>
+            <div class="rz">{{t.razon}}</div>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+
+    <!-- CON CUIDADO -->
+    <div class="banda">
+      <span class="t" style="color: #c9973a">Con cuidado</span>
+      <span class="l" style="background: rgba(201,151,58,0.3)"></span>
+      <span class="n">{{elegido.nOjo}}</span>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px">
+      <sc-for list="{{elegido.ojo}}" as="t" hint-placeholder-count="5">
+        <div class="pl">
+          <div class="sw" style="background: {{t.hex}}"></div>
+          <div class="bd">
+            <div class="nm">{{t.nombre}}</div>
+            <div class="rz">{{t.razon}}</div>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+
+    <!-- EVÍTALO -->
+    <div class="banda">
+      <span class="t" style="color: #c85a5a">Evítalo</span>
+      <span class="l" style="background: rgba(200,90,90,0.3)"></span>
+      <span class="n">{{elegido.nNo}}</span>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px">
+      <sc-for list="{{elegido.no}}" as="t" hint-placeholder-count="3">
+        <div class="pl" style="opacity: 0.72">
+          <div class="sw" style="background: {{t.hex}}"></div>
+          <div class="bd">
+            <div class="nm">{{t.nombre}}</div>
+            <div class="rz">{{t.razon}}</div>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+
+  </div>
+</div>
+</x-dc>
+
+<script data-dc-script data-props='{"$preview":{"width":1240,"height":1240}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { pant: 'indigo' };
+  }
+
+  renderVals() {
+    // Los 16 colores de playera. Los hex son de TELA, no de pantalla: un blanco de
+    // camiseta es #F2EFE9, no #FFFFFF, y un negro lavado tira a #1B1B1D.
+    const C = {
+      blanco:    ['Blanco',        '#F2EFE9'],
+      crema:     ['Crema',         '#E4D9C4'],
+      grisj:     ['Gris jaspeado', '#A3A19C'],
+      carbon:    ['Carbón',        '#3A3A3E'],
+      negro:     ['Negro',         '#1B1B1D'],
+      marino:    ['Azul marino',   '#22304A'],
+      celeste:   ['Celeste',       '#8FB6D4'],
+      oliva:     ['Verde oliva',   '#6E7448'],
+      botella:   ['Verde botella', '#254A3D'],
+      burdeos:   ['Burdeos',       '#6B2536'],
+      rojo:      ['Rojo ladrillo', '#A93A38'],
+      mostaza:   ['Mostaza',       '#C59A31'],
+      terracota: ['Terracota',     '#A85C3D'],
+      camel:     ['Camel',         '#B98A5B'],
+      rosa:      ['Rosa palo',     '#D7A79E'],
+      berenjena: ['Berenjena',     '#4B3455'],
+    };
+
+    // Los seis pantalones que salen de tu catálogo (jeans azul clásico, chino caqui y
+    // el azul marino del tip) más los tres que faltan para cubrir la semana.
+    const P = [
+      { id: 'indigo', nombre: 'Jeans índigo', hex: '#42618A',
+        lectura: 'Frío, valor medio, saturación media. El más difícil de los seis: al ser azul y de valor medio, se pelea con los azules y con los grises oscuros.',
+        si: [
+          ['blanco', 'El contraste más limpio que hay. Si dudas, esta.'],
+          ['crema', 'Como el blanco pero cálido: suaviza el azul y se ve menos de uniforme.'],
+          ['grisj', 'Neutro puro. Mismo valor que el jean, pero sin color que compita.'],
+          ['carbon', 'Ancla la mitad de arriba sin el corte duro del negro.'],
+          ['negro', 'Contraste máximo. De noche y con sneaker blanco, siempre.'],
+          ['oliva', 'Cálido apagado contra azul frío: el complementario que no grita.'],
+          ['burdeos', 'Rojo oscuro contra azul es el par clásico. Con derby café.'],
+          ['camel', 'El pariente natural del denim: cálido y poco saturado, nunca choca.'],
+        ],
+        ojo: [
+          ['mostaza', 'Es el complementario exacto del azul: funciona, pero manda. Deja el resto neutro.'],
+          ['terracota', 'Igual que la mostaza pero más apagada. Pide zapato café, no blanco.'],
+          ['botella', 'Frío y oscuro como el jean. Con índigo claro va; con oscuro se apelmaza.'],
+          ['rojo', 'Mucha saturación arriba. Que sea ladrillo, no rojo puro, y nada más de color.'],
+          ['rosa', 'Va en primavera y con jean claro. Con índigo oscuro se apaga.'],
+        ],
+        no: [
+          ['marino', 'Dos azules que no son ni el mismo ni opuestos: lee como error, no como conjunto.'],
+          ['celeste', 'Mismo azul, distinto valor: parece intento de conjunto de mezclilla que salió mal.'],
+          ['berenjena', 'Morado y azul son vecinos: juntos enturbian y ninguno se lee.'],
+        ] },
+
+      { id: 'oscuro', nombre: 'Jeans azul oscuro', hex: '#2B3A55',
+        lectura: 'Frío y oscuro. Aguanta mucha más saturación arriba que el índigo, porque hay salto de valor. Es tu jean de viernes de oficina.',
+        si: [
+          ['blanco', 'Contraste máximo y limpio. El combo de viernes casual.'],
+          ['crema', 'Menos duro que el blanco y más cálido. Bien con derby café.'],
+          ['grisj', 'Sube el valor sin meter color. Seguro con cualquier zapato.'],
+          ['celeste', 'Aquí sí: hay salto grande de valor entre el celeste y el índigo oscuro.'],
+          ['camel', 'Cálido claro sobre azul oscuro: el contraste de temperatura hace el trabajo.'],
+          ['oliva', 'Apagado contra apagado, pero uno cálido y otro frío. Muy usable.'],
+          ['burdeos', 'Oscuro con oscuro funciona porque el matiz es opuesto. De noche, impecable.'],
+          ['mostaza', 'El jean oscuro sostiene la saturación que el índigo medio no aguanta.'],
+        ],
+        ojo: [
+          ['negro', 'Se ve bien, pero junto al negro el azul puede leerse sucio. Revísalo con luz de día.'],
+          ['carbon', 'Poco contraste de valor. Funciona si el jean es claramente más azul que gris.'],
+          ['botella', 'Dos oscuros fríos. Necesita zapato claro para no ser un bloque.'],
+          ['terracota', 'Buena idea, pero pide que el resto sea neutro total.'],
+          ['rosa', 'Muy claro sobre muy oscuro: el contraste es grande y el tono, delicado.'],
+        ],
+        no: [
+          ['marino', 'Es prácticamente el mismo color: parece traje de mezclilla mal cortado.'],
+          ['berenjena', 'Morado sobre azul oscuro se lee como negro sucio, no como color.'],
+          ['rojo', 'Rojo puro sobre índigo oscuro es bandera, no outfit. Cámbialo por burdeos.'],
+        ] },
+
+      { id: 'negro', nombre: 'Jeans negro', hex: '#232326',
+        lectura: 'Neutro y muy oscuro. El más permisivo de tus jeans: al no tener color propio, no compite con nada de arriba.',
+        si: [
+          ['blanco', 'El contraste más fuerte del clóset. Nunca falla, de día o de noche.'],
+          ['crema', 'Rompe la dureza del blanco y ablanda el negro. Muy bueno con Chelsea.'],
+          ['grisj', 'El degradado natural: gris arriba, negro abajo.'],
+          ['camel', 'Un cálido claro es lo que más levanta un pantalón negro.'],
+          ['celeste', 'El negro no compite con ningún azul, así que aquí sí puedes usarlo.'],
+          ['oliva', 'Apagado sobre negro se ve caro. Con sneaker blanco, muy bien.'],
+          ['burdeos', 'Vino sobre negro es el combo de noche por excelencia.'],
+          ['mostaza', 'El negro absorbe la saturación: la mostaza se ve intencional, no chillona.'],
+        ],
+        ojo: [
+          ['negro', 'Total black funciona, pero solo si las dos telas son del mismo negro. Un negro lavado junto a uno nuevo se nota.'],
+          ['carbon', 'Poco contraste. Va si el gris es claramente más claro que el pantalón.'],
+          ['botella', 'Verde muy oscuro sobre negro: a distancia se pierde el verde.'],
+          ['terracota', 'Bien, pero el negro apaga el naranja. Elige la versión más saturada.'],
+          ['rosa', 'Contraste alto y tono suave. Funciona, pero es la más arriesgada aquí.'],
+        ],
+        no: [
+          ['marino', 'Marino y negro es el choque clásico: con luz de día se ve equivocado, no elegante.'],
+          ['berenjena', 'Morado oscuro sobre negro no se lee: parece una mancha.'],
+          ['rojo', 'Rojo puro con negro es disfraz. El burdeos hace lo mismo sin el grito.'],
+        ] },
+
+      { id: 'caqui', nombre: 'Chino caqui', hex: '#C0A57C',
+        lectura: 'Cálido y claro. Es el único claro de los seis, así que aquí manda el pantalón: arriba conviene algo más oscuro que él.',
+        si: [
+          ['blanco', 'Claro sobre claro, pero el caqui es cálido y el blanco frío: se separan solos.'],
+          ['marino', 'El par de manual. Marino arriba, caqui abajo: no falla nunca.'],
+          ['botella', 'Verde oscuro sobre caqui: la versión menos vista del combo de arriba.'],
+          ['negro', 'Contraste fuerte y limpio. El más sencillo de todos.'],
+          ['carbon', 'Como el negro, un punto menos severo. Muy bien de oficina.'],
+          ['burdeos', 'Cálido con cálido, pero con un salto de valor grande. Funciona.'],
+          ['oliva', 'Los dos son tierra; funciona porque el oliva es mucho más oscuro.'],
+          ['celeste', 'Fresco sobre cálido. El combo de primavera más fácil que tienes.'],
+        ],
+        ojo: [
+          ['crema', 'Muy parecido al caqui. Solo va si la crema es claramente más clara.'],
+          ['camel', 'Mismo problema: dos tostados. Si el valor es parecido, no.'],
+          ['grisj', 'Gris frío sobre caqui cálido puede leerse apagado. Va con zapato blanco.'],
+          ['mostaza', 'Amarillo sobre amarillo tierra. Necesita que la mostaza sea muy oscura.'],
+          ['terracota', 'Cálido sobre cálido otra vez: funciona en otoño, no de oficina.'],
+        ],
+        no: [
+          ['rojo', 'Rojo sobre caqui se va a uniforme de trabajo. No es lo que buscas.'],
+          ['rosa', 'Rosa claro con caqui claro: sin contraste ni de valor ni de temperatura.'],
+          ['berenjena', 'Morado con caqui nunca acaba de verse deliberado.'],
+        ] },
+
+      { id: 'marino', nombre: 'Chino azul marino', hex: '#293650',
+        lectura: 'Frío y oscuro, y liso: al no tener la textura del denim aguanta más formalidad. Es tu pantalón de junta.',
+        si: [
+          ['blanco', 'El uniforme seguro de oficina: blanco arriba, marino abajo.'],
+          ['crema', 'Igual pero más suave. Con mocasín es lo más elegante por lo que cuesta.'],
+          ['celeste', 'Salto de valor grande dentro del mismo azul: aquí sí funciona.'],
+          ['camel', 'Cálido claro sobre azul oscuro: el contraste más elegante de la lista.'],
+          ['grisj', 'Neutro que no compite. Seguro para junta.'],
+          ['burdeos', 'Vino con marino es un clásico de sastrería. Con derby café, perfecto.'],
+          ['oliva', 'Menos obvio que el blanco y se ve pensado.'],
+          ['mostaza', 'El marino oscuro sostiene la mostaza sin que grite.'],
+        ],
+        ojo: [
+          ['negro', 'Negro sobre marino es el par que más se equivoca. Solo con luz artificial.'],
+          ['carbon', 'Poco contraste, pero funciona si el gris es claro.'],
+          ['botella', 'Dos oscuros fríos. Pide zapato claro.'],
+          ['terracota', 'Funciona, pero casualiza un pantalón que quiere ser formal.'],
+          ['rosa', 'Va, pero es la combinación más difícil de llevar de todas estas.'],
+        ],
+        no: [
+          ['marino', 'Marino con marino solo funciona si es literalmente un traje. Si no, no.'],
+          ['berenjena', 'Morado y azul son vecinos: el conjunto sale turbio.'],
+          ['rojo', 'Demasiada saturación contra un pantalón que quiere ser formal.'],
+        ] },
+
+      { id: 'gris', nombre: 'Chino gris piedra', hex: '#7D7B76',
+        lectura: 'Neutro de valor medio: no tiene temperatura, así que no se pelea con nada. Es el más permisivo de los seis y el que menos tienes.',
+        si: [
+          ['blanco', 'El gris no compite con nada y el blanco lo deja limpio.'],
+          ['negro', 'Contraste claro de valor, sin choque de color.'],
+          ['marino', 'Aquí el marino sí va: el gris es neutro, no azul.'],
+          ['burdeos', 'El gris hace de fondo y el vino se lee entero.'],
+          ['botella', 'Igual que el vino: el gris deja hablar al verde.'],
+          ['oliva', 'Dos apagados, y funciona porque el gris no tiene temperatura.'],
+          ['celeste', 'Fresco sobre neutro. Muy primaveral y muy fácil.'],
+          ['terracota', 'El mejor fondo que hay para un naranja tierra.'],
+        ],
+        ojo: [
+          ['grisj', 'Gris sobre gris: solo si hay dos o tres tonos de diferencia.'],
+          ['carbon', 'Mismo caso: necesita un salto claro de valor.'],
+          ['camel', 'Va, pero el gris frío puede apagar el camel. Pruébalo con luz de día.'],
+          ['mostaza', 'El gris la sostiene, pero es mucho color para un pantalón de valor medio.'],
+          ['crema', 'Los dos son claros y apagados. Va si la crema es bastante más clara.'],
+        ],
+        no: [
+          ['rosa', 'Rosa y gris juntos apagan: el conjunto se ve descolorido.'],
+          ['berenjena', 'El morado necesita un fondo neutro oscuro; el gris medio lo deja a medias.'],
+          ['rojo', 'Rojo puro sobre gris medio vibra y cansa a la vista.'],
+        ] },
+    ];
+
+    const viste = (pares) => pares.map(([k, razon]) => ({
+      nombre: C[k][0], hex: C[k][1], razon,
+    }));
+
+    const actual = P.filter((p) => p.id === this.state.pant)[0] || P[0];
+
+    return {
+      pantalones: P.map((p) => ({
+        nombre: p.nombre,
+        hex: p.hex,
+        cls: p.id === actual.id ? 'on' : '',
+        pick: () => this.setState({ pant: p.id }),
+      })),
+      elegido: {
+        nombre: actual.nombre,
+        hex: actual.hex,
+        lectura: actual.lectura,
+        si: viste(actual.si),
+        ojo: viste(actual.ojo),
+        no: viste(actual.no),
+        nSi: actual.si.length + ' de 16',
+        nOjo: actual.ojo.length + ' de 16',
+        nNo: actual.no.length + ' de 16',
+      },
+    };
+  }
+}
+</script>
+</body>
+</html>

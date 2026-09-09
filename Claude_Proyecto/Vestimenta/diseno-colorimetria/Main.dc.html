@@ -1,0 +1,180 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&display=swap">
+  <style>
+    body { margin: 0; background: #0a0908; font-family: 'Inter', -apple-system, sans-serif;
+           font-size: 14px; color: #f0ece6; }
+    a { color: #c17f4a; } a:hover { color: #d99a68; }
+    .mono { font-family: 'Space Grotesk', monospace; letter-spacing: -0.01em; }
+    .nav { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: 9px;
+           color: #a89e91; font-weight: 500; font-size: 13px; }
+    .nav.on { background: rgba(193,127,74,0.12); color: #c17f4a; font-weight: 600; }
+    .nav i { width: 16px; height: 16px; display: block; flex: none; }
+    /* LA MATRIZ. Las playeras van en FILAS y los pantalones en columnas, y no al revés:
+       hay 16 playeras y 6 pantalones, así que en filas cabe entera sin apretar nada. */
+    .fila { display: grid; grid-template-columns: 186px repeat(6, minmax(0, 1fr)); gap: 0;
+            align-items: center; border-top: 1px solid rgba(255,255,255,0.06); }
+    .fila .et { display: flex; align-items: center; gap: 9px; padding: 7px 10px 7px 0; }
+    .fila .et .sw { width: 30px; height: 30px; border-radius: 7px; flex: none;
+                    border: 1px solid rgba(255,255,255,0.11); }
+    .fila .et .nm { font-size: 12px; font-weight: 600; color: #f0ece6; }
+    .cel { display: flex; align-items: center; justify-content: center; height: 44px; }
+    /* El veredicto es un punto, no una palabra: en 96 celdas leer 96 etiquetas no es leer. */
+    .pt { width: 13px; height: 13px; border-radius: 50%; }
+    .si { background: #4ea87a; }
+    .ojo { background: transparent; border: 2.5px solid #c9973a; }
+    .no { width: 13px; height: 2.5px; border-radius: 2px; background: #c85a5a; }
+    .cab { display: grid; grid-template-columns: 186px repeat(6, minmax(0, 1fr));
+           align-items: end; padding-bottom: 9px; }
+    .cab .p { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+    .cab .p .sw { width: 100%; height: 30px; border-radius: 7px;
+                  border: 1px solid rgba(255,255,255,0.11); }
+    .cab .p .nm { font-size: 10.5px; font-weight: 700; color: #a89e91; text-align: center;
+                  line-height: 1.25; }
+    .ley { display: flex; align-items: center; gap: 7px; font-size: 11.5px; color: #a89e91; }
+  </style>
+</helmet>
+
+<div style="width: 1240px; height: 1040px; box-sizing: border-box; display: grid;
+     grid-template-columns: 245px minmax(0, 1fr); background: #0a0908; overflow: hidden">
+
+  <div style="border-right: 1px solid rgba(255,255,255,0.08); background: #151311;
+       padding: 18px 14px; display: flex; flex-direction: column; gap: 3px">
+    <div style="display: flex; align-items: center; gap: 9px; padding: 0 6px 16px">
+      <div style="width: 26px; height: 26px; border-radius: 7px; background: #c17f4a;
+           display: flex; align-items: center; justify-content: center">
+        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="#0a0908"
+             stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M16 3l4 3-2 4-2-1v12H8V9L6 10 4 6l4-3 4 2 4-2z"></path></svg>
+      </div>
+      <div style="font-size: 13.5px; font-weight: 800; letter-spacing: -0.01em">Vestimenta</div>
+    </div>
+    <div class="nav"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+      stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8"></path>
+      <path d="M5 10v10h14V10"></path></svg></i>Inicio</div>
+    <div class="nav"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+      stroke-linecap="round" stroke-linejoin="round"><path d="M16 3l4 3-2 4-2-1v12H8V9L6 10 4 6l4-3"></path></svg></i>Básicos</div>
+    <div class="nav"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+      stroke-linecap="round" stroke-linejoin="round"><path d="M6 3l6 4 6-4 3 4-3 3v10H6V10L3 7z"></path></svg></i>Chaquetas</div>
+    <div class="nav"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+      stroke-linecap="round" stroke-linejoin="round"><path d="M3 17h18v3H3z"></path>
+      <path d="M3 17l2-8h5l4 4h5l2 4"></path></svg></i>Zapatos</div>
+    <div class="nav"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+      stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="6"></circle>
+      <path d="M12 9v3l2 1"></path></svg></i>Accesorios</div>
+    <div class="nav on"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+      stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle>
+      <path d="M12 3a9 9 0 0 1 0 18"></path><circle cx="9" cy="10" r="1.2"></circle>
+      <circle cx="15" cy="14" r="1.2"></circle></svg></i>Colorimetría</div>
+    <div style="height: 1px; background: rgba(255,255,255,0.08); margin: 11px 6px"></div>
+    <div class="nav"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+      stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="13" rx="2"></rect>
+      <path d="M9 7V5h6v2"></path></svg></i>Trabajo</div>
+    <div class="nav"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+      stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle>
+      <path d="M9 14s1 1.5 3 1.5S15 14 15 14"></path></svg></i>Casual</div>
+  </div>
+
+  <div style="padding: 20px 26px; display: flex; flex-direction: column; gap: 13px;
+       min-width: 0; overflow: hidden">
+
+    <div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 20px">
+      <div>
+        <div style="font-size: 10px; font-weight: 800; letter-spacing: 0.16em;
+             text-transform: uppercase; color: #6b6156">Cómo combinar</div>
+        <h2 style="font-size: 20px; font-weight: 800; margin: 5px 0 0">Colorimetría</h2>
+      </div>
+      <div style="display: flex; gap: 18px">
+        <div class="ley"><span class="pt si"></span>Va siempre</div>
+        <div class="ley"><span class="pt ojo"></span>Con cuidado</div>
+        <div class="ley"><span class="no"></span>Evítalo</div>
+      </div>
+    </div>
+
+    <!-- cabecera: los seis pantalones -->
+    <div class="cab" style="border-bottom: 1px solid rgba(255,255,255,0.14)">
+      <div style="font-size: 10px; font-weight: 800; letter-spacing: 0.13em;
+           text-transform: uppercase; color: #6b6156; padding-bottom: 4px">Playera ↓ · Pantalón →</div>
+      <div class="p"><div class="sw" style="background: #42618A"></div><div class="nm">Jeans<br>índigo</div></div>
+      <div class="p"><div class="sw" style="background: #2B3A55"></div><div class="nm">Jeans<br>oscuro</div></div>
+      <div class="p"><div class="sw" style="background: #232326"></div><div class="nm">Jeans<br>negro</div></div>
+      <div class="p"><div class="sw" style="background: #C0A57C"></div><div class="nm">Chino<br>caqui</div></div>
+      <div class="p"><div class="sw" style="background: #293650"></div><div class="nm">Chino<br>marino</div></div>
+      <div class="p"><div class="sw" style="background: #7D7B76"></div><div class="nm">Chino<br>gris</div></div>
+    </div>
+
+    <div>
+      <sc-for list="{{filas}}" as="f" hint-placeholder-count="16">
+        <div class="fila">
+          <div class="et">
+            <div class="sw" style="background: {{f.hex}}"></div>
+            <div class="nm">{{f.nombre}}</div>
+          </div>
+          <sc-for list="{{f.celdas}}" as="c" hint-placeholder-count="6">
+            <div class="cel"><span class="{{c.cls}}"></span></div>
+          </sc-for>
+        </div>
+      </sc-for>
+    </div>
+
+    <div style="margin-top: auto; display: flex; gap: 11px; padding: 12px 15px;
+         border-radius: 11px; background: #1a1815; border: 1px solid rgba(255,255,255,0.07)">
+      <div style="width: 3px; border-radius: 2px; background: #c17f4a; flex: none"></div>
+      <div style="font-size: 12px; color: #a89e91; line-height: 1.55">
+        Leída en horizontal: <b style="color:#f0ece6">blanco, verde oliva y burdeos</b>
+        van con los seis pantalones — son las tres que compras primero, y de ellas solo
+        tienes la blanca. <b style="color:#f0ece6">Rojo ladrillo, rosa palo y berenjena</b>
+        no tienen un solo verde en toda la tabla. Y si quieres
+        <b style="color:#f0ece6">playera azul marino</b>, necesitas un pantalón que no sea
+        azul ni negro: solo funciona sobre el caqui y sobre el gris. Los seis pantalones
+        aceptan ocho playeras cada uno, así que ninguno es «más combinable» — lo que
+        cambia es <i>cuáles</i> ocho.
+      </div>
+    </div>
+
+  </div>
+</div>
+</x-dc>
+
+<script data-dc-script data-props='{"$preview":{"width":1240,"height":1040}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // Las 96 celdas: para cada playera, su veredicto contra los seis pantalones en el
+    // orden de la cabecera (índigo, oscuro, negro, caqui, marino, gris).
+    const M = [
+      ['Blanco',        '#F2EFE9', 'ssssss'],
+      ['Crema',         '#E4D9C4', 'sssoso'],
+      ['Gris jaspeado', '#A3A19C', 'sssoso'],
+      ['Carbón',        '#3A3A3E', 'soosoo'],
+      ['Negro',         '#1B1B1D', 'soosos'],
+      ['Azul marino',   '#22304A', 'nnnsns'],
+      ['Celeste',       '#8FB6D4', 'nsssss'],
+      ['Verde oliva',   '#6E7448', 'ssssss'],
+      ['Verde botella', '#254A3D', 'ooosos'],
+      ['Burdeos',       '#6B2536', 'ssssss'],
+      ['Rojo ladrillo', '#A93A38', 'onnnnn'],
+      ['Mostaza',       '#C59A31', 'ossoso'],
+      ['Terracota',     '#A85C3D', 'ooooos'],
+      ['Camel',         '#B98A5B', 'sssoso'],
+      ['Rosa palo',     '#D7A79E', 'ooonon'],
+      ['Berenjena',     '#4B3455', 'nnnnnn'],
+    ];
+    const CLS = { s: 'pt si', o: 'pt ojo', n: 'no' };
+    return {
+      filas: M.map(([nombre, hex, cod]) => ({
+        nombre, hex,
+        celdas: cod.split('').map((c) => ({ cls: CLS[c] })),
+      })),
+    };
+  }
+}
+</script>
+</body>
+</html>

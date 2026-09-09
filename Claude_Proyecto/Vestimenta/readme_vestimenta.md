@@ -9,7 +9,7 @@ Aplicación web de una sola página (HTML+CSS+JS, sin backend) — catálogo/gu�
 | Archivo | Qué es |
 |---|---|
 | `vestimenta.html` | Shell: sidebar, topbar, CSS, cascarón de `<div id="content-root">` |
-| `vestimenta_data.js` | Todo el contenido: `BASICOS`, `CHAQUETAS`, `ZAPATOS` (arrays de items comprables), `OCASIONES` (combos por ocasión), `FASES` (plan de compra) |
+| `vestimenta_data.js` | Todo el contenido: `BASICOS`, `CHAQUETAS`, `ZAPATOS` (arrays de items comprables), `OCASIONES` (combos por ocasión), `FASES` (plan de compra), `COLORIMETRIA` (la matriz de color) |
 | `vestimenta_app.js` | Render (`RENDERS`), navegación (`nav()`), checklist (`toggleCheck()`), tema (`toggleTheme()`) |
 | `images/{basicos,chaquetas,zapatos,accesorios,trabajo,casual,ejercicio,bodas,fiestas}/` | 35 fotos descargadas, una carpeta por categoría/ocasión (`accesorios/` es nueva, 2026-08-03) |
 | `_image_sources.json` | Manifiesto de las 30 fotos: URL de origen, licencia y título — para atribución si se necesita en el futuro |
@@ -26,6 +26,55 @@ Aplicación web de una sola página (HTML+CSS+JS, sin backend) — catálogo/gu�
   - **Ejercicio**: conecta directamente con la sección "🧭 Deportes para Explorar" de `../CuidadoPersonal/ejercicio.html` (ver `readme_ejercicio.md`) — el tenis de cross-training se explica ahí mismo como prioridad si la meta de Hyrox va en serio.
   - **Bodas**: dos rutas (formal de noche con traje completo vs. de día/jardín con guayabera), con nota explícita de rentar el traje antes de comprarlo dado el enfoque actual en liquidar deuda.
   - **Fiestas**: marcado explícitamente como "$0 extra" si ya se compró lo de Básicos/Chaquetas/Zapatos — es la ocasión con menor costo incremental a propósito.
+
+## Colorimetría — qué playera va con qué pantalón
+
+**La sección que sustituye a las fotos de outfit.** Pedido de Adán (2026-09-08): *"en vez de
+buscar imagenes feas por que no hay ninguna bonita dame como la colorimetria mejor para
+combinar playeras de diferentes colores con pantalones en especificos"*. Elegida entre tres
+maquetas: *"direccion b"*.
+
+`COLORIMETRIA` (en `vestimenta_data.js`) son **6 pantalones × 16 playeras = 96 celdas**, cada
+una con veredicto (`s` va siempre · `o` con cuidado · `n` evítalo) **y el porqué escrito**.
+`renderColorimetria()` pinta la matriz con las playeras en **filas** y los pantalones en
+columnas — al revés no cabe: 16 columnas no entran ni en escritorio.
+
+**El veredicto es un punto, no una palabra**: son 96 celdas y leer 96 etiquetas no es leer. La
+forma lo dice además del color —círculo lleno, aro y raya—, así que se distingue en blanco y
+negro y con cualquier daltonismo. El semáforo usa los acentos que la app ya tiene (`--g`,
+`--w`, `--r`), no colores nuevos. El porqué de cada celda vive en el `title`, donde no
+estorba; en táctil no hay `title`, y por eso el subtítulo dice «en escritorio» en vez de
+prometer algo que el teléfono no cumple.
+
+**Los hex son de TELA, no de pantalla**: un blanco de camiseta es `#F2EFE9` y no `#FFFFFF`, y
+un negro lavado tira a `#1B1B1D`. Sobre el fondo carbón de esta app se leen mucho mejor que
+sobre blanco — es la razón de que la sección no lleve tarjetas claras.
+
+Los tres criterios detrás de cada veredicto son **contraste de valor** (claro contra oscuro),
+**temperatura** (cálido contra frío) y **saturación** (solo una prenda saturada por outfit).
+Cuando dos prendas comparten familia de color sin salto de valor, es `n`: no lee como
+conjunto, lee como error — por eso playera azul marino sobre jeans azules está en rojo.
+
+**Lo que dice la tabla, medido sobre las 96 celdas y no supuesto:**
+
+- **Blanco, verde oliva y burdeos** van con los seis pantalones. De las tres, solo la blanca
+  (`b1`) está en el catálogo.
+- **Celeste** va con cinco: todos menos el jeans índigo.
+- **Rojo ladrillo, rosa palo y berenjena** no tienen un solo verde. La berenjena es «evítalo»
+  en los seis.
+- **Playera azul marino** solo funciona sobre el chino caqui y el chino gris — los dos únicos
+  pantalones que no son ni azules ni negros.
+- Los seis pantalones aceptan **ocho playeras cada uno**: ninguno es «más combinable», lo que
+  cambia es *cuáles* ocho.
+
+Dos pantalones salen del catálogo (`b3` jeans azul clásico, `b4` chino caqui) y el marino lo
+pide el propio tip de `b4`; los otros tres completan la semana y no están comprados. **De las
+16 playeras solo existen dos en el catálogo** (`b1` blanca, `b2` negra), así que la matriz es
+también la lista de qué comprar. Esa correspondencia se guarda en el campo opcional `item` de
+cada entrada; hoy no se pinta, está para cuando se enlace con el checklist.
+
+La sección **no añade estado**: no hay nada que marcar, así que el contador del sidebar sigue
+contando sobre los 25 items comprables.
 
 ## Modelo de datos — `localStorage['vestimenta_v1']`
 
@@ -61,6 +110,7 @@ Smoke test con Playwright (Chromium headless): las 9 pestañas cargan sin imáge
 Ya existían tres breakpoints funcionales de una pasada anterior (`@media(max-width:760px)` apila `.combo-card`, `900px` pone `.fase-grid` a 2 columnas, `640px` saca el sidebar de pantalla con `transform:translateX(-100%)`), así que el trabajo fue completar lo que faltaba, no reconstruir el layout:
 
 - **Bug real encontrado — el botón ☰ nunca se veía en móvil**: `#menuBtn` (el botón hamburguesa que abre el sidebar cuando está oculto) tenía `style="display:none;border-radius:6px"` puesto **inline** en el HTML, y no existía ningún `@media` que lo reactivara. Resultado: en cualquier pantalla ≤640px el sidebar se escondía (correcto) pero no había forma de volver a abrirlo — navegación completamente inaccesible salvo la pestaña "Inicio" ya activa al cargar. Un `@media(max-width:640px){#menuBtn{display:flex}}` normal **no alcanza** porque un inline `style` le gana a cualquier regla externa sin `!important` — se resolvió con `#menuBtn{display:flex !important}` dentro del media query. Verificado con Playwright: en iPhone 15 Pro (393px) el botón ahora es visible, el click abre `.sidebar.open`, y navegar a otra sección la vuelve a cerrar (ese comportamiento de auto-cierre ya existía en `nav()` de `vestimenta_app.js`, no se tocó JS).
+- **`.main` lleva `min-width:0`**, y esto sí arregló un desbordamiento real: `.main` es flex item de `body` y, sin declararlo, un flex item crece con su contenido en vez de limitarlo. La matriz de colorimetría (mínimo 490px en móvil) empujaba la página **166px** a 390 de ancho en lugar de rodar dentro de su propio scroll. Medido antes y después. Es la misma trampa que las dos rejillas de abajo, un nivel más arriba.
 - **Red de seguridad para la trampa de CSS Grid**: se agregó `.fase-grid > *, .item-grid > * { min-width: 0 }` — no había overflow activo (el `item-grid` usa `repeat(auto-fill,minmax(270px,1fr))`, que ya es responsivo por diseño, y `.combo-card` es flex, no grid), pero se deja la regla como prevención igual que en `Dashboard/Coach` por si se agregan items con texto más largo a futuro.
 - **Breakpoints nuevos 800px / 480px** (los estándar del resto del ecosistema), agregados sin quitar los 760/900/640 existentes: a 800px se reduce el padding de `.content` y `.combo-body` y el tamaño de `.sh h2`; a 480px se compacta aún más (`.content` a 14px de padding, `.item-img` de 210px a 170px de alto, `.topbar` con menos padding lateral).
 - **Verificado con Playwright** en iPad (820×1180) e iPhone 15 Pro (393×852, `isMobile:true, hasTouch:true`): las 9 pestañas, el checklist, el toggle de tema y (en iPhone) la apertura/cierre del sidebar móvil — overflow horizontal (`scrollWidth - clientWidth`) en 0 en todos los casos, cero errores de consola. Capturas en `shots_responsive/vestimenta_*` de la sesión.

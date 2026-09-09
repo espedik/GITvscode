@@ -227,3 +227,171 @@ const FASES = [
   {n:'Fase 3', t:'Para variar', items:['Hoodie','Polo piqué','Botines Chelsea','Blazer casual o puffer (según temporada)'], costo:'$2,700-4,000'},
   {n:'Fase 4', t:'Opcional / cuando alcance', items:['Chamarra de cuero','Tenis de cross-training (si Hyrox va en serio)','Traje de boda (mejor rentar primero)','Reloj, lentes de sol, mochila, corbata y cartera (ver Accesorios)'], costo:'Variable — sin prisa'},
 ];
+
+// ─── COLORIMETRÍA: qué playera va con qué pantalón ────────────────────────────
+// Sustituye a las fotos de outfit. Pedido de Adán (2026-09-08): *"en vez de buscar
+// imágenes feas por que no hay ninguna bonita dame como la colorimetria mejor para
+// combinar playeras de diferentes colores con pantalones en especificos"*.
+//
+// Los hex son de TELA, no de pantalla: un blanco de camiseta es #F2EFE9 y no #FFFFFF,
+// y un negro lavado tira a #1B1B1D. Sobre el fondo carbón de esta app se leen mucho
+// mejor que sobre blanco, que es la razón de que la sección no tenga tarjetas claras.
+//
+// `reglas[pantalón][playera]` es `[veredicto, porqué]`:
+//   's' va siempre · 'o' con cuidado · 'n' evítalo
+// Los tres criterios detrás de cada veredicto son contraste de VALOR (claro contra
+// oscuro), TEMPERATURA (cálido contra frío) y SATURACIÓN (solo una prenda saturada por
+// outfit). Cuando dos prendas comparten familia de color sin salto de valor, es 'n':
+// no lee como conjunto, lee como error.
+
+const COLORIMETRIA = {
+  // Seis pantalones. `b3` (jeans azul clásico) y `b4` (chino caqui) ya están en BASICOS;
+  // el marino lo pide el tip de b4 ("un caqui y un azul marino cubren el 90%"). Los
+  // otros tres completan la semana y no están todavía en el catálogo.
+  pantalones: [
+    {id:'indigo', n:'Jeans índigo', hex:'#42618A', item:'b3',
+      lectura:'Frío, valor medio, saturación media. El más difícil de los seis: al ser azul y de valor medio se pelea con los azules y con los grises oscuros.'},
+    {id:'oscuro', n:'Jeans azul oscuro', hex:'#2B3A55',
+      lectura:'Frío y oscuro. Aguanta mucha más saturación arriba que el índigo porque hay salto de valor. Es tu jean de viernes de oficina.'},
+    {id:'negro', n:'Jeans negro', hex:'#232326',
+      lectura:'Neutro y muy oscuro. El más permisivo de tus jeans: al no tener color propio, no compite con nada de arriba.'},
+    {id:'caqui', n:'Chino caqui', hex:'#C0A57C', item:'b4',
+      lectura:'Cálido y claro. El único claro de los seis, así que aquí manda el pantalón: arriba conviene algo más oscuro que él.'},
+    {id:'marino', n:'Chino azul marino', hex:'#293650',
+      lectura:'Frío y oscuro, y liso: al no tener la textura del denim aguanta más formalidad. Es tu pantalón de junta.'},
+    {id:'gris', n:'Chino gris piedra', hex:'#7D7B76',
+      lectura:'Neutro de valor medio: no tiene temperatura, así que no se pelea con nada. El más permisivo de los seis y el que no tienes.'},
+  ],
+
+  // Dieciséis colores de playera. Hoy solo tienes blanca (b1) y negra (b2): las otras
+  // catorce son también la lista de qué comprar, en el orden que dice la tabla.
+  playeras: [
+    {id:'blanco',    n:'Blanco',        hex:'#F2EFE9', item:'b1'},
+    {id:'crema',     n:'Crema',         hex:'#E4D9C4'},
+    {id:'grisj',     n:'Gris jaspeado', hex:'#A3A19C'},
+    {id:'carbon',    n:'Carbón',        hex:'#3A3A3E'},
+    {id:'negro',     n:'Negro',         hex:'#1B1B1D', item:'b2'},
+    {id:'marino',    n:'Azul marino',   hex:'#22304A'},
+    {id:'celeste',   n:'Celeste',       hex:'#8FB6D4'},
+    {id:'oliva',     n:'Verde oliva',   hex:'#6E7448'},
+    {id:'botella',   n:'Verde botella', hex:'#254A3D'},
+    {id:'burdeos',   n:'Burdeos',       hex:'#6B2536'},
+    {id:'rojo',      n:'Rojo ladrillo', hex:'#A93A38'},
+    {id:'mostaza',   n:'Mostaza',       hex:'#C59A31'},
+    {id:'terracota', n:'Terracota',     hex:'#A85C3D'},
+    {id:'camel',     n:'Camel',         hex:'#B98A5B'},
+    {id:'rosa',      n:'Rosa palo',     hex:'#D7A79E'},
+    {id:'berenjena', n:'Berenjena',     hex:'#4B3455'},
+  ],
+
+  reglas: {
+    indigo: {
+      blanco:   ['s','El contraste más limpio que hay. Si dudas, esta.'],
+      crema:    ['s','Como el blanco pero cálido: suaviza el azul y se ve menos de uniforme.'],
+      grisj:    ['s','Neutro puro. Mismo valor que el jean, pero sin color que compita.'],
+      carbon:   ['s','Ancla la mitad de arriba sin el corte duro del negro.'],
+      negro:    ['s','Contraste máximo. De noche y con sneaker blanco, siempre.'],
+      oliva:    ['s','Cálido apagado contra azul frío: el complementario que no grita.'],
+      burdeos:  ['s','Rojo oscuro contra azul es el par clásico. Con derby café.'],
+      camel:    ['s','El pariente natural del denim: cálido y poco saturado, nunca choca.'],
+      mostaza:  ['o','Es el complementario exacto del azul: funciona, pero manda. Deja el resto neutro.'],
+      terracota:['o','Igual que la mostaza pero más apagada. Pide zapato café, no blanco.'],
+      botella:  ['o','Frío y oscuro como el jean. Con índigo claro va; con oscuro se apelmaza.'],
+      rojo:     ['o','Mucha saturación arriba. Que sea ladrillo, no rojo puro, y nada más de color.'],
+      rosa:     ['o','Va en primavera y con jean claro. Con índigo oscuro se apaga.'],
+      marino:   ['n','Dos azules que no son ni el mismo ni opuestos: lee como error, no como conjunto.'],
+      celeste:  ['n','Mismo azul, distinto valor: parece intento de conjunto de mezclilla que salió mal.'],
+      berenjena:['n','Morado y azul son vecinos: juntos enturbian y ninguno se lee.'],
+    },
+    oscuro: {
+      blanco:   ['s','Contraste máximo y limpio. El combo de viernes casual.'],
+      crema:    ['s','Menos duro que el blanco y más cálido. Bien con derby café.'],
+      grisj:    ['s','Sube el valor sin meter color. Seguro con cualquier zapato.'],
+      celeste:  ['s','Aquí sí: hay salto grande de valor entre el celeste y el índigo oscuro.'],
+      camel:    ['s','Cálido claro sobre azul oscuro: el contraste de temperatura hace el trabajo.'],
+      oliva:    ['s','Apagado contra apagado, pero uno cálido y otro frío. Muy usable.'],
+      burdeos:  ['s','Oscuro con oscuro funciona porque el matiz es opuesto. De noche, impecable.'],
+      mostaza:  ['s','El jean oscuro sostiene la saturación que el índigo medio no aguanta.'],
+      negro:    ['o','Se ve bien, pero junto al negro el azul puede leerse sucio. Revísalo con luz de día.'],
+      carbon:   ['o','Poco contraste de valor. Funciona si el jean es claramente más azul que gris.'],
+      botella:  ['o','Dos oscuros fríos. Necesita zapato claro para no ser un bloque.'],
+      terracota:['o','Buena idea, pero pide que el resto sea neutro total.'],
+      rosa:     ['o','Muy claro sobre muy oscuro: el contraste es grande y el tono, delicado.'],
+      marino:   ['n','Es prácticamente el mismo color: parece traje de mezclilla mal cortado.'],
+      berenjena:['n','Morado sobre azul oscuro se lee como negro sucio, no como color.'],
+      rojo:     ['n','Rojo puro sobre índigo oscuro es bandera, no outfit. Cámbialo por burdeos.'],
+    },
+    negro: {
+      blanco:   ['s','El contraste más fuerte del clóset. Nunca falla, de día o de noche.'],
+      crema:    ['s','Rompe la dureza del blanco y ablanda el negro. Muy bueno con Chelsea.'],
+      grisj:    ['s','El degradado natural: gris arriba, negro abajo.'],
+      camel:    ['s','Un cálido claro es lo que más levanta un pantalón negro.'],
+      celeste:  ['s','El negro no compite con ningún azul, así que aquí sí puedes usarlo.'],
+      oliva:    ['s','Apagado sobre negro se ve caro. Con sneaker blanco, muy bien.'],
+      burdeos:  ['s','Vino sobre negro es el combo de noche por excelencia.'],
+      mostaza:  ['s','El negro absorbe la saturación: la mostaza se ve intencional, no chillona.'],
+      negro:    ['o','Total black funciona, pero solo si las dos telas son del mismo negro. Un negro lavado junto a uno nuevo se nota.'],
+      carbon:   ['o','Poco contraste. Va si el gris es claramente más claro que el pantalón.'],
+      botella:  ['o','Verde muy oscuro sobre negro: a distancia se pierde el verde.'],
+      terracota:['o','Bien, pero el negro apaga el naranja. Elige la versión más saturada.'],
+      rosa:     ['o','Contraste alto y tono suave. Funciona, pero es la más arriesgada aquí.'],
+      marino:   ['n','Marino y negro es el choque clásico: con luz de día se ve equivocado, no elegante.'],
+      berenjena:['n','Morado oscuro sobre negro no se lee: parece una mancha.'],
+      rojo:     ['n','Rojo puro con negro es disfraz. El burdeos hace lo mismo sin el grito.'],
+    },
+    caqui: {
+      blanco:   ['s','Claro sobre claro, pero el caqui es cálido y el blanco frío: se separan solos.'],
+      marino:   ['s','El par de manual. Marino arriba, caqui abajo: no falla nunca.'],
+      botella:  ['s','Verde oscuro sobre caqui: la versión menos vista del combo de arriba.'],
+      negro:    ['s','Contraste fuerte y limpio. El más sencillo de todos.'],
+      carbon:   ['s','Como el negro, un punto menos severo. Muy bien de oficina.'],
+      burdeos:  ['s','Cálido con cálido, pero con un salto de valor grande. Funciona.'],
+      oliva:    ['s','Los dos son tierra; funciona porque el oliva es mucho más oscuro.'],
+      celeste:  ['s','Fresco sobre cálido. El combo de primavera más fácil que tienes.'],
+      crema:    ['o','Muy parecido al caqui. Solo va si la crema es claramente más clara.'],
+      camel:    ['o','Mismo problema: dos tostados. Si el valor es parecido, no.'],
+      grisj:    ['o','Gris frío sobre caqui cálido puede leerse apagado. Va con zapato blanco.'],
+      mostaza:  ['o','Amarillo sobre amarillo tierra. Necesita que la mostaza sea muy oscura.'],
+      terracota:['o','Cálido sobre cálido otra vez: funciona en otoño, no de oficina.'],
+      rojo:     ['n','Rojo sobre caqui se va a uniforme de trabajo. No es lo que buscas.'],
+      rosa:     ['n','Rosa claro con caqui claro: sin contraste ni de valor ni de temperatura.'],
+      berenjena:['n','Morado con caqui nunca acaba de verse deliberado.'],
+    },
+    marino: {
+      blanco:   ['s','El uniforme seguro de oficina: blanco arriba, marino abajo.'],
+      crema:    ['s','Igual pero más suave. Con mocasín es lo más elegante por lo que cuesta.'],
+      celeste:  ['s','Salto de valor grande dentro del mismo azul: aquí sí funciona.'],
+      camel:    ['s','Cálido claro sobre azul oscuro: el contraste más elegante de la lista.'],
+      grisj:    ['s','Neutro que no compite. Seguro para junta.'],
+      burdeos:  ['s','Vino con marino es un clásico de sastrería. Con derby café, perfecto.'],
+      oliva:    ['s','Menos obvio que el blanco y se ve pensado.'],
+      mostaza:  ['s','El marino oscuro sostiene la mostaza sin que grite.'],
+      negro:    ['o','Negro sobre marino es el par que más se equivoca. Solo con luz artificial.'],
+      carbon:   ['o','Poco contraste, pero funciona si el gris es claro.'],
+      botella:  ['o','Dos oscuros fríos. Pide zapato claro.'],
+      terracota:['o','Funciona, pero casualiza un pantalón que quiere ser formal.'],
+      rosa:     ['o','Va, pero es la combinación más difícil de llevar de todas estas.'],
+      marino:   ['n','Marino con marino solo funciona si es literalmente un traje. Si no, no.'],
+      berenjena:['n','Morado y azul son vecinos: el conjunto sale turbio.'],
+      rojo:     ['n','Demasiada saturación contra un pantalón que quiere ser formal.'],
+    },
+    gris: {
+      blanco:   ['s','El gris no compite con nada y el blanco lo deja limpio.'],
+      negro:    ['s','Contraste claro de valor, sin choque de color.'],
+      marino:   ['s','Aquí el marino sí va: el gris es neutro, no azul.'],
+      burdeos:  ['s','El gris hace de fondo y el vino se lee entero.'],
+      botella:  ['s','Igual que el vino: el gris deja hablar al verde.'],
+      oliva:    ['s','Dos apagados, y funciona porque el gris no tiene temperatura.'],
+      celeste:  ['s','Fresco sobre neutro. Muy primaveral y muy fácil.'],
+      terracota:['s','El mejor fondo que hay para un naranja tierra.'],
+      grisj:    ['o','Gris sobre gris: solo si hay dos o tres tonos de diferencia.'],
+      carbon:   ['o','Mismo caso: necesita un salto claro de valor.'],
+      camel:    ['o','Va, pero el gris frío puede apagar el camel. Pruébalo con luz de día.'],
+      mostaza:  ['o','El gris la sostiene, pero es mucho color para un pantalón de valor medio.'],
+      crema:    ['o','Los dos son claros y apagados. Va si la crema es bastante más clara.'],
+      rosa:     ['n','Rosa y gris juntos apagan: el conjunto se ve descolorido.'],
+      berenjena:['n','El morado necesita un fondo neutro oscuro; el gris medio lo deja a medias.'],
+      rojo:     ['n','Rojo puro sobre gris medio vibra y cansa a la vista.'],
+    },
+  },
+};

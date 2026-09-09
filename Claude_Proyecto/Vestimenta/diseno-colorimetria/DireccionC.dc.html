@@ -1,0 +1,221 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&display=swap">
+  <style>
+    body { margin: 0; background: #0a0908; font-family: 'Inter', -apple-system, sans-serif;
+           font-size: 14px; color: #f0ece6; }
+    a { color: #c17f4a; } a:hover { color: #d99a68; }
+    .mono { font-family: 'Space Grotesk', monospace; letter-spacing: -0.01em; }
+    .nav { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: 9px;
+           color: #a89e91; font-weight: 500; font-size: 13px; }
+    .nav.on { background: rgba(193,127,74,0.12); color: #c17f4a; font-weight: 600; }
+    .nav i { width: 16px; height: 16px; display: block; flex: none; }
+    /* LA TORRE. El outfit dibujado como lo que es: bloques de color apilados en el orden
+       en que se ven de arriba abajo. Con proporciones reales — el pantalón ocupa más que
+       la playera, y el zapato es una franja. Esto es lo que sustituye a la foto. */
+    .torre { display: flex; flex-direction: column; border-radius: 10px; overflow: hidden;
+             border: 1px solid rgba(255,255,255,0.11); }
+    .torre .top { height: 116px; }
+    .torre .cin { height: 9px; }
+    .torre .bot { height: 168px; }
+    .torre .zap { height: 34px; }
+    .pieza { display: flex; align-items: center; gap: 9px; }
+    .pieza .sw { width: 15px; height: 15px; border-radius: 4px; flex: none;
+                 border: 1px solid rgba(255,255,255,0.13); }
+    .pieza .n { font-size: 12px; color: #f0ece6; font-weight: 500; }
+    .pieza .k { font-size: 10px; font-weight: 700; letter-spacing: 0.1em;
+                text-transform: uppercase; color: #6b6156; margin-left: auto; }
+    .card { background: #1a1815; border: 1px solid rgba(255,255,255,0.07); border-radius: 14px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.45); padding: 16px; display: flex;
+            flex-direction: column; gap: 13px; }
+    .swap { display: flex; align-items: center; gap: 8px; padding: 7px 10px; border-radius: 9px;
+            background: #1a1815; border: 1px solid rgba(255,255,255,0.07); }
+    .swap .sw { width: 20px; height: 20px; border-radius: 5px; flex: none;
+                border: 1px solid rgba(255,255,255,0.13); }
+    .swap .n { font-size: 11.5px; font-weight: 600; color: #f0ece6; }
+    .swap .r { font-size: 10.5px; color: #6b6156; }
+  </style>
+</helmet>
+
+<div style="width: 1240px; height: 940px; box-sizing: border-box; display: grid;
+     grid-template-columns: 245px minmax(0, 1fr); background: #0a0908; overflow: hidden">
+
+  <div style="border-right: 1px solid rgba(255,255,255,0.08); background: #151311;
+       padding: 18px 14px; display: flex; flex-direction: column; gap: 3px">
+    <div style="display: flex; align-items: center; gap: 9px; padding: 0 6px 16px">
+      <div style="width: 26px; height: 26px; border-radius: 7px; background: #c17f4a;
+           display: flex; align-items: center; justify-content: center">
+        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="#0a0908"
+             stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M16 3l4 3-2 4-2-1v12H8V9L6 10 4 6l4-3 4 2 4-2z"></path></svg>
+      </div>
+      <div style="font-size: 13.5px; font-weight: 800; letter-spacing: -0.01em">Vestimenta</div>
+    </div>
+    <div class="nav"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+      stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8"></path>
+      <path d="M5 10v10h14V10"></path></svg></i>Inicio</div>
+    <div class="nav"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+      stroke-linecap="round" stroke-linejoin="round"><path d="M16 3l4 3-2 4-2-1v12H8V9L6 10 4 6l4-3"></path></svg></i>Básicos</div>
+    <div class="nav"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+      stroke-linecap="round" stroke-linejoin="round"><path d="M6 3l6 4 6-4 3 4-3 3v10H6V10L3 7z"></path></svg></i>Chaquetas</div>
+    <div class="nav"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+      stroke-linecap="round" stroke-linejoin="round"><path d="M3 17h18v3H3z"></path>
+      <path d="M3 17l2-8h5l4 4h5l2 4"></path></svg></i>Zapatos</div>
+    <div class="nav"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+      stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="6"></circle>
+      <path d="M12 9v3l2 1"></path></svg></i>Accesorios</div>
+    <div class="nav on"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+      stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle>
+      <path d="M12 3a9 9 0 0 1 0 18"></path><circle cx="9" cy="10" r="1.2"></circle>
+      <circle cx="15" cy="14" r="1.2"></circle></svg></i>Colorimetría</div>
+    <div style="height: 1px; background: rgba(255,255,255,0.08); margin: 11px 6px"></div>
+    <div class="nav"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+      stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="13" rx="2"></rect>
+      <path d="M9 7V5h6v2"></path></svg></i>Trabajo</div>
+    <div class="nav"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+      stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle>
+      <path d="M9 14s1 1.5 3 1.5S15 14 15 14"></path></svg></i>Casual</div>
+  </div>
+
+  <div style="padding: 22px 26px; display: flex; flex-direction: column; gap: 16px;
+       min-width: 0; overflow: hidden">
+
+    <div>
+      <div style="font-size: 10px; font-weight: 800; letter-spacing: 0.16em;
+           text-transform: uppercase; color: #6b6156">Cómo combinar</div>
+      <h2 style="font-size: 20px; font-weight: 800; margin: 5px 0 0">Tres que siempre funcionan</h2>
+      <div style="font-size: 12.5px; color: #a89e91; margin-top: 4px; line-height: 1.5">
+        El outfit dibujado en bloques de color, en el orden en que se ve: playera,
+        cinturón, pantalón, zapato. Todas las piezas salen de tus listas.
+      </div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px">
+
+      <!-- 1 · viernes de oficina -->
+      <div class="card">
+        <div class="torre">
+          <div class="top" style="background: #F2EFE9"></div>
+          <div class="cin" style="background: #5A3A28"></div>
+          <div class="bot" style="background: #293650"></div>
+          <div class="zap" style="background: #6B4530"></div>
+        </div>
+        <div>
+          <div style="font-size: 14.5px; font-weight: 800">Viernes de oficina</div>
+          <div class="mono" style="font-size: 10.5px; font-weight: 700; color: #c17f4a;
+               margin-top: 3px">FRÍO ABAJO · CÁLIDO EN LOS DETALLES</div>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 7px">
+          <div class="pieza"><span class="sw" style="background:#F2EFE9"></span>
+            <span class="n">Playera blanca</span><span class="k">Playera</span></div>
+          <div class="pieza"><span class="sw" style="background:#293650"></span>
+            <span class="n">Chino azul marino</span><span class="k">Pantalón</span></div>
+          <div class="pieza"><span class="sw" style="background:#6B4530"></span>
+            <span class="n">Derby café</span><span class="k">Zapato</span></div>
+          <div class="pieza"><span class="sw" style="background:#5A3A28"></span>
+            <span class="n">Cinturón de piel café</span><span class="k">Cinturón</span></div>
+        </div>
+        <div style="font-size: 11.5px; color: #a89e91; line-height: 1.55; border-top:
+             1px solid rgba(255,255,255,0.07); padding-top: 11px">
+          Blanco sobre marino es el par más seguro que existe. El café del zapato y del
+          cinturón mete el único cálido del conjunto: sin él, blanco y marino se quedan
+          en un bloque frío que parece uniforme.
+        </div>
+      </div>
+
+      <!-- 2 · sábado de día -->
+      <div class="card">
+        <div class="torre">
+          <div class="top" style="background: #B98A5B"></div>
+          <div class="cin" style="background: #5A3A28"></div>
+          <div class="bot" style="background: #42618A"></div>
+          <div class="zap" style="background: #EDEAE4"></div>
+        </div>
+        <div>
+          <div style="font-size: 14.5px; font-weight: 800">Sábado de día</div>
+          <div class="mono" style="font-size: 10.5px; font-weight: 700; color: #c17f4a;
+               margin-top: 3px">CÁLIDO ARRIBA · FRÍO ABAJO</div>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 7px">
+          <div class="pieza"><span class="sw" style="background:#B98A5B"></span>
+            <span class="n">Playera camel</span><span class="k">Playera</span></div>
+          <div class="pieza"><span class="sw" style="background:#42618A"></span>
+            <span class="n">Jeans índigo</span><span class="k">Pantalón</span></div>
+          <div class="pieza"><span class="sw" style="background:#EDEAE4"></span>
+            <span class="n">Sneakers blancos</span><span class="k">Zapato</span></div>
+          <div class="pieza"><span class="sw" style="background:#5A3A28"></span>
+            <span class="n">Cinturón de piel café</span><span class="k">Cinturón</span></div>
+        </div>
+        <div style="font-size: 11.5px; color: #a89e91; line-height: 1.55; border-top:
+             1px solid rgba(255,255,255,0.07); padding-top: 11px">
+          El camel es el cálido natural del denim: poco saturado, así que contrasta en
+          temperatura sin competir. El sneaker blanco sube el valor abajo y cierra la
+          silueta — con zapato oscuro el conjunto se hunde por los pies.
+        </div>
+      </div>
+
+      <!-- 3 · noche -->
+      <div class="card">
+        <div class="torre">
+          <div class="top" style="background: #6B2536"></div>
+          <div class="cin" style="background: #1D1C1E"></div>
+          <div class="bot" style="background: #232326"></div>
+          <div class="zap" style="background: #1D1C1E"></div>
+        </div>
+        <div>
+          <div style="font-size: 14.5px; font-weight: 800">Noche</div>
+          <div class="mono" style="font-size: 10.5px; font-weight: 700; color: #c17f4a;
+               margin-top: 3px">UN SOLO COLOR, Y VA ARRIBA</div>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 7px">
+          <div class="pieza"><span class="sw" style="background:#6B2536"></span>
+            <span class="n">Playera burdeos</span><span class="k">Playera</span></div>
+          <div class="pieza"><span class="sw" style="background:#232326"></span>
+            <span class="n">Jeans negro</span><span class="k">Pantalón</span></div>
+          <div class="pieza"><span class="sw" style="background:#1D1C1E"></span>
+            <span class="n">Botines Chelsea negros</span><span class="k">Zapato</span></div>
+          <div class="pieza"><span class="sw" style="background:#1D1C1E"></span>
+            <span class="n">Cinturón negro</span><span class="k">Cinturón</span></div>
+        </div>
+        <div style="font-size: 11.5px; color: #a89e91; line-height: 1.55; border-top:
+             1px solid rgba(255,255,255,0.07); padding-top: 11px">
+          Todo el peso abajo y el único color arriba, que es donde te miran cuando hablas.
+          El burdeos hace lo que haría un rojo sin el grito, y el negro con negro de
+          pantalón y zapato alarga la pierna.
+        </div>
+      </div>
+    </div>
+
+    <!-- cambia una pieza -->
+    <div style="display: flex; flex-direction: column; gap: 9px">
+      <div style="font-size: 10px; font-weight: 800; letter-spacing: 0.13em;
+           text-transform: uppercase; color: #6b6156">
+        Cambia solo la playera y sigue funcionando</div>
+      <div style="display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 9px">
+        <div class="swap"><span class="sw" style="background:#E4D9C4"></span>
+          <span><span class="n">Crema</span><br><span class="r">los tres</span></span></div>
+        <div class="swap"><span class="sw" style="background:#6E7448"></span>
+          <span><span class="n">Oliva</span><br><span class="r">los tres</span></span></div>
+        <div class="swap"><span class="sw" style="background:#A3A19C"></span>
+          <span><span class="n">Gris jaspeado</span><br><span class="r">oficina, sábado</span></span></div>
+        <div class="swap"><span class="sw" style="background:#8FB6D4"></span>
+          <span><span class="n">Celeste</span><br><span class="r">oficina, noche</span></span></div>
+        <div class="swap"><span class="sw" style="background:#C59A31"></span>
+          <span><span class="n">Mostaza</span><br><span class="r">oficina, noche</span></span></div>
+        <div class="swap" style="opacity: 0.55"><span class="sw" style="background:#22304A"></span>
+          <span><span class="n">Azul marino</span><br><span class="r">en ninguno</span></span></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

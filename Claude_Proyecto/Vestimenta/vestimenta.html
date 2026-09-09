@@ -52,7 +52,7 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var
 .nav-item:hover{background:rgba(var(--ov),.05);color:var(--text)}
 .nav-item.active{background:var(--p-l);color:var(--p);font-weight:600;border-left:2px solid var(--p)}
 .nav-item .ico{font-size:15px;width:20px;text-align:center;flex-shrink:0}
-.main{margin-left:var(--sw);flex:1;display:flex;flex-direction:column;min-height:100vh}
+.main{margin-left:var(--sw);flex:1;min-width:0;display:flex;flex-direction:column;min-height:100vh}
 .topbar{background:var(--surface);border-bottom:1px solid rgba(var(--ov),.06);padding:0 24px;height:58px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
 .topbar-title{font-size:15px;font-weight:700}
 .content{padding:24px;flex:1;max-width:1280px}
@@ -62,6 +62,41 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var
 .sh h2{font-size:20px;font-weight:800}
 .sh .sub{font-size:12.5px;color:var(--text2);margin-top:4px;line-height:1.6;max-width:760px}
 .intro-banner{border-color:rgba(193,127,74,.28);background:var(--p-l);margin-bottom:20px}
+/* ── COLORIMETRÍA ────────────────────────────────────────────────────────
+   La matriz: 16 playeras en FILAS y 6 pantalones en columnas. Al revés no cabe —
+   16 columnas no entran ni en escritorio— y así entra entera sin apretar nada.
+   El semáforo usa los acentos que ya tiene la app (--g, --w, --r), no colores
+   nuevos: el verde y el rojo del veredicto son los mismos de todo el proyecto. */
+.cm-ley{display:flex;align-items:center;gap:18px;flex-wrap:wrap;margin-bottom:14px}
+.cm-ley span{display:flex;align-items:center;gap:7px;font-size:11.5px;color:var(--text2)}
+.cm-ley i{flex:none}
+.cm-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.cm-tabla{min-width:600px}
+.cm-cab,.cm-fila{display:grid;grid-template-columns:168px repeat(6,minmax(56px,1fr))}
+.cm-cab{align-items:end;padding-bottom:9px;border-bottom:1px solid rgba(var(--ov),.16)}
+.cm-lbl{font-size:10px;font-weight:800;letter-spacing:.11em;text-transform:uppercase;
+  color:var(--text3);padding-bottom:4px}
+.cm-p{display:flex;flex-direction:column;align-items:center;gap:6px;padding:0 4px;cursor:help}
+.cm-sw{width:100%;height:30px;border-radius:7px;border:1px solid rgba(var(--ov),.16)}
+.cm-pn{font-size:10.5px;font-weight:700;color:var(--text2);text-align:center;line-height:1.25}
+.cm-fila{align-items:center;border-top:1px solid rgba(var(--ov),.07)}
+.cm-et{display:flex;align-items:center;gap:9px;padding:7px 10px 7px 0;min-width:0}
+.cm-sw2{width:28px;height:28px;border-radius:7px;flex:none;border:1px solid rgba(var(--ov),.16)}
+.cm-tn{font-size:12px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;
+  text-overflow:ellipsis}
+.cm-cel{display:flex;align-items:center;justify-content:center;height:42px}
+/* El veredicto es un punto y no una palabra: son 96 celdas, y leer 96 etiquetas no
+   es leer. La forma también lo dice, no solo el color — círculo lleno, aro y raya —
+   para que se distinga en blanco y negro y con cualquier daltonismo. */
+.cm-pt{display:block;width:13px;height:13px;border-radius:50%;cursor:help}
+.cm-pt.si{background:var(--g)}
+.cm-pt.ojo{background:transparent;border:2.5px solid var(--w)}
+.cm-pt.no{height:2.5px;border-radius:2px;background:var(--r)}
+.cm-nota{margin-top:16px;border-color:rgba(193,127,74,.28)}
+.cm-nota .t{font-size:13px;font-weight:800;margin-bottom:9px}
+.cm-nota ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:7px}
+.cm-nota li{font-size:12.5px;color:var(--text2);line-height:1.55}
+.cm-nota li b{color:var(--text)}
 .intro-banner .t{font-size:13px;font-weight:800;color:var(--p);margin-bottom:4px}
 .intro-banner .d{font-size:12.5px;color:var(--text2);line-height:1.65}
 .theme-toggle-btn{background:rgba(var(--ov),.06);border:1px solid rgba(var(--ov),.12);color:var(--text);width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
@@ -172,6 +207,17 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var
 }
 .cp-cab-fuera{padding:24px 24px 0}
 @media(max-width:760px){.cp-cab-fuera{padding:16px 14px 0}}
+@media(max-width:760px){
+  .cm-cab,.cm-fila{grid-template-columns:132px repeat(6,minmax(52px,1fr))}
+  .cm-tabla{min-width:490px}
+  /* La etiqueta se queda pegada al borde: sin esto, a la segunda columna ya no se
+     sabe de qué playera es la fila. Lleva el fondo de la tarjeta para tapar lo que
+     pasa por debajo. */
+  .cm-et{position:sticky;left:0;z-index:1;background:var(--surface-2);padding-right:8px}
+  .cm-lbl{position:sticky;left:0;z-index:1;background:var(--surface-2)}
+  .cm-sw2{width:24px;height:24px}
+  .cm-tn{font-size:11.5px}
+}
 </style>
 <!-- El material comun de las 8 areas: velos de blanco con desenfoque.
      Va despues del <style> para ganar por orden. Ver vidrio.css. -->
@@ -202,6 +248,7 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var
     <div class="nav-item" onclick="nav('chaquetas')"><span class="ico">🧥</span>Chaquetas</div>
     <div class="nav-item" onclick="nav('zapatos')"><span class="ico">👞</span>Zapatos</div>
     <div class="nav-item" onclick="nav('accesorios')"><span class="ico">⌚</span>Accesorios</div>
+    <div class="nav-item" onclick="nav('colorimetria')"><span class="ico">🎨</span>Colorimetría</div>
     <div class="nav-label">Por ocasión</div>
     <div class="nav-item" onclick="nav('trabajo')"><span class="ico">💼</span>Trabajo</div>
     <div class="nav-item" onclick="nav('casual')"><span class="ico">🙂</span>Casual</div>

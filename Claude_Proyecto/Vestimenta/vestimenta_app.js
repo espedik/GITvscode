@@ -157,12 +157,89 @@ function renderOcasion(key) {
   ${o.combos.map(comboCard).join('')}`;
 }
 
+// ─── COLORIMETRÍA ────────────────────────────────────────────────────────────
+// La matriz entera: 16 playeras en FILAS y 6 pantalones en columnas, no al revés —
+// 16 columnas no caben ni en escritorio, y en filas entra sin apretar nada.
+//
+// El veredicto es un PUNTO y no una palabra: son 96 celdas, y leer 96 etiquetas no es
+// leer. El porqué de cada una vive en el `title`, que es donde no estorba: la tabla
+// se barre de un vistazo y el detalle sale solo si se pregunta por él.
+function cmEsc(t) {
+  return String(t == null ? '' : t)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+function renderColorimetria() {
+  const C = COLORIMETRIA;
+  const CLS = { s: 'si', o: 'ojo', n: 'no' };
+  const TXT = { s: 'Va siempre', o: 'Con cuidado', n: 'Evítalo' };
+
+  const cab = C.pantalones.map(p =>
+    `<div class="cm-p" title="${cmEsc(p.n)} · ${p.hex} — ${cmEsc(p.lectura)}">
+       <div class="cm-sw" style="background:${p.hex}"></div>
+       <div class="cm-pn">${cmEsc(p.n)}</div>
+     </div>`).join('');
+
+  const filas = C.playeras.map(t => {
+    const celdas = C.pantalones.map(p => {
+      const [v, porque] = C.reglas[p.id][t.id];
+      return `<div class="cm-cel"><span class="cm-pt ${CLS[v]}"
+        title="${cmEsc(t.n)} + ${cmEsc(p.n)} · ${TXT[v]} — ${cmEsc(porque)}"></span></div>`;
+    }).join('');
+    return `<div class="cm-fila">
+      <div class="cm-et"><span class="cm-sw2" style="background:${t.hex}"></span>
+        <span class="cm-tn">${cmEsc(t.n)}</span></div>${celdas}</div>`;
+  }).join('');
+
+  return `
+  <div class="sh"><h2>🎨 Colorimetría</h2>
+    <div class="sub">Qué playera va con qué pantalón, y por qué. Sin fotos: lo que decide
+    una combinación es el color, y el color se juzga viéndolo. En escritorio, pasa el
+    cursor por cualquier punto para leer el motivo de esa pareja.</div>
+  </div>
+
+  <div class="card">
+    <div class="cm-ley">
+      <span><i class="cm-pt si"></i>Va siempre</span>
+      <span><i class="cm-pt ojo"></i>Con cuidado</span>
+      <span><i class="cm-pt no"></i>Evítalo</span>
+    </div>
+    <div class="cm-wrap">
+      <div class="cm-tabla">
+        <div class="cm-cab">
+          <div class="cm-lbl">Playera ↓ · Pantalón →</div>
+          ${cab}
+        </div>
+        ${filas}
+      </div>
+    </div>
+  </div>
+
+  <div class="card cm-nota">
+    <div class="t">Lo que dice la tabla leída en horizontal</div>
+    <ul>
+      <li><b>Blanco, verde oliva y burdeos</b> van con los seis pantalones. Son las tres
+        playeras que compras primero — de las tres, solo tienes la blanca.</li>
+      <li><b>Celeste</b> va con cinco: todos menos el jeans índigo, donde choca por ser
+        el mismo azul sin salto de valor suficiente.</li>
+      <li><b>Rojo ladrillo, rosa palo y berenjena</b> no tienen un solo verde en toda la
+        tabla. La berenjena es «evítalo» en los seis: no la compres.</li>
+      <li>Si quieres <b>playera azul marino</b>, necesitas un pantalón que no sea azul ni
+        negro: solo funciona sobre el chino caqui y sobre el chino gris.</li>
+      <li>Los seis pantalones aceptan <b>ocho playeras cada uno</b>, así que ninguno es
+        «más combinable» que otro — lo que cambia es <i>cuáles</i> ocho.</li>
+    </ul>
+  </div>`;
+}
+
 const RENDERS = {
   inicio: renderInicio,
   basicos: () => renderCategoria('👕 Básicos', 'Las piezas que más combinaciones desbloquean por peso invertido — la base de todo lo demás.', BASICOS),
   chaquetas: () => renderCategoria('🧥 Chaquetas', 'Una capa exterior cambia todo un outfit. No necesitas las 6 — elige 2-3 según tu temporada y presupuesto.', CHAQUETAS),
   zapatos: () => renderCategoria('👞 Zapatos', 'El zapato es lo primero que se nota. Cada uno de estos cubre una función distinta, no son intercambiables.', ZAPATOS),
   accesorios: () => renderCategoria('⌚ Accesorios', 'Los detalles que más se notan por lo poco que cuestan — un reloj o unos lentes bien elegidos suben cualquier outfit de la lista.', ACCESORIOS),
+  colorimetria: renderColorimetria,
   trabajo: () => renderOcasion('trabajo'),
   casual: () => renderOcasion('casual'),
   ejercicio: () => renderOcasion('ejercicio'),
