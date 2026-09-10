@@ -1698,10 +1698,17 @@ function mainTab(tab){
   document.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));
   document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id==='view-'+tab));
   subnavPinta(tab);
-  if(tab==='salud'){const f=document.getElementById('frame-salud');if(!f.getAttribute('src'))f.src='salud.html?embed=1';}
-  if(tab==='ejercicio'){const f=document.getElementById('frame-ejercicio');if(!f.getAttribute('src'))f.src='ejercicio.html?embed=1';}
-  if(tab==='comida'){const f=document.getElementById('frame-comida');if(!f.getAttribute('src'))f.src='comida.html?embed=1';}
-  if(tab==='vestimenta'){const f=document.getElementById('frame-vestimenta');if(!f.getAttribute('src'))f.src='../Vestimenta/vestimenta.html?embed=1';}
+  // Con `file://` Chrome sirve el documento del iframe desde su caché sin revalidar, así
+  // que un cambio en la app embebida no se veía hasta un Ctrl+Shift+R. Los .js de cada
+  // app ya se piden con `?v=Date.now()` desde dentro, pero el HTML que los contiene no
+  // puede: cuando se ejecuta, ya se descargó. La versión la pone quien lo pide.
+  const __vSesion = Date.now();
+  const __vApp = (ruta) => ruta + '?embed=1&v=' + __vSesion;
+
+  if(tab==='salud'){const f=document.getElementById('frame-salud');if(!f.getAttribute('src'))f.src=__vApp('salud.html');}
+  if(tab==='ejercicio'){const f=document.getElementById('frame-ejercicio');if(!f.getAttribute('src'))f.src=__vApp('ejercicio.html');}
+  if(tab==='comida'){const f=document.getElementById('frame-comida');if(!f.getAttribute('src'))f.src=__vApp('comida.html');}
+  if(tab==='vestimenta'){const f=document.getElementById('frame-vestimenta');if(!f.getAttribute('src'))f.src=__vApp('../Vestimenta/vestimenta.html');}
 }
 
 // ═════════════════════════════════════════════════════════════════════════
