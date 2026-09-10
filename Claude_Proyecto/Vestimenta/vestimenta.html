@@ -205,6 +205,30 @@ a:hover{color:var(--p-d);border-bottom-color:var(--p)}
 .pc-check{display:flex;align-items:center;gap:9px;margin-top:auto;padding-top:12px;
   border-top:var(--bd-fina);font-size:12px;font-weight:700;cursor:pointer}
 .pc-check input{width:16px;height:16px;accent-color:var(--p);cursor:pointer}
+/* El aviso de que la prenda que se propone no está en tu clóset. Va en el acento
+   porque es una compra pendiente, no un error. */
+.hy-falta{font-family:'Space Grotesk',monospace;font-size:9px;font-weight:700;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--p);margin-top:4px}
+/* ── LAS REGLAS ─────────────────────────────────────────────────────────
+   Texto largo, y por eso van en dos columnas anchas y no en rejilla de tarjetas:
+   lo que hay que hacer aquí es LEER, no comparar. El número gigante ordena. */
+.rg-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));border-top:var(--bd)}
+.rg-grid>*{min-width:0}
+.rg{display:grid;grid-template-columns:56px minmax(0,1fr);gap:18px;padding:22px 26px 24px 0;
+  border-bottom:var(--bd-fina)}
+.rg:nth-child(2n){padding-left:26px;border-left:var(--bd-fina)}
+.rg-n{font-family:var(--font-dsp);font-size:34px;font-weight:800;color:var(--p);
+  letter-spacing:-.05em;line-height:.9}
+.rg-t{font-family:var(--font-dsp);font-size:19px;font-weight:800;letter-spacing:-.03em;
+  line-height:1.15}
+.rg-d{font-size:13.5px;color:var(--text2);line-height:1.6;margin-top:9px}
+.rg-p{font-size:12px;color:var(--text3);line-height:1.55;margin-top:11px;
+  padding-top:11px;border-top:var(--bd-fina)}
+@media(max-width:820px){
+  .rg-grid{grid-template-columns:minmax(0,1fr)}
+  .rg:nth-child(2n){padding-left:0;border-left:0}
+  .rg{padding-right:0}
+}
 @media(max-width:560px){
   .pc-grid{grid-template-columns:minmax(0,1fr)}
 }
@@ -219,6 +243,9 @@ a:hover{color:var(--p-d);border-bottom-color:var(--p)}
 .cm-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
 .cm-tabla{min-width:600px}
 .cm-cab,.cm-fila{display:grid;grid-template-columns:168px repeat(6,minmax(56px,1fr))}
+/* Capas y zapatos llevan nombres de prenda —«Chamarra de mezclilla»— y no de color,
+   así que su columna de etiquetas necesita más sitio. */
+.cm-ancha .cm-cab,.cm-ancha .cm-fila{grid-template-columns:224px repeat(6,minmax(56px,1fr))}
 .cm-cab{align-items:end;padding-bottom:9px;border-bottom:1px solid rgba(var(--ov),.16)}
 .cm-lbl{font-size:10px;font-weight:800;letter-spacing:.11em;text-transform:uppercase;
   color:var(--text3);padding-bottom:4px}
@@ -375,7 +402,7 @@ a:hover{color:var(--p-d);border-bottom-color:var(--p)}
 .cp-cab-fuera{padding:24px 24px 0}
 @media(max-width:760px){.cp-cab-fuera{padding:16px 14px 0}}
 @media(max-width:760px){
-  .cm-cab,.cm-fila{grid-template-columns:132px repeat(6,minmax(52px,1fr))}
+  .cm-cab,.cm-fila,.cm-ancha .cm-cab,.cm-ancha .cm-fila{grid-template-columns:132px repeat(6,minmax(52px,1fr))}
   .cm-tabla{min-width:490px}
   /* La etiqueta se queda pegada al borde: sin esto, a la segunda columna ya no se
      sabe de qué playera es la fila. Lleva el fondo de la tarjeta para tapar lo que
@@ -421,6 +448,8 @@ a:hover{color:var(--p-d);border-bottom-color:var(--p)}
     <div class="nav-label">Cómo combinar</div>
     <div class="nav-item" onclick="nav('colorimetria')"><span class="ico">🎨</span>Colorimetría</div>
     <div class="nav-item" onclick="nav('combinaciones')"><span class="ico">🧩</span>Combinaciones</div>
+    <div class="nav-item" onclick="nav('capas')"><span class="ico">▲</span>Capas</div>
+    <div class="nav-item" onclick="nav('reglas')"><span class="ico">§</span>Las reglas</div>
     <div class="nav-label">Aparte</div>
     <div class="nav-item" onclick="nav('ejercicio')"><span class="ico">🏋️</span>Ejercicio</div>
     <div class="nav-item" onclick="nav('bodas')"><span class="ico">💍</span>Bodas</div>

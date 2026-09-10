@@ -282,6 +282,136 @@ const COLORIMETRIA = {
       tip:'El chino es lo que sube de registro un outfit sin llegar a pantalón de vestir.'},
   },
 
+  // ─── LA TERCERA CAPA ───────────────────────────────────────────────────────
+  // Una playera y un pantalón visten medio cuerpo. Lo que se ve al llegar a un sitio es
+  // la capa, y la capa NO se elige por el color de la playera: se elige por el pantalón
+  // —para no chocar con él— y por el registro que impone. Por eso las reglas van contra
+  // los seis pantalones y no contra las dieciséis playeras.
+  //
+  // El rompevientos (`c4`) se queda fuera a propósito: es ropa de deporte, y el propio
+  // catálogo lo dice. Meterlo aquí sería fingir que compite con un blazer.
+  capas: [
+    {id:'mezclilla', n:'Chamarra de mezclilla', hex:'#4A6B94', item:'c1'},
+    {id:'bomber',    n:'Bomber negra',          hex:'#1E1E20', item:'c2'},
+    {id:'cuero',     n:'Chamarra de cuero',     hex:'#161618', item:'c3'},
+    {id:'puffer',    n:'Chamarra acolchada',    hex:'#3A3A3C', item:'c5'},
+    {id:'blazer',    n:'Blazer azul marino',    hex:'#24304A', item:'c6'},
+  ],
+
+  reglasCapa: {
+    mezclilla: {
+      indigo: ['n','Denim sobre denim del mismo tono: es el error clásico del conjunto de mezclilla.'],
+      oscuro: ['o','Va solo si la chamarra es claramente más clara que el jean. Dos tonos de diferencia, mínimo.'],
+      negro:  ['s','El contraste que mejor le sienta a la mezclilla, y el más fácil de llevar.'],
+      caqui:  ['s','Azul sobre tierra: el combo más sencillo que hay con esta chamarra.'],
+      marino: ['o','Otra vez dos azules. Va si el chino es liso y bastante más oscuro que ella.'],
+      gris:   ['s','El gris es neutro y deja que la mezclilla sea la pieza que se mira.'],
+    },
+    bomber: {
+      indigo: ['s','Negro sobre índigo: limpio y urbano, sin pensarlo.'],
+      oscuro: ['s','Igual que con el índigo, con más peso abajo.'],
+      negro:  ['o','Negro con negro pide que las dos telas sean el mismo negro. Uno lavado se nota.'],
+      caqui:  ['s','El contraste fuerte que al caqui le hace falta arriba.'],
+      marino: ['o','Negro sobre marino es el par que más se equivoca. Con luz artificial pasa; de día, míralo.'],
+      gris:   ['s','Neutro con neutro, y el negro manda. Muy limpio.'],
+    },
+    cuero: {
+      indigo: ['s','La combinación de siempre. No hay forma de que salga mal.'],
+      oscuro: ['s','Como con el índigo pero de noche: el jean oscuro sube el registro.'],
+      negro:  ['s','Total black con textura: el cuero rompe el bloque y por eso funciona.'],
+      caqui:  ['n','El cuero pide registro urbano y el caqui lo baja a domingo. Chocan de tono, no de color.'],
+      marino: ['o','Va si el chino es oscuro y el resto neutro total. Es la menos obvia de las seis.'],
+      gris:   ['s','El gris sostiene el cuero sin competir con él.'],
+    },
+    puffer: {
+      indigo: ['s','Para el frío de verdad, y el índigo aguanta cualquier capa.'],
+      oscuro: ['s','Lo mismo, con el jean que mejor se lleva con el invierno.'],
+      negro:  ['s','Todo oscuro y funcional. Es lo que te vas a poner de enero.'],
+      caqui:  ['o','Funciona, pero la puffer es lo más casual del clóset: con caqui se va a fin de semana.'],
+      marino: ['o','Misma razón: le baja el registro a un pantalón que quiere ser formal.'],
+      gris:   ['s','Gris con gris oscuro: el conjunto más discreto para el frío.'],
+    },
+    blazer: {
+      indigo: ['o','Blazer sobre jeans va, pero el índigo medio lo casualiza. Mejor con el jean oscuro.'],
+      oscuro: ['s','El smart casual de manual: blazer marino y jean oscuro.'],
+      negro:  ['o','Marino sobre negro, el choque de siempre. Solo con luz artificial.'],
+      caqui:  ['s','Blazer marino y chino caqui es el uniforme que nunca falla.'],
+      marino: ['n','Marino sobre marino sin ser un traje parece un traje mal emparejado.'],
+      gris:   ['s','La alternativa más elegante al caqui, y la que menos se ve.'],
+    },
+  },
+
+  // ─── EL ZAPATO DEPENDE DEL PANTALÓN, NO DE LA OCASIÓN ──────────────────────
+  // Las ocasiones traen un zapato sugerido, pero eso es un atajo: el derby café con
+  // jeans negros no funciona por mucho que la ocasión sea «oficina». Lo que manda es el
+  // pantalón. Los tenis de running y de cross-training (`z4`, `z5`) no están: son de
+  // gimnasio y no se combinan, se usan.
+  calzado: [
+    {id:'sneakers', n:'Sneakers blancos', hex:'#EDEAE4', item:'z1'},
+    {id:'chelsea',  n:'Botines Chelsea',  hex:'#1D1C1E', item:'z2'},
+    {id:'derby',    n:'Zapato derby café',hex:'#6B4530', item:'z3'},
+    {id:'mocasin',  n:'Mocasines',        hex:'#4A3226', item:'z6'},
+  ],
+
+  reglasZapato: {
+    sneakers: {
+      indigo: ['s','El par por defecto. Sube el valor abajo y cierra la silueta.'],
+      oscuro: ['s','Con el jean oscuro se ve más intencional que con el índigo.'],
+      negro:  ['s','El contraste blanco sobre negro es lo que evita que el conjunto se hunda.'],
+      caqui:  ['s','Claro sobre claro, pero el blanco es frío y el caqui cálido: se separan solos.'],
+      marino: ['o','Va, pero le quita a la junta lo que el chino marino le había puesto.'],
+      gris:   ['s','El gris no compite con nada, y menos con un sneaker blanco.'],
+    },
+    chelsea: {
+      indigo: ['s','Botín negro con jean: alarga la pierna y sube el registro sin esfuerzo.'],
+      oscuro: ['s','El mejor zapato que le puedes poner al jean oscuro de noche.'],
+      negro:  ['s','Negro con negro alarga la pierna más que ninguna otra combinación.'],
+      caqui:  ['o','El negro con caqui es duro. Va, pero pide que arriba haya algo oscuro que lo acompañe.'],
+      marino: ['s','Discreto y formal sin llegar a zapato de vestir.'],
+      gris:   ['s','El gris deja que el botín sea lo que se mire.'],
+    },
+    derby: {
+      indigo: ['o','El café va con el índigo, pero es zapato de chino: con jean se ve algo forzado.'],
+      oscuro: ['s','Café sobre azul oscuro es de los pares más elegantes que tienes.'],
+      negro:  ['n','Café con negro es el choque clásico. No hay manera de que se vea deliberado.'],
+      caqui:  ['s','El par de manual: derby café y chino caqui.'],
+      marino: ['s','Café sobre marino: cálido contra frío, y por eso funciona tan bien.'],
+      gris:   ['s','El gris es neutro y el café aporta el único cálido. Muy limpio.'],
+    },
+    mocasin: {
+      indigo: ['o','Con jean el mocasín pide que todo lo demás esté arreglado. Es fácil pasarse.'],
+      oscuro: ['o','Mejor que con el índigo, pero sigue siendo zapato de chino.'],
+      negro:  ['n','Mismo problema que el derby: café con negro no se lleva.'],
+      caqui:  ['s','Lo más elegante que puedes ponerte con un chino sin llegar a zapato de vestir.'],
+      marino: ['s','Con chino marino y sin calcetín a la vista es el combo de verano.'],
+      gris:   ['s','Neutro abajo, cálido en el pie: funciona igual que el derby.'],
+    },
+  },
+
+  // ─── LO QUE NO SE VE EN NINGUNA TABLA ──────────────────────────────────────
+  // El color decide si dos prendas se llevan; esto decide si el conjunto se ve bien
+  // puesto. Son las que se notan cuando fallan y nadie sabe decir por qué.
+  reglas_oro: [
+    {t:'El cinturón iguala al zapato',
+     d:'Café con café, negro con negro. No tiene que ser el mismo tono exacto, pero sí la misma familia. Es el detalle que más se nota de los que nadie menciona.',
+     p:'Por eso el cinturón reversible café/negro del catálogo rinde el doble: cubre los dos casos.'},
+    {t:'Un solo color saturado por outfit',
+     d:'Si la playera es mostaza, todo lo demás es neutro: pantalón, zapato, capa. Dos prendas peleando por la atención es lo que hace que un conjunto se vea disfraz.',
+     p:'Los seis pantalones son neutros o casi, y eso es a propósito: el color va arriba, donde te miran.'},
+    {t:'El pantalón termina donde empieza el zapato',
+     d:'Sin pliegue o con uno solo. Un pantalón que se amontona sobre el zapato arruina un outfit que por color era perfecto, y es lo primero que se ve de lejos.',
+     p:'Cuesta $150 en cualquier sastrería y es la mejor inversión de todo el clóset.'},
+    {t:'El calcetín se resuelve, no se improvisa',
+     d:'Con sneakers, invisible. Con zapato y pantalón largo, del color del pantalón — nunca blanco, y nunca más claro que él.',
+     p:'La única excepción es el mocasín en verano: ahí no va calcetín a la vista.'},
+    {t:'La talla manda sobre el color',
+     d:'Una playera que queda bien en una talla equivocada se ve peor que un color discutible en la talla correcta. La costura del hombro cae en el hueso, no antes ni después.',
+     p:'Antes de comprar por color, prueba la talla. Esta guía asume que la prenda te queda.'},
+    {t:'Si no sabes, blanco arriba',
+     d:'Blanco va con los seis pantalones. Es la única prenda de la que se puede decir eso, y por eso es siempre la primera compra.',
+     p:'Ten tres o cuatro: es la que más se desgasta.'},
+  ],
+
   reglas: {
     indigo: {
       blanco:   ['s','El contraste más limpio que hay. Si dudas, esta.'],

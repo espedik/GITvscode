@@ -31,7 +31,7 @@ servía.
 
 ## Estructura de contenido
 
-Doce secciones en cuatro grupos:
+Catorce secciones en cuatro grupos:
 
 - **Principal** — **Hoy** (`renderHoy()`), la sección de arranque, contada abajo; y
   🏠 Inicio (`renderInicio()`): filosofía de guardarropa cápsula y el plan de
@@ -42,8 +42,8 @@ Doce secciones en cuatro grupos:
   `renderCategoria()` pinta una rejilla de `.item-card`: nombre, para qué sirve, 2-3 tiendas
   con rango de precio en MXN (70 de 74 con link real y verificado), un tip y un checkbox
   «Ya lo tengo / lo quiero comprar». **25 items marcables**, que es lo que cuenta el sidebar.
-- **Cómo combinar** — 🎨 Colorimetría (la matriz) y 🧩 Combinaciones (las 48). Es el corazón
-  de la app; las dos secciones se cuentan abajo.
+- **Cómo combinar** — 🎨 Colorimetría (la matriz), 🧩 Combinaciones (las 48), **Capas** y
+  **Las reglas**. Es el corazón de la app; todas se cuentan abajo.
 - **Aparte** — 🏋️ Ejercicio y 💍 Bodas (`renderOcasion(key)`, desde `OCASIONES`). Son las dos
   únicas ocasiones que **no** se resuelven eligiendo color de playera y de pantalón: una pide
   ropa técnica y la otra, traje o guayabera. Trabajo, Casual y Fiestas ya no existen como
@@ -164,6 +164,40 @@ Las dos cifras de la cabecera (`cpCabVest`) se **derivan**: `FASES.length` y
 `combLista().length`. Estaban escritas a mano y una llegó a mentir —«5 ocasiones cubiertas»
 seguía ahí después de que las ocasiones cambiaran.
 
+## Capas, zapatos y reglas — vestirse entero
+
+Una playera y un pantalón visten medio cuerpo. Estas tres secciones cubren el resto, y
+las tres se leen **contra los pantalones**, no contra las playeras.
+
+**Capas** (`COLORIMETRIA.capas` + `reglasCapa`, 5 × 6 = 30 celdas). Una chamarra choca
+con lo que lleva debajo, no con lo que lleva encima: la mezclilla se descarta sobre el
+jeans índigo —denim sobre denim del mismo tono— y el blazer marino sobre el chino
+marino, que sin ser un traje parece un traje desparejado. El rompevientos (`c4`) se
+queda fuera a propósito: es ropa de deporte, y fingir que compite con un blazer sería
+meter una fila que nadie va a mirar.
+
+**Un hueco que la tabla enseña y la app dice**: el **chino azul marino** no está en verde
+con ninguna de las cinco capas. No es un fallo de la tabla — su capa natural, un blazer
+gris o algo en ante camel, no está en el catálogo. Forzar un verde para que la columna
+no quedara vacía habría sido mentir; decirlo es lo que convierte el hueco en información.
+
+**Zapatos** (`calzado` + `reglasZapato`, 4 × 6 = 24 celdas). La sección de compra ganó su
+matriz porque **el zapato no lo decide la ocasión sino el pantalón**: el derby café con
+jeans negros no funciona por mucho que la ocasión sea de oficina, y antes las ocasiones
+lo daban por bueno. Los tenis de running y de cross-training (`z4`, `z5`) no están: son
+de gimnasio, no se combinan.
+
+Por eso **Hoy elige el zapato y la capa por el pantalón del outfit**, no por la ocasión:
+`elegir()` toma los que están en verde y prefiere uno que ya tengas; si el que toca no
+está marcado, lo dice con «no lo tienes» en vez de callarlo. Es lo que hace que la
+pantalla nunca proponga un par que la propia tabla desaconseja.
+
+**Las reglas** (`reglas_oro`, 6). Lo que ninguna matriz puede decir: el cinturón iguala al
+zapato, un solo color saturado por outfit, el largo del pantalón, el calcetín, que la
+talla manda sobre el color, y que si no sabes va blanco arriba. Son las que se notan
+cuando fallan y nadie sabe decir por qué — y las que hacen que el resto de la guía sirva
+de algo, porque toda ella da por hecho que la prenda te queda.
+
 ## Modelo de datos — `localStorage['vestimenta_v1']`
 
 ```js
@@ -253,8 +287,8 @@ clóset** sobre 22 y **combinaciones** sobre 48.
 
 ## Probado
 
-Con Chromium sobre `file://`, a **1600px y 390px**, en tema claro y oscuro: las doce
-secciones sin desbordamiento horizontal, **cero elementos `<img>`** en toda la app, cero  
+Con Chromium sobre `file://`, a **1600px y 390px**, en tema claro y oscuro: las catorce
+secciones sin desbordamiento horizontal, **cero elementos `<img>`** en toda la app, cero
 peticiones fallidas y cero errores de consola. Las 48 combinaciones se pintan y el filtro
 devuelve 27 / 18 / 40. El checklist marca, persiste y actualiza el contador.
 
@@ -262,7 +296,10 @@ El flujo de Hoy, medido de punta a punta: con el clóset vacío sale el estado v
 ruta con 4 pasos; marcando esos 4 aparecen el outfit del día, 3 alternativas y la cuenta
 pasa a 4 de 48, con la ruta proyectando 16. Y el camino que fallaba: marcar `b1`–`b4` en
 **Básicos** da outfit en Hoy y deja 4 de 22 en el clóset, con las fichas de Playeras y
-Pantalones marcadas solas.
+Pantalones marcadas solas. Las matrices de capas y de zapatos salen completas —30 y 24
+celdas, cada una con su porqué en el `title`— y con un clóset de siete prendas Hoy elige
+sneakers blancos (que están marcados) y bomber negra (que no), en vez de la chamarra de
+mezclilla que sí está marcada pero que la tabla descarta sobre jeans índigo.
 
 ## Responsivo — iPad / iPhone 15 Pro (2026-08-03)
 

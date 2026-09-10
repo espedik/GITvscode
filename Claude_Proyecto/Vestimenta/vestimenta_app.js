@@ -8,10 +8,10 @@ const load = () => { try { const d = localStorage.getItem(KEY); if (d) S = { ...
   if (!Array.isArray(S.color)) S.color = []; };
 load();
 
-const SECS = ['hoy','inicio','playeras','pantalones','basicos','chaquetas','zapatos','accesorios','colorimetria','combinaciones','ejercicio','bodas'];
+const SECS = ['hoy','inicio','playeras','pantalones','basicos','chaquetas','zapatos','accesorios','colorimetria','combinaciones','capas','reglas','ejercicio','bodas'];
 const STITLE = {
   hoy:'Hoy', inicio:'🏠 Inicio', playeras:'Playeras', pantalones:'Pantalones', basicos:'👕 Básicos', chaquetas:'🧥 Chaquetas', zapatos:'👞 Zapatos', accesorios:'⌚ Accesorios',
-  colorimetria:'🎨 Colorimetría', combinaciones:'🧩 Combinaciones', ejercicio:'🏋️ Ejercicio', bodas:'💍 Bodas'
+  colorimetria:'🎨 Colorimetría', combinaciones:'🧩 Combinaciones', capas:'Capas', reglas:'Las reglas', ejercicio:'🏋️ Ejercicio', bodas:'💍 Bodas'
 };
 
 let secActual = 'hoy';
@@ -347,6 +347,10 @@ function renderHoy() {
   const fecha = DIAS[hoy.getDay()] + ' ' + hoy.getDate() + ' de ' + MESES[hoy.getMonth()];
   const dis = disponibles();
   const o = outfitDelDia();
+  // El zapato y la capa se eligen por el PANTALÓN del outfit, no por la ocasión: es lo
+  // que de verdad manda, y así el par que se propone nunca contradice a la tabla.
+  const zap = o ? elegir(COLORIMETRIA.calzado, COLORIMETRIA.reglasZapato, o.p.id) : null;
+  const capa = o ? elegir(COLORIMETRIA.capas, COLORIMETRIA.reglasCapa, o.p.id) : null;
   const ruta = rutaCompra(4);
   const gana = ruta.reduce((a, p) => a + p.gana, 0);
 
@@ -359,8 +363,14 @@ function renderHoy() {
         <div class="hy-dsp2">+ ${o.p.n.toUpperCase()}</div>
         <div class="hy-por">${o.porque}</div>
         <div class="hy-datos">
-          ${o.ocs.map(x => `<div><div class="hy-lbl">${x.n}</div>
-            <div class="hy-dato">${x.zapato}</div></div>`).join('')}
+          <div><div class="hy-lbl">Zapato</div>
+            <div class="hy-dato">${zap ? cmEsc(zap.x.n) : '—'}</div>
+            ${zap && !zap.tengo ? '<div class="hy-falta">no lo tienes</div>' : ''}</div>
+          <div><div class="hy-lbl">Capa</div>
+            <div class="hy-dato">${capa ? cmEsc(capa.x.n) : 'ninguna le va'}</div>
+            ${capa && !capa.tengo ? '<div class="hy-falta">no la tienes</div>' : ''}</div>
+          <div><div class="hy-lbl">Sirve para</div>
+            <div class="hy-dato">${o.ocs.map(x => x.n).join(' · ') || '—'}</div></div>
         </div>
       </div>
       ${torreHtml(o, 'auto')}
@@ -499,6 +509,122 @@ function renderPantalones() {
     'Los 6, ordenados igual. Todos aceptan ocho playeras, así que aquí lo que cambia no es cuántas sino cuáles — los cuadritos dicen exactamente eso.');
 }
 
+// ─── CAPAS Y CALZADO ─────────────────────────────────────────────────────────
+// Las dos se leen contra los PANTALONES y no contra las playeras: una chamarra choca
+// con lo que lleva debajo, no con lo que lleva encima, y un zapato lo mismo. Comparten
+// forma, así que comparten render.
+function matrizPantalon(items, reglas, titulo) {
+  const P = COLORIMETRIA.pantalones;
+  const CLS = { s: 'si', o: 'ojo', n: 'no' };
+  const TXT = { s: 'Va siempre', o: 'Con cuidado', n: 'Evítalo' };
+  const cab = P.map(p => `<div class="cm-p" title="${cmEsc(p.n)} · ${p.hex}">
+      <div class="cm-sw" style="background:${p.hex}"></div>
+      <div class="cm-pn">${cmEsc(p.n)}</div></div>`).join('');
+  const filas = items.map(it => {
+    const celdas = P.map(p => {
+      const [v, porque] = reglas[it.id][p.id];
+      return `<div class="cm-cel"><span class="cm-pt ${CLS[v]}"
+        title="${cmEsc(it.n)} + ${cmEsc(p.n)} · ${TXT[v]} — ${cmEsc(porque)}"></span></div>`;
+    }).join('');
+    return `<div class="cm-fila">
+      <div class="cm-et"><span class="cm-sw2" style="background:${it.hex}"></span>
+        <span class="cm-tn">${cmEsc(it.n)}</span></div>${celdas}</div>`;
+  }).join('');
+  return `<div class="card cm-ancha">
+    <div class="cm-ley">
+      <span><i class="cm-pt si"></i>Va siempre</span>
+      <span><i class="cm-pt ojo"></i>Con cuidado</span>
+      <span><i class="cm-pt no"></i>Evítalo</span>
+    </div>
+    <div class="cm-wrap"><div class="cm-tabla">
+      <div class="cm-cab"><div class="cm-lbl">${titulo}</div>${cab}</div>
+      ${filas}
+    </div></div>
+  </div>`;
+}
+
+// Las que están en verde con este pantalón, y si las tienes.
+function paraPantalon(items, reglas, pantId) {
+  return items.map(x => ({ x: x, v: reglas[x.id][pantId][0],
+                           porque: reglas[x.id][pantId][1],
+                           tengo: S.marcados.indexOf(x.item) >= 0 }))
+              .filter(r => r.v === 's');
+}
+// La que le pondrías hoy: primero una que tengas; si no, la que habría que comprar.
+function elegir(items, reglas, pantId) {
+  const ok = paraPantalon(items, reglas, pantId);
+  if (!ok.length) return null;
+  return ok.filter(r => r.tengo)[0] || ok[0];
+}
+
+function fichaCapa(it, reglas, tipoTxt) {
+  const ok = COLORIMETRIA.pantalones.filter(p => reglas[it.id][p.id][0] === 's');
+  const tengo = S.marcados.indexOf(it.item) >= 0;
+  const cat = CATALOGO[it.item];
+  return `<div class="pc${tengo ? ' tengo' : ''}${ok.length ? '' : ' cero'}">
+    <div class="pc-sw" style="background:${it.hex}">
+      ${tengo ? '<span class="pc-ok">Ya la tienes</span>' : ''}
+    </div>
+    <div class="pc-b">
+      <div class="pc-h">
+        <div class="pc-n">${cmEsc(it.n)}</div>
+        <div class="pc-abre">${ok.length}<em>/${COLORIMETRIA.pantalones.length}</em></div>
+      </div>
+      <div class="pc-pts">${COLORIMETRIA.pantalones.map(p => {
+        const v = reglas[it.id][p.id][0];
+        return `<span class="pc-pt${v === 's' ? ' si' : ''}" style="background:${p.hex}"
+          title="${cmEsc(p.n)}"></span>`; }).join('')}</div>
+      ${cat ? `<div class="pc-tiendas">${cat.compra.map(c => `<div class="pc-t">
+        <span>${c.u ? `<a href="${c.u}" target="_blank" rel="noopener">${c.t} ↗</a>` : c.t}</span>
+        <b>${c.p}</b></div>`).join('')}</div>` : ''}
+      <label class="pc-check">
+        <input type="checkbox" ${tengo ? 'checked' : ''} onchange="toggleCheck('${it.item}');
+          document.getElementById('content-root').innerHTML = RENDERS[secActual]();">
+        <span>${tipoTxt}</span>
+      </label>
+    </div>
+  </div>`;
+}
+
+function renderCapas() {
+  const C = COLORIMETRIA;
+  // Un pantalón sin ninguna capa en verde no es un fallo de la tabla: es un hueco real
+  // del guardarropa, y decirlo vale más que forzar un verde para que no quede vacío.
+  const huerfanos = C.pantalones.filter(p =>
+    !C.capas.some(c => C.reglasCapa[c.id][p.id][0] === 's'));
+
+  return `<div class="sh"><h2>Capas</h2>
+    <div class="sub">La chamarra es lo que se ve al llegar a un sitio, y no se elige por
+    el color de la playera: se elige por el <b>pantalón</b> —para no chocar con él— y por
+    el registro que impone. Por eso la tabla va contra los seis pantalones.</div></div>
+  ${matrizPantalon(C.capas, C.reglasCapa, 'Capa ↓ · Pantalón →')}
+  ${huerfanos.length ? `<div class="card cm-nota">
+    <div class="t">Un hueco que enseña la tabla</div>
+    <ul><li>El <b>${huerfanos.map(p => cmEsc(p.n)).join('</b> y el <b>')}</b> no está en verde
+      con ninguna de las cinco capas. No es un error de la tabla: su capa natural —un
+      blazer gris, o algo en ante camel— no está en tu catálogo. Con lo que hay, ese
+      pantalón se lleva sin capa o con la que menos moleste.</li></ul>
+  </div>` : ''}
+  <div class="hy-lbl" style="color:var(--text3);margin:26px 0 14px">Las cinco, para comprar</div>
+  <div class="pc-grid">${C.capas.map(c => fichaCapa(c, C.reglasCapa, 'Ya la tengo')).join('')}</div>`;
+}
+
+function renderReglas() {
+  return `<div class="sh"><h2>Las reglas</h2>
+    <div class="sub">El color decide si dos prendas se llevan. Esto decide si el conjunto
+    se ve bien puesto — son las que se notan cuando fallan y nadie sabe decir por qué.</div></div>
+  <div class="rg-grid">
+    ${COLORIMETRIA.reglas_oro.map((r, i) => `<div class="rg">
+      <div class="rg-n">${String(i + 1).padStart(2, '0')}</div>
+      <div class="rg-b">
+        <div class="rg-t">${cmEsc(r.t)}</div>
+        <div class="rg-d">${cmEsc(r.d)}</div>
+        <div class="rg-p">${cmEsc(r.p)}</div>
+      </div>
+    </div>`).join('')}
+  </div>`;
+}
+
 // ─── COMBINACIONES ───────────────────────────────────────────────────────────
 // Las 48 NO están escritas a mano: son las celdas verdes de `COLORIMETRIA.reglas`
 // cruzadas con `COLORIMETRIA.ocasiones`. Si mañana un veredicto de la matriz cambia,
@@ -566,10 +692,18 @@ const RENDERS = {
   pantalones: renderPantalones,
   basicos: () => renderCategoria('👕 Básicos', 'Las piezas que más combinaciones desbloquean por peso invertido — la base de todo lo demás.', BASICOS),
   chaquetas: () => renderCategoria('🧥 Chaquetas', 'Una capa exterior cambia todo un outfit. No necesitas las 6 — elige 2-3 según tu temporada y presupuesto.', CHAQUETAS),
-  zapatos: () => renderCategoria('👞 Zapatos', 'El zapato es lo primero que se nota. Cada uno de estos cubre una función distinta, no son intercambiables.', ZAPATOS),
+  zapatos: () => `<div class="sh"><h2>👞 Zapatos</h2>
+    <div class="sub">Lo primero que se nota. Y el zapato NO lo decide la ocasión sino el
+    pantalón: el derby café con jeans negros no funciona por mucho que la ocasión sea de
+    oficina.</div></div>
+    ${matrizPantalon(COLORIMETRIA.calzado, COLORIMETRIA.reglasZapato, 'Zapato ↓ · Pantalón →')}
+    <div class="hy-lbl" style="color:var(--text3);margin:26px 0 14px">Los seis del catálogo</div>
+    <div class="item-grid">${ZAPATOS.map(itemCard).join('')}</div>`,
   accesorios: () => renderCategoria('⌚ Accesorios', 'Los detalles que más se notan por lo poco que cuestan — un reloj o unos lentes bien elegidos suben cualquier outfit de la lista.', ACCESORIOS),
   colorimetria: renderColorimetria,
   combinaciones: renderCombinaciones,
+  capas: renderCapas,
+  reglas: renderReglas,
   ejercicio: () => renderOcasion('ejercicio'),
   bodas: () => renderOcasion('bodas'),
 };
