@@ -1,0 +1,79 @@
+{
+  "pages": [
+    {
+      "id": "page-1",
+      "name": "La elegida"
+    },
+    {
+      "id": "page-2",
+      "name": "Las descartadas"
+    }
+  ],
+  "artboards": [
+    {
+      "file": "Main.dc.html",
+      "x": 0,
+      "y": 0,
+      "w": 1240,
+      "h": 1080,
+      "page": "page-1",
+      "title": "Figura — rehecha"
+    },
+    {
+      "file": "DireccionA.dc.html",
+      "x": 0,
+      "y": 0,
+      "w": 1240,
+      "h": 1080,
+      "page": "page-2",
+      "title": "Prenda plana"
+    },
+    {
+      "file": "DireccionC.dc.html",
+      "x": 1360,
+      "y": 0,
+      "w": 1240,
+      "h": 1080,
+      "page": "page-2",
+      "title": "Dirección C — pictograma"
+    }
+  ],
+  "annotations": [
+    {
+      "id": "nota-main",
+      "x": 0,
+      "y": -250,
+      "w": 640,
+      "page": "page-1",
+      "text": "LA FIGURA, REHECHA. La primera se veía rara por cuatro cosas concretas, y las cuatro están arregladas:\n\n· el CUELLO era un tubo recto con sus dos líneas laterales a la vista; ahora es un trapecio que se ensancha hacia los hombros y baja hasta donde el escote lo tapa entero.\n· los BRAZOS eran trapecios de 30 unidades de ancho que acababan en punta roma — guantes de boxeo. Ahora miden 20, tienen muñeca marcada y la mano se ensancha respecto al antebrazo.\n· los PIES medían 60 unidades de largo, como zapatillas de payaso. Ahora 40.\n· el TORSO era un rectángulo; la playera entra tres unidades por lado de la axila a la cadera.\n\nAdemás va sobre canon de ocho cabezas —cabeza 22-96, hombros 127, cintura 286, entrepierna 372, tobillo 580— en vez de proporciones a ojo."
+    },
+    {
+      "id": "nota-tam",
+      "x": 680,
+      "y": -250,
+      "w": 520,
+      "page": "page-1",
+      "text": "Probada en los tres tamaños en que va a existir: 212px en Hoy, 40 en las 48 tarjetas de Combinaciones y 34 en el mínimo. El contorno usa `non-scaling-stroke`, así que la línea mide 1,5px reales en los tres.\n\nLos cuatro ejemplos pequeños son combinaciones que la matriz da por buenas: blanco con índigo, oliva con caqui, mostaza con chino marino y celeste con chino gris."
+    },
+    {
+      "id": "nota-a",
+      "x": 0,
+      "y": -170,
+      "w": 560,
+      "page": "page-2",
+      "text": "PRENDA PLANA — las tres prendas de frente, tipo catálogo. Descartada. Era la más segura a cualquier tamaño, pero no dice nada de proporciones: playera y pantalón salían iguales de grandes."
+    },
+    {
+      "id": "nota-c",
+      "x": 1360,
+      "y": -170,
+      "w": 560,
+      "page": "page-2",
+      "text": "PICTOGRAMA — la forma mínima, sin contorno. Descartada. Rendía muy bien en pequeño, pero en grande se notaba que era un icono y no un dibujo."
+    }
+  ],
+  "launch": {
+    "view": "canvas",
+    "page": "page-1"
+  }
+}

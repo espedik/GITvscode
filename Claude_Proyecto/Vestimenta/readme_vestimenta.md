@@ -21,8 +21,8 @@ hay ninguna bonita"*. Dos rondas de sourcing con licencia libre no habían dado 
 que se viera bien, y para lo que la app tiene que resolver —qué me pongo con qué— la foto
 de una prenda genérica no aporta: lo que decide una combinación es el color.
 
-Lo que sustituye a la foto es el **color puro**: en Colorimetría, una muestra por prenda;
-en Combinaciones, dos bloques apilados en el orden en que se ven. El fondo carbón de la app
+Lo que sustituye a la foto es el **dibujo**: siluetas SVG rellenas del color real, que se
+cuentan más abajo. En la Colorimetría, que es una tabla, el color sigue yendo en muestra. El fondo carbón de la app
 ayuda — un color de tela se lee mucho mejor sobre carbón que sobre blanco.
 
 Las fichas de compra (Básicos, Chaquetas, Zapatos, Accesorios) siguen ahí **con sus precios
@@ -245,6 +245,39 @@ Clave **propia de este archivo**, no compartida con el resto del ecosistema (igu
 cuenta solo sobre los 25 items comprables; el clóset de color lo cuenta la cabecera, sobre 22.
 
 **Excepción intencional**: el botón de tema (🌙/☀️) sí usa la clave compartida `coach-theme` (ver `../README.md` → "Convenciones de diseño compartidas") para que el tema visual se sincronice con el resto de apps que Adán ya usa — es solo una preferencia visual, no dato personal, así que no rompe el aislamiento de datos del resto de la app.
+
+## Las siluetas — dos dibujos y una regla
+
+**No hay fotos, pero sí hay dibujo.** Las prendas se pintan como siluetas SVG rellenas
+del color real, y hay dos: la **figura** —las prendas puestas sobre un cuerpo— y la
+**prenda suelta**. La regla para elegir es qué se está enseñando:
+
+| Dónde | Qué | Por qué |
+| --- | --- | --- |
+| Hoy · Combinaciones | Figura | Se enseña una COMBINACIÓN, y lo que hay que juzgar es el conjunto |
+| Mi clóset · fichas · ruta | Prenda suelta | Se enseña UNA prenda; un muñeco con solo la playera puesta y el resto en blanco se ve mal |
+
+La figura va sobre **canon de ocho cabezas** en un viewBox de 200×640 —cabeza 22-96,
+hombros 127, cintura 286, entrepierna 372, tobillo 580— y enseña algo que las prendas
+sueltas no pueden: **el pantalón ocupa el doble que la playera**, así que el color de
+abajo pesa el doble en lo que se ve de lejos.
+
+**El orden de los trazos ES el orden de pintado**, y por eso `SIL_FIG` es una lista y no
+un objeto: las piernas y los brazos van antes que la ropa para que la ropa los tape, y el
+cuello antes que la playera para que el escote lo corte. Con el cuello después asomaba un
+trapecio por encima de la camiseta.
+
+**`vector-effect: non-scaling-stroke` es lo que hace que esto funcione.** Mantiene la
+línea a 1,5px REALES sea cual sea el tamaño del dibujo, y aquí el rango va de 176px en Hoy
+a 26 en la ruta de compra. Sin eso, la silueta pequeña se convierte en una mancha de tinta
+y la grande en un dibujo desvaído.
+
+**La piel va del color del papel** (`--surface-2`), no de un tono de piel: en «Cero» el
+único color de la pantalla es el de la prenda — y además habría que elegir cuál.
+
+El **zapato de la figura** sale de `reglasZapato`, igual que el que se nombra en el texto:
+si ninguno está en verde con ese pantalón, la figura va descalza antes que con uno que la
+propia tabla desaconseja.
 
 ## Sistema de diseño — «Cero»
 

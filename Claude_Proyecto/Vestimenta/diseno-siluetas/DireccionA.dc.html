@@ -1,0 +1,195 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800;900&family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap">
+  <style>
+    body { margin: 0; background: #ececea; color: #0a0a0a;
+           font-family: 'Inter', -apple-system, sans-serif; font-size: 14px; }
+    a { color: #ff4a00; } a:hover { color: #cc3b00; }
+    .dsp { font-family: 'Archivo', 'Helvetica Neue', Arial, sans-serif; font-weight: 800;
+           letter-spacing: -0.04em; line-height: 0.94; }
+    .lbl { font-family: 'Space Grotesk', monospace; font-size: 9.5px; font-weight: 700;
+           letter-spacing: 0.2em; text-transform: uppercase; color: #6a6a66; }
+    .mono { font-family: 'Space Grotesk', monospace; font-variant-numeric: tabular-nums; }
+    /* EL CONTORNO NO ESCALA. `vector-effect: non-scaling-stroke` mantiene la línea a
+       1.5px reales tanto si la prenda se dibuja a 200px como a 40: sin eso, la silueta
+       pequeña se convierte en una mancha de tinta y la grande en un dibujo desvaído. */
+    .sil path, .sil circle, .sil line { vector-effect: non-scaling-stroke;
+      stroke: #0a0a0a; stroke-width: 1.5; stroke-linejoin: round; }
+    .sil .det { fill: none; stroke-width: 1; opacity: 0.42; }
+    .caja { border: 1.5px solid #0a0a0a; background: #f6f6f4; }
+  </style>
+</helmet>
+
+<div style="width: 1240px; height: 1080px; box-sizing: border-box; background: #ececea;
+     padding: 30px 34px; display: flex; flex-direction: column; gap: 24px; overflow: hidden">
+
+  <div>
+    <div class="lbl" style="color: #ff4a00">Silueta · dirección principal</div>
+    <div class="dsp" style="font-size: 38px; margin-top: 8px">PRENDA PLANA</div>
+    <div style="font-size: 13.5px; color: #333330; margin-top: 10px; max-width: 620px;
+         line-height: 1.6">
+      Las tres prendas de frente, como en un catálogo. Contorno de tinta y relleno del
+      color: la forma dice qué prenda es y el relleno dice de qué color, sin más capas.
+    </div>
+  </div>
+
+  <!-- ── EL OUTFIT GRANDE, como en Hoy ─────────────────────────── -->
+  <div class="caja" style="display: grid; grid-template-columns: minmax(0,1fr) 430px">
+    <div style="padding: 28px 30px; display: flex; flex-direction: column">
+      <div class="lbl">Hoy te pones</div>
+      <div class="dsp" style="font-size: 46px; margin-top: 12px">GRIS<br>JASPEADO</div>
+      <div class="dsp" style="font-size: 24px; margin-top: 14px; color: #6a6a66;
+           font-weight: 600">+ JEANS NEGRO</div>
+      <div style="font-size: 13.5px; color: #333330; line-height: 1.6; margin-top: 16px;
+           max-width: 380px">
+        El degradado natural: gris arriba, negro abajo. El negro no tiene color propio,
+        así que no compite con nada.
+      </div>
+      <div style="display: flex; gap: 0; margin-top: auto; padding-top: 20px;
+           border-top: 1.5px solid #0a0a0a">
+        <div style="flex: 1"><div class="lbl">Zapato</div>
+          <div style="font-size: 14px; font-weight: 700; margin-top: 5px">Sneakers blancos</div></div>
+        <div style="flex: 1; padding-left: 18px; border-left: 1px solid rgba(10,10,10,0.16)">
+          <div class="lbl">Capa</div>
+          <div style="font-size: 14px; font-weight: 700; margin-top: 5px">Bomber negra</div></div>
+      </div>
+    </div>
+
+    <!-- las tres siluetas, en columna y a escala real entre ellas -->
+    <div style="border-left: 1.5px solid #0a0a0a; display: flex; flex-direction: column;
+         align-items: center; justify-content: center; gap: 4px; padding: 22px 0">
+      <!-- PLAYERA -->
+      <svg class="sil" viewBox="0 0 120 112" width="176" height="164" aria-label="Playera">
+        <path d="M42,10 L18,22 L26,45 L36,40 L36,104 L84,104 L84,40 L94,45 L102,22 L78,10
+                 Q60,27 42,10 Z" fill="#A3A19C"></path>
+        <path class="det" d="M42,10 Q60,27 78,10"></path>
+        <path class="det" d="M36,40 L36,104 M84,40 L84,104"></path>
+      </svg>
+      <!-- PANTALÓN -->
+      <svg class="sil" viewBox="0 0 120 132" width="176" height="194" aria-label="Pantalón">
+        <path d="M32,8 L88,8 L85,126 L66,126 L60,64 L54,126 L35,126 Z" fill="#232326"></path>
+        <path class="det" d="M32,21 L88,21"></path>
+        <path class="det" d="M60,21 L60,64"></path>
+      </svg>
+      <!-- ZAPATO -->
+      <svg class="sil" viewBox="0 0 140 72" width="176" height="90" aria-label="Zapato">
+        <path d="M18,54 L18,41 Q18,29 30,25 L56,15 Q64,11 71,16 L84,27 L106,32
+                 Q122,36 122,49 L122,54 Z" fill="#EDEAE4"></path>
+        <path d="M13,54 L127,54 L127,62 Q127,66 123,66 L17,66 Q13,66 13,62 Z"
+              fill="#EDEAE4"></path>
+        <path class="det" d="M56,20 L68,32 M66,17 L78,29"></path>
+      </svg>
+    </div>
+  </div>
+
+  <!-- ── EN PEQUEÑO: las tarjetas de Combinaciones ──────────────── -->
+  <div>
+    <div class="lbl" style="margin-bottom: 12px">Las mismas siluetas en una tarjeta de Combinaciones</div>
+    <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px">
+
+      <div class="caja" style="display: flex; align-items: center; gap: 16px; padding: 14px 18px">
+        <svg class="sil" viewBox="0 0 120 250" width="52" height="108" aria-label="Outfit">
+          <path d="M42,10 L18,22 L26,45 L36,40 L36,104 L84,104 L84,40 L94,45 L102,22 L78,10
+                   Q60,27 42,10 Z" fill="#E4D9C4"></path>
+          <path d="M32,108 L88,108 L85,226 L66,226 L60,164 L54,226 L35,226 Z" fill="#2B3A55"></path>
+          <path d="M34,230 L34,240 Q34,246 42,246 L86,246 Q92,246 92,240 L92,232 L60,228 Z"
+                fill="#6B4530"></path>
+        </svg>
+        <div style="min-width: 0">
+          <div class="dsp" style="font-size: 16px; letter-spacing: -0.025em; line-height: 1.15">
+            CREMA<br>+ JEANS OSCURO</div>
+          <div class="mono" style="font-size: 10px; color: #6a6a66; margin-top: 7px">
+            DERBY CAFÉ · OFICINA</div>
+        </div>
+      </div>
+
+      <div class="caja" style="display: flex; align-items: center; gap: 16px; padding: 14px 18px">
+        <svg class="sil" viewBox="0 0 120 250" width="52" height="108" aria-label="Outfit">
+          <path d="M42,10 L18,22 L26,45 L36,40 L36,104 L84,104 L84,40 L94,45 L102,22 L78,10
+                   Q60,27 42,10 Z" fill="#F2EFE9"></path>
+          <path d="M32,108 L88,108 L85,226 L66,226 L60,164 L54,226 L35,226 Z" fill="#42618A"></path>
+          <path d="M34,230 L34,240 Q34,246 42,246 L86,246 Q92,246 92,240 L92,232 L60,228 Z"
+                fill="#EDEAE4"></path>
+        </svg>
+        <div style="min-width: 0">
+          <div class="dsp" style="font-size: 16px; letter-spacing: -0.025em; line-height: 1.15">
+            BLANCO<br>+ JEANS ÍNDIGO</div>
+          <div class="mono" style="font-size: 10px; color: #6a6a66; margin-top: 7px">
+            SNEAKERS · DIARIO</div>
+        </div>
+      </div>
+
+      <div class="caja" style="display: flex; align-items: center; gap: 16px; padding: 14px 18px">
+        <svg class="sil" viewBox="0 0 120 250" width="52" height="108" aria-label="Outfit">
+          <path d="M42,10 L18,22 L26,45 L36,40 L36,104 L84,104 L84,40 L94,45 L102,22 L78,10
+                   Q60,27 42,10 Z" fill="#6B2536"></path>
+          <path d="M32,108 L88,108 L85,226 L66,226 L60,164 L54,226 L35,226 Z" fill="#232326"></path>
+          <path d="M34,230 L34,240 Q34,246 42,246 L86,246 Q92,246 92,240 L92,232 L60,228 Z"
+                fill="#1D1C1E"></path>
+        </svg>
+        <div style="min-width: 0">
+          <div class="dsp" style="font-size: 16px; letter-spacing: -0.025em; line-height: 1.15">
+            BURDEOS<br>+ JEANS NEGRO</div>
+          <div class="mono" style="font-size: 10px; color: #6a6a66; margin-top: 7px">
+            CHELSEA · NOCHE</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── EL TAMAÑO MÍNIMO: los recuadros de Mi clóset ───────────── -->
+  <div>
+    <div class="lbl" style="margin-bottom: 12px">Y a 44px, en los recuadros de Mi clóset</div>
+    <div style="display: flex; gap: 12px">
+      <div class="caja" style="width: 118px; display: flex; flex-direction: column;
+           align-items: center; padding: 14px 0 0">
+        <svg class="sil" viewBox="0 0 120 112" width="52" height="48">
+          <path d="M42,10 L18,22 L26,45 L36,40 L36,104 L84,104 L84,40 L94,45 L102,22 L78,10
+                   Q60,27 42,10 Z" fill="#6E7448"></path></svg>
+        <div style="width: 100%; border-top: 1.5px solid #0a0a0a; margin-top: 12px;
+             padding: 9px 11px; font-size: 12px; font-weight: 700">Verde oliva</div>
+      </div>
+      <div class="caja" style="width: 118px; display: flex; flex-direction: column;
+           align-items: center; padding: 14px 0 0">
+        <svg class="sil" viewBox="0 0 120 112" width="52" height="48">
+          <path d="M42,10 L18,22 L26,45 L36,40 L36,104 L84,104 L84,40 L94,45 L102,22 L78,10
+                   Q60,27 42,10 Z" fill="#C59A31"></path></svg>
+        <div style="width: 100%; border-top: 1.5px solid #0a0a0a; margin-top: 12px;
+             padding: 9px 11px; font-size: 12px; font-weight: 700">Mostaza</div>
+      </div>
+      <div class="caja" style="width: 118px; display: flex; flex-direction: column;
+           align-items: center; padding: 14px 0 0">
+        <svg class="sil" viewBox="0 0 120 132" width="46" height="50">
+          <path d="M32,8 L88,8 L85,126 L66,126 L60,64 L54,126 L35,126 Z" fill="#C0A57C"></path>
+          <path class="det" d="M32,21 L88,21"></path></svg>
+        <div style="width: 100%; border-top: 1.5px solid #0a0a0a; margin-top: 12px;
+             padding: 9px 11px; font-size: 12px; font-weight: 700">Chino caqui</div>
+      </div>
+      <div class="caja" style="width: 118px; display: flex; flex-direction: column;
+           align-items: center; padding: 20px 0 0">
+        <svg class="sil" viewBox="0 0 140 72" width="62" height="32">
+          <path d="M18,54 L18,41 Q18,29 30,25 L56,15 Q64,11 71,16 L84,27 L106,32
+                   Q122,36 122,49 L122,54 Z" fill="#6B4530"></path>
+          <path d="M13,54 L127,54 L127,62 Q127,66 123,66 L17,66 Q13,66 13,62 Z"
+                fill="#6B4530"></path></svg>
+        <div style="width: 100%; border-top: 1.5px solid #0a0a0a; margin-top: 14px;
+             padding: 9px 11px; font-size: 12px; font-weight: 700">Derby café</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</x-dc>
+
+<script data-dc-script data-props='{"$preview":{"width":1240,"height":1080}}'>
+class Component extends DCLogic {}
+</script>
+</body>
+</html>

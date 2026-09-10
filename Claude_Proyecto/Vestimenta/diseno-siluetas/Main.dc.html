@@ -1,0 +1,184 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800;900&family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap">
+  <style>
+    body { margin: 0; background: #ececea; color: #0a0a0a;
+           font-family: 'Inter', -apple-system, sans-serif; font-size: 14px; }
+    a { color: #ff4a00; } a:hover { color: #cc3b00; }
+    .dsp { font-family: 'Archivo', 'Helvetica Neue', Arial, sans-serif; font-weight: 800;
+           letter-spacing: -0.04em; line-height: 0.94; }
+    .lbl { font-family: 'Space Grotesk', monospace; font-size: 9.5px; font-weight: 700;
+           letter-spacing: 0.2em; text-transform: uppercase; color: #6a6a66; }
+    .mono { font-family: 'Space Grotesk', monospace; font-variant-numeric: tabular-nums; }
+    /* EL CONTORNO NO ESCALA: `non-scaling-stroke` mantiene la línea a 1,5px reales lo
+       mismo a 230px que a 34, que es el rango en que esta figura tiene que funcionar. */
+    .sil path { vector-effect: non-scaling-stroke; stroke: #0a0a0a; stroke-width: 1.5;
+                stroke-linejoin: round; stroke-linecap: round; }
+    /* La piel va del color del papel: en «Cero» el único color de la pantalla es el de
+       la prenda, y un tono de piel inventado competiría con él — además de haber que
+       elegir cuál. */
+    .sil .piel { fill: #f6f6f4; }
+    .caja { border: 1.5px solid #0a0a0a; background: #f6f6f4; }
+  </style>
+</helmet>
+
+<div style="width: 1240px; height: 1080px; box-sizing: border-box; background: #ececea;
+     padding: 30px 34px; display: flex; flex-direction: column; gap: 22px; overflow: hidden">
+
+  <div>
+    <div class="lbl" style="color: #ff4a00">Silueta · la elegida</div>
+    <div class="dsp" style="font-size: 38px; margin-top: 8px">FIGURA</div>
+    <div style="font-size: 13.5px; color: #333330; margin-top: 10px; max-width: 660px;
+         line-height: 1.6">
+      Las prendas puestas sobre un cuerpo, con canon de ocho cabezas. Enseña lo que las
+      prendas sueltas no pueden: que el pantalón ocupa el doble que la playera, así que
+      el color de abajo pesa el doble en lo que se ve de lejos.
+    </div>
+  </div>
+
+  <div class="caja" style="display: grid; grid-template-columns: minmax(0,1fr) 400px; flex: 1">
+    <div style="padding: 28px 30px; display: flex; flex-direction: column; min-width: 0">
+      <div class="lbl">Hoy te pones</div>
+      <div class="dsp" style="font-size: 44px; margin-top: 12px">GRIS<br>JASPEADO</div>
+      <div class="dsp" style="font-size: 23px; margin-top: 13px; color: #6a6a66;
+           font-weight: 600">+ JEANS NEGRO</div>
+      <div style="font-size: 13.5px; color: #333330; line-height: 1.6; margin-top: 15px;
+           max-width: 370px">
+        El degradado natural: gris arriba, negro abajo. El negro no tiene color propio,
+        así que no compite con nada.
+      </div>
+
+      <div class="lbl" style="margin-top: 26px">En una tarjeta de Combinaciones</div>
+      <div style="display: flex; gap: 13px; margin-top: 12px">
+        <div class="caja" style="display: flex; align-items: center; gap: 13px; padding: 11px 15px">
+          <svg class="sil" viewBox="0 0 200 640" width="40" height="128" aria-label="Crema con jeans oscuro">
+          <path class="piel" d="M70,300 L66,470 L70,586 L92,586 L94,470 L98,340 L102,340 L106,470 L108,586 L130,586 L134,470 L130,300 Z"></path>
+          <path class="piel" d="M28,190 L23,252 L21,262 C20,272 25,280 33,280 C41,280 46,273 45,264 L43,254 L49,195 Z"></path>
+          <path class="piel" d="M172,190 L177,252 L179,262 C180,272 175,280 167,280 C159,280 154,273 155,264 L157,254 L151,195 Z"></path>
+          <path class="piel" d="M89,84 L84,162 L116,162 L111,84 Z"></path>
+          <path d="M60,286 C58,320 62,352 64,392 L66,580 L94,580 L100,372 L106,580 L134,580 L136,392 C138,352 142,320 140,286 Z" fill="#2B3A55"></path>
+          <path d="M74,109 L32,127 L19,186 L55,197 L59,169 L63,292 L137,292 L141,169 L145,197 L181,186 L168,127 L126,109 C122,133 112,144 100,144 C88,144 78,133 74,109 Z" fill="#E4D9C4"></path>
+          <path class="piel" d="M100,22 C118,22 130,37 130,57 C130,78 117,96 100,96 C83,96 70,78 70,57 C70,37 82,22 100,22 Z"></path>
+          <path d="M70,58 C70,32 83,19 100,19 C117,19 130,32 130,58 C130,47 123,40 114,37 C106,44 94,44 86,37 C77,40 70,47 70,58 Z" fill="#0a0a0a"></path>
+          <path d="M68,572 L92,572 L92,592 C92,599 87,602 81,602 L58,602 C52,602 49,599 50,594 C51,589 56,587 61,585 Z" fill="#6B4530"></path>
+          <path d="M108,572 L132,572 L139,585 C144,587 149,589 150,594 C151,599 148,602 142,602 L119,602 C113,602 108,599 108,592 Z" fill="#6B4530"></path>
+        </svg>
+          <div style="min-width: 0">
+            <div class="dsp" style="font-size: 14px; letter-spacing: -0.02em; line-height: 1.15">
+              CREMA<br>+ JEANS OSCURO</div>
+            <div class="mono" style="font-size: 9.5px; color: #6a6a66; margin-top: 5px">OFICINA</div>
+          </div>
+        </div>
+        <div class="caja" style="display: flex; align-items: center; gap: 13px; padding: 11px 15px">
+          <svg class="sil" viewBox="0 0 200 640" width="40" height="128" aria-label="Burdeos con jeans negro">
+          <path class="piel" d="M70,300 L66,470 L70,586 L92,586 L94,470 L98,340 L102,340 L106,470 L108,586 L130,586 L134,470 L130,300 Z"></path>
+          <path class="piel" d="M28,190 L23,252 L21,262 C20,272 25,280 33,280 C41,280 46,273 45,264 L43,254 L49,195 Z"></path>
+          <path class="piel" d="M172,190 L177,252 L179,262 C180,272 175,280 167,280 C159,280 154,273 155,264 L157,254 L151,195 Z"></path>
+          <path class="piel" d="M89,84 L84,162 L116,162 L111,84 Z"></path>
+          <path d="M60,286 C58,320 62,352 64,392 L66,580 L94,580 L100,372 L106,580 L134,580 L136,392 C138,352 142,320 140,286 Z" fill="#232326"></path>
+          <path d="M74,109 L32,127 L19,186 L55,197 L59,169 L63,292 L137,292 L141,169 L145,197 L181,186 L168,127 L126,109 C122,133 112,144 100,144 C88,144 78,133 74,109 Z" fill="#6B2536"></path>
+          <path class="piel" d="M100,22 C118,22 130,37 130,57 C130,78 117,96 100,96 C83,96 70,78 70,57 C70,37 82,22 100,22 Z"></path>
+          <path d="M70,58 C70,32 83,19 100,19 C117,19 130,32 130,58 C130,47 123,40 114,37 C106,44 94,44 86,37 C77,40 70,47 70,58 Z" fill="#0a0a0a"></path>
+          <path d="M68,572 L92,572 L92,592 C92,599 87,602 81,602 L58,602 C52,602 49,599 50,594 C51,589 56,587 61,585 Z" fill="#1D1C1E"></path>
+          <path d="M108,572 L132,572 L139,585 C144,587 149,589 150,594 C151,599 148,602 142,602 L119,602 C113,602 108,599 108,592 Z" fill="#1D1C1E"></path>
+        </svg>
+          <div style="min-width: 0">
+            <div class="dsp" style="font-size: 14px; letter-spacing: -0.02em; line-height: 1.15">
+              BURDEOS<br>+ JEANS NEGRO</div>
+            <div class="mono" style="font-size: 9.5px; color: #6a6a66; margin-top: 5px">NOCHE</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="lbl" style="margin-top: 24px">Y a 34px, el tamaño mínimo</div>
+      <div style="display: flex; gap: 13px; margin-top: 12px; align-items: flex-end">
+        <svg class="sil" viewBox="0 0 200 640" width="34" height="109" aria-label="Blanco con índigo">
+          <path class="piel" d="M70,300 L66,470 L70,586 L92,586 L94,470 L98,340 L102,340 L106,470 L108,586 L130,586 L134,470 L130,300 Z"></path>
+          <path class="piel" d="M28,190 L23,252 L21,262 C20,272 25,280 33,280 C41,280 46,273 45,264 L43,254 L49,195 Z"></path>
+          <path class="piel" d="M172,190 L177,252 L179,262 C180,272 175,280 167,280 C159,280 154,273 155,264 L157,254 L151,195 Z"></path>
+          <path class="piel" d="M89,84 L84,162 L116,162 L111,84 Z"></path>
+          <path d="M60,286 C58,320 62,352 64,392 L66,580 L94,580 L100,372 L106,580 L134,580 L136,392 C138,352 142,320 140,286 Z" fill="#42618A"></path>
+          <path d="M74,109 L32,127 L19,186 L55,197 L59,169 L63,292 L137,292 L141,169 L145,197 L181,186 L168,127 L126,109 C122,133 112,144 100,144 C88,144 78,133 74,109 Z" fill="#F2EFE9"></path>
+          <path class="piel" d="M100,22 C118,22 130,37 130,57 C130,78 117,96 100,96 C83,96 70,78 70,57 C70,37 82,22 100,22 Z"></path>
+          <path d="M70,58 C70,32 83,19 100,19 C117,19 130,32 130,58 C130,47 123,40 114,37 C106,44 94,44 86,37 C77,40 70,47 70,58 Z" fill="#0a0a0a"></path>
+          <path d="M68,572 L92,572 L92,592 C92,599 87,602 81,602 L58,602 C52,602 49,599 50,594 C51,589 56,587 61,585 Z" fill="#EDEAE4"></path>
+          <path d="M108,572 L132,572 L139,585 C144,587 149,589 150,594 C151,599 148,602 142,602 L119,602 C113,602 108,599 108,592 Z" fill="#EDEAE4"></path>
+        </svg>
+        <svg class="sil" viewBox="0 0 200 640" width="34" height="109" aria-label="Oliva con caqui">
+          <path class="piel" d="M70,300 L66,470 L70,586 L92,586 L94,470 L98,340 L102,340 L106,470 L108,586 L130,586 L134,470 L130,300 Z"></path>
+          <path class="piel" d="M28,190 L23,252 L21,262 C20,272 25,280 33,280 C41,280 46,273 45,264 L43,254 L49,195 Z"></path>
+          <path class="piel" d="M172,190 L177,252 L179,262 C180,272 175,280 167,280 C159,280 154,273 155,264 L157,254 L151,195 Z"></path>
+          <path class="piel" d="M89,84 L84,162 L116,162 L111,84 Z"></path>
+          <path d="M60,286 C58,320 62,352 64,392 L66,580 L94,580 L100,372 L106,580 L134,580 L136,392 C138,352 142,320 140,286 Z" fill="#C0A57C"></path>
+          <path d="M74,109 L32,127 L19,186 L55,197 L59,169 L63,292 L137,292 L141,169 L145,197 L181,186 L168,127 L126,109 C122,133 112,144 100,144 C88,144 78,133 74,109 Z" fill="#6E7448"></path>
+          <path class="piel" d="M100,22 C118,22 130,37 130,57 C130,78 117,96 100,96 C83,96 70,78 70,57 C70,37 82,22 100,22 Z"></path>
+          <path d="M70,58 C70,32 83,19 100,19 C117,19 130,32 130,58 C130,47 123,40 114,37 C106,44 94,44 86,37 C77,40 70,47 70,58 Z" fill="#0a0a0a"></path>
+          <path d="M68,572 L92,572 L92,592 C92,599 87,602 81,602 L58,602 C52,602 49,599 50,594 C51,589 56,587 61,585 Z" fill="#6B4530"></path>
+          <path d="M108,572 L132,572 L139,585 C144,587 149,589 150,594 C151,599 148,602 142,602 L119,602 C113,602 108,599 108,592 Z" fill="#6B4530"></path>
+        </svg>
+        <svg class="sil" viewBox="0 0 200 640" width="34" height="109" aria-label="Mostaza con chino marino">
+          <path class="piel" d="M70,300 L66,470 L70,586 L92,586 L94,470 L98,340 L102,340 L106,470 L108,586 L130,586 L134,470 L130,300 Z"></path>
+          <path class="piel" d="M28,190 L23,252 L21,262 C20,272 25,280 33,280 C41,280 46,273 45,264 L43,254 L49,195 Z"></path>
+          <path class="piel" d="M172,190 L177,252 L179,262 C180,272 175,280 167,280 C159,280 154,273 155,264 L157,254 L151,195 Z"></path>
+          <path class="piel" d="M89,84 L84,162 L116,162 L111,84 Z"></path>
+          <path d="M60,286 C58,320 62,352 64,392 L66,580 L94,580 L100,372 L106,580 L134,580 L136,392 C138,352 142,320 140,286 Z" fill="#293650"></path>
+          <path d="M74,109 L32,127 L19,186 L55,197 L59,169 L63,292 L137,292 L141,169 L145,197 L181,186 L168,127 L126,109 C122,133 112,144 100,144 C88,144 78,133 74,109 Z" fill="#C59A31"></path>
+          <path class="piel" d="M100,22 C118,22 130,37 130,57 C130,78 117,96 100,96 C83,96 70,78 70,57 C70,37 82,22 100,22 Z"></path>
+          <path d="M70,58 C70,32 83,19 100,19 C117,19 130,32 130,58 C130,47 123,40 114,37 C106,44 94,44 86,37 C77,40 70,47 70,58 Z" fill="#0a0a0a"></path>
+          <path d="M68,572 L92,572 L92,592 C92,599 87,602 81,602 L58,602 C52,602 49,599 50,594 C51,589 56,587 61,585 Z" fill="#1D1C1E"></path>
+          <path d="M108,572 L132,572 L139,585 C144,587 149,589 150,594 C151,599 148,602 142,602 L119,602 C113,602 108,599 108,592 Z" fill="#1D1C1E"></path>
+        </svg>
+        <svg class="sil" viewBox="0 0 200 640" width="34" height="109" aria-label="Celeste con chino gris">
+          <path class="piel" d="M70,300 L66,470 L70,586 L92,586 L94,470 L98,340 L102,340 L106,470 L108,586 L130,586 L134,470 L130,300 Z"></path>
+          <path class="piel" d="M28,190 L23,252 L21,262 C20,272 25,280 33,280 C41,280 46,273 45,264 L43,254 L49,195 Z"></path>
+          <path class="piel" d="M172,190 L177,252 L179,262 C180,272 175,280 167,280 C159,280 154,273 155,264 L157,254 L151,195 Z"></path>
+          <path class="piel" d="M89,84 L84,162 L116,162 L111,84 Z"></path>
+          <path d="M60,286 C58,320 62,352 64,392 L66,580 L94,580 L100,372 L106,580 L134,580 L136,392 C138,352 142,320 140,286 Z" fill="#7D7B76"></path>
+          <path d="M74,109 L32,127 L19,186 L55,197 L59,169 L63,292 L137,292 L141,169 L145,197 L181,186 L168,127 L126,109 C122,133 112,144 100,144 C88,144 78,133 74,109 Z" fill="#8FB6D4"></path>
+          <path class="piel" d="M100,22 C118,22 130,37 130,57 C130,78 117,96 100,96 C83,96 70,78 70,57 C70,37 82,22 100,22 Z"></path>
+          <path d="M70,58 C70,32 83,19 100,19 C117,19 130,32 130,58 C130,47 123,40 114,37 C106,44 94,44 86,37 C77,40 70,47 70,58 Z" fill="#0a0a0a"></path>
+          <path d="M68,572 L92,572 L92,592 C92,599 87,602 81,602 L58,602 C52,602 49,599 50,594 C51,589 56,587 61,585 Z" fill="#EDEAE4"></path>
+          <path d="M108,572 L132,572 L139,585 C144,587 149,589 150,594 C151,599 148,602 142,602 L119,602 C113,602 108,599 108,592 Z" fill="#EDEAE4"></path>
+        </svg>
+      </div>
+
+      <div style="font-size: 12px; color: #6a6a66; line-height: 1.6; margin-top: auto;
+           padding-top: 18px; border-top: 1.5px solid #0a0a0a">
+        Rehecha sobre la primera: el cuello pasó de tubo recto a trapecio que el escote
+        tapa, los brazos perdieron un tercio de grosor y ganaron muñeca, y los pies
+        bajaron de 60 a 40 unidades de largo — parecían zapatillas de payaso.
+      </div>
+    </div>
+
+    <div style="border-left: 1.5px solid #0a0a0a; display: flex; align-items: center;
+         justify-content: center; padding: 20px">
+        <svg class="sil" viewBox="0 0 200 640" width="212" height="678" aria-label="Outfit de hoy">
+          <path class="piel" d="M70,300 L66,470 L70,586 L92,586 L94,470 L98,340 L102,340 L106,470 L108,586 L130,586 L134,470 L130,300 Z"></path>
+          <path class="piel" d="M28,190 L23,252 L21,262 C20,272 25,280 33,280 C41,280 46,273 45,264 L43,254 L49,195 Z"></path>
+          <path class="piel" d="M172,190 L177,252 L179,262 C180,272 175,280 167,280 C159,280 154,273 155,264 L157,254 L151,195 Z"></path>
+          <path class="piel" d="M89,84 L84,162 L116,162 L111,84 Z"></path>
+          <path d="M60,286 C58,320 62,352 64,392 L66,580 L94,580 L100,372 L106,580 L134,580 L136,392 C138,352 142,320 140,286 Z" fill="#232326"></path>
+          <path d="M74,109 L32,127 L19,186 L55,197 L59,169 L63,292 L137,292 L141,169 L145,197 L181,186 L168,127 L126,109 C122,133 112,144 100,144 C88,144 78,133 74,109 Z" fill="#A3A19C"></path>
+          <path class="piel" d="M100,22 C118,22 130,37 130,57 C130,78 117,96 100,96 C83,96 70,78 70,57 C70,37 82,22 100,22 Z"></path>
+          <path d="M70,58 C70,32 83,19 100,19 C117,19 130,32 130,58 C130,47 123,40 114,37 C106,44 94,44 86,37 C77,40 70,47 70,58 Z" fill="#0a0a0a"></path>
+          <path d="M68,572 L92,572 L92,592 C92,599 87,602 81,602 L58,602 C52,602 49,599 50,594 C51,589 56,587 61,585 Z" fill="#EDEAE4"></path>
+          <path d="M108,572 L132,572 L139,585 C144,587 149,589 150,594 C151,599 148,602 142,602 L119,602 C113,602 108,599 108,592 Z" fill="#EDEAE4"></path>
+        </svg>
+    </div>
+  </div>
+
+</div>
+</x-dc>
+
+<script data-dc-script data-props='{"$preview":{"width":1240,"height":1080}}'>
+class Component extends DCLogic {}
+</script>
+</body>
+</html>

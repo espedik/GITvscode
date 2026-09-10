@@ -334,11 +334,12 @@ const DIAS = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábad
 const MESES = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto',
                'septiembre','octubre','noviembre','diciembre'];
 
-function torreHtml(c, alto) {
-  return `<div class="hy-torre" style="height:${alto}">
-    <div style="height:42%;background:${c.t.hex}"></div>
-    <div style="flex:1;background:${c.p.hex}"></div>
-  </div>`;
+// El zapato de la figura sale de las reglas, no de la ocasión: si ninguno está en verde
+// con ese pantalón, va sin zapato antes que con uno que la tabla desaconseja.
+function torreHtml(c, ancho) {
+  const z = elegir(COLORIMETRIA.calzado, COLORIMETRIA.reglasZapato, c.p.id);
+  return `<div class="hy-torre">${figuraSvg(c.t.hex, c.p.hex, z ? z.x.hex : null, ancho,
+    c.t.n + ' con ' + c.p.n)}</div>`;
 }
 
 function renderHoy() {
@@ -372,7 +373,7 @@ function renderHoy() {
             <div class="hy-dato">${o.ocs.map(x => x.n).join(' · ') || '—'}</div></div>
         </div>
       </div>
-      ${torreHtml(o, 'auto')}
+      ${torreHtml(o, 176)}
     </div>`
   : `
     <div class="hy-h hy-vacio">
@@ -390,7 +391,7 @@ function renderHoy() {
     <div class="hy-lbl" style="color:var(--text3);margin:26px 0 14px">Otras que ya puedes armar</div>
     <div class="hy-alts">
       ${alt.map(c => `<div class="hy-alt">
-        ${torreHtml(c, '62px')}
+        ${torreHtml(c, 44)}
         <div style="min-width:0">
           <div class="hy-alt-n">${c.t.n}<br>+ ${c.p.n}</div>
           <div class="hy-alt-o">${c.ocs.map(x => x.n).join(' · ') || '—'}</div>
@@ -415,7 +416,8 @@ function renderHoy() {
     <div class="hy-pasos">
       ${ruta.map((p, i) => `<label class="hy-paso">
         <span class="hy-paso-n">${String(closetColor() + i + 1).padStart(2, '0')}</span>
-        <span class="hy-sw" style="background:${p.hex}"></span>
+        <span class="hy-sw">${prendaSvg(p.tipo === 'p' ? 'pantalon' : 'playera',
+          p.hex, 26, p.n)}</span>
         <span class="hy-paso-t">${p.n}
           <em>${p.tipo === 'p' ? 'PANTALÓN' : 'PLAYERA'}</em></span>
         <span class="hy-gana">+${p.gana}</span>
@@ -459,7 +461,7 @@ function fichaColor(tipo, pr, max) {
     <b>${c.p}</b></div>`).join('');
 
   return `<div class="pc${tengo ? ' tengo' : ''}${cero ? ' cero' : ''}">
-    <div class="pc-sw" style="background:${pr.hex}">
+    <div class="pc-sw">${siluetaDe(tipo, pr, tipo === 'p' ? 86 : 96)}
       ${abre === max && max > 0 ? '<span class="pc-top">Va con todos</span>' : ''}
       ${tengo ? '<span class="pc-ok">Ya la tienes</span>' : ''}
     </div>
@@ -551,7 +553,7 @@ function fichaCapa(it, reglas, tipoTxt) {
   const tengo = S.marcados.indexOf(it.item) >= 0;
   const cat = CATALOGO[it.item];
   return `<div class="pc${tengo ? ' tengo' : ''}${ok.length ? '' : ' cero'}">
-    <div class="pc-sw" style="background:${it.hex}">
+    <div class="pc-sw">${prendaSvg('capa', it.hex, 96, it.n)}
       ${tengo ? '<span class="pc-ok">Ya la tienes</span>' : ''}
     </div>
     <div class="pc-b">
@@ -617,6 +619,83 @@ function renderReglas() {
   </div>`;
 }
 
+// ─── LAS SILUETAS ────────────────────────────────────────────────────────────
+// Dos dibujos y una regla para elegir cuál: la FIGURA donde hay una combinación —Hoy y
+// las 48 tarjetas—, y la PRENDA SUELTA donde hay una sola prenda —Mi clóset, las fichas
+// de compra, la ruta—. Un muñeco con solo la playera puesta y el resto en blanco se ve
+// mal, y una prenda suelta no dice nada de cómo queda el conjunto.
+//
+// El contorno lleva `vector-effect:non-scaling-stroke` (en el CSS): la línea mide 1,5px
+// reales lo mismo a 212px que a 30. Sin eso, la silueta pequeña se convierte en una
+// mancha de tinta y la grande en un dibujo desvaído.
+
+// La figura, canon de ocho cabezas sobre un viewBox de 200×640: cabeza 22-96, hombros
+// 127, cintura 286, entrepierna 372, tobillo 580, suelo 602. El orden de los trazos ES
+// el orden de pintado: las piernas y los brazos van antes que la ropa para que la ropa
+// los tape, y el cuello antes que la playera para que el escote lo corte.
+const SIL_FIG = [
+  ['piel', 'M70,300 L66,470 L70,586 L92,586 L94,470 L98,340 L102,340 L106,470 L108,586 L130,586 L134,470 L130,300 Z'],
+  ['piel', 'M28,190 L23,252 L21,262 C20,272 25,280 33,280 C41,280 46,273 45,264 L43,254 L49,195 Z'],
+  ['piel', 'M172,190 L177,252 L179,262 C180,272 175,280 167,280 C159,280 154,273 155,264 L157,254 L151,195 Z'],
+  ['piel', 'M89,84 L84,162 L116,162 L111,84 Z'],
+  ['pant', 'M60,286 C58,320 62,352 64,392 L66,580 L94,580 L100,372 L106,580 L134,580 L136,392 C138,352 142,320 140,286 Z'],
+  ['play', 'M74,109 L32,127 L19,186 L55,197 L59,169 L63,292 L137,292 L141,169 L145,197 L181,186 L168,127 L126,109 C122,133 112,144 100,144 C88,144 78,133 74,109 Z'],
+  ['piel', 'M100,22 C118,22 130,37 130,57 C130,78 117,96 100,96 C83,96 70,78 70,57 C70,37 82,22 100,22 Z'],
+  ['pelo', 'M70,58 C70,32 83,19 100,19 C117,19 130,32 130,58 C130,47 123,40 114,37 C106,44 94,44 86,37 C77,40 70,47 70,58 Z'],
+  ['zap',  'M68,572 L92,572 L92,592 C92,599 87,602 81,602 L58,602 C52,602 49,599 50,594 C51,589 56,587 61,585 Z'],
+  ['zap',  'M108,572 L132,572 L139,585 C144,587 149,589 150,594 C151,599 148,602 142,602 L119,602 C113,602 108,599 108,592 Z'],
+];
+
+function figuraSvg(playera, pantalon, zapato, ancho, etiqueta) {
+  const alto = Math.round(ancho * 640 / 200);
+  const col = { play: playera || '#f6f6f4', pant: pantalon || '#f6f6f4', zap: zapato || '#f6f6f4' };
+  const trazos = SIL_FIG.map(function (t) {
+    if (t[0] === 'piel') return '<path class="s-piel" d="' + t[1] + '"></path>';
+    if (t[0] === 'pelo') return '<path class="s-pelo" d="' + t[1] + '"></path>';
+    return '<path d="' + t[1] + '" fill="' + col[t[0]] + '"></path>';
+  }).join('');
+  return '<svg class="sil" viewBox="0 0 200 640" width="' + ancho + '" height="' + alto +
+    '" role="img" aria-label="' + cmEsc(etiqueta || '') + '">' + trazos + '</svg>';
+}
+
+// Las prendas sueltas. `d` son los trazos con relleno y `det` los de detalle, sin él:
+// la cinturilla del pantalón y la abertura de la chamarra, que es lo que las distingue
+// de una playera cuando se ven a 30px.
+const SIL_PRENDA = {
+  playera:  { w: 120, h: 112,
+    d: ['M42,10 L18,22 L26,45 L36,40 L36,104 L84,104 L84,40 L94,45 L102,22 L78,10 Q60,27 42,10 Z'],
+    det: ['M42,10 Q60,27 78,10'] },
+  pantalon: { w: 120, h: 132,
+    d: ['M32,8 L88,8 L85,126 L66,126 L60,64 L54,126 L35,126 Z'],
+    det: ['M32,21 L88,21'] },
+  capa:     { w: 120, h: 122,
+    d: ['M42,10 L14,24 L20,50 L30,45 L30,114 L90,114 L90,45 L100,50 L106,24 L78,10 Q60,26 42,10 Z'],
+    det: ['M60,26 L60,114'] },
+  zapato:   { w: 140, h: 72,
+    d: ['M18,54 L18,41 Q18,29 30,25 L56,15 Q64,11 71,16 L84,27 L106,32 Q122,36 122,49 L122,54 Z',
+        'M13,54 L127,54 L127,62 Q127,66 123,66 L17,66 Q13,66 13,62 Z'],
+    det: [] },
+};
+
+function prendaSvg(tipo, hex, ancho, etiqueta) {
+  const s = SIL_PRENDA[tipo];
+  if (!s) return '';
+  const alto = Math.round(ancho * s.h / s.w);
+  const rell = s.d.map(function (d) { return '<path d="' + d + '" fill="' + hex + '"></path>'; }).join('');
+  const det = s.det.map(function (d) { return '<path class="s-det" d="' + d + '"></path>'; }).join('');
+  return '<svg class="sil" viewBox="0 0 ' + s.w + ' ' + s.h + '" width="' + ancho +
+    '" height="' + alto + '" role="img" aria-label="' + cmEsc(etiqueta || '') + '">' +
+    rell + det + '</svg>';
+}
+
+// Qué silueta le toca a cada cosa del clóset.
+function siluetaDe(tipo, pr, ancho) {
+  if (tipo === 'p') return prendaSvg('pantalon', pr.hex, ancho, pr.n);
+  if (tipo === 't') return prendaSvg('playera', pr.hex, ancho, pr.n);
+  if (tipo === 'capa') return prendaSvg('capa', pr.hex, ancho, pr.n);
+  return prendaSvg('zapato', pr.hex, ancho, pr.n);
+}
+
 // ─── MI CLÓSET ───────────────────────────────────────────────────────────────
 // UN solo sitio para marcar lo que tienes. Antes estaba repartido entre las fichas de
 // compra y las casillas de la ruta, y marcar treinta y una prendas obligaba a recorrer
@@ -632,8 +711,10 @@ function bloqueCloset(titulo, items, tipo) {
     const fn = tipo === 'x'
       ? `toggleCheck('${it.item}'); document.getElementById('content-root').innerHTML = RENDERS[secActual]();`
       : `toggleColor('${tipo}','${it.id}')`;
+    const sil = siluetaDe(tipo === 'x' ? (COLORIMETRIA.capas.indexOf(it) >= 0 ? 'capa' : 'z') : tipo,
+                          it, tipo === 'x' && COLORIMETRIA.calzado.indexOf(it) >= 0 ? 92 : 74);
     return `<button type="button" class="mc${tengo ? ' tengo' : ''}" onclick="${fn}">
-      <span class="mc-sw" style="background:${it.hex}">
+      <span class="mc-sw">${sil}
         ${tengo ? `<span class="mc-tick">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4"
             stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l6 6L20 6"></path></svg>
@@ -698,7 +779,8 @@ function renderQueComprar() {
     <div class="hy-pasos">
       ${ruta.map((p, i) => `<label class="hy-paso">
         <span class="hy-paso-n">${String(i + 1).padStart(2, '0')}</span>
-        <span class="hy-sw" style="background:${p.hex}"></span>
+        <span class="hy-sw">${prendaSvg(p.tipo === 'p' ? 'pantalon' : 'playera',
+          p.hex, 26, p.n)}</span>
         <span class="hy-paso-t">${cmEsc(p.n)}
           <em>${p.tipo === 'p' ? 'PANTALÓN' : 'PLAYERA'}</em></span>
         <span class="hy-gana">+${p.gana}</span>
@@ -793,11 +875,10 @@ function combFiltro(id) { combOc = id; document.getElementById('content-root').i
 function combCard(c) {
   const ocs = c.ocs.map(o =>
     `<span class="cb-oc" title="${o.nota.replace(/"/g, '&quot;')}">${o.ico} ${o.n} · ${o.zapato}</span>`).join('');
+  const z = elegir(COLORIMETRIA.calzado, COLORIMETRIA.reglasZapato, c.p.id);
   return `<div class="cb">
-    <div class="cb-color">
-      <div class="cb-t" style="background:${c.t.hex}"></div>
-      <div class="cb-p" style="background:${c.p.hex}"></div>
-    </div>
+    <div class="cb-color">${figuraSvg(c.t.hex, c.p.hex, z ? z.x.hex : null, 62,
+      c.t.n + ' con ' + c.p.n)}</div>
     <div class="cb-body">
       <div class="cb-n">${c.t.n} <span>+</span> ${c.p.n}</div>
       <div class="cb-por">${c.porque}</div>

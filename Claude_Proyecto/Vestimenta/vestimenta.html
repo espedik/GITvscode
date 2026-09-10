@@ -84,6 +84,18 @@ a:hover{color:var(--p-d);border-bottom-color:var(--p)}
 .sh h2{font-family:var(--font-dsp);font-size:30px;font-weight:800;letter-spacing:-.035em;line-height:1}
 .sh .sub{font-size:13px;color:var(--text2);margin-top:9px;line-height:1.6;max-width:760px}
 .intro-banner{background:var(--p-l);border-color:var(--p);margin-bottom:22px}
+/* ── LAS SILUETAS ────────────────────────────────────────────────────────
+   `non-scaling-stroke` mantiene la línea a 1,5px REALES sea cual sea el tamaño del
+   dibujo, y aquí el rango va de 212px en Hoy a 26 en la ruta de compra. Sin eso, la
+   silueta pequeña se convierte en una mancha de tinta y la grande en un dibujo
+   desvaído. La piel va del color del papel: en «Cero» el único color de la pantalla
+   es el de la prenda. */
+.sil{display:block;flex:none}
+.sil path{vector-effect:non-scaling-stroke;stroke:var(--text);stroke-width:1.5;
+  stroke-linejoin:round;stroke-linecap:round}
+.sil .s-piel{fill:var(--surface-2)}
+.sil .s-pelo{fill:var(--text)}
+.sil .s-det{fill:none;stroke-width:1;opacity:.4}
 /* ── HOY ─────────────────────────────────────────────────────────────────
    La pantalla que se abre por la mañana. Todo lo que hace falta para vestirse
    entra sin desplazar: qué me pongo, qué más puedo armar, qué comprar. */
@@ -94,7 +106,8 @@ a:hover{color:var(--p-d);border-bottom-color:var(--p)}
 .hy-h{display:grid;grid-template-columns:minmax(0,1fr) 336px;border:var(--bd);
   min-height:340px}
 .hy-h-tx{padding:30px 32px;display:flex;flex-direction:column;min-width:0}
-.hy-torre{display:flex;flex-direction:column;border-left:var(--bd)}
+.hy-torre{display:flex;align-items:center;justify-content:center;border-left:var(--bd);
+  padding:20px}
 .hy-dsp{font-family:var(--font-dsp);font-size:clamp(38px,4.6vw,60px);font-weight:800;
   letter-spacing:-.045em;line-height:.94;margin-top:14px}
 .hy-dsp2{font-family:var(--font-dsp);font-size:26px;font-weight:600;color:var(--text3);
@@ -111,7 +124,7 @@ a:hover{color:var(--p-d);border-bottom-color:var(--p)}
 .hy-alts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border-top:var(--bd)}
 .hy-alt{display:flex;gap:15px;padding:16px 20px 18px 0;min-width:0}
 .hy-alt+.hy-alt{border-left:var(--bd-fina);padding-left:20px}
-.hy-alt .hy-torre{width:44px;flex:none;border:var(--bd);border-left:var(--bd)}
+.hy-alt .hy-torre{flex:none;border:0;padding:0}
 .hy-alt-n{font-family:var(--font-dsp);font-size:16px;font-weight:700;
   letter-spacing:-.025em;line-height:1.15}
 .hy-alt-o{font-family:'Space Grotesk',monospace;font-size:10px;color:var(--text3);
@@ -133,7 +146,7 @@ a:hover{color:var(--p-d);border-bottom-color:var(--p)}
 .hy-paso:hover{background:var(--p-l)}
 .hy-paso-n{font-family:'Space Grotesk',monospace;font-size:11px;font-weight:700;
   color:var(--text3)}
-.hy-sw{height:34px;border:var(--bd)}
+.hy-sw{display:flex;align-items:center;justify-content:center}
 .hy-paso-t{font-size:14.5px;font-weight:700;min-width:0}
 .hy-paso-t em{font-family:'Space Grotesk',monospace;font-size:9.5px;font-style:normal;
   font-weight:700;color:var(--text3);letter-spacing:.14em;margin-left:10px}
@@ -143,8 +156,8 @@ a:hover{color:var(--p-d);border-bottom-color:var(--p)}
 .hy-tick{display:none}
 @media(max-width:900px){
   .hy-h,.hy-compra{grid-template-columns:minmax(0,1fr)}
-  .hy-torre{border-left:0;border-top:var(--bd);min-height:150px}
-  .hy-alt .hy-torre{border:var(--bd);min-height:0}
+  .hy-torre{border-left:0;border-top:var(--bd);padding:18px}
+  .hy-alt .hy-torre{border:0}
   .hy-compra-n{border-right:0;border-bottom:var(--bd)}
   .hy-alts{grid-template-columns:minmax(0,1fr)}
   .hy-alt+.hy-alt{border-left:0;border-top:var(--bd-fina);padding-left:0}
@@ -173,14 +186,15 @@ a:hover{color:var(--p-d);border-bottom-color:var(--p)}
 .pc{border:var(--bd);display:flex;flex-direction:column;background:var(--surface-2)}
 .pc.tengo{border-color:var(--p)}
 .pc.cero{opacity:.62}
-.pc-sw{height:118px;border-bottom:var(--bd);position:relative;display:flex;
-  align-items:flex-start;justify-content:flex-end;padding:8px}
+.pc-sw{height:130px;border-bottom:var(--bd);position:relative;display:flex;
+  align-items:center;justify-content:center;padding:10px}
 /* La insignia va sobre la muestra, en negro sobre el color: sea cual sea el color
    de la prenda, el negro se lee — es el mismo criterio que la tinta del resto. */
-.pc-top,.pc-ok{font-family:'Space Grotesk',monospace;font-size:8.5px;font-weight:700;
+.pc-top,.pc-ok{position:absolute;top:8px;right:8px;
+  font-family:'Space Grotesk',monospace;font-size:8.5px;font-weight:700;
   letter-spacing:.14em;text-transform:uppercase;padding:4px 8px;background:#0a0a0a;
   color:#ececea}
-.pc-ok{background:var(--p);color:#fff}
+.pc-ok{background:var(--p);color:#fff;top:auto;bottom:8px}
 .pc-b{padding:14px 16px 16px;display:flex;flex-direction:column;gap:11px;flex:1}
 .pc-h{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
 .pc-n{font-family:var(--font-dsp);font-size:19px;font-weight:800;letter-spacing:-.03em;
@@ -221,19 +235,22 @@ a:hover{color:var(--p-d);border-bottom-color:var(--p)}
   padding:0;cursor:pointer;font-family:inherit;text-align:left;color:inherit;
   transition:border-color .15s}
 .mc:hover{border-color:var(--p)}
-.mc-sw{height:104px;border-bottom:var(--bd);position:relative;display:flex;
+.mc-sw{height:118px;border-bottom:var(--bd);position:relative;display:flex;
   align-items:center;justify-content:center}
 /* La marca de «la tengo» va DENTRO de la muestra y en el acento: sobre cualquiera de
    los 31 colores, el naranja con tinta clara se lee. */
-.mc-tick{width:38px;height:38px;background:var(--p);color:#fff;display:flex;
+/* La marca de «la tengo» se sale a la esquina: en el centro tapaba la prenda, que
+   es justo lo que hay que reconocer. */
+.mc-tick{position:absolute;top:8px;right:8px;width:30px;height:30px;
+  background:var(--p);color:#fff;display:flex;
   align-items:center;justify-content:center}
-.mc-tick svg{width:21px;height:21px}
+.mc-tick svg{width:17px;height:17px}
 .mc-n{padding:11px 13px 13px;font-size:13px;font-weight:700;line-height:1.3}
 .mc.tengo{border-color:var(--p)}
 .mc.tengo .mc-n{color:var(--p)}
 @media(max-width:560px){
   .mc-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
-  .mc-sw{height:84px}
+  .mc-sw{height:96px}
 }
 /* El aviso de que la prenda que se propone no está en tu clóset. Va en el acento
    porque es una compra pendiente, no un error. */
@@ -317,9 +334,8 @@ a:hover{color:var(--p-d);border-bottom-color:var(--p)}
 .cb-grid>*{min-width:0}
 .cb{border-radius:var(--r14);border:1px solid rgba(var(--ov),.07);background:var(--surface-2);
   box-shadow:var(--sh);overflow:hidden;display:flex;flex-direction:column}
-.cb-color{display:flex;flex-direction:column}
-.cb-t{height:52px}
-.cb-p{height:74px;border-top:1px solid rgba(var(--ov),.14)}
+.cb-color{display:flex;align-items:center;justify-content:center;padding:16px 0 14px;
+  border-bottom:var(--bd-fina)}
 .cb-body{padding:12px 14px 13px;display:flex;flex-direction:column;gap:7px}
 .cb-n{font-size:13.5px;font-weight:800;line-height:1.3;color:var(--text)}
 .cb-n span{color:var(--text3);font-weight:600;margin:0 2px}
