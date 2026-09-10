@@ -19,49 +19,138 @@
      el primer instante. -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&display=swap" media="print" onload="this.media='all'">
-<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&display=swap"></noscript>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800;900&family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&display=swap" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800;900&family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&display=swap"></noscript>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+/* ═══ CERO — el sistema visual ═══════════════════════════════════════════
+   Sin radios, sin sombras, sin desenfoque y sin degradados. La jerarquía la hacen
+   la REGLA de 1,5px, el tamaño del tipo y un único acento: naranja señal. Ese
+   naranja no aparece en ninguna de las 16 playeras ni en los 6 pantalones, así que
+   nunca compite con la prenda — que es lo único que aquí tiene derecho a color.
+
+   `--r14`, `--rs` y `--sh` valen 0 y none: como toda la app pinta con esos tokens,
+   los radios y las sombras desaparecen de las nueve secciones sin tocar ninguna. */
 :root{
-  --p:#c17f4a;--p-d:#9c632f;--p-l:rgba(193,127,74,.12);
-  --g:#00a758;--g-l:rgba(0,167,88,.1);
-  --r:#ff3b6b;--r-l:rgba(255,59,107,.1);
-  --w:#ffd93d;
-  --bg:#0a0908;--text:#f0ece6;--text2:#a89e91;--text3:#6b6156;
-  --surface:#151311;--surface-2:#1a1815;--surface-3:#1e1c18;
-  --border:rgba(var(--ov),.08);--ov:255,255,255;
-  --sw:245px;--r14:14px;--rs:9px;--sh:0 4px 24px rgba(0,0,0,.45);
+  --p:#ff4a00;--p-d:#cc3b00;--p-l:rgba(255,74,0,.09);
+  --g:#0a7d3c;--g-l:rgba(10,125,60,.1);
+  --r:#c81e00;--r-l:rgba(200,30,0,.09);
+  --w:#a86400;
+  --bg:#ececea;--text:#0a0a0a;--text2:#333330;--text3:#6a6a66;
+  --surface:#f6f6f4;--surface-2:#f6f6f4;--surface-3:#e4e4e1;
+  --ov:10,10,10;--border:rgba(var(--ov),.16);
+  /* La regla: gruesa para lo que encierra, fina para lo que divide por dentro. */
+  --bd:1.5px solid var(--text);
+  --bd-fina:1px solid rgba(var(--ov),.16);
+  --sw:196px;--r14:0;--rs:0;--sh:none;
+  --font-dsp:'Archivo','Helvetica Neue',Arial,sans-serif;
 }
-:root[data-theme="light"]{
-  --p:#a4632f;--p-d:#824c22;--p-l:rgba(164,99,47,.1);
-  --g:#00a758;--r:#c81e4d;--w:#a8790a;
-  --bg:#f6f3ee;--text:#211d18;--text2:#6b6255;--text3:#95897a;
-  --surface:#ffffff;--surface-2:#ffffff;--surface-3:#ffffff;--ov:0,0,0;
-  --sh:0 2px 14px rgba(0,0,0,.08);
+/* La versión oscura no es «otro diseño»: es el mismo sistema con la tinta y el papel
+   cambiados de sitio. El naranja sube un punto para aguantar el fondo negro. */
+:root[data-theme="dark"]{
+  --p:#ff6a2a;--p-d:#ff4a00;--p-l:rgba(255,106,42,.12);
+  --g:#3fbf6f;--g-l:rgba(63,191,111,.12);
+  --r:#ff5c3a;--r-l:rgba(255,92,58,.12);
+  --w:#e0a020;
+  --bg:#0a0a0a;--text:#ececea;--text2:#c2c2be;--text3:#8a8a86;
+  --surface:#141413;--surface-2:#141413;--surface-3:#1c1c1a;
+  --ov:236,236,234;--border:rgba(var(--ov),.18);
 }
 body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);display:flex;min-height:100vh;font-size:14px}
 ::-webkit-scrollbar{width:4px;height:4px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:rgba(var(--ov),.14);border-radius:2px}
-.sidebar{width:var(--sw);background:var(--surface);border-right:1px solid rgba(var(--ov),.08);display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:100;transition:transform .25s}
-.sb-logo{padding:20px;border-bottom:1px solid rgba(var(--ov),.06)}
-.sb-logo h1{font-size:16px;font-weight:800;letter-spacing:-.2px}
-.sb-logo p{font-size:10px;color:var(--text3);margin-top:3px;letter-spacing:.08em;text-transform:uppercase}
-.sb-nav{padding:10px 8px;flex:1;overflow-y:auto}
-.nav-label{font-size:9px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.1em;padding:12px 12px 4px}
-.nav-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:var(--rs);cursor:pointer;color:var(--text2);font-weight:500;font-size:13px;transition:all .2s;margin-bottom:2px;user-select:none}
-.nav-item:hover{background:rgba(var(--ov),.05);color:var(--text)}
-.nav-item.active{background:var(--p-l);color:var(--p);font-weight:600;border-left:2px solid var(--p)}
-.nav-item .ico{font-size:15px;width:20px;text-align:center;flex-shrink:0}
+.sidebar{width:var(--sw);background:var(--bg);border-right:var(--bd);display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:100;transition:transform .25s}
+.sb-logo{padding:24px 22px 18px}
+.sb-logo h1{font-family:var(--font-dsp);font-size:22px;font-weight:800;letter-spacing:-.04em;line-height:.95}
+.sb-logo p{font-family:var(--mono,'Space Grotesk',monospace);font-size:9.5px;color:var(--p);margin-top:9px;letter-spacing:.2em;text-transform:uppercase;font-weight:700}
+.sb-nav{padding:0 22px 10px;flex:1;overflow-y:auto}
+.nav-label{font-family:'Space Grotesk',monospace;font-size:9px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.2em;padding:20px 0 6px}
+.nav-item{display:flex;align-items:center;gap:9px;padding:10px 0;border-top:var(--bd-fina);cursor:pointer;color:var(--text3);font-weight:600;font-size:13px;transition:color .15s;user-select:none}
+.nav-item:hover{color:var(--text)}
+.nav-item.active{color:var(--text);font-weight:800}
+.nav-item.active::after{content:'\2190';margin-left:auto;color:var(--p);font-weight:700}
+.nav-item .ico{font-size:13px;width:17px;text-align:center;flex-shrink:0;filter:grayscale(1);opacity:.75}
+.nav-item.active .ico{filter:none;opacity:1}
 .main{margin-left:var(--sw);flex:1;min-width:0;display:flex;flex-direction:column;min-height:100vh}
-.topbar{background:var(--surface);border-bottom:1px solid rgba(var(--ov),.06);padding:0 24px;height:58px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
-.topbar-title{font-size:15px;font-weight:700}
+.topbar{background:var(--bg);border-bottom:var(--bd);padding:0 26px;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
+.topbar-title{font-family:var(--font-dsp);font-size:16px;font-weight:800;letter-spacing:-.02em}
 .content{padding:24px;flex:1;max-width:1280px}
 .section{display:none}.section.active{display:block}
-.card{background:var(--surface-2);border:1px solid rgba(var(--ov),.07);border-radius:var(--r14);padding:18px;box-shadow:var(--sh)}
+.card{background:var(--surface-2);border:var(--bd);border-radius:0;padding:20px;box-shadow:none}
 .sh{margin-bottom:18px}
-.sh h2{font-size:20px;font-weight:800}
-.sh .sub{font-size:12.5px;color:var(--text2);margin-top:4px;line-height:1.6;max-width:760px}
-.intro-banner{border-color:rgba(193,127,74,.28);background:var(--p-l);margin-bottom:20px}
+.sh h2{font-family:var(--font-dsp);font-size:30px;font-weight:800;letter-spacing:-.035em;line-height:1}
+.sh .sub{font-size:13px;color:var(--text2);margin-top:9px;line-height:1.6;max-width:760px}
+.intro-banner{background:var(--p-l);border-color:var(--p);margin-bottom:22px}
+/* ── HOY ─────────────────────────────────────────────────────────────────
+   La pantalla que se abre por la mañana. Todo lo que hace falta para vestirse
+   entra sin desplazar: qué me pongo, qué más puedo armar, qué comprar. */
+.hy-lbl{font-family:'Space Grotesk',monospace;font-size:9.5px;font-weight:700;
+  letter-spacing:.2em;text-transform:uppercase}
+/* El bloque grande. El color de la prenda va A SANGRE, sin marco ni radio: es lo
+   único de la pantalla que tiene derecho a color, y aquí se le da entero. */
+.hy-h{display:grid;grid-template-columns:minmax(0,1fr) 336px;border:var(--bd);
+  min-height:340px}
+.hy-h-tx{padding:30px 32px;display:flex;flex-direction:column;min-width:0}
+.hy-torre{display:flex;flex-direction:column;border-left:var(--bd)}
+.hy-dsp{font-family:var(--font-dsp);font-size:clamp(38px,4.6vw,60px);font-weight:800;
+  letter-spacing:-.045em;line-height:.94;margin-top:14px}
+.hy-dsp2{font-family:var(--font-dsp);font-size:26px;font-weight:600;color:var(--text3);
+  letter-spacing:-.03em;margin-top:14px}
+.hy-por{font-size:14px;line-height:1.6;color:var(--text2);max-width:470px;margin-top:18px}
+.hy-datos{display:flex;gap:0;margin-top:auto;padding-top:22px;border-top:var(--bd)}
+.hy-datos>div{flex:1;padding-right:18px}
+.hy-datos>div+div{border-left:var(--bd-fina);padding-left:18px}
+.hy-datos .hy-lbl{color:var(--text3)}
+.hy-dato{font-size:14px;font-weight:700;margin-top:5px}
+.hy-vacio{grid-template-columns:minmax(0,1fr);min-height:0}
+.hy-vacio .hy-dsp{font-size:clamp(30px,3.6vw,44px)}
+/* Las alternativas: tres columnas separadas por regla fina, sin caja propia. */
+.hy-alts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border-top:var(--bd)}
+.hy-alt{display:flex;gap:15px;padding:16px 20px 18px 0;min-width:0}
+.hy-alt+.hy-alt{border-left:var(--bd-fina);padding-left:20px}
+.hy-alt .hy-torre{width:44px;flex:none;border:var(--bd);border-left:var(--bd)}
+.hy-alt-n{font-family:var(--font-dsp);font-size:16px;font-weight:700;
+  letter-spacing:-.025em;line-height:1.15}
+.hy-alt-o{font-family:'Space Grotesk',monospace;font-size:10px;color:var(--text3);
+  margin-top:7px;text-transform:uppercase;letter-spacing:.1em}
+/* Qué comprar: el número manda a la izquierda, los pasos a la derecha. */
+.hy-compra{display:grid;grid-template-columns:290px minmax(0,1fr);border:var(--bd)}
+.hy-compra-n{padding:22px 24px;border-right:var(--bd);display:flex;flex-direction:column}
+.hy-big{font-family:var(--font-dsp);font-size:96px;font-weight:800;color:var(--p);
+  letter-spacing:-.05em;line-height:.9;margin-top:8px}
+.hy-big-t{font-size:14px;font-weight:600;margin-top:6px}
+.hy-nota{font-size:11.5px;color:var(--text3);line-height:1.6;margin-top:auto;
+  padding-top:18px;border-top:var(--bd-fina)}
+.hy-pasos{display:flex;flex-direction:column}
+/* Cada paso es una etiqueta entera: se marca tocando la fila, no un cuadrito. */
+.hy-paso{display:grid;grid-template-columns:30px 38px minmax(0,1fr) auto auto;
+  gap:14px;align-items:center;padding:13px 22px;cursor:pointer;
+  transition:background .15s}
+.hy-paso+.hy-paso{border-top:var(--bd-fina)}
+.hy-paso:hover{background:var(--p-l)}
+.hy-paso-n{font-family:'Space Grotesk',monospace;font-size:11px;font-weight:700;
+  color:var(--text3)}
+.hy-sw{height:26px;border:var(--bd)}
+.hy-paso-t{font-size:14.5px;font-weight:700;min-width:0}
+.hy-paso-t em{font-family:'Space Grotesk',monospace;font-size:9.5px;font-style:normal;
+  font-weight:700;color:var(--text3);letter-spacing:.14em;margin-left:10px}
+.hy-gana{font-family:var(--font-dsp);font-size:21px;font-weight:800;color:var(--p);
+  letter-spacing:-.03em}
+.hy-paso input{width:17px;height:17px;accent-color:var(--p);cursor:pointer}
+.hy-tick{display:none}
+@media(max-width:900px){
+  .hy-h,.hy-compra{grid-template-columns:minmax(0,1fr)}
+  .hy-torre{border-left:0;border-top:var(--bd);min-height:150px}
+  .hy-alt .hy-torre{border:var(--bd);min-height:0}
+  .hy-compra-n{border-right:0;border-bottom:var(--bd)}
+  .hy-alts{grid-template-columns:minmax(0,1fr)}
+  .hy-alt+.hy-alt{border-left:0;border-top:var(--bd-fina);padding-left:0}
+  .hy-alt{padding-right:0}
+}
+@media(max-width:560px){
+  .hy-paso{grid-template-columns:26px 30px minmax(0,1fr) auto auto;gap:10px;padding:12px 14px}
+  .hy-h-tx,.hy-compra-n{padding:20px 16px}
+  .hy-big{font-size:70px}
+}
 /* ── COLORIMETRÍA ────────────────────────────────────────────────────────
    La matriz: 16 playeras en FILAS y 6 pantalones en columnas. Al revés no cabe —
    16 columnas no entran ni en escritorio— y así entra entera sin apretar nada.
@@ -263,7 +352,8 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var
   </div>
   <nav class="sb-nav">
     <div class="nav-label">Principal</div>
-    <div class="nav-item active" onclick="nav('inicio')"><span class="ico">🏠</span>Inicio</div>
+    <div class="nav-item active" onclick="nav('hoy')"><span class="ico">◆</span>Hoy</div>
+    <div class="nav-item" onclick="nav('inicio')"><span class="ico">🏠</span>Inicio</div>
     <div class="nav-label">Qué comprar</div>
     <div class="nav-item" onclick="nav('basicos')"><span class="ico">👕</span>Básicos</div>
     <div class="nav-item" onclick="nav('chaquetas')"><span class="ico">🧥</span>Chaquetas</div>
@@ -324,10 +414,15 @@ function cpCabVest(){
     titulo:'Vestimenta, por fases',
     sub:'versatilidad antes que cantidad',
     kpis:[
-      {v:marcadas+(total?' / '+total:''), k:'Prendas que ya tienes'},
       // Derivadas, no escritas: «5 ocasiones cubiertas» siguio ahi despues de que las
       // ocasiones cambiaran, y una cifra a mano solo miente en cuanto el dato se mueve.
-      {v:String(typeof FASES!=='undefined'?FASES.length:''), k:'Fases de compra'},
+      // Son las tres que importan al vestirse: cuantas puedo armar YA, cuanto llevo del
+      // armario de color, y cuantas hay en total.
+      {v:String(typeof disponibles==='function'?disponibles().length:''), k:'Puedes armar hoy'},
+      {v:(typeof COLORIMETRIA!=='undefined'
+          ? (JSON.parse(localStorage.getItem('vestimenta_v1')||'{}').color||[]).length
+            +' / '+(COLORIMETRIA.pantalones.length+COLORIMETRIA.playeras.length)
+          : ''), k:'Tu clóset'},
       {v:String(typeof combLista==='function'?combLista().length:''), k:'Combinaciones'},
     ],
   });

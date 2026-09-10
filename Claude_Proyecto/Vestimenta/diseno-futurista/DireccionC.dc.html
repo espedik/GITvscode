@@ -1,0 +1,208 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800;900&family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap">
+  <style>
+    body { margin: 0; background: #ececea; color: #0a0a0a;
+           font-family: 'Inter', -apple-system, sans-serif; font-size: 14px; }
+    a { color: #ff4a00; } a:hover { color: #cc3b00; }
+    .mono { font-family: 'Space Grotesk', ui-monospace, monospace;
+            font-variant-numeric: tabular-nums; letter-spacing: -0.02em; }
+    /* La voz de display. Archivo en 800/900 aguanta tamaños grandes sin volverse
+       decorativa, que es lo que pide una pantalla que se lee en dos segundos. */
+    .dsp { font-family: 'Archivo', 'Helvetica Neue', Arial, sans-serif; font-weight: 800;
+           letter-spacing: -0.04em; line-height: 0.92; }
+    .lbl { font-family: 'Space Grotesk', monospace; font-size: 9.5px; font-weight: 700;
+           letter-spacing: 0.2em; text-transform: uppercase; }
+    /* Sin radios, sin sombras, sin desenfoque: la jerarquía la hace la REGLA de 1px y
+       el tamaño del tipo. Es lo contrario de las otras dos a propósito. */
+    .caja { border: 1.5px solid #0a0a0a; background: #f6f6f4; }
+    .nav { padding: 10px 0; font-size: 13px; font-weight: 600; color: #6a6a66;
+           border-top: 1px solid rgba(10,10,10,0.14); }
+    .nav.on { color: #0a0a0a; font-weight: 800; }
+    .nav.on::before { content: '→ '; color: #ff4a00; }
+  </style>
+</helmet>
+
+<div style="width: 1240px; height: 960px; box-sizing: border-box; background: #ececea;
+     display: grid; grid-template-columns: 196px minmax(0, 1fr); overflow: hidden">
+
+  <!-- ── índice ────────────────────────────────────────────────── -->
+  <div style="border-right: 1.5px solid #0a0a0a; padding: 26px 22px; display: flex;
+       flex-direction: column">
+    <div class="dsp" style="font-size: 22px; line-height: 0.95">VESTI<br>MENTA</div>
+    <div class="lbl" style="color: #ff4a00; margin-top: 10px">009 / 048</div>
+    <div style="margin-top: 30px; display: flex; flex-direction: column">
+      <div class="nav on">Hoy</div>
+      <div class="nav">Combinaciones</div>
+      <div class="nav">Colorimetría</div>
+      <div class="nav">Qué comprar</div>
+      <div class="nav">Ejercicio</div>
+      <div class="nav" style="border-bottom: 1px solid rgba(10,10,10,0.14)">Bodas</div>
+    </div>
+    <div class="mono" style="margin-top: auto; font-size: 10px; color: #6a6a66; line-height: 1.7">
+      6 / 12 PRENDAS<br>MAR 09 SEP
+    </div>
+  </div>
+
+  <!-- ── contenido ─────────────────────────────────────────────── -->
+  <div style="display: flex; flex-direction: column; min-width: 0">
+
+    <!-- EL OUTFIT: bandas de color a sangre y el tipo encima en negativo -->
+    <div style="display: grid; grid-template-columns: minmax(0, 1fr) 404px;
+         border-bottom: 1.5px solid #0a0a0a">
+      <div style="padding: 34px 34px 30px; display: flex; flex-direction: column; min-width: 0">
+        <div class="lbl" style="color: #ff4a00">Hoy te pones</div>
+        <div class="dsp" style="font-size: 62px; margin-top: 14px">GRIS<br>JASPEADO</div>
+        <div class="dsp" style="font-size: 30px; margin-top: 16px; color: #6a6a66;
+             font-weight: 600">+ JEANS NEGRO</div>
+        <div style="font-size: 14.5px; line-height: 1.6; max-width: 470px; margin-top: 20px;
+             color: #333330">
+          El degradado natural: gris arriba, negro abajo. El negro no tiene color propio,
+          así que no compite con nada — y el gris jaspeado es neutro puro.
+        </div>
+        <div style="display: flex; gap: 0; margin-top: auto; padding-top: 24px;
+             border-top: 1.5px solid #0a0a0a">
+          <div style="flex: 1; padding-right: 18px">
+            <div class="lbl" style="color: #6a6a66">Zapato</div>
+            <div style="font-size: 14px; font-weight: 700; margin-top: 5px">Sneakers blancos</div>
+          </div>
+          <div style="flex: 1; padding: 0 18px; border-left: 1px solid rgba(10,10,10,0.16)">
+            <div class="lbl" style="color: #6a6a66">Cinturón</div>
+            <div style="font-size: 14px; font-weight: 700; margin-top: 5px">Negro</div>
+          </div>
+          <div style="flex: 1; padding-left: 18px; border-left: 1px solid rgba(10,10,10,0.16)">
+            <div class="lbl" style="color: #6a6a66">Sirve para</div>
+            <div style="font-size: 14px; font-weight: 700; margin-top: 5px">Diario · Noche</div>
+          </div>
+        </div>
+      </div>
+      <!-- las dos bandas, sin marco ni radio -->
+      <div style="display: flex; flex-direction: column; border-left: 1.5px solid #0a0a0a">
+        <div style="height: 42%; background: #A3A19C"></div>
+        <div style="flex: 1; background: #232326"></div>
+        <div style="height: 62px; background: #EDEAE4; border-top: 1.5px solid #0a0a0a"></div>
+      </div>
+    </div>
+
+    <!-- ALTERNATIVAS: tres columnas divididas por regla -->
+    <div style="border-bottom: 1.5px solid #0a0a0a">
+      <div class="lbl" style="padding: 16px 34px 12px; color: #6a6a66">Otras que ya puedes armar</div>
+      <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr))">
+        <div style="padding: 0 0 20px 34px; display: flex; gap: 15px; align-items: flex-start">
+          <div style="width: 46px; height: 62px; flex: none; display: flex; flex-direction: column;
+               border: 1.5px solid #0a0a0a">
+            <div style="height: 42%; background: #E4D9C4"></div>
+            <div style="flex: 1; background: #2B3A55"></div>
+          </div>
+          <div style="min-width: 0; padding-right: 20px">
+            <div class="dsp" style="font-size: 17px; font-weight: 700; letter-spacing: -0.025em;
+                 line-height: 1.1">CREMA<br>+ JEANS OSCURO</div>
+            <div class="mono" style="font-size: 10px; color: #6a6a66; margin-top: 7px">
+              DERBY CAFÉ · OFICINA</div>
+          </div>
+        </div>
+        <div style="padding: 0 0 20px 20px; display: flex; gap: 15px; align-items: flex-start;
+             border-left: 1px solid rgba(10,10,10,0.16)">
+          <div style="width: 46px; height: 62px; flex: none; display: flex; flex-direction: column;
+               border: 1.5px solid #0a0a0a">
+            <div style="height: 42%; background: #F2EFE9"></div>
+            <div style="flex: 1; background: #42618A"></div>
+          </div>
+          <div style="min-width: 0; padding-right: 20px">
+            <div class="dsp" style="font-size: 17px; font-weight: 700; letter-spacing: -0.025em;
+                 line-height: 1.1">BLANCO<br>+ JEANS ÍNDIGO</div>
+            <div class="mono" style="font-size: 10px; color: #6a6a66; margin-top: 7px">
+              SNEAKERS · DIARIO</div>
+          </div>
+        </div>
+        <div style="padding: 0 34px 20px 20px; display: flex; gap: 15px; align-items: flex-start;
+             border-left: 1px solid rgba(10,10,10,0.16)">
+          <div style="width: 46px; height: 62px; flex: none; display: flex; flex-direction: column;
+               border: 1.5px solid #0a0a0a">
+            <div style="height: 42%; background: #A3A19C"></div>
+            <div style="flex: 1; background: #2B3A55"></div>
+          </div>
+          <div style="min-width: 0">
+            <div class="dsp" style="font-size: 17px; font-weight: 700; letter-spacing: -0.025em;
+                 line-height: 1.1">GRIS JASP.<br>+ JEANS OSCURO</div>
+            <div class="mono" style="font-size: 10px; color: #6a6a66; margin-top: 7px">
+              DERBY CAFÉ · OFICINA</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- QUÉ COMPRAR: el número manda -->
+    <div style="flex: 1; display: grid; grid-template-columns: 296px minmax(0, 1fr); min-height: 0">
+      <div style="padding: 26px 26px 26px 34px; border-right: 1.5px solid #0a0a0a;
+           display: flex; flex-direction: column">
+        <div class="lbl" style="color: #6a6a66">Si compras las cuatro</div>
+        <div class="dsp" style="font-size: 112px; color: #ff4a00; margin-top: 6px">24</div>
+        <div style="font-size: 14px; font-weight: 600; margin-top: 2px">outfits, contra los 9 de ahora</div>
+        <div style="font-size: 11.5px; color: #6a6a66; line-height: 1.6; margin-top: auto;
+             padding-top: 18px; border-top: 1px solid rgba(10,10,10,0.16)">
+          El orden no es una opinión: en cada paso se elige la prenda que abre más
+          combinaciones nuevas con lo que ya tienes marcado.
+        </div>
+      </div>
+
+      <div style="padding: 26px 34px 26px 26px; display: flex; flex-direction: column">
+        <div class="lbl" style="color: #6a6a66; margin-bottom: 14px">Qué comprar, en orden</div>
+        <div style="display: flex; flex-direction: column">
+
+          <div style="display: grid; grid-template-columns: 32px 40px 1fr auto; gap: 14px;
+               align-items: center; padding: 11px 0; border-top: 1.5px solid #0a0a0a">
+            <span class="mono" style="font-size: 11px; font-weight: 700; color: #6a6a66">07</span>
+            <span style="height: 26px; background: #293650; border: 1.5px solid #0a0a0a"></span>
+            <span><span style="font-size: 14.5px; font-weight: 700">Chino azul marino</span>
+              <span class="mono" style="font-size: 10px; color: #6a6a66; margin-left: 9px">PANTALÓN</span></span>
+            <span class="dsp" style="font-size: 22px; color: #ff4a00">+3</span>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 32px 40px 1fr auto; gap: 14px;
+               align-items: center; padding: 11px 0; border-top: 1px solid rgba(10,10,10,0.16)">
+            <span class="mono" style="font-size: 11px; font-weight: 700; color: #6a6a66">08</span>
+            <span style="height: 26px; background: #6E7448; border: 1.5px solid #0a0a0a"></span>
+            <span><span style="font-size: 14.5px; font-weight: 700">Playera verde oliva</span>
+              <span class="mono" style="font-size: 10px; color: #6a6a66; margin-left: 9px">VA CON LOS 6</span></span>
+            <span class="dsp" style="font-size: 22px; color: #ff4a00">+4</span>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 32px 40px 1fr auto; gap: 14px;
+               align-items: center; padding: 11px 0; border-top: 1px solid rgba(10,10,10,0.16)">
+            <span class="mono" style="font-size: 11px; font-weight: 700; color: #6a6a66">09</span>
+            <span style="height: 26px; background: #6B2536; border: 1.5px solid #0a0a0a"></span>
+            <span><span style="font-size: 14.5px; font-weight: 700">Playera burdeos</span>
+              <span class="mono" style="font-size: 10px; color: #6a6a66; margin-left: 9px">VA CON LOS 6</span></span>
+            <span class="dsp" style="font-size: 22px; color: #ff4a00">+4</span>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 32px 40px 1fr auto; gap: 14px;
+               align-items: center; padding: 11px 0; border-top: 1px solid rgba(10,10,10,0.16);
+               border-bottom: 1.5px solid #0a0a0a">
+            <span class="mono" style="font-size: 11px; font-weight: 700; color: #6a6a66">10</span>
+            <span style="height: 26px; background: #B98A5B; border: 1.5px solid #0a0a0a"></span>
+            <span><span style="font-size: 14.5px; font-weight: 700">Playera camel</span>
+              <span class="mono" style="font-size: 10px; color: #6a6a66; margin-left: 9px">PLAYERA</span></span>
+            <span class="dsp" style="font-size: 22px; color: #ff4a00">+4</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+</x-dc>
+
+<script data-dc-script data-props='{"$preview":{"width":1240,"height":960}}'>
+class Component extends DCLogic {}
+</script>
+</body>
+</html>

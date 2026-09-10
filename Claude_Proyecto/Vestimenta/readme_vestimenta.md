@@ -1,6 +1,6 @@
 # vestimenta.html — Mi Guía de Vestimenta
 
-Aplicación web de una sola página (HTML+CSS+JS, sin backend) — guía de guardarropa en dos mitades: **qué comprar** (básicos, chaquetas, zapatos, accesorios, con precio y link) y **cómo combinarlo** (la matriz de color y las 48 combinaciones que salen de ella). **Nueva el 2026-08-01**, pedido explícito de Adán: *"hazme un html y proyecto de vestimenta, debes darme muchas opciones de que comprar, basicos chaquetas, zapatos, y ademas para cada ocacion... busca en alguna web que tenga una buena base de fotos y descargarlas y ponlas en el folder en especifico"*.
+Aplicación web de una sola página (HTML+CSS+JS, sin backend) — guía de guardarropa en tres mitades: **qué me pongo hoy**, **cómo combinarlo** (la matriz de color y las 48 combinaciones que salen de ella) y **qué comprar** (la ruta ordenada por cuántos outfits abre cada prenda, más las fichas con precio y link). **Nueva el 2026-08-01**, pedido explícito de Adán: *"hazme un html y proyecto de vestimenta, debes darme muchas opciones de que comprar, basicos chaquetas, zapatos, y ademas para cada ocacion... busca en alguna web que tenga una buena base de fotos y descargarlas y ponlas en el folder en especifico"*.
 
 **Fuera del ecosistema principal** (igual que `Aleman/` y `Entrevistas/`, ver `../README.md` → "Mapa de carpetas") — no comparte datos con Finanzas/Coach/CuidadoPersonal/Dashboard, es una guía de referencia personal independiente.
 
@@ -31,9 +31,10 @@ servía.
 
 ## Estructura de contenido
 
-Nueve secciones en tres grupos:
+Diez secciones en cuatro grupos:
 
-- **Principal** — 🏠 Inicio (`renderInicio()`): filosofía de guardarropa cápsula y el plan de
+- **Principal** — **Hoy** (`renderHoy()`), la sección de arranque, contada abajo; y
+  🏠 Inicio (`renderInicio()`): filosofía de guardarropa cápsula y el plan de
   compra por fases (`FASES`, 4 tarjetas), con el mismo lenguaje de «fases» que el Plan
   Maestro de `Coach/Coach.html`.
 - **Qué comprar** — 👕 Básicos (8), 🧥 Chaquetas (6), 👞 Zapatos (6), ⌚ Accesorios (5).
@@ -134,24 +135,100 @@ seguía ahí después de que las ocasiones cambiaran.
 ## Modelo de datos — `localStorage['vestimenta_v1']`
 
 ```js
-{ marcados: ['b1', 'c3', 'z1', ...] }   // ids de items marcados en el checklist (Básicos/Chaquetas/Zapatos/Accesorios)
-// De aquí sale también el estado de cada pieza en los combos por ocasión: qué ya tienes y cuánto falta.
+{
+  marcados: ['b1', 'c3', 'z1', ...],      // los 25 items del catálogo, con precio y link
+  color:    ['p:indigo', 't:blanco', ...] // las 22 prendas de la colorimetría
+}
 ```
 
-Solo el checklist de compra persiste — las secciones de ocasión (Trabajo/Casual/Ejercicio/Bodas/Fiestas) son de solo lectura, sin estado propio. Clave **propia de este archivo**, no compartida con el resto del ecosistema (igual que `theme`/`sidebar-collapsed` en `Entrevistas/`). El contador `X/20` del sidebar (`updateCounter()`) cuenta sobre el total de los 20 items comprables (8+6+6), no sobre las ocasiones.
+**Son dos listas y no una a propósito.** `marcados` son los items comprables del catálogo
+(Básicos, Chaquetas, Zapatos, Accesorios) y de ahí sale el estado de cada pieza en Ejercicio
+y Bodas. `color` son las 22 prendas de la colorimetría, que el catálogo no cubre: solo cuatro
+de ellas existen ahí, así que las otras 18 no tendrían dónde marcarse.
+
+Las claves de `color` van **cualificadas por tipo** (`p:` pantalón, `t:` playera). Sin eso,
+«negro» y «marino» —que existen en los dos ejes— se pisarían: marcar la playera negra habría
+marcado también los jeans negros.
+
+Clave **propia de este archivo**, no compartida con el resto del ecosistema (igual que
+`theme`/`sidebar-collapsed` en `Entrevistas/`). El contador del sidebar (`updateCounter()`)
+cuenta solo sobre los 25 items comprables; el clóset de color lo cuenta la cabecera, sobre 22.
 
 **Excepción intencional**: el botón de tema (🌙/☀️) sí usa la clave compartida `coach-theme` (ver `../README.md` → "Convenciones de diseño compartidas") para que el tema visual se sincronice con el resto de apps que Adán ya usa — es solo una preferencia visual, no dato personal, así que no rompe el aislamiento de datos del resto de la app.
 
-## Sistema de diseño
+## Sistema de diseño — «Cero»
 
-Paleta propia "premium minimalista" (cognac/carbón, `--p:#c17f4a`), **no** la paleta naranja/verde compartida de Salud/Ejercicio — es un catálogo de referencia, no parte del ecosistema de tracking de vida, así que tiene su propia identidad visual. Sigue el estándar del proyecto (2026-07-31): sin gradientes decorativos, sin glow de neón, tarjetas planas con sombra estándar. Reutiliza el patrón de sidebar de 245px + `.nav-item` que ya usan Salud/Ejercicio/Comida/Finanzas, y el truco `--ov` para que los overlays funcionen en ambos temas. Sin Chart.js — no hay gráficas, es contenido estático + un checklist simple.
+**Sin radios, sin sombras, sin desenfoque y sin degradados.** La jerarquía la hacen la
+REGLA de 1,5px (`--bd`), el tamaño del tipo y un único acento: **naranja señal**
+`#ff4a00`. Ese naranja no aparece en ninguna de las 16 playeras ni en los 6 pantalones,
+así que nunca compite con la prenda — que es lo único aquí con derecho a color. Elegido
+por Adán entre tres direcciones futuristas: *"aplica la c"*.
+
+El cambio de piel costó poco código porque **toda la app ya pintaba con `--r14`, `--rs`
+y `--sh`**: ponerlos a `0`, `0` y `none` quitó radios y sombras de las diez secciones de
+una vez, sin tocar ninguna.
+
+| | Claro (por defecto) | Oscuro |
+| --- | --- | --- |
+| Papel | `#ececea` | `#0a0a0a` |
+| Tinta | `#0a0a0a` | `#ececea` |
+| Acento | `#ff4a00` | `#ff6a2a` |
+
+La versión oscura no es otro diseño: es el mismo sistema con la tinta y el papel
+cambiados de sitio. El naranja sube un punto para aguantar el fondo negro. El tema
+sigue en la clave compartida `coach-theme`, así que Vestimenta cambia con el resto del
+ecosistema.
+
+**Tres voces tipográficas.** `Archivo` en 700/800 para display (`--font-dsp`), que
+aguanta 96px sin volverse decorativa; `Inter` para el texto; `Space Grotesk` para todo
+lo que sea número o etiqueta técnica. Archivo es la única fuente nueva.
+
+**Dos grosores de regla, y significan cosas distintas**: `--bd` (1,5px sólido) encierra;
+`--bd-fina` (1px al 16%) divide por dentro. El carril de navegación no usa píldoras ni
+fondos: el activo se marca en negrita con una flecha naranja.
+
+## Hoy — la pantalla que se abre por la mañana
+
+**Es la sección de arranque** (`nav('hoy')`), y resuelve las tres preguntas en una
+pantalla sin desplazar: qué me pongo, qué más puedo armar, qué compro.
+
+**El outfit del día** es el mismo todo el día y distinto cada día: `outfitDelDia()`
+indexa las combinaciones disponibles por el día del año, el mismo criterio que la
+palabra del día del Dashboard. No es aleatorio.
+
+**`S.color` es la lista de lo que ya tienes, en color.** Existe porque el catálogo solo
+conoce cuatro de las 22 prendas de la colorimetría (playera blanca, negra, jeans azul y
+chino caqui): las otras 18 no se pueden marcar en Básicos. Las claves van **cualificadas
+por tipo** (`p:negro`, `t:negro`) y no por id a secas — «negro» y «marino» existen como
+pantalón *y* como playera, y con la id sola marcar la playera negra habría marcado
+también los jeans negros.
+
+**La ruta de compra** (`rutaCompra(n)`) es lo que responde a «qué compro sí o sí». En
+cada paso elige la prenda que abre **más combinaciones nuevas con lo que ya tienes
+marcado**, y dice cuántas abre. No es una lista de deseos ni un orden por precio: es el
+orden que más rápido convierte dinero en outfits. Desde cero, la ruta completa son 12
+prendas y llega a **31 outfits**; las 4 primeras dan 4.
+
+Es **codiciosa, no óptima**: mira solo el paso siguiente. Con 22 prendas la diferencia no
+compensa el coste de explicar un resultado que no se puede seguir a ojo.
+
+Cada paso lleva su casilla «ya la tengo», así que la ruta **se avanza sola**: al marcar
+una prenda, la lista recalcula y aparecen las siguientes. Con el clóset vacío la sección
+no finge nada — dice que todavía no hay outfit y manda a marcar.
+
+Las tres cifras de la cabecera (`cpCabVest`) se derivan: **puedes armar hoy**, **tu
+clóset** sobre 22 y **combinaciones** sobre 48.
 
 ## Probado
 
-Con Chromium sobre `file://`, a **1600px y 390px**, en tema claro y oscuro: las nueve
+Con Chromium sobre `file://`, a **1600px y 390px**, en tema claro y oscuro: las diez
 secciones sin desbordamiento horizontal, **cero elementos `<img>`** en toda la app, cero
 peticiones fallidas y cero errores de consola. Las 48 combinaciones se pintan y el filtro
 devuelve 27 / 18 / 40. El checklist marca, persiste y actualiza el contador.
+
+El flujo de Hoy, medido de punta a punta: con el clóset vacío sale el estado vacío y la
+ruta con 4 pasos; marcando esos 4 aparecen el outfit del día, 3 alternativas y la cuenta
+pasa a 4 de 48, con la ruta proyectando 16.
 
 ## Responsivo — iPad / iPhone 15 Pro (2026-08-03)
 

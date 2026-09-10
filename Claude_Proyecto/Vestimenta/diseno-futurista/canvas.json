@@ -1,0 +1,61 @@
+{
+  "artboards": [
+    {
+      "file": "Main.dc.html",
+      "x": 0,
+      "y": 0,
+      "w": 1240,
+      "h": 960,
+      "title": "Consola — instrumento de vestuario"
+    },
+    {
+      "file": "DireccionB.dc.html",
+      "x": 1360,
+      "y": 0,
+      "w": 1240,
+      "h": 960,
+      "title": "Dirección B — vidrio"
+    },
+    {
+      "file": "DireccionC.dc.html",
+      "x": 2720,
+      "y": 0,
+      "w": 1240,
+      "h": 960,
+      "title": "Dirección C — cero"
+    }
+  ],
+  "annotations": [
+    {
+      "id": "nota-comun",
+      "x": 0,
+      "y": -340,
+      "w": 620,
+      "text": "LAS TRES RESUELVEN LO MISMO, en este orden: qué me pongo HOY (arriba, grande, sin buscar nada), qué más puedo armar YA, y qué comprar para que eso crezca.\n\nEl dato nuevo es la RUTA DE COMPRA. No es una lista de deseos: en cada paso se elige la prenda que abre más combinaciones nuevas con lo que ya tienes marcado, y se dice cuántas abre. Sale de las 48 celdas verdes de tu colorimetría, calculado — la ruta completa son 12 prendas y llega a 31 outfits.\n\nOJO CON LAS CIFRAS: las maquetas suponen que ya compraste los seis primeros pasos (jeans índigo, blanco, jeans oscuro, crema, jeans negro, gris jaspeado) = 9 outfits. Con tu clóset de hoy, que tiene 0 prendas marcadas, todo saldría en cero."
+    },
+    {
+      "id": "nota-main",
+      "x": 0,
+      "y": -180,
+      "w": 620,
+      "text": "CONSOLA — la que recomiendo. Futurista por INSTRUMENTACIÓN, no por brillos: retícula fina, panel sin sombra con una línea de luz arriba, Space Grotesk para todo dato, y el carril de navegación reducido a iconos con etiqueta.\n\nHereda el cian #0aa5cc y el verde ácido del sistema «consola» que ya tienes en Coach, sobre el negro de Vestimenta. Es la única de las tres que se apoya en algo que ya usas a diario.\n\nTradeoff: es la más densa. Si algún día quieres abrirla y no leer nada, la C lo hace mejor."
+    },
+    {
+      "id": "nota-b",
+      "x": 1360,
+      "y": -180,
+      "w": 600,
+      "text": "VIDRIO — usa `CuidadoPersonal/vidrio.css` tal cual: fondo #06080c, superficies blancas al 5%, borde al 11%, desenfoque de 14px con saturación al 130% y la línea de luz del borde superior. La profundidad viene del desenfoque, no de una sombra.\n\nEs la más cálida de las tres y la que mejor deja hablar al color de la prenda: el bloque va a sangre, sin marco, y el vidrio flota encima.\n\nTradeoff: `backdrop-filter` cuesta en pantallas grandes, y sobre un outfit sin color —gris y negro, como el de hoy— el vidrio se queda algo apagado."
+    },
+    {
+      "id": "nota-c",
+      "x": 2720,
+      "y": -180,
+      "w": 600,
+      "text": "CERO — la ruptura: clara, no oscura. Brutalismo suizo llevado al futuro por reducción: sin radios, sin sombras, sin desenfoque, sin degradados. La jerarquía la hacen la regla de 1,5px, el tamaño del tipo y un único acento naranja señal (#ff4a00), que no aparece en ninguna prenda y por eso nunca compite.\n\nArchivo en 800 para display, que aguanta 112px sin volverse decorativa. Es la única que cambia de tipografía.\n\nTradeoff: rompe con el resto de tus apps, que son todas oscuras. Y en un clóset donde casi todo es negro, gris y azul, el fondo claro hace que las prendas oscuras dominen mucho la pantalla."
+    }
+  ],
+  "launch": {
+    "view": "canvas"
+  }
+}

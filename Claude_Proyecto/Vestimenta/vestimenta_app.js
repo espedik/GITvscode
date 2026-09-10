@@ -1,19 +1,23 @@
 // ─── APP: navegación, render y checklist de compra ────────────────────────────
 const KEY = 'vestimenta_v1';
-let S = { marcados: [] };
+let S = { marcados: [], color: [] };
 const save = () => { localStorage.setItem(KEY, JSON.stringify(S));
   // La cabecera lleva el contador de prendas: se repinta al marcar una.
   if (typeof cpCabVest === 'function') cpCabVest(); };
-const load = () => { try { const d = localStorage.getItem(KEY); if (d) S = { ...S, ...JSON.parse(d) }; } catch(e){} };
+const load = () => { try { const d = localStorage.getItem(KEY); if (d) S = { ...S, ...JSON.parse(d) }; } catch(e){}
+  if (!Array.isArray(S.color)) S.color = []; };
 load();
 
-const SECS = ['inicio','basicos','chaquetas','zapatos','accesorios','colorimetria','combinaciones','ejercicio','bodas'];
+const SECS = ['hoy','inicio','basicos','chaquetas','zapatos','accesorios','colorimetria','combinaciones','ejercicio','bodas'];
 const STITLE = {
-  inicio:'🏠 Inicio', basicos:'👕 Básicos', chaquetas:'🧥 Chaquetas', zapatos:'👞 Zapatos', accesorios:'⌚ Accesorios',
+  hoy:'Hoy', inicio:'🏠 Inicio', basicos:'👕 Básicos', chaquetas:'🧥 Chaquetas', zapatos:'👞 Zapatos', accesorios:'⌚ Accesorios',
   colorimetria:'🎨 Colorimetría', combinaciones:'🧩 Combinaciones', ejercicio:'🏋️ Ejercicio', bodas:'💍 Bodas'
 };
 
+let secActual = 'hoy';
+
 function nav(s) {
+  secActual = s;
   document.querySelectorAll('.nav-item').forEach(el => el.classList.toggle('active', el.getAttribute('onclick') === `nav('${s}')`));
   document.getElementById('topTitle').textContent = STITLE[s];
   document.getElementById('content-root').innerHTML = RENDERS[s]();
@@ -229,6 +233,162 @@ function renderColorimetria() {
   </div>`;
 }
 
+// ─── LO QUE YA TIENES, EN COLOR ──────────────────────────────────────────────
+// El catálogo solo conoce cuatro de las 22 prendas de la colorimetría (playera blanca,
+// negra, jeans azul y chino caqui): las otras 18 no se pueden marcar ahí. Por eso el
+// color lleva su propia lista.
+//
+// Las claves van CUALIFICADAS por tipo (`p:negro`, `t:negro`) y no por id a secas:
+// «negro» y «marino» existen como pantalón Y como playera, y con la id sola marcar la
+// playera negra habría marcado también los jeans negros.
+function tengoColor(tipo, id) { return S.color.indexOf(tipo + ':' + id) >= 0; }
+
+function toggleColor(tipo, id) {
+  const k = tipo + ':' + id;
+  const i = S.color.indexOf(k);
+  if (i === -1) S.color.push(k); else S.color.splice(i, 1);
+  save();
+  document.getElementById('content-root').innerHTML = RENDERS[secActual]();
+}
+
+// Las combinaciones que YA puedes armar: las dos prendas marcadas.
+function disponibles() {
+  return combLista().filter(c => tengoColor('p', c.p.id) && tengoColor('t', c.t.id));
+}
+
+// El outfit de hoy: el mismo todo el día y distinto cada día. Mismo criterio que la
+// palabra del día del Dashboard — no es aleatorio, es el día del año.
+function diaDelAnio() {
+  const h = new Date();
+  return Math.floor((h - new Date(h.getFullYear(), 0, 0)) / 86400000);
+}
+function outfitDelDia() {
+  const d = disponibles();
+  return d.length ? d[diaDelAnio() % d.length] : null;
+}
+
+// ─── LA RUTA DE COMPRA ───────────────────────────────────────────────────────
+// En cada paso se elige la prenda que abre MÁS combinaciones nuevas con lo que ya
+// tienes marcado, y se dice cuántas abre. No es una lista de deseos ni un orden por
+// precio: es el orden que más rápido convierte dinero en outfits.
+//
+// Es codicioso, no óptimo: mira solo el siguiente paso. Con 22 prendas la diferencia
+// no compensa el coste de explicar un resultado que no se puede seguir a ojo.
+function rutaCompra(cuantos) {
+  const C = COLORIMETRIA;
+  const verdes = combLista().map(c => [c.p.id, c.t.id]);
+  const P = new Set(C.pantalones.filter(x => tengoColor('p', x.id)).map(x => x.id));
+  const T = new Set(C.playeras.filter(x => tengoColor('t', x.id)).map(x => x.id));
+  const cuenta = (a, b) => verdes.filter(([p, t]) => a.has(p) && b.has(t)).length;
+
+  let hechos = cuenta(P, T);
+  const pasos = [];
+  while (pasos.length < (cuantos || 4)) {
+    const cand = C.pantalones.filter(x => !P.has(x.id)).map(x => ['p', x])
+      .concat(C.playeras.filter(x => !T.has(x.id)).map(x => ['t', x]));
+    if (!cand.length) break;
+    let mejor = null;
+    cand.forEach(([k, x]) => {
+      const A = new Set(P), B = new Set(T);
+      (k === 'p' ? A : B).add(x.id);
+      const n = cuenta(A, B);
+      if (!mejor || n - hechos > mejor.gana) mejor = { k: k, x: x, gana: n - hechos, total: n };
+    });
+    (mejor.k === 'p' ? P : T).add(mejor.x.id);
+    pasos.push({ tipo: mejor.k, id: mejor.x.id, n: mejor.x.n, hex: mejor.x.hex,
+                 gana: mejor.gana, total: mejor.total });
+    hechos = mejor.total;
+  }
+  return pasos;
+}
+
+// ─── HOY ─────────────────────────────────────────────────────────────────────
+const DIAS = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
+const MESES = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto',
+               'septiembre','octubre','noviembre','diciembre'];
+
+function torreHtml(c, alto) {
+  return `<div class="hy-torre" style="height:${alto}">
+    <div style="height:42%;background:${c.t.hex}"></div>
+    <div style="flex:1;background:${c.p.hex}"></div>
+  </div>`;
+}
+
+function renderHoy() {
+  const hoy = new Date();
+  const fecha = DIAS[hoy.getDay()] + ' ' + hoy.getDate() + ' de ' + MESES[hoy.getMonth()];
+  const dis = disponibles();
+  const o = outfitDelDia();
+  const ruta = rutaCompra(4);
+  const gana = ruta.reduce((a, p) => a + p.gana, 0);
+
+  // El bloque grande: el outfit de hoy, o el empujón para que haya uno.
+  const grande = o ? `
+    <div class="hy-h">
+      <div class="hy-h-tx">
+        <div class="hy-lbl" style="color:var(--p)">${fecha}</div>
+        <div class="hy-dsp">${o.t.n.toUpperCase()}</div>
+        <div class="hy-dsp2">+ ${o.p.n.toUpperCase()}</div>
+        <div class="hy-por">${o.porque}</div>
+        <div class="hy-datos">
+          ${o.ocs.map(x => `<div><div class="hy-lbl">${x.n}</div>
+            <div class="hy-dato">${x.zapato}</div></div>`).join('')}
+        </div>
+      </div>
+      ${torreHtml(o, 'auto')}
+    </div>`
+  : `
+    <div class="hy-h hy-vacio">
+      <div class="hy-h-tx">
+        <div class="hy-lbl" style="color:var(--p)">${fecha}</div>
+        <div class="hy-dsp">TODAVÍA<br>NO HAY OUTFIT</div>
+        <div class="hy-por">Esta pantalla sale de lo que tengas marcado, y ahora mismo
+          no hay nada. Marca abajo lo que ya esté en tu clóset — en cuanto tengas un
+          pantalón y una playera que se lleven bien, aquí aparece qué ponerte.</div>
+      </div>
+    </div>`;
+
+  const alt = dis.filter(c => !o || c.p.id !== o.p.id || c.t.id !== o.t.id).slice(0, 3);
+  const alternativas = alt.length ? `
+    <div class="hy-lbl" style="color:var(--text3);margin:26px 0 14px">Otras que ya puedes armar</div>
+    <div class="hy-alts">
+      ${alt.map(c => `<div class="hy-alt">
+        ${torreHtml(c, '62px')}
+        <div style="min-width:0">
+          <div class="hy-alt-n">${c.t.n}<br>+ ${c.p.n}</div>
+          <div class="hy-alt-o">${c.ocs.map(x => x.n).join(' · ') || '—'}</div>
+        </div>
+      </div>`).join('')}
+    </div>` : '';
+
+  return `
+  <div class="sh"><h2>Hoy te pones esto</h2></div>
+  ${grande}
+  ${alternativas}
+
+  <div class="hy-lbl" style="color:var(--text3);margin:30px 0 14px">Qué comprar, en orden</div>
+  <div class="hy-compra">
+    <div class="hy-compra-n">
+      <div class="hy-lbl" style="color:var(--text3)">Si compras las ${ruta.length}</div>
+      <div class="hy-big">${dis.length + gana}</div>
+      <div class="hy-big-t">outfits, contra ${dis.length === 1 ? 'el 1 de ahora' : 'los ' + dis.length + ' de ahora'}</div>
+      <div class="hy-nota">El orden no es una opinión: en cada paso se elige la prenda
+        que abre más combinaciones nuevas con lo que ya tienes marcado.</div>
+    </div>
+    <div class="hy-pasos">
+      ${ruta.map((p, i) => `<label class="hy-paso">
+        <span class="hy-paso-n">${String(S.color.length + i + 1).padStart(2, '0')}</span>
+        <span class="hy-sw" style="background:${p.hex}"></span>
+        <span class="hy-paso-t">${p.n}
+          <em>${p.tipo === 'p' ? 'PANTALÓN' : 'PLAYERA'}</em></span>
+        <span class="hy-gana">+${p.gana}</span>
+        <input type="checkbox" onchange="toggleColor('${p.tipo}','${p.id}')">
+        <span class="hy-tick">Ya la tengo</span>
+      </label>`).join('')}
+    </div>
+  </div>`;
+}
+
 // ─── COMBINACIONES ───────────────────────────────────────────────────────────
 // Las 48 NO están escritas a mano: son las celdas verdes de `COLORIMETRIA.reglas`
 // cruzadas con `COLORIMETRIA.ocasiones`. Si mañana un veredicto de la matriz cambia,
@@ -290,6 +450,7 @@ function renderCombinaciones() {
 }
 
 const RENDERS = {
+  hoy: renderHoy,
   inicio: renderInicio,
   basicos: () => renderCategoria('👕 Básicos', 'Las piezas que más combinaciones desbloquean por peso invertido — la base de todo lo demás.', BASICOS),
   chaquetas: () => renderCategoria('🧥 Chaquetas', 'Una capa exterior cambia todo un outfit. No necesitas las 6 — elige 2-3 según tu temporada y presupuesto.', CHAQUETAS),
@@ -314,5 +475,5 @@ document.addEventListener('DOMContentLoaded', () => {
   const btn = document.getElementById('theme-toggle-btn');
   if (btn) btn.textContent = document.documentElement.getAttribute('data-theme') === 'dark' ? '☀️' : '🌙';
   updateCounter();
-  nav('inicio');
+  nav('hoy');
 });
