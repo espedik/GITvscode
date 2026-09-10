@@ -8,10 +8,11 @@ const load = () => { try { const d = localStorage.getItem(KEY); if (d) S = { ...
   if (!Array.isArray(S.color)) S.color = []; };
 load();
 
-const SECS = ['hoy','inicio','playeras','pantalones','basicos','chaquetas','zapatos','accesorios','colorimetria','combinaciones','capas','reglas','ejercicio','bodas'];
+const SECS = ['comose','hoy','closet','comprar','colorimetria','combinaciones','capas','reglas','basicos','chaquetas','zapatos','accesorios','ejercicio','bodas'];
 const STITLE = {
-  hoy:'Hoy', inicio:'🏠 Inicio', playeras:'Playeras', pantalones:'Pantalones', basicos:'👕 Básicos', chaquetas:'🧥 Chaquetas', zapatos:'👞 Zapatos', accesorios:'⌚ Accesorios',
-  colorimetria:'🎨 Colorimetría', combinaciones:'🧩 Combinaciones', capas:'Capas', reglas:'Las reglas', ejercicio:'🏋️ Ejercicio', bodas:'💍 Bodas'
+  comose:'Cómo se usa', hoy:'Hoy', closet:'Mi clóset', comprar:'Qué comprar',
+  basicos:'👕 Básicos', chaquetas:'🧥 Chaquetas', zapatos:'👞 Zapatos', accesorios:'⌚ Accesorios',
+  colorimetria:'🎨 Colorimetría', combinaciones:'🧩 Combinaciones', capas:'Capas y zapatos', reglas:'Las reglas', ejercicio:'🏋️ Ejercicio', bodas:'💍 Bodas'
 };
 
 let secActual = 'hoy';
@@ -125,23 +126,6 @@ function comboCard(c) {
       <div class="combo-f-t">${pie}<br>Costo aprox. de todo nuevo: <b>${c.total}</b></div>
       <div class="combo-f-r"><div class="combo-f-v">${valor}</div><div class="combo-f-k">${clave}</div></div>
     </div>
-  </div>`;
-}
-
-function renderInicio() {
-  return `
-  <div class="sh"><h2>🏠 Tu guardarropa, en fases</h2>
-    <div class="sub">Con 8 básicos + 6 chaquetas + 6 zapatos + 5 accesorios ya cubres las 5 ocasiones de abajo sin comprar un clóset aparte para cada una — la clave es la versatilidad, no la cantidad. Dado que hoy priorizas liquidar deuda (ver tu plan en Coach), compra por fases en vez de todo de golpe.</div>
-  </div>
-  <div class="card intro-banner">
-    <div class="t">Cómo usar esta guía</div>
-    <div class="d">Recorre <b>Básicos → Chaquetas → Zapatos → Accesorios</b> para armar la base de tu clóset (marca ✓ lo que ya tienes o quieres comprar, se guarda automáticamente). Cada tienda con link (↗) te lleva directo a su sitio oficial verificado — algunas marcas quedaron sin link a propósito porque no tienen tienda oficial confirmada en México (ver el tip de esa prenda). Luego <b>Colorimetría</b> te dice qué color va con qué color, y <b>Combinaciones</b> convierte esa tabla en 48 outfits concretos con su zapato y su ocasión. <b>Ejercicio</b> y <b>Bodas</b> van aparte porque no se resuelven con playera y pantalón.</div>
-  </div>
-  <div class="sh" style="margin-top:22px"><h2 style="font-size:16px">Plan de compra por fases</h2>
-    <div class="sub">Mismo criterio de fases que ya usas en tu Plan Maestro — no hay que comprar todo a la vez.</div>
-  </div>
-  <div class="fase-grid">
-    ${FASES.map(f=>`<div class="fase-card"><div class="fn">${f.n} — ${f.t}</div><ul>${f.items.map(i=>`<li>${i}</li>`).join('')}</ul><div class="tot">${f.costo}</div></div>`).join('')}
   </div>`;
 }
 
@@ -273,10 +257,25 @@ function toggleColor(tipo, id) {
   document.getElementById('content-root').innerHTML = RENDERS[secActual]();
 }
 
-// Cuántas de las 22 tienes, mirando los dos sitios.
+// Cuántas de las 22 prendas de COLOR tienes, mirando los dos sitios. Es lo que usa la
+// ruta de compra, que solo mueve playeras y pantalones.
 function closetColor() {
   return COLORIMETRIA.pantalones.filter(x => tengoColor('p', x.id)).length
        + COLORIMETRIA.playeras.filter(x => tengoColor('t', x.id)).length;
+}
+
+// El clóset ENTERO son 31: las 22 de color más las cinco capas y los cuatro zapatos.
+// Sale de una sola función porque la cabecera y Mi clóset llegaron a decir cifras
+// distintas de lo mismo — 22 una y 31 la otra.
+function closetTotal() {
+  const C = COLORIMETRIA;
+  return closetColor()
+       + C.capas.filter(x => S.marcados.indexOf(x.item) >= 0).length
+       + C.calzado.filter(x => S.marcados.indexOf(x.item) >= 0).length;
+}
+function closetCuantas() {
+  const C = COLORIMETRIA;
+  return C.playeras.length + C.pantalones.length + C.capas.length + C.calzado.length;
 }
 
 // Las combinaciones que YA puedes armar: las dos prendas marcadas.
@@ -499,16 +498,6 @@ function renderColorCompra(tipo, titulo, sub) {
   <div class="pc-grid">${arr.map(x => fichaColor(tipo, x.pr, max)).join('')}</div>`;
 }
 
-function renderPlayeras() {
-  return renderColorCompra('t', 'Playeras',
-    'Los 16 colores, ordenados por con cuántos de tus 6 pantalones quedan bien. Los cuadritos de cada ficha son los pantalones: el que se ve entero está en verde con ese color, el apagado no.');
-}
-
-function renderPantalones() {
-  return renderColorCompra('p', 'Pantalones',
-    'Los 6, ordenados igual. Todos aceptan ocho playeras, así que aquí lo que cambia no es cuántas sino cuáles — los cuadritos dicen exactamente eso.');
-}
-
 // ─── CAPAS Y CALZADO ─────────────────────────────────────────────────────────
 // Las dos se leen contra los PANTALONES y no contra las playeras: una chamarra choca
 // con lo que lleva debajo, no con lo que lleva encima, y un zapato lo mismo. Comparten
@@ -588,6 +577,7 @@ function fichaCapa(it, reglas, tipoTxt) {
 
 function renderCapas() {
   const C = COLORIMETRIA;
+  const zapatos = matrizPantalon(C.calzado, C.reglasZapato, 'Zapato ↓ · Pantalón →');
   // Un pantalón sin ninguna capa en verde no es un fallo de la tabla: es un hueco real
   // del guardarropa, y decirlo vale más que forzar un verde para que no quede vacío.
   const huerfanos = C.pantalones.filter(p =>
@@ -605,8 +595,10 @@ function renderCapas() {
       blazer gris, o algo en ante camel— no está en tu catálogo. Con lo que hay, ese
       pantalón se lleva sin capa o con la que menos moleste.</li></ul>
   </div>` : ''}
-  <div class="hy-lbl" style="color:var(--text3);margin:26px 0 14px">Las cinco, para comprar</div>
-  <div class="pc-grid">${C.capas.map(c => fichaCapa(c, C.reglasCapa, 'Ya la tengo')).join('')}</div>`;
+  <div class="hy-lbl" style="color:var(--text3);margin:30px 0 14px">El zapato lo decide el pantalón</div>
+  <div class="sub" style="margin-bottom:14px">El derby café con jeans negros no funciona
+  por mucho que la ocasión sea de oficina. Los tenis de gimnasio no están: no se combinan.</div>
+  ${zapatos}`;
 }
 
 function renderReglas() {
@@ -622,6 +614,156 @@ function renderReglas() {
         <div class="rg-p">${cmEsc(r.p)}</div>
       </div>
     </div>`).join('')}
+  </div>`;
+}
+
+// ─── MI CLÓSET ───────────────────────────────────────────────────────────────
+// UN solo sitio para marcar lo que tienes. Antes estaba repartido entre las fichas de
+// compra y las casillas de la ruta, y marcar treinta y una prendas obligaba a recorrer
+// cuatro secciones. Aquí no hay precios ni tiendas: aquí solo se marca.
+//
+// El recuadro es grande y el color ocupa casi todo, porque lo que hay que reconocer es
+// el color, no leer el nombre: se busca «la playera que tengo» mirando, no leyendo.
+function bloqueCloset(titulo, items, tipo) {
+  const marca = items.map(it => {
+    const tengo = tipo === 'x'
+      ? S.marcados.indexOf(it.item) >= 0
+      : tengoColor(tipo, it.id);
+    const fn = tipo === 'x'
+      ? `toggleCheck('${it.item}'); document.getElementById('content-root').innerHTML = RENDERS[secActual]();`
+      : `toggleColor('${tipo}','${it.id}')`;
+    return `<button type="button" class="mc${tengo ? ' tengo' : ''}" onclick="${fn}">
+      <span class="mc-sw" style="background:${it.hex}">
+        ${tengo ? `<span class="mc-tick">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4"
+            stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l6 6L20 6"></path></svg>
+        </span>` : ''}
+      </span>
+      <span class="mc-n">${cmEsc(it.n)}</span>
+    </button>`;
+  }).join('');
+  const n = items.filter(it => tipo === 'x'
+    ? S.marcados.indexOf(it.item) >= 0 : tengoColor(tipo, it.id)).length;
+  return `<div class="mc-grupo">
+    <div class="mc-h"><div class="mc-t">${titulo}</div>
+      <div class="mc-c">${n} de ${items.length}</div></div>
+    <div class="mc-grid">${marca}</div>
+  </div>`;
+}
+
+function renderCloset() {
+  const C = COLORIMETRIA;
+  const total = closetCuantas();
+  const tengo = closetTotal();
+
+  return `<div class="sh"><h2>Mi clóset</h2>
+    <div class="sub">Toca lo que ya tengas. Es lo único que hay que hacer para que la
+    pantalla de <b>Hoy</b> empiece a decirte qué ponerte — todo lo demás sale de aquí.</div></div>
+  <div class="pc-barra">
+    <div><div class="hy-lbl">Marcadas</div><div class="pc-cif">${tengo}<em> / ${total}</em></div></div>
+    <div><div class="hy-lbl">Outfits que abren</div><div class="pc-cif">${disponibles().length}<em> / 48</em></div></div>
+  </div>
+  ${bloqueCloset('Playeras', C.playeras, 't')}
+  ${bloqueCloset('Pantalones', C.pantalones, 'p')}
+  ${bloqueCloset('Capas', C.capas, 'x')}
+  ${bloqueCloset('Zapatos', C.calzado, 'x')}`;
+}
+
+// ─── QUÉ COMPRAR ─────────────────────────────────────────────────────────────
+// La ruta entera —no los cuatro pasos de Hoy— y debajo todo lo comprable con su precio,
+// ordenado por lo que abre. Es la sección que se mira ANTES de gastar.
+function renderQueComprar() {
+  const C = COLORIMETRIA;
+  const ruta = rutaCompra(99);
+  const dis = disponibles().length;
+  const maxT = Math.max.apply(null, C.playeras.map(p => abreCon('t', p.id).filter(x => x.v === 's').length));
+  const maxP = Math.max.apply(null, C.pantalones.map(p => abreCon('p', p.id).filter(x => x.v === 's').length));
+  const orden = (tipo, arr) => arr.map(pr => ({ pr: pr,
+      abre: abreCon(tipo, pr.id).filter(x => x.v === 's').length }))
+    .sort((a, b) => b.abre - a.abre);
+
+  return `<div class="sh"><h2>Qué comprar</h2>
+    <div class="sub">En orden, y el orden no es una opinión: en cada paso va la prenda que
+    abre <b>más combinaciones nuevas</b> con lo que ya tienes marcado en tu clóset. Es el
+    orden que más rápido convierte dinero en outfits.</div></div>
+
+  ${ruta.length ? `<div class="hy-compra">
+    <div class="hy-compra-n">
+      <div class="hy-lbl" style="color:var(--text3)">Comprándolo todo</div>
+      <div class="hy-big">${dis + ruta.reduce((a, p) => a + p.gana, 0)}</div>
+      <div class="hy-big-t">outfits, contra ${dis} de ahora</div>
+      <div class="hy-nota">Son ${ruta.length} prendas. Las primeras cuatro ya te dan
+        ${dis + ruta.slice(0, 4).reduce((a, p) => a + p.gana, 0)}: no hace falta comprarlo todo de golpe.</div>
+    </div>
+    <div class="hy-pasos">
+      ${ruta.map((p, i) => `<label class="hy-paso">
+        <span class="hy-paso-n">${String(i + 1).padStart(2, '0')}</span>
+        <span class="hy-sw" style="background:${p.hex}"></span>
+        <span class="hy-paso-t">${cmEsc(p.n)}
+          <em>${p.tipo === 'p' ? 'PANTALÓN' : 'PLAYERA'}</em></span>
+        <span class="hy-gana">+${p.gana}</span>
+        <input type="checkbox" onchange="toggleColor('${p.tipo}','${p.id}')">
+      </label>`).join('')}
+    </div>
+  </div>` : `<div class="card"><b>Ya tienes las 22 prendas de color.</b> No queda nada que
+    comprar para abrir más combinaciones — de aquí en adelante es cuestión de reponer.</div>`}
+
+  <div class="hy-lbl" style="color:var(--text3);margin:30px 0 14px">Playeras · las 16, por lo que abren</div>
+  <div class="pc-grid">${orden('t', C.playeras).map(x => fichaColor('t', x.pr, maxT)).join('')}</div>
+
+  <div class="hy-lbl" style="color:var(--text3);margin:30px 0 14px">Pantalones · los 6</div>
+  <div class="pc-grid">${orden('p', C.pantalones).map(x => fichaColor('p', x.pr, maxP)).join('')}</div>
+
+  <div class="hy-lbl" style="color:var(--text3);margin:30px 0 14px">Capas · las 5</div>
+  <div class="pc-grid">${C.capas.map(c => fichaCapa(c, C.reglasCapa, 'Ya la tengo')).join('')}</div>
+
+  <div class="hy-lbl" style="color:var(--text3);margin:30px 0 14px">Y si prefieres ir por fases</div>
+  <div class="sub" style="margin-bottom:14px">La ruta de arriba ordena por lo que abre cada
+  prenda; esto ordena por presupuesto. Mientras estés liquidando deuda, esta es la lectura
+  que importa.</div>
+  <div class="fase-grid">
+    ${FASES.map(f => `<div class="fase-card"><div class="fn">${f.n} — ${f.t}</div>
+      <ul>${f.items.map(i => `<li>${i}</li>`).join('')}</ul>
+      <div class="tot">${f.costo}</div></div>`).join('')}
+  </div>`;
+}
+
+// ─── CÓMO SE USA ─────────────────────────────────────────────────────────────
+function renderComoSeUsa() {
+  const pasos = [
+    ['Marca lo que ya tienes', 'Mi clóset',
+     'Es el único paso obligatorio. Toca cada prenda que esté en tu armario — playeras, pantalones, capas y zapatos. Todo lo demás de la app sale de ahí, así que mientras esté vacío no puede decirte nada.'],
+    ['Abre Hoy por la mañana', 'Hoy',
+     'Te dice qué ponerte, con su zapato y su capa, y por qué esa combinación funciona. Es el mismo outfit todo el día y cambia cada día. Debajo, las otras que ya puedes armar.'],
+    ['Compra en orden, no por antojo', 'Qué comprar',
+     'La lista está ordenada por cuántas combinaciones nuevas abre cada prenda con lo que ya tienes. Comprar la número 1 rinde más que comprar la número 8, y la app te dice cuánto.'],
+    ['Consulta cuando dudes', 'Colorimetría · Combinaciones · Capas y zapatos',
+     'Las tablas están para las preguntas concretas: ¿esta playera con este pantalón? ¿qué chamarra le va? ¿este zapato con estos jeans? Cada punto de color explica su porqué al pasar el cursor.'],
+  ];
+  return `<div class="sh"><h2>Cómo se usa</h2>
+    <div class="sub">Cuatro pasos. El primero es el único que tienes que hacer tú.</div></div>
+  <div class="rg-grid">
+    ${pasos.map((p, i) => `<div class="rg">
+      <div class="rg-n">${String(i + 1).padStart(2, '0')}</div>
+      <div class="rg-b">
+        <div class="rg-t">${cmEsc(p[0])}</div>
+        <div class="rg-d">${cmEsc(p[2])}</div>
+        <div class="rg-p">Sección: <b>${cmEsc(p[1])}</b></div>
+      </div>
+    </div>`).join('')}
+  </div>
+  <div class="card cm-nota" style="margin-top:22px">
+    <div class="t">De dónde salen los números</div>
+    <ul>
+      <li>Las <b>48 combinaciones</b> son las parejas playera–pantalón que la colorimetría
+        da por buenas. No están escritas a mano: salen de la tabla, así que no pueden
+        contradecirla.</li>
+      <li><b>«Abre +3»</b> quiere decir que esa prenda añade tres combinaciones nuevas a
+        las que ya puedes armar. Depende de lo que tengas marcado, así que cambia según
+        vas comprando.</li>
+      <li>Los <b>precios</b> son rangos de tiendas reales en CDMX y van por tipo de prenda:
+        una playera burdeos cuesta lo que una blanca. Conviene revisarlos de vez en cuando.</li>
+    </ul>
   </div>`;
 }
 
@@ -686,10 +828,10 @@ function renderCombinaciones() {
 }
 
 const RENDERS = {
+  comose: renderComoSeUsa,
   hoy: renderHoy,
-  inicio: renderInicio,
-  playeras: renderPlayeras,
-  pantalones: renderPantalones,
+  closet: renderCloset,
+  comprar: renderQueComprar,
   basicos: () => renderCategoria('👕 Básicos', 'Las piezas que más combinaciones desbloquean por peso invertido — la base de todo lo demás.', BASICOS),
   chaquetas: () => renderCategoria('🧥 Chaquetas', 'Una capa exterior cambia todo un outfit. No necesitas las 6 — elige 2-3 según tu temporada y presupuesto.', CHAQUETAS),
   zapatos: () => `<div class="sh"><h2>👞 Zapatos</h2>
@@ -721,5 +863,5 @@ document.addEventListener('DOMContentLoaded', () => {
   const btn = document.getElementById('theme-toggle-btn');
   if (btn) btn.textContent = document.documentElement.getAttribute('data-theme') === 'dark' ? '☀️' : '🌙';
   updateCounter();
-  nav('hoy');
+  nav('closet');
 });

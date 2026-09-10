@@ -133,7 +133,7 @@ a:hover{color:var(--p-d);border-bottom-color:var(--p)}
 .hy-paso:hover{background:var(--p-l)}
 .hy-paso-n{font-family:'Space Grotesk',monospace;font-size:11px;font-weight:700;
   color:var(--text3)}
-.hy-sw{height:26px;border:var(--bd)}
+.hy-sw{height:34px;border:var(--bd)}
 .hy-paso-t{font-size:14.5px;font-weight:700;min-width:0}
 .hy-paso-t em{font-family:'Space Grotesk',monospace;font-size:9.5px;font-style:normal;
   font-weight:700;color:var(--text3);letter-spacing:.14em;margin-left:10px}
@@ -173,7 +173,7 @@ a:hover{color:var(--p-d);border-bottom-color:var(--p)}
 .pc{border:var(--bd);display:flex;flex-direction:column;background:var(--surface-2)}
 .pc.tengo{border-color:var(--p)}
 .pc.cero{opacity:.62}
-.pc-sw{height:78px;border-bottom:var(--bd);position:relative;display:flex;
+.pc-sw{height:118px;border-bottom:var(--bd);position:relative;display:flex;
   align-items:flex-start;justify-content:flex-end;padding:8px}
 /* La insignia va sobre la muestra, en negro sobre el color: sea cual sea el color
    de la prenda, el negro se lee — es el mismo criterio que la tinta del resto. */
@@ -205,6 +205,36 @@ a:hover{color:var(--p-d);border-bottom-color:var(--p)}
 .pc-check{display:flex;align-items:center;gap:9px;margin-top:auto;padding-top:12px;
   border-top:var(--bd-fina);font-size:12px;font-weight:700;cursor:pointer}
 .pc-check input{width:16px;height:16px;accent-color:var(--p);cursor:pointer}
+/* ── MI CLÓSET ──────────────────────────────────────────────────────────
+   El recuadro es grande y el color ocupa casi todo: lo que hay que reconocer es el
+   color, no leer el nombre. Toda la ficha es el botón — un cuadrito de 16px para
+   marcar treinta y una prendas es pedir puntería. */
+.mc-grupo{margin-bottom:30px}
+.mc-h{display:flex;align-items:baseline;justify-content:space-between;gap:12px;
+  padding-bottom:9px;margin-bottom:14px;border-bottom:var(--bd)}
+.mc-t{font-family:var(--font-dsp);font-size:21px;font-weight:800;letter-spacing:-.03em}
+.mc-c{font-family:'Space Grotesk',monospace;font-size:11px;font-weight:700;
+  color:var(--text3);letter-spacing:.06em}
+.mc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(158px,1fr));gap:14px}
+.mc-grid>*{min-width:0}
+.mc{display:flex;flex-direction:column;border:var(--bd);background:var(--surface-2);
+  padding:0;cursor:pointer;font-family:inherit;text-align:left;color:inherit;
+  transition:border-color .15s}
+.mc:hover{border-color:var(--p)}
+.mc-sw{height:104px;border-bottom:var(--bd);position:relative;display:flex;
+  align-items:center;justify-content:center}
+/* La marca de «la tengo» va DENTRO de la muestra y en el acento: sobre cualquiera de
+   los 31 colores, el naranja con tinta clara se lee. */
+.mc-tick{width:38px;height:38px;background:var(--p);color:#fff;display:flex;
+  align-items:center;justify-content:center}
+.mc-tick svg{width:21px;height:21px}
+.mc-n{padding:11px 13px 13px;font-size:13px;font-weight:700;line-height:1.3}
+.mc.tengo{border-color:var(--p)}
+.mc.tengo .mc-n{color:var(--p)}
+@media(max-width:560px){
+  .mc-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  .mc-sw{height:84px}
+}
 /* El aviso de que la prenda que se propone no está en tu clóset. Va en el acento
    porque es una compra pendiente, no un error. */
 .hy-falta{font-family:'Space Grotesk',monospace;font-size:9px;font-weight:700;
@@ -250,14 +280,14 @@ a:hover{color:var(--p-d);border-bottom-color:var(--p)}
 .cm-lbl{font-size:10px;font-weight:800;letter-spacing:.11em;text-transform:uppercase;
   color:var(--text3);padding-bottom:4px}
 .cm-p{display:flex;flex-direction:column;align-items:center;gap:6px;padding:0 4px;cursor:help}
-.cm-sw{width:100%;height:30px;border-radius:7px;border:1px solid rgba(var(--ov),.16)}
+.cm-sw{width:100%;height:42px;border:1px solid rgba(var(--ov),.28)}
 .cm-pn{font-size:10.5px;font-weight:700;color:var(--text2);text-align:center;line-height:1.25}
 .cm-fila{align-items:center;border-top:1px solid rgba(var(--ov),.07)}
 .cm-et{display:flex;align-items:center;gap:9px;padding:7px 10px 7px 0;min-width:0}
-.cm-sw2{width:28px;height:28px;border-radius:7px;flex:none;border:1px solid rgba(var(--ov),.16)}
+.cm-sw2{width:40px;height:40px;flex:none;border:1px solid rgba(var(--ov),.28)}
 .cm-tn{font-size:12px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;
   text-overflow:ellipsis}
-.cm-cel{display:flex;align-items:center;justify-content:center;height:42px}
+.cm-cel{display:flex;align-items:center;justify-content:center;height:54px}
 /* El veredicto es un punto y no una palabra: son 96 celdas, y leer 96 etiquetas no
    es leer. La forma también lo dice, no solo el color — círculo lleno, aro y raya —
    para que se distinga en blanco y negro y con cualquier daltonismo. */
@@ -435,21 +465,22 @@ a:hover{color:var(--p-d);border-bottom-color:var(--p)}
     <p>Guardarropa y guía de compras</p>
   </div>
   <nav class="sb-nav">
-    <div class="nav-label">Principal</div>
-    <div class="nav-item active" onclick="nav('hoy')"><span class="ico">◆</span>Hoy</div>
-    <div class="nav-item" onclick="nav('inicio')"><span class="ico">🏠</span>Inicio</div>
-    <div class="nav-label">Qué comprar</div>
-    <div class="nav-item" onclick="nav('playeras')"><span class="ico">▪</span>Playeras</div>
-    <div class="nav-item" onclick="nav('pantalones')"><span class="ico">▬</span>Pantalones</div>
+    <div class="nav-label">Empieza aquí</div>
+    <div class="nav-item" onclick="nav('comose')"><span class="ico">?</span>Cómo se usa</div>
+    <div class="nav-item" onclick="nav('hoy')"><span class="ico">◆</span>Hoy</div>
+    <div class="nav-label">Mi ropa</div>
+    <div class="nav-item active" onclick="nav('closet')"><span class="ico">▣</span>Mi clóset</div>
+    <div class="nav-item" onclick="nav('comprar')"><span class="ico">$</span>Qué comprar</div>
+    <div class="nav-label">Cómo combinar</div>
+    <div class="nav-item" onclick="nav('colorimetria')"><span class="ico">🎨</span>Colorimetría</div>
+    <div class="nav-item" onclick="nav('combinaciones')"><span class="ico">🧩</span>Combinaciones</div>
+    <div class="nav-item" onclick="nav('capas')"><span class="ico">▲</span>Capas y zapatos</div>
+    <div class="nav-item" onclick="nav('reglas')"><span class="ico">§</span>Las reglas</div>
+    <div class="nav-label">Catálogo y precios</div>
     <div class="nav-item" onclick="nav('basicos')"><span class="ico">👕</span>Básicos</div>
     <div class="nav-item" onclick="nav('chaquetas')"><span class="ico">🧥</span>Chaquetas</div>
     <div class="nav-item" onclick="nav('zapatos')"><span class="ico">👞</span>Zapatos</div>
     <div class="nav-item" onclick="nav('accesorios')"><span class="ico">⌚</span>Accesorios</div>
-    <div class="nav-label">Cómo combinar</div>
-    <div class="nav-item" onclick="nav('colorimetria')"><span class="ico">🎨</span>Colorimetría</div>
-    <div class="nav-item" onclick="nav('combinaciones')"><span class="ico">🧩</span>Combinaciones</div>
-    <div class="nav-item" onclick="nav('capas')"><span class="ico">▲</span>Capas</div>
-    <div class="nav-item" onclick="nav('reglas')"><span class="ico">§</span>Las reglas</div>
     <div class="nav-label">Aparte</div>
     <div class="nav-item" onclick="nav('ejercicio')"><span class="ico">🏋️</span>Ejercicio</div>
     <div class="nav-item" onclick="nav('bodas')"><span class="ico">💍</span>Bodas</div>
@@ -507,9 +538,8 @@ function cpCabVest(){
       // Son las tres que importan al vestirse: cuantas puedo armar YA, cuanto llevo del
       // armario de color, y cuantas hay en total.
       {v:String(typeof disponibles==='function'?disponibles().length:''), k:'Puedes armar hoy'},
-      {v:(typeof closetColor==='function'
-          ? closetColor()+' / '+(COLORIMETRIA.pantalones.length+COLORIMETRIA.playeras.length)
-          : ''), k:'Tu clóset'},
+      {v:(typeof closetTotal==='function'
+          ? closetTotal()+' / '+closetCuantas() : ''), k:'Tu clóset'},
       {v:String(typeof combLista==='function'?combLista().length:''), k:'Combinaciones'},
     ],
   });

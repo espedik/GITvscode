@@ -31,30 +31,54 @@ servía.
 
 ## Estructura de contenido
 
-Catorce secciones en cuatro grupos:
+**Catorce secciones en cinco grupos, y el orden es el del uso.** La app llegó a tener
+las mismas catorce sin agrupar y con el catálogo mezclado con las tablas; Adán:
+*"esta medio revuelta la aplicacion y ademas no tiene instrucciones"*.
 
-- **Principal** — **Hoy** (`renderHoy()`), la sección de arranque, contada abajo; y
-  🏠 Inicio (`renderInicio()`): filosofía de guardarropa cápsula y el plan de
-  compra por fases (`FASES`, 4 tarjetas), con el mismo lenguaje de «fases» que el Plan
-  Maestro de `Coach/Coach.html`.
-- **Qué comprar** — **Playeras** (16) y **Pantalones** (6), que son las prendas de color
-  y se cuentan abajo; más 👕 Básicos (8), 🧥 Chaquetas (6), 👞 Zapatos (6), ⌚ Accesorios (5).
-  `renderCategoria()` pinta una rejilla de `.item-card`: nombre, para qué sirve, 2-3 tiendas
-  con rango de precio en MXN (70 de 74 con link real y verificado), un tip y un checkbox
-  «Ya lo tengo / lo quiero comprar». **25 items marcables**, que es lo que cuenta el sidebar.
-- **Cómo combinar** — 🎨 Colorimetría (la matriz), 🧩 Combinaciones (las 48), **Capas** y
-  **Las reglas**. Es el corazón de la app; todas se cuentan abajo.
-- **Aparte** — 🏋️ Ejercicio y 💍 Bodas (`renderOcasion(key)`, desde `OCASIONES`). Son las dos
-  únicas ocasiones que **no** se resuelven eligiendo color de playera y de pantalón: una pide
-  ropa técnica y la otra, traje o guayabera. Trabajo, Casual y Fiestas ya no existen como
-  sección — las absorbió Combinaciones, que dice lo mismo pero con prendas concretas.
-  - Cada pieza de `OCASIONES` es `{n, ids}` con los productos reales del catálogo. Varios ids
-    son alternativas y basta tener uno; **`ids:[]` es una prenda que el catálogo no cubre** y
-    se dibuja con recuadro punteado y «no está en tus listas» en vez de fingir que la cubre.
-  - El estado del combo y el «desde $X para completarlo» son **derivados**: `precioMin(item)`
-    lee los números de los rangos de `compra[].p` y toma el menor.
+| Grupo | Secciones | Para qué |
+| --- | --- | --- |
+| **Empieza aquí** | Cómo se usa · Hoy | Las instrucciones y la pantalla de la mañana |
+| **Mi ropa** | Mi clóset · Qué comprar | Lo que tengo y lo que me falta |
+| **Cómo combinar** | Colorimetría · Combinaciones · Capas y zapatos · Las reglas | Las tablas, para dudas concretas |
+| **Catálogo y precios** | Básicos · Chaquetas · Zapatos · Accesorios | Las fichas con tienda y rango |
+| **Aparte** | Ejercicio · Bodas | Lo que no se resuelve con color |
 
-## Playeras y Pantalones — todo lo comprable, por sección
+**La app arranca en Mi clóset**, no en Hoy: con el clóset vacío, Hoy no puede decir
+nada, y mandar a alguien a una pantalla que solo sabe disculparse es mal recibimiento.
+
+## Cómo se usa — las instrucciones
+
+Cuatro pasos, con la sección de cada uno nombrada: marcar lo que tienes, abrir Hoy por
+la mañana, comprar en orden, consultar las tablas cuando dudes. Y un bloque explicando
+**de dónde salen los números** — qué son las 48, qué quiere decir «abre +3» y por qué los
+precios van por tipo de prenda. Sin eso, las cifras de la app parecen sacadas de la nada.
+
+## Mi clóset — el único sitio donde se marca
+
+**31 prendas** en cuatro bloques: 16 playeras, 6 pantalones, 5 capas y 4 zapatos.
+Antes marcar estaba repartido entre las fichas de compra y las casillas de la ruta, y
+completar el clóset obligaba a recorrer cuatro secciones.
+
+**Toda la ficha es el botón** y el color ocupa 104px de alto: lo que hay que reconocer
+es el color —se busca «la playera que tengo» mirando, no leyendo— y un cuadrito de 16px
+para marcar treinta y una prendas es pedir puntería. La marca de «la tengo» va dentro de
+la muestra, en el naranja del sistema, que se lee sobre cualquiera de los 31 colores.
+
+Aquí no hay precios ni tiendas: aquí solo se marca. Lo comprable vive en **Qué comprar**.
+
+## Qué comprar — la ruta entera
+
+La ruta **completa** —no los cuatro pasos que asoman en Hoy— y debajo todo lo comprable
+con su precio, ordenado por lo que abre: las 16 playeras, los 6 pantalones y las 5 capas.
+Cierra con el **plan por fases** (`FASES`), que ordena por presupuesto en vez de por
+impacto: mientras se esté liquidando deuda, esa es la lectura que importa.
+
+**El clóset son 31 y la cifra sale de una sola función.** `closetTotal()` y
+`closetCuantas()` existen porque la cabecera llegó a decir 22 y Mi clóset 31 de lo mismo:
+la cabecera contaba solo las prendas de color y se dejaba fuera capas y zapatos.
+`closetColor()` sigue aparte, con sus 22, porque es lo que mueve la ruta de compra.
+
+## Las fichas de compra
 
 **Las 22 prendas de la colorimetría, cada una con LO QUE ABRE**: con cuántas
 contrapartes está en verde. Ese número ordena la lista y es el mismo que manda en la
@@ -296,7 +320,8 @@ El flujo de Hoy, medido de punta a punta: con el clóset vacío sale el estado v
 ruta con 4 pasos; marcando esos 4 aparecen el outfit del día, 3 alternativas y la cuenta
 pasa a 4 de 48, con la ruta proyectando 16. Y el camino que fallaba: marcar `b1`–`b4` en
 **Básicos** da outfit en Hoy y deja 4 de 22 en el clóset, con las fichas de Playeras y
-Pantalones marcadas solas. Las matrices de capas y de zapatos salen completas —30 y 24
+Pantalones marcadas solas. Mi clóset pinta sus 31 recuadros en cuatro bloques y marcar
+uno tocando la ficha entera actualiza la cuenta y la cabecera. Las matrices de capas y de zapatos salen completas —30 y 24
 celdas, cada una con su porqué en el `title`— y con un clóset de siete prendas Hoy elige
 sneakers blancos (que están marcados) y bomber negra (que no), en vez de la chamarra de
 mezclilla que sí está marcada pero que la tabla descarta sobre jeans índigo.
