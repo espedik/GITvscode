@@ -23,6 +23,8 @@ en una página.
 | — | El vocabulario de alemán ya no vive aquí: los datos, el diseño y el motor están en `Aleman/` (`vocab-datos.js`, `vocab.css`, `vocab.js`) y esta pantalla los carga — ver abajo |
 | `aleman-data.js` | Las 40 lecciones de alemán extraídas de `Aleman/`. **En reposo** desde el 2026-09-02: ninguna pantalla lo carga (ver abajo) |
 | `entrevistas-data.js` | Temas extraídos de `Entrevistas/` para su slide |
+| `examen-genai-data.js` | Banco de 79 preguntas del simulacro ISTQB CT-GenAI, más el blueprint oficial del examen |
+| `examen-genai.js` | El motor del simulacro: reloj, corrección, desglose por capítulo y revisión razonada |
 | `readme_dashboard.md` | Este archivo |
 
 Se abre con `file://`, sin servidor ni build. Los `<script src="…">` cargan con normalidad — es
@@ -378,6 +380,52 @@ ancha que las de largo plazo, que es lo que se pidió el 2026-08-11. Medido: 0 p
 paso a propósito —son dos avances distintos de la misma meta— y enseña **la cifra**
 (`$22,800 pagado`), no solo el porcentaje. `METAS_MONEYBAR[x].short` es ese texto; `.lbl` sigue
 siendo el largo, en el `title`.
+
+### El simulacro del ISTQB CT-GenAI
+
+La meta `istqbgenai` trae, en su paso 6 de 10, un **examen de verdad**: 40 preguntas, 46 puntos,
+reloj corriendo y entrega automática al agotarse. Vive en dos archivos aparte de esta carpeta
+(`examen-genai-data.js` y `examen-genai.js`), que `dashboard.html` carga junto a `ficha.js`.
+
+**Nada está inventado.** Las preguntas se responden solo desde el *Programa de estudio ES V01.01*
+(traducción del CT-GenAI V1.0 del 25 de julio de 2025), y cada una guarda en `ref` la sección del
+syllabus donde se comprueba. La estructura viene del documento oficial *ISTQB CT-GenAI Exam
+Structure Tables v1.0*, y por eso el reparto es exacto:
+
+| Capítulo | Preguntas | Puntos |
+|---|---|---|
+| 1 · Introducción a la IA generativa | 7 | 7 |
+| 2 · Ingeniería de instrucciones | 11 | 16 |
+| 3 · Gestión de riesgos | 10 | 11 |
+| 4 · Infraestructura impulsada por MLG | 5 | 5 |
+| 5 · Despliegue e integración | 7 | 7 |
+
+Las 6 preguntas K3 valen 2 puntos y las 34 de K1/K2 valen 1: 40 preguntas dan 46 puntos, y el
+corte oficial está en 30 (65%). El reloj ofrece 75 minutos —los 60 oficiales más el 25% que ISTQB
+concede a quien presenta en un idioma que no es el suyo— o los 60 pelados.
+
+**El banco tiene 79 preguntas para 40 huecos.** Cada intento recorre el blueprint objetivo por
+objetivo, elige al azar las variantes que pide de cada uno, y baraja tanto las 40 preguntas como
+las 4 opciones de cada una. Medido sobre 300 exámenes simulados: 300 combinaciones distintas y
+ninguno malformado. Ni el orden ni la letra se pueden memorizar entre intentos.
+
+**Durante el examen solo se ve el número de pregunta y lo que vale.** El capítulo, el objetivo de
+aprendizaje y el nivel K son pistas que el examen real no da —saber que una pregunta es del
+capítulo 3 ya orienta la respuesta—, así que se guardan para la revisión, que es donde sirven.
+
+**Por qué es una capa propia y no un paso más de la ficha.** `mdPintar()` repinta el cuerpo del
+panel de metas entero cada vez que se cambia de paso, así que un examen incrustado ahí perdería el
+DOM —y con él el temporizador— al primer clic. El módulo monta su propio overlay (`#xg-overlay`,
+clases `.xg-*`) por encima, con su ciclo de vida. Usa las variables de tema del dashboard, así que
+sigue el modo claro/oscuro sin código extra.
+
+**Se guarda en `localStorage['examen_genai_v1']`**, con dos cosas: `curso`, el examen a medias con
+el **instante** de finalización —cerrar la pestaña por accidente no debe costar el intento, y al
+volver se reanuda con el tiempo que quedaba de verdad, no con el que quedaba al guardar—; e
+`intentos`, el histórico con puntos, porcentaje, minutos usados y desglose por capítulo.
+
+Para que un paso pueda disparar algo de la app en vez de abrir un enlace, `mdPintar()` aprendió a
+pintar `paso.boton` (HTML nuestro, detrás de `linkHtml`), con el estilo `.md-paso-btn`.
 
 
 ## Mi Día, en detalle

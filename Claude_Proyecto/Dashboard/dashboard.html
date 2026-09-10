@@ -27,6 +27,13 @@
 <link rel="stylesheet" href="ficha.css">
 <script src="datos-maestros.js"></script>
 <script src="ficha.js"></script>
+<!-- Simulacro del examen ISTQB CT-GenAI (ultimo paso de la ficha de la meta
+     `istqbgenai`). Los datos son las 79 preguntas del banco, todas trazadas al
+     programa de estudio oficial en espanol; el motor monta su propia capa a pantalla
+     completa porque el panel de metas repinta su cuerpo al cambiar de paso y se
+     llevaria por delante el temporizador. Se abre con abrirExamenGenAI(). -->
+<script src="examen-genai-data.js"></script>
+<script src="examen-genai.js"></script>
 <!-- El vocabulario: los datos, el diseño y el motor. Los tres viven en Aleman/,
      que es donde Adán trabaja el vocabulario; esta pantalla lo refleja. -->
 <link rel="stylesheet" href="../Aleman/vocab.css">
@@ -2421,6 +2428,11 @@ button.hp-lec:active{transform:translateY(0)}
   font-size:12.5px;font-weight:800;color:var(--cy);text-decoration:none;
   background:rgba(0,224,192,.1);border:1px solid rgba(0,224,192,.24)}
 .md-paso-link:hover{background:rgba(0,224,192,.2)}
+/* Mismo botón, pero para acciones de la app (el simulacro del CT-GenAI). Un <button>
+   no hereda la tipografía ni el cursor, así que se los da esta regla. */
+.md-paso-btn{font-family:inherit;cursor:pointer;color:var(--g);
+  background:rgba(0,232,122,.12);border-color:rgba(0,232,122,.3)}
+.md-paso-btn:hover{background:rgba(0,232,122,.22)}
 /* Marcar y avanzar sin ir a buscar nada. */
 .md-acciones{flex:none;display:flex;align-items:center;gap:10px;padding:14px 32px;
   border-top:1px solid rgba(var(--ov),.09);background:rgba(var(--ov),.045)}
@@ -9271,6 +9283,7 @@ const META_DETALLE={
       {t:"Cómo es el examen",d:"<b>40 preguntas</b> de opción múltiple. El tiempo oficial es de 60 minutos, pero <b>tú tienes 75</b>: ISTQB da 15 minutos extra a quien presenta en un idioma que no es el suyo. Son <b>casi 2 minutos por pregunta</b> — no es un examen contra el reloj si llegas con el temario leído.",href:"https://astqb.org/certifications/testing-with-generative-ai/",label:"Reglas del examen · ASTQB"},
       {t:"El temario, en 4 bloques",d:"Syllabus <b>v1.1</b>, vigente desde el 27 de abril de 2026:",list:["Prompt engineering aplicado a las pruebas — cómo pedirle a un modelo lo que de verdad necesitas","Riesgos y limitaciones de la IA generativa en un proceso de calidad","Infraestructura de pruebas con IA generativa","Adopción organizacional: cómo se mete esto en un equipo que ya trabaja de otra forma"],href:"https://astqb.org/assets/documents/ISTQB-CT-GenAI-Syllabus-v1.1.pdf",label:"📄 Syllabus v1.1 completo (PDF)"},
       {t:"Tu material de repaso ya está en Entrevistas",d:"Tu propia app de <b>Entrevistas</b> tiene el módulo <b>📜 ISTQB CTFL</b> con los 6 capítulos completos (Fundamentos del Testing · Testing en el SDLC · Pruebas estáticas · Test Analysis and Design · Managing the Test Activities · Test Tools) más el glosario. El CT-GenAI <b>da por sabido</b> ese vocabulario, así que ahí tienes el repaso hecho — empieza por el Capítulo 1 y el 4, que son los que más se dan por supuestos.",href:"../Entrevistas/entrevistas.html#istqb",label:"Abrir Entrevistas → módulo ISTQB CTFL"},
+      {t:"🎓 Simulacro completo, con reloj",d:"Un examen real, aquí dentro: <b>40 preguntas, 46 puntos y el corte en 30</b> (65%), con el reparto por capítulo exacto del documento oficial de estructura del examen. Las preguntas salen <b>solo</b> del programa de estudio en español (CT-GenAI V1.0) y cada respuesta te dice la sección del syllabus donde se comprueba. El banco tiene <b>79 preguntas</b>: cada intento arma un examen distinto, así que no se memoriza. Al terminar ves el desglose por capítulo, que es lo que te dice <i>qué releer</i> y no solo si pasaste.",list:["Reloj de <b>75 minutos</b> — el oficial es de 60, más el 25% que ISTQB da a quien presenta en un idioma que no es el suyo — con entrega automática al agotarse","Mapa de las 40 preguntas, marcar para revisar y navegación con teclado (1-4 responder, ←→ moverse, M marcar)","Si cierras sin querer, se reanuda con el tiempo que quedaba de verdad","Revisión razonada al final: por qué la correcta lo es y por qué fallan las otras","Historial de intentos, para ver si de verdad estás mejorando"],boton:"<button class=\"md-paso-link md-paso-btn\" onclick=\"abrirExamenGenAI()\">▶ Empezar el simulacro</button>"},
       {t:"Practica con los exámenes de muestra oficiales",d:"ISTQB publica exámenes completos con sus respuestas — mismo formato y mismo nivel que el real. Hazlos <b>antes</b> de estudiar el syllabus entero: te dicen en 40 preguntas qué ya sabes y qué no, y así estudias solo lo que falta.",list:["Examen de muestra A v1.1 — 40 preguntas, el más parecido al actual","Sus respuestas razonadas, para revisar por qué falla cada opción","Un segundo set de ASTQB, para repetir sin memorizar el primero"],href:"https://astqb.org/assets/documents/ISTQB-CT-GenAI_Sample-Exam-A-Questions_v1.1.pdf",label:"📝 Examen de muestra A (PDF)"},
       {t:"Respuestas del examen de muestra",d:"Revísalas <b>después</b> de contestar, no mientras. Cada respuesta trae el porqué, que es donde de verdad se aprende el criterio que evalúa ISTQB.",href:"https://astqb.org/assets/documents/ISTQB-CT-GenAI_Sample-Exam-A-Answers_v1.1.pdf",label:"✅ Respuestas del muestra A (PDF)"},
       {t:"Por qué esta y por qué ahora",d:"Conecta las dos cosas que ya haces todos los días: el testing en ALTEN y las 20 horas al mes que le metes a construir con IA. Es la credencial que convierte esa práctica en algo que se puede poner en un CV y defender en una entrevista — el mismo hueco que tu meta de <b>trabajar remoto</b> necesita cerrar."},
@@ -9517,12 +9530,15 @@ function mdPintar(){
   const imgCls=p.imgTipo==='diagrama'?'md-paso-img is-diagram':'md-paso-img';
   const imgHtml=p.img?`<img class="${imgCls}" src="${p.img}" alt="${esc(p.t)}" loading="lazy">`:'';
   const linkHtml=p.href?`<a class="md-paso-link" href="${p.href}" target="_blank" rel="noopener">${esc(p.label||'Ver más')} ↗</a>`:'';
+  // Un paso puede traer un botón que dispara algo de la propia app en vez de abrir
+  // un enlace: lo usa el simulacro del CT-GenAI. Es HTML nuestro, no de fuera.
+  const botonHtml=p.boton||'';
   const cuerpo=document.getElementById('metaDetailSteps');
   cuerpo.innerHTML=`
     <div class="md-paso-n">PASO ${i+1} DE ${total}</div>
     <div class="md-paso-t">${p.t}</div>
     <div class="md-paso-d">${p.d}</div>
-    ${listHtml}${casoHtml}${imgHtml}${linkHtml}`;
+    ${listHtml}${casoHtml}${imgHtml}${linkHtml}${botonHtml}`;
   cuerpo.scrollTop=0;   // cambiar de paso empieza arriba, no a media lectura del anterior
 
   // Acciones
