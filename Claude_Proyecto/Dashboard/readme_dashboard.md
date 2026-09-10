@@ -23,7 +23,8 @@ en una página.
 | — | El vocabulario de alemán ya no vive aquí: los datos, el diseño y el motor están en `Aleman/` (`vocab-datos.js`, `vocab.css`, `vocab.js`) y esta pantalla los carga — ver abajo |
 | `aleman-data.js` | Las 40 lecciones de alemán extraídas de `Aleman/`. **En reposo** desde el 2026-09-02: ninguna pantalla lo carga (ver abajo) |
 | `entrevistas-data.js` | Temas extraídos de `Entrevistas/` para su slide |
-| `examen-genai-data.js` | Banco de 79 preguntas del simulacro ISTQB CT-GenAI, más el blueprint oficial del examen |
+| `examen-genai-data.js` | **Examen A**: 79 preguntas del simulacro ISTQB CT-GenAI, más el blueprint oficial |
+| `examen-genai-data-b.js` | **Examen B**: otras 77 preguntas, el mismo temario por la otra cara |
 | `examen-genai.js` | El motor del simulacro: reloj, corrección, desglose por capítulo y revisión razonada |
 | `readme_dashboard.md` | Este archivo |
 
@@ -384,8 +385,9 @@ siendo el largo, en el `title`.
 ### El simulacro del ISTQB CT-GenAI
 
 La meta `istqbgenai` trae, en su paso 6 de 10, un **examen de verdad**: 40 preguntas, 46 puntos,
-reloj corriendo y entrega automática al agotarse. Vive en dos archivos aparte de esta carpeta
-(`examen-genai-data.js` y `examen-genai.js`), que `dashboard.html` carga junto a `ficha.js`.
+reloj corriendo y entrega automática al agotarse. Vive en tres archivos aparte de esta carpeta
+(`examen-genai-data.js`, `examen-genai-data-b.js` y `examen-genai.js`), que `dashboard.html`
+carga junto a `ficha.js`.
 
 **Nada está inventado.** Las preguntas se responden solo desde el *Programa de estudio ES V01.01*
 (traducción del CT-GenAI V1.0 del 25 de julio de 2025), y cada una guarda en `ref` la sección del
@@ -404,10 +406,17 @@ Las 6 preguntas K3 valen 2 puntos y las 34 de K1/K2 valen 1: 40 preguntas dan 46
 corte oficial está en 30 (65%). El reloj ofrece 75 minutos —los 60 oficiales más el 25% que ISTQB
 concede a quien presenta en un idioma que no es el suyo— o los 60 pelados.
 
-**El banco tiene 79 preguntas para 40 huecos.** Cada intento recorre el blueprint objetivo por
+**Hay dos exámenes y una mezcla.** El **A** (79 preguntas) y el **B** (77) cubren el mismo temario
+por caras distintas: donde el A pregunta por la IA simbólica, el B pregunta por el aprendizaje
+profundo; donde el A pide identificar el formato de salida, el B pide el contexto o las
+restricciones. Es lo mismo que hace ISTQB con sus exámenes de muestra A y B. **Mezcla** tira de los
+dos bancos a la vez (156 preguntas). Comprobado: **0 enunciados y 0 respuestas correctas idénticas**
+entre los dos bancos, y los identificadores no se solapan, así que la mezcla no puede duplicar nada.
+
+Con cualquiera de los tres, cada intento recorre el blueprint objetivo por
 objetivo, elige al azar las variantes que pide de cada uno, y baraja tanto las 40 preguntas como
-las 4 opciones de cada una. Medido sobre 300 exámenes simulados: 300 combinaciones distintas y
-ninguno malformado. Ni el orden ni la letra se pueden memorizar entre intentos.
+las 4 opciones de cada una. Medido sobre 300 exámenes simulados por juego: 300 combinaciones
+distintas y ninguno malformado en los tres. Ni el orden ni la letra se pueden memorizar entre intentos.
 
 **Durante el examen solo se ve el número de pregunta y lo que vale.** El capítulo, el objetivo de
 aprendizaje y el nivel K son pistas que el examen real no da —saber que una pregunta es del
@@ -422,7 +431,12 @@ sigue el modo claro/oscuro sin código extra.
 **Se guarda en `localStorage['examen_genai_v1']`**, con dos cosas: `curso`, el examen a medias con
 el **instante** de finalización —cerrar la pestaña por accidente no debe costar el intento, y al
 volver se reanuda con el tiempo que quedaba de verdad, no con el que quedaba al guardar—; e
-`intentos`, el histórico con puntos, porcentaje, minutos usados y desglose por capítulo.
+`intentos`, el histórico con puntos, porcentaje, minutos usados, desglose por capítulo y **qué examen**
+se hizo, que es la columna que permite comparar dos intentos del mismo juego.
+
+**Elegir va antes de leer.** Los dos bloques de arranque —juego y reloj— están justo debajo de los
+cuatro datos del examen, por encima del reparto por capítulo y de las reglas. Al final, que es donde
+estaban al principio, obligaban a bajar hasta el fondo de la pantalla solo para poder empezar.
 
 Para que un paso pueda disparar algo de la app en vez de abrir un enlace, `mdPintar()` aprendió a
 pintar `paso.boton` (HTML nuestro, detrás de `linkHtml`), con el estilo `.md-paso-btn`.

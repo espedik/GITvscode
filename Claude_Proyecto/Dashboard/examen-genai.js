@@ -34,12 +34,31 @@
   const LS = 'examen_genai_v1';
   const D = () => window.EXAMEN_GENAI;
 
+  /* Los dos juegos de preguntas. El A y el B cubren el mismo temario por caras
+     distintas —ninguna pregunta del B repite el ángulo de una del A—, igual que
+     los exámenes de muestra A y B de ISTQB. `AB` tira de los dos a la vez: los
+     identificadores no se solapan, así que la mezcla no puede duplicar nada. */
+  const SETS = {
+    A:  { n: 'Examen A', d: 'El primer juego de preguntas' },
+    B:  { n: 'Examen B', d: 'El segundo, sin repetir ningún ángulo del A' },
+    AB: { n: 'Mezcla', d: 'Los dos bancos a la vez: la prueba más dura' }
+  };
+  function bancoDe(s) {
+    const a = D().banco;
+    const b = (window.EXAMEN_GENAI_B && window.EXAMEN_GENAI_B.banco) || [];
+    if (s === 'B') return b.length ? b : a;
+    if (s === 'AB') return a.concat(b);
+    return a;
+  }
+  function haySetB() { return !!(window.EXAMEN_GENAI_B && window.EXAMEN_GENAI_B.banco.length); }
+
   /* ── Estado vivo ────────────────────────────────────────────────────── */
-  let ex = null;        // { preguntas, resp, marcadas, i, finEn, minutos, inicio }
+  let ex = null;        // { preguntas, resp, marcadas, i, finEn, minutos, inicio, set }
   let vista = 'inicio'; // inicio | test | fin | revision
   let tick = null;
   let resultado = null;
   let filtroFallos = false;
+  let setElegido = 'A';
 
   /* ── Utilidades ─────────────────────────────────────────────────────── */
   const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -64,7 +83,8 @@
     if (!ex) return;
     const g = guardado();
     g.curso = { preguntas: ex.preguntas, resp: ex.resp, marcadas: ex.marcadas,
-                i: ex.i, finEn: ex.finEn, minutos: ex.minutos, inicio: ex.inicio };
+                i: ex.i, finEn: ex.finEn, minutos: ex.minutos, inicio: ex.inicio,
+                set: ex.set };
     guardar(g);
   }
   function borrarCurso() { const g = guardado(); delete g.curso; guardar(g); }
@@ -76,11 +96,12 @@
   };
 
   /* ── Armar un examen conforme al blueprint ──────────────────────────── */
-  function armar(minutos) {
+  function armar(minutos, set) {
     const d = D();
+    const banco = bancoDe(set);
     const preguntas = [];
     d.blueprint.forEach(b => {
-      const variantes = barajar(d.banco.filter(q => q.lo === b.lo));
+      const variantes = barajar(banco.filter(q => q.lo === b.lo));
       variantes.slice(0, b.n).forEach(q => {
         const correcta = q.o[q.r];
         const ops = barajar(q.o);
@@ -97,6 +118,7 @@
       marcadas: new Array(p.length).fill(false),
       i: 0,
       minutos: minutos,
+      set: set,
       inicio: Date.now(),
       finEn: Date.now() + minutos * 60000
     };
@@ -125,12 +147,12 @@
       pct: Math.round(pts / d.meta.puntos * 100),
       aprobado: pts >= d.meta.corte,
       caps: caps, ks: ks, ms: usados,
-      fecha: Date.now(), minutos: ex.minutos
+      fecha: Date.now(), minutos: ex.minutos, set: ex.set || 'A'
     };
     const g = guardado();
     g.intentos = (g.intentos || []).concat([{
       fecha: resultado.fecha, pts: pts, max: d.meta.puntos, pct: resultado.pct,
-      aprobado: resultado.aprobado, ms: usados, minutos: ex.minutos,
+      aprobado: resultado.aprobado, ms: usados, minutos: ex.minutos, set: ex.set || 'A',
       caps: Object.keys(caps).reduce((a, c) => { a[c] = caps[c].pts + '/' + caps[c].max; return a; }, {})
     }]).slice(-40);
     delete g.curso;
@@ -175,9 +197,11 @@
 
     const filas = hist.slice(0, 6).map(t => {
       const f = new Date(t.fecha);
+      const s = SETS[t.set || 'A'];
       return `<tr>
         <td>${f.toLocaleDateString('es-MX', { day: '2-digit', month: 'short' })}
             <span class="xg-hora">${f.toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit' })}</span></td>
+        <td><span class="xg-tag">${esc(s ? s.n : t.set)}</span></td>
         <td class="xg-num">${t.pts}/${t.max}</td>
         <td class="xg-num">${t.pct}%</td>
         <td class="xg-num">${mmss(t.ms)}</td>
@@ -198,7 +222,7 @@
       ${curso ? `
       <div class="xg-reanudar">
         <div>
-          <b>Tienes un examen a medias.</b>
+          <b>Tienes un examen a medias${SETS[curso.set || 'A'] ? ' — ' + esc(SETS[curso.set || 'A'].n) : ''}.</b>
           <span>Te quedan ${mmss(curso.finEn - Date.now())} y llevas
           ${curso.resp.filter(x => x !== null).length} de ${curso.preguntas.length} respondidas.</span>
         </div>
@@ -210,6 +234,34 @@
         <div class="xg-dato"><b>${d.meta.puntos}</b><span>puntos</span></div>
         <div class="xg-dato"><b>${d.meta.corte}</b><span>para aprobar (${d.meta.cortePct}%)</span></div>
         <div class="xg-dato"><b>${d.meta.minutos}′</b><span>oficiales</span></div>
+      </div>
+
+      ${haySetB() ? `
+      <div class="xg-arranque">
+        <div class="xg-arranque-t">Elige el juego de preguntas</div>
+        <div class="xg-sets">
+          ${Object.keys(SETS).map(k => `
+            <button class="xg-set${setElegido === k ? ' on' : ''}" onclick="XGenAI.elegirSet('${k}')">
+              <b>${esc(SETS[k].n)}</b>
+              <span>${esc(SETS[k].d)}</span>
+              <i>${bancoDe(k).length} preguntas en banco</i>
+            </button>`).join('')}
+        </div>
+        <p class="xg-nota">Los tres arman el mismo examen: 40 preguntas y 46 puntos con el reparto
+        oficial. Cambia de dónde salen. Ninguna pregunta del <b>Examen B</b> repite el ángulo de una
+        del A — es el mismo temario visto por la otra cara.</p>
+      </div>` : ''}
+
+      <div class="xg-arranque">
+        <div class="xg-arranque-t">Elige el reloj${haySetB() ? ` · vas a hacer el <b>${esc(SETS[setElegido].n)}</b>` : ''}</div>
+        <div class="xg-arranque-b">
+          <button class="xg-b xg-b-p" onclick="XGenAI.empezar(75)">
+            <b>75 minutos</b><span>Tu caso: +25% por presentar en un idioma que no es el tuyo</span>
+          </button>
+          <button class="xg-b" onclick="XGenAI.empezar(60)">
+            <b>60 minutos</b><span>El tiempo oficial base, si quieres apretar</span>
+          </button>
+        </div>
       </div>
 
       <div class="xg-bloque">
@@ -240,23 +292,11 @@
         </ul>
       </div>
 
-      <div class="xg-arranque">
-        <div class="xg-arranque-t">Elige el reloj</div>
-        <div class="xg-arranque-b">
-          <button class="xg-b xg-b-p" onclick="XGenAI.empezar(75)">
-            <b>75 minutos</b><span>Tu caso: +25% por presentar en un idioma que no es el tuyo</span>
-          </button>
-          <button class="xg-b" onclick="XGenAI.empezar(60)">
-            <b>60 minutos</b><span>El tiempo oficial base, si quieres apretar</span>
-          </button>
-        </div>
-      </div>
-
       ${hist.length ? `
       <div class="xg-bloque">
         <div class="xg-bloque-t">Tus intentos ${mejor !== null ? `<span class="xg-mejor">mejor: ${mejor}%</span>` : ''}</div>
         <table class="xg-tabla xg-tabla-hist">
-          <thead><tr><th>Fecha</th><th>Puntos</th><th>%</th><th>Tiempo</th><th></th></tr></thead>
+          <thead><tr><th>Fecha</th><th>Examen</th><th>Puntos</th><th>%</th><th>Tiempo</th><th></th></tr></thead>
           <tbody>${filas}</tbody>
         </table>
         ${hist.length > 6 ? `<p class="xg-nota">Se muestran los 6 últimos de ${hist.length}.</p>` : ''}
@@ -305,6 +345,7 @@
           <div class="xg-mig">
             <span class="xg-n">Pregunta ${ex.i + 1} / ${total}</span>
             <span class="xg-tag">${q.pts} ${q.pts === 1 ? 'punto' : 'puntos'}</span>
+            ${ex.set && SETS[ex.set] && haySetB() ? `<span class="xg-tag">${esc(SETS[ex.set].n)}</span>` : ''}
           </div>
           <div class="xg-reloj-caja">
             <span class="xg-reloj-lbl">Tiempo</span>
@@ -357,7 +398,7 @@
     return `
     <div class="xg-fin">
       <div class="xg-veredicto ${r.aprobado ? 'ok' : 'no'}">
-        <div class="xg-veredicto-l">${r.aprobado ? 'APROBADO' : 'NO APROBADO'}</div>
+        <div class="xg-veredicto-l">${r.aprobado ? 'APROBADO' : 'NO APROBADO'}${SETS[r.set] && haySetB() ? ' · ' + esc(SETS[r.set].n.toUpperCase()) : ''}</div>
         <div class="xg-veredicto-n">${r.pts}<span>/${r.max} puntos</span></div>
         <div class="xg-veredicto-d">${r.pct}% · el corte está en ${d.meta.corte} puntos (${d.meta.cortePct}%)</div>
       </div>
@@ -374,7 +415,9 @@
         ${caps}
         <p class="xg-nota">${falla.length
           ? `Por debajo del 65% en <b>${falla.join(' y ')}</b>. Ahí es donde toca releer el syllabus antes del siguiente intento — la revisión de abajo te dice la sección exacta de cada fallo.`
-          : 'Vas por encima del 65% en todos los capítulos. Repite el simulacro en unos días: cada intento arma preguntas distintas del banco.'}</p>
+          : (haySetB() && r.set !== 'AB'
+              ? `Vas por encima del 65% en todos los capítulos. Prueba ahora el <b>${esc(SETS[r.set === 'A' ? 'B' : 'A'].n)}</b>, que ataca el mismo temario por otra cara, o la <b>Mezcla</b> si quieres el banco entero.`
+              : 'Vas por encima del 65% en todos los capítulos. Repite el simulacro en unos días: cada intento arma preguntas distintas del banco.')}</p>
       </div>
 
       <div class="xg-fin-acc">
@@ -461,8 +504,14 @@
       document.body.classList.remove('xg-abierto');
     },
 
+    elegirSet: function (s) {
+      if (!SETS[s]) return;
+      setElegido = s;
+      pintar();
+    },
+
     empezar: function (min) {
-      armar(min);
+      armar(min, setElegido);
       vista = 'test';
       pintar();
     },
@@ -471,6 +520,7 @@
       const g = guardado();
       if (!g.curso || g.curso.finEn <= Date.now()) { API.aInicio(); return; }
       ex = g.curso;
+      if (ex.set && SETS[ex.set]) setElegido = ex.set;
       vista = 'test';
       pintar();
     },
@@ -668,6 +718,19 @@ body.xg-abierto{overflow:hidden}
   border:1px solid rgba(0,232,122,.24);background:linear-gradient(135deg,rgba(0,232,122,.07),transparent 70%)}
 .xg-arranque-t{font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
   color:var(--g);margin-bottom:12px}
+.xg-arranque-t b{color:var(--text)}
+/* Los tres juegos de preguntas. Chips grandes: se elige una vez y se ve cuál está activo. */
+.xg-sets{display:flex;gap:10px;flex-wrap:wrap}
+.xg-set{flex:1 1 200px;text-align:left;padding:13px 15px;border-radius:13px;cursor:pointer;
+  font-family:inherit;border:1px solid rgba(var(--ov),.13);background:rgba(var(--ov),.04);
+  transition:border-color .15s,background .15s}
+.xg-set:hover{background:rgba(var(--ov),.09)}
+.xg-set.on{border-color:rgba(0,232,122,.5);background:rgba(0,232,122,.1)}
+.xg-set b{display:block;font-size:14px;font-weight:800;color:var(--text);margin-bottom:3px}
+.xg-set.on b{color:var(--g)}
+.xg-set span{display:block;font-size:11.5px;line-height:1.4;color:var(--text3)}
+.xg-set i{display:block;margin-top:6px;font-family:var(--mono);font-style:normal;font-size:10px;
+  color:var(--text3);opacity:.8}
 .xg-arranque-b{display:flex;gap:11px;flex-wrap:wrap}
 .xg-arranque-b .xg-b{flex:1 1 240px;text-align:left;padding:14px 16px}
 .xg-arranque-b .xg-b b{display:block;font-size:15px;margin-bottom:3px}
