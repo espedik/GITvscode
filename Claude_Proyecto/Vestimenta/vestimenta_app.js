@@ -8,9 +8,9 @@ const load = () => { try { const d = localStorage.getItem(KEY); if (d) S = { ...
   if (!Array.isArray(S.color)) S.color = []; };
 load();
 
-const SECS = ['hoy','inicio','basicos','chaquetas','zapatos','accesorios','colorimetria','combinaciones','ejercicio','bodas'];
+const SECS = ['hoy','inicio','playeras','pantalones','basicos','chaquetas','zapatos','accesorios','colorimetria','combinaciones','ejercicio','bodas'];
 const STITLE = {
-  hoy:'Hoy', inicio:'🏠 Inicio', basicos:'👕 Básicos', chaquetas:'🧥 Chaquetas', zapatos:'👞 Zapatos', accesorios:'⌚ Accesorios',
+  hoy:'Hoy', inicio:'🏠 Inicio', playeras:'Playeras', pantalones:'Pantalones', basicos:'👕 Básicos', chaquetas:'🧥 Chaquetas', zapatos:'👞 Zapatos', accesorios:'⌚ Accesorios',
   colorimetria:'🎨 Colorimetría', combinaciones:'🧩 Combinaciones', ejercicio:'🏋️ Ejercicio', bodas:'💍 Bodas'
 };
 
@@ -241,14 +241,42 @@ function renderColorimetria() {
 // Las claves van CUALIFICADAS por tipo (`p:negro`, `t:negro`) y no por id a secas:
 // «negro» y «marino» existen como pantalón Y como playera, y con la id sola marcar la
 // playera negra habría marcado también los jeans negros.
-function tengoColor(tipo, id) { return S.color.indexOf(tipo + ':' + id) >= 0; }
+//
+// CUATRO DE LAS 22 VIVEN EN EL CATÁLOGO. `COLORIMETRIA` las enlaza con el campo `item`
+// (blanco→b1, negro→b2, índigo→b3, caqui→b4), así que esas se leen de `S.marcados` y no
+// de `S.color`: marcar «Playera blanca lisa» en Básicos y marcarla en la ruta tienen que
+// ser la misma acción. Sin esto se marcaban las cuatro en Básicos y Hoy seguía diciendo
+// que no había outfit, que es exactamente lo que pasó.
+function prendaColor(tipo, id) {
+  const arr = tipo === 'p' ? COLORIMETRIA.pantalones : COLORIMETRIA.playeras;
+  return arr.filter(x => x.id === id)[0] || null;
+}
+
+function tengoColor(tipo, id) {
+  const pr = prendaColor(tipo, id);
+  if (pr && pr.item) return S.marcados.indexOf(pr.item) >= 0;
+  return S.color.indexOf(tipo + ':' + id) >= 0;
+}
 
 function toggleColor(tipo, id) {
-  const k = tipo + ':' + id;
-  const i = S.color.indexOf(k);
-  if (i === -1) S.color.push(k); else S.color.splice(i, 1);
+  const pr = prendaColor(tipo, id);
+  if (pr && pr.item) {
+    const i = S.marcados.indexOf(pr.item);
+    if (i === -1) S.marcados.push(pr.item); else S.marcados.splice(i, 1);
+  } else {
+    const k = tipo + ':' + id;
+    const i = S.color.indexOf(k);
+    if (i === -1) S.color.push(k); else S.color.splice(i, 1);
+  }
   save();
+  updateCounter();
   document.getElementById('content-root').innerHTML = RENDERS[secActual]();
+}
+
+// Cuántas de las 22 tienes, mirando los dos sitios.
+function closetColor() {
+  return COLORIMETRIA.pantalones.filter(x => tengoColor('p', x.id)).length
+       + COLORIMETRIA.playeras.filter(x => tengoColor('t', x.id)).length;
 }
 
 // Las combinaciones que YA puedes armar: las dos prendas marcadas.
@@ -377,7 +405,7 @@ function renderHoy() {
     </div>
     <div class="hy-pasos">
       ${ruta.map((p, i) => `<label class="hy-paso">
-        <span class="hy-paso-n">${String(S.color.length + i + 1).padStart(2, '0')}</span>
+        <span class="hy-paso-n">${String(closetColor() + i + 1).padStart(2, '0')}</span>
         <span class="hy-sw" style="background:${p.hex}"></span>
         <span class="hy-paso-t">${p.n}
           <em>${p.tipo === 'p' ? 'PANTALÓN' : 'PLAYERA'}</em></span>
@@ -387,6 +415,88 @@ function renderHoy() {
       </label>`).join('')}
     </div>
   </div>`;
+}
+
+// ─── LAS PRENDAS DE COLOR, PARA COMPRAR ──────────────────────────────────────
+// Las 22 de la colorimetría, cada una con LO QUE ABRE: con cuántas contrapartes está
+// en verde. Ese número es el que ordena la lista, y es el mismo que manda en la ruta de
+// compra de Hoy — aquí se ve el catálogo entero y allí solo el siguiente paso.
+//
+// Las fichas no están escritas a mano: salen de `COLORIMETRIA` cruzada con
+// `COLORIMETRIA.compra`, que guarda tiendas y precio POR TIPO de prenda. Un color nuevo
+// en los datos aparece aquí solo.
+function abreCon(tipo, id) {
+  const C = COLORIMETRIA;
+  const otros = tipo === 'p' ? C.playeras : C.pantalones;
+  return otros.map(o => {
+    const r = tipo === 'p' ? C.reglas[id][o.id] : C.reglas[o.id][id];
+    return { id: o.id, n: o.n, hex: o.hex, v: r[0] };
+  });
+}
+
+function fichaColor(tipo, pr, max) {
+  const con = abreCon(tipo, pr.id);
+  const abre = con.filter(x => x.v === 's').length;
+  const tengo = tengoColor(tipo, pr.id);
+  const cmp = COLORIMETRIA.compra[tipo === 'p' ? pr.tipo : 'playera'];
+  const cero = abre === 0;
+
+  const puntos = con.map(x => `<span class="pc-pt${x.v === 's' ? ' si' : ''}"
+    style="background:${x.hex}" title="${x.n} — ${x.v === 's' ? 'va siempre'
+      : (x.v === 'o' ? 'con cuidado' : 'evítalo')}"></span>`).join('');
+
+  const tiendas = cmp.tiendas.map(c => `<div class="pc-t">
+    <span>${c.u ? `<a href="${c.u}" target="_blank" rel="noopener">${c.t} ↗</a>` : c.t}</span>
+    <b>${c.p}</b></div>`).join('');
+
+  return `<div class="pc${tengo ? ' tengo' : ''}${cero ? ' cero' : ''}">
+    <div class="pc-sw" style="background:${pr.hex}">
+      ${abre === max && max > 0 ? '<span class="pc-top">Va con todos</span>' : ''}
+      ${tengo ? '<span class="pc-ok">Ya la tienes</span>' : ''}
+    </div>
+    <div class="pc-b">
+      <div class="pc-h">
+        <div class="pc-n">${pr.n}</div>
+        <div class="pc-abre">${abre}<em>/${con.length}</em></div>
+      </div>
+      <div class="pc-pts">${puntos}</div>
+      ${cero
+        ? `<div class="pc-cero">No la compres: no está en verde con ninguno de los
+             ${con.length}. ${pr.n === 'Berenjena' ? 'El morado necesita un fondo neutro oscuro que no tienes.'
+             : 'Demasiada saturación para lo que hay abajo.'}</div>`
+        : `<div class="pc-tiendas">${tiendas}</div>`}
+      <label class="pc-check">
+        <input type="checkbox" ${tengo ? 'checked' : ''}
+          onchange="toggleColor('${tipo}','${pr.id}')">
+        <span>Ya la tengo</span>
+      </label>
+    </div>
+  </div>`;
+}
+
+function renderColorCompra(tipo, titulo, sub) {
+  const arr = (tipo === 'p' ? COLORIMETRIA.pantalones : COLORIMETRIA.playeras)
+    .map(pr => ({ pr: pr, abre: abreCon(tipo, pr.id).filter(x => x.v === 's').length }));
+  const max = Math.max.apply(null, arr.map(x => x.abre));
+  arr.sort((a, b) => b.abre - a.abre);
+  const tengo = arr.filter(x => tengoColor(tipo, x.pr.id)).length;
+
+  return `<div class="sh"><h2>${titulo}</h2><div class="sub">${sub}</div></div>
+  <div class="pc-barra">
+    <div><div class="hy-lbl">Ya tienes</div><div class="pc-cif">${tengo}<em> / ${arr.length}</em></div></div>
+    <div><div class="hy-lbl">Ordenadas por</div><div class="pc-cif2">lo que abren</div></div>
+  </div>
+  <div class="pc-grid">${arr.map(x => fichaColor(tipo, x.pr, max)).join('')}</div>`;
+}
+
+function renderPlayeras() {
+  return renderColorCompra('t', 'Playeras',
+    'Los 16 colores, ordenados por con cuántos de tus 6 pantalones quedan bien. Los cuadritos de cada ficha son los pantalones: el que se ve entero está en verde con ese color, el apagado no.');
+}
+
+function renderPantalones() {
+  return renderColorCompra('p', 'Pantalones',
+    'Los 6, ordenados igual. Todos aceptan ocho playeras, así que aquí lo que cambia no es cuántas sino cuáles — los cuadritos dicen exactamente eso.');
 }
 
 // ─── COMBINACIONES ───────────────────────────────────────────────────────────
@@ -452,6 +562,8 @@ function renderCombinaciones() {
 const RENDERS = {
   hoy: renderHoy,
   inicio: renderInicio,
+  playeras: renderPlayeras,
+  pantalones: renderPantalones,
   basicos: () => renderCategoria('👕 Básicos', 'Las piezas que más combinaciones desbloquean por peso invertido — la base de todo lo demás.', BASICOS),
   chaquetas: () => renderCategoria('🧥 Chaquetas', 'Una capa exterior cambia todo un outfit. No necesitas las 6 — elige 2-3 según tu temporada y presupuesto.', CHAQUETAS),
   zapatos: () => renderCategoria('👞 Zapatos', 'El zapato es lo primero que se nota. Cada uno de estos cubre una función distinta, no son intercambiables.', ZAPATOS),

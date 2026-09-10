@@ -195,17 +195,17 @@ const COLORIMETRIA = {
   // el marino lo pide el tip de b4 ("un caqui y un azul marino cubren el 90%"). Los
   // otros tres completan la semana y no están todavía en el catálogo.
   pantalones: [
-    {id:'indigo', n:'Jeans índigo', hex:'#42618A', item:'b3',
+    {id:'indigo', tipo:'jeans', n:'Jeans índigo', hex:'#42618A', item:'b3',
       lectura:'Frío, valor medio, saturación media. El más difícil de los seis: al ser azul y de valor medio se pelea con los azules y con los grises oscuros.'},
-    {id:'oscuro', n:'Jeans azul oscuro', hex:'#2B3A55',
+    {id:'oscuro', tipo:'jeans', n:'Jeans azul oscuro', hex:'#2B3A55',
       lectura:'Frío y oscuro. Aguanta mucha más saturación arriba que el índigo porque hay salto de valor. Es tu jean de viernes de oficina.'},
-    {id:'negro', n:'Jeans negro', hex:'#232326',
+    {id:'negro', tipo:'jeans', n:'Jeans negro', hex:'#232326',
       lectura:'Neutro y muy oscuro. El más permisivo de tus jeans: al no tener color propio, no compite con nada de arriba.'},
-    {id:'caqui', n:'Chino caqui', hex:'#C0A57C', item:'b4',
+    {id:'caqui', tipo:'chino', n:'Chino caqui', hex:'#C0A57C', item:'b4',
       lectura:'Cálido y claro. El único claro de los seis, así que aquí manda el pantalón: arriba conviene algo más oscuro que él.'},
-    {id:'marino', n:'Chino azul marino', hex:'#293650',
+    {id:'marino', tipo:'chino', n:'Chino azul marino', hex:'#293650',
       lectura:'Frío y oscuro, y liso: al no tener la textura del denim aguanta más formalidad. Es tu pantalón de junta.'},
-    {id:'gris', n:'Chino gris piedra', hex:'#7D7B76',
+    {id:'gris', tipo:'chino', n:'Chino gris piedra', hex:'#7D7B76',
       lectura:'Neutro de valor medio: no tiene temperatura, así que no se pelea con nada. El más permisivo de los seis y el que no tienes.'},
   ],
 
@@ -255,6 +255,32 @@ const COLORIMETRIA = {
       zapato:'Sneakers blancos',
       nota:'Aquí entra todo lo que la matriz da por bueno. El sneaker blanco sube el valor abajo y cierra la silueta.'},
   ],
+
+  // Dónde se compra, por tipo de prenda. Los rangos y los links son los mismos de `b1`
+  // (playera lisa), `b3` (jeans) y `b4` (chino) en BASICOS, verificados uno por uno: una
+  // playera burdeos cuesta lo que una blanca, así que el precio va por TIPO y no por
+  // color. Poner un precio distinto para cada uno de los 16 colores sería inventarlo.
+  // Uniqlo va sin link a propósito: no tiene tienda oficial en México.
+  compra: {
+    playera: {
+      etiqueta:'Playera lisa de algodón',
+      tiendas:[{t:'Uniqlo (Supima/Airism)',p:'$299-399'},
+               {t:'Zara',p:'$299-449',u:'https://www.zara.com/mx/'},
+               {t:'H&M',p:'$199-299',u:'https://www2.hm.com/es_mx/index.html'}],
+      tip:'Lisa y sin estampado: es lo que hace que el color combine con el pantalón y no compita con él.'},
+    jeans: {
+      etiqueta:'Jeans corte recto o slim',
+      tiendas:[{t:'Levi\'s 511/505',p:'$999-1,499',u:'https://www.levi.com.mx/'},
+               {t:'Zara',p:'$699-899',u:'https://www.zara.com/mx/'},
+               {t:'C&amp;A / Suburbia',p:'$499-699',u:'https://www.cyc.com.mx/'}],
+      tip:'Recto o slim, no skinny ni ancho: es el corte que funciona igual con sneaker y con zapato.'},
+    chino: {
+      etiqueta:'Pantalón chino',
+      tiendas:[{t:'Dockers',p:'$899-1,199',u:'https://www.dockers.com.mx/'},
+               {t:'Zara',p:'$699-899',u:'https://www.zara.com/mx/'},
+               {t:'H&M',p:'$549-699',u:'https://www2.hm.com/es_mx/index.html'}],
+      tip:'El chino es lo que sube de registro un outfit sin llegar a pantalón de vestir.'},
+  },
 
   reglas: {
     indigo: {

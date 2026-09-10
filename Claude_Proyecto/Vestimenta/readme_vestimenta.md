@@ -31,13 +31,14 @@ servía.
 
 ## Estructura de contenido
 
-Diez secciones en cuatro grupos:
+Doce secciones en cuatro grupos:
 
 - **Principal** — **Hoy** (`renderHoy()`), la sección de arranque, contada abajo; y
   🏠 Inicio (`renderInicio()`): filosofía de guardarropa cápsula y el plan de
   compra por fases (`FASES`, 4 tarjetas), con el mismo lenguaje de «fases» que el Plan
   Maestro de `Coach/Coach.html`.
-- **Qué comprar** — 👕 Básicos (8), 🧥 Chaquetas (6), 👞 Zapatos (6), ⌚ Accesorios (5).
+- **Qué comprar** — **Playeras** (16) y **Pantalones** (6), que son las prendas de color
+  y se cuentan abajo; más 👕 Básicos (8), 🧥 Chaquetas (6), 👞 Zapatos (6), ⌚ Accesorios (5).
   `renderCategoria()` pinta una rejilla de `.item-card`: nombre, para qué sirve, 2-3 tiendas
   con rango de precio en MXN (70 de 74 con link real y verificado), un tip y un checkbox
   «Ya lo tengo / lo quiero comprar». **25 items marcables**, que es lo que cuenta el sidebar.
@@ -52,6 +53,37 @@ Diez secciones en cuatro grupos:
     se dibuja con recuadro punteado y «no está en tus listas» en vez de fingir que la cubre.
   - El estado del combo y el «desde $X para completarlo» son **derivados**: `precioMin(item)`
     lee los números de los rangos de `compra[].p` y toma el menor.
+
+## Playeras y Pantalones — todo lo comprable, por sección
+
+**Las 22 prendas de la colorimetría, cada una con LO QUE ABRE**: con cuántas
+contrapartes está en verde. Ese número ordena la lista y es el mismo que manda en la
+ruta de Hoy — aquí se ve el catálogo entero, allí solo el paso siguiente.
+
+Las fichas **no están escritas a mano**: `renderColorCompra(tipo, …)` cruza
+`COLORIMETRIA` con `COLORIMETRIA.compra`, que guarda tiendas y precio **por tipo de
+prenda** (playera, jeans, chino). Un color nuevo en los datos aparece aquí solo.
+
+**El precio va por tipo y no por color, a propósito.** Los rangos y los links son los
+mismos de `b1` (playera lisa), `b3` (jeans) y `b4` (chino) en `BASICOS`, verificados uno
+por uno: una playera burdeos cuesta lo que una blanca. Poner un precio distinto para
+cada uno de los 16 colores sería inventarlo.
+
+Cada ficha lleva **los cuadritos de las contrapartes**: uno por cada prenda del otro
+eje, entero si están en verde y apagado si no. Se lee cuántas *y cuáles* sin leer una
+palabra. Las que abren el máximo llevan la insignia «Va con todos» —blanco, verde oliva
+y burdeos, las tres que van con los seis pantalones— y las que **no abren ninguna**
+(rojo ladrillo, rosa palo, berenjena) salen atenuadas y con «no la compres» en vez de
+tiendas: enseñar dónde comprar algo que la tabla desaconseja sería contradecirse.
+
+Los seis pantalones aceptan ocho playeras cada uno, así que ahí el número no discrimina
+y lo que informa son los cuadritos: no cuántas, sino cuáles.
+
+**Marcar es la misma acción en los dos sitios.** Cuatro de las 22 viven también en el
+catálogo y `COLORIMETRIA` las enlaza con el campo `item` (blanco→`b1`, negro→`b2`,
+índigo→`b3`, caqui→`b4`): esas se leen y se escriben en `S.marcados`, las otras 18 en
+`S.color`. Sin ese enlace se marcaban las cuatro en Básicos y **Hoy seguía diciendo que
+no había outfit** — que es exactamente lo que pasaba.
 
 ## Colorimetría — qué playera va con qué pantalón
 
@@ -221,14 +253,16 @@ clóset** sobre 22 y **combinaciones** sobre 48.
 
 ## Probado
 
-Con Chromium sobre `file://`, a **1600px y 390px**, en tema claro y oscuro: las diez
-secciones sin desbordamiento horizontal, **cero elementos `<img>`** en toda la app, cero
+Con Chromium sobre `file://`, a **1600px y 390px**, en tema claro y oscuro: las doce
+secciones sin desbordamiento horizontal, **cero elementos `<img>`** en toda la app, cero  
 peticiones fallidas y cero errores de consola. Las 48 combinaciones se pintan y el filtro
 devuelve 27 / 18 / 40. El checklist marca, persiste y actualiza el contador.
 
 El flujo de Hoy, medido de punta a punta: con el clóset vacío sale el estado vacío y la
 ruta con 4 pasos; marcando esos 4 aparecen el outfit del día, 3 alternativas y la cuenta
-pasa a 4 de 48, con la ruta proyectando 16.
+pasa a 4 de 48, con la ruta proyectando 16. Y el camino que fallaba: marcar `b1`–`b4` en
+**Básicos** da outfit en Hoy y deja 4 de 22 en el clóset, con las fichas de Playeras y
+Pantalones marcadas solas.
 
 ## Responsivo — iPad / iPhone 15 Pro (2026-08-03)
 

@@ -57,6 +57,10 @@
   --ov:236,236,234;--border:rgba(var(--ov),.18);
 }
 body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);display:flex;min-height:100vh;font-size:14px}
+/* El enlace tenía estilo solo dentro de `.buy-opt`; en cualquier otro sitio salía en
+   el azul del navegador, que en «Cero» es el único color que no puede aparecer. */
+a{color:var(--p);text-decoration:none;border-bottom:1px solid rgba(var(--ov),.28)}
+a:hover{color:var(--p-d);border-bottom-color:var(--p)}
 ::-webkit-scrollbar{width:4px;height:4px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:rgba(var(--ov),.14);border-radius:2px}
 .sidebar{width:var(--sw);background:var(--bg);border-right:var(--bd);display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:100;transition:transform .25s}
 .sb-logo{padding:24px 22px 18px}
@@ -151,6 +155,59 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var
   .hy-h-tx,.hy-compra-n{padding:20px 16px}
   .hy-big{font-size:70px}
 }
+/* ── LAS PRENDAS DE COLOR, PARA COMPRAR ─────────────────────────────────
+   La ficha entera es la prenda: la muestra ocupa la cabeza de la tarjeta, a sangre,
+   y todo lo demás es el argumento para comprarla. El número grande es cuántas
+   contrapartes abre, que es lo que ordena la lista. */
+.pc-barra{display:flex;border-top:var(--bd);border-bottom:var(--bd);margin-bottom:20px}
+.pc-barra>div{padding:13px 22px 14px}
+.pc-barra>div+div{border-left:var(--bd-fina)}
+.pc-barra .hy-lbl{color:var(--text3)}
+.pc-cif{font-family:'Space Grotesk',monospace;font-size:27px;font-weight:700;
+  line-height:1.1;margin-top:4px;font-variant-numeric:tabular-nums}
+.pc-cif em{font-size:15px;font-style:normal;color:var(--text3)}
+.pc-cif2{font-family:var(--font-dsp);font-size:20px;font-weight:700;margin-top:6px;
+  letter-spacing:-.02em}
+.pc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(258px,1fr));gap:16px}
+.pc-grid>*{min-width:0}
+.pc{border:var(--bd);display:flex;flex-direction:column;background:var(--surface-2)}
+.pc.tengo{border-color:var(--p)}
+.pc.cero{opacity:.62}
+.pc-sw{height:78px;border-bottom:var(--bd);position:relative;display:flex;
+  align-items:flex-start;justify-content:flex-end;padding:8px}
+/* La insignia va sobre la muestra, en negro sobre el color: sea cual sea el color
+   de la prenda, el negro se lee — es el mismo criterio que la tinta del resto. */
+.pc-top,.pc-ok{font-family:'Space Grotesk',monospace;font-size:8.5px;font-weight:700;
+  letter-spacing:.14em;text-transform:uppercase;padding:4px 8px;background:#0a0a0a;
+  color:#ececea}
+.pc-ok{background:var(--p);color:#fff}
+.pc-b{padding:14px 16px 16px;display:flex;flex-direction:column;gap:11px;flex:1}
+.pc-h{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
+.pc-n{font-family:var(--font-dsp);font-size:19px;font-weight:800;letter-spacing:-.03em;
+  line-height:1.1}
+.pc-abre{font-family:var(--font-dsp);font-size:25px;font-weight:800;color:var(--p);
+  letter-spacing:-.04em;line-height:1}
+.pc-abre em{font-size:13px;font-style:normal;color:var(--text3);font-weight:700}
+/* Los cuadritos: uno por contraparte. Entero = está en verde con esta prenda;
+   apagado = no. Se lee cuántas Y cuáles sin leer una palabra. */
+.pc-pts{display:flex;gap:5px}
+.pc-pt{width:22px;height:14px;border:1px solid rgba(var(--ov),.3);opacity:.2;
+  filter:grayscale(1)}
+.pc-pt.si{opacity:1;filter:none;border-color:rgba(var(--ov),.55)}
+.pc-tiendas{display:flex;flex-direction:column;gap:5px;padding-top:10px;
+  border-top:var(--bd-fina)}
+.pc-t{display:flex;align-items:baseline;justify-content:space-between;gap:10px;
+  font-size:11.5px;color:var(--text2)}
+.pc-t b{font-family:'Space Grotesk',monospace;font-size:11px;font-weight:700;
+  color:var(--text);white-space:nowrap}
+.pc-cero{font-size:11.5px;color:var(--text2);line-height:1.55;padding-top:10px;
+  border-top:var(--bd-fina)}
+.pc-check{display:flex;align-items:center;gap:9px;margin-top:auto;padding-top:12px;
+  border-top:var(--bd-fina);font-size:12px;font-weight:700;cursor:pointer}
+.pc-check input{width:16px;height:16px;accent-color:var(--p);cursor:pointer}
+@media(max-width:560px){
+  .pc-grid{grid-template-columns:minmax(0,1fr)}
+}
 /* ── COLORIMETRÍA ────────────────────────────────────────────────────────
    La matriz: 16 playeras en FILAS y 6 pantalones en columnas. Al revés no cabe —
    16 columnas no entran ni en escritorio— y así entra entera sin apretar nada.
@@ -181,7 +238,7 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var
 .cm-pt.si{background:var(--g)}
 .cm-pt.ojo{background:transparent;border:2.5px solid var(--w)}
 .cm-pt.no{height:2.5px;border-radius:2px;background:var(--r)}
-.cm-nota{margin-top:16px;border-color:rgba(193,127,74,.28)}
+.cm-nota{margin-top:16px;border-color:var(--p)}
 .cm-nota .t{font-size:13px;font-weight:800;margin-bottom:9px}
 .cm-nota ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:7px}
 .cm-nota li{font-size:12.5px;color:var(--text2);line-height:1.55}
@@ -194,7 +251,7 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var
 .cb-f{padding:7px 13px;border-radius:20px;border:1.5px solid rgba(var(--ov),.12);
   background:var(--surface-2);color:var(--text2);font:600 12px inherit;font-family:inherit;
   cursor:pointer;display:inline-flex;align-items:center;gap:7px;transition:all .18s}
-.cb-f:hover{border-color:rgba(193,127,74,.4);color:var(--text)}
+.cb-f:hover{border-color:var(--p);color:var(--text)}
 .cb-f b{font-size:10.5px;font-weight:800;color:var(--text3);font-variant-numeric:tabular-nums}
 .cb-f.on{background:var(--p);border-color:var(--p);color:#fff}
 .cb-f.on b{color:rgba(255,255,255,.85)}
@@ -218,7 +275,7 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var
 .theme-toggle-btn{background:rgba(var(--ov),.06);border:1px solid rgba(var(--ov),.12);color:var(--text);width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .theme-toggle-btn:hover{background:rgba(var(--ov),.12)}
 .badge{display:inline-block;padding:3px 9px;border-radius:20px;font-size:10px;font-weight:700}
-.b-p{background:var(--p-l);color:var(--p);border:1px solid rgba(193,127,74,.3)}
+.b-p{background:var(--p-l);color:var(--p);border:1px solid var(--p)}
 .b-g{background:var(--g-l);color:var(--g);border:1px solid rgba(0,167,88,.25)}
 .b-n{background:rgba(var(--ov),.07);color:var(--text2)}
 
@@ -233,7 +290,7 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var
 /* Grid de items comprables */
 .item-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:18px}
 .item-card{border-radius:var(--r14);border:1px solid rgba(var(--ov),.07);background:var(--surface-2);overflow:hidden;box-shadow:var(--sh);transition:border-color .2s,transform .2s}
-.item-card:hover{border-color:rgba(193,127,74,.35);transform:translateY(-2px)}
+.item-card:hover{border-color:var(--p)}
 .item-body{padding:15px}
 .item-body h3{font-size:14.5px;font-weight:800;margin-bottom:4px}
 .item-use{font-size:12px;color:var(--text2);line-height:1.5;margin-bottom:10px}
@@ -258,7 +315,7 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var
 .combo-h h3{font-size:15px;font-weight:800;letter-spacing:-.015em}
 .combo-desc{font-size:12.5px;color:var(--text2);line-height:1.6;margin-top:5px;max-width:640px}
 .combo-est{flex:none;font-size:9.5px;font-weight:800;letter-spacing:.05em;padding:5px 11px;border-radius:7px;white-space:nowrap}
-.combo-est.falta{color:var(--p);background:var(--p-l);border:1px solid rgba(193,127,74,.42)}
+.combo-est.falta{color:var(--p);background:var(--p-l);border:1px solid var(--p)}
 .combo-est.ok{color:var(--g);background:var(--g-l);border:1px solid rgba(0,167,88,.25)}
 .combo-est.lejos{color:var(--text3);background:rgba(var(--ov),.05);border:1px solid rgba(var(--ov),.08)}
 
@@ -355,6 +412,8 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var
     <div class="nav-item active" onclick="nav('hoy')"><span class="ico">◆</span>Hoy</div>
     <div class="nav-item" onclick="nav('inicio')"><span class="ico">🏠</span>Inicio</div>
     <div class="nav-label">Qué comprar</div>
+    <div class="nav-item" onclick="nav('playeras')"><span class="ico">▪</span>Playeras</div>
+    <div class="nav-item" onclick="nav('pantalones')"><span class="ico">▬</span>Pantalones</div>
     <div class="nav-item" onclick="nav('basicos')"><span class="ico">👕</span>Básicos</div>
     <div class="nav-item" onclick="nav('chaquetas')"><span class="ico">🧥</span>Chaquetas</div>
     <div class="nav-item" onclick="nav('zapatos')"><span class="ico">👞</span>Zapatos</div>
@@ -419,9 +478,8 @@ function cpCabVest(){
       // Son las tres que importan al vestirse: cuantas puedo armar YA, cuanto llevo del
       // armario de color, y cuantas hay en total.
       {v:String(typeof disponibles==='function'?disponibles().length:''), k:'Puedes armar hoy'},
-      {v:(typeof COLORIMETRIA!=='undefined'
-          ? (JSON.parse(localStorage.getItem('vestimenta_v1')||'{}').color||[]).length
-            +' / '+(COLORIMETRIA.pantalones.length+COLORIMETRIA.playeras.length)
+      {v:(typeof closetColor==='function'
+          ? closetColor()+' / '+(COLORIMETRIA.pantalones.length+COLORIMETRIA.playeras.length)
           : ''), k:'Tu clóset'},
       {v:String(typeof combLista==='function'?combLista().length:''), k:'Combinaciones'},
     ],
