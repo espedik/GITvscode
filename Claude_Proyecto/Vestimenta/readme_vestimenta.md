@@ -1,6 +1,6 @@
 # vestimenta.html — Mi Guía de Vestimenta
 
-Aplicación web de una sola página (HTML+CSS+JS, sin backend) — catálogo/guía de compras de guardarropa: qué comprar (básicos, chaquetas, zapatos) y cómo combinarlo por ocasión (trabajo, casual, ejercicio, bodas, fiestas). **Nueva el 2026-08-01**, pedido explícito de Adán: *"hazme un html y proyecto de vestimenta, debes darme muchas opciones de que comprar, basicos chaquetas, zapatos, y ademas para cada ocacion... busca en alguna web que tenga una buena base de fotos y descargarlas y ponlas en el folder en especifico"*.
+Aplicación web de una sola página (HTML+CSS+JS, sin backend) — guía de guardarropa en dos mitades: **qué comprar** (básicos, chaquetas, zapatos, accesorios, con precio y link) y **cómo combinarlo** (la matriz de color y las 48 combinaciones que salen de ella). **Nueva el 2026-08-01**, pedido explícito de Adán: *"hazme un html y proyecto de vestimenta, debes darme muchas opciones de que comprar, basicos chaquetas, zapatos, y ademas para cada ocacion... busca en alguna web que tenga una buena base de fotos y descargarlas y ponlas en el folder en especifico"*.
 
 **Fuera del ecosistema principal** (igual que `Aleman/` y `Entrevistas/`, ver `../README.md` → "Mapa de carpetas") — no comparte datos con Finanzas/Coach/CuidadoPersonal/Dashboard, es una guía de referencia personal independiente.
 
@@ -9,23 +9,48 @@ Aplicación web de una sola página (HTML+CSS+JS, sin backend) — catálogo/gu�
 | Archivo | Qué es |
 |---|---|
 | `vestimenta.html` | Shell: sidebar, topbar, CSS, cascarón de `<div id="content-root">` |
-| `vestimenta_data.js` | Todo el contenido: `BASICOS`, `CHAQUETAS`, `ZAPATOS` (arrays de items comprables), `OCASIONES` (combos por ocasión), `FASES` (plan de compra), `COLORIMETRIA` (la matriz de color) |
-| `vestimenta_app.js` | Render (`RENDERS`), navegación (`nav()`), checklist (`toggleCheck()`), tema (`toggleTheme()`) |
-| `images/{basicos,chaquetas,zapatos,accesorios,trabajo,casual,ejercicio,bodas,fiestas}/` | 35 fotos descargadas, una carpeta por categoría/ocasión (`accesorios/` es nueva, 2026-08-03) |
-| `_image_sources.json` | Manifiesto de las 30 fotos: URL de origen, licencia y título — para atribución si se necesita en el futuro |
+| `vestimenta_data.js` | Todo el contenido: `BASICOS`, `CHAQUETAS`, `ZAPATOS`, `ACCESORIOS` (arrays de items comprables), `COLORIMETRIA` (la matriz de color y las reglas de ocasión), `OCASIONES` (solo ejercicio y bodas), `FASES` (plan de compra) |
+| `vestimenta_app.js` | Render (`RENDERS`), navegación (`nav()`), checklist (`toggleCheck()`), tema (`toggleTheme()`), las 48 combinaciones (`combLista()`) |
+
+## Sin fotos, a propósito
+
+**No hay una sola imagen en la app.** Las 35 que había se borraron, con su manifiesto.
+Adán (2026-09-09): *"osea queria que borraras todo y me dieras buenas combinaciones, por
+que lo que tenemos no me gusta nada"*, y antes: *"en vez de buscar imagenes feas por que no
+hay ninguna bonita"*. Dos rondas de sourcing con licencia libre no habían dado un catálogo
+que se viera bien, y para lo que la app tiene que resolver —qué me pongo con qué— la foto
+de una prenda genérica no aporta: lo que decide una combinación es el color.
+
+Lo que sustituye a la foto es el **color puro**: en Colorimetría, una muestra por prenda;
+en Combinaciones, dos bloques apilados en el orden en que se ven. El fondo carbón de la app
+ayuda — un color de tela se lee mucho mejor sobre carbón que sobre blanco.
+
+Las fichas de compra (Básicos, Chaquetas, Zapatos, Accesorios) siguen ahí **con sus precios
+y sus links verificados uno por uno**, ya como texto. Eso no se tocó: es la parte que sí
+servía.
 
 ## Estructura de contenido
 
-- **🏠 Inicio** (`renderInicio()`) — filosofía de guardarropa cápsula ("con 8 básicos + 6 chaquetas + 6 zapatos + 5 accesorios ya cubres las 5 ocasiones") y **plan de compra por fases** (`FASES`, 4 tarjetas) — mismo lenguaje de "fases" que el Plan Maestro de `Coach/Coach.html`, a propósito, para que se sienta consistente con cómo Adán ya planea su dinero. Explícitamente conecta con su prioridad actual de liquidar deuda antes de comprar ropa de golpe.
-- **👕 Básicos** (8 items), **🧥 Chaquetas** (6 items), **👞 Zapatos** (6 items), **⌚ Accesorios** (5 items, nuevo 2026-08-03) — `renderCategoria()`, grid `.item-grid` de `.item-card`: foto, nombre, para qué sirve, 2-3 opciones de tienda con rango de precio MXN (varias con link real y clicable a la tienda oficial, ver más abajo), un tip, y un checkbox "Ya lo tengo / lo quiero comprar".
-- **💼 Trabajo, 🙂 Casual, 🏋️ Ejercicio, 💍 Bodas, 🎉 Fiestas** — `renderOcasion(key)`, 2-3 `.combo-card` por ocasión. Cada combo se dibuja **con las fotos de sus propias piezas**, no con una foto de outfit: una tira de `.pz` (miniatura + nombre + estado) más un pie con lo que falta. La mayoría de las piezas son las mismas de Básicos/Chaquetas/Zapatos — el objetivo es mostrar reutilización, no un guardarropa nuevo por ocasión, y ahora se ve pieza por pieza cuáles ya marcaste.
-  - Cada pieza de `OCASIONES` es `{n, ids}`: `ids` son los productos reales del catálogo (`CATALOGO`, un mapa id→item que `vestimenta_app.js` arma de los cuatro arrays). **Varios ids son alternativas** —"chamarra de cuero o bomber", "sneakers o botines"— y basta tener una marcada. **`ids:[]` es una prenda que el catálogo no cubre**: se dibuja con recuadro punteado y «no está en tus listas» en vez de fingir que la cubre. Son 7 y explican por qué Ejercicio y las bodas no se cierran solo con esta guía (playera dry-fit, shorts, guantes, traje completo, guayabera, pantalón de vestir claro, camisa estampada).
-  - El estado del combo y el «desde $X para completarlo» son **derivados**, no texto escrito: `precioMin(item)` lee los números de los rangos de `compra[].p` ('$599-799', '$199-299 c/u') y toma el menor; el combo suma los mínimos de las piezas que faltan. El `total` del maestro sigue mostrándose aparte como «costo aprox. de todo nuevo», que es otra cosa: lo que costaría comprarlo todo.
-  - **No hay foto de outfit** (el campo `img` de cada combo se quitó el 2026-09-08). Las que había eran de banco y no correspondían: `trabajo/outfit-business-casual.jpg` salía en **dos** de los tres combos de Trabajo, y la del «viernes casual» (`pantalon-vestir-oficina.jpg`) enseñaba un traje completo cuando el texto dice jeans, polo y mocasines. Los archivos siguen en `images/{trabajo,casual,ejercicio,bodas,fiestas}/`, ya sin usar.
-  - **Trabajo**: 3 combos de business casual (contexto ALTEN — nota explícita de "confirma el código real de tu equipo antes de invertir fuerte", ya que no hay dato confirmado del dress code real).
-  - **Ejercicio**: conecta directamente con la sección "🧭 Deportes para Explorar" de `../CuidadoPersonal/ejercicio.html` (ver `readme_ejercicio.md`) — el tenis de cross-training se explica ahí mismo como prioridad si la meta de Hyrox va en serio.
-  - **Bodas**: dos rutas (formal de noche con traje completo vs. de día/jardín con guayabera), con nota explícita de rentar el traje antes de comprarlo dado el enfoque actual en liquidar deuda.
-  - **Fiestas**: marcado explícitamente como "$0 extra" si ya se compró lo de Básicos/Chaquetas/Zapatos — es la ocasión con menor costo incremental a propósito.
+Nueve secciones en tres grupos:
+
+- **Principal** — 🏠 Inicio (`renderInicio()`): filosofía de guardarropa cápsula y el plan de
+  compra por fases (`FASES`, 4 tarjetas), con el mismo lenguaje de «fases» que el Plan
+  Maestro de `Coach/Coach.html`.
+- **Qué comprar** — 👕 Básicos (8), 🧥 Chaquetas (6), 👞 Zapatos (6), ⌚ Accesorios (5).
+  `renderCategoria()` pinta una rejilla de `.item-card`: nombre, para qué sirve, 2-3 tiendas
+  con rango de precio en MXN (70 de 74 con link real y verificado), un tip y un checkbox
+  «Ya lo tengo / lo quiero comprar». **25 items marcables**, que es lo que cuenta el sidebar.
+- **Cómo combinar** — 🎨 Colorimetría (la matriz) y 🧩 Combinaciones (las 48). Es el corazón
+  de la app; las dos secciones se cuentan abajo.
+- **Aparte** — 🏋️ Ejercicio y 💍 Bodas (`renderOcasion(key)`, desde `OCASIONES`). Son las dos
+  únicas ocasiones que **no** se resuelven eligiendo color de playera y de pantalón: una pide
+  ropa técnica y la otra, traje o guayabera. Trabajo, Casual y Fiestas ya no existen como
+  sección — las absorbió Combinaciones, que dice lo mismo pero con prendas concretas.
+  - Cada pieza de `OCASIONES` es `{n, ids}` con los productos reales del catálogo. Varios ids
+    son alternativas y basta tener uno; **`ids:[]` es una prenda que el catálogo no cubre** y
+    se dibuja con recuadro punteado y «no está en tus listas» en vez de fingir que la cubre.
+  - El estado del combo y el «desde $X para completarlo» son **derivados**: `precioMin(item)`
+    lee los números de los rangos de `compra[].p` y toma el menor.
 
 ## Colorimetría — qué playera va con qué pantalón
 
@@ -76,6 +101,36 @@ cada entrada; hoy no se pinta, está para cuando se enlace con el checklist.
 La sección **no añade estado**: no hay nada que marcar, así que el contador del sidebar sigue
 contando sobre los 25 items comprables.
 
+## Combinaciones — las 48, ya resueltas
+
+**La sección que responde «qué me pongo».** `renderCombinaciones()` no lee una lista escrita
+a mano: cruza las **48 celdas verdes** de `COLORIMETRIA.reglas` con `COLORIMETRIA.ocasiones`
+y arma cada combinación al vuelo. Si un veredicto de la matriz cambia, la combinación
+aparece o desaparece sola — no hay dos sitios que puedan contradecirse.
+
+Cada tarjeta es **dos bloques de color apilados en el orden en que se ven** —playera arriba,
+pantalón abajo, y el pantalón más alto porque ocupa más cuerpo—, el nombre de las dos
+prendas, el porqué (el mismo texto que sale en el `title` de la matriz) y una línea por
+ocasión con su zapato.
+
+`ocasiones` son tres reglas, no una etiqueta por combinación: `pant` es qué pantalones admite
+y `pl` qué playeras son de su registro (`null` = cualquiera que esté en verde).
+
+| Ocasión | Cuántas | Zapato | Qué la define |
+| --- | --- | --- | --- |
+| 💼 Oficina | 27 | Derby café o mocasín | Chino marino, gris o caqui, y jeans oscuro. Sin mostaza ni terracota: funcionan de color pero bajan el registro |
+| 🌙 Noche | 18 | Botines Chelsea | Pantalón oscuro siempre; el único color, arriba |
+| 🙂 Diario | 40 | Sneakers blancos | Todo lo que la matriz da por bueno |
+
+Una combinación cae en varias ocasiones a la vez (27 + 18 + 40 sobre 48 parejas) y **ninguna
+de las 48 se queda sin ocasión** — comprobado contando, no supuesto. El filtro de arriba
+(`combFiltro`) reparte la rejilla; `combOc` guarda cuál está activo y no persiste, porque es
+una vista, no una preferencia.
+
+Las dos cifras de la cabecera (`cpCabVest`) se **derivan**: `FASES.length` y
+`combLista().length`. Estaban escritas a mano y una llegó a mentir —«5 ocasiones cubiertas»
+seguía ahí después de que las ocasiones cambiaran.
+
 ## Modelo de datos — `localStorage['vestimenta_v1']`
 
 ```js
@@ -91,19 +146,12 @@ Solo el checklist de compra persiste — las secciones de ocasión (Trabajo/Casu
 
 Paleta propia "premium minimalista" (cognac/carbón, `--p:#c17f4a`), **no** la paleta naranja/verde compartida de Salud/Ejercicio — es un catálogo de referencia, no parte del ecosistema de tracking de vida, así que tiene su propia identidad visual. Sigue el estándar del proyecto (2026-07-31): sin gradientes decorativos, sin glow de neón, tarjetas planas con sombra estándar. Reutiliza el patrón de sidebar de 245px + `.nav-item` que ya usan Salud/Ejercicio/Comida/Finanzas, y el truco `--ov` para que los overlays funcionen en ambos temas. Sin Chart.js — no hay gráficas, es contenido estático + un checklist simple.
 
-## Cómo se eligieron y verificaron las fotos (2026-08-01)
+## Probado
 
-Las 30 fotos vienen de **Wikipedia (imagen principal de artículo)** y **Openverse** (agregador de fotos con licencia libre de Flickr/rawpixel/etc., `api.openverse.org`, sin necesidad de API key) — **no** de bancos de fotos de pago ni de sitios de retail (evita problemas de derechos de marca/modelo). Cada URL final se verificó una por una descargándola y **viendo la imagen real** antes de aceptarla — la búsqueda automática por texto (tanto en Wikimedia Commons como en Openverse) devuelve falsos positivos con frecuencia (p.ej. buscar "denim jacket" puede traer una foto histórica sin relación solo porque el texto coincide). Varias fotos necesitaron 2-3 intentos:
-- `basicos/playera-blanca-lisa.jpg` y `playera-negra-lisa.jpg`: los primeros resultados eran escenas de mercado/bicicleta sin relación — reemplazadas por plantillas de playera lisa reales.
-- `chaquetas/chamarra-mezclilla.jpg`: el primer resultado (CC0 de rawpixel) era una foto artística demasiado oscura para distinguir la prenda.
-- `basicos/polo-pique.jpg`: la URL original titulada "Blue polo shirt" resultó ser, al verla, una foto de una playera manchada — reemplazada por una foto de producto real de Under Armour (CC0).
-- `casual/outfit-casual-diario.jpg`: el primer resultado mostraba un señor mayor en foto artística en blanco y negro, tono equivocado para "casual diario".
-
-Detalle completo de qué URL se usó para cada archivo, su licencia y por qué, en `_image_sources.json` (30 entradas, incluye notas de reemplazo donde aplicó).
-
-## Probado (2026-08-01)
-
-Smoke test con Playwright (Chromium headless): las 9 pestañas cargan sin imágenes rotas ni errores de consola, el checklist marca/desmarca y persiste tras recargar, el contador del sidebar se actualiza, y el toggle de tema claro/oscuro funciona. Capturas de pantalla revisadas visualmente en ambos temas.
+Con Chromium sobre `file://`, a **1600px y 390px**, en tema claro y oscuro: las nueve
+secciones sin desbordamiento horizontal, **cero elementos `<img>`** en toda la app, cero
+peticiones fallidas y cero errores de consola. Las 48 combinaciones se pintan y el filtro
+devuelve 27 / 18 / 40. El checklist marca, persiste y actualiza el contador.
 
 ## Responsivo — iPad / iPhone 15 Pro (2026-08-03)
 
@@ -116,42 +164,17 @@ Ya existían tres breakpoints funcionales de una pasada anterior (`@media(max-wi
 - **Verificado con Playwright** en iPad (820×1180) e iPhone 15 Pro (393×852, `isMobile:true, hasTouch:true`): las 9 pestañas, el checklist, el toggle de tema y (en iPhone) la apertura/cierre del sidebar móvil — overflow horizontal (`scrollWidth - clientWidth`) en 0 en todos los casos, cero errores de consola. Capturas en `shots_responsive/vestimenta_*` de la sesión.
 - A 820px (iPad) el sidebar se queda en flujo normal — a esa altura el sidebar fijo de 245px + contenido (`repeat(auto-fill,minmax(270px,1fr))` / combo-card en fila) ya tienen espacio suficiente sin necesidad de convertir el sidebar en overlay, a diferencia de `Entrevistas/` que sí lo necesitó (sidebar de 290px, ver `readme_entrevistas.md`).
 
-## Reconstrucción de fotos + Accesorios + links de compra reales (2026-08-03)
-
-Adán probó la app integrada en Cuidado Personal y preguntó directamente *"pero lo hiciste completo, con imagenes profesionales?"* — auditoría honesta de las 30 fotos originales encontró que **19 tenían problemas reales**: mujeres modeleando prendas de hombre (chamarra de mezclilla, chamarra de cuero), sneakers Michael Kors de mujer, tenis viejos y sucios sobre pasto, una vitrina desordenada de zapatos en tienda, un traje mal entallado fotografiado en la cochera de una casa, una corbata estampada que chocaba con el saco, un retrato corporativo con marca de agua en vez de "salir de noche", una foto borrosa de una fiesta, y varias fotos que eran solo acercamientos de cara sin mostrar el outfit. Pedido explícito de seguimiento: *"para todo, usa fotos mas profesionales y la ropa debe ser que me hagan lucir muy bien, debe estar muy completo esto... tomate tu tiempo"*.
-
-- **19 fotos reemplazadas** (de 30 originales, 8 se quedaron igual por ser ya buenas: playeras, camisa de vestir, polo, cinturón, chamarra puffer, botines Chelsea, zapato derby). Mismo criterio de sourcing que el 2026-08-01 (Wikimedia Commons + Openverse/Flickr, licencia libre, cada foto verificada visualmente una por una antes de aceptarla — no por el texto del resultado de búsqueda) pero con un criterio de aceptación más estricto: se rechazó cualquier foto con género equivocado, fondo/contexto inapropiado, mala iluminación, o que no mostrara la prenda con claridad. El detalle completo de qué se reemplazó y por qué está en `_image_sources.json` (35 entradas).
-- **Las fotos de outfit de las ocasiones ya no se usan** — se repetían entre combos (`trabajo/outfit-business-casual.jpg` en dos, `casual/outfit-casual-diario.jpg` compartida con `chaquetas/chamarra-mezclilla.jpg`) y en un caso contradecían el texto del combo. Los combos se dibujan con las fotos de sus piezas; estos archivos quedan en disco sin referencia.
-- **`images/bodas/corbata-formal.jpg` ahora muestra una guayabera, no una corbata** — el nombre del archivo es heredado de la versión anterior, pero el combo real que usa esa foto es "Boda de día/jardín... con guayabera" (ver `OCASIONES.bodas` en `vestimenta_data.js`), así que una guayabera es la foto correcta para ese combo — la corbata anterior nunca encajó con el texto que la acompañaba.
-- **Nueva categoría ⌚ Accesorios** (`ACCESORIOS`, 5 items: reloj análogo, lentes de sol, mochila, corbata, cartera) — mismo formato que Básicos/Chaquetas/Zapatos, con su propio nav item, su propio `RENDERS.accesorios`, y sumada a `updateCounter()` (el contador pasó de `/20` a `/25`). También se referencian desde 3 combos de `OCASIONES` donde tiene sentido (reloj en la junta importante de Trabajo y en la boda formal, lentes de sol en Casual arreglado).
-- **Links de compra reales, verificados uno por uno (2026-08-03)** — nuevo campo opcional `u` en cada entrada de `compra:[{t,p,u}]`; `itemCard()` en `vestimenta_app.js` renderiza `c.t` como `<a href="${c.u}" target="_blank">` (con un ↗ al final) cuando existe `u`, texto plano si no. **70 de 74 entradas de tienda tienen link real** — verificadas con `curl`/WebSearch antes de escribirlas, no adivinadas por el nombre de la marca. Esto importó de verdad: varias búsquedas de "tienda oficial México" para marcas como Uniqlo o Aldo devuelven sobre todo **dominios apócrifos/typosquatting** (`uniqlomx.com.mx`, `aldo-mexico.com`, `lacoste-mexico.com.mx`, etc. — ninguno es el sitio real de la marca), así que cada dominio se confirmó por código de respuesta HTTP real (con user-agent de navegador, ya que varias tiendas grandes bloquean bots) y, en casos dudosos, cruzado con una búsqueda adicional.
-  - **Uniqlo no tiene tienda oficial en México** (confirmado: no aparece en el listado de países de Wikipedia, el dominio `uniqlo.com/mx` da 404) — se dejó **sin link a propósito** en los 3 lugares donde aparece (playera blanca, playera negra, puffer), con una nota explícita en el tip de la puffer explicando que hay que comprarla en un viaje o por reventa verificada, en vez de inventar un link a uno de los sitios falsos.
-  - **Aldo tampoco tiene un dominio propio confiable para México** (mismo patrón de typosquatting) — se usa en su lugar el link a la página de la marca Aldo dentro de **El Palacio de Hierro** (`elpalaciodehierro.com/marcas/aldo/`), una tienda departamental real que sí la vende.
-  - **"Marathon" (mencionado junto con Innovasport para tenis de running) no tiene presencia confirmada en México** (la cadena real "Marathon Sports" opera en Ecuador/Perú/Bolivia, no México) — se dejó el link solo sobre "Innovasport", que sí está verificado.
-  - **"Piel genuina en outlet/segunda mano (Marketplace, Bazar del Chopo)"** (chamarra de cuero) se dejó sin link a propósito — describe un mercado informal/de segunda mano, no una tienda con sitio web propio.
-- **Verificado con Playwright**: las 10 secciones (Inicio + 4 "Qué comprar" + 5 ocasiones) navegan bien, 0 imágenes rotas de 36 totales, 70 links de compra presentes y con `href`/`target="_blank"` correctos, el contador pasa de `0/25` a `1/25` al marcar un item y sobrevive un recargo real de página, y la sección Accesorios funciona igual dentro del `<iframe>` de `CuidadoPersonal/cuidadopersonal.html`. Cero errores de consola. `node --check` limpio en los 3 archivos (`vestimenta.html`, `vestimenta_data.js`, `vestimenta_app.js`).
-
-## Segunda ronda: consistencia visual del catálogo (2026-08-03, mismo día)
-
-Adán vio el resultado de la reconstrucción de arriba y dijo *"siento que las imagenes son deficientes"*. Antes de reemplazar más fotos a ciegas se le preguntó qué fallaba exactamente — la respuesta fue **calidad/consistencia visual**, no relevancia ni que parecieran de stock gratuito. Diagnóstico correcto: las fotos individuales eran reales y apropiadas, pero **mezclaban estilos fotográficos** dentro de la misma cuadrícula — una en fondo blanco de estudio, otra en una playa, otra con alguien en motocicleta en la calle, otra en una alfombra roja — lo cual se lee como un collage de fotos sueltas de internet, no como el catálogo uniforme de una tienda real.
-
-**Regla aplicada**: en las 4 secciones "Qué comprar" (Básicos/Chaquetas/Zapatos/Accesorios), **toda foto debe ser foto de producto** — colgada en gancho, doblada, en maniquí sin cabeza, o puesta sobre una superficie neutra — nunca "alguien usándola en la calle/playa/motocicleta". Las fotos de `OCASIONES` (combos por evento) son la única excepción a propósito: por definición necesitan mostrar un look puesto en una persona, así que se quedan como están (ya comparten entre sí un estilo razonablemente parecido — retrato/cuerpo completo en exterior o interior neutro).
-
-- **5 fotos más reemplazadas** por versiones de foto de producto limpia: `chaquetas/chamarra-mezclilla.jpg` (ahora un maniquí sin cabeza en fondo beige — recortada con Pillow del panel superior izquierdo de una foto de 4 ángulos, la original de este mismo día era una foto de estilo de vida en la playa), `chaquetas/chamarra-cuero.jpg` (chamarra aislada en fondo blanco, en vez de la foto de motociclista en la calle), `chaquetas/chamarra-bomber.jpg` (chamarra suede AllSaints en gancho sobre fondo gris de estudio — esta foto nunca se había tocado desde el 2026-08-01, seguía siendo la original con fondo de alfombra roja anticuado), `chaquetas/blazer-casual.jpg` (blazer Polo Ralph Lauren en fondo blanco, en vez del flat-lay sobre piso de madera) y `accesorios/cartera.jpg` (cartera Bellroy sola sobre papel de seda, en vez de una mano sosteniéndola sobre una mesa de madera).
-- **`images/casual/outfit-casual-diario.jpg` casi se rompe por accidente**: al recortar la foto de maniquí para `chamarra-mezclilla.jpg`, por un momento se le puso la misma foto recortada (una sola chamarra, sin outfit completo) a este combo — pero ese archivo necesita mostrar un **look completo puesto en una persona** (`OCASIONES.casual`, combo "El default de fin de semana": playera+jean+chamarra+sneaker), no una sola prenda. Se revirtió a la foto de estilo de vida en la playa (que sí muestra el outfit completo) antes de terminar — la lección: las fotos de `OCASIONES` y las de los items sueltos tienen requisitos distintos aunque compartan el mismo archivo fuente.
-- **Se intentó también conseguir fotos de producto limpio para jeans, chino, sneakers blancos y tenis de running** — sin éxito después de más de 15 búsquedas distintas entre esta ronda y la anterior (jeans en particular parece ser un género de fotografía casi inexistente en los bancos de imágenes con licencia libre: la mayoría son fotos de gente usándolos, vitrinas de tienda desordenadas, o acercamientos de costura). Estos 4 quedan con la foto de la ronda anterior (no son fotos rotas ni inapropiadas, solo un poco menos consistentes visualmente que el resto) — si en el futuro aparece una fuente mejor, reemplazar siguiendo el mismo criterio de "foto de producto, fondo neutro".
-- **Verificado de nuevo con Playwright**: 0 imágenes rotas en las 10 secciones, la sección Chaquetas funciona igual dentro del `<iframe>` de `CuidadoPersonal/cuidadopersonal.html`, cero errores de consola.
-
 ## Cómo mantener esto al día
 
 - Si cambian precios, abren/cierran tiendas mencionadas, o cambia la URL de una tienda, actualizar los arrays `compra` en `vestimenta_data.js` a mano (incluyendo el campo `u` si aplica) — no hay ninguna fuente en vivo.
 - **Antes de agregar un link nuevo, verificarlo de verdad** (código de respuesta HTTP con user-agent de navegador, y si el dominio no es obviamente el oficial, cruzarlo con una búsqueda) — varias marcas grandes tienen clones/typosquats en los primeros resultados de búsqueda para "tienda oficial México" (ver la sección de arriba). Si no se puede confirmar un dominio oficial, mejor dejar esa tienda sin link (`{t:'...',p:'...'}` sin `u`) que inventar uno.
 - Si se agrega o quita un item de `BASICOS`/`CHAQUETAS`/`ZAPATOS`/`ACCESORIOS`, actualizar el total hardcodeado `0/25` en `vestimenta.html` (`#checkCounter`) y la lista `FASES` si aplica.
-- Si se agrega una foto nueva, descargarla a la subcarpeta de `images/` correspondiente (o crear `images/accesorios/` si hiciera falta una 6ª categoría), verificarla visualmente (no solo por el título de la búsqueda ni por el nombre de archivo) y añadir su entrada a `_image_sources.json`.
+- **La app no lleva imágenes.** Si alguna vez vuelven, que no sea para ilustrar una prenda genérica: eso ya se intentó dos veces y no funcionó (ver «Sin fotos, a propósito»).
+- Para añadir una playera o un pantalón a la colorimetría hay que darle su veredicto contra **todos** los del otro eje: son 16 y 6, y una celda vacía rompe la tabla. `COLORIMETRIA` es la única fuente — las combinaciones salen de ahí, no se escriben aparte.
 
 ## Cómo usarlo
 
-Se abre `vestimenta.html` directamente en cualquier navegador (`file://`), sin instalación ni servidor. Requiere `vestimenta_data.js` y `vestimenta_app.js` en la misma carpeta, y la carpeta `images/` junto a ellos.
+Se abre `vestimenta.html` directamente en cualquier navegador (`file://`), sin instalación ni servidor. Requiere `vestimenta_data.js` y `vestimenta_app.js` en la misma carpeta.
 
 ## El enlace al Dashboard vive en la `.topbar` (2026-08-18)
 

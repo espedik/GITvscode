@@ -7,10 +7,10 @@ const save = () => { localStorage.setItem(KEY, JSON.stringify(S));
 const load = () => { try { const d = localStorage.getItem(KEY); if (d) S = { ...S, ...JSON.parse(d) }; } catch(e){} };
 load();
 
-const SECS = ['inicio','basicos','chaquetas','zapatos','accesorios','trabajo','casual','ejercicio','bodas','fiestas'];
+const SECS = ['inicio','basicos','chaquetas','zapatos','accesorios','colorimetria','combinaciones','ejercicio','bodas'];
 const STITLE = {
   inicio:'🏠 Inicio', basicos:'👕 Básicos', chaquetas:'🧥 Chaquetas', zapatos:'👞 Zapatos', accesorios:'⌚ Accesorios',
-  trabajo:'💼 Trabajo', casual:'🙂 Casual', ejercicio:'🏋️ Ejercicio', bodas:'💍 Bodas', fiestas:'🎉 Fiestas'
+  colorimetria:'🎨 Colorimetría', combinaciones:'🧩 Combinaciones', ejercicio:'🏋️ Ejercicio', bodas:'💍 Bodas'
 };
 
 function nav(s) {
@@ -37,7 +37,6 @@ function updateCounter() {
 function itemCard(it) {
   const checked = S.marcados.includes(it.id);
   return `<div class="item-card${checked?' checked':''}" id="card-${it.id}">
-    <div class="item-img"><img src="${it.img}" alt="${it.nombre}" loading="lazy"></div>
     <div class="item-body">
       <h3>${it.nombre}</h3>
       <div class="item-use">${it.uso}</div>
@@ -74,22 +73,19 @@ function piezaEstado(p) {
   const its = (p.ids || []).map(id => CATALOGO[id]).filter(Boolean);
   const mios = its.filter(it => S.marcados.includes(it.id));
   const precios = its.map(precioMin).filter(x => x !== null);
-  return { its, tengo: mios.length > 0, precio: precios.length ? Math.min(...precios) : null,
-           foto: (mios[0] || its[0] || {}).img };
+  return { its, tengo: mios.length > 0, precio: precios.length ? Math.min(...precios) : null };
 }
 
 function piezaCard(p) {
   const e = piezaEstado(p);
   if (!e.its.length) {
     return `<div class="pz sin">
-      <div class="pz-img"><span>fuera del catálogo</span></div>
       <div class="pz-n">${p.n}</div>
       <div class="pz-p">no está en tus listas</div>
     </div>`;
   }
   return `<div class="pz${e.tengo ? ' tengo' : ''}">
-    <div class="pz-img"><img src="${e.foto}" alt="${p.n}" loading="lazy">${e.tengo ? '<span class="pz-ok">✓</span>' : ''}</div>
-    <div class="pz-n">${p.n}</div>
+    <div class="pz-n">${e.tengo ? '<span class="pz-ok">✓</span>' : ''}${p.n}</div>
     <div class="pz-p">${e.tengo ? 'YA LA TIENES' : (e.precio !== null ? 'desde ' + pesos(e.precio) : '—')}</div>
   </div>`;
 }
@@ -135,7 +131,7 @@ function renderInicio() {
   </div>
   <div class="card intro-banner">
     <div class="t">Cómo usar esta guía</div>
-    <div class="d">Recorre <b>Básicos → Chaquetas → Zapatos → Accesorios</b> para armar la base de tu clóset (marca ✓ lo que ya tienes o quieres comprar, se guarda automáticamente). Cada tienda con link (↗) te lleva directo a su sitio oficial verificado — algunas marcas quedaron sin link a propósito porque no tienen tienda oficial confirmada en México (ver el tip de esa prenda). Luego revisa <b>Trabajo, Casual, Ejercicio, Bodas y Fiestas</b> para ver cómo combinar esas mismas piezas según la ocasión — la mayoría de los outfits reutilizan lo que ya compraste en las 4 primeras secciones.</div>
+    <div class="d">Recorre <b>Básicos → Chaquetas → Zapatos → Accesorios</b> para armar la base de tu clóset (marca ✓ lo que ya tienes o quieres comprar, se guarda automáticamente). Cada tienda con link (↗) te lleva directo a su sitio oficial verificado — algunas marcas quedaron sin link a propósito porque no tienen tienda oficial confirmada en México (ver el tip de esa prenda). Luego <b>Colorimetría</b> te dice qué color va con qué color, y <b>Combinaciones</b> convierte esa tabla en 48 outfits concretos con su zapato y su ocasión. <b>Ejercicio</b> y <b>Bodas</b> van aparte porque no se resuelven con playera y pantalón.</div>
   </div>
   <div class="sh" style="margin-top:22px"><h2 style="font-size:16px">Plan de compra por fases</h2>
     <div class="sub">Mismo criterio de fases que ya usas en tu Plan Maestro — no hay que comprar todo a la vez.</div>
@@ -233,6 +229,66 @@ function renderColorimetria() {
   </div>`;
 }
 
+// ─── COMBINACIONES ───────────────────────────────────────────────────────────
+// Las 48 NO están escritas a mano: son las celdas verdes de `COLORIMETRIA.reglas`
+// cruzadas con `COLORIMETRIA.ocasiones`. Si mañana un veredicto de la matriz cambia,
+// la combinación aparece o desaparece sola — no hay dos sitios que puedan
+// contradecirse. Pedido de Adán (2026-09-09): *"queria que borraras todo y me dieras
+// buenas combinaciones, por que lo que tenemos no me gusta nada"*.
+let combOc = 'todas';
+
+function combLista() {
+  const C = COLORIMETRIA;
+  const out = [];
+  C.pantalones.forEach(p => C.playeras.forEach(t => {
+    const r = C.reglas[p.id][t.id];
+    if (r[0] !== 's') return;
+    const ocs = C.ocasiones.filter(o =>
+      o.pant.indexOf(p.id) >= 0 && (!o.pl || o.pl.indexOf(t.id) >= 0));
+    out.push({ p, t, porque: r[1], ocs });
+  }));
+  return out;
+}
+
+function combFiltro(id) { combOc = id; document.getElementById('content-root').innerHTML = RENDERS.combinaciones(); }
+
+function combCard(c) {
+  const ocs = c.ocs.map(o =>
+    `<span class="cb-oc" title="${o.nota.replace(/"/g, '&quot;')}">${o.ico} ${o.n} · ${o.zapato}</span>`).join('');
+  return `<div class="cb">
+    <div class="cb-color">
+      <div class="cb-t" style="background:${c.t.hex}"></div>
+      <div class="cb-p" style="background:${c.p.hex}"></div>
+    </div>
+    <div class="cb-body">
+      <div class="cb-n">${c.t.n} <span>+</span> ${c.p.n}</div>
+      <div class="cb-por">${c.porque}</div>
+      <div class="cb-ocs">${ocs}</div>
+    </div>
+  </div>`;
+}
+
+function renderCombinaciones() {
+  const todas = combLista();
+  const cuenta = id => id === 'todas' ? todas.length
+    : todas.filter(c => c.ocs.some(o => o.id === id)).length;
+  const chips = [{ id: 'todas', n: 'Todas', ico: '' }].concat(COLORIMETRIA.ocasiones)
+    .map(o => `<button type="button" class="cb-f${combOc === o.id ? ' on' : ''}"
+      onclick="combFiltro('${o.id}')">${o.ico ? o.ico + ' ' : ''}${o.n}
+      <b>${cuenta(o.id)}</b></button>`).join('');
+  const lista = combOc === 'todas' ? todas
+    : todas.filter(c => c.ocs.some(o => o.id === combOc));
+
+  return `
+  <div class="sh"><h2>🧩 Combinaciones</h2>
+    <div class="sub">Las ${todas.length} parejas que la Colorimetría da por buenas, ya resueltas:
+    qué playera, con qué pantalón, con qué zapato y para cuándo. No están escritas aparte —
+    salen de la misma tabla, así que no pueden contradecirla.</div>
+  </div>
+  <div class="cb-filtros">${chips}</div>
+  <div class="cb-grid">${lista.map(combCard).join('')}</div>`;
+}
+
 const RENDERS = {
   inicio: renderInicio,
   basicos: () => renderCategoria('👕 Básicos', 'Las piezas que más combinaciones desbloquean por peso invertido — la base de todo lo demás.', BASICOS),
@@ -240,11 +296,9 @@ const RENDERS = {
   zapatos: () => renderCategoria('👞 Zapatos', 'El zapato es lo primero que se nota. Cada uno de estos cubre una función distinta, no son intercambiables.', ZAPATOS),
   accesorios: () => renderCategoria('⌚ Accesorios', 'Los detalles que más se notan por lo poco que cuestan — un reloj o unos lentes bien elegidos suben cualquier outfit de la lista.', ACCESORIOS),
   colorimetria: renderColorimetria,
-  trabajo: () => renderOcasion('trabajo'),
-  casual: () => renderOcasion('casual'),
+  combinaciones: renderCombinaciones,
   ejercicio: () => renderOcasion('ejercicio'),
   bodas: () => renderOcasion('bodas'),
-  fiestas: () => renderOcasion('fiestas'),
 };
 
 function toggleTheme(){

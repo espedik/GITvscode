@@ -97,6 +97,33 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var
 .cm-nota ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:7px}
 .cm-nota li{font-size:12.5px;color:var(--text2);line-height:1.55}
 .cm-nota li b{color:var(--text)}
+/* ── COMBINACIONES ───────────────────────────────────────────────────────
+   Cada una es dos bloques de color, uno encima del otro y en el orden en que se
+   ven: playera arriba, pantalón abajo. Eso ES la combinación — el resto es texto
+   que la explica. La proporción no es 50/50 porque un pantalón ocupa más cuerpo. */
+.cb-filtros{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.cb-f{padding:7px 13px;border-radius:20px;border:1.5px solid rgba(var(--ov),.12);
+  background:var(--surface-2);color:var(--text2);font:600 12px inherit;font-family:inherit;
+  cursor:pointer;display:inline-flex;align-items:center;gap:7px;transition:all .18s}
+.cb-f:hover{border-color:rgba(193,127,74,.4);color:var(--text)}
+.cb-f b{font-size:10.5px;font-weight:800;color:var(--text3);font-variant-numeric:tabular-nums}
+.cb-f.on{background:var(--p);border-color:var(--p);color:#fff}
+.cb-f.on b{color:rgba(255,255,255,.85)}
+.cb-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(268px,1fr));gap:14px;
+  align-items:start}
+.cb-grid>*{min-width:0}
+.cb{border-radius:var(--r14);border:1px solid rgba(var(--ov),.07);background:var(--surface-2);
+  box-shadow:var(--sh);overflow:hidden;display:flex;flex-direction:column}
+.cb-color{display:flex;flex-direction:column}
+.cb-t{height:52px}
+.cb-p{height:74px;border-top:1px solid rgba(var(--ov),.14)}
+.cb-body{padding:12px 14px 13px;display:flex;flex-direction:column;gap:7px}
+.cb-n{font-size:13.5px;font-weight:800;line-height:1.3;color:var(--text)}
+.cb-n span{color:var(--text3);font-weight:600;margin:0 2px}
+.cb-por{font-size:11.5px;color:var(--text2);line-height:1.5}
+.cb-ocs{display:flex;flex-direction:column;gap:4px;margin-top:2px;padding-top:9px;
+  border-top:1px solid rgba(var(--ov),.07)}
+.cb-oc{font-size:10.5px;font-weight:700;color:var(--p);cursor:help}
 .intro-banner .t{font-size:13px;font-weight:800;color:var(--p);margin-bottom:4px}
 .intro-banner .d{font-size:12.5px;color:var(--text2);line-height:1.65}
 .theme-toggle-btn{background:rgba(var(--ov),.06);border:1px solid rgba(var(--ov),.12);color:var(--text);width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
@@ -118,8 +145,6 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var
 .item-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:18px}
 .item-card{border-radius:var(--r14);border:1px solid rgba(var(--ov),.07);background:var(--surface-2);overflow:hidden;box-shadow:var(--sh);transition:border-color .2s,transform .2s}
 .item-card:hover{border-color:rgba(193,127,74,.35);transform:translateY(-2px)}
-.item-img{width:100%;height:210px;overflow:hidden;background:rgba(var(--ov),.04)}
-.item-img img{width:100%;height:100%;object-fit:cover;display:block}
 .item-body{padding:15px}
 .item-body h3{font-size:14.5px;font-weight:800;margin-bottom:4px}
 .item-use{font-size:12px;color:var(--text2);line-height:1.5;margin-bottom:10px}
@@ -134,7 +159,6 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var
 .item-check input{width:15px;height:15px;accent-color:var(--g);cursor:pointer}
 .item-check span{font-size:11.5px;color:var(--text2);font-weight:600}
 .item-card.checked{border-color:rgba(0,167,88,.4)}
-.item-card.checked .item-img{opacity:.75}
 
 /* Combos por ocasión — el combo se dibuja con las fotos de sus propias piezas, así
    que no hay foto de outfit: la tarjeta es cabecera + tira de piezas + pie. */
@@ -150,16 +174,15 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var
 .combo-est.lejos{color:var(--text3);background:rgba(var(--ov),.05);border:1px solid rgba(var(--ov),.08)}
 
 .pz-list{display:flex;gap:12px;flex-wrap:wrap}
-.pz{width:126px;display:flex;flex-direction:column;gap:7px}
-.pz-img{position:relative;height:94px;border-radius:10px;overflow:hidden;background:rgba(var(--ov),.04);border:1px solid rgba(var(--ov),.07)}
-.pz-img img{width:100%;height:100%;object-fit:cover;display:block}
-.pz.tengo .pz-img{border-color:rgba(0,167,88,.35)}
-.pz.tengo .pz-img img{opacity:.6}
-.pz-ok{position:absolute;top:6px;right:6px;width:19px;height:19px;border-radius:50%;background:var(--g);color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800}
+/* Una pieza de un combo. Era una miniatura con foto; ahora es una ficha de texto:
+   lo que hay que saber de ella es si la tienes y cuánto cuesta, no cómo se ve. */
+.pz{width:126px;display:flex;flex-direction:column;gap:5px;padding:9px 10px;
+  border-radius:10px;background:rgba(var(--ov),.04);border:1px solid rgba(var(--ov),.07)}
+.pz.tengo{border-color:rgba(0,167,88,.35)}
+.pz.sin{border-style:dashed}
+.pz-ok{color:var(--g);font-weight:800;margin-right:4px}
 /* Una prenda que ninguna de las cuatro categorías cubre: no se finge que la tienes. */
-.pz.sin .pz-img{border-style:dashed;display:flex;align-items:center;justify-content:center;padding:0 8px}
-.pz.sin .pz-img span{font-size:9.5px;color:var(--text3);text-align:center;line-height:1.3;letter-spacing:.04em;text-transform:uppercase;font-weight:700}
-.pz-n{font-size:11px;font-weight:700;line-height:1.3;color:var(--text);min-height:29px}
+.pz-n{font-size:11px;font-weight:700;line-height:1.35;color:var(--text)}
 .pz-p{font-size:10px;font-weight:800;letter-spacing:.03em;color:var(--p);font-variant-numeric:tabular-nums}
 .pz.tengo .pz-p{color:var(--g)}
 .pz.sin .pz-p{color:var(--text3);font-weight:600;letter-spacing:0}
@@ -196,14 +219,12 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var
 @media(max-width:480px){
   .content{padding:14px}
   .topbar{padding:0 14px}
-  .item-img{height:170px}
   .item-body{padding:13px}
   .sh h2{font-size:17px}
   .fase-grid{gap:10px}
   .combo-card{padding:14px 15px;gap:12px}
   .pz-list{gap:9px}
   .pz{width:calc((100% - 18px) / 3)}
-  .pz-img{height:76px}
 }
 .cp-cab-fuera{padding:24px 24px 0}
 @media(max-width:760px){.cp-cab-fuera{padding:16px 14px 0}}
@@ -248,13 +269,12 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var
     <div class="nav-item" onclick="nav('chaquetas')"><span class="ico">🧥</span>Chaquetas</div>
     <div class="nav-item" onclick="nav('zapatos')"><span class="ico">👞</span>Zapatos</div>
     <div class="nav-item" onclick="nav('accesorios')"><span class="ico">⌚</span>Accesorios</div>
+    <div class="nav-label">Cómo combinar</div>
     <div class="nav-item" onclick="nav('colorimetria')"><span class="ico">🎨</span>Colorimetría</div>
-    <div class="nav-label">Por ocasión</div>
-    <div class="nav-item" onclick="nav('trabajo')"><span class="ico">💼</span>Trabajo</div>
-    <div class="nav-item" onclick="nav('casual')"><span class="ico">🙂</span>Casual</div>
+    <div class="nav-item" onclick="nav('combinaciones')"><span class="ico">🧩</span>Combinaciones</div>
+    <div class="nav-label">Aparte</div>
     <div class="nav-item" onclick="nav('ejercicio')"><span class="ico">🏋️</span>Ejercicio</div>
     <div class="nav-item" onclick="nav('bodas')"><span class="ico">💍</span>Bodas</div>
-    <div class="nav-item" onclick="nav('fiestas')"><span class="ico">🎉</span>Fiestas</div>
   </nav>
   <div style="padding:12px;border-top:1px solid rgba(var(--ov),.06);font-size:10px;color:var(--text3);line-height:1.6">
     <span id="checkCounter">0/25</span> piezas marcadas
@@ -305,8 +325,10 @@ function cpCabVest(){
     sub:'versatilidad antes que cantidad',
     kpis:[
       {v:marcadas+(total?' / '+total:''), k:'Prendas que ya tienes'},
-      {v:'4', k:'Fases de compra'},
-      {v:'5', k:'Ocasiones cubiertas'},
+      // Derivadas, no escritas: «5 ocasiones cubiertas» siguio ahi despues de que las
+      // ocasiones cambiaran, y una cifra a mano solo miente en cuanto el dato se mueve.
+      {v:String(typeof FASES!=='undefined'?FASES.length:''), k:'Fases de compra'},
+      {v:String(typeof combLista==='function'?combLista().length:''), k:'Combinaciones'},
     ],
   });
 }
