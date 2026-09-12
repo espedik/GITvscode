@@ -84,7 +84,9 @@
      días en que toca (0=domingo) o 'todos'. Es solo la semilla: se editan
      desde la propia pantalla. */
   const SEMILLA = [
-    { id:'app',    nombre:'Construir esta app',     ancla:'10 min antes de arrancar · y de 23:30 a 00:00', hora:'06:43', color:'#22d3ee', ico:'codigo', dow:[1,2,3,4,5],
+    /* `flex:true`: toca de lunes a viernes, pero se puede marcar cualquier día.
+       Adán rompe la rutina a veces y lo hace en fin de semana; ese extra suma. */
+    { id:'app',    nombre:'Construir esta app',     ancla:'10 min antes de arrancar · y de 23:30 a 00:00', hora:'06:43', color:'#22d3ee', ico:'codigo', dow:[1,2,3,4,5], flex:true,
       pasos:[
         'Por la mañana, 10 min: abre el proyecto y anota UNA mejora concreta para hoy.',
         'De 23:30 a 00:00: constrúyela, pruébala en el navegador y súbela a GitHub.',
@@ -108,7 +110,7 @@
        foco) en vez de copiarlo aquí. El detalle de cada ejercicio vive en Ejercicio. */
     { id:'gym',    nombre:'Gimnasio',               ancla:'Tras el CENLEX · el sábado a las 07:35',      hora:'18:15', color:'#ff8a3d', ico:'pesa',   dow:[1,2,4,5,6], gym:true,
       pasos:['Series, reps y peso de cada ejercicio: en Ejercicio, en la barra de arriba.'] },
-    { id:'fase0',  nombre:'Fase 0 · 1h15',          ancla:'Negocio de tu papá o plantilla GBM',          hora:'20:00', color:'#8b5cf6', ico:'diana',  dow:[1,2,3,4,5],
+    { id:'fase0',  nombre:'Fase 0 · 1h15',          ancla:'Negocio de tu papá o plantilla GBM',          hora:'20:00', color:'#8b5cf6', ico:'diana',  dow:[1,2,3,4,5], flex:true,
       pasos:[
         '1h15 de avance en la prioridad activa: el negocio de tu papá o la plantilla GBM.',
         'Antes de empezar, decide qué vas a tener hecho a las 21:15. Una cosa, no tres.',
@@ -142,7 +144,7 @@
      La regla de todas: lo que Adán editó a mano manda. Un hábito se considera
      "suyo" si su nombre o su anclaje no son los que le puso la semilla anterior
      — entonces se le añade solo lo nuevo (la hora) y no se le toca nada más. */
-  const MIG = 5;
+  const MIG = 6;
   const RETIRADOS = { 2: ['azucar', 'gasto'], 3: ['pasos'], 4: ['snooze', 'diario'], 5: ['nata'] };
   /* Lo que decía la semilla anterior de cada hábito, para saber si Adán lo tocó */
   const PREVIO = {
@@ -242,6 +244,7 @@
           if (h.pasos === undefined && sem.pasos) h.pasos = sem.pasos.slice();
           if (h.rutina === undefined && sem.rutina) { h.rutina = sem.rutina; if (sem.sec) h.sec = sem.sec; }
           if (h.gym === undefined && sem.gym) h.gym = true;
+          if (h.flex === undefined && sem.flex) h.flex = true;
           if (!h.ico || !ICO[h.ico]) h.ico = sem.ico;
           if (sem.meta && !h.meta) h.meta = sem.meta;
         });
@@ -335,7 +338,12 @@
   }
   function marcado(h, fecha) { return valor(h, fecha) >= meta(h); }
   function estado(h, fecha) {
-    if (!toca(h, fecha)) return 'off';
+    if (!toca(h, fecha)) {
+      /* Flexible y marcado un día que no tocaba: es un extra y cuenta como
+         hecho. Sin marcar, sigue siendo neutro — nunca un fallo. */
+      if (h.flex && marcado(h, fecha)) return fecha === hoyISO() ? 'hoyok' : 'ok';
+      return 'off';
+    }
     const arranque = h.desde || S.desde;
     if (arranque && fecha < arranque) return 'pre';
     const hoy = hoyISO();
@@ -347,6 +355,13 @@
      restan, ni rompen una racha. Se separan porque significan cosas distintas
      ("aún no lo llevabas" contra "ese día no tocaba"). */
   function neutro(e) { return e === 'off' || e === 'pre'; }
+  /* Qué celdas responden al clic: las de días que cuentan (hechas, falladas,
+     hoy) y, en un flexible, también las de días que no tocan. Ni el futuro
+     ni lo anterior al arranque: marcarlos guardaría una marca que estado()
+     nunca miraría. */
+  function tocable(h, e) {
+    return e === 'ok' || e === 'no' || e === 'hoy' || e === 'hoyok' || (e === 'off' && !!h.flex);
+  }
   function cuenta(e) { return e === 'ok' || e === 'no' || e === 'hoyok'; }
   function logrado(e) { return e === 'ok' || e === 'hoyok'; }
 
@@ -391,6 +406,7 @@
     if (fecha > hoyISO()) return;
     const h = S.def.filter(function (x) { return x.id === id; })[0];
     if (!h) return;
+    if (!tocable(h, estado(h, fecha))) return;   // ni futuro, ni pre-arranque, ni 'no toca' en un rígido
     /* Con meta > 1 cada toque suma un paso; al completar, el siguiente vuelve
        a cero. Con meta 1 es el interruptor de siempre. */
     const m = meta(h), v = valor(h, fecha);
@@ -486,7 +502,13 @@
         const e = estado(h, f), d = desdeISO(f), w = d.getDay();
         const cls = e === 'pre' ? 'off' : e;
         const fondo = f === hoy ? ' hb2-colhoy' : ((w === 0 || w === 6) ? ' hb2-finde' : '');
-        const clic = f <= hoy ? ' onclick="HB.toggle(\'' + h.id + '\',\'' + f + '\')"' : '';
+        /* Tocable si ya llegó el día y, o toca, o el hábito es flexible. Una
+           celda "no tocaba" de un hábito rígido no responde: antes guardaba una
+           marca que estado() nunca miraba. */
+        const clic = tocable(h, e) ? ' onclick="HB.toggle(\'' + h.id + '\',\'' + f + '\')"' : '';
+        /* En un flexible, la celda de un día que no toca es tocable: lleva un
+           borde punteado tenue que la distingue de una neutra de verdad. */
+        const flexoff = h.flex && e === 'off' && f <= hoy ? ' hb2-flexoff' : '';
         /* Con meta > 1, un día a medias se pinta con el relleno subiendo desde
            abajo: dos litros de tres se ven como dos tercios de celda. Sin esto,
            beber dos litros y beber cero se verían exactamente igual. */
@@ -495,7 +517,7 @@
           ? '<u style="height:' + Math.round(v / m * 100) + '%"></u>' : '';
         const tit = h.nombre + ' · ' + d.getDate() + ' ' + MESES[d.getMonth()] +
           (m > 1 ? ' · ' + v + ' de ' + m : '');
-        return '<div class="hb2-c hb2-' + cls + (parcial ? ' hb2-parc' : '') + fondo + '"' +
+        return '<div class="hb2-c hb2-' + cls + (parcial ? ' hb2-parc' : '') + flexoff + fondo + '"' +
           clic + ' title="' + esc(tit) + '">' + parcial + '<span>' + d.getDate() + '</span></div>';
       }).join('');
 
@@ -539,7 +561,17 @@
     }).join('');
 
     /* ── Chips de hoy ──────────────────────────────────────────────────── */
-    const chips = deHoy.length ? deHoy.map(function (h) {
+    /* Los flexibles que hoy no tocan salen al final como EXTRA: se pueden
+       marcar, pero no entran en el contador ni en la barra del día. */
+    const extras = ordenados().filter(function (h) { return h.flex && !toca(h, hoy); });
+    const chipsExtra = extras.map(function (h) {
+      const hecho = marcado(h, hoy);
+      return '<button class="hb2-chip hb2-chip-x' + (hecho ? ' on' : '') + '" onclick="HB.toggle(\'' + h.id + '\',\'' + hoy + '\')" ' +
+        'title="Hoy no toca, pero si lo haces cuenta">' +
+        '<span class="hb2-box">' + (hecho ? '<svg viewBox="0 0 24 24"><path d="M5 12.5 10 17.5 19 7"/></svg>' : '') + '</span>' +
+        esc(h.nombre) + '<i class="hb2-chip-n" style="color:var(--text3)">extra</i></button>';
+    }).join('');
+    const chips = (deHoy.length ? deHoy.map(function (h) {
       const hecho = marcado(h, hoy), m = meta(h), v = valor(h, hoy);
       /* El de varios pasos lleva su cuenta al lado y la casilla a medio llenar:
          es la señal de que falta poco, que es justo lo que empuja a cerrarlo. */
@@ -549,7 +581,7 @@
       return '<button class="hb2-chip' + (hecho ? ' on' : '') + '" onclick="HB.toggle(\'' + h.id + '\',\'' + hoy + '\')">' +
         '<span class="hb2-box">' + caja + '</span>' + esc(h.nombre) +
         (m > 1 ? '<i class="hb2-chip-n">' + v + '/' + m + '</i>' : '') + '</button>';
-    }).join('') : '<div class="hb2-vacio">Hoy no toca ninguno. Día libre de verdad, no un fallo.</div>';
+    }).join('') : '<div class="hb2-vacio">Hoy no toca ninguno. Día libre de verdad, no un fallo.</div>') + chipsExtra;
 
     /* ── Aviso: solo existe si de verdad hay algo en riesgo ────────────── */
     const nomR = riesgo.slice(0, 3).map(function (h) { return h.nombre; }).join(', ') +
@@ -806,8 +838,8 @@
     for (let i = 0; i < primero; i++) cal += '<div class="hb2-fd"></div>';
     dias.forEach(function (f) {
       const e = estado(h, f), cls = e === 'pre' ? 'off' : e;
-      const clic = f <= hoy ? ' onclick="HB.toggle(\'' + h.id + '\',\'' + f + '\')"' : '';
-      cal += '<div class="hb2-fd hb2-f-' + cls + '"' + clic + '>' + desdeISO(f).getDate() + '</div>';
+      const clic = tocable(h, e) ? ' onclick="HB.toggle(\'' + h.id + '\',\'' + f + '\')"' : '';
+      cal += '<div class="hb2-fd hb2-f-' + cls + (h.flex && e === 'off' && f <= hoy ? ' hb2-f-flex' : '') + '"' + clic + '>' + desdeISO(f).getDate() + '</div>';
     });
 
     /* Cumplimiento por día de la semana: dice DÓNDE se cae este hábito */
@@ -859,7 +891,8 @@
         '</span></div>' +
         '<div class="hb2-ficha-dow">' + (h.hora ? '<b>' + esc(h.hora) + '</b> · ' : '') +
           (h.dow === 'todos' ? 'Todos los días'
-          : 'Toca los ' + h.dow.map(function (i) { return DOW_LARGO[i]; }).join(', ')) + '</div>' +
+          : 'Toca los ' + h.dow.map(function (i) { return DOW_LARGO[i]; }).join(', ')) +
+          (h.flex ? ' · <span style="color:var(--cy)">se puede marcar cualquier día</span>' : '') + '</div>' +
         '<div class="hb2-ficha-cols">' +
         '<div class="hb2-ficha-col">' +
         queHacerHTML(h) +
@@ -1003,6 +1036,9 @@
             return '<button class="hb2-dow' + (on ? ' on' : '') + '" data-d="' + i + '" onclick="HB.edDow(' + i + ')">' + n + '</button>';
           }).join('') +
         '</div>' +
+        '<label class="hb2-flex-l"><input type="checkbox" id="hbEdF"' + (v.flex ? ' checked' : '') + '>' +
+          '<span>Se puede marcar cualquier día, aunque no toque</span>' +
+          '<i>Los días que no tocan no cuentan como fallo; si lo haces igual, suma.</i></label>' +
 
         '<label class="hb2-lbl">Icono</label>' +
         '<div class="hb2-icos">' +
@@ -1107,6 +1143,7 @@
       if (!nom) { document.getElementById('hbEdN').focus(); return; }
       const ancla = (document.getElementById('hbEdA').value || '').trim();
       const hora = (document.getElementById('hbEdH').value || '').trim();
+      const flex = !!document.getElementById('hbEdF').checked;
       const pasos = (document.getElementById('hbEdP').value || '').split('\n')
         .map(function (x) { return x.trim(); }).filter(function (x) { return x; });
       const dowS = ov.dataset.dow;
@@ -1116,13 +1153,13 @@
 
       if (id) {
         S.def.forEach(function (h) {
-          if (h.id === id) { h.nombre = nom; h.ancla = ancla; h.hora = hora; h.dow = dow; h.color = color; h.ico = ico; h.pasos = pasos; }
+          if (h.id === id) { h.nombre = nom; h.ancla = ancla; h.hora = hora; h.dow = dow; h.color = color; h.ico = ico; h.pasos = pasos; h.flex = flex; }
         });
       } else {
         let base = nom.toLowerCase().replace(/[^a-z0-9]/g, '').slice(0, 8) || 'h';
         let nid = base, k = 2;
         while (S.def.some(function (h) { return h.id === nid; })) nid = base + (k++);
-        S.def.push({ id: nid, nombre: nom, ancla: ancla, hora: hora, color: color, ico: ico, dow: dow, pasos: pasos, desde: hoyISO() });
+        S.def.push({ id: nid, nombre: nom, ancla: ancla, hora: hora, color: color, ico: ico, dow: dow, pasos: pasos, flex: flex, desde: hoyISO() });
       }
       guardar();
       HB.cerrarFicha();
@@ -1385,6 +1422,11 @@
 .hb2-parc u{position:absolute;left:0;right:0;bottom:0;display:block;text-decoration:none;
   background:rgba(var(--g-rgb),.3);z-index:0}
 .hb2-c span{position:relative;z-index:1}
+/* Flexible, día que no toca: tocable. El punteado tenue lo distingue de una
+   neutra de verdad sin gritar; al pasar el ratón se ve que responde. */
+.hb2-flexoff{cursor:pointer;border:1px dashed rgba(var(--cy-rgb),.22);color:rgba(var(--ov),.22)}
+.hb2-flexoff:hover{transform:translateY(-2px) scale(1.08);border-color:rgba(var(--cy-rgb),.55);
+  color:var(--cy);background:rgba(var(--cy-rgb),.08)}
 .hb2-finde{background:rgba(var(--ov),.03)}
 .hb2-colhoy{background:linear-gradient(180deg,rgba(var(--w-rgb),.16),rgba(var(--w-rgb),.04));
   box-shadow:0 0 0 1px rgba(var(--w-rgb),.22)}
@@ -1446,6 +1488,12 @@
   background:rgba(var(--g-rgb),.5)}
 .hb2-chip-n{font-family:var(--mono);font-size:9.5px;font-style:normal;font-weight:700;
   color:var(--g);margin-left:1px}
+.hb2-chip-x{border-style:dashed;opacity:.8}
+.hb2-chip-x.on{opacity:1}
+.hb2-flex-l{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;margin-top:11px;cursor:pointer}
+.hb2-flex-l input{width:15px;height:15px;accent-color:var(--cy);margin:0}
+.hb2-flex-l span{font-size:12px;font-weight:600;color:var(--text)}
+.hb2-flex-l i{flex-basis:100%;font-style:normal;font-size:10px;color:var(--text3);line-height:1.4;padding-left:23px}
 .hb2-vacio{font-size:11px;color:var(--text3);line-height:1.5}
 
 /* ── La ficha ─────────────────────────────────────────────────────────── */
@@ -1529,6 +1577,8 @@
 .hb2-f-hoy{background:rgba(var(--w-rgb),.1);color:var(--w);border:1.5px dashed rgba(var(--w-rgb),.85)}
 .hb2-f-hoyok{box-shadow:0 0 0 2px rgba(var(--w-rgb),.7)}
 .hb2-f-off{background:rgba(var(--ov),.03);color:rgba(var(--ov),.13);cursor:default}
+.hb2-f-flex{cursor:pointer;border:1px dashed rgba(var(--cy-rgb),.25);color:rgba(var(--ov),.22)}
+.hb2-f-flex:hover{transform:scale(1.08);border-color:rgba(var(--cy-rgb),.55);color:var(--cy)}
 .hb2-f-off:hover{transform:none}
 .hb2-f-fut{cursor:default}
 .hb2-f-fut:hover{transform:none}

@@ -511,6 +511,24 @@ Cada hábito lleva `hora` y **la lista se pinta ordenada por ella**, de modo que
 en que se vive el día. Se ordena una copia: el orden guardado es el de creación y no se toca. La
 hora se edita en la ficha (campo `time`) y sale en cian delante del anclaje.
 
+### Un hábito puede ser flexible
+
+`flex:true` — toca ciertos días, pero **se puede marcar cualquier día**. Construir esta app y la
+Fase 0 son de lunes a viernes; Adán a veces rompe la rutina y las hace en fin de semana, y eso
+tiene que poder anotarse ("habilita siempre modificar el construir app y fase 0, porque a veces
+rompo mi rutina y hago otras cosas"). Un día que no toca y no se marca sigue siendo neutro — nunca
+un fallo; marcado, es un **extra** y cuenta como hecho: suma a la racha, al % del mes y a la
+lectura vertical.
+
+En la cuadrícula, la celda de un día que no toca lleva un punteado cian tenue y responde al clic;
+en el pie, el hábito sale como chip "extra" cuando hoy no toca, sin entrar en el contador ni en la
+barra del día. Se activa en el editor con "Se puede marcar cualquier día, aunque no toque".
+
+De paso se cerró un hueco: una celda "no tocaba" de un hábito rígido, y las anteriores al
+arranque, respondían al clic y guardaban una marca que `estado()` nunca miraba — basura invisible
+en localStorage. Ahora `tocable()` decide qué celdas responden: hechas, falladas, hoy, y "no toca"
+solo en un flexible.
+
 ### Un hábito puede pedir varios pasos
 
 El campo `meta` parte un hábito en tramos. El agua son **tres litros y se marca litro a
@@ -611,10 +629,10 @@ Al subir de 7 a 12 hábitos, la migración **solo añade los nuevos si la lista 
 Adán añadió, borró o renombró algo, la suya manda y no se toca. Y si el guardado trae `marcas`
 pero no `def`, el historial se conserva — reemplazar el objeto entero lo borraba sin avisar.
 
-Las migraciones van por versión (`S.mig`, hoy en 5) y corren una sola vez y en orden. La regla de
+Las migraciones van por versión (`S.mig`, hoy en 6) y corren una sola vez y en orden. La regla de
 todas: **lo que Adán editó a mano manda**. Un hábito se considera suyo si su nombre o su anclaje no
 son los que le puso la semilla anterior — entonces solo recibe lo nuevo (la hora, el icono, la
-meta, el qué hacer) y no se le toca nada más. Los retirados (Sin azúcar y Anotar gastos en la 2, 8 000 pasos en
+meta, el qué hacer, el flex) y no se le toca nada más. Los retirados (Sin azúcar y Anotar gastos en la 2, 8 000 pasos en
 la 3, Sin snooze y Diario en la 4, Natación en la 5) salen de la lista y de su historial; los nuevos entran con su
 arranque en hoy.
 
