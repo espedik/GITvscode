@@ -173,6 +173,10 @@
                   '#00b8d9','#f472b6','#ff5c5c','#8b5cf6','#4ade80','#22d3ee','#818cf8','#fb7185','#fb923c'];
   const DOW_N = ['D','L','M','M','J','V','S'];
   const DOW_LARGO = ['domingos','lunes','martes','miércoles','jueves','viernes','sábados'];
+  const DOW_3 = ['DOM','LUN','MAR','MIÉ','JUE','VIE','SÁB'];
+  /* Las gráficas por día van de lunes a domingo, que es como Adán piensa la
+     semana; getDay() sigue dando domingo = 0, de ahí este orden. */
+  const DOW_ORDEN = [1, 2, 3, 4, 5, 6, 0];
   const MESES = ['enero','febrero','marzo','abril','mayo','junio','julio',
                  'agosto','septiembre','octubre','noviembre','diciembre'];
 
@@ -630,7 +634,6 @@
       /* ── Telemetría ───────────────────────────────────────────────── */
       '<div class="hb2-tel">' +
         anilloHTML(st) +
-        acumuladoHTML(dias, hoy) +
         perfilHTML() +
         '<div class="hb2-kpis">' +
           kpi(mejor.r, 'días', 'Racha viva', 'var(--o)') +
@@ -695,110 +698,106 @@
       '</div></div>';
   }
 
-  /* ── Gráfica 2 · Cómo va el mes: el acumulado día a día ──────────────
-     No es el % de cada día suelto (eso ya lo cuenta la fila de totales al pie
-     de la cuadrícula): es el del mes calculado HASTA cada día. Sube cuando
-     cierras días completos y cae cuando no. */
-  function acumuladoHTML(dias, hoy) {
-    const serie = [];
-    let ok = 0, tot = 0;
-    dias.forEach(function (f) {
-      if (f >= hoy) return;
-      S.def.forEach(function (h) {
-        const e = estado(h, f);
-        if (neutro(e) || e === 'fut' || e === 'hoy') return;
-        tot++;
-        if (logrado(e)) ok++;
-      });
-      if (tot) serie.push({ d: desdeISO(f).getDate(), pct: Math.round(ok / tot * 100) });
-    });
-
-    if (serie.length < 2) {
-      return '<div class="hb2-panel hb2-acum">' +
-        '<div class="hb2-k">Cómo va el mes · acumulado</div>' +
-        '<div class="hb2-sindatos">Con dos días marcados empieza a dibujarse.</div></div>';
-    }
-
-    const W = 420, H = 96, P = 10;
-    const paso = (W - P * 2) / (serie.length - 1);
-    const yDe = function (p) { return H - P - (p / 100) * (H - P * 2); };
-    const pts = serie.map(function (s, i) {
-      return { x: +(P + i * paso).toFixed(1), y: +yDe(s.pct).toFixed(1), pct: s.pct, d: s.d };
-    });
-    const linea = pts.map(function (p, i) { return (i ? 'L' : 'M') + p.x + ' ' + p.y; }).join(' ');
-    const area = linea + ' L' + pts[pts.length - 1].x + ' ' + H + ' L' + pts[0].x + ' ' + H + ' Z';
-
-    /* Solo cuatro etiquetas: con una por día se amontonan y no se lee ninguna */
-    const marcas = [0, Math.floor((pts.length - 1) / 3), Math.floor((pts.length - 1) * 2 / 3), pts.length - 1];
-    const ejes = pts.map(function (p, i) {
-      return '<span>' + (marcas.indexOf(i) >= 0 ? p.d : '') + '</span>';
-    }).join('');
-
-    let dif = '—', dcol = 'var(--text3)';
-    if (serie.length >= 4) {
-      const v = serie[serie.length - 1].pct - serie[serie.length - 4].pct;
-      dif = (v > 0 ? '+' : '') + v + ' pts';
-      dcol = v > 0 ? 'var(--g)' : (v < 0 ? 'var(--r)' : 'var(--text3)');
-    }
-
-    const circulos = pts.map(function (p, i) {
-      const ult = i === pts.length - 1;
-      return '<circle cx="' + p.x + '" cy="' + p.y + '" r="' + (ult ? 4.5 : 2.5) + '" ' +
-        'fill="var(--bg)" stroke="var(--g)" stroke-width="2" opacity="' + (ult ? 1 : .45) + '"></circle>';
-    }).join('');
-
-    return '<div class="hb2-panel hb2-acum">' +
-      '<div class="hb2-acum-hd">' +
-        '<div class="hb2-k">Cómo va el mes · acumulado</div>' +
-        '<div class="hb2-acum-d"><b style="color:' + dcol + '">' + dif + '</b>' +
-          '<span class="hb2-k" style="font-size:7.5px">últimos 3 días</span></div>' +
-      '</div>' +
-      '<svg class="hb2-acum-g" viewBox="0 0 ' + W + ' ' + H + '" preserveAspectRatio="none">' +
-        '<defs><linearGradient id="hb2Area" x1="0" y1="0" x2="0" y2="1">' +
-          '<stop offset="0%" stop-color="#00e87a" stop-opacity=".45"></stop>' +
-          '<stop offset="100%" stop-color="#00e87a" stop-opacity="0"></stop>' +
-        '</linearGradient></defs>' +
-        '<line x1="0" y1="24" x2="' + W + '" y2="24" stroke="rgba(var(--ov),.07)"></line>' +
-        '<line x1="0" y1="58" x2="' + W + '" y2="58" stroke="rgba(var(--ov),.07)"></line>' +
-        '<path d="' + area + '" fill="url(#hb2Area)"></path>' +
-        '<path d="' + linea + '" fill="none" stroke="var(--g)" stroke-width="2" ' +
-          'stroke-linecap="round" stroke-linejoin="round"></path>' +
-        circulos +
-      '</svg>' +
-      '<div class="hb2-acum-x">' + ejes + '</div>' +
-    '</div>';
-  }
-
-  /* ── Gráfica 3 · Perfil por día de la semana ─────────────────────────
-     El único dato de la pantalla que dice DÓNDE se cae, no solo cuánto. */
+  /* ── Gráfica 2 · Perfil por día de la semana ─────────────────────────
+     El único dato de la pantalla que dice DÓNDE se cae, no solo cuánto — un
+     total global solo dice que te va mal. Siete columnas de lunes a domingo
+     sobre una retícula de 25 en 25, la media del periodo punteada y, a la
+     derecha, el hallazgo: el día que peor va con el hábito que más cae ahí,
+     y el mejor. Una sola serie, así que no lleva leyenda: el título la
+     nombra. Últimos 90 días. (La gráfica de acumulado que iba aquí se quitó:
+     no decía nada que la fila de totales del pie no dijera ya.) */
   function perfilHTML() {
-    const acum = [0,0,0,0,0,0,0].map(function () { return { ok: 0, tot: 0 }; });
+    const acum = [0,0,0,0,0,0,0].map(function () { return { ok: 0, tot: 0, hab: {} }; });
     const hoy = hoyISO();
+    let pOk = 0, pTot = 0;
     let d = sumaDias(new Date(), -90);
     while (iso(d) < hoy) {
       const f = iso(d), w = d.getDay();
       S.def.forEach(function (h) {
         const e = estado(h, f);
         if (!cuenta(e)) return;
-        acum[w].tot++;
-        if (logrado(e)) acum[w].ok++;
+        const x = acum[w].hab[h.id] || (acum[w].hab[h.id] = { ok: 0, tot: 0, h: h });
+        acum[w].tot++; x.tot++; pTot++;
+        if (logrado(e)) { acum[w].ok++; x.ok++; pOk++; }
       });
       d = sumaDias(d, 1);
     }
-    const MAXB = 74;
-    const barras = acum.map(function (x, i) {
+    const cab = '<div class="hb2-pf-hd"><span class="hb2-k">Perfil por día de la semana</span>' +
+      (pTot ? '<span class="hb2-k" style="font-size:7.5px">Últimos 90 días · ' + pTot + ' marcas</span>' : '') + '</div>';
+    if (!pTot) {
+      return '<div class="hb2-panel hb2-perfil">' + cab +
+        '<div class="hb2-sindatos">Con una semana marcada sabrás qué día se te cae.</div></div>';
+    }
+
+    /* El peor y el mejor día, entre los que tienen al menos dos marcas: con
+       una sola no hay perfil, hay anécdota. */
+    const H = 66, hoyW = new Date().getDay();
+    let peor = -1, peorP = 101, mejor = -1, mejorP = -1;
+    DOW_ORDEN.forEach(function (i) {
+      const x = acum[i];
+      if (x.tot < 2) return;
+      const p = x.ok / x.tot * 100;
+      if (p < peorP) { peorP = p; peor = i; }
+      if (p > mejorP) { mejorP = p; mejor = i; }
+    });
+
+    const cols = DOW_ORDEN.map(function (i) {
+      const x = acum[i];
       const pct = x.tot ? Math.round(x.ok / x.tot * 100) : null;
-      const bg = pct === null ? 'rgba(var(--ov),.08)'
-        : (pct < 60 ? 'var(--r)' : (pct < 80 ? 'var(--w)' : 'rgba(var(--g-rgb),.8)'));
-      const col = pct === null ? 'var(--text3)' : (pct < 60 ? 'var(--r)' : 'var(--text3)');
-      return '<div class="hb2-pb">' +
-        '<span style="color:' + col + '">' + (pct === null ? '—' : pct + '%') + '</span>' +
-        '<u style="height:' + (pct === null ? 3 : Math.max(4, Math.round(pct / 100 * MAXB))) + 'px;background:' + bg + '"></u>' +
-        '<i style="color:' + col + '">' + DOW_N[i] + '</i></div>';
+      const rgb = pct === null ? null : (pct < 60 ? 'var(--r-rgb)' : (pct < 80 ? 'var(--w-rgb)' : 'var(--g-rgb)'));
+      const bg = pct === null ? 'rgba(var(--ov),.08)' : (pct < 80 ? 'rgb(' + rgb + ')' : 'rgba(var(--g-rgb),.85)');
+      /* El día etiquetado en rojo es el peor (con el hallazgo al lado como
+         etiqueta: nunca color solo); el de hoy, en cian y con fondo. */
+      const col = i === peor && peorP < 80 ? 'var(--r)' : (i === hoyW ? 'var(--cy)' : 'var(--text3)');
+      return '<div class="hb2-pf-col' + (i === hoyW ? ' hb2-pf-hoy' : '') + '" title="' +
+          DOW_LARGO[i] + (x.tot ? ' · ' + x.ok + ' de ' + x.tot : ' · sin datos') + '">' +
+        '<span class="hb2-pf-pct">' + (pct === null ? '—' : pct + '%') + '</span>' +
+        '<div class="hb2-pf-bw"><u style="height:' + (pct === null ? 3 : Math.max(4, Math.round(pct / 100 * H))) + 'px;background:' + bg +
+          (rgb ? ';box-shadow:0 0 12px rgba(' + rgb + ',.35)' : '') + '"></u></div>' +
+        '<span class="hb2-pf-d" style="color:' + col + '">' + DOW_3[i] + '</span>' +
+        '<span class="hb2-pf-n">' + (x.tot ? x.ok + '/' + x.tot : '') + '</span>' +
+      '</div>';
     }).join('');
-    return '<div class="hb2-panel hb2-perfil">' +
-      '<div class="hb2-k">Perfil por día de la semana</div>' +
-      '<div class="hb2-pbs">' + barras + '</div></div>';
+
+    /* La retícula va debajo de las columnas; la media, punteada, con su
+       etiqueta en un carril propio a la derecha para no caer sobre el domingo. */
+    const mediaPct = Math.round(pOk / pTot * 100);
+    const mediaTop = Math.round(H - mediaPct / 100 * H);
+    const reticula = '<div class="hb2-pf-ret">' +
+      '<i style="top:0"></i><i style="top:25%"></i><i style="top:50%"></i><i style="top:75%"></i><i class="hb2-pf-base"></i>' +
+      '<b style="top:' + mediaTop + 'px"></b>' +
+      '<span style="top:' + (mediaTop < 11 ? mediaTop + 2 : mediaTop - 10) + 'px">media ' + mediaPct + '%</span></div>';
+
+    /* El hallazgo. Si hasta el peor día pasa del 80 %, no hay caída que señalar
+       y el panel lo dice en verde en vez de inventar una alarma. */
+    let hallazgo;
+    if (peor < 0) {
+      hallazgo = '<div class="hb2-pf-call">' +
+        '<div class="hb2-pf-call-h" style="color:var(--text3)">' + ICO_BOMBILLA + '<span class="hb2-k">Dónde se te cae</span></div>' +
+        '<div class="hb2-pf-call-t">Con dos semanas marcadas se ve qué día falla.</div></div>';
+    } else {
+      let hb = null, hp = 101;
+      Object.keys(acum[peor].hab).forEach(function (id) {
+        const x = acum[peor].hab[id], p = x.ok / x.tot * 100;
+        if (p < hp) { hp = p; hb = x; }
+      });
+      const bien = peorP >= 80;
+      hallazgo = '<div class="hb2-pf-call">' +
+        '<div class="hb2-pf-call-h" style="color:' + (bien ? 'var(--g)' : 'var(--r)') + '">' + (bien ? ICO_ESCUDO : ICO_ALERTA) +
+          '<span class="hb2-k" style="color:inherit">' + (bien ? 'Ningún día se cae' : 'Dónde se te cae') + '</span></div>' +
+        '<div class="hb2-pf-call-d"><b>' + DOW_3[peor] + '</b>' +
+          '<i style="color:' + (bien ? 'var(--text3)' : 'var(--r)') + '">' + Math.round(peorP) + '%</i></div>' +
+        (hb ? '<div class="hb2-pf-call-t">Lo que más cae: <b>' + esc(hb.h.nombre) + '</b> <span>' + hb.ok + ' de ' + hb.tot + '</span></div>' : '') +
+        (mejor >= 0 && mejor !== peor ? '<div class="hb2-pf-call-m"><span class="hb2-k" style="font-size:7.5px">Mejor</span>' +
+          '<b>' + DOW_3[mejor] + '</b><i>' + Math.round(mejorP) + '%</i></div>' : '') +
+      '</div>';
+    }
+
+    return '<div class="hb2-panel hb2-perfil">' + cab +
+      '<div class="hb2-pf-body">' +
+        '<div class="hb2-pf-g">' + reticula + '<div class="hb2-pf-cols">' + cols + '</div></div>' +
+        '<div class="hb2-pf-sep"></div>' + hallazgo +
+      '</div></div>';
   }
 
   /* La frase del día. Está debajo del título, que es donde se lee antes de
@@ -854,7 +853,8 @@
     }
     const conDatos = porDow.filter(function (x) { return x.tot > 0; });
     const MAXH = 92;
-    const barras = porDow.map(function (x, i) {
+    const barras = DOW_ORDEN.map(function (i) {
+      const x = porDow[i];
       const pct = x.tot ? Math.round(x.ok / x.tot * 100) : null;
       const bg = pct === null ? 'rgba(var(--ov),.08)'
         : (pct < 60 ? 'var(--r)' : (pct < 80 ? 'var(--w)' : 'rgba(var(--g-rgb),.8)'));
@@ -1291,7 +1291,7 @@
 .hb2-hoypill-n i{font-size:12px;font-style:normal;font-weight:700;color:var(--text3)}
 
 /* ── Telemetría ───────────────────────────────────────────────────────── */
-.hb2-tel{display:flex;gap:11px;flex-shrink:0;height:140px}
+.hb2-tel{display:flex;gap:11px;flex-shrink:0;height:156px}
 .hb2-anillo{width:184px;flex-shrink:0;padding:13px 15px;display:flex;flex-direction:column;
   align-items:center;justify-content:center;gap:7px}
 .hb2-anillo .hb2-k{align-self:flex-start}
@@ -1303,18 +1303,46 @@
 .hb2-anillo-c b{font-size:24px;font-weight:700;color:var(--cy);line-height:1}
 .hb2-anillo-c i{font-size:9px;font-style:normal;font-weight:700;color:var(--text3);margin-top:2px}
 
-.hb2-acum{flex:1;min-width:0;padding:13px 15px;display:flex;flex-direction:column;gap:5px}
-.hb2-acum-hd{display:flex;align-items:baseline;justify-content:space-between;gap:12px}
-.hb2-acum-d{display:flex;align-items:center;gap:5px}
-.hb2-acum-d b{font-family:var(--mono);font-size:11px;font-weight:700}
-.hb2-acum-g{width:100%;flex:1;min-height:0}
-.hb2-acum-x{display:flex;justify-content:space-between}
-.hb2-acum-x span{font-family:var(--mono);font-size:7.5px;font-weight:700;color:var(--text3);
-  flex:1;text-align:center}
 .hb2-sindatos{flex:1;display:flex;align-items:center;justify-content:center;
   font-size:11px;color:var(--text3);text-align:center;line-height:1.4}
 
-.hb2-perfil{width:252px;flex-shrink:0;padding:13px 15px;display:flex;flex-direction:column;gap:6px}
+/* El perfil por día de la semana ocupa todo lo que dejan el anillo y las
+   cifras. La gráfica a la izquierda, el hallazgo a la derecha. */
+.hb2-perfil{flex:1;min-width:0;padding:13px 17px 10px;display:flex;flex-direction:column;gap:5px}
+.hb2-pf-hd{display:flex;align-items:baseline;justify-content:space-between;gap:12px}
+.hb2-pf-body{display:flex;gap:15px;flex:1;min-height:0}
+.hb2-pf-g{flex:1;min-width:0;position:relative}
+/* La retícula, debajo de las columnas: cuatro líneas tenues y la base firme;
+   la media punteada en cian. Empieza a 14px, justo bajo la fila de porcentajes. */
+.hb2-pf-ret{position:absolute;left:0;right:0;top:14px;height:66px;pointer-events:none}
+.hb2-pf-ret i,.hb2-pf-ret b{position:absolute;left:0;right:0;border-top:1px solid rgba(var(--ov),.09)}
+.hb2-pf-ret i.hb2-pf-base{bottom:0;border-top-color:rgba(var(--ov),.18)}
+.hb2-pf-ret b{border-top:1px dashed rgba(var(--cy-rgb),.6)}
+.hb2-pf-ret span{position:absolute;right:0;font-family:var(--mono);font-size:7px;font-weight:700;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--cy);background:var(--bg);padding:0 4px;line-height:1.2}
+.hb2-pf-cols{position:relative;display:flex;gap:7px;height:100%;padding-right:64px}
+.hb2-pf-col{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;gap:3px;border-radius:8px}
+.hb2-pf-hoy{background:rgba(var(--cy-rgb),.07)}
+.hb2-pf-pct{font-family:var(--mono);font-size:10.5px;font-weight:700;color:var(--text);height:11px;line-height:1}
+.hb2-pf-bw{width:100%;height:66px;display:flex;align-items:flex-end;justify-content:center}
+.hb2-pf-bw u{display:block;width:34px;max-width:60%;border-radius:4px 4px 2px 2px;text-decoration:none}
+.hb2-pf-d{font-family:var(--mono);font-size:8.5px;font-weight:700;letter-spacing:.2em;margin-top:2px;line-height:1.2}
+.hb2-pf-n{font-family:var(--mono);font-size:8px;font-weight:700;color:var(--text3);line-height:1}
+.hb2-pf-sep{width:1px;align-self:stretch;background:rgba(var(--cy-rgb),.18);flex-shrink:0}
+.hb2-pf-call{width:206px;flex-shrink:0;display:flex;flex-direction:column;justify-content:center;gap:6px}
+.hb2-pf-call-h{display:flex;align-items:center;gap:6px}
+.hb2-pf-call-h svg{width:12px;height:12px;flex-shrink:0}
+.hb2-pf-call-d{display:flex;align-items:baseline;gap:7px;font-family:var(--mono);font-weight:700}
+.hb2-pf-call-d b{font-size:22px;color:var(--text);line-height:1}
+.hb2-pf-call-d i{font-size:12px;font-style:normal}
+.hb2-pf-call-t{font-size:10.5px;line-height:1.4;color:var(--text2)}
+.hb2-pf-call-t b{color:var(--text)}
+.hb2-pf-call-t span{font-family:var(--mono);font-size:9.5px;font-weight:700;color:var(--text3)}
+.hb2-pf-call-m{display:flex;align-items:baseline;gap:6px;font-family:var(--mono);font-weight:700;margin-top:1px}
+.hb2-pf-call-m b{font-size:10.5px;color:var(--g)}
+.hb2-pf-call-m i{font-size:9px;font-style:normal;color:var(--text3)}
+
+/* Las barras chicas de la ficha ("Dónde se te cae") */
 .hb2-pbs{display:flex;align-items:flex-end;justify-content:space-between;gap:5px;flex:1;min-height:0}
 .hb2-pb{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;height:100%;
   justify-content:flex-end}
@@ -1635,11 +1663,12 @@
 
 /* ── Angosto ──────────────────────────────────────────────────────────── */
 @media (max-width:1200px){
+  /* El perfil necesita ancho: se queda junto al anillo y las cuatro cifras
+     bajan a una fila. */
   .hb2-tel{flex-wrap:wrap;height:auto}
-  .hb2-anillo{width:160px}
-  .hb2-acum{min-width:280px}
-  .hb2-perfil,.hb2-kpis{width:calc(50% - 6px)}
-  .hb2-acum-g{height:80px}
+  .hb2-anillo{width:160px;height:150px}
+  .hb2-perfil{min-width:520px;height:150px}
+  .hb2-kpis{width:100%;grid-template-columns:repeat(4,1fr);grid-template-rows:1fr;height:62px}
 }
 @media (max-width:900px){
   .hb2-ficha-cols{grid-template-columns:1fr}
@@ -1653,7 +1682,16 @@
   .hb2-filasw{overflow-y:visible}
   .hb2-hd{flex-direction:column;align-items:flex-start;gap:11px}
   .hb2-tel{flex-direction:column}
-  .hb2-anillo,.hb2-perfil,.hb2-kpis,.hb2-acum{width:100%}
+  .hb2-anillo,.hb2-perfil,.hb2-kpis{width:100%}
+  .hb2-anillo{height:auto}
+  .hb2-kpis{grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;height:auto}
+  /* La gráfica encima, el hallazgo debajo */
+  .hb2-perfil{min-width:0;height:auto}
+  .hb2-pf-body{flex-direction:column;gap:10px}
+  .hb2-pf-g{flex:none;height:108px}
+  .hb2-pf-cols{padding-right:58px}
+  .hb2-pf-sep,.hb2-pf-call{width:100%}
+  .hb2-pf-sep{height:1px}
   .hb2-pie{flex-direction:column}
   .hb2-aviso{width:100%}
   .hb2-nom,.hb2-nom-sp{width:132px}

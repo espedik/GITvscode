@@ -486,18 +486,29 @@ existía el registro. Un hábito no puede fallar antes de existir, así que nada
 cuenta. Esa fecha **se guarda en la primera carga**, no al primer toggle: si se abre hoy, no se
 marca nada y se vuelve en una semana, el arranque tiene que seguir siendo hoy.
 
-### Las tres gráficas, y por qué ninguna repite a otra
+### Las dos gráficas, y por qué ninguna repite a otra
 
 | Gráfica | Qué responde |
 |---|---|
 | **Anillo** | El titular: qué % del mes llevas cumplido |
-| **Cómo va el mes** | Acumulado día a día: ¿vas a mejor o a peor? Con la diferencia de los últimos 3 días |
 | **Perfil por día de la semana** | **Dónde** se cae, que es lo accionable: un total global solo dice que te va mal |
 | *(fila al pie de la cuadrícula)* | La lectura vertical: cuántos de los que tocaban cerraste cada día |
 
-El acumulado sustituyó a un "% por semana" que salió **plano al renderizarlo**: con 11 días de mes
-solo hay dos semanas con datos y ambas dan el mismo número. El acumulado sí dibuja con los días
-que haya, y responde otra pregunta que la fila de totales — esa es por día suelto.
+El perfil ocupa todo el ancho que dejan el anillo y las cuatro cifras. Siete columnas de **lunes a
+domingo** (`DOW_ORDEN`; `getDay()` sigue dando domingo = 0) sobre una retícula de 25 en 25, cada una
+con su %, la barra en color de estado (rojo < 60, amarillo < 80, verde) y debajo el día y el
+`hechos/total`; la columna de hoy lleva fondo cian, y la media del periodo va punteada con su
+etiqueta en un carril propio a la derecha para no caer sobre el domingo. A la derecha, el
+**hallazgo**: el peor día con su % y el hábito que más cae ese día (`acum[w].hab[id]`, contado en
+el mismo recorrido), y el mejor. Solo entran días con dos marcas o más — con una hay anécdota, no
+perfil — y si hasta el peor pasa del 80 % el panel lo dice en verde ("Ningún día se cae") en vez de
+inventar una alarma. Mira los últimos 90 días, no el mes visto. Una sola serie: sin leyenda, el
+título la nombra. Cada columna lleva `title` con el día largo y el conteo.
+
+Aquí iba una gráfica de **acumulado del mes** (el % calculado hasta cada día, con la diferencia
+de los últimos 3); Adán la quitó ("esa gráfica no me gusta"): no decía nada que la fila de
+totales del pie y el anillo no dijeran ya, y el sitio se lo quedó el perfil, que es el único dato
+accionable de la pantalla.
 
 ### Los hábitos siguen el horario, y la lista va en orden de hora
 
@@ -642,8 +653,9 @@ la 3, Sin snooze y Diario en la 4, Natación en la 5) salen de la lista y de su 
 arranque en hoy.
 
 **Medido** (Playwright, 1920px, 1600px, 1366px y 390px): 10 filas × 30 celdas fluidas, 6 capas de
-fondo, el anillo con su arco correcto, la línea del acumulado con 10 puntos, 7 barras de
-perfil y 30 de totales. El agua recorre 0/3 → 1/3 → 2/3 → hecho → 0/3 en cuatro toques, con la
+fondo, el anillo con su arco correcto, 7 columnas de perfil (a 1600px la barra mide 34px; a 390px, 21)
+y 30 de totales. Con tres semanas marcadas y los jueves flojos, el hallazgo nombra el jueves y el
+gimnasio (0 de 3); sin registro, el panel dice qué falta sin romperse. El agua recorre 0/3 → 1/3 → 2/3 → hecho → 0/3 en cuatro toques, con la
 celda al 33%, 67% y llena, y la barra del día subiendo en cada uno. Partiendo del estado guardado con un hábito renombrado a mano, la migración 3 lo respeta, retira
 8 000 pasos con sus marcas, actualiza el alemán a las 17:00 y mete los cuatro nuevos con arranque
 en hoy; un hábito creado a las 07:10 cae en la posición 3. Marcar mueve las cifras, el registro

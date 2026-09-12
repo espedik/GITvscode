@@ -157,7 +157,7 @@
       </div>
     </div>
 
-    <!-- ── TELEMETRÍA: tres gráficas y cuatro cifras ──────────────────── -->
+    <!-- ── TELEMETRÍA: dos gráficas y cuatro cifras ───────────────────── -->
     <div style="display:flex;gap:12px;flex-shrink:0;height:166px">
 
       <!-- 1 · Anillo del mes. Una cifra que manda, con su arco. -->
@@ -177,54 +177,66 @@
         </div>
       </div>
 
-      <!-- 2 · Tendencia semanal. La única gráfica que dice si vas a mejor. -->
-      <div class="panel" style="flex:1;min-width:0;padding:14px 16px;display:flex;flex-direction:column;gap:6px">
-        <div style="display:flex;align-items:baseline;justify-content:space-between">
-          <div class="k">Cómo va el mes · acumulado</div>
-          <div style="display:flex;align-items:center;gap:5px">
-            <span class="num" style="font-size:11px;color:{{tendCol}}">{{tendTxt}}</span>
-            <span class="k" style="font-size:7.5px">últimos 3 días</span>
+      <!-- 2 · Perfil por día de la semana. Dice DÓNDE se cae, que es lo
+           accionable: un total global solo dice que te va mal. Ocupa todo el
+           ancho que dejan el anillo y las cifras: siete columnas sobre una
+           retícula de 25 en 25, la media del periodo punteada, y a la derecha
+           el hallazgo — el día que peor va y el hábito que más cae ahí. -->
+      <div class="panel" style="flex:1;min-width:0;padding:14px 18px 11px;display:flex;flex-direction:column;gap:6px">
+        <div style="display:flex;align-items:baseline;justify-content:space-between;gap:12px">
+          <div class="k">Perfil por día de la semana</div>
+          <div class="k" style="font-size:7.5px">Últimos 90 días · {{perfilTot}} marcas</div>
+        </div>
+        <div style="display:flex;gap:16px;flex:1;min-height:0">
+
+          <div style="flex:1;min-width:0;position:relative">
+            <!-- La retícula, debajo de las columnas. La línea de base es la única firme. -->
+            <div style="position:absolute;left:0;right:0;top:15px;height:76px;pointer-events:none">
+              <div style="position:absolute;left:0;right:0;top:0;border-top:1px solid rgba(255,255,255,.09)"></div>
+              <div style="position:absolute;left:0;right:0;top:25%;border-top:1px solid rgba(255,255,255,.09)"></div>
+              <div style="position:absolute;left:0;right:0;top:50%;border-top:1px solid rgba(255,255,255,.09)"></div>
+              <div style="position:absolute;left:0;right:0;top:75%;border-top:1px solid rgba(255,255,255,.09)"></div>
+              <div style="position:absolute;left:0;right:0;bottom:0;border-top:1px solid rgba(255,255,255,.18)"></div>
+              <div style="position:absolute;left:0;right:0;top:{{mediaTop}}px;border-top:1px dashed rgba(0,224,192,.6)"></div>
+              <span class="k" style="position:absolute;right:0;top:{{mediaLbl}}px;font-size:7px;color:var(--cy);letter-spacing:.14em;background:#0b0c17;padding:0 4px">media {{mediaPct}}</span>
+            </div>
+            <!-- Un carril libre a la derecha para la etiqueta de la media, que si no cae sobre el domingo -->
+            <div style="position:relative;display:flex;gap:8px;height:100%;padding-right:56px">
+              <sc-for list="{{porDow}}" as="b" hint-placeholder-count="7">
+                <div title="{{b.tip}}" style="flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;gap:3px;border-radius:8px;background:{{b.colBg}}">
+                  <span class="num" style="font-size:11px;color:#f4f4f8;height:12px">{{b.pct}}</span>
+                  <div style="width:100%;height:76px;display:flex;align-items:flex-end;justify-content:center">
+                    <div style="width:38px;height:{{b.h}}px;border-radius:4px 4px 2px 2px;background:{{b.bg}};box-shadow:{{b.glow}}"></div>
+                  </div>
+                  <span class="k" style="font-size:8.5px;color:{{b.col}};margin-top:2px">{{b.d}}</span>
+                  <span class="num" style="font-size:8px;color:#7d8199">{{b.cnt}}</span>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+
+          <div style="width:1px;align-self:stretch;background:rgba(var(--cy-rgb),.18);flex-shrink:0"></div>
+
+          <!-- El hallazgo. Rojo de estado, con su icono y su etiqueta: nunca color solo. -->
+          <div style="width:214px;flex-shrink:0;display:flex;flex-direction:column;justify-content:center;gap:7px">
+            <div style="display:flex;align-items:center;gap:6px">
+              <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="var(--r)" stroke-width="2" stroke-linecap="round"><path d="M12 3.5 22 20H2L12 3.5Z"></path><path d="M12 10v4.5M12 17.3v.2"></path></svg>
+              <span class="k" style="color:var(--r)">Dónde se te cae</span>
+            </div>
+            <div style="display:flex;align-items:baseline;gap:7px">
+              <span class="num" style="font-size:24px;color:#f4f4f8">{{peorDia}}</span>
+              <span class="num" style="font-size:12px;color:var(--r)">{{peorPct}}</span>
+            </div>
+            <div style="font-size:10.5px;line-height:1.4;color:#9a9db3">Lo que más cae: <b style="color:#f4f4f8">{{peorHab}}</b> <span class="num" style="font-size:9.5px;color:#7d8199">{{peorHabCnt}}</span></div>
+            <div style="display:flex;align-items:baseline;gap:6px;margin-top:2px">
+              <span class="k" style="font-size:7.5px">Mejor</span>
+              <span class="num" style="font-size:10.5px;color:var(--g)">{{mejorDia}}</span>
+              <span class="num" style="font-size:9px;color:#7d8199">{{mejorPct}}</span>
+            </div>
           </div>
         </div>
-        <svg viewBox="0 0 420 96" preserveAspectRatio="none" style="width:100%;flex:1;min-height:0">
-          <defs>
-            <linearGradient id="gArea" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stop-color="#00e87a" stop-opacity=".45"></stop>
-              <stop offset="100%" stop-color="#00e87a" stop-opacity="0"></stop>
-            </linearGradient>
-          </defs>
-          <line x1="0" y1="24" x2="420" y2="24" stroke="rgba(255,255,255,.07)" stroke-width="1"></line>
-          <line x1="0" y1="58" x2="420" y2="58" stroke="rgba(255,255,255,.07)" stroke-width="1"></line>
-          <path d="{{areaPath}}" fill="url(#gArea)"></path>
-          <path d="{{lineaPath}}" fill="none" stroke="#00e87a" stroke-width="2"
-            stroke-linecap="round" stroke-linejoin="round"
-            style="filter:drop-shadow(0 0 6px rgba(0,232,122,.6))"></path>
-          <sc-for list="{{puntos}}" as="p" hint-placeholder-count="10">
-            <circle cx="{{p.x}}" cy="{{p.y}}" r="{{p.r}}" fill="#04040c" stroke="#00e87a" stroke-width="2" opacity="{{p.op}}"></circle>
-          </sc-for>
-        </svg>
-        <div style="display:flex;justify-content:space-between">
-          <sc-for list="{{semanas}}" as="s" hint-placeholder-count="10">
-            <span class="k" style="font-size:7.5px;color:{{s.col}}">{{s.lbl}}</span>
-          </sc-for>
-        </div>
       </div>
-
-      <!-- 3 · Perfil por día. Dice DÓNDE se cae, que es lo accionable. -->
-      <div class="panel" style="width:268px;flex-shrink:0;padding:14px 16px;display:flex;flex-direction:column;gap:7px">
-        <div class="k">Perfil por día de la semana</div>
-        <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:5px;flex:1;min-height:0">
-          <sc-for list="{{porDow}}" as="b" hint-placeholder-count="7">
-            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;height:100%;justify-content:flex-end">
-              <span class="num" style="font-size:8.5px;color:{{b.col}}">{{b.pct}}</span>
-              <div style="width:100%;height:{{b.h}}px;border-radius:4px 4px 2px 2px;background:{{b.bg}}"></div>
-              <span class="k" style="font-size:8px;color:{{b.col}}">{{b.d}}</span>
-            </div>
-          </sc-for>
-        </div>
-      </div>
-
-      <!-- 4 · Las cuatro cifras, apiladas en dos por dos -->
+      <!-- 3 · Las cuatro cifras, apiladas en dos por dos -->
       <div style="width:254px;flex-shrink:0;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:8px">
         <div class="panel" style="padding:10px 12px;display:flex;flex-direction:column;justify-content:center;gap:4px">
           <div style="display:flex;align-items:baseline;gap:4px">
@@ -287,7 +299,7 @@
       </div>
 
       <div style="display:flex;flex-direction:column;flex:1;min-height:0">
-        <sc-for list="{{habitos}}" as="h" hint-placeholder-count="12">
+        <sc-for list="{{habitos}}" as="h" hint-placeholder-count="10">
           <div style="display:flex;align-items:center;gap:10px;padding:2px 5px;border-radius:9px;flex:1;min-height:33px;border-bottom:1px solid rgba(255,255,255,.04);background:{{h.fondo}}">
 
             <div style="width:192px;flex-shrink:0;min-width:0;display:flex;align-items:center;gap:9px">
@@ -383,8 +395,8 @@
 <script data-dc-script data-props='{"$preview":{"width":1440,"height":980}}'>
 class Component extends DCLogic {
 
-  /* Doce hábitos, de lo que el propio proyecto ya registra en otras pantallas:
-     el gym y la natación de Ejercicio, el CENLEX, el CT-GenAI que tiene agendado,
+  /* Diez hábitos, de lo que el propio proyecto ya registra en otras pantallas:
+     el gym de Ejercicio, el CENLEX, el CT-GenAI que tiene agendado,
      el bloque de las 23:10, la revisión de gastos, skincare y el agua de Salud.
      Los datos de cumplimiento son de MUESTRA: esto es un diseño, no la app. */
   constructor(props) {
@@ -422,13 +434,12 @@ class Component extends DCLogic {
     };
 
     /* `fallos` son los días del mes en que tocaba y no se hizo. */
-    /* Los once del horario real (RUTINA_TASKS), en orden de hora. */
+    /* Los diez del horario real (RUTINA_TASKS), en orden de hora. */
     this.base = [
       { id:'app',    nombre:'Construir esta app',      hora:'06:43', ancla:'10 min antes de arrancar',            color:'#22d3ee', ico:I.codigo, dow:[1,2,3,4,5], fallos:[],      rec:11 },
       { id:'genai',  nombre:'CT-GenAI · 30 min',       hora:'08:30', ancla:'Al llegar a ALTEN, antes del correo', color:'#4ade80', ico:I.chip,   dow:[1,2,3,4,5], fallos:[8],     rec:7  },
       { id:'ale',    nombre:'Clase de alemán',         hora:'17:00', ancla:'CENLEX · ESCA Santo Tomás',           color:'#ffd93d', ico:I.habla,  dow:[1,2,3,4,5], fallos:[],      rec:14 },
       { id:'gym',    nombre:'Gimnasio',                hora:'18:15', ancla:'Tras el CENLEX · sábado 07:35',       color:'#ff8a3d', ico:I.pesa,   dow:[1,2,4,5,6], fallos:[],      rec:12 },
-      { id:'nata',   nombre:'Natación',                hora:'18:15', ancla:'Alberca del Fitsi Buenavista',        color:'#00e0c0', ico:I.onda,   dow:[3],         fallos:[],      rec:9  },
       { id:'fase0',  nombre:'Fase 0 · 1h15',           hora:'20:00', ancla:'Negocio de tu papá o plantilla GBM',  color:'#8b5cf6', ico:I.diana,  dow:[1,2,3,4,5], fallos:[4,9],   rec:5  },
       { id:'leer',   nombre:'Leer 10 páginas',         hora:'21:45', ancla:'En el cierre del día',                color:'#b06eff', ico:I.libro,  dow:'todos',     fallos:[3,7],   rec:11 },
       { id:'piel',   nombre:'Rutina de la noche',      hora:'22:30', ancla:'Piel, minoxidil y suplementos',       color:'#fb7185', ico:I.chispa, dow:'todos',     fallos:[4],     rec:13 },
@@ -537,75 +548,65 @@ class Component extends DCLogic {
       });
     }
 
-    /* ── Cómo va el mes: el acumulado día a día ────────────────────────
-       Una sola serie, así que no lleva leyenda: el título la nombra. Es el
-       porcentaje del mes calculado hasta cada día, no el del día suelto —
-       eso ya lo cuenta la fila de totales al pie de la cuadrícula. Dibujado
-       así, la línea sube cuando cierras días completos y cae cuando no. */
-    const semRaw = [];
-    let accOk = 0, accTot = 0;
-    for (let d = 1; d < this.HOY; d++) {
-      this.base.forEach(function (h) {
-        const e = self.estado(h, d);
-        if (e === 'off' || e === 'fut' || e === 'hoy') return;
-        accTot++;
-        if (e === 'ok' || e === 'hoyok') accOk++;
-      });
-      if (accTot) semRaw.push({ i: d, pct: Math.round(accOk / accTot * 100) });
-    }
-    const W = 420, H = 96, PAD = 10;
-    const pasoX = semRaw.length > 1 ? (W - PAD * 2) / (semRaw.length - 1) : 0;
-    const yDe = function (p) { return H - PAD - (p / 100) * (H - PAD * 2); };
-    const puntos = semRaw.map(function (s, i) {
-      const ultimo = i === semRaw.length - 1;
-      return { x: Math.round(PAD + i * pasoX), y: Math.round(yDe(s.pct)), pct: s.pct,
-               r: ultimo ? 4.5 : 2.5, op: ultimo ? 1 : .45 };
-    });
-    let lineaPath = '', areaPath = '';
-    if (puntos.length) {
-      lineaPath = puntos.map(function (p, i) { return (i ? 'L' : 'M') + p.x + ' ' + p.y; }).join(' ');
-      areaPath = lineaPath + ' L' + puntos[puntos.length - 1].x + ' ' + H + ' L' + puntos[0].x + ' ' + H + ' Z';
-    }
-    /* Solo cuatro etiquetas: con una por día se amontonan y no se lee ninguna */
-    const marcas = [0, Math.floor((semRaw.length - 1) / 3), Math.floor((semRaw.length - 1) * 2 / 3), semRaw.length - 1];
-    const semanas = semRaw.map(function (s, i) {
-      return {
-        lbl: marcas.indexOf(i) >= 0 ? ('d' + s.i) : '',
-        col: i === semRaw.length - 1 ? '#00e87a' : '#7d8199'
-      };
-    });
-    let tendTxt = '—', tendCol = '#7d8199';
-    if (semRaw.length >= 4) {
-      const dif = semRaw[semRaw.length - 1].pct - semRaw[semRaw.length - 4].pct;
-      tendTxt = (dif > 0 ? '+' : '') + dif + ' pts';
-      tendCol = dif > 0 ? '#00e87a' : (dif < 0 ? '#ff5c5c' : '#7d8199');
-    }
-
-    /* ── Perfil por día de la semana ─────────────────────────────────── */
-    const acumDow = [0,0,0,0,0,0,0].map(function () { return { ok: 0, tot: 0 }; });
+    /* ── Perfil por día de la semana ───────────────────────────────────
+       Una sola serie, así que no lleva leyenda: el título la nombra. Va de
+       lunes a domingo, que es como Adán piensa la semana. Además del % por
+       día se guarda el detalle por hábito, para nombrar el que más cae en el
+       peor día: eso es lo accionable. */
+    const ORDEN = [1, 2, 3, 4, 5, 6, 0];
+    const NOMD = ['DOM', 'LUN', 'MAR', 'MIÉ', 'JUE', 'VIE', 'SÁB'];
+    const LARGO = ['domingos', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábados'];
+    const acumDow = [0,0,0,0,0,0,0].map(function () { return { ok: 0, tot: 0, hab: {} }; });
+    let pOk = 0, pTot = 0;
     for (let d = 1; d < this.HOY; d++) {
       const w = this.dow(d);
       this.base.forEach(function (h) {
         const e = self.estado(h, d);
         if (e === 'off' || e === 'fut') return;
-        acumDow[w].tot++;
-        if (e === 'ok') acumDow[w].ok++;
+        const x = acumDow[w].hab[h.id] || (acumDow[w].hab[h.id] = { ok: 0, tot: 0, h: h });
+        acumDow[w].tot++; x.tot++; pTot++;
+        if (e === 'ok') { acumDow[w].ok++; x.ok++; pOk++; }
       });
     }
-    const MAXB = 74;
-    const porDow = acumDow.map(function (x, i) {
+    const H = 76, hoyW = this.dow(this.HOY);
+    let peor = -1, peorP = 101, mejorI = -1, mejorP = -1;
+    ORDEN.forEach(function (i) {
+      const x = acumDow[i];
+      if (!x.tot) return;
+      const p = x.ok / x.tot * 100;
+      if (p < peorP) { peorP = p; peor = i; }
+      if (p > mejorP) { mejorP = p; mejorI = i; }
+    });
+    const porDow = ORDEN.map(function (i) {
+      const x = acumDow[i];
       const pct = x.tot ? Math.round(x.ok / x.tot * 100) : null;
+      const rgb = pct === null ? null : (pct < 60 ? '255,92,92' : (pct < 80 ? '255,217,61' : '0,232,122'));
       return {
-        d: NOM[i],
+        d: NOMD[i],
         pct: pct === null ? '—' : pct + '%',
-        h: pct === null ? 3 : Math.max(4, Math.round(pct / 100 * MAXB)),
+        cnt: x.tot ? x.ok + '/' + x.tot : '',
+        tip: LARGO[i] + (x.tot ? ' · ' + x.ok + ' de ' + x.tot : ' · sin datos'),
+        h: pct === null ? 3 : Math.max(4, Math.round(pct / 100 * H)),
         bg: pct === null ? 'rgba(255,255,255,.08)'
-          : (pct < 60 ? '#ff5c5c' : (pct < 80 ? '#ffd93d' : 'rgba(0,232,122,.8)')),
-        col: pct === null ? '#7d8199' : (pct < 60 ? '#ff5c5c' : '#7d8199')
+          : (pct < 60 ? '#ff5c5c' : (pct < 80 ? '#ffd93d' : 'rgba(0,232,122,.85)')),
+        glow: pct === null ? 'none' : '0 0 12px rgba(' + rgb + ',.35)',
+        col: i === peor && peorP < 80 ? '#ff5c5c' : (i === hoyW ? '#00e0c0' : '#7d8199'),
+        colBg: i === hoyW ? 'rgba(0,224,192,.07)' : 'transparent'
       };
     });
+    const mediaPct = pTot ? Math.round(pOk / pTot * 100) : 0;
+    const mediaTop = Math.round(H - mediaPct / 100 * H);
+    let peorHab = '—', peorHabCnt = '';
+    if (peor >= 0) {
+      let hb = null, hp = 101;
+      Object.keys(acumDow[peor].hab).forEach(function (id) {
+        const x = acumDow[peor].hab[id], p = x.ok / x.tot * 100;
+        if (p < hp) { hp = p; hb = x; }
+      });
+      if (hb) { peorHab = hb.h.nombre; peorHabCnt = hb.ok + ' de ' + hb.tot; }
+    }
 
-    /* ── Hoy y riesgo ─────────────────────────────────────────────────── */
+    /* ── Hoy y riesgo ─────────────────────────────────────────────────── */    /* ── Hoy y riesgo ─────────────────────────────────────────────────── */
     const deHoy = this.base.filter(function (h) { return self.toca(h, self.HOY); })
       .map(function (h) {
         const m = self.meta(h), v = self.valor(h, self.HOY);
@@ -657,8 +658,11 @@ class Component extends DCLogic {
       riesgoN: riesgo.length,
       riesgoNombres: riesgo.length ? nomR : 'Nada',
       riesgoVerbo: riesgo.length > 1 ? 'se cayeron' : 'se cayó',
-      puntos: puntos, lineaPath: lineaPath, areaPath: areaPath, semanas: semanas,
-      tendTxt: tendTxt, tendCol: tendCol, porDow: porDow
+      porDow: porDow, perfilTot: pTot,
+      mediaPct: mediaPct + '%', mediaTop: mediaTop, mediaLbl: mediaTop < 11 ? mediaTop + 2 : mediaTop - 10,
+      peorDia: peor >= 0 ? NOMD[peor] : '—', peorPct: peor >= 0 ? Math.round(peorP) + '%' : '',
+      peorHab: peorHab, peorHabCnt: peorHabCnt,
+      mejorDia: mejorI >= 0 ? NOMD[mejorI] : '—', mejorPct: mejorI >= 0 ? Math.round(mejorP) + '%' : ''
     };
   }
 }

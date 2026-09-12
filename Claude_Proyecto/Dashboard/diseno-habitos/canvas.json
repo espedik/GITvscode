@@ -75,7 +75,7 @@
       "x": 750,
       "y": -200,
       "w": 690,
-      "text": "TRES GRÁFICAS, CADA UNA CON UN TRABAJO DISTINTO\n· El anillo es el titular: el % del mes, con su arco.\n· La tendencia por semana es la única que dice si vas a MEJOR — la cifra de al lado es la diferencia contra la semana previa.\n· El perfil por día dice DÓNDE se cae, que es lo accionable: un total global solo dice que te va mal."
+      "text": "DOS GRÁFICAS, CADA UNA CON UN TRABAJO DISTINTO\n· El anillo es el titular: el % del mes, con su arco.\n· El perfil por día de la semana dice DÓNDE se cae, que es lo accionable: un total global solo dice que te va mal. Siete columnas de lunes a domingo sobre una retícula de 25 en 25, la media del periodo punteada, y a la derecha el hallazgo: el peor día con el hábito que más cae ahí, y el mejor.\nLa gráfica de acumulado se quitó: no decía nada que la fila de totales del pie no dijera ya."
     },
     {
       "id": "nota-habitos",
@@ -83,7 +83,7 @@
       "x": 0,
       "y": 1030,
       "w": 760,
-      "text": "ONCE HÁBITOS, del horario real (los 58 bloques de RUTINA_TASKS), en orden de hora: la app a las 06:43, CT-GenAI al llegar a ALTEN, la clase de alemán de 17:00 a 18:00 en CENLEX · ESCA Santo Tomás, gym o natación a las 18:15, la Fase 0 a las 20:00, lectura a las 21:45, rutina de la noche, meditar, dormir — y el agua, sin hora, al final.\nLa fila de abajo sigue siendo la lectura vertical: cuántos cerraste cada día."
+      "text": "DIEZ HÁBITOS, del horario real (los 58 bloques de RUTINA_TASKS), en orden de hora: la app a las 06:43, CT-GenAI al llegar a ALTEN, la clase de alemán de 17:00 a 18:00 en CENLEX · ESCA Santo Tomás, el gym a las 18:15, la Fase 0 a las 20:00, lectura a las 21:45, rutina de la noche, meditar, dormir — y el agua, sin hora, al final.\nLa fila de abajo sigue siendo la lectura vertical: cuántos cerraste cada día."
     },
     {
       "id": "nota-ficha",
