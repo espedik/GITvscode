@@ -134,6 +134,11 @@
         <div style="font-family:var(--font-title);font-size:33px;font-weight:600;letter-spacing:-.01em;line-height:1.06;color:var(--text)">
           La cadena que no se rompe
         </div>
+        <!-- La frase del día: cambia con la fecha, no con cada repintado -->
+        <div style="display:flex;align-items:baseline;gap:9px;margin-top:6px;max-width:760px">
+          <span style="font-size:12.5px;font-style:italic;color:var(--text2);line-height:1.4">No subes al nivel de tus metas. Caes al nivel de tus sistemas.</span>
+          <span class="k" style="font-size:8px;letter-spacing:.14em;white-space:nowrap;flex-shrink:0">— James Clear</span>
+        </div>
       </div>
 
       <div style="display:flex;align-items:center;gap:10px;flex-shrink:0">
@@ -291,7 +296,7 @@
               </span>
               <div style="min-width:0">
                 <div style="font-size:12px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{h.nombre}}</div>
-                <div style="font-size:9px;color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{h.ancla}}</div>
+                <div style="font-size:9px;color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis"><b style="font-family:var(--mono);color:var(--cy);letter-spacing:.04em">{{h.horaTxt}}</b> · {{h.ancla}}</div>
               </div>
             </div>
 
@@ -364,7 +369,7 @@
                   <svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="#00e87a" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5 10 17.5 19 7"></path></svg>
                 </sc-if>
               </div>
-              <span style="font-size:11px;font-weight:600;color:{{t.txt}};white-space:nowrap">{{t.nombre}}</span>
+              <span style="font-size:10.5px;font-weight:600;color:{{t.txt}};white-space:nowrap">{{t.nombre}}</span>
               <i class="cuenta">{{t.cuenta}}</i>
             </div>
           </sc-for>
@@ -409,26 +414,34 @@ class Component extends DCLogic {
              'M12 7.5v9M14.6 9.8c-.6-.7-1.5-1-2.6-1-1.5 0-2.5.7-2.5 1.8 0 2.6 5.2 1.2 5.2 3.8 0 1.1-1 1.9-2.7 1.9-1.2 0-2.1-.4-2.7-1.1',
       gota:  'M12 3.5c3.2 3.6 6 6.4 6 9.6a6 6 0 0 1-12 0c0-3.2 2.8-6 6-9.6Z',
       chispa:'M12 3.5 13.7 9l5.5 1.7-5.5 1.7L12 18l-1.7-5.6L4.8 10.7 10.3 9Z' +
-             'M18.5 15.5l.7 2.2 2.3.8-2.3.7-.7 2.3-.7-2.3-2.3-.7 2.3-.8Z'
+             'M18.5 15.5l.7 2.2 2.3.8-2.3.7-.7 2.3-.7-2.3-2.3-.7 2.3-.8Z',
+      sol:   'M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6l1.4 1.4M17 17l1.4 1.4M5.6 18.4 7 17M17 7l1.4-1.4M12 8a4 4 0 1 0 0 8 4 4 0 1 0 0-8',
+      codigo:'M8 7l-5 5 5 5M16 7l5 5-5 5M14 4l-4 16',
+      diana: 'M12 3a9 9 0 1 0 0 18 9 9 0 1 0 0-18M12 8a4 4 0 1 0 0 8 4 4 0 1 0 0-8M12 11.5a.5.5 0 1 0 0 1 .5.5 0 1 0 0-1',
+      pluma: 'M4 20l4-1 11-11a2.1 2.1 0 0 0-3-3L5 16l-1 4ZM13.5 6.5l3 3M4 20h6'
     };
 
     /* `fallos` son los días del mes en que tocaba y no se hizo. */
+    /* Los trece del horario real (RUTINA_TASKS), en orden de hora. */
     this.base = [
-      { id:'gym',   nombre:'Gimnasio',         ancla:'19:00 · después de comer', color:'#ff8a3d', ico:I.pesa,   dow:[1,2,4,5], fallos:[],      rec:12 },
-      { id:'nata',  nombre:'Natación',         ancla:'Miércoles, 20:00',         color:'#00e0c0', ico:I.onda,   dow:[3],       fallos:[],      rec:9  },
-      { id:'pasos', nombre:'8 000 pasos',      ancla:'Caminata tras la comida',  color:'#4ade80', ico:I.pasos,  dow:'todos',   fallos:[6,9],   rec:10 },
-      { id:'ale',   nombre:'Alemán · 15 min',  ancla:'Antes del café',           color:'#ffd93d', ico:I.habla,  dow:'todos',   fallos:[6],     rec:14 },
-      { id:'genai', nombre:'CT-GenAI · 30 min',ancla:'Antes de abrir el correo', color:'#22d3ee', ico:I.chip,   dow:[1,2,3,4,5], fallos:[8],   rec:7  },
-      { id:'leer',  nombre:'Leer 10 páginas',  ancla:'Al acostarme',             color:'#b06eff', ico:I.libro,  dow:'todos',   fallos:[3,7],   rec:11 },
-      { id:'medi',  nombre:'Meditar · 5 min',  ancla:'23:10 · tras los dientes', color:'#00e87a', ico:I.loto,   dow:'todos',   fallos:[5,10],  rec:14 },
-      { id:'sueno', nombre:'Dormir 7 h',       ancla:'Luz fuera a las 23:40',    color:'#818cf8', ico:I.luna,   dow:'todos',   fallos:[2,6,9], rec:8  },
-      /* `meta` parte el hábito en pasos: el agua se marca litro a litro. */
-      { id:'agua',  nombre:'Agua · 3 litros',  ancla:'Botella llena al salir',   color:'#00b8d9', ico:I.gota,   dow:'todos',   fallos:[9],     rec:16, meta:3 },
-      { id:'piel',  nombre:'Skincare noche',   ancla:'Después de la ducha',      color:'#fb7185', ico:I.chispa, dow:'todos',   fallos:[4],     rec:13 }
+      { id:'snooze', nombre:'Sin snooze',              hora:'06:40', ancla:'Celular fuera del cuarto',            color:'#fb923c', ico:I.sol,    dow:[1,2,3,4,5], fallos:[3],     rec:6  },
+      { id:'app',    nombre:'Construir esta app',      hora:'06:43', ancla:'10 min antes de arrancar',            color:'#22d3ee', ico:I.codigo, dow:[1,2,3,4,5], fallos:[],      rec:11 },
+      { id:'genai',  nombre:'CT-GenAI · 30 min',       hora:'08:30', ancla:'Al llegar a ALTEN, antes del correo', color:'#4ade80', ico:I.chip,   dow:[1,2,3,4,5], fallos:[8],     rec:7  },
+      { id:'ale',    nombre:'Clase de alemán',         hora:'17:00', ancla:'CENLEX · ESCA Santo Tomás',           color:'#ffd93d', ico:I.habla,  dow:[1,2,3,4,5], fallos:[],      rec:14 },
+      { id:'gym',    nombre:'Gimnasio',                hora:'18:15', ancla:'Tras el CENLEX · sábado 07:35',       color:'#ff8a3d', ico:I.pesa,   dow:[1,2,4,5,6], fallos:[],      rec:12 },
+      { id:'nata',   nombre:'Natación',                hora:'18:15', ancla:'Alberca del Fitsi Buenavista',        color:'#00e0c0', ico:I.onda,   dow:[3],         fallos:[],      rec:9  },
+      { id:'fase0',  nombre:'Fase 0 · 1h15',           hora:'20:00', ancla:'Negocio de tu papá o plantilla GBM',  color:'#8b5cf6', ico:I.diana,  dow:[1,2,3,4,5], fallos:[4,9],   rec:5  },
+      { id:'leer',   nombre:'Leer 10 páginas',         hora:'21:45', ancla:'En el cierre del día',                color:'#b06eff', ico:I.libro,  dow:'todos',     fallos:[3,7],   rec:11 },
+      { id:'diario', nombre:'Diario y plan de mañana', hora:'21:45', ancla:'Tras leer',                           color:'#f472b6', ico:I.pluma,  dow:'todos',     fallos:[6],     rec:8  },
+      { id:'piel',   nombre:'Rutina de la noche',      hora:'22:30', ancla:'Piel, minoxidil y suplementos',       color:'#fb7185', ico:I.chispa, dow:'todos',     fallos:[4],     rec:13 },
+      { id:'medi',   nombre:'Meditar · 10 min',        hora:'23:00', ancla:'Respiración box 4-4-4-4',             color:'#00e87a', ico:I.loto,   dow:'todos',     fallos:[5,10],  rec:14 },
+      { id:'sueno',  nombre:'Dormir 7 h',              hora:'23:59', ancla:'Apagar pantallas al cerrar la app',   color:'#818cf8', ico:I.luna,   dow:'todos',     fallos:[2,6,9], rec:8  },
+      /* `meta` parte el hábito en pasos: el agua se marca litro a litro. Sin hora: todo el día. */
+      { id:'agua',   nombre:'Agua · 3 litros',         hora:'',      ancla:'Botella llena al salir',              color:'#00b8d9', ico:I.gota,   dow:'todos',     fallos:[9],     rec:16, meta:3 }
     ];
 
     /* `hechos` guarda cuántos pasos lleva hoy cada uno: 2 de 3 litros de agua. */
-    this.state = { hechos: { ale:1, leer:1, agua:2, pasos:1, piel:1, genai:1 } };
+    this.state = { hechos: { snooze:1, app:1, ale:1, leer:1, agua:2, piel:1, genai:1 } };
   }
 
   dow(d) { return (this.DOW0 + d - 1) % 7; }
@@ -497,7 +510,7 @@ class Component extends DCLogic {
       const rec = Math.max(h.rec, r);
       const enRiesgo = h.fallos.indexOf(self.HOY - 1) >= 0 && !self.state.hechos[h.id];
       return {
-        nombre: h.nombre, ancla: h.ancla, color: h.color, ico: h.ico, celdas: celdas,
+        nombre: h.nombre, ancla: h.ancla, horaTxt: h.hora || 'Todo el día', color: h.color, ico: h.ico, celdas: celdas,
         racha: r, record: rec,
         pctRec: rec ? Math.round(Math.min(r / rec, 1) * 100) : 0,
         rachaCol: r >= 7 ? '#00e87a' : (r >= 3 ? '#ffd93d' : '#7d8199'),

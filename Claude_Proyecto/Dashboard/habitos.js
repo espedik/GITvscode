@@ -69,47 +69,103 @@
     gota:  'M12 3.5c3.2 3.6 6 6.4 6 9.6a6 6 0 0 1-12 0c0-3.2 2.8-6 6-9.6Z',
     chispa:'M12 3.5 13.7 9l5.5 1.7-5.5 1.7L12 18l-1.7-5.6L4.8 10.7 10.3 9Z' +
            'M18.5 15.5l.7 2.2 2.3.8-2.3.7-.7 2.3-.7-2.3-2.3-.7 2.3-.8Z',
+    sol:   'M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6l1.4 1.4M17 17l1.4 1.4M5.6 18.4 7 17M17 7l1.4-1.4M12 8a4 4 0 1 0 0 8 4 4 0 1 0 0-8',
+    codigo:'M8 7l-5 5 5 5M16 7l5 5-5 5M14 4l-4 16',
+    diana: 'M12 3a9 9 0 1 0 0 18 9 9 0 1 0 0-18M12 8a4 4 0 1 0 0 8 4 4 0 1 0 0-8M12 11.5a.5.5 0 1 0 0 1 .5.5 0 1 0 0-1',
+    pluma: 'M4 20l4-1 11-11a2.1 2.1 0 0 0-3-3L5 16l-1 4ZM13.5 6.5l3 3M4 20h6',
     punto: 'M12 4.5a7.5 7.5 0 1 0 0 15 7.5 7.5 0 1 0 0-15'   // el de los hábitos nuevos
   };
   const ICO_NOMBRES = Object.keys(ICO);
 
   /* ── Los hábitos de arranque ──────────────────────────────────────────
-     Salen de lo que el proyecto ya registra en otras pantallas: el gym y la
-     natación de Ejercicio, el CENLEX, el CT-GenAI que tiene agendado, el
-     bloque de las 23:10, la revisión de gastos, skincare y el agua de Salud.
-     `dow` son los días en que toca (0=domingo) o 'todos'. Es solo la semilla:
-     se editan desde la propia pantalla. */
+     Salen del horario real de Adán (RUTINA_TASKS en datos-maestros.js, los 58
+     bloques de la semana): la hora, el anclaje y los días son los de ahí.
+     `hora` ordena la lista; 'todo el día' (vacío) va al final. `dow` son los
+     días en que toca (0=domingo) o 'todos'. Es solo la semilla: se editan
+     desde la propia pantalla. */
   const SEMILLA = [
-    { id:'gym',    nombre:'Gimnasio',          ancla:'19:00 · después de comer',      color:'#ff8a3d', ico:'pesa',   dow:[1,2,4,5] },
-    { id:'nata',   nombre:'Natación',          ancla:'Miércoles, 20:00',              color:'#00e0c0', ico:'onda',   dow:[3] },
-    { id:'pasos',  nombre:'8 000 pasos',       ancla:'Caminata tras la comida',       color:'#4ade80', ico:'pasos',  dow:'todos' },
-    { id:'ale',    nombre:'Alemán · 15 min',   ancla:'Antes del café',                color:'#ffd93d', ico:'habla',  dow:'todos' },
-    { id:'genai',  nombre:'CT-GenAI · 30 min', ancla:'Antes de abrir el correo',      color:'#22d3ee', ico:'chip',   dow:[1,2,3,4,5] },
-    { id:'leer',   nombre:'Leer 10 páginas',   ancla:'Al acostarme',                  color:'#b06eff', ico:'libro',  dow:'todos' },
-    { id:'medi',   nombre:'Meditar · 5 min',   ancla:'23:10 · tras lavarme los dientes', color:'#00e87a', ico:'loto', dow:'todos' },
-    { id:'sueno',  nombre:'Dormir 7 h',        ancla:'Luz fuera a las 23:40',         color:'#818cf8', ico:'luna',   dow:'todos' },
+    { id:'snooze', nombre:'Sin snooze',             ancla:'Celular fuera del cuarto',                    hora:'06:40', color:'#fb923c', ico:'sol',    dow:[1,2,3,4,5] },
+    { id:'app',    nombre:'Construir esta app',     ancla:'10 min antes de arrancar · y de 23:30 a 00:00', hora:'06:43', color:'#22d3ee', ico:'codigo', dow:[1,2,3,4,5] },
+    { id:'genai',  nombre:'CT-GenAI · 30 min',      ancla:'Al llegar a ALTEN, antes del correo',         hora:'08:30', color:'#4ade80', ico:'chip',   dow:[1,2,3,4,5] },
+    { id:'ale',    nombre:'Clase de alemán',        ancla:'CENLEX · ESCA Santo Tomás, hasta las 18:00',  hora:'17:00', color:'#ffd93d', ico:'habla',  dow:[1,2,3,4,5] },
+    { id:'gym',    nombre:'Gimnasio',               ancla:'Tras el CENLEX · el sábado a las 07:35',      hora:'18:15', color:'#ff8a3d', ico:'pesa',   dow:[1,2,4,5,6] },
+    { id:'nata',   nombre:'Natación',               ancla:'Alberca del Fitsi Buenavista',                hora:'18:15', color:'#00e0c0', ico:'onda',   dow:[3] },
+    { id:'fase0',  nombre:'Fase 0 · 1h15',          ancla:'Negocio de tu papá o plantilla GBM',          hora:'20:00', color:'#8b5cf6', ico:'diana',  dow:[1,2,3,4,5] },
+    { id:'leer',   nombre:'Leer 10 páginas',        ancla:'En el cierre del día',                        hora:'21:45', color:'#b06eff', ico:'libro',  dow:'todos' },
+    { id:'diario', nombre:'Diario y plan de mañana',ancla:'En el cierre del día, tras leer',             hora:'21:45', color:'#f472b6', ico:'pluma',  dow:'todos' },
+    { id:'piel',   nombre:'Rutina de la noche',     ancla:'Piel, minoxidil y suplementos',               hora:'22:30', color:'#fb7185', ico:'chispa', dow:'todos' },
+    { id:'medi',   nombre:'Meditar · 10 min',       ancla:'Respiración box 4-4-4-4',                     hora:'23:00', color:'#00e87a', ico:'loto',   dow:'todos' },
+    { id:'sueno',  nombre:'Dormir 7 h',             ancla:'Apagar pantallas al cerrar la app',           hora:'23:59', color:'#818cf8', ico:'luna',   dow:'todos' },
     /* `meta` parte el hábito en pasos: el agua se marca litro a litro y solo
-       cuenta como cumplida al tercero. Un hábito sin `meta` es de un paso. */
-    { id:'agua',   nombre:'Agua · 3 litros',   ancla:'Botella llena al salir',        color:'#00b8d9', ico:'gota',   dow:'todos', meta:3 },
-    { id:'piel',   nombre:'Skincare noche',    ancla:'Después de la ducha',           color:'#fb7185', ico:'chispa', dow:'todos' }
+       cuenta como cumplida al tercero. Sin hora: es de todo el día. */
+    { id:'agua',   nombre:'Agua · 3 litros',        ancla:'Botella llena al salir',                      hora:'',      color:'#00b8d9', ico:'gota',   dow:'todos', meta:3 }
   ];
-  /* Los siete de la primera versión. Sirven para saber si Adán tocó su lista:
-     si lo guardado es exactamente esto, nunca la editó y se puede subir a la
-     semilla nueva sin pisarle nada. */
-  const SEMILLA_V1 = ['gym','nata','ale','leer','medi','gasto','agua'];
-  /* Hábitos retirados de la semilla. Se borran una sola vez de la lista ya
-     guardada (y con ellos sus marcas), porque Adán pidió quitarlos. */
-  const RETIRADOS = ['azucar', 'gasto'];
+
+  /* ── Migraciones ──────────────────────────────────────────────────────
+     `S.mig` guarda la última aplicada. Cada una corre una sola vez y en orden.
+     La regla de todas: lo que Adán editó a mano manda. Un hábito se considera
+     "suyo" si su nombre o su anclaje no son los que le puso la semilla anterior
+     — entonces se le añade solo lo nuevo (la hora) y no se le toca nada más. */
+  const MIG = 3;
+  const RETIRADOS = { 2: ['azucar', 'gasto'], 3: ['pasos'] };
+  /* Lo que decía la semilla anterior de cada hábito, para saber si Adán lo tocó */
+  const PREVIO = {
+    gym:   [['Gimnasio', '19:00 · después de comer']],
+    nata:  [['Natación', 'Miércoles, 20:00']],
+    ale:   [['Alemán · 15 min', 'Antes del café']],
+    genai: [['CT-GenAI · 30 min', 'Antes de abrir el correo']],
+    leer:  [['Leer 10 páginas', 'Al acostarme']],
+    medi:  [['Meditar · 5 min', '23:10 · tras lavarme los dientes']],
+    sueno: [['Dormir 7 h', 'Luz fuera a las 23:40']],
+    agua:  [['Agua · 3 litros', 'Botella llena al salir'], ['3 litros de agua', 'Botella llena al salir']],
+    piel:  [['Skincare noche', 'Después de la ducha']]
+  };
+  const intacto = function (h) {
+    const p = PREVIO[h.id];
+    if (!p) return false;
+    return p.some(function (v) { return h.nombre === v[0] && h.ancla === v[1]; });
+  };
+  const semillaDe = function (id) {
+    return SEMILLA.filter(function (x) { return x.id === id; })[0];
+  };
 
   const PALETA = ['#ff8a3d','#00e0c0','#ffd93d','#b06eff','#00e87a','#3b82f6',
-                  '#00b8d9','#f472b6','#ff5c5c','#8b5cf6','#4ade80','#22d3ee','#818cf8','#fb7185'];
+                  '#00b8d9','#f472b6','#ff5c5c','#8b5cf6','#4ade80','#22d3ee','#818cf8','#fb7185','#fb923c'];
   const DOW_N = ['D','L','M','M','J','V','S'];
   const DOW_LARGO = ['domingos','lunes','martes','miércoles','jueves','viernes','sábados'];
   const MESES = ['enero','febrero','marzo','abril','mayo','junio','julio',
                  'agosto','septiembre','octubre','noviembre','diciembre'];
 
+  /* ── Frases para formar hábitos ───────────────────────────────────────
+     Una por día, elegida por la fecha (no al azar: la misma todo el día). Solo
+     autores comprobables; las que no llevan nombre son de la casa. */
+  const FRASES = [
+    ['No subes al nivel de tus metas. Caes al nivel de tus sistemas.', 'James Clear, Hábitos atómicos'],
+    ['Cada acción que tomas es un voto por el tipo de persona en que quieres convertirte.', 'James Clear'],
+    ['Los hábitos son el interés compuesto de la superación personal.', 'James Clear'],
+    ['Somos lo que hacemos repetidamente. La excelencia, entonces, no es un acto sino un hábito.', 'Will Durant, sobre Aristóteles'],
+    ['Primero hacemos nuestros hábitos, y luego nuestros hábitos nos hacen a nosotros.', 'John Dryden'],
+    ['La motivación es lo que te pone en marcha. El hábito es lo que te mantiene.', 'Jim Ryun'],
+    ['No rompas la cadena.', 'Jerry Seinfeld'],
+    ['Nunca falles dos veces seguidas. Un fallo es un accidente; dos es el principio de un hábito nuevo.', 'James Clear'],
+    ['Hazlo tan fácil que no puedas decir que no.', 'James Clear, la regla de los dos minutos'],
+    ['Un uno por ciento mejor cada día es treinta y siete veces mejor en un año.', 'James Clear'],
+    ['La motivación te va a fallar la mayoría de los días. Exígete el hábito, no la motivación.', ''],
+    ['El día que no tienes ganas es el único que cuenta de verdad.', ''],
+    ['No se trata de hacerlo perfecto. Se trata de no dejar el hueco.', ''],
+    ['La racha no es el premio. El premio es en quién te conviertes mientras la sostienes.', ''],
+    ['Cinco minutos hoy valen más que una hora que nunca llega.', ''],
+    ['Le exiges rigor a un sistema en el trabajo. Exígeselo a tus hábitos.', '']
+  ];
+  function fraseDelDia() {
+    const d = new Date();
+    const inicio = new Date(d.getFullYear(), 0, 0);
+    const dia = Math.floor((d - inicio) / 86400000);
+    return FRASES[dia % FRASES.length];
+  }
+
   /* ── Estado ───────────────────────────────────────────────────────────── */
-  let S = null;            // { def:[], marcas:{}, desde:'YYYY-MM-DD' }
+  let S = null;            // { def:[], marcas:{}, desde:'YYYY-MM-DD', mig:n }
   let mesVisto = null;
   let fichaId = null;
 
@@ -121,49 +177,42 @@
     let nuevo = false;
     if (g && g.def && g.def.length) {
       S = g;
-      /* Subir de los 7 originales a los 12 SOLO si la lista está intacta: si
-         Adán añadió, borró o renombró algo, la suya manda y no se toca. */
-      const ids = S.def.map(function (h) { return h.id; }).sort().join(',');
-      if (ids === SEMILLA_V1.slice().sort().join(',')) {
-        const nuevos = SEMILLA.filter(function (s) {
-          return !S.def.some(function (h) { return h.id === s.id; });
-        }).map(function (s) { return Object.assign({}, s, { desde: hoyISO() }); });
-        if (nuevos.length) { S.def = S.def.concat(nuevos); nuevo = true; }
-      }
-      /* Los dos que Adán pidió quitar salen de su lista y de su historial.
-         Se hace una vez: si después crea uno con ese id, no se vuelve a tocar. */
-      if (!S.retirado) {
-        const fuera = S.def.filter(function (h) { return RETIRADOS.indexOf(h.id) >= 0; });
+      if (!S.marcas) S.marcas = {};
+      /* La bandera vieja `retirado` equivale a la migración 2 */
+      if (!S.mig) S.mig = S.retirado ? 2 : 1;
+
+      for (let m = S.mig + 1; m <= MIG; m++) {
+        /* 1) Los retirados salen de la lista y de su historial */
+        const fuera = RETIRADOS[m] || [];
         if (fuera.length) {
-          S.def = S.def.filter(function (h) { return RETIRADOS.indexOf(h.id) < 0; });
+          S.def = S.def.filter(function (h) { return fuera.indexOf(h.id) < 0; });
           Object.keys(S.marcas).forEach(function (f) {
-            RETIRADOS.forEach(function (id) { delete S.marcas[f][id]; });
+            fuera.forEach(function (id) { delete S.marcas[f][id]; });
             if (!Object.keys(S.marcas[f]).length) delete S.marcas[f];
           });
         }
-        S.retirado = 1;
+        /* 2) Los que siguen: si Adán no los tocó, toman la semilla nueva entera;
+              si los tocó, solo reciben lo que no tenían (hora, icono, meta). */
+        S.def.forEach(function (h) {
+          const sem = semillaDe(h.id);
+          if (!sem) { if (!h.ico || !ICO[h.ico]) h.ico = 'punto'; return; }
+          if (intacto(h)) {
+            h.nombre = sem.nombre; h.ancla = sem.ancla; h.dow = sem.dow;
+            h.color = sem.color; h.ico = sem.ico;
+          }
+          if (h.hora === undefined) h.hora = sem.hora;
+          if (!h.ico || !ICO[h.ico]) h.ico = sem.ico;
+          if (sem.meta && !h.meta) h.meta = sem.meta;
+        });
+        /* 3) Los nuevos de la semilla entran con su arranque en hoy */
+        SEMILLA.forEach(function (sem) {
+          if (S.def.some(function (h) { return h.id === sem.id; })) return;
+          S.def.push(Object.assign({}, sem, { desde: hoyISO() }));
+        });
+        S.mig = m;
         nuevo = true;
       }
-      /* El agua pasó a contarse por litros: se le pone su meta si venía sin ella.
-         El nombre viejo llevaba la cantidad dentro ("3 litros de agua") y junto al
-         contador se leía "3 litros de agua 3/3", así que se cambia por el de la
-         semilla — pero solo si Adán no lo había renombrado él. */
-      const NOMBRE_V1 = { agua: '3 litros de agua' };
-      S.def.forEach(function (h) {
-        const sem = SEMILLA.filter(function (x) { return x.id === h.id; })[0];
-        if (!sem || !sem.meta || h.meta) return;
-        h.meta = sem.meta;
-        if (h.nombre === NOMBRE_V1[h.id]) h.nombre = sem.nombre;
-        nuevo = true;
-      });
-      /* Los hábitos de antes no traían icono: se les asigna el de la semilla
-         por id, y uno neutro a los que Adán haya creado él. */
-      S.def.forEach(function (h) {
-        if (h.ico && ICO[h.ico]) return;
-        const s = SEMILLA.filter(function (x) { return x.id === h.id; })[0];
-        h.ico = s ? s.ico : 'punto';
-        nuevo = true;
-      });
+      delete S.retirado;
     } else {
       /* Sin lista de hábitos, pero `marcas` y `desde` se conservan: pueden venir
          de una versión anterior o de una restauración a medias, y son historial
@@ -171,7 +220,8 @@
       S = {
         def: SEMILLA.map(function (h) { return Object.assign({}, h); }),
         marcas: (g && g.marcas) || {},
-        desde: g && g.desde
+        desde: g && g.desde,
+        mig: MIG
       };
       nuevo = true;
     }
@@ -186,6 +236,15 @@
     if (!S.desde) { S.desde = hoyISO(); nuevo = true; }
     if (nuevo) guardar();
     return S;
+  }
+
+  /* La lista en el orden en que se vive el día. Los sin hora (el agua) al final.
+     Se ordena una copia: el orden guardado es el de creación y no se toca. */
+  function ordenados() {
+    return S.def.slice().sort(function (a, b) {
+      const ha = a.hora || '99:99', hb = b.hora || '99:99';
+      return ha < hb ? -1 : (ha > hb ? 1 : 0);
+    });
   }
 
   function guardar() {
@@ -278,7 +337,7 @@
       return estado(h, ayer) === 'no' && toca(h, hoy) && !marcado(h, hoy);
     });
   }
-  function delDia(fecha) { return S.def.filter(function (h) { return toca(h, fecha); }); }
+  function delDia(fecha) { return ordenados().filter(function (h) { return toca(h, fecha); }); }
 
   function toggle(id, fecha) {
     if (fecha > hoyISO()) return;
@@ -372,7 +431,7 @@
     }).join('');
 
     /* ── Filas ─────────────────────────────────────────────────────────── */
-    const filas = S.def.map(function (h) {
+    const filas = ordenados().map(function (h) {
       const r = racha(h), rec = Math.max(record(h), r);
       const peligro = riesgo.some(function (x) { return x.id === h.id; });
       const celdas = dias.map(function (f) {
@@ -397,7 +456,9 @@
           '<span class="hb2-ico">' + svgIco(h.ico, h.color, 14) + '</span>' +
           '<span class="hb2-nom-t">' +
             '<span class="hb2-nom-n">' + esc(h.nombre) + '</span>' +
-            '<span class="hb2-nom-a">' + esc(h.ancla || '') + '</span>' +
+            '<span class="hb2-nom-a">' +
+              (h.hora ? '<b>' + esc(h.hora) + '</b>' : '<b>Todo el día</b>') +
+              (h.ancla ? ' · ' + esc(h.ancla) : '') + '</span>' +
           '</span>' +
         '</button>' +
         '<div class="hb2-celdas">' + celdas + '</div>' +
@@ -470,6 +531,7 @@
             '<span class="hb2-k" style="color:var(--cy)">Hábitos · sistema de constancia</span>' +
             '<span class="hb2-linea"></span></div>' +
           '<div class="hb2-titulo">La cadena que no se rompe</div>' +
+          fraseHTML() +
         '</div>' +
         '<div class="hb2-hd-r">' +
           '<div class="hb2-panel hb2-mes">' +
@@ -657,6 +719,16 @@
       '<div class="hb2-pbs">' + barras + '</div></div>';
   }
 
+  /* La frase del día. Está debajo del título, que es donde se lee antes de
+     mirar ningún número — y cambia con la fecha, no con cada repintado. */
+  function fraseHTML() {
+    const f = fraseDelDia();
+    return '<div class="hb2-frase">' +
+      '<span class="hb2-frase-t">' + esc(f[0]) + '</span>' +
+      (f[1] ? '<span class="hb2-frase-a">' + esc(f[1]) + '</span>' : '') +
+    '</div>';
+  }
+
   function kpi(n, uni, lbl, col, alerta) {
     return '<div class="hb2-panel hb2-kpi' + (alerta ? ' hb2-hot' : '') + '">' +
       '<div class="hb2-kpi-v"><b style="color:' + col + '">' + n + '</b>' +
@@ -737,7 +809,8 @@
         '<div class="hb2-ficha-a">' + ICO_ANCLA + '<span>' +
           (h.ancla ? esc(h.ancla) : '<i style="color:var(--text3)">Sin anclaje — añádele uno, es lo que hace que ocurra</i>') +
         '</span></div>' +
-        '<div class="hb2-ficha-dow">' + (h.dow === 'todos' ? 'Todos los días'
+        '<div class="hb2-ficha-dow">' + (h.hora ? '<b>' + esc(h.hora) + '</b> · ' : '') +
+          (h.dow === 'todos' ? 'Todos los días'
           : 'Toca los ' + h.dow.map(function (i) { return DOW_LARGO[i]; }).join(', ')) + '</div>' +
 
         '<div class="hb2-panel hb2-ficha-rac">' +
@@ -783,7 +856,7 @@
   function editor(h) {
     const ov = document.getElementById('hb2Ficha');
     const nuevo = !h;
-    const v = h || { id:'', nombre:'', ancla:'', color: PALETA[S.def.length % PALETA.length],
+    const v = h || { id:'', nombre:'', ancla:'', hora:'', color: PALETA[S.def.length % PALETA.length],
                      ico: 'punto', dow: 'todos' };
     const todos = v.dow === 'todos';
 
@@ -799,8 +872,12 @@
         '<label class="hb2-lbl">Nombre</label>' +
         '<input class="hb2-in" id="hbEdN" value="' + esc(v.nombre) + '" placeholder="Leer 10 páginas" maxlength="40">' +
 
-        '<label class="hb2-lbl">Anclaje <i>— después de qué cosa que ya haces</i></label>' +
-        '<input class="hb2-in" id="hbEdA" value="' + esc(v.ancla) + '" placeholder="Al acostarme, tras dejar el móvil" maxlength="60">' +
+        '<div class="hb2-ed-2">' +
+          '<div><label class="hb2-lbl">Hora <i>— ordena la lista</i></label>' +
+          '<input class="hb2-in" id="hbEdH" type="time" value="' + esc(v.hora || '') + '"></div>' +
+          '<div style="flex:1"><label class="hb2-lbl">Anclaje <i>— después de qué cosa que ya haces</i></label>' +
+          '<input class="hb2-in" id="hbEdA" value="' + esc(v.ancla) + '" placeholder="Al acostarme, tras dejar el móvil" maxlength="60"></div>' +
+        '</div>' +
 
         '<label class="hb2-lbl">Qué días toca</label>' +
         '<div class="hb2-dows">' +
@@ -913,6 +990,7 @@
       const nom = (document.getElementById('hbEdN').value || '').trim();
       if (!nom) { document.getElementById('hbEdN').focus(); return; }
       const ancla = (document.getElementById('hbEdA').value || '').trim();
+      const hora = (document.getElementById('hbEdH').value || '').trim();
       const dowS = ov.dataset.dow;
       const dow = dowS === 'todos' ? 'todos' : dowS.split(',').map(Number);
       const color = ov.dataset.col || PALETA[0];
@@ -920,13 +998,13 @@
 
       if (id) {
         S.def.forEach(function (h) {
-          if (h.id === id) { h.nombre = nom; h.ancla = ancla; h.dow = dow; h.color = color; h.ico = ico; }
+          if (h.id === id) { h.nombre = nom; h.ancla = ancla; h.hora = hora; h.dow = dow; h.color = color; h.ico = ico; }
         });
       } else {
         let base = nom.toLowerCase().replace(/[^a-z0-9]/g, '').slice(0, 8) || 'h';
         let nid = base, k = 2;
         while (S.def.some(function (h) { return h.id === nid; })) nid = base + (k++);
-        S.def.push({ id: nid, nombre: nom, ancla: ancla, color: color, ico: ico, dow: dow, desde: hoyISO() });
+        S.def.push({ id: nid, nombre: nom, ancla: ancla, hora: hora, color: color, ico: ico, dow: dow, desde: hoyISO() });
       }
       guardar();
       HB.cerrarFicha();
@@ -1032,6 +1110,12 @@
 .hb2-titulo{font-family:var(--font-title);font-size:clamp(21px,2.4vw,32px);font-weight:600;
   letter-spacing:-.01em;line-height:1.06;color:var(--text)}
 .hb2-hd-r{display:flex;align-items:center;gap:10px;flex-shrink:0}
+/* La frase del día: itálica bajo el título, con el autor en mono pequeño */
+.hb2-frase{display:flex;align-items:baseline;gap:9px;margin-top:6px;max-width:760px}
+.hb2-frase-t{font-size:12.5px;font-style:italic;color:var(--text2);line-height:1.4}
+.hb2-frase-a{font-family:var(--mono);font-size:8px;font-weight:700;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--text3);white-space:nowrap;flex-shrink:0}
+.hb2-frase-a::before{content:'— '}
 .hb2-mes{padding:7px 12px;display:flex;align-items:center;gap:8px;
   font-family:var(--mono);font-size:11.5px;font-weight:700;color:var(--text2);
   letter-spacing:.1em;text-transform:uppercase}
@@ -1119,6 +1203,7 @@
   text-overflow:ellipsis}
 .hb2-nom:hover .hb2-nom-n{color:var(--cy)}
 .hb2-nom-a{font-size:9px;color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hb2-nom-a b{font-family:var(--mono);font-weight:700;color:var(--cy);letter-spacing:.04em}
 .hb2-celdas{display:flex;gap:3px}
 .hb2-rac{width:128px;flex-shrink:0;display:flex;align-items:center;justify-content:flex-end;
   gap:11px;padding-right:2px}
@@ -1244,6 +1329,7 @@
 .hb2-ficha-a{display:flex;align-items:center;gap:7px;font-size:11.5px;color:var(--text2)}
 .hb2-ficha-a svg{width:13px;height:13px;color:var(--cy);flex-shrink:0}
 .hb2-ficha-dow{font-size:10.5px;color:var(--text3);margin:5px 0 14px}
+.hb2-ficha-dow b{font-family:var(--mono);color:var(--cy)}
 .hb2-ficha-rac{padding:13px 15px;margin-bottom:11px}
 .hb2-ficha-rac-r{display:flex;align-items:flex-end;justify-content:space-between;gap:14px;margin-bottom:9px}
 .hb2-ficha-big{font-family:var(--mono);font-size:28px;font-weight:700;line-height:1;margin-top:5px;
@@ -1299,6 +1385,8 @@
 .hb2-in{width:100%;padding:10px 13px;border-radius:9px;border:1px solid rgba(var(--ov),.13);
   background:rgba(var(--ov),.04);color:var(--text);font-family:inherit;font-size:13px}
 .hb2-in:focus{outline:none;border-color:var(--cy);background:rgba(var(--ov),.07)}
+.hb2-in[type=time]{width:112px;font-family:var(--mono);color-scheme:dark}
+.hb2-ed-2{display:flex;gap:10px;align-items:flex-start}
 .hb2-dows,.hb2-cols,.hb2-icos{display:flex;gap:6px;flex-wrap:wrap}
 .hb2-dow{padding:7px 12px;border-radius:8px;border:1px solid rgba(var(--ov),.13);
   background:rgba(var(--ov),.04);color:var(--text2);font-family:var(--mono);font-size:11px;

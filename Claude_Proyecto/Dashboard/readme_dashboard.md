@@ -499,6 +499,18 @@ El acumulado sustituyó a un "% por semana" que salió **plano al renderizarlo**
 solo hay dos semanas con datos y ambas dan el mismo número. El acumulado sí dibuja con los días
 que haya, y responde otra pregunta que la fila de totales — esa es por día suelto.
 
+### Los hábitos siguen el horario, y la lista va en orden de hora
+
+Los trece de la semilla salen de `RUTINA_TASKS` (datos-maestros.js, los 58 bloques de la semana):
+la hora, el anclaje y los días son los de ahí. Sin snooze a las 06:40, construir la app a las
+06:43, CT-GenAI al llegar a ALTEN, la clase de alemán de 17:00 a 18:00 en CENLEX · ESCA Santo
+Tomás, gym o natación a las 18:15, la Fase 0 a las 20:00, lectura y diario a las 21:45, la rutina
+de la noche a las 22:30, meditar a las 23:00, dormir a las 23:59 — y el agua, sin hora, al final.
+
+Cada hábito lleva `hora` y **la lista se pinta ordenada por ella**, de modo que se lee en el orden
+en que se vive el día. Se ordena una copia: el orden guardado es el de creación y no se toca. La
+hora se edita en la ficha (campo `time`) y sale en cian delante del anclaje.
+
 ### Un hábito puede pedir varios pasos
 
 El campo `meta` parte un hábito en tramos. El agua son **tres litros y se marca litro a
@@ -539,6 +551,10 @@ donde tiene que estar. Antes iba dentro del mismo scroll y quedaba cortada a med
 **El anclaje vive junto al nombre.** "23:10, después de lavarme los dientes" no es decoración: es
 lo que hace que el hábito ocurra.
 
+**Una frase al día, bajo el título.** Dieciséis frases sobre formar hábitos; la del día la elige la
+fecha, no el azar, así que es la misma todo el día. Solo autores comprobables (Clear, Durant sobre
+Aristóteles, Dryden, Ryun, Seinfeld); las que no llevan nombre son de la casa.
+
 **Un solo aviso, y solo cuando toca.** "Nunca falles dos veces seguidas" aparece únicamente cuando
 algo se cayó ayer y hoy sigue sin marcar; si no hay nada colgando, el panel dice "cadena intacta"
 y explica para qué sirve ese hueco. Con más de tres nombres lista tres y "y N más".
@@ -561,19 +577,19 @@ Al subir de 7 a 12 hábitos, la migración **solo añade los nuevos si la lista 
 Adán añadió, borró o renombró algo, la suya manda y no se toca. Y si el guardado trae `marcas`
 pero no `def`, el historial se conserva — reemplazar el objeto entero lo borraba sin avisar.
 
-Después se retiraron **Sin azúcar** y **Anotar gastos** a petición de Adán: salen de la lista y
-de su historial una sola vez (bandera `retirado`), así que si algún día crea uno con ese mismo
-id no se lo vuelve a borrar. En esa misma migración el agua recibió su `meta` y el nombre pasó
-de "3 litros de agua" a "Agua · 3 litros" — con el contador al lado, el viejo se leía "3 litros
-de agua 3/3". El nombre solo se cambia si Adán no lo había renombrado él.
+Las migraciones van por versión (`S.mig`, hoy en 3) y corren una sola vez y en orden. La regla de
+todas: **lo que Adán editó a mano manda**. Un hábito se considera suyo si su nombre o su anclaje no
+son los que le puso la semilla anterior — entonces solo recibe lo nuevo (la hora, el icono, la
+meta) y no se le toca nada más. Los retirados (Sin azúcar y Anotar gastos en la 2, 8 000 pasos en
+la 3) salen de la lista y de su historial; los nuevos entran con su arranque en hoy.
 
-**Medido** (Playwright, 1600px, 1280px y 390px): 10 filas × 30 celdas, 6 capas de
+**Medido** (Playwright, 1600px, 1280px y 390px): 13 filas × 30 celdas, 6 capas de
 fondo, el anillo con su arco correcto, la línea del acumulado con 10 puntos, 7 barras de
 perfil y 30 de totales. El agua recorre 0/3 → 1/3 → 2/3 → hecho → 0/3 en cuatro toques, con la
-celda al 33%, 67% y llena, y la barra del día subiendo en cada uno. Partiendo de un estado con
-los dos hábitos retirados, desaparecen ellos y sus marcas sin dejar huérfanas. Marcar mueve las
-cifras, el registro sobrevive a recargar y a 1600px no
-hay un solo desborde. Sin errores de consola.
+celda al 33%, 67% y llena, y la barra del día subiendo en cada uno. Partiendo del estado guardado con un hábito renombrado a mano, la migración 3 lo respeta, retira
+8 000 pasos con sus marcas, actualiza el alemán a las 17:00 y mete los cuatro nuevos con arranque
+en hoy; un hábito creado a las 07:10 cae en la posición 3. Marcar mueve las cifras, el registro
+sobrevive a recargar y a 1600px no hay un solo desborde. Sin errores de consola.
 
 ## Mi Día, en detalle
 
