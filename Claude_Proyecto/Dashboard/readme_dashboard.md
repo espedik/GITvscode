@@ -446,12 +446,27 @@ pintar `paso.boton` (HTML nuestro, detrás de `linkHtml`), con el estilo `.md-pa
 
 ## Hábitos — la cadena que no se rompe
 
-El slide 8. Vive entero en `habitos.js` — hábitos, motor, pintado y estilos — igual que el
-simulacro del ISTQB: `dashboard.html` solo aporta el `<section>` vacío, el tema de color y la
-entrada en las cuatro listas de pantallas. El diseño se acordó en `diseno-habitos/`, donde
-están también las dos direcciones que se descartaron.
+El slide 8. Vive entero en `habitos.js` — hábitos, motor, gráficas, pintado y estilos — igual
+que el simulacro del ISTQB: `dashboard.html` solo aporta el `<section>`, las seis capas del fondo,
+el tema de color y la entrada en las cuatro listas de pantallas. El diseño se acordó en
+`diseno-habitos/`, donde están también las dos direcciones descartadas.
 
-**Cuatro estados, no dos.** Es la decisión que sostiene todo lo demás:
+### Es la única pantalla que no sigue el tema
+
+Fija su propio esquema oscuro (`--bg:#04040c` y los acentos en cian/violeta) aunque el Dashboard
+esté en claro, igual que `.theme-aleman` fija los colores de su bandera. **Un HUD sobre fondo
+blanco deja de ser un HUD**: la retícula, las manchas y el glow de las celdas viven de un fondo
+casi negro. Se vio al medir en el navegador — Adán usa el Dashboard en claro y la primera versión
+perdía ahí todo su carácter.
+
+El fondo son **seis capas, todas CSS, ni una imagen**: una retícula fina que rima con la
+cuadrícula de datos, dos manchas de color, una malla en fuga con su línea de horizonte y un
+barrido de líneas casi invisible. Van en el `<section>` y no dentro de `#habitosSlide` porque
+`.slide-inner` está limitado a 1400px y el fondo tiene que llegar a los bordes de la pantalla.
+
+### Cuatro estados, no dos
+
+Es la decisión que sostiene todo lo demás:
 
 | Estado | Qué significa | Cuenta |
 |---|---|---|
@@ -465,39 +480,68 @@ están también las dos direcciones que se descartaron.
 Natación es solo los miércoles: un martes en blanco no es un fallo. Sin `off`, cualquier hábito
 de días alternos parecería un desastre y el tablero dejaría de decir la verdad.
 
-`pre` resuelve **el arranque en frío**, que se vio al medir: sin él, el primer día que se abre la
-pestaña el mes entero sale pintado de rojo — días en que "tocaba y no se marcó" porque no existía
-el registro. Un hábito no puede fallar antes de existir, así que nada anterior a `desde` cuenta.
-Esa fecha **se guarda en la primera carga**, no al primer toggle: si se abre hoy, no se marca nada
-y se vuelve en una semana, el arranque tiene que seguir siendo hoy.
+`pre` resuelve **el arranque en frío**, que solo apareció al medirlo: sin él, el primer día la
+pantalla salía con el mes entero pintado de rojo — días en que "tocaba y no se marcó" porque no
+existía el registro. Un hábito no puede fallar antes de existir, así que nada anterior a `desde`
+cuenta. Esa fecha **se guarda en la primera carga**, no al primer toggle: si se abre hoy, no se
+marca nada y se vuelve en una semana, el arranque tiene que seguir siendo hoy.
+
+### Las tres gráficas, y por qué ninguna repite a otra
+
+| Gráfica | Qué responde |
+|---|---|
+| **Anillo** | El titular: qué % del mes llevas cumplido |
+| **Cómo va el mes** | Acumulado día a día: ¿vas a mejor o a peor? Con la diferencia de los últimos 3 días |
+| **Perfil por día de la semana** | **Dónde** se cae, que es lo accionable: un total global solo dice que te va mal |
+| *(fila al pie de la cuadrícula)* | La lectura vertical: cuántos de los que tocaban cerraste cada día |
+
+El acumulado sustituyó a un "% por semana" que salió **plano al renderizarlo**: con 11 días de mes
+solo hay dos semanas con datos y ambas dan el mismo número. El acumulado sí dibuja con los días
+que haya, y responde otra pregunta que la fila de totales — esa es por día suelto.
+
+### La cuadrícula
+
+Doce hábitos × los días del mes. Celdas de **30px con el número del día dentro** y la palomita en
+la esquina: a ese tamaño el color solo no basta. Franja gris en sábados y domingos para ubicarse
+sin contar columnas, y la columna de hoy iluminada de arriba abajo. Cada hábito lleva su icono de
+trazo (nunca emoji: a 14px es una mancha) y su racha con la barra de avance hacia el récord.
+
+**Los dos ejes de scroll están separados**, y eso importa: el horizontal envuelve la tabla entera
+— cabecera, filas y totales — para que nunca se desalineen; el vertical vive solo en las filas.
+Así, en una ventana baja scrollean los hábitos y **la fila de totales sigue a la vista**, que es
+donde tiene que estar. Antes iba dentro del mismo scroll y quedaba cortada a media barra.
+
+### El resto
 
 **El anclaje vive junto al nombre.** "23:10, después de lavarme los dientes" no es decoración: es
-lo que hace que el hábito ocurra. Por eso va en la fila, no escondido en un ajuste.
+lo que hace que el hábito ocurra.
 
 **Un solo aviso, y solo cuando toca.** "Nunca falles dos veces seguidas" aparece únicamente cuando
-algo se cayó ayer y hoy sigue sin marcar. Gritarlo todos los días lo convertiría en ruido. Si hay
-más de tres, lista tres y "y N más": con cinco nombres el párrafo se comía el panel.
+algo se cayó ayer y hoy sigue sin marcar; si no hay nada colgando, el panel dice "cadena intacta"
+y explica para qué sirve ese hueco. Con más de tres nombres lista tres y "y N más".
 
-**La ficha** (clic en el nombre) es donde vive lo que de verdad ayuda a sostener un hábito: racha
-actual contra el récord, el calendario de ese hábito solo — donde se puede corregir un día pasado
-que se olvidó anotar — y el cumplimiento **por día de la semana** de los últimos 90 días. Ese
-último es el único dato accionable de la pantalla: un porcentaje global solo dice que te va mal;
-saber que los sábados caes al 40% dice que el problema es la hora, no la fuerza de voluntad. El
-consejo que lo acompaña solo sale si hay al menos 3 días con datos y alguno baja del 70%.
+**La ficha** (clic en el nombre) trae racha contra récord con su barra, el calendario de ese
+hábito solo — donde se corrige un día que se olvidó anotar — y el cumplimiento por día de la
+semana de los últimos 90 días. El consejo que lo acompaña solo sale si hay al menos 3 días con
+datos y alguno baja del 70%. Es una **capa propia** (`#hb2Ficha`), no un trozo del slide: marcar
+una casilla repinta el slide entero y se llevaría por delante el panel abierto.
 
-**Dónde viven los datos.** `localStorage['dash-habitos-v1']`, con la pareja `rawGet`/`rawSet` del
-resto del Dashboard. Dos cosas distintas dentro: `def` son los hábitos (se editan desde la propia
-pantalla, con el botón "Añadir un hábito" y el lápiz de la ficha) y `marcas` es el registro vivo,
-indexado por **fecha ISO local** — nunca `toISOString()`, que en México adelanta el día a partir de
-las 18:00 — para que cruzar de mes no desplace nada.
+### Dónde viven los datos
 
-La ficha es una **capa propia** (`#hb2Ficha`), no un trozo del slide: marcar una casilla repinta el
-slide entero y se llevaría por delante el panel abierto. Mismo motivo que el simulacro del ISTQB.
+En `localStorage`, clave `dash-habitos-v1`, con la pareja `rawGet`/`rawSet` del resto del
+Dashboard. Tres cosas dentro: `def` son los hábitos (se editan desde la propia pantalla — nombre,
+anclaje, días, icono y color), `marcas` es el registro vivo indexado por **fecha ISO local**
+— nunca `toISOString()`, que en México adelanta el día a partir de las 18:00 — y `desde` es el
+arranque.
 
-**Medido** (Playwright, 1600px y 390px): 7 filas × 30 celdas, las cifras se mueven al marcar (racha
-6 → 7 al cerrar el día), el registro sobrevive a recargar, el mes anterior pinta 31 columnas y 0
-futuras, y en frío la pantalla sale con 0 celdas rojas y 0 avisos. En 390px la cuadrícula scrollea
-dentro de su tarjeta; el documento no scrollea en horizontal.
+Al subir de 7 a 12 hábitos, la migración **solo añade los nuevos si la lista está intacta**: si
+Adán añadió, borró o renombró algo, la suya manda y no se toca. Y si el guardado trae `marcas`
+pero no `def`, el historial se conserva — reemplazar el objeto entero lo borraba sin avisar.
+
+**Medido** (Playwright, 1600px, 1280px y 390px): 12 filas × 30 celdas, 12 iconos, 6 capas de
+fondo, anillo al 86% con su arco correcto, la línea del acumulado con 10 puntos, 7 barras de
+perfil y 30 de totales. Marcar mueve las cifras, el registro sobrevive a recargar y a 1600px no
+hay un solo desborde. Sin errores de consola.
 
 ## Mi Día, en detalle
 

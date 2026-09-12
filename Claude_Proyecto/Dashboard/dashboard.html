@@ -191,7 +191,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 /* Habitos (2026-09-11). Violeta -> rosa: el unico par que quedaba libre entre los 8
    slides. El contenido pinta en verde (--g, lo cumplido) y el ambiente en violeta,
    asi el color del logro no compite con el del fondo. */
-.theme-habitos{--ac1:#8b5cf6;--ac2:#f472b6}
+.theme-habitos{--ac1:#00e0c0;--ac2:#b06eff}
 
 .eyebrow{font-size:clamp(11px,1.1vw,14px);font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--text2);display:flex;align-items:center;gap:10px;margin-bottom:10px}
 .eyebrow .dot{width:8px;height:8px;border-radius:50%;background:var(--ac1);box-shadow:0 0 12px var(--ac1);animation:pulse 2s ease-in-out infinite}
@@ -3566,6 +3566,14 @@ button.ct-cat:hover{background:rgba(var(--ov),.07)}
   <!-- 8 · HÁBITOS — la cuadrícula del mes. El slide llega vacío: lo pinta entero
        habitos.js (window.renderHabitos), que también inyecta su CSS. -->
   <section class="slide theme-habitos" data-i="8">
+    <!-- El fondo HUD: retícula, dos manchas, la malla en fuga con su horizonte y el
+         barrido de líneas. Va aquí y no dentro de #habitosSlide porque .slide-inner
+         está limitado a 1400px y el fondo tiene que llegar a los bordes. Las reglas
+         están en habitos.js, junto al resto de la pantalla. -->
+    <div class="hb2-bg" aria-hidden="true">
+      <i class="hb2-bg-net"></i><i class="hb2-bg-a"></i><i class="hb2-bg-b"></i>
+      <i class="hb2-bg-h"></i><i class="hb2-bg-f"></i><i class="hb2-bg-s"></i>
+    </div>
     <div class="slide-inner">
       <div class="reveal d2" id="habitosSlide"></div>
     </div>
