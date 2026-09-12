@@ -254,7 +254,7 @@ ejes hacía ilegibles las etiquetas y escondía el peso de cada una.
 
 Eran 51 KB y 12 guías prácticas de vida (networking, persuasión, modales, fogata, vino,
 coctelería, nudos, mecánica, primeros auxilios…). **Su contenido vive en el Dashboard**, pantalla
-*Habilidades Base* → "Lo que todo hombre debería saber hacer", donde es bastante más profundo:
+*Habilidades Base* → "Lo que todos deberíamos saber hacer", donde es bastante más profundo:
 23 habilidades con 11-20 pasos cada una, checklist real y barra de avance.
 
 No fue una migración de hoy: se copió el 11-ago-2026 a petición de Adán (*"en coach hay una
