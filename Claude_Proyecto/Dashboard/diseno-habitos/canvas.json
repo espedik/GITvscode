@@ -1,47 +1,109 @@
 {
   "pages": [
-    { "id": "page-1", "name": "La pantalla" },
-    { "id": "page-2", "name": "Descartadas" }
+    {
+      "id": "page-1",
+      "name": "La pantalla"
+    },
+    {
+      "id": "page-2",
+      "name": "Descartadas"
+    }
   ],
   "artboards": [
-    { "file": "Main.dc.html",  "page": "page-1", "x": 0,    "y": 0, "w": 1440, "h": 980, "title": "Pestaña de hábitos", "is_interactive": true },
-    { "file": "Ficha.dc.html", "page": "page-1", "x": 1560, "y": 0, "w": 520,  "h": 980, "title": "Ficha de un hábito" },
-    { "file": "Movil.dc.html", "page": "page-1", "x": 2200, "y": 0, "w": 390,  "h": 844, "title": "En el teléfono", "is_interactive": true },
-
-    { "file": "DireccionB.dc.html", "page": "page-2", "x": 0,    "y": 0, "w": 1040, "h": 580, "title": "Dirección B · La semana en grande", "is_interactive": true },
-    { "file": "DireccionC.dc.html", "page": "page-2", "x": 1140, "y": 0, "w": 1040, "h": 580, "title": "Dirección C · Hoy manda", "is_interactive": true }
+    {
+      "file": "Main.dc.html",
+      "page": "page-1",
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 980,
+      "title": "Pestaña de hábitos",
+      "is_interactive": true
+    },
+    {
+      "file": "Ficha.dc.html",
+      "page": "page-1",
+      "x": 1560,
+      "y": 0,
+      "w": 520,
+      "h": 1120,
+      "title": "Ficha de un hábito"
+    },
+    {
+      "file": "Movil.dc.html",
+      "page": "page-1",
+      "x": 2200,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "title": "En el teléfono",
+      "is_interactive": true
+    },
+    {
+      "file": "DireccionB.dc.html",
+      "page": "page-2",
+      "x": 0,
+      "y": 0,
+      "w": 1040,
+      "h": 580,
+      "title": "Dirección B · La semana en grande",
+      "is_interactive": true
+    },
+    {
+      "file": "DireccionC.dc.html",
+      "page": "page-2",
+      "x": 1140,
+      "y": 0,
+      "w": 1040,
+      "h": 580,
+      "title": "Dirección C · Hoy manda",
+      "is_interactive": true
+    }
   ],
   "annotations": [
     {
       "id": "nota-fondo",
       "page": "page-1",
-      "x": 0, "y": -200, "w": 690,
+      "x": 0,
+      "y": -200,
+      "w": 690,
       "text": "EL FONDO SON CUATRO CAPAS, TODAS CSS — ni una imagen.\nUna retícula fina arriba que rima con la cuadrícula de datos, dos manchas de color (cian arriba, violeta abajo), una malla en fuga pegada al suelo y una línea de horizonte encendida. Encima, un barrido de líneas casi invisible que da textura sin ensuciar."
     },
     {
       "id": "nota-graficas",
       "page": "page-1",
-      "x": 750, "y": -200, "w": 690,
+      "x": 750,
+      "y": -200,
+      "w": 690,
       "text": "TRES GRÁFICAS, CADA UNA CON UN TRABAJO DISTINTO\n· El anillo es el titular: el % del mes, con su arco.\n· La tendencia por semana es la única que dice si vas a MEJOR — la cifra de al lado es la diferencia contra la semana previa.\n· El perfil por día dice DÓNDE se cae, que es lo accionable: un total global solo dice que te va mal."
     },
     {
       "id": "nota-habitos",
       "page": "page-1",
-      "x": 0, "y": 1030, "w": 760,
-      "text": "DOCE HÁBITOS, no siete. Los cinco nuevos salen de lo que el proyecto ya registra en otras pantallas: 8 000 pasos, CT-GenAI (el examen que tienes agendado), dormir 7 h, sin azúcar y skincare noche.\nLa fila de abajo sigue siendo la lectura vertical: cuántos cerraste cada día."
+      "x": 0,
+      "y": 1030,
+      "w": 760,
+      "text": "ONCE HÁBITOS, del horario real (los 58 bloques de RUTINA_TASKS), en orden de hora: la app a las 06:43, CT-GenAI al llegar a ALTEN, la clase de alemán de 17:00 a 18:00 en CENLEX · ESCA Santo Tomás, gym o natación a las 18:15, la Fase 0 a las 20:00, lectura a las 21:45, rutina de la noche, meditar, dormir — y el agua, sin hora, al final.\nLa fila de abajo sigue siendo la lectura vertical: cuántos cerraste cada día."
     },
     {
       "id": "nota-ficha",
       "page": "page-1",
-      "x": 1560, "y": -200, "w": 520,
-      "text": "LA FICHA, con el mismo lenguaje\nRacha contra récord con su barra de avance, el mes de ese hábito solo, y la gráfica de en qué día de la semana se te cae."
+      "x": 1560,
+      "y": -200,
+      "w": 520,
+      "text": "LA FICHA, con el mismo lenguaje\nAbre con QUÉ HACER: en la app se lee de tu rutina (RUTINA_TASKS) o del día de gimnasio que toca, sin copiar nada. Debajo, racha contra récord, el mes de ese hábito solo, y en qué día de la semana se te cae."
     },
     {
       "id": "nota-descartadas",
       "page": "page-2",
-      "x": 0, "y": -150, "w": 900,
+      "x": 0,
+      "y": -150,
+      "w": 900,
       "text": "LAS DOS QUE NO SE CONSTRUYERON, en el estilo anterior.\nSe quedan aquí como referencia de las alternativas de cuadrícula: B son casillas grandes de una semana, C pone la acción de hoy delante."
     }
   ],
-  "launch": { "view": "canvas", "page": "page-1" }
+  "launch": {
+    "view": "canvas",
+    "page": "page-1"
+  }
 }

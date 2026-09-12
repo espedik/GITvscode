@@ -34,7 +34,7 @@
   </style>
 </helmet>
 
-<div style="position:relative;width:520px;height:980px;background:#04040c;overflow:hidden;border-left:1px solid rgba(0,224,192,.2)">
+<div style="position:relative;width:520px;height:1120px;background:#04040c;overflow:hidden;border-left:1px solid rgba(0,224,192,.2)">
   <!-- Mismo fondo que la pantalla, para que la ficha se lea como parte del sistema -->
   <div style="position:absolute;inset:0;overflow:hidden;pointer-events:none">
     <div style="position:absolute;inset:0;background-image:linear-gradient(rgba(0,224,192,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(0,224,192,.05) 1px,transparent 1px);background-size:40px 40px;-webkit-mask-image:radial-gradient(ellipse 120% 70% at 50% 20%,#000 30%,transparent 80%);mask-image:radial-gradient(ellipse 120% 70% at 50% 20%,#000 30%,transparent 80%)"></div>
@@ -51,10 +51,28 @@
         <span class="k" style="color:var(--g);font-size:8.5px">Ficha del hábito</span>
         <span style="flex:1;height:1px;background:linear-gradient(90deg,rgba(var(--g-rgb),.4),transparent);display:block"></span>
       </div>
-      <div style="font-family:var(--font-title);font-size:26px;font-weight:600;line-height:1.12">Meditar · 5 min</div>
+      <div style="font-family:var(--font-title);font-size:26px;font-weight:600;line-height:1.12">Meditar · 10 min</div>
       <div style="display:flex;align-items:center;gap:7px;margin-top:7px">
         <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="var(--cy)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><path d="M9 6.5H6a3.5 3.5 0 0 0 0 7h3M15 17.5h3a3.5 3.5 0 0 0 0-7h-3"></path><path d="M8.5 12h7"></path></svg>
-        <div style="font-size:11.5px;color:var(--text2)">Después de <b style="color:var(--text)">lavarme los dientes</b>, 23:10</div>
+        <div style="font-size:11.5px;color:var(--text2)"><b style="font-family:var(--mono);color:var(--cy)">23:00</b> · Respiración box 4-4-4-4 · todos los días</div>
+      </div>
+    </div>
+
+    <!-- QUÉ HACER: lo primero después del anclaje. En la app se lee de RUTINA_TASKS
+         (las subtareas del bloque) o de GYM_RUTINA_DEFAULT; aquí, la meditación tal
+         como está en la rutina. -->
+    <div class="panel" style="padding:13px 15px;flex-shrink:0">
+      <div style="display:flex;align-items:center;gap:9px;margin-bottom:9px">
+        <span class="k" style="color:var(--cy)">Qué hacer</span>
+        <span style="width:44px;height:1px;background:linear-gradient(90deg,rgba(var(--cy-rgb),.5),transparent);display:block"></span>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:6px">
+        <sc-for list="{{pasos}}" as="p" hint-placeholder-count="4">
+          <div style="display:flex;align-items:flex-start;gap:9px;font-size:11.5px;line-height:1.5;color:var(--text2)">
+            <span style="width:5px;height:5px;border-radius:50%;background:var(--cy);box-shadow:0 0 6px rgba(var(--cy-rgb),.6);flex-shrink:0;margin-top:6px"></span>
+            <span>{{p}}</span>
+          </div>
+        </sc-for>
       </div>
     </div>
 
@@ -148,7 +166,7 @@
 </div>
 </x-dc>
 
-<script data-dc-script data-props='{"$preview":{"width":520,"height":980}}'>
+<script data-dc-script data-props='{"$preview":{"width":520,"height":1120}}'>
 class Component extends DCLogic {
   renderVals() {
     const HOY = 11, DIAS = 30, DOW0 = 2;
@@ -183,7 +201,13 @@ class Component extends DCLogic {
       };
     });
 
-    return { dow: ['D','L','M','M','J','V','S'], celdas: celdas, barras: barras };
+    const pasos = [
+      'Inhala 4 segundos por la nariz',
+      'Sostén el aire 4 segundos',
+      'Exhala 4 segundos por la boca',
+      'Sostén sin aire 4 segundos — repite el ciclo (~10 veces en 10 min)'
+    ];
+    return { dow: ['D','L','M','M','J','V','S'], celdas: celdas, barras: barras, pasos: pasos };
   }
 }
 </script>

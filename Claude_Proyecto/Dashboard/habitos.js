@@ -84,21 +84,58 @@
      días en que toca (0=domingo) o 'todos'. Es solo la semilla: se editan
      desde la propia pantalla. */
   const SEMILLA = [
-    { id:'snooze', nombre:'Sin snooze',             ancla:'Celular fuera del cuarto',                    hora:'06:40', color:'#fb923c', ico:'sol',    dow:[1,2,3,4,5] },
-    { id:'app',    nombre:'Construir esta app',     ancla:'10 min antes de arrancar · y de 23:30 a 00:00', hora:'06:43', color:'#22d3ee', ico:'codigo', dow:[1,2,3,4,5] },
-    { id:'genai',  nombre:'CT-GenAI · 30 min',      ancla:'Al llegar a ALTEN, antes del correo',         hora:'08:30', color:'#4ade80', ico:'chip',   dow:[1,2,3,4,5] },
-    { id:'ale',    nombre:'Clase de alemán',        ancla:'CENLEX · ESCA Santo Tomás, hasta las 18:00',  hora:'17:00', color:'#ffd93d', ico:'habla',  dow:[1,2,3,4,5] },
-    { id:'gym',    nombre:'Gimnasio',               ancla:'Tras el CENLEX · el sábado a las 07:35',      hora:'18:15', color:'#ff8a3d', ico:'pesa',   dow:[1,2,4,5,6] },
-    { id:'nata',   nombre:'Natación',               ancla:'Alberca del Fitsi Buenavista',                hora:'18:15', color:'#00e0c0', ico:'onda',   dow:[3] },
-    { id:'fase0',  nombre:'Fase 0 · 1h15',          ancla:'Negocio de tu papá o plantilla GBM',          hora:'20:00', color:'#8b5cf6', ico:'diana',  dow:[1,2,3,4,5] },
-    { id:'leer',   nombre:'Leer 10 páginas',        ancla:'En el cierre del día',                        hora:'21:45', color:'#b06eff', ico:'libro',  dow:'todos' },
-    { id:'diario', nombre:'Diario y plan de mañana',ancla:'En el cierre del día, tras leer',             hora:'21:45', color:'#f472b6', ico:'pluma',  dow:'todos' },
-    { id:'piel',   nombre:'Rutina de la noche',     ancla:'Piel, minoxidil y suplementos',               hora:'22:30', color:'#fb7185', ico:'chispa', dow:'todos' },
-    { id:'medi',   nombre:'Meditar · 10 min',       ancla:'Respiración box 4-4-4-4',                     hora:'23:00', color:'#00e87a', ico:'loto',   dow:'todos' },
-    { id:'sueno',  nombre:'Dormir 7 h',             ancla:'Apagar pantallas al cerrar la app',           hora:'23:59', color:'#818cf8', ico:'luna',   dow:'todos' },
+    { id:'app',    nombre:'Construir esta app',     ancla:'10 min antes de arrancar · y de 23:30 a 00:00', hora:'06:43', color:'#22d3ee', ico:'codigo', dow:[1,2,3,4,5],
+      pasos:[
+        'Por la mañana, 10 min: abre el proyecto y anota UNA mejora concreta para hoy.',
+        'De 23:30 a 00:00: constrúyela, pruébala en el navegador y súbela a GitHub.',
+        'Si no cabe en 30 min, pártela. Lo que suba hoy tiene que funcionar.'
+      ] },
+    { id:'genai',  nombre:'CT-GenAI · 30 min',      ancla:'Al llegar a ALTEN, antes del correo',         hora:'08:30', color:'#4ade80', ico:'chip',   dow:[1,2,3,4,5],
+      pasos:[
+        'Al llegar a ALTEN, antes de abrir el correo: 30 min con el syllabus o con el simulacro.',
+        'El orden que funciona: examen de muestra primero, después los capítulos que fallaste.',
+        'El simulacro está en Metas → ISTQB CT-GenAI: 40 preguntas, 46 puntos, corte en 30.',
+        'El capítulo 2 (ingeniería de instrucciones) es un tercio del examen: 11 preguntas, 16 puntos.'
+      ] },
+    { id:'ale',    nombre:'Clase de alemán',        ancla:'CENLEX · ESCA Santo Tomás, hasta las 18:00',  hora:'17:00', color:'#ffd93d', ico:'habla',  dow:[1,2,3,4,5],
+      pasos:[
+        'Sales de ALTEN a las 16:40 y manejas unos 20 min al CENLEX.',
+        'Clase de 17:00 a 18:00 · vas por el Kapitel {{kapitelAleman}}.',
+        'Lleva anotadas las 3 palabras que no te salieron en la clase anterior.',
+        'A las 18:00, del CENLEX al gimnasio: unos 15 min.'
+      ] },
+    /* `gym:true`: la ficha lee el día de GYM_RUTINA_DEFAULT que toca hoy (nombre y
+       foco) en vez de copiarlo aquí. El detalle de cada ejercicio vive en Ejercicio. */
+    { id:'gym',    nombre:'Gimnasio',               ancla:'Tras el CENLEX · el sábado a las 07:35',      hora:'18:15', color:'#ff8a3d', ico:'pesa',   dow:[1,2,4,5,6], gym:true,
+      pasos:['Series, reps y peso de cada ejercicio: en Ejercicio, en la barra de arriba.'] },
+    { id:'nata',   nombre:'Natación',               ancla:'Alberca del Fitsi Buenavista',                hora:'18:15', color:'#00e0c0', ico:'onda',   dow:[3], gym:true },
+    { id:'fase0',  nombre:'Fase 0 · 1h15',          ancla:'Negocio de tu papá o plantilla GBM',          hora:'20:00', color:'#8b5cf6', ico:'diana',  dow:[1,2,3,4,5],
+      pasos:[
+        '1h15 de avance en la prioridad activa: el negocio de tu papá o la plantilla GBM.',
+        'Antes de empezar, decide qué vas a tener hecho a las 21:15. Una cosa, no tres.',
+        'Sin Didi ni celular en este bloque: es el único hueco de trabajo profundo del día.'
+      ] },
+    /* `rutina` + `sec`: la ficha enseña las subtareas de ese bloque de RUTINA_TASKS,
+       solo la sección indicada. Aquí, la lectura del cierre del día. */
+    { id:'leer',   nombre:'Leer 10 páginas',        ancla:'En el cierre del día',                        hora:'21:45', color:'#b06eff', ico:'libro',  dow:'todos', rutina:'wd-cierre', sec:'Lectura',
+      pasos:['10 páginas es el mínimo para marcarlo; el bloque completo son 30 min.'] },
+    { id:'piel',   nombre:'Rutina de la noche',     ancla:'Piel, minoxidil y suplementos',               hora:'22:30', color:'#fb7185', ico:'chispa', dow:'todos', rutina:'wd-pm' },
+    { id:'medi',   nombre:'Meditar · 10 min',       ancla:'Respiración box 4-4-4-4',                     hora:'23:00', color:'#00e87a', ico:'loto',   dow:'todos', rutina:'wd20' },
+    { id:'sueno',  nombre:'Dormir 7 h',             ancla:'Apagar pantallas al cerrar la app',           hora:'23:59', color:'#818cf8', ico:'luna',   dow:'todos',
+      pasos:[
+        'Apaga pantallas en cuanto cierres la app: entre 00:00 y 01:00.',
+        'Son 5h40 a 6h40 de sueño hasta las 06:40. Cada media hora que te pases se nota al día siguiente.',
+        'Celular fuera del cuarto: es lo que hace que despertar sin snooze funcione.'
+      ] },
     /* `meta` parte el hábito en pasos: el agua se marca litro a litro y solo
        cuenta como cumplida al tercero. Sin hora: es de todo el día. */
-    { id:'agua',   nombre:'Agua · 3 litros',        ancla:'Botella llena al salir',                      hora:'',      color:'#00b8d9', ico:'gota',   dow:'todos', meta:3 }
+    { id:'agua',   nombre:'Agua · 3 litros',        ancla:'Botella llena al salir',                      hora:'',      color:'#00b8d9', ico:'gota',   dow:'todos', meta:3,
+      pasos:[
+        'Litro 1: la botella llena al salir de casa, terminada antes de comer.',
+        'Litro 2: en ALTEN por la tarde, antes de salir al CENLEX.',
+        'Litro 3: entre el gimnasio y la cena.',
+        'Marca un litro cada vez que termines la botella: tres toques y el día está.'
+      ] }
   ];
 
   /* ── Migraciones ──────────────────────────────────────────────────────
@@ -106,19 +143,21 @@
      La regla de todas: lo que Adán editó a mano manda. Un hábito se considera
      "suyo" si su nombre o su anclaje no son los que le puso la semilla anterior
      — entonces se le añade solo lo nuevo (la hora) y no se le toca nada más. */
-  const MIG = 3;
-  const RETIRADOS = { 2: ['azucar', 'gasto'], 3: ['pasos'] };
+  const MIG = 4;
+  const RETIRADOS = { 2: ['azucar', 'gasto'], 3: ['pasos'], 4: ['snooze', 'diario'] };
   /* Lo que decía la semilla anterior de cada hábito, para saber si Adán lo tocó */
   const PREVIO = {
-    gym:   [['Gimnasio', '19:00 · después de comer']],
-    nata:  [['Natación', 'Miércoles, 20:00']],
-    ale:   [['Alemán · 15 min', 'Antes del café']],
-    genai: [['CT-GenAI · 30 min', 'Antes de abrir el correo']],
-    leer:  [['Leer 10 páginas', 'Al acostarme']],
-    medi:  [['Meditar · 5 min', '23:10 · tras lavarme los dientes']],
-    sueno: [['Dormir 7 h', 'Luz fuera a las 23:40']],
+    gym:   [['Gimnasio', '19:00 · después de comer'], ['Gimnasio', 'Tras el CENLEX · el sábado a las 07:35']],
+    nata:  [['Natación', 'Miércoles, 20:00'], ['Natación', 'Alberca del Fitsi Buenavista']],
+    app:   [['Construir esta app', '10 min antes de arrancar · y de 23:30 a 00:00']],
+    fase0: [['Fase 0 · 1h15', 'Negocio de tu papá o plantilla GBM']],
+    ale:   [['Alemán · 15 min', 'Antes del café'], ['Clase de alemán', 'CENLEX · ESCA Santo Tomás, hasta las 18:00']],
+    genai: [['CT-GenAI · 30 min', 'Antes de abrir el correo'], ['CT-GenAI · 30 min', 'Al llegar a ALTEN, antes del correo']],
+    leer:  [['Leer 10 páginas', 'Al acostarme'], ['Leer 10 páginas', 'En el cierre del día']],
+    medi:  [['Meditar · 5 min', '23:10 · tras lavarme los dientes'], ['Meditar · 10 min', 'Respiración box 4-4-4-4']],
+    sueno: [['Dormir 7 h', 'Luz fuera a las 23:40'], ['Dormir 7 h', 'Apagar pantallas al cerrar la app']],
     agua:  [['Agua · 3 litros', 'Botella llena al salir'], ['3 litros de agua', 'Botella llena al salir']],
-    piel:  [['Skincare noche', 'Después de la ducha']]
+    piel:  [['Skincare noche', 'Después de la ducha'], ['Rutina de la noche', 'Piel, minoxidil y suplementos']]
   };
   const intacto = function (h) {
     const p = PREVIO[h.id];
@@ -201,6 +240,9 @@
             h.color = sem.color; h.ico = sem.ico;
           }
           if (h.hora === undefined) h.hora = sem.hora;
+          if (h.pasos === undefined && sem.pasos) h.pasos = sem.pasos.slice();
+          if (h.rutina === undefined && sem.rutina) { h.rutina = sem.rutina; if (sem.sec) h.sec = sem.sec; }
+          if (h.gym === undefined && sem.gym) h.gym = true;
           if (!h.ico || !ICO[h.ico]) h.ico = sem.ico;
           if (sem.meta && !h.meta) h.meta = sem.meta;
         });
@@ -812,6 +854,7 @@
         '<div class="hb2-ficha-dow">' + (h.hora ? '<b>' + esc(h.hora) + '</b> · ' : '') +
           (h.dow === 'todos' ? 'Todos los días'
           : 'Toca los ' + h.dow.map(function (i) { return DOW_LARGO[i]; }).join(', ')) + '</div>' +
+        queHacerHTML(h) +
 
         '<div class="hb2-panel hb2-ficha-rac">' +
           '<div class="hb2-ficha-rac-r">' +
@@ -850,6 +893,62 @@
     ov.classList.add('open');
   }
 
+  /* ── QUÉ HACER: el detalle del hábito, leído de donde ya vive ────────
+     Tres fuentes, en este orden: el día de GYM_RUTINA_DEFAULT que toca hoy
+     (gym), las subtareas del bloque de RUTINA_TASKS (rutina, filtrado por sec)
+     y los `pasos` propios. Ninguna se copia: si Adán cambia un producto en la
+     rutina o un ejercicio en Ejercicio, la ficha lo refleja sola. */
+  const resuelve = function (t) {
+    return (typeof CIFRAS !== 'undefined' && CIFRAS.texto) ? CIFRAS.texto(t) : t;
+  };
+  function queHacerHTML(h) {
+    const partes = [];
+
+    if (h.gym && typeof GYM_RUTINA_DEFAULT !== 'undefined') {
+      const w = new Date().getDay();
+      const hoyToca = toca(h, hoyISO());
+      const dia = GYM_RUTINA_DEFAULT[w];
+      if (hoyToca && dia && dia.foco) {
+        partes.push('<div class="hb2-qh-hoy"><span class="hb2-k" style="color:var(--o)">Hoy · ' +
+          DOW_LARGO[w].replace(/s$/, '') + '</span>' +
+          '<b>' + esc(dia.nombre) + '</b><p>' + esc(dia.foco.replace(/<[^>]+>/g, '')) + '</p></div>');
+      }
+      const semana = (h.dow === 'todos' ? [1,2,3,4,5,6,0] : h.dow).map(function (d) {
+        const x = GYM_RUTINA_DEFAULT[d];
+        return x ? '<li><b>' + DOW_N[d] + '</b> ' + esc(x.nombre) + '</li>' : '';
+      }).join('');
+      if (semana) partes.push('<ul class="hb2-qh-sem">' + semana + '</ul>');
+    }
+
+    if (h.rutina && typeof CIFRAS !== 'undefined' && CIFRAS.rutina) {
+      const bloque = CIFRAS.rutina('').filter(function (t) { return t.id === h.rutina; })[0];
+      if (bloque && bloque.subtareas && bloque.subtareas.length) {
+        let sec = null, html = '';
+        bloque.subtareas.forEach(function (st) {
+          if (st.sec) sec = st.sec;
+          if (h.sec && sec !== h.sec) return;
+          if (st.sec && !h.sec) html += '<li class="hb2-qh-sec">' + esc(st.sec) + '</li>';
+          html += '<li>' + resuelve(st.txt) + '</li>';
+        });
+        if (html) partes.push('<ul class="hb2-qh-lista">' + html + '</ul>');
+      }
+    }
+
+    if (h.pasos && h.pasos.length) {
+      partes.push('<ul class="hb2-qh-lista">' +
+        h.pasos.map(function (p) { return '<li>' + esc(resuelve(p)) + '</li>'; }).join('') + '</ul>');
+    }
+
+    if (!partes.length) {
+      partes.push('<div class="hb2-qh-vacio">Sin detalle todavía. Edítalo y escribe, una línea por paso, ' +
+        'qué haces exactamente cuando toca.</div>');
+    }
+
+    return '<div class="hb2-panel hb2-qh">' +
+      '<div class="hb2-qh-hd"><span class="hb2-k" style="color:var(--cy)">Qué hacer</span>' +
+      '<span class="hb2-linea"></span></div>' + partes.join('') + '</div>';
+  }
+
   /* ══════════════════════════════════════════════════════════════════════
      EDITOR
      ══════════════════════════════════════════════════════════════════════ */
@@ -879,6 +978,12 @@
           '<input class="hb2-in" id="hbEdA" value="' + esc(v.ancla) + '" placeholder="Al acostarme, tras dejar el móvil" maxlength="60"></div>' +
         '</div>' +
 
+        '<label class="hb2-lbl">Qué hacer <i>— una línea por paso</i></label>' +
+        '<textarea class="hb2-in hb2-ta" id="hbEdP" rows="4" placeholder="Abre el proyecto y anota una mejora&#10;Constrúyela y súbela">' +
+          esc((v.pasos || []).join('\n')) + '</textarea>' +
+        (v.rutina || v.gym ? '<div class="hb2-lbl-nota">Además, la ficha enseña ' +
+          (v.gym ? 'el día de gimnasio que toca (desde Ejercicio)' : 'los pasos de tu rutina (desde datos maestros)') +
+          ', que se editan allí.</div>' : '') +
         '<label class="hb2-lbl">Qué días toca</label>' +
         '<div class="hb2-dows">' +
           '<button class="hb2-dow' + (todos ? ' on' : '') + '" data-d="todos" onclick="HB.edDow(\'todos\')">Todos</button>' +
@@ -991,6 +1096,8 @@
       if (!nom) { document.getElementById('hbEdN').focus(); return; }
       const ancla = (document.getElementById('hbEdA').value || '').trim();
       const hora = (document.getElementById('hbEdH').value || '').trim();
+      const pasos = (document.getElementById('hbEdP').value || '').split('\n')
+        .map(function (x) { return x.trim(); }).filter(function (x) { return x; });
       const dowS = ov.dataset.dow;
       const dow = dowS === 'todos' ? 'todos' : dowS.split(',').map(Number);
       const color = ov.dataset.col || PALETA[0];
@@ -998,13 +1105,13 @@
 
       if (id) {
         S.def.forEach(function (h) {
-          if (h.id === id) { h.nombre = nom; h.ancla = ancla; h.hora = hora; h.dow = dow; h.color = color; h.ico = ico; }
+          if (h.id === id) { h.nombre = nom; h.ancla = ancla; h.hora = hora; h.dow = dow; h.color = color; h.ico = ico; h.pasos = pasos; }
         });
       } else {
         let base = nom.toLowerCase().replace(/[^a-z0-9]/g, '').slice(0, 8) || 'h';
         let nid = base, k = 2;
         while (S.def.some(function (h) { return h.id === nid; })) nid = base + (k++);
-        S.def.push({ id: nid, nombre: nom, ancla: ancla, hora: hora, color: color, ico: ico, dow: dow, desde: hoyISO() });
+        S.def.push({ id: nid, nombre: nom, ancla: ancla, hora: hora, color: color, ico: ico, dow: dow, pasos: pasos, desde: hoyISO() });
       }
       guardar();
       HB.cerrarFicha();
@@ -1327,7 +1434,9 @@
   padding:24px 26px;border:1px solid rgba(var(--cy-rgb),.2);
   clip-path:polygon(0 14px,14px 0,calc(100% - 14px) 0,100% 14px,100% calc(100% - 14px),calc(100% - 14px) 100%,14px 100%,0 calc(100% - 14px));
   box-shadow:0 24px 70px rgba(0,0,0,.6)}
-.hb2-ficha-card{background:linear-gradient(160deg,#0b0b18,#07070f)}
+/* color explícito: el overlay es position:fixed fuera del <section> y heredaba el
+   texto oscuro del tema claro — el título salía negro sobre negro. */
+.hb2-ficha-card{background:linear-gradient(160deg,#0b0b18,#07070f);color:var(--text)}
 .hb2-x{position:absolute;top:15px;right:15px;width:28px;height:28px;border-radius:50%;
   border:1px solid rgba(var(--ov),.12);background:rgba(var(--ov),.05);color:var(--text2);
   cursor:pointer;font-size:12px;font-family:inherit;line-height:1;z-index:2}
@@ -1339,6 +1448,28 @@
 .hb2-ficha-a svg{width:13px;height:13px;color:var(--cy);flex-shrink:0}
 .hb2-ficha-dow{font-size:10.5px;color:var(--text3);margin:5px 0 14px}
 .hb2-ficha-dow b{font-family:var(--mono);color:var(--cy)}
+/* Qué hacer: va lo primero después del anclaje, porque es lo que se abre a leer */
+.hb2-qh{padding:13px 15px;margin-bottom:11px}
+.hb2-qh-hd{display:flex;align-items:center;gap:9px;margin-bottom:9px}
+.hb2-qh-hoy{padding:10px 12px;border-radius:9px;background:rgba(var(--o-rgb),.08);
+  border:1px solid rgba(var(--o-rgb),.28);margin-bottom:9px}
+.hb2-qh-hoy b{display:block;font-size:12.5px;font-weight:700;color:var(--text);margin:4px 0 5px}
+.hb2-qh-hoy p{font-size:11px;line-height:1.5;color:var(--text2)}
+.hb2-qh-sem{list-style:none;display:flex;flex-wrap:wrap;gap:5px 12px;margin-bottom:9px}
+.hb2-qh-sem li{font-size:10.5px;color:var(--text3)}
+.hb2-qh-sem li b{font-family:var(--mono);color:var(--cy);margin-right:3px}
+.hb2-qh-lista{list-style:none;display:flex;flex-direction:column;gap:6px}
+.hb2-qh-lista li{position:relative;padding-left:14px;font-size:11.5px;line-height:1.5;color:var(--text2)}
+.hb2-qh-lista li::before{content:'';position:absolute;left:0;top:8px;width:5px;height:5px;
+  border-radius:50%;background:var(--cy);box-shadow:0 0 6px rgba(var(--cy-rgb),.6)}
+.hb2-qh-lista li b{color:var(--text)}
+.hb2-qh-lista li.hb2-qh-sec{padding-left:0;margin-top:4px;font-family:var(--mono);font-size:8px;
+  font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--text3)}
+.hb2-qh-lista li.hb2-qh-sec::before{display:none}
+.hb2-qh-lista + .hb2-qh-lista{margin-top:8px;padding-top:8px;border-top:1px solid rgba(var(--ov),.07)}
+.hb2-qh-vacio{font-size:11px;color:var(--text3);line-height:1.5}
+.hb2-ta{resize:vertical;min-height:72px;line-height:1.45;font-size:12px}
+.hb2-lbl-nota{font-size:10px;color:var(--text3);margin-top:5px;line-height:1.4}
 .hb2-ficha-rac{padding:13px 15px;margin-bottom:11px}
 .hb2-ficha-rac-r{display:flex;align-items:flex-end;justify-content:space-between;gap:14px;margin-bottom:9px}
 .hb2-ficha-big{font-family:var(--mono);font-size:28px;font-weight:700;line-height:1;margin-top:5px;

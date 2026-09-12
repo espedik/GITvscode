@@ -422,9 +422,8 @@ class Component extends DCLogic {
     };
 
     /* `fallos` son los días del mes en que tocaba y no se hizo. */
-    /* Los trece del horario real (RUTINA_TASKS), en orden de hora. */
+    /* Los once del horario real (RUTINA_TASKS), en orden de hora. */
     this.base = [
-      { id:'snooze', nombre:'Sin snooze',              hora:'06:40', ancla:'Celular fuera del cuarto',            color:'#fb923c', ico:I.sol,    dow:[1,2,3,4,5], fallos:[3],     rec:6  },
       { id:'app',    nombre:'Construir esta app',      hora:'06:43', ancla:'10 min antes de arrancar',            color:'#22d3ee', ico:I.codigo, dow:[1,2,3,4,5], fallos:[],      rec:11 },
       { id:'genai',  nombre:'CT-GenAI · 30 min',       hora:'08:30', ancla:'Al llegar a ALTEN, antes del correo', color:'#4ade80', ico:I.chip,   dow:[1,2,3,4,5], fallos:[8],     rec:7  },
       { id:'ale',    nombre:'Clase de alemán',         hora:'17:00', ancla:'CENLEX · ESCA Santo Tomás',           color:'#ffd93d', ico:I.habla,  dow:[1,2,3,4,5], fallos:[],      rec:14 },
@@ -432,7 +431,6 @@ class Component extends DCLogic {
       { id:'nata',   nombre:'Natación',                hora:'18:15', ancla:'Alberca del Fitsi Buenavista',        color:'#00e0c0', ico:I.onda,   dow:[3],         fallos:[],      rec:9  },
       { id:'fase0',  nombre:'Fase 0 · 1h15',           hora:'20:00', ancla:'Negocio de tu papá o plantilla GBM',  color:'#8b5cf6', ico:I.diana,  dow:[1,2,3,4,5], fallos:[4,9],   rec:5  },
       { id:'leer',   nombre:'Leer 10 páginas',         hora:'21:45', ancla:'En el cierre del día',                color:'#b06eff', ico:I.libro,  dow:'todos',     fallos:[3,7],   rec:11 },
-      { id:'diario', nombre:'Diario y plan de mañana', hora:'21:45', ancla:'Tras leer',                           color:'#f472b6', ico:I.pluma,  dow:'todos',     fallos:[6],     rec:8  },
       { id:'piel',   nombre:'Rutina de la noche',      hora:'22:30', ancla:'Piel, minoxidil y suplementos',       color:'#fb7185', ico:I.chispa, dow:'todos',     fallos:[4],     rec:13 },
       { id:'medi',   nombre:'Meditar · 10 min',        hora:'23:00', ancla:'Respiración box 4-4-4-4',             color:'#00e87a', ico:I.loto,   dow:'todos',     fallos:[5,10],  rec:14 },
       { id:'sueno',  nombre:'Dormir 7 h',              hora:'23:59', ancla:'Apagar pantallas al cerrar la app',   color:'#818cf8', ico:I.luna,   dow:'todos',     fallos:[2,6,9], rec:8  },
@@ -441,7 +439,7 @@ class Component extends DCLogic {
     ];
 
     /* `hechos` guarda cuántos pasos lleva hoy cada uno: 2 de 3 litros de agua. */
-    this.state = { hechos: { snooze:1, app:1, ale:1, leer:1, agua:2, piel:1, genai:1 } };
+    this.state = { hechos: { app:1, ale:1, leer:1, agua:2, piel:1, genai:1 } };
   }
 
   dow(d) { return (this.DOW0 + d - 1) % 7; }
