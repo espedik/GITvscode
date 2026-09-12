@@ -76,8 +76,11 @@
       font-family:var(--mono);font-size:10px;font-weight:700;
       transition:transform .12s,box-shadow .12s}
     .c:hover{transform:translateY(-2px) scale(1.08);z-index:4}
-    .c-ok{background:linear-gradient(158deg,#19ff96,#00c26a);color:rgba(0,28,13,.75);
-      box-shadow:0 0 12px rgba(var(--g-rgb),.42),inset 0 1px 0 rgba(255,255,255,.4)}
+    /* Celda cumplida: verde translúcido con borde encendido, para que la palomita
+       VERDE de la esquina se vea. A distancia sigue leyéndose como bloque lleno. */
+    .c-ok{background:rgba(var(--g-rgb),.22);color:var(--g);
+      border:1px solid rgba(var(--g-rgb),.75);
+      box-shadow:0 0 12px rgba(var(--g-rgb),.3),inset 0 0 12px rgba(var(--g-rgb),.15)}
     .c-no{background:rgba(var(--r-rgb),.1);color:rgba(255,92,92,.95);
       border:1px solid rgba(var(--r-rgb),.42)}
     .c-off{background:rgba(var(--ov),.026);color:rgba(var(--ov),.15);cursor:default}
@@ -87,12 +90,21 @@
     .c-fut:hover{transform:none}
     .c-hoy{background:rgba(var(--w-rgb),.09);color:var(--w);
       border:1.5px dashed rgba(var(--w-rgb),.85)}
-    .c-hoyok{background:linear-gradient(158deg,#19ff96,#00c26a);color:rgba(0,28,13,.75);
-      box-shadow:0 0 0 2px rgba(var(--w-rgb),.9),0 0 16px rgba(var(--g-rgb),.55),
-      inset 0 1px 0 rgba(255,255,255,.4)}
-    .c-ok::after,.c-hoyok::after{content:'';position:absolute;right:4px;bottom:4px;
-      width:4px;height:7px;border:solid rgba(0,38,17,.6);border-width:0 2px 2px 0;
-      transform:rotate(42deg)}
+    .c-hoyok{background:rgba(var(--g-rgb),.22);color:var(--g);
+      border:1px solid rgba(var(--g-rgb),.75);
+      box-shadow:0 0 0 2px rgba(var(--w-rgb),.9),0 0 16px rgba(var(--g-rgb),.4)}
+    .c-ok::after,.c-hoyok::after{content:'';position:absolute;right:3.5px;bottom:3.5px;
+      width:4px;height:7px;border:solid var(--g);border-width:0 2px 2px 0;
+      transform:rotate(42deg);filter:drop-shadow(0 0 3px rgba(var(--g-rgb),.9))}
+    /* Un día a medias: el relleno sube con los pasos dados; el número por encima. */
+    .c-parc{border:1px solid rgba(var(--g-rgb),.45);color:var(--g)}
+    .c u{position:absolute;left:0;right:0;bottom:0;display:block;background:rgba(var(--g-rgb),.3);z-index:0}
+    .c span{position:relative;z-index:1}
+    .box{width:15px;height:15px;border-radius:5px;flex-shrink:0;display:flex;align-items:center;
+      justify-content:center;position:relative;overflow:hidden}
+    .box u{position:absolute;left:0;right:0;bottom:0;display:block;background:rgba(var(--g-rgb),.5)}
+    .box svg{filter:drop-shadow(0 0 4px rgba(var(--g-rgb),.7))}
+    .cuenta{font-family:var(--mono);font-size:9.5px;font-style:normal;font-weight:700;color:var(--g)}
     .finde{background:rgba(var(--ov),.03)}
     .colhoy{background:linear-gradient(180deg,rgba(var(--w-rgb),.16),rgba(var(--w-rgb),.04));
       box-shadow:0 0 0 1px rgba(var(--w-rgb),.22)}
@@ -285,7 +297,7 @@
 
             <div style="display:flex;gap:3px">
               <sc-for list="{{h.celdas}}" as="c" hint-placeholder-count="30">
-                <div class="c {{c.cls}} {{c.fondo}}" onClick="{{c.tog}}" title="{{c.tip}}">{{c.n}}</div>
+                <div class="c {{c.cls}} {{c.fondo}}" onClick="{{c.tog}}" title="{{c.tip}}"><sc-if value="{{c.parc}}" hint-placeholder-val="{{true}}"><u style="height:{{c.alto}}"></u></sc-if><span>{{c.n}}</span></div>
               </sc-for>
             </div>
 
@@ -346,12 +358,14 @@
         <div style="display:flex;gap:6px;flex:1;min-width:0;flex-wrap:wrap">
           <sc-for list="{{deHoy}}" as="t" hint-placeholder-count="11">
             <div onClick="{{t.tog}}" style="display:flex;align-items:center;gap:7px;padding:6px 10px;border-radius:9px;background:{{t.bg}};border:1px solid {{t.br}};cursor:pointer">
-              <div style="width:15px;height:15px;border-radius:5px;flex-shrink:0;background:{{t.boxBg}};border:1.5px solid {{t.boxBr}};display:flex;align-items:center;justify-content:center">
+              <div class="box" style="background:{{t.boxBg}};border:1.5px solid {{t.boxBr}}">
+                <sc-if value="{{t.parc}}" hint-placeholder-val="{{true}}"><u style="height:{{t.alto}}"></u></sc-if>
                 <sc-if value="{{t.hecho}}" hint-placeholder-val="{{true}}">
-                  <svg viewBox="0 0 24 24" width="10" height="10" fill="none" stroke="#04040c" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5 10 17.5 19 7"></path></svg>
+                  <svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="#00e87a" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5 10 17.5 19 7"></path></svg>
                 </sc-if>
               </div>
               <span style="font-size:11px;font-weight:600;color:{{t.txt}};white-space:nowrap">{{t.nombre}}</span>
+              <i class="cuenta">{{t.cuenta}}</i>
             </div>
           </sc-for>
         </div>
@@ -408,21 +422,23 @@ class Component extends DCLogic {
       { id:'leer',  nombre:'Leer 10 páginas',  ancla:'Al acostarme',             color:'#b06eff', ico:I.libro,  dow:'todos',   fallos:[3,7],   rec:11 },
       { id:'medi',  nombre:'Meditar · 5 min',  ancla:'23:10 · tras los dientes', color:'#00e87a', ico:I.loto,   dow:'todos',   fallos:[5,10],  rec:14 },
       { id:'sueno', nombre:'Dormir 7 h',       ancla:'Luz fuera a las 23:40',    color:'#818cf8', ico:I.luna,   dow:'todos',   fallos:[2,6,9], rec:8  },
-      { id:'azucar',nombre:'Sin azúcar',       ancla:'Nada dulce después de comer', color:'#f472b6', ico:I.nocar, dow:'todos', fallos:[6,7],   rec:9  },
-      { id:'gasto', nombre:'Anotar gastos',    ancla:'Al llegar a casa',         color:'#3b82f6', ico:I.moneda, dow:'todos',   fallos:[2,8],   rec:8  },
-      { id:'agua',  nombre:'3 litros de agua', ancla:'Botella llena al salir',   color:'#00b8d9', ico:I.gota,   dow:'todos',   fallos:[9],     rec:16 },
+      /* `meta` parte el hábito en pasos: el agua se marca litro a litro. */
+      { id:'agua',  nombre:'Agua · 3 litros',  ancla:'Botella llena al salir',   color:'#00b8d9', ico:I.gota,   dow:'todos',   fallos:[9],     rec:16, meta:3 },
       { id:'piel',  nombre:'Skincare noche',   ancla:'Después de la ducha',      color:'#fb7185', ico:I.chispa, dow:'todos',   fallos:[4],     rec:13 }
     ];
 
-    this.state = { hechos: { ale:true, leer:true, gasto:true, agua:true, pasos:true, piel:true, genai:true } };
+    /* `hechos` guarda cuántos pasos lleva hoy cada uno: 2 de 3 litros de agua. */
+    this.state = { hechos: { ale:1, leer:1, agua:2, pasos:1, piel:1, genai:1 } };
   }
 
   dow(d) { return (this.DOW0 + d - 1) % 7; }
   toca(h, d) { return h.dow === 'todos' || h.dow.indexOf(this.dow(d)) >= 0; }
+  meta(h) { return h.meta > 1 ? h.meta : 1; }
+  valor(h, d) { return d === this.HOY ? (this.state.hechos[h.id] || 0) : 0; }
   estado(h, d) {
     if (!this.toca(h, d)) return 'off';
     if (d > this.HOY) return 'fut';
-    if (d === this.HOY) return this.state.hechos[h.id] ? 'hoyok' : 'hoy';
+    if (d === this.HOY) return this.valor(h, d) >= this.meta(h) ? 'hoyok' : 'hoy';
     return h.fallos.indexOf(d) >= 0 ? 'no' : 'ok';
   }
   racha(h) {
@@ -437,8 +453,11 @@ class Component extends DCLogic {
     return n;
   }
   toggle(id) {
+    const hab = this.base.filter(function (x) { return x.id === id; })[0];
+    const m = this.meta(hab);
     const h = Object.assign({}, this.state.hechos);
-    h[id] = !h[id];
+    const v = h[id] || 0;
+    h[id] = v >= m ? 0 : v + 1;
     this.setState({ hechos: h });
   }
 
@@ -464,10 +483,12 @@ class Component extends DCLogic {
           if (e === 'ok' || e === 'hoyok') cumplidas++;
         }
         const w = self.dow(d), fin = w === 0 || w === 6;
+        const m = self.meta(h), v = self.valor(h, d);
+        const parc = m > 1 && v > 0 && v < m;
         celdas.push({
-          cls: 'c-' + e,
+          cls: 'c-' + e + (parc ? ' c-parc' : ''),
           fondo: d === self.HOY ? 'colhoy' : (fin ? 'finde' : ''),
-          n: d,
+          n: d, parc: parc, alto: parc ? Math.round(v / m * 100) + '%' : '0%',
           tip: h.nombre + ' · día ' + d,
           tog: d === self.HOY ? function () { self.toggle(h.id); } : function () {}
         });
@@ -576,12 +597,16 @@ class Component extends DCLogic {
     /* ── Hoy y riesgo ─────────────────────────────────────────────────── */
     const deHoy = this.base.filter(function (h) { return self.toca(h, self.HOY); })
       .map(function (h) {
-        const hecho = !!self.state.hechos[h.id];
+        const m = self.meta(h), v = self.valor(h, self.HOY);
+        const hecho = v >= m;
         return {
           nombre: h.nombre, hecho: hecho,
+          cuenta: m > 1 ? v + '/' + m : '',
+          parc: m > 1 && v > 0 && v < m,
+          alto: m > 1 ? Math.round(v / m * 100) + '%' : '0%',
           bg: hecho ? 'rgba(0,232,122,.1)' : 'rgba(255,255,255,.035)',
           br: hecho ? 'rgba(0,232,122,.32)' : 'rgba(255,255,255,.09)',
-          boxBg: hecho ? '#00e87a' : 'rgba(255,255,255,.04)',
+          boxBg: hecho ? 'rgba(0,232,122,.18)' : 'rgba(255,255,255,.04)',
           boxBr: hecho ? '#00e87a' : 'rgba(255,255,255,.22)',
           txt: hecho ? '#f4f4f8' : '#9a9db3',
           tog: function () { self.toggle(h.id); }

@@ -499,12 +499,35 @@ El acumulado sustituyó a un "% por semana" que salió **plano al renderizarlo**
 solo hay dos semanas con datos y ambas dan el mismo número. El acumulado sí dibuja con los días
 que haya, y responde otra pregunta que la fila de totales — esa es por día suelto.
 
+### Un hábito puede pedir varios pasos
+
+El campo `meta` parte un hábito en tramos. El agua son **tres litros y se marca litro a
+litro**: cada toque suma uno, al tercero cuenta como cumplida y el siguiente vuelve a cero.
+Un hábito sin `meta` es el interruptor de siempre.
+
+Lo que eso cambia en pantalla:
+
+- La **celda** se rellena desde abajo con lo que llevas — dos de tres litros se ven como dos
+  tercios de celda. Sin eso, beber dos litros y beber cero se verían exactamente igual.
+- El **chip** lleva su cuenta al lado (`2/3`) y su casilla hace de vaso.
+- La **barra del día** cuenta pasos, no hábitos cerrados, así que cada litro la mueve un poco
+  en vez de dejarla quieta hasta el tercero. El contador de al lado sigue contando hábitos
+  cerrados: dos litros de tres no es un hábito hecho.
+
+Lo guardado sigue siendo un número, así que el historial anterior (`1`) se lee igual en un
+hábito de un solo paso.
+
 ### La cuadrícula
 
-Doce hábitos × los días del mes. Celdas de **30px con el número del día dentro** y la palomita en
+Diez hábitos × los días del mes. Celdas de **30px con el número del día dentro** y la palomita en
 la esquina: a ese tamaño el color solo no basta. Franja gris en sábados y domingos para ubicarse
 sin contar columnas, y la columna de hoy iluminada de arriba abajo. Cada hábito lleva su icono de
 trazo (nunca emoji: a 14px es una mancha) y su racha con la barra de avance hacia el récord.
+
+**Los checks son verdes.** La celda cumplida es verde translúcido con el borde encendido, no
+verde macizo, para que la palomita verde de la esquina se vea; a distancia sigue leyéndose
+como bloque lleno, que es lo que hace legible el mes de un vistazo. En los chips la casilla
+marcada es fondo tenue con la palomita en verde, no al revés.
 
 **Los dos ejes de scroll están separados**, y eso importa: el horizontal envuelve la tabla entera
 — cabecera, filas y totales — para que nunca se desalineen; el vertical vive solo en las filas.
@@ -538,9 +561,18 @@ Al subir de 7 a 12 hábitos, la migración **solo añade los nuevos si la lista 
 Adán añadió, borró o renombró algo, la suya manda y no se toca. Y si el guardado trae `marcas`
 pero no `def`, el historial se conserva — reemplazar el objeto entero lo borraba sin avisar.
 
-**Medido** (Playwright, 1600px, 1280px y 390px): 12 filas × 30 celdas, 12 iconos, 6 capas de
-fondo, anillo al 86% con su arco correcto, la línea del acumulado con 10 puntos, 7 barras de
-perfil y 30 de totales. Marcar mueve las cifras, el registro sobrevive a recargar y a 1600px no
+Después se retiraron **Sin azúcar** y **Anotar gastos** a petición de Adán: salen de la lista y
+de su historial una sola vez (bandera `retirado`), así que si algún día crea uno con ese mismo
+id no se lo vuelve a borrar. En esa misma migración el agua recibió su `meta` y el nombre pasó
+de "3 litros de agua" a "Agua · 3 litros" — con el contador al lado, el viejo se leía "3 litros
+de agua 3/3". El nombre solo se cambia si Adán no lo había renombrado él.
+
+**Medido** (Playwright, 1600px, 1280px y 390px): 10 filas × 30 celdas, 6 capas de
+fondo, el anillo con su arco correcto, la línea del acumulado con 10 puntos, 7 barras de
+perfil y 30 de totales. El agua recorre 0/3 → 1/3 → 2/3 → hecho → 0/3 en cuatro toques, con la
+celda al 33%, 67% y llena, y la barra del día subiendo en cada uno. Partiendo de un estado con
+los dos hábitos retirados, desaparecen ellos y sus marcas sin dejar huérfanas. Marcar mueve las
+cifras, el registro sobrevive a recargar y a 1600px no
 hay un solo desborde. Sin errores de consola.
 
 ## Mi Día, en detalle

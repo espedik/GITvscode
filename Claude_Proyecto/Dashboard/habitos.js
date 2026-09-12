@@ -88,15 +88,18 @@
     { id:'leer',   nombre:'Leer 10 páginas',   ancla:'Al acostarme',                  color:'#b06eff', ico:'libro',  dow:'todos' },
     { id:'medi',   nombre:'Meditar · 5 min',   ancla:'23:10 · tras lavarme los dientes', color:'#00e87a', ico:'loto', dow:'todos' },
     { id:'sueno',  nombre:'Dormir 7 h',        ancla:'Luz fuera a las 23:40',         color:'#818cf8', ico:'luna',   dow:'todos' },
-    { id:'azucar', nombre:'Sin azúcar',        ancla:'Nada dulce después de comer',   color:'#f472b6', ico:'nocar',  dow:'todos' },
-    { id:'gasto',  nombre:'Anotar gastos',     ancla:'Al llegar a casa',              color:'#3b82f6', ico:'moneda', dow:'todos' },
-    { id:'agua',   nombre:'3 litros de agua',  ancla:'Botella llena al salir',        color:'#00b8d9', ico:'gota',   dow:'todos' },
+    /* `meta` parte el hábito en pasos: el agua se marca litro a litro y solo
+       cuenta como cumplida al tercero. Un hábito sin `meta` es de un paso. */
+    { id:'agua',   nombre:'Agua · 3 litros',   ancla:'Botella llena al salir',        color:'#00b8d9', ico:'gota',   dow:'todos', meta:3 },
     { id:'piel',   nombre:'Skincare noche',    ancla:'Después de la ducha',           color:'#fb7185', ico:'chispa', dow:'todos' }
   ];
   /* Los siete de la primera versión. Sirven para saber si Adán tocó su lista:
      si lo guardado es exactamente esto, nunca la editó y se puede subir a la
      semilla nueva sin pisarle nada. */
   const SEMILLA_V1 = ['gym','nata','ale','leer','medi','gasto','agua'];
+  /* Hábitos retirados de la semilla. Se borran una sola vez de la lista ya
+     guardada (y con ellos sus marcas), porque Adán pidió quitarlos. */
+  const RETIRADOS = ['azucar', 'gasto'];
 
   const PALETA = ['#ff8a3d','#00e0c0','#ffd93d','#b06eff','#00e87a','#3b82f6',
                   '#00b8d9','#f472b6','#ff5c5c','#8b5cf6','#4ade80','#22d3ee','#818cf8','#fb7185'];
@@ -127,6 +130,32 @@
         }).map(function (s) { return Object.assign({}, s, { desde: hoyISO() }); });
         if (nuevos.length) { S.def = S.def.concat(nuevos); nuevo = true; }
       }
+      /* Los dos que Adán pidió quitar salen de su lista y de su historial.
+         Se hace una vez: si después crea uno con ese id, no se vuelve a tocar. */
+      if (!S.retirado) {
+        const fuera = S.def.filter(function (h) { return RETIRADOS.indexOf(h.id) >= 0; });
+        if (fuera.length) {
+          S.def = S.def.filter(function (h) { return RETIRADOS.indexOf(h.id) < 0; });
+          Object.keys(S.marcas).forEach(function (f) {
+            RETIRADOS.forEach(function (id) { delete S.marcas[f][id]; });
+            if (!Object.keys(S.marcas[f]).length) delete S.marcas[f];
+          });
+        }
+        S.retirado = 1;
+        nuevo = true;
+      }
+      /* El agua pasó a contarse por litros: se le pone su meta si venía sin ella.
+         El nombre viejo llevaba la cantidad dentro ("3 litros de agua") y junto al
+         contador se leía "3 litros de agua 3/3", así que se cambia por el de la
+         semilla — pero solo si Adán no lo había renombrado él. */
+      const NOMBRE_V1 = { agua: '3 litros de agua' };
+      S.def.forEach(function (h) {
+        const sem = SEMILLA.filter(function (x) { return x.id === h.id; })[0];
+        if (!sem || !sem.meta || h.meta) return;
+        h.meta = sem.meta;
+        if (h.nombre === NOMBRE_V1[h.id]) h.nombre = sem.nombre;
+        nuevo = true;
+      });
       /* Los hábitos de antes no traían icono: se les asigna el de la semilla
          por id, y uno neutro a los que Adán haya creado él. */
       S.def.forEach(function (h) {
@@ -188,7 +217,16 @@
     if (h.dow === 'todos') return true;
     return h.dow.indexOf(desdeISO(fecha).getDay()) >= 0;
   }
-  function marcado(h, fecha) { return !!(S.marcas[fecha] && S.marcas[fecha][h.id]); }
+  /* Un hábito puede pedir varios pasos (el agua, tres litros). `valor` es
+     cuántos llevas ese día y `marcado` solo es cierto al llegar a la meta.
+     Lo guardado sigue siendo un número, así que el historial viejo (1) se lee
+     igual en un hábito de un solo paso. */
+  function meta(h) { return h.meta > 1 ? h.meta : 1; }
+  function valor(h, fecha) {
+    const v = S.marcas[fecha] && S.marcas[fecha][h.id];
+    return typeof v === 'number' ? v : (v ? 1 : 0);
+  }
+  function marcado(h, fecha) { return valor(h, fecha) >= meta(h); }
   function estado(h, fecha) {
     if (!toca(h, fecha)) return 'off';
     const arranque = h.desde || S.desde;
@@ -244,9 +282,15 @@
 
   function toggle(id, fecha) {
     if (fecha > hoyISO()) return;
+    const h = S.def.filter(function (x) { return x.id === id; })[0];
+    if (!h) return;
+    /* Con meta > 1 cada toque suma un paso; al completar, el siguiente vuelve
+       a cero. Con meta 1 es el interruptor de siempre. */
+    const m = meta(h), v = valor(h, fecha);
+    const n = v >= m ? 0 : v + 1;
     if (!S.marcas[fecha]) S.marcas[fecha] = {};
-    if (S.marcas[fecha][id]) delete S.marcas[fecha][id];
-    else S.marcas[fecha][id] = 1;
+    if (n === 0) delete S.marcas[fecha][id];
+    else S.marcas[fecha][id] = n;
     if (!Object.keys(S.marcas[fecha]).length) delete S.marcas[fecha];
     guardar();
     pintar();
@@ -306,6 +350,13 @@
     const hoyEnMes = dias.indexOf(hoy) >= 0;
     const deHoy = delDia(hoy);
     const hechosHoy = deHoy.filter(function (h) { return marcado(h, hoy); }).length;
+    /* El CONTADOR cuenta hábitos cerrados (dos litros de tres no es un hábito
+       hecho), pero la BARRA cuenta pasos: así cada litro la mueve un poco en vez
+       de dejarla quieta hasta el tercero. */
+    const pasosHoy = deHoy.reduce(function (a, h) {
+      return a + Math.min(valor(h, hoy) / meta(h), 1);
+    }, 0);
+    const pctHoy = deHoy.length ? Math.round(pasosHoy / deHoy.length * 100) : 0;
     const riesgo = enRiesgo();
 
     const mejor = S.def.reduce(function (a, h) {
@@ -329,9 +380,16 @@
         const cls = e === 'pre' ? 'off' : e;
         const fondo = f === hoy ? ' hb2-colhoy' : ((w === 0 || w === 6) ? ' hb2-finde' : '');
         const clic = f <= hoy ? ' onclick="HB.toggle(\'' + h.id + '\',\'' + f + '\')"' : '';
-        const tit = h.nombre + ' · ' + d.getDate() + ' ' + MESES[d.getMonth()];
-        return '<div class="hb2-c hb2-' + cls + fondo + '"' + clic + ' title="' + esc(tit) + '">' +
-          d.getDate() + '</div>';
+        /* Con meta > 1, un día a medias se pinta con el relleno subiendo desde
+           abajo: dos litros de tres se ven como dos tercios de celda. Sin esto,
+           beber dos litros y beber cero se verían exactamente igual. */
+        const m = meta(h), v = valor(h, f);
+        const parcial = m > 1 && v > 0 && v < m
+          ? '<u style="height:' + Math.round(v / m * 100) + '%"></u>' : '';
+        const tit = h.nombre + ' · ' + d.getDate() + ' ' + MESES[d.getMonth()] +
+          (m > 1 ? ' · ' + v + ' de ' + m : '');
+        return '<div class="hb2-c hb2-' + cls + (parcial ? ' hb2-parc' : '') + fondo + '"' +
+          clic + ' title="' + esc(tit) + '">' + parcial + '<span>' + d.getDate() + '</span></div>';
       }).join('');
 
       return '<div class="hb2-fila' + (peligro ? ' peligro' : '') + '">' +
@@ -373,10 +431,15 @@
 
     /* ── Chips de hoy ──────────────────────────────────────────────────── */
     const chips = deHoy.length ? deHoy.map(function (h) {
-      const hecho = marcado(h, hoy);
+      const hecho = marcado(h, hoy), m = meta(h), v = valor(h, hoy);
+      /* El de varios pasos lleva su cuenta al lado y la casilla a medio llenar:
+         es la señal de que falta poco, que es justo lo que empuja a cerrarlo. */
+      const caja = hecho
+        ? '<svg viewBox="0 0 24 24"><path d="M5 12.5 10 17.5 19 7"/></svg>'
+        : (m > 1 && v > 0 ? '<u style="height:' + Math.round(v / m * 100) + '%"></u>' : '');
       return '<button class="hb2-chip' + (hecho ? ' on' : '') + '" onclick="HB.toggle(\'' + h.id + '\',\'' + hoy + '\')">' +
-        '<span class="hb2-box">' + (hecho ? '<svg viewBox="0 0 24 24"><path d="M5 12.5 10 17.5 19 7"/></svg>' : '') + '</span>' +
-        esc(h.nombre) + '</button>';
+        '<span class="hb2-box">' + caja + '</span>' + esc(h.nombre) +
+        (m > 1 ? '<i class="hb2-chip-n">' + v + '/' + m + '</i>' : '') + '</button>';
     }).join('') : '<div class="hb2-vacio">Hoy no toca ninguno. Día libre de verdad, no un fallo.</div>';
 
     /* ── Aviso: solo existe si de verdad hay algo en riesgo ────────────── */
@@ -464,7 +527,8 @@
         aviso +
         '<div class="hb2-panel hb2-hoy">' +
           '<div class="hb2-hoy-n"><span class="hb2-k">Lo de hoy</span>' +
-            '<span><b>' + hechosHoy + '</b><i>/' + deHoy.length + '</i></span></div>' +
+            '<span><b>' + hechosHoy + '</b><i>/' + deHoy.length + '</i></span>' +
+            '<div class="hb2-barra"><u style="width:' + pctHoy + '%"></u></div></div>' +
           '<div class="hb2-sep"></div>' +
           '<div class="hb2-chips">' + chips + '</div>' +
         '</div>' +
@@ -1073,8 +1137,12 @@
   font-family:var(--mono);font-size:10px;font-weight:700;
   transition:transform .12s,box-shadow .12s}
 .hb2-c:hover{transform:translateY(-2px) scale(1.08);z-index:4}
-.hb2-ok,.hb2-hoyok{background:linear-gradient(158deg,#19ff96,#00c26a);color:rgba(0,28,13,.75);
-  box-shadow:0 0 12px rgba(var(--g-rgb),.42),inset 0 1px 0 rgba(255,255,255,.4)}
+/* Celda cumplida: verde translúcido con borde encendido en vez de verde macizo,
+   para que la palomita VERDE de la esquina se vea. Sigue leyéndose como bloque
+   lleno a distancia, que es lo que hace legible el mes de un vistazo. */
+.hb2-ok,.hb2-hoyok{background:rgba(var(--g-rgb),.22);color:var(--g);
+  border:1px solid rgba(var(--g-rgb),.75);
+  box-shadow:0 0 12px rgba(var(--g-rgb),.3),inset 0 0 12px rgba(var(--g-rgb),.15)}
 .hb2-no{background:rgba(var(--r-rgb),.1);color:var(--r);border:1px solid rgba(var(--r-rgb),.42)}
 .hb2-off{background:rgba(var(--ov),.026);color:rgba(var(--ov),.15);cursor:default}
 .hb2-off:hover{transform:none}
@@ -1085,9 +1153,15 @@
 .hb2-hoyok{box-shadow:0 0 0 2px rgba(var(--w-rgb),.9),0 0 16px rgba(var(--g-rgb),.55),
   inset 0 1px 0 rgba(255,255,255,.4)}
 /* La palomita dentro de la celda cumplida: a este tamaño el color solo no basta */
-.hb2-ok::after,.hb2-hoyok::after{content:'';position:absolute;right:4px;bottom:4px;
-  width:4px;height:7px;border:solid rgba(0,38,17,.6);border-width:0 2px 2px 0;
-  transform:rotate(42deg)}
+.hb2-ok::after,.hb2-hoyok::after{content:'';position:absolute;right:3.5px;bottom:3.5px;
+  width:4px;height:7px;border:solid var(--g);border-width:0 2px 2px 0;
+  transform:rotate(42deg);filter:drop-shadow(0 0 3px rgba(var(--g-rgb),.9))}
+/* Un día a medias en un hábito por pasos: el relleno sube con lo que llevas.
+   El número se queda por encima, para que siga leyéndose. */
+.hb2-parc{border:1px solid rgba(var(--g-rgb),.45);color:var(--g)}
+.hb2-parc u{position:absolute;left:0;right:0;bottom:0;display:block;text-decoration:none;
+  background:rgba(var(--g-rgb),.3);z-index:0}
+.hb2-c span{position:relative;z-index:1}
 .hb2-finde{background:rgba(var(--ov),.03)}
 .hb2-colhoy{background:linear-gradient(180deg,rgba(var(--w-rgb),.16),rgba(var(--w-rgb),.04));
   box-shadow:0 0 0 1px rgba(var(--w-rgb),.22)}
@@ -1122,6 +1196,11 @@
 .hb2-hoy-n>span:last-child{display:flex;align-items:baseline;gap:2px;margin-top:3px;font-family:var(--mono)}
 .hb2-hoy-n b{font-size:18px;font-weight:700;color:var(--w)}
 .hb2-hoy-n i{font-size:11px;font-style:normal;font-weight:700;color:var(--text3)}
+.hb2-barra{width:78px;height:4px;border-radius:3px;background:rgba(var(--ov),.1);
+  overflow:hidden;margin-top:6px}
+.hb2-barra u{display:block;height:100%;border-radius:3px;text-decoration:none;
+  background:linear-gradient(90deg,var(--g),var(--cy));
+  box-shadow:0 0 8px rgba(var(--g-rgb),.55);transition:width .3s}
 .hb2-sep{width:1px;align-self:stretch;background:rgba(var(--cy-rgb),.18);flex-shrink:0}
 .hb2-chips{display:flex;gap:6px;flex:1;min-width:0;flex-wrap:wrap;overflow-y:auto;max-height:64px}
 .hb2-chip{display:flex;align-items:center;gap:7px;padding:6px 10px;border-radius:9px;cursor:pointer;
@@ -1132,9 +1211,18 @@
 .hb2-box{width:15px;height:15px;border-radius:5px;flex-shrink:0;display:flex;align-items:center;
   justify-content:center;background:rgba(var(--ov),.04);border:1.5px solid rgba(var(--ov),.22);
   transition:background .16s,border-color .16s}
-.hb2-chip.on .hb2-box{background:var(--g);border-color:var(--g);box-shadow:0 0 10px rgba(var(--g-rgb),.5)}
-.hb2-box svg{width:10px;height:10px;fill:none;stroke:var(--bg);stroke-width:3.6;
-  stroke-linecap:round;stroke-linejoin:round}
+.hb2-chip.on .hb2-box{background:rgba(var(--g-rgb),.18);border-color:var(--g);
+  box-shadow:0 0 10px rgba(var(--g-rgb),.35)}
+/* La palomita va en VERDE sobre fondo tenue, no en negro sobre verde sólido. */
+.hb2-box svg{width:11px;height:11px;fill:none;stroke:var(--g);stroke-width:3.4;
+  stroke-linecap:round;stroke-linejoin:round;
+  filter:drop-shadow(0 0 4px rgba(var(--g-rgb),.7))}
+/* La casilla hace de vaso: el relleno sube con cada paso dado. */
+.hb2-box{position:relative;overflow:hidden}
+.hb2-box u{position:absolute;left:0;right:0;bottom:0;display:block;text-decoration:none;
+  background:rgba(var(--g-rgb),.5)}
+.hb2-chip-n{font-family:var(--mono);font-size:9.5px;font-style:normal;font-weight:700;
+  color:var(--g);margin-left:1px}
 .hb2-vacio{font-size:11px;color:var(--text3);line-height:1.5}
 
 /* ── La ficha ─────────────────────────────────────────────────────────── */
@@ -1201,6 +1289,7 @@
 .hb2-b svg{width:13px;height:13px}
 .hb2-b-r:hover{background:rgba(var(--r-rgb),.14);border-color:rgba(var(--r-rgb),.35);color:var(--r)}
 .hb2-b-g{background:rgba(var(--g-rgb),.13);border-color:rgba(var(--g-rgb),.35);color:var(--g)}
+.hb2-b-g svg{filter:drop-shadow(0 0 4px rgba(var(--g-rgb),.6))}
 .hb2-b-g:hover{background:rgba(var(--g-rgb),.2);color:var(--g)}
 
 /* ── Editor ───────────────────────────────────────────────────────────── */
