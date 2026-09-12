@@ -108,7 +108,6 @@
        foco) en vez de copiarlo aquí. El detalle de cada ejercicio vive en Ejercicio. */
     { id:'gym',    nombre:'Gimnasio',               ancla:'Tras el CENLEX · el sábado a las 07:35',      hora:'18:15', color:'#ff8a3d', ico:'pesa',   dow:[1,2,4,5,6], gym:true,
       pasos:['Series, reps y peso de cada ejercicio: en Ejercicio, en la barra de arriba.'] },
-    { id:'nata',   nombre:'Natación',               ancla:'Alberca del Fitsi Buenavista',                hora:'18:15', color:'#00e0c0', ico:'onda',   dow:[3], gym:true },
     { id:'fase0',  nombre:'Fase 0 · 1h15',          ancla:'Negocio de tu papá o plantilla GBM',          hora:'20:00', color:'#8b5cf6', ico:'diana',  dow:[1,2,3,4,5],
       pasos:[
         '1h15 de avance en la prioridad activa: el negocio de tu papá o la plantilla GBM.',
@@ -143,8 +142,8 @@
      La regla de todas: lo que Adán editó a mano manda. Un hábito se considera
      "suyo" si su nombre o su anclaje no son los que le puso la semilla anterior
      — entonces se le añade solo lo nuevo (la hora) y no se le toca nada más. */
-  const MIG = 4;
-  const RETIRADOS = { 2: ['azucar', 'gasto'], 3: ['pasos'], 4: ['snooze', 'diario'] };
+  const MIG = 5;
+  const RETIRADOS = { 2: ['azucar', 'gasto'], 3: ['pasos'], 4: ['snooze', 'diario'], 5: ['nata'] };
   /* Lo que decía la semilla anterior de cada hábito, para saber si Adán lo tocó */
   const PREVIO = {
     gym:   [['Gimnasio', '19:00 · después de comer'], ['Gimnasio', 'Tras el CENLEX · el sábado a las 07:35']],
@@ -265,6 +264,13 @@
         desde: g && g.desde,
         mig: MIG
       };
+      /* Ese historial puede traer marcas de hábitos ya retirados: como aquí no
+         corren las migraciones, se limpian de una vez. */
+      const todosFuera = Object.keys(RETIRADOS).reduce(function (a, k) { return a.concat(RETIRADOS[k]); }, []);
+      Object.keys(S.marcas).forEach(function (f) {
+        todosFuera.forEach(function (id) { delete S.marcas[f][id]; });
+        if (!Object.keys(S.marcas[f]).length) delete S.marcas[f];
+      });
       nuevo = true;
     }
     if (!S.marcas) S.marcas = {};
@@ -606,7 +612,7 @@
           '<div class="hb2-grid-t">' +
             '<span class="hb2-k" style="color:var(--cy)">Cuadrícula del mes</span>' +
             '<span class="hb2-linea"></span>' +
-            '<span class="hb2-k" style="font-size:7.5px">' + S.def.length + ' hábitos · ' + dias.length + ' días</span>' +
+            '<span class="hb2-k" style="font-size:7.5px">' + S.def.length + ' hábitos · ' + dias.length + ' días · toca un día pasado para corregirlo</span>' +
           '</div>' +
           '<button class="hb2-add" onclick="HB.nuevo()">' + ICO_MAS + ' Hábito</button>' +
           '<div class="hb2-leg">' +
@@ -1343,13 +1349,21 @@
   font-family:var(--mono);font-size:11px;font-weight:700;
   transition:transform .12s,box-shadow .12s}
 .hb2-c:hover{transform:translateY(-2px) scale(1.08);z-index:4}
-/* Celda cumplida: verde translúcido con borde encendido en vez de verde macizo,
-   para que la palomita VERDE de la esquina se vea. Sigue leyéndose como bloque
-   lleno a distancia, que es lo que hace legible el mes de un vistazo. */
-.hb2-ok,.hb2-hoyok{background:rgba(var(--g-rgb),.22);color:var(--g);
-  border:1px solid rgba(var(--g-rgb),.75);
+/* EL PASADO VA APAGADO, HOY ENCENDIDO. Las celdas de días anteriores se pueden
+   marcar y desmarcar igual que la de hoy (se te olvidó anotar ayer, lo corriges),
+   pero con el mismo brillo no se distinguía qué día era el vivo. Un día pasado
+   cumplido es verde tenue sin glow; fallado, rojo tenue. Al pasar el ratón se
+   encienden: es la señal de que se pueden tocar. Hoy conserva el brillo entero. */
+.hb2-ok{background:rgba(var(--g-rgb),.11);color:rgba(var(--g-rgb),.72);
+  border:1px solid rgba(var(--g-rgb),.36)}
+.hb2-ok:hover{background:rgba(var(--g-rgb),.22);color:var(--g);border-color:rgba(var(--g-rgb),.75);
+  box-shadow:0 0 12px rgba(var(--g-rgb),.3)}
+.hb2-no{background:rgba(var(--r-rgb),.06);color:rgba(var(--r-rgb),.62);border:1px solid rgba(var(--r-rgb),.26)}
+.hb2-no:hover{background:rgba(var(--r-rgb),.12);color:var(--r);border-color:rgba(var(--r-rgb),.48)}
+/* Hoy cumplido: el verde entero, con borde encendido y glow — el único que brilla */
+.hb2-hoyok{background:rgba(var(--g-rgb),.24);color:var(--g);
+  border:1px solid rgba(var(--g-rgb),.8);
   box-shadow:0 0 12px rgba(var(--g-rgb),.3),inset 0 0 12px rgba(var(--g-rgb),.15)}
-.hb2-no{background:rgba(var(--r-rgb),.1);color:var(--r);border:1px solid rgba(var(--r-rgb),.42)}
 .hb2-off{background:rgba(var(--ov),.026);color:rgba(var(--ov),.15);cursor:default}
 .hb2-off:hover{transform:none}
 .hb2-fut{background:rgba(var(--ov),.038);color:rgba(var(--ov),.19);
@@ -1362,9 +1376,12 @@
 .hb2-ok::after,.hb2-hoyok::after{content:'';position:absolute;right:11%;bottom:11%;
   width:13%;height:23%;border:solid var(--g);border-width:0 2px 2px 0;
   transform:rotate(42deg);filter:drop-shadow(0 0 3px rgba(var(--g-rgb),.9))}
+.hb2-ok::after{border-color:rgba(var(--g-rgb),.6);filter:none}
+.hb2-ok:hover::after{border-color:var(--g);filter:drop-shadow(0 0 3px rgba(var(--g-rgb),.9))}
 /* Un día a medias en un hábito por pasos: el relleno sube con lo que llevas.
    El número se queda por encima, para que siga leyéndose. */
 .hb2-parc{border:1px solid rgba(var(--g-rgb),.45);color:var(--g)}
+.hb2-no.hb2-parc{border-color:rgba(var(--g-rgb),.3);color:rgba(var(--g-rgb),.65)}
 .hb2-parc u{position:absolute;left:0;right:0;bottom:0;display:block;text-decoration:none;
   background:rgba(var(--g-rgb),.3);z-index:0}
 .hb2-c span{position:relative;z-index:1}
@@ -1503,8 +1520,12 @@
 .hb2-fd:hover{transform:scale(1.08)}
 .hb2-fd:empty{background:transparent;cursor:default}
 .hb2-fd:empty:hover{transform:none}
-.hb2-f-ok,.hb2-f-hoyok{background:linear-gradient(158deg,#19ff96,#00c26a);color:rgba(0,28,13,.78)}
-.hb2-f-no{background:rgba(var(--r-rgb),.12);color:var(--r);border:1px solid rgba(var(--r-rgb),.4)}
+.hb2-f-ok{background:rgba(var(--g-rgb),.12);color:rgba(var(--g-rgb),.75);border:1px solid rgba(var(--g-rgb),.36)}
+.hb2-f-ok:hover{background:rgba(var(--g-rgb),.24);color:var(--g);border-color:rgba(var(--g-rgb),.75)}
+.hb2-f-hoyok{background:rgba(var(--g-rgb),.26);color:var(--g);border:1px solid rgba(var(--g-rgb),.8);
+  box-shadow:0 0 10px rgba(var(--g-rgb),.3)}
+.hb2-f-no{background:rgba(var(--r-rgb),.07);color:rgba(var(--r-rgb),.65);border:1px solid rgba(var(--r-rgb),.28)}
+.hb2-f-no:hover{background:rgba(var(--r-rgb),.13);color:var(--r);border-color:rgba(var(--r-rgb),.48)}
 .hb2-f-hoy{background:rgba(var(--w-rgb),.1);color:var(--w);border:1.5px dashed rgba(var(--w-rgb),.85)}
 .hb2-f-hoyok{box-shadow:0 0 0 2px rgba(var(--w-rgb),.7)}
 .hb2-f-off{background:rgba(var(--ov),.03);color:rgba(var(--ov),.13);cursor:default}

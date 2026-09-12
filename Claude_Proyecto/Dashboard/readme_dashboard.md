@@ -501,10 +501,10 @@ que haya, y responde otra pregunta que la fila de totales — esa es por día su
 
 ### Los hábitos siguen el horario, y la lista va en orden de hora
 
-Los once de la semilla salen de `RUTINA_TASKS` (datos-maestros.js, los 58 bloques de la semana):
+Los diez de la semilla salen de `RUTINA_TASKS` (datos-maestros.js, los 58 bloques de la semana):
 la hora, el anclaje y los días son los de ahí. Construir la app a las
 06:43, CT-GenAI al llegar a ALTEN, la clase de alemán de 17:00 a 18:00 en CENLEX · ESCA Santo
-Tomás, gym o natación a las 18:15, la Fase 0 a las 20:00, la lectura a las 21:45, la rutina
+Tomás, gym a las 18:15, la Fase 0 a las 20:00, la lectura a las 21:45, la rutina
 de la noche a las 22:30, meditar a las 23:00, dormir a las 23:59 — y el agua, sin hora, al final.
 
 Cada hábito lleva `hora` y **la lista se pinta ordenada por ella**, de modo que se lee en el orden
@@ -531,7 +531,7 @@ hábito de un solo paso.
 
 ### La cuadrícula
 
-Once hábitos × los días del mes. **Es la única pantalla sin el tope de 1400px** de `.slide-inner`
+Diez hábitos × los días del mes. **Es la única pantalla sin el tope de 1400px** de `.slide-inner`
 y con menos padding lateral: aquí cada píxel de ancho es tamaño de celda, que es lo que pidió Adán
 ("haz más grande a lo ancho esa página, quiero los recuadros más grandes").
 
@@ -546,6 +546,12 @@ Llevan **el número del día dentro** y la palomita en
 la esquina: a ese tamaño el color solo no basta. Franja gris en sábados y domingos para ubicarse
 sin contar columnas, y la columna de hoy iluminada de arriba abajo. Cada hábito lleva su icono de
 trazo (nunca emoji: a 14px es una mancha) y su racha con la barra de avance hacia el récord.
+
+**El pasado va apagado, hoy encendido.** Las celdas de días anteriores se marcan y desmarcan igual
+que la de hoy (se te olvidó anotar ayer, lo corriges), pero con el mismo brillo no se distinguía
+qué día era el vivo. Un día pasado cumplido es verde tenue sin glow y fallado, rojo tenue; al
+pasar el ratón se encienden, que es la señal de que se pueden tocar. Solo hoy brilla entero. La
+cabecera de la cuadrícula lo dice: "toca un día pasado para corregirlo".
 
 **Los checks son verdes.** La celda cumplida es verde translúcido con el borde encendido, no
 verde macizo, para que la palomita verde de la esquina se vea; a distancia sigue leyéndose
@@ -575,7 +581,7 @@ donde ya vive para no duplicarlo (Regla 1). Tres fuentes, y un hábito puede com
 
 | Campo | De dónde sale | Quién lo usa |
 |---|---|---|
-| `gym:true` | `GYM_RUTINA_DEFAULT[día]` de dashboard.html: nombre y `foco` del día que toca hoy, más la semana entera | Gimnasio, Natación |
+| `gym:true` | `GYM_RUTINA_DEFAULT[día]` de dashboard.html: nombre y `foco` del día que toca hoy, más la semana entera | Gimnasio |
 | `rutina` (+ `sec`) | Las subtareas de ese bloque de `RUTINA_TASKS`, agrupadas por sección; `sec` se queda solo con una | Leer (`wd-cierre`/Lectura), Rutina de la noche (`wd-pm`), Meditar (`wd20`) |
 | `pasos` | Lista propia, una línea por paso; los datos maestros se citan con marcadores que resuelve `CIFRAS.texto()` (el alemán dice "Kapitel {{kapitelAleman}}") | El resto, y cualquier hábito nuevo |
 
@@ -605,14 +611,14 @@ Al subir de 7 a 12 hábitos, la migración **solo añade los nuevos si la lista 
 Adán añadió, borró o renombró algo, la suya manda y no se toca. Y si el guardado trae `marcas`
 pero no `def`, el historial se conserva — reemplazar el objeto entero lo borraba sin avisar.
 
-Las migraciones van por versión (`S.mig`, hoy en 4) y corren una sola vez y en orden. La regla de
+Las migraciones van por versión (`S.mig`, hoy en 5) y corren una sola vez y en orden. La regla de
 todas: **lo que Adán editó a mano manda**. Un hábito se considera suyo si su nombre o su anclaje no
 son los que le puso la semilla anterior — entonces solo recibe lo nuevo (la hora, el icono, la
 meta, el qué hacer) y no se le toca nada más. Los retirados (Sin azúcar y Anotar gastos en la 2, 8 000 pasos en
-la 3, Sin snooze y Diario en la 4) salen de la lista y de su historial; los nuevos entran con su
+la 3, Sin snooze y Diario en la 4, Natación en la 5) salen de la lista y de su historial; los nuevos entran con su
 arranque en hoy.
 
-**Medido** (Playwright, 1920px, 1600px, 1366px y 390px): 11 filas × 30 celdas fluidas, 6 capas de
+**Medido** (Playwright, 1920px, 1600px, 1366px y 390px): 10 filas × 30 celdas fluidas, 6 capas de
 fondo, el anillo con su arco correcto, la línea del acumulado con 10 puntos, 7 barras de
 perfil y 30 de totales. El agua recorre 0/3 → 1/3 → 2/3 → hecho → 0/3 en cuatro toques, con la
 celda al 33%, 67% y llena, y la barra del día subiendo en cada uno. Partiendo del estado guardado con un hábito renombrado a mano, la migración 3 lo respeta, retira
