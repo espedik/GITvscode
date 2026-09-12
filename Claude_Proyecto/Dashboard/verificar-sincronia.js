@@ -1477,6 +1477,50 @@ function impactoDelCambio() {
       vivas.length + ' deudas vigiladas en ' + fuentes.length + ' archivos)');
 })();
 
+/* ── Las pantallas del Dashboard, en CUATRO listas paralelas ──────────────────────────────
+   Un slide existe en cuatro sitios a la vez: su <section class="slide" data-i="N">, su funcion
+   en RENDERS, su fila en SLIDE_MENU_META (el menu ☰) y su icono en HUD_ICO (el rail). Las
+   cuatro tienen que medir lo mismo y estar en el mismo orden.
+
+   Por que importa: si se anade una pantalla y se olvida su icono, `N` sale de RENDERS y el rail
+   pinta undefined en la ultima posicion — sin error de consola, solo un hueco. Se anadio al
+   sumar Habitos (slide 8, 2026-09-11), que toca esas cuatro listas a la vez. */
+(function () {
+  const renders = literal(dash, 'const RENDERS=');
+  const menu    = literal(dash, 'const SLIDE_MENU_META=');
+  const icos    = literal(dash, 'const HUD_ICO=');
+  if (!renders || !menu || !icos) {
+    problemas.push('No se pudieron leer RENDERS / SLIDE_MENU_META / HUD_ICO en dashboard.html.' +
+      '\n     Si se renombraron, hay que actualizar este control.');
+    return;
+  }
+  const nRend = renders.slice(1, -1).split(',').filter(x => x.trim()).length;
+  const nMenu = (evaluar(menu)  || []).length;
+  const nIco  = (evaluar(icos)  || []).length;
+  const secs  = (dash.match(/<section class="slide[^"]*" data-i="\d+"/g) || []).length;
+
+  if (nRend === nMenu && nMenu === nIco && nIco === secs) {
+    ok.push('Las 4 listas de pantallas del Dashboard cuadran (' + secs + ' slides: <section>, ' +
+      'RENDERS, SLIDE_MENU_META y HUD_ICO)');
+  } else {
+    problemas.push('Las listas de pantallas del Dashboard NO cuadran:' +
+      '\n       <section class="slide">  ' + secs +
+      '\n       RENDERS                 ' + nRend +
+      '\n       SLIDE_MENU_META         ' + nMenu +
+      '\n       HUD_ICO                 ' + nIco +
+      '\n     Las cuatro describen las mismas pantallas y en el mismo orden. La que va corta' +
+      '\n     deja el rail o el menu pintando un hueco, sin error de consola.');
+  }
+
+  // Los data-i tienen que ser 0..N-1 sin saltos: showSlide() indexa RENDERS con ese numero.
+  const is = (dash.match(/<section class="slide[^"]*" data-i="(\d+)"/g) || [])
+    .map(m => +m.match(/data-i="(\d+)"/)[1]);
+  const esperado = is.map((_, k) => k).join(',');
+  if (is.slice().sort((a, b) => a - b).join(',') !== esperado)
+    problemas.push('Los data-i de los slides no son 0..' + (is.length - 1) + ' sin saltos: [' +
+      is.join(', ') + ']\n     showSlide(i) usa ese numero como indice de RENDERS.');
+})();
+
 // ── Salida ──
 if (process.argv.indexOf('--hook') !== -1) {
   const partes = [];

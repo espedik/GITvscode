@@ -1,0 +1,173 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;700&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&display=swap">
+  <style>
+    :root{
+      --bg:#05050a; --text:#f4f4f8; --text2:#9a9db3; --text3:#8589a8;
+      --card:rgba(255,255,255,.06); --card-br:rgba(255,255,255,.13);
+      --g:#00e87a; --o:#ff8a3d; --w:#ffd93d; --r:#ff5c5c; --cy:#00e0c0;
+      --g-rgb:0,232,122; --r-rgb:255,92,92; --w-rgb:255,217,61; --o-rgb:255,138,61;
+      --font:'Inter',-apple-system,sans-serif;
+      --mono:'Space Grotesk',monospace;
+      --font-title:'Fraunces',Georgia,serif;
+      --ac1:#8b5cf6; --ac2:#f472b6;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    body{margin:0;font-family:var(--font);background:var(--bg);color:var(--text)}
+    a{color:var(--ac1)} a:hover{color:var(--ac2)}
+    .tile{background:var(--card);border:1px solid var(--card-br);border-radius:18px}
+    .k{font-family:var(--mono);font-weight:700;letter-spacing:.16em;text-transform:uppercase;
+      font-size:8.5px;color:var(--text3)}
+    .num{font-family:var(--mono);font-weight:700;line-height:1}
+    .d{height:26px;border-radius:7px;display:flex;align-items:center;justify-content:center;
+      font-family:var(--mono);font-size:10px;font-weight:700}
+  </style>
+</helmet>
+
+<div style="position:relative;width:520px;height:840px;background:#0a0a14;overflow:hidden;border-left:1px solid rgba(255,255,255,.09)">
+  <div style="position:absolute;width:420px;height:420px;border-radius:50%;filter:blur(90px);opacity:.16;background:var(--g);top:-18%;right:-22%;pointer-events:none"></div>
+
+  <div style="position:relative;z-index:1;height:100%;padding:24px 26px;display:flex;flex-direction:column;gap:14px;overflow:hidden">
+
+    <!-- Cabecera del hábito -->
+    <div style="flex-shrink:0">
+      <div class="k" style="color:var(--g);margin-bottom:7px">Ficha del hábito</div>
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:14px">
+        <div style="min-width:0">
+          <div style="font-family:var(--font-title);font-size:27px;font-weight:600;line-height:1.15">Meditar · 5 min</div>
+          <!-- El anclaje, editable: es la pieza que hace que el hábito ocurra -->
+          <div style="display:flex;align-items:center;gap:7px;margin-top:8px">
+            <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="var(--cy)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><path d="M9 6.5H6a3.5 3.5 0 0 0 0 7h3M15 17.5h3a3.5 3.5 0 0 0 0-7h-3"/><path d="M8.5 12h7"/></svg>
+            <div style="font-size:12px;color:var(--text2)">Después de <b style="color:var(--text)">lavarme los dientes</b>, a las 23:10</div>
+          </div>
+        </div>
+        <div style="width:11px;height:11px;border-radius:3px;background:var(--g);flex-shrink:0;margin-top:8px"></div>
+      </div>
+    </div>
+
+    <!-- Racha actual contra el récord: el marcador que importa -->
+    <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px;flex-shrink:0">
+      <div class="tile" style="padding:14px 16px;border-color:rgba(var(--o-rgb),.30);background:rgba(var(--o-rgb),.07)">
+        <div style="display:flex;align-items:center;gap:7px">
+          <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="var(--o)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c.7 3 2.6 4.2 4 5.8A7.5 7.5 0 0 1 12 21a7.5 7.5 0 0 1-4-13.2C9.3 9 10 10 10 11c1.4-1.6 2-5 2-8Z"/></svg>
+          <span class="num" style="font-size:25px;color:var(--o)">0</span>
+        </div>
+        <div class="k" style="margin-top:7px">Racha ahora · rota ayer</div>
+      </div>
+      <div class="tile" style="padding:14px 16px">
+        <div style="display:flex;align-items:center;gap:7px">
+          <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="var(--w)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8M12 17v4"/><path d="M17 4H7v6a5 5 0 0 0 10 0V4Z"/><path d="M17 5.5h2.5a2.5 2.5 0 0 1 0 5H17M7 5.5H4.5a2.5 2.5 0 0 0 0 5H7"/></svg>
+          <span class="num" style="font-size:25px;color:var(--w)">14</span>
+        </div>
+        <div class="k" style="margin-top:7px">Tu récord · ago 12-25</div>
+      </div>
+    </div>
+
+    <!-- Aviso vivo: el único momento en que este panel debe gritar -->
+    <div class="tile" style="padding:14px 16px;border-color:rgba(var(--r-rgb),.34);background:rgba(var(--r-rgb),.08);flex-shrink:0">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:7px">
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="var(--r)" stroke-width="2" stroke-linecap="round"><path d="M12 3.5 22 20H2L12 3.5Z"/><path d="M12 10v4.5M12 17.3v.2"/></svg>
+        <div class="k" style="color:var(--r);font-size:9px">Hoy es el día que cuenta</div>
+      </div>
+      <div style="font-size:12px;line-height:1.5;color:var(--text2)">
+        Fallaste ayer. Hacerlo hoy corta la caída en un día;
+        saltártelo lo convierte en la primera semana de haberlo dejado.
+      </div>
+    </div>
+
+    <!-- El mes de este hábito, día a día -->
+    <div class="tile" style="padding:16px 18px;flex-shrink:0">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:11px">
+        <div class="k" style="font-size:9.5px">Septiembre</div>
+        <div class="num" style="font-size:10px;color:var(--text3)">8 de 10 · 80%</div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px;margin-bottom:6px">
+        <sc-for list="{{dow}}" as="n" hint-placeholder-count="7">
+          <div class="k" style="text-align:center;font-size:8px">{{n}}</div>
+        </sc-for>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px">
+        <sc-for list="{{celdas}}" as="c" hint-placeholder-count="35">
+          <div class="d" style="background:{{c.bg}};color:{{c.fg}};border:{{c.br}}">{{c.n}}</div>
+        </sc-for>
+      </div>
+    </div>
+
+    <!-- El dato accionable de verdad: en qué día de la semana se cae -->
+    <div class="tile" style="padding:16px 18px;flex:1;min-height:0;display:flex;flex-direction:column">
+      <div class="k" style="font-size:9.5px;margin-bottom:4px">Dónde se te cae</div>
+      <div style="font-size:11px;color:var(--text3);line-height:1.4;margin-bottom:13px">
+        Cumplimiento por día de la semana, últimos 90 días.
+      </div>
+
+      <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:7px;flex:1;min-height:0">
+        <sc-for list="{{barras}}" as="b" hint-placeholder-count="7">
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:7px;height:100%;justify-content:flex-end">
+            <div class="num" style="font-size:10px;color:{{b.col}}">{{b.pct}}</div>
+            <div style="width:100%;border-radius:5px 5px 2px 2px;height:{{b.h}}px;background:{{b.bg}}"></div>
+            <div class="k" style="font-size:9px;color:{{b.col}}">{{b.dow}}</div>
+          </div>
+        </sc-for>
+      </div>
+
+      <div style="display:flex;align-items:center;gap:8px;margin-top:13px;padding-top:12px;border-top:1px solid rgba(255,255,255,.08)">
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="var(--w)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><path d="M9.5 18h5M10 21h4"/><path d="M12 3a6 6 0 0 0-3.5 10.9c.4.3.6.7.6 1.1h5.8c0-.4.2-.8.6-1.1A6 6 0 0 0 12 3Z"/></svg>
+        <div style="font-size:11.5px;color:var(--text2);line-height:1.45">
+          Los <b style="color:var(--text)">sábados</b> caes al 40%: es tu día de Didi hasta tarde.
+          Mueve este bloque a la mañana solo los sábados.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+
+<script data-dc-script data-props='{"$preview":{"width":520,"height":840}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const HOY = 11, DIAS = 30, DOW0 = 2;   // el 1 cae en martes
+    const fallos = [5, 10];
+
+    const celdas = [];
+    for (let i = 0; i < DOW0; i++) celdas.push({ n: '', bg: 'transparent', fg: 'transparent', br: 'none' });
+    for (let d = 1; d <= DIAS; d++) {
+      let bg = 'rgba(255,255,255,.045)', fg = 'rgba(255,255,255,.22)', br = '1px solid transparent';
+      if (d < HOY) {
+        if (fallos.indexOf(d) >= 0) { bg = 'rgba(255,92,92,.13)'; fg = '#ff5c5c'; br = '1px solid rgba(255,92,92,.38)'; }
+        else { bg = '#00e87a'; fg = '#05050a'; br = '1px solid transparent'; }
+      } else if (d === HOY) {
+        bg = 'rgba(255,217,61,.10)'; fg = '#ffd93d'; br = '1.5px dashed rgba(255,217,61,.75)';
+      }
+      celdas.push({ n: d, bg: bg, fg: fg, br: br });
+    }
+
+    // Cumplimiento por día de la semana: el sábado es el agujero real
+    const datos = [
+      { dow: 'D', pct: 86 }, { dow: 'L', pct: 93 }, { dow: 'M', pct: 90 },
+      { dow: 'M', pct: 88 }, { dow: 'J', pct: 91 }, { dow: 'V', pct: 75 },
+      { dow: 'S', pct: 40 }
+    ];
+    const MAXH = 96;
+    const barras = datos.map(function (b) {
+      const flojo = b.pct < 60;
+      return {
+        dow: b.dow, pct: b.pct + '%',
+        h: Math.max(8, Math.round(b.pct / 100 * MAXH)),
+        bg: flojo ? '#ff5c5c' : (b.pct < 80 ? '#ffd93d' : 'rgba(0,232,122,.75)'),
+        col: flojo ? '#ff5c5c' : '#8589a8'
+      };
+    });
+
+    return { dow: ['D','L','M','M','J','V','S'], celdas: celdas, barras: barras };
+  }
+}
+</script>
+</body>
+</html>

@@ -25,6 +25,7 @@ en una página.
 | `entrevistas-data.js` | Temas extraídos de `Entrevistas/` para su slide |
 | `examen-genai-data.js` | **Examen A**: 79 preguntas del simulacro ISTQB CT-GenAI, más el blueprint oficial |
 | `examen-genai-data-b.js` | **Examen B**: otras 77 preguntas, el mismo temario por la otra cara |
+| `habitos.js` | La pantalla de Hábitos entera: habítos, motor de rachas, pintado y estilos |
 | `examen-genai.js` | El motor del simulacro: reloj, corrección, desglose por capítulo y revisión razonada |
 | `readme_dashboard.md` | Este archivo |
 
@@ -56,7 +57,7 @@ la forma de `completado` o los ids `sN-M` en Coach, hay que revisar estas dos fu
 
 ---
 
-## Las 8 pantallas
+## Las 9 pantallas
 
 Cada una es un `<section class="slide theme-…">`. Rotan solas cada 3 minutos; se navega con las
 flechas, los puntos del HUD lateral, o deslizando en táctil.
@@ -71,6 +72,7 @@ flechas, los puntos del HUD lateral, o deslizando en táctil.
 | `theme-lista` | **Lista de Compras** | 7 categorías. Comida con precios por pieza, ticket, costo al mes y proporción de verduras/frutas/almidones — ver abajo |
 | `theme-aleman` | **Alemán** | Vocabulario por secciones y el tema de Partizip I y II, desde `Aleman/vocab-datos.js` — ver abajo |
 | `theme-entrevista` | **Entrevista del día** | Un tema técnico al día, desde `entrevistas-data.js` |
+| `theme-habitos` | **Hábitos** | La cuadrícula del mes: hábitos en filas, días en columnas, rachas y la ficha de cada uno — ver abajo |
 
 Entrevistas **no usa `<iframe>`**: su contenido se extrajo a `entrevistas-data.js` y se pinta
 nativo dentro del slide, con botón "Siguiente →" para no esperar al día siguiente. Alemán
@@ -441,6 +443,61 @@ estaban al principio, obligaban a bajar hasta el fondo de la pantalla solo para 
 Para que un paso pueda disparar algo de la app en vez de abrir un enlace, `mdPintar()` aprendió a
 pintar `paso.boton` (HTML nuestro, detrás de `linkHtml`), con el estilo `.md-paso-btn`.
 
+
+## Hábitos — la cadena que no se rompe
+
+El slide 8. Vive entero en `habitos.js` — hábitos, motor, pintado y estilos — igual que el
+simulacro del ISTQB: `dashboard.html` solo aporta el `<section>` vacío, el tema de color y la
+entrada en las cuatro listas de pantallas. El diseño se acordó en `diseno-habitos/`, donde
+están también las dos direcciones que se descartaron.
+
+**Cuatro estados, no dos.** Es la decisión que sostiene todo lo demás:
+
+| Estado | Qué significa | Cuenta |
+|---|---|---|
+| `ok` | Cumplido | Suma |
+| `no` | Tocaba y no se hizo | Resta y rompe la racha |
+| `off` | Ese día no tocaba | Neutro |
+| `pre` | Aún no llevabas el hábito | Neutro |
+| `hoy` / `hoyok` | Hoy, sin marcar / marcado | Hoy sin marcar **todavía no es un fallo** |
+| `fut` | No ha llegado | No se puede marcar |
+
+Natación es solo los miércoles: un martes en blanco no es un fallo. Sin `off`, cualquier hábito
+de días alternos parecería un desastre y el tablero dejaría de decir la verdad.
+
+`pre` resuelve **el arranque en frío**, que se vio al medir: sin él, el primer día que se abre la
+pestaña el mes entero sale pintado de rojo — días en que "tocaba y no se marcó" porque no existía
+el registro. Un hábito no puede fallar antes de existir, así que nada anterior a `desde` cuenta.
+Esa fecha **se guarda en la primera carga**, no al primer toggle: si se abre hoy, no se marca nada
+y se vuelve en una semana, el arranque tiene que seguir siendo hoy.
+
+**El anclaje vive junto al nombre.** "23:10, después de lavarme los dientes" no es decoración: es
+lo que hace que el hábito ocurra. Por eso va en la fila, no escondido en un ajuste.
+
+**Un solo aviso, y solo cuando toca.** "Nunca falles dos veces seguidas" aparece únicamente cuando
+algo se cayó ayer y hoy sigue sin marcar. Gritarlo todos los días lo convertiría en ruido. Si hay
+más de tres, lista tres y "y N más": con cinco nombres el párrafo se comía el panel.
+
+**La ficha** (clic en el nombre) es donde vive lo que de verdad ayuda a sostener un hábito: racha
+actual contra el récord, el calendario de ese hábito solo — donde se puede corregir un día pasado
+que se olvidó anotar — y el cumplimiento **por día de la semana** de los últimos 90 días. Ese
+último es el único dato accionable de la pantalla: un porcentaje global solo dice que te va mal;
+saber que los sábados caes al 40% dice que el problema es la hora, no la fuerza de voluntad. El
+consejo que lo acompaña solo sale si hay al menos 3 días con datos y alguno baja del 70%.
+
+**Dónde viven los datos.** `localStorage['dash-habitos-v1']`, con la pareja `rawGet`/`rawSet` del
+resto del Dashboard. Dos cosas distintas dentro: `def` son los hábitos (se editan desde la propia
+pantalla, con el botón "Añadir un hábito" y el lápiz de la ficha) y `marcas` es el registro vivo,
+indexado por **fecha ISO local** — nunca `toISOString()`, que en México adelanta el día a partir de
+las 18:00 — para que cruzar de mes no desplace nada.
+
+La ficha es una **capa propia** (`#hb2Ficha`), no un trozo del slide: marcar una casilla repinta el
+slide entero y se llevaría por delante el panel abierto. Mismo motivo que el simulacro del ISTQB.
+
+**Medido** (Playwright, 1600px y 390px): 7 filas × 30 celdas, las cifras se mueven al marcar (racha
+6 → 7 al cerrar el día), el registro sobrevive a recargar, el mes anterior pinta 31 columnas y 0
+futuras, y en frío la pantalla sale con 0 celdas rojas y 0 avisos. En 390px la cuadrícula scrollea
+dentro de su tarjeta; el documento no scrollea en horizontal.
 
 ## Mi Día, en detalle
 

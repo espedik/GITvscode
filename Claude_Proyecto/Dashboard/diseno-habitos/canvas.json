@@ -1,0 +1,37 @@
+{
+  "artboards": [
+    { "file": "Main.dc.html",       "x": 0,    "y": 0,    "w": 1440, "h": 840, "title": "Pestaña de hábitos", "is_interactive": true },
+    { "file": "Ficha.dc.html",      "x": 1560, "y": 0,    "w": 520,  "h": 840, "title": "Ficha de un hábito" },
+    { "file": "DireccionB.dc.html", "x": 0,    "y": 1060, "w": 1040, "h": 580, "title": "Dirección B · La semana en grande", "is_interactive": true },
+    { "file": "DireccionC.dc.html", "x": 1140, "y": 1060, "w": 1040, "h": 580, "title": "Dirección C · Hoy manda", "is_interactive": true },
+    { "file": "Movil.dc.html",      "x": 0,    "y": 1780, "w": 390,  "h": 844, "title": "En el teléfono", "is_interactive": true }
+  ],
+  "annotations": [
+    {
+      "id": "nota-propuesta",
+      "x": 0, "y": -150, "w": 700,
+      "text": "LA PROPUESTA — el mes entero de un vistazo.\nFilas = hábitos, columnas = los 30 días. La columna de hoy va marcada en amarillo y se puede tocar; el resto del mes es memoria.\nPruébalo: marca y desmarca las casillas de hoy y mira cómo se mueven la racha, el % y la barra del día."
+    },
+    {
+      "id": "nota-honestidad",
+      "x": 760, "y": -150, "w": 660,
+      "text": "LA DECISIÓN QUE HACE HONESTO AL TRACKER\nHay cuatro estados, no dos: hecho, fallé, NO TOCABA y futuro. Natación es solo los miércoles — un martes en blanco no es un fallo. Sin esa distinción, cualquier hábito de días alternos parece un desastre y el tablero deja de decir la verdad."
+    },
+    {
+      "id": "nota-ficha",
+      "x": 1560, "y": -150, "w": 520,
+      "text": "AL TOCAR UN HÁBITO\nRacha actual contra tu récord, el mes de ese hábito solo, y el dato que de verdad sirve: en qué día de la semana se te cae. Si los sábados estás al 40%, el problema no es tu fuerza de voluntad, es la hora."
+    },
+    {
+      "id": "nota-direcciones",
+      "x": 0, "y": 900, "w": 900,
+      "text": "DOS ALTERNATIVAS A LA CUADRÍCULA — cada una cede algo distinto.\nB cambia el mes por casillas grandes que se tocan sin apuntar. C pone la acción de hoy delante y comprime el registro a una tira de puntos.\nDime cuál prefieres y esa pasa a ser la pestaña; las otras dos se van."
+    },
+    {
+      "id": "nota-movil",
+      "x": 0, "y": 1690, "w": 420,
+      "text": "EN EL TELÉFONO\nLa cuadrícula de 30 columnas no cabe, así que se comprime a una tira de puntos bajo cada nombre y la casilla de hoy crece a 30px. El aviso sube arriba del todo."
+    }
+  ],
+  "launch": { "view": "canvas" }
+}

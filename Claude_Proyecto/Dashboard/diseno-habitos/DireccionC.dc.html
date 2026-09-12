@@ -1,0 +1,211 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;700&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&display=swap">
+  <style>
+    :root{
+      --bg:#05050a; --text:#f4f4f8; --text2:#9a9db3; --text3:#8589a8;
+      --card:rgba(255,255,255,.06); --card-br:rgba(255,255,255,.13);
+      --g:#00e87a; --o:#ff8a3d; --w:#ffd93d; --r:#ff5c5c; --cy:#00e0c0;
+      --g-rgb:0,232,122; --r-rgb:255,92,92; --w-rgb:255,217,61;
+      --font:'Inter',-apple-system,sans-serif;
+      --mono:'Space Grotesk',monospace;
+      --font-title:'Fraunces',Georgia,serif;
+      --ac1:#8b5cf6; --ac2:#f472b6;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    body{margin:0;font-family:var(--font);background:var(--bg);color:var(--text)}
+    a{color:var(--ac1)} a:hover{color:var(--ac2)}
+    .tile{background:var(--card);border:1px solid var(--card-br);border-radius:22px;
+      backdrop-filter:blur(16px);box-shadow:0 10px 40px rgba(0,0,0,.35)}
+    .k{font-family:var(--mono);font-weight:700;letter-spacing:.16em;text-transform:uppercase;
+      font-size:8.5px;color:var(--text3)}
+    .num{font-family:var(--mono);font-weight:700;line-height:1}
+    /* El heatmap comprimido: 30 puntitos que caben junto al nombre. No se marca
+       aquí — es memoria, no control. */
+    .p{width:9px;height:9px;border-radius:2.5px;flex-shrink:0}
+  </style>
+</helmet>
+
+<div style="position:relative;width:1040px;height:580px;background:#05050a;overflow:hidden">
+  <div style="position:absolute;width:520px;height:520px;border-radius:50%;filter:blur(90px);opacity:.18;background:var(--ac2);bottom:-28%;right:-10%;pointer-events:none"></div>
+
+  <div style="position:relative;z-index:1;height:100%;padding:24px 28px;display:flex;flex-direction:column;gap:16px">
+
+    <div style="flex-shrink:0">
+      <div class="k" style="color:var(--ac2);font-size:9px;margin-bottom:6px">Dirección C · Hoy manda</div>
+      <div style="font-family:var(--font-title);font-size:25px;font-weight:600;color:var(--text)">La acción grande, el registro al margen</div>
+    </div>
+
+    <div style="display:flex;gap:16px;flex:1;min-height:0">
+
+      <!-- IZQUIERDA: lo de hoy, tamaño real de decisión -->
+      <div class="tile" style="width:420px;flex-shrink:0;padding:20px 22px;display:flex;flex-direction:column;gap:12px">
+        <div style="display:flex;align-items:baseline;justify-content:space-between;flex-shrink:0">
+          <div>
+            <div class="k" style="font-size:9.5px">Viernes 11</div>
+            <div style="display:flex;align-items:baseline;gap:5px;margin-top:5px">
+              <span class="num" style="font-size:34px;color:var(--w)">{{hoyHechos}}</span>
+              <span class="num" style="font-size:16px;color:var(--text3)">/ {{hoyTotal}}</span>
+            </div>
+          </div>
+          <div style="text-align:right">
+            <div class="k" style="font-size:9px">Si cierras hoy</div>
+            <div class="num" style="font-size:14px;color:var(--g);margin-top:5px">día redondo nº 5</div>
+          </div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:8px;flex:1">
+          <sc-for list="{{deHoy}}" as="t" hint-placeholder-count="6">
+            <div onClick="{{t.tog}}" style="display:flex;align-items:center;gap:13px;padding:11px 13px;border-radius:14px;background:{{t.bg}};border:1px solid {{t.br}};cursor:pointer">
+              <div style="width:24px;height:24px;border-radius:8px;flex-shrink:0;background:{{t.boxBg}};border:1.5px solid {{t.boxBr}};display:flex;align-items:center;justify-content:center">
+                <sc-if value="{{t.hecho}}" hint-placeholder-val="{{true}}">
+                  <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="#05050a" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5 10 17.5 19 7"/></svg>
+                </sc-if>
+              </div>
+              <div style="flex:1;min-width:0">
+                <div style="font-size:13.5px;font-weight:600;color:{{t.txt}};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{t.nombre}}</div>
+                <div style="font-size:10px;color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px">{{t.ancla}}</div>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+
+      <!-- DERECHA: la memoria, comprimida -->
+      <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:12px">
+
+        <div class="tile" style="flex:1;min-height:0;padding:18px 20px;display:flex;flex-direction:column;gap:11px">
+          <div class="k" style="font-size:9.5px;flex-shrink:0">Los últimos 30 días</div>
+          <div style="display:flex;flex-direction:column;gap:9px;flex:1;justify-content:space-around">
+            <sc-for list="{{habitos}}" as="h" hint-placeholder-count="7">
+              <div style="display:flex;align-items:center;gap:11px">
+                <div style="width:118px;flex-shrink:0;font-size:11.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{h.nombre}}</div>
+                <div style="display:flex;gap:2.5px;flex:1">
+                  <sc-for list="{{h.puntos}}" as="p" hint-placeholder-count="30">
+                    <div class="p" style="background:{{p.bg}}"></div>
+                  </sc-for>
+                </div>
+                <div style="width:58px;flex-shrink:0;display:flex;align-items:center;justify-content:flex-end;gap:4px">
+                  <span class="num" style="font-size:13px;color:{{h.rachaCol}}">{{h.racha}}</span>
+                  <span style="font-size:9px;color:var(--text3);font-weight:600">{{h.pct}}%</span>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+
+        <div style="display:flex;align-items:center;gap:9px;flex-shrink:0;padding:0 4px">
+          <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="var(--text3)" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v5.5M12 7.8v.2"/></svg>
+          <div style="font-size:11px;color:var(--text3);line-height:1.4">
+            <b style="color:var(--text2)">A favor:</b> empuja a hacer, no a contemplar.
+            <b style="color:var(--text2);margin-left:6px">En contra:</b> la cuadrícula deja de ser la protagonista, que era justo lo que pediste.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+
+<script data-dc-script data-props='{"$preview":{"width":1040,"height":580}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.HOY = 11;
+    this.DIAS = 30;
+    this.DOW0 = 2;
+    this.base = [
+      { id:'gym',   nombre:'Gimnasio',        ancla:'19:00 · después de comer', dow:[1,2,4,5], fallos:[] },
+      { id:'nata',  nombre:'Natación',        ancla:'Miércoles, 20:00',         dow:[3],       fallos:[] },
+      { id:'ale',   nombre:'Alemán · 15 min', ancla:'Antes del café',           dow:'todos',   fallos:[6] },
+      { id:'leer',  nombre:'Leer 10 páginas', ancla:'Al acostarme',             dow:'todos',   fallos:[3,7] },
+      { id:'medi',  nombre:'Meditar · 5 min', ancla:'23:10 · tras los dientes', dow:'todos',   fallos:[5,10] },
+      { id:'gasto', nombre:'Anotar gastos',   ancla:'Al llegar a casa',         dow:'todos',   fallos:[2,8] },
+      { id:'agua',  nombre:'3 litros de agua',ancla:'Botella llena al salir',   dow:'todos',   fallos:[9] }
+    ];
+    this.state = { hechos: { ale:true, leer:true, gasto:true, agua:true } };
+  }
+
+  dow(d) { return (this.DOW0 + d - 1) % 7; }
+  toca(h, d) { return h.dow === 'todos' || h.dow.indexOf(this.dow(d)) >= 0; }
+  estado(h, d) {
+    if (!this.toca(h, d)) return 'off';
+    if (d > this.HOY) return 'fut';
+    if (d === this.HOY) return this.state.hechos[h.id] ? 'hoyok' : 'hoy';
+    return h.fallos.indexOf(d) >= 0 ? 'no' : 'ok';
+  }
+  racha(h) {
+    let n = 0;
+    for (let d = this.HOY; d >= 1; d--) {
+      const e = this.estado(h, d);
+      if (e === 'off') continue;
+      if (e === 'ok' || e === 'hoyok') n++;
+      else if (e === 'hoy') continue;
+      else break;
+    }
+    return n;
+  }
+  toggle(id) {
+    const h = Object.assign({}, this.state.hechos);
+    h[id] = !h[id];
+    this.setState({ hechos: h });
+  }
+
+  renderVals() {
+    const self = this;
+    const COL = {
+      ok:    '#00e87a',
+      hoyok: '#00e87a',
+      no:    'rgba(255,92,92,.45)',
+      off:   'rgba(255,255,255,.055)',
+      fut:   'rgba(255,255,255,.075)',
+      hoy:   'rgba(255,217,61,.55)'
+    };
+
+    const habitos = this.base.map(function (h) {
+      const puntos = [];
+      let ok = 0, tot = 0;
+      for (let d = 1; d <= self.DIAS; d++) {
+        const e = self.estado(h, d);
+        if (e !== 'off' && e !== 'fut') { tot++; if (e === 'ok' || e === 'hoyok') ok++; }
+        puntos.push({ bg: COL[e] });
+      }
+      const r = self.racha(h);
+      return {
+        nombre: h.nombre, puntos: puntos, racha: r,
+        rachaCol: r >= 7 ? '#00e87a' : (r >= 3 ? '#ffd93d' : '#8589a8'),
+        pct: tot ? Math.round(ok / tot * 100) : 0
+      };
+    });
+
+    const deHoy = this.base.filter(function (h) { return self.toca(h, self.HOY); })
+      .map(function (h) {
+        const hecho = !!self.state.hechos[h.id];
+        return {
+          nombre: h.nombre, ancla: h.ancla, hecho: hecho,
+          bg: hecho ? 'rgba(0,232,122,.09)' : 'rgba(255,255,255,.035)',
+          br: hecho ? 'rgba(0,232,122,.30)' : 'rgba(255,255,255,.09)',
+          boxBg: hecho ? '#00e87a' : 'rgba(255,255,255,.04)',
+          boxBr: hecho ? '#00e87a' : 'rgba(255,255,255,.22)',
+          txt: hecho ? '#f4f4f8' : '#9a9db3',
+          tog: function () { self.toggle(h.id); }
+        };
+      });
+
+    return {
+      habitos: habitos, deHoy: deHoy,
+      hoyHechos: deHoy.filter(function (t) { return t.hecho; }).length,
+      hoyTotal: deHoy.length
+    };
+  }
+}
+</script>
+</body>
+</html>

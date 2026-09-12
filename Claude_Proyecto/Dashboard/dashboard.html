@@ -34,6 +34,10 @@
      espanol. El motor monta su propia capa a pantalla completa porque el panel de metas
      repinta su cuerpo al cambiar de paso y se llevaria por delante el temporizador.
      Se abre con abrirExamenGenAI(). -->
+<!-- Habitos: el slide 8. Datos, motor, pintado y estilos viven todos ahi, igual que
+     el simulacro del ISTQB - dashboard.html ya pesa 1.1 MB. Aqui solo esta el
+     <section> vacio, el tema de color y la entrada en RENDERS/SLIDE_MENU_META. -->
+<script src="habitos.js"></script>
 <script src="examen-genai-data.js"></script>
 <script src="examen-genai-data-b.js"></script>
 <script src="examen-genai.js"></script>
@@ -184,6 +188,10 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 .theme-lista  {--ac1:#3ddc97;--ac2:#00b8d9}
 .theme-aleman {--ac1:#dd0000;--ac2:#ffce00}
 .theme-entrevista{--ac1:#4f8cff;--ac2:#22d3a8}
+/* Habitos (2026-09-11). Violeta -> rosa: el unico par que quedaba libre entre los 8
+   slides. El contenido pinta en verde (--g, lo cumplido) y el ambiente en violeta,
+   asi el color del logro no compite con el del fondo. */
+.theme-habitos{--ac1:#8b5cf6;--ac2:#f472b6}
 
 .eyebrow{font-size:clamp(11px,1.1vw,14px);font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--text2);display:flex;align-items:center;gap:10px;margin-bottom:10px}
 .eyebrow .dot{width:8px;height:8px;border-radius:50%;background:var(--ac1);box-shadow:0 0 12px var(--ac1);animation:pulse 2s ease-in-out infinite}
@@ -3555,6 +3563,14 @@ button.ct-cat:hover{background:rgba(var(--ov),.07)}
     </div>
   </section>
 
+  <!-- 8 · HÁBITOS — la cuadrícula del mes. El slide llega vacío: lo pinta entero
+       habitos.js (window.renderHabitos), que también inyecta su CSS. -->
+  <section class="slide theme-habitos" data-i="8">
+    <div class="slide-inner">
+      <div class="reveal d2" id="habitosSlide"></div>
+    </div>
+  </section>
+
 </div>
 
 <!-- Un SOLO rail, a la derecha (diseño aprobado el 2026-08-31). Antes eran dos columnas
@@ -3637,6 +3653,10 @@ button.ct-cat:hover{background:rgba(var(--ov),.07)}
 <div class="toast" id="toast"></div>
 
 <!-- ─── DETALLE DE META (subpágina in-page) ─── -->
+<!-- La ficha de un hábito. Capa propia, como la del examen: el slide se repinta entero
+     al marcar una casilla y se llevaría por delante el panel abierto. -->
+<div class="hb2-ficha-ov" id="hb2Ficha" onclick="if(event.target===this) HB.cerrarFicha()"></div>
+
 <div class="meta-detail-overlay" id="metaDetailOverlay" onclick="if(event.target===this) cerrarMetaDetalle()">
   <!-- Rediseñado el 2026-08-23 (dirección "Estudio", elegida entre 3 en un canvas): la foto pasa
        a miniatura, el temario vive en una columna propia y a la derecha se lee UN paso a la vez,
@@ -10982,7 +11002,7 @@ function renderHabilidadesBase(){
 // existiendo por separado (pintan ids de DOM distintos, todos ahora dentro de la misma <section>),
 // esta solo las llama en secuencia.
 function renderDiaHero(){ renderDia(); renderHero(); }
-const RENDERS=[renderDiaHero,renderCoach,renderMetasSlide,renderHabilidadesBase,renderSkills,renderListaCompras,renderAleman,renderEntrevista];
+const RENDERS=[renderDiaHero,renderCoach,renderMetasSlide,renderHabilidadesBase,renderSkills,renderListaCompras,renderAleman,renderEntrevista,renderHabitos];
 // `ico` sigue aquí porque el menú ☰ lo usa; el rail pinta HUD_ICO, que son trazos y no
 // emoji — a 16px la bandera de Alemán se veía como las letras "DE" y la hélice del ADN
 // como una mancha. `corto` es el nombre que cabe en los 198px del rail.
@@ -10995,6 +11015,7 @@ const SLIDE_MENU_META=[
   {ico:'🛒',n:'Lista de Compras',     corto:'Lista de compras'},
   {ico:'🇩🇪',n:'Alemán del día',    corto:'Alemán'},
   {ico:'💻',n:'Entrevista del día', corto:'Entrevistas'},
+  {ico:'🔗',n:'Hábitos',            corto:'Hábitos'},
 ];
 const HUD_ICO=[
   '<circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path>',
@@ -11004,7 +11025,8 @@ const HUD_ICO=[
   '<circle cx="7" cy="8" r="2.4"></circle><circle cx="17" cy="7" r="2.4"></circle><circle cx="12" cy="17" r="2.4"></circle><path d="M8.9 9.6l2.2 5M15.3 8.9l-2.3 6"></path>',
   '<path d="M3 5h2.2l2.3 10.5h9.6L19 8H6.2"></path><circle cx="9.5" cy="19" r="1.4"></circle><circle cx="16.5" cy="19" r="1.4"></circle>',
   '<circle cx="12" cy="12" r="9"></circle><path d="M3 12h18"></path><path d="M12 3a15 15 0 0 1 0 18a15 15 0 0 1 0-18z"></path>',
-  '<rect x="2.5" y="4" width="19" height="16" rx="2"></rect><path d="M7.5 10l2.2 2.2-2.2 2.2M12 15h4.5"></path>'
+  '<rect x="2.5" y="4" width="19" height="16" rx="2"></rect><path d="M7.5 10l2.2 2.2-2.2 2.2M12 15h4.5"></path>',
+  '<path d="M10.5 13.5a3.5 3.5 0 0 0 5 0l3-3a3.5 3.5 0 0 0-5-5l-1 1"></path><path d="M13.5 10.5a3.5 3.5 0 0 0-5 0l-3 3a3.5 3.5 0 0 0 5 5l1-1"></path>'
 ];
 
 // ══════════════════════════════════════════════════════════════════════════

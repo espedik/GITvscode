@@ -1,0 +1,202 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;700&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&display=swap">
+  <style>
+    :root{
+      --bg:#05050a; --text:#f4f4f8; --text2:#9a9db3; --text3:#8589a8;
+      --card:rgba(255,255,255,.06); --card-br:rgba(255,255,255,.13);
+      --g:#00e87a; --o:#ff8a3d; --w:#ffd93d; --r:#ff5c5c; --cy:#00e0c0;
+      --g-rgb:0,232,122; --r-rgb:255,92,92; --w-rgb:255,217,61;
+      --font:'Inter',-apple-system,sans-serif;
+      --mono:'Space Grotesk',monospace;
+      --font-title:'Fraunces',Georgia,serif;
+      --ac1:#8b5cf6; --ac2:#f472b6;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    body{margin:0;font-family:var(--font);background:var(--bg);color:var(--text)}
+    a{color:var(--ac1)} a:hover{color:var(--ac2)}
+    .tile{background:var(--card);border:1px solid var(--card-br);border-radius:18px}
+    .k{font-family:var(--mono);font-weight:700;letter-spacing:.16em;text-transform:uppercase;
+      font-size:8.5px;color:var(--text3)}
+    .num{font-family:var(--mono);font-weight:700;line-height:1}
+    /* En teléfono la cuadrícula del mes no cabe: se comprime a una tira de puntos
+       por hábito, y la casilla de hoy crece a 44px, que es el piso táctil. */
+    .p{width:7px;height:7px;border-radius:2px;flex-shrink:0}
+  </style>
+</helmet>
+
+<div style="position:relative;width:390px;height:844px;background:#05050a;overflow:hidden">
+  <div style="position:absolute;width:340px;height:340px;border-radius:50%;filter:blur(80px);opacity:.20;background:var(--ac1);top:-12%;left:-24%;pointer-events:none"></div>
+
+  <div style="position:relative;z-index:1;height:100%;padding:20px 16px;display:flex;flex-direction:column;gap:13px;overflow:hidden">
+
+    <div style="flex-shrink:0">
+      <div class="k" style="color:var(--ac2);margin-bottom:6px">Hábitos · Septiembre</div>
+      <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:12px">
+        <div style="font-family:var(--font-title);font-size:22px;font-weight:600;line-height:1.15">La cadena</div>
+        <div style="display:flex;align-items:baseline;gap:3px;flex-shrink:0">
+          <span class="num" style="font-size:26px;color:var(--w)">{{hoyHechos}}</span>
+          <span class="num" style="font-size:13px;color:var(--text3)">/{{hoyTotal}}</span>
+        </div>
+      </div>
+      <div style="height:5px;border-radius:3px;background:rgba(255,255,255,.1);overflow:hidden;margin-top:10px">
+        <div style="height:100%;border-radius:3px;width:{{hoyPct}}%;background:linear-gradient(90deg,var(--g),var(--cy))"></div>
+      </div>
+    </div>
+
+    <!-- El aviso, arriba del todo: en teléfono es lo primero que se ve -->
+    <div class="tile" style="padding:12px 14px;border-color:rgba(var(--r-rgb),.32);background:rgba(var(--r-rgb),.08);flex-shrink:0;display:flex;align-items:center;gap:10px">
+      <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="var(--r)" stroke-width="2" stroke-linecap="round" style="flex-shrink:0"><path d="M12 3.5 22 20H2L12 3.5Z"/><path d="M12 10v4.5M12 17.3v.2"/></svg>
+      <div style="font-size:11.5px;line-height:1.4;color:var(--text2)"><b style="color:var(--text)">Meditar</b> falló ayer. No lo falles dos veces.</div>
+    </div>
+
+    <!-- Lo de hoy: casilla de 44px, la única que se toca en el teléfono -->
+    <div style="display:flex;flex-direction:column;gap:8px;flex:1;min-height:0;overflow:hidden">
+      <sc-for list="{{deHoy}}" as="t" hint-placeholder-count="6">
+        <div onClick="{{t.tog}}" style="display:flex;align-items:center;gap:12px;padding:10px 13px;border-radius:15px;background:{{t.bg}};border:1px solid {{t.br}};cursor:pointer;flex-shrink:0">
+          <div style="width:30px;height:30px;border-radius:10px;flex-shrink:0;background:{{t.boxBg}};border:1.5px solid {{t.boxBr}};display:flex;align-items:center;justify-content:center">
+            <sc-if value="{{t.hecho}}" hint-placeholder-val="{{true}}">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#05050a" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5 10 17.5 19 7"/></svg>
+            </sc-if>
+          </div>
+          <div style="flex:1;min-width:0">
+            <div style="font-size:13px;font-weight:600;color:{{t.txt}};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{t.nombre}}</div>
+            <!-- La tira del mes, comprimida bajo el nombre -->
+            <div style="display:flex;gap:1.5px;margin-top:6px">
+              <sc-for list="{{t.puntos}}" as="p" hint-placeholder-count="30">
+                <div class="p" style="background:{{p.bg}}"></div>
+              </sc-for>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;gap:3px;flex-shrink:0">
+            <svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="{{t.rachaCol}}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c.7 3 2.6 4.2 4 5.8A7.5 7.5 0 0 1 12 21a7.5 7.5 0 0 1-4-13.2C9.3 9 10 10 10 11c1.4-1.6 2-5 2-8Z"/></svg>
+            <span class="num" style="font-size:12px;color:{{t.rachaCol}}">{{t.racha}}</span>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;flex-shrink:0">
+      <div class="tile" style="padding:11px 12px">
+        <div class="num" style="font-size:18px;color:var(--o)">{{rachaDias}}</div>
+        <div class="k" style="margin-top:5px;font-size:8px">Racha</div>
+      </div>
+      <div class="tile" style="padding:11px 12px">
+        <div class="num" style="font-size:18px;color:var(--g)">{{mesPct}}%</div>
+        <div class="k" style="margin-top:5px;font-size:8px">Mes</div>
+      </div>
+      <div class="tile" style="padding:11px 12px">
+        <div class="num" style="font-size:18px;color:var(--cy)">{{perfectos}}</div>
+        <div class="k" style="margin-top:5px;font-size:8px">Redondos</div>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+
+<script data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.HOY = 11; this.DIAS = 30; this.DOW0 = 2;
+    this.base = [
+      { id:'gym',   nombre:'Gimnasio',        dow:[1,2,4,5], fallos:[] },
+      { id:'ale',   nombre:'Alemán · 15 min', dow:'todos',   fallos:[6] },
+      { id:'leer',  nombre:'Leer 10 páginas', dow:'todos',   fallos:[3,7] },
+      { id:'medi',  nombre:'Meditar · 5 min', dow:'todos',   fallos:[5,10] },
+      { id:'gasto', nombre:'Anotar gastos',   dow:'todos',   fallos:[2,8] },
+      { id:'agua',  nombre:'3 litros de agua',dow:'todos',   fallos:[9] }
+    ];
+    this.state = { hechos: { ale:true, leer:true, gasto:true, agua:true } };
+  }
+  dow(d) { return (this.DOW0 + d - 1) % 7; }
+  toca(h, d) { return h.dow === 'todos' || h.dow.indexOf(this.dow(d)) >= 0; }
+  estado(h, d) {
+    if (!this.toca(h, d)) return 'off';
+    if (d > this.HOY) return 'fut';
+    if (d === this.HOY) return this.state.hechos[h.id] ? 'hoyok' : 'hoy';
+    return h.fallos.indexOf(d) >= 0 ? 'no' : 'ok';
+  }
+  racha(h) {
+    let n = 0;
+    for (let d = this.HOY; d >= 1; d--) {
+      const e = this.estado(h, d);
+      if (e === 'off') continue;
+      if (e === 'ok' || e === 'hoyok') n++;
+      else if (e === 'hoy') continue;
+      else break;
+    }
+    return n;
+  }
+  toggle(id) {
+    const h = Object.assign({}, this.state.hechos);
+    h[id] = !h[id];
+    this.setState({ hechos: h });
+  }
+  renderVals() {
+    const self = this;
+    const COL = { ok:'#00e87a', hoyok:'#00e87a', no:'rgba(255,92,92,.45)',
+                  off:'rgba(255,255,255,.055)', fut:'rgba(255,255,255,.075)',
+                  hoy:'rgba(255,217,61,.55)' };
+
+    let cumplidas = 0, tocadas = 0, mejor = 0;
+    this.base.forEach(function (h) {
+      for (let d = 1; d <= self.DIAS; d++) {
+        const e = self.estado(h, d);
+        if (e !== 'off' && e !== 'fut') { tocadas++; if (e === 'ok' || e === 'hoyok') cumplidas++; }
+      }
+      const r = self.racha(h);
+      if (r > mejor) mejor = r;
+    });
+
+    const deHoy = this.base.filter(function (h) { return self.toca(h, self.HOY); })
+      .map(function (h) {
+        const hecho = !!self.state.hechos[h.id];
+        const r = self.racha(h);
+        const puntos = [];
+        for (let d = 1; d <= self.DIAS; d++) puntos.push({ bg: COL[self.estado(h, d)] });
+        return {
+          nombre: h.nombre, hecho: hecho, puntos: puntos, racha: r,
+          rachaCol: r >= 7 ? '#00e87a' : (r >= 3 ? '#ffd93d' : '#8589a8'),
+          bg: hecho ? 'rgba(0,232,122,.09)' : 'rgba(255,255,255,.035)',
+          br: hecho ? 'rgba(0,232,122,.30)' : 'rgba(255,255,255,.09)',
+          boxBg: hecho ? '#00e87a' : 'rgba(255,255,255,.04)',
+          boxBr: hecho ? '#00e87a' : 'rgba(255,255,255,.22)',
+          txt: hecho ? '#f4f4f8' : '#9a9db3',
+          tog: function () { self.toggle(h.id); }
+        };
+      });
+
+    const hoyHechos = deHoy.filter(function (t) { return t.hecho; }).length;
+
+    let perfectos = 0;
+    for (let d = 1; d < this.HOY; d++) {
+      let todo = true, alguno = false;
+      for (let i = 0; i < this.base.length; i++) {
+        const e = this.estado(this.base[i], d);
+        if (e === 'off') continue;
+        alguno = true;
+        if (e !== 'ok') todo = false;
+      }
+      if (alguno && todo) perfectos++;
+    }
+
+    return {
+      deHoy: deHoy, hoyHechos: hoyHechos, hoyTotal: deHoy.length,
+      hoyPct: deHoy.length ? Math.round(hoyHechos / deHoy.length * 100) : 0,
+      rachaDias: mejor,
+      mesPct: tocadas ? Math.round(cumplidas / tocadas * 100) : 0,
+      perfectos: perfectos
+    };
+  }
+}
+</script>
+</body>
+</html>
