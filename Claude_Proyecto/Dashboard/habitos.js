@@ -1197,12 +1197,11 @@
      claro/oscuro sin una sola regla extra.
      ══════════════════════════════════════════════════════════════════════ */
   const CSS = `
-/* ── ESTA PANTALLA ES SIEMPRE OSCURA ───────────────────────────────────
-   Un HUD sobre fondo blanco deja de ser un HUD: la retícula, las manchas y el
-   glow de las celdas viven de un fondo casi negro. Así que el slide fija sus
-   propias variables de superficie en vez de heredar el tema, igual que
-   .theme-aleman fija los colores de su bandera. El resto del Dashboard sigue
-   el tema claro/oscuro como siempre. */
+/* ── MODO DE NOCHE (el de por defecto) ─────────────────────────────────
+   El HUD nació sobre un fondo casi negro: la retícula, las manchas y el glow
+   de las celdas viven de eso. El slide fija sus propias variables de
+   superficie en vez de heredar las del tema, porque las del Dashboard oscuro
+   son otras (fondo #05050a, grises distintos). El modo de día va más abajo. */
 .theme-habitos,.hb2-ficha-ov{
   --bg:#04040c; --text:#f4f4f8; --text2:#9a9db3; --text3:#7d8199;
   --ov:255,255,255;
@@ -1215,6 +1214,60 @@
    tamaño de celda, que es lo que Adán pidió. */
 .theme-habitos .slide-inner{max-width:none}
 .theme-habitos .slide-title,.theme-habitos .eyebrow{color:var(--text)}
+
+/* ── MODO DE DÍA ───────────────────────────────────────────────────────
+   Adán: "debe haber un modo de día, el de noche ya está". Sigue el sol/luna
+   de la barra (data-theme="light"). Sigue siendo el mismo HUD: misma
+   retícula, mismas esquinas cortadas, misma malla en fuga — pero sobre un
+   blanco frío con tinte cian, los acentos en los pasos oscuros del tema claro
+   del Dashboard (los mismos que usan las demás pantallas, así el verde de
+   aquí es el verde de allá) y la luz convertida en tinta: donde de noche
+   brilla, de día se subraya. Los paneles son más claros que el fondo, no
+   más oscuros, que es lo que hace que lean como tarjetas a plena luz. */
+:root[data-theme="light"] .theme-habitos,:root[data-theme="light"] .hb2-ficha-ov{
+  --bg:#eef2f7; --text:#12141c; --text2:#4d5266; --text3:#666b82;
+  --ov:8,14,30;
+  --g:#00a758; --o:#b8632c; --w:#a8790a; --r:#c81e3a; --cy:#047a6b; --p:#7f4fb8;
+  --g-rgb:0,167,88; --o-rgb:184,99,44; --r-rgb:200,30,58; --w-rgb:168,121,10;
+  --cy-rgb:4,122,107;
+}
+:root[data-theme="light"] .theme-habitos{background:#eef2f7}
+/* El fondo: las manchas bajan de intensidad y la violeta pasa al violeta del
+   tema claro; la retícula sube un punto porque la tinta oscura sobre claro
+   se ve menos que la luz sobre negro. */
+:root[data-theme="light"] .hb2-bg-net{
+  background-image:linear-gradient(rgba(var(--cy-rgb),.075) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(var(--cy-rgb),.075) 1px,transparent 1px)}
+:root[data-theme="light"] .hb2-bg-a{background:radial-gradient(ellipse at center,rgba(var(--cy-rgb),.13),transparent 68%)}
+:root[data-theme="light"] .hb2-bg-b{background:radial-gradient(ellipse at center,rgba(127,79,184,.12),transparent 68%)}
+:root[data-theme="light"] .hb2-bg-h{
+  background:linear-gradient(90deg,transparent,rgba(var(--cy-rgb),.45),rgba(127,79,184,.35),transparent);
+  box-shadow:0 0 18px rgba(var(--cy-rgb),.25)}
+:root[data-theme="light"] .hb2-bg-f{opacity:.5}
+/* Paneles: blanco casi opaco sobre el fondo gris-azul, sombra suave en vez de negra */
+:root[data-theme="light"] .hb2-panel{
+  background:linear-gradient(160deg,rgba(255,255,255,.93),rgba(255,255,255,.74));
+  border-color:rgba(var(--cy-rgb),.22);
+  box-shadow:0 10px 30px rgba(20,30,60,.10),inset 0 1px 0 #fff}
+:root[data-theme="light"] .hb2-hot{border-color:rgba(var(--r-rgb),.4);
+  background:linear-gradient(160deg,rgba(var(--r-rgb),.10),rgba(var(--r-rgb),.03))}
+:root[data-theme="light"] .hb2-hoypill{
+  background:linear-gradient(160deg,rgba(var(--w-rgb),.14),rgba(var(--w-rgb),.04))}
+/* Los glows de texto y del anillo: de día se quedan en un halo corto */
+:root[data-theme="light"] .hb2-hoypill-n b{text-shadow:none}
+:root[data-theme="light"] .hb2-anillo-w circle:last-child{filter:drop-shadow(0 0 4px rgba(var(--cy-rgb),.35))}
+:root[data-theme="light"] .hb2-dot{box-shadow:0 0 6px rgba(var(--cy-rgb),.5)}
+:root[data-theme="light"] .hb2-pf-ret span{background:#f7f9fc}
+/* Los colores propios de cada hábito son neón (nacieron para el negro): un
+   icono amarillo #ffd93d sobre blanco no se ve. Se oscurecen al pintar, sin
+   tocar el dato, que sigue siendo el mismo en los dos modos. */
+:root[data-theme="light"] .hb2-ico svg,:root[data-theme="light"] .hb2-ficha-t svg,
+:root[data-theme="light"] .hb2-ficha-card .hb2-eyebrow{filter:brightness(.68) saturate(1.35)}
+/* La ficha: velo gris-azul en vez de negro, tarjeta blanca */
+:root[data-theme="light"] .hb2-ficha-ov{background:rgba(20,26,40,.45)}
+:root[data-theme="light"] .hb2-ficha-card{background:linear-gradient(160deg,#ffffff,#f3f5fa);
+  box-shadow:0 24px 60px rgba(20,30,60,.28)}
+:root[data-theme="light"] .hb2-in[type=time]{color-scheme:light}
 
 /* ── EL FONDO: cuatro capas, todas CSS, ni una imagen ──────────────────
    Va en el <section> y no dentro de #habitosSlide, porque .slide-inner está

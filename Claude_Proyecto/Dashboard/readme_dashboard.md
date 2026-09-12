@@ -451,13 +451,24 @@ que el simulacro del ISTQB: `dashboard.html` solo aporta el `<section>`, las sei
 el tema de color y la entrada en las cuatro listas de pantallas. El diseño se acordó en
 `diseno-habitos/`, donde están también las dos direcciones descartadas.
 
-### Es la única pantalla que no sigue el tema
+### Noche y día, con el mismo HUD
 
-Fija su propio esquema oscuro (`--bg:#04040c` y los acentos en cian/violeta) aunque el Dashboard
-esté en claro, igual que `.theme-aleman` fija los colores de su bandera. **Un HUD sobre fondo
-blanco deja de ser un HUD**: la retícula, las manchas y el glow de las celdas viven de un fondo
-casi negro. Se vio al medir en el navegador — Adán usa el Dashboard en claro y la primera versión
-perdía ahí todo su carácter.
+La pantalla fija sus propias variables de superficie en vez de heredar las del tema, porque las
+del Dashboard oscuro son otras (fondo `#05050a`, grises distintos). El **modo de noche** es el
+de por defecto: `--bg:#04040c`, acentos neón en cian/violeta, glows. Nació así porque un HUD
+vive de un fondo casi negro, y la primera versión, forzada a oscuro, ignoraba el interruptor del
+tema — hasta que Adán pidió el otro: *"debe haber un modo de día, el de noche ya está"*.
+
+El **modo de día** entra con `data-theme="light"` (el sol/luna de la barra) y es el mismo HUD
+traducido a tinta: misma retícula, mismas esquinas cortadas, misma malla en fuga, sobre un blanco
+frío con tinte cian (`#eef2f7`), los acentos en los **pasos oscuros del tema claro del Dashboard**
+(el verde de aquí es el de las demás pantallas), paneles más claros que el fondo (así leen como
+tarjetas a plena luz) y los glows reducidos a un halo corto. Casi todo sale solo del juego de
+variables (`--ov` pasa de blanco a tinta oscura y con él las celdas, bordes y fondos); lo que las
+variables no cubren va en un bloque propio: las manchas del fondo, el panel, el velo y la tarjeta
+de la ficha, el `color-scheme` del input de hora. Los colores propios de cada hábito son neón
+(nacieron para el negro) y un icono `#ffd93d` sobre blanco no se ve: en día se oscurecen al pintar
+con `filter:brightness(.68) saturate(1.35)`, sin tocar el dato.
 
 El fondo son **seis capas, todas CSS, ni una imagen**: una retícula fina que rima con la
 cuadrícula de datos, dos manchas de color, una malla en fuga con su línea de horizonte y un
