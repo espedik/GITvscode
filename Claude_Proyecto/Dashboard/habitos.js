@@ -345,7 +345,9 @@
       return 'off';
     }
     const arranque = h.desde || S.desde;
-    if (arranque && fecha < arranque) return 'pre';
+    /* Antes del arranque no hay fallos (no existía el registro), pero si Adán
+       marca un día de esos a posteriori, cuenta: es historial que él recuerda. */
+    if (arranque && fecha < arranque) return marcado(h, fecha) ? 'ok' : 'pre';
     const hoy = hoyISO();
     if (fecha > hoy) return 'fut';
     if (fecha === hoy) return marcado(h, fecha) ? 'hoyok' : 'hoy';
@@ -356,11 +358,11 @@
      ("aún no lo llevabas" contra "ese día no tocaba"). */
   function neutro(e) { return e === 'off' || e === 'pre'; }
   /* Qué celdas responden al clic: las de días que cuentan (hechas, falladas,
-     hoy) y, en un flexible, también las de días que no tocan. Ni el futuro
-     ni lo anterior al arranque: marcarlos guardaría una marca que estado()
-     nunca miraría. */
+     hoy), las anteriores al arranque (marcarlas cuenta), y en un flexible
+     también las de días que no tocan. El futuro nunca, y "no toca" en un
+     rígido tampoco: guardaría una marca que estado() nunca miraría. */
   function tocable(h, e) {
-    return e === 'ok' || e === 'no' || e === 'hoy' || e === 'hoyok' || (e === 'off' && !!h.flex);
+    return e === 'ok' || e === 'no' || e === 'hoy' || e === 'hoyok' || e === 'pre' || (e === 'off' && !!h.flex);
   }
   function cuenta(e) { return e === 'ok' || e === 'no' || e === 'hoyok'; }
   function logrado(e) { return e === 'ok' || e === 'hoyok'; }
@@ -508,7 +510,7 @@
         const clic = tocable(h, e) ? ' onclick="HB.toggle(\'' + h.id + '\',\'' + f + '\')"' : '';
         /* En un flexible, la celda de un día que no toca es tocable: lleva un
            borde punteado tenue que la distingue de una neutra de verdad. */
-        const flexoff = h.flex && e === 'off' && f <= hoy ? ' hb2-flexoff' : '';
+        const flexoff = h.flex && (e === 'off' || e === 'pre') && f <= hoy ? ' hb2-flexoff' : '';
         /* Con meta > 1, un día a medias se pinta con el relleno subiendo desde
            abajo: dos litros de tres se ven como dos tercios de celda. Sin esto,
            beber dos litros y beber cero se verían exactamente igual. */
@@ -839,7 +841,7 @@
     dias.forEach(function (f) {
       const e = estado(h, f), cls = e === 'pre' ? 'off' : e;
       const clic = tocable(h, e) ? ' onclick="HB.toggle(\'' + h.id + '\',\'' + f + '\')"' : '';
-      cal += '<div class="hb2-fd hb2-f-' + cls + (h.flex && e === 'off' && f <= hoy ? ' hb2-f-flex' : '') + '"' + clic + '>' + desdeISO(f).getDate() + '</div>';
+      cal += '<div class="hb2-fd hb2-f-' + cls + (h.flex && (e === 'off' || e === 'pre') && f <= hoy ? ' hb2-f-flex' : '') + '"' + clic + '>' + desdeISO(f).getDate() + '</div>';
     });
 
     /* Cumplimiento por día de la semana: dice DÓNDE se cae este hábito */
@@ -1403,6 +1405,11 @@
   box-shadow:0 0 12px rgba(var(--g-rgb),.3),inset 0 0 12px rgba(var(--g-rgb),.15)}
 .hb2-off{background:rgba(var(--ov),.026);color:rgba(var(--ov),.15);cursor:default}
 .hb2-off:hover{transform:none}
+/* Una celda neutra que sí responde (anterior al arranque, o flexible): el
+   cursor y el hover lo dicen aunque en reposo no se distinga */
+.hb2-off[onclick]{cursor:pointer}
+.hb2-off[onclick]:hover{transform:translateY(-2px) scale(1.08);color:var(--cy);
+  background:rgba(var(--cy-rgb),.08);border:1px solid rgba(var(--cy-rgb),.4)}
 .hb2-fut{background:rgba(var(--ov),.038);color:rgba(var(--ov),.19);
   border:1px solid rgba(var(--ov),.045);cursor:default}
 .hb2-fut:hover{transform:none}

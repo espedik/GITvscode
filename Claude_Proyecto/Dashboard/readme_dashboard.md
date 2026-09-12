@@ -524,10 +524,15 @@ En la cuadrícula, la celda de un día que no toca lleva un punteado cian tenue 
 en el pie, el hábito sale como chip "extra" cuando hoy no toca, sin entrar en el contador ni en la
 barra del día. Se activa en el editor con "Se puede marcar cualquier día, aunque no toque".
 
-De paso se cerró un hueco: una celda "no tocaba" de un hábito rígido, y las anteriores al
-arranque, respondían al clic y guardaban una marca que `estado()` nunca miraba — basura invisible
-en localStorage. Ahora `tocable()` decide qué celdas responden: hechas, falladas, hoy, y "no toca"
-solo en un flexible.
+**Los días anteriores al arranque también se pueden marcar**, en cualquier hábito. Sin marcar
+siguen neutros (no existía el registro, no hay fallo); marcados, cuentan como hechos — es historial
+que Adán recuerda. Hizo falta porque los dos flexibles entraron con `desde` = el día de su
+migración, y todo lo anterior quedaba bloqueado ("pero en días pasados también debo poder"). En un
+flexible esos días llevan el punteado; en un rígido, responden al pasar el ratón.
+
+`tocable()` decide qué celdas responden: hechas, falladas, hoy, las anteriores al arranque, y
+"no toca" solo en un flexible. Ni el futuro ni "no toca" en un rígido: guardarían una marca que
+`estado()` nunca miraría — basura invisible en localStorage, que es lo que pasaba antes.
 
 ### Un hábito puede pedir varios pasos
 
