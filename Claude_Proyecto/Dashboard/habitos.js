@@ -854,6 +854,8 @@
         '<div class="hb2-ficha-dow">' + (h.hora ? '<b>' + esc(h.hora) + '</b> · ' : '') +
           (h.dow === 'todos' ? 'Todos los días'
           : 'Toca los ' + h.dow.map(function (i) { return DOW_LARGO[i]; }).join(', ')) + '</div>' +
+        '<div class="hb2-ficha-cols">' +
+        '<div class="hb2-ficha-col">' +
         queHacerHTML(h) +
 
         '<div class="hb2-panel hb2-ficha-rac">' +
@@ -870,7 +872,8 @@
             '<div class="hb2-aviso-h">' + ICO_ALERTA + '<span>Hoy es el día que cuenta</span></div>' +
             '<div class="hb2-aviso-d">Fallaste ayer. Hacerlo hoy corta la caída en un día; ' +
             'saltártelo lo convierte en la primera semana de haberlo dejado.</div></div>' : '') +
-
+        '</div>' +
+        '<div class="hb2-ficha-col">' +
         '<div class="hb2-panel hb2-ficha-cal">' +
           '<div class="hb2-ficha-cal-hd"><span class="hb2-k" style="color:var(--cy)">' +
             MESES[base.getMonth()] + '</span>' +
@@ -883,6 +886,8 @@
           '<span class="hb2-k" style="color:var(--cy)">Dónde se te cae</span>' +
           '<div class="hb2-ficha-sub">Cumplimiento por día de la semana, últimos 90 días.</div>' +
           '<div class="hb2-pbs">' + barras + '</div>' + consejo +
+        '</div>' +
+        '</div>' +
         '</div>' +
 
         '<div class="hb2-ficha-pie">' +
@@ -1430,18 +1435,25 @@
 .hb2-ficha-ov{position:fixed;inset:0;z-index:90;background:rgba(0,0,0,.68);backdrop-filter:blur(7px);
   display:none;align-items:center;justify-content:center;padding:24px}
 .hb2-ficha-ov.open{display:flex}
-.hb2-ficha-card{position:relative;width:100%;max-width:480px;max-height:100%;overflow-y:auto;
-  padding:24px 26px;border:1px solid rgba(var(--cy-rgb),.2);
+/* 1040px: el doble de antes. Con ese ancho el contenido va en dos columnas y
+   la ficha entera cabe sin scrollear en 950px de alto. El editor (.hb2-ed)
+   conserva 520px: un formulario no gana nada con inputs de un metro. */
+.hb2-ficha-card{position:relative;width:100%;max-width:1040px;max-height:100%;overflow-y:auto;
+  padding:22px 26px;border:1px solid rgba(var(--cy-rgb),.2);
   clip-path:polygon(0 14px,14px 0,calc(100% - 14px) 0,100% 14px,100% calc(100% - 14px),calc(100% - 14px) 100%,14px 100%,0 calc(100% - 14px));
   box-shadow:0 24px 70px rgba(0,0,0,.6)}
 /* color explícito: el overlay es position:fixed fuera del <section> y heredaba el
    texto oscuro del tema claro — el título salía negro sobre negro. */
 .hb2-ficha-card{background:linear-gradient(160deg,#0b0b18,#07070f);color:var(--text)}
+.hb2-ficha-card.hb2-ed{max-width:520px}
+.hb2-ficha-cols{display:grid;grid-template-columns:1fr 1fr;gap:12px;align-items:start;margin-top:2px}
+.hb2-ficha-col{min-width:0}
+.hb2-ficha-col>.hb2-panel:last-child{margin-bottom:0}
 .hb2-x{position:absolute;top:15px;right:15px;width:28px;height:28px;border-radius:50%;
   border:1px solid rgba(var(--ov),.12);background:rgba(var(--ov),.05);color:var(--text2);
   cursor:pointer;font-size:12px;font-family:inherit;line-height:1;z-index:2}
 .hb2-x:hover{background:rgba(var(--ov),.12);color:var(--text)}
-.hb2-ficha-t{display:flex;align-items:center;gap:10px;font-family:var(--font-title);font-size:24px;
+.hb2-ficha-t{display:flex;align-items:center;gap:10px;font-family:var(--font-title);font-size:27px;
   font-weight:600;line-height:1.15;margin:6px 0 8px;padding-right:34px}
 .hb2-ficha-t svg{flex-shrink:0}
 .hb2-ficha-a{display:flex;align-items:center;gap:7px;font-size:11.5px;color:var(--text2)}
@@ -1500,7 +1512,7 @@
 .hb2-f-fut{cursor:default}
 .hb2-f-fut:hover{transform:none}
 .hb2-ficha-bars{padding:13px 15px}
-.hb2-ficha-bars .hb2-pbs{height:120px;margin-top:11px}
+.hb2-ficha-bars .hb2-pbs{height:132px;margin-top:11px}
 .hb2-ficha-sub{font-size:10.5px;color:var(--text3);line-height:1.4;margin-top:3px}
 .hb2-consejo{display:flex;align-items:flex-start;gap:8px;margin-top:12px;padding-top:11px;
   border-top:1px solid rgba(var(--cy-rgb),.14);font-size:11px;color:var(--text2);line-height:1.45}
@@ -1550,6 +1562,9 @@
   .hb2-acum{min-width:280px}
   .hb2-perfil,.hb2-kpis{width:calc(50% - 6px)}
   .hb2-acum-g{height:80px}
+}
+@media (max-width:900px){
+  .hb2-ficha-cols{grid-template-columns:1fr}
 }
 @media (max-width:760px){
   /* En vertical la telemetría se apila y el contenido pasa del alto de la

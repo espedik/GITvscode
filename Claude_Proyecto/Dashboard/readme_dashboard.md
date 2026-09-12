@@ -583,7 +583,11 @@ Si Adán cambia un producto en la rutina o un ejercicio en Ejercicio, la ficha l
 Los `pasos` se editan en la ficha (una línea por paso); lo que viene de la rutina o del gym se
 edita allí, y el editor lo dice.
 
-Debajo, racha contra récord con su barra, el calendario de ese
+La ficha mide **1040px** y va en **dos columnas**: a la izquierda lo que se lee (qué hacer, racha,
+aviso) y a la derecha lo que se mira (calendario, gráfica). Medido: 1040×670 en 1600px, entera sin
+scroll interno; por debajo de 900px de ancho vuelve a una columna. El editor conserva 520px.
+
+A la izquierda, racha contra récord con su barra; a la derecha, el calendario de ese
 hábito solo — donde se corrige un día que se olvidó anotar — y el cumplimiento por día de la
 semana de los últimos 90 días. El consejo que lo acompaña solo sale si hay al menos 3 días con
 datos y alguno baja del 70%. Es una **capa propia** (`#hb2Ficha`), no un trozo del slide: marcar
