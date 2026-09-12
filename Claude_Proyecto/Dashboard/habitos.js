@@ -1053,7 +1053,10 @@
   --g-rgb:0,232,122; --o-rgb:255,138,61; --r-rgb:255,92,92; --w-rgb:255,217,61;
   --cy-rgb:0,224,192;
 }
-.theme-habitos{background:#04040c}
+.theme-habitos{background:#04040c;padding-right:max(1.6vw,18px)}
+/* Sin el tope de 1400px del resto de pantallas: aquí cada píxel de ancho es
+   tamaño de celda, que es lo que Adán pidió. */
+.theme-habitos .slide-inner{max-width:none}
 .theme-habitos .slide-title,.theme-habitos .eyebrow{color:var(--text)}
 
 /* ── EL FONDO: cuatro capas, todas CSS, ni una imagen ──────────────────
@@ -1175,26 +1178,29 @@
 .hb2-grid-t{display:flex;align-items:center;gap:9px}
 .hb2-leg{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
 .hb2-leg-i{display:flex;align-items:center;gap:5px;font-size:9.5px;color:var(--text3)}
-.hb2-leg-i .hb2-c{width:12px;height:12px;border-radius:3px;font-size:0;cursor:default}
+.hb2-leg-i .hb2-c{flex:none;width:12px;min-width:12px;max-width:12px;height:12px;aspect-ratio:auto;
+  border-radius:3px;font-size:0;cursor:default}
 /* El scroll HORIZONTAL envuelve la tabla entera para que cabecera, filas y
    totales scrollen juntos y nunca se desalineen. El VERTICAL vive solo en
    .hb2-filasw: si la ventana es baja, scrollean los hábitos y la fila de
    totales sigue a la vista, que es donde tiene que estar. */
 .hb2-scroll{flex:1;min-height:0;overflow-x:auto;overflow-y:hidden;display:flex}
-.hb2-tabla{flex:1;min-width:max-content;min-height:0;display:flex;flex-direction:column}
+.hb2-tabla{flex:1;min-width:max-content;width:100%;min-height:0;display:flex;flex-direction:column}
 .hb2-filasw{flex:1;min-height:0;overflow-y:auto}
-.hb2-cab{display:flex;align-items:flex-end;gap:10px;flex:none;padding-bottom:3px}
-.hb2-nom-sp{width:192px;flex-shrink:0}
-.hb2-dn{width:30px;text-align:center;font-family:var(--mono);font-size:8px;font-weight:700;
-  flex-shrink:0;padding-bottom:2px}
+/* Mismo padding lateral que .hb2-fila (5px): sin él la cabecera arrancaba 5px
+   antes que las celdas y las letras de los días no caían sobre su columna. */
+.hb2-cab{display:flex;align-items:flex-end;gap:10px;flex:none;padding:0 5px 3px}
+.hb2-nom-sp{width:168px;flex-shrink:0}
+.hb2-dn{flex:1 1 0;min-width:30px;max-width:44px;text-align:center;font-family:var(--mono);
+  font-size:8px;font-weight:700;padding-bottom:2px}
 .hb2-filas{display:flex;flex-direction:column;min-height:100%}
 /* flex:1 0 33px - crece si sobra alto, pero NUNCA por debajo de 33px. Con 12
    hábitos y poco alto, antes se comprimían hasta solaparse con los totales. */
 .hb2-fila{display:flex;align-items:center;gap:10px;padding:1px 5px;border-radius:9px;
-  flex:1 0 31px;border-bottom:1px solid rgba(var(--ov),.04);transition:background .15s}
+  flex:1 0 33px;border-bottom:1px solid rgba(var(--ov),.04);transition:background .15s}
 .hb2-fila:hover{background:rgba(var(--ov),.03)}
 .hb2-fila.peligro{background:rgba(var(--r-rgb),.055)}
-.hb2-nom{width:192px;flex-shrink:0;min-width:0;display:flex;align-items:center;gap:9px;
+.hb2-nom{width:168px;flex-shrink:0;min-width:0;display:flex;align-items:center;gap:7px;
   background:none;border:0;padding:0;cursor:pointer;font-family:inherit;text-align:left}
 .hb2-ico{width:26px;height:26px;border-radius:8px;flex-shrink:0;display:flex;align-items:center;
   justify-content:center;background:rgba(var(--ov),.05);border:1px solid rgba(var(--ov),.1)}
@@ -1204,12 +1210,15 @@
 .hb2-nom:hover .hb2-nom-n{color:var(--cy)}
 .hb2-nom-a{font-size:9px;color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .hb2-nom-a b{font-family:var(--mono);font-weight:700;color:var(--cy);letter-spacing:.04em}
-.hb2-celdas{display:flex;gap:3px}
-.hb2-rac{width:128px;flex-shrink:0;display:flex;align-items:center;justify-content:flex-end;
-  gap:11px;padding-right:2px}
+/* Las tres filas (cabecera, hábitos, totales) comparten este contenedor con
+   flex:1, y cada celda se reparte el ancho entre 30 y 42px con aspect-ratio 1.
+   Así la cuadrícula crece con la pantalla en vez de quedarse en 30px fijos. */
+.hb2-celdas{display:flex;gap:2px;flex:1;min-width:0}
+.hb2-rac{width:98px;flex-shrink:0;display:flex;align-items:center;justify-content:flex-end;
+  gap:8px;padding-right:2px}
 .hb2-rac-n{text-align:right}
 .hb2-rac-n b{display:block;font-family:var(--mono);font-size:15px;font-weight:700;line-height:1}
-.hb2-rac-n i{display:block;width:40px;height:2.5px;border-radius:2px;margin-top:3px;
+.hb2-rac-n i{display:block;width:34px;height:2.5px;border-radius:2px;margin-top:3px;
   background:rgba(var(--ov),.1);overflow:hidden}
 .hb2-rac-n u{display:block;height:100%;border-radius:2px;text-decoration:none}
 .hb2-rec{font-family:var(--mono);font-size:10px;font-weight:700;color:var(--text3);
@@ -1217,9 +1226,9 @@
 .hb2-cab .hb2-rac,.hb2-tot .hb2-rac{gap:13px}
 
 /* ── La celda ─────────────────────────────────────────────────────────── */
-.hb2-c{width:30px;height:30px;border-radius:7px;display:flex;align-items:center;
-  justify-content:center;position:relative;flex-shrink:0;cursor:pointer;
-  font-family:var(--mono);font-size:10px;font-weight:700;
+.hb2-c{flex:1 1 0;min-width:30px;max-width:44px;aspect-ratio:1;border-radius:8px;display:flex;
+  align-items:center;justify-content:center;position:relative;cursor:pointer;
+  font-family:var(--mono);font-size:11px;font-weight:700;
   transition:transform .12s,box-shadow .12s}
 .hb2-c:hover{transform:translateY(-2px) scale(1.08);z-index:4}
 /* Celda cumplida: verde translúcido con borde encendido en vez de verde macizo,
@@ -1238,8 +1247,8 @@
 .hb2-hoyok{box-shadow:0 0 0 2px rgba(var(--w-rgb),.9),0 0 16px rgba(var(--g-rgb),.55),
   inset 0 1px 0 rgba(255,255,255,.4)}
 /* La palomita dentro de la celda cumplida: a este tamaño el color solo no basta */
-.hb2-ok::after,.hb2-hoyok::after{content:'';position:absolute;right:3.5px;bottom:3.5px;
-  width:4px;height:7px;border:solid var(--g);border-width:0 2px 2px 0;
+.hb2-ok::after,.hb2-hoyok::after{content:'';position:absolute;right:11%;bottom:11%;
+  width:13%;height:23%;border:solid var(--g);border-width:0 2px 2px 0;
   transform:rotate(42deg);filter:drop-shadow(0 0 3px rgba(var(--g-rgb),.9))}
 /* Un día a medias en un hábito por pasos: el relleno sube con lo que llevas.
    El número se queda por encima, para que siga leyéndose. */
@@ -1254,7 +1263,7 @@
 /* La lectura vertical */
 .hb2-tot{display:flex;align-items:flex-end;gap:10px;flex:none;padding:6px 5px 0;
   border-top:1px solid rgba(var(--cy-rgb),.14)}
-.hb2-tt{width:30px;flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:2px}
+.hb2-tt{flex:1 1 0;min-width:30px;max-width:44px;display:flex;flex-direction:column;align-items:center;gap:2px}
 .hb2-tt span{font-family:var(--mono);font-size:8px;font-weight:700;min-height:10px}
 .hb2-tt i{width:100%;height:22px;display:flex;align-items:flex-end;font-style:normal}
 .hb2-tt u{width:100%;border-radius:3px 3px 1px 1px;text-decoration:none;display:block}

@@ -531,7 +531,18 @@ hábito de un solo paso.
 
 ### La cuadrícula
 
-Diez hábitos × los días del mes. Celdas de **30px con el número del día dentro** y la palomita en
+Trece hábitos × los días del mes. **Es la única pantalla sin el tope de 1400px** de `.slide-inner`
+y con menos padding lateral: aquí cada píxel de ancho es tamaño de celda, que es lo que pidió Adán
+("haz más grande a lo ancho esa página, quiero los recuadros más grandes").
+
+**Celdas fluidas.** No miden 30px fijos: cada una toma `flex:1` entre 30 y 44px con `aspect-ratio:1`,
+y las tres filas (cabecera de días, hábitos, totales) comparten el mismo contenedor y el mismo
+padding lateral, así que quedan alineadas al píxel. Medido: **36px en 1600 con el rail abierto**
+(44 en 1920, 31 con scroll horizontal en 1366). Las columnas fijas cedieron para eso: nombre 168px,
+racha 98px, hueco entre celdas 2px. El nombre largo se trunca en la fila; entero está en la ficha
+y en el chip de hoy.
+
+Llevan **el número del día dentro** y la palomita en
 la esquina: a ese tamaño el color solo no basta. Franja gris en sábados y domingos para ubicarse
 sin contar columnas, y la columna de hoy iluminada de arriba abajo. Cada hábito lleva su icono de
 trazo (nunca emoji: a 14px es una mancha) y su racha con la barra de avance hacia el récord.
@@ -583,7 +594,7 @@ son los que le puso la semilla anterior — entonces solo recibe lo nuevo (la ho
 meta) y no se le toca nada más. Los retirados (Sin azúcar y Anotar gastos en la 2, 8 000 pasos en
 la 3) salen de la lista y de su historial; los nuevos entran con su arranque en hoy.
 
-**Medido** (Playwright, 1600px, 1280px y 390px): 13 filas × 30 celdas, 6 capas de
+**Medido** (Playwright, 1920px, 1600px, 1366px y 390px): 13 filas × 30 celdas fluidas, 6 capas de
 fondo, el anillo con su arco correcto, la línea del acumulado con 10 puntos, 7 barras de
 perfil y 30 de totales. El agua recorre 0/3 → 1/3 → 2/3 → hecho → 0/3 en cuatro toques, con la
 celda al 33%, 67% y llena, y la barra del día subiendo en cada uno. Partiendo del estado guardado con un hábito renombrado a mano, la migración 3 lo respeta, retira
