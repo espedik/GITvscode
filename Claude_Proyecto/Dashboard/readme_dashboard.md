@@ -911,11 +911,16 @@ terminaciones, así que la fila se lee pareja y el hover los enciende con un hal
 Bajados a tonos medios (`#0891b2`, `#16a34a`, `#0d9488`, `#38bdf8`), el peor contraste es 5.43 en
 oscuro y 1.92 en claro.
 
-**Tres grupos, no diez botones sueltos.** Lo que administras (Coach, Finanzas), el cuerpo —las seis
-que son pestañas de la MISMA app de Cuidado Personal— y lo que estudias (Alemán, Entrevistas), con
-un separador fino entre ellos: ordena la fila sin escribir un solo rótulo. Y van dentro de un
-contenedor de 1180px como máximo, porque en una pantalla de 2000px se repartían a lo ancho y
-quedaban a un palmo unas de otras; ahora ocupan 999px centrados.
+**Tres grupos, no quince botones sueltos.** Lo que administras (Coach, Finanzas), el cuerpo —las
+**ocho** pestañas de la MISMA app de Cuidado Personal, en su mismo orden: Skincare, Cabello, Ojos,
+Dentista, Salud, Ejercicio, Comida, Vestimenta— y lo que estudias (Alemán con sus tres partes,
+Lecciones, Vocabulario y Gramática, y Entrevistas), con un separador fino entre ellos: ordena la fila
+sin escribir un solo rótulo. Cabello, Ojos y las tres de Alemán entraron el 2026-09-13 (Adán: *"faltan
+más iconos [...] hay más htmls que no están en la app"*): todo HTML que se abre solo tiene ya su
+píldora. Van dentro de un contenedor de 1440px como máximo, porque en una pantalla de 2000px se
+repartían a lo ancho y quedaban a un palmo unas de otras; a 1600 las quince ocupan 1405px en una
+sola línea. **Por debajo de 1500px se quedan solo los iconos**, con el nombre en el `title`: con
+quince píldoras la fila se partiría en dos y taparía el slide, que empieza fijo a 58px.
 
 El botón de privacidad se ancló a la derecha, y bajo la barra corre una línea de acento en
 degradado — lo único que la separa del slide cuando el de abajo también es oscuro.
