@@ -1955,11 +1955,11 @@ button.hp-lec:active{transform:translateY(0)}
      libro con su PORTADA de la biblioteca y el estante con los libros de toda la ruta) y LO QUE
      SABES (las 12 a ~44px por fila, leyenda, nota y el rato al volante).
    · Botón "Siguiente paso": antes solo se avanzaba tocando la ruta. */
-.theme-skills .slide-inner{justify-content:flex-start}
+.theme-skills .slide-inner{justify-content:flex-start;max-width:none}
 .hab-head{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:24px;align-items:end;flex:none;margin-bottom:14px}
 .hab-head .eyebrow{margin-bottom:6px}
 .hab-title{font-size:clamp(26px,2.6vw,36px);margin-bottom:0;line-height:1}
-.hab-cols{flex:1;min-height:0;display:grid;grid-template-columns:292px minmax(0,1fr) 372px;gap:16px;align-items:stretch}
+.hab-cols{flex:1;min-height:0;display:grid;grid-template-columns:250px minmax(0,1fr) 330px;gap:16px;align-items:stretch}
 .hab-cols>*{min-width:0}
 .hab-side{display:flex;flex-direction:column;gap:12px;min-height:0}
 .hab-lbl{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--text3)}
@@ -1976,7 +1976,7 @@ button.hp-lec:active{transform:translateY(0)}
 .ho-txt b{color:var(--text2);font-weight:700}
 .ho-txt i{font-style:normal;font-family:var(--mono);font-weight:800;color:var(--g)}
 /* LA RUTA: la habilidad abierta y sus pasos como línea de tiempo. */
-.hab-ruta{padding:20px 16px;display:flex;flex-direction:column;gap:14px;min-height:0;overflow:hidden}
+.hab-ruta{padding:18px 14px;display:flex;flex-direction:column;gap:14px;min-height:0;overflow:hidden}
 .hf-top{display:flex;align-items:center;gap:10px}
 .hf-badge{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
 .hf-name{font-size:17px;font-weight:800;color:var(--text);line-height:1}
@@ -2000,7 +2000,7 @@ button.hp-lec:active{transform:translateY(0)}
 .hf-p-n{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;position:relative;z-index:1;
   font-family:var(--mono);font-size:10.5px;font-weight:700;background:rgba(var(--ov),.06);color:var(--text3);border:1px solid rgba(var(--ov),.1)}
 .hf-p.act .hf-p-n{background:var(--g);color:#05050a;border-color:var(--g)}
-.hf-p-t{font-size:12.5px;line-height:1.3;color:var(--text2);padding-top:6px}
+.hf-p-t{font-size:12px;line-height:1.3;color:var(--text2);padding-top:6px}
 .hf-p.act .hf-p-t{color:var(--text);font-weight:700}
 .hf-ruta-acts{display:flex;flex-direction:column;gap:8px;padding-top:14px;border-top:1px solid rgba(var(--ov),.09)}
 .hf-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:40px;padding:0 16px;border-radius:10px;font-family:inherit;font-size:12.5px;font-weight:800;
@@ -2020,12 +2020,12 @@ button.hp-lec:active{transform:translateY(0)}
 .hf-n{display:flex;align-items:center;gap:12px}
 .hf-n .hab-lbl:first-child{color:var(--cy)}
 .hf-n i{width:1px;height:10px;background:rgba(var(--ov),.2)}
-.hf-h1{font-family:var(--font-title);font-size:clamp(28px,2.75vw,44px);font-weight:600;line-height:1.06;letter-spacing:-.015em;color:var(--text);text-wrap:pretty;max-width:18ch}
+.hf-h1{font-family:var(--font-title);font-size:clamp(28px,2.75vw,44px);font-weight:600;line-height:1.06;letter-spacing:-.015em;color:var(--text);text-wrap:pretty}
 .hf-qw{display:grid;grid-template-columns:8px minmax(0,1fr);gap:16px}
 .hf-qw>i{border-radius:4px;background:var(--g);opacity:.8}
 .hf-blk{display:flex;flex-direction:column;gap:6px}
-.hf-q{font-size:17.5px;color:var(--text2);line-height:1.55;max-width:60ch}
-.hf-c{font-size:16.5px;color:var(--text2);line-height:1.65;max-width:64ch}
+.hf-q{font-size:18px;color:var(--text2);line-height:1.55}
+.hf-c{font-size:17px;color:var(--text2);line-height:1.65}
 .hf-q b,.hf-c b{color:var(--text);font-weight:700}
 /* CON QUÉ: el libro con su portada, o el recurso tal cual si no es un libro de la biblioteca. */
 .hf-libro{display:grid;grid-template-columns:76px minmax(0,1fr) auto;gap:16px;align-items:center;padding:13px 16px;border-radius:14px;
@@ -2056,7 +2056,7 @@ button.hp-lec:active{transform:translateY(0)}
    el retorno y Ventas salía llena). Ventas y Marketing siguen en la lista pero apagadas: están
    fuera del foco por decisión del 2026-08-09 (PRIORIDAD_EXCLUIDAS), y verlas explica por qué
    encabezan el retorno sin ser la habilidad de la semana. */
-.hab-rank{padding:20px 18px;flex:1;min-height:0;display:flex;flex-direction:column;gap:10px;overflow:hidden}
+.hab-rank{padding:18px 16px;flex:1;min-height:0;display:flex;flex-direction:column;gap:10px;overflow:hidden}
 .hr-head{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
 .hr-sub{font-size:10px;color:var(--text3);white-space:nowrap}
 .hr-rows{display:flex;flex-direction:column;justify-content:space-between;flex:1;min-height:0;gap:1px}
@@ -2082,6 +2082,9 @@ button.hp-lec:active{transform:translateY(0)}
 .hr-pie i{width:14px;height:5px;border-radius:2px;flex-shrink:0}
 .hr-nota{font-size:11px;color:var(--text3);line-height:1.45}
 .hr-nota b{color:var(--text);font-weight:700}
+/* A 330px la franja de Didi cabe en una línea solo con el texto un punto más chico. */
+.hab-side .didi-strip-txt{font-size:11px;white-space:nowrap}
+.hab-side .didi-strip-btn{padding:6px 10px}
 /* PANTALLAS BAJAS (laptops de 900 y menos): los tamaños de lectura bajan un escalón y el estante
    se pliega, para que el paso más largo quepa sin que la tarjeta tenga que desplazar. */
 @media(max-height:940px){
@@ -2104,7 +2107,7 @@ button.hp-lec:active{transform:translateY(0)}
   .hr-name{font-size:12px}
 }
 @media(max-width:1180px){
-  .hab-cols{grid-template-columns:260px minmax(0,1fr) 320px;gap:12px}
+  .hab-cols{grid-template-columns:236px minmax(0,1fr) 300px;gap:12px}
   .hab-foco{padding:20px 24px 18px}
   .hf-why{display:none}
 }

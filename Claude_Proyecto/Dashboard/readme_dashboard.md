@@ -1448,14 +1448,16 @@ direcciones más (doble página; tablero de las 12). Lo pinta `renderSkills()` e
 derecha (`46 /100`, su barra y la frase *"llevar Inversión de 25 a 40 lo sube a 48"*, calculada con
 `calcOVRcon()`, no estimada). Con el título a 48 px y su margen, la fila medía 126 px; ahora 91,
 y el cuerpo ocupa los **741 px** que quedan a 1600×1000 (`flex:1` sobre `.slide-inner`, que en
-este slide no se centra).
+este slide no se centra ni se limita a 1400 px: usa los **1440** que deja el slide, porque Adán
+pidió *"más grande a lo ancho la parte central"*).
 
-**Tres tarjetas a toda la altura**, en columnas de 292 · fluida · 372 px:
+**Tres tarjetas a toda la altura**, en columnas de 250 · fluida · 330 px — la del paso mide
+**828 px** a 1600 (antes 704) y el texto ya no se capa a 64 caracteres:
 
 | Tarjeta | Qué lleva |
 |---|---|
 | **La ruta** | La habilidad abierta con su icono, nivel y peso; los chips *Esta semana* / nivel / *la que más rinde*; y los pasos como **línea de tiempo** (número en círculo, nombre completo, el activo en verde). Abajo, *Cambiar a …* y *Ajustar en Coach*. |
-| **El paso** | `Paso 01 de 9` · título en Fraunces a 44 px · **Por qué este paso** con filete verde a 17.5 px · **Qué hacer** a 16.5 px · **Con qué**: el libro con su **portada de la biblioteca**, autor, páginas, la nota y *Qué es* (abre la ficha) · el **estante** con los libros de toda la ruta, el del paso marcado · pie con *Al cerrarlo sigue…* y **Siguiente paso**, que antes no existía. |
+| **El paso** | `Paso 01 de 9` · título en Fraunces a 44 px · **Por qué este paso** con filete verde a 18 px · **Qué hacer** a 17 px · **Con qué**: el libro con su **portada de la biblioteca**, autor, páginas, la nota y *Qué es* (abre la ficha) · el **estante** con los libros de toda la ruta, el del paso marcado · pie con *Al cerrarlo sigue…* y **Siguiente paso**, que antes no existía. |
 | **Lo que sabes** | Las 12 a ~44 px por fila, ordenadas por retorno y medidas por nivel (la barra es lo que ya sabes; Ventas y Marketing apagadas por `PRIORIDAD_EXCLUIDAS`), leyenda, nota y el rato al volante. |
 
 **La lectura desplaza por dentro** (`.hf-lectura`) cuando el paso es largo —el 4 de Inversión
@@ -1465,7 +1467,7 @@ biblioteca (web, curso) sigue saliendo con `pfRecursoHtml()`; el estante solo ap
 libros o más, y las rutas de formato viejo (IA, Datos…) no lo tienen porque no traen `r` por paso.
 
 **Tamaños.** Bajo 940 px de alto los tamaños de lectura bajan un escalón y el estante se pliega;
-bajo 1180 px de ancho las columnas pasan a 260 · fluida · 320. En el celular la cabecera se
+bajo 1180 px de ancho las columnas pasan a 236 · fluida · 300. En el celular la cabecera se
 apila, la ruta es una tira de números de 46 px y las tres tarjetas van una bajo otra (la de la
 ruta con `min-width:0`, que sin eso los nueve chips la estiraban a 500 px). Comprobado sin
 errores en 1600, 1366 y 390 px, en los dos temas, con Inversión (pasos 1 y 4), Finanzas e IA.
