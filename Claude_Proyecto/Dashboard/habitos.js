@@ -1095,6 +1095,17 @@
       pintar();
     },
     toggle: function (id, f) { toggle(id, f); },
+    /* Para Mi Día (2026-09-13): los hábitos que tocan hoy con su estado y su racha, el
+       toggle de hoy y el icono de trazo. Lectura pura sobre el mismo S de siempre. */
+    hoy: function () {
+      cargar();
+      const f = hoyISO();
+      return delDia(f).map(function (h) {
+        return { id: h.id, nombre: h.nombre, ancla: h.ancla, hora: h.hora, color: h.color, ico: h.ico, estado: estado(h, f), racha: racha(h) };
+      });
+    },
+    toggleHoy: function (id) { cargar(); toggle(id, hoyISO()); },
+    ico: function (nombre, color, px) { return svgIco(nombre, color, px); },
     mes: function (n) {
       const m = new Date(mesVisto.getFullYear(), mesVisto.getMonth() + n, 1);
       if (m > new Date()) return;

@@ -2733,7 +2733,175 @@ button.hp-lec:active{transform:translateY(0)}
    de los eventos de dash-eventos-mes-v1, y del avance real en coach_checks_v1. */
 .dia-reloj{cursor:pointer;border-radius:10px;padding:3px 8px;margin:-3px -8px;transition:background .18s}
 .dia-reloj:hover{background:rgba(var(--ov),.08)}
-.dia-reloj::after{content:'📅';font-size:11px;opacity:.5;margin-left:2px}
+.dia-reloj::after{content:'📅';font-size:11px;opacity:.5;margin-left:2px}
+
+/* ─── Mi Día — diseño "agenda vertical" (2026-09-13) ───
+   Adán: "siento que está muy amontonado y no me está aportando mucho y hay cosas atrasadas,
+   mejora el diseño y ve qué más le puedes meter" y, sobre el canvas de diseno-midia/, "me gusta la
+   opción B, hazla". Lo que había, medido a 1600×1000: siete bloques apilados que aun así dejaban
+   200px vacíos abajo, y tarjetas a 10.5–12px con la mitad hueca. Ahora:
+   · Izquierda (420px, toda la altura): la agenda del día, una fila por bloque con la hora al
+     margen, el color de su categoría en el punto, el actual en verde y los hechos apagados. Tocar
+     una fila abre ese bloque en el AHORA, como antes tocar una ficha de la cinta.
+   · Derecha: la frase en una línea, el AHORA en grande, y seis módulos iguales (3×2) con lo que
+     antes no estaba: los hábitos de hoy con racha y marcar, el entreno de hoy con los 7 días como
+     chips, el paso de la semana con su portada y la ficha en curso, los cobros de los próximos 7
+     días, qué viene tras la fase, y los pendientes del mes.
+   Todo sale de datos que ya existían: HB.hoy (hábitos), CIFRAS.agendaDia, PHASES, APRENDIZAJE,
+   HABILIDAD_DETALLE y DIDI_AUDIO. Estas reglas van DESPUÉS de las viejas de cada pieza para
+   ganarles sin tocar lo que otras pantallas comparten. */
+.theme-dia .slide-inner{max-width:none}
+.dia-b{flex:1;min-height:0;display:grid;grid-template-columns:420px minmax(0,1fr);gap:16px}
+/* La agenda */
+.dia-agenda{display:flex;flex-direction:column;gap:10px;padding:18px 14px 14px;min-height:0;overflow:hidden}
+.dia-agenda-hd{display:flex;flex-direction:column;gap:6px;padding:0 6px 6px}
+.dia-quien{display:flex;flex-direction:column;gap:6px;cursor:pointer;border-radius:10px;padding:2px 6px 4px;margin:-2px -6px -4px;transition:background .18s}
+.dia-quien:hover{background:rgba(var(--ov),.06)}
+.dia-quien .eyebrow{font-size:10px;letter-spacing:.2em}
+.dia-quien #diaFecha{text-transform:capitalize}
+.dia-reloj{font-family:var(--mono);font-size:clamp(28px,2.4vw,36px);font-weight:700;line-height:1;color:var(--text);padding:0;margin:0;border-radius:0}
+.dia-reloj::after{content:none}
+.dia-agenda-res{font-size:11.5px;color:var(--text3)}
+.dia-agenda-res b{color:var(--g);font-family:var(--mono)}
+.dia-agenda-l{flex:1;min-height:0;overflow-y:auto;scrollbar-width:thin;display:flex;flex-direction:column;gap:2px;padding:0 2px}
+.ag-row{display:grid;grid-template-columns:44px 10px minmax(0,1fr) auto;gap:10px;align-items:center;padding:7px 8px;border-radius:9px;
+  border:1px solid transparent;background:none;width:100%;text-align:left;font-family:inherit;color:inherit;cursor:pointer;transition:background .13s}
+.ag-row:hover{background:rgba(var(--ov),.05)}
+.ag-h{font-family:var(--mono);font-size:11px;font-weight:700;color:var(--text3)}
+.ag-p{width:10px;height:10px;border-radius:50%;background:rgba(var(--ov),.15)}
+.ag-t{font-size:13px;font-weight:600;color:var(--text2);overflow:hidden;white-space:nowrap;text-overflow:ellipsis;line-height:1.3}
+.ag-d{font-family:var(--mono);font-size:10.5px;color:var(--text3);white-space:nowrap}
+.ag-row.hecho{opacity:.5}
+.ag-row.hecho .ag-t{text-decoration:line-through}
+.ag-row.sel{background:rgba(var(--ov),.06);border-color:rgba(var(--ov),.12)}
+.ag-row.ahora{background:rgba(var(--g-rgb),.12);border-color:rgba(var(--g-rgb),.4)}
+.ag-row.ahora .ag-p{background:var(--g);box-shadow:0 0 0 4px rgba(var(--g-rgb),.2)}
+.ag-row.ahora .ag-h,.ag-row.ahora .ag-d{color:var(--g)}
+.ag-row.ahora .ag-t{color:var(--text);font-weight:800}
+.dia-agenda-pie{display:flex;gap:8px;padding-top:10px;border-top:1px solid rgba(var(--ov),.09)}
+.dia-agenda-pie .hf-btn:first-child{flex:1}
+/* La derecha */
+.dia-der{display:flex;flex-direction:column;gap:14px;min-width:0;min-height:0}
+.dia-topbar{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:20px;align-items:center;margin:0;padding:0 4px}
+.dia-topbar .hero-frase{background:none;border:none;padding:0;margin:0}
+.dia-topbar .hero-frase .q{display:none}
+.dia-topbar .hero-frase .txt{font-family:var(--font-title);font-size:clamp(13px,1.1vw,16px);font-style:italic;font-weight:500;color:var(--text2);line-height:1.4;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.dia-topbar .hero-frase .txt::before{content:'“'}.dia-topbar .hero-frase .txt::after{content:'”'}
+.dia-sem{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--text3);white-space:nowrap}
+/* El AHORA: tarjeta propia, sin el tope de 44vh de antes; lo largo (subtareas, gym) desplaza dentro. */
+.dia-ahora{flex:none;padding:18px 24px 16px!important;max-height:34vh;overflow-y:auto;scrollbar-width:thin;border-left-width:3px}
+.dia-ahora .blq-head{gap:10px;margin-bottom:8px}
+.dia-ahora .blq-head .lbl{font-family:var(--mono);font-size:10px;letter-spacing:.16em}
+.dia-ahora .blq-txt{font-size:clamp(22px,2.2vw,32px);line-height:1.08;letter-spacing:-.012em}
+.dia-ahora .blq-acciones{margin-top:12px}
+.dia-ahora .blq-btn{height:38px;padding:0 16px;border-radius:10px;font-size:12.5px}
+.blq-sig{font-size:12.5px;color:var(--text3);text-align:right;min-width:0}
+.blq-sig b{color:var(--text2);font-weight:700}
+/* Mientras manejas: solo cuando el bloque abierto es de Didi. El catálogo entero sigue en el
+   overlay de "Qué escuchar". */
+.blq-escuchar{display:flex;align-items:center;gap:10px;margin-top:10px;padding:9px 13px;border-radius:12px;
+  background:rgba(var(--cy-rgb),.07);border:1px solid rgba(var(--cy-rgb),.2);font-size:12.5px;color:var(--text2);line-height:1.4}
+.blq-escuchar b{color:var(--text)}
+.blq-escuchar .hp-link{margin-left:auto;flex-shrink:0;font-family:var(--mono);letter-spacing:.1em;text-transform:uppercase}
+/* Los seis módulos: 3×2, iguales, y cada uno desplaza por dentro. */
+.dia-mods{flex:1;min-height:0;grid-template-columns:repeat(3,minmax(0,1fr));grid-template-rows:repeat(2,minmax(0,1fr));gap:14px}
+#miDiaSecundarios{grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+#miDiaSecundarios>.tile{border-radius:16px;padding:14px 16px 12px;min-height:0;overflow-y:auto;scrollbar-width:thin;display:flex;flex-direction:column;gap:6px}
+#miDiaSecundarios .hp-title{font-family:var(--mono);font-size:10px;letter-spacing:.16em;color:var(--text3);margin-bottom:4px}
+#miDiaSecundarios .hp-title span:first-child{display:flex;align-items:center;gap:6px}
+#miDiaSecundarios .hp-row{font-size:12.5px;padding:5px 0}
+#miDiaSecundarios .hp-cifra{font-size:clamp(22px,2vw,28px)}
+#miDiaSecundarios .hp-lec{padding:6px 9px;margin-bottom:5px}
+#miDiaSecundarios .hp-lec-top{margin-bottom:3px}
+#miDiaSecundarios .hp-lec-t{font-size:12px}
+#heroAprenderPanel .hp-sub{padding-top:7px;gap:3px}
+/* Sin la línea de detalle de cada lección: con el paso de la semana y la ficha en curso debajo
+   no cabía, y el detalle está a un toque en su pantalla. */
+#miDiaSecundarios .hp-lec-d{display:none}
+/* Los apartados nuevos al pie de un módulo: filete arriba y etiqueta en mono. */
+.hp-sub{margin-top:auto;padding-top:9px;border-top:1px solid rgba(var(--ov),.09);display:flex;flex-direction:column;gap:4px}
+.hp-sub-lbl{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--text3);display:flex;justify-content:space-between;gap:8px}
+.hp-sub-t{font-size:12.5px;color:var(--text2);line-height:1.45}
+.hp-sub-t b{color:var(--text);font-weight:700}
+.hp-cobro{display:flex;justify-content:space-between;gap:8px;align-items:baseline;padding:4px 0;border-top:1px solid rgba(var(--ov),.06);font-size:12px;color:var(--text2)}
+.hp-cobro:first-of-type{border-top:none}
+.hp-cobro b{color:var(--text);font-weight:600}
+.hp-cobro .m{font-family:var(--mono);font-weight:700;color:var(--text);white-space:nowrap}
+.hp-cobro .m.entra{color:var(--g)}
+.hp-paso{display:grid;grid-template-columns:32px minmax(0,1fr);gap:9px;align-items:center;width:100%;text-align:left;font-family:inherit;cursor:pointer;
+  background:none;border:none;padding:0;color:inherit}
+.hp-paso img{width:32px;height:46px;object-fit:cover;border-radius:3px;box-shadow:0 5px 12px rgba(0,0,0,.25);background:rgba(var(--ov),.08)}
+.hp-paso-t{font-size:12.5px;font-weight:700;color:var(--text);line-height:1.25}
+.hp-paso-d{font-size:11px;color:var(--text3);line-height:1.35;margin-top:2px}
+.hp-paso:hover .hp-paso-t{color:var(--cy)}
+/* Hábitos de hoy */
+.dh-hd{display:flex;align-items:baseline;justify-content:space-between;gap:8px}
+.dh-hd .mono{font-family:var(--mono);font-size:11px;font-weight:700;color:var(--text3)}
+.dh-hd .mono b{color:var(--g)}
+.dh-list{flex:1;min-height:0;display:flex;flex-direction:column}
+.dh-row{display:grid;grid-template-columns:22px minmax(0,1fr) auto;gap:10px;align-items:center;padding:5px 0;border-top:1px solid rgba(var(--ov),.07);
+  background:none;border-left:none;border-right:none;border-bottom:none;width:100%;text-align:left;font-family:inherit;cursor:pointer;color:inherit}
+.dh-row:first-child{border-top:none}
+.dh-c{width:22px;height:22px;border-radius:50%;border:1.5px solid rgba(var(--ov),.22);display:flex;align-items:center;justify-content:center;color:#05050a;font-size:11px;transition:background .15s,border-color .15s}
+.dh-row.ok .dh-c{background:var(--g);border-color:var(--g)}
+.dh-row.no .dh-c{border-color:var(--r)}
+.dh-n{font-size:12.5px;font-weight:600;color:var(--text);line-height:1.2}
+.dh-row.ok .dh-n{color:var(--text3);text-decoration:line-through}
+.dh-a{display:block;font-size:10px;color:var(--text3);font-weight:500;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dh-r{font-family:var(--mono);font-size:10.5px;font-weight:700;color:var(--text3);white-space:nowrap}
+.dh-r.viva{color:var(--o)}
+.dh-vacio{font-size:12px;color:var(--text3);padding:6px 0}
+/* Entrenas */
+.dia-entrena{display:flex;flex-direction:column;gap:6px}
+.dia-entrena b{font-family:var(--font-title);font-size:20px;font-weight:600;color:var(--text);line-height:1.1}
+.dia-entrena span{font-size:11.5px;color:var(--text3)}
+.dia-entrena-tile .week-strip{gap:4px;margin-top:auto}
+.dia-entrena-tile .ws-day{height:52px;padding:3px 5px;border-radius:8px;justify-content:flex-end}
+.dia-entrena-sig{display:flex;flex-direction:column;gap:3px;margin-top:2px}
+.dia-entrena-sig span{font-size:12px;color:var(--text2)}
+.dia-entrena-sig b{font-family:var(--mono);font-size:10.5px;color:var(--text3);margin-right:6px}
+.dia-entrena-tile .ws-dname{font-size:8.5px}
+.dia-entrena-tile .ws-ddate,.dia-entrena-tile .ws-gym-lbl{display:none}
+.dia-entrena-tile .ws-gym-badge{font-size:9px}
+.dia-entrena-tile .ws-day.today{border-color:var(--g);box-shadow:0 0 0 1px var(--g)}
+/* Tu dinero lleva dentro el botón de invertir, compacto. */
+.dia-dinero>#heroDineroPanel{display:flex;flex-direction:column;flex:1;min-height:0;overflow-y:auto;scrollbar-width:thin}
+.dia-dinero{overflow:hidden!important}
+.dia-dinero .inv-btn{flex:none;margin-top:8px;border-radius:12px;padding:9px 12px;box-shadow:none;backdrop-filter:none;
+  background:rgba(var(--o-rgb),.07);border-color:rgba(var(--o-rgb),.28);border-left-width:1px}
+.dia-dinero .inv-btn:hover{transform:none;box-shadow:none;background:rgba(var(--o-rgb),.12)}
+/* Una sola línea: etiqueta y respuesta ("Qué invertir hoy · Primero tu fondo →"); el detalle con
+   las cifras vive en el panel que abre. Así el panel de arriba conserva sus filas. */
+.dia-dinero .inv-btn{flex-direction:row;align-items:center;gap:8px}
+.dia-dinero .inv-btn-lbl,.dia-dinero .inv-btn-sub{display:none}
+.dia-dinero .inv-btn-paso{font-size:12.5px;margin-top:0;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dia-dinero .inv-btn-paso::before{content:'📈 Invertir hoy · ';font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text3)}
+.dia-dinero .inv-btn-paso::after{content:' →';color:var(--o)}
+@media(max-height:940px){
+  .dia-ahora{max-height:30vh}
+  .dia-ahora .blq-txt{font-size:clamp(20px,2vw,26px)}
+  .dia-reloj{font-size:28px}
+  .ag-row{padding:5px 8px}
+}
+@media(max-width:1280px){
+  .dia-b{grid-template-columns:360px minmax(0,1fr)}
+  .dia-mods,#miDiaSecundarios{grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:repeat(3,minmax(0,1fr))}
+}
+/* Teléfono y tablet en vertical: la agenda arriba (a su altura), y todo a una columna. */
+@media(max-width:900px){
+  .dia-b{grid-template-columns:1fr;min-height:0}
+  .dia-agenda{overflow:visible}
+  .dia-agenda-l{overflow:visible;flex:none;max-height:none}
+  .dia-der{min-height:0}
+  .dia-ahora{max-height:none;overflow:visible}
+  .dia-topbar{grid-template-columns:1fr}
+  .dia-sem{display:none}
+  .dia-mods,#miDiaSecundarios{grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:none}
+  #miDiaSecundarios>.tile{overflow:visible}
+  .dh-list{flex:none}
+}
+@media(max-width:600px){.dia-mods,#miDiaSecundarios{grid-template-columns:1fr}}
 
 /* ─── CALENDARIO DEL AÑO — rediseño "de presión" (2026-08-26) ─────────────────
    Pedido de Adán: "dame un diseño que me aporte mucho más a la fecha de mis metas y
@@ -3335,93 +3503,74 @@ button.ct-cat:hover{background:rgba(var(--ov),.07)}
        de tiempo completa. Ver sección "Unificación Mi Día + Hero" en el .md para el detalle de qué
        se compactó y por qué. -->
   <section class="slide theme-dia" data-i="0">
+    <!-- Diseño "agenda vertical" (2026-09-13, la dirección B de diseno-midia/, elegida por Adán:
+         "me gusta la opción B, hazla"). Antes eran siete bloques apilados —Adán: "siento que está
+         muy amontonado y no me está aportando mucho y hay cosas atrasadas"—. Ahora: a la
+         izquierda el día entero de arriba abajo como un calendario, con la hora al margen y el
+         bloque actual marcado; a la derecha la frase, el AHORA en grande y seis módulos iguales
+         (hábitos de hoy, entrenas, aprendes, dinero, fase, importante este mes).
+         Los ids se conservan: los pintan las mismas funciones de siempre. La cinta del día
+         (riel + fichas) salió de la pantalla: la agenda hace su trabajo de arriba abajo. -->
     <div class="slide-inner">
-      <!-- 2026-08-12 — antes esto eran 2 filas (eyebrow+reloj arriba, frase abajo). Adán pidió
-           juntarlas: "el reloj y lo del dia, lo puedes poner a la par de la frase del dia, esto
-           para ahorrar espacio". Ahora es 1 sola fila: etiqueta a la izquierda, frase al centro
-           (se estira), reloj+fecha a la derecha — se ahorra una fila completa de alto. -->
-      <div class="dia-topbar reveal d1">
-        <div class="eyebrow" style="margin-bottom:0"><span class="dot"></span> Mi Día · JARVIS</div>
-        <div class="hero-frase" id="heroFrase"></div>
-        <div class="dia-reloj" onclick="abrirCalendario()" title="Ver el calendario del año y qué toca cada mes" role="button" tabindex="0">
-          <span id="diaClock">00:00</span>
-          <span id="diaFecha">—</span>
-        </div>
-      </div>
+      <div class="dia-b">
 
-      <!-- Orden de estos dos bloques (2026-08-23, segunda iteración): la tira de 7 días va ARRIBA
-           de la cinta, no debajo — "quiero que los dias de la semana esten abajo de la frase y del
-           reloj, y arriba de la barra de la rutina". Tiene sentido de lectura: primero eliges el
-           día, luego ves el día que elegiste. Al mover el bloque también bajó de alto (ver
-           .ws-day en el CSS): pasó de foto + encabezado apilados a foto de fondo con el texto
-           encima, que a 66px se lee mejor. -->
-      <div class="week-strip reveal d2" id="heroWeekStrip" style="margin-bottom:10px"></div>
-
-      <!-- Cinta del día (2026-08-23) — sustituye a la lista con scroll de toda la rutina:
-           "arriba quiero que pongas esta barra que me propusiste y quitando toda la lista del
-           scroll donde muestras toda mi rutina... al tocar cada seccion me des mas detalles".
-           Cada tramo es un bloque real de RUTINA_TASKS, con ancho proporcional a su duración. -->
-      <div id="diaTimelineTitle" style="display:none;align-items:center;gap:8px;margin-bottom:5px;font-size:11.5px;font-weight:700;color:var(--text2)"></div>
-      <div class="cinta-wrap reveal d2" id="cintaDia"></div>
-
-      <!-- 2026-08-18 — "Ahora mismo" dejó de ir solo a todo el ancho: ahora comparte fila con el
-           acceso directo al panel de inversión (ver .dia-ahora-row en el CSS para el porqué del
-           reparto de columnas). El margin-bottom se mudó del tile a la fila, y la clase .reveal
-           también: si se quedaba en el tile, el botón entraba sin la animación de los demás. -->
-      <div class="dia-ahora-row reveal d3">
-      <!-- 2026-08-23 — un solo panel. Antes había dos bloques casi iguales: este ("Ahora mismo")
-           y el detalle del tramo tocado en la cinta, abajo. Ahora este es el único: por defecto
-           muestra la actividad de la hora actual, y al tocar un tramo de la cinta muestra ese.
-           Lo pinta pintarBloqueDetalle(). -->
-      <div class="tile tile-glow now-hero" id="diaAhoraTile" style="padding:12px 18px;max-height:44vh;overflow-y:auto"></div>
-        <!-- Se pinta en pintarInvertirBtn() con el paso que toca hoy, no con texto fijo: el botón
-             adelanta la respuesta ("primero tu fondo" / "abona a tu deuda" / "hoy sí inviertes")
-             sin obligar a abrir el panel para saberla. -->
-        <button class="inv-btn" id="diaInvertirBtn" onclick="abrirGBM()"
-                title="Qué invertir hoy — precios en vivo y tus saldos reales de Finanzas"></button>
-      </div>
-
-      <!-- 2026-08-23 — esta fila pasó de 3 tarjetas a 4, y cambió qué muestra. Fuera el panel de
-           gym: la rutina del día ya salía TRES veces en esta misma pantalla (la tira de 7 días,
-           la ficha de las 18:15 en la cinta, y esta tarjeta) — "para no repetir lo del gym,
-           muestrame mas cosas". Fuera también el recetario, que era un catálogo de 28 recetas
-           para hojear, no algo que necesites ver al abrir el día. Ambos paneles siguen vivos en
-           sus propias apps (ejercicio.html y comida.html) y sus funciones de render siguen aquí
-           con su guarda `if(!el)return`, por si algún día vuelven a esta pantalla.
-           En su lugar entran tres datos que hoy te obligan a cambiar de slide para consultarlos:
-           tu dinero, en qué punto va la fase del Plan Maestro, y qué toca aprender hoy. -->
-      <!-- Sin `flex:1` ni `max-height` fijos: con 4 tarjetas cuyo contenido mide entre 117 y 213px,
-           forzar 430px dejaba 217px de vacío dentro de cada una — media tarjeta hueca. Ahora la
-           fila mide lo que mide su contenido y `align-items:stretch` las iguala entre sí. -->
-      <div class="grid g4 reveal d4" style="margin-bottom:8px;align-items:stretch" id="miDiaSecundarios">
-        <div class="tile" id="heroDineroPanel"></div>
-        <div class="tile" id="heroFasePanel"></div>
-        <div class="tile" id="heroAprenderPanel"></div>
-        <div class="tile">
-          <!-- El botón "+" va en el encabezado, no en la fila de pestañas: ahí abajo compite con
-               las 4 pestañas y las 2 flechas de navegación, y en esta columna angosta empujaba
-               todo a una segunda línea. -->
-          <div style="display:flex;align-items:center;gap:8px">
-            <div class="lbl" style="margin:0">🗓️ Importante este mes</div>
-            <span id="mesAddBtn" style="margin-left:auto"></span>
+        <!-- LA AGENDA DEL DÍA -->
+        <div class="tile dia-agenda reveal d1">
+          <div class="dia-agenda-hd">
+            <div class="dia-quien" onclick="abrirCalendario()" title="Ver el calendario del año y qué toca cada mes" role="button" tabindex="0">
+              <div class="eyebrow" style="margin-bottom:0"><span class="dot"></span> Mi Día · <span id="diaFecha">—</span></div>
+              <span class="dia-reloj" id="diaClock">00:00</span>
+            </div>
+            <span class="dia-agenda-res" id="diaAgendaRes"></span>
           </div>
-          <!-- nowrap + scroll horizontal en vez de flex-wrap: medido con Playwright, este tile
-               baja a ~227px de ancho en iPad y ahí las 3 pestañas más las flechas se partían en
-               2 líneas, estirando las tarjetas vecinas. Con scroll la fila mide siempre lo mismo
-               sin importar el ancho, y las flechas ‹ › siguen siendo la forma principal de moverse. -->
-          <div id="mesTabs" class="mes-tabs-row" style="display:flex;gap:4px;flex-wrap:nowrap;align-items:center;margin-top:5px;overflow-x:auto"></div>
-          <!-- max-height + scroll propio: esta tarjeta vive en un grid con align-items:stretch, así
-               que si la lista crece sin tope estira también al panel de Gym y al de Nutrición. -->
-          <div style="margin-top:5px;display:flex;flex-direction:column;max-height:240px;overflow-y:auto" id="mesEventos">—</div>
+          <div id="diaTimelineTitle" style="display:none;align-items:center;gap:8px;font-size:11.5px;font-weight:700;color:var(--text2)"></div>
+          <div class="dia-agenda-l" id="diaAgenda"></div>
+          <div class="dia-agenda-pie">
+            <button class="hf-btn primario" onclick="quickMarkDone()">✓ Marcar el bloque actual</button>
+            <a class="hf-btn" href="../Coach/Coach.html#rutina">Coach →</a>
+          </div>
         </div>
-      </div>
 
-      <!-- Sin clase "reveal": este elemento pasa de display:none a visible dinámicamente (ver
-           verDiaSemana()), y las animaciones .reveal se reinician cada vez que un elemento vuelve
-           de display:none — se quedaba invisible (opacity:0) un momento tras cada clic. -->
-
-      <div class="reveal d6" style="margin-top:8px">
-        <a href="../Coach/Coach.html#rutina" style="color:var(--cy);font-size:12px;font-weight:600;text-decoration:none">Ver/editar rutina completa en Coach →</a>
+        <!-- LO DEMÁS -->
+        <div class="dia-der">
+          <div class="dia-topbar reveal d1">
+            <div class="hero-frase" id="heroFrase"></div>
+            <span class="dia-sem" id="diaSemana"></span>
+          </div>
+          <!-- pintarBloqueDetalle() escribe aquí el bloque de la hora actual, o el que toques en
+               la agenda. -->
+          <div class="tile now-hero dia-ahora reveal d2" id="diaAhoraTile"></div>
+          <div class="grid dia-mods reveal d3" id="miDiaSecundarios">
+            <div class="tile" id="diaHabitos"></div>
+            <div class="tile dia-entrena-tile">
+              <div class="hp-title"><span>🏋️ Entrenas</span><a href="../CuidadoPersonal/ejercicio.html" class="hp-link">Ejercicio →</a></div>
+              <div class="dia-entrena" id="diaEntrenaTxt"></div>
+              <!-- La tira de 7 días sigue siendo #heroWeekStrip: renderHero() la pinta y
+                   verDiaSemana() la usa para ver la rutina de otro día en la agenda. -->
+              <div class="week-strip" id="heroWeekStrip"></div>
+            </div>
+            <div class="tile" id="heroAprenderPanel"></div>
+            <div class="tile dia-dinero">
+              <div id="heroDineroPanel"></div>
+              <!-- Se pinta en pintarInvertirBtn() con el paso que toca hoy, no con texto fijo: el
+                   botón adelanta la respuesta ("primero tu fondo" / "abona a tu deuda" / "hoy sí
+                   inviertes") sin obligar a abrir el panel para saberla. -->
+              <button class="inv-btn" id="diaInvertirBtn" onclick="abrirGBM()"
+                      title="Qué invertir hoy — precios en vivo y tus saldos reales de Finanzas"></button>
+            </div>
+            <div class="tile" id="heroFasePanel"></div>
+            <div class="tile dia-mes">
+              <div class="hp-title">
+                <span>🗓️ Importante este mes</span>
+                <span id="mesAddBtn"></span>
+              </div>
+              <!-- nowrap + scroll horizontal en vez de flex-wrap: en columnas angostas las 3
+                   pestañas más las flechas se partían en 2 líneas. -->
+              <div id="mesTabs" class="mes-tabs-row" style="display:flex;gap:4px;flex-wrap:nowrap;align-items:center;margin-top:5px;overflow-x:auto"></div>
+              <div style="margin-top:5px;display:flex;flex-direction:column;flex:1;min-height:0;overflow-y:auto" id="mesEventos">—</div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -6223,6 +6372,7 @@ function renderDia(){
   const doneHoy=(D.rut.completado||{})[today()]||[];
 
   document.getElementById('diaFecha').textContent=new Date().toLocaleDateString('es-MX',{weekday:'long',day:'numeric',month:'long'});
+  const semEl=document.getElementById('diaSemana'); if(semEl) semEl.textContent=`Semana ${semanaISO(new Date())} · día ${diaDelAnio()}`;
   // El bloque "Ahora mismo" ya no repite las subtareas aquí (2026-08-08, unificación con Hero):
   // con las 2 pantallas fusionadas, la línea de tiempo de abajo queda a la vista en el mismo
   // slide, con la tarjeta "ahora" ya resaltada (.rt2-now) y sus subtareas completas — mostrarlas
@@ -6262,7 +6412,9 @@ function renderDia(){
   // donde muestras toda mi rutina... esa barra que me propusiste quiero que al tocar cada seccion
   // me des mas detalles acerca de esa seccion"). Cada bloque es un tramo con ancho proporcional a
   // su duración; se toca uno y su detalle se pinta debajo, en #diaBloque.
-  pintarCintaDia(tareasDia, anchorTask, doneTimeline, esHoyMostrado);
+  // La cinta (pintarCintaDia) salió de la pantalla el 2026-09-13 con la agenda vertical; la
+  // función sigue en el archivo con su guarda `if(!wrap) return`, por si vuelve.
+  pintarAgendaDia(tareasDia, anchorTask, doneTimeline, esHoyMostrado);
   pintarBloqueDetalle(tareasDia, anchorTask, doneTimeline, esHoyMostrado);
 }
 
@@ -6479,6 +6631,7 @@ function pintarBloqueDetalle(tareas, anchor, done, esHoy){
   if(i<0) i=anchor?tareas.findIndex(t=>t.id===anchor.id):0;
   if(i<0) i=0;
   const t=tareas[i], sig=tareas[i+1];
+  const dowB=diaSemanaSel!==null?diaSemanaSel:new Date().getDay();
   const meta=CAT_META[t.cat]||{ico:'•',label:t.cat,c:'#565a72'};
   const leaves=leafItems(t);
   const hecho=!t.fijo&&leaves.every(it=>done.includes(it.id));
@@ -6513,10 +6666,11 @@ function pintarBloqueDetalle(tareas, anchor, done, esHoy){
     ${t.gym?gymBloqueHtml(diaSemanaSel!==null?diaSemanaSel:new Date().getDay())
            :((!t.fijo&&t.subtareas)?subtareasHtml(leaves,done,t.producto):'')}
     ${t.fijo?'<div class="blq-nota">Este bloque no se marca: es horario fijo.</div>':''}
+    ${escucharHtml(t)}
     <div class="blq-acciones">
       ${t.fijo?'':`<button class="blq-btn${hecho?' off':''}" onclick="marcarBloque('${t.id}')">${hecho?'↩️ Desmarcar':'✅ Marcar hecho'}</button>`}
       ${(!esAhora&&esHoy&&anchor)?'<button class="blq-btn off" onclick="volverABloqueAhora()">● Volver a ahora</button>':''}
-      <div style="flex:1"></div>
+      <span class="blq-sig" style="flex:1">${sig?`Después, <b>${sig.hora} · ${esc(rtSoloTitulo(tituloBloque(sig,dowB)))}</b>`:'Es el último bloque del día'}</span>
       <span class="blq-dur">${i+1} de ${tareas.length}</span>
       <button class="blq-nav" onclick="tocarBloque('${tareas[Math.max(0,i-1)].id}')" ${i===0?'disabled':''} aria-label="Bloque anterior">‹</button>
       <button class="blq-nav" onclick="tocarBloque('${tareas[Math.min(tareas.length-1,i+1)].id}')" ${i===tareas.length-1?'disabled':''} aria-label="Bloque siguiente">›</button>
@@ -6593,6 +6747,149 @@ function quickMarkDone(){
   renderDia();
   toast(allDone?'↩️ Desmarcado':'✅ Marcado como hecho');
 }
+// ══════════════════════════════════════════════════════════════════════════
+// MI DÍA — las piezas del diseño "agenda vertical" (2026-09-13, dirección B de diseno-midia/)
+// ══════════════════════════════════════════════════════════════════════════
+// La agenda: una fila por bloque, de arriba abajo. Mismos datos que la cinta (que se sigue
+// pintando, oculta): tocar una fila abre ese bloque en el AHORA, igual que tocar una ficha.
+function pintarAgendaDia(tareas, anchor, done, esHoy){
+  const el=document.getElementById('diaAgenda'), res=document.getElementById('diaAgendaRes');
+  if(!el) return;
+  const dow=diaSemanaSel!==null?diaSemanaSel:new Date().getDay();
+  if(!tareas.length){ el.innerHTML='<div class="dh-vacio">Sin bloques de rutina para este día.</div>'; if(res) res.textContent=''; return; }
+  const fin=minutosDe(tareas[tareas.length-1].hora)+30;
+  const ahoraMin=minutosDe(horaAhora());
+  let hechos=0;
+  el.innerHTML=tareas.map((t,i)=>{
+    const sig=tareas[i+1];
+    const meta=CAT_META[t.cat]||{ico:'•',label:t.cat,c:'#565a72'};
+    const leaves=leafItems(t);
+    const hecho=!t.fijo&&leaves.every(it=>done.includes(it.id));
+    if(hecho) hechos++;
+    const esAncla=anchor&&t.id===anchor.id;
+    const sel=cintaSel?t.id===cintaSel:esAncla;
+    const esAhora=esHoy&&esAncla;
+    const f=finDeBloque(t,sig);
+    const titulo=rtSoloTitulo(tituloBloque(t,dow));
+    return `<button class="ag-row${esAhora?' ahora':(sel?' sel':'')}${hecho?' hecho':''}" onclick="tocarBloque('${t.id}')"
+      title="${esc(t.hora+' · '+meta.label+' · '+titulo)}">
+      <span class="ag-h">${t.hora}</span>
+      <span class="ag-p" style="${esAhora?'':`background:${meta.c}`}"></span>
+      <span class="ag-t">${esc(titulo)}</span>
+      <span class="ag-d">${f?rtDur(t.hora,f):'—'}</span>
+    </button>`;
+  }).join('');
+  const marcables=tareas.filter(t=>!t.fijo).length;
+  const faltaMin=esHoy?Math.max(0,fin-ahoraMin):0;
+  if(res) res.innerHTML=`<b>${hechos}</b> de ${marcables} bloques hechos${esHoy?' · '+(faltaMin>0?'quedan '+Math.floor(faltaMin/60)+'h '+(faltaMin%60)+'m':'día cerrado'):' · '+DIAS_LARGO[dow]}`;
+  // La fila activa a la vista: con 14-26 bloques la de la tarde queda fuera del alto de la agenda.
+  const act=el.querySelector('.ag-row.ahora, .ag-row.sel');
+  if(act&&act.scrollIntoView) act.scrollIntoView({block:'nearest'});
+}
+// Mientras manejas: el primer audiolibro del grupo de la habilidad que más rinde (DIDI_AUDIO ya
+// va en ese orden), solo cuando el bloque abierto es de Didi. El catálogo entero está en el
+// overlay de "Qué escuchar".
+function escucharHtml(t){
+  if(!/didi/i.test(rtSoloTitulo(t.txt||''))||typeof DIDI_AUDIO==='undefined'||!DIDI_AUDIO.length) return '';
+  const rec=(typeof habRecomendada==='function')?habRecomendada():null;
+  const grupo=(rec&&DIDI_AUDIO.find(g=>g.sk===rec.id))||DIDI_AUDIO[0];
+  const it=(grupo.items||[])[0]; if(!it) return '';
+  return `<div class="blq-escuchar">🎧<span>Mientras manejas: <b>${esc(it.n)}</b> · ${esc(it.d)}</span><a href="javascript:void(0)" class="hp-link" onclick="abrirDidi()">Qué escuchar →</a></div>`;
+}
+// Entrenas: el día de hoy en grande y el de mañana en chico; la tira de 7 días va debajo.
+function renderDiaEntrena(gymRutina, dowHoy){
+  const el=document.getElementById('diaEntrenaTxt'); if(!el) return;
+  const hoy=gymRutina[dowHoy], man=gymRutina[(dowHoy+1)%7];
+  const nom=r=>!r?'':(r.tipo==='descanso'?'Descanso':(r.nombre||''));
+  const sesion=(D.gym.sesiones||[]).find(s=>s.fecha===today());
+  const DOWL=['dom','lun','mar','mié','jue','vie','sáb'];
+  const sig=[1,2,3].map(k=>({d:(dowHoy+k)%7,r:gymRutina[(dowHoy+k)%7]})).filter(x=>x.r);
+  el.innerHTML=`<b>${sesion?'✅ '+esc(sesion.nombre||'Entrenado'):(hoy&&hoy.tipo==='descanso'?'Hoy descansas':esc(nom(hoy)||'Sin rutina hoy'))}</b>
+    <div class="dia-entrena-sig">${sig.map((x,k)=>`<span><b>${k===0?'mañana':DOWL[x.d]}</b>${esc(nom(x.r))}</span>`).join('')}</div>`;
+}
+// Hábitos de hoy: los que tocan hoy según habitos.js (HB.hoy), con su racha, y se marcan aquí
+// mismo — es el mismo toggle que la cuadrícula del slide de Hábitos.
+function renderDiaHabitos(){
+  const el=document.getElementById('diaHabitos'); if(!el) return;
+  if(!window.HB||typeof HB.hoy!=='function'){ el.innerHTML='<div class="hp-title"><span>🔗 Hábitos de hoy</span></div><div class="dh-vacio">habitos.js no cargó.</div>'; return; }
+  const lista=HB.hoy();
+  const hechos=lista.filter(h=>h.estado==='hoyok'||h.estado==='ok').length;
+  const viva=lista.some(h=>h.racha>=3);
+  el.innerHTML=`
+    <div class="hp-title"><span>🔗 Hábitos de hoy</span><a href="javascript:void(0)" class="hp-link" onclick="irASlide('theme-habitos')">Hábitos →</a></div>
+    <div class="dh-hd"><span class="mono"><b>${hechos}</b> de ${lista.length}${viva?' · racha viva':''}</span></div>
+    <div class="dh-list">${lista.length?lista.map(h=>{
+      const ok=h.estado==='hoyok'||h.estado==='ok';
+      return `<button class="dh-row${ok?' ok':''}" onclick="HB.toggleHoy('${h.id}');renderDiaHabitos()" title="${esc(h.nombre)} — ${esc(h.ancla||'')}">
+        <span class="dh-c">${ok?'✓':HB.ico(h.ico,h.color,13)}</span>
+        <span><span class="dh-n">${esc(h.nombre)}</span>${h.ancla?`<span class="dh-a">${esc(h.ancla)}</span>`:''}</span>
+        <span class="dh-r${h.racha>=3?' viva':''}">${h.racha>=3?'🔥 ':''}${h.racha}</span>
+      </button>`;
+    }).join(''):'<div class="dh-vacio">Hoy no toca ningún hábito.</div>'}</div>`;
+}
+// Los cobros y abonos de los próximos 7 días, de CIFRAS.agendaDia — la misma fuente que el
+// calendario del Plan Maestro, para que las dos pantallas no puedan discrepar.
+function cobrosHtml(mon){
+  if(typeof ctAgenda!=='function') return '';
+  const hoy=new Date(); const out=[];
+  const DOW=['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+  for(let k=1;k<=7&&out.length<3;k++){
+    const d=new Date(hoy.getFullYear(),hoy.getMonth(),hoy.getDate()+k);
+    const ym=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+    (ctAgenda(d.getDate(),ym)||[]).forEach(a=>{ if(out.length<3) out.push({d,a}); });
+  }
+  if(!out.length) return '<div class="hp-sub"><div class="hp-sub-lbl">Próximos 7 días</div><div class="hp-sub-t">Nada programado.</div></div>';
+  return `<div class="hp-sub"><div class="hp-sub-lbl">Próximos 7 días</div>${out.map(({d,a})=>
+    `<div class="hp-cobro"><span><b>${DOW[d.getDay()]} ${d.getDate()}</b> · ${esc(a.t)}</span><span class="m${a.entra?' entra':''}">${a.entra?'+':'−'}${mon(a.monto)}</span></div>`).join('')}</div>`;
+}
+// Qué viene después de la fase activa: la siguiente de PHASES, con su arranque.
+function faseDespuesHtml(f){
+  if(typeof PHASES==='undefined') return '';
+  const i=PHASES.indexOf(f), nx=PHASES[i+1]; if(!nx) return '';
+  const dm={day:'numeric',month:'long'};
+  return `<div class="hp-sub"><div class="hp-sub-lbl"><span>Después · ${esc(nx.tag)}</span><span>desde el ${nx.start.toLocaleDateString('es-MX',dm)}</span></div><div class="hp-sub-t">${esc(nx.title)}</div></div>`;
+}
+// El paso de la semana (la habilidad del foco de "En qué invertir tu tiempo") con la portada
+// de su libro; tocarlo lleva a esa pantalla.
+function pasoSemanaHtml(){
+  if(typeof habFocoActual!=='function') return '';
+  const foco=habFocoActual(); if(!foco) return '';
+  const pasos=habPasos(foco.id); if(!pasos.length) return '';
+  const st=habFocoLoad(); let i=st.paso[foco.id]||0; if(i<0||i>=pasos.length) i=0;
+  const p=pasos[i];
+  const r=(Array.isArray(p.r)?p.r:[]).find(x=>x&&x.t==='libro');
+  const lib=r?habLibro(r.id):null;
+  return `<div class="hp-sub"><div class="hp-sub-lbl">El paso de la semana · ${esc(foco.name)}</div>
+    <button class="hp-paso" onclick="irASlide('theme-skills')" title="Abrir En qué invertir tu tiempo">
+      ${lib?`<img src="${lib.portada||''}" alt="" loading="lazy">`:`<span style="width:36px;height:52px;border-radius:3px;background:rgba(var(--ov),.06);display:flex;align-items:center;justify-content:center;font-size:18px">${foco.icon}</span>`}
+      <span><span class="hp-paso-t">${String(i+1).padStart(2,'0')} · ${esc(p.n)}</span>
+      <span class="hp-paso-d">${lib?`con <i>${esc(lib.t)}</i>`:`paso ${i+1} de ${pasos.length}`}</span></span>
+    </button></div>`;
+}
+// La ficha de Habilidades Base en curso: la empezada que está más cerca de terminar (mismo
+// criterio que "SIGUIENTE" en esa pantalla), con el paso al que se retoma.
+function fichaEnCursoHtml(){
+  if(typeof HABILIDADES_BASE==='undefined'||typeof hbAvance!=='function') return '';
+  const av=HABILIDADES_BASE.map(h=>Object.assign({h},hbAvance(h.id)));
+  let sig=null,mejor=-1;
+  av.forEach(x=>{ if(x.hechos>0&&x.hechos<x.total&&x.pct>mejor){mejor=x.pct;sig=x;} });
+  if(!sig) sig=av[0]; if(!sig) return '';
+  const info=HABILIDAD_DETALLE[sig.h.id]; const store=(rawGet('habilidades_checklist_v1',{})[sig.h.id])||{};
+  const k=info?info.pasos.findIndex((_,j)=>!store[j]):-1;
+  const paso=k>=0?info.pasos[k]:null;
+  return `<div class="hp-sub"><div class="hp-sub-lbl"><span>Ficha en curso · Habilidades base</span><span style="color:var(--g)">${sig.hechos} / ${sig.total}</span></div>
+    <button class="hp-paso" style="grid-template-columns:minmax(0,1fr)" onclick="abrirHabilidadDetalle('${sig.h.id}','${sig.h.img}')" title="Abrir la ficha">
+      <span><span class="hp-paso-t">${sig.h.ico} ${esc(sig.h.t)}</span>
+      <span class="hp-paso-d">${paso?`sigue el paso ${k+1} · ${esc(mdLimpiaTitulo(paso.t))}`:'ficha completa'}</span></span>
+    </button></div>`;
+}
+// Semana ISO del año, para la esquina de la frase.
+function semanaISO(d){
+  const x=new Date(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate()));
+  const dow=x.getUTCDay()||7; x.setUTCDate(x.getUTCDate()+4-dow);
+  const y0=new Date(Date.UTC(x.getUTCFullYear(),0,1));
+  return Math.ceil(((x-y0)/86400000+1)/7);
+}
 function renderHero(){
   const semana=semanaActual();
   const hoyStr=today();
@@ -6646,6 +6943,8 @@ function renderHero(){
   renderHeroDinero();
   renderHeroFase();
   renderHeroAprender();
+  renderDiaEntrena(gymRutina, dowHoy);
+  renderDiaHabitos();
 }
 
 // ── Tira semanal del Hero — un solo estado de "día elegido" que ahora maneja TODO lo que
@@ -6690,7 +6989,7 @@ function renderHeroDinero(){
                  `<span style="font-family:var(--mono);font-weight:700;color:${b>0?'var(--r)':'var(--g)'}">`+
                  `${b>0?mon(b):'liquidada ✓'}</span></div>`;
         }).join('')
-      : '<div class="hp-empty">Registra tus deudas en Finanzas para verlas aquí.</div>'}`;
+      : '<div class="hp-empty">Registra tus deudas en Finanzas para verlas aquí.</div>'}${cobrosHtml(mon)}`;
 }
 
 // ── 🎯 La fase del Plan Maestro — la misma activePhase() que usa el slide de Coach. Lo que aporta
@@ -6736,7 +7035,7 @@ function renderHeroFase(){
     ${items.map((s,i)=>`<div class="hp-mini">
       <span class="hp-mini-n" style="color:${i===0?'var(--o)':'var(--text3)'}">0${i+1}</span>
       <span>${corto(s.txt)}</span>
-    </div>`).join('')}`;
+    </div>`).join('')}${faseDespuesHtml(f)}`;
 }
 
 // ── 🎓 Hoy aprendes — la lección de alemán y el tema de Python del día. Llama a las MISMAS
@@ -6769,7 +7068,7 @@ function renderHeroAprender(){
     <div class="hp-title"><span>🎓 Hoy aprendes</span></div>
     ${a?bloque({c:'#00e87a',ico:'🇩🇪',slide:'theme-aleman',tag:'Alemán · '+((ALEMAN_VOCAB.cats[a.cat]||{}).label||''),n:'palabra del día',t:(a.art&&a.art!=='-'?a.art+' ':'')+a.de,d:a.es+' — '+a.ex}):''}
     ${p?bloque({c:'#00e0c0',ico:p.icon||'🐍',slide:'theme-entrevista',tag:'Python · '+pyModLabel(p.mod),n:(entrevistaIdx+1)+' / '+nPy,t:p.title,d:p.hint||''})
-       :'<div class="hp-empty">El catálogo de Python no cargó — revisa entrevistas-data.js.</div>'}`;
+       :'<div class="hp-empty">El catálogo de Python no cargó — revisa entrevistas-data.js.</div>'}${pasoSemanaHtml()}${fichaEnCursoHtml()}`;
 }
 
 function renderHeroGymPanel(){

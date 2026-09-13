@@ -64,7 +64,7 @@ flechas, los puntos del HUD lateral, o deslizando en táctil.
 
 | Tema | Pantalla | Qué muestra |
 |---|---|---|
-| `theme-dia` | **Mi Día** | La principal. Tira de 7 días, cinta del día completo, bloque actual, KPIs |
+| `theme-dia` | **Mi Día** | La principal. La agenda del día a la izquierda, el AHORA y seis módulos (hábitos, entreno, aprendes, dinero, fase, pendientes) — ver abajo |
 | `theme-coach` | **Plan Maestro** | Fase activa, ruta de deuda cara y el tablero calendario / día / semana — ver abajo |
 | `theme-metas` | **Mis Metas** | 8 KPIs financieros, franja de instrumentos y las 14 metas con estado — ver abajo |
 | `theme-basicas` | **Habilidades Base** | 27 guías de vida práctica, todas menos Citas con **su video verificado**. **Única fuente** desde el 30-ago-2026: la sección equivalente de Coach se eliminó — ver abajo |
@@ -787,82 +787,60 @@ sobrevive a recargar y a 1600px no hay un solo desborde. Sin errores de consola.
 
 ## Mi Día, en detalle
 
-La pantalla que más se usa, y la que más piezas tiene.
+La pantalla que más se usa. Diseño **"agenda vertical"** (la dirección B de `diseno-midia/`,
+elegida por Adán el 2026-09-13: *"me gusta la opción B, hazla"*), tras *"siento que está muy
+amontonado y no me está aportando mucho y hay cosas atrasadas, mejora el diseño y ve qué más le
+puedes meter"*. Lo que había, medido a 1600×1000: siete bloques apilados —frase, tira de 7 días,
+cinta, «Ahora mismo», botón de invertir, cuatro tarjetas y un enlace— que aun así dejaban 200 px
+vacíos abajo, y tarjetas a 10.5–12 px con la mitad hueca.
 
-### La cinta del día
+### La agenda del día
 
-El día entero en una barra horizontal, en vez de una lista de 26 tarjetas con scroll. Son **dos
-piezas con trabajos distintos**, porque una sola no podía con ambos:
+La columna izquierda (420 px, toda la altura) es el día de arriba abajo, como un calendario: una
+fila por bloque de `RUTINA_TASKS` con la hora al margen, el color de su categoría en el punto, la
+duración a la derecha, **el bloque en curso en verde** y los hechos apagados y tachados. Arriba,
+la fecha, el reloj en grande (abre el calendario del año, como antes) y el resumen `0 de 14
+bloques hechos · quedan 8h 15m`; abajo, **Marcar el bloque actual** (`quickMarkDone()`) y
+*Coach →*. La pinta `pintarAgendaDia()` desde `renderDia()`, con los mismos cálculos que tenía la
+cinta (`finDeBloque`, `rtDur`, `leafItems`, `tituloBloque`).
 
-- **El riel** (`.cinta`, 11px de alto) es el **mapa**: proporción real del día y la línea verde de
-  "ahora". Sin texto — a 45 minutos un tramo mide 40px y nunca cupo un nombre.
-- **Las fichas** (`.cinta-fic`) son **lo que se toca**: hora, nombre y duración, **78px de alto**
-  (muy por encima del mínimo de 44px para el pulgar). Se deslizan con las flechas ‹ › y la del
-  bloque en curso se centra sola — ver abajo.
+**Tocar una fila abre ese bloque en el AHORA** (`tocarBloque(id)` → `cintaSel`), igual que antes
+tocar una ficha; **tocar un día de la tira de 7** (`verDiaSemana`) cambia la agenda a ese día y
+el resumen dice cuál es. La fila activa se trae a la vista sola (`scrollIntoView`), porque con
+21-26 bloques entre semana la de la tarde queda fuera del alto.
 
-  Los 78px salen de querer **tres líneas de título**. Con los 60px que tenía — 16 de padding + 13
-  de la fila de hora + 3 de margen + 2×13.75 de texto = 59.5 — solo cabían dos, y se truncaban
-  **8 de los 13 bloques del día**: "Despertar (sin alarma agresiva)" se leía *"Despertar (sin
-  alarma…"*. Con tres bajan a 5, y los que siguen cortados son los de título muy largo, que no
-  cabrían ni con cuatro en una ficha de 104-148px de ancho. La tercera línea pide 73.25px; los
-  78 dejan aire para los emojis, que levantan un pelo la caja de línea. `.cinta-nav` va a la
-  misma altura para que la fila quede a ras.
+La **cinta** (riel proporcional + fichas) salió de la pantalla: la agenda hace su trabajo de
+arriba abajo y sin deslizar. `pintarCintaDia()`, `centrarFichaActiva()` y `cintaScroll()` siguen
+en el archivo con sus guardas `if(!el) return`, por si vuelve.
 
-**El ancho de cada ficha depende de la duración** (`anchoFicha`), con escala de **raíz cuadrada**:
-en el mismo carril conviven bloques de 10 min y de 5 h, y en proporción directa el largo mediría
-30× el corto — se comería la fila y los cortos caerían por debajo del mínimo tocable. Suelo 104px
-(lo que necesita la fila superior para que hora y duración no se pisen), techo 300px.
+### El AHORA
 
-| Duración | 10–30 min | 45 min | 1 h | 2 h | 4 h | 5 h |
-|---|---|---|---|---|---|---|
-| Ancho | 104px | 127px | 147px | 208px | 294px | 300px |
+La tarjeta de la derecha, bajo la frase del día (una línea en cursiva) y `Semana 37 · día 256`.
+La pinta `pintarBloqueDetalle()` como siempre —bloque de la hora actual o el tocado en la agenda,
+con sus subtareas o la rutina de gym—, con dos cosas nuevas: **Después, 21:00 · Cena ligera** (el
+bloque que sigue) y, cuando el bloque es de Didi, **Mientras manejas** con el primer audiolibro
+del grupo de la habilidad que más rinde (`DIDI_AUDIO`) y el enlace al overlay de *Qué escuchar*.
+Tope de 34 vh con desplazamiento interno para los bloques largos.
 
-En móvil (`max-width:700px`) no se fija `width` — eso aplastaría la proporción —, solo sube el
-suelo a `min-width:132px`.
+### Los seis módulos
 
-**El verde significa una sola cosa en toda la pantalla: esto está ocurriendo ahora.** Tres estados
-excluyentes en este orden: `.ahora` (verde) gana sobre `.sel` (color de su categoría, lo que estás
-mirando) gana sobre `.hecho` (apagado). Antes la ficha activa usaba el color de su categoría y al
-tocar otra se perdía de vista cuál estaba pasando.
+Una rejilla 3×2 que toma lo que queda de alto (a 1600×1000, 325×308 px cada uno); cada módulo
+desplaza por dentro si su contenido no cabe. Lo que hay en cada uno y de dónde sale:
 
-Contraste invertido respecto a la versión vieja: **hecho = encendido, pendiente = apagado**.
+| Módulo | Qué muestra | Fuente |
+|---|---|---|
+| **Hábitos de hoy** | Los que tocan hoy con su ancla, su racha (🔥 desde 3) y `2 de 5`; se marcan aquí mismo | `HB.hoy()` / `HB.toggleHoy()`, la API de lectura que `habitos.js` expone para esta pantalla — el mismo `toggle` de la cuadrícula del slide 8 |
+| **Entrenas** | Hoy en grande («Hoy descansas» / la rutina), los tres días que siguen, y la tira de 7 días como chips de foto (`#heroWeekStrip`, 52 px) | `renderDiaEntrena()` sobre `D.gym.rutina` o `GYM_RUTINA_DEFAULT` |
+| **Hoy aprendes** | La palabra de alemán y el tema de entrevista (sin su línea de detalle, que está a un toque en su pantalla), **el paso de la semana** con la portada de su libro (lleva a *En qué invertir tu tiempo*) y **la ficha de Habilidades Base en curso** con el paso al que se retoma (abre la ficha) | `pasoSemanaHtml()` con `habFocoActual()`/`habLibro()`; `fichaEnCursoHtml()` con `hbAvance()`, mismo criterio que «SIGUIENTE» en esa pantalla |
+| **Tu dinero** | El fondo de emergencia, las deudas, **los cobros y abonos de los próximos 7 días** (tres) y el botón *Invertir hoy · Primero tu fondo →* en una línea | `renderHeroDinero()` + `cobrosHtml()` con `ctAgenda()` → `CIFRAS.agendaDia`, la misma fuente que el calendario del Plan Maestro |
+| **Fase** | La fase activa, su barra con la marca de hoy, la prioridad del mes y **Después · Fase 1 desde el 1 de octubre** con su título | `renderHeroFase()` + `faseDespuesHtml()` sobre `PHASES` |
+| **Importante este mes** | Los pendientes del mes, con pestañas, «+ Nuevo», editar y borrar | Igual que antes (`dash-eventos-mes-v1`) |
 
-**La ficha en curso queda centrada, y vuelve al centro cada vez que entras a la pantalla.**
-`centrarFichaActiva()` centra `.sel` si tocaste alguna ficha y `.ahora` —la verde— si no, que es
-el caso normal. Salir de Mi Día limpia `cintaSel` igual que `diaSemanaSel`, así que al volver
-siempre encuentras centrado el bloque de ahora, no el que dejaste tocado.
-
-El centrado corre dos veces: al pintar la cinta y otra vez en el `requestAnimationFrame` de
-`showSlide(0)`. Hace falta el segundo pase porque `RENDERS[i]()` corre con el slide todavía
-inactivo y el carril puede medir 0 de ancho.
-
-**En táctil, la tira se queda su propio gesto.** El swipe de cambio de pantalla vive en `#slides`
-y se dispara con cualquier arrastre horizontal de más de 50px, viniera de donde viniera: al
-deslizar las fichas en un iPad, el gesto burbujeaba y cambiaba de pantalla. Medido en iPad
-(820×1180) el carril enseña **616px de 3,126px de fichas**, así que sin deslizar no hay forma de
-llegar a la mayoría de los bloques del día.
-
-El `touchstart` de `#slides` ahora consulta el DOM en el momento del toque y se retira si el dedo
-empezó dentro de algo con scroll horizontal **real** (`overflow-x` auto/scroll y
-`scrollWidth > clientWidth`). Se resuelve mirando el árbol y no con una lista de clases: hoy hay
-siete tiras así — la cinta, las pestañas de meses y de la lista de compras, el vocabulario de
-alemán, el índice de los `.md`, las tablas y los bloques de código — y la que se añada mañana
-queda cubierta sin tocar nada.
-
-La tira lleva además `overscroll-behavior-x: contain`, que corta el encadenamiento: al llegar al
-final, el gesto no pasa al contenedor de atrás ni dispara el swipe-atrás de Safari. **No** lleva
-`touch-action`, a propósito — fijarlo a `pan-x` impediría bajar la página con el dedo sobre la
-cinta.
-
-Comprobado con gestos táctiles reales (`Input.dispatchTouchEvent`) en iPad y iPhone, contra la
-versión anterior: antes el mismo swipe cambiaba de pantalla, ahora las fichas avanzan 245px y la
-pantalla se queda. Deslizar **fuera** de la tira sigue cambiando de pantalla.
-
-Mueve `scrollLeft` a mano y **no** usa `scrollIntoView()`: esa función arrastraría también el
-scroll del carrusel y saltaría la pantalla entera en cada repintado. La cuenta va con
-`getBoundingClientRect()` y no con `offsetLeft` porque `.cinta-fic-scroll` no está posicionado —
-el `offsetParent` de una ficha acaba siendo el `<section>` del slide, y ese offset traía encima
-el padding del slide y de la tarjeta.
+**Tamaños.** Bajo 940 px de alto el AHORA baja a 30 vh y los títulos un escalón; bajo 1280 px de
+ancho la agenda mide 360 px y los módulos van 2×3; en el celular todo va a una columna sin alturas
+fijas (la agenda a su altura completa, los módulos en dos columnas y en una bajo 600 px).
+Comprobado sin errores de consola en 1600, 1366 y 390 px, en los dos temas: 14 filas de agenda el
+domingo y 23 el lunes, marcar un hábito actualiza el conteo, tocar una fila cambia el AHORA.
 
 ### La rutina
 
@@ -972,9 +950,9 @@ no manda en Safari, pero sí en Android y en el escritorio.
 
 ### Otras piezas
 
-- **Tira de 7 días** arriba: 66px de alto, la foto del gimnasio como fondo de toda la tarjeta
-  (`position:absolute`) con el texto encima. Partida en dos la foto quedaba en ~40px y el degradado
-  se la comía.
+- **Tira de 7 días** (dentro de *Entrenas*): chips de 52 px con la foto del tipo de entreno como
+  fondo (`position:absolute`) y el nombre del día encima; el de hoy con borde verde. Tocar uno
+  cambia la agenda a ese día.
 - **KPIs de dinero**: salen de `finanzasmx_v2` en vivo, con los saldos ya migrados.
 - **"Importante este mes"**: eventos propios, editables desde el slide.
 

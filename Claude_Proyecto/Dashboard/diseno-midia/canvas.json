@@ -1,0 +1,14 @@
+{
+  "artboards": [
+    { "file": "Main.dc.html",       "x": 0,    "y": 0,    "w": 1600, "h": 1000, "title": "Mi Día — tres filas (propuesta)" },
+    { "file": "DireccionB.dc.html", "x": 1720, "y": 0,    "w": 1600, "h": 1000, "title": "Dirección B — agenda vertical" },
+    { "file": "DireccionC.dc.html", "x": 0,    "y": 1220, "w": 1600, "h": 1000, "title": "Dirección C — dos paneles: Hoy y Este mes" }
+  ],
+  "annotations": [
+    { "id": "nota-problema", "x": 0, "y": -300, "w": 600, "text": "Lo que falla hoy (medido a 1600×1000): siete bloques apilados —frase, tira de 7 días, cinta, «Ahora mismo», botón de invertir, cuatro tarjetas y un enlace— y aun así sobran 200 px abajo. Las tarjetas van a 10.5–12 px y la mitad de cada una está vacía. Nada dice qué hábitos tocan hoy, qué se cobra esta semana ni qué toca estudiar de las rutas nuevas; y la fase que termina en 17 días no dice qué viene después." },
+    { "id": "nota-main", "x": 640, "y": -300, "w": 640, "text": "Propuesta, tres filas: (A) fecha, frase y reloj en una línea. (B) AHORA en grande —bloque, quedan X, marcar, qué sigue, qué escuchar mientras manejas— con el día entero DENTRO (riel + fichas), y al lado HOY: entrenas (con los 7 días como chips de foto), hábitos de hoy con racha y marcar, y qué invertir. (C) cuatro módulos que llenan lo que queda, cada uno con algo que hoy no está: Tu dinero suma los cobros de los próximos 7 días; Plan Maestro dice qué viene tras la Fase 0; Hoy aprendes trae el paso de la semana con su portada y la ficha de Habilidades Base en curso; Importante este mes queda igual. Lo nuevo sale de datos que ya existen: hábitos, CALENDARIO.cobros, APRENDIZAJE, HABILIDAD_DETALLE, DIDI_AUDIO, PHASES." },
+    { "id": "nota-b", "x": 1720, "y": -160, "w": 600, "text": "Dirección B — agenda vertical: el día se lee de arriba abajo como un calendario, con la hora al margen y el bloque actual marcado; lo demás va a la derecha en seis módulos iguales. A favor: se ve el día completo sin deslizar. En contra: se pierde la cinta —el riel con la proporción real del día y las fichas que ya usas—, y los seis módulos vuelven a ser chicos." },
+    { "id": "nota-c", "x": 0, "y": 1060, "w": 600, "text": "Dirección C — dos paneles: el ahora a todo lo ancho con la cinta, y abajo solo dos tarjetas grandes, HOY (hábitos, entreno, aprendes, invertir) y ESTE MES (dinero, próximos cobros, fase, pendientes). A favor: la pantalla más tranquila de las tres, dos cajas en vez de siete. En contra: cada panel es denso por dentro y sin bordes que separen sus cuatro secciones." }
+  ],
+  "launch": { "view": "canvas" }
+}
