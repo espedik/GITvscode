@@ -67,7 +67,7 @@ flechas, los puntos del HUD lateral, o deslizando en táctil.
 | `theme-dia` | **Mi Día** | La principal. Tira de 7 días, cinta del día completo, bloque actual, KPIs |
 | `theme-coach` | **Plan Maestro** | Fase activa, ruta de deuda cara y el tablero calendario / día / semana — ver abajo |
 | `theme-metas` | **Mis Metas** | 8 KPIs financieros, franja de instrumentos y las 14 metas con estado — ver abajo |
-| `theme-basicas` | **Habilidades Base** | 23 guías de vida práctica, cada una con **su video verificado**. **Única fuente** desde el 30-ago-2026: la sección equivalente de Coach se eliminó — ver abajo |
+| `theme-basicas` | **Habilidades Base** | 27 guías de vida práctica, todas menos Citas con **su video verificado**. **Única fuente** desde el 30-ago-2026: la sección equivalente de Coach se eliminó — ver abajo |
 | `theme-skills` | **Habilidades** | Radar de 12 habilidades y prioridades de aprendizaje |
 | `theme-lista` | **Lista de Compras** | 7 categorías. Comida con precios por pieza, ticket, costo al mes y proporción de verduras/frutas/almidones — ver abajo |
 | `theme-aleman` | **Alemán** | Vocabulario por secciones y el tema de Partizip I y II, desde `Aleman/vocab-datos.js` — ver abajo |
@@ -288,14 +288,127 @@ baranda** al reservar, y que de junio a septiembre llueve y te mandan adentro—
 Comprobado en dark y light a 1600 y 390px: los 30 lugares aparecen en sus siete pasos, ninguno con
 el enlace roto ni repetido en dos pasos, todos con `target="_blank"` y `rel="noopener"`.
 
+## Leer a las personas, y leer la actitud de una mujer
+
+Adán, 2026-09-12: *"quiero que en habilidades base agregues la habilidad de leer el comportamiento
+humano y varios rasgos para leer a las personas y actitud, también una para leer la actitud de las
+mujeres y saber que hacer en ciertas situaciones"*.
+
+Son **dos fichas** (`leerpersonas`, `leermujeres`), de 16 pasos cada una, y van justo después de
+las cuatro sociales porque son su materia prima: sin leer al otro no hay a quién persuadir ni con
+quién relacionarse. Con ellas la pantalla pasa de 24 a **26 fichas** y de 334 a **366 pasos**.
+
+**Leer a las personas** va de fuera hacia dentro: la línea base y los racimos (Navarro), el cuerpo
+de los pies a la cabeza, la cara (Ekman: las siete emociones, la sonrisa de Duchenne, el desprecio
+asimétrico), la voz y las palabras (Pennebaker), los Cinco Grandes como único modelo de rasgos con
+evidencia, los patrones de carácter (Greene), la actitud en una conversación —abierto, cerrado,
+resistiendo— con la etiqueta de Voss para comprobar la lectura, y una sala en treinta segundos (Van
+Edwards). Dos pasos existen para **bajar la soberbia**, no para subirla: el de mentiras abre con el
+54% de acierto del metaanálisis de Bond y DePaulo y desmonta el mito de la mirada; el de sesgos cierra
+con Gladwell y el *truth-default*. La ficha no promete un detector de mentiras porque no existe.
+
+**Leer la actitud de una mujer** está construida como **situaciones que se repiten**, y en cada una
+cómo se lee y qué hacer: te interesa alguien (las 52 señales de Monica Moore, en racimo), te dice que
+no (el no suave y la retirada con gracia), acercarte sin ser el pesado, la primera cita (Ury y el mito
+de la chispa), te cuenta un problema (Tannen: escuchar o resolver, y la pregunta que lo zanja), *"estoy
+bien"*, se molesta contigo (los cuatro jinetes de Gottman y sus antídotos), se enfría (Levine: la
+conducta de protesta), te vacila, el apego, las ofertas de conexión del día a día y las señales de
+alarma en ella **y en ti**. Abre con Hyde (2005) —la mayoría de las diferencias psicológicas entre
+sexos son pequeñas o nulas— para dejar claro desde el paso 1 que no es un manual de "las mujeres" sino
+de atención a una persona, y con las tres bases de Manson: vivir, actuar y comunicar honesto. **No hay
+técnicas ni trucos de seducción** a propósito; el consentimiento como sí claro está en el primer paso.
+
+Cada una lleva su `✅ Ya lo dominas cuando…` con criterios comprobables (nada de "sentir que
+entiendes"), sus `⚠️ Error más común`, cajas de `Tu caso`/`Ejemplo` y `📚 Qué leer`. Los **siete
+videos** (cuatro y tres) se buscaron y se comprobaron con la API oEmbed de YouTube, que devuelve el
+título real del video: la guía del FBI de Navarro, las expresiones universales de Ekman, los Cinco
+Grandes, el resumen animado de Greene; la conferencia completa de Ramón Nogueras sobre cuarenta años
+de investigación de Gottman, el resumen de *Modelos* de Manson y los cuatro jinetes. Se descartaron
+los videos de "señales secretas de atracción": clickbait sin fuente. Las dos fotos de Unsplash se
+verificaron con curl **y se vieron** antes de elegirlas — la primera es una reunión con posturas
+distintas a la vista (brazos cruzados, torsos que se acercan), que es justo lo que enseña la ficha.
+
+## Forjar carácter
+
+Adán, 2026-09-13: *"una habilidad de forjar caracter, me refiero a como una persona timida y sin
+decisiones propias, puede ser un gran lider, pero de esos que toman desiciones dificiles y hablan
+con las personas de cierto modo y no se dejan intimidar"*.
+
+Una ficha (`caracter`), 17 pasos, que cierra el bloque social: las dos anteriores enseñan a leer al
+otro; esta, a sostenerte tú. Con ella son **27 fichas** y **383 pasos**. Sigue el orden del pedido,
+en cuatro bloques:
+
+1. **La timidez** — Cain (introversión ≠ timidez ≠ carácter, con Gandhi, Buffett y Rosa Parks), la
+   dicotomía del control de Epicteto, y la **exposición gradual** con escalera de diez peldaños y
+   la regla de quedarse hasta que baje (Jia Jiang como prueba en vivo).
+2. **Las decisiones** — primero rápido en lo pequeño (las puertas de dos vías de Bezos, «pide datos,
+   no permiso»), el método de *Decídete* para las difíciles (opciones, prueba en pequeño, 10/10/10,
+   cable trampa, y el *resulting* de Annie Duke), y la decisión que nadie quiere tomar (Willink:
+   *Extreme Ownership*; Brown: «claro es amable»).
+3. **La forma de hablar** — la voz de locutor de madrugada de Voss, frases que terminan hacia abajo,
+   quitar los amortiguadores, hablar primero en la junta; y decir las cosas de frente con
+   hecho → efecto → petición. El no en concreto **se refiere a la ficha de Saber decir que no**, que
+   ya tiene el disco rayado y el caso de la familia; no se repite.
+4. **No dejarse intimidar** — la intimidación como táctica: el suspiro fisiológico (Stanford 2023),
+   pausa y voz hacia abajo, nombrar la táctica, preguntar, y tener alternativa (MAAN, *Obtenga el
+   sí*). Después, la preparación como el 80% del valor, disciplina es libertad (Bandura: las
+   experiencias de dominio), liderar siendo introvertido (el estudio de las pizzerías de Grant) y
+   aguantar no caerle bien a todos (el hombre en la arena).
+
+Lo que **no** lleva, a propósito: «poses de poder» — no replicaron — ni frases motivacionales. Cada
+afirmación tiene autor. Las cajas `Tu caso` son cinco situaciones que Adán ya vive: la junta donde
+nunca habla, el negocio de su papá, un pasajero agresivo, una entrevista, y la decisión que lleva
+evitando. Los **cinco videos** se comprobaron con oEmbed: tres TED con subtítulos en español (Cain,
+Jia Jiang, Willink), la dicotomía del control en español y *Decídete* en español. La foto es un
+soldador entre chispas: forjar, literalmente.
+
+## El panel de detalle — "tres apartados"
+
+Es el overlay que abre una ficha de Habilidades Base, una meta de Mis Metas o Tu año
+(`#metaDetailOverlay`; lo pintan `pintarDetailOverlay()` → `mdPintar()`, y los tres comparten
+los mismos ids). El diseño se acordó en `diseno-ficha/` frente a dos direcciones más —lectura
+ancha con el temario como regla de segmentos, y un dossier de corrido— tras el pedido de Adán,
+2026-09-13: *"se me hace muy pequeño y no organizado, debe ser que abarque más tamaño de pantalla
+y además tenga apartados definidos muy bien, quiero un diseño elegante"*.
+
+**La tarjeta ocupa el 96 % del ancho y el 94 % del alto** (tope de 1920 px). Medido a 1600×1000:
+1536×940 px, con el paso a 934 px de ancho; a 1366×768, 1311×722. Antes se quedaba en 1280×860 y
+dejaba media pantalla vacía.
+
+**Tres apartados con nombre**, cada uno con su etiqueta en mono y su propio desplazamiento:
+
+| Apartado | Ancho | Qué lleva |
+|---|---|---|
+| **Temario** | 300 px | Un paso por fila, con su número o ✓ verde; el activo en cian. Un filete separa los pasos de cierre (Practicarlo, Qué leer, Ya lo dominas) de la teoría. |
+| **El paso** | el resto | `Paso N de M` · título en Fraunces a 34 px · la idea (`d`) a 16.5 px · **En detalle**: los puntos como libro mayor numerado (`01`, `02`…), no viñetas · los apartados |
+| **Recursos** | 300 px | Los videos (`Para escucharlo`), la barra de dinero real de BYD y Maestría, el bloque de Tu año, y **Tu avance**: dominados, pendientes y el siguiente pendiente como botón |
+
+La frase de la ficha vive en la cabecera, en cursiva bajo el título, junto al avance en grande
+(`7 / 16 · Dominados · 44 %`). El pie va a lo ancho: **Marcar como dominado**, un punto por paso
+(verde hecho, cian el actual; se puede tocar) y Anterior / Siguiente.
+
+**Los puntos de un paso se reparten solos** en `mdPintar()` según cómo empiezan: `Tu caso`,
+`Ejemplo` y `Plantilla` van a cajas cian; `⚠️ …` a una caja ámbar con el rótulo que traiga
+(*Error más común*, o *Ojo* si no trae); los lugares de Citas (`<a class="mapa">`) a su rejilla;
+el resto es la teoría. Un `(1)` al frente de un punto se quita porque el libro mayor ya numera, y
+los emojis al frente de un título (📚, ✅) se quitan en el temario y en el título grande. Nada de
+esto toca los datos: `HABILIDAD_DETALLE` y `META_DETALLE` siguen igual.
+
+**Tamaños.** Hasta 1180 px, Recursos baja bajo el temario, en su misma columna (260 px), y el
+paso conserva toda la altura: a 1024×768 el temario mide 288 px de alto y Recursos 206. En el
+celular los tres apartados se apilan y toda la ficha desplaza como una sola página: el temario es
+una tira de chips, la frase se recorta a dos líneas, los puntos del pie se ocultan y Marcar y
+Siguiente miden 44 px. Comprobado sin errores de consola en 1600, 1366, 1024 y 390 px, en los dos
+temas, con Leer a las personas, Citas (mapas), Vino (serie), el BYD (barra de dinero) y Tu año.
+
 ## Un video por habilidad
 
 Adán, 2026-08-30: *"dame videos que abarquen cada habilidad […] para que lo escuche y aprenda
 varias cosas […] pero además asegúrate que sea de buena calidad"*.
 
-**48 enlaces sueltos + los 42 episodios de la serie de vino**, para 23 habilidades. Viven en
-`HABILIDAD_DETALLE[id].videos` como `{u, t, d}` y se pintan en la columna del temario, bajo la
-frase. Todas menos vino llevan **dos o más**, y el segundo nunca repite al primero: aporta el
+**60 enlaces sueltos + los 42 episodios de la serie de vino**, para 26 habilidades. Viven en
+`HABILIDAD_DETALLE[id].videos` como `{u, t, d}` y se pintan en la columna de Recursos del panel
+de detalle, visibles en cualquier paso. Todas menos vino llevan **dos o más**, y el segundo nunca repite al primero: aporta el
 ángulo que al primero le falta (la herramienta antes que la receta, la maniobra aislada del curso,
 el audiolibro frente a la conferencia, la fuente original frente a la explicación).
 
@@ -329,7 +442,7 @@ era un video: era el episodio 1 de un curso en pódcast de más de 52 entregas.
 
 `videos[0].serie` trae `{canal, nota, eps:[{n, u, t}]}` con **42 episodios verificados**, y el
 renderizador los pinta como una **rejilla de números plegable** — 42 enlaces sueltos habrían
-ahogado la columna del temario. El título de cada episodio vive en su `title`, así que la rejilla
+ahogado la columna de Recursos. El título de cada episodio vive en su `title`, así que la rejilla
 se escanea de un vistazo y aun así se sabe qué es cada número.
 
 **Los huecos se declaran en pantalla**, no se esconden: los episodios 26, 28, 29 y del 42 al 49 no

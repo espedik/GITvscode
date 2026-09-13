@@ -1,0 +1,212 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&display=swap">
+  <style>
+    body { margin: 0; font-family: 'Inter', -apple-system, 'Segoe UI', sans-serif; }
+    a { color: var(--cy, #047a6b); } a:hover { color: var(--g, #00a758); }
+    /* Tokens del dashboard: tema claro por defecto, oscuro con la clase .oscuro (tweak). */
+    .raiz { --bg: #f2f2f6; --text: #16161a; --text2: #5c5f70; --text3: #63667c;
+            --g: #00a758; --cy: #047a6b; --w: #a8790a; --ov: 0,0,0; --cy-rgb: 4,122,107; --g-rgb: 0,167,88; --w-rgb: 168,121,10;
+            --card: rgba(255,255,255,.96); --velo: rgba(20,20,30,.62); }
+    .raiz.oscuro { --bg: #05050a; --text: #f4f4f8; --text2: #9a9db3; --text3: #8589a8;
+            --g: #00e87a; --cy: #00e0c0; --w: #ffd93d; --ov: 255,255,255; --cy-rgb: 0,224,192; --g-rgb: 0,232,122; --w-rgb: 255,217,61;
+            --card: rgba(12,12,22,.96); --velo: rgba(0,0,0,.74); }
+    .mono { font-family: 'Space Grotesk', 'SF Mono', monospace; font-variant-numeric: tabular-nums; }
+    .ttl { font-family: 'Fraunces', Georgia, serif; }
+    .lbl { font-family: 'Space Grotesk', monospace; font-size: 10px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; color: var(--text3); }
+    .hair { border-top: 1px solid rgba(var(--ov), .09); }
+    /* Temario */
+    .ix { display: grid; grid-template-columns: 24px minmax(0, 1fr); gap: 11px; align-items: start; padding: 9px 10px; border-radius: 4px; border: 1px solid transparent; }
+    .ix .n { width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: 'Space Grotesk', monospace; font-size: 10px; font-weight: 700; background: rgba(var(--ov), .07); color: var(--text3); }
+    .ix .t { font-size: 13px; line-height: 1.4; color: var(--text2); padding-top: 3px; }
+    .ix.hecho .n { background: var(--g); color: #05050a; }
+    .ix.hecho .t { color: var(--text3); }
+    .ix.on { background: rgba(var(--cy-rgb), .09); border-color: rgba(var(--cy-rgb), .32); }
+    .ix.on .n { background: var(--cy); color: #05050a; }
+    .ix.on .t { color: var(--text); font-weight: 700; }
+    /* Puntos del paso: libro mayor, no viñetas */
+    .pt { display: grid; grid-template-columns: 34px minmax(0, 1fr); gap: 14px; padding: 11px 0; border-top: 1px solid rgba(var(--ov), .08); }
+    .pt:first-child { border-top: none; padding-top: 4px; }
+    .pt .k { font-family: 'Space Grotesk', monospace; font-size: 11px; font-weight: 700; color: var(--cy); padding-top: 4px; letter-spacing: .06em; }
+    .pt .x { font-size: 15px; line-height: 1.68; color: var(--text2); }
+    .pt .x b { color: var(--text); font-weight: 700; }
+    /* Apartados con nombre */
+    .ap { border-radius: 5px; padding: 15px 18px 16px; display: flex; flex-direction: column; gap: 7px; }
+    .ap.caso { background: rgba(var(--cy-rgb), .07); border: 1px solid rgba(var(--cy-rgb), .24); }
+    .ap.caso .lbl { color: var(--cy); }
+    .ap.error { background: rgba(var(--w-rgb), .08); border: 1px solid rgba(var(--w-rgb), .3); }
+    .ap.error .lbl { color: var(--w); }
+    .ap p { margin: 0; font-size: 14.5px; line-height: 1.65; color: var(--text2); }
+    .ap p b { color: var(--text); }
+    /* Recursos */
+    .vid { display: grid; grid-template-columns: 30px minmax(0, 1fr); gap: 12px; padding: 12px 0; border-top: 1px solid rgba(var(--ov), .08); text-decoration: none; }
+    .vid:first-of-type { border-top: none; padding-top: 0; }
+    .vid .play { width: 30px; height: 30px; border-radius: 50%; border: 1px solid rgba(var(--ov), .16); display: flex; align-items: center; justify-content: center; color: var(--text); }
+    .vid .vt { font-size: 12.5px; font-weight: 700; color: var(--text); line-height: 1.35; }
+    .vid .vd { font-size: 11px; color: var(--text3); line-height: 1.45; margin-top: 3px; }
+    /* Pie */
+    .btn { display: inline-flex; align-items: center; gap: 9px; height: 44px; padding: 0 20px; border-radius: 6px; font-size: 13.5px; font-weight: 700; font-family: inherit; cursor: pointer; border: 1px solid rgba(var(--ov), .16); background: rgba(var(--ov), .04); color: var(--text2); }
+    .btn.primario { border-color: rgba(var(--cy-rgb), .4); background: rgba(var(--cy-rgb), .12); color: var(--cy); }
+    .btn.marcar { border-color: rgba(var(--g-rgb), .45); background: rgba(var(--g-rgb), .12); color: var(--g); }
+    .dot { width: 18px; height: 4px; border-radius: 2px; background: rgba(var(--ov), .12); }
+    .dot.hecho { background: var(--g); }
+    .dot.on { background: var(--cy); height: 6px; }
+  </style>
+</helmet>
+
+<div class="raiz {{ tema.cls }}" style="width: 1600px; height: 1000px; background: var(--bg); position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center">
+  <!-- el dashboard atrás, velado -->
+  <div style="position: absolute; inset: 0; background: var(--velo); backdrop-filter: blur(6px)"></div>
+
+  <!-- LA FICHA · 96vw × 94vh -->
+  <div style="position: relative; width: 1536px; height: 940px; background: var(--card); border: 1px solid rgba(var(--ov), .14); border-radius: 10px; box-shadow: 0 34px 90px rgba(0,0,0,.5); display: flex; flex-direction: column; overflow: hidden">
+
+    <!-- CABECERA: foto · título y frase · progreso · cerrar -->
+    <div style="display: grid; grid-template-columns: 76px minmax(0, 1fr) auto 36px; gap: 22px; align-items: center; padding: 22px 28px 20px; border-bottom: 1px solid rgba(var(--ov), .1); background: linear-gradient(100deg, rgba(var(--g-rgb), .07), transparent 55%)">
+      <img src="leer-personas.jpg" alt="" style="width: 76px; height: 76px; border-radius: 4px; object-fit: cover; border: 1px solid rgba(var(--ov), .16)">
+      <div style="display: flex; flex-direction: column; gap: 6px; min-width: 0">
+        <div style="display: flex; align-items: center; gap: 10px">
+          <span class="lbl" style="color: var(--g)">Habilidades base</span>
+          <span style="width: 1px; height: 10px; background: rgba(var(--ov), .2)"></span>
+          <span class="lbl">Ficha 05 de 27</span>
+        </div>
+        <div class="ttl" style="font-size: 30px; font-weight: 600; line-height: 1.12; color: var(--text); letter-spacing: -.01em">Leer a las personas: comportamiento, rasgos y actitud</div>
+        <div class="ttl" style="font-size: 15px; font-style: italic; font-weight: 500; line-height: 1.45; color: var(--text2)">La gente te dice quién es todo el tiempo: con el cuerpo, con lo que repite y con lo que hace cuando nadie la mira. Leer es escuchar eso.</div>
+      </div>
+      <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 7px; padding-right: 6px">
+        <div style="display: flex; align-items: baseline; gap: 4px">
+          <span class="mono" style="font-size: 34px; font-weight: 700; color: var(--g); line-height: 1">7</span>
+          <span class="mono" style="font-size: 15px; font-weight: 600; color: var(--text3)">/ 16</span>
+        </div>
+        <span class="lbl">Pasos dominados · 44 %</span>
+        <div style="width: 220px; height: 5px; border-radius: 3px; background: rgba(var(--ov), .1); overflow: hidden">
+          <div style="width: 44%; height: 100%; background: linear-gradient(90deg, var(--g), var(--cy))"></div>
+        </div>
+      </div>
+      <button style="width: 36px; height: 36px; border-radius: 50%; border: 1px solid rgba(var(--ov), .16); background: rgba(var(--ov), .05); color: var(--text2); display: flex; align-items: center; justify-content: center; cursor: pointer; align-self: start">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </div>
+
+    <!-- CUERPO: temario · paso · recursos -->
+    <div style="flex: 1; min-height: 0; display: grid; grid-template-columns: 300px minmax(0, 1fr) 300px">
+
+      <!-- TEMARIO -->
+      <aside style="border-right: 1px solid rgba(var(--ov), .1); display: flex; flex-direction: column; min-height: 0">
+        <div style="display: flex; align-items: baseline; justify-content: space-between; padding: 16px 20px 10px">
+          <span class="lbl">Temario</span>
+          <span class="mono" style="font-size: 10px; font-weight: 600; color: var(--text3)">16 pasos</span>
+        </div>
+        <div style="flex: 1; min-height: 0; overflow: hidden; padding: 0 10px 10px; display: flex; flex-direction: column; gap: 2px">
+          <div class="ix hecho"><span class="n"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg></span><span class="t">Primero la línea base, después la señal</span></div>
+          <div class="ix hecho"><span class="n"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg></span><span class="t">De los pies a la cabeza: el cuerpo dice a dónde quiere ir</span></div>
+          <div class="ix hecho"><span class="n"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg></span><span class="t">Manos, cuello y ojos: comodidad o incomodidad</span></div>
+          <div class="ix hecho"><span class="n"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg></span><span class="t">La cara: siete emociones que se ven igual en todo el mundo</span></div>
+          <div class="ix hecho"><span class="n"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg></span><span class="t">La voz y las palabras: lo que se dice sin querer</span></div>
+          <div class="ix hecho"><span class="n"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg></span><span class="t">Los rasgos: los Cinco Grandes, el único modelo que sí predice</span></div>
+          <div class="ix hecho"><span class="n"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg></span><span class="t">Lo que la gente repite es lo que es</span></div>
+          <div class="ix on"><span class="n">8</span><span class="t">La actitud en una conversación: abierto, cerrado o resistiendo</span></div>
+          <div class="ix"><span class="n">9</span><span class="t">Interés y desinterés: la lectura que más vas a usar</span></div>
+          <div class="ix"><span class="n">10</span><span class="t">Mentiras: lo que sí sirve y lo que es mito</span></div>
+          <div class="ix"><span class="n">11</span><span class="t">Leer una sala en treinta segundos</span></div>
+          <div class="ix"><span class="n">12</span><span class="t">Los sesgos que te hacen leer mal (los tuyos)</span></div>
+          <div class="ix"><span class="n">13</span><span class="t">Aplicarlo donde ya estás: junta, entrevista, negociación, Didi</span></div>
+          <div class="hair" style="margin: 8px 10px 6px"></div>
+          <div class="ix"><span class="n">14</span><span class="t">Practicarlo esta semana</span></div>
+          <div class="ix"><span class="n">15</span><span class="t">Qué leer, en qué orden</span></div>
+          <div class="ix"><span class="n">16</span><span class="t">Ya lo dominas cuando…</span></div>
+        </div>
+      </aside>
+
+      <!-- EL PASO -->
+      <section style="min-width: 0; min-height: 0; overflow: hidden; padding: 24px 48px 24px; display: flex; flex-direction: column; gap: 18px">
+        <div style="display: flex; flex-direction: column; gap: 9px; padding-bottom: 16px; border-bottom: 1px solid rgba(var(--ov), .1)">
+          <div style="display: flex; align-items: center; gap: 12px">
+            <span class="lbl" style="color: var(--cy)">Paso 8 de 16</span>
+            <span style="width: 1px; height: 10px; background: rgba(var(--ov), .2)"></span>
+            <span class="lbl">Leer la actitud</span>
+          </div>
+          <h2 class="ttl" style="margin: 0; font-size: 34px; font-weight: 700; line-height: 1.12; color: var(--text); letter-spacing: -.012em; max-width: 24ch">La actitud en una conversación: abierto, cerrado o resistiendo</h2>
+          <p style="margin: 0; font-size: 16.5px; line-height: 1.7; color: var(--text2); max-width: 66ch">La actitud no es una emoción: es la <b style="color: var(--text)">disposición</b> con la que alguien entra a la conversación, y cambia de minuto a minuto. Saber en qué punto está te dice si empujar, esperar o cambiar de tema.</p>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 8px">
+          <span class="lbl">En detalle</span>
+          <div style="display: flex; flex-direction: column">
+            <div class="pt"><span class="k">01</span><span class="x"><b>Abierto</b>: hace preguntas, completa tus frases, asiente <i>mientras</i> hablas (no solo al final), dice "nosotros", propone. El cuerpo se acerca. Aquí es cuando se piden las cosas.</span></div>
+            <div class="pt"><span class="k">02</span><span class="x"><b>Cerrado</b>: respuestas cortas, "ajá", mira el reloj o el celular, el torso se aleja, cambia de tema. No es no: es "no ahora". Empujar aquí lo convierte en no.</span></div>
+            <div class="pt"><span class="k">03</span><span class="x"><b>Resistiendo</b>: el "sí, pero…", las objeciones en cadena, la sonrisa sin ojos, el "lo pensamos" sin fecha. Es el más peligroso porque parece acuerdo. <b>Un "sí" sin siguiente paso concreto es un no educado.</b></span></div>
+            <div class="pt"><span class="k">04</span><span class="x">La herramienta para saber en cuál estás: <b>la etiqueta</b>, de Chris Voss. Nombras lo que crees ver, con calma y sin acusar: <i>"parece que esto no te termina de convencer"</i>. Si acertaste, el otro lo suelta; si no, te corrige — y también ganaste.</span></div>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px">
+          <div class="ap caso">
+            <span class="lbl">Ejemplo</span>
+            <p>Presentas un plan y te contestan <i>"está muy bien, lo revisamos la próxima semana"</i>. Cuerpo hacia atrás, sin preguntas. Eso es resistencia disfrazada. Etiqueta: <i>"siento que hay algo del plan que no te cuadra; prefiero oírlo ahora que enterarme en un mes"</i>.</p>
+          </div>
+          <div class="ap error">
+            <span class="lbl" style="display: flex; align-items: center; gap: 7px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3L2 20h20L12 3z"/><path d="M12 10v5M12 18h.01"/></svg>Error más común</span>
+            <p>Tomar el "sí" verbal como el dato y descartar todo lo demás. El cuerpo, el tono y la ausencia de preguntas también votan — y cuando votan distinto que la boca, casi siempre tienen razón ellos.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- RECURSOS -->
+      <aside style="border-left: 1px solid rgba(var(--ov), .1); display: flex; flex-direction: column; gap: 22px; padding: 16px 22px; min-height: 0; overflow: hidden">
+        <div style="display: flex; flex-direction: column; gap: 10px">
+          <div style="display: flex; align-items: baseline; justify-content: space-between">
+            <span class="lbl">Para escucharlo</span>
+            <span class="mono" style="font-size: 10px; font-weight: 600; color: var(--text3)">4 videos</span>
+          </div>
+          <div style="display: flex; flex-direction: column">
+            <a class="vid" href="#"><span class="play"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M7 4l13 8-13 8z"/></svg></span><span><span class="vt">El Cuerpo Habla: guía del FBI para leer el lenguaje corporal — Joe Navarro</span><span class="vd" style="display: block">El libro base de esta ficha: pies, manos y pacificadores, en ese orden.</span></span></a>
+            <a class="vid" href="#"><span class="play"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M7 4l13 8-13 8z"/></svg></span><span><span class="vt">Expresiones faciales universales: Paul Ekman</span><span class="vd" style="display: block">La cara, aparte del cuerpo: las siete emociones que se ven igual en cualquier país.</span></span></a>
+            <a class="vid" href="#"><span class="play"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M7 4l13 8-13 8z"/></svg></span><span><span class="vt">Psicología de los 5 grandes rasgos — Ram Talks</span><span class="vd" style="display: block">Los rasgos, que es lo que el cuerpo no te dice.</span></span></a>
+            <a class="vid" href="#"><span class="play"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M7 4l13 8-13 8z"/></svg></span><span><span class="vt">Las Leyes de la Naturaleza Humana — resumen animado</span><span class="vd" style="display: block">El carácter como patrón que se repite.</span></span></a>
+          </div>
+        </div>
+        <div class="hair"></div>
+        <div style="display: flex; flex-direction: column; gap: 10px">
+          <span class="lbl">Tu avance</span>
+          <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px">
+            <div style="display: flex; flex-direction: column; gap: 3px"><span class="mono" style="font-size: 20px; font-weight: 700; color: var(--g); line-height: 1">7</span><span class="lbl" style="font-size: 8.5px; letter-spacing: .14em">Dominados</span></div>
+            <div style="display: flex; flex-direction: column; gap: 3px"><span class="mono" style="font-size: 20px; font-weight: 700; color: var(--text); line-height: 1">9</span><span class="lbl" style="font-size: 8.5px; letter-spacing: .14em">Pendientes</span></div>
+            <div style="display: flex; flex-direction: column; gap: 3px"><span class="mono" style="font-size: 20px; font-weight: 700; color: var(--text); line-height: 1">3</span><span class="lbl" style="font-size: 8.5px; letter-spacing: .14em">De cierre</span></div>
+          </div>
+          <p style="margin: 0; font-size: 12px; line-height: 1.55; color: var(--text3)">Los tres últimos pasos son el cierre: práctica de la semana, qué leer y la prueba de que ya lo dominas.</p>
+        </div>
+      </aside>
+    </div>
+
+    <!-- PIE: marcar · dónde vas · navegar -->
+    <div style="display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 24px; padding: 14px 28px; border-top: 1px solid rgba(var(--ov), .1); background: rgba(var(--ov), .035)">
+      <button class="btn marcar"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>Marcar como dominado</button>
+      <div style="display: flex; align-items: center; justify-content: center; gap: 5px">
+        <span class="dot hecho"></span><span class="dot hecho"></span><span class="dot hecho"></span><span class="dot hecho"></span><span class="dot hecho"></span><span class="dot hecho"></span><span class="dot hecho"></span><span class="dot on"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span>
+      </div>
+      <div style="display: flex; align-items: center; gap: 8px">
+        <button class="btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>Anterior</button>
+        <button class="btn primario">Siguiente<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></button>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script data-dc-script data-props='{"tema":{"editor":"enum","options":["claro","oscuro"],"default":"claro"},"$preview":{"width":1600,"height":1000}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const t = this.props.tema ?? 'claro';
+    return { tema: { cls: t === 'oscuro' ? 'oscuro' : '' } };
+  }
+}
+</script>
+</body>
+</html>

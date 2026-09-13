@@ -227,20 +227,8 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 /* El tope de 430px (inline) reparte el espacio que dejo el panel unico del 2026-08-23 sin
    que las tarjetas queden vacias. En una sola columna estorba: las tres apiladas no caben. */
 
-/* ─── El video de cada habilidad (2026-08-30) ─────────────────────────────────
-   Vive en la columna del temario, bajo la frase: es un recurso de la habilidad entera, no de
-   un paso, así que sigue ahí en cualquier punto del checklist. Rojo de YouTube solo en el
-   filete izquierdo — el resto sigue la paleta de la pantalla. */
-.md-vid{margin:10px 0 14px;padding:10px 12px;border-radius:3px;
-  background:rgba(var(--ov),.04);border:1px solid rgba(var(--ov),.09);
-  border-left:2px solid #ff0033}
-.md-vid-lbl{font-family:var(--mono);font-size:8.5px;font-weight:700;letter-spacing:.18em;
-  text-transform:uppercase;color:var(--text3);margin-bottom:7px}
-.md-vid-a{display:block;text-decoration:none;padding:6px 0;border-top:1px solid rgba(var(--ov),.07)}
-.md-vid-a:first-of-type{border-top:none;padding-top:0}
-.md-vid-t{display:block;font-size:12px;font-weight:700;color:var(--text);line-height:1.35}
-.md-vid-a:hover .md-vid-t{color:var(--ac2,var(--cy))}
-.md-vid-d{display:block;font-size:10.5px;color:var(--text3);margin-top:3px;line-height:1.45}
+/* Los videos de cada habilidad (.md-vid-*) se estilan en el bloque "Panel de detalle" de más
+   abajo; aquí solo queda el índice plegable de una serie larga (.md-eps). */
 /* Índice de una serie larga: 42 enlaces sueltos ahogarían el panel, así que van como una
    rejilla de números plegada. El título de cada episodio vive en el `title`, para que la
    rejilla siga siendo escaneable y aun así se pueda saber qué es cada uno. */
@@ -444,7 +432,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
      pieza que justificó el rediseño: el dato ya existía (`HABILIDAD_DETALLE[id].pasos`) y no
      se estaba usando.
    · Aparece una franja de instrumentos (`#hbBay`) con el progreso global, el ecualizador de
-     las 23 habilidades y los tres conteos (dominadas / en curso / sin empezar).
+     las 27 habilidades y los tres conteos (dominadas / en curso / sin empezar).
    · Esquinas rectas de 3px con brackets de HUD en las fotos, en vez de los 12px redondeados.
    · Se va el `.tile` que envolvía la rejilla: las fichas se apoyan directo en el slide.
    Clases propias `.hb-*` y NO `.img-goal-*` a propósito: esas las comparte con "Mis Metas"
@@ -498,7 +486,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 .hb-rv small{font-size:.55em;color:var(--text3);font-weight:500}
 
 /* ─── Rejilla de fichas ──────────────────────────────────────────────── */
-/* `auto-fill` en vez de un número fijo de columnas: con 23 fichas + la celda de lectura, el
+/* `auto-fill` en vez de un número fijo de columnas: con 27 fichas + la celda de lectura, el
    número correcto de columnas depende del ancho real (7 en un monitor de 1920, 6 en 1440,
    5 en una laptop angosta, 4 en iPad) y una sola regla cubre todos los casos. El
    `minmax(128px,1fr)` de las filas es el mismo patrón de "estira si cabe, scrollea si no"
@@ -2310,115 +2298,99 @@ button.hp-lec:active{transform:translateY(0)}
   box-shadow:0 10px 30px rgba(0,0,0,.4);z-index:90;opacity:0;transition:all .3s;pointer-events:none;backdrop-filter:blur(14px)}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
-/* ─── Detalle de meta — "subpágina" in-page (2026-08-07): clic en una tarjeta de Mis Metas
-   abre este overlay con foto grande + plan personalizado, sin salir de dashboard.html.
-   Rediseñado 2026-08-09 (pedido explícito: "hazla mas grande a lo ancho... el texto visualmente
-   se ve muy plano... devez mejorar la apariencia de todos") y compactado el mismo día (pedido
-   explícito: "ponle titulo: descripcion... y quiero mas reducidos visualmente los checklist por
-   que se ven muy grandes y solo veo pocos de primera vista y no quiero hacer muchos scroll down")
-   — cada paso ahora es "Título: descripción" (el título en serif/negrita de acento, ver
-   viene de `p.t` en META_DETALLE/HABILIDAD_DETALLE) en una lista compacta, para que cupieran
-   más pasos sin scroll. Rehecho el 2026-08-23 con el diseño "Estudio" (bloque .md-* más abajo):
-   esa lista plana se quedó corta cuando las habilidades sociales trajeron pasos de 11 puntos con
-   teoría de libros — ahora la foto es miniatura, el temario tiene columna propia y se lee UN
-   paso a la vez. ─── */
+/* ─── Panel de detalle — diseño "Tres apartados" (2026-09-13) ───
+   Lo comparten Mis Metas (abrirMetaDetalle), Habilidades Base (abrirHabilidadDetalle) y Tu año
+   (abrirEdadDetalle); los ids del DOM son los mismos para los tres.
+   Adán, 2026-09-13: "se me hace muy pequeño y no organizado, debe ser que abarque más tamaño de
+   pantalla y además tenga apartados definidos muy bien, quiero un diseño elegante". Elegido en un
+   canvas (diseno-ficha/) frente a dos direcciones más. Lo que cambia respecto al "Estudio" de agosto:
+   · La tarjeta ocupa el 96% del ancho y el 94% del alto (antes 1280×860 y media pantalla vacía).
+   · Tres apartados con nombre: TEMARIO (300px, solo el índice), EL PASO (título a 34px, la idea a
+     16.5px y los puntos como libro mayor numerado, no viñetas) y RECURSOS (videos, el dinero real
+     de las metas y el avance). La frase de la ficha sube a la cabecera, bajo el título.
+   · Ejemplo / Tu caso / Plantilla van a cajas cian; el "⚠️ Error más común" a una caja ámbar.
+   · El pie va a lo ancho: marcar, un punto por paso (dónde vas) y Anterior / Siguiente. */
 .meta-detail-overlay{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.72);backdrop-filter:blur(6px);
-  display:flex;align-items:center;justify-content:center;padding:4vh 3vw;opacity:0;pointer-events:none;transition:opacity .25s}
+  display:flex;align-items:center;justify-content:center;padding:3vh 2vw;opacity:0;pointer-events:none;transition:opacity .25s}
 .meta-detail-overlay.open{opacity:1;pointer-events:auto}
-/* Ancho subido de 980px a 1280px el 2026-08-12 ("esa ventana al hacer click hazla mas ancha,
-   para todos, para que se muestre mejor"). Aplica a los 2 usos del overlay —Habilidades Base y
-   Mis Metas— porque comparten estas clases. El `96vw` sube a `94vw` para que en pantallas
-   angostas siga quedando un respiro visible del fondo a los lados en vez de tocar los bordes. */
-.meta-detail-card{width:min(1280px,94vw);height:min(860px,92vh);overflow:hidden;display:flex;flex-direction:column;background:var(--bar2);border:1px solid rgba(var(--ov),.14);
-  border-radius:26px;box-shadow:0 30px 90px rgba(0,0,0,.55);transform:translateY(18px);transition:transform .25s}
+.meta-detail-card{width:min(1920px,96vw);height:94vh;overflow:hidden;display:flex;flex-direction:column;background:var(--bar2);border:1px solid rgba(var(--ov),.14);
+  border-radius:10px;box-shadow:0 34px 90px rgba(0,0,0,.5);transform:translateY(18px);transition:transform .25s}
 .meta-detail-overlay.open .meta-detail-card{transform:translateY(0)}
-/* La foto también creció (era clamp(150px,22vh,230px)): con la tarjeta más ancha, una franja de
-   150px dejaba la imagen como una tira recortadísima — `cover` tiraba casi todo el encuadre.
-   Con más alto se ve la foto, no un recorte de ella. `image-rendering:auto` es explícito a
-   propósito: si el navegador la escala, que interpole en vez de dejarla dentada. */
-/* Antes era un hero de hasta 340px de alto; ahora es la miniatura de la cabecera (2026-08-23). */
-.meta-detail-hero{flex:none;width:78px;height:78px;border-radius:16px;background-size:cover;background-position:center;
-  border:1px solid rgba(var(--ov),.14)}
-/* El degradado tapaba demasiado: arrancaba opaco (var(--bar2) al 0%) y a media altura ya iba en
-   .25 de negro, así que apagaba la foto entera. Ahora solo oscurece el tercio inferior, que es
-   donde va el título — el resto de la imagen se ve limpia. */
-.meta-detail-hero::after{content:none}
-.md-head-oculto::after{content:'';position:absolute;inset:0;border-radius:26px 26px 0 0;
-  background:linear-gradient(to top,var(--bar2) 0%,rgba(0,0,0,.45) 30%,rgba(0,0,0,.12) 58%,rgba(0,0,0,0) 100%)}
-.meta-detail-close{flex:none;align-self:flex-start;width:34px;height:34px;border-radius:50%;background:rgba(var(--ov),.06);
-  border:1px solid rgba(var(--ov),.16);color:var(--text2);font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(6px)}
-.meta-detail-close:hover{background:rgba(0,0,0,.78)}
-/* .meta-detail-titlewrap se retiró con el rediseño: el título vive en .md-head-txt. */
-.meta-detail-title{font-family:var(--font-title);font-size:clamp(19px,2.2vw,26px);font-weight:600;color:var(--text);line-height:1.15}
-/* Cita motivadora — comillas grandes decorativas, fondo con tinte de color, tipografía serif —
-   pero compacta: ya no domina la parte de arriba de la pantalla como en la ronda anterior. */
-.meta-detail-frase{position:relative;font-family:var(--font-title);font-size:13.5px;font-weight:500;font-style:italic;
-  color:var(--text2);margin:0 8px 14px;padding-left:13px;border-left:2px solid rgba(0,232,122,.45);line-height:1.5;padding:9px 16px 9px 36px;border-radius:12px;
-  background:linear-gradient(135deg,rgba(0,232,122,.09),rgba(0,232,122,.02));border:1px solid rgba(0,232,122,.16)}
-.meta-detail-frase::before{content:none}
-/* Barra de dinero real (2026-08-09) — solo BYD y Maestría la traen (ver METAS_MONEYBAR): datos
-   reales de Finanzas, de solo lectura, distinta del checklist de abajo (que sí se puede tocar). */
-.meta-detail-moneybar{margin-bottom:10px;padding:9px 14px;background:linear-gradient(135deg,rgba(0,224,192,.08),rgba(0,224,192,.01));border:1px solid rgba(0,224,192,.18);border-radius:12px}
-.meta-detail-moneybar-row{display:flex;align-items:center;gap:9px;font-size:11.5px;color:var(--text2);margin-bottom:5px}
-.meta-detail-moneybar-row b{font-family:var(--mono);font-size:14px;color:var(--cy);flex-shrink:0}
-/* Checklist (2026-08-09, reemplaza los pasos numerados de solo lectura) — pedido explícito:
-   "al hacer click en las metas no me estas poniendo checklist, con eso se van a llenar las
-   barras de progreso". Desde el 2026-08-23 no hay casillas sueltas: se marca el paso abierto
-   con el botón del pie (.md-btn-marcar → mdMarcar()), que sigue llamando a toggleMetaChecklist()
-   / toggleHabilidadChecklist() / toggleEdadChecklist() — el mismo guardado de siempre en
-   localStorage, que repinta el panel y la tarjeta de atrás (su barra se calcula sola:
-   % = pasos marcados / total, ver detailPct()). */
-.meta-detail-bar-ico{width:20px;height:20px;border-radius:50%;background:rgba(var(--ov),.1);display:flex;align-items:center;justify-content:center;font-size:10.5px;flex-shrink:0}
-.meta-detail-bar-lbl{flex:1;min-width:0}
-/* ─── Panel de detalle, diseño "Estudio" (2026-08-23) ───
-   Elegido por Adán entre 3 direcciones. Lo que arregla del anterior, que era una lista plana de
-   hasta 11 pasos: la foto ocupaba 340px antes de leer nada, el título del paso iba pegado al
-   texto en el mismo párrafo, la barra de progreso se perdía al bajar y el cuerpo era de 11.5px.
-   Ahora: cabecera en franja con miniatura, temario en columna, y un paso a la vez a 15px. */
-:root[data-theme="light"] .meta-detail-card{background:rgba(255,255,255,.94)}
-:root:not([data-theme="light"]) .meta-detail-card{background:rgba(12,12,22,.94)}
-.md-head{display:flex;align-items:flex-start;gap:18px;padding:16px 20px;flex:none;
-  border-bottom:1px solid rgba(var(--ov),.09);
-  background:linear-gradient(100deg,rgba(0,232,122,.07),transparent 60%)}
-.md-head-txt{flex:1;min-width:0}
-.md-eyebrow{font-size:10px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--g);margin-bottom:4px}
-.md-head-bar{display:flex;align-items:center;gap:9px;margin-top:8px}
-.md-bar{flex:1;max-width:280px;height:5px;border-radius:5px;background:rgba(var(--ov),.1);overflow:hidden}
-.md-bar-fill{height:100%;border-radius:5px;background:linear-gradient(90deg,var(--g),var(--cy));transition:width .35s}
-.md-bar-num{font-family:var(--mono);font-size:12px;font-weight:700;color:var(--g);flex-shrink:0}
-/* Dos columnas: el temario dice siempre dónde vas, el panel derecho es lo que se lee. */
-.md-body{flex:1;min-height:0;display:flex}
-.md-indice{flex:none;width:270px;border-right:1px solid rgba(var(--ov),.09);overflow-y:auto;padding:14px 12px}
-.md-indice-lbl{font-size:9.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);padding:0 8px 9px}
-.md-indice-list{display:flex;flex-direction:column;gap:3px}
-.md-ix{display:flex;align-items:flex-start;gap:9px;width:100%;text-align:left;cursor:pointer;
-  padding:8px 9px;border-radius:9px;border:1px solid transparent;background:none;font-family:inherit;
+:root[data-theme="light"] .meta-detail-card{background:rgba(255,255,255,.96)}
+:root:not([data-theme="light"]) .meta-detail-card{background:rgba(12,12,22,.96)}
+/* Etiqueta de apartado: la misma voz que el resto del dashboard (mono, versalitas, espaciada). */
+.md-lbl{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--text3)}
+/* Cabecera: foto · título y frase · avance · cerrar. */
+.md-head{display:grid;grid-template-columns:76px minmax(0,1fr) auto 36px;grid-template-areas:"hero txt prog close";gap:22px;align-items:center;
+  padding:20px 28px 18px;flex:none;border-bottom:1px solid rgba(var(--ov),.1);
+  background:linear-gradient(100deg,rgba(var(--g-rgb),.07),transparent 55%)}
+.meta-detail-hero{grid-area:hero;width:76px;height:76px;border-radius:4px;background-size:cover;background-position:center;border:1px solid rgba(var(--ov),.16)}
+.md-head-txt{grid-area:txt;min-width:0;display:flex;flex-direction:column;gap:5px}
+.md-eyebrow{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--g)}
+.meta-detail-title{font-family:var(--font-title);font-size:clamp(20px,2.1vw,30px);font-weight:600;color:var(--text);line-height:1.12;letter-spacing:-.01em}
+.meta-detail-frase{font-family:var(--font-title);font-size:15px;font-style:italic;font-weight:500;line-height:1.45;color:var(--text2)}
+.meta-detail-frase:empty{display:none}
+.md-prog{grid-area:prog;display:flex;flex-direction:column;align-items:flex-end;gap:6px;padding-right:6px}
+.md-bar-num{font-family:var(--mono);font-size:34px;font-weight:700;line-height:1;color:var(--g);white-space:nowrap}
+.md-bar-num small{font-size:15px;font-weight:600;color:var(--text3);margin-left:4px}
+.md-bar{width:220px;height:5px;border-radius:3px;background:rgba(var(--ov),.1);overflow:hidden}
+.md-bar-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--g),var(--cy));transition:width .35s}
+.meta-detail-close{grid-area:close;align-self:start;width:36px;height:36px;border-radius:50%;background:rgba(var(--ov),.05);
+  border:1px solid rgba(var(--ov),.16);color:var(--text2);font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.meta-detail-close:hover{background:rgba(var(--ov),.12);color:var(--text)}
+/* Cuerpo: temario · paso · recursos. Cada columna desplaza lo suyo; la tarjeta, no. */
+.md-body{flex:1;min-height:0;display:grid;grid-template-columns:300px minmax(0,1fr) 300px;grid-template-rows:minmax(0,1fr)}
+.md-col-hd{display:flex;align-items:baseline;justify-content:space-between;gap:8px;padding:16px 20px 10px;flex:none}
+.md-col-hd small,.md-rec-hd small{font-family:var(--mono);font-size:10px;font-weight:600;color:var(--text3)}
+.md-indice{min-height:0;display:flex;flex-direction:column;border-right:1px solid rgba(var(--ov),.1)}
+.md-indice-list{flex:1;min-height:0;overflow-y:auto;padding:0 10px 12px;display:flex;flex-direction:column;gap:2px}
+.md-ix{display:grid;grid-template-columns:24px minmax(0,1fr);gap:11px;align-items:start;width:100%;text-align:left;cursor:pointer;
+  padding:9px 10px;border-radius:4px;border:1px solid transparent;background:none;font-family:inherit;
   transition:background .15s,border-color .15s}
 .md-ix:hover{background:rgba(var(--ov),.05)}
-.md-ix.on{background:rgba(0,224,192,.1);border-color:rgba(0,224,192,.3)}
-.md-ix-n{flex:none;width:19px;height:19px;border-radius:50%;display:flex;align-items:center;justify-content:center;
-  font-family:var(--mono);font-size:9.5px;font-weight:700;background:rgba(var(--ov),.09);color:var(--text3);margin-top:1px}
+.md-ix.on{background:rgba(var(--cy-rgb),.09);border-color:rgba(var(--cy-rgb),.32)}
+.md-ix-n{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-family:var(--mono);font-size:10px;font-weight:700;background:rgba(var(--ov),.07);color:var(--text3)}
 .md-ix.hecho .md-ix-n{background:var(--g);color:#05050a}
-.md-ix-t{flex:1;min-width:0;font-size:12px;font-weight:500;line-height:1.4;color:var(--text2)}
+.md-ix.on .md-ix-n{background:var(--cy);color:#05050a}
+.md-ix-t{min-width:0;font-size:13px;font-weight:500;line-height:1.4;color:var(--text2);padding-top:3px}
 .md-ix.on .md-ix-t{color:var(--text);font-weight:700}
 .md-ix.hecho .md-ix-t{color:var(--text3)}
+/* Filete antes del cierre de la ficha (Practicarlo · Qué leer · Ya lo dominas): son otra cosa que
+   la teoría, y el temario lo dice sin una etiqueta más. */
+.md-ix-sep{border-top:1px solid rgba(var(--ov),.09);margin:8px 10px 6px}
 /* El paso, en tamaño de lectura de verdad. */
-.md-main{flex:1;min-width:0;min-height:0;display:flex;flex-direction:column}
-.md-paso{flex:1;min-height:0;overflow-y:auto;padding:26px 32px}
-.md-paso-t,.md-paso-d,.md-paso-list{max-width:72ch}
-.md-paso-n{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.08em;color:var(--cy);margin-bottom:8px}
-.md-paso-t{font-family:var(--font-title);font-size:clamp(20px,2.2vw,27px);font-weight:700;color:var(--text);line-height:1.2;margin-bottom:14px}
-.md-paso-d{font-size:15px;line-height:1.75;color:var(--text2)}
-.md-tucaso{max-width:72ch;margin:18px 0 0;padding:13px 16px;border-radius:13px;
-  background:rgba(0,224,192,.08);border:1px solid rgba(0,224,192,.22);border-left:3px solid var(--cy)}
-.md-tucaso-lbl{font-size:9.5px;font-weight:800;letter-spacing:.11em;text-transform:uppercase;color:var(--cy);margin-bottom:5px}
-.md-tucaso-txt{font-size:14px;line-height:1.65;color:var(--text2)}
-.md-paso-list{margin:16px 0 0;padding-left:20px;display:flex;flex-direction:column;gap:8px}
-/* Un lugar de la lista de citas: nombre, zona y para qué sirve, y toda la fila es el
-   enlace a Google Maps. El pin va a la derecha para que se vea que lleva a algún sitio. */
-.md-paso-list li:has(>.mapa){list-style:none;margin-left:-20px}
-.mapa{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 12px;padding:10px 13px;
-  border-radius:11px;background:rgba(var(--ov),.035);border:1px solid rgba(var(--ov),.07);
+.md-main{min-width:0;min-height:0;display:flex;flex-direction:column}
+.md-paso{flex:1;min-height:0;overflow-y:auto;padding:24px 48px 30px;display:flex;flex-direction:column;gap:20px}
+.md-paso-hd{display:flex;flex-direction:column;gap:9px;padding-bottom:16px;border-bottom:1px solid rgba(var(--ov),.1)}
+.md-paso-n{display:flex;align-items:center;gap:12px}
+.md-paso-n .md-lbl:first-child{color:var(--cy)}
+.md-paso-n i{width:1px;height:10px;background:rgba(var(--ov),.2)}
+.md-paso-t{font-family:var(--font-title);font-size:clamp(22px,2.3vw,34px);font-weight:700;color:var(--text);line-height:1.12;letter-spacing:-.012em;max-width:26ch}
+.md-paso-d{font-size:16.5px;line-height:1.7;color:var(--text2);max-width:66ch}
+.md-paso-d b{color:var(--text)}
+/* Los puntos del paso como libro mayor: índice en mono, filete entre uno y otro, sin viñetas. */
+.md-ledger{display:flex;flex-direction:column;gap:8px}
+.md-pt{display:grid;grid-template-columns:34px minmax(0,1fr);gap:14px;padding:12px 0;border-top:1px solid rgba(var(--ov),.08)}
+.md-pt:first-of-type{border-top:none;padding-top:2px}
+.md-pt-k{font-family:var(--mono);font-size:11px;font-weight:700;color:var(--cy);padding-top:4px;letter-spacing:.06em}
+.md-pt-x{font-size:15px;line-height:1.68;color:var(--text2);max-width:72ch}
+.md-pt-x b{color:var(--text)}
+/* Los apartados con nombre: cian para lo que se copia y se usa (Tu caso, Ejemplo, Plantilla),
+   ámbar para el error más común. Van en rejilla: dos al lado si caben, si no uno bajo otro. */
+.md-apartados{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:14px}
+.md-tucaso{border-radius:5px;padding:15px 18px 16px;display:flex;flex-direction:column;gap:7px;
+  background:rgba(var(--cy-rgb),.07);border:1px solid rgba(var(--cy-rgb),.24)}
+.md-tucaso-lbl{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--cy);display:flex;align-items:center;gap:7px}
+.md-tucaso-txt{font-size:14.5px;line-height:1.65;color:var(--text2)}
+.md-tucaso-txt b{color:var(--text)}
+.md-tucaso.aviso{background:rgba(var(--w-rgb),.08);border-color:rgba(var(--w-rgb),.3)}
+.md-tucaso.aviso .md-tucaso-lbl{color:var(--w)}
+/* Un lugar de la lista de citas: nombre, zona y para qué sirve, y toda la fila es el enlace a
+   Google Maps. El pin va a la derecha para que se vea que lleva a algún sitio. */
+.md-mapas{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr));gap:10px}
+.mapa{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 12px;padding:11px 14px;
+  border-radius:5px;background:rgba(var(--ov),.035);border:1px solid rgba(var(--ov),.08);
   text-decoration:none;transition:background .15s,border-color .15s;position:relative}
 .mapa:hover{background:rgba(var(--ov),.075);border-color:rgba(var(--cy-rgb),.3)}
 .mapa b{font-size:14px;font-weight:700;color:var(--text)}
@@ -2431,78 +2403,124 @@ button.hp-lec:active{transform:translateY(0)}
   -webkit-mask:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'><path d='M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z'/><circle cx='12' cy='10' r='3'/></svg>") center/contain no-repeat;
           mask:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'><path d='M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z'/><circle cx='12' cy='10' r='3'/></svg>") center/contain no-repeat}
 .mapa:hover::after{color:var(--cy)}
-.md-paso-list li{font-size:14px;line-height:1.65;color:var(--text2)}
-.md-paso-list li::marker{color:var(--cy)}
-.md-paso-img{display:block;width:auto;max-width:min(100%,520px);max-height:260px;object-fit:cover;border-radius:12px;margin:18px 0 0}
+.md-paso-img{display:block;width:auto;max-width:min(100%,520px);max-height:260px;object-fit:cover;border-radius:6px}
 .md-paso-img.is-diagram{max-height:320px;max-width:min(100%,420px);object-fit:contain;background:#fff;padding:10px}
-.md-paso-link{display:inline-flex;align-items:center;gap:6px;margin-top:18px;padding:9px 15px;border-radius:11px;
+.md-paso-link{display:inline-flex;align-items:center;gap:6px;align-self:flex-start;padding:10px 16px;border-radius:6px;
   font-size:12.5px;font-weight:800;color:var(--cy);text-decoration:none;
-  background:rgba(0,224,192,.1);border:1px solid rgba(0,224,192,.24)}
-.md-paso-link:hover{background:rgba(0,224,192,.2)}
+  background:rgba(var(--cy-rgb),.1);border:1px solid rgba(var(--cy-rgb),.24)}
+.md-paso-link:hover{background:rgba(var(--cy-rgb),.2)}
 /* Mismo botón, pero para acciones de la app (el simulacro del CT-GenAI). Un <button>
    no hereda la tipografía ni el cursor, así que se los da esta regla. */
 .md-paso-btn{font-family:inherit;cursor:pointer;color:var(--g);
-  background:rgba(0,232,122,.12);border-color:rgba(0,232,122,.3)}
-.md-paso-btn:hover{background:rgba(0,232,122,.22)}
-/* Marcar y avanzar sin ir a buscar nada. */
-.md-acciones{flex:none;display:flex;align-items:center;gap:10px;padding:14px 32px;
-  border-top:1px solid rgba(var(--ov),.09);background:rgba(var(--ov),.045)}
-.md-btn-marcar{display:flex;align-items:center;gap:8px;padding:10px 18px;border-radius:11px;cursor:pointer;
-  font-family:inherit;font-size:13px;font-weight:800;transition:background .15s,border-color .15s,color .15s;
-  border:1px solid rgba(var(--ov),.14);background:rgba(var(--ov),.05);color:var(--text2)}
-.md-btn-marcar:hover{background:rgba(var(--ov),.1)}
-.md-btn-marcar.on{border-color:rgba(0,232,122,.4);background:rgba(0,232,122,.16);color:var(--g)}
+  background:rgba(var(--g-rgb),.12);border-color:rgba(var(--g-rgb),.3)}
+.md-paso-btn:hover{background:rgba(var(--g-rgb),.22)}
+/* Recursos: lo que acompaña a la ficha entera, no a un paso — se ve en cualquier punto del
+   checklist. Los videos (2026-08-30) van FUERA de `pasos` para no cambiar el denominador de los
+   checklists ya guardados. Rojo de YouTube en ningún sitio: el botón de play sigue la paleta. */
+.md-recursos{min-height:0;overflow-y:auto;border-left:1px solid rgba(var(--ov),.1);padding:16px 22px 20px;display:flex;flex-direction:column;gap:20px}
+.md-rec{display:flex;flex-direction:column;gap:10px}
+.md-rec-hd{display:flex;align-items:baseline;justify-content:space-between;gap:8px}
+.md-vid-a{display:grid;grid-template-columns:30px minmax(0,1fr);gap:12px;padding:12px 0;border-top:1px solid rgba(var(--ov),.08);text-decoration:none}
+.md-vid-a:first-of-type{border-top:none;padding-top:0}
+.md-vid-play{width:30px;height:30px;border-radius:50%;border:1px solid rgba(var(--ov),.16);display:flex;align-items:center;justify-content:center;color:var(--text);transition:background .15s,color .15s,border-color .15s}
+.md-vid-a:hover .md-vid-play{background:var(--cy);border-color:var(--cy);color:#04140c}
+.md-vid-t{display:block;font-size:12.5px;font-weight:700;color:var(--text);line-height:1.35}
+.md-vid-a:hover .md-vid-t{color:var(--cy)}
+.md-vid-d{display:block;font-size:11px;color:var(--text3);margin-top:3px;line-height:1.45}
+.md-avance{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.md-avance div{display:flex;flex-direction:column;gap:4px}
+.md-avance b{font-family:var(--mono);font-size:22px;font-weight:700;color:var(--text);line-height:1}
+.md-avance b.ok{color:var(--g)}
+.md-avance .md-lbl{font-size:8.5px;letter-spacing:.14em}
+/* "Siguiente pendiente": el paso al que se retoma; toda la caja es el botón. */
+.md-sig{display:flex;flex-direction:column;gap:4px;text-align:left;cursor:pointer;font-family:inherit;padding:11px 13px;border-radius:5px;
+  border:1px solid rgba(var(--ov),.1);background:rgba(var(--ov),.03);color:var(--text)}
+.md-sig:hover{border-color:rgba(var(--cy-rgb),.4);background:rgba(var(--cy-rgb),.06)}
+.md-sig span:last-child{font-size:12.5px;font-weight:600;line-height:1.4}
+.md-avance-nota{font-size:12px;line-height:1.55;color:var(--text3)}
+.md-hair{border-top:1px solid rgba(var(--ov),.09)}
+/* Barra de dinero real (metas BYD y Maestría, ver METAS_MONEYBAR) y el bloque de Tu año: de solo
+   lectura, en Recursos porque acompañan a la ficha entera. */
+.meta-detail-moneybar{padding:12px 14px;background:linear-gradient(135deg,rgba(var(--cy-rgb),.08),rgba(var(--cy-rgb),.01));border:1px solid rgba(var(--cy-rgb),.18);border-radius:5px}
+.meta-detail-moneybar-row{display:flex;align-items:center;gap:9px;font-size:11.5px;color:var(--text2);margin-bottom:6px}
+.meta-detail-moneybar-row b{font-family:var(--mono);font-size:14px;color:var(--cy);flex-shrink:0}
+.meta-detail-bar-ico{width:20px;height:20px;border-radius:50%;background:rgba(var(--ov),.1);display:flex;align-items:center;justify-content:center;font-size:10.5px;flex-shrink:0}
+.meta-detail-bar-lbl{flex:1;min-width:0}
+#metaDetailMoneybar:empty,#metaDetailVideo:empty{display:none}
+/* Pie a lo ancho: marcar · dónde vas · navegar. Marcar sigue llamando a toggle*Checklist(), que
+   guarda en localStorage y repinta la tarjeta de atrás. */
+.md-acciones{flex:none;display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:24px;padding:14px 28px;
+  border-top:1px solid rgba(var(--ov),.1);background:rgba(var(--ov),.035)}
+.md-btn-marcar{display:inline-flex;align-items:center;gap:9px;height:44px;padding:0 20px;border-radius:6px;cursor:pointer;
+  font-family:inherit;font-size:13.5px;font-weight:700;transition:background .15s,border-color .15s,color .15s;
+  border:1px solid rgba(var(--g-rgb),.45);background:rgba(var(--g-rgb),.12);color:var(--g)}
+.md-btn-marcar:hover{background:rgba(var(--g-rgb),.22)}
+.md-btn-marcar.on{border-color:var(--g);background:var(--g);color:#05050a}
 .md-check{font-size:14px;line-height:1}
-.md-nav{width:38px;height:38px;border-radius:10px;cursor:pointer;font-family:inherit;font-size:17px;font-weight:700;
-  border:1px solid rgba(var(--ov),.14);background:rgba(var(--ov),.05);color:var(--text2);
-  display:flex;align-items:center;justify-content:center;padding:0}
-.md-nav:hover:not(:disabled){background:rgba(var(--ov),.11);color:var(--text)}
+.md-dots{display:flex;align-items:center;justify-content:center;gap:5px;flex-wrap:wrap}
+.md-dots i{width:18px;height:4px;border-radius:2px;background:rgba(var(--ov),.12);cursor:pointer}
+.md-dots i.hecho{background:var(--g)}
+.md-dots i.on{background:var(--cy);height:6px}
+.md-navs{display:flex;align-items:center;gap:8px}
+.md-nav{display:inline-flex;align-items:center;gap:8px;height:44px;padding:0 18px;border-radius:6px;cursor:pointer;font-family:inherit;font-size:13.5px;font-weight:700;
+  border:1px solid rgba(var(--ov),.16);background:rgba(var(--ov),.04);color:var(--text2)}
+.md-nav:hover:not(:disabled){background:rgba(var(--ov),.1);color:var(--text)}
 .md-nav:disabled{opacity:.32;cursor:default}
-.md-nav-next{width:auto;padding:0 16px;font-size:13px;
-  border-color:rgba(0,224,192,.3);background:rgba(0,224,192,.12);color:var(--cy)}
-.md-nav-next:hover:not(:disabled){background:rgba(0,224,192,.2)}
-/* En pantallas angostas el temario no cabe al lado: pasa a tira horizontal sobre el contenido. */
-@media(max-width:820px){
-  .md-body{flex-direction:column}
-  .md-indice{width:auto;border-right:none;border-bottom:1px solid rgba(var(--ov),.09);
-    max-height:none;overflow:visible;padding:12px}
-  .md-indice-list{flex-direction:row;overflow-x:auto;gap:6px;scrollbar-width:none}
-  .md-indice-list::-webkit-scrollbar{display:none}
-  .md-ix{width:auto;flex:none;max-width:210px}
-  .md-ix-t{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .md-paso{padding:20px}
-  .md-acciones{padding:12px 20px}
-  .md-head{padding:12px 14px;gap:12px}
-  /* La cita da contexto, pero a 5 lineas empuja el temario y el paso fuera de la pantalla. */
-  .meta-detail-frase{font-size:12.5px;padding:8px 12px;margin:0 0 10px;
-    display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
-  .md-btn-marcar,.md-nav-next{white-space:nowrap}
-  .md-btn-marcar{font-size:12px;padding:10px 13px;min-width:0;overflow:hidden}
-  .md-btn-marcar #metaDetailMarcarTxt{overflow:hidden;text-overflow:ellipsis}
-  .md-nav-next{padding:0 12px;font-size:12px}
-  .md-nav{width:34px;height:34px}
-  .md-nav-next{width:auto;height:34px}
-  .md-acciones{gap:7px}
+.md-nav-next{border-color:rgba(var(--cy-rgb),.4);background:rgba(var(--cy-rgb),.12);color:var(--cy)}
+.md-nav-next:hover:not(:disabled){background:rgba(var(--cy-rgb),.22);color:var(--cy)}
+/* Pantallas medianas (laptop angosta, iPad apaisado): no caben tres columnas, así que Recursos
+   baja a una franja bajo el temario y el paso. */
+@media(max-width:1180px){
+  .md-body{grid-template-columns:260px minmax(0,1fr);grid-template-rows:minmax(0,1.4fr) minmax(0,1fr)}
+  .md-indice{grid-area:1/1/2/2}
+  .md-recursos{grid-area:2/1/3/2;border-left:none;border-top:1px solid rgba(var(--ov),.1);padding:14px 16px 16px;gap:16px}
+  .md-main{grid-area:1/2/3/3}
+  .md-paso{padding:22px 32px 26px}
 }
-/* Imagen dentro de un paso del checklist (2026-08-11) — foto/diagrama real que ilustra esa fase
-   de una progresión (empezando por "Saber nadar", Habilidades Base). object-fit:cover con un
-   alto máximo fijo para que una foto muy alta/muy panorámica no se coma media pantalla del
-   overlay — el punto es apoyar el texto, no reemplazarlo.
-   2026-08-12 — se subió el alto de 180px a 220px (pedido: "ni siquiera se ven bien") y se agregó
-   la variante `.is-diagram` para los pasos que traen `imgFit:'diagrama'`: un diagrama técnico
-   (nudo, maniobra de RCP, torniquete) es línea sobre fondo blanco/transparente, así que
-   `object-fit:cover` le recortaba justo la parte que explica el paso, y en tema oscuro un PNG/SVG
-   transparente con trazo negro quedaba prácticamente invisible. La variante usa `contain` (se ve
-   el diagrama completo), fondo blanco fijo (el trazo negro siempre contrasta, en los 2 temas) y
-   más alto — un diagrama mal recortado o invisible no sirve de nada, y aquí puede ser el
-   diagrama de una maniobra que salva una vida. */
-/* 2026-08-15, "ponlas mas pequeñas": 300→150px las fotos y 400→240px los diagramas. La foto
-   ocupaba más alto que el texto que venía a ilustrar, así que en fases largas empujaba la lista
-   fuera de la pantalla y había que scrollear para leer lo que la imagen supuestamente apoyaba.
-   Los diagramas bajan menos porque en ellos el detalle SÍ es el contenido (un nudo o una
-   maniobra de RCP a 150px ya no se distingue). `max-width` limita el ancho además del alto: con
-   `cover` y ancho 100%, una foto apaisada de 150px de alto se recortaba a una tira inservible. */
-@media(max-width:600px){.meta-detail-frase{padding:8px 14px}}
+/* Celular: los tres apartados se apilan y toda la ficha desplaza como una sola página; el temario
+   es una tira de chips, el pie se queda fijo con Dominado y Siguiente a 44px. */
+@media(max-width:820px){
+  .meta-detail-overlay{padding:0}
+  .meta-detail-card{width:100vw;height:100vh;height:100dvh;border-radius:0;border:none}
+  .md-head{grid-template-columns:52px minmax(0,1fr) 32px;grid-template-areas:"hero txt close" "hero prog close";gap:6px 12px;align-items:start;padding:14px 16px 12px}
+  .meta-detail-hero{width:52px;height:52px}
+  .meta-detail-title{font-size:19px}
+  .md-head-txt{display:block}
+  .md-head-txt>*+*{margin-top:5px}
+  .meta-detail-frase{font-size:13px;line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .md-prog{flex-direction:row;align-items:center;gap:9px;padding:0;margin-top:2px}
+  .md-prog>.md-lbl{display:none}
+  .md-bar{flex:1;width:auto;height:4px}
+  .md-bar-num{font-size:12px;order:2}
+  .md-bar-num small{font-size:12px;margin-left:0}
+  .meta-detail-close{width:32px;height:32px}
+  .md-body{display:flex;flex-direction:column;overflow-y:auto}
+  .md-indice{flex:none;border-right:none;border-bottom:1px solid rgba(var(--ov),.1)}
+  .md-col-hd{padding:12px 16px 8px}
+  .md-indice-list{flex:none;flex-direction:row;overflow-x:auto;overflow-y:hidden;gap:6px;padding:0 16px 12px;scrollbar-width:none}
+  .md-indice-list::-webkit-scrollbar{display:none}
+  .md-ix{width:auto;flex:none;max-width:210px;grid-template-columns:22px minmax(0,1fr);gap:7px;align-items:center;padding:5px 11px 5px 6px;
+    border-color:rgba(var(--ov),.1);background:rgba(var(--ov),.03)}
+  .md-ix-n{width:22px;height:22px}
+  .md-ix-t{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:12px;padding-top:0}
+  .md-ix-sep{display:none}
+  .md-main{flex:none}
+  .md-paso{overflow:visible;padding:18px 16px;gap:16px}
+  .md-paso-t{font-size:24px}
+  .md-paso-d{font-size:15px}
+  .md-pt{grid-template-columns:26px minmax(0,1fr);gap:10px}
+  .md-pt-x{font-size:14.5px}
+  .md-recursos{flex:none;overflow:visible;border-left:none;border-top:1px solid rgba(var(--ov),.1);padding:14px 16px 18px}
+  .md-acciones{grid-template-columns:minmax(0,1fr) auto;gap:8px;padding:10px 16px 14px}
+  .md-dots{display:none}
+  .md-btn-marcar{justify-content:center;padding:0 12px;font-size:12.5px;min-width:0;overflow:hidden}
+  .md-btn-marcar #metaDetailMarcarTxt{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .md-nav{padding:0 14px;font-size:13px}
+  .md-nav-prev{width:44px;padding:0;justify-content:center}
+  .md-nav-prev span{display:none}
+}
+/* Las imágenes de un paso (.md-paso-img, .is-diagram) se estilan en el bloque "Panel de detalle": foto
+   recortada a 260px de alto; diagrama completo sobre fondo blanco, porque su detalle SÍ es el contenido. */
 
 /* ─── IMAGEN DE EJERCICIO (2026-08-11) — clic en "🏋️ Hoy toca" → ver diagrama de técnica ───
    Mismo lenguaje visual que .meta-detail-overlay (overlay fijo + card con blur + cierre por
@@ -3666,48 +3684,56 @@ button.ct-cat:hover{background:rgba(var(--ov),.07)}
 <div class="hb2-ficha-ov" id="hb2Ficha" onclick="if(event.target===this) HB.cerrarFicha()"></div>
 
 <div class="meta-detail-overlay" id="metaDetailOverlay" onclick="if(event.target===this) cerrarMetaDetalle()">
-  <!-- Rediseñado el 2026-08-23 (dirección "Estudio", elegida entre 3 en un canvas): la foto pasa
-       a miniatura, el temario vive en una columna propia y a la derecha se lee UN paso a la vez,
-       grande. Los ids se conservan porque los usan abrirMetaDetalle(), abrirHabilidadDetalle() y
-       abrirEdadDetalle() — el cambio no toca a ninguna de las tres. -->
+  <!-- Diseño "Tres apartados" (2026-09-13, elegido en diseno-ficha/ frente a dos direcciones más):
+       la tarjeta ocupa casi toda la pantalla y se parte en TEMARIO · EL PASO · RECURSOS, con la
+       frase en la cabecera y el pie a lo ancho. Los ids se conservan porque los usan
+       abrirMetaDetalle(), abrirHabilidadDetalle() y abrirEdadDetalle(): el cambio no toca a
+       ninguna de las tres. El CSS está en el bloque "Panel de detalle" de arriba. -->
   <div class="meta-detail-card">
     <div class="md-head">
       <div class="meta-detail-hero" id="metaDetailHero"></div>
       <div class="md-head-txt">
         <div class="md-eyebrow" id="metaDetailEyebrow">Detalle</div>
         <div class="meta-detail-title" id="metaDetailTitle"></div>
-        <div class="md-head-bar">
-          <div class="md-bar"><div class="md-bar-fill" id="metaDetailBarFill" style="width:0%"></div></div>
-          <span class="md-bar-num" id="metaDetailBarNum">0/0</span>
-        </div>
+        <div class="meta-detail-frase" id="metaDetailFrase"></div>
+      </div>
+      <div class="md-prog">
+        <span class="md-bar-num" id="metaDetailBarNum">0<small>/ 0</small></span>
+        <span class="md-lbl" id="metaDetailProgLbl">Dominados · 0 %</span>
+        <div class="md-bar"><div class="md-bar-fill" id="metaDetailBarFill" style="width:0%"></div></div>
       </div>
       <button class="meta-detail-close" onclick="cerrarMetaDetalle()" aria-label="Cerrar">✕</button>
     </div>
 
     <div class="md-body">
       <aside class="md-indice">
-        <div class="meta-detail-frase" id="metaDetailFrase"></div>
-        <div id="metaDetailMoneybar"></div>
-        <div id="metaDetailVideo"></div>
-        <div class="md-indice-lbl">Temario</div>
+        <div class="md-col-hd"><span class="md-lbl">Temario</span><small id="metaDetailIndiceN"></small></div>
         <div class="md-indice-list" id="metaDetailIndice"></div>
       </aside>
 
       <div class="md-main">
         <div class="md-paso" id="metaDetailSteps"></div>
-        <div class="md-acciones">
-          <button class="md-btn-marcar" id="metaDetailMarcar" onclick="mdMarcar()">
-            <span class="md-check">✓</span><span id="metaDetailMarcarTxt">Marcar como dominado</span>
-          </button>
-          <div style="flex:1"></div>
-          <button class="md-nav" onclick="mdIr(mdEstado.i-1)" aria-label="Paso anterior">‹</button>
-          <button class="md-nav md-nav-next" onclick="mdIr(mdEstado.i+1)">Siguiente ›</button>
-        </div>
+      </div>
+
+      <aside class="md-recursos">
+        <div id="metaDetailMoneybar"></div>
+        <div id="metaDetailVideo"></div>
+        <div class="md-rec" id="metaDetailAvance"></div>
+      </aside>
+    </div>
+
+    <div class="md-acciones">
+      <button class="md-btn-marcar" id="metaDetailMarcar" onclick="mdMarcar()">
+        <span class="md-check">✓</span><span id="metaDetailMarcarTxt">Marcar como dominado</span>
+      </button>
+      <div class="md-dots" id="metaDetailDots"></div>
+      <div class="md-navs">
+        <button class="md-nav md-nav-prev" onclick="mdIr(mdEstado.i-1)" aria-label="Paso anterior">‹ <span>Anterior</span></button>
+        <button class="md-nav md-nav-next" onclick="mdIr(mdEstado.i+1)">Siguiente ›</button>
       </div>
     </div>
   </div>
 </div>
-
 <!-- ─── DETALLE DE UN MEDIDOR (2026-08-19) — se abre tocando cualquiera de los 8 de Mis Metas ─── -->
 <div class="gbm-overlay" id="kpiOverlay" onclick="if(event.target===this) cerrarKpi()">
   <div class="gbm-card">
@@ -9485,6 +9511,17 @@ function pintarDetailOverlay(dataDict,storeKey,id,toggleFnName,moneyInfo){
   mdPintar();
 }
 
+// Los títulos de los pasos traen a veces un emoji delante ("📚 Qué leer", "✅ Ya lo dominas"). En
+// el temario y en el título grande del paso se quita: el filete del temario y la etiqueta del
+// apartado ya dicen qué son, y un emoji en serif a 34px se ve fuera de sitio.
+const MD_RE_EMOJI=/^(?:[\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}\u{2B00}-\u{2BFF}\u{FE0F}]\s*)+/u;
+function mdLimpiaTitulo(t){ return String(t||'').replace(MD_RE_EMOJI,''); }
+// Los pasos de cierre de una ficha (práctica de la semana, qué leer, ya lo dominas): el temario
+// pone un filete antes del primero para separarlos de la teoría.
+function mdEsCierre(t){ return /^(?:practicarlo|qué leer|ya lo dominas)/i.test(mdLimpiaTitulo(t)); }
+const MD_SVG_PLAY='<svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4l13 8-13 8z"/></svg>';
+const MD_SVG_AVISO='<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3L2 20h20L12 3z"/><path d="M12 10v5M12 18h.01"/></svg>';
+
 function mdPintar(){
   const {dict,storeKey,id}=mdEstado;
   const info=dict&&dict[id]; if(!info) return;
@@ -9496,11 +9533,13 @@ function mdPintar(){
   mdEstado.i=i;
   const p=pasos[i], hecho=!!store[i];
 
-  // Cabecera
+  // Cabecera: el avance, en grande
   document.getElementById('metaDetailBarFill').style.width=pct+'%';
-  document.getElementById('metaDetailBarNum').textContent=done+'/'+total;
+  document.getElementById('metaDetailBarNum').innerHTML=`${done}<small>/ ${total}</small>`;
+  document.getElementById('metaDetailProgLbl').textContent=`Dominados · ${pct} %`;
 
-  // Dinero real de BYD/Maestría — sigue existiendo, ahora bajo la frase
+  // ── RECURSOS ──────────────────────────────────────────────────────────────
+  // Dinero real de BYD/Maestría — sigue existiendo, ahora en la columna de recursos
   const mb=mdEstado.money;
   document.getElementById('metaDetailMoneybar').innerHTML=mb?`
     <div class="meta-detail-moneybar">
@@ -9508,56 +9547,84 @@ function mdPintar(){
       <div class="img-goal-pbar"><div class="img-goal-pbar-fill" style="width:${mb.pct}%;background:var(--cy)"></div></div>
     </div>`:'';
 
-  // ── El video de la habilidad (2026-08-30) ──────────────────────────────────
-  // Adán: "dame videos que abarquen cada habilidad […] para que lo escuche y aprenda".
-  // Va FUERA de `pasos` a propósito: como un paso más habría cambiado los denominadores de
-  // todos los checklists (0/12 pasa a 0/13) y con ellos su avance ya guardado. Aquí es un
-  // recurso permanente del panel, visible en cualquier paso.
-  // Los 23 enlaces se buscaron y se comprobaron uno a uno: de cada uno se verificó que la
-  // página responde y que el título es el que dice. Lo que NO se pudo comprobar desde aquí es
-  // la duración ni las vistas, así que la ficha no las promete.
+  // Los videos de la habilidad (2026-08-30; Adán: "dame videos que abarquen cada habilidad […]
+  // para que lo escuche y aprenda"). Van FUERA de `pasos` a propósito: como un paso más habrían
+  // cambiado el denominador de todos los checklists (0/12 pasa a 0/13) y con él su avance ya
+  // guardado. Cada enlace se buscó y se comprobó uno a uno (la página responde y el título es el
+  // que dice); lo que no se pudo comprobar desde aquí es la duración ni las vistas, así que la
+  // ficha no las promete.
   const vids=info.videos||[];
   document.getElementById('metaDetailVideo').innerHTML=vids.length?`
-    <div class="md-vid">
-      <div class="md-vid-lbl">▶ Para escucharlo</div>
-      ${vids.map(v=>`<a class="md-vid-a" href="${v.u}" target="_blank" rel="noopener">
-        <span class="md-vid-t">${esc(v.t)}</span>
-        <span class="md-vid-d">${esc(v.d)}</span>
-      </a>`).join('')}
-      ${vids.filter(v=>v.serie).map(v=>`
-        <details class="md-eps">
-          <summary>Los ${v.serie.eps.length} episodios</summary>
-          <div class="md-eps-grid">${v.serie.eps.map(e=>
-            `<a class="md-ep" href="${e.u}" target="_blank" rel="noopener" title="${esc(e.n+' · '+e.t)}">${e.n}</a>`).join('')}</div>
-          <div class="md-eps-nota">${esc(v.serie.nota)}</div>
-          <a class="md-eps-all" href="${v.serie.canal}" target="_blank" rel="noopener">Ver la serie completa en el canal ↗</a>
-        </details>`).join('')}
+    <div class="md-rec">
+      <div class="md-rec-hd"><span class="md-lbl">Para escucharlo</span><small>${vids.length} ${vids.length===1?'video':'videos'}</small></div>
+      <div>
+        ${vids.map(v=>`<a class="md-vid-a" href="${v.u}" target="_blank" rel="noopener">
+          <span class="md-vid-play">${MD_SVG_PLAY}</span>
+          <span><span class="md-vid-t">${esc(v.t)}</span><span class="md-vid-d">${esc(v.d)}</span></span>
+        </a>`).join('')}
+        ${vids.filter(v=>v.serie).map(v=>`
+          <details class="md-eps">
+            <summary>Los ${v.serie.eps.length} episodios</summary>
+            <div class="md-eps-grid">${v.serie.eps.map(e=>
+              `<a class="md-ep" href="${e.u}" target="_blank" rel="noopener" title="${esc(e.n+' · '+e.t)}">${e.n}</a>`).join('')}</div>
+            <div class="md-eps-nota">${esc(v.serie.nota)}</div>
+            <a class="md-eps-all" href="${v.serie.canal}" target="_blank" rel="noopener">Ver la serie completa en el canal ↗</a>
+          </details>`).join('')}
+      </div>
     </div>`:'';
 
-  // Temario
+  // Tu avance: dominados, pendientes, y el siguiente paso pendiente como botón (es a donde se
+  // retoma; con 16 pasos hace falta un punto de entrada que no sea recorrer el temario).
+  const sig=pasos.findIndex((_,k)=>!store[k]);
+  document.getElementById('metaDetailAvance').innerHTML=`
+    ${(mb||vids.length)?'<div class="md-hair"></div>':''}
+    <div class="md-rec-hd"><span class="md-lbl">Tu avance</span></div>
+    <div class="md-avance">
+      <div><b class="ok">${done}</b><span class="md-lbl">Dominados</span></div>
+      <div><b>${total-done}</b><span class="md-lbl">Pendientes</span></div>
+    </div>
+    ${sig<0?'<div class="md-avance-nota">Ficha completa: los '+total+' pasos están dominados.</div>'
+      :`<button class="md-sig" onclick="mdIr(${sig})"><span class="md-lbl">Siguiente pendiente</span><span>${sig+1} · ${esc(mdLimpiaTitulo(pasos[sig].t))}</span></button>`}`;
+
+  // ── TEMARIO ───────────────────────────────────────────────────────────────
+  const iSep=pasos.findIndex((x,k)=>k>0&&mdEsCierre(x.t));
+  document.getElementById('metaDetailIndiceN').textContent=`${total} ${total===1?'paso':'pasos'}`;
   document.getElementById('metaDetailIndice').innerHTML=pasos.map((x,k)=>{
     const h=!!store[k];
-    return `<button class="md-ix${k===i?' on':''}${h?' hecho':''}" onclick="mdIr(${k})">
-      <span class="md-ix-n">${h?'✓':(k+1)}</span><span class="md-ix-t">${esc(x.t)}</span>
+    return `${k===iSep?'<div class="md-ix-sep"></div>':''}<button class="md-ix${k===i?' on':''}${h?' hecho':''}" onclick="mdIr(${k})">
+      <span class="md-ix-n">${h?'✓':(k+1)}</span><span class="md-ix-t">${esc(mdLimpiaTitulo(x.t))}</span>
     </button>`;
   }).join('');
 
-  // Con 11 pasos el activo se sale de la vista: en el celular el temario es una tira horizontal y
+  // Con 16 pasos el activo se sale de la vista: en el celular el temario es una tira horizontal y
   // en la PC una columna larga, así que se arrastra solo hasta el paso en el que estás.
   const chip=document.querySelector('#metaDetailIndice .md-ix.on');
   if(chip&&chip.scrollIntoView) chip.scrollIntoView({block:'nearest',inline:'nearest'});
 
-  // El paso
-  // Los ítems que arrancan con una etiqueta accionable ("Tu caso", "Plantilla…", "Ejemplo…")
-  // salen de la lista y se pintan en su propia caja: son lo que se copia y se usa, no un punto
-  // más de la teoría, y perdidos entre viñetas no se distinguían de ella.
+  // ── EL PASO ───────────────────────────────────────────────────────────────
+  // Los puntos del paso se reparten en apartados: los que arrancan con "Tu caso", "Plantilla…" o
+  // "Ejemplo…" son lo que se copia y se usa, y van a una caja cian; los "⚠️ …" (el error más
+  // común, una advertencia) a una caja ámbar; los lugares de Citas (<a class="mapa">) a su rejilla;
+  // y el resto es la teoría, como libro mayor numerado.
   const RE_CAJA=/^\s*(?:<b>)?\s*(tu caso[^:<]*|plantilla[^:<]*|ejemplo[^:<]*)\s*(?:<\/b>)?\s*[:\-–—]\s*/i;
+  const RE_AVISO=/^\s*⚠️\s*(?:<b>)?([^:<]{1,60}?)(?:<\/b>)?\s*:\s*/;
   const items=p.list||[];
-  const cajas=[], resto=[];
-  items.forEach(x=>{ const m=x.match(RE_CAJA); (m?cajas:resto).push(m?{lbl:m[1],txt:x.slice(m[0].length)}:x); });
-  const listHtml=resto.length?`<ul class="md-paso-list">${resto.map(li=>`<li>${li}</li>`).join('')}</ul>`:'';
-  const casoHtml=cajas.map(c=>`<div class="md-tucaso"><div class="md-tucaso-lbl">${esc(c.lbl)}</div>
-      <div class="md-tucaso-txt">${c.txt}</div></div>`).join('');
+  const cajas=[], avisos=[], mapas=[], resto=[];
+  const cap=s=>s.replace(/^(\s*(?:<[^>]+>\s*)*)(\p{Ll})/u,(m,a,b)=>a+b.toUpperCase());   // la etiqueta se fue al rótulo; el texto arranca en mayúscula
+  items.forEach(x=>{
+    let m;
+    if((m=x.match(RE_AVISO))) avisos.push({lbl:m[1].trim(),txt:cap(x.slice(m[0].length))});
+    else if(/^\s*⚠️/.test(x)) avisos.push({lbl:'Ojo',txt:cap(x.replace(/^\s*⚠️\s*/,''))});
+    else if(/^\s*<a class="mapa"/.test(x)) mapas.push(x);
+    else if((m=x.match(RE_CAJA))) cajas.push({lbl:m[1],txt:cap(x.slice(m[0].length))});
+    else resto.push(x.replace(/^\s*<b>\(\d+\)<\/b>\s*/,''));   // "(1)" sobra: el libro mayor ya numera
+  });
+  const ledgerHtml=resto.length?`<div class="md-ledger"><span class="md-lbl">En detalle</span><div>${resto.map((li,n)=>
+    `<div class="md-pt"><span class="md-pt-k">${String(n+1).padStart(2,'0')}</span><span class="md-pt-x">${li}</span></div>`).join('')}</div></div>`:'';
+  const mapasHtml=mapas.length?`<div class="md-mapas">${mapas.join('')}</div>`:'';
+  const apHtml=(cajas.length||avisos.length)?`<div class="md-apartados">${
+    cajas.map(c=>`<div class="md-tucaso"><div class="md-tucaso-lbl">${esc(c.lbl)}</div><div class="md-tucaso-txt">${c.txt}</div></div>`).join('')}${
+    avisos.map(a=>`<div class="md-tucaso aviso"><div class="md-tucaso-lbl">${MD_SVG_AVISO}${esc(a.lbl)}</div><div class="md-tucaso-txt">${a.txt}</div></div>`).join('')}</div>`:'';
   const imgCls=p.imgTipo==='diagrama'?'md-paso-img is-diagram':'md-paso-img';
   const imgHtml=p.img?`<img class="${imgCls}" src="${p.img}" alt="${esc(p.t)}" loading="lazy">`:'';
   const linkHtml=p.href?`<a class="md-paso-link" href="${p.href}" target="_blank" rel="noopener">${esc(p.label||'Ver más')} ↗</a>`:'';
@@ -9566,13 +9633,17 @@ function mdPintar(){
   const botonHtml=p.boton||'';
   const cuerpo=document.getElementById('metaDetailSteps');
   cuerpo.innerHTML=`
-    <div class="md-paso-n">PASO ${i+1} DE ${total}</div>
-    <div class="md-paso-t">${p.t}</div>
-    <div class="md-paso-d">${p.d}</div>
-    ${listHtml}${casoHtml}${imgHtml}${linkHtml}${botonHtml}`;
+    <div class="md-paso-hd">
+      <div class="md-paso-n"><span class="md-lbl">Paso ${i+1} de ${total}</span>${hecho?'<i></i><span class="md-lbl" style="color:var(--g)">Dominado</span>':''}</div>
+      <div class="md-paso-t">${mdLimpiaTitulo(p.t)}</div>
+      <div class="md-paso-d">${p.d}</div>
+    </div>
+    ${ledgerHtml}${mapasHtml}${apHtml}${imgHtml}${linkHtml}${botonHtml}`;
   cuerpo.scrollTop=0;   // cambiar de paso empieza arriba, no a media lectura del anterior
 
-  // Acciones
+  // ── PIE ───────────────────────────────────────────────────────────────────
+  document.getElementById('metaDetailDots').innerHTML=pasos.map((_,k)=>
+    `<i class="${store[k]?'hecho':''}${k===i?' on':''}" onclick="mdIr(${k})" title="Paso ${k+1}"></i>`).join('');
   const btn=document.getElementById('metaDetailMarcar');
   btn.classList.toggle('on',hecho);
   // En pantallas angostas la frase completa no cabe junto a ‹ › y salía cortada.
@@ -9581,7 +9652,6 @@ function mdPintar(){
   if(navs[0]) navs[0].disabled=(i===0);
   if(navs[1]) navs[1].disabled=(i===total-1);
 }
-
 addEventListener('resize',()=>{
   const ov=document.getElementById('metaDetailOverlay');
   if(ov&&ov.classList.contains('open')&&mdEstado.id) mdPintar();
@@ -10253,6 +10323,22 @@ const HABILIDADES_BASE=[
   {id:'persuadir', ico:'🎯', t:'Persuadir sin manipular', img:'https://images.unsplash.com/photo-1552664730-d307ca884978?w=1920&q=85&auto=format&fit=crop'},
   {id:'relacionarte', ico:'💬', t:'Relacionarte con las personas', img:'https://images.unsplash.com/photo-1543269865-cbf427effbad?w=1920&q=85&auto=format&fit=crop'},
   {id:'sacarmejor', ico:'🌱', t:'Sacarle lo mejor a una persona', img:'https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=1920&q=85&auto=format&fit=crop'},
+  // 2 nuevas (2026-09-12), pedido de Adán: "la habilidad de leer el comportamiento humano y
+  // varios rasgos para leer a las personas y actitud, también una para leer la actitud de las
+  // mujeres y saber qué hacer en ciertas situaciones". Van con las sociales porque son su
+  // materia prima: sin leer al otro no hay a quién persuadir ni con quién relacionarse. Fotos
+  // de Unsplash verificadas con curl (HTTP 200) y VISTAS antes de elegirlas: la primera es una
+  // reunión con posturas distintas a la vista (brazos cruzados, torsos que se acercan, pies que
+  // ya se van), que es justo lo que enseña la ficha; la segunda, una mujer riéndose en plena
+  // conversación con alguien fuera de cuadro.
+  {id:'leerpersonas', ico:'👁️', t:'Leer a las personas',                    img:'https://images.unsplash.com/photo-1515169067868-5387ec356754?w=2400&q=85&auto=format&fit=crop'},
+  {id:'leermujeres',  ico:'🌹', t:'Leer la actitud de una mujer y qué hacer', img:'https://images.unsplash.com/photo-1543269664-56d93c1b41a6?w=2400&q=85&auto=format&fit=crop'},
+  // 2026-09-13, pedido de Adán: "una habilidad de forjar caracter... como una persona timida y
+  // sin decisiones propias puede ser un gran lider, de esos que toman decisiones dificiles y
+  // hablan con las personas de cierto modo y no se dejan intimidar". Cierra el bloque social:
+  // las dos anteriores enseñan a leer al otro; esta, a sostenerte tú. Foto de Unsplash verificada
+  // con curl y vista: un soldador entre chispas — forjar, literalmente.
+  {id:'caracter',     ico:'⚒️', t:'Forjar carácter: de tímido a líder',       img:'https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?w=2400&q=85&auto=format&fit=crop'},
   {id:'nadar',    ico:'🏊', t:'Saber nadar',                         img:'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c8/US_Navy_110520-N-CD297-071_Aviation_Ordnanceman_2nd_Class_Selemani_Johnson_swims_in_the_100-meter_Freestyle_event_as_a_member_of_Team_Navy-Coast_Gu.jpg/1920px-US_Navy_110520-N-CD297-071_Aviation_Ordnanceman_2nd_Class_Selemani_Johnson_swims_in_the_100-meter_Freestyle_event_as_a_member_of_Team_Navy-Coast_Gu.jpg'},
   {id:'cocinar',  ico:'🍳', t:'Saber cocinar',                       img:'https://images.unsplash.com/photo-1556910103-1c02745aae4d?w=2400&q=85&auto=format&fit=crop'},
   {id:'armas',    ico:'🎯', t:'Tirar armas de fuego',                img:'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/210126-A-DO858-0016_-_M17_pistol_training_%28Image_1_of_9%29.jpg/1920px-210126-A-DO858-0016_-_M17_pistol_training_%28Image_1_of_9%29.jpg'},
@@ -10434,6 +10520,84 @@ const HABILIDAD_DETALLE={
       {t:'Practicarlo esta semana',d:'Cinco días, cinco ejercicios. Todos se hacen dentro de conversaciones que ya ibas a tener:',list:['<b>Lunes</b>: en una junta, mide cuánto hablas tú. Solo mídelo, no cambies nada todavía.','<b>Martes</b>: haz una pregunta importante y <b>cuenta hasta siete</b> antes de decir nada.','<b>Miércoles</b>: usa <i>"¿y qué más?"</i> tres veces seguidas en una misma conversación.','<b>Jueves</b>: da un elogio <b>de esfuerzo</b>, específico y verdadero, a alguien que no lo espera.','<b>Viernes</b>: pide permiso para dar una observación, dala con hecho → efecto → pregunta, y observa si la conversación mejoró o empeoró.','<b>Fin de semana</b>: piensa en alguien de quien esperas poco y busca <b>tres evidencias</b> que contradigan esa etiqueta.']},
       {t:'📚 Qué leer, en qué orden',d:'Cinco libros. Empieza por el segundo si solo vas a leer uno — es el más corto y el más aplicable de inmediato:',list:['<b>Multipliers</b> · Liz Wiseman — la diferencia entre duplicar y reducir a la mitad la capacidad de los que tienes cerca.','<b>The Coaching Habit</b> · Michael Bungay Stanier — las siete preguntas. Se lee en dos horas y se aplica al día siguiente. En español, <i>El hábito del coaching</i>.','<b>Radical Candor</b> · Kim Scott — cómo decir la verdad sin romper la relación.','<b>Drive</b> · Daniel Pink — autonomía, maestría y propósito. En español, <i>La sorprendente verdad sobre qué nos motiva</i>.','<b>Mindset</b> · Carol Dweck — mentalidad fija contra mentalidad de crecimiento, y por qué el elogio equivocado hace daño.','<b>The 7 Habits of Highly Effective People</b> · Stephen Covey — por el <b>hábito 5</b>: "busca primero entender, después ser entendido". Es la base de todo lo de arriba y la frase que resume la habilidad entera.']},
       {t:'✅ Ya lo dominas cuando…',d:'Cuatro pruebas, y ninguna se cumple sola:',list:['<b>(1)</b> En una junta hablas <b>menos del 30%</b> del tiempo, y lo has medido, no supuesto.','<b>(2)</b> Alguien resolvió algo solo porque le hiciste la pregunta en vez de darle la respuesta — aunque tú ya supieras la respuesta y te costara callártela.','<b>(3)</b> Le has dicho a alguien algo incómodo y la relación quedó <b>mejor</b>, no peor.','<b>(4)</b> Alguien de quien esperabas poco te sorprendió, y puedes señalar qué cambiaste tú para que pasara.'],href:'https://www.google.com/search?q=Multipliers+Liz+Wiseman+libro',label:'📚 Multipliers · Liz Wiseman'},
+    ]},
+  // ── Leer a las personas (2026-09-12) ─────────────────────────────────────────
+  // Pedido de Adán: "la habilidad de leer el comportamiento humano y varios rasgos para leer
+  // a las personas y actitud". Va junto a las cuatro sociales porque es la que las alimenta:
+  // sin leer al otro, ni persuadir ni relacionarte funcionan. Fuentes reales, citadas en su
+  // paso: Navarro (el cuerpo), Ekman (la cara), los Cinco Grandes (los rasgos), Greene (los
+  // patrones) y Gladwell (los límites de todo lo anterior). Lo que NO hay aquí es un "detector
+  // de mentiras": la evidencia dice que nadie lo es, y el paso 10 lo dice con el número.
+  leerpersonas:{titulo:'Leer a las personas: comportamiento, rasgos y actitud',frase:'La gente te dice quién es todo el tiempo: con el cuerpo, con lo que repite y con lo que hace cuando nadie la mira. Leer es escuchar eso.',videos:[{u:"https://www.youtube.com/watch?v=qvvUTUB__-E",t:"El Cuerpo Habla: guía del FBI para leer el lenguaje corporal — Joe Navarro",d:"El libro base de esta ficha, explicado por un instituto de negociación: pies, manos y pacificadores, en ese orden."},{u:"https://www.youtube.com/watch?v=_M6ThnQMZuI",t:"Expresiones faciales universales: Paul Ekman",d:"La cara, aparte del cuerpo: las siete emociones que se ven igual en cualquier país."},{u:"https://www.youtube.com/watch?v=nybjLdGz-mg",t:"Psicología de los 5 grandes rasgos de la personalidad (Lewis Goldberg) — Ram Talks",d:"Los rasgos, que es lo que el cuerpo no te dice: el único modelo de personalidad con evidencia sólida."},{u:"https://www.youtube.com/watch?v=dyeMwJPJF0g",t:"Las Leyes de la Naturaleza Humana (Robert Greene) — resumen animado",d:"El carácter como patrón que se repite; la versión corta del libro más largo de la lista."}],pasos:[
+      {t:'Primero la línea base, después la señal',d:'Joe Navarro pasó 25 años en el FBI leyendo gente, y su primera regla no es un gesto: es que <b>ningún gesto significa nada solo</b>. Cruzar los brazos es frialdad en una persona y simple comodidad en otra. Lo que informa es el <b>cambio</b> respecto a cómo está esa persona cuando está tranquila.',list:['La <b>línea base</b> es cómo se sienta, qué hace con las manos, cuánto te mira y a qué velocidad habla alguien <b>cuando no hay nada en juego</b>. Se toma en los primeros minutos, hablando de cosas sin importancia: el tráfico, el clima, el fin de semana.','Luego se busca la <b>desviación</b>: la persona que hablaba con las manos y de pronto las esconde; la que te miraba y ahora mira la mesa; la que se recargó hacia atrás justo cuando mencionaste el precio. Eso sí es información.','Se lee en <b>racimos</b>, nunca una señal suelta: tres o más cambios en la misma dirección y en el mismo momento. Una sola puede ser comezón; tres seguidas al tocar un tema, no.','Y siempre <b>en contexto</b>: alguien tenso en una entrevista está tenso porque es una entrevista. Un cuarto frío, una silla incómoda y un café de más explican más gestos que cualquier emoción oculta.','⚠️ Error más común: leer un gesto suelto y sacar una conclusión. "Se tocó la nariz, miente". No. Se tocó la nariz. Sin línea base y sin racimo no has leído nada — has adivinado.']},
+      {t:'De los pies a la cabeza: el cuerpo dice a dónde quiere ir',d:'La parte más honesta del cuerpo es la que menos vigilamos. Todos cuidamos la cara; casi nadie cuida los pies. Navarro lee de abajo hacia arriba por eso: cuanto más lejos del cerebro, menos control consciente.',list:['<b>Los pies apuntan a donde la persona quiere ir.</b> Si hablas con alguien y su torso te mira pero un pie ya apunta a la puerta, la conversación terminó para él hace rato. En un grupo, los pies te dicen quién está dentro y quién ya se quiere ir.','<b>El torso se abre a lo que le gusta y se cierra a lo que no.</b> Inclinarse hacia ti, girarse a encararte, quitar lo que hay en medio (la bolsa, la laptop) es interés. Girar el torso, poner un objeto entre los dos o recargarse hacia atrás justo en un tema es rechazo a ese tema.','<b>Las piernas</b>: cruzadas hacia ti, cómoda; cruzadas hacia afuera, poniendo distancia. Los pies que se mueven de pronto —Navarro les dice "pies felices"— casi siempre son buenas noticias: alguien que acaba de oír algo que le gusta.','<b>Un cambio brusco vale más que una postura fija.</b> Que alguien esté recargado no dice nada. Que se recargue hacia atrás <b>en el segundo en que dijiste una cifra</b>, dice mucho.','Ejemplo: en una junta propones un cambio; dos personas se inclinan hacia adelante y una se recuesta y cruza los brazos por primera vez en la hora. Ya sabes con quién hablar aparte, antes de que lo diga en voz alta — o de que no lo diga nunca y lo bloquee en silencio.']},
+      {t:'Manos, cuello y ojos: comodidad o incomodidad',d:'Casi todo lo que hace el cuerpo bajo presión se resume en un solo eje: <b>¿esta persona está cómoda o incómoda ahora mismo?</b> No hace falta adivinar la emoción exacta. Basta con ver cuándo cambia de un lado al otro, y con qué.',list:['<b>Pacificadores</b> (Navarro): lo que uno se hace a sí mismo para calmarse. Tocarse el cuello, frotarse los muslos, jugar con el collar o el anillo, jalarse el cuello de la camisa como si diera calor, morderse el labio. Aparecen justo después de algo que estresó. No dicen <i>qué</i>: dicen <i>cuándo</i>.','<b>Las manos que desaparecen</b> —bajo la mesa, en los bolsillos— suelen acompañar a la incomodidad; las manos a la vista y abiertas, a la confianza. Los dedos en "campanario" (puntas juntas, palmas separadas) es el gesto de seguridad más claro que hay.','<b>El bloqueo de ojos</b>: taparse los ojos, frotarlos, cerrarlos un segundo más de lo normal al oír algo. Es el gesto de "no quiero ver esto", y sale antes de que la persona sepa que no está de acuerdo.','<b>Las pupilas</b> se dilatan con lo que gusta y se contraen con lo que no, y nadie las controla. Solo se ven de cerca y con luz pareja, pero cuando se ven, no mienten.','<b>Hombros que suben, cabeza que baja</b> —el "efecto tortuga"— es alguien que quiere hacerse pequeño: lo acaban de regañar, o teme que lo regañen.','⚠️ Error más común: confundir <b>incomodidad</b> con <b>culpa</b>. Alguien incómodo con tu pregunta puede estarlo porque la pregunta fue invasiva, porque tiene prisa, o porque le recordaste algo que no tiene que ver contigo. Lo que viste es que algo lo movió; qué fue, lo tienes que preguntar.']},
+      {t:'La cara: siete emociones que se ven igual en todo el mundo',d:'Paul Ekman demostró a finales de los sesenta —con tribus de Papúa Nueva Guinea que nunca habían visto una película— que hay <b>siete expresiones universales</b>: alegría, tristeza, ira, miedo, sorpresa, asco y desprecio. Se hacen igual en Oaxaca, en Múnich y en Tokio. Lo que cambia por cultura es cuánto se permite mostrarlas, no cómo se ven.',list:['<b>La sonrisa de verdad usa los ojos.</b> La de Duchenne contrae el músculo alrededor de los ojos: aparecen las patas de gallo y las mejillas suben. La sonrisa social solo mueve la boca. Es la lectura más útil que vas a hacer en tu vida y se aprende en una tarde: mira los ojos, no los dientes.','<b>El desprecio es el único gesto asimétrico</b>: una comisura sube y la otra no, como media sonrisa torcida. John Gottman lo encontró como <b>el predictor número uno de divorcio</b> en sus estudios de parejas. Si lo ves en una junta dirigido a alguien, esa relación ya está rota aunque los dos se saluden.','<b>Microexpresiones</b>: la emoción real se asoma una fracción de segundo antes de que la persona la tape con la cara que quiere mostrar. Se entrenan con práctica, pero ojo: te dicen que <i>hubo</i> una emoción, no por qué. Miedo al hablar de un tema puede ser miedo a que no le creas, no a que lo descubras.','Cómo detectar una expresión fingida: <b>es asimétrica, dura demasiado, y llega tarde o de golpe</b>. La emoción real aparece y se va suave; la actuada se enciende como un foco y se queda puesta.','Ejemplo: le cuentas a alguien una buena noticia y sonríe solo con la boca, un segundo tarde, mientras dice <i>"qué bien"</i>. Ya sabes que no le pareció tan bien. No lo confrontes: guárdalo y observa si se repite.']},
+      {t:'La voz y las palabras: lo que se dice sin querer',d:'Después del cuerpo y la cara, escucha <b>cómo</b> habla, no solo qué dice. La voz y la elección de palabras cambian bajo presión igual que las manos, con una ventaja: se pueden leer por teléfono.',list:['<b>La voz</b>: cuando alguien se estresa, sube el tono, acelera, se atropella o hace pausas donde no las hacía. Igual que con el cuerpo, importa el cambio respecto a su voz normal, no el tono en sí.','<b>Distancia en el lenguaje</b>: <i>"esa persona"</i> en vez del nombre, <i>"se rompió"</i> en vez de <i>"lo rompí"</i>, la voz pasiva, <i>"uno piensa que…"</i> en vez de <i>"yo pienso"</i>. James Pennebaker analizó millones de textos y encontró que quien se distancia de lo que cuenta usa menos "yo". No es prueba de nada, pero te dice de qué parte de la historia la persona se quiere separar.','<b>Las muletillas de honestidad</b> —<i>"para ser sincero"</i>, <i>"la verdad es que"</i>, <i>"te lo juro"</i>— aparecen justo cuando la persona sospecha que no le van a creer. A veces porque no es cierto; a veces solo porque es insegura. Otra vez: es una alerta, no un veredicto.','<b>Las preguntas de vuelta.</b> Es la señal más simple de interés que existe: quien te hace preguntas está interesado; quien solo contesta las tuyas está siendo educado. Funciona en persona, en WhatsApp y en una entrevista.','<b>Lo que responde a lo que no preguntaste</b>: cuando alguien contesta con una defensa (<i>"¿por qué lo preguntas?"</i>), o con demasiado detalle sin que se lo pidieras, el tema le pesa. Anótalo y vuelve a él más tarde, con calma.']},
+      {t:'Los rasgos: los Cinco Grandes, el único modelo que sí predice',d:'El cuerpo te dice cómo está alguien <b>ahora</b>. Los rasgos te dicen cómo es <b>casi siempre</b>. De todos los modelos de personalidad que circulan, solo uno resiste décadas de evidencia: los <b>Cinco Grandes</b>. El MBTI (INTJ, ENFP…) no: cerca de la mitad de la gente cambia de tipo si repite el test a las cinco semanas.',list:['<b>Apertura</b> — curiosidad por ideas, arte, cosas nuevas. Alta: pregunta, viaja, cambia de opinión, le gusta lo raro. Baja: prefiere lo conocido, desconfía de lo nuevo. <i>Cómo se ve</i>: qué hace con su tiempo libre y cuánto tarda en decir "eso no" ante algo distinto.','<b>Responsabilidad</b> — orden, disciplina, cumplir. Alta: llega a tiempo, cumple lo pequeño, escritorio en orden, lista de pendientes. Baja: improvisa, promete y olvida, "mañana lo hago". <i>Es el rasgo que mejor predice el desempeño en cualquier trabajo</i>, y el que más te conviene leer en un socio, un contratista o un roomie.','<b>Extraversión</b> — de dónde saca energía. Alta: habla primero, busca gente, se carga en la fiesta. Baja: se agota con la gente, piensa antes de hablar, prefiere el uno a uno. <i>No es timidez</i>: hay introvertidos con enorme soltura social que se van a casa vacíos.','<b>Amabilidad</b> — cuánto le importa llevarse bien. Alta: evita el conflicto, dice que sí, cede, confía. Baja: compite, discute, dice lo que piensa, desconfía. La gente muy amable es difícil de leer porque <b>te dice que sí aunque piense que no</b>: con ellos hay que preguntar dos veces.','<b>Estabilidad emocional</b> (lo contrario del neuroticismo) — cómo responde al estrés. Baja: se preocupa, cambia de humor, se toma las cosas personal, rumia. Alta: no se altera fácil, se recupera rápido. Se lee en cómo reacciona a una mala noticia pequeña: un vuelo retrasado te lo dice todo.','Sam Gosling (<b>Snoop</b>) demostró que desconocidos adivinan bastante bien la Responsabilidad y la Apertura de alguien <b>solo viendo su cuarto o su escritorio</b>. Mira el espacio de la gente: el orden y la variedad de lo que tiene dicen más que su descripción de sí misma.']},
+      {t:'Lo que la gente repite es lo que es',d:'Robert Greene dedica <b>Las leyes de la naturaleza humana</b> a una idea: el carácter es un patrón, y los patrones se repiten. Lo que alguien te dice de sí mismo es su versión; lo que hace cuando nadie lo obliga es la verdad. Y la verdad ya la mostró, si sabes dónde mirar.',list:['<b>Cómo trata a quien no le sirve de nada</b>: el mesero, el guardia, el que trae el pedido. Con quien puede darle algo, todo el mundo es amable. El carácter está en la otra columna.','<b>Cómo habla de los de antes</b>: sus ex, sus jefes anteriores, sus antiguos amigos. Si en todas las historias el otro fue el problema, el problema ya sabes quién es — y sabes cómo va a hablar de ti después.','<b>Qué hace con las promesas chicas.</b> "Te lo mando en la tarde", "te llamo el jueves". Quien no cumple lo pequeño no va a cumplir lo grande; solo va a tener una excusa mejor.','<b>Cómo reacciona al éxito ajeno</b>: la envidia se disfraza de broma, de crítica pequeña, de "qué suerte tuvo". Greene la describe como la emoción que más se esconde y la que más daño hace en silencio.','<b>Cómo reacciona bajo presión, con poder y con dinero.</b> Las tres situaciones sacan el carácter que la vida normal deja tapado. Si no las has visto, no conoces a esa persona todavía.','La regla, atribuida a Maya Angelou: <b>"cuando alguien te muestra quién es, créele a la primera."</b> El error no es no ver el patrón; es verlo y decidir que contigo va a ser distinto.']},
+      {t:'La actitud en una conversación: abierto, cerrado o resistiendo',d:'La actitud no es una emoción: es la <b>disposición</b> con la que alguien entra a la conversación, y cambia de minuto a minuto. Saber en qué punto está te dice si empujar, esperar o cambiar de tema.',list:['<b>Abierto</b>: hace preguntas, completa tus frases, asiente <i>mientras</i> hablas (no solo al final), dice "nosotros", propone. El cuerpo se acerca. Aquí es cuando se piden las cosas.','<b>Cerrado</b>: respuestas cortas, "ajá", mira el reloj o el celular, el torso se aleja, cambia de tema. No es no: es "no ahora". Empujar aquí lo convierte en no.','<b>Resistiendo</b>: el "sí, pero…", las objeciones en cadena, la sonrisa sin ojos, el "lo pensamos" sin fecha, el elogio seguido de nada. Es el más peligroso porque parece acuerdo. <b>Un "sí" sin siguiente paso concreto es un no educado.</b>','La herramienta para saber en cuál estás: <b>la etiqueta</b>, de Chris Voss (<i>Rompe la barrera del no</i>). Nombras lo que crees ver, con calma y sin acusar: <i>"parece que esto no te termina de convencer"</i>, <i>"me da la impresión de que hay algo que no me estás diciendo"</i>. Si acertaste, el otro se relaja y lo suelta. Si no, te corrige — y también ganaste, porque ahora sí sabes.','Ejemplo: presentas un plan y te contestan <i>"está muy bien, lo revisamos la próxima semana"</i>. Cuerpo hacia atrás, sin preguntas. Eso es resistencia disfrazada. Etiqueta: <i>"siento que hay algo del plan que no te cuadra; prefiero oírlo ahora que enterarme en un mes"</i>. Casi siempre sale.','⚠️ Error más común: tomar el "sí" verbal como el dato y descartar todo lo demás. El cuerpo, el tono y la ausencia de preguntas también votan, y cuando votan distinto que la boca, casi siempre tienen razón ellos.']},
+      {t:'Interés y desinterés: la lectura que más vas a usar',d:'De todas las lecturas, la que se usa a diario no es "¿miente?" sino <b>"¿le interesa esto, o le interesa irse?"</b>. Sirve igual con un cliente, un entrevistador, alguien en una fiesta o un pasajero.',list:['<b>Interés</b>, en racimo: se inclina, gira torso y pies hacia ti, sostiene la mirada, <b>copia tu postura sin darse cuenta</b> (el eco postural es de las señales más fiables de sintonía), te hace preguntas, alarga la conversación, se ríe con los ojos, levanta las cejas medio segundo al verte (el "destello de cejas" es universal).','<b>Desinterés</b>, en racimo: respuestas de una palabra, mira alrededor, los pies hacia la salida, saca el celular, cruza algo entre los dos, mira el reloj, deja de preguntar, la sonrisa se vuelve de cortesía.','<b>Incomodidad</b> (que no es desinterés): pacificadores, se aleja medio paso, cruza los brazos por primera vez, baja la voz, mira a otros como pidiendo rescate. Aquí no hay que insistir: hay que <b>dar espacio</b> — cambiar de tema, bajar la intensidad, o soltar la conversación con elegancia.','La regla de oro: <b>las señales de interés se acumulan; las de desinterés se respetan a la primera</b>. Si viste dos de desinterés, ya está. No hay lectura más importante que esa, y es la que más gente ignora por orgullo.','Ejemplo: en un evento hablas con alguien que contesta amable pero no pregunta nada y ya giró el pie hacia el grupo de al lado. <i>"Te dejo seguir, un gusto"</i> — y te vas antes de que tenga que inventar una excusa. Eso, además, es lo que hace que te recuerden bien.']},
+      {t:'Mentiras: lo que sí sirve y lo que es mito',d:'Aquí conviene bajar las expectativas de golpe: en un metaanálisis de más de 200 estudios, la gente detectó mentiras con un <b>54% de acierto</b> — apenas mejor que una moneda. Policías, jueces y aduaneros incluidos. Lo que sí se puede es <b>hacer más difícil mentir bien</b>, y saber qué señales ignorar.',list:['<b>Mito</b>: desviar la mirada. Es la creencia más extendida en 58 países y no tiene apoyo en la evidencia. Muchos mentirosos <i>sostienen</i> la mirada precisamente porque saben lo que tú crees.','<b>Mito</b>: tocarse la nariz, tartamudear, ponerse nervioso. Los nervios los pone la situación, no la culpa. Paul Ekman lo llamó el <b>error de Otelo</b>: leer el miedo a no ser creído como miedo a ser descubierto — así se condena a inocentes.','<b>Lo que sí se observa</b> (Aldert Vrij, Bella DePaulo): las historias inventadas tienen <b>menos detalle</b>, menos sensaciones (olores, sonidos, qué pensaba), se cuentan siempre en el mismo orden, sin correcciones espontáneas, sin "no me acuerdo". La verdad es desordenada; la mentira está limpia.','<b>Carga cognitiva</b>: mentir cuesta esfuerzo mental. Pide que lo cuente <b>de atrás hacia adelante</b>, o haz una pregunta que no pudo preparar (<i>"¿qué había en la mesa?"</i>). Quien vivió la escena responde sin esfuerzo; quien la inventó tiene que construirla en vivo, y se nota.','<b>Lo que más sirve no es leer: es verificar.</b> Un dato comprobable vale más que cien gestos. Si importa, contrasta el hecho. Si no se puede contrastar, actúa con cautela, no con certeza.','⚠️ Error más común: decir "está mintiendo" por un gesto. Nadie tiene esa capacidad. Lo máximo honesto que puedes decir es "hay algo en esta parte que le incomoda" — y luego preguntar.']},
+      {t:'Leer una sala en treinta segundos',d:'Una junta, una fiesta, la sala de espera de una entrevista: antes de hablar con nadie hay una lectura de conjunto que te dice dónde pararte y a quién dirigirte. Vanessa Van Edwards la entrena en <b>Cautivar</b>, y funciona.',list:['<b>¿A quién miran cuando alguien habla?</b> Cuando se hace un chiste o se toma una decisión, la gente mira de reojo a la persona cuya reacción importa. Esa es la que manda, tenga el puesto que tenga.','<b>Quién está abierto y quién cerrado</b>: cuerpos hacia el centro, manos visibles, pies hacia el grupo = dentro. Cuerpos hacia atrás, brazos cruzados, pies hacia la puerta = fuera o en contra. En dos segundos sabes dónde va a estar la fricción.','<b>Las alianzas se ven en los pies y en el eco</b>: quienes se copian la postura están de acuerdo, aunque no hayan hablado. Quienes tienen los pies apuntándose entre sí ya son un bloque.','<b>Dónde pararte en una fiesta</b>: no en la entrada (todos están llegando y decidiendo), no en la barra (todos están de paso). Donde la gente ya tiene su bebida y busca con quién hablar: dos metros después de la barra, o junto a la comida.','<b>Calidez y competencia</b>: Van Edwards resume décadas de estudios en que juzgamos a alguien en esos dos ejes, y en ese orden. Primero "¿me cae bien?" y solo después "¿sabe?". Léelo en los demás y úsalo en ti: entra cálido, demuestra competencia después.']},
+      {t:'Los sesgos que te hacen leer mal (los tuyos)',d:'El instrumento con el que lees a los demás es tu propia cabeza, y viene con fallas de fábrica. Malcolm Gladwell dedica <b>Hablar con extraños</b> a demostrar que somos mucho peores leyendo desconocidos de lo que creemos — y que creerse bueno es lo que más daño hace.',list:['<b>Sesgo de confirmación</b>: decidiste que alguien es flojo y a partir de ahí cada cosa que hace lo confirma; lo que lo contradice no lo ves. Antídoto: busca a propósito la evidencia en contra antes de cerrar el juicio.','<b>Efecto halo</b>: si es guapo, o va bien vestido, o habla bien, le atribuyes también inteligencia, honestidad y competencia. No vienen juntas. Sepáralas a propósito.','<b>Error fundamental de atribución</b>: a los demás los juzgas por su carácter (<i>"llegó tarde porque es irresponsable"</i>) y a ti por tus circunstancias (<i>"llegué tarde por el tráfico"</i>). Cuando leas un comportamiento, pregúntate primero qué situación lo explicaría.','<b>Proyección</b>: crees que el otro piensa lo que tú pensarías en su lugar. No. Tú eres tu peor muestra de "la gente normal".','<b>La transparencia es un mito</b>: Gladwell muestra con el caso de Amanda Knox que la cara de la gente <b>no siempre coincide</b> con lo que siente. Hay gente que se ve culpable estando inocente y gente encantadora que es un fraude (Bernie Madoff engañó a expertos durante décadas). Por eso una lectura es una <b>hipótesis</b>, nunca un veredicto.','La postura correcta: <b>"por defecto, creo"</b> (Tim Levine lo llama <i>truth-default</i>) es lo que nos permite vivir en sociedad. El precio es que a veces te engañan. Es un buen precio: la alternativa —desconfiar de todos— te cuesta todas las relaciones para ahorrarte una estafa.']},
+      {t:'Aplicarlo donde ya estás: junta, entrevista, negociación, Didi',d:'La habilidad no se aprende leyendo: se aprende observando gente real en situaciones que ya vives. Cinco donde el retorno es inmediato:',list:['<b>Tu caso — la junta</b>: toma la línea base en los primeros cinco minutos, mientras se habla de nada. Cuando entres al tema que te importa, mira <b>pies, torso y ojos</b> del que decide, no sus palabras. Si se cierra, no insistas ahí: pide cinco minutos aparte después. Lo que se resiste en público se concede en privado.','<b>Tu caso — una entrevista</b>: el entrevistador también se lee. Si se inclina y toma notas, vas bien: sigue. Si se recarga y deja de escribir, cambia de ejemplo — lo que estás contando no le importa. Y si te pregunta algo dos veces con otras palabras, la primera respuesta no lo convenció.','<b>Tu caso — negociar un precio, un sueldo o un contrato</b>: la primera reacción a tu cifra es la honesta y dura medio segundo. Después viene la actuada. Di el número, <b>cállate y mira</b>. El bloqueo de ojos, la ceja, el pacificador: ahí está la información que la contraoferta te va a esconder.','<b>Tu caso — un pasajero de Didi</b>: en diez segundos sabes si quiere plática o silencio. Audífonos, celular, respuesta corta al saludo = silencio, y dárselo es el mejor servicio. Cuerpo hacia el frente, pregunta de vuelta, comentario sobre el clima = plática. Leerlo bien es, literalmente, mejor calificación.','<b>Tu caso — el negocio de tu papá</b>: el cuerpo de un cliente en el mostrador dice si el precio le dolió antes de que lo diga. Enséñale a mirar eso y le estás dando algo que ningún curso de ventas le va a dar.']},
+      {t:'Practicarlo esta semana',d:'Un ejercicio por día. Todos son de observar, ninguno de confrontar: esta habilidad se entrena en silencio.',list:['<b>Lunes</b>: toma la línea base de tres personas de tu equipo — cómo se sientan, qué hacen con las manos, cuánto te miran. Anótalo. Sin esto no hay nada que leer después.','<b>Martes</b>: cuenta sonrisas. En cada una que veas, mira los ojos: ¿Duchenne o social? Al final del día sabrás quién estuvo contento de verdad y quién fue educado.','<b>Miércoles</b>: en una junta mira solo pies y torsos durante cinco minutos. Anota quién está dentro y quién fuera. Compara con lo que dijeron después.','<b>Jueves</b>: pon un video de una entrevista sin sonido durante dos minutos y adivina la emoción de cada momento. Luego súbele y comprueba. Es el entrenamiento más barato que existe para la cara.','<b>Viernes</b>: usa una etiqueta con alguien que te parezca cerrado: <i>"parece que esto no te termina de convencer"</i>. Fíjate en si acertaste. Cuenta cuántas de cinco aciertas en el mes — ese número es tu nivel real.','<b>Fin de semana</b>: en un restaurante o una fiesta, elige a dos personas que no conozcas y adivina, viendo cómo se tratan, si son pareja, colegas o familia, y quién manda. Lo divertido es que a veces lo puedes comprobar.']},
+      {t:'📚 Qué leer, en qué orden',d:'Cinco libros. Si solo vas a leer uno, que sea el primero: es el más práctico y el que más rápido cambia lo que ves.',list:['<b>El cuerpo habla</b> · Joe Navarro — el lenguaje corporal por un agente del FBI, de los pies a la cabeza. En inglés, <i>What Every Body Is Saying</i>.','<b>El rostro de las emociones</b> · Paul Ekman — la cara, las siete emociones, la sonrisa de verdad y el error de Otelo. En inglés, <i>Emotions Revealed</i>.','<b>Las leyes de la naturaleza humana</b> · Robert Greene — el carácter como patrón: envidia, narcisismo, máscaras. Largo; se lee por capítulos, en el orden que quieras.','<b>Cautivar</b> · Vanessa Van Edwards — leer una sala, calidez y competencia, dónde pararte. En inglés, <i>Captivate</i>.','<b>Hablar con extraños</b> · Malcolm Gladwell — el libro que te quita la soberbia: por qué leemos mal a los desconocidos y por qué confiar por defecto sigue siendo lo correcto. En inglés, <i>Talking to Strangers</i>.']},
+      {t:'✅ Ya lo dominas cuando…',d:'Nada de "sentir que entiendes a la gente". Cinco cosas comprobables:',list:['<b>(1)</b> Puedes describir de memoria la línea base de tres personas con las que trabajas: cómo se sientan, qué hacen con las manos y cómo hablan cuando están tranquilas.','<b>(2)</b> En una junta detectaste un desacuerdo <b>antes de que lo dijeran</b>, lo comprobaste con una etiqueta, y acertaste. Al menos tres veces.','<b>(3)</b> En un video sin sonido aciertas la emoción en al menos <b>5 de 7</b> momentos, y distingues la sonrisa de Duchenne de la social sin pensarlo.','<b>(4)</b> Cambiaste el rumbo de una conversación a la mitad por una señal de incomodidad, y la otra persona después te confirmó que sí había algo.','<b>(5)</b> Dejaste de decir "está mintiendo" por un gesto. Ahora dices "algo aquí le incomoda", preguntas, y si importa, verificas el hecho.'],href:'https://www.google.com/search?q=El+cuerpo+habla+Joe+Navarro+libro',label:'📚 El cuerpo habla · Joe Navarro'},
+    ]},
+  // ── Leer la actitud de una mujer y saber qué hacer (2026-09-12) ───────────────
+  // Pedido de Adán, el mismo día: "una para leer la actitud de las mujeres y saber que hacer
+  // en ciertas situaciones". Está construida como SITUACIONES que se repiten (te interesa
+  // alguien, te dice que no, te cuenta un problema, "estoy bien", se enfría, se molesta…) y
+  // en cada una: cómo se lee y qué hacer. Fuentes: Manson (Modelos), Gottman (los jinetes,
+  // los bids), Tannen (escuchar o resolver), Levine y Heller (apego), Moore (las señales de
+  // cortejo), Ury (la primera cita). Lo que NO hay: "técnicas" de seducción ni trucos — el
+  // paso 1 explica por qué, y la evidencia (Hyde 2005) está citada ahí.
+  leermujeres:{titulo:'Leer la actitud de una mujer y saber qué hacer en cada situación',frase:'No hay un manual secreto de las mujeres. Hay atención a una persona, honestidad y saber qué hacer en las situaciones que se repiten.',videos:[{u:"https://www.youtube.com/watch?v=orouFvnorpM",t:"¿Por qué fracasan las parejas? — Ramón Nogueras (Mensa España)",d:"Conferencia completa de un psicólogo sobre 40 años de investigación de Gottman: cómo se rompen las parejas y qué las sostiene. Formato largo, para escuchar."},{u:"https://www.youtube.com/watch?v=cOg6ojhwLU8",t:"Modelos: atraer mujeres a través de la honestidad — Mark Manson (resumen en español)",d:"El libro que sostiene la mitad de esta ficha: atracción sin trucos, desde la honestidad y la no necesidad."},{u:"https://www.youtube.com/watch?v=-6Rs7fYU1Tc",t:"Los 4 jinetes del Apocalipsis de las rupturas de pareja — David Gómez Psicología",d:"Solo el concepto de Gottman que más vas a usar, corto y con ejemplos: para repasarlo antes de una conversación difícil."}],pasos:[
+      {t:'Antes de todo: no es un código, es una persona',d:'Lo primero que hay que sacarse de la cabeza es que existe un manual de "las mujeres". Janet Hyde revisó en 2005 <b>46 metaanálisis</b> sobre diferencias psicológicas entre hombres y mujeres: la gran mayoría son <b>pequeñas o casi nulas</b>. La diferencia entre dos mujeres es mucho mayor que la diferencia promedio entre mujeres y hombres. Lo que sí existe son <b>situaciones que se repiten</b>, y en cada una hay una forma de leer y una forma de actuar que funciona. De eso va esta ficha.',list:['Lo que esta habilidad <b>es</b>: atención a <i>una</i> persona concreta —su línea base, sus cambios, lo que pide y lo que no dice— más saber qué hacer en las situaciones que se repiten en cualquier relación, desde la primera conversación hasta los años.','Lo que <b>no es</b>: un truco para "conseguir" a alguien. Mark Manson lo dice de frente en <b>Modelos</b>: la atracción no se fabrica con técnicas; aparece cuando eres honesto sobre quién eres y qué quieres, y cuando <b>no necesitas</b> que ella diga que sí para estar bien. La necesidad se huele, y es lo menos atractivo que hay.','Las tres bases de Manson, que sostienen todo lo demás: <b>vivir honesto</b> (una vida que te guste aunque nadie la mire), <b>actuar honesto</b> (acercarte, decir lo que quieres, arriesgar el no) y <b>comunicar honesto</b> (sin indirectas ni juegos). Con esas tres, lo que sigue son detalles. Sin ellas, ningún detalle sirve.','Todo lo que viene de aquí en adelante parte de una regla: <b>el consentimiento es el sí claro y con ganas</b>. Un "puede ser", un silencio o un "no sé" no son un sí. Leer bien a una mujer empieza por leer bien eso.','⚠️ Error más común: buscar la frase, el truco, la "señal secreta". Quien busca eso ya perdió, porque puso la atención en una fórmula y no en la persona que tiene enfrente. Y ella lo nota en dos minutos.']},
+      {t:'Cómo saber si le interesas: las señales, en racimo',d:'La psicóloga Monica Moore pasó cientos de horas en bares y cafeterías catalogando <b>52 señales no verbales</b> con las que las mujeres muestran interés, y encontró dos cosas: que <b>ellas inician la mayoría de las veces</b> —con señales, no con palabras— y que las mujeres que las mandan son abordadas mucho más, sin importar qué tan guapas sean. Las señales existen. Hay que saber verlas, y verlas en racimo.',list:['<b>La mirada que vuelve</b>: te mira, baja la vista, y vuelve a mirar. Una mirada es casualidad; dos con sonrisa, no. Si además levanta las cejas medio segundo al verte (el destello de cejas), es de las señales más limpias que hay.','<b>El cuerpo hacia ti</b>: torso y pies apuntando a donde estás, se acerca sin motivo, se queda cuando podría irse, quita lo que hay entre los dos. En un grupo, si te sigue mirando a ti aunque hable otro, ya sabes.','<b>Arreglarse y tocarse el pelo</b>, acomodarse la ropa, jugar con un collar mientras te habla. Son gestos de autoatención que aparecen cuando alguien quiere verse bien delante de ti.','<b>El contacto</b>: te toca el brazo al reír, te da un golpecito para hacer un punto, deja la mano un segundo más al saludar. El toque que ella inicia es, de todas, la señal más fuerte.','<b>Lo que hace con la conversación</b>: te pregunta de ti, se ríe de cosas que no eran tan graciosas, menciona que "está libre el sábado", se acuerda de algo que dijiste hace rato, le da largas a la despedida. La regla más útil: <b>el interés añade</b> (preguntas, tiempo, contacto); <b>la cortesía solo contesta</b>.','⚠️ Error más común: confundir amabilidad con interés, sobre todo con quien trabaja de cara al público. La pregunta que lo resuelve: <i>¿se comportaría igual con cualquier otro?</i> Si sí, es simpatía, y es un regalo que no hay que malinterpretar.']},
+      {t:'Las señales de que no — y cómo aceptarlas bien',d:'Muchas mujeres dicen que no de forma indirecta, y no por juego: porque un no directo a un desconocido ha terminado mal demasiadas veces. Leer el <b>no suave</b> y respetarlo a la primera es la habilidad que más te distingue, y la que más hombres ignoran.',list:['<b>El no suave suena así</b>: <i>"ahorita ando ocupada"</i>, <i>"luego te digo"</i>, <i>"tengo novio"</i>, <i>"estoy con mis amigas"</i>, cancelar sin proponer otro día, contestar cada vez más tarde y más corto, un "jaja" sin nada después. Ninguna de estas frases necesita traducción. Todas son no.','<b>El cuerpo lo dice antes que la boca</b>: torso y pies hacia otro lado, brazos cerrados, la bolsa entre los dos, la mirada que busca a sus amigas, la sonrisa sin ojos, un paso atrás cuando te acercas. Dos de estas y ya está.','<b>Qué hacer</b>: retirarte con gracia y sin cobrar nada. <i>"Un gusto, que te vaya bien"</i>, y te vas. No pides explicación, no insistes con "solo un café", no mandas el mensaje de las 2 a.m. Un hombre que acepta un no sin drama es, de lejos, el que mejor se recuerda.','<b>Un no no es sobre ti.</b> Manson lo llama <b>polarizar</b>: cuando eres honesto sobre quién eres, filtras rápido — a unas les vas a gustar mucho y a otras nada, y las dos respuestas son buenas noticias porque las dos te ahorran tiempo. El no que duele es el que no llega nunca.','Ejemplo: le escribes para salir; contesta al día siguiente <i>"uy, esta semana está difícil"</i> sin proponer otra. Eso es un no. Respuesta correcta: <i>"va, sin problema; si un día se te antoja me dices"</i> — y no vuelves a escribir. Si le interesaba, escribe ella. Si no, te ahorraste tres semanas de insistir.','⚠️ Error más común: tomar el "tengo novio" o el "ahorita no" como un reto. No es un reto. Es la puerta cerrándose con cortesía para que no te sientas mal.']},
+      {t:'Acercarte a alguien que no conoces sin ser el pesado',d:'La mayoría de los hombres no se acerca por miedo al no, y la minoría que se acerca lo hace mal: con una frase preparada, sin leer el contexto, o quedándose de más. Manson lo reduce a una cosa: <b>di la verdad, corto, y lee la respuesta</b>.',list:['<b>Lee el contexto antes que a ella.</b> Audífonos puestos, leyendo, con prisa, en el gym a mitad de una serie, en el trabajo mientras atiende: no es momento, y no por ella sino por respeto al lugar. En un evento, una fiesta, una clase, una fila, sí.','<b>Lo que dices no importa tanto como que sea verdad.</b> <i>"Hola, te vi y quise saludarte. Soy Adán."</i> Sin frases de internet, sin comentarios sobre su cuerpo. Un comentario sobre lo que están compartiendo (la clase, el evento, la fila eterna) funciona porque es real.','<b>Los primeros treinta segundos son su respuesta.</b> Si contesta y pregunta algo de vuelta, sigue. Si contesta y nada más, una frase más y te despides con gracia. No hay tercera oportunidad en el mismo momento, y eso es justo lo que te hace no ser el pesado.','<b>Corto y con salida</b>: la conversación buena de un primer encuentro dura cinco minutos, no cuarenta. Si va bien, cierra tú: <i>"me tengo que ir, pero me gustaría seguir esta plática, ¿te paso mi número?"</i>. Pedir el suyo la obliga a decidir en el momento; ofrecer el tuyo le deja la decisión a ella, sin presión.','<b>En el trabajo</b>: no. No porque esté prohibido, sino porque ella no puede decir que no con la misma libertad, y eso vicia todo. Si de verdad hay algo, saldrá fuera de la oficina, sin que tú lo empujes.','⚠️ Error más común: quedarse después de un "gracias" educado. Cada minuto de más convierte un encuentro agradable en una situación de la que ella tiene que escapar.']},
+      {t:'La primera cita: leer si quiere una segunda, y qué hacer',d:'Logan Ury, que dirigió la investigación sobre relaciones en Hinge, encontró que la gente <b>decide mal</b> después de una primera cita porque busca "la chispa" — y la chispa es un pésimo predictor de una buena relación: aparece igual con la gente encantadora que con la gente peligrosa, y muchísimas parejas sólidas no la tuvieron el primer día.',list:['<b>Señales de que quiere seguir</b>: alarga la cita (<i>"¿vamos a otro lado?"</i>), menciona planes a futuro (<i>"tienes que probar tal lugar"</i>), te toca, pregunta cosas personales, se ríe con los ojos, te escribe esa misma noche o al día siguiente sin que le hayas escrito tú.','<b>Señales de que no</b>: mira el celular, respuestas cortas, no pregunta de ti, se despide en la puerta con prisa, "gracias por la cena" y nada más al día siguiente. Léelo y déjalo ir, sin un segundo intento insistido.','<b>Qué hacer si fue bien</b>: pide la segunda cita <b>al final de la primera</b>, concreta y con día: <i>"me la pasé muy bien, ¿repetimos el jueves?"</i>. Y escríbele esa misma noche. La regla de "esperar tres días" es un juego, y Manson es claro: <b>los juegos atraen a gente que juega</b>.','<b>La cuenta</b>: ofrece pagar sin hacer un tema de ello. Si ella insiste en dividir, acepta con naturalidad — insistir dos veces convierte un gesto en una imposición. Nadie pierde por esto salvo el que lo convierte en discusión.','<b>Antes de decidir, Ury propone otra pregunta</b>: no "¿sentí chispa?" sino <i>¿cómo me sentí conmigo mismo estando con ella? ¿me reí? ¿me dio curiosidad? ¿me sentí escuchado?</i>. Con dos síes hay segunda cita, aunque no haya habido fuegos artificiales.','Ejemplo: la cita fue tranquila, sin chispa, pero platicaron dos horas sin ver el reloj y ella te preguntó por tu papá. Eso es una segunda cita. La que tuvo chispa y en la que no te preguntó nada de ti, probablemente no.']},
+      {t:'Cuando te cuenta un problema: escuchar o resolver',d:'Deborah Tannen, lingüista, describió en <b>Tú no me entiendes</b> la diferencia que más peleas causa: muchos hombres usan la conversación para <b>informar y resolver</b> y muchas mujeres para <b>conectar</b>. Cuando ella cuenta un problema, con frecuencia no está pidiendo una solución: está pidiendo compañía en el problema. Y él, con toda la buena intención, le entrega un plan de tres puntos.',list:['<b>Cómo se lee</b>: si te lo cuenta con detalle, con emoción, y sigue contando después de que diste tu primera idea, no quería la idea. Si te pregunta directamente <i>"¿tú qué harías?"</i>, sí la quería.','<b>Qué hacer</b>: la frase que resuelve el 80% de los casos es <b>preguntar</b>: <i>"¿quieres que te ayude a resolverlo, o que te escuche?"</i>. No es una frase blanda: es la más eficiente que existe, porque te ahorra adivinar y a ella le dice que la estás tomando en serio.','<b>Si es escuchar</b>: escucha de verdad (los tres niveles de la ficha de Relacionarte), refleja lo que oyes (<i>"o sea que te sentiste ignorada delante de todos"</i>), y no resuelvas aunque veas la solución clarísima. Verla y callártela es la parte difícil.','<b>Las indirectas</b> son parte del mismo estilo: <i>"¿tienes hambre?"</i> puede ser "quiero comer"; <i>"¿te gusta cómo me veo?"</i> pide seguridad, no una auditoría; <i>"haz lo que quieras"</i> casi nunca significa eso. No es manipulación: es una forma de hablar donde se cuida la relación antes que el mensaje. Se aprende a oírla como se aprende un idioma.','⚠️ Error más común: decirle "dramática" o "no es para tanto". Eso le dice que el problema no es válido y que tú no eres un lugar seguro para contarlo. La próxima vez no te lo cuenta — y ese silencio es peor que cualquier drama.','Y ojo: <b>no todas</b>. Hay mujeres que quieren el plan de tres puntos y se desesperan con la escucha. Por eso se pregunta en vez de asumir.']},
+      {t:'Cuando dice "estoy bien" y no está bien',d:'La situación más famosa y la peor manejada. Se lee fácil: tono plano, monosílabos, no te mira, "nada", se pone a hacer otra cosa con más ruido del normal. No está bien. Lo que casi todos hacen —insistir, o tomárselo literal y seguir como si nada— es justo lo que la empeora.',list:['<b>No discutas el "estoy bien".</b> <i>"Se nota que no"</i> la obliga a defenderse. Tampoco lo tomes literal para escaparte: ella sabe que se nota, y que lo ignores le confirma que no te importa.','<b>Nómbralo suave y sin exigir</b>: <i>"Te siento callada. No tienes que contarme ahora, pero aquí estoy cuando quieras."</i> Y luego —esto es lo importante— <b>quédate cerca</b>. Haz algo al lado de ella. Muchas veces lo suelta veinte minutos después, sin que preguntes otra vez.','<b>Si es contigo</b>: pregunta directo y aguanta la respuesta sin defenderte: <i>"¿Hice algo que te lastimó?"</i>. Si dice que sí, tu primera frase no es una explicación: es <i>"tienes razón en que…"</i>. Las explicaciones vienen después, si hacen falta.','<b>Si no es contigo</b>: no lo conviertas en algo tuyo (<i>"¿es por mí?"</i> tres veces). Ofrece lo concreto: <i>"¿pido de cenar y vemos algo?"</i>. La compañía sin interrogatorio es lo que se agradece.','<b>Tiempo</b>: si dice que no quiere hablar, se respeta, pero se vuelve. Un <i>"¿cómo amaneciste?"</i> al día siguiente, con calma, cierra el ciclo. Lo que no se puede es dejar que pase una semana y hacer como que no hubo nada.','⚠️ Error más común: <i>"¿ya se te pasó?"</i>. Esa frase dice que su emoción era un inconveniente que esperabas que terminara. Cambia a <i>"¿cómo estás hoy?"</i>: misma pregunta, otro mensaje.']},
+      {t:'Cuando se molesta contigo: los cuatro jinetes y sus antídotos',d:'John Gottman observó a miles de parejas en su laboratorio y afirma predecir con más del 90% de acierto cuáles se van a separar viendo <b>cómo discuten</b>, no cuánto. Las que se rompen usan cuatro cosas —él las llama <b>los cuatro jinetes</b>— y cada una tiene un antídoto que se aprende.',list:['<b>Crítica</b> (atacar a la persona: <i>"siempre eres…"</i>) → antídoto: la <b>queja específica</b>: <i>"cuando llegaste tarde sin avisar, me sentí poco importante"</i>. Léelo también en ella: una queja es sobre un hecho; una crítica es sobre ti. A la queja se responde; a la crítica se le pide el hecho: <i>"¿qué fue exactamente lo que te molestó?"</i>.','<b>Actitud defensiva</b> (<i>"yo no fui, tú también…"</i>) → antídoto: <b>aceptar tu parte</b>, aunque sea el 10%: <i>"tienes razón en que no avisé"</i>. Es lo que más rápido baja la temperatura, y lo que casi ningún hombre hace porque lo siente como perder. No es perder. Es la única forma de que la conversación avance.','<b>Desprecio</b> (burla, sarcasmo, ojos en blanco, hablarle como a alguien inferior) → es <b>el predictor número uno de ruptura</b>. Antídoto: una cultura de aprecio diaria y, en la discusión, cero sarcasmo. Si el desprecio viene de ella de forma habitual, eso ya no es una discusión: es una señal de alarma (paso 13).','<b>Muro de piedra</b> (callarte, irte, mirar el celular mientras ella habla) → suele venir de estar <b>inundado</b>: pulso arriba de 100, no puedes pensar. Antídoto: <b>pausa de veinte minutos con hora de regreso</b>: <i>"estoy muy alterado para hablar bien; dame veinte minutos y seguimos"</i>. Y regresas. Irte sin decir cuándo vuelves es el muro; decirlo es el antídoto.','<b>Los intentos de reparación</b>: en medio de la pelea, una broma, un "espera, empezamos mal", una mano en la pierna. Gottman encontró que lo que distingue a las parejas que duran no es que no peleen, sino que <b>reciben esos intentos</b>. Léelos en ella y acéptalos aunque estés enojado; lánzalos tú y no te ofendas si el primero no aterriza.','<b>Aceptar influencia</b>: en los datos de Gottman, cuando el hombre no está dispuesto a compartir el poder ni a dejarse influir por su pareja, la relación se destruye en el <b>81%</b> de los casos. Ceder en lo que ella tiene razón no es debilidad: es la variable que más pesa.']},
+      {t:'Cuando se enfría de repente',d:'Contesta más tarde, más corto, ya no propone, cancela. Puede ser por ti o no: trabajo, familia, otra persona, o simplemente que el interés bajó. Lo que hagas en esta semana define si te enteras de la verdad o si te conviertes en el que persigue.',list:['<b>Lo que no se hace</b>: mandar tres mensajes seguidos, preguntar "¿estás enojada?" cada día, aparecer donde sabes que está — o su contrario, castigar con silencio. Amir Levine llama a todo eso <b>conducta de protesta</b>: intentos de forzar cercanía que consiguen justo lo contrario.','<b>Lo que sí</b>: un mensaje, honesto y sin drama, y luego silencio: <i>"Te siento más lejos estos días. Si algo cambió prefiero saberlo, sin problema."</i> Le das la salida fácil y la oportunidad de decir la verdad. Lo que conteste —o que no conteste— es la respuesta.','<b>Iguala su inversión.</b> Manson y Levine coinciden desde ángulos distintos: si ella baja a la mitad, tú no subes al doble. No es castigo ni juego, es no necesitar. Al que no necesita se le regresa; al que persigue se le huye.','<b>Mientras tanto, tu vida.</b> Lo más atractivo que puedes hacer en una semana de frío no tiene que ver con ella: gym, tu papá, tus amigos, el alemán. No como estrategia para que lo vea, sino porque es lo que hace que un no no te tumbe.','Ejemplo: tres días con respuestas de una palabra. Escribes el mensaje del punto 2. Contesta <i>"perdón, mi mamá está en el hospital, ha sido una semana horrible"</i>. Te ahorraste tres días de inventar historias, y ella acaba de ver que se puede hablar contigo sin drama. Si en cambio no contesta en tres días, también ya sabes, y no lo tuviste que mendigar.','⚠️ Error más común: interpretar el silencio como reto y "dar más". El silencio de alguien que se enfrió no se calienta con más mensajes: se calienta, si acaso, con menos.']},
+      {t:'Cuando te pica, te vacila o te pone a prueba',d:'<i>"¿Siempre eres tan callado?"</i>, <i>"seguro les dices eso a todas"</i>, un comentario burlón sobre tu camisa. Muchas veces no es rechazo: es <b>coqueteo</b>, o una forma de ver si te tomas demasiado en serio. Cómo respondas dice más de ti que cualquier cosa que le hayas contado.',list:['<b>Cómo se lee</b>: si lo dice sonriendo, mirándote, y se queda esperando tu reacción, es juego. Si lo dice sin mirarte, con cara plana, delante de otros y buscando que se rían de ti, no es juego: es desprecio (paso 8), y no se sigue.','<b>Qué hacer con el juego</b>: no defenderte, no explicar, no ofenderte. Ligereza. <i>"Solo a las que me caen bien"</i>, <i>"sí, lo de callado lo cobro aparte"</i>. Manson: la persona segura no necesita ganar el intercambio; necesita disfrutarlo. El que responde con un discurso de tres minutos sobre por qué no es callado acaba de perderlo.','<b>El truco no es tener frases</b>: es estar bien contigo antes de que empiece la conversación. Si su aprobación no te hace falta, el vacile se disfruta solo. Si te hace falta, cualquier frase te va a sonar forzada.','<b>Devuélvelo, con cariño</b>: el vacile es un diálogo. Picar de vuelta, suave y sin crueldad, es como se construye la complicidad. La regla: se juega con lo que ella eligió (su gusto en música, que llegó tarde), nunca con lo que no (su cuerpo, su familia, sus inseguridades).','Ejemplo: <i>"¿Ingeniero? Qué aburrido."</i> — <i>"Sí, horrible. Por eso salgo con gente divertida, para compensar."</i> Sonríe. Sigue. Eso es todo.']},
+      {t:'El apego: por qué reacciona así (y por qué tú también)',d:'Amir Levine y Rachel Heller resumen en <b>Maneras de amar</b> décadas de investigación sobre el apego adulto en tres estilos. No es un horóscopo: es una tendencia que se mueve con el tiempo y con la relación, y hay psicólogos que discuten cuánto pesa. Pero como <b>vocabulario para leer una reacción</b> —la suya y la tuya— es de lo más útil que hay.',list:['<b>Seguro</b> (más o menos la mitad de la gente): dice lo que quiere, no castiga, no desaparece, discute sin amenazar la relación. Se lee en la calma con la que maneja un desacuerdo. Si encuentras a alguien así, es la mejor noticia que te puede dar esta ficha.','<b>Ansioso</b> (alrededor de una de cada cinco personas): necesita confirmación, lee de más los mensajes, se activa con la distancia. Se lee en los "¿todo bien entre nosotros?" y en cuánto le afecta que tardes. <b>Qué hacer</b>: constancia. Responder, avisar, cumplir lo pequeño. La seguridad que le das no se gasta: se acumula.','<b>Evitativo</b> (una de cada cuatro): valora la independencia, se retira después de la cercanía, "no quiero nada serio" mientras actúa como si sí. Se lee en que después de un fin de semana muy bueno viene una semana fría. <b>Qué hacer</b>: no perseguir, dar espacio sin drama — pero <b>no aceptar migajas</b>: espacio no es lo mismo que desaparecer una semana sin avisar.','<b>La trampa ansioso-evitativo</b>: uno persigue, el otro se aleja, y cuanto más persigue uno más se aleja el otro. Es la dinámica más común y la más dolorosa. Si te ves en ella, lo que la rompe no es cambiar a la otra persona: es dejar de perseguir.','<b>Conócete tú primero.</b> El estilo que sí puedes cambiar es el tuyo. Si eres ansioso, tu tarea es tolerar la incertidumbre sin protesta. Si eres evitativo, tu tarea es quedarte un poco más de lo que te pide el cuerpo. Levine trae el test en el libro; se hace en diez minutos.']},
+      {t:'Lo cotidiano: los gestos pequeños que sostienen todo',d:'Gottman descubrió lo que de verdad predice que una pareja dure, y no es la pasión ni la ausencia de peleas: son las <b>ofertas de conexión</b> (él las llama <i>bids</i>), las pequeñas invitaciones del día a día. Ella te enseña un meme, comenta algo por la ventana, suspira. Cada una es una pregunta: <i>¿estás ahí?</i>',list:['En su estudio, las parejas que seguían juntas seis años después respondían a esas ofertas el <b>86%</b> de las veces; las que se separaron, el <b>33%</b>. La diferencia entre durar y no durar está en un "¿a ver?" cuando te enseña el celular.','<b>Cómo se lee una oferta</b>: cualquier comentario que espera reacción. <i>"Mira ese perro"</i> no es sobre el perro. Un suspiro fuerte no es respirar. Cuando te la pierdes tres veces seguidas, ella deja de ofrecer — y ese silencio se lee como paz, pero es distancia.','<b>Qué hacer</b>: voltear hacia ella. No hace falta una gran respuesta: mirar, un comentario, una pregunta. Lo que mata es el "ajá" sin levantar la vista del celular.','<b>Lo que ella hace por ti te dice cómo quiere que la quieran.</b> Gary Chapman lo llamó "lenguajes del amor" (palabras, tiempo, regalos, actos, contacto); la evidencia científica detrás es débil, pero como pregunta es de oro: <i>¿de qué se queja cuando se queja?</i> "Nunca me dices nada bonito" y "nunca estamos solos" piden cosas distintas.','<b>La proporción 5 a 1</b>: Gottman midió que las parejas estables tienen unas cinco interacciones positivas por cada negativa, incluso durante una discusión. No es un número para llevar la cuenta: es para recordar que un comentario duro se paga con cinco buenos, y que la cuenta la lleva ella aunque tú no.','Ejemplo: llegas cansado y ella dice <i>"hoy vi a la vecina con su bebé"</i>. Respuesta que resta: <i>"ah"</i>. Respuesta que suma: <i>"¿ya nació? ¿cómo se llama?"</i>. Quince segundos. Ahí se decide más de lo que parece.']},
+      {t:'Señales de alarma que no debes leer como "intensidad"',d:'Leer bien también es leer lo que <b>no</b> hay que aceptar. Hay comportamientos que al principio se sienten como pasión y son otra cosa. Y hay comportamientos tuyos que se sienten como amor y tampoco lo son.',list:['<b>En ella</b>: desprecio habitual (burlarse de ti delante de otros, ojos en blanco, hablarte como a menos); castigarte con silencio por días; revisar tu celular o exigir contraseñas; celos que te aíslan de amigos y familia; "amor" explosivo a la semana de conocerte y frío a la tercera; tratar mal a meseros y a su propia familia (de la ficha de Leer a las personas: como trata a quien no le sirve, te va a tratar a ti).','<b>En ti</b>: los mismos. Revisar su celular, los celos como prueba de amor, el muro de piedra de días, controlar con quién sale. Si los reconoces en ti, la lectura más valiosa de esta ficha es esa.','<b>Qué hacer</b>: nombrarlo <b>una vez</b>, claro y sin gritos: <i>"cuando te burlaste de mí delante de tus amigas me sentí humillado; no quiero que se repita"</i>. Y observar. Si se repite después de nombrarlo, ya no es un malentendido: es un patrón. Y los patrones (Greene) no cambian porque tú los aguantes mejor.','<b>Irse a tiempo</b> es una habilidad. Cuesta más que quedarse porque se pierde lo bueno junto con lo malo. Pero cada mes que te quedas después de ver el patrón es un mes que le quitas a la relación que sí puede funcionar.','⚠️ Error más común: leer los celos y el control como prueba de que le importas. La gente a la que le importas quiere que tengas amigos, vida y las llaves de tu propio celular.']},
+      {t:'Practicarlo esta semana',d:'Cinco ejercicios y uno de fin de semana. No hace falta tener pareja ni estar saliendo con nadie: casi todos se practican con las mujeres que ya hay en tu vida —compañeras, amigas, familia—, que es donde se aprende sin presión.',list:['<b>Lunes</b>: en una conversación con una amiga o compañera, cuenta cuántas preguntas te hace ella y cuántas le haces tú. Solo cuenta. Es el termómetro más simple del interés, y de tu propia atención.','<b>Martes</b>: la próxima vez que alguien te cuente un problema, pregunta <i>"¿quieres que te ayude a resolverlo o que te escuche?"</i> y haz lo que te diga. Fíjate en lo que cuesta callarte la solución.','<b>Miércoles</b>: responde a tres ofertas de conexión con la vista levantada del celular. Mamá, hermana, compañera: cualquiera cuenta.','<b>Jueves</b>: haz el test de apego de Levine (está en el libro y en internet) y escribe cuál fue tu última conducta de protesta. Solo reconocerla ya la debilita.','<b>Viernes</b>: si hay alguien que te interesa, propón algo concreto y con fecha, sin indirectas. Si no hay nadie, practica lo contrario: la salida elegante de una conversación que no va a ningún lado, en una fiesta o un evento.','<b>Fin de semana</b>: en un café o una fiesta, observa a una pareja durante cinco minutos. ¿Quién ofrece conexión? ¿Quién voltea? ¿Hay desprecio? Es el laboratorio de Gottman gratis, y aprendes a verlo en otros antes que en ti.']},
+      {t:'📚 Qué leer, en qué orden',d:'Cinco libros. El primero es corto y cambia la forma de pararte frente a una mujer; el segundo es el que más matrimonios ha salvado.',list:['<b>Modelos</b> · Mark Manson — atracción desde la honestidad y la no necesidad. El único libro "de ligue" que vale la pena, porque no es de ligue. En inglés, <i>Models: Attract Women Through Honesty</i>.','<b>Siete reglas de oro para vivir en pareja</b> · John Gottman — los cuatro jinetes, las ofertas de conexión, aceptar influencia. Cuarenta años de datos, no de opiniones. En inglés, <i>The Seven Principles for Making Marriage Work</i>.','<b>Maneras de amar</b> · Amir Levine y Rachel Heller — seguro, ansioso, evitativo, y el test para saber cuál eres. En inglés, <i>Attached</i>.','<b>Tú no me entiendes</b> · Deborah Tannen — por qué la misma frase significa cosas distintas según quién la dice: escuchar o resolver, las indirectas. En inglés, <i>You Just Don’t Understand</i>.','<b>How to Not Die Alone</b> · Logan Ury — cómo decidir después de una cita, el mito de la chispa, y por qué la gente elige mal. Búscalo en inglés; se lee rápido.']},
+      {t:'✅ Ya lo dominas cuando…',d:'Nada de "entender a las mujeres". Cinco cosas comprobables:',list:['<b>(1)</b> Has recibido un no suave, lo leíste a la primera, te retiraste con gracia — y lo puedes contar sin resentimiento.','<b>(2)</b> Has preguntado <i>"¿quieres que lo resuelva o que te escuche?"</i> al menos tres veces, e hiciste lo que te dijeron sin colar la solución.','<b>(3)</b> Después de un "estoy bien" que no lo era, la conversación salió <b>el mismo día</b>, sin que tuvieras que adivinar ni insistir.','<b>(4)</b> Sabes tu estilo de apego, puedes nombrar tu última conducta de protesta, y la siguiente vez que sentiste el impulso de mandar el tercer mensaje, no lo mandaste.','<b>(5)</b> En una discusión aceptaste tu parte en la primera frase (<i>"tienes razón en que…"</i>) y la conversación terminó mejor de lo que empezó. Al menos una vez, y sabes qué hiciste distinto.'],href:'https://www.google.com/search?q=Modelos+Mark+Manson+libro+atraer+mujeres+honestidad',label:'📚 Modelos · Mark Manson'},
+    ]},
+  // ── Forjar carácter (2026-09-13) ─────────────────────────────────────────────
+  // Pedido de Adán: "una habilidad de forjar caracter, me refiero a como una persona timida y
+  // sin decisiones propias, puede ser un gran lider, pero de esos que toman desiciones dificiles
+  // y hablan con las personas de cierto modo y no se dejan intimidar". Cuatro bloques, en ese
+  // orden: la timidez (Cain, exposición gradual, Jia Jiang), las decisiones (Bezos, los Heath,
+  // Duke, Willink), la forma de hablar (Voss, Brown, hecho→efecto→petición) y la intimidación
+  // (Fisher y Ury, el suspiro fisiológico). Lo que ya está en "Saber decir que no" (disco rayado,
+  // la familia) se refiere, no se repite. Sin "poses de poder" a propósito: no replicaron.
+  caracter:{titulo:'Forjar carácter: decidir, hablar de frente y no dejarte intimidar',frase:'El carácter no se tiene: se forja. Cada decisión que tomas solo y cada vez que hablas de frente aunque tiembles es un golpe más en el yunque.',videos:[{u:"https://www.youtube.com/watch?v=c0KYU2j0TM4",t:"The power of introverts — Susan Cain (TED, subtítulos en español)",d:"La charla que sostiene el paso 1: ser callado no es ser menos. Activa los subtítulos (CC) en español."},{u:"https://www.youtube.com/watch?v=ycE4_KCDz3c",t:"Dicotomía del control de Epicteto — El Estoico Podcast, episodio 8",d:"Lo que controlas y lo que no, explicado en español por un divulgador del estoicismo. Es el paso 2 entero."},{u:"https://www.youtube.com/watch?v=-vZXgApsPCQ",t:"What I learned from 100 days of rejection — Jia Jiang (TED, subtítulos en español)",d:"Cien días buscando el no. La prueba en vivo de que el rechazo duele menos de lo que anticipas."},{u:"https://www.youtube.com/watch?v=rQbzTZ1ca5Y",t:"Decídete: la guía definitiva para tomar mejores decisiones — Chip y Dan Heath (IEXE Universidad)",d:"El método del paso 5, en español y con ejemplos: ampliar opciones, probar en pequeño, 10/10/10."},{u:"https://www.youtube.com/watch?v=ljqra3BcqWM",t:"Extreme Ownership — Jocko Willink (TEDx, subtítulos en español)",d:"El comandante de SEALs contando el error que le enseñó a ser dueño de todo lo que pasa en su equipo."}],pasos:[
+      {t:'Tímido no es lo mismo que sin carácter',d:'Susan Cain separa en <b>El poder de los introvertidos</b> dos cosas que casi todo el mundo mezcla: la <b>introversión</b> (de dónde sacas energía: prefieres poco estímulo y el uno a uno) y la <b>timidez</b> (miedo al juicio de los demás). La primera no se cura ni hace falta: entre un tercio y la mitad de la gente es introvertida. La segunda sí se entrena. Y el carácter no tiene que ver con ninguna de las dos: es <b>lo que haces cuando hacerlo cuesta</b>.',list:['Gandhi era tan tímido que en su primer caso como abogado, en Bombay, no pudo pronunciar palabra ante el juez: salió del tribunal y devolvió los honorarios. Lo cuenta él mismo en su autobiografía. Décadas después movió a un país entero sin levantar la voz.','Warren Buffett le tenía tanto pánico a hablar en público que a los 21 años se inscribió en el curso de Dale Carnegie. El diploma sigue colgado en su oficina: dice que es el título más importante que tiene, por encima de los de la universidad.','Rosa Parks era, según todos los que la conocieron, callada y tímida. Cain abre su libro con ella y la describe en una frase: <i>"tímida y con el valor de un león"</i>. Sentarse y no levantarse no fue un arranque: fue carácter.','Aristóteles lo dejó escrito hace 2,300 años: nos volvemos valientes <b>haciendo actos valientes</b>, no sintiéndonos valientes primero. El carácter es un hábito, y un hábito se construye con repeticiones, no con revelaciones.','⚠️ Error más común: esperar a <i>sentirte</i> seguro para actuar. Nunca llega en ese orden. Primero actúas temblando; la seguridad es lo que queda después de haberlo hecho veinte veces.']},
+      {t:'Lo que sí controlas, y lo que no',d:'Epicteto fue esclavo antes que filósofo, y su manual empieza con la frase que sostiene todo el estoicismo: <b>"hay cosas que dependen de nosotros y cosas que no"</b>. Tu opinión, tu esfuerzo, tu respuesta: dependen de ti. Lo que piensan de ti, lo que decide tu jefe, si el cliente grita: no. Casi toda la timidez es energía gastada en la segunda columna.',list:['El ejercicio, cada vez que algo te paralice: dos columnas en la cabeza. <b>¿Qué de esto controlo?</b> Lo que digo, cómo lo digo, si me preparo, si me quedo o me voy. Todo lo demás se suelta — no porque no importe, sino porque gastarse ahí no lo cambia.','Viktor Frankl, que sobrevivió a cuatro campos de concentración, lo escribió en <b>El hombre en busca de sentido</b>: te pueden quitar todo menos la última libertad, <b>elegir tu actitud</b> ante lo que pasa. Si eso valía en Auschwitz, vale en una junta.','Marco Aurelio, emperador de Roma, se escribía a sí mismo por las mañanas en sus <b>Meditaciones</b>: <i>"hoy me encontraré con gente entrometida, ingrata, arrogante…"</i>. No era pesimismo: era prepararse para no sorprenderse. Lo que esperas no te tumba.','Lo que más cambia con esto: dejar de necesitar la <b>aprobación</b>. La opinión ajena está en la columna que no controlas. Puedes influirla con tus actos, pero no decidirla — y una vez que lo aceptas, hablar de frente cuesta la mitad.','Ejemplo: te llaman a una junta para explicar un retraso. Columna uno: llegar con los hechos, la causa y el plan, decirlo claro y sin excusas. Columna dos: la cara que pongan. Prepara la uno al máximo y suelta la dos por completo.']},
+      {t:'Exposición: el músculo de la incomodidad',d:'La timidez no se piensa: se <b>entrena a la inversa</b>. La terapia con más evidencia para la ansiedad social es la exposición gradual, y se puede hacer sin terapeuta si eres honesto contigo. El mecanismo: la ansiedad sube, llega a un pico, y <b>si te quedas, baja sola</b> en unos veinte minutos. Si te vas antes del pico, el cerebro aprende que escapar salvó la situación, y la próxima vez el miedo es más grande.',list:['<b>Haz tu escalera</b>: diez situaciones que te dan miedo, ordenadas del 2 al 9 en una escala de 10. Preguntar la hora a un desconocido (2), pedir en una tienda algo que sabes que no tienen (3), hablar primero en una junta (5), decirle a alguien que se equivocó (7), presentar frente a veinte personas (9). Subes un peldaño por semana. No se salta.','<b>Jia Jiang</b> lo llevó al extremo: cien días pidiendo cosas absurdas a desconocidos para recibir cien noes — 100 dólares prestados a un guardia, un "relleno" de hamburguesa, una dona con forma de anillos olímpicos (se la hicieron). Su hallazgo: el rechazo <b>duele mucho menos de lo que anticipas</b>, y después de un no, preguntar <i>"¿por qué?"</i> abre puertas que el sí nunca abrió.','<b>Quita las conductas de seguridad</b>: mirar al piso, ensayar la frase diez veces, tener las manos ocupadas, hablar rapidísimo para terminar. Se sienten como ayuda y son lo que mantiene el miedo: no dejan que compruebes que sin ellas también sobrevives.','<b>Mide, no sientas.</b> Antes de cada peldaño anota qué tan mal crees que va a salir (0-10) y después, qué tan mal salió. En tres semanas vas a tener la prueba en papel de que tu predicción siempre exagera. Esa hoja vale más que cualquier libro de autoestima.','⚠️ Error más común: elegir un peldaño 9 el primer día, salir mal, y concluir "no sirvo para esto". No es que no sirvas: es que te saltaste siete peldaños.']},
+      {t:'Decidir: primero rápido, en lo pequeño',d:'"Sin decisiones propias" tiene un síntoma preciso: consultas todo. Qué pedir, qué contestar, si ir o no. No es humildad, es <b>delegar la responsabilidad</b> para que, si sale mal, no sea tuyo. El problema es que quien no decide lo pequeño nunca llega a decidir lo grande — y la vida lo decide por él.',list:['<b>Regla de Bezos</b>: casi todas las decisiones son <b>puertas de dos vías</b> — si te equivocas, regresas. Esas se toman rápido, con el 70% de la información. Solo las de una vía (irreversibles: casarte, un contrato de años, dejar el trabajo) merecen lentitud. Si esperas al 90% de la información en una de dos vías, estás siendo lento, no cuidadoso.','<b>Diez decisiones al día sin consultar</b>: la ruta, qué comer, qué contestar, si aceptas o no la reunión. Sin preguntar "¿tú qué harías?". Se siente incómodo una semana y después se siente como respirar.','<b>Pide datos, no permiso.</b> La diferencia entre <i>"¿tú crees que esté bien si…?"</i> y <i>"voy a hacer X; si sabes algo que lo cambie, dímelo"</i> es toda la diferencia entre alguien que sigue y alguien que lidera. Consultar para informarte es inteligencia; consultar para que otro cargue con la decisión es miedo.','<b>Decide, luego informa.</b> En vez de proponer con la voz en signo de pregunta, di lo que vas a hacer y por qué. Quien discrepa lo va a decir igual — y ahora discute contra una decisión, no contra una duda.','Ejemplo: en el negocio de tu papá hay una compra que se pospone semanas porque "hay que verlo". Ponle fecha, decide con lo que hay, y anota por qué. Si te equivocas, es una puerta de dos vías: se corrige. Lo que no se corrige es un negocio donde nadie decide.']},
+      {t:'Las decisiones difíciles: un método, no un salto',d:'Chip y Dan Heath revisaron en <b>Decídete</b> por qué la gente decide mal y encontraron cuatro trampas: ver solo dos opciones, buscar solo lo que confirma lo que ya crees, decidir en caliente, y creer que sabes cómo va a salir. Contra cada una hay un movimiento, y juntos forman el método.',list:['<b>Amplía las opciones.</b> Paul Nutt estudió cientos de decisiones empresariales: las de "sí o no" fracasaron el <b>52%</b> de las veces; las que tenían más de una alternativa, el 32%. Antes de decidir, pregúntate: <i>si esta opción desapareciera, ¿qué haría?</i> La respuesta suele ser mejor que la opción original.','<b>Comprueba en pequeño.</b> Antes de apostar todo, haz una prueba barata: un mes en vez de un año, diez clientes en vez de cien. Los datos reales le ganan a cualquier discusión.','<b>Toma distancia: 10/10/10.</b> ¿Cómo me voy a sentir con esto en 10 minutos, en 10 meses, en 10 años? La emoción de los 10 minutos es la que casi siempre decide, y es la que menos importa. Y la otra pregunta: <i>¿qué le aconsejaría a mi mejor amigo si fuera él?</i> Siempre lo tienes clarísimo para los demás.','<b>Prepárate para estar equivocado.</b> Pon un <b>cable trampa</b>: <i>"si en marzo no hay tres ventas, cierro"</i>. Decidirlo antes te libra de seguir por orgullo.','<b>Juzga la decisión por el proceso, no por el resultado.</b> Annie Duke, campeona de póker, le llama <i>resulting</i> al error de creer que una decisión fue buena porque salió bien. Puedes decidir perfecto y perder; puedes decidir pésimo y ganar. Escribe la decisión y sus razones el mismo día; en seis meses vuelve a leerla. Así aprendes a decidir, no a tener suerte.','Ejemplo: una oferta para dejar el empleo por un proyecto. Opciones: ¿no hay una tercera, como negociar medio tiempo? Prueba: ¿puedo hacer un mes de fines de semana? 10/10/10: en diez años, ¿cuál me arrepiento de no haber intentado? Cable trampa: fecha y número para volver atrás. Luego decides — y ya no es un salto.']},
+      {t:'La decisión que nadie quiere tomar',d:'Todo líder llega al momento en que la decisión correcta es la que nadie quiere: decirle a un cliente que no, cortar con un proveedor, decirle a alguien que su trabajo no alcanza. Jocko Willink, que comandó SEALs en Ramadi, lo resume en dos palabras: <b>Extreme Ownership</b>. El líder es dueño de todo lo que pasa en su área — incluido lo que no decidió.',list:['<b>No decidir también es una decisión</b>, y casi siempre la más cara. El proveedor que no cambias, el empleado que no confrontas, el precio que no subes: cada semana de "lo vemos después" tiene un costo que nadie anota porque no aparece en ninguna factura.','<b>Relájate, mira alrededor, toma una decisión.</b> Es la instrucción de Willink para el caos: cuando todo se cae a la vez, no intentes resolver todo. Prioriza <b>una</b> cosa, ejecuta, y pasa a la siguiente. La parálisis viene de querer resolver diez a la vez.','<b>Claro es amable; confuso es cruel.</b> Brené Brown lo pone así, y es la regla para toda conversación difícil. Suavizar tanto la noticia que el otro no la entiende no es bondad: es cobardía disfrazada. La bondad es decirlo claro, con respeto, y quedarte para la reacción.','<b>Dueño del error, dueño de la solución.</b> Cuando algo sale mal en tu equipo, la frase del líder no es <i>"es que ellos…"</i> sino <i>"no lo expliqué bien; así lo corregimos"</i>. Willink descubrió en la guerra lo que cualquier oficina confirma: los equipos siguen al que carga con la culpa, no al que la reparte.','<b>Tu caso — el negocio de tu papá</b>: hay un producto, un proveedor o un cliente que todos saben que no funciona y nadie toca porque es incómodo. Ese es el examen. Junta los números, decide, díselo de frente y con el plan hecho. Que te digan que estás mal es parte del proceso, no una señal de que te equivocaste.','⚠️ Error más común: tomar la decisión difícil y no comunicarla — dejar que "se enteren". Eso convierte una decisión valiente en una traición. Se decide y se dice, de frente, el mismo día.']},
+      {t:'Cómo hablan los que lideran',d:'La gente no sigue a quien más sabe: sigue a quien <b>suena</b> como si supiera a dónde va. Y eso, que parece un don, son cinco cosas mecánicas que se entrenan en un mes. La timidez se oye antes de que se vea: en la velocidad, en el tono y en las muletillas.',list:['<b>Más despacio y más grave.</b> El nervio acelera y agudiza la voz. Chris Voss, negociador de rehenes del FBI, usa lo que llama la <i>"voz de locutor de madrugada"</i>: baja, lenta, calmada. Es la voz que se usa cuando lo que dices no está en duda. Grábate un minuto y escúchate: la velocidad casi siempre sobra.','<b>Termina las frases hacia abajo.</b> Muchos tímidos acaban cada frase subiendo el tono, como pregunta, pidiendo permiso sin querer. La afirmación baja al final. <i>"Vamos a hacerlo así."</i> Punto.','<b>Quita los amortiguadores</b>: <i>"creo que quizá"</i>, <i>"no sé si"</i>, <i>"a lo mejor podríamos"</i>, <i>"perdón, pero"</i>. Cada uno le dice al otro que ni tú te crees lo que dices. Cambia a <i>"propongo"</i>, <i>"mi lectura es"</i>, <i>"vamos a"</i>. Un tímido que quita los amortiguadores suena decidido sin haber cambiado nada más.','<b>Menos palabras.</b> La inseguridad se alarga: explica, justifica, repite. La seguridad dice la frase y se calla. Y después del silencio, <b>no lo llenes tú</b>. El que aguanta el silencio es el que manda en la conversación.','<b>Habla primero en la junta.</b> Cuanto más esperas, más crece la presión y más se ocupa el espacio. Una frase en los primeros cinco minutos —aunque sea una pregunta buena— te mete en la sala; después, el resto cuesta la mitad. Ten esa frase preparada antes de entrar.','Ejemplo: en vez de <i>"eh, no sé si esto tenga sentido, pero quizá podríamos ver si… bueno, es una idea nada más"</i>: <i>"Propongo mover la entrega al viernes. La razón es X. ¿Qué se nos escapa?"</i> Tres frases. Misma idea, otra persona.']},
+      {t:'Decir las cosas de frente sin agredir',d:'Hay dos formas de perder: callarse (pasivo) y explotar (agresivo). Las dos nacen del mismo sitio: aguantar hasta que no se puede más. La tercera vía es decirlo <b>pronto, corto y sin adjetivos</b>, y tiene una estructura que se puede seguir aunque te tiemble la voz. Para el no en concreto, la ficha de <b>Saber decir que no</b> ya tiene el disco rayado y la fórmula de tres partes; aquí va lo demás.',list:['<b>Hecho → efecto → petición.</b> <i>"En la junta de ayer presentaste mi análisis como tuyo (hecho). Me dejó en mal lugar con el equipo (efecto). La próxima vez, di de dónde salió (petición)."</i> Nada de "siempre", nada de "eres". El hecho no se puede discutir; el adjetivo sí, y ahí se pierde la conversación.','<b>Dilo en las primeras 48 horas.</b> Lo que no se dice a tiempo se acumula, y lo que se acumula sale mal: o con tono de rencor viejo, o nunca. La regla: si algo te molestó dos veces, se habla antes de la tercera.','<b>En privado y de frente.</b> Nunca por mensaje lo que se puede decir cara a cara; nunca delante de otros lo que se puede decir a solas. Lo primero se malinterpreta; lo segundo humilla, y quien se siente humillado no escucha.','<b>Aguanta la reacción sin retroceder.</b> Es lo que separa a quien lo dice de quien lo sostiene. El otro se va a defender, va a minimizar, quizá se enoje. Tu trabajo no es convencerlo en ese momento: es no retirar lo dicho. <i>"Entiendo que lo veas así. Aun así, te pido que la próxima vez lo digas."</i>','<b>Da la razón en lo que la tenga.</b> Ceder en el 20% donde el otro tiene un punto (<i>"es cierto que yo tampoco lo dejé claro"</i>) no te resta: te da autoridad para no ceder en el 80% restante.','⚠️ Error más común: pedir perdón por decir algo que tenías derecho a decir. <i>"Perdón que te lo diga, pero…"</i> convierte una petición legítima en una molestia que causas. Se dice sin perdón, con respeto, y ya.']},
+      {t:'No dejarte intimidar',d:'La intimidación es una <b>táctica</b>, no una fuerza de la naturaleza: quien alza la voz, interrumpe, amenaza o te mira fijo está probando si funciona. Funciona cuando reaccionas: te encoges, te disculpas, o le contestas en su tono. No funciona cuando haces algo que no esperaba: <b>bajar el ritmo</b>.',list:['<b>Primero el cuerpo, en tres segundos.</b> Dos inhalaciones cortas por la nariz y una exhalación larga por la boca — el "suspiro fisiológico" que Stanford midió en 2023 como la forma más rápida de bajar la ansiedad. Pies plantados, hombros abajo, manos a la vista. El cuerpo calmado es la mitad de la respuesta; el otro lo lee antes de que hables.','<b>Pausa de tres segundos y voz hacia abajo.</b> Nunca contestes a la velocidad del que grita. La pausa le dice que su tono no te movió; la voz baja le quita el público. Casi todos bajan el suyo sin darse cuenta.','<b>Nombra la táctica, sin atacar.</b> <i>"Te noto muy molesto. Lo podemos hablar así, o con calma en diez minutos; tú dime."</i> Al nombrarla, deja de funcionar: el que intimida cuenta con que nadie lo diga en voz alta.','<b>Pregunta.</b> <i>"¿Qué exactamente propones?"</i>, <i>"¿cuál es el dato?"</i>. El grito es vago por naturaleza; la pregunta lo obliga a concretar, y al concretar pierde fuerza. Y mientras él responde, tú respiras.','<b>Ten alternativa.</b> Fisher y Ury lo llaman MAAN en <b>Obtenga el sí</b>: tu mejor alternativa si esto no sale. Quien puede levantarse de la mesa no es intimidable; quien no puede, sí. Por eso el trabajo de fondo —tu fondo de emergencia, tu red, tu currículum al día— es también lo que te da voz en una junta.','<b>Separa a la persona del problema.</b> El que grita hoy es el mismo con el que vas a trabajar mañana. Duro con el tema, suave con la persona: <i>"Esto no lo voy a aceptar así. Y sigo queriendo resolverlo contigo."</i>','Ejemplo: un cliente te dice a gritos que si no bajas el precio se va. Respiras, pausa, voz baja: <i>"Entiendo que el precio te preocupa. Este es el precio y esta es la razón. Si prefieres buscar otra opción, lo entiendo."</i> Nueve de cada diez se quedan. El décimo era el que igual se iba.','⚠️ Error más común: contestar al tono en vez de al contenido — o disculparte por algo que no hiciste para que se calme. Las dos cosas le enseñan que gritar funciona contigo.']},
+      {t:'La preparación es el ochenta por ciento del valor',d:'Lo que la gente llama "aplomo" casi nunca es una cualidad: es <b>haber hecho la tarea</b>. El que entra a la junta con los números, las tres objeciones previstas y una frase de apertura no necesita valor; necesita abrir la carpeta. Una frase que repiten los SEAL, atribuida al poeta griego Arquíloco: <i>no subes al nivel de tus expectativas; caes al nivel de tu entrenamiento</i>.',list:['<b>Las tres objeciones.</b> Antes de cualquier conversación que importe, escribe las tres cosas que te van a decir en contra y tu respuesta a cada una. Cuando llegan, ya no son un golpe: son la parte del guion que esperabas.','<b>El pre-mortem</b> (Gary Klein): antes de arrancar un plan, imagina que ya fracasó y escribe por qué. Encuentras en diez minutos lo que la esperanza esconde durante meses.','<b>Ensáyalo en voz alta.</b> No en la cabeza: en voz alta, solo, en el coche. Lo que suena bien pensado suena distinto dicho. La primera vez que dices una frase difícil no debería ser delante de quien importa.','<b>Lleva el dato.</b> Nadie intimida a quien tiene el número exacto. "Creo que las ventas bajaron" pierde contra "bajaron 18% desde marzo, aquí está la hoja". El dato es tu voz cuando la tuya tiembla.','Ejemplo: vas a pedir un aumento. Preparado: tus tres logros con cifra, el rango de mercado del puesto, la respuesta a "no hay presupuesto", y la frase con la que abres. Sin preparar: entras esperando que te lo den. La diferencia no está en tu personalidad; está en la carpeta.']},
+      {t:'Disciplina es libertad: el carácter se forja en lo pequeño',d:'Willink lo dice en tres palabras: <b>disciplina es libertad</b>. Suena a contradicción hasta que lo vives: quien se levanta a la hora que dijo, va al gym cuando dijo y cumple lo que se prometió deja de negociar consigo mismo — y esa energía es la que después usa para decidir y para hablar de frente. Albert Bandura lo midió: la fuente número uno de <b>confianza en uno mismo</b> no son las palabras de ánimo, son las <b>experiencias de dominio</b>: haber hecho algo difícil y haberlo terminado.',list:['<b>Cada promesa cumplida contigo es evidencia.</b> Tu cerebro no cree lo que le dices; cree lo que te ve hacer. Treinta días levantándote a la misma hora son treinta pruebas de que eres alguien que cumple. Eso se lleva a la junta aunque no lo notes.','<b>Ya lo estás haciendo.</b> Tu rutina de la mañana, el gym, el alemán, la cuadrícula de hábitos de la pantalla de al lado: eso <b>es</b> forjar carácter. La diferencia es hacerlo consciente: cada tache es un peldaño, no un pendiente.','<b>Haz lo difícil primero.</b> La tarea que evitas a las 9 de la mañana es la que te va a pesar todo el día. Decidirla primero —la llamada incómoda, el correo difícil— te deja el resto del día con la sensación de haber ganado ya.','<b>Sin excepciones "solo por hoy".</b> Willink: el momento en que negocias contigo mismo ("hoy no, mañana sí") es exactamente donde se pierde. No por el día perdido, sino porque acabas de enseñarte que tu palabra se puede renegociar.','⚠️ Error más común: querer forjar carácter en lo grande (la decisión enorme, el discurso) sin haberlo forjado en lo chico. No se sostiene. El que no cumple su alarma no va a sostener una decisión impopular tres meses.']},
+      {t:'Liderar siendo introvertido: no tienes que ser el que más habla',d:'Adam Grant y su equipo estudiaron en 2011 decenas de sucursales de una cadena de pizzas y encontraron algo que contradice al cine: con equipos <b>proactivos</b>, los líderes introvertidos obtuvieron <b>mejores resultados</b> que los extrovertidos — porque escuchan las ideas en vez de taparlas con las suyas. El líder callado no es una versión menor del líder: es otro modelo, y en muchos equipos, el mejor.',list:['<b>Lo tuyo es escuchar y preparar.</b> El introvertido que llega a la junta con el tema pensado, hace dos preguntas buenas y cierra con una decisión pesa más que el que habló veinte minutos. Usa tu ventaja en vez de imitar la del otro.','<b>Uno a uno, no en el escenario.</b> Los introvertidos lideran mejor en conversaciones individuales: ahí convencen, ahí se enteran de lo que pasa de verdad. Ten una conversación de quince minutos con cada persona clave cada semana; muchos "líderes carismáticos" nunca lo hacen.','<b>Por escrito, cuando se pueda.</b> Un correo claro con la decisión, las razones y el siguiente paso vale más que una junta ruidosa. Y es donde el introvertido suele ser mejor.','<b>Decide después de escuchar, pero decide.</b> El riesgo del líder que escucha es quedarse escuchando. Pon un límite: <i>"escucho hasta el jueves; el viernes decido"</i>. Y el viernes decides, aunque no haya consenso.','<b>Recarga a propósito.</b> Cain habla de "nichos restauradores": el rato solo después de la junta, la comida sin gente, el domingo callado. No es debilidad, es mantenimiento. Un introvertido sin recarga se vuelve irritable y toma peores decisiones.','<b>Tu caso — tu equipo en el trabajo</b>: no compitas por el micrófono con el que más habla. Llega con el análisis hecho, habla una vez en los primeros cinco minutos, haz la pregunta que nadie hizo, y cuando haya que decidir, di <i>"propongo X"</i>. En tres juntas te van a voltear a ver cuando haya que decidir.']},
+      {t:'Aguantar no caerle bien a todos',d:'Si tomas decisiones difíciles, alguien va a estar en contra. Es matemática, no fracaso. El tímido que se convierte en líder se estrella aquí: quiere decidir <b>y</b> que todos estén de acuerdo. No existe. Hay que elegir, y la elección correcta es <b>ser respetado</b> antes que ser querido — lo segundo suele llegar después, y lo primero no llega nunca si lo persigues al revés.',list:['Theodore Roosevelt, 1910, el discurso del <b>hombre en la arena</b>: el mérito no es del crítico que señala cómo tropieza el fuerte, sino del que está en la arena, con la cara manchada de polvo y sudor, que se equivoca una y otra vez. Brené Brown construyó un libro entero sobre esa idea: si no estás en la arena recibiendo golpes, tu opinión sobre mi trabajo no me interesa.','<b>La prueba correcta no es "¿les gusta?" sino "¿es correcto?"</b>. Antes de una decisión impopular, escríbelo: ¿por qué es correcta? Si la razón se sostiene en papel, se sostiene frente a cualquier cara.','<b>Distingue crítica de ruido.</b> La crítica trae un hecho y una alternativa: se escucha y a veces se cede. El ruido trae adjetivos y ninguna alternativa: se agradece y se sigue. Confundir los dos es lo que agota a los líderes nuevos.','<b>El malestar dura menos de lo que crees.</b> La decisión impopular duele dos semanas; la indecisión duele dos años. Y la gente respeta —a regañadientes, después— a quien decidió, no a quien la tuvo contenta mientras todo se hundía.','<b>Tu caso — la familia</b>: en México el no a la familia es el examen más duro, y ya tienes ficha aparte para eso. Aquí va la parte de carácter: puedes decir no a un préstamo, a un favor, a una expectativa, y seguir siendo un buen hijo. Que se enojen un rato es el precio de tener criterio propio. Pagarlo una vez enseña a todos que tu no es en serio — y tu sí también.','⚠️ Error más común: retractarte cuando llega la primera cara larga. Cada vez que lo haces, enseñas que tu decisión se compra con una cara larga. La siguiente va a costar más.']},
+      {t:'Aplicarlo donde ya estás',d:'Cuatro situaciones que ya vives y que son, exactamente, el gimnasio de esta habilidad — y una quinta contigo mismo:',list:['<b>Tu caso — la junta donde nunca hablas</b>: la próxima, una frase en los primeros cinco minutos, preparada desde antes. Puede ser una pregunta. A la tercera junta, una propuesta con "propongo". A la quinta, sostenerla cuando la discutan.','<b>Tu caso — el negocio de tu papá</b>: elige la decisión que lleva más tiempo pospuesta, ponle fecha, decídela con el método del paso 5, y comunícala de frente. Es el mejor laboratorio que tienes: hay dinero real, hay alguien que va a discutir, y hay cariño de por medio para que no se rompa nada.','<b>Tu caso — un pasajero que se pone agresivo</b>: es el paso 9 en vivo. Respiras, bajas la voz, no discutes el tono: <i>"Lo llevo a su destino con gusto; si prefiere, terminamos el viaje aquí."</i> Calmado y con alternativa. Nunca en su tono.','<b>Tu caso — una entrevista</b>: la timidez se oye en la voz que sube al final y en los amortiguadores. Prepara tres logros con cifra, ensaya en voz alta, y responde corto. Y cuando pregunten algo que no sabes: <i>"No lo he hecho. Lo aprendería así."</i> Sin disculpa.','<b>Tu caso — contigo mismo</b>: la decisión más difícil que llevas evitando (la que te vino a la cabeza al leer esto). Ponle fecha hoy. No mañana. Ese es el primer golpe en el yunque.']},
+      {t:'Practicarlo esta semana',d:'Seis ejercicios, uno por día. Ninguno necesita más de quince minutos; todos incomodan un poco, que es la señal de que están funcionando.',list:['<b>Lunes</b>: diez decisiones sin consultar a nadie. Cuéntalas. Anota cuántas veces sentiste el impulso de preguntar "¿tú qué harías?".','<b>Martes</b>: escribe tu escalera de exposición de diez peldaños y sube el primero hoy mismo (pedir algo pequeño con probabilidad de no).','<b>Miércoles</b>: en la junta, habla en los primeros cinco minutos. Una frase, sin "creo que" ni "quizá". Preparada desde el martes.','<b>Jueves</b>: la conversación incómoda que llevas posponiendo, con hecho → efecto → petición. En persona.','<b>Viernes</b>: grábate dos minutos explicando algo del trabajo y escúchate. Cuenta amortiguadores y finales de frase hacia arriba. Repítelo hasta bajarlos a la mitad.','<b>Fin de semana</b>: escribe la decisión difícil que estás evitando, aplica el método del paso 5 en una hoja, y ponle fecha de decisión. Compártela con alguien para que no la puedas mover.']},
+      {t:'📚 Qué leer, en qué orden',d:'Seis libros. El primero te quita la vergüenza de ser callado; el segundo te da el método; el tercero, la actitud.',list:['<b>El poder de los introvertidos</b> · Susan Cain — por qué el líder callado no es un líder menor, y cómo usar lo tuyo en vez de imitar lo ajeno. En inglés, <i>Quiet</i>.','<b>Decídete</b> · Chip y Dan Heath — el método de las decisiones difíciles: ampliar opciones, probar en pequeño, 10/10/10, cables trampa. En inglés, <i>Decisive</i>.','<b>Extreme Ownership</b> · Jocko Willink y Leif Babin — la responsabilidad total y la disciplina como libertad, contadas desde Ramadi y llevadas a la empresa. Si no lo encuentras en español, en inglés es de lectura sencilla.','<b>Meditaciones</b> · Marco Aurelio, y el <b>Manual</b> de Epicteto — los dos textos que fundan lo que controlas y lo que no. Cortos; se leen en una tarde y se releen toda la vida. Si prefieres una entrada moderna, <i>El obstáculo es el camino</i> de Ryan Holiday.','<b>Atrévete a liderar</b> · Brené Brown — la arena, "claro es amable", y por qué la vulnerabilidad es lo contrario de la debilidad. En inglés, <i>Dare to Lead</i>.','<b>Obtenga el sí</b> · Roger Fisher y William Ury — la negociación de Harvard: separar a la persona del problema y tener alternativa. Es el libro que te hace no intimidable en una mesa. En inglés, <i>Getting to Yes</i>.']},
+      {t:'✅ Ya lo dominas cuando…',d:'Nada de "sentirte más seguro". Seis cosas comprobables:',list:['<b>(1)</b> Tomaste una decisión difícil que llevabas más de un mes posponiendo, la comunicaste de frente el mismo día, y la sostuviste cuando la discutieron.','<b>(2)</b> Alguien te alzó la voz y tú bajaste la tuya, hiciste la pausa y preguntaste — y lo puedes contar sin vergüenza ni rencor.','<b>(3)</b> En un mes hablaste en los primeros cinco minutos de al menos cinco juntas, sin amortiguadores, y en una de ellas dijiste "propongo".','<b>(4)</b> Tienes tu escalera de exposición escrita y subiste al menos seis peldaños, con la predicción y el resultado anotados en cada uno.','<b>(5)</b> Dijiste que no a alguien de tu familia sin justificarte de más, aguantaste la cara larga, y la relación sigue intacta.','<b>(6)</b> Treinta días seguidos cumpliendo la hora de levantarte y el gym sin negociar contigo. Sin eso, lo demás no se sostiene.'],href:'https://www.google.com/search?q=El+poder+de+los+introvertidos+Susan+Cain+libro',label:'📚 El poder de los introvertidos · Susan Cain'},
     ]},
   // Reescrito por completo el 2026-08-11 (pedido explícito: "en saber nadar ni siquiera me das
   // las cosas de como hacerlo, debes decirme eso a detalle, pero de progresion... que tecnicas,
@@ -10959,7 +11123,7 @@ function renderHabilidadesBase(){
   const estado=x=>(x.total&&x.hechos===x.total)?'ok':(x.hechos===0?'zero':'');
 
   // "SIGUIENTE" = la habilidad EMPEZADA que está más cerca de terminar. Cerrar algo que ya
-  // llevas a medias motiva más que abrir una novena habilidad en 1 paso, y con 23 fichas hace
+  // llevas a medias motiva más que abrir una novena habilidad en 1 paso, y con 27 fichas hace
   // falta un punto de entrada o la pantalla se vuelve un catálogo. Si no hay ninguna empezada
   // (navegador nuevo), marca la primera del temario para que nunca se quede sin marcar.
   let sig=null,mejor=-1;
@@ -11351,7 +11515,9 @@ fixMsiBBVA20260813IfNeeded();
 // Las cifras compartidas se releen DESPUÉS de los fix*IfNeeded() de arriba: el módulo leyó
 // localStorage al cargarse, antes que ellos. (Su propia migración, la de datos-maestros, ya
 // corrió dentro del módulo; este refresco es por las que siguen viviendo aquí.)
-if(window.CIFRAS){ CIFRAS.refrescar(); cifrarLiterales(PHASES); cifrarLiterales(META_DETALLE); }
+// EDAD_DETALLE copia el `meta` de cada fase al cargar, ANTES de que PHASES pase por aquí: sin
+// esta llamada, el panel de Tu año enseñaba «{{fondoMeta}}» a la vista.
+if(window.CIFRAS){ CIFRAS.refrescar(); cifrarLiterales(PHASES); cifrarLiterales(META_DETALLE); cifrarLiterales(EDAD_DETALLE); }
 fixMiercolesNatacionIfNeeded();
 fixRutina20260812IfNeeded();
 seedMetasLogradasIfNeeded();

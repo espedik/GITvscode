@@ -1,0 +1,16 @@
+{
+  "artboards": [
+    { "file": "Main.dc.html",       "x": 0,    "y": 0,    "w": 1600, "h": 1000, "title": "Ficha — tres apartados (propuesta)" },
+    { "file": "Movil.dc.html",      "x": 1720, "y": 0,    "w": 390,  "h": 844,  "title": "La misma ficha en el celular" },
+    { "file": "DireccionB.dc.html", "x": 0,    "y": 1220, "w": 1600, "h": 1000, "title": "Dirección B — lectura ancha" },
+    { "file": "DireccionC.dc.html", "x": 1720, "y": 1220, "w": 1600, "h": 1000, "title": "Dirección C — dossier de corrido" }
+  ],
+  "annotations": [
+    { "id": "nota-problema", "x": 0, "y": -230, "w": 560, "text": "Lo que falla hoy (captura de Adán, 2026-09-13): la tarjeta se queda en 1280 px y deja la mitad derecha vacía; el temario, la frase y los videos van apilados en una columna de 270 px a 12 px; el cuerpo del paso es un párrafo y viñetas sin jerarquía. Se ve pequeño y sin apartados." },
+    { "id": "nota-main", "x": 600, "y": -230, "w": 560, "text": "Propuesta: la ficha ocupa el 96 % del ancho y el 94 % del alto. Tres apartados con nombre: TEMARIO (300 px, un paso por fila con su estado), EL PASO (título a 34 px, la idea a 16.5 px, y los puntos como libro mayor numerado en vez de viñetas; Ejemplo y Error más común salen a cajas propias) y RECURSOS (los videos y tu avance). La frase de la habilidad sube a la cabecera; el pie marca, muestra dónde vas y navega." },
+    { "id": "nota-movil", "x": 1720, "y": -150, "w": 390, "text": "En el celular los tres apartados se apilan: el temario es una tira de chips, los recursos se pliegan bajo el paso, y el pie se queda fijo con Dominado y Siguiente a 44 px." },
+    { "id": "nota-b", "x": 0, "y": 1000, "w": 560, "text": "Dirección B — lectura ancha: el temario se vuelve una regla de 16 segmentos arriba y el paso se lee a 17.5 px en una columna de 64 caracteres; los apartados (Ejemplo, Error, videos) van a la derecha. A favor: la lectura más cómoda de las tres. En contra: los títulos de los pasos ya no se ven de un vistazo, solo los números." },
+    { "id": "nota-c", "x": 1720, "y": 1000, "w": 560, "text": "Dirección C — dossier: los 16 pasos van de corrido en una sola página, cada uno con su botón de Marcar, y el temario fijo a la izquierda te lleva a cualquiera. A favor: se ve la ficha entera y no hay que dar Siguiente. En contra: se pierde el «un paso a la vez» que se eligió el 23 de agosto, y un paso de 6 puntos ya ocupa una pantalla." }
+  ],
+  "launch": { "view": "canvas" }
+}

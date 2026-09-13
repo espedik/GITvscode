@@ -1,0 +1,115 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&display=swap">
+  <style>
+    body { margin: 0; font-family: 'Inter', -apple-system, 'Segoe UI', sans-serif; }
+    a { color: #047a6b; } a:hover { color: #00a758; }
+    .raiz { --bg: #f2f2f6; --text: #16161a; --text2: #5c5f70; --text3: #63667c; --g: #00a758; --cy: #047a6b; --w: #a8790a;
+            --ov: 0,0,0; --cy-rgb: 4,122,107; --g-rgb: 0,167,88; --w-rgb: 168,121,10; --card: rgba(255,255,255,.96); --velo: rgba(20,20,30,.62); }
+    .mono { font-family: 'Space Grotesk', monospace; font-variant-numeric: tabular-nums; }
+    .ttl { font-family: 'Fraunces', Georgia, serif; }
+    .lbl { font-family: 'Space Grotesk', monospace; font-size: 10px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; color: var(--text3); }
+    .ix { display: grid; grid-template-columns: 22px minmax(0, 1fr); gap: 10px; align-items: start; padding: 7px 10px; border-radius: 4px; }
+    .ix .n { width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: 'Space Grotesk', monospace; font-size: 9.5px; font-weight: 700; background: rgba(var(--ov), .07); color: var(--text3); }
+    .ix .t { font-size: 12.5px; line-height: 1.4; color: var(--text2); padding-top: 2px; }
+    .ix.hecho .n { background: var(--g); color: #05050a; }
+    .ix.on { background: rgba(var(--cy-rgb), .09); }
+    .ix.on .n { background: var(--cy); color: #05050a; }
+    .ix.on .t { color: var(--text); font-weight: 700; }
+    /* Cada paso es una sección del documento */
+    .sec { display: grid; grid-template-columns: 64px minmax(0, 1fr) 200px; gap: 24px; padding: 28px 0; border-top: 1px solid rgba(var(--ov), .1); }
+    .sec .num { font-family: 'Fraunces', Georgia, serif; font-size: 44px; font-weight: 500; color: rgba(var(--ov), .18); line-height: 1; }
+    .sec h3 { margin: 0 0 8px; font-family: 'Fraunces', Georgia, serif; font-size: 24px; font-weight: 700; color: var(--text); line-height: 1.15; }
+    .sec p { margin: 0; font-size: 15px; line-height: 1.68; color: var(--text2); }
+    .sec .lista { margin: 12px 0 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 8px; }
+    .sec .lista li { font-size: 14.5px; line-height: 1.62; color: var(--text2); padding-left: 16px; position: relative; }
+    .sec .lista li::before { content: ''; position: absolute; left: 0; top: 10px; width: 6px; height: 6px; border-radius: 50%; background: var(--cy); }
+    .marcar { display: inline-flex; align-items: center; gap: 8px; height: 38px; padding: 0 14px; border-radius: 6px; font-size: 12.5px; font-weight: 700; font-family: inherit; border: 1px solid rgba(var(--ov), .16); background: rgba(var(--ov), .04); color: var(--text2); justify-self: end; align-self: start; }
+    .marcar.on { border-color: rgba(var(--g-rgb), .45); background: rgba(var(--g-rgb), .12); color: var(--g); }
+  </style>
+</helmet>
+
+<div class="raiz" style="width: 1600px; height: 1000px; background: var(--bg); position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center">
+  <div style="position: absolute; inset: 0; background: var(--velo)"></div>
+  <div style="position: relative; width: 1536px; height: 940px; background: var(--card); border: 1px solid rgba(var(--ov), .14); border-radius: 10px; box-shadow: 0 34px 90px rgba(0,0,0,.5); display: grid; grid-template-columns: 320px minmax(0, 1fr); overflow: hidden">
+
+    <!-- columna fija: ficha, avance y temario -->
+    <aside style="border-right: 1px solid rgba(var(--ov), .1); padding: 24px 20px; display: flex; flex-direction: column; gap: 18px; overflow: hidden; background: linear-gradient(180deg, rgba(var(--g-rgb), .06), transparent 40%)">
+      <img src="leer-personas.jpg" alt="" style="width: 100%; height: 150px; border-radius: 5px; object-fit: cover; border: 1px solid rgba(var(--ov), .16)">
+      <div style="display: flex; flex-direction: column; gap: 6px">
+        <span class="lbl" style="color: var(--g)">Habilidades base · 05 de 27</span>
+        <div class="ttl" style="font-size: 22px; font-weight: 600; line-height: 1.15; color: var(--text)">Leer a las personas: comportamiento, rasgos y actitud</div>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 6px; padding: 12px 14px; border-radius: 5px; border: 1px solid rgba(var(--ov), .1)">
+        <div style="display: flex; align-items: baseline; justify-content: space-between"><span class="lbl">Dominados</span><span class="mono" style="font-size: 16px; font-weight: 700; color: var(--g)">7 / 16</span></div>
+        <div style="height: 5px; border-radius: 3px; background: rgba(var(--ov), .1); overflow: hidden"><div style="width: 44%; height: 100%; background: linear-gradient(90deg, var(--g), var(--cy))"></div></div>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 1px; overflow: hidden">
+        <span class="lbl" style="padding: 0 10px 8px">Temario</span>
+        <div class="ix hecho"><span class="n"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg></span><span class="t">Primero la línea base, después la señal</span></div>
+        <div class="ix hecho"><span class="n"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg></span><span class="t">De los pies a la cabeza</span></div>
+        <div class="ix hecho"><span class="n"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg></span><span class="t">Manos, cuello y ojos</span></div>
+        <div class="ix hecho"><span class="n"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg></span><span class="t">La cara: siete emociones</span></div>
+        <div class="ix hecho"><span class="n"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg></span><span class="t">La voz y las palabras</span></div>
+        <div class="ix hecho"><span class="n"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg></span><span class="t">Los rasgos: los Cinco Grandes</span></div>
+        <div class="ix hecho"><span class="n"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg></span><span class="t">Lo que la gente repite es lo que es</span></div>
+        <div class="ix on"><span class="n">8</span><span class="t">La actitud en una conversación</span></div>
+        <div class="ix"><span class="n">9</span><span class="t">Interés y desinterés</span></div>
+        <div class="ix"><span class="n">10</span><span class="t">Mentiras: lo que sí sirve y lo que es mito</span></div>
+        <div class="ix"><span class="n">11</span><span class="t">Leer una sala en treinta segundos</span></div>
+        <div class="ix"><span class="n">12</span><span class="t">Los sesgos que te hacen leer mal</span></div>
+      </div>
+    </aside>
+
+    <!-- el documento entero, de corrido -->
+    <section style="min-width: 0; overflow: hidden; padding: 20px 56px 0 48px; display: flex; flex-direction: column">
+      <div style="display: flex; align-items: center; justify-content: space-between; padding-bottom: 14px">
+        <span class="lbl">La ficha completa · 16 pasos de corrido</span>
+        <span class="mono" style="font-size: 10.5px; font-weight: 600; color: var(--text3)">Estás en el paso 8</span>
+      </div>
+
+      <div class="sec" style="opacity: .55">
+        <span class="num">07</span>
+        <div><h3>Lo que la gente repite es lo que es</h3><p>Robert Greene dedica <b>Las leyes de la naturaleza humana</b> a una idea: el carácter es un patrón, y los patrones se repiten. Lo que alguien te dice de sí mismo es su versión; lo que hace cuando nadie lo obliga es la verdad.</p></div>
+        <button class="marcar on"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>Dominado</button>
+      </div>
+
+      <div class="sec" style="background: linear-gradient(90deg, rgba(var(--cy-rgb), .05), transparent 70%); margin: 0 -24px; padding-left: 24px; padding-right: 24px; border-radius: 6px">
+        <span class="num" style="color: var(--cy)">08</span>
+        <div>
+          <h3>La actitud en una conversación: abierto, cerrado o resistiendo</h3>
+          <p>La actitud no es una emoción: es la <b>disposición</b> con la que alguien entra a la conversación, y cambia de minuto a minuto. Saber en qué punto está te dice si empujar, esperar o cambiar de tema.</p>
+          <ul class="lista">
+            <li><b>Abierto</b>: hace preguntas, completa tus frases, asiente mientras hablas, propone. Aquí es cuando se piden las cosas.</li>
+            <li><b>Cerrado</b>: respuestas cortas, "ajá", el torso se aleja, cambia de tema. No es no: es "no ahora".</li>
+            <li><b>Resistiendo</b>: el "sí, pero…", el "lo pensamos" sin fecha. Un "sí" sin siguiente paso concreto es un no educado.</li>
+            <li>La herramienta: <b>la etiqueta</b> de Chris Voss — <i>"parece que esto no te termina de convencer"</i>. Si acertaste, el otro lo suelta; si no, te corrige.</li>
+          </ul>
+        </div>
+        <button class="marcar"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>Marcar</button>
+      </div>
+
+      <div class="sec">
+        <span class="num">09</span>
+        <div><h3>Interés y desinterés: la lectura que más vas a usar</h3><p>De todas las lecturas, la que se usa a diario no es "¿miente?" sino <b>"¿le interesa esto, o le interesa irse?"</b>. Sirve igual con un cliente, un entrevistador, alguien en una fiesta o un pasajero.</p></div>
+        <button class="marcar"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>Marcar</button>
+      </div>
+
+      <div class="sec">
+        <span class="num">10</span>
+        <div><h3>Mentiras: lo que sí sirve y lo que es mito</h3><p>Aquí conviene bajar las expectativas de golpe: en un metaanálisis de más de 200 estudios, la gente detectó mentiras con un <b>54% de acierto</b> — apenas mejor que una moneda.</p></div>
+        <button class="marcar"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>Marcar</button>
+      </div>
+    </section>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

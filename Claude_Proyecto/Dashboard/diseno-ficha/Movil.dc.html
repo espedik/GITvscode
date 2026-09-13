@@ -1,0 +1,119 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&display=swap">
+  <style>
+    body { margin: 0; font-family: 'Inter', -apple-system, 'Segoe UI', sans-serif; }
+    a { color: var(--cy, #047a6b); } a:hover { color: var(--g, #00a758); }
+    .raiz { --bg: #f2f2f6; --text: #16161a; --text2: #5c5f70; --text3: #63667c;
+            --g: #00a758; --cy: #047a6b; --w: #a8790a; --ov: 0,0,0; --cy-rgb: 4,122,107; --g-rgb: 0,167,88; --w-rgb: 168,121,10;
+            --card: rgba(255,255,255,.97); }
+    .raiz.oscuro { --bg: #05050a; --text: #f4f4f8; --text2: #9a9db3; --text3: #8589a8;
+            --g: #00e87a; --cy: #00e0c0; --w: #ffd93d; --ov: 255,255,255; --cy-rgb: 0,224,192; --g-rgb: 0,232,122; --w-rgb: 255,217,61;
+            --card: rgba(12,12,22,.97); }
+    .mono { font-family: 'Space Grotesk', 'SF Mono', monospace; font-variant-numeric: tabular-nums; }
+    .ttl { font-family: 'Fraunces', Georgia, serif; }
+    .lbl { font-family: 'Space Grotesk', monospace; font-size: 9.5px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: var(--text3); }
+    .chip { flex: none; display: flex; align-items: center; gap: 7px; height: 34px; padding: 0 11px 0 6px; border-radius: 4px; border: 1px solid rgba(var(--ov), .1); background: rgba(var(--ov), .03); max-width: 200px; }
+    .chip .n { width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: 'Space Grotesk', monospace; font-size: 10px; font-weight: 700; background: rgba(var(--ov), .07); color: var(--text3); }
+    .chip .t { font-size: 12px; color: var(--text2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .chip.hecho .n { background: var(--g); color: #05050a; }
+    .chip.on { background: rgba(var(--cy-rgb), .09); border-color: rgba(var(--cy-rgb), .32); }
+    .chip.on .n { background: var(--cy); color: #05050a; }
+    .chip.on .t { color: var(--text); font-weight: 700; }
+    .pt { display: grid; grid-template-columns: 26px minmax(0, 1fr); gap: 10px; padding: 12px 0; border-top: 1px solid rgba(var(--ov), .08); }
+    .pt:first-child { border-top: none; padding-top: 2px; }
+    .pt .k { font-family: 'Space Grotesk', monospace; font-size: 10.5px; font-weight: 700; color: var(--cy); padding-top: 3px; }
+    .pt .x { font-size: 14.5px; line-height: 1.62; color: var(--text2); }
+    .pt .x b { color: var(--text); }
+    .ap { border-radius: 5px; padding: 13px 15px 14px; display: flex; flex-direction: column; gap: 6px; }
+    .ap.caso { background: rgba(var(--cy-rgb), .07); border: 1px solid rgba(var(--cy-rgb), .24); }
+    .ap.caso .lbl { color: var(--cy); }
+    .ap.error { background: rgba(var(--w-rgb), .08); border: 1px solid rgba(var(--w-rgb), .3); }
+    .ap.error .lbl { color: var(--w); }
+    .ap p { margin: 0; font-size: 14px; line-height: 1.6; color: var(--text2); }
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 44px; padding: 0 16px; border-radius: 6px; font-size: 13px; font-weight: 700; font-family: inherit; border: 1px solid rgba(var(--ov), .16); background: rgba(var(--ov), .04); color: var(--text2); }
+    .btn.primario { border-color: rgba(var(--cy-rgb), .4); background: rgba(var(--cy-rgb), .12); color: var(--cy); }
+    .btn.marcar { border-color: rgba(var(--g-rgb), .45); background: rgba(var(--g-rgb), .12); color: var(--g); }
+  </style>
+</helmet>
+
+<div class="raiz {{ tema.cls }}" style="width: 390px; height: 844px; background: var(--card); position: relative; overflow: hidden; display: flex; flex-direction: column">
+
+  <!-- cabecera compacta -->
+  <div style="display: grid; grid-template-columns: 52px minmax(0, 1fr) 32px; gap: 12px; align-items: start; padding: 16px 16px 14px; border-bottom: 1px solid rgba(var(--ov), .1); background: linear-gradient(100deg, rgba(var(--g-rgb), .07), transparent 60%)">
+    <img src="leer-personas.jpg" alt="" style="width: 52px; height: 52px; border-radius: 4px; object-fit: cover; border: 1px solid rgba(var(--ov), .16)">
+    <div style="display: flex; flex-direction: column; gap: 5px; min-width: 0">
+      <span class="lbl" style="color: var(--g)">Habilidades base · 05 de 27</span>
+      <div class="ttl" style="font-size: 19px; font-weight: 600; line-height: 1.15; color: var(--text)">Leer a las personas: comportamiento, rasgos y actitud</div>
+      <div style="display: flex; align-items: center; gap: 9px; margin-top: 2px">
+        <div style="flex: 1; height: 4px; border-radius: 2px; background: rgba(var(--ov), .1); overflow: hidden"><div style="width: 44%; height: 100%; background: linear-gradient(90deg, var(--g), var(--cy))"></div></div>
+        <span class="mono" style="font-size: 11px; font-weight: 700; color: var(--g)">7/16</span>
+      </div>
+    </div>
+    <button style="width: 32px; height: 32px; border-radius: 50%; border: 1px solid rgba(var(--ov), .16); background: rgba(var(--ov), .05); color: var(--text2); display: flex; align-items: center; justify-content: center">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+  </div>
+
+  <!-- temario en tira -->
+  <div style="display: flex; flex-direction: column; gap: 8px; padding: 12px 16px; border-bottom: 1px solid rgba(var(--ov), .1)">
+    <div style="display: flex; align-items: baseline; justify-content: space-between">
+      <span class="lbl">Temario</span>
+      <span class="mono" style="font-size: 10px; font-weight: 600; color: var(--text3)">8 de 16</span>
+    </div>
+    <div style="display: flex; gap: 6px; overflow: hidden">
+      <div class="chip hecho"><span class="n"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg></span><span class="t">Lo que la gente repite</span></div>
+      <div class="chip on"><span class="n">8</span><span class="t">La actitud en una conversación</span></div>
+      <div class="chip"><span class="n">9</span><span class="t">Interés y desinterés</span></div>
+    </div>
+  </div>
+
+  <!-- el paso -->
+  <div style="flex: 1; min-height: 0; overflow: hidden; padding: 18px 16px; display: flex; flex-direction: column; gap: 16px">
+    <div style="display: flex; flex-direction: column; gap: 8px; padding-bottom: 14px; border-bottom: 1px solid rgba(var(--ov), .1)">
+      <span class="lbl" style="color: var(--cy)">Paso 8 de 16</span>
+      <h2 class="ttl" style="margin: 0; font-size: 24px; font-weight: 700; line-height: 1.15; color: var(--text); letter-spacing: -.01em">La actitud en una conversación: abierto, cerrado o resistiendo</h2>
+      <p style="margin: 0; font-size: 15px; line-height: 1.65; color: var(--text2)">La actitud no es una emoción: es la <b style="color: var(--text)">disposición</b> con la que alguien entra a la conversación, y cambia de minuto a minuto.</p>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 6px">
+      <span class="lbl">En detalle</span>
+      <div style="display: flex; flex-direction: column">
+        <div class="pt"><span class="k">01</span><span class="x"><b>Abierto</b>: hace preguntas, completa tus frases, asiente mientras hablas, dice "nosotros", propone. Aquí es cuando se piden las cosas.</span></div>
+        <div class="pt"><span class="k">02</span><span class="x"><b>Cerrado</b>: respuestas cortas, "ajá", mira el celular, el torso se aleja. No es no: es "no ahora".</span></div>
+      </div>
+    </div>
+    <div class="ap error">
+      <span class="lbl" style="display: flex; align-items: center; gap: 6px"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3L2 20h20L12 3z"/><path d="M12 10v5M12 18h.01"/></svg>Error más común</span>
+      <p>Tomar el "sí" verbal como el dato y descartar todo lo demás.</p>
+    </div>
+  </div>
+
+  <!-- recursos plegados + pie -->
+  <div style="display: flex; align-items: center; justify-content: space-between; padding: 10px 16px; border-top: 1px solid rgba(var(--ov), .1)">
+    <span class="lbl" style="display: flex; align-items: center; gap: 8px"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M7 4l13 8-13 8z"/></svg>Para escucharlo · 4 videos</span>
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--text3)"><path d="M6 9l6 6 6-6"/></svg>
+  </div>
+  <div style="display: grid; grid-template-columns: minmax(0, 1fr) 44px auto; gap: 8px; padding: 10px 16px 16px; border-top: 1px solid rgba(var(--ov), .1); background: rgba(var(--ov), .035)">
+    <button class="btn marcar"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>Dominado</button>
+    <button class="btn" style="padding: 0"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg></button>
+    <button class="btn primario">Siguiente<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></button>
+  </div>
+</div>
+</x-dc>
+<script data-dc-script data-props='{"tema":{"editor":"enum","options":["claro","oscuro"],"default":"claro"},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const t = this.props.tema ?? 'claro';
+    return { tema: { cls: t === 'oscuro' ? 'oscuro' : '' } };
+  }
+}
+</script>
+</body>
+</html>
