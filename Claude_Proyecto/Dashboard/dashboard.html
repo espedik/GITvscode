@@ -162,7 +162,10 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 .slide::after{width:50vmax;height:50vmax;bottom:-24%;right:-12%;background:var(--ac2);animation:driftB 28s ease-in-out infinite alternate}
 @keyframes driftA{0%{transform:translate(0,0) scale(1)}100%{transform:translate(6vw,5vh) scale(1.18)}}
 @keyframes driftB{0%{transform:translate(0,0) scale(1)}100%{transform:translate(-6vw,-5vh) scale(1.12)}}
-.slide-inner{position:relative;z-index:1;width:100%;max-width:1400px;height:100%;display:flex;flex-direction:column;justify-content:center}
+/* Sin tope de ancho desde el 2026-09-13 (Adán: "las demás páginas del dashboard, debes ocupar toda la
+   pantalla igualmente"): cada pantalla usa lo que deja el padding del slide — 1440px a 1600, 1760 a
+   1920 —, y lo que es lectura pone su propio tope en caracteres. */
+.slide-inner{position:relative;z-index:1;width:100%;height:100%;display:flex;flex-direction:column;justify-content:center}
 /* Mi Día llena la pantalla, no se centra (2026-08-12) — pedido de Adán con captura: entre la
    barra de apps y el título quedaba una franja muerta de ~5vh. Es la pantalla con más contenido
    del Dashboard (frase, tira de 7 días, "Ahora mismo", 3 paneles y la línea de tiempo), así que
@@ -1259,7 +1262,7 @@ button.hp-lec:active{transform:translateY(0)}
    la única pieza que crece sin tope, porque depende de cuántas tareas tenga la fase— absorbe el
    alto sobrante y hace su propio scroll. El patrón es el mismo de "Importante este mes" en Mi Día
    y de #diaTimeline: la lista larga scrollea dentro de su tarjeta, no empuja al resto. */
-.theme-coach .slide-inner{justify-content:flex-start;height:auto;min-height:100%;padding-bottom:24px}
+.theme-coach .slide-inner{justify-content:flex-start;height:auto;min-height:100%}
 /* El slide scrollea en vez de recortar. Es la diferencia entre "no cabe, mala suerte" y "no cabe,
    baja a verlo": el resto de pantallas del Dashboard son de vistazo y caben, pero esta lleva el
    plan de la fase completo —encabezado, ruta de deuda y el checklist entero— y en 720-900 px de
@@ -1955,7 +1958,7 @@ button.hp-lec:active{transform:translateY(0)}
      libro con su PORTADA de la biblioteca y el estante con los libros de toda la ruta) y LO QUE
      SABES (las 12 a ~44px por fila, leyenda, nota y el rato al volante).
    · Botón "Siguiente paso": antes solo se avanzaba tocando la ruta. */
-.theme-skills .slide-inner{justify-content:flex-start;max-width:none}
+.theme-skills .slide-inner{justify-content:flex-start}
 .hab-head{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:24px;align-items:end;flex:none;margin-bottom:14px}
 .hab-head .eyebrow{margin-bottom:6px}
 .hab-title{font-size:clamp(26px,2.6vw,36px);margin-bottom:0;line-height:1}
@@ -2024,8 +2027,8 @@ button.hp-lec:active{transform:translateY(0)}
 .hf-qw{display:grid;grid-template-columns:8px minmax(0,1fr);gap:16px}
 .hf-qw>i{border-radius:4px;background:var(--g);opacity:.8}
 .hf-blk{display:flex;flex-direction:column;gap:6px}
-.hf-q{font-size:18px;color:var(--text2);line-height:1.55}
-.hf-c{font-size:17px;color:var(--text2);line-height:1.65}
+.hf-q{font-size:18px;color:var(--text2);line-height:1.55;max-width:80ch}
+.hf-c{font-size:17px;color:var(--text2);line-height:1.65;max-width:80ch}
 .hf-q b,.hf-c b{color:var(--text);font-weight:700}
 /* CON QUÉ: el libro con su portada, o el recurso tal cual si no es un libro de la biblioteca. */
 .hf-libro{display:grid;grid-template-columns:76px minmax(0,1fr) auto;gap:16px;align-items:center;padding:13px 16px;border-radius:14px;
@@ -2750,7 +2753,6 @@ button.hp-lec:active{transform:translateY(0)}
    Todo sale de datos que ya existían: HB.hoy (hábitos), CIFRAS.agendaDia, PHASES, APRENDIZAJE,
    HABILIDAD_DETALLE y DIDI_AUDIO. Estas reglas van DESPUÉS de las viejas de cada pieza para
    ganarles sin tocar lo que otras pantallas comparten. */
-.theme-dia .slide-inner{max-width:none}
 .dia-b{flex:1;min-height:0;display:grid;grid-template-columns:420px minmax(0,1fr);gap:16px}
 /* La agenda */
 .dia-agenda{display:flex;flex-direction:column;gap:10px;padding:18px 14px 14px;min-height:0;overflow:hidden}
@@ -3052,7 +3054,7 @@ button.hp-lec:active{transform:translateY(0)}
    mide su contenido: al cambiar de mes crecia o encogia y arrastraba todo con el.
    Con stretch ocupa el alto entero y el tablero (flex:1) se queda con lo que sobra. */
 .slide.theme-coach{align-items:stretch;overflow:hidden}
-.slide.theme-coach .slide-inner{max-width:1400px;width:100%}
+.slide.theme-coach .slide-inner{width:100%}
 .coach-tablero{max-width:100%}
 .slide.theme-coach .slide-inner{justify-content:flex-start}
 .coach-riel{display:flex;align-items:stretch;flex-shrink:0;border-radius:14px;overflow:hidden;
@@ -3661,7 +3663,7 @@ button.ct-cat:hover{background:rgba(var(--ov),.07)}
         <div class="slide-title" style="margin-bottom:0"><span class="ico">🛒</span> Todo lo que hay que comprar</div>
         <div id="listaCatTabs" class="lc-tabs"></div>
       </div>
-      <div class="tile reveal d3" id="listaCompraBody" style="max-height:70vh;overflow-y:auto"></div>
+      <div class="tile reveal d3" id="listaCompraBody" style="flex:1;min-height:0;overflow-y:auto"></div>
     </div>
   </section>
 

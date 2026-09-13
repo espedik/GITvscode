@@ -585,8 +585,8 @@ con `filter:brightness(.68) saturate(1.35)`, sin tocar el dato.
 
 El fondo son **seis capas, todas CSS, ni una imagen**: una retícula fina que rima con la
 cuadrícula de datos, dos manchas de color, una malla en fuga con su línea de horizonte y un
-barrido de líneas casi invisible. Van en el `<section>` y no dentro de `#habitosSlide` porque
-`.slide-inner` está limitado a 1400px y el fondo tiene que llegar a los bordes de la pantalla.
+barrido de líneas casi invisible. Van en el `<section>` y no dentro de `#habitosSlide` porque el
+fondo tiene que llegar a los bordes de la pantalla, más allá del padding del slide.
 
 ### Cuatro estados, no dos
 
@@ -689,9 +689,9 @@ hábito de un solo paso.
 
 ### La cuadrícula
 
-Diez hábitos × los días del mes. **Es la única pantalla sin el tope de 1400px** de `.slide-inner`
-y con menos padding lateral: aquí cada píxel de ancho es tamaño de celda, que es lo que pidió Adán
-("haz más grande a lo ancho esa página, quiero los recuadros más grandes").
+Diez hábitos × los días del mes. Lleva **menos padding lateral** que el resto: aquí cada píxel
+de ancho es tamaño de celda, que es lo que pidió Adán ("haz más grande a lo ancho esa página,
+quiero los recuadros más grandes").
 
 **Celdas fluidas.** No miden 30px fijos: cada una toma `flex:1` entre 30 y 44px con `aspect-ratio:1`,
 y las tres filas (cabecera de días, hábitos, totales) comparten el mismo contenedor y el mismo
@@ -877,8 +877,14 @@ Los ocho iconos de 38px caben incluso a 720px de alto, que es la ventana más ba
 
 **El hueco sigue al rail.** El padding del lado del rail es una variable (`--pad-rail`) que cambia
 con la clase `rail-on` del `body`: 88px plegado, 230px abierto. Así el contenido pasa de 1306 a
-**1400px** —su máximo— en cuanto el rail se cierra. El otro lado se queda en 42px, que es lo que
-pide el aire, no un obstáculo que esquivar.
+**1440px** a 1600 de ancho en cuanto el rail se cierra. El otro lado se queda en 42px, que es lo
+que pide el aire, no un obstáculo que esquivar.
+
+**Ninguna pantalla tiene tope de ancho** desde el 2026-09-13 (Adán: *"las demás páginas del
+dashboard, debes ocupar toda la pantalla igualmente"*): `.slide-inner` ya no lleva `max-width`, así
+que cada una usa lo que deja el padding del slide —1440 px a 1600, 1728 a 1920— y lo que es lectura
+(el paso de *En qué invertir tu tiempo*, la ficha) pone su propio tope en caracteres. Medidas las
+nueve a 1366, 1600 y 1920: todas al ancho completo, ninguna con hueco abajo ni desborde horizontal.
 
 Comprobado slide por slide en los ocho, plegado y abierto, a 1600, 1366 y 1280×720: ninguno queda
 por debajo del rail. Ojo al medirlo — `getBoundingClientRect()` incluye el `scale` de la animación
@@ -1426,8 +1432,9 @@ direcciones más (doble página; tablero de las 12). Lo pinta `renderSkills()` e
 derecha (`46 /100`, su barra y la frase *"llevar Inversión de 25 a 40 lo sube a 48"*, calculada con
 `calcOVRcon()`, no estimada). Con el título a 48 px y su margen, la fila medía 126 px; ahora 91,
 y el cuerpo ocupa los **741 px** que quedan a 1600×1000 (`flex:1` sobre `.slide-inner`, que en
-este slide no se centra ni se limita a 1400 px: usa los **1440** que deja el slide, porque Adán
-pidió *"más grande a lo ancho la parte central"*).
+este slide no se centra). A 1600 el slide da **1440 px** de ancho y la tarjeta del paso 828,
+porque Adán pidió *"más grande a lo ancho la parte central"*; la lectura se detiene en 80
+caracteres en monitores más anchos.
 
 **Tres tarjetas a toda la altura**, en columnas de 250 · fluida · 330 px — la del paso mide
 **828 px** a 1600 (antes 704) y el texto ya no se capa a 64 caracteres:
@@ -1452,9 +1459,9 @@ errores en 1600, 1366 y 390 px, en los dos temas, con Inversión (pasos 1 y 4), 
 
 ### Medidas
 
-A 1600×1000 el tablero ocupa los 748px que le deja la banda de fase, con las tres columnas
-parejas (`flex:1` sobre `.slide-inner`, que ya es flex column). Sin eso se quedaba en 437px y
-media pantalla iba en negro. Cada columna lleva su propio `overflow-y:auto`, para que un mes con
+A 1600×1000 el tablero ocupa los 655px que le dejan las tres bandas de arriba, hasta el borde
+inferior, con las tres columnas parejas (`flex:1` sobre `.slide-inner`, que ya es flex column).
+Sin eso se quedaba en 437px y media pantalla iba en negro. Cada columna lleva su propio `overflow-y:auto`, para que un mes con
 muchas categorías no empuje el layout.
 
 ---

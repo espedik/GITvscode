@@ -1221,9 +1221,6 @@
   --cy-rgb:0,224,192;
 }
 .theme-habitos{background:#04040c;padding-right:max(1.6vw,18px)}
-/* Sin el tope de 1400px del resto de pantallas: aquí cada píxel de ancho es
-   tamaño de celda, que es lo que Adán pidió. */
-.theme-habitos .slide-inner{max-width:none}
 .theme-habitos .slide-title,.theme-habitos .eyebrow{color:var(--text)}
 
 /* ── MODO DE DÍA ───────────────────────────────────────────────────────
