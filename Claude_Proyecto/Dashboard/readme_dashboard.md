@@ -1437,47 +1437,38 @@ La tarjeta ya leía su contenido de `alemanTemaHoy()` / `entrevistaTemaHoy()`, l
 funciones que pintan los slides, así que al llegar se ve **esa misma lección** y no otra —
 comprobado: el título de la tarjeta aparece en el slide de destino.
 
-### En qué invertir tu tiempo
+### En qué invertir tu tiempo — "mesa de estudio"
 
-Dos cosas se arreglaron el 2026-08-31, y la primera era un engaño de verdad.
+El slide 4. Adán, 2026-09-13: *"quiero un buen diseño y que abarque la pantalla completa y que
+te den ganas de estudiarlo y leerlo"*. El diseño se acordó en `diseno-tiempo/` frente a dos
+direcciones más (doble página; tablero de las 12). Lo pinta `renderSkills()` en cuatro ids:
+`#habOvr`, `#habRuta`, `#habFoco` y `#habRank`, más la franja de Didi (`#didiStrip`).
 
-#### La barra medía el retorno y parecía medir el nivel
+**La cabecera es una fila**: eyebrow y título a 36 px a la izquierda, el nivel general a la
+derecha (`46 /100`, su barra y la frase *"llevar Inversión de 25 a 40 lo sube a 48"*, calculada con
+`calcOVRcon()`, no estimada). Con el título a 48 px y su margen, la fila medía 126 px; ahora 91,
+y el cuerpo ocupa los **741 px** que quedan a 1600×1000 (`flex:1` sobre `.slide-inner`, que en
+este slide no se centra).
 
-Adán: *"los indicadores no son claros, por que parece que las habilidades que tengo menos
-conocimiento, parece que tengo mucho […] inviértelo"*.
+**Tres tarjetas a toda la altura**, en columnas de 292 · fluida · 372 px:
 
-El ranking ordena por **retorno** (`peso × lo que falta`) y la barra dibujaba ese mismo retorno.
-Como el retorno crece cuando el nivel baja, salía al revés de lo que uno lee:
+| Tarjeta | Qué lleva |
+|---|---|
+| **La ruta** | La habilidad abierta con su icono, nivel y peso; los chips *Esta semana* / nivel / *la que más rinde*; y los pasos como **línea de tiempo** (número en círculo, nombre completo, el activo en verde). Abajo, *Cambiar a …* y *Ajustar en Coach*. |
+| **El paso** | `Paso 01 de 9` · título en Fraunces a 44 px · **Por qué este paso** con filete verde a 17.5 px · **Qué hacer** a 16.5 px · **Con qué**: el libro con su **portada de la biblioteca**, autor, páginas, la nota y *Qué es* (abre la ficha) · el **estante** con los libros de toda la ruta, el del paso marcado · pie con *Al cerrarlo sigue…* y **Siguiente paso**, que antes no existía. |
+| **Lo que sabes** | Las 12 a ~44 px por fila, ordenadas por retorno y medidas por nivel (la barra es lo que ya sabes; Ventas y Marketing apagadas por `PRIORIDAD_EXCLUIDAS`), leyenda, nota y el rato al volante. |
 
-| | Nivel | Barra que salía |
-|---|---|---|
-| Ventas | 15/100 | llena |
-| Mentalidad | 85/100 | casi vacía |
+**La lectura desplaza por dentro** (`.hf-lectura`) cuando el paso es largo —el 4 de Inversión
+dobla al 8—, y el estante y el pie se quedan siempre a la vista: a 1600×1000 el paso 1 cabe
+entero y el 4 desplaza 32 px, sin tapar nunca el botón. Un recurso que no es libro de la
+biblioteca (web, curso) sigue saliendo con `pfRecursoHtml()`; el estante solo aparece con dos
+libros o más, y las rutas de formato viejo (IA, Datos…) no lo tienen porque no traen `r` por paso.
 
-Encima el **color** venía del nivel y el **largo** del retorno: dos escalas en el mismo trazo.
-
-Ahora la barra es el nivel y el orden sigue siendo el retorno — son dos preguntas distintas y cada
-una tiene su sitio. Al pie, una frase lo dice con nombre propio: *"el orden es dónde una hora rinde
-más, que no es lo mismo: Ventas va primera porque pesa ×1.5 y está casi a cero"*. La fila pasó de
-15px a 33px, con el nombre y el nivel arriba y la barra debajo, y hay leyenda de los tres niveles
-más la rayita de la meta de la semana.
-
-#### El contenido manda, y la ruta se ve entera
-
-Adán: *"el contenido eso me interesa más […] además abarca más espacio de la pantalla"*. Diseñado
-en canvas en tres direcciones; eligió la de la ruta al lado, con la ruta **a la izquierda**.
-
-El panel de foco pasó de `1.75:1` a `2.35:1` — de 857 a **952px** a 1600 — y por dentro se partió
-en dos: la ruta de pasos a la izquierda y el paso abierto a la derecha.
-
-Los 9 pasos eran una rejilla de botones bajo el texto donde el nombre no cabía; ahora son una lista
-vertical con el nombre completo, su barra de avance y el número de paso. El paso abierto gana un
-número grande junto al título, y el *por qué* y el *qué hacer* se separan por color (verde y cian) y
-por tamaño de letra, en vez de ir seguidos con la misma voz.
-
-**En un teléfono la ruta se apila arriba** y pasa a una tira de números con scroll horizontal: el
-nombre del paso abierto ya está en el título, y el área de toque sube de 30 a 46px. Los dos botones
-del pie suman 342px contra los 333 del panel, así que ahí van apilados.
+**Tamaños.** Bajo 940 px de alto los tamaños de lectura bajan un escalón y el estante se pliega;
+bajo 1180 px de ancho las columnas pasan a 260 · fluida · 320. En el celular la cabecera se
+apila, la ruta es una tira de números de 46 px y las tres tarjetas van una bajo otra (la de la
+ruta con `min-width:0`, que sin eso los nueve chips la estiraban a 500 px). Comprobado sin
+errores en 1600, 1366 y 390 px, en los dos temas, con Inversión (pasos 1 y 4), Finanzas e IA.
 
 ### Medidas
 

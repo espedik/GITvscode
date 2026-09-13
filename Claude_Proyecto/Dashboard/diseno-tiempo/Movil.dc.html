@@ -1,0 +1,80 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&display=swap">
+  <style>
+    body { margin: 0; font-family: 'Inter', -apple-system, 'Segoe UI', sans-serif; }
+    a { color: var(--cy, #047a6b); } a:hover { color: var(--g, #00a758); }
+    .raiz { --bg: #f2f2f6; --text: #16161a; --text2: #5c5f70; --text3: #63667c; --g: #00a758; --cy: #047a6b;
+            --ov: 0,0,0; --g-rgb: 0,167,88; --cy-rgb: 4,122,107; --card: rgba(255,255,255,.85); --card-br: rgba(0,0,0,.12); }
+    .raiz.oscuro { --bg: #05050a; --text: #f4f4f8; --text2: #9a9db3; --text3: #8589a8; --g: #00e87a; --cy: #00e0c0;
+            --ov: 255,255,255; --g-rgb: 0,232,122; --cy-rgb: 0,224,192; --card: rgba(255,255,255,.06); --card-br: rgba(255,255,255,.13); }
+    .mono { font-family: 'Space Grotesk', monospace; font-variant-numeric: tabular-nums; }
+    .ttl { font-family: 'Fraunces', Georgia, serif; }
+    .lbl { font-family: 'Space Grotesk', monospace; font-size: 9.5px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: var(--text3); }
+    .tile { background: var(--card); border: 1px solid var(--card-br); border-radius: 16px; }
+    .chipn { flex: none; width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-family: 'Space Grotesk', monospace; font-size: 12px; font-weight: 700; border: 1px solid rgba(var(--ov), .1); color: var(--text3); background: rgba(var(--ov), .03); }
+    .chipn.on { background: var(--g); border-color: var(--g); color: #05050a; }
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 44px; padding: 0 16px; border-radius: 10px; font-size: 13px; font-weight: 800; font-family: inherit; border: 1px solid var(--card-br); background: rgba(var(--ov), .06); color: var(--text); }
+    .btn.primario { background: var(--g); border-color: var(--g); color: #05050a; }
+  </style>
+</helmet>
+
+<div class="raiz {{ tema.cls }}" style="width: 390px; height: 844px; background: var(--bg); overflow: hidden; display: flex; flex-direction: column; gap: 12px; padding: 16px 16px 0; box-sizing: border-box">
+  <div style="display: flex; flex-direction: column; gap: 4px">
+    <span class="lbl">Coach · Habilidades</span>
+    <span class="ttl" style="font-size: 26px; font-weight: 600; color: var(--text); line-height: 1.05">En qué invertir tu tiempo</span>
+  </div>
+
+  <!-- la habilidad y la ruta en tira -->
+  <div class="tile" style="padding: 14px; display: flex; flex-direction: column; gap: 10px">
+    <div style="display: flex; align-items: center; gap: 10px">
+      <span style="width: 36px; height: 36px; border-radius: 10px; background: rgba(239,68,68,.14); display: flex; align-items: center; justify-content: center; font-size: 18px">📈</span>
+      <div style="display: flex; flex-direction: column; gap: 2px; min-width: 0"><span style="font-size: 15px; font-weight: 800; color: var(--text)">Inversión · esta semana</span><span class="mono" style="font-size: 10.5px; color: var(--text3)">25/100 · principiante · 1 / 9</span></div>
+      <span class="mono" style="margin-left: auto; font-size: 20px; font-weight: 800; color: var(--text)">46</span>
+    </div>
+    <div style="display: flex; gap: 6px; overflow: hidden">
+      <span class="chipn on">01</span><span class="chipn">02</span><span class="chipn">03</span><span class="chipn">04</span><span class="chipn">05</span><span class="chipn">06</span><span class="chipn">07</span><span class="chipn">08</span>
+    </div>
+  </div>
+
+  <!-- el paso -->
+  <div class="tile" style="padding: 18px 16px; display: flex; flex-direction: column; gap: 12px; flex: 1; min-height: 0; overflow: hidden">
+    <span class="lbl" style="color: var(--cy)">Paso 01 de 9</span>
+    <h2 class="ttl" style="margin: 0; font-size: 28px; font-weight: 600; line-height: 1.08; letter-spacing: -.01em; color: var(--text)">Interés compuesto y horizonte</h2>
+    <div style="display: grid; grid-template-columns: 6px minmax(0, 1fr); gap: 12px">
+      <span style="border-radius: 3px; background: var(--g); opacity: .8"></span>
+      <p style="margin: 0; font-size: 15px; line-height: 1.55; color: var(--text2)">Es el motor de todo. Y lo que lo mueve no es la tasa, es el <b style="color: var(--text)">tiempo</b>: cada año que pospones cuesta más que cualquier punto extra de rendimiento.</p>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 5px">
+      <span class="lbl" style="color: var(--cy)">Qué hacer</span>
+      <p style="margin: 0; font-size: 14.5px; line-height: 1.65; color: var(--text2)">Haz el cálculo una vez con tus números reales, no con ejemplos de libro: lo que puedes aportar al mes, un rendimiento conservador y los años hasta 2030. Repítelo restando un año de aportaciones y compara.</p>
+    </div>
+    <div style="display: grid; grid-template-columns: 52px minmax(0, 1fr); gap: 12px; align-items: center; padding: 12px; border-radius: 12px; background: rgba(var(--g-rgb), .07); border: 1px solid rgba(var(--g-rgb), .2)">
+      <img src="littleBook.jpg" alt="" style="width: 52px; height: 76px; object-fit: cover; border-radius: 3px; box-shadow: 0 6px 14px rgba(0,0,0,.25)">
+      <div style="display: flex; flex-direction: column; gap: 3px; min-width: 0"><span class="lbl" style="color: var(--g)">Con qué · libro</span><span style="font-size: 13.5px; font-weight: 700; color: var(--text); line-height: 1.25">The Little Book of Common Sense Investing</span><span style="font-size: 11.5px; color: var(--text3)">John Bogle · corto y va directo al punto</span></div>
+    </div>
+  </div>
+
+  <div style="display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px; padding-bottom: 16px">
+    <button class="btn">Lo que sabes de cada una</button>
+    <button class="btn primario">Siguiente ›</button>
+  </div>
+</div>
+</x-dc>
+<script data-dc-script data-props='{"tema":{"editor":"enum","options":["claro","oscuro"],"default":"claro"},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const t = this.props.tema ?? 'claro';
+    return { tema: { cls: t === 'oscuro' ? 'oscuro' : '' } };
+  }
+}
+</script>
+</body>
+</html>

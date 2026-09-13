@@ -1,0 +1,112 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&display=swap">
+  <style>
+    body { margin: 0; font-family: 'Inter', -apple-system, 'Segoe UI', sans-serif; }
+    a { color: #047a6b; } a:hover { color: #00a758; }
+    .raiz { --bg: #f2f2f6; --text: #16161a; --text2: #5c5f70; --text3: #63667c; --g: #00a758; --cy: #047a6b;
+            --ov: 0,0,0; --g-rgb: 0,167,88; --cy-rgb: 4,122,107; --card: rgba(255,255,255,.85); --card-br: rgba(0,0,0,.12); --topbar: rgba(255,255,255,.72); }
+    .mono { font-family: 'Space Grotesk', monospace; font-variant-numeric: tabular-nums; }
+    .ttl { font-family: 'Fraunces', Georgia, serif; }
+    .lbl { font-family: 'Space Grotesk', monospace; font-size: 10px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: var(--text3); }
+    .tile { background: var(--card); border: 1px solid var(--card-br); border-radius: 18px; box-shadow: 0 10px 40px rgba(0,0,0,.08); }
+    .seg { flex: 1; height: 42px; display: flex; align-items: center; justify-content: center; border-radius: 10px; border: 1px solid rgba(var(--ov), .1); font-family: 'Space Grotesk', monospace; font-size: 11px; font-weight: 700; color: var(--text3); background: rgba(var(--ov), .02); }
+    .seg.on { background: var(--g); border-color: var(--g); color: #05050a; flex: 3; gap: 10px; padding: 0 14px; font-family: 'Inter', sans-serif; font-size: 12.5px; }
+    .mini { display: flex; flex-direction: column; gap: 4px; padding: 8px 10px; border-radius: 9px; }
+    .mini .nom { display: flex; justify-content: space-between; font-size: 11.5px; font-weight: 600; color: var(--text); }
+    .mini .nom .v { font-family: 'Space Grotesk', monospace; font-weight: 700; }
+    .mini .bar { height: 4px; border-radius: 3px; background: rgba(var(--ov), .07); overflow: hidden; }
+    .mini.pausa { opacity: .42; }
+    .mini.foco { background: rgba(var(--g-rgb), .09); }
+    .btn { display: inline-flex; align-items: center; gap: 8px; height: 40px; padding: 0 16px; border-radius: 10px; font-size: 12.5px; font-weight: 800; font-family: inherit; border: 1px solid var(--card-br); background: rgba(var(--ov), .06); color: var(--text); }
+    .btn.primario { background: var(--g); border-color: var(--g); color: #05050a; }
+  </style>
+</helmet>
+
+<div class="raiz" style="width: 1600px; height: 1000px; background: var(--bg); position: relative; overflow: hidden">
+  <div style="position: absolute; left: 0; right: 0; top: 0; height: 54px; background: var(--topbar); border-bottom: 1px solid rgba(var(--ov), .08)"></div>
+  <div style="position: absolute; left: 18px; top: 70px; width: 52px; height: 910px; border-radius: 16px; background: var(--card); border: 1px solid var(--card-br)"></div>
+
+  <div style="position: absolute; left: 116px; top: 104px; width: 1400px; height: 846px; display: flex; flex-direction: column; gap: 14px">
+    <!-- cabecera con la habilidad y el nivel general -->
+    <div style="display: grid; grid-template-columns: minmax(0, 1fr) auto auto; gap: 24px; align-items: end">
+      <div style="display: flex; flex-direction: column; gap: 6px">
+        <div class="lbl" style="font-size: 11px; letter-spacing: .22em">Coach · Habilidades</div>
+        <div class="ttl" style="font-size: 36px; font-weight: 600; letter-spacing: -.01em; line-height: 1; color: var(--text)">En qué invertir tu tiempo</div>
+      </div>
+      <div style="display: flex; align-items: center; gap: 10px; padding: 10px 16px; border-radius: 14px; background: rgba(var(--ov), .04); border: 1px solid rgba(var(--ov), .08)">
+        <span style="width: 36px; height: 36px; border-radius: 10px; background: rgba(239,68,68,.14); display: flex; align-items: center; justify-content: center; font-size: 18px">📈</span>
+        <div style="display: flex; flex-direction: column; gap: 3px"><span style="font-size: 15px; font-weight: 800; color: var(--text)">Inversión · esta semana</span><span class="mono" style="font-size: 11px; color: var(--text3)">25/100 · principiante · pesa ×1.2</span></div>
+      </div>
+      <div style="display: flex; align-items: baseline; gap: 6px; padding: 10px 16px; border-radius: 14px; background: rgba(var(--ov), .04); border: 1px solid rgba(var(--ov), .08)"><span class="lbl">OVR</span><span class="mono" style="font-size: 30px; font-weight: 800; color: var(--text); line-height: 1">46</span><span style="font-size: 11px; color: var(--text3)">→ 48 al cerrar</span></div>
+    </div>
+
+    <!-- la ruta como regla de 9 segmentos -->
+    <div style="display: flex; gap: 6px">
+      <span class="seg on"><span class="mono">01</span><span>Interés compuesto y horizonte</span></span>
+      <span class="seg">02</span><span class="seg">03</span><span class="seg">04</span><span class="seg">05</span><span class="seg">06</span><span class="seg">07</span><span class="seg">08</span><span class="seg">09</span>
+    </div>
+
+    <!-- la doble página -->
+    <div class="tile" style="flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); overflow: hidden">
+      <div style="padding: 34px 40px; display: flex; flex-direction: column; gap: 20px; border-right: 1px solid rgba(var(--ov), .09)">
+        <span class="lbl" style="color: var(--cy)">Paso 01 de 9</span>
+        <h2 class="ttl" style="margin: 0; font-size: 52px; font-weight: 600; line-height: 1.04; letter-spacing: -.015em; color: var(--text)">Interés compuesto y horizonte</h2>
+        <p class="ttl" style="margin: 0; font-size: 21px; font-style: italic; font-weight: 500; line-height: 1.5; color: var(--text2)">Es el motor de todo. Y lo que lo mueve no es la tasa, es el tiempo: cada año que pospones cuesta más que cualquier punto extra de rendimiento.</p>
+        <div style="display: flex; flex-direction: column; gap: 6px">
+          <span class="lbl" style="color: var(--cy)">Qué hacer</span>
+          <p style="margin: 0; font-size: 17.5px; line-height: 1.75; color: var(--text2)">Haz el cálculo una vez con tus números reales, no con ejemplos de libro: lo que puedes aportar al mes, un rendimiento conservador (8-10 % anual nominal en México) y los años hasta 2030. Repítelo restando un año de aportaciones y compara — ver esa diferencia en pesos es lo que hace que ya no te saltes un mes.</p>
+        </div>
+        <div style="margin-top: auto; display: flex; align-items: center; justify-content: space-between; gap: 14px; padding-top: 14px; border-top: 1px solid rgba(var(--ov), .09)">
+          <span style="font-size: 12.5px; color: var(--text3)">Al cerrarlo sigue <b style="color: var(--text2)">Escribir tu asignación objetivo</b></span>
+          <button class="btn primario">Siguiente paso ›</button>
+        </div>
+      </div>
+      <div style="padding: 34px 36px; display: flex; flex-direction: column; gap: 22px; background: rgba(var(--ov), .02)">
+        <div style="display: grid; grid-template-columns: 132px minmax(0, 1fr); gap: 20px; align-items: start">
+          <img src="littleBook.jpg" alt="" style="width: 132px; height: 190px; object-fit: cover; border-radius: 5px; box-shadow: 0 14px 30px rgba(0,0,0,.28)">
+          <div style="display: flex; flex-direction: column; gap: 8px">
+            <span class="lbl" style="color: var(--g)">Con qué · libro</span>
+            <span style="font-size: 19px; font-weight: 700; color: var(--text); line-height: 1.25">The Little Book of Common Sense Investing</span>
+            <span style="font-size: 13px; color: var(--text3)">John Bogle · 228 páginas</span>
+            <span style="font-size: 14px; color: var(--text2); line-height: 1.5"><i>Corto y va directo al punto.</i></span>
+            <button class="btn" style="align-self: flex-start; margin-top: 4px">Qué es</button>
+          </div>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 9px">
+          <span class="lbl">Los libros de esta ruta</span>
+          <div style="display: flex; gap: 8px; align-items: flex-end">
+            <img src="bogleheads.jpg" alt="" style="width: 46px; height: 68px; object-fit: cover; border-radius: 3px; opacity: .85"><img src="cerdoInv.jpg" alt="" style="width: 46px; height: 68px; object-fit: cover; border-radius: 3px; opacity: .85"><img src="randomWalk.jpg" alt="" style="width: 46px; height: 68px; object-fit: cover; border-radius: 3px; opacity: .85"><img src="simplePath.jpg" alt="" style="width: 46px; height: 68px; object-fit: cover; border-radius: 3px; opacity: .85"><img src="psychMoney.jpg" alt="" style="width: 46px; height: 68px; object-fit: cover; border-radius: 3px; opacity: .85"><img src="intelligentInvestor.jpg" alt="" style="width: 46px; height: 68px; object-fit: cover; border-radius: 3px; opacity: .85"><img src="iWillTeach.jpg" alt="" style="width: 46px; height: 68px; object-fit: cover; border-radius: 3px; opacity: .85">
+          </div>
+        </div>
+        <div style="margin-top: auto; display: flex; flex-direction: column; gap: 8px">
+          <div style="display: flex; align-items: baseline; justify-content: space-between"><span class="lbl">Lo que sabes de cada una</span><span style="font-size: 10px; color: var(--text3)">ordenadas por dónde rinde más una hora</span></div>
+          <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 4px 10px">
+            <div class="mini pausa"><div class="nom"><span>🤝 Ventas</span><span class="v">15</span></div><div class="bar"><div style="width: 15%; height: 100%; background: #ef4444"></div></div></div>
+            <div class="mini pausa"><div class="nom"><span>📣 Marketing</span><span class="v">20</span></div><div class="bar"><div style="width: 20%; height: 100%; background: #ef4444"></div></div></div>
+            <div class="mini foco"><div class="nom"><span>📈 Inversión</span><span class="v">25</span></div><div class="bar"><div style="width: 25%; height: 100%; background: #ef4444"></div></div></div>
+            <div class="mini"><div class="nom"><span>💰 Finanzas</span><span class="v">20</span></div><div class="bar"><div style="width: 20%; height: 100%; background: #ef4444"></div></div></div>
+            <div class="mini"><div class="nom"><span>🤖 IA</span><span class="v">30</span></div><div class="bar"><div style="width: 30%; height: 100%; background: #ef4444"></div></div></div>
+            <div class="mini"><div class="nom"><span>✍️ Copy</span><span class="v">55</span></div><div class="bar"><div style="width: 55%; height: 100%; background: #fb923c"></div></div></div>
+            <div class="mini"><div class="nom"><span>💻 Código</span><span class="v">60</span></div><div class="bar"><div style="width: 60%; height: 100%; background: #fb923c"></div></div></div>
+            <div class="mini"><div class="nom"><span>🔗 Networking</span><span class="v">55</span></div><div class="bar"><div style="width: 55%; height: 100%; background: #fb923c"></div></div></div>
+            <div class="mini"><div class="nom"><span>📊 Datos</span><span class="v">55</span></div><div class="bar"><div style="width: 55%; height: 100%; background: #fb923c"></div></div></div>
+            <div class="mini"><div class="nom"><span>🌐 Inglés</span><span class="v">80</span></div><div class="bar"><div style="width: 80%; height: 100%; background: #84cc16"></div></div></div>
+            <div class="mini"><div class="nom"><span>👑 Liderazgo</span><span class="v">80</span></div><div class="bar"><div style="width: 80%; height: 100%; background: #84cc16"></div></div></div>
+            <div class="mini"><div class="nom"><span>🚀 Mentalidad</span><span class="v">85</span></div><div class="bar"><div style="width: 85%; height: 100%; background: #84cc16"></div></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

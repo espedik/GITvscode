@@ -1945,186 +1945,198 @@ button.hp-lec:active{transform:translateY(0)}
   .al-tabs{margin:10px 0 12px}
 }
 
-.hab-cols{display:grid;grid-template-columns:minmax(0,2.35fr) minmax(0,1fr);gap:14px;align-items:stretch}
-.hab-side{display:flex;flex-direction:column;gap:14px;min-height:0}
-
-/* Dos zonas: la ruta de pasos a la izquierda y el paso abierto a la derecha. Antes los
-   pasos eran una rejilla de botones bajo el texto y el nombre de cada uno no cabia. */
-.hab-foco{position:relative;overflow:hidden;padding:0;display:grid;
-  grid-template-columns:264px minmax(0,1fr)}
-.hf-ruta{padding:19px 16px;display:flex;flex-direction:column;gap:10px;min-width:0;
-  border-right:1px solid rgba(var(--ov),.09);background:rgba(var(--ov),.018)}
-.hf-ruta-h{display:flex;align-items:baseline;justify-content:space-between;gap:8px}
-.hf-ruta-n{font-family:var(--mono);font-size:10px;font-weight:700;color:var(--g)}
-.hf-ruta-b{height:4px;border-radius:2px;background:rgba(var(--ov),.07);overflow:hidden}
-.hf-ruta-b i{display:block;height:100%;border-radius:2px;background:var(--g)}
-.hf-ruta-l{display:flex;flex-direction:column;gap:1px;min-height:0;overflow-y:auto;scrollbar-gutter:stable}
-/* Un paso de la ruta: numero fijo a la izquierda, nombre completo a la derecha. */
-.hf-p{display:grid;grid-template-columns:21px minmax(0,1fr);gap:9px;align-items:start;
-  padding:7px 9px;border-radius:9px;border:1px solid transparent;background:transparent;
-  cursor:pointer;font-family:inherit;text-align:left;color:inherit;transition:background .15s}
-.hf-p:hover{background:rgba(var(--ov),.06)}
-.hf-p.act{background:rgba(var(--g-rgb),.1);border-color:rgba(var(--g-rgb),.32)}
-.hf-p-n{font-family:var(--mono);font-size:10px;font-weight:700;color:var(--text3);padding-top:1px}
-.hf-p.act .hf-p-n{color:var(--g)}
-.hf-p-t{font-size:11px;line-height:1.35;color:var(--text2)}
-.hf-p.act .hf-p-t{color:var(--text);font-weight:600}
-.hf-ruta-pie{margin-top:auto;padding-top:10px;border-top:1px solid rgba(var(--ov),.08);
-  font-size:10px;color:var(--text3);line-height:1.45}
-/* La columna del contenido. */
-.hf-cuerpo{padding:20px 24px;display:flex;flex-direction:column;gap:13px;min-width:0}
-.hab-foco::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;z-index:1;
-  background:linear-gradient(90deg,transparent,var(--g),transparent)}
-/* El numero del paso, junto al titulo: dice donde estas sin leer nada. */
-.hf-h1w{display:flex;align-items:flex-start;gap:14px}
-.hf-h1n{flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:4px;padding-top:2px}
-.hf-h1n b{font-family:var(--mono);font-size:clamp(30px,3.4vw,44px);font-weight:700;color:var(--g);line-height:.85}
-.hf-h1n span{font-family:var(--mono);font-size:9px;color:var(--text3)}
-.hf-top{display:flex;align-items:center;gap:11px;flex-wrap:wrap}
-.hf-chip{font-size:9.5px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;padding:4px 10px;border-radius:20px;background:var(--g);color:#05050a}
-.hf-badge{width:26px;height:26px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
-.hf-name{font-size:14px;font-weight:800;color:var(--text)}
-.hf-lvl{font-size:9px;font-weight:800;letter-spacing:.03em;padding:2px 7px;border-radius:20px;flex-shrink:0}
-.hf-val{font-family:var(--mono);font-size:12px;font-weight:800;color:var(--text3)}
-.hf-why{margin-left:auto;font-size:11px;color:var(--text3);text-align:right}
-.hf-why b{color:var(--text2);font-weight:700}
-/* El título grande es el nombre del PASO, no el de la habilidad: la habilidad ya la dice la
-   fila de arriba, y lo que se tiene que leer de lejos es qué toca hacer. */
-.hf-h1{font-family:var(--font-title);font-size:clamp(24px,2.9vw,44px);font-weight:600;line-height:1.08;letter-spacing:-.01em;color:var(--text);text-wrap:pretty}
-.hf-lbl{font-size:9.5px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--text3);margin-bottom:6px}
-.hf-q{font-size:14px;color:var(--text2);line-height:1.5}
-.hf-c{font-size:13.5px;color:var(--text2);line-height:1.5}
-.hf-q b,.hf-c b,.hf-res-t b{color:var(--text);font-weight:700}
-.hf-res{padding:11px 14px;border-radius:12px;background:rgba(0,232,122,.07);border:1px solid rgba(0,232,122,.2)}
-.hf-res .hf-lbl{color:var(--g);margin-bottom:4px}
-.hf-res-t{font-size:12.5px;color:var(--text);line-height:1.45}
-.hf-pasos{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
-.hf-paso{display:flex;align-items:center;gap:8px;padding:8px 10px;min-height:38px;border-radius:9px;box-sizing:border-box;text-align:left;
-  background:rgba(var(--ov),.03);border:1px solid transparent;cursor:pointer;font-family:inherit;transition:background .15s,border-color .15s}
-.hf-paso:hover{background:rgba(var(--ov),.07)}
-.hf-paso.act{background:rgba(0,232,122,.12);border-color:rgba(0,232,122,.45)}
-.hf-paso-n{font-family:var(--mono);font-size:10.5px;font-weight:800;color:var(--text3);flex-shrink:0}
-.hf-paso.act .hf-paso-n{color:var(--g)}
-.hf-paso-t{font-size:11px;font-weight:700;color:var(--text3);line-height:1.25}
-.hf-paso.act .hf-paso-t{color:var(--text)}
-.hf-pie{display:flex;align-items:center;gap:12px;padding-top:9px;border-top:1px solid rgba(var(--ov),.07);margin-top:auto}
-.hf-pie-t{font-size:11px;color:var(--text3)}
-.hf-pie-t b{color:var(--text2);font-weight:700}
-.hf-acts{margin-left:auto;display:flex;gap:8px;flex-shrink:0}
-.hf-btn{display:inline-flex;align-items:center;padding:9px 16px;border-radius:10px;font-family:inherit;font-size:12px;font-weight:800;
-  background:rgba(var(--ov),.06);border:1px solid var(--card-br);color:var(--text);cursor:pointer;text-decoration:none;white-space:nowrap;transition:background .15s}
-.hf-btn:hover{background:rgba(var(--ov),.11)}
-
-.hab-ovr{padding:15px 17px}
-.ho-lbl{font-size:9.5px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--text3);margin-bottom:5px}
-.ho-n{display:flex;align-items:baseline;gap:8px}
-.ho-n b{font-family:var(--mono);font-size:42px;font-weight:800;color:var(--text);line-height:1}
+/* ─── "En qué invertir tu tiempo" — diseño "mesa de estudio" (2026-09-13) ───
+   Adán: "quiero un buen diseño y que abarque la pantalla completa y que te den ganas de
+   estudiarlo y leerlo". Elegido en un canvas (diseno-tiempo/) frente a dos direcciones más.
+   · La cabecera es una fila: título a 36px a la izquierda y el nivel general a la derecha; el
+     cuerpo gana los ~60px que antes se llevaba el título a 48px con su margen.
+   · Tres apartados a toda la altura: LA RUTA (la habilidad, sus chips y los pasos como línea de
+     tiempo), EL PASO (título a 46px, el porqué a 17px con filete verde, el qué hacer a 16px, el
+     libro con su PORTADA de la biblioteca y el estante con los libros de toda la ruta) y LO QUE
+     SABES (las 12 a ~44px por fila, leyenda, nota y el rato al volante).
+   · Botón "Siguiente paso": antes solo se avanzaba tocando la ruta. */
+.theme-skills .slide-inner{justify-content:flex-start}
+.hab-head{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:24px;align-items:end;flex:none;margin-bottom:14px}
+.hab-head .eyebrow{margin-bottom:6px}
+.hab-title{font-size:clamp(26px,2.6vw,36px);margin-bottom:0;line-height:1}
+.hab-cols{flex:1;min-height:0;display:grid;grid-template-columns:292px minmax(0,1fr) 372px;gap:16px;align-items:stretch}
+.hab-cols>*{min-width:0}
+.hab-side{display:flex;flex-direction:column;gap:12px;min-height:0}
+.hab-lbl{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--text3)}
+.hab-hair{border-top:1px solid rgba(var(--ov),.09)}
+/* Nivel general, en la cabecera. La cifra prometida sale de calcOVRcon(), no se estima. */
+.hab-ovr{display:grid;grid-template-columns:auto 220px;gap:6px 16px;align-items:center;padding:10px 18px;border-radius:14px;
+  background:rgba(var(--ov),.04);border:1px solid rgba(var(--ov),.08)}
+.ho-lbl{grid-column:1/-1;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--text3)}
+.ho-n{display:flex;align-items:baseline;gap:6px}
+.ho-n b{font-family:var(--mono);font-size:34px;font-weight:800;color:var(--text);line-height:1}
 .ho-n span{font-size:12px;color:var(--text3)}
-.ho-txt{font-size:11px;color:var(--text3);line-height:1.42;margin-top:9px}
+.ho-r{display:flex;flex-direction:column;gap:6px;min-width:0}
+.ho-txt{font-size:11.5px;color:var(--text3);line-height:1.3}
 .ho-txt b{color:var(--text2);font-weight:700}
 .ho-txt i{font-style:normal;font-family:var(--mono);font-weight:800;color:var(--g)}
-
-.hab-rank{padding:15px 17px;flex:1;min-height:0;display:flex;flex-direction:column}
-.hr-head{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:8px}
-.hr-t{font-size:9.5px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--text3)}
-.hr-sub{font-size:10px;color:var(--text3);opacity:.75;white-space:nowrap}
-.hr-rows{display:flex;flex-direction:column;justify-content:space-between;flex:1;gap:1px}
-/* Dos renglones por habilidad: arriba el nombre y su nivel, abajo la barra. Antes era una
-   sola línea de 15px con cinco cosas apretadas y no se leía nada. */
-.hr-row{display:grid;grid-template-columns:15px 14px minmax(0,1fr);gap:7px;align-items:center;
-  padding:4px 7px;border-radius:8px}
-.hr-top{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin-bottom:3px}
-/* Ventas y Marketing siguen en la lista pero apagadas: están fuera del foco por decisión
-   explícita del 2026-08-09 (PRIORIDAD_EXCLUIDAS) y encabezan el retorno — verlas apagadas
-   explica por qué no son la habilidad de la semana, cosa que ocultarlas no haría. */
+/* LA RUTA: la habilidad abierta y sus pasos como línea de tiempo. */
+.hab-ruta{padding:20px 16px;display:flex;flex-direction:column;gap:14px;min-height:0;overflow:hidden}
+.hf-top{display:flex;align-items:center;gap:10px}
+.hf-badge{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.hf-name{font-size:17px;font-weight:800;color:var(--text);line-height:1}
+.hf-val{display:block;font-family:var(--mono);font-size:11px;font-weight:700;color:var(--text3);margin-top:4px}
+.hf-chips{display:flex;gap:6px;flex-wrap:wrap}
+.hf-chip{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:4px 9px;border-radius:20px;background:var(--g);color:#05050a}
+.hf-lvl{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:4px 9px;border-radius:20px}
+.hf-why{font-size:10px;padding:4px 9px;border-radius:20px;background:rgba(var(--ov),.06);color:var(--text2)}
+.hf-why b{color:var(--text);font-weight:700}
+.hf-ruta-h{display:flex;align-items:baseline;justify-content:space-between;gap:8px}
+.hf-ruta-n{font-family:var(--mono);font-size:10.5px;font-weight:700;color:var(--g)}
+.hf-ruta-b{height:4px;border-radius:2px;background:rgba(var(--ov),.07);overflow:hidden;margin-top:-8px}
+.hf-ruta-b i{display:block;height:100%;border-radius:2px;background:var(--g)}
+.hf-ruta-l{position:relative;display:flex;flex-direction:column;gap:2px;flex:1;min-height:0;overflow-y:auto;scrollbar-width:thin}
+.hf-ruta-l::before{content:'';position:absolute;left:24px;top:30px;bottom:30px;width:1px;background:rgba(var(--ov),.1)}
+.hf-p{display:grid;grid-template-columns:28px minmax(0,1fr);gap:12px;align-items:start;position:relative;
+  padding:5px 10px;border-radius:10px;border:1px solid transparent;background:transparent;
+  cursor:pointer;font-family:inherit;text-align:left;color:inherit;transition:background .15s,border-color .15s}
+.hf-p:hover{background:rgba(var(--ov),.06)}
+.hf-p.act{background:rgba(var(--g-rgb),.1);border-color:rgba(var(--g-rgb),.32)}
+.hf-p-n{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;position:relative;z-index:1;
+  font-family:var(--mono);font-size:10.5px;font-weight:700;background:rgba(var(--ov),.06);color:var(--text3);border:1px solid rgba(var(--ov),.1)}
+.hf-p.act .hf-p-n{background:var(--g);color:#05050a;border-color:var(--g)}
+.hf-p-t{font-size:12.5px;line-height:1.3;color:var(--text2);padding-top:6px}
+.hf-p.act .hf-p-t{color:var(--text);font-weight:700}
+.hf-ruta-acts{display:flex;flex-direction:column;gap:8px;padding-top:14px;border-top:1px solid rgba(var(--ov),.09)}
+.hf-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:40px;padding:0 16px;border-radius:10px;font-family:inherit;font-size:12.5px;font-weight:800;
+  background:rgba(var(--ov),.06);border:1px solid var(--card-br);color:var(--text);cursor:pointer;text-decoration:none;white-space:nowrap;transition:background .15s}
+.hf-btn:hover{background:rgba(var(--ov),.11)}
+.hf-btn.ghost{background:none}
+.hf-btn.primario{background:var(--g);border-color:var(--g);color:#05050a}
+.hf-btn.primario:hover{background:var(--g);filter:brightness(1.08)}
+.hf-btn:disabled{opacity:.4;cursor:default}
+/* EL PASO: la lectura. Desplaza por dentro cuando el paso es largo; la tarjeta no crece. */
+.hab-foco{position:relative;padding:22px 34px 20px;display:flex;flex-direction:column;gap:14px;min-width:0;min-height:0;overflow:hidden}
+/* La lectura desplaza por dentro cuando el paso es largo (el 4 de Inversión dobla al 8); el estante
+   y el pie con "Siguiente paso" se quedan siempre a la vista. */
+.hf-lectura{flex:1;min-height:0;overflow-y:auto;scrollbar-width:thin;display:flex;flex-direction:column;gap:14px;margin:0 -6px;padding:0 6px}
+.hab-foco::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;z-index:1;
+  background:linear-gradient(90deg,transparent,var(--g),transparent)}
+.hf-n{display:flex;align-items:center;gap:12px}
+.hf-n .hab-lbl:first-child{color:var(--cy)}
+.hf-n i{width:1px;height:10px;background:rgba(var(--ov),.2)}
+.hf-h1{font-family:var(--font-title);font-size:clamp(28px,2.75vw,44px);font-weight:600;line-height:1.06;letter-spacing:-.015em;color:var(--text);text-wrap:pretty;max-width:18ch}
+.hf-qw{display:grid;grid-template-columns:8px minmax(0,1fr);gap:16px}
+.hf-qw>i{border-radius:4px;background:var(--g);opacity:.8}
+.hf-blk{display:flex;flex-direction:column;gap:6px}
+.hf-q{font-size:17.5px;color:var(--text2);line-height:1.55;max-width:60ch}
+.hf-c{font-size:16.5px;color:var(--text2);line-height:1.65;max-width:64ch}
+.hf-q b,.hf-c b{color:var(--text);font-weight:700}
+/* CON QUÉ: el libro con su portada, o el recurso tal cual si no es un libro de la biblioteca. */
+.hf-libro{display:grid;grid-template-columns:76px minmax(0,1fr) auto;gap:16px;align-items:center;padding:13px 16px;border-radius:14px;
+  background:rgba(var(--g-rgb),.07);border:1px solid rgba(var(--g-rgb),.2)}
+.hf-libro img{width:76px;height:110px;object-fit:cover;border-radius:4px;box-shadow:0 8px 20px rgba(0,0,0,.25);background:rgba(var(--ov),.08)}
+.hf-libro-t{display:flex;flex-direction:column;gap:5px;min-width:0}
+.hf-libro-t .hab-lbl{color:var(--g)}
+.hf-libro-n{font-size:16px;font-weight:700;color:var(--text);line-height:1.25}
+.hf-libro-a{font-size:12.5px;color:var(--text3)}
+.hf-libro-nota{font-size:13px;color:var(--text2);line-height:1.45;margin-top:2px;font-style:italic}
+.hf-libro .hf-btn{background:rgba(var(--g-rgb),.12);border-color:rgba(var(--g-rgb),.35);color:var(--g)}
+.hf-res{padding:11px 14px;border-radius:12px;background:rgba(var(--g-rgb),.07);border:1px solid rgba(var(--g-rgb),.2)}
+.hf-res .hab-lbl{color:var(--g);margin-bottom:6px;display:block}
+/* El estante: los libros de toda la ruta, con el del paso abierto marcado. */
+.hf-estante{display:flex;flex-direction:column;gap:7px;flex:none}
+.hf-estante-h{display:flex;align-items:baseline;justify-content:space-between;gap:8px}
+.hf-estante-h small{font-family:var(--mono);font-size:10px;font-weight:600;color:var(--text3)}
+.hf-estante-l{display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap}
+.hf-tomo{padding:0;border:none;background:none;cursor:pointer;line-height:0;border-radius:3px;opacity:.85;transition:opacity .15s,transform .15s}
+.hf-tomo img{width:46px;height:68px;object-fit:cover;border-radius:3px;box-shadow:0 6px 14px rgba(0,0,0,.18);background:rgba(var(--ov),.08)}
+.hf-tomo:hover{opacity:1;transform:translateY(-2px)}
+.hf-tomo.act{opacity:1;outline:2px solid var(--g);outline-offset:2px}
+.hf-pie{flex:none;display:flex;align-items:center;justify-content:space-between;gap:14px;padding-top:12px;border-top:1px solid rgba(var(--ov),.09)}
+.hf-pie-t{font-size:12.5px;color:var(--text3)}
+.hf-pie-t b{color:var(--text2);font-weight:700}
+/* LO QUE SABES DE CADA UNA: las 12, ordenadas por retorno pero MEDIDAS por nivel (la barra es lo
+   que ya sabes; el orden es dónde rinde más una hora — Adán, 2026-08-31, cuando la barra medía
+   el retorno y Ventas salía llena). Ventas y Marketing siguen en la lista pero apagadas: están
+   fuera del foco por decisión del 2026-08-09 (PRIORIDAD_EXCLUIDAS), y verlas explica por qué
+   encabezan el retorno sin ser la habilidad de la semana. */
+.hab-rank{padding:20px 18px;flex:1;min-height:0;display:flex;flex-direction:column;gap:10px;overflow:hidden}
+.hr-head{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.hr-sub{font-size:10px;color:var(--text3);white-space:nowrap}
+.hr-rows{display:flex;flex-direction:column;justify-content:space-between;flex:1;min-height:0;gap:1px}
+.hr-row{display:grid;grid-template-columns:18px 18px minmax(0,1fr);gap:9px;align-items:center;padding:6px 9px;border-radius:9px}
+.hr-top{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin-bottom:5px}
 .hr-row.pausa{opacity:.42}
-.hr-row.foco{padding:5px 7px;margin:0 -7px;border-radius:8px;background:rgba(0,232,122,.09)}
-.hr-n{font-family:var(--mono);font-size:9.5px;font-weight:700;color:var(--text3);width:14px;flex-shrink:0}
+.hr-row.foco{background:rgba(var(--g-rgb),.09)}
+.hr-n{font-family:var(--mono);font-size:10px;font-weight:700;color:var(--text3)}
 .hr-row.foco .hr-n{color:var(--g)}
-.hr-ico{font-size:11px;flex-shrink:0}
-.hr-name{font-size:11.5px;font-weight:600;color:var(--text);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hr-ico{font-size:13px;text-align:center}
+.hr-name{font-size:13px;font-weight:600;color:var(--text);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .hr-row.foco .hr-name{font-weight:800}
-/* La barra es LO QUE SABES: llena = lo dominas. Antes media el retorno, asi que Ventas
-   (15/100) salia llena y Mentalidad (85/100) casi vacia — justo al reves de lo que es. */
-/* La barra a la MITAD DE GROSOR, no de largo (Adán, 2026-09-02: "las redujiste
-   de largo y no de ancho"). Sigue midiendo el renglón entero —el largo es el
-   dato, es el nivel— pero con la mitad de trazo pesa menos que el nombre y el
-   número, que es lo que de verdad se lee. `overflow:hidden` se cae porque la
-   marca de la meta puede quedar fuera del relleno. */
-.hr-bar{position:relative;height:3px;background:rgba(var(--ov),.07);
-  border-radius:3px}
-.hr-fill,.hr-meta{border-radius:3px}
-/* Se puede abrir: cursor, realce al pasar y la que está abierta marcada. */
-.hr-row.abrible{cursor:pointer;border-radius:8px;transition:background .13s}
+.hr-bar{position:relative;height:4px;background:rgba(var(--ov),.07);border-radius:3px}
+.hr-row.abrible{cursor:pointer;transition:background .13s}
 .hr-row.abrible:hover{background:rgba(var(--ov),.05)}
 .hr-row.abierta{background:rgba(var(--ov),.06);box-shadow:inset 2px 0 0 var(--cy)}
-.hr-row.abierta .hr-name{color:var(--text)}
-.hr-fill{position:absolute;left:0;top:0;bottom:0;border-radius:4px}
-/* La rayita del siguiente escalon: a donde llega la habilidad de la semana si la cierras. */
-.hr-meta{position:absolute;top:-2px;bottom:-2px;width:2px;background:rgba(var(--ov),.42);border-radius:1px}
-.hr-v{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:12px;font-weight:700;
-  color:var(--text);flex-shrink:0}
+.hr-fill{position:absolute;left:0;top:0;bottom:0;border-radius:3px}
+.hr-meta{position:absolute;top:-3px;bottom:-3px;width:2px;background:rgba(var(--ov),.42);border-radius:1px}
+.hr-v{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:13px;font-weight:700;color:var(--text);flex-shrink:0}
 .hr-tag{font-family:var(--mono);font-size:8px;font-weight:700;letter-spacing:.1em;color:var(--text3)}
-.hr-pie{display:flex;flex-wrap:wrap;gap:5px;margin-top:9px;padding-top:9px;
-  border-top:1px solid rgba(var(--ov),.08)}
-.hr-pie span{display:flex;align-items:center;gap:5px;padding:3px 8px;border-radius:20px;
-  background:rgba(var(--ov),.045);font-size:10px;color:var(--text2)}
+.hr-pie{display:flex;flex-wrap:wrap;gap:5px;padding-top:10px;border-top:1px solid rgba(var(--ov),.09)}
+.hr-pie span{display:flex;align-items:center;gap:5px;padding:3px 8px;border-radius:20px;background:rgba(var(--ov),.045);font-size:10px;color:var(--text2)}
 .hr-pie i{width:14px;height:5px;border-radius:2px;flex-shrink:0}
-.hr-nota{font-size:10px;color:var(--text3);line-height:1.45;margin-top:7px}
+.hr-nota{font-size:11px;color:var(--text3);line-height:1.45}
 .hr-nota b{color:var(--text);font-weight:700}
-
-/* PANTALLAS BAJAS — el alto del panel de foco lo manda el largo del texto del paso, y ese
-   largo varía mucho: el paso 4 de Inversión ("Ver las comisiones antes que el rendimiento")
-   ocupa casi el doble que el 8 ("Aguantar sin vender"). Barriendo los 16 pasos en 15
-   resoluciones, en 1440x900, 1366x768 y 1280x720 los más largos se salían entre 9 y 31px.
-   Aquí se recupera espacio en tres frentes a la vez, para que aguante el peor paso y no solo
-   el que estaba abierto al medir:
-     1) la rejilla de 9 pasos con nombre (166px fijos) pasa a tira de números (~70px) — el
-        nombre del paso abierto sigue en el título grande y el de cada número en su title;
-     2) título, cifra del OVR y cuerpo bajan un escalón de tamaño;
-     3) se aprietan gaps y paddings.
-   El corte va en 940px de alto para cubrir las laptops de 900. */
+/* PANTALLAS BAJAS (laptops de 900 y menos): los tamaños de lectura bajan un escalón y el estante
+   se pliega, para que el paso más largo quepa sin que la tarjeta tenga que desplazar. */
 @media(max-height:940px){
-  .hf-pasos{grid-template-columns:repeat(auto-fit,minmax(44px,1fr));gap:7px}
-  .hf-paso{justify-content:center;min-height:44px;padding:8px 4px}
-  .hf-paso-n{font-size:14px}
-  .hf-paso-t{display:none}
-  .hf-h1{font-size:clamp(23px,2.4vw,34px)}
-  .ho-n b{font-size:34px}
-  .hab-foco{padding:16px 22px;gap:8px}
-  .hf-q{font-size:12.5px}
-  .hf-c{font-size:12.5px;line-height:1.45}
-  .hf-res{padding:9px 12px}
-  .hf-res-t{font-size:11.5px}
-  .hf-lbl{margin-bottom:4px}
-  .hf-pie{padding-top:7px}
-  .hab-ovr,.hab-rank{padding:13px 15px}
+  .hab-head{margin-bottom:10px}
+  .hab-title{font-size:clamp(24px,2.2vw,30px)}
+  .ho-n b{font-size:28px}
+  .hab-foco{padding:18px 26px 16px;gap:12px}
+  .hf-h1{font-size:clamp(24px,2.4vw,34px)}
+  .hf-q{font-size:15.5px}
+  .hf-c{font-size:14.5px;line-height:1.6}
+  .hf-libro{padding:12px 14px;grid-template-columns:60px minmax(0,1fr) auto;gap:14px}
+  .hf-libro img{width:60px;height:88px}
+  .hf-libro-n{font-size:14px}
+  .hf-estante{display:none}
+  .hab-ruta{padding:16px 14px;gap:10px}
+  .hf-p{padding:5px 8px}
+  .hf-p-t{font-size:12px;padding-top:5px}
+  .hab-rank{padding:14px 14px;gap:8px}
+  .hr-row{padding:4px 8px}
+  .hr-name{font-size:12px}
 }
-/* Por debajo de ~1340px de ancho, la nota de la derecha de la fila de arriba parte esa fila
-   en dos y cuesta 25px. Solo se quita cuando además la ventana es baja — 1280x720 medido, y
-   también cualquier teléfono, donde esa fila ya va a dos renglones. Es lo menos importante
-   de la fila: el mismo dato está en el ranking de la derecha, donde el foco sale resaltado. */
-@media(max-height:940px) and (max-width:1340px){.hf-why{display:none}}
+@media(max-width:1180px){
+  .hab-cols{grid-template-columns:260px minmax(0,1fr) 320px;gap:12px}
+  .hab-foco{padding:20px 24px 18px}
+  .hf-why{display:none}
+}
+/* Teléfono: la cabecera se apila, la ruta se va arriba como tira de números y las tres
+   tarjetas van una bajo otra. El nombre del paso abierto sigue en el título grande. */
 @media(max-width:900px){
-  .hab-cols{grid-template-columns:1fr}
-  .hf-why{margin-left:0;text-align:left;width:100%}
-  .hf-pie{flex-wrap:wrap}
-  .hf-acts{margin-left:0;width:100%;flex-wrap:wrap}
-  /* Los dos botones suman 342px y el panel da 333: apilados caben y ganan area de toque. */
-  .hf-btn{flex:1 1 100%;min-width:0;justify-content:center;min-height:44px}
-  /* La ruta de 264px no cabe al lado en un teléfono: se va arriba y pasa a una tira de
-     números en horizontal. El nombre del paso abierto sigue en el título grande, así que
-     no se pierde nada, y el área de toque sube de 30px a 46px. */
-  .hab-foco{grid-template-columns:1fr}
-  .hf-ruta{border-right:0;border-bottom:1px solid rgba(var(--ov),.09);padding:14px 16px}
-  .hf-ruta-l{flex-direction:row;gap:7px;overflow-x:auto;overflow-y:hidden;padding-bottom:2px}
-  .hf-p{grid-template-columns:1fr;justify-items:center;min-width:46px;min-height:46px;
-    padding:8px 4px;flex-shrink:0}
-  .hf-p-n{font-size:14px;padding-top:0}
+  .hab-head{grid-template-columns:1fr;gap:10px;align-items:start}
+  .hab-ovr{grid-template-columns:auto minmax(0,1fr)}
+  .hab-cols{grid-template-columns:minmax(0,1fr);gap:12px}
+  .hab-ruta{padding:14px 14px;gap:10px;overflow:visible}
+  .hf-chips .hf-why{display:none}
+  .hf-ruta-b{display:none}
+  .hf-ruta-l{flex-direction:row;gap:7px;overflow-x:auto;overflow-y:hidden;padding-bottom:2px;scrollbar-width:none}
+  .hf-ruta-l::before{display:none}
+  .hf-p{grid-template-columns:1fr;justify-items:center;min-width:46px;min-height:46px;padding:8px 4px;flex-shrink:0}
+  .hf-p-n{width:30px;height:30px;font-size:12px}
   .hf-p-t{display:none}
-  .hf-ruta-pie{display:none}
-  .hf-cuerpo{padding:16px 16px 18px}
-  .hf-h1n b{font-size:30px}
+  .hf-ruta-acts{flex-direction:row;padding-top:10px}
+  .hf-ruta-acts .hf-btn{flex:1;min-width:0;min-height:44px}
+  .hab-foco{padding:18px 16px;gap:12px;overflow:visible}
+  .hf-lectura{overflow:visible;flex:none}
+  .hf-h1{font-size:28px;max-width:none}
+  .hf-q{font-size:15px}
+  .hf-c{font-size:14.5px;line-height:1.65}
+  .hf-libro{grid-template-columns:52px minmax(0,1fr);gap:12px;padding:12px}
+  .hf-libro img{width:52px;height:76px}
+  .hf-libro .hf-btn{grid-column:1/-1;min-height:44px}
+  .hf-estante{margin-top:0}
+  .hf-pie{flex-wrap:wrap}
+  .hf-pie .hf-btn{flex:1 1 100%;min-height:44px}
+  .hab-rank{overflow:visible}
+  .hr-sub{white-space:normal}
 }
 
 
@@ -3465,18 +3477,23 @@ button.ct-cat:hover{background:rgba(var(--ov),.07)}
     </div>
   </section>
 
-  <!-- 4 · COACH: HABILIDADES -->
+  <!-- 4 · COACH: HABILIDADES — diseño "mesa de estudio" (2026-09-13, elegido en diseno-tiempo/):
+       cabecera en una fila (título + nivel general) y tres tarjetas a toda la altura: la ruta,
+       el paso y lo que sabes de cada una. Los ids los pinta renderSkills(); la franja de Didi
+       (#didiStrip) sigue siendo la misma y vive bajo el ranking. -->
   <section class="slide theme-skills" data-i="4">
     <div class="slide-inner">
-      <div class="eyebrow reveal d1"><span class="dot"></span> Coach · Habilidades</div>
-      <!-- La franja de Didi bajó a la columna derecha el 2026-08-23 (rediseño "Foco"): ahí
-           ya no compite con el título por la misma fila y queda junto al resto del contexto,
-           que es donde se mira de reojo. Sigue siendo el mismo #didiStrip. -->
-      <div class="slide-title reveal d2" style="margin-bottom:14px"><span class="ico">🧠</span> En qué invertir tu tiempo</div>
-      <div class="hab-cols reveal d3">
+      <div class="hab-head reveal d1">
+        <div>
+          <div class="eyebrow"><span class="dot"></span> Coach · Habilidades</div>
+          <div class="slide-title hab-title"><span class="ico">🧠</span> En qué invertir tu tiempo</div>
+        </div>
+        <div class="hab-ovr" id="habOvr"></div>
+      </div>
+      <div class="hab-cols reveal d2">
+        <div class="tile hab-ruta" id="habRuta"></div>
         <div class="tile hab-foco" id="habFoco"></div>
         <div class="hab-side">
-          <div class="tile hab-ovr" id="habOvr"></div>
           <div class="tile hab-rank" id="habRank"></div>
           <div class="didi-strip" id="didiStrip"></div>
         </div>
@@ -9101,6 +9118,18 @@ function habPasoSet(i){
 // Offers"), que romperían el atributo si se metieran tal cual.
 function habAttr(t){ return String(t || '').replace(/<[^>]*>/g, '').replace(/"/g, '&quot;'); }
 
+// Un libro de la biblioteca por su id (para la portada, el título y el autor). Si no está, se
+// pinta el recurso tal cual con pfRecursoHtml(), que ya sabe hacerlo.
+function habLibro(id){
+  const B = window.CIFRAS && CIFRAS.BIBLIOTECA;
+  return (B && B.todos || []).find(l => l.id === id) || null;
+}
+// Los libros de TODA la ruta, sin repetir y en el orden en que aparecen: es el estante.
+function habLibrosRuta(pasos){
+  const ids = [];
+  pasos.forEach(p => (Array.isArray(p.r) ? p.r : []).forEach(r => { if(r && r.t === 'libro' && r.id && !ids.includes(r.id)) ids.push(r.id); }));
+  return ids.map(habLibro).filter(Boolean);
+}
 function renderSkills(){
   renderDidiStrip();
   const cand = habCandidatas(); if(!cand.length) return;
@@ -9111,60 +9140,9 @@ function renderSkills(){
   let i = st.paso[foco.id] || 0; if(i < 0 || i >= pasos.length) i = 0;
   const p = pasos[i], l = skLevel(foco.val), esTop = cand[0].id === foco.id;
 
-  // ── Columna izquierda: la habilidad de la semana, con el paso abierto y legible entero.
-  document.getElementById('habFoco').innerHTML = `
-    <div class="hf-ruta">
-      <div class="hf-ruta-h">
-        <span class="hf-lbl">La ruta</span>
-        <span class="hf-ruta-n">${i + 1} / ${pasos.length}</span>
-      </div>
-      <div class="hf-ruta-b"><i style="width:${Math.round((i + 1) / pasos.length * 100)}%"></i></div>
-      <div class="hf-ruta-l">${pasos.map((x, j) => `
-        <button class="hf-p${j === i ? ' act' : ''}" onclick="habPasoSet(${j})" title="${j + 1}. ${habAttr(x.n)} — ${habAttr(x.q || x.c).slice(0, 170)}">
-          <span class="hf-p-n">${String(j + 1).padStart(2, '0')}</span>
-          <span class="hf-p-t">${x.n}</span>
-        </button>`).join('')}</div>
-      <div class="hf-ruta-pie">Toca cualquiera para abrirlo. No hace falta ir en orden.</div>
-    </div>
-
-    <div class="hf-cuerpo">
-      <div class="hf-top">
-        <span class="hf-chip">${(habRecomendada()||{}).id === foco.id ? 'Esta semana' : 'Su ruta'}</span>
-        <div class="hf-badge" style="background:${l.c}22">${foco.icon}</div>
-        <span class="hf-name">${foco.name}</span>
-        <span class="hf-lvl" style="background:${l.c}22;color:${l.c}">${l.l}</span>
-        <span class="hf-val">${foco.val}/100 · pesa ×${foco.w}</span>
-        <span class="hf-why">${esTop
-          ? 'la que <b>más rinde</b> de las activas'
-          : `rinde <b>${skRetorno(foco)}</b> · la que más rinde es ${cand[0].name}`}</span>
-      </div>
-
-      <div class="hf-h1w">
-        <span class="hf-h1n"><b>${i + 1}</b><span>de ${pasos.length}</span></span>
-        <div class="hf-h1">${p.n}</div>
-      </div>
-
-      ${p.q ? `<div><div class="hf-lbl" style="color:var(--g)">Por qué este paso</div><div class="hf-q">${p.q}</div></div>` : ''}
-      <div><div class="hf-lbl" style="color:var(--cy)">Qué hacer</div><div class="hf-c">${p.c}</div></div>
-      ${p.r ? `<div class="hf-res"><div class="hf-lbl">Con qué</div>${
-        typeof pfRecursosHtml === 'function' ? pfRecursosHtml(p.r)
-          : `<div class="hf-res-t">${Array.isArray(p.r) ? p.r.map(x => x.n || x.id).join(' · ') : p.r}</div>`
-      }</div>` : ''}
-
-      <div class="hf-pie">
-        <span class="hf-pie-t">${i + 1 < pasos.length
-          ? `Al cerrarlo sigue <b>${pasos[i + 1].n}</b>`
-          : `Es el último de los ${pasos.length}`}</span>
-        <span class="hf-acts">
-          ${otra ? `<button class="hf-btn" onclick="habFocoSet('${otra.id}')">Cambiar a ${otra.name} ${otra.icon}</button>` : ''}
-          <a class="hf-btn" href="../Coach/Coach.html?skill=${foco.id}#aprendizaje">✏️ Ajustar en Coach →</a>
-        </span>
-      </div>
-    </div>`;
-
-  // ── Nivel general. La frase promete una cifra concreta, así que se calcula con calcOVRcon()
-  // en vez de estimarse; y la comparación con la otra candidata solo se escribe si de verdad
-  // gana — hoy empatan en 48, y afirmar "es el mayor salto" sería falso.
+  // ── Cabecera: el nivel general. La frase promete una cifra concreta, así que se calcula con
+  // calcOVRcon() en vez de estimarse; y la comparación con la otra candidata solo se escribe si
+  // de verdad gana — hoy empatan en 48, y afirmar "es el mayor salto" sería falso.
   const ovr = calcOVR();
   const meta = skSiguienteEscalon(foco.val), ovrF = calcOVRcon(foco.id, meta);
   let extra = '';
@@ -9173,21 +9151,92 @@ function renderSkills(){
     if(ovrO > ovrF) extra = ` ${otra.name} daría <i>${ovrO}</i>: está más lejos de su siguiente nivel.`;
   }
   document.getElementById('habOvr').innerHTML = `
-    <div class="ho-lbl">Nivel general</div>
-    <div class="ho-n"><b>${ovr}</b><span>/100 · OVR ponderado</span></div>
-    <div class="pbar" style="height:6px;margin-top:9px"><div class="pfill" style="width:${ovr}%;background:${skLevel(ovr).c}"></div></div>
-    <div class="ho-txt">Llevar ${foco.name} de <b>${foco.val} a ${meta}</b> lo sube a <i>${ovrF}</i>.${extra}</div>`;
+    <div class="ho-lbl">Nivel general · OVR ponderado</div>
+    <div class="ho-n"><b>${ovr}</b><span>/100</span></div>
+    <div class="ho-r">
+      <div class="pbar" style="height:5px"><div class="pfill" style="width:${ovr}%;background:${skLevel(ovr).c}"></div></div>
+      <div class="ho-txt">Llevar ${foco.name} de <b>${foco.val} a ${meta}</b> lo sube a <i>${ovrF}</i>.${extra}</div>
+    </div>`;
 
-  // ── Las 12, ordenadas por retorno pero MEDIDAS por nivel. Son dos preguntas distintas y
-  // antes compartían el mismo trazo: la barra dibujaba el retorno, así que Ventas (15/100)
-  // salía llena y Mentalidad (85/100) casi vacía. Adán, 2026-08-31: "parece que las
-  // habilidades que tengo menos conocimiento, parece que tengo mucho […] inviértelo".
-  // Ahora la barra es el nivel y el orden es el retorno, con una frase al pie que lo dice.
+  // ── LA RUTA: la habilidad abierta, sus chips y los pasos como línea de tiempo.
+  document.getElementById('habRuta').innerHTML = `
+    <div class="hf-top">
+      <div class="hf-badge" style="background:${l.c}22">${foco.icon}</div>
+      <div style="min-width:0"><span class="hf-name">${foco.name}</span><span class="hf-val">${foco.val}/100 · pesa ×${foco.w}</span></div>
+    </div>
+    <div class="hf-chips">
+      <span class="hf-chip">${(habRecomendada()||{}).id === foco.id ? 'Esta semana' : 'Su ruta'}</span>
+      <span class="hf-lvl" style="background:${l.c}22;color:${l.c}">${l.l}</span>
+      <span class="hf-why">${esTop
+        ? 'la que <b>más rinde</b> de las activas'
+        : `rinde <b>${skRetorno(foco)}</b> · la que más rinde es ${cand[0].name}`}</span>
+    </div>
+    <div class="hab-hair"></div>
+    <div class="hf-ruta-h"><span class="hab-lbl">La ruta</span><span class="hf-ruta-n">${i + 1} / ${pasos.length}</span></div>
+    <div class="hf-ruta-b"><i style="width:${Math.round((i + 1) / pasos.length * 100)}%"></i></div>
+    <div class="hf-ruta-l">${pasos.map((x, j) => `
+      <button class="hf-p${j === i ? ' act' : ''}" onclick="habPasoSet(${j})" title="${j + 1}. ${habAttr(x.n)} — ${habAttr(x.q || x.c).slice(0, 170)}">
+        <span class="hf-p-n">${String(j + 1).padStart(2, '0')}</span>
+        <span class="hf-p-t">${x.n}</span>
+      </button>`).join('')}</div>
+    <div class="hf-ruta-acts">
+      ${otra ? `<button class="hf-btn" onclick="habFocoSet('${otra.id}')">Cambiar a ${otra.name} ${otra.icon}</button>` : ''}
+      <a class="hf-btn ghost" href="../Coach/Coach.html?skill=${foco.id}#aprendizaje">Ajustar en Coach →</a>
+    </div>`;
+
+  // ── EL PASO: la lectura. "Con qué" pinta el libro con su portada cuando el recurso es un
+  // libro de la biblioteca; cualquier otro recurso (web, curso…) sigue saliendo con
+  // pfRecursoHtml(). El estante lleva los libros de toda la ruta y marca el del paso abierto.
+  const recs = Array.isArray(p.r) ? p.r : (p.r ? [p.r] : []);
+  const conQue = recs.map(r => {
+    const lib = (r && r.t === 'libro') ? habLibro(r.id) : null;
+    if(!lib) return typeof pfRecursoHtml === 'function' ? `<div class="hf-res"><span class="hab-lbl">Con qué</span>${pfRecursoHtml(r)}</div>` : '';
+    return `<div class="hf-libro">
+      <img src="${lib.portada || ''}" alt="" loading="lazy" onclick="pfAbrirId('libros','${lib.id}')" style="cursor:pointer">
+      <div class="hf-libro-t">
+        <span class="hab-lbl">Con qué · libro</span>
+        <span class="hf-libro-n">${lib.t}</span>
+        <span class="hf-libro-a">${lib.a}${lib.pags ? ` · ${lib.pags} páginas` : ''}</span>
+        ${r.nota ? `<span class="hf-libro-nota">${r.nota.charAt(0).toUpperCase() + r.nota.slice(1)}${/[.!?]$/.test(r.nota) ? '' : '.'}</span>` : ''}
+      </div>
+      <button class="hf-btn" onclick="pfAbrirId('libros','${lib.id}')" title="De qué trata, qué dice y cuándo leerlo">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 7.6v.1"/></svg>Qué es
+      </button>
+    </div>`;
+  }).join('');
+  const estante = habLibrosRuta(pasos);
+  const idsPaso = recs.filter(r => r && r.t === 'libro').map(r => r.id);
+  const estanteHtml = estante.length >= 2 ? `
+    <div class="hf-estante">
+      <div class="hf-estante-h"><span class="hab-lbl">Los libros de esta ruta</span><small>${estante.length} · toca uno para ver qué es</small></div>
+      <div class="hf-estante-l">${estante.map(lib => `
+        <button class="hf-tomo${idsPaso.includes(lib.id) ? ' act' : ''}" onclick="pfAbrirId('libros','${lib.id}')" title="${habAttr(lib.t)} — ${habAttr(lib.a)}"><img src="${lib.portada || ''}" alt="${habAttr(lib.t)}" loading="lazy"></button>`).join('')}</div>
+    </div>` : '';
+  document.getElementById('habFoco').innerHTML = `
+    <div class="hf-n"><span class="hab-lbl">Paso ${String(i + 1).padStart(2, '0')} de ${pasos.length}</span><i></i><span class="hab-lbl">${foco.name}</span></div>
+    <div class="hf-lectura">
+    <div class="hf-h1">${p.n}</div>
+    ${p.q ? `<div class="hf-qw"><i></i><div class="hf-blk"><span class="hab-lbl" style="color:var(--g)">Por qué este paso</span><div class="hf-q">${p.q}</div></div></div>` : ''}
+    <div class="hf-blk"><span class="hab-lbl" style="color:var(--cy)">Qué hacer</span><div class="hf-c">${p.c}</div></div>
+    ${conQue}
+    </div>
+    ${estanteHtml}
+    <div class="hf-pie">
+      <span class="hf-pie-t">${i + 1 < pasos.length
+        ? `Al cerrarlo sigue <b>${pasos[i + 1].n}</b>`
+        : `Es el último de los ${pasos.length}`}</span>
+      <button class="hf-btn primario" onclick="habPasoSet(${i + 1})"${i + 1 < pasos.length ? '' : ' disabled'}>Siguiente paso ›</button>
+    </div>`;
+
+  // ── LO QUE SABES DE CADA UNA: las 12, ordenadas por retorno pero MEDIDAS por nivel. Son dos
+  // preguntas distintas y antes compartían el mismo trazo: la barra dibujaba el retorno, así que
+  // Ventas (15/100) salía llena y Mentalidad (85/100) casi vacía. Adán, 2026-08-31: "parece que
+  // las habilidades que tengo menos conocimiento, parece que tengo mucho […] inviértelo".
   const orden = [...SK].sort((a, b) => skRetorno(b) - skRetorno(a));
   const metaFoco = skSiguienteEscalon(foco.val);
   const abiertaId = foco.id;   // la que se está viendo a la izquierda
   document.getElementById('habRank').innerHTML = `
-    <div class="hr-head"><span class="hr-t">Lo que sabes de cada una</span><span class="hr-sub">de arriba abajo, dónde rinde más una hora</span></div>
+    <div class="hr-head"><span class="hab-lbl">Lo que sabes de cada una</span><span class="hr-sub">de arriba abajo, dónde rinde más una hora</span></div>
     <div class="hr-rows">${orden.map((s, j) => {
       const lv = skLevel(s.val);
       const pausa = PRIORIDAD_EXCLUIDAS.includes(s.id), esFoco = s.id === foco.id;

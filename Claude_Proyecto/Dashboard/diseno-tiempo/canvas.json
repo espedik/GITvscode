@@ -1,0 +1,16 @@
+{
+  "artboards": [
+    { "file": "Main.dc.html",       "x": 0,    "y": 0,    "w": 1600, "h": 1000, "title": "Mesa de estudio (propuesta)" },
+    { "file": "Movil.dc.html",      "x": 1720, "y": 0,    "w": 390,  "h": 844,  "title": "La misma pantalla en el celular" },
+    { "file": "DireccionB.dc.html", "x": 0,    "y": 1220, "w": 1600, "h": 1000, "title": "Dirección B — doble página" },
+    { "file": "DireccionC.dc.html", "x": 1720, "y": 1220, "w": 1600, "h": 1000, "title": "Dirección C — tablero de las 12" }
+  ],
+  "annotations": [
+    { "id": "nota-problema", "x": 0, "y": -230, "w": 560, "text": "Lo que falla hoy (medido a 1600×1000): el título ocupa 126 px, el panel del paso usa el tercio de arriba y deja la mitad vacía, el texto del paso va a 13.5 px y el ranking a 11.5. El libro es una línea de texto: nada invita a abrirlo." },
+    { "id": "nota-main", "x": 600, "y": -230, "w": 600, "text": "Propuesta «mesa de estudio»: el título baja a 36 px y el nivel general sube a su lado, así el cuerpo gana 60 px. Tres apartados a toda la altura: LA RUTA (la habilidad, sus chips y los 9 pasos como línea de tiempo), EL PASO (título a 46 px, el porqué a 17.5 con filete verde, el qué hacer a 16.5, el libro con su PORTADA real y los ocho libros de la ruta como estante) y LO QUE SABES (las 12 a 44 px por fila, leyenda, nota y el rato al volante). Aparece el botón Siguiente paso, que hoy no existe." },
+    { "id": "nota-movil", "x": 1720, "y": -150, "w": 390, "text": "En el celular: la habilidad y la ruta como tira de números, el paso con su libro, y el ranking se abre desde un botón para no empujar la lectura." },
+    { "id": "nota-b", "x": 0, "y": 1000, "w": 560, "text": "Dirección B — doble página: la ruta es una regla de 9 segmentos arriba y el paso se lee como revista (título a 52 px, el porqué en cursiva a 21). La página derecha es el libro en grande y el ranking en tres columnas. A favor: la lectura más cómoda. En contra: los nombres de los pasos ya no se ven, solo los números." },
+    { "id": "nota-c", "x": 1720, "y": 1000, "w": 560, "text": "Dirección C — tablero de las 12: cada habilidad es una tarjeta con nivel, peso y cuántos pasos tiene la ruta; la abierta se lee en un panel lateral. A favor: se ve el mapa entero de un vistazo. En contra: el paso pierde la mitad del espacio, y leer es lo que Adán pidió que diera ganas." }
+  ],
+  "launch": { "view": "canvas" }
+}
