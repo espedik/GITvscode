@@ -1,0 +1,129 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+  <style>
+    body { margin: 0; font-family: 'Inter', -apple-system, sans-serif; }
+    a { color: #00a758; } a:hover { color: #008a48; }
+    .raiz { --g: #00a758; --w: #a8790a; --r: #c81e4d; --b: #2563eb; --p: #7f4fb8; --bg: #f4f4f7; --text: #16161a; --text2: #5c5f70; --text3: #6f7286; --ov: 0,0,0; }
+    .card { background: #fff; border: 1px solid rgba(0,0,0,.07); border-radius: 14px; padding: 18px; box-shadow: 0 2px 14px rgba(0,0,0,.08); }
+    .ct { font-size: 11px; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: .06em; display: flex; align-items: center; gap: 5px; }
+    .cv { font-size: 26px; font-weight: 800; color: var(--text); letter-spacing: -.5px; }
+    .cs { font-size: 12px; color: var(--text3); }
+    .stat { display: flex; flex-direction: column; gap: 3px; padding: 10px 0; border-top: 1px solid rgba(0,0,0,.07); }
+    .stat:first-child { border-top: none; padding-top: 0; }
+    .stat .k { font-size: 10.5px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--text2); }
+    .stat .v { font-size: 22px; font-weight: 800; letter-spacing: -.4px; color: var(--text); line-height: 1; }
+    .stat .v small { font-size: 12px; font-weight: 600; color: var(--text3); margin-left: 4px; letter-spacing: 0; }
+    .stat .d { font-size: 12px; color: var(--text2); line-height: 1.45; }
+    .stat .d b { color: var(--text); }
+    .col { display: flex; flex-direction: column; gap: 4px; padding: 12px 14px; border-radius: 10px; background: rgba(0,0,0,.03); border: 1px solid rgba(0,0,0,.06); }
+    .col .k { font-size: 10.5px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--text2); }
+    .col .v { font-size: 13px; color: var(--text2); line-height: 1.45; }
+    .col .v b { color: var(--text); }
+    .nav { display: flex; align-items: center; gap: 10px; padding: 9px 14px; border-radius: 10px; font-size: 14px; color: var(--text2); }
+    .nav.on { background: rgba(0,167,88,.12); color: var(--g); font-weight: 600; }
+  </style>
+</helmet>
+<div class="raiz" style="width: 1600px; height: 1000px; background: var(--bg); display: grid; grid-template-columns: 245px minmax(0, 1fr); overflow: hidden">
+  <aside style="background: #fff; border-right: 1px solid rgba(0,0,0,.07); padding: 20px 12px; display: flex; flex-direction: column; gap: 6px">
+    <div style="padding: 0 10px 14px"><div style="font-size: 17px; font-weight: 800; color: var(--text)">🫀 Mi Salud</div><div style="font-size: 10px; letter-spacing: .1em; color: var(--text3); text-transform: uppercase">Nutrición &amp; bienestar</div></div>
+    <div class="nav">📊 Dashboard</div>
+    <div class="nav on">⚖️ Peso &amp; Medidas</div>
+    <div class="nav">🫁 Salud Digestiva</div>
+    <div class="nav">🩺 Exámenes Médicos</div>
+    <div class="nav">🧍 Postura</div>
+    <div class="nav">🧠 Salud Mental</div>
+    <div class="nav">💊 Suplementos</div>
+    <div class="nav">🎯 Perfil &amp; Metas</div>
+  </aside>
+  <div style="display: flex; flex-direction: column; min-width: 0; overflow: hidden">
+    <div style="height: 58px; background: #fff; border-bottom: 1px solid rgba(0,0,0,.07); display: flex; align-items: center; justify-content: space-between; padding: 0 22px; font-size: 15px; font-weight: 700; color: var(--text)"><span>⚖️ Peso & Medidas</span><span style="font-size: 12px; font-weight: 500; color: var(--text3)">domingo, 13 de septiembre</span></div>
+    <div style="padding: 24px 22px; display: flex; flex-direction: column; gap: 14px; overflow: hidden">
+      <div style="display: flex; justify-content: space-between; align-items: center"><span style="font-size: 19px; font-weight: 800; color: var(--text)">⚖️ Peso &amp; Medidas</span><span style="padding: 8px 14px; border-radius: 9px; background: var(--g); color: #fff; font-size: 13px; font-weight: 700">+ Registrar</span></div>
+      <div style="display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 14px">
+        <div class="card" style="background: rgba(0,167,88,.05); border-color: rgba(0,167,88,.25)"><div class="ct">⚖️ Peso actual</div><div class="cv" style="color: var(--g)">78 kg</div><div class="cs">↑ +3.0 kg vs anterior</div></div>
+        <div class="card" style="border-left: 4px solid var(--g)"><div class="ct">📐 IMC</div><div class="cv" style="color: var(--g)">24.6</div><div class="cs">Normal · a 0.3 del tope</div></div>
+        <div class="card" style="border-left: 4px solid var(--p)"><div class="ct" style="color: var(--p)">📊 % Grasa corporal</div><div class="cv" style="color: var(--p)">—</div><div class="cs">Sin dato aún</div></div>
+        <div class="card"><div class="ct">🎯 Objetivo de peso</div><div class="cv" style="color: var(--b)">80 kg</div><div class="cs">Faltan 2 kg · IMC 25.2</div></div>
+        <div class="card"><div class="ct">📅 Registros</div><div class="cv">2</div><div class="cs">Último: 13 Sep 2026</div></div>
+      </div>
+      <div class="card" style="display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 22px; padding: 20px 22px">
+        <div style="display: flex; flex-direction: column; gap: 10px; min-width: 0">
+          <div style="display: flex; justify-content: space-between; align-items: baseline"><span class="ct">📐 IMC por edad — dónde estás y a dónde vas</span><span class="cs">IMC = peso ÷ altura² · OMS</span></div>
+          <svg viewBox="0 0 900 360" width="100%" style="display:block;font-family:Inter,sans-serif">
+<polygon points="52.0,18.0 85.3,18.0 118.6,18.0 151.8,18.0 185.1,18.0 218.4,18.0 251.7,18.0 285.0,18.0 318.2,18.0 351.5,18.0 384.8,18.0 418.1,18.0 451.4,18.0 484.6,18.0 517.9,18.0 551.2,18.0 584.5,18.0 617.8,18.0 651.0,18.0 684.3,18.0 717.6,18.0 750.9,18.0 784.2,18.0 817.4,18.0 850.7,18.0 884.0,18.0 884.0,52.2 850.7,52.2 817.4,52.2 784.2,52.2 750.9,52.2 717.6,52.2 684.3,52.2 651.0,52.2 617.8,52.2 584.5,52.2 551.2,52.2 517.9,52.2 484.6,52.2 451.4,52.2 418.1,52.2 384.8,52.2 351.5,52.2 318.2,52.2 285.0,52.2 251.7,52.2 218.4,52.2 185.1,57.4 151.8,76.2 118.6,88.2 85.3,101.8 52.0,115.5" fill="#c81e4d1a"/>
+<polygon points="52.0,115.5 85.3,101.8 118.6,88.2 151.8,76.2 185.1,57.4 218.4,52.2 251.7,52.2 285.0,52.2 318.2,52.2 351.5,52.2 384.8,52.2 418.1,52.2 451.4,52.2 484.6,52.2 517.9,52.2 551.2,52.2 584.5,52.2 617.8,52.2 651.0,52.2 684.3,52.2 717.6,52.2 750.9,52.2 784.2,52.2 817.4,52.2 850.7,52.2 884.0,52.2 884.0,137.8 850.7,137.8 817.4,137.8 784.2,137.8 750.9,137.8 717.6,137.8 684.3,137.8 651.0,137.8 617.8,137.8 584.5,137.8 551.2,137.8 517.9,137.8 484.6,137.8 451.4,137.8 418.1,137.8 384.8,137.8 351.5,137.8 318.2,137.8 285.0,137.8 251.7,137.8 218.4,137.8 185.1,130.9 151.8,142.9 118.6,153.2 85.3,165.2 52.0,177.1" fill="#a8790a1f"/>
+<polygon points="52.0,177.1 85.3,165.2 118.6,153.2 151.8,142.9 185.1,130.9 218.4,137.8 251.7,137.8 285.0,137.8 318.2,137.8 351.5,137.8 384.8,137.8 418.1,137.8 451.4,137.8 484.6,137.8 517.9,137.8 551.2,137.8 584.5,137.8 617.8,137.8 651.0,137.8 684.3,137.8 717.6,137.8 750.9,137.8 784.2,137.8 817.4,137.8 850.7,137.8 884.0,137.8 884.0,249.0 850.7,249.0 817.4,249.0 784.2,249.0 750.9,249.0 717.6,249.0 684.3,249.0 651.0,249.0 617.8,249.0 584.5,249.0 551.2,249.0 517.9,249.0 484.6,249.0 451.4,249.0 418.1,249.0 384.8,249.0 351.5,249.0 318.2,249.0 285.0,249.0 251.7,249.0 218.4,249.0 185.1,276.4 151.8,281.5 118.6,286.6 85.3,293.5 52.0,302.0" fill="#00a75822"/>
+<polygon points="52.0,302.0 85.3,293.5 118.6,286.6 151.8,281.5 185.1,276.4 218.4,249.0 251.7,249.0 285.0,249.0 318.2,249.0 351.5,249.0 384.8,249.0 418.1,249.0 451.4,249.0 484.6,249.0 517.9,249.0 551.2,249.0 584.5,249.0 617.8,249.0 651.0,249.0 684.3,249.0 717.6,249.0 750.9,249.0 784.2,249.0 817.4,249.0 850.7,249.0 884.0,249.0 884.0,326.0 850.7,326.0 817.4,326.0 784.2,326.0 750.9,326.0 717.6,326.0 684.3,326.0 651.0,326.0 617.8,326.0 584.5,326.0 551.2,326.0 517.9,326.0 484.6,326.0 451.4,326.0 418.1,326.0 384.8,326.0 351.5,326.0 318.2,326.0 285.0,326.0 251.7,326.0 218.4,326.0 185.1,326.0 151.8,326.0 118.6,326.0 85.3,326.0 52.0,326.0" fill="#2563eb1a"/>
+<line x1="52" y1="326.0" x2="884" y2="326.0" stroke="rgba(0,0,0,.08)"/>
+<text x="44" y="330.0" text-anchor="end" font-size="10.5" fill="#5c5f70">14</text>
+<line x1="52" y1="291.8" x2="884" y2="291.8" stroke="rgba(0,0,0,.08)"/>
+<text x="44" y="295.8" text-anchor="end" font-size="10.5" fill="#5c5f70">16</text>
+<line x1="52" y1="257.6" x2="884" y2="257.6" stroke="rgba(0,0,0,.08)"/>
+<text x="44" y="261.6" text-anchor="end" font-size="10.5" fill="#5c5f70">18</text>
+<line x1="52" y1="223.3" x2="884" y2="223.3" stroke="rgba(0,0,0,.08)"/>
+<text x="44" y="227.3" text-anchor="end" font-size="10.5" fill="#5c5f70">20</text>
+<line x1="52" y1="189.1" x2="884" y2="189.1" stroke="rgba(0,0,0,.08)"/>
+<text x="44" y="193.1" text-anchor="end" font-size="10.5" fill="#5c5f70">22</text>
+<line x1="52" y1="154.9" x2="884" y2="154.9" stroke="rgba(0,0,0,.08)"/>
+<text x="44" y="158.9" text-anchor="end" font-size="10.5" fill="#5c5f70">24</text>
+<line x1="52" y1="120.7" x2="884" y2="120.7" stroke="rgba(0,0,0,.08)"/>
+<text x="44" y="124.7" text-anchor="end" font-size="10.5" fill="#5c5f70">26</text>
+<line x1="52" y1="86.4" x2="884" y2="86.4" stroke="rgba(0,0,0,.08)"/>
+<text x="44" y="90.4" text-anchor="end" font-size="10.5" fill="#5c5f70">28</text>
+<line x1="52" y1="52.2" x2="884" y2="52.2" stroke="rgba(0,0,0,.08)"/>
+<text x="44" y="56.2" text-anchor="end" font-size="10.5" fill="#5c5f70">30</text>
+<line x1="52" y1="18.0" x2="884" y2="18.0" stroke="rgba(0,0,0,.08)"/>
+<text x="44" y="22.0" text-anchor="end" font-size="10.5" fill="#5c5f70">32</text>
+<text x="52.0" y="346" text-anchor="middle" font-size="10.5" fill="#5c5f70">15</text>
+<text x="218.4" y="346" text-anchor="middle" font-size="10.5" fill="#5c5f70">20</text>
+<text x="384.8" y="346" text-anchor="middle" font-size="10.5" fill="#5c5f70">25</text>
+<text x="551.2" y="346" text-anchor="middle" font-size="10.5" fill="#5c5f70">30</text>
+<text x="717.6" y="346" text-anchor="middle" font-size="10.5" fill="#5c5f70">35</text>
+<text x="884.0" y="346" text-anchor="middle" font-size="10.5" fill="#5c5f70">40</text>
+<text x="468" y="358" text-anchor="middle" font-size="10" fill="#5c5f70" letter-spacing="1.5">EDAD (AÑOS)</text>
+<rect x="384.8" y="18" width="332.8" height="308" fill="none" stroke="#00a758" stroke-dasharray="4 4" stroke-width="1.2" rx="4"/>
+<text x="551.2" y="32" text-anchor="middle" font-size="10" font-weight="700" fill="#00a758" letter-spacing="1.5">DE LOS 25 A LOS 35</text>
+<polyline points="52.0,115.5 85.3,101.8 118.6,88.2 151.8,76.2 185.1,57.4 218.4,52.2 251.7,52.2 285.0,52.2 318.2,52.2 351.5,52.2 384.8,52.2 418.1,52.2 451.4,52.2 484.6,52.2 517.9,52.2 551.2,52.2 584.5,52.2 617.8,52.2 651.0,52.2 684.3,52.2 717.6,52.2 750.9,52.2 784.2,52.2 817.4,52.2 850.7,52.2 884.0,52.2" fill="none" stroke="#c81e4d" stroke-width="1.6"/>
+<polyline points="52.0,177.1 85.3,165.2 118.6,153.2 151.8,142.9 185.1,130.9 218.4,137.8 251.7,137.8 285.0,137.8 318.2,137.8 351.5,137.8 384.8,137.8 418.1,137.8 451.4,137.8 484.6,137.8 517.9,137.8 551.2,137.8 584.5,137.8 617.8,137.8 651.0,137.8 684.3,137.8 717.6,137.8 750.9,137.8 784.2,137.8 817.4,137.8 850.7,137.8 884.0,137.8" fill="none" stroke="#a8790a" stroke-width="1.6"/>
+<polyline points="52.0,302.0 85.3,293.5 118.6,286.6 151.8,281.5 185.1,276.4 218.4,249.0 251.7,249.0 285.0,249.0 318.2,249.0 351.5,249.0 384.8,249.0 418.1,249.0 451.4,249.0 484.6,249.0 517.9,249.0 551.2,249.0 584.5,249.0 617.8,249.0 651.0,249.0 684.3,249.0 717.6,249.0 750.9,249.0 784.2,249.0 817.4,249.0 850.7,249.0 884.0,249.0" fill="none" stroke="#2563eb" stroke-width="1.6"/>
+<text x="878" y="46.0" text-anchor="end" font-size="10" font-weight="700" fill="#c81e4d" letter-spacing="1.2">OBESIDAD · 30</text>
+<text x="878" y="131.5" text-anchor="end" font-size="10" font-weight="700" fill="#a8790a" letter-spacing="1.2">SOBREPESO · 25</text>
+<text x="878" y="194.8" text-anchor="end" font-size="10" font-weight="700" fill="#00a758" letter-spacing="1.2">SANO · 18.5 – 24.9</text>
+<text x="878" y="270.1" text-anchor="end" font-size="10" font-weight="700" fill="#2563eb" letter-spacing="1.2">BAJO PESO</text>
+<text x="118.6" y="28.3" text-anchor="middle" font-size="9.5" fill="#5c5f70">15–19: referencia OMS por edad (varones, aprox.)</text>
+<line x1="584.5" y1="144.6" x2="584.5" y2="326" stroke="#5c5f70" stroke-dasharray="3 3"/>
+<circle cx="584.5" cy="134.4" r="7" fill="none" stroke="#a8790a" stroke-width="2"/>
+<text x="596.5" y="128.4" font-size="11" font-weight="700" fill="#a8790a">Meta 80 kg · IMC 25.2</text>
+<circle cx="584.5" cy="144.6" r="7.5" fill="#00a758" stroke="white" stroke-width="2"/>
+<text x="596.5" y="158.6" font-size="11.5" font-weight="800" fill="#16161a">Tú · 31 años · IMC 24.6</text>
+<text x="596.5" y="171.6" font-size="10.5" fill="#5c5f70">78 kg a 1.78 m — normal, a 0.3 del tope</text>
+</svg>
+        </div>
+        <div style="display: flex; flex-direction: column; border-left: 1px solid rgba(0,0,0,.07); padding-left: 22px">
+          <div class="stat"><span class="k">A tu altura · 1.78 m</span><span class="v">58.6 – 78.9<small>kg sano</small></span><span class="d">IMC de 18.5 a 24.9. El centro del rango (IMC 22) son <b>69.7 kg</b>.</span></div>
+          <div class="stat"><span class="k">Tienes</span><span class="v" style="color: var(--g)">24.6<small>IMC · 78 kg</small></span><span class="d"><b>Normal</b>, a 0.3 del tope. Un kilo más de grasa te saca del rango; un kilo más de músculo, también — el IMC no los distingue.</span></div>
+          <div class="stat"><span class="k">Tu meta · 80 kg</span><span class="v" style="color: var(--w)">25.2<small>IMC</small></span><span class="d">Sale <b>1.1 kg por encima</b> de la tabla. Si es músculo, no importa: la que manda es la cintura.</span></div>
+          <div class="stat"><span class="k">La cintura que te dice si vas bien</span><span class="v">&lt; 89<small>cm</small></span><span class="d">Cintura ÷ altura menor a 0.5. Sin cintura anotada todavía: <b>mídela y dímela</b>.</span></div>
+        </div>
+      </div>
+      <div class="card" style="padding: 16px 22px; display: grid; grid-template-columns: auto repeat(3, minmax(0, 1fr)); gap: 14px; align-items: stretch">
+        <div style="display: flex; flex-direction: column; gap: 4px; justify-content: center; padding-right: 8px; max-width: 250px"><span class="ct">De los 25 a los 35</span><span style="font-size: 12.5px; color: var(--text2); line-height: 1.45">El rango sano <b style="color: var(--text)">no cambia con la edad</b> entre los 20 y los 65. Lo que cambia es lo que hay dentro del kilo.</span></div>
+        <div class="col"><span class="k">IMC y peso sano</span><span class="v"><b>18.5 – 24.9</b> · 58.6 – 78.9 kg a los 25, a los 30 y a los 35. La tabla es la misma; tu punto es el que se mueve.</span></div>
+        <div class="col"><span class="k">Músculo · desde los 30</span><span class="v">Sin fuerza se pierde <b>3 – 8 % por década</b>. Tu meta de 80 kg solo vale si el kilo extra es músculo: por eso pesas y mides, no solo pesas.</span></div>
+        <div class="col"><span class="k">Cintura · la que sube sola</span><span class="v">A partir de los 30 la grasa se va al abdomen. Menos de <b>89 cm</b> (la mitad de tu altura) vale más que cualquier IMC.</span></div>
+      </div>
+      <div class="card" style="padding: 14px 22px; display: flex; justify-content: space-between; align-items: center; opacity: .55"><span class="ct">⚖️ Peso y composición</span><span class="cs">(la tarjeta de siempre, debajo)</span></div>
+    </div>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

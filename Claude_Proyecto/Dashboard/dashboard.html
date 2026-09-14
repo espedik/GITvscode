@@ -6187,7 +6187,8 @@ function activePhase(){
 //    exactos de mi fecha"): este archivo no debe guardar su fecha de nacimiento exacta en ningún
 //    comentario ni string. Se calcula en vivo a partir de esta fecha de referencia, no se
 //    hardcodea "31" — el próximo 1 de julio la barra sola pasa a mostrar 32→33 sin tocar el código.
-const NACIMIENTO={anio:1995,mes:7,dia:1};
+// Del maestro (PROYECTO.nacimiento) desde el 2026-09-13; Salud saca la edad del mismo dato.
+const NACIMIENTO=(function(){ const s=(window.CIFRAS&&CIFRAS.PROYECTO&&CIFRAS.PROYECTO.nacimiento)||'1995-07-01'; const p=s.split('-').map(Number); return {anio:p[0],mes:p[1],dia:p[2]}; })();
 function edadInfo(){
   const hoy=new Date(); hoy.setHours(0,0,0,0);
   const cumpleEsteAnio=new Date(hoy.getFullYear(),NACIMIENTO.mes-1,NACIMIENTO.dia);

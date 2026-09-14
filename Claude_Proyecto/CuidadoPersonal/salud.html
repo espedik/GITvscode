@@ -165,6 +165,27 @@ tbody tr:hover td{background:rgba(0,232,122,.02)}
 .fw7{font-weight:700}.ts{font-size:11px}.tm{color:var(--text3)}
 .gap6{gap:6px}.gap8{gap:8px}
 .chart-c{position:relative;height:220px}
+/* IMC por edad: la gráfica a la izquierda y las cuatro cifras a la derecha; debajo, la franja de
+   los 25 a los 35 en tres columnas. */
+.imc-wrap{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:22px}
+.imc-chart{min-width:0;display:flex;flex-direction:column;gap:8px}
+.imc-stats{display:flex;flex-direction:column;border-left:1px solid rgba(var(--ov),.08);padding-left:22px}
+.imc-stat{display:flex;flex-direction:column;gap:3px;padding:10px 0;border-top:1px solid rgba(var(--ov),.07)}
+.imc-stat:first-child{border-top:none;padding-top:0}
+.imc-stat .k{font-size:10.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--text2)}
+.imc-stat .v{font-size:22px;font-weight:800;letter-spacing:-.4px;color:var(--text);line-height:1}
+.imc-stat .v small{font-size:12px;font-weight:600;color:var(--text3);margin-left:4px;letter-spacing:0}
+.imc-stat .d{font-size:12px;color:var(--text2);line-height:1.45}
+.imc-stat .d b{color:var(--text)}
+.imc-edad{display:grid;grid-template-columns:auto repeat(3,minmax(0,1fr));gap:14px;align-items:stretch}
+.imc-edad-intro{display:flex;flex-direction:column;gap:4px;justify-content:center;padding-right:8px;max-width:250px}
+.imc-edad-intro .ts{font-size:12.5px;color:var(--text2);line-height:1.45}
+.imc-edad-intro .ts b{color:var(--text)}
+.imc-col{display:flex;flex-direction:column;gap:4px;padding:12px 14px;border-radius:10px;background:rgba(var(--ov),.03);border:1px solid rgba(var(--ov),.06)}
+.imc-col .k{font-size:10.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text2)}
+.imc-col .v{font-size:13px;color:var(--text2);line-height:1.45}
+.imc-col .v b{color:var(--text)}
+@media(max-width:1100px){.imc-wrap{grid-template-columns:1fr}.imc-stats{border-left:none;padding-left:0;border-top:1px solid rgba(var(--ov),.08);padding-top:10px}.imc-edad{grid-template-columns:1fr}.imc-edad-intro{max-width:none}}
 .empty{text-align:center;padding:40px 24px;color:var(--text3)}
 .empty .ico{font-size:40px;margin-bottom:10px;opacity:.4}
 
@@ -380,6 +401,11 @@ canvas{max-width:100%}
     <section id="s-medidas" class="section">
       <div class="sh"><h2>⚖️ Peso & Medidas</h2><button class="btn btn-g" onclick="openMedidaModal()">+ Registrar</button></div>
       <div class="g4" id="med-kpis" style="margin-bottom:18px"></div>
+      <!-- IMC por edad (2026-09-13): la gráfica con las franjas de la OMS, tu punto y tu meta, más
+           el rango sano en kilos a tu altura y la franja "de los 25 a los 35". Las pinta
+           renderIMCEdad(). -->
+      <div class="card" id="med-imc" style="margin-bottom:14px"></div>
+      <div class="card" id="med-edad" style="margin-bottom:14px"></div>
       <div id="med-barra" style="margin-bottom:14px"></div>
       <div class="g2" id="med-charts" style="margin-bottom:14px">
         <div class="card"><div class="card-title">📉 Evolución del peso</div><div class="chart-c"><canvas id="ch-peso"></canvas></div></div>
@@ -615,7 +641,7 @@ let S = {
   chequeo: {}
 };
 let editId=null, confCb=null;
-let chPeso=null, chExam=null, chComp=null, chMental=null;
+let chPeso=null, chExam=null, chComp=null, chMental=null;   // chIMC vive junto a renderIMCEdad()
 
 // ─── EXÁMENES MÉDICOS — catálogo de referencia ───────────────────────────────
 // Rangos generales para adulto — orientativos, no diagnósticos. Cada registro guarda
@@ -1073,6 +1099,110 @@ function toggleVaso(i) {
 function resetAgua() { S.agua[today()]=0; save(); sdRepintar(); }
 
 // ─── MEDIDAS ─────────────────────────────────────────────────────────────────
+// ─── IMC POR EDAD (2026-09-13) ───────────────────────────────────────────────
+// Adán: "una gráfica entera de índice de masa [...] de diferentes edades a partir de 15 [...]
+// desde los 25 hasta los 35, cuánto debería tener, cuánto tengo, cuál es mi meta, también del
+// peso". Lo que se calcula con peso y altura es el IMC (peso / altura²). Diseño elegido en
+// diseno-imc/ frente a dos direcciones más.
+// Cortes: adultos según la OMS (18.5 / 25 / 30), iguales de los 20 a los 65 — por eso "cuánto
+// debería tener a los 25, 30 y 35" es el MISMO rango, y la franja de abajo dice lo que sí cambia
+// con la edad. De 15 a 19 la OMS usa una referencia por edad (2007, varones); van aproximados y
+// la gráfica lo dice, porque a Adán le importan los 25-35 y ese tramo es contexto.
+const IMC_15_19={
+  bajo: {15:15.4,16:15.9,17:16.3,18:16.6,19:16.9},
+  sobre:{15:22.7,16:23.4,17:24.1,18:24.7,19:25.4},
+  obes: {15:26.3,16:27.1,17:27.9,18:28.6,19:29.7}
+};
+const imcCorte=(k,edad)=>IMC_15_19[k][edad]||{bajo:18.5,sobre:25,obes:30}[k];
+let chIMC=null;
+// La edad sale del maestro (PROYECTO.nacimiento), que es el mismo dato que usa el Dashboard.
+function edadHoy(){
+  const s=(window.CIFRAS&&CIFRAS.PROYECTO&&CIFRAS.PROYECTO.nacimiento)||'';
+  if(!s) return S.perfil.edad||0;
+  const [y,m,d]=s.split('-').map(Number); const hoy=new Date();
+  let e=hoy.getFullYear()-y; if(hoy.getMonth()+1<m||(hoy.getMonth()+1===m&&hoy.getDate()<d)) e--;
+  return e;
+}
+function renderIMCEdad(){
+  const el=document.getElementById('med-imc'), el2=document.getElementById('med-edad');
+  if(!el) return;
+  const altura=S.perfil.altura||0;
+  if(!altura){ el.innerHTML='<div class="card-title">📐 IMC por edad</div><div class="empty"><p>Pon tu altura en Perfil &amp; Metas para ver dónde estás.</p></div>'; if(el2) el2.innerHTML=''; return; }
+  const list=[...S.medidas].sort((a,b)=>b.fecha.localeCompare(a.fecha));
+  const ultima=list[0]||null;
+  const peso=ultima?ultima.peso:(S.perfil.peso||0);
+  const meta=S.metas.pesoObj||0;
+  const edad=edadHoy();
+  const m2=(altura/100)**2;
+  const imc=peso?+(peso/m2).toFixed(1):0, imcMeta=meta?+(meta/m2).toFixed(1):0;
+  const pMin=+(18.5*m2).toFixed(1), pMax=+(24.9*m2).toFixed(1), p22=+(22*m2).toFixed(1);
+  const cintMeta=Math.round(altura/2);
+  const cint=list.find(m=>m.cintura)||null;
+  const ii=imcLabel(imc);
+  const alTope=imc?+(24.9-imc).toFixed(1):0;
+  const metaTxt=!meta?'Sin meta: se fija en <b>Dashboard/datos-maestros.js</b> (<code>PESO.metaKg</code>).'
+    :(imcMeta>24.9?`Sale <b>${(meta-pMax).toFixed(1)} kg por encima</b> de la tabla. Si es músculo, no importa: la que manda es la cintura.`
+      :(imcMeta<18.5?'Queda <b>por debajo</b> del rango sano.':'Queda <b>dentro</b> del rango sano.'));
+  el.innerHTML=`
+    <div class="imc-wrap">
+      <div class="imc-chart">
+        <div class="card-title" style="justify-content:space-between"><span>📐 IMC por edad — dónde estás y a dónde vas</span><span class="ts tm" style="text-transform:none;letter-spacing:0">IMC = peso ÷ altura² · OMS</span></div>
+        <div class="chart-c" style="height:340px"><canvas id="ch-imc"></canvas></div>
+      </div>
+      <div class="imc-stats">
+        <div class="imc-stat"><span class="k">A tu altura · ${(altura/100).toFixed(2)} m</span><span class="v">${pMin} – ${pMax}<small>kg sano</small></span><span class="d">IMC de 18.5 a 24.9. El centro del rango (IMC 22) son <b>${p22} kg</b>.</span></div>
+        <div class="imc-stat"><span class="k">Tienes</span><span class="v" style="color:${ii.c}">${imc||'—'}<small>IMC · ${peso||'—'} kg</small></span><span class="d">${imc?`<b>${ii.l}</b>${imc<=24.9&&imc>=18.5?`, a ${alTope} del tope`:''}. Un kilo más de grasa te saca del rango; un kilo más de músculo, también — el IMC no los distingue.`:'Pésate para ver tu punto.'}</span></div>
+        <div class="imc-stat"><span class="k">Tu meta${meta?' · '+meta+' kg':''}</span><span class="v" style="color:var(--w)">${imcMeta||'—'}<small>IMC</small></span><span class="d">${metaTxt}</span></div>
+        <div class="imc-stat"><span class="k">La cintura que te dice si vas bien</span><span class="v">&lt; ${cintMeta}<small>cm</small></span><span class="d">Cintura ÷ altura menor a 0.5. ${cint?`Última: <b>${cint.cintura} cm</b> el ${fmtD(cint.fecha)} (${(cint.cintura/altura).toFixed(2)}).`:'Sin cintura anotada todavía: <b>mídela y dísela a Claude</b> con el pesaje.'}</span></div>
+      </div>
+    </div>`;
+  if(el2) el2.innerHTML=`
+    <div class="imc-edad">
+      <div class="imc-edad-intro"><div class="card-title">De los 25 a los 35</div><div class="ts">El rango sano <b>no cambia con la edad</b> entre los 20 y los 65. Lo que cambia es lo que hay dentro del kilo.</div></div>
+      <div class="imc-col"><span class="k">IMC y peso sano</span><span class="v"><b>18.5 – 24.9</b> · ${pMin} – ${pMax} kg a los 25, a los 30 y a los 35. La tabla es la misma; tu punto es el que se mueve.</span></div>
+      <div class="imc-col"><span class="k">Músculo · desde los 30</span><span class="v">Sin entrenar fuerza se pierde <b>3 – 8 % por década</b>. Tu meta de ${meta||'—'} kg solo vale si el kilo extra es músculo: por eso pesas <b>y mides</b>, no solo pesas.</span></div>
+      <div class="imc-col"><span class="k">Cintura · la que sube sola</span><span class="v">A partir de los 30 la grasa se va al abdomen. Menos de <b>${cintMeta} cm</b> (la mitad de tu altura) vale más que cualquier IMC.</span></div>
+    </div>`;
+
+  // La gráfica: cuatro franjas rellenas entre cortes, la ventana 25-35 y tus dos puntos.
+  chIMC=killChart(chIMC);
+  const ctx=document.getElementById('ch-imc'); if(!ctx) return;
+  const edades=[]; for(let a=15;a<=40;a++) edades.push(a);
+  const serie=k=>edades.map(a=>imcCorte(k,a));
+  const punto=(v)=>edades.map(a=>a===edad?v:null);
+  const g=cssVar('--g'), w=cssVar('--w'), r=cssVar('--r'), b=cssVar('--b'), t2=cssVar('--text2'), t3=cssVar('--text3'), ov=cssVar('--ov');
+  const tinte=(hex,a)=>{ const c=hex.replace('#',''); const n=parseInt(c.length===3?c.split('').map(x=>x+x).join(''):c,16); return `rgba(${(n>>16)&255},${(n>>8)&255},${n&255},${a})`; };
+  const ventana={id:'ventana2535',beforeDatasetsDraw(ch){
+    const {ctx:c,scales:{x,y}}=ch; const x0=x.getPixelForValue(edades.indexOf(25)), x1=x.getPixelForValue(edades.indexOf(35));
+    c.save(); c.setLineDash([4,4]); c.strokeStyle=g; c.lineWidth=1.2; c.strokeRect(x0,y.top,x1-x0,y.bottom-y.top);
+    c.setLineDash([]); c.fillStyle=g; c.font='700 10px Inter, sans-serif'; c.textAlign='center'; c.fillText('DE LOS 25 A LOS 35',(x0+x1)/2,y.top+14); c.restore();
+  }};
+  const linea=(data,color,fillTarget,fillColor)=>({data,borderColor:color,borderWidth:1.6,pointRadius:0,tension:0,fill:fillTarget,backgroundColor:fillColor,order:5});
+  chIMC=new Chart(ctx,{type:'line',data:{labels:edades,datasets:[
+    Object.assign(linea(edades.map(()=>32),'transparent','+1',tinte(r,.1)),{borderWidth:0}),
+    linea(serie('obes'),r,'+1',tinte(w,.12)),
+    linea(serie('sobre'),w,'+1',tinte(g,.14)),
+    linea(serie('bajo'),b,'origin',tinte(b,.1)),
+    {label:'Meta',data:punto(imcMeta||null),showLine:false,pointRadius:7,pointHoverRadius:8,pointBackgroundColor:'transparent',pointBorderColor:w,pointBorderWidth:2,order:1},
+    {label:'Tú',data:punto(imc||null),showLine:false,pointRadius:7.5,pointHoverRadius:9,pointBackgroundColor:g,pointBorderColor:cssVar('--surface-2'),pointBorderWidth:2,order:0}
+  ]},plugins:[ventana],options:{responsive:true,maintainAspectRatio:false,animation:false,interaction:{mode:'nearest',intersect:true},
+    plugins:{legend:{display:false},tooltip:{filter:i=>i.datasetIndex>=4,callbacks:{title:i=>`${i[0].label} años`,label:i=>i.dataset.label==='Tú'?` Tú · IMC ${imc} · ${peso} kg`:` Meta · IMC ${imcMeta} · ${meta} kg`}}},
+    scales:{y:{min:14,max:32,grid:{color:`rgba(${ov},.06)`},ticks:{color:t3,stepSize:2}},
+      x:{grid:{display:false},ticks:{color:t3,callback:(v,i)=>edades[i]%5===0?edades[i]:'',maxRotation:0,autoSkip:false},title:{display:true,text:'EDAD (AÑOS)',color:t3,font:{size:10,weight:'700'}}}}}});
+  // Etiquetas de las franjas y de tus puntos, pintadas encima (Chart.js no rotula franjas).
+  const rotulos={id:'rotulosImc',afterDatasetsDraw(ch){
+    const {ctx:c,scales:{x,y},chartArea:{left,right}}=ch; const estrecha=(right-left)<520;   // móvil: rótulos a la izquierda del punto
+    c.save(); c.font='700 10px Inter, sans-serif'; c.textAlign='right';
+    [['OBESIDAD · 30',30.6,r],['SOBREPESO · 25',25.6,w],['SANO · 18.5 – 24.9',21.9,g],['BAJO PESO',17.5,b]].forEach(([l,v,col])=>{ c.fillStyle=col; c.fillText(l,right-6,y.getPixelForValue(v)+4); });
+    if(!estrecha){ c.fillStyle=t3; c.font='500 9.5px Inter, sans-serif'; c.textAlign='left'; c.fillText('15–19: referencia OMS por edad (varones, aprox.)',x.getPixelForValue(0)+4,y.getPixelForValue(31.4)); }
+    if(imc&&edades.includes(edad)){ const px=x.getPixelForValue(edades.indexOf(edad)); const tx=estrecha?px-12:px+12; c.textAlign=estrecha?'right':'left';
+      c.fillStyle=cssVar('--text'); c.font='800 11.5px Inter, sans-serif'; c.fillText(`Tú · ${edad} años · IMC ${imc}`,tx,y.getPixelForValue(imc)+16);
+      if(imcMeta){ c.fillStyle=w; c.font='700 11px Inter, sans-serif'; c.fillText(`Meta ${meta} kg · IMC ${imcMeta}`,tx,y.getPixelForValue(imcMeta)-8); } }
+    c.restore();
+  }};
+  chIMC.config.plugins.push(rotulos); chIMC.update();
+}
+
 function renderMedidas() {
   const list=[...S.medidas].sort((a,b)=>b.fecha.localeCompare(a.fecha));
   // Una linea con uno o dos puntos es peor que ninguna linea: hasta el tercer pesaje se
@@ -1118,6 +1248,7 @@ function renderMedidas() {
       <div class="card-sub">${ultima?'Último: '+fmtD(ultima.fecha):'Sin registros'}</div>
     </div>`;
 
+  renderIMCEdad();   // no necesita tres pesajes: con la altura y el último peso ya hay punto
   const empty=document.getElementById('med-empty');
   const tbody=document.getElementById('med-body');
   if(!list.length){tbody.innerHTML='';empty.style.display='';chPeso=killChart(chPeso);chComp=killChart(chComp);return;}

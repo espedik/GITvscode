@@ -90,6 +90,7 @@ desde JS. En consola, `CIFRAS.tabla()` las lista con su valor actual.
 | Marcador | Valor hoy | Se nombraba a mano en |
 |---|---|---|
 | `{{nombre}}` | Adán | — |
+| `PROYECTO.nacimiento` | 1995-07-01 | La edad del Dashboard (Tu año) y de Salud (IMC por edad) sale de aquí |
 | `{{empleador}}` | ALTEN | 5 apps, 78 veces |
 | `{{auto}}` | BYD Dolphin Mini | 3 apps |
 | `{{broker}}` | GBM | 3 apps, 103 veces |
@@ -757,6 +758,7 @@ Ya no queda ninguna estructura copiada entre archivos. Las siete viven aquí:
 | `GASTOS_20260901` | Las seis compras del 1-sep-2026 — las siembra Finanzas.html y las aplica la migración `_gastos20260901` | `CIFRAS.GASTOS_20260901` |
 | `RUTINA_TASKS` | 58 bloques del horario | `CIFRAS.rutina(base)` |
 | `SK` | 12 habilidades del radar | `CIFRAS.SK` |
+| `PESO` | Altura (178 cm), meta (80 kg), objetivo y el histórico de pesajes (2: 75 kg el 2-sep-2026, 78 el 13-sep) con IMC derivado. Salud lo siembra en Peso & Medidas en cada carga | `CIFRAS.PESO` |
 | `PHASES` | 4 fases del Plan Maestro | `CIFRAS.PHASES` |
 | `APRENDIZAJE` | 6 prioridades de aprendizaje | `CIFRAS.APRENDIZAJE` |
 | `LISTA_COMPRAS` | Catálogo de compras por pasillos — 7 categorías; `comida` en 7 pasillos, con `Verduras` / `Frutas` / `Almidones y grasas` separados para medir la proporción del canasto | `CIFRAS.LISTA_COMPRAS` |

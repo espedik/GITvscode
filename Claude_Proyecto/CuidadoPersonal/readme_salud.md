@@ -63,7 +63,7 @@ para bien.
 ## Navegación (sidebar propio de este archivo)
 
 - **📊 Dashboard** — **rediseñado el 2026-08-02** (ver abajo): ya no muestra calorías/macros/comidas de hoy (eso vive en Comida). Ahora resume lo que Salud sí administra: peso actual (con tendencia vs. el registro anterior), vasos de agua, pausas activas de hoy, suplementos tomados hoy, próxima cita médica, y un mini-resumen de bienestar (ánimo de hoy + dolor/molestia reciente). Incluye un banner fijo arriba con link directo a `comida.html` para lo de nutrición.
-- **⚖️ Peso & Medidas** — registro de peso corporal, % de grasa corporal y medidas (cintura, cadera, pecho, brazo, muslo) con cálculo automático de IMC y de masa magra estimada, gráfica de evolución del peso y una segunda gráfica de composición corporal (cintura/brazo/muslo/% grasa). Ampliada el 2026-07-30 — ver detalle abajo.
+- **⚖️ Peso & Medidas** — cuatro KPI (peso actual, IMC, % grasa, meta), la gráfica **IMC por edad** con tu punto y tu meta (ver sección propia), la franja "De los 25 a los 35", y el registro de peso corporal, % de grasa y medidas (cintura, cadera, pecho, brazo, muslo) con IMC y masa magra estimada, gráfica de evolución del peso y una segunda de composición corporal (cintura/brazo/muslo/% grasa). Los pesajes vienen del maestro (`CIFRAS.PESO`).
 - **🫁 Salud Digestiva** — contenido de referencia sobre reflujo/agruras: síntomas, alimentos a evitar y recomendados (con la razón fisiológica de cada uno), remedios caseros paso a paso, un plan diario hora por hora, hábitos recomendados, y señales de alerta que ameritan ver a un médico. Se quedó aquí (y no se movió a Comida) porque es guía médica de referencia, no un tracker de alimentos — aunque sí informa qué recetas se eligieron en `comida.html`.
 - **🩺 Exámenes Médicos** — registro de exámenes de laboratorio y signos vitales con rangos de referencia, chequeos/consultas por especialidad, y un perfil médico general. Responde a "necesito saber todo de mí y cómo estoy" en un solo lugar.
 - **🧍 Postura** (nuevo, 2026-07-30 — ver detalle abajo) — ejercicios correctivos, registro de dolor/molestias, contador de pausas activas y tips de ergonomía de escritorio.
@@ -146,7 +146,7 @@ Los tres cierran con la misma convención visual que Salud Digestiva/Exámenes: 
 ## Funcionalidad clave
 
 - **CRUD** de medidas, exámenes médicos, chequeos, dolor/molestias de postura, registros de ánimo/estrés y suplementos — todos con modales y confirmación antes de eliminar (`askDel()`/`doConf()`/`closeConf()`, compartido).
-- **Cálculo de IMC y composición corporal**: `calcIMC()`/`imcLabel()` calculan y clasifican el IMC; `renderMedidas()` también estima la masa magra (`peso*(1-grasa/100)`) cuando hay dato de % de grasa corporal.
+- **Cálculo de IMC y composición corporal**: `calcIMC()`/`imcLabel()` calculan y clasifican el IMC; `renderIMCEdad()` pinta la gráfica de IMC por edad (abajo); `renderMedidas()` también estima la masa magra (`peso*(1-grasa/100)`) cuando hay dato de % de grasa corporal.
 - **Contador de agua**: `toggleVaso()`/`resetAgua()` llevan el conteo de vasos de agua del día.
 - **Contadores diarios reseteables por fecha**: mismo patrón usado tres veces en el archivo — `agua` (por vaso), `postura.pausas` (por pausa activa) y `suplementos.tomado` (por suplemento) — todos son objetos `{ 'YYYY-MM-DD': ... }`, se "reinician" solos cada día porque la clave es la fecha de hoy, no requieren limpieza manual.
 - **Catálogo de exámenes** (`EXAM_CATALOG`, `CHEQ_TIPOS`, `CAT_OTRO`): ~24 marcadores de laboratorio con rango de referencia general por adulto, más la opción de examen personalizado. `examStatusInfo(e)` clasifica cualquier registro en Normal/Alto/Bajo/Sin rango.
@@ -272,10 +272,17 @@ const PESO = {
   alturaCm: 178,
   metaKg:   80,                                  // "es subir a 80 kg"
   objetivo: 'Ganar masa muscular y bajar panza',
-  registros: [ { fecha:'2026-09-02', kg:75, nota:'…' } ],   // cintura/brazo/muslo/grasa opcionales
+  registros: [ { fecha:'2026-09-02', kg:75, nota:'…' },      // cintura/brazo/muslo/grasa opcionales
+               { fecha:'2026-09-13', kg:78, nota:'…' } ],
   // ultimo, actualKg, inicioKg, faltanKg, imc, cinturaUltima — todos derivados
 };
 ```
+
+Ojo con un hueco que hubo: este bloque estuvo documentado aquí desde el 2-sep pero **nunca llegó a
+`datos-maestros.js`** — la app caía a su respaldo y enseñaba "configura tu meta". Entró al maestro
+el 2026-09-13 junto con el segundo pesaje (78 kg) y `PROYECTO.nacimiento`, de donde salud y el
+Dashboard sacan la edad. Si el verificador o la app vuelven a decir que no hay `CIFRAS.PESO`, el
+problema es el maestro, no este archivo.
 
 **Cómo se conectan las dos verdades.** `init()` siembra `PESO.registros` en `S.medidas` en **cada
 carga**, no una sola vez con bandera como los suplementos: así un navegador nuevo, o uno al que le
@@ -304,3 +311,38 @@ caso que antes perdía todo): el pesaje aparece solo, la tarjeta muestra 75 kg c
 (luego revertidos) aparecen las dos gráficas — evolución del peso y cintura —, la barra
 inicio → meta y el "↑ +0.7 kg vs anterior". Cero mensajes de consola en las tres pantallas, y
 `dashboard.html` sigue cargando limpio.
+
+## IMC por edad — dónde estás y a dónde vas (2026-09-13)
+
+Adán: *"una gráfica entera de índice de masa [...] de diferentes edades, a partir de 15 [...]
+ponme estadísticas desde los 25 hasta los 35, cuánto debería tener, cuánto tengo, cuál es mi meta,
+también del peso [...] actualmente mido 1.78 y peso 78 kg"*. Lo que se mide con peso y altura es el
+IMC (kg ÷ m²), y eso es lo que pinta la tarjeta `#med-imc` — la primera de Peso & Medidas, bajo los
+KPI — seguida de `#med-edad`. Diseño elegido en [`diseno-imc/`](diseno-imc/) (Main; B y C fueron las
+otras dos direcciones).
+
+**La gráfica** (`renderIMCEdad()`, Chart.js, 340 px de alto, sin animación): edades 15–40 en el eje X,
+IMC 14–32 en el Y, y cuatro franjas rellenas entre los cortes de la OMS — bajo peso (< 18.5, azul),
+sano (18.5–24.9, verde), sobrepeso (25–29.9, ámbar), obesidad (≥ 30, rojo). De 20 en adelante los
+cortes son horizontales porque **la OMS los lee igual de los 20 a los 65**; de 15 a 19 siguen la
+referencia por edad (varones, 2007, redondeada — `IMC_15_19`), por eso suben hasta encontrarse con
+los adultos. Encima: la ventana **25–35** en trazo discontinuo verde (plugin `ventana`), tu punto
+relleno en tu edad de hoy (`edadHoy()` desde `CIFRAS.PROYECTO.nacimiento`), la meta como aro ámbar
+en la misma columna, y los rótulos de franja y de puntos (plugin `rotulos`; en gráficas de menos de
+520 px de ancho los rótulos van a la izquierda del punto y la nota "15–19" no se pinta). El tooltip
+solo sale sobre los dos puntos.
+
+**Las cuatro cifras** a la derecha (`.imc-stats`, columna de 340 px; bajo 1100 px pasa debajo): rango
+sano en kilos a tu altura (18.5·m² – 24.9·m², con el centro IMC 22), cuánto tienes (IMC y kg del
+último pesaje, con su clasificación y a cuánto del tope), tu meta (IMC de `metaKg` y si queda
+dentro, por debajo o por encima de la tabla y por cuántos kilos) y la cintura que te dice si vas bien
+(mitad de la altura; muestra la última anotada o pide que se mida). La franja **"De los 25 a los 35"**
+(`.imc-edad`) responde lo que se pidió con la verdad: el rango no cambia con la edad, lo que cambia
+es el músculo que se pierde desde los 30 sin fuerza (3–8 % por década) y la grasa que se va al
+abdomen — por eso se pesa y se mide.
+
+**Con los datos de hoy**: 1.78 m → sano de **58.6 a 78.9 kg**; 78 kg → **IMC 24.6**, normal a 0.3
+del tope; la meta de 80 kg → **IMC 25.2**, 1.1 kg por encima de la tabla (válido si es músculo, y
+eso lo dice la cintura, no la báscula); cintura objetivo **< 89 cm**. Medido en Chromium `file://`
+a 1600 (claro y oscuro) y 390 px: gráfica de 911 × 340 y 308 × 340, documento sin desbordar
+(`scrollWidth` = viewport) y cero errores de consola.

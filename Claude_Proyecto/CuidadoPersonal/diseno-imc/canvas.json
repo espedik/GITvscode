@@ -1,0 +1,61 @@
+{
+  "artboards": [
+    {
+      "file": "Main.dc.html",
+      "x": 0,
+      "y": 0,
+      "w": 1600,
+      "h": 1000,
+      "title": "IMC por edad — gráfica y cifras (propuesta)"
+    },
+    {
+      "file": "DireccionB.dc.html",
+      "x": 1720,
+      "y": 0,
+      "w": 1600,
+      "h": 1000,
+      "title": "Dirección B — dos gráficas: IMC y kilos"
+    },
+    {
+      "file": "DireccionC.dc.html",
+      "x": 0,
+      "y": 1220,
+      "w": 1600,
+      "h": 1000,
+      "title": "Dirección C — la regla y la tabla por edad"
+    }
+  ],
+  "annotations": [
+    {
+      "id": "nota-dato",
+      "x": 0,
+      "y": -280,
+      "w": 600,
+      "text": "Lo que se pidió: «una gráfica entera de índice de masa […] de diferentes edades a partir de 15, […] de los 25 a los 35, cuánto debería tener, cuánto tengo, cuál es mi meta, también del peso». Lo que se mide con peso y altura es el IMC (índice de masa corporal): 78 kg a 1.78 m = 24.6. Datos: OMS (adultos 18.5–24.9; 15–19 por edad, referencia 2007 para varones, aproximada). Un hallazgo honesto: la tabla NO cambia entre los 20 y los 65, así que «cuánto deberías tener a los 25, 30 y 35» es el mismo rango; lo que cambia con la edad es el músculo y la cintura, y eso es lo que la franja de abajo cuenta."
+    },
+    {
+      "id": "nota-main",
+      "x": 640,
+      "y": -280,
+      "w": 620,
+      "text": "Propuesta: una gráfica ancha IMC × edad (15–40) con las cuatro franjas de la OMS, la ventana 25–35 marcada, tu punto (31 años, 24.6) y tu meta (80 kg → 25.2, que sale 1.1 kg por encima de la tabla: si es músculo no importa, y por eso el panel pide la cintura, < 89 cm). A la derecha, las cuatro cifras: rango sano en kilos a tu altura, tienes, meta, cintura. Debajo, la franja «de los 25 a los 35» dice lo que sí cambia con la edad. Va en Peso & Medidas de salud.html, bajo los KPI; el objetivo de peso (80) y los pesajes se leen del maestro (PESO en datos-maestros.js), que hoy no llegaba a la app."
+    },
+    {
+      "id": "nota-b",
+      "x": 1720,
+      "y": -160,
+      "w": 600,
+      "text": "Dirección B — dos gráficas: la misma de IMC y, al lado, la de kilos por edad a tu altura (la franja sana convertida a 58.6–78.9 kg), con las cifras en cuatro tarjetas. A favor: se lee en kilos, que es como uno se pesa. En contra: son dos gráficas que dicen lo mismo con otra escala, y cada una queda más chica."
+    },
+    {
+      "id": "nota-c",
+      "x": 0,
+      "y": 1040,
+      "w": 600,
+      "text": "Dirección C — la regla vertical del IMC con tu punto y tu meta, y una tabla por edad (15–19, 25, 30, 35). A favor: la tabla responde literalmente «cuánto debería tener a cada edad». En contra: tres filas repiten el mismo rango, y se pierde la lectura de tendencia que da la gráfica."
+    }
+  ],
+  "launch": {
+    "view": "canvas"
+  }
+}

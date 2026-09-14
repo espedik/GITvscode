@@ -609,6 +609,36 @@ const DOCS_DEUDA = ['Dashboard/DATOS-MAESTROS.md', 'Dashboard/readme_dashboard.m
     SU.delMomento('pm').length + ' PM, $' + SU.costoMesTotal + ' al mes, ' + C.CHEQUEO.examenes.length + ' exámenes)');
 })();
 
+/* ── El peso: lo que salud.html lee del maestro tiene que existir ────────────────────────────
+   `PESO` estuvo documentado en readme_salud.md y en DATOS-MAESTROS.md del 2 al 13 de sep de 2026
+   sin haber llegado nunca a datos-maestros.js: la app caía a su respaldo y enseñaba "configura tu
+   meta" mientras los .md juraban lo contrario. Este control lee del HTML qué campos de CIFRAS.PESO
+   usa salud.html y exige que el maestro los tenga, con la forma que la app espera. */
+(function pesoEnElMaestro() {
+  if (!global.window || !global.window.CIFRAS) return;
+  const C = global.window.CIFRAS, PE = C.PESO;
+  const html = leer('CuidadoPersonal/salud.html');
+  if (!html) return;
+  const usados = {};
+  // salud.html lo lee directo (CIFRAS.PESO.x) y con el alias `const MP=CIFRAS.PESO` de init().
+  html.replace(/CIFRAS\.PESO\.([A-Za-z]+)|\bMP\.([A-Za-z]+)/g, function (_, a, b) { usados[a || b] = true; return _; });
+  const malos = [];
+  if (!PE) malos.push('     CIFRAS.PESO no existe — salud.html lo pide (' + Object.keys(usados).join(', ') + ')');
+  else {
+    Object.keys(usados).forEach(function (k) { if (!(k in PE)) malos.push('     salud.html lee CIFRAS.PESO.' + k + ' y el maestro no lo tiene'); });
+    if (!(PE.alturaCm > 100)) malos.push('     PESO.alturaCm tiene que ir en centímetros (' + PE.alturaCm + ')');
+    if (!(PE.metaKg > 0)) malos.push('     PESO.metaKg vacío');
+    if (!Array.isArray(PE.registros) || !PE.registros.length) malos.push('     PESO.registros sin pesajes');
+    else PE.registros.forEach(function (r) {
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(r.fecha || '') || !(r.kg > 0)) malos.push('     Pesaje sin fecha ISO o sin kg: ' + JSON.stringify(r));
+    });
+    if (!(C.PROYECTO && /^\d{4}-\d{2}-\d{2}$/.test(C.PROYECTO.nacimiento || ''))) malos.push('     PROYECTO.nacimiento falta o no es ISO — de ahí sale la edad del IMC por edad');
+  }
+  if (malos.length) problemas.push('El peso que salud.html espera no está en el maestro:\n' + malos.join('\n'));
+  else ok.push('PESO en el maestro (' + PE.registros.length + ' pesajes, último ' + PE.actualKg + ' kg → IMC ' + PE.imc +
+    ', meta ' + PE.metaKg + ' kg, ' + Object.keys(usados).length + ' campos que lee salud.html)');
+})();
+
 /* ── Impacto de lo que cambió en esta sesión ──────────────────────────────────────────────────
    Si `datos-maestros.js` cambió respecto al último commit, se comparan los valores de entonces
    con los de ahora y se dice qué se movió — incluido lo ARRASTRADO. Es la parte que Adán

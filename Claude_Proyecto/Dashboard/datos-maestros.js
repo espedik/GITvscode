@@ -60,6 +60,7 @@ window.CIFRAS = (function () {
   const PROYECTO = {
     // ── Quién es ── (ALTEN salía 78 veces repartidas en 5 apps)
     nombre:      'Adán',
+    nacimiento:  '1995-07-01',   // el Dashboard (Tu año) y Salud (IMC por edad) sacan la edad de aquí
     empleador:   'ALTEN',
     puesto:      'Ingeniero de pruebas — automotriz (ADAS)',
     ciudad:      'CDMX',
@@ -1152,6 +1153,32 @@ window.CIFRAS = (function () {
         aviso:'Reglas con las que se lee tu PSA a partir de ahora: <b>di siempre que tomas dutasterida</b> a quien lo interprete, y <b>multiplica el resultado por 2</b> para compararlo con los rangos normales. Si no te hiciste una medición antes de empezar, pide una ahora: sirve de línea base, y lo que importa a partir de aquí no es el número suelto sino que <b>suba</b> respecto a ella.' }
     ],
     get enAyuno() { return this.examenes.filter(function (e) { return e.ayuno; }); },
+  };
+
+  // ── EL PESO ─────────────────────────────────────────────────
+  // El histórico de pesajes vive aquí y no en el navegador. Adán, 2026-09-02: "no te los daré
+  // cada mes, te los daré cada que me acuerde y anotamos la fecha, además no quiero que esos
+  // registros se pierdan, entonces los anotas en variables maestras". salud.html siembra
+  // `registros` en su tabla de Peso & Medidas en cada carga (maestro → app, nunca al revés) y
+  // toma de aquí la altura y la meta. `fecha` y `kg` obligatorios; cintura, brazo, muslo y grasa
+  // opcionales — la cintura es la que dice si un kilo fue músculo o panza, así que se pide.
+  // (Este bloque estaba documentado en readme_salud.md desde el 2-sep pero nunca llegó al
+  // archivo: la app caía a su respaldo y enseñaba "configura tu meta". Entró el 13-sep-2026.)
+  const PESO = {
+    alturaCm: 178,
+    metaKg:   80,                          // acordado el 2026-09-02, partiendo de 75 kg
+    objetivo: 'Ganar masa muscular y bajar panza',
+    registros: [
+      { fecha: '2026-09-02', kg: 75, nota: 'Punto de partida al fijar la meta de 80 kg' },
+      { fecha: '2026-09-13', kg: 78, nota: 'Dicho al pedir la gráfica de IMC por edad' },
+    ],
+    get ultimo()  { const r = this.registros.slice().sort(function (a, b) { return a.fecha < b.fecha ? 1 : -1; }); return r[0] || null; },
+    get actualKg() { return this.ultimo ? this.ultimo.kg : 0; },
+    get inicioKg() { const r = this.registros.slice().sort(function (a, b) { return a.fecha > b.fecha ? 1 : -1; }); return r[0] ? r[0].kg : 0; },
+    get faltanKg() { return this.actualKg ? Math.round((this.metaKg - this.actualKg) * 10) / 10 : 0; },
+    // IMC = kg / m². La OMS lo lee igual de los 20 a los 65: sano de 18.5 a 24.9.
+    get imc()      { const m = this.alturaCm / 100; return this.actualKg ? Math.round(this.actualKg / (m * m) * 10) / 10 : 0; },
+    get cinturaUltima() { const r = this.registros.filter(function (x) { return x.cintura; }).sort(function (a, b) { return a.fecha < b.fecha ? 1 : -1; }); return r[0] || null; },
   };
 
   // ─── El recetario ──────────────────────────────────────────────────────────
@@ -3311,6 +3338,7 @@ window.CIFRAS = (function () {
     RECETARIO: RECETARIO,
     SUPLEMENTOS: SUPLEMENTOS,
     CHEQUEO: CHEQUEO,
+    PESO: PESO,
     PROYECTO: PROYECTO,
     CALENDARIO: CALENDARIO,
     get datos() { return fin; }
