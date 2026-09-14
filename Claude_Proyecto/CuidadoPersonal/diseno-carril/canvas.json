@@ -1,0 +1,97 @@
+{
+  "pages": [
+    {
+      "id": "page-1",
+      "name": "Elegida — C"
+    },
+    {
+      "id": "page-2",
+      "name": "Descartadas — A y B"
+    }
+  ],
+  "artboards": [
+    {
+      "file": "Main.dc.html",
+      "title": "Main — carril mínimo (Salud, oscuro)",
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "page": "page-1"
+    },
+    {
+      "file": "MainComida.dc.html",
+      "title": "Main — el mismo carril en Comida (claro)",
+      "x": 1540,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "page": "page-1"
+    },
+    {
+      "file": "MainMovil.dc.html",
+      "title": "Main — en el teléfono",
+      "x": 3080,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "page": "page-1"
+    },
+    {
+      "file": "DireccionA.dc.html",
+      "title": "Dirección A — carril con nombres y grupos",
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "page": "page-2"
+    },
+    {
+      "file": "DireccionB.dc.html",
+      "title": "Dirección B — todo lateral, sin barra superior",
+      "x": 1540,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "page": "page-2"
+    }
+  ],
+  "annotations": [
+    {
+      "id": "brief",
+      "x": 0,
+      "y": -190,
+      "w": 600,
+      "page": "page-1",
+      "text": "Pedido: \"la barra de mi salud y nutrición se confunde con la barra superior; mejor hazla lateral pero arregla esos menús, puedes reducirlo\". Adán eligió la C.\nAntes el shell apilaba dos barras horizontales de píldoras: 8 áreas (56 px) y las secciones del área (46 px). Se leían igual.\nAhora: la barra de áreas se queda arriba; las secciones son un carril de 80 px a la izquierda, icono de trazo y nombre debajo, un filete entre grupos y el nombre del área en su color. Nombres cortos en Salud: Hoy, Peso y medidas, Digestión, Exámenes, Postura, Mente, Suplementos, Perfil y metas. Implementado en cuidadopersonal.html el 2026-09-14."
+    },
+    {
+      "id": "nota-movil",
+      "x": 3080,
+      "y": -110,
+      "w": 390,
+      "page": "page-1",
+      "text": "Bajo 900 px el carril no cabe: las secciones pasan a una tira con scroll bajo la barra, con el nombre del área como ancla a la izquierda."
+    },
+    {
+      "id": "nota-a",
+      "x": 0,
+      "y": -120,
+      "w": 460,
+      "page": "page-2",
+      "text": "A — Carril de 232 px con nombre completo, rótulos de grupo y botón para plegarlo. Descartada: Adán prefirió el mínimo."
+    },
+    {
+      "id": "nota-b",
+      "x": 1540,
+      "y": -120,
+      "w": 460,
+      "page": "page-2",
+      "text": "B — Todo lateral: desaparece la barra superior; las 8 áreas son una columna de iconos y al lado el carril. Ganaba 56 px de alto; perdía el nombre de cada área."
+    }
+  ],
+  "launch": {
+    "view": "canvas",
+    "page": "page-1"
+  }
+}

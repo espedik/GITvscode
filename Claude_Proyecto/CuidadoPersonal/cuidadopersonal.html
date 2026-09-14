@@ -56,7 +56,11 @@
 }
 html,body{height:100%}
 body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);font-size:14px;
-  display:flex;flex-direction:column;overflow:hidden}
+  /* Rejilla (2026-09-14): la barra de áreas cruza arriba; debajo, el carril de secciones a la
+     izquierda y la vista activa a la derecha. Todas las .view comparten la misma celda — solo
+     una está visible — y así no hubo que mover el HTML de las ocho áreas. */
+  display:grid;grid-template-columns:auto minmax(0,1fr);grid-template-rows:56px minmax(0,1fr);overflow:hidden}
+.topnav{grid-column:1/-1}
 ::-webkit-scrollbar{width:4px;height:4px}
 ::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:rgba(var(--ov),.12);border-radius:2px}
@@ -126,19 +130,13 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var
 }
 
 /* VIEWS */
-.view{flex:1;min-height:0;display:none}
+.view{grid-row:2;grid-column:2;min-height:0;display:none}
 .view.active{display:block}
 .view-native.active{overflow-y:auto;padding:22px}
 .view-frame{overflow:hidden}
 .view-frame.active{display:flex;flex-direction:column}
 .view-frame iframe{flex:1;width:100%;border:0;display:block;background:var(--bg)}
 
-/* SUBNAV */
-.subnav{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
-.subnav-btn{padding:7px 14px;border-radius:var(--rs);border:1px solid rgba(var(--ov),.08);background:rgba(var(--ov),.03);
-  color:var(--text2);font-weight:600;font-size:12px;cursor:pointer;transition:all .2s;font-family:inherit}
-.subnav-btn:hover{background:rgba(var(--ov),.07);color:var(--text)}
-.subnav-btn.active{background:var(--acc-l);color:var(--acc);border-color:var(--acc)}
 
 /* CARDS */
 .card{background:var(--surface-2);border:1px solid rgba(var(--ov),.07);border-radius:var(--r14);padding:18px;
@@ -907,27 +905,41 @@ body::before{content:'';position:fixed;inset:0 0 auto 0;height:280px;pointer-eve
 .tab-btn.active::after{content:'';position:absolute;left:12px;right:12px;bottom:-14px;height:2px;
   border-radius:2px;background:currentColor;box-shadow:0 0 12px currentColor}
 
-/* BARRA 2 — las secciones de la app activa, donde vivia su carril */
-.subnav{flex:none;display:flex;align-items:center;flex-wrap:nowrap;gap:5px;padding:0 20px;height:46px;
-  background:rgba(var(--ov),.035);backdrop-filter:blur(18px) saturate(140%);
-  -webkit-backdrop-filter:blur(18px) saturate(140%);
-  border-bottom:1px solid var(--brv2);position:relative;z-index:99;overflow-x:auto;
-  scrollbar-width:none}
-.subnav::-webkit-scrollbar{display:none}
+/* ══ EL CARRIL — las secciones del área activa, a la izquierda (2026-09-14) ═══
+   Hasta el 13-sep eran una SEGUNDA barra horizontal de píldoras (46 px) bajo la de áreas, y las
+   dos se leían igual. Adán: "se confunden con los de la barra superior, mejor hazla lateral
+   pero arregla esos menús, puedes reducirlo si gustas". De tres direcciones dibujadas en
+   diseno-carril/ eligió la C: un carril mínimo de 80 px, icono de trazo y el nombre debajo, sin
+   rótulos de grupo (entre grupos queda un filete). Bajo 900 px vuelve a ser una tira bajo la
+   barra, pero con icono y anclada al nombre del área en su color. */
+.carril{grid-row:2;grid-column:1;width:80px;display:flex;flex-direction:column;align-items:center;gap:3px;
+  padding:12px 8px;background:rgba(var(--ov),.028);backdrop-filter:blur(18px) saturate(140%);
+  -webkit-backdrop-filter:blur(18px) saturate(140%);border-right:1px solid var(--brv2);
+  position:relative;z-index:99;overflow-y:auto;overflow-x:hidden;scrollbar-width:none}
+.carril::-webkit-scrollbar{display:none}
+.carril.vacia{display:none}
+.cr-area{display:flex;flex-direction:column;align-items:center;gap:6px;font-size:8px;font-weight:800;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--sn-c);padding:2px 0 10px;flex:none;max-width:100%}
+/* El nombre en bloque, con elipsis: "VESTIMENTA" a 8 px son 62 px, justo en los 64 del carril. */
+.cr-area span{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cr-area i{width:6px;height:6px;border-radius:50%;background:var(--sn-c);box-shadow:0 0 10px var(--sn-c);flex:none}
+.cr-sep{width:36px;height:1px;background:var(--brv2);margin:5px 0;flex:none}
+.cr-b{display:flex;flex-direction:column;align-items:center;gap:5px;width:64px;padding:9px 2px;border-radius:11px;
+  border:1px solid transparent;background:transparent;color:var(--text2);font-weight:600;font-size:9px;
+  letter-spacing:.01em;line-height:1.15;text-align:center;cursor:pointer;font-family:inherit;flex:none;
+  transition:background .15s,color .15s,border-color .15s}
+.cr-b:hover{background:rgba(var(--ov),.055);color:var(--text)}
+.cr-b.on{background:var(--sn-l);border-color:var(--sn-br);color:var(--sn-c);font-weight:800}
+.cr-b svg{width:18px;height:18px;flex:none;stroke:currentColor;fill:none;stroke-width:1.7;
+  stroke-linecap:round;stroke-linejoin:round;opacity:.8}
+.cr-b.on svg{opacity:1}
+.cr-b svg text{fill:currentColor;stroke:none;font-size:11px;font-weight:800;font-family:'Inter',sans-serif}
+.cr-b .txt{max-width:60px;overflow-wrap:anywhere;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
 /* Cuando la tira de areas no cabe, este velo avisa de que sigue por debajo de
    los botones de la derecha, en vez de dejar un nombre cortado a medias. */
 .topnav::after{content:'';position:absolute;right:84px;top:1px;bottom:1px;width:34px;
   pointer-events:none;z-index:1;background:linear-gradient(90deg,transparent,var(--bg))}
 @media(min-width:1180px){.topnav::after{display:none}}
-.subnav.vacia{display:none}
-.sn-t{font-size:14.5px;font-weight:800;letter-spacing:-.018em;margin-right:14px;flex:none;
-  font-family:'Space Grotesk','Inter',sans-serif;color:var(--text)}
-.sn-b{padding:6px 13px;border-radius:9px;font-size:11.5px;font-weight:700;color:var(--text2);
-  border:1px solid transparent;cursor:pointer;background:transparent;font-family:inherit;
-  white-space:nowrap;flex:none;transition:background .15s,color .15s}
-.sn-b:hover{background:rgba(var(--ov),.055);color:var(--text2)}
-.sn-b.on{background:var(--sn-l);border-color:var(--sn-br);color:var(--sn-c)}
-.sn-d{margin-left:auto;display:flex;gap:7px;align-items:center;flex:none;padding-left:14px}
 
 .theme-toggle-btn{width:31px;height:31px;border-radius:10px;border:1px solid var(--brv);
   background:var(--v3);display:flex;align-items:center;justify-content:center;flex:none}
@@ -939,13 +951,22 @@ body::before{content:'';position:fixed;inset:0 0 auto 0;height:280px;pointer-eve
   .topnav{padding:0 12px;gap:8px}
   .brand span{display:none}
   .brand{padding-right:10px;margin-right:0}
-  .subnav{padding:0 12px}
-  .sn-t{font-size:13px;margin-right:8px}
+  /* El carril no cabe al lado: pasa a una tira con scroll bajo la barra, el nombre del área
+     como ancla a la izquierda y las secciones en línea con su icono. */
+  body{grid-template-columns:minmax(0,1fr);grid-template-rows:56px auto minmax(0,1fr)}
+  .view{grid-row:3;grid-column:1}
+  .carril{width:auto;flex-direction:row;align-items:center;gap:4px;padding:8px 12px;overflow-x:auto;overflow-y:hidden;
+    border-right:0;border-bottom:1px solid var(--brv2)}
+  .cr-area{flex-direction:row;font-size:10px;letter-spacing:.14em;padding:0 10px 0 0;margin-right:4px;border-right:1px solid var(--brv2)}
+  .cr-sep{width:1px;height:18px;margin:0 3px}
+  .cr-b{flex-direction:row;width:auto;gap:7px;padding:7px 11px;border-radius:9px;font-size:12px;white-space:nowrap}
+  .cr-b svg{width:14px;height:14px}
+  .cr-b .txt{max-width:none;display:block}
 }
 
-/* El carril de las guias (Dentista y Ojos) sube a la barra de secciones del
-   shell. Se deja en el DOM porque es quien tiene la logica de mostrar cada
-   sección — la barra pulsa sus botones — pero deja de ocupar 216px. */
+/* El menu propio de las guias (Dentista y Ojos) sube al carril del shell. Se
+   deja en el DOM porque es quien tiene la logica de mostrar cada sección — el
+   carril pulsa sus botones — pero deja de ocupar 216px. */
 .guia-nav{display:none}
 </style>
 <!-- El material comun de las 8 areas: velos de blanco con desenfoque.
@@ -983,9 +1004,10 @@ body::before{content:'';position:fixed;inset:0 0 auto 0;height:280px;pointer-eve
   <a href="../Dashboard/dashboard.html" class="theme-toggle-btn" id="btnVolverDash" title="Volver al Dashboard" aria-label="Volver al Dashboard" style="text-decoration:none">🚀</a>
   <button class="theme-toggle-btn" id="theme-toggle-btn" onclick="toggleTheme()" title="Cambiar tema claro/oscuro" aria-label="Cambiar tema claro/oscuro">🌙</button>
 </header>
-<!-- Las secciones de la app activa. Se llena desde su carril: en las nativas con
-     SUBNAV_NATIVAS, y en las de iframe con lo que la app manda por postMessage. -->
-<nav class="subnav vacia" id="subnav"></nav>
+<!-- El carril: las secciones del área activa. Se llena desde el menú de cada app — en las
+     guías nativas (Dentista, Ojos) con guiaAlCarril(), y en las de iframe con lo que la app
+     manda por postMessage (embed.js). Skincare y Cabello no tienen secciones: sin carril. -->
+<nav class="carril vacia" id="carril"></nav>
 
 <!-- ══════════════ SKINCARE ══════════════
      Sin menú lateral, al revés que Cabello y Dentista: la rutina de la cara son 6 pasos en
@@ -1285,7 +1307,7 @@ function toggleTheme(){
   // El tema a los iframes. Antes esto usaba `f.contentDocument`, que abierto con
   // file:// es SIEMPRE null — cada archivo es un origen distinto — y el try/catch
   // se tragaba el fallo: el tema nunca llegaba. Ahora va por postMessage.
-  subnavTema(next);
+  iframesTema(next);
 }
 
 // ══════════════════════════════════════════════════════════════════════════
@@ -1348,13 +1370,13 @@ function cpCabOjos(){
   });
 }
 
-function guiaAlSubnav(navId){
+function guiaAlCarril(navId){
   const area = GUIA_AREA[navId]; if(!area) return;
   const nav = document.getElementById(navId); if(!nav) return;
   const btns = [...nav.querySelectorAll('.guia-nav-item')];
   if(!btns.length) return;
-  const base = SUBNAV_NATIVAS[area] || {};
-  subnavEstado[area] = {
+  const base = CARRIL_NATIVAS[area] || {};
+  carrilEstado[area] = {
     titulo: base.titulo || '',
     secciones: btns.map(function(b,i){
       // "Ojo seco — el problema de las 10 h de pantalla" no cabe en una pildora:
@@ -1366,7 +1388,7 @@ function guiaAlSubnav(navId){
     botones: btns,
   };
   const act = document.querySelector('.tab-btn.active');
-  if(act && act.dataset.tab === area) subnavPinta(area);
+  if(act && act.dataset.tab === area) carrilPinta(area);
 }
 
 function guiaEnSecciones(bodyId, navId, claseHeader, formCardId){
@@ -1429,7 +1451,7 @@ function guiaEnSecciones(bodyId, navId, claseHeader, formCardId){
   // El carril de 216px se queda como respaldo (lo oculta el CSS): la barra del
   // shell es la que se ve, y se alimenta de estos mismos botones. Asi Dentista
   // y Ojos se comportan igual que Salud, Ejercicio, Comida y Vestimenta.
-  setTimeout(function(){ guiaAlSubnav(navId); }, 0);
+  setTimeout(function(){ guiaAlCarril(navId); }, 0);
   secciones.forEach((sec,i)=>addItem(sec.ico,sec.titulo,()=>mostrarSec(i),i===0));
 }
 
@@ -1599,10 +1621,10 @@ function ojRenderGuia(){
 }
 
 
-// ══ LA BARRA DE SECCIONES ═════════════════════════════════════
-// Cuatro areas viven en este archivo y cuatro se cargan en un iframe. La barra
-// tiene que verse igual en las ocho, asi que cada tipo la llena a su manera:
-//   nativas  → SUBNAV_NATIVAS, escrito aqui porque su nav ya vive en este HTML
+// ══ EL CARRIL DE SECCIONES ════════════════════════════════════
+// Cuatro areas viven en este archivo y cuatro se cargan en un iframe. El carril
+// tiene que verse igual en las ocho, asi que cada tipo lo llena a su manera:
+//   nativas  → CARRIL_NATIVAS + guiaAlCarril(), porque su nav ya vive en este HTML
 //   iframe   → lo que la app manda al cargar (embed.js → {tipo:'listo'})
 // Abiertas con file://, el shell NO puede leer dentro del iframe — se midio:
 // contentDocument es null. postMessage es el unico canal que cruza.
@@ -1619,41 +1641,86 @@ const AREA_COLOR = {
   vestimenta:['var(--ve)','var(--ve-l)','rgba(193,127,74,.32)'],
 };
 
-// Las nativas: su nav ya esta en este archivo, asi que aqui solo va el rotulo.
-// Skincare y Ojos no tienen secciones — caben enteras en una pantalla.
-const SUBNAV_NATIVAS = {
+// Las nativas: su nav ya esta en este archivo, asi que aqui solo va el rotulo
+// (hoy no se pinta: el carril mínimo enseña el nombre del área, no el título).
+// Skincare y Cabello no tienen secciones — caben enteras en una pantalla.
+const CARRIL_NATIVAS = {
   skincare:{titulo:'Tu día de piel', secciones:[]},
   cabello:{titulo:'Tu cabello, semana a semana', secciones:[]},
   dentista:{titulo:'Tu boca', secciones:[]},
   ojos:{titulo:'Ojos y vista', secciones:[]},
 };
+const AREA_NOMBRE = {skincare:'Skincare', cabello:'Cabello', salud:'Salud', ejercicio:'Ejercicio',
+                     comida:'Comida', dentista:'Dentista', ojos:'Ojos', vestimenta:'Vestimenta'};
+
+// El icono de cada seccion, de trazo y a 18 px como los de las areas (los emoji de
+// los menus de cada app no escalan ni se tinen). Clave area/id; si una seccion no
+// esta aqui — las guias de Dentista y Ojos se generan solas — va su numero en un
+// circulo, que en un carril de iconos es mas util que un icono generico repetido.
+const CARRIL_ICONO = {
+  'salud/dashboard':'<rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/><circle cx="12" cy="15.5" r="1.4" fill="currentColor" stroke="none"/>',
+  'salud/medidas':'<rect x="4" y="4" width="16" height="16" rx="4"/><path d="M8.5 10.5a4 4 0 0 1 7 0M12 9.5v3"/>',
+  'salud/digestiva':'<path d="M9 3v4a3 3 0 0 0 3 3h1a4 4 0 0 1 4 4v1a5 5 0 0 1-5 5H9a4 4 0 0 1-4-4v-1a4 4 0 0 1 4-4"/>',
+  'salud/examenes':'<path d="M9 3h6M10 3v6l-4.5 8A2 2 0 0 0 7.2 20h9.6a2 2 0 0 0 1.7-3L14 9V3"/><path d="M8 15h8"/>',
+  'salud/postura':'<circle cx="12" cy="4.5" r="2"/><path d="M12 7v7M12 14l-3 6M12 14l3 6M8 10h8"/>',
+  'salud/mental':'<path d="M9 4a3 3 0 0 0-3 3 3 3 0 0 0-1 5.5A3 3 0 0 0 7 17a3 3 0 0 0 5 2V6a3 3 0 0 0-3-2z"/><path d="M15 4a3 3 0 0 1 3 3 3 3 0 0 1 1 5.5A3 3 0 0 1 17 17a3 3 0 0 1-5 2V6a3 3 0 0 1 3-2z"/>',
+  'salud/suplementos':'<rect x="3.5" y="9" width="17" height="7" rx="3.5" transform="rotate(-40 12 12.5)"/><path d="M9 8.5l5.5 6.5"/>',
+  'salud/metas':'<circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r="1" fill="currentColor" stroke="none"/>',
+  'comida/desayunos':'<path d="M4 17h16M6 17a6 6 0 0 1 12 0M12 5v2M5.5 8.5l1.4 1.4M18.5 8.5l-1.4 1.4M2 20h20"/>',
+  'comida/cenas':'<path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/>',
+  'comida/rutina':'<path d="M6 8v8M18 8v8M3 10v4M21 10v4M6 12h12"/>',
+  'ejercicio/rutina':'<path d="M6 8v8M18 8v8M3 10v4M21 10v4M6 12h12"/>',
+  'ejercicio/biblioteca':'<path d="M4 4h6a3 3 0 0 1 3 3v13a2 2 0 0 0-2-2H4zM20 4h-6a3 3 0 0 0-3 3v13a2 2 0 0 1 2-2h7z"/>',
+  'ejercicio/deportes':'<circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/>',
+  'vestimenta/comose':'<circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.4-1 .9-1 1.7M12 17h.01"/>',
+  'vestimenta/hoy':'<rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/><circle cx="12" cy="15.5" r="1.4" fill="currentColor" stroke="none"/>',
+  'vestimenta/closet':'<path d="M12 4a2 2 0 0 1 2 2c0 1.2-2 1.5-2 3v1M12 10l9 6v2H3v-2z"/>',
+  'vestimenta/comprar':'<path d="M3 12V4h8l10 10-8 8z"/><circle cx="7.5" cy="8.5" r="1.3"/>',
+  'vestimenta/colorimetria':'<circle cx="12" cy="12" r="9"/><circle cx="8" cy="10" r="1.2"/><circle cx="12" cy="7" r="1.2"/><circle cx="16" cy="10" r="1.2"/><path d="M12 21a3 3 0 0 0 0-6h-1a2 2 0 0 1 0-4"/>',
+  'vestimenta/combinaciones':'<rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/>',
+  'vestimenta/capas':'<path d="M12 4l9 5-9 5-9-5zM3 14l9 5 9-5"/>',
+  'vestimenta/reglas':'<path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/>',
+  'vestimenta/basicos':'<path d="M7 4l5 3 5-3 3 3-2.5 2.5V20H6.5V9.5L4 7z"/>',
+  'vestimenta/chaquetas':'<path d="M8 4l4 2 4-2 4 4-2 3v10H6V11L4 8z"/><path d="M12 6v14"/>',
+  'vestimenta/zapatos':'<path d="M3 16l4-6 3 2 4-2c3 1 5 2 7 4v3H3z"/>',
+  'vestimenta/accesorios':'<rect x="7" y="7" width="10" height="10" rx="3"/><path d="M9 7l.7-4h4.6l.7 4M9 17l.7 4h4.6l.7-4M12 10v2.5l1.5 1"/>',
+  'vestimenta/ejercicio':'<path d="M6 8v8M18 8v8M3 10v4M21 10v4M6 12h12"/>',
+  'vestimenta/bodas':'<circle cx="12" cy="14" r="6"/><path d="M9.5 6l2.5-3 2.5 3-2.5 2z"/>',
+};
+function carrilIcono(tab, id, i){
+  const p = CARRIL_ICONO[tab+'/'+id];
+  return '<svg viewBox="0 0 24 24">' + (p || '<circle cx="12" cy="12" r="9"/><text x="12" y="16" text-anchor="middle">'+(i+1)+'</text>') + '</svg>';
+}
 
 const FRAMES = {salud:'frame-salud', ejercicio:'frame-ejercicio',
                 comida:'frame-comida', vestimenta:'frame-vestimenta'};
-let subnavEstado = {};   // por area: {titulo, secciones:[{id,n}], activa}
+let carrilEstado = {};   // por area: {titulo, secciones:[{id,n,g}], activa}
 
-function subnavPinta(tab){
-  const el = document.getElementById('subnav'); if(!el) return;
-  const e = subnavEstado[tab] || SUBNAV_NATIVAS[tab] || null;
+function carrilPinta(tab){
+  const el = document.getElementById('carril'); if(!el) return;
+  const e = carrilEstado[tab] || null;
   const col = AREA_COLOR[tab] || ['var(--text)','rgba(var(--ov),.08)','rgba(var(--ov),.2)'];
   el.style.setProperty('--sn-c', col[0]);
   el.style.setProperty('--sn-l', col[1]);
   el.style.setProperty('--sn-br', col[2]);
-
-  if(!e){ el.className='subnav vacia'; el.innerHTML=''; return; }
-  const secs = e.secciones || [];
-  // Sin titulo ni secciones no hay nada que ensenar: la barra se va entera en
-  // vez de dejar una franja vacia de 46px.
-  if(!e.titulo && !secs.length){ el.className='subnav vacia'; el.innerHTML=''; return; }
-  el.className='subnav';
-  el.innerHTML =
-    (e.titulo ? '<div class="sn-t">'+plEsc(e.titulo)+'</div>' : '') +
-    secs.map(x=>'<button class="sn-b'+(x.id===e.activa?' on':'')+'" '+
-      'onclick="subnavIr(\''+tab+'\',\''+x.id+'\')">'+plEsc(x.n)+'</button>').join('');
+  const secs = e ? (e.secciones || []) : [];
+  // Sin secciones no hay carril: el area cabe entera y el contenido gana los 80 px.
+  if(!secs.length){ el.className='carril vacia'; el.innerHTML=''; return; }
+  el.className='carril';
+  let html = '<div class="cr-area"><i></i><span>'+plEsc(AREA_NOMBRE[tab]||tab)+'</span></div>', g = null;
+  secs.forEach(function(x, i){
+    // Entre dos grupos del menu de la app (Seguimiento, Salud, Bienestar…) queda un filete:
+    // el rotulo no cabe en 80 px, la separacion si.
+    if(x.g && g !== null && x.g !== g) html += '<div class="cr-sep"></div>';
+    if(x.g) g = x.g;
+    html += '<button class="cr-b'+(x.id===e.activa?' on':'')+'" title="'+plEsc(x.n)+'" '+
+      'onclick="carrilIr(\''+tab+'\',\''+x.id+'\')">'+carrilIcono(tab, x.id, i)+'<span class="txt">'+plEsc(x.n)+'</span></button>';
+  });
+  el.innerHTML = html;
 }
 
-function subnavIr(tab, sec){
-  const e = subnavEstado[tab]; if(e) e.activa = sec;
+function carrilIr(tab, sec){
+  const e = carrilEstado[tab]; if(e) e.activa = sec;
   // Nativa con guia: se pulsa su boton original, que ya sabe que mostrar.
   if(e && e.botones){
     const i = parseInt(String(sec).slice(1), 10);
@@ -1661,7 +1728,7 @@ function subnavIr(tab, sec){
   }
   const f = document.getElementById(FRAMES[tab]);
   if(f && f.contentWindow) f.contentWindow.postMessage({fuente:'cp-shell',tipo:'ir',seccion:sec},'*');
-  subnavPinta(tab);
+  carrilPinta(tab);
 }
 
 // Lo que las apps cuentan de si mismas.
@@ -1676,16 +1743,16 @@ window.addEventListener('message', function(ev){
   }
   if(!tab) return;
   if(d.tipo === 'listo'){
-    subnavEstado[tab] = {titulo:(d.titulo||'').split('—')[0].trim(),
+    carrilEstado[tab] = {titulo:(d.titulo||'').split('—')[0].trim(),
                          secciones:d.secciones||[], activa:d.activa};
   }
-  if(d.tipo === 'seccion' && subnavEstado[tab]) subnavEstado[tab].activa = d.activa;
+  if(d.tipo === 'seccion' && carrilEstado[tab]) carrilEstado[tab].activa = d.activa;
   if(document.querySelector('.tab-btn.active') &&
-     document.querySelector('.tab-btn.active').dataset.tab === tab) subnavPinta(tab);
+     document.querySelector('.tab-btn.active').dataset.tab === tab) carrilPinta(tab);
 });
 
 // El tema es del shell: cuando cambia, se lo dice a los iframes cargados.
-function subnavTema(tema){
+function iframesTema(tema){
   for(const k in FRAMES){
     const f = document.getElementById(FRAMES[k]);
     if(f && f.getAttribute('src') && f.contentWindow)
@@ -1697,7 +1764,7 @@ function mainTab(tab){
   if(tab==='ojos'&&!document.getElementById('oj-guia-body').innerHTML) ojRenderGuia();
   document.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));
   document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id==='view-'+tab));
-  subnavPinta(tab);
+  carrilPinta(tab);
   // Con `file://` Chrome sirve el documento del iframe desde su caché sin revalidar, así
   // que un cambio en la app embebida no se veía hasta un Ctrl+Shift+R. Los .js de cada
   // app ya se piden con `?v=Date.now()` desde dentro, pero el HTML que los contiene no

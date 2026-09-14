@@ -16,8 +16,10 @@ todos los días con sus dosis.
 
 ### Qué hay en la pantalla
 
-1. **Tres cifras**: racha de suplementos (días con TODOS tomados), peso con IMC, y exámenes
-   pendientes.
+1. **La cabecera común** (`cpCabecera`, ver `cabecera.js`) con cuatro cifras: suplementos de
+   hoy, racha con todos tomados, exámenes pendientes y último peso con su IMC. Hasta el
+   2026-09-14 debajo iba otro título "Tu salud, hoy y este año" con tres KPI que repetían
+   estos: se quitó.
 2. **Hoy** (`.sd-hero`), lo primero: los suplementos partidos en **con el desayuno** / **antes de
    dormir**, con la dosis y la condición al lado, marcables con un clic. Y el bloque de **agua y
    pausas**, con los vasos clicables. El pie de la noche lee el registro de Mi Comida
@@ -181,7 +183,7 @@ Pedido explícito de Adán: *"en cuidado de la salud, quita alimentacion plan se
 
 **`S.alimentos`/`S.ejercicios`/`S.plan` se quitaron del objeto `S` por defecto** de este archivo (ya no los declara ni los edita) — pero si `misalud_v1` real ya tenía `alimentos` (porque `comida.html` los escribió), `load()` los sigue trayendo a `S` vía spread y `save()` los sigue conservando intactos sin tocarlos. No hay pérdida de datos, solo Salud dejó de ser quien los administra.
 
-**Menú lateral simplificado**: de 13 secciones a 8 (`Dashboard, Peso & Medidas, Salud Digestiva, Exámenes Médicos, Postura, Salud Mental, Suplementos, Perfil & Metas`). El botón rápido del topbar cambió de "+ Registrar comida" a "+ Pesarme hoy" (`openMedidaModal()`).
+**Menú lateral simplificado**: de 13 secciones a 8, con nombres cortos desde el 2026-09-14 porque el carril del shell los pinta bajo un icono de 18 px en 60 px de ancho (`Hoy, Peso y medidas, Digestión, Exámenes, Postura, Mente, Suplementos, Perfil y metas`; los ids no cambiaron: `dashboard, medidas, digestiva, examenes, postura, mental, suplementos, metas`). `STITLE` usa los mismos nombres. El botón rápido del topbar cambió de "+ Registrar comida" a "+ Pesarme hoy" (`openMedidaModal()`).
 
 Probado con Playwright (Chromium headless): las 8 secciones cargan sin errores de consola, el nuevo Dashboard muestra datos reales, y no quedó ninguna referencia colgante a IDs/funciones eliminadas (verificado con grep sistemático antes de dar por terminado).
 

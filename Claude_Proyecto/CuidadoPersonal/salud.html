@@ -351,19 +351,21 @@ canvas{max-width:100%}
     <p>Nutrición & Bienestar</p>
   </div>
   <nav class="sb-nav">
+    <!-- Nombres cortos desde el 2026-09-14: el carril del shell los pinta bajo un icono de
+         18 px, en 60 px de ancho — "Exámenes Médicos" no cabe, "Exámenes" sí. -->
     <div class="nav-label">Principal</div>
-    <div class="nav-item active" onclick="nav('dashboard')"><span class="ico">📊</span>Dashboard</div>
+    <div class="nav-item active" onclick="nav('dashboard')"><span class="ico">📊</span>Hoy</div>
     <div class="nav-label">Seguimiento</div>
-    <div class="nav-item" onclick="nav('medidas')"><span class="ico">⚖️</span>Peso & Medidas</div>
+    <div class="nav-item" onclick="nav('medidas')"><span class="ico">⚖️</span>Peso y medidas</div>
     <div class="nav-label">Salud</div>
-    <div class="nav-item" onclick="nav('digestiva')"><span class="ico">🫁</span>Salud Digestiva</div>
-    <div class="nav-item" onclick="nav('examenes')"><span class="ico">🩺</span>Exámenes Médicos</div>
+    <div class="nav-item" onclick="nav('digestiva')"><span class="ico">🫁</span>Digestión</div>
+    <div class="nav-item" onclick="nav('examenes')"><span class="ico">🩺</span>Exámenes</div>
     <div class="nav-label">Bienestar</div>
     <div class="nav-item" onclick="nav('postura')"><span class="ico">🧍</span>Postura</div>
-    <div class="nav-item" onclick="nav('mental')"><span class="ico">🧠</span>Salud Mental</div>
+    <div class="nav-item" onclick="nav('mental')"><span class="ico">🧠</span>Mente</div>
     <div class="nav-item" onclick="nav('suplementos')"><span class="ico">💊</span>Suplementos</div>
     <div class="nav-label">Configuración</div>
-    <div class="nav-item" onclick="nav('metas')"><span class="ico">🎯</span>Perfil & Metas</div>
+    <div class="nav-item" onclick="nav('metas')"><span class="ico">🎯</span>Perfil y metas</div>
   </nav>
   <div style="padding:12px;border-top:1px solid rgba(var(--ov),.06);display:flex;flex-direction:column;gap:6px">
     <button class="btn btn-o" style="width:100%;font-size:12px" onclick="exportData()">⬇️ Exportar datos</button>
@@ -744,7 +746,7 @@ document.getElementById('conf').addEventListener('click',e=>{ if(e.target===docu
 
 // ─── NAVIGATION ──────────────────────────────────────────────────────────────
 const SECS=['dashboard','medidas','digestiva','examenes','postura','mental','suplementos','metas'];
-const STITLE={dashboard:'📊 Dashboard',medidas:'⚖️ Peso & Medidas',digestiva:'🫁 Salud Digestiva',examenes:'🩺 Exámenes Médicos',postura:'🧍 Postura',mental:'🧠 Salud Mental',suplementos:'💊 Suplementos',metas:'🎯 Perfil & Metas'};
+const STITLE={dashboard:'📊 Hoy',medidas:'⚖️ Peso y medidas',digestiva:'🫁 Digestión',examenes:'🩺 Exámenes',postura:'🧍 Postura',mental:'🧠 Mente',suplementos:'💊 Suplementos',metas:'🎯 Perfil y metas'};   // los mismos nombres cortos que el menú
 const RENDERS={dashboard:renderDashboard,medidas:renderMedidas,digestiva:renderDigestiva,examenes:renderExamenes,postura:renderPostura,mental:renderMental,suplementos:renderSuplementos,metas:renderMetas};
 
 function nav(s) {
@@ -1059,8 +1061,9 @@ function cpCabSalud(){
     sub:'lo que tomas hoy y lo que te toca revisar',
     kpis:[
       {v:tomados+' / '+nSup, k:'Suplementos de hoy'},
+      {v:String(sdRachaSupl())+' d', k:'Racha con todos'},
       {v:String(pend), k:'Ex\u00e1menes pendientes'},
-      {v:peso, k:'\u00daltimo peso'},
+      {v:peso, k:(function(){ try{ const a=S.perfil.altura, p=parseFloat(peso); return (a&&p)?'\u00daltimo peso \u00b7 IMC '+calcIMC(p,a):'\u00daltimo peso'; }catch(e){ return '\u00daltimo peso'; } })()},
     ],
   });
 }
@@ -1075,13 +1078,9 @@ function renderDashboard() {
   const pend=CH?CH.examenes.filter(e=>{const c=sdEstadoExamen(e).c;return c==='nunca'||c==='vence';}).length:0;
   const lista=S.suplementos.lista, hechos=lista.filter(x=>tomadoHoy(x.id)).length;
 
+  // Hasta el 2026-09-14 aquí iba otro título "Tu salud, hoy y este año" con tres KPI: repetía
+  // la cabecera común (cpCabSalud) que va justo encima. La racha y el IMC pasaron a esos KPI.
   document.getElementById('d-hero').innerHTML=
-    '<div class="sh"><h2>🩺 Tu salud, hoy y este a\u00f1o</h2>'+
-    '<div class="flex gap8">'+
-      '<div class="card" style="padding:9px 14px;text-align:right"><div class="card-val" style="font-size:19px;color:var(--g)">'+sdRachaSupl()+'</div><div class="ts tm" style="font-size:9px;letter-spacing:.08em;text-transform:uppercase">Racha suplementos</div></div>'+
-      '<div class="card" style="padding:9px 14px;text-align:right"><div class="card-val" style="font-size:19px;color:var(--w)">'+(act?act.peso+' kg':'\u2014')+'</div><div class="ts tm" style="font-size:9px;letter-spacing:.08em;text-transform:uppercase">'+(imc?'IMC '+imc:'Peso')+'</div></div>'+
-      '<div class="card" style="padding:9px 14px;text-align:right"><div class="card-val" style="font-size:19px;color:'+(pend?'var(--r)':'var(--g)')+'">'+pend+'</div><div class="ts tm" style="font-size:9px;letter-spacing:.08em;text-transform:uppercase">Ex\u00e1menes pendientes</div></div>'+
-    '</div></div>'+
     '<div class="sd-hero"><div class="sd-hero-h"><div class="sd-hero-t">Hoy</div>'+
     '<div class="sd-hero-x">'+(M?'Los suplementos salen de tu rutina diaria: <b>'+M.delMomento('am').length+' por la ma\u00f1ana, '+M.delMomento('pm').length+' por la noche</b> \u2014 no hay que darlos de alta':'')+'</div></div>'+
     '<div class="sd-grid">'+sdBloqueHtml('am')+sdBloqueHtml('pm')+sdAguaHtml()+'</div></div>';

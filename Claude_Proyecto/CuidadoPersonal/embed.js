@@ -14,7 +14,7 @@
    postMessage sí cruza, y es el único canal que cruza.
 
    Protocolo, todo con `{fuente:'cp'}` para no confundirlo con otros mensajes:
-     app  → shell   {tipo:'listo',    secciones:[{id,n}], activa}
+     app  → shell   {tipo:'listo',    secciones:[{id,n,g}], activa}
      app  → shell   {tipo:'seccion',  activa}          (navegó por su cuenta)
      shell → app    {tipo:'ir',       seccion}
      shell → app    {tipo:'tema',     tema}
@@ -61,7 +61,13 @@
       for (var q = 0; q < quita.length; q++) quita[q].remove();
       var t = (c.textContent || '').replace(/\s+/g, ' ').trim();
       t = t.replace(/^[^\p{L}\p{N}]+/u, '').trim();
-      out.push({ id: m[1], n: t || m[1] });
+      // El grupo del menú (el .nav-label que va antes): el carril del shell pone un
+      // filete entre grupos, que es lo único que cabe de los rótulos en 80 px.
+      var g = '', h = nodos[i];
+      while ((h = h.previousElementSibling)) {
+        if (h.classList && h.classList.contains('nav-label')) { g = (h.textContent || '').trim(); break; }
+      }
+      out.push({ id: m[1], n: t || m[1], g: g });
     }
     return out;
   }

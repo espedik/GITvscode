@@ -617,7 +617,7 @@ Comprobado en el navegador: 5 momentos en la rutina con la pastilla en el suyo,
 4 horas, el botiquín lista los dos, y en el carrito marcarlos suma $2,400.
 Verificador en verde: 10 productos, $2854 al mes.
 
-## El shell: barra doble de vidrio (2026-09-01)
+## El shell: barra de áreas arriba y carril de secciones a la izquierda
 
 Adán: *"no me gusta la distribución ni el reparto que hicimos con las demás apps
 … unifícalo, futurista y limpio"*, y sobre la opción elegida: *"me gusta la opcion
@@ -638,14 +638,39 @@ del shell:
 
 ### Cómo queda
 
-**Barra 1** — las 8 áreas, con icono SVG (fuera los emoji) y el color que cada una
-ya tenía. **Barra 2** — las secciones de la app activa, que es donde vivía su
-carril. **102 px, iguales para las ocho.**
+**La barra** — las 8 áreas, con icono SVG (fuera los emoji) y el color que cada una
+ya tenía, 56 px de vidrio al 10 %. **El carril** (`#carril`) — las secciones del
+área activa, a la izquierda: 80 px, velo al 2,8 %, el nombre del área arriba en
+su color con un punto encendido, y cada sección como icono de trazo de 18 px con
+el nombre debajo a 9 px (hasta tres líneas, 60 px de ancho). Entre dos grupos del
+menú de la app (Seguimiento, Salud, Bienestar…) queda un filete: el rótulo no
+cabe, la separación sí. Sin secciones — Skincare y Cabello caben enteras en una
+pantalla — el carril no aparece y el contenido gana los 80 px.
 
-El material son velos de blanco con `backdrop-filter`: 10 % la barra de áreas,
-5,5 % la de secciones. Detalle que lo hace funcionar: un velo blanco sobre negro
-plano sigue siendo negro, así que **las auroras de color cruzan justo detrás de
-las barras** (`body::before`, 280 px de alto) y eso es lo que se lee como cristal.
+Hasta el 13-sep las secciones eran una **segunda barra horizontal** de píldoras
+(46 px) bajo la de áreas, y las dos se leían igual. Adán, 14-sep: *"se confunden
+con los de la barra superior, mejor hazla lateral pero arregla esos menús, puedes
+reducirlo si gustas"*. Se dibujaron tres direcciones en
+[`diseno-carril/`](diseno-carril/) — A: carril de 232 px con nombres y grupos;
+B: todo lateral sin barra superior; C: carril mínimo de iconos — y eligió la C.
+
+El `body` es ahora una rejilla (`auto minmax(0,1fr)` × `56px minmax(0,1fr)`): la
+barra cruza arriba, el carril va en la columna 1 y **las ocho `.view` comparten la
+celda de la columna 2** — solo una es visible — así que no hubo que mover el HTML
+de ninguna área. Bajo 900 px el carril no cabe al lado: pasa a una tira con
+scroll bajo la barra (47 px), con el nombre del área como ancla a la izquierda y
+las secciones en línea con su icono.
+
+Los iconos de sección viven en `CARRIL_ICONO`, con clave `area/id` (los emoji de
+los menús de cada app no escalan ni se tiñen). Una sección sin icono — las guías
+de Dentista y Ojos se generan solas — lleva su número en un círculo, que en un
+carril de iconos dice más que un icono genérico repetido. Los nombres de Salud se
+acortaron en su propio menú para que quepan bajo el icono: *Hoy, Peso y medidas,
+Digestión, Exámenes, Postura, Mente, Suplementos, Perfil y metas*.
+
+Detalle que hace funcionar el vidrio: un velo blanco sobre negro plano sigue
+siendo negro, así que **las auroras de color cruzan justo detrás de la barra**
+(`body::before`, 280 px de alto) y eso es lo que se lee como cristal.
 
 ### El canal: postMessage, no el DOM del iframe
 
@@ -655,9 +680,10 @@ dentro. Por eso [`embed.js`](embed.js), cargado por las cuatro apps externas:
 
 - Con `?embed=1` la app oculta su `.sidebar` y su `.topbar`, y quita el
   `margin-left` de `.main` (ahí estaba el hueco de 245 px, no en `.content`).
-- Publica sus secciones al shell (`{tipo:'listo', secciones:[{id,n}]}`), **leídas
-  de su propio carril**: si mañana se añade una sección aparece sola en la barra,
-  sin tocar ni este archivo ni el del shell.
+- Publica sus secciones al shell (`{tipo:'listo', secciones:[{id,n,g}]}`), **leídas
+  de su propio menú** — `g` es el rótulo del grupo (`.nav-label`) que las precede, y
+  es lo que el carril convierte en filetes —: si mañana se añade una sección
+  aparece sola en el carril, sin tocar ni este archivo ni el del shell.
 - Escucha `{tipo:'ir'}` para navegar y `{tipo:'tema'}` para el tema.
 - Sin `?embed=1` no hace nada: las apps siguen abriéndose solas igual que antes.
 
@@ -669,10 +695,13 @@ dentro. Por eso [`embed.js`](embed.js), cargado por las cuatro apps externas:
   `f.contentDocument`, que en `file://` es siempre null, y el `try/catch` se
   tragaba el fallo en silencio. Ahora va por postMessage y se verificó que cruza.
 
-Comprobado a 1600 px y 390 px: las 8 áreas con 102 px de chrome, los 4 iframes sin
-carril ni cabecera propia, el clic en la barra de secciones navega dentro del
-iframe, sin errores de consola y sin desbordes. La barra de secciones lleva
-`nowrap`: sin él, en móvil se partía en dos líneas y la segunda quedaba cortada.
+Comprobado a 1600, 1366 y 390 px en las 8 áreas y los 2 temas: el carril mide
+80 × (alto − 56) px donde hay secciones (Salud 8, Ejercicio 3, Comida 3, Dentista 5,
+Ojos 9, Vestimenta 14) y no existe en Skincare ni Cabello; la vista activa arranca
+en x = 80; ningún nombre queda cortado ni desborda el carril (`scrollWidth` =
+`clientWidth`); el clic en *Peso y medidas* cambia la sección dentro del iframe de
+Salud; cero errores de consola. En móvil la tira mide 47 px y hace scroll
+horizontal, que es lo previsto.
 
 ### El material, escrito una sola vez: `vidrio.css`
 
@@ -702,16 +731,15 @@ material. Va después del `<style>` de cada app, para ganar por orden.
 Eran las dos últimas que no encajaban: `guiaEnSecciones()` les construía un menú
 lateral de 216 px dentro del shell, así que tenían carril donde las otras seis no.
 
-`guiaAlSubnav()` lee los botones que esa función acaba de construir y los publica
-en la barra del shell; pulsar en la barra **pulsa el botón original**, así que la
-lógica de navegación sigue siendo una sola, la que ya estaba. El carril se queda
-en el DOM (es quien sabe mostrar cada sección) pero con `display:none`. Los
-nombres se cortan en el guion: *"Ojo seco — el problema de las 10 h de pantalla"*
-no cabe en una píldora, *"Ojo seco"* sí.
+`guiaAlCarril()` lee los botones que esa función acaba de construir y los publica
+en el carril del shell; pulsar en el carril **pulsa el botón original**, así que la
+lógica de navegación sigue siendo una sola, la que ya estaba. Su menú se queda en
+el DOM (es quien sabe mostrar cada sección) pero con `display:none`. Los nombres
+se cortan en el guion: *"Ojo seco — el problema de las 10 h de pantalla"* no cabe
+bajo un icono, *"Ojo seco"* sí.
 
-Resultado: **las ocho áreas con barra de secciones y sin carril lateral.**
-Skincare y Cabello siguen sin secciones a propósito — caben enteras en una
-pantalla.
+Resultado: **las ocho áreas con el mismo carril.** Skincare y Cabello siguen sin
+secciones a propósito — caben enteras en una pantalla.
 
 Comprobado en las 8 áreas y los 2 temas: mismo `--bg`, `blur(14px)` en todas, sin
 errores de consola, sin desbordes y contraste sin nada bajo el mínimo. Abiertas
