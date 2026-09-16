@@ -588,6 +588,10 @@ perdía en el siguiente reseed si nadie se acordaba de tocar el seed también.
 Si el `<script src>` fallara, siembra **sin** deudas y avisa con un `console.error`: mejor eso que
 sembrar con una copia vieja escondida aquí.
 
+**El historial de BTC tampoco se escribe aquí**: sale de `CIFRAS.BTC_SEED` (copia profunda), por
+la misma razón — vivía solo en este seed, o sea en un navegador. Una operación nueva se añade allá
+y llega a un navegador con datos por una migración (por id, solo si falta).
+
 Solo se ejecuta si `localStorage['finanzasmx_v2_v'] !== SEED_VER` (actualmente `'23'`). Borra el estado anterior e inyecta datos de ejemplo con 6 meses de transacciones (ene-jun 2026) más los movimientos sueltos de agosto 2026, presupuestos, deudas reales, metas, inversiones, activos físicos e historial BTC. Incrementar `SEED_VER` para forzar re-seed.
 
 ---
@@ -631,10 +635,25 @@ aportaciones"*. Lo que estaba mal no era el estilo:
 Ahora: **un punto por día**, eje temporal lineal en milisegundos, pesos por defecto, y cada
 aportación con su línea vertical y su monto.
 
+### Las ventas
+
+Desde el 2026-09-16 (la primera: $5,300 MXN el 14-sep, 0.003889 ₿ a $79,000 USD/₿) una entrada
+de `btcHistory` puede ser una venta: `tipo:'venta'`, `btc` **negativo** (lo que salió) y `usd` lo
+que entró. Tres helpers la separan en todo el módulo — `btcEsVenta(h)`, `btcCompras(hist)`,
+`btcVentas(hist)` — y la regla es una: **lo aportado y el precio promedio salen solo de las
+compras; una venta resta ₿ y suma a "retirado"**. El P&L es `vale hoy + retirado − aportado`;
+sin eso, vender $5,300 se leía como perder $5,300. En pantalla: botón **− Venta** junto a
+**+ Compra** (mismo modal, con un selector de operación que cambia los rótulos y no deja vender
+más ₿ de los que hay), fila roja "VENTA" en la tabla (sin valor actual ni P&L: ya está en pesos),
+lectura **Ya retirado** bajo la gráfica, la pestaña del mes dice `venta −$5,300` si ese mes no
+hubo compras, un triángulo invertido rojo sobre la curva y su marca `−$5,300` con signo.
+
 ### `btcSerie()`
 
 Construye la serie diaria desde la primera compra hasta hoy. Devuelve
-`{pts, compras, t0, tEnd, reales, dias}`; cada `pt` trae `{t, btc, aMxn, aUsd, vMxn, vUsd, pMxn, pUsd}`.
+`{pts, compras, ventas, t0, tEnd, reales, dias}`; cada `pt` trae
+`{t, btc, aMxn, aUsd, rMxn, rUsd, vMxn, vUsd, pMxn, pUsd}` — `r*` es lo retirado acumulado, que
+no baja la línea de "aportado".
 
 **El precio de cada día** sale de interpolar linealmente entre anclas, de menos a más fiable
 (la última gana si caen el mismo día):
@@ -717,9 +736,10 @@ gráfica, la fila de tarjetas, los tabs por mes y sus paneles. La tabla históri
 
 Renderiza el panel completo de BTC en `btc-history` dentro del Plan de Inversiones.
 
-**KPIs en USD:** `totalBtc`, `totalUsd`, `avgPrice` (`totalUsd/totalBtc`), `curVal`, `pnl`, `pnlPct`.
+**KPIs en USD:** `totalBtc` (compras − ventas), `totalUsd` (solo compras), `avgPrice`
+(`totalUsd/btcComprado`), `retUsd` (ventas), `curVal`, `pnl` (`curVal + retUsd − totalUsd`), `pnlPct`.
 
-**KPIs en MXN:** `invMxn` (cada compra a su propio fx), `valMxn`, `pnlMxn`, `pnlMxnPct`.
+**KPIs en MXN:** `invMxn` (cada compra a su propio fx), `retMxn`, `valMxn`, `pnlMxn`, `pnlMxnPct`.
 
 **Renderiza:**
 - Inputs inline de precio BTC y tasa USD/MXN + botón "Actualizar precio" (`fetchBtcPrice()`)
@@ -746,16 +766,18 @@ Actualiza `S.currentBtcPrice` manualmente (desde input). Refresca todas las vist
 ### `updateUsdMxn(val)`
 Actualiza `S.usdMxn` manualmente (desde input). Refresca todas las vistas afectadas.
 
-### `openBtcModal(id=null)`
-Abre `mo-btc`. Si `id` existe carga datos para edición. El campo de tipo de cambio se prellena
-con `S.usdMxn`.
+### `openBtcModal(id=null, tipo=null)`
+Abre `mo-btc`. Si `id` existe carga datos para edición (y el selector toma el tipo de esa
+operación); `tipo:'venta'` abre el formulario como venta. `btcTipoUI()` cambia los rótulos
+(*USD recibidos*, *BTC vendido*). El campo de tipo de cambio se prellena con `S.usdMxn`.
 
 ### `calcBtc()`
 Calcula automáticamente `btc-received = btc-usd / btc-price-at` cuando el usuario edita los campos.
 
 ### `saveBtcPurchase()`
-Valida fecha, USD y precio BTC. Calcula `btc = usd / btcPrice` con 8 decimales. Guarda en
-`S.btcHistory` **con `fx`** (el del formulario, o `S.usdMxn` como respaldo).
+Valida fecha, USD y precio BTC. Calcula `btc = usd / btcPrice` con 8 decimales — **negativo si es
+venta**, y una venta no puede superar los ₿ que hay. Guarda en `S.btcHistory` **con `fx`** (el del
+formulario, o `S.usdMxn` como respaldo) y con `tipo`.
 
 ### `delBtc(id)`
 Filtra `S.btcHistory` y llama a `renderBtcHistory()`.
@@ -954,16 +976,17 @@ se tocó.
 
 | id | Deuda | Saldo | Nota |
 |---|---|---|---|
-| `d001` | Tarjeta BBVA | **$37,000** ⚠️ | Dato de Adán el 7-sep-2026: +$3,000 sobre el 24-ago. Zanja el pendiente de abajo |
-| `d002` | Tarjeta Banamex | **$7,000** ⚠️ | Se liquidó el 13-ago-2026, volvió a usarse el 1-sep ($5,985) y sigue subiendo |
+| `d001` | Tarjeta BBVA | **$39,000** ⚠️ | Dato de Adán el 16-sep-2026 ($37,000 el 7-sep, $34,000 el 24-ago). Zanja el pendiente de abajo |
+| `d002` | Tarjeta Banamex | **$7,800** ⚠️ | Se liquidó el 13-ago-2026, volvió a usarse el 1-sep ($5,985) y sigue subiendo ($7,000 el 7-sep) |
 | `d003` | Crédito Automotriz | $293,000 | 12.99%, $6,700/mes — ver nota abajo |
 | `d004` | Apple Watch MSI | $854 | Queda 1 cuota, la del 18 sep 2026 |
 | `d007` | Boletos Ticketmaster | $0 ✅ | Liquidado |
 | `d008` | iPhone 15 MSI | $11,362 | |
 | `d009` | Zap Stylo (MSI BBVA) | $334 | "El de los zapatos" — el único MSI de BBVA vivo |
 | `d010`, `d011` | Merpago, Mercado Pago | $0 ✅ | Liquidados el 24-ago-2026 |
+| `d012` | Deuda del departamento | $13,000 | 16-sep-2026, `loan` a 0%. Sin mínimo ni día hasta que Adán diga cómo la paga |
 
-Deuda total **$349,550** según el maestro, de la que **$44,000 es deuda cara** (las dos tarjetas al 55.7%).
+Deuda total **$365,350** según el maestro, de la que **$46,800 es deuda cara** (las dos tarjetas al 55.7%).
 Los valores vivos están en `finanzasmx_v2`; esta tabla es la foto para orientarse rápido.
 
 ### El auto subió $1,000 el 25-ago-2026

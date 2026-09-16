@@ -639,6 +639,37 @@ const DOCS_DEUDA = ['Dashboard/DATOS-MAESTROS.md', 'Dashboard/readme_dashboard.m
     ', meta ' + PE.metaKg + ' kg, ' + Object.keys(usados).length + ' campos que lee salud.html)');
 })();
 
+/* ── El Bitcoin: BTC_SEED tiene forma y Finanzas lo lee de aquí ──────────────────────────────
+   Las operaciones de BTC entraron al maestro el 2026-09-16 con la primera venta. Lo que puede
+   volver a romperse: una venta con `btc` positivo (sumaría en vez de restar), una compra con
+   `tipo:'venta'` olvidado, más ₿ vendidos de los que había ese día, un id repetido (la migración
+   añade por id y lo saltaría), o que Finanzas.html vuelva a traer su propia lista. */
+(function bitcoinEnElMaestro() {
+  if (!global.window || !global.window.CIFRAS) return;
+  const B = global.window.CIFRAS.BTC_SEED;
+  const malos = [];
+  if (!Array.isArray(B) || !B.length) { problemas.push('CIFRAS.BTC_SEED no existe o está vacío'); return; }
+  const vistos = {}; let saldo = 0;
+  B.slice().sort(function (a, b) { return a.date < b.date ? -1 : 1; }).forEach(function (o) {
+    if (vistos[o.id]) malos.push('     id repetido en BTC_SEED: ' + o.id);
+    vistos[o.id] = 1;
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(o.date || '')) malos.push('     ' + o.id + ' sin fecha ISO');
+    if (!(o.usd > 0) || !(o.btcPrice > 0) || typeof o.btc !== 'number') malos.push('     ' + o.id + ' sin usd, btcPrice o btc numéricos');
+    const venta = o.tipo === 'venta';
+    if (venta && !(o.btc < 0)) malos.push('     ' + o.id + ' es venta y su btc no es negativo (' + o.btc + ')');
+    if (!venta && !(o.btc > 0)) malos.push('     ' + o.id + ' es compra y su btc no es positivo (' + o.btc + ')');
+    if (Math.abs(Math.abs(o.btc) - o.usd / o.btcPrice) > 0.00002) malos.push('     ' + o.id + ': usd/btcPrice da ' + (o.usd / o.btcPrice).toFixed(6) + ' ₿ y trae ' + o.btc);
+    saldo += o.btc;
+    if (saldo < -1e-9) malos.push('     ' + o.id + ' vende más ₿ de los que había ese día (saldo ' + saldo.toFixed(6) + ')');
+  });
+  const fin = leer('Finanzas/Finanzas.html');
+  if (fin.indexOf('CIFRAS.BTC_SEED') < 0) malos.push('     Finanzas.html no lee CIFRAS.BTC_SEED');
+  if (/btcHistory:\s*\[\s*\{/.test(fin)) malos.push('     Finanzas.html vuelve a traer su propia lista de compras BTC en el seed');
+  if (malos.length) problemas.push('BTC_SEED no tiene la forma que Finanzas espera:\n' + malos.join('\n'));
+  else ok.push('BTC_SEED en el maestro (' + B.filter(o => o.tipo !== 'venta').length + ' compras, ' + B.filter(o => o.tipo === 'venta').length +
+    ' ventas, quedan ' + saldo.toFixed(6) + ' ₿; Finanzas lo siembra de aquí)');
+})();
+
 /* ── Impacto de lo que cambió en esta sesión ──────────────────────────────────────────────────
    Si `datos-maestros.js` cambió respecto al último commit, se comparan los valores de entonces
    con los de ahora y se dice qué se movió — incluido lo ARRASTRADO. Es la parte que Adán

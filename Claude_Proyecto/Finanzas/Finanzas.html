@@ -878,12 +878,15 @@ select option{background:var(--surface-solid);color:var(--text)}
   <div class="modal">
     <div class="modal-h"><div class="modal-title" id="mo-btc-title">Nueva Compra BTC</div><button class="modal-x" onclick="closeMo('mo-btc')">✕</button></div>
     <div class="fr">
+      <div class="fg"><label>Operación</label><select id="btc-tipo" onchange="btcTipoUI()"><option value="compra">Compra</option><option value="venta">Venta</option></select></div>
       <div class="fg"><label>Fecha *</label><input type="date" id="btc-date"></div>
-      <div class="fg"><label>USD invertidos *</label><input type="number" id="btc-usd" placeholder="0.00" min="0" step="0.01" oninput="calcBtc()"></div>
     </div>
-    <div class="fg"><label>Precio BTC al momento (USD) *</label><input type="number" id="btc-price-at" placeholder="ej. 97000" min="0" step="1" oninput="calcBtc()"></div>
     <div class="fr">
-      <div class="fg"><label>BTC recibido (calculado automáticamente)</label><input type="number" id="btc-received" placeholder="0.00000000" step="0.00000001" readonly style="opacity:.7;cursor:default"></div>
+      <div class="fg"><label id="btc-usd-lbl">USD invertidos *</label><input type="number" id="btc-usd" placeholder="0.00" min="0" step="0.01" oninput="calcBtc()"></div>
+      <div class="fg"><label>Precio BTC al momento (USD) *</label><input type="number" id="btc-price-at" placeholder="ej. 97000" min="0" step="1" oninput="calcBtc()"></div>
+    </div>
+    <div class="fr">
+      <div class="fg"><label id="btc-received-lbl">BTC recibido (calculado automáticamente)</label><input type="number" id="btc-received" placeholder="0.00000000" step="0.00000001" readonly style="opacity:.7;cursor:default"></div>
       <div class="fg"><label>Tipo de cambio USD/MXN ese día</label><input type="number" id="btc-fx" placeholder="19.50" min="0" step="0.01"><div class="ts tm" style="margin-top:4px">Lo que te costó en pesos de verdad. Vacío = se usa el de hoy.</div></div>
     </div>
     <div class="fg"><label>Notas</label><input id="btc-notes" placeholder="Ej. DCA mensual, compra de emergencia..."></div>
@@ -4365,11 +4368,10 @@ function seedData() {
       {id:'ac013',name:'Cuenta BBVA',            type:'liquido',    value:75,     notes:'Saldo disponible en cuenta'},
       {id:'ac014',name:'Efectivo',               type:'liquido',    value:1600,   notes:'Dinero en efectivo'},
     ],
-    btcHistory: [
-      {id:'btc001',date:'2025-02-01',usd:200,   btcPrice:102007,btc:0.001960,notes:'Primera compra'},
-      {id:'btc002',date:'2025-12-15',usd:2438,  btcPrice:91000, btc:0.026791,notes:'Compra mayor'},
-      {id:'btc003',date:'2026-06-21',usd:240,   btcPrice:63875, btc:0.003758,notes:'Compra reciente'}
-    ],
+    // Las operaciones de BTC salen del maestro desde el 2026-09-16 (CIFRAS.BTC_SEED), igual
+    // que las deudas: vivían solo aquí, o sea en un navegador. Copia profunda: lo que Adán
+    // edite en la app no debe tocar la lista del maestro en memoria.
+    btcHistory: JSON.parse(JSON.stringify((window.CIFRAS && window.CIFRAS.BTC_SEED) || [])),
     currentBtcPrice: 63875,
     usdMxn: 19.5
   };
@@ -4631,6 +4633,13 @@ const btcTs = d => { const [y,m,dd]=d.split('-').map(Number); return Date.UTC(y,
 // Sin este campo, "cuánto llevo metido en pesos" se recalculaba con el dólar de
 // hoy: el número se movía solo aunque Adán no hubiera aportado nada.
 const btcFxDe = h => (+h.fx>0 ? +h.fx : (S.usdMxn||19.5));
+// Una VENTA (2026-09-16, la primera: $5,300 MXN el 14-sep) es una entrada con `tipo:'venta'`:
+// `btc` negativo (lo que salió) y `usd` lo que entró. No suma a lo aportado ni mueve el
+// precio promedio —eso es lo que pagaste por lo que compraste—, resta ₿ y cuenta como
+// RETIRADO. Todo el módulo separa las dos listas con estos tres helpers.
+const btcEsVenta = h => h.tipo==='venta' || (h.btc||0)<0;
+const btcCompras = hist => hist.filter(h=>!btcEsVenta(h));
+const btcVentas  = hist => hist.filter(btcEsVenta);
 
 function btcSerie() {
   const hist = [...(S.btcHistory||[])].sort((a,b)=>a.date.localeCompare(b.date));
@@ -4659,24 +4668,31 @@ function btcSerie() {
     return {usd:a.usd+(b.usd-a.usd)*k, mxn:a.mxn+(b.mxn-a.mxn)*k};
   };
 
-  const pts=[], compras=[];
-  let i=0, btc=0, aMxn=0, aUsd=0;
+  const pts=[], compras=[], ventas=[];
+  let i=0, btc=0, aMxn=0, aUsd=0, rMxn=0, rUsd=0;
   for(let t=t0; t<=tEnd; t+=BTC_DAY){
     while(i<hist.length && btcTs(hist[i].date)<=t){
       const h=hist[i];
-      btc+=h.btc||0; aUsd+=h.usd||0; aMxn+=(h.usd||0)*btcFxDe(h);
-      compras.push({t:btcTs(h.date), h, aMxn, aUsd, mxn:(h.usd||0)*btcFxDe(h), fx:btcFxDe(h)});
+      btc+=h.btc||0;
+      if(btcEsVenta(h)){
+        // Lo retirado se acumula aparte: la línea de "aportado" no baja porque vendas.
+        rUsd+=h.usd||0; rMxn+=(h.usd||0)*btcFxDe(h);
+        ventas.push({t:btcTs(h.date), h, mxn:(h.usd||0)*btcFxDe(h), fx:btcFxDe(h)});
+      } else {
+        aUsd+=h.usd||0; aMxn+=(h.usd||0)*btcFxDe(h);
+        compras.push({t:btcTs(h.date), h, aMxn, aUsd, mxn:(h.usd||0)*btcFxDe(h), fx:btcFxDe(h)});
+      }
       i++;
     }
     const p=precio(t);
-    pts.push({t, btc, aMxn, aUsd, vMxn:btc*p.mxn, vUsd:btc*p.usd, pMxn:p.mxn, pUsd:p.usd});
+    pts.push({t, btc, aMxn, aUsd, rMxn, rUsd, vMxn:btc*p.mxn, vUsd:btc*p.usd, pMxn:p.mxn, pUsd:p.usd});
   }
   // Días de precio real dentro del tramo dibujado: es lo que decide si la
   // leyenda puede decir "precio real" o tiene que admitir "reconstruido".
   const reales = (S.btcPriceHist||[]).filter(p=>{
     const t=Math.floor(p[0]/BTC_DAY)*BTC_DAY; return t>=t0 && t<=tEnd;
   }).length;
-  return {pts, compras, t0, tEnd, reales, dias:pts.length};
+  return {pts, compras, ventas, t0, tEnd, reales, dias:pts.length};
 }
 
 // Las aportaciones tienen que verse COMO aportaciones: una línea vertical en su
@@ -4870,11 +4886,17 @@ function renderBtcHistory() {
     return;
   }
 
+  // Aportado y precio promedio salen SOLO de las compras; las ventas restan ₿ y suman a
+  // "retirado". El P&L cuenta las dos cosas: lo que vale hoy + lo que ya te llevaste − lo que
+  // metiste. Sin esto, vender $5,300 se leía como perder $5,300.
+  const compras  = btcCompras(history), ventas = btcVentas(history);
   const totalBtc = history.reduce((s,h)=>s+(h.btc||0),0);
-  const totalUsd = history.reduce((s,h)=>s+(h.usd||0),0);
-  const avgPrice  = totalBtc>0 ? totalUsd/totalBtc : 0;
+  const totalUsd = compras.reduce((s,h)=>s+(h.usd||0),0);
+  const btcComprado = compras.reduce((s,h)=>s+(h.btc||0),0);
+  const retUsd   = ventas.reduce((s,h)=>s+(h.usd||0),0);
+  const avgPrice  = btcComprado>0 ? totalUsd/btcComprado : 0;
   const curVal    = curPrice>0 ? totalBtc*curPrice : null;
-  const pnl       = curVal!==null ? curVal-totalUsd : null;
+  const pnl       = curVal!==null ? curVal+retUsd-totalUsd : null;
   const pnlPct    = pnl!==null&&totalUsd>0 ? (pnl/totalUsd)*100 : null;
   const hasCur    = curPrice>0;
 
@@ -4882,9 +4904,10 @@ function renderBtcHistory() {
   // Cada compra se convierte con SU tipo de cambio (h.fx) si lo tiene; el total
   // en pesos es entonces lo que salió de su cuenta, no una reconversión de hoy.
   const fxNow     = S.usdMxn||19.5;
-  const invMxn    = history.reduce((s,h)=>s+(h.usd||0)*btcFxDe(h),0);
+  const invMxn    = compras.reduce((s,h)=>s+(h.usd||0)*btcFxDe(h),0);
+  const retMxn    = ventas.reduce((s,h)=>s+(h.usd||0)*btcFxDe(h),0);
   const valMxn    = totalBtc*curPrice*fxNow;
-  const pnlMxn    = valMxn-invMxn;
+  const pnlMxn    = valMxn+retMxn-invMxn;
   const pnlMxnPct = invMxn>0 ? (pnlMxn/invMxn)*100 : 0;
   const MX        = btcCur==='MXN';
   const fMX       = n => '$'+Math.round(n).toLocaleString('es-MX');
@@ -4896,6 +4919,21 @@ function renderBtcHistory() {
   const mLabel = mk=>{ const [y,m]=mk.split('-'); return `${MN_S[parseInt(m)-1]} ${y}`; };
 
   const rows = history.map(h=>{
+    if(btcEsVenta(h)){
+      // Una venta no tiene "valor actual" ni P&L propio: lo que vale es lo que entró.
+      return `<tr style="background:rgba(255,59,107,.04)">
+      <td style="white-space:nowrap">${fmtDate(h.date)}<div class="ts" style="color:var(--danger);font-weight:700">VENTA</div></td>
+      <td style="white-space:nowrap">$${(h.btcPrice||0).toLocaleString('es-MX')} USD</td>
+      <td style="font-weight:700;color:var(--danger)">−${fUSD(h.usd)}<div class="ts" style="color:var(--text3)">recibiste ${fMX(h.usd*btcFxDe(h))} MXN</div></td>
+      <td style="font-weight:700;color:var(--danger)">${(h.btc||0).toFixed(6)} ₿</td>
+      ${hasCur?`<td class="ts tm">—</td><td class="ts tm">ya en pesos</td>`:''}
+      <td class="ts tm">${h.notes||''}</td>
+      <td style="white-space:nowrap">
+        <button class="btn btn-o btn-sm btn-ico" onclick="openBtcModal('${h.id}')">✏️</button>
+        <button class="btn btn-o btn-sm btn-ico" onclick="askDel('venta BTC',()=>delBtc('${h.id}'))">🗑️</button>
+      </td>
+    </tr>`;
+    }
     const hv  = hasCur ? h.btc*curPrice : null;
     const hp  = hv!==null ? hv-h.usd : null;
     const hpp = hp!==null&&h.usd>0 ? (hp/h.usd)*100 : null;
@@ -4932,6 +4970,7 @@ function renderBtcHistory() {
           <input type="number" id="btc-usdmxn" style="width:72px" value="${S.usdMxn||19.5}" placeholder="19.5" step="0.01" oninput="updateUsdMxn(this.value)">
         </div>
         <button class="btn btn-p btn-sm" onclick="openBtcModal()">+ Compra</button>
+        <button class="btn btn-o btn-sm" onclick="openBtcModal(null,'venta')">− Venta</button>
       </div>
     </div>
 
@@ -4985,17 +5024,21 @@ function renderBtcHistory() {
       <div class="btcx-tabs">
         <button id="btc-tab-resumen" class="btcx-tab on" onclick="switchBtcTab('resumen')">
           <span class="fx-num" style="font-size:12px;font-weight:700">Todo</span>
-          <span style="font-size:10px;opacity:.7">${monthKeys.length} compra${monthKeys.length!==1?'s':''}</span>
+          <span style="font-size:10px;opacity:.7">${compras.length} compra${compras.length!==1?'s':''}${ventas.length?' · '+ventas.length+' venta'+(ventas.length!==1?'s':''):''}</span>
         </button>
         ${monthKeys.map(mk=>{
-          const mh=byMonth[mk];
-          const mU=mh.reduce((s,h)=>s+h.usd,0);
-          const mI=mh.reduce((s,h)=>s+h.usd*btcFxDe(h),0);
-          const mV=mh.reduce((s,h)=>s+(h.btc||0),0)*curPrice;
+          const mc=btcCompras(byMonth[mk]), mv=btcVentas(byMonth[mk]);
+          const mU=mc.reduce((s,h)=>s+h.usd,0);
+          const mI=mc.reduce((s,h)=>s+h.usd*btcFxDe(h),0);
+          const mV=mc.reduce((s,h)=>s+(h.btc||0),0)*curPrice;
           const mP=MX ? (mV*fxNow-mI) : (mV-mU); const isP=mP>=0;
+          const mR=mv.reduce((s,h)=>s+(MX?h.usd*btcFxDe(h):h.usd),0);
+          // Un mes en que solo vendiste no tiene P&L de compra: dice cuánto te llevaste.
+          const sub = mc.length ? `<span class="fx-num" style="font-size:10px;font-weight:700;color:${isP?'var(--success)':'var(--danger)'}">${isP?'+':''}$${Math.round(mP).toLocaleString('es-MX')}</span>`
+                                : `<span class="fx-num" style="font-size:10px;font-weight:700;color:var(--danger)">venta −$${Math.round(mR).toLocaleString('es-MX')}</span>`;
           return `<button id="btc-tab-${mk}" class="btcx-tab" onclick="switchBtcTab('${mk}')">
             <span class="fx-num" style="font-size:12px;font-weight:700">${mLabel(mk)}</span>
-            <span class="fx-num" style="font-size:10px;font-weight:700;color:${isP?'var(--success)':'var(--danger)'}">${isP?'+':''}$${Math.round(mP).toLocaleString('es-MX')}</span>
+            ${sub}
           </button>`;
         }).join('')}
       </div>
@@ -5038,7 +5081,8 @@ function renderBtcHistory() {
                                    v:((MX?pnlMxn:pnl)>=0?'+':'')+(MX?fMX(pnlMxn):fUSD(pnl)),
                                    s:((MX?pnlMxnPct:pnlPct)>=0?'+':'')+(MX?pnlMxnPct:pnlPct).toFixed(2)+'%',
                                    c:(MX?pnlMxn:pnl)>=0?'var(--success)':'var(--danger)', hi:true},
-            {l:'BTC acumulado',    v:totalBtc.toFixed(6)+' ₿',            s:history.length===1?'1 aportación':history.length+' aportaciones', c:'var(--btc-hi)'},
+            ...(ventas.length?[{l:'Ya retirado',  v:MX?fMX(retMxn):fUSD(retUsd),      s:(ventas.length===1?'1 venta':ventas.length+' ventas')+' · cuenta en el P&L', c:'var(--danger)'}]:[]),
+            {l:'BTC acumulado',    v:totalBtc.toFixed(6)+' ₿',            s:(compras.length===1?'1 aportación':compras.length+' aportaciones')+(ventas.length?' · '+ventas.length+' venta'+(ventas.length>1?'s':''):''), c:'var(--btc-hi)'},
             {l:'Tu precio promedio',v:MX?fMX(totalBtc>0?invMxn/totalBtc:0):('$'+Math.round(avgPrice).toLocaleString('es-MX')), s:'por ₿ comprado', c:'var(--primary)'},
             {l:'BTC ahora',        v:MX?fMX(curPrice*fxNow):('$'+Math.round(curPrice).toLocaleString('es-MX')),
                                    s:curPrice>=avgPrice?'↑ arriba de tu promedio':'↓ abajo de tu promedio',
@@ -5060,15 +5104,24 @@ function renderBtcHistory() {
 
       <!-- PANES: Por mes -->
       ${monthKeys.map(mk=>{
-        const mh=byMonth[mk];
+        const mh=btcCompras(byMonth[mk]), mvs=btcVentas(byMonth[mk]);
         const mU=mh.reduce((s,h)=>s+h.usd,0);
         const mI=mh.reduce((s,h)=>s+h.usd*btcFxDe(h),0);
         const mB=mh.reduce((s,h)=>s+(h.btc||0),0);
         const mV=mB*curPrice;
         const mBase=MX?mI:mU, mVal=MX?mV*fxNow:mV, mP=mVal-mBase;
         const mPct=mBase>0?(mP/mBase)*100:0; const isP=mP>=0;
+        const mRet=mvs.reduce((s,h)=>s+(MX?h.usd*btcFxDe(h):h.usd),0);
+        const mBv=mvs.reduce((s,h)=>s+(h.btc||0),0);
         return `<div id="btc-pane-${mk}" style="display:none">
-          <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px">
+          ${mvs.length?`<div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px">
+            <div style="flex:1;min-width:110px;background:rgba(255,59,107,.06);border:1px solid rgba(255,59,107,.18);border-radius:10px;padding:12px;text-align:center">
+              <div style="font-size:10px;color:var(--text3);margin-bottom:4px">Vendido este mes</div>
+              <div style="font-size:18px;font-weight:800;color:var(--danger)">${MX?fMX(mRet):fUSD(mRet)}</div>
+              <div style="font-size:11px;font-weight:700;color:var(--danger)">${mBv.toFixed(6)} ₿ · ya en pesos</div>
+            </div>
+          </div>`:''}
+          ${mh.length?`<div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px">
             <div style="flex:1;min-width:110px;background:rgba(255,255,255,.04);border-radius:10px;padding:12px;text-align:center">
               <div style="font-size:10px;color:var(--text3);margin-bottom:4px">Aportado</div>
               <div style="font-size:18px;font-weight:800">${MX?fMX(mI):fUSD(mU)}</div>
@@ -5086,7 +5139,21 @@ function renderBtcHistory() {
               <div style="font-size:18px;font-weight:800;color:${isP?'var(--success)':'var(--danger)'}">${isP?'+':''}${MX?fMX(mP):fUSD(mP)}</div>
               <div style="font-size:11px;font-weight:700;color:${isP?'var(--success)':'var(--danger)'};">${isP?'+':''}${mPct.toFixed(1)}%</div>
             </div>
-          </div>
+          </div>`:''}
+          ${mvs.map(h=>`<div style="background:rgba(255,59,107,.05);border:1px solid rgba(255,59,107,.15);border-radius:10px;padding:14px;margin-bottom:8px">
+              <div style="display:flex;justify-content:space-between;align-items:center;gap:12px">
+                <div style="flex:1">
+                  <div style="font-size:13px;font-weight:700;color:var(--text)">${fmtDate(h.date)} · <span style="color:var(--danger)">Venta</span></div>
+                  <div style="font-size:11px;color:var(--text3);margin-top:4px">Precio de venta: <strong style="color:var(--text2)">$${(h.btcPrice||0).toLocaleString('es-MX')} USD</strong></div>
+                  <div style="font-size:11px;color:var(--text3);margin-top:3px">BTC vendido: <strong style="color:var(--danger)">${(h.btc||0).toFixed(6)} ₿</strong></div>
+                  ${h.notes?`<div style="font-size:10px;color:var(--text3);margin-top:3px;font-style:italic">${h.notes}</div>`:''}
+                </div>
+                <div style="text-align:right;flex-shrink:0;border-left:1px solid rgba(255,255,255,.07);padding-left:14px">
+                  <div style="font-size:10px;color:var(--text3)">Recibiste</div>
+                  <div style="font-size:22px;font-weight:900;color:var(--danger)">${MX?fMX(h.usd*btcFxDe(h)):fUSD(h.usd)}</div>
+                </div>
+              </div>
+            </div>`).join('')}
           ${mh.map(h=>{
             const hV=h.btc*curPrice;
             const hBase=MX?h.usd*btcFxDe(h):h.usd, hVal=MX?hV*fxNow:hV, hP=hVal-hBase;
@@ -5140,7 +5207,7 @@ function renderBtcHistory() {
     <div class="ts tm" style="margin-top:10px;line-height:1.7">
       * <b>Aportado en pesos</b>: cada compra se convierte con el tipo de cambio de SU día (el campo USD/MXN del formulario). Las compras que no lo tengan usan el de hoy, ${fxNow.toFixed(2)}.<br>
       * <b>La curva de valor</b> reconstruye el precio de BTC entre las fechas que conoces — tus compras y el precio de hoy. Con 📈 <b>Precio real</b> se sustituye por el histórico diario de CoinGecko (últimos 365 días).<br>
-      * <b>No es el saldo de una cuenta</b>: es tu BTC valuado a precio de mercado. Solo se vuelve pesos si vendes.
+      * <b>No es el saldo de una cuenta</b>: es tu BTC valuado a precio de mercado. Solo se vuelve pesos si vendes.${ventas.length?` <b>Ya vendiste ${fMX(retMxn)} MXN</b> (${ventas.length===1?'1 venta':ventas.length+' ventas'}): ese dinero ya no está aquí, pero sí cuenta en el P&amp;L.`:''}
     </div>
   </div>`;
 
@@ -5221,7 +5288,11 @@ function renderBtcHistory() {
           fill:{target:0, above:areaArr('0,232,122'), below:areaAba('255,59,107')}, order:2 },
         { label:'Aportaciones', data:SER.compras.map(c=>({x:c.t,y:+(mx?c.aMxn:c.aUsd).toFixed(2)})),
           showLine:false, pointStyle:'triangle', pointRadius:7, pointHoverRadius:9.5,
-          pointBackgroundColor:gHi, pointBorderColor:fondo, pointBorderWidth:1.5, order:1 }
+          pointBackgroundColor:gHi, pointBorderColor:fondo, pointBorderWidth:1.5, order:1 },
+        // Las ventas: un triángulo invertido rojo sobre la curva de valor, el día que vendiste.
+        { label:'Ventas', data:SER.ventas.map(v=>{ const p=SER.pts.find(q=>q.t===v.t)||SER.pts[ult]; return {x:v.t,y:+yV(p).toFixed(2)}; }),
+          showLine:false, pointStyle:'triangle', rotation:180, pointRadius:7, pointHoverRadius:9.5,
+          pointBackgroundColor:'#ff3b6b', pointBorderColor:fondo, pointBorderWidth:1.5, order:0 }
       ]},
       options:{
         responsive:true, maintainAspectRatio:false, parsing:false,
@@ -5234,7 +5305,12 @@ function renderBtcHistory() {
           btcAport:{ marks:(()=>{
             const porDia=new Map();   // varias compras el mismo día = un solo escalón
             SER.compras.forEach(c=>porDia.set(c.t,(porDia.get(c.t)||0)+(mx?c.mxn:c.h.usd)));
-            return [...porDia].map(([t,v])=>({t, label:'+'+nf(v)}));
+            const marks=[...porDia].map(([t,v])=>({t, label:'+'+nf(v)}));
+            // Las ventas llevan su propia marca, con signo: lo que salió ese día.
+            const vDia=new Map();
+            SER.ventas.forEach(v=>vDia.set(v.t,(vDia.get(v.t)||0)+(mx?v.mxn:v.h.usd)));
+            [...vDia].forEach(([t,v])=>marks.push({t, label:'−'+nf(v)}));
+            return marks.sort((a,b)=>a.t-b.t);
           })() },
           tooltip:{
             filter:it=>it.datasetIndex===1, displayColors:false, padding:11,
@@ -5247,15 +5323,18 @@ function renderBtcHistory() {
               title:it=>fTs(SER.pts[it[0].dataIndex].t),
               label:it=>{
                 const p=SER.pts[it.dataIndex]; if(!p) return '';
-                const a=yA(p), v=yV(p), d=v-a, pct=a>0?(d/a)*100:0;
+                const a=yA(p), v=yV(p), r=mx?p.rMxn:p.rUsd, d=v+r-a, pct=a>0?(d/a)*100:0;
                 const L=[
                   'Aportado  '+nf(a)+' '+sim,
                   'Vale      '+nf(v)+' '+sim,
+                  ...(r>0?['Retirado  '+nf(r)+' '+sim]:[]),
                   (d>=0?'Ganas     +':'Pierdes   ')+nf(d)+' '+sim+'  ('+(d>=0?'+':'')+pct.toFixed(1)+'%)',
                   '₿ '+p.btc.toFixed(6)+'  ·  BTC a '+nf(mx?p.pMxn:p.pUsd)
                 ];
                 SER.compras.filter(c=>c.t===p.t).forEach(c=>
                   L.push('▲ Aportaste '+nf(mx?c.mxn:c.h.usd)+(c.h.notes?' — '+c.h.notes:'')));
+                SER.ventas.filter(c=>c.t===p.t).forEach(c=>
+                  L.push('▼ Vendiste '+nf(mx?c.mxn:c.h.usd)+(c.h.notes?' — '+c.h.notes:'')));
                 return L;
               }
             }
@@ -5289,6 +5368,7 @@ function renderBtcHistory() {
           <span class="btcx-key"><span style="width:16px;height:0;border-top:1.6px dashed rgba(var(--ov),.5)"></span>Lo que has aportado</span>
           <span class="btcx-key"><span style="width:16px;height:2.6px;border-radius:2px;background:linear-gradient(90deg,${gLo},${gHi});box-shadow:0 0 9px rgba(${btcAcc},.75)"></span>Lo que vale</span>
           <span class="btcx-key"><span style="color:var(--btc);font-size:11px;text-shadow:0 0 8px rgba(var(--btc-rgb),.85)">▲</span>Aportación</span>
+          ${SER.ventas.length?`<span class="btcx-key"><span style="color:var(--danger);font-size:11px">▼</span>Venta</span>`:''}
           <span class="btcx-key"><span style="width:16px;height:9px;border-radius:2px;background:${gana?'linear-gradient(180deg,rgba(0,232,122,.5),rgba(0,232,122,.06))':'linear-gradient(180deg,rgba(255,59,107,.06),rgba(255,59,107,.5))'}"></span>${gana?'Ganancia':'Pérdida'}</span>
         </div>
         <span class="btcx-src">${fuente}</span>
@@ -5351,14 +5431,25 @@ function updateUsdMxn(val) {
   if(document.getElementById('s-patrimonio').classList.contains('active')) renderPatrimonio();
 }
 
-function openBtcModal(id=null) {
+// Los rótulos del formulario cambian con la operación: en una venta los dólares son lo que
+// ENTRA y el BTC lo que SALE.
+function btcTipoUI(){
+  const venta = document.getElementById('btc-tipo').value==='venta';
+  document.getElementById('btc-usd-lbl').textContent = venta ? 'USD recibidos *' : 'USD invertidos *';
+  document.getElementById('btc-received-lbl').textContent = venta ? 'BTC vendido (calculado automáticamente)' : 'BTC recibido (calculado automáticamente)';
+  if(!btcEditId) document.getElementById('mo-btc-title').textContent = venta ? 'Nueva Venta BTC' : 'Nueva Compra BTC';
+}
+function openBtcModal(id=null, tipo=null) {
   btcEditId = id;
   const h = id ? (S.btcHistory||[]).find(x=>x.id===id) : null;
-  document.getElementById('mo-btc-title').textContent = id ? 'Editar Compra BTC' : 'Nueva Compra BTC';
+  const venta = h ? btcEsVenta(h) : tipo==='venta';
+  document.getElementById('btc-tipo').value = venta ? 'venta' : 'compra';
+  document.getElementById('mo-btc-title').textContent = id ? (venta?'Editar Venta BTC':'Editar Compra BTC') : (venta?'Nueva Venta BTC':'Nueva Compra BTC');
+  btcTipoUI();
   document.getElementById('btc-date').value = h?.date || today();
   document.getElementById('btc-usd').value = h?.usd || '';
   document.getElementById('btc-price-at').value = h?.btcPrice || '';
-  document.getElementById('btc-received').value = h?.btc || '';
+  document.getElementById('btc-received').value = h ? Math.abs(h.btc||0) : '';
   document.getElementById('btc-fx').value = h?.fx || (S.usdMxn||'');
   document.getElementById('btc-notes').value = h?.notes || '';
   document.getElementById('mo-btc').classList.add('open');
@@ -5375,17 +5466,23 @@ function saveBtcPurchase() {
   const usd      = parseFloat(document.getElementById('btc-usd').value)||0;
   const btcPrice = parseFloat(document.getElementById('btc-price-at').value)||0;
   const notes    = document.getElementById('btc-notes').value.trim();
-  if(!date||!usd||!btcPrice) return alert('Completa fecha, USD invertidos y precio BTC.');
-  const btc  = parseFloat((usd/btcPrice).toFixed(8));
+  if(!date||!usd||!btcPrice) return alert('Completa fecha, USD y precio BTC.');
+  const venta = document.getElementById('btc-tipo').value==='venta';
+  // En una venta el BTC va en negativo: es lo que salió. Y no puedes vender más de lo que tienes.
+  const btc  = parseFloat((usd/btcPrice).toFixed(8)) * (venta?-1:1);
+  if(venta){
+    const tengo = (S.btcHistory||[]).filter(x=>x.id!==btcEditId).reduce((s,h)=>s+(h.btc||0),0);
+    if(-btc > tengo+1e-9) return alert('Vas a vender '+(-btc).toFixed(6)+' ₿ y solo tienes '+tengo.toFixed(6)+' ₿.');
+  }
   // El tipo de cambio se guarda CON la compra: es lo que esos dólares costaron
   // en pesos ese día. Sin él, el total en pesos se recalcula con el dólar de hoy
   // y el histórico entero se mueve cada vez que el peso se mueve.
   const fx   = parseFloat(document.getElementById('btc-fx').value)||0;
-  const data = {date,usd,btcPrice,btc,notes,fx:fx>0?fx:(S.usdMxn||19.5)};
+  const data = {date,usd,btcPrice,btc,notes,fx:fx>0?fx:(S.usdMxn||19.5),tipo:venta?'venta':'compra'};
   if(!S.btcHistory) S.btcHistory=[];
   if(btcEditId){const i=S.btcHistory.findIndex(x=>x.id===btcEditId);if(i>=0)S.btcHistory[i]={...S.btcHistory[i],...data};}
   else S.btcHistory.push({id:uid(),...data});
-  save(); closeMo('mo-btc'); renderBtcHistory(); toast('✅ Compra BTC guardada');
+  save(); closeMo('mo-btc'); renderBtcHistory(); toast(venta?'✅ Venta BTC guardada':'✅ Compra BTC guardada');
 }
 
 function delBtc(id) {

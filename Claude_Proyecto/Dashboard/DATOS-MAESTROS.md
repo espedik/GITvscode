@@ -118,31 +118,31 @@ desde JS. En consola, `CIFRAS.tabla()` las lista con su valor actual.
 | Marcador | Valor hoy | id |
 |---|---|---|
 | `{{autoSaldo}}` `{{autoTotal}}` `{{autoPago}}` `{{autoTasa}}` `{{autoMeses}}` | $293,000 · $315,800 · $6,700 · 12.99% · 61 | `d003` |
-| `{{tcBbva}}` `{{tcBbvaMin}}` `{{tcBbvaTasa}}` | $37,000 ⚠️ subiendo · $1,500 · 55.7% | `d001` |
-| `{{banamex}}` `{{banamexMin}}` | $7,000 ⚠️ subiendo · $810 | `d002` |
+| `{{tcBbva}}` `{{tcBbvaMin}}` `{{tcBbvaTasa}}` | $39,000 ⚠️ subiendo · $1,500 · 55.7% | `d001` |
+| `{{banamex}}` `{{banamexMin}}` | $7,800 ⚠️ subiendo · $810 | `d002` |
+| `{{depto}}` | $13,000 — "por temas de mi apartamento"; sin mínimo ni día todavía | `d012` |
 | `{{iphone}}` | $11,362 | `d008` |
 | `{{appleWatch}}` `{{appleWatchCuota}}` | $854 · $854 — queda 1 cuota (18 sep) | `d004` |
 | `{{zapStylo}}` `{{zapStyloCuota}}` | $334 · $167 — "el de los zapatos" | `d009` |
-| `{{deudaTotal}}` `{{deudaCara}}` `{{deudaMsi}}` | $349,550 · $44,000 · $12,550 | derivadas |
+| `{{deudaTotal}}` `{{deudaCara}}` `{{deudaMsi}}` | $365,350 · $46,800 · $12,550 | derivadas |
 | `{{minimosDeuda}}` `{{margen}}` | suma de mínimos vivos · lo que sobra al mes | derivadas |
 
 **Derivadas del auto**, que antes se escribían a mano y se quedaban congeladas:
 `{{autoAPagar}}` (meses × pago) y `{{autoInteres}}` (lo que cuesta en puro interés).
 
-**Las dos tarjetas subieron otra vez el 7-sep-2026.** Adán: *"ya debo 7,000 a mi tc banamex
-y a la de bbva 37,000"*. La BBVA sube **$3,000** sobre el dato del 24-ago y la Banamex
-**$1,015** sobre las cuatro compras del 1-sep. Con eso `deudaCara` pasa de $39,985 a
-**$44,000** —más que antes de liquidar la Banamex en agosto— y `deudaTotal` de $345,535 a
-**$349,550**. Los mínimos no se mueven ($1,500 y $810), así que `minimosDeuda` y `margen`
-se quedan donde estaban: lo que crece es el saldo, no la cuota. Ver `_tarjetas20260907` en
-`MIGRACIONES`.
-**La Banamex volvió a tener saldo el 1-sep-2026.** Llevaba en $0 desde el 13 ago, cuando Adán
-pagó los $9,000 completos. Ese día se le cargaron cuatro compras —plancha de Amazon $1,902,
-dutasterida $1,560, minoxidil NR-11 $900 y mouse $1,623— que suman **$5,985**. No es solo un
-número que sube: la tarjeta vuelve a ser **deuda cara** (`deudaCara` pasa de $34,000 a $39,985)
-y su mínimo de $810 vuelve a `minimosDeuda`, así que **`margen` baja $810** sin que nadie haya
-tocado un gasto fijo. Toda la prosa de Coach que daba por hecho "Banamex en $0" y "BBVA es la
-única deuda cara que queda" se corrigió el mismo día — ver `_gastos20260901` en `MIGRACIONES`.
+**Las dos tarjetas siguen subiendo.** BBVA: $34,000 (24-ago) → $37,000 (7-sep) → **$39,000**
+(16-sep-2026). Banamex: en $0 desde el 13-ago (Adán pagó los $9,000 completos), volvió a tener
+saldo el 1-sep con cuatro compras de un día —plancha $1,902, dutasterida $1,560, minoxidil $900 y
+mouse $1,623 = $5,985— y de ahí $7,000 (7-sep) → **$7,800** (16-sep). Con la BBVA por encima de
+su mínimo (el 55.7% se come los $1,500), lo que crece es el saldo, no la cuota: `minimosDeuda` y
+`margen` no se mueven; `deudaCara` sí, y hoy va en **$46,800**, más que antes de liquidar la
+Banamex en agosto. Cada subida es una entrada de `MIGRACIONES` (`_gastos20260901`,
+`_tarjetas20260907`, `_deudas20260916`).
+
+**La deuda del departamento** (`d012`, $13,000, 16-sep-2026: *"tengo una deuda de 13,000 por
+temas de mi apartamento"*) es `type:'loan'` a 0%: suma en `deudaTotal` (por eso pasa de $349,550 a
+**$365,350**) pero no en `deudaCara` ni en `deudaMsi`. **No tiene mínimo ni día** porque Adán no
+ha dicho cómo la paga; mientras `min` sea 0 no baja `margen` ni aparece en el calendario.
 
 **El día de pago vive en `day`**, dentro de cada entrada de `DEUDAS_SEED`. No tiene marcador
 porque no se escribe en prosa, pero **sí se dibuja**: el calendario del Dashboard arma con él el
@@ -156,6 +156,9 @@ globo de "se mueve dinero" de cada día.
 | `d003` | Crédito Automotriz | **15** |
 | `d004` | Apple Watch MSI | 18 |
 | `d009` `d010` `d011` | MSI de TC BBVA | 22 |
+
+`d012` (deuda del departamento) no está en la tabla a propósito: sin mínimo no hay cobro que
+pintar. Entra en cuanto Adán diga cuánto abona al mes y qué día.
 
 **Un `day` equivocado no mueve ninguna cifra** — `minimosDeuda` y `margen` suman igual — así que
 ningún cálculo lo delata: solo se ve en el calendario, mirando el día. Dos casos, los dos el
@@ -587,6 +590,11 @@ sabía migrar y por eso enseñaba saldos viejos. Ahora se escribe una vez y la v
 Las migraciones anteriores a esa fecha (`_banamex9k`, `_pagos20260813`, `_msibbva20260813`,
 `_ahorro20260817`) siguen en sus archivos: ya corrieron y tienen bandera, son inertes.
 
+Las vivas, en orden: `_gastos20260901` (Banamex vuelve a $5,985 + seis gastos), `_tarjetas20260907`
+(BBVA $37,000, Banamex $7,000), `_deudas20260916` (BBVA $39,000, Banamex $7,800, entra `d012` y la
+venta de BTC `btc004`). Una migración que añade un registro lo hace **por id y solo si falta**:
+así el navegador que arranca en blanco (que ya lo trae del seed) no lo duplica.
+
 ---
 
 ## Mapa de apps
@@ -759,6 +767,7 @@ Ya no queda ninguna estructura copiada entre archivos. Las siete viven aquí:
 | `RUTINA_TASKS` | 58 bloques del horario | `CIFRAS.rutina(base)` |
 | `SK` | 12 habilidades del radar | `CIFRAS.SK` |
 | `PESO` | Altura (178 cm), meta (80 kg), objetivo y el histórico de pesajes (2: 75 kg el 2-sep-2026, 78 el 13-sep) con IMC derivado. Salud lo siembra en Peso & Medidas en cada carga | `CIFRAS.PESO` |
+| `BTC_SEED` | Las operaciones de Bitcoin: 3 compras ($2,878 USD, 0.032509 ₿) y 1 venta (14-sep-2026: $5,300 MXN = 0.003889 ₿ a $79,000 USD/₿). Quedan **0.028620 ₿**. Finanzas lo siembra en `btcHistory`; una venta lleva `tipo:'venta'` y `btc` negativo | `CIFRAS.BTC_SEED` |
 | `PHASES` | 4 fases del Plan Maestro | `CIFRAS.PHASES` |
 | `APRENDIZAJE` | 6 prioridades de aprendizaje | `CIFRAS.APRENDIZAJE` |
 | `LISTA_COMPRAS` | Catálogo de compras por pasillos — 7 categorías; `comida` en 7 pasillos, con `Verduras` / `Frutas` / `Almidones y grasas` separados para medir la proporción del canasto | `CIFRAS.LISTA_COMPRAS` |

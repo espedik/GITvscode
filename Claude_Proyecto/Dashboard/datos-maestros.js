@@ -200,7 +200,8 @@ window.CIFRAS = (function () {
     // anual, el pago no alcanza a cubrir el interés y la tarjeta crece sola. `total` sube con el
     // saldo para conservar la invariante `total == balance` que esta tarjeta lleva desde 2024;
     // si `total` se quedara en 32,343.31, el "pagado real" de las barras saldría en negativo.
-    {id:'d001',name:'Tarjeta BBVA',                  type:'credit_card',total:37000,     balance:37000,     rate:55.7,  min:1500, day:11,start:'2024-01-22'},
+    // Saldos dichos por Adán: $34,000 (24-ago) → $37,000 (7-sep) → $39,000 (16-sep-2026).
+    {id:'d001',name:'Tarjeta BBVA',                  type:'credit_card',total:39000,     balance:39000,     rate:55.7,  min:1500, day:11,start:'2024-01-22'},
     // Liquidada el 13 ago 2026 — Adán pagó el saldo completo. 55.7 es un supuesto tomado de
     // la BBVA, no un dato medido de esta tarjeta.
     // 2026-09-01: VUELVE A TENER SALDO, y con él vuelve a ser deuda cara. Cuatro compras de ese
@@ -211,7 +212,8 @@ window.CIFRAS = (function () {
     // `total` se queda en 14349.72, el pico de 2024: es mayor que el saldo nuevo, así que el
     // "pagado real" de las barras sigue saliendo positivo y no hay que romper la invariante
     // `total == balance` como hubo que hacer con la BBVA.
-    {id:'d002',name:'Tarjeta Banamex',               type:'credit_card',total:14349.72,  balance:7000,       rate:55.7,  min:810,  day:8, start:'2024-06-18', noInterest:0},
+    // Saldos dichos por Adán: $5,985 (1-sep) → $7,000 (7-sep) → $7,800 (16-sep-2026).
+    {id:'d002',name:'Tarjeta Banamex',               type:'credit_card',total:14349.72,  balance:7800,       rate:55.7,  min:810,  day:8, start:'2024-06-18', noInterest:0},
     // Saldo reportado por Adán: $299,000 (24-ago) → $292,000 → $293,000 (25-ago-2026).
     {id:'d003',name:'Crédito Automotriz',            type:'car',        total:315800,    balance:293000,    rate:12.99, min:6700, day:15, start:'2026-01-01', remainingMonths:61},
     // Queda 1 cuota, la del 18 sep 2026: la penúltima se pagó (confirmado el 25-ago-2026).
@@ -234,7 +236,13 @@ window.CIFRAS = (function () {
     // d010 y d011 quedaron liquidados el 24-ago-2026: cerraron su tercera y última cuota. De los
     // tres MSI de la TC BBVA el único vivo es d009, los zapatos.
     {id:'d010',name:'Merpago*Merca (MSI TC BBVA)', type:'other',      total:1791,      balance:0,         rate:0,     min:597,  day:22,start:'2026-05-22'},
-    {id:'d011',name:'Mercado Pago (MSI TC BBVA)',  type:'other',      total:2151,      balance:0,         rate:0,     min:717,  day:22,start:'2026-05-22'}
+    {id:'d011',name:'Mercado Pago (MSI TC BBVA)',  type:'other',      total:2151,      balance:0,         rate:0,     min:717,  day:22,start:'2026-05-22'},
+    // 2026-09-16 · Adán: "tengo una deuda de 13,000 por temas de mi apartamento". Sin tasa, sin
+    // mínimo y sin día: no dijo cómo la paga. Con `min:0` no entra en `minimosDeuda` ni baja
+    // `margen` — en cuanto diga cuánto abona al mes y qué día, van aquí y el calendario la
+    // pinta solo. `loan` (préstamo personal): no es tarjeta (`deudaCara`) ni MSI (`deudaMsi`),
+    // pero sí suma en `deudaTotal`.
+    {id:'d012',name:'Deuda del departamento',       type:'loan',       total:13000,     balance:13000,     rate:0,     min:0,    day:0, start:'2026-09-16'}
   
   ];
 
@@ -2877,6 +2885,32 @@ window.CIFRAS = (function () {
         });
       }
     },
+    {
+      // 2026-09-16 · "debo a bbva 39,000, a banamex debo 7,800 y tengo una deuda de 13,000 por
+      // temas de mi apartamento y vendí 5,300 pesos de mi bitcoin antier". Cuatro cosas:
+      //   - d001 sube $2,000 (y `total` con ella, misma invariante de siempre); d002 sube $800.
+      //   - Entra d012, la deuda del departamento, copiada de DEUDAS_SEED si el navegador no la
+      //     tiene (sin mínimo ni día hasta que Adán diga cómo la paga).
+      //   - La venta de BTC (btc004) entra en `btcHistory` por id, solo si falta.
+      // Lo que se mueve sin que nadie lo escriba: `deudaCara` de $44,000 a $46,800, `deudaTotal`
+      // de $349,550 a $365,350. `minimosDeuda` y `margen` no cambian: los mínimos de las
+      // tarjetas siguen en $1,500 y $810, y d012 no tiene mínimo todavía.
+      flag: '_deudas20260916',
+      hacer: function (f) {
+        const tc = (f.debts || []).find(d => d.id === 'd001');
+        if (tc) { tc.balance = 39000; tc.total = 39000; }
+        const bx = (f.debts || []).find(d => d.id === 'd002');
+        if (bx) bx.balance = 7800;
+        if (!(f.debts || []).some(d => d.id === 'd012')) {
+          const dep = DEUDAS_SEED.find(d => d.id === 'd012');
+          if (dep) f.debts.push(Object.assign({}, dep));
+        }
+        if (!Array.isArray(f.btcHistory)) f.btcHistory = [];
+        BTC_SEED.filter(function (o) { return o.tipo === 'venta'; }).forEach(function (o) {
+          if (!f.btcHistory.some(x => x.id === o.id)) f.btcHistory.push(Object.assign({}, o));
+        });
+      }
+    },
   ];
 
   /* Las seis compras del 1-sep-2026, en un solo sitio: las usa la migración de arriba para el
@@ -2890,6 +2924,28 @@ window.CIFRAS = (function () {
     {id:'s069',type:'expense',desc:'Avodart (dutasterida 0,5 mg)',          amount:1560, date:'2026-09-01',cat:'Salud',       notes:'TC Banamex — 30 cápsulas, un mes de tratamiento'},
     {id:'s070',type:'expense',desc:'Minoxidil 5% NR-11 (Polaris Research)', amount:900,  date:'2026-09-01',cat:'Salud',       notes:'TC Banamex — 60 ml, un mes de tratamiento'},
     {id:'s071',type:'expense',desc:'Mouse',                                 amount:1623, date:'2026-09-01',cat:'Otros gastos',notes:'TC Banamex'}
+  ];
+
+  /* ── EL BITCOIN ─────────────────────────────────────────────────────────────────────
+     Las operaciones de BTC vivían solo en el seed de Finanzas.html, o sea en un navegador: la
+     misma fuga que tuvo el peso (ver PESO). Desde el 2026-09-16 están aquí y Finanzas las
+     siembra desde `CIFRAS.BTC_SEED`, igual que hace con DEUDAS_SEED. Una compra lleva `usd`
+     (lo que salió), `btcPrice` (USD por ₿ ese día), `btc` (lo recibido) y `fx` (pesos por
+     dólar ese día, para que "lo aportado en pesos" no se mueva con el dólar de hoy). Una VENTA
+     lleva `tipo:'venta'`, `btc` NEGATIVO (lo que salió) y `usd` lo que entró: no suma a lo
+     aportado ni mueve el precio promedio, resta ₿ y cuenta como retirado.
+     La venta del 14-sep: Adán, 16-sep-2026: "vendí 5,300 pesos de mi bitcoin antier, que valía
+     79,000" — 79,000 leído como el precio del BTC en dólares ese día (CoinGecko lo tuvo entre
+     $75,700 y $77,700 el 14 y 15 de sep; sus 0.0325 ₿ NO valían $79,000 MXN: ~$42,400). A 17.25
+     MXN/USD son $307.25 USD → 0.003889 ₿. Los saldos de hoy NO se editan aquí (Finanzas guarda
+     los suyos); esto es el punto de partida de un navegador en blanco y la lista que la
+     migración de abajo usa para completar uno que ya tenga datos. */
+  const BTC_SEED = [
+    {id:'btc001', date:'2025-02-01', usd:200,    btcPrice:102007, btc:0.001960,  notes:'Primera compra'},
+    {id:'btc002', date:'2025-12-15', usd:2438,   btcPrice:91000,  btc:0.026791,  notes:'Compra mayor'},
+    {id:'btc003', date:'2026-06-21', usd:240,    btcPrice:63875,  btc:0.003758,  notes:'Compra reciente'},
+    {id:'btc004', tipo:'venta', date:'2026-09-14', usd:307.25, btcPrice:79000, btc:-0.003889, fx:17.25,
+     notes:'Venta de $5,300 MXN (dicho el 16-sep-2026)'},
   ];
 
   function migrar() {
@@ -2942,6 +2998,7 @@ window.CIFRAS = (function () {
     banamex:       { v: () => campo('d002', 'balance') },
     banamexMin:    { v: () => campo('d002', 'min') },
     iphone:        { v: () => campo('d008', 'balance') },
+    depto:         { v: () => campo('d012', 'balance') },
     appleWatch:    { v: () => campo('d004', 'balance') },
     // El importe de la cuota, distinto del saldo aunque hoy coincidan: queda una sola.
     appleWatchCuota: { v: () => campo('d004', 'min') },
@@ -3323,6 +3380,7 @@ window.CIFRAS = (function () {
     grafo: grafo,
     DEUDAS_SEED: DEUDAS_SEED,
     GASTOS_20260901: GASTOS_20260901,
+    BTC_SEED: BTC_SEED,
     // Para que `seedData()` pueda marcarlas como aplicadas: un seed nuevo ya las incluye.
     MIGRACIONES_FLAGS: MIGRACIONES.map(function (m) { return m.flag; }),
     rutina: rutina,
