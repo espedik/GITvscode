@@ -10504,9 +10504,9 @@ function renderMetasSlide(){
     // movimientos del mes: sin capturarlos salía en ceros. Los intereses se calculan de saldo ×
     // tasa, que siempre está, y la barra mide cuánto ha bajado el interés desde que debía el
     // total original — así avanza de verdad cada vez que abona.
-    {ico:'🔥',lbl:'Intereses este mes',val:hasFinData()?money(interesMesKpi):'Sin datos',pct:interesPctKpi,sub:interesMesKpi>0?`${money(interesMesKpi*12)} al año si no cambia`:'Sin deuda con interés 🎉',c:'var(--r)',id:'intereses'},
+    {ico:'🔥',lbl:'Intereses este mes',val:hasFinData()?money(interesMesKpi):'Sin datos',pct:interesPctKpi,sub:interesMesKpi>0?`${money(interesMesKpi*12)} al año si no cambia`:(hasFinData()?'Sin deuda con interés 🎉':'Abre Finanzas una vez para cargarlos'),c:'var(--r)',id:'intereses'},
     {ico:'📈',lbl:'Total invertido',val:money(totalInvKpi),pct:totalInvKpi>0?Math.min(100,totalInvKpi/50000*100):0,sub:`${(D.fin.investments||[]).length} instrumento(s) · toca para ver el reparto`,c:'var(--cy)',id:'invertido'},
-    {ico:'🧾',lbl:'Deuda total',val:hasFinData()?money(deudaTotKpi):'Sin datos',pct:deudaTotKpi>0?100:0,sub:deudaTotKpi>0?`${money(deudaCaraBalKpi)} con interés`:'Sin deudas vivas 🎉',c:'var(--r)',id:'deudatotal'},
+    {ico:'🧾',lbl:'Deuda total',val:hasFinData()?money(deudaTotKpi):'Sin datos',pct:deudaTotKpi>0?100:0,sub:deudaTotKpi>0?`${money(deudaCaraBalKpi)} con interés`:(hasFinData()?'Sin deudas vivas 🎉':'Abre Finanzas una vez para cargarlas'),c:'var(--r)',id:'deudatotal'},
     {ico:'⏳',lbl:'Camino a 2030',val:diasA2030.toLocaleString('es-MX')+' días',pct:pct2030,sub:`${Math.round(pct2030)}% del plan recorrido`,c:'var(--p)',id:'meta2030'}
   ];
   document.getElementById('metasProgreso').innerHTML=tiles.map(x=>`

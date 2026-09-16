@@ -4847,9 +4847,11 @@ function setBtcCur(c){
 // 365 días hacia atrás; lo que quede fuera sigue interpolado y la leyenda lo
 // dice. Se guarda recortado al rango que la gráfica usa: el historial completo
 // son ~100 KB de localStorage que no se dibujan nunca.
-async function fetchBtcHistory(){
+// `auto` (2026-09-16): al abrir la app se trae solo, sin avisos, si el que hay tiene más de un
+// día. Antes había que pulsar 📈 cada vez, y sin pulsarlo la curva era una reconstrucción.
+async function fetchBtcHistory(auto){
   const btn=document.getElementById('btc-hist-btn');
-  if(btn){ btn.textContent='⏳ Cargando…'; btn.disabled=true; }
+  if(btn && !auto){ btn.textContent='⏳ Cargando…'; btn.disabled=true; }
   try{
     const r=await fetch('https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=mxn&days=365',{cache:'no-store'});
     if(!r.ok) throw new Error('HTTP '+r.status);
@@ -4866,10 +4868,10 @@ async function fetchBtcHistory(){
     out.sort((a,b)=>a[0]-b[0]);
     S.btcPriceHist=out; S.btcHistFetch=new Date().toISOString();
     save(); renderBtcHistory();
-    toast('📈 '+out.length+' días de precio real cargados');
+    if(!auto) toast('📈 '+out.length+' días de precio real cargados');
   }catch(e){
-    toast('⚠️ No se pudo traer el histórico. La curva sigue reconstruida.');
-    if(btn){ btn.textContent='📈 Precio real'; btn.disabled=false; }
+    if(!auto) toast('⚠️ No se pudo traer el histórico. La curva sigue reconstruida.');
+    if(btn && !auto){ btn.textContent='📈 Precio real'; btn.disabled=false; }
   }
 }
 
@@ -5083,7 +5085,7 @@ function renderBtcHistory() {
                                    c:(MX?pnlMxn:pnl)>=0?'var(--success)':'var(--danger)', hi:true},
             ...(ventas.length?[{l:'Ya retirado',  v:MX?fMX(retMxn):fUSD(retUsd),      s:(ventas.length===1?'1 venta':ventas.length+' ventas')+' · cuenta en el P&L', c:'var(--danger)'}]:[]),
             {l:'BTC acumulado',    v:totalBtc.toFixed(6)+' ₿',            s:(compras.length===1?'1 aportación':compras.length+' aportaciones')+(ventas.length?' · '+ventas.length+' venta'+(ventas.length>1?'s':''):''), c:'var(--btc-hi)'},
-            {l:'Tu precio promedio',v:MX?fMX(totalBtc>0?invMxn/totalBtc:0):('$'+Math.round(avgPrice).toLocaleString('es-MX')), s:'por ₿ comprado', c:'var(--primary)'},
+            {l:'Tu precio promedio',v:MX?fMX(btcComprado>0?invMxn/btcComprado:0):('$'+Math.round(avgPrice).toLocaleString('es-MX')), s:'por ₿ comprado', c:'var(--primary)'},   // entre lo COMPRADO, no lo que queda: una venta no cambia lo que pagaste
             {l:'BTC ahora',        v:MX?fMX(curPrice*fxNow):('$'+Math.round(curPrice).toLocaleString('es-MX')),
                                    s:curPrice>=avgPrice?'↑ arriba de tu promedio':'↓ abajo de tu promedio',
                                    c:curPrice>=avgPrice?'var(--success)':'var(--danger)'},
@@ -5600,6 +5602,11 @@ function init() {
   // Auto-fetch precio BTC si tiene más de 15 minutos sin actualizarse
   const stale = !S.btcLastFetch || (Date.now()-new Date(S.btcLastFetch).getTime()) > 15*60*1000;
   if(stale && (S.btcHistory||[]).length > 0) fetchBtcPrice();
+  // Y el histórico diario, si el guardado tiene más de un día: así la curva es precio real de
+  // mercado desde que se abre, no una recta entre compras. Va después del precio (dos llamadas
+  // seguidas a CoinGecko y la segunda se espera 1,5 s: su API pública limita por minuto).
+  const histViejo = !S.btcHistFetch || (Date.now()-new Date(S.btcHistFetch).getTime()) > 24*60*60*1000;
+  if(histViejo && (S.btcHistory||[]).length > 0) setTimeout(function(){ fetchBtcHistory(true); }, 1500);
 }
 
 init();

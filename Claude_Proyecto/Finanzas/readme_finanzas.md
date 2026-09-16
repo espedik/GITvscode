@@ -637,7 +637,7 @@ aportación con su línea vertical y su monto.
 
 ### Las ventas
 
-Desde el 2026-09-16 (la primera: $5,300 MXN el 14-sep, 0.003889 ₿ a $79,000 USD/₿) una entrada
+Desde el 2026-09-16 (la primera: $5,300 MXN el 14-sep, 0.003930 ₿ a $79,000 USD/₿ y 17.072 MXN/USD) una entrada
 de `btcHistory` puede ser una venta: `tipo:'venta'`, `btc` **negativo** (lo que salió) y `usd` lo
 que entró. Tres helpers la separan en todo el módulo — `btcEsVenta(h)`, `btcCompras(hist)`,
 `btcVentas(hist)` — y la regla es una: **lo aportado y el precio promedio salen solo de las
@@ -672,7 +672,9 @@ curva inventada y una real se dibujan igual de bonitas; solo una de las dos es i
 `h.fx` si existe, si no `S.usdMxn`. El campo es nuevo (input **Tipo de cambio USD/MXN ese día**
 en `mo-btc`, opcional). Sin él, "cuánto llevo metido en pesos" se recalculaba con el dólar de
 hoy y **el histórico entero se movía solo** cada vez que el peso se movía, aunque Adán no
-hubiera aportado un peso.
+hubiera aportado un peso. Desde el 2026-09-16 las cuatro operaciones del maestro lo traen (BCE
+del día: 20.665, 17.980, 17.336 y 17.072) y la migración `_deudas20260916` se lo pone a las
+compras que ya estaban en el navegador sin él: lo aportado son **$52,129 MXN**, fijos.
 
 La regla que se sigue en todo el módulo: **un valor de HOY** (lo que vale, el P&L) se convierte
 con `fxNow`; **lo APORTADO** se convierte con el fx de su día. Mezclarlos era el bug.
@@ -719,7 +721,11 @@ Los degradados (área de ganancia/pérdida y la curva, que va de `--btc-lo` en e
 armar la configuración: el `chartArea` todavía no existe en ese momento, así que se usan el alto
 y el ancho reales del contenedor.
 
-### `fetchBtcHistory()`
+### `fetchBtcHistory(auto)`
+Con `auto` (al abrir la app, si el histórico guardado tiene más de un día) va en silencio: sin
+toast ni cambiar el botón. Así la curva es precio real de mercado desde que se abre; el botón 📈
+queda para forzarlo. Se lanza 1,5 s después del precio actual porque CoinGecko limita las
+llamadas por minuto.
 
 `async`. Trae `coins/bitcoin/market_chart?vs_currency=mxn&days=365` y guarda en `S.btcPriceHist`
 **recortado al rango que la gráfica dibuja** (el historial completo son ~100 KB de localStorage

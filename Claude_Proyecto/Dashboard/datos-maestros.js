@@ -2906,8 +2906,12 @@ window.CIFRAS = (function () {
           if (dep) f.debts.push(Object.assign({}, dep));
         }
         if (!Array.isArray(f.btcHistory)) f.btcHistory = [];
-        BTC_SEED.filter(function (o) { return o.tipo === 'venta'; }).forEach(function (o) {
-          if (!f.btcHistory.some(x => x.id === o.id)) f.btcHistory.push(Object.assign({}, o));
+        BTC_SEED.forEach(function (o) {
+          const ya = f.btcHistory.find(x => x.id === o.id);
+          if (!ya) { if (o.tipo === 'venta') f.btcHistory.push(Object.assign({}, o)); return; }
+          // Las compras que ya estaban no traían `fx` (se valuaban con el dólar de hoy): se les
+          // pone el de su día. Solo si no lo tienen, por si Adán lo anotó a mano.
+          if (!(ya.fx > 0) && o.fx > 0) ya.fx = o.fx;
         });
       }
     },
@@ -2934,17 +2938,23 @@ window.CIFRAS = (function () {
      dólar ese día, para que "lo aportado en pesos" no se mueva con el dólar de hoy). Una VENTA
      lleva `tipo:'venta'`, `btc` NEGATIVO (lo que salió) y `usd` lo que entró: no suma a lo
      aportado ni mueve el precio promedio, resta ₿ y cuenta como retirado.
+     `fx` es el tipo de cambio de referencia del BCE ese día (api.frankfurter.dev; si cae en fin
+     de semana, el del viernes anterior): 20.665 el 31-ene-2025, 17.980 el 15-dic-2025, 17.336 el
+     19-jun-2026 y 17.072 el 14-sep-2026. Sin `fx` la app usaba el dólar de HOY para todas, y "lo
+     aportado en pesos" se movía solo con el peso. CoinGecko da lo mismo con ±0,5 % (17.98, 17.36,
+     16.99) y no llega a la compra de 2025.
      La venta del 14-sep: Adán, 16-sep-2026: "vendí 5,300 pesos de mi bitcoin antier, que valía
-     79,000" — 79,000 leído como el precio del BTC en dólares ese día (CoinGecko lo tuvo entre
-     $75,700 y $77,700 el 14 y 15 de sep; sus 0.0325 ₿ NO valían $79,000 MXN: ~$42,400). A 17.25
-     MXN/USD son $307.25 USD → 0.003889 ₿. Los saldos de hoy NO se editan aquí (Finanzas guarda
-     los suyos); esto es el punto de partida de un navegador en blanco y la lista que la
-     migración de abajo usa para completar uno que ya tenga datos. */
+     79,000" — 79,000 leído como el precio del BTC en dólares ese día, dicho por él (CoinGecko:
+     apertura $76,819 el 14 y $78,173 el 15; sus 0.0325 ₿ NO valían $79,000 MXN: ~$42,400).
+     $5,300 / 17.072 = $310.45 USD → 0.003930 ₿. ⚠️ El ₿ exacto vendido está en el recibo de su
+     exchange; hasta tenerlo, esta es la mejor cifra. Los saldos de hoy NO se editan aquí
+     (Finanzas guarda los suyos); esto es el punto de partida de un navegador en blanco y la lista
+     que la migración de abajo usa para completar uno que ya tenga datos. */
   const BTC_SEED = [
-    {id:'btc001', date:'2025-02-01', usd:200,    btcPrice:102007, btc:0.001960,  notes:'Primera compra'},
-    {id:'btc002', date:'2025-12-15', usd:2438,   btcPrice:91000,  btc:0.026791,  notes:'Compra mayor'},
-    {id:'btc003', date:'2026-06-21', usd:240,    btcPrice:63875,  btc:0.003758,  notes:'Compra reciente'},
-    {id:'btc004', tipo:'venta', date:'2026-09-14', usd:307.25, btcPrice:79000, btc:-0.003889, fx:17.25,
+    {id:'btc001', date:'2025-02-01', usd:200,    btcPrice:102007, btc:0.001960,  fx:20.665, notes:'Primera compra'},
+    {id:'btc002', date:'2025-12-15', usd:2438,   btcPrice:91000,  btc:0.026791,  fx:17.980, notes:'Compra mayor'},
+    {id:'btc003', date:'2026-06-21', usd:240,    btcPrice:63875,  btc:0.003758,  fx:17.336, notes:'Compra reciente'},
+    {id:'btc004', tipo:'venta', date:'2026-09-14', usd:310.45, btcPrice:79000, btc:-0.003930, fx:17.072,
      notes:'Venta de $5,300 MXN (dicho el 16-sep-2026)'},
   ];
 

@@ -767,7 +767,7 @@ Ya no queda ninguna estructura copiada entre archivos. Las siete viven aquí:
 | `RUTINA_TASKS` | 58 bloques del horario | `CIFRAS.rutina(base)` |
 | `SK` | 12 habilidades del radar | `CIFRAS.SK` |
 | `PESO` | Altura (178 cm), meta (80 kg), objetivo y el histórico de pesajes (2: 75 kg el 2-sep-2026, 78 el 13-sep) con IMC derivado. Salud lo siembra en Peso & Medidas en cada carga | `CIFRAS.PESO` |
-| `BTC_SEED` | Las operaciones de Bitcoin: 3 compras ($2,878 USD, 0.032509 ₿) y 1 venta (14-sep-2026: $5,300 MXN = 0.003889 ₿ a $79,000 USD/₿). Quedan **0.028620 ₿**. Finanzas lo siembra en `btcHistory`; una venta lleva `tipo:'venta'` y `btc` negativo | `CIFRAS.BTC_SEED` |
+| `BTC_SEED` | Las operaciones de Bitcoin: 3 compras ($2,878 USD = $52,129 MXN al cambio de cada día, 0.032509 ₿) y 1 venta (14-sep-2026: $5,300 MXN = $310.45 USD = 0.003930 ₿ a $79,000 USD/₿, precio dicho por Adán). Quedan **0.028579 ₿**. Cada operación lleva `fx` (BCE del día). Finanzas lo siembra en `btcHistory`; una venta lleva `tipo:'venta'` y `btc` negativo | `CIFRAS.BTC_SEED` |
 | `PHASES` | 4 fases del Plan Maestro | `CIFRAS.PHASES` |
 | `APRENDIZAJE` | 6 prioridades de aprendizaje | `CIFRAS.APRENDIZAJE` |
 | `LISTA_COMPRAS` | Catálogo de compras por pasillos — 7 categorías; `comida` en 7 pasillos, con `Verduras` / `Frutas` / `Almidones y grasas` separados para medir la proporción del canasto | `CIFRAS.LISTA_COMPRAS` |
