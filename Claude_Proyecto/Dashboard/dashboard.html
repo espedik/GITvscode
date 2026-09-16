@@ -6802,12 +6802,24 @@ function escucharHtml(t){
   const it=(grupo.items||[])[0]; if(!it) return '';
   return `<div class="blq-escuchar">🎧<span>Mientras manejas: <b>${esc(it.n)}</b> · ${esc(it.d)}</span><a href="javascript:void(0)" class="hp-link" onclick="abrirDidi()">Qué escuchar →</a></div>`;
 }
+// `mirutina_v1.sesiones` cambió de forma el 2026-09-01, cuando Ejercicio pasó a registrar series:
+// antes era una lista [{fecha,nombre}] y ahora es un objeto por fecha ISO {fecha:{ejercicio:[sets]}}.
+// Tres sitios de Mi Día seguían haciendo .find/.some sobre él y tronaban en cuanto Ejercicio
+// había guardado algo ("find is not a function", 2026-09-16). Esto devuelve siempre la lista:
+// una fecha con al menos una serie marcada cuenta como entrenada.
+function gymSesiones(){
+  const s=D.gym&&D.gym.sesiones;
+  if(Array.isArray(s)) return s;
+  if(s&&typeof s==='object') return Object.keys(s).filter(k=>/^\d{4}-\d{2}-\d{2}$/.test(k)&&
+    Object.values(s[k]||{}).some(a=>Array.isArray(a)&&a.some(x=>x&&x.ok))).map(k=>({fecha:k,nombre:''}));
+  return [];
+}
 // Entrenas: el día de hoy en grande y el de mañana en chico; la tira de 7 días va debajo.
 function renderDiaEntrena(gymRutina, dowHoy){
   const el=document.getElementById('diaEntrenaTxt'); if(!el) return;
   const hoy=gymRutina[dowHoy], man=gymRutina[(dowHoy+1)%7];
   const nom=r=>!r?'':(r.tipo==='descanso'?'Descanso':(r.nombre||''));
-  const sesion=(D.gym.sesiones||[]).find(s=>s.fecha===today());
+  const sesion=gymSesiones().find(s=>s.fecha===today());
   const DOWL=['dom','lun','mar','mié','jue','vie','sáb'];
   const sig=[1,2,3].map(k=>({d:(dowHoy+k)%7,r:gymRutina[(dowHoy+k)%7]})).filter(x=>x.r);
   el.innerHTML=`<b>${sesion?'✅ '+esc(sesion.nombre||'Entrenado'):(hoy&&hoy.tipo==='descanso'?'Hoy descansas':esc(nom(hoy)||'Sin rutina hoy'))}</b>
@@ -6917,7 +6929,7 @@ function renderHero(){
   //    emoji de ESTADO (✅/⏳/😴/🏋️) se conserva, ahora como badge chico sobre la foto. ──
   document.getElementById('heroWeekStrip').innerHTML=semana.map((d,dow)=>{
     const esHoy=d===hoyStr, esFuturo=d>hoyStr, esPasado=d<hoyStr;
-    const sesion=(D.gym.sesiones||[]).find(s=>s.fecha===d);
+    const sesion=gymSesiones().find(s=>s.fecha===d);
     const rutinaDia=gymRutina[dow];
     let badge='—', gymLbl='', lblCls='';
     if(sesion){ badge='✅'; gymLbl=sesion.nombre||'Entrenado'; }
@@ -7085,7 +7097,7 @@ function renderHeroGymPanel(){
   const dow=diaSemanaSel!==null?diaSemanaSel:dowHoy;
   const esHoy=dow===dowHoy;
   const rutinaDia=gymRutina[dow];
-  const yaEntreno=esHoy&&(D.gym.sesiones||[]).some(s=>s.fecha===today());
+  const yaEntreno=esHoy&&gymSesiones().some(s=>s.fecha===today());
   const esDescanso=rutinaDia?.tipo==='descanso';
   let gymBody;
   if(esDescanso){

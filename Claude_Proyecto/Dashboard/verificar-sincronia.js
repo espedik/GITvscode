@@ -670,6 +670,23 @@ const DOCS_DEUDA = ['Dashboard/DATOS-MAESTROS.md', 'Dashboard/readme_dashboard.m
     ' ventas, quedan ' + saldo.toFixed(6) + ' ₿; Finanzas lo siembra de aquí)');
 })();
 
+/* ── Lo que una app guarda y otra lee: la forma tiene que ser la misma ───────────────────────
+   Las apps comparten localStorage (mismo origen file://). El 2026-09-01 Ejercicio cambió
+   `mirutina_v1.sesiones` de lista a objeto por fecha y el Dashboard siguió haciendo `.find` sobre
+   él: Mi Día tronaba en cuanto se marcaba una serie, y ningún control lo veía porque ninguna
+   cifra del maestro cambia. Aquí se vigila el contrato: el Dashboard solo toca `sesiones` a
+   través de gymSesiones(), y Ejercicio sigue guardándolo como objeto. */
+(function contratoGym() {
+  const dash = leer('Dashboard/dashboard.html'), ej = leer('CuidadoPersonal/ejercicio.html');
+  const malos = [];
+  const usos = (sinComentarios(dash).match(/D\.gym\.sesiones/g) || []).length;
+  if (dash.indexOf('function gymSesiones()') < 0) malos.push('     dashboard.html ya no tiene gymSesiones()');
+  else if (usos > 1) malos.push('     dashboard.html lee D.gym.sesiones en ' + usos + ' sitios; solo gymSesiones() debe tocarlo');
+  if (!/sesiones:\s*\{\}/.test(ej)) malos.push('     ejercicio.html ya no siembra `sesiones: {}` — si cambió de forma, hay que revisar gymSesiones()');
+  if (malos.length) problemas.push('El contrato de mirutina_v1.sesiones entre Ejercicio y el Dashboard se rompió:\n' + malos.join('\n'));
+  else ok.push('mirutina_v1.sesiones: Ejercicio lo guarda como objeto y el Dashboard lo lee solo por gymSesiones()');
+})();
+
 /* ── Impacto de lo que cambió en esta sesión ──────────────────────────────────────────────────
    Si `datos-maestros.js` cambió respecto al último commit, se comparan los valores de entonces
    con los de ahora y se dice qué se movió — incluido lo ARRASTRADO. Es la parte que Adán

@@ -1,4 +1,5 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Playfair+Display:wght@700;900&display=swap');
+/* La fuente de Google la pide cada HTML con un <link> no bloqueante (2026-09-16): un @import aquí
+   detenía el pintado hasta que Google contestaba. Los font-family de abajo ya llevan respaldo. */
 
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 
