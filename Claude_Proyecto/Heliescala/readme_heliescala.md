@@ -38,13 +38,55 @@ a mano. No es un juguete pintado, y hay que decirlo con el taller de fondo.
 
 Ocho piezas reales suyas, cada una con la librea que llevaba el original: Airbus H145 (corporativa
 y de exhibición), AS350/H125 de servicios médicos, Mi-17, tres Panther de la **Marina**, un par de
-rescate con flotadores, dos Bell 407 de gobierno estatal y la flota de la **Policía** (Cóndores).
-Más, en "tu aeronave", el Bell 412 de la policía con su número de unidad y el de la **Fuerza Aérea
-Mexicana** con su matrícula.
+rescate en librea AESSA, dos del **gobierno de San Luis Potosí** (XC-PSI) y la flota de la
+**Policía** (Bell 412, grupo Cóndores). Más, en "tu aeronave", el Bell 412 de la policía con su
+número de unidad y el de la **Fuerza Aérea Mexicana** con su matrícula.
 
 Para añadir un modelo hacen falta dos cosas: la foto en `fotos/` y una línea en `T.es.piezas` (con
-su traducción en `T.en.piezas`). El último elemento de cada línea son sus etiquetas; la primera se
-pinta en cian.
+su traducción en `T.en.piezas`). Cada línea es `[clave, nombre, foto, texto, etiquetas, modelo]`:
+la primera etiqueta se pinta en cian y `modelo` es la clave de su ficha (ver abajo).
+
+## La ficha del helicóptero
+
+Adán, 2026-09-17: *"de los helicópteros puedes hacer al abrir que te dé una ficha completa del
+helicóptero?"*. Al tocar una pieza del catálogo se abre un panel a pantalla partida: a la izquierda
+la foto de la réplica, a la derecha **el helicóptero de verdad**.
+
+| Bloque | Qué lleva |
+|---|---|
+| Identidad | Fabricante, designación y un párrafo de qué es y por qué existe |
+| Ficha técnica | Motor, rotor, peso máximo, capacidad, crucero y alcance |
+| Para qué se usa | Las misiones reales del tipo |
+| **Cómo se reconoce** | El detalle que hay que clavar para que se identifique: el fenestron, las cinco palas, el rotor de cola de tres… |
+| En México | Quién lo vuela aquí — la Marina, la FAM, la policía, los servicios médicos |
+| La réplica | Escala, tiempo, envío y precio, con el botón que la encarga por WhatsApp **con el modelo ya escrito en el mensaje** |
+
+**"Cómo se reconoce" es el bloque que justifica la página**: es lo que separa una maqueta fiel de
+un juguete, y es el argumento de por qué la hace quien repara las de verdad.
+
+Se cierra con **Esc**, con clic fuera o con la ✕, y se navega entre las ocho piezas con las
+**flechas** del teclado o los botones del pie. El panel es uno solo en el DOM y se repinta; al
+cambiar de idioma con una ficha abierta, se repinta en el idioma nuevo sin cerrarse.
+
+**Los datos son del fabricante y se comprobaron el 2026-09-17**, no salen de memoria:
+
+| Modelo | Fuente |
+|---|---|
+| H145 (BK117 D-3) | [airbus.com/…/h145](https://www.airbus.com/en/products-services/helicopters/civil-helicopters/h145) — 2 × Arriel 2E, 5 palas, 241 km/h, ≈650 km, hasta 10 pax |
+| H125 / AS350 | [airbus.com/…/h125](https://www.airbus.com/en/products-services/helicopters/civil-helicopters/h125) — Arriel 2D 952 shp, 2,250 kg, 1+6, 252 km/h, 630 km, récord del Everest 2005 |
+| AS565 MBe Panther | Airbus — 2 × Arriel 2N, 4,500 kg, 165 kt, 780 km; **10 unidades entregadas a la Marina de México entre 2016 y 2017** |
+| Bell 412 | [bellflight.com/products/bell-412](https://www.bellflight.com/products/bell-412) — Twin-Pac, 1+14, 5,534 kg, 228 km/h, 669 km |
+| Mi-17 / Mi-8MTV | No hay ficha pública del fabricante: se usan los datos de la versión de exportación (2 × TV3-117, 13,000 kg, 24 pax, 225 km/h) |
+
+Las cifras **varían con la versión y la configuración**, y la ficha lo dice en el comentario del
+código: quien necesite el número exacto de SU aeronave va al manual, no a esta página.
+
+**Dos piezas no tienen ficha de modelo a propósito**: el par rojo de rescate con librea AESSA y las
+dos azules del gobierno de San Luis Potosí (matrícula XC-PSI). Por la foto no se puede afirmar qué
+modelo son —el par azul tiene rotor de dos palas con barra estabilizadora, así que **no** es un Bell
+407— y en esta página no se inventa un dato. Su ficha enseña lo que sí se sabe (librea, operador,
+qué es la pieza) y marca el modelo como pendiente de confirmar con su papá. En cuanto lo diga, es
+una línea: se le pone la clave del modelo y su ficha en `T.*.modelos`.
 
 ## Las fotos
 
@@ -81,3 +123,10 @@ píldoras: ver "La barra de apps" en `../Dashboard/readme_dashboard.md`.
 Chromium `file://` a 1600 y 390 px, en español y en inglés: 13 imágenes, **ninguna rota**, 8 piezas
 en el catálogo, sin desborde horizontal, sin errores de consola y sin marcadores sin resolver.
 Desde el Dashboard la píldora abre la página, y el menú cruza a Aeroresinas y vuelve.
+
+**Las ocho fichas**, recorridas una a una en los dos anchos y los dos idiomas: las seis con modelo
+pintan 5 o 6 datos técnicos y sus tres bloques de texto; las dos sin modelo pintan su aviso y
+ocultan la rejilla de datos en vez de dejarla vacía. Esc cierra y devuelve el scroll del fondo, las
+flechas giran del 8 al 1, el clic y el Enter en la tarjeta abren, y el botón de encargo lleva el
+modelo en el mensaje. El `<img>` del panel nace **sin** atributo `src` — con `src=""` el navegador
+pide la propia página.

@@ -215,6 +215,62 @@ b,strong{font-weight:600;color:var(--tinta)}
 .pie-p a:hover{color:var(--tinta)}
 .pie-d{font-family:var(--fm);font-size:11px;letter-spacing:.08em}
 
+/* ── Ficha del helicóptero ─────────────────────────────────────────────────
+   Se abre al tocar una pieza del catálogo. La mitad izquierda es la foto de la
+   pieza; la derecha, el helicóptero de verdad: qué es, sus números, para qué se
+   usa, qué hay que clavar para que se reconozca y quién lo vuela en México.
+   Al final, lo que cuesta la réplica y el botón que la encarga con el modelo ya
+   escrito en el mensaje. */
+.pieza{cursor:pointer}
+.ovl{position:fixed;inset:0;z-index:100;display:none;align-items:center;justify-content:center;
+  padding:28px;background:rgba(3,6,12,.82);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.ovl.abierto{display:flex}
+.fichap{position:relative;width:min(1080px,96vw);max-height:92vh;display:grid;
+  grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);border-radius:22px;overflow:hidden;
+  background:#0d1322;border:1px solid var(--linea);box-shadow:0 40px 100px -30px rgba(0,0,0,.9)}
+.fichap-im{position:relative;background:#fff;min-height:320px}
+.fichap-im img{width:100%;height:100%;object-fit:cover}
+.fichap-im .et{position:absolute;left:16px;top:16px;display:flex;gap:7px;flex-wrap:wrap}
+.fichap-cu{display:flex;flex-direction:column;gap:16px;padding:32px;overflow-y:auto}
+.fichap-x{position:absolute;top:14px;right:14px;z-index:3;width:38px;height:38px;border-radius:11px;
+  border:1px solid var(--linea);background:rgba(8,12,22,.75);color:var(--tinta);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;font-size:19px;line-height:1;font-family:var(--fb)}
+.fichap-x:hover{background:rgba(255,255,255,.14)}
+.fichap-fab{font-family:var(--fm);font-size:10.5px;font-weight:600;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--cian)}
+.fichap-t{font-family:var(--fd);font-size:clamp(24px,2.6vw,31px);font-weight:600;letter-spacing:-.025em;line-height:1.12}
+.fichap-r{font-size:14px;line-height:1.65;color:var(--t2)}
+.fichap-specs{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--linea2);
+  border:1px solid var(--linea2);border-radius:14px;overflow:hidden}
+.spec{background:#0d1322;padding:13px 15px;display:flex;flex-direction:column;gap:3px}
+.spec .k{font-family:var(--fm);font-size:9px;letter-spacing:.12em;color:var(--t3);text-transform:uppercase}
+.spec .v{font-size:13.5px;font-weight:600;line-height:1.35}
+/* Con un número impar de datos, el último ocupa las dos columnas: si no, queda un hueco
+   negro a su derecha que se lee como un dato que falta. */
+.spec:last-child:nth-child(odd){grid-column:1/-1}
+.fichap-bl{display:flex;flex-direction:column;gap:7px}
+.fichap-bl .h{font-family:var(--fm);font-size:9.5px;font-weight:600;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--t3);display:flex;align-items:center;gap:7px}
+.fichap-bl .h svg{color:var(--cian)}
+.fichap-bl p{font-size:13.5px;line-height:1.65;color:var(--t2)}
+.fichap-bl b{color:var(--tinta)}
+.fichap-rep{display:flex;flex-direction:column;gap:12px;padding:18px;border-radius:14px;
+  background:rgba(0,194,212,.07);border:1px solid rgba(0,194,212,.22)}
+.fichap-rep .fila{display:flex;gap:18px;flex-wrap:wrap}
+.fichap-rep .fila>div{display:flex;flex-direction:column;gap:2px}
+.fichap-nav{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:auto;
+  padding-top:14px;border-top:1px solid var(--linea2)}
+.fichap-nav button{padding:9px 13px;border-radius:10px;border:1px solid var(--linea);
+  background:rgba(255,255,255,.05);color:var(--t2);cursor:pointer;font:inherit;font-size:12.5px}
+.fichap-nav button:hover{background:rgba(255,255,255,.12);color:var(--tinta)}
+.fichap-nav .cuenta{font-family:var(--fm);font-size:11px;color:var(--t3)}
+@media(max-width:860px){
+  .ovl{padding:0}
+  .fichap{grid-template-columns:1fr;width:100vw;max-height:100vh;border-radius:0;height:100vh}
+  .fichap-im{min-height:230px;max-height:38vh}
+  .fichap-cu{padding:22px}
+}
+
 /* ── Responsivo ────────────────────────────────────────────────────────── */
 @media(max-width:1080px){
   .cat{grid-template-columns:repeat(2,minmax(0,1fr))}
@@ -382,6 +438,34 @@ b,strong{font-weight:600;color:var(--tinta)}
   </div>
 </section>
 
+<!-- La ficha del helicóptero. Una sola en el DOM: se repinta con la pieza que se abra. -->
+<div class="ovl" id="ovl" onclick="if(event.target===this)cerrarFicha()">
+  <div class="fichap" role="dialog" aria-modal="true" aria-labelledby="fp-t">
+    <button class="fichap-x" onclick="cerrarFicha()" aria-label="Cerrar">✕</button>
+    <div class="fichap-im"><img id="fp-img" alt=""><div class="et" id="fp-et"></div></div>
+    <div class="fichap-cu">
+      <div style="display:flex;flex-direction:column;gap:7px">
+        <div class="fichap-fab" id="fp-fab"></div>
+        <h2 class="fichap-t" id="fp-t"></h2>
+        <p class="fichap-r" id="fp-r"></p>
+      </div>
+      <div class="fichap-specs" id="fp-specs"></div>
+      <div id="fp-bloques" style="display:flex;flex-direction:column;gap:16px"></div>
+      <div class="fichap-rep">
+        <div class="fichap-fab" data-t="fpRepT">La réplica</div>
+        <div class="fila" id="fp-rep"></div>
+        <p class="fichap-r" id="fp-repd" style="font-size:13px"></p>
+        <a class="btn btn-p" id="fp-cta" href="#contacto"><i data-ico="wa"></i><span data-t="fpCta">Encargar esta</span></a>
+      </div>
+      <div class="fichap-nav">
+        <button type="button" onclick="moverFicha(-1)" id="fp-ant">←</button>
+        <span class="cuenta" id="fp-cuenta"></span>
+        <button type="button" onclick="moverFicha(1)" id="fp-sig">→</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <footer class="pie-p">
   <div class="pie-in">
     <div class="pie-m"><i data-ico="heli"></i><b>HELIESCALA</b></div>
@@ -436,16 +520,58 @@ const T = {
   catT:'Algunos de los que ya ha hecho', catN:'CATÁLOGO',
   catSub:'Cada uno es una pieza real suya, con la librea que llevaba el original. Si el tuyo no está, se hace: el molde y la decoración se preparan para cada encargo.',
   piezas:[
-   ['h145','Airbus H145','fotos/h145.jpg','Fenestron, tren de patines y librea corporativa blanca y negra.',['AIRBUS','TWIN']],
-   ['h145a','Airbus H145 · exhibición','fotos/h145-airbus.jpg','Versión de exhibición en azul Airbus, montada sobre pedestal.','',['AIRBUS','EXHIBICIÓN']],
-   ['sgm','AS350 / H125 · ambulancia','fotos/sgm.jpg','Rojo de servicios médicos, con camilla y estribos. De los más pedidos.','',['AIRBUS','AEROMÉDICA']],
-   ['mi17','Mi-17','fotos/mi17.jpg','El ruso de transporte, en gris. Rotor de cinco palas y tren fijo.','',['MIL','TRANSPORTE']],
-   ['marina','Panther · Marina','fotos/marina.jpg','Tres piezas de la misma serie, en librea naval mexicana.','',['MARINA','SERIE']],
-   ['rescate','Rescate con flotadores','fotos/rescate.jpg','Par en rojo y amarillo de rescate, con flotadores de emergencia.','',['RESCATE','PAR']],
-   ['bell407','Bell 407','fotos/bell407.jpg','Dos unidades en librea de gobierno estatal, azul y gris.','',['BELL','GOBIERNO']],
-   ['policiapar','Policía · Cóndores','fotos/policia-par.jpg','La flota de la policía, en azul y blanco, lista para entregar.','',['POLICÍA','FLOTA']],
+   ['h145','Airbus H145','fotos/h145.jpg','Fenestron, tren de patines y librea corporativa blanca y negra.',['AIRBUS','TWIN'],'h145'],
+   ['h145a','Airbus H145 · exhibición','fotos/h145-airbus.jpg','Versión de exhibición en azul Airbus, montada sobre pedestal.',['AIRBUS','EXHIBICIÓN'],'h145'],
+   ['sgm','AS350 / H125 · ambulancia','fotos/sgm.jpg','Rojo de servicios médicos, con camilla y estribos. De los más pedidos.',['AIRBUS','AEROMÉDICA'],'h125'],
+   ['mi17','Mi-17','fotos/mi17.jpg','El ruso de transporte, en gris. Rotor de cinco palas y tren fijo.',['MIL','TRANSPORTE'],'mi17'],
+   ['marina','Panther · Marina','fotos/marina.jpg','Tres piezas de la misma serie, en librea naval mexicana.',['MARINA','SERIE'],'panther'],
+   ['rescate','Rescate · librea AESSA','fotos/rescate.jpg','Par en rojo y amarillo con flotadores de emergencia y patines altos.',['RESCATE','PAR'],''],
+   ['bell407','Gobierno de SLP · XC-PSI','fotos/bell407.jpg','Dos unidades en azul y gris, con matrícula y escudo pintados a mano.',['GOBIERNO','PAR'],''],
+   ['policiapar','Bell 412 · Policía','fotos/policia-par.jpg','La flota de la policía, en azul y blanco, lista para entregar.',['POLICÍA','FLOTA'],'bell412'],
   ],
   fichas:[['regla','ESCALAS','escalas'],['reloj','TIEMPO','tiempo'],['caja','ENVÍO','envio'],['etiqueta','DESDE','desde']],
+  verFicha:'Ver la ficha',
+  fpRepT:'La réplica', fpCta:'Encargar esta', fpDe:'de', fpRepD:'Se hace por encargo, con la librea que pidas: la de la foto, la de tu operador o la tuya propia.',
+  fpSpec:{motor:'Motor', rotor:'Rotor', peso:'Peso máximo', cap:'Capacidad', vel:'Crucero', alc:'Alcance'},
+  fpBl:{usos:'Para qué se usa', ojo:'Cómo se reconoce', mx:'En México'},
+  fpPend:'Modelo exacto por confirmar con el taller.',
+  /* ── Los helicópteros de verdad ──────────────────────────────────────────
+     Cifras del fabricante, comprobadas el 2026-09-17 en airbus.com y bellflight.com
+     (el Mi-17 no tiene ficha pública de fabricante: sus datos son los del Mi-8MTV,
+     la versión de exportación más común). Varían con la versión y la configuración:
+     si alguien necesita el número exacto de SU aeronave, va al manual, no a esta página. */
+  modelos:{
+   h145:{fab:'Airbus Helicopters', n:'H145 (BK117 D-3)',
+     r:'El bimotor ligero más vendido de Airbus para emergencias. Cabina cuadrada con puertas traseras de concha, fenestron en la cola y, desde 2020, rotor de cinco palas sin cabeza articulada: 150 kg más de carga útil y mucho menos ruido.',
+     sp:{motor:'2 × Safran Arriel 2E', rotor:'5 palas · fenestron', cap:'Hasta 10 pasajeros', vel:'241 km/h', alc:'≈ 650 km'},
+     usos:'Ambulancia aérea, policía, búsqueda y rescate, transporte ejecutivo y offshore. Es el que ves cuando aterriza un helicóptero medicalizado en una carretera.',
+     ojo:'El <b>fenestron</b> —el rotor de cola metido dentro de la deriva— y las <b>cinco palas</b> del rotor principal. Si tiene cuatro palas y fenestron, es el H145 anterior a 2020.',
+     mx:'Vuela en servicios aeromédicos privados y en dependencias de gobierno; la versión de exhibición de Airbus es una de las piezas que más se pide.'},
+   h125:{fab:'Airbus Helicopters', n:'H125 / AS350 Écureuil',
+     r:'El monomotor de trabajo por excelencia. Ligero, sencillo de mantener y con una relación potencia-peso que lo hace imbatible en altura: en 2005 un AS350 B3 aterrizó y despegó en la cima del Everest, a 8,848 m — el récord sigue en pie.',
+     sp:{motor:'1 × Safran Arriel 2D (952 shp)', rotor:'3 palas', peso:'2,250 kg', cap:'1 piloto + 6', vel:'252 km/h', alc:'≈ 630 km'},
+     usos:'Trabajo aéreo, tendido eléctrico, combate de incendios, ambulancia aérea, turismo y vigilancia. Donde hay montaña, hay Écureuil.',
+     ojo:'La silueta estrecha, el <b>rotor de tres palas</b> y el escape del motor saliendo alto, detrás del rotor. Los de ambulancia llevan camilla y estribo lateral.',
+     mx:'Es de los más comunes del país: servicios médicos, gobiernos estatales, empresas de trabajo aéreo y turismo.'},
+   mi17:{fab:'Mil (Rusia)', n:'Mi-17 / Mi-8MTV',
+     r:'El camión del aire. Transporte medio-pesado, de mecánica robusta y pensado para operar donde no hay hangar ni pista. Es, con su antecesor el Mi-8, el helicóptero más producido de la historia.',
+     sp:{motor:'2 × Klimov TV3-117 (≈2,070 shp)', rotor:'5 palas · rotor de cola de 3', peso:'13,000 kg', cap:'Hasta 24 pasajeros', vel:'225 km/h', alc:'≈ 580 km'},
+     usos:'Transporte de tropa y carga, combate de incendios con helibalde, evacuación y apoyo en desastres.',
+     ojo:'El <b>tamaño</b>, las puertas de concha en la cola, las ventanillas redondas y el tren de aterrizaje fijo de tres patas. No se parece a nada occidental.',
+     mx:'La Fuerza Aérea Mexicana opera Mi-17 desde los años noventa, y son los que se ven en inundaciones y huracanes.'},
+   panther:{fab:'Airbus Helicopters', n:'AS565 MBe Panther',
+     r:'La versión naval del Dauphin: bimotor, plegable para caber en el hangar de un buque y preparado para operar sobre el mar. Es el helicóptero embarcado de la Marina.',
+     sp:{motor:'2 × Safran Arriel 2N', rotor:'4 palas · fenestron', peso:'4,500 kg', vel:'≈ 305 km/h', alc:'≈ 780 km'},
+     usos:'Guerra antisubmarina y antisuperficie, vigilancia marítima, interdicción, búsqueda y rescate en el mar.',
+     ojo:'El <b>fenestron</b> y la deriva alta con plano de cola en T, más el tren retráctil y la sonda. La cola y las palas se pliegan.',
+     mx:'La <b>Marina mexicana</b> recibió diez AS565 MBe entre 2016 y 2017, y operan desde sus buques.'},
+   bell412:{fab:'Bell', n:'Bell 412',
+     r:'Bimotor medio derivado del mítico Huey, con rotor de cuatro palas. La combinación de cabina grande, dos motores y mecánica conocida lo hizo el estándar de la policía y la protección civil.',
+     sp:{motor:'2 × Pratt &amp; Whitney (Twin-Pac)', rotor:'4 palas', peso:'5,534 kg', cap:'1 piloto + 14', vel:'228 km/h', alc:'≈ 669 km'},
+     usos:'Patrulla policial, rescate, traslado de personal, combate de incendios y transporte a plataformas.',
+     ojo:'La cabina ancha con <b>puertas corredizas</b>, los patines altos y el rotor de cuatro palas. Los de policía llevan reflector y torreta de cámara bajo la nariz.',
+     mx:'Es el helicóptero de la <b>policía</b> en varias ciudades — el grupo Cóndores de la Ciudad de México es el más conocido — y también de la Fuerza Aérea.'},
+  },
   tuyaOjo:'Lo que más se encarga', tuyaT:'La réplica de tu propia aeronave',
   tuyaSub:'Es lo que más piden: el helicóptero que vuelas o que operas, con <b>sus colores, su número y su matrícula</b>. Sirve de regalo de retiro, de reconocimiento, de pieza de recepción o de obsequio a un cliente.',
   tuyaLista:[
@@ -492,16 +618,53 @@ const T = {
   catT:'Some of the ones he has built', catN:'CATALOGUE',
   catSub:'Each one is a real piece of his, in the livery the original wore. If yours is not here, it gets built: the mould and the markings are prepared for each order.',
   piezas:[
-   ['h145','Airbus H145','fotos/h145.jpg','Fenestron, skid gear and a black and white corporate livery.',['AIRBUS','TWIN']],
-   ['h145a','Airbus H145 · display','fotos/h145-airbus.jpg','Display version in Airbus blue, on a pedestal.','',['AIRBUS','DISPLAY']],
-   ['sgm','AS350 / H125 · air ambulance','fotos/sgm.jpg','Medical-services red, with stretcher and steps. One of the most requested.','',['AIRBUS','AIR MEDICAL']],
-   ['mi17','Mi-17','fotos/mi17.jpg','The Russian transport, in grey. Five-blade rotor and fixed gear.','',['MIL','TRANSPORT']],
-   ['marina','Panther · Navy','fotos/marina.jpg','Three pieces from the same batch, in Mexican naval livery.','',['NAVY','BATCH']],
-   ['rescate','Rescue with floats','fotos/rescate.jpg','A pair in red and yellow rescue livery, with emergency floats.','',['RESCUE','PAIR']],
-   ['bell407','Bell 407','fotos/bell407.jpg','Two units in state-government livery, blue and grey.','',['BELL','GOVERNMENT']],
-   ['policiapar','Police · Cóndores','fotos/policia-par.jpg','The police fleet, in blue and white, ready to deliver.','',['POLICE','FLEET']],
+   ['h145','Airbus H145','fotos/h145.jpg','Fenestron, skid gear and a black and white corporate livery.',['AIRBUS','TWIN'],'h145'],
+   ['h145a','Airbus H145 · display','fotos/h145-airbus.jpg','Display version in Airbus blue, on a pedestal.',['AIRBUS','DISPLAY'],'h145'],
+   ['sgm','AS350 / H125 · air ambulance','fotos/sgm.jpg','Medical-services red, with stretcher and steps. One of the most requested.',['AIRBUS','AIR MEDICAL'],'h125'],
+   ['mi17','Mi-17','fotos/mi17.jpg','The Russian transport, in grey. Five-blade rotor and fixed gear.',['MIL','TRANSPORT'],'mi17'],
+   ['marina','Panther · Navy','fotos/marina.jpg','Three pieces from the same batch, in Mexican naval livery.',['NAVY','BATCH'],'panther'],
+   ['rescate','Rescue · AESSA livery','fotos/rescate.jpg','A pair in red and yellow with emergency floats and high skids.',['RESCUE','PAIR'],''],
+   ['bell407','SLP government · XC-PSI','fotos/bell407.jpg','Two units in blue and grey, registration and crest painted by hand.',['GOVERNMENT','PAIR'],''],
+   ['policiapar','Bell 412 · Police','fotos/policia-par.jpg','The police fleet, in blue and white, ready to deliver.',['POLICE','FLEET'],'bell412'],
   ],
   fichas:[['regla','SCALES','escalas'],['reloj','LEAD TIME','tiempo'],['caja','SHIPPING','envio'],['etiqueta','FROM','desde']],
+  verFicha:'See the data sheet',
+  fpRepT:'The replica', fpCta:'Order this one', fpDe:'of', fpRepD:'Built to order, in whatever livery you ask for: the one in the photo, your operator\u2019s, or your own.',
+  fpSpec:{motor:'Engine', rotor:'Rotor', peso:'Max weight', cap:'Capacity', vel:'Cruise', alc:'Range'},
+  fpBl:{usos:'What it is used for', ojo:'How to recognise it', mx:'In Mexico'},
+  fpPend:'Exact model to be confirmed with the workshop.',
+  modelos:{
+   h145:{fab:'Airbus Helicopters', n:'H145 (BK117 D-3)',
+     r:'Airbus\u2019 best-selling light twin for emergency work. Square cabin with rear clamshell doors, a fenestron in the tail and, since 2020, a bearingless five-blade rotor: 150 kg more useful load and far less noise.',
+     sp:{motor:'2 × Safran Arriel 2E', rotor:'5 blades · fenestron', cap:'Up to 10 passengers', vel:'241 km/h', alc:'≈ 650 km'},
+     usos:'Air ambulance, police, search and rescue, corporate transport and offshore. It is the one you see when a medical helicopter lands on a motorway.',
+     ojo:'The <b>fenestron</b> — the tail rotor buried in the fin — and the <b>five blades</b> on the main rotor. Four blades with a fenestron means a pre-2020 H145.',
+     mx:'It flies with private air-medical operators and government agencies; the Airbus display version is one of the most requested pieces.'},
+   h125:{fab:'Airbus Helicopters', n:'H125 / AS350 Écureuil',
+     r:'The single-engine workhorse. Light, simple to maintain and with a power-to-weight ratio that makes it unbeatable at altitude: in 2005 an AS350 B3 landed and took off from the summit of Everest, at 8,848 m — the record still stands.',
+     sp:{motor:'1 × Safran Arriel 2D (952 shp)', rotor:'3 blades', peso:'2,250 kg', cap:'1 pilot + 6', vel:'252 km/h', alc:'≈ 630 km'},
+     usos:'Aerial work, power-line jobs, firefighting, air ambulance, sightseeing and surveillance. Wherever there are mountains, there is an Écureuil.',
+     ojo:'The narrow silhouette, the <b>three-blade rotor</b> and the exhaust exiting high, behind the rotor. Air-ambulance ones carry a stretcher and a side step.',
+     mx:'One of the most common types in the country: medical services, state governments, aerial-work companies and tour operators.'},
+   mi17:{fab:'Mil (Russia)', n:'Mi-17 / Mi-8MTV',
+     r:'The truck of the air. A medium-heavy transport, mechanically rugged and built to operate where there is no hangar and no runway. Together with its predecessor the Mi-8, it is the most-produced helicopter in history.',
+     sp:{motor:'2 × Klimov TV3-117 (≈2,070 shp)', rotor:'5 blades · 3-blade tail rotor', peso:'13,000 kg', cap:'Up to 24 passengers', vel:'225 km/h', alc:'≈ 580 km'},
+     usos:'Troop and cargo transport, firefighting with a bambi bucket, evacuation and disaster relief.',
+     ojo:'The <b>size</b>, the clamshell doors at the tail, the round windows and the fixed three-leg landing gear. It looks like nothing western.',
+     mx:'The Mexican Air Force has operated Mi-17s since the nineties, and they are the ones you see in floods and hurricanes.'},
+   panther:{fab:'Airbus Helicopters', n:'AS565 MBe Panther',
+     r:'The naval version of the Dauphin: twin-engine, foldable to fit a ship\u2019s hangar and equipped to work over water. It is the navy\u2019s shipborne helicopter.',
+     sp:{motor:'2 × Safran Arriel 2N', rotor:'4 blades · fenestron', peso:'4,500 kg', vel:'≈ 305 km/h', alc:'≈ 780 km'},
+     usos:'Anti-submarine and anti-surface warfare, maritime surveillance, interdiction, and search and rescue at sea.',
+     ojo:'The <b>fenestron</b> and the tall fin with a T-tail, plus the retractable gear and the sensor probe. Tail and blades fold.',
+     mx:'The <b>Mexican Navy</b> received ten AS565 MBe between 2016 and 2017, and they operate from its ships.'},
+   bell412:{fab:'Bell', n:'Bell 412',
+     r:'A medium twin derived from the legendary Huey, with a four-blade rotor. A big cabin, two engines and familiar mechanics made it the standard for police and civil-protection work.',
+     sp:{motor:'2 × Pratt &amp; Whitney (Twin-Pac)', rotor:'4 blades', peso:'5,534 kg', cap:'1 pilot + 14', vel:'228 km/h', alc:'≈ 669 km'},
+     usos:'Police patrol, rescue, personnel transport, firefighting and offshore runs.',
+     ojo:'The wide cabin with <b>sliding doors</b>, the tall skids and the four-blade rotor. Police ones carry a searchlight and a camera turret under the nose.',
+     mx:'It is the police helicopter in several cities — Mexico City\u2019s Cóndores unit is the best known — and also flies with the Air Force.'},
+  },
   tuyaOjo:'The most requested', tuyaT:'A replica of your own aircraft',
   tuyaSub:'It is what people ask for most: the helicopter you fly or operate, in <b>its colours, its unit number and its registration</b>. It works as a retirement gift, an award, a reception piece or a present for a client.',
   tuyaLista:[
@@ -554,12 +717,15 @@ function pinta(){
     if(v == null) return;
     el.textContent = v; el.classList.toggle('pend', marcado(v));
   });
-  // Catálogo. La última posición de cada pieza son sus etiquetas.
-  document.getElementById('catalogo-grid').innerHTML = t.piezas.map(function(p){
-    const tags = p[p.length - 1] || [];
-    return '<article class="pieza"><div class="im"><img src="' + p[2] + '" alt="' + p[1] + '" loading="lazy"></div>' +
+  // Catálogo. Cada pieza es [clave, nombre, foto, texto, etiquetas, modelo].
+  document.getElementById('catalogo-grid').innerHTML = t.piezas.map(function(p, i){
+    const tags = p[4] || [];
+    return '<article class="pieza" onclick="abrirFicha(' + i + ')" tabindex="0" ' +
+      'onkeydown="if(event.key===\'Enter\'||event.key===\' \'){event.preventDefault();abrirFicha(' + i + ')}">' +
+      '<div class="im"><img src="' + p[2] + '" alt="' + p[1] + '" loading="lazy"></div>' +
       '<div class="cuerpo"><h3 class="t">' + p[1] + '</h3><p class="d">' + p[3] + '</p>' +
-      '<div class="tags">' + tags.map(function(x, i){ return '<span class="tag' + (i === 0 ? ' acc' : '') + '">' + x + '</span>'; }).join('') +
+      '<div class="tags">' + tags.map(function(x, k){ return '<span class="tag' + (k === 0 ? ' acc' : '') + '">' + x + '</span>'; }).join('') +
+      '<span class="tag" style="margin-left:auto;color:var(--cian)">' + t.verFicha + ' →</span>' +
       '</div></div></article>';
   }).join('');
   document.getElementById('fichas').innerHTML = t.fichas.map(function(f){
@@ -585,7 +751,67 @@ function pinta(){
   document.getElementById('btn-es').classList.toggle('on', IDIOMA === 'es');
   document.getElementById('btn-en').classList.toggle('on', IDIOMA === 'en');
 }
-function setIdioma(x){ IDIOMA = x; try{ localStorage.setItem('heli-idioma', x); }catch(e){} pinta(); }
+function setIdioma(x){ IDIOMA = x; try{ localStorage.setItem('heli-idioma', x); }catch(e){} pinta(); if(fichaAbierta >= 0) abrirFicha(fichaAbierta); }
+
+/* ── La ficha del helicóptero ───────────────────────────────────────────────
+   La pieza trae la foto y la librea; el MODELO trae los datos de la aeronave de
+   verdad, y varias piezas comparten modelo (los dos H145, por ejemplo). Si una
+   pieza no tiene modelo asignado —porque todavía no está confirmado cuál es— la
+   ficha enseña lo que sí se sabe y lo dice, en vez de inventarlo. */
+let fichaAbierta = -1;
+function abrirFicha(i){
+  const t = T[IDIOMA], p = t.piezas[i];
+  if(!p) return;
+  fichaAbierta = i;
+  const m = p[5] ? t.modelos[p[5]] : null;
+  document.getElementById('fp-img').src = p[2];
+  document.getElementById('fp-img').alt = p[1];
+  document.getElementById('fp-et').innerHTML = (p[4] || []).map(function(x, k){
+    return '<span class="tag' + (k === 0 ? ' acc' : '') + '">' + x + '</span>'; }).join('');
+  document.getElementById('fp-fab').textContent = m ? m.fab : p[1];
+  document.getElementById('fp-t').textContent = m ? m.n : p[1];
+  document.getElementById('fp-r').innerHTML = m ? m.r : p[3] + ' <span class="pend">' + t.fpPend + '</span>';
+  document.getElementById('fp-specs').innerHTML = m ? Object.keys(m.sp).map(function(k){
+    return '<div class="spec"><span class="k">' + (t.fpSpec[k] || k) + '</span><span class="v">' + m.sp[k] + '</span></div>';
+  }).join('') : '';
+  document.getElementById('fp-specs').style.display = m ? '' : 'none';
+  document.getElementById('fp-bloques').innerHTML = m ? [['usos','lupa'],['ojo','check'],['mx','pin']].map(function(b){
+    return '<div class="fichap-bl"><div class="h">' + svg(b[1], 13) + (t.fpBl[b[0]] || '') + '</div><p>' + m[b[0]] + '</p></div>';
+  }).join('') : '';
+  document.getElementById('fp-rep').innerHTML = t.fichas.map(function(f){
+    const v = PERFIL[f[2]] || '';
+    return '<div><span class="k" style="font-family:var(--fm);font-size:9px;letter-spacing:.12em;color:var(--t3)">' + f[1] + '</span>' +
+      '<span class="v' + (marcado(v) ? ' pend' : '') + '" style="font-size:13.5px;font-weight:600">' + v + '</span></div>';
+  }).join('');
+  document.getElementById('fp-repd').textContent = t.fpRepD;
+  const cta = document.getElementById('fp-cta');
+  cta.href = PERFIL.whatsapp
+    ? 'https://wa.me/' + PERFIL.whatsapp + '?text=' + encodeURIComponent(t.waSaludo + '\n' + t.waModelo + ': ' + (m ? m.n : p[1]))
+    : '#contacto';
+  cta.target = PERFIL.whatsapp ? '_blank' : '';
+  document.getElementById('fp-cuenta').textContent = (i + 1) + ' ' + t.fpDe + ' ' + t.piezas.length;
+  document.querySelectorAll('#fp-cta [data-ico]').forEach(function(el){
+    if(!el.querySelector('svg')) el.innerHTML = svg('wa', 17); });
+  const ovl = document.getElementById('ovl');
+  ovl.classList.add('abierto');
+  document.body.style.overflow = 'hidden';
+  ovl.querySelector('.fichap-cu').scrollTop = 0;
+}
+function cerrarFicha(){
+  document.getElementById('ovl').classList.remove('abierto');
+  document.body.style.overflow = '';
+  fichaAbierta = -1;
+}
+function moverFicha(d){
+  const n = T[IDIOMA].piezas.length;
+  abrirFicha((fichaAbierta + d + n) % n);
+}
+document.addEventListener('keydown', function(e){
+  if(fichaAbierta < 0) return;
+  if(e.key === 'Escape') cerrarFicha();
+  if(e.key === 'ArrowLeft') moverFicha(-1);
+  if(e.key === 'ArrowRight') moverFicha(1);
+});
 
 function enviarWhatsApp(ev){
   ev.preventDefault();
