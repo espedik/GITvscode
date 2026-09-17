@@ -12,15 +12,19 @@ los helicópteros de resina, cada uno haz un html, es mejor y dividiremos la emp
 | **Aeroresinas** | Reparación estructural de aeronaves | esta página |
 | **Heliescala** | Réplicas en resina de helicópteros | [`../Heliescala/`](../Heliescala/readme_heliescala.md) |
 
-Cada archivo es **autónomo** —su CSS va dentro, sin hoja compartida— porque son dos clientes
-distintos y algún día serán dos dominios. Se enlazan entre sí desde el menú, el pie y una sección
-de puente a media página: son la misma casa y el argumento cruzado es bueno (quien repara las de
-verdad es quien hace las réplicas).
+**Y son independientes de verdad**: ninguna página menciona a la otra ni enlaza con ella. Adán,
+2026-09-17: *"de ambas páginas no pongas lo de que se relacionan"*. Se quitaron la sección puente,
+los enlaces del menú y del pie, y las frases que apoyaban una en la otra. Cada archivo es
+**autónomo** —su CSS va dentro, sin hoja compartida— y se puede subir a su propio dominio sin
+arrastrar nada.
+
+Lo único que las relaciona es esta documentación y la carpeta del repositorio; nada de eso lo ve
+un cliente.
 
 ## Estructura
 
 Barra → hero → **qué repara** (5 servicios, cada uno con su foto) → **un trabajo de principio a
-fin** → **cómo trabaja** (4 pasos) → **puente a Heliescala** → **quién lo hace** → contacto.
+fin** → **cómo trabaja** (4 pasos) → **galería** → **quién lo hace** → contacto.
 
 **El titular es el diferenciador, no un eslogan:** *"Tu aeronave no viaja al taller. El taller
 viaja a tu aeronave."* Un operador no mueve un helicóptero si puede evitarlo, y eso es justo lo que
@@ -71,8 +75,7 @@ por WhatsApp, que es como va a llegar a la mayoría de los clientes.
 
 Blanco y transparente, como pidió Adán: vidrio (blanco al 72 % con `backdrop-filter`) sobre un
 cielo claro con dos auroras y una retícula técnica al 4,5 %, para que se lea como un plano y no
-como un folleto. Un solo acento, `#1b47ff`. **Heliescala usa la misma familia invertida** (fondo
-oscuro, acento cian): se distinguen de un vistazo sin cambiar de tipografía ni de retícula.
+como un folleto. Un solo acento, `#1b47ff`.
 
 Tipografía: **Space Grotesk** (títulos), **IBM Plex Sans** (cuerpo), **IBM Plex Mono** (datos). La
 hoja de Google **no bloquea el pintado** (`media="print"` + `onload`), como en el resto del proyecto.
@@ -122,9 +125,11 @@ vista. Cada una con su pie. Se añade con una línea en `T.*.galeria`.
 
 ## Comprobado
 
-Chromium `file://` a 1600 y 390 px, en español y en inglés: 18 imágenes, **ninguna rota**, 5
+Chromium `file://` a 1600 y 390 px, en español y en inglés: 15 imágenes, **ninguna rota**, 5
 servicios, 3 fotos de galería, sin desborde horizontal, sin errores de consola y sin marcadores sin
-resolver. Desde el Dashboard la píldora abre la página, y el menú cruza a Heliescala y vuelve.
+resolver. Desde el Dashboard la píldora abre la página. **Cero referencias a Heliescala** en el
+cuerpo del documento (la única mención es la ruta en el comentario del `<style>`, que explica por
+qué el CSS está duplicado).
 
 **El idioma se probó con el navegador puesto en `en-US`**, que es el caso que fallaba: la página
 abre en español, el botón dice *English*, cambia y vuelve. En 390px el menú es visible con sus 6

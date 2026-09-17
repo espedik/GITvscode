@@ -21,11 +21,11 @@
 /* ════════════════════════════════════════════════════════════════════════════
    AERORESINAS — reparación estructural de aeronaves.
 
-   Una de las dos mitades del negocio del papá de Adán; la otra, las réplicas en
-   resina, vive en ../Heliescala/heliescala.html. Se separaron el 2026-09-17
-   ("mejor separa lo de reparaciones y los helicópteros de resina, cada uno haz
-   un html"): son dos clientes distintos y algún día serán dos dominios, así que
-   cada archivo es AUTÓNOMO — su CSS va aquí dentro, sin hoja compartida.
+   Negocio del papá de Adán. Las réplicas en resina son OTRO negocio, con su
+   propia página (../Heliescala/), y desde el 2026-09-17 las dos son
+   independientes: ninguna menciona a la otra ni enlaza con ella —"de ambas
+   páginas no pongas lo de que se relacionan"—. Cada archivo es AUTÓNOMO (su CSS
+   va aquí dentro) y se puede subir a su dominio sin arrastrar nada.
 
    Material: blanco y transparente. Vidrio (blanco al 72 % con desenfoque) sobre
    un cielo claro con dos auroras y una retícula técnica muy tenue, para que se
@@ -175,19 +175,6 @@ b,strong{font-weight:600;color:var(--tinta)}
   background:rgba(27,71,255,.05);border:1px solid rgba(27,71,255,.16);font-size:13.5px;color:var(--t2);line-height:1.55}
 .aviso svg{color:var(--azul);flex:none}
 
-/* ── Puente a Heliescala ───────────────────────────────────────────────── */
-.puente{background:var(--tinta);color:#fff;overflow:hidden}
-.puente::before{content:'';position:absolute;inset:0;pointer-events:none;background:
-  radial-gradient(ellipse 50% 60% at 78% 0%, rgba(0,194,212,.22) 0%, transparent 60%),
-  radial-gradient(ellipse 45% 50% at 10% 100%, rgba(27,71,255,.28) 0%, transparent 62%)}
-.puente-in{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.85fr);gap:40px;align-items:center}
-.puente .h2{color:#fff}
-.puente .sub{color:rgba(255,255,255,.72)}
-.puente .ojo{color:var(--cian)}
-.puente b{color:#fff}
-.puente .foto{height:300px}
-.btn-b{background:#fff;color:var(--tinta)}
-
 /* ── Quién ─────────────────────────────────────────────────────────────── */
 .quien{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:44px;align-items:center}
 .quien .foto{height:380px}
@@ -268,7 +255,7 @@ b,strong{font-weight:600;color:var(--tinta)}
 @media(max-width:820px){
   .wrap,.barra-in,.pie-in{padding-left:18px;padding-right:18px}
   .hero{grid-template-columns:1fr;gap:28px;padding-top:30px}
-  .quien,.contacto,.puente-in{grid-template-columns:1fr;gap:26px}
+  .quien,.contacto{grid-template-columns:1fr;gap:26px}
   .servs,.caso,.par{grid-template-columns:1fr}
   .hero-datos{gap:24px}
   .marca .n span{display:none}
@@ -312,7 +299,6 @@ b,strong{font-weight:600;color:var(--tinta)}
       <a href="#proceso" data-t="navProc">Cómo trabaja</a>
       <a href="#galeria" data-t="navGal">Galería</a>
       <a href="#quien" data-t="navQuien">Quién es</a>
-      <a href="../Heliescala/heliescala.html" data-t="navHeli">Heliescala ↗</a>
     </nav>
     <div class="barra-d">
       <button type="button" class="lang" id="lang" onclick="toggleIdioma()"><i data-ico="globo"></i><span id="lang-txt">English</span></button>
@@ -391,21 +377,6 @@ b,strong{font-weight:600;color:var(--tinta)}
   </div>
 </section>
 
-<section class="sec puente">
-  <div class="wrap">
-    <div class="puente-in">
-      <div style="display:flex;flex-direction:column;gap:18px">
-        <div class="ojo" data-t="punOjo">La otra mitad de la casa</div>
-        <h2 class="h2" data-t="punT">De la misma mano salen las réplicas</h2>
-        <p class="sub" data-t="punSub"></p>
-        <div><a class="btn btn-b" href="../Heliescala/heliescala.html"><i data-ico="heli"></i><span data-t="punCta">Ver Heliescala</span></a></div>
-      </div>
-      <figure class="foto"><img src="../Heliescala/fotos/hero.jpg" alt="Réplicas en resina hechas a mano" loading="lazy">
-        <figcaption class="pie" data-t="piePuente"></figcaption></figure>
-    </div>
-  </div>
-</section>
-
 <section id="quien" class="sec sec-blanca">
   <div class="wrap">
     <div class="quien">
@@ -466,7 +437,7 @@ b,strong{font-weight:600;color:var(--tinta)}
 <footer class="pie-p">
   <div class="pie-in">
     <div class="pie-m"><i data-ico="heli"></i><b>AERORESINAS</b></div>
-    <div class="pie-d"><span class="pend" data-campo="ciudad">[CIUDAD]</span> · MÉXICO · <span id="anio"></span> · <a href="../Heliescala/heliescala.html">HELIESCALA ↗</a></div>
+    <div class="pie-d"><span class="pend" data-campo="ciudad">[CIUDAD]</span> · MÉXICO · <span id="anio"></span></div>
   </div>
 </footer>
 
@@ -515,7 +486,7 @@ const svg = (k, sz) => '<svg viewBox="0 0 24 24" width="' + (sz||18) + '" height
 const T = {
  es:{
   marcaSub:'REPARACIÓN ESTRUCTURAL DE AERONAVES',
-  navRep:'Qué repara', navCaso:'Un trabajo real', navProc:'Cómo trabaja', navGal:'Galería', navQuien:'Quién es', navHeli:'Heliescala ↗',
+  navRep:'Qué repara', navCaso:'Un trabajo real', navProc:'Cómo trabaja', navGal:'Galería', navQuien:'Quién es',
   otroIdioma:'English',
   galT:'Más del taller', galN:'GALERÍA',
   galSub:'Otras piezas del mismo trabajo: el hangar donde se hace, una estructura recién repuesta y un borde de ataque abierto.',
@@ -561,10 +532,6 @@ const T = {
    ['Entrega con reporte','La reparación documentada con fotos del antes y el después, para tu bitácora.'],
   ],
   cobT:'Cobertura:', cobD:'Para trabajos fuera de su base se acuerdan traslado y estancia antes de salir.',
-  punOjo:'La otra mitad de la casa', punCta:'Ver Heliescala',
-  punT:'De la misma mano salen las réplicas',
-  punSub:'<b>Heliescala</b> es la otra línea de trabajo: helicópteros a escala en resina, hechos a mano. Conoce la forma real de esas aeronaves porque lleva media vida con las manos dentro de ellas — y sí, hace la réplica de la tuya, con tus colores y tu matrícula.',
-  piePuente:'Réplicas en resina: Airbus, Bell, Mi-17 y las libreas que le pidas.',
   pieQuien:'En el hangar, sellando el marco de una ventanilla.',
   quienT:'Quién lo hace',
   quienD:'<b>{nombre}</b>, {anios} años reparando estructuras de aeronaves en {donde}. Retirado de la plantilla, hoy trabaja por su cuenta: la misma mano que hacía esas reparaciones, ahora directamente para el dueño de la aeronave, sin taller de por medio.',
@@ -580,7 +547,7 @@ const T = {
  },
  en:{
   marcaSub:'AIRCRAFT STRUCTURAL REPAIR',
-  navRep:'What he repairs', navCaso:'A real job', navProc:'How it works', navGal:'Gallery', navQuien:'Who does it', navHeli:'Heliescala ↗',
+  navRep:'What he repairs', navCaso:'A real job', navProc:'How it works', navGal:'Gallery', navQuien:'Who does it',
   otroIdioma:'Español',
   galT:'More from the shop', galN:'GALLERY',
   galSub:'Other pieces of the same work: the hangar where it happens, freshly replaced structure and an open leading edge.',
@@ -626,10 +593,6 @@ const T = {
    ['Handover with report','The repair documented with before and after photos, for your logbook.'],
   ],
   cobT:'Coverage:', cobD:'For work outside his base, travel and lodging are agreed before he sets out.',
-  punOjo:'The other half of the house', punCta:'See Heliescala',
-  punT:'The same hands build the replicas',
-  punSub:'<b>Heliescala</b> is the other line of work: scale helicopters cast in resin, built by hand. He knows the real shape of those aircraft because he has spent half his life with his hands inside them — and yes, he builds a replica of yours, in your colours and with your registration.',
-  piePuente:'Resin replicas: Airbus, Bell, Mi-17 and whatever livery you ask for.',
   pieQuien:'In the hangar, sealing a window frame.',
   quienT:'Who does it',
   quienD:'<b>{nombre}</b>, {anios} years repairing aircraft structures at {donde}. Retired from the payroll, he now works on his own: the same hands that did those repairs, now directly for the aircraft owner, with no shop in between.',

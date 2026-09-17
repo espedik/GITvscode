@@ -4,10 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Heliescala — Helicópteros a escala en resina, hechos a mano</title>
-<meta name="description" content="Réplicas en resina de casi cualquier helicóptero: Airbus, Bell, Mi-17 y las libreas que pidas — incluida la de tu aeronave, con sus colores y su matrícula. Por Aeroresinas.">
+<meta name="description" content="Réplicas en resina de casi cualquier helicóptero: Airbus, Bell, Mi-17 y las libreas que pidas — incluida la de tu aeronave, con sus colores y su matrícula.">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Heliescala — Helicópteros a escala en resina">
-<meta property="og:description" content="Réplicas hechas a mano de casi cualquier helicóptero, con la librea y la matrícula que pidas. Por Aeroresinas.">
+<meta property="og:description" content="Réplicas hechas a mano de casi cualquier helicóptero, con la librea y la matrícula que pidas.">
 <meta property="og:image" content="fotos/og.jpg">
 <meta name="theme-color" content="#0a1020">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2300c2d4' stroke-width='2' stroke-linecap='round'%3E%3Cpath d='M3 6h18M12 6v3'/%3E%3Cpath d='M6 12h9a3 3 0 0 1 3 3v2H8a2 2 0 0 1-2-2z'/%3E%3Cpath d='M18 15h3M7 17v3M13 17v3M5 20h10'/%3E%3C/svg%3E">
@@ -17,17 +17,17 @@
 <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap"></noscript>
 <style>
 /* ════════════════════════════════════════════════════════════════════════════
-   HELIESCALA — helicópteros a escala en resina, por Aeroresinas.
+   HELIESCALA — helicópteros a escala en resina.
 
-   La otra mitad del negocio del papá de Adán; la reparación de aeronaves vive en
-   ../Aeroresinas/aeroresinas.html. Se separaron el 2026-09-17: son dos clientes
-   distintos y algún día serán dos dominios, así que este archivo es AUTÓNOMO —
-   su CSS va aquí dentro, sin hoja compartida.
+   Negocio del papá de Adán. La reparación de aeronaves (../Aeroresinas/) es OTRO
+   negocio y desde el 2026-09-17 las dos páginas son independientes: ninguna
+   menciona a la otra ni enlaza con ella —"de ambas páginas no pongas lo de que
+   se relacionan"—. Este archivo es AUTÓNOMO (su CSS va aquí dentro) y se puede
+   subir a su dominio sin arrastrar nada.
 
-   Misma familia visual que Aeroresinas (vidrio, Space Grotesk + IBM Plex, acento
-   azul) pero INVERTIDA: fondo oscuro. Una maqueta es una pieza de vitrina y se
-   ve mejor iluminada sobre negro; además distingue las dos casas de un vistazo
-   sin cambiar de tipografía ni de retícula. El acento aquí es el cian.
+   Fondo oscuro: una maqueta es una pieza de vitrina y se ve mejor iluminada
+   sobre negro, y las fotos de catálogo tienen fondo blanco de estudio, así que
+   recortan solas contra el panel. El acento es el cian.
 
    Todas las fotos son de piezas reales suyas (fotos/).
    Sin backend: el formulario arma un mensaje de WhatsApp.
@@ -171,15 +171,6 @@ b,strong{font-weight:600;color:var(--tinta)}
 .ficha .k{font-family:var(--fm);font-size:9.5px;letter-spacing:.12em;color:var(--t3);display:block}
 .ficha .v{font-size:13.5px;font-weight:600}
 
-/* ── Puente a Aeroresinas ──────────────────────────────────────────────── */
-.puente{background:#fff;color:#0a1020}
-.puente .h2,.puente b{color:#0a1020}
-.puente .sub{color:#48536b}
-.puente .ojo{color:#1b47ff}
-.puente-in{display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1fr);gap:40px;align-items:center}
-.puente .foto{height:300px;border-color:rgba(10,16,32,.1)}
-.btn-n{background:#0a1020;color:#fff}
-
 /* ── Contacto ──────────────────────────────────────────────────────────── */
 .contacto{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:40px;align-items:start}
 .vias{display:flex;flex-direction:column;gap:12px}
@@ -309,7 +300,7 @@ b,strong{font-weight:600;color:var(--tinta)}
 @media(max-width:820px){
   .wrap,.barra-in,.pie-in{padding-left:18px;padding-right:18px}
   .hero{grid-template-columns:1fr;gap:28px;padding-top:30px}
-  .tuya,.proc,.contacto,.puente-in{grid-template-columns:1fr;gap:26px}
+  .tuya,.proc,.contacto{grid-template-columns:1fr;gap:26px}
   .hero .foto{height:300px}
   .proc .foto{height:340px}
   .marca .n span{display:none}
@@ -340,14 +331,13 @@ b,strong{font-weight:600;color:var(--tinta)}
   <div class="barra-in">
     <a class="marca" href="#inicio">
       <i data-ico="heli"></i>
-      <span class="n"><b>HELIESCALA</b><span data-t="marcaSub">POR AERORESINAS · HECHO A MANO</span></span>
+      <span class="n"><b>HELIESCALA</b><span data-t="marcaSub">HECHO A MANO EN MÉXICO</span></span>
     </a>
     <nav class="menu">
       <a href="#catalogo" data-t="navCat">Catálogo</a>
       <a href="#tuya" data-t="navTuya">Tu aeronave</a>
       <a href="#proceso" data-t="navProc">Cómo se hace</a>
       <a href="#galeria" data-t="navGal">Galería</a>
-      <a href="../Aeroresinas/aeroresinas.html" data-t="navAero">Aeroresinas ↗</a>
     </nav>
     <div class="barra-d">
       <button type="button" class="lang" id="lang" onclick="toggleIdioma()"><i data-ico="globo"></i><span id="lang-txt">English</span></button>
@@ -446,21 +436,6 @@ b,strong{font-weight:600;color:var(--tinta)}
   </div>
 </section>
 
-<section class="sec puente">
-  <div class="wrap">
-    <div class="puente-in">
-      <figure class="foto"><img src="../Aeroresinas/fotos/hero.jpg" alt="Reparación estructural de una aeronave" loading="lazy">
-        <figcaption class="pie" data-t="piePuente"></figcaption></figure>
-      <div style="display:flex;flex-direction:column;gap:18px">
-        <div class="ojo" data-t="punOjo">De dónde salen</div>
-        <h2 class="h2" data-t="punT">Aeroresinas, reparación de aeronaves</h2>
-        <p class="sub" data-t="punSub"></p>
-        <div><a class="btn btn-n" href="../Aeroresinas/aeroresinas.html"><i data-ico="llave"></i><span data-t="punCta">Ver Aeroresinas</span></a></div>
-      </div>
-    </div>
-  </div>
-</section>
-
 <section id="contacto" class="sec">
   <div class="cielo"></div>
   <div class="wrap">
@@ -522,7 +497,7 @@ b,strong{font-weight:600;color:var(--tinta)}
 <footer class="pie-p">
   <div class="pie-in">
     <div class="pie-m"><i data-ico="heli"></i><b>HELIESCALA</b></div>
-    <div class="pie-d"><span class="pend" data-campo="ciudad">[CIUDAD]</span> · MÉXICO · <span id="anio"></span> · <a href="../Aeroresinas/aeroresinas.html">AERORESINAS ↗</a></div>
+    <div class="pie-d"><span class="pend" data-campo="ciudad">[CIUDAD]</span> · MÉXICO · <span id="anio"></span></div>
   </div>
 </footer>
 
@@ -563,8 +538,8 @@ const svg = (k, sz) => '<svg viewBox="0 0 24 24" width="' + (sz||18) + '" height
 
 const T = {
  es:{
-  marcaSub:'POR AERORESINAS · HECHO A MANO',
-  navCat:'Catálogo', navTuya:'Tu aeronave', navProc:'Cómo se hace', navGal:'Galería', navAero:'Aeroresinas ↗',
+  marcaSub:'HECHO A MANO EN MÉXICO',
+  navCat:'Catálogo', navTuya:'Tu aeronave', navProc:'Cómo se hace', navGal:'Galería',
   otroIdioma:'English',
   galT:'Más piezas', galN:'GALERÍA',
   galSub:'Entregas de varias unidades y producción en curso. Cuando el encargo es una flota, todas salen iguales.',
@@ -575,7 +550,7 @@ const T = {
   ],
   heroOjo:'Réplicas en resina · por encargo',
   heroT1:'Casi cualquier helicóptero,', heroT2:'a escala y hecho a mano.',
-  heroSub:'Airbus, Bell, Mi-17, Super Puma… fundidos en resina, montados y pintados a mano, con la librea que pidas. Los hace quien lleva media vida reparando esas mismas aeronaves de tamaño real.',
+  heroSub:'Airbus, Bell, Mi-17, Super Puma… fundidos en resina, montados y pintados a mano. Cada modelo sale de su propio molde, y la librea, el número de unidad y la matrícula se pintan una por una.',
   ctaPedir:'Encargar una réplica', ctaVer:'Ver el catálogo',
   dModelos:'30+', kModelos:'Modelos hechos', dResina:'Resina', kResina:'Material', kEscala:'Escalas', kBase:'TALLER',
   pieHero:'Tres piezas terminadas: ambulancia aérea, rescate y Super Puma.',
@@ -654,9 +629,6 @@ const T = {
    ['Lijado y montaje','Cada pieza se lija a mano hasta que la forma queda limpia, y se monta con su rotor, su tren y su pedestal.'],
    ['Pintura y decoración','La librea, el número y la matrícula se pintan y se aplican a mano. Es lo que hace que se reconozca la aeronave y no solo el modelo.'],
   ],
-  punOjo:'De dónde salen', punT:'Aeroresinas, reparación de aeronaves', punCta:'Ver Aeroresinas',
-  punSub:'<b>Aeroresinas</b> es la otra mitad de la casa: reparación estructural de aeronaves — estructuras, corrosión, composites, parabrisas y antenas. La forma de estas réplicas sale de ahí, de tener las manos dentro de esas aeronaves desde hace décadas.',
-  piePuente:'La otra mitad: reparación estructural, en el hangar del cliente.',
   conT:'Dile cuál quieres',
   conSub:'Con el modelo y una foto de la librea alcanza para que te diga tiempo y precio. Contesta él.',
   formT:'Pide tu réplica', fNombre:'NOMBRE', fModelo:'MODELO', fLibrea:'LIBREA Y MATRÍCULA',
@@ -669,8 +641,8 @@ const T = {
   faltaWa:'Todavía no hay número de WhatsApp cargado en la página.',
  },
  en:{
-  marcaSub:'BY AERORESINAS · HANDMADE',
-  navCat:'Catalogue', navTuya:'Your aircraft', navProc:'How it is made', navGal:'Gallery', navAero:'Aeroresinas ↗',
+  marcaSub:'HANDMADE IN MEXICO',
+  navCat:'Catalogue', navTuya:'Your aircraft', navProc:'How it is made', navGal:'Gallery',
   otroIdioma:'Español',
   galT:'More pieces', galN:'GALLERY',
   galSub:'Multi-unit deliveries and work in progress. When the order is a fleet, they all come out identical.',
@@ -681,7 +653,7 @@ const T = {
   ],
   heroOjo:'Resin replicas · made to order',
   heroT1:'Almost any helicopter,', heroT2:'to scale and built by hand.',
-  heroSub:'Airbus, Bell, Mi-17, Super Puma… cast in resin, assembled and painted by hand, in whatever livery you ask for. Built by someone who has spent half his life repairing those same aircraft at full size.',
+  heroSub:'Airbus, Bell, Mi-17, Super Puma… cast in resin, assembled and painted by hand. Every model comes from its own mould, and the livery, unit number and registration are painted one by one.',
   ctaPedir:'Order a replica', ctaVer:'See the catalogue',
   dModelos:'30+', kModelos:'Models built', dResina:'Resin', kResina:'Material', kEscala:'Scales', kBase:'WORKSHOP',
   pieHero:'Three finished pieces: air ambulance, rescue and Super Puma.',
@@ -755,9 +727,6 @@ const T = {
    ['Sanding and assembly','Every part is sanded by hand until the shape is clean, then assembled with its rotor, gear and pedestal.'],
    ['Paint and markings','Livery, unit number and registration are painted and applied by hand. That is what makes it recognisable as the aircraft, not just the model.'],
   ],
-  punOjo:'Where they come from', punT:'Aeroresinas, aircraft structural repair', punCta:'See Aeroresinas',
-  punSub:'<b>Aeroresinas</b> is the other half of the house: aircraft structural repair — structures, corrosion, composites, windshields and antennas. The shape of these replicas comes from there: from having his hands inside those aircraft for decades.',
-  piePuente:'The other half: structural repair, at the customer’s hangar.',
   conT:'Tell him which one you want',
   conSub:'The model and a photo of the livery are enough for him to quote time and price. He answers.',
   formT:'Order your replica', fNombre:'NAME', fModelo:'MODEL', fLibrea:'LIVERY AND REGISTRATION',
@@ -902,7 +871,7 @@ function enviarWhatsApp(ev){
 }
 
 (function init(){
-  // Español por defecto SIEMPRE (ver la nota igual en aeroresinas.html).
+  // Español por defecto SIEMPRE: el cliente de aquí es mexicano.
   try{ IDIOMA = localStorage.getItem('heli-idioma') || 'es'; }catch(e){ IDIOMA = 'es'; }
   document.getElementById('anio').textContent = new Date().getFullYear();
   pinta();
