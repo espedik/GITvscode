@@ -1,30 +1,30 @@
-# aeroresinas.html — reparación estructural de aeronaves
+# aeroresinas.html — reparación estructural de helicópteros
 
 La página pública del taller del papá de Adán. No es una herramienta suya: está hecha para
 conseguirle clientes, así que no guarda estado, no depende del Dashboard y tiene que abrirse bien
 en el teléfono de un desconocido al que le llegó el enlace por WhatsApp.
 
-**El negocio está partido en dos** desde el 2026-09-17 (Adán: *"mejor separa lo de reparaciones y
-los helicópteros de resina, cada uno haz un html, es mejor y dividiremos la empresa"*):
+Las réplicas en resina son **otro negocio**, con su propia página
+([`../Heliescala/`](../Heliescala/readme_heliescala.md)), y **son independientes**: ninguna
+menciona a la otra ni enlaza con ella (Adán, 2026-09-17: *"de ambas páginas no pongas lo de que se
+relacionan"*). Lo único que las relaciona es esta documentación y la carpeta del repositorio; nada
+de eso lo ve un cliente.
 
-| | Qué vende | Dónde |
-|---|---|---|
-| **Aeroresinas** | Reparación estructural de aeronaves | esta página |
-| **Heliescala** | Réplicas en resina de helicópteros | [`../Heliescala/`](../Heliescala/readme_heliescala.md) |
+## El archivo está partido en dos
 
-**Y son independientes de verdad**: ninguna página menciona a la otra ni enlaza con ella. Adán,
-2026-09-17: *"de ambas páginas no pongas lo de que se relacionan"*. Se quitaron la sección puente,
-los enlaces del menú y del pie, y las frases que apoyaban una en la otra. Cada archivo es
-**autónomo** —su CSS va dentro, sin hoja compartida— y se puede subir a su propio dominio sin
-arrastrar nada.
+| | Qué tiene |
+|---|---|
+| `aeroresinas.html` | El molde y el CSS. Ni una frase de contenido |
+| `datos.js` | **Todo** el texto, en español e inglés, más la constante `PERFIL` |
 
-Lo único que las relaciona es esta documentación y la carpeta del repositorio; nada de eso lo ve
-un cliente.
+Se separaron cuando Adán pidió *"muchísima información"* y el contenido pasó de 400 a más de 1,500
+líneas: buscar una frase dentro del HTML era buscar una aguja. Para cambiar cualquier texto solo se
+toca `datos.js`, y las tres reglas de qué se puede escribir ahí están en su cabecera.
 
 ## Quién es, y por qué eso lo cambia todo
 
-**José Arturo Martínez Ponce**, técnico de mantenimiento de aeronaves. Los datos salen de su perfil
-de LinkedIn (17-sep-2026), no de suposiciones:
+**José Arturo Martínez Ponce**, técnico de mantenimiento de aeronaves con licencia **DGAC**. Los
+datos salen de su perfil profesional, no de suposiciones:
 
 | | |
 |---|---|
@@ -35,135 +35,122 @@ de LinkedIn (17-sep-2026), no de suposiciones:
 | Dónde | México, Panamá y Guatemala — hangar y campo |
 | Base | Miguel Hidalgo, Ciudad de México |
 | Especialidad | Composites (fibra de vidrio), técnicas al vacío, parabrisas y acrílicos, estructuras remachadas |
+| Además | Soporte **AOG**, movilidad internacional, colaboración con talleres **MRO** |
 
 **36 años en Airbus es el argumento de la página entera.** Un dueño de aeronave no contrata a un
-desconocido para abrir su fuselaje; contrata a alguien con un historial que puede comprobar. Por eso
-la trayectoria tiene **sección propia** —no una línea perdida en "quién lo hace"— y por eso la
-página enlaza a su LinkedIn: es la prueba verificable de todo lo anterior.
+desconocido para abrir su fuselaje: contrata a alguien con un historial que puede comprobar. Por
+eso la trayectoria tiene sección propia, los 20 trabajos de su historial están listados con nombre
+y apellido, y la página enlaza a su LinkedIn — la prueba verificable de todo lo anterior.
 
-La lista de **20 trabajos** de su historial en Airbus (radomos, piel de fuselaje, panel sándwich de
-nido de abeja, reparación al vacío, restitución del puenteo eléctrico…) está ahí por la misma razón,
-y el pie lo dice explícito: *la técnica es la misma, cambia la aeronave*.
+## Cómo está ordenada
 
-También entró lo que él mismo anuncia y vende bien: **soporte AOG** (aeronave en tierra), movilidad
-internacional y disposición a **colaborar con talleres MRO**. Y que repara conforme a **SRM, AMM y
-Boletines de Servicio**: es lo que separa una reparación aeronáutica de un arreglo.
+Diez secciones, en el orden en que un cliente decide:
 
-## Estructura
+| # | Sección | Para qué está |
+|---|---|---|
+| 1 | Hero | Qué hace y dónde, con las cuatro cifras que importan: 36 años en Airbus, licencia DGAC, marcas que repara, países |
+| 2 | **Qué repara** | 7 servicios, cada uno con foto, descripción y **un apunte de oficio** — lo que un técnico sabe y el dueño no |
+| 3 | **Trabajos** | 8 casos reales, con sus **24 fotos por etapas** en orden y lo que se hizo en cada una |
+| 4 | **Cómo trabaja** | 6 pasos, cobertura y el bloque de **AOG** |
+| 5 | **Técnicas** | 8 términos explicados en claro, para poder juzgar un presupuesto |
+| 6 | **Trayectoria** | Las dos etapas y los 20 trabajos de su historial en Airbus |
+| 7 | **Quién lo hace** | Su biografía completa y 6 credenciales |
+| 8 | Galería | Lo que no cabe en un caso |
+| 9 | **Preguntas** | 8 preguntas reales con respuesta honesta |
+| 10 | Contacto | WhatsApp, correo, LinkedIn, base y licencia, más el formulario |
 
-Barra → hero → **qué repara** (5 servicios, cada uno con su foto) → **un trabajo de principio a
-fin** → **cómo trabaja** (4 pasos) → **trayectoria** → **galería** → **quién lo hace** → contacto.
+**Tres secciones existen para vender sin decir "compre"**:
 
-**El titular es el diferenciador, no un eslogan:** *"Tu aeronave no viaja al taller. El taller
-viaja a tu aeronave."* Un operador no mueve un helicóptero si puede evitarlo, y eso es justo lo que
-ofrece un técnico independiente que va al hangar.
+- **El apunte de oficio de cada servicio.** *"Un daño de 10 cm en la piel puede haber deformado el
+  larguero de abajo"*, *"un acrílico se agrieta por tensión, no por golpe"*. Demuestra dominio en
+  una línea, que es más de lo que consigue un párrafo de adjetivos.
+- **Técnicas explicadas.** Bolsa de vacío, SRM/AMM/boletines, panel sándwich, doubler,
+  delaminación, líquidos penetrantes, puenteo eléctrico y sellado. Están escritas **para el dueño
+  de la aeronave**, no para el técnico: quien entiende el presupuesto confía más en quien se lo da.
+- **Preguntas.** Incluida la incómoda —*"¿y si el daño excede el manual?"*— con la respuesta que da
+  confianza: *se sustituye, no se remienda*.
 
-**La sección que más pesa es "Un trabajo, de principio a fin"**: el mismo panel de composite en sus
-tres etapas — abierto y saneado, laminado con fibra nueva, cerrado y listo para pintura — más un
-par antes/después de una nariz. No hay foto de catálogo en toda la página: son reparaciones suyas,
-fotografiadas mientras las hacía.
+El **AOG** tiene bloque propio, en ámbar, porque es lo único urgente de la página: quien tiene una
+aeronave parada no está para leer, y su botón abre WhatsApp con el mensaje ya escrito.
+
+## Los 8 trabajos
+
+Cada uno corresponde a fotos suyas, en el orden real del trabajo: techo de cabina de un Bell (4
+etapas, hasta la pieza pintada), carenado lateral con el núcleo deshecho (4), techo delaminado (3),
+piel y estructura (3), nariz (2), parabrisas (3), tomas de aire y rejillas (3), y puertas y
+estabilizador (2).
+
+Las dos primeras son las que más convencen porque **terminan en la pieza acabada**: se ve el daño
+abierto, el proceso y el resultado sin rastro.
 
 ## Las fotos
 
-Las 15 de `fotos/` salen de las 300 originales que pasó Adán (`C:\Users\esped\Desktop\Aeroresinas\`,
-carpetas `reparacion` y `reparacion2`), elegidas viéndolas todas en hojas de contacto y optimizadas
-para web: rotadas según EXIF, 1000–1500 px de ancho y JPEG progresivo al 79 % — **2.9 MB en total**
-frente a los ~45 MB de los originales, que no se tocaron. `fotos/LEEME.txt` dice qué es cada una.
+**30 en `fotos/`**, salidas de las 300 originales que pasó Adán
+(`C:\Users\esped\Desktop\Aeroresinas\`, carpetas `reparacion` y `reparacion2`), elegidas viéndolas
+todas en hojas de contacto y optimizadas: rotadas según EXIF, 1000–1500 px de ancho y JPEG
+progresivo al 79 % — **6 MB en total** frente a los ~45 MB de los originales, que no se tocaron.
+`fotos/LEEME.txt` dice qué es cada una.
 
-Cada foto lleva **pie de foto** explicando qué se está viendo: una reparación abierta no se entiende
-sola, y el pie es lo que convierte la foto en argumento.
+Cada foto lleva **pie**: una reparación abierta no se entiende sola, y el pie es lo que convierte
+la foto en argumento. Todas van con `loading="lazy"`.
 
-Falta una foto de **una antena montada** (el servicio de antenas usa hoy la del fuselaje desmontado)
-y un **retrato** suyo mirando a cámara — el de su perfil de LinkedIn serviría, y le daría cara a la
-sección "Quién lo hace", que hoy usa una foto de él trabajando de espaldas.
+Lo que falta: una foto de **una antena montada** y un **retrato** suyo mirando a cámara — el de su
+perfil de LinkedIn serviría, y le daría cara a "Quién lo hace", que hoy usa una foto de él
+trabajando de espaldas.
 
-## Lo que hay que rellenar — `PERFIL`
+## Lo que falta en `PERFIL`
 
-Todo vive en la constante `PERFIL`, al principio del `<script>`. Lo que falta sale **marcado en
-azul** en la página: se ve que falta y nadie lo confunde con un dato real.
+**Un solo hueco: el correo.** Sale marcado en azul en la página. Todo lo demás está: nombre,
+licencia DGAC, WhatsApp (`525586184919`), ciudad, cobertura, años, LinkedIn.
 
-Con el perfil de LinkedIn se llenaron nombre, ciudad, años, dónde trabajó, cobertura, países,
-aeronaves y credenciales: **de 15 huecos quedan 3**.
-
-| Falta | Por qué importa |
-|---|---|
-| **WhatsApp** | Sin él la página no puede convertir una visita en un mensaje: el formulario avisa en vez de fallar, pero no hay a dónde escribir |
-| **Correo** | Para el operador que no usa WhatsApp y para las cotizaciones formales |
-| **Licencia o figura con la que firma** | AFAC/DGAC, A&P o el taller que ampara el trabajo. Es lo primero que pregunta un operador serio, y hoy es el único hueco de credibilidad que queda |
-
-`whatsapp` va en formato internacional y **solo dígitos** (`5215512345678`), que es lo que pide
-`wa.me`; `whatsappTxt` es cómo se escribe en pantalla.
+`whatsapp` va en formato internacional y **solo dígitos**, que es lo que pide `wa.me`;
+`whatsappTxt` es cómo se escribe en pantalla.
 
 ## Sin backend, a propósito
 
 El formulario no manda nada a ningún lado: arma el mensaje y abre **WhatsApp** con él ya escrito.
 Es lo único que funciona igual desde `file://` y desde un dominio sin pagar un servidor, y deja la
-conversación en el teléfono de su papá. Si no hay número cargado, lo dice en vez de fallar en
-silencio.
+conversación en el teléfono de su papá.
 
 Las etiquetas **Open Graph** del `<head>` no son adorno: es lo que se ve cuando el enlace se manda
 por WhatsApp, que es como va a llegar a la mayoría de los clientes.
 
-## Material
-
-Blanco y transparente, como pidió Adán: vidrio (blanco al 72 % con `backdrop-filter`) sobre un
-cielo claro con dos auroras y una retícula técnica al 4,5 %, para que se lea como un plano y no
-como un folleto. Un solo acento, `#1b47ff`.
-
-Tipografía: **Space Grotesk** (títulos), **IBM Plex Sans** (cuerpo), **IBM Plex Mono** (datos). La
-hoja de Google **no bloquea el pintado** (`media="print"` + `onload`), como en el resto del proyecto.
-
 ## Idioma: español por defecto, inglés a un toque
 
-**La página abre SIEMPRE en español.** Hasta el 2026-09-17 seguía el idioma del navegador
-(`navigator.language`), así que en un equipo configurado en inglés —el de Adán, por ejemplo— se
-abría en inglés y parecía que no existía la versión en español. El cliente de aquí es mexicano: el
-español es el punto de partida y no se negocia. Lo elegido se guarda en `localStorage`.
+**La página abre SIEMPRE en español.** Hasta el 2026-09-17 seguía el idioma del navegador, así que
+en un equipo configurado en inglés se abría en inglés y parecía que no existía la versión en
+español. El cliente de aquí es mexicano.
 
-El selector es **un solo botón que dice a qué idioma cambias**, no en cuál estás: en español pone
-*English*, en inglés pone *Español*. El par "ES | EN" obligaba a pensar cuál de los dos estaba
-activo y en el teléfono era ilegible. Lleva un globo al lado y **nunca se oculta**, tampoco en
-móvil (ahí se queda solo el globo).
+El selector es **un botón que dice a qué idioma cambias**, no en cuál estás: en español pone
+*English*. Nunca se oculta, tampoco en móvil (ahí queda solo el globo).
 
-Español e inglés viven en el mismo HTML, con un diccionario `T` y atributos `data-t`: dos archivos
-se desincronizan al segundo cambio.
+Los dos idiomas están completos: **2,839 palabras en español y 2,616 en inglés**, medidas.
 
 ## En el teléfono
 
-Tres cosas que faltaban y entraron el 2026-09-17:
+- El menú **no desaparece**: pasa a una tira que se desliza bajo la marca.
+- **Botón flotante de WhatsApp** abajo a la derecha.
+- Los casos pasan de 4 columnas a 2 y luego a 1; las preguntas y las técnicas, a una columna.
 
-- **El menú ya no desaparece.** Bajo 1080px estaba en `display:none` y no había forma de llegar a
-  una sección sin recorrer la página entera; ahora pasa a una **tira que se desliza** bajo la marca.
-- **Botón flotante de WhatsApp**, abajo a la derecha, solo en pantallas de teléfono. El contacto
-  está al final de una página larga y desde el móvil ese camino es largo.
-- La barra se reordena en dos filas (marca + botones arriba, menú debajo) en vez de recortarse.
+## Material
+
+Blanco y transparente: vidrio (blanco al 72 % con `backdrop-filter`) sobre un cielo claro con dos
+auroras y una retícula técnica al 4,5 %, para que se lea como un plano y no como un folleto. Un
+solo acento, `#1b47ff`; el ámbar aparece **una vez**, en el AOG, que es lo único urgente.
+
+Tipografía: **Space Grotesk** (títulos), **IBM Plex Sans** (cuerpo), **IBM Plex Mono** (datos). La
+hoja de Google **no bloquea el pintado** (`media="print"` + `onload`).
 
 ## Dónde está enlazada
 
-En la **barra de apps del Dashboard**, en un grupo propio al final junto a Heliescala — ver "La
-barra de apps" en `../Dashboard/readme_dashboard.md`.
-
-## El diseño
-
-[`diseno-web/`](diseno-web/) tiene el lienzo del plan, **anterior a la separación**: ahí las
-maquetas todavía eran una sección de esta misma página. Se conserva porque las direcciones
-(ficha técnica, vitrina) y las notas del plan siguen valiendo; la estructura de hoy es la de
-`Main`, partida en dos.
-
-## La galería
-
-`#galeria`, antes del contacto: las fotos que no encajaban en ninguna sección pero que valen — el
-hangar donde se trabaja, una piel nueva ya imprimada y un borde de ataque abierto con la fibra a la
-vista. Cada una con su pie. Se añade con una línea en `T.*.galeria`.
+En la **barra de apps del Dashboard**, en un grupo propio al final — ver "La barra de apps" en
+`../Dashboard/readme_dashboard.md`.
 
 ## Comprobado
 
-Chromium `file://` a 1600 y 390 px, en español y en inglés: 15 imágenes, **ninguna rota**, 5
-servicios, 2 etapas de trayectoria, 20 capacidades, 3 fotos de galería, **3 huecos** (los de la
-tabla de arriba), sin desborde horizontal y sin errores de consola. Desde el Dashboard la píldora abre la página. **Cero referencias a Heliescala** en el
-cuerpo del documento (la única mención es la ruta en el comentario del `<style>`, que explica por
-qué el CSS está duplicado).
-
-**El idioma se probó con el navegador puesto en `en-US`**, que es el caso que fallaba: la página
-abre en español, el botón dice *English*, cambia y vuelve. En 390px el menú es visible con sus 6
-enlaces y el WhatsApp flotante aparece (en 1600 no).
+Chromium `file://` a 1600 y 390 px, en español y en inglés, **con el navegador puesto en `en-US`**
+(el caso que fallaba): abre en español, 10 secciones, 7 servicios, 8 trabajos con 24 etapas, 6
+pasos, 8 técnicas, 20 capacidades, 6 credenciales, 6 fotos de galería, 8 preguntas, **41 imágenes y
+ninguna rota**, 1 solo hueco (el correo), sin desborde horizontal, sin errores de consola y sin
+marcadores sin resolver. El WhatsApp apunta a `wa.me/525586184919` y el botón de AOG abre con el
+mensaje ya escrito.

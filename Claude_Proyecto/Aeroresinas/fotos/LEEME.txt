@@ -1,26 +1,63 @@
-Fotos de AERORESINAS (reparación). Ya están puestas y optimizadas para web
-(rotadas según EXIF, ~1000-1500 px de ancho, JPEG progresivo al 79 %).
-Las originales siguen intactas en C:\Users\esped\Desktop\Aeroresinas\.
+Fotos de AERORESINAS. Ya están puestas y optimizadas para web (rotadas según EXIF,
+1000-1500 px de ancho, JPEG progresivo al 79 %). Las originales siguen intactas en
+C:\Users\esped\Desktop\Aeroresinas\ (carpetas reparacion y reparacion2).
 
+PORTADA Y HERO
   hero.jpg              Evaluando un panel dañado. Es la foto de portada.
-  trabajando.jpg        Sellando el marco de una ventanilla, en el hangar.
-  estructura-piel.jpg   Piel retirada: los largueros a la vista.
-  estructura-nueva.jpg  Piel nueva imprimada sobre la estructura.
+  composite-antes.jpg   Composite delaminado en el techo de cabina.
+  composite-despues.jpg La misma zona, lista para pintura.
+
+TRABAJO 01 · Techo de cabina de un Bell (las cuatro etapas)
+  techo-1.jpg           Abierto y saneado hasta fibra firme.
+  techo-2.jpg           Enmascarado y laminado.
+  techo-3.jpg           Relleno y lijado.
+  techo-4.jpg           TERMINADO, pintado y montado.
+
+TRABAJO 02 · Carenado lateral con el núcleo deshecho
+  panel-1.jpg           El núcleo comprometido, con la piel abierta.
+  panel-2.jpg           Núcleo nuevo y relleno.
+  panel-3.jpg           Lijado y ajuste, con la rejilla puesta.
+  panel-4.jpg           ENTREGADO, pintado con su librea.
+
+TRABAJO 03 · Composite delaminado
+  composite-fibra.jpg   Fibra nueva laminada.
+
+TRABAJO 04 · Piel y estructura
   corrosion.jpg         Techo decapado: aparece toda la corrosión.
-  composite-antes.jpg   El daño en el composite, abierto y saneado.
-  composite-fibra.jpg   Fibra nueva laminada sobre la zona.
-  composite-despues.jpg Cerrado y lijado, listo para pintura.
-  nariz-antes.jpg       Nariz con impactos y pintura levantada.
-  nariz-despues.jpg     La misma nariz, recuperada.
-  hangar.jpg            El hangar, con varias aeronaves.
+  estructura-piel.jpg   Piel retirada, largueros a la vista.
+  estructura-nueva.jpg  Piel nueva imprimada.
+
+TRABAJO 05 · Nariz
+  nariz-antes.jpg       Impactos y pintura levantada.
+  nariz-despues.jpg     Superficie recuperada.
+
+TRABAJO 06 · Parabrisas
+  parabrisas.jpg        Marco preparado.
+  parabrisas-2.jpg      Ajuste del cristal.
+  parabrisas-3.jpg      Sellado de la junta.
+
+TRABAJO 07 · Tomas de aire y rejillas
+  rejilla-1.jpg         Rejilla desmontada, alojamiento a la vista.
+  rejilla-2.jpg         Montada, sellada y con el bonding restituido.
+  tomas.jpg             Las tomas ya en la aeronave.
+
+TRABAJO 08 · Puertas y estabilizador
+  puerta.jpg            Puerta saneada.
+  estabilizador.jpg     Borde de ataque con la fibra a la vista.
+
+GALERÍA Y OTRAS
+  hangar.jpg            El hangar con varias aeronaves.
+  trabajando.jpg        Él sellando el marco de una ventanilla.
   fuselaje.jpg          Aeronave desmontada para trabajar la piel.
-  borde-ataque.jpg      Borde de ataque con fibra expuesta.
-  parabrisas.jpg        Marco del parabrisas preparado.
+  borde-ataque.jpg      Borde de ataque abierto.
   og.jpg                1200x630 — la miniatura que sale en WhatsApp.
 
-Para cambiar una: deja el archivo con el MISMO nombre y listo, no hay que tocar
-el HTML. Si añades una nueva, se referencia desde la constante T del <script>.
+Para cambiar una: deja el archivo con el MISMO nombre y listo. Para añadir un caso
+nuevo hacen falta las fotos aquí y una entrada en `trabajos` dentro de datos.js
+(con su traducción en T.en).
 
-Lo que todavía falta y valdría la pena tener:
-  · Una foto de una antena montada (hoy el servicio de antenas usa fuselaje.jpg).
-  · Un retrato suyo de medio cuerpo mirando a cámara, para "Quién lo hace".
+LO QUE FALTA Y VALDRÍA LA PENA TENER
+  · Una antena montada, de cerca (el servicio de antenas usa hoy rejilla-2.jpg).
+  · Un retrato suyo de medio cuerpo mirando a cámara — el de LinkedIn sirve.
+  · Una aeronave terminada y en vuelo, o al menos entera en la plataforma: hoy
+    todas las fotos son de trabajo abierto, y falta la del resultado final.
