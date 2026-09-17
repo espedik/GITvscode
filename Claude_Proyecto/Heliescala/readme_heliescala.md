@@ -107,10 +107,33 @@ la constante `PERFIL` al principio del `<script>`, y salen **marcadas en cian** 
 `wa.me`. El formulario arma el mensaje con modelo y librea y abre WhatsApp con él ya escrito; sin
 servidor, igual que Aeroresinas.
 
-## Bilingüe con un solo archivo
+## Idioma: español por defecto, inglés a un toque
 
-Español e inglés con el diccionario `T` y atributos `data-t`. Pesa más aquí que en Aeroresinas: una
-réplica se envía a cualquier parte, y el comprador de fuera llega en inglés.
+**La página abre SIEMPRE en español.** Hasta el 2026-09-17 seguía el idioma del navegador
+(`navigator.language`), así que en un equipo configurado en inglés —el de Adán, por ejemplo— se
+abría en inglés y parecía que no existía la versión en español. El cliente de aquí es mexicano: el
+español es el punto de partida y no se negocia. Lo elegido se guarda en `localStorage`.
+
+El selector es **un solo botón que dice a qué idioma cambias**, no en cuál estás: en español pone
+*English*, en inglés pone *Español*. El par "ES | EN" obligaba a pensar cuál de los dos estaba
+activo y en el teléfono era ilegible. Lleva un globo al lado y **nunca se oculta**, tampoco en
+móvil (ahí se queda solo el globo).
+
+Español e inglés viven en el diccionario `T` con atributos `data-t`. Pesa más aquí que en
+Aeroresinas: una réplica se envía a cualquier parte, y el comprador de fuera llega en inglés — pero
+llega a una página que abre en español y cambia con un toque.
+
+## En el teléfono
+
+- **El menú ya no desaparece** bajo 1080px: pasa a una tira que se desliza bajo la marca.
+- **Botón flotante de WhatsApp** abajo a la derecha, solo en pantallas de teléfono.
+- La barra se reordena en dos filas en vez de recortarse.
+
+## La galería
+
+`#galeria`, entre el proceso y el puente: entregas de varias unidades y producción en curso — el
+trío del mismo lote, los fuselajes en fila esperando pintura y el Bell 412 de la policía con su
+número. Sirve para lo que el catálogo no dice: que puede hacer **una flota entera igual**.
 
 ## Dónde está enlazada
 
@@ -120,9 +143,13 @@ píldoras: ver "La barra de apps" en `../Dashboard/readme_dashboard.md`.
 
 ## Comprobado
 
-Chromium `file://` a 1600 y 390 px, en español y en inglés: 13 imágenes, **ninguna rota**, 8 piezas
-en el catálogo, sin desborde horizontal, sin errores de consola y sin marcadores sin resolver.
-Desde el Dashboard la píldora abre la página, y el menú cruza a Aeroresinas y vuelve.
+Chromium `file://` a 1600 y 390 px, en español y en inglés: 16 imágenes, **ninguna rota**, 8 piezas
+en el catálogo, 3 de galería, sin desborde horizontal, sin errores de consola y sin marcadores sin
+resolver. Desde el Dashboard la píldora abre la página, y el menú cruza a Aeroresinas y vuelve.
+
+**El idioma se probó con el navegador puesto en `en-US`**, que es el caso que fallaba: la página
+abre en español, el botón dice *English*, cambia y vuelve. En 390px el menú es visible con sus 5
+enlaces y el WhatsApp flotante aparece (en 1600 no).
 
 **Las ocho fichas**, recorridas una a una en los dos anchos y los dos idiomas: las seis con modelo
 pintan 5 o 6 datos técnicos y sus tres bloques de texto; las dos sin modelo pintan su aviso y

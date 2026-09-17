@@ -77,11 +77,30 @@ oscuro, acento cian): se distinguen de un vistazo sin cambiar de tipografía ni 
 Tipografía: **Space Grotesk** (títulos), **IBM Plex Sans** (cuerpo), **IBM Plex Mono** (datos). La
 hoja de Google **no bloquea el pintado** (`media="print"` + `onload`), como en el resto del proyecto.
 
-## Bilingüe con un solo archivo
+## Idioma: español por defecto, inglés a un toque
 
-Español e inglés en el mismo HTML, con un diccionario `T` y atributos `data-t`. Dos archivos se
-desincronizan al segundo cambio. La elección se guarda en `localStorage`; si el navegador está en
-inglés, abre en inglés.
+**La página abre SIEMPRE en español.** Hasta el 2026-09-17 seguía el idioma del navegador
+(`navigator.language`), así que en un equipo configurado en inglés —el de Adán, por ejemplo— se
+abría en inglés y parecía que no existía la versión en español. El cliente de aquí es mexicano: el
+español es el punto de partida y no se negocia. Lo elegido se guarda en `localStorage`.
+
+El selector es **un solo botón que dice a qué idioma cambias**, no en cuál estás: en español pone
+*English*, en inglés pone *Español*. El par "ES | EN" obligaba a pensar cuál de los dos estaba
+activo y en el teléfono era ilegible. Lleva un globo al lado y **nunca se oculta**, tampoco en
+móvil (ahí se queda solo el globo).
+
+Español e inglés viven en el mismo HTML, con un diccionario `T` y atributos `data-t`: dos archivos
+se desincronizan al segundo cambio.
+
+## En el teléfono
+
+Tres cosas que faltaban y entraron el 2026-09-17:
+
+- **El menú ya no desaparece.** Bajo 1080px estaba en `display:none` y no había forma de llegar a
+  una sección sin recorrer la página entera; ahora pasa a una **tira que se desliza** bajo la marca.
+- **Botón flotante de WhatsApp**, abajo a la derecha, solo en pantallas de teléfono. El contacto
+  está al final de una página larga y desde el móvil ese camino es largo.
+- La barra se reordena en dos filas (marca + botones arriba, menú debajo) en vez de recortarse.
 
 ## Dónde está enlazada
 
@@ -95,8 +114,18 @@ maquetas todavía eran una sección de esta misma página. Se conserva porque la
 (ficha técnica, vitrina) y las notas del plan siguen valiendo; la estructura de hoy es la de
 `Main`, partida en dos.
 
+## La galería
+
+`#galeria`, antes del contacto: las fotos que no encajaban en ninguna sección pero que valen — el
+hangar donde se trabaja, una piel nueva ya imprimada y un borde de ataque abierto con la fibra a la
+vista. Cada una con su pie. Se añade con una línea en `T.*.galeria`.
+
 ## Comprobado
 
-Chromium `file://` a 1600 y 390 px, en español y en inglés: 15 imágenes, **ninguna rota**, 5
-servicios, sin desborde horizontal, sin errores de consola y sin marcadores sin resolver. Desde el
-Dashboard la píldora abre la página, y el menú cruza a Heliescala y vuelve.
+Chromium `file://` a 1600 y 390 px, en español y en inglés: 18 imágenes, **ninguna rota**, 5
+servicios, 3 fotos de galería, sin desborde horizontal, sin errores de consola y sin marcadores sin
+resolver. Desde el Dashboard la píldora abre la página, y el menú cruza a Heliescala y vuelve.
+
+**El idioma se probó con el navegador puesto en `en-US`**, que es el caso que fallaba: la página
+abre en español, el botón dice *English*, cambia y vuelve. En 390px el menú es visible con sus 6
+enlaces y el WhatsApp flotante aparece (en 1600 no).

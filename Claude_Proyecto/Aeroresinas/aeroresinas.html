@@ -234,11 +234,36 @@ b,strong{font-weight:600;color:var(--tinta)}
 .pie-p a:hover{color:#fff}
 .pie-d{font-family:var(--fm);font-size:11px;letter-spacing:.08em}
 
+/* ── Idioma ────────────────────────────────────────────────────────────────
+   Un solo botón que dice A QUÉ idioma cambias, no en cuál estás: "ES/EN" obligaba
+   a pensar y en el teléfono era ilegible. Nunca se oculta. */
+.lang{display:inline-flex;align-items:center;gap:7px;padding:10px 14px;border-radius:11px;
+  border:1px solid var(--linea);background:var(--vidrio);color:var(--tinta);cursor:pointer;
+  font-family:var(--fb);font-size:13px;font-weight:600;white-space:nowrap;
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);transition:background .15s}
+.lang:hover{background:rgba(255,255,255,.14)}
+.lang svg{flex:none;opacity:.75}
+
+/* ── WhatsApp flotante (solo teléfono) ─────────────────────────────────────
+   En el móvil la barra se queda arriba y el contacto está al final de una página
+   larga: este botón acorta ese camino a un toque, desde donde estés. */
+.wa-flota{position:fixed;right:16px;bottom:16px;z-index:50;display:none;align-items:center;
+  justify-content:center;width:56px;height:56px;border-radius:18px;text-decoration:none;
+  box-shadow:0 12px 30px -8px rgba(0,0,0,.5)}
+
+/* ── Galería ───────────────────────────────────────────────────────────────
+   Las fotos que no encajan en ninguna sección pero que valen: el hangar, una
+   pieza a medio hacer, la producción en fila. */
+.gal{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.gal .foto{height:280px}
+
 /* ── Responsivo ────────────────────────────────────────────────────────── */
 @media(max-width:1080px){
   .servs{grid-template-columns:repeat(2,minmax(0,1fr))}
   .pasos{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .menu{display:none}
+  .gal{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .menu{gap:14px;overflow-x:auto;scrollbar-width:none}
+  .menu::-webkit-scrollbar{display:none}
 }
 @media(max-width:820px){
   .wrap,.barra-in,.pie-in{padding-left:18px;padding-right:18px}
@@ -247,10 +272,21 @@ b,strong{font-weight:600;color:var(--tinta)}
   .servs,.caso,.par{grid-template-columns:1fr}
   .hero-datos{gap:24px}
   .marca .n span{display:none}
-  .barra-in{height:60px;gap:12px}
   .barra-d .btn span{display:none}
   .barra-d .btn{padding:11px 13px}
+  .lang span{display:none}
+  .lang{padding:11px 12px}
   .caso .foto{height:260px}
+  /* El menú no se oculta en el teléfono: pasa a una tira que se desliza. Antes
+     desaparecía y no había forma de llegar a ninguna sección sin hacer scroll. */
+  .menu{display:flex;order:3;flex-basis:100%;gap:16px;overflow-x:auto;padding:0 0 8px;
+    scrollbar-width:none;-webkit-overflow-scrolling:touch}
+  .menu::-webkit-scrollbar{display:none}
+  .barra-in{height:auto;padding-top:10px;padding-bottom:0;flex-wrap:wrap;row-gap:4px}
+  .wa-flota{display:flex}
+  .gal{grid-template-columns:1fr}
+  .gal .foto{height:240px}
+
   .quien .foto{height:320px}
 }
 @media(max-width:520px){
@@ -274,14 +310,12 @@ b,strong{font-weight:600;color:var(--tinta)}
       <a href="#reparacion" data-t="navRep">Qué repara</a>
       <a href="#caso" data-t="navCaso">Un trabajo real</a>
       <a href="#proceso" data-t="navProc">Cómo trabaja</a>
+      <a href="#galeria" data-t="navGal">Galería</a>
       <a href="#quien" data-t="navQuien">Quién es</a>
       <a href="../Heliescala/heliescala.html" data-t="navHeli">Heliescala ↗</a>
     </nav>
     <div class="barra-d">
-      <div class="idioma">
-        <button type="button" id="btn-es" class="on" onclick="setIdioma('es')">ES</button>
-        <button type="button" id="btn-en" onclick="setIdioma('en')">EN</button>
-      </div>
+      <button type="button" class="lang" id="lang" onclick="toggleIdioma()"><i data-ico="globo"></i><span id="lang-txt">English</span></button>
       <a class="btn btn-p btn-sm" href="#contacto"><i data-ico="wa"></i><span>WhatsApp</span></a>
     </div>
   </div>
@@ -386,6 +420,19 @@ b,strong{font-weight:600;color:var(--tinta)}
   </div>
 </section>
 
+<section id="galeria" class="sec sec-blanca">
+  <div class="wrap">
+    <div class="sec-h">
+      <div>
+        <h2 class="h2" data-t="galT">Más del taller</h2>
+        <p class="sub" style="margin-top:10px" data-t="galSub"></p>
+      </div>
+      <div class="sec-n" data-t="galN">GALERÍA</div>
+    </div>
+    <div class="gal" id="galeria-grid"></div>
+  </div>
+</section>
+
 <section id="contacto" class="sec">
   <div class="cielo"></div>
   <div class="wrap">
@@ -413,6 +460,8 @@ b,strong{font-weight:600;color:var(--tinta)}
     </div>
   </div>
 </section>
+
+<a class="wa-flota btn-p" id="wa-flota" href="#contacto" aria-label="WhatsApp"><i data-ico="wa"></i></a>
 
 <footer class="pie-p">
   <div class="pie-in">
@@ -457,6 +506,7 @@ const ICO = {
   pin:'<path d="M12 21s7-5.6 7-11a7 7 0 1 0-14 0c0 5.4 7 11 7 11z"/><circle cx="12" cy="10" r="2.6"/>',
   check:'<path d="M4 12.5l5 5L20 6.5"/>',
   lupa:'<circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/>',
+  globo:'<circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3a15 15 0 0 1 0 18a15 15 0 0 1 0-18z"/>',
 };
 const svg = (k, sz) => '<svg viewBox="0 0 24 24" width="' + (sz||18) + '" height="' + (sz||18) +
   '" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">' + (ICO[k]||'') + '</svg>';
@@ -465,7 +515,15 @@ const svg = (k, sz) => '<svg viewBox="0 0 24 24" width="' + (sz||18) + '" height
 const T = {
  es:{
   marcaSub:'REPARACIÓN ESTRUCTURAL DE AERONAVES',
-  navRep:'Qué repara', navCaso:'Un trabajo real', navProc:'Cómo trabaja', navQuien:'Quién es', navHeli:'Heliescala ↗',
+  navRep:'Qué repara', navCaso:'Un trabajo real', navProc:'Cómo trabaja', navGal:'Galería', navQuien:'Quién es', navHeli:'Heliescala ↗',
+  otroIdioma:'English',
+  galT:'Más del taller', galN:'GALERÍA',
+  galSub:'Otras piezas del mismo trabajo: el hangar donde se hace, una estructura recién repuesta y un borde de ataque abierto.',
+  galeria:[
+   ['fotos/hangar.jpg','<b>El hangar.</b> Se trabaja donde está la aeronave: no hay que moverla.'],
+   ['fotos/estructura-nueva.jpg','<b>Piel nueva.</b> Imprimada sobre la estructura, antes de cerrar.'],
+   ['fotos/borde-ataque.jpg','<b>Borde de ataque abierto.</b> La fibra a la vista, lista para reponer material.'],
+  ],
   heroOjo:'Estructuras · composites · corrosión',
   heroT1:'Tu aeronave no viaja al taller.', heroT2:'El taller viaja a tu aeronave.',
   heroSub:'Estructuras, corrosión, composites, parabrisas y antenas. <b>{anios} años</b> reparando aeronaves; hoy, por su cuenta y en el hangar donde esté la tuya.',
@@ -522,7 +580,15 @@ const T = {
  },
  en:{
   marcaSub:'AIRCRAFT STRUCTURAL REPAIR',
-  navRep:'What he repairs', navCaso:'A real job', navProc:'How it works', navQuien:'Who does it', navHeli:'Heliescala ↗',
+  navRep:'What he repairs', navCaso:'A real job', navProc:'How it works', navGal:'Gallery', navQuien:'Who does it', navHeli:'Heliescala ↗',
+  otroIdioma:'Español',
+  galT:'More from the shop', galN:'GALLERY',
+  galSub:'Other pieces of the same work: the hangar where it happens, freshly replaced structure and an open leading edge.',
+  galeria:[
+   ['fotos/hangar.jpg','<b>The hangar.</b> The work happens where the aircraft is: no need to move it.'],
+   ['fotos/estructura-nueva.jpg','<b>New skin.</b> Primed over the structure, before closing up.'],
+   ['fotos/borde-ataque.jpg','<b>Open leading edge.</b> Fibre exposed, ready for new material.'],
+  ],
   heroOjo:'Structures · composites · corrosion',
   heroT1:'Your aircraft does not travel to a shop.', heroT2:'The shop travels to your aircraft.',
   heroSub:'Structures, corrosion, composites, windshields and antennas. <b>{anios} years</b> repairing aircraft; today, on his own and at whatever hangar yours is in.',
@@ -618,6 +684,11 @@ function pinta(){
   document.getElementById('credenciales').innerHTML = PERFIL.credenciales.map(function(c){
     return '<div>' + svg('check', 15) + '<span' + (marcado(c) ? ' class="pend"' : '') + '>' + c + '</span></div>';
   }).join('');
+  document.getElementById('galeria-grid').innerHTML = t.galeria.map(function(g){
+    return '<figure class="foto"><img src="' + g[0] + '" alt="" loading="lazy">' +
+      '<figcaption class="pie">' + g[1] + '</figcaption></figure>';
+  }).join('');
+  document.getElementById('lang-txt').textContent = t.otroIdioma;
   const ph = {'f-nombre':'phNombre','f-aeronave':'phAeronave','f-que':'phQue'};
   Object.keys(ph).forEach(function(id){ const el = document.getElementById(id); if(el) el.placeholder = t[ph[id]]; });
   document.querySelectorAll('[data-ico]').forEach(function(el){
@@ -626,10 +697,11 @@ function pinta(){
   const wa = document.getElementById('via-wa'), ml = document.getElementById('via-mail');
   wa.href = PERFIL.whatsapp ? 'https://wa.me/' + PERFIL.whatsapp : '#contacto';
   ml.href = marcado(PERFIL.correo) ? '#contacto' : 'mailto:' + PERFIL.correo;
-  document.getElementById('btn-es').classList.toggle('on', IDIOMA === 'es');
-  document.getElementById('btn-en').classList.toggle('on', IDIOMA === 'en');
+  const flot = document.getElementById('wa-flota');
+  if(flot) flot.href = PERFIL.whatsapp ? 'https://wa.me/' + PERFIL.whatsapp : '#contacto';
 }
 function setIdioma(x){ IDIOMA = x; try{ localStorage.setItem('aero-idioma', x); }catch(e){} pinta(); }
+function toggleIdioma(){ setIdioma(IDIOMA === 'es' ? 'en' : 'es'); }
 
 function enviarWhatsApp(ev){
   ev.preventDefault();
@@ -644,10 +716,10 @@ function enviarWhatsApp(ev){
 }
 
 (function init(){
-  try{
-    const g = localStorage.getItem('aero-idioma');
-    IDIOMA = g || ((navigator.language || 'es').slice(0,2) === 'en' ? 'en' : 'es');
-  }catch(e){}
+  // Español por defecto SIEMPRE. Antes seguía el idioma del navegador y la página
+  // se abría en inglés en un equipo configurado en inglés — el cliente de aquí es
+  // mexicano. El inglés queda a un toque, en el botón de la barra.
+  try{ IDIOMA = localStorage.getItem('aero-idioma') || 'es'; }catch(e){ IDIOMA = 'es'; }
   document.getElementById('anio').textContent = new Date().getFullYear();
   pinta();
 })();
