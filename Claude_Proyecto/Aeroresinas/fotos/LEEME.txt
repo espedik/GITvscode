@@ -1,19 +1,26 @@
-Las fotos de la página van aquí, con estos nombres exactos:
+Fotos de AERORESINAS (reparación). Ya están puestas y optimizadas para web
+(rotadas según EXIF, ~1000-1500 px de ancho, JPEG progresivo al 79 %).
+Las originales siguen intactas en C:\Users\esped\Desktop\Aeroresinas\.
 
-  trabajando.jpg        Él trabajando sobre el fuselaje, con herramienta a la vista. HORIZONTAL.
-                        Es la foto que decide si te llaman: si solo hay una buena, que sea esta.
-  antes.jpg             El daño de cerca (corrosión, panel golpeado, cristal estrellado).
-  despues.jpg           La MISMA zona ya reparada, con el MISMO encuadre. El par vale doble.
-  retrato.jpg           Él, de medio cuerpo, en el hangar o junto a una aeronave, mirando a cámara.
-  maqueta-h125.jpg      Airbus H125 / AS350 a escala.
-  maqueta-h145.jpg      Airbus H145 a escala.
-  maqueta-fam.jpg       La de la Fuerza Aérea Mexicana.
-  maqueta-encargo.jpg   Una hecha por encargo (si hay una con matrícula de cliente, mejor).
-  og.jpg                La miniatura que sale al mandar el enlace por WhatsApp. 1200x630 px.
-                        Puede ser la misma que trabajando.jpg, recortada.
+  hero.jpg              Evaluando un panel dañado. Es la foto de portada.
+  trabajando.jpg        Sellando el marco de una ventanilla, en el hangar.
+  estructura-piel.jpg   Piel retirada: los largueros a la vista.
+  estructura-nueva.jpg  Piel nueva imprimada sobre la estructura.
+  corrosion.jpg         Techo decapado: aparece toda la corrosión.
+  composite-antes.jpg   El daño en el composite, abierto y saneado.
+  composite-fibra.jpg   Fibra nueva laminada sobre la zona.
+  composite-despues.jpg Cerrado y lijado, listo para pintura.
+  nariz-antes.jpg       Nariz con impactos y pintura levantada.
+  nariz-despues.jpg     La misma nariz, recuperada.
+  hangar.jpg            El hangar, con varias aeronaves.
+  fuselaje.jpg          Aeronave desmontada para trabajar la piel.
+  borde-ataque.jpg      Borde de ataque con fibra expuesta.
+  parabrisas.jpg        Marco del parabrisas preparado.
+  og.jpg                1200x630 — la miniatura que sale en WhatsApp.
 
-Mientras un archivo no exista, la página deja el hueco marcado diciendo qué va ahí.
-En cuanto se copia aquí con el nombre correcto, aparece sola: no hay que tocar el HTML.
+Para cambiar una: deja el archivo con el MISMO nombre y listo, no hay que tocar
+el HTML. Si añades una nueva, se referencia desde la constante T del <script>.
 
-Para las maquetas: fondo neutro, luz pareja y sin sombras duras; una foto con algo al lado
-que dé escala (una mano, un boli) ayuda a que se entienda el tamaño.
+Lo que todavía falta y valdría la pena tener:
+  · Una foto de una antena montada (hoy el servicio de antenas usa fuselaje.jpg).
+  · Un retrato suyo de medio cuerpo mirando a cámara, para "Quién lo hace".

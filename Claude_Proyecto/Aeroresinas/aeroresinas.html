@@ -4,36 +4,35 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Aeroresinas — Reparación estructural de aeronaves</title>
-<meta name="description" content="Reparación de estructuras, corrosión, parabrisas, antenas y fuselaje de helicóptero, en el hangar donde esté tu aeronave. Y réplicas en resina de casi cualquier helicóptero.">
-<!-- Open Graph: esto es lo que se ve cuando el enlace se manda por WhatsApp, que es como
-     va a llegar a la mayoría de los clientes. Sin esto, el mensaje sale como una URL pelada. -->
+<meta name="description" content="Reparación de estructuras, corrosión, composites, parabrisas y antenas de aeronaves, en el hangar donde esté la tuya. Trabajo documentado con fotos del antes y el después.">
+<!-- Open Graph: es lo que se ve cuando el enlace se manda por WhatsApp, que es como va a llegar
+     a la mayoría de los clientes. Sin esto, el mensaje sale como una URL pelada. -->
 <meta property="og:type" content="website">
 <meta property="og:title" content="Aeroresinas — Reparación estructural de aeronaves">
-<meta property="og:description" content="El taller va a donde está tu aeronave. Estructuras, corrosión, parabrisas, antenas y fuselaje de helicóptero. Y helicópteros a escala en resina.">
+<meta property="og:description" content="El taller va a donde está tu aeronave. Estructuras, corrosión, composites, parabrisas y antenas.">
 <meta property="og:image" content="fotos/og.jpg">
 <meta name="theme-color" content="#eef1f6">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231b47ff' stroke-width='2' stroke-linecap='round'%3E%3Cpath d='M3 6h18M12 6v3'/%3E%3Cpath d='M6 12h9a3 3 0 0 1 3 3v2H8a2 2 0 0 1-2-2z'/%3E%3Cpath d='M18 15h3M7 17v3M13 17v3M5 20h10'/%3E%3C/svg%3E">
-<!-- La fuente NO bloquea el pintado: media="print" y el onload la activa al llegar. Si Google
-     tarda o no responde, la página se lee igual con la tipografía de respaldo. -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" media="print" onload="this.media='all'">
 <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap"></noscript>
 <style>
 /* ════════════════════════════════════════════════════════════════════════════
-   AERORESINAS — la página del taller de Adán padre.
+   AERORESINAS — reparación estructural de aeronaves.
 
-   Diseño acordado en `diseno-web/` (lienzo, 2026-09-17). Blanco y transparente:
-   vidrio (blanco al 72 % con desenfoque) sobre un cielo claro con dos auroras y
-   una retícula técnica muy tenue, para que se lea como un plano y no como un
-   folleto. Un solo acento azul; el cian solo en la franja oscura de maquetas.
+   Una de las dos mitades del negocio del papá de Adán; la otra, las réplicas en
+   resina, vive en ../Heliescala/heliescala.html. Se separaron el 2026-09-17
+   ("mejor separa lo de reparaciones y los helicópteros de resina, cada uno haz
+   un html"): son dos clientes distintos y algún día serán dos dominios, así que
+   cada archivo es AUTÓNOMO — su CSS va aquí dentro, sin hoja compartida.
 
-   Dos negocios con el mismo peso —reparar aeronaves y hacer réplicas en resina—
-   y un puente entre ellos: al que le reparas el helicóptero es exactamente el que
-   quiere la maqueta de SU aeronave, con su matrícula.
+   Material: blanco y transparente. Vidrio (blanco al 72 % con desenfoque) sobre
+   un cielo claro con dos auroras y una retícula técnica muy tenue, para que se
+   lea como un plano y no como un folleto. Un solo acento azul.
 
-   Sin backend: el formulario arma un mensaje de WhatsApp. Se abre igual desde
-   `file://` que desde un dominio.
+   Todas las fotos son de trabajos reales suyos (fotos/), no de banco.
+   Sin backend: el formulario arma un mensaje de WhatsApp.
    ════════════════════════════════════════════════════════════════════════════ */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -53,8 +52,6 @@ body{font-family:var(--fb);background:var(--bg);color:var(--tinta);font-size:15p
   -webkit-font-smoothing:antialiased;overflow-x:hidden}
 img{max-width:100%;display:block}
 ::selection{background:rgba(27,71,255,.16)}
-
-/* El cielo y la retícula: sin color detrás, un velo blanco es solo blanco. */
 .cielo{position:absolute;inset:0;pointer-events:none;z-index:0;background:
   radial-gradient(ellipse 55% 45% at 12% 0%, rgba(27,71,255,.13) 0%, transparent 62%),
   radial-gradient(ellipse 45% 40% at 88% 4%, rgba(0,194,212,.14) 0%, transparent 62%),
@@ -69,14 +66,14 @@ section{position:relative}
 .barra{position:sticky;top:0;z-index:40;background:var(--vidrio);
   backdrop-filter:blur(22px) saturate(150%);-webkit-backdrop-filter:blur(22px) saturate(150%);
   border-bottom:1px solid var(--linea);box-shadow:0 1px 0 var(--luz) inset}
-.barra-in{display:flex;align-items:center;gap:26px;height:70px;max-width:var(--ancho);margin:0 auto;padding:0 32px}
+.barra-in{display:flex;align-items:center;gap:24px;height:70px;max-width:var(--ancho);margin:0 auto;padding:0 32px}
 .marca{display:flex;align-items:center;gap:11px;text-decoration:none;color:inherit;flex:none}
 .marca i{width:34px;height:34px;border-radius:10px;flex:none;display:flex;align-items:center;justify-content:center;
   background:var(--tinta);color:#fff;font-style:normal}
 .marca .n{display:flex;flex-direction:column;line-height:1.05}
 .marca .n b{font-family:var(--fd);font-size:16.5px;font-weight:700;letter-spacing:-.02em}
 .marca .n span{font-family:var(--fm);font-size:8.5px;font-weight:500;letter-spacing:.2em;color:var(--t3);white-space:nowrap}
-.menu{display:flex;gap:22px;flex:1;min-width:0}
+.menu{display:flex;gap:20px;flex:1;min-width:0}
 .menu a{font-size:13.5px;font-weight:500;color:var(--t2);text-decoration:none;white-space:nowrap;transition:color .15s}
 .menu a:hover{color:var(--tinta)}
 .barra-d{display:flex;align-items:center;gap:10px;flex:none}
@@ -96,26 +93,23 @@ section{position:relative}
 .btn-s{background:var(--vidrio);color:var(--tinta);border-color:var(--linea);
   backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
 .btn-s:hover{background:#fff}
-.btn-b{background:#fff;color:var(--tinta)}
-.btn-o{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.18);color:#fff}
 .btn-sm{padding:11px 16px;font-size:13px;border-radius:11px}
 
 /* ── Texto ─────────────────────────────────────────────────────────────── */
 .ojo{display:flex;align-items:center;gap:8px;font-family:var(--fm);font-size:10.5px;font-weight:600;
   letter-spacing:.16em;text-transform:uppercase;color:var(--azul)}
 .ojo::before{content:'';width:22px;height:1px;background:currentColor;flex:none}
-.h1{font-family:var(--fd);font-size:clamp(34px,5vw,60px);font-weight:600;letter-spacing:-.035em;
-  line-height:1.04;text-wrap:pretty}
+.h1{font-family:var(--fd);font-size:clamp(34px,5vw,58px);font-weight:600;letter-spacing:-.035em;
+  line-height:1.05;text-wrap:pretty}
 .h1 em{font-style:normal;color:var(--azul)}
 .h2{font-family:var(--fd);font-size:clamp(26px,3.4vw,38px);font-weight:600;letter-spacing:-.025em;
   line-height:1.12;max-width:20ch;text-wrap:pretty}
-.sub{font-size:clamp(14.5px,1.4vw,17px);line-height:1.65;color:var(--t2);max-width:56ch}
+.sub{font-size:clamp(14.5px,1.4vw,17px);line-height:1.65;color:var(--t2);max-width:58ch}
 .lead{font-size:15.5px;line-height:1.7;color:var(--t2)}
 b,strong{font-weight:600;color:var(--tinta)}
 .dato{display:flex;flex-direction:column;gap:5px}
 .dato .v{font-family:var(--fd);font-size:27px;font-weight:600;letter-spacing:-.02em;line-height:1}
 .dato .k{font-family:var(--fm);font-size:10px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--t3)}
-/* Un dato que todavía no me han dado: se ve que falta, no se inventa. */
 .pend{color:var(--azul);background:rgba(27,71,255,.07);border-bottom:1px dashed rgba(27,71,255,.4);
   padding:0 3px;border-radius:3px;font-family:var(--fm);font-size:.92em}
 
@@ -126,46 +120,52 @@ b,strong{font-weight:600;color:var(--tinta)}
 .sec-n{font-family:var(--fm);font-size:11px;letter-spacing:.1em;color:var(--t3);white-space:nowrap}
 
 /* ── Hero ──────────────────────────────────────────────────────────────── */
-.hero{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:44px;align-items:center;
-  padding:clamp(40px,6vw,76px) 0 clamp(44px,6vw,64px)}
-.hero-txt{display:flex;flex-direction:column;gap:26px;min-width:0}
+.hero{display:grid;grid-template-columns:minmax(0,1.02fr) minmax(0,.98fr);gap:44px;align-items:center;
+  padding:clamp(40px,6vw,72px) 0 clamp(44px,6vw,64px)}
+.hero-txt{display:flex;flex-direction:column;gap:24px;min-width:0}
 .hero-btns{display:flex;gap:12px;flex-wrap:wrap}
-.hero-datos{display:flex;gap:40px;padding-top:12px;border-top:1px solid var(--linea2);flex-wrap:wrap}
-.hero-fotos{display:flex;flex-direction:column;gap:14px;min-width:0}
-.hero-fotos .par{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.hero-datos{display:flex;gap:38px;padding-top:14px;border-top:1px solid var(--linea2);flex-wrap:wrap}
 
-/* ── Foto o hueco ──────────────────────────────────────────────────────── */
-.foto{position:relative;width:100%;border-radius:18px;overflow:hidden;background:rgba(10,16,32,.04)}
-.foto img{width:100%;height:100%;object-fit:cover}
-.foto.r0{border-radius:0}
-.hueco{position:relative;width:100%;border-radius:18px;overflow:hidden;
-  background:linear-gradient(135deg,rgba(27,71,255,.06),rgba(0,194,212,.05));
-  border:1px dashed rgba(27,71,255,.30);display:flex;flex-direction:column;align-items:center;
-  justify-content:center;gap:6px;text-align:center;padding:16px}
-.hueco .et{font-family:var(--fm);font-size:10px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--azul)}
-.hueco .no{font-size:11.5px;color:var(--t2);max-width:34ch;line-height:1.5}
-.oscura .hueco{background:linear-gradient(135deg,rgba(255,255,255,.07),rgba(0,194,212,.06));
-  border-color:rgba(255,255,255,.22)}
-.oscura .hueco .et{color:var(--cian)}
-.oscura .hueco .no{color:rgba(255,255,255,.55)}
-.hueco.r0{border-radius:0}
+/* ── Fotos ─────────────────────────────────────────────────────────────── */
+.foto{position:relative;border-radius:18px;overflow:hidden;background:rgba(10,16,32,.05);
+  box-shadow:var(--sombra)}
+.foto img{width:100%;height:100%;object-fit:cover;display:block}
+.foto .pie{position:absolute;left:0;right:0;bottom:0;padding:26px 16px 12px;color:#fff;font-size:12px;
+  line-height:1.45;background:linear-gradient(to top,rgba(6,10,20,.82),transparent)}
+.foto .pie b{color:#fff}
+.hero-fotos{display:grid;grid-template-columns:1fr 1fr;gap:14px;min-width:0}
+.hero-fotos .alta{grid-column:1/-1;height:330px}
+.hero-fotos .baja{height:180px}
 
-/* ── Tarjetas ──────────────────────────────────────────────────────────── */
-.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
-.cards-2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin-top:18px}
-.card{display:flex;flex-direction:column;gap:12px;padding:24px;border-radius:18px;background:var(--vidrio);
+/* ── Servicios ─────────────────────────────────────────────────────────── */
+.servs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.serv{display:flex;flex-direction:column;border-radius:18px;overflow:hidden;background:var(--vidrio);
   backdrop-filter:blur(18px) saturate(140%);-webkit-backdrop-filter:blur(18px) saturate(140%);
   border:1px solid var(--linea);box-shadow:0 1px 0 var(--luz) inset,var(--sombra)}
-.card-ico{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;
+.serv .im{height:190px;background:rgba(10,16,32,.06);position:relative}
+.serv .im img{width:100%;height:100%;object-fit:cover}
+.serv .cuerpo{padding:22px;display:flex;flex-direction:column;gap:11px;flex:1}
+.serv-ico{width:38px;height:38px;border-radius:11px;display:flex;align-items:center;justify-content:center;
   background:rgba(27,71,255,.08);border:1px solid rgba(27,71,255,.18);color:var(--azul)}
-.card-t{font-family:var(--fd);font-size:18px;font-weight:600;letter-spacing:-.01em}
-.card-d{font-size:13.5px;line-height:1.62;color:var(--t2)}
-.card-pie{margin-top:auto;padding-top:12px;border-top:1px solid var(--linea2);font-family:var(--fm);
+.serv .t{font-family:var(--fd);font-size:18px;font-weight:600;letter-spacing:-.01em}
+.serv .d{font-size:13.5px;line-height:1.62;color:var(--t2)}
+.serv .pie2{margin-top:auto;padding-top:12px;border-top:1px solid var(--linea2);font-family:var(--fm);
   font-size:10.5px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--t3)}
 
+/* ── Caso paso a paso ──────────────────────────────────────────────────── */
+.caso{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin-top:28px}
+.caso figure{display:flex;flex-direction:column;gap:12px}
+.caso .foto{height:300px}
+.caso figcaption{display:flex;flex-direction:column;gap:5px}
+.caso .n{font-family:var(--fm);font-size:11px;font-weight:600;color:var(--azul);letter-spacing:.12em}
+.caso .t{font-family:var(--fd);font-size:16px;font-weight:600}
+.caso .d{font-size:13px;line-height:1.6;color:var(--t2)}
+.par{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:22px}
+.par .foto{height:250px}
+
 /* ── Proceso ───────────────────────────────────────────────────────────── */
-.pasos{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin-top:32px}
-.paso{display:flex;flex-direction:column;gap:12px;padding:26px 22px;border-radius:16px;background:var(--vidrio2);
+.pasos{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin-top:30px}
+.paso{display:flex;flex-direction:column;gap:11px;padding:24px 20px;border-radius:16px;background:var(--vidrio2);
   backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid var(--linea);
   box-shadow:0 1px 0 var(--luz) inset}
 .paso .n{font-family:var(--fm);font-size:11px;font-weight:600;color:var(--azul);letter-spacing:.12em}
@@ -175,37 +175,23 @@ b,strong{font-weight:600;color:var(--tinta)}
   background:rgba(27,71,255,.05);border:1px solid rgba(27,71,255,.16);font-size:13.5px;color:var(--t2);line-height:1.55}
 .aviso svg{color:var(--azul);flex:none}
 
-/* ── Maquetas (la franja oscura) ───────────────────────────────────────── */
-.oscura{background:var(--tinta);color:#fff;overflow:hidden}
-.oscura::before{content:'';position:absolute;inset:0;pointer-events:none;background:
+/* ── Puente a Heliescala ───────────────────────────────────────────────── */
+.puente{background:var(--tinta);color:#fff;overflow:hidden}
+.puente::before{content:'';position:absolute;inset:0;pointer-events:none;background:
   radial-gradient(ellipse 50% 60% at 78% 0%, rgba(0,194,212,.22) 0%, transparent 60%),
   radial-gradient(ellipse 45% 50% at 10% 100%, rgba(27,71,255,.28) 0%, transparent 62%)}
-.oscura .h2{color:#fff}
-.oscura .sub{color:rgba(255,255,255,.72)}
-.oscura b{color:#fff}
-.oscura .ojo{color:var(--cian)}
-.oscura .sec-n{color:rgba(255,255,255,.45)}
-.maqs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
-.maq{display:flex;flex-direction:column;border-radius:18px;overflow:hidden;background:rgba(255,255,255,.06);
-  border:1px solid rgba(255,255,255,.14);transition:transform .18s,border-color .18s}
-.maq:hover{transform:translateY(-2px);border-color:rgba(255,255,255,.28)}
-.maq .cuerpo{padding:18px 20px;display:flex;flex-direction:column;gap:7px}
-.maq .t{font-family:var(--fd);font-size:16.5px;font-weight:600;letter-spacing:-.01em;color:#fff}
-.maq .d{font-size:12.5px;color:rgba(255,255,255,.62);line-height:1.55}
-.tags{display:flex;gap:8px;margin-top:6px;flex-wrap:wrap}
-.tag{font-family:var(--fm);font-size:10px;letter-spacing:.06em;padding:4px 8px;border-radius:7px;
-  background:rgba(255,255,255,.08);color:rgba(255,255,255,.7)}
-.fichas{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin-top:20px}
-.ficha{display:flex;align-items:center;gap:11px;padding:16px 18px;border-radius:14px;
-  background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.12)}
-.ficha svg{color:var(--cian);flex:none}
-.ficha .k{font-family:var(--fm);font-size:9.5px;letter-spacing:.12em;color:rgba(255,255,255,.5);display:block}
-.ficha .v{font-size:13.5px;font-weight:600;color:#fff}
-.oscura .pend{color:var(--cian);background:rgba(0,194,212,.12);border-bottom-color:rgba(0,194,212,.5)}
+.puente-in{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.85fr);gap:40px;align-items:center}
+.puente .h2{color:#fff}
+.puente .sub{color:rgba(255,255,255,.72)}
+.puente .ojo{color:var(--cian)}
+.puente b{color:#fff}
+.puente .foto{height:300px}
+.btn-b{background:#fff;color:var(--tinta)}
 
 /* ── Quién ─────────────────────────────────────────────────────────────── */
 .quien{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:44px;align-items:center}
-.quien-txt{display:flex;flex-direction:column;gap:22px;min-width:0}
+.quien .foto{height:380px}
+.quien-txt{display:flex;flex-direction:column;gap:20px;min-width:0}
 .cred{display:flex;flex-direction:column;gap:10px;padding:20px;border-radius:16px;
   background:rgba(10,16,32,.03);border:1px solid var(--linea2)}
 .cred div{display:flex;align-items:flex-start;gap:10px;font-size:13.5px;color:var(--t2);line-height:1.5}
@@ -237,98 +223,100 @@ b,strong{font-weight:600;color:var(--tinta)}
 .nota-form svg{color:var(--azul);flex:none}
 
 /* ── Pie ───────────────────────────────────────────────────────────────── */
-.pie{padding:30px 0;background:var(--tinta);color:rgba(255,255,255,.55)}
+.pie-p{padding:30px 0;background:var(--tinta);color:rgba(255,255,255,.55)}
 .pie-in{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;
   max-width:var(--ancho);margin:0 auto;padding:0 32px;font-size:12.5px}
 .pie-m{display:flex;align-items:center;gap:10px}
 .pie-m i{width:26px;height:26px;border-radius:8px;display:flex;align-items:center;justify-content:center;
   background:rgba(255,255,255,.1);color:#fff;font-style:normal}
 .pie-m b{font-family:var(--fd);font-weight:600;color:#fff}
+.pie-p a{color:rgba(255,255,255,.75);text-decoration:none}
+.pie-p a:hover{color:#fff}
 .pie-d{font-family:var(--fm);font-size:11px;letter-spacing:.08em}
 
 /* ── Responsivo ────────────────────────────────────────────────────────── */
 @media(max-width:1080px){
-  .cards{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .servs{grid-template-columns:repeat(2,minmax(0,1fr))}
   .pasos{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .maqs{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .fichas{grid-template-columns:repeat(2,minmax(0,1fr))}
   .menu{display:none}
 }
 @media(max-width:820px){
   .wrap,.barra-in,.pie-in{padding-left:18px;padding-right:18px}
   .hero{grid-template-columns:1fr;gap:28px;padding-top:30px}
-  .quien,.contacto{grid-template-columns:1fr;gap:26px}
-  .cards,.cards-2{grid-template-columns:1fr}
-  .hero-datos{gap:26px}
+  .quien,.contacto,.puente-in{grid-template-columns:1fr;gap:26px}
+  .servs,.caso,.par{grid-template-columns:1fr}
+  .hero-datos{gap:24px}
   .marca .n span{display:none}
   .barra-in{height:60px;gap:12px}
   .barra-d .btn span{display:none}
   .barra-d .btn{padding:11px 13px}
+  .caso .foto{height:260px}
+  .quien .foto{height:320px}
 }
 @media(max-width:520px){
-  .pasos,.maqs,.fichas{grid-template-columns:1fr}
-  .hero-fotos .par{grid-template-columns:1fr}
+  .pasos{grid-template-columns:1fr}
+  .hero-fotos{grid-template-columns:1fr}
+  .hero-fotos .baja{height:200px}
   .form{padding:20px}
 }
-@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.btn:hover,.maq:hover{transform:none}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.btn:hover{transform:none}}
 </style>
 </head>
 <body>
 
-<!-- ══ BARRA ══════════════════════════════════════════════════════════════ -->
 <header class="barra">
   <div class="barra-in">
     <a class="marca" href="#inicio">
       <i data-ico="heli"></i>
-      <span class="n"><b>AERORESINAS</b><span data-t="marcaSub">AIRCRAFT STRUCTURAL REPAIR</span></span>
+      <span class="n"><b>AERORESINAS</b><span data-t="marcaSub">REPARACIÓN ESTRUCTURAL DE AERONAVES</span></span>
     </a>
     <nav class="menu">
-      <a href="#reparacion" data-t="navRep">Reparación</a>
+      <a href="#reparacion" data-t="navRep">Qué repara</a>
+      <a href="#caso" data-t="navCaso">Un trabajo real</a>
       <a href="#proceso" data-t="navProc">Cómo trabaja</a>
-      <a href="#maquetas" data-t="navMaq">Helicópteros a escala</a>
       <a href="#quien" data-t="navQuien">Quién es</a>
+      <a href="../Heliescala/heliescala.html" data-t="navHeli">Heliescala ↗</a>
     </nav>
     <div class="barra-d">
       <div class="idioma">
         <button type="button" id="btn-es" class="on" onclick="setIdioma('es')">ES</button>
         <button type="button" id="btn-en" onclick="setIdioma('en')">EN</button>
       </div>
-      <a class="btn btn-p btn-sm" id="wa-barra" href="#contacto"><i data-ico="wa"></i><span>WhatsApp</span></a>
+      <a class="btn btn-p btn-sm" href="#contacto"><i data-ico="wa"></i><span>WhatsApp</span></a>
     </div>
   </div>
 </header>
 
-<!-- ══ HERO ═══════════════════════════════════════════════════════════════ -->
 <section id="inicio">
   <div class="cielo"></div><div class="malla"></div>
   <div class="wrap">
     <div class="hero">
       <div class="hero-txt">
-        <div class="ojo"><span data-t="heroOjo">Reparación estructural de aeronaves</span> · <span class="pend" data-campo="ciudad">[CIUDAD BASE]</span></div>
+        <div class="ojo"><span data-t="heroOjo">Estructuras · composites · corrosión</span> · <span class="pend" data-campo="ciudad">[CIUDAD BASE]</span></div>
         <h1 class="h1"><span data-t="heroT1">Tu aeronave no viaja al taller.</span><br><em data-t="heroT2">El taller viaja a tu aeronave.</em></h1>
         <p class="sub" data-t="heroSub"></p>
         <div class="hero-btns">
-          <a class="btn btn-p" href="#contacto"><i data-ico="wa"></i><span data-t="ctaDanio">Describir un daño</span></a>
-          <a class="btn btn-s" href="#maquetas"><i data-ico="heli"></i><span data-t="ctaMaq">Ver helicópteros a escala</span></a>
+          <a class="btn btn-p" href="#contacto"><i data-ico="wa"></i><span data-t="ctaDanio">Mandar fotos del daño</span></a>
+          <a class="btn btn-s" href="#caso"><i data-ico="lupa"></i><span data-t="ctaCaso">Ver un trabajo completo</span></a>
         </div>
         <div class="hero-datos">
           <div class="dato"><span class="v"><span class="pend" data-campo="anios">[XX]</span></span><span class="k" data-t="kAnios">Años de oficio</span></div>
+          <div class="dato"><span class="v">5</span><span class="k" data-t="kServ">Tipos de trabajo</span></div>
           <div class="dato"><span class="v"><span class="pend" data-campo="licencia">[LIC]</span></span><span class="k" data-t="kLic">Licencia</span></div>
-          <div class="dato"><span class="v"><span class="pend" data-campo="aeronaves">[XX]</span></span><span class="k" data-t="kAero">Aeronaves atendidas</span></div>
         </div>
       </div>
       <div class="hero-fotos">
-        <div data-foto="trabajando" data-alto="360" data-nota="Horizontal. Él trabajando sobre el fuselaje, con herramienta a la vista. Es la foto que decide si te llaman."></div>
-        <div class="par">
-          <div data-foto="antes" data-alto="150" data-nota="El daño: corrosión o panel golpeado, de cerca."></div>
-          <div data-foto="despues" data-alto="150" data-nota="La misma zona ya reparada, mismo encuadre."></div>
-        </div>
+        <figure class="foto alta"><img src="fotos/hero.jpg" alt="Evaluando un panel dañado en el hangar">
+          <figcaption class="pie" data-t="pieHero"></figcaption></figure>
+        <figure class="foto baja"><img src="fotos/composite-antes.jpg" alt="Daño en un panel de composite" loading="lazy">
+          <figcaption class="pie" data-t="pieAntes"></figcaption></figure>
+        <figure class="foto baja"><img src="fotos/composite-despues.jpg" alt="El mismo panel ya reparado" loading="lazy">
+          <figcaption class="pie" data-t="pieDespues"></figcaption></figure>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ══ QUÉ REPARA ═════════════════════════════════════════════════════════ -->
 <section id="reparacion" class="sec sec-blanca">
   <div class="wrap">
     <div class="sec-h">
@@ -338,14 +326,26 @@ b,strong{font-weight:600;color:var(--tinta)}
       </div>
       <div class="sec-n" data-t="repN">05 SERVICIOS</div>
     </div>
-    <div class="cards" id="servicios-1"></div>
-    <div class="cards-2" id="servicios-2"></div>
+    <div class="servs" id="servicios"></div>
   </div>
 </section>
 
-<!-- ══ CÓMO TRABAJA ═══════════════════════════════════════════════════════ -->
-<section id="proceso" class="sec">
+<section id="caso" class="sec">
   <div class="cielo"></div>
+  <div class="wrap">
+    <div class="sec-h">
+      <div>
+        <h2 class="h2" data-t="casoT">Un trabajo, de principio a fin</h2>
+        <p class="sub" style="margin-top:10px" data-t="casoSub"></p>
+      </div>
+      <div class="sec-n" data-t="casoN">CASO REAL</div>
+    </div>
+    <div class="caso" id="caso-pasos"></div>
+    <div class="par" id="caso-par"></div>
+  </div>
+</section>
+
+<section id="proceso" class="sec sec-blanca">
   <div class="wrap">
     <h2 class="h2" data-t="procT">Cómo trabaja</h2>
     <p class="sub" style="margin-top:10px" data-t="procSub"></p>
@@ -357,30 +357,26 @@ b,strong{font-weight:600;color:var(--tinta)}
   </div>
 </section>
 
-<!-- ══ MAQUETAS ═══════════════════════════════════════════════════════════ -->
-<section id="maquetas" class="sec oscura">
+<section class="sec puente">
   <div class="wrap">
-    <div class="sec-h">
-      <div style="display:flex;flex-direction:column;gap:12px">
-        <div class="ojo" data-t="maqOjo">Segunda línea de trabajo</div>
-        <h2 class="h2" data-t="maqT">Helicópteros a escala, en resina, hechos a mano</h2>
-        <p class="sub" data-t="maqSub"></p>
+    <div class="puente-in">
+      <div style="display:flex;flex-direction:column;gap:18px">
+        <div class="ojo" data-t="punOjo">La otra mitad de la casa</div>
+        <h2 class="h2" data-t="punT">De la misma mano salen las réplicas</h2>
+        <p class="sub" data-t="punSub"></p>
+        <div><a class="btn btn-b" href="../Heliescala/heliescala.html"><i data-ico="heli"></i><span data-t="punCta">Ver Heliescala</span></a></div>
       </div>
-      <div class="sec-n" data-t="maqN">POR ENCARGO</div>
-    </div>
-    <div class="maqs" id="maquetas-grid"></div>
-    <div class="fichas" id="maquetas-fichas"></div>
-    <div style="display:flex;gap:12px;margin-top:24px;flex-wrap:wrap">
-      <a class="btn btn-b" href="#contacto"><i data-ico="wa"></i><span data-t="ctaEncargar">Encargar una réplica</span></a>
+      <figure class="foto"><img src="../Heliescala/fotos/hero.jpg" alt="Réplicas en resina hechas a mano" loading="lazy">
+        <figcaption class="pie" data-t="piePuente"></figcaption></figure>
     </div>
   </div>
 </section>
 
-<!-- ══ QUIÉN ══════════════════════════════════════════════════════════════ -->
 <section id="quien" class="sec sec-blanca">
   <div class="wrap">
     <div class="quien">
-      <div data-foto="retrato" data-alto="320" data-nota="Él, en el hangar o junto a una aeronave. De medio cuerpo, mirando a cámara. Overol o camisa de trabajo."></div>
+      <figure class="foto"><img src="fotos/trabajando.jpg" alt="Trabajando sobre la aeronave en el hangar" loading="lazy">
+        <figcaption class="pie" data-t="pieQuien"></figcaption></figure>
       <div class="quien-txt">
         <h2 class="h2" data-t="quienT">Quién lo hace</h2>
         <p class="lead" data-t="quienD"></p>
@@ -390,7 +386,6 @@ b,strong{font-weight:600;color:var(--tinta)}
   </div>
 </section>
 
-<!-- ══ CONTACTO ═══════════════════════════════════════════════════════════ -->
 <section id="contacto" class="sec">
   <div class="cielo"></div>
   <div class="wrap">
@@ -399,9 +394,9 @@ b,strong{font-weight:600;color:var(--tinta)}
         <h2 class="h2" data-t="conT">Cuéntale qué le pasó a tu aeronave</h2>
         <p class="sub" data-t="conSub"></p>
         <div class="vias">
-          <a class="via" id="via-wa" href="#" target="_blank" rel="noopener">
+          <a class="via" id="via-wa" href="#contacto" target="_blank" rel="noopener">
             <i data-ico="wa"></i><div><span class="k">WHATSAPP</span><span class="v pend" data-campo="whatsapp">[+52 XX XXXX XXXX]</span></div></a>
-          <a class="via" id="via-mail" href="#">
+          <a class="via" id="via-mail" href="#contacto">
             <i data-ico="mail"></i><div><span class="k">CORREO</span><span class="v pend" data-campo="correo">[correo@aeroresinas.com]</span></div></a>
           <div class="via">
             <i data-ico="pin"></i><div><span class="k" data-t="kBase">BASE</span><span class="v pend" data-campo="ciudad">[CIUDAD, ESTADO]</span></div></div>
@@ -419,20 +414,18 @@ b,strong{font-weight:600;color:var(--tinta)}
   </div>
 </section>
 
-<footer class="pie">
+<footer class="pie-p">
   <div class="pie-in">
     <div class="pie-m"><i data-ico="heli"></i><b>AERORESINAS</b></div>
-    <div class="pie-d"><span class="pend" data-campo="ciudad">[CIUDAD]</span> · MÉXICO · <span id="anio"></span></div>
+    <div class="pie-d"><span class="pend" data-campo="ciudad">[CIUDAD]</span> · MÉXICO · <span id="anio"></span> · <a href="../Heliescala/heliescala.html">HELIESCALA ↗</a></div>
   </div>
 </footer>
 
 <script>
 /* ════════════════════════════════════════════════════════════════════════════
-   LOS DATOS DE TU PAPÁ — lo único que hay que editar en este archivo.
-
-   Todo lo que siga entre corchetes sale marcado en azul en la página: se ve que
-   falta, y nadie lo confunde con un dato real. En cuanto lo llenes aquí, aparece
-   en todos los sitios donde se cita (son ocho).
+   LOS DATOS — lo único que hay que editar en este archivo.
+   Lo que siga entre corchetes sale marcado en azul en la página: se ve que falta
+   y nadie lo confunde con un dato real. Al llenarlo aquí aparece en todos lados.
    ════════════════════════════════════════════════════════════════════════════ */
 const PERFIL = {
   nombre:    '[NOMBRE COMPLETO]',
@@ -440,39 +433,18 @@ const PERFIL = {
   cobertura: '[ZONA — p. ej. todo el país, o el radio que esté dispuesto a viajar]',
   anios:     '[XX]',
   licencia:  '[LIC]',
-  aeronaves: '[XX]',
   donde:     '[DÓNDE TRABAJÓ]',
-  // El teléfono, en formato internacional y SOLO DÍGITOS para el enlace de WhatsApp
-  // (52 = México). `whatsappTxt` es cómo se ve escrito en la página.
-  whatsapp:    '',                        // p. ej. '5215512345678'
+  // Formato internacional y SOLO DÍGITOS para el enlace de WhatsApp (52 = México).
+  whatsapp:    '',                       // p. ej. '5215512345678'
   whatsappTxt: '[+52 XX XXXX XXXX]',
   correo:      '[correo@aeroresinas.com]',
-  // Maquetas
-  escalas: '[1:XX y 1:XX]', tiempo: '[X] semanas', envio: '[Sí / a convenir]', desde: '[$X,XXX MXN]',
-  // Credenciales (una línea por viñeta)
   credenciales: [
-    '[Licencia / certificación — p. ej. A&amp;P, DGAC, tipo]',
-    '[Aeronaves o modelos en los que ha trabajado]',
+    '[Licencia / certificación — p. ej. A&amp;P, DGAC, AFAC, tipo]',
+    '[Bajo qué figura firma: taller autorizado, licencia propia o mano de obra supervisada]',
     '[¿Factura? ¿RFC? — dilo si aplica: pesa para operadores]',
   ],
 };
 
-/* Las fotos viven en `fotos/` con estos nombres. Mientras un archivo no exista, su
-   hueco queda marcado con la instrucción de qué foto va ahí; en cuanto se copia,
-   aparece sola sin tocar el HTML. Se comprueba cargándola, que es lo único que
-   funciona desde `file://`. */
-const FOTOS = {
-  trabajando: 'fotos/trabajando.jpg',
-  antes:      'fotos/antes.jpg',
-  despues:    'fotos/despues.jpg',
-  retrato:    'fotos/retrato.jpg',
-  h125:       'fotos/maqueta-h125.jpg',
-  h145:       'fotos/maqueta-h145.jpg',
-  fam:        'fotos/maqueta-fam.jpg',
-  tuya:       'fotos/maqueta-encargo.jpg',
-};
-
-// ─── Iconos de trazo, uno solo por concepto ─────────────────────────────────
 const ICO = {
   heli:'<path d="M3 6h18M12 6v3"/><path d="M6 12h9a3 3 0 0 1 3 3v2H8a2 2 0 0 1-2-2z"/><path d="M18 15h3M7 17v3M13 17v3M5 20h10"/>',
   estruc:'<path d="M3 7l9-4 9 4v10l-9 4-9-4z"/><path d="M3 7l9 4 9-4M12 11v10"/>',
@@ -484,35 +456,43 @@ const ICO = {
   mail:'<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/>',
   pin:'<path d="M12 21s7-5.6 7-11a7 7 0 1 0-14 0c0 5.4 7 11 7 11z"/><circle cx="12" cy="10" r="2.6"/>',
   check:'<path d="M4 12.5l5 5L20 6.5"/>',
-  regla:'<path d="M3 8h18v8H3z"/><path d="M7 8v4M11 8v3M15 8v4M19 8v3"/>',
-  reloj:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
-  caja:'<path d="M3 8l9-5 9 5v8l-9 5-9-5z"/><path d="M3 8l9 5 9-5M12 13v8"/>',
   lupa:'<circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/>',
 };
 const svg = (k, sz) => '<svg viewBox="0 0 24 24" width="' + (sz||18) + '" height="' + (sz||18) +
   '" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">' + (ICO[k]||'') + '</svg>';
 
-/* ─── Los dos idiomas ───────────────────────────────────────────────────────
-   Una sola página, no dos archivos: un archivo por idioma se desincroniza al
-   segundo cambio. La elección se guarda; si el navegador está en inglés, abre
-   en inglés sin preguntar. */
+/* Los dos idiomas en una sola página: dos archivos se desincronizan al segundo cambio. */
 const T = {
  es:{
   marcaSub:'REPARACIÓN ESTRUCTURAL DE AERONAVES',
-  navRep:'Reparación', navProc:'Cómo trabaja', navMaq:'Helicópteros a escala', navQuien:'Quién es',
-  heroOjo:'Reparación estructural de aeronaves',
+  navRep:'Qué repara', navCaso:'Un trabajo real', navProc:'Cómo trabaja', navQuien:'Quién es', navHeli:'Heliescala ↗',
+  heroOjo:'Estructuras · composites · corrosión',
   heroT1:'Tu aeronave no viaja al taller.', heroT2:'El taller viaja a tu aeronave.',
-  heroSub:'Estructuras, corrosión, parabrisas, antenas y fuselaje de helicóptero. <b>{anios} años</b> reparando aeronaves; hoy, de forma independiente y en el hangar donde esté la tuya.',
-  ctaDanio:'Describir un daño', ctaMaq:'Ver helicópteros a escala',
-  kAnios:'Años de oficio', kLic:'Licencia', kAero:'Aeronaves atendidas', kBase:'BASE',
+  heroSub:'Estructuras, corrosión, composites, parabrisas y antenas. <b>{anios} años</b> reparando aeronaves; hoy, por su cuenta y en el hangar donde esté la tuya.',
+  ctaDanio:'Mandar fotos del daño', ctaCaso:'Ver un trabajo completo',
+  kAnios:'Años de oficio', kServ:'Tipos de trabajo', kLic:'Licencia', kBase:'BASE',
+  pieHero:'<b>Evaluando el daño antes de tocar nada.</b> El panel se mide y se compara con el manual: se decide si se repara o se sustituye.',
+  pieAntes:'<b>Antes.</b> Composite delaminado en el techo de cabina.',
+  pieDespues:'<b>Después.</b> La misma zona, lista para pintura.',
   repT:'Qué repara', repN:'05 SERVICIOS',
-  repSub:'Cinco cosas, y las hace completas: evaluación, reparación y reporte. Si algo no se puede reparar, te lo dice antes de empezar.',
+  repSub:'Cinco cosas, y las hace completas: evaluación, reparación y reporte con fotos. Si algo no se puede reparar, te lo dice antes de empezar.',
   servicios:[
-   ['estruc','Estructuras','Paneles, largueros, cuadernas y recubrimiento. Se evalúa el daño contra el manual de la aeronave, se repara o se sustituye la sección, y se entrega documentado.','Ala fija y ala rotativa'],
-   ['corro','Corrosión','La corrosión no se limpia: se remueve hasta material sano, se mide lo que queda y se protege para que no vuelva. Lo que se ve en la superficie casi nunca es todo.','Detección · remoción · protección'],
-   ['cristal','Parabrisas y ventanas','Cristales estrellados o delaminados y sellos que filtran. Cambio completo, o reparación cuando el daño y el manual lo permiten.','Cambio y sellado'],
-   ['antena','Antenas','Montaje, sellado y reparación del área donde va montada. Muchas veces el problema no es la antena: es la piel de abajo.','Montaje · sello · refuerzo'],
-   ['fuse','Fuselaje de helicóptero','Resina, fibra y estructura en la misma pieza. Es la especialidad de la casa y lo que a un taller de ala fija se le complica.','La especialidad'],
+   ['estruc','Estructuras','fotos/estructura-piel.jpg','Piel, largueros, cuadernas y refuerzos. Se retira la zona dañada hasta ver estructura sana, se repone material y se cierra según el manual de la aeronave.','Ala fija y ala rotativa','Piel retirada: los largueros a la vista, listos para reponer material.'],
+   ['corro','Corrosión','fotos/corrosion.jpg','La corrosión no se limpia: se remueve hasta material sano, se mide lo que queda y se protege para que no vuelva. Lo que se ve en la superficie casi nunca es todo.','Detección · remoción · protección','Decapado completo del techo: aparece toda la corrosión, no solo la que se veía.'],
+   ['fuse','Composites y fuselaje','fotos/composite-fibra.jpg','Fibra, resina y estructura en la misma pieza. Es la especialidad de la casa —de ahí el nombre— y lo que a un taller de ala fija se le complica.','La especialidad','Fibra nueva laminada sobre la zona saneada.'],
+   ['cristal','Parabrisas y ventanas','fotos/parabrisas.jpg','Cristales estrellados o delaminados y sellos que filtran. Cambio completo, o reparación cuando el daño y el manual lo permiten.','Cambio y sellado','Marco del parabrisas preparado antes de montar el cristal.'],
+   ['antena','Antenas y accesorios','fotos/fuselaje.jpg','Montaje, sellado y reparación del área donde va montada la antena. Muchas veces el problema no es la antena: es la piel de abajo, y ahí es donde entra el trabajo estructural.','Montaje · sello · refuerzo','Aeronave desmontada en el hangar para trabajar la piel.'],
+  ],
+  casoT:'Un trabajo, de principio a fin', casoN:'CASO REAL',
+  casoSub:'El mismo panel, las tres etapas. No hay foto de catálogo aquí: es una reparación suya, fotografiada mientras la hacía.',
+  caso:[
+   ['Se abre y se sanea','fotos/composite-antes.jpg','Se retira todo el material dañado hasta llegar a fibra sana. Queda más grande de lo que parecía desde fuera — siempre queda más grande.'],
+   ['Se lamina la fibra','fotos/composite-fibra.jpg','Capas nuevas de fibra y resina, orientadas como las originales. Aquí es donde se decide si la pieza aguanta o solo lo parece.'],
+   ['Se cierra y se entrega','fotos/composite-despues.jpg','Relleno, lijado y superficie lista para pintura. La zona reparada tiene que desaparecer a la vista y estar en el reporte.'],
+  ],
+  par:[
+   ['fotos/nariz-antes.jpg','<b>Antes.</b> Nariz con impactos y pintura levantada.'],
+   ['fotos/nariz-despues.jpg','<b>Después.</b> Superficie recuperada, lista para pintura.'],
   ],
   procT:'Cómo trabaja',
   procSub:'Sin taller fijo, sin lista de espera y sin mover la aeronave. Cuatro pasos, y el primero es una foto.',
@@ -523,19 +503,13 @@ const T = {
    ['Entrega con reporte','La reparación documentada con fotos del antes y el después, para tu bitácora.'],
   ],
   cobT:'Cobertura:', cobD:'Para trabajos fuera de su base se acuerdan traslado y estancia antes de salir.',
-  maqOjo:'Segunda línea de trabajo', maqN:'POR ENCARGO',
-  maqT:'Helicópteros a escala, en resina, hechos a mano',
-  maqSub:'Réplicas de casi cualquier modelo. Las que ya tiene son de la Fuerza Aérea Mexicana y de Airbus, pero se hace el que le pidas — <b>incluido el tuyo, con tus colores y tu matrícula</b>.',
-  maquetas:[
-   ['h125','Airbus H125 / AS350','El de trabajo. El que más pide la gente.'],
-   ['h145','Airbus H145','Doble motor, línea de rescate y traslado médico.'],
-   ['fam','Fuerza Aérea Mexicana','Con sus colores y su matrícula, como vuela.'],
-   ['tuya','Tu aeronave','La réplica exacta de la tuya: colores, matrícula y detalles.'],
-  ],
-  fichasMaq:[['regla','ESCALAS','escalas'],['reloj','TIEMPO','tiempo'],['caja','ENVÍO','envio'],['lupa','DESDE','desde']],
-  ctaEncargar:'Encargar una réplica',
+  punOjo:'La otra mitad de la casa', punCta:'Ver Heliescala',
+  punT:'De la misma mano salen las réplicas',
+  punSub:'<b>Heliescala</b> es la otra línea de trabajo: helicópteros a escala en resina, hechos a mano. Conoce la forma real de esas aeronaves porque lleva media vida con las manos dentro de ellas — y sí, hace la réplica de la tuya, con tus colores y tu matrícula.',
+  piePuente:'Réplicas en resina: Airbus, Bell, Mi-17 y las libreas que le pidas.',
+  pieQuien:'En el hangar, sellando el marco de una ventanilla.',
   quienT:'Quién lo hace',
-  quienD:'<b>{nombre}</b>, {anios} años reparando estructuras de aeronaves en {donde}. Retirado de la plantilla, hoy trabaja por su cuenta: la misma mano que hacía esas reparaciones, ahora directamente para el dueño de la aeronave, sin taller de por medio.<br><br>Las réplicas en resina salieron de ahí: conoce la forma real de esas aeronaves porque lleva media vida con las manos dentro de ellas.',
+  quienD:'<b>{nombre}</b>, {anios} años reparando estructuras de aeronaves en {donde}. Retirado de la plantilla, hoy trabaja por su cuenta: la misma mano que hacía esas reparaciones, ahora directamente para el dueño de la aeronave, sin taller de por medio.',
   conT:'Cuéntale qué le pasó a tu aeronave',
   conSub:'Una foto y dos líneas bastan para que te diga si tiene arreglo y cuánto cuesta. Contesta él, no un conmutador.',
   formT:'Mándale el caso', fNombre:'NOMBRE', fAeronave:'AERONAVE', fQue:'QUÉ PASÓ',
@@ -548,20 +522,34 @@ const T = {
  },
  en:{
   marcaSub:'AIRCRAFT STRUCTURAL REPAIR',
-  navRep:'Repairs', navProc:'How it works', navMaq:'Scale helicopters', navQuien:'Who does it',
-  heroOjo:'Aircraft structural repair',
+  navRep:'What he repairs', navCaso:'A real job', navProc:'How it works', navQuien:'Who does it', navHeli:'Heliescala ↗',
+  heroOjo:'Structures · composites · corrosion',
   heroT1:'Your aircraft does not travel to a shop.', heroT2:'The shop travels to your aircraft.',
-  heroSub:'Structures, corrosion, windshields, antennas and helicopter fuselage. <b>{anios} years</b> repairing aircraft; today, independently and at whatever hangar yours is in.',
-  ctaDanio:'Describe a damage', ctaMaq:'See scale helicopters',
-  kAnios:'Years in the trade', kLic:'License', kAero:'Aircraft serviced', kBase:'BASED IN',
+  heroSub:'Structures, corrosion, composites, windshields and antennas. <b>{anios} years</b> repairing aircraft; today, on his own and at whatever hangar yours is in.',
+  ctaDanio:'Send photos of the damage', ctaCaso:'See a full job',
+  kAnios:'Years in the trade', kServ:'Types of work', kLic:'License', kBase:'BASED IN',
+  pieHero:'<b>Assessing the damage before touching anything.</b> The panel is measured against the manual: repair or replace.',
+  pieAntes:'<b>Before.</b> Delaminated composite on the cabin roof.',
+  pieDespues:'<b>After.</b> The same area, ready for paint.',
   repT:'What he repairs', repN:'05 SERVICES',
-  repSub:'Five things, done end to end: assessment, repair and report. If something cannot be repaired, he tells you before starting.',
+  repSub:'Five things, done end to end: assessment, repair and a photo report. If something cannot be repaired, he tells you before starting.',
   servicios:[
-   ['estruc','Structures','Skins, stringers, frames and panels. Damage is assessed against the aircraft manual, the section is repaired or replaced, and the job is handed over documented.','Fixed and rotary wing'],
-   ['corro','Corrosion','Corrosion is not cleaned off: it is removed down to sound material, what is left is measured, and the area is protected so it does not come back. What shows on the surface is rarely all of it.','Detection · removal · protection'],
-   ['cristal','Windshields and windows','Crazed or delaminated glass and leaking seals. Full replacement, or repair when the damage and the manual allow it.','Replacement and sealing'],
-   ['antena','Antennas','Mounting, sealing and repair of the area they sit on. Often the problem is not the antenna: it is the skin underneath.','Mount · seal · reinforce'],
-   ['fuse','Helicopter fuselage','Resin, fibre and structure in the same part. It is the house specialty, and what a fixed-wing shop struggles with.','The specialty'],
+   ['estruc','Structures','fotos/estructura-piel.jpg','Skin, stringers, frames and reinforcements. The damaged area is removed down to sound structure, material is replaced and the job is closed per the aircraft manual.','Fixed and rotary wing','Skin removed: stringers exposed, ready for new material.'],
+   ['corro','Corrosion','fotos/corrosion.jpg','Corrosion is not cleaned off: it is removed down to sound material, what is left is measured, and the area is protected so it does not come back. What shows on the surface is rarely all of it.','Detection · removal · protection','Roof fully stripped: all the corrosion shows, not just what was visible.'],
+   ['fuse','Composites and fuselage','fotos/composite-fibra.jpg','Fibre, resin and structure in the same part. It is the house specialty — hence the name — and what a fixed-wing shop struggles with.','The specialty','New fibre laid over the cleaned-up area.'],
+   ['cristal','Windshields and windows','fotos/parabrisas.jpg','Crazed or delaminated glass and leaking seals. Full replacement, or repair when the damage and the manual allow it.','Replacement and sealing','Windshield frame prepared before fitting the glass.'],
+   ['antena','Antennas and accessories','fotos/fuselaje.jpg','Mounting, sealing and repair of the area the antenna sits on. Often the problem is not the antenna: it is the skin underneath, and that is structural work.','Mount · seal · reinforce','Aircraft stripped down in the hangar to work the skin.'],
+  ],
+  casoT:'One job, start to finish', casoN:'REAL JOB',
+  casoSub:'The same panel, three stages. No stock photos here: it is one of his repairs, shot while he was doing it.',
+  caso:[
+   ['Open it up and clean it out','fotos/composite-antes.jpg','All damaged material is removed down to sound fibre. It always ends up bigger than it looked from the outside.'],
+   ['Lay up the fibre','fotos/composite-fibra.jpg','New plies of fibre and resin, oriented like the originals. This is where it is decided whether the part holds or only looks like it does.'],
+   ['Close it and hand it over','fotos/composite-despues.jpg','Filling, sanding and a surface ready for paint. The repaired area has to disappear to the eye — and appear in the report.'],
+  ],
+  par:[
+   ['fotos/nariz-antes.jpg','<b>Before.</b> Nose with impact marks and lifted paint.'],
+   ['fotos/nariz-despues.jpg','<b>After.</b> Surface recovered, ready for paint.'],
   ],
   procT:'How it works',
   procSub:'No fixed shop, no waiting list and no moving the aircraft. Four steps, and the first one is a photo.',
@@ -572,19 +560,13 @@ const T = {
    ['Handover with report','The repair documented with before and after photos, for your logbook.'],
   ],
   cobT:'Coverage:', cobD:'For work outside his base, travel and lodging are agreed before he sets out.',
-  maqOjo:'Second line of work', maqN:'MADE TO ORDER',
-  maqT:'Scale helicopters, cast in resin, built by hand',
-  maqSub:'Replicas of almost any model. The ones he already makes are Mexican Air Force and Airbus, but he builds the one you ask for — <b>including yours, in your colours and with your registration</b>.',
-  maquetas:[
-   ['h125','Airbus H125 / AS350','The workhorse. The one people ask for most.'],
-   ['h145','Airbus H145','Twin engine, rescue and air-medical livery.'],
-   ['fam','Mexican Air Force','In its colours and registration, the way it flies.'],
-   ['tuya','Your aircraft','An exact replica of yours: colours, registration and details.'],
-  ],
-  fichasMaq:[['regla','SCALES','escalas'],['reloj','LEAD TIME','tiempo'],['caja','SHIPPING','envio'],['lupa','FROM','desde']],
-  ctaEncargar:'Order a replica',
+  punOjo:'The other half of the house', punCta:'See Heliescala',
+  punT:'The same hands build the replicas',
+  punSub:'<b>Heliescala</b> is the other line of work: scale helicopters cast in resin, built by hand. He knows the real shape of those aircraft because he has spent half his life with his hands inside them — and yes, he builds a replica of yours, in your colours and with your registration.',
+  piePuente:'Resin replicas: Airbus, Bell, Mi-17 and whatever livery you ask for.',
+  pieQuien:'In the hangar, sealing a window frame.',
   quienT:'Who does it',
-  quienD:'<b>{nombre}</b>, {anios} years repairing aircraft structures at {donde}. Retired from the payroll, he now works on his own: the same hands that did those repairs, now directly for the aircraft owner, with no shop in between.<br><br>The resin replicas came out of that: he knows the real shape of those aircraft because he has spent half his life with his hands inside them.',
+  quienD:'<b>{nombre}</b>, {anios} years repairing aircraft structures at {donde}. Retired from the payroll, he now works on his own: the same hands that did those repairs, now directly for the aircraft owner, with no shop in between.',
   conT:'Tell him what happened to your aircraft',
   conSub:'One photo and two lines are enough for him to tell you whether it can be fixed and what it costs. He answers, not a switchboard.',
   formT:'Send him the case', fNombre:'NAME', fAeronave:'AIRCRAFT', fQue:'WHAT HAPPENED',
@@ -598,94 +580,57 @@ const T = {
 };
 
 let IDIOMA = 'es';
-
-// ─── Dibujar ───────────────────────────────────────────────────────────────
 function marcado(v){ return /^\[.*\]$/.test(String(v).trim()); }
 function campo(k){ const v = PERFIL[k] || ''; return marcado(v) ? '<span class="pend">' + v + '</span>' : v; }
 function rellena(txt){ return String(txt).replace(/\{(\w+)\}/g, (_, k) => campo(k)); }
 
-function pintaFotos(){
-  document.querySelectorAll('[data-foto]').forEach(function(el){
-    const k = el.getAttribute('data-foto'), alto = el.getAttribute('data-alto') || 200;
-    const nota = el.getAttribute('data-nota') || '', r0 = el.hasAttribute('data-r0') ? ' r0' : '';
-    const src = FOTOS[k];
-    el.innerHTML = '<div class="hueco' + r0 + '" style="height:' + alto + 'px">' +
-      '<span class="et">FOTO · ' + k.toUpperCase() + '</span>' +
-      (nota ? '<span class="no">' + nota + '</span>' : '') + '</div>';
-    if(!src) return;
-    const img = new Image();
-    img.onload = function(){ el.innerHTML = '<div class="foto' + r0 + '" style="height:' + alto + 'px"><img src="' + src + '" alt="' + k + '" loading="lazy"></div>'; };
-    img.src = src;   // si no existe, `onload` no corre y el hueco se queda: exactamente lo que se quiere
-  });
-}
-
 function pinta(){
   const t = T[IDIOMA];
   document.documentElement.lang = IDIOMA;
-  // Textos simples
   document.querySelectorAll('[data-t]').forEach(function(el){
     const k = el.getAttribute('data-t');
-    if(t[k] != null && typeof t[k] === 'string') el.innerHTML = rellena(t[k]);
+    if(typeof t[k] === 'string') el.innerHTML = rellena(t[k]);
   });
-  // Campos del perfil citados sueltos
   document.querySelectorAll('[data-campo]').forEach(function(el){
     const k = el.getAttribute('data-campo');
     const v = k === 'whatsapp' ? PERFIL.whatsappTxt : PERFIL[k];
     if(v == null) return;
-    el.textContent = v;
-    el.classList.toggle('pend', marcado(v));
+    el.textContent = v; el.classList.toggle('pend', marcado(v));
   });
-  // Servicios
-  const s1 = document.getElementById('servicios-1'), s2 = document.getElementById('servicios-2');
-  const tar = x => '<div class="card"><div class="card-ico">' + svg(x[0], 20) + '</div>' +
-    '<div class="card-t">' + x[1] + '</div><div class="card-d">' + x[2] + '</div>' +
-    '<div class="card-pie">' + x[3] + '</div></div>';
-  s1.innerHTML = t.servicios.slice(0,3).map(tar).join('');
-  s2.innerHTML = t.servicios.slice(3).map(tar).join('');
-  // Pasos
+  document.getElementById('servicios').innerHTML = t.servicios.map(function(s){
+    return '<article class="serv"><div class="im"><img src="' + s[2] + '" alt="' + s[1] + '" loading="lazy"></div>' +
+      '<div class="cuerpo"><div class="serv-ico">' + svg(s[0], 19) + '</div>' +
+      '<h3 class="t">' + s[1] + '</h3><p class="d">' + s[3] + '</p>' +
+      '<div class="pie2">' + s[4] + '</div></div></article>';
+  }).join('');
+  document.getElementById('caso-pasos').innerHTML = t.caso.map(function(c, i){
+    return '<figure><div class="foto"><img src="' + c[1] + '" alt="' + c[0] + '" loading="lazy"></div>' +
+      '<figcaption><span class="n">0' + (i+1) + '</span><span class="t">' + c[0] + '</span>' +
+      '<span class="d">' + c[2] + '</span></figcaption></figure>';
+  }).join('');
+  document.getElementById('caso-par').innerHTML = t.par.map(function(p){
+    return '<figure class="foto"><img src="' + p[0] + '" alt="" loading="lazy">' +
+      '<figcaption class="pie">' + p[1] + '</figcaption></figure>';
+  }).join('');
   document.getElementById('pasos').innerHTML = t.pasos.map(function(p, i){
     return '<div class="paso"><div class="n">0' + (i+1) + '</div><div class="t">' + p[0] + '</div><div class="d">' + p[1] + '</div></div>';
   }).join('');
-  // Maquetas
-  document.getElementById('maquetas-grid').innerHTML = t.maquetas.map(function(m){
-    return '<div class="maq"><div data-foto="' + m[0] + '" data-alto="190" data-r0></div>' +
-      '<div class="cuerpo"><div class="t">' + m[1] + '</div><div class="d">' + m[2] + '</div>' +
-      '<div class="tags"><span class="tag">RESINA</span><span class="tag">ESC. ' + PERFIL.escalas + '</span></div></div></div>';
-  }).join('');
-  document.getElementById('maquetas-fichas').innerHTML = t.fichasMaq.map(function(f){
-    const v = PERFIL[f[2]] || '';
-    return '<div class="ficha">' + svg(f[0], 18) + '<div><span class="k">' + f[1] + '</span>' +
-      '<span class="v' + (marcado(v) ? ' pend' : '') + '">' + v + '</span></div></div>';
-  }).join('');
-  // Credenciales
   document.getElementById('credenciales').innerHTML = PERFIL.credenciales.map(function(c){
     return '<div>' + svg('check', 15) + '<span' + (marcado(c) ? ' class="pend"' : '') + '>' + c + '</span></div>';
   }).join('');
-  // Marcadores de posición del formulario
   const ph = {'f-nombre':'phNombre','f-aeronave':'phAeronave','f-que':'phQue'};
   Object.keys(ph).forEach(function(id){ const el = document.getElementById(id); if(el) el.placeholder = t[ph[id]]; });
-  // Iconos sueltos
   document.querySelectorAll('[data-ico]').forEach(function(el){
     if(!el.querySelector('svg')) el.innerHTML = svg(el.getAttribute('data-ico'), el.closest('.marca,.pie-m') ? 19 : 17);
   });
-  // Enlaces de contacto
   const wa = document.getElementById('via-wa'), ml = document.getElementById('via-mail');
   wa.href = PERFIL.whatsapp ? 'https://wa.me/' + PERFIL.whatsapp : '#contacto';
   ml.href = marcado(PERFIL.correo) ? '#contacto' : 'mailto:' + PERFIL.correo;
   document.getElementById('btn-es').classList.toggle('on', IDIOMA === 'es');
   document.getElementById('btn-en').classList.toggle('on', IDIOMA === 'en');
-  pintaFotos();
 }
+function setIdioma(x){ IDIOMA = x; try{ localStorage.setItem('aero-idioma', x); }catch(e){} pinta(); }
 
-function setIdioma(x){
-  IDIOMA = x;
-  try{ localStorage.setItem('aeroresinas-idioma', x); }catch(e){}
-  pinta();
-}
-
-/* El formulario no manda nada a ningún lado: arma el mensaje y abre WhatsApp con
-   él ya escrito. Es lo único que funciona igual desde `file://` y desde un dominio
-   sin pagar un servidor, y además deja la conversación en el teléfono de tu papá. */
 function enviarWhatsApp(ev){
   ev.preventDefault();
   const t = T[IDIOMA];
@@ -700,7 +645,7 @@ function enviarWhatsApp(ev){
 
 (function init(){
   try{
-    const g = localStorage.getItem('aeroresinas-idioma');
+    const g = localStorage.getItem('aero-idioma');
     IDIOMA = g || ((navigator.language || 'es').slice(0,2) === 'en' ? 'en' : 'es');
   }catch(e){}
   document.getElementById('anio').textContent = new Date().getFullYear();

@@ -1,0 +1,26 @@
+Fotos de HELIESCALA (réplicas en resina). Ya están puestas y optimizadas para web.
+Las originales siguen intactas en C:\Users\esped\Desktop\Aeroresinas\.
+
+  hero.jpg          Tres piezas terminadas: ambulancia, rescate y Super Puma.
+  h145.jpg          Airbus H145 en librea blanca y negra.
+  h145-airbus.jpg   H145 azul Airbus, versión de exhibición.
+  sgm.jpg           AS350 / H125 rojo de servicios médicos.
+  mi17.jpg          Mi-17 gris.
+  marina.jpg        Tres Panther en librea de la Marina.
+  rescate.jpg       Par de rescate con flotadores.
+  bell407.jpg       Dos Bell 407 en librea de gobierno estatal.
+  trio.jpg          Tres piezas juntas (sin usar todavía en la página).
+  policia.jpg       Bell 412 de la Policía, con número de unidad.
+  policia-par.jpg   La pareja de la Policía, lista para entregar.
+  fam.jpg           Fuerza Aérea Mexicana, con matrícula.
+  taller.jpg        Piezas fundidas esperando montaje y pintura.
+  flota.jpg         Fuselajes en fila durante la producción.
+  og.jpg            1200x630 — la miniatura que sale en WhatsApp.
+
+Para cambiar una: deja el archivo con el MISMO nombre. Para AÑADIR un modelo al
+catálogo hace falta la foto aquí y una línea en `T.es.piezas` (y su traducción en
+`T.en.piezas`) dentro del <script> de heliescala.html.
+
+Lo que valdría la pena tener:
+  · Una foto con algo al lado que dé escala (una mano, un boli).
+  · Una réplica junto a la aeronave real que copia: es la foto que vende sola.

@@ -948,21 +948,28 @@ terminaciones, así que la fila se lee pareja y el hover los enciende con un hal
 Bajados a tonos medios (`#0891b2`, `#16a34a`, `#0d9488`, `#38bdf8`), el peor contraste es 5.43 en
 oscuro y 1.92 en claro.
 
-**Cuatro grupos, no dieciséis botones sueltos.** Lo que administras (Coach, Finanzas), el cuerpo
+**Cuatro grupos, no diecisiete botones sueltos.** Lo que administras (Coach, Finanzas), el cuerpo
 —las **ocho** pestañas de la MISMA app de Cuidado Personal, en su mismo orden: Skincare, Cabello,
 Ojos, Dentista, Salud, Ejercicio, Comida, Vestimenta—, lo que estudias (Alemán con sus tres partes,
 Lecciones, Vocabulario y Gramática, y Entrevistas) y, aparte, **Aeroresinas**, con un separador fino
 entre ellos: ordena la fila sin escribir un solo rótulo. Cabello, Ojos y las tres de Alemán entraron
 el 2026-09-13 (Adán: *"faltan más iconos [...] hay más htmls que no están en la app"*): todo HTML que
-se abre solo tiene ya su píldora. **Aeroresinas va en un grupo propio** (2026-09-17) porque no es una
-app suya: es el negocio de su papá, y colgarla de "lo que administras" o de "lo que estudias"
-mezclaría dos cosas distintas; su píldora lo dice con el subtítulo *de tu papá*.
+se abre solo tiene ya su píldora. **El negocio de su papá va en un grupo propio** (2026-09-17):
+**Aeroresinas** (reparación) y **Heliescala** (réplicas en resina), con un icono cada una —el
+helicóptero que vuela y el que está sobre un pedestal de vitrina— y su subtítulo. No son apps suyas,
+y colgarlas de "lo que administras" o de "lo que estudias" mezclaría dos cosas distintas.
 
-Van dentro de un contenedor de **1560px** como máximo, porque en una pantalla de 2000px se repartían
-a lo ancho y quedaban a un palmo unas de otras; a 1600 las dieciséis ocupan **1531px** en una sola
-línea (54px de alto). **Por debajo de 1580px se quedan solo los iconos**, con el nombre en el
-`title`: ahí la fila se partiría en dos y taparía el slide, que empieza fijo a 58px — con Aeroresinas
-dentro y el umbral viejo (1440/1500) la barra pasaba de 54 a 92px, medido.
+Van dentro de un contenedor con `max-width`, porque en una pantalla de 2000px se repartían a lo ancho
+y quedaban a un palmo unas de otras. **Por debajo de un umbral se quedan solo los iconos**, con el
+nombre en el `title`: ahí la fila se partiría en dos y taparía el slide, que empieza fijo a 58px (la
+barra pasa de 54 a 92px de alto — medido las dos veces que ocurrió).
+
+**Los dos números salen de medir, no de tantear**: con las 17 apps de hoy la fila CON nombres
+necesita **1,632px**, así que el contenedor va a **1,660** y el umbral a **1,690**. Historial: 15
+apps → 1440/1500 · 16 (entra Aeroresinas) → 1560/1580 · 17 (entra Heliescala) → 1660/1690. Si entra
+otra app hay que volver a medirlo: `.qa-grupos` con `flex-wrap:nowrap` y `max-width:none` da el ancho
+real de la fila en una línea. Efecto secundario a tener presente: **a 1600px de pantalla la barra ya
+enseña solo iconos**; los nombres vuelven a partir de 1,691.
 
 El botón de privacidad se ancló a la derecha, y bajo la barra corre una línea de acento en
 degradado — lo único que la separa del slide cuando el de abajo también es oscuro.

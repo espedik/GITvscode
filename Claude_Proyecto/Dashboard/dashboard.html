@@ -98,12 +98,15 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 /* Las apps van AGRUPADAS y con ancho máximo. Antes se repartían por los 2000px de la
    pantalla y quedaban a un palmo unas de otras. */
 .qa-grupos{display:flex;align-items:center;gap:3px;flex-wrap:wrap;justify-content:center;
-  max-width:1560px;margin:0 auto}
-/* Con 16 apps, por debajo de 1580px la fila se partiría en dos y taparía el slide (la franja
-   empieza fija a 58px): ahí se quedan solo los iconos, con el nombre en el title. El umbral y el
-   max-width subieron de 1500/1440 al entrar Aeroresinas (2026-09-17): con ella la fila con
-   nombres mide 1,531 px —medido— y a 1440 envolvía, subiendo la barra de 54 a 92 px de alto. */
-@media(max-width:1580px){.qa-name,.qa-stat{display:none}.qa-pill{padding:6px 8px}.qa-grupos{gap:2px}}
+  max-width:1660px;margin:0 auto}
+/* Por debajo del umbral la fila se partiría en dos y taparía el slide (la franja empieza fija a
+   58px): ahí se quedan solo los iconos, con el nombre en el title. Los dos números salen de
+   medir, no de tantear: con las 17 apps de hoy la fila CON nombres necesita 1,632 px, así que el
+   contenedor va a 1,660 y el umbral a 1,690 (el viewport tiene que dar el ancho más el padding).
+   Historial: 15 apps → 1440/1500 · 16 (entra Aeroresinas) → 1560/1580 · 17 (entra Heliescala,
+   2026-09-17) → 1660/1690. Si entra otra app hay que volver a medirlo — `.qa-grupos` con
+   `flex-wrap:nowrap` y `max-width:none` da el ancho real en una línea. */
+@media(max-width:1690px){.qa-name,.qa-stat{display:none}.qa-pill{padding:6px 8px}.qa-grupos{gap:2px}}
 .qa-sep{width:1px;height:20px;background:rgba(var(--ov),.12);margin:0 6px;flex-shrink:0}
 .qa-pill{display:flex;align-items:center;gap:6px;padding:5px 9px;border-radius:9px;
   background:transparent;border:1px solid transparent;text-decoration:none;color:var(--text2);
@@ -9618,6 +9621,9 @@ const QA_ICO = {
   // Aeroresinas (2026-09-17): el taller de su papá. Helicóptero de perfil — rotor, cabina y
   // patines —, porque lo que repara y lo que vende a escala son helicópteros.
   heli:   '<path d="M3 6h18M12 6v3"></path><path d="M6 12h9a3 3 0 0 1 3 3v2H8a2 2 0 0 1-2-2z"></path><path d="M18 15h3M7 17v3M13 17v3M5 20h10"></path>',
+  // Heliescala: el mismo helicóptero, pero sobre el pedestal de vitrina — es una réplica, no
+  // una aeronave. Dos iconos distintos para dos negocios distintos.
+  heliesc:'<path d="M4 5h13M10.5 5v2.5"></path><path d="M6 10h7a2.5 2.5 0 0 1 2.5 2.5V14H7.5A1.5 1.5 0 0 1 6 12.5z"></path><path d="M15.5 12.5H19"></path><path d="M10.5 14v3.5M7 21h7M8.5 19.5h4"></path>',
   birrete:'<path d="M2.5 9.5 12 5l9.5 4.5L12 14z"></path><path d="M6.5 11.6v4.2c0 1.6 2.5 3 5.5 3s5.5-1.4 5.5-3v-4.2"></path><path d="M21.5 9.5v5"></path>',
   // El ojo del modo privado: mismo trazo y misma rejilla que los de las apps, para que
   // el botón no se lea como una pieza de otra familia (Adán, 2026-09-01).
@@ -9657,7 +9663,8 @@ function renderQuickApps(){
      {k:'code',   c:'#0d9488', n:'Entrevistas',href:'../Entrevistas/entrevistas.html', stat:''}],
     // Grupo propio: no es una app tuya, es el negocio de tu papá. Mezclarla con lo que
     // administras o con lo que estudias confundiría las dos cosas.
-    [{k:'heli',   c:'#1b47ff', n:'Aeroresinas',href:'../Aeroresinas/aeroresinas.html', stat:'de tu papá'}]
+    [{k:'heli',    c:'#1b47ff', n:'Aeroresinas',href:'../Aeroresinas/aeroresinas.html', stat:'reparación'},
+     {k:'heliesc', c:'#00a4b4', n:'Heliescala', href:'../Heliescala/heliescala.html',   stat:'maquetas'}]
   ];
   const pill = a=>`<a href="${a.href}" class="qa-pill" title="${a.n}">
     <span class="qa-ico" style="color:${a.c}">${qaSvg(a.k, a.c)}</span>
