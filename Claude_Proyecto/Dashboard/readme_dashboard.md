@@ -66,7 +66,7 @@ flechas, los puntos del HUD lateral, o deslizando en táctil.
 |---|---|---|
 | `theme-dia` | **Mi Día** | La principal. La agenda del día a la izquierda, el AHORA y seis módulos (hábitos, entreno, aprendes, dinero, fase, pendientes) — ver abajo |
 | `theme-coach` | **Plan Maestro** | Fase activa, ruta de deuda cara y el tablero calendario / día / semana — ver abajo |
-| `theme-metas` | **Mis Metas** | 8 KPIs financieros, franja de instrumentos y las 14 metas con estado — ver abajo |
+| `theme-metas` | **Mis Metas** | 8 KPIs financieros, franja de instrumentos y las 17 metas con estado — ver abajo |
 | `theme-basicas` | **Habilidades Base** | 27 guías de vida práctica, todas menos Citas con **su video verificado**. **Única fuente** desde el 30-ago-2026: la sección equivalente de Coach se eliminó — ver abajo |
 | `theme-skills` | **Habilidades** | Radar de 12 habilidades y prioridades de aprendizaje |
 | `theme-lista` | **Lista de Compras** | 7 categorías. Comida con precios por pieza, ticket, costo al mes y proporción de verduras/frutas/almidones — ver abajo |
@@ -480,7 +480,7 @@ empezado.
 **La franja de instrumentos** (`#metasBay`, contenedor nuevo en el HTML del slide) trae el avance
 del conjunto en **pasos**, no promediando porcentajes: promediar le daba el mismo peso a "Básico 5
 de alemán" (1 paso) que al Hyrox (15), así que marcar la meta más chica movía la aguja tanto como
-quince sesiones de entrenamiento. Más el ecualizador de las 14 metas —con piso del 20% para que
+quince sesiones de entrenamiento. Más el ecualizador de las 17 metas —con piso del 20% para que
 una meta sin empezar siga siendo una barra visible y no un hueco— y los tres conteos.
 
 **La regla de edad vive dentro de la franja**, separada por un filete. Como caja aparte costaba
@@ -496,6 +496,43 @@ ancha que las de largo plazo, que es lo que se pidió el 2026-08-11. Medido: 0 p
 paso a propósito —son dos avances distintos de la misma meta— y enseña **la cifra**
 (`$22,800 pagado`), no solo el porcentaje. `METAS_MONEYBAR[x].short` es ese texto; `.lbl` sigue
 siendo el largo, en el `title`.
+
+### Las tres adicciones — celular, citas, alcohol
+
+Añadidas el 2026-09-14 (*"dejar de ser adicto al celular, dejar adicción por salir con mujeres y
+dejar la adicción de tomar alcohol... con información muy completa"*). Son `celular`, `citas` y
+`alcohol` en `META_DETALLE`, **14 pasos cada una**, y van en su propia fila de corto/mediano
+plazo, entre el ISTQB y las dos logradas: con 11 fichas la rejilla de tres columnas pasa a
+cuatro filas, que a 1600×950 siguen cabiendo sin scroll (0 px de desborde, medido) y a
+1366×768 hacen el scroll interno de siempre. La franja pasa de 14 a **17 metas** y de 117 a
+**159 pasos**.
+
+**Van juntas a propósito.** Las tres son la misma mecánica —una conducta que se repite para
+regular emociones— y se disparan entre sí: el alcohol baja la guardia para salir, salir pone
+alcohol enfrente, y el celular es donde viven las apps de citas. Cada ficha lo dice y remite a
+las otras dos, y las tres cierran con la misma puerta (Línea de la Vida, UNAM, CIJ).
+
+**Nada inventado, y lo que se cita se verificó ese día:** Línea de la Vida 800 911 2000 (gratis,
+24 h, CONASAMA), alcoholímetro CDMX (0.4 mg/L, arresto de 20-36 h inconmutable, **cero** para
+transporte de pasajeros —Didi—), trago estándar FISAC (13 g: 355 ml de cerveza = 120 ml de vino =
+45 ml de destilado; máximo 4 por ocasión y 12 por semana), Parr et al. 2014 en *PLOS ONE*
+(síntesis de proteína −24% con proteína y −37% con carbohidratos — el primer borrador decía 37%
+para los dos y se corrigió al leer el paper), OMS enero 2023 (ningún nivel seguro), AUDIT de la
+OMS (8 / 16 / 20), las 40 preguntas de SLAA y su material en español, y el Centro de Servicios
+Psicológicos "Dr. Guillermo Dávila" de la UNAM. Todas las URLs respondieron 200 con curl; la de
+la agenda de la UNAM (`agendadav.psicologiaunam.com`) no respondió y no se usó.
+
+**Las fechas están ancladas a ese día:** el retiro de 90 días de `citas` "empieza mañana, 15 de
+septiembre" y cae el **13 de diciembre de 2026**; los 30 días de `alcohol` terminan el **14 de
+octubre** y llegan al Hyrox con 46 limpios. Si se reescriben las fichas, esas cuentas se rehacen.
+
+**Las fotos** son de Unsplash, verificadas con curl y vistas antes de elegirlas: las manos con el
+celular a oscuras (`photo-1423784346385`), el camino que se recorre solo (`photo-1603210109305`)
+y la mano que tapa el vaso (`photo-1676629922083`). Se descartó una de una niña con el teléfono
+y las de botellas: la ficha enseña lo que se deja, no una tentación.
+
+**Coach** las repite como tres marcadores (`mtc7`-`mtc9`) en su lista de corto plazo, que
+persisten solos en `coach_checks_v1`; el detalle vive solo aquí.
 
 ### El simulacro del ISTQB CT-GenAI
 
