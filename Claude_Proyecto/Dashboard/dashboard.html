@@ -98,10 +98,12 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 /* Las apps van AGRUPADAS y con ancho máximo. Antes se repartían por los 2000px de la
    pantalla y quedaban a un palmo unas de otras. */
 .qa-grupos{display:flex;align-items:center;gap:3px;flex-wrap:wrap;justify-content:center;
-  max-width:1440px;margin:0 auto}
-/* Con 15 apps, por debajo de 1500px la fila se partiría en dos y taparía el slide (la franja
-   empieza fija a 58px): ahí se quedan solo los iconos, con el nombre en el title. */
-@media(max-width:1500px){.qa-name,.qa-stat{display:none}.qa-pill{padding:6px 8px}.qa-grupos{gap:2px}}
+  max-width:1560px;margin:0 auto}
+/* Con 16 apps, por debajo de 1580px la fila se partiría en dos y taparía el slide (la franja
+   empieza fija a 58px): ahí se quedan solo los iconos, con el nombre en el title. El umbral y el
+   max-width subieron de 1500/1440 al entrar Aeroresinas (2026-09-17): con ella la fila con
+   nombres mide 1,531 px —medido— y a 1440 envolvía, subiendo la barra de 54 a 92 px de alto. */
+@media(max-width:1580px){.qa-name,.qa-stat{display:none}.qa-pill{padding:6px 8px}.qa-grupos{gap:2px}}
 .qa-sep{width:1px;height:20px;background:rgba(var(--ov),.12);margin:0 6px;flex-shrink:0}
 .qa-pill{display:flex;align-items:center;gap:6px;padding:5px 9px;border-radius:9px;
   background:transparent;border:1px solid transparent;text-decoration:none;color:var(--text2);
@@ -9613,6 +9615,9 @@ const QA_ICO = {
   lentes: '<circle cx="7" cy="13.5" r="3.5"></circle><circle cx="17" cy="13.5" r="3.5"></circle><path d="M10.5 13.5h3M3.5 12.5l2-5.5M20.5 12.5l-2-5.5"></path>',
   libro:  '<path d="M4 4.5h5.5A2.5 2.5 0 0 1 12 7v13a2 2 0 0 0-2-2H4z"></path><path d="M20 4.5h-5.5A2.5 2.5 0 0 0 12 7v13a2 2 0 0 1 2-2h6z"></path>',
   letras: '<path d="M4 18.5 8.2 7l4.2 11.5M5.7 14.2h5"></path><path d="M15 9.5h5.5M15 13.5h5.5M15 17.5h5.5"></path>',
+  // Aeroresinas (2026-09-17): el taller de su papá. Helicóptero de perfil — rotor, cabina y
+  // patines —, porque lo que repara y lo que vende a escala son helicópteros.
+  heli:   '<path d="M3 6h18M12 6v3"></path><path d="M6 12h9a3 3 0 0 1 3 3v2H8a2 2 0 0 1-2-2z"></path><path d="M18 15h3M7 17v3M13 17v3M5 20h10"></path>',
   birrete:'<path d="M2.5 9.5 12 5l9.5 4.5L12 14z"></path><path d="M6.5 11.6v4.2c0 1.6 2.5 3 5.5 3s5.5-1.4 5.5-3v-4.2"></path><path d="M21.5 9.5v5"></path>',
   // El ojo del modo privado: mismo trazo y misma rejilla que los de las apps, para que
   // el botón no se lea como una pieza de otra familia (Adán, 2026-09-01).
@@ -9649,7 +9654,10 @@ function renderQuickApps(){
      {k:'birrete',c:'#ea580c', n:'Lecciones',  href:'../Aleman/principiantes.html', stat:''},
      {k:'libro',  c:'#db2777', n:'Vocabulario',href:'../Aleman/vocabulario.html', stat:''},
      {k:'letras', c:'#9333ea', n:'Gramática',  href:'../Aleman/gramatica.html', stat:''},
-     {k:'code',   c:'#0d9488', n:'Entrevistas',href:'../Entrevistas/entrevistas.html', stat:''}]
+     {k:'code',   c:'#0d9488', n:'Entrevistas',href:'../Entrevistas/entrevistas.html', stat:''}],
+    // Grupo propio: no es una app tuya, es el negocio de tu papá. Mezclarla con lo que
+    // administras o con lo que estudias confundiría las dos cosas.
+    [{k:'heli',   c:'#1b47ff', n:'Aeroresinas',href:'../Aeroresinas/aeroresinas.html', stat:'de tu papá'}]
   ];
   const pill = a=>`<a href="${a.href}" class="qa-pill" title="${a.n}">
     <span class="qa-ico" style="color:${a.c}">${qaSvg(a.k, a.c)}</span>

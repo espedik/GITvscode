@@ -1,0 +1,17 @@
+{
+  "artboards": [
+    {"file": "Main.dc.html", "title": "Main — la página completa (escritorio)", "x": 0, "y": 0, "w": 1440, "h": 4400},
+    {"file": "MainMovil.dc.html", "title": "Main — en el teléfono (como llega por WhatsApp)", "x": 1560, "y": 0, "w": 390, "h": 1700},
+    {"file": "DireccionB.dc.html", "title": "Dirección B — ficha técnica", "x": 2070, "y": 0, "w": 1440, "h": 1500},
+    {"file": "DireccionC.dc.html", "title": "Dirección C — vitrina, las maquetas mandan", "x": 3630, "y": 0, "w": 1440, "h": 900}
+  ],
+  "annotations": [
+    {"id": "plan", "x": 0, "y": -420, "w": 640, "text": "AERORESINAS · el plan\n\nQué vende: reparación estructural de aeronaves (estructuras, corrosión, parabrisas, antenas, fuselaje de helicóptero) Y réplicas en resina. Adán las quiere con el MISMO peso, así que la página tiene dos mitades y un puente entre ellas.\n\nEl puente es el mejor argumento que hay aquí: al que le reparas el helicóptero es exactamente el que quiere la réplica de SU aeronave, con su matrícula. Por eso las maquetas no van como un apéndice: van como segunda línea, en la franja oscura, justo después de la prueba de que sabe reparar.\n\nEl diferenciador, y el titular: él VA a donde está la aeronave. Un operador no mueve un helicóptero a un taller si puede evitarlo.\n\nEstructura: barra → hero (dos llamadas) → 5 servicios → cómo trabaja (4 pasos) → maquetas → quién es → contacto. Bilingüe ES/EN con el interruptor de la barra."},
+    {"id": "material", "x": 0, "y": -140, "w": 640, "text": "El material: blanco y transparente, como pediste. Vidrio (blanco al 72 % con desenfoque) sobre un cielo claro con dos auroras — azul de instrumento y cian — y una retícula técnica muy tenue, para que se lea como un plano y no como un folleto. Un solo acento azul #1b47ff; el cian solo en la franja oscura de maquetas. Tipografía: Space Grotesk para los títulos, IBM Plex Sans para el cuerpo, IBM Plex Mono para los datos técnicos."},
+    {"id": "faltan", "x": 1560, "y": -420, "w": 480, "text": "TODO LO QUE ESTÁ ENTRE [CORCHETES] LO NECESITO DE TI — no lo invento:\n\n· Nombre completo de tu papá y cómo quiere aparecer\n· Licencia o certificación (A&P, DGAC, tipo)\n· Años de oficio y dónde trabajó\n· Ciudad base y hasta dónde viaja\n· WhatsApp y correo\n· Escalas, material, tiempo y precio desde de las maquetas; si envía\n· Si factura (pesa para operadores)\n· Modelos de aeronave en los que ha trabajado"},
+    {"id": "fotos", "x": 1560, "y": -170, "w": 480, "text": "Las fotos: dime la carpeta. Los huecos marcados dicen qué va en cada uno.\nLa que más importa es la primera: él trabajando sobre el fuselaje, con herramienta a la vista. Y un antes/después con el MISMO encuadre — eso es lo que convence a un dueño de aeronave.\nDe las maquetas: fondo neutro, luz pareja, y una con algo al lado que dé escala."},
+    {"id": "notab", "x": 2070, "y": -170, "w": 460, "text": "B — Ficha técnica: mismo contenido, piel de manual de mantenimiento. Blanco puro, sin vidrio, servicios numerados en filas. Más sobria y más rápida de leer; pierde el brillo futurista que pediste."},
+    {"id": "notac", "x": 3630, "y": -170, "w": 460, "text": "C — Vitrina: las maquetas mandan y la reparación queda como aval. Es la que usaría si lo que más se vende fueran las réplicas. Contradice \"las dos por igual\", así que va como alternativa, no como Main."}
+  ],
+  "launch": {"view": "canvas"}
+}

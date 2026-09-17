@@ -1,0 +1,19 @@
+Las fotos de la página van aquí, con estos nombres exactos:
+
+  trabajando.jpg        Él trabajando sobre el fuselaje, con herramienta a la vista. HORIZONTAL.
+                        Es la foto que decide si te llaman: si solo hay una buena, que sea esta.
+  antes.jpg             El daño de cerca (corrosión, panel golpeado, cristal estrellado).
+  despues.jpg           La MISMA zona ya reparada, con el MISMO encuadre. El par vale doble.
+  retrato.jpg           Él, de medio cuerpo, en el hangar o junto a una aeronave, mirando a cámara.
+  maqueta-h125.jpg      Airbus H125 / AS350 a escala.
+  maqueta-h145.jpg      Airbus H145 a escala.
+  maqueta-fam.jpg       La de la Fuerza Aérea Mexicana.
+  maqueta-encargo.jpg   Una hecha por encargo (si hay una con matrícula de cliente, mejor).
+  og.jpg                La miniatura que sale al mandar el enlace por WhatsApp. 1200x630 px.
+                        Puede ser la misma que trabajando.jpg, recortada.
+
+Mientras un archivo no exista, la página deja el hueco marcado diciendo qué va ahí.
+En cuanto se copia aquí con el nombre correcto, aparece sola: no hay que tocar el HTML.
+
+Para las maquetas: fondo neutro, luz pareja y sin sombras duras; una foto con algo al lado
+que dé escala (una mano, un boli) ayuda a que se entienda el tamaño.
