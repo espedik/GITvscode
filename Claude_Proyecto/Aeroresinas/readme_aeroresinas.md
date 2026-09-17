@@ -21,10 +21,38 @@ arrastrar nada.
 Lo único que las relaciona es esta documentación y la carpeta del repositorio; nada de eso lo ve
 un cliente.
 
+## Quién es, y por qué eso lo cambia todo
+
+**José Arturo Martínez Ponce**, técnico de mantenimiento de aeronaves. Los datos salen de su perfil
+de LinkedIn (17-sep-2026), no de suposiciones:
+
+| | |
+|---|---|
+| **1988 — 2024** | **Airbus**, técnico de mantenimiento. 36 años de planta trabajando estructura en A320, A321, ATR 42 y ATR 72 |
+| **2025 — hoy** | **Aeroresinas**, por su cuenta: reparación estructural de helicópteros |
+| Aeronaves | Bell, Airbus Helicopters y Robinson |
+| Clientes | Operadores civiles, privados y gubernamentales |
+| Dónde | México, Panamá y Guatemala — hangar y campo |
+| Base | Miguel Hidalgo, Ciudad de México |
+| Especialidad | Composites (fibra de vidrio), técnicas al vacío, parabrisas y acrílicos, estructuras remachadas |
+
+**36 años en Airbus es el argumento de la página entera.** Un dueño de aeronave no contrata a un
+desconocido para abrir su fuselaje; contrata a alguien con un historial que puede comprobar. Por eso
+la trayectoria tiene **sección propia** —no una línea perdida en "quién lo hace"— y por eso la
+página enlaza a su LinkedIn: es la prueba verificable de todo lo anterior.
+
+La lista de **20 trabajos** de su historial en Airbus (radomos, piel de fuselaje, panel sándwich de
+nido de abeja, reparación al vacío, restitución del puenteo eléctrico…) está ahí por la misma razón,
+y el pie lo dice explícito: *la técnica es la misma, cambia la aeronave*.
+
+También entró lo que él mismo anuncia y vende bien: **soporte AOG** (aeronave en tierra), movilidad
+internacional y disposición a **colaborar con talleres MRO**. Y que repara conforme a **SRM, AMM y
+Boletines de Servicio**: es lo que separa una reparación aeronáutica de un arreglo.
+
 ## Estructura
 
 Barra → hero → **qué repara** (5 servicios, cada uno con su foto) → **un trabajo de principio a
-fin** → **cómo trabaja** (4 pasos) → **galería** → **quién lo hace** → contacto.
+fin** → **cómo trabaja** (4 pasos) → **trayectoria** → **galería** → **quién lo hace** → contacto.
 
 **El titular es el diferenciador, no un eslogan:** *"Tu aeronave no viaja al taller. El taller
 viaja a tu aeronave."* Un operador no mueve un helicóptero si puede evitarlo, y eso es justo lo que
@@ -46,17 +74,22 @@ Cada foto lleva **pie de foto** explicando qué se está viendo: una reparación
 sola, y el pie es lo que convierte la foto en argumento.
 
 Falta una foto de **una antena montada** (el servicio de antenas usa hoy la del fuselaje desmontado)
-y un **retrato** suyo mirando a cámara.
+y un **retrato** suyo mirando a cámara — el de su perfil de LinkedIn serviría, y le daría cara a la
+sección "Quién lo hace", que hoy usa una foto de él trabajando de espaldas.
 
 ## Lo que hay que rellenar — `PERFIL`
 
-Todo lo que falta vive en la constante `PERFIL`, al principio del `<script>`, y sale **marcado en
-azul** en la página: se ve que falta y nadie lo confunde con un dato real. Son 15 marcas.
+Todo vive en la constante `PERFIL`, al principio del `<script>`. Lo que falta sale **marcado en
+azul** en la página: se ve que falta y nadie lo confunde con un dato real.
 
-Pendiente al 2026-09-17: nombre, ciudad base, cobertura, años de oficio, licencia, dónde trabajó,
-WhatsApp, correo y las tres credenciales — entre ellas **bajo qué figura firma** (taller autorizado
-por la AFAC, licencia propia o mano de obra supervisada), que es lo primero que pregunta un
-operador serio.
+Con el perfil de LinkedIn se llenaron nombre, ciudad, años, dónde trabajó, cobertura, países,
+aeronaves y credenciales: **de 15 huecos quedan 3**.
+
+| Falta | Por qué importa |
+|---|---|
+| **WhatsApp** | Sin él la página no puede convertir una visita en un mensaje: el formulario avisa en vez de fallar, pero no hay a dónde escribir |
+| **Correo** | Para el operador que no usa WhatsApp y para las cotizaciones formales |
+| **Licencia o figura con la que firma** | AFAC/DGAC, A&P o el taller que ampara el trabajo. Es lo primero que pregunta un operador serio, y hoy es el único hueco de credibilidad que queda |
 
 `whatsapp` va en formato internacional y **solo dígitos** (`5215512345678`), que es lo que pide
 `wa.me`; `whatsappTxt` es cómo se escribe en pantalla.
@@ -126,8 +159,8 @@ vista. Cada una con su pie. Se añade con una línea en `T.*.galeria`.
 ## Comprobado
 
 Chromium `file://` a 1600 y 390 px, en español y en inglés: 15 imágenes, **ninguna rota**, 5
-servicios, 3 fotos de galería, sin desborde horizontal, sin errores de consola y sin marcadores sin
-resolver. Desde el Dashboard la píldora abre la página. **Cero referencias a Heliescala** en el
+servicios, 2 etapas de trayectoria, 20 capacidades, 3 fotos de galería, **3 huecos** (los de la
+tabla de arriba), sin desborde horizontal y sin errores de consola. Desde el Dashboard la píldora abre la página. **Cero referencias a Heliescala** en el
 cuerpo del documento (la única mención es la ruta en el comentario del `<style>`, que explica por
 qué el CSS está duplicado).
 

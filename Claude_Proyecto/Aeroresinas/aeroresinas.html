@@ -175,6 +175,33 @@ b,strong{font-weight:600;color:var(--tinta)}
   background:rgba(27,71,255,.05);border:1px solid rgba(27,71,255,.16);font-size:13.5px;color:var(--t2);line-height:1.55}
 .aviso svg{color:var(--azul);flex:none}
 
+/* ── Trayectoria ───────────────────────────────────────────────────────────
+   Dos etapas, con el mismo peso visual: 36 años en Airbus y lo que hace hoy por
+   su cuenta. Es la sección que responde a "¿y por qué te creo?", así que va
+   antes de la galería y después de ver el trabajo. */
+.tray{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+.tray-it{display:flex;flex-direction:column;gap:12px;padding:26px;border-radius:18px;
+  background:var(--vidrio);backdrop-filter:blur(18px) saturate(140%);
+  -webkit-backdrop-filter:blur(18px) saturate(140%);border:1px solid var(--linea);
+  box-shadow:0 1px 0 var(--luz) inset,var(--sombra)}
+.tray-it.ahora{background:var(--tinta);color:#fff;border-color:var(--tinta)}
+.tray-it.ahora .t,.tray-it.ahora b{color:#fff}
+.tray-it.ahora .d{color:rgba(255,255,255,.75)}
+.tray-it.ahora .per{color:var(--cian)}
+.tray-it .per{font-family:var(--fm);font-size:11px;font-weight:600;letter-spacing:.12em;color:var(--azul)}
+.tray-it .t{font-family:var(--fd);font-size:20px;font-weight:600;letter-spacing:-.015em;line-height:1.2}
+.tray-it .d{font-size:13.5px;line-height:1.65;color:var(--t2)}
+.capac{margin-top:18px;padding:26px;border-radius:18px;background:rgba(10,16,32,.028);
+  border:1px solid var(--linea2)}
+.capac-h{font-family:var(--fm);font-size:10px;font-weight:600;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--t3);margin-bottom:16px}
+.capac-g{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px 20px}
+.capac-g span{display:flex;align-items:flex-start;gap:8px;font-size:13px;line-height:1.5;color:var(--t2)}
+.capac-g span::before{content:'';flex:none;width:5px;height:5px;border-radius:50%;
+  background:var(--azul);opacity:.55;margin-top:7px}
+.capac-p{margin-top:16px;padding-top:14px;border-top:1px solid var(--linea2);
+  font-size:13px;line-height:1.6;color:var(--t2)}
+
 /* ── Quién ─────────────────────────────────────────────────────────────── */
 .quien{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:44px;align-items:center}
 .quien .foto{height:380px}
@@ -249,6 +276,7 @@ b,strong{font-weight:600;color:var(--tinta)}
   .servs{grid-template-columns:repeat(2,minmax(0,1fr))}
   .pasos{grid-template-columns:repeat(2,minmax(0,1fr))}
   .gal{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .capac-g{grid-template-columns:repeat(2,minmax(0,1fr))}
   .menu{gap:14px;overflow-x:auto;scrollbar-width:none}
   .menu::-webkit-scrollbar{display:none}
 }
@@ -256,7 +284,9 @@ b,strong{font-weight:600;color:var(--tinta)}
   .wrap,.barra-in,.pie-in{padding-left:18px;padding-right:18px}
   .hero{grid-template-columns:1fr;gap:28px;padding-top:30px}
   .quien,.contacto{grid-template-columns:1fr;gap:26px}
-  .servs,.caso,.par{grid-template-columns:1fr}
+  .servs,.caso,.par,.tray{grid-template-columns:1fr}
+  .capac-g{grid-template-columns:1fr}
+  .capac{padding:20px}
   .hero-datos{gap:24px}
   .marca .n span{display:none}
   .barra-d .btn span{display:none}
@@ -297,6 +327,7 @@ b,strong{font-weight:600;color:var(--tinta)}
       <a href="#reparacion" data-t="navRep">Qué repara</a>
       <a href="#caso" data-t="navCaso">Un trabajo real</a>
       <a href="#proceso" data-t="navProc">Cómo trabaja</a>
+      <a href="#trayectoria" data-t="navTray">Trayectoria</a>
       <a href="#galeria" data-t="navGal">Galería</a>
       <a href="#quien" data-t="navQuien">Quién es</a>
     </nav>
@@ -320,9 +351,9 @@ b,strong{font-weight:600;color:var(--tinta)}
           <a class="btn btn-s" href="#caso"><i data-ico="lupa"></i><span data-t="ctaCaso">Ver un trabajo completo</span></a>
         </div>
         <div class="hero-datos">
-          <div class="dato"><span class="v"><span class="pend" data-campo="anios">[XX]</span></span><span class="k" data-t="kAnios">Años de oficio</span></div>
-          <div class="dato"><span class="v">5</span><span class="k" data-t="kServ">Tipos de trabajo</span></div>
-          <div class="dato"><span class="v"><span class="pend" data-campo="licencia">[LIC]</span></span><span class="k" data-t="kLic">Licencia</span></div>
+          <div class="dato"><span class="v"><span data-campo="anios">36</span></span><span class="k" data-t="kAnios">Años en Airbus</span></div>
+          <div class="dato"><span class="v" data-t="dHeli">Bell · Airbus · Robinson</span><span class="k" data-t="kHeli">Helicópteros que repara</span></div>
+          <div class="dato"><span class="v"><span data-campo="paises">3</span></span><span class="k" data-t="kPaises">Países atendidos</span></div>
         </div>
       </div>
       <div class="hero-fotos">
@@ -372,7 +403,7 @@ b,strong{font-weight:600;color:var(--tinta)}
     <div class="pasos" id="pasos"></div>
     <div class="aviso">
       <i data-ico="pin"></i>
-      <div><b data-t="cobT">Cobertura:</b> <span class="pend" data-campo="cobertura">[ZONA]</span>. <span data-t="cobD"></span></div>
+      <div><b data-t="cobT">Cobertura:</b> <span data-campo="cobertura">México, Panamá y Guatemala</span>. <span data-t="cobD"></span></div>
     </div>
   </div>
 </section>
@@ -391,7 +422,25 @@ b,strong{font-weight:600;color:var(--tinta)}
   </div>
 </section>
 
-<section id="galeria" class="sec sec-blanca">
+<section id="trayectoria" class="sec sec-blanca">
+  <div class="wrap">
+    <div class="sec-h">
+      <div>
+        <h2 class="h2" data-t="trayT">36 años dentro de una aeronave</h2>
+        <p class="sub" style="margin-top:10px" data-t="traySub"></p>
+      </div>
+      <div class="sec-n" data-t="trayN">TRAYECTORIA</div>
+    </div>
+    <div class="tray" id="trayectoria-lista"></div>
+    <div class="capac">
+      <div class="capac-h" data-t="capT">Lo que ha reparado, con ese nombre</div>
+      <div class="capac-g" id="capacidades"></div>
+      <p class="capac-p" data-t="capP"></p>
+    </div>
+  </div>
+</section>
+
+<section id="galeria" class="sec">
   <div class="wrap">
     <div class="sec-h">
       <div>
@@ -417,7 +466,9 @@ b,strong{font-weight:600;color:var(--tinta)}
           <a class="via" id="via-mail" href="#contacto">
             <i data-ico="mail"></i><div><span class="k">CORREO</span><span class="v pend" data-campo="correo">[correo@aeroresinas.com]</span></div></a>
           <div class="via">
-            <i data-ico="pin"></i><div><span class="k" data-t="kBase">BASE</span><span class="v pend" data-campo="ciudad">[CIUDAD, ESTADO]</span></div></div>
+            <i data-ico="pin"></i><div><span class="k" data-t="kBase">BASE</span><span class="v" data-campo="ciudad">Miguel Hidalgo, Ciudad de México</span></div></div>
+          <a class="via" id="via-in" href="#" target="_blank" rel="noopener">
+            <i data-ico="linkedin"></i><div><span class="k">LINKEDIN</span><span class="v" data-campo="linkedinTxt">Aeroresinas en LinkedIn</span></div></a>
         </div>
       </div>
       <form class="form" id="form" onsubmit="return enviarWhatsApp(event)">
@@ -448,20 +499,26 @@ b,strong{font-weight:600;color:var(--tinta)}
    y nadie lo confunde con un dato real. Al llenarlo aquí aparece en todos lados.
    ════════════════════════════════════════════════════════════════════════════ */
 const PERFIL = {
-  nombre:    '[NOMBRE COMPLETO]',
-  ciudad:    '[CIUDAD, ESTADO]',
-  cobertura: '[ZONA — p. ej. todo el país, o el radio que esté dispuesto a viajar]',
-  anios:     '[XX]',
-  licencia:  '[LIC]',
-  donde:     '[DÓNDE TRABAJÓ]',
+  // Datos reales, de su perfil de LinkedIn (17-sep-2026). Lo que siga entre corchetes es lo
+  // único que falta y sale marcado en azul en la página.
+  nombre:    'José Arturo Martínez Ponce',
+  ciudad:    'Miguel Hidalgo, Ciudad de México',
+  cobertura: 'México, Panamá y Guatemala — y a donde haga falta, con movilidad internacional',
+  anios:     '36',                       // en Airbus, 1988-2024
+  desde:     '1988',
+  donde:     'Airbus',
+  paises:    '3',
+  linkedin:     'https://www.linkedin.com/company/107151473/',
+  linkedinTxt:  'Aeroresinas en LinkedIn',
   // Formato internacional y SOLO DÍGITOS para el enlace de WhatsApp (52 = México).
   whatsapp:    '',                       // p. ej. '5215512345678'
   whatsappTxt: '[+52 XX XXXX XXXX]',
   correo:      '[correo@aeroresinas.com]',
   credenciales: [
-    '[Licencia / certificación — p. ej. A&amp;P, DGAC, AFAC, tipo]',
-    '[Bajo qué figura firma: taller autorizado, licencia propia o mano de obra supervisada]',
-    '[¿Factura? ¿RFC? — dilo si aplica: pesa para operadores]',
+    'Reparaciones conforme a <b>SRM, AMM y Boletines de Servicio</b> — permanentes y temporales, con la integridad estructural y la aeronavegabilidad documentadas.',
+    'Trabajo en <b>Bell, Airbus Helicopters y Robinson</b>, para operadores civiles, privados y gubernamentales.',
+    'Disponible para <b>proyectos por contrato, soporte urgente (AOG) y colaboración con talleres MRO</b>.',
+    '[Licencia o certificación con la que firma — AFAC/DGAC, A&amp;P o el taller que ampara el trabajo]',
   ],
 };
 
@@ -477,6 +534,7 @@ const ICO = {
   pin:'<path d="M12 21s7-5.6 7-11a7 7 0 1 0-14 0c0 5.4 7 11 7 11z"/><circle cx="12" cy="10" r="2.6"/>',
   check:'<path d="M4 12.5l5 5L20 6.5"/>',
   lupa:'<circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/>',
+  linkedin:'<rect x="3" y="3" width="18" height="18" rx="2.5"/><path d="M7.5 10.5v6M7.5 7.6v.01M11.5 16.5v-6M11.5 13a2.5 2.5 0 0 1 5 0v3.5"/>',
   globo:'<circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3a15 15 0 0 1 0 18a15 15 0 0 1 0-18z"/>',
 };
 const svg = (k, sz) => '<svg viewBox="0 0 24 24" width="' + (sz||18) + '" height="' + (sz||18) +
@@ -486,7 +544,17 @@ const svg = (k, sz) => '<svg viewBox="0 0 24 24" width="' + (sz||18) + '" height
 const T = {
  es:{
   marcaSub:'REPARACIÓN ESTRUCTURAL DE AERONAVES',
-  navRep:'Qué repara', navCaso:'Un trabajo real', navProc:'Cómo trabaja', navGal:'Galería', navQuien:'Quién es',
+  navRep:'Qué repara', navCaso:'Un trabajo real', navProc:'Cómo trabaja', navTray:'Trayectoria', navGal:'Galería', navQuien:'Quién es',
+  dHeli:'Bell · Airbus · Robinson', kHeli:'Helicópteros que repara', kPaises:'Países atendidos',
+  trayT:'36 años dentro de una aeronave', trayN:'TRAYECTORIA',
+  traySub:'No empezó ayer ni aprendió por su cuenta: es técnico de mantenimiento de aeronaves formado y curtido en <b>Airbus</b>, desde 1988. Lo que hoy hace por su cuenta es lo mismo que hizo durante 36 años en una línea de producción, con sus manuales y sus boletines.',
+  trayectoria:[
+   ['1988 — 2024','Airbus · Técnico de mantenimiento','<b>36 años de planta</b>, trabajando estructura en flotas A320, A321, ATR 42 y ATR 72: inspección estructural, reparación de chapa, composites y modificaciones conforme a <b>SRM, AMM y Boletines de Servicio</b>. Reparaciones permanentes y temporales, con la aeronavegabilidad documentada.', false],
+   ['2025 — hoy','Aeroresinas · Por su cuenta','Reparación estructural de <b>helicópteros</b>: fibra de vidrio, técnicas al vacío, acrílicos y estructuras remachadas. Para operadores civiles, privados y gubernamentales en <b>México, Panamá y Guatemala</b>, en hangar o en campo — incluido el <b>soporte AOG</b> con la aeronave en tierra.', true],
+  ],
+  capT:'Lo que ha reparado, con ese nombre',
+  capacidades:['Radomos','Piel de fuselaje','Botas antihielo','Reparación interior de cubiertas','Sustitución de piel','Boletines de servicio','Instalación de antenas','Reparación de puertas','Remoción de corrosión','Modificación de winglets','Inspección con líquidos penetrantes','Panel sándwich de nido de abeja','Refuerzos (doublers) para antenas','Cambio de remaches vibrantes','Reparación al vacío (vacuum bag)','Compuestos de sellado','Restitución del puenteo eléctrico','Montaje y retiro de insertos','Composites monolíticos y sándwich','Estabilizador horizontal'],
+  capP:'Veinte trabajos distintos, de su historial en Airbus. Los de estructura y composite son exactamente los que hoy aplica a un helicóptero: la técnica es la misma, cambia la aeronave.',
   otroIdioma:'English',
   galT:'Más del taller', galN:'GALERÍA',
   galSub:'Otras piezas del mismo trabajo: el hangar donde se hace, una estructura recién repuesta y un borde de ataque abierto.',
@@ -495,9 +563,9 @@ const T = {
    ['fotos/estructura-nueva.jpg','<b>Piel nueva.</b> Imprimada sobre la estructura, antes de cerrar.'],
    ['fotos/borde-ataque.jpg','<b>Borde de ataque abierto.</b> La fibra a la vista, lista para reponer material.'],
   ],
-  heroOjo:'Estructuras · composites · corrosión',
+  heroOjo:'Composites · técnicas al vacío · parabrisas',
   heroT1:'Tu aeronave no viaja al taller.', heroT2:'El taller viaja a tu aeronave.',
-  heroSub:'Estructuras, corrosión, composites, parabrisas y antenas. <b>{anios} años</b> reparando aeronaves; hoy, por su cuenta y en el hangar donde esté la tuya.',
+  heroSub:'Estructuras, corrosión, composites, parabrisas y antenas de helicóptero. <b>{anios} años</b> de técnico de mantenimiento en <b>{donde}</b>; hoy, por su cuenta y en el hangar donde esté la tuya.',
   ctaDanio:'Mandar fotos del daño', ctaCaso:'Ver un trabajo completo',
   kAnios:'Años de oficio', kServ:'Tipos de trabajo', kLic:'Licencia', kBase:'BASE',
   pieHero:'<b>Evaluando el daño antes de tocar nada.</b> El panel se mide y se compara con el manual: se decide si se repara o se sustituye.',
@@ -531,10 +599,10 @@ const T = {
    ['Va a donde está la aeronave','Llega a tu hangar con herramienta y material. No hay que mover la aeronave ni esperar un lugar en un taller.'],
    ['Entrega con reporte','La reparación documentada con fotos del antes y el después, para tu bitácora.'],
   ],
-  cobT:'Cobertura:', cobD:'Para trabajos fuera de su base se acuerdan traslado y estancia antes de salir.',
+  cobT:'Cobertura:', cobD:'Ha trabajado para operadores de los tres países, en hangar y en campo. Para salidas fuera de su base se acuerdan traslado y estancia antes de viajar, y para una aeronave en tierra (AOG) se sale en cuanto se confirme.',
   pieQuien:'En el hangar, sellando el marco de una ventanilla.',
   quienT:'Quién lo hace',
-  quienD:'<b>{nombre}</b>, {anios} años reparando estructuras de aeronaves en {donde}. Retirado de la plantilla, hoy trabaja por su cuenta: la misma mano que hacía esas reparaciones, ahora directamente para el dueño de la aeronave, sin taller de por medio.',
+  quienD:'<b>{nombre}</b> — técnico de mantenimiento de aeronaves, {anios} años en <b>{donde}</b> y especialista en composites, técnicas al vacío y parabrisas. Retirado de la plantilla, hoy trabaja por su cuenta: la misma mano que hacía esas reparaciones, ahora directamente para el dueño de la aeronave y sin taller de por medio.',
   conT:'Cuéntale qué le pasó a tu aeronave',
   conSub:'Una foto y dos líneas bastan para que te diga si tiene arreglo y cuánto cuesta. Contesta él, no un conmutador.',
   formT:'Mándale el caso', fNombre:'NOMBRE', fAeronave:'AERONAVE', fQue:'QUÉ PASÓ',
@@ -547,7 +615,17 @@ const T = {
  },
  en:{
   marcaSub:'AIRCRAFT STRUCTURAL REPAIR',
-  navRep:'What he repairs', navCaso:'A real job', navProc:'How it works', navGal:'Gallery', navQuien:'Who does it',
+  navRep:'What he repairs', navCaso:'A real job', navProc:'How it works', navTray:'Track record', navGal:'Gallery', navQuien:'Who does it',
+  dHeli:'Bell · Airbus · Robinson', kHeli:'Helicopters he repairs', kPaises:'Countries served',
+  trayT:'36 years inside an aircraft', trayN:'TRACK RECORD',
+  traySub:'He did not start yesterday and he is not self-taught: he is an aircraft maintenance technician trained and seasoned at <b>Airbus</b>, since 1988. What he does on his own today is what he did for 36 years on a line, with its manuals and its bulletins.',
+  trayectoria:[
+   ['1988 — 2024','Airbus · Maintenance technician','<b>36 years on staff</b>, working structure on A320, A321, ATR 42 and ATR 72 fleets: structural inspection, sheet-metal repair, composites and modifications per <b>SRM, AMM and Service Bulletins</b>. Permanent and temporary repairs, with airworthiness documented.', false],
+   ['2025 — today','Aeroresinas · On his own','Structural repair of <b>helicopters</b>: fibreglass, vacuum techniques, acrylics and riveted structures. For civil, private and government operators in <b>Mexico, Panama and Guatemala</b>, in the hangar or in the field — including <b>AOG support</b> with the aircraft on the ground.', true],
+  ],
+  capT:'What he has repaired, under that name',
+  capacidades:['Radomes','Fuselage skin','Anti-ice boots','Inner cover repairs','Skin replacement','Service bulletins','Antenna installation','Door repair','Corrosion removal','Winglet modification','Dye penetrant inspection','Honeycomb sandwich panel','Doublers for antennas','Vibrating rivet replacement','Vacuum-bag structural repair','Sealing compound','Electrical bonding restoration','Insert installation and removal','Monolithic and sandwich composites','Horizontal stabiliser'],
+  capP:'Twenty different jobs, from his record at Airbus. The structural and composite ones are exactly what he applies to a helicopter today: same technique, different aircraft.',
   otroIdioma:'Español',
   galT:'More from the shop', galN:'GALLERY',
   galSub:'Other pieces of the same work: the hangar where it happens, freshly replaced structure and an open leading edge.',
@@ -556,9 +634,9 @@ const T = {
    ['fotos/estructura-nueva.jpg','<b>New skin.</b> Primed over the structure, before closing up.'],
    ['fotos/borde-ataque.jpg','<b>Open leading edge.</b> Fibre exposed, ready for new material.'],
   ],
-  heroOjo:'Structures · composites · corrosion',
+  heroOjo:'Composites · vacuum techniques · windshields',
   heroT1:'Your aircraft does not travel to a shop.', heroT2:'The shop travels to your aircraft.',
-  heroSub:'Structures, corrosion, composites, windshields and antennas. <b>{anios} years</b> repairing aircraft; today, on his own and at whatever hangar yours is in.',
+  heroSub:'Helicopter structures, corrosion, composites, windshields and antennas. <b>{anios} years</b> as a maintenance technician at <b>{donde}</b>; today, on his own and at whatever hangar yours is in.',
   ctaDanio:'Send photos of the damage', ctaCaso:'See a full job',
   kAnios:'Years in the trade', kServ:'Types of work', kLic:'License', kBase:'BASED IN',
   pieHero:'<b>Assessing the damage before touching anything.</b> The panel is measured against the manual: repair or replace.',
@@ -592,10 +670,10 @@ const T = {
    ['He goes to the aircraft','He arrives at your hangar with tools and material. No need to move the aircraft or wait for a slot at a shop.'],
    ['Handover with report','The repair documented with before and after photos, for your logbook.'],
   ],
-  cobT:'Coverage:', cobD:'For work outside his base, travel and lodging are agreed before he sets out.',
+  cobT:'Coverage:', cobD:'He has worked for operators in all three countries, in the hangar and in the field. For trips outside his base, travel and lodging are agreed beforehand; for an aircraft on the ground (AOG) he leaves as soon as it is confirmed.',
   pieQuien:'In the hangar, sealing a window frame.',
   quienT:'Who does it',
-  quienD:'<b>{nombre}</b>, {anios} years repairing aircraft structures at {donde}. Retired from the payroll, he now works on his own: the same hands that did those repairs, now directly for the aircraft owner, with no shop in between.',
+  quienD:'<b>{nombre}</b> — aircraft maintenance technician, {anios} years at <b>{donde}</b>, specialised in composites, vacuum techniques and windshields. Retired from the payroll, he now works on his own: the same hands that did those repairs, now directly for the aircraft owner, with no shop in between.',
   conT:'Tell him what happened to your aircraft',
   conSub:'One photo and two lines are enough for him to tell you whether it can be fixed and what it costs. He answers, not a switchboard.',
   formT:'Send him the case', fNombre:'NAME', fAeronave:'AIRCRAFT', fQue:'WHAT HAPPENED',
@@ -647,6 +725,14 @@ function pinta(){
   document.getElementById('credenciales').innerHTML = PERFIL.credenciales.map(function(c){
     return '<div>' + svg('check', 15) + '<span' + (marcado(c) ? ' class="pend"' : '') + '>' + c + '</span></div>';
   }).join('');
+  document.getElementById('trayectoria-lista').innerHTML = t.trayectoria.map(function(x){
+    return '<article class="tray-it' + (x[3] ? ' ahora' : '') + '">' +
+      '<div class="per">' + x[0] + '</div><h3 class="t">' + x[1] + '</h3>' +
+      '<p class="d">' + x[2] + '</p></article>';
+  }).join('');
+  document.getElementById('capacidades').innerHTML = t.capacidades.map(function(c){
+    return '<span>' + c + '</span>';
+  }).join('');
   document.getElementById('galeria-grid').innerHTML = t.galeria.map(function(g){
     return '<figure class="foto"><img src="' + g[0] + '" alt="" loading="lazy">' +
       '<figcaption class="pie">' + g[1] + '</figcaption></figure>';
@@ -662,6 +748,8 @@ function pinta(){
   ml.href = marcado(PERFIL.correo) ? '#contacto' : 'mailto:' + PERFIL.correo;
   const flot = document.getElementById('wa-flota');
   if(flot) flot.href = PERFIL.whatsapp ? 'https://wa.me/' + PERFIL.whatsapp : '#contacto';
+  const inn = document.getElementById('via-in');
+  if(inn) inn.href = PERFIL.linkedin;
 }
 function setIdioma(x){ IDIOMA = x; try{ localStorage.setItem('aero-idioma', x); }catch(e){} pinta(); }
 function toggleIdioma(){ setIdioma(IDIOMA === 'es' ? 'en' : 'es'); }
