@@ -64,6 +64,11 @@ la foto de la réplica, a la derecha **el helicóptero de verdad**.
 **"Cómo se reconoce" es el bloque que justifica la página**: es lo que separa una maqueta fiel de
 un juguete, y es el argumento de por qué estas réplicas salen de un taller de reparación.
 
+**La foto de la ficha se ve entera, sin recorte** (`object-fit:contain`): con `cover` el panel la
+recortaba y parecía que le hacía zoom, y en una ficha técnica lo que importa es la silueta completa
+— es justo lo que se compara con el helicóptero real. El fondo de estas fotos ya es blanco de
+estudio, así que el relleno no se nota.
+
 Se cierra con **Esc**, con clic fuera o con la ✕, y se navega entre las ocho piezas con las
 **flechas** del teclado o los botones del pie. El panel es uno solo en el DOM y se repinta; al
 cambiar de idioma con una ficha abierta, se repinta en el idioma nuevo sin cerrarse.
