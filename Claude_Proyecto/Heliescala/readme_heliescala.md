@@ -62,7 +62,7 @@ la foto de la réplica, a la derecha **el helicóptero de verdad**.
 | La réplica | Escala, tiempo, envío y precio, con el botón que la encarga por WhatsApp **con el modelo ya escrito en el mensaje** |
 
 **"Cómo se reconoce" es el bloque que justifica la página**: es lo que separa una maqueta fiel de
-un juguete, y es el argumento de por qué la hace quien repara las de verdad.
+un juguete, y es el argumento de por qué estas réplicas salen de un taller de reparación.
 
 Se cierra con **Esc**, con clic fuera o con la ✕, y se navega entre las ocho piezas con las
 **flechas** del teclado o los botones del pie. El panel es uno solo en el DOM y se repinta; al
