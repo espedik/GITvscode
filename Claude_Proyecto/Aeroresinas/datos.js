@@ -278,6 +278,7 @@ const T = {
   // ── Contacto ───────────────────────────────────────────────────────────
   conT:'Cuéntale qué le pasó a tu aeronave',
   conSub:'Una foto y dos líneas bastan para que te diga si tiene arreglo y cuánto cuesta. Contesta él, no un conmutador.',
+  visorAyuda:'CLIC EN LA FOTO PARA VERLA A TAMAÑO REAL · ← → PARA PASAR',
   kWa:'WHATSAPP', kMail:'CORREO', kIn:'LINKEDIN', kEmp:'EMPRESA', kBase:'BASE', kLic:'LICENCIA',
   formT:'Mándale el caso', fNombre:'NOMBRE', fAeronave:'AERONAVE', fQue:'QUÉ PASÓ',
   phNombre:'Cómo te llamas', phAeronave:'Modelo y matrícula — ej. Bell 407, XA-XXX', phQue:'Dos líneas: dónde está el daño y desde cuándo',
@@ -512,6 +513,7 @@ const T = {
 
   conT:'Tell him what happened to your aircraft',
   conSub:'One photo and two lines are enough for him to tell you whether it can be fixed and what it costs. He answers, not a switchboard.',
+  visorAyuda:'CLICK THE PHOTO FOR FULL SIZE · ← → TO MOVE',
   kWa:'WHATSAPP', kMail:'EMAIL', kIn:'LINKEDIN', kEmp:'COMPANY', kBase:'BASED IN', kLic:'LICENCE',
   formT:'Send him the case', fNombre:'NAME', fAeronave:'AIRCRAFT', fQue:'WHAT HAPPENED',
   phNombre:'Your name', phAeronave:'Model and registration — e.g. Bell 407, XA-XXX', phQue:'Two lines: where the damage is and since when',

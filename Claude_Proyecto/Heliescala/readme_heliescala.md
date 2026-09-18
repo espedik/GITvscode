@@ -160,6 +160,33 @@ La cifra se escribe `{desde}` en el texto y la sustituye `sub()` desde `PERFIL`,
 precio en dos sitios (Regla 1): sale en la ficha del catálogo, en el panel de cada helicóptero y en
 esa nota, y se cambia en una línea.
 
+## El visor de fotos
+
+Adán, 2026-09-17: *"cuando intento ver las fotos en grande no se puede ver, cuando hago clic
+debería de verse"*. Lo dijo por Aeroresinas, pero aquí pasaba lo mismo: las fotos del taller, de la
+producción y de la sala de exposición iban recortadas dentro de sus tarjetas.
+
+**El catálogo queda fuera a propósito**: tocar una pieza abre su ficha técnica, y dos cosas
+distintas con el mismo clic confunden. El visor es para el hero, "tu aeronave", el taller y la
+galería — 13 fotos.
+
+**Cualquier foto de la página se abre a pantalla completa con un clic**, y se ve **entera**
+(`contain`, sin recorte). Se recorren las 13 con las flechas del teclado o los botones, se cierra
+con Esc, con la ✕ o con un clic fuera, y al cerrar **el scroll vuelve a la foto que estabas
+mirando** — sin eso, cerrar en la etapa 5 de un trabajo te dejaba arriba del todo.
+
+**Un segundo clic la lleva a tamaño real.** Medido: en una ventana de 900 px de alto, una foto
+vertical de 1000×1333 se mostraba ajustada a 567×755, **más chica que el archivo**. Ampliada llega
+a sus 1000×1333 y el visor se arrastra. Cada foto nueva vuelve a empezar ajustada, porque heredar
+el zoom de la anterior desorienta cuando cada imagen tiene otro tamaño.
+
+El pie de la foto viaja con ella, que es cuando sirve.
+
+El clic está **delegado en `document`** y la lista se recoge al abrir. Las fotos las pinta el
+render desde el diccionario, así que engancharse a cada `<img>` obligaría a re-enganchar en cada
+repintado y en cada cambio de idioma. Una lupa aparece al pasar el cursor —en móvil siempre— porque
+sin ella nadie sabe que se puede abrir.
+
 ## Las fotos
 
 Las **42** de `fotos/` salen de las **321 originales** de Adán (`C:\Users\esped\Desktop\Aeroresinas\`,
@@ -247,6 +274,11 @@ en el cuerpo del documento (la única mención es la ruta en el comentario del `
 
 Las 39 imágenes se comprobaron **forzando la carga de todo lo diferido**: con `lazy` una foto rota
 no se detecta hasta que alguien baja hasta ella.
+
+**El visor**, probado a 1600 y 390 px: 13 fotos abribles, abre sin recortar, las flechas pasan de
+foto, Esc cierra y el segundo clic lleva de 1007×755 a 1300×975. Su Esc y sus flechas se capturan
+antes que las de la ficha del catálogo, así que con el visor abierto manda el visor —que es lo que
+está encima— y con el visor cerrado siguen funcionando en la ficha.
 
 La única imagen que el navegador reporta sin cargar es `#fp-img`, el `<img>` del panel de ficha:
 nace **sin** atributo `src` a propósito y está oculto hasta que se abre una ficha.

@@ -144,6 +144,52 @@ b,strong{font-weight:600;color:var(--tinta)}
 .foto .pie{position:absolute;left:0;right:0;bottom:0;padding:28px 16px 13px;color:#fff;font-size:12px;
   line-height:1.5;background:linear-gradient(to top,rgba(6,10,20,.86),transparent)}
 .foto .pie b{color:#fff}
+/* ── Visor de fotos ────────────────────────────────────────────────────────
+   Toda foto de la página se abre entera a pantalla completa. `contain` y no
+   `cover`: en una reparación importa la trama de la fibra y el número de parte
+   estampado en la piel, y un recorte se los come. El fondo va oscuro aunque la
+   página sea clara, porque lo que se mira es la foto y no el marco. */
+.foto img,.serv .im img{cursor:zoom-in}
+.lupa-ico{position:absolute;top:12px;right:12px;z-index:2;width:34px;height:34px;border-radius:11px;
+  display:flex;align-items:center;justify-content:center;pointer-events:none;
+  background:rgba(10,16,32,.55);color:#fff;opacity:0;transition:opacity .16s;backdrop-filter:blur(6px)}
+.foto:hover .lupa-ico,.serv:hover .lupa-ico{opacity:1}
+.visor{position:fixed;inset:0;z-index:200;display:none;flex-direction:column;
+  background:rgba(6,10,20,.94);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.visor.abierto{display:flex}
+.visor-im{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;padding:56px 72px 8px}
+.visor-im img{max-width:100%;max-height:100%;object-fit:contain;border-radius:10px;
+  box-shadow:0 30px 80px -30px rgba(0,0,0,.9)}
+.visor-pie{flex:none;padding:14px 72px 22px;color:rgba(255,255,255,.88);font-size:14px;line-height:1.6;
+  text-align:center;max-width:90ch;margin:0 auto}
+.visor-pie b{color:#fff}
+.visor-pie:empty{display:none}
+.visor-im{overflow:auto}
+.visor-im img{cursor:zoom-in}
+.visor.zoom .visor-im{align-items:flex-start;justify-content:flex-start;padding:56px 16px 16px}
+.visor.zoom .visor-im img{max-width:none;max-height:none;width:auto;height:auto;cursor:zoom-out;margin:auto}
+.visor.zoom .visor-ayuda{display:none}
+.visor-ayuda{position:absolute;top:22px;left:50%;transform:translateX(-50%);z-index:3;
+  font-family:var(--fm);font-size:10.5px;letter-spacing:.09em;color:rgba(255,255,255,.5);
+  white-space:nowrap;pointer-events:none}
+@media(max-width:820px){.visor-ayuda{display:none}}
+.visor-x,.visor-nav{position:absolute;z-index:3;border:1px solid rgba(255,255,255,.18);border-radius:12px;
+  background:rgba(255,255,255,.08);color:#fff;cursor:pointer;display:flex;align-items:center;
+  justify-content:center;font-family:var(--fb);transition:background .15s}
+.visor-x:hover,.visor-nav:hover{background:rgba(255,255,255,.2)}
+.visor-x{top:14px;right:16px;width:40px;height:40px;font-size:20px;line-height:1}
+.visor-nav{top:50%;transform:translateY(-50%);width:44px;height:58px;font-size:20px}
+.visor-ant{left:14px} .visor-sig{right:14px}
+.visor-n{position:absolute;top:22px;left:20px;z-index:3;font-family:var(--fm);font-size:11.5px;
+  letter-spacing:.1em;color:rgba(255,255,255,.62);text-shadow:0 1px 6px rgba(0,0,0,.9)}
+body.sin-scroll{overflow:hidden}
+@media(max-width:820px){
+  .visor-im{padding:52px 10px 6px}
+  .visor-pie{padding:12px 16px 16px;font-size:13px}
+  .visor-nav{width:38px;height:50px}
+  .lupa-ico{opacity:1;width:30px;height:30px;top:9px;right:9px}
+}
+
 .hero-fotos{display:grid;grid-template-columns:1fr 1fr;gap:14px;min-width:0}
 .hero-fotos .alta{grid-column:1/-1;height:320px}
 .hero-fotos .baja{height:178px}
@@ -525,6 +571,16 @@ b,strong{font-weight:600;color:var(--tinta)}
   </div>
 </section>
 
+<div class="visor" id="visor" onclick="if((event.target===this||event.target.classList.contains('visor-im'))&&!this.classList.contains('zoom'))cerrarVisor()">
+  <div class="visor-n" id="visor-n"></div>
+  <div class="visor-ayuda" id="visor-ayuda"></div>
+  <button type="button" class="visor-x" id="visor-x" onclick="cerrarVisor()" aria-label="Cerrar">&#10005;</button>
+  <button type="button" class="visor-nav visor-ant" onclick="moverVisor(-1)" aria-label="Anterior">&#8592;</button>
+  <button type="button" class="visor-nav visor-sig" onclick="moverVisor(1)" aria-label="Siguiente">&#8594;</button>
+  <div class="visor-im"><img id="visor-img" alt="" onclick="zoomVisor()"></div>
+  <div class="visor-pie" id="visor-pie"></div>
+</div>
+
 <a class="wa-flota btn-p" id="wa-flota" href="#contacto" aria-label="WhatsApp"><i data-ico="wa"></i></a>
 
 <footer class="pie-p">
@@ -608,6 +664,7 @@ function pinta(){
   pon('flota-grid', t.flota.map(g =>
     '<figure class="foto"><img src="' + g[0] + '" alt="" loading="lazy">' +
     '<figcaption class="pie">' + g[1] + '</figcaption></figure>').join(''));
+  document.getElementById('visor-ayuda').textContent = t.visorAyuda;
   pon('galeria-grid', t.galeria.map(g =>
     '<figure class="foto"><img src="' + g[0] + '" alt="" loading="lazy">' +
     '<figcaption class="pie">' + g[1] + '</figcaption></figure>').join(''));
@@ -622,6 +679,7 @@ function pinta(){
   const wa = PERFIL.whatsapp ? 'https://wa.me/' + PERFIL.whatsapp : '#contacto';
   document.getElementById('via-wa').href = wa;
   document.getElementById('wa-flota').href = wa;
+  ponLupas();
   document.getElementById('via-in').href = PERFIL.linkedin;
   document.getElementById('via-emp').href = PERFIL.linkedinEmp;
   document.getElementById('via-mail').href = marcado(PERFIL.correo) ? '#contacto' : 'mailto:' + PERFIL.correo;
@@ -642,6 +700,87 @@ function enviarWhatsApp(ev){
     t.waQue + ': ' + v('f-que')].filter(Boolean).join('\n');
   window.open('https://wa.me/' + PERFIL.whatsapp + '?text=' + encodeURIComponent(msg), '_blank');
   return false;
+}
+
+/* ── Visor de fotos ────────────────────────────────────────────────────────
+   Delegado en document: las fotos las pinta el render desde datos.js, así que
+   engancharse a cada <img> obligaría a re-enganchar en cada repintado y en cada
+   cambio de idioma. La lista se recoge en el momento de abrir, en el orden del
+   documento, que es el orden en que se leen las etapas de un trabajo. */
+let visorFotos = [], visorI = -1;
+
+function visorLista(){
+  return [].slice.call(document.querySelectorAll('.foto img, .serv .im img'));
+}
+function visorPie(img){
+  const fig = img.closest('figure');
+  const pie = fig && fig.querySelector('.pie');
+  if(pie && pie.innerHTML.trim()) return pie.innerHTML;
+  const serv = img.closest('.serv');
+  if(serv){
+    const t = serv.querySelector('.t');
+    if(t) return '<b>' + t.textContent + '</b>';
+  }
+  return img.getAttribute('alt') || '';
+}
+function abrirVisor(i){
+  visorFotos = visorLista();
+  if(!visorFotos.length) return;
+  visorI = (i + visorFotos.length) % visorFotos.length;
+  const img = visorFotos[visorI];
+  const v = document.getElementById('visor');
+  const g = document.getElementById('visor-img');
+  g.src = img.currentSrc || img.src;
+  g.alt = img.getAttribute('alt') || '';
+  document.getElementById('visor-pie').innerHTML = visorPie(img);
+  document.getElementById('visor-n').textContent = (visorI + 1) + ' / ' + visorFotos.length;
+  v.classList.remove('zoom');
+  document.querySelector('.visor-im').scrollTop = 0;
+  v.classList.add('abierto');
+  document.body.classList.add('sin-scroll');
+  document.getElementById('visor-x').focus();
+}
+function zoomVisor(){
+  const v = document.getElementById('visor');
+  v.classList.toggle('zoom');
+  const im = v.querySelector('.visor-im');
+  if(v.classList.contains('zoom')){
+    // Al ampliar se centra, que es de donde venía mirando el visitante.
+    im.scrollLeft = (im.scrollWidth - im.clientWidth) / 2;
+    im.scrollTop = (im.scrollHeight - im.clientHeight) / 2;
+  } else { im.scrollLeft = 0; im.scrollTop = 0; }
+}
+function moverVisor(d){ if(visorI >= 0) abrirVisor(visorI + d); }
+function cerrarVisor(){
+  document.getElementById('visor').classList.remove('abierto');
+  document.body.classList.remove('sin-scroll');
+  // Se devuelve el scroll a la foto que se estaba mirando: sin esto, cerrar el
+  // visor en la etapa 5 de un trabajo te deja arriba del todo.
+  if(visorI >= 0 && visorFotos[visorI]) visorFotos[visorI].scrollIntoView({block:'center'});
+  visorI = -1;
+}
+document.addEventListener('click', function(e){
+  const img = e.target.closest && e.target.closest('.foto img, .serv .im img');
+  if(!img) return;
+  e.preventDefault();
+  abrirVisor(visorLista().indexOf(img));
+});
+document.addEventListener('keydown', function(e){
+  if(visorI < 0) return;
+  if(e.key === 'Escape'){ cerrarVisor(); }
+  else if(e.key === 'ArrowRight'){ e.preventDefault(); moverVisor(1); }
+  else if(e.key === 'ArrowLeft'){ e.preventDefault(); moverVisor(-1); }
+});
+// Una lupa discreta en cada foto al pasar el cursor: sin ella nadie sabe que se
+// puede abrir. Se pone por JS y no por CSS porque las fotos las pinta el render.
+function ponLupas(){
+  document.querySelectorAll('.foto, .serv .im').forEach(function(c){
+    if(c.querySelector('.lupa-ico')) return;
+    const s = document.createElement('span');
+    s.className = 'lupa-ico';
+    s.innerHTML = svg('lupa', 16);
+    c.appendChild(s);
+  });
 }
 
 (function init(){

@@ -124,6 +124,32 @@ la técnica que la página explica en `#tecnicas`.
 **puenteo eléctrico**: las tiras en estrella alrededor de la base de la antena. Estaba en la lista
 de 20 capacidades sin una sola foto, y es de las cosas que un operador entiende al verlas.
 
+## El visor de fotos
+
+Adán, 2026-09-17: *"cuando intento ver las fotos en grande no se puede ver, cuando hago clic
+debería de verse"*. Tenía razón y era grave en esta página en concreto: las fotos iban recortadas
+a `object-fit:cover` dentro de tarjetas de 180 a 430 px de alto, y **lo que hay que mirar en una
+reparación es justo el detalle** — la trama de la fibra, la huella hexagonal del núcleo, el número
+de parte estampado en la piel. Todo eso cabía en una franja recortada.
+
+**Cualquier foto de la página se abre a pantalla completa con un clic**, y se ve **entera**
+(`contain`, sin recorte). Se recorren las 80 con las flechas del teclado o los botones, se cierra
+con Esc, con la ✕ o con un clic fuera, y al cerrar **el scroll vuelve a la foto que estabas
+mirando** — sin eso, cerrar en la etapa 5 de un trabajo te dejaba arriba del todo.
+
+**Un segundo clic la lleva a tamaño real.** Medido: en una ventana de 900 px de alto, una foto
+vertical de 1000×1333 se mostraba ajustada a 567×755, **más chica que el archivo**. Ampliada llega
+a sus 1000×1333 y el visor se arrastra. Cada foto nueva vuelve a empezar ajustada, porque heredar
+el zoom de la anterior desorienta cuando cada imagen tiene otro tamaño.
+
+El pie de la foto viaja con ella: en un trabajo, eso significa que **la etapa se lee mientras se
+mira la imagen** («03 · Relleno y lijado…»), que es cuando sirve.
+
+El clic está **delegado en `document`** y la lista se recoge al abrir. Las fotos las pinta el
+render desde el diccionario, así que engancharse a cada `<img>` obligaría a re-enganchar en cada
+repintado y en cada cambio de idioma. Una lupa aparece al pasar el cursor —en móvil siempre— porque
+sin ella nadie sabe que se puede abrir.
+
 ## Las fotos
 
 **73 en `fotos/`**, salidas de las **321 originales** que pasó Adán
@@ -211,6 +237,11 @@ consola y sin marcadores sin resolver. Medido: **4,192 palabras en español y 3,
 
 Las 80 imágenes se comprobaron **forzando la carga de todo lo diferido** (`loading='eager'` y
 scroll al final): con `lazy` una foto rota no se detecta hasta que alguien baja hasta ella.
+
+**El visor**, probado a 1600 y 390 px: 80 fotos abribles y 80 lupas, abre sin recortar (proporción
+idéntica a la del archivo), bloquea el scroll del fondo, las flechas pasan de foto, Esc cierra y
+devuelve el scroll, el segundo clic lleva de 567×755 a 1000×1333 y con la foto ampliada el clic
+fuera **no** cierra, para poder arrastrarla.
 
 Los cinco enlaces de contacto, comprobados uno a uno: `wa.me/525586184919`,
 `mailto:adanarturomartinez@gmail.com`, el perfil personal de LinkedIn, la página de empresa y el
