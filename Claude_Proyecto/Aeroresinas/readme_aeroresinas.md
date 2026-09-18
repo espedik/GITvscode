@@ -102,7 +102,7 @@ abierto, el proceso y el resultado sin rastro.
 
 ## Las fotos
 
-**30 en `fotos/`**, salidas de las 300 originales que pasó Adán
+**31 en `fotos/`**, salidas de las 300 originales que pasó Adán
 (`C:\Users\esped\Desktop\Aeroresinas\`, carpetas `reparacion` y `reparacion2`), elegidas viéndolas
 todas en hojas de contacto y optimizadas: rotadas según EXIF, 1000–1500 px de ancho y JPEG
 progresivo al 79 % — **6 MB en total** frente a los ~45 MB de los originales, que no se tocaron.
@@ -111,9 +111,15 @@ progresivo al 79 % — **6 MB en total** frente a los ~45 MB de los originales, 
 Cada foto lleva **pie**: una reparación abierta no se entiende sola, y el pie es lo que convierte
 la foto en argumento. Todas van con `loading="lazy"`.
 
-Lo que falta: una foto de **una antena montada** y un **retrato** suyo mirando a cámara — el de su
-perfil de LinkedIn serviría, y le daría cara a "Quién lo hace", que hoy usa una foto de él
-trabajando de espaldas.
+**"Quién lo hace" tiene cara.** `retrato.jpg` es la única foto de la página en la que se le ve el
+rostro, y por eso va ahí: nadie deja entrar a un desconocido a abrir su fuselaje, y una foto de
+espaldas no presenta a nadie. Lleva pie con su nombre, su licencia y sus años, para que el nombre y
+la cara lleguen juntos. Es cuadrada y el rostro cae arriba, así que el recorte se ancla en
+`object-position:50% 22%` — centrado se comía la frente. `trabajando.jpg`, que ocupaba ese sitio,
+no se perdió: sigue en la galería, que es donde valía.
+
+Lo que falta: una foto de **una antena montada** y una de **aeronave terminada** — hoy todas son de
+trabajo abierto y no hay ninguna del resultado.
 
 ## `PERFIL` está completo
 
@@ -145,7 +151,7 @@ español. El cliente de aquí es mexicano.
 El selector es **un botón que dice a qué idioma cambias**, no en cuál estás: en español pone
 *English*. Nunca se oculta, tampoco en móvil (ahí queda solo el globo).
 
-Los dos idiomas están completos: **2,839 palabras en español y 2,616 en inglés**, medidas.
+Los dos idiomas están completos: **2,857 palabras en español y 2,634 en inglés**, medidas.
 
 ## En el teléfono
 
@@ -173,7 +179,7 @@ Chromium `file://` a 1600 y 390 px, en español y en inglés, **con el navegador
 (el caso que fallaba): abre en español, 10 secciones, 7 servicios, 8 trabajos con 24 etapas, 6
 pasos, 8 técnicas, 20 capacidades, 6 credenciales, 6 fotos de galería, 8 preguntas, **41 imágenes y
 ninguna rota**, **cero huecos**, sin desborde horizontal, sin errores de consola y sin marcadores
-sin resolver. Medido: **2,842 palabras en español y 2,619 en inglés**.
+sin resolver. Medido: **2,857 palabras en español y 2,634 en inglés**.
 
 Los cinco enlaces de contacto, comprobados uno a uno: `wa.me/525586184919`,
 `mailto:adanarturomartinez@gmail.com`, el perfil personal de LinkedIn, la página de empresa y el

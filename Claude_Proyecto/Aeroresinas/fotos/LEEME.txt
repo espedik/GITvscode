@@ -45,9 +45,14 @@ TRABAJO 08 · Puertas y estabilizador
   puerta.jpg            Puerta saneada.
   estabilizador.jpg     Borde de ataque con la fibra a la vista.
 
+QUIÉN LO HACE
+  retrato.jpg           José Arturo de frente. Es la ÚNICA foto de la página en la
+                        que se le ve la cara, y va en "Quién lo hace".
+
 GALERÍA Y OTRAS
   hangar.jpg            El hangar con varias aeronaves.
-  trabajando.jpg        Él sellando el marco de una ventanilla.
+  trabajando.jpg        Él sellando el marco de una ventanilla. Estuvo en "Quién lo
+                        hace" hasta que llegó el retrato; hoy vive en la galería.
   fuselaje.jpg          Aeronave desmontada para trabajar la piel.
   borde-ataque.jpg      Borde de ataque abierto.
   og.jpg                1200x630 — la miniatura que sale en WhatsApp.
@@ -58,6 +63,5 @@ nuevo hacen falta las fotos aquí y una entrada en `trabajos` dentro de datos.js
 
 LO QUE FALTA Y VALDRÍA LA PENA TENER
   · Una antena montada, de cerca (el servicio de antenas usa hoy rejilla-2.jpg).
-  · Un retrato suyo de medio cuerpo mirando a cámara — el de LinkedIn sirve.
   · Una aeronave terminada y en vuelo, o al menos entera en la plataforma: hoy
     todas las fotos son de trabajo abierto, y falta la del resultado final.

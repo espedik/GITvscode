@@ -231,6 +231,7 @@ b,strong{font-weight:600;color:var(--tinta)}
 /* ── Quién ─────────────────────────────────────────────────────────────── */
 .quien{display:grid;grid-template-columns:minmax(0,.82fr) minmax(0,1.18fr);gap:44px;align-items:start}
 .quien .foto{height:430px;position:sticky;top:90px}
+.quien .retrato img{object-position:50% 22%}
 .quien-txt{display:flex;flex-direction:column;gap:22px;min-width:0}
 .creds{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
 .cred{display:flex;gap:11px;padding:16px 18px;border-radius:14px;background:rgba(10,16,32,.03);
@@ -448,7 +449,8 @@ b,strong{font-weight:600;color:var(--tinta)}
   <div class="cielo"></div>
   <div class="wrap">
     <div class="quien">
-      <figure class="foto"><img src="fotos/trabajando.jpg" alt="Trabajando sobre la aeronave en el hangar" loading="lazy"></figure>
+      <figure class="foto retrato"><img src="fotos/retrato.jpg" alt="José Arturo Martínez Ponce" loading="lazy">
+        <figcaption class="pie" data-t="pieRetrato"></figcaption></figure>
       <div class="quien-txt">
         <h2 class="h2" data-t="quienT"></h2>
         <p class="lead" data-t="quienD"></p>
