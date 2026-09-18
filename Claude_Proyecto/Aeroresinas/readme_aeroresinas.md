@@ -115,6 +115,21 @@ etapas, y siete de los catorce casos llegan hasta la pieza terminada.
 | 13 | **Nariz del monomotor** | 4 | **Entregada con librea** |
 | 14 | **Estabilizador horizontal** | 3 | **Pintado con sus franjas** |
 
+**Todas las fotos de etapa miden lo mismo**, en los catorce casos. La rejilla es **fija** —4
+columnas, 3 bajo 1080 px, 2 bajo 860 y 1 bajo 520— y **no depende de cuántas etapas tenga el
+trabajo**.
+
+Hasta el 2026-09-18 la clase era `etapas n<número de etapas>`, con reglas de CSS solo para `n2`,
+`n3` y `n4`. Al pasar los casos de 8 a 14 aparecieron uno de **5** etapas y otro de **6**: `n5` y
+`n6` no existían, así que caían al `display:grid` pelado —una columna— y sus fotos salían **a todo
+el ancho de la sección**. Y aun con la clase correcta el tamaño dependía del caso: un trabajo de 2
+etapas daba fotos del doble de ancho que uno de 4, con el mismo alto de 250 px. De ahí venía la
+desproporción.
+
+Medido después: **51 fotos y un solo tamaño en cada ancho** (279×250 a 1600 px, 283×250 a 1000,
+364×250 en iPad, 312×250 en móvil), y **cero trabajos con fotos desiguales**. Una fila incompleta
+deja huecos, que es lo que toca en una rejilla.
+
 **El 12 es el mejor caso de la página** y por eso tiene seis etapas: daño, piel desprendida con el
 número de parte legible, preparación, laminado, **curado bajo bolsa de vacío con la manguera
 conectada** y la pieza terminada. Es la única secuencia donde se ve el proceso completo, incluida
