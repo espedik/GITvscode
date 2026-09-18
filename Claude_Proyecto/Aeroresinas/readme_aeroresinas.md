@@ -56,15 +56,18 @@ Diez secciones, en el orden en que un cliente decide:
 | # | Sección | Para qué está |
 |---|---|---|
 | 1 | Hero | Qué hace y dónde, con las cuatro cifras que importan: 36 años en Airbus, licencia DGAC, marcas que repara, países |
+
+Son **11 secciones**, y el orden no es casual: los 14 trabajos terminan en paneles abiertos, y lo siguiente que ve el visitante son **aeronaves enteras en línea de vuelo**. Ese contraste es el argumento entero de la página, y por eso `#flota` va pegada a `#trabajos` y no al final.
 | 2 | **Qué repara** | 7 servicios, cada uno con foto, descripción y **un apunte de oficio** — lo que un técnico sabe y el dueño no |
-| 3 | **Trabajos** | 8 casos reales, con sus **24 fotos por etapas** en orden y lo que se hizo en cada una |
-| 4 | **Cómo trabaja** | 6 pasos, cobertura y el bloque de **AOG** |
-| 5 | **Técnicas** | 8 términos explicados en claro, para poder juzgar un presupuesto |
-| 6 | **Trayectoria** | Las dos etapas y los 20 trabajos de su historial en Airbus |
-| 7 | **Quién lo hace** | Su biografía completa y 6 credenciales |
-| 8 | Galería | Lo que no cabe en un caso |
-| 9 | **Preguntas** | 8 preguntas reales con respuesta honesta |
-| 10 | Contacto | WhatsApp, correo, **los dos LinkedIn**, base y licencia, más el formulario |
+| 3 | **Trabajos** | 14 casos reales, con sus **51 fotos por etapas** en orden y lo que se hizo en cada una |
+| 4 | **Aeronaves** | 6 aeronaves completas, en el hangar. Es lo único de la página que no es trabajo abierto |
+| 5 | **Cómo trabaja** | 6 pasos, cobertura y el bloque de **AOG** |
+| 6 | **Técnicas** | 8 términos explicados en claro, para poder juzgar un presupuesto |
+| 7 | **Trayectoria** | Las dos etapas y los 20 trabajos de su historial en Airbus |
+| 8 | **Quién lo hace** | Su biografía completa y 6 credenciales |
+| 9 | Galería | 12 fotos: el taller, las bolsas de vacío, la cabina protegida |
+| 10 | **Preguntas** | 8 preguntas reales con respuesta honesta |
+| 11 | Contacto | WhatsApp, correo, **los dos LinkedIn**, base y licencia, más el formulario |
 
 **Tres secciones existen para vender sin decir "compre"**:
 
@@ -90,23 +93,48 @@ aparece dicho así.
 déjalo pendiente"*. Se queda fuera de la página hasta que haya con qué responder; prometerlo y no
 poder cumplirlo cuesta más que no mencionarlo. Cuando exista, va en las preguntas.
 
-## Los 8 trabajos
+## Los 14 trabajos
 
-Cada uno corresponde a fotos suyas, en el orden real del trabajo: techo de cabina de un Bell (4
-etapas, hasta la pieza pintada), carenado lateral con el núcleo deshecho (4), techo delaminado (3),
-piel y estructura (3), nariz (2), parabrisas (3), tomas de aire y rejillas (3), y puertas y
-estabilizador (2).
+Cada uno corresponde a fotos suyas, **en el orden real en que ocurrió el trabajo**. Son 51 fotos de
+etapas, y siete de los catorce casos llegan hasta la pieza terminada.
 
-Las dos primeras son las que más convencen porque **terminan en la pieza acabada**: se ve el daño
-abierto, el proceso y el resultado sin rastro.
+| # | Caso | Etapas | Llega a |
+|---|---|---|---|
+| 01 | Techo de cabina de un Bell | 4 | **Pintado, sin rastro** |
+| 02 | Carenado con el núcleo deshecho | 4 | **Entregado con su librea** |
+| 03 | Techo delaminado | 3 | Cerrado |
+| 04 | Piel y estructura | 3 | Estructura repuesta |
+| 05 | Nariz | 2 | Cerrada |
+| 06 | Parabrisas y acrílicos | 3 | Cristal montado |
+| 07 | Tomas de aire y rejillas | 3 | Alojamiento saneado |
+| 08 | Puertas y estabilizador | 2 | Saneado |
+| 09 | **Techo con corrosión, larguero y piel nueva** | 5 | **Cerrado, antenas montadas** |
+| 10 | **Radomo delaminado** | 4 | Sellado |
+| 11 | **Antenas: desmontaje, sellado y puenteo** | 5 | **Montadas en la aeronave** |
+| 12 | **Costado bajo el parabrisas** | 6 | **Terminado** |
+| 13 | **Nariz del monomotor** | 4 | **Entregada con librea** |
+| 14 | **Estabilizador horizontal** | 3 | **Pintado con sus franjas** |
+
+**El 12 es el mejor caso de la página** y por eso tiene seis etapas: daño, piel desprendida con el
+número de parte legible, preparación, laminado, **curado bajo bolsa de vacío con la manguera
+conectada** y la pieza terminada. Es la única secuencia donde se ve el proceso completo, incluida
+la técnica que la página explica en `#tecnicas`.
+
+**El 11 cierra dos huecos a la vez.** Enseña una antena montada —que faltaba— y, sobre todo, el
+**puenteo eléctrico**: las tiras en estrella alrededor de la base de la antena. Estaba en la lista
+de 20 capacidades sin una sola foto, y es de las cosas que un operador entiende al verlas.
 
 ## Las fotos
 
-**31 en `fotos/`**, salidas de las 300 originales que pasó Adán
-(`C:\Users\esped\Desktop\Aeroresinas\`, carpetas `reparacion` y `reparacion2`), elegidas viéndolas
-todas en hojas de contacto y optimizadas: rotadas según EXIF, 1000–1500 px de ancho y JPEG
-progresivo al 79 % — **6 MB en total** frente a los ~45 MB de los originales, que no se tocaron.
-`fotos/LEEME.txt` dice qué es cada una.
+**73 en `fotos/`**, salidas de las **321 originales** que pasó Adán
+(`C:\Users\esped\Desktop\Aeroresinas\`, carpetas `reparacion`, `reparacion2` e `iCloud Photos (3)`),
+elegidas viéndolas todas en hojas de contacto y optimizadas: rotadas según EXIF, 1000–1300 px de
+ancho y JPEG progresivo al 79 % — **13.5 MB en total** frente a los ~45 MB de los originales, que
+no se tocaron. `fotos/LEEME.txt` dice qué es cada una, caso por caso.
+
+Hasta el 2026-09-17 solo había 31, y dos carpetas enteras de originales estaban sin revisar. De
+ahí salieron las cinco secuencias nuevas, la bolsa de vacío, el puenteo eléctrico y las seis
+aeronaves terminadas.
 
 Cada foto lleva **pie**: una reparación abierta no se entiende sola, y el pie es lo que convierte
 la foto en argumento. Todas van con `loading="lazy"`.
@@ -176,10 +204,13 @@ En la **barra de apps del Dashboard**, en un grupo propio al final — ver "La b
 ## Comprobado
 
 Chromium `file://` a 1600 y 390 px, en español y en inglés, **con el navegador puesto en `en-US`**
-(el caso que fallaba): abre en español, 10 secciones, 7 servicios, 8 trabajos con 24 etapas, 6
-pasos, 8 técnicas, 20 capacidades, 6 credenciales, 6 fotos de galería, 8 preguntas, **41 imágenes y
-ninguna rota**, **cero huecos**, sin desborde horizontal, sin errores de consola y sin marcadores
-sin resolver. Medido: **2,857 palabras en español y 2,634 en inglés**.
+(el caso que fallaba): abre en español, **11 secciones**, 7 servicios, **14 trabajos con 51 etapas**,
+6 aeronaves, 6 pasos, 8 técnicas, 20 capacidades, 6 credenciales, **12 fotos de galería**, 8
+preguntas, **80 imágenes y ninguna rota**, **cero huecos**, sin desborde horizontal, sin errores de
+consola y sin marcadores sin resolver. Medido: **4,192 palabras en español y 3,901 en inglés**.
+
+Las 80 imágenes se comprobaron **forzando la carga de todo lo diferido** (`loading='eager'` y
+scroll al final): con `lazy` una foto rota no se detecta hasta que alguien baja hasta ella.
 
 Los cinco enlaces de contacto, comprobados uno a uno: `wa.me/525586184919`,
 `mailto:adanarturomartinez@gmail.com`, el perfil personal de LinkedIn, la página de empresa y el

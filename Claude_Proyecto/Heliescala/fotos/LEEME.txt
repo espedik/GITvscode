@@ -1,26 +1,79 @@
-Fotos de HELIESCALA (réplicas en resina). Ya están puestas y optimizadas para web.
-Las originales siguen intactas en C:\Users\esped\Desktop\Aeroresinas\.
+FOTOS DE HELIESCALA (réplicas en resina) — qué es cada una
+══════════════════════════════════════════════════════════════════════════════
 
-  hero.jpg          Tres piezas terminadas: ambulancia, rescate y Super Puma.
-  h145.jpg          Airbus H145 en librea blanca y negra.
+42 fotos, ya optimizadas para web. Las originales siguen intactas en
+C:\Users\esped\Desktop\Aeroresinas\ (carpetas `resina`, `resina2`, `resina3` e
+`iCloud Photos (3)`). `resina3` son las de estudio con fondo blanco, y de ahí
+salen las primeras ocho del catálogo.
+
+CATÁLOGO — 26 piezas
+  Fondo blanco de estudio:
+  h145.jpg          Airbus H145, librea blanca y negra.
   h145-airbus.jpg   H145 azul Airbus, versión de exhibición.
   sgm.jpg           AS350 / H125 rojo de servicios médicos.
   mi17.jpg          Mi-17 gris.
   marina.jpg        Tres Panther en librea de la Marina.
-  rescate.jpg       Par de rescate con flotadores.
-  bell407.jpg       Dos Bell 407 en librea de gobierno estatal.
-  trio.jpg          Tres piezas juntas (sin usar todavía en la página).
-  policia.jpg       Bell 412 de la Policía, con número de unidad.
+  rescate.jpg       Par de rescate con flotadores, librea AESSA.
+  bell407.jpg       Dos unidades del gobierno de SLP, matrícula XC-PSI.
+                    OJO: el nombre del archivo dice bell407 pero el modelo NO
+                    está confirmado — rotor de dos palas con barra estabilizadora.
   policia-par.jpg   La pareja de la Policía, lista para entregar.
-  fam.jpg           Fuerza Aérea Mexicana, con matrícula.
-  taller.jpg        Piezas fundidas esperando montaje y pintura.
+
+  Con matrícula legible en la foto:
+  xamvr.jpg         Airbus H145 XA-MVR, azul sobre blanco.
+  grandnew.jpg      AgustaWestland Grand New XB-HFY, plata metálico.
+  aessa-mcm.jpg     Rescate AESSA XA-MCM, rojo y amarillo.
+  aessa-jgh.jpg     Rescate AESSA XA-JGH, la segunda de la flota.
+  fam-uma.jpg       Fuerza Aérea Mexicana MX-UMA.
+  xaecj.jpg         Corporativo XA-ECJ, blanco con grecas verdes y amarillas.
+
+  Militares y de gobierno:
+  marineone.jpg     EL PRESIDENCIAL DE EE. UU., verde y blanco, con
+                    "UNITED STATES OF AMERICA" rotulado en el costado.
+  marineone-2.jpg   El mismo, otro ángulo (reserva, hoy sin usar).
+  fam-412.jpg       Bell 412 de la FAM, camuflaje gris y blanco.
+  fam-sp.jpg        Super Puma de la FAM, número 1006.
+  fam-mi17.jpg      Mi-17 de la FAM, gris.
+  camo-verde.jpg    Super Puma con camuflaje verde y café.
+  camo-gris.jpg     Cougar con camuflaje gris y blanco.
+  marina-cruz.jpg   Panther de la Marina con la cruz roja del servicio sanitario.
+  policia-2.jpg     Dos unidades de la Policía, Cóndores 01.
+  bell-camo.jpg     Ligero militar con camuflaje y palas de cola rojas y blancas.
+
+  Otros:
+  fenestron.jpg     Bimotor con fenestrón, azul y blanco, librea corporativa.
+  as350-grande.jpg  Monomotor rojo — de las piezas más grandes que ha hecho.
+  avion.jpg         BIMOTOR DE ALA FIJA. No todo son helicópteros.
+
+TU AERONAVE
+  policia.jpg       Bell 412 de la Policía con su número de unidad.
+  personalizado.jpg Pieza con PLACA EN LA BASE con el nombre del dueño. Es la que
+                    prueba esa sección entera.
+
+GALERÍA, TALLER Y EXHIBICIÓN
+  museo.jpg         PIEZAS SUYAS EN UNA SALA DE EXPOSICIÓN, sobre pedestal.
+  produccion.jpg    La mesa de producción: fuselajes en imprimación.
+  fila.jpg          Un lote completo, cada modelo en su etapa.
+  flota6.jpg        SEIS IGUALES: un pedido de flota con el mismo camuflaje.
+  bruto-1.jpg       Pieza recién salida del molde, sin lijar ni pintar.
+  bruto-2.jpg       Fuselaje y cola por separado, con lija y pegamento.
+  trio.jpg          Tres piezas juntas del mismo lote.
   flota.jpg         Fuselajes en fila durante la producción.
+  taller.jpg        Piezas fundidas esperando montaje y pintura.
+
+  hero.jpg          Tres piezas terminadas (la del encabezado).
+  fam.jpg           FAM con matrícula (reserva, hoy sin usar).
   og.jpg            1200x630 — la miniatura que sale en WhatsApp.
 
 Para cambiar una: deja el archivo con el MISMO nombre. Para AÑADIR un modelo al
 catálogo hace falta la foto aquí y una línea en `T.es.piezas` (y su traducción en
-`T.en.piezas`) dentro del <script> de heliescala.html.
+`T.en.piezas`) dentro del <script> de heliescala.html. Cada línea es
+[clave, nombre, foto, texto, etiquetas, modelo]: `modelo` vacío significa que no
+hay ficha técnica, y la ficha lo dice en vez de inventarla.
 
-Lo que valdría la pena tener:
-  · Una foto con algo al lado que dé escala (una mano, un boli).
-  · Una réplica junto a la aeronave real que copia: es la foto que vende sola.
+LO QUE FALTA Y VALDRÍA LA PENA TENER
+  · Una foto con algo al lado que dé escala (una mano, un boli). Con 26 piezas en
+    el catálogo sigue sin poderse saber de qué tamaño son.
+  · Una réplica junto a la aeronave real que copia. Está a un paso: la XA-MVR
+    existe como réplica (xamvr.jpg) y la aeronave real está fotografiada. Falta
+    una sola foto con las dos juntas, y es la que vende sola.

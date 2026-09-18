@@ -1,67 +1,129 @@
-Fotos de AERORESINAS. Ya están puestas y optimizadas para web (rotadas según EXIF,
-1000-1500 px de ancho, JPEG progresivo al 79 %). Las originales siguen intactas en
-C:\Users\esped\Desktop\Aeroresinas\ (carpetas reparacion y reparacion2).
+FOTOS DE AERORESINAS — qué es cada una
+══════════════════════════════════════════════════════════════════════════════
 
-PORTADA Y HERO
-  hero.jpg              Evaluando un panel dañado. Es la foto de portada.
-  composite-antes.jpg   Composite delaminado en el techo de cabina.
-  composite-despues.jpg La misma zona, lista para pintura.
+73 fotos, salidas de las 321 originales que pasó Adán (C:\Users\esped\Desktop\
+Aeroresinas\, carpetas `reparacion`, `reparacion2` e `iCloud Photos (3)`).
+Todas se eligieron viéndolas en hojas de contacto, y se optimizaron: rotadas
+según EXIF, 1000-1300 px de ancho y JPEG progresivo al 79 % (el retrato, al 84).
 
-TRABAJO 01 · Techo de cabina de un Bell (las cuatro etapas)
-  techo-1.jpg           Abierto y saneado hasta fibra firme.
+Los pies de cada foto están en `../datos.js`, y describen LO QUE SE VE. Si algo
+no se puede afirmar por la foto, no se escribe.
+
+
+TRABAJO 01 · Techo de cabina de un Bell
+  techo-1.jpg           Abierto y saneado.
   techo-2.jpg           Enmascarado y laminado.
   techo-3.jpg           Relleno y lijado.
-  techo-4.jpg           TERMINADO, pintado y montado.
+  techo-4.jpg           TERMINADO y pintado.
 
 TRABAJO 02 · Carenado lateral con el núcleo deshecho
   panel-1.jpg           El núcleo comprometido, con la piel abierta.
-  panel-2.jpg           Núcleo nuevo y relleno.
+  panel-2.jpg           Núcleo nuevo.
   panel-3.jpg           Lijado y ajuste, con la rejilla puesta.
   panel-4.jpg           ENTREGADO, pintado con su librea.
 
-TRABAJO 03 · Composite delaminado
-  composite-fibra.jpg   Fibra nueva laminada.
+TRABAJO 03 · Techo delaminado
+  composite-antes.jpg   El daño abierto.
+  composite-fibra.jpg   Fibra nueva curada.
+  composite-despues.jpg Cerrado y listo para pintura.
 
 TRABAJO 04 · Piel y estructura
-  corrosion.jpg         Techo decapado: aparece toda la corrosión.
   estructura-piel.jpg   Piel retirada, largueros a la vista.
-  estructura-nueva.jpg  Piel nueva imprimada.
+  estructura-nueva.jpg  Estructura repuesta.
+  corrosion.jpg         Zona con corrosión removida.
 
 TRABAJO 05 · Nariz
-  nariz-antes.jpg       Impactos y pintura levantada.
-  nariz-despues.jpg     Superficie recuperada.
+  nariz-antes.jpg       Nariz abierta.
+  nariz-despues.jpg     Nariz cerrada.
 
-TRABAJO 06 · Parabrisas
-  parabrisas.jpg        Marco preparado.
-  parabrisas-2.jpg      Ajuste del cristal.
-  parabrisas-3.jpg      Sellado de la junta.
+TRABAJO 06 · Parabrisas y acrílicos
+  parabrisas.jpg        Marco y cristal.
+  parabrisas-2.jpg      Sellado del marco.
+  parabrisas-3.jpg      Cristal montado.
 
 TRABAJO 07 · Tomas de aire y rejillas
-  rejilla-1.jpg         Rejilla desmontada, alojamiento a la vista.
-  rejilla-2.jpg         Montada, sellada y con el bonding restituido.
-  tomas.jpg             Las tomas ya en la aeronave.
+  tomas.jpg             Tomas de aire.
+  rejilla-1.jpg         Rejilla desmontada.
+  rejilla-2.jpg         Alojamiento de la rejilla.
 
 TRABAJO 08 · Puertas y estabilizador
   puerta.jpg            Puerta saneada.
   estabilizador.jpg     Borde de ataque con la fibra a la vista.
 
-QUIÉN LO HACE
-  retrato.jpg           José Arturo de frente. Es la ÚNICA foto de la página en la
-                        que se le ve la cara, y va en "Quién lo hace".
+TRABAJO 09 · Techo con corrosión, larguero y piel nueva  ← 5 etapas
+  techo2-1.jpg          Decapado: la corrosión en manchas café por todo el techo.
+  techo2-2.jpg          Canal central abierto, con los refuerzos a la vista.
+  techo2-3.jpg          Piel nueva imprimada, a todo lo largo.
+  techo2-4.jpg          Relleno e igualado de perfil.
+  techo2-5.jpg          CERRADO, con las antenas otra vez montadas.
 
-GALERÍA Y OTRAS
+TRABAJO 10 · Radomo delaminado (cono de nariz)
+  radomo-1.jpg          Decapado por manchas para hallar el contorno real.
+  radomo-2.jpg          Regla sobre la zona abierta: se mide lo que se perdió.
+  radomo-3.jpg          Saneado completo hasta fibra firme.
+  radomo-4.jpg          Sellado, listo para imprimación.
+
+TRABAJO 11 · Antenas: desmontaje, sellado y puenteo eléctrico
+  antena-1.jpg          Base fuera: asiento, agujero del cable y sellador viejo.
+  antena-2.jpg          Base nueva con su coaxial, enmascarada.
+  antena-3.jpg          EL PUENTEO: las tiras en estrella alrededor de la base.
+  antena-4.jpg          Contorno sellado, junto a la tapa de la antena de al lado.
+  antena-5.jpg          LAS DOS ANTENAS MONTADAS en el fuselaje pintado.
+
+TRABAJO 12 · Costado bajo el parabrisas  ← el caso más completo, 6 etapas
+  costado-1.jpg         El daño: panel abierto, interior de cabina a la vista.
+  costado-2.jpg         La piel desprendida, sostenida en su sitio. Nº de parte legible.
+  costado-3.jpg         Zona saneada e imprimada, contorno enmascarado.
+  costado-4.jpg         Laminado: capas nuevas curadas.
+  costado-5.jpg         BOLSA DE VACÍO sellada, con la manguera conectada.
+  costado-6.jpg         TERMINADO, con la curva del fuselaje recuperada.
+
+TRABAJO 13 · Nariz del monomotor
+  nariz2-1.jpg          Panel roto, interior a la vista.
+  nariz2-2.jpg          Reconstruido con capas nuevas.
+  nariz2-3.jpg          Zona junto al faro, sellada.
+  nariz2-4.jpg          ENTREGADA con su librea completa.
+
+TRABAJO 14 · Estabilizador horizontal
+  estab2-1.jpg          Extremo abierto: el núcleo verde del panel sándwich.
+  estab2-2.jpg          El corte de cerca: espesor real y núcleo sano.
+  estab2-3.jpg          Cerrado y PINTADO con sus franjas.
+
+QUIÉN LO HACE
+  retrato.jpg           José Arturo de frente. Es la ÚNICA foto donde se le ve la
+                        cara, y va en "Quién lo hace".
+
+AERONAVES TERMINADAS (sección #flota)
+  real-h145.jpg         Bimotor Airbus azul sobre blanco, matrícula mexicana.
+  real-h145b.jpg        El mismo, de perfil.
+  real-sgm.jpg          Monomotor rojo y blanco de operador institucional.
+  real-sgm2.jpg         El mismo, otro ángulo (reserva, hoy sin usar en la página).
+  real-panama.jpg       Ambulancia aérea con matrícula HP — PANAMÁ.
+  real-fenestron.jpg    Deriva y fenestrón, librea azul y blanca.
+  real-h125.jpg         Cola de un H125 con su designación pintada.
+
+GALERÍA Y TALLER
   hangar.jpg            El hangar con varias aeronaves.
-  trabajando.jpg        Él sellando el marco de una ventanilla. Estuvo en "Quién lo
-                        hace" hasta que llegó el retrato; hoy vive en la galería.
+  trabajando.jpg        Él sellando el marco de una ventanilla. Estuvo en "Quién
+                        lo hace" hasta que llegó el retrato; hoy vive en la galería.
+  taller-1.jpg          Aeronave abierta: puertas fuera e interior desmontado.
+  taller-2.jpg          Fuselaje sobre caballetes, sin tren.
+  vacio-1.jpg           Bolsa de vacío con lámpara de calor.
+  vacio-2.jpg           La misma reparación desde abajo, curando.
+  cabina.jpg            Cabina protegida con plástico antes de trabajar.
+  bahia.jpg             Bahía de equipo: batería, aviónica y conductos.
+  circular.jpg          Reparación pequeña junto a la ventanilla.
+  louver.jpg            Rejilla y condensador del aire acondicionado.
   fuselaje.jpg          Aeronave desmontada para trabajar la piel.
   borde-ataque.jpg      Borde de ataque abierto.
   og.jpg                1200x630 — la miniatura que sale en WhatsApp.
 
-Para cambiar una: deja el archivo con el MISMO nombre y listo. Para añadir un caso
-nuevo hacen falta las fotos aquí y una entrada en `trabajos` dentro de datos.js
-(con su traducción en T.en).
+Para cambiar una: deja el archivo con el MISMO nombre y listo. Para añadir un
+caso nuevo hacen falta las fotos aquí y una entrada en `trabajos` dentro de
+datos.js (con su traducción en T.en).
 
 LO QUE FALTA Y VALDRÍA LA PENA TENER
-  · Una antena montada, de cerca (el servicio de antenas usa hoy rejilla-2.jpg).
-  · Una aeronave terminada y en vuelo, o al menos entera en la plataforma: hoy
-    todas las fotos son de trabajo abierto, y falta la del resultado final.
+  · Una aeronave EN VUELO. Ya hay seis completas en el hangar, pero ninguna
+    volando, y esa es la foto que cierra el argumento.
+  · Una foto de él con una aeronave terminada, de frente. Hoy el retrato es de
+    estudio y las de trabajo son de espaldas o de perfil.

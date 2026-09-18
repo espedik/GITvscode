@@ -33,16 +33,44 @@ que puede hacer cualquier modelo, y esa sección convierte esa prueba en un enca
 que vuelas o que operas, con sus colores, su número de unidad y su matrícula. Sirve de regalo de
 retiro, de reconocimiento, de pieza de recepción o de obsequio a un cliente.
 
+Sus dos fotos lo demuestran en vez de prometerlo: un Bell 412 de la policía con su número de
+unidad, y **una pieza con placa en la base con el nombre del dueño**. Esa placa es exactamente lo
+que compra quien encarga una.
+
 **"Cómo se hace una"** existe para justificar el precio: molde, colada, lijado y montaje, y pintura
 a mano. No es un juguete pintado, y hay que decirlo con el taller de fondo.
 
-## El catálogo
+## El catálogo — 26 piezas
 
-Ocho piezas reales suyas, cada una con la librea que llevaba el original: Airbus H145 (corporativa
-y de exhibición), AS350/H125 de servicios médicos, Mi-17, tres Panther de la **Marina**, un par de
-rescate en librea AESSA, dos del **gobierno de San Luis Potosí** (XC-PSI) y la flota de la
-**Policía** (Bell 412, grupo Cóndores). Más, en "tu aeronave", el Bell 412 de la policía con su
-número de unidad y el de la **Fuerza Aérea Mexicana** con su matrícula.
+Adán, 2026-09-17: *"siento que en ambas no estás usando todas las imágenes, usa todas y pon la
+información completa"*. Tenía razón: de las 321 fotos originales solo habían entrado 45, y dos
+carpetas (`resina` y `resina2`, 65 fotos) no se habían mirado nunca. El catálogo pasó de 8 a 26.
+
+| Grupo | Piezas |
+|---|---|
+| Civil y corporativo | H145 (dos libreas), H145 **XA-MVR**, AgustaWestland **Grand New XB-HFY**, **XA-ECJ**, bimotor con fenestrón, AS350/H125 de servicios médicos, monomotor rojo de gran formato |
+| Rescate | Par en librea AESSA, **XA-MCM**, **XA-JGH** |
+| Marina | Tres Panther en serie, Panther sanitario con la cruz roja |
+| Fuerza Aérea | **MX-UMA**, Bell 412 en camuflaje, Super Puma **1006**, Mi-17 |
+| Policía | La flota Cóndores (dos fotos distintas) |
+| Militar | Super Puma con camuflaje verde, Cougar con camuflaje gris, ligero con camuflaje |
+| Gobierno estatal | Dos de San Luis Potosí, **XC-PSI** |
+| Otros | Mi-17, **el presidencial de Estados Unidos** y un **bimotor de ala fija** |
+
+**Dos piezas cambian lo que la página puede decir**:
+
+- **El presidencial de Estados Unidos**, verde y blanco, con *UNITED STATES OF AMERICA* rotulado en
+  el costado. Es la librea más reconocible del mundo y prueba que el catálogo no se limita a
+  aeronaves mexicanas.
+- **Un avión**. No todo son helicópteros, y hasta hoy la página afirmaba lo contrario por omisión.
+
+**Donde la matrícula se lee en la foto, se escribe** (XA-MVR, XB-HFY, XA-MCM, XA-JGH, MX-UMA,
+XA-ECJ, XC-PSI): es lo que demuestra que cada pieza salió de una aeronave concreta y no de un
+molde genérico.
+
+La cifra del hero dice **26 y no "30+"**. El 30+ era una estimación mía y era el único número de
+las dos páginas que no venía de un dato comprobable; 26 son las piezas que se pueden contar en la
+pantalla.
 
 Para añadir un modelo hacen falta dos cosas: la foto en `fotos/` y una línea en `T.es.piezas` (con
 su traducción en `T.en.piezas`). Cada línea es `[clave, nombre, foto, texto, etiquetas, modelo]`:
@@ -88,8 +116,11 @@ cambiar de idioma con una ficha abierta, se repinta en el idioma nuevo sin cerra
 Las cifras **varían con la versión y la configuración**, y la ficha lo dice en el comentario del
 código: quien necesite el número exacto de SU aeronave va al manual, no a esta página.
 
-**Dos piezas no tienen ficha de modelo a propósito**: el par rojo de rescate con librea AESSA y las
-dos azules del gobierno de San Luis Potosí (matrícula XC-PSI). Por la foto no se puede afirmar qué
+**Trece de las 26 piezas no tienen ficha de modelo a propósito** — entre ellas el par rojo de
+rescate con librea AESSA y las dos azules del gobierno de San Luis Potosí (matrícula XC-PSI).
+Enseñan lo que sí se sabe (librea, operador, matrícula cuando se lee) y marcan el modelo como
+pendiente. Confirmar cada uno es **una línea**: se le pone la clave del modelo y su ficha en
+`T.*.modelos`. Por la foto no se puede afirmar qué
 modelo son —el par azul tiene rotor de dos palas con barra estabilizadora, así que **no** es un Bell
 407— y en esta página no se inventa un dato. Su ficha enseña lo que sí se sabe (librea, operador,
 qué es la pieza) y marca el modelo como pendiente de confirmar con su papá. En cuanto lo diga, es
@@ -131,13 +162,17 @@ esa nota, y se cambia en una línea.
 
 ## Las fotos
 
-Las 15 de `fotos/` salen de las 300 originales de Adán (`C:\Users\esped\Desktop\Aeroresinas\`,
-carpetas `resina3` e `iCloud Photos (3)`), optimizadas para web: **1.2 MB en total**. `resina3` son
-fotos de estudio con fondo blanco —las mejores que tiene— y de ahí sale todo el catálogo;
-`iCloud Photos (3)` aporta las de librea real (Policía, Fuerza Aérea) y las del taller.
+Las **42** de `fotos/` salen de las **321 originales** de Adán (`C:\Users\esped\Desktop\Aeroresinas\`,
+carpetas `resina`, `resina2`, `resina3` e `iCloud Photos (3)`), optimizadas para web: **5.4 MB en
+total**. `resina3` son fotos de estudio con fondo blanco —las mejores que tiene— y de ahí salen las
+ocho primeras del catálogo; `resina` y `resina2` aportan los militares, el presidencial y las
+piezas en bruto; `iCloud Photos (3)`, las de matrícula real, la producción y la sala de exposición.
 
-`fotos/LEEME.txt` dice qué es cada una. Lo que falta: una con **algo al lado que dé escala** y una
-**réplica junto a la aeronave real** que copia — esa foto vende sola.
+`fotos/LEEME.txt` dice qué es cada una.
+
+Lo que falta: una con **algo al lado que dé escala** —con 26 piezas sigue sin saberse de qué tamaño
+son— y una **réplica junto a la aeronave real** que copia. Esta segunda está a un paso: la XA-MVR
+existe como réplica y la aeronave real está fotografiada; falta una sola foto con las dos juntas.
 
 ## Lo que hay que rellenar — `PERFIL`
 
@@ -187,9 +222,14 @@ llega a una página que abre en español y cambia con un toque.
 
 ## La galería
 
-`#galeria`, entre el proceso y el puente: entregas de varias unidades y producción en curso — el
-trío del mismo lote, los fuselajes en fila esperando pintura y el Bell 412 de la policía con su
-número. Sirve para lo que el catálogo no dice: que puede hacer **una flota entera igual**.
+Nueve fotos del taller y de lo que sale de él. Tres importan más que el resto:
+
+- **La sala de exposición.** Piezas suyas montadas sobre pedestal, detrás del cordón. Es lo más
+  cerca que tiene la página de una credencial.
+- **Seis iguales.** Un pedido de flota completo, mismo modelo y mismo camuflaje. Demuestra lo que
+  el catálogo no puede: que repite una pieza sin que se note la diferencia.
+- **Las piezas en bruto.** Recién salidas del molde, sin lijar y sin pintar, con la lija y el
+  pegamento al lado. Justifican el precio mejor que cualquier frase.
 
 ## Dónde está enlazada
 
@@ -199,11 +239,14 @@ píldoras: ver "La barra de apps" en `../Dashboard/readme_dashboard.md`.
 
 ## Comprobado
 
-Chromium `file://` a 1600 y 390 px, en español y en inglés: 7 secciones, 16 imágenes, **ninguna
-rota**, 8 piezas en el catálogo, 3 de galería, sin desborde horizontal, sin errores de consola y
-**sin `{marcadores}` sin sustituir**. Los cuatro huecos que quedan salen marcados y son los cuatro
-esperados. Desde el Dashboard la píldora abre la página. **Cero referencias a Aeroresinas** en el
-cuerpo del documento (la única mención es la ruta en el comentario del `<style>`).
+Chromium `file://` a 1600 y 390 px, en español y en inglés: 7 secciones, **39 imágenes, ninguna
+rota**, **26 piezas** en el catálogo, 9 de galería, sin desborde horizontal, sin errores de consola
+y **sin `{marcadores}` sin sustituir**. Los cuatro huecos que quedan salen marcados y son los
+cuatro esperados. Desde el Dashboard la píldora abre la página. **Cero referencias a Aeroresinas**
+en el cuerpo del documento (la única mención es la ruta en el comentario del `<style>`).
+
+Las 39 imágenes se comprobaron **forzando la carga de todo lo diferido**: con `lazy` una foto rota
+no se detecta hasta que alguien baja hasta ella.
 
 La única imagen que el navegador reporta sin cargar es `#fp-img`, el `<img>` del panel de ficha:
 nace **sin** atributo `src` a propósito y está oculto hasta que se abre una ficha.

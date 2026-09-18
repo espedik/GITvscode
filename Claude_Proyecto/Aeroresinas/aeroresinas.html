@@ -400,6 +400,16 @@ b,strong{font-weight:600;color:var(--tinta)}
   </div>
 </section>
 
+<section id="flota" class="sec sec-blanca">
+  <div class="wrap">
+    <div class="sec-h">
+      <div><h2 class="h2" data-t="floT"></h2><p class="sub" style="margin-top:10px" data-t="floSub"></p></div>
+      <div class="sec-n" data-t="floN"></div>
+    </div>
+    <div class="gal" id="flota-grid"></div>
+  </div>
+</section>
+
 <section id="metodo" class="sec sec-blanca">
   <div class="wrap">
     <div class="sec-h">
@@ -595,6 +605,9 @@ function pinta(){
   pon('credenciales', t.credenciales.map(c =>
     '<div class="cred">' + svg('check', 15) + '<div><div class="t">' + rell(c[0]) + '</div>' +
     '<div class="d">' + rell(c[1]) + '</div></div></div>').join(''));
+  pon('flota-grid', t.flota.map(g =>
+    '<figure class="foto"><img src="' + g[0] + '" alt="" loading="lazy">' +
+    '<figcaption class="pie">' + g[1] + '</figcaption></figure>').join(''));
   pon('galeria-grid', t.galeria.map(g =>
     '<figure class="foto"><img src="' + g[0] + '" alt="" loading="lazy">' +
     '<figcaption class="pie">' + g[1] + '</figcaption></figure>').join(''));
