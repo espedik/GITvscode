@@ -21,6 +21,25 @@ Se separaron cuando Adán pidió *"muchísima información"* y el contenido pas�
 líneas: buscar una frase dentro del HTML era buscar una aguja. Para cambiar cualquier texto solo se
 toca `datos.js`, y las tres reglas de qué se puede escribir ahí están en su cabecera.
 
+## La voz: habla él, en primera persona
+
+Adán, 2026-09-18: *"es la página de Arturo, pero habla como la empresa"*. Tenía razón y era general,
+no un descuido suelto: medidas **30 líneas con marca de tercera persona y ninguna en primera**. La
+página estaba escrita desde fuera —*qué repara*, *cómo trabaja*, *contesta él*, *cuéntale*— como si
+una empresa presentara a un empleado. Es su página: **habla él**.
+
+*Qué reparo · Cómo trabajo · Las aeronaves con las que trabajo · Quién soy · Cuéntame qué le pasó a
+tu aeronave · Contesto yo, no un conmutador.* En inglés igual: *What I repair, How I work, Who I am,
+Tell me what happened to your aircraft.*
+
+**Solo cambió la persona.** Ni un dato, ni una cifra, ni el tono. Y el **impersonal técnico se
+queda** —*se abre y se sanea*, *se retira material hasta zona sana*, *se compara con los límites del
+manual*—: es el registro del oficio, lo usa cualquier manual de mantenimiento, y suena a alguien que
+sabe. Cambiarlo a *yo abro, yo saneo* habría sonado a folleto.
+
+Al pasar a primera persona, dos preguntas cambiaron de dueño: *¿Trabaja fuera de la Ciudad de
+México?* es ahora *¿Trabajas…?*, porque quien pregunta se dirige a él y no a un tercero.
+
 ## Quién es, y por qué eso lo cambia todo
 
 **José Arturo Martínez Ponce**, técnico de mantenimiento de aeronaves con licencia **DGAC**. Los

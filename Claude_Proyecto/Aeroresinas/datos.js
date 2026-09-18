@@ -45,22 +45,22 @@ const T = {
   // ── Barra ──────────────────────────────────────────────────────────────
   marcaSub:'REPARACIÓN ESTRUCTURAL DE HELICÓPTEROS',
   otroIdioma:'English',
-  nav:[['#reparacion','Qué repara'],['#trabajos','Trabajos'],['#flota','Aeronaves'],['#metodo','Cómo trabaja'],
-       ['#tecnicas','Técnicas'],['#trayectoria','Quién es'],['#faq','Preguntas']],
+  nav:[['#reparacion','Qué reparo'],['#trabajos','Trabajos'],['#flota','Aeronaves'],['#metodo','Cómo trabajo'],
+       ['#tecnicas','Técnicas'],['#trayectoria','Quién soy'],['#faq','Preguntas']],
 
   // ── Hero ───────────────────────────────────────────────────────────────
   heroOjo:'Composites · técnicas al vacío · parabrisas',
   heroT1:'Tu helicóptero no viaja al taller.', heroT2:'El taller viaja a tu helicóptero.',
-  heroSub:'Reparación estructural en fibra de vidrio, acrílicos y estructuras remachadas, hecha por un técnico con <b>{anios} años en {donde}</b>. En tu hangar, en campo o donde quedó la aeronave.',
+  heroSub:'Reparo estructura en fibra de vidrio, acrílicos y estructuras remachadas, con <b>{anios} años en {donde}</b> detrás. Voy a tu hangar, a campo o a donde quedó la aeronave.',
   ctaDanio:'Mandar fotos del daño', ctaCaso:'Ver trabajos hechos',
-  datos:[['{anios}','Años en {donde}'],['{licencia}','Licencia'],['Bell · Airbus · Robinson','Marcas que repara'],['{paises}','Países atendidos']],
+  datos:[['{anios}','Años en {donde}'],['{licencia}','Licencia'],['Bell · Airbus · Robinson','Marcas que reparo'],['{paises}','Países atendidos']],
   pieHero:'<b>Evaluando el daño antes de tocar nada.</b> El panel se mide y se compara con el manual: se decide si se repara o se sustituye.',
   pieAntes:'<b>Antes.</b> Composite delaminado en el techo de cabina.',
   pieDespues:'<b>Después.</b> La misma zona, lista para pintura.',
 
   // ── Qué repara ─────────────────────────────────────────────────────────
-  repT:'Qué repara', repN:'07 SERVICIOS',
-  repSub:'Siete trabajos, y los hace completos: evaluación del daño, reparación conforme al manual de la aeronave y entrega documentada con fotos. Si algo excede los límites del manual y hay que sustituir la pieza, te lo dice antes de empezar — no después.',
+  repT:'Qué reparo', repN:'07 SERVICIOS',
+  repSub:'Siete trabajos, y los hago completos: evaluación del daño, reparación conforme al manual de la aeronave y entrega documentada con fotos. Si algo excede los límites del manual y hay que sustituir la pieza, te lo digo antes de empezar — no después.',
   servicios:[
    ['estruc','Estructura de fuselaje y cabina','fotos/estructura-piel.jpg',
     'Piel, largueros, cuadernas y refuerzos. Se retira el material dañado hasta llegar a estructura sana, se repone con el mismo calibre y aleación que pide el manual, y se cierra con el patrón de remachado original.',
@@ -95,7 +95,7 @@ const T = {
   // ── Trabajos ───────────────────────────────────────────────────────────
   trabT:'Trabajos, paso a paso', trabN:'CASOS REALES',
   trabNum:'TRABAJO', trabDe:'de', trabAnt:'Trabajo anterior', trabSig:'Trabajo siguiente',
-  trabSub:'Cada caso es una reparación suya, fotografiada mientras la hacía. No hay imágenes de catálogo aquí: son las etapas reales, en orden, con lo que se hizo en cada una.',
+  trabSub:'Cada caso es una reparación mía, fotografiada mientras la hacía. No hay imágenes de catálogo aquí: son las etapas reales, en orden, con lo que se hizo en cada una.',
   trabajos:[
    {t:'Techo de cabina · Bell', z:'Composite · bolsa de vacío',
     r:'Daño en el techo de la cabina, sobre la puerta. Se abrió la zona, se retiró todo el material comprometido, se laminaron capas nuevas de fibra y se cerró hasta dejar la superficie lista para pintura. La aeronave salió con el techo sin rastro de la reparación.',
@@ -179,19 +179,19 @@ const T = {
   ],
 
   // ── Método ─────────────────────────────────────────────────────────────
-  metT:'Cómo trabaja', metN:'EL MÉTODO',
+  metT:'Cómo trabajo', metN:'EL MÉTODO',
   metSub:'Sin taller fijo, sin lista de espera y sin mover la aeronave. Seis pasos, y el primero es una foto por WhatsApp.',
   pasos:[
-   ['Mándale fotos del daño','El área de cerca y de lejos, y si lo tienes a mano el número de parte o la página del manual. Con eso ya te puede decir si es reparable o si va a sustitución.'],
-   ['Evaluación y presupuesto','Te dice qué se repara, qué hay que sustituir, cuánto tiempo toma y qué cuesta. La evaluación no se cobra.'],
-   ['Va a donde está la aeronave','Llega a tu hangar con herramienta y material. No hay que trasladar la aeronave ni esperar un espacio en un taller.'],
+   ['Mándame fotos del daño','El área de cerca y de lejos, y si lo tienes a mano el número de parte o la página del manual. Con eso ya te puedo decir si es reparable o si va a sustitución.'],
+   ['Evaluación y presupuesto','Te digo qué se repara, qué hay que sustituir, cuánto tiempo toma y qué cuesta. La evaluación no te la cobro.'],
+   ['Voy a donde está la aeronave','Llego a tu hangar con herramienta y material. No hay que trasladar la aeronave ni esperar un espacio en un taller.'],
    ['Se abre y se mide','El daño se delimita de verdad: se retira material hasta llegar a zona sana y se compara con los límites del manual. Aquí es donde un presupuesto serio se distingue de uno hecho por foto.'],
    ['Reparación y curado','Laminado, remachado, sellado o sustitución, según el caso, con los tiempos de curado que pide el material. Las prisas aquí se pagan en vuelo.'],
    ['Entrega con reporte','La reparación documentada con fotos del antes, el proceso y el después, para tu bitácora.'],
   ],
-  cobT:'Cobertura:', cobD:'Ha trabajado para operadores civiles, privados y gubernamentales de los tres países, en hangar y en campo. Para salidas fuera de su base se acuerdan traslado y estancia antes de viajar.',
+  cobT:'Cobertura:', cobD:'He trabajado para operadores civiles, privados y gubernamentales de los tres países, en hangar y en campo. Para salidas fuera de mi base acordamos traslado y estancia antes de viajar.',
   aogT:'Aeronave en tierra (AOG)',
-  aogD:'Si tienes una aeronave detenida esperando una reparación estructural, esa es exactamente la llamada que atiende primero. Soporte AOG con movilidad internacional: se viaja en cuanto se confirme.',
+  aogD:'Si tienes una aeronave detenida esperando una reparación estructural, esa es exactamente la llamada que atiendo primero. Soporte AOG con movilidad internacional: viajo en cuanto se confirme.',
   aogCta:'Llamar por un AOG',
 
   // ── Técnicas ───────────────────────────────────────────────────────────
@@ -210,17 +210,17 @@ const T = {
 
   // ── Trayectoria y quién es ─────────────────────────────────────────────
   trayT:'36 años dentro de una aeronave', trayN:'TRAYECTORIA',
-  traySub:'No empezó ayer ni aprendió por su cuenta: es técnico de mantenimiento de aeronaves formado y curtido en <b>Airbus</b>, desde 1988. Lo que hoy hace por su cuenta es lo mismo que hizo durante 36 años en una línea de producción, con sus manuales y sus boletines.',
+  traySub:'No empecé ayer ni aprendí por mi cuenta: soy técnico de mantenimiento de aeronaves formado y curtido en <b>Airbus</b>, desde 1988. Lo que hoy hago por mi cuenta es lo mismo que hice durante 36 años en una línea de producción, con sus manuales y sus boletines.',
   trayectoria:[
    ['1988 — 2024','Airbus · Técnico de mantenimiento','<b>36 años de planta</b>, trabajando estructura en flotas A320, A321, ATR 42 y ATR 72: inspección estructural, reparación de chapa, composites y modificaciones conforme a <b>SRM, AMM y Boletines de Servicio</b>. Reparaciones permanentes y temporales, con la integridad estructural y la aeronavegabilidad documentadas.', false],
-   ['2025 — hoy','Aeroresinas · Por su cuenta','Reparación estructural de <b>helicópteros</b>: fibra de vidrio, técnicas al vacío, acrílicos y estructuras remachadas. Para operadores civiles, privados y gubernamentales en <b>México, Panamá y Guatemala</b>, en hangar o en campo — incluido el <b>soporte AOG</b> con la aeronave en tierra.', true],
+   ['2025 — hoy','Aeroresinas · Por mi cuenta','Reparación estructural de <b>helicópteros</b>: fibra de vidrio, técnicas al vacío, acrílicos y estructuras remachadas. Para operadores civiles, privados y gubernamentales en <b>México, Panamá y Guatemala</b>, en hangar o en campo — incluido el <b>soporte AOG</b> con la aeronave en tierra.', true],
   ],
-  capT:'Lo que ha reparado, con ese nombre',
+  capT:'Lo que he reparado, con ese nombre',
   capacidades:['Radomos','Piel de fuselaje','Botas antihielo','Reparación interior de cubiertas','Sustitución de piel','Boletines de servicio','Instalación de antenas','Reparación de puertas','Remoción de corrosión','Modificación de winglets','Inspección con líquidos penetrantes','Panel sándwich de nido de abeja','Refuerzos (doublers) para antenas','Cambio de remaches vibrantes','Reparación al vacío (vacuum bag)','Compuestos de sellado','Restitución del puenteo eléctrico','Montaje y retiro de insertos','Composites monolíticos y sándwich','Estabilizador horizontal'],
   capP:'Veinte trabajos distintos, de su historial en Airbus. Los de estructura y composite son exactamente los que hoy aplica a un helicóptero: <b>la técnica es la misma, cambia la aeronave</b>.',
-  pieRetrato:'<b>José Arturo Martínez Ponce.</b> Licencia {licencia}, {anios} años en {donde} y hoy en tu hangar.',
-  quienT:'Quién lo hace',
-  quienD:'<b>{nombre}</b> — técnico de mantenimiento de aeronaves con licencia <b>{licencia}</b>, especialista en composites, técnicas al vacío y parabrisas.<br><br>Entró a <b>Airbus en 1988</b> y estuvo <b>36 años</b> en estructura: A320, A321, ATR 42 y ATR 72. Radomos, piel de fuselaje, paneles de nido de abeja, corrosión, modificación de winglets, instalación de antenas con sus refuerzos, reparación al vacío, sellado, puenteo eléctrico. Todo conforme a SRM, AMM y boletines, y todo documentado: en una línea de producción una reparación no existe si no está escrita.<br><br>Desde <b>2025 trabaja por su cuenta</b>, y lo hace en helicópteros: Bell, Airbus Helicopters y Robinson, para operadores civiles, privados y gubernamentales de <b>México, Panamá y Guatemala</b>. En hangar cuando se puede y en campo cuando toca, porque una aeronave detenida cuesta dinero cada día.<br><br>Está disponible para <b>proyectos por contrato, soporte urgente (AOG) y colaboración con talleres MRO</b>. Y contesta él: no hay conmutador ni intermediario entre tu aeronave y quien la va a reparar.',
+  pieRetrato:'<b>Soy José Arturo Martínez Ponce.</b> Licencia {licencia}, {anios} años en {donde} y hoy en tu hangar.',
+  quienT:'Quién soy',
+  quienD:'Soy <b>{nombre}</b>, técnico de mantenimiento de aeronaves con licencia <b>{licencia}</b>, especialista en composites, técnicas al vacío y parabrisas.<br><br>Entré a <b>Airbus en 1988</b> y estuve <b>36 años</b> en estructura: A320, A321, ATR 42 y ATR 72. Radomos, piel de fuselaje, paneles de nido de abeja, corrosión, modificación de winglets, instalación de antenas con sus refuerzos, reparación al vacío, sellado, puenteo eléctrico. Todo conforme a SRM, AMM y boletines, y todo documentado: en una línea de producción una reparación no existe si no está escrita.<br><br>Desde <b>2025 trabajo por mi cuenta</b>, y lo hago en helicópteros: Bell, Airbus Helicopters y Robinson, para operadores civiles, privados y gubernamentales de <b>México, Panamá y Guatemala</b>. En hangar cuando se puede y en campo cuando toca, porque una aeronave detenida cuesta dinero cada día.<br><br>Estoy disponible para <b>proyectos por contrato, soporte urgente (AOG) y colaboración con talleres MRO</b>. Y contesto yo: no hay conmutador ni intermediario entre tu aeronave y quien la va a reparar.',
   credT:'Lo que respalda el trabajo',
   credenciales:[
    ['Licencia {licencia}','Técnico de mantenimiento de aeronaves con licencia de la autoridad aeronáutica.'],
@@ -234,8 +234,8 @@ const T = {
   // ── Aeronaves terminadas ───────────────────────────────────────────────
   // Lo único de la página que NO es trabajo abierto. Un dueño de aeronave ve
   // paneles rotos en todas las secciones anteriores; aquí ve el resultado.
-  floT:'Las aeronaves con las que trabaja', floN:'EN EL HANGAR',
-  floSub:'Bimotores corporativos, monomotores de trabajo aéreo, ambulancias aéreas y aeronaves de operadores de fuera de México. Estas son del tipo y del tamaño que entran al hangar donde repara — completas, montadas y en línea de vuelo.',
+  floT:'Las aeronaves con las que trabajo', floN:'EN EL HANGAR',
+  floSub:'Bimotores corporativos, monomotores de trabajo aéreo, ambulancias aéreas y aeronaves de operadores de fuera de México. Estas son del tipo y del tamaño que entran al hangar donde reparo — completas, montadas y en línea de vuelo.',
   flota:[
    ['fotos/real-h145.jpg','<b>Bimotor corporativo Airbus.</b> Cinco palas, fenestrón y librea azul sobre blanco. Matrícula mexicana.'],
    ['fotos/real-sgm.jpg','<b>Monomotor de trabajo aéreo.</b> Librea roja y blanca de un operador institucional, con patines altos.'],
@@ -268,22 +268,22 @@ const T = {
   faq:[
    ['¿Puede repararse o hay que cambiar la pieza?','Depende del tamaño del daño y de dónde esté, y eso lo fija el manual de tu aeronave, no el criterio de nadie. Por eso la zona se abre y se mide antes de dar un precio definitivo: un presupuesto hecho solo por foto es una estimación.'],
    ['¿Cuánto tarda?','Un composite pequeño puede quedar en uno o dos días; una sustitución de piel con estructura debajo lleva más, y el curado tiene sus tiempos y no se acortan. La estimación te la da con el presupuesto, antes de empezar.'],
-   ['¿Tengo que llevar la aeronave a algún lado?','No. Va él a donde esté: tu hangar, la base o donde quedó — es la razón de ser de este servicio, y por eso no hay taller a donde mandarla. La excepción son las <b>piezas pequeñas desmontadas</b>: una tapa, un carenado, una ventanilla o un acrílico sí se los puedes entregar, los repara y te los devuelve listos para montar.'],
-   ['¿Trabaja fuera de la Ciudad de México?','Sí. Ha trabajado en México, Panamá y Guatemala. Para salidas se acuerdan traslado y estancia antes de viajar, y para una aeronave en tierra se sale en cuanto se confirme.'],
-   ['¿Qué necesita para cotizar?','Fotos del área de cerca y de lejos, el modelo y la matrícula, y si lo tienes a mano el número de parte o la página del manual. Con eso alcanza para una primera respuesta.'],
-   ['¿Qué entrega al terminar?','La aeronave reparada y un reporte con fotos del antes, el proceso y el después, para que quede en tu bitácora.'],
-   ['¿Trabaja con talleres MRO?','Sí, y es parte de lo que ofrece: colaboración con talleres para trabajos de estructura y composite, por contrato o por proyecto.'],
-   ['¿Y si el daño excede el manual?','Te lo dice y no se repara: se sustituye. Preferir un remiendo que no ampara el manual es exactamente lo que no se hace aquí.'],
+   ['¿Tengo que llevar la aeronave a algún lado?','No. Voy yo a donde esté: tu hangar, la base o donde quedó — es la razón de ser de este servicio, y por eso no hay taller a donde mandarla. La excepción son las <b>piezas pequeñas desmontadas</b>: una tapa, un carenado, una ventanilla o un acrílico sí me los puedes entregar, los reparo y te los devuelvo listos para montar.'],
+   ['¿Trabajas fuera de la Ciudad de México?','Sí. He trabajado en México, Panamá y Guatemala. Para salidas acordamos traslado y estancia antes de viajar, y para una aeronave en tierra salgo en cuanto se confirme.'],
+   ['¿Qué necesitas para cotizar?','Fotos del área de cerca y de lejos, el modelo y la matrícula, y si lo tienes a mano el número de parte o la página del manual. Con eso alcanza para una primera respuesta.'],
+   ['¿Qué entregas al terminar?','La aeronave reparada y un reporte con fotos del antes, el proceso y el después, para que quede en tu bitácora.'],
+   ['¿Trabajas con talleres MRO?','Sí, y es parte de lo que ofrezco: colaboración con talleres para trabajos de estructura y composite, por contrato o por proyecto.'],
+   ['¿Y si el daño excede el manual?','Te lo digo y no se repara: se sustituye. Preferir un remiendo que no ampara el manual es exactamente lo que no se hace aquí.'],
   ],
 
   // ── Contacto ───────────────────────────────────────────────────────────
-  conT:'Cuéntale qué le pasó a tu aeronave',
-  conSub:'Una foto y dos líneas bastan para que te diga si tiene arreglo y cuánto cuesta. Contesta él, no un conmutador.',
+  conT:'Cuéntame qué le pasó a tu aeronave',
+  conSub:'Con una foto y dos líneas te digo si tiene arreglo y cuánto cuesta. Contesto yo, no un conmutador.',
   visorAyuda:'CLIC EN LA FOTO PARA VERLA A TAMAÑO REAL · ← → PARA PASAR',
   kWa:'WHATSAPP', kMail:'CORREO', kIn:'LINKEDIN', kEmp:'EMPRESA', kBase:'BASE', kLic:'LICENCIA',
   formT:'Mándale el caso', fNombre:'NOMBRE', fAeronave:'AERONAVE', fQue:'QUÉ PASÓ',
   phNombre:'Cómo te llamas', phAeronave:'Modelo y matrícula — ej. Bell 407, XA-XXX', phQue:'Dos líneas: dónde está el daño y desde cuándo',
-  formNota:'Se abre WhatsApp con el mensaje ya escrito. Después le mandas las fotos por ahí mismo.',
+  formNota:'Se abre WhatsApp con el mensaje ya escrito. Después me mandas las fotos por ahí mismo.',
   formBtn:'Enviar por WhatsApp',
   waSaludo:'Hola, vi la página de Aeroresinas.',
   waNombre:'Soy', waAeronave:'Aeronave', waQue:'Lo que pasó',
@@ -294,19 +294,19 @@ const T = {
   marcaSub:'HELICOPTER STRUCTURAL REPAIR',
   otroIdioma:'Español',
   nav:[['#reparacion','Services'],['#trabajos','Jobs'],['#flota','Aircraft'],['#metodo','How it works'],
-       ['#tecnicas','Techniques'],['#trayectoria','Who he is'],['#faq','FAQ']],
+       ['#tecnicas','Techniques'],['#trayectoria','Who I am'],['#faq','FAQ']],
 
   heroOjo:'Composites · vacuum techniques · windshields',
   heroT1:'Your helicopter does not travel to a shop.', heroT2:'The shop travels to your helicopter.',
-  heroSub:'Structural repair in fibreglass, acrylics and riveted structures, by a technician with <b>{anios} years at {donde}</b>. At your hangar, in the field, or wherever the aircraft is.',
+  heroSub:'I repair structure in fibreglass, acrylics and riveted structures, with <b>{anios} years at {donde}</b> behind me. I come to your hangar, to the field, or to wherever the aircraft is.',
   ctaDanio:'Send photos of the damage', ctaCaso:'See finished jobs',
-  datos:[['{anios}','Years at {donde}'],['{licencia}','License'],['Bell · Airbus · Robinson','Makes he repairs'],['{paises}','Countries served']],
+  datos:[['{anios}','Years at {donde}'],['{licencia}','License'],['Bell · Airbus · Robinson','Makes I repair'],['{paises}','Countries served']],
   pieHero:'<b>Assessing the damage before touching anything.</b> The panel is measured against the manual: repair or replace.',
   pieAntes:'<b>Before.</b> Delaminated composite on the cabin roof.',
   pieDespues:'<b>After.</b> The same area, ready for paint.',
 
-  repT:'What he repairs', repN:'07 SERVICES',
-  repSub:'Seven jobs, done end to end: damage assessment, repair per the aircraft manual and a documented handover with photos. If something exceeds the manual limits and the part has to be replaced, he tells you before starting — not after.',
+  repT:'What I repair', repN:'07 SERVICES',
+  repSub:'Seven jobs, and I do them end to end: damage assessment, repair per the aircraft manual and a documented handover with photos. If something exceeds the manual limits and the part has to be replaced, I tell you before starting — not after.',
   servicios:[
    ['estruc','Fuselage and cabin structure','fotos/estructura-piel.jpg',
     'Skin, stringers, frames and reinforcements. Damaged material is removed down to sound structure, replaced in the gauge and alloy the manual calls for, and closed with the original rivet pattern.',
@@ -340,7 +340,7 @@ const T = {
 
   trabT:'Jobs, step by step', trabN:'REAL CASES',
   trabNum:'JOB', trabDe:'of', trabAnt:'Previous job', trabSig:'Next job',
-  trabSub:'Every case is one of his repairs, shot while he was doing it. No stock images here: these are the real stages, in order, with what was done at each one.',
+  trabSub:'Every case is a repair of mine, shot while I was doing it. No stock images here: these are the real stages, in order, with what was done at each one.',
   trabajos:[
    {t:'Cabin roof · Bell', z:'Composite · vacuum bag',
     r:'Damage to the cabin roof, above the door. The area was opened, all compromised material removed, new plies of fibre laid, and the surface closed and prepared for paint. The aircraft left with no trace of the repair.',
@@ -423,19 +423,19 @@ const T = {
        ['fotos/estabilizador.jpg','<b>02 · Stabiliser.</b> Leading edge with the fibre exposed, ready to lay up.']]},
   ],
 
-  metT:'How he works', metN:'THE METHOD',
+  metT:'How I work', metN:'THE METHOD',
   metSub:'No fixed shop, no waiting list and no moving the aircraft. Six steps, and the first one is a photo over WhatsApp.',
   pasos:[
-   ['Send photos of the damage','The area close up and from a distance, plus the part number or manual page if you have it. That is enough for him to say whether it is repairable or goes to replacement.'],
-   ['Assessment and quote','He tells you what can be repaired, what has to be replaced, how long it takes and what it costs. The assessment is free.'],
-   ['He goes to the aircraft','He arrives at your hangar with tools and material. No need to move the aircraft or wait for a slot at a shop.'],
+   ['Send me photos of the damage','The area close up and from a distance, plus the part number or manual page if you have it. That is enough for me to say whether it is repairable or goes to replacement.'],
+   ['Assessment and quote','I tell you what can be repaired, what has to be replaced, how long it takes and what it costs. I do not charge for the assessment.'],
+   ['I go to the aircraft','I arrive at your hangar with tools and material. No need to move the aircraft or wait for a slot at a shop.'],
    ['Opened and measured','The damage is properly bounded: material is removed down to a sound area and compared with the manual limits. This is where a serious quote differs from one made off a photo.'],
    ['Repair and cure','Lay-up, riveting, sealing or replacement, with the cure times the material requires. Rushing here is paid for in flight.'],
    ['Handover with report','The repair documented with before, in-progress and after photos, for your logbook.'],
   ],
-  cobT:'Coverage:', cobD:'He has worked for civil, private and government operators in all three countries, in the hangar and in the field. For trips outside his base, travel and lodging are agreed beforehand.',
+  cobT:'Coverage:', cobD:'I have worked for civil, private and government operators in all three countries, in the hangar and in the field. For trips outside my base, we agree travel and lodging beforehand.',
   aogT:'Aircraft on ground (AOG)',
-  aogD:'If you have an aircraft grounded waiting on a structural repair, that is exactly the call he takes first. AOG support with international mobility: he travels as soon as it is confirmed.',
+  aogD:'If you have an aircraft grounded waiting on a structural repair, that is exactly the call I take first. AOG support with international mobility: I travel as soon as it is confirmed.',
   aogCta:'Call about an AOG',
 
   tecT:'The techniques, explained', tecN:'TO JUDGE A QUOTE',
@@ -452,17 +452,17 @@ const T = {
   ],
 
   trayT:'36 years inside an aircraft', trayN:'TRACK RECORD',
-  traySub:'He did not start yesterday and he is not self-taught: he is an aircraft maintenance technician trained and seasoned at <b>Airbus</b>, since 1988. What he does on his own today is what he did for 36 years on a line, with its manuals and its bulletins.',
+  traySub:'I did not start yesterday and I am not self-taught: I am an aircraft maintenance technician trained and seasoned at <b>Airbus</b>, since 1988. What I do on my own today is what I did for 36 years on a line, with its manuals and its bulletins.',
   trayectoria:[
    ['1988 — 2024','Airbus · Maintenance technician','<b>36 years on staff</b>, working structure on A320, A321, ATR 42 and ATR 72 fleets: structural inspection, sheet-metal repair, composites and modifications per <b>SRM, AMM and Service Bulletins</b>. Permanent and temporary repairs, with structural integrity and airworthiness documented.', false],
-   ['2025 — today','Aeroresinas · On his own','Structural repair of <b>helicopters</b>: fibreglass, vacuum techniques, acrylics and riveted structures. For civil, private and government operators in <b>Mexico, Panama and Guatemala</b>, in the hangar or in the field — including <b>AOG support</b> with the aircraft on the ground.', true],
+   ['2025 — today','Aeroresinas · On my own','Structural repair of <b>helicopters</b>: fibreglass, vacuum techniques, acrylics and riveted structures. For civil, private and government operators in <b>Mexico, Panama and Guatemala</b>, in the hangar or in the field — including <b>AOG support</b> with the aircraft on the ground.', true],
   ],
-  capT:'What he has repaired, under that name',
+  capT:'What I have repaired, under that name',
   capacidades:['Radomes','Fuselage skin','Anti-ice boots','Inner cover repairs','Skin replacement','Service bulletins','Antenna installation','Door repair','Corrosion removal','Winglet modification','Dye penetrant inspection','Honeycomb sandwich panel','Doublers for antennas','Vibrating rivet replacement','Vacuum-bag structural repair','Sealing compound','Electrical bonding restoration','Insert installation and removal','Monolithic and sandwich composites','Horizontal stabiliser'],
   capP:'Twenty different jobs, from his record at Airbus. The structural and composite ones are exactly what he applies to a helicopter today: <b>same technique, different aircraft</b>.',
-  pieRetrato:'<b>José Arturo Martínez Ponce.</b> {licencia} licence, {anios} years at {donde}, and today in your hangar.',
-  quienT:'Who does it',
-  quienD:'<b>{nombre}</b> — aircraft maintenance technician, <b>{licencia}</b> licensed, specialised in composites, vacuum techniques and windshields.<br><br>He joined <b>Airbus in 1988</b> and spent <b>36 years</b> in structure: A320, A321, ATR 42 and ATR 72. Radomes, fuselage skin, honeycomb panels, corrosion, winglet modifications, antenna installations with their doublers, vacuum-bag repairs, sealing, electrical bonding. All per SRM, AMM and bulletins, and all documented: on a production line a repair does not exist unless it is written down.<br><br>Since <b>2025 he works on his own</b>, on helicopters: Bell, Airbus Helicopters and Robinson, for civil, private and government operators in <b>Mexico, Panama and Guatemala</b>. In the hangar when possible and in the field when needed, because a grounded aircraft costs money every day.<br><br>He is available for <b>contract projects, urgent AOG support and collaboration with MRO facilities</b>. And he answers himself: no switchboard between your aircraft and the person who will repair it.',
+  pieRetrato:'<b>I am José Arturo Martínez Ponce.</b> {licencia} licence, {anios} years at {donde}, and today in your hangar.',
+  quienT:'Who I am',
+  quienD:'I am <b>{nombre}</b>, an aircraft maintenance technician, <b>{licencia}</b> licensed, specialised in composites, vacuum techniques and windshields.<br><br>I joined <b>Airbus in 1988</b> and spent <b>36 years</b> in structure: A320, A321, ATR 42 and ATR 72. Radomes, fuselage skin, honeycomb panels, corrosion, winglet modifications, antenna installations with their doublers, vacuum-bag repairs, sealing, electrical bonding. All per SRM, AMM and bulletins, and all documented: on a production line a repair does not exist unless it is written down.<br><br>Since <b>2025 I work on my own</b>, on helicopters: Bell, Airbus Helicopters and Robinson, for civil, private and government operators in <b>Mexico, Panama and Guatemala</b>. In the hangar when possible and in the field when needed, because a grounded aircraft costs money every day.<br><br>I am available for <b>contract projects, urgent AOG support and collaboration with MRO facilities</b>. And I answer myself: no switchboard between your aircraft and the person who will repair it.',
   credT:'What backs the work',
   credenciales:[
    ['{licencia} licence','Aircraft maintenance technician licensed by the aviation authority.'],
@@ -473,8 +473,8 @@ const T = {
    ['AOG support and MRO shops','Contract projects, urgent support and collaboration with shops.'],
   ],
 
-  floT:'The aircraft he works on', floN:'IN THE HANGAR',
-  floSub:'Corporate twins, single-engine aerial-work machines, air ambulances and aircraft from operators outside Mexico. These are the type and size that come into the hangar where he repairs — complete, assembled and on the line.',
+  floT:'The aircraft I work on', floN:'IN THE HANGAR',
+  floSub:'Corporate twins, single-engine aerial-work machines, air ambulances and aircraft from operators outside Mexico. These are the type and size that come into the hangar where I repair — complete, assembled and on the line.',
   flota:[
    ['fotos/real-h145.jpg','<b>Airbus corporate twin.</b> Five blades, fenestron and a blue-over-white livery. Mexican registration.'],
    ['fotos/real-sgm.jpg','<b>Single-engine aerial-work machine.</b> Red and white livery of an institutional operator, on high skids.'],
@@ -505,21 +505,21 @@ const T = {
   faq:[
    ['Can it be repaired, or does the part have to be replaced?','It depends on the size of the damage and where it is, and that is set by your aircraft manual, not by anyone’s judgement. That is why the area is opened and measured before a final price: a quote made from a photo alone is an estimate.'],
    ['How long does it take?','A small composite can be done in a day or two; a skin replacement with structure underneath takes longer, and cure times are what they are. You get the estimate with the quote, before work starts.'],
-   ['Do I have to take the aircraft somewhere?','No. He goes to it: your hangar, your base, or wherever it is — that is the whole point of this service, and it is why there is no shop to send it to. The exception is <b>small removed parts</b>: a cover, a fairing, a window or an acrylic panel can be handed over, repaired and returned ready to fit.'],
-   ['Does he work outside Mexico City?','Yes. He has worked in Mexico, Panama and Guatemala. Travel and lodging are agreed beforehand, and for a grounded aircraft he leaves as soon as it is confirmed.'],
-   ['What does he need to quote?','Photos of the area close up and from a distance, the model and registration, and the part number or manual page if you have it. That is enough for a first answer.'],
+   ['Do I have to take the aircraft somewhere?','No. I go to it: your hangar, your base, or wherever it is — that is the whole point of this service, and it is why there is no shop to send it to. The exception is <b>small removed parts</b>: a cover, a fairing, a window or an acrylic panel you can hand to me, and I return it repaired and ready to fit.'],
+   ['Do you work outside Mexico City?','Yes. I have worked in Mexico, Panama and Guatemala. We agree travel and lodging beforehand, and for a grounded aircraft I leave as soon as it is confirmed.'],
+   ['What do you need to quote?','Photos of the area close up and from a distance, the model and registration, and the part number or manual page if you have it. That is enough for a first answer.'],
    ['What do I get at the end?','The repaired aircraft and a report with before, in-progress and after photos, for your logbook.'],
-   ['Does he work with MRO shops?','Yes, and it is part of what he offers: collaboration with shops on structure and composite work, by contract or by project.'],
-   ['What if the damage exceeds the manual?','He tells you, and it is not repaired: it is replaced. Preferring a patch the manual does not cover is exactly what is not done here.'],
+   ['Do you work with MRO shops?','Yes, and it is part of what I offer: collaboration with shops on structure and composite work, by contract or by project.'],
+   ['What if the damage exceeds the manual?','I tell you, and it is not repaired: it is replaced. Preferring a patch the manual does not cover is exactly what is not done here.'],
   ],
 
-  conT:'Tell him what happened to your aircraft',
-  conSub:'One photo and two lines are enough for him to tell you whether it can be fixed and what it costs. He answers, not a switchboard.',
+  conT:'Tell me what happened to your aircraft',
+  conSub:'One photo and two lines and I tell you whether it can be fixed and what it costs. I answer, not a switchboard.',
   visorAyuda:'CLICK THE PHOTO FOR FULL SIZE · ← → TO MOVE',
   kWa:'WHATSAPP', kMail:'EMAIL', kIn:'LINKEDIN', kEmp:'COMPANY', kBase:'BASED IN', kLic:'LICENCE',
   formT:'Send him the case', fNombre:'NAME', fAeronave:'AIRCRAFT', fQue:'WHAT HAPPENED',
   phNombre:'Your name', phAeronave:'Model and registration — e.g. Bell 407, XA-XXX', phQue:'Two lines: where the damage is and since when',
-  formNota:'WhatsApp opens with the message already written. You send the photos right there.',
+  formNota:'WhatsApp opens with the message already written. You send me the photos right there.',
   formBtn:'Send over WhatsApp',
   waSaludo:'Hello, I saw the Aeroresinas page.',
   waNombre:'I am', waAeronave:'Aircraft', waQue:'What happened',
