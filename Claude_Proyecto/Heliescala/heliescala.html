@@ -289,6 +289,25 @@ b,strong{font-weight:600;color:var(--tinta)}
 .gal{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
 .gal .foto{height:280px}
 
+/* ── Tabulador de envíos ───────────────────────────────────────────────────
+   Tres columnas: zona, estados y lo que cuesta llegar ahí. La primera fila va
+   en cian porque es la buena noticia —entrega en persona y sin costo— y es la
+   que busca el cliente de la ciudad, que es la mayoría. */
+.tabu{display:flex;flex-direction:column;gap:11px}
+.zona{display:grid;grid-template-columns:200px minmax(0,1fr) 170px;gap:22px;align-items:center;
+  padding:18px 22px;border-radius:16px;background:var(--vidrio2);border:1px solid var(--linea2)}
+.zona.z1{background:rgba(0,194,212,.08);border-color:rgba(0,194,212,.38)}
+.zona .zn{display:flex;align-items:center;gap:11px;min-width:0}
+.zona .zn b{font-family:var(--fd);font-size:15.5px;font-weight:600;letter-spacing:-.015em;line-height:1.2}
+.zona .zi{font-family:var(--fm);font-size:11px;font-weight:600;color:var(--cian);flex:none}
+.zona .ze{font-size:12.5px;line-height:1.65;color:var(--t2)}
+.zona .zc{justify-self:end;text-align:right;font-family:var(--fm);font-size:13.5px;font-weight:600}
+.zona.z1 .zc{color:var(--cian)}
+.nota-env{display:flex;align-items:flex-start;gap:12px;margin-top:16px;padding:16px 19px;border-radius:13px;
+  background:var(--vidrio2);border:1px solid var(--linea2);font-size:13px;line-height:1.65;color:var(--t2)}
+.nota-env svg{color:var(--cian);flex:none;margin-top:2px}
+.fichas-nota{margin-top:14px;font-size:13px;line-height:1.65;color:var(--t2);max-width:78ch}
+
 /* ── Responsivo ────────────────────────────────────────────────────────── */
 @media(max-width:1080px){
   .cat{grid-template-columns:repeat(2,minmax(0,1fr))}
@@ -301,6 +320,8 @@ b,strong{font-weight:600;color:var(--tinta)}
   .wrap,.barra-in,.pie-in{padding-left:18px;padding-right:18px}
   .hero{grid-template-columns:1fr;gap:28px;padding-top:30px}
   .tuya,.proc,.contacto{grid-template-columns:1fr;gap:26px}
+  .zona{grid-template-columns:1fr;gap:9px}
+  .zona .zc{justify-self:start;text-align:left}
   .hero .foto{height:300px}
   .proc .foto{height:340px}
   .marca .n span{display:none}
@@ -320,6 +341,7 @@ b,strong{font-weight:600;color:var(--tinta)}
 }
 @media(max-width:520px){
   .cat,.fichas,.tuya-fotos{grid-template-columns:1fr}
+  .zona .ze{font-size:12px}
   .form{padding:20px}
 }
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.btn:hover,.pieza:hover{transform:none}}
@@ -337,6 +359,7 @@ b,strong{font-weight:600;color:var(--tinta)}
       <a href="#catalogo" data-t="navCat">Catálogo</a>
       <a href="#tuya" data-t="navTuya">Tu aeronave</a>
       <a href="#proceso" data-t="navProc">Cómo se hace</a>
+      <a href="#envios" data-t="navEnv">Envíos</a>
       <a href="#galeria" data-t="navGal">Galería</a>
     </nav>
     <div class="barra-d">
@@ -381,6 +404,7 @@ b,strong{font-weight:600;color:var(--tinta)}
     </div>
     <div class="cat" id="catalogo-grid"></div>
     <div class="fichas" id="fichas"></div>
+    <p class="fichas-nota" data-t="fichasNota"></p>
   </div>
 </section>
 
@@ -422,6 +446,20 @@ b,strong{font-weight:600;color:var(--tinta)}
   </div>
 </section>
 
+<section id="envios" class="sec sec-panel">
+  <div class="wrap">
+    <div class="sec-h">
+      <div>
+        <h2 class="h2" data-t="envT">A dónde llega</h2>
+        <p class="sub" style="margin-top:10px" data-t="envSub"></p>
+      </div>
+      <div class="sec-n" data-t="envN">ENTREGA Y ENVÍOS</div>
+    </div>
+    <div class="tabu" id="tabu"></div>
+    <div class="nota-env"><i data-ico="caja"></i><span data-t="envNota"></span></div>
+  </div>
+</section>
+
 <section id="galeria" class="sec">
   <div class="cielo"></div>
   <div class="wrap">
@@ -445,9 +483,9 @@ b,strong{font-weight:600;color:var(--tinta)}
         <p class="sub" data-t="conSub"></p>
         <div class="vias">
           <a class="via" id="via-wa" href="#contacto" target="_blank" rel="noopener">
-            <i data-ico="wa"></i><div><span class="k">WHATSAPP</span><span class="v pend" data-campo="whatsapp">[+52 XX XXXX XXXX]</span></div></a>
+            <i data-ico="wa"></i><div><span class="k" data-t="kWa">WHATSAPP</span><span class="v" data-campo="whatsapp"></span></div></a>
           <a class="via" id="via-mail" href="#contacto">
-            <i data-ico="mail"></i><div><span class="k">CORREO</span><span class="v pend" data-campo="correo">[correo@heliescala.com]</span></div></a>
+            <i data-ico="mail"></i><div><span class="k" data-t="kMail">CORREO</span><span class="v" data-campo="correo"></span></div></a>
           <div class="via">
             <i data-ico="pin"></i><div><span class="k" data-t="kBase">TALLER</span><span class="v pend" data-campo="ciudad">[CIUDAD, ESTADO]</span></div></div>
         </div>
@@ -497,7 +535,7 @@ b,strong{font-weight:600;color:var(--tinta)}
 <footer class="pie-p">
   <div class="pie-in">
     <div class="pie-m"><i data-ico="heli"></i><b>HELIESCALA</b></div>
-    <div class="pie-d"><span class="pend" data-campo="ciudad">[CIUDAD]</span> · MÉXICO · <span id="anio"></span></div>
+    <div class="pie-d"><span data-campo="ciudad"></span> · <span id="anio"></span></div>
   </div>
 </footer>
 
@@ -507,14 +545,29 @@ b,strong{font-weight:600;color:var(--tinta)}
    Lo que siga entre corchetes sale marcado en cian: se ve que falta.
    ════════════════════════════════════════════════════════════════════════════ */
 const PERFIL = {
-  ciudad:  '[CIUDAD, ESTADO]',
-  escalas: '[1:XX]',
-  tiempo:  '[X] semanas',
-  envio:   '[Sí / a convenir]',
-  desde:   '[$X,XXX MXN]',
-  whatsapp:    '',                        // solo dígitos, p. ej. '5215512345678'
-  whatsappTxt: '[+52 XX XXXX XXXX]',
-  correo:      '[correo@heliescala.com]',
+  ciudad:  'Ciudad de México',
+  escalas: '[1:XX]',                      // único dato que sigue pendiente
+  tiempo:  '2 semanas',
+  envio:   'En persona o por DHL',
+  desde:   '$1,800 MXN',
+  // Solo dígitos para wa.me (52 = México); `whatsappTxt` es cómo se escribe en pantalla.
+  whatsapp:    '525586184919',
+  whatsappTxt: '+52 55 8618 4919',
+  correo:      'adanarturomartinez@gmail.com',
+  // Tarifa de DHL por zona. Se cotiza sobre la caja ya embalada, así que hasta
+  // que no haya una cifra real la tabla lo dice en vez de inventarla.
+  envZ2: '[$XXX]',
+  envZ3: '[$XXX]',
+  envZ4: '[$XXX]',
+};
+
+/* Lo que cambia de idioma. PERFIL es un solo objeto —un dato, un sitio— pero tres
+   de sus valores son texto, y en inglés no pueden salir en español. Solo se
+   sobrescriben esos. */
+const PERFIL_EN = {
+  ciudad: 'Mexico City',
+  tiempo: '2 weeks',
+  envio:  'In person or by DHL',
 };
 
 /* El catálogo: piezas reales suyas, con la librea que llevan en la foto. Para añadir
@@ -539,8 +592,24 @@ const svg = (k, sz) => '<svg viewBox="0 0 24 24" width="' + (sz||18) + '" height
 const T = {
  es:{
   marcaSub:'HECHO A MANO EN MÉXICO',
-  navCat:'Catálogo', navTuya:'Tu aeronave', navProc:'Cómo se hace', navGal:'Galería',
+  navCat:'Catálogo', navTuya:'Tu aeronave', navProc:'Cómo se hace', navEnv:'Envíos', navGal:'Galería',
+  kWa:'WHATSAPP', kMail:'CORREO',
   otroIdioma:'English',
+  fichasNota:'Los <b>{desde}</b> son el punto de partida, no la tarifa: el precio final depende del modelo, del tamaño y de cuánta decoración lleve — no cuesta lo mismo un fuselaje gris que una librea con escudo, número de unidad y matrícula. Cada encargo se cotiza antes de empezar.',
+
+  /* ── Entrega y envíos ───────────────────────────────────────────────────
+     Los 32 estados repartidos en cuatro zonas. La primera no es una zona de
+     envío: es donde la entrega él en persona, y por eso va aparte y en cian. */
+  envT:'A dónde llega', envN:'ENTREGA Y ENVÍOS',
+  envSub:'En la <b>Ciudad de México y el Estado de México</b> te la entrega él en persona, sin costo. Al resto del país va por <b>DHL</b>, con el envío aparte: sale embalada en caja rígida y con su número de guía.',
+  envZonas:[
+   ['01','Entrega en persona','Ciudad de México · Estado de México','Sin costo'],
+   ['02','Centro','Hidalgo · Morelos · Puebla · Tlaxcala · Querétaro · Guanajuato · San Luis Potosí · Michoacán','@envZ2'],
+   ['03','Occidente y norte','Jalisco · Colima · Nayarit · Aguascalientes · Zacatecas · Durango · Sinaloa · Coahuila · Nuevo León · Tamaulipas · Chihuahua · Sonora','@envZ3'],
+   ['04','Sur, sureste y penínsulas','Guerrero · Oaxaca · Veracruz · Chiapas · Tabasco · Campeche · Yucatán · Quintana Roo · Baja California · Baja California Sur','@envZ4'],
+  ],
+  envNota:'El envío se cobra aparte y lo cotiza DHL sobre la caja ya embalada: una réplica pesa poco pero ocupa, y en paquetería manda el volumen, no el peso. Si encargas varias piezas, viajan en una sola caja y el envío se reparte entre todas.',
+
   galT:'Más piezas', galN:'GALERÍA',
   galSub:'Entregas de varias unidades y producción en curso. Cuando el encargo es una flota, todas salen iguales.',
   galeria:[
@@ -642,8 +711,21 @@ const T = {
  },
  en:{
   marcaSub:'HANDMADE IN MEXICO',
-  navCat:'Catalogue', navTuya:'Your aircraft', navProc:'How it is made', navGal:'Gallery',
+  navCat:'Catalogue', navTuya:'Your aircraft', navProc:'How it is made', navEnv:'Shipping', navGal:'Gallery',
+  kWa:'WHATSAPP', kMail:'EMAIL',
   otroIdioma:'Español',
+  fichasNota:'<b>{desde}</b> is the starting point, not the price list: the final figure depends on the model, the size and how much the markings involve — a plain grey fuselage is not the same job as a full livery with crest, unit number and registration. Every order is quoted before work starts.',
+
+  envT:'Where it goes', envN:'DELIVERY & SHIPPING',
+  envSub:'In <b>Mexico City and the State of Mexico</b> he hands it to you in person, at no cost. Anywhere else in the country it travels by <b>DHL</b>, shipping charged separately: it leaves packed in a rigid box, with its tracking number.',
+  envZonas:[
+   ['01','Handed over in person','Mexico City · State of Mexico','No charge'],
+   ['02','Central','Hidalgo · Morelos · Puebla · Tlaxcala · Querétaro · Guanajuato · San Luis Potosí · Michoacán','@envZ2'],
+   ['03','West and north','Jalisco · Colima · Nayarit · Aguascalientes · Zacatecas · Durango · Sinaloa · Coahuila · Nuevo León · Tamaulipas · Chihuahua · Sonora','@envZ3'],
+   ['04','South, southeast and the peninsulas','Guerrero · Oaxaca · Veracruz · Chiapas · Tabasco · Campeche · Yucatán · Quintana Roo · Baja California · Baja California Sur','@envZ4'],
+  ],
+  envNota:'Shipping is charged separately and quoted by DHL on the packed box: a replica weighs little but takes up room, and couriers charge by volume, not by weight. Order several pieces and they travel in one box, sharing the shipping.',
+
   galT:'More pieces', galN:'GALLERY',
   galSub:'Multi-unit deliveries and work in progress. When the order is a fleet, they all come out identical.',
   galeria:[
@@ -743,19 +825,32 @@ const T = {
 let IDIOMA = 'es';
 function marcado(v){ return /^\[.*\]$/.test(String(v).trim()); }
 
+function perfil(){ return IDIOMA === 'en' ? Object.assign({}, PERFIL, PERFIL_EN) : PERFIL; }
+function sub(s){ return String(s).replace(/\{(\w+)\}/g, function(m, k){
+  const v = perfil()[k]; return v == null ? m : v; }); }
+
 function pinta(){
-  const t = T[IDIOMA];
+  const t = T[IDIOMA], P = perfil();
   document.documentElement.lang = IDIOMA;
   document.querySelectorAll('[data-t]').forEach(function(el){
     const k = el.getAttribute('data-t');
-    if(typeof t[k] === 'string') el.innerHTML = t[k];
+    if(typeof t[k] === 'string') el.innerHTML = sub(t[k]);
   });
   document.querySelectorAll('[data-campo]').forEach(function(el){
     const k = el.getAttribute('data-campo');
-    const v = k === 'whatsapp' ? PERFIL.whatsappTxt : PERFIL[k];
+    const v = k === 'whatsapp' ? P.whatsappTxt : P[k];
     if(v == null) return;
     el.textContent = v; el.classList.toggle('pend', marcado(v));
   });
+  // Tabulador de envíos. Cada zona es [nº, nombre, estados, costo], y el costo
+  // puede ser texto fijo o '@clave' para leerlo de PERFIL y marcarlo si falta.
+  document.getElementById('tabu').innerHTML = t.envZonas.map(function(z, i){
+    const c = z[3].charAt(0) === '@' ? (P[z[3].slice(1)] || '') : z[3];
+    return '<div class="zona' + (i === 0 ? ' z1' : '') + '">' +
+      '<div class="zn"><span class="zi">' + z[0] + '</span><b>' + z[1] + '</b></div>' +
+      '<div class="ze">' + z[2] + '</div>' +
+      '<div class="zc' + (marcado(c) ? ' pend' : '') + '">' + c + '</div></div>';
+  }).join('');
   // Catálogo. Cada pieza es [clave, nombre, foto, texto, etiquetas, modelo].
   document.getElementById('catalogo-grid').innerHTML = t.piezas.map(function(p, i){
     const tags = p[4] || [];
@@ -768,7 +863,7 @@ function pinta(){
       '</div></div></article>';
   }).join('');
   document.getElementById('fichas').innerHTML = t.fichas.map(function(f){
-    const v = PERFIL[f[2]] || '';
+    const v = P[f[2]] || '';
     return '<div class="ficha">' + svg(f[0], 18) + '<div><span class="k">' + f[1] + '</span>' +
       '<span class="v' + (marcado(v) ? ' pend' : '') + '">' + v + '</span></div></div>';
   }).join('');
@@ -824,7 +919,7 @@ function abrirFicha(i){
     return '<div class="fichap-bl"><div class="h">' + svg(b[1], 13) + (t.fpBl[b[0]] || '') + '</div><p>' + m[b[0]] + '</p></div>';
   }).join('') : '';
   document.getElementById('fp-rep').innerHTML = t.fichas.map(function(f){
-    const v = PERFIL[f[2]] || '';
+    const v = perfil()[f[2]] || '';
     return '<div><span class="k" style="font-family:var(--fm);font-size:9px;letter-spacing:.12em;color:var(--t3)">' + f[1] + '</span>' +
       '<span class="v' + (marcado(v) ? ' pend' : '') + '" style="font-size:13.5px;font-weight:600">' + v + '</span></div>';
   }).join('');

@@ -26,7 +26,7 @@ El archivo es **autónomo** —su CSS va dentro— porque algún día tendrá su
 ## Estructura
 
 Barra → hero → **catálogo** (8 piezas reales) → **tu aeronave** → **cómo se hace una** (4 pasos,
-con la foto del taller) → **galería** → contacto.
+con la foto del taller) → **entrega y envíos** → **galería** → contacto.
 
 **"La réplica de tu propia aeronave" es la sección que vende**, no el catálogo: el catálogo prueba
 que puede hacer cualquier modelo, y esa sección convierte esa prueba en un encargo — el helicóptero
@@ -95,6 +95,40 @@ modelo son —el par azul tiene rotor de dos palas con barra estabilizadora, as�
 qué es la pieza) y marca el modelo como pendiente de confirmar con su papá. En cuanto lo diga, es
 una línea: se le pone la clave del modelo y su ficha en `T.*.modelos`.
 
+## Entrega y envíos — el tabulador
+
+Adán, 2026-09-17: *"ciudad de méxico y estado de méxico entregas personales, envíos por DHL costo
+extra, haz un tabulador de estados o sea añade al diseño eso"*. La sección `#envios` es esa tabla:
+**las 32 entidades del país repartidas en cuatro zonas**, y qué cuesta llegar a cada una.
+
+| Zona | Entidades | Envío |
+|---|---|---|
+| **01 · Entrega en persona** | Ciudad de México, Estado de México (2) | **Sin costo** — se la entrega él |
+| 02 · Centro | Hidalgo, Morelos, Puebla, Tlaxcala, Querétaro, Guanajuato, San Luis Potosí, Michoacán (8) | DHL — `envZ2` |
+| 03 · Occidente y norte | Jalisco, Colima, Nayarit, Aguascalientes, Zacatecas, Durango, Sinaloa, Coahuila, Nuevo León, Tamaulipas, Chihuahua, Sonora (12) | DHL — `envZ3` |
+| 04 · Sur, sureste y penínsulas | Guerrero, Oaxaca, Veracruz, Chiapas, Tabasco, Campeche, Yucatán, Quintana Roo, Baja California, Baja California Sur (10) | DHL — `envZ4` |
+
+**La primera fila va en cian y las otras no**: es la buena noticia —entrega en mano, sin costo— y
+es la que busca el cliente de la ciudad, que es la mayoría. Las otras tres esperan la tarifa.
+
+Cada zona es `[nº, nombre, estados, costo]` en `T.*.envZonas`. El costo puede ser **texto fijo**
+(«Sin costo») o **`'@clave'`**, y entonces se lee de `PERFIL` y se marca en cian si todavía falta —
+un solo mecanismo para las dos cosas.
+
+La nota del pie explica lo que sorprende al cliente: **el envío lo cotiza DHL sobre la caja ya
+embalada**, porque en paquetería manda el volumen y no el peso, y una réplica pesa poco pero ocupa.
+Varias piezas viajan en una caja y reparten el envío.
+
+## El precio: `$1,800` es el punto de partida
+
+Bajo las cuatro fichas del catálogo hay una línea que lo dice: el precio final depende del modelo,
+del tamaño y de cuánta decoración lleve — **no cuesta lo mismo un fuselaje gris que una librea con
+escudo, número de unidad y matrícula**. Cada encargo se cotiza antes de empezar.
+
+La cifra se escribe `{desde}` en el texto y la sustituye `sub()` desde `PERFIL`, para no tener el
+precio en dos sitios (Regla 1): sale en la ficha del catálogo, en el panel de cada helicóptero y en
+esa nota, y se cambia en una línea.
+
 ## Las fotos
 
 Las 15 de `fotos/` salen de las 300 originales de Adán (`C:\Users\esped\Desktop\Aeroresinas\`,
@@ -107,12 +141,27 @@ fotos de estudio con fondo blanco —las mejores que tiene— y de ahí sale tod
 
 ## Lo que hay que rellenar — `PERFIL`
 
-Escalas, tiempo de entrega, envío, precio desde, WhatsApp, correo y ciudad. Ocho marcas, todas en
-la constante `PERFIL` al principio del `<script>`, y salen **marcadas en cian** en la página.
+Ya están ciudad (Ciudad de México), tiempo (2 semanas), envío, precio desde ($1,800 MXN), WhatsApp
+y correo. **Quedan cuatro marcas**, todas en la constante `PERFIL` y todas **en cian** en la página:
 
-`whatsapp` va en formato internacional y **solo dígitos** (`5215512345678`), que es lo que pide
-`wa.me`. El formulario arma el mensaje con modelo y librea y abre WhatsApp con él ya escrito; sin
-servidor, igual que Aeroresinas.
+| Falta | Dónde se ve |
+|---|---|
+| `escalas` | En la ficha del catálogo y en el panel de cada helicóptero — dos veces |
+| `envZ2`, `envZ3`, `envZ4` | La columna de costo del tabulador, una por zona |
+
+Las tres tarifas de DHL **no se inventan**: cambian con el volumen de la caja, y un precio que
+después no se cumple es peor que un hueco declarado.
+
+`whatsapp` va en formato internacional y **solo dígitos** (`525586184919`), que es lo que pide
+`wa.me`; `whatsappTxt` (`+52 55 8618 4919`) es cómo se escribe en pantalla. El formulario arma el
+mensaje con modelo y librea y abre WhatsApp con él ya escrito; sin servidor, igual que Aeroresinas.
+
+### `PERFIL_EN`
+
+`PERFIL` es **un solo objeto** —un dato, un sitio— pero tres de sus valores son texto y en inglés
+no pueden salir en español: `ciudad`, `tiempo` y `envio`. `PERFIL_EN` sobrescribe **solo esos
+tres**, y `perfil()` devuelve la mezcla según el idioma. El resto (precio, teléfono, correo,
+tarifas) es el mismo valor en los dos idiomas y no se duplica.
 
 ## Idioma: español por defecto, inglés a un toque
 
@@ -150,10 +199,19 @@ píldoras: ver "La barra de apps" en `../Dashboard/readme_dashboard.md`.
 
 ## Comprobado
 
-Chromium `file://` a 1600 y 390 px, en español y en inglés: 16 imágenes, **ninguna rota**, 8 piezas
-en el catálogo, 3 de galería, sin desborde horizontal, sin errores de consola y sin marcadores sin
-resolver. Desde el Dashboard la píldora abre la página. **Cero referencias a Aeroresinas** en el
+Chromium `file://` a 1600 y 390 px, en español y en inglés: 7 secciones, 16 imágenes, **ninguna
+rota**, 8 piezas en el catálogo, 3 de galería, sin desborde horizontal, sin errores de consola y
+**sin `{marcadores}` sin sustituir**. Los cuatro huecos que quedan salen marcados y son los cuatro
+esperados. Desde el Dashboard la píldora abre la página. **Cero referencias a Aeroresinas** en el
 cuerpo del documento (la única mención es la ruta en el comentario del `<style>`).
+
+La única imagen que el navegador reporta sin cargar es `#fp-img`, el `<img>` del panel de ficha:
+nace **sin** atributo `src` a propósito y está oculto hasta que se abre una ficha.
+
+**El tabulador**: 4 zonas, 32 entidades sin repetir ninguna, la fila 01 en cian con «Sin costo» y
+las otras tres con su marca. A 1600 px son tres columnas; bajo 820 px cada zona se apila y el costo
+se alinea a la izquierda. Los contactos apuntan a `wa.me/525586184919` y a
+`mailto:adanarturomartinez@gmail.com`.
 
 **El idioma se probó con el navegador puesto en `en-US`**, que es el caso que fallaba: la página
 abre en español, el botón dice *English*, cambia y vuelve. En 390px el menú es visible con sus 5

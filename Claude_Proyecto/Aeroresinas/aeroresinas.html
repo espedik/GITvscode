@@ -488,11 +488,13 @@ b,strong{font-weight:600;color:var(--tinta)}
         <p class="sub" data-t="conSub"></p>
         <div class="vias">
           <a class="via" id="via-wa" href="#contacto" target="_blank" rel="noopener">
-            <i data-ico="wa"></i><div><span class="k">WHATSAPP</span><span class="v" data-campo="whatsappTxt"></span></div></a>
+            <i data-ico="wa"></i><div><span class="k" data-t="kWa"></span><span class="v" data-campo="whatsappTxt"></span></div></a>
           <a class="via" id="via-mail" href="#contacto">
-            <i data-ico="mail"></i><div><span class="k">CORREO</span><span class="v" data-campo="correo"></span></div></a>
+            <i data-ico="mail"></i><div><span class="k" data-t="kMail"></span><span class="v" data-campo="correo"></span></div></a>
           <a class="via" id="via-in" href="#" target="_blank" rel="noopener">
-            <i data-ico="linkedin"></i><div><span class="k">LINKEDIN</span><span class="v" data-campo="linkedinTxt"></span></div></a>
+            <i data-ico="linkedin"></i><div><span class="k" data-t="kIn"></span><span class="v" data-campo="linkedinTxt"></span></div></a>
+          <a class="via" id="via-emp" href="#" target="_blank" rel="noopener">
+            <i data-ico="linkedin"></i><div><span class="k" data-t="kEmp"></span><span class="v" data-campo="linkedinEmpTxt"></span></div></a>
           <div class="via">
             <i data-ico="pin"></i><div><span class="k" data-t="kBase"></span><span class="v" data-campo="ciudad"></span></div></div>
           <div class="via">
@@ -606,6 +608,7 @@ function pinta(){
   document.getElementById('via-wa').href = wa;
   document.getElementById('wa-flota').href = wa;
   document.getElementById('via-in').href = PERFIL.linkedin;
+  document.getElementById('via-emp').href = PERFIL.linkedinEmp;
   document.getElementById('via-mail').href = marcado(PERFIL.correo) ? '#contacto' : 'mailto:' + PERFIL.correo;
   // El botón del AOG lleva el mensaje ya escrito: quien tiene una aeronave parada no está
   // para redactar.

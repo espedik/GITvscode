@@ -30,9 +30,14 @@ const PERFIL = {
   // Solo dígitos para wa.me (52 = México); `whatsappTxt` es cómo se escribe en pantalla.
   whatsapp:    '525586184919',
   whatsappTxt: '+52 55 8618 4919',
-  correo:      '[correo@aeroresinas.com]',
-  linkedin:    'https://www.linkedin.com/company/107151473/',
-  linkedinTxt: 'Aeroresinas en LinkedIn',
+  correo:      'adanarturomartinez@gmail.com',
+  // Dos enlaces distintos y los dos importan: el PERSONAL es la prueba de los 36
+  // años en Airbus —lo que hace que un operador confíe— y el de EMPRESA es la
+  // marca. Por eso salen en filas separadas y con etiqueta propia.
+  linkedin:    'https://www.linkedin.com/in/jose-arturo-martinez-ponce-34697b243/',
+  linkedinTxt: 'José Arturo Martínez Ponce',
+  linkedinEmp:    'https://www.linkedin.com/company/107151473/',
+  linkedinEmpTxt: 'Aeroresinas',
 };
 
 const T = {
@@ -202,7 +207,7 @@ const T = {
   faq:[
    ['¿Puede repararse o hay que cambiar la pieza?','Depende del tamaño del daño y de dónde esté, y eso lo fija el manual de tu aeronave, no el criterio de nadie. Por eso la zona se abre y se mide antes de dar un precio definitivo: un presupuesto hecho solo por foto es una estimación.'],
    ['¿Cuánto tarda?','Un composite pequeño puede quedar en uno o dos días; una sustitución de piel con estructura debajo lleva más, y el curado tiene sus tiempos y no se acortan. La estimación te la da con el presupuesto, antes de empezar.'],
-   ['¿Tengo que llevar la aeronave a algún lado?','No. Va él a donde esté: tu hangar, la base o donde quedó. Es la razón de ser de este servicio.'],
+   ['¿Tengo que llevar la aeronave a algún lado?','No. Va él a donde esté: tu hangar, la base o donde quedó — es la razón de ser de este servicio, y por eso no hay taller a donde mandarla. La excepción son las <b>piezas pequeñas desmontadas</b>: una tapa, un carenado, una ventanilla o un acrílico sí se los puedes entregar, los repara y te los devuelve listos para montar.'],
    ['¿Trabaja fuera de la Ciudad de México?','Sí. Ha trabajado en México, Panamá y Guatemala. Para salidas se acuerdan traslado y estancia antes de viajar, y para una aeronave en tierra se sale en cuanto se confirme.'],
    ['¿Qué necesita para cotizar?','Fotos del área de cerca y de lejos, el modelo y la matrícula, y si lo tienes a mano el número de parte o la página del manual. Con eso alcanza para una primera respuesta.'],
    ['¿Qué entrega al terminar?','La aeronave reparada y un reporte con fotos del antes, el proceso y el después, para que quede en tu bitácora.'],
@@ -213,7 +218,7 @@ const T = {
   // ── Contacto ───────────────────────────────────────────────────────────
   conT:'Cuéntale qué le pasó a tu aeronave',
   conSub:'Una foto y dos líneas bastan para que te diga si tiene arreglo y cuánto cuesta. Contesta él, no un conmutador.',
-  kBase:'BASE', kLic:'LICENCIA',
+  kWa:'WHATSAPP', kMail:'CORREO', kIn:'LINKEDIN', kEmp:'EMPRESA', kBase:'BASE', kLic:'LICENCIA',
   formT:'Mándale el caso', fNombre:'NOMBRE', fAeronave:'AERONAVE', fQue:'QUÉ PASÓ',
   phNombre:'Cómo te llamas', phAeronave:'Modelo y matrícula — ej. Bell 407, XA-XXX', phQue:'Dos líneas: dónde está el daño y desde cuándo',
   formNota:'Se abre WhatsApp con el mensaje ya escrito. Después le mandas las fotos por ahí mismo.',
@@ -380,7 +385,7 @@ const T = {
   faq:[
    ['Can it be repaired, or does the part have to be replaced?','It depends on the size of the damage and where it is, and that is set by your aircraft manual, not by anyone’s judgement. That is why the area is opened and measured before a final price: a quote made from a photo alone is an estimate.'],
    ['How long does it take?','A small composite can be done in a day or two; a skin replacement with structure underneath takes longer, and cure times are what they are. You get the estimate with the quote, before work starts.'],
-   ['Do I have to take the aircraft somewhere?','No. He goes to it: your hangar, your base, or wherever it is. That is the whole point of this service.'],
+   ['Do I have to take the aircraft somewhere?','No. He goes to it: your hangar, your base, or wherever it is — that is the whole point of this service, and it is why there is no shop to send it to. The exception is <b>small removed parts</b>: a cover, a fairing, a window or an acrylic panel can be handed over, repaired and returned ready to fit.'],
    ['Does he work outside Mexico City?','Yes. He has worked in Mexico, Panama and Guatemala. Travel and lodging are agreed beforehand, and for a grounded aircraft he leaves as soon as it is confirmed.'],
    ['What does he need to quote?','Photos of the area close up and from a distance, the model and registration, and the part number or manual page if you have it. That is enough for a first answer.'],
    ['What do I get at the end?','The repaired aircraft and a report with before, in-progress and after photos, for your logbook.'],
@@ -390,7 +395,7 @@ const T = {
 
   conT:'Tell him what happened to your aircraft',
   conSub:'One photo and two lines are enough for him to tell you whether it can be fixed and what it costs. He answers, not a switchboard.',
-  kBase:'BASED IN', kLic:'LICENCE',
+  kWa:'WHATSAPP', kMail:'EMAIL', kIn:'LINKEDIN', kEmp:'COMPANY', kBase:'BASED IN', kLic:'LICENCE',
   formT:'Send him the case', fNombre:'NAME', fAeronave:'AIRCRAFT', fQue:'WHAT HAPPENED',
   phNombre:'Your name', phAeronave:'Model and registration — e.g. Bell 407, XA-XXX', phQue:'Two lines: where the damage is and since when',
   formNota:'WhatsApp opens with the message already written. You send the photos right there.',
