@@ -824,27 +824,56 @@ sobrevive a recargar y a 1600px no hay un solo desborde. Sin errores de consola.
 
 ## Mi Día, en detalle
 
-La pantalla que más se usa. Diseño **"agenda vertical"** (la dirección B de `diseno-midia/`,
-elegida por Adán el 2026-09-13: *"me gusta la opción B, hazla"*), tras *"siento que está muy
-amontonado y no me está aportando mucho y hay cosas atrasadas, mejora el diseño y ve qué más le
-puedes meter"*. Lo que había, medido a 1600×1000: siete bloques apilados —frase, tira de 7 días,
-cinta, «Ahora mismo», botón de invertir, cuatro tarjetas y un enlace— que aun así dejaban 200 px
-vacíos abajo, y tarjetas a 10.5–12 px con la mitad hueca.
+La pantalla que más se usa. La agenda es el diseño **"tres franjas plegables"** (la dirección C
+de `diseno-midia/`, elegida por Adán el 2026-09-17: *"la C me gusta"*, tras *"esto se ve muuuy
+amontonado"*). Antes fue "agenda vertical", que resolvió el amontonamiento de tarjetas pero
+generó otro: 23 filas iguales seguidas.
 
-### La agenda del día
+### La agenda del día — tres franjas plegables
 
-La columna izquierda (420 px, toda la altura) es el día de arriba abajo, como un calendario: una
-fila por bloque de `RUTINA_TASKS` con la hora al margen, el color de su categoría en el punto, la
-duración a la derecha, **el bloque en curso en verde** y los hechos apagados y tachados. Arriba,
-la fecha, el reloj en grande (abre el calendario del año, como antes) y el resumen `0 de 14
-bloques hechos · quedan 8h 15m`; abajo, **Marcar el bloque actual** (`quickMarkDone()`) y
-*Coach →*. La pinta `pintarAgendaDia()` desde `renderDia()`, con los mismos cálculos que tenía la
-cinta (`finDeBloque`, `rtDur`, `leafItems`, `tituloBloque`).
+La columna izquierda (420 px, toda la altura) es el día repartido en **Mañana, Tarde y Noche**.
+Los cortes son fijos, **13:00 y 19:00**, y no se mueven con el reloj: si dependieran de la hora,
+la mañana cambiaría de tamaño a lo largo del día y dejarías de reconocerla de un vistazo.
 
-**Tocar una fila abre ese bloque en el AHORA** (`tocarBloque(id)` → `cintaSel`), igual que antes
-tocar una ficha; **tocar un día de la tira de 7** (`verDiaSemana`) cambia la agenda a ese día y
-el resumen dice cuál es. La fila activa se trae a la vista sola (`scrollIntoView`), porque con
-21-26 bloques entre semana la de la tarde queda fuera del alto.
+**Solo una franja está abierta.** Se abre sola la del bloque en curso —o la primera con bloques
+si el día que miras no es hoy— y las otras dos se resumen en **una fila de 61 px**: nombre,
+rango real de horas, cuántos bloques son, y **un punto por bloque, verde si está hecho**. Esos
+puntos son lo que hace que plegar no cueste información: para saber cómo va la mañana no hace
+falta verla, hace falta contar sus verdes. Los bloques `fijo` (los que no se marcan) salen como
+cuadrito y no entran en el `N de M hechos`.
+
+`toggleFranja(k)` abre y cierra. Lo que abras **se queda abierto** el resto de la sesión, incluso
+al tocar un bloque o cambiar de día: `agFrAbiertas` es un `Set` en memoria y `agFrAuto` recuerda
+si ya decidiste tú. **No va a `localStorage` a propósito** — es estado de sesión, no un dato, y
+una clave más sería una clave más que mantener.
+
+Dentro de la franja abierta, una fila por bloque de `RUTINA_TASKS`: hora al margen, el color de su
+categoría en el punto, duración a la derecha, **el bloque en curso en verde con los minutos que le
+quedan**, y los hechos apagados y tachados. **El título ocupa dos líneas** (tres en el bloque en
+curso) en vez de cortarse con puntos suspensivos. La pinta `pintarAgendaDia()` desde `renderDia()`,
+con los mismos cálculos de siempre (`finDeBloque`, `rtDur`, `leafItems`, `tituloBloque`).
+
+Arriba: la fecha, el reloj en grande (abre el calendario del año) y el resumen
+`0 de 21 bloques hechos · quedan 4h 50m`; abajo, **Marcar el bloque actual** (`quickMarkDone()`) y
+*Coach →*.
+
+**Tocar una fila abre ese bloque en el AHORA** (`tocarBloque(id)` → `cintaSel`); **tocar un día de
+la tira de 7** (`verDiaSemana`) cambia la agenda a ese día. La fila activa se trae a la vista sola
+(`scrollIntoView`), porque dentro de una franja de 11 bloques también puede quedar fuera.
+
+**Lo que se midió, antes y después** (jueves 17 de septiembre, 19:39, 23 bloques, hora congelada):
+
+| | Antes | Ahora |
+|---|---|---|
+| Filas en pantalla | 23 | **11** |
+| Títulos cortados a 1600 px | **17 de 23** | 3 de 11 |
+| Títulos cortados en iPad | 3 de 23 | **0 de 11** |
+| Títulos cortados en móvil | 20 de 23 | 4 de 11 |
+| ¿Hace falta desplazar a 1600 px? | sí (800 px en una caja de 731) | **no** (731 de 731) |
+
+Las dos franjas cerradas ocupan **61 px cada una**; sus 12 filas ocupaban 420 px. Si abres las
+tres, cada una se reparte el alto y su cuerpo se desplaza por dentro, así que la agenda **nunca
+crece más allá del panel**.
 
 La **cinta** (riel proporcional + fichas) salió de la pantalla: la agenda hace su trabajo de
 arriba abajo y sin deslizar. `pintarCintaDia()`, `centrarFichaActiva()` y `cintaScroll()` siguen

@@ -1,257 +1,131 @@
 <!doctype html>
-<html>
+<html lang="es">
 <head>
-  <meta charset="utf-8">
-  <script src="./support.js"></script>
+<meta charset="utf-8">
+<title>Mi Día — Ahora y lo que viene</title>
+<script src="./support.js"></script>
 </head>
 <body>
 <x-dc>
 <helmet>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&display=swap">
-  <style>
-    body { margin: 0; font-family: 'Inter', -apple-system, 'Segoe UI', sans-serif; }
-    a { color: var(--cy, #047a6b); } a:hover { color: var(--g, #00a758); }
-    .raiz { --bg: #f2f2f6; --text: #16161a; --text2: #5c5f70; --text3: #63667c; --g: #00a758; --cy: #047a6b; --o: #b8632c; --r: #c81e3a; --w: #a8790a;
-            --ov: 0,0,0; --g-rgb: 0,167,88; --cy-rgb: 4,122,107; --o-rgb: 184,99,44; --card: rgba(255,255,255,.85); --card-br: rgba(0,0,0,.12); --topbar: rgba(255,255,255,.72); }
-    .raiz.oscuro { --bg: #05050a; --text: #f4f4f8; --text2: #9a9db3; --text3: #8589a8; --g: #00e87a; --cy: #00e0c0; --o: #ff8a3d; --r: #ff5c5c; --w: #ffd93d;
-            --ov: 255,255,255; --g-rgb: 0,232,122; --cy-rgb: 0,224,192; --o-rgb: 255,138,61; --card: rgba(255,255,255,.06); --card-br: rgba(255,255,255,.13); --topbar: rgba(6,6,14,.65); }
-    .mono { font-family: 'Space Grotesk', monospace; font-variant-numeric: tabular-nums; }
-    .ttl { font-family: 'Fraunces', Georgia, serif; }
-    .lbl { font-family: 'Space Grotesk', monospace; font-size: 10px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: var(--text3); }
-    .tile { background: var(--card); border: 1px solid var(--card-br); border-radius: 18px; box-shadow: 0 10px 40px rgba(0,0,0,.08); }
-    .hair { border-top: 1px solid rgba(var(--ov), .09); }
-    .hd { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
-    .hd a { font-family: 'Space Grotesk', monospace; font-size: 10px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; text-decoration: none; }
-    /* Ficha de la cinta */
-    .fic { flex: none; height: 74px; border-radius: 12px; border: 1px solid rgba(var(--ov), .1); background: rgba(var(--ov), .03); padding: 9px 11px; display: flex; flex-direction: column; gap: 4px; box-sizing: border-box; }
-    .fic .h { display: flex; justify-content: space-between; font-family: 'Space Grotesk', monospace; font-size: 10.5px; font-weight: 700; color: var(--text3); }
-    .fic .t { font-size: 12.5px; font-weight: 600; color: var(--text2); line-height: 1.3; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
-    .fic.hecho { opacity: .55; }
-    .fic.ahora { background: rgba(var(--g-rgb), .12); border-color: rgba(var(--g-rgb), .5); }
-    .fic.ahora .h, .fic.ahora .t { color: var(--text); }
-    /* Hábitos */
-    .hab { display: grid; grid-template-columns: 22px minmax(0, 1fr) auto; gap: 10px; align-items: center; padding: 7px 0; border-top: 1px solid rgba(var(--ov), .07); }
-    .hab:first-child { border-top: none; }
-    .hab .c { width: 22px; height: 22px; border-radius: 50%; border: 1.5px solid rgba(var(--ov), .2); display: flex; align-items: center; justify-content: center; color: #05050a; }
-    .hab.ok .c { background: var(--g); border-color: var(--g); }
-    .hab .n { font-size: 13px; font-weight: 600; color: var(--text); }
-    .hab.ok .n { color: var(--text3); text-decoration: line-through; }
-    .hab .a { display: block; font-size: 10.5px; color: var(--text3); font-weight: 500; }
-    .hab .r { font-family: 'Space Grotesk', monospace; font-size: 10.5px; font-weight: 700; color: var(--text3); }
-    /* Filas de módulos */
-    .fila { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; padding: 6px 0; border-top: 1px solid rgba(var(--ov), .07); font-size: 12.5px; color: var(--text2); }
-    .fila:first-child { border-top: none; }
-    .fila b { color: var(--text); font-weight: 600; }
-    .fila .m { font-family: 'Space Grotesk', monospace; font-weight: 700; color: var(--text); white-space: nowrap; }
-    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 40px; padding: 0 16px; border-radius: 10px; font-size: 12.5px; font-weight: 800; font-family: inherit; border: 1px solid var(--card-br); background: rgba(var(--ov), .06); color: var(--text); }
-    .btn.primario { background: var(--g); border-color: var(--g); color: #05050a; }
-    .pend { display: grid; grid-template-columns: 16px minmax(0, 1fr); gap: 9px; align-items: start; padding: 7px 0; border-top: 1px solid rgba(var(--ov), .07); font-size: 12.5px; color: var(--text2); line-height: 1.4; }
-    .pend:first-child { border-top: none; }
-    .pend i { width: 14px; height: 14px; border-radius: 4px; border: 1.5px solid rgba(var(--ov), .25); margin-top: 2px; }
-    .dia { flex: 1; height: 44px; border-radius: 9px; position: relative; overflow: hidden; background: rgba(var(--ov), .06); display: flex; align-items: flex-end; padding: 5px 7px; box-sizing: border-box; }
-    .dia span { font-family: 'Space Grotesk', monospace; font-size: 9.5px; font-weight: 700; color: #fff; text-shadow: 0 1px 4px rgba(0,0,0,.7); position: relative; }
-    .dia img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: .85; }
-    .dia.hoy { outline: 2px solid var(--g); outline-offset: 1px; }
-  </style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+body{margin:0;font-family:'Inter',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#00e87a}a:hover{color:#5cffb4}
+</style>
 </helmet>
 
-<div class="raiz {{ tema.cls }}" style="width: 1600px; height: 1000px; background: var(--bg); position: relative; overflow: hidden">
-  <div style="position: absolute; left: 0; right: 0; top: 0; height: 54px; background: var(--topbar); border-bottom: 1px solid rgba(var(--ov), .08); display: flex; align-items: center; justify-content: center; gap: 28px; font-size: 12.5px; font-weight: 600; color: var(--text2)">
-    <span style="color: var(--text)">Coach</span><span>Finanzas</span><span>Skincare</span><span>Salud</span><span>Ejercicio</span><span>Comida</span><span>Dentista</span><span>Vestimenta</span><span>Alemán</span><span>Entrevistas</span>
-  </div>
-  <div style="position: absolute; left: 18px; top: 70px; width: 52px; height: 910px; border-radius: 16px; background: var(--card); border: 1px solid var(--card-br)"></div>
+<div style="width: 440px; height: 920px; box-sizing: border-box; background: linear-gradient(162deg, #17393e 0%, #0f2b2f 42%, #0b2225 100%); border-radius: 22px; border: 1px solid rgba(255,255,255,0.08); padding: 20px 18px 18px; display: flex; flex-direction: column; gap: 14px; color: #f4f4f8; overflow: hidden;">
 
-  <!-- slide-inner: 1440 × 900 -->
-  <div style="position: absolute; left: 96px; top: 68px; width: 1440px; height: 912px; display: flex; flex-direction: column; gap: 14px">
+  <!-- Cabecera: la hora manda, el progreso deja de ser una frase y pasa a ser una barra -->
+  <div style="display: flex; flex-direction: column; gap: 9px;">
+    <div style="display: flex; align-items: center; gap: 8px; font-family: 'Space Grotesk', monospace; font-size: 10px; font-weight: 600; letter-spacing: 0.18em; color: {{acento}}; text-transform: uppercase;">
+      <span style="width: 7px; height: 7px; border-radius: 50%; background: {{acento}}; flex-shrink: 0;"></span>
+      <span>Mi día</span>
+      <span style="color: #7f8aa0;">·</span>
+      <span style="color: #9aa5b8; letter-spacing: 0.1em;">Jueves 17 de septiembre</span>
+    </div>
 
-    <!-- FILA A · cabecera: quién, cuándo, y la frase en una línea -->
-    <div style="display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 24px; align-items: center; flex: none">
-      <div style="display: flex; flex-direction: column; gap: 4px">
-        <span class="lbl" style="letter-spacing: .22em; display: flex; align-items: center; gap: 9px"><span style="width: 7px; height: 7px; border-radius: 50%; background: var(--g)"></span>Mi día</span>
-        <span class="ttl" style="font-size: 26px; font-weight: 600; color: var(--text); line-height: 1">Domingo 13 de septiembre</span>
-      </div>
-      <p class="ttl" style="margin: 0; font-size: 15px; font-style: italic; color: var(--text2); line-height: 1.4; text-align: center; padding: 0 20px">"Fracasar no es lo que debería darte miedo. Quedarte exactamente igual sí. Cada tarea de hoy que te saltas es un voto a favor de eso."</p>
-      <div style="display: flex; align-items: baseline; gap: 10px">
-        <span class="mono" style="font-size: 40px; font-weight: 700; color: var(--text); line-height: 1">14:44</span>
-        <span class="lbl">Semana 37 · día 256</span>
+    <div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 12px;">
+      <div style="font-family: 'Space Grotesk', monospace; font-size: 46px; font-weight: 700; line-height: 0.92; letter-spacing: -0.03em;">19:39</div>
+      <div style="text-align: right; display: flex; flex-direction: column; gap: 2px;">
+        <div style="font-family: 'Space Grotesk', monospace; font-size: 19px; font-weight: 700; color: {{acento}}; line-height: 1;">8<span style="color: #7f8aa0; font-size: 13px;"> / 21</span></div>
+        <div style="font-size: 10.5px; color: #9aa5b8;">quedan 4 h 50 m</div>
       </div>
     </div>
 
-    <!-- FILA B · el ahora (con el día entero dentro) y lo de hoy -->
-    <div style="flex: none; display: grid; grid-template-columns: minmax(0, 1fr) 440px; gap: 16px; height: 440px">
-
-      <!-- AHORA -->
-      <div class="tile" style="padding: 22px 26px 18px; display: flex; flex-direction: column; gap: 14px; min-width: 0; position: relative; overflow: hidden">
-        <div style="position: absolute; left: 0; right: 0; top: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--g), transparent)"></div>
-        <div class="hd">
-          <span class="lbl" style="color: var(--g); display: flex; align-items: center; gap: 8px"><span style="width: 7px; height: 7px; border-radius: 50%; background: var(--g); box-shadow: 0 0 0 4px rgba(var(--g-rgb), .2)"></span>Ahora mismo · Admin · 14:40 – 21:00</span>
-          <span class="mono" style="font-size: 11px; font-weight: 700; color: var(--text3)">quedan <b style="color: var(--text)">6h 16m</b> de este bloque</span>
-        </div>
-        <h2 class="ttl" style="margin: 0; font-size: 36px; font-weight: 600; line-height: 1.08; letter-spacing: -.012em; color: var(--text)">🚗 Didi — bloque de tarde-noche</h2>
-        <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap">
-          <button class="btn primario"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>Marcar hecho</button>
-          <span class="mono" style="font-size: 12px; font-weight: 700; color: var(--text3)">7 de 14</span>
-          <span style="display: flex; gap: 6px"><button class="btn" style="width: 36px; height: 36px; padding: 0">‹</button><button class="btn" style="width: 36px; height: 36px; padding: 0">›</button></span>
-          <span style="font-size: 12.5px; color: var(--text3); margin-left: auto">Después, <b style="color: var(--text2)">21:00 · Cena ligera</b> y a las 21:20 <b style="color: var(--text2)">Finanzas: revisión de deudas</b></span>
-        </div>
-        <div style="display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 12px; background: rgba(var(--cy-rgb), .07); border: 1px solid rgba(var(--cy-rgb), .2)">
-          <span style="font-size: 16px">🎧</span>
-          <span style="font-size: 12.5px; color: var(--text2)">Mientras manejas: <b style="color: var(--text)">Influence — Robert Cialdini</b> · los 6 principios, en historias; tu habilidad más baja y la de mayor peso.</span>
-          <a href="#" style="margin-left: auto; font-family: 'Space Grotesk', monospace; font-size: 10px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; text-decoration: none; white-space: nowrap">Qué escuchar →</a>
-        </div>
-
-        <!-- el día entero: riel + fichas -->
-        <div class="hair" style="padding-top: 14px; display: flex; flex-direction: column; gap: 10px; margin-top: auto">
-          <div class="hd">
-            <span class="lbl">Tu día completo · 07:30 a 22:45</span>
-            <span class="mono" style="font-size: 11px; font-weight: 700; color: var(--text3)"><b style="color: var(--g)">0</b> de 14 bloques hechos · quedan 8h 31m</span>
-          </div>
-          <div style="position: relative; height: 11px; border-radius: 6px; overflow: hidden; display: flex; gap: 2px">
-            <span style="flex: 1.5; background: #f4b8b8"></span><span style="flex: 1.4; background: #f4b8b8"></span><span style="flex: 2; background: #f4b8b8"></span><span style="flex: 4; background: #f4b8b8"></span><span style="flex: 28; background: #a9c8f5"></span><span style="flex: 4; background: #f4b8b8"></span><span style="flex: 38; background: var(--g)"></span><span style="flex: 2; background: #f4b8b8"></span><span style="flex: 1.5; background: #a9c8f5"></span><span style="flex: 1; background: #a9c8f5"></span><span style="flex: 2; background: #f0d76a"></span><span style="flex: 2; background: #f4b8b8"></span><span style="flex: 4; background: #c9c9d3"></span><span style="flex: 3; background: #f4b8b8"></span>
-          </div>
-          <div style="display: flex; justify-content: space-between" class="mono"><span style="font-size: 9.5px; color: var(--text3)">07:30</span><span style="font-size: 9.5px; color: var(--text3)">11:26</span><span style="font-size: 9.5px; color: var(--text3)">15:23</span><span style="font-size: 9.5px; color: var(--text3)">19:19</span><span style="font-size: 9.5px; color: var(--text3)">23:15</span></div>
-          <div style="display: flex; gap: 8px; overflow: hidden; align-items: stretch">
-            <div class="fic hecho" style="width: 116px"><span class="h"><span>09:15</span><span>4h 45</span></span><span class="t">🚗 Didi — bloque de día</span></div>
-            <div class="fic" style="width: 116px"><span class="h"><span>14:00</span><span>40 min</span></span><span class="t">🍽️ Almuerzo — come de verdad</span></div>
-            <div class="fic ahora" style="width: 248px"><span class="h"><span>● 14:40</span><span>6h 20</span></span><span class="t">🚗 Didi — bloque de tarde-noche</span></div>
-            <div class="fic" style="width: 104px"><span class="h"><span>21:00</span><span>20 min</span></span><span class="t">🥗 Cena ligera</span></div>
-            <div class="fic" style="width: 104px"><span class="h"><span>21:20</span><span>15 min</span></span><span class="t">💰 Finanzas: revisión de deudas</span></div>
-            <div class="fic" style="width: 104px"><span class="h"><span>21:35</span><span>10 min</span></span><span class="t">🎯 Revisar Plan Maestro</span></div>
-            <div class="fic" style="width: 104px"><span class="h"><span>21:45</span><span>20 min</span></span><span class="t">📓 Diario de cierre de semana</span></div>
-            <div class="fic" style="width: 104px"><span class="h"><span>22:05</span><span>25 min</span></span><span class="t">🧴 Rutina de la noche</span></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- HOY -->
-      <div class="tile" style="padding: 20px 20px 16px; display: flex; flex-direction: column; gap: 14px; min-width: 0; overflow: hidden">
-        <div class="hd"><span class="lbl">Entrenas</span><a href="#">Ejercicio →</a></div>
-        <div style="display: flex; align-items: center; gap: 12px">
-          <span style="font-size: 22px; font-weight: 800; color: var(--text); font-family: 'Fraunces', Georgia, serif">Hoy descansas</span>
-          <span style="font-size: 12px; color: var(--text3)">mañana · Brazos A — Bíceps + Tríceps</span>
-        </div>
-        <div style="display: flex; gap: 5px">
-          <div class="dia hoy"><span>Dom</span></div>
-          <div class="dia"><img src="brazos.jpg" alt=""><span>Lun</span></div>
-          <div class="dia"><img src="piernas.jpg" alt=""><span>Mar</span></div>
-          <div class="dia"><span>Mié</span></div>
-          <div class="dia"><img src="brazos.jpg" alt=""><span>Jue</span></div>
-          <div class="dia"><span>Vie</span></div>
-          <div class="dia"><img src="piernas.jpg" alt=""><span>Sáb</span></div>
-        </div>
-        <div class="hair"></div>
-        <div class="hd"><span class="lbl">Hábitos de hoy</span><span class="mono" style="font-size: 11px; font-weight: 700"><b style="color: var(--g)">2</b><span style="color: var(--text3)"> de 6 · racha viva</span></span></div>
-        <div style="display: flex; flex-direction: column; flex: 1; min-height: 0; overflow: hidden">
-          <div class="hab ok"><span class="c"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg></span><span><span class="n">Agua · 3 litros</span><span class="a">durante el día</span></span><span class="r">🔥 12</span></div>
-          <div class="hab ok"><span class="c"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg></span><span><span class="n">Construir esta app</span><span class="a">10 min antes de arrancar</span></span><span class="r">🔥 9</span></div>
-          <div class="hab"><span class="c"></span><span><span class="n">Leer 10 páginas</span><span class="a">22:30, antes de la rutina de la noche</span></span><span class="r">3</span></div>
-          <div class="hab"><span class="c"></span><span><span class="n">Rutina de la noche</span><span class="a">22:05 · piel, minoxidil y suplementos</span></span><span class="r">🔥 14</span></div>
-          <div class="hab"><span class="c"></span><span><span class="n">Meditar · 10 min</span><span class="a">23:10, después de lavarte los dientes</span></span><span class="r">5</span></div>
-          <div class="hab"><span class="c"></span><span><span class="n">Dormir 7 h</span><span class="a">23:59, luces fuera</span></span><span class="r">🔥 8</span></div>
-        </div>
-        <div style="display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 10px; align-items: center; padding: 10px 12px; border-radius: 12px; background: rgba(var(--o-rgb), .08); border: 1px solid rgba(var(--o-rgb), .3)">
-          <span style="font-size: 16px">📈</span>
-          <span style="font-size: 12px; color: var(--text2); line-height: 1.35"><b style="color: var(--text)">Qué invertir hoy: primero tu fondo.</b> Faltan $10,000 de $10,000 — hoy no compras nada más.</span>
-          <a href="#" style="font-family: 'Space Grotesk', monospace; font-size: 10px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; text-decoration: none; color: var(--o)">Abrir →</a>
-        </div>
-      </div>
-    </div>
-
-    <!-- FILA C · cuatro módulos que llenan lo que queda -->
-    <div style="flex: 1; min-height: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px">
-
-      <!-- TU DINERO -->
-      <div class="tile" style="padding: 18px 18px 16px; display: flex; flex-direction: column; gap: 10px; min-height: 0; overflow: hidden">
-        <div class="hd"><span class="lbl">Tu dinero</span><a href="#">Finanzas →</a></div>
-        <div style="display: flex; align-items: baseline; gap: 6px"><span class="mono" style="font-size: 30px; font-weight: 800; color: var(--o); line-height: 1">$0</span><span style="font-size: 12px; color: var(--text3)">/ $10,000 · fondo de emergencia · prioridad 1</span></div>
-        <div style="height: 5px; border-radius: 3px; background: rgba(var(--ov), .08); overflow: hidden"><div style="width: 0%; height: 100%; background: var(--o)"></div></div>
-        <div style="display: flex; flex-direction: column">
-          <div class="fila"><b>Crédito del auto</b><span class="m" style="color: var(--r)">$293,000</span></div>
-          <div class="fila"><b>TC BBVA</b><span class="m" style="color: var(--r)">$37,000</span></div>
-          <div class="fila"><b>iPhone</b><span class="m" style="color: var(--r)">$11,362</span></div>
-        </div>
-        <div class="hair" style="padding-top: 10px; display: flex; flex-direction: column; gap: 6px; margin-top: auto">
-          <span class="lbl">Próximos 7 días</span>
-          <div class="fila"><span><b>Mar 15</b> · Quincena</span><span class="m" style="color: var(--g)">+$20,500</span></div>
-          <div class="fila"><span><b>Mar 15</b> · Crédito automotriz</span><span class="m">−$6,700</span></div>
-          <div class="fila"><span><b>Mar 15</b> · CETES</span><span class="m">−$1,500</span></div>
-          <div class="fila"><span><b>Jue 17</b> · Gym</span><span class="m">−$650</span></div>
-        </div>
-      </div>
-
-      <!-- PLAN MAESTRO -->
-      <div class="tile" style="padding: 18px 18px 16px; display: flex; flex-direction: column; gap: 10px; min-height: 0; overflow: hidden">
-        <div class="hd"><span class="lbl">Plan maestro · Fase 0</span><a href="#">Coach →</a></div>
-        <span style="font-size: 15px; font-weight: 700; color: var(--text); line-height: 1.3">Cerrar la fuga y arrancar ingreso, no solo pensar</span>
-        <div style="display: flex; flex-direction: column; gap: 5px">
-          <div style="height: 5px; border-radius: 3px; background: rgba(var(--ov), .08); overflow: hidden; position: relative"><div style="width: 72%; height: 100%; background: var(--w)"></div></div>
-          <div style="display: flex; justify-content: space-between" class="mono"><span style="font-size: 10px; color: var(--text3)">1 ago</span><span style="font-size: 10.5px; font-weight: 700; color: var(--w)">quedan 17 días</span><span style="font-size: 10px; color: var(--text3)">30 sep</span></div>
-        </div>
-        <div style="display: flex; flex-direction: column; gap: 4px">
-          <span class="lbl" style="color: var(--g)">Prioridad de este mes</span>
-          <span style="font-size: 12.5px; color: var(--text2); line-height: 1.5">Cada peso de ventas o activos va, en orden fijo: <b style="color: var(--text)">(1) fondo de emergencia a $10,000, (2) resto a BBVA</b>. Banamex ya está en $0.</span>
-        </div>
-        <div class="hair" style="padding-top: 10px; display: flex; flex-direction: column; gap: 4px; margin-top: auto">
-          <span class="lbl">Después · Fase 1 desde el 1 de octubre</span>
-          <span style="font-size: 12.5px; color: var(--text2); line-height: 1.45">Los <b style="color: var(--text)">$3,145/mes</b> liberados entran en acción y el primer ingreso real fuera del empleo.</span>
-        </div>
-      </div>
-
-      <!-- HOY APRENDES -->
-      <div class="tile" style="padding: 18px 18px 16px; display: flex; flex-direction: column; gap: 10px; min-height: 0; overflow: hidden">
-        <div class="hd"><span class="lbl">Hoy aprendes</span><a href="#">Alemán · Entrevista →</a></div>
-        <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px">
-          <div style="display: flex; flex-direction: column; gap: 3px; padding: 10px 12px; border-radius: 10px; background: rgba(var(--g-rgb), .07); border: 1px solid rgba(var(--g-rgb), .2)">
-            <span class="lbl" style="color: var(--g); font-size: 8.5px">Alemán · palabra del día</span>
-            <span style="font-size: 16px; font-weight: 800; color: var(--text)">der Januar</span>
-            <span style="font-size: 11px; color: var(--text3)">enero · Im Januar ist es sehr kalt.</span>
-          </div>
-          <div style="display: flex; flex-direction: column; gap: 3px; padding: 10px 12px; border-radius: 10px; background: rgba(var(--cy-rgb), .07); border: 1px solid rgba(var(--cy-rgb), .2)">
-            <span class="lbl" style="color: var(--cy); font-size: 8.5px">Entrevista · Python</span>
-            <span style="font-size: 14px; font-weight: 800; color: var(--text); line-height: 1.2">Archivos de texto</span>
-            <span style="font-size: 11px; color: var(--text3)">fundamentos · 11 / 41</span>
-          </div>
-        </div>
-        <div class="hair" style="padding-top: 10px; display: grid; grid-template-columns: 44px minmax(0, 1fr); gap: 12px; align-items: center">
-          <img src="littleBook.jpg" alt="" style="width: 44px; height: 64px; object-fit: cover; border-radius: 3px; box-shadow: 0 5px 12px rgba(0,0,0,.25)">
-          <div style="display: flex; flex-direction: column; gap: 3px; min-width: 0">
-            <span class="lbl" style="font-size: 8.5px">El paso de la semana · Inversión</span>
-            <span style="font-size: 13px; font-weight: 700; color: var(--text); line-height: 1.25">01 · Interés compuesto y horizonte</span>
-            <span style="font-size: 11px; color: var(--text3)">con <i>The Little Book of Common Sense Investing</i></span>
-          </div>
-        </div>
-        <div class="hair" style="padding-top: 10px; display: flex; flex-direction: column; gap: 4px; margin-top: auto">
-          <div class="hd"><span class="lbl" style="font-size: 8.5px">Ficha en curso · Habilidades base</span><span class="mono" style="font-size: 10.5px; font-weight: 700; color: var(--g)">7 / 16</span></div>
-          <span style="font-size: 13px; font-weight: 700; color: var(--text)">Leer a las personas</span>
-          <span style="font-size: 11px; color: var(--text3)">sigue el paso 8 · La actitud en una conversación</span>
-        </div>
-      </div>
-
-      <!-- IMPORTANTE ESTE MES -->
-      <div class="tile" style="padding: 18px 18px 16px; display: flex; flex-direction: column; gap: 10px; min-height: 0; overflow: hidden">
-        <div class="hd"><span class="lbl">Importante este mes</span><a href="#">+ Nuevo</a></div>
-        <div style="display: flex; gap: 5px">
-          <span class="mono" style="font-size: 10px; font-weight: 700; padding: 4px 10px; border-radius: 20px; background: var(--cy); color: #fff">Sep · 4</span>
-          <span class="mono" style="font-size: 10px; font-weight: 700; padding: 4px 10px; border-radius: 20px; border: 1px solid rgba(var(--ov), .12); color: var(--text3)">Oct · 1</span>
-          <span class="mono" style="font-size: 10px; font-weight: 700; padding: 4px 10px; border-radius: 20px; border: 1px solid rgba(var(--ov), .12); color: var(--text3)">Nov</span>
-        </div>
-        <div style="display: flex; flex-direction: column; flex: 1; min-height: 0; overflow: hidden">
-          <div class="pend"><i></i><span>🩺 Ir al doctor por la gastritis</span></div>
-          <div class="pend"><i></i><span>🎯 Vence Fase 0 del Plan Maestro (30 sep) — revisa el fondo de emergencia y las dos tarjetas</span></div>
-          <div class="pend"><i></i><span>🛂 Agendar la visa de tu papá</span></div>
-          <div class="pend"><i></i><span>✈️ Revisar FAMEX 2027</span></div>
-        </div>
-        <span style="font-size: 11px; color: var(--text3)">4 pendientes en septiembre · toca uno para editarlo</span>
-      </div>
+    <!-- Progreso del día. Sustituye a "0 de 21 bloques hechos", que era texto perdido. -->
+    <div style="height: 5px; border-radius: 99px; background: rgba(255,255,255,0.09); overflow: hidden;">
+      <div style="width: 38%; height: 100%; border-radius: 99px; background: linear-gradient(90deg, {{acento}}, #00e0c0);"></div>
     </div>
   </div>
+
+  <!-- LO PASADO, PLEGADO. 14 bloques ocupaban 490 px y ya no se pueden cambiar. -->
+  <button type="button" style="display: flex; align-items: center; gap: 10px; width: 100%; padding: 9px 12px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.08); background: rgba(255,255,255,0.035); color: #9aa5b8; font-family: 'Inter', sans-serif; font-size: 12px; text-align: left; cursor: pointer;">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;"><path d="M9 6l6 6-6 6"/></svg>
+    <span style="flex-grow: 1;"><b style="color: #d7dbe6; font-weight: 600;">14 bloques</b> antes de las 19:30</span>
+    <span style="display: flex; gap: 3px; align-items: center;">
+      <span style="width: 5px; height: 5px; border-radius: 50%; background: #2fe39c;"></span>
+      <span style="width: 5px; height: 5px; border-radius: 50%; background: #2fe39c;"></span>
+      <span style="width: 5px; height: 5px; border-radius: 50%; background: #2fe39c;"></span>
+      <span style="width: 5px; height: 5px; border-radius: 50%; background: rgba(255,255,255,0.22);"></span>
+      <span style="width: 5px; height: 5px; border-radius: 50%; background: #2fe39c;"></span>
+      <span style="font-family: 'Space Grotesk', monospace; font-size: 10px; color: #7f8aa0; margin-left: 3px;">+9</span>
+    </span>
+  </button>
+
+  <!-- AHORA: tarjeta propia. El título entero, la cuenta atrás y el botón que importa. -->
+  <div style="display: flex; flex-direction: column; gap: 9px; padding: 15px 15px 13px; border-radius: 16px; background: rgba(0,232,122,0.10); border: 1px solid rgba(0,232,122,0.34); box-shadow: 0 0 34px -12px rgba(0,232,122,0.5);">
+    <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px;">
+      <div style="display: flex; align-items: center; gap: 7px; font-family: 'Space Grotesk', monospace; font-size: 10px; font-weight: 700; letter-spacing: 0.16em; color: {{acento}};">
+        <span style="width: 6px; height: 6px; border-radius: 50%; background: {{acento}}; box-shadow: 0 0 0 4px rgba(0,232,122,0.22);"></span>
+        AHORA
+      </div>
+      <div style="font-family: 'Space Grotesk', monospace; font-size: 11.5px; font-weight: 600; color: #cfe9dc;">19:30 — 20:00</div>
+    </div>
+
+    <div style="font-size: 17px; font-weight: 700; line-height: 1.28; letter-spacing: -0.01em;">Didi — sesión corta de la noche</div>
+    <div style="font-size: 12.5px; color: #a9c4b8; line-height: 1.45;">Hasta las 20:00, después de la ducha</div>
+
+    <div style="display: flex; align-items: center; gap: 9px; margin-top: 2px;">
+      <div style="flex-grow: 1; height: 4px; border-radius: 99px; background: rgba(255,255,255,0.12); overflow: hidden;">
+        <div style="width: 30%; height: 100%; border-radius: 99px; background: {{acento}};"></div>
+      </div>
+      <div style="font-family: 'Space Grotesk', monospace; font-size: 11px; font-weight: 600; color: {{acento}}; white-space: nowrap;">faltan 21 m</div>
+    </div>
+
+    <button type="button" style="margin-top: 4px; width: 100%; padding: 11px; border-radius: 11px; border: none; background: {{acento}}; color: #06231a; font-family: 'Inter', sans-serif; font-size: 13.5px; font-weight: 700; cursor: pointer;">Marcar hecho</button>
+  </div>
+
+  <!-- LO QUE VIENE: dos líneas por bloque, título completo, sin puntos suspensivos. -->
+  <div style="display: flex; align-items: center; justify-content: space-between; padding: 0 3px;">
+    <div style="font-family: 'Space Grotesk', monospace; font-size: 10px; font-weight: 600; letter-spacing: 0.16em; color: #7f8aa0;">LO QUE VIENE</div>
+    <div style="font-family: 'Space Grotesk', monospace; font-size: 10px; color: #7f8aa0;">7 bloques · 4 h 29 m</div>
+  </div>
+
+  <div style="flex-grow: 1; min-height: 0; display: flex; flex-direction: column; gap: 4px; overflow: hidden;">
+    <sc-for list="{{proximos}}" as="b" hint-placeholder-count="6">
+      <div style="display: grid; grid-template-columns: 46px 9px minmax(0, 1fr); gap: 11px; align-items: start; padding: 9px 8px; border-radius: 11px;">
+        <div style="display: flex; flex-direction: column; gap: 1px;">
+          <div style="font-family: 'Space Grotesk', monospace; font-size: 12px; font-weight: 700; color: #d7dbe6; line-height: 1.1;">{{b.hora}}</div>
+          <div style="font-family: 'Space Grotesk', monospace; font-size: 9.5px; color: #7f8aa0; line-height: 1.1;">{{b.dur}}</div>
+        </div>
+        <div style="width: 9px; height: 9px; border-radius: 50%; margin-top: 3px; background: {{b.color}};"></div>
+        <div style="font-size: 12.5px; font-weight: 500; color: #c9cedd; line-height: 1.38;">{{b.txt}}</div>
+      </div>
+    </sc-for>
+    <div style="display: grid; grid-template-columns: 46px 9px minmax(0, 1fr); gap: 11px; align-items: center; padding: 9px 8px; border-radius: 11px; opacity: 0.6;">
+      <div style="font-family: 'Space Grotesk', monospace; font-size: 12px; font-weight: 700; color: #8f96a8;">23:59</div>
+      <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#8f96a8" stroke-width="3" stroke-linecap="round"><path d="M5 12h14"/></svg>
+      <div style="font-size: 12px; color: #8f96a8; line-height: 1.35;">Apagar pantallas y dormir</div>
+    </div>
+  </div>
+
+  <div style="display: flex; gap: 8px; padding-top: 11px; border-top: 1px solid rgba(255,255,255,0.09);">
+    <a href="DireccionB.dc.html" style="flex-grow: 1; padding: 12px; border-radius: 12px; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12); color: #d7dbe6; font-size: 13px; font-weight: 600; text-align: center; text-decoration: none;">Ver el día completo</a>
+    <a href="#coach" style="padding: 12px 17px; border-radius: 12px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #9aa5b8; font-size: 13px; font-weight: 600; text-decoration: none;">Coach</a>
+  </div>
+
 </div>
 </x-dc>
-<script data-dc-script data-props='{"tema":{"editor":"enum","options":["claro","oscuro"],"default":"claro"},"$preview":{"width":1600,"height":1000}}'>
+
+<script type="text/x-dc" data-dc-script data-props='{"acento":{"editor":"color","default":"#00e87a","options":["#00e87a","#00e0c0","#5aa9ff","#ffd93d"]},"$preview":{"width":440,"height":920}}'>
 class Component extends DCLogic {
   renderVals() {
-    const t = this.props.tema ?? 'claro';
-    return { tema: { cls: t === 'oscuro' ? 'oscuro' : '' } };
+    return {
+      acento: this.props.acento ?? '#00e87a',
+      // El día real de Adán, del jueves 17 de septiembre.
+      proximos: [
+        { hora: '20:00', dur: '1h 15m', color: '#ffd93d', txt: 'Prioridad activa de Fase 0: negocio' },
+        { hora: '21:15', dur: '30m',    color: '#ff6b6b', txt: 'Cena + preparar la comida de mañana' },
+        { hora: '21:45', dur: '45m',    color: '#c8ccd8', txt: 'Cierre del día — lectura, diario y plan' },
+        { hora: '22:30', dur: '30m',    color: '#ff6b6b', txt: 'Rutina de la noche — piel, minoxidil' },
+        { hora: '23:00', dur: '10m',    color: '#c8ccd8', txt: 'Meditación — respiración box' },
+        { hora: '23:30', dur: '29m',    color: '#2fe39c', txt: 'Construir esta aplicación' }
+      ]
+    };
   }
 }
 </script>

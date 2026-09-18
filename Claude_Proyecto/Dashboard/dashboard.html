@@ -2773,21 +2773,56 @@ button.hp-lec:active{transform:translateY(0)}
 .dia-reloj::after{content:none}
 .dia-agenda-res{font-size:11.5px;color:var(--text3)}
 .dia-agenda-res b{color:var(--g);font-family:var(--mono)}
-.dia-agenda-l{flex:1;min-height:0;overflow-y:auto;scrollbar-width:thin;display:flex;flex-direction:column;gap:2px;padding:0 2px}
-.ag-row{display:grid;grid-template-columns:44px 10px minmax(0,1fr) auto;gap:10px;align-items:center;padding:7px 8px;border-radius:9px;
+.dia-agenda-l{flex:1;min-height:0;overflow-y:auto;scrollbar-width:thin;display:flex;flex-direction:column;gap:7px;padding:0 2px}
+/* ── Las tres franjas ──────────────────────────────────────────────────────
+   Una franja cerrada ocupa 52 px y cuenta lo mismo que ocupaban sus 8 filas:
+   cuántos bloques son y cuáles cerraste. La abierta es la única que crece. */
+.ag-fr{display:flex;flex-direction:column;border-radius:14px;border:1px solid rgba(var(--ov),.08);
+  background:rgba(var(--ov),.03);overflow:hidden;flex:none}
+.ag-fr.abierta{flex:1;min-height:0;background:rgba(var(--ov),.045);border-color:rgba(var(--ov),.11)}
+.ag-fr.viva{border-color:rgba(var(--g-rgb),.3);background:rgba(var(--g-rgb),.05)}
+.ag-fr-hd{display:flex;flex-direction:column;gap:7px;width:100%;padding:11px 13px;border:0;background:none;
+  font-family:inherit;color:inherit;text-align:left;cursor:pointer;transition:background .13s}
+.ag-fr-hd:hover{background:rgba(var(--ov),.04)}
+.ag-fr-t{display:flex;align-items:center;gap:9px}
+.ag-fr-t .ch{flex:none;color:var(--text3);transition:transform .18s}
+.ag-fr.abierta .ag-fr-t .ch{transform:rotate(90deg)}
+.ag-fr.viva .ag-fr-t .ch{color:var(--g)}
+.ag-fr-n{font-size:13px;font-weight:700;color:var(--text2);flex:1}
+.ag-fr.viva .ag-fr-n,.ag-fr.abierta .ag-fr-n{color:var(--text)}
+.ag-fr-r{font-family:var(--mono);font-size:10.5px;color:var(--text3);white-space:nowrap}
+.ag-fr.viva .ag-fr-r{color:var(--g)}
+/* Los puntos son el resumen: uno por bloque, verde si está hecho. Sustituyen a
+   ver las 8 filas para saber cómo va la mañana. */
+.ag-fr-pts{display:flex;align-items:center;gap:9px;padding-left:22px}
+.ag-fr-pts .pts{display:flex;gap:3px;flex-wrap:wrap}
+.ag-fr-pts .pt{width:6px;height:6px;border-radius:50%;background:rgba(var(--ov),.2)}
+.ag-fr-pts .pt.ok{background:var(--g)}
+.ag-fr-pts .pt.fijo{background:rgba(var(--ov),.32);border-radius:1px;width:5px;height:5px}
+.ag-fr-pts .txt{font-size:11px;color:var(--text3)}
+.ag-fr-body{min-height:0;overflow-y:auto;scrollbar-width:thin;display:flex;flex-direction:column;gap:2px;padding:0 8px 9px}
+.ag-row{display:grid;grid-template-columns:42px 9px minmax(0,1fr) auto;gap:9px;align-items:flex-start;padding:7px 7px;border-radius:9px;
   border:1px solid transparent;background:none;width:100%;text-align:left;font-family:inherit;color:inherit;cursor:pointer;transition:background .13s}
 .ag-row:hover{background:rgba(var(--ov),.05)}
-.ag-h{font-family:var(--mono);font-size:11px;font-weight:700;color:var(--text3)}
-.ag-p{width:10px;height:10px;border-radius:50%;background:rgba(var(--ov),.15)}
-.ag-t{font-size:13px;font-weight:600;color:var(--text2);overflow:hidden;white-space:nowrap;text-overflow:ellipsis;line-height:1.3}
-.ag-d{font-family:var(--mono);font-size:10.5px;color:var(--text3);white-space:nowrap}
+.ag-h{font-family:var(--mono);font-size:11px;font-weight:700;color:var(--text3);padding-top:1px}
+.ag-p{width:9px;height:9px;border-radius:50%;background:rgba(var(--ov),.15);margin-top:4px}
+/* Dos líneas en vez de una cortada: 17 de 23 títulos no se leían enteros. */
+.ag-t{font-size:12.5px;font-weight:600;color:var(--text2);line-height:1.34;overflow:hidden;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.ag-d{font-family:var(--mono);font-size:10px;color:var(--text3);white-space:nowrap;padding-top:2px}
 .ag-row.hecho{opacity:.5}
 .ag-row.hecho .ag-t{text-decoration:line-through}
 .ag-row.sel{background:rgba(var(--ov),.06);border-color:rgba(var(--ov),.12)}
-.ag-row.ahora{background:rgba(var(--g-rgb),.12);border-color:rgba(var(--g-rgb),.4)}
+.ag-row.ahora{background:rgba(var(--g-rgb),.12);border-color:rgba(var(--g-rgb),.4);align-items:center}
 .ag-row.ahora .ag-p{background:var(--g);box-shadow:0 0 0 4px rgba(var(--g-rgb),.2)}
 .ag-row.ahora .ag-h,.ag-row.ahora .ag-d{color:var(--g)}
-.ag-row.ahora .ag-t{color:var(--text);font-weight:800}
+.ag-row.ahora .ag-t{color:var(--text);font-weight:800;-webkit-line-clamp:3}
+.ag-row.ahora .ag-falta{display:block;font-family:var(--mono);font-size:10px;font-weight:600;color:var(--g);margin-top:2px}
+.ag-falta{display:none}
+@media(max-width:900px){
+  .ag-fr-pts{padding-left:0}
+  .ag-fr-hd{padding:10px 11px}
+}
 .dia-agenda-pie{display:flex;gap:8px;padding-top:10px;border-top:1px solid rgba(var(--ov),.09)}
 .dia-agenda-pie .hf-btn:first-child{flex:1}
 /* La derecha */
@@ -6763,6 +6798,26 @@ function quickMarkDone(){
 // ══════════════════════════════════════════════════════════════════════════
 // La agenda: una fila por bloque, de arriba abajo. Mismos datos que la cinta (que se sigue
 // pintando, oculta): tocar una fila abre ese bloque en el AHORA, igual que tocar una ficha.
+// Las tres franjas del día. Los cortes son fijos (13:00 y 19:00) y no dependen de la
+// hora: si se movieran con el reloj, la mañana cambiaría de tamaño a lo largo del día
+// y dejarías de reconocerla de un vistazo.
+const AG_FRANJAS=[
+  {k:'man', n:'Mañana', desde:0,    hasta:780},
+  {k:'tar', n:'Tarde',  desde:780,  hasta:1140},
+  {k:'noc', n:'Noche',  desde:1140, hasta:1e9}
+];
+// Qué franjas están abiertas. Vive en memoria y no en localStorage a propósito: es
+// estado de la sesión, no un dato, y una clave más sería una clave más que mantener.
+// `agFrAuto` recuerda si el usuario ya decidió; hasta entonces manda la franja en curso.
+let agFrAbiertas=null, agFrAuto=true;
+function agFranjaDe(hora){ const m=minutosDe(hora); return (AG_FRANJAS.find(f=>m>=f.desde&&m<f.hasta)||AG_FRANJAS[2]).k; }
+function toggleFranja(k){
+  if(!agFrAbiertas) agFrAbiertas=new Set();
+  agFrAuto=false;
+  if(agFrAbiertas.has(k)) agFrAbiertas.delete(k); else agFrAbiertas.add(k);
+  renderDia();
+}
+
 function pintarAgendaDia(tareas, anchor, done, esHoy){
   const el=document.getElementById('diaAgenda'), res=document.getElementById('diaAgendaRes');
   if(!el) return;
@@ -6770,30 +6825,63 @@ function pintarAgendaDia(tareas, anchor, done, esHoy){
   if(!tareas.length){ el.innerHTML='<div class="dh-vacio">Sin bloques de rutina para este día.</div>'; if(res) res.textContent=''; return; }
   const fin=minutosDe(tareas[tareas.length-1].hora)+30;
   const ahoraMin=minutosDe(horaAhora());
+  const selId=cintaSel||(anchor?anchor.id:null);
+  const kSel=selId?(tareas.find(t=>t.id===selId)||{}).hora:null;
+  // Sin elección del usuario se abre la franja del bloque en curso; y si el día no es
+  // hoy, la primera que tenga bloques, para no dejar el panel en blanco.
+  if(agFrAuto||!agFrAbiertas){
+    const kAuto=kSel?agFranjaDe(kSel):agFranjaDe(tareas[0].hora);
+    agFrAbiertas=new Set([kAuto]);
+  }
   let hechos=0;
-  el.innerHTML=tareas.map((t,i)=>{
-    const sig=tareas[i+1];
+  const filaHtml=(t,i,arr)=>{
+    const sig=arr[i+1];
     const meta=CAT_META[t.cat]||{ico:'•',label:t.cat,c:'#565a72'};
-    const leaves=leafItems(t);
-    const hecho=!t.fijo&&leaves.every(it=>done.includes(it.id));
-    if(hecho) hechos++;
+    const hecho=!t.fijo&&leafItems(t).every(it=>done.includes(it.id));
     const esAncla=anchor&&t.id===anchor.id;
     const sel=cintaSel?t.id===cintaSel:esAncla;
     const esAhora=esHoy&&esAncla;
     const f=finDeBloque(t,sig);
     const titulo=rtSoloTitulo(tituloBloque(t,dow));
+    const faltan=esAhora&&f?Math.max(0,minutosDe(f)-ahoraMin):0;
     return `<button class="ag-row${esAhora?' ahora':(sel?' sel':'')}${hecho?' hecho':''}" onclick="tocarBloque('${t.id}')"
       title="${esc(t.hora+' · '+meta.label+' · '+titulo)}">
       <span class="ag-h">${t.hora}</span>
       <span class="ag-p" style="${esAhora?'':`background:${meta.c}`}"></span>
-      <span class="ag-t">${esc(titulo)}</span>
+      <span><span class="ag-t">${esc(titulo)}</span>${faltan>0?`<span class="ag-falta">faltan ${faltan>=60?Math.floor(faltan/60)+'h '+(faltan%60)+'m':faltan+' min'}</span>`:''}</span>
       <span class="ag-d">${f?rtDur(t.hora,f):'—'}</span>
     </button>`;
+  };
+  const CHEVRON='<svg class="ch" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>';
+  el.innerHTML=AG_FRANJAS.map(fr=>{
+    const dentro=tareas.filter(t=>agFranjaDe(t.hora)===fr.k);
+    if(!dentro.length) return '';
+    const hechosFr=dentro.filter(t=>!t.fijo&&leafItems(t).every(it=>done.includes(it.id))).length;
+    hechos+=hechosFr;
+    const marcablesFr=dentro.filter(t=>!t.fijo).length;
+    const abierta=agFrAbiertas.has(fr.k);
+    const viva=esHoy&&kSel&&agFranjaDe(kSel)===fr.k;
+    const pts=dentro.map(t=>{
+      if(t.fijo) return '<span class="pt fijo"></span>';
+      const ok=leafItems(t).every(it=>done.includes(it.id));
+      return `<span class="pt${ok?' ok':''}"></span>`;
+    }).join('');
+    const ult=dentro[dentro.length-1];
+    const sigGlobal=tareas[tareas.indexOf(ult)+1]||null;
+    const rango=dentro[0].hora+' — '+(finDeBloque(ult,sigGlobal)||ult.hora);
+    return `<section class="ag-fr${abierta?' abierta':''}${viva?' viva':''}">
+      <button class="ag-fr-hd" onclick="toggleFranja('${fr.k}')" aria-expanded="${abierta}"
+        title="${esc(fr.n+' · '+rango+' · '+dentro.length+' bloques')}">
+        <span class="ag-fr-t">${CHEVRON}<span class="ag-fr-n">${fr.n}</span><span class="ag-fr-r">${rango} · ${dentro.length}</span></span>
+        <span class="ag-fr-pts"><span class="pts">${pts}</span><span class="txt">${marcablesFr?hechosFr+' de '+marcablesFr+' hechos':'sin bloques que marcar'}</span></span>
+      </button>
+      ${abierta?`<div class="ag-fr-body">${dentro.map((t,i)=>filaHtml(t,i,dentro)).join('')}</div>`:''}
+    </section>`;
   }).join('');
   const marcables=tareas.filter(t=>!t.fijo).length;
   const faltaMin=esHoy?Math.max(0,fin-ahoraMin):0;
   if(res) res.innerHTML=`<b>${hechos}</b> de ${marcables} bloques hechos${esHoy?' · '+(faltaMin>0?'quedan '+Math.floor(faltaMin/60)+'h '+(faltaMin%60)+'m':'día cerrado'):' · '+DIAS_LARGO[dow]}`;
-  // La fila activa a la vista: con 14-26 bloques la de la tarde queda fuera del alto de la agenda.
+  // La fila activa a la vista: dentro de una franja abierta también puede quedar fuera.
   const act=el.querySelector('.ag-row.ahora, .ag-row.sel');
   if(act&&act.scrollIntoView) act.scrollIntoView({block:'nearest'});
 }

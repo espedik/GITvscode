@@ -1,14 +1,95 @@
 {
-  "artboards": [
-    { "file": "Main.dc.html",       "x": 0,    "y": 0,    "w": 1600, "h": 1000, "title": "Mi Día — tres filas (propuesta)" },
-    { "file": "DireccionB.dc.html", "x": 1720, "y": 0,    "w": 1600, "h": 1000, "title": "Dirección B — agenda vertical" },
-    { "file": "DireccionC.dc.html", "x": 0,    "y": 1220, "w": 1600, "h": 1000, "title": "Dirección C — dos paneles: Hoy y Este mes" }
+  "v": 3,
+  "createdOnFiles": {
+    "v": 1,
+    "at": "2026-09-17T20:05:00Z"
+  },
+  "title": "Mi Día — rediseño del panel",
+  "launch": {
+    "view": "canvas"
+  },
+  "pages": [],
+  "boards": {
+    "Main.dc.html": {
+      "x": 0,
+      "y": 0,
+      "w": 440,
+      "h": 920,
+      "title": "Main · Ahora y lo que viene",
+      "is_interactive": true
+    },
+    "DireccionB.dc.html": {
+      "x": 520,
+      "y": 0,
+      "w": 440,
+      "h": 920,
+      "title": "B · Agenda a escala real"
+    },
+    "DireccionC.dc.html": {
+      "x": 1040,
+      "y": 0,
+      "w": 440,
+      "h": 920,
+      "title": "C · Tres franjas plegables"
+    },
+    "Movil.dc.html": {
+      "x": 1560,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "title": "Main en el teléfono · 390 px"
+    }
+  },
+  "order": [
+    "Main.dc.html",
+    "DireccionB.dc.html",
+    "DireccionC.dc.html",
+    "Movil.dc.html"
   ],
-  "annotations": [
-    { "id": "nota-problema", "x": 0, "y": -300, "w": 600, "text": "Lo que falla hoy (medido a 1600×1000): siete bloques apilados —frase, tira de 7 días, cinta, «Ahora mismo», botón de invertir, cuatro tarjetas y un enlace— y aun así sobran 200 px abajo. Las tarjetas van a 10.5–12 px y la mitad de cada una está vacía. Nada dice qué hábitos tocan hoy, qué se cobra esta semana ni qué toca estudiar de las rutas nuevas; y la fase que termina en 17 días no dice qué viene después." },
-    { "id": "nota-main", "x": 640, "y": -300, "w": 640, "text": "Propuesta, tres filas: (A) fecha, frase y reloj en una línea. (B) AHORA en grande —bloque, quedan X, marcar, qué sigue, qué escuchar mientras manejas— con el día entero DENTRO (riel + fichas), y al lado HOY: entrenas (con los 7 días como chips de foto), hábitos de hoy con racha y marcar, y qué invertir. (C) cuatro módulos que llenan lo que queda, cada uno con algo que hoy no está: Tu dinero suma los cobros de los próximos 7 días; Plan Maestro dice qué viene tras la Fase 0; Hoy aprendes trae el paso de la semana con su portada y la ficha de Habilidades Base en curso; Importante este mes queda igual. Lo nuevo sale de datos que ya existen: hábitos, CALENDARIO.cobros, APRENDIZAJE, HABILIDAD_DETALLE, DIDI_AUDIO, PHASES." },
-    { "id": "nota-b", "x": 1720, "y": -160, "w": 600, "text": "Dirección B — agenda vertical: el día se lee de arriba abajo como un calendario, con la hora al margen y el bloque actual marcado; lo demás va a la derecha en seis módulos iguales. A favor: se ve el día completo sin deslizar. En contra: se pierde la cinta —el riel con la proporción real del día y las fichas que ya usas—, y los seis módulos vuelven a ser chicos." },
-    { "id": "nota-c", "x": 0, "y": 1060, "w": 600, "text": "Dirección C — dos paneles: el ahora a todo lo ancho con la cinta, y abajo solo dos tarjetas grandes, HOY (hábitos, entreno, aprendes, invertir) y ESTE MES (dinero, próximos cobros, fase, pendientes). A favor: la pantalla más tranquila de las tres, dos cajas en vez de siete. En contra: cada panel es denso por dentro y sin bordes que separen sus cuatro secciones." }
-  ],
-  "launch": { "view": "canvas" }
+  "notes": {
+    "titulo": {
+      "x": 0,
+      "y": -280,
+      "text": "Mi Día — 23 bloques en una columna de 420 px",
+      "kind": "title1",
+      "maxW": 1950
+    },
+    "problema": {
+      "x": 0,
+      "y": -168,
+      "w": 620,
+      "text": "MEDIDO EN EL DASHBOARD DE HOY (jueves 17, 19:39)\n\n· 23 filas de 35 px = 800 px de tira uniforme.\n· 17 de 23 títulos se cortan con «…»: la columna del título mide 269 px.\n· Un bloque de 3 m y uno de 4 h 30 m miden lo mismo: 33 px.\n· A las 19:39 ya pasaron 14 bloques y siguen pesando igual que los 8 que quedan.\n· En 1600 px hay scroll (contenido 800, caja 731). En móvil se cortan 20 de 23.",
+      "color": "red"
+    },
+    "n-main": {
+      "x": 0,
+      "y": 960,
+      "w": 440,
+      "text": "MAIN — recomendada.\n\nEl pasado se pliega en una fila. El bloque de ahora recibe una tarjeta con el título entero, la cuenta atrás y su botón. Lo que viene son dos líneas por bloque, sin cortar ni un título.\n\nDe 23 filas a 9 elementos. Es la única que resuelve los tres problemas a la vez y la que menos código nuevo pide.",
+      "color": "green"
+    },
+    "n-b": {
+      "x": 520,
+      "y": 960,
+      "w": 440,
+      "text": "B — la altura es la duración.\n\nALTEN (4 h 30 m) se ve como un bloque grande; «Vestirte» (7 m) es una tira. La línea de ahora cruza la agenda, como un calendario de verdad.\n\nA favor: ves de un golpe en qué se te va el día. En contra: los bloques cortos pierden su título, y son la mitad.",
+      "color": "blue"
+    },
+    "n-c": {
+      "x": 1040,
+      "y": 960,
+      "w": 440,
+      "text": "C — tres franjas plegables.\n\nMañana, tarde y noche. Las cerradas se resumen en una línea con puntos de avance; solo la franja en curso gasta altura.\n\nA favor: el día entero sigue accesible y cabe. En contra: dos toques para ver un bloque de la mañana.",
+      "color": "purple"
+    },
+    "n-movil": {
+      "x": 1560,
+      "y": 884,
+      "w": 390,
+      "text": "MAIN a 390 px.\n\nMisma estructura. En el teléfono el bloque de ahora se lleva la pantalla, porque es lo único que se puede cambiar desde ahí.",
+      "color": "green"
+    }
+  },
+  "designSystems": [],
+  "artifact": "https://claude.ai/artifact/SRMiYB1HXEfP9WbqLv7dn6"
 }
