@@ -59,7 +59,7 @@ Diez secciones, en el orden en que un cliente decide:
 
 Son **11 secciones**, y el orden no es casual: los 14 trabajos terminan en paneles abiertos, y lo siguiente que ve el visitante son **aeronaves enteras en línea de vuelo**. Ese contraste es el argumento entero de la página, y por eso `#flota` va pegada a `#trabajos` y no al final.
 | 2 | **Qué repara** | 7 servicios, cada uno con foto, descripción y **un apunte de oficio** — lo que un técnico sabe y el dueño no |
-| 3 | **Trabajos** | 14 casos reales, con sus **51 fotos por etapas** en orden y lo que se hizo en cada una |
+| 3 | **Trabajos** | Índice de los 14 casos + el elegido con sus etapas en orden. 51 fotos en total |
 | 4 | **Aeronaves** | 6 aeronaves completas, en el hangar. Es lo único de la página que no es trabajo abierto |
 | 5 | **Cómo trabaja** | 6 pasos, cobertura y el bloque de **AOG** |
 | 6 | **Técnicas** | 8 términos explicados en claro, para poder juzgar un presupuesto |
@@ -93,10 +93,39 @@ aparece dicho así.
 déjalo pendiente"*. Se queda fuera de la página hasta que haya con qué responder; prometerlo y no
 poder cumplirlo cuesta más que no mencionarlo. Cuando exista, va en las preguntas.
 
-## Los 14 trabajos
+## Los 14 trabajos — índice y escenario
 
 Cada uno corresponde a fotos suyas, **en el orden real en que ocurrió el trabajo**. Son 51 fotos de
 etapas, y siete de los catorce casos llegan hasta la pieza terminada.
+
+**No se muestran los 14 a la vez.** A la izquierda, un **índice pegajoso** con los catorce (número,
+título y cuántas etapas tiene); a la derecha, el **escenario**: solo el caso elegido, con sus
+etiquetas de técnica, su descripción y sus etapas en rejilla. Se cambia tocando el índice o con las
+flechas del escenario, que se deshabilitan en los extremos. Es la dirección C de
+`diseno-trabajos/`, elegida por Adán el 2026-09-18 (*"opción c"*).
+
+**Por qué, medido.** Con los 14 apilados la página entera medía **17 900 px en escritorio —20
+pantallas— y 38 999 px en móvil, 43 pantallas**, y `#trabajos` se llevaba el **43 % y el 47 %**. Los
+14 casos sumaban 7 091 px, y en el teléfono **uno solo llegaba a 1 908 px**: más de dos pantallas
+para un trabajo. Todo lo que va después —aeronaves, técnicas, quién es, preguntas y **el
+contacto**— quedaba enterrado detrás.
+
+| | Antes | Ahora |
+|---|---|---|
+| Página, escritorio | 17 900 px · **20 pantallas** | 11 286 px · **12.5** |
+| Página, móvil | 38 999 px · **43 pantallas** | 22 481 px · **25** |
+| `#trabajos` | 7 631 px · 43 % del total | **1 017 px · 9 %** |
+| Imágenes en el DOM | 81 | **34** |
+
+**Solo un caso está en el DOM a la vez**, que es de dónde sale la mitad del ahorro: no es que se
+oculten con CSS, es que no se pintan. El visor de fotos recorre lo que hay en el DOM, así que
+también baja de 81 a 35.
+
+**Bajo 1080 px el índice deja de ser columna** y pasa a una tira horizontal que se desliza sobre el
+escenario: una barra lateral de 320 px se comía el ancho útil justo donde menos sobra.
+
+`.trab-es` lleva `min-height:620px` en escritorio para que la página **no dé un salto** al cambiar
+de caso — uno de 2 etapas y otro de 6 no miden lo mismo.
 
 | # | Caso | Etapas | Llega a |
 |---|---|---|---|
@@ -115,9 +144,9 @@ etapas, y siete de los catorce casos llegan hasta la pieza terminada.
 | 13 | **Nariz del monomotor** | 4 | **Entregada con librea** |
 | 14 | **Estabilizador horizontal** | 3 | **Pintado con sus franjas** |
 
-**Todas las fotos de etapa miden lo mismo**, en los catorce casos. La rejilla es **fija** —4
-columnas, 3 bajo 1080 px, 2 bajo 860 y 1 bajo 520— y **no depende de cuántas etapas tenga el
-trabajo**.
+**Todas las fotos de etapa miden lo mismo**, en los catorce casos. La rejilla es **fija** —3
+columnas, 2 bajo 1080 px y 1 bajo 520— y **no depende de cuántas etapas tenga el trabajo**. Son 3 y
+no 4 porque el escenario le cede 346 px al índice: a 4 columnas las fotos se quedaban en 220 px.
 
 Hasta el 2026-09-18 la clase era `etapas n<número de etapas>`, con reglas de CSS solo para `n2`,
 `n3` y `n4`. Al pasar los casos de 8 a 14 aparecieron uno de **5** etapas y otro de **6**: `n5` y
@@ -126,9 +155,9 @@ el ancho de la sección**. Y aun con la clase correcta el tamaño dependía del 
 etapas daba fotos del doble de ancho que uno de 4, con el mismo alto de 250 px. De ahí venía la
 desproporción.
 
-Medido después: **51 fotos y un solo tamaño en cada ancho** (279×250 a 1600 px, 283×250 a 1000,
-364×250 en iPad, 312×250 en móvil), y **cero trabajos con fotos desiguales**. Una fila incompleta
-deja huecos, que es lo que toca en una rejilla.
+Medido: **un solo tamaño en cada ancho** (281×250 a 1600 px, 461×250 a 1000, 385×250 en iPad,
+354×250 en móvil), y **cero trabajos con fotos desiguales**. Una fila incompleta deja huecos, que es
+lo que toca en una rejilla.
 
 **El 12 es el mejor caso de la página** y por eso tiene seis etapas: daño, piel desprendida con el
 número de parte legible, preparación, laminado, **curado bajo bolsa de vacío con la manguera
@@ -148,7 +177,7 @@ reparación es justo el detalle** — la trama de la fibra, la huella hexagonal 
 de parte estampado en la piel. Todo eso cabía en una franja recortada.
 
 **Cualquier foto de la página se abre a pantalla completa con un clic**, y se ve **entera**
-(`contain`, sin recorte). Se recorren las 80 con las flechas del teclado o los botones, se cierra
+(`contain`, sin recorte). Se recorren con las flechas del teclado o los botones, se cierra
 con Esc, con la ✕ o con un clic fuera, y al cerrar **el scroll vuelve a la foto que estabas
 mirando** — sin eso, cerrar en la etapa 5 de un trabajo te dejaba arriba del todo.
 
@@ -220,7 +249,10 @@ español. El cliente de aquí es mexicano.
 El selector es **un botón que dice a qué idioma cambias**, no en cuál estás: en español pone
 *English*. Nunca se oculta, tampoco en móvil (ahí queda solo el globo).
 
-Los dos idiomas están completos: **2,857 palabras en español y 2,634 en inglés**, medidas.
+Los dos idiomas están completos. El contenido de `datos.js` son **4,192 palabras en español y
+3,901 en inglés**, medidas con los 14 trabajos pintados a la vez; con el índice y el escenario en
+pantalla hay **2,683 y 2,493**, porque solo un caso se pinta cada vez. No falta nada: el resto
+está a un toque en el índice.
 
 ## En el teléfono
 
@@ -244,19 +276,25 @@ En la **barra de apps del Dashboard**, en un grupo propio al final — ver "La b
 
 ## Comprobado
 
-Chromium `file://` a 1600 y 390 px, en español y en inglés, **con el navegador puesto en `en-US`**
-(el caso que fallaba): abre en español, **11 secciones**, 7 servicios, **14 trabajos con 51 etapas**,
+Chromium `file://` a 1600, 1000, 820 y 390 px, en español y en inglés, **con el navegador puesto en
+`en-US`** (el caso que fallaba): abre en español, **11 secciones**, 7 servicios, **índice de 14
+trabajos** que abre el caso elegido con sus etapas,
 6 aeronaves, 6 pasos, 8 técnicas, 20 capacidades, 6 credenciales, **12 fotos de galería**, 8
-preguntas, **80 imágenes y ninguna rota**, **cero huecos**, sin desborde horizontal, sin errores de
-consola y sin marcadores sin resolver. Medido: **4,192 palabras en español y 3,901 en inglés**.
+preguntas, **33 imágenes en el DOM y ninguna rota**, **cero huecos**, sin desborde horizontal, sin
+errores de consola y sin marcadores sin resolver.
 
-Las 80 imágenes se comprobaron **forzando la carga de todo lo diferido** (`loading='eager'` y
-scroll al final): con `lazy` una foto rota no se detecta hasta que alguien baja hasta ella.
+**El índice**, recorrido entero: los 14 abren su caso, el activo se marca, las flechas avanzan y se
+deshabilitan en el primero y en el último, y las lupas del visor se vuelven a poner en cada cambio.
 
-**El visor**, probado a 1600 y 390 px: 80 fotos abribles y 80 lupas, abre sin recortar (proporción
-idéntica a la del archivo), bloquea el scroll del fondo, las flechas pasan de foto, Esc cierra y
-devuelve el scroll, el segundo clic lleva de 567×755 a 1000×1333 y con la foto ampliada el clic
-fuera **no** cierra, para poder arrastrarla.
+Las imágenes se comprueban **forzando la carga de todo lo diferido** (`loading='eager'` y scroll
+al final): con `lazy` una foto rota no se detecta hasta que alguien baja hasta ella. Las 51 de
+etapa se comprobaron recorriendo los 14 casos del índice, uno a uno.
+
+**El visor**, probado a 1600 y 390 px: abre sin recortar (proporción idéntica a la del archivo),
+bloquea el scroll del fondo, las flechas pasan de foto, Esc cierra y devuelve el scroll, el segundo
+clic lleva de 567×755 a 1000×1333 y con la foto ampliada el clic fuera **no** cierra, para poder
+arrastrarla. Recorre lo que hay en el DOM, así que con el índice y el escenario son 35 fotos y no
+81.
 
 Los cinco enlaces de contacto, comprobados uno a uno: `wa.me/525586184919`,
 `mailto:adanarturomartinez@gmail.com`, el perfil personal de LinkedIn, la página de empresa y el

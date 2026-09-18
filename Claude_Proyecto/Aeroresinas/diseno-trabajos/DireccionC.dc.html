@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Aeroresinas — Índice y escenario</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+body{margin:0;font-family:'IBM Plex Sans',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#1b47ff}a:hover{color:#0a2fd0}
+</style>
+</helmet>
+
+<div style="width: 1440px; height: 1200px; box-sizing: border-box; background: #eef1f6; color: #0a1020; display: flex; flex-direction: column; overflow: hidden;">
+
+  <div style="padding: 56px 80px 24px; display: flex; align-items: flex-end; justify-content: space-between; gap: 40px;">
+    <div style="display: flex; flex-direction: column; gap: 13px;">
+      <div style="display: flex; align-items: center; gap: 10px; font-family: 'IBM Plex Mono', monospace; font-size: 11px; font-weight: 600; letter-spacing: 0.18em; color: #1b47ff;">
+        <span style="width: 26px; height: 1px; background: #1b47ff;"></span>CASOS REALES
+      </div>
+      <h2 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 48px; font-weight: 600; letter-spacing: -0.035em; line-height: 1.06;">Elige un trabajo y ábrelo.</h2>
+    </div>
+    <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; letter-spacing: 0.1em; color: #8994ab; padding-bottom: 8px;">14 TRABAJOS · 51 ETAPAS</div>
+  </div>
+
+  <div style="flex-grow: 1; min-height: 0; padding: 0 80px 56px; display: grid; grid-template-columns: 318px minmax(0, 1fr); gap: 26px; overflow: hidden;">
+
+    <!-- El índice: los 14, siempre visibles, sin desplazar la página -->
+    <div style="display: flex; flex-direction: column; gap: 4px; min-height: 0; overflow: hidden; padding-right: 4px;">
+      <sc-for list="{{indice}}" as="i" hint-placeholder-count="14">
+        <a href="#" style="display: grid; grid-template-columns: 26px minmax(0, 1fr) auto; gap: 11px; align-items: center; padding: 11px 13px; border-radius: 11px; background: {{i.bg}}; border: 1px solid {{i.bd}}; text-decoration: none; color: inherit;">
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; font-weight: 600; color: {{i.num}};">{{i.n}}</span>
+          <span style="font-size: 13px; font-weight: {{i.w}}; line-height: 1.3; color: {{i.fg}};">{{i.t}}</span>
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: {{i.num}};">{{i.e}}</span>
+        </a>
+      </sc-for>
+    </div>
+
+    <!-- El escenario: solo el trabajo elegido, con sus etapas grandes -->
+    <div style="display: flex; flex-direction: column; gap: 16px; min-height: 0;">
+      <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 28px;">
+        <div style="display: flex; flex-direction: column; gap: 9px; max-width: 62ch;">
+          <div style="display: flex; gap: 7px;">
+            <span style="font-family: 'IBM Plex Mono', monospace; font-size: 9.5px; font-weight: 600; letter-spacing: 0.12em; padding: 5px 10px; border-radius: 6px; background: rgba(0,194,212,0.14); color: #07707c;">COMPOSITE</span>
+            <span style="font-family: 'IBM Plex Mono', monospace; font-size: 9.5px; font-weight: 600; letter-spacing: 0.12em; padding: 5px 10px; border-radius: 6px; background: rgba(10,16,32,0.07); color: #48536b;">BOLSA DE VACÍO</span>
+          </div>
+          <h3 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 30px; font-weight: 600; letter-spacing: -0.025em; line-height: 1.15;">Costado bajo el parabrisas</h3>
+          <p style="margin: 0; font-size: 14px; line-height: 1.65; color: #48536b;">El panel se abrió por completo: el daño, la piel desprendida, la preparación, el laminado, el curado bajo bolsa de vacío y la pieza terminada. Seis etapas de la misma reparación, en el orden en que ocurrió.</p>
+        </div>
+        <div style="display: flex; gap: 6px; flex: none; padding-top: 4px;">
+          <button type="button" aria-label="Trabajo anterior" style="width: 40px; height: 40px; border-radius: 11px; border: 1px solid rgba(10,16,32,0.12); background: rgba(255,255,255,0.8); color: #48536b; cursor: pointer; display: flex; align-items: center; justify-content: center;">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>
+          </button>
+          <button type="button" aria-label="Trabajo siguiente" style="width: 40px; height: 40px; border-radius: 11px; border: 1px solid rgba(10,16,32,0.12); background: rgba(255,255,255,0.8); color: #48536b; cursor: pointer; display: flex; align-items: center; justify-content: center;">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <div style="flex-grow: 1; min-height: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); grid-template-rows: repeat(2, minmax(0, 1fr)); gap: 14px;">
+        <sc-for list="{{etapas}}" as="e" hint-placeholder-count="6">
+          <figure style="margin: 0; position: relative; border-radius: 15px; overflow: hidden; background: {{e.tint}}; border: 1px solid {{e.bd}};">
+            <sc-if value="{{e.foto}}" hint-placeholder-val="{{true}}">
+              <img src="{{e.foto}}" alt="{{e.alt}}" style="width: 100%; height: 100%; object-fit: cover; display: block;">
+            </sc-if>
+            <figcaption style="position: absolute; left: 0; right: 0; bottom: 0; padding: 34px 14px 12px; background: linear-gradient(to top, rgba(6,10,22,0.93), transparent); font-size: 11.5px; line-height: 1.45; color: #dfe4ee;"><b style="color: #fff;">{{e.n}} · {{e.t}}</b> {{e.d}}</figcaption>
+          </figure>
+        </sc-for>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1200}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const off = { bg: 'rgba(255,255,255,0.6)', bd: 'rgba(10,16,32,0.07)', fg: '#48536b', num: '#8994ab', w: '500' };
+    const on = { bg: '#0a1020', bd: '#0a1020', fg: '#ffffff', num: '#6b8cff', w: '600' };
+    const T = [
+      ['01', 'Techo de cabina · Bell', 4], ['02', 'Carenado lateral · núcleo', 4],
+      ['03', 'Techo delaminado', 3], ['04', 'Piel y estructura', 3],
+      ['05', 'Nariz · impactos', 2], ['06', 'Parabrisas · marco', 3],
+      ['07', 'Tomas de aire y rejillas', 3], ['08', 'Techo con corrosión', 5],
+      ['09', 'Radomo delaminado', 4], ['10', 'Antenas y puenteo', 5],
+      ['11', 'Costado bajo el parabrisas', 6], ['12', 'Nariz del monomotor', 4],
+      ['13', 'Estabilizador horizontal', 3], ['14', 'Puertas y estabilizador', 2]
+    ];
+    const t = '#dfe4ee', bd = 'rgba(10,16,32,0.09)';
+    return {
+      indice: T.map(x => Object.assign({ n: x[0], t: x[1], e: x[2] }, x[0] === '11' ? on : off)),
+      etapas: [
+        { n: '01', t: 'El daño', d: 'El panel abierto, con el interior a la vista.', foto: '/_blob/cae01de0158a6b80a2e7b4b5a34e2c1f', alt: 'Panel abierto', tint: t, bd: bd },
+        { n: '02', t: 'La piel desprendida', d: 'Sostenida en su sitio; el nº de parte sigue legible.', foto: '', alt: '', tint: t, bd: bd },
+        { n: '03', t: 'Preparado', d: 'Saneado e imprimado, con el contorno enmascarado.', foto: '', alt: '', tint: t, bd: bd },
+        { n: '04', t: 'Laminado', d: 'Capas nuevas con la orientación original.', foto: '', alt: '', tint: t, bd: bd },
+        { n: '05', t: 'Bolsa de vacío', d: 'Aprieta las capas mientras cura y saca el aire.', foto: '/_blob/b5017892dbca42c24eba934811379124', alt: 'Bolsa de vacío con lámpara', tint: t, bd: bd },
+        { n: '06', t: 'Terminado', d: 'Con la curva del fuselaje recuperada.', foto: '/_blob/b1d5370b397c8e3851f1803308fa00db', alt: 'Panel terminado', tint: t, bd: 'rgba(27,71,255,0.45)' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

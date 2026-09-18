@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Aeroresinas — Antes y después</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+body{margin:0;font-family:'IBM Plex Sans',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#1b47ff}a:hover{color:#0a2fd0}
+</style>
+</helmet>
+
+<div style="width: 1440px; height: 1200px; box-sizing: border-box; background: #eef1f6; color: #0a1020; display: flex; flex-direction: column; overflow: hidden;">
+
+  <div style="padding: 60px 80px 26px; display: flex; flex-direction: column; gap: 14px;">
+    <div style="display: flex; align-items: center; gap: 10px; font-family: 'IBM Plex Mono', monospace; font-size: 11px; font-weight: 600; letter-spacing: 0.18em; color: #1b47ff;">
+      <span style="width: 26px; height: 1px; background: #1b47ff;"></span>ANTES Y DESPUÉS
+    </div>
+    <h2 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 50px; font-weight: 600; letter-spacing: -0.035em; line-height: 1.06; max-width: 22ch;">Lo que llegó, y lo que salió.</h2>
+    <p style="margin: 0; font-size: 16px; line-height: 1.65; color: #48536b; max-width: 62ch;">Siete de los catorce casos terminan en la pieza acabada. Arrastra el tirador para ver el mismo panel antes y después; las etapas de en medio están debajo, en su orden.</p>
+  </div>
+
+  <div style="flex-grow: 1; min-height: 0; padding: 0 80px 60px; display: flex; flex-direction: column; gap: 22px; overflow: hidden;">
+
+    <!-- El comparador: una sola pieza, dos momentos, un tirador entre medias -->
+    <div style="position: relative; height: 460px; border-radius: 22px; overflow: hidden; border: 1px solid rgba(10,16,32,0.1); box-shadow: 0 24px 60px -30px rgba(10,16,32,0.4);">
+      <img src="/_blob/b1d5370b397c8e3851f1803308fa00db" alt="El panel terminado, con la curva del fuselaje recuperada" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;">
+      <div style="position: absolute; top: 0; left: 0; bottom: 0; width: 46%; overflow: hidden;">
+        <img src="/_blob/cae01de0158a6b80a2e7b4b5a34e2c1f" alt="El mismo panel abierto, con el interior de la cabina a la vista" style="width: 1280px; height: 460px; object-fit: cover;">
+      </div>
+      <div style="position: absolute; top: 0; bottom: 0; left: 46%; width: 2px; background: #fff; box-shadow: 0 0 18px rgba(0,0,0,0.5);"></div>
+      <button type="button" aria-label="Arrastrar para comparar" style="position: absolute; top: 50%; left: 46%; transform: translate(-50%, -50%); width: 52px; height: 52px; border-radius: 50%; border: 2px solid #fff; background: rgba(10,16,32,0.55); backdrop-filter: blur(8px); color: #fff; cursor: ew-resize; display: flex; align-items: center; justify-content: center; gap: 2px;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 6l-6 6 6 6"/></svg>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="margin-left: -12px;"><path d="M10 6l6 6-6 6"/></svg>
+      </button>
+      <div style="position: absolute; top: 20px; left: 20px; padding: 7px 14px; border-radius: 999px; background: rgba(194,65,12,0.92); color: #fff; font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; font-weight: 600; letter-spacing: 0.14em;">ANTES</div>
+      <div style="position: absolute; top: 20px; right: 20px; padding: 7px 14px; border-radius: 999px; background: rgba(27,71,255,0.92); color: #fff; font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; font-weight: 600; letter-spacing: 0.14em;">DESPUÉS</div>
+      <div style="position: absolute; left: 0; right: 0; bottom: 0; padding: 60px 26px 22px; background: linear-gradient(to top, rgba(6,10,22,0.92), transparent); color: #fff;">
+        <div style="font-family: 'Space Grotesk', sans-serif; font-size: 26px; font-weight: 600; letter-spacing: -0.02em;">Costado bajo el parabrisas</div>
+        <div style="font-size: 13.5px; color: #cdd5e4; margin-top: 5px;">Composite · bolsa de vacío — 6 etapas</div>
+      </div>
+    </div>
+
+    <!-- Las etapas de en medio, como tira de miniaturas -->
+    <div style="display: flex; gap: 11px; align-items: center;">
+      <sc-for list="{{tira}}" as="e" hint-placeholder-count="6">
+        <div style="flex-grow: 1; display: flex; flex-direction: column; gap: 7px;">
+          <div style="height: 86px; border-radius: 11px; background: {{e.tint}}; border: 1px solid {{e.bd}}; overflow: hidden; position: relative;">
+            <sc-if value="{{e.foto}}" hint-placeholder-val="{{true}}">
+              <img src="{{e.foto}}" alt="{{e.alt}}" style="width: 100%; height: 100%; object-fit: cover; display: block;">
+            </sc-if>
+          </div>
+          <div style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 0.1em; color: #8994ab;">{{e.n}}</div>
+          <div style="font-size: 11.5px; line-height: 1.4; color: #48536b;">{{e.t}}</div>
+        </div>
+      </sc-for>
+    </div>
+
+    <!-- Los otros seis casos que terminan en pieza acabada -->
+    <div style="margin-top: auto; display: flex; align-items: center; gap: 12px; overflow: hidden;">
+      <div style="font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; letter-spacing: 0.14em; color: #8994ab; white-space: nowrap; padding-right: 6px;">OTROS SEIS ACABADOS</div>
+      <sc-for list="{{otros}}" as="o" hint-placeholder-count="6">
+        <a href="Main.dc.html" style="flex-grow: 1; display: flex; align-items: center; gap: 11px; padding: 11px 14px; border-radius: 13px; background: rgba(255,255,255,0.78); border: 1px solid rgba(10,16,32,0.09); text-decoration: none; color: inherit; min-width: 0;">
+          <span style="width: 34px; height: 34px; border-radius: 9px; background: {{o.tint}}; flex: none; overflow: hidden;">
+            <sc-if value="{{o.foto}}" hint-placeholder-val="{{true}}">
+              <img src="{{o.foto}}" alt="" style="width: 100%; height: 100%; object-fit: cover; display: block;">
+            </sc-if>
+          </span>
+          <span style="min-width: 0; display: flex; flex-direction: column; gap: 2px;">
+            <span style="font-size: 12.5px; font-weight: 600; line-height: 1.25; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{o.t}}</span>
+            <span style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: #8994ab;">{{o.e}} etapas</span>
+          </span>
+        </a>
+      </sc-for>
+    </div>
+  </div>
+</div>
+</x-dc>
+
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1200}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const t = '#dfe4ee', bd = 'rgba(10,16,32,0.09)';
+    return {
+      tira: [
+        { n: '01', t: 'El daño, abierto', foto: '/_blob/cae01de0158a6b80a2e7b4b5a34e2c1f', alt: 'Panel abierto', tint: t, bd: bd },
+        { n: '02', t: 'La piel desprendida', foto: '', alt: '', tint: t, bd: bd },
+        { n: '03', t: 'Saneado e imprimado', foto: '', alt: '', tint: t, bd: bd },
+        { n: '04', t: 'Capas nuevas curadas', foto: '', alt: '', tint: t, bd: bd },
+        { n: '05', t: 'Bolsa de vacío', foto: '/_blob/b5017892dbca42c24eba934811379124', alt: 'Bolsa de vacío con la lámpara de calor', tint: t, bd: bd },
+        { n: '06', t: 'Terminado', foto: '/_blob/b1d5370b397c8e3851f1803308fa00db', alt: 'El panel terminado', tint: t, bd: 'rgba(27,71,255,0.4)' }
+      ],
+      otros: [
+        { t: 'Techo de cabina · Bell', e: 4, foto: '', tint: '#dfe4ee' },
+        { t: 'Carenado lateral', e: 4, foto: '/_blob/b1d5370b397c8e3851f1803308fa00db', tint: '#dfe4ee' },
+        { t: 'Techo con corrosión', e: 5, foto: '/_blob/293654ddb3e0cf8288626013f485f41a', tint: '#dfe4ee' },
+        { t: 'Antenas y puenteo', e: 5, foto: '/_blob/2c16ff9d11ecaa7e04f3ea2da9dfc3be', tint: '#dfe4ee' },
+        { t: 'Nariz del monomotor', e: 4, foto: '/_blob/633fb88f3983d3140845b32d49478723', tint: '#dfe4ee' },
+        { t: 'Estabilizador horizontal', e: 3, foto: '/_blob/20f5f7417c4f546d6bf0897f26aa7ae5', tint: '#dfe4ee' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

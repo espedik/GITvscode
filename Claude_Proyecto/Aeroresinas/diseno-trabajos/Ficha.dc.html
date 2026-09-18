@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Aeroresinas — Un trabajo abierto</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+body{margin:0;font-family:'IBM Plex Sans',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#6b8cff}a:hover{color:#9db2ff}
+</style>
+</helmet>
+
+<div style="width: 1440px; height: 1000px; box-sizing: border-box; background: #0a1020; color: #f3f5fa; display: flex; flex-direction: column; overflow: hidden;">
+
+  <div style="padding: 26px 80px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.09);">
+    <a href="Main.dc.html" style="display: inline-flex; align-items: center; gap: 9px; font-size: 13.5px; font-weight: 500; text-decoration: none; color: #a8b2c7;">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>
+      Todos los trabajos
+    </a>
+    <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.14em; color: #7d89a3;">TRABAJO 11 DE 14</div>
+  </div>
+
+  <div style="flex-grow: 1; min-height: 0; display: grid; grid-template-columns: 360px minmax(0, 1fr); overflow: hidden;">
+
+    <!-- La columna fija: qué fue, qué se hizo y con qué técnica -->
+    <div style="padding: 44px 36px 44px 80px; display: flex; flex-direction: column; gap: 20px; border-right: 1px solid rgba(255,255,255,0.09);">
+      <div style="display: flex; gap: 7px; flex-wrap: wrap;">
+        <span style="font-family: 'IBM Plex Mono', monospace; font-size: 9.5px; font-weight: 600; letter-spacing: 0.12em; padding: 5px 10px; border-radius: 6px; background: rgba(0,194,212,0.18); color: #4fe0ee;">COMPOSITE</span>
+        <span style="font-family: 'IBM Plex Mono', monospace; font-size: 9.5px; font-weight: 600; letter-spacing: 0.12em; padding: 5px 10px; border-radius: 6px; background: rgba(255,255,255,0.12); color: #cbd3e2;">BOLSA DE VACÍO</span>
+      </div>
+      <h2 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 34px; font-weight: 600; letter-spacing: -0.03em; line-height: 1.12;">Costado bajo el parabrisas</h2>
+      <p style="margin: 0; font-size: 14.5px; line-height: 1.7; color: #a8b2c7;">El panel del costado se abrió por completo: el daño, la piel desprendida, la preparación, el laminado, el curado bajo bolsa de vacío y la pieza terminada. Seis etapas de la misma reparación, en el orden en que ocurrió.</p>
+
+      <div style="margin-top: 6px; display: flex; flex-direction: column; gap: 1px; border-radius: 12px; overflow: hidden; border: 1px solid rgba(255,255,255,0.09);">
+        <sc-for list="{{datos}}" as="d" hint-placeholder-count="3">
+          <div style="display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 13px 15px; background: rgba(255,255,255,0.035);">
+            <span style="font-family: 'IBM Plex Mono', monospace; font-size: 9.5px; letter-spacing: 0.12em; color: #7d89a3;">{{d.k}}</span>
+            <span style="font-size: 13.5px; font-weight: 500; text-align: right;">{{d.v}}</span>
+          </div>
+        </sc-for>
+      </div>
+
+      <a href="#contacto" style="margin-top: auto; display: inline-flex; align-items: center; justify-content: center; gap: 9px; padding: 15px 22px; border-radius: 13px; background: {{acento}}; color: #0a1020; font-size: 14.5px; font-weight: 600; text-decoration: none;">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21l1.6-4.4A8 8 0 1 1 8 20.3z"/></svg>
+        Mándale tu caso
+      </a>
+    </div>
+
+    <!-- El escenario: las etapas en orden, grandes, con su pie -->
+    <div style="padding: 44px 80px 44px 44px; display: flex; flex-direction: column; gap: 18px; min-height: 0;">
+      <div style="display: flex; align-items: center; justify-content: space-between;">
+        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.16em; color: #7d89a3;">LAS SEIS ETAPAS, EN ORDEN</div>
+        <div style="display: flex; gap: 6px;">
+          <sc-for list="{{pasos}}" as="p" hint-placeholder-count="6">
+            <span style="width: 26px; height: 3px; border-radius: 2px; background: {{p.c}};"></span>
+          </sc-for>
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; min-height: 0;">
+        <figure style="margin: 0; position: relative; height: 300px; border-radius: 16px; overflow: hidden; border: 1px solid rgba(255,255,255,0.1);">
+          <img src="/_blob/cae01de0158a6b80a2e7b4b5a34e2c1f" alt="El panel abierto con el interior de la cabina a la vista" style="width: 100%; height: 100%; object-fit: cover; display: block;">
+          <figcaption style="position: absolute; left: 0; right: 0; bottom: 0; padding: 30px 16px 14px; background: linear-gradient(to top, rgba(6,10,22,0.95), transparent); font-size: 12.5px; line-height: 1.5; color: #dfe4ee;"><b style="color: #fff;">01 · El daño.</b> El panel abierto, con el interior de la cabina a la vista. Así llegó la aeronave.</figcaption>
+        </figure>
+        <figure style="margin: 0; position: relative; height: 300px; border-radius: 16px; overflow: hidden; border: 1px solid rgba(255,255,255,0.1);">
+          <img src="/_blob/b5017892dbca42c24eba934811379124" alt="Bolsa de vacío sellada sobre la reparación con la lámpara de calor" style="width: 100%; height: 100%; object-fit: cover; display: block;">
+          <figcaption style="position: absolute; left: 0; right: 0; bottom: 0; padding: 30px 16px 14px; background: linear-gradient(to top, rgba(6,10,22,0.95), transparent); font-size: 12.5px; line-height: 1.5; color: #dfe4ee;"><b style="color: #fff;">05 · Bolsa de vacío.</b> El vacío aprieta las capas contra la pieza mientras cura y saca el aire atrapado.</figcaption>
+        </figure>
+      </div>
+
+      <figure style="margin: 0; position: relative; flex-grow: 1; min-height: 0; border-radius: 16px; overflow: hidden; border: 1px solid rgba(107,140,255,0.4);">
+        <img src="/_blob/b1d5370b397c8e3851f1803308fa00db" alt="El panel terminado, con la curva del fuselaje recuperada" style="width: 100%; height: 100%; object-fit: cover; display: block;">
+        <div style="position: absolute; top: 16px; left: 16px; padding: 6px 12px; border-radius: 999px; background: {{acento}}; color: #0a1020; font-family: 'IBM Plex Mono', monospace; font-size: 10px; font-weight: 600; letter-spacing: 0.12em;">RESULTADO</div>
+        <figcaption style="position: absolute; left: 0; right: 0; bottom: 0; padding: 40px 20px 18px; background: linear-gradient(to top, rgba(6,10,22,0.95), transparent); font-size: 14px; line-height: 1.55; color: #dfe4ee;"><b style="color: #fff;">06 · Terminado.</b> Relleno, lijado y con la curva del fuselaje recuperada. Lista para pintura.</figcaption>
+      </figure>
+    </div>
+  </div>
+</div>
+</x-dc>
+
+<script type="text/x-dc" data-dc-script data-props='{"acento":{"editor":"color","default":"#6b8cff","options":["#6b8cff","#00c2d4","#ff9e6b","#7cf5b0"]},"$preview":{"width":1440,"height":1000}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const a = this.props.acento ?? '#6b8cff';
+    return {
+      acento: a,
+      datos: [
+        { k: 'ETAPAS', v: '6, en orden' },
+        { k: 'TÉCNICA', v: 'Laminado y curado al vacío' },
+        { k: 'CONFORME A', v: 'SRM · AMM · Boletines' }
+      ],
+      pasos: [ { c: a }, { c: a }, { c: a }, { c: a }, { c: a }, { c: a } ]
+    };
+  }
+}
+</script>
+</body>
+</html>

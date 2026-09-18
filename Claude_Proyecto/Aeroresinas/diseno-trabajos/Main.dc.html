@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Aeroresinas — Muro de trabajos</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+body{margin:0;font-family:'IBM Plex Sans',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#6b8cff}a:hover{color:#9db2ff}
+</style>
+</helmet>
+
+<div style="width: 1440px; height: 1560px; box-sizing: border-box; background: #0a1020; color: #f3f5fa; display: flex; flex-direction: column; overflow: hidden;">
+
+  <!-- La banda oscura empieza aquí: el resto de la página sigue siendo blanca.
+       El corte es el que hace que la sección se lea como un capítulo aparte. -->
+  <div style="padding: 64px 80px 0; display: flex; flex-direction: column; gap: 34px;">
+
+    <div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 48px;">
+      <div style="display: flex; flex-direction: column; gap: 16px; max-width: 640px;">
+        <div style="display: flex; align-items: center; gap: 10px; font-family: 'IBM Plex Mono', monospace; font-size: 11px; font-weight: 600; letter-spacing: 0.18em; color: {{acento}};">
+          <span style="width: 26px; height: 1px; background: {{acento}};"></span>CASOS REALES
+        </div>
+        <h2 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 54px; font-weight: 600; letter-spacing: -0.035em; line-height: 1.04;">Catorce aeronaves,<br>abiertas y cerradas.</h2>
+        <p style="margin: 0; font-size: 16px; line-height: 1.65; color: #a8b2c7; max-width: 58ch;">Cada caso es una reparación suya, fotografiada mientras la hacía. Elige la técnica que te interesa y ábrelo: verás las etapas en orden, del daño a la pieza entregada.</p>
+      </div>
+
+      <!-- Las cifras son el gancho: dicen el tamaño del trabajo sin una sola foto -->
+      <div style="display: flex; gap: 40px; padding-bottom: 6px;">
+        <sc-for list="{{cifras}}" as="c" hint-placeholder-count="3">
+          <div style="display: flex; flex-direction: column; gap: 6px;">
+            <div style="font-family: 'Space Grotesk', sans-serif; font-size: 44px; font-weight: 600; letter-spacing: -0.03em; line-height: 1; color: {{acento}};">{{c.n}}</div>
+            <div style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 0.14em; color: #7d89a3; text-transform: uppercase;">{{c.k}}</div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+
+    <!-- Filtros por técnica. Sustituyen al scroll: en vez de pasar 14 bloques
+         para encontrar el de antenas, tocas «Antenas» y quedan dos. -->
+    <div style="display: flex; gap: 9px; flex-wrap: wrap; padding-bottom: 6px; border-bottom: 1px solid rgba(255,255,255,0.09);">
+      <sc-for list="{{filtros}}" as="f" hint-placeholder-count="7">
+        <button type="button" style="padding: 10px 17px; border-radius: 999px; border: 1px solid {{f.bd}}; background: {{f.bg}}; color: {{f.fg}}; font-family: 'IBM Plex Sans', sans-serif; font-size: 13.5px; font-weight: 500; cursor: pointer; white-space: nowrap;">{{f.n}}<span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; opacity: 0.6; margin-left: 7px;">{{f.c}}</span></button>
+      </sc-for>
+    </div>
+  </div>
+
+  <!-- El muro. Dos destacados a doble ancho arriba, el resto en rejilla de 4. -->
+  <div style="flex-grow: 1; min-height: 0; padding: 30px 80px 64px; display: flex; flex-direction: column; gap: 18px; overflow: hidden;">
+
+    <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px;">
+      <a href="Ficha.dc.html" style="position: relative; height: 320px; border-radius: 20px; overflow: hidden; text-decoration: none; color: inherit; display: block; border: 1px solid rgba(255,255,255,0.1);">
+        <img src="/_blob/cae01de0158a6b80a2e7b4b5a34e2c1f" alt="El panel del costado abierto, con el interior de la cabina a la vista" style="width: 100%; height: 100%; object-fit: cover; display: block;">
+        <div style="position: absolute; inset: 0; background: linear-gradient(to top, rgba(6,10,22,0.94) 0%, rgba(6,10,22,0.35) 45%, transparent 70%);"></div>
+        <div style="position: absolute; left: 24px; right: 24px; bottom: 22px; display: flex; flex-direction: column; gap: 9px;">
+          <div style="display: flex; gap: 7px;">
+            <span style="font-family: 'IBM Plex Mono', monospace; font-size: 9.5px; font-weight: 600; letter-spacing: 0.12em; padding: 5px 10px; border-radius: 6px; background: rgba(0,194,212,0.18); color: #4fe0ee;">COMPOSITE</span>
+            <span style="font-family: 'IBM Plex Mono', monospace; font-size: 9.5px; font-weight: 600; letter-spacing: 0.12em; padding: 5px 10px; border-radius: 6px; background: rgba(255,255,255,0.12); color: #cbd3e2;">BOLSA DE VACÍO</span>
+          </div>
+          <div style="font-family: 'Space Grotesk', sans-serif; font-size: 25px; font-weight: 600; letter-spacing: -0.02em; line-height: 1.2;">Costado bajo el parabrisas</div>
+          <div style="display: flex; align-items: center; gap: 12px; font-size: 13.5px; color: #b8c2d6;">
+            <span style="font-family: 'IBM Plex Mono', monospace; color: {{acento}};">6 etapas</span>
+            <span style="opacity: 0.4;">·</span>
+            <span>Del daño abierto a la pieza terminada</span>
+          </div>
+        </div>
+        <div style="position: absolute; top: 18px; right: 18px; padding: 6px 12px; border-radius: 999px; background: rgba(6,10,22,0.7); backdrop-filter: blur(8px); font-family: 'IBM Plex Mono', monospace; font-size: 10px; font-weight: 600; letter-spacing: 0.12em; color: #fff;">EL CASO COMPLETO</div>
+      </a>
+
+      <a href="Ficha.dc.html" style="position: relative; height: 320px; border-radius: 20px; overflow: hidden; text-decoration: none; color: inherit; display: block; border: 1px solid rgba(255,255,255,0.1);">
+        <img src="/_blob/293654ddb3e0cf8288626013f485f41a" alt="Techo decapado con la corrosión en manchas" style="width: 100%; height: 100%; object-fit: cover; display: block;">
+        <div style="position: absolute; inset: 0; background: linear-gradient(to top, rgba(6,10,22,0.94) 0%, rgba(6,10,22,0.35) 45%, transparent 70%);"></div>
+        <div style="position: absolute; left: 24px; right: 24px; bottom: 22px; display: flex; flex-direction: column; gap: 9px;">
+          <div style="display: flex; gap: 7px;">
+            <span style="font-family: 'IBM Plex Mono', monospace; font-size: 9.5px; font-weight: 600; letter-spacing: 0.12em; padding: 5px 10px; border-radius: 6px; background: rgba(194,65,12,0.24); color: #ff9e6b;">CORROSIÓN</span>
+            <span style="font-family: 'IBM Plex Mono', monospace; font-size: 9.5px; font-weight: 600; letter-spacing: 0.12em; padding: 5px 10px; border-radius: 6px; background: rgba(255,255,255,0.12); color: #cbd3e2;">CHAPA</span>
+          </div>
+          <div style="font-family: 'Space Grotesk', sans-serif; font-size: 25px; font-weight: 600; letter-spacing: -0.02em; line-height: 1.2;">Techo con corrosión y piel nueva</div>
+          <div style="display: flex; align-items: center; gap: 12px; font-size: 13.5px; color: #b8c2d6;">
+            <span style="font-family: 'IBM Plex Mono', monospace; color: {{acento}};">5 etapas</span>
+            <span style="opacity: 0.4;">·</span>
+            <span>Hasta las antenas montadas otra vez</span>
+          </div>
+        </div>
+      </a>
+    </div>
+
+    <!-- Los otros doce, en rejilla. Una tarjeta = un caso, y nada más. -->
+    <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 18px;">
+      <sc-for list="{{casos}}" as="c" hint-placeholder-count="8">
+        <a href="Ficha.dc.html" style="display: flex; flex-direction: column; border-radius: 16px; overflow: hidden; background: rgba(255,255,255,0.045); border: 1px solid rgba(255,255,255,0.09); text-decoration: none; color: inherit;">
+          <div style="height: 132px; background: {{c.tint}}; position: relative; overflow: hidden;">
+            <sc-if value="{{c.foto}}" hint-placeholder-val="{{true}}">
+              <img src="{{c.foto}}" alt="{{c.alt}}" style="width: 100%; height: 100%; object-fit: cover; display: block;">
+            </sc-if>
+            <span style="position: absolute; top: 10px; left: 10px; font-family: 'IBM Plex Mono', monospace; font-size: 9px; font-weight: 600; letter-spacing: 0.12em; padding: 4px 8px; border-radius: 5px; background: rgba(6,10,22,0.72); color: #cbd3e2;">{{c.tec}}</span>
+          </div>
+          <div style="padding: 14px 15px 15px; display: flex; flex-direction: column; gap: 7px; flex-grow: 1;">
+            <div style="font-family: 'Space Grotesk', sans-serif; font-size: 15px; font-weight: 600; letter-spacing: -0.01em; line-height: 1.3;">{{c.t}}</div>
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-top: auto; padding-top: 8px;">
+              <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #7d89a3;">{{c.e}} etapas</span>
+              <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: {{acento}};">Ver →</span>
+            </div>
+          </div>
+        </a>
+      </sc-for>
+    </div>
+  </div>
+</div>
+</x-dc>
+
+<script type="text/x-dc" data-dc-script data-props='{"acento":{"editor":"color","default":"#6b8cff","options":["#6b8cff","#00c2d4","#ff9e6b","#7cf5b0"]},"$preview":{"width":1440,"height":1560}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const a = this.props.acento ?? '#6b8cff';
+    const act = { bg: a, bd: a, fg: '#0a1020' };
+    const off = { bg: 'rgba(255,255,255,0.05)', bd: 'rgba(255,255,255,0.14)', fg: '#c3ccdd' };
+    return {
+      acento: a,
+      cifras: [ { n: '14', k: 'Trabajos' }, { n: '51', k: 'Etapas' }, { n: '08', k: 'Técnicas' } ],
+      filtros: [
+        Object.assign({ n: 'Todos', c: 14 }, act),
+        Object.assign({ n: 'Composite', c: 6 }, off),
+        Object.assign({ n: 'Panel sándwich', c: 3 }, off),
+        Object.assign({ n: 'Chapa y remaches', c: 2 }, off),
+        Object.assign({ n: 'Corrosión', c: 2 }, off),
+        Object.assign({ n: 'Antenas', c: 1 }, off),
+        Object.assign({ n: 'Parabrisas', c: 1 }, off),
+        Object.assign({ n: 'Bolsa de vacío', c: 3 }, off)
+      ],
+      // Los doce casos restantes, con sus etapas reales.
+      casos: [
+        { t: 'Antenas: desmontaje, sellado y puenteo', tec: 'ANTENAS', e: 5, foto: '/_blob/2c16ff9d11ecaa7e04f3ea2da9dfc3be', alt: 'Tiras de puenteo en estrella alrededor de la base de la antena', tint: '#131c33' },
+        { t: 'Estabilizador horizontal · borde y núcleo', tec: 'PANEL SÁNDWICH', e: 3, foto: '/_blob/20f5f7417c4f546d6bf0897f26aa7ae5', alt: 'Extremo abierto con el núcleo verde a la vista', tint: '#131c33' },
+        { t: 'Nariz del monomotor · panel roto', tec: 'COMPOSITE', e: 4, foto: '/_blob/633fb88f3983d3140845b32d49478723', alt: 'La nariz terminada con su librea', tint: '#131c33' },
+        { t: 'Carenado lateral · núcleo dañado', tec: 'PANEL SÁNDWICH', e: 4, foto: '/_blob/b1d5370b397c8e3851f1803308fa00db', alt: 'Panel terminado con la curva del fuselaje recuperada', tint: '#131c33' },
+        { t: 'Radomo · delaminación en el cono', tec: 'COMPOSITE', e: 4, foto: '', alt: '', tint: '#152039' },
+        { t: 'Techo de cabina · Bell', tec: 'BOLSA DE VACÍO', e: 4, foto: '', alt: '', tint: '#14243a' },
+        { t: 'Piel y estructura · sustitución', tec: 'CHAPA', e: 3, foto: '', alt: '', tint: '#1a2036' },
+        { t: 'Techo de cabina · delaminado', tec: 'COMPOSITE', e: 3, foto: '', alt: '', tint: '#152039' },
+        { t: 'Parabrisas · marco y montaje', tec: 'PARABRISAS', e: 3, foto: '', alt: '', tint: '#132436' },
+        { t: 'Tomas de aire y rejillas', tec: 'ESTRUCTURA', e: 3, foto: '', alt: '', tint: '#1a2036' },
+        { t: 'Nariz · impactos y acabado', tec: 'COMPOSITE', e: 2, foto: '', alt: '', tint: '#152039' },
+        { t: 'Puertas y estabilizador', tec: 'ESTRUCTURA', e: 2, foto: '', alt: '', tint: '#1a2036' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

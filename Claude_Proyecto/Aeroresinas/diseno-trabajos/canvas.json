@@ -1,0 +1,118 @@
+{
+  "v": 3,
+  "createdOnFiles": {
+    "v": 1,
+    "at": "2026-09-18T02:10:00Z"
+  },
+  "title": "Aeroresinas — los 14 trabajos, rediseño",
+  "launch": {
+    "view": "canvas"
+  },
+  "pages": [],
+  "boards": {
+    "Main.dc.html": {
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 1560,
+      "title": "Main · Muro de trabajos con filtros",
+      "is_interactive": true
+    },
+    "Ficha.dc.html": {
+      "x": 1520,
+      "y": 0,
+      "w": 1440,
+      "h": 1000,
+      "title": "Main · un trabajo abierto",
+      "is_interactive": true
+    },
+    "DireccionB.dc.html": {
+      "x": 3040,
+      "y": 0,
+      "w": 1440,
+      "h": 1200,
+      "title": "B · Antes y después"
+    },
+    "DireccionC.dc.html": {
+      "x": 4560,
+      "y": 0,
+      "w": 1440,
+      "h": 1200,
+      "title": "C · Índice y escenario"
+    },
+    "Movil.dc.html": {
+      "x": 6080,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "title": "Main en el teléfono · 390 px"
+    }
+  },
+  "order": [
+    "Main.dc.html",
+    "Ficha.dc.html",
+    "DireccionB.dc.html",
+    "DireccionC.dc.html",
+    "Movil.dc.html"
+  ],
+  "notes": {
+    "titulo": {
+      "x": 0,
+      "y": -300,
+      "text": "Aeroresinas — 14 trabajos y 51 fotos en una sola columna",
+      "kind": "title1",
+      "maxW": 6470
+    },
+    "problema": {
+      "x": 0,
+      "y": -180,
+      "w": 700,
+      "text": "MEDIDO EN LA PÁGINA DE HOY\n\n· 17 900 px de alto en escritorio = 20 pantallas.\n· 38 999 px en el teléfono = 43 pantallas.\n· #trabajos se lleva el 43 % en escritorio y el 47 % en móvil.\n· Los 14 casos suman 7 091 px en escritorio y 17 616 en móvil: uno solo llega a 1 908 px, más de dos pantallas.\n· Todo lo que va después —aeronaves, técnicas, quién es, preguntas, contacto— queda enterrado detrás de eso.",
+      "color": "red"
+    },
+    "n-main": {
+      "x": 0,
+      "y": 1600,
+      "w": 700,
+      "text": "MAIN — recomendada. «Muro de trabajos».\n\nLa sección se vuelve una banda OSCURA a sangre: corta con el blanco del resto y hace que las fotos de reparación salten. Es la parte llamativa.\n\nLos 14 casos pasan a una rejilla: dos destacados grandes y doce tarjetas. Los filtros por técnica sustituyen al scroll — para ver el de antenas lo tocas, no bajas 14 bloques.\n\nDe 7 631 px a unos 1 200. Tocar una tarjeta abre el trabajo con sus etapas (segundo artboard).",
+      "color": "green"
+    },
+    "n-ficha": {
+      "x": 1520,
+      "y": 1040,
+      "w": 600,
+      "text": "El trabajo abierto, de Main.\n\nColumna fija con qué fue y con qué técnica, y las etapas grandes al lado. El resultado ocupa el sitio mayor, que es lo que un dueño quiere ver.",
+      "color": "green"
+    },
+    "n-b": {
+      "x": 3040,
+      "y": 1240,
+      "w": 700,
+      "text": "B — «Antes y después».\n\nCada caso se reduce a UNA pieza: un comparador con tirador entre la foto del daño y la de la pieza acabada, y las etapas de en medio en una tira de miniaturas.\n\nA favor: es lo más impresionante de todo, y siete de los catorce casos terminan en pieza acabada. En contra: los otros siete no tienen «después», así que la sección quedaría a dos velocidades.",
+      "color": "blue"
+    },
+    "n-c": {
+      "x": 4560,
+      "y": 1240,
+      "w": 700,
+      "text": "C — «Índice y escenario».\n\nLos 14 siempre a la vista en una columna; a la derecha, solo el elegido, con sus etapas en rejilla. Nunca se desplaza la página.\n\nA favor: el más ordenado de los tres y el que menos altura gasta. En contra: el más frío — parece un catálogo técnico, y la palabra que usó Adán fue «llamativo».",
+      "color": "purple"
+    },
+    "n-movil": {
+      "x": 6080,
+      "y": 884,
+      "w": 390,
+      "text": "MAIN a 390 px, que es donde más duele: hoy son 43 pantallas.\n\nUn destacado, tira de filtros que se desliza y rejilla de dos.",
+      "color": "green"
+    },
+    "fotos": {
+      "x": 780,
+      "y": -180,
+      "w": 560,
+      "text": "Las fotos son las suyas de verdad, no ejemplos: el costado abierto, la bolsa de vacío, el panel terminado, el techo con corrosión, el puenteo eléctrico, el núcleo del estabilizador y la nariz entregada.\n\nLas tarjetas sin foto llevan un tono liso a propósito: son casos cuyas fotos no subí al lienzo, no huecos del diseño.",
+      "color": "gray"
+    }
+  },
+  "designSystems": [],
+  "artifact": "https://claude.ai/artifact/GRXhus1Tp2tq4E8AP7QZQc"
+}

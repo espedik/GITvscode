@@ -94,6 +94,7 @@ const T = {
 
   // ── Trabajos ───────────────────────────────────────────────────────────
   trabT:'Trabajos, paso a paso', trabN:'CASOS REALES',
+  trabNum:'TRABAJO', trabDe:'de', trabAnt:'Trabajo anterior', trabSig:'Trabajo siguiente',
   trabSub:'Cada caso es una reparación suya, fotografiada mientras la hacía. No hay imágenes de catálogo aquí: son las etapas reales, en orden, con lo que se hizo en cada una.',
   trabajos:[
    {t:'Techo de cabina · Bell', z:'Composite · bolsa de vacío',
@@ -338,6 +339,7 @@ const T = {
   ],
 
   trabT:'Jobs, step by step', trabN:'REAL CASES',
+  trabNum:'JOB', trabDe:'of', trabAnt:'Previous job', trabSig:'Next job',
   trabSub:'Every case is one of his repairs, shot while he was doing it. No stock images here: these are the real stages, in order, with what was done at each one.',
   trabajos:[
    {t:'Cabin roof · Bell', z:'Composite · vacuum bag',
