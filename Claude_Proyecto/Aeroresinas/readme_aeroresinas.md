@@ -10,12 +10,60 @@ menciona a la otra ni enlaza con ella (Adán, 2026-09-17: *"de ambas páginas no
 relacionan"*). Lo único que las relaciona es esta documentación y la carpeta del repositorio; nada
 de eso lo ve un cliente.
 
-## El archivo está partido en dos
+## Los archivos
 
 | | Qué tiene |
 |---|---|
-| `aeroresinas.html` | El molde y el CSS. Ni una frase de contenido |
-| `datos.js` | **Todo** el texto, en español e inglés, más la constante `PERFIL` |
+| `aeroresinas.html` | El molde y el CSS de la web. Ni una frase de contenido |
+| `datos.js` | **Todo** el texto, en español e inglés, más la constante `PERFIL`. Lo leen la web **y el dossier** |
+| `dossier.html` | El molde del **PDF**: páginas carta fijas, leídas del mismo `datos.js` |
+| `generar-pdf.js` | Genera `Aeroresinas-dossier.pdf` con Chromium, comprobando antes que ninguna página desborda |
+| `Aeroresinas-dossier.pdf` | **El portafolio para mandar por WhatsApp.** 24 páginas, 11.8 MB |
+| `qr-whatsapp.svg` | El QR de la última página: abre WhatsApp con el saludo ya escrito |
+
+## El dossier en PDF
+
+Adán, 2026-09-19: *"haz un pdf con el mejor diseño que puedas e info"*, tras preguntar si la web
+podía ser un PDF interactivo. La respuesta corta es que **«interactivo» en PDF es mucho menos que
+en HTML**, y el dossier usa exactamente lo que sí funciona en cualquier lector — teléfono, WhatsApp,
+Chrome, papel:
+
+- **Índice con enlaces** (página 5): los 14 trabajos, cada uno salta a su página. Se comprobó
+  abriendo el PDF: los 14 destinos resuelven a las páginas 6–19, las mismas que imprime el índice.
+- **Marcadores del lector**: 24, uno por página, del `h1`/`h2` de cada una.
+- **WhatsApp con el mensaje ya escrito**: `wa.me/…?text=` en la portada, en el AOG y en contacto.
+  Más `mailto:` y los dos LinkedIn.
+- **QR** en la última página, para el que lo tiene impreso delante.
+- **Texto seleccionable** (PDF etiquetado), no una imagen de la página.
+
+**No es la web impresa.** Son 24 páginas carta de paginación **fija** —cada `<section class="pg">`
+es una página— porque así el índice puede decir *p. 12* sin adivinar. Portada oscura con la
+aeronave a sangre, quién soy, qué reparo (2), índice, **un trabajo por página** (14), aeronaves,
+cómo trabajo, técnicas, preguntas y contacto.
+
+**La rejilla de etapas cambia con el número de fotos**, al revés que en la web: dos van una encima
+de otra a todo lo ancho, tres con la primera grande, cuatro en 2×2, cinco y seis en tres columnas.
+En pantalla una foto pequeña se amplía con un clic; **en papel una página medio vacía se lee como
+"se acabó"**. Medido: con la rejilla fija de la web, el trabajo de 2 etapas dejaba el 55 % de la
+página en blanco. Las dos páginas de solo texto llevan una foto del taller al pie por lo mismo.
+
+**Regla 1, respetada.** `dossier.html` lee `datos.js`: cambiar un pie de foto ahí cambia la web y
+el PDF. Nada está escrito dos veces. Para regenerarlo:
+
+```bash
+cd Aeroresinas
+NODE_PATH="C:/Users/esped/AppData/Local/npm-cache/_npx/e41f203b7505f1fb/node_modules" node generar-pdf.js      # español
+NODE_PATH="…" node generar-pdf.js en                                                                        # inglés
+```
+
+El generador **mide cada página antes de imprimir** y se niega a generar si alguna desborda sus
+11 in o si hay una imagen rota — lo que se sale de una página fija se corta sin aviso, y así no
+puede pasar en silencio. Las fotos van del mismo `fotos/`; Chromium las incrusta tal cual, de ahí
+los 11.8 MB (69 imágenes). Cabe en WhatsApp de sobra.
+
+**Lo que el PDF no lleva, a propósito**: el visor de fotos (el zoom del lector hace lo mismo), el
+botón de idioma (el inglés es otro archivo, `generar-pdf.js en`) y el tema oscuro (en papel no
+tiene sentido).
 
 Se separaron cuando Adán pidió *"muchísima información"* y el contenido pasó de 400 a más de 1,500
 líneas: buscar una frase dentro del HTML era buscar una aguja. Para cambiar cualquier texto solo se

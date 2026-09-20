@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Aeroresinas — Dossier</title>
+<!-- ═══════════════════════════════════════════════════════════════════════════
+   DOSSIER PARA PDF — el portafolio de José Arturo, para mandar por WhatsApp.
+
+   Adán, 2026-09-19: "haz un pdf con el mejor diseño que puedas e info".
+
+   NO es la página web impresa: es un documento de páginas fijas pensado para
+   leerse en el teléfono y en papel. Lee el MISMO datos.js que aeroresinas.html
+   (regla 1: un dato, un sitio), así que cambiar un texto ahí cambia los dos.
+
+   Cada <section class="pg"> es UNA página carta (8.5 × 11 in) y se pagina a
+   mano, no con el flujo del navegador: así el índice puede decir en qué página
+   está cada trabajo sin adivinar. El PDF se genera con generar-pdf.js
+   (Chromium por Playwright), que conserva los enlaces internos (#trabajo-3), los
+   externos (wa.me con el mensaje ya escrito) y los marcadores del lector.
+   ═══════════════════════════════════════════════════════════════════════════ -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+:root{
+  --tinta:#0a1020; --t2:#48536b; --t3:#7d879e; --azul:#1b47ff; --cian:#07707c; --ambar:#c2410c;
+  --linea:rgba(10,16,32,.11); --linea2:rgba(10,16,32,.06); --suave:#f3f5f9;
+  --fd:'Space Grotesk','Segoe UI',sans-serif; --fb:'IBM Plex Sans',-apple-system,sans-serif; --fm:'IBM Plex Mono',ui-monospace,monospace;
+}
+@page{size:Letter;margin:0}
+html,body{background:#fff;color:var(--tinta);font-family:var(--fb);font-size:10.5pt;line-height:1.5}
+img{display:block;max-width:100%}
+a{color:inherit;text-decoration:none}
+b{font-weight:600}
+
+/* ── La página ─────────────────────────────────────────────────────────── */
+.pg{width:8.5in;height:11in;position:relative;overflow:hidden;padding:.62in .7in .55in;
+  break-after:page;page-break-after:always;display:flex;flex-direction:column}
+.pg:last-of-type{break-after:auto;page-break-after:auto}
+.pie-pg{position:absolute;left:.7in;right:.7in;bottom:.32in;display:flex;justify-content:space-between;
+  font-family:var(--fm);font-size:7pt;letter-spacing:.12em;color:var(--t3);text-transform:uppercase}
+.pie-pg b{color:var(--tinta);font-weight:600}
+.pg.oscura{background:var(--tinta);color:#fff}
+.pg.oscura .pie-pg{color:rgba(255,255,255,.5)}
+.pg.oscura .pie-pg b{color:#fff}
+
+/* ── Tipos ─────────────────────────────────────────────────────────────── */
+.ojo{display:flex;align-items:center;gap:8px;font-family:var(--fm);font-size:7.5pt;font-weight:600;
+  letter-spacing:.18em;text-transform:uppercase;color:var(--azul)}
+.ojo::before{content:'';width:22px;height:1px;background:currentColor}
+.oscura .ojo{color:#7f9bff}
+.h1{font-family:var(--fd);font-size:34pt;font-weight:600;letter-spacing:-.035em;line-height:1.02}
+.h1 em{font-style:normal;color:#7f9bff}
+.h2{font-family:var(--fd);font-size:21pt;font-weight:600;letter-spacing:-.03em;line-height:1.1}
+.h3{font-family:var(--fd);font-size:12.5pt;font-weight:600;letter-spacing:-.015em;line-height:1.2}
+.sub{font-size:10.5pt;line-height:1.55;color:var(--t2);max-width:62ch}
+.oscura .sub{color:rgba(255,255,255,.78)}
+.cab{display:flex;flex-direction:column;gap:7px;margin-bottom:16px}
+.num{font-family:var(--fm);font-size:8pt;font-weight:600;letter-spacing:.14em;color:var(--azul)}
+.mono{font-family:var(--fm)}
+
+/* ── Portada ───────────────────────────────────────────────────────────── */
+.portada{padding:0}
+.portada-foto{position:absolute;left:0;right:0;bottom:0;height:5.6in;overflow:hidden}
+.portada-foto img{width:100%;height:100%;object-fit:cover;object-position:50% 40%}
+.portada-foto::after{content:'';position:absolute;inset:0;
+  background:linear-gradient(to bottom,var(--tinta) 0%,rgba(10,16,32,.15) 42%,rgba(10,16,32,.85) 100%)}
+.portada-txt{position:relative;z-index:1;padding:.7in .7in 0;display:flex;flex-direction:column;gap:18px}
+.portada-datos{display:grid;grid-template-columns:repeat(4,auto);gap:26px;justify-content:start;
+  padding-top:16px;border-top:1px solid rgba(255,255,255,.18);margin-top:6px}
+.dato .v{font-family:var(--fd);font-size:19pt;font-weight:600;letter-spacing:-.02em;line-height:1}
+.dato .k{font-family:var(--fm);font-size:6.8pt;letter-spacing:.14em;color:rgba(255,255,255,.62);text-transform:uppercase;margin-top:5px}
+.portada-pie{position:absolute;left:.7in;right:.7in;bottom:.55in;z-index:1;display:flex;justify-content:space-between;
+  align-items:flex-end;gap:20px;color:#fff}
+.portada-pie .n{font-family:var(--fd);font-size:14pt;font-weight:600;letter-spacing:-.02em}
+.portada-pie .d{font-size:9pt;color:rgba(255,255,255,.75);margin-top:3px}
+.portada-pie .wa{display:inline-flex;align-items:center;gap:8px;padding:10px 16px;border-radius:10px;
+  background:#fff;color:var(--tinta);font-size:9.5pt;font-weight:600}
+.marca{display:flex;align-items:center;gap:10px}
+.marca i{width:30px;height:30px;border-radius:9px;background:#fff;color:var(--tinta);display:flex;align-items:center;justify-content:center}
+.marca b{font-family:var(--fd);font-size:12pt;letter-spacing:-.01em}
+.marca span{display:block;font-family:var(--fm);font-size:6.5pt;letter-spacing:.18em;color:rgba(255,255,255,.6)}
+
+/* ── Quién soy ─────────────────────────────────────────────────────────── */
+.quien{display:grid;grid-template-columns:2.35in minmax(0,1fr);gap:26px;align-items:start}
+.retrato{border-radius:14px;overflow:hidden;height:3.05in;position:relative}
+.retrato img{width:100%;height:100%;object-fit:cover;object-position:50% 22%}
+.retrato .pie{position:absolute;left:0;right:0;bottom:0;padding:26px 12px 11px;color:#fff;font-size:7.8pt;line-height:1.4;
+  background:linear-gradient(to top,rgba(10,16,32,.9),transparent)}
+.quien-d{font-size:9.6pt;line-height:1.6;color:var(--t2)}
+.quien-d b{color:var(--tinta)}
+.creds{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin-top:16px}
+.cred{padding:10px 12px;border-radius:10px;background:var(--suave);border:1px solid var(--linea2)}
+.cred .t{font-size:8.6pt;font-weight:600;line-height:1.3}
+.cred .d{font-size:7.8pt;color:var(--t2);line-height:1.45;margin-top:3px}
+.tray{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.tray-it{padding:13px 14px;border-radius:12px;border:1px solid var(--linea)}
+.tray-it.ahora{background:var(--tinta);color:#fff;border-color:var(--tinta)}
+.tray-it .per{font-family:var(--fm);font-size:7.5pt;letter-spacing:.12em;color:var(--azul)}
+.tray-it.ahora .per{color:#7f9bff}
+.tray-it .t{font-family:var(--fd);font-size:10.5pt;font-weight:600;margin:4px 0 5px}
+.tray-it .d{font-size:8.3pt;line-height:1.5;color:var(--t2)}
+.tray-it.ahora .d{color:rgba(255,255,255,.78)}
+
+/* ── Servicios ─────────────────────────────────────────────────────────── */
+.servs{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.serv{display:grid;grid-template-columns:1.55in minmax(0,1fr);gap:13px;padding:12px;border-radius:13px;
+  border:1px solid var(--linea2);background:var(--suave)}
+.serv .im{height:1.55in;border-radius:9px;overflow:hidden}
+.serv .im img{width:100%;height:100%;object-fit:cover}
+.serv .t{font-family:var(--fd);font-size:10.5pt;font-weight:600;line-height:1.2}
+.serv .d{font-size:8.2pt;line-height:1.48;color:var(--t2);margin-top:5px}
+.serv .ojo2{font-size:7.9pt;line-height:1.45;color:var(--t2);margin-top:7px;padding:7px 9px;border-radius:8px;
+  background:#fff;border-left:2px solid var(--azul)}
+.aog{margin-top:14px;padding:16px 18px;border-radius:13px;background:var(--tinta);color:#fff;
+  display:grid;grid-template-columns:minmax(0,1fr) auto;gap:18px;align-items:center}
+.aog .t{font-family:var(--fd);font-size:12pt;font-weight:600;color:#ffb27a}
+.aog .d{font-size:8.6pt;line-height:1.5;color:rgba(255,255,255,.8);margin-top:4px}
+.aog .b{padding:10px 14px;border-radius:9px;background:#ffb27a;color:var(--tinta);font-size:8.8pt;font-weight:600;white-space:nowrap}
+
+/* ── Índice de trabajos ────────────────────────────────────────────────── */
+.ix{display:flex;flex-direction:column;gap:4px;margin-top:6px}
+.ix a{display:grid;grid-template-columns:30px minmax(0,1fr) auto auto;gap:12px;align-items:center;
+  padding:8px 11px;border-radius:9px;border:1px solid var(--linea2)}
+.ix a:nth-child(odd){background:var(--suave)}
+.ix .n{font-family:var(--fm);font-size:8pt;font-weight:600;color:var(--azul)}
+.ix .t{font-size:9.4pt;font-weight:500}
+.ix .z{font-family:var(--fm);font-size:6.8pt;letter-spacing:.08em;color:var(--t3);text-transform:uppercase}
+.ix .p{font-family:var(--fm);font-size:8pt;color:var(--t2);min-width:52px;text-align:right}
+.ix-nota{margin-top:auto;padding-top:14px;font-size:8.6pt;color:var(--t3);line-height:1.5}
+
+/* ── Un trabajo ────────────────────────────────────────────────────────── */
+.tr-h{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;margin-bottom:10px}
+.tr-h .num{font-size:9pt}
+.tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.tag{font-family:var(--fm);font-size:6.8pt;font-weight:600;letter-spacing:.12em;padding:4px 8px;border-radius:5px;
+  background:rgba(10,16,32,.07);color:var(--t2);text-transform:uppercase}
+.tag.acc{background:rgba(7,112,124,.12);color:var(--cian)}
+.tr-r{font-size:9.6pt;line-height:1.55;color:var(--t2);max-width:78ch;margin-bottom:14px}
+/* La rejilla cambia con el número de etapas para que la página se llene igual
+   con 2 que con 6: dos fotos grandes, tres con la primera a todo lo ancho,
+   cuatro en 2×2, cinco y seis en 3 columnas. Aquí SÍ depende del caso, al
+   revés que en la web: una página impresa medio vacía se lee como "se acabó". */
+.etapas{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.etapa .im{height:2.45in;border-radius:10px;overflow:hidden;background:var(--suave)}
+.etapa .im img{width:100%;height:100%;object-fit:cover}
+.etapa .pie{font-size:8pt;line-height:1.45;color:var(--t2);margin-top:6px}
+.etapa .pie b{color:var(--tinta)}
+.etapas.n2{grid-template-columns:1fr}
+.etapas.n2 .etapa .im{height:3.25in}
+/* Foto del taller al pie de las páginas de solo texto */
+.banda{margin-top:auto;padding-top:14px}
+.banda .im{height:2.55in;border-radius:12px;overflow:hidden}
+.banda .im img{width:100%;height:100%;object-fit:cover}
+.banda .pie{font-size:8pt;line-height:1.45;color:var(--t2);margin-top:6px}
+.banda .pie b{color:var(--tinta)}
+.etapas.n3{grid-template-columns:repeat(2,minmax(0,1fr))}
+.etapas.n3 .etapa:first-child{grid-column:1/-1}
+.etapas.n3 .etapa:first-child .im{height:3.2in}
+.etapas.n3 .etapa .im{height:2.75in}
+.etapas.n4{grid-template-columns:repeat(2,minmax(0,1fr))}
+.etapas.n4 .etapa .im{height:2.85in}
+
+/* ── Aeronaves y galería ───────────────────────────────────────────────── */
+.gal{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.gal .etapa .im{height:2.35in}
+
+/* ── Pasos y técnicas ──────────────────────────────────────────────────── */
+.pasos{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.paso{display:flex;gap:11px;padding:12px 13px;border-radius:11px;border:1px solid var(--linea2);background:var(--suave)}
+.paso .n{font-family:var(--fm);font-size:8pt;font-weight:600;color:var(--azul);flex:none;padding-top:2px}
+.paso .t{font-family:var(--fd);font-size:10pt;font-weight:600;line-height:1.2}
+.paso .d{font-size:8.2pt;line-height:1.48;color:var(--t2);margin-top:4px}
+.cob{margin-top:12px;padding:12px 14px;border-radius:11px;border:1px solid var(--linea);font-size:8.6pt;line-height:1.5;color:var(--t2)}
+.cob b{color:var(--tinta)}
+.tecs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.tec{padding:12px 13px;border-radius:11px;border:1px solid var(--linea2)}
+.tec .t{font-family:var(--fd);font-size:9.8pt;font-weight:600;line-height:1.2;margin-bottom:4px}
+.tec .d{font-size:8pt;line-height:1.48;color:var(--t2)}
+.capac{margin-top:12px;padding:12px 14px;border-radius:11px;background:var(--suave);border:1px solid var(--linea2)}
+.capac .h{font-family:var(--fm);font-size:7pt;letter-spacing:.14em;color:var(--t3);text-transform:uppercase;margin-bottom:8px}
+.capac-g{display:flex;flex-wrap:wrap;gap:5px}
+.capac-g span{font-size:7.6pt;padding:4px 8px;border-radius:6px;background:#fff;border:1px solid var(--linea2);color:var(--t2)}
+
+/* ── Preguntas ─────────────────────────────────────────────────────────── */
+.faqs{display:grid;grid-template-columns:1fr 1fr;gap:10px 16px}
+.faq{padding:11px 0;border-top:1px solid var(--linea2)}
+.faq .q{font-family:var(--fd);font-size:10pt;font-weight:600;line-height:1.25}
+.faq .r{font-size:8.3pt;line-height:1.5;color:var(--t2);margin-top:4px}
+
+/* ── Contacto ──────────────────────────────────────────────────────────── */
+.contacto{display:grid;grid-template-columns:minmax(0,1fr) 2.6in;gap:26px;align-items:start;margin-top:4px}
+.vias{display:flex;flex-direction:column;gap:9px}
+.via{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:11px;border:1px solid var(--linea);background:var(--suave)}
+.via i{width:32px;height:32px;border-radius:9px;background:rgba(27,71,255,.09);color:var(--azul);display:flex;align-items:center;justify-content:center;flex:none}
+.via .k{font-family:var(--fm);font-size:6.8pt;letter-spacing:.12em;color:var(--t3);text-transform:uppercase}
+.via .v{font-size:10.5pt;font-weight:600;margin-top:1px}
+.via.wa{background:var(--tinta);color:#fff;border-color:var(--tinta)}
+.via.wa i{background:rgba(255,255,255,.12);color:#fff}
+.via.wa .k{color:rgba(255,255,255,.6)}
+.qr{padding:14px;border-radius:14px;border:1px solid var(--linea);text-align:center}
+.qr img,.qr svg{width:100%;height:auto;display:block}
+.qr .t{font-family:var(--fm);font-size:7pt;letter-spacing:.12em;color:var(--t3);text-transform:uppercase;margin-top:10px;line-height:1.5}
+.con-nota{margin-top:14px;padding:14px 16px;border-radius:12px;background:var(--suave);border:1px solid var(--linea2);
+  font-size:8.8pt;line-height:1.55;color:var(--t2)}
+.cotiza{margin-top:14px;padding:16px 18px;border-radius:13px;border:1px solid var(--linea)}
+.cotiza .h{font-family:var(--fd);font-size:11.5pt;font-weight:600;margin-bottom:8px}
+.cotiza ul{list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:6px 18px}
+.cotiza li{display:flex;gap:8px;font-size:8.8pt;line-height:1.5;color:var(--t2)}
+.cotiza li::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--azul);flex:none;margin-top:6px}
+.con-nota b{color:var(--tinta)}
+</style>
+</head>
+<body>
+<div id="doc"></div>
+
+<script src="datos.js"></script>
+<script>
+const IDIOMA = /[?&]en\b/.test(location.search) ? 'en' : 'es';
+const t = T[IDIOMA];
+const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');
+const rell = s => String(s).replace(/\{(\w+)\}/g, (m,k) => PERFIL[k] == null ? m : PERFIL[k]);
+const ICO = {
+  heli:'<path d="M3 6h18M12 6v3"/><path d="M6 12h9a3 3 0 0 1 3 3v2H8a2 2 0 0 1-2-2z"/><path d="M18 15h3M7 17v3M13 17v3M5 20h10"/>',
+  wa:'<path d="M3 21l1.6-4.4A8 8 0 1 1 8 20.3z"/><path d="M8.5 9.5c0 3 2.5 5.5 5.5 5.5.6 0 1.2-.7 1.2-1.3l-1.6-.9-1 1a6 6 0 0 1-2.4-2.4l1-1-.9-1.6c-.6 0-1.3.6-1.3 1.2z"/>',
+  mail:'<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/>',
+  pin:'<path d="M12 21s7-5.6 7-11a7 7 0 1 0-14 0c0 5.4 7 11 7 11z"/><circle cx="12" cy="10" r="2.6"/>',
+  check:'<path d="M4 12.5l5 5L20 6.5"/>',
+  linkedin:'<rect x="3" y="3" width="18" height="18" rx="2.5"/><path d="M7.5 10.5v6M7.5 7.6v.01M11.5 16.5v-6M11.5 13a2.5 2.5 0 0 1 5 0v3.5"/>',
+};
+const svg = (k, sz) => '<svg viewBox="0 0 24 24" width="' + (sz||16) + '" height="' + (sz||16) +
+  '" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">' + (ICO[k]||'') + '</svg>';
+
+const WA = 'https://wa.me/' + PERFIL.whatsapp + '?text=' + encodeURIComponent(t.waSaludo + ' ' + (IDIOMA === 'es' ? 'Vi tu dossier.' : 'I saw your dossier.'));
+const WA_AOG = 'https://wa.me/' + PERFIL.whatsapp + '?text=' + encodeURIComponent(t.waAog);
+
+const banda = archivo => {
+  const g = (t.galeria || []).find(x => x[0].indexOf(archivo) >= 0);
+  return g ? '<figure class="banda"><div class="im"><img src="' + g[0] + '" alt=""></div><figcaption class="pie">' + g[1] + '</figcaption></figure>' : '';
+};
+
+/* La paginación es fija: cada bloque de esta lista es una página. Así el índice
+   sabe dónde cae cada trabajo sin que nadie lo cuente a mano. */
+const paginas = [];
+const pagina = (html, extra) => paginas.push({ html, extra: extra || '' });
+const pie = (n, total) => '<div class="pie-pg"><span><b>AERORESINAS</b> · ' + esc(PERFIL.nombre) + '</span><span>' +
+  (IDIOMA === 'es' ? 'Página' : 'Page') + ' ' + n + ' / ' + total + '</span></div>';
+
+// ── 1 · Portada ────────────────────────────────────────────────────────────
+pagina(`
+  <div class="portada-txt" style="gap:14px">
+    <div class="marca"><i>${svg('heli',16)}</i><div><b>AERORESINAS</b><span>${esc(t.marcaSub)}</span></div></div>
+    <div class="ojo" style="margin-top:22px">${esc(t.heroOjo)}</div>
+    <h1 class="h1">${esc(t.heroT1)}</h1><div class="h1"><em>${esc(t.heroT2)}</em></div>
+    <p class="sub">${rell(t.heroSub)}</p>
+    <div class="portada-datos">${t.datos.map(d => '<div class="dato"><div class="v">' + rell(d[0]) + '</div><div class="k">' + rell(d[1]) + '</div></div>').join('')}</div>
+  </div>
+  <div class="portada-foto"><img src="fotos/real-h145.jpg" alt=""></div>
+  <div class="portada-pie">
+    <div><div class="n">${esc(PERFIL.nombre)}</div><div class="d">${esc(PERFIL.puesto)} · ${esc(PERFIL.ciudad)}</div></div>
+    <a class="wa" href="${WA}">${svg('wa',15)} ${esc(PERFIL.whatsappTxt)}</a>
+  </div>`, 'oscura portada');
+
+// ── 2 · Quién soy ──────────────────────────────────────────────────────────
+pagina(`
+  <div class="cab"><div class="ojo">${esc(t.trayN || 'TRAYECTORIA')}</div><h2 class="h2">${esc(t.quienT)}</h2></div>
+  <div class="quien">
+    <figure class="retrato"><img src="fotos/retrato.jpg" alt=""><figcaption class="pie">${rell(t.pieRetrato)}</figcaption></figure>
+    <div class="quien-d">${rell(t.quienD)}</div>
+  </div>
+  <div class="tray">${t.trayectoria.map(x => '<div class="tray-it' + (x[3] ? ' ahora' : '') + '"><div class="per">' + esc(x[0]) + '</div><div class="t">' + esc(x[1]) + '</div><div class="d">' + x[2] + '</div></div>').join('')}</div>
+  <div class="creds">${t.credenciales.map(c => '<div class="cred"><div class="t">' + rell(c[0]) + '</div><div class="d">' + rell(c[1]) + '</div></div>').join('')}</div>`);
+
+// ── 3 y 4 · Qué reparo ─────────────────────────────────────────────────────
+const servHtml = s => '<div class="serv"><div class="im"><img src="' + s[2] + '" alt=""></div><div>' +
+  '<div class="t">' + esc(s[1]) + '</div><div class="d">' + s[3] + '</div><div class="ojo2">' + s[4] + '</div></div></div>';
+pagina(`
+  <div class="cab"><div class="ojo">${esc(t.repN)}</div><h2 class="h2">${esc(t.repT)}</h2><p class="sub">${t.repSub}</p></div>
+  <div class="servs">${t.servicios.slice(0,4).map(servHtml).join('')}</div>`);
+pagina(`
+  <div class="cab"><div class="ojo">${esc(t.repN)} · 2/2</div><h2 class="h2">${esc(t.repT)}</h2></div>
+  <div class="servs">${t.servicios.slice(4).map(servHtml).join('')}</div>
+  <div class="aog"><div><div class="t">${esc(t.aogT)}</div><div class="d">${t.aogD}</div></div><a class="b" href="${WA_AOG}">${esc(t.aogCta)} →</a></div>`);
+
+// ── 5 · Índice de trabajos ─────────────────────────────────────────────────
+const PRIMER_TRABAJO = 6;   // la página en la que cae el trabajo 01
+pagina(`
+  <div class="cab"><div class="ojo">${esc(t.trabN)}</div><h2 class="h2">${esc(t.trabT)}</h2><p class="sub">${t.trabSub}</p></div>
+  <div class="ix">${t.trabajos.map((w, i) => '<a href="#trabajo-' + (i+1) + '"><span class="n">' + (i < 9 ? '0' : '') + (i+1) + '</span>' +
+    '<span class="t">' + esc(w.t) + '</span><span class="z">' + esc(w.z) + '</span>' +
+    '<span class="p">' + w.f.length + ' ' + (IDIOMA === 'es' ? 'etapas' : 'stages') + ' · p. ' + (PRIMER_TRABAJO + i) + '</span></a>').join('')}</div>
+  <div class="ix-nota">${IDIOMA === 'es'
+    ? 'Toca cualquier trabajo para ir a su página. Cada caso lleva sus fotos en el orden real en que ocurrió, del daño a la pieza cerrada.'
+    : 'Tap any job to go to its page. Each case carries its photos in the real order it happened, from the damage to the closed part.'}</div>`);
+
+// ── 6 a 19 · Un trabajo por página ─────────────────────────────────────────
+t.trabajos.forEach((w, i) => {
+  const tags = w.z.split(' · ').map((x, k) => '<span class="tag' + (k === 0 ? ' acc' : '') + '">' + esc(x) + '</span>').join('');
+  const n = w.f.length;
+  pagina(`
+    <a id="trabajo-${i+1}"></a>
+    <div class="tr-h"><div><div class="num">${esc(t.trabNum)} ${i < 9 ? '0' : ''}${i+1} ${esc(t.trabDe)} ${t.trabajos.length}</div>
+      <h2 class="h2" style="margin-top:5px">${esc(w.t)}</h2><div class="tags">${tags}</div></div></div>
+    <p class="tr-r">${w.r}</p>
+    <div class="etapas n${n}">${w.f.map(f => '<figure class="etapa"><div class="im"><img src="' + f[0] + '" alt=""></div><figcaption class="pie">' + f[1] + '</figcaption></figure>').join('')}</div>`);
+});
+
+// ── 20 · Las aeronaves ─────────────────────────────────────────────────────
+pagina(`
+  <div class="cab"><div class="ojo">${esc(t.floN)}</div><h2 class="h2">${esc(t.floT)}</h2><p class="sub">${t.floSub}</p></div>
+  <div class="gal">${t.flota.map(g => '<figure class="etapa"><div class="im"><img src="' + g[0] + '" alt=""></div><figcaption class="pie">' + g[1] + '</figcaption></figure>').join('')}</div>`);
+
+// ── 21 · Cómo trabajo ──────────────────────────────────────────────────────
+pagina(`
+  <div class="cab"><div class="ojo">${esc(t.metN)}</div><h2 class="h2">${esc(t.metT)}</h2><p class="sub">${t.metSub}</p></div>
+  <div class="pasos">${t.pasos.map((p, i) => '<div class="paso"><div class="n">0' + (i+1) + '</div><div><div class="t">' + esc(p[0]) + '</div><div class="d">' + p[1] + '</div></div></div>').join('')}</div>
+  <div class="cob"><b>${esc(t.cobT)}</b> ${t.cobD}</div>
+  ${banda('hangar.jpg')}`);
+
+// ── 22 · Técnicas ──────────────────────────────────────────────────────────
+pagina(`
+  <div class="cab"><div class="ojo">${esc(t.tecN)}</div><h2 class="h2">${esc(t.tecT)}</h2><p class="sub">${t.tecSub}</p></div>
+  <div class="tecs">${t.tecnicas.map(x => '<div class="tec"><div class="t">' + esc(x[0]) + '</div><div class="d">' + x[1] + '</div></div>').join('')}</div>
+  <div class="capac"><div class="h">${esc(t.capT)}</div><div class="capac-g">${t.capacidades.map(c => '<span>' + esc(c) + '</span>').join('')}</div></div>`);
+
+// ── 23 · Preguntas ─────────────────────────────────────────────────────────
+pagina(`
+  <div class="cab"><div class="ojo">${esc(t.faqN || 'PREGUNTAS')}</div><h2 class="h2">${esc(t.faqT)}</h2></div>
+  <div class="faqs">${t.faq.map(f => '<div class="faq"><div class="q">' + esc(f[0]) + '</div><div class="r">' + f[1] + '</div></div>').join('')}</div>
+  ${banda('vacio-1.jpg')}`);
+
+// ── 24 · Contacto ──────────────────────────────────────────────────────────
+pagina(`
+  <div class="cab"><div class="ojo">${IDIOMA === 'es' ? 'CONTACTO' : 'CONTACT'}</div><h2 class="h2">${esc(t.conT)}</h2><p class="sub">${t.conSub}</p></div>
+  <div class="contacto">
+    <div class="vias">
+      <a class="via wa" href="${WA}"><i>${svg('wa',16)}</i><div><div class="k">${esc(t.kWa)}</div><div class="v">${esc(PERFIL.whatsappTxt)}</div></div></a>
+      <a class="via" href="mailto:${PERFIL.correo}"><i>${svg('mail',16)}</i><div><div class="k">${esc(t.kMail)}</div><div class="v">${esc(PERFIL.correo)}</div></div></a>
+      <a class="via" href="${PERFIL.linkedin}"><i>${svg('linkedin',16)}</i><div><div class="k">${esc(t.kIn)}</div><div class="v">${esc(PERFIL.linkedinTxt)}</div></div></a>
+      <a class="via" href="${PERFIL.linkedinEmp}"><i>${svg('linkedin',16)}</i><div><div class="k">${esc(t.kEmp)}</div><div class="v">${esc(PERFIL.linkedinEmpTxt)}</div></div></a>
+      <div class="via"><i>${svg('pin',16)}</i><div><div class="k">${esc(t.kBase)}</div><div class="v">${esc(PERFIL.ciudad)}</div></div></div>
+      <div class="via"><i>${svg('check',16)}</i><div><div class="k">${esc(t.kLic)}</div><div class="v">${esc(PERFIL.licencia)}</div></div></div>
+    </div>
+    <div class="qr"><img src="qr-whatsapp.svg" alt=""><div class="t">${IDIOMA === 'es' ? 'Escanea para escribir<br>por WhatsApp' : 'Scan to write<br>on WhatsApp'}</div></div>
+  </div>
+  <div class="cotiza"><div class="h">${IDIOMA === 'es' ? 'Para cotizar, mándame' : 'To quote, send me'}</div><ul>${(IDIOMA === 'es'
+    ? ['Fotos del área de cerca y de lejos', 'El modelo y la matrícula de la aeronave', 'El número de parte o la página del manual, si lo tienes a mano', 'Dónde está la aeronave y desde cuándo']
+    : ['Photos of the area, close up and from a distance', 'The aircraft model and registration', 'The part number or manual page, if you have it to hand', 'Where the aircraft is and since when']
+  ).map(x => '<li>' + x + '</li>').join('')}</ul></div>
+  <div class="aog"><div><div class="t">${esc(t.aogT)}</div><div class="d">${t.aogD}</div></div><a class="b" href="${WA_AOG}">${esc(t.aogCta)} →</a></div>
+  <div class="con-nota"><b>${IDIOMA === 'es' ? 'Cobertura.' : 'Coverage.'}</b> ${esc(PERFIL.cobertura)} — ${t.cobD}</div>`);
+
+// ── Pintar ─────────────────────────────────────────────────────────────────
+const total = paginas.length;
+document.getElementById('doc').innerHTML = paginas.map((p, i) =>
+  '<section class="pg ' + p.extra + '">' + p.html + (p.extra.includes('portada') ? '' : pie(i + 1, total)) + '</section>').join('');
+</script>
+</body>
+</html>
