@@ -73,6 +73,22 @@ desincronizar. En 2026-08-25 se reescribieron por esto: 92% de las 184 secciones
 Adán, 2026-08-25: *"tampoco quiero que en los .md haya información innecesaria / duplicada /
 desincronizada. No me sirve historial acumulado sin sentido, quiero información valiosa"*.
 
+## Regla 5 — El mapa antes que el archivo: leer el `readme_<app>.md`, no el `.html`
+
+Cuando Adán nombra `dashboard.html` (o cualquier `.html` del proyecto) o una de sus pantallas,
+**el primer paso es su readme, nunca el archivo entero**. `readme_dashboard.md` es el mapa:
+describe cada pantalla y pieza con sus ids, clases y funciones. `dashboard.html` pesa 1.28 MB y
+abrirlo a ciegas quema el contexto sin ubicar nada.
+
+1. `grep -n "^#" Dashboard/readme_dashboard.md` → encontrar la sección de lo que se pidió.
+2. `sed -n A,Bp` **solo esa sección** → sacar los nombres (`#metaDetailOverlay`, `calRitmo`, `theme-dia`…).
+3. `grep -n` de esos nombres en el `.html` → leer solo ese rango.
+
+Las demás apps siguen igual: cada carpeta tiene su `readme_<app>.md` y es lo que se lee primero.
+
+Adán, 2026-09-20: *"cuando lees esto lees el .md y ahorras tokens, o sea ya sabes qué sección me
+estoy refiriendo… rigurosamente debes tener el mapa para saber rápidamente a qué me refiero"*.
+
 ## Al terminar una tarea, se sube a GitHub
 
 **Regla fija (2026-08-19, pedido explícito de Adán): terminar una tarea incluye subirla.** No se espera a que lo pida — una tarea sin commit no está terminada. El orden es siempre:
