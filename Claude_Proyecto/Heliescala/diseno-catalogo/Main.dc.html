@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Heliescala — Catálogo de vitrina</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+body{margin:0;font-family:'IBM Plex Sans',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#00c2d4}a:hover{color:#5ee3f0}
+</style>
+</helmet>
+
+<div style="width: 816px; height: 1056px; box-sizing: border-box; background: #080c16; color: #f3f6fb; padding: 60px 64px 52px; display: flex; flex-direction: column; gap: 22px; overflow: hidden;">
+
+  <div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 24px;">
+    <div style="display: flex; flex-direction: column; gap: 8px;">
+      <div style="display: flex; align-items: center; gap: 8px; font-family: 'IBM Plex Mono', monospace; font-size: 10px; font-weight: 600; letter-spacing: 0.18em; color: {{acento}};">
+        <span style="width: 22px; height: 1px; background: {{acento}};"></span>CATÁLOGO · 1 / 7
+      </div>
+      <h2 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 30px; font-weight: 600; letter-spacing: -0.03em; line-height: 1.08;">Civiles y corporativos</h2>
+    </div>
+    <div style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 0.12em; color: #7f8ba4;">26 PIEZAS · 4 POR PÁGINA</div>
+  </div>
+
+  <!-- Cuatro piezas por página. La foto de estudio va sobre blanco y recorta
+       sola contra el fondo oscuro: es la razón de que la página sea oscura. -->
+  <div style="flex-grow: 1; min-height: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: repeat(2, minmax(0, 1fr)); gap: 18px;">
+    <sc-for list="{{piezas}}" as="p" hint-placeholder-count="4">
+      <div style="display: flex; flex-direction: column; border-radius: 16px; overflow: hidden; background: rgba(255,255,255,0.045); border: 1px solid rgba(255,255,255,0.1);">
+        <div style="flex-grow: 1; min-height: 0; background: #ffffff; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+          <img src="{{p.foto}}" alt="{{p.alt}}" style="width: 100%; height: 100%; object-fit: cover; display: block;">
+        </div>
+        <div style="padding: 13px 15px 14px; display: flex; flex-direction: column; gap: 6px;">
+          <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 10px;">
+            <div style="font-family: 'Space Grotesk', sans-serif; font-size: 15px; font-weight: 600; letter-spacing: -0.015em; line-height: 1.2;">{{p.n}}</div>
+            <div style="font-family: 'IBM Plex Mono', monospace; font-size: 9.5px; color: #7f8ba4; white-space: nowrap;">{{p.num}}</div>
+          </div>
+          <div style="font-size: 11px; line-height: 1.45; color: #a7b2c6;">{{p.d}}</div>
+          <div style="display: flex; gap: 6px; margin-top: 2px;">
+            <span style="font-family: 'IBM Plex Mono', monospace; font-size: 8.5px; font-weight: 600; letter-spacing: 0.1em; padding: 4px 8px; border-radius: 5px; background: rgba(0,194,212,0.16); color: {{acento}};">{{p.t1}}</span>
+            <span style="font-family: 'IBM Plex Mono', monospace; font-size: 8.5px; font-weight: 600; letter-spacing: 0.1em; padding: 4px 8px; border-radius: 5px; background: rgba(255,255,255,0.08); color: #a7b2c6;">{{p.t2}}</span>
+          </div>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+
+  <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 14px; border-top: 1px solid rgba(255,255,255,0.1); font-family: 'IBM Plex Mono', monospace; font-size: 9px; letter-spacing: 0.12em; color: #7f8ba4;">
+    <span><b style="color: #f3f6fb; font-weight: 600;">HELIESCALA</b> · HECHO A MANO EN MÉXICO</span>
+    <span>DESDE $1,800 MXN · 2 SEMANAS · CDMX EN PERSONA · DHL AL RESTO</span>
+    <span>PÁGINA 3 / 13</span>
+  </div>
+</div>
+</x-dc>
+
+<script type="text/x-dc" data-dc-script data-props='{"acento":{"editor":"color","default":"#00c2d4","options":["#00c2d4","#4d6bff","#7cf5b0","#ffb27a"]},"$preview":{"width":816,"height":1056}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      acento: this.props.acento ?? '#00c2d4',
+      piezas: [
+        { num: '01', n: 'Airbus H145', d: 'Fenestron, tren de patines y librea corporativa blanca y negra.', t1: 'AIRBUS', t2: 'TWIN', foto: '/_blob/a994c23200ea1bcf688784e41e3bc34f', alt: 'Réplica de un Airbus H145' },
+        { num: '02', n: 'Airbus H145 · XA-MVR', d: 'Bimotor corporativo azul sobre blanco, con su matrícula y la bandera pintadas a mano.', t1: 'AIRBUS', t2: 'MATRÍCULA', foto: '/_blob/75520bf68d8a7c604f27381bedec9e66', alt: 'Réplica del H145 XA-MVR' },
+        { num: '03', n: 'AS350 / H125 · ambulancia', d: 'Rojo de servicios médicos, con camilla y estribos. De los más pedidos.', t1: 'AIRBUS', t2: 'AEROMÉDICA', foto: '/_blob/a1c4f9072ee1dc2234b6f34ca4c01c18', alt: 'Réplica de un AS350 de ambulancia' },
+        { num: '04', n: 'Fuerza Aérea Mexicana · MX-UMA', d: 'Blanco con la franja verde y roja, el escudo y la matrícula. De las piezas con más rotulación a mano.', t1: 'FAM', t2: 'MATRÍCULA', foto: '/_blob/934b94fd182cfcdf7e2492528446dd5b', alt: 'Réplica de la FAM MX-UMA' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

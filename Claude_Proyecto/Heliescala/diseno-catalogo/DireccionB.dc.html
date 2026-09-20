@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Heliescala — Ficha por modelo</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+body{margin:0;font-family:'IBM Plex Sans',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#07707c}a:hover{color:#04555e}
+</style>
+</helmet>
+
+<div style="width: 816px; height: 1056px; box-sizing: border-box; background: #eef1f6; color: #0a1020; padding: 60px 64px 52px; display: flex; flex-direction: column; gap: 20px; overflow: hidden;">
+
+  <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 24px;">
+    <div style="display: flex; flex-direction: column; gap: 8px;">
+      <div style="display: flex; align-items: center; gap: 8px; font-family: 'IBM Plex Mono', monospace; font-size: 10px; font-weight: 600; letter-spacing: 0.18em; color: #07707c;">
+        <span style="width: 22px; height: 1px; background: #07707c;"></span>AIRBUS HELICOPTERS
+      </div>
+      <h2 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 34px; font-weight: 600; letter-spacing: -0.03em; line-height: 1.05;">H145 (BK117 D-3)</h2>
+      <p style="margin: 0; font-size: 12px; line-height: 1.6; color: #48536b; max-width: 60ch;">El bimotor ligero más vendido de Airbus para emergencias. Cabina cuadrada con puertas traseras de concha, fenestron en la cola y, desde 2020, rotor de cinco palas sin cabeza articulada.</p>
+    </div>
+    <div style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 0.12em; color: #7d879e; white-space: nowrap; padding-top: 4px;">MODELO 1 / 6</div>
+  </div>
+
+  <!-- Las réplicas de este tipo, a la izquierda; la ficha del helicóptero de
+       verdad, a la derecha. Lo que separa una maqueta fiel de un juguete. -->
+  <div style="flex-grow: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: 20px;">
+    <div style="display: flex; flex-direction: column; gap: 14px; min-height: 0;">
+      <sc-for list="{{replicas}}" as="r" hint-placeholder-count="2">
+        <div style="flex-grow: 1; min-height: 0; display: flex; flex-direction: column; border-radius: 14px; overflow: hidden; background: #ffffff; border: 1px solid rgba(10,16,32,0.1);">
+          <div style="flex-grow: 1; min-height: 0; overflow: hidden;"><img src="{{r.foto}}" alt="{{r.alt}}" style="width: 100%; height: 100%; object-fit: cover; display: block;"></div>
+          <div style="padding: 11px 14px; display: flex; align-items: baseline; justify-content: space-between; gap: 10px;">
+            <div style="font-family: 'Space Grotesk', sans-serif; font-size: 13.5px; font-weight: 600; letter-spacing: -0.01em;">{{r.n}}</div>
+            <div style="font-size: 10.5px; color: #48536b;">{{r.d}}</div>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 12px;">
+      <div style="border-radius: 14px; overflow: hidden; border: 1px solid rgba(10,16,32,0.1); background: #ffffff;">
+        <div style="padding: 10px 14px; font-family: 'IBM Plex Mono', monospace; font-size: 8.5px; letter-spacing: 0.14em; color: #7d879e; border-bottom: 1px solid rgba(10,16,32,0.07);">FICHA TÉCNICA · DATOS DEL FABRICANTE</div>
+        <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1px; background: rgba(10,16,32,0.07);">
+          <sc-for list="{{specs}}" as="s" hint-placeholder-count="6">
+            <div style="background: #ffffff; padding: 11px 14px; display: flex; flex-direction: column; gap: 3px;">
+              <div style="font-family: 'IBM Plex Mono', monospace; font-size: 7.5px; letter-spacing: 0.12em; color: #7d879e; text-transform: uppercase;">{{s.k}}</div>
+              <div style="font-size: 12px; font-weight: 600; line-height: 1.3;">{{s.v}}</div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+      <sc-for list="{{bloques}}" as="b" hint-placeholder-count="3">
+        <div style="padding: 12px 14px; border-radius: 12px; background: #ffffff; border: 1px solid rgba(10,16,32,0.07);">
+          <div style="font-family: 'IBM Plex Mono', monospace; font-size: 8px; letter-spacing: 0.14em; color: #07707c; margin-bottom: 5px;">{{b.k}}</div>
+          <div style="font-size: 10.5px; line-height: 1.5; color: #48536b;">{{b.v}}</div>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+
+  <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 14px; border-top: 1px solid rgba(10,16,32,0.1); font-family: 'IBM Plex Mono', monospace; font-size: 9px; letter-spacing: 0.12em; color: #7d879e;">
+    <span><b style="color: #0a1020; font-weight: 600;">HELIESCALA</b> · HECHO A MANO EN MÉXICO</span>
+    <span>LA RÉPLICA: DESDE $1,800 MXN · 2 SEMANAS</span>
+    <span>PÁGINA 4 / 12</span>
+  </div>
+</div>
+</x-dc>
+
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":816,"height":1056}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      replicas: [
+        { n: 'Airbus H145', d: 'Corporativa blanca y negra', foto: '/_blob/a994c23200ea1bcf688784e41e3bc34f', alt: 'Réplica del H145' },
+        { n: 'H145 · XA-MVR', d: 'Azul sobre blanco, con matrícula', foto: '/_blob/75520bf68d8a7c604f27381bedec9e66', alt: 'Réplica del H145 XA-MVR' }
+      ],
+      specs: [
+        { k: 'Motor', v: '2 × Safran Arriel 2E' }, { k: 'Rotor', v: '5 palas · fenestron' },
+        { k: 'Capacidad', v: 'Hasta 10 pasajeros' }, { k: 'Crucero', v: '241 km/h' },
+        { k: 'Alcance', v: '≈ 650 km' }, { k: 'Fuente', v: 'airbus.com · 2026' }
+      ],
+      bloques: [
+        { k: 'PARA QUÉ SE USA', v: 'Ambulancia aérea, policía, búsqueda y rescate, transporte ejecutivo y offshore.' },
+        { k: 'CÓMO SE RECONOCE', v: 'El fenestron —el rotor de cola metido dentro de la deriva— y las cinco palas del rotor principal.' },
+        { k: 'EN MÉXICO', v: 'Vuela en servicios aeromédicos privados y en dependencias de gobierno.' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

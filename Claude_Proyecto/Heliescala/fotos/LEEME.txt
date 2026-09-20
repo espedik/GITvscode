@@ -67,7 +67,7 @@ GALERÍA, TALLER Y EXHIBICIÓN
 
 Para cambiar una: deja el archivo con el MISMO nombre. Para AÑADIR un modelo al
 catálogo hace falta la foto aquí y una línea en `T.es.piezas` (y su traducción en
-`T.en.piezas`) dentro del <script> de heliescala.html. Cada línea es
+`T.en.piezas`) dentro de datos.js, que leen la web y el PDF. Cada línea es
 [clave, nombre, foto, texto, etiquetas, modelo]: `modelo` vacío significa que no
 hay ficha técnica, y la ficha lo dice en vez de inventarla.
 

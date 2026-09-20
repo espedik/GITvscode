@@ -1,0 +1,95 @@
+{
+  "v": 3,
+  "createdOnFiles": {
+    "v": 1,
+    "at": "2026-09-19T03:40:00Z"
+  },
+  "title": "Heliescala — catálogo en PDF",
+  "launch": {
+    "view": "canvas"
+  },
+  "pages": [],
+  "boards": {
+    "Portada.dc.html": {
+      "x": 0,
+      "y": 0,
+      "w": 816,
+      "h": 1056,
+      "title": "Main · Portada"
+    },
+    "Main.dc.html": {
+      "x": 896,
+      "y": 0,
+      "w": 816,
+      "h": 1056,
+      "title": "Main · Catálogo de vitrina, 4 por página"
+    },
+    "Tuya.dc.html": {
+      "x": 1792,
+      "y": 0,
+      "w": 816,
+      "h": 1056,
+      "title": "Main · La réplica de tu aeronave"
+    },
+    "DireccionB.dc.html": {
+      "x": 2808,
+      "y": 0,
+      "w": 816,
+      "h": 1056,
+      "title": "B · Ficha por modelo"
+    },
+    "DireccionC.dc.html": {
+      "x": 3824,
+      "y": 0,
+      "w": 816,
+      "h": 1056,
+      "title": "C · Lookbook, una pieza por página"
+    }
+  },
+  "order": [
+    "Portada.dc.html",
+    "Main.dc.html",
+    "Tuya.dc.html",
+    "DireccionB.dc.html",
+    "DireccionC.dc.html"
+  ],
+  "notes": {
+    "titulo": {
+      "x": 0,
+      "y": -290,
+      "text": "Heliescala — el catálogo para mandar por WhatsApp",
+      "kind": "title1",
+      "maxW": 4640
+    },
+    "contexto": {
+      "x": 0,
+      "y": -170,
+      "w": 640,
+      "text": "QUÉ HAY QUE RESOLVER\n\n· 26 piezas con foto y librea real, 6 con ficha técnica del fabricante.\n· El PDF va por WhatsApp a un comprador potencial: tiene que abrir bien en el teléfono y pesar poco.\n· Lo que vende no es el catálogo sino «la réplica de tu aeronave»: eso necesita su página.\n· Igual que en Aeroresinas: se genera del mismo datos del HTML, con índice enlazado, WhatsApp con mensaje escrito y QR.",
+      "color": "gray"
+    },
+    "n-main": {
+      "x": 0,
+      "y": 1100,
+      "w": 2608,
+      "text": "MAIN — recomendada. «Catálogo de vitrina».\n\nPáginas oscuras, como la web: las fotos de estudio van sobre blanco y recortan solas contra el negro — es la razón de que Heliescala sea oscura, y en PDF funciona igual. Cuatro piezas por página, agrupadas por operador (civiles, rescate, Marina, Fuerza Aérea, Policía, militares, otros): 7 páginas de catálogo. Más portada con el presidencial, «tu aeronave», cómo se hace, envíos por zona y contacto con QR. Unas 13 páginas y ~5 MB.\n\nA favor: se ve el catálogo entero en pocas páginas y es el más fiel a la identidad. En contra: oscuro gasta tinta si alguien lo imprime.",
+      "color": "green"
+    },
+    "n-b": {
+      "x": 2808,
+      "y": 1100,
+      "w": 816,
+      "text": "B — «Ficha por modelo».\n\nUna página por helicóptero de verdad (H145, H125, Mi-17, Panther, Bell 412 y «otros»): a la izquierda las réplicas que hay de ese tipo, a la derecha la ficha técnica del fabricante, para qué se usa y cómo se reconoce. Claro, para imprimir.\n\nA favor: usa lo que nadie más tiene, los datos comprobados. En contra: 13 de las 26 piezas no tienen modelo confirmado y caerían todas en «otros».",
+      "color": "blue"
+    },
+    "n-c": {
+      "x": 3824,
+      "y": 1100,
+      "w": 816,
+      "text": "C — «Lookbook».\n\nUna pieza por página, la foto a sangre y una banda oscura con el nombre, la librea y tres datos del modelo. 26 páginas de piezas más 6 de texto.\n\nA favor: el más vistoso, cada pieza respira. En contra: 32 páginas y ~9 MB para mandar por WhatsApp; y muchas fotos no son de estudio, así que la mitad de las páginas lucirían menos que esta.",
+      "color": "purple"
+    }
+  },
+  "designSystems": [],
+  "artifact": "https://claude.ai/artifact/BWcGy4gAeJ2uN5w8pg48Pc"
+}

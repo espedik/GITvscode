@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Heliescala — Portada del catálogo</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+body{margin:0;font-family:'IBM Plex Sans',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#00c2d4}a:hover{color:#5ee3f0}
+</style>
+</helmet>
+
+<div style="width: 816px; height: 1056px; box-sizing: border-box; background: #080c16; color: #f3f6fb; position: relative; overflow: hidden; display: flex; flex-direction: column;">
+
+  <!-- La pieza estrella a sangre: el presidencial. Sobre blanco de estudio,
+       que es cómo están tomadas todas las fotos del catálogo. -->
+  <div style="position: absolute; left: 0; right: 0; top: 0; height: 600px; background: #ffffff; overflow: hidden;">
+    <img src="/_blob/c4b0e5b3e71548534758c120befb2d56" alt="Réplica del helicóptero presidencial de Estados Unidos" style="width: 100%; height: 100%; object-fit: cover; object-position: 50% 55%; display: block;">
+    <div style="position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(8,12,22,0) 55%, #080c16 100%);"></div>
+  </div>
+
+  <div style="position: relative; z-index: 1; padding: 52px 64px 0; display: flex; align-items: center; justify-content: space-between;">
+    <div style="display: flex; align-items: center; gap: 10px;">
+      <span style="width: 32px; height: 32px; border-radius: 9px; background: linear-gradient(140deg, #00c2d4, #4d6bff); display: flex; align-items: center; justify-content: center; color: #fff;">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M12 6v3"/><path d="M6 12h9a3 3 0 0 1 3 3v2H8a2 2 0 0 1-2-2z"/><path d="M18 15h3M7 17v3M13 17v3M5 20h10"/></svg>
+      </span>
+      <div><div style="font-family: 'Space Grotesk', sans-serif; font-size: 15px; font-weight: 700; letter-spacing: -0.01em; color: #0a1020;">HELIESCALA</div>
+        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 7.5px; letter-spacing: 0.2em; color: #48536b;">HECHO A MANO EN MÉXICO</div></div>
+    </div>
+    <div style="font-family: 'IBM Plex Mono', monospace; font-size: 9.5px; letter-spacing: 0.14em; color: #48536b;">CATÁLOGO 2026</div>
+  </div>
+
+  <div style="position: relative; z-index: 1; margin-top: auto; padding: 0 64px 56px; display: flex; flex-direction: column; gap: 18px;">
+    <div style="display: flex; align-items: center; gap: 8px; font-family: 'IBM Plex Mono', monospace; font-size: 10px; font-weight: 600; letter-spacing: 0.18em; color: {{acento}};">
+      <span style="width: 22px; height: 1px; background: {{acento}};"></span>RÉPLICAS EN RESINA · POR ENCARGO
+    </div>
+    <h1 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 50px; font-weight: 600; letter-spacing: -0.035em; line-height: 1.02;">Casi cualquier helicóptero,<br><span style="color: {{acento}};">a escala y hecho a mano.</span></h1>
+    <p style="margin: 0; font-size: 14.5px; line-height: 1.6; color: #a7b2c6; max-width: 58ch;">Airbus, Bell, Agusta, Mil, Sikorsky… fundidos en resina, montados y pintados a mano. Cada modelo sale de su propio molde, y la librea, el número de unidad y la matrícula se pintan una por una.</p>
+    <div style="display: flex; gap: 34px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.14);">
+      <sc-for list="{{datos}}" as="d" hint-placeholder-count="4">
+        <div><div style="font-family: 'Space Grotesk', sans-serif; font-size: 24px; font-weight: 600; letter-spacing: -0.02em; line-height: 1;">{{d.v}}</div>
+          <div style="font-family: 'IBM Plex Mono', monospace; font-size: 8px; letter-spacing: 0.14em; color: #7f8ba4; margin-top: 6px;">{{d.k}}</div></div>
+      </sc-for>
+    </div>
+    <div style="display: flex; align-items: center; justify-content: space-between; gap: 20px; margin-top: 8px;">
+      <div style="font-size: 11px; color: #a7b2c6;">Ciudad de México · entrega en persona en CDMX y Edomex, DHL al resto del país</div>
+      <a href="https://wa.me/525586184919" style="display: inline-flex; align-items: center; gap: 8px; padding: 11px 16px; border-radius: 10px; background: {{acento}}; color: #04141a; font-size: 12.5px; font-weight: 600; text-decoration: none;">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21l1.6-4.4A8 8 0 1 1 8 20.3z"/></svg>
+        +52 55 8618 4919
+      </a>
+    </div>
+  </div>
+</div>
+</x-dc>
+
+<script type="text/x-dc" data-dc-script data-props='{"acento":{"editor":"color","default":"#00c2d4","options":["#00c2d4","#4d6bff","#7cf5b0","#ffb27a"]},"$preview":{"width":816,"height":1056}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      acento: this.props.acento ?? '#00c2d4',
+      datos: [ { v: '26', k: 'EN EL CATÁLOGO' }, { v: 'Resina', k: 'MATERIAL' }, { v: '2 sem', k: 'ENTREGA' }, { v: '$1,800', k: 'DESDE · MXN' } ]
+    };
+  }
+}
+</script>
+</body>
+</html>

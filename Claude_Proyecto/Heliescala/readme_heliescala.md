@@ -40,6 +40,53 @@ Medido con los colores calculados por el navegador, en los dos temas: todo el te
 
 El archivo es **autónomo** —su CSS va dentro— porque algún día tendrá su propio dominio.
 
+## Los archivos
+
+| | Qué tiene |
+|---|---|
+| `heliescala.html` | La vista de la web: CSS, iconos, render, ficha del catálogo, visor, temas |
+| `datos.js` | **Todo** el contenido: `PERFIL`, `PERFIL_EN` y `T` (los dos idiomas, las 26 piezas, las fichas de los modelos, el tabulador de envíos). Lo leen la web **y el catálogo en PDF** |
+| `dossier.html` | El molde del **PDF**: páginas carta fijas, leídas del mismo `datos.js` |
+| `generar-pdf.js` | Genera `Heliescala-catalogo.pdf` con Chromium, comprobando antes que ninguna página desborda |
+| `Heliescala-catalogo.pdf` | **El catálogo para mandar por WhatsApp.** 15 páginas, 4.8 MB |
+| `qr-whatsapp.svg` | El QR de la última página: abre WhatsApp con el saludo ya escrito |
+| `diseno-catalogo/` | Las tres direcciones del catálogo en PDF (Adán eligió la B) |
+
+Los datos salieron del HTML el 2026-09-19, al hacer el PDF: con dos consumidores del mismo texto,
+tenerlo dentro de uno de ellos habría sido tenerlo dos veces (regla 1). Se comprobó que la web
+quedó idéntica: 26 piezas, 39 imágenes, las mismas palabras, los dos temas.
+
+## El catálogo en PDF — ficha por modelo
+
+Adán, 2026-09-19: *"ahora un pdf para resinas"*, y de las tres direcciones eligió la B (*"me gusta
+la opción B"*): **una página por helicóptero de verdad**. A la izquierda las réplicas que hay de
+ese tipo; a la derecha la **ficha del fabricante** —motor, rotor, peso, capacidad, crucero,
+alcance—, para qué se usa, cómo se reconoce y quién lo vuela en México. Es lo que nadie más tiene:
+los datos comprobados de `T.*.modelos`.
+
+**Las 13 piezas sin modelo confirmado no se inventan una ficha.** Van en cuatro páginas por
+familia —*Super Puma y Cougar*, *Rescate · librea AESSA*, *Bimotores corporativos y de Estado*,
+*Ligeros, gobierno y ala fija*— con las fotos a todo lo ancho, lo que sí se sabe (librea, operador,
+matrícula) y una nota que dice, literalmente, que el modelo exacto está por confirmar con el
+taller. El reparto en familias es presentación del PDF y vive en `dossier.html`, no en los datos.
+
+Las 15 páginas: portada oscura con el presidencial a sangre, índice, **5 fichas** (H145, H125,
+Bell 412, Panther, Mi-17: 13 piezas), **4 familias** (13 piezas), la réplica de tu aeronave, cómo se
+hace, envíos con el tabulador por zona, y contacto con QR. Todo lo demás es como en Aeroresinas:
+paginación fija, índice con enlaces (comprobado: los 9 destinos resuelven a las páginas 3–11),
+15 marcadores, `wa.me` con el mensaje ya escrito, texto seleccionable, y el generador se niega a
+imprimir si algo desborda. **4.8 MB** — las fotos del catálogo son ligeras.
+
+Dos cosas que salieron de mirar las páginas: el índice va **a dos columnas**, porque 26 filas y 9
+cabeceras se pasaban 381 px en una; y en las páginas de familia las fotos ocupan **todo el ancho**
+con la nota abajo, porque una columna lateral repetía el texto que ya llevaba cada foto.
+
+```bash
+cd Heliescala
+NODE_PATH="C:/Users/esped/AppData/Local/npm-cache/_npx/e41f203b7505f1fb/node_modules" node generar-pdf.js      # español
+NODE_PATH="…" node generar-pdf.js en                                                                        # inglés
+```
+
 ## Estructura
 
 Barra → hero → **catálogo** (8 piezas reales) → **tu aeronave** → **cómo se hace una** (4 pasos,
@@ -89,8 +136,9 @@ La cifra del hero dice **26 y no "30+"**. El 30+ era una estimación mía y era 
 las dos páginas que no venía de un dato comprobable; 26 son las piezas que se pueden contar en la
 pantalla.
 
-Para añadir un modelo hacen falta dos cosas: la foto en `fotos/` y una línea en `T.es.piezas` (con
-su traducción en `T.en.piezas`). Cada línea es `[clave, nombre, foto, texto, etiquetas, modelo]`:
+Para añadir un modelo hacen falta dos cosas: la foto en `fotos/` y una línea en `T.es.piezas` de
+`datos.js` (con su traducción en `T.en.piezas`). Sale en la web y en el PDF a la vez; en el PDF cae
+en la ficha de su modelo si lo tiene, o en «Más piezas» si no encaja en ninguna familia. Cada línea es `[clave, nombre, foto, texto, etiquetas, modelo]`:
 la primera etiqueta se pinta en cian y `modelo` es la clave de su ficha (ver abajo).
 
 ## La ficha del helicóptero

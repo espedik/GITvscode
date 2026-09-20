@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Heliescala — Catálogo</title>
+<!-- ═══════════════════════════════════════════════════════════════════════════
+   CATÁLOGO PARA PDF — dirección B de diseno-catalogo/: «ficha por modelo».
+
+   Adán, 2026-09-19: "me gusta la opción B".
+
+   Una página por helicóptero de verdad: a la izquierda las réplicas que hay de
+   ese tipo, a la derecha la ficha del fabricante (los datos comprobados de
+   T.*.modelos), para qué se usa y cómo se reconoce. Las 13 piezas SIN modelo
+   confirmado no se inventan una ficha: van en cuatro páginas por familia, con lo
+   que sí se sabe —librea, operador, matrícula— y la nota de «por confirmar».
+
+   Lee el MISMO datos.js que heliescala.html (regla 1). Páginas carta fijas,
+   paginadas a mano, para que el índice diga en qué página está cada modelo. Se
+   genera con generar-pdf.js, igual que el de Aeroresinas.
+   ═══════════════════════════════════════════════════════════════════════════ -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+:root{
+  --tinta:#0a1020; --t2:#48536b; --t3:#7d879e; --cian:#07707c; --azul:#1b47ff;
+  --linea:rgba(10,16,32,.11); --linea2:rgba(10,16,32,.06); --suave:#f3f5f9; --bg:#eef1f6;
+  --fd:'Space Grotesk','Segoe UI',sans-serif; --fb:'IBM Plex Sans',-apple-system,sans-serif; --fm:'IBM Plex Mono',ui-monospace,monospace;
+}
+@page{size:Letter;margin:0}
+html,body{background:#fff;color:var(--tinta);font-family:var(--fb);font-size:10.5pt;line-height:1.5}
+img{display:block;max-width:100%}
+a{color:inherit;text-decoration:none}
+b{font-weight:600}
+
+.pg{width:8.5in;height:11in;position:relative;overflow:hidden;padding:.62in .7in .55in;background:var(--bg);
+  break-after:page;page-break-after:always;display:flex;flex-direction:column}
+.pg:last-of-type{break-after:auto;page-break-after:auto}
+.pie-pg{position:absolute;left:.7in;right:.7in;bottom:.32in;display:flex;justify-content:space-between;
+  font-family:var(--fm);font-size:7pt;letter-spacing:.12em;color:var(--t3);text-transform:uppercase}
+.pie-pg b{color:var(--tinta);font-weight:600}
+.pg.oscura{background:#080c16;color:#f3f6fb}
+.pg.oscura .pie-pg{color:rgba(255,255,255,.5)}.pg.oscura .pie-pg b{color:#fff}
+
+.ojo{display:flex;align-items:center;gap:8px;font-family:var(--fm);font-size:7.5pt;font-weight:600;
+  letter-spacing:.18em;text-transform:uppercase;color:var(--cian)}
+.ojo::before{content:'';width:22px;height:1px;background:currentColor}
+.oscura .ojo{color:#00c2d4}
+.h1{font-family:var(--fd);font-size:36pt;font-weight:600;letter-spacing:-.035em;line-height:1.02}
+.h1 em{font-style:normal;color:#00c2d4}
+.h2{font-family:var(--fd);font-size:22pt;font-weight:600;letter-spacing:-.03em;line-height:1.08}
+.sub{font-size:10.5pt;line-height:1.55;color:var(--t2);max-width:62ch}
+.oscura .sub{color:rgba(255,255,255,.78)}
+.cab{display:flex;flex-direction:column;gap:7px;margin-bottom:16px}
+.cab-fila{display:flex;justify-content:space-between;align-items:flex-start;gap:20px}
+.num{font-family:var(--fm);font-size:8pt;letter-spacing:.12em;color:var(--t3);white-space:nowrap;padding-top:6px}
+
+/* ── Portada ───────────────────────────────────────────────────────────── */
+.portada{padding:0}
+.portada-foto{position:absolute;left:0;right:0;top:0;height:6.1in;background:#fff;overflow:hidden}
+.portada-foto img{width:100%;height:100%;object-fit:cover;object-position:50% 55%}
+.portada-foto::after{content:'';position:absolute;inset:0;background:linear-gradient(to bottom,rgba(8,12,22,0) 58%,#080c16 100%)}
+.portada-marca{position:absolute;left:.7in;right:.7in;top:.55in;z-index:1;display:flex;justify-content:space-between;align-items:center}
+.marca{display:flex;align-items:center;gap:10px}
+.marca i{width:30px;height:30px;border-radius:9px;background:linear-gradient(140deg,#00c2d4,#4d6bff);color:#fff;display:flex;align-items:center;justify-content:center}
+.portada .marca,.portada-marca>div:last-child{padding:8px 12px;border-radius:10px;background:rgba(8,12,22,.55);backdrop-filter:blur(6px)}
+.marca b{font-family:var(--fd);font-size:12pt;letter-spacing:-.01em;color:#fff}
+.marca span{display:block;font-family:var(--fm);font-size:6.5pt;letter-spacing:.2em;color:rgba(255,255,255,.7)}
+.portada-txt{position:relative;z-index:1;margin-top:auto;padding:0 .7in .6in;display:flex;flex-direction:column;gap:16px}
+.portada-datos{display:flex;gap:30px;padding-top:14px;border-top:1px solid rgba(255,255,255,.16)}
+.dato .v{font-family:var(--fd);font-size:19pt;font-weight:600;letter-spacing:-.02em;line-height:1}
+.dato .k{font-family:var(--fm);font-size:6.8pt;letter-spacing:.14em;color:rgba(255,255,255,.62);text-transform:uppercase;margin-top:5px}
+.portada-cta{display:flex;justify-content:space-between;align-items:center;gap:20px;margin-top:4px}
+.portada-cta .d{font-size:9pt;color:rgba(255,255,255,.75)}
+.portada-cta .wa{display:inline-flex;align-items:center;gap:8px;padding:10px 16px;border-radius:10px;background:#00c2d4;color:#04141a;font-size:9.5pt;font-weight:600}
+
+/* ── Índice ────────────────────────────────────────────────────────────── */
+.ix-g{display:grid;grid-template-columns:1fr 1fr;gap:10px 16px;margin-top:4px;align-content:start}
+.ix-grupo{display:flex;flex-direction:column;gap:3px}
+.ix-grupo .h{display:flex;justify-content:space-between;align-items:baseline;padding:4px 11px 5px;
+  font-family:var(--fm);font-size:7.5pt;letter-spacing:.14em;color:var(--cian);text-transform:uppercase;border-bottom:1px solid var(--linea)}
+.ix-grupo .h span:last-child{color:var(--t3)}
+.ix a{display:grid;grid-template-columns:24px minmax(0,1fr) auto;gap:9px;align-items:center;padding:5px 9px;border-radius:7px}
+.ix a:nth-child(odd){background:rgba(255,255,255,.6)}
+.ix .n{font-family:var(--fm);font-size:7.5pt;font-weight:600;color:var(--t3)}
+.ix .t{font-size:8.6pt;font-weight:500;line-height:1.25}
+.ix .p{font-family:var(--fm);font-size:7.5pt;color:var(--t3)}
+.ix-nota{margin-top:auto;padding-top:12px;font-size:8.6pt;color:var(--t3);line-height:1.5}
+
+/* ── Ficha por modelo ──────────────────────────────────────────────────── */
+.ficha{flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,1.12fr) minmax(0,1fr);gap:18px}
+.replicas{display:grid;gap:12px;min-height:0}
+.replicas.n1{grid-template-rows:1fr}
+.replicas.n2{grid-template-rows:1fr 1fr}
+.replicas.n3{grid-template-columns:1fr 1fr;grid-template-rows:1.25fr 1fr}
+.replicas.n3 .rep:first-child{grid-column:1/-1}
+.replicas.n4{grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr}
+/* Página de familia: sin ficha que poner al lado, las fotos ocupan el ancho y
+   la nota y «la réplica» van abajo. Con 3 piezas, tres columnas; con 4, 2×2. */
+.ficha.fam{grid-template-columns:1fr;grid-template-rows:minmax(0,1fr) auto;gap:14px}
+.ficha.fam .replicas.n3{grid-template-columns:repeat(3,minmax(0,1fr));grid-template-rows:1fr}
+.ficha.fam .replicas.n3 .rep:first-child{grid-column:auto}
+.ficha.fam .replicas.n4{grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr}
+.ficha.fam .banda{display:grid;grid-template-columns:minmax(0,1fr) 3in;gap:12px;align-items:stretch}
+.ficha.fam .banda .bloque.rep-b{margin-top:0}
+.rep{display:flex;flex-direction:column;border-radius:13px;overflow:hidden;background:#fff;border:1px solid var(--linea);min-height:0}
+.rep .im{flex:1;min-height:0;overflow:hidden;background:#fff}
+.rep .im img{width:100%;height:100%;object-fit:cover}
+.rep .tx{padding:8px 11px 9px;display:flex;flex-direction:column;gap:2px}
+.rep .t{font-family:var(--fd);font-size:9.8pt;font-weight:600;letter-spacing:-.01em;line-height:1.2}
+.rep .d{font-size:7.9pt;line-height:1.4;color:var(--t2)}
+.rep .tags{display:flex;gap:5px;margin-top:4px}
+.tag{font-family:var(--fm);font-size:6.5pt;font-weight:600;letter-spacing:.1em;padding:3px 7px;border-radius:4px;background:rgba(10,16,32,.07);color:var(--t2);text-transform:uppercase}
+.tag.acc{background:rgba(7,112,124,.12);color:var(--cian)}
+.lado{display:flex;flex-direction:column;gap:10px;min-height:0}
+.specs{border-radius:13px;overflow:hidden;border:1px solid var(--linea);background:#fff}
+.specs .h{padding:8px 13px;font-family:var(--fm);font-size:7pt;letter-spacing:.14em;color:var(--t3);border-bottom:1px solid var(--linea2);text-transform:uppercase}
+.specs .g{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--linea2)}
+.spec{background:#fff;padding:9px 13px;display:flex;flex-direction:column;gap:2px}
+.spec .k{font-family:var(--fm);font-size:6.8pt;letter-spacing:.12em;color:var(--t3);text-transform:uppercase}
+.spec .v{font-size:9.6pt;font-weight:600;line-height:1.3}
+.spec:last-child:nth-child(odd){grid-column:1/-1}
+.bloque{padding:10px 13px;border-radius:11px;background:#fff;border:1px solid var(--linea2)}
+.bloque .k{font-family:var(--fm);font-size:6.8pt;letter-spacing:.14em;color:var(--cian);margin-bottom:4px;text-transform:uppercase}
+.bloque .v{font-size:8.6pt;line-height:1.5;color:var(--t2)}
+.bloque .v b{color:var(--tinta)}
+.bloque.rep-b{background:#0a1020;color:#fff;border-color:#0a1020;margin-top:auto}
+.bloque.rep-b .k{color:#00c2d4}
+.bloque.rep-b .v{color:rgba(255,255,255,.78)}
+.bloque.rep-b .fila{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 14px;margin-top:8px}
+.bloque.rep-b .fila .kk{font-family:var(--fm);font-size:6.3pt;letter-spacing:.12em;color:rgba(255,255,255,.5)}
+.bloque.rep-b .fila .vv{font-size:9pt;font-weight:600;color:#fff;margin-top:2px}
+.pend{color:var(--cian);background:rgba(7,112,124,.1);border-bottom:1px dashed rgba(7,112,124,.5);padding:0 3px;border-radius:3px}
+.fam-nota{padding:12px 14px;border-radius:11px;border:1px dashed rgba(7,112,124,.45);background:rgba(7,112,124,.05);font-size:8.6pt;line-height:1.5;color:var(--t2)}
+.fam-nota b{color:var(--tinta)}
+.fam-lista{display:flex;flex-direction:column;gap:6px}
+.fam-lista .it{padding:9px 12px;border-radius:10px;background:#fff;border:1px solid var(--linea2)}
+.fam-lista .t{font-size:9pt;font-weight:600;line-height:1.25}
+.fam-lista .d{font-size:8pt;line-height:1.45;color:var(--t2);margin-top:2px}
+
+/* ── Tu aeronave, proceso, envíos, contacto ────────────────────────────── */
+.dos{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.foto{border-radius:14px;overflow:hidden;position:relative;background:#fff;border:1px solid var(--linea)}
+.foto img{width:100%;height:100%;object-fit:cover}
+.foto .pie{position:absolute;left:0;right:0;bottom:0;padding:28px 13px 11px;color:#fff;font-size:8pt;line-height:1.4;
+  background:linear-gradient(to top,rgba(8,12,22,.9),transparent)}
+.foto .pie b{color:#fff}
+.lista{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:14px}
+.lista .it{display:flex;gap:10px;padding:11px 13px;border-radius:11px;background:#fff;border:1px solid var(--linea2);font-size:8.8pt;line-height:1.5;color:var(--t2)}
+.lista .n{font-family:var(--fm);font-size:8pt;font-weight:600;color:var(--cian);flex:none;padding-top:2px}
+.pasos{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.paso{display:flex;gap:11px;padding:12px 13px;border-radius:11px;background:#fff;border:1px solid var(--linea2)}
+.paso .n{font-family:var(--fm);font-size:8pt;font-weight:600;color:var(--cian);flex:none;padding-top:2px}
+.paso .t{font-family:var(--fd);font-size:10pt;font-weight:600;line-height:1.2}
+.paso .d{font-size:8.3pt;line-height:1.48;color:var(--t2);margin-top:4px}
+.gal3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:14px;flex:1;min-height:0}
+.gal3 .foto{min-height:0}
+.tabu{display:flex;flex-direction:column;gap:8px}
+.zona{display:grid;grid-template-columns:1.7in minmax(0,1fr) 1.2in;gap:14px;align-items:center;padding:12px 14px;border-radius:12px;background:#fff;border:1px solid var(--linea2)}
+.zona.z1{background:rgba(7,112,124,.07);border-color:rgba(7,112,124,.35)}
+.zona .zn{display:flex;align-items:center;gap:9px}
+.zona .zi{font-family:var(--fm);font-size:8pt;font-weight:600;color:var(--cian)}
+.zona .zn b{font-family:var(--fd);font-size:10.5pt;font-weight:600;letter-spacing:-.01em;line-height:1.2}
+.zona .ze{font-size:8.3pt;line-height:1.5;color:var(--t2)}
+.zona .zc{text-align:right;font-family:var(--fm);font-size:9pt;font-weight:600}
+.zona.z1 .zc{color:var(--cian)}
+.fichas{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:14px}
+.fichas .f{padding:11px 13px;border-radius:11px;background:#fff;border:1px solid var(--linea2)}
+.fichas .k{font-family:var(--fm);font-size:6.8pt;letter-spacing:.12em;color:var(--t3);text-transform:uppercase}
+.fichas .v{font-size:10.5pt;font-weight:600;margin-top:3px}
+.nota{margin-top:12px;padding:12px 14px;border-radius:11px;background:#fff;border:1px solid var(--linea2);font-size:8.6pt;line-height:1.5;color:var(--t2)}
+.nota b{color:var(--tinta)}
+.contacto{display:grid;grid-template-columns:minmax(0,1fr) 2.5in;gap:22px;align-items:start}
+.vias{display:flex;flex-direction:column;gap:8px}
+.via{display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:11px;border:1px solid var(--linea);background:#fff}
+.via i{width:30px;height:30px;border-radius:8px;background:rgba(7,112,124,.1);color:var(--cian);display:flex;align-items:center;justify-content:center;flex:none}
+.via .k{font-family:var(--fm);font-size:6.8pt;letter-spacing:.12em;color:var(--t3);text-transform:uppercase}
+.via .v{font-size:10.5pt;font-weight:600;margin-top:1px}
+.via.wa{background:#0a1020;color:#fff;border-color:#0a1020}
+.via.wa i{background:rgba(255,255,255,.12);color:#00c2d4}
+.via.wa .k{color:rgba(255,255,255,.6)}
+.qr{padding:12px;border-radius:14px;border:1px solid var(--linea);background:#fff;text-align:center}
+.qr img{width:100%;height:auto}
+.qr .t{font-family:var(--fm);font-size:7pt;letter-spacing:.12em;color:var(--t3);text-transform:uppercase;margin-top:8px;line-height:1.5}
+.pedir{margin-top:14px;padding:16px 18px;border-radius:13px;background:#0a1020;color:#fff;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:18px;align-items:center}
+.pedir .t{font-family:var(--fd);font-size:12pt;font-weight:600;color:#00c2d4}
+.pedir .d{font-size:8.6pt;line-height:1.5;color:rgba(255,255,255,.8);margin-top:4px}
+.pedir .b{padding:10px 14px;border-radius:9px;background:#00c2d4;color:#04141a;font-size:8.8pt;font-weight:600;white-space:nowrap}
+</style>
+</head>
+<body>
+<div id="doc"></div>
+
+<script src="datos.js"></script>
+<script>
+const IDIOMA = /[?&]en\b/.test(location.search) ? 'en' : 'es';
+const t = T[IDIOMA];
+const P = IDIOMA === 'en' ? Object.assign({}, PERFIL, PERFIL_EN) : PERFIL;
+const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');
+const rell = s => String(s).replace(/\{(\w+)\}/g, (m,k) => P[k] == null ? m : P[k]);
+const marcado = v => /^\[.*\]$/.test(String(v).trim());
+const val = k => marcado(P[k]) ? '<span class="pend">' + esc(P[k]) + '</span>' : esc(P[k]);
+const ICO = {
+  heli:'<path d="M3 6h18M12 6v3"/><path d="M6 12h9a3 3 0 0 1 3 3v2H8a2 2 0 0 1-2-2z"/><path d="M18 15h3M7 17v3M13 17v3M5 20h10"/>',
+  wa:'<path d="M3 21l1.6-4.4A8 8 0 1 1 8 20.3z"/><path d="M8.5 9.5c0 3 2.5 5.5 5.5 5.5.6 0 1.2-.7 1.2-1.3l-1.6-.9-1 1a6 6 0 0 1-2.4-2.4l1-1-.9-1.6c-.6 0-1.3.6-1.3 1.2z"/>',
+  mail:'<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/>',
+  pin:'<path d="M12 21s7-5.6 7-11a7 7 0 1 0-14 0c0 5.4 7 11 7 11z"/><circle cx="12" cy="10" r="2.6"/>',
+};
+const svg = (k, sz) => '<svg viewBox="0 0 24 24" width="' + (sz||16) + '" height="' + (sz||16) +
+  '" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">' + (ICO[k]||'') + '</svg>';
+const E = IDIOMA === 'en';
+const WA = 'https://wa.me/' + PERFIL.whatsapp + '?text=' + encodeURIComponent(t.waSaludo + ' ' + (E ? 'I saw your catalogue.' : 'Vi tu catálogo.'));
+
+/* ── Cómo se agrupan las 26 piezas ──────────────────────────────────────────
+   Las que tienen modelo (T.*.modelos) van a la ficha de ese modelo. Las 13 que
+   no lo tienen confirmado se reparten en cuatro familias por lo que sí se sabe
+   —el nombre que llevan y su operador— sin inventarles ficha. Esto es
+   presentación del PDF, no dato: por eso vive aquí y no en datos.js. */
+const ORDEN_MODELOS = ['h145', 'h125', 'bell412', 'panther', 'mi17'];
+const FAMILIAS = [
+  { k: 'puma',      claves: ['fam-sp', 'camo-verde', 'camo-gris'],
+    es: ['Super Puma y Cougar', 'Airbus Helicopters · familia AS332 / H215 / H225'],
+    en: ['Super Puma and Cougar', 'Airbus Helicopters · AS332 / H215 / H225 family'] },
+  { k: 'rescate',   claves: ['rescate', 'aessa-mcm', 'aessa-jgh'],
+    es: ['Rescate · librea AESSA', 'Tres piezas del mismo operador'],
+    en: ['Rescue · AESSA livery', 'Three pieces from the same operator'] },
+  { k: 'bimotores', claves: ['marineone', 'grandnew', 'xaecj', 'fenestron'],
+    es: ['Bimotores corporativos y de Estado', 'Del presidencial de EE. UU. a los ejecutivos con matrícula'],
+    en: ['Corporate and state twins', 'From the US presidential to registered executives'] },
+  { k: 'otros',     claves: ['bell407', 'bell-camo', 'avion'],
+    es: ['Ligeros, gobierno y ala fija', 'Lo que no cabe en las otras familias'],
+    en: ['Light, government and fixed wing', 'What the other families do not hold'] },
+];
+const porClave = Object.fromEntries(t.piezas.map(p => [p[0], p]));
+const grupos = [];
+ORDEN_MODELOS.forEach(m => {
+  const piezas = t.piezas.filter(p => p[5] === m);
+  if(piezas.length) grupos.push({ tipo: 'modelo', k: m, modelo: t.modelos[m], piezas });
+});
+FAMILIAS.forEach(f => {
+  const piezas = f.claves.map(c => porClave[c]).filter(Boolean);
+  if(piezas.length) grupos.push({ tipo: 'familia', k: f.k, titulo: f[IDIOMA][0], sub: f[IDIOMA][1], piezas });
+});
+const asignadas = new Set(grupos.flatMap(g => g.piezas.map(p => p[0])));
+const sueltas = t.piezas.filter(p => !asignadas.has(p[0]));
+if(sueltas.length) grupos.push({ tipo: 'familia', k: 'mas', titulo: E ? 'More pieces' : 'Más piezas', sub: '', piezas: sueltas });
+
+const paginas = [];
+const pagina = (html, extra) => paginas.push({ html, extra: extra || '' });
+const pie = (n, total) => '<div class="pie-pg"><span><b>HELIESCALA</b> · ' + esc(t.marcaSub) + '</span><span>' +
+  (E ? 'Page' : 'Página') + ' ' + n + ' / ' + total + '</span></div>';
+const repHtml = p => '<div class="rep"><div class="im"><img src="' + p[2] + '" alt=""></div><div class="tx">' +
+  '<div class="t">' + esc(p[1]) + '</div><div class="d">' + p[3] + '</div>' +
+  '<div class="tags">' + (p[4] || []).map((x, k) => '<span class="tag' + (k === 0 ? ' acc' : '') + '">' + esc(x) + '</span>').join('') + '</div></div></div>';
+const replicaBloque = () => '<div class="bloque rep-b"><div class="k">' + esc(t.fpRepT) + '</div><div class="v">' + t.fpRepD + '</div>' +
+  '<div class="fila">' + t.fichas.map(f => '<div><div class="kk">' + esc(f[1]) + '</div><div class="vv">' + val(f[2]) + '</div></div>').join('') + '</div></div>';
+
+// ── 1 · Portada ────────────────────────────────────────────────────────────
+const estrella = porClave['marineone'] || t.piezas[0];
+pagina(`
+  <div class="portada-foto"><img src="${estrella[2]}" alt=""></div>
+  <div class="portada-marca">
+    <div class="marca"><i>${svg('heli',15)}</i><div><b>HELIESCALA</b><span>${esc(t.marcaSub)}</span></div></div>
+    <div style="font-family:var(--fm);font-size:8pt;letter-spacing:.14em;color:#fff">${E ? 'CATALOGUE' : 'CATÁLOGO'} ${new Date().getFullYear()}</div>
+  </div>
+  <div class="portada-txt">
+    <div class="ojo">${esc(t.heroOjo)}</div>
+    <h1 class="h1">${esc(t.heroT1)}</h1><div class="h1"><em>${esc(t.heroT2)}</em></div>
+    <p class="sub">${t.heroSub}</p>
+    <div class="portada-datos">
+      <div class="dato"><div class="v">${t.piezas.length}</div><div class="k">${esc(t.kModelos)}</div></div>
+      <div class="dato"><div class="v">${esc(t.dResina)}</div><div class="k">${esc(t.kResina)}</div></div>
+      <div class="dato"><div class="v">${esc(P.tiempo)}</div><div class="k">${esc(t.fichas[1][1])}</div></div>
+      <div class="dato"><div class="v">${esc(P.desde)}</div><div class="k">${esc(t.fichas[3][1])}</div></div>
+    </div>
+    <div class="portada-cta"><div class="d">${esc(P.ciudad)} · ${E ? 'in person in CDMX and Edomex, DHL elsewhere' : 'entrega en persona en CDMX y Edomex, DHL al resto'}</div>
+      <a class="wa" href="${WA}">${svg('wa',14)} ${esc(PERFIL.whatsappTxt)}</a></div>
+  </div>`, 'oscura portada');
+
+// ── 2 · Índice ─────────────────────────────────────────────────────────────
+const PRIMERA = 3;
+pagina(`
+  <div class="cab"><div class="ojo">${esc(t.catN)}</div><h2 class="h2">${esc(t.catT)}</h2><p class="sub">${t.catSub}</p></div>
+  <div class="ix-g">${grupos.map((g, gi) => {
+    const titulo = g.tipo === 'modelo' ? g.modelo.n : g.titulo;
+    const fab = g.tipo === 'modelo' ? g.modelo.fab : g.sub;
+    return '<div class="ix-grupo"><div class="h"><span>' + esc(titulo) + '</span><span>p. ' + (PRIMERA + gi) + '</span></div><div class="ix">' +
+      g.piezas.map(p => '<a href="#g-' + g.k + '"><span class="n">' + String(t.piezas.indexOf(p) + 1).padStart(2, '0') + '</span><span class="t">' + esc(p[1]) + '</span><span class="p">' + esc((p[4] || [])[0] || '') + '</span></a>').join('') + '</div></div>';
+  }).join('')}</div>
+  <div class="ix-nota">${E
+    ? 'Tap any piece to go to its page. Five models carry the manufacturer’s data sheet, checked against airbus.com and bellflight.com; the other families show what is known — livery, operator, registration — and say when the exact model is still to be confirmed.'
+    : 'Toca cualquier pieza para ir a su página. Cinco modelos llevan la ficha del fabricante, comprobada en airbus.com y bellflight.com; las otras familias enseñan lo que se sabe —librea, operador, matrícula— y dicen cuándo el modelo exacto está por confirmar.'}</div>`);
+
+// ── 3 en adelante · Una página por modelo o familia ────────────────────────
+grupos.forEach((g, gi) => {
+  const n = g.piezas.length;
+  const izq = '<div class="replicas n' + Math.min(n, 4) + '">' + g.piezas.slice(0, 4).map(repHtml).join('') + '</div>';
+  let der;
+  if(g.tipo === 'modelo'){
+    const m = g.modelo;
+    der = '<div class="lado">' +
+      '<div class="specs"><div class="h">' + (E ? 'Data sheet · manufacturer figures' : 'Ficha técnica · datos del fabricante') + '</div><div class="g">' +
+        Object.keys(m.sp).map(k => '<div class="spec"><div class="k">' + esc(t.fpSpec[k] || k) + '</div><div class="v">' + m.sp[k] + '</div></div>').join('') + '</div></div>' +
+      [['usos','usos'],['ojo','ojo'],['mx','mx']].map(b => '<div class="bloque"><div class="k">' + esc(t.fpBl[b[0]]) + '</div><div class="v">' + m[b[1]] + '</div></div>').join('') +
+      replicaBloque() + '</div>';
+    pagina(`
+      <a id="g-${g.k}"></a>
+      <div class="cab"><div class="cab-fila"><div><div class="ojo">${esc(m.fab)}</div><h2 class="h2" style="margin-top:6px">${esc(m.n)}</h2>
+        <p class="sub" style="margin-top:6px;font-size:9.6pt">${m.r}</p></div>
+        <div class="num">${E ? 'MODEL' : 'MODELO'} ${gi + 1} / ${grupos.length} · ${n} ${n === 1 ? (E ? 'PIECE' : 'PIEZA') : (E ? 'PIECES' : 'PIEZAS')}</div></div></div>
+      <div class="ficha">${izq}${der}</div>`);
+  } else {
+    const sinModelo = g.piezas.filter(p => !p[5]).length;
+    const nota = sinModelo ? '<div class="fam-nota"><b>' + (E ? 'What is known, and what is not.' : 'Lo que se sabe, y lo que no.') + '</b> ' +
+        (E ? 'Livery, operator and registration come from the photo. ' : 'La librea, el operador y la matrícula salen de la foto. ') +
+        esc(t.fpPend) + (E ? ' Nothing here is invented: when the workshop confirms it, the piece gets its data sheet.' : ' Aquí no se inventa nada: cuando el taller lo confirme, la pieza tendrá su ficha.') + '</div>' : '<div></div>';
+    pagina(`
+      <a id="g-${g.k}"></a>
+      <div class="cab"><div class="cab-fila"><div><div class="ojo">${esc(g.sub)}</div><h2 class="h2" style="margin-top:6px">${esc(g.titulo)}</h2></div>
+        <div class="num">${E ? 'FAMILY' : 'FAMILIA'} ${gi + 1} / ${grupos.length} · ${n} ${E ? 'PIECES' : 'PIEZAS'}</div></div></div>
+      <div class="ficha fam">${izq}<div class="banda">${nota}${replicaBloque()}</div></div>`);
+  }
+});
+
+// ── Tu aeronave ────────────────────────────────────────────────────────────
+const fotoPers = 'fotos/personalizado.jpg', fotoPol = 'fotos/policia.jpg';
+pagina(`
+  <div class="cab"><div class="ojo">${esc(t.tuyaOjo)}</div><h2 class="h2">${esc(t.tuyaT)}</h2><p class="sub">${t.tuyaSub}</p></div>
+  <div class="dos" style="flex:1;min-height:0">
+    <figure class="foto"><img src="${fotoPers}" alt=""><figcaption class="pie">${t.pieFam}</figcaption></figure>
+    <figure class="foto"><img src="${fotoPol}" alt=""><figcaption class="pie">${t.piePolicia}</figcaption></figure>
+  </div>
+  <div class="lista">${t.tuyaLista.map((x, i) => '<div class="it"><span class="n">0' + (i+1) + '</span><span>' + x + '</span></div>').join('')}</div>
+  <div class="pedir"><div><div class="t">${esc(t.ctaTuya)}</div><div class="d">${t.conSub}</div></div><a class="b" href="${WA}">${esc(t.formBtn)} →</a></div>`);
+
+// ── Cómo se hace ───────────────────────────────────────────────────────────
+const gal = a => (t.galeria || []).find(x => x[0].indexOf(a) >= 0);
+pagina(`
+  <div class="cab"><div class="ojo">${esc(t.procN)}</div><h2 class="h2">${esc(t.procT)}</h2><p class="sub">${t.procSub}</p></div>
+  <div class="pasos">${t.pasos.map((p, i) => '<div class="paso"><div class="n">0' + (i+1) + '</div><div><div class="t">' + esc(p[0]) + '</div><div class="d">' + p[1] + '</div></div></div>').join('')}</div>
+  <div class="gal3">${['bruto-1.jpg', 'produccion.jpg', 'flota6.jpg'].map(a => { const g = gal(a); return g ? '<figure class="foto"><img src="' + g[0] + '" alt=""><figcaption class="pie">' + g[1] + '</figcaption></figure>' : ''; }).join('')}</div>`);
+
+// ── Envíos y precio ────────────────────────────────────────────────────────
+pagina(`
+  <div class="cab"><div class="ojo">${esc(t.envN)}</div><h2 class="h2">${esc(t.envT)}</h2><p class="sub">${t.envSub}</p></div>
+  <div class="fichas">${t.fichas.map(f => '<div class="f"><div class="k">' + esc(f[1]) + '</div><div class="v">' + val(f[2]) + '</div></div>').join('')}</div>
+  <div class="tabu">${t.envZonas.map((z, i) => { const c = z[3].charAt(0) === '@' ? P[z[3].slice(1)] : z[3];
+    return '<div class="zona' + (i === 0 ? ' z1' : '') + '"><div class="zn"><span class="zi">' + esc(z[0]) + '</span><b>' + esc(z[1]) + '</b></div><div class="ze">' + esc(z[2]) + '</div><div class="zc">' + (marcado(c) ? '<span class="pend">' + esc(c) + '</span>' : esc(c)) + '</div></div>'; }).join('')}</div>
+  <div class="nota">${t.envNota}</div>
+  <div class="nota">${rell(t.fichasNota)}</div>
+  ${(() => { const g = gal('museo.jpg'); return g ? '<figure class="foto" style="flex:1;min-height:0;margin-top:12px"><img src="' + g[0] + '" alt=""><figcaption class="pie">' + g[1] + '</figcaption></figure>' : ''; })()}`);
+
+// ── Contacto ───────────────────────────────────────────────────────────────
+pagina(`
+  <div class="cab"><div class="ojo">${E ? 'CONTACT' : 'CONTACTO'}</div><h2 class="h2">${esc(t.conT)}</h2><p class="sub">${t.conSub}</p></div>
+  <div class="contacto">
+    <div class="vias">
+      <a class="via wa" href="${WA}"><i>${svg('wa',15)}</i><div><div class="k">${esc(t.kWa)}</div><div class="v">${esc(PERFIL.whatsappTxt)}</div></div></a>
+      <a class="via" href="mailto:${PERFIL.correo}"><i>${svg('mail',15)}</i><div><div class="k">${esc(t.kMail)}</div><div class="v">${esc(PERFIL.correo)}</div></div></a>
+      <div class="via"><i>${svg('pin',15)}</i><div><div class="k">${esc(t.kBase)}</div><div class="v">${esc(P.ciudad)}</div></div></div>
+    </div>
+    <div class="qr"><img src="qr-whatsapp.svg" alt=""><div class="t">${E ? 'Scan to write<br>on WhatsApp' : 'Escanea para escribir<br>por WhatsApp'}</div></div>
+  </div>
+  <div class="pedir"><div><div class="t">${esc(t.formT)}</div><div class="d">${E ? 'Model, livery and registration — or tell me you will send photos. WhatsApp opens with the message already written.' : 'Modelo, librea y matrícula — o dime que me mandas fotos. Se abre WhatsApp con el mensaje ya escrito.'}</div></div><a class="b" href="${WA}">${esc(t.formBtn)} →</a></div>
+  ${(() => { const g = gal('flota.jpg') || gal('fila.jpg'); return g ? '<figure class="foto" style="flex:1;min-height:0;margin-top:14px"><img src="' + g[0] + '" alt=""><figcaption class="pie">' + g[1] + '</figcaption></figure>' : ''; })()}`);
+
+// ── Pintar ─────────────────────────────────────────────────────────────────
+const total = paginas.length;
+document.getElementById('doc').innerHTML = paginas.map((p, i) =>
+  '<section class="pg ' + p.extra + '">' + p.html + (p.extra.includes('portada') ? '' : pie(i + 1, total)) + '</section>').join('');
+</script>
+</body>
+</html>

@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Heliescala — La réplica de tu aeronave</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+body{margin:0;font-family:'IBM Plex Sans',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#00c2d4}a:hover{color:#5ee3f0}
+</style>
+</helmet>
+
+<div style="width: 816px; height: 1056px; box-sizing: border-box; background: #080c16; color: #f3f6fb; padding: 60px 64px 52px; display: flex; flex-direction: column; gap: 22px; overflow: hidden;">
+
+  <div style="display: flex; flex-direction: column; gap: 10px;">
+    <div style="display: flex; align-items: center; gap: 8px; font-family: 'IBM Plex Mono', monospace; font-size: 10px; font-weight: 600; letter-spacing: 0.18em; color: {{acento}};">
+      <span style="width: 22px; height: 1px; background: {{acento}};"></span>LO QUE MÁS SE ENCARGA
+    </div>
+    <h2 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 36px; font-weight: 600; letter-spacing: -0.03em; line-height: 1.05;">La réplica de tu propia aeronave</h2>
+    <p style="margin: 0; font-size: 13px; line-height: 1.6; color: #a7b2c6; max-width: 62ch;">Es lo que más piden: el helicóptero que vuelas o que operas, con <b style="color: #f3f6fb; font-weight: 600;">sus colores, su número y su matrícula</b>. Sirve de regalo de retiro, de reconocimiento, de pieza de recepción o de obsequio a un cliente.</p>
+  </div>
+
+  <div style="flex-grow: 1; min-height: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px;">
+    <div style="border-radius: 16px; overflow: hidden; background: #ffffff; position: relative;">
+      <img src="/_blob/5b6e49552b7dbe1b8dce8ef1dd769667" alt="Réplica con placa personalizada en la base" style="width: 100%; height: 100%; object-fit: cover; display: block;">
+      <div style="position: absolute; left: 0; right: 0; bottom: 0; padding: 30px 16px 14px; background: linear-gradient(to top, rgba(8,12,22,0.92), transparent); font-size: 11.5px; line-height: 1.45; color: #dfe4ee;"><b style="color: #fff;">Con placa en la base:</b> el nombre del dueño, bajo su propia aeronave.</div>
+    </div>
+    <div style="border-radius: 16px; overflow: hidden; background: #ffffff; position: relative;">
+      <img src="/_blob/75520bf68d8a7c604f27381bedec9e66" alt="Réplica del H145 XA-MVR con su matrícula" style="width: 100%; height: 100%; object-fit: cover; display: block;">
+      <div style="position: absolute; left: 0; right: 0; bottom: 0; padding: 30px 16px 14px; background: linear-gradient(to top, rgba(8,12,22,0.92), transparent); font-size: 11.5px; line-height: 1.45; color: #dfe4ee;"><b style="color: #fff;">XA-MVR.</b> Matrícula, bandera y librea pintadas a mano.</div>
+    </div>
+  </div>
+
+  <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px;">
+    <sc-for list="{{pasos}}" as="p" hint-placeholder-count="4">
+      <div style="display: flex; gap: 12px; padding: 13px 15px; border-radius: 12px; background: rgba(255,255,255,0.045); border: 1px solid rgba(255,255,255,0.09);">
+        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; font-weight: 600; color: {{acento}}; flex: none; padding-top: 2px;">{{p.n}}</div>
+        <div style="font-size: 11.5px; line-height: 1.5; color: #c3ccdd;">{{p.t}}</div>
+      </div>
+    </sc-for>
+  </div>
+
+  <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 14px; border-top: 1px solid rgba(255,255,255,0.1); font-family: 'IBM Plex Mono', monospace; font-size: 9px; letter-spacing: 0.12em; color: #7f8ba4;">
+    <span><b style="color: #f3f6fb; font-weight: 600;">HELIESCALA</b> · HECHO A MANO EN MÉXICO</span>
+    <a href="https://wa.me/525586184919" style="color: {{acento}}; text-decoration: none;">PEDIR LA DE TU MATRÍCULA →</a>
+    <span>PÁGINA 10 / 13</span>
+  </div>
+</div>
+</x-dc>
+
+<script type="text/x-dc" data-dc-script data-props='{"acento":{"editor":"color","default":"#00c2d4","options":["#00c2d4","#4d6bff","#7cf5b0","#ffb27a"]},"$preview":{"width":816,"height":1056}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      acento: this.props.acento ?? '#00c2d4',
+      pasos: [
+        { n: '01', t: 'Mándale fotos de la aeronave: los dos costados, la nariz y la cola.' },
+        { n: '02', t: 'Si tiene logotipo o número de unidad, una foto de cerca — se pinta a mano.' },
+        { n: '03', t: 'Él te dice si el modelo ya tiene molde o hay que prepararlo, y cuánto cambia el tiempo.' },
+        { n: '04', t: 'Se puede hacer una pieza o una flota completa, todas iguales.' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>
