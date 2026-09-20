@@ -279,11 +279,43 @@ está a un toque en el índice.
 - **Botón flotante de WhatsApp** abajo a la derecha.
 - Los casos pasan de 4 columnas a 2 y luego a 1; las preguntas y las técnicas, a una columna.
 
-## Material
+## Material, y el modo oscuro
 
 Blanco y transparente: vidrio (blanco al 72 % con `backdrop-filter`) sobre un cielo claro con dos
 auroras y una retícula técnica al 4,5 %, para que se lea como un plano y no como un folleto. Un
 solo acento, `#1b47ff`; el ámbar aparece **una vez**, en el AOG, que es lo único urgente.
+
+**Hay modo oscuro** (Adán, 2026-09-18: *"en ambos html de Aeroresinas y Heliescala, pon modo
+oscuro y modo claro"*). El botón está junto al de idioma y sigue el mismo criterio: **el icono dice
+a qué tema cambias**, no en cuál estás — en claro se ve la luna. Lo elegido se guarda en
+`localStorage['aero-tema']`.
+
+**La página abre siempre en claro.** No sigue `prefers-color-scheme`: nació blanca por encargo
+(*"quiero que se base en el color blanco y transparente"*), y arrancar en el tema del sistema haría
+que un visitante viera una página que no es la que se diseñó. Es el mismo criterio que con el
+idioma, que abre siempre en español.
+
+**Cómo está hecho, y por qué es barato.** Todo cuelga de `--ov`, la base de las superposiciones:
+`10,16,32` (tinta sobre blanco) en claro y `255,255,255` en oscuro. Las líneas, los vidrios, la
+retícula y las tarjetas están escritas como `rgba(var(--ov),X)`, así que **el tema oscuro son solo
+tokens** —ni una regla duplicada. Es el patrón del Dashboard.
+
+Tres cosas que salieron de **medir el contraste**, no de mirarlo:
+
+- `--tinta` hacía dos trabajos: color del texto **y** fondo de los bloques oscuros (pie, AOG,
+  «2025 — hoy», el ítem activo del índice, el cuadro de la marca). Al invertir, esos bloques se
+  volvían blancos con texto blanco: **1.09:1**. Se separó en `--sup`, la superficie fuerte, que es
+  oscura en los dos temas porque su trabajo es contrastar con la página, no acompañarla.
+- `.sec-blanca` tenía `#fff` fijo: media página seguía blanca en oscuro. Ahora es `--panel`.
+- El azul sube a `#6b8cff` en oscuro (`#1b47ff` sobre `#0b1018` da 2.2:1) y el texto de los botones
+  primarios pasa a `--sobre-azul`, oscuro, porque blanco sobre ese azul claro daba 2.6:1.
+
+**Lo que no se invierte, a propósito**: el visor de fotos, el AOG, la tarjeta «2025 — hoy» y el
+pie. Son oscuros en los dos temas.
+
+Medido en los dos temas con los colores calculados por el navegador: **títulos, cuerpo, menú,
+índice, credenciales, botones y pie, todos por encima de 4.5:1** (la mayoría entre 6 y 19). El
+tema cambia con el botón, se guarda y **sobrevive a la recarga**.
 
 Tipografía: **Space Grotesk** (títulos), **IBM Plex Sans** (cuerpo), **IBM Plex Mono** (datos). La
 hoja de Google **no bloquea el pintado** (`media="print"` + `onload`).

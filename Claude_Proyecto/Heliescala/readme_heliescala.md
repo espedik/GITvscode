@@ -15,11 +15,28 @@ EN MÉXICO**— y la frase del hero que se apoyaba en la reparación. En su luga
 con lo suyo: **cada modelo sale de su propio molde**, y la librea, el número de unidad y la
 matrícula se pintan una por una.
 
-## Por qué es oscura
+## Por qué es oscura, y el modo claro
 
 Fondo `#080c16` y acento cian, con la misma retícula técnica y la misma tipografía que se usa en
 el resto del proyecto: **una maqueta es una pieza de vitrina y se ve mejor iluminada sobre negro**.
 Las fotos del catálogo tienen fondo blanco de estudio, así que recortan solas contra el panel.
+
+**Hay modo claro** (Adán, 2026-09-18). El botón está junto al de idioma; el icono dice a qué tema
+cambias —en oscuro se ve el sol— y lo elegido se guarda en `localStorage['heli-tema']`. **La página
+abre siempre en oscuro**, porque esa es su identidad y la razón está en el párrafo de arriba; no
+sigue `prefers-color-scheme` por el mismo motivo por el que no sigue el idioma del navegador.
+
+Está hecho con `--ov`, la base de las superposiciones (`255,255,255` en oscuro, `10,16,32` en
+claro): el tema claro son solo tokens. El cian baja a `#07707c` en claro porque `#00c2d4` sobre
+blanco da 2.1:1, y el texto sobre el botón cian pasa a blanco (`--sobre-cian`). La barra tenía su
+fondo fijo en oscuro y en claro dejaba el menú invisible; ahora es `--barra`.
+
+**Lo que no se invierte**: el visor de fotos y el panel de la ficha del helicóptero. Son visores
+sobre imagen y van oscuros en los dos temas; las fotos del catálogo siguen sobre blanco de estudio.
+
+Medido con los colores calculados por el navegador, en los dos temas: todo el texto por encima de
+4.5:1. De paso se corrigió el pie del tema oscuro, que daba **4.36:1** desde antes (`--t3` sube a
+`#7f8ba4`, 5.2:1).
 
 El archivo es **autónomo** —su CSS va dentro— porque algún día tendrá su propio dominio.
 
