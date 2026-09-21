@@ -241,14 +241,16 @@ carril, volver a medir** (medido: a 1 580 solapaba 2 px; a 1 600 queda un hueco 
 ven los nombres; a 1366, solo iconos.
 
 **Posts, tema y privacidad van juntos a la derecha**, en el carril `.qa-acciones`, como tres
-píldoras `qa-pill` iguales de 35 px: el altavoz (`posts-btn`, un enlace a
+píldoras `qa-pill` iguales de 35 px: el helicóptero (`posts-btn`, un enlace a
 `../Posts/posts.html` — las plantillas de LinkedIn de Aeroresinas y Heliescala, ver
-`../Posts/readme_posts.md`; Adán lo pidió *"en la parte de arriba a la derecha"*), el tema, cuyo
-icono **enseña a dónde vas** (sol en oscuro, luna en claro; `luna`, `sol` y `posts` en `QA_ICO`), y
-el ojo (`priv-btn`; tachado y en rojo con las cifras ocultas, con `title` que dice lo que hace).
-`toggleTheme()` repinta la barra entera — el botón contiene un `<svg>`, no texto. **Ninguno de los
-tres se pliega** con `.qa-collapsed`: el tema y el ojo son controles que se usan sin entrar a
-ninguna pantalla, y el altavoz se queda con ellos para no romper el trío; en móvil la regla
+`../Posts/readme_posts.md`; Adán lo pidió *"en la parte de arriba a la derecha"* y *"como el de
+aeroresinas"*: es el mismo trazo `heli` y el mismo azul `#1b47ff` de su píldora, el único del
+carril con color, para que se lea como el negocio), el tema, cuyo icono **enseña a dónde vas**
+(sol en oscuro, luna en claro; `luna` y `sol` en `QA_ICO`), y el ojo (`priv-btn`; tachado y en
+rojo con las cifras ocultas, con `title` que dice lo que hace). `toggleTheme()` repinta la barra
+entera — el botón contiene un `<svg>`, no texto. **Ninguno de los tres se pliega** con
+`.qa-collapsed`: el tema y el ojo son controles que se usan sin entrar a ninguna pantalla, y el
+helicóptero se queda con ellos para no romper el trío; en móvil la regla
 `position:static;order:-1` se aplica al carril entero. Bajo la barra corre una línea de acento en
 degradado que la separa del slide oscuro.
 

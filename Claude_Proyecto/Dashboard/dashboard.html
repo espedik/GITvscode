@@ -138,11 +138,12 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
   display:flex;align-items:center;gap:5px}
 .priv-btn,.tema-btn,.posts-btn{padding:5px 8px;border:1px solid transparent;cursor:pointer;
   font-family:inherit}
-/* El altavoz abre Posts (las plantillas de LinkedIn de Aeroresinas y Heliescala). Es un
-   enlace y no un control, pero va en este carril porque Adán lo pidió "arriba a la
-   derecha", y se lee como el tercero del trío: mismo trazo, mismo tamaño. */
-.tema-btn .qa-ico,.posts-btn .qa-ico{color:var(--text3)}
-.tema-btn:hover .qa-ico,.posts-btn:hover .qa-ico{color:var(--text2)}
+/* El helicóptero abre Posts (las plantillas de LinkedIn de Aeroresinas y Heliescala). Es un
+   enlace y no un control, pero va en este carril porque Adán lo pidió "arriba a la derecha"
+   y "como el de aeroresinas": mismo trazo `heli` y mismo azul que su píldora de la barra, para
+   que se lea como el negocio y no como un ajuste. Mismo tamaño que el tema y el ojo. */
+.tema-btn .qa-ico{color:var(--text3)}
+.tema-btn:hover .qa-ico{color:var(--text2)}
 .priv-btn .qa-ico{color:var(--text3)}
 .priv-btn:hover .qa-ico{color:var(--text2)}
 .priv-btn.on{background:rgba(var(--r-rgb),.1);border-color:rgba(var(--r-rgb),.28)}
@@ -10058,8 +10059,6 @@ const QA_ICO = {
   // el botón no se lea como una pieza de otra familia (Adán, 2026-09-01).
   // La luna y el sol del tema. Mismo trazo que el resto: 24px, sin relleno.
   luna:   '<path d="M20.5 14.3A8.5 8.5 0 0 1 9.7 3.5a8.5 8.5 0 1 0 10.8 10.8z"></path>',
-  // El altavoz de Posts: publicar. Mismo trazo que el resto.
-  posts:  '<path d="M3 11v2a1 1 0 0 0 1 1h2l8 4V6l-8 4H4a1 1 0 0 0-1 1z"></path><path d="M8 14l1.5 5h3l-1.5-5"></path><path d="M17.5 9.5a3.5 3.5 0 0 1 0 5"></path>',
   sol:    '<circle cx="12" cy="12" r="4.2"></circle><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.2 5.2l1.6 1.6M17.2 17.2l1.6 1.6M18.8 5.2l-1.6 1.6M6.8 17.2l-1.6 1.6"></path>',
   ojo:    '<path d="M2.2 12s3.6-7 9.8-7 9.8 7 9.8 7-3.6 7-9.8 7-9.8-7-9.8-7z"></path><circle cx="12" cy="12" r="3"></circle>',
   ojoOff: '<path d="M9.9 5.2A9.5 9.5 0 0 1 12 5c6.2 0 9.8 7 9.8 7a17 17 0 0 1-2.4 3.3M6.5 6.6A17 17 0 0 0 2.2 12s3.6 7 9.8 7a9.5 9.5 0 0 0 4-.9"></path><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"></path><path d="M3 3l18 18"></path>'
@@ -10106,7 +10105,7 @@ function renderQuickApps(){
     `<a class="qa-pill posts-btn" id="posts-btn" href="../Posts/posts.html"
        title="Posts: plantillas de LinkedIn para Aeroresinas y Heliescala"
        aria-label="Abrir las plantillas de posts">
-       <span class="qa-ico">${qaSvg('posts','currentColor')}</span>
+       <span class="qa-ico" style="color:#1b47ff">${qaSvg('heli','#1b47ff')}</span>
      </a>`+
     `<button class="qa-pill tema-btn" id="theme-toggle-top" onclick="toggleTheme()"
        title="${qaOscuro()?'Cambiar a modo claro':'Cambiar a modo oscuro'}"
