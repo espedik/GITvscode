@@ -62,9 +62,13 @@ instancias de Chart (`chCat`, `chBal`, `chBud`, `chInv`, `chGbmInv`, `chBtcPnl`,
   semanal en GBM. **Se actualiza pidiéndoselo a Claude cada lunes** y solo con precios reales:
   no se inventan cotizaciones.
 - **Meta Maestría** — `g001` (o `icon === '🎓'`), `target` del propio registro con respaldo en
-  `CIFRAS.n('maestriaMeta')` (`_metaMaestria()`). Cuentan fondo de emergencia + CETES +
+  `CIFRAS.n('maestriaMeta')` (`_metaMaestria()`). Cuentan fondo de emergencia (que son los CETES) +
   inversiones + BTC en MXN.
-- **Fondo de emergencia** — meta `ef-001`; `EF_TARGET = _metaFondo()`.
+- **Fondo de emergencia** — meta `ef-001` ("Fondo de emergencia (CETES)"); `EF_TARGET = _metaFondo()`.
+  **Son los CETES**, un solo número (`S.emergencyFund`): no hay inversión `type:'cetes'` en
+  `investments`, porque los indicadores, el patrimonio y el fondo de la maestría sumaban las dos
+  cosas. Aportar a `ef-001` (`saveContrib`/`setEmergencyFund`) es anotar lo que entró a CETES; el
+  bloque de CETES del plan GBM lo dice y muestra el saldo.
 
 ---
 
@@ -146,7 +150,7 @@ gasto **sale de tu caja ese día** o solo **sube el saldo de la tarjeta**.
 Sin la nota, una compra a crédito se contaría dos veces: el día de la compra y en el mínimo.
 
 **Los gastos que Adán reporta de golpe** (un lote de compras) van a `datos-maestros.js` una sola
-vez (`CIFRAS.GASTOS_20260901` es el patrón): de ahí los siembra `seedData()` para un navegador en
+vez (`CIFRAS.GASTOS_20260901` y `CIFRAS.MOVIMIENTOS_20260920` son el patrón): de ahí los siembra `seedData()` para un navegador en
 blanco y de ahí los aplica una migración **por id, solo si falta**, para el navegador que ya
 tiene datos. `SEED_VER` no se sube por eso: borraría los movimientos capturados a mano. Los
 gastos de productos llevan el nombre exacto del catálogo (`RUTINA_PELO`, etc.) para poder cruzar

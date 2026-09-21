@@ -200,8 +200,12 @@ window.CIFRAS = (function () {
     // anual, el pago no alcanza a cubrir el interés y la tarjeta crece sola. `total` sube con el
     // saldo para conservar la invariante `total == balance` que esta tarjeta lleva desde 2024;
     // si `total` se quedara en 32,343.31, el "pagado real" de las barras saldría en negativo.
-    // Saldos dichos por Adán: $34,000 (24-ago) → $37,000 (7-sep) → $39,000 (16-sep-2026).
-    {id:'d001',name:'Tarjeta BBVA',                  type:'credit_card',total:39000,     balance:39000,     rate:55.7,  min:1500, day:11,start:'2024-01-22'},
+    // Saldos dichos por Adán: $34,000 (24-ago) → $37,000 (7-sep) → $39,000 (16-sep-2026) →
+    // $900 (20-sep-2026: vendió todo el Bitcoin, $39,500, y con eso más $4,000 de la cuenta
+    // pagó $38,100 aquí). `total` se queda en 39,000: ya no hace falta la invariante
+    // `total == balance` —era para que el saldo creciente no dejara el "pagado real" en
+    // negativo— y así las barras enseñan los $38,100 pagados de verdad.
+    {id:'d001',name:'Tarjeta BBVA',                  type:'credit_card',total:39000,     balance:900,       rate:55.7,  min:1500, day:11,start:'2024-01-22'},
     // Liquidada el 13 ago 2026 — Adán pagó el saldo completo. 55.7 es un supuesto tomado de
     // la BBVA, no un dato medido de esta tarjeta.
     // 2026-09-01: VUELVE A TENER SALDO, y con él vuelve a ser deuda cara. Cuatro compras de ese
@@ -212,8 +216,10 @@ window.CIFRAS = (function () {
     // `total` se queda en 14349.72, el pico de 2024: es mayor que el saldo nuevo, así que el
     // "pagado real" de las barras sigue saliendo positivo y no hay que romper la invariante
     // `total == balance` como hubo que hacer con la BBVA.
-    // Saldos dichos por Adán: $5,985 (1-sep) → $7,000 (7-sep) → $7,800 (16-sep-2026).
-    {id:'d002',name:'Tarjeta Banamex',               type:'credit_card',total:14349.72,  balance:7800,       rate:55.7,  min:810,  day:8, start:'2024-06-18', noInterest:0},
+    // Saldos dichos por Adán: $5,985 (1-sep) → $7,000 (7-sep) → $7,800 (16-sep-2026) →
+    // $4,900 (20-sep-2026: abonó $3,000 de la venta del Bitcoin; los $100 sobre la resta son
+    // intereses o cargos del corte, dicho por él).
+    {id:'d002',name:'Tarjeta Banamex',               type:'credit_card',total:14349.72,  balance:4900,       rate:55.7,  min:810,  day:8, start:'2024-06-18', noInterest:0},
     // Saldo reportado por Adán: $299,000 (24-ago) → $292,000 → $293,000 (25-ago-2026).
     {id:'d003',name:'Crédito Automotriz',            type:'car',        total:315800,    balance:293000,    rate:12.99, min:6700, day:15, start:'2026-01-01', remainingMonths:61},
     // Queda 1 cuota, la del 18 sep 2026: la penúltima se pagó (confirmado el 25-ago-2026).
@@ -353,7 +359,7 @@ window.CIFRAS = (function () {
       {id:'ia',        name:'IA',         full:'IA & Automatización',      icon:'🤖', val:30, w:1.2, cat:'tecnico',  desc:'Te sientes principiante, pero ya validaste IA generativa para Google, usas Claude Code a diario en producción, y tu carrera incluyó Visión Artificial y Sistemas Neurodifusos — tienes base formal que no te has reconocido. Es tu fortaleza más subestimada.'},
       {id:'datos',     name:'Datos',      full:'Análisis de Datos',        icon:'📊', val:55, w:1.0, cat:'tecnico',  desc:'Nivel medio — mejor de lo que reflejaba antes (Adán confirmó que este terreno sí lo domina más que el valor viejo). Ajusta el slider de abajo si quieres un número más preciso.'},
       {id:'inversion', name:'Inversión',  full:'Inversión en Mercados',    icon:'📈', val:25, w:1.2, cat:'finanzas', desc:'Principiante real, aprendiendo poco a poco. Ya diste el primer paso (CETES, BTC, acciones) — falta volumen y estructura.'},
-      {id:'finanzas',  name:'Finanzas',   full:'Finanzas Personales',      icon:'💰', val:20, w:1.1, cat:'finanzas', desc:'Te excedes en gastos mensuales seguido (deuda ~$366k vs. inversión ~$55k). Es tu debilidad más cara — literalmente, en intereses.'},
+      {id:'finanzas',  name:'Finanzas',   full:'Finanzas Personales',      icon:'💰', val:20, w:1.1, cat:'finanzas', desc:'Te excedes en gastos mensuales seguido (deuda ~$324k vs. ahorro ~$17k tras vender el Bitcoin para pagar la BBVA). Es tu debilidad más cara — literalmente, en intereses.'},
       {id:'ingles',    name:'Inglés',     full:'Inglés / Idioma Global',   icon:'🌐', val:80, w:1.1, cat:'personal', desc:'B2 real, confirmado. Es tu pasaporte a clientes, mercados y sueldos en dólares — úsalo como ventaja, no solo como requisito de trabajo.'},
       {id:'mente',     name:'Mentalidad', full:'Mentalidad & Ejecución',   icon:'🚀', val:85, w:1.0, cat:'personal', desc:'Tu activo más grande. Tolerancia al riesgo alta, resiliencia real ante pérdidas, y ahora mismo estás en el punto de romper años de inacción. Esto es lo que hace que todo lo demás sea entrenable.'},
     ];
@@ -365,19 +371,19 @@ window.CIFRAS = (function () {
      generar desde aquí sin rediseñar la sección, así que sigue a mano: `verificar-sincronia.js`
      compara los títulos y las metas de fase entre este literal y ese HTML. */
   const PHASES = [
-    {start:new Date(2026,7,1),end:new Date(2026,8,30),tag:"Fase 0",title:"Cerrar la fuga y arrancar ingreso, no solo pensar",meta:"✅ Banamex liquidada el 13 ago 2026 (era meta de Fase 1, para ene 2027). Quedan 2 objetivos financieros, en este orden: 1) fondo de emergencia a {{fondoMeta}}, 2) abonos extra a BBVA.",explica:"Fase 0 es el arranque del plan (1 ago – 30 sep 2026, ~9 semanas). Todavía no se trata de ganar mucho — se trata de cerrar la fuga de dinero y sentar las bases. El orden era 1) fondo de emergencia, 2) Banamex, 3) BBVA: el paso 2 ya está hecho desde el 13 ago 2026, así que la prioridad es el fondo de emergencia y, en cuanto llegue a {{fondoMeta}}, todo excedente a BBVA. En paralelo arrancas el negocio: dedicar atención real al negocio de tu papá y publicar tu primera plantilla en comunidades de GBM.",semanas:[
-      {id:"s0-9",mes:"2026-08",txt:"Prioridad 1 — Fondo de emergencia a {{fondoMeta}}. Antes que cualquier abono extra a deuda: es el colchón que evita que un imprevisto te regrese a la tarjeta. (hoy en $0)"},
-      {id:"s0-10",mes:"2026-08",txt:"Prioridad 2 — Liquidar la TC BBVA ({{tcBbva}}). Única deuda cara que queda — y sigue SUBIENDO: el mínimo de {{tcBbvaMin}} no cubre el interés. En cuanto el fondo llegue a {{fondoMeta}}, todo excedente va aquí. (la proyección de “$0 en mar 2027” se hizo con $32,343 al 10% anual; con el saldo real y la tasa real de 55.7% hay que rehacerla)"},
+    {start:new Date(2026,7,1),end:new Date(2026,8,30),tag:"Fase 0",title:"Cerrar la fuga y arrancar ingreso, no solo pensar",meta:"✅ Banamex liquidada el 13 ago 2026 (era meta de Fase 1, para ene 2027; volvió a tener saldo el 1 sep) y ✅ BBVA de $39,000 a {{tcBbva}} el 19 sep 2026 con la venta del Bitcoin. Quedan 2 objetivos financieros, en este orden: 1) fondo de emergencia —los CETES, {{fondo}}— a {{fondoMeta}}, 2) rematar las dos tarjetas ({{tcBbva}} BBVA + {{banamex}} Banamex).",explica:"Fase 0 es el arranque del plan (1 ago – 30 sep 2026, ~9 semanas). Todavía no se trata de ganar mucho — se trata de cerrar la fuga de dinero y sentar las bases. El orden era 1) fondo de emergencia, 2) Banamex, 3) BBVA: el paso 2 se hizo el 13 ago 2026 y el 3 casi entero el 19 sep 2026 (BBVA de $39,000 a {{tcBbva}} con la venta del Bitcoin), así que la prioridad es el fondo de emergencia —que desde sep 2026 son los CETES— y, en cuanto llegue a {{fondoMeta}}, rematar lo que queda en las dos tarjetas. En paralelo arrancas el negocio: dedicar atención real al negocio de tu papá y publicar tu primera plantilla en comunidades de GBM.",semanas:[
+      {id:"s0-9",mes:"2026-08",txt:"Prioridad 1 — Fondo de emergencia a {{fondoMeta}}. Antes que cualquier abono extra a deuda: es el colchón que evita que un imprevisto te regrese a la tarjeta. (hoy {{fondo}}, en CETES)"},
+      {id:"s0-10",mes:"2026-08",txt:"Prioridad 2 — Liquidar las dos tarjetas: BBVA ({{tcBbva}}) y Banamex ({{banamex}}). El 19 sep 2026 la venta del Bitcoin dejó la BBVA de $39,000 en {{tcBbva}} y abonó $3,000 a Banamex; lo que queda cabe en un par de quincenas y deja de pagar 55.7% anual. En cuanto el fondo llegue a {{fondoMeta}}, todo excedente va aquí."},
       {id:"s0-4",mes:"2026-08",txt:"Sube a Marketplace tus activos ociosos (PS5, control, monitores, iPad) — es la fuente más rápida para completar el fondo de emergencia de la Prioridad 1."},
       {id:"s0-3",mes:"2026-08",txt:"Plantilla Finanzas.html, de principio a fin: versión limpia sin tus datos + post de venta + publicarla en 2-3 comunidades de GBM (Opción 1)."},
       {id:"s0-2",mes:"2026-08",txt:"Revisar las fotos y el material del negocio de tu papá y ponerle atención real — primer paso concreto de la Opción 5."},
       {id:"s0-6",mes:"2026-08",txt:"Pausa aportaciones a la Maestría 1 año (hasta 18 jul 2027) — los {{maestria}} quedan intactos, nueva meta oct 2028."},
       {id:"s0-8",mes:"2026-08",txt:"Liquidar la TC Banamex. (✅ 13 ago 2026 — pagaste los $9,000 completos, no el mínimo, 5 meses antes de la meta)"},
       {id:"s0-1",mes:"2026-08",txt:"Corrige \"Deudas\" en Finanzas.html · cero MSI nuevo. (✅ 13 ago 2026: quedó en $8,200 = auto {{autoPago}} + mínimo BBVA {{tcBbvaMin}})"},
-      {id:"s0-7",mes:"2026-09",txt:"Cada peso de ventas/activos va, en orden fijo: (1) fondo de emergencia a {{fondoMeta}}, (2) resto a BBVA — Banamex ya está en $0. Este mes cierra la fase."},
+      {id:"s0-7",mes:"2026-09",txt:"Cada peso de ventas/activos va, en orden fijo: (1) fondo de emergencia a {{fondoMeta}}, (2) resto a las tarjetas, Banamex ({{banamex}}) primero por ser la mayor desde el 19 sep. Este mes cierra la fase."},
     ]},
-    {start:new Date(2026,9,1),end:new Date(2027,2,31),tag:"Fase 1",title:"Los $3,145/mes liberados entran en acción + primer ingreso real",meta:"Primer contrato freelance o 20+ ventas de la plantilla cobradas. La meta vieja —Banamex liquidada— ya se cumplió el 13 ago 2026, así que el objetivo financiero pasa a bajar BBVA de {{tcBbva}} a menos de $15,000.",explica:"Fase 1 (oct 2026 – mar 2027) arranca cuando los $2,335/mes de MSI de gadgets quedan libres, que sumados a los {{banamexMin}} del mínimo de Banamex ya liquidada dan $3,145/mes nuevos. Con Banamex en $0 desde agosto, ese dinero tiene un solo destino: fondo de emergencia a {{fondoMeta}} y todo lo demás a BBVA, la única deuda cara que queda. En paralelo, buscas tu primer ingreso real fuera de ALTEN.",semanas:[
-      {id:"s1-1",mes:"2026-10",txt:"Oct 2026: los $2,335/mes liberados de MSI + los {{banamexMin}} del mínimo de Banamex van, en orden fijo: fondo de emergencia a {{fondoMeta}} → 100% BBVA (única deuda cara restante) = $4,645/mes."},
+    {start:new Date(2026,9,1),end:new Date(2027,2,31),tag:"Fase 1",title:"Los $3,145/mes liberados entran en acción + primer ingreso real",meta:"Primer contrato freelance o 20+ ventas de la plantilla cobradas. La meta vieja —Banamex liquidada— se cumplió el 13 ago 2026 y BBVA bajó a {{tcBbva}} el 19 sep 2026, así que el objetivo financiero pasa a dejar las dos tarjetas en $0 y no volver a cargarlas.",explica:"Fase 1 (oct 2026 – mar 2027) arranca cuando los $2,335/mes de MSI de gadgets quedan libres, que sumados a los {{banamexMin}} del mínimo de Banamex (en cuanto quede en $0) dan $3,145/mes nuevos. Con las tarjetas casi en cero desde el 19 sep 2026 ({{tcBbva}} BBVA + {{banamex}} Banamex), ese dinero tiene un solo destino: fondo de emergencia —los CETES— a {{fondoMeta}} y todo lo demás a rematar las tarjetas. En paralelo, buscas tu primer ingreso real fuera de ALTEN.",semanas:[
+      {id:"s1-1",mes:"2026-10",txt:"Oct 2026: los $2,335/mes liberados de MSI + los {{banamexMin}} del mínimo de Banamex (en cuanto quede en $0) van, en orden fijo: fondo de emergencia a {{fondoMeta}} → 100% a lo que quede en las tarjetas = $4,645/mes."},
       {id:"s1-2",cont:true,txt:"Prioridad: cerrar el primer contrato freelance (Opción 2) + 1 post de seguimiento mensual de la plantilla GBM (Opción 1)."},
       {id:"s1-3",mes:"2026-11",txt:"En paralelo: primer post de mentoría pagada (Opción 3) — bajo riesgo, casi sin preparación."},
       {id:"s1-4",cont:true,txt:"Primer peso cobrado en Opción 1-3 → esas horas de Didi se mueven ahí (Opción 6), no antes."},
@@ -2915,6 +2921,57 @@ window.CIFRAS = (function () {
         });
       }
     },
+    {
+      // 2026-09-20 · "vendí todos mis bitcoin y me dieron 39,500 y en mi tarjeta tenía como
+      // 4,000, entonces pagué mi tc de bbva con ese dinero y ahora queda con un saldo de 900,
+      // también a mi tc banamex pagué 3,000 y me quedan 4,900 (…) mi fondo de emergencia van a
+      // ser los cetes (…) actualmente en cetes tengo 6,000 y mi saldo de mi tarjeta de débito
+      // tengo 1200". Seis cosas:
+      //   - d001 baja de $39,000 a $900 (`total` se queda: el "pagado real" son los $38,100).
+      //   - d002 baja de $7,800 a $4,900.
+      //   - La venta total de BTC (btc005) entra en `btcHistory` por id, solo si falta.
+      //   - Los tres movimientos del 19-sep (MOVIMIENTOS_20260920) entran por id, solo si faltan.
+      //     Se llaman como la deuda ("Tarjeta BBVA — …") a propósito: así `yaContado` los
+      //     empareja con el mínimo previsto del mes y no se cuentan las dos cosas.
+      //   - EL FONDO DE EMERGENCIA SON LOS CETES. Hasta hoy eran dos números —`emergencyFund`
+      //     ($4,000) y una inversión CETES ($6,500)— y las apps sumaban los dos. Desde hoy es
+      //     UNO: `emergencyFund` = lo que hay en CETES ($6,000), la meta ef-001 lo dice en su
+      //     nombre, y la inversión CETES desaparece de `investments` para no contarla dos
+      //     veces (`{{cetes}}` lee el fondo). El aporte de {{cetesDia15}} sigue: es el aporte
+      //     al fondo.
+      //   - La cuenta BBVA (activo líquido ac013) queda en $1,200.
+      // Lo que se mueve sin que nadie lo escriba: `deudaCara` de $46,800 a $5,800, `deudaTotal`
+      // de $365,350 a $324,350. `minimosDeuda` y `margen` no cambian: las dos tarjetas siguen
+      // vivas con sus mínimos ($1,500 y $810).
+      flag: '_liquidacion20260920',
+      hacer: function (f) {
+        const tc = (f.debts || []).find(d => d.id === 'd001');
+        if (tc) tc.balance = 900;
+        const bx = (f.debts || []).find(d => d.id === 'd002');
+        if (bx) bx.balance = 4900;
+        if (!Array.isArray(f.btcHistory)) f.btcHistory = [];
+        BTC_SEED.filter(o => o.tipo === 'venta').forEach(function (o) {
+          if (!f.btcHistory.some(x => x.id === o.id)) f.btcHistory.push(Object.assign({}, o));
+        });
+        if (!Array.isArray(f.transactions)) f.transactions = [];
+        MOVIMIENTOS_20260920.forEach(function (t) {
+          if (!f.transactions.some(x => x.id === t.id)) f.transactions.push(Object.assign({}, t));
+        });
+        f.emergencyFund = 6000;
+        if (!Array.isArray(f.goals)) f.goals = [];
+        const ef = f.goals.find(g => g.id === 'ef-001');
+        if (ef) { ef.current = 6000; ef.name = 'Fondo de emergencia (CETES)'; }
+        else f.goals.unshift({ id: 'ef-001', name: 'Fondo de emergencia (CETES)', icon: '🛡️', target: 10000, current: 6000, date: '' });
+        if (Array.isArray(f.investments))
+          f.investments = f.investments.filter(i => !(i.type === 'cetes' || /cetes/i.test(i.name || '')));
+        const cta = (f.activos || []).find(a => a.id === 'ac013');
+        if (cta) cta.value = 1200;
+        /* Se sella el espejo del ahorro de agosto (`fixAhorro20260817IfNeeded` en dashboard.html
+           y su gemelo en Finanzas): a un navegador sin esa bandera le devolvería el fondo a
+           $4,000 y volvería a meter CETES como inversión. Misma defensa que el 7-sep. */
+        try { localStorage.setItem(KEY + '_ahorro20260817', '1'); } catch (e) {}
+      }
+    },
   ];
 
   /* Las seis compras del 1-sep-2026, en un solo sitio: las usa la migración de arriba para el
@@ -2928,6 +2985,15 @@ window.CIFRAS = (function () {
     {id:'s069',type:'expense',desc:'Avodart (dutasterida 0,5 mg)',          amount:1560, date:'2026-09-01',cat:'Salud',       notes:'TC Banamex — 30 cápsulas, un mes de tratamiento'},
     {id:'s070',type:'expense',desc:'Minoxidil 5% NR-11 (Polaris Research)', amount:900,  date:'2026-09-01',cat:'Salud',       notes:'TC Banamex — 60 ml, un mes de tratamiento'},
     {id:'s071',type:'expense',desc:'Mouse',                                 amount:1623, date:'2026-09-01',cat:'Otros gastos',notes:'TC Banamex'}
+  ];
+
+  /* Los tres movimientos del 19-sep-2026 (dichos el 20): la venta de todo el Bitcoin y los dos
+     pagos que salieron de ella. Los pagos se llaman como la deuda para que `yaContado` los
+     empareje con el mínimo previsto de ese mes (dos palabras en común) y no los sume encima. */
+  const MOVIMIENTOS_20260920 = [
+    {id:'s072',type:'income', desc:'Venta de Bitcoin (todo)',                   amount:39500, date:'2026-09-19',cat:'Inversiones',notes:'0.028579 ₿, el saldo completo — para pagar la TC BBVA'},
+    {id:'s073',type:'expense',desc:'Tarjeta BBVA — pago con la venta del Bitcoin', amount:38100, date:'2026-09-19',cat:'Deudas',     notes:'De $39,000 a $900: los $39,500 del Bitcoin más $4,000 de la cuenta'},
+    {id:'s074',type:'expense',desc:'Tarjeta Banamex — abono',                  amount:3000,  date:'2026-09-19',cat:'Deudas',     notes:'De $7,800 a $4,900'}
   ];
 
   /* ── EL BITCOIN ─────────────────────────────────────────────────────────────────────
@@ -2949,13 +3015,19 @@ window.CIFRAS = (function () {
      $5,300 / 17.072 = $310.45 USD → 0.003930 ₿. ⚠️ El ₿ exacto vendido está en el recibo de su
      exchange; hasta tenerlo, esta es la mejor cifra. Los saldos de hoy NO se editan aquí
      (Finanzas guarda los suyos); esto es el punto de partida de un navegador en blanco y la lista
-     que la migración de abajo usa para completar uno que ya tenga datos. */
+     que la migración de abajo usa para completar uno que ya tenga datos.
+     La venta total del 19-sep (btc005): Adán, 20-sep-2026: "vendí todos mis bitcoin y me dieron
+     39,500". Salieron los 0.028579 ₿ que quedaban; $39,500 / 17.1776 (BCE del viernes 18) =
+     $2,299.51 USD → $80,461 USD/₿ implícito, que casa con CoinGecko el 19 ($80,874; el 18 daba
+     $76,371), de ahí la fecha. Ya no queda Bitcoin. */
   const BTC_SEED = [
     {id:'btc001', date:'2025-02-01', usd:200,    btcPrice:102007, btc:0.001960,  fx:20.665, notes:'Primera compra'},
     {id:'btc002', date:'2025-12-15', usd:2438,   btcPrice:91000,  btc:0.026791,  fx:17.980, notes:'Compra mayor'},
     {id:'btc003', date:'2026-06-21', usd:240,    btcPrice:63875,  btc:0.003758,  fx:17.336, notes:'Compra reciente'},
     {id:'btc004', tipo:'venta', date:'2026-09-14', usd:310.45, btcPrice:79000, btc:-0.003930, fx:17.072,
      notes:'Venta de $5,300 MXN (dicho el 16-sep-2026)'},
+    {id:'btc005', tipo:'venta', date:'2026-09-19', usd:2299.51, btcPrice:80461, btc:-0.028579, fx:17.1776,
+     notes:'Venta de TODO: $39,500 MXN, para pagar la TC BBVA (dicho el 20-sep-2026)'},
   ];
 
   function migrar() {
@@ -3061,11 +3133,10 @@ window.CIFRAS = (function () {
       return PROYECTO.ingresoTotal - PROYECTO.fijosTotal - min;
     } },
     minimosDeuda:  { dep: ['*deudas'], v: () => deudas().filter(d => +d.balance > 0).reduce((a, d) => a + (+d.min || 0), 0) },
-    cetes:         { v: () => {
-      const i = (fin && Array.isArray(fin.investments) ? fin.investments : [])
-        .find(x => x.type === 'cetes' || /cetes/i.test(x.name || ''));
-      return i ? +i.value : null;
-    } },
+    // Desde el 20-sep-2026 el fondo de emergencia SON los CETES (Adán: "mi fondo de emergencia
+    // van a ser los cetes, de ahí tendré mi fondo de emergencia y cualquier cosa los vendo").
+    // Un solo número: `emergencyFund`. Ya no hay inversión CETES aparte que sumar dos veces.
+    cetes:         { dep: ['fondo'], v: () => (fin && fin.emergencyFund != null ? +fin.emergencyFund : null) },
   };
 
 
@@ -3390,6 +3461,7 @@ window.CIFRAS = (function () {
     grafo: grafo,
     DEUDAS_SEED: DEUDAS_SEED,
     GASTOS_20260901: GASTOS_20260901,
+    MOVIMIENTOS_20260920: MOVIMIENTOS_20260920,
     BTC_SEED: BTC_SEED,
     // Para que `seedData()` pueda marcarlas como aplicadas: un seed nuevo ya las incluye.
     MIGRACIONES_FLAGS: MIGRACIONES.map(function (m) { return m.flag; }),

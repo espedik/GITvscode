@@ -2233,7 +2233,7 @@ function renderGBM() {
 
     <!-- CETES -->
     <div class="card" style="margin-bottom:20px;border-color:rgba(0,232,122,.2);background:rgba(0,232,122,.03)">
-      <div class="card-title" style="color:var(--success);margin-bottom:12px">🏛️ CETES — Ahorro recurrente fijo</div>
+      <div class="card-title" style="color:var(--success);margin-bottom:12px">🏛️ CETES — tu fondo de emergencia</div>
       <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
         <div style="flex:1;min-width:150px;background:rgba(0,232,122,.08);border-radius:8px;padding:14px;text-align:center">
           <div class="ts tm">Día 15 de cada mes</div>
@@ -2244,7 +2244,7 @@ function renderGBM() {
           <div>📅 <strong>Cuándo:</strong> Día 15 de cada mes (semana 3), se aparta de la quincena 2 en BBVA débito.</div>
           <div>🏛️ <strong>Dónde:</strong> CETES 28 días en GBM+ — renovación automática, máxima liquidez, sin comisión.</div>
           <div>📈 <strong>Rendimiento:</strong> ~11% anual sobre el capital acumulado. En 12 meses: <strong style="color:var(--success)">${fmt(Math.round(CETES_DIA15*12*1.11))} estimado</strong>.</div>
-          <div>🛡️ <strong>Función:</strong> Base de seguridad. Este dinero no se toca ni se mueve a acciones.</div>
+          <div>🛡️ <strong>Función:</strong> Es el fondo de emergencia (desde sep 2026): hoy <strong>${fmt(S.emergencyFund||0)}</strong> de ${fmt(_metaFondo())}. Solo se vende ante un imprevisto; nunca se mueve a acciones.</div>
         </div>
       </div>
     </div>
@@ -2532,7 +2532,7 @@ function renderIndicatorsHTML(src) {
           const col=pct>=100?'var(--success)':pct>=75?'#3b82f6':pct>=50?'var(--warning)':'var(--danger)';
           const falta=Math.max(0,(g.target||0)-cur);
           const segs=isMae?[
-            {a:efV2,col:'#00e87a',l:'Fondo emerg.'},{a:cetesV2,col:'#3b82f6',l:'CETES'},
+            {a:efV2,col:'#00e87a',l:'Fondo emerg. (CETES)'},{a:cetesV2,col:'#3b82f6',l:'CETES'},
             {a:accV2,col:'#b06eff',l:'Acciones'},{a:rentaV2,col:'#f59e0b',l:'Dep. renta'},
             {a:btcValue2,col:'#f7931a',l:'BTC'},
           ].filter(s=>s.a>0):null;
@@ -2620,7 +2620,7 @@ function renderIndicatorsHTML(src) {
 
     ${sec2('💧 Liquidez y Emergencia','var(--primary)')}
     <div class="g2" style="margin-bottom:4px">
-      ${C2('🆘','Fondo de Emergencia',`${fmt(src.emergencyFund||0)} — ${(efPct2*100).toFixed(0)}% de meta`,
+      ${C2('🆘','Fondo de emergencia (CETES)',`${fmt(src.emergencyFund||0)} — ${(efPct2*100).toFixed(0)}% de meta`,
         '(Fondo emergencia + Líquidos) ÷ Gasto mensual promedio',
         `Meta: ${fmt(efGoal2)} · Ahorrado: ${fmt(src.emergencyFund||0)} · Cobertura: ${emergM2.toFixed(2)} meses de gastos.`,
         '✅ Meta completa (≥100%) — Excelente &nbsp;·&nbsp; 🟡 Meta al 50–75% — Buen avance &nbsp;·&nbsp; ⚠️ Meta al 25–50% — En progreso &nbsp;·&nbsp; 🔴 &lt;25% — Inicio',
@@ -2691,7 +2691,7 @@ function renderIndicatorsHTML(src) {
         <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:10px">${fmt(Math.round(maeBase2))} <span style="font-size:11px;color:var(--text3);font-weight:400">de ${fmt(maestria2?.target||500000)}</span></div>
         <div class="pbar" style="height:8px;margin-bottom:14px"><div class="pfill" style="width:${mPct2}%;background:linear-gradient(90deg,#00e87a,#3b82f6,#b06eff)"></div></div>
         ${[
-          {l:'🛡️ Fondo de emergencia',a:efV2,col:'#00e87a'},
+          {l:'🛡️ Fondo de emergencia (CETES)',a:efV2,col:'#00e87a'},
           {l:'🏛️ CETES',a:cetesV2,col:'#3b82f6'},
           {l:'📈 Acciones (bolsa)',a:accV2,col:'#b06eff'},
           {l:'🏠 Dep. renta',a:rentaV2,col:'#f59e0b'},
@@ -4183,6 +4183,9 @@ function seedData() {
       // mismo sitio del que las lee la migración `_gastos20260901` para los navegadores que ya
       // tienen datos. Copiarlas sería tener el gasto en dos ficheros y que uno se quedara viejo.
       ...((window.CIFRAS && CIFRAS.GASTOS_20260901) || []),
+      // Y los tres del 19-sep (venta de todo el Bitcoin, pago a BBVA, abono a Banamex), igual:
+      // viven en `CIFRAS.MOVIMIENTOS_20260920`, que la migración `_liquidacion20260920` usa.
+      ...((window.CIFRAS && CIFRAS.MOVIMIENTOS_20260920) || []),
       // ── AGOSTO 2026 ──
       {id:'s064',type:'expense',desc:'Liquidación total TC Banamex',   amount:9000,   date:'2026-08-13',cat:'Deudas',                notes:'Pago del saldo completo — tarjeta a $0'},
       {id:'s065',type:'expense',desc:'Boletos Ticketmaster (3/3)',     amount:1260,   date:'2026-08-13',cat:'Entretenimiento',        notes:'MSI 0% interés — última cuota, liquidado'},
@@ -4348,7 +4351,9 @@ function seedData() {
       {id:'g001',name:'Maestría en Alemania', target:500000, current:53740, date:'2028-10-01', pausadaHasta:'2027-07-18',icon:'🎓'},
     ],
     investments: [
-      {id:'i002',name:'CETES',              type:'cetes',    invested:3000,  value:3000,  date:'2026-04-20',rate:11},
+      // CETES no va aquí desde el 20-sep-2026: es el fondo de emergencia (`emergencyFund`, meta
+      // ef-001), un solo número. Como inversión aparte se sumaba dos veces en patrimonio y en
+      // el fondo de la maestría.
       {id:'i004',name:'Depósito de renta',  type:'otro',     invested:11250, value:11250, date:'2024-01-01',rate:0}
     ],
     activos: [
@@ -4365,7 +4370,7 @@ function seedData() {
       {id:'ac010',name:'iPhone 15 Pro Max',      type:'electronico',value:15000,  notes:'Valor estimado de mercado secundario'},
       {id:'ac011',name:'iPhone 12 Mini',         type:'electronico',value:3600,   notes:'Valor estimado de mercado secundario'},
       {id:'ac012',name:'Pantalla 50 pulgadas',   type:'electronico',value:5000,   notes:'TV / pantalla'},
-      {id:'ac013',name:'Cuenta BBVA',            type:'liquido',    value:75,     notes:'Saldo disponible en cuenta'},
+      {id:'ac013',name:'Cuenta BBVA',            type:'liquido',    value:1200,   notes:'Saldo disponible en cuenta (dicho el 20-sep-2026)'},
       {id:'ac014',name:'Efectivo',               type:'liquido',    value:1600,   notes:'Dinero en efectivo'},
     ],
     // Las operaciones de BTC salen del maestro desde el 2026-09-16 (CIFRAS.BTC_SEED), igual
@@ -4373,6 +4378,8 @@ function seedData() {
     // edite en la app no debe tocar la lista del maestro en memoria.
     btcHistory: JSON.parse(JSON.stringify((window.CIFRAS && window.CIFRAS.BTC_SEED) || [])),
     currentBtcPrice: 63875,
+    // El fondo de emergencia son los CETES (20-sep-2026): $6,000 en un solo número.
+    emergencyFund: 6000,
     usdMxn: 19.5
   };
   S.indicatorHistory = _preservedHistory;
@@ -4892,7 +4899,9 @@ function renderBtcHistory() {
   // "retirado". El P&L cuenta las dos cosas: lo que vale hoy + lo que ya te llevaste − lo que
   // metiste. Sin esto, vender $5,300 se leía como perder $5,300.
   const compras  = btcCompras(history), ventas = btcVentas(history);
-  const totalBtc = history.reduce((s,h)=>s+(h.btc||0),0);
+  // A 8 decimales, como se guarda cada operación: al vender todo, la suma en coma flotante queda
+  // en -1e-17 y se pintaba "-0.000000 ₿".
+  const totalBtc = +history.reduce((s,h)=>s+(h.btc||0),0).toFixed(8);
   const totalUsd = compras.reduce((s,h)=>s+(h.usd||0),0);
   const btcComprado = compras.reduce((s,h)=>s+(h.btc||0),0);
   const retUsd   = ventas.reduce((s,h)=>s+(h.usd||0),0);
@@ -5577,7 +5586,7 @@ function init() {
   // Asegurar que el fondo de emergencia exista en metas
   if(!S.goals.find(g=>g.id==='ef-001')) {
     S.goals.unshift({
-      id:'ef-001', name:'Fondo de emergencia', icon:'🛡️',
+      id:'ef-001', name:'Fondo de emergencia (CETES)', icon:'🛡️',
       target:10000, current:S.emergencyFund||0, date:''
     });
     save();

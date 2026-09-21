@@ -4462,7 +4462,7 @@ const EVENTOS_MES={
   ],
   "2026-09":[
     {ico:"🩺",txt:"Ir al doctor por la gastritis"},
-    {ico:"🎯",txt:"Vence Fase 0 del Plan Maestro (30 sep) — revisa el fondo de emergencia y las DOS tarjetas: la Banamex volvió a tener saldo el 1 sep"},
+    {ico:"🎯",txt:"Vence Fase 0 del Plan Maestro (30 sep) — revisa el fondo de emergencia (los CETES) y remata las DOS tarjetas (BBVA y Banamex, con poco saldo desde el 19 sep gracias a la venta del Bitcoin)"},
     {ico:"📄",txt:"Agendar la visa de tu papá"},
     {ico:"✈️",txt:"Revisar FAMEX 2027"},
   ],
@@ -6180,7 +6180,7 @@ function pintarEdadPace(){
     // El subtítulo nombra solo las tarjetas que TODAVÍA deben: desde que Banamex quedó en $0
     // (13 ago 2026), decir "restante en Banamex + BBVA" sugería que las dos siguen vivas.
     {ico:'💳',t:'Deuda cara',      hay:hayDeuda||!!logro('banamex-liquidada'), val:money(deudaCara), sub:deudaCara<=0?'Liquidada 🎉':'restante en '+[bana&&bana.balance>0?'Banamex':null,bbva&&bbva.balance>0?'BBVA':null].filter(Boolean).join(' + '), falta:'Regístrala en Finanzas para medirla aquí'},
-    {ico:'🆘',t:'Fondo de emergencia', hay:ef>0, val:money(ef),        sub:`de ${money(_metaFondo())} · ${Math.min(100,Math.round(ef/_metaFondo()*100))}%`, falta:'Aún en $0 — es el primer paso de Fase 0'},
+    {ico:'🆘',t:'Fondo de emergencia', hay:ef>0, val:money(ef),        sub:`en CETES · de ${money(_metaFondo())} · ${Math.min(100,Math.round(ef/_metaFondo()*100))}%`, falta:'Aún en $0 — es el primer paso de Fase 0'},
     {ico:'🎓',t:'Fondo Maestría',  hay:fmMae.total>0, val:money(fmMae.total), sub:goalMae&&goalMae.target?`de ${money(goalMae.target)} · ${fmMae.comps.length} piezas`:`${fmMae.comps.length} piezas sumadas`, falta:'Créala en Finanzas → Metas'},
   ];
 
@@ -6260,7 +6260,7 @@ function fondoMaestria(){
   const F=D.fin||{}, inv=F.investments||[], b=btcInfo();
   const comps=[];
   const ef=+F.emergencyFund||0;
-  if(ef>0) comps.push({k:'ef',n:'Fondo de emergencia',v:ef,c:'var(--w)',
+  if(ef>0) comps.push({k:'ef',n:'Fondo de emergencia (CETES)',v:ef,c:'var(--w)',
     d:'Cuenta aquí porque así lo suma Finanzas — pero su trabajo es cubrir imprevistos, no pagar la maestría'});
   inv.forEach(i=>{
     const v=+i.value||+i.invested||0;
@@ -9235,7 +9235,9 @@ function pasoInversionHoy(){
   const ef = +F.emergencyFund || 0;
   const metaEf = _metaFondo();
   const totalInv = inv.reduce((s,i)=>s+(+i.value||+i.invested||0), 0);
-  const cetes = inv.filter(i=>i.type==='cetes').reduce((s,i)=>s+(+i.value||+i.invested||0),0);
+  // Desde el 20-sep-2026 los CETES SON el fondo de emergencia (`emergencyFund`); ya no hay una
+  // inversión CETES aparte que sumar.
+  const cetes = ef;
   const deudaCara = (F.debts||[]).filter(d=>d.rate>0 && d.balance>0).reduce((s,d)=>s+d.balance,0);
   const mon = n => money(n);
 
@@ -9306,7 +9308,7 @@ function renderGBMPanel(){
     '<div class="gbm-sec">💼 Tu portafolio hoy</div>'+
     asignacion+
     (totalInv?'<div class="gbm-row gbm-row-tot"><span>Total invertido</span><span class="gbm-mono">'+mon(totalInv)+'</span></div>':'')+
-    (cetes?'<div class="gbm-nota">CETES aporta '+mon(cetes)+'. Tu aporte recurrente es de '+mon(_PG().cetesDia15||1500)+' el día 15.</div>':'')+
+    (cetes?'<div class="gbm-nota">Tus CETES son el fondo de emergencia: '+mon(cetes)+'. Tu aporte recurrente es de '+mon(_PG().cetesDia15||1500)+' el día 15, y solo se venden ante un imprevisto.</div>':'')+
 
     '<div class="gbm-sec">⏱️ La compra rápida, en 20 minutos</div>'+
     '<ol class="gbm-check">'+
@@ -10201,7 +10203,7 @@ function kpiDetalle(id){
     const falta=Math.max(0,metaEf-ef), pct=ef/metaEf*100;
     const mesesCubiertos=g.prom>0?(ef/g.prom):0;
     const rec=Math.round(falta/3/100)*100;
-    return {titulo:'🆘 Fondo de emergencia', sub:'Cuánto llevas, cuánto te cubre de verdad y qué falta.',
+    return {titulo:'🆘 Fondo de emergencia (CETES)', sub:'Vive en CETES y se vende si hace falta. Cuánto llevas, cuánto te cubre de verdad y qué falta.',
       html:
       '<div class="kpi-cifra" style="color:'+W+'">'+money(ef)+' <span style="font-size:14px;color:var(--text3)">de '+money(metaEf)+'</span></div>'+
       '<div class="kpi-cifra-sub">'+Math.round(pct)+'% de la meta · faltan <b>'+money(falta)+'</b></div>'+
@@ -10335,7 +10337,7 @@ function kpiDetalle(id){
 
     const filasTengo=[]
       .concat(inv.map(i=>({n:esc(i.name),v:+i.value||+i.invested||0,c:V,d:'Inversión registrada en Finanzas'})))
-      .concat(ef>0?[{n:'Fondo de emergencia',v:ef,c:W,d:'Tu colchón — no se toca para invertir'}]:[])
+      .concat(ef>0?[{n:'Fondo de emergencia (CETES)',v:ef,c:W,d:'Tu colchón — no se toca para invertir'}]:[])
       .concat(btcP.mxn>0?[{n:'Bitcoin',v:btcP.mxn,c:'#f7931a',d:btcP.held.toFixed(6)+' BTC a $'+Math.round(btcP.price).toLocaleString('en-US')+' USD — sube y baja solo, y no entra en la fórmula del número grande'}]:[])
       .concat(liquidos.map(a=>({n:esc(a.name),v:+a.value||0,c:C,d:'Disponible ya, sin vender nada'})))
       .filter(x=>x.v!==0).sort((a,b)=>b.v-a.v);
@@ -10533,7 +10535,7 @@ function renderMetasSlide(){
   const pct2030=Math.min(100,Math.max(0,(new Date()-new Date(2026,6,18))/(new Date(2030,0,1)-new Date(2026,6,18))*100));
 
   const tiles=[
-    {ico:'🆘',lbl:'Fondo de emergencia',val:money(ef),pct:Math.min(100,ef/metaFondo*100),sub:'Meta: '+money(metaFondo),c:'var(--w)',id:'fondo'},
+    {ico:'🆘',lbl:'Fondo de emergencia',val:money(ef),pct:Math.min(100,ef/metaFondo*100),sub:'En CETES · meta '+money(metaFondo),c:'var(--w)',id:'fondo'},
     // La etiqueta lista solo las tarjetas con saldo vivo (ver la nota igual en renderCoach()).
     {ico:'💳',lbl:'Deuda cara'+(deudaCaraBal>0?' ('+[bana.balance>0?'Banamex':null,bbva.balance>0?'BBVA':null].filter(Boolean).join('+')+')':''),val:deudaCaraTieneDatos?money(deudaCaraBal):'Sin datos',pct:deudaCaraTieneDatos?deudaCaraPct:0,sub:deudaCaraTieneDatos?(deudaCaraBal<=0?'Liquidada 🎉':'restante'):'Regístralas en Finanzas',c:'var(--r)',id:'deudacara'},
     {ico:'🎓',lbl:'Fondo Maestría',val:fmMae.total>0?money(fmMae.total):'Sin datos',pct:maeTgt>0?Math.min(100,fmMae.total/maeTgt*100):0,sub:maeTgt>0?`Meta: ${money(maeTgt)}${fmMae.btc.mxn>0?` · ${Math.round(fmMae.btc.mxn/fmMae.total*100)}% en BTC`:''}`:'Meta en Finanzas → Metas',c:'var(--cy)',id:'maestria'},

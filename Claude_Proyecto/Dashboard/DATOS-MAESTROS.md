@@ -117,25 +117,28 @@ desde JS. En consola, `CIFRAS.tabla()` las lista con su valor actual.
 | Marcador | Valor hoy | id |
 |---|---|---|
 | `{{autoSaldo}}` `{{autoTotal}}` `{{autoPago}}` `{{autoTasa}}` `{{autoMeses}}` | $293,000 · $315,800 · $6,700 · 12.99% · 61 | `d003` |
-| `{{tcBbva}}` `{{tcBbvaMin}}` `{{tcBbvaTasa}}` | $39,000 ⚠️ subiendo · $1,500 · 55.7% | `d001` |
-| `{{banamex}}` `{{banamexMin}}` | $7,800 ⚠️ subiendo · $810 | `d002` |
+| `{{tcBbva}}` `{{tcBbvaMin}}` `{{tcBbvaTasa}}` | $900 · $1,500 · 55.7% | `d001` |
+| `{{banamex}}` `{{banamexMin}}` | $4,900 · $810 | `d002` |
 | `{{depto}}` | $13,000 — "por temas de mi apartamento"; sin mínimo ni día todavía | `d012` |
 | `{{iphone}}` | $11,362 | `d008` |
 | `{{appleWatch}}` `{{appleWatchCuota}}` | $854 · $854 — queda 1 cuota (18 sep) | `d004` |
 | `{{zapStylo}}` `{{zapStyloCuota}}` | $334 · $167 — "el de los zapatos" | `d009` |
-| `{{deudaTotal}}` `{{deudaCara}}` `{{deudaMsi}}` | $365,350 · $46,800 · $12,550 | derivadas |
+| `{{deudaTotal}}` `{{deudaCara}}` `{{deudaMsi}}` | $324,350 · $5,800 · $12,550 | derivadas |
 | `{{minimosDeuda}}` `{{margen}}` | suma de mínimos vivos · lo que sobra al mes | derivadas |
 
 **Derivadas del auto**, que antes se escribían a mano y se quedaban congeladas:
 `{{autoAPagar}}` (meses × pago) y `{{autoInteres}}` (lo que cuesta en puro interés).
 
-**Las dos tarjetas están subiendo** y cada saldo nuevo que Adán reporta es una entrada de
-`MIGRACIONES`. Con la BBVA por encima de su mínimo (el 55.7% se come los $1,500), lo que crece es
-el saldo, no la cuota: `minimosDeuda` y `margen` no se mueven; `deudaCara` sí.
+**Las dos tarjetas quedaron casi en cero el 19-sep-2026**: Adán vendió todo el Bitcoin ($39,500) y,
+con $4,000 de la cuenta, pagó $38,100 a la BBVA (de $39,000 a $900) y $3,000 a Banamex (de $7,800 a
+$4,900). Cada saldo nuevo que reporta es una entrada de `MIGRACIONES` (`_liquidacion20260920` es la
+de este). Los mínimos no cambian mientras haya saldo, así que `minimosDeuda` y `margen` siguen
+iguales; `deudaCara` bajó de $46,800 a $5,800. En `d001` `total` se queda en $39,000: el "pagado
+real" de las barras de Finanzas son los $38,100.
 
 **La deuda del departamento** (`d012`, $13,000, 16-sep-2026: *"tengo una deuda de 13,000 por
-temas de mi apartamento"*) es `type:'loan'` a 0%: suma en `deudaTotal` (por eso pasa de $349,550 a
-**$365,350**) pero no en `deudaCara` ni en `deudaMsi`. **No tiene mínimo ni día** porque Adán no
+temas de mi apartamento"*) es `type:'loan'` a 0%: suma en `deudaTotal` (sus $13,000 están dentro de los
+**$324,350**) pero no en `deudaCara` ni en `deudaMsi`. **No tiene mínimo ni día** porque Adán no
 ha dicho cómo la paga; mientras `min` sea 0 no baja `margen` ni aparece en el calendario.
 
 **El día de pago vive en `day`**, dentro de cada entrada de `DEUDAS_SEED`. No tiene marcador
@@ -168,11 +171,18 @@ pero el nombre de la variable se queda corto.
 
 | Marcador | Valor hoy | Origen |
 |---|---|---|
-| `{{fondo}}` `{{fondoMeta}}` | $4,000 de $10,000 | vivo |
-| `{{cetes}}` | $6,500 | vivo |
+| `{{fondo}}` `{{fondoMeta}}` | $6,000 de $10,000 — son los CETES | vivo |
+| `{{cetes}}` | $6,000 — el mismo número que `{{fondo}}` | derivada de `fondo` |
 | `{{maestria}}` `{{maestriaMeta}}` | $53,740 de $500,000 | vivo |
 | `{{maestriaEscuela}}` | Esslingen — Automotive Systems M.Eng. | constante |
 | `{{maestriaInicio}}` | 2028-10-01 (pausada hasta 2027-07-18) | constante |
+
+**El fondo de emergencia son los CETES** (Adán, 20-sep-2026: *"mi fondo de emergencia van a ser los
+cetes, de ahí tendré mi fondo de emergencia y cualquier cosa los vendo"*). Es **un solo número**,
+`emergencyFund` en `finanzasmx_v2` (y `current` de la meta `ef-001`, que se llama "Fondo de
+emergencia (CETES)"); ya no hay una inversión CETES aparte en `investments`, porque las apps sumaban
+las dos cosas en patrimonio y en el fondo de la maestría. El aporte `{{cetesDia15}}` del día 15 es
+el aporte al fondo; una aportación en Finanzas → Metas → ef-001 es lo mismo.
 
 ### Estudios de alemán · constantes
 
@@ -709,10 +719,11 @@ Ninguna estructura está copiada entre archivos; todas se leen de aquí:
 |---|---|---|
 | `DEUDAS_SEED` | Punto de partida de las deudas | `CIFRAS.DEUDAS_SEED` |
 | `GASTOS_20260901` | Las seis compras del 1-sep-2026 — las siembra Finanzas.html y las aplica la migración `_gastos20260901` | `CIFRAS.GASTOS_20260901` |
+| `MOVIMIENTOS_20260920` | Los tres movimientos del 19-sep-2026 — la venta de todo el Bitcoin ($39,500), el pago a la TC BBVA ($38,100) y el abono a Banamex ($3,000). Los pagos se llaman como la deuda para que `yaContado` los empareje con el mínimo previsto del mes. Los siembra Finanzas.html y los aplica `_liquidacion20260920` | `CIFRAS.MOVIMIENTOS_20260920` |
 | `RUTINA_TASKS` | 58 bloques del horario | `CIFRAS.rutina(base)` |
 | `SK` | 12 habilidades del radar | `CIFRAS.SK` |
 | `PESO` | Altura (178 cm), meta (80 kg), objetivo y el histórico de pesajes (2: 75 kg el 2-sep-2026, 78 el 13-sep) con IMC derivado. Salud lo siembra en Peso & Medidas en cada carga | `CIFRAS.PESO` |
-| `BTC_SEED` | Las operaciones de Bitcoin: 3 compras ($2,878 USD = $52,129 MXN al cambio de cada día, 0.032509 ₿) y 1 venta (14-sep-2026: $5,300 MXN = $310.45 USD = 0.003930 ₿ a $79,000 USD/₿, precio dicho por Adán). Quedan **0.028579 ₿**. Cada operación lleva `fx` (BCE del día). Finanzas lo siembra en `btcHistory`; una venta lleva `tipo:'venta'` y `btc` negativo | `CIFRAS.BTC_SEED` |
+| `BTC_SEED` | Las operaciones de Bitcoin: 3 compras ($2,878 USD = $52,129 MXN al cambio de cada día, 0.032509 ₿) y 2 ventas: 14-sep-2026 ($5,300 MXN = $310.45 USD = 0.003930 ₿ a $79,000 USD/₿, precio dicho por Adán) y 19-sep-2026 (todo lo que quedaba, 0.028579 ₿, por $39,500 MXN = $2,299.51 USD a $80,461 USD/₿ implícito — para pagar la TC BBVA). **Ya no queda Bitcoin.** Cada operación lleva `fx` (BCE del día). Finanzas lo siembra en `btcHistory`; una venta lleva `tipo:'venta'` y `btc` negativo | `CIFRAS.BTC_SEED` |
 | `PHASES` | 4 fases del Plan Maestro | `CIFRAS.PHASES` |
 | `APRENDIZAJE` | 6 prioridades de aprendizaje | `CIFRAS.APRENDIZAJE` |
 | `LISTA_COMPRAS` | Catálogo de compras por pasillos — 7 categorías; `comida` en 7 pasillos, con `Verduras` / `Frutas` / `Almidones y grasas` separados para medir la proporción del canasto | `CIFRAS.LISTA_COMPRAS` |
