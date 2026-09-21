@@ -525,6 +525,12 @@ desplaza al mes de hoy solo cuando hay una columna.
 
 ## Mis Metas — "panel de trayectoria"
 
+**Los ocho medidores** (`#metasProgreso`, `tiles` en `renderMetasSlide()`) llevan el porcentaje en
+su línea de detalle, todos. En **Deuda cara** y **Deuda total** la barra es verde sobre rojo: lo
+verde es lo pagado y lo rojo lo que falta (`fill`/`track` del tile; la pista es `--r` al 60 %), y
+el avance de Deuda total se mide sobre lo que nació cada deuda, liquidadas incluidas. Los desgloses
+de esos dos (`kpiDetalle`, `kpiBarra` con `pista`) usan el mismo par y ponen el % junto al saldo.
+
 Clases `.mg-*`; de la familia anterior `.img-goal-*` solo sobreviven `.img-goal-pbar` y `-fill`,
 que usa el overlay de detalle.
 

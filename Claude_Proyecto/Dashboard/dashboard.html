@@ -10151,10 +10151,13 @@ function toggleEdadChecklist(id,idx){
 // desde `finanzasmx_v2` — nada aquí está escrito a mano, y por eso ninguna cifra puede quedarse
 // vieja. Los textos de "qué hacer" salen de reglas que ya están en su Plan Maestro, no de
 // consejos genéricos.
-function kpiBarra(nom, val, pct, color, nota){
+// `pista` (opcional) pinta el fondo de la barra: en las deudas va rojo, para que lo verde sea lo
+// pagado y lo rojo lo que falta (Adán, 21-sep-2026: "la barra ponla en verde y lo blanco en rojo,
+// esto para que sea visiblemente de que ya pagué cierta cantidad").
+function kpiBarra(nom, val, pct, color, nota, pista){
   return '<div><div class="kpi-linea-top"><span class="kpi-linea-nom">'+nom+'</span>'+
          '<span class="kpi-linea-val">'+val+'</span></div>'+
-         '<div class="gbm-bar"><div class="gbm-bar-f" style="width:'+Math.max(0,Math.min(100,pct))+'%;background:'+color+'"></div></div>'+
+         '<div class="gbm-bar"'+(pista?' style="background:'+pista+'"':'')+'><div class="gbm-bar-f" style="width:'+Math.max(0,Math.min(100,pct))+'%;background:'+color+'"></div></div>'+
          (nota?'<div class="kpi-linea-nota">'+nota+'</div>':'')+'</div>';
 }
 function kpiSec(t){ return '<div class="gbm-sec">'+t+'</div>'; }
@@ -10198,6 +10201,8 @@ function kpiDetalle(id){
   const deudaCara=debts.filter(d=>d.rate>0&&d.balance>0&&d.type==='credit_card');
   const deudaCaraBal=deudaCara.reduce((a,d)=>a+d.balance,0);
   const V='var(--g)', O='var(--o)', R='var(--r)', C='var(--cy)', P='var(--p)', W='var(--w)';
+  // Lo que falta por pagar, detrás de lo pagado en verde.
+  const PISTA_R='color-mix(in srgb,var(--r) 60%,transparent)';
 
   if(id==='fondo'){
     const falta=Math.max(0,metaEf-ef), pct=ef/metaEf*100;
@@ -10225,8 +10230,8 @@ function kpiDetalle(id){
     const filas=deudaCara.map(d=>{
       const pagado=d.total>0?(1-d.balance/d.total)*100:0;
       const interesMes=d.rate>0?d.balance*(d.rate/100)/12:0;
-      return kpiBarra(esc(d.name), money(d.balance), pagado, R,
-        'Tasa '+d.rate+'% anual · te cuesta <b>'+money(interesMes)+' al mes</b> solo en intereses'+(d.total>0?' · llevas '+Math.round(pagado)+'% pagado':''));
+      return kpiBarra(esc(d.name), money(d.balance)+(d.total>0?' · '+Math.round(pagado)+'% pagado':''), pagado, V,
+        'Tasa '+d.rate+'% anual · te cuesta <b>'+money(interesMes)+' al mes</b> solo en intereses'+(d.total>0?' · pagado '+money(d.total-d.balance)+' de '+money(d.total):''), PISTA_R);
     }).join('');
     const interesTotal=deudaCara.reduce((a,d)=>a+d.balance*((d.rate||0)/100)/12,0);
     return {titulo:'💳 Deuda cara', sub:'Cada saldo con su tasa, y lo que te cuesta cada mes que sigue vivo.',
@@ -10464,8 +10469,8 @@ function kpiDetalle(id){
   if(id==='deudatotal'){
     const filas=debts.filter(d=>d.balance>0).sort((a,b)=>(b.rate||0)-(a.rate||0)).map(d=>{
       const pagado=d.total>0?(1-d.balance/d.total)*100:0;
-      return kpiBarra(esc(d.name)+(d.rate>0?' · '+d.rate+'%':' · sin interés'), money(d.balance), pagado, d.rate>0?R:P,
-        d.total>0?'Llevas '+Math.round(pagado)+'% pagado de '+money(d.total):'');
+      return kpiBarra(esc(d.name)+(d.rate>0?' · '+d.rate+'%':' · sin interés'), money(d.balance)+(d.total>0?' · '+Math.round(pagado)+'% pagado':''), pagado, V,
+        d.total>0?'Pagado '+money(d.total-d.balance)+' de '+money(d.total)+' · faltan '+money(d.balance):'', PISTA_R);
     }).join('');
     return {titulo:'🧾 Deuda total', sub:'Todo lo que debes, ordenado por tasa.',
       html:
@@ -10531,31 +10536,37 @@ function renderMetasSlide(){
   const totalInvKpi=(D.fin.investments||[]).reduce((a,i)=>a+(+i.value||+i.invested||0),0);
   const deudaTotKpi=(D.fin.debts||[]).reduce((a,d)=>a+(+d.balance||0),0);
   const deudaCaraBalKpi=(D.fin.debts||[]).filter(d=>d.rate>0&&d.balance>0).reduce((a,d)=>a+d.balance,0);
+  // Lo pagado de TODA la deuda, sobre lo que nació cada una (las liquidadas también cuentan): la
+  // barra de Deuda total enseña avance, no un 100% rojo fijo.
+  const deudaTotIniKpi=(D.fin.debts||[]).reduce((a,d)=>a+(+d.total||+d.balance||0),0);
+  const deudaTotPctKpi=deudaTotIniKpi>0?Math.max(0,Math.min(100,(1-deudaTotKpi/deudaTotIniKpi)*100)):0;
+  // En las deudas la barra va verde (pagado) sobre rojo (lo que falta): así se ve el avance.
+  const PISTA_ROJA='color-mix(in srgb,var(--r) 60%,transparent)';
   const diasA2030=Math.max(0,Math.round((new Date(2030,0,1)-new Date())/86400000));
   const pct2030=Math.min(100,Math.max(0,(new Date()-new Date(2026,6,18))/(new Date(2030,0,1)-new Date(2026,6,18))*100));
 
   const tiles=[
-    {ico:'🆘',lbl:'Fondo de emergencia',val:money(ef),pct:Math.min(100,ef/metaFondo*100),sub:'En CETES · meta '+money(metaFondo),c:'var(--w)',id:'fondo'},
+    {ico:'🆘',lbl:'Fondo de emergencia',val:money(ef),pct:Math.min(100,ef/metaFondo*100),sub:Math.round(Math.min(100,ef/metaFondo*100))+'% · en CETES · meta '+money(metaFondo),c:'var(--w)',id:'fondo'},
     // La etiqueta lista solo las tarjetas con saldo vivo (ver la nota igual en renderCoach()).
-    {ico:'💳',lbl:'Deuda cara'+(deudaCaraBal>0?' ('+[bana.balance>0?'Banamex':null,bbva.balance>0?'BBVA':null].filter(Boolean).join('+')+')':''),val:deudaCaraTieneDatos?money(deudaCaraBal):'Sin datos',pct:deudaCaraTieneDatos?deudaCaraPct:0,sub:deudaCaraTieneDatos?(deudaCaraBal<=0?'Liquidada 🎉':'restante'):'Regístralas en Finanzas',c:'var(--r)',id:'deudacara'},
-    {ico:'🎓',lbl:'Fondo Maestría',val:fmMae.total>0?money(fmMae.total):'Sin datos',pct:maeTgt>0?Math.min(100,fmMae.total/maeTgt*100):0,sub:maeTgt>0?`Meta: ${money(maeTgt)}${fmMae.btc.mxn>0?` · ${Math.round(fmMae.btc.mxn/fmMae.total*100)}% en BTC`:''}`:'Meta en Finanzas → Metas',c:'var(--cy)',id:'maestria'},
-    {ico:'💰',lbl:'Patrimonio hacia $1M',val:hasFinData()?money(pat):'Sin datos',pct:patPct,sub:'Meta: $1,000,000 · 01 ene 2030',c:'var(--g)',id:'patrimonio'},
+    {ico:'💳',lbl:'Deuda cara'+(deudaCaraBal>0?' ('+[bana.balance>0?'Banamex':null,bbva.balance>0?'BBVA':null].filter(Boolean).join('+')+')':''),val:deudaCaraTieneDatos?money(deudaCaraBal):'Sin datos',pct:deudaCaraTieneDatos?deudaCaraPct:0,sub:deudaCaraTieneDatos?(deudaCaraBal<=0?'100% · Liquidada 🎉':Math.round(deudaCaraPct)+'% pagado de '+money(deudaCaraTot)):'Regístralas en Finanzas',c:'var(--r)',fill:'var(--g)',track:PISTA_ROJA,id:'deudacara'},
+    {ico:'🎓',lbl:'Fondo Maestría',val:fmMae.total>0?money(fmMae.total):'Sin datos',pct:maeTgt>0?Math.min(100,fmMae.total/maeTgt*100):0,sub:maeTgt>0?`${Math.round(Math.min(100,fmMae.total/maeTgt*100))}% · Meta: ${money(maeTgt)}${fmMae.btc.mxn>0?` · ${Math.round(fmMae.btc.mxn/fmMae.total*100)}% en BTC`:''}`:'Meta en Finanzas → Metas',c:'var(--cy)',id:'maestria'},
+    {ico:'💰',lbl:'Patrimonio hacia $1M',val:hasFinData()?money(pat):'Sin datos',pct:patPct,sub:Math.round(patPct)+'% · meta $1,000,000 · 01 ene 2030',c:'var(--g)',id:'patrimonio'},
     // 4 medidores nuevos (2026-08-19, "tambien si puedes agregar mas, hazlo"). Los 4 salen de
     // datos que ya existían en `finanzasmx_v2` y que no se estaban mirando en ninguna pantalla.
     // 2026-08-19 — este medidor era "Ahorro de este mes", pero dependía de tener capturados los
     // movimientos del mes: sin capturarlos salía en ceros. Los intereses se calculan de saldo ×
     // tasa, que siempre está, y la barra mide cuánto ha bajado el interés desde que debía el
     // total original — así avanza de verdad cada vez que abona.
-    {ico:'🔥',lbl:'Intereses este mes',val:hasFinData()?money(interesMesKpi):'Sin datos',pct:interesPctKpi,sub:interesMesKpi>0?`${money(interesMesKpi*12)} al año si no cambia`:(hasFinData()?'Sin deuda con interés 🎉':'Abre Finanzas una vez para cargarlos'),c:'var(--r)',id:'intereses'},
-    {ico:'📈',lbl:'Total invertido',val:money(totalInvKpi),pct:totalInvKpi>0?Math.min(100,totalInvKpi/50000*100):0,sub:`${(D.fin.investments||[]).length} instrumento(s) · toca para ver el reparto`,c:'var(--cy)',id:'invertido'},
-    {ico:'🧾',lbl:'Deuda total',val:hasFinData()?money(deudaTotKpi):'Sin datos',pct:deudaTotKpi>0?100:0,sub:deudaTotKpi>0?`${money(deudaCaraBalKpi)} con interés`:(hasFinData()?'Sin deudas vivas 🎉':'Abre Finanzas una vez para cargarlas'),c:'var(--r)',id:'deudatotal'},
+    {ico:'🔥',lbl:'Intereses este mes',val:hasFinData()?money(interesMesKpi):'Sin datos',pct:interesPctKpi,sub:interesMesKpi>0?`${Math.round(interesPctKpi)}% menos que al inicio · ${money(interesMesKpi*12)} al año si no cambia`:(hasFinData()?'Sin deuda con interés 🎉':'Abre Finanzas una vez para cargarlos'),c:'var(--r)',id:'intereses'},
+    {ico:'📈',lbl:'Total invertido',val:money(totalInvKpi),pct:totalInvKpi>0?Math.min(100,totalInvKpi/50000*100):0,sub:`${Math.round(totalInvKpi>0?Math.min(100,totalInvKpi/50000*100):0)}% de $50,000 · ${(D.fin.investments||[]).length} instrumento(s)`,c:'var(--cy)',id:'invertido'},
+    {ico:'🧾',lbl:'Deuda total',val:hasFinData()?money(deudaTotKpi):'Sin datos',pct:deudaTotPctKpi,sub:deudaTotKpi>0?`${Math.round(deudaTotPctKpi)}% pagado · ${money(deudaCaraBalKpi)} con interés`:(hasFinData()?'Sin deudas vivas 🎉':'Abre Finanzas una vez para cargarlas'),c:'var(--r)',fill:'var(--g)',track:PISTA_ROJA,id:'deudatotal'},
     {ico:'⏳',lbl:'Camino a 2030',val:diasA2030.toLocaleString('es-MX')+' días',pct:pct2030,sub:`${Math.round(pct2030)}% del plan recorrido`,c:'var(--p)',id:'meta2030'}
   ];
   document.getElementById('metasProgreso').innerHTML=tiles.map(x=>`
     <div class="tile" onclick="abrirKpi('${x.id}')" role="button" tabindex="0" title="Ver el desglose de ${x.lbl}">
       <div class="lbl" style="color:${x.c}"><span class="metas-kpi-ico">${x.ico}</span> ${x.lbl}</div>
       <div class="big-num${privado?' fin-hidden':''}" style="font-size:clamp(12px,1.3vw,16px);color:${x.c}">${x.val}</div>
-      <div class="pbar${privado?' fin-hidden':''}"><div class="pfill" style="width:${x.pct}%;background:${x.c}"></div></div>
+      <div class="pbar${privado?' fin-hidden':''}"${x.track?` style="background:${x.track}"`:''}><div class="pfill" style="width:${x.pct}%;background:${x.fill||x.c}"></div></div>
       <div class="sub${privado?' fin-hidden':''}">${x.sub}</div>
     </div>`).join('');
 

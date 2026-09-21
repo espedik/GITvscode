@@ -217,13 +217,13 @@ window.CIFRAS = (function () {
     // "pagado real" de las barras sigue saliendo positivo y no hay que romper la invariante
     // `total == balance` como hubo que hacer con la BBVA.
     // Saldos dichos por Adán: $5,985 (1-sep) → $7,000 (7-sep) → $7,800 (16-sep-2026) →
-    // $4,900 (20-sep-2026: abonó $3,000 de la venta del Bitcoin; los $100 sobre la resta son
+    // $4,900 (20-sep-2026 → $3,900 el 21-sep: abonó $3,000 de la venta del Bitcoin; los $100 sobre la resta son
     // intereses o cargos del corte, dicho por él).
-    {id:'d002',name:'Tarjeta Banamex',               type:'credit_card',total:14349.72,  balance:4900,       rate:55.7,  min:810,  day:8, start:'2024-06-18', noInterest:0},
-    // Saldo reportado por Adán: $299,000 (24-ago) → $292,000 → $293,000 (25-ago-2026).
-    {id:'d003',name:'Crédito Automotriz',            type:'car',        total:315800,    balance:293000,    rate:12.99, min:6700, day:15, start:'2026-01-01', remainingMonths:61},
-    // Queda 1 cuota, la del 18 sep 2026: la penúltima se pagó (confirmado el 25-ago-2026).
-    {id:'d004',name:'Apple Watch MSI (TC Banamex)',  type:'other',      total:10248,     balance:854,      rate:0,     min:854,  day:18,start:'2025-09-16'},
+    {id:'d002',name:'Tarjeta Banamex',               type:'credit_card',total:14349.72,  balance:3900,       rate:55.7,  min:810,  day:8, start:'2024-06-18', noInterest:0},
+    // Saldo reportado por Adán: $299,000 (24-ago) → $292,000 → $293,000 (25-ago-2026) → $283,000 (21-sep-2026).
+    {id:'d003',name:'Crédito Automotriz',            type:'car',        total:315800,    balance:283000,    rate:12.99, min:6700, day:15, start:'2026-01-01', remainingMonths:61},
+    // Liquidado: la última cuota era la del 18 sep 2026 y Adán la dio por pagada el 21-sep-2026.
+    {id:'d004',name:'Apple Watch MSI (TC Banamex)',  type:'other',      total:10248,     balance:0,        rate:0,     min:854,  day:18,start:'2025-09-16'},
     // d005 (Vuelo Viva Aerobus) y d006 (Mercado Libre) se ELIMINARON el 13 ago 2026: Adán
     // revisó su historial real de BBVA y esos dos MSI no existen — no aparecen en ningún
     // movimiento. Se borran en vez de ponerlos en $0 porque nunca fueron deuda suya.
@@ -238,17 +238,18 @@ window.CIFRAS = (function () {
     // (captura que mandó Adán el 13 ago 2026). El `start` de cada uno está puesto para que
     // `autoBalance()` reproduzca exactamente las cuotas ya cobradas: 30.44 días por mes desde
     // esa fecha dan el número de cargos que se ven en el estado de cuenta, ni uno más.
-    {id:'d009',name:'Zap Stylo (MSI TC BBVA)',      type:'other',      total:1002,      balance:334,       rate:0,     min:167,  day:22,start:'2026-03-22'},
+    {id:'d009',name:'Zap Stylo (MSI TC BBVA)',      type:'other',      total:1002,      balance:0,         rate:0,     min:167,  day:22,start:'2026-03-22'},
     // d010 y d011 quedaron liquidados el 24-ago-2026: cerraron su tercera y última cuota. De los
-    // tres MSI de la TC BBVA el único vivo es d009, los zapatos.
+    // tres MSI de la TC BBVA, d009 (los zapatos) fue el último: Adán lo dio por pagado el 21-sep-2026.
     {id:'d010',name:'Merpago*Merca (MSI TC BBVA)', type:'other',      total:1791,      balance:0,         rate:0,     min:597,  day:22,start:'2026-05-22'},
     {id:'d011',name:'Mercado Pago (MSI TC BBVA)',  type:'other',      total:2151,      balance:0,         rate:0,     min:717,  day:22,start:'2026-05-22'},
     // 2026-09-16 · Adán: "tengo una deuda de 13,000 por temas de mi apartamento". Sin tasa, sin
     // mínimo y sin día: no dijo cómo la paga. Con `min:0` no entra en `minimosDeuda` ni baja
     // `margen` — en cuanto diga cuánto abona al mes y qué día, van aquí y el calendario la
     // pinta solo. `loan` (préstamo personal): no es tarjeta (`deudaCara`) ni MSI (`deudaMsi`),
-    // pero sí suma en `deudaTotal`.
-    {id:'d012',name:'Deuda del departamento',       type:'loan',       total:13000,     balance:13000,     rate:0,     min:0,    day:0, start:'2026-09-16'}
+    // pero sí suma en `deudaTotal`. Se pagó entera el 21-sep-2026 (Adán: "deuda de apartamento
+    // también ya la pagué"); nunca tuvo mínimo ni día.
+    {id:'d012',name:'Deuda del departamento',       type:'loan',       total:13000,     balance:0,         rate:0,     min:0,    day:0, start:'2026-09-16'}
   
   ];
 
@@ -359,7 +360,7 @@ window.CIFRAS = (function () {
       {id:'ia',        name:'IA',         full:'IA & Automatización',      icon:'🤖', val:30, w:1.2, cat:'tecnico',  desc:'Te sientes principiante, pero ya validaste IA generativa para Google, usas Claude Code a diario en producción, y tu carrera incluyó Visión Artificial y Sistemas Neurodifusos — tienes base formal que no te has reconocido. Es tu fortaleza más subestimada.'},
       {id:'datos',     name:'Datos',      full:'Análisis de Datos',        icon:'📊', val:55, w:1.0, cat:'tecnico',  desc:'Nivel medio — mejor de lo que reflejaba antes (Adán confirmó que este terreno sí lo domina más que el valor viejo). Ajusta el slider de abajo si quieres un número más preciso.'},
       {id:'inversion', name:'Inversión',  full:'Inversión en Mercados',    icon:'📈', val:25, w:1.2, cat:'finanzas', desc:'Principiante real, aprendiendo poco a poco. Ya diste el primer paso (CETES, BTC, acciones) — falta volumen y estructura.'},
-      {id:'finanzas',  name:'Finanzas',   full:'Finanzas Personales',      icon:'💰', val:20, w:1.1, cat:'finanzas', desc:'Te excedes en gastos mensuales seguido (deuda ~$324k vs. ahorro ~$17k tras vender el Bitcoin para pagar la BBVA). Es tu debilidad más cara — literalmente, en intereses.'},
+      {id:'finanzas',  name:'Finanzas',   full:'Finanzas Personales',      icon:'💰', val:20, w:1.1, cat:'finanzas', desc:'Te excedes en gastos mensuales seguido (deuda ~$299k vs. ahorro ~$17k tras vender el Bitcoin para pagar la BBVA). Es tu debilidad más cara — literalmente, en intereses.'},
       {id:'ingles',    name:'Inglés',     full:'Inglés / Idioma Global',   icon:'🌐', val:80, w:1.1, cat:'personal', desc:'B2 real, confirmado. Es tu pasaporte a clientes, mercados y sueldos en dólares — úsalo como ventaja, no solo como requisito de trabajo.'},
       {id:'mente',     name:'Mentalidad', full:'Mentalidad & Ejecución',   icon:'🚀', val:85, w:1.0, cat:'personal', desc:'Tu activo más grande. Tolerancia al riesgo alta, resiliencia real ante pérdidas, y ahora mismo estás en el punto de romper años de inacción. Esto es lo que hace que todo lo demás sea entrenable.'},
     ];
@@ -2970,6 +2971,20 @@ window.CIFRAS = (function () {
            y su gemelo en Finanzas): a un navegador sin esa bandera le devolvería el fondo a
            $4,000 y volvería a meter CETES como inversión. Misma defensa que el 7-sep. */
         try { localStorage.setItem(KEY + '_ahorro20260817', '1'); } catch (e) {}
+      }
+    },
+    {
+      // 2026-09-21 · "la tarjeta banamex ya está en 3,900, el crédito automotriz 283,000, el apple
+      // watch ponlo como pagado, Zap Stylo los zapatos también ya pagados, deuda de apartamento
+      // también ya la pagué". Solo saldos, como el 7 y el 16 de sep: no dijo con qué ni qué día,
+      // así que no se inventan movimientos.
+      // Lo que se mueve sin que nadie lo escriba: `deudaCara` $5,800 → $4,800; `deudaMsi` $12,550 →
+      // $11,362 (solo queda el iPhone); `deudaTotal` $324,350 → $299,162; `minimosDeuda` baja
+      // $1,021 (los $854 del reloj y los $167 de los zapatos) y `margen` sube eso mismo.
+      flag: '_pagos20260921',
+      hacer: function (f) {
+        const pon = function (id, saldo) { const d = (f.debts || []).find(x => x.id === id); if (d) d.balance = saldo; };
+        pon('d002', 3900); pon('d003', 283000); pon('d004', 0); pon('d009', 0); pon('d012', 0);
       }
     },
   ];

@@ -21,7 +21,7 @@ apps lo leen. Nunca se copia un número a mano en un HTML.
 En la prosa se escribe un marcador y el módulo lo sustituye al cargar la página:
 
 ```html
-<p>un crédito de {{autoSaldo}}</p>        →   un crédito de $293,000
+<p>un crédito de {{autoSaldo}}</p>        →   un crédito de $283,000
 <p>ganas {{sueldo}} en {{empleador}}</p>  →   ganas $41,000 en ALTEN
 ```
 
@@ -116,14 +116,14 @@ desde JS. En consola, `CIFRAS.tabla()` las lista con su valor actual.
 
 | Marcador | Valor hoy | id |
 |---|---|---|
-| `{{autoSaldo}}` `{{autoTotal}}` `{{autoPago}}` `{{autoTasa}}` `{{autoMeses}}` | $293,000 · $315,800 · $6,700 · 12.99% · 61 | `d003` |
+| `{{autoSaldo}}` `{{autoTotal}}` `{{autoPago}}` `{{autoTasa}}` `{{autoMeses}}` | $283,000 · $315,800 · $6,700 · 12.99% · 61 | `d003` |
 | `{{tcBbva}}` `{{tcBbvaMin}}` `{{tcBbvaTasa}}` | $900 · $1,500 · 55.7% | `d001` |
-| `{{banamex}}` `{{banamexMin}}` | $4,900 · $810 | `d002` |
-| `{{depto}}` | $13,000 — "por temas de mi apartamento"; sin mínimo ni día todavía | `d012` |
+| `{{banamex}}` `{{banamexMin}}` | $3,900 · $810 | `d002` |
+| `{{depto}}` | $0 — "por temas de mi apartamento"; pagada entera el 21-sep-2026 | `d012` |
 | `{{iphone}}` | $11,362 | `d008` |
-| `{{appleWatch}}` `{{appleWatchCuota}}` | $854 · $854 — queda 1 cuota (18 sep) | `d004` |
-| `{{zapStylo}}` `{{zapStyloCuota}}` | $334 · $167 — "el de los zapatos" | `d009` |
-| `{{deudaTotal}}` `{{deudaCara}}` `{{deudaMsi}}` | $324,350 · $5,800 · $12,550 | derivadas |
+| `{{appleWatch}}` `{{appleWatchCuota}}` | $0 · $854 — liquidado: la última cuota era la del 18 sep 2026 | `d004` |
+| `{{zapStylo}}` `{{zapStyloCuota}}` | $0 · $167 — "el de los zapatos", liquidado el 21-sep-2026 | `d009` |
+| `{{deudaTotal}}` `{{deudaCara}}` `{{deudaMsi}}` | $299,162 · $4,800 · $11,362 | derivadas |
 | `{{minimosDeuda}}` `{{margen}}` | suma de mínimos vivos · lo que sobra al mes | derivadas |
 
 **Derivadas del auto**, que antes se escribían a mano y se quedaban congeladas:
@@ -131,15 +131,20 @@ desde JS. En consola, `CIFRAS.tabla()` las lista con su valor actual.
 
 **Las dos tarjetas quedaron casi en cero el 19-sep-2026**: Adán vendió todo el Bitcoin ($39,500) y,
 con $4,000 de la cuenta, pagó $38,100 a la BBVA (de $39,000 a $900) y $3,000 a Banamex (de $7,800 a
-$4,900). Cada saldo nuevo que reporta es una entrada de `MIGRACIONES` (`_liquidacion20260920` es la
-de este). Los mínimos no cambian mientras haya saldo, así que `minimosDeuda` y `margen` siguen
-iguales; `deudaCara` bajó de $46,800 a $5,800. En `d001` `total` se queda en $39,000: el "pagado
-real" de las barras de Finanzas son los $38,100.
+$4,900; el 21-sep la dejó en $3,900). Cada saldo nuevo que reporta es una entrada de `MIGRACIONES`
+(`_liquidacion20260920` y `_pagos20260921` son las de estos). Los mínimos no cambian mientras haya
+saldo; `deudaCara` bajó de $46,800 a $4,800. En `d001` `total` se queda en $39,000: el "pagado real"
+de las barras de Finanzas son los $38,100.
 
-**La deuda del departamento** (`d012`, $13,000, 16-sep-2026: *"tengo una deuda de 13,000 por
-temas de mi apartamento"*) es `type:'loan'` a 0%: suma en `deudaTotal` (sus $13,000 están dentro de los
-**$324,350**) pero no en `deudaCara` ni en `deudaMsi`. **No tiene mínimo ni día** porque Adán no
-ha dicho cómo la paga; mientras `min` sea 0 no baja `margen` ni aparece en el calendario.
+**El 21-sep-2026 se liquidaron tres de golpe**: el Apple Watch (`d004`, su última cuota era la del
+18 sep), los zapatos (`d009`, el último MSI vivo de la TC BBVA) y la deuda del departamento (`d012`).
+Con ellas salen de `minimosDeuda` los $854 del reloj y los $167 de los zapatos, y `margen` sube eso
+mismo; `deudaMsi` se queda solo con el iPhone. El auto bajó a $283,000 ese mismo día.
+
+**La deuda del departamento** (`d012`) entró el 16-sep-2026 con $13,000 (*"tengo una deuda de 13,000
+por temas de mi apartamento"*) y **se pagó entera el 21-sep-2026**. Es `type:'loan'` a 0%: mientras
+vivió sumó en `deudaTotal` y no en `deudaCara` ni en `deudaMsi`; nunca tuvo mínimo ni día, así que
+no tocó `margen` ni el calendario.
 
 **El día de pago vive en `day`**, dentro de cada entrada de `DEUDAS_SEED`. No tiene marcador
 porque no se escribe en prosa, pero **sí se dibuja**: el calendario del Dashboard arma con él el
@@ -154,8 +159,7 @@ globo de "se mueve dinero" de cada día.
 | `d004` | Apple Watch MSI | 18 |
 | `d009` `d010` `d011` | MSI de TC BBVA | 22 |
 
-`d012` (deuda del departamento) no está en la tabla a propósito: sin mínimo no hay cobro que
-pintar. Entra en cuanto Adán diga cuánto abona al mes y qué día.
+`d012` (deuda del departamento) no está en la tabla: nunca tuvo mínimo ni día, y ya está pagada.
 
 **Un `day` equivocado no mueve ninguna cifra** — `minimosDeuda` y `margen` suman igual — así que
 ningún cálculo lo delata: solo se ve en el calendario. `day: 0` significa *sin día* y la deuda
