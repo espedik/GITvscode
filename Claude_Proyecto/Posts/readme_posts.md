@@ -107,9 +107,10 @@ empresa no usa (Vender en Aeroresinas, Reparar en Heliescala) sale atenuado de e
 
 ## Dónde está enlazada
 
-En el **carril derecho de la barra del Dashboard**, el helicóptero azul de Aeroresinas junto al
-tema y la privacidad — ver
-"La barra de apps" en `../Dashboard/readme_dashboard.md`. También con `?empresa=heli` en la URL
+En la **barra de apps del Dashboard**, en el grupo del negocio, junto a Aeroresinas y Heliescala:
+píldora *Posts · linkedin* con el helicóptero y un bocadillo (`posts` en `QA_ICO`), tercer icono de
+la misma familia — ver "La barra de apps" en `../Dashboard/readme_dashboard.md`. También con
+`?empresa=heli` en la URL
 para abrir directo en Heliescala; la pestaña elegida se guarda en `posts-empresa`.
 
 ## Comprobado

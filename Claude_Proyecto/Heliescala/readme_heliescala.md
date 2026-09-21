@@ -324,8 +324,8 @@ Nueve fotos del taller y de lo que sale de él. Tres importan más que el resto:
 ## Dónde está enlazada
 
 En la **barra de apps del Dashboard**, junto a Aeroresinas, con su propio icono — el helicóptero
-sobre el pedestal de vitrina, porque es una réplica y no una aeronave. Con ella la fila llegó a 17
-píldoras: ver "La barra de apps" en `../Dashboard/readme_dashboard.md`.
+sobre el pedestal de vitrina, porque es una réplica y no una aeronave. Ver "La barra de apps" en
+`../Dashboard/readme_dashboard.md`.
 
 ## Comprobado
 

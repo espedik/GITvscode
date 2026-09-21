@@ -100,20 +100,19 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
 /* Las apps van AGRUPADAS y con ancho máximo. Antes se repartían por los 2000px de la
    pantalla y quedaban a un palmo unas de otras. */
 .qa-grupos{display:flex;align-items:center;gap:3px;flex-wrap:wrap;justify-content:center;
-  max-width:1350px;margin:0 auto}
+  max-width:1430px;margin:0 auto}
 /* Por debajo del umbral se quedan solo los iconos, con el nombre en el title: la fila con
    nombres se partiría en dos y taparía el slide (la franja empieza fija a 58px), o se metería
-   debajo de los botones de la derecha (`.qa-acciones`: Posts, tema y privacidad, 115 px más
-   16 del borde = 131, fuera del flujo). Los dos números salen de medir, no de tantear: con las
-   14 apps de hoy la fila CON nombres necesita 1,321 px, así que el contenedor va a 1,350; y
-   como la fila va centrada, deja de pisar los botones a partir de 1,583 px de viewport →
-   umbral en 1,590 (medido: a 1,580 solapaba 2 px; a 1,600 queda un hueco de 8). Historial:
-   15 apps → 1440/1500 · 16 (entra Aeroresinas) → 1560/1580 · 17 (entra Heliescala) →
-   1660/1690 · 14 (salen Lecciones, Vocabulario y Gramática: el hub de Alemán ya lleva a las
-   tres) → 1350/1520 · tercer botón en el carril (Posts) → 1350/1590.
-   Si entra o sale otra app, o un botón del carril, hay que volver a medirlo — `.qa-grupos`
-   con `flex-wrap:nowrap` y `max-width:none` da el ancho real en una línea, y el umbral es ese
-   ancho más 2×131 del carril (la fila centrada reparte el sobrante a los dos lados). */
+   debajo de los botones de tema y privacidad (`.qa-acciones`, 91 px pegados a la derecha, fuera
+   del flujo). Los dos números salen de medir, no de tantear: con las 15 apps de hoy la fila CON
+   nombres necesita 1,401 px, así que el contenedor va a 1,430; y como la fila va centrada, deja
+   de pisar los botones a partir de 1,583 px de viewport → umbral en 1,590 (a 1,600 queda un
+   hueco de 8 px). Historial: 15 apps → 1440/1500 · 16 (entra Aeroresinas) → 1560/1580 · 17
+   (entra Heliescala) → 1660/1690 · 14 (salen Lecciones, Vocabulario y Gramática: el hub de
+   Alemán ya lleva a las tres) → 1350/1520 · 15 (entra Posts) → 1430/1590.
+   Si entra o sale otra app hay que volver a medirlo — `.qa-grupos` con `flex-wrap:nowrap` y
+   `max-width:none` da el ancho real en una línea, y el umbral es ese ancho más 2×91 de los
+   botones (la fila centrada reparte el sobrante a los dos lados). */
 @media(max-width:1590px){.qa-name,.qa-stat{display:none}.qa-pill{padding:6px 8px}.qa-grupos{gap:2px}}
 .qa-sep{width:1px;height:20px;background:rgba(var(--ov),.12);margin:0 6px;flex-shrink:0}
 .qa-pill{display:flex;align-items:center;gap:6px;padding:5px 9px;border-radius:9px;
@@ -136,12 +135,8 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
    este carril para que se lean como un par. */
 .qa-acciones{position:absolute;right:16px;top:50%;transform:translateY(-50%);
   display:flex;align-items:center;gap:5px}
-.priv-btn,.tema-btn,.posts-btn{padding:5px 8px;border:1px solid transparent;cursor:pointer;
+.priv-btn,.tema-btn{padding:5px 8px;border:1px solid transparent;cursor:pointer;
   font-family:inherit}
-/* El helicóptero abre Posts (las plantillas de LinkedIn de Aeroresinas y Heliescala). Es un
-   enlace y no un control, pero va en este carril porque Adán lo pidió "arriba a la derecha"
-   y "como el de aeroresinas": mismo trazo `heli` y mismo azul que su píldora de la barra, para
-   que se lea como el negocio y no como un ajuste. Mismo tamaño que el tema y el ojo. */
 .tema-btn .qa-ico{color:var(--text3)}
 .tema-btn:hover .qa-ico{color:var(--text2)}
 .priv-btn .qa-ico{color:var(--text3)}
@@ -10054,6 +10049,9 @@ const QA_ICO = {
   // Heliescala: el mismo helicóptero, pero sobre el pedestal de vitrina — es una réplica, no
   // una aeronave. Dos iconos distintos para dos negocios distintos.
   heliesc:'<path d="M4 5h13M10.5 5v2.5"></path><path d="M6 10h7a2.5 2.5 0 0 1 2.5 2.5V14H7.5A1.5 1.5 0 0 1 6 12.5z"></path><path d="M15.5 12.5H19"></path><path d="M10.5 14v3.5M7 21h7M8.5 19.5h4"></path>',
+  // Posts: el mismo helicóptero, más chico, con un bocadillo arriba a la derecha — lo que se
+  // publica sobre el negocio. Tercer icono de la familia, para la tercera píldora del grupo.
+  posts:  '<path d="M2.5 7.5h11M8 7.5v5"></path><path d="M4 12.5h6a2.5 2.5 0 0 1 2.5 2.5v1.5H5.5A1.5 1.5 0 0 1 4 15z"></path><path d="M12.5 15H15M5.5 16.5v2.5M10.5 16.5v2.5M4 19h8"></path><path d="M15.5 3h5a1.5 1.5 0 0 1 1.5 1.5v4A1.5 1.5 0 0 1 20.5 10h-2l-2.5 2.2V10h-.5A1.5 1.5 0 0 1 14 8.5v-4A1.5 1.5 0 0 1 15.5 3z"></path><path d="M16.5 6.5h3"></path>',
   birrete:'<path d="M2.5 9.5 12 5l9.5 4.5L12 14z"></path><path d="M6.5 11.6v4.2c0 1.6 2.5 3 5.5 3s5.5-1.4 5.5-3v-4.2"></path><path d="M21.5 9.5v5"></path>',
   // El ojo del modo privado: mismo trazo y misma rejilla que los de las apps, para que
   // el botón no se lea como una pieza de otra familia (Adán, 2026-09-01).
@@ -10092,7 +10090,9 @@ function renderQuickApps(){
     // Grupo propio: no es una app tuya, es el negocio de tu papá. Mezclarla con lo que
     // administras o con lo que estudias confundiría las dos cosas.
     [{k:'heli',    c:'#1b47ff', n:'Aeroresinas',href:'../Aeroresinas/aeroresinas.html', stat:'reparación'},
-     {k:'heliesc', c:'#00a4b4', n:'Heliescala', href:'../Heliescala/heliescala.html',   stat:'maquetas'}]
+     {k:'heliesc', c:'#00a4b4', n:'Heliescala', href:'../Heliescala/heliescala.html',   stat:'maquetas'},
+     // Las plantillas de LinkedIn de las dos: no es una web, es lo que se publica sobre ellas.
+     {k:'posts',   c:'#3b9cff', n:'Posts',      href:'../Posts/posts.html',             stat:'linkedin'}]
   ];
   const pill = a=>`<a href="${a.href}" class="qa-pill" title="${a.n}">
     <span class="qa-ico" style="color:${a.c}">${qaSvg(a.k, a.c)}</span>
@@ -10102,11 +10102,6 @@ function renderQuickApps(){
     `<button class="qa-toggle-btn" onclick="toggleQaBar()" aria-label="Mostrar u ocultar accesos directos" title="Mostrar/ocultar accesos directos">🔗 Apps <span class="qa-toggle-chevron">▾</span></button>`+
     `<div class="qa-grupos">${grupos.map(g=>g.map(pill).join('')).join('<span class="qa-sep"></span>')}</div>`+
     `<div class="qa-acciones">`+
-    `<a class="qa-pill posts-btn" id="posts-btn" href="../Posts/posts.html"
-       title="Posts: plantillas de LinkedIn para Aeroresinas y Heliescala"
-       aria-label="Abrir las plantillas de posts">
-       <span class="qa-ico" style="color:#1b47ff">${qaSvg('heli','#1b47ff')}</span>
-     </a>`+
     `<button class="qa-pill tema-btn" id="theme-toggle-top" onclick="toggleTheme()"
        title="${qaOscuro()?'Cambiar a modo claro':'Cambiar a modo oscuro'}"
        aria-label="Cambiar entre modo claro y oscuro">
