@@ -104,9 +104,8 @@ a mano. No es un juguete pintado, y hay que decirlo con el taller de fondo.
 
 ## El catálogo — 26 piezas
 
-Adán, 2026-09-17: *"siento que en ambas no estás usando todas las imágenes, usa todas y pon la
-información completa"*. Tenía razón: de las 321 fotos originales solo habían entrado 45, y dos
-carpetas (`resina` y `resina2`, 65 fotos) no se habían mirado nunca. El catálogo pasó de 8 a 26.
+Adán: *"siento que en ambas no estás usando todas las imágenes, usa todas y pon la información
+completa"*. Se revisaron las 321 fotos originales, carpeta por carpeta.
 
 | Grupo | Piezas |
 |---|---|
@@ -252,11 +251,12 @@ sin ella nadie sabe que se puede abrir.
 
 ## Las fotos
 
-Las **42** de `fotos/` salen de las **321 originales** de Adán (`C:\Users\esped\Desktop\Aeroresinas\`,
-carpetas `resina`, `resina2`, `resina3` e `iCloud Photos (3)`), optimizadas para web: **5.4 MB en
-total**. `resina3` son fotos de estudio con fondo blanco —las mejores que tiene— y de ahí salen las
-ocho primeras del catálogo; `resina` y `resina2` aportan los militares, el presidencial y las
-piezas en bruto; `iCloud Photos (3)`, las de matrícula real, la producción y la sala de exposición.
+Las **42** de `fotos/` salen de las **321 originales** de Adán (fuera del repo, en
+`C:\Users\esped\Desktop\Aeroresinas\`, carpetas *resina*, *resina2*, *resina3* e *iCloud Photos (3)*),
+optimizadas para web: **5.4 MB en total**. *resina3* son fotos de estudio con fondo blanco —las
+mejores que tiene— y de ahí salen las ocho primeras del catálogo; *resina* y *resina2* aportan los
+militares, el presidencial y las piezas en bruto; *iCloud Photos (3)*, las de matrícula real, la
+producción y la sala de exposición.
 
 `fotos/LEEME.txt` dice qué es cada una.
 

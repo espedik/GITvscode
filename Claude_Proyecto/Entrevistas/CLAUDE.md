@@ -5,7 +5,7 @@ App estática de una sola página (sin build, sin servidor — se abre con doble
 ## Estructura
 
 - `entrevistas.html` — shell: `<head>` + markup del sidebar/header/main + `<script src>` de todos los módulos, en orden de carga.
-- `styles.css` — todo el CSS (antes estaba inline en `<style>`).
+- `styles.css` — todo el CSS; `entrevistas.html` no tiene `<style>` propio.
 - `js/core.js` — objeto `T` (metadata de cada tema: title, icon, mod, tags, hint) + `TOTAL` + helpers `toggleQuiz`/`switchTab`. **Cargar primero.**
 - `js/data-*.js` — contenido enriquecido por módulo, cada uno un objeto `*_RICH` con HTML embebido como template strings. Deben cargar antes de `js/ui.js`:
   - `data-wayve.js` → `WAYVE_RICH` (plan de estudio específico Wayve)
@@ -38,7 +38,7 @@ App estática de una sola página (sin build, sin servidor — se abre con doble
 
 - Las secciones de **Quiz** (`quiz-section`/`quiz-card`, con `toggleQuiz()` de `core.js`) son
   contenido legítimo —exámenes de práctica en 6 módulos— y no se borran.
-- `data-devops.js` lleva también los 10 temas de `linux` (no hay `data-linux.js`).
+- `data-devops.js` lleva también los 10 temas del módulo `linux`, que no tiene archivo propio.
 - `js/data-python-intro.js` → `PY_INTRO`: explicación en español llano de cada tema de Python. **No
   la carga `entrevistas.html`**; la consume solo `_generar-datos-dashboard.js` para el Dashboard
   (ver `readme_entrevistas.md`).

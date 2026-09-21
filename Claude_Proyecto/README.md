@@ -64,7 +64,7 @@ no dependen del Dashboard; la barra de apps del Dashboard las agrupa aparte.
 | `skincare_v1`, `cabello_v1` | `cuidadopersonal.html` | Dashboard (`D.sk`, `D.ca`, solo el perfil) |
 | `dentista_v1` | `cuidadopersonal.html` | nadie |
 | `coach_rutina_v1` | Coach y Dashboard (`completado[hoy]` desde *Marcar el bloque actual*) | ambos |
-| `coach_checks_v1` | Coach (todos los `.check-item`) y Dashboard (solo los ids `sN-M` del checklist de fase y `mtc7-9`) | ambos |
+| `coach_checks_v1` | Coach (todos los `.check-item`) y Dashboard (solo los ids `sN-M` del checklist de fase y `mtc7`…`mtc9`) | ambos |
 | `radarp_<id>` × 12 | Coach | Dashboard (`SK[].val`) |
 | `coach-theme` | Dashboard, Coach, Finanzas, CuidadoPersonal y Vestimenta | Clave compartida de tema claro/oscuro (Entrevistas, Heliescala y Aeroresinas tienen la suya) |
 | `dash-eventos-mes-v1`, `dash-lista-compras`, `dash-lista-tengo`, `dash-logros-v1`, `dash-habitos-v1`, `dash-rail-abierto`, `dash-settings`, `dash-privado`, `metas_checklist_v1`, `habilidades_checklist_v1`, `edad_checklist_v1`, `examen_genai_v1` | Dashboard | nadie |

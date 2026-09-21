@@ -44,7 +44,7 @@ Se verifica recorriendo los 229 temas con `go(id)` en iPad (820×1180) e iPhone 
 
 ## Deep-link por hash
 
-`irDesdeHash()`, al final de `js/ui.js`, acepta `#<id-de-tema>` (`#istqb-ch4`) y `#<data-mod>`
+`irDesdeHash()`, al final de `js/ui.js`, acepta `#<id>` de tema (`#istqb-ch4`) y `#<data-mod>`
 (`#istqb`, abre el primer capítulo del módulo). **Desde fuera conviene la segunda**: los ids de
 tema cambian al reordenar un módulo, el `data-mod` no. Antes de `go()` despliega el módulo y hace
 `scrollIntoView` del enlace en el sidebar; corre al arrancar y en `hashchange`, y tiene prioridad

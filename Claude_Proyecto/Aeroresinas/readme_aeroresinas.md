@@ -261,7 +261,7 @@ sin ella nadie sabe que se puede abrir.
 ## Las fotos
 
 **73 en `fotos/`**, salidas de las **321 originales** que pasó Adán
-(`C:\Users\esped\Desktop\Aeroresinas\`, carpetas `reparacion`, `reparacion2` e `iCloud Photos (3)`),
+(fuera del repo: `C:\Users\esped\Desktop\Aeroresinas\`, carpetas *reparacion*, *reparacion2* e *iCloud Photos (3)*),
 elegidas viéndolas todas en hojas de contacto y optimizadas: rotadas según EXIF, 1000–1300 px de
 ancho y JPEG progresivo al 79 % — **13.5 MB en total** frente a los ~45 MB de los originales, que
 no se tocaron. `fotos/LEEME.txt` dice qué es cada una, caso por caso.

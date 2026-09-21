@@ -14,6 +14,8 @@
       texto de `PHASES`/`APRENDIZAJE` contra el HTML equivalente de Coach.
    3. Que ninguna cifra con variable siga escrita a mano.
    4. Que no haya `{{marcadores}}` fuera del catálogo.
+   5. Que los .md sigan siendo referencia y no diario, y que todo el código que citan exista
+      (control 23).
 
    Extrae los literales balanceando corchetes y **saltando strings** — no con regex: los textos
    del proyecto llevan llaves y comillas dentro, y una regex se equivoca.
@@ -1597,6 +1599,104 @@ function impactoDelCambio() {
   if (is.slice().sort((a, b) => a - b).join(',') !== esperado)
     problemas.push('Los data-i de los slides no son 0..' + (is.length - 1) + ' sin saltos: [' +
       is.join(', ') + ']\n     showSlide(i) usa ese numero como indice de RENDERS.');
+})();
+
+/* ── 23. Los .md son REFERENCIA, no diario, y no citan código que no existe ─────────────────
+   Regla 3 del CLAUDE.md. Adán, 2026-09-20: "no quiero que vuelva a pasar que se llene de archivos
+   basura". Lo que llena un readme de basura son dos cosas, y las dos se miden:
+
+   a) BITÁCORA: encabezados fechados ("## Fix: … (2026-08-05)", "(nuevo 2026-08-03)"), y frases
+      que cuentan cómo era antes en vez de cómo es hoy ("hasta el 2026-09-02 …", "antes era …",
+      "el primer intento", "mismo día)", "se quitó el 2026-…"). Eso vive en `git log`.
+   b) FANTASMAS: identificadores en `código` que ya no existen en ningún .html/.js/.css del
+      proyecto ni son nombres de archivo. Así es como readme_ejercicio.md siguió describiendo
+      Fitsi y `verSoloDia()` semanas después de borrarlos.
+
+   Un token "parece código" si lleva `_`, `-`, camelCase o mezcla letras y dígitos; las palabras
+   en MAYÚSCULAS sueltas (COMPLETA, MARTES) son rótulos de pantalla y no cuentan. Una cita que
+   lleva `<…>`, `*`, `…` o `YYYY` es un molde, no un nombre. Si el token no es palabra entera de
+   ninguna fuente se busca como subcadena (`fixTasaTC` vive dentro de `fixTasaTCIfNeeded`,
+   `k10-01` dentro de `k10-01-perfekt-regel.html`): solo lo que no aparece de ninguna forma es
+   fantasma. Las excepciones llevan su razón; una excepción sin razón es un aviso que se ignora. */
+(function docsSinBasura() {
+  const EXCEPCIONES = {
+    addInitScript: 'API de Playwright: se cita en "Verificar un cambio", no es código del proyecto',
+    finanzasmx_v2_v: "la bandera del seed se construye como KEY+'_v', nunca aparece literal",
+  };
+  const DIARIO = [
+    [/^#{1,6} .*(\b20\d\d-\d\d(-\d\d)?\b|\(nuevo\b)|^#{1,6} Fix:/i, 'encabezado fechado o de bitácora'],
+    [/\bhasta el (\d{1,2}-\w{3}-20\d\d|20\d\d-\d\d-\d\d|\d{1,2}-\w{3})\b/i, 'cuenta cómo era antes'],
+    [/\bantes (era|eran|había|estaba|estaban|marcar|cada|solo|sólo) /i, 'cuenta cómo era antes'],
+    [/\b(el primer intento|la primera versión|primera versión de esto|segunda vuelta|misma tarde)\b/i, 'relato de cómo se llegó'],
+    [/(, |\()mismo día\)/i, 'relato de cómo se llegó'],
+    [/\bse (rehizo|quitó|quitaron|borró|borraron|eliminó|eliminaron|reescribió|reescribieron|corrigió|movió|movieron|añadió|añadieron|agregó|agregaron|cambió|cambiaron|bumpeó|sembró|detectó|encontró) el (\d{1,2}-\w{3}-20\d\d|20\d\d-\d\d-\d\d)\b/i, 'cambio fechado — eso va en el mensaje del commit'],
+    [/\b(corregido|documentado|verificado|actualizado|añadido|agregado|nuevo) (el )?20\d\d-\d\d-\d\d\b/i, 'cambio fechado — eso va en el mensaje del commit'],
+  ];
+
+  // Todo lo que hay en el proyecto: fuentes (.html/.js/.css fuera de diseno-*) y nombres de archivo.
+  const fuentes = [], nombres = new Set([path.basename(RAIZ)]), docs = [];
+  (function listar(dir) {
+    for (const e of fs.readdirSync(path.join(RAIZ, dir), { withFileTypes: true })) {
+      if (e.name.charAt(0) === '.' || e.name === 'node_modules') continue;
+      const rel = dir ? dir + '/' + e.name : e.name;
+      nombres.add(e.name); nombres.add(e.name.replace(/\.[a-z0-9]+$/i, '')); nombres.add(e.name.split('.')[0]);
+      if (e.isDirectory()) { listar(rel); continue; }
+      if (/\.md$/i.test(e.name) && !/^Negocio\//.test(rel)) docs.push(rel);
+      else if (/\.(html|js|css)$/i.test(e.name) && !/(^|\/)diseno-[^/]+\//.test(rel)) fuentes.push(rel);
+    }
+  })('');
+
+  // Palabras enteras de las fuentes. Un bucle a mano: matchAll sobre 10 MB tarda segundos y esto
+  // corre en el hook de cada turno. Este mismo archivo queda fuera: nombra las excepciones y
+  // muchos de los nombres que vigila, y se taparía a sí mismo.
+  const palabras = new Set(); let todo = '';
+  const esId = c => (c >= 48 && c <= 57) || (c >= 65 && c <= 90) || (c >= 97 && c <= 122) || c === 95 || c === 36 || c === 45;
+  for (const rel of fuentes) {
+    if (/verificar-sincronia\.js$/.test(rel)) continue;
+    const src = leer(rel); todo += src + '\n';
+    let ini = -1;
+    for (let i = 0, n = src.length; i <= n; i++) {
+      const dentro = i < n && esId(src.charCodeAt(i));
+      if (dentro && ini < 0) ini = i;
+      else if (!dentro && ini >= 0) { if (i - ini >= 4) palabras.add(src.slice(ini, i)); ini = -1; }
+    }
+  }
+  const pareceCodigo = t => t.length >= 4 && !(/^[A-Z0-9-]+$/.test(t)) &&
+    (/_/.test(t) || /-[A-Za-z0-9]/.test(t) || /[a-z][A-Z]/.test(t) || /^[a-z]+\d/.test(t) || /\d[a-z]/i.test(t));
+  const verif = leer('Dashboard/verificar-sincronia.js');   // sus constantes (ALIAS_DEUDA…) sí se pueden citar
+  const existe = t => palabras.has(t) || nombres.has(t) || todo.indexOf(t) !== -1 || verif.indexOf(t) !== -1;
+
+  const bitacora = [], fantasmas = [];
+  docs.forEach(rel => {
+    let enBloque = false;
+    leer(rel).split('\n').forEach((l, i) => {
+      if (/^\s*```/.test(l)) { enBloque = !enBloque; return; }
+      for (const [re, por] of DIARIO) if (re.test(l)) { bitacora.push('     ' + rel + ':' + (i + 1) + ' · ' + por + '\n       ' + l.trim().slice(0, 100)); break; }
+      if (enBloque) return;
+      for (const m of l.matchAll(/`([^`\n]+)`/g)) {
+        const cita = m[1];
+        if (/^https?:|^\.\.\/|\.md$|\/$|[<>*…]|YYYY|NOMBRE/.test(cita)) continue;   // rutas, enlaces y moldes
+        for (const p of cita.matchAll(/[A-Za-z_$][\w$-]*/g)) {
+          const tok = p[0].replace(/-+$/, '');
+          if (!pareceCodigo(tok) || EXCEPCIONES[tok] || existe(tok)) continue;
+          fantasmas.push('     ' + rel + ':' + (i + 1) + ' · `' + tok + '` no existe en ningún .html/.js/.css  (en `' + cita.slice(0, 60) + '`)');
+        }
+      }
+    });
+  });
+  // Una excepción que ya no hace falta también es basura.
+  for (const tok in EXCEPCIONES) if (palabras.has(tok) || nombres.has(tok) || todo.indexOf(tok) !== -1) avisos.push('Control 23: la excepción `' + tok + '` ya no hace falta, el nombre existe en el código');
+
+  if (bitacora.length)
+    problemas.push('Los .md se están llenando de bitácora (Regla 3: referencia, no diario; la historia está en git):\n' +
+      bitacora.join('\n') + '\n     Se reescribe la sección para que diga cómo funciona HOY; no se apila una entrada fechada.');
+  if (fantasmas.length)
+    problemas.push('Los .md citan código que ya no existe (desincronizados):\n' + fantasmas.join('\n') +
+      '\n     O se borró y hay que quitar la frase, o se renombró y hay que corregirla. Si de verdad no es' +
+      '\n     código del proyecto, va en EXCEPCIONES del control 23 con su razón.');
+  if (!bitacora.length && !fantasmas.length)
+    ok.push('Los .md son referencia, no diario, y todo el código que citan existe (' + docs.length + ' archivos, ' +
+      fuentes.length + ' fuentes)');
 })();
 
 // ── Salida ──

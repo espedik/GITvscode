@@ -105,8 +105,8 @@ desde JS. En consola, `CIFRAS.tabla()` las lista con su valor actual.
 | `{{siVale}}` | $940 | Vale de despensa |
 | `{{ingresoTotal}}` | $53,140 | Derivada: sueldo + Didi + Si Vale |
 | `{{renta}}` | $11,000 | Día 1 |
-| `{{gym}}` `{{gymNombre}}` | $650 · Total Pass | Día 17. Era Fitsi a $1,500 hasta el 18-ago-2026 |
-| `{{celular}}` `{{celularPlan}}` | $650 · Plan de datos AT&T | Día 1. Subió de $600 el 30-ago-2026, cuando se supo su día |
+| `{{gym}}` `{{gymNombre}}` | $650 · Total Pass | Día 17 |
+| `{{celular}}` `{{celularPlan}}` | $650 · Plan de datos AT&T | Día 1 |
 | `{{servicios}}` | $1,075 | Plan AT&T + internet + gas (la mitad: es bimestral) + luz/agua |
 | `{{suscripciones}}` | $1,080 | Gym + Claude Code + iCloud |
 | `{{cetesDia15}}` | $1,500 | Aporte recurrente a CETES el día 15 |
@@ -266,8 +266,7 @@ en cada una era la duplicación de siempre.
 
 Coach no reescribe sus 58 recursos: un script los recorre al cargar, busca cada
 título con `BIBLIOTECA.porTitulo()` y le pone el botón al que encuentra. La
-descripción corta que antes estaba escrita en el HTML de Coach ahora sale de
-`ficha.idea`, así que ese texto vive en un solo sitio.
+descripción corta sale de `ficha.idea`, no del HTML de Coach: ese texto vive en un solo sitio.
 
 `porTitulo` resuelve los **alias**: Coach nombra a Carnegie en inglés (*How to Win
 Friends*) y la lista de la compra en español (*Cómo Ganar Amigos*). Son el mismo
@@ -412,7 +411,7 @@ vienen de internet y las apps se abren con `file://`, así que sin red el `onerr
 cae al envase en vez de dejar un hueco.
 
 Las de Wikimedia se guardan apuntando a `upload.wikimedia.org` y **sin query**. La
-API las devuelve con host `thumb.wikimedia.org` y parámetros `utm_` pegados detrás;
+API las devuelve con host `thumb.wikimedia.org` y parámetros *utm* pegados detrás;
 ese host no es fiable y dejó 31 fotos rotas en el dashboard. No se vio al montar las
 hojas de contacto — ahí a veces redirige — sino midiendo con una espera corta.
 
@@ -508,7 +507,7 @@ CIFRAS.CALENDARIO.hitos    // [{fecha, txt, sub}] — fechas duras que no salen 
 
 | | Qué trae | De dónde sale el número |
 |---|---|---|
-| `cobros` | Renta día 1, plan AT&T día 1, quincena días 1 y 15, CETES día 15, gym día 17 | El **monto** es un getter sobre `PROYECTO`: si sube la renta o vuelve a cambiar el gimnasio, el calendario se entera solo. El **día** vive aquí — hasta el 26-ago-2026 solo existía como comentario al lado de la cifra, o sea que ninguna app podía leerlo. |
+| `cobros` | Renta día 1, plan AT&T día 1, quincena días 1 y 15, CETES día 15, gym día 17 | El **monto** es un getter sobre `PROYECTO`: si sube la renta o vuelve a cambiar el gimnasio, el calendario se entera solo. El **día** vive aquí como dato, no como comentario al lado de la cifra: las apps lo leen. |
 | `hitos` | Decisión Maestría (18 jul 2027) y arranque de la Maestría (1 oct 2028) | `PROYECTO.maestriaPausa` y `PROYECTO.maestriaInicio`. |
 
 **Regla al agregar: si una fecha se puede derivar de un dato que ya existe, NO va aquí.** Por eso
@@ -771,6 +770,13 @@ pulsarlo no pasa **nada** — sin error en consola, sin señal de ningún tipo.
 El **control 18** vigila los 94 recursos de las rutas: que ningún libro apunte a un id que no existe, que todo lo que no sea `propio` tenga URL https, y que un libro no vuelva a traer su título escrito. Probado rompiéndolo de cuatro formas.
 
 El **control 17** vigila lo que `pfEnlazar` no puede: que los nombres de la guía dental — la única lista escrita a mano que queda — sigan resolviendo a un producto del kit, y que las tres apps carguen `ficha.css`, `ficha.js` y el hueco `pfFondo`. Comprueba la **etiqueta** `<script src=...>`, no la palabra «ficha.js», que también aparece en un comentario y no carga nada.
+
+El **control 23** vigila los `.md`: que **no vuelvan a ser diario** (encabezados fechados,
+"hasta el 2026-…", "antes era…", "mismo día)") y que **todo el código que citan exista** — cada
+identificador en `código` (ids, clases, funciones, claves) se busca en los `.html/.js/.css` del
+proyecto y en los nombres de archivo; lo que no aparece de ninguna forma es un fantasma y sale
+con archivo y línea. Las excepciones (`addInitScript` de Playwright, la bandera construida
+`finanzasmx_v2_v`) llevan su razón, y una excepción que deje de hacer falta también se avisa.
 
 El **control 16** hace lo mismo con los 60 libros, aparte porque sus campos son otros, y añade lo que un producto no tiene: año y páginas plausibles, y que la portada sea de Open Library o haya con qué dibujar el libro. Probado rompiendo el maestro de cuatro formas, incluida la que ocurrió de verdad.
 

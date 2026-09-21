@@ -146,7 +146,7 @@ filas, la noche del pelo (2 pasos) frente al día (9) dejaba media pantalla en b
    el shedding del mes 2-4 es el error nº 5 y la caída notoria reciente abre la lista con marca
    de aviso) y **qué puede ir con qué** como matriz: en la piel, ingredientes; en el pelo,
    horarios (mojarse dentro de las 4 h) y sustituciones (Darrow en lugar de Pilexil, mascarilla
-   en lugar de acondicionador, nunca los dos champús medicados el mismo día).
+   en lugar de acondicionador, nunca los dos champús medicados en el mismo día).
 
 **Los productos no viven aquí**: `CIFRAS.RUTINA_PIEL` y `CIFRAS.RUTINA_PELO` de
 `datos-maestros.js`, la misma fuente que la rutina del Dashboard. La lista de la compra, el

@@ -116,8 +116,8 @@ sidebar en el mismo gesto.
 | Clave `localStorage` | Forma | Qué guarda |
 |---|---|---|
 | `coach-theme` | `'dark'` \| `'light'` | Tema activo |
-| `coach_rutina_v1` | `{completado: {'YYYY-MM-DD': ['taskId',…]}}` | Progreso diario de la rutina |
-| `coach_checks_v1` | `{[checkboxId]: true}` | **Todos** los demás checklists del archivo |
+| `coach_rutina_v1` | `{completado: {'YYYY-MM-DD': [id, …]}}` (ids de `RUTINA_TASKS`) | Progreso diario de la rutina |
+| `coach_checks_v1` | `{[id]: true}` (ids de los `.check-item`) | **Todos** los demás checklists del archivo |
 | `radarp_{skillId}` | entero 0-100, 12 claves | Overrides del radar. Sin override se usa el valor base de `SK` |
 
 Ids del radar: `ventas, copy, marketing, network, liderazgo, codigo, ia, datos, inversion,
@@ -261,7 +261,7 @@ faltaba eran las cifras, y se **inyectan** sobre las 11 tarjetas existentes desd
 Tres cosas se respetaron a propósito:
 
 - **Los ids `negocio1..11`**, porque otras secciones enlazan a ellos con `irANegocios()`.
-- **Los 12 checkboxes** (`pr1-4`, `oc1-5`, `og1-3`): guardan progreso real en `coach_checks_v1`.
+- **Los 12 checkboxes** (`pr1`…`pr4`, `oc1`…`oc5`, `og1`…`og3`): guardan progreso real en `coach_checks_v1`.
 - **Los tres `.stat-badge` cualitativos** de cada tarjeta ("Bajo · Requiere ventas"). Dicen algo
   distinto de las cifras — son el ranking — y quitarlos habría sido perder información.
 

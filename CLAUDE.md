@@ -73,6 +73,12 @@ desincronizar. En 2026-08-25 se reescribieron por esto: 92% de las 184 secciones
 Adán, 2026-08-25: *"tampoco quiero que en los .md haya información innecesaria / duplicada /
 desincronizada. No me sirve historial acumulado sin sentido, quiero información valiosa"*.
 
+**Lo vigila el hook** (control 23 de `verificar-sincronia.js`, Adán 2026-09-20: *"no quiero que
+vuelva a pasar que se llene de archivos basura"*): un encabezado fechado, un "hasta el 2026-…" o
+un "antes era…" en cualquier `.md` sale como problema al final del turno, igual que citar en
+`código` un id, clase o función que ya no existe en ningún `.html/.js/.css`. Se arregla
+reescribiendo la sección, no añadiendo una excepción.
+
 ## Regla 5 — El mapa antes que el archivo: leer el `readme_<app>.md`, no el `.html`
 
 Cuando Adán nombra `dashboard.html` (o cualquier `.html` del proyecto) o una de sus pantallas,
