@@ -69,7 +69,7 @@ $MODOS = @{
   }
   superalto = @{
     prompt = 'inversion-superalto-prompt.js'; esquema = 'inversion-superalto-esquema.json'; destino = 'inversion-superalto.js'
-    variable = 'INVERSION_SUPERALTO'; contexto = 'inversion-superalto-contexto.json'; web = @('WebSearch', 'WebFetch'); esfuerzo = 'high'
+    variable = 'INVERSION_SUPERALTO'; contexto = 'inversion-superalto-contexto.json'; web = @('WebSearch', 'WebFetch'); esfuerzo = 'medium'   # Adán, 21-sep-2026: "no quiero que se gasten muchos tokens, ponle medium"
     sistema = 'Eres un analista de acciones de alto riesgo. Investigas a fondo con WebSearch y WebFetch (entre 6 y 12 búsquedas) antes de responder, y respondes únicamente con la salida estructurada que se te pide, en español de México. Ninguna otra herramienta.'
     nombre = 'la apuesta de riesgo súper alto'
   }

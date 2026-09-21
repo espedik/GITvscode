@@ -309,7 +309,7 @@ la apuesta anterior, para que Claude diga si sigue vigente. Windows abre
 `inversion-instalar.bat`, sin administrador), que corre `claude -p` con salida estructurada (el
 esquema de ese modo), solo herramientas de web (búsqueda para los perfiles, limitada a 3 por el
 prompt; búsqueda y lectura de páginas para súper alto, que el prompt obliga a usar entre 6 y 12
-veces con esfuerzo alto) y un system prompt corto — 13.7 k tokens de sistema medidos contra 27.6 k
+veces con esfuerzo medio: Adán, 21-sep-2026, *"no quiero que se gasten muchos tokens"*) y un system prompt corto — 13.7 k tokens de sistema medidos contra 27.6 k
 con el de Claude Code —, valida la respuesta y reescribe el `.js` de ese modo con temporal y
 renombrado, así un fallo deja el anterior intacto. La página no puede
 leer archivos desde `file://`, pero sí recargar un `<script>`: `invEsperar()` lo reinyecta cada 5 s
