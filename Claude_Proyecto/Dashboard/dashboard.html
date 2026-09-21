@@ -26,6 +26,8 @@
      Plan Maestro vienen de aquí, no escritos a mano. El mapa está en DATOS-MAESTROS.md -->
 <link rel="stylesheet" href="ficha.css">
 <script src="datos-maestros.js"></script>
+<!-- Lo que Claude escribe para "Qué invertir hoy" (ver inversion-actualizar.ps1). Si falta, el panel lo dice. -->
+<script src="inversion-hoy.js"></script>
 <script src="ficha.js"></script>
 <!-- Simulacro del examen ISTQB CT-GenAI (paso 6 de la ficha de la meta `istqbgenai`).
      Dos bancos de preguntas hermanos - Examen A (79) y Examen B (77), que cubren el
@@ -132,10 +134,13 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hid
    este carril para que se lean como un par. */
 .qa-acciones{position:absolute;right:16px;top:50%;transform:translateY(-50%);
   display:flex;align-items:center;gap:5px}
-.priv-btn,.tema-btn{padding:5px 8px;border:1px solid transparent;cursor:pointer;
+.priv-btn,.tema-btn,.posts-btn{padding:5px 8px;border:1px solid transparent;cursor:pointer;
   font-family:inherit}
-.tema-btn .qa-ico{color:var(--text3)}
-.tema-btn:hover .qa-ico{color:var(--text2)}
+/* El altavoz abre Posts (las plantillas de LinkedIn de Aeroresinas y Heliescala). Es un
+   enlace y no un control, pero va en este carril porque Adán lo pidió "arriba a la
+   derecha", y se lee como el tercero del trío: mismo trazo, mismo tamaño. */
+.tema-btn .qa-ico,.posts-btn .qa-ico{color:var(--text3)}
+.tema-btn:hover .qa-ico,.posts-btn:hover .qa-ico{color:var(--text2)}
 .priv-btn .qa-ico{color:var(--text3)}
 .priv-btn:hover .qa-ico{color:var(--text2)}
 .priv-btn.on{background:rgba(var(--r-rgb),.1);border-color:rgba(var(--r-rgb),.28)}
@@ -3485,6 +3490,168 @@ button.ct-cat:hover{background:rgba(var(--ov),.07)}
   .gbm-precios{grid-template-columns:1fr}
   .gbm-links{grid-template-columns:1fr}
 }
+/* ─── "QUÉ INVERTIR HOY" — la plantilla XL de tres perfiles ─────────────────────────────
+   Adán, 21-sep-2026: "hazla lo más grande posible… una especie de plantilla… claude solo se
+   encargará de la información y la plantilla no se modificará visualmente". Por eso todo lo
+   visual vive aquí y en renderGBMPanel(); lo que cambia cada semana vive en inversion-hoy.js.
+   Las clases .gbm-* las comparte el panel de KPIs de Mis Metas (#kpiOverlay): el tamaño XL va
+   en .inv-card, un modificador que solo lleva este panel, para no agrandar el otro. */
+.gbm-card.inv-card{width:min(1560px,96vw);height:min(960px,94vh);max-height:94vh;display:flex;flex-direction:column;overflow:hidden}
+.inv-card .inv-head{display:flex;align-items:flex-start;gap:16px;padding:14px 56px 12px 22px;flex-shrink:0}
+.inv-head-txt{flex:1;min-width:0}
+.inv-head-acc{display:flex;flex-direction:column;align-items:flex-end;gap:5px;flex-shrink:0}
+.inv-btn-claude{display:inline-flex;align-items:center;gap:7px;font:inherit;font-size:12px;font-weight:800;cursor:pointer;
+  padding:8px 14px;border-radius:11px;border:1px solid rgba(var(--cy-rgb),.45);color:var(--cy);
+  background:rgba(var(--cy-rgb),.1);transition:background .15s,transform .15s}
+.inv-btn-claude:hover{background:rgba(var(--cy-rgb),.18);transform:translateY(-1px)}
+.inv-btn-claude:disabled{opacity:.55;cursor:wait;transform:none}
+.inv-estado{font-family:var(--mono);font-size:10px;font-weight:700;color:var(--text3);letter-spacing:.03em;text-align:right;max-width:420px;line-height:1.35}
+.inv-estado.wait{color:var(--w)}.inv-estado.err{color:var(--r)}.inv-estado.ok{color:var(--g)}
+.inv-ayuda{font-size:10px;color:var(--text3)}
+.inv-ayuda a{color:var(--text2);text-decoration:underline dotted;cursor:pointer}
+/* Dos columnas que desplazan por separado: la lectura larga a la izquierda, la situación a la derecha. */
+.inv-card .inv-body{flex:1;min-height:0;padding:0;display:grid;grid-template-columns:minmax(0,1fr) 372px;overflow:hidden}
+.inv-main{overflow-y:auto;padding:16px 22px 28px}
+.inv-side{overflow-y:auto;padding:16px 18px 28px;border-left:1px solid rgba(var(--ov),.08);background:rgba(var(--ov),.025)}
+.inv-side .gbm-sec:first-child{margin-top:0}
+
+/* Veredicto: la regla del Plan Maestro en grande, el texto de Claude debajo, el monto a la derecha. */
+.inv-veredicto{display:grid;grid-template-columns:minmax(0,1fr) 230px;gap:18px;align-items:stretch;
+  border-radius:16px;border:1px solid rgba(var(--ov),.1);border-left:4px solid var(--c);
+  background:linear-gradient(90deg,color-mix(in srgb,var(--c) 10%,transparent),transparent 60%);padding:14px 18px;margin-bottom:14px}
+.inv-ver-eyebrow{font-size:9.5px;font-weight:900;letter-spacing:.11em;text-transform:uppercase;color:var(--text3);margin-bottom:4px}
+.inv-ver-t{font-family:var(--font-title);font-size:clamp(20px,2.2vw,28px);font-weight:700;line-height:1.1;color:var(--c);margin-bottom:6px}
+.inv-ver-d{font-size:13px;line-height:1.5;color:var(--text2)}
+.inv-ver-d b{color:var(--text)}
+.inv-ver-cuando{margin-top:8px;font-size:11.5px;color:var(--text2);display:flex;gap:6px;align-items:baseline}
+.inv-ver-cuando b{color:var(--text3);font-size:9.5px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;flex-shrink:0}
+.inv-ver-r{display:flex;flex-direction:column;justify-content:center;gap:4px;padding-left:18px;border-left:1px solid rgba(var(--ov),.1)}
+.inv-ver-r label{font-size:9.5px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;color:var(--text3)}
+.inv-monto{display:flex;align-items:baseline;gap:3px;font-family:var(--mono);font-weight:800;font-size:26px;color:var(--text)}
+.inv-monto input{font:inherit;width:130px;background:transparent;border:none;border-bottom:1px dashed rgba(var(--ov),.3);color:var(--text);padding:0 2px;outline:none}
+.inv-monto input:focus{border-bottom-color:var(--cy)}
+.inv-monto input::-webkit-outer-spin-button,.inv-monto input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+.inv-ver-r small{font-size:10px;color:var(--text3);line-height:1.35}
+
+/* Las tres pestañas: cada una es un perfil con su color. */
+.inv-tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+.inv-tab{font:inherit;text-align:left;cursor:pointer;border-radius:14px;padding:11px 14px;
+  background:rgba(var(--ov),.04);border:1px solid rgba(var(--ov),.09);border-top:3px solid rgba(var(--ov),.12);
+  transition:background .15s,transform .15s,border-color .15s}
+.inv-tab:hover{background:rgba(var(--ov),.07);transform:translateY(-1px)}
+.inv-tab.on{background:color-mix(in srgb,var(--c) 12%,transparent);border-color:color-mix(in srgb,var(--c) 40%,transparent);border-top-color:var(--c)}
+.inv-tab-n{display:flex;align-items:center;gap:7px;font-size:13px;font-weight:900;color:var(--text)}
+.inv-tab.on .inv-tab-n{color:var(--c)}
+.inv-tab-l{font-size:11px;color:var(--text2);margin-top:2px;display:flex;justify-content:space-between;gap:8px;align-items:baseline}
+.inv-dots{font-family:var(--mono);letter-spacing:1px;font-size:11px;color:var(--c);white-space:nowrap}
+
+/* El perfil: cabecera con lema y cuatro medidas, luego reparto, activos, tres columnas y el mes. */
+.inv-perfil{--c:var(--cy)}
+.inv-pf-head{display:grid;grid-template-columns:minmax(0,1fr) 380px;gap:18px;align-items:start;margin-bottom:6px}
+.inv-pf-lema{font-family:var(--font-title);font-size:clamp(22px,2.4vw,30px);font-weight:700;line-height:1.1;color:var(--text);margin-bottom:6px}
+.inv-pf-lema i{color:var(--c);font-style:normal}
+.inv-pf-para{font-size:12.5px;color:var(--text2);line-height:1.45;margin-bottom:8px}
+.inv-pf-resumen{font-size:13.5px;line-height:1.55;color:var(--text)}
+.inv-pf-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.inv-stat{border-radius:11px;padding:8px 11px;background:rgba(var(--ov),.05);border:1px solid rgba(var(--ov),.07);min-width:0}
+.inv-stat span{display:block;font-size:9px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;color:var(--text3);margin-bottom:3px}
+.inv-stat b{display:block;font-family:var(--mono);font-size:14px;font-weight:800;color:var(--text);line-height:1.2}
+.inv-stat b.inv-dots{font-size:15px}
+.inv-stat b.inv-stat-txt{font-family:var(--font);font-size:11px;font-weight:600;line-height:1.35;color:var(--text2)}
+.inv-stat small{display:block;font-size:9.5px;color:var(--text3);margin-top:1px}
+.inv-stat.inv-stat-wide{grid-column:1/4}
+.inv-sec{font-size:11px;font-weight:900;letter-spacing:.05em;text-transform:uppercase;color:var(--text3);margin:16px 0 8px;display:flex;align-items:center;gap:8px}
+.inv-sec::after{content:'';flex:1;height:1px;background:rgba(var(--ov),.1)}
+.inv-sec b{color:var(--text)}
+.inv-barra{display:flex;height:14px;border-radius:8px;overflow:hidden;gap:2px;margin-bottom:6px}
+.inv-barra i{display:block;height:100%;background:var(--a);opacity:.9}
+.inv-leyenda{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:11px;color:var(--text2);margin-bottom:10px}
+.inv-leyenda i{display:inline-block;width:9px;height:9px;border-radius:3px;background:var(--a);margin-right:5px;vertical-align:-1px}
+.inv-leyenda b{font-family:var(--mono);color:var(--text)}
+.inv-activos{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.inv-activo{border-radius:14px;padding:12px 14px;background:rgba(var(--ov),.04);border:1px solid rgba(var(--ov),.08);border-left:3px solid var(--a)}
+.inv-ac-top{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
+.inv-ac-nombre{font-size:14px;font-weight:900;color:var(--text);display:flex;align-items:center;gap:8px;flex-wrap:wrap;min-width:0}
+.inv-ac-tk{font-family:var(--mono);font-size:10px;font-weight:800;letter-spacing:.06em;color:var(--a);border:1px solid color-mix(in srgb,var(--a) 45%,transparent);border-radius:6px;padding:1px 6px}
+.inv-ac-pct{font-family:var(--mono);font-size:22px;font-weight:800;color:var(--a);line-height:1;flex-shrink:0}
+.inv-ac-meta{font-size:11px;color:var(--text3);margin:3px 0 8px}
+.inv-ac-meta b{font-family:var(--mono);color:var(--text)}
+.inv-ac-row{display:grid;grid-template-columns:52px 1fr;gap:8px;font-size:12px;line-height:1.45;color:var(--text2);padding:4px 0;border-top:1px solid rgba(var(--ov),.06)}
+.inv-ac-k{font-size:9px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;color:var(--text3);padding-top:3px}
+.inv-ac-riesgo span:last-child{color:var(--o)}
+.inv-tres{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:14px}
+.inv-col{border-radius:13px;padding:11px 13px;background:rgba(var(--ov),.035);border:1px solid rgba(var(--ov),.07)}
+.inv-col-t{font-size:10.5px;font-weight:900;letter-spacing:.06em;text-transform:uppercase;color:var(--text);margin-bottom:7px}
+.inv-col ul,.inv-col ol{margin:0;padding-left:16px;display:flex;flex-direction:column;gap:5px}
+.inv-col li{font-size:12px;line-height:1.45;color:var(--text2)}
+.inv-col li::marker{color:var(--c);font-weight:800}
+.inv-mes{display:grid;grid-template-columns:minmax(0,1fr) 260px;gap:12px;margin-top:12px}
+.inv-mes-l{border-radius:13px;padding:12px 14px;background:color-mix(in srgb,var(--c) 9%,transparent);border:1px solid color-mix(in srgb,var(--c) 30%,transparent)}
+.inv-mes-l p{margin:0;font-size:13px;line-height:1.5;color:var(--text)}
+.inv-mes-r{border-radius:13px;padding:12px 14px;background:rgba(var(--ov),.04);border:1px solid rgba(var(--ov),.08);display:flex;flex-direction:column;justify-content:center;gap:3px}
+.inv-mes-r span{font-size:10px;font-weight:900;letter-spacing:.06em;text-transform:uppercase;color:var(--text3)}
+.inv-mes-r b{font-family:var(--mono);font-size:20px;font-weight:800;color:var(--text);line-height:1.15}
+.inv-mes-r small{font-size:10px;color:var(--text3);line-height:1.35}
+.inv-pf-foot{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:14px;padding-top:12px;border-top:1px solid rgba(var(--ov),.08)}
+.inv-elegir{font:inherit;font-size:12px;font-weight:800;cursor:pointer;padding:8px 14px;border-radius:11px;
+  border:1px solid color-mix(in srgb,var(--c) 45%,transparent);color:var(--c);background:color-mix(in srgb,var(--c) 10%,transparent)}
+.inv-elegir:hover{background:color-mix(in srgb,var(--c) 18%,transparent)}
+.inv-elegir.on{background:var(--c);color:var(--bg);border-color:var(--c)}
+.inv-disc{flex:1;min-width:220px;font-size:10px;color:var(--text3);line-height:1.35}
+.inv-vacio{border-radius:16px;padding:34px 26px;text-align:center;border:1px dashed rgba(var(--ov),.2);color:var(--text2);font-size:13px;line-height:1.55}
+.inv-vacio b{display:block;font-family:var(--font-title);font-size:22px;color:var(--text);margin-bottom:8px}
+
+/* Barra lateral: precios, mercado, tu situación, la compra rápida, enlaces. */
+.inv-precios{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.inv-precios .gbm-precio b{font-size:13px}
+.inv-mercado{margin-top:8px;font-size:11.5px;line-height:1.5;color:var(--text2);padding:9px 11px;border-radius:10px;background:rgba(var(--ov),.04)}
+.inv-mercado p{margin:0 0 7px}
+.inv-senales{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:5px}
+.inv-senales li{display:grid;grid-template-columns:8px 1fr;gap:8px;align-items:start;font-size:11px;line-height:1.4}
+.inv-senales li::before{content:'';width:8px;height:8px;border-radius:50%;margin-top:4px;background:var(--text3)}
+.inv-senales li.ok::before{background:var(--g)}.inv-senales li.alerta::before{background:var(--o)}
+.inv-senales li b{color:var(--text)}
+.inv-objetivo{margin-top:8px;padding:10px 12px;border-radius:11px;border:1px solid color-mix(in srgb,var(--c) 35%,transparent);background:color-mix(in srgb,var(--c) 8%,transparent)}
+.inv-objetivo-t{font-size:9.5px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;color:var(--text3);margin-bottom:3px}
+.inv-objetivo-n{font-size:13px;font-weight:900;color:var(--c)}
+.inv-objetivo-r{font-family:var(--mono);font-size:11px;color:var(--text2);margin-top:3px;line-height:1.4}
+.inv-fuentes{display:flex;flex-direction:column;gap:3px;margin-top:8px}
+.inv-fuentes a{font-size:10.5px;color:var(--text3);text-decoration:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.inv-fuentes a:hover{color:var(--cy);text-decoration:underline}
+.inv-fuentes a::before{content:'↗ ';color:var(--cy)}
+
+@media(max-width:1280px){
+  .inv-card .inv-body{grid-template-columns:minmax(0,1fr) 320px}
+  .inv-pf-head{grid-template-columns:1fr}
+  .inv-pf-stats{grid-template-columns:repeat(4,1fr)}
+  .inv-stat.inv-stat-wide{grid-column:auto}
+}
+@media(max-width:1024px){
+  .inv-tres{grid-template-columns:1fr}
+  .inv-mes{grid-template-columns:1fr}
+}
+@media(max-width:860px){
+  .inv-card .inv-body{display:block;overflow-y:auto}
+  .inv-main,.inv-side{overflow:visible}
+  .inv-side{border-left:none;border-top:1px solid rgba(var(--ov),.08)}
+  .inv-veredicto{grid-template-columns:1fr}
+  .inv-ver-r{padding-left:0;border-left:none;padding-top:10px;border-top:1px solid rgba(var(--ov),.1)}
+  .inv-activos{grid-template-columns:1fr}
+  .inv-pf-stats{grid-template-columns:1fr 1fr}
+  .inv-stat.inv-stat-wide{grid-column:1/3}
+}
+@media(max-width:640px){
+  .gbm-card.inv-card{width:100%;height:100%;max-height:100%}
+  .inv-card .inv-head{padding:12px 48px 10px 14px;flex-direction:column;gap:8px}
+  .inv-head-acc{align-items:flex-start}
+  .inv-estado{text-align:left}
+  .inv-main,.inv-side{padding:12px 14px 24px}
+  .inv-tabs{gap:5px}
+  .inv-tab{padding:9px 8px}
+  .inv-tab-l{display:none}
+  .inv-tab-n{font-size:11.5px}
+  .inv-precios{grid-template-columns:1fr 1fr}
+}
 </style>
 <script>
 (function () {
@@ -3900,14 +4067,18 @@ button.ct-cat:hover{background:rgba(var(--ov),.07)}
 </div>
 
 <!-- ─── PANEL DE INVERSIÓN DEL LUNES (2026-08-18) — se abre desde el bloque de GBM ─── -->
+<!-- ─── QUÉ INVERTIR HOY — plantilla XL de tres perfiles; los datos los escribe Claude en inversion-hoy.js ─── -->
 <div class="gbm-overlay" id="gbmOverlay" onclick="if(event.target===this) cerrarGBM()">
-  <div class="gbm-card">
-    <div class="gbm-head">
+  <div class="gbm-card inv-card">
+    <div class="gbm-head inv-head">
       <button class="gbm-close" onclick="cerrarGBM()" aria-label="Cerrar">✕</button>
-      <h2>📈 Qué invertir hoy</h2>
-      <p>Tu compra rápida de los lunes, con precios en vivo y tus saldos reales de Finanzas.</p>
+      <div class="inv-head-txt">
+        <h2>📈 Qué invertir hoy</h2>
+        <p>Tres perfiles con tus saldos reales de Finanzas. La plantilla es fija; Claude solo rellena la información.</p>
+      </div>
+      <div class="inv-head-acc" id="invHeadAcc"></div>
     </div>
-    <div class="gbm-body" id="gbmBody"></div>
+    <div class="gbm-body inv-body" id="gbmBody"></div>
   </div>
 </div>
 
@@ -9332,53 +9503,292 @@ function pintarInvertirBtn(){
     '<div class="inv-btn-sub">'+p.sub+'</div>';
 }
 
+// ─── "Qué invertir hoy" — la plantilla y los datos van separados ─────────────────────────
+// La plantilla (renderGBMPanel y el CSS .inv-*) es fija. Lo que cambia de una semana a otra vive
+// en inversion-hoy.js (window.INVERSION_HOY), que escribe Claude Code a través de
+// inversion-actualizar.ps1: así una actualización cuesta los tokens de la información y ninguno
+// de la interfaz. Adán, 21-sep-2026: "claude solo se encargará de la información y la plantilla
+// no se modificará visualmente, entonces solo se gastan tokens en información".
+//
+// El botón 🤖 navega a claudeinv://actualizar?ctx=<base64url del contexto>. Windows abre el .ps1
+// (registrado en HKCU por inversion-instalar.bat), que corre `claude -p` y reescribe el .js. La
+// página no puede leer archivos (file://), pero sí volver a cargar un <script>: invEsperar()
+// lo reinyecta cada 5 s hasta que _meta.generado cambia y entonces se repinta solo.
+const INV_KEY = 'dash-inversion-v1';   // {tab, perfil, monto} — pestaña abierta, perfil elegido, monto al mes
+const INV_PERFILES = [
+  { id:'seguro', nombre:'Inversión segura', ico:'🛡️', color:'var(--g)' },
+  { id:'medio',  nombre:'Riesgo medio',     ico:'⚖️', color:'var(--w)' },
+  { id:'alto',   nombre:'Riesgo alto',      ico:'🔥', color:'var(--o)' },
+];
+const INV_ACTIVO_COLORES = ['var(--cy)', 'var(--p)', 'var(--b)', 'var(--w)', 'var(--o)'];
+function invPref(){ return rawGet(INV_KEY, {}) || {}; }
+function invPrefSet(patch){ rawSet(INV_KEY, Object.assign(invPref(), patch)); }
+function invDatos(){ const d = window.INVERSION_HOY; return (d && d.perfiles && d.veredicto) ? d : null; }
+function invPerfilDef(id){ return INV_PERFILES.find(p => p.id === id) || INV_PERFILES[1]; }
+function invTabActual(){ const p = invPref(); return invPerfilDef(p.tab || p.perfil || 'medio').id; }
+// El monto al mes con el que se calculan los repartos: el que Adán escribió; si no, el que Claude
+// ve razonable hoy; si tampoco, el aporte a CETES del día 15 (nunca un número a mano).
+function invMontoMensual(){
+  const p = invPref(), d = invDatos();
+  if(+p.monto > 0) return +p.monto;
+  if(d && +d.veredicto.montoMensual > 0) return +d.veredicto.montoMensual;
+  return +_PG().cetesDia15 || 0;
+}
+function invMontoCambia(v){ invPrefSet({ monto: Math.max(0, Math.round(+v || 0)) }); renderGBMPanel(); cargarPreciosGBM(); }
+function invTab(id){ invPrefSet({ tab: id }); renderGBMPanel(); cargarPreciosGBM(); }
+function invElegirPerfil(id){ invPrefSet({ perfil: invPref().perfil === id ? '' : id }); renderGBMPanel(); cargarPreciosGBM(); }
+function invDots(n){ n = Math.max(0, Math.min(5, Math.round(+n || 0))); return '●'.repeat(n) + '○'.repeat(5 - n); }
+function invPct(x){ return (Math.round(+x * 10) / 10).toLocaleString('es-MX') + ' %'; }
+// Valor futuro de aportar M al mes durante 12 meses a una tasa anual r: la fórmula de la anualidad.
+function invEn12(M, rAnual){ const i = (+rAnual || 0) / 100 / 12; if(!i) return M * 12; return M * ((Math.pow(1 + i, 12) - 1) / i); }
+function invFechaCorta(iso){
+  const f = new Date(iso); if(isNaN(f)) return '';
+  return f.toLocaleDateString('es-MX', { day:'numeric', month:'short' }) + ' ' + f.toLocaleTimeString('es-MX', { hour:'2-digit', minute:'2-digit' });
+}
+function invModeloCorto(m){ m = String(m || ''); return /opus/i.test(m) ? 'Opus' : /sonnet/i.test(m) ? 'Sonnet' : /haiku/i.test(m) ? 'Haiku' : (m || 'Claude'); }
+
+// Lo que se le manda a Claude: los mismos números que ya pinta el panel, en JSON corto. Nada de
+// leer archivos del lado de Claude — el contexto viaja en el enlace y cuesta ~500 tokens.
+function invContexto(){
+  const { F, inv, ef, metaEf } = pasoInversionHoy();
+  const P = _PG(), hoy = new Date();
+  const maes = (F.goals || []).find(g => g.id === 'g001');
+  const ph = (typeof activePhase === 'function') ? activePhase() : null;
+  const fmtF = d => d instanceof Date ? d.toLocaleDateString('es-MX', { day:'numeric', month:'short', year:'numeric' }) : '';
+  return {
+    fecha: hoy.toISOString().slice(0, 10),
+    edad: P.nacimiento ? Math.floor((hoy - new Date(P.nacimiento)) / 31557600000) : null,
+    ciudad: P.ciudad || '', empleador: P.empleador || '',
+    ingresosMes: { sueldo: +P.sueldo || 0, didi: +P.didiMes || 0, siVale: +P.siVale || 0 },
+    fijosMes: Math.round(+P.fijosTotal || 0), cetesDia15: +P.cetesDia15 || 0,
+    fondo: { actual: Math.round(ef), meta: Math.round(metaEf) },
+    deudas: (F.debts || []).filter(d => +d.balance > 0).map(d => ({ nombre: d.name, saldo: Math.round(+d.balance), tasa: +d.rate || 0, minimo: +d.min || 0 })),
+    inversiones: inv.map(i => ({ nombre: i.name, tipo: i.type || '', valor: Math.round(+i.value || +i.invested || 0) })),
+    efectivo: (F.activos || []).filter(a => a.type === 'liquido' && +a.value > 0).map(a => ({ nombre: a.name, valor: Math.round(+a.value) })),
+    precios: { btcUsd: +F.currentBtcPrice || null, usdMxn: +F.usdMxn || null },
+    maestria: maes ? { ahorrado: Math.round(+maes.current || 0), meta: Math.round(+maes.target || 0), inicio: P.maestriaInicio || '' } : null,
+    fase: ph ? (ph.tag + ' · ' + ph.title + ' (' + fmtF(ph.start) + ' – ' + fmtF(ph.end) + ')') : '',
+    perfilElegido: invPref().perfil || null,
+    montoMensualActual: +invPref().monto || null,
+  };
+}
+function invBase64url(txt){
+  return btoa(unescape(encodeURIComponent(txt))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+}
+let _invPoll = null;
+function invEstado(msg, clase){
+  const e = document.getElementById('invEstado'); if(!e) return;
+  e.textContent = msg; e.className = 'inv-estado' + (clase ? ' ' + clase : '');
+}
+function invPedirClaude(){
+  // El protocolo solo existe en Windows (el .ps1 vive en esta PC): en el iPad se copia el encargo.
+  if(!/Win/i.test(navigator.platform || navigator.userAgent)){
+    invCopiarContexto();
+    invEstado('Aquí no hay Claude Code: el contexto quedó copiado, pégalo en Claude Code en la PC.', 'wait');
+    return;
+  }
+  const btn = document.getElementById('invBtnClaude'); if(btn) btn.disabled = true;
+  invEstado('⏳ Se abrió una ventana de PowerShell: Claude está pensando, tarda 1-3 min. Puedes seguir usando el Dashboard.', 'wait');
+  invEsperar();
+  location.href = 'claudeinv://actualizar?ctx=' + invBase64url(JSON.stringify(invContexto()));
+}
+function invEsperar(){
+  clearInterval(_invPoll);
+  const meta = () => (window.INVERSION_HOY && window.INVERSION_HOY._meta && window.INVERSION_HOY._meta.generado) || '';
+  const antes = meta(), t0 = Date.now();
+  _invPoll = setInterval(() => {
+    if(Date.now() - t0 > 6 * 60 * 1000){
+      clearInterval(_invPoll);
+      const btn = document.getElementById('invBtnClaude'); if(btn) btn.disabled = false;
+      invEstado('No llegó nada en 6 min. ¿Se abrió PowerShell? Si no, instala el protocolo (una vez) o copia el contexto y pégalo en Claude Code.', 'err');
+      return;
+    }
+    const s = document.createElement('script');
+    s.src = 'inversion-hoy.js?v=' + Date.now();
+    s.onload = () => {
+      s.remove();
+      if(meta() && meta() !== antes){
+        clearInterval(_invPoll);
+        renderGBMPanel(); cargarPreciosGBM();
+        toast('🤖 Claude actualizó qué invertir hoy');
+      }
+    };
+    s.onerror = () => s.remove();
+    document.head.appendChild(s);
+  }, 5000);
+}
+// Sin protocolo (iPad, otra máquina) el camino es pegar esto en cualquier sesión de Claude Code.
+function invCopiarContexto(){
+  const txt = 'Lee Claude_Proyecto/Dashboard/inversion-prompt.txt y responde a ese prompt con el CONTEXTO de abajo. ' +
+    'Guarda el JSON resultante en Claude_Proyecto/Dashboard/inversion-hoy.js como `window.INVERSION_HOY = {...};`, ' +
+    'añadiendo _meta:{generado:<ahora en ISO>, modelo:<tu modelo>}. No toques ningún otro archivo.\n\n' +
+    'CONTEXTO DE ADÁN (JSON, saldos reales de hoy):\n' + JSON.stringify(invContexto());
+  const ok = () => toast('Contexto copiado: pégalo en Claude Code');
+  if(navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(ok, () => toast('No se pudo copiar'));
+  else { const t = document.createElement('textarea'); t.value = txt; document.body.appendChild(t); t.select(); document.execCommand('copy'); t.remove(); ok(); }
+}
+function invAyudaInstalar(){ toast('Doble clic en Dashboard/inversion-instalar.bat (una sola vez) y vuelve a pulsar el botón'); }
+
+function invPintarCabecera(d){
+  const acc = document.getElementById('invHeadAcc'); if(!acc) return;
+  const m = d && d._meta;
+  const estado = m
+    ? 'Claude · ' + invFechaCorta(m.generado) + ' · ' + invModeloCorto(m.modelo) + (m.tokens ? ' · ' + fmt(m.tokens) + ' tokens' : '') + (m.segundos ? ' · ' + m.segundos + ' s' : '')
+    : (d ? 'Datos de Claude sin fecha' : 'Todavía no le has pedido nada a Claude');
+  acc.innerHTML =
+    '<button class="inv-btn-claude" id="invBtnClaude" onclick="invPedirClaude()" title="Manda tus saldos reales a Claude Code y reescribe solo los datos">🤖 Actualizar con Claude</button>' +
+    '<div class="inv-estado" id="invEstado">' + esc(estado) + '</div>' +
+    '<div class="inv-ayuda">¿No se abre nada? <a onclick="invAyudaInstalar()">instalar el protocolo</a> · <a onclick="invCopiarContexto()">copiar el contexto</a></div>';
+}
+
+function invVeredictoHtml(P, d){
+  const v = d && d.veredicto;
+  const monto = invMontoMensual();
+  return '<div class="inv-veredicto" style="--c:' + P.color + '">' +
+    '<div class="inv-ver-l">' +
+      '<div class="inv-ver-eyebrow">Qué te toca hoy · la regla de tu Plan Maestro</div>' +
+      '<div class="inv-ver-t">' + esc(P.paso) + '</div>' +
+      '<div class="inv-ver-d">' + (v ? '<b>' + esc(v.titulo) + '.</b> ' + esc(v.texto) : P.detalle) + '</div>' +
+      (v && v.cuandoInvertir ? '<div class="inv-ver-cuando"><b>Desde cuándo</b><span>' + esc(v.cuandoInvertir) + '</span></div>' : '') +
+    '</div>' +
+    '<div class="inv-ver-r">' +
+      '<label>Al mes destino</label>' +
+      (privado
+        ? '<div class="inv-monto">$••,•••</div>'
+        : '<div class="inv-monto"><span>$</span><input id="invMontoInput" type="number" step="100" min="0" value="' + monto + '" onchange="invMontoCambia(this.value)"></div>') +
+      '<small>' + (v && +v.montoMensual > 0 ? 'Claude sugiere ' + money(v.montoMensual) + '. ' : '') + 'Con esto se calcula el reparto de cada perfil; edítalo.</small>' +
+    '</div>' +
+  '</div>';
+}
+function invTabsHtml(d, tab){
+  return '<div class="inv-tabs">' + INV_PERFILES.map(p => {
+    const pf = d && d.perfiles[p.id];
+    return '<button class="inv-tab' + (p.id === tab ? ' on' : '') + '" style="--c:' + p.color + '" onclick="invTab(\'' + p.id + '\')">' +
+      '<div class="inv-tab-n"><span>' + p.ico + '</span>' + p.nombre + (invPref().perfil === p.id ? ' <span title="Tu perfil elegido">★</span>' : '') + '</div>' +
+      (pf ? '<div class="inv-tab-l"><span>' + esc(pf.lema) + '</span><span class="inv-dots">' + invDots(pf.riesgo) + '</span></div>' : '') +
+    '</button>';
+  }).join('') + '</div>';
+}
+function invActivoHtml(a, i, monto){
+  const c = INV_ACTIVO_COLORES[i % INV_ACTIVO_COLORES.length];
+  return '<div class="inv-activo" style="--a:' + c + '">' +
+    '<div class="inv-ac-top"><div class="inv-ac-nombre">' + esc(a.nombre) + (a.ticker ? '<span class="inv-ac-tk">' + esc(a.ticker) + '</span>' : '') + '</div>' +
+      '<div class="inv-ac-pct">' + invPct(a.pct) + '</div></div>' +
+    '<div class="inv-ac-meta">' + esc(a.tipo) + ' · <b>' + money(monto * a.pct / 100) + '</b> al mes' + (a.donde ? ' · 📍 ' + esc(a.donde) : '') + '</div>' +
+    '<div class="inv-ac-row"><span class="inv-ac-k">Por qué</span><span>' + esc(a.porque) + '</span></div>' +
+    '<div class="inv-ac-row"><span class="inv-ac-k">Vigilar</span><span>' + esc(a.vigilar) + '</span></div>' +
+    '<div class="inv-ac-row inv-ac-riesgo"><span class="inv-ac-k">Riesgo</span><span>' + esc(a.riesgo) + '</span></div>' +
+  '</div>';
+}
+function invPerfilHtml(d, id){
+  const def = invPerfilDef(id), pf = d.perfiles[id];
+  if(!pf) return invVacioHtml();
+  const monto = invMontoMensual();
+  // Los porcentajes se normalizan por si Claude no cerró en 100: la barra siempre llena el ancho.
+  const suma = (pf.activos || []).reduce((s, a) => s + (+a.pct || 0), 0) || 100;
+  const activos = (pf.activos || []).map(a => Object.assign({}, a, { pct: (+a.pct || 0) * 100 / suma }));
+  const r = Array.isArray(pf.rendAnual) ? pf.rendAnual : [0, 0];
+  const elegido = invPref().perfil === id;
+  const lista = (arr, tag) => '<' + tag + '>' + (arr || []).map(x => '<li>' + esc(x) + '</li>').join('') + '</' + tag + '>';
+  return '<div class="inv-perfil" style="--c:' + def.color + '">' +
+    '<div class="inv-pf-head">' +
+      '<div class="inv-pf-l">' +
+        '<div class="inv-pf-lema">' + def.ico + ' <i>' + esc(pf.lema) + '</i></div>' +
+        '<div class="inv-pf-para">' + esc(pf.paraQuien) + '</div>' +
+        '<div class="inv-pf-resumen">' + esc(pf.resumen) + '</div>' +
+      '</div>' +
+      '<div class="inv-pf-stats">' +
+        '<div class="inv-stat"><span>Horizonte</span><b>' + esc(pf.horizonte) + '</b></div>' +
+        '<div class="inv-stat"><span>Rendimiento esperado</span><b>' + (+r[0]).toLocaleString('es-MX') + ' – ' + (+r[1]).toLocaleString('es-MX') + ' %</b><small>anual, nominal</small></div>' +
+        '<div class="inv-stat"><span>Riesgo</span><b class="inv-dots">' + invDots(pf.riesgo) + '</b><small>' + Math.round(+pf.riesgo || 0) + ' de 5</small></div>' +
+        '<div class="inv-stat inv-stat-wide"><span>La caída que debes aguantar</span><b class="inv-stat-txt">' + esc(pf.caidaMax) + '</b></div>' +
+      '</div>' +
+    '</div>' +
+    '<div class="inv-sec">💼 Cómo se reparten tus <b>' + money(monto) + '</b> al mes</div>' +
+    '<div class="inv-barra">' + activos.map((a, i) => '<i style="--a:' + INV_ACTIVO_COLORES[i % INV_ACTIVO_COLORES.length] + ';width:' + a.pct + '%" title="' + esc(a.nombre) + ' ' + invPct(a.pct) + '"></i>').join('') + '</div>' +
+    '<div class="inv-leyenda">' + activos.map((a, i) => '<span style="--a:' + INV_ACTIVO_COLORES[i % INV_ACTIVO_COLORES.length] + '"><i></i>' + esc(a.ticker || a.nombre) + ' <b>' + invPct(a.pct) + '</b></span>').join('') + '</div>' +
+    '<div class="inv-activos">' + activos.map((a, i) => invActivoHtml(a, i, monto)).join('') + '</div>' +
+    '<div class="inv-tres">' +
+      '<div class="inv-col"><div class="inv-col-t">✅ Por qué este perfil</div>' + lista(pf.porque, 'ul') + '</div>' +
+      '<div class="inv-col"><div class="inv-col-t">⚠️ En contra</div>' + lista(pf.contra, 'ul') + '</div>' +
+      '<div class="inv-col"><div class="inv-col-t">📏 Reglas del juego</div>' + lista(pf.reglas, 'ol') + '</div>' +
+    '</div>' +
+    '<div class="inv-mes">' +
+      '<div class="inv-mes-l"><div class="inv-col-t">📅 Este mes</div><p>' + esc(pf.esteMes) + '</p></div>' +
+      '<div class="inv-mes-r"><span>En 12 meses, aportando ' + money(monto) + ' al mes</span>' +
+        '<b>≈ ' + money(invEn12(monto, r[0])) + ' – ' + money(invEn12(monto, r[1])) + '</b>' +
+        '<small>Aportas ' + money(monto * 12) + '; el resto es el rendimiento esperado, sin impuestos ni comisiones.</small></div>' +
+    '</div>' +
+    '<div class="inv-pf-foot">' +
+      '<button class="inv-elegir' + (elegido ? ' on' : '') + '" onclick="invElegirPerfil(\'' + id + '\')">' + (elegido ? '★ Este es tu perfil elegido' : '☆ Usar este perfil como mi asignación objetivo') + '</button>' +
+      '<span class="inv-disc">Orientación generada por Claude con tus números de hoy; no es asesoría regulada. La decisión y el riesgo son tuyos.</span>' +
+    '</div>' +
+  '</div>';
+}
+function invVacioHtml(){
+  return '<div class="inv-vacio"><b>Todavía no hay perfiles</b>Pulsa <b style="display:inline;font:inherit">🤖 Actualizar con Claude</b>: la página manda tus saldos reales y en 1-3 minutos aparecen aquí los tres perfiles con su reparto, su porqué y sus reglas.</div>';
+}
+function invSideHtml(P, d){
+  const { inv, ef, metaEf, totalInv, cetes, deudaCara, mon } = P;
+  const m = d && d.mercado;
+  const asignacion = inv.length
+    ? inv.map(i => {
+        const v = +i.value || +i.invested || 0;
+        const pct = totalInv ? Math.round(v / totalInv * 100) : 0;
+        return '<div class="gbm-row"><span>' + esc(i.name) + '</span><span class="gbm-mono">' + mon(v) + ' · ' + pct + '%</span></div>';
+      }).join('')
+    : '<div class="gbm-vacio">Todavía no hay inversiones registradas en Finanzas.</div>';
+  const elegido = invPref().perfil, pfE = elegido && d && d.perfiles[elegido];
+  const objetivo = pfE
+    ? '<div class="inv-objetivo" style="--c:' + invPerfilDef(elegido).color + '"><div class="inv-objetivo-t">Tu asignación objetivo</div>' +
+        '<div class="inv-objetivo-n">' + invPerfilDef(elegido).ico + ' ' + invPerfilDef(elegido).nombre + ' · ' + esc(pfE.lema) + '</div>' +
+        '<div class="inv-objetivo-r">' + (pfE.activos || []).map(a => invPct(a.pct) + ' ' + esc(a.ticker || a.nombre)).join(' · ') + '</div></div>'
+    : '<div class="gbm-nota">⚠️ Sigues sin una <b>asignación objetivo escrita</b>. Elige uno de los tres perfiles con el botón ☆: definirla una vez evita decidir cada lunes desde cero, que es justo el hueco que señala tu habilidad de Inversión.</div>';
+  return '<div class="gbm-sec">📡 Precios ahora</div>' +
+    '<div class="inv-precios" id="gbmPrecios">' +
+      '<div class="gbm-precio"><span class="gbm-tk">BTC</span><div id="gbmBtc"><b>…</b><small>cargando</small></div></div>' +
+      '<div class="gbm-precio"><span class="gbm-tk">USD/MXN</span><div id="gbmUsd"><b>…</b><small>cargando</small></div></div>' +
+      '<div class="gbm-precio' + (m && m.cetesTasa != null ? '' : ' gbm-precio-off') + '"><span class="gbm-tk">CETES 28 d</span><div>' +
+        (m && m.cetesTasa != null ? '<b>' + (+m.cetesTasa).toLocaleString('es-MX') + ' %</b><small>anual · lo buscó Claude</small>' : '<b>sin dato</b><small>Claude no la encontró</small>') + '</div></div>' +
+      '<div class="gbm-precio gbm-precio-off"><span class="gbm-tk">VOO</span><div><b>no disponible aquí</b><small>ábrelo abajo ↓</small></div></div>' +
+    '</div>' +
+    (m
+      ? '<div class="inv-mercado"><p>' + esc(m.resumen) + '</p><ul class="inv-senales">' + (m.senales || []).map(s => '<li class="' + esc(s.tono || 'neutro') + '"><span><b>' + esc(s.t) + '</b> — ' + esc(s.d) + '</span></li>').join('') + '</ul></div>'
+      : '<div class="gbm-nota">El dólar se actualiza una vez al día. <b>VOO no se puede leer desde este archivo</b> — Yahoo y Stooq bloquean la petición; por eso va como link.</div>') +
+
+    '<div class="gbm-sec">🎯 Tu situación</div>' +
+    '<div class="gbm-row"><span>Fondo de emergencia</span><span class="gbm-mono">' + mon(ef) + ' / ' + mon(metaEf) + '</span></div>' +
+    '<div class="gbm-bar"><div class="gbm-bar-f" style="width:' + Math.min(100, ef / metaEf * 100) + '%"></div></div>' +
+    '<div class="gbm-row" style="margin-top:6px"><span>Deuda con interés</span><span class="gbm-mono" style="color:' + (deudaCara > 0 ? 'var(--r)' : 'var(--g)') + '">' + mon(deudaCara) + '</span></div>' +
+    asignacion +
+    (totalInv ? '<div class="gbm-row gbm-row-tot"><span>Total invertido</span><span class="gbm-mono">' + mon(totalInv) + '</span></div>' : '') +
+    (cetes ? '<div class="gbm-nota">Tus CETES son el fondo de emergencia: ' + mon(cetes) + '. Tu aporte recurrente es de ' + mon(_PG().cetesDia15 || 0) + ' el día 15, y solo se venden ante un imprevisto.</div>' : '') +
+    objetivo +
+
+    '<div class="gbm-sec">⏱️ La compra rápida, en 20 minutos</div>' +
+    '<ol class="gbm-check">' +
+      '<li>Abre GBM+ y mira el saldo disponible (2 min).</li>' +
+      '<li>Compara contra el veredicto: ¿toca fondo, deuda o invertir? (1 min)</li>' +
+      '<li>Si toca invertir: ejecuta según tu perfil elegido, el activo más rezagado primero (5 min).</li>' +
+      '<li>Regístralo en Finanzas → Plan de Inversiones para que el dashboard quede al día (5 min).</li>' +
+      '<li>Cierra la app. <b>No revises precios hasta el próximo lunes</b> — mirar a diario es lo que hace vender en pánico (7 min de sobra).</li>' +
+    '</ol>' +
+
+    '<div class="gbm-sec">🔗 Dónde ejecutar</div>' +
+    '<div class="gbm-links" style="grid-template-columns:1fr">' + GBM_LINKS.map(l => '<a href="' + l.u + '" target="_blank" rel="noopener"><b>' + l.t + '</b><span>' + l.d + '</span></a>').join('') + '</div>' +
+    (d && d.fuentes && d.fuentes.length ? '<div class="inv-fuentes">' + d.fuentes.map(f => '<a href="' + esc(f.u) + '" target="_blank" rel="noopener" title="' + esc(f.u) + '">' + esc(f.t) + '</a>').join('') + '</div>' : '');
+}
+
 function renderGBMPanel(){
   const b = document.getElementById('gbmBody');
   if(!b) return;
-  const {inv, ef, metaEf, totalInv, cetes, mon, paso, color, detalle} = pasoInversionHoy();
-
-  const asignacion = inv.length
-    ? inv.map(i=>{
-        const v = +i.value || +i.invested || 0;
-        const pct = totalInv ? Math.round(v/totalInv*100) : 0;
-        return '<div class="gbm-row"><span>'+esc(i.name)+'</span><span class="gbm-mono">'+mon(v)+' · '+pct+'%</span></div>';
-      }).join('')
-    : '<div class="gbm-vacio">Todavía no hay inversiones registradas en Finanzas.</div>';
-
+  const P = pasoInversionHoy(), d = invDatos(), tab = invTabActual();
+  invPintarCabecera(d);
   b.innerHTML =
-    '<div class="gbm-sec">📡 Precios ahora</div>'+
-    '<div class="gbm-precios" id="gbmPrecios">'+
-      '<div class="gbm-precio"><span class="gbm-tk">BTC</span><div id="gbmBtc"><b>…</b><small>cargando</small></div></div>'+
-      '<div class="gbm-precio"><span class="gbm-tk">USD/MXN</span><div id="gbmUsd"><b>…</b><small>cargando</small></div></div>'+
-      '<div class="gbm-precio gbm-precio-off"><span class="gbm-tk">VOO</span><div><b>no disponible aquí</b><small>ábrelo abajo ↓</small></div></div>'+
-    '</div>'+
-    '<div class="gbm-nota">El dólar se actualiza una vez al día, no al segundo. <b>VOO no se puede leer desde este archivo</b> — Yahoo y Stooq bloquean la petición y las demás piden llave de pago; por eso va como link, no como número inventado.</div>'+
-
-    '<div class="gbm-sec">🎯 Qué te toca hoy</div>'+
-    '<div class="gbm-paso" style="border-color:'+color+'55;background:'+color+'12">'+
-      '<div class="gbm-paso-t" style="color:'+color+'">'+paso+'</div>'+
-      '<div class="gbm-paso-d">'+detalle+'</div>'+
-    '</div>'+
-    '<div class="gbm-row"><span>Fondo de emergencia</span><span class="gbm-mono">'+mon(ef)+' / '+mon(metaEf)+'</span></div>'+
-    '<div class="gbm-bar"><div class="gbm-bar-f" style="width:'+Math.min(100,ef/metaEf*100)+'%"></div></div>'+
-
-    '<div class="gbm-sec">💼 Tu portafolio hoy</div>'+
-    asignacion+
-    (totalInv?'<div class="gbm-row gbm-row-tot"><span>Total invertido</span><span class="gbm-mono">'+mon(totalInv)+'</span></div>':'')+
-    (cetes?'<div class="gbm-nota">Tus CETES son el fondo de emergencia: '+mon(cetes)+'. Tu aporte recurrente es de '+mon(_PG().cetesDia15||1500)+' el día 15, y solo se venden ante un imprevisto.</div>':'')+
-
-    '<div class="gbm-sec">⏱️ La compra rápida, en 20 minutos</div>'+
-    '<ol class="gbm-check">'+
-      '<li>Abre GBM+ y mira el saldo disponible (2 min).</li>'+
-      '<li>Compara contra el paso de arriba: ¿toca fondo, deuda o invertir? (1 min)</li>'+
-      '<li>Si toca invertir: ejecuta la orden según tu asignación ya definida (5 min).</li>'+
-      '<li>Regístralo en Finanzas → Plan de Inversiones para que el dashboard quede al día (5 min).</li>'+
-      '<li>Cierra la app. <b>No revises precios otra vez hasta el próximo lunes</b> — mirar a diario es lo que hace vender en pánico (7 min de sobra).</li>'+
-    '</ol>'+
-    '<div class="gbm-nota">⚠️ Sigues sin una <b>asignación objetivo escrita</b> (% CETES / % VOO / % BTC). Es la tarea pendiente de tu habilidad de Inversión: definirla una vez evita decidir cada lunes desde cero, que es justo lo que tu diagnóstico señala como el hueco real.</div>'+
-
-    '<div class="gbm-sec">🔗 Dónde ejecutar</div>'+
-    '<div class="gbm-links">'+GBM_LINKS.map(l=>'<a href="'+l.u+'" target="_blank" rel="noopener"><b>'+l.t+'</b><span>'+l.d+'</span></a>').join('')+'</div>';
+    '<div class="inv-main">' + invVeredictoHtml(P, d) + invTabsHtml(d, tab) +
+      '<div class="inv-panel" id="invPanel">' + (d ? invPerfilHtml(d, tab) : invVacioHtml()) + '</div>' +
+    '</div>' +
+    '<aside class="inv-side">' + invSideHtml(P, d) + '</aside>';
 }
 
 // ─── Slide de Habilidades — "Foco" (2026-08-23) ─────────────────────────
@@ -9646,6 +10056,8 @@ const QA_ICO = {
   // el botón no se lea como una pieza de otra familia (Adán, 2026-09-01).
   // La luna y el sol del tema. Mismo trazo que el resto: 24px, sin relleno.
   luna:   '<path d="M20.5 14.3A8.5 8.5 0 0 1 9.7 3.5a8.5 8.5 0 1 0 10.8 10.8z"></path>',
+  // El altavoz de Posts: publicar. Mismo trazo que el resto.
+  posts:  '<path d="M3 11v2a1 1 0 0 0 1 1h2l8 4V6l-8 4H4a1 1 0 0 0-1 1z"></path><path d="M8 14l1.5 5h3l-1.5-5"></path><path d="M17.5 9.5a3.5 3.5 0 0 1 0 5"></path>',
   sol:    '<circle cx="12" cy="12" r="4.2"></circle><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.2 5.2l1.6 1.6M17.2 17.2l1.6 1.6M18.8 5.2l-1.6 1.6M6.8 17.2l-1.6 1.6"></path>',
   ojo:    '<path d="M2.2 12s3.6-7 9.8-7 9.8 7 9.8 7-3.6 7-9.8 7-9.8-7-9.8-7z"></path><circle cx="12" cy="12" r="3"></circle>',
   ojoOff: '<path d="M9.9 5.2A9.5 9.5 0 0 1 12 5c6.2 0 9.8 7 9.8 7a17 17 0 0 1-2.4 3.3M6.5 6.6A17 17 0 0 0 2.2 12s3.6 7 9.8 7a9.5 9.5 0 0 0 4-.9"></path><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"></path><path d="M3 3l18 18"></path>'
@@ -9689,6 +10101,11 @@ function renderQuickApps(){
     `<button class="qa-toggle-btn" onclick="toggleQaBar()" aria-label="Mostrar u ocultar accesos directos" title="Mostrar/ocultar accesos directos">🔗 Apps <span class="qa-toggle-chevron">▾</span></button>`+
     `<div class="qa-grupos">${grupos.map(g=>g.map(pill).join('')).join('<span class="qa-sep"></span>')}</div>`+
     `<div class="qa-acciones">`+
+    `<a class="qa-pill posts-btn" id="posts-btn" href="../Posts/posts.html"
+       title="Posts: plantillas de LinkedIn para Aeroresinas y Heliescala"
+       aria-label="Abrir las plantillas de posts">
+       <span class="qa-ico">${qaSvg('posts','currentColor')}</span>
+     </a>`+
     `<button class="qa-pill tema-btn" id="theme-toggle-top" onclick="toggleTheme()"
        title="${qaOscuro()?'Cambiar a modo claro':'Cambiar a modo oscuro'}"
        aria-label="Cambiar entre modo claro y oscuro">

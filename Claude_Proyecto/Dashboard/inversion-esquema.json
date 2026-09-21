@@ -1,0 +1,67 @@
+{
+  "$defs": {
+    "senal": {
+      "type": "object", "additionalProperties": false,
+      "properties": { "t": {"type":"string"}, "d": {"type":"string"}, "tono": {"type":"string","enum":["ok","alerta","neutro"]} },
+      "required": ["t","d","tono"]
+    },
+    "activo": {
+      "type": "object", "additionalProperties": false,
+      "properties": {
+        "nombre": {"type":"string"}, "ticker": {"type":"string"}, "tipo": {"type":"string"},
+        "pct": {"type":"number"}, "donde": {"type":"string"},
+        "porque": {"type":"string"}, "vigilar": {"type":"string"}, "riesgo": {"type":"string"}
+      },
+      "required": ["nombre","ticker","tipo","pct","donde","porque","vigilar","riesgo"]
+    },
+    "perfil": {
+      "type": "object", "additionalProperties": false,
+      "properties": {
+        "lema": {"type":"string"}, "paraQuien": {"type":"string"}, "horizonte": {"type":"string"},
+        "riesgo": {"type":"integer"}, "rendAnual": {"type":"array","items":{"type":"number"}},
+        "caidaMax": {"type":"string"}, "resumen": {"type":"string"},
+        "activos": {"type":"array","items":{"$ref":"#/$defs/activo"}},
+        "porque": {"type":"array","items":{"type":"string"}},
+        "contra": {"type":"array","items":{"type":"string"}},
+        "reglas": {"type":"array","items":{"type":"string"}},
+        "esteMes": {"type":"string"}
+      },
+      "required": ["lema","paraQuien","horizonte","riesgo","rendAnual","caidaMax","resumen","activos","porque","contra","reglas","esteMes"]
+    }
+  },
+  "type": "object", "additionalProperties": false,
+  "properties": {
+    "veredicto": {
+      "type": "object", "additionalProperties": false,
+      "properties": {
+        "titulo": {"type":"string"}, "texto": {"type":"string"},
+        "montoMensual": {"type":"number"}, "cuandoInvertir": {"type":"string"}
+      },
+      "required": ["titulo","texto","montoMensual","cuandoInvertir"]
+    },
+    "mercado": {
+      "type": "object", "additionalProperties": false,
+      "properties": {
+        "resumen": {"type":"string"},
+        "cetesTasa": {"type":["number","null"]},
+        "senales": {"type":"array","items":{"$ref":"#/$defs/senal"}}
+      },
+      "required": ["resumen","cetesTasa","senales"]
+    },
+    "perfiles": {
+      "type": "object", "additionalProperties": false,
+      "properties": {
+        "seguro": {"$ref":"#/$defs/perfil"},
+        "medio":  {"$ref":"#/$defs/perfil"},
+        "alto":   {"$ref":"#/$defs/perfil"}
+      },
+      "required": ["seguro","medio","alto"]
+    },
+    "fuentes": {
+      "type": "array",
+      "items": { "type":"object", "additionalProperties": false,
+        "properties": { "t": {"type":"string"}, "u": {"type":"string"} }, "required": ["t","u"] }
+    }
+  },
+  "required": ["veredicto","mercado","perfiles","fuentes"]
+}

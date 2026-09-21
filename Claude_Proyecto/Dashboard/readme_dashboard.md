@@ -20,6 +20,7 @@ en una página.
 | `DATOS-MAESTROS.md` | Índice del proyecto: catálogo de variables, mapa de apps, cómo se corrige un saldo |
 | `verificar-sincronia.js` | Comprueba que nada se haya vuelto a duplicar. Lo corre un hook al final de cada turno; sale con código 1 si algo falla |
 | `habitos.js` | La pantalla de Hábitos entera: semilla, motor de rachas, migraciones, pintado y estilos |
+| `inversion-hoy.js` · `inversion-prompt.txt` · `inversion-esquema.json` · `inversion-actualizar.ps1` (+ `.bat`) · `inversion-instalar.bat` | *Qué invertir hoy*: los datos que escribe Claude, el prompt, el esquema de la respuesta y el puente que los une (ver su sección) |
 | `ficha.js` · `ficha.css` | El panel de ficha de producto (`pfAbrirId`, `pfPorNombre`, `.lc-info`) que usan la Lista de Compras y la rutina |
 | `examen-genai.js` · `examen-genai-data.js` (A, 79 preguntas) · `examen-genai-data-b.js` (B, 77) | El simulacro ISTQB CT-GenAI: motor y los dos bancos |
 | `entrevistas-data.js` | Los 41 temas de Python (`ENTREVISTA_TEMAS`, `PY_MOD_LABEL`) que nombra la tarjeta *Hoy aprendes* de Mi Día. Trae también el HTML y el CSS de cada tema (`ENTREVISTA_CONTENT`, `ENTREVISTA_CSS`), que ya no pinta ninguna pantalla. Lo genera `Entrevistas/_generar-datos-dashboard.js`; **no se edita a mano** |
@@ -61,7 +62,8 @@ forma de `completado` o los ids `sN-M`, hay que revisar esas dos funciones.
 
 **Claves propias** del Dashboard: `dash-eventos-mes-v1` (pendientes del mes), `dash-lista-compras`
 y `dash-lista-tengo`, `dash-logros-v1` (libreta de logros), `dash-habitos-v1`, `dash-rail-abierto`,
-`habilidades_checklist_v1`, `examen_genai_v1`, y las `al_*_v1` de Alemán.
+`habilidades_checklist_v1`, `examen_genai_v1`, `dash-inversion-v1` (pestaña, perfil elegido y monto de *Qué
+invertir hoy*), y las `al_*_v1` de Alemán.
 
 ---
 
@@ -262,6 +264,54 @@ El bloqueo va por eventos, en un archivo que cargan las seis apps:
 El doble toque va por CSS y no cancelando `touchend`, porque eso **rompería los clicks**. Todo lo
 de un dedo sigue vivo: scroll, swipe entre pantallas, taps. El meta se cerró igual en las seis
 apps: manda en Android y escritorio.
+
+## Qué invertir hoy — plantilla fija, datos de Claude
+
+Se abre desde el botón *📈 Qué invertir hoy* del módulo **Tu dinero** (`#diaInvertirBtn` →
+`abrirGBM()`), cualquier día de la semana, y ocupa `min(1560px, 96vw)` × `min(960px, 94vh)`
+(`.gbm-card.inv-card`; el modificador existe porque las clases `.gbm-*` las comparte el panel de
+KPIs de Mis Metas, que sigue en 760 px). Adán, 21-sep-2026: *"hazla lo más grande posible… una
+especie de plantilla… claude solo se encargará de la información y la plantilla no se modificará
+visualmente, entonces solo se gastan tokens en información"*.
+
+**Dos archivos, dos responsabilidades.** La plantilla es `renderGBMPanel()` más el CSS `.inv-*`:
+nunca cambia al actualizar. Los datos son `inversion-hoy.js` (`window.INVERSION_HOY`, cargado
+justo después del maestro): veredicto, mercado, los tres perfiles y las fuentes, más `_meta`
+(cuándo, qué modelo, tokens, segundos). Si el archivo falta, el panel lo dice y todo lo demás
+sigue funcionando con lo local.
+
+| Zona | Qué pinta | De dónde |
+|---|---|---|
+| Veredicto | El paso que toca (`pasoInversionHoy()`: fondo → deuda con interés → invertir, mismo color que el botón de Mi Día), el título y el texto de Claude, *desde cuándo* y el **monto al mes** editable | regla local + `veredicto` |
+| Tres pestañas | 🛡️ Inversión segura (`--g`), ⚖️ Riesgo medio (`--w`), 🔥 Riesgo alto (`--o`), con lema y riesgo 1-5 en puntos; `invTab()` recuerda la abierta | `perfiles.seguro/medio/alto` |
+| El perfil | Lema, para quién, resumen; horizonte, rendimiento esperado, riesgo y la caída que hay que aguantar; la barra de reparto y una tarjeta por activo (%, pesos al mes, dónde, por qué, vigilar, riesgo); *Por qué / En contra / Reglas*; *Este mes* y la proyección a 12 meses (anualidad con el rendimiento mín-máx: `invEn12()`) | el perfil + el monto |
+| ☆ Usar este perfil | Guarda la asignación objetivo (`invElegirPerfil()`); la barra lateral la muestra y deja de avisar que falta | `dash-inversion-v1` |
+| Barra lateral | BTC y USD/MXN en vivo (`cargarPreciosGBM()`), la tasa de CETES y el resumen del mercado que trajo Claude, tu situación (fondo, deuda con interés, portafolio), la compra rápida y los enlaces (`GBM_LINKS` + `fuentes`) | local + `mercado` |
+
+Los porcentajes de cada activo se normalizan por si Claude no cerró en 100; el monto al mes es el
+que Adán escribió, si no el que sugirió Claude (`veredicto.montoMensual`), si no `{{cetesDia15}}`.
+Todas las cantidades propias pasan por `money()`, así el modo privado también las tapa.
+
+**El botón 🤖 Actualizar con Claude.** `invPedirClaude()` arma el contexto (`invContexto()`:
+ingresos, fijos, fondo y meta, deudas con tasa, inversiones, efectivo, precios, maestría, fase,
+perfil elegido — unos 500 tokens) y navega a `claudeinv://actualizar?ctx=<base64url>`. Windows abre
+`inversion-actualizar.ps1` (registrado en `HKCU\Software\Classes\claudeinv` por
+`inversion-instalar.bat`, sin administrador), que corre `claude -p` con salida estructurada
+(`inversion-esquema.json`), solo la herramienta de búsqueda web (el prompt la limita a 3) y un
+system prompt corto — 13.7 k tokens de sistema medidos contra 27.6 k con el de Claude Code —,
+valida la respuesta y reescribe `inversion-hoy.js` con temporal y renombrado, así un fallo deja el anterior intacto. La página no puede
+leer archivos desde `file://`, pero sí recargar un `<script>`: `invEsperar()` lo reinyecta cada 5 s
+y, cuando `_meta.generado` cambia, repinta y avisa con un toast. Sin protocolo (iPad, otra máquina)
+*copiar el contexto* deja en el portapapeles el encargo para pegarlo en cualquier sesión de Claude
+Code; `inversion-actualizar.bat` repite la última petición con el contexto guardado en
+`inversion-contexto.json` (no se sube: es un derivado).
+
+**Qué le pide el prompt** (`inversion-prompt.txt`): respetar el orden fijo del Plan Maestro,
+usar los números del contexto, 2-4 activos por perfil comprables en GBM+ / Cetesdirecto / un
+exchange para BTC, cada uno con dónde, por qué, qué vigilar y su riesgo concreto, y largos máximos
+por campo para que la plantilla no se deforme. Una corrida con Opus y 3 búsquedas: 152 s y 92.7 k
+tokens procesados (11.4 k de salida), medido; las búsquedas son el grueso, y el script acepta
+-SinBusqueda para pedirla de memoria cuando solo cambian los saldos.
 
 ---
 
